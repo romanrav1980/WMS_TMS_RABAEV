@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="CS_CATClient">
+</Property><Property Name="Файл решения" Value="\\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\CS_CATClient.sln">
+</Property><Property Name="Файл параметров пользователя" Value="\\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\CS_CATClient.suo">
+</Property><Property Name="Date" Value="21 февраля 2012 г.">
+</Property><Property Name="Time" Value="17:48">
+</Property><Property Name="Номер записи" Value="4">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="CS_CATClient.sln" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\CS_CATClient.sln">
+</Event><Event ErrorLevel="0" Project="" Source="CS_CATClient.suo" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\CS_CATClient.suo">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="CS_CATClient.csproj" Description="Успешно создана резервная копия файла проекта: \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\CS_CATClient.csproj">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="CS_CATClient.csproj.user" Description="Резервная копия проекта успешно создана как \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\CS_CATClient.csproj.user">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="Communication.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\Communication.cs">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="DBComponent.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\DBComponent.cs">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="DeviceSocket.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\DeviceSocket.cs">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="FormMain.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\FormMain.cs">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="FormMain.Designer.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\FormMain.Designer.cs">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="Program.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\Program.cs">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="AssemblyInfo.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="Resources.Designer.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\Resources.Designer.cs">
+</Event><Event ErrorLevel="2" Project="CS_CATClient" Source=".\DataSources\Resources.datasource" Description="Не удалось создать резервную копию файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\.\DataSources\Resources.datasource">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="app.config" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\app.config">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="ClassDiagram1.cd" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\ClassDiagram1.cd">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="ClassDiagram2.cd" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\ClassDiagram2.cd">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="MCSSLib.dll" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\MCSSLib.dll">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="FormMain.resx" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\FormMain.resx">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="Resources.resx" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Реутов\ТСД WMS Штаб\Работающий пример\Backup1\Resources.resx">
+</Event><Event ErrorLevel="0" Project="CS_CATClient" Source="CS_CATClient.csproj" Description="Проект успешно преобразован">
+</Event><Event ErrorLevel="3" Project="CS_CATClient" Source="CS_CATClient.csproj" Description="Converted">
+</Event><Event ErrorLevel="2" Project="CS_CATClient" Source="CS_CATClient.csproj" Description="">
+</Event><Event ErrorLevel="0" Project="" Source="CS_CATClient.sln" Description="Преобразование решения успешно завершено">
+</Event><Event ErrorLevel="3" Project="" Source="CS_CATClient.sln" Description="Converted">
+</Event></UpgradeLog>

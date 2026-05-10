@@ -1,0 +1,42 @@
+На сервере RC-WMS (192.168.208.9) создана БД.
+
+Пользователь  rabaev пароль – rabaevwms
+
+Строка подключения:
+
+DBWMS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = rc-wms)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DBWMS)
+    )
+  )
+
+
+
+
+
+
+Cc: Сергей Г. Порываев; Дмитрий В. Рогулькин; Артем С. Коваленко
+Subject: Сервер для РЦ
+
+Здравствуйте 
+
+
+На сервере RC-WMS (192.168.208.9) создана БД.
+
+Пользователь  rabaev пароль – rabaevwms
+
+Строка подключения:
+
+DBWMS =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = rc-wms)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = DBWMS)
+    )
+  )
+
+

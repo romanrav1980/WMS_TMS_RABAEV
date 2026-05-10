@@ -1,0 +1,54 @@
+<BODY>
+<VAR name='id' >[nakl_id]</VAR>
+<VAR name='head' type='sql' >select * from  RABAEV.RRL_SBORKA_PALLETS NAK where   NAK.PALLET_UID = '[zakaz_id]' and rownum=1 </VAR>
+<VAR name='vol' type='sql' > select  compl.perdiction_count_pall_not_full( '[order_id]' ) cp   from dual </VAR>
+
+
+<VAR name='vol2' type='sql' > select  compl.perdiction_count_pall_only_ful( '[order_id]' ) cp   from dual </VAR>
+
+
+
+
+
+<LOOP  from='1' to='[vol.CP]+1'  >
+<PAGE axes='0' landscape='1' >
+	<LABEL   x='50' y='200' fontsize='480'  >[loop_counter]</LABEL>
+	<LABEL   x='50' y='100' fontsize='72'  width='1100' height='700' >[head.ADDR]</LABEL>
+
+	<LABEL   x='50' y='760' fontsize='30'  >[head.ADDR]</LABEL>
+
+	<LABEL   x='710' y='200' fontsize='30' >Дата СТ: [head.STDATE] </LABEL>
+	<LABEL   x='710' y='240' fontsize='30' >Печать=[Date] [Time]</LABEL>
+	<LABEL   x='710' y='280' fontsize='30' >СТ: [head.ST_NUMBER] </LABEL>
+	<LABEL   x='710' y='320' fontsize='60' >Вес: _ _ _  </LABEL>
+<LINE x1='700' x2='700' y1='200' y2='700' ></LINE>
+<LINE x1='700' x2='1100' y1='400' y2='400' ></LINE>
+<LABEL   x='50' y='700' fontsize='60' >Комплектовщик: __________  </LABEL>
+<LABEL   x='800' y='10' repeat='1' >страница [page_number] из [page_count]</LABEL>
+</PAGE>
+</LOOP>
+
+
+<LOOP  from='90' to='[vol2.CP]+1'  >
+<PAGE axes='0' landscape='1' >
+	<LABEL   x='50' y='200' fontsize='480'  >[loop_counter]</LABEL>
+	<LABEL   x='50' y='100' fontsize='72'  width='1100' height='700' >[head.ADDR]</LABEL>
+
+	<LABEL   x='50' y='760' fontsize='30'  >[head.ADDR]</LABEL>
+
+	<LABEL   x='710' y='200' fontsize='30' >Дата СТ: [head.STDATE] </LABEL>
+	<LABEL   x='710' y='240' fontsize='30' >Печать=[Date] [Time]</LABEL>
+	<LABEL   x='710' y='280' fontsize='30' >СТ: [head.ST_NUMBER] </LABEL>
+	<LABEL   x='710' y='320' fontsize='60' >Вес: _ _ _  </LABEL>
+<LINE x1='700' x2='700' y1='200' y2='700' ></LINE>
+<LINE x1='700' x2='1100' y1='400' y2='400' ></LINE>
+<LABEL   x='50' y='700' fontsize='60' >Комплектовщик: __________  </LABEL>
+<LABEL   x='800' y='10' repeat='1' >страница [page_number] из [page_count]</LABEL>
+</PAGE>
+</LOOP>
+
+
+</BODY>
+
+
+

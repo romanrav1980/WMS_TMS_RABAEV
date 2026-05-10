@@ -1,0 +1,224 @@
+//Microsoft eMbedded Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+#include "newres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Korean resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+#ifdef _WIN32
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "#include ""newres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\WlanSample.rc2""  // non-Microsoft eMbedded Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#include ""wceres.rc""         // WCE-specific components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\WlanSample.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ASSOCIATED_PAGE DIALOG DISCARDABLE  0, 0, 131, 138
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Associated"
+FONT 10, "System"
+BEGIN
+    LTEXT           "State",IDC_STATIC,6,23,18,8
+    EDITTEXT        IDC_ED_STATE,51,23,72,12,ES_AUTOHSCROLL | WS_DISABLED
+    LTEXT           "Adapter",IDC_STATIC,6,10,27,8
+    LTEXT           "SSID",IDC_STATIC,6,36,17,8
+    LTEXT           "BSSID",IDC_STATIC,6,49,21,8
+    LTEXT           "Channel",IDC_STATIC,6,62,27,8
+    LTEXT           "Link Speed",IDC_STATIC,6,75,36,8
+    LTEXT           "Beacon",IDC_STATIC,6,88,24,8
+    LTEXT           "ATIM",IDC_STATIC,6,101,18,8
+    EDITTEXT        IDC_ED_ATIM,51,101,72,12,ES_AUTOHSCROLL | WS_DISABLED
+    EDITTEXT        IDC_ED_BEACON,51,88,72,12,ES_AUTOHSCROLL | WS_DISABLED
+    EDITTEXT        IDC_ED_LINK_SPEED,51,75,72,12,ES_AUTOHSCROLL | 
+                    WS_DISABLED
+    EDITTEXT        IDC_ED_CHANNEL,51,62,72,12,ES_AUTOHSCROLL | WS_DISABLED
+    EDITTEXT        IDC_ED_BSSID,51,49,72,12,ES_AUTOHSCROLL | WS_DISABLED
+    EDITTEXT        IDC_ED_SSID,51,36,72,12,ES_AUTOHSCROLL | WS_DISABLED
+    EDITTEXT        IDC_ED_ADAPTER,51,10,72,12,ES_AUTOHSCROLL | WS_DISABLED
+    GROUPBOX        "Connected",IDC_STATIC,2,0,125,116
+    CONTROL         "Progress1",IDC_PROGRESS,"msctls_progress32",PBS_SMOOTH | 
+                    WS_BORDER,3,119,125,9
+    RTEXT           "RSSI",IDC_ST_RSSI,100,130,28,8
+    LTEXT           "",IDC_ST_ZC,56,130,37,8
+END
+
+IDD_BSSID_LIST_PAGE DIALOG DISCARDABLE  0, 0, 153, 153
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Bssid List"
+FONT 8, "Tahoma"
+BEGIN
+    CONTROL         "List2",IDC_LIST_BSSID,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | WS_BORDER | WS_TABSTOP,0,2,153,114
+    PUSHBUTTON      "List",IDC_BTN_BSSID_LIST,4,123,50,14
+    PUSHBUTTON      "SCAN",IDC_BTN_SCAN,58,123,35,14
+END
+
+IDD_ABOUT_PAGE DIALOG DISCARDABLE  0, 0, 131, 138
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 10, "System"
+BEGIN
+    CONTROL         132,IDC_STATIC,"Static",SS_BITMAP,5,92,43,20
+    CTEXT           "Copyright  2006 Mobile Compia, Inc.\r\nAll Right reserved.",
+                    IDC_STATIC,4,115,123,16
+    CTEXT           "Wireless Library \r\nSample Utility",IDC_STATIC,52,93,
+                    74,19
+    GROUPBOX        "",IDC_STATIC,1,84,129,51
+    LTEXT           "MAC Adrress",IDC_STATIC,4,72,43,8
+    EDITTEXT        IDC_ED_MAC,53,72,72,12,ES_AUTOHSCROLL | WS_DISABLED
+    LTEXT           "AKAI",IDC_STATIC,63,120,16,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BTM_MC              BITMAP  DISCARDABLE     "res\\mobilecompia.bmp"
+#endif    // Korean resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", "SEGA\0"
+            VALUE "FileDescription", "WlanSample WCE MFC Application\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "WlanSample\0"
+            VALUE "LegalCopyright", "Copyright © 2006\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "WlanSample.exe\0"
+            VALUE "ProductName", "WlanSample Application\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\WlanSample.rc2"  // non-Microsoft eMbedded Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#include "wceres.rc"         // WCE-specific components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

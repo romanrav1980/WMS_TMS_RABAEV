@@ -1,0 +1,75 @@
+# -------------------------------------------------------
+# Build artifacts
+# -------------------------------------------------------
+.vs/
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+**/x64/
+**/x86/
+**/TestResults/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+*.user
+*.suo
+*.cache
+*.pdb
+
+# Generated runtime configs (produced by MSBuild)
+**/*.vshost.exe.config
+**/*.vshost.exe.manifest
+**/*.vshost.exe
+
+# -------------------------------------------------------
+# Archives and large binary payloads (no value in git)
+# -------------------------------------------------------
+*.7z
+*.zip
+*.rar
+*.cab
+*.iso
+*.bak
+*.dmp
+*.dump
+*.DMP
+*.dat
+*.DAT
+
+# Large Oracle/database files over GitHub 100MB limit
+data30.sql
+OracleXEUniv.exe
+**/Создание нового РЦ.sql
+**/Заполнить все паллеты.sql
+
+# -------------------------------------------------------
+# SAP integration — runtime temp files and logs
+# -------------------------------------------------------
+# SAP_INTEGRATION is intentionally local-only.
+SAP_INTEGRATION/
+
+# -------------------------------------------------------
+# Inaccessible / permission-denied directories
+# -------------------------------------------------------
+sap_oracle_python_test_0jk_lzve/
+
+# -------------------------------------------------------
+# Claude Code local settings (machine-specific permissions)
+# -------------------------------------------------------
+.claude/
+
+# -------------------------------------------------------
+# Local operational traces
+# -------------------------------------------------------
+tmp/
+tmp-ssh/
+sqlnet.log
+*.log
+desktop.ini
+Thumbs.db
+
+# -------------------------------------------------------
+# Compiled outputs inside root-level WindowsApplication2 (legacy copy)
+# -------------------------------------------------------
+WindowsApplication2/

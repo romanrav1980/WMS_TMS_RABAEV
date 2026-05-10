@@ -1,0 +1,5 @@
+update RABAEV.RRL_SBORKA_PALLETS
+set  ZONE_TIME_PLAN_IN= null , ZONE_TIME_PLAN_OUT = null where 
+ 
+
+  ZONE_TIME_PLAN_IN  < to_date('01-01-2000')

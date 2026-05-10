@@ -1,0 +1,22 @@
+
+--RRL_SBORKA_PALLET_ROWS.*
+
+select
+ARTICUL ,
+sum( QUANTITY ) , 
+count( QUANTITY )
+
+ from 
+RRL_SBORKA_PALLET_ROWS ,
+RRL_SBORKA_PALLETS, RRL_ARTICULS ART , RRL_ADDR ADR
+
+  where 
+  RRL_SBORKA_PALLETS.PALLET_UID = RRL_SBORKA_PALLET_ROWS.PALLET_UID 
+  and art.ACTICUL=ARTICUL
+  and RRL_SBORKA_PALLETS.STDATE  > to_date( '01.03.2011' )
+  and RRL_SBORKA_PALLETS.STDATE  < to_date( '01.04.2011' )
+  and art.NAME like '%Пиво%'
+  and ADR.ADDR = RRL_SBORKA_PALLETS.ADDR
+  and (  ADR.REGION like '%Гипер%'  )
+  
+  group by ARTICUL

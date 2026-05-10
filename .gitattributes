@@ -1,0 +1,13 @@
+* text=auto
+*.sln text eol=crlf
+*.cs text eol=crlf
+*.csproj text eol=crlf
+*.sql text eol=crlf
+*.ps1 text eol=crlf
+*.md text eol=crlf
+*.dll binary
+*.exe binary
+*.rar binary
+*.zip binary
+*.7z binary
+db/restore_points/**/data/*.sql filter=lfs diff=lfs merge=lfs -text

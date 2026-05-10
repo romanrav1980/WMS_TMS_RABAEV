@@ -1,0 +1,19 @@
+<BODY>
+<VAR name='id' >[nakl_id]</VAR>
+<VAR name='head' type='sql' >select * from  RABAEV.RRL_SBORKA_PALLETS NAK where   NAK.PALLET_UID = '[zakaz_id]' and rownum=1 </VAR>
+ 
+<PAGE axes='0' landscape='1' >
+
+<LABEL fontsize='24' x='50' y='50'  replace_from=' 0:00:00' replace_to=''   > Паллет № [head.PALLET_UID] от [head.STDATE]</LABEL>
+<LABEL fontsize='24' x='50' y='75'    >  Адрес магазина: [head.ADDR]  </LABEL>
+<LABEL  x='50' y='150'   >комплектовщик:  ______________</LABEL>
+<LABEL   x='50' y='162' fontsize='72'  >[head.PALLET_NUMBER]</LABEL>
+
+<RECT  x2='50' y2='150'   x1='250' y1='350'  ></RECT>
+
+</PAGE>
+
+</BODY>
+
+
+

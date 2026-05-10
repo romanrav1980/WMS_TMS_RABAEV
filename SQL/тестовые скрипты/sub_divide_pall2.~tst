@@ -1,0 +1,51 @@
+PL/SQL Developer Test script 3.0
+14
+begin
+  
+  :result := pall_splitter.sub_divide_pall(ord_id => :ord_id,
+                                           vers1 => :vers1,
+                                           maxv1 => :maxv1,
+                                           maxm1 => :maxm1,
+                                           compl_gr => :compl_gr,
+                                           ware_id2 => :ware_id2);
+                              
+  :result := fix_divide_by_pall(  :vers1  , :ord_id , 'R' );                                            
+  
+  commit;
+                                           
+end;
+7
+result
+1
+0
+4
+ord_id
+1
+28398
+4
+vers1
+1
+1
+4
+maxv1
+1
+100000
+4
+maxm1
+1
+1000
+4
+compl_gr
+1
+101
+4
+ware_id2
+1
+18
+4
+5
+K
+y
+r.taresize
+r.tareweight
+ r.articul

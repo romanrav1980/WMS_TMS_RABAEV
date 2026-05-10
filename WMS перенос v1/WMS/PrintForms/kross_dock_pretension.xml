@@ -1,0 +1,55 @@
+<BODY>
+<VAR name='id' >[nakl_id]</VAR>
+<VAR name='head' type='sql' >select * from  RABAEV.RRL_SBORKA_PALLETS NAK where   NAK.PALLET_UID = '[pall_id]' and rownum=1 </VAR>
+
+<VAR name='stat' type='sql' >
+select count(  pts.quantity ) RS , sum( RABAEV.RRL_COUNT_KOR( articul , quantity ) ) KOR
+  from rrl_sborka_pallet_rows pts    
+	where pts.pallet_uid ='[pall_id]'</VAR>
+
+<PAGE axes='0' landscape='0' >
+
+<LABEL   x='600' y='10' repeat='1' >страница [page_number] из [page_count]</LABEL>
+<LABEL   x='600' y='1120' repeat='1' >страница [page_number] из [page_count]</LABEL>
+
+<LABEL fontsize='24' x='50' y='25'     >Акт расхождения веса</LABEL>
+
+<LABEL fontsize='18' x='50' y='50' replace_from=' 0:00:00' replace_to='' >Паллет № [head.PALLET_UID] от [head.STDATE]</LABEL>
+
+<LABEL fontsize='18' x='50' y='70'    >Автомобиль: ____________ </LABEL>
+<LABEL fontsize='18' x='50' y='90'      >Водитель: ____________ ( ФИО: ___________  ) </LABEL>
+<LABEL fontsize='18' x='50' y='110'    >Приемосдатчик РЦ Уфа:  </LABEL>
+
+
+<LABEL fontsize='18' x='50' y='130'    >Вес, отгруженный с РЦ Екатеринбург: [head.KROSS_WEIGHT]  </LABEL>
+<LABEL   x='50' y='150'  fontsize='18'   >Вес, принятый на РЦ Уфа:[head.TRIAL_WEIGHT] </LABEL>
+
+
+
+
+
+
+
+
+<TABLE y='212' x='20' name='table_1' rows_table_limit='18' yrepeat='30' xrepeat='30' font='12'  >
+<SQL limit='400'  yrepeat='30' xrepeat='28'  > 
+
+select    pts.articul  , pts.shortname ,  pts.quantity , pts.KROSS_DOCK_QTY , pts.ei  
+  from rrl_sborka_pallet_rows pts    
+	where pts.pallet_uid ='[pall_id]' 
+/* and ( not( pts.KROSS_DOCK_QTY = pts.quantity ) or (pts.KROSS_DOCK_QTY is null))  */
+order by ID 
+
+<FIELD name='articul'  width='7' show='Артикул'   ></FIELD>
+<FIELD name='SHORTNAME'  width='19' show='Наименование'   ></FIELD>
+<FIELD name='rownum'   width='3' show='№'   ></FIELD>
+<FIELD name='quantity'  width='15' show='Кол собр на ЦРЦ'   ></FIELD>
+
+<FIELD name='KROSS_DOCK_QTY'  width='15' show='Кол принятое на РЦ Уфа'   ></FIELD>
+
+<FIELD name='EI'  width='3' show='ЕИ'   ></FIELD>
+
+</SQL>
+</TABLE>
+</PAGE>
+</BODY>

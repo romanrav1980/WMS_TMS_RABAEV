@@ -1,0 +1,122 @@
+<BODY>
+<VAR name='id' >[nakl_id]</VAR>
+<VAR name='head' type='sql' >select * from  RABAEV.RRL_SBORKA_PALLETS NAK where   NAK.PALLET_UID = '[pall_id]' and rownum=1 </VAR>
+
+
+<VAR name='stat' type='sql' >
+select count(  pts.quantity ) RS , sum( RABAEV.RRL_COUNT_KOR( articul , quantity ) ) KOR
+  from rrl_sborka_pallet_rows pts    
+	where pts.pallet_uid ='[pall_id]'   
+</VAR>
+
+
+
+
+<PAGE axes='0' landscape='0' >
+<LABEL   x='350' y='0' type='EAN' encode='pallet_uid_code' width='400' height='50'  >[pall_id]</LABEL>
+<LABEL   x='350' y='1100' type='EAN' encode='pallet_uid_code' width='400' height='150'  >[pall_id]</LABEL>
+
+<LABEL   x='600' y='10' repeat='1' >страница [page_number] из [page_count]</LABEL>
+<LABEL   x='600' y='1100' repeat='1' >страница [page_number] из [page_count]</LABEL>
+
+
+<LABEL fontsize='24' x='50' y='25'     >Сборочный лист</LABEL>
+
+
+<LABEL fontsize='24' x='50' y='50'  replace_from=' 0:00:00' replace_to=''   > Паллет № [head.PALLET_UID] от [head.STDATE]</LABEL>
+<LABEL fontsize='24' x='50' y='75'    >Адрес магазина: [head.ADDR]  </LABEL>
+<LABEL  x='50' y='120'  fontsize='18'   >комплектовщик:  [head.SBORSHIK]</LABEL>
+<LABEL   x='50' y='140'  fontsize='18'   >Время получения СТ: [Date] [Time] </LABEL>
+<LABEL   x='50' y='160'  fontsize='18'   >Время окончания комплектации:  _________</LABEL>
+<LABEL   x='50' y='180'  fontsize='18'   >Строк:[stat.RS] Коробок:[stat.KOR] </LABEL>
+
+
+<RECT x1='500' x2='750' y1='100' y2='140' ></RECT>
+<LABEL  x='500' y='110'  fontsize='16'   > Вес пустого паллета</LABEL>
+
+
+<RECT x1='500' x2='750' y1='160' y2='200' ></RECT>
+<LABEL  x='500' y='170'  fontsize='16'   > Вес собранного паллета</LABEL>
+
+
+<TABLE y='212' x='20' name='table_1' rows_table_limit='20' yrepeat='30' xrepeat='30' font='16'  >
+
+<SQL limit='400'  yrepeat='30' xrepeat='28'  >  
+
+select rownum , path1  , sobr , articul , shortname  , vlozennost , quantity , KOR , ei from (
+select    compl.path(articul ,pallet_uid) path1 , pts.articul  , pts.shortname ,
+COMPL.print_kolbasa_sobr( ei  , pts.quantity , COMPL.RRL_vlozennost(articul ) )  sobr  , 
+pts.ei , COMPL.RRL_vlozennost(articul)  vlozennost ,  pts.quantity , RABAEV.RRL_COUNT_KOR( articul , quantity ) KOR
+
+  from rrl_sborka_pallet_rows pts    
+	where pts.pallet_uid ='[pall_id]'   order by ID )
+
+
+
+<FIELD name='path1'   width='6' show='Ячейка'   ></FIELD>
+<FIELD name='articul'  width='7' show='Артикул'   ></FIELD>
+<FIELD name='SHORTNAME'  width='20' show='Наименование'   ></FIELD>
+<FIELD name='rownum'   width='3' show='№'   ></FIELD>
+<FIELD name='sobr'  width='5' show='Собрать' fontsize='24' ></FIELD> 
+<FIELD name='vlozennost'  width='3' show='Упак'   ></FIELD>
+<FIELD name='quantity'  width='3' show='Количество'   ></FIELD>
+<FIELD name='KOR'  width='4' show='KOR'   ></FIELD>
+
+
+
+<FIELD name='EI'  width='3' show='ЕИ'   >
+
+
+	<IF condition='[EI]=кг' >
+		<BOXES width='90' height='30' count='[KOR]' padding='5' ylimit='800' ></BOXES>
+	</IF>
+	
+	<IF condition='[ARTICUL]=Т0000080256' >
+		<BOXES width='90' height='30' count='[KOR]' padding='5' ylimit='800' ></BOXES>
+	</IF>
+
+ 
+</FIELD>
+
+
+
+
+
+</SQL>
+</TABLE>
+
+ 
+
+
+</PAGE>
+<PAGE>
+
+<LABEL fontsize='50' x='50' y='30'     >Временный ярлык на паллет</LABEL>
+<LABEL fontsize='50' x='50' y='80'  replace_from=' 0:00:00' replace_to=''   >[head.PALLET_UID]</LABEL>
+<LABEL fontsize='50' x='50' y='130'  replace_from=' 0:00:00' replace_to=''   >от [head.STDATE]</LABEL>
+<LABEL fontsize='36' x='50' y='180'    >Адр:[head.ADDR]</LABEL>
+<LABEL  x='50' y='220'  fontsize='18'   >комплектовщик:  [head.SBORSHIK]</LABEL>
+<LABEL   x='50' y='240'  fontsize='18'   >Время получения СТ: [Date] [Time] </LABEL>
+<LABEL   x='50' y='260'  fontsize='18'   >Время окончания комплектации:  _________</LABEL>
+<LABEL   x='50' y='280'  fontsize='18'   >Строк:[stat.RS] Коробок:[stat.KOR] </LABEL>
+<LINE x1='50' y1='330' x2='700' y2='330' width='5' ></LINE>
+
+
+<LABEL fontsize='50' x='50' y='530'     >Временный ярлык на паллет</LABEL>
+<LABEL fontsize='50' x='50' y='580'  replace_from=' 0:00:00' replace_to=''   >[head.PALLET_UID]</LABEL>
+<LABEL fontsize='50' x='50' y='630'  replace_from=' 0:00:00' replace_to=''   >от [head.STDATE]</LABEL>
+<LABEL fontsize='36' x='50' y='680'    >Адр:[head.ADDR]</LABEL>
+<LABEL  x='50' y='720'  fontsize='18'   >комплектовщик:  [head.SBORSHIK]</LABEL>
+<LABEL   x='50' y='740'  fontsize='18'   >Время получения СТ: [Date] [Time] </LABEL>
+<LABEL   x='50' y='760'  fontsize='18'   >Время окончания комплектации:  _________</LABEL>
+<LABEL   x='50' y='780'  fontsize='18'   >Строк:[stat.RS] Коробок:[stat.KOR] </LABEL>
+<LINE x1='50' y1='830' x2='700' y2='830' width='5' ></LINE>
+
+
+</PAGE>
+ 
+
+</BODY>
+
+
+

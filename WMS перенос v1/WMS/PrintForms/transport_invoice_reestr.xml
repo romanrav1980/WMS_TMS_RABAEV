@@ -1,0 +1,58 @@
+<BODY>
+<VAR name='id' >[nakl_id]</VAR>
+<VAR name='head' type='sql' > select *  from  RABAEV.RRL_BILL_ORDERS where ID = '[invoice_id]' </VAR>
+<VAR name='stat' type='sql' > 
+select to_char( СТОИМОСТЬ , '999G999G999G999' ) СТОИМОСТЬ  , PC  ,to_char( СТОИМ_ТОВАРА, '999G999G999G999G999' ) СТОИМ_ТОВАРА , round( Стоимость*100/СТОИМ_ТОВАРА , 2 )  PERC  ,
+ round( Стоимость/PC , 0 ) СТОИМ_ДОСТ_ПАЛЛ  
+  from ( select  sum( PRICE ) СТОИМОСТЬ , 
+ sum( TRANSPORT_TASK.pallet_count( T.ID ) ) PC ,  round( sum(TRANSPORT_TASK.stoim_tt(T.ID)) , 0 ) СТОИМ_ТОВАРА 
+ from  RABAEV.RRL_TRANSPORT_TASK T , RRL_TR_VODITEL VOD  
+ where PAY_ORDER_ID =  '[invoice_id]' and  VOD.ID = T.VODITEL_ID   )
+</VAR>
+
+
+<PAGE axes='0' landscape='1' >
+<LABEL   x='600' y='10' repeat='1' >страница [page_number] из [page_count]</LABEL>
+<LABEL   x='600' y='780' repeat='1' >страница [page_number] из [page_count]</LABEL>
+<LABEL fontsize='22' x='50' y='25'  >Реестр маршрутов счета № '[head.NUM]' транспортной компании: '[head.COMPANY]'</LABEL>
+<LABEL fontsize='12' x='50' y='52'  >Внутренний номер счета: № '[head.ID]' </LABEL>
+<LABEL   x='50' y='64'  fontsize='12'   >Время печати : [Date] [Time] </LABEL>
+
+<TABLE y='90' x='50' name='table_1' rows_table_limit='35' yrepeat='30' xrepeat='30' font='12'  >
+<SQL limit='400'  yrepeat='30' xrepeat='28'  >  
+select rownum , Рейс ,  to_char( PRICE , '999G999' ) Стоимость ,Регионы_Рейса , ТИП_ТС  , Машина , Дата , 
+ ФИО_ВОДИТЕЛЯ , PC , to_char( round( СТОИМ_ТОВАРА1 , 0 ) , '999G999G999G999' ) СТОИМ_ТОВАРА , WRS , 
+concat( to_char( round(PRICE*100/СТОИМ_ТОВАРА1,1 )) , '%' ) PERC1, 
+round ( PRICE / PC ,0 ) STOIM_PAL
+from( 
+ select rownum , T.ID Рейс ,  PRICE  , 
+ RRL_TT_REGIONS( T.ID) Регионы_Рейса , TRANSTYPE ТИП_ТС , TRANSPORT Машина , T.SHIPMENT_DATE Дата , 
+ RRL_TT_VODITEL_INFO(T.VODITEL_ID) ФИО_ВОДИТЕЛЯ   , 
+ TRANSPORT_TASK.pallet_count( T.ID ) PC ,   TRANSPORT_TASK.stoim_tt(T.ID) СТОИМ_ТОВАРА1 , 
+ TRANSPORT_TASK.tt_wares( T.ID ) WRS 
+ from  RABAEV.RRL_TRANSPORT_TASK T , RRL_TR_VODITEL VOD  
+ where PAY_ORDER_ID =  '[invoice_id]' and  VOD.ID = T.VODITEL_ID  )
+
+<FIELD name='ФИО_ВОДИТЕЛЯ'   width='16' show='ФИО Водителя'   ></FIELD>
+<FIELD name='PC'   width='3' show='ПАЛЛ'   ></FIELD>
+<FIELD name='ДАТА'   width='6' show='ДАТА'   ></FIELD>
+<FIELD name='СТОИМОСТЬ'   width='5' show='Стоим' align='right'  font='12'   ></FIELD>
+<FIELD name='WRS'   width='17' show='СКЛАДЫ'   ></FIELD>
+<FIELD name='ТИП_ТС'   width='5' show='ТИП ТС'   ></FIELD>
+<FIELD name='ROWNUM'   width='2' show='№'   ></FIELD>
+<FIELD name='СТОИМ_ТОВАРА'   width='6' show='СтоимТов' align='right' font='12'  ></FIELD>
+<FIELD name='PERC1'   width='4' show='%'  align='right' fon3t='12'   ></FIELD>
+<FIELD name='STOIM_PAL'   width='4' show='СТПАЛ' align='right' font='12'   ></FIELD>
+</SQL>
+</TABLE>
+
+ <LABEL   x='50' y='table_1+12' repeat='0' fontsize='12' > Итого сумма транспортных услуг:[stat.СТОИМОСТЬ]</LABEL>
+<LABEL   x='50' y='table_1+26' repeat='0' fontsize='12' > Итого сумма перевезенного товара:[stat.СТОИМ_ТОВАРА]</LABEL>
+<LABEL   x='50' y='table_1+40' repeat='0' fontsize='12' > Средняя стоимость перевозки паллета: [stat.СТОИМ_ДОСТ_ПАЛЛ]  </LABEL>
+<LABEL   x='50' y='table_1+54' repeat='0' fontsize='12' > Доля затрат:[stat.PERC]%   </LABEL>
+<LABEL   x='50' y='table_1+70' repeat='0' fontsize='16' > Подпись начальника ТЛ: ____________________  </LABEL>
+</PAGE>
+</BODY>
+
+
+

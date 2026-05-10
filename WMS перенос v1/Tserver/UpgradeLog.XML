@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="Tserver">
+</Property><Property Name="Файл решения" Value="C:\WMS перенос\Tserver\Tserver.sln">
+</Property><Property Name="Date" Value="24 июня 2013 г.">
+</Property><Property Name="Time" Value="23:19">
+</Property></Properties><Event ErrorLevel="0" Project="Tserver" Source="Tserver\Tserver.csproj" Description="Проект успешно преобразован">
+</Event><Event ErrorLevel="3" Project="Tserver" Source="Tserver\Tserver.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="Tserver.sln" Description="Преобразование решения успешно завершено">
+</Event><Event ErrorLevel="3" Project="" Source="Tserver.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="Tserver" Source="Tserver\Tserver.csproj" Description="Сканирование завершено: обновление для файлов проекта не требуется.">
+</Event></UpgradeLog>

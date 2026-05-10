@@ -1,0 +1,410 @@
+rem Differences between RABAEV@DBWMS and RABAEV@DBWMSUFA, created on 06.10.2011
+rem Press Apply button, or run in Command Window or SQL*Plus connected as RABAEV@DBWMSUFA
+
+--------------------------
+--  New table rcompany  --
+--------------------------
+-- Create table
+create table RCOMPANY
+(
+  inn  VARCHAR2(10) not null,
+  name VARCHAR2(250)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table RCOMPANY
+  add constraint RCOMPANY_PK primary key (INN)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+
+------------------------------
+--  Changed table rrl_addr  --
+------------------------------
+-- Add/modify columns 
+alter table RRL_ADDR add remote_id VARCHAR2(50);
+-- Create/Recreate indexes 
+create index RRL_ADDR_I1 on RRL_ADDR (REMOTE_ID, DELETED3)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+----------------------------------
+--  Changed table rrl_articuls  --
+----------------------------------
+-- Add/modify columns 
+alter table RRL_ARTICULS add author_id VARCHAR2(50);
+--------------------------------
+--  Changed table rrl_events  --
+--------------------------------
+-- Add/modify columns 
+alter table RRL_EVENTS add trans_compl INTEGER;
+-- Add comments to the columns 
+comment on column RRL_EVENTS.trans_compl
+  is 'Транзакция успешно завершена.';
+-----------------------------------------
+--  New table rrl_kross_docking_rules  --
+-----------------------------------------
+-- Create table
+create table RRL_KROSS_DOCKING_RULES
+(
+  region              VARCHAR2(255),
+  ware_id             INTEGER,
+  connection          VARCHAR2(255),
+  destination_ware_id INTEGER,
+  id                  INTEGER
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+
+-----------------------------------
+--  New table rrl_login_history  --
+-----------------------------------
+-- Create table
+create table RRL_LOGIN_HISTORY
+(
+  id         INTEGER,
+  name       VARCHAR2(255),
+  start_time DATE,
+  ip_addr    VARCHAR2(50),
+  version    VARCHAR2(150),
+  end_time   DATE,
+  pass       VARCHAR2(50),
+  succsess   INTEGER default 0
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+
+-------------------------------------
+--  New table rrl_remain_snapshot  --
+-------------------------------------
+-- Create table
+create table RRL_REMAIN_SNAPSHOT
+(
+  id             INTEGER not null,
+  type1          INTEGER not null,
+  snap_shot_time DATE not null,
+  closed         INTEGER default 0,
+  create_time    DATE
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Add comments to the columns 
+comment on column RRL_REMAIN_SNAPSHOT.type1
+  is 'ТИП снимка 1-до ревизии 2-после 3- не привязан к ревизии';
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table RRL_REMAIN_SNAPSHOT
+  add constraint RRL_REMAIN_SNAPSHOT_PK primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate indexes 
+create index RRL_REMAIN_SNAPSHOT_I1 on RRL_REMAIN_SNAPSHOT (TYPE1, CLOSED)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index RRL_REMAIN_SNAPSHOT_I2 on RRL_REMAIN_SNAPSHOT (SNAP_SHOT_TIME, CREATE_TIME)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+
+------------------------------------------
+--  New table rrl_remain_snapshot_rows  --
+------------------------------------------
+-- Create table
+create table RRL_REMAIN_SNAPSHOT_ROWS
+(
+  id           INTEGER not null,
+  articul      VARCHAR2(50),
+  pallet_uid   VARCHAR2(150),
+  cell         VARCHAR2(50),
+  ware_id      INTEGER,
+  snap_time    DATE,
+  remain       NUMBER,
+  condition    INTEGER default 0,
+  snap_shot_id INTEGER
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table RRL_REMAIN_SNAPSHOT_ROWS
+  add constraint RRL_REMAIN_SNAPSHOT_ROWS_I1 primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate indexes 
+create index RRL_PEMAIN_SNAPSHOT_ROWS_I2 on RRL_REMAIN_SNAPSHOT_ROWS (ARTICUL, PALLET_UID, CELL, WARE_ID)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index RRL_REMAIN_SNAPSHOT_ROWS_I11 on RRL_REMAIN_SNAPSHOT_ROWS (SNAP_SHOT_ID)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index RRL_REMAIN_SNAPSHOT_ROWS_I9 on RRL_REMAIN_SNAPSHOT_ROWS (CONDITION)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index RRL_REMIAN_SNAPSHOT_ROWS_I5 on RRL_REMAIN_SNAPSHOT_ROWS (SNAP_TIME)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+
+----------------------------------
+--  Changed table rrl_revizion  --
+----------------------------------
+-- Add/modify columns 
+alter table RRL_REVIZION add close_date DATE;
+alter table RRL_REVIZION add snapshot_before INTEGER;
+alter table RRL_REVIZION add snapshot_after INTEGER;
+--------------------------------------------
+--  Changed table rrl_sborka_pallet_rows  --
+--------------------------------------------
+-- Add/modify columns 
+alter table RRL_SBORKA_PALLET_ROWS modify quantity default 0;
+alter table RRL_SBORKA_PALLET_ROWS add id_event NUMBER;
+alter table RRL_SBORKA_PALLET_ROWS add manual_input VARCHAR2(255);
+alter table RRL_SBORKA_PALLET_ROWS add remains_pick_before NUMBER;
+alter table RRL_SBORKA_PALLET_ROWS add remains_pick_after NUMBER;
+alter table RRL_SBORKA_PALLET_ROWS add close_date DATE;
+----------------------------------------
+--  Changed table rrl_sborka_pallets  --
+----------------------------------------
+-- Add/modify columns 
+alter table RRL_SBORKA_PALLETS add checking_time DATE;
+alter table RRL_SBORKA_PALLETS add remote_id INTEGER;
+-- Create/Recreate indexes 
+create index RRL_SBORKA_PALLETS_CH_TIME_I on RRL_SBORKA_PALLETS (CHECKING_TIME)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+create index RRL_SBORKA_PALLETS_IREMOTE on RRL_SBORKA_PALLETS (REMOTE_ID)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+------------------------------------------------
+--  Changed table rrl_sborka_pallets_history  --
+------------------------------------------------
+-- Add/modify columns 
+alter table RRL_SBORKA_PALLETS_HISTORY add st_number VARCHAR2(50);
+alter table RRL_SBORKA_PALLETS_HISTORY add create_date DATE;
+alter table RRL_SBORKA_PALLETS_HISTORY add ware_id INTEGER;
+alter table RRL_SBORKA_PALLETS_HISTORY add addr VARCHAR2(255);
+alter table RRL_SBORKA_PALLETS_HISTORY add state DATE;
+alter table RRL_SBORKA_PALLETS_HISTORY add stdate DATE;
+alter table RRL_SBORKA_PALLETS_HISTORY add transtask_id INTEGER;
+alter table RRL_SBORKA_PALLETS_HISTORY add sborshik VARCHAR2(50);
+alter table RRL_SBORKA_PALLETS_HISTORY add kladovshik VARCHAR2(50);
+alter table RRL_SBORKA_PALLETS_HISTORY add prooved_by_scan INTEGER;
+alter table RRL_SBORKA_PALLETS_HISTORY add condition INTEGER;
+-- Create/Recreate indexes 
+create index RRL_SBORKA_PALLETS_HISTORY_I2 on RRL_SBORKA_PALLETS_HISTORY (TIME1)
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+----------------------------------------
+--  Changed table rrl_transport_type  --
+----------------------------------------
+-- Add/modify columns 
+alter table RRL_TRANSPORT_TYPE add min_pallet_load INTEGER default 0;
+-------------------------------
+--  Changed table rrl_wares  --
+-------------------------------
+-- Add/modify columns 
+alter table RRL_WARES add plan_trunc_order_by_remain INTEGER default 1;
+-- Add comments to the columns 
+comment on column RRL_WARES.plan_trunc_order_by_remain
+  is 'При планировании заказов обрезать строки по остатку?';
+----------------------------
+--  Changed table rusers  --
+----------------------------
+-- Add/modify columns 
+alter table RUSERS add company_id INTEGER;
+-----------------------------
+--  New table ruser_tabel  --
+-----------------------------
+-- Create table
+create table RUSER_TABEL
+(
+  tabel_no VARCHAR2(10) not null,
+  user_id  NVARCHAR2(50) not null,
+  inn      VARCHAR2(10) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table RUSER_TABEL
+  add constraint RUSER_TABEL_U1 unique (TABEL_NO)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+alter table RUSER_TABEL
+  add constraint RUSER_TABEL_U2 unique (USER_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    minextents 1
+    maxextents unlimited
+  );
+alter table RUSER_TABEL
+  add constraint RUSER_TABEL_FK1 foreign key (INN)
+  references RCOMPANY (INN);
+alter table RUSER_TABEL
+  add constraint RUSER_TABEL_FK2 foreign key (USER_ID)
+  references RUSERS (ID);
+

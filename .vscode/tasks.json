@@ -1,0 +1,71 @@
+﻿{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build WindowsApplication2 x64 Debug",
+      "type": "shell",
+      "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe",
+      "args": [
+        "${workspaceFolder}\\MINI WMS\\WindowsApplication2\\WindowsApplication2\\WindowsApplication2.csproj",
+        "/t:Rebuild",
+        "/p:Configuration=Debug",
+        "/p:Platform=x64",
+        "/p:SignManifests=false",
+        "/p:GenerateManifests=false"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}\\MINI WMS\\WindowsApplication2\\WindowsApplication2"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build WindowsApplication2 x64 Release",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\scripts\\build-windowsapplication2-desktop.ps1"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "run WindowsApplication2 x64 Debug",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "& '${workspaceFolder}\\MINI WMS\\WindowsApplication2\\WindowsApplication2\\bin\\Debug\\WindowsApplication2.exe'"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}\\MINI WMS\\WindowsApplication2\\WindowsApplication2"
+      },
+      "dependsOn": "build WindowsApplication2 x64 Debug",
+      "problemMatcher": []
+    },
+    {
+      "label": "run WindowsApplication2 x64 Release",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "& '${workspaceFolder}\\MINI WMS\\WindowsApplication2\\WindowsApplication2\\bin\\Release\\WindowsApplication2.exe'"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}\\MINI WMS\\WindowsApplication2\\WindowsApplication2"
+      },
+      "dependsOn": "build WindowsApplication2 x64 Release",
+      "problemMatcher": []
+    }
+  ]
+}

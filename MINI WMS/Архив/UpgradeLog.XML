@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="CustomControl.OrientedTextControlsDemo">
+</Property><Property Name="Файл решения" Value="C:\MINI WMS\Архив\CustomControl.OrientedTextControlsDemo.sln">
+</Property><Property Name="Date" Value="7 июня 2011 г.">
+</Property><Property Name="Time" Value="12:33">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="CustomControl.OrientedTextControlsDemo.sln" Description="Успешно создана резервная копия файла C:\MINI WMS\Архив\Backup\CustomControl.OrientedTextControlsDemo.sln">
+</Event><Event ErrorLevel="0" Project="CustomControl.OrientedTextControlsTest" Source="CustomControl.OrientedTextControlsTest\CustomControl.OrientedTextControlsTest.csproj" Description="Project file successfully backed up as C:\MINI WMS\Архив\Backup\CustomControl.OrientedTextControlsTest\CustomControl.OrientedTextControlsTest.csproj">
+</Event><Event ErrorLevel="0" Project="CustomControl.OrientedTextControlsTest" Source="CustomControl.OrientedTextControlsTest\CustomControl.OrientedTextControlsTest.csproj.user" Description="Project user file successfully backed up as C:\MINI WMS\Архив\Backup\CustomControl.OrientedTextControlsTest\CustomControl.OrientedTextControlsTest.csproj.user">
+</Event><Event ErrorLevel="0" Project="CustomControl.OrientedTextControlsTest" Source="CustomControl.OrientedTextControlsTest\AssemblyInfo.cs" Description="File successfully backed up as C:\MINI WMS\Архив\Backup\CustomControl.OrientedTextControlsTest\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="CustomControl.OrientedTextControlsTest" Source="CustomControl.OrientedTextControlsTest\FormTest.cs" Description="File successfully backed up as C:\MINI WMS\Архив\Backup\CustomControl.OrientedTextControlsTest\FormTest.cs">
+</Event><Event ErrorLevel="0" Project="CustomControl.OrientedTextControlsTest" Source="CustomControl.OrientedTextControlsTest\App.ico" Description="File successfully backed up as C:\MINI WMS\Архив\Backup\CustomControl.OrientedTextControlsTest\App.ico">
+</Event><Event ErrorLevel="0" Project="CustomControl.OrientedTextControlsTest" Source="CustomControl.OrientedTextControlsTest\FormTest.resx" Description="File successfully backed up as C:\MINI WMS\Архив\Backup\CustomControl.OrientedTextControlsTest\FormTest.resx">
+</Event><Event ErrorLevel="0" Project="CustomControl.OrientedTextControlsTest" Source="CustomControl.OrientedTextControlsTest\CustomControl.OrientedTextControlsTest.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="CustomControl.OrientedTextControlsTest" Source="CustomControl.OrientedTextControlsTest\CustomControl.OrientedTextControlsTest.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="CustomControl.OrientedTextControlsDemo.sln" Description="Преобразование решения успешно завершено">
+</Event><Event ErrorLevel="3" Project="" Source="CustomControl.OrientedTextControlsDemo.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="CustomControl.OrientedTextControlsTest" Source="CustomControl.OrientedTextControlsTest\CustomControl.OrientedTextControlsTest.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

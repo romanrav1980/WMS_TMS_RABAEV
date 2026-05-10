@@ -1,0 +1,59 @@
+
+Atinav aveLinkBT SDK for Windows CE, Version 2.0  SOFTWARE LICENSE AGREEMENT.
+
+
+IMPORTANT!  The Atinav aveLinkBT SDK for Windows CE,  will be licensed only on the condition that the licensee (referred to in this Agreement as "You") agrees with Atinav, Inc. (referred to in this Agreement as "Atinav") to the terms and conditions set forth in this Agreement.  READ THIS AGREEMENT CAREFULLY.  YOU WILL BE BOUND BY THE TERMS OF THIS AGREEMENT IF YOU SELECT THE ACCEPT OPTION AT THE END OF THE AGREEMENT.  THE ACCEPT OPTION MUST BE SELECTED BEFORE THE SOFTWARE WILL INSTALL ON YOUR SYSTEM.  If You do not agree to the terms contained in this Agreement, please select the DO NOT ACCEPT option at the end of the Agreement and You will not have access to the software.
+
+1. Grant.  Atinav grants You a nontransferable, nonexclusive license to use the enclosed software("the Licensed Software") and the accompanying documentation (the Licensed Software, the media embodying  the Licensed Software, and the documentation are referred to 
+ in this Agreement as the "Licensed Materials"), if You agree to the following terms and conditions.  YOU MAY NOT USE, COPY, MODIFY, OR TRANSFER THE LICENSED MATERIALS, IN WHOLE OR IN PART, EXCEPT AS PROVIDED IN THIS AGREEMENT.
+
+
+2. Term; Termination.  This Agreement is effective from the date on which You execute this agreement and receive the Licensed Materials.  This Agreement may be terminated by You at any time by destroying the Licensed Materials, together with all copies.  It will also terminate automatically within a specific date range and without notice.  It will also terminate automatically and without notice if You fail to comply with any term or condition of this Agreement.  On termination, You must destroy all copies of the Licensed Materials.
+
+3. Ownership.  The Licensed Materials are the sole and exclusive property of Atinav and all intellectual property rights in the Licensed Materials are owned by Atinav and are protected by United States copyright laws, other applicable copyright laws, and international treaty provisions.  Atinav retains all rights not expressly granted.  Atinav's ownership rights are not affected by termination of this Agreement.  You may not remove or alter any copyright notice, trademark or other proprietary rights notice placed by Atinav on or in the Licensed Materials.
+
+4. Use and Copy Restrictions. (a) You may install, copy and use the Licensed Software on one computer within your organization for the sole purpose of evaluating the Licensed Software.  Except as expressly provided in paragraph 6.c. below, You may not give, sell, lease, distribute, or otherwise transfer any of the Licensed Materials or any copies of the Licensed Materials or any portion thereof, to any third party. 
+
+(b) You shall not electronically transfer the Licensed Materials or decompile, disassemble, or reverse engineer the Licensed Materials, or translate the Licensed Materials into another computer language.  You may not copy the Documentation. 
+
+(c) You agree to include the copyright notice set forth on the label of the media and embodied in the Licensed Materials on any copy of the Licensed Materials or any portion thereof, in any form, in whole or in part. 
+
+5. Protection and Security; Distribution of Licensed Materials.  (a) You agree to use your best efforts and take all reasonable steps to safeguard the Licensed Materials to ensure that no unauthorized person shall have access thereto and that no unauthorized copy, publication, disclosure or distribution, in whole or in part, in any form shall be made.  You acknowledge that the Licensed Materials contain valuable, confidential information and trade secrets and that unauthorized use and/or copying are harmful to Atinav.
+
+(b)  The Sample Code that is provided to You as part of the Licensed Materials is provided in source code and object code forms.  The Sample Code is provided to You for illustrative purposes only.  You may not distribute any of the Sample Code.  You may not use the Sample Code, in whole or in part, as part of any application or in any other manner other than for illustrative purposes.
+
+(c) You may use the Licensed Materials to develop and test your own applications and You may incorporate the Framework, Bundles, and APIs into such applications.  However, You may not sell, transfer, license, transmit, make available for downloading or otherwise distribute applications or other products created using the Licensed Materials and/or incorporating the Framework, Bundles, and APIs unless You obtain a separate license from Atinav to do so.
+
+6.   Duty to Back up Data.  IT IS YOUR RESPONSIBILITY TO MAINTAIN PERIODIC BACKUP COPIES OF ALL DATA AND PROGRAMS USED IN CONJUNCTION WITH THE LICENSED SOFTWARE TO PREVENT CATASTROPHIC LOSS.
+
+7.	Limited Warranty. 
+(a) The only warranty Atinav makes to You in connection with the Licensed Materials is that the media on which the Licensed Software is recorded will be replaced without charge,  if Atinav in good faith determines that it was defective and not subject to misuse, and if the media and proof of purchase are returned to Atinav within ninety (90) days of the date of purchase.
+
+(b)	Because Atinav cannot know the purposes for which You acquired the Licensed Materials or the uses to which You will put the Licensed Software, You assume full responsibility for the selection of the computer hardware and Licensed Software and for their installation and use and the results of that use.
+
+8.	Warranty Disclaimers; Liability Limitations.
+(a) Atinav MAKES NO WARRANTY OR REPRESENTATION WITH RESPECT TO THE LICENSED MATERIALS AND THEY ARE LICENSED "AS IS."  THE WARRANTY AND REMEDY PROVIDED ABOVE ARE EXCLUSIVE AND IN LIEU OF ALL OTHER WARRANTIES, EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, AND ANY STATEMENTS OR REPRESENTATIONS MADE BY ANY OTHER PERSON OR FIRM ARE VOID.
+
+YOU AGREE NOT TO USE THE LICENSED MATERIALS IN ANY SITUATION WHERE SIGNIFICANT DAMAGE OR INJURY TO PERSONS, PROPERTY OR BUSINESS COULD OCCUR FROM A SOFTWARE ERROR.
+
+YOU ASSUME ALL RISK AS TO THE SELECTION, USE, PERFORMANCE AND QUALITY OF THE LICENSED MATERIALS.  IN NO EVENT WILL Atinav OR ANY OTHER PARTY WHO HAS BEEN INVOLVED IN THE CREATION, PRODUCTION OR DELIVERY OF THE LICENSED MATERIALS BE LIABLE FOR SPECIAL, DIRECT, INDIRECT, INCIDENTAL, PUNITIVE OR CONSEQUENTIAL DAMAGES, INCLUDING LOSS OF PROFITS, REVENUE, BUSINESS, GOODWILL, DATA OR COMPUTER PROGRAMS OR INABILITY TO USE THE LICENSED MATERIALS, HOWEVER CAUSED AND REGARDLESS OF THE THEORY OF LIABILIY EVEN IF Atinav OR SUCH OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.  IN NO EVENT SHALL Atinav'S OR SUCH OTHER PARTY'S LIABILITY FOR ANY DAMAGES OR LOSS TO YOU OR ANY OTHER PARTY EXCEED THE PURCHASE PRICE PAID FOR THESE LICENSED MATERIALS.
+
+9. General.  (a) If any provision or portion of a provision of this Agreement is determined to be invalid or unenforceable, it shall be deemed omitted and the remaining provisions of this Agreement shall remain in full force and effect.
+
+(b) This Agreement is governed by and construed in accordance with the laws of the State of New Jersey.  Any suit brought with respect to this Agreement may be brought ONLY in New Jersey State Courts and must be filed no later than one (1) year after the purchase date of the Licensed Materials. 
+
+(c) This Agreement constitutes the entire agreement between the parties with respect to the subject matter hereof, and all prior agreements, representations, statements and undertakings are hereby expressly superceded.
+
+(d) Should You have any questions regarding this Agreement, You may contact Atinav by certified mail at Atinav, Inc., 100 Franklin Square Drive, Suite 304, Somerset, NJ 08873, USA.
+
+10. U.S. Government Restricted Rights.  The Licensed Materials are provided with RESTRICTED RIGHTS.  The use, duplication, or disclosure by the Government is subject to restrictions as set forth in subparagraph (c)(1)(ii) of The Rights in Technical Data and Computer Software clause, DFARS 52.227-7013, FAR 52.227-14, FAR 52.227-19, or the equivalent government clause for other agencies.  The contract/manufacturer is Atinav, Inc., 100 Franklin Square Drive, Suite 304, Somerset, NJ 08873, USA.  In the event (1) that the Government seeks to obtain the Licensed Materials pursuant to standard commercial practice, or (2) that the Licensed Materials are licensed on behalf of the Government by a contractor or subcontractor then the Government's rights in the Licensed materials shall be as set forth in this Agreement.
+
+
+I ACCEPT AND AGREE WITH THE TERMS AND CONDITIONS OF THE ABOVE LICENSING AGREEMENT.  The Licensed Materials will be installed onto your system and you will have access to the Licensed Materials.
+
+I DO NOT ACCEPT AND DO NOT AGREE WITH THE TERMS AND CONDITIONS OF THE ABOVE LICENSING AGREEMENT.  You will not have access to the Licensed Materials.
+
+
+
+
+NWK2: 858815.02

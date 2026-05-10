@@ -1,0 +1,80 @@
+ПЕЧАТЬ
+
+ Dictionary<string, string> constants = new Dictionary<string, string>();
+                                constants["zakaz_id"] = o.ToString();
+                                PrintFromXMLFile("temp_label.xml", null, constants);
+--------------------------------------------
+
+Запросы
+
+ List<string> SubQueries = new List<string>();
+            SubQueries.Add(strSQL2);
+            object[] o = ShowQuery(strSQL, "Сводная:  производительность сборщиков  ", new Point(1, 1), "", SubQueries);
+
+
+---------------------------------------------------------------------------
+
+Вызов ХП
+
+
+Dictionary<string , object> values  =  new Dictionary<string,object>();
+values["order_id1"] = CT_NUMBER;
+object ret = wms_get_spfunction_value2("COMPL.reset_2_first_status", values, OracleType.Int32, 0);
+                         
+
+------------------------------------------------------------------------------
+
+Выбор значений справочника
+
+object[] o = ShowQuery(" " );
+if (o.Length > 0)
+            {
+                string st_numb = o[0].ToString();
+}
+
+
+
+
+------------------------------------------  УПРАВЛЕНИЕ ТАБЛИЦЕЙ И ЗАГРУЗКА
+            ВыбратьСтолбцы vs = new ВыбратьСтолбцы();
+            vs._parent = this;
+            vs.dgv = dataGridView11;
+            vs.ShowDialog();
+
+------------------------------------------------------
+
+
+Пример  запроса с расшифровкой
+
+
+
+  string strSQL = " select  RS.SHORTNAME , RS.ARTICUL , sum(RS.ORIGINAL_QUANTITY) ЗАКАЗАНО  , sum(RS.QUANTITY) Собрано  " +
+            " from  RABAEV.RRL_SBORKA_PALLETS PP   , RRL_SBORKA_PALLET_ROWS RS where  RS.PALLET_UID  = PP.PALLET_UID "+
+            " and ST_NUMBER in ( " + str1 + " ) " +
+            "  group by RS.SHORTNAME , RS.ARTICUL ";
+
+           // ShowQuery(strSQL, "Отчет по сборке по выделенным ст ");
+
+            ЗАПРОСЫ ftr = new ЗАПРОСЫ();
+            ftr._parent = this;
+            ftr.sSQL = strSQL;
+            ftr.Header_Text = "Отчет по сборке по выделенным ст ";
+
+            ftr.ИменованныеЗапросы["Подробнее"] = " select  RS.SHORTNAME , RS.ARTICUL , (RS.ORIGINAL_QUANTITY) ЗАКАЗАНО  , (RS.QUANTITY) Собрано  , ST_NUMBER " +
+            " from  RABAEV.RRL_SBORKA_PALLETS PP   , RRL_SBORKA_PALLET_ROWS RS where  RS.PALLET_UID  = PP.PALLET_UID " +
+            " and ST_NUMBER in ( " + str1 + " ) and RS.ARTICUL ='[ARTICUL]' " +
+            "  ";
+
+            ftr.ИменованныеЗапросы["Вычерки"] = " select  RS.SHORTNAME , RS.ARTICUL , (RS.ORIGINAL_QUANTITY) ЗАКАЗАНО  , (RS.QUANTITY) Собрано  , ST_NUMBER " +
+            " from  RABAEV.RRL_SBORKA_PALLETS PP   , RRL_SBORKA_PALLET_ROWS RS where  RS.PALLET_UID  = PP.PALLET_UID " +
+            " and ST_NUMBER in ( " + str1 + " ) and RS.ARTICUL ='[ARTICUL]' " +
+            " and RS.QUANTITY<(RS.ORIGINAL_QUANTITY*0.7) ";
+
+            ftr._parent = this;
+            ftr.ShowDialog();
+
+
+------------------
+
+
+

@@ -1,0 +1,9 @@
+DECLARE
+ cntPos number;
+begin
+cntPos:=0;
+SUPERMAG.mon_st_baseinsert ( cntPos , 'ÑÒêðà009382' )   ;  
+end ;
+
+
+ 

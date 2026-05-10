@@ -1,0 +1,3 @@
+<IF condition='[FP]=1' >
+		<BOXES width='90' height='30' sql='' padding='5' ylimit='800' ></BOXES>
+	</IF>

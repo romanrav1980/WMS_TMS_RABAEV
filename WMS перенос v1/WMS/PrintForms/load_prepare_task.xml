@@ -1,0 +1,53 @@
+<BODY>
+<VAR name='id' >[nakl_id]</VAR>
+<VAR name='head' type='sql' >select * from  RABAEV.RRL_TRANSPORT_TASK  where   ID = [tt_id]  </VAR>
+
+
+
+<PAGE axes='0' landscape='0' >
+
+<LABEL   x='600' y='10' repeat='1' >страница [page_number] из [page_count]</LABEL>
+<LABEL   x='600' y='1100' repeat='1' >страница [page_number] из [page_count]</LABEL>
+
+<LABEL fontsize='24' x='50' y='25'     >Заявка на подготовку паллет к погрузке.</LABEL>
+<LABEL fontsize='18' x='50' y='50'    >Машина №  [head.TRANSPORT] от [head.CREATEDATE]</LABEL>
+<LABEL  x='50' y='70'  fontsize='18'   >Док:  [head.DOCK]</LABEL>
+
+<LABEL fontsize='18' x='550' y='25' type='EAN' width='300' height='60' >PREP_[tt_id]</LABEL>
+<LABEL fontsize='18' x='150' y='1025' type='EAN2' width='300' height='160' >PREP_[tt_id]</LABEL>
+
+
+<TABLE y='100' x='20' name='table_1' rows_table_limit='40' yrepeat='30' xrepeat='30' font='14'  >
+<SQL limit='400'  yrepeat='30' xrepeat='28'  >  
+
+ select ORD  , ST_NUMBER Заявка  ,
+ ZONE  ЗОНА ,
+ CREATE_DATE Дата , 
+ RRL_SKLADNAME_BY_ID( WARE_ID ) СКЛАД , 
+ PALLET_UID Паллет ,ADDR Адрес ,   TRANSPORT_TASK.PRINT_PALLET_WEIGHT( PALLET_UID ) ВЕС  
+
+ from RRL_SBORKA_PALLETS 
+ where TRANSTASK_ID=[tt_id]
+ order by  WARE_ID , ORD , ZONE , PALLET_UID 
+
+<FIELD name='ORD'   width='2' show='№'   ></FIELD>
+<FIELD name='ЗАЯВКА'   width='7' show='Заявка'   ></FIELD>
+<FIELD name='Дата'   width='6' show='Дата'   ></FIELD>
+<FIELD name='СКЛАД'   width='5' show='Склад'   ></FIELD>
+<FIELD name='ПАЛЛЕТ'   width='8' show='Паллет'   ></FIELD>
+<FIELD name='АДРЕС'   width='20' show='Адрес'   ></FIELD>
+
+
+</SQL>
+
+
+</TABLE>
+
+ 
+
+
+</PAGE>
+
+
+</BODY>
+

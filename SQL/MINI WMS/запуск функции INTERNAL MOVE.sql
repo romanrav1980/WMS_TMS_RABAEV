@@ -1,0 +1,12 @@
+DECLARE
+BAKA varchar2(50);
+BEGIN
+BAKA := RRL_INTERNAL_MOVE3(  'P_Ò0000133561_31580_1' ,  'D-7-6-1-3' , 0 , 'KLAD_RABAEV' );
+
+
+
+
+
+DBMS_OUTPUT.put_line(  BAKA );
+
+END;

@@ -1,0 +1,22 @@
+
+<BODY>
+<VAR name='head' type='sql' >select * from  RUSERS where   ID = '[user_id]' </VAR>
+<PAGE axes='0' landscape='0' >
+
+<LABEL   x='50' y='120' type='EAN2'   width='1400' height='100'  >[user_id]</LABEL>
+<LABEL   x='50' y='100'  fontsize='14'   >[user_id]</LABEL>
+<LABEL   x='50' y='250'  fontsize='14'   >[head.NAME]</LABEL>
+
+
+<RECT x1='50' x2='550' y1='50' y2='300' ></RECT>
+
+
+
+
+</PAGE>
+
+
+</BODY>
+
+
+

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="MCSSTestNet">
+</Property><Property Name="Файл решения" Value="\\Ekb-tec\monetka\Рабаев\Работающий пример\MCSSTestNet.sln">
+</Property><Property Name="Файл параметров пользователя" Value="\\Ekb-tec\monetka\Рабаев\Работающий пример\MCSSTestNet.suo">
+</Property><Property Name="Date" Value="17 октября 2011 г.">
+</Property><Property Name="Time" Value="11:55">
+</Property><Property Name="Номер записи" Value="2">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="MCSSTestNet.sln" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\MCSSTestNet.sln">
+</Event><Event ErrorLevel="0" Project="" Source="MCSSTestNet.suo" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\MCSSTestNet.suo">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="MCSSTestNet.csproj" Description="Успешно создана резервная копия файла проекта: \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\MCSSTestNet.csproj">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="MCSSTestNet.csproj.user" Description="Резервная копия проекта успешно создана как \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\MCSSTestNet.csproj.user">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="AssemblyInfo.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="DBComponent.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\DBComponent.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="DeviceSocket.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\DeviceSocket.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="Form1.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\Form1.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="FormMain.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\FormMain.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="FormMain.designer.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\FormMain.designer.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="Program.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\Program.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="VoiceClass.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\VoiceClass.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="MCSSLib.dll" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\MCSSLib.dll">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="Form1.resx" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\Form1.resx">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="FormMain.resx" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup\FormMain.resx">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="MCSSTestNet.csproj" Description="Проект успешно преобразован">
+</Event><Event ErrorLevel="3" Project="MCSSTestNet" Source="MCSSTestNet.csproj" Description="Converted">
+</Event><Event ErrorLevel="2" Project="MCSSTestNet" Source="MCSSTestNet.csproj" Description="">
+</Event><Event ErrorLevel="0" Project="" Source="MCSSTestNet.sln" Description="Преобразование решения успешно завершено">
+</Event><Event ErrorLevel="3" Project="" Source="MCSSTestNet.sln" Description="Converted">
+</Event></UpgradeLog>

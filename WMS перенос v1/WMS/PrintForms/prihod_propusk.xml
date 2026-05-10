@@ -1,0 +1,48 @@
+<BODY>
+
+<VAR name='head' type='sql' >select * from  RABAEV.rrl_prihod_naklad  where   ID = [id]  </VAR>
+
+
+<VAR name='head3' type='sql' >select RRL_SKLADNAME_BY_ID( ware_id ) NAME from  RABAEV.rrl_prihod_naklad  where   ID = [id] 
+ </VAR>
+
+<PAGE axes='0' landscape='0' >
+
+<LABEL fontsize='24' x='50' y='25'     >Пропуск на разгрузку № [id]</LABEL>
+<LABEL fontsize='18' x='50' y='50'    >Машина №  [head.VECHILE_NUMBER] прошла сверку [head.CHECKING_TIME]</LABEL>
+
+<LABEL  x='50' y='70'  fontsize='18'   >Телефон водителя:  [head.VODITEL_PHONE_NUMB]</LABEL>
+<LABEL  x='50' y='90'  fontsize='18'   >Док:  [head.DOCK]</LABEL>
+<LABEL  x='50' y='110'  fontsize='18'   >Поставщик:  [head.POSTAVSHIK_NAME]</LABEL>
+<LABEL  x='50' y='130'  fontsize='18'   >ИНН Поставщика:  [head.SUPP_INN]</LABEL>
+<LABEL  x='50' y='150'  fontsize='18'   >КПП Поставщика:  [head.SUPP_KPP]</LABEL>
+<LABEL  x='50' y='170'  fontsize='18'   >ИД поставки:  [id]</LABEL>
+
+<LABEL fontsize='18' x='50' y='190'    >Принять не позднее                                [head.PLANNING_ACCEPT_TIME]</LABEL>
+
+<LABEL fontsize='18' x='550' y='190'    >пропуск выдал: [user]</LABEL>
+
+
+
+
+<LABEL fontsize='18' x='50' y='210'    >Водитель [head.VODITEL_NAME]</LABEL>
+<LABEL fontsize='18' x='50' y='230'    >Номер склада [head3.NAME]</LABEL>
+
+<LABEL fontsize='36' x='50' y='260'  ></LABEL>
+<LABEL fontsize='150' x='50' y='300' >[head.VECHILE_NUMBER]</LABEL>
+<LABEL fontsize='150' x='50' y='500' >[head.DOCK]</LABEL>
+
+<LABEL fontsize='18' x='50' y='700' >Въезд разрешаю пост № ___ Контролер __________ </LABEL>
+<LABEL fontsize='18' x='50' y='720' >Въезд разрешаю приемосдатчик __________ </LABEL>
+<LABEL fontsize='18' x='50' y='740' >Примечание __________ </LABEL>
+
+
+<LABEL fontsize='18' x='650' y='25' type='EAN' width='300' height='60' >SUPP_[id]</LABEL>
+<LABEL fontsize='18' x='150' y='1025' type='EAN2' width='300' height='160' >SUPP_[id]</LABEL>
+
+
+
+
+
+</PAGE>
+</BODY>

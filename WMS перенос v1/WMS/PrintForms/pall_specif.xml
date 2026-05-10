@@ -1,0 +1,71 @@
+<BODY>
+<VAR name='id' >[nakl_id]</VAR>
+<VAR name='head' type='sql' >select * from  RABAEV.RRL_SBORKA_PALLETS NAK where   NAK.PALLET_UID = '[pall_id]' and rownum=1 </VAR>
+<PAGE axes='0' landscape='1' >
+
+<LABEL   x='900' y='10' repeat='1' >страница [page_number] из [page_count]</LABEL>
+<LABEL fontsize='24' x='50' y='50'  replace_from=' 0:00:00' replace_to=''  repeat='1'  > Паллет № [head.PALLET_UID] от [head.STDATE]</LABEL>
+<LABEL fontsize='24' x='50' y='75'   repeat='1'  > Спецификация на паллет:[pall_id]   [head.ADDR]  </LABEL>
+
+
+<LABEL  x='50' y='128'   >комплектовщик: [head.SBORSHIK]</LABEL>
+<LABEL  x='50' y='140'   >Номер заказа:[head.ADDR]</LABEL>
+<LABEL  x='50' y='152'   replace_from=' 0:00:00' replace_to=''   >Дата СТ: [head.STDATE]</LABEL>
+<LABEL  x='50' y='164'   >Дата Печати: [Date] [Time]</LABEL>
+<LABEL  x='50' y='176'   >Весовой контролер: [head.VESOVSHIK]</LABEL>
+<LABEL  x='50' y='188'   >Вес тары(поддона): [head.WOOD_WEIGHT]</LABEL>
+<LABEL  x='50' y='200'   >Фактический вес паллета: [head.TRIAL_WEIGHT]</LABEL>
+
+
+<LABEL   x='650' y='120' type='EAN' encode='pallet_uid_code' width='200' height='80'  >[pall_id]</LABEL>
+
+
+<TABLE y='224' x='50' name='table_1' rows_table_limit='30' yrepeat='150' xrepeat='50' font='12'  >
+<SQL limit='400'  yrepeat='150' xrepeat='50'  >  
+
+ select rownum , ARTICUL , SHORTNAME , EI , QT   , PACK_COUNT , 
+ COMPL.filter_show_weight_brutto( ORDER_WEIGHT , ARTICUL) ORDER_WEIGHT,  compl.print_perc_defect( PRIHOD_PALLET_UID ) DEF_PRC ,
+ COMPL.print_brutto_defect( PRIHOD_PALLET_UID  , ORDER_WEIGHT  ) DEF_WG , 
+ RRL_GET_MOD_INFO( CURRENT_MOD_ID ) CURRENT_MOD_ID , IS_FULL_PALLET FP
+from ( select RS.ID RSID  , RS.ARTICUL , RS.SHORTNAME , (ORDER_WEIGHT) ORDER_WEIGHT ,(RS.QUANTITY) QT , PACK_COUNT ,  (SORTFIELD) as sort1 ,  CURRENT_MOD_ID  , PRIHOD_PALLET_UID , EI , IS_FULL_PALLET
+from  RABAEV.RRL_SBORKA_PALLETS NAK ,
+RABAEV.RRL_SBORKA_PALLET_ROWS RS 
+ where   NAK.PALLET_UID= '[pall_id]'  
+ and NAK.PALLET_UID = RS.PALLET_UID  
+ order by (SORTFIELD) ) 
+
+
+<FIELD name='rownum'   width='3' show='№'   ></FIELD>
+<FIELD name='ARTICUL'  width='8' show='Артикул'   ></FIELD>
+<FIELD name='SHORTNAME'  width='20' show='Наименование'   ></FIELD>
+<FIELD name='QT'  width='3' show='Нетто/ШТ'  ></FIELD> 
+<FIELD name='PACK_COUNT'  width='3' show='Кор'   ></FIELD>
+<FIELD name='ORDER_WEIGHT'   width='5' show='БРУТТО'   ></FIELD>
+<FIELD name='CURRENT_MOD_ID'   width='8' show='ФАСОВКА'   ></FIELD>
+<FIELD name='DEF_WG'   width='5' show='Вес брака'   ></FIELD>
+<FIELD name='DEF_PRC'   width='5' show='%брака'   ></FIELD>
+
+<FIELD name='FP'   width='4' show='ПАЛЛ'   >
+</FIELD>
+
+
+
+</SQL>
+</TABLE>
+
+
+</PAGE>
+
+
+<PAGE>
+
+<LABEL   x='50' y='150' type='EAN' encode='pallet_uid_code' width='200' height='80'  >[pall_id]</LABEL>
+<LABEL fontsize='24' x='50' y='50'  replace_from=' 0:00:00' replace_to=''   >Паллет № [head.PALLET_UID] от [head.STDATE]</LABEL>
+<LABEL fontsize='48' x='50' y='75'    >Адрес магазина: [head.ADDR]  </LABEL>
+<LABEL  x='50' y='720' fontsize='24'  >комплектовщик:  ____________________________</LABEL>
+<LABEL   x='50' y='50' fontsize='720'  >[head.PALLET_NUMBER]</LABEL>
+
+</PAGE>
+
+
+</BODY>

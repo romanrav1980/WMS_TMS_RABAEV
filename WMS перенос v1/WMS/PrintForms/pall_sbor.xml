@@ -1,0 +1,105 @@
+<BODY>
+<VAR name='id' >[nakl_id]</VAR>
+<VAR name='head' type='sql' >select * from  RABAEV.RRL_SBORKA_PALLETS NAK where   NAK.PALLET_UID = '[zakaz_id]' and rownum=1 </VAR>
+
+
+<VAR name='vol' type='sql' > select  compl.perdiction_count_pall( '[zakaz_id]' ) cp   from dual </VAR>
+
+
+<VAR name='sborka_type' type='sql' > select  
+compl.get_sborka_pall_sborka_text  ( NAK.PALLET_UID ) TXT , 
+compl.get_sborka_pall_sborka_invite  ( NAK.PALLET_UID ) INV1 ,
+TRANSPORT_TASK.RRL_PALLETS_STR(  ST_NUMBER  ) PALLETS_STR 
+
+ from  RABAEV.RRL_SBORKA_PALLETS NAK where   NAK.PALLET_UID = '[zakaz_id]' and rownum=1
+</VAR>
+
+
+
+<PAGE axes='0' landscape='1' >
+
+<LABEL  x='20' y='700'  fontsize='18'   repeat='1' >[sborka_type.INV1]</LABEL>
+
+
+<LABEL   x='900' y='10' repeat='1' >!страница [page_number] из [page_count] v[version] [filename] </LABEL>
+<LABEL fontsize='24' x='50' y='50'  replace_from=' 0:00:00' replace_to=''   > Паллет № [head.PALLET_UID] от [head.STDATE]</LABEL>
+<LABEL fontsize='24' x='50' y='75'    >  Адрес магазина: [head.ADDR]  </LABEL>
+<LABEL  x='50' y='150'   >комплектовщик:  ______________</LABEL>
+<LABEL   x='50' y='162'  >Время получения СТ:  ______________</LABEL>
+<LABEL   x='50' y='174'  >Врем окончания комплектации:  ______________. Оборотная тара [sborka_type.PALLETS_STR]</LABEL>
+<LABEL   x='750' y='20' type='EAN' encode='pallet_uid_code' width='200' height='100'  >[zakaz_id]</LABEL>
+
+<TABLE y='212' x='20' name='table_1' rows_table_limit='15' yrepeat='30' xrepeat='30' font='17'  >
+<SQL limit='400'  yrepeat='30' xrepeat='28'  >  
+
+select rownum , ARTICUL , SHORTNAME , QT2   , COMPL.RRL_COUNT_KOR4( RSID  ) kor, 
+
+COMPL.filter_show_weight_brutto( ORDER_WEIGHT , ARTICUL) ORDER_WEIGHT,
+
+ '' fakt_br , '' fakt_kor , '' n_pall ,
+ RRL_GET_MOD_INFO( CURRENT_MOD_ID ) CURRENT_MOD_ID , QT
+ 
+from ( select RS.ID RSID  , RS.ARTICUL , RS.SHORTNAME , (ORDER_WEIGHT) ORDER_WEIGHT ,  (RS.QUANTITY) QT ,  (SORTFIELD) as sort1
+ ,  CURRENT_MOD_ID  ,    ORDERS.get_ordered_qty( RS.ORIGINAL_QUANTITY , NAK.ORIGINAL_ST_NUMBER , RS.ARTICUL ) QT2
+from  RABAEV.RRL_SBORKA_PALLETS NAK ,
+RABAEV.RRL_SBORKA_PALLET_ROWS RS 
+ where   NAK.PALLET_UID= '[zakaz_id]'  
+ and NAK.PALLET_UID = RS.PALLET_UID  
+ 
+order by (SORTFIELD) ) 
+
+<FIELD name='rownum'   width='3' show='№'   ></FIELD>
+<FIELD name='ARTICUL'  width='8' show='Артикул'   ></FIELD>
+<FIELD name='SHORTNAME'  width='18' show='Наименование'   ></FIELD>
+<FIELD name='QT'  width='3' show='Колв'  ></FIELD> 
+<FIELD name='kor'  width='3' show='Кор'   ></FIELD>
+
+<FIELD name='fakt_br'  width='4' show='Фбрутто'   ></FIELD>
+<FIELD name='fakt_kor'  width='3' show='Фкор'   ></FIELD>
+<FIELD name='n_pall'  width='3' show='№пал'   ></FIELD>
+
+<FIELD name='ORDER_WEIGHT'   width='5' show='БРУТТО'   ></FIELD>
+
+<FIELD name='CURRENT_MOD_ID'   width='8' show='ФАСОВКА'   ></FIELD>
+<FIELD name='QT2'  width='5' show='Заказано'  ></FIELD> 
+
+
+</SQL>
+</TABLE>
+
+<TABLE x='10' y='700'  font='18' >
+<HEAD><TH width='10' name='z1' >номер паллета</TH>
+<TH width='4' >1</TH><TH>2</TH> <TH>3</TH><TH>4</TH> <TH>5</TH><TH>6</TH> <TH>7</TH><TH>8</TH>  <TH>9</TH><TH>10</TH>
+
+<TH>11</TH><TH>12</TH> <TH>13</TH><TH>14</TH> <!-- TH>15</TH><TH>16</TH> <TH>17</TH><TH>18</TH>  <TH>19</TH><TH>20</TH -->
+
+</HEAD>
+<TR><TD  name='z1' >Вес дер. поддона </TD> <TD></TD> <TD></TD>  
+</TR>
+<TR><TD>Вес БРУТТО: </TD> <TD> </TD> <TD> </TD> </TR>
+</TABLE> 
+
+</PAGE>
+
+<!-- LOOP  from='1' to='[vol.CP]'  >
+<PAGE axes='0' landscape='1' >
+	<LABEL   x='50' y='200' fontsize='520'  >[loop_counter]</LABEL>
+	<LABEL   x='50' y='100' fontsize='72'  width='1100' height='700' >[head.ADDR]</LABEL>
+	<LABEL   x='710' y='200' fontsize='30' >Дата СТ: [head.STDATE] </LABEL>
+	<LABEL   x='710' y='240' fontsize='30' >Печать=[Date] [Time]</LABEL>
+	<LABEL   x='710' y='280' fontsize='30' >СТ: [head.ST_NUMBER] </LABEL>
+	<LABEL   x='710' y='320' fontsize='60' >Вес: _ _ _  </LABEL>
+<LINE x1='700' x2='700' y1='200' y2='700' ></LINE>
+<LINE x1='700' x2='1100' y1='400' y2='400' ></LINE>
+<LABEL   x='50' y='700' fontsize='60' >Комплектовщик: __________  </LABEL>
+<LABEL   x='800' y='10' repeat='1' >страница [page_number] из [page_count]</LABEL>
+</PAGE>
+</LOOP -->
+
+
+
+
+</BODY>
+
+
+

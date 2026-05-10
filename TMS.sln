@@ -1,0 +1,42 @@
+﻿Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsApplication2", "MINI WMS\WindowsApplication2\WindowsApplication2\WindowsApplication2.csproj", "{E4537E9F-2542-4774-BC57-F5E4AA449DC0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{0E0B3644-0031-4A53-9009-66468FAF0175}"
+	ProjectSection(SolutionItems) = preProject
+		db\windowsapplication2_xp12_oracle\create_schema.sql = db\windowsapplication2_xp12_oracle\create_schema.sql
+		db\windowsapplication2_xp12_oracle\01_tables.sql = db\windowsapplication2_xp12_oracle\01_tables.sql
+		db\windowsapplication2_xp12_oracle\02_sequences.sql = db\windowsapplication2_xp12_oracle\02_sequences.sql
+		db\windowsapplication2_xp12_oracle\03_functions.sql = db\windowsapplication2_xp12_oracle\03_functions.sql
+		db\windowsapplication2_xp12_oracle\04_procedures.sql = db\windowsapplication2_xp12_oracle\04_procedures.sql
+		db\windowsapplication2_xp12_oracle\05_gap_patch.sql = db\windowsapplication2_xp12_oracle\05_gap_patch.sql
+		db\windowsapplication2_xp12_oracle\06_transport_task_missing_impl.sql = db\windowsapplication2_xp12_oracle\06_transport_task_missing_impl.sql
+		db\windowsapplication2_xp12_oracle\README.md = db\windowsapplication2_xp12_oracle\README.md
+		db\windowsapplication2_xp12_oracle\gap_report.md = db\windowsapplication2_xp12_oracle\gap_report.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{4AB6A44C-6648-40A2-BDB1-C1C2E9B85150}"
+	ProjectSection(SolutionItems) = preProject
+		EXTERNAL_INTEGRATION.MD = EXTERNAL_INTEGRATION.MD
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{0C0C5A29-C2CF-4309-9BFD-20FE18AEE48E}"
+	ProjectSection(SolutionItems) = preProject
+		scripts\build-windowsapplication2-desktop.ps1 = scripts\build-windowsapplication2-desktop.ps1
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E4537E9F-2542-4774-BC57-F5E4AA449DC0}.Debug|x64.ActiveCfg = Debug|x64
+		{E4537E9F-2542-4774-BC57-F5E4AA449DC0}.Debug|x64.Build.0 = Debug|x64
+		{E4537E9F-2542-4774-BC57-F5E4AA449DC0}.Release|x64.ActiveCfg = Release|x64
+		{E4537E9F-2542-4774-BC57-F5E4AA449DC0}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

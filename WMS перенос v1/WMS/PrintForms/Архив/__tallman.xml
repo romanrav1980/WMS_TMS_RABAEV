@@ -1,0 +1,59 @@
+<BODY>
+<VAR name='id' >[nakl_id]</VAR>
+<VAR name='head' type='sql' >select * from  RABAEV.RRL_PRIHOD_NAKLAD NAK where   NAK.ID = [nakl_id]</VAR>
+<PAGE axes='0' landscape='1' >
+
+<LABEL   x='900' y='10' repeat='1' >страница [page_number] из [page_count]</LABEL>
+
+
+<LABEL fontsize='24' x='50' y='50' > Тальманский лист приема поставки поставщика "[head.POSTAVSHIK_NAME]" </LABEL>
+<LABEL fontsize='24' x='50' y='75'   replace_from=' 0:00:00' replace_to=''    > по накладной "[head.NAKLAD_NUMBER]" от "[head.DATE_OF_NAKLAD]". Внутренний номер [head.ID] [head.SM_NAKLAD_NUMBER] </LABEL>
+<LABEL  x='50' y='150'   >Номер авто: "[head.VECHILE_NUMBER]"</LABEL>
+<LABEL   x='50' y='162'  >ФИО Водителя: "[head.VODITEL_NAME]"</LABEL>
+<LABEL   x='50' y='174'  >Подпись водителя:  ______________</LABEL>
+<LABEL   x='500' y='150' replace_from=' 0:00:00' replace_to=''  >Дата приема авто: "[head.DATE_OF_ACCEPT]"</LABEL>
+<LABEL   x='500' y='162'  >Температура: "[head.TEMPERATURE]"</LABEL>
+<LABEL   x='500' y='174'  >Приемщик: "[head.USER_ID]" </LABEL> 
+<LABEL   x='500' y='186'  >Подпись: ______________</LABEL>
+
+
+
+<LABEL fontsize='24' x='50' y='50+table_1' >Итого</LABEL>
+<TABLE y='78+table_1' x='50' name='table_2' >
+<SQL limit='400'  >  
+
+
+
+select
+ART.NAME Товар, 
+sum( PAL.UNIT_COUNT)  ПРИНЯТО , 
+sum ((PAL.WEIGHT_BRUTTO-PAL.WEIGHT_TN))   ВЕС_С_БРАКОМ ,
+sum( ((PAL.WEIGHT_BRUTTO-PAL.WEIGHT_TN ) *( PAL.DEFECT_PERC  ) )  / 100 )   ВЕС_БРАКА , 
+sum( COUNT_KOR )  КОРОБКИ ,
+round(100* sum( ((PAL.WEIGHT_BRUTTO-PAL.WEIGHT_TN ) *( PAL.DEFECT_PERC  ) )  / 100 )  / sum ((PAL.WEIGHT_BRUTTO-PAL.WEIGHT_TN )  ) , 2 ) ПРОЦЕНТ_БРАКА 
+
+ from RABAEV.RRL_PRIHOD_NAKLAD NAK , RABAEV.RRL_PALLETS PAL , RABAEV.RRL_ARTICULS ART 
+ where 
+NAK.ID = PAL.PRIHOD_NAKLAD_ID  and
+ART.ACTICUL = PAL.ARTICUL and
+NAK.ID = [nakl_id]
+group by ART.NAME
+
+
+<FIELD name='ВесНетто'  width='8' show='Вес нетто' ></FIELD>
+<FIELD name='Товар'  width='25'   ></FIELD> 
+<FIELD name='ПАЛЛЕТ'  width='14'  ></FIELD>
+<FIELD name='ПРИНЯТО'  width='6'  ></FIELD>
+<FIELD name='КОРОБКИ'  width='6' show='Коробки'   ></FIELD>
+<FIELD name='ВЕС_С_БРАКОМ'  width='8' show='Вес с браком' ></FIELD>
+<FIELD name='ВЕС_БРАКА'  width='6' show='Вес брака' ></FIELD>
+<FIELD name='ПРОЦЕНТ_БРАКА'  width='6' show='% брака' ></FIELD>
+<FIELD name='КОРОБКИ'  width='12' show='КОРОБКИ'   ></FIELD>
+</SQL>
+</TABLE>
+
+
+
+
+</PAGE>
+</BODY>

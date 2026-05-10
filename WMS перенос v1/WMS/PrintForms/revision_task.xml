@@ -1,0 +1,42 @@
+<BODY>
+<VAR name='id' >[rev_id]</VAR>
+<!-- VAR name='head' type='sql' >select * from  RABAEV.RRL_SBORKA_PALLETS NAK where   NAK.ST_NUMBER = '[zakaz_id]' and rownum=1 </VAR -->
+
+<PAGE axes='0' landscape='1' >
+
+<LABEL   x='900' y='10' repeat='1' >страница [page_number] из [page_count]</LABEL>
+<LABEL fontsize='24' x='50' y='50'  replace_from=' 0:00:00' replace_to=''   >Ведомость инвентаризации № [rev_id]</LABEL>
+
+<LABEL  repeat='1' x='50' y='730'  fontsize='16' >Кладовщик:  ___________________________</LABEL>
+<LABEL  repeat='1' x='50' y='746'  fontsize='16' >Время начала ревизии:  _________________</LABEL>
+<LABEL  repeat='1' x='50' y='762'  fontsize='16' >Врем окончания ревизии:  _______________</LABEL>
+
+
+<TABLE y='90' x='50' name='table_1' rows_table_limit='34' yrepeat='50' xrepeat='50' font='14'  >
+<SQL limit='400'  yrepeat='10' xrepeat='10'  >  
+
+select   RR.ID,RR.CELL , RR.COUNT1, COUNT_KOR, REMARK1 
+ , CEL.X , CEL.Y , CEL.Z , RR.ARTICUL1   , REVIZION.articul_name( RR.ARTICUL1) artname,  RR.NUM_OF_PALL
+ from RABAEV.RRL_REVISION_ROW RR , RRL_CELLS CEL
+ where RR.CELL=CEL.CELL and REVISION_ID= [rev_id] order by CEL.Z , CEL.Y , CEL.X 
+ 
+
+<FIELD name='CELL'   width='6' show='Ячейка'   ></FIELD>
+<FIELD name='COUNT1'   width='5' show='Штуки'   ></FIELD>
+<FIELD name='COUNT_KOR'   width='5' show='Коробки'   ></FIELD>
+<FIELD name='REMARK1'   width='14' show='Примечание'   ></FIELD>
+<FIELD name='ARTICUL1'   width='8' show='Артикул'   ></FIELD>
+<FIELD name='NUM_OF_PALL'   width='6' show='КолПалл'   ></FIELD>
+<FIELD name='artname'   width='28' show='Имя артикула'   ></FIELD>
+
+
+
+
+
+</SQL>
+</TABLE>
+
+
+
+</PAGE>
+</BODY>

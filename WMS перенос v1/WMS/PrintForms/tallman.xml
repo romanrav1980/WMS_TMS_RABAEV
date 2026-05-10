@@ -1,0 +1,107 @@
+<BODY>
+<VAR name='id' >[nakl_id]</VAR>
+<VAR name='head' type='sql' >select * from  RABAEV.RRL_PRIHOD_NAKLAD NAK where   NAK.ID = [nakl_id]</VAR>
+<PAGE axes='0' landscape='1' >
+
+<LABEL   x='1000' y='10' repeat='1' >страница [page_number] из [page_count]</LABEL>
+<LABEL fontsize='24' x='50' y='50' > Тальманский лист приема поставки поставщика "[head.POSTAVSHIK_NAME]" </LABEL>
+<LABEL fontsize='24' x='50' y='75'   replace_from=' 0:00:00' replace_to=''    > по накладной "[head.NAKLAD_NUMBER]" от "[head.DATE_OF_NAKLAD]". Внутренний номер [head.ID] [head.SM_NAKLAD_NUMBER] </LABEL>
+<LABEL  x='50' y='150'   >Номер авто: "[head.VECHILE_NUMBER]"</LABEL>
+<LABEL   x='50' y='162'  >ФИО Водителя: "[head.VODITEL_NAME]"</LABEL>
+<LABEL   x='50' y='174'  >Подпись водителя:  ______________</LABEL>
+<LABEL   x='500' y='150' replace_from=' 0:00:00' replace_to=''  >Дата приема авто: "[head.DATE_OF_ACCEPT]"</LABEL>
+<LABEL   x='500' y='162'  >Температура: "[head.TEMPERATURE]"</LABEL>
+<LABEL   x='500' y='174'  >Приемщик: "[head.USER_ID]" </LABEL> 
+<LABEL   x='500' y='186'  >Подпись: ______________</LABEL>
+
+
+<TABLE y='212' x='10' name='table_1'  rows_table_limit='25' yrepeat='40' xrepeat='10'    >
+<SQL limit='400'  >  
+
+select
+rownum , 
+ART.NAME Товар, 
+PAL.UID_PALLET ПАЛЛЕТ,
+(PAL.WEIGHT_BRUTTO ) ВЕСБРУТТОИТН,
+PAL.WEIGHT_TN Вес_ТН,
+PAL.UNIT_COUNT ШТУКИ , 
+concat(  to_char( PAL.DEFECT_PERC ) , '%' )   Отход ,
+RRL_GET_MOD_INFO( MOD_ID )  ФАСОВКА ,
+PAL.COUNT_KOR , 
+PAL.GTD 
+
+from RABAEV.RRL_PRIHOD_NAKLAD NAK , RABAEV.RRL_PALLETS PAL , RABAEV.RRL_ARTICULS ART 
+where 
+NAK.ID = PAL.PRIHOD_NAKLAD_ID  and
+ART.ACTICUL = PAL.ARTICUL and
+NAK.ID = [nakl_id]
+
+
+
+<FIELD name='rownum'   width='3' show='№'   ></FIELD>
+
+
+<FIELD name='COUNT_KOR'   width='5' show='Коробки'   ></FIELD>
+
+<FIELD name='Нетто'   width='7' show='Принято Нетто'   ></FIELD>
+<FIELD name='Брутто'  width='5' show='Брутто'   ></FIELD>
+<FIELD name='Вес_ТН'  width='4' show='Вес ТН'   ></FIELD>
+<FIELD name='Товар'  width='18'   ></FIELD> <FIELD name='ПАЛЛЕТ'  width='14'   ></FIELD>
+<FIELD name='ВЕСБРУТТОИТН'  width='8' show='Вес брутто+ТН'   ></FIELD>
+<FIELD name='Вес_ТН'  width='4' show='Вес ТН'   ></FIELD>
+<FIELD name='ФАСОВКА'  width='10' show='Фасовка'   ></FIELD>
+<FIELD name='GTD'  width='16' show='Номер ГТД'   ></FIELD>
+
+
+</SQL>
+</TABLE>
+
+<LABEL fontsize='24' x='10' y='24+table_1' >Итого</LABEL>
+
+<TABLE y='78+table_1' x='10' name='table_2' >
+<SQL limit='400'  >  
+select
+ART.NAME Товар, 
+sum( PAL.UNIT_COUNT)  ПРИНЯТО , 
+sum ( PAL.WEIGHT_BRUTTO )   ВЕС_БРУТТО_С_ТН ,
+sum ( PAL.WEIGHT_TN )   ВЕС_ТН ,
+sum ((PAL.WEIGHT_BRUTTO-PAL.WEIGHT_TN))   ВЕС_С_БРАКОМ ,
+sum( ((PAL.WEIGHT_BRUTTO-PAL.WEIGHT_TN ) *( PAL.DEFECT_PERC  ) )  / 100 )   ВЕС_БРАКА , 
+sum( COUNT_KOR )  КОРОБКИ,
+round(100* sum( ((PAL.WEIGHT_BRUTTO-PAL.WEIGHT_TN ) *( PAL.DEFECT_PERC  ) )  / 100 )  / sum ((PAL.WEIGHT_BRUTTO-PAL.WEIGHT_TN )  ) , 2 ) ПРОЦЕНТ_БРАКА ,
+PAL.GTD GTD , 
+max( PRIHOD.get_pallet_price(  NAK.ID , ART.acticul ) ) ЦЕНА , 
+sum( round( PAL.UNIT_COUNT * PRIHOD.get_pallet_price(  NAK.ID , ART.acticul ) , 2 ) ) СУММА 
+ from RABAEV.RRL_PRIHOD_NAKLAD NAK , RABAEV.RRL_PALLETS PAL , RABAEV.RRL_ARTICULS ART 
+ where 
+NAK.ID = PAL.PRIHOD_NAKLAD_ID  and
+ART.ACTICUL = PAL.ARTICUL and
+NAK.ID = [nakl_id]
+group by ART.NAME , PAL.GTD 
+<FIELD name='ВЕС_БРУТТО_С_ТН'  width='8' show='БРУТТО+ТН' ></FIELD>
+<FIELD name='ВесНетто'  width='8' show='Вес нетто' ></FIELD>
+<FIELD name='Товар'  width='24'   ></FIELD> 
+<FIELD name='ПАЛЛЕТ'  width='14'  ></FIELD>
+<FIELD name='ПРИНЯТО'  width='6'  ></FIELD>
+<FIELD name='КОРОБКИ'  width='5' show='Коробки'   ></FIELD>
+<FIELD name='ВЕС_С_БРАКОМ'  width='8' show='Вес с браком' ></FIELD>
+<FIELD name='ВЕС_БРАКА'  width='6' show='Вес брака' ></FIELD>
+<FIELD name='ПРОЦЕНТ_БРАКА'  width='6' show='% брака' ></FIELD>
+<FIELD name='КОРОБКИ'  width='12' show='КОРОБКИ'   ></FIELD>
+<FIELD name='GTD'  width='7' show='Номер ГТД'   ></FIELD>
+
+ 
+<FIELD name='ЦЕНА'  width='5' show='ЦЕНА'   ></FIELD>
+<FIELD name='СУММА'  width='7' show='СУММА'  summ='1'  ></FIELD>
+
+</SQL>
+
+<TR>
+	<TD></TD><TD></TD>
+	<TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>итого</TD>
+	<TD>[table_2.СУММА.sum]</TD>
+</TR>
+</TABLE>
+
+</PAGE>
+</BODY>

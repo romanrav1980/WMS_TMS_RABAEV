@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="MCSSTestNet">
+</Property><Property Name="Файл решения" Value="\\Ekb-tec\monetka\Рабаев\Работающий пример\MCSSTestNet.sln">
+</Property><Property Name="Файл параметров пользователя" Value="\\Ekb-tec\monetka\Рабаев\Работающий пример\MCSSTestNet.suo">
+</Property><Property Name="Date" Value="18 октября 2011 г.">
+</Property><Property Name="Time" Value="13:22">
+</Property><Property Name="Номер записи" Value="3">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="MCSSTestNet.sln" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\MCSSTestNet.sln">
+</Event><Event ErrorLevel="0" Project="" Source="MCSSTestNet.suo" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\MCSSTestNet.suo">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="MCSSTestNet.csproj" Description="Успешно создана резервная копия файла проекта: \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\MCSSTestNet.csproj">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="MCSSTestNet.csproj.user" Description="Резервная копия проекта успешно создана как \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\MCSSTestNet.csproj.user">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="AssemblyInfo.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="DBComponent.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\DBComponent.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="DeviceSocket.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\DeviceSocket.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="Form1.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\Form1.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="FormMain.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\FormMain.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="FormMain.designer.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\FormMain.designer.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="Program.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\Program.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="VoiceClass.cs" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\VoiceClass.cs">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="MCSSLib.dll" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\MCSSLib.dll">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="Form1.resx" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\Form1.resx">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="FormMain.resx" Description="Успешно создана резервная копия файла \\Ekb-tec\monetka\Рабаев\Работающий пример\Backup1\FormMain.resx">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="MCSSTestNet.csproj" Description="Проект успешно преобразован">
+</Event><Event ErrorLevel="3" Project="MCSSTestNet" Source="MCSSTestNet.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="MCSSTestNet.sln" Description="Для этого файла не требуется преобразование.">
+</Event><Event ErrorLevel="3" Project="" Source="MCSSTestNet.sln" Description="Преобразование не требуется">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="Form1.resx" Description="Преобразование файла завершилось успешно">
+</Event><Event ErrorLevel="3" Project="MCSSTestNet" Source="Form1.resx" Description="Converted">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="FormMain.resx" Description="Преобразование файла завершилось успешно">
+</Event><Event ErrorLevel="3" Project="MCSSTestNet" Source="FormMain.resx" Description="Converted">
+</Event><Event ErrorLevel="0" Project="MCSSTestNet" Source="MCSSTestNet.csproj" Description="Сканирование завершено: обновление для файлов проекта не требуется.">
+</Event></UpgradeLog>

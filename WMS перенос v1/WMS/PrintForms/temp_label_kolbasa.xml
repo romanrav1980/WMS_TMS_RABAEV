@@ -1,0 +1,35 @@
+<BODY>
+<VAR name='id' >[nakl_id]</VAR>
+<VAR name='head' type='sql' >select * from  RABAEV.RRL_SBORKA_PALLETS NAK where   NAK.PALLET_UID = '[pall_id]' and rownum=1 </VAR>
+ 
+
+<VAR name='head2' type='sql' >  select count( PALLET_UID ) COUNTPALL , max( RRL_ST_ROW_COUNT( ST_NUMBER ) ) ROWS1
+	from RABAEV.RRL_SBORKA_PALLETS where ST_NUMBER in 
+	( select ST_NUMBER from  RABAEV.RRL_SBORKA_PALLETS NAK where NAK.PALLET_UID = '[pall_id]' and rownum=1 )
+</VAR>
+
+
+<VAR name='stat' type='sql' >
+select count(  pts.quantity ) RS , sum( RABAEV.RRL_COUNT_KOR( articul , quantity ) ) KOR
+  from rrl_sborka_pallet_rows pts    
+	where pts.pallet_uid ='[pall_id]'</VAR>
+
+
+
+<PAGE axes='0' landscape='1' >
+
+<LABEL fontsize='24' x='50' y='50'  replace_from=' 0:00:00' replace_to=''   >Паллет № [head.PALLET_UID] от [head.STDATE]</LABEL>
+<LABEL fontsize='48' x='50' y='75'    >Адрес магазина: [head.ADDR]  </LABEL>
+<LABEL  x='50' y='150'  fontsize='18'  >комплектовщик:[head.SBORSHIK] строк:[head2.ROWS1] паллет:[head2.COUNTPALL] коробок:[stat.KOR] </LABEL>
+
+<LABEL   x='10' y='200' fontsize='150'  >[head.ST_NUMBER]</LABEL>
+
+<LABEL   x='450' y='500' fontsize='200'  >[head.PALLET_NUMBER]</LABEL>
+
+
+</PAGE>
+
+</BODY>
+
+
+

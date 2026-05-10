@@ -1,0 +1,16 @@
+PL/SQL Developer Test script 3.0
+5
+begin
+  -- Call the function
+  :result := cross_docking.sync_sborka_pall(sb_pall_uid => :sb_pall_uid);
+  
+end;
+2
+result
+0
+4
+sb_pall_uid
+1
+OP_ΡÒσπρ005311_2
+5
+0

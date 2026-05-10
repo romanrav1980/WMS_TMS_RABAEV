@@ -1,0 +1,244 @@
+#
+#  You can create a schema script from a command line
+#  using this file with a few modifications.
+#
+#  Lines that start with a # are comments.
+#
+#  Calling TOAD like this will invoke the generate schema script screen
+#, from command line :
+#
+#  "C:\Toad for Oracle 9\toad.exe" -c RABAEV/<8,0,0,0,183,210,46,212,101,201,249,207,55,110,252,22,12,24,194,44>@REFSTOCK GSS="C:\MINI WMS\SCRIPT\4.txt"
+#
+#  Obviously, your path to TOAD may differ, along with your connect info.
+#  The file name after "GSS=" is the name of this file.
+#
+#  To disable the Team Coding login prompt:
+#  Add "TC=NO" (without the quotes) in the command line string.
+#
+#  You can also generate a schema script from a command file like this:
+#
+#  "C:\Toad for Oracle 9\toad.exe" -c RABAEV/<8,0,0,0,183,210,46,212,101,201,249,207,55,110,252,22,12,24,194,44>@REFSTOCK CMDFILE=c:\mycommandfile.txt
+#
+#  Where mycommandfile.txt might look like this, first generating a schema script,
+#  then performing an index rebuild, then a schema comparison and finally building
+#  some html schema documentation.
+#
+#  GSS=c:\schemascript.txt
+#  RMI=c:\indrebuild.txt
+#  COMP=c:\schemacomp1.txt
+#  GENHTML=c:\html1.txt
+#
+#
+#  When you start TOAD with the GSS command line option, the generation of the schema
+#  script will start automatically.  So there are only two possible commands, one to close
+#  the Generate schema script window, and one to close TOAD after the script is created.
+#  Do not put more than one command per line.  Do not leave spaces before the commands.
+#
+#  Command Summary : 
+#  -----------------
+#  CloseGSS
+#  CloseTOAD
+#
+#
+########################################
+#            Begin Settings            #
+########################################
+rbSchema|1
+rbDefFile|0
+cbShowDDL|1
+cbTree|1
+cboSource|
+eSQLFile|
+cbManyFiles|0
+eDefFile|
+cbHTML|0
+cbIndivDDLFiles|0
+eTopDir|
+rbSQLExt|1
+rbToadExt|0
+cbRelativePath|0
+cbPctAlways|0
+sePctAlways|0
+cbInitialNext|0
+cbScaleBy|0
+seScaleBy|25
+seMinSize|4
+cbMinSize|KB
+seMaxSize|200
+cbMaxSize|MB
+rgBasedOn|0
+seSmallThresh|256
+cbSmallThreshUnits|KB
+seMediumThresh|5
+cbMediumThreshUnits|MB
+seLargeThresh|100
+cbLargeThreshUnits|MB
+rbForce|0
+seSmallSize|64
+cbSmallUnits|KB
+seMediumSize|512
+cbMediumUnits|KB
+seLargeSize|10
+cbLargeUnits|MB
+seHugeSize|200
+cbHugeUnits|MB
+rbRound|0
+seRound|2
+cbChangeSizes|0
+rbAllTables|0
+rbSizeTables|0
+ComboSmallTableTS|Select a Tablespace...
+ComboMediumTableTS|Select a Tablespace...
+ComboLargeTableTS|Select a Tablespace...
+ComboHugeTableTS|Select a Tablespace...
+ComboAllTableTS|Select a Tablespace...
+cbTable|0
+rbAllTabParts|0
+rbSizeTabParts|0
+ComboSmallTabPartsTS|Select a Tablespace...
+ComboMediumTabPartsTS|Select a Tablespace...
+ComboLargeTabPartsTS|Select a Tablespace...
+ComboHugeTabPartsTS|Select a Tablespace...
+ComboAllTabPartsTS|Select a Tablespace...
+cbTabParts|0
+rbAllIndParts|0
+rbSizeIndParts|0
+ComboAllIndPartsTS|Select a Tablespace...
+ComboSmallIndPartsTS|Select a Tablespace...
+ComboMediumIndPartsTS|Select a Tablespace...
+ComboLargeIndPartsTS|Select a Tablespace...
+ComboHugeIndPartsTS|Select a Tablespace...
+cbIndParts|0
+rbAllLobs|0
+rbSizeLobs|0
+ComboSmallLOBTS|Select a Tablespace...
+ComboMediumLOBTS|Select a Tablespace...
+ComboLargeLOBTS|Select a Tablespace...
+ComboHugeLOBTS|Select a Tablespace...
+ComboAllLOBTS|Select a Tablespace...
+cbLobs|0
+rbAllIndex|0
+rbSizeIndex|0
+ComboAllIndexTS|Select a Tablespace...
+ComboSmallIndexTS|Select a Tablespace...
+ComboMediumIndexTS|Select a Tablespace...
+ComboLargeIndexTS|Select a Tablespace...
+ComboHugeIndexTS|Select a Tablespace...
+cbIndex|0
+cbXMLSchemas|0
+cbUser|1
+cbDefTS|0
+cbRoles|0
+cbTempTS|0
+cbProfiles|0
+cbAllTS|1
+cbNoRecycle|0
+rgAuditObjs|0
+cbAuditSQLs|0
+cbClusters|1
+cbConstraints|1
+cbCheckConstraints|1
+cbFKConstraints|1
+cbPKConstraints|1
+cbUKConstraints|1
+cbContexts|0
+cbDatabaseLinks|1
+cbDimensions|0
+cbDirectories|0
+cbFunctions|1
+rgGrants|0
+cbIndexes|1
+cbJavaClass|0
+cbJavaResource|0
+cbJavaSource|0
+cbJobs|0
+cbLibraries|1
+cbSnapshots|1
+cbCommentsSnap|0
+cbCommentsSnapCols|0
+cbSnapshotLogs|1
+cbOutlines|0
+cbPackages|1
+cbPackageBodies|1
+cbPartitions|1
+cbPolicies|0
+cbPolicyGroups|0
+cbProcedures|1
+cbQueues|1
+cbQueueTables|1
+cbRefreshGroups|0
+cbChains|0
+cbPrograms|0
+cbSchedules|0
+cbSchedJobs|0
+cbSequences|1
+cbSynonyms|0
+cbPubSyn|0
+cbTables|1
+cbCommentsTab|1
+cbCommentsTabCols|1
+cbTriggers|1
+cbDatatypes|1
+cbTypeBodies|0
+cbViews|1
+cbCommentsView|1
+cbCommentsViewCols|1
+cbAuditObjs|0
+cbGrants|1
+cbStorage|0
+cbTSOnly|0
+cbNoLobStorage|0
+cbNomonitoring|0
+cbNocache|0
+cbNoParallel|0
+cbNologging|0
+cbNoCompress|0
+cbUEnNoV|0
+cbPEnNoV|0
+cbFEnNoV|0
+cbCEnNoV|0
+cbCExceptions|0
+cbFExceptions|0
+cbPExceptions|0
+cbUExceptions|0
+eExceptions|EXCEPTIONS
+rbConTable|0
+rbConSep|0
+rbConBig|0
+cbNamingStandards|0
+cbNoInd|0
+cbJobNoParse|0
+cbJobForce|0
+cbJobNoSnap|0
+cbJobIntNext|0
+cbResetSequences|0
+cbNULLs|0
+cbNoParseTriggers|0
+cbFormatSQL|0
+cbViewCols|0
+cbForceViews|0
+cbFormatPLSQL|0
+cbSort|0
+cbSetDefineOff|0
+cbDrop|0
+cbShowErrors|1
+cbSQLPlusPrompt|0
+cbOneLine|0
+cbSlash|0
+cbIncludeComments|0
+cbShowDependencies|0
+cbCount|0
+EditAltSchema|
+cbAltSchema|0
+cbSchemaName|0
+cbDropWithPurge|0
+cbObjNamesLike|0
+cbLikeCaseSens|0
+EditObjNamesLike|A%
+cbLikeNotLike|0
+cboTableTSFilter|All Tablespaces
+cbTableTSNull|0
+cboIndexTSFilter|All Tablespaces
+cbIndexTSNull|0
+btnSpecifyObjectSet|1
+SelectedSchema|RABAEV

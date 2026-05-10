@@ -1,0 +1,62 @@
+<BODY>
+<VAR name='id' >[nakl_id]</VAR>
+<VAR name='head' type='sql' >select * from  RABAEV.RRL_SBORKA_PALLETS NAK where   NAK.ST_NUMBER = '[order_id]' and rownum=1 </VAR>
+
+
+<VAR name='head2' type='sql' >select TRANSPORT_TASK.RRL_PALLETS_STR('[nakl_id]') fff from dual</VAR>
+
+
+
+<PAGE axes='0' landscape='1' >
+
+<LABEL   x='900' y='10' repeat='1' >страница [page_number] из [page_count]</LABEL>
+<LABEL fontsize='24' x='50' y='50'  replace_from=' 0:00:00' replace_to=''  repeat='1'  > Паллет № [head.PALLET_UID] от [head.STDATE]</LABEL>
+<LABEL fontsize='24' x='50' y='75'   repeat='1'  > Спецификация на собранный весовой заказ: [order_id]   [head.ADDR]  </LABEL>
+
+
+
+<LABEL  x='50' y='140'   >Номер заказа:[head.ADDR]</LABEL>
+<LABEL  x='50' y='152'   replace_from=' 0:00:00' replace_to=''   >Дата СТ: [head.STDATE]</LABEL>
+<LABEL  x='50' y='164'   >Дата Печати: [Date] [Time]</LABEL>
+<LABEL  x='50' y='176'   >Весовой контролер: [head.VESOVSHIK]</LABEL>
+<LABEL  x='350' y='140'   >Оборотная тара: [head2.fff]</LABEL>
+
+
+
+
+<TABLE y='224' x='50' name='table_1' rows_table_limit='30' yrepeat='150' xrepeat='50' font='12'  >
+<SQL limit='400'  yrepeat='150' xrepeat='50'  >  
+
+select   ARTICUL , SHORTNAME , round( SUM( QT ) , 2 ) QT  , round( sum( www ) , 2 ) ORDER_WEIGHT
+from ( select RS.ID RSID , RS.ORDER_WEIGHT www  , RS.ARTICUL , RS.SHORTNAME , (ORDER_WEIGHT) ORDER_WEIGHT ,  (RS.QUANTITY) QT ,  (SORTFIELD) as sort1
+ ,  CURRENT_MOD_ID  
+from  RABAEV.RRL_SBORKA_PALLETS NAK ,
+RABAEV.RRL_SBORKA_PALLET_ROWS RS 
+ where   NAK.ST_NUMBER='[order_id]'  
+ and NAK.PALLET_UID = RS.PALLET_UID  ) 
+ GROUP BY  ARTICUL , SHORTNAME 
+ order by ( max(sort1))
+ 
+
+<FIELD name='rownum'   width='3' show='№'   ></FIELD>
+<FIELD name='ARTICUL'  width='8' show='Артикул'   ></FIELD>
+<FIELD name='SHORTNAME'  width='20' show='Наименование'   ></FIELD>
+<FIELD name='QT'  width='6' show='Нетто/ШТ' summ='1'  ></FIELD> 
+<FIELD name='ORDER_WEIGHT'   width='6' show='БРУТТО'  summ='1' ></FIELD>
+
+
+</SQL>
+<TR>
+	<TD></TD><TD>итого</TD>
+	<TD>[table_1.QT.sum]</TD><TD>[table_1.ORDER_WEIGHT.sum]</TD>
+</TR>
+</TABLE>
+
+
+</PAGE>
+
+
+
+
+
+</BODY>

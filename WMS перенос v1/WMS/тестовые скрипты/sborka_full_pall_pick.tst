@@ -1,0 +1,31 @@
+PL/SQL Developer Test script 3.0
+7
+begin
+  -- Call the function
+  :result := test_pack.sborka_full_pall_pick(sb_pall_uid => :sb_pall_uid,
+                                             hran_pall_uid => :hran_pall_uid,
+                                             cell1 => :cell1,
+                                             user_id1 => :user_id1);
+end;
+5
+result
+1
+-4
+4
+sb_pall_uid
+1
+W6P1252644
+5
+hran_pall_uid
+1
+P_Ò0000036908_61000_1
+5
+cell1
+1
+ddd
+5
+user_id1
+1
+R
+5
+0

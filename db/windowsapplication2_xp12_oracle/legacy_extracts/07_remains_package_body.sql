@@ -1,0 +1,1093 @@
+create or replace package body REMAINS is
+
+
+--  ???? ?????????? :  
+--  1 = ????? ????????
+--  2 = ????? ???????
+--  3 = ?????????? ???????? , ??????????? ?? ???????.
+
+  -- Function and procedure implementations
+  function create_snapshot( type2 int  ) return int is
+
+    ID1 int;
+  begin
+  select  RRL_REMAIN_SNAPSHOT_SQ.NEXTVAL into ID1 from dual;  
+  insert into RRL_REMAIN_SNAPSHOT (ID ,TYPE1 , create_time , SNAP_SHOT_TIME  ) values ( ID1 , type2 , systimestamp , systimestamp ); 
+   
+    return ID1;
+  end;
+
+-- ??????????? ?????? ? ??????
+function add_row_2_snapshot( 
+  snap_shot_id1 int , 
+  cell1 varchar , 
+  articul1 varchar2 ) return int is
+  tmp int;
+  ware_id1 int;
+  ID1 int;
+  snap_time1 Date;
+  cursor sss is select rm.uid_poleta , rm.remain , pts.expiry_date  from rrl_remains rm , rrl_pallets pts where 
+  pts.uid_pallet = rm.uid_poleta and rm.cell=cell1 and pts.articul=articul1 ;
+  
+begin 
+
+  if(cell1 is null) or (  articul1 is null )  then 
+           return -1;
+  end if;
+
+  select closed , SNAP_SHOT_TIME into tmp , snap_time1  from   RRL_REMAIN_SNAPSHOT where ID=snap_shot_id1 ;  
+  if(tmp=1 ) then 
+           return -1;
+  end if;
+  
+  begin
+      select ID into ID1 from RRL_REMAIN_SNAPSHOT_ROWS 
+             where ARTICUL=articul1 and CELL=cell1 and  snap_shot_id=snap_shot_id1;
+      return ID1;
+  exception when no_data_found then null;
+  end;
+    
+  select ware_id into ware_id1 from rrl_cells where cell=cell1 ;
+
+  for s in sss loop
+
+      select  RRL_REMAIN_SNAPSHOT_ROWS_SQ.NEXTVAL into ID1 from dual; 
+      
+      insert into RRL_REMAIN_SNAPSHOT_ROWS 
+      ( ID , ARTICUL  ,CELL , PALLET_UID , REMAIN , WARE_ID ,
+      CONDITION  , snap_shot_id , SNAP_TIME ) 
+      values 
+      ( ID1 , articul1 , cell1 , s.uid_poleta , s.remain , ware_id1 , 
+      0 , snap_shot_id1 , snap_time1 );
+            
+   
+      
+  end loop;
+
+
+return 1;
+exception
+         when no_data_found then return -2;
+        -- when others then return -3;
+end;
+
+-- ?????? ???????????
+function close_snapshot(  snap_shot_id1 int  ) return int is
+  time_shot Date;
+  cell2 varchar2(255);
+  articul2 varchar2(255);
+  is_first int;
+  ware_id1 int;
+  -- ???????? ?????? ????? ? ?????????
+  cursor cells_arts is select distinct cell,articul 
+  from rrl_remain_snapshot_rows rs where rs.snap_shot_id=snap_shot_id1;
+  
+  cursor current_remains is select cell, rm.uid_poleta , rm.remain  
+  from rrl_remains rm , rrl_pallets pts
+   where rm.uid_poleta=pts.uid_pallet and
+  rm.cell = cell2 and pts.articul = articul2;
+  
+begin 
+    
+    time_shot:= systimestamp;     
+    for ca in cells_arts loop
+    -- ?? ???? ?????????, ??????? 
+       -- ?????? ?????????? ? ??????? ??????. 
+         cell2:= ca.cell ;
+         articul2:= ca.articul;
+         is_first:=1;
+         select ware_id into ware_id1 from rrl_cells where cell=cell2;
+         
+         for r in current_remains loop
+             if( is_first=1 ) then
+                 update rrl_remain_snapshot_rows set 
+                 PALLET_UID=r.uid_poleta , SNAP_TIME = time_shot , 
+                 REMAIN = r.remain , CONDITION=1,  WARE_ID=ware_id1
+                  where  snap_shot_id=snap_shot_id1 and
+                 cell=cell2 and articul=articul2;
+                 is_first:=0;
+             else
+               
+               insert into rrl_remain_snapshot_rows ( 
+               PALLET_UID , SNAP_TIME , REMAIN , CONDITION , WARE_ID ,  
+                snap_shot_id , cell , articul
+                      ) values ( r.uid_poleta , time_shot , r.remain , 1 , ware_id1 ,
+                     snap_shot_id1 , cell2  , articul2 );
+               is_first:=0;
+               
+             end if;
+         end loop;
+    -- ????? ?????     
+    end loop;
+    
+         
+    update RRL_REMAIN_SNAPSHOT set closed=1 , SNAP_SHOT_TIME=time_shot where ID=snap_shot_id1 ;  
+    return 1;
+    
+end;
+
+function remains_free( articul1 varchar2 ) return number is
+  tmp number;
+  begin
+  --         return 0;
+  tmp:=0;    
+  
+  select sum( rem.remain ) into tmp 
+  from rrl_remains rem ,  rrl_cells cel , rrl_pallets pts 
+  where rem.cell = cel.cell and
+  cel.blocked_for_remains=0 
+  and rem.uid_poleta=pts.uid_pallet 
+  and pts.articul= articul1  and rem.remain>0 ;    
+  
+  return tmp;
+  exception when   others then return -999;
+  
+end;
+
+function remains_in_otbor( articul1 varchar2 ) return number is
+  tmp number;
+  cell3 varchar2(255);
+  begin
+  tmp:=0;
+  select  cell into cell3  from rrl_articuls where acticul=articul1;
+  
+  select sum( rem.remain ) into tmp 
+  from rrl_remains rem   , rrl_pallets pts 
+  where rem.cell = cell3 
+  and rem.uid_poleta=pts.uid_pallet 
+  and pts.articul= articul1 and rem.remain>0 ;    
+  return tmp;
+  exception when   others then return -999;
+end;
+
+
+
+function remains_in_otbor_all( articul1 varchar2 ) return number is
+  tmp number;
+  cell3 varchar2(255);
+  begin
+  --         return 0;
+  tmp:=0;
+      
+  select  cell into cell3  from rrl_articuls where acticul=articul1;
+  
+  select sum( rem.remain ) into tmp 
+  from rrl_remains rem   , rrl_pallets pts 
+  where rem.cell = cell3 
+  and rem.uid_poleta=pts.uid_pallet 
+  and pts.articul= articul1 ;    
+  
+  return tmp;
+  exception when   others then return -999;
+  
+end;
+
+
+function remains_free_all( articul1 varchar2 ) return number is
+  tmp number;
+  begin
+  --         return 0;
+  tmp:=0;    
+  
+  select sum( rem.remain ) into tmp 
+  from rrl_remains rem ,  rrl_cells cel , rrl_pallets pts 
+  where rem.cell = cel.cell and
+  cel.blocked_for_remains=0 
+  and rem.uid_poleta=pts.uid_pallet 
+  and pts.articul= articul1  and rem.remain>0 ;    
+  
+  return tmp;
+  exception when   others then return -999;
+  
+end;
+
+
+-- ??????? ????????? ?????? ? ?????? 
+function remains_partion_in_otbor( pallet_uid1 varchar2 ) return number is
+  tmp number;
+  articul1 varchar2(255);
+  cell3 varchar2(255);
+  begin
+  tmp:=0.0;
+  if( pallet_uid1 is null ) then
+  return 0.0;
+  end if;
+  
+  select pts.articul into articul1 from rrl_pallets pts where pts.uid_pallet=pallet_uid1 ;
+  
+  select  cell into cell3  from rrl_articuls where acticul=articul1;
+  
+  select sum( rem.remain ) into tmp 
+  from rrl_remains rem  
+  where rem.cell = cell3 
+  and rem.uid_poleta=pallet_uid1
+  and rem.remain>0 ;    
+  return tmp;
+  
+  exception 
+    when no_data_found then return 0.0;
+    when   others then return -999;
+end;
+
+
+-- ??????? ????? ????????? ?????? ? ?????? 
+function remains_except_part_in_otb( pallet_uid1 varchar2 ) return number is
+  tmp number;
+  articul1 varchar2(255);
+  cell3 varchar2(255);
+  begin
+  tmp:=0;
+  if( pallet_uid1 is null ) then
+  return 0;
+  end if;
+  
+  select pts.articul into articul1 from rrl_pallets pts where pts.uid_pallet=pallet_uid1 ;
+  
+  select  cell into cell3  from rrl_articuls where acticul=articul1;
+  
+  -------------------------------------------
+  
+  select sum( rem.remain ) into tmp 
+  from rrl_remains rem ,  rrl_pallets pts 
+  where rem.cell = cell3 
+  and rem.uid_poleta=pts.uid_pallet 
+  and   rem.uid_poleta<>pallet_uid1 and pts.uid_pallet <>pallet_uid1 
+  and pts.articul= articul1  and rem.remain>0 ;
+       
+  -------------------------------------------  
+  return tmp;
+  
+  exception when   others then return -999;
+end;
+
+-- ??????? ????????? ?????? ? ????????? ?????? 
+function remains_partion_in_cell( pallet_uid1 varchar2 , cell3 varchar2 ) return number is
+  tmp number;
+  begin
+  if( pallet_uid1 is null ) then
+      return 0;
+  end if;
+  
+  tmp:=0;
+  
+  select sum( rem.remain ) into tmp 
+  from rrl_remains rem  
+  where rem.cell = cell3 
+  and rem.uid_poleta=pallet_uid1
+  and rem.remain>0 ;    
+  return tmp;
+  
+  exception when   others then return -999;
+end;
+
+
+-- 
+function set_othod_pall_row_partion(PALLET_ROW_ID1 int , quantity1 number , prih_pall_uid varchar2 ,
+   EXPIRY_DATE1 Date   , event_id1 int , articul1 varchar2 ,  prih_pall_uid1 varchar2 , num1 int ) return number is
+   rp_id int;
+begin
+  
+    if( num1=1 ) then 
+        update rrl_sborka_pallet_rows rs set rs.prihod_pallet_uid=prih_pall_uid , rs.prihod_pallet_uid_count=1 ,
+        rs.id_event = event_id1
+         where id=PALLET_ROW_ID1;
+    end if; 
+      -- ??????? ????? !
+          select Rrl_Sborka_Pall_Rows_Partssq.Nextval into rp_id  from dual;
+          
+          insert into RRL_SBORKA_PALL_ROWS_PARTS  (ID , PALLET_UID ,COUNT,ARTICUL,EXPIRY_DATE ,  
+          SPALLET_ROW_ID , prih_pall_uid , event_id ) values
+          ( rp_id ,prih_pall_uid , quantity1, articul1 , EXPIRY_DATE1 , PALLET_ROW_ID1 , prih_pall_uid1 , event_id1 );
+ 
+       
+        
+        update rrl_sborka_pallet_rows rs set  rs.prihod_pallet_uid_count=max2(rs.prihod_pallet_uid_count , num1 ) 
+          where id=PALLET_ROW_ID1;
+          
+    return 1;
+end;
+
+-- ??????? ??????????  UID ???????? ?????? ( ???????  ) ? ??? ???????, ????? ??????? ?? ????? ?????????
+-- ?????? ??? ??????? 5-?? ????
+function get_articul_dummy_puid( articul1 varchar2 ) return varchar2 is
+    fake_partion_uid1 varchar2(50);
+    uid_pallet1 varchar2(50);
+begin
+  
+    select art.fake_partion_uid into fake_partion_uid1 from rrl_articuls art where  art.acticul=articul1;
+if(fake_partion_uid1 is null) then
+    uid_pallet1:=concat( 'P_' , concat( articul1 ,  '_dummy' ) );
+    insert into rrl_pallets(uid_pallet ,articul ,creation_date ,expiry_date ,unit_count,price,kladovshik,produced_date,prihod_naklad_id )
+    values (uid_pallet1  ,articul1 ,sysdate , sysdate , 1000 , 1 , 'dummy' , sysdate , 1 );
+    fake_partion_uid1:=uid_pallet1;
+    update rrl_articuls set fake_partion_uid = fake_partion_uid1 where acticul=articul1;
+end if;
+
+return fake_partion_uid1;
+
+end;
+
+
+
+-- ??????? ???????? ?????? ??????????? ??????? 
+function close_othod_pall_row( PALLET_ROW_ID1 int, prih_pall_uid5 varchar2 , kolvo_provod number  , iser_id21 varchar2   ) return int is
+    current_cell varchar2(50);
+    new_event_id int;
+    event_id1 int;
+    ARTICUL1 varchar2(50);
+    rem12 number;
+    ware_id1 int;
+    remain_deficit_strategy1 int; 
+    ostatok_spisania number; --???????_????????   
+    tmp number;
+    row_cond int;
+    count_of_partions int;
+    tmp2 number;
+    EXPIRY_DATE1 Date;
+    tmp23 varchar2(50);
+    prih_pall_uid varchar2(50);
+    return_supplier_id1 int;
+    
+    --?????????? ??????? ? ?????? ?????? ? ??????? ??????, ????????????? ?? ?????? ????????. (????? ??????????????? ??????)
+cursor rests_in_cell is
+       select  RABAEV.RRL_REMAINS.REMAIN , RABAEV.RRL_REMAINS.UID_POLETA ,  RRL_PALLETS.EXPIRY_DATE 
+       from RABAEV.RRL_REMAINS , RABAEV.RRL_PALLETS  
+       where RRL_REMAINS.UID_POLETA = RRL_PALLETS.UID_PALLET 
+       and Rrl_Remains.Uid_Poleta<>prih_pall_uid  and 
+             RRL_REMAINS.CELL = current_cell and RRL_REMAINS.REMAIN>0  
+             and rrl_pallets.articul = ARTICUL1
+       order by RRL_PALLETS.EXPIRY_DATE  ; 
+
+cursor rests_in_invent is
+       select  RABAEV.RRL_REMAINS.REMAIN , rrl_remains.cell , RABAEV.RRL_REMAINS.UID_POLETA ,  RRL_PALLETS.EXPIRY_DATE 
+       from RABAEV.RRL_REMAINS , RABAEV.RRL_PALLETS  
+       where RRL_REMAINS.UID_POLETA = RRL_PALLETS.UID_PALLET and Rrl_Remains.Uid_Poleta<>prih_pall_uid  and 
+             RRL_REMAINS.CELL = 'INVENT' and RRL_REMAINS.REMAIN>0  and rrl_pallets.articul = ARTICUL1
+       order by RRL_PALLETS.EXPIRY_DATE desc ; 
+    
+cursor rests_in_invent_p is
+       select  RABAEV.RRL_REMAINS.REMAIN , rrl_remains.cell , RABAEV.RRL_REMAINS.UID_POLETA ,  RRL_PALLETS.EXPIRY_DATE 
+       from RABAEV.RRL_REMAINS , RABAEV.RRL_PALLETS  
+       where RRL_REMAINS.UID_POLETA = RRL_PALLETS.UID_PALLET and Rrl_Remains.Uid_Poleta<>prih_pall_uid  and 
+             RRL_REMAINS.CELL = 'INVENT_P' and RRL_REMAINS.REMAIN>0  and rrl_pallets.articul = ARTICUL1
+       order by RRL_PALLETS.EXPIRY_DATE desc ; 
+    
+
+begin
+    
+
+    EXPIRY_DATE1:=systimestamp;
+    count_of_partions:=0;
+    ostatok_spisania:=0;
+    select rs.articul , rs.condition , rs.id_event into ARTICUL1 , row_cond , event_id1  from rrl_sborka_pallet_rows rs where id= PALLET_ROW_ID1;
+    select CELL into  current_cell from  RABAEV.RRL_ARTICULS  where RRL_ARTICULS.ACTICUL= ARTICUL1 ; 
+   
+
+begin -- ???? ??????? = ???????  ?????????? , ?? ?????? = RETURNS
+  select  pts.return_supplier_id into return_supplier_id1 
+    from rrl_sborka_pallet_rows rs , rrl_sborka_pallets pts
+    where rs.id=PALLET_ROW_ID1 and rs.pallet_uid= pts.pallet_uid ;
+    if not ( return_supplier_id1 is null ) then
+         current_cell:='RETURNS';
+    end if;
+  exception 
+    when no_data_found then null; 
+    when others then null;
+end; -- ???? ??????? = ???????  ?????????? , ?? ?????? = RETURNS
+
+    prih_pall_uid:=prih_pall_uid5;
+    if( prih_pall_uid5 is null ) then
+    prih_pall_uid:=get_articul_dummy_puid(ARTICUL1 );
+    end if;
+        
+    
+    
+    select cl.ware_id into ware_id1 from rrl_cells cl where  cl.cell=current_cell ;
+    select remain_deficit_strategy into remain_deficit_strategy1 from rrl_wares where id=ware_id1;
+    select sum( rem.remain )  into rem12  from rrl_remains rem 
+       where cell= current_cell and rem.uid_poleta = prih_pall_uid and rem.remain>0 ; -- ??????? ? ???????????? ??????
+    begin
+       select pts.expiry_date into EXPIRY_DATE1 from rrl_pallets pts where pts.uid_pallet=prih_pall_uid;
+       exception
+         when no_data_found then null;
+    end;
+    
+    if( not (event_id1 is null) ) then -- ???? ??????? ??? ?????????, ?? ?????? ?? ??????
+        return 1;
+    end if;
+
+
+
+    if  rem12>= kolvo_provod  then -- ???? ??? ???????? ?? ?? ????? ? ?????, ??:
+                    SELECT RABAEV.RRL_EVENT_ID_SQ.NEXTVAL INTO new_event_id FROM dual;
+                    insert into RABAEV.RRL_EVENTS ( ID_EVENT , 
+                          CELL_FROM , CELL_TO  , DATE_EVENT  ,
+                          COUNT_EVENT, TYPE_EVENT , UID_POLETA,
+                          USER_ID, PALLET_ROW_ID       
+                      ) values ( new_event_id ,
+                      current_cell, null, SYSTIMESTAMP , 
+                      kolvo_provod , 3, prih_pall_uid ,
+                      iser_id21 , PALLET_ROW_ID1 ) ;
+                        tmp2:=set_othod_pall_row_partion( PALLET_ROW_ID1  , kolvo_provod , prih_pall_uid,
+                          EXPIRY_DATE1    ,  new_event_id , articul1  ,  prih_pall_uid  , 1 );
+       -- DBMS_OUTPUT.put_line( concat( concat( ARTICUL1 , ' ???????? ??? ???????????? ?????? ' ) ,naklad_row2.PRIHOD_PALLET_UID ) );
+    else
+       -- ???? ??? ???????? ?? ????? ? ?????
+       -- ??????? ????????? ??????? ??????, ??? ???? ??????????.
+       -- ????? ???????? ?????? ?????? ? ?????? ?????? 
+       -- ???? ???????_???????? >0
+       -- ????????? ?????????? = min ( ???????_???????? , ??????? ?????? ?????? )
+       -- ???????_????????= ??????? ???????? - ????????? ?????????? ; 
+      
+      ostatok_spisania:=kolvo_provod;
+      for r in rests_in_cell loop
+        if( ostatok_spisania>0 ) then
+            tmp:= min2( ostatok_spisania , r.remain );
+            -- ?????? ????????? ???????
+                    SELECT RABAEV.RRL_EVENT_ID_SQ.NEXTVAL INTO new_event_id FROM dual;
+                    insert into RABAEV.RRL_EVENTS ( ID_EVENT , 
+                          CELL_FROM , CELL_TO , DATE_EVENT ,
+                          COUNT_EVENT , TYPE_EVENT ,UID_POLETA ,
+                          USER_ID , PALLET_ROW_ID       
+                      ) values ( new_event_id ,
+                      current_cell, null, SYSTIMESTAMP , 
+                      tmp , 3, r.uid_poleta ,
+                      iser_id21 , PALLET_ROW_ID1  ) ;
+                      count_of_partions:=count_of_partions+1;
+                      tmp2:=set_othod_pall_row_partion( PALLET_ROW_ID1  , tmp , prih_pall_uid,
+                          EXPIRY_DATE1    ,  new_event_id , articul1  ,  prih_pall_uid  , count_of_partions );
+                      
+              ostatok_spisania:=ostatok_spisania-tmp;
+        end if;
+      end loop;
+    
+      if( ostatok_spisania > 0 ) then
+       -- ???? ??????? ???????? > 0 
+       -- ? ??????????? ?? ???????? ??????
+       -- ???? ????????? ??????? ?? ???????????? ??????
+       -- ???? ?? ????????? ?????????? 
+       -- ???? ??????? ?????? ? INVENT , ????????? ? ?????? ? ????????? ?? -- remain_deficit_strategy    
+       -- 1- ?????? ? INVENT ? INVENT_P , ???? ???? ??????? - ???????? ? ???????.
+       -- 5- ?????? ? INVENT ? INVENT_P , ???? ???? ??????? - ??????????? ?? ?????? MINUS.
+               if( remain_deficit_strategy1  in (0,3,4)  ) then 
+               --  0 - ????????? ??????? ?? ???????????? ?????? (?????????? ??? ??????????) , 
+               --  3 - ????????? ??????? ?? ???????????? ?????? (?????????? ??? ?????????? ?? INVENT , INVENT_P ) ,
+               --  4 - ????????? ??????? ?? ???????????? ?????? (?? ?????????? ??? ??????????) ,
+                  SELECT RABAEV.RRL_EVENT_ID_SQ.NEXTVAL INTO new_event_id FROM dual;
+                      insert into RABAEV.RRL_EVENTS ( ID_EVENT , 
+                            CELL_FROM , CELL_TO  ,  DATE_EVENT  , COUNT_EVENT ,
+                            TYPE_EVENT , UID_POLETA , USER_ID    ,
+                            PALLET_ROW_ID       
+                        ) values ( new_event_id ,
+                        current_cell, null, SYSTIMESTAMP , 
+                        ostatok_spisania , 3, prih_pall_uid ,
+                        iser_id21 , PALLET_ROW_ID1 ) ;
+                      count_of_partions:=count_of_partions+1;
+                      tmp2:=set_othod_pall_row_partion( PALLET_ROW_ID1  , ostatok_spisania , prih_pall_uid,
+                          EXPIRY_DATE1    ,  new_event_id , articul1  ,  prih_pall_uid  , count_of_partions );
+ 
+                 end if;  
+              
+               if( remain_deficit_strategy1 in ( 1 , 5 ) ) then  -- 1- ?????? ? INVENT ? INVENT_P , 
+               
+                        for r in rests_in_invent_p loop
+                               if( ostatok_spisania>0 ) then
+                                  tmp:= min2( ostatok_spisania , r.remain );
+                                  -- ?????? ???????????? ??????? ? ?????? ??????, ????? ?????????
+                                          SELECT RABAEV.RRL_EVENT_ID_SQ.NEXTVAL INTO new_event_id FROM dual;
+                                          insert into RABAEV.RRL_EVENTS ( ID_EVENT , 
+                                                CELL_FROM ,CELL_TO,DATE_EVENT, COUNT_EVENT,
+                                                TYPE_EVENT,UID_POLETA,USER_ID, PALLET_ROW_ID       
+                                            ) values ( new_event_id ,
+                                           r.cell , current_cell , SYSTIMESTAMP , 
+                                            tmp ,  2, r.uid_poleta ,
+                                            iser_id21 , PALLET_ROW_ID1  ) ;
+                                            
+                                          SELECT RABAEV.RRL_EVENT_ID_SQ.NEXTVAL INTO new_event_id FROM dual;
+                                          insert into RABAEV.RRL_EVENTS ( ID_EVENT , 
+                                                CELL_FROM ,CELL_TO,DATE_EVENT, COUNT_EVENT,
+                                                TYPE_EVENT,UID_POLETA,USER_ID, PALLET_ROW_ID       
+                                            ) values ( new_event_id ,
+                                            current_cell,  null, SYSTIMESTAMP , 
+                                            tmp ,  3, r.uid_poleta ,
+                                            iser_id21 , PALLET_ROW_ID1  ) ;
+                                            count_of_partions:=count_of_partions+1; 
+                                            tmp2:=set_othod_pall_row_partion( PALLET_ROW_ID1  , tmp , prih_pall_uid,
+                                                EXPIRY_DATE1    ,  new_event_id , articul1  ,  prih_pall_uid  , count_of_partions );
+                                    ostatok_spisania:=ostatok_spisania-tmp;
+                              end if;
+                           end loop;
+               
+                           for r in rests_in_invent loop
+                               if( ostatok_spisania>0 ) then
+                                  tmp:= min2( ostatok_spisania , r.remain );
+                                  -- ?????? ???????????? ??????? ? ?????? ??????, ????? ?????????
+                                          SELECT RABAEV.RRL_EVENT_ID_SQ.NEXTVAL INTO new_event_id FROM dual;
+                                          insert into RABAEV.RRL_EVENTS ( ID_EVENT , 
+                                                CELL_FROM ,CELL_TO,DATE_EVENT, COUNT_EVENT,
+                                                TYPE_EVENT,UID_POLETA,USER_ID, PALLET_ROW_ID       
+                                            ) values ( new_event_id ,
+                                           r.cell , current_cell , SYSTIMESTAMP , 
+                                            tmp ,  2, r.uid_poleta ,
+                                            iser_id21 , PALLET_ROW_ID1  ) ;
+                                            
+                                          SELECT RABAEV.RRL_EVENT_ID_SQ.NEXTVAL INTO new_event_id FROM dual;
+                                          insert into RABAEV.RRL_EVENTS ( ID_EVENT , 
+                                                CELL_FROM ,CELL_TO,DATE_EVENT, COUNT_EVENT,
+                                                TYPE_EVENT,UID_POLETA,USER_ID, PALLET_ROW_ID       
+                                            ) values ( new_event_id ,
+                                            current_cell,  null, SYSTIMESTAMP , 
+                                            tmp ,  3, r.uid_poleta ,
+                                            iser_id21 , PALLET_ROW_ID1  ) ;
+                                            count_of_partions:=count_of_partions+1; 
+                                            tmp2:=set_othod_pall_row_partion( PALLET_ROW_ID1  , tmp , prih_pall_uid,
+                                                EXPIRY_DATE1    ,  new_event_id , articul1  ,  prih_pall_uid  , count_of_partions );
+                                    ostatok_spisania:=ostatok_spisania-tmp;
+                              end if;
+                           end loop; -- ?? 1 ? 5 ????
+                           if( remain_deficit_strategy1=1 and ostatok_spisania>0 ) then
+                               update rrl_sborka_pallet_rows rs set condition=1 , rs.spisano=rs.quantity-ostatok_spisania
+                                where rs.id = PALLET_ROW_ID1;
+                               return 0;
+                           end if;
+                           
+                           if( remain_deficit_strategy1=5 and ostatok_spisania>0 ) then
+                               tmp23:= get_articul_dummy_puid( articul1 ); 
+                               SELECT RABAEV.RRL_EVENT_ID_SQ.NEXTVAL INTO new_event_id FROM dual;
+                                insert into RABAEV.RRL_EVENTS ( ID_EVENT , 
+                                      CELL_FROM , CELL_TO  ,  DATE_EVENT  , COUNT_EVENT ,
+                                      TYPE_EVENT , UID_POLETA , USER_ID    ,
+                                      PALLET_ROW_ID       
+                                  ) values ( new_event_id ,
+                                  current_cell, null, SYSTIMESTAMP , 
+                                  ostatok_spisania , 3, tmp23 ,
+                                  iser_id21 , PALLET_ROW_ID1 ) ;
+                                   count_of_partions:=count_of_partions+1; 
+                                  tmp2:=set_othod_pall_row_partion( PALLET_ROW_ID1  , ostatok_spisania , prih_pall_uid,
+                                  EXPIRY_DATE1    ,  new_event_id , articul1  ,  prih_pall_uid  , count_of_partions );
+                                  update rrl_sborka_pallet_rows rs set condition=2 , rs.spisano=rs.quantity
+                                  where rs.id = PALLET_ROW_ID1;
+                                  return 1;
+                        
+                           end if;
+               end if;  
+
+               if( remain_deficit_strategy1  =2 ) then -- 2 - ?? ????????? ?????????? .
+                   return 0;
+               end if;  
+       
+       end if;
+    end if;  
+
+    if( ostatok_spisania=0 ) then 
+        update rrl_sborka_pallet_rows rs set condition=2 , spisano=kolvo_provod where id=PALLET_ROW_ID1 ; 
+        return 1;
+    else
+        update rrl_sborka_pallet_rows rs set condition=1 , spisano=obj2number(spisano)+kolvo_provod-ostatok_spisania 
+        where id=PALLET_ROW_ID1 ; 
+      return 0;
+    end if;
+    return 1;
+end;
+
+-- ?????????? ???????? ??????????
+function close_return_2_supplier( PALLET_ID1 varchar2 , iser_id21 varchar2 ) return varchar2 is
+  
+ARTICUL1 varchar2(255);
+remains_in_return number;
+       cursor rests_in_returns is
+       select sum( RABAEV.RRL_REMAINS.REMAIN ) 
+       from RABAEV.RRL_REMAINS , RABAEV.RRL_PALLETS  
+       where RRL_REMAINS.UID_POLETA = RRL_PALLETS.UID_PALLET and 
+             RRL_REMAINS.CELL = 'RETURNS' and RRL_REMAINS.REMAIN>0  
+             and rrl_pallets.articul = ARTICUL1;
+
+      -- ?????? ?? ???????? ???????
+      cursor rowss is 
+          select * from RABAEV.RRL_SBORKA_PALLET_ROWS 
+          where PALLET_UID = PALLET_ID1 and QUANTITY>0 
+          and ( ID_EVENT is null ) ;
+   
+ret varchar2(255);
+ret2 int;
+begin
+    
+    for  r in rowss  loop     
+         articul1:=r.articul;
+         remains_in_return:=0;
+         begin
+           select sum( RABAEV.RRL_REMAINS.REMAIN ) into remains_in_return
+           from RABAEV.RRL_REMAINS , RABAEV.RRL_PALLETS  
+           where RRL_REMAINS.UID_POLETA = RRL_PALLETS.UID_PALLET and 
+                 RRL_REMAINS.CELL = 'RETURNS' and RRL_REMAINS.REMAIN>0  
+                 and rrl_pallets.articul = ARTICUL1;
+         exception when no_data_found then null;
+         end;
+         
+         if r.quantity> remains_in_return then 
+              return '?? ?????????? ???????';
+         end if; 
+    end loop;
+        
+    for  r in rowss  loop  
+      ret2:= close_othod_pall_row( r.id , r.prihod_pallet_uid , r.QUANTITY   ,  iser_id21);        
+     null;
+    end loop;    
+          
+      update   RABAEV.RRL_SBORKA_PALLETs  set condition = 2  where   PALLET_UID = PALLET_ID1;
+     return 'ok'; 
+    
+end;
+
+
+-- ??????? ?????? ? ????????? ??????
+FUNCTION CLOSE_OTHOD_PALLET(  PALLET_ID1 varchar2 ,  iser_id21 varchar2  ) RETURN varchar2 IS
+
+      tmpVar int;
+      current_cell  varchar2(50);
+      kolvo_otbora NUMBER  ;
+      PALLET_ROW_ID1 int;
+      res1 int;
+      return_supplier_id1 int;
+      order_number varchar2(250);
+
+-- ?????? ?? ???????? ???????, ??? ??????? ?? ??????? ?????? .
+cursor rowss is 
+  select * from RABAEV.RRL_SBORKA_PALLET_ROWS 
+  where PALLET_UID = PALLET_ID1 and QUANTITY>0 and PRIHOD_PALLET_UID is null 
+   and ( ID_EVENT is null ) ;
+
+-- ?????? ?? ???????? ???????, ??? ???????  ??????? ?????? .
+cursor rowss2 is 
+       select * from RABAEV.RRL_SBORKA_PALLET_ROWS 
+       where PALLET_UID = PALLET_ID1 and QUANTITY>0 
+       and not( PRIHOD_PALLET_UID is null )  
+       and ( ID_EVENT is null )  ;
+
+cursor rowss3 is -- ?????? ??? ???????? ???????? ??
+select * from RABAEV.RRL_SBORKA_PALLET_ROWS 
+where PALLET_UID = PALLET_ID1 and QUANTITY>0    and ( ID_EVENT is null ) ;
+
+cursor rowss4 is -- ?????? ??? ???????? ???????? ?????
+select * from RABAEV.RRL_SBORKA_PALLET_ROWS 
+       where PALLET_UID = PALLET_ID1 and QUANTITY>0  
+         and ( ID_EVENT is null ) ;
+      
+BEGIN  
+       
+-- ! ?????????????? ?????? ?????? ???, ??? ?????? ?? ??????????!!!!
+
+for naklad_row2 in rowss3 loop -- ??? ?????? ?????? ??????? ????????? ??????? ? ?????? ?? ?????????? ???????
+ begin 
+ update RABAEV.RRL_SBORKA_PALLET_ROWS set REMAINS_PICK_BEFORE = REMAINS.remains_in_otbor_all( naklad_row2.articul )  , 
+ close_date=systimestamp where  ID = naklad_row2.ID; 
+    exception  when no_data_found then null; 
+ end;
+end loop;  -- ??? ?????? ?????? ??????? ????????? ??????? ? ?????? ?? ?????????? ???????
+
+
+-- ??????? ?? ?????? ??????? 2 ???? ?? ????????
+  DBMS_OUTPUT.put_line(  '??????' );
+  select condition , pts.return_supplier_id  , pts.st_number 
+  into tmpVar , return_supplier_id1 , order_number
+  from RABAEV.RRL_SBORKA_PALLETs pts where PALLET_UID = PALLET_ID1; -- 
+
+
+begin  --- ????? ????????? ?????.
+  update rrl_orders rd set rd.cond=9 where rd.ord_number=order_number ;
+exception 
+  when no_data_found then null;
+end;
+
+res1:=OTHOD_PALLET_PODBOR_PARTII( PALLET_ID1 );
+
+if( not  return_supplier_id1 is null ) then 
+    return close_return_2_supplier( PALLET_ID1 , iser_id21  );
+end if;
+
+  if(tmpVar>=2) then   
+      DBMS_OUTPUT.put_line(  '????????? ???????' );
+     -- return 'closed already';
+  end if;
+-- ??????? ?? ?????? ??????? 2 ???? ?? ????????
+
+
+res1:=1;
+
+-- ???????? ?????? ?????? ? ???????????? ????????
+for naklad_row2 in rowss2 loop
+    PALLET_ROW_ID1:= naklad_row2.ID;
+    kolvo_otbora:=naklad_row2.QUANTITY;
+    select CELL into  current_cell from  RABAEV.RRL_ARTICULS  where RRL_ARTICULS.ACTICUL=naklad_row2.ARTICUL ; 
+    if naklad_row2.condition =1 then
+                res1:=min2( res1, close_othod_pall_row( naklad_row2.id , naklad_row2.prihod_pallet_uid ,
+                            naklad_row2.QUANTITY - naklad_row2.spisano ,  iser_id21) );  
+    else
+                res1:=min2( res1, close_othod_pall_row( naklad_row2.id , naklad_row2.prihod_pallet_uid ,
+                            naklad_row2.QUANTITY ,  iser_id21) );  
+    end if;
+    
+end loop;
+-- ???????? ?????? ?????? ? ???????????? ????????
+
+-- ?????? ??? ??????..
+for naklad_row in rowss loop
+PALLET_ROW_ID1:= naklad_row.ID;
+   res1:= min2( res1 , close_othod_pall_row( naklad_row.id , null ,naklad_row.QUANTITY ,  iser_id21) );   
+end loop;
+
+  if(res1>0) then 
+      
+      update   RABAEV.RRL_SBORKA_PALLETs  set condition = 2  where   PALLET_UID = PALLET_ID1;
+      
+  end if;
+
+commit;
+
+
+
+
+  -- ????????? ??????? ????? ?????????? ?????????
+  for naklad_row2 in rowss4 loop
+  begin 
+       update RABAEV.RRL_SBORKA_PALLET_ROWS set  REMAINS_PICK_AFTER  = REMAINS.remains_in_otbor_all( naklad_row2.articul ) , close_date=systimestamp
+           where  ID = naklad_row2.ID;  exception  when no_data_found then null; 
+  end;
+  end loop; 
+  -- ????????? ??????? ????? ?????????? ?????????
+
+commit;
+
+
+DBMS_OUTPUT.put_line(  '  ?????? ????? ' );  
+if(res1>0) then  
+           RETURN 'ok';
+end if;
+return 'neok';
+
+exception 
+when no_data_found then  return 'neok';
+-- when others then raise;
+
+
+END CLOSE_OTHOD_PALLET;
+
+
+
+
+
+FUNCTION TRIAL_BY_WEIGHT(  PALLET_UID1  varchar2 ,  TRIAL_WEIGHT1 varchar2 ,
+    WOOD_WEIGHT1 varchar2 , user_id1 varchar2 )
+ RETURN int IS 
+    tmpVar number;
+    pogr number;
+    IDD1 int;
+    SPIS_OTBOR_ON_SCAN_OPALL1 int;
+    vhelp2 varchar2(255);
+    ware_id1 int;
+BEGIN
+
+select ID into IDD1 from RABAEV.RRL_SBORKA_PALLETS where PALLET_UID=PALLET_UID1;
+tmpVar := 0;
+pogr:=RRL_TT_POGRESHNOST(IDD1);
+
+update RABAEV.RRL_SBORKA_PALLETS set TRIAL_WEIGHT = TRIAL_WEIGHT1 ,  WOOD_WEIGHT = WOOD_WEIGHT1 , VESOVSHIK = user_id1  where PALLET_UID=PALLET_UID1;
+
+    if (abs( TRIAL_WEIGHT1-WOOD_WEIGHT1 - RRL_PALLET_WEIGHT2(PALLET_UID1)  )<pogr ) then
+       
+        -- ???????? ???????? 
+        select WW.SPIS_OTBOR_ON_SCAN_OPALL , WW.ID into SPIS_OTBOR_ON_SCAN_OPALL1 , ware_id1  from RRL_SBORKA_PALLETS PP ,  RRL_WARES WW where PP.WARE_ID=WW.ID and PP.PALLET_UID=PALLET_UID1;
+         if( SPIS_OTBOR_ON_SCAN_OPALL1=1 ) then 
+            vhelp2:=REMAINS.CLOSE_OTHOD_PALLET(   PALLET_UID1  ,    user_id1  ) ;
+         end if;
+        -- ???????? ???????? 
+        update RABAEV.RRL_SBORKA_PALLETS set PROOVED=1 , STATE = '??????????????' where PALLET_UID=PALLET_UID1;
+        
+        insert into RRL_SBORKA_PALLETS_HISTORY ( PALLET_UID ,USER_ID ,  ZONE ,  EVENT , WEIGHT)
+            values (PALLET_UID1 , user_id1 , 'VESOV' , 'WEIGHT_CHECK' , TRIAL_WEIGHT1  );
+
+        return 1;
+        
+      else
+      
+      insert into RRL_SBORKA_PALLETS_HISTORY ( PALLET_UID ,USER_ID ,  ZONE ,  EVENT , WEIGHT)
+        values (PALLET_UID1 , user_id1 , 'VESOV' , 'WEIGHT_CHECK' , TRIAL_WEIGHT1  );
+
+        
+        update RABAEV.RRL_SBORKA_PALLETS set PROOVED=0 , STATE = '????? ? ??????' where PALLET_UID=PALLET_UID1;
+        return 0;
+        
+    end if;
+    
+
+
+   RETURN tmpVar;
+   
+   EXCEPTION
+     WHEN NO_DATA_FOUND THEN
+       RETURN 0;
+     WHEN OTHERS THEN
+       -- Consider logging the error and then re-raise
+       RAISE;       
+END TRIAL_BY_WEIGHT;
+
+
+
+
+FUNCTION SET_SCAN_PROOVE(
+    PALLET_UID1 varchar2  ,
+    count_of_errors1 int ,
+    prim1 varchar2 , 
+    SBORSHIK1  VARCHAR2,
+    KLADOVSHIK1 VARCHAR2
+) return int
+ 
+IS
+vhelp2 varchar2(255);
+ttt number;
+ SPIS_OTBOR_ON_SCAN_OPALL1 int;
+BEGIN
+
+    if count_of_errors1=0 then
+    
+     update RABAEV.RRL_SBORKA_PALLETS set    PROOVED_BY_SCAN=1 , prim=prim1   where PALLET_UID=PALLET_UID1  ;
+     --  ????????? ????? ?? ????? ??????. ?????????= SPIS_OTBOR_ON_SCAN_OPALL
+        select WW.SPIS_OTBOR_ON_SCAN_OPALL into SPIS_OTBOR_ON_SCAN_OPALL1 from RRL_SBORKA_PALLETS PP ,  RRL_WARES WW where PP.WARE_ID=WW.ID and PP.PALLET_UID=PALLET_UID1;
+         if( SPIS_OTBOR_ON_SCAN_OPALL1=1 ) then 
+           vhelp2:= CLOSE_OTHOD_PALLET(    PALLET_UID1  ,    KLADOVSHIK1 );
+         end if;
+     -- ???????? ???????? ?? ??????   
+          
+    else
+     update RABAEV.RRL_SBORKA_PALLETS set   prim=prim1 , COUNT_OF_ERRORS=count_of_errors1  where PALLET_UID=PALLET_UID1  ; 
+    end if;
+    
+    if (not(SBORSHIK1 is null)) then
+     update RABAEV.RRL_SBORKA_PALLETS set  SBORSHIK=SBORSHIK1   where PALLET_UID=PALLET_UID1  ; 
+    end if;
+    
+    if (not(KLADOVSHIK1 is null)) then
+     update RABAEV.RRL_SBORKA_PALLETS set  KLADOVSHIK=KLADOVSHIK1   where PALLET_UID=PALLET_UID1  ; 
+    end if;
+
+return 0;
+exception
+when NO_DATA_FOUND then
+    return 0;
+    when others then 
+    return 0;
+END  SET_SCAN_PROOVE;
+
+
+
+
+
+FUNCTION OTHOD_PALLET_PODBOR_PARTII( PALLET_ID1 varchar2 )
+ RETURN int IS
+tmpVar int;
+current_cell  varchar2(50);
+kolvo_otbora NUMBER  ;
+new_event_id int;
+EXPEDITION_CELL varchar2(50);
+PALLET_ROW_ID1 int;
+count_of_PUID int;
+new_part_id int;
+vychet number;
+all_found int;
+mod_id4 int;
+articul_for varchar2(255);
+return_supplier_id1 int;
+
+-- ?????? ?? ???????? ???????, ??? ??????? ?? ??????? ?????? .
+cursor rowss is 
+      select *  from RABAEV.RRL_SBORKA_PALLET_ROWS rs
+      where PALLET_UID =  PALLET_ID1 /* and QUANTITY>0 */ and obj2number(condition)<>2
+       and ( ( PRIHOD_PALLET_UID is null ) or  
+          (   REMAINS.remains_partion_in_otbor( rs.PRIHOD_PALLET_UID ) <=0 or 
+              REMAINS.remains_partion_in_otbor( rs.PRIHOD_PALLET_UID ) is null   
+       and REMAINS.REMAINS_EXCEPT_PART_IN_OTB(  rs.PRIHOD_PALLET_UID   )>0  )         ) ;
+       
+cursor rests_in_cell is
+ select  RABAEV.RRL_REMAINS.REMAIN , RABAEV.RRL_REMAINS.UID_POLETA ,  RRL_PALLETS.EXPIRY_DATE , RRL_PALLETS.ARTICUL
+  from RABAEV.RRL_REMAINS , RABAEV.RRL_PALLETS  
+    where RRL_REMAINS.UID_POLETA = RRL_PALLETS.UID_PALLET and
+     RRL_REMAINS.CELL = current_cell and RRL_REMAINS.REMAIN>0  and RRL_PALLETS.ARTICUL = articul_for
+     order by RRL_PALLETS.EXPIRY_DATE  ; 
+    
+BEGIN
+
+
+
+all_found:=1;
+select condition , pts.return_supplier_id into tmpVar , return_supplier_id1   
+from RABAEV.RRL_SBORKA_PALLETs pts where PALLET_UID = PALLET_ID1;
+
+if not return_supplier_id1 is null then 
+ return  OTHOD_PALLET_PODBOR_PARTI4CELL(PALLET_ID1 , 'RETURNS'  );
+end if;
+
+if(tmpVar>=2) then   
+    DBMS_OUTPUT.put_line(  '????????? ???????' );
+    return 0;
+end if;
+count_of_PUID := 0;
+new_part_id:=0;
+    for naklad_row in rowss loop
+    count_of_PUID :=0 ;
+    PALLET_ROW_ID1:= naklad_row.ID;
+    tmpVar:=0;
+    kolvo_otbora:=naklad_row.QUANTITY;
+    articul_for := naklad_row.ARTICUL ;
+    select CELL into  current_cell from  RABAEV.RRL_ARTICULS  where RRL_ARTICULS.ACTICUL=naklad_row.ARTICUL ; 
+        for  ddd8 in rests_in_cell loop  -- ???? ?? ???????? ? ?????? ?????? 
+            if(kolvo_otbora>0) then
+                count_of_PUID :=count_of_PUID +1;
+                if(kolvo_otbora <= ddd8.REMAIN )  then
+                   -- ???? ??????? ?????????? ?????? ?????? ???? ????? ?????? ? ?????? . 
+                       vychet := kolvo_otbora;
+                       kolvo_otbora:=0;
+                else
+                        vychet:=ddd8.REMAIN; 
+                        kolvo_otbora:=kolvo_otbora-ddd8.REMAIN;
+                end if;      
+                select  PPP.MOD_ID into  mod_id4  from RRL_PALLETS PPP where PPP.UID_PALLET= ddd8.UID_POLETA  ;
+                            update RABAEV.RRL_SBORKA_PALLET_ROWS set 
+                            CURRENT_MOD_ID  = mod_id4  ,
+                            PRIHOD_PALLET_UID = ddd8.UID_POLETA , 
+                            PRIHOD_PALLET_UID_COUNT = count_of_PUID ,
+                            EXPIRY_DATE = ddd8.EXPIRY_DATE where ID = naklad_row.ID ;                           
+                 kolvo_otbora:=0;
+            end if;
+        end loop;
+    end loop;
+    
+   RETURN 1;
+
+exception 
+when no_data_found then  return 0;
+when others then raise;
+
+
+END OTHOD_PALLET_PODBOR_PARTII;
+
+
+FUNCTION OTHOD_PALLET_PODBOR_PARTI4CELL( PALLET_ID1 varchar2 , cell1 varchar2 )
+ RETURN int IS
+tmpVar int;
+current_cell  varchar2(50);
+kolvo_otbora NUMBER  ;
+new_event_id int;
+EXPEDITION_CELL varchar2(50);
+PALLET_ROW_ID1 int;
+count_of_PUID int;
+new_part_id int;
+vychet number;
+all_found int;
+mod_id4 int;
+articul_for varchar2(255);
+
+-- ?????? ?? ???????? ???????, ??? ??????? ?? ??????? ?????? .
+cursor rowss is 
+      select *  from RABAEV.RRL_SBORKA_PALLET_ROWS rs
+      where PALLET_UID =  PALLET_ID1 /* and QUANTITY>0 */ and obj2number(condition)<>2
+       and ( ( PRIHOD_PALLET_UID is null ) or  
+          (   REMAINS.remains_partion_in_otbor( rs.PRIHOD_PALLET_UID ) <=0 or 
+              REMAINS.remains_partion_in_otbor( rs.PRIHOD_PALLET_UID ) is null   
+       and REMAINS.REMAINS_EXCEPT_PART_IN_OTB(  rs.PRIHOD_PALLET_UID   )>0  )         ) ;
+       
+cursor rests_in_cell is
+ select  RABAEV.RRL_REMAINS.REMAIN , RABAEV.RRL_REMAINS.UID_POLETA ,  
+ RRL_PALLETS.EXPIRY_DATE , RRL_PALLETS.ARTICUL
+  from RABAEV.RRL_REMAINS , RABAEV.RRL_PALLETS  
+    where RRL_REMAINS.UID_POLETA = RRL_PALLETS.UID_PALLET and
+     RRL_REMAINS.CELL = current_cell and RRL_REMAINS.REMAIN>0  
+     and RRL_PALLETS.ARTICUL = articul_for
+     order by RRL_PALLETS.EXPIRY_DATE  ; 
+    
+BEGIN
+
+all_found:=1;
+select condition into tmpVar   from RABAEV.RRL_SBORKA_PALLETs where PALLET_UID = PALLET_ID1;
+if(tmpVar>=2) then   
+    DBMS_OUTPUT.put_line(  '????????? ???????' );
+    return 0;
+end if;
+count_of_PUID := 0;
+new_part_id:=0;
+    for naklad_row in rowss loop
+    count_of_PUID :=0 ;
+    PALLET_ROW_ID1:= naklad_row.ID;
+    tmpVar:=0;
+    kolvo_otbora:=naklad_row.QUANTITY;
+    articul_for := naklad_row.ARTICUL ;
+                --    select CELL into  current_cell from  RABAEV.RRL_ARTICULS  where RRL_ARTICULS.ACTICUL=naklad_row.ARTICUL ; 
+    current_cell:=cell1 ;
+    
+      for  ddd8 in rests_in_cell loop  -- ???? ?? ???????? ? ?????? ?????? 
+            if(kolvo_otbora>0) then
+                count_of_PUID :=count_of_PUID +1;
+                if(kolvo_otbora <= ddd8.REMAIN )  then
+                   -- ???? ??????? ?????????? ?????? ?????? ???? ????? ?????? ? ?????? . 
+                       vychet := kolvo_otbora;
+                       kolvo_otbora:=0;
+                else
+                        vychet:=ddd8.REMAIN; 
+                        kolvo_otbora:=kolvo_otbora-ddd8.REMAIN;
+                end if;      
+                select  PPP.MOD_ID into  mod_id4  from RRL_PALLETS PPP where PPP.UID_PALLET= ddd8.UID_POLETA  ;
+                            update RABAEV.RRL_SBORKA_PALLET_ROWS set 
+                            CURRENT_MOD_ID  = mod_id4  ,
+                            PRIHOD_PALLET_UID = ddd8.UID_POLETA , 
+                            PRIHOD_PALLET_UID_COUNT = count_of_PUID ,
+                            EXPIRY_DATE = ddd8.EXPIRY_DATE where ID = naklad_row.ID ;                           
+                 kolvo_otbora:=0;
+            end if;
+        end loop;
+    end loop;
+    
+   RETURN 1;
+
+exception 
+when no_data_found then  return 0;
+when others then raise;
+
+
+END OTHOD_PALLET_PODBOR_PARTI4CELL;
+
+
+
+-- ??????? ??????????? ?????? ? ??? ?????? ??????
+function move_pall_2_picking_cell( pall_uid1 varchar2 , user_id2 varchar2 ) return varchar2 is
+articul1 varchar2(50);
+cell1 varchar2(50);
+count1 number;
+tmp varchar2(50);
+begin
+  
+  begin
+      select pts.articul , pts.unit_count into articul1  , count1 
+      from rrl_pallets pts where pts.uid_pallet =  pall_uid1;
+  exception
+      when no_data_found then return 'no_pall';
+  end;
+         
+  select art.cell into cell1 from rrl_articuls art where art.acticul=articul1;
+  tmp:=RABAEV.RRL_INTERNAL_MOVE3(
+  pallet_id => pall_uid1,
+  cell_to => cell1,
+  count1 => count1,
+  user_id1 => user_id2);
+       
+  return tmp;  
+end;
+
+
+
+
+
+
+begin
+  -- Initialization
+  null;
+end REMAINS;
+/

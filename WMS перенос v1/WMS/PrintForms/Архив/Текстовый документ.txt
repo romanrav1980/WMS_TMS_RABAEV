@@ -1,0 +1,13 @@
+<BODY>
+<PAGE axes='1'  landscape='0' >
+
+<LABEL fontsize='24'   x='50'   y='50' type='EAN3'  width='600'  height='150'   > A-10-10-10-1 </LABEL>
+<LABEL fontsize='52'   x='100'   y='220'    width='600'  height='150'   > A-10-10-10-1     ฮาม</LABEL>
+
+</PAGE>
+</BODY>
+
+
+
+
+

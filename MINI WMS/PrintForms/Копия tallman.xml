@@ -1,0 +1,63 @@
+
+<BODY>
+<VAR name='id' >345</VAR>
+<VAR name='head' type='sql' >select * from  RABAEV.RRL_PRIHOD_NAKLAD NAK where   NAK.ID = 31187</VAR>
+<PAGE axes='0' >
+
+<LABEL fontsize='24' x='50' y='50' > Тальманский лист приема поставки поставщика "[head.POSTAVSHIK_NAME]" </LABEL>
+<LABEL fontsize='24' x='50' y='75'   replace_from=' 0:00:00' replace_to=''    > по накладной "" от "[head.DATE_OF_NAKLAD]". Внутренний номер [head.ID]</LABEL>
+<LABEL  x='50' y='150'   >Номер авто: "[head.VECHILE_NUMBER]"</LABEL>
+<LABEL   x='50' y='162'  >ФИО Водителя: "[head.VODITEL_NAME]"</LABEL>
+<LABEL   x='50' y='174'  >Подпись водителя:  ______________</LABEL>
+<LABEL   x='500' y='150' replace_from=' 0:00:00' replace_to=''  >Дата приема авто: "[head.DATE_OF_ACCEPT]"</LABEL>
+<LABEL   x='500' y='162'  >Температура: "[head.TEMPERATURE]"</LABEL>
+<LABEL   x='500' y='174'  >Приемщик: "[head.USER_ID]" </LABEL> 
+<LABEL   x='500' y='186'  >Подпись: ______________</LABEL>
+
+
+<TABLE y='212' x='50' name='table_1' >
+<SQL limit='400'  >  
+select
+ART.NAME Товар, 
+PAL.UID_PALLET ПАЛЛЕТ,
+(PAL.WEIGHT_BRUTTO+PAL.WEIGHT_TN ) ВЕСБРУТТОИТН,
+PAL.WEIGHT_TN Вес_ТН,
+ concat(  to_char( PAL.DEFECT_PERC ) , '%' )   Отход ,
+RRL_GET_MOD_INFO( MOD_ID )  ФАСОВКА ,
+
+ RRL_COUNT_KOR2( PAL.ARTICUL , PAL.UNIT_COUNT , PAL.MOD_ID ) КОРОБКИ
+
+ from RABAEV.RRL_PRIHOD_NAKLAD NAK , RABAEV.RRL_PALLETS PAL , RABAEV.RRL_ARTICULS ART 
+ where 
+NAK.ID = PAL.PRIHOD_NAKLAD_ID  and
+ART.ACTICUL = PAL.ARTICUL and
+NAK.ID = 31187
+<FIELD name='Товар'  width='25'   ></FIELD> <FIELD name='ПАЛЛЕТ'  width='14'   ></FIELD>
+<FIELD name='ВЕСБРУТТОИТН'  width='8' show='Вес брутто+ТН'   ></FIELD>
+<FIELD name='Вес_ТН'  width='6' show='Вес ТН'   ></FIELD>
+<FIELD name='ФАСОВКА'  width='12' show='Фасовка'   ></FIELD>
+</SQL>
+</TABLE>
+
+<LABEL fontsize='24' x='50' y='50+table_1' >Итого</LABEL>
+
+<TABLE y='78+table_1' x='50' name='table_2' >
+<SQL limit='400'  >  
+select
+ART.NAME Товар, 
+sum( ((PAL.WEIGHT_BRUTTO-PAL.WEIGHT_TN ) *(100- PAL.DEFECT_PERC  ) )  / 100 )   ПРИНЯТО , 
+sum( RRL_COUNT_KOR2( PAL.ARTICUL , PAL.UNIT_COUNT , PAL.MOD_ID ) )  КОРОБКИ
+ from RABAEV.RRL_PRIHOD_NAKLAD NAK , RABAEV.RRL_PALLETS PAL , RABAEV.RRL_ARTICULS ART 
+ where 
+NAK.ID = PAL.PRIHOD_NAKLAD_ID  and
+ART.ACTICUL = PAL.ARTICUL and
+NAK.ID = 31187
+group by ART.NAME
+<FIELD name='Товар'  width='25'   ></FIELD> <FIELD name='ПАЛЛЕТ'  width='14'   ></FIELD>
+<FIELD name='ПРИНЯТО'  width='6'    ></FIELD>
+<FIELD name='КОРОБКИ'  width='12' show='КОРОБКИ'   ></FIELD>
+</SQL>
+</TABLE>
+
+</PAGE>
+</BODY>

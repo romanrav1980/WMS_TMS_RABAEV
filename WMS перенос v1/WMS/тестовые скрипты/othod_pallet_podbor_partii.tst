@@ -1,0 +1,22 @@
+PL/SQL Developer Test script 3.0
+10
+begin
+  -- Call the function
+  
+  update rrl_sborka_pallet_rows rs 
+  set rs.prihod_pallet_uid_count=null 
+  where rs.pallet_uid='OP_—“ско003932_1';
+  commit;
+  
+  :result := remains.othod_pallet_podbor_partii(pallet_id1 => :pallet_id1);
+end;
+2
+result
+1
+0
+4
+pallet_id1
+1
+OP_—“ско003932_1
+5
+0

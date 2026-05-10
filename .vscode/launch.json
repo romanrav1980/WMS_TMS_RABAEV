@@ -1,0 +1,14 @@
+﻿{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "WindowsApplication2 x64 Debug",
+      "type": "clr",
+      "request": "launch",
+      "program": "${workspaceFolder}\\MINI WMS\\WindowsApplication2\\WindowsApplication2\\bin\\Debug\\WindowsApplication2.exe",
+      "cwd": "${workspaceFolder}\\MINI WMS\\WindowsApplication2\\WindowsApplication2",
+      "preLaunchTask": "build WindowsApplication2 x64 Debug",
+      "stopAtEntry": false
+    }
+  ]
+}
