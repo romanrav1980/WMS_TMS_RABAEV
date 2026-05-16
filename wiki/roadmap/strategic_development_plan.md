@@ -22,6 +22,21 @@ Important publication rule:
 
 - SAP/SAP_INTEGRATION projects are local-only and are not published to GitHub.
 
+## Текущий Статус Реализации
+
+На 2026-05-17 первый слой реализации для фабрики кормов уже внесен в Oracle:
+
+- применена миграция `2026-05-17-001-feed-factory-traceability`;
+- применена миграция `2026-05-17-002-feed-factory-traceability-api`;
+- в схеме есть первые таблицы для партий производства, партий сырья, вовлечения сырья, Меркурия, Честного знака / CRPT, SSCC-агрегации, outbox и журнала JSON-файлового обмена;
+- PL/SQL пакет `RRL_PRODUCTION_API` валиден и является первым управляемым DB API для этого контура;
+- проверка live Oracle после реализации показала `458 VALID` объектов без учета recycle bin и `0 INVALID`;
+- кодовая точка после реализации: `444354a`.
+
+Следующий стратегический шаг - не рисовать экраны, а поставить стабильную сервисную границу поверх `RRL_PRODUCTION_API`. После этого к ней подключаются файловый обмен, адаптеры Меркурия/Честного знака и выбранные legacy-потоки.
+
+Тактический план ведется отдельно: [`tactical_implementation_plan.md`](tactical_implementation_plan.md).
+
 ## Phase 1: Prove Database Compatibility
 
 Purpose: confirm that the restored Oracle state works with every current application before architecture changes start.
@@ -101,6 +116,12 @@ Use a strangler pattern:
   - internal movement;
   - assign destination cell;
   - confirm picking/assembly operation.
+- Feed-factory traceability:
+  - register production batch from API or JSON file exchange;
+  - attach pallets and SSCC aggregation;
+  - register raw-material usage;
+  - enqueue Mercury and Honest Sign events;
+  - expose processing status to operators and integrations.
 
 ### Design Rules
 
@@ -211,6 +232,8 @@ The detailed product/warehouse requirements for the feed factory scenario are ca
 Core needs:
 
 - store DataMatrix codes and aggregation relations;
+- support clients that accept aggregation by `SSCC`;
+- support clients that require full item-level `CIS` transfer;
 - validate code format at receiving/scanning time;
 - track code ownership/status where required by product group;
 - send or receive documents through True API or EDI-related flows;
@@ -228,6 +251,7 @@ Architectural rule:
 
 Core needs:
 
+- store raw-material and finished-goods production batch linkage;
 - map WMS receipt/shipment/stock records to veterinary document concepts;
 - track eVSD identifiers;
 - reconcile incoming and outgoing certificates;
@@ -293,12 +317,14 @@ This gives a practical path: stabilize first, then centralize writes, then intro
 
 ## First 30 Days
 
-1. Freeze a known-good Oracle restore point.
-2. Build the DB compatibility matrix for WinForms and `Tserver`.
-3. Document top 20 terminal/API operations.
-4. Create API skeleton with health check, Oracle connectivity check, and OpenAPI.
-5. Implement one read-only endpoint and one safe mutation endpoint in a disposable schema.
-6. Decide queue MVP: Oracle command journal/outbox unless a broker is already available.
+1. Keep the applied Oracle traceability migrations under version control and export a new restore point.
+2. Build the API server skeleton with health check, Oracle connectivity check, OpenAPI, logging, and idempotency middleware.
+3. Implement feed-factory endpoints over `RRL_PRODUCTION_API`.
+4. Implement the JSON folder-exchange worker for production batch release.
+5. Add smoke tests that create a production batch, raw-material usage, SSCC aggregation, CRPT code, Mercury metadata, and outbox events, then clean their own test data.
+6. Build the DB compatibility matrix for WinForms and `Tserver`.
+7. Document top 20 terminal/API operations.
+8. Decide queue MVP: Oracle command journal/outbox unless a broker is already available.
 
 ## 90 Day Target
 
