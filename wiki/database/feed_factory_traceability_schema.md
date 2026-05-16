@@ -22,7 +22,14 @@ SQL files:
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/001_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/001_rollback.sql)
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/001_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/001_verify.sql)
 
-Status: prepared for review, not applied to live Oracle until explicit approval.
+Status: applied to local Oracle VM schema `RABAEV@127.0.0.1:1521/orcl` after explicit approval.
+
+Apply/verify result:
+
+- Code checkpoint before apply: `0e0c270`.
+- Apply: `Statements=4; Errors=0`.
+- Verify: `Statements=6; Errors=0`.
+- Final live object check excluding recycle-bin objects: `456 VALID`, `0 INVALID`.
 
 ## Version Ledger
 
@@ -87,4 +94,3 @@ Rollback script:
 - keeps the migration ledger/settings foundation tables themselves if present.
 
 Before rollback, export any data already written to the new traceability tables.
-

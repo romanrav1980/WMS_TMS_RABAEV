@@ -2,7 +2,7 @@
 
 Versioned Oracle migration for the feed-factory WMS/MES traceability layer.
 
-This migration is prepared for review only. Do not apply it to the live Oracle VM until the user explicitly approves the exact script.
+This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/orcl` after explicit user approval.
 
 ## Files
 
@@ -41,7 +41,16 @@ The apply script is intended to be additive and idempotent:
 
 The rollback script is destructive for the new migration objects and should only be used after exporting any data written into the new tables.
 
-## Required Procedure
+## Applied Result
+
+- Code checkpoint before apply: `0e0c270`.
+- Oracle migration ledger ID: `2026-05-17-001-feed-factory-traceability`.
+- Apply result: `Statements=4; Errors=0`.
+- Verify result: `Statements=6; Errors=0`.
+- Post-apply recompile: `dbms_utility.compile_schema(schema => 'RABAEV', compile_all => false)`.
+- Final live object check excluding recycle-bin objects: `456 VALID`, `0 INVALID`.
+
+## Required Procedure For Future Reapply
 
 1. Create or confirm a VirtualBox snapshot before applying to the live Oracle VM.
 2. Review `001_apply.sql`.
@@ -53,4 +62,3 @@ The rollback script is destructive for the new migration objects and should only
 ## Version ID
 
 `2026-05-17-001-feed-factory-traceability`
-

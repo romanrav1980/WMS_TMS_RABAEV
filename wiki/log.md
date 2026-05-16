@@ -2,6 +2,15 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-17] oracle-migration-001-applied | Applied feed factory traceability migration
+
+- Applied `db/migrations/2026-05-17_feed_factory_traceability/001_apply.sql` to `RABAEV@127.0.0.1:1521/orcl` after explicit user approval.
+- Code checkpoint before apply: `0e0c270`.
+- Apply result: `Statements=4; Errors=0`.
+- Verify result after removing SQL*Plus-only formatting from `001_verify.sql`: `Statements=6; Errors=0`.
+- Recompiled the `RABAEV` schema with `dbms_utility.compile_schema`.
+- Final live object check excluding recycle-bin objects: `456 VALID`, `0 INVALID`, no current `USER_ERRORS`.
+
 ## [2026-05-17] oracle-migration-001 | Prepared feed factory traceability migration for review
 
 - Added versioned migration folder `db/migrations/2026-05-17_feed_factory_traceability/`.
