@@ -2,6 +2,16 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-17] oracle-migration-002-applied | Applied feed factory PL/SQL API package
+
+- Applied `db/migrations/2026-05-17_feed_factory_traceability/002_apply.sql` to `RABAEV@127.0.0.1:1521/orcl` after explicit user approval.
+- Code checkpoint before apply: `b823af6`.
+- Apply result: `Statements=4; Errors=0`.
+- Verify result: `Statements=4; Errors=0`.
+- `RRL_PRODUCTION_API` package and package body are `VALID`.
+- Smoke test `002_smoke_cleanup.sql`: `Statements=12; Errors=0`; cleanup confirmed `SMOKE-BATCH-002 = 0` and `SMOKE-20260517-002 = 0`.
+- Final live object check excluding recycle-bin objects: `458 VALID`, `0 INVALID`.
+
 ## [2026-05-17] oracle-migration-002-prepared | Added feed factory PL/SQL API migration
 
 - Added `002_apply.sql`, `002_rollback.sql`, and `002_verify.sql` under `db/migrations/2026-05-17_feed_factory_traceability/`.

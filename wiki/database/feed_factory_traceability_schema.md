@@ -77,6 +77,16 @@ Main operations:
 - `REGISTER_FILE_MESSAGE`, `MARK_FILE_PROCESSED`, `MARK_FILE_ERROR`: maintain JSON folder-exchange journal.
 - `GET_SETTING` and `SET_SETTING`: read and update traceability settings.
 
+Apply/verify result for `2026-05-17-002-feed-factory-traceability-api`:
+
+- Code checkpoint before apply: `b823af6`.
+- Apply: `Statements=4; Errors=0`.
+- Verify: `Statements=4; Errors=0`.
+- `RRL_PRODUCTION_API` package and package body are `VALID`.
+- Smoke: `002_smoke_cleanup.sql` finished with `Statements=12; Errors=0`.
+- Smoke cleanup check: `SMOKE-BATCH-002 = 0`, `SMOKE-20260517-002 = 0`.
+- Final live object check excluding recycle-bin objects: `458 VALID`, `0 INVALID`.
+
 ## Existing Table Extensions
 
 `RRL_PALLETS` receives:

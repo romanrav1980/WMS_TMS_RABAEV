@@ -12,6 +12,7 @@ This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/
 - `002_apply.sql`: PL/SQL API package for production traceability operations.
 - `002_rollback.sql`: rollback script for the PL/SQL API package. It does not drop tables.
 - `002_verify.sql`: read-only verification for the PL/SQL API package.
+- `002_smoke_cleanup.sql`: smoke test for package calls. It cleans only rows with fixed `SMOKE-*` keys and commits the cleanup.
 
 ## Scope
 
@@ -65,7 +66,15 @@ The rollback script is destructive for the new migration objects and should only
 - Post-apply recompile: `dbms_utility.compile_schema(schema => 'RABAEV', compile_all => false)`.
 - Final live object check excluding recycle-bin objects: `456 VALID`, `0 INVALID`.
 
-`2026-05-17-002-feed-factory-traceability-api` is prepared as the next migration and must be applied separately.
+`2026-05-17-002-feed-factory-traceability-api`:
+
+- Code checkpoint before apply: `b823af6`.
+- Apply result: `Statements=4; Errors=0`.
+- Verify result: `Statements=4; Errors=0`.
+- Package status: `RRL_PRODUCTION_API` package and package body are `VALID`.
+- Smoke result: `002_smoke_cleanup.sql` finished with `Statements=12; Errors=0`.
+- Smoke cleanup check: `SMOKE-BATCH-002 = 0`, `SMOKE-20260517-002 = 0`.
+- Final live object check excluding recycle-bin objects: `458 VALID`, `0 INVALID`.
 
 ## Required Procedure For Future Reapply
 
