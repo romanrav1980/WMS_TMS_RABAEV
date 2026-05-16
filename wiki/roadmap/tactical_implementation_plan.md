@@ -60,10 +60,12 @@
 
 Цель: создать стабильную сервисную границу для всех новых операций изменения данных.
 
-Рекомендуемый стек:
+Принятый стек:
 
-- ASP.NET Core на текущем .NET LTS.
-- Oracle.ManagedDataAccess.
+- Python FastAPI.
+- Pydantic request/response models.
+- `oracledb` для Oracle package calls и parameterized SQL.
+- `sqlalchemy` в зависимостях как технологический сосед проекта `demand_forecast_backend`.
 - OpenAPI/Swagger.
 - Структурные логи с request ID и operation ID.
 - Конфигурация через environment variables или защищенный конфиг, без hardcoded DB strings.
@@ -83,6 +85,7 @@
 Критерий готовности:
 
 - API вызывает `RRL_PRODUCTION_API`.
+- Legacy `Tserver` compatibility endpoints вызывают Oracle через parameterized handlers или allowlisted `CALL_SPF`.
 - Каждая mutation требует idempotency key.
 - Есть OpenAPI contract.
 - Integration tests запускаются против локальной Oracle VM.
@@ -175,16 +178,17 @@
 
 ## Первые Две Недели
 
-1. Создать проект API server.
-2. Добавить `GET /health` и `GET /db/ping`.
-3. Добавить Oracle config и безопасное хранение secrets.
-4. Реализовать `POST /api/production-batches` поверх `RRL_PRODUCTION_API.CREATE_PROD_BATCH`.
-5. Реализовать endpoint привязки паллеты/SSCC.
-6. Реализовать endpoint вовлечения сырья.
-7. Добавить API integration smoke test против локальной Oracle.
-8. Создать JSON schema для production release file.
-9. Реализовать happy path файлового worker.
-10. Готовить миграцию `003` только если API выявит недостающий DB contract.
+1. Проверить запуск `api/wms_api_server` через Uvicorn после установки зависимостей.
+2. Проверить `GET /health` и `GET /db/ping`.
+3. Проверить Oracle config и безопасное хранение secrets.
+4. Прогнать первый API smoke для `POST /api/production-batches` поверх `RRL_PRODUCTION_API.CREATE_PROD_BATCH`.
+5. Проверить endpoint привязки паллеты/SSCC.
+6. Проверить endpoint вовлечения сырья.
+7. Проверить legacy endpoints: `GET_RUSER`, `GET_PRODUCT_INFO`, `GET_LOT_ITEMS`, `GET_PLACE_ITEMS`, `LOT_CHECK_PASSED`.
+8. Добавить integration smoke tests против локальной Oracle.
+9. Создать JSON schema для production release file.
+10. Реализовать happy path файлового worker.
+11. Готовить миграцию `003` только если API выявит недостающий DB contract.
 
 ## Следующий Месяц
 

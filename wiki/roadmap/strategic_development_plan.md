@@ -85,11 +85,11 @@ The target is one stable API endpoint, with a stable DNS/IP address, where all w
 
 ### Recommended Stack
 
-- API server: ASP.NET Core on current .NET LTS.
-- Oracle access: managed Oracle provider.
+- API server: Python FastAPI.
+- Oracle access: `oracledb`, with `sqlalchemy` kept as an accepted DB-tooling dependency in the same family as `demand_forecast_backend`.
 - Auth: JWT or internal service tokens at first, then role-based authorization mapped to WMS users.
 - Documentation: OpenAPI/Swagger.
-- Deployment: Windows service or Linux container, depending on the actual server environment.
+- Deployment: Uvicorn behind a Windows service wrapper, reverse proxy, or Linux container depending on the actual server environment.
 - Observability: structured logs, request IDs, operation IDs, metrics, and audit tables.
 
 ### API Migration Rule
@@ -289,7 +289,7 @@ WMS API Gateway
 
 Start conservative:
 
-- ASP.NET Core API on current .NET LTS.
+- Python FastAPI, following the local `demand_forecast_backend` style.
 - Oracle remains primary database.
 - Oracle command journal and outbox first.
 - Add RabbitMQ if a separate queue broker is needed quickly.
@@ -342,4 +342,5 @@ This gives a practical path: stabilize first, then centralize writes, then intro
 - [Честный знак note: GIS MT API does not replace VetIS API](https://markirovka.ru/knowledge/tovarnye-gruppy/molochnaya-produkciya/mozhno-li-rabotat-posredstvom-api-gis-mt-s-vetis)
 - [VetIS.API component documentation](https://help.vetrf.ru/wiki/%D0%9A%D0%BE%D0%BC%D0%BF%D0%BE%D0%BD%D0%B5%D0%BD%D1%82_%D0%92%D0%B5%D1%82%D0%B8%D1%81.API)
 - [VetIS.API application processing subsystem](https://help.vetrf.ru/wiki/%D0%9F%D0%BE%D0%B4%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D0%BE%D0%B1%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B8_%D0%B7%D0%B0%D1%8F%D0%B2%D0%BE%D0%BA_%D0%B2_%D0%92%D0%B5%D1%82%D0%B8%D1%81.API)
-- [.NET support policy](https://dotnet.microsoft.com/en-us/platform/support/policy)
+- [FastAPI documentation](https://fastapi.tiangolo.com/)
+- [python-oracledb documentation](https://python-oracledb.readthedocs.io/)

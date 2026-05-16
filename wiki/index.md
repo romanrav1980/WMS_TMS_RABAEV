@@ -38,6 +38,7 @@ Start here for a fresh session:
 ## Runbooks
 
 - [runbooks/create_api_server.md](runbooks/create_api_server.md): recommended API server stack and migration plan from `Tserver`
+- [../api/wms_api_server/README.md](../api/wms_api_server/README.md): first Python FastAPI implementation for WMS/TMS API and `Tserver` compatibility
 - [runbooks/db_app_compatibility_check_2026_05_11.md](runbooks/db_app_compatibility_check_2026_05_11.md): compatibility check for Oracle, C# desktop client, and `Tserver`
 - [runbooks/oracle_recovery_2026_05_11.md](runbooks/oracle_recovery_2026_05_11.md): Oracle VM recovery context and restore point after flashback repair
 - [runbooks/project_onramp.md](runbooks/project_onramp.md): how to orient before changing code or docs

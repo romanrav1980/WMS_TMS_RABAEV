@@ -27,6 +27,7 @@ SAP/SAP_INTEGRATION projects are intentionally out of scope for GitHub publicati
 - `database/`: local wiki mirror of the Oracle schema and Oracle change protocol
 - `requirements/`: technical assignments and durable product requirements
 - `roadmap/`: strategic and tactical implementation plans
+- `../api/wms_api_server/`: Python FastAPI implementation of the new WMS API boundary
 - `../db/migrations/`: versioned Oracle migration scripts with apply, rollback, and verify files
 - `components/`: pages for concrete code or SQL modules
 - `concepts/`: cross-cutting architecture and data concepts

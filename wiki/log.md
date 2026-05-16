@@ -2,6 +2,14 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-17] python-api-server | Accepted Python FastAPI stack and added first API server
+
+- Added `api/wms_api_server/` as the first Python FastAPI implementation.
+- Followed the local `C:\WEB\demand_forecast\demand_forecast_backend` technology style while improving structure: modular routers/services, environment config, Oracle gateway, and allowlisted `CALL_SPF`.
+- Added production traceability endpoints over `RRL_PRODUCTION_API`.
+- Added first `Tserver` compatibility endpoints and legacy `FUNC=...|` parser/encoder.
+- Updated [`runbooks/create_api_server.md`](runbooks/create_api_server.md) and [`roadmap/tactical_implementation_plan.md`](roadmap/tactical_implementation_plan.md) to make Python/FastAPI the accepted stack.
+
 ## [2026-05-17] implementation-planning | Added strategic and tactical next-step plan
 
 - Updated [`roadmap/strategic_development_plan.md`](roadmap/strategic_development_plan.md) with the current applied Oracle state and the next strategic boundary: API over `RRL_PRODUCTION_API`.

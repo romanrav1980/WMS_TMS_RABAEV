@@ -6,39 +6,39 @@ Create a modern API server that replaces `Tserver` as the long-term integration 
 
 The first version should not rewrite the Oracle business logic. It should wrap existing PL/SQL and SQL-backed operations behind explicit, typed, observable API endpoints.
 
-## Recommended Technology
+## Accepted Technology
 
-Use **ASP.NET Core Web API on .NET 10 LTS** as the primary stack.
+Use **Python FastAPI** as the primary API-server stack.
 
-Recommended components:
+This decision follows the local backend style from `C:\WEB\demand_forecast\demand_forecast_backend`:
 
-- ASP.NET Core Minimal APIs or Controllers for HTTP endpoints.
-- `Oracle.ManagedDataAccess.Core` for Oracle access.
-- Dapper or plain ADO.NET for stored procedure calls and tightly controlled SQL.
-- OpenAPI/Swagger for contract documentation.
-- Serilog or built-in structured logging.
-- Windows Service hosting first; Linux container later if infrastructure allows it.
+- FastAPI for HTTP endpoints and OpenAPI.
+- Pydantic models for request/response contracts.
+- SQL-oriented service code.
+- Uvicorn runtime.
 
-Why this is the best fit:
+For WMS/TMS the stack is extended with:
 
-- The current codebase is already C#.
-- The team can migrate `Tserver` behavior incrementally instead of crossing both language and architecture boundaries at once.
-- Oracle stored procedure calls map naturally to `Oracle.ManagedDataAccess`.
-- It is practical to run near the existing Windows/Oracle environment.
-- It gives a clean path to serve both old terminal adapters and future clients.
+- `oracledb` for Oracle package calls and parameterized SQL;
+- `sqlalchemy` kept in dependencies for the same family of DB tooling and future query/session work;
+- environment-based configuration instead of hardcoded credentials;
+- modular routers and services instead of one very large `main.py`;
+- allowlisted legacy procedure calls for `CALL_SPF`.
 
-Current version note:
+Current implementation:
 
-- As of 2026-05-11, Microsoft lists .NET 10 as an active LTS release with support until 2028-11-14.
-- Microsoft recommends Minimal APIs for new ASP.NET Core HTTP API projects.
-- Oracle documents ODP.NET Core as a fully managed ADO.NET provider available through the `Oracle.ManagedDataAccess.Core` NuGet package.
+- [`../../api/wms_api_server/`](../../api/wms_api_server/) contains the first FastAPI server.
+- [`../../api/wms_api_server/app/main.py`](../../api/wms_api_server/app/main.py) wires the app and routers.
+- [`../../api/wms_api_server/app/routers/tserver.py`](../../api/wms_api_server/app/routers/tserver.py) contains the first `Tserver` compatibility endpoints.
+- [`../../api/wms_api_server/app/services/tserver_service.py`](../../api/wms_api_server/app/services/tserver_service.py) maps legacy `FUNC=...|` commands to Oracle-backed handlers.
+- [`../../api/wms_api_server/app/services/production_service.py`](../../api/wms_api_server/app/services/production_service.py) wraps `RRL_PRODUCTION_API`.
 
-## Acceptable Alternatives
+## Rejected Alternatives For Now
 
 | Stack | When it makes sense | Tradeoff |
 | --- | --- | --- |
-| Java Spring Boot + Oracle JDBC | If the infrastructure/team is already Java-heavy. | Strong enterprise option, but heavier migration from current C# code. |
-| Python FastAPI + `oracledb` | Good for prototypes, admin APIs, and integration glue. | Less natural for replacing C# Tserver as a long-lived warehouse transaction gateway. |
+| ASP.NET Core | Still a strong fit for C# teams. | Rejected by current decision because the target style is Python/FastAPI like the existing demand forecast backend. |
+| Java Spring Boot + Oracle JDBC | If infrastructure/team becomes Java-heavy. | Heavier than needed for the first WMS API boundary. |
 | Node.js/NestJS + OracleDB | Works for JSON APIs. | Less attractive for Oracle-heavy transactional warehouse operations. |
 
 ## Target Architecture
@@ -142,60 +142,54 @@ Phase 4: migrate clients.
 ## Suggested Project Layout
 
 ```text
-src/
-  Wms.Api/
-    Program.cs
-    appsettings.json
-    Features/
-      Users/
-      Products/
-      Lots/
-      Places/
-      Orders/
-      Forklift/
-      Inventory/
-      Picking/
-    LegacyTcp/
-      LegacyTcpHostedService.cs
-      LegacyProtocolParser.cs
-      LegacyProtocolWriter.cs
-      LegacyCommandMapper.cs
-    Oracle/
-      OracleConnectionFactory.cs
-      OracleProcedureExecutor.cs
-      OracleOptions.cs
-    Common/
-      RequestContext.cs
-      ApiError.cs
-      Idempotency.cs
-tests/
-  Wms.Api.Tests/
+api/
+  wms_api_server/
+    requirements.txt
+    .env.example
+    README.md
+    app/
+      main.py
+      config.py
+      db.py
+      oracle_gateway.py
+      legacy_protocol.py
+      schemas.py
+      routers/
+        health.py
+        production.py
+        tserver.py
+      services/
+        production_service.py
+        tserver_service.py
 ```
 
 ## Minimum Viable Version
 
 The first useful version should include:
 
-- `GET /api/users/{userId}` mapped from `GET_RUSER`.
+- `GET /health`.
+- `GET /db/ping`.
+- `GET /api/terminal/users/{userId}` mapped from `GET_RUSER`.
 - `GET /api/products/by-barcode/{barcode}` mapped from `GET_PRODUCT_INFO`.
 - `GET /api/lots/{usscc}/items` mapped from `GET_LOT_ITEMS`.
 - `POST /api/terminal/lots/{usscc}/check` mapped from `LOT_CHECK_PASSED`.
 - allowlisted compatibility calls for the observed `CALL_SPF` procedures.
+- production traceability endpoints over `RRL_PRODUCTION_API`.
 - structured logs and Oracle call timing.
 - configuration-driven Oracle connection string with secrets outside source code.
 
 ## Local Test Status
 
-Checked on 2026-05-11:
+Checked on 2026-05-17:
 
-- .NET SDK 9.0 is installed and can build/run ASP.NET Core APIs locally.
-- .NET 10 SDK is not installed yet, so local development can start on `net9.0` or the SDK should be upgraded before targeting `net10.0`.
-- Oracle Developer VM is reachable from the Windows host at `127.0.0.1:1521`.
-- `tnsping //127.0.0.1:1521/orcl` succeeds.
-- Old Windows `sqlplus` 10.2 fails against the VM with `ORA-28040`, so do not use it as the API connectivity test.
-- `Oracle.ManagedDataAccess.Core` 23.8.0 builds under the local ASP.NET Core probe project.
-- ASP.NET Core probe endpoint `/db/ping` successfully connected through `Oracle.ManagedDataAccess.Core` to service `orcl` and returned `SYSTEM` from `dual`.
-- Legacy `DBWMS` from repository `tnsnames.ora` currently times out at `192.168.208.9:1521`; use the VM for API development tests until real WMS database network access is available.
+- Python `3.13.3` is installed.
+- The new FastAPI source under `api/wms_api_server/app` passes `python -m py_compile`.
+- Oracle Developer VM is reachable from the Windows host at `127.0.0.1:1521/orcl`.
+- The current Oracle schema has applied migrations:
+  - `2026-05-17-001-feed-factory-traceability`;
+  - `2026-05-17-002-feed-factory-traceability-api`.
+- `RRL_PRODUCTION_API` is valid in Oracle and is the preferred DB write boundary for feed-factory traceability.
+- Full runtime API smoke still requires installing Python dependencies from `api/wms_api_server/requirements.txt`.
 
 ## Non-Goals For The First Version
 
@@ -206,10 +200,10 @@ Checked on 2026-05-11:
 
 ## Decision
 
-The recommended path is ASP.NET Core Web API on .NET 10 LTS plus a legacy TCP compatibility adapter. This keeps migration close to the existing C# codebase, preserves the Oracle PL/SQL core, and gives the project a proper API boundary without forcing a big-bang rewrite.
+The accepted path is Python FastAPI plus a legacy `Tserver` compatibility layer. This matches the existing local backend methodology from the demand forecast project while still preserving the Oracle PL/SQL core and avoiding a big-bang rewrite.
 
 ## Reference Links
 
-- [.NET Support Policy](https://dotnet.microsoft.com/en-us/platform/support/policy)
-- [ASP.NET Core APIs overview](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/apis?view=aspnetcore-10.0)
-- [Oracle ODP.NET Core installation](https://docs.oracle.com/en/database/oracle/oracle-database/26/odpnt/InstallODPCore.html)
+- [FastAPI documentation](https://fastapi.tiangolo.com/)
+- [python-oracledb documentation](https://python-oracledb.readthedocs.io/)
+- [SQLAlchemy Oracle dialect documentation](https://docs.sqlalchemy.org/en/latest/dialects/oracle.html)
