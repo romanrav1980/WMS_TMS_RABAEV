@@ -20,6 +20,12 @@ The target model separates:
 - `05_gap_patch.sql`: missing compatibility fixes
 - `06_transport_task_missing_impl.sql`: transport task implementation gaps
 
+## Local Schema Mirror
+
+The maintained local mirror of Oracle structure lives in [`../database/index.md`](../database/index.md).
+
+When procedures, packages, tables, sequences, or integration-facing contracts change, update both the mirror and the SQL source before or alongside applying the change to live Oracle. Follow [`../database/oracle_change_protocol.md`](../database/oracle_change_protocol.md).
+
 ## Design Direction
 
 The recommended environment is a separate Oracle 11g-compatible Windows VM, accessed over the network by the desktop app. The application should connect as `RABAEV`, while `SUPERMAG` remains an external data owner exposed through grants.
@@ -30,4 +36,3 @@ The recommended environment is a separate Oracle 11g-compatible Windows VM, acce
 - [`../../db/windowsapplication2_xp12_oracle/README.md`](../../db/windowsapplication2_xp12_oracle/README.md)
 - [`../../db/windowsapplication2_xp12_oracle/gap_report.md`](../../db/windowsapplication2_xp12_oracle/gap_report.md)
 - [`../concepts/oracle_environment.md`](../concepts/oracle_environment.md)
-

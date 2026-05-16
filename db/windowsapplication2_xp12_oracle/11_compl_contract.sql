@@ -11,6 +11,10 @@ create or replace package COMPL is
   function orders_start_plan(ord_id1 int) return int;
   function orders_create_vycherk(ord_id1 int) return int;
   function orders_check(ware_id6 int) return int;
+  function divide_order_bypal2(ord_id1 int, user_id11 varchar2) return int;
+  function update_seq2(articul1 varchar2, cell1 varchar2, SQ1 int, SQGROUP int) return int;
+  function add_art_2pall(articul1 varchar2) return int;
+  function add_art_2pall(articul1 varchar2, count1 number, pall_uid1 varchar2, ware_id1 int, ord_number1 varchar2) return int;
   function order_rows_count(order_id1 int) return int;
   function order_vycherk_count(order_id1 int) return int;
   function reset_2_first_status(order_id1 int) return int;
@@ -38,6 +42,15 @@ create or replace package body COMPL is
     when no_data_found then
       insert into RRL_COMPL_SEQ (ARTICUL, WARE_ID, SEQ, SEQ_GROUP) values (articul1, ware_id1, SQ1, SQGROUP);
       return 1;
+  end;
+
+  function update_seq2(articul1 varchar2, cell1 varchar2, SQ1 int, SQGROUP int) return int is
+    ware_id1 int;
+  begin
+    select ware_id into ware_id1 from rrl_cells where cell = cell1;
+    return update_seq(articul1, ware_id1, SQ1, SQGROUP);
+  exception
+    when no_data_found then return -1;
   end;
 
   function show_sq(articul1 varchar2, ware_id1 int) return int is
@@ -79,6 +92,47 @@ create or replace package body COMPL is
   function divide_st_bypal(stn varchar2, ware_id1 int) return int is
   begin
     return 0;
+  end;
+
+  function divide_order_bypal2(ord_id1 int, user_id11 varchar2) return int is
+    cond1 int;
+  begin
+    select cond into cond1 from rrl_orders where id = ord_id1;
+    if cond1 <> 2 then
+      return 0;
+    end if;
+
+    update rrl_orders set cond = 4 where id = ord_id1;
+    return 4;
+  exception
+    when no_data_found then return -1;
+    when others then return -2;
+  end;
+
+  function add_art_2pall(articul1 varchar2) return int is
+  begin
+    return 0;
+  end;
+
+  function add_art_2pall(articul1 varchar2, count1 number, pall_uid1 varchar2, ware_id1 int, ord_number1 varchar2) return int is
+    row_id1 int;
+  begin
+    select RRL_SBORKA_PALLET_ROWS_SQ.nextval into row_id1 from dual;
+
+    insert into RRL_SBORKA_PALLET_ROWS (
+      ID, PALLET_UID, ARTICUL, SHORTNAME, SHTRIHKOD, EI,
+      ORDER_WEIGHT, TARESIZE, QUANTITY, SORTFIELD, WARE_ID,
+      PACK_COUNT, ORIGINAL_QUANTITY, ORIGINAL_ORDER_WEIGHT
+    )
+    select row_id1, pall_uid1, art.ACTICUL, art.NAME, art.BARCODE_SHT, art.UNIT_TYPE,
+           0, 0, count1, 999999, ware_id1, 0, count1, 0
+      from RRL_ARTICULS art
+     where art.ACTICUL = articul1;
+
+    return row_id1;
+  exception
+    when no_data_found then return 0;
+    when others then return 0;
   end;
 
   function create_order_from_spallets(st_numb varchar2, user_id1 varchar2) return int is

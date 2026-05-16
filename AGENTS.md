@@ -32,4 +32,5 @@ Before making non-trivial project decisions, start here:
 - Use stable names: `subprojects/`, `components/`, `concepts/`, `runbooks/`, `incidents/`, `sources/`.
 - Every meaningful wiki change updates `wiki/index.md`.
 - Every meaningful wiki change appends `wiki/log.md`.
+- Oracle schema changes must be mirrored in `wiki/database/`, represented in SQL under `db/windowsapplication2_xp12_oracle/`, `db/migrations/`, or `db/compatibility_fixes/`, and verified against live Oracle after application.
 - Do not publish SAP/SAP_INTEGRATION projects to GitHub. Treat any local SAP material as out of scope for this repository publication unless the user explicitly changes that rule.

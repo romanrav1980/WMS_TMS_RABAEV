@@ -2,6 +2,62 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-17] oracle-migration-001 | Prepared feed factory traceability migration for review
+
+- Added versioned migration folder `db/migrations/2026-05-17_feed_factory_traceability/`.
+- Added `001_apply.sql`, `001_rollback.sql`, and `001_verify.sql` for the first feed-factory traceability schema layer.
+- Added [`database/feed_factory_traceability_schema.md`](database/feed_factory_traceability_schema.md) as the local schema mirror for the migration.
+- Recorded the migration version ID `2026-05-17-001-feed-factory-traceability`.
+- Updated [`database/oracle_change_protocol.md`](database/oracle_change_protocol.md) with the code version rule for Oracle migrations.
+- Did not apply the migration to live Oracle; it is ready for user review and explicit approval.
+
+## [2026-05-17] feed-factory-file-exchange | Added JSON folder exchange for production release
+
+- Updated [`requirements/feed_factory_mercury_crpt_tz.md`](requirements/feed_factory_mercury_crpt_tz.md).
+- Added `PRODUCTION_BATCH_SOURCE = FILE_EXCHANGE` as a configurable source for finished-goods production releases.
+- Defined the folder-based JSON exchange standard: `in/`, `processing/`, `archive/`, `error/`, and `out/`.
+- Added idempotency by `messageId`, JSON examples, response files, and `RRL_FILE_EXCHANGE_LOG`.
+
+## [2026-05-16] feed-factory-tz | Added production traceability requirements for Mercury and Honest Sign
+
+- Added [`requirements/feed_factory_mercury_crpt_tz.md`](requirements/feed_factory_mercury_crpt_tz.md) in Russian.
+- Captured the target process model for raw-material receipt, raw-material usage, production batch release, marking, aggregation, pallet receipt, and client shipment.
+- Recorded that some clients accept Honest Sign aggregation by `SSCC`, while others require full item-level `CIS` lists.
+- Linked the technical assignment from the root index, wiki schema, external integrations branch, and strategic roadmap.
+
+## [2026-05-16] oracle-schema-mirror | Added local wiki mirror rule for Oracle changes
+
+- Added [`database/index.md`](database/index.md) as the local wiki mirror entry point for the Oracle `RABAEV` schema.
+- Added [`database/oracle_change_protocol.md`](database/oracle_change_protocol.md) to require wiki + SQL source + live Oracle alignment for schema changes.
+- Linked the database mirror from the root index, Oracle branch, Oracle schema subproject, wiki schema, and agent onramp.
+- Recorded the safety discipline: no invisible Oracle changes, no stored secrets in wiki, and verification through read-only metadata checks after applying changes.
+
+## [2026-05-11] compatibility-fix | Closed missing DB API and Tserver config gaps
+
+- Created VM snapshot `before-compat-fixes-2026-05-11` before applying Oracle DDL.
+- Added `db/compatibility_fixes/2026-05-11/001_client_tserver_compat.sql`.
+- Added missing table-like objects and compatibility packages for `PRIHOD`, `PALL_SPLITTER`, `TRANSPORT_PLN`, `STORE_ADRESSES`, and `HELP`.
+- Extended `COMPL` with `ADD_ART_2PALL`, `DIVIDE_ORDER_BYPAL2`, and `UPDATE_SEQ2`.
+- Fixed `Tserver` `adr.txt` parsing so malformed config no longer falls back to `192.168.208.200`.
+- Added `adr.txt` as `Tserver.csproj` content so Release builds place a valid config beside `Tserver.exe`.
+- Normalized `Tserver.sln` header so MSBuild 17 recognizes it as a solution file.
+- Recompiled Oracle schema; final invalid object count is `0`.
+- Rebuilt `WindowsApplication2` and `Tserver`, and reran `Tserver` `GET_RUSER` smoke against local Oracle.
+
+## [2026-05-11] compatibility | Checked Oracle with desktop client and Tserver
+
+- Built `WindowsApplication2` Release x64: `0` errors, legacy warnings remain.
+- Built `Tserver` Release AnyCPU: `0` errors, `System.Data.OracleClient` deprecation warnings remain.
+- Verified managed ODP.NET and legacy `System.Data.OracleClient` connections to `RABAEV@127.0.0.1:1521/orcl`.
+- Ran read-only `Tserver` smoke command `GET_RUSER` against local Oracle VM.
+- Added [`runbooks/db_app_compatibility_check_2026_05_11.md`](runbooks/db_app_compatibility_check_2026_05_11.md) with findings and gaps.
+
+## [2026-05-11] roadmap | Strategic development plan
+
+- Added [`roadmap/strategic_development_plan.md`](roadmap/strategic_development_plan.md).
+- Captured the path from Oracle compatibility checks to API gateway, queueing, Android terminals, and regulated integrations.
+- Recorded queue decision guidance: Oracle command journal/outbox first, RabbitMQ or Kafka when their semantics are justified.
+
 ## [2026-05-11] oracle-recovery | Restored RABAEV and exported restore point
 
 - Recovered Oracle VM `orcl` schema `RABAEV` from recycle bin after accidental DDL damage.

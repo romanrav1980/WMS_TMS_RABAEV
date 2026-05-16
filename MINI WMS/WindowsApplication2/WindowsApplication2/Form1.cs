@@ -24867,7 +24867,7 @@ option1 int  -- 1= дан вес товара  2=вест товара без к
             string strSQL = " select   ID, PUID , TYPE , DEF_PERC_BEFORE , "+
                " DEF_PERC_AFTRER , DEF_PERC_REASON , EVENT_TIME   " +
                "  from RRL_PALLETS_HIST " +
-               " where  rs.PUID = '" + puid + "'  order by ID ";
+               " where  PUID = '" + puid + "'  order by ID ";
 
             ShowQuery(strSQL, "История паллета");
         }

@@ -2167,45 +2167,75 @@ strSQL = " SELECT ТранспортныеЗаданияСтроки.НОМЕР,
             Console.WriteLine(str);
         }
 
+        static string GetAdrConfigPath()
+        {
+            string currentPath = Path.Combine(Directory.GetCurrentDirectory(), "adr.txt");
+            if (File.Exists(currentPath))
+                return currentPath;
+
+            string appPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "adr.txt");
+            if (File.Exists(appPath))
+                return appPath;
+
+            throw new FileNotFoundException("adr.txt не найден рядом с Tserver или в рабочей папке.");
+        }
+
+        static void LoadAdrConfig(ref string IP_listen, ref int PORT_p, ref long ware_id, ref string DBWMSString)
+        {
+            string adrPath = GetAdrConfigPath();
+            string[] str4 = File.ReadAllLines(adrPath, Encoding.GetEncoding("windows-1251"));
+
+            if (str4.Length < 4)
+                throw new InvalidDataException("adr.txt должен содержать 4 строки: IP, PORT, WARE_ID, DB_ALIAS.");
+
+            string ip = str4[0].Trim();
+            string portText = str4[1].Trim();
+            string wareText = str4[2].Trim();
+            string dbAlias = str4[3].Trim();
+
+            IPAddress parsedAddress;
+            if (!IPAddress.TryParse(ip, out parsedAddress))
+                throw new InvalidDataException("adr.txt содержит некорректный IP: " + ip);
+
+            int parsedPort;
+            if (!Int32.TryParse(portText, out parsedPort) || parsedPort <= 0 || parsedPort > 65535)
+                throw new InvalidDataException("adr.txt содержит некорректный PORT: " + portText);
+
+            long parsedWareId;
+            if (!Int64.TryParse(wareText, out parsedWareId))
+                throw new InvalidDataException("adr.txt содержит некорректный WARE_ID: " + wareText);
+
+            if (dbAlias.Length == 0)
+                throw new InvalidDataException("adr.txt содержит пустой DB_ALIAS.");
+
+            IP_listen = ip;
+            PORT_p = parsedPort;
+            ware_id = parsedWareId;
+            DBWMSString = dbAlias;
+        }
+
         static void Main(string[] args)
         {
 
-            int PORT_p = 20005;
+            int PORT_p = 20009;
             long ware_id = 3;
             string VERSION1 = " от 03.04.2010";
-            string IP_listen = "192.168.30.41";
+            string IP_listen = "127.0.0.1";
             string DBWMSString = "DBWMS";
-            if(ware_id==1)
-            IP_listen = "192.168.193.14";
 
-        if (ware_id == 2)
-        {
-            IP_listen = "192.168.208.205";
-        }
-
-        if (ware_id == 3)
-        {
-            IP_listen = "192.168.208.205";
-            IP_listen = "192.168.208.200"; PORT_p = 20007;
-           // IP_listen = "192.168.208.205";
-
-        }
-
-        try
-        {
-            string[] str4 = File.ReadAllLines("adr.txt", Encoding.GetEncoding("windows-1251"));
-            IP_listen = str4[0];
-            PORT_p = Convert.ToInt32( str4[1] );
-
-            DBWMSString = str4[3];
-        }
-        catch(Exception ex)
-        {
-            Console_WriteLine(ex.Message);
-        }
+            try
+            {
+                LoadAdrConfig(ref IP_listen, ref PORT_p, ref ware_id, ref DBWMSString);
+            }
+            catch(Exception ex)
+            {
+                Console_WriteLine("Ошибка конфигурации Tserver: " + ex.Message);
+                Console_WriteLine("Сервер не запущен. Исправьте adr.txt.");
+                return;
+            }
 
 
-        if (args.Length > 0)
+        if (args.Length > 1)
         {
             try {
                 PORT_p = Convert.ToInt32( args[1].ToString() );

@@ -22,6 +22,12 @@ Start here for a fresh session:
 - [subprojects/windowsapplication2.md](subprojects/windowsapplication2.md): legacy WinForms WMS/TMS desktop application
 - [subprojects/oracle_schema.md](subprojects/oracle_schema.md): reconstructed Oracle schema and deployment scripts
 
+## Database Mirror
+
+- [database/index.md](database/index.md): local wiki mirror of the Oracle `RABAEV` schema and change discipline
+- [database/oracle_change_protocol.md](database/oracle_change_protocol.md): required workflow for Oracle structure changes
+- [database/feed_factory_traceability_schema.md](database/feed_factory_traceability_schema.md): schema mirror for the first feed-factory traceability migration
+
 ## Concepts
 
 - [concepts/external_integration_supermag.md](concepts/external_integration_supermag.md): `SUPERMAG` / `Sfera` as external ERP source
@@ -32,8 +38,17 @@ Start here for a fresh session:
 ## Runbooks
 
 - [runbooks/create_api_server.md](runbooks/create_api_server.md): recommended API server stack and migration plan from `Tserver`
+- [runbooks/db_app_compatibility_check_2026_05_11.md](runbooks/db_app_compatibility_check_2026_05_11.md): compatibility check for Oracle, C# desktop client, and `Tserver`
 - [runbooks/oracle_recovery_2026_05_11.md](runbooks/oracle_recovery_2026_05_11.md): Oracle VM recovery context and restore point after flashback repair
 - [runbooks/project_onramp.md](runbooks/project_onramp.md): how to orient before changing code or docs
+
+## Roadmap
+
+- [roadmap/strategic_development_plan.md](roadmap/strategic_development_plan.md): strategic plan for DB compatibility, API boundary, queueing, Android terminals, and regulated integrations
+
+## Requirements
+
+- [requirements/feed_factory_mercury_crpt_tz.md](requirements/feed_factory_mercury_crpt_tz.md): Russian technical assignment for feed-factory production, raw-material usage, Mercury, Honest Sign, aggregation, and shipment modes
 
 ## Control Files
 

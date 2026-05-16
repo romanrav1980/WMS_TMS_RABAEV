@@ -30,6 +30,14 @@ Integration concerns belong here:
    - external ERP/source schema
    - source of articles, documents, document lines, palletization, store/client data
 
+2. `Меркурий` / VetIS.API
+   - production and transport veterinary document contour for regulated goods
+   - planned through [feed factory Mercury/CRPT technical assignment](../requirements/feed_factory_mercury_crpt_tz.md)
+
+3. `Честный знак` / ГИС МТ
+   - marking codes, GTIN, DataMatrix, aggregation, SSCC, and client transfer modes
+   - planned through [feed factory Mercury/CRPT technical assignment](../requirements/feed_factory_mercury_crpt_tz.md)
+
 ## What It Depends On
 
 - [[oracle_plsql_core]] for staging/current tables and WMS-side consumption.

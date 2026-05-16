@@ -27,6 +27,7 @@ Core warehouse logic belongs here when it changes persistent state or enforces w
 ## Main Current Location
 
 - [`../../db/windowsapplication2_xp12_oracle/`](../../db/windowsapplication2_xp12_oracle/)
+- [`../database/index.md`](../database/index.md) is the local wiki mirror for the Oracle schema and the first place to record durable structure decisions.
 
 Legacy and investigative SQL also exists under:
 
@@ -45,9 +46,11 @@ Treat `SQL/` as a source/archive area unless a file is explicitly promoted into 
 - Do not put UI-only behavior here.
 - Do not treat ad hoc report SQL as schema truth until it is reconciled with `db/windowsapplication2_xp12_oracle`.
 - Do not collapse `RABAEV` and `SUPERMAG`: `RABAEV` is the WMS application schema; `SUPERMAG` is external ERP/source context.
+- Do not make invisible Oracle changes: update the wiki mirror, SQL source, and live Oracle together according to [`../database/oracle_change_protocol.md`](../database/oracle_change_protocol.md).
 
 ## Primary Sources
 
+- [`../database/index.md`](../database/index.md)
 - [`../../db/windowsapplication2_xp12_oracle/README.md`](../../db/windowsapplication2_xp12_oracle/README.md)
 - [`../../db/windowsapplication2_xp12_oracle/create_schema.sql`](../../db/windowsapplication2_xp12_oracle/create_schema.sql)
 - [`../../db/windowsapplication2_xp12_oracle/01_tables.sql`](../../db/windowsapplication2_xp12_oracle/01_tables.sql)
@@ -55,4 +58,3 @@ Treat `SQL/` as a source/archive area unless a file is explicitly promoted into 
 - [`../../db/windowsapplication2_xp12_oracle/04_procedures.sql`](../../db/windowsapplication2_xp12_oracle/04_procedures.sql)
 - [`../../db/windowsapplication2_xp12_oracle/gap_report.md`](../../db/windowsapplication2_xp12_oracle/gap_report.md)
 - [`../subprojects/oracle_schema.md`](../subprojects/oracle_schema.md)
-
