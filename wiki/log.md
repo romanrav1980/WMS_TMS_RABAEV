@@ -2,6 +2,13 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-17] oracle-migration-002-prepared | Added feed factory PL/SQL API migration
+
+- Added `002_apply.sql`, `002_rollback.sql`, and `002_verify.sql` under `db/migrations/2026-05-17_feed_factory_traceability/`.
+- The new package is `RRL_PRODUCTION_API`.
+- The package centralizes controlled writes for production batches, pallets, raw-material usage, Mercury, Honest Sign, aggregation, outbox, and JSON file exchange.
+- The rollback script drops only the package and the migration ledger row; it does not drop tables.
+
 ## [2026-05-17] oracle-migration-001-applied | Applied feed factory traceability migration
 
 - Applied `db/migrations/2026-05-17_feed_factory_traceability/001_apply.sql` to `RABAEV@127.0.0.1:1521/orcl` after explicit user approval.

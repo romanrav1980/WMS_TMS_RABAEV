@@ -58,6 +58,25 @@ The ledger is intentionally kept as a small foundation table so future Oracle ch
 - `RRL_CLIENT_REG_PROFILE`: client-specific regulatory transfer profile.
 - `RRL_SYSTEM_SETTINGS`: system settings, including production batch source mode.
 
+## PL/SQL API
+
+Migration `2026-05-17-002-feed-factory-traceability-api` introduces package `RRL_PRODUCTION_API`.
+
+The package is the intended database boundary for the future API server and the production-release file worker. It keeps direct writes to the traceability tables in one controlled contract.
+
+Main operations:
+
+- `CREATE_PROD_BATCH`: create or idempotently find a production batch.
+- `ATTACH_PALLET`: link a WMS pallet to a production batch and optional `SSCC`.
+- `REGISTER_RAW_BATCH`: create or idempotently find a raw-material batch.
+- `ADD_RAW_USAGE`: register raw-material usage in a production batch.
+- `SET_MERCURY_BATCH`: write Mercury/VetIS identifiers and statuses.
+- `ADD_CRPT_CODE`: register Honest Sign item code/CIS.
+- `CREATE_AGGREGATION` and `ADD_AGGREGATION_ITEM`: maintain `SSCC` aggregation.
+- `ENQUEUE_EVENT`: add pending Mercury/CRPT events to `RRL_REGULATORY_OUTBOX`.
+- `REGISTER_FILE_MESSAGE`, `MARK_FILE_PROCESSED`, `MARK_FILE_ERROR`: maintain JSON folder-exchange journal.
+- `GET_SETTING` and `SET_SETTING`: read and update traceability settings.
+
 ## Existing Table Extensions
 
 `RRL_PALLETS` receives:

@@ -9,6 +9,9 @@ This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/
 - `001_apply.sql`: additive forward migration.
 - `001_rollback.sql`: rollback script for the migration.
 - `001_verify.sql`: read-only verification after apply or rollback.
+- `002_apply.sql`: PL/SQL API package for production traceability operations.
+- `002_rollback.sql`: rollback script for the PL/SQL API package. It does not drop tables.
+- `002_verify.sql`: read-only verification for the PL/SQL API package.
 
 ## Scope
 
@@ -23,6 +26,18 @@ The migration adds the first database layer for:
 - production-release JSON file exchange log;
 - client regulatory profile for aggregation mode;
 - schema migration ledger.
+
+The second migration adds package `RRL_PRODUCTION_API` for controlled writes from the future API server or file-exchange worker:
+
+- production batch creation;
+- pallet attachment and SSCC assignment;
+- raw-material batch registration;
+- raw-material usage registration;
+- Mercury batch metadata updates;
+- Honest Sign / CRPT code and aggregation registration;
+- regulatory outbox enqueueing;
+- production JSON file exchange journal updates;
+- system setting reads and writes.
 
 It also adds non-destructive columns to existing WMS tables:
 
@@ -49,6 +64,8 @@ The rollback script is destructive for the new migration objects and should only
 - Verify result: `Statements=6; Errors=0`.
 - Post-apply recompile: `dbms_utility.compile_schema(schema => 'RABAEV', compile_all => false)`.
 - Final live object check excluding recycle-bin objects: `456 VALID`, `0 INVALID`.
+
+`2026-05-17-002-feed-factory-traceability-api` is prepared as the next migration and must be applied separately.
 
 ## Required Procedure For Future Reapply
 
