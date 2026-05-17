@@ -73,6 +73,13 @@ sqlnet.log
 *.log
 api/wms_api_server/runtime/
 tests/load/**/report.json
+exchange/production_release/in/*
+exchange/production_release/processing/*
+exchange/production_release/archive/*
+exchange/production_release/error/*
+exchange/production_release/out/*
+!exchange/production_release/README.md
+!exchange/production_release/**/.gitkeep
 desktop.ini
 Thumbs.db
 

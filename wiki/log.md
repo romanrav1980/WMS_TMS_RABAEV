@@ -2,6 +2,14 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-17] mes-file-exchange | Production release folder exchange
+
+- Added the production-release file exchange worker over existing Oracle `RRL_FILE_EXCHANGE_LOG` and `RRL_PRODUCTION_API`.
+- Added `production-exchange.bat` with stale worker cleanup through `scripts/kill-port.ps1`.
+- Added tracked folder skeleton and JSON contract under `exchange/production_release`.
+- Added smoke test `tests/smoke/mes_file_exchange_smoke.py` and cleanup SQL.
+- The worker accepts folder JSON, creates/reuses MES production orders, issues raw material, completes production, applies WMS movements, archives input, writes `out/{messageId}.json`, and treats repeated identical `messageId` as `DUPLICATE`.
+
 ## [2026-05-17] warehouse-settings-and-encoding-guard | Added warehouse flags and UTF-8 safeguards
 
 - Added and applied migration `012_wms-warehouse-settings` with independent flags on `RRL_WARES`: raw material, production, production buffer, and finished goods.

@@ -16,6 +16,7 @@ class Settings:
     audit_capture_response_body: bool
     audit_replay_base_url: str
     admin_auth_enabled: bool
+    production_exchange_root_dir: str
 
 
 def _split_origins(value: str) -> list[str]:
@@ -40,4 +41,5 @@ def get_settings() -> Settings:
         audit_capture_response_body=_bool_env("WMS_API_AUDIT_CAPTURE_RESPONSE_BODY", "1"),
         audit_replay_base_url=os.getenv("WMS_API_REPLAY_BASE_URL", "http://127.0.0.1:8088"),
         admin_auth_enabled=_bool_env("WMS_ADMIN_AUTH_ENABLED", "1"),
+        production_exchange_root_dir=os.getenv("WMS_PRODUCTION_EXCHANGE_ROOT_DIR", "exchange/production_release"),
     )

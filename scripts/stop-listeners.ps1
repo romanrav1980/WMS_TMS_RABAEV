@@ -63,8 +63,8 @@ if ($All -or $Terminal) {
 
 if ($All -or $Worker) {
   Stop-WmsListener `
-    -Name "outbox worker" `
-    -Pattern @("*app.workers.outbox_worker*")
+    -Name "workers" `
+    -Pattern @("*app.workers.outbox_worker*", "*app.workers.production_exchange_worker*")
 }
 
 Write-Host "Listener cleanup completed." -ForegroundColor Green

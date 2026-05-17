@@ -377,11 +377,11 @@ DB/API:
 
 Актуальный следующий набор файлов:
 
-1. Доработать `production-orders.html/js` до operator workflow.
-2. Добавить массовую/построчную выдачу сырья с контролем план/факт.
-3. Расширить MES detail endpoint удобными summary для UI: movement summary, trace/outbox summary.
-4. Подготовить `production_release_file_exchange` worker и JSON schema.
-5. Обновить wiki после каждого инкремента.
+1. Завершено: `production-orders.html/js` доведен до operator workflow.
+2. Завершено: построчная выдача сырья и завершение выпуска работают через MES API.
+3. В работе: `production_release_file_exchange` worker и JSON schema.
+4. Следующее: расширить MES detail endpoint удобными summary для UI: movement summary, trace/outbox summary.
+5. Следующее: QA/QC hold и блокировки партий перед отгрузкой/маркировкой.
 
 ## Verification Checklist
 
@@ -415,6 +415,7 @@ Sprint 1 завершен, когда:
 - сырье можно выдать по строкам BOM snapshot;
 - завершение выпуска и WMS apply доступны из admin workflow;
 - genealogy читается из admin UI;
+- файловый обмен выпуска производства принимает JSON из папки, пишет `RRL_FILE_EXCHANGE_LOG`, архивирует успешные файлы и возвращает `DUPLICATE` на повтор того же `messageId`;
 - HTTP smoke и cleanup проходят;
 - Oracle invalid objects = `0`;
 - изменения закоммичены и запушены.

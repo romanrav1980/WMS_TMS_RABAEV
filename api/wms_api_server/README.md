@@ -60,6 +60,23 @@ $env:WMS_ORACLE_DSN="127.0.0.1:1521/orcl"
 python -m app.workers.outbox_worker --limit 1
 ```
 
+Production release file exchange worker:
+
+```bat
+production-exchange.bat
+```
+
+Manual one-shot file exchange run:
+
+```powershell
+cd C:\projects\TMS\api\wms_api_server
+$env:WMS_ORACLE_USER="RABAEV"
+$env:WMS_ORACLE_PASSWORD="<password>"
+$env:WMS_ORACLE_DSN="127.0.0.1:1521/orcl"
+$env:WMS_PRODUCTION_EXCHANGE_ROOT_DIR="C:\projects\TMS\exchange\production_release"
+python -m app.workers.production_exchange_worker --limit 1
+```
+
 ## Implemented Surface
 
 Core:
@@ -173,6 +190,14 @@ BOM / MES recipes:
 These endpoints require Oracle migration `2026-05-17-009-bom-production-block`.
 They use permissions `bom_view`, `bom_edit`, `bom_approve`, `bom_block`, and `bom_make_primary`.
 The raw admin page is `http://127.0.0.1:3000/bom.html`.
+
+Production release file exchange:
+
+- JSON files are placed into `exchange/production_release/in`.
+- The worker moves files through `processing`, `archive` or `error`, and writes responses to `out`.
+- `messageId` is stored in Oracle `RRL_FILE_EXCHANGE_LOG` and is used as the idempotency key.
+- The worker creates or reuses a MES production order, issues raw material, completes the order, and can apply old-WMS stock movements through `RRL_EVENTS`.
+- The local launcher is `production-exchange.bat`; the worker module is `app.workers.production_exchange_worker`.
 
 ## Notes
 

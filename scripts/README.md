@@ -6,6 +6,7 @@ Use root `.bat` files for local Windows runs:
 - [`../front.bat`](../front.bat): starts the WMS admin frontend on port `3000`.
 - [`../terminal.bat`](../terminal.bat): starts the WMS terminal Web/PWA app on port `3010`.
 - [`../worker.bat`](../worker.bat): starts the WMS external outbox worker for Oracle-backed adapter events.
+- [`../production-exchange.bat`](../production-exchange.bat): starts the production-release folder/JSON exchange worker.
 - [`../stop-listeners.bat`](../stop-listeners.bat): stops all known local WMS listeners and workers.
 - [`kill-port.ps1`](kill-port.ps1): shared cleanup helper for stale listeners and old command-line matched worker processes.
 - [`stop-listeners.ps1`](stop-listeners.ps1): grouped listener shutdown command for API, admin frontend, terminal frontend, and outbox worker.
@@ -13,12 +14,13 @@ Use root `.bat` files for local Windows runs:
 
 Port-based scripts first call `scripts/kill-port.ps1`, terminate an existing listening process on that port, terminate Uvicorn reloader children such as `parent_pid=<old pid>`, and fail loudly if the port is still busy. This keeps repeated local launches from silently attaching to stale processes.
 
-`worker.bat` has no listening port, so it uses the same helper with `-CommandLineLike "*app.workers.outbox_worker*"` to clear stale worker loops before starting a new one.
+`worker.bat` and `production-exchange.bat` have no listening port, so they use the same helper with `-CommandLineLike` to clear stale worker loops before starting a new one.
 
 Current behavior:
 
 - `serv.bat` starts `api/wms_api_server` through `python -m uvicorn`.
 - `worker.bat` starts `api/wms_api_server` through `python -m app.workers.outbox_worker --loop`.
+- `production-exchange.bat` starts `api/wms_api_server` through `python -m app.workers.production_exchange_worker --loop`.
 - `front.bat` starts `admin/wms_admin_frontend` with `npm start` when that React project exists.
 - Until the React admin frontend is created, `front.bat` serves the raw UI reference from `wiki-raw/wms_admin_ui_reference` through `python -m http.server`.
 - `terminal.bat` starts `terminal/wms_terminal_web` with `npm run dev`.
@@ -31,6 +33,7 @@ Environment defaults:
 - `WMS_API_AUDIT_ENABLED=1`
 - `WMS_API_AUDIT_LOCAL_DIR=runtime\api_audit`
 - `WMS_API_REPLAY_BASE_URL=http://127.0.0.1:8088`
+- `WMS_PRODUCTION_EXCHANGE_ROOT_DIR=exchange\production_release`
 - `REACT_APP_API_BASE_URL=http://127.0.0.1:8088`
 - `VITE_WMS_API_BASE_URL=http://127.0.0.1:8088`
 
