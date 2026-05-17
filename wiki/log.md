@@ -448,6 +448,15 @@ Append-only log of root wiki updates.
 - Added backend endpoints under `/api/picking`.
 - Verified PL/SQL smoke, HTTP smoke, cleanup, UTF-8 encoding check, and final Oracle invalid-object count `0`.
 
+## [2026-05-18] mes-raw-supply-oracle-api | Moved release-to-production into Oracle package
+
+- Added migration `025_apply.sql` with package `RRL_MES_RAW_SUPPLY_API`.
+- The release-to-production step now runs atomically in Oracle: order lock, demand rebuild, shortage protocol, hard reservations, and raw transfer task creation.
+- Backend endpoint `POST /api/mes/production-orders/{production_order_id}/release-to-production` delegates to the Oracle package and returns the resulting task IDs or shortage details.
+- Added permanent smoke/load script `tests/smoke/mes_raw_supply_smoke.py`.
+- Applied and verified migration `025` on local Oracle; backend health check passed on `127.0.0.1:8088`.
+- Smoke/load result: 12 parallel order releases, 12 task cancellations, 1 confirmed task, no active hard reservations left for the smoke marker.
+
 ## [2026-05-17] oracle-migration-001 | Prepared feed factory traceability migration for review
 
 - Added versioned migration folder `db/migrations/2026-05-17_feed_factory_traceability/`.

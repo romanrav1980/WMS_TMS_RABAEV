@@ -390,9 +390,25 @@ class MesService:
         if order.get("status") in {"COMPLETED", "CANCELLED"}:
             raise HTTPException(status_code=409, detail="Completed/cancelled production order cannot be released.")
 
-        self.calculate_raw_supply(
-            production_order_id,
-            MesRawSupplyCalculateRequest(calculated_by=request.created_by or "API"),
+        task_count = self.gateway.call_number_plsql(
+            """
+            begin
+              :result := RRL_MES_RAW_SUPPLY_API.release_to_production(
+                p_production_order_id => :production_order_id,
+                p_to_ware_id => :to_ware_id,
+                p_to_cell => :to_cell,
+                p_allow_partial => :allow_partial,
+                p_created_by => :created_by
+              );
+            end;
+            """,
+            {
+                "production_order_id": production_order_id,
+                "to_ware_id": request.to_ware_id,
+                "to_cell": request.to_cell,
+                "allow_partial": int(request.allow_partial or 0),
+                "created_by": request.created_by or "API",
+            },
         )
         shortages = self.gateway.fetch_all(
             """
@@ -412,63 +428,21 @@ class MesService:
                     "shortages": shortages,
                 },
             )
-
-        created_by = request.created_by or "API"
-        task_ids: list[int] = []
-        candidates = self.gateway.fetch_all(
+        tasks = self.gateway.fetch_all(
             """
-            select d.ORDER_LINE_ID, d.BOM_ID, d.BOM_LINE_ID, d.REQUIRED_QTY, d.UNIT_CODE,
-                   c.*
-              from RRL_MES_RAW_DEMAND d
-              join RRL_MES_RAW_SUPPLY_CANDIDATE c on c.DEMAND_ID = d.DEMAND_ID
-             where d.PRODUCTION_ORDER_ID = :production_order_id
-               and c.SUGGESTED_QTY > 0
-             order by d.DEMAND_ID, c.SORT_ORDER, c.CANDIDATE_ID
+            select TASK_ID
+              from RRL_MES_RAW_TRANSFER_TASK
+             where PRODUCTION_ORDER_ID = :production_order_id
+               and TASK_STATUS in ('PLANNED', 'IN_PROGRESS')
+             order by TASK_ID
             """,
             {"production_order_id": production_order_id},
         )
-        for candidate in candidates:
-            if self._active_mes_task_exists(production_order_id, candidate):
-                continue
-            reservation_id = self._create_hard_raw_reservation(
-                production_order_id=production_order_id,
-                candidate=candidate,
-                created_by=created_by,
-            )
-            task_id = self._create_raw_transfer_task(
-                production_order_id=production_order_id,
-                candidate=candidate,
-                reservation_id=reservation_id,
-                to_ware_id=request.to_ware_id,
-                to_cell=request.to_cell,
-                created_by=created_by,
-            )
-            self.gateway.execute(
-                """
-                update RRL_STOCK_RESERVATION
-                   set TASK_ID = :task_id
-                 where RESERVATION_ID = :reservation_id
-                """,
-                {"task_id": task_id, "reservation_id": reservation_id},
-            )
-            task_ids.append(task_id)
-
-        if task_ids:
-            self.gateway.execute(
-                """
-                update RRL_PRODUCTION_ORDER
-                   set STATUS = case when STATUS = 'DRAFT' then 'RELEASED' else STATUS end,
-                       UPDATED_AT = systimestamp,
-                       UPDATED_BY = :updated_by
-                 where PRODUCTION_ORDER_ID = :production_order_id
-                   and STATUS not in ('COMPLETED', 'CANCELLED')
-                """,
-                {"production_order_id": production_order_id, "updated_by": created_by},
-            )
+        task_ids = [int(row["task_id"]) for row in tasks]
         return {
             "status": "ok",
             "production_order_id": production_order_id,
-            "created_task_count": len(task_ids),
+            "created_task_count": task_count,
             "task_ids": task_ids,
             "shortage_count": len(shortages),
         }

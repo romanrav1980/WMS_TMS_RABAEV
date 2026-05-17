@@ -67,6 +67,9 @@ This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/
 - `024_apply.sql`: MES raw demand, supply candidates, shortages, and raw transfer tasks linked to common reservations.
 - `024_verify.sql`: read-only verification for MES raw supply entities.
 - `024_rollback.sql`: safe rollback for MES raw supply rights and migration ledger only. It does not drop raw supply history.
+- `025_apply.sql`: Oracle package API for atomic release of planned MES production into raw-material supply tasks.
+- `025_verify.sql`: read-only verification for the raw-supply package and invalid objects.
+- `025_rollback.sql`: safe rollback for the raw-supply package only. It does not drop demand, reservation, task, or movement history.
 
 ## Scope
 
@@ -462,6 +465,27 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - Adds indexes for source document lookup, articul/status lookup, physical stock lookup, MES/picking/wave ownership, and a function-based unique guard for active full-pallet hard reservations.
 - Adds admin rights `STOCK_RESERVATION_VIEW` and `STOCK_RESERVATION_EDIT`.
 - `023_rollback.sql` is non-destructive and keeps reservation table/data; it removes only rights and the migration ledger row.
+
+`2026-05-17-024-mes-raw-supply`:
+
+- Apply result: `Statements=4; Errors=0`.
+- Verify result: `Statements=5; Errors=0`.
+- Post-apply invalid-object check left `0 INVALID` current objects.
+- Adds MES raw demand, candidate, shortage, and transfer-task tables.
+- Connects MES raw supply to common `RRL_STOCK_RESERVATION`, using `SOFT` for production demand and `HARD` for concrete warehouse/cell/pallet allocation.
+- Transfer task confirmation calls the existing MES raw issue contour; task cancellation releases the linked hard reservation.
+- `024_rollback.sql` is non-destructive and keeps raw supply history; it removes only rights and the migration ledger row.
+
+`2026-05-17-025-mes-raw-supply-oracle-api`:
+
+- Apply result: `Statements=4; Errors=0`.
+- Verify result: `Statements=3; Errors=0`.
+- Post-apply invalid-object check left `0 INVALID` current objects.
+- Adds package `RRL_MES_RAW_SUPPLY_API` with `release_to_production`.
+- The package locks the production order, rebuilds raw demand, writes soft reservations, calculates available stock from legacy WMS remains minus active hard reservations, writes shortage protocol, and creates hard reservations plus transfer tasks when stock is sufficient.
+- Partial pallet reservations use `RESERVATION_SCOPE = 'QTY'`; full-pallet reservations use `RESERVATION_SCOPE = 'PALLET'`.
+- The backend `release-to-production` endpoint now delegates the critical release step to this Oracle package.
+- `025_rollback.sql` is non-destructive for business data and drops only the package and migration ledger row.
 
 ## Required Procedure For Future Reapply
 

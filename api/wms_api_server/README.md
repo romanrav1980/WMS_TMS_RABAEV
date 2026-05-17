@@ -340,6 +340,7 @@ MES raw supply:
 - `POST /api/mes/raw-transfer-tasks/{task_id}/cancel`
 - These endpoints require Oracle migrations `2026-05-17-023-common-stock-reservation` and `2026-05-17-024-mes-raw-supply`.
 - Calculation creates `SOFT` reservations in `RRL_STOCK_RESERVATION`. Release to production creates `HARD` pallet reservations and `RRL_MES_RAW_TRANSFER_TASK` rows. Task confirmation calls the existing MES raw issue procedure and consumes the hard reservation.
+- The critical release-to-production step is implemented in Oracle package `RRL_MES_RAW_SUPPLY_API` from migration `2026-05-17-025-mes-raw-supply-oracle-api`, so the order lock, demand rebuild, shortage protocol, hard reservation, and transfer task creation happen in one database transaction.
 
 ## Notes
 
@@ -366,4 +367,6 @@ Checked on 2026-05-17:
 - The same page has operator workflow helpers: generate order number, select raw pallets from free raw stock by BOM line, issue all BOM raw lines, prefill finished-goods lot/pallet/SSCC, and run the full MES completion cycle.
 - Migration `023` apply/verify passed; HTTP smoke created a `SOFT` reservation with empty physical fields, promoted it to `HARD` with warehouse/cell/pallet, consumed it, and cleaned the smoke row.
 - Migration `024` apply/verify passed; HTTP smoke created a BOM/order, calculated raw demand, created a hard raw reservation and transfer task, then cancelled the smoke task/reservation without touching legacy stock.
+- Migration `025` apply/verify passed; backend release-to-production now uses `RRL_MES_RAW_SUPPLY_API`.
 - MES raw supply load smoke passed: 12 parallel partial hard reservations on one raw pallet were created and cancelled; one transfer task was confirmed and its reservation moved to `CONSUMED`.
+- Permanent smoke/load script: `python tests\smoke\mes_raw_supply_smoke.py --orders 12 --workers 4`.
