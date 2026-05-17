@@ -12,6 +12,7 @@ Files:
 
 - [`index.html`](index.html): static raw prototype of the accepted dashboard style
 - [`styles.css`](styles.css): visual tokens and layout rules
+- [`admin-nav.js`](admin-nav.js): single modular navigation definition and renderer for all raw admin pages
 - [`assets/nav-icons.svg`](assets/nav-icons.svg): RAW SVG navigation icon sprite for the 17 WMS admin sections
 - [`api-audit.js`](api-audit.js): lightweight API journal/replay block for the raw prototype
 - [`external-outbox.html`](external-outbox.html): separate external outbox and adapter journal administration page
@@ -42,6 +43,7 @@ Design notes:
 - API page lists calls from `GET /api/admin/api-calls`, opens details, runs dry-run replay, and can repeat selected ID or date ranges through `POST /api/admin/api-calls/replay`
 - [`admin-auth.js`](admin-auth.js) adds login/password entry and hides the API page unless the user has `api_audit_view`; real replay requires `api_audit_replay`
 - Login uses the legacy Oracle user table `RUSERS`; the seeded local admin is `admin/admin123`.
+- left navigation is rendered by [`admin-nav.js`](admin-nav.js); pages only set `data-active-nav`, while rights can hide protected items for non-privileged users
 - left navigation has fixed sidebar width, fixed row sizing, stable scrollbar gutter, and SVG icons with a fixed icon slot to avoid visual jumping between pages
 - retail demo customers are repaired/seeded through `scripts/seed-retail-customers.py`; do not seed Russian text through inline PowerShell commands
 - light background, thin borders, small radii, dense tables, restrained blue/green accents

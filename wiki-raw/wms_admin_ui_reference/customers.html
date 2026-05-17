@@ -13,19 +13,7 @@
           <div class="brand-mark">W</div>
           <div class="brand-text"><span>WMS</span> PRO</div>
         </div>
-        <nav class="nav">
-          <a class="nav-link" href="index.html"><svg class="nav-icon" aria-hidden="true"><use href="assets/nav-icons.svg#icon-home"></use></svg><span class="nav-label">Главная</span></a>
-          <a class="nav-link" href="index.html"><svg class="nav-icon" aria-hidden="true"><use href="assets/nav-icons.svg#icon-production"></use></svg><span class="nav-label">Производство</span></a>
-          <a class="nav-link more active" href="customers.html" data-permission="customer_view"><svg class="nav-icon" aria-hidden="true"><use href="assets/nav-icons.svg#icon-customers"></use></svg><span class="nav-label">Клиенты</span></a>
-          <a class="nav-link more" href="customer-orders.html" data-permission="customer_order_view"><svg class="nav-icon" aria-hidden="true"><use href="assets/nav-icons.svg#icon-orders"></use></svg><span class="nav-label">Заказы клиентов</span></a>
-          <a class="nav-link more" href="production-orders.html" data-permission="mes_production_view"><svg class="nav-icon" aria-hidden="true"><use href="assets/nav-icons.svg#icon-mes"></use></svg><span class="nav-label">MES</span></a>
-          <a class="nav-link more" href="bom.html" data-permission="bom_view"><svg class="nav-icon" aria-hidden="true"><use href="assets/nav-icons.svg#icon-bom"></use></svg><span class="nav-label">BOM</span></a>
-          <a class="nav-link more" href="warehouses.html" data-permission="warehouse_settings_view"><svg class="nav-icon" aria-hidden="true"><use href="assets/nav-icons.svg#icon-warehouse-types"></use></svg><span class="nav-label">Типы складов</span></a>
-          <a class="nav-link more" href="product-shipment-settings.html" data-permission="quality_batch_view"><svg class="nav-icon" aria-hidden="true"><use href="assets/nav-icons.svg#icon-aging"></use></svg><span class="nav-label">Вылежка партий</span></a>
-          <a class="nav-link more" href="rights-admin.html" data-permission="rights_admin_view"><svg class="nav-icon" aria-hidden="true"><use href="assets/nav-icons.svg#icon-rights"></use></svg><span class="nav-label">Права</span></a>
-          <a class="nav-link more" href="api-audit.html" data-permission="api_audit_view"><svg class="nav-icon" aria-hidden="true"><use href="assets/nav-icons.svg#icon-api"></use></svg><span class="nav-label">API</span></a>
-          <a class="nav-link more" href="external-outbox.html" data-permission="external_outbox_view"><svg class="nav-icon" aria-hidden="true"><use href="assets/nav-icons.svg#icon-external"></use></svg><span class="nav-label">Внешние отправки</span></a>
-        </nav>
+        <nav class="nav" data-admin-nav data-active-nav="customers"></nav>
         <div class="sidebar-footer">
           <div class="factory-mark">
             <span class="tower t1"></span>
@@ -152,6 +140,7 @@
         </section>
       </main>
     </div>
+    <script src="admin-nav.js?v=20260517-navmodule"></script>
     <script src="admin-auth.js?v=20260517-admin123"></script>
     <script src="customers.js?v=20260517-retail"></script>
   </body>

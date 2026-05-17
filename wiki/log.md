@@ -2,6 +2,13 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-17] raw-admin-nav-canonical | Unified RAW admin navigation
+
+- Fixed the raw admin pages so the left navigation uses one canonical 17-item menu in the same order on every page.
+- Extracted the canonical menu into [`../wiki-raw/wms_admin_ui_reference/admin-nav.js`](../wiki-raw/wms_admin_ui_reference/admin-nav.js); pages now only set `data-active-nav`.
+- Kept per-page active state only; protected sections still use `data-permission` from the rendered menu and may be hidden by rights for non-privileged users.
+- This fixes the visible menu composition change between `index.html` and `customers.html`.
+
 ## [2026-05-17] raw-admin-nav-icons | Added RAW navigation icon sprite
 
 - Added [`../wiki-raw/wms_admin_ui_reference/assets/nav-icons.svg`](../wiki-raw/wms_admin_ui_reference/assets/nav-icons.svg) with SVG icons for the 17 WMS admin navigation sections.
