@@ -5,6 +5,7 @@ Append-only log of root wiki updates.
 ## [2026-05-17] retail-customer-demo-seed | Seeded Magnit and X5 warehouse customers
 
 - Seeded Oracle through the FastAPI admin endpoints with `12` Magnit / AO Tander warehouse customers and `20` X5 warehouse customers.
+- Fixed the seed after the initial inline PowerShell run wrote literal `?` characters into Oracle; the maintained repair path is now [`../scripts/seed-retail-customers.py`](../scripts/seed-retail-customers.py), a UTF-8 file using python-oracledb bind variables.
 - Each demo warehouse customer has one delivery address plus shelf-life, pallet stack, and vehicle-capacity rules for picking-planning scenarios.
 - Added demo vehicle types `FTL33`, `REF33`, `FTL20`, and `CITY10` for full-truck, refrigerated, medium, and city delivery scenarios.
 - Removed duplicate operator-facing `API base` fields from customer and customer-order raw pages; these pages now use the global API base from the admin login session.

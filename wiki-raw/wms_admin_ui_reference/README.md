@@ -41,7 +41,8 @@ Design notes:
 - API page lists calls from `GET /api/admin/api-calls`, opens details, runs dry-run replay, and can repeat selected ID or date ranges through `POST /api/admin/api-calls/replay`
 - [`admin-auth.js`](admin-auth.js) adds login/password entry and hides the API page unless the user has `api_audit_view`; real replay requires `api_audit_replay`
 - Login uses the legacy Oracle user table `RUSERS`; the seeded local admin is `admin/admin123`.
-- left navigation has fixed row sizing and CSS pixel icons to avoid visual jumping between pages
+- left navigation has fixed sidebar width, fixed row sizing, stable scrollbar gutter, and CSS pixel icons with a fixed icon slot to avoid visual jumping between pages
+- retail demo customers are repaired/seeded through `scripts/seed-retail-customers.py`; do not seed Russian text through inline PowerShell commands
 - light background, thin borders, small radii, dense tables, restrained blue/green accents
 - no destructive database actions are represented in the raw prototype
 
