@@ -4,6 +4,9 @@ Append-only log of root wiki updates.
 
 ## [2026-05-17] picking-planning | Drafted picking planning requirements
 
+- Implemented and applied migration `014_customer-order-foundation` with `RRL_CUSTOMER`, customer addresses, legacy address mapping, canonical customer orders, order rows, fulfillment facts, and `RRL_CUSTOMER_ORDER_API`.
+- Added FastAPI customer/order endpoints for listing customers, importing legacy orders, reading customer orders, and reading fulfillment facts.
+- Verified `014_apply`, `014_verify`, PL/SQL smoke/cleanup, backend service smoke/cleanup, and Oracle invalid objects = `0`.
 - Added [`requirements/picking_planning_tz.md`](requirements/picking_planning_tz.md).
 - Added [`requirements/wave_picking_tz.md`](requirements/wave_picking_tz.md) as a separate wave-picking sub-branch for launch waves, hard reservations, pick-face replenishment, open-order selection, and the `Запуск волны` admin dialog.
 - Added [`requirements/wave_picking_admin_tz.md`](requirements/wave_picking_admin_tz.md) for the wave-picking admin page, rights, launch dialog, preview, monitoring, cancellation, reserve release, settings, and audit requirements.

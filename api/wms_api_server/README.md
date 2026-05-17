@@ -208,6 +208,17 @@ Batch quality and shipment readiness:
 - `GET /api/production-batches/{prod_batch_id}/status` returns `AGING_REQUIRED_HOURS`, `SHIPMENT_ALLOWED_AT`, `SHIPMENT_EFFECTIVE_STATUS`, and `IS_SHIPMENT_ALLOWED`.
 - The raw admin page is `http://127.0.0.1:3000/product-shipment-settings.html`.
 
+Customer orders for picking planning:
+
+- `GET /api/customers`
+- `GET /api/customers/{customer_id}`
+- `GET /api/customer-orders`
+- `GET /api/customer-orders/{customer_order_id}`
+- `POST /api/customer-orders/import-legacy/{legacy_order_id}`
+- `GET /api/customer-orders/{customer_order_id}/fulfillment`
+- These endpoints require Oracle migration `2026-05-17-014-customer-order-foundation`.
+- They use permissions `customer_view`, `customer_order_view`, `customer_order_import`, and `customer_fulfillment_view`.
+
 ## Notes
 
 Some legacy `Tserver` operations update both Oracle and Access MDB. This first API version implements the Oracle part and records the Access limitation in the response/documentation. The Access side should be replaced by Oracle/API-owned state or by a separate adapter before production cutover.

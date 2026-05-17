@@ -197,6 +197,13 @@
 
 ## 4. Тактический План Реализации
 
+Текущий статус на 2026-05-17:
+
+- инкремент 0 выполнен для стартовых legacy sources: подтверждены `RRL_ORDERS`, `RRL_ORDER_ROWS`, `RRL_SBORKA_PALLETS`, `RRL_SBORKA_PALLET_ROWS`, `RRL_CLIENT_REG_PROFILE`;
+- в живой Oracle до `014` не было `RRL_CUSTOMER*`, `RRL_PICK*`, `RRL_SHIPMENT_PART*`;
+- инкремент 1 выполнен через migration `014`: customer/order foundation, `RRL_CUSTOMER_ORDER_API`, backend endpoints, smoke и cleanup;
+- Oracle invalid objects после `014`: `0`.
+
 ### Инкремент 0. Подготовка И Инвентаризация
 
 Цель: уточнить реальные источники данных перед DDL.
@@ -218,6 +225,8 @@
 - короткий отчет в wiki;
 - список реальных legacy sources;
 - подтверждение, что Oracle invalid objects = `0`.
+
+Статус: выполнено в рамках подготовки migration `014`.
 
 ### Инкремент 1. Migration 014: Customer And Order Foundation
 
@@ -265,6 +274,8 @@ Smoke:
 - заказ клиента можно читать как новый объект;
 - legacy mapping работает;
 - Oracle invalid objects = `0`.
+
+Статус: выполнено. Следующий практический инкремент - `015 Customer Rules And Vehicle Capacity`.
 
 ### Инкремент 2. Migration 015: Customer Rules And Vehicle Capacity
 

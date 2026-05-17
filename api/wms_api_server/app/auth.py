@@ -29,6 +29,11 @@ WAREHOUSE_SETTINGS_VIEW_PERMISSION = "warehouse_settings_view"
 WAREHOUSE_SETTINGS_EDIT_PERMISSION = "warehouse_settings_edit"
 QUALITY_BATCH_VIEW_PERMISSION = "quality_batch_view"
 QUALITY_BATCH_EDIT_PERMISSION = "quality_batch_edit"
+CUSTOMER_VIEW_PERMISSION = "customer_view"
+CUSTOMER_EDIT_PERMISSION = "customer_edit"
+CUSTOMER_ORDER_VIEW_PERMISSION = "customer_order_view"
+CUSTOMER_ORDER_IMPORT_PERMISSION = "customer_order_import"
+CUSTOMER_FULFILLMENT_VIEW_PERMISSION = "customer_fulfillment_view"
 
 security = HTTPBasic(auto_error=False)
 

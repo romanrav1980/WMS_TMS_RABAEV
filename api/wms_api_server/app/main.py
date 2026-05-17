@@ -3,7 +3,20 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import get_settings
 from .middleware.api_audit import ApiAuditMiddleware
-from .routers import admin_auth, admin_rights, api_audit, bom, health, mes, production, products, traceability, tserver, warehouses
+from .routers import (
+    admin_auth,
+    admin_rights,
+    api_audit,
+    bom,
+    customer_orders,
+    health,
+    mes,
+    production,
+    products,
+    traceability,
+    tserver,
+    warehouses,
+)
 
 
 settings = get_settings()
@@ -30,3 +43,4 @@ app.include_router(bom.router)
 app.include_router(mes.router)
 app.include_router(warehouses.router)
 app.include_router(products.router)
+app.include_router(customer_orders.router)

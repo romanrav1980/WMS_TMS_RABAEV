@@ -37,6 +37,11 @@ This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/
 - `012_seed_wms_mes_test_warehouses.sql`: idempotent test stand seed for raw material, production, production buffer, and finished-goods warehouses.
 - `012_seed_wms_mes_test_warehouses_verify.sql`: read-only verification for the seeded test stand.
 - `012_seed_wms_mes_test_warehouses_cleanup.sql`: cleanup for the fixed `9101..9104` test warehouse stand.
+- `014_apply.sql`: additive customer/order foundation for picking planning.
+- `014_verify.sql`: read-only verification for customer/order foundation.
+- `014_smoke.sql`: smoke import of one legacy order into the customer-order model.
+- `014_smoke_cleanup.sql`: cleanup for rows created by the fixed `SMOKE_014` user marker.
+- `014_rollback.sql`: safe rollback for the customer-order package only. It does not drop customer/order tables.
 
 ## Scope
 
@@ -134,6 +139,17 @@ The twelfth migration adds warehouse role settings directly to `RRL_WARES`:
 - admin rights for `GLOBAL_ADMIN`: `WAREHOUSE_SETTINGS_VIEW`, `WAREHOUSE_SETTINGS_EDIT`;
 - idempotent test stand seed with 4 warehouses, 56 cells, 30 raw-material articles, and starting stock inserted through old `RRL_EVENTS` so the legacy remainder trigger remains the only stock updater.
 
+The fourteenth migration adds the first customer-order foundation for picking planning:
+
+- customer registry through `RRL_CUSTOMER`;
+- customer addresses through `RRL_CUSTOMER_ADDRESS`;
+- legacy store/address bridge through `RRL_CUSTOMER_STORE_MAP`;
+- canonical customer orders through `RRL_CUSTOMER_ORDER`;
+- customer order rows through `RRL_CUSTOMER_ORDER_ROW`;
+- customer order fulfillment facts through `RRL_CUSTOMER_ORDER_FULFILLMENT`;
+- package `RRL_CUSTOMER_ORDER_API` for legacy address/customer creation and legacy order import;
+- admin rights for `GLOBAL_ADMIN`: `CUSTOMER_VIEW`, `CUSTOMER_EDIT`, `CUSTOMER_ORDER_VIEW`, `CUSTOMER_ORDER_IMPORT`, `CUSTOMER_FULFILLMENT_VIEW`.
+
 ## Safety
 
 The apply script is intended to be additive and idempotent:
@@ -163,6 +179,8 @@ The `009_rollback.sql` script is intentionally safe: it drops only `RRL_BOM_API`
 The `011_rollback.sql` script is intentionally safe: it drops only `RRL_MES_PRODUCTION_API`, removes the `GLOBAL_ADMIN` MES rights, and removes the migration ledger row. MES production orders, movements, completions, sequences, and audit history are kept.
 
 The `012_rollback.sql` script is intentionally safe: it removes only warehouse settings rights and the migration ledger row. Warehouse columns and seeded warehouse data are kept unless the explicit seed cleanup script is reviewed and run.
+
+The `014_rollback.sql` script is intentionally safe: it drops only `RRL_CUSTOMER_ORDER_API`. Customer registry, order, row, fulfillment, sequence, index, and mapping data are kept.
 
 SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply` helper reads scripts as strict UTF-8 by default; use `--encoding=cp1251` only for confirmed legacy scripts. `012_verify.sql` includes a mojibake-marker query for the warehouse seed texts.
 
@@ -280,6 +298,16 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - Added admin API `GET/PATCH /api/admin/product-shipment-settings` and raw admin page `wiki-raw/wms_admin_ui_reference/product-shipment-settings.html`.
 - Smoke proved a 24-hour norm produces `WAIT_AGING`; existing MES HTTP smoke proved default norm `0` produces `READY` / `IS_SHIPMENT_ALLOWED = 1`.
 - Post-apply recompile left `0 INVALID` current objects.
+
+`2026-05-17-014-customer-order-foundation`:
+
+- Apply result: `Statements=6; Errors=0`.
+- Verify result: `Statements=5; Errors=0`.
+- Package status: `RRL_CUSTOMER_ORDER_API` package and package body are `VALID`.
+- Added customer registry, address, legacy address mapping, canonical customer order, order rows, and fulfillment fact tables.
+- PL/SQL smoke imported one legacy `RRL_ORDERS` row into the customer-order model and cleanup left `SMOKE_014 = 0`.
+- Backend service smoke imported one legacy order through `CustomerOrderService`, read 298 rows, and cleanup left `SMOKE_API_014 = 0`.
+- Post-apply invalid-object check left `0 INVALID` current objects.
 
 ## Required Procedure For Future Reapply
 

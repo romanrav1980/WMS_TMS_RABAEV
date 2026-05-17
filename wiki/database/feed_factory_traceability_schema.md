@@ -19,6 +19,7 @@ The schema supports:
 - traceability events, genealogy edges, durable event outbox, adapter request log, and QA hold.
 - BOM recipes, component lines, and audit journal for MES production planning.
 - MES production orders, order BOM snapshots, production completion journal, and the WMS event bridge through `RRL_EVENTS`.
+- customer registry, legacy store/address mapping, customer orders, order rows, and fulfillment facts for picking planning.
 
 ## Migration
 
@@ -42,6 +43,9 @@ SQL files:
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/011_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/011_apply.sql)
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/011_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/011_verify.sql)
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/011_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/011_rollback.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/014_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/014_apply.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/014_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/014_verify.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/014_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/014_rollback.sql)
 
 Status: applied to local Oracle VM schema `RABAEV@127.0.0.1:1521/orcl` after explicit approval.
 
@@ -95,6 +99,12 @@ The ledger is intentionally kept as a small foundation table so future Oracle ch
 - `RRL_PROD_ORDER_BOM_LINE`: immutable snapshot of BOM lines used by a production order.
 - `RRL_MES_MOVEMENT`: MES movement journal for raw issue, raw consumption, finished lot release, and pallet release.
 - `RRL_MES_COMPLETION`: idempotent production completion journal.
+- `RRL_CUSTOMER`: customer registry for picking planning.
+- `RRL_CUSTOMER_ADDRESS`: customer legal, delivery, billing, and store addresses.
+- `RRL_CUSTOMER_STORE_MAP`: bridge from legacy `RRL_ORDERS.ADDR` to a canonical customer.
+- `RRL_CUSTOMER_ORDER`: canonical customer order imported from legacy WMS or future external sources.
+- `RRL_CUSTOMER_ORDER_ROW`: canonical customer order lines.
+- `RRL_CUSTOMER_ORDER_FULFILLMENT`: fulfillment fact rows linked to legacy assembly pallets.
 
 ## PL/SQL API
 
@@ -222,6 +232,25 @@ The migration also grants `GLOBAL_ADMIN` the new legacy rights:
 - `MES_WMS_BRIDGE_APPLY`.
 
 The `011_rollback.sql` script is intentionally safe: it drops only `RRL_MES_PRODUCTION_API`, removes the MES rights, and removes the migration ledger row. It does not drop MES production-order or movement history.
+
+Migration `2026-05-17-014-customer-order-foundation` prepares package `RRL_CUSTOMER_ORDER_API`.
+
+Main operations:
+
+- `NORMALIZE_KEY`: normalize legacy address strings for stable mapping.
+- `ENSURE_CUSTOMER_FROM_LEGACY_ADDR`: create or reuse a canonical customer/store mapping from `RRL_ORDERS.ADDR`.
+- `IMPORT_LEGACY_ORDER`: import a legacy `RRL_ORDERS` header and `RRL_ORDER_ROWS` into `RRL_CUSTOMER_ORDER` and `RRL_CUSTOMER_ORDER_ROW`.
+- `SYNC_FULFILLMENT_FROM_LEGACY`: link legacy `RRL_SBORKA_PALLETS` facts to the canonical order where legacy order numbers match.
+
+The migration also grants `GLOBAL_ADMIN` the new legacy rights:
+
+- `CUSTOMER_VIEW`;
+- `CUSTOMER_EDIT`;
+- `CUSTOMER_ORDER_VIEW`;
+- `CUSTOMER_ORDER_IMPORT`;
+- `CUSTOMER_FULFILLMENT_VIEW`.
+
+The `014_rollback.sql` script is intentionally safe: it drops only `RRL_CUSTOMER_ORDER_API`. It does not drop customer, order, row, fulfillment, or mapping data.
 
 ## WMS/MES Warehouse Settings
 
