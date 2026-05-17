@@ -9,6 +9,7 @@
 - [WMS+MES+Traceability EDD](../architecture/wms_mes_traceability_edd.md)
 - [Тактический план WMS+MES+Traceability](../roadmap/wms_mes_traceability_tactical_plan.md)
 - [BOM-блок для MES](bom_production_block_tz.md)
+- [Сборка по волнам / Wave Picking](wave_picking_tz.md)
 
 ## 1. Назначение
 
