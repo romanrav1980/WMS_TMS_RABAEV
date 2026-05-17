@@ -9,6 +9,7 @@ Append-only log of root wiki updates.
 - Captured customer shelf-life rules, customer-specific palletization, route/dock context, full-pallet-first planning, case picking, weight/volume limits, pick route order, regular pick faces, and future dynamic pick faces.
 - Added the mandatory reservation layer so active picking plans cannot double-assign the same pallet or the already reserved part of a pallet.
 - Added partial picking requirements: plan only free stock after reservations and write a shortage protocol for missing quantities.
+- Added customer order, customer registry, legacy store-as-customer mapping, and order fulfillment fact requirements based on live Oracle checks of `RRL_ORDERS.ADDR` and `RRL_SBORKA_PALLETS`.
 
 ## [2026-05-17] batch-shipment-readiness | Added aging norm on finished-goods lots
 
