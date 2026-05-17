@@ -79,6 +79,7 @@
               <label>Ед.<input id="mesNewUnit" value="KG" /></label>
               <label>Линия<input id="mesNewLine" placeholder="LINE-1" /></label>
               <button id="mesCreateOrder" type="button">Создать</button>
+              <button id="mesFillDemo" type="button">Тестовые поля</button>
             </div>
             <div class="rights-summary"><span id="mesStatusText">Ожидание данных</span></div>
             <div class="rights-table-wrap">
@@ -108,7 +109,10 @@
               <label>SSCC<input id="mesFgSscc" placeholder="000000000000000001" /></label>
               <button id="mesCompleteOrder" type="button">Завершить</button>
               <button id="mesApplyWms" type="button" data-permission="mes_wms_bridge_apply">Применить в WMS</button>
+              <button id="mesLoadGenealogy" type="button">Genealogy</button>
             </div>
+            <div class="rights-summary"><span>Genealogy: сырье → заказ → партия → паллеты</span></div>
+            <pre id="mesGenealogy"></pre>
             <div class="rights-table-wrap">
               <table class="rights-table">
                 <thead><tr><th>ID</th><th>Тип</th><th>Статус</th><th>Паллет</th><th>Откуда</th><th>Куда</th><th>Кол-во</th><th>Ошибка</th></tr></thead>

@@ -22,6 +22,14 @@ Append-only log of root wiki updates.
 - Ran MES production-completion smoke after the restore point: raw issue and raw consumption were applied to old WMS through `RRL_EVENTS TYPE_EVENT=2/3`, finished pallet receipt through `TYPE_EVENT=1`, and cleanup removed the fixed smoke rows.
 - Runtime smoke passed: `/health`, BOM/MES/warehouse/API-audit endpoints, raw admin page `warehouses.html`, and Oracle invalid-object check.
 
+## [2026-05-17] mes-http-workflow | Verified MES workflow through API
+
+- Added HTTP smoke `tests/smoke/mes_http_workflow.py` for the full operator path: create BOM, add raw line, approve BOM, create production order, issue raw material, complete production, apply WMS bridge, and read genealogy.
+- Added cleanup script `tests/smoke/cleanup_mes_http_workflow.sql` for fixed `HTTP-MES-*` test rows.
+- Extended raw MES admin page `wiki-raw/wms_admin_ui_reference/production-orders.html` with demo-field fill and genealogy display.
+- Smoke result: `movements=4`, `applied_movements=3`, `raw_usage=1`, `pallets=1`; cleanup left `HTTP-MES-*` orders, BOMs, and pallets at `0`.
+- Oracle invalid-object check remained empty after the workflow.
+
 ## [2026-05-17] mes-production-completion-implemented | Implemented MES completion and WMS event bridge
 
 - Added and applied migration `011_mes-production-completion`.

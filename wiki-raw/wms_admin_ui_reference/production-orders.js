@@ -82,6 +82,7 @@ async function loadMesOrder(orderId) {
     prod_batch_id: result.prod_batch_id,
   }, null, 2);
   renderMesMovements(result.movements || []);
+  mesEl("mesGenealogy").textContent = "";
 }
 
 function renderMesMovements(movements) {
@@ -187,15 +188,55 @@ async function applyMesWms() {
   await loadMesOrder(mesState.selectedOrder.production_order_id);
 }
 
+async function loadMesGenealogy() {
+  if (!mesState.selectedOrder) throw new Error("Выберите заказ");
+  const response = await fetch(`${mesApiBase()}/api/mes/production-orders/${mesState.selectedOrder.production_order_id}/genealogy`, {
+    headers: mesHeaders(),
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.detail || `Genealogy HTTP ${response.status}`);
+  mesEl("mesGenealogy").textContent = JSON.stringify({
+    order: {
+      production_order_id: result.order?.production_order_id,
+      order_no: result.order?.order_no,
+      status: result.order?.status,
+      prod_batch_id: result.order?.prod_batch_id,
+      target_articul: result.order?.target_articul,
+    },
+    raw_usage: result.raw_usage || [],
+    pallets: result.pallets || [],
+  }, null, 2);
+}
+
+function fillMesDemoFields() {
+  const suffix = new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 14);
+  mesEl("mesNewOrderNo").value = `MES-DEMO-${suffix}`;
+  mesEl("mesNewTarget").value = "FG-DEMO-PETFOOD";
+  mesEl("mesNewQty").value = "100";
+  mesEl("mesNewUnit").value = "KG";
+  mesEl("mesNewLine").value = "LINE-1";
+  mesEl("mesRawPallet").value = `RAW-DEMO-${suffix}`;
+  mesEl("mesRawArticul").value = "RM-MEAT-BEEF-FROZ-01";
+  mesEl("mesRawQty").value = "50";
+  mesEl("mesRawFrom").value = "RM-A01-01";
+  mesEl("mesRawTo").value = "MES_PROD";
+  mesEl("mesLotNo").value = `LOT-DEMO-${suffix}`;
+  mesEl("mesFactQty").value = "100";
+  mesEl("mesFgPallet").value = `FG-DEMO-${suffix}`;
+  mesEl("mesFgSscc").value = `0000000000${suffix}`.slice(-18);
+}
+
 function initMes() {
   if (!mesEl("mesRefresh")) return;
   if (window.wmsAdminAuth && !window.wmsAdminAuth.hasPermission("mes_production_view")) return;
   mesEl("mesRefresh").addEventListener("click", () => mesLoadOrders().catch(showMesError));
   mesEl("mesLoad").addEventListener("click", () => mesLoadOrders().catch(showMesError));
   mesEl("mesCreateOrder").addEventListener("click", () => createMesOrder().catch(showMesError));
+  mesEl("mesFillDemo").addEventListener("click", () => fillMesDemoFields());
   mesEl("mesIssueRaw").addEventListener("click", () => issueMesRaw().catch(showMesError));
   mesEl("mesCompleteOrder").addEventListener("click", () => completeMesOrder().catch(showMesError));
   mesEl("mesApplyWms").addEventListener("click", () => applyMesWms().catch(showMesError));
+  mesEl("mesLoadGenealogy").addEventListener("click", () => loadMesGenealogy().catch(showMesError));
   for (const id of ["mesStatusFilter", "mesTargetFilter", "mesLimit"]) {
     mesEl(id).addEventListener("change", () => mesLoadOrders().catch(showMesError));
   }
