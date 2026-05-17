@@ -58,6 +58,7 @@ Start here for a fresh session:
 - [roadmap/wms_mes_traceability_strategic_plan.md](roadmap/wms_mes_traceability_strategic_plan.md): approved strategic plan for WMS+MES+Traceability implementation
 - [roadmap/wms_mes_traceability_tactical_plan.md](roadmap/wms_mes_traceability_tactical_plan.md): tactical sprint plan for traceability spine, outbox, adapters, admin UI, MES, shipment, and recall
 - [roadmap/picking_wave_implementation_plan.md](roadmap/picking_wave_implementation_plan.md): strategic and tactical implementation plan for picking planning, wave picking, reservations, admin UI, terminal execution, and WMS bridge
+- [roadmap/current_checkpoint_2026_05_18.md](roadmap/current_checkpoint_2026_05_18.md): current reboot checkpoint, tactical plan, strategic plan, and exact next steps after warehouse-task implementation
 
 ## Requirements
 
@@ -69,6 +70,7 @@ Start here for a fresh session:
 - [requirements/modern_terminal_app_tz.md](requirements/modern_terminal_app_tz.md): Russian technical assignment for the modern Web/PWA terminal app replacing the legacy terminal OS client
 - [requirements/picking_planning_tz.md](requirements/picking_planning_tz.md): Russian technical assignment for customer-order picking planning, reservations, customer rules, route/dock context, and shipment-part splitting
 - [requirements/raw_material_admin_tz.md](requirements/raw_material_admin_tz.md): Russian technical assignment for the raw-material admin page: raw SKU settings, raw warehouses, and stock by selected warehouses
+- [requirements/warehouse_tasks_reachtruck_tz.md](requirements/warehouse_tasks_reachtruck_tz.md): Russian technical assignment for common warehouse tasks and reachtruck-driver execution
 - [requirements/wave_picking_tz.md](requirements/wave_picking_tz.md): Russian technical assignment for wave picking, hard reservations, pick-face replenishment, launch dialog, and wave execution
 - [requirements/wave_picking_admin_tz.md](requirements/wave_picking_admin_tz.md): Russian technical assignment for the wave-picking admin page, launch dialog, rights, monitoring, and operational controls
 

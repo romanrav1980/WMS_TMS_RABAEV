@@ -2,6 +2,13 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-18] reboot-checkpoint | Recorded warehouse-task next plan
+
+- Added [`roadmap/current_checkpoint_2026_05_18.md`](roadmap/current_checkpoint_2026_05_18.md) as the current reboot checkpoint.
+- Recorded the current strategic direction: stabilize the WMS/MES operational boundary through `RRL_WAREHOUSE_TASK`, then build driver execution and move toward picking/shipment.
+- Recorded the tactical next steps: warehouse-task driver page, scan validation, domain sync on task completion, supervisor monitoring, and later picking/wave integration.
+- Added `warehouse_tasks_reachtruck_tz.md` and the checkpoint document to the wiki index.
+
 ## [2026-05-18] warehouse-tasks | Added reachtruck task foundation
 
 - Added [`requirements/warehouse_tasks_reachtruck_tz.md`](requirements/warehouse_tasks_reachtruck_tz.md).
