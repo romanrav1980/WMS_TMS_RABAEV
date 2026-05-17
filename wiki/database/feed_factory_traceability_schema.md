@@ -22,6 +22,7 @@ The schema supports:
 - customer registry, legacy store/address mapping, customer orders, order rows, and fulfillment facts for picking planning.
 - customer shelf-life rules, product stacking rules, vehicle types, vehicle capacity rules, and shipment parts.
 - picking plans, picking tasks, soft reservations, shortage protocol, and decision log.
+- pick routes, pick-face locations, SKU-to-pick-face assignments, and case-pick task sequencing.
 
 ## Migration
 
@@ -54,6 +55,9 @@ SQL files:
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/016_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/016_apply.sql)
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/016_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/016_verify.sql)
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/016_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/016_rollback.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/017_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/017_apply.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/017_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/017_verify.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/017_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/017_rollback.sql)
 
 Status: applied to local Oracle VM schema `RABAEV@127.0.0.1:1521/orcl` after explicit approval.
 
@@ -124,6 +128,10 @@ The ledger is intentionally kept as a small foundation table so future Oracle ch
 - `RRL_PICK_RESERVATION`: soft/hard reservation rows that prevent double assignment of pallet or case stock.
 - `RRL_PICK_SHORTAGE`: explicit shortage protocol for partially planned customer orders.
 - `RRL_PICK_DECISION_LOG`: explanation log for stock selection, shortages, and plan cancellation.
+- `RRL_PICK_ROUTE`: warehouse picking route header.
+- `RRL_PICK_ROUTE_CELL`: ordered route cells with `PICK_SEQUENCE`.
+- `RRL_PICK_FACE`: configured regular/dynamic pick-face locations.
+- `RRL_PICK_FACE_ARTICUL`: article-to-pick-face assignment with priority and validity period.
 
 ## PL/SQL API
 
@@ -311,6 +319,32 @@ The migration also grants `GLOBAL_ADMIN` the new legacy rights:
 The package reads `RRL_REMAINS`, `RRL_PALLETS`, and `RRL_PROD_BATCH_READY_V`, but does not update old WMS stock tables directly. Physical stock remains owned by the legacy WMS event/trigger mechanism.
 
 The `016_rollback.sql` script is intentionally safe: it drops only `RRL_PICKING_API`. It does not drop picking plan, reservation, task, shortage, or decision-log data.
+
+Migration `2026-05-17-017-pick-face-route` prepares package `RRL_PICK_TOPOLOGY_API` and extends `RRL_PICKING_API`.
+
+Main operations:
+
+- `UPSERT_ROUTE`: create/update a warehouse picking route.
+- `UPSERT_ROUTE_CELL`: create/update an ordered route cell.
+- `UPSERT_PICK_FACE`: create/update a regular or dynamic pick-face location.
+- `ASSIGN_ARTICUL`: assign a SKU to a pick face with priority, validity period, and case-pick flag.
+- `RESOLVE_PICK_FACE`: choose the active pick face for a SKU and warehouse.
+
+`RRL_PICKING_API.CREATE_PLAN` now uses the topology layer for `CASE_PICK` tasks. If a matching active pick face exists, the task receives:
+
+- `TARGET_CELL_CODE`;
+- `PICK_SEQUENCE`;
+- `PICK_FACE_ID`;
+- `PICK_ROUTE_CELL_ID`.
+
+Full-pallet tasks remain tied to the source pallet/cell and do not move stock directly. Old WMS stock remains owned by the legacy WMS event/trigger mechanism.
+
+The migration also grants `GLOBAL_ADMIN` the new legacy rights:
+
+- `PICK_TOPOLOGY_VIEW`;
+- `PICK_TOPOLOGY_EDIT`.
+
+The `017_rollback.sql` script is intentionally no-op. Pick topology is data-bearing configuration and `RRL_PICKING_API` depends on the topology package after this migration; use a VM/database snapshot for a full physical rollback.
 
 ## WMS/MES Warehouse Settings
 

@@ -204,7 +204,8 @@
 - инкремент 1 выполнен через migration `014`: customer/order foundation, `RRL_CUSTOMER_ORDER_API`, backend endpoints, smoke и cleanup;
 - инкремент 2 выполнен через migration `015`: customer shelf-life rules, stack rules, vehicle types, customer vehicle rules, shipment parts, `RRL_CUSTOMER_RULE_API`, backend endpoints, smoke и cleanup;
 - инкремент 3 выполнен через migration `016`: picking plans, tasks, soft reservations, shortages, decision log, `RRL_PICKING_API`, backend endpoints, smoke и cleanup;
-- Oracle invalid objects после `016`: `0`.
+- инкремент 4 выполнен через migration `017`: pick routes, route cells, pick faces, SKU assignment, `RRL_PICK_TOPOLOGY_API`, case-pick target cells and sequence, backend endpoints, smoke и cleanup;
+- Oracle invalid objects после `017`: `0`.
 
 ### Инкремент 0. Подготовка И Инвентаризация
 
@@ -402,6 +403,8 @@ Smoke:
 
 - покоробочные задачи имеют порядок обхода;
 - можно рассчитывать потребность пополнения.
+
+Статус: выполнено. Следующий практический инкремент - `018 Wave Picking Core`.
 
 ### Инкремент 5. Migration 018: Wave Picking Core
 
@@ -714,10 +717,10 @@ Smoke:
 
 Следующий разумный шаг реализации:
 
-1. Подготовить migration `017` для pick face и маршрута обхода ячеек.
-2. Добавить таблицы `RRL_PICK_FACE`, `RRL_PICK_FACE_ARTICUL`, `RRL_PICK_ROUTE`, `RRL_PICK_ROUTE_CELL`.
-3. Научить планировщик отличать полнопалетный отбор от покоробочного отбора по настроенным pick face.
-4. Добавить backend API для настройки pick face и маршрута.
-5. Проверить, что case-pick задачи сортируются по `PICK_SEQUENCE`, а старые WMS остатки по-прежнему не меняются напрямую.
+1. Подготовить migration `018` для ядра волновой сборки.
+2. Добавить `RRL_PICK_WAVE`, `RRL_PICK_WAVE_ORDER`, `RRL_PICK_WAVE_LINE`, `RRL_PICK_WAVE_RESERVATION`, replenishment/picking tasks и audit.
+3. Реализовать preview/launch/cancel волны через `RRL_PICK_WAVE_API`.
+4. При launch переводить выбранные soft reservations в hard reservations и создавать задачи пополнения/отбора.
+5. Проверить конкурентный запуск двух волн: один и тот же паллет или часть паллета не должны попасть в две волны.
 
-Это даст фундамент для следующего этапа: `018 Wave Picking Core`, где soft reserve будет переводиться в hard reserve при запуске волны.
+Это переведёт модуль от индивидуального планирования заказа к операционному запуску сборки по волнам.

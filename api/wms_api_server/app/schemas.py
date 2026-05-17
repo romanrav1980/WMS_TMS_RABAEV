@@ -462,3 +462,60 @@ class PickingPlanCreateRequest(BaseModel):
 
 class PickingPlanCancelRequest(BaseModel):
     updated_by: str | None = None
+
+
+class PickRouteUpsertRequest(BaseModel):
+    pick_route_id: int | None = None
+    route_code: str
+    route_name: str | None = None
+    ware_id: int
+    route_kind: str = "PICK"
+    active: int = 1
+    updated_by: str | None = None
+
+
+class PickRouteCellUpsertRequest(BaseModel):
+    pick_route_cell_id: int | None = None
+    pick_route_id: int
+    cell_code: str
+    pick_sequence: float
+    zone_code: str | None = None
+    aisle_code: str | None = None
+    side_code: str | None = None
+    level_no: float | None = None
+    active: int = 1
+    updated_by: str | None = None
+
+
+class PickFaceUpsertRequest(BaseModel):
+    pick_face_id: int | None = None
+    ware_id: int
+    cell_code: str
+    pick_face_code: str | None = None
+    pick_face_type: str = "REGULAR"
+    pick_route_id: int | None = None
+    pick_route_cell_id: int | None = None
+    pick_sequence: float | None = None
+    min_case_qty: float | None = None
+    max_case_qty: float | None = None
+    replenishment_trigger_qty: float | None = None
+    max_weight: float | None = None
+    max_volume: float | None = None
+    allow_dynamic_assignment: int = 0
+    active: int = 1
+    comment_text: str | None = None
+    updated_by: str | None = None
+
+
+class PickFaceArticulUpsertRequest(BaseModel):
+    pick_face_articul_id: int | None = None
+    pick_face_id: int | None = None
+    articul: str
+    priority: float = 100
+    min_qty: float | None = None
+    max_qty: float | None = None
+    case_pick_enabled: int = 1
+    active: int = 1
+    valid_from: date | None = None
+    valid_to: date | None = None
+    updated_by: str | None = None

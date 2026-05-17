@@ -7,9 +7,18 @@ from ..auth import (
     PICK_PLAN_VIEW_PERMISSION,
     PICK_RESERVATION_VIEW_PERMISSION,
     PICK_SHORTAGE_VIEW_PERMISSION,
+    PICK_TOPOLOGY_EDIT_PERMISSION,
+    PICK_TOPOLOGY_VIEW_PERMISSION,
     require_permission,
 )
-from ..schemas import PickingPlanCancelRequest, PickingPlanCreateRequest
+from ..schemas import (
+    PickFaceArticulUpsertRequest,
+    PickFaceUpsertRequest,
+    PickRouteCellUpsertRequest,
+    PickRouteUpsertRequest,
+    PickingPlanCancelRequest,
+    PickingPlanCreateRequest,
+)
 from ..services.picking_service import PickingService
 
 router = APIRouter(prefix="/api/picking", tags=["picking"])
@@ -98,3 +107,90 @@ def list_picking_plan_shortages(
     _user: AdminUser = Depends(require_permission(PICK_SHORTAGE_VIEW_PERMISSION)),
 ) -> list[dict]:
     return PickingService().list_shortages(pick_plan_id=pick_plan_id, limit=limit)
+
+
+@router.get("/routes")
+def list_pick_routes(
+    ware_id: int | None = None,
+    active_only: int | None = None,
+    _user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_VIEW_PERMISSION)),
+) -> list[dict]:
+    return PickingService().list_routes(ware_id=ware_id, active_only=active_only)
+
+
+@router.post("/routes")
+def upsert_pick_route(
+    request: PickRouteUpsertRequest,
+    user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_EDIT_PERMISSION)),
+) -> dict[str, int]:
+    request.updated_by = request.updated_by or user.username
+    pick_route_id = PickingService().upsert_route(request)
+    return {"pick_route_id": pick_route_id}
+
+
+@router.get("/route-cells")
+def list_pick_route_cells(
+    pick_route_id: int | None = None,
+    ware_id: int | None = None,
+    active_only: int | None = None,
+    _user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_VIEW_PERMISSION)),
+) -> list[dict]:
+    return PickingService().list_route_cells(
+        pick_route_id=pick_route_id,
+        ware_id=ware_id,
+        active_only=active_only,
+    )
+
+
+@router.post("/route-cells")
+def upsert_pick_route_cell(
+    request: PickRouteCellUpsertRequest,
+    user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_EDIT_PERMISSION)),
+) -> dict[str, int]:
+    request.updated_by = request.updated_by or user.username
+    pick_route_cell_id = PickingService().upsert_route_cell(request)
+    return {"pick_route_cell_id": pick_route_cell_id}
+
+
+@router.get("/pick-faces")
+def list_pick_faces(
+    ware_id: int | None = None,
+    articul: str | None = None,
+    active_only: int | None = None,
+    _user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_VIEW_PERMISSION)),
+) -> list[dict]:
+    return PickingService().list_pick_faces(
+        ware_id=ware_id,
+        articul=articul,
+        active_only=active_only,
+    )
+
+
+@router.post("/pick-faces")
+def upsert_pick_face(
+    request: PickFaceUpsertRequest,
+    user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_EDIT_PERMISSION)),
+) -> dict[str, int]:
+    request.updated_by = request.updated_by or user.username
+    pick_face_id = PickingService().upsert_pick_face(request)
+    return {"pick_face_id": pick_face_id}
+
+
+@router.get("/pick-faces/{pick_face_id}/articuls")
+def list_pick_face_articuls(
+    pick_face_id: int,
+    _user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_VIEW_PERMISSION)),
+) -> list[dict]:
+    return PickingService().list_pick_face_articuls(pick_face_id)
+
+
+@router.post("/pick-faces/{pick_face_id}/articuls")
+def assign_pick_face_articul(
+    pick_face_id: int,
+    request: PickFaceArticulUpsertRequest,
+    user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_EDIT_PERMISSION)),
+) -> dict[str, int]:
+    request.pick_face_id = pick_face_id
+    request.updated_by = request.updated_by or user.username
+    pick_face_articul_id = PickingService().assign_pick_face_articul(request)
+    return {"pick_face_articul_id": pick_face_articul_id}

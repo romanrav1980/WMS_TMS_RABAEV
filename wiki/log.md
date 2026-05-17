@@ -314,6 +314,14 @@ Append-only log of root wiki updates.
 - Recompiled the `RABAEV` schema with `dbms_utility.compile_schema`.
 - Final live object check excluding recycle-bin objects: `456 VALID`, `0 INVALID`, no current `USER_ERRORS`.
 
+## [2026-05-17] pick-face-route | Added pick topology and case-pick sequencing
+
+- Applied Oracle migration `017` to `RABAEV@127.0.0.1:1521/orcl`.
+- Added `RRL_PICK_ROUTE`, `RRL_PICK_ROUTE_CELL`, `RRL_PICK_FACE`, and `RRL_PICK_FACE_ARTICUL`.
+- Added `RRL_PICK_TOPOLOGY_API` and extended `RRL_PICKING_API` so `CASE_PICK` tasks can receive target pick face and route sequence.
+- Added backend endpoints under `/api/picking/routes`, `/api/picking/route-cells`, and `/api/picking/pick-faces`.
+- Verified PL/SQL smoke, HTTP smoke, cleanup, UTF-8 encoding check, and final Oracle invalid-object count `0`.
+
 ## [2026-05-17] picking-plan-reservations | Added picking plan and soft reservations
 
 - Applied Oracle migration `016` to `RABAEV@127.0.0.1:1521/orcl`.

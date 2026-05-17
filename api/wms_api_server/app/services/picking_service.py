@@ -1,7 +1,13 @@
 from typing import Any
 
 from ..oracle_gateway import OracleGateway
-from ..schemas import PickingPlanCreateRequest
+from ..schemas import (
+    PickFaceArticulUpsertRequest,
+    PickFaceUpsertRequest,
+    PickRouteCellUpsertRequest,
+    PickRouteUpsertRequest,
+    PickingPlanCreateRequest,
+)
 
 
 class PickingService:
@@ -181,6 +187,8 @@ class PickingService:
                    TARGET_CELL_CODE,
                    QTY,
                    PICK_SEQUENCE,
+                   PICK_FACE_ID,
+                   PICK_ROUTE_CELL_ID,
                    ASSIGNED_TO,
                    CREATED_AT,
                    STARTED_AT,
@@ -276,6 +284,262 @@ class PickingService:
              where rownum <= :limit
             """,
             params,
+        )
+
+    def list_routes(self, ware_id: int | None = None, active_only: int | None = None) -> list[dict[str, Any]]:
+        conditions: list[str] = []
+        params: dict[str, Any] = {}
+        if ware_id is not None:
+            conditions.append("r.WARE_ID = :ware_id")
+            params["ware_id"] = ware_id
+        if active_only is not None and int(active_only) == 1:
+            conditions.append("r.ACTIVE = 1")
+        where_sql = " where " + " and ".join(conditions) if conditions else ""
+        return self.gateway.fetch_all(
+            f"""
+            select r.PICK_ROUTE_ID,
+                   r.WARE_ID,
+                   w.NAME WARE_NAME,
+                   r.ROUTE_CODE,
+                   r.ROUTE_NAME,
+                   r.ROUTE_KIND,
+                   r.ACTIVE,
+                   count(distinct rc.PICK_ROUTE_CELL_ID) CELL_COUNT,
+                   count(distinct pf.PICK_FACE_ID) PICK_FACE_COUNT,
+                   r.CREATED_AT,
+                   r.UPDATED_AT
+              from RRL_PICK_ROUTE r
+              left join RRL_WARES w
+                on w.ID = r.WARE_ID
+              left join RRL_PICK_ROUTE_CELL rc
+                on rc.PICK_ROUTE_ID = r.PICK_ROUTE_ID
+              left join RRL_PICK_FACE pf
+                on pf.PICK_ROUTE_ID = r.PICK_ROUTE_ID
+              {where_sql}
+             group by r.PICK_ROUTE_ID,
+                      r.WARE_ID,
+                      w.NAME,
+                      r.ROUTE_CODE,
+                      r.ROUTE_NAME,
+                      r.ROUTE_KIND,
+                      r.ACTIVE,
+                      r.CREATED_AT,
+                      r.UPDATED_AT
+             order by r.WARE_ID, r.ROUTE_CODE
+            """,
+            params,
+        )
+
+    def upsert_route(self, request: PickRouteUpsertRequest) -> int:
+        return self.gateway.call_number_plsql(
+            """
+            begin
+              :result := RRL_PICK_TOPOLOGY_API.upsert_route(
+                p_pick_route_id => :pick_route_id,
+                p_route_code => :route_code,
+                p_route_name => :route_name,
+                p_ware_id => :ware_id,
+                p_route_kind => :route_kind,
+                p_active => :active,
+                p_updated_by => :updated_by
+              );
+            end;
+            """,
+            request.model_dump(),
+        )
+
+    def list_route_cells(
+        self,
+        pick_route_id: int | None = None,
+        ware_id: int | None = None,
+        active_only: int | None = None,
+    ) -> list[dict[str, Any]]:
+        conditions: list[str] = []
+        params: dict[str, Any] = {}
+        if pick_route_id is not None:
+            conditions.append("rc.PICK_ROUTE_ID = :pick_route_id")
+            params["pick_route_id"] = pick_route_id
+        if ware_id is not None:
+            conditions.append("rc.WARE_ID = :ware_id")
+            params["ware_id"] = ware_id
+        if active_only is not None and int(active_only) == 1:
+            conditions.append("rc.ACTIVE = 1")
+        where_sql = " where " + " and ".join(conditions) if conditions else ""
+        return self.gateway.fetch_all(
+            f"""
+            select rc.PICK_ROUTE_CELL_ID,
+                   rc.PICK_ROUTE_ID,
+                   r.ROUTE_CODE,
+                   rc.WARE_ID,
+                   w.NAME WARE_NAME,
+                   rc.CELL_CODE,
+                   rc.PICK_SEQUENCE,
+                   rc.ZONE_CODE,
+                   rc.AISLE_CODE,
+                   rc.SIDE_CODE,
+                   rc.LEVEL_NO,
+                   rc.ACTIVE,
+                   rc.CREATED_AT,
+                   rc.UPDATED_AT
+              from RRL_PICK_ROUTE_CELL rc
+              join RRL_PICK_ROUTE r
+                on r.PICK_ROUTE_ID = rc.PICK_ROUTE_ID
+              left join RRL_WARES w
+                on w.ID = rc.WARE_ID
+              {where_sql}
+             order by rc.WARE_ID, r.ROUTE_CODE, rc.PICK_SEQUENCE, rc.CELL_CODE
+            """,
+            params,
+        )
+
+    def upsert_route_cell(self, request: PickRouteCellUpsertRequest) -> int:
+        return self.gateway.call_number_plsql(
+            """
+            begin
+              :result := RRL_PICK_TOPOLOGY_API.upsert_route_cell(
+                p_pick_route_cell_id => :pick_route_cell_id,
+                p_pick_route_id => :pick_route_id,
+                p_cell_code => :cell_code,
+                p_pick_sequence => :pick_sequence,
+                p_zone_code => :zone_code,
+                p_aisle_code => :aisle_code,
+                p_side_code => :side_code,
+                p_level_no => :level_no,
+                p_active => :active,
+                p_updated_by => :updated_by
+              );
+            end;
+            """,
+            request.model_dump(),
+        )
+
+    def list_pick_faces(
+        self,
+        ware_id: int | None = None,
+        articul: str | None = None,
+        active_only: int | None = None,
+    ) -> list[dict[str, Any]]:
+        conditions: list[str] = []
+        params: dict[str, Any] = {}
+        if ware_id is not None:
+            conditions.append("pf.WARE_ID = :ware_id")
+            params["ware_id"] = ware_id
+        if active_only is not None and int(active_only) == 1:
+            conditions.append("pf.ACTIVE = 1")
+        if articul:
+            conditions.append(
+                "exists (select 1 from RRL_PICK_FACE_ARTICUL pfa "
+                "where pfa.PICK_FACE_ID = pf.PICK_FACE_ID "
+                "and upper(pfa.ARTICUL) = :articul and pfa.ACTIVE = 1)"
+            )
+            params["articul"] = articul.upper()
+        where_sql = " where " + " and ".join(conditions) if conditions else ""
+        return self.gateway.fetch_all(
+            f"""
+            select pf.PICK_FACE_ID,
+                   pf.WARE_ID,
+                   w.NAME WARE_NAME,
+                   pf.CELL_CODE,
+                   pf.PICK_FACE_CODE,
+                   pf.PICK_FACE_TYPE,
+                   pf.PICK_ROUTE_ID,
+                   r.ROUTE_CODE,
+                   pf.PICK_ROUTE_CELL_ID,
+                   pf.PICK_SEQUENCE,
+                   pf.MIN_CASE_QTY,
+                   pf.MAX_CASE_QTY,
+                   pf.REPLENISHMENT_TRIGGER_QTY,
+                   pf.MAX_WEIGHT,
+                   pf.MAX_VOLUME,
+                   pf.ALLOW_DYNAMIC_ASSIGNMENT,
+                   pf.ACTIVE,
+                   (select count(*)
+                      from RRL_PICK_FACE_ARTICUL pfa
+                     where pfa.PICK_FACE_ID = pf.PICK_FACE_ID
+                       and pfa.ACTIVE = 1) ARTICUL_COUNT,
+                   pf.CREATED_AT,
+                   pf.UPDATED_AT
+              from RRL_PICK_FACE pf
+              left join RRL_WARES w
+                on w.ID = pf.WARE_ID
+              left join RRL_PICK_ROUTE r
+                on r.PICK_ROUTE_ID = pf.PICK_ROUTE_ID
+              {where_sql}
+             order by pf.WARE_ID, pf.PICK_SEQUENCE nulls last, pf.CELL_CODE, pf.PICK_FACE_ID
+            """,
+            params,
+        )
+
+    def upsert_pick_face(self, request: PickFaceUpsertRequest) -> int:
+        return self.gateway.call_number_plsql(
+            """
+            begin
+              :result := RRL_PICK_TOPOLOGY_API.upsert_pick_face(
+                p_pick_face_id => :pick_face_id,
+                p_ware_id => :ware_id,
+                p_cell_code => :cell_code,
+                p_pick_face_code => :pick_face_code,
+                p_pick_face_type => :pick_face_type,
+                p_pick_route_id => :pick_route_id,
+                p_pick_route_cell_id => :pick_route_cell_id,
+                p_pick_sequence => :pick_sequence,
+                p_min_case_qty => :min_case_qty,
+                p_max_case_qty => :max_case_qty,
+                p_replenishment_trigger_qty => :replenishment_trigger_qty,
+                p_max_weight => :max_weight,
+                p_max_volume => :max_volume,
+                p_allow_dynamic_assignment => :allow_dynamic_assignment,
+                p_active => :active,
+                p_comment_text => :comment_text,
+                p_updated_by => :updated_by
+              );
+            end;
+            """,
+            request.model_dump(),
+        )
+
+    def list_pick_face_articuls(self, pick_face_id: int) -> list[dict[str, Any]]:
+        return self.gateway.fetch_all(
+            """
+            select PICK_FACE_ARTICUL_ID,
+                   PICK_FACE_ID,
+                   ARTICUL,
+                   PRIORITY,
+                   MIN_QTY,
+                   MAX_QTY,
+                   CASE_PICK_ENABLED,
+                   ACTIVE,
+                   VALID_FROM,
+                   VALID_TO,
+                   CREATED_AT,
+                   UPDATED_AT
+              from RRL_PICK_FACE_ARTICUL
+             where PICK_FACE_ID = :pick_face_id
+             order by PRIORITY, ARTICUL, PICK_FACE_ARTICUL_ID
+            """,
+            {"pick_face_id": pick_face_id},
+        )
+
+    def assign_pick_face_articul(self, request: PickFaceArticulUpsertRequest) -> int:
+        return self.gateway.call_number_plsql(
+            """
+            begin
+              :result := RRL_PICK_TOPOLOGY_API.assign_articul(
+                p_pick_face_articul_id => :pick_face_articul_id,
+                p_pick_face_id => :pick_face_id,
+                p_articul => :articul,
+                p_priority => :priority,
+                p_min_qty => :min_qty,
+                p_max_qty => :max_qty,
+                p_case_pick_enabled => :case_pick_enabled,
+                p_active => :active,
+                p_valid_from => :valid_from,
+                p_valid_to => :valid_to,
+                p_updated_by => :updated_by
+              );
+            end;
+            """,
+            request.model_dump(),
         )
 
     def list_shortages(self, pick_plan_id: int | None = None, limit: int = 200) -> list[dict[str, Any]]:

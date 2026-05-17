@@ -239,6 +239,20 @@ Picking plans and reservations:
 - These endpoints require Oracle migration `2026-05-17-016-picking-plan-reservations`.
 - They use permissions `pick_plan_view`, `pick_plan_create`, `pick_plan_cancel`, `pick_reservation_view`, and `pick_shortage_view`.
 
+Pick topology:
+
+- `GET /api/picking/routes`
+- `POST /api/picking/routes`
+- `GET /api/picking/route-cells`
+- `POST /api/picking/route-cells`
+- `GET /api/picking/pick-faces`
+- `POST /api/picking/pick-faces`
+- `GET /api/picking/pick-faces/{pick_face_id}/articuls`
+- `POST /api/picking/pick-faces/{pick_face_id}/articuls`
+- These endpoints require Oracle migration `2026-05-17-017-pick-face-route`.
+- They use permissions `pick_topology_view` and `pick_topology_edit`.
+- `CASE_PICK` tasks created by `/api/picking/plans` now receive `target_cell_code`, `pick_sequence`, `pick_face_id`, and `pick_route_cell_id` when topology is configured.
+
 ## Notes
 
 Some legacy `Tserver` operations update both Oracle and Access MDB. This first API version implements the Oracle part and records the Access limitation in the response/documentation. The Access side should be replaced by Oracle/API-owned state or by a separate adapter before production cutover.
@@ -258,3 +272,4 @@ Checked on 2026-05-17:
 - Migration `009` apply/verify passed; `RRL_BOM_API` is valid; PL/SQL and HTTP API smoke passed and cleanup left `SMOKE-009% = 0`.
 - The updated backend was launched through `serv.bat` and smoke-tested on `127.0.0.1:8088`.
 - Migration `016` apply/verify passed; `RRL_PICKING_API` is valid; HTTP smoke created, read, cancelled, and cleaned a picking plan through the new API.
+- Migration `017` apply/verify passed; `RRL_PICK_TOPOLOGY_API` and `RRL_PICKING_API` are valid; HTTP smoke created pick topology and verified case-pick task sequencing.

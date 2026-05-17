@@ -52,6 +52,11 @@ This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/
 - `016_smoke.sql`: smoke creation of a temporary customer order and picking plan against real stock.
 - `016_smoke_cleanup.sql`: cleanup for rows created by the fixed `SMOKE_016` user marker.
 - `016_rollback.sql`: safe rollback for the picking package only. It does not drop picking plan or reservation history.
+- `017_apply.sql`: additive pick route and pick face topology migration.
+- `017_verify.sql`: read-only verification for pick route and pick face entities.
+- `017_smoke.sql`: smoke topology setup and case-pick task sequencing check.
+- `017_smoke_cleanup.sql`: cleanup for rows created by the fixed `SMOKE_017` user marker.
+- `017_rollback.sql`: safe no-op rollback note; full rollback should use a database snapshot.
 
 ## Scope
 
@@ -181,6 +186,17 @@ The sixteenth migration adds picking planning and soft reservations:
 - package `RRL_PICKING_API` for plan creation and cancellation;
 - admin rights for `GLOBAL_ADMIN`: `PICK_PLAN_VIEW`, `PICK_PLAN_CREATE`, `PICK_PLAN_CANCEL`, `PICK_RESERVATION_VIEW`, `PICK_SHORTAGE_VIEW`.
 
+The seventeenth migration adds pick topology for case picking:
+
+- pick routes through `RRL_PICK_ROUTE`;
+- route cells and picking sequence through `RRL_PICK_ROUTE_CELL`;
+- pick-face locations through `RRL_PICK_FACE`;
+- article-to-pick-face assignment through `RRL_PICK_FACE_ARTICUL`;
+- task links to `PICK_FACE_ID` and `PICK_ROUTE_CELL_ID` on `RRL_PICK_TASK`;
+- package `RRL_PICK_TOPOLOGY_API` for controlled topology writes and pick-face resolution;
+- `RRL_PICKING_API` now assigns `TARGET_CELL_CODE`, `PICK_SEQUENCE`, `PICK_FACE_ID`, and `PICK_ROUTE_CELL_ID` to `CASE_PICK` tasks when an active pick face exists;
+- admin rights for `GLOBAL_ADMIN`: `PICK_TOPOLOGY_VIEW`, `PICK_TOPOLOGY_EDIT`.
+
 ## Safety
 
 The apply script is intended to be additive and idempotent:
@@ -216,6 +232,8 @@ The `014_rollback.sql` script is intentionally safe: it drops only `RRL_CUSTOMER
 The `015_rollback.sql` script is intentionally safe: it drops only `RRL_CUSTOMER_RULE_API`. Customer rule, vehicle type, shipment part, sequence, index, and setting data are kept.
 
 The `016_rollback.sql` script is intentionally safe: it drops only `RRL_PICKING_API`. Picking plan, task, reservation, shortage, decision-log, sequence, index, and audit data are kept.
+
+The `017_rollback.sql` script is intentionally no-op: `RRL_PICKING_API` depends on the topology package after this migration, and pick topology tables are data-bearing settings. Use a VirtualBox/database snapshot for full physical rollback.
 
 SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply` helper reads scripts as strict UTF-8 by default; use `--encoding=cp1251` only for confirmed legacy scripts. `012_verify.sql` includes a mojibake-marker query for the warehouse seed texts.
 
@@ -364,6 +382,17 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - Added picking plans, plan lines, picking tasks, soft reservations, shortages, and decision log.
 - PL/SQL smoke created a temporary customer order against real stock, built a picking plan, and cleanup left `SMOKE_016 = 0`.
 - HTTP smoke started backend on `127.0.0.1:8088`, created a picking plan through `/api/picking/plans`, read it back, cancelled it, verified active reservations were released, and cleaned `SMOKE_API_016`.
+- Post-apply invalid-object check left `0 INVALID` current objects.
+
+`2026-05-17-017-pick-face-route`:
+
+- Apply result: `Statements=8; Errors=0`.
+- Verify result: `Statements=5; Errors=0`.
+- Package status: `RRL_PICK_TOPOLOGY_API` and `RRL_PICKING_API` package bodies are `VALID`.
+- Added pick routes, route cells, pick faces, and article-to-pick-face assignment.
+- Extended `RRL_PICK_TASK` with `PICK_FACE_ID` and `PICK_ROUTE_CELL_ID`.
+- PL/SQL smoke created two pick faces for one SKU and verified that a `CASE_PICK` task uses the priority pick face with `PICK_SEQUENCE = 10`; cleanup left `SMOKE_017 = 0`.
+- HTTP smoke created topology through `/api/picking/routes`, `/api/picking/route-cells`, `/api/picking/pick-faces`, then created a picking plan and verified the case-pick target cell and sequence; cleanup left `SMOKE_API_017 = 0`.
 - Post-apply invalid-object check left `0 INVALID` current objects.
 
 ## Required Procedure For Future Reapply

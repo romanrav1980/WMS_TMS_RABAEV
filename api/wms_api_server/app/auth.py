@@ -43,6 +43,8 @@ PICK_PLAN_CREATE_PERMISSION = "pick_plan_create"
 PICK_PLAN_CANCEL_PERMISSION = "pick_plan_cancel"
 PICK_RESERVATION_VIEW_PERMISSION = "pick_reservation_view"
 PICK_SHORTAGE_VIEW_PERMISSION = "pick_shortage_view"
+PICK_TOPOLOGY_VIEW_PERMISSION = "pick_topology_view"
+PICK_TOPOLOGY_EDIT_PERMISSION = "pick_topology_edit"
 
 security = HTTPBasic(auto_error=False)
 
