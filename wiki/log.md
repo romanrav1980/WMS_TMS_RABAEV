@@ -2,6 +2,13 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-18] mes-production-page-split | Split raw supply from MES order passport
+
+- Removed the duplicated raw-supply planning grid from `production-orders.html`.
+- Kept `production-orders.html` focused on the MES production-order passport, manual issue/completion controls, genealogy, movements, trace edges, and outbox.
+- Added a direct link from the MES order page to `raw-supply.html` for demand, shortages, reservations, and transfer tasks.
+- Removed obsolete raw-supply handlers from `production-orders.js`.
+
 ## [2026-05-18] raw-supply-admin | Added operator page for raw material supply to production
 
 - Added separate raw admin page `wiki-raw/wms_admin_ui_reference/raw-supply.html`.

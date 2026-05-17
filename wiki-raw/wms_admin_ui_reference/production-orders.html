@@ -93,31 +93,9 @@
                 <tbody id="mesBomLineRows"></tbody>
               </table>
             </div>
-            <div class="rights-summary"><span>Снабжение сырьем: потребность, резерв и задачи перемещения</span></div>
+            <div class="rights-summary"><span>Снабжение сырьем и задачи перемещения вынесены на отдельную страницу</span></div>
             <div class="rights-editor">
-              <label>Склад пр-ва<input id="mesRawSupplyToWare" type="number" value="9102" /></label>
-              <label>Ячейка пр-ва<input id="mesRawSupplyToCell" value="MES_PROD" /></label>
-              <label>Частично<select id="mesRawSupplyPartial"><option value="0">Нет</option><option value="1">Да</option></select></label>
-              <button id="mesCalcRawSupply" type="button" data-permission="mes_raw_supply_calculate">Рассчитать</button>
-              <button id="mesReleaseToProduction" type="button" data-permission="mes_raw_transfer_create">Передать в производство</button>
-            </div>
-            <div class="rights-table-wrap compact-scroll">
-              <table class="rights-table">
-                <thead><tr><th>Сырье</th><th>Нужно</th><th>Выдано</th><th>Открыто</th><th>SOFT</th><th>Статус</th></tr></thead>
-                <tbody id="mesRawDemandRows"></tbody>
-              </table>
-            </div>
-            <div class="rights-table-wrap compact-scroll">
-              <table class="rights-table">
-                <thead><tr><th>Сырье</th><th>Паллет</th><th>Ячейка</th><th>Доступно</th><th>К резерву</th><th>Качество</th></tr></thead>
-                <tbody id="mesRawCandidateRows"></tbody>
-              </table>
-            </div>
-            <div class="rights-table-wrap compact-scroll">
-              <table class="rights-table">
-                <thead><tr><th>Задача</th><th>Сырье</th><th>Паллет</th><th>Откуда</th><th>Куда</th><th>Кол-во</th><th>Статус</th><th></th></tr></thead>
-                <tbody id="mesRawTransferTaskRows"></tbody>
-              </table>
+              <a class="inline-action" href="raw-supply.html" data-permission="mes_raw_supply_view">Открыть снабжение сырьем</a>
             </div>
             <div class="rights-editor" data-permission="mes_production_edit">
               <label>Сырьевой паллет<input id="mesRawPallet" placeholder="RAW-PALLET-001" /></label>

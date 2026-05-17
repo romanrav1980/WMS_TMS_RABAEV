@@ -29,6 +29,7 @@ Files:
 - [`raw-material.js`](raw-material.js): lightweight raw-material list/settings/stock logic
 - [`raw-supply.html`](raw-supply.html): MES raw supply control page for demand, shortages, hard reservations, and transfer tasks
 - [`raw-supply.js`](raw-supply.js): lightweight operator logic for calculating, releasing, confirming, and cancelling raw-material transfer tasks
+- [`production-orders.html`](production-orders.html): MES production-order passport and completion controls; raw supply planning is linked out to `raw-supply.html`
 - [`finished-goods.html`](finished-goods.html): finished-goods SKU settings, warehouses/buffers, production batches, pallets, and SSCC stock
 - [`finished-goods.js`](finished-goods.js): lightweight finished-goods list/settings/batch/stock logic
 

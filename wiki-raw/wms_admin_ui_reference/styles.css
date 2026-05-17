@@ -1132,6 +1132,20 @@ a {
   font-weight: 750;
 }
 
+.rights-editor .inline-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  border: 1px solid var(--blue);
+  border-radius: 5px;
+  color: #fff;
+  background: var(--blue);
+  font-size: 12px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
 .rights-summary {
   padding: 10px 18px;
   color: #63758e;
