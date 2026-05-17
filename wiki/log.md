@@ -8,6 +8,7 @@ Append-only log of root wiki updates.
 - Fixed the architectural decision that `IS_SHIPMENT_ALLOWED` is a picking-planning criterion, not a hard WMS block.
 - Captured customer shelf-life rules, customer-specific palletization, route/dock context, full-pallet-first planning, case picking, weight/volume limits, pick route order, regular pick faces, and future dynamic pick faces.
 - Added the mandatory reservation layer so active picking plans cannot double-assign the same pallet or the already reserved part of a pallet.
+- Added partial picking requirements: plan only free stock after reservations and write a shortage protocol for missing quantities.
 
 ## [2026-05-17] batch-shipment-readiness | Added aging norm on finished-goods lots
 
