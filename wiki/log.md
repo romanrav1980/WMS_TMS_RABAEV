@@ -2,6 +2,14 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-18] raw-supply-admin | Added operator page for raw material supply to production
+
+- Added separate raw admin page `wiki-raw/wms_admin_ui_reference/raw-supply.html`.
+- Added `raw-supply.js` for production-order selection, BOM demand review, shortage review, candidates, common reservations, and raw transfer tasks.
+- Added navigation item `Сырье в производство`, protected by `mes_raw_supply_view`.
+- Added backend endpoint `GET /api/mes/raw-shortages` for cross-order shortage monitoring.
+- The page uses existing Oracle-backed release flow through `RRL_MES_RAW_SUPPLY_API` and does not modify legacy WMS stock directly.
+
 ## [2026-05-18] mes-raw-supply-implementation | Released production orders through common reservations
 
 - Applied migration `024_apply.sql`: added MES raw demand, supply candidates, shortages, and raw transfer tasks.

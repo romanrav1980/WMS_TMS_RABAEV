@@ -336,11 +336,13 @@ MES raw supply:
 - `POST /api/mes/production-orders/{production_order_id}/release-to-production`
 - `GET /api/mes/raw-transfer-tasks`
 - `GET /api/mes/raw-transfer-tasks/{task_id}`
+- `GET /api/mes/raw-shortages`
 - `POST /api/mes/raw-transfer-tasks/{task_id}/confirm`
 - `POST /api/mes/raw-transfer-tasks/{task_id}/cancel`
 - These endpoints require Oracle migrations `2026-05-17-023-common-stock-reservation` and `2026-05-17-024-mes-raw-supply`.
 - Calculation creates `SOFT` reservations in `RRL_STOCK_RESERVATION`. Release to production creates `HARD` pallet reservations and `RRL_MES_RAW_TRANSFER_TASK` rows. Task confirmation calls the existing MES raw issue procedure and consumes the hard reservation.
 - The critical release-to-production step is implemented in Oracle package `RRL_MES_RAW_SUPPLY_API` from migration `2026-05-17-025-mes-raw-supply-oracle-api`, so the order lock, demand rebuild, shortage protocol, hard reservation, and transfer task creation happen in one database transaction.
+- Raw admin page: `http://127.0.0.1:3000/raw-supply.html`.
 
 ## Notes
 

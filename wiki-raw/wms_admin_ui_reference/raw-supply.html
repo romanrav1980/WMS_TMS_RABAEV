@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS PRO Сырье в производство</title>
+    <link rel="stylesheet" href="styles.css?v=20260518-raw-supply" />
+  </head>
+  <body class="auth-pending" data-required-permission="mes_raw_supply_view">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span> PRO</div>
+        </div>
+        <nav class="nav" data-admin-nav data-active-nav="raw-supply"></nav>
+        <div class="sidebar-footer">
+          <div class="factory-mark">
+            <span class="tower t1"></span>
+            <span class="tower t2"></span>
+            <span class="tower t3"></span>
+            <span class="plant-base"></span>
+          </div>
+          <div class="footer-line"><span>Смена</span><b>1 смена</b></div>
+          <div class="footer-line muted"><span>18.05.2025</span><span>10:24</span></div>
+          <div class="footer-line muted"><span>Версия</span><span>2.4.1</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="breadcrumbs"><b>Админ-панель WMS</b><span>/</span><b>Сырье в производство</b></div>
+          <div class="top-actions">
+            <label class="search">
+              <span>Поиск</span>
+              <input id="rawSupplySearch" placeholder="Заказ, сырье, паллета..." />
+              <kbd>Ctrl K</kbd>
+            </label>
+            <button class="round alert">12</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">Администратор</b><small id="adminUserRole">WMS</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="admin-page raw-supply-page">
+          <article class="panel raw-supply-orders-panel">
+            <header><h2>Производственные заказы</h2><button id="rawSupplyRefresh" type="button">Обновить</button></header>
+            <div class="rights-toolbar">
+              <label>Статус
+                <select id="rawSupplyOrderStatus">
+                  <option value="">Все</option>
+                  <option>DRAFT</option>
+                  <option>RELEASED</option>
+                  <option>IN_PROGRESS</option>
+                  <option>COMPLETED</option>
+                  <option>CANCELLED</option>
+                </select>
+              </label>
+              <label>Артикул<input id="rawSupplyTarget" placeholder="FG-..." /></label>
+              <label>Лимит<input id="rawSupplyOrderLimit" type="number" min="1" max="500" value="100" /></label>
+              <button id="rawSupplyLoadOrders" type="button">Показать</button>
+            </div>
+            <div class="rights-summary"><span id="rawSupplyOrderStatusText">Ожидание данных</span></div>
+            <div class="rights-table-wrap raw-scroll">
+              <table class="rights-table">
+                <thead><tr><th>ID</th><th>Заказ</th><th>Продукт</th><th>Статус</th><th>План</th><th>Факт</th></tr></thead>
+                <tbody id="rawSupplyOrderRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel raw-supply-summary-panel">
+            <header><h2>Контроль снабжения</h2></header>
+            <div class="rights-summary"><span id="rawSupplyDetailStatus">Выберите производственный заказ</span></div>
+            <div class="mes-kpi-grid">
+              <div><span>Потребность</span><b id="rawSupplyKpiDemand">-</b></div>
+              <div><span>Кандидаты</span><b id="rawSupplyKpiCandidate">-</b></div>
+              <div><span>Дефицит</span><b id="rawSupplyKpiShortage">-</b></div>
+              <div><span>Задачи</span><b id="rawSupplyKpiTask">-</b></div>
+            </div>
+            <div class="rights-editor raw-supply-actions">
+              <label>Склад производства<input id="rawSupplyToWare" type="number" value="9102" /></label>
+              <label>Ячейка производства<input id="rawSupplyToCell" value="MES_PROD" /></label>
+              <label>Частичный запуск
+                <select id="rawSupplyAllowPartial">
+                  <option value="0">Нет</option>
+                  <option value="1">Да</option>
+                </select>
+              </label>
+              <button id="rawSupplyCalculate" type="button" data-permission="mes_raw_supply_calculate">Рассчитать</button>
+              <button id="rawSupplyRelease" type="button" data-permission="mes_raw_transfer_create">Передать в производство</button>
+            </div>
+          </article>
+
+          <article class="panel raw-supply-demand-panel">
+            <header><h2>Потребность по BOM</h2></header>
+            <div class="rights-table-wrap compact-scroll">
+              <table class="rights-table">
+                <thead><tr><th>Сырье</th><th>Нужно</th><th>Выдано</th><th>Открыто</th><th>SOFT</th><th>Статус</th></tr></thead>
+                <tbody id="rawSupplyDemandRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel raw-supply-shortage-panel">
+            <header><h2>Дефицит</h2><button id="rawSupplyLoadShortages" type="button">Обновить</button></header>
+            <div class="rights-toolbar">
+              <label>Статус
+                <select id="rawSupplyShortageStatus">
+                  <option value="OPEN">OPEN</option>
+                  <option value="">Все</option>
+                  <option>RESOLVED</option>
+                  <option>CANCELLED</option>
+                </select>
+              </label>
+              <label>Сырье<input id="rawSupplyShortageArticul" placeholder="RM-..." /></label>
+              <label>Лимит<input id="rawSupplyShortageLimit" type="number" min="1" max="500" value="100" /></label>
+            </div>
+            <div class="rights-table-wrap compact-scroll">
+              <table class="rights-table">
+                <thead><tr><th>Заказ</th><th>Сырье</th><th>Нужно</th><th>Доступно</th><th>Не хватает</th><th>Статус</th></tr></thead>
+                <tbody id="rawSupplyShortageRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel raw-supply-candidate-panel">
+            <header><h2>Кандидаты к резерву</h2></header>
+            <div class="rights-table-wrap compact-scroll">
+              <table class="rights-table">
+                <thead><tr><th>Сырье</th><th>Паллет</th><th>Склад</th><th>Ячейка</th><th>Доступно</th><th>К резерву</th><th>Качество</th></tr></thead>
+                <tbody id="rawSupplyCandidateRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel raw-supply-task-panel">
+            <header><h2>Задачи перемещения</h2><button id="rawSupplyLoadTasks" type="button">Обновить</button></header>
+            <div class="rights-toolbar">
+              <label>Статус
+                <select id="rawSupplyTaskStatus">
+                  <option value="">Все</option>
+                  <option>PLANNED</option>
+                  <option>IN_PROGRESS</option>
+                  <option>DONE</option>
+                  <option>CANCELLED</option>
+                  <option>ERROR</option>
+                </select>
+              </label>
+              <label>Лимит<input id="rawSupplyTaskLimit" type="number" min="1" max="500" value="100" /></label>
+            </div>
+            <div class="rights-table-wrap compact-scroll">
+              <table class="rights-table">
+                <thead><tr><th>ID</th><th>Заказ</th><th>Сырье</th><th>Паллет</th><th>Откуда</th><th>Куда</th><th>Кол-во</th><th>Статус</th><th></th></tr></thead>
+                <tbody id="rawSupplyTaskRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel raw-supply-reservation-panel">
+            <header><h2>Резервы заказа</h2></header>
+            <div class="rights-table-wrap compact-scroll">
+              <table class="rights-table">
+                <thead><tr><th>ID</th><th>Тип</th><th>Сырье</th><th>Кол-во</th><th>Склад</th><th>Ячейка</th><th>Паллет</th><th>Статус</th></tr></thead>
+                <tbody id="rawSupplyReservationRows"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="admin-nav.js?v=20260518-raw-supply"></script>
+    <script src="admin-auth.js?v=20260518-raw-supply"></script>
+    <script src="raw-supply.js?v=20260518-raw-supply"></script>
+  </body>
+</html>

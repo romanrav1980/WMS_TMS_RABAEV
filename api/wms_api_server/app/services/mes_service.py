@@ -476,6 +476,45 @@ class MesService:
             params,
         )
 
+    def list_raw_shortages(
+        self,
+        production_order_id: int | None = None,
+        status: str | None = None,
+        raw_articul: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        conditions = []
+        params: dict[str, Any] = {"limit": clamp_limit(limit)}
+        if production_order_id is not None:
+            conditions.append("s.PRODUCTION_ORDER_ID = :production_order_id")
+            params["production_order_id"] = production_order_id
+        if status:
+            conditions.append("s.STATUS = :status")
+            params["status"] = status.upper()
+        if raw_articul:
+            conditions.append("upper(s.RAW_ARTICUL) = :raw_articul")
+            params["raw_articul"] = raw_articul.upper()
+        where_sql = " where " + " and ".join(conditions) if conditions else ""
+        return self.gateway.fetch_all(
+            f"""
+            select *
+              from (
+                select s.SHORTAGE_ID, s.PRODUCTION_ORDER_ID, o.ORDER_NO,
+                       o.TARGET_ARTICUL, o.STATUS ORDER_STATUS,
+                       s.DEMAND_ID, s.RAW_ARTICUL, s.REQUIRED_QTY,
+                       s.ISSUED_QTY, s.AVAILABLE_QTY, s.SHORTAGE_QTY,
+                       s.UNIT_CODE, s.STATUS, s.CREATED_AT
+                  from RRL_MES_RAW_SHORTAGE s
+                  left join RRL_PRODUCTION_ORDER o
+                    on o.PRODUCTION_ORDER_ID = s.PRODUCTION_ORDER_ID
+                  {where_sql}
+                 order by s.CREATED_AT desc, s.SHORTAGE_ID desc
+              )
+             where rownum <= :limit
+            """,
+            params,
+        )
+
     def get_raw_transfer_task_or_404(self, task_id: int) -> dict[str, Any]:
         rows = self.gateway.fetch_all(
             """

@@ -143,6 +143,22 @@ def get_raw_transfer_task(
     return MesService().get_raw_transfer_task_or_404(task_id)
 
 
+@router.get("/raw-shortages")
+def list_raw_shortages(
+    production_order_id: int | None = None,
+    status: str | None = None,
+    raw_articul: str | None = None,
+    limit: int = 100,
+    _user: AdminUser = Depends(require_permission(MES_RAW_SUPPLY_VIEW_PERMISSION)),
+) -> list[dict]:
+    return MesService().list_raw_shortages(
+        production_order_id=production_order_id,
+        status=status,
+        raw_articul=raw_articul,
+        limit=limit,
+    )
+
+
 @router.post("/raw-transfer-tasks/{task_id}/confirm", response_model=IdResponse)
 def confirm_raw_transfer_task(
     task_id: int,

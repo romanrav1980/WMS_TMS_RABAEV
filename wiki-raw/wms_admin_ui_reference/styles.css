@@ -1057,6 +1057,32 @@ a {
   grid-column: 1 / -1;
 }
 
+.raw-supply-page {
+  grid-template-columns: minmax(420px, 1.05fr) minmax(520px, 1.35fr);
+}
+
+.raw-supply-orders-panel {
+  min-width: 0;
+}
+
+.raw-supply-summary-panel,
+.raw-supply-demand-panel,
+.raw-supply-shortage-panel,
+.raw-supply-candidate-panel,
+.raw-supply-task-panel,
+.raw-supply-reservation-panel {
+  min-width: 0;
+}
+
+.raw-supply-task-panel,
+.raw-supply-reservation-panel {
+  grid-column: 1 / -1;
+}
+
+.raw-supply-actions {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
 .raw-scroll {
   max-height: 420px;
 }

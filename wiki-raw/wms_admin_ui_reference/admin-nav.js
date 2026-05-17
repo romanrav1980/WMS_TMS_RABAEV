@@ -2,6 +2,7 @@ const WMS_ADMIN_NAV_ITEMS = [
   { key: "home", label: "Главная", href: "index.html", icon: "home" },
   { key: "production", label: "Производство", href: "index.html", icon: "production" },
   { key: "mes", label: "MES", href: "production-orders.html", icon: "mes", permission: "mes_production_view" },
+  { key: "raw-supply", label: "Сырье в производство", href: "raw-supply.html", icon: "raw", permission: "mes_raw_supply_view" },
   { key: "bom", label: "BOM", href: "bom.html", icon: "bom", permission: "bom_view" },
   { key: "customers", label: "Клиенты", href: "customers.html", icon: "customers", permission: "customer_view" },
   { key: "customer-orders", label: "Заказы клиентов", href: "customer-orders.html", icon: "orders", permission: "customer_order_view" },

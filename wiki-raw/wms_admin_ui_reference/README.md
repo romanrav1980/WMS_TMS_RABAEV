@@ -27,6 +27,8 @@ Files:
 - [`product-shipment-settings.js`](product-shipment-settings.js): lightweight settings list/detail/save logic
 - [`raw-material.html`](raw-material.html): raw-material SKU settings, raw warehouses, and stock by selected warehouse
 - [`raw-material.js`](raw-material.js): lightweight raw-material list/settings/stock logic
+- [`raw-supply.html`](raw-supply.html): MES raw supply control page for demand, shortages, hard reservations, and transfer tasks
+- [`raw-supply.js`](raw-supply.js): lightweight operator logic for calculating, releasing, confirming, and cancelling raw-material transfer tasks
 - [`finished-goods.html`](finished-goods.html): finished-goods SKU settings, warehouses/buffers, production batches, pallets, and SSCC stock
 - [`finished-goods.js`](finished-goods.js): lightweight finished-goods list/settings/batch/stock logic
 
@@ -43,6 +45,7 @@ Design notes:
 - [`customers.html`](customers.html) is protected by `customer_view`; customer card changes require `customer_edit`; rule creation requires `customer_rule_edit`
 - [`customer-orders.html`](customer-orders.html) is protected by `customer_order_view`; legacy import requires `customer_order_import`; fulfillment facts require `customer_fulfillment_view`
 - [`raw-material.html`](raw-material.html) is protected by `raw_material_view`; editing SKU settings requires `raw_material_edit`; stock rows require `raw_material_stock_view`
+- [`raw-supply.html`](raw-supply.html) is protected by `mes_raw_supply_view`; calculation, release, confirmation, and cancellation use `mes_raw_supply_calculate`, `mes_raw_transfer_create`, `mes_raw_transfer_confirm`, and `mes_raw_transfer_cancel`
 - [`finished-goods.html`](finished-goods.html) is protected by `finished_goods_view`; editing SKU settings requires `finished_goods_edit`; stock rows require `finished_goods_stock_view`; batches require `finished_goods_batch_view`
 - raw admin pages use the global admin session connection settings from `admin-auth.js`; working screens do not show technical permission or API connection fields
 - [`product-shipment-settings.html`](product-shipment-settings.html) is protected by `quality_batch_view`; editing aging norms requires `quality_batch_edit`
