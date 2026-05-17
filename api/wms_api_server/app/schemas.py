@@ -519,3 +519,25 @@ class PickFaceArticulUpsertRequest(BaseModel):
     valid_from: date | None = None
     valid_to: date | None = None
     updated_by: str | None = None
+
+
+class PickWaveCreateRequest(BaseModel):
+    wave_code: str | None = None
+    wave_name: str | None = None
+    ware_id: int | None = None
+    route_id: int | None = None
+    dock_id: int | None = None
+    planned_start_at: datetime | None = None
+    planned_finish_at: datetime | None = None
+    max_customers: int = Field(default=30, ge=1, le=500)
+    created_by: str | None = None
+
+
+class PickWaveAddPlanRequest(BaseModel):
+    pick_plan_id: int
+    created_by: str | None = None
+
+
+class PickWaveActionRequest(BaseModel):
+    reason: str | None = None
+    updated_by: str | None = None

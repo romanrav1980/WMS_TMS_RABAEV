@@ -2,6 +2,14 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-17] wave-picking-core | Added wave launch and hard reservations
+
+- Implemented and applied migration `018_wave-picking-core` with wave settings, wave headers, wave orders, wave lines, wave demand, hard wave reservations, replenishment tasks, picking tasks, shortages, audit, and `RRL_PICK_WAVE_API`.
+- Added FastAPI wave endpoints for candidates, create, add plan, preview, launch, cancel, reserve release, reservations, replenishment tasks, picking tasks, and audit.
+- Verified `018_apply`, `018_verify`, PL/SQL launch/cancel smoke, HTTP wave smoke, cleanup, OpenAPI generation, and Oracle invalid objects = `0`.
+- Recorded that wave launch converts soft reservations to hard reservations and still does not update old WMS stock tables directly.
+- Updated the implementation roadmap: next step is raw admin UI for picking plans and wave picking.
+
 ## [2026-05-17] picking-planning | Drafted picking planning requirements
 
 - Implemented and applied migration `014_customer-order-foundation` with `RRL_CUSTOMER`, customer addresses, legacy address mapping, canonical customer orders, order rows, fulfillment facts, and `RRL_CUSTOMER_ORDER_API`.

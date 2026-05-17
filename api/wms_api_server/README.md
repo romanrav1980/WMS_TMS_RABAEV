@@ -253,6 +253,25 @@ Pick topology:
 - They use permissions `pick_topology_view` and `pick_topology_edit`.
 - `CASE_PICK` tasks created by `/api/picking/plans` now receive `target_cell_code`, `pick_sequence`, `pick_face_id`, and `pick_route_cell_id` when topology is configured.
 
+Wave picking:
+
+- `GET /api/picking/waves`
+- `POST /api/picking/waves`
+- `GET /api/picking/waves/candidates`
+- `GET /api/picking/waves/{pick_wave_id}`
+- `POST /api/picking/waves/{pick_wave_id}/plans`
+- `POST /api/picking/waves/{pick_wave_id}/calculate`
+- `POST /api/picking/waves/{pick_wave_id}/launch`
+- `POST /api/picking/waves/{pick_wave_id}/cancel`
+- `POST /api/picking/waves/{pick_wave_id}/release-reservations`
+- `GET /api/picking/waves/{pick_wave_id}/reservations`
+- `GET /api/picking/waves/{pick_wave_id}/replenishment-tasks`
+- `GET /api/picking/waves/{pick_wave_id}/tasks`
+- `GET /api/picking/waves/{pick_wave_id}/audit`
+- These endpoints require Oracle migration `2026-05-17-018-wave-picking-core`.
+- They use permissions `pick_wave_view`, `pick_wave_create`, `pick_wave_calculate`, `pick_wave_launch`, `pick_wave_cancel`, `pick_wave_release_reserves`, and `pick_wave_audit_view`.
+- Launch converts selected picking-plan soft reservations into hard reservations and creates wave picking/replenishment tasks. It still does not update legacy stock tables directly.
+
 ## Notes
 
 Some legacy `Tserver` operations update both Oracle and Access MDB. This first API version implements the Oracle part and records the Access limitation in the response/documentation. The Access side should be replaced by Oracle/API-owned state or by a separate adapter before production cutover.

@@ -45,6 +45,13 @@ PICK_RESERVATION_VIEW_PERMISSION = "pick_reservation_view"
 PICK_SHORTAGE_VIEW_PERMISSION = "pick_shortage_view"
 PICK_TOPOLOGY_VIEW_PERMISSION = "pick_topology_view"
 PICK_TOPOLOGY_EDIT_PERMISSION = "pick_topology_edit"
+PICK_WAVE_VIEW_PERMISSION = "pick_wave_view"
+PICK_WAVE_CREATE_PERMISSION = "pick_wave_create"
+PICK_WAVE_CALCULATE_PERMISSION = "pick_wave_calculate"
+PICK_WAVE_LAUNCH_PERMISSION = "pick_wave_launch"
+PICK_WAVE_CANCEL_PERMISSION = "pick_wave_cancel"
+PICK_WAVE_RELEASE_RESERVES_PERMISSION = "pick_wave_release_reserves"
+PICK_WAVE_AUDIT_VIEW_PERMISSION = "pick_wave_audit_view"
 
 security = HTTPBasic(auto_error=False)
 

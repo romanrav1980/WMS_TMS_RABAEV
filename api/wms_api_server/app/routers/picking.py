@@ -9,6 +9,13 @@ from ..auth import (
     PICK_SHORTAGE_VIEW_PERMISSION,
     PICK_TOPOLOGY_EDIT_PERMISSION,
     PICK_TOPOLOGY_VIEW_PERMISSION,
+    PICK_WAVE_AUDIT_VIEW_PERMISSION,
+    PICK_WAVE_CALCULATE_PERMISSION,
+    PICK_WAVE_CANCEL_PERMISSION,
+    PICK_WAVE_CREATE_PERMISSION,
+    PICK_WAVE_LAUNCH_PERMISSION,
+    PICK_WAVE_RELEASE_RESERVES_PERMISSION,
+    PICK_WAVE_VIEW_PERMISSION,
     require_permission,
 )
 from ..schemas import (
@@ -16,6 +23,9 @@ from ..schemas import (
     PickFaceUpsertRequest,
     PickRouteCellUpsertRequest,
     PickRouteUpsertRequest,
+    PickWaveActionRequest,
+    PickWaveAddPlanRequest,
+    PickWaveCreateRequest,
     PickingPlanCancelRequest,
     PickingPlanCreateRequest,
 )
@@ -107,6 +117,154 @@ def list_picking_plan_shortages(
     _user: AdminUser = Depends(require_permission(PICK_SHORTAGE_VIEW_PERMISSION)),
 ) -> list[dict]:
     return PickingService().list_shortages(pick_plan_id=pick_plan_id, limit=limit)
+
+
+@router.get("/waves")
+def list_pick_waves(
+    status: str | None = None,
+    ware_id: int | None = None,
+    customer_id: int | None = None,
+    limit: int = 100,
+    _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+) -> list[dict]:
+    return PickingService().list_waves(
+        status=status,
+        ware_id=ware_id,
+        customer_id=customer_id,
+        limit=limit,
+    )
+
+
+@router.post("/waves")
+def create_pick_wave(
+    request: PickWaveCreateRequest,
+    user: AdminUser = Depends(require_permission(PICK_WAVE_CREATE_PERMISSION)),
+) -> dict[str, int]:
+    request.created_by = request.created_by or user.username
+    pick_wave_id = PickingService().create_wave(request)
+    return {"pick_wave_id": pick_wave_id}
+
+
+@router.get("/waves/candidates")
+def list_pick_wave_candidates(
+    ware_id: int | None = None,
+    route_id: int | None = None,
+    dock_id: int | None = None,
+    shipment_from: str | None = None,
+    shipment_to: str | None = None,
+    limit: int = 100,
+    _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+) -> list[dict]:
+    return PickingService().list_wave_candidates(
+        ware_id=ware_id,
+        route_id=route_id,
+        dock_id=dock_id,
+        shipment_from=shipment_from,
+        shipment_to=shipment_to,
+        limit=limit,
+    )
+
+
+@router.get("/waves/{pick_wave_id}")
+def get_pick_wave(
+    pick_wave_id: int,
+    _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+) -> dict:
+    wave = PickingService().get_wave(pick_wave_id)
+    if wave is None:
+        raise HTTPException(status_code=404, detail="Pick wave not found.")
+    return wave
+
+
+@router.post("/waves/{pick_wave_id}/plans")
+def add_pick_wave_plan(
+    pick_wave_id: int,
+    request: PickWaveAddPlanRequest,
+    user: AdminUser = Depends(require_permission(PICK_WAVE_CREATE_PERMISSION)),
+) -> dict[str, str | int]:
+    request.created_by = request.created_by or user.username
+    PickingService().add_wave_plan(pick_wave_id, request)
+    return {"pick_wave_id": pick_wave_id, "pick_plan_id": request.pick_plan_id, "status": "ADDED"}
+
+
+@router.post("/waves/{pick_wave_id}/calculate")
+def calculate_pick_wave(
+    pick_wave_id: int,
+    request: PickWaveActionRequest,
+    user: AdminUser = Depends(require_permission(PICK_WAVE_CALCULATE_PERMISSION)),
+) -> dict[str, str | int]:
+    request.updated_by = request.updated_by or user.username
+    PickingService().preview_wave(pick_wave_id, request)
+    return {"pick_wave_id": pick_wave_id, "status": "PREVIEW"}
+
+
+@router.post("/waves/{pick_wave_id}/launch")
+def launch_pick_wave(
+    pick_wave_id: int,
+    request: PickWaveActionRequest,
+    user: AdminUser = Depends(require_permission(PICK_WAVE_LAUNCH_PERMISSION)),
+) -> dict[str, str | int]:
+    request.updated_by = request.updated_by or user.username
+    PickingService().launch_wave(pick_wave_id, request)
+    return {"pick_wave_id": pick_wave_id, "status": "LAUNCHED"}
+
+
+@router.post("/waves/{pick_wave_id}/cancel")
+def cancel_pick_wave(
+    pick_wave_id: int,
+    request: PickWaveActionRequest,
+    user: AdminUser = Depends(require_permission(PICK_WAVE_CANCEL_PERMISSION)),
+) -> dict[str, str | int]:
+    request.updated_by = request.updated_by or user.username
+    PickingService().cancel_wave(pick_wave_id, request)
+    return {"pick_wave_id": pick_wave_id, "status": "CANCELLED"}
+
+
+@router.post("/waves/{pick_wave_id}/release-reservations")
+def release_pick_wave_reservations(
+    pick_wave_id: int,
+    request: PickWaveActionRequest,
+    user: AdminUser = Depends(require_permission(PICK_WAVE_RELEASE_RESERVES_PERMISSION)),
+) -> dict[str, str | int]:
+    request.updated_by = request.updated_by or user.username
+    PickingService().release_wave_reservations(pick_wave_id, request)
+    return {"pick_wave_id": pick_wave_id, "status": "PREVIEW"}
+
+
+@router.get("/waves/{pick_wave_id}/reservations")
+def list_pick_wave_reservations(
+    pick_wave_id: int,
+    limit: int = 200,
+    _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+) -> list[dict]:
+    return PickingService().list_wave_reservations(pick_wave_id, limit=limit)
+
+
+@router.get("/waves/{pick_wave_id}/replenishment-tasks")
+def list_pick_wave_replenishment_tasks(
+    pick_wave_id: int,
+    limit: int = 200,
+    _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+) -> list[dict]:
+    return PickingService().list_wave_replenishment_tasks(pick_wave_id, limit=limit)
+
+
+@router.get("/waves/{pick_wave_id}/tasks")
+def list_pick_wave_tasks(
+    pick_wave_id: int,
+    limit: int = 200,
+    _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+) -> list[dict]:
+    return PickingService().list_wave_tasks(pick_wave_id, limit=limit)
+
+
+@router.get("/waves/{pick_wave_id}/audit")
+def list_pick_wave_audit(
+    pick_wave_id: int,
+    limit: int = 200,
+    _user: AdminUser = Depends(require_permission(PICK_WAVE_AUDIT_VIEW_PERMISSION)),
+) -> list[dict]:
+    return PickingService().list_wave_audit(pick_wave_id, limit=limit)
 
 
 @router.get("/routes")

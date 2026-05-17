@@ -401,7 +401,7 @@ ALLOW_PARTIAL_WAVE = 1
 - `GET /api/picking/waves`
 - `POST /api/picking/waves`
 - `GET /api/picking/waves/{wave_id}`
-- `POST /api/picking/waves/candidates`
+- `GET /api/picking/waves/candidates`
 - `POST /api/picking/waves/{wave_id}/calculate`
 - `POST /api/picking/waves/{wave_id}/launch`
 - `POST /api/picking/waves/{wave_id}/cancel`

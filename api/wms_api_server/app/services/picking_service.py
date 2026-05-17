@@ -6,6 +6,9 @@ from ..schemas import (
     PickFaceUpsertRequest,
     PickRouteCellUpsertRequest,
     PickRouteUpsertRequest,
+    PickWaveActionRequest,
+    PickWaveAddPlanRequest,
+    PickWaveCreateRequest,
     PickingPlanCreateRequest,
 )
 
@@ -39,6 +42,514 @@ class PickingService:
             end;
             """,
             {"pick_plan_id": pick_plan_id, "updated_by": updated_by},
+        )
+
+    def create_wave(self, request: PickWaveCreateRequest) -> int:
+        return self.gateway.call_number_plsql(
+            """
+            begin
+              :result := RRL_PICK_WAVE_API.create_wave(
+                p_wave_code => :wave_code,
+                p_wave_name => :wave_name,
+                p_ware_id => :ware_id,
+                p_route_id => :route_id,
+                p_dock_id => :dock_id,
+                p_planned_start_at => :planned_start_at,
+                p_planned_finish_at => :planned_finish_at,
+                p_max_customers => :max_customers,
+                p_created_by => :created_by
+              );
+            end;
+            """,
+            request.model_dump(),
+        )
+
+    def add_wave_plan(self, pick_wave_id: int, request: PickWaveAddPlanRequest) -> None:
+        self.gateway.execute_plsql(
+            """
+            begin
+              RRL_PICK_WAVE_API.add_plan(
+                p_pick_wave_id => :pick_wave_id,
+                p_pick_plan_id => :pick_plan_id,
+                p_created_by => :created_by
+              );
+            end;
+            """,
+            {"pick_wave_id": pick_wave_id, **request.model_dump()},
+        )
+
+    def preview_wave(self, pick_wave_id: int, request: PickWaveActionRequest) -> None:
+        self.gateway.execute_plsql(
+            """
+            begin
+              RRL_PICK_WAVE_API.preview_wave(
+                p_pick_wave_id => :pick_wave_id,
+                p_updated_by => :updated_by
+              );
+            end;
+            """,
+            {"pick_wave_id": pick_wave_id, "updated_by": request.updated_by},
+        )
+
+    def launch_wave(self, pick_wave_id: int, request: PickWaveActionRequest) -> None:
+        self.gateway.execute_plsql(
+            """
+            begin
+              RRL_PICK_WAVE_API.launch_wave(
+                p_pick_wave_id => :pick_wave_id,
+                p_launched_by => :updated_by
+              );
+            end;
+            """,
+            {"pick_wave_id": pick_wave_id, "updated_by": request.updated_by},
+        )
+
+    def cancel_wave(self, pick_wave_id: int, request: PickWaveActionRequest) -> None:
+        self.gateway.execute_plsql(
+            """
+            begin
+              RRL_PICK_WAVE_API.cancel_wave(
+                p_pick_wave_id => :pick_wave_id,
+                p_reason => :reason,
+                p_updated_by => :updated_by
+              );
+            end;
+            """,
+            {"pick_wave_id": pick_wave_id, **request.model_dump()},
+        )
+
+    def release_wave_reservations(self, pick_wave_id: int, request: PickWaveActionRequest) -> None:
+        self.gateway.execute_plsql(
+            """
+            begin
+              RRL_PICK_WAVE_API.release_reservations(
+                p_pick_wave_id => :pick_wave_id,
+                p_updated_by => :updated_by
+              );
+            end;
+            """,
+            {"pick_wave_id": pick_wave_id, "updated_by": request.updated_by},
+        )
+
+    def list_waves(
+        self,
+        status: str | None = None,
+        ware_id: int | None = None,
+        customer_id: int | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        conditions: list[str] = []
+        params: dict[str, Any] = {"limit": min(max(limit, 1), 500)}
+        if status:
+            conditions.append("upper(w.STATUS) = :status")
+            params["status"] = status.upper()
+        if ware_id is not None:
+            conditions.append("w.WARE_ID = :ware_id")
+            params["ware_id"] = ware_id
+        if customer_id is not None:
+            conditions.append(
+                "exists (select 1 from RRL_PICK_WAVE_ORDER wo "
+                "where wo.PICK_WAVE_ID = w.PICK_WAVE_ID "
+                "and wo.STATUS = 'ACTIVE' and wo.CUSTOMER_ID = :customer_id)"
+            )
+            params["customer_id"] = customer_id
+        where_sql = " where " + " and ".join(conditions) if conditions else ""
+        return self.gateway.fetch_all(
+            f"""
+            select *
+              from (
+                select w.PICK_WAVE_ID,
+                       w.WAVE_CODE,
+                       w.WAVE_NAME,
+                       w.WARE_ID,
+                       wa.NAME WARE_NAME,
+                       w.ROUTE_ID,
+                       r.ROUTE_CODE,
+                       w.DOCK_ID,
+                       w.STATUS,
+                       w.WAVE_KIND,
+                       w.PLANNED_START_AT,
+                       w.PLANNED_FINISH_AT,
+                       w.MAX_CUSTOMERS,
+                       w.CUSTOMER_COUNT,
+                       w.ORDER_COUNT,
+                       w.PLAN_COUNT,
+                       w.TASK_COUNT,
+                       w.HARD_RESERVE_QTY,
+                       w.CREATED_AT,
+                       w.CREATED_BY,
+                       w.LAUNCHED_AT,
+                       w.LAUNCHED_BY,
+                       w.CANCELLED_AT,
+                       w.CANCELLED_BY,
+                       w.UPDATED_AT,
+                       w.UPDATED_BY
+                  from RRL_PICK_WAVE w
+                  left join RRL_WARES wa
+                    on wa.ID = w.WARE_ID
+                  left join RRL_PICK_ROUTE r
+                    on r.PICK_ROUTE_ID = w.ROUTE_ID
+                  {where_sql}
+                 order by w.PICK_WAVE_ID desc
+              )
+             where rownum <= :limit
+            """,
+            params,
+        )
+
+    def list_wave_candidates(
+        self,
+        ware_id: int | None = None,
+        route_id: int | None = None,
+        dock_id: int | None = None,
+        shipment_from: str | None = None,
+        shipment_to: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        conditions = [
+            "p.STATUS in ('PLANNED_FULL', 'PLANNED_PARTIAL')",
+            "not exists ("
+            "select 1 from RRL_PICK_WAVE_ORDER wo "
+            "join RRL_PICK_WAVE w on w.PICK_WAVE_ID = wo.PICK_WAVE_ID "
+            "where wo.PICK_PLAN_ID = p.PICK_PLAN_ID "
+            "and wo.STATUS = 'ACTIVE' "
+            "and w.STATUS in ('DRAFT', 'PREVIEW', 'LAUNCHED'))",
+        ]
+        params: dict[str, Any] = {"limit": min(max(limit, 1), 500)}
+        if ware_id is not None:
+            conditions.append("p.WARE_ID = :ware_id")
+            params["ware_id"] = ware_id
+        if route_id is not None:
+            conditions.append("p.ROUTE_ID = :route_id")
+            params["route_id"] = route_id
+        if dock_id is not None:
+            conditions.append("p.DOCK_ID = :dock_id")
+            params["dock_id"] = dock_id
+        if shipment_from:
+            conditions.append("co.SHIPMENT_DATE >= to_date(:shipment_from, 'YYYY-MM-DD')")
+            params["shipment_from"] = shipment_from
+        if shipment_to:
+            conditions.append("co.SHIPMENT_DATE < to_date(:shipment_to, 'YYYY-MM-DD') + 1")
+            params["shipment_to"] = shipment_to
+        where_sql = " where " + " and ".join(conditions)
+        return self.gateway.fetch_all(
+            f"""
+            select *
+              from (
+                select p.PICK_PLAN_ID,
+                       p.CUSTOMER_ORDER_ID,
+                       co.ORDER_NO,
+                       co.SHIPMENT_DATE,
+                       p.CUSTOMER_ID,
+                       c.CUSTOMER_NAME,
+                       p.WARE_ID,
+                       wa.NAME WARE_NAME,
+                       p.ROUTE_ID,
+                       p.DOCK_ID,
+                       p.STATUS,
+                       p.PLAN_STRATEGY,
+                       p.TOTAL_ORDER_QTY,
+                       p.TOTAL_PLANNED_QTY,
+                       p.TOTAL_SHORTAGE_QTY,
+                       count(distinct t.PICK_TASK_ID) TASK_COUNT,
+                       count(distinct pr.PICK_RESERVATION_ID) RESERVATION_COUNT,
+                       p.CREATED_AT,
+                       p.CREATED_BY
+                  from RRL_PICK_PLAN p
+                  join RRL_CUSTOMER_ORDER co
+                    on co.CUSTOMER_ORDER_ID = p.CUSTOMER_ORDER_ID
+                  left join RRL_CUSTOMER c
+                    on c.CUSTOMER_ID = p.CUSTOMER_ID
+                  left join RRL_WARES wa
+                    on wa.ID = p.WARE_ID
+                  left join RRL_PICK_TASK t
+                    on t.PICK_PLAN_ID = p.PICK_PLAN_ID
+                  left join RRL_PICK_RESERVATION pr
+                    on pr.PICK_PLAN_ID = p.PICK_PLAN_ID
+                   and pr.RESERVATION_STATUS = 'ACTIVE'
+                  {where_sql}
+                 group by p.PICK_PLAN_ID,
+                          p.CUSTOMER_ORDER_ID,
+                          co.ORDER_NO,
+                          co.SHIPMENT_DATE,
+                          p.CUSTOMER_ID,
+                          c.CUSTOMER_NAME,
+                          p.WARE_ID,
+                          wa.NAME,
+                          p.ROUTE_ID,
+                          p.DOCK_ID,
+                          p.STATUS,
+                          p.PLAN_STRATEGY,
+                          p.TOTAL_ORDER_QTY,
+                          p.TOTAL_PLANNED_QTY,
+                          p.TOTAL_SHORTAGE_QTY,
+                          p.CREATED_AT,
+                          p.CREATED_BY
+                 order by co.SHIPMENT_DATE nulls last, p.PICK_PLAN_ID
+              )
+             where rownum <= :limit
+            """,
+            params,
+        )
+
+    def get_wave(self, pick_wave_id: int) -> dict[str, Any] | None:
+        rows = self.gateway.fetch_all(
+            """
+            select w.PICK_WAVE_ID,
+                   w.WAVE_CODE,
+                   w.WAVE_NAME,
+                   w.WARE_ID,
+                   wa.NAME WARE_NAME,
+                   w.ROUTE_ID,
+                   r.ROUTE_CODE,
+                   w.DOCK_ID,
+                   w.STATUS,
+                   w.WAVE_KIND,
+                   w.PLANNED_START_AT,
+                   w.PLANNED_FINISH_AT,
+                   w.MAX_CUSTOMERS,
+                   w.CUSTOMER_COUNT,
+                   w.ORDER_COUNT,
+                   w.PLAN_COUNT,
+                   w.TASK_COUNT,
+                   w.HARD_RESERVE_QTY,
+                   w.COMMENT_TEXT,
+                   w.CREATED_AT,
+                   w.CREATED_BY,
+                   w.LAUNCHED_AT,
+                   w.LAUNCHED_BY,
+                   w.CANCELLED_AT,
+                   w.CANCELLED_BY,
+                   w.UPDATED_AT,
+                   w.UPDATED_BY
+              from RRL_PICK_WAVE w
+              left join RRL_WARES wa
+                on wa.ID = w.WARE_ID
+              left join RRL_PICK_ROUTE r
+                on r.PICK_ROUTE_ID = w.ROUTE_ID
+             where w.PICK_WAVE_ID = :pick_wave_id
+            """,
+            {"pick_wave_id": pick_wave_id},
+        )
+        if not rows:
+            return None
+
+        wave = rows[0]
+        wave["orders"] = self.gateway.fetch_all(
+            """
+            select wo.PICK_WAVE_ORDER_ID,
+                   wo.PICK_PLAN_ID,
+                   wo.CUSTOMER_ORDER_ID,
+                   wo.ORDER_NO,
+                   wo.CUSTOMER_ID,
+                   c.CUSTOMER_NAME,
+                   wo.STATUS,
+                   wo.CREATED_AT,
+                   wo.CREATED_BY
+              from RRL_PICK_WAVE_ORDER wo
+              left join RRL_CUSTOMER c
+                on c.CUSTOMER_ID = wo.CUSTOMER_ID
+             where wo.PICK_WAVE_ID = :pick_wave_id
+             order by wo.PICK_WAVE_ORDER_ID
+            """,
+            {"pick_wave_id": pick_wave_id},
+        )
+        wave["lines"] = self.list_wave_lines(pick_wave_id)
+        wave["demand"] = self.list_wave_demand(pick_wave_id)
+        wave["reservations"] = self.list_wave_reservations(pick_wave_id, limit=500)
+        wave["replenishment_tasks"] = self.list_wave_replenishment_tasks(pick_wave_id, limit=500)
+        wave["tasks"] = self.list_wave_tasks(pick_wave_id, limit=500)
+        wave["shortages"] = self.list_wave_shortages(pick_wave_id, limit=500)
+        return wave
+
+    def list_wave_lines(self, pick_wave_id: int) -> list[dict[str, Any]]:
+        return self.gateway.fetch_all(
+            """
+            select wl.PICK_WAVE_LINE_ID,
+                   wl.PICK_WAVE_ORDER_ID,
+                   wl.PICK_PLAN_ID,
+                   wl.PICK_PLAN_LINE_ID,
+                   wl.CUSTOMER_ORDER_ROW_ID,
+                   wl.ARTICUL,
+                   wl.REQUESTED_QTY,
+                   wl.PLANNED_QTY,
+                   wl.SHORTAGE_QTY,
+                   wl.STATUS,
+                   wl.CREATED_AT,
+                   wl.CREATED_BY
+              from RRL_PICK_WAVE_LINE wl
+             where wl.PICK_WAVE_ID = :pick_wave_id
+             order by wl.PICK_WAVE_LINE_ID
+            """,
+            {"pick_wave_id": pick_wave_id},
+        )
+
+    def list_wave_demand(self, pick_wave_id: int) -> list[dict[str, Any]]:
+        return self.gateway.fetch_all(
+            """
+            select PICK_WAVE_DEMAND_ID,
+                   ARTICUL,
+                   TASK_TYPE,
+                   TARGET_CELL_CODE,
+                   PICK_FACE_ID,
+                   PICK_ROUTE_CELL_ID,
+                   DEMAND_QTY,
+                   TASK_COUNT,
+                   CREATED_AT,
+                   CREATED_BY
+              from RRL_PICK_WAVE_DEMAND
+             where PICK_WAVE_ID = :pick_wave_id
+             order by TASK_TYPE, TARGET_CELL_CODE, ARTICUL
+            """,
+            {"pick_wave_id": pick_wave_id},
+        )
+
+    def list_wave_reservations(self, pick_wave_id: int, limit: int = 200) -> list[dict[str, Any]]:
+        params = {"pick_wave_id": pick_wave_id, "limit": min(max(limit, 1), 1000)}
+        return self.gateway.fetch_all(
+            """
+            select *
+              from (
+                select wr.PICK_WAVE_RESERVATION_ID,
+                       wr.PICK_RESERVATION_ID,
+                       wr.PICK_TASK_ID,
+                       wr.PICK_PLAN_ID,
+                       wr.PICK_PLAN_LINE_ID,
+                       wr.CUSTOMER_ORDER_ID,
+                       co.ORDER_NO,
+                       wr.CUSTOMER_ID,
+                       c.CUSTOMER_NAME,
+                       wr.RESERVATION_STATUS,
+                       wr.PALLET_UID,
+                       wr.SSCC,
+                       wr.ARTICUL,
+                       wr.SOURCE_CELL_CODE,
+                       wr.RESERVED_QTY,
+                       wr.CREATED_AT,
+                       wr.CREATED_BY,
+                       wr.RELEASED_AT,
+                       wr.UPDATED_AT,
+                       wr.UPDATED_BY
+                  from RRL_PICK_WAVE_RESERVATION wr
+                  join RRL_CUSTOMER_ORDER co
+                    on co.CUSTOMER_ORDER_ID = wr.CUSTOMER_ORDER_ID
+                  left join RRL_CUSTOMER c
+                    on c.CUSTOMER_ID = wr.CUSTOMER_ID
+                 where wr.PICK_WAVE_ID = :pick_wave_id
+                 order by wr.PICK_WAVE_RESERVATION_ID
+              )
+             where rownum <= :limit
+            """,
+            params,
+        )
+
+    def list_wave_replenishment_tasks(self, pick_wave_id: int, limit: int = 200) -> list[dict[str, Any]]:
+        params = {"pick_wave_id": pick_wave_id, "limit": min(max(limit, 1), 1000)}
+        return self.gateway.fetch_all(
+            """
+            select *
+              from (
+                select PICK_WAVE_REPLENISH_TASK_ID,
+                       PICK_TASK_ID,
+                       STATUS,
+                       ARTICUL,
+                       PALLET_UID,
+                       SOURCE_CELL_CODE,
+                       TARGET_CELL_CODE,
+                       QTY,
+                       PICK_SEQUENCE,
+                       CREATED_AT,
+                       CREATED_BY,
+                       UPDATED_AT,
+                       UPDATED_BY
+                  from RRL_PICK_WAVE_REPLENISH_TASK
+                 where PICK_WAVE_ID = :pick_wave_id
+                 order by PICK_SEQUENCE nulls last, PICK_WAVE_REPLENISH_TASK_ID
+              )
+             where rownum <= :limit
+            """,
+            params,
+        )
+
+    def list_wave_tasks(self, pick_wave_id: int, limit: int = 200) -> list[dict[str, Any]]:
+        params = {"pick_wave_id": pick_wave_id, "limit": min(max(limit, 1), 1000)}
+        return self.gateway.fetch_all(
+            """
+            select *
+              from (
+                select PICK_WAVE_TASK_ID,
+                       PICK_TASK_ID,
+                       PICK_WAVE_REPLENISH_TASK_ID,
+                       TASK_TYPE,
+                       STATUS,
+                       ARTICUL,
+                       PALLET_UID,
+                       SOURCE_CELL_CODE,
+                       TARGET_CELL_CODE,
+                       QTY,
+                       PICK_SEQUENCE,
+                       PICK_FACE_ID,
+                       PICK_ROUTE_CELL_ID,
+                       CREATED_AT,
+                       CREATED_BY,
+                       UPDATED_AT,
+                       UPDATED_BY
+                  from RRL_PICK_WAVE_TASK
+                 where PICK_WAVE_ID = :pick_wave_id
+                 order by PICK_SEQUENCE nulls last, PICK_WAVE_TASK_ID
+              )
+             where rownum <= :limit
+            """,
+            params,
+        )
+
+    def list_wave_shortages(self, pick_wave_id: int, limit: int = 200) -> list[dict[str, Any]]:
+        params = {"pick_wave_id": pick_wave_id, "limit": min(max(limit, 1), 1000)}
+        return self.gateway.fetch_all(
+            """
+            select *
+              from (
+                select PICK_WAVE_SHORTAGE_ID,
+                       PICK_SHORTAGE_ID,
+                       PICK_PLAN_ID,
+                       CUSTOMER_ORDER_ID,
+                       CUSTOMER_ID,
+                       ARTICUL,
+                       REQUESTED_QTY,
+                       PLANNED_QTY,
+                       SHORTAGE_QTY,
+                       REASON_CODE,
+                       REASON_TEXT,
+                       CREATED_AT,
+                       CREATED_BY
+                  from RRL_PICK_WAVE_SHORTAGE
+                 where PICK_WAVE_ID = :pick_wave_id
+                 order by PICK_WAVE_SHORTAGE_ID
+              )
+             where rownum <= :limit
+            """,
+            params,
+        )
+
+    def list_wave_audit(self, pick_wave_id: int, limit: int = 200) -> list[dict[str, Any]]:
+        params = {"pick_wave_id": pick_wave_id, "limit": min(max(limit, 1), 1000)}
+        return self.gateway.fetch_all(
+            """
+            select *
+              from (
+                select PICK_WAVE_AUDIT_ID,
+                       EVENT_TYPE,
+                       MESSAGE_TEXT,
+                       PAYLOAD_JSON,
+                       CREATED_AT,
+                       CREATED_BY
+                  from RRL_PICK_WAVE_AUDIT
+                 where PICK_WAVE_ID = :pick_wave_id
+                 order by PICK_WAVE_AUDIT_ID
+              )
+             where rownum <= :limit
+            """,
+            params,
         )
 
     def list_plans(

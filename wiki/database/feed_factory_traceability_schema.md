@@ -346,6 +346,46 @@ The migration also grants `GLOBAL_ADMIN` the new legacy rights:
 
 The `017_rollback.sql` script is intentionally no-op. Pick topology is data-bearing configuration and `RRL_PICKING_API` depends on the topology package after this migration; use a VM/database snapshot for a full physical rollback.
 
+Migration `2026-05-17-018-wave-picking-core` prepares package `RRL_PICK_WAVE_API`.
+
+Main operations:
+
+- `CREATE_WAVE`: create a draft picking wave with warehouse, route, dock, time window, and customer limit.
+- `ADD_PLAN`: attach an already planned customer picking plan to the wave and prevent assignment of the same plan to another open wave.
+- `PREVIEW_WAVE`: build wave lines, aggregated demand, shortages, and preview state without converting reservations.
+- `LAUNCH_WAVE`: convert selected active soft reservations to hard reservations, create wave picking tasks, create replenishment tasks for case-pick work, and mark picking plans as `RELEASED`.
+- `RELEASE_RESERVATIONS`: before physical task start, return hard reservations back to active soft reservations and cancel wave tasks.
+- `CANCEL_WAVE`: cancel draft/preview waves or cancel launched waves after releasing hard reservations when no physical task has started.
+
+The migration adds these data-bearing tables:
+
+- `RRL_PICK_WAVE_SETTING`
+- `RRL_PICK_WAVE`
+- `RRL_PICK_WAVE_ORDER`
+- `RRL_PICK_WAVE_LINE`
+- `RRL_PICK_WAVE_RESERVATION`
+- `RRL_PICK_WAVE_DEMAND`
+- `RRL_PICK_WAVE_REPLENISH_TASK`
+- `RRL_PICK_WAVE_TASK`
+- `RRL_PICK_WAVE_SHORTAGE`
+- `RRL_PICK_WAVE_AUDIT`
+
+Wave launch changes only the new reservation layer and task state. It does not update legacy physical stock tables directly; later terminal/WMS bridge work must consume tasks through the old WMS movement mechanism.
+
+The migration also grants `GLOBAL_ADMIN` the new legacy rights:
+
+- `PICK_WAVE_VIEW`
+- `PICK_WAVE_CREATE`
+- `PICK_WAVE_CALCULATE`
+- `PICK_WAVE_LAUNCH`
+- `PICK_WAVE_CANCEL`
+- `PICK_WAVE_RELEASE_RESERVES`
+- `PICK_WAVE_SETTINGS_VIEW`
+- `PICK_WAVE_SETTINGS_EDIT`
+- `PICK_WAVE_AUDIT_VIEW`
+
+The `018_rollback.sql` script is intentionally no-op. Wave picking tables are data-bearing operational history; use a VM/database snapshot for a full physical rollback.
+
 ## WMS/MES Warehouse Settings
 
 Migration `2026-05-17-012-wms-warehouse-settings` extends legacy `RRL_WARES` with independent role flags:

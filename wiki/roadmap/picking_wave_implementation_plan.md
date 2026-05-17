@@ -205,7 +205,8 @@
 - инкремент 2 выполнен через migration `015`: customer shelf-life rules, stack rules, vehicle types, customer vehicle rules, shipment parts, `RRL_CUSTOMER_RULE_API`, backend endpoints, smoke и cleanup;
 - инкремент 3 выполнен через migration `016`: picking plans, tasks, soft reservations, shortages, decision log, `RRL_PICKING_API`, backend endpoints, smoke и cleanup;
 - инкремент 4 выполнен через migration `017`: pick routes, route cells, pick faces, SKU assignment, `RRL_PICK_TOPOLOGY_API`, case-pick target cells and sequence, backend endpoints, smoke и cleanup;
-- Oracle invalid objects после `017`: `0`.
+- инкремент 5 выполнен через migration `018`: wave picking core, hard reservations, wave demand, replenishment/picking tasks, `RRL_PICK_WAVE_API`, backend endpoints, smoke и cleanup;
+- Oracle invalid objects после `018`: `0`.
 
 ### Инкремент 0. Подготовка И Инвентаризация
 
@@ -441,7 +442,7 @@ API:
 
 - `GET /api/picking/waves`;
 - `POST /api/picking/waves`;
-- `POST /api/picking/waves/candidates`;
+- `GET /api/picking/waves/candidates`;
 - `POST /api/picking/waves/{id}/calculate`;
 - `POST /api/picking/waves/{id}/launch`;
 - `POST /api/picking/waves/{id}/cancel`;
@@ -469,6 +470,8 @@ Smoke:
 - hard reservation работает;
 - задачи пополнения и отбора создаются;
 - audit полный.
+
+Статус: выполнено через migration `018`. PL/SQL smoke и HTTP smoke прошли, cleanup оставил `SMOKE_018 = 0` и `SMOKE_018_HTTP = 0`, Oracle invalid objects = `0`. Следующий практический инкремент - `Admin UI: Picking Planning / Wave Picking`.
 
 ### Инкремент 6. Admin UI: Picking Planning
 
@@ -639,7 +642,7 @@ Smoke:
 4. Migration `015` + customer rules API.
 5. Migration `016` + picking plan API + reservations smoke.
 6. Migration `017` + pick face API.
-7. Migration `018` + wave API + concurrency smoke.
+7. Migration `018` + wave API + launch/cancel smoke.
 8. Admin page `picking-plans`.
 9. Admin page `wave-picking`.
 10. Terminal flow.
@@ -717,10 +720,9 @@ Smoke:
 
 Следующий разумный шаг реализации:
 
-1. Подготовить migration `018` для ядра волновой сборки.
-2. Добавить `RRL_PICK_WAVE`, `RRL_PICK_WAVE_ORDER`, `RRL_PICK_WAVE_LINE`, `RRL_PICK_WAVE_RESERVATION`, replenishment/picking tasks и audit.
-3. Реализовать preview/launch/cancel волны через `RRL_PICK_WAVE_API`.
-4. При launch переводить выбранные soft reservations в hard reservations и создавать задачи пополнения/отбора.
-5. Проверить конкурентный запуск двух волн: один и тот же паллет или часть паллета не должны попасть в две волны.
+1. Сделать raw admin page для просмотра picking plans: строки, резервы, shortages, decision log.
+2. Сделать raw admin page для wave picking: реестр волн, кандидаты, preview, launch, cancel, hard reservations, replenishment tasks, picking tasks и audit.
+3. Добавить smoke UI/API на права: пользователь без `pick_wave_view` не видит страницу, без `pick_wave_launch` не может запускать волну.
+4. После admin UI перейти к terminal flow для выполнения wave tasks.
 
-Это переведёт модуль от индивидуального планирования заказа к операционному запуску сборки по волнам.
+Это переведёт модуль от backend/API ядра к рабочему диспетчерскому экрану склада.

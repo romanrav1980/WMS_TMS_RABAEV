@@ -395,6 +395,19 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - HTTP smoke created topology through `/api/picking/routes`, `/api/picking/route-cells`, `/api/picking/pick-faces`, then created a picking plan and verified the case-pick target cell and sequence; cleanup left `SMOKE_API_017 = 0`.
 - Post-apply invalid-object check left `0 INVALID` current objects.
 
+`2026-05-17-018-wave-picking-core`:
+
+- Apply result: `Statements=6; Errors=0`.
+- Verify result: `Statements=6; Errors=0`.
+- Package status: `RRL_PICK_WAVE_API` package and package body are `VALID`.
+- Added wave picking core tables: `RRL_PICK_WAVE_SETTING`, `RRL_PICK_WAVE`, `RRL_PICK_WAVE_ORDER`, `RRL_PICK_WAVE_LINE`, `RRL_PICK_WAVE_RESERVATION`, `RRL_PICK_WAVE_DEMAND`, `RRL_PICK_WAVE_REPLENISH_TASK`, `RRL_PICK_WAVE_TASK`, `RRL_PICK_WAVE_SHORTAGE`, and `RRL_PICK_WAVE_AUDIT`.
+- `RRL_PICK_WAVE_API` supports wave create, add plan, preview, launch, release reservations, and cancel.
+- Launch converts selected picking-plan soft reservations into hard reservations and creates wave picking/replenishment tasks without updating legacy stock tables directly.
+- Cancel before physical task start releases hard reservations back to soft reservations.
+- PL/SQL smoke created a picking plan from real stock, built a wave preview, launched it, converted soft reservations to hard reservations, cancelled it, and cleanup left `SMOKE_018 = 0`.
+- HTTP smoke on `127.0.0.1:8088` created a wave through `/api/picking/waves`, added a plan, calculated preview, launched, read reservations/audit, cancelled, and cleanup left `SMOKE_018_HTTP = 0`.
+- Post-apply invalid-object check left `0 INVALID` current objects.
+
 ## Required Procedure For Future Reapply
 
 1. Create or confirm a VirtualBox snapshot before applying to the live Oracle VM.
