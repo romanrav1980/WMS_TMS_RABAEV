@@ -12,6 +12,16 @@ Append-only log of root wiki updates.
 - Re-applied the warehouse seed after the encoding fix and verified Oracle stores Russian seed text as valid AL32UTF8.
 - Added `stop-listeners.bat` / `scripts/stop-listeners.ps1` for controlled shutdown of local API, frontend, terminal, and worker listeners.
 
+## [2026-05-17] oracle-restore-point-after-012 | Protected current Oracle state
+
+- Pushed code commit `659342b` to `origin/codex/oracle-rabaev-restore-point-2026-05-11`.
+- Created VirtualBox snapshot `wms-mes-after-012-2026-05-17`, UUID `d6dc40b3-279f-4995-9af1-ef3d732b04ee`, for VM `Oracle DB Developer VM`.
+- Exported local SQL restore bundle for `RABAEV@127.0.0.1:1521/orcl` to `db/restore_points/rabaev_orcl_wms_mes_after_012_2026-05-17`.
+- The restore bundle is about 1.7 GB and is intentionally ignored by Git; it is a local restore artifact, not a GitHub payload.
+- Updated `tools/oracle_apply` export mode to work from the schema owner through `USER_*` dictionary views instead of requiring `DBA_*` privileges.
+- Ran MES production-completion smoke after the restore point: raw issue and raw consumption were applied to old WMS through `RRL_EVENTS TYPE_EVENT=2/3`, finished pallet receipt through `TYPE_EVENT=1`, and cleanup removed the fixed smoke rows.
+- Runtime smoke passed: `/health`, BOM/MES/warehouse/API-audit endpoints, raw admin page `warehouses.html`, and Oracle invalid-object check.
+
 ## [2026-05-17] mes-production-completion-implemented | Implemented MES completion and WMS event bridge
 
 - Added and applied migration `011_mes-production-completion`.

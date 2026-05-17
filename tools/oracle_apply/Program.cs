@@ -282,17 +282,15 @@ internal static class RabaevSqlExporter
 
         var tables = await LoadNamesAsync(connection, """
             select table_name
-              from dba_tables
-             where owner = 'RABAEV'
-               and table_name not like 'BIN$%'
+              from user_tables
+             where table_name not like 'BIN$%'
                and nested = 'NO'
              order by table_name
             """);
 
         var sequences = await LoadNamesAsync(connection, """
             select sequence_name
-              from dba_sequences
-             where sequence_owner = 'RABAEV'
+              from user_sequences
              order by sequence_name
             """);
 
@@ -366,9 +364,8 @@ internal static class RabaevSqlExporter
         var objectType = typeName == "PACKAGE_BODY" ? "PACKAGE BODY" : typeName;
         return $"""
             select object_name
-              from dba_objects
-             where owner = 'RABAEV'
-               and object_type = '{objectType}'
+              from user_objects
+             where object_type = '{objectType}'
                and object_name not like 'BIN$%'
              order by object_name
             """;
@@ -465,9 +462,8 @@ internal static class RabaevSqlExporter
         command.BindByName = true;
         command.CommandText = """
             select column_name, data_type
-              from dba_tab_columns
-             where owner = 'RABAEV'
-               and table_name = :table_name
+              from user_tab_columns
+             where table_name = :table_name
              order by column_id
             """;
         command.Parameters.Add("table_name", OracleDbType.Varchar2).Value = table;
@@ -583,16 +579,14 @@ internal static class RabaevSqlExporter
     {
         await WriteQueryAsync(connection, Path.Combine(metaDir, "object_status.tsv"), """
             select object_type, status, count(*) cnt
-              from dba_objects
-             where owner = 'RABAEV'
+              from user_objects
              group by object_type, status
              order by object_type, status
             """);
 
         await WriteQueryAsync(connection, Path.Combine(metaDir, "table_counts.tsv"), """
             select table_name, num_rows
-              from dba_tables
-             where owner = 'RABAEV'
+              from user_tables
              order by table_name
             """);
 
