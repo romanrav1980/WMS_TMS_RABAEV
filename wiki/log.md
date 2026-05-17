@@ -2,6 +2,14 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-17] customer-admin-zero-step | Added raw customers and customer orders admin
+
+- Added backend endpoints for creating/updating customers and adding customer addresses on top of existing Oracle customer tables.
+- Added raw admin page `customers.html` for customer registry, customer card, addresses, legacy mapping, shelf-life rules, stack rules, and vehicle rules.
+- Added raw admin page `customer-orders.html` for customer order registry, legacy order import, order rows, and fulfillment facts.
+- Added navigation links to the raw admin shell and documented permissions: `customer_view`, `customer_edit`, `customer_order_view`, `customer_order_import`, `customer_fulfillment_view`, `customer_rule_view`, and `customer_rule_edit`.
+- Verified HTTP smoke against `127.0.0.1:8088`: create customer, add address, patch customer, add shelf/stack/vehicle rules, list customer orders, cleanup, and Oracle invalid objects = `0`.
+
 ## [2026-05-17] wave-picking-core | Added wave launch and hard reservations
 
 - Implemented and applied migration `018_wave-picking-core` with wave settings, wave headers, wave orders, wave lines, wave demand, hard wave reservations, replenishment tasks, picking tasks, shortages, audit, and `RRL_PICK_WAVE_API`.

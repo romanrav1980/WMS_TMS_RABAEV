@@ -211,7 +211,10 @@ Batch quality and shipment readiness:
 Customer orders for picking planning:
 
 - `GET /api/customers`
+- `POST /api/customers`
 - `GET /api/customers/{customer_id}`
+- `PATCH /api/customers/{customer_id}`
+- `POST /api/customers/{customer_id}/addresses`
 - `GET /api/customers/{customer_id}/shelf-life-rules`
 - `POST /api/customers/{customer_id}/shelf-life-rules`
 - `GET /api/customers/{customer_id}/stack-rules`
@@ -225,7 +228,8 @@ Customer orders for picking planning:
 - `GET /api/vehicle-types`
 - `POST /api/vehicle-types`
 - These endpoints require Oracle migrations `2026-05-17-014-customer-order-foundation` and `2026-05-17-015-customer-rules-vehicle-capacity`.
-- They use permissions `customer_view`, `customer_order_view`, `customer_order_import`, `customer_fulfillment_view`, `customer_rule_view`, `customer_rule_edit`, `vehicle_type_view`, and `vehicle_type_edit`.
+- They use permissions `customer_view`, `customer_edit`, `customer_order_view`, `customer_order_import`, `customer_fulfillment_view`, `customer_rule_view`, `customer_rule_edit`, `vehicle_type_view`, and `vehicle_type_edit`.
+- Raw admin pages: `wiki-raw/wms_admin_ui_reference/customers.html` and `wiki-raw/wms_admin_ui_reference/customer-orders.html`.
 
 Picking plans and reservations:
 

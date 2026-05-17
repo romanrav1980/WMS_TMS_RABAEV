@@ -454,6 +454,49 @@ class VehicleTypeCreateRequest(BaseModel):
     created_by: str | None = None
 
 
+class CustomerCreateRequest(BaseModel):
+    customer_code: str
+    customer_name: str
+    customer_type: str = "STORE"
+    inn: str | None = None
+    kpp: str | None = None
+    gln: str | None = None
+    edi_id: str | None = None
+    default_vehicle_type_id: int | None = None
+    split_order_by_vehicle_capacity: int = 0
+    default_min_shelf_life_days: float | None = Field(default=None, ge=0)
+    default_min_shelf_life_percent: float | None = Field(default=None, ge=0, le=100)
+    active: int = 1
+    created_by: str | None = None
+
+
+class CustomerUpdateRequest(BaseModel):
+    customer_code: str | None = None
+    customer_name: str | None = None
+    customer_type: str | None = None
+    inn: str | None = None
+    kpp: str | None = None
+    gln: str | None = None
+    edi_id: str | None = None
+    default_vehicle_type_id: int | None = None
+    split_order_by_vehicle_capacity: int | None = None
+    default_min_shelf_life_days: float | None = Field(default=None, ge=0)
+    default_min_shelf_life_percent: float | None = Field(default=None, ge=0, le=100)
+    active: int | None = None
+    updated_by: str | None = None
+
+
+class CustomerAddressCreateRequest(BaseModel):
+    address_type: str = "DELIVERY"
+    address_text: str
+    city: str | None = None
+    region: str | None = None
+    postal_code: str | None = None
+    gln: str | None = None
+    active: int = 1
+    created_by: str | None = None
+
+
 class PickingPlanCreateRequest(BaseModel):
     customer_order_id: int
     plan_strategy: str = "FEFO"

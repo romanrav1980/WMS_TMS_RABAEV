@@ -1,6 +1,14 @@
 from typing import Any
 
 from ..oracle_gateway import OracleGateway
+from ..schemas import CustomerAddressCreateRequest, CustomerCreateRequest, CustomerUpdateRequest
+
+
+def _trim_text(value: Any, max_len: int, upper: bool = False) -> str | None:
+    if value is None:
+        return None
+    text = str(value)[:max_len]
+    return text.upper() if upper else text
 
 
 class CustomerOrderService:
@@ -48,6 +56,134 @@ class CustomerOrderService:
              where rownum <= :limit
             """,
             params,
+        )
+
+    def create_customer(self, request: CustomerCreateRequest) -> int:
+        return self.gateway.call_number_plsql(
+            """
+            declare
+              v_id number;
+            begin
+              select RRL_CUSTOMER_SQ.nextval into v_id from dual;
+              insert into RRL_CUSTOMER (
+                CUSTOMER_ID, CUSTOMER_CODE, CUSTOMER_NAME, CUSTOMER_TYPE,
+                INN, KPP, GLN, EDI_ID, DEFAULT_VEHICLE_TYPE_ID,
+                SPLIT_ORDER_BY_VEHICLE_CAPACITY,
+                DEFAULT_MIN_SHELF_LIFE_DAYS, DEFAULT_MIN_SHELF_LIFE_PERCENT,
+                ACTIVE, CREATED_AT, CREATED_BY
+              ) values (
+                v_id, cast(:customer_code as varchar2(100)), cast(:customer_name as varchar2(255)),
+                cast(:customer_type as varchar2(30)), cast(:inn as varchar2(20)),
+                cast(:kpp as varchar2(20)), cast(:gln as varchar2(32)), cast(:edi_id as varchar2(100)),
+                :default_vehicle_type_id, nvl(:split_order_by_vehicle_capacity, 0),
+                :default_min_shelf_life_days, :default_min_shelf_life_percent,
+                nvl(:active, 1), sysdate, cast(:created_by as varchar2(50))
+              );
+              :result := v_id;
+            end;
+            """,
+            {
+                **request.model_dump(),
+                "customer_code": _trim_text(request.customer_code, 100, upper=True),
+                "customer_name": _trim_text(request.customer_name, 255),
+                "customer_type": _trim_text(request.customer_type, 30, upper=True),
+                "inn": _trim_text(request.inn, 20),
+                "kpp": _trim_text(request.kpp, 20),
+                "gln": _trim_text(request.gln, 32),
+                "edi_id": _trim_text(request.edi_id, 100),
+                "created_by": _trim_text(request.created_by, 50),
+            },
+        )
+
+    def update_customer(self, customer_id: int, request: CustomerUpdateRequest) -> None:
+        touched = request.model_fields_set
+        params: dict[str, Any] = {
+            "customer_id": customer_id,
+            "updated_by": (request.updated_by or "api")[:50],
+        }
+        set_clauses: list[str] = []
+
+        string_fields = {
+            "customer_code": ("CUSTOMER_CODE", 100, True),
+            "customer_name": ("CUSTOMER_NAME", 255, False),
+            "customer_type": ("CUSTOMER_TYPE", 30, True),
+            "inn": ("INN", 20, False),
+            "kpp": ("KPP", 20, False),
+            "gln": ("GLN", 32, False),
+            "edi_id": ("EDI_ID", 100, False),
+        }
+        number_fields = {
+            "default_vehicle_type_id": "DEFAULT_VEHICLE_TYPE_ID",
+            "split_order_by_vehicle_capacity": "SPLIT_ORDER_BY_VEHICLE_CAPACITY",
+            "default_min_shelf_life_days": "DEFAULT_MIN_SHELF_LIFE_DAYS",
+            "default_min_shelf_life_percent": "DEFAULT_MIN_SHELF_LIFE_PERCENT",
+            "active": "ACTIVE",
+        }
+
+        for field_name, (column_name, max_len, should_upper) in string_fields.items():
+            if field_name not in touched:
+                continue
+            value = getattr(request, field_name)
+            if value is not None:
+                value = str(value)[:max_len]
+                if should_upper:
+                    value = value.upper()
+            params[field_name] = value
+            set_clauses.append(f"{column_name} = cast(:{field_name} as varchar2({max_len}))")
+
+        for field_name, column_name in number_fields.items():
+            if field_name not in touched:
+                continue
+            params[field_name] = getattr(request, field_name)
+            set_clauses.append(f"{column_name} = :{field_name}")
+
+        set_clauses.append("UPDATED_AT = sysdate")
+        set_clauses.append("UPDATED_BY = cast(:updated_by as varchar2(50))")
+        set_sql = ",\n                     ".join(set_clauses)
+        self.gateway.execute_plsql(
+            f"""
+            begin
+              update RRL_CUSTOMER
+                 set {set_sql}
+               where CUSTOMER_ID = :customer_id;
+
+              if sql%rowcount = 0 then
+                raise_application_error(-20801, 'customer not found');
+              end if;
+            end;
+            """,
+            params,
+        )
+
+    def create_customer_address(self, customer_id: int, request: CustomerAddressCreateRequest) -> int:
+        return self.gateway.call_number_plsql(
+            """
+            declare
+              v_id number;
+            begin
+              select RRL_CUSTOMER_ADDRESS_SQ.nextval into v_id from dual;
+              insert into RRL_CUSTOMER_ADDRESS (
+                CUSTOMER_ADDRESS_ID, CUSTOMER_ID, ADDRESS_TYPE, ADDRESS_TEXT,
+                CITY, REGION, POSTAL_CODE, GLN, ACTIVE, CREATED_AT, CREATED_BY
+              ) values (
+                v_id, :customer_id, cast(:address_type as varchar2(30)), cast(:address_text as varchar2(1000)),
+                cast(:city as varchar2(100)), cast(:region as varchar2(100)), cast(:postal_code as varchar2(20)),
+                cast(:gln as varchar2(32)), nvl(:active, 1), sysdate, cast(:created_by as varchar2(50))
+              );
+              :result := v_id;
+            end;
+            """,
+            {
+                "customer_id": customer_id,
+                **request.model_dump(),
+                "address_type": _trim_text(request.address_type, 30, upper=True),
+                "address_text": _trim_text(request.address_text, 1000),
+                "city": _trim_text(request.city, 100),
+                "region": _trim_text(request.region, 100),
+                "postal_code": _trim_text(request.postal_code, 20),
+                "gln": _trim_text(request.gln, 32),
+                "created_by": _trim_text(request.created_by, 50),
+            },
         )
 
     def get_customer(self, customer_id: int) -> dict[str, Any] | None:

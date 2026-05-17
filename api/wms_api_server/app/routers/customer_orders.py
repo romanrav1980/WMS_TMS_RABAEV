@@ -2,12 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from ..auth import (
     AdminUser,
+    CUSTOMER_EDIT_PERMISSION,
     CUSTOMER_FULFILLMENT_VIEW_PERMISSION,
     CUSTOMER_ORDER_IMPORT_PERMISSION,
     CUSTOMER_ORDER_VIEW_PERMISSION,
     CUSTOMER_VIEW_PERMISSION,
     require_permission,
 )
+from ..schemas import CustomerAddressCreateRequest, CustomerCreateRequest, CustomerUpdateRequest
 from ..services.customer_order_service import CustomerOrderService
 
 router = APIRouter(tags=["customer-orders"])
@@ -22,6 +24,16 @@ def list_customers(
     return CustomerOrderService().list_customers(search=search, limit=limit)
 
 
+@router.post("/api/customers")
+def create_customer(
+    request: CustomerCreateRequest,
+    user: AdminUser = Depends(require_permission(CUSTOMER_EDIT_PERMISSION)),
+) -> dict[str, int]:
+    request.created_by = request.created_by or user.username
+    customer_id = CustomerOrderService().create_customer(request)
+    return {"customer_id": customer_id}
+
+
 @router.get("/api/customers/{customer_id}")
 def get_customer(
     customer_id: int,
@@ -31,6 +43,28 @@ def get_customer(
     if customer is None:
         raise HTTPException(status_code=404, detail="Customer not found.")
     return customer
+
+
+@router.patch("/api/customers/{customer_id}")
+def update_customer(
+    customer_id: int,
+    request: CustomerUpdateRequest,
+    user: AdminUser = Depends(require_permission(CUSTOMER_EDIT_PERMISSION)),
+) -> dict[str, int]:
+    request.updated_by = request.updated_by or user.username
+    CustomerOrderService().update_customer(customer_id, request)
+    return {"customer_id": customer_id}
+
+
+@router.post("/api/customers/{customer_id}/addresses")
+def create_customer_address(
+    customer_id: int,
+    request: CustomerAddressCreateRequest,
+    user: AdminUser = Depends(require_permission(CUSTOMER_EDIT_PERMISSION)),
+) -> dict[str, int]:
+    request.created_by = request.created_by or user.username
+    address_id = CustomerOrderService().create_customer_address(customer_id, request)
+    return {"customer_address_id": address_id}
 
 
 @router.get("/api/customer-orders")

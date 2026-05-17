@@ -9,6 +9,13 @@ from ..schemas import (
 )
 
 
+def _trim_text(value: Any, max_len: int, upper: bool = False) -> str | None:
+    if value is None:
+        return None
+    text = str(value)[:max_len]
+    return text.upper() if upper else text
+
+
 class CustomerRuleService:
     def __init__(self, gateway: OracleGateway | None = None) -> None:
         self.gateway = gateway or OracleGateway()
@@ -49,15 +56,21 @@ class CustomerRuleService:
                 VALID_FROM, VALID_TO, CREATED_AT, CREATED_BY
               ) values (
                 v_id, :customer_id, :customer_store_map_id,
-                upper(substr(:articul, 1, 40)), substr(:product_group, 1, 100),
+                cast(:articul as varchar2(40)), cast(:product_group as varchar2(100)),
                 :min_shelf_life_days, :min_shelf_life_percent,
                 :rule_priority, :active, nvl(:valid_from, trunc(sysdate)),
-                :valid_to, sysdate, substr(:created_by, 1, 50)
+                :valid_to, sysdate, cast(:created_by as varchar2(50))
               );
               :result := v_id;
             end;
             """,
-            {"customer_id": customer_id, **request.model_dump()},
+            {
+                "customer_id": customer_id,
+                **request.model_dump(),
+                "articul": _trim_text(request.articul, 40, upper=True),
+                "product_group": _trim_text(request.product_group, 100),
+                "created_by": _trim_text(request.created_by, 50),
+            },
         )
 
     def list_stack_rules(self, customer_id: int) -> list[dict[str, Any]]:
@@ -106,18 +119,26 @@ class CustomerRuleService:
                 RULE_PRIORITY, ACTIVE, VALID_FROM, VALID_TO, CREATED_AT, CREATED_BY
               ) values (
                 v_id, :customer_id, :customer_store_map_id,
-                upper(substr(:articul, 1, 40)), substr(:product_group, 1, 100),
+                cast(:articul as varchar2(40)), cast(:product_group as varchar2(100)),
                 :pallet_case_qty, :pallet_layer_qty, :pallet_layer_count,
                 :max_pallet_weight, :max_pallet_volume, :max_pallet_height,
-                substr(:pallet_type, 1, 50), :allow_top_stacking,
-                :must_be_separate_pallet, substr(:stack_compatibility_group, 1, 100),
+                cast(:pallet_type as varchar2(50)), :allow_top_stacking,
+                :must_be_separate_pallet, cast(:stack_compatibility_group as varchar2(100)),
                 :rule_priority, :active, nvl(:valid_from, trunc(sysdate)),
-                :valid_to, sysdate, substr(:created_by, 1, 50)
+                :valid_to, sysdate, cast(:created_by as varchar2(50))
               );
               :result := v_id;
             end;
             """,
-            {"customer_id": customer_id, **request.model_dump()},
+            {
+                "customer_id": customer_id,
+                **request.model_dump(),
+                "articul": _trim_text(request.articul, 40, upper=True),
+                "product_group": _trim_text(request.product_group, 100),
+                "pallet_type": _trim_text(request.pallet_type, 50),
+                "stack_compatibility_group": _trim_text(request.stack_compatibility_group, 100),
+                "created_by": _trim_text(request.created_by, 50),
+            },
         )
 
     def list_vehicle_rules(self, customer_id: int) -> list[dict[str, Any]]:

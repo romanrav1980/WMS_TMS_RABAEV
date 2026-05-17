@@ -206,6 +206,7 @@
 - инкремент 3 выполнен через migration `016`: picking plans, tasks, soft reservations, shortages, decision log, `RRL_PICKING_API`, backend endpoints, smoke и cleanup;
 - инкремент 4 выполнен через migration `017`: pick routes, route cells, pick faces, SKU assignment, `RRL_PICK_TOPOLOGY_API`, case-pick target cells and sequence, backend endpoints, smoke и cleanup;
 - инкремент 5 выполнен через migration `018`: wave picking core, hard reservations, wave demand, replenishment/picking tasks, `RRL_PICK_WAVE_API`, backend endpoints, smoke и cleanup;
+- нулевой raw-admin слой для оператора выполнен после `018`: страницы `customers.html` и `customer-orders.html`, backend create/update customer, address creation, customer rules and legacy order import checks;
 - Oracle invalid objects после `018`: `0`.
 
 ### Инкремент 0. Подготовка И Инвентаризация

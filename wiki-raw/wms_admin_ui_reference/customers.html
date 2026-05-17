@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS PRO Клиенты</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="auth-pending" data-required-permission="customer_view">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span> PRO</div>
+        </div>
+        <nav class="nav">
+          <a class="nav-link" href="index.html">Главная</a>
+          <a class="nav-link" href="index.html">Производство</a>
+          <a class="nav-link more active" href="customers.html" data-permission="customer_view">Клиенты</a>
+          <a class="nav-link more" href="customer-orders.html" data-permission="customer_order_view">Заказы клиентов</a>
+          <a class="nav-link more" href="production-orders.html" data-permission="mes_production_view">MES</a>
+          <a class="nav-link more" href="bom.html" data-permission="bom_view">BOM</a>
+          <a class="nav-link more" href="warehouses.html" data-permission="warehouse_settings_view">Типы складов</a>
+          <a class="nav-link more" href="product-shipment-settings.html" data-permission="quality_batch_view">Вылежка партий</a>
+          <a class="nav-link more" href="rights-admin.html" data-permission="rights_admin_view">Права</a>
+          <a class="nav-link more" href="api-audit.html" data-permission="api_audit_view">API</a>
+          <a class="nav-link more" href="external-outbox.html" data-permission="external_outbox_view">Внешние отправки</a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="factory-mark">
+            <span class="tower t1"></span>
+            <span class="tower t2"></span>
+            <span class="tower t3"></span>
+            <span class="plant-base"></span>
+          </div>
+          <div class="footer-line"><span>Смена</span><b>1 смена</b></div>
+          <div class="footer-line muted"><span>18.05.2025</span><span>10:24</span></div>
+          <div class="footer-line muted"><span>Версия</span><span>2.4.1</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="breadcrumbs"><b>Админ-панель WMS</b><span>/</span><b>Клиенты</b></div>
+          <div class="top-actions">
+            <label class="search">
+              <span>Поиск</span>
+              <input id="customerSearchTop" placeholder="Клиент, адрес, ИНН, GLN..." />
+              <kbd>Ctrl K</kbd>
+            </label>
+            <button class="round alert">12</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">Администратор</b><small id="adminUserRole">WMS</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="admin-page rights-page">
+          <article class="panel rights-users">
+            <header><h2>Реестр клиентов</h2><button id="customerRefresh" type="button">Обновить</button></header>
+            <div class="permission-strip">
+              <span>Просмотр: <b>customer_view</b></span>
+              <span>Изменение: <b>customer_edit</b></span>
+              <span>Правила: <b>customer_rule_view / customer_rule_edit</b></span>
+            </div>
+            <div class="rights-toolbar">
+              <label>API base<input id="customerBase" value="http://127.0.0.1:8088" /></label>
+              <label>Поиск<input id="customerSearch" placeholder="Название, код, адрес" /></label>
+              <label>Лимит<input id="customerLimit" type="number" min="1" max="500" value="200" /></label>
+              <button id="customerLoad" type="button">Показать</button>
+            </div>
+            <div class="rights-summary"><span id="customerStatusText">Ожидание данных</span></div>
+            <div class="rights-table-wrap">
+              <table class="rights-table">
+                <thead><tr><th>ID</th><th>Код</th><th>Клиент</th><th>Тип</th><th>Активен</th><th>Legacy адрес</th></tr></thead>
+                <tbody id="customerRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel rights-groups">
+            <header><h2>Карточка клиента</h2></header>
+            <div class="rights-summary"><span id="customerDetailStatus">Выберите клиента или создайте нового</span></div>
+            <div class="rights-editor" data-permission="customer_edit">
+              <label>Код<input id="customerEditCode" /></label>
+              <label>Название<input id="customerEditName" /></label>
+              <label>Тип<select id="customerEditType"><option>STORE</option><option>CHAIN</option><option>DISTRIBUTOR</option><option>LEGAL_ENTITY</option><option>OTHER</option></select></label>
+              <label>Активен<select id="customerEditActive"><option value="1">Да</option><option value="0">Нет</option></select></label>
+              <label>ИНН<input id="customerEditInn" /></label>
+              <label>КПП<input id="customerEditKpp" /></label>
+              <label>GLN<input id="customerEditGln" /></label>
+              <label>EDI<input id="customerEditEdi" /></label>
+              <label>Тип машины<select id="customerEditVehicle"></select></label>
+              <label>Делить по емкости<select id="customerEditSplit"><option value="1">Да</option><option value="0">Нет</option></select></label>
+              <label>Мин. срок, дни<input id="customerEditShelfDays" type="number" min="0" step="1" /></label>
+              <label>Мин. срок, %<input id="customerEditShelfPercent" type="number" min="0" max="100" step="1" /></label>
+              <button id="customerCreate" type="button">Создать</button>
+              <button id="customerSave" type="button">Сохранить</button>
+            </div>
+            <div class="rights-editor" data-permission="customer_edit">
+              <label>Тип адреса<select id="customerAddressType"><option>DELIVERY</option><option>LEGAL</option><option>BILLING</option><option>STORE</option></select></label>
+              <label>Адрес<input id="customerAddressText" /></label>
+              <label>Город<input id="customerAddressCity" /></label>
+              <label>Регион<input id="customerAddressRegion" /></label>
+              <label>Индекс<input id="customerAddressPostal" /></label>
+              <label>GLN<input id="customerAddressGln" /></label>
+              <button id="customerAddAddress" type="button">Добавить адрес</button>
+            </div>
+            <div class="rights-summary"><span>Адреса и legacy mapping</span></div>
+            <div class="rights-table-wrap compact-scroll">
+              <table class="rights-table">
+                <thead><tr><th>Тип</th><th>Адрес</th><th>Город</th><th>GLN</th><th>Активен</th></tr></thead>
+                <tbody id="customerAddressRows"></tbody>
+              </table>
+              <table class="rights-table">
+                <thead><tr><th>Legacy адрес</th><th>Магазин</th><th>Адрес</th><th>Маршрут</th><th>Ворота</th></tr></thead>
+                <tbody id="customerMappingRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel rights-users">
+            <header><h2>Правила клиента для комплектации</h2></header>
+            <div class="rights-toolbar" data-permission="customer_rule_edit">
+              <label>Артикул<input id="customerRuleArticul" placeholder="опционально" /></label>
+              <label>Мин. срок, дни<input id="customerRuleShelfDays" type="number" min="0" step="1" /></label>
+              <label>Мин. срок, %<input id="customerRuleShelfPercent" type="number" min="0" max="100" step="1" /></label>
+              <button id="customerAddShelfRule" type="button">Добавить срок</button>
+            </div>
+            <div class="rights-toolbar" data-permission="customer_rule_edit">
+              <label>Коробов на паллете<input id="customerStackCases" type="number" min="0" step="1" /></label>
+              <label>Ярусов<input id="customerStackLayers" type="number" min="0" step="1" /></label>
+              <label>Можно сверху<select id="customerStackTop"><option value="0">Нет</option><option value="1">Да</option></select></label>
+              <button id="customerAddStackRule" type="button">Добавить укладку</button>
+            </div>
+            <div class="rights-toolbar" data-permission="customer_rule_edit">
+              <label>Тип машины<select id="customerRuleVehicle"></select></label>
+              <label>Паллет<input id="customerVehiclePallets" type="number" min="0" step="1" value="33" /></label>
+              <label>Вес<input id="customerVehicleWeight" type="number" min="0" step="1" /></label>
+              <label>Объем<input id="customerVehicleVolume" type="number" min="0" step="1" /></label>
+              <button id="customerAddVehicleRule" type="button">Добавить машину</button>
+            </div>
+            <div class="rights-table-wrap compact-scroll">
+              <table class="rights-table">
+                <thead><tr><th>Тип</th><th>Артикул</th><th>Дни</th><th>%</th><th>Коробов</th><th>Машина</th><th>Активно</th></tr></thead>
+                <tbody id="customerRuleRows"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="admin-auth.js?v=20260517-admin123"></script>
+    <script src="customers.js?v=20260517"></script>
+  </body>
+</html>

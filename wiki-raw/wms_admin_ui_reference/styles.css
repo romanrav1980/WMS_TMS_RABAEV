@@ -1054,6 +1054,11 @@ a {
   max-height: 560px;
 }
 
+.rights-table-wrap.compact-scroll {
+  max-height: 230px;
+  border-bottom: 1px solid var(--soft-line);
+}
+
 .rights-table tbody tr {
   cursor: pointer;
 }
@@ -1071,4 +1076,16 @@ a {
   background: #fff5f5;
   font-size: 11px;
   font-weight: 750;
+}
+
+#orderDetails {
+  margin: 0;
+  padding: 14px 18px;
+  overflow: auto;
+  max-height: 190px;
+  border-bottom: 1px solid var(--soft-line);
+  color: #243b5a;
+  background: #fbfdff;
+  font: 12px/1.45 Consolas, "Courier New", monospace;
+  white-space: pre-wrap;
 }
