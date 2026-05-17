@@ -239,6 +239,23 @@ DB/API:
 - показывать genealogy не только JSON, но и таблицами сырье/партия/паллеты/события;
 - добавить cleanup/retry сценарии для failed movements в UI.
 
+Прогресс 2026-05-17:
+
+- primary BOM lookup добавлен в raw MES page;
+- production order HTTP smoke теперь создает заказ без ручного `bom_id`;
+- BOM snapshot показывается таблицей;
+- строка BOM может заполнить поля выдачи сырья;
+- movement statuses отображаются операторскими подписями;
+- genealogy дополнительно выводится таблицами raw usage и pallets;
+- retry-кнопки для failed movements добавлены в UI.
+
+Осталось:
+
+- довести layout/UX до полноценной frontend-админки вместо raw HTML;
+- добавить массовую/построчную выдачу сырья с контролем план/факт;
+- сделать readable validation до вызова API;
+- показать trace events/outbox рядом с production order.
+
 ### Задача 7.1. Production Workflow UX
 
 Цель: превратить доказанный API workflow в операторский сценарий.
@@ -361,11 +378,10 @@ DB/API:
 Актуальный следующий набор файлов:
 
 1. Доработать `production-orders.html/js` до operator workflow.
-2. Добавить API helper для подбора primary BOM по артикулу при создании заказа.
-3. Расширить MES detail endpoint удобными полями для UI: BOM snapshot, movement summary, genealogy summary.
-4. Добавить smoke для UI-compatible сценария или расширить `tests/smoke/mes_http_workflow.py`.
-5. Подготовить `production_release_file_exchange` worker и JSON schema.
-6. Обновить wiki после каждого инкремента.
+2. Добавить массовую/построчную выдачу сырья с контролем план/факт.
+3. Расширить MES detail endpoint удобными summary для UI: movement summary, trace/outbox summary.
+4. Подготовить `production_release_file_exchange` worker и JSON schema.
+5. Обновить wiki после каждого инкремента.
 
 ## Verification Checklist
 

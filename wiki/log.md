@@ -19,6 +19,13 @@ Append-only log of root wiki updates.
 - Current strategic stop point: base Traceability/MES/API infrastructure is working; next strategic focus is turning MES Core into an operator-ready production workflow, then file exchange, QA/QC, labeling/aggregation, shipment/recall, and real Mercury/CRPT adapters.
 - Current tactical stop point: `tests/smoke/mes_http_workflow.py` proves the full API path; next tactical work is production-order UX, BOM selection, BOM snapshot display, raw issue by BOM lines, readable movement statuses, genealogy tables, and retry controls.
 
+## [2026-05-17] mes-operator-workflow-ui | Advanced MES operator workflow
+
+- Extended `production-orders.html/js` with primary BOM lookup, BOM snapshot table, raw issue field-fill from BOM lines, readable movement statuses, retry buttons for failed movements, and tabular genealogy for raw usage and finished pallets.
+- Updated `tests/smoke/mes_http_workflow.py` so production order creation no longer passes manual `bom_id`; it verifies `/api/bom/default` and lets `RRL_MES_PRODUCTION_API.create_order` resolve the primary BOM.
+- Smoke result: `movements=4`, `applied_movements=3`, `raw_usage=1`, `pallets=1`; cleanup left `HTTP-MES-*` orders, BOMs, and pallets at `0`.
+- Verified `node --check` for the MES page script, Python compile for smoke, UTF-8 check, page availability, and Oracle invalid-object check.
+
 ## [2026-05-17] oracle-restore-point-after-012 | Protected current Oracle state
 
 - Pushed code commit `659342b` to `origin/codex/oracle-rabaev-restore-point-2026-05-11`.

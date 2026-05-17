@@ -78,6 +78,7 @@
               <label>План<input id="mesNewQty" type="number" step="0.001" value="1000" /></label>
               <label>Ед.<input id="mesNewUnit" value="KG" /></label>
               <label>Линия<input id="mesNewLine" placeholder="LINE-1" /></label>
+              <button id="mesFindBom" type="button">Подобрать BOM</button>
               <button id="mesCreateOrder" type="button">Создать</button>
               <button id="mesFillDemo" type="button">Тестовые поля</button>
             </div>
@@ -94,6 +95,13 @@
             <header><h2>Карточка заказа и движения</h2></header>
             <div class="rights-summary"><span id="mesDetailStatus">Выберите заказ</span></div>
             <pre id="mesDetails"></pre>
+            <div class="rights-summary"><span>План сырья из BOM snapshot</span></div>
+            <div class="rights-table-wrap">
+              <table class="rights-table">
+                <thead><tr><th>Строка</th><th>Тип</th><th>Сырье</th><th>Наименование</th><th>План</th><th>Потери</th><th>Действие</th></tr></thead>
+                <tbody id="mesBomLineRows"></tbody>
+              </table>
+            </div>
             <div class="rights-editor" data-permission="mes_production_edit">
               <label>Сырьевой паллет<input id="mesRawPallet" placeholder="RAW-PALLET-001" /></label>
               <label>Сырье<input id="mesRawArticul" placeholder="RAW-001" /></label>
@@ -115,7 +123,19 @@
             <pre id="mesGenealogy"></pre>
             <div class="rights-table-wrap">
               <table class="rights-table">
-                <thead><tr><th>ID</th><th>Тип</th><th>Статус</th><th>Паллет</th><th>Откуда</th><th>Куда</th><th>Кол-во</th><th>Ошибка</th></tr></thead>
+                <thead><tr><th>Сырье</th><th>План</th><th>Факт</th><th>Ед.</th><th>Когда</th><th>Кем</th></tr></thead>
+                <tbody id="mesGenealogyRawRows"></tbody>
+              </table>
+            </div>
+            <div class="rights-table-wrap">
+              <table class="rights-table">
+                <thead><tr><th>Паллет</th><th>SSCC</th><th>Кол-во</th><th>Упаковок</th><th>Агрегация</th><th>Кем</th></tr></thead>
+                <tbody id="mesGenealogyPalletRows"></tbody>
+              </table>
+            </div>
+            <div class="rights-table-wrap">
+              <table class="rights-table">
+                <thead><tr><th>ID</th><th>Тип</th><th>Статус</th><th>Паллет</th><th>Откуда</th><th>Куда</th><th>Кол-во</th><th>Ошибка</th><th></th></tr></thead>
                 <tbody id="mesMovementRows"></tbody>
               </table>
             </div>

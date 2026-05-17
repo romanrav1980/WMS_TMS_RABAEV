@@ -48,10 +48,12 @@ def main() -> int:
         "created_by": "http-smoke",
     })
     client.post(f"/api/bom/{bom_id}/approve", {"user_name": "http-smoke"})
+    default_bom = client.get(f"/api/bom/default?target_articul={target_articul}&planned_date={date.today().isoformat()}")
+    if default_bom["bom_id"] != bom_id:
+        raise AssertionError(f"Expected default BOM {bom_id}, got {default_bom['bom_id']}")
 
     order = client.post("/api/mes/production-orders", {
         "order_no": order_no,
-        "bom_id": bom_id,
         "target_articul": target_articul,
         "planned_qty": 100,
         "unit_code": "KG",
