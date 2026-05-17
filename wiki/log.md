@@ -11,6 +11,7 @@ Append-only log of root wiki updates.
 - Added partial picking requirements: plan only free stock after reservations and write a shortage protocol for missing quantities.
 - Added customer order, customer registry, legacy store-as-customer mapping, and order fulfillment fact requirements based on live Oracle checks of `RRL_ORDERS.ADDR` and `RRL_SBORKA_PALLETS`.
 - Expanded customer requirements with addresses, shelf-life rules, product stacking rules, top-stacking permission, vehicle types, vehicle capacity, and automatic shipment-part splitting.
+- Fixed the final Picking Planning requirements as the implementation baseline: customer is a separate entity, legacy stores are mapped through `RRL_ORDERS.ADDR`, planning is customer/order/route/dock based, reservations prevent double assignment, shortages create partial plans, and vehicle capacity can split one customer order into several shipment parts.
 
 ## [2026-05-17] batch-shipment-readiness | Added aging norm on finished-goods lots
 
