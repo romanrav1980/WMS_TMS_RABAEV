@@ -314,7 +314,32 @@ Wave picking:
 - `GET /api/picking/waves/{pick_wave_id}/audit`
 - These endpoints require Oracle migration `2026-05-17-018-wave-picking-core`.
 - They use permissions `pick_wave_view`, `pick_wave_create`, `pick_wave_calculate`, `pick_wave_launch`, `pick_wave_cancel`, `pick_wave_release_reserves`, and `pick_wave_audit_view`.
-- Launch converts selected picking-plan soft reservations into hard reservations and creates wave picking/replenishment tasks. It still does not update legacy stock tables directly.
+- Launch creates hard operational reservations and picking/replenishment tasks. It still does not update legacy stock tables directly.
+
+Common stock reservations:
+
+- `GET /api/stock-reservations`
+- `GET /api/stock-reservations/{reservation_id}`
+- `POST /api/stock-reservations`
+- `POST /api/stock-reservations/{reservation_id}/promote-to-hard`
+- `POST /api/stock-reservations/{reservation_id}/release`
+- `POST /api/stock-reservations/{reservation_id}/consume`
+- `POST /api/stock-reservations/{reservation_id}/cancel`
+- These endpoints require Oracle migration `2026-05-17-023-common-stock-reservation`.
+- They use permissions `stock_reservation_view` and `stock_reservation_edit`.
+- `SOFT` rows store articul/quantity demand and must keep physical fields empty. `HARD` rows store concrete WMS allocation with warehouse, cell, and pallet or batch/production-batch identity.
+
+MES raw supply:
+
+- `POST /api/mes/production-orders/{production_order_id}/raw-supply/calculate`
+- `GET /api/mes/production-orders/{production_order_id}/raw-supply`
+- `POST /api/mes/production-orders/{production_order_id}/release-to-production`
+- `GET /api/mes/raw-transfer-tasks`
+- `GET /api/mes/raw-transfer-tasks/{task_id}`
+- `POST /api/mes/raw-transfer-tasks/{task_id}/confirm`
+- `POST /api/mes/raw-transfer-tasks/{task_id}/cancel`
+- These endpoints require Oracle migrations `2026-05-17-023-common-stock-reservation` and `2026-05-17-024-mes-raw-supply`.
+- Calculation creates `SOFT` reservations in `RRL_STOCK_RESERVATION`. Release to production creates `HARD` pallet reservations and `RRL_MES_RAW_TRANSFER_TASK` rows. Task confirmation calls the existing MES raw issue procedure and consumes the hard reservation.
 
 ## Notes
 
@@ -339,3 +364,6 @@ Checked on 2026-05-17:
 - MES HTTP workflow smoke now verifies the full completion contour: BOM, production order, raw issue, completion, WMS bridge apply, finished-goods batch/remains visibility, trace links, durable outbox, and API audit.
 - The raw MES admin page `production-orders.html` now works as an operator order passport with WMS bridge status, finished-goods lot/remains, trace edges, and outbox events for the selected order.
 - The same page has operator workflow helpers: generate order number, select raw pallets from free raw stock by BOM line, issue all BOM raw lines, prefill finished-goods lot/pallet/SSCC, and run the full MES completion cycle.
+- Migration `023` apply/verify passed; HTTP smoke created a `SOFT` reservation with empty physical fields, promoted it to `HARD` with warehouse/cell/pallet, consumed it, and cleaned the smoke row.
+- Migration `024` apply/verify passed; HTTP smoke created a BOM/order, calculated raw demand, created a hard raw reservation and transfer task, then cancelled the smoke task/reservation without touching legacy stock.
+- MES raw supply load smoke passed: 12 parallel partial hard reservations on one raw pallet were created and cancelled; one transfer task was confirmed and its reservation moved to `CONSUMED`.

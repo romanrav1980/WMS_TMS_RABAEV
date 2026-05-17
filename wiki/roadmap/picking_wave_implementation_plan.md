@@ -19,12 +19,14 @@
 - заказ клиента становится отдельным объектом;
 - клиент становится отдельной сущностью с адресами и правилами;
 - система планирует отбор по заказу клиента, маршруту и воротам;
-- остатки резервируются так, чтобы исключить двойное назначение;
+- мягкая потребность планируется без занятия WMS-остатка, а жесткие WMS-резервы создаются на конкретные паллеты/партии/количества так, чтобы исключить двойное назначение;
 - дефицит фиксируется явно;
 - заказы можно группировать в волны сборки;
-- запуск волны переводит резерв в жесткий операционный режим;
+- запуск волны создает жесткий WMS-резерв на конкретные остатки;
 - админка показывает запуск, статусы, задачи, резервы, дефицит и аудит;
 - физические движения по-прежнему должны быть согласованы со старым WMS-механизмом, без прямого изменения остатков в обход старого ядра.
+
+Целевая модель резервов: `SOFT` и `HARD` хранятся в одной таблице `RRL_STOCK_RESERVATION`. `SOFT` содержит артикул/количество и пустые физические поля, `HARD` содержит склад, ячейку, партию и паллет.
 
 ## 2. Стратегическая Позиция
 
@@ -57,8 +59,8 @@
 
 Нужно сохранить два уровня:
 
-- `Picking Planning`: расчет, soft reserve, дефицит, привязка к заказу клиента.
-- `Wave Picking`: групповой запуск, hard reserve, задачи пополнения и отбора.
+- `Picking Planning`: расчет, soft demand, дефицит, привязка к заказу клиента.
+- `Wave Picking`: групповой запуск, hard WMS reserve, задачи пополнения и отбора.
 
 Это важно, потому что заказ может быть рассчитан заранее, но не запущен в работу. Волна является операционным событием старта сборки.
 
@@ -123,7 +125,7 @@
 
 Результат:
 
-- soft reservations;
+- soft demand;
 - полнопалетный отбор;
 - покоробочный отбор;
 - shortage-протокол;
@@ -149,7 +151,7 @@
 
 - волна как объект;
 - заказы и строки в волне;
-- hard reservations;
+- hard WMS reservations;
 - задачи пополнения;
 - задачи отбора;
 - статусы волны;
@@ -203,9 +205,9 @@
 - в живой Oracle до `014` не было `RRL_CUSTOMER*`, `RRL_PICK*`, `RRL_SHIPMENT_PART*`;
 - инкремент 1 выполнен через migration `014`: customer/order foundation, `RRL_CUSTOMER_ORDER_API`, backend endpoints, smoke и cleanup;
 - инкремент 2 выполнен через migration `015`: customer shelf-life rules, stack rules, vehicle types, customer vehicle rules, shipment parts, `RRL_CUSTOMER_RULE_API`, backend endpoints, smoke и cleanup;
-- инкремент 3 выполнен через migration `016`: picking plans, tasks, soft reservations, shortages, decision log, `RRL_PICKING_API`, backend endpoints, smoke и cleanup;
+- инкремент 3 выполнен через migration `016`: picking plans, tasks, soft demand/hard reservations, shortages, decision log, `RRL_PICKING_API`, backend endpoints, smoke и cleanup;
 - инкремент 4 выполнен через migration `017`: pick routes, route cells, pick faces, SKU assignment, `RRL_PICK_TOPOLOGY_API`, case-pick target cells and sequence, backend endpoints, smoke и cleanup;
-- инкремент 5 выполнен через migration `018`: wave picking core, hard reservations, wave demand, replenishment/picking tasks, `RRL_PICK_WAVE_API`, backend endpoints, smoke и cleanup;
+- инкремент 5 выполнен через migration `018`: wave picking core, hard WMS reservations, wave demand, replenishment/picking tasks, `RRL_PICK_WAVE_API`, backend endpoints, smoke и cleanup;
 - нулевой raw-admin слой для оператора выполнен после `018`: страницы `customers.html` и `customer-orders.html`, backend create/update customer, address creation, customer rules and legacy order import checks;
 - Oracle invalid objects после `018`: `0`.
 
@@ -346,7 +348,7 @@ Smoke:
 - FEFO/FIFO;
 - учет `IS_SHIPMENT_ALLOWED` как критерия планирования;
 - учет активных резервов;
-- soft reserve;
+- soft demand;
 - shortage-протокол;
 - partial plan.
 
@@ -364,7 +366,7 @@ Smoke:
 - заказ с достаточным остатком;
 - заказ с частичным дефицитом;
 - второй план не может взять уже зарезервированный остаток;
-- отмена плана освобождает soft reserve.
+- отмена плана снимает soft demand и освобождает hard reserve, если он уже был создан.
 
 Критерий готовности:
 
@@ -432,7 +434,7 @@ Smoke:
 - расчет кандидатов;
 - preview;
 - запуск волны;
-- перевод soft reserve в hard reserve;
+- создание hard reserve по soft demand после выбора конкретных остатков;
 - защита от double assignment;
 - создание replenishment tasks;
 - создание picking tasks;
@@ -462,7 +464,7 @@ Concurrency:
 Smoke:
 
 - две волны одновременно не берут один паллет;
-- запуск волны создает hard reserve;
+- запуск волны создает hard WMS reserve;
 - отмена до старта задач освобождает reserve;
 - отмена после старта задач блокируется.
 
@@ -551,8 +553,8 @@ Smoke:
 - пользователь без права не видит страницу;
 - пользователь с view видит реестр;
 - launch button скрыт без права;
-- preview не создает hard reserve;
-- launch создает hard reserve.
+- preview не создает hard WMS reserve;
+- launch создает hard WMS reserve.
 
 Критерий готовности:
 
@@ -708,7 +710,7 @@ Smoke:
 - дефицит фиксируется и виден оператору;
 - волна может включить несколько клиентов в рамках лимита;
 - preview волны показывает последствия запуска;
-- запуск волны создает hard reservations;
+- запуск волны создает hard WMS reservations;
 - задачи пополнения и отбора создаются и видны в админке;
 - терминальный контур может исполнять задачи;
 - физические движения проходят через WMS bridge;
@@ -722,7 +724,7 @@ Smoke:
 Следующий разумный шаг реализации:
 
 1. Сделать raw admin page для просмотра picking plans: строки, резервы, shortages, decision log.
-2. Сделать raw admin page для wave picking: реестр волн, кандидаты, preview, launch, cancel, hard reservations, replenishment tasks, picking tasks и audit.
+2. Сделать raw admin page для wave picking: реестр волн, кандидаты, preview, launch, cancel, hard WMS reservations, replenishment tasks, picking tasks и audit.
 3. Добавить smoke UI/API на права: пользователь без `pick_wave_view` не видит страницу, без `pick_wave_launch` не может запускать волну.
 4. После admin UI перейти к terminal flow для выполнения wave tasks.
 

@@ -8,6 +8,10 @@ from ..schemas import (
     MesApplyWmsRequest,
     MesCompleteOrderRequest,
     MesProductionOrderCreateRequest,
+    MesRawSupplyCalculateRequest,
+    MesRawTransferTaskCancelRequest,
+    MesRawTransferTaskConfirmRequest,
+    MesReleaseToProductionRequest,
     MesRawIssueRequest,
     MesRetryMovementRequest,
 )
@@ -222,6 +226,695 @@ class MesService:
             """,
             params,
         )
+
+    def calculate_raw_supply(
+        self,
+        production_order_id: int,
+        request: MesRawSupplyCalculateRequest,
+    ) -> dict[str, Any]:
+        order = self.get_order(production_order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail="MES production order not found.")
+        if order.get("status") in {"COMPLETED", "CANCELLED"}:
+            raise HTTPException(status_code=409, detail="Raw supply cannot be recalculated for completed/cancelled order.")
+
+        calculated_by = request.calculated_by or "API"
+        self._clear_raw_supply_calculation(production_order_id, calculated_by)
+
+        demand_count = 0
+        candidate_count = 0
+        shortage_count = 0
+        for line in self.list_order_lines(production_order_id):
+            raw_articul = str(line.get("component_articul") or "").upper()
+            if not raw_articul:
+                continue
+            required_qty = float(line.get("planned_qty") or 0)
+            issued_qty = self._issued_raw_qty(production_order_id, line)
+            open_qty = max(required_qty - issued_qty, 0)
+            if open_qty <= 0:
+                status = "COVERED"
+                soft_reservation_id = None
+            else:
+                status = "OPEN"
+                soft_reservation_id = self._create_soft_raw_reservation(
+                    production_order_id=production_order_id,
+                    line=line,
+                    raw_articul=raw_articul,
+                    qty=open_qty,
+                    unit_code=line.get("unit_code") or order.get("unit_code"),
+                    created_by=calculated_by,
+                )
+            demand_id = self._next_sequence_value("RRL_MES_RAW_DEMAND_SQ", "DEMAND_ID")
+            self.gateway.execute(
+                """
+                insert into RRL_MES_RAW_DEMAND (
+                  DEMAND_ID, PRODUCTION_ORDER_ID, ORDER_LINE_ID, BOM_ID, BOM_LINE_ID,
+                  RAW_ARTICUL, REQUIRED_QTY, ISSUED_QTY, OPEN_QTY, UNIT_CODE,
+                  SOFT_RESERVATION_ID, STATUS, CALCULATED_BY
+                ) values (
+                  :demand_id, :production_order_id, :order_line_id, :bom_id, :bom_line_id,
+                  :raw_articul, :required_qty, :issued_qty, :open_qty, :unit_code,
+                  :soft_reservation_id, :status, :calculated_by
+                )
+                """,
+                {
+                    "demand_id": demand_id,
+                    "production_order_id": production_order_id,
+                    "order_line_id": line.get("order_line_id"),
+                    "bom_id": line.get("bom_id"),
+                    "bom_line_id": line.get("bom_line_id"),
+                    "raw_articul": raw_articul,
+                    "required_qty": required_qty,
+                    "issued_qty": issued_qty,
+                    "open_qty": open_qty,
+                    "unit_code": line.get("unit_code") or order.get("unit_code"),
+                    "soft_reservation_id": soft_reservation_id,
+                    "status": status,
+                    "calculated_by": calculated_by,
+                },
+            )
+            demand_count += 1
+            if open_qty <= 0:
+                continue
+
+            remaining_to_suggest = open_qty
+            available_total = 0.0
+            sort_order = 0
+            for candidate in self._find_raw_candidates(raw_articul, limit=200):
+                available_qty = float(candidate.get("available_qty") or 0)
+                if available_qty <= 0:
+                    continue
+                sort_order += 1
+                suggested_qty = min(remaining_to_suggest, available_qty) if remaining_to_suggest > 0 else 0
+                available_total += available_qty
+                if suggested_qty > 0:
+                    remaining_to_suggest = max(remaining_to_suggest - suggested_qty, 0)
+                self._insert_raw_candidate(demand_id, production_order_id, raw_articul, candidate, suggested_qty, sort_order)
+                candidate_count += 1
+
+            if available_total < open_qty:
+                self._insert_raw_shortage(
+                    production_order_id=production_order_id,
+                    demand_id=demand_id,
+                    raw_articul=raw_articul,
+                    required_qty=required_qty,
+                    issued_qty=issued_qty,
+                    available_qty=available_total,
+                    shortage_qty=max(open_qty - available_total, 0),
+                    unit_code=line.get("unit_code") or order.get("unit_code"),
+                )
+                shortage_count += 1
+
+        return {
+            "status": "ok",
+            "production_order_id": production_order_id,
+            "demand_count": demand_count,
+            "candidate_count": candidate_count,
+            "shortage_count": shortage_count,
+        }
+
+    def get_raw_supply(self, production_order_id: int) -> dict[str, Any]:
+        order = self.get_order(production_order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail="MES production order not found.")
+        return {
+            "order": order,
+            "demands": self.gateway.fetch_all(
+                """
+                select *
+                  from RRL_MES_RAW_DEMAND
+                 where PRODUCTION_ORDER_ID = :production_order_id
+                 order by DEMAND_ID
+                """,
+                {"production_order_id": production_order_id},
+            ),
+            "candidates": self.gateway.fetch_all(
+                """
+                select *
+                  from RRL_MES_RAW_SUPPLY_CANDIDATE
+                 where PRODUCTION_ORDER_ID = :production_order_id
+                 order by DEMAND_ID, SORT_ORDER, CANDIDATE_ID
+                """,
+                {"production_order_id": production_order_id},
+            ),
+            "shortages": self.gateway.fetch_all(
+                """
+                select *
+                  from RRL_MES_RAW_SHORTAGE
+                 where PRODUCTION_ORDER_ID = :production_order_id
+                 order by SHORTAGE_ID
+                """,
+                {"production_order_id": production_order_id},
+            ),
+            "reservations": self.gateway.fetch_all(
+                """
+                select *
+                  from RRL_STOCK_RESERVATION
+                 where RESERVATION_DOMAIN = 'MES_RAW'
+                   and PRODUCTION_ORDER_ID = :production_order_id
+                 order by RESERVATION_ID
+                """,
+                {"production_order_id": production_order_id},
+            ),
+            "tasks": self.list_raw_transfer_tasks(production_order_id=production_order_id, limit=500),
+        }
+
+    def release_to_production(
+        self,
+        production_order_id: int,
+        request: MesReleaseToProductionRequest,
+    ) -> dict[str, Any]:
+        order = self.get_order(production_order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail="MES production order not found.")
+        if order.get("status") in {"COMPLETED", "CANCELLED"}:
+            raise HTTPException(status_code=409, detail="Completed/cancelled production order cannot be released.")
+
+        self.calculate_raw_supply(
+            production_order_id,
+            MesRawSupplyCalculateRequest(calculated_by=request.created_by or "API"),
+        )
+        shortages = self.gateway.fetch_all(
+            """
+            select *
+              from RRL_MES_RAW_SHORTAGE
+             where PRODUCTION_ORDER_ID = :production_order_id
+               and STATUS = 'OPEN'
+               and SHORTAGE_QTY > 0
+            """,
+            {"production_order_id": production_order_id},
+        )
+        if shortages and int(request.allow_partial or 0) != 1:
+            raise HTTPException(
+                status_code=409,
+                detail={
+                    "message": "Raw material shortage. Use allow_partial=1 to create partial transfer tasks.",
+                    "shortages": shortages,
+                },
+            )
+
+        created_by = request.created_by or "API"
+        task_ids: list[int] = []
+        candidates = self.gateway.fetch_all(
+            """
+            select d.ORDER_LINE_ID, d.BOM_ID, d.BOM_LINE_ID, d.REQUIRED_QTY, d.UNIT_CODE,
+                   c.*
+              from RRL_MES_RAW_DEMAND d
+              join RRL_MES_RAW_SUPPLY_CANDIDATE c on c.DEMAND_ID = d.DEMAND_ID
+             where d.PRODUCTION_ORDER_ID = :production_order_id
+               and c.SUGGESTED_QTY > 0
+             order by d.DEMAND_ID, c.SORT_ORDER, c.CANDIDATE_ID
+            """,
+            {"production_order_id": production_order_id},
+        )
+        for candidate in candidates:
+            if self._active_mes_task_exists(production_order_id, candidate):
+                continue
+            reservation_id = self._create_hard_raw_reservation(
+                production_order_id=production_order_id,
+                candidate=candidate,
+                created_by=created_by,
+            )
+            task_id = self._create_raw_transfer_task(
+                production_order_id=production_order_id,
+                candidate=candidate,
+                reservation_id=reservation_id,
+                to_ware_id=request.to_ware_id,
+                to_cell=request.to_cell,
+                created_by=created_by,
+            )
+            self.gateway.execute(
+                """
+                update RRL_STOCK_RESERVATION
+                   set TASK_ID = :task_id
+                 where RESERVATION_ID = :reservation_id
+                """,
+                {"task_id": task_id, "reservation_id": reservation_id},
+            )
+            task_ids.append(task_id)
+
+        if task_ids:
+            self.gateway.execute(
+                """
+                update RRL_PRODUCTION_ORDER
+                   set STATUS = case when STATUS = 'DRAFT' then 'RELEASED' else STATUS end,
+                       UPDATED_AT = systimestamp,
+                       UPDATED_BY = :updated_by
+                 where PRODUCTION_ORDER_ID = :production_order_id
+                   and STATUS not in ('COMPLETED', 'CANCELLED')
+                """,
+                {"production_order_id": production_order_id, "updated_by": created_by},
+            )
+        return {
+            "status": "ok",
+            "production_order_id": production_order_id,
+            "created_task_count": len(task_ids),
+            "task_ids": task_ids,
+            "shortage_count": len(shortages),
+        }
+
+    def list_raw_transfer_tasks(
+        self,
+        production_order_id: int | None = None,
+        status: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        conditions = []
+        params: dict[str, Any] = {"limit": clamp_limit(limit)}
+        if production_order_id is not None:
+            conditions.append("PRODUCTION_ORDER_ID = :production_order_id")
+            params["production_order_id"] = production_order_id
+        if status:
+            conditions.append("TASK_STATUS = :status")
+            params["status"] = status.upper()
+        where_sql = " where " + " and ".join(conditions) if conditions else ""
+        return self.gateway.fetch_all(
+            f"""
+            select *
+              from (
+                select *
+                  from RRL_MES_RAW_TRANSFER_TASK
+                  {where_sql}
+                 order by CREATED_AT desc, TASK_ID desc
+              )
+             where rownum <= :limit
+            """,
+            params,
+        )
+
+    def get_raw_transfer_task_or_404(self, task_id: int) -> dict[str, Any]:
+        rows = self.gateway.fetch_all(
+            """
+            select *
+              from RRL_MES_RAW_TRANSFER_TASK
+             where TASK_ID = :task_id
+            """,
+            {"task_id": task_id},
+        )
+        if not rows:
+            raise HTTPException(status_code=404, detail="MES raw transfer task not found.")
+        return rows[0]
+
+    def confirm_raw_transfer_task(
+        self,
+        task_id: int,
+        request: MesRawTransferTaskConfirmRequest,
+    ) -> int:
+        task = self.get_raw_transfer_task_or_404(task_id)
+        if task.get("task_status") not in {"PLANNED", "IN_PROGRESS"}:
+            raise HTTPException(status_code=409, detail="Only planned/in-progress transfer task can be confirmed.")
+        fact_qty = request.fact_qty if request.fact_qty is not None else task.get("task_qty")
+        if fact_qty is None or float(fact_qty) <= 0:
+            raise HTTPException(status_code=400, detail="fact_qty must be positive.")
+        movement_id = self.issue_raw(
+            int(task["production_order_id"]),
+            MesRawIssueRequest(
+                uid_pallet=task.get("uid_pallet"),
+                raw_batch_id=task.get("raw_batch_id"),
+                raw_articul=task.get("raw_articul"),
+                quantity=float(fact_qty),
+                unit_code=task.get("unit_code") or "KG",
+                source_location=task.get("from_cell"),
+                production_location=task.get("to_cell"),
+                created_by=request.confirmed_by or "API",
+            ),
+        )
+        self.gateway.execute(
+            """
+            update RRL_MES_RAW_TRANSFER_TASK
+               set TASK_STATUS = 'DONE',
+                   FACT_QTY = :fact_qty,
+                   FINISHED_AT = systimestamp,
+                   LAST_ERROR = null
+             where TASK_ID = :task_id
+            """,
+            {"task_id": task_id, "fact_qty": fact_qty},
+        )
+        if task.get("reservation_id") is not None:
+            self.gateway.execute(
+                """
+                update RRL_STOCK_RESERVATION
+                   set STATUS = 'CONSUMED',
+                       CONSUMED_AT = systimestamp,
+                       CONSUMED_BY = :consumed_by
+                 where RESERVATION_ID = :reservation_id
+                """,
+                {
+                    "reservation_id": task.get("reservation_id"),
+                    "consumed_by": request.confirmed_by or "API",
+                },
+            )
+        return movement_id
+
+    def cancel_raw_transfer_task(
+        self,
+        task_id: int,
+        request: MesRawTransferTaskCancelRequest,
+    ) -> None:
+        task = self.get_raw_transfer_task_or_404(task_id)
+        if task.get("task_status") == "DONE":
+            raise HTTPException(status_code=409, detail="Completed transfer task cannot be cancelled.")
+        cancelled_by = request.cancelled_by or "API"
+        self.gateway.execute(
+            """
+            update RRL_MES_RAW_TRANSFER_TASK
+               set TASK_STATUS = 'CANCELLED',
+                   CANCELLED_AT = systimestamp,
+                   CANCELLED_BY = :cancelled_by,
+                   LAST_ERROR = :reason
+             where TASK_ID = :task_id
+            """,
+            {"task_id": task_id, "cancelled_by": cancelled_by, "reason": request.reason},
+        )
+        if task.get("reservation_id") is not None:
+            self.gateway.execute(
+                """
+                update RRL_STOCK_RESERVATION
+                   set STATUS = 'CANCELLED',
+                       RELEASED_AT = systimestamp,
+                       RELEASED_BY = :released_by,
+                       RELEASE_REASON = :reason
+                 where RESERVATION_ID = :reservation_id
+                """,
+                {
+                    "reservation_id": task.get("reservation_id"),
+                    "released_by": cancelled_by,
+                    "reason": request.reason,
+                },
+            )
+
+    def _clear_raw_supply_calculation(self, production_order_id: int, updated_by: str) -> None:
+        self.gateway.execute(
+            """
+            update RRL_STOCK_RESERVATION
+               set STATUS = 'CANCELLED',
+                   RELEASED_AT = systimestamp,
+                   RELEASED_BY = :updated_by,
+                   RELEASE_REASON = 'MES raw supply recalculation'
+             where RESERVATION_DOMAIN = 'MES_RAW'
+               and PRODUCTION_ORDER_ID = :production_order_id
+               and RESERVATION_KIND = 'SOFT'
+               and STATUS = 'ACTIVE'
+            """,
+            {"production_order_id": production_order_id, "updated_by": updated_by},
+        )
+        for table_name in (
+            "RRL_MES_RAW_SUPPLY_CANDIDATE",
+            "RRL_MES_RAW_SHORTAGE",
+            "RRL_MES_RAW_DEMAND",
+        ):
+            self.gateway.execute(
+                f"delete from {table_name} where PRODUCTION_ORDER_ID = :production_order_id",
+                {"production_order_id": production_order_id},
+            )
+
+    def _issued_raw_qty(self, production_order_id: int, line: dict[str, Any]) -> float:
+        rows = self.gateway.fetch_all(
+            """
+            select nvl(sum(nvl(QUANTITY, 0)), 0) ISSUED_QTY
+              from RRL_MES_MOVEMENT
+             where PRODUCTION_ORDER_ID = :production_order_id
+               and MOVEMENT_TYPE = 'RAW_ISSUE_TO_PRODUCTION'
+               and STATUS <> 'CANCELLED'
+               and (
+                    (BOM_LINE_ID is not null and BOM_LINE_ID = :bom_line_id)
+                    or (BOM_LINE_ID is null and upper(RAW_ARTICUL) = :raw_articul)
+               )
+            """,
+            {
+                "production_order_id": production_order_id,
+                "bom_line_id": line.get("bom_line_id"),
+                "raw_articul": str(line.get("component_articul") or "").upper(),
+            },
+        )
+        return float(rows[0]["issued_qty"] or 0) if rows else 0.0
+
+    def _create_soft_raw_reservation(
+        self,
+        production_order_id: int,
+        line: dict[str, Any],
+        raw_articul: str,
+        qty: float,
+        unit_code: str | None,
+        created_by: str,
+    ) -> int:
+        reservation_id = self._next_sequence_value("RRL_STOCK_RESERVATION_SQ", "RESERVATION_ID")
+        self.gateway.execute(
+            """
+            insert into RRL_STOCK_RESERVATION (
+              RESERVATION_ID, RESERVATION_KIND, RESERVATION_SCOPE, RESERVATION_DOMAIN,
+              SOURCE_DOC_TYPE, SOURCE_DOC_ID, SOURCE_LINE_ID, PRODUCTION_ORDER_ID,
+              ARTICUL, QTY, UNIT_CODE, STATUS, PRIORITY, CREATED_BY
+            ) values (
+              :reservation_id, 'SOFT', 'QTY', 'MES_RAW',
+              'PRODUCTION_ORDER', :production_order_id, :source_line_id, :production_order_id,
+              :articul, :qty, :unit_code, 'ACTIVE', 100, :created_by
+            )
+            """,
+            {
+                "reservation_id": reservation_id,
+                "production_order_id": production_order_id,
+                "source_line_id": line.get("order_line_id"),
+                "articul": raw_articul,
+                "qty": qty,
+                "unit_code": unit_code,
+                "created_by": created_by,
+            },
+        )
+        return reservation_id
+
+    def _find_raw_candidates(self, raw_articul: str, limit: int = 200) -> list[dict[str, Any]]:
+        return self.gateway.fetch_all(
+            """
+            select *
+              from (
+                select w.ID WARE_ID,
+                       r.CELL,
+                       r.UID_POLETA UID_PALLET,
+                       p.SSCC,
+                       p.ARTICUL,
+                       p.PRIHOD_NAKLAD_ID RAW_BATCH_ID,
+                       to_char(p.PRIHOD_NAKLAD_ID) BATCH_ID,
+                       p.EXPIRY_DATE,
+                       nvl(p.QUALITY_STATUS, 'UNKNOWN') QUALITY_STATUS,
+                       nvl(r.REMAIN, 0) PHYSICAL_QTY,
+                       nvl(hr.HARD_RESERVED_QTY, 0) HARD_RESERVED_QTY,
+                       greatest(nvl(r.REMAIN, 0) - nvl(hr.HARD_RESERVED_QTY, 0), 0) AVAILABLE_QTY
+                  from RRL_REMAINS r
+                  join RRL_CELLS c on c.CELL = r.CELL
+                  join RRL_WARES w on w.ID = c.WARE_ID
+                  join RRL_PALLETS p on p.UID_PALLET = r.UID_POLETA
+                  left join (
+                    select UID_PALLET, sum(nvl(QTY, 0)) HARD_RESERVED_QTY
+                      from RRL_STOCK_RESERVATION
+                     where RESERVATION_KIND = 'HARD'
+                       and STATUS in ('ACTIVE', 'ALLOCATED', 'PICKING')
+                       and UID_PALLET is not null
+                     group by UID_PALLET
+                  ) hr on hr.UID_PALLET = r.UID_POLETA
+                 where nvl(w.FLAG_RAW_MATERIAL, 0) = 1
+                   and upper(p.ARTICUL) = :raw_articul
+                   and nvl(r.REMAIN, 0) > 0
+                 order by p.EXPIRY_DATE nulls last, p.PRODUCED_DATE nulls last, r.CELL, r.UID_POLETA
+              )
+             where rownum <= :limit
+            """,
+            {"raw_articul": raw_articul.upper(), "limit": min(max(limit, 1), 1000)},
+        )
+
+    def _insert_raw_candidate(
+        self,
+        demand_id: int,
+        production_order_id: int,
+        raw_articul: str,
+        candidate: dict[str, Any],
+        suggested_qty: float,
+        sort_order: int,
+    ) -> None:
+        candidate_id = self._next_sequence_value("RRL_MES_RAW_SUPPLY_CANDIDATE_SQ", "CANDIDATE_ID")
+        self.gateway.execute(
+            """
+            insert into RRL_MES_RAW_SUPPLY_CANDIDATE (
+              CANDIDATE_ID, DEMAND_ID, PRODUCTION_ORDER_ID, RAW_ARTICUL,
+              UID_PALLET, BATCH_ID, RAW_BATCH_ID, SSCC, FROM_WARE_ID, FROM_CELL,
+              PHYSICAL_QTY, HARD_RESERVED_QTY, AVAILABLE_QTY, SUGGESTED_QTY,
+              EXPIRY_DATE, QUALITY_STATUS, SORT_ORDER
+            ) values (
+              :candidate_id, :demand_id, :production_order_id, :raw_articul,
+              :uid_pallet, :batch_id, :raw_batch_id, :sscc, :from_ware_id, :from_cell,
+              :physical_qty, :hard_reserved_qty, :available_qty, :suggested_qty,
+              :expiry_date, :quality_status, :sort_order
+            )
+            """,
+            {
+                "candidate_id": candidate_id,
+                "demand_id": demand_id,
+                "production_order_id": production_order_id,
+                "raw_articul": raw_articul,
+                "uid_pallet": candidate.get("uid_pallet"),
+                "batch_id": candidate.get("batch_id"),
+                "raw_batch_id": candidate.get("raw_batch_id"),
+                "sscc": candidate.get("sscc"),
+                "from_ware_id": candidate.get("ware_id"),
+                "from_cell": candidate.get("cell"),
+                "physical_qty": candidate.get("physical_qty"),
+                "hard_reserved_qty": candidate.get("hard_reserved_qty"),
+                "available_qty": candidate.get("available_qty"),
+                "suggested_qty": suggested_qty,
+                "expiry_date": candidate.get("expiry_date"),
+                "quality_status": candidate.get("quality_status"),
+                "sort_order": sort_order,
+            },
+        )
+
+    def _insert_raw_shortage(
+        self,
+        production_order_id: int,
+        demand_id: int,
+        raw_articul: str,
+        required_qty: float,
+        issued_qty: float,
+        available_qty: float,
+        shortage_qty: float,
+        unit_code: str | None,
+    ) -> None:
+        shortage_id = self._next_sequence_value("RRL_MES_RAW_SHORTAGE_SQ", "SHORTAGE_ID")
+        self.gateway.execute(
+            """
+            insert into RRL_MES_RAW_SHORTAGE (
+              SHORTAGE_ID, PRODUCTION_ORDER_ID, DEMAND_ID, RAW_ARTICUL,
+              REQUIRED_QTY, ISSUED_QTY, AVAILABLE_QTY, SHORTAGE_QTY, UNIT_CODE, STATUS
+            ) values (
+              :shortage_id, :production_order_id, :demand_id, :raw_articul,
+              :required_qty, :issued_qty, :available_qty, :shortage_qty, :unit_code, 'OPEN'
+            )
+            """,
+            {
+                "shortage_id": shortage_id,
+                "production_order_id": production_order_id,
+                "demand_id": demand_id,
+                "raw_articul": raw_articul,
+                "required_qty": required_qty,
+                "issued_qty": issued_qty,
+                "available_qty": available_qty,
+                "shortage_qty": shortage_qty,
+                "unit_code": unit_code,
+            },
+        )
+
+    def _active_mes_task_exists(self, production_order_id: int, candidate: dict[str, Any]) -> bool:
+        rows = self.gateway.fetch_all(
+            """
+            select count(*) CNT
+              from RRL_MES_RAW_TRANSFER_TASK
+             where PRODUCTION_ORDER_ID = :production_order_id
+               and ORDER_LINE_ID = :order_line_id
+               and UID_PALLET = :uid_pallet
+               and TASK_STATUS in ('PLANNED', 'IN_PROGRESS')
+            """,
+            {
+                "production_order_id": production_order_id,
+                "order_line_id": candidate.get("order_line_id"),
+                "uid_pallet": candidate.get("uid_pallet"),
+            },
+        )
+        return bool(rows and int(rows[0]["cnt"] or 0) > 0)
+
+    def _create_hard_raw_reservation(
+        self,
+        production_order_id: int,
+        candidate: dict[str, Any],
+        created_by: str,
+    ) -> int:
+        reservation_id = self._next_sequence_value("RRL_STOCK_RESERVATION_SQ", "RESERVATION_ID")
+        suggested_qty = float(candidate.get("suggested_qty") or 0)
+        physical_qty = float(candidate.get("physical_qty") or 0)
+        reservation_scope = "PALLET" if physical_qty > 0 and suggested_qty >= physical_qty else "QTY"
+        self.gateway.execute(
+            """
+            insert into RRL_STOCK_RESERVATION (
+              RESERVATION_ID, RESERVATION_KIND, RESERVATION_SCOPE, RESERVATION_DOMAIN,
+              SOURCE_DOC_TYPE, SOURCE_DOC_ID, SOURCE_LINE_ID, PRODUCTION_ORDER_ID,
+              ARTICUL, QTY, UNIT_CODE, WARE_ID, CELL, BATCH_ID, UID_PALLET, SSCC,
+              STATUS, PRIORITY, CREATED_BY
+            ) values (
+              :reservation_id, 'HARD', :reservation_scope, 'MES_RAW',
+              'PRODUCTION_ORDER', :production_order_id, :source_line_id, :production_order_id,
+              :articul, :qty, :unit_code, :ware_id, :cell, :batch_id, :uid_pallet, :sscc,
+              'ACTIVE', 100, :created_by
+            )
+            """,
+            {
+                "reservation_id": reservation_id,
+                "reservation_scope": reservation_scope,
+                "production_order_id": production_order_id,
+                "source_line_id": candidate.get("order_line_id"),
+                "articul": candidate.get("raw_articul"),
+                "qty": suggested_qty,
+                "unit_code": candidate.get("unit_code"),
+                "ware_id": candidate.get("from_ware_id"),
+                "cell": candidate.get("from_cell"),
+                "batch_id": candidate.get("batch_id"),
+                "uid_pallet": candidate.get("uid_pallet"),
+                "sscc": candidate.get("sscc"),
+                "created_by": created_by,
+            },
+        )
+        return reservation_id
+
+    def _create_raw_transfer_task(
+        self,
+        production_order_id: int,
+        candidate: dict[str, Any],
+        reservation_id: int,
+        to_ware_id: int | None,
+        to_cell: str,
+        created_by: str,
+    ) -> int:
+        task_id = self._next_sequence_value("RRL_MES_RAW_TRANSFER_TASK_SQ", "TASK_ID")
+        self.gateway.execute(
+            """
+            insert into RRL_MES_RAW_TRANSFER_TASK (
+              TASK_ID, PRODUCTION_ORDER_ID, ORDER_LINE_ID, BOM_ID, BOM_LINE_ID,
+              RAW_ARTICUL, RAW_BATCH_ID, BATCH_ID, UID_PALLET, SSCC,
+              FROM_WARE_ID, FROM_CELL, TO_WARE_ID, TO_CELL,
+              REQUIRED_QTY, TASK_QTY, UNIT_CODE, RESERVATION_ID,
+              TASK_STATUS, PRIORITY, CREATED_BY
+            ) values (
+              :task_id, :production_order_id, :order_line_id, :bom_id, :bom_line_id,
+              :raw_articul, :raw_batch_id, :batch_id, :uid_pallet, :sscc,
+              :from_ware_id, :from_cell, :to_ware_id, :to_cell,
+              :required_qty, :task_qty, :unit_code, :reservation_id,
+              'PLANNED', 100, :created_by
+            )
+            """,
+            {
+                "task_id": task_id,
+                "production_order_id": production_order_id,
+                "order_line_id": candidate.get("order_line_id"),
+                "bom_id": candidate.get("bom_id"),
+                "bom_line_id": candidate.get("bom_line_id"),
+                "raw_articul": candidate.get("raw_articul"),
+                "raw_batch_id": candidate.get("raw_batch_id"),
+                "batch_id": candidate.get("batch_id"),
+                "uid_pallet": candidate.get("uid_pallet"),
+                "sscc": candidate.get("sscc"),
+                "from_ware_id": candidate.get("from_ware_id"),
+                "from_cell": candidate.get("from_cell"),
+                "to_ware_id": to_ware_id,
+                "to_cell": to_cell,
+                "required_qty": candidate.get("required_qty"),
+                "task_qty": candidate.get("suggested_qty"),
+                "unit_code": candidate.get("unit_code"),
+                "reservation_id": reservation_id,
+                "created_by": created_by,
+            },
+        )
+        return task_id
+
+    def _next_sequence_value(self, sequence_name: str, alias: str) -> int:
+        rows = self.gateway.fetch_all(f"select {sequence_name}.nextval {alias} from dual")
+        return int(rows[0][alias.lower()])
 
     def get_genealogy(self, production_order_id: int) -> dict[str, Any]:
         order = self.get_order(production_order_id)

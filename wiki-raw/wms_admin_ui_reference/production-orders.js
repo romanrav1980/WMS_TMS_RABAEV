@@ -6,6 +6,7 @@ const mesState = {
   traceEdges: [],
   outboxEvents: [],
   finishedGoods: [],
+  rawSupply: null,
 };
 
 const mesEl = (id) => document.getElementById(id);
@@ -94,6 +95,7 @@ async function loadMesOrder(orderId) {
   renderMesTraceEdges([]);
   renderMesOutbox([]);
   updateMesKpis(result, null);
+  await loadMesRawSupply(result.production_order_id).catch(() => renderMesRawSupply(null));
   await loadMesOperatorData(result).catch(showMesError);
 }
 
@@ -207,6 +209,128 @@ async function issueAllRawFromBom() {
   }
   await loadMesOrder(mesState.selectedOrder.production_order_id);
   mesEl("mesStatusText").textContent = `Выдано строк BOM: ${issued}`;
+}
+
+async function loadMesRawSupply(orderId) {
+  const rawSupply = await fetchMesJson(`/api/mes/production-orders/${orderId}/raw-supply`);
+  mesState.rawSupply = rawSupply;
+  renderMesRawSupply(rawSupply);
+  return rawSupply;
+}
+
+function renderMesRawSupply(rawSupply) {
+  const demandRows = mesEl("mesRawDemandRows");
+  const candidateRows = mesEl("mesRawCandidateRows");
+  const taskRows = mesEl("mesRawTransferTaskRows");
+  if (!demandRows || !candidateRows || !taskRows) return;
+  demandRows.innerHTML = "";
+  candidateRows.innerHTML = "";
+  taskRows.innerHTML = "";
+  for (const demand of rawSupply?.demands || []) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${escapeMes(demand.raw_articul ?? "")}</td>
+      <td>${demand.required_qty ?? ""} ${escapeMes(demand.unit_code ?? "")}</td>
+      <td>${demand.issued_qty ?? ""}</td>
+      <td>${demand.open_qty ?? ""}</td>
+      <td>${demand.soft_reservation_id ?? ""}</td>
+      <td>${escapeMes(demand.status ?? "")}</td>
+    `;
+    demandRows.appendChild(tr);
+  }
+  for (const candidate of rawSupply?.candidates || []) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${escapeMes(candidate.raw_articul ?? "")}</td>
+      <td>${escapeMes(candidate.uid_pallet ?? "")}</td>
+      <td>${escapeMes(candidate.from_cell ?? "")}</td>
+      <td>${candidate.available_qty ?? ""}</td>
+      <td>${candidate.suggested_qty ?? ""}</td>
+      <td>${escapeMes(candidate.quality_status ?? "")}</td>
+    `;
+    candidateRows.appendChild(tr);
+  }
+  for (const task of rawSupply?.tasks || []) {
+    const canConfirm = ["PLANNED", "IN_PROGRESS"].includes(task.task_status) && mesCan("mes_raw_transfer_confirm");
+    const canCancel = task.task_status !== "DONE" && task.task_status !== "CANCELLED" && mesCan("mes_raw_transfer_cancel");
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${task.task_id ?? ""}</td>
+      <td>${escapeMes(task.raw_articul ?? "")}</td>
+      <td>${escapeMes(task.uid_pallet ?? "")}</td>
+      <td>${escapeMes(task.from_cell ?? "")}</td>
+      <td>${escapeMes(task.to_cell ?? "")}</td>
+      <td>${task.task_qty ?? ""} ${escapeMes(task.unit_code ?? "")}</td>
+      <td>${escapeMes(task.task_status ?? "")}</td>
+      <td>
+        ${canConfirm ? `<button type="button" data-confirm-task="${task.task_id}">Подтвердить</button>` : ""}
+        ${canCancel ? `<button type="button" data-cancel-task="${task.task_id}">Отменить</button>` : ""}
+      </td>
+    `;
+    const confirmButton = tr.querySelector("button[data-confirm-task]");
+    if (confirmButton) {
+      confirmButton.addEventListener("click", () => confirmMesRawTransferTask(task.task_id).catch(showMesError));
+    }
+    const cancelButton = tr.querySelector("button[data-cancel-task]");
+    if (cancelButton) {
+      cancelButton.addEventListener("click", () => cancelMesRawTransferTask(task.task_id).catch(showMesError));
+    }
+    taskRows.appendChild(tr);
+  }
+}
+
+async function calculateMesRawSupply() {
+  if (!mesState.selectedOrder) throw new Error("Выберите заказ");
+  const response = await fetch(`${mesApiBase()}/api/mes/production-orders/${mesState.selectedOrder.production_order_id}/raw-supply/calculate`, {
+    method: "POST",
+    headers: mesHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ calculated_by: mesCurrentUser() }),
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.detail || `Raw supply calculate HTTP ${response.status}`);
+  await loadMesRawSupply(mesState.selectedOrder.production_order_id);
+  mesEl("mesStatusText").textContent = `Сырье: потребность ${result.demand_count}, кандидаты ${result.candidate_count}, дефицит ${result.shortage_count}`;
+}
+
+async function releaseMesToProduction() {
+  if (!mesState.selectedOrder) throw new Error("Выберите заказ");
+  const response = await fetch(`${mesApiBase()}/api/mes/production-orders/${mesState.selectedOrder.production_order_id}/release-to-production`, {
+    method: "POST",
+    headers: mesHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({
+      to_ware_id: Number(mesEl("mesRawSupplyToWare").value) || null,
+      to_cell: mesEl("mesRawSupplyToCell").value.trim() || "MES_PROD",
+      allow_partial: Number(mesEl("mesRawSupplyPartial").value || 0),
+      created_by: mesCurrentUser(),
+    }),
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(JSON.stringify(result.detail || result));
+  await loadMesOrder(mesState.selectedOrder.production_order_id);
+  mesEl("mesStatusText").textContent = `Создано задач перемещения: ${result.created_task_count}`;
+}
+
+async function confirmMesRawTransferTask(taskId) {
+  const response = await fetch(`${mesApiBase()}/api/mes/raw-transfer-tasks/${taskId}/confirm`, {
+    method: "POST",
+    headers: mesHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ confirmed_by: mesCurrentUser() }),
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.detail || `Confirm raw task HTTP ${response.status}`);
+  await loadMesOrder(mesState.selectedOrder.production_order_id);
+  mesEl("mesStatusText").textContent = `Сырье подтверждено, движение ${result.id}`;
+}
+
+async function cancelMesRawTransferTask(taskId) {
+  const response = await fetch(`${mesApiBase()}/api/mes/raw-transfer-tasks/${taskId}/cancel`, {
+    method: "POST",
+    headers: mesHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ reason: "Cancelled from MES admin", cancelled_by: mesCurrentUser() }),
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.detail || `Cancel raw task HTTP ${response.status}`);
+  await loadMesRawSupply(mesState.selectedOrder.production_order_id);
 }
 
 function renderMesMovements(movements) {
@@ -609,6 +733,8 @@ function initMes() {
   });
   mesEl("mesIssueRaw").addEventListener("click", () => issueMesRaw().catch(showMesError));
   mesEl("mesIssueAllRaw").addEventListener("click", () => issueAllRawFromBom().catch(showMesError));
+  mesEl("mesCalcRawSupply").addEventListener("click", () => calculateMesRawSupply().catch(showMesError));
+  mesEl("mesReleaseToProduction").addEventListener("click", () => releaseMesToProduction().catch(showMesError));
   mesEl("mesPrefillCompletion").addEventListener("click", () => {
     try { prefillMesCompletion(); } catch (error) { showMesError(error); }
   });

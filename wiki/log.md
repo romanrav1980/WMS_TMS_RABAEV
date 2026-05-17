@@ -2,6 +2,36 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-18] mes-raw-supply-implementation | Released production orders through common reservations
+
+- Applied migration `024_apply.sql`: added MES raw demand, supply candidates, shortages, and raw transfer tasks.
+- Added rights `MES_RAW_SUPPLY_VIEW`, `MES_RAW_SUPPLY_CALCULATE`, `MES_RAW_TRANSFER_CREATE`, `MES_RAW_TRANSFER_CONFIRM`, and `MES_RAW_TRANSFER_CANCEL`.
+- Added FastAPI endpoints for raw-supply calculation, release to production, raw transfer task listing, confirmation, and cancellation.
+- Calculation creates `SOFT` reservations in `RRL_STOCK_RESERVATION`; release to production creates `HARD` pallet reservations and transfer tasks.
+- Task confirmation calls the existing `RRL_MES_PRODUCTION_API.issue_raw_to_production` path, so old WMS stock movement remains behind the MES movement/WMS bridge boundary.
+- Extended `production-orders.html` with a raw-supply block for demand, candidates, transfer tasks, calculate, release, confirm, and cancel.
+- Runtime smoke passed: BOM/order created, demand calculated, one candidate selected, one hard reservation/task created, then the task/reservation cancelled as cleanup.
+- Load smoke passed: 12 parallel partial hard reservations against one raw pallet were created and cancelled; one extra task was confirmed to `DONE`, creating MES movement `45` and moving its reservation to `CONSUMED`.
+
+## [2026-05-18] reservation-model-clarification | Split soft demand and hard WMS reservations
+
+- Updated MES raw shortage/replenishment, Picking Planning, Wave Picking, Wave Picking Admin, feed-factory, raw material, finished goods, production completion, schema, roadmap, and architecture docs.
+- Fixed the reservation terminology: soft reserve is planning demand without party/pallet/cell and does not occupy WMS stock.
+- Fixed the WMS boundary: WMS deals with hard reservations only, tied to concrete batch/pallet/cell/quantity.
+- Updated free-stock formulas to subtract active hard reservations, not soft demand.
+- Refined the target design to keep `SOFT` and `HARD` rows in one common `RRL_STOCK_RESERVATION` table.
+- Added migration scripts `023_apply.sql`, `023_verify.sql`, and `023_rollback.sql` for the common reservation table foundation.
+- Applied `023` to Oracle, verified successfully, and confirmed invalid current objects count is `0`.
+- Added FastAPI endpoints under `/api/stock-reservations` for listing, creating `SOFT`, promoting to `HARD`, releasing, consuming, and cancelling common reservation rows.
+
+## [2026-05-17] mes-release-to-production-tz | Clarified long-term planning vs production release
+
+- Updated [`requirements/mes_raw_shortage_replenishment_tz.md`](requirements/mes_raw_shortage_replenishment_tz.md).
+- Split long-term production planning from the controlled `Передать в производство` operation.
+- Fixed the reservation rule: planned orders do not reserve stock; raw-material reservations are created only when the order is released to production.
+- Aligned MES raw reservations with the same free-stock and no-double-assignment principle used by Picking Planning reservations.
+- Added `release_to_production` to the target PL/SQL/API contract and admin UI requirements.
+
 ## [2026-05-17] mes-raw-shortage-transfer-tz | Added BOM raw shortage and transfer task specification
 
 - Added [`requirements/mes_raw_shortage_replenishment_tz.md`](requirements/mes_raw_shortage_replenishment_tz.md).
@@ -87,7 +117,7 @@ Append-only log of root wiki updates.
 - Implemented and applied migration `018_wave-picking-core` with wave settings, wave headers, wave orders, wave lines, wave demand, hard wave reservations, replenishment tasks, picking tasks, shortages, audit, and `RRL_PICK_WAVE_API`.
 - Added FastAPI wave endpoints for candidates, create, add plan, preview, launch, cancel, reserve release, reservations, replenishment tasks, picking tasks, and audit.
 - Verified `018_apply`, `018_verify`, PL/SQL launch/cancel smoke, HTTP wave smoke, cleanup, OpenAPI generation, and Oracle invalid objects = `0`.
-- Recorded that wave launch converts soft reservations to hard reservations and still does not update old WMS stock tables directly.
+- Recorded that wave launch creates hard operational reservations from planning reservations and still does not update old WMS stock tables directly.
 - Updated the implementation roadmap: next step is raw admin UI for picking plans and wave picking.
 
 ## [2026-05-17] picking-planning | Drafted picking planning requirements

@@ -18,6 +18,7 @@ from .routers import (
     products,
     raw_material,
     slow_sql,
+    stock_reservations,
     traceability,
     tserver,
     warehouses,
@@ -54,3 +55,4 @@ app.include_router(finished_goods.router)
 app.include_router(customer_orders.router)
 app.include_router(customer_rules.router)
 app.include_router(picking.router)
+app.include_router(stock_reservations.router)

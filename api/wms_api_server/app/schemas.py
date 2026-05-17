@@ -644,3 +644,70 @@ class PickWaveAddPlanRequest(BaseModel):
 class PickWaveActionRequest(BaseModel):
     reason: str | None = None
     updated_by: str | None = None
+
+
+class StockReservationCreateRequest(BaseModel):
+    reservation_kind: str = "SOFT"
+    reservation_scope: str = "QTY"
+    reservation_domain: str
+    source_doc_type: str
+    source_doc_id: int
+    source_line_id: int | None = None
+    task_id: int | None = None
+    customer_id: int | None = None
+    customer_order_id: int | None = None
+    production_order_id: int | None = None
+    pick_plan_id: int | None = None
+    pick_plan_line_id: int | None = None
+    pick_wave_id: int | None = None
+    pick_wave_line_id: int | None = None
+    articul: str
+    qty: float = Field(ge=0)
+    unit_code: str | None = None
+    ware_id: int | None = None
+    cell: str | None = None
+    batch_id: str | None = None
+    prod_batch_id: int | None = None
+    uid_pallet: str | None = None
+    sscc: str | None = None
+    status: str = "ACTIVE"
+    priority: float = 100
+    created_by: str | None = None
+
+
+class StockReservationPromoteRequest(BaseModel):
+    reservation_scope: str = "PALLET"
+    ware_id: int
+    cell: str
+    batch_id: str | None = None
+    prod_batch_id: int | None = None
+    uid_pallet: str | None = None
+    sscc: str | None = None
+    qty: float | None = Field(default=None, ge=0)
+    updated_by: str | None = None
+
+
+class StockReservationStatusRequest(BaseModel):
+    reason: str | None = None
+    updated_by: str | None = None
+
+
+class MesRawSupplyCalculateRequest(BaseModel):
+    calculated_by: str | None = None
+
+
+class MesReleaseToProductionRequest(BaseModel):
+    to_ware_id: int | None = None
+    to_cell: str = "MES_PROD"
+    allow_partial: int = 0
+    created_by: str | None = None
+
+
+class MesRawTransferTaskConfirmRequest(BaseModel):
+    fact_qty: float | None = Field(default=None, ge=0)
+    confirmed_by: str | None = None
+
+
+class MesRawTransferTaskCancelRequest(BaseModel):
+    reason: str | None = None
+    cancelled_by: str | None = None

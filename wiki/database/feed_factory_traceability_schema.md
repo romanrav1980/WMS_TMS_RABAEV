@@ -22,7 +22,7 @@ The schema supports:
 - MES production orders, order BOM snapshots, production completion journal, and the WMS event bridge through `RRL_EVENTS`.
 - customer registry, legacy store/address mapping, customer orders, order rows, and fulfillment facts for picking planning.
 - customer shelf-life rules, product stacking rules, vehicle types, vehicle capacity rules, and shipment parts.
-- picking plans, picking tasks, soft reservations, shortage protocol, and decision log.
+- picking plans, picking tasks, soft demand, hard WMS reservations, shortage protocol, and decision log.
 - pick routes, pick-face locations, SKU-to-pick-face assignments, and case-pick task sequencing.
 
 ## Migration
@@ -130,7 +130,8 @@ The ledger is intentionally kept as a small foundation table so future Oracle ch
 - `RRL_PICK_PLAN`: picking plan header for a customer order.
 - `RRL_PICK_PLAN_LINE`: planned quantity, full-pallet quantity, case-pick quantity, and shortage by order row.
 - `RRL_PICK_TASK`: planned full-pallet and case-pick tasks.
-- `RRL_PICK_RESERVATION`: soft/hard reservation rows that prevent double assignment of pallet or case stock.
+- `RRL_STOCK_RESERVATION`: target common reservation table. `SOFT` rows are planning demand without warehouse/cell/batch/pallet allocation; `HARD` rows are WMS reservations on concrete warehouse/cell/batch/pallet/quantity and prevent double assignment of stock. `RESERVATION_SCOPE = PALLET` means full-pallet reservation; `QTY` means partial/case reservation.
+- `RRL_PICK_RESERVATION`: legacy/picking-specific reservation table from migration `016`; should be migrated or wrapped by compatibility views/adapters when `RRL_STOCK_RESERVATION` is introduced.
 - `RRL_PICK_SHORTAGE`: explicit shortage protocol for partially planned customer orders.
 - `RRL_PICK_DECISION_LOG`: explanation log for stock selection, shortages, and plan cancellation.
 - `RRL_PICK_ROUTE`: warehouse picking route header.
@@ -310,7 +311,7 @@ Migration `2026-05-17-016-picking-plan-reservations` prepares package `RRL_PICKI
 
 Main operations:
 
-- `CREATE_PLAN`: create a picking plan for a canonical customer order, read legacy WMS stock, subtract active reservations, choose candidates by FEFO/FIFO, create tasks, create soft reservations, and write shortage rows.
+- `CREATE_PLAN`: create a picking plan for a canonical customer order, read legacy WMS stock, subtract active `HARD` reservations from `RRL_STOCK_RESERVATION`, choose candidates by FEFO/FIFO, create tasks, create `SOFT` or `HARD` reservations depending on plan publication mode, and write shortage rows.
 - `CANCEL_PLAN`: cancel a non-executed picking plan and release active reservations.
 
 The migration also grants `GLOBAL_ADMIN` the new legacy rights:
@@ -357,9 +358,9 @@ Main operations:
 
 - `CREATE_WAVE`: create a draft picking wave with warehouse, route, dock, time window, and customer limit.
 - `ADD_PLAN`: attach an already planned customer picking plan to the wave and prevent assignment of the same plan to another open wave.
-- `PREVIEW_WAVE`: build wave lines, aggregated demand, shortages, and preview state without converting reservations.
-- `LAUNCH_WAVE`: convert selected active soft reservations to hard reservations, create wave picking tasks, create replenishment tasks for case-pick work, and mark picking plans as `RELEASED`.
-- `RELEASE_RESERVATIONS`: before physical task start, return hard reservations back to active soft reservations and cancel wave tasks.
+- `PREVIEW_WAVE`: build wave lines, aggregated `SOFT` reservations, shortages, and preview state without creating `HARD` WMS reservations.
+- `LAUNCH_WAVE`: create `HARD` WMS reservations in `RRL_STOCK_RESERVATION` for selected concrete pallets/batches/cells/quantities, create wave picking tasks, create replenishment tasks for case-pick work, and mark picking plans as `RELEASED`.
+- `RELEASE_RESERVATIONS`: before physical task start, release hard reservations back to demand-only state and cancel wave tasks.
 - `CANCEL_WAVE`: cancel draft/preview waves or cancel launched waves after releasing hard reservations when no physical task has started.
 
 The migration adds these data-bearing tables:

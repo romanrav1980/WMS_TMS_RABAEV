@@ -61,6 +61,12 @@ This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/
 - `022_verify.sql`: read-only verification for slow SQL diagnostics.
 - `022_rollback.sql`: safe rollback for the slow SQL right and migration ledger only. It does not drop SQL diagnostic history.
 - `022_grant_native_views_system.sql`: optional SYSDBA grant script for Oracle-native `V$SQL` diagnostics.
+- `023_apply.sql`: common `SOFT`/`HARD` stock reservation table.
+- `023_verify.sql`: read-only verification for common stock reservations.
+- `023_rollback.sql`: safe rollback for reservation rights and migration ledger only. It does not drop reservation history.
+- `024_apply.sql`: MES raw demand, supply candidates, shortages, and raw transfer tasks linked to common reservations.
+- `024_verify.sql`: read-only verification for MES raw supply entities.
+- `024_rollback.sql`: safe rollback for MES raw supply rights and migration ledger only. It does not drop raw supply history.
 
 ## Scope
 
@@ -179,7 +185,7 @@ The fifteenth migration adds customer-specific picking rules and vehicle capacit
 - package `RRL_CUSTOMER_RULE_API` for vehicle resolution and pallet-capacity splitting;
 - admin rights for `GLOBAL_ADMIN`: `CUSTOMER_RULE_VIEW`, `CUSTOMER_RULE_EDIT`, `VEHICLE_TYPE_VIEW`, `VEHICLE_TYPE_EDIT`.
 
-The sixteenth migration adds picking planning and soft reservations:
+The sixteenth migration adds picking planning and the first picking-specific reservation layer:
 
 - picking plan headers through `RRL_PICK_PLAN`;
 - picking plan lines through `RRL_PICK_PLAN_LINE`;
@@ -395,7 +401,7 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - Apply result: `Statements=6; Errors=0`.
 - Verify result: `Statements=4; Errors=0`.
 - Package status: `RRL_PICKING_API` package and package body are `VALID`.
-- Added picking plans, plan lines, picking tasks, soft reservations, shortages, and decision log.
+- Added picking plans, plan lines, picking tasks, picking-specific reservation rows, shortages, and decision log.
 - PL/SQL smoke created a temporary customer order against real stock, built a picking plan, and cleanup left `SMOKE_016 = 0`.
 - HTTP smoke started backend on `127.0.0.1:8088`, created a picking plan through `/api/picking/plans`, read it back, cancelled it, verified active reservations were released, and cleaned `SMOKE_API_016`.
 - Post-apply invalid-object check left `0 INVALID` current objects.
@@ -418,9 +424,9 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - Package status: `RRL_PICK_WAVE_API` package and package body are `VALID`.
 - Added wave picking core tables: `RRL_PICK_WAVE_SETTING`, `RRL_PICK_WAVE`, `RRL_PICK_WAVE_ORDER`, `RRL_PICK_WAVE_LINE`, `RRL_PICK_WAVE_RESERVATION`, `RRL_PICK_WAVE_DEMAND`, `RRL_PICK_WAVE_REPLENISH_TASK`, `RRL_PICK_WAVE_TASK`, `RRL_PICK_WAVE_SHORTAGE`, and `RRL_PICK_WAVE_AUDIT`.
 - `RRL_PICK_WAVE_API` supports wave create, add plan, preview, launch, release reservations, and cancel.
-- Launch converts selected picking-plan soft reservations into hard reservations and creates wave picking/replenishment tasks without updating legacy stock tables directly.
-- Cancel before physical task start releases hard reservations back to soft reservations.
-- PL/SQL smoke created a picking plan from real stock, built a wave preview, launched it, converted soft reservations to hard reservations, cancelled it, and cleanup left `SMOKE_018 = 0`.
+- Launch converts selected picking-plan reservations into hard operational reservations and creates wave picking/replenishment tasks without updating legacy stock tables directly.
+- Cancel before physical task start releases hard reservations back to planning state.
+- PL/SQL smoke created a picking plan from real stock, built a wave preview, launched it, converted reservations to hard operational reservations, cancelled it, and cleanup left `SMOKE_018 = 0`.
 - HTTP smoke on `127.0.0.1:8088` created a wave through `/api/picking/waves`, added a plan, calculated preview, launched, read reservations/audit, cancelled, and cleanup left `SMOKE_018_HTTP = 0`.
 - Post-apply invalid-object check left `0 INVALID` current objects.
 
@@ -443,6 +449,19 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - Seeds finished-goods settings from existing finished-goods settings, `FG-%` articles, production batches, and stock found in warehouses with `FLAG_FINISHED_GOODS = 1` or `FLAG_PRODUCTION_BUFFER = 1`.
 - Adds finished-goods admin rights: `FINISHED_GOODS_VIEW`, `FINISHED_GOODS_EDIT`, `FINISHED_GOODS_STOCK_VIEW`, `FINISHED_GOODS_BATCH_VIEW`, `FINISHED_GOODS_EXPORT`.
 - `021_rollback.sql` is non-destructive and keeps finished-goods SKU settings unless an operator explicitly approves dropping data.
+
+`2026-05-17-023-common-stock-reservation`:
+
+- Apply result: `Statements=4; Errors=0`.
+- Verify result: `Statements=7; Errors=0`.
+- Post-apply invalid-object check left `0 INVALID` current objects.
+- Adds `RRL_STOCK_RESERVATION` as the target common table for both `SOFT` demand reservations and `HARD` WMS stock reservations.
+- `SOFT` rows hold articul/quantity demand only; warehouse, cell, batch, pallet, and SSCC fields must stay empty.
+- `HARD` rows hold concrete WMS allocation: articul, quantity, warehouse, cell, and either pallet or batch/production batch.
+- Adds `RESERVATION_SCOPE`: `PALLET` for full-pallet hard reservations and `QTY` for partial/case hard reservations.
+- Adds indexes for source document lookup, articul/status lookup, physical stock lookup, MES/picking/wave ownership, and a function-based unique guard for active full-pallet hard reservations.
+- Adds admin rights `STOCK_RESERVATION_VIEW` and `STOCK_RESERVATION_EDIT`.
+- `023_rollback.sql` is non-destructive and keeps reservation table/data; it removes only rights and the migration ledger row.
 
 ## Required Procedure For Future Reapply
 

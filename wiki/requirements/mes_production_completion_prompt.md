@@ -152,7 +152,7 @@ Bridge должен:
    - production order header;
    - production order status;
    - planned BOM snapshot;
-   - raw material reservation/issue to production;
+   - raw material soft demand, hard reservation, and issue to production;
    - MES movement journal;
    - raw material consumption fact;
    - finished goods lot;
@@ -271,7 +271,7 @@ Bridge должен:
 
 Критерии приемки:
 - production order можно создать по BOM;
-- сырье можно переместить/зарезервировать в производство;
+- сырье можно переместить/зарезервировать в производство; резерв, который влияет на WMS-остаток, должен быть жестким и содержать конкретную партию/паллет/ячейку/количество. Мягкий резерв является только плановой потребностью.
 - завершение производства списывает сырье из производственной зоны через MES movement journal;
 - создается партия готовой продукции;
 - создаются поддоны готовой продукции;
