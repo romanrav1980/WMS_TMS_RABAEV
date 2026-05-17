@@ -310,12 +310,19 @@ class ProductionService:
             select PROD_BATCH_ID,
                    PROD_BATCH_NO,
                    QUALITY_STATUS,
+                   AGING_REQUIRED_HOURS,
+                   AGING_UNTIL,
+                   SHIPMENT_ALLOWED_AT,
+                   SHIPMENT_RELEASE_STATUS,
+                   SHIPMENT_BLOCK_REASON,
+                   SHIPMENT_EFFECTIVE_STATUS,
+                   IS_SHIPMENT_ALLOWED,
                    MERCURY_STATUS,
                    CRPT_STATUS,
                    TOTAL_QUANTITY,
                    TOTAL_PACK_COUNT,
                    UPDATED_AT
-              from RRL_PROD_BATCH
+              from RRL_PROD_BATCH_READY_V
              where PROD_BATCH_ID = :prod_batch_id
             """,
             {"prod_batch_id": prod_batch_id},

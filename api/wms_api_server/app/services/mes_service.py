@@ -229,6 +229,17 @@ class MesService:
         pallets = []
         usages = []
         if prod_batch_id is not None:
+            batch_readiness = self.gateway.fetch_all(
+                """
+                select PROD_BATCH_ID, QUALITY_STATUS, AGING_REQUIRED_HOURS,
+                       AGING_UNTIL, SHIPMENT_ALLOWED_AT, SHIPMENT_RELEASE_STATUS,
+                       SHIPMENT_BLOCK_REASON, SHIPMENT_EFFECTIVE_STATUS,
+                       IS_SHIPMENT_ALLOWED
+                  from RRL_PROD_BATCH_READY_V
+                 where PROD_BATCH_ID = :prod_batch_id
+                """,
+                {"prod_batch_id": prod_batch_id},
+            )
             pallets = self.gateway.fetch_all(
                 """
                 select PROD_BATCH_ID, UID_PALLET, PALLET_NO, QUANTITY, PACK_COUNT,
@@ -251,7 +262,14 @@ class MesService:
                 """,
                 {"prod_batch_id": prod_batch_id},
             )
-        return {"order": order, "raw_usage": usages, "pallets": pallets}
+        else:
+            batch_readiness = []
+        return {
+            "order": order,
+            "batch_readiness": batch_readiness[0] if batch_readiness else {},
+            "raw_usage": usages,
+            "pallets": pallets,
+        }
 
 
 def clamp_limit(value: int) -> int:

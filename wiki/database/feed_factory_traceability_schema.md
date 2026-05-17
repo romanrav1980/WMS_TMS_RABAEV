@@ -275,6 +275,24 @@ Apply/verify result for `2026-05-17-002-feed-factory-traceability-api`:
 
 - `MERCURY_SITE_ID`
 
+`RRL_ARTICULS` receives finished-goods aging settings:
+
+- `SHIPMENT_AGING_HOURS`
+- `SHIPMENT_AGING_COMMENT`
+
+`RRL_PROD_BATCH` receives shipment-readiness fields:
+
+- `AGING_REQUIRED_HOURS`
+- `AGING_UNTIL`
+- `SHIPMENT_ALLOWED_AT`
+- `SHIPMENT_RELEASE_STATUS`
+- `SHIPMENT_BLOCK_REASON`
+
+`RRL_PROD_BATCH_READY_V` exposes effective readiness:
+
+- `SHIPMENT_EFFECTIVE_STATUS`
+- `IS_SHIPMENT_ALLOWED`
+
 `RRL_CRPT_CODES` receives:
 
 - `WITHDRAWN_AT`

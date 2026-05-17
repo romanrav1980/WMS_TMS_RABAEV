@@ -2,6 +2,14 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-17] batch-shipment-readiness | Added aging norm on finished-goods lots
+
+- Added migration `013_batch-shipment-readiness` with article-level `SHIPMENT_AGING_HOURS` and batch-level `SHIPMENT_ALLOWED_AT`.
+- Added `RRL_TRG_PROD_BATCH_SHIP_READY` so produced batches receive the default shipment allowed date from the article norm.
+- Added `RRL_PROD_BATCH_READY_V` for computed shipment readiness; a batch becomes effectively `READY` after `SHIPMENT_ALLOWED_AT` without requiring a scheduled status rewrite.
+- Added admin API and raw page for article aging norms: `product-shipment-settings.html`.
+- Verified migration, smoke, cleanup, MES HTTP workflow with default norm `0`, and Oracle invalid-object recompilation.
+
 ## [2026-05-17] mes-file-exchange | Production release folder exchange
 
 - Added the production-release file exchange worker over existing Oracle `RRL_FILE_EXCHANGE_LOG` and `RRL_PRODUCTION_API`.

@@ -17,6 +17,8 @@ Files:
 - [`external-outbox.js`](external-outbox.js): lightweight external outbox list/detail/retry logic
 - [`bom.html`](bom.html): separate BOM recipe administration page
 - [`bom.js`](bom.js): lightweight BOM list/detail/lifecycle/calculation logic
+- [`product-shipment-settings.html`](product-shipment-settings.html): article-level aging norms for finished-goods shipment readiness
+- [`product-shipment-settings.js`](product-shipment-settings.js): lightweight settings list/detail/save logic
 
 Design notes:
 
@@ -28,6 +30,7 @@ Design notes:
 - [`external-outbox.html`](external-outbox.html) is a separate administrative page for Mercury/CRPT outbox diagnostics and retry
 - [`rights-admin.html`](rights-admin.html) is a separate rights administration page backed by legacy `RUSERS` / `USER_GROUP` / `RIGHTS`
 - [`bom.html`](bom.html) is a separate MES recipe/BOM page protected by `bom_view`; lifecycle buttons require `bom_edit`, `bom_approve`, `bom_block`, or `bom_make_primary`
+- [`product-shipment-settings.html`](product-shipment-settings.html) is protected by `quality_batch_view`; editing aging norms requires `quality_batch_edit`
 - API page lists calls from `GET /api/admin/api-calls`, opens details, runs dry-run replay, and can repeat selected ID or date ranges through `POST /api/admin/api-calls/replay`
 - [`admin-auth.js`](admin-auth.js) adds login/password entry and hides the API page unless the user has `api_audit_view`; real replay requires `api_audit_replay`
 - Login uses the legacy Oracle user table `RUSERS`; the seeded local admin is `admin/admin123`.

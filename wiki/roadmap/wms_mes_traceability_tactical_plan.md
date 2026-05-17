@@ -381,7 +381,8 @@ DB/API:
 2. Завершено: построчная выдача сырья и завершение выпуска работают через MES API.
 3. В работе: `production_release_file_exchange` worker и JSON schema.
 4. Следующее: расширить MES detail endpoint удобными summary для UI: movement summary, trace/outbox summary.
-5. Следующее: QA/QC hold и блокировки партий перед отгрузкой/маркировкой.
+5. Завершено частично: базовая готовность партии к отгрузке считается от норматива вылежки в карточке артикула.
+6. Следующее: ручные QA/QC блокировки партий, лабораторные статусы и запрет подбора/отгрузки по `IS_SHIPMENT_ALLOWED`.
 
 ## Verification Checklist
 

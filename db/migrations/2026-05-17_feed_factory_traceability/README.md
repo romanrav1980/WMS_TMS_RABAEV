@@ -270,6 +270,17 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - Added admin API `GET/PATCH /api/admin/warehouses` and raw admin page `wiki-raw/wms_admin_ui_reference/warehouses.html`.
 - Fixed the SQL runner to read migration files as strict UTF-8 by default, moved that helper into tracked `tools/oracle_apply`, then re-applied the seed so Oracle stores Russian reference text correctly.
 
+`2026-05-17-013-batch-shipment-readiness`:
+
+- Apply result: `Statements=7; Errors=0`.
+- Added article-level `RRL_ARTICULS.SHIPMENT_AGING_HOURS` and `SHIPMENT_AGING_COMMENT`.
+- Added batch-level readiness fields on `RRL_PROD_BATCH`: `AGING_REQUIRED_HOURS`, `AGING_UNTIL`, `SHIPMENT_ALLOWED_AT`, `SHIPMENT_RELEASE_STATUS`, and `SHIPMENT_BLOCK_REASON`.
+- Added `RRL_TRG_PROD_BATCH_SHIP_READY` to calculate the default shipment allowed date from the article norm.
+- Added `RRL_PROD_BATCH_READY_V` to expose effective readiness; batches with norm `0` are ready immediately after quality release.
+- Added admin API `GET/PATCH /api/admin/product-shipment-settings` and raw admin page `wiki-raw/wms_admin_ui_reference/product-shipment-settings.html`.
+- Smoke proved a 24-hour norm produces `WAIT_AGING`; existing MES HTTP smoke proved default norm `0` produces `READY` / `IS_SHIPMENT_ALLOWED = 1`.
+- Post-apply recompile left `0 INVALID` current objects.
+
 ## Required Procedure For Future Reapply
 
 1. Create or confirm a VirtualBox snapshot before applying to the live Oracle VM.

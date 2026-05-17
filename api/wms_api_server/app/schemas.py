@@ -389,3 +389,8 @@ class WarehouseSettingsUpdateRequest(BaseModel):
     default_receive_cell: str | None = None
     default_issue_cell: str | None = None
     ware_comment: str | None = None
+
+
+class ProductShipmentSettingsUpdateRequest(BaseModel):
+    shipment_aging_hours: float | None = Field(default=None, ge=0)
+    shipment_aging_comment: str | None = None

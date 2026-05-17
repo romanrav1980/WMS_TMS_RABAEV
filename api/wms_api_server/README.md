@@ -142,6 +142,8 @@ Admin permissions:
 - `api_audit_replay`: may execute real replay.
 - `rights_admin_view`: may open users/groups/rights administration.
 - `rights_admin_edit`: may edit user groups and group rights.
+- `quality_batch_view`: may view article aging norms and batch shipment readiness.
+- `quality_batch_edit`: may edit article aging norms.
 - Admin users are read from legacy Oracle `RUSERS`; group permissions are read from `USER_GROUP`/`RIGHTS`.
 - Local seeded admin: `RUSERS.ID=admin`, `RUSERS.PASS=admin123`, `USER_GROUP=GLOBAL_ADMIN`.
 - The legacy `GLOBAL_ADMIN` rule is preserved: this group is treated as full access, matching the old `RRL_HAS_WRIGHT` behavior.
@@ -198,6 +200,13 @@ Production release file exchange:
 - `messageId` is stored in Oracle `RRL_FILE_EXCHANGE_LOG` and is used as the idempotency key.
 - The worker creates or reuses a MES production order, issues raw material, completes the order, and can apply old-WMS stock movements through `RRL_EVENTS`.
 - The local launcher is `production-exchange.bat`; the worker module is `app.workers.production_exchange_worker`.
+
+Batch quality and shipment readiness:
+
+- `GET /api/admin/product-shipment-settings`
+- `PATCH /api/admin/product-shipment-settings/{articul}`
+- `GET /api/production-batches/{prod_batch_id}/status` returns `AGING_REQUIRED_HOURS`, `SHIPMENT_ALLOWED_AT`, `SHIPMENT_EFFECTIVE_STATUS`, and `IS_SHIPMENT_ALLOWED`.
+- The raw admin page is `http://127.0.0.1:3000/product-shipment-settings.html`.
 
 ## Notes
 

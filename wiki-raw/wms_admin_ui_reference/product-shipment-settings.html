@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS PRO Product Shipment Settings</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="auth-pending" data-required-permission="quality_batch_view">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span> PRO</div>
+        </div>
+        <nav class="nav">
+          <a class="nav-link" href="index.html">Главная</a>
+          <a class="nav-link" href="index.html">Производство</a>
+          <a class="nav-link more" href="production-orders.html" data-permission="mes_production_view">MES</a>
+          <a class="nav-link more" href="bom.html" data-permission="bom_view">BOM</a>
+          <a class="nav-link more" href="warehouses.html" data-permission="warehouse_settings_view">Типы складов</a>
+          <a class="nav-link more active" href="product-shipment-settings.html" data-permission="quality_batch_view">Вылежка партий</a>
+          <a class="nav-link more" href="rights-admin.html" data-permission="rights_admin_view">Права</a>
+          <a class="nav-link more" href="api-audit.html" data-permission="api_audit_view">API</a>
+          <a class="nav-link more" href="external-outbox.html" data-permission="external_outbox_view">Внешние отправки</a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="factory-mark">
+            <span class="tower t1"></span>
+            <span class="tower t2"></span>
+            <span class="tower t3"></span>
+            <span class="plant-base"></span>
+          </div>
+          <div class="footer-line"><span>Смена</span><b>1 смена</b></div>
+          <div class="footer-line muted"><span>18.05.2025</span><span>10:24</span></div>
+          <div class="footer-line muted"><span>Версия</span><span>2.4.1</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="breadcrumbs"><b>Админ-панель WMS</b><span>/</span><b>Вылежка партий</b></div>
+          <div class="top-actions">
+            <label class="search">
+              <span>Поиск</span>
+              <input id="productSearch" placeholder="Артикул или наименование..." />
+              <kbd>⌘ K</kbd>
+            </label>
+            <button class="round alert">12</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">Администратор</b><small id="adminUserRole">WMS</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="admin-page rights-page">
+          <article class="panel rights-users">
+            <header><h2>Нормативы вылежки по артикулам</h2><button id="productRefresh" type="button">↻</button></header>
+            <div class="permission-strip">
+              <span>Просмотр: <b>quality_batch_view</b></span>
+              <span>Изменение: <b>quality_batch_edit</b></span>
+            </div>
+            <div class="rights-toolbar">
+              <label>API base<input id="productBase" value="http://127.0.0.1:8088" /></label>
+              <label>Только с вылежкой<select id="productOnlyAging"><option value="">Все</option><option value="1">Да</option></select></label>
+              <label>Лимит<input id="productLimit" type="number" min="1" max="500" value="200" /></label>
+              <button id="productLoad" type="button">Обновить</button>
+            </div>
+            <div class="rights-summary"><span id="productStatusText">Ожидание данных</span></div>
+            <div class="rights-table-wrap">
+              <table class="rights-table">
+                <thead><tr><th>Артикул</th><th>Наименование</th><th>Ед.</th><th>Вылежка, ч</th><th>Комментарий</th></tr></thead>
+                <tbody id="productRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel rights-groups">
+            <header><h2>Настройка артикула</h2></header>
+            <div class="rights-summary"><span id="productDetailStatus">Выберите артикул</span></div>
+            <pre id="productDetails"></pre>
+            <div class="rights-editor" data-permission="quality_batch_edit">
+              <label>Вылежка, часов<input id="productAgingHours" type="number" min="0" step="0.25" /></label>
+              <label>Комментарий<input id="productAgingComment" /></label>
+              <button id="productSave" type="button">Сохранить</button>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="admin-auth.js?v=20260517-product-shipment"></script>
+    <script src="product-shipment-settings.js?v=20260517-product-shipment"></script>
+  </body>
+</html>

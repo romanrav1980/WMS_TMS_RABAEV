@@ -27,6 +27,8 @@ MES_PRODUCTION_COMPLETE_PERMISSION = "mes_production_complete"
 MES_WMS_BRIDGE_APPLY_PERMISSION = "mes_wms_bridge_apply"
 WAREHOUSE_SETTINGS_VIEW_PERMISSION = "warehouse_settings_view"
 WAREHOUSE_SETTINGS_EDIT_PERMISSION = "warehouse_settings_edit"
+QUALITY_BATCH_VIEW_PERMISSION = "quality_batch_view"
+QUALITY_BATCH_EDIT_PERMISSION = "quality_batch_edit"
 
 security = HTTPBasic(auto_error=False)
 
