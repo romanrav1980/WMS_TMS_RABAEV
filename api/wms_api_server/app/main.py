@@ -12,6 +12,7 @@ from .routers import (
     customer_rules,
     health,
     mes,
+    picking,
     production,
     products,
     traceability,
@@ -46,3 +47,4 @@ app.include_router(warehouses.router)
 app.include_router(products.router)
 app.include_router(customer_orders.router)
 app.include_router(customer_rules.router)
+app.include_router(picking.router)

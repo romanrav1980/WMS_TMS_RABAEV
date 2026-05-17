@@ -314,6 +314,14 @@ Append-only log of root wiki updates.
 - Recompiled the `RABAEV` schema with `dbms_utility.compile_schema`.
 - Final live object check excluding recycle-bin objects: `456 VALID`, `0 INVALID`, no current `USER_ERRORS`.
 
+## [2026-05-17] picking-plan-reservations | Added picking plan and soft reservations
+
+- Applied Oracle migration `016` to `RABAEV@127.0.0.1:1521/orcl`.
+- Added `RRL_PICK_PLAN`, `RRL_PICK_PLAN_LINE`, `RRL_PICK_TASK`, `RRL_PICK_RESERVATION`, `RRL_PICK_SHORTAGE`, and `RRL_PICK_DECISION_LOG`.
+- Added `RRL_PICKING_API` for creating/cancelling picking plans without direct writes to old WMS stock tables.
+- Added backend endpoints under `/api/picking`.
+- Verified PL/SQL smoke, HTTP smoke, cleanup, UTF-8 encoding check, and final Oracle invalid-object count `0`.
+
 ## [2026-05-17] oracle-migration-001 | Prepared feed factory traceability migration for review
 
 - Added versioned migration folder `db/migrations/2026-05-17_feed_factory_traceability/`.

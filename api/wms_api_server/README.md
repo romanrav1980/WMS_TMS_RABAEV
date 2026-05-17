@@ -227,6 +227,18 @@ Customer orders for picking planning:
 - These endpoints require Oracle migrations `2026-05-17-014-customer-order-foundation` and `2026-05-17-015-customer-rules-vehicle-capacity`.
 - They use permissions `customer_view`, `customer_order_view`, `customer_order_import`, `customer_fulfillment_view`, `customer_rule_view`, `customer_rule_edit`, `vehicle_type_view`, and `vehicle_type_edit`.
 
+Picking plans and reservations:
+
+- `POST /api/picking/plans`
+- `GET /api/picking/plans`
+- `GET /api/picking/plans/{pick_plan_id}`
+- `POST /api/picking/plans/{pick_plan_id}/cancel`
+- `GET /api/picking/reservations`
+- `GET /api/picking/shortages`
+- `GET /api/picking/plans/{pick_plan_id}/shortages`
+- These endpoints require Oracle migration `2026-05-17-016-picking-plan-reservations`.
+- They use permissions `pick_plan_view`, `pick_plan_create`, `pick_plan_cancel`, `pick_reservation_view`, and `pick_shortage_view`.
+
 ## Notes
 
 Some legacy `Tserver` operations update both Oracle and Access MDB. This first API version implements the Oracle part and records the Access limitation in the response/documentation. The Access side should be replaced by Oracle/API-owned state or by a separate adapter before production cutover.
@@ -245,3 +257,4 @@ Checked on 2026-05-17:
 - Migration `008` apply/verify passed; external outbox worker smoke processed `SMOKE-008` through mock Mercury adapter and cleanup removed the smoke rows.
 - Migration `009` apply/verify passed; `RRL_BOM_API` is valid; PL/SQL and HTTP API smoke passed and cleanup left `SMOKE-009% = 0`.
 - The updated backend was launched through `serv.bat` and smoke-tested on `127.0.0.1:8088`.
+- Migration `016` apply/verify passed; `RRL_PICKING_API` is valid; HTTP smoke created, read, cancelled, and cleaned a picking plan through the new API.

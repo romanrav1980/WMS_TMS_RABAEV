@@ -47,6 +47,11 @@ This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/
 - `015_smoke.sql`: smoke rule creation and split of an 80-pallet order into shipment parts.
 - `015_smoke_cleanup.sql`: cleanup for rows created by the fixed `SMOKE_015` user marker.
 - `015_rollback.sql`: safe rollback for the customer-rule package only. It does not drop rule or shipment-part tables.
+- `016_apply.sql`: additive picking plan, task, reservation, shortage, and decision-log migration.
+- `016_verify.sql`: read-only verification for picking plan entities.
+- `016_smoke.sql`: smoke creation of a temporary customer order and picking plan against real stock.
+- `016_smoke_cleanup.sql`: cleanup for rows created by the fixed `SMOKE_016` user marker.
+- `016_rollback.sql`: safe rollback for the picking package only. It does not drop picking plan or reservation history.
 
 ## Scope
 
@@ -165,6 +170,17 @@ The fifteenth migration adds customer-specific picking rules and vehicle capacit
 - package `RRL_CUSTOMER_RULE_API` for vehicle resolution and pallet-capacity splitting;
 - admin rights for `GLOBAL_ADMIN`: `CUSTOMER_RULE_VIEW`, `CUSTOMER_RULE_EDIT`, `VEHICLE_TYPE_VIEW`, `VEHICLE_TYPE_EDIT`.
 
+The sixteenth migration adds picking planning and soft reservations:
+
+- picking plan headers through `RRL_PICK_PLAN`;
+- picking plan lines through `RRL_PICK_PLAN_LINE`;
+- planned full-pallet/case-pick tasks through `RRL_PICK_TASK`;
+- active/released/consumed reservations through `RRL_PICK_RESERVATION`;
+- shortage protocol through `RRL_PICK_SHORTAGE`;
+- decision log through `RRL_PICK_DECISION_LOG`;
+- package `RRL_PICKING_API` for plan creation and cancellation;
+- admin rights for `GLOBAL_ADMIN`: `PICK_PLAN_VIEW`, `PICK_PLAN_CREATE`, `PICK_PLAN_CANCEL`, `PICK_RESERVATION_VIEW`, `PICK_SHORTAGE_VIEW`.
+
 ## Safety
 
 The apply script is intended to be additive and idempotent:
@@ -198,6 +214,8 @@ The `012_rollback.sql` script is intentionally safe: it removes only warehouse s
 The `014_rollback.sql` script is intentionally safe: it drops only `RRL_CUSTOMER_ORDER_API`. Customer registry, order, row, fulfillment, sequence, index, and mapping data are kept.
 
 The `015_rollback.sql` script is intentionally safe: it drops only `RRL_CUSTOMER_RULE_API`. Customer rule, vehicle type, shipment part, sequence, index, and setting data are kept.
+
+The `016_rollback.sql` script is intentionally safe: it drops only `RRL_PICKING_API`. Picking plan, task, reservation, shortage, decision-log, sequence, index, and audit data are kept.
 
 SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply` helper reads scripts as strict UTF-8 by default; use `--encoding=cp1251` only for confirmed legacy scripts. `012_verify.sql` includes a mojibake-marker query for the warehouse seed texts.
 
@@ -336,6 +354,16 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - PL/SQL smoke split an 80-pallet order into `33 + 33 + 14`; cleanup left `SMOKE_015 = 0`.
 - Backend service smoke created shelf-life, stack, and vehicle rules, split 80 pallets into 3 parts, and cleanup left `SMOKE_API_015 = 0`.
 - HTTP smoke proved `GET /api/vehicle-types?active_only=1` returns 3 active vehicle types.
+- Post-apply invalid-object check left `0 INVALID` current objects.
+
+`2026-05-17-016-picking-plan-reservations`:
+
+- Apply result: `Statements=6; Errors=0`.
+- Verify result: `Statements=4; Errors=0`.
+- Package status: `RRL_PICKING_API` package and package body are `VALID`.
+- Added picking plans, plan lines, picking tasks, soft reservations, shortages, and decision log.
+- PL/SQL smoke created a temporary customer order against real stock, built a picking plan, and cleanup left `SMOKE_016 = 0`.
+- HTTP smoke started backend on `127.0.0.1:8088`, created a picking plan through `/api/picking/plans`, read it back, cancelled it, verified active reservations were released, and cleaned `SMOKE_API_016`.
 - Post-apply invalid-object check left `0 INVALID` current objects.
 
 ## Required Procedure For Future Reapply

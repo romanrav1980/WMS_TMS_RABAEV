@@ -38,6 +38,11 @@ CUSTOMER_RULE_VIEW_PERMISSION = "customer_rule_view"
 CUSTOMER_RULE_EDIT_PERMISSION = "customer_rule_edit"
 VEHICLE_TYPE_VIEW_PERMISSION = "vehicle_type_view"
 VEHICLE_TYPE_EDIT_PERMISSION = "vehicle_type_edit"
+PICK_PLAN_VIEW_PERMISSION = "pick_plan_view"
+PICK_PLAN_CREATE_PERMISSION = "pick_plan_create"
+PICK_PLAN_CANCEL_PERMISSION = "pick_plan_cancel"
+PICK_RESERVATION_VIEW_PERMISSION = "pick_reservation_view"
+PICK_SHORTAGE_VIEW_PERMISSION = "pick_shortage_view"
 
 security = HTTPBasic(auto_error=False)
 

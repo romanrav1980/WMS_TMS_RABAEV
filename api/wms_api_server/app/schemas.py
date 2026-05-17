@@ -452,3 +452,13 @@ class VehicleTypeCreateRequest(BaseModel):
     max_volume: float | None = Field(default=None, ge=0)
     active: int = 1
     created_by: str | None = None
+
+
+class PickingPlanCreateRequest(BaseModel):
+    customer_order_id: int
+    plan_strategy: str = "FEFO"
+    created_by: str | None = None
+
+
+class PickingPlanCancelRequest(BaseModel):
+    updated_by: str | None = None

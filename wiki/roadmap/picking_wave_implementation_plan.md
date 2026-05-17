@@ -203,7 +203,8 @@
 - в живой Oracle до `014` не было `RRL_CUSTOMER*`, `RRL_PICK*`, `RRL_SHIPMENT_PART*`;
 - инкремент 1 выполнен через migration `014`: customer/order foundation, `RRL_CUSTOMER_ORDER_API`, backend endpoints, smoke и cleanup;
 - инкремент 2 выполнен через migration `015`: customer shelf-life rules, stack rules, vehicle types, customer vehicle rules, shipment parts, `RRL_CUSTOMER_RULE_API`, backend endpoints, smoke и cleanup;
-- Oracle invalid objects после `015`: `0`.
+- инкремент 3 выполнен через migration `016`: picking plans, tasks, soft reservations, shortages, decision log, `RRL_PICKING_API`, backend endpoints, smoke и cleanup;
+- Oracle invalid objects после `016`: `0`.
 
 ### Инкремент 0. Подготовка И Инвентаризация
 
@@ -367,6 +368,8 @@ Smoke:
 - двойное назначение исключено;
 - shortage объясним;
 - старые WMS остатки не меняются.
+
+Статус: выполнено. Следующий практический инкремент - `017 Pick Face And Pick Route`.
 
 ### Инкремент 4. Migration 017: Pick Face And Pick Route
 
@@ -711,11 +714,10 @@ Smoke:
 
 Следующий разумный шаг реализации:
 
-1. Подготовить и показать migration `014` для customer/order foundation.
-2. Не накатывать ее без просмотра, если пользователь просит сначала показать DDL.
-3. После подтверждения применить migration на Oracle.
-4. Проверить `014_verify.sql`, invalid objects и backend startup.
-5. Добавить минимальный backend API.
-6. Сделать smoke импорта одного legacy order.
+1. Подготовить migration `017` для pick face и маршрута обхода ячеек.
+2. Добавить таблицы `RRL_PICK_FACE`, `RRL_PICK_FACE_ARTICUL`, `RRL_PICK_ROUTE`, `RRL_PICK_ROUTE_CELL`.
+3. Научить планировщик отличать полнопалетный отбор от покоробочного отбора по настроенным pick face.
+4. Добавить backend API для настройки pick face и маршрута.
+5. Проверить, что case-pick задачи сортируются по `PICK_SEQUENCE`, а старые WMS остатки по-прежнему не меняются напрямую.
 
-Это даст фундамент для всех следующих этапов: правил клиента, picking plan, резервов и волн.
+Это даст фундамент для следующего этапа: `018 Wave Picking Core`, где soft reserve будет переводиться в hard reserve при запуске волны.

@@ -21,6 +21,7 @@ The schema supports:
 - MES production orders, order BOM snapshots, production completion journal, and the WMS event bridge through `RRL_EVENTS`.
 - customer registry, legacy store/address mapping, customer orders, order rows, and fulfillment facts for picking planning.
 - customer shelf-life rules, product stacking rules, vehicle types, vehicle capacity rules, and shipment parts.
+- picking plans, picking tasks, soft reservations, shortage protocol, and decision log.
 
 ## Migration
 
@@ -50,6 +51,9 @@ SQL files:
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/015_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/015_apply.sql)
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/015_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/015_verify.sql)
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/015_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/015_rollback.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/016_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/016_apply.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/016_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/016_verify.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/016_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/016_rollback.sql)
 
 Status: applied to local Oracle VM schema `RABAEV@127.0.0.1:1521/orcl` after explicit approval.
 
@@ -114,6 +118,12 @@ The ledger is intentionally kept as a small foundation table so future Oracle ch
 - `RRL_VEHICLE_TYPE`: vehicle capacity reference, including the default `TRUCK_33` type.
 - `RRL_CUSTOMER_VEHICLE_RULE`: customer vehicle preferences and split-by-capacity rules.
 - `RRL_SHIPMENT_PART`: planned customer-order split into one or more vehicle/shipment parts.
+- `RRL_PICK_PLAN`: picking plan header for a customer order.
+- `RRL_PICK_PLAN_LINE`: planned quantity, full-pallet quantity, case-pick quantity, and shortage by order row.
+- `RRL_PICK_TASK`: planned full-pallet and case-pick tasks.
+- `RRL_PICK_RESERVATION`: soft/hard reservation rows that prevent double assignment of pallet or case stock.
+- `RRL_PICK_SHORTAGE`: explicit shortage protocol for partially planned customer orders.
+- `RRL_PICK_DECISION_LOG`: explanation log for stock selection, shortages, and plan cancellation.
 
 ## PL/SQL API
 
@@ -282,6 +292,25 @@ The migration also grants `GLOBAL_ADMIN` the new legacy rights:
 - `VEHICLE_TYPE_EDIT`.
 
 The `015_rollback.sql` script is intentionally safe: it drops only `RRL_CUSTOMER_RULE_API`. It does not drop customer rule, vehicle type, or shipment part data.
+
+Migration `2026-05-17-016-picking-plan-reservations` prepares package `RRL_PICKING_API`.
+
+Main operations:
+
+- `CREATE_PLAN`: create a picking plan for a canonical customer order, read legacy WMS stock, subtract active reservations, choose candidates by FEFO/FIFO, create tasks, create soft reservations, and write shortage rows.
+- `CANCEL_PLAN`: cancel a non-executed picking plan and release active reservations.
+
+The migration also grants `GLOBAL_ADMIN` the new legacy rights:
+
+- `PICK_PLAN_VIEW`;
+- `PICK_PLAN_CREATE`;
+- `PICK_PLAN_CANCEL`;
+- `PICK_RESERVATION_VIEW`;
+- `PICK_SHORTAGE_VIEW`.
+
+The package reads `RRL_REMAINS`, `RRL_PALLETS`, and `RRL_PROD_BATCH_READY_V`, but does not update old WMS stock tables directly. Physical stock remains owned by the legacy WMS event/trigger mechanism.
+
+The `016_rollback.sql` script is intentionally safe: it drops only `RRL_PICKING_API`. It does not drop picking plan, reservation, task, shortage, or decision-log data.
 
 ## WMS/MES Warehouse Settings
 
