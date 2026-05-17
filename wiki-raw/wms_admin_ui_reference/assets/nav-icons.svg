@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wmsBlue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3b8cff" />
+      <stop offset="1" stop-color="#0c55c7" />
+    </linearGradient>
+    <linearGradient id="wmsOrange" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffba45" />
+      <stop offset="1" stop-color="#f28a00" />
+    </linearGradient>
+    <linearGradient id="wmsSteel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#edf5ff" />
+      <stop offset="1" stop-color="#9bb4d1" />
+    </linearGradient>
+    <symbol id="icon-home" viewBox="0 0 64 64">
+      <path d="M8 36 32 18l24 18v18H12V36Z" fill="url(#wmsSteel)" />
+      <path d="M8 36 32 18l24 18-6 4-18-13-18 13-6-4Z" fill="url(#wmsBlue)" />
+      <path d="M16 38h32v16H16V38Z" fill="#f8fbff" />
+      <path d="M24 42h8v12h-8V42Zm14 0h8v7h-8v-7Z" fill="url(#wmsBlue)" />
+    </symbol>
+    <symbol id="icon-production" viewBox="0 0 64 64">
+      <path d="M9 43h46v10H9V43Z" fill="#263f62" />
+      <circle cx="18" cy="48" r="3" fill="#f6b02a" /><circle cx="29" cy="48" r="3" fill="#f6b02a" /><circle cx="40" cy="48" r="3" fill="#f6b02a" />
+      <path d="M14 32h12v11H14V32Zm25-8h14v19H39V24Z" fill="url(#wmsSteel)" />
+      <path d="M25 17 38 9l6 7-15 10-4-9Z" fill="url(#wmsOrange)" />
+      <path d="M19 29 25 17l5 3-5 12-6-3Z" fill="#1e4d91" />
+      <path d="M30 31h10v10H30V31Z" fill="url(#wmsOrange)" />
+    </symbol>
+    <symbol id="icon-mes" viewBox="0 0 64 64">
+      <path d="M14 14h36a5 5 0 0 1 5 5v24a5 5 0 0 1-5 5H14a5 5 0 0 1-5-5V19a5 5 0 0 1 5-5Z" fill="#102b50" />
+      <path d="M16 20h32v20H16V20Z" fill="url(#wmsBlue)" />
+      <path d="M18 44h28l6 8H12l6-8Z" fill="url(#wmsSteel)" />
+      <path d="M21 25a8 8 0 1 0 8 8h-8v-8Z" fill="url(#wmsOrange)" />
+      <path d="M33 25h10v4H33v-4Zm0 8h12v4H33v-4Z" fill="#b8d7ff" />
+    </symbol>
+    <symbol id="icon-bom" viewBox="0 0 64 64">
+      <path d="M13 44h38v8H13v-8Z" fill="url(#wmsSteel)" />
+      <path d="M18 33h10v11H18V33Zm18 0h10v11H36V33Zm-9-18h12v12H27V15Z" fill="url(#wmsOrange)" />
+      <path d="M23 33V27h18v6M32 27V15" fill="none" stroke="#173a68" stroke-width="4" stroke-linecap="round" />
+    </symbol>
+    <symbol id="icon-customers" viewBox="0 0 64 64">
+      <path d="M8 46c2-9 9-14 17-14s15 5 17 14v6H8v-6Z" fill="url(#wmsBlue)" />
+      <circle cx="25" cy="22" r="9" fill="#123d76" />
+      <path d="M30 49c2-9 9-14 17-14 5 0 9 2 12 6v11H30v-3Z" fill="#2c6ed4" />
+      <circle cx="47" cy="25" r="8" fill="#1c4f93" />
+      <path d="M22 46c2-10 10-16 19-16s17 6 19 16v8H22v-8Z" fill="url(#wmsOrange)" />
+      <circle cx="41" cy="20" r="9" fill="#ffb238" />
+    </symbol>
+    <symbol id="icon-orders" viewBox="0 0 64 64">
+      <path d="M17 10h30v44H17V10Z" fill="#f7fbff" stroke="#2a6fd4" stroke-width="4" />
+      <path d="M25 9h14v7H25V9Z" fill="#143d70" />
+      <path d="M24 25h4l4-5 4 4" fill="none" stroke="#2a78f2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M38 25h8M24 36h4l4-5 4 4M38 36h8M24 47h4l4-5 4 4M38 47h8" fill="none" stroke="#9fb1c6" stroke-width="3" stroke-linecap="round" />
+      <path d="M42 41h12v13H42V41Z" fill="url(#wmsOrange)" />
+    </symbol>
+    <symbol id="icon-warehouses" viewBox="0 0 64 64">
+      <path d="M8 34 32 18l24 16v21H8V34Z" fill="url(#wmsSteel)" />
+      <path d="M8 34 32 18l24 16-5 4-19-12-19 12-5-4Z" fill="url(#wmsBlue)" />
+      <path d="M18 40h12v15H18V40Zm17 7h10v8H35v-8Z" fill="url(#wmsOrange)" />
+    </symbol>
+    <symbol id="icon-warehouse-types" viewBox="0 0 64 64">
+      <path d="M14 16h36v38H14V16Z" fill="#1f559f" />
+      <path d="M20 21h24v9H20v-9Zm0 14h24v9H20v-9Z" fill="url(#wmsSteel)" />
+      <path d="M24 19h10v9H24V19Zm12 15h10v9H36v-9Z" fill="url(#wmsOrange)" />
+    </symbol>
+    <symbol id="icon-aging" viewBox="0 0 64 64">
+      <path d="M13 36h23v17H13V36Z" fill="url(#wmsOrange)" />
+      <path d="M15 30h20l6 6H10l5-6Z" fill="#ffbf5b" />
+      <circle cx="42" cy="38" r="16" fill="#f8fbff" stroke="#2b72d4" stroke-width="4" />
+      <path d="M42 28v11l8 5" fill="none" stroke="#163b69" stroke-width="4" stroke-linecap="round" />
+    </symbol>
+    <symbol id="icon-raw" viewBox="0 0 64 64">
+      <path d="M10 31h16v20H10V31Zm30-3h14v23H40V28Z" fill="url(#wmsSteel)" />
+      <path d="M24 29h16v22H24V29Z" fill="#f7fbff" />
+      <path d="M28 36c8 3 8 10 0 13-8-3-8-10 0-13Z" fill="url(#wmsOrange)" />
+      <path d="M8 51h48" stroke="#254b77" stroke-width="4" stroke-linecap="round" />
+    </symbol>
+    <symbol id="icon-finished" viewBox="0 0 64 64">
+      <path d="M10 42h44v10H10V42Z" fill="#8d5b22" />
+      <path d="M15 25h34v20H15V25Z" fill="url(#wmsOrange)" />
+      <path d="M15 25 25 17h34L49 25H15Z" fill="#ffc067" />
+      <path d="M49 25 59 17v20L49 45V25Z" fill="#d67b00" />
+      <path d="M23 34h16v7H23v-7Z" fill="#f3d49b" />
+    </symbol>
+    <symbol id="icon-settings" viewBox="0 0 64 64">
+      <path d="M28 8h8l3 9 9-2 4 7-7 7 7 7-4 7-9-2-3 9h-8l-3-9-9 2-4-7 7-7-7-7 4-7 9 2 3-9Z" fill="url(#wmsBlue)" />
+      <circle cx="32" cy="29" r="10" fill="#f8fbff" />
+      <circle cx="32" cy="29" r="5" fill="#1d4f91" />
+    </symbol>
+    <symbol id="icon-rights" viewBox="0 0 64 64">
+      <path d="M14 27c0-11 8-19 18-19s18 8 18 19v7H14v-7Z" fill="url(#wmsBlue)" />
+      <path d="M10 30h44v24H10V30Z" fill="url(#wmsSteel)" />
+      <path d="M37 36h12v18H37V36Z" fill="url(#wmsOrange)" />
+      <circle cx="43" cy="44" r="3" fill="#173a68" />
+      <path d="M23 28v-2c0-5 4-9 9-9s9 4 9 9v2" fill="none" stroke="#f8fbff" stroke-width="4" />
+    </symbol>
+    <symbol id="icon-kpi" viewBox="0 0 64 64">
+      <path d="M12 49h40v5H12v-5Z" fill="url(#wmsSteel)" />
+      <path d="M17 36h8v13h-8V36Zm13-11h8v24h-8V25Zm13-17h8v41h-8V8Z" fill="url(#wmsBlue)" />
+      <path d="m15 31 12-11 9 6 14-16" fill="none" stroke="url(#wmsOrange)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+    </symbol>
+    <symbol id="icon-api" viewBox="0 0 64 64">
+      <path d="M16 39c-7 0-12-5-12-11s5-11 12-11c3-7 10-11 18-9 7 2 11 8 11 15 8 1 15 7 15 15 0 9-7 16-16 16H17c-8 0-13-6-13-13 0-1 0-2 1-3 3 1 7 1 11 1Z" fill="url(#wmsBlue)" />
+      <text x="14" y="41" fill="#fff" font-family="Arial, sans-serif" font-size="17" font-weight="800">API</text>
+      <circle cx="18" cy="55" r="3" fill="url(#wmsOrange)" /><circle cx="45" cy="55" r="3" fill="url(#wmsOrange)" />
+    </symbol>
+    <symbol id="icon-external" viewBox="0 0 64 64">
+      <path d="M13 25h31l9 9v18H13V25Z" fill="url(#wmsSteel)" />
+      <path d="M8 38h14v14H8V38Z" fill="#173a68" />
+      <path d="M22 31h18v15H22V31Z" fill="url(#wmsOrange)" />
+      <path d="M44 25v11h9" fill="none" stroke="#2a72d4" stroke-width="4" />
+      <circle cx="19" cy="54" r="4" fill="#143d70" /><circle cx="46" cy="54" r="4" fill="#143d70" />
+    </symbol>
+    <symbol id="icon-reports" viewBox="0 0 64 64">
+      <path d="M17 8h30l8 9v39H17V8Z" fill="#f8fbff" stroke="#bfd0e4" stroke-width="3" />
+      <path d="M47 8v10h8" fill="#dbe8f7" />
+      <path d="M25 43h5v7h-5v-7Zm10-12h5v19h-5V31Zm10 7h5v12h-5V38Z" fill="url(#wmsOrange)" />
+      <path d="M24 20h18M24 27h15" stroke="#9fb1c6" stroke-width="4" stroke-linecap="round" />
+      <circle cx="31" cy="44" r="11" fill="none" stroke="url(#wmsBlue)" stroke-width="4" />
+    </symbol>
+  </defs>
+</svg>

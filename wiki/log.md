@@ -2,6 +2,13 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-17] raw-admin-nav-icons | Added RAW navigation icon sprite
+
+- Added [`../wiki-raw/wms_admin_ui_reference/assets/nav-icons.svg`](../wiki-raw/wms_admin_ui_reference/assets/nav-icons.svg) with SVG icons for the 17 WMS admin navigation sections.
+- Applied the icon sprite to raw admin navigation links across the existing HTML pages.
+- Removed the old CSS pseudo-icons and kept a fixed SVG icon slot so the left navigation does not visually jump between pages.
+- Bumped the raw admin stylesheet cache key to `20260517-icons2`.
+
 ## [2026-05-17] retail-customer-demo-seed | Seeded Magnit and X5 warehouse customers
 
 - Seeded Oracle through the FastAPI admin endpoints with `12` Magnit / AO Tander warehouse customers and `20` X5 warehouse customers.
