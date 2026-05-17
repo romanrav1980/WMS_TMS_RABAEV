@@ -2,6 +2,15 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-17] retail-customer-demo-seed | Seeded Magnit and X5 warehouse customers
+
+- Seeded Oracle through the FastAPI admin endpoints with `12` Magnit / AO Tander warehouse customers and `20` X5 warehouse customers.
+- Each demo warehouse customer has one delivery address plus shelf-life, pallet stack, and vehicle-capacity rules for picking-planning scenarios.
+- Added demo vehicle types `FTL33`, `REF33`, `FTL20`, and `CITY10` for full-truck, refrigerated, medium, and city delivery scenarios.
+- Removed duplicate operator-facing `API base` fields from customer and customer-order raw pages; these pages now use the global API base from the admin login session.
+- Stabilized the raw admin left navigation with fixed row sizing and CSS pixel icons so category rows do not jump between active/permission states.
+- Verified demo counts: Magnit `12`, X5 `20`, addresses `32`, shelf rules `32`, stack rules `32`, vehicle rules `32`, and Oracle invalid objects = `0`.
+
 ## [2026-05-17] customer-admin-zero-step | Added raw customers and customer orders admin
 
 - Added backend endpoints for creating/updating customers and adding customer addresses on top of existing Oracle customer tables.

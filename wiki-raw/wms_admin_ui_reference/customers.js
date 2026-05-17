@@ -9,9 +9,10 @@ const customerState = {
 };
 
 const customerEl = (id) => document.getElementById(id);
+const CUSTOMER_DEFAULT_API_BASE = "http://127.0.0.1:8088";
 
 function customerApiBase() {
-  return customerEl("customerBase").value.replace(/\/$/, "");
+  return (window.wmsAdminAuth?.state?.apiBase || CUSTOMER_DEFAULT_API_BASE).replace(/\/$/, "");
 }
 
 function customerHeaders(extra = {}) {
@@ -319,7 +320,6 @@ function customerBind(id, handler) {
 }
 
 async function customerInit() {
-  customerEl("customerBase").value = window.wmsAdminAuth?.state?.apiBase || customerEl("customerBase").value;
   customerBind("customerLoad", loadCustomers);
   customerBind("customerRefresh", loadCustomers);
   customerBind("customerCreate", createCustomer);

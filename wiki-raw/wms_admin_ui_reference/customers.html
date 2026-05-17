@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>WMS PRO Клиенты</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20260517-retail" />
   </head>
   <body class="auth-pending" data-required-permission="customer_view">
     <div class="app">
@@ -67,7 +67,6 @@
               <span>Правила: <b>customer_rule_view / customer_rule_edit</b></span>
             </div>
             <div class="rights-toolbar">
-              <label>API base<input id="customerBase" value="http://127.0.0.1:8088" /></label>
               <label>Поиск<input id="customerSearch" placeholder="Название, код, адрес" /></label>
               <label>Лимит<input id="customerLimit" type="number" min="1" max="500" value="200" /></label>
               <button id="customerLoad" type="button">Показать</button>
@@ -154,6 +153,6 @@
       </main>
     </div>
     <script src="admin-auth.js?v=20260517-admin123"></script>
-    <script src="customers.js?v=20260517"></script>
+    <script src="customers.js?v=20260517-retail"></script>
   </body>
 </html>

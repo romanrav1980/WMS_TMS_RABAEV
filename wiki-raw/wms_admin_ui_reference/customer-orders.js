@@ -6,9 +6,10 @@ const orderState = {
 };
 
 const orderEl = (id) => document.getElementById(id);
+const ORDER_DEFAULT_API_BASE = "http://127.0.0.1:8088";
 
 function orderApiBase() {
-  return orderEl("orderBase").value.replace(/\/$/, "");
+  return (window.wmsAdminAuth?.state?.apiBase || ORDER_DEFAULT_API_BASE).replace(/\/$/, "");
 }
 
 function orderHeaders(extra = {}) {
@@ -151,7 +152,6 @@ function orderBind(id, handler) {
 }
 
 async function orderInit() {
-  orderEl("orderBase").value = window.wmsAdminAuth?.state?.apiBase || orderEl("orderBase").value;
   orderBind("orderLoad", loadOrders);
   orderBind("orderRefresh", loadOrders);
   orderBind("legacyImport", importLegacyOrder);

@@ -36,10 +36,12 @@ Design notes:
 - [`bom.html`](bom.html) is a separate MES recipe/BOM page protected by `bom_view`; lifecycle buttons require `bom_edit`, `bom_approve`, `bom_block`, or `bom_make_primary`
 - [`customers.html`](customers.html) is protected by `customer_view`; customer card changes require `customer_edit`; rule creation requires `customer_rule_edit`
 - [`customer-orders.html`](customer-orders.html) is protected by `customer_order_view`; legacy import requires `customer_order_import`; fulfillment facts require `customer_fulfillment_view`
+- customer and customer-order pages use the global admin session API base from `admin-auth.js`; the operator-facing duplicate API base field is intentionally not shown
 - [`product-shipment-settings.html`](product-shipment-settings.html) is protected by `quality_batch_view`; editing aging norms requires `quality_batch_edit`
 - API page lists calls from `GET /api/admin/api-calls`, opens details, runs dry-run replay, and can repeat selected ID or date ranges through `POST /api/admin/api-calls/replay`
 - [`admin-auth.js`](admin-auth.js) adds login/password entry and hides the API page unless the user has `api_audit_view`; real replay requires `api_audit_replay`
 - Login uses the legacy Oracle user table `RUSERS`; the seeded local admin is `admin/admin123`.
+- left navigation has fixed row sizing and CSS pixel icons to avoid visual jumping between pages
 - light background, thin borders, small radii, dense tables, restrained blue/green accents
 - no destructive database actions are represented in the raw prototype
 

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>WMS PRO Заказы клиентов</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20260517-retail" />
   </head>
   <body class="auth-pending" data-required-permission="customer_order_view">
     <div class="app">
@@ -67,7 +67,6 @@
               <span>Факт исполнения: <b>customer_fulfillment_view</b></span>
             </div>
             <div class="rights-toolbar">
-              <label>API base<input id="orderBase" value="http://127.0.0.1:8088" /></label>
               <label>Статус<select id="orderStatus"><option value="">Все</option><option>IMPORTED</option><option>OPEN</option><option>PLANNED_FULL</option><option>PLANNED_PARTIAL</option><option>NO_STOCK</option><option>IN_WAVE</option><option>PICKING</option><option>FULFILLED</option><option>CANCELLED</option></select></label>
               <label>Заказ<input id="orderNo" placeholder="ORDER_NO" /></label>
               <label>Legacy ID<input id="legacyOrderId" type="number" min="1" /></label>
@@ -110,6 +109,6 @@
       </main>
     </div>
     <script src="admin-auth.js?v=20260517-admin123"></script>
-    <script src="customer-orders.js?v=20260517"></script>
+    <script src="customer-orders.js?v=20260517-retail"></script>
   </body>
 </html>
