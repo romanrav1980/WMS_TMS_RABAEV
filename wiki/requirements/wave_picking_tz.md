@@ -7,6 +7,7 @@
 Связанные документы:
 
 - [Комплектация / Picking Planning](picking_planning_tz.md)
+- [Администрирование сборки по волнам](wave_picking_admin_tz.md)
 - [WMS+MES+Traceability EDD](../architecture/wms_mes_traceability_edd.md)
 - [Тактический план WMS+MES+Traceability](../roadmap/wms_mes_traceability_tactical_plan.md)
 - [Oracle Change Protocol](../database/oracle_change_protocol.md)
