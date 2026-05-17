@@ -34,6 +34,10 @@ CUSTOMER_EDIT_PERMISSION = "customer_edit"
 CUSTOMER_ORDER_VIEW_PERMISSION = "customer_order_view"
 CUSTOMER_ORDER_IMPORT_PERMISSION = "customer_order_import"
 CUSTOMER_FULFILLMENT_VIEW_PERMISSION = "customer_fulfillment_view"
+CUSTOMER_RULE_VIEW_PERMISSION = "customer_rule_view"
+CUSTOMER_RULE_EDIT_PERMISSION = "customer_rule_edit"
+VEHICLE_TYPE_VIEW_PERMISSION = "vehicle_type_view"
+VEHICLE_TYPE_EDIT_PERMISSION = "vehicle_type_edit"
 
 security = HTTPBasic(auto_error=False)
 

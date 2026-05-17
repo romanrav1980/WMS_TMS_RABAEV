@@ -9,6 +9,7 @@ from .routers import (
     api_audit,
     bom,
     customer_orders,
+    customer_rules,
     health,
     mes,
     production,
@@ -44,3 +45,4 @@ app.include_router(mes.router)
 app.include_router(warehouses.router)
 app.include_router(products.router)
 app.include_router(customer_orders.router)
+app.include_router(customer_rules.router)

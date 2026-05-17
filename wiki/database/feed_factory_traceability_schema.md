@@ -20,6 +20,7 @@ The schema supports:
 - BOM recipes, component lines, and audit journal for MES production planning.
 - MES production orders, order BOM snapshots, production completion journal, and the WMS event bridge through `RRL_EVENTS`.
 - customer registry, legacy store/address mapping, customer orders, order rows, and fulfillment facts for picking planning.
+- customer shelf-life rules, product stacking rules, vehicle types, vehicle capacity rules, and shipment parts.
 
 ## Migration
 
@@ -46,6 +47,9 @@ SQL files:
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/014_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/014_apply.sql)
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/014_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/014_verify.sql)
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/014_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/014_rollback.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/015_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/015_apply.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/015_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/015_verify.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/015_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/015_rollback.sql)
 
 Status: applied to local Oracle VM schema `RABAEV@127.0.0.1:1521/orcl` after explicit approval.
 
@@ -105,6 +109,11 @@ The ledger is intentionally kept as a small foundation table so future Oracle ch
 - `RRL_CUSTOMER_ORDER`: canonical customer order imported from legacy WMS or future external sources.
 - `RRL_CUSTOMER_ORDER_ROW`: canonical customer order lines.
 - `RRL_CUSTOMER_ORDER_FULFILLMENT`: fulfillment fact rows linked to legacy assembly pallets.
+- `RRL_CUSTOMER_SHELF_LIFE_RULE`: customer, store, article, and product-group shelf-life acceptance rules.
+- `RRL_CUSTOMER_PRODUCT_STACK_RULE`: customer stacking, palletization, top-stacking, and compatibility rules.
+- `RRL_VEHICLE_TYPE`: vehicle capacity reference, including the default `TRUCK_33` type.
+- `RRL_CUSTOMER_VEHICLE_RULE`: customer vehicle preferences and split-by-capacity rules.
+- `RRL_SHIPMENT_PART`: planned customer-order split into one or more vehicle/shipment parts.
 
 ## PL/SQL API
 
@@ -251,6 +260,28 @@ The migration also grants `GLOBAL_ADMIN` the new legacy rights:
 - `CUSTOMER_FULFILLMENT_VIEW`.
 
 The `014_rollback.sql` script is intentionally safe: it drops only `RRL_CUSTOMER_ORDER_API`. It does not drop customer, order, row, fulfillment, or mapping data.
+
+Migration `2026-05-17-015-customer-rules-vehicle-capacity` prepares package `RRL_CUSTOMER_RULE_API`.
+
+Main operations:
+
+- `RESOLVE_VEHICLE_TYPE`: choose the applicable customer/store vehicle type with fallback to customer default and then `TRUCK_33`.
+- `SPLIT_ORDER_BY_PALLET_CAPACITY`: split a customer order into `RRL_SHIPMENT_PART` rows according to vehicle pallet capacity.
+
+The migration seeds:
+
+- `TRUCK_33`: 33-pallet truck;
+- `TEN_TON`: 10-ton truck;
+- `SMALL_TRUCK`: small truck placeholder.
+
+The migration also grants `GLOBAL_ADMIN` the new legacy rights:
+
+- `CUSTOMER_RULE_VIEW`;
+- `CUSTOMER_RULE_EDIT`;
+- `VEHICLE_TYPE_VIEW`;
+- `VEHICLE_TYPE_EDIT`.
+
+The `015_rollback.sql` script is intentionally safe: it drops only `RRL_CUSTOMER_RULE_API`. It does not drop customer rule, vehicle type, or shipment part data.
 
 ## WMS/MES Warehouse Settings
 

@@ -394,3 +394,61 @@ class WarehouseSettingsUpdateRequest(BaseModel):
 class ProductShipmentSettingsUpdateRequest(BaseModel):
     shipment_aging_hours: float | None = Field(default=None, ge=0)
     shipment_aging_comment: str | None = None
+
+
+class CustomerShelfLifeRuleCreateRequest(BaseModel):
+    customer_store_map_id: int | None = None
+    articul: str | None = None
+    product_group: str | None = None
+    min_shelf_life_days: float | None = Field(default=None, ge=0)
+    min_shelf_life_percent: float | None = Field(default=None, ge=0, le=100)
+    rule_priority: int = 100
+    active: int = 1
+    valid_from: date | None = None
+    valid_to: date | None = None
+    created_by: str | None = None
+
+
+class CustomerStackRuleCreateRequest(BaseModel):
+    customer_store_map_id: int | None = None
+    articul: str | None = None
+    product_group: str | None = None
+    pallet_case_qty: float | None = Field(default=None, ge=0)
+    pallet_layer_qty: float | None = Field(default=None, ge=0)
+    pallet_layer_count: float | None = Field(default=None, ge=0)
+    max_pallet_weight: float | None = Field(default=None, ge=0)
+    max_pallet_volume: float | None = Field(default=None, ge=0)
+    max_pallet_height: float | None = Field(default=None, ge=0)
+    pallet_type: str | None = None
+    allow_top_stacking: int = 0
+    must_be_separate_pallet: int = 0
+    stack_compatibility_group: str | None = None
+    rule_priority: int = 100
+    active: int = 1
+    valid_from: date | None = None
+    valid_to: date | None = None
+    created_by: str | None = None
+
+
+class CustomerVehicleRuleCreateRequest(BaseModel):
+    customer_store_map_id: int | None = None
+    vehicle_type_id: int
+    max_pallet_count: float | None = Field(default=None, ge=0)
+    max_weight: float | None = Field(default=None, ge=0)
+    max_volume: float | None = Field(default=None, ge=0)
+    split_order_by_capacity: int = 1
+    rule_priority: int = 100
+    active: int = 1
+    valid_from: date | None = None
+    valid_to: date | None = None
+    created_by: str | None = None
+
+
+class VehicleTypeCreateRequest(BaseModel):
+    vehicle_type_code: str
+    vehicle_type_name: str
+    max_pallet_count: float | None = Field(default=None, ge=0)
+    max_weight: float | None = Field(default=None, ge=0)
+    max_volume: float | None = Field(default=None, ge=0)
+    active: int = 1
+    created_by: str | None = None

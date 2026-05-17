@@ -212,12 +212,20 @@ Customer orders for picking planning:
 
 - `GET /api/customers`
 - `GET /api/customers/{customer_id}`
+- `GET /api/customers/{customer_id}/shelf-life-rules`
+- `POST /api/customers/{customer_id}/shelf-life-rules`
+- `GET /api/customers/{customer_id}/stack-rules`
+- `POST /api/customers/{customer_id}/stack-rules`
+- `GET /api/customers/{customer_id}/vehicle-rules`
+- `POST /api/customers/{customer_id}/vehicle-rules`
 - `GET /api/customer-orders`
 - `GET /api/customer-orders/{customer_order_id}`
 - `POST /api/customer-orders/import-legacy/{legacy_order_id}`
 - `GET /api/customer-orders/{customer_order_id}/fulfillment`
-- These endpoints require Oracle migration `2026-05-17-014-customer-order-foundation`.
-- They use permissions `customer_view`, `customer_order_view`, `customer_order_import`, and `customer_fulfillment_view`.
+- `GET /api/vehicle-types`
+- `POST /api/vehicle-types`
+- These endpoints require Oracle migrations `2026-05-17-014-customer-order-foundation` and `2026-05-17-015-customer-rules-vehicle-capacity`.
+- They use permissions `customer_view`, `customer_order_view`, `customer_order_import`, `customer_fulfillment_view`, `customer_rule_view`, `customer_rule_edit`, `vehicle_type_view`, and `vehicle_type_edit`.
 
 ## Notes
 

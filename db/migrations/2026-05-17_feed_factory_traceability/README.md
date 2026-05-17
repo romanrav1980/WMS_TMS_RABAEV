@@ -42,6 +42,11 @@ This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/
 - `014_smoke.sql`: smoke import of one legacy order into the customer-order model.
 - `014_smoke_cleanup.sql`: cleanup for rows created by the fixed `SMOKE_014` user marker.
 - `014_rollback.sql`: safe rollback for the customer-order package only. It does not drop customer/order tables.
+- `015_apply.sql`: additive customer picking rules, vehicle types, vehicle capacity, and shipment parts.
+- `015_verify.sql`: read-only verification for customer rules and vehicle capacity.
+- `015_smoke.sql`: smoke rule creation and split of an 80-pallet order into shipment parts.
+- `015_smoke_cleanup.sql`: cleanup for rows created by the fixed `SMOKE_015` user marker.
+- `015_rollback.sql`: safe rollback for the customer-rule package only. It does not drop rule or shipment-part tables.
 
 ## Scope
 
@@ -150,6 +155,16 @@ The fourteenth migration adds the first customer-order foundation for picking pl
 - package `RRL_CUSTOMER_ORDER_API` for legacy address/customer creation and legacy order import;
 - admin rights for `GLOBAL_ADMIN`: `CUSTOMER_VIEW`, `CUSTOMER_EDIT`, `CUSTOMER_ORDER_VIEW`, `CUSTOMER_ORDER_IMPORT`, `CUSTOMER_FULFILLMENT_VIEW`.
 
+The fifteenth migration adds customer-specific picking rules and vehicle capacity:
+
+- shelf-life rules through `RRL_CUSTOMER_SHELF_LIFE_RULE`;
+- product stacking rules through `RRL_CUSTOMER_PRODUCT_STACK_RULE`;
+- vehicle types through `RRL_VEHICLE_TYPE`;
+- customer vehicle rules through `RRL_CUSTOMER_VEHICLE_RULE`;
+- shipment split parts through `RRL_SHIPMENT_PART`;
+- package `RRL_CUSTOMER_RULE_API` for vehicle resolution and pallet-capacity splitting;
+- admin rights for `GLOBAL_ADMIN`: `CUSTOMER_RULE_VIEW`, `CUSTOMER_RULE_EDIT`, `VEHICLE_TYPE_VIEW`, `VEHICLE_TYPE_EDIT`.
+
 ## Safety
 
 The apply script is intended to be additive and idempotent:
@@ -181,6 +196,8 @@ The `011_rollback.sql` script is intentionally safe: it drops only `RRL_MES_PROD
 The `012_rollback.sql` script is intentionally safe: it removes only warehouse settings rights and the migration ledger row. Warehouse columns and seeded warehouse data are kept unless the explicit seed cleanup script is reviewed and run.
 
 The `014_rollback.sql` script is intentionally safe: it drops only `RRL_CUSTOMER_ORDER_API`. Customer registry, order, row, fulfillment, sequence, index, and mapping data are kept.
+
+The `015_rollback.sql` script is intentionally safe: it drops only `RRL_CUSTOMER_RULE_API`. Customer rule, vehicle type, shipment part, sequence, index, and setting data are kept.
 
 SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply` helper reads scripts as strict UTF-8 by default; use `--encoding=cp1251` only for confirmed legacy scripts. `012_verify.sql` includes a mojibake-marker query for the warehouse seed texts.
 
@@ -307,6 +324,18 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - Added customer registry, address, legacy address mapping, canonical customer order, order rows, and fulfillment fact tables.
 - PL/SQL smoke imported one legacy `RRL_ORDERS` row into the customer-order model and cleanup left `SMOKE_014 = 0`.
 - Backend service smoke imported one legacy order through `CustomerOrderService`, read 298 rows, and cleanup left `SMOKE_API_014 = 0`.
+- Post-apply invalid-object check left `0 INVALID` current objects.
+
+`2026-05-17-015-customer-rules-vehicle-capacity`:
+
+- Apply result: `Statements=7; Errors=0`.
+- Verify result: `Statements=5; Errors=0`.
+- Package status: `RRL_CUSTOMER_RULE_API` package and package body are `VALID`.
+- Added shelf-life, product stacking, vehicle type, customer vehicle rule, and shipment-part tables.
+- Seeded vehicle types `TRUCK_33`, `TEN_TON`, and `SMALL_TRUCK`.
+- PL/SQL smoke split an 80-pallet order into `33 + 33 + 14`; cleanup left `SMOKE_015 = 0`.
+- Backend service smoke created shelf-life, stack, and vehicle rules, split 80 pallets into 3 parts, and cleanup left `SMOKE_API_015 = 0`.
+- HTTP smoke proved `GET /api/vehicle-types?active_only=1` returns 3 active vehicle types.
 - Post-apply invalid-object check left `0 INVALID` current objects.
 
 ## Required Procedure For Future Reapply

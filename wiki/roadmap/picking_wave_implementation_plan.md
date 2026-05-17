@@ -202,7 +202,8 @@
 - инкремент 0 выполнен для стартовых legacy sources: подтверждены `RRL_ORDERS`, `RRL_ORDER_ROWS`, `RRL_SBORKA_PALLETS`, `RRL_SBORKA_PALLET_ROWS`, `RRL_CLIENT_REG_PROFILE`;
 - в живой Oracle до `014` не было `RRL_CUSTOMER*`, `RRL_PICK*`, `RRL_SHIPMENT_PART*`;
 - инкремент 1 выполнен через migration `014`: customer/order foundation, `RRL_CUSTOMER_ORDER_API`, backend endpoints, smoke и cleanup;
-- Oracle invalid objects после `014`: `0`.
+- инкремент 2 выполнен через migration `015`: customer shelf-life rules, stack rules, vehicle types, customer vehicle rules, shipment parts, `RRL_CUSTOMER_RULE_API`, backend endpoints, smoke и cleanup;
+- Oracle invalid objects после `015`: `0`.
 
 ### Инкремент 0. Подготовка И Инвентаризация
 
@@ -317,6 +318,8 @@ Smoke:
 - правила клиента выбираются детерминированно;
 - действует fallback к правилу по умолчанию;
 - конфликт правил виден в диагностике.
+
+Статус: выполнено. Следующий практический инкремент - `016 Picking Plan And Reservations`.
 
 ### Инкремент 3. Migration 016: Picking Plan And Reservations
 
