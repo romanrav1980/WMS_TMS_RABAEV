@@ -7,6 +7,7 @@ Append-only log of root wiki updates.
 - Added [`requirements/picking_planning_tz.md`](requirements/picking_planning_tz.md).
 - Added [`requirements/wave_picking_tz.md`](requirements/wave_picking_tz.md) as a separate wave-picking sub-branch for launch waves, hard reservations, pick-face replenishment, open-order selection, and the `Запуск волны` admin dialog.
 - Added [`requirements/wave_picking_admin_tz.md`](requirements/wave_picking_admin_tz.md) for the wave-picking admin page, rights, launch dialog, preview, monitoring, cancellation, reserve release, settings, and audit requirements.
+- Added [`roadmap/picking_wave_implementation_plan.md`](roadmap/picking_wave_implementation_plan.md) as the strategic and tactical implementation plan for customer/order foundation, customer rules, picking reservations, pick face topology, wave core, wave admin, terminal execution, WMS bridge, and load/recovery tests.
 - Fixed the architectural decision that `IS_SHIPMENT_ALLOWED` is a picking-planning criterion, not a hard WMS block.
 - Captured customer shelf-life rules, customer-specific palletization, route/dock context, full-pallet-first planning, case picking, weight/volume limits, pick route order, regular pick faces, and future dynamic pick faces.
 - Added the mandatory reservation layer so active picking plans cannot double-assign the same pallet or the already reserved part of a pallet.
