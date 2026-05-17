@@ -70,6 +70,9 @@ This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/
 - `025_apply.sql`: Oracle package API for atomic release of planned MES production into raw-material supply tasks.
 - `025_verify.sql`: read-only verification for the raw-supply package and invalid objects.
 - `025_rollback.sql`: safe rollback for the raw-supply package only. It does not drop demand, reservation, task, or movement history.
+- `026_apply.sql`: common warehouse reachtruck tasks for MES raw supply and finished-goods storage.
+- `026_verify.sql`: read-only verification for warehouse task entities.
+- `026_rollback.sql`: safe rollback for warehouse task rights and migration ledger only. It does not drop warehouse task history.
 
 ## Scope
 
@@ -486,6 +489,13 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - Partial pallet reservations use `RESERVATION_SCOPE = 'QTY'`; full-pallet reservations use `RESERVATION_SCOPE = 'PALLET'`.
 - The backend `release-to-production` endpoint now delegates the critical release step to this Oracle package.
 - `025_rollback.sql` is non-destructive for business data and drops only the package and migration ledger row.
+
+`2026-05-17-026-warehouse-tasks`:
+
+- Adds common table `RRL_WAREHOUSE_TASK` for driver/reachtruck work lists.
+- Adds task types `RAW_TO_PRODUCTION` and `FG_TO_STORAGE` for MES raw supply and finished-goods storage.
+- Adds admin rights `WAREHOUSE_TASK_VIEW` and `WAREHOUSE_TASK_EXECUTE`.
+- `026_rollback.sql` is non-destructive and keeps task history; it removes only rights and the migration ledger row.
 
 ## Required Procedure For Future Reapply
 

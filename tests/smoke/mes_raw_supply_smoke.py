@@ -69,6 +69,13 @@ def main() -> int:
     confirmed_task = client.get(f"/api/mes/raw-transfer-tasks/{confirm_task['task_id']}")
     if confirmed_task.get("task_status") != "DONE":
         raise AssertionError(f"Expected confirmed task DONE, got {confirmed_task.get('task_status')}")
+    confirmed_warehouse_tasks = client.get(
+        f"/api/warehouse-tasks?production_order_id={confirm_order_id}&task_type=RAW_TO_PRODUCTION&limit=20"
+    )
+    if not confirmed_warehouse_tasks:
+        raise AssertionError("Expected RAW_TO_PRODUCTION warehouse task for confirmed raw supply task.")
+    if not any(task.get("status") == "DONE" for task in confirmed_warehouse_tasks):
+        raise AssertionError("Expected confirmed RAW_TO_PRODUCTION warehouse task to be DONE.")
 
     for task_id in created_tasks:
         client.post(
@@ -103,6 +110,7 @@ def main() -> int:
         "confirm_order_id": confirm_order_id,
         "confirm_task_id": confirm_task["task_id"],
         "movement_id": confirm_result["id"],
+        "confirmed_warehouse_tasks": len(confirmed_warehouse_tasks),
         "elapsed_sec": round(elapsed, 3),
         "ops_per_sec": round((args.orders * 3 + 10) / elapsed, 2),
     }, ensure_ascii=False, indent=2))

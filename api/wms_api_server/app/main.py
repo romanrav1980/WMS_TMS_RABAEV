@@ -21,6 +21,7 @@ from .routers import (
     stock_reservations,
     traceability,
     tserver,
+    warehouse_tasks,
     warehouses,
 )
 
@@ -56,3 +57,4 @@ app.include_router(customer_orders.router)
 app.include_router(customer_rules.router)
 app.include_router(picking.router)
 app.include_router(stock_reservations.router)
+app.include_router(warehouse_tasks.router)

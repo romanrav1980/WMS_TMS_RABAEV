@@ -344,6 +344,18 @@ MES raw supply:
 - The critical release-to-production step is implemented in Oracle package `RRL_MES_RAW_SUPPLY_API` from migration `2026-05-17-025-mes-raw-supply-oracle-api`, so the order lock, demand rebuild, shortage protocol, hard reservation, and transfer task creation happen in one database transaction.
 - Raw admin page: `http://127.0.0.1:3000/raw-supply.html`.
 
+Warehouse reachtruck tasks:
+
+- `GET /api/warehouse-tasks`
+- `GET /api/warehouse-tasks/{task_id}`
+- `POST /api/warehouse-tasks/{task_id}/assign`
+- `POST /api/warehouse-tasks/{task_id}/start`
+- `POST /api/warehouse-tasks/{task_id}/complete`
+- `POST /api/warehouse-tasks/{task_id}/cancel`
+- These endpoints require Oracle migration `2026-05-17-026-warehouse-tasks`.
+- They use permissions `warehouse_task_view` and `warehouse_task_execute`.
+- MES raw supply creates `RAW_TO_PRODUCTION` tasks; production completion creates `FG_TO_STORAGE` tasks for finished-goods pallets.
+
 ## Notes
 
 Some legacy `Tserver` operations update both Oracle and Access MDB. This first API version implements the Oracle part and records the Access limitation in the response/documentation. The Access side should be replaced by Oracle/API-owned state or by a separate adapter before production cutover.

@@ -69,6 +69,8 @@ PICK_WAVE_RELEASE_RESERVES_PERMISSION = "pick_wave_release_reserves"
 PICK_WAVE_AUDIT_VIEW_PERMISSION = "pick_wave_audit_view"
 STOCK_RESERVATION_VIEW_PERMISSION = "stock_reservation_view"
 STOCK_RESERVATION_EDIT_PERMISSION = "stock_reservation_edit"
+WAREHOUSE_TASK_VIEW_PERMISSION = "warehouse_task_view"
+WAREHOUSE_TASK_EXECUTE_PERMISSION = "warehouse_task_execute"
 
 security = HTTPBasic(auto_error=False)
 

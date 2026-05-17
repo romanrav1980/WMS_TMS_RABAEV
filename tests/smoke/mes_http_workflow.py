@@ -24,6 +24,7 @@ def main() -> int:
     lot_no = f"HTTP-MES-LOT-{suffix}"
     raw_pallet = f"HTTP-MES-RAW-{suffix}"
     fg_pallet = f"HTTP-MES-FG-{suffix}"
+    fg_target_cell = "FG-A01-01"
 
     client.get("/health", auth=False)
 
@@ -55,6 +56,7 @@ def main() -> int:
 
     order = client.post("/api/mes/production-orders", {
         "order_no": order_no,
+        "bom_id": bom_id,
         "target_articul": target_articul,
         "planned_qty": 100,
         "unit_code": "KG",
@@ -85,6 +87,8 @@ def main() -> int:
             "quantity": 100,
             "pack_count": 10,
             "sscc": ("0000000000" + suffix)[-18:],
+            "target_ware_id": 9104,
+            "target_cell": fg_target_cell,
         }],
         "idempotency_key": f"{order_no}:complete",
         "created_by": "http-smoke",
@@ -112,6 +116,13 @@ def main() -> int:
         raise AssertionError("Expected finished-goods batch to be visible in finished-goods admin API.")
     if not fg_remains:
         raise AssertionError("Expected finished-goods pallet remain to be visible in finished-goods admin API.")
+
+    warehouse_tasks = client.get(f"/api/warehouse-tasks?production_order_id={order_id}&limit=20")
+    fg_storage_tasks = [task for task in warehouse_tasks if task.get("task_type") == "FG_TO_STORAGE"]
+    if not fg_storage_tasks:
+        raise AssertionError("Expected FG_TO_STORAGE warehouse task for released finished-goods pallet.")
+    if fg_storage_tasks[0].get("to_cell") != fg_target_cell:
+        raise AssertionError(f"Expected FG target cell {fg_target_cell}, got {fg_storage_tasks[0].get('to_cell')}")
 
     raw_trace = client.get(f"/api/trace/entities/RAW_MATERIAL_PALLET/{urllib.parse.quote(raw_pallet)}/forward")
     order_trace = client.get(f"/api/trace/entities/PRODUCTION_ORDER/{order_id}/forward")
@@ -150,6 +161,8 @@ def main() -> int:
         "pallets": len(genealogy.get("pallets", [])),
         "finished_goods_batches": len(fg_batches),
         "finished_goods_remains": len(fg_remains),
+        "warehouse_tasks": len(warehouse_tasks),
+        "fg_storage_tasks": len(fg_storage_tasks),
         "trace_edges": {
             "raw_to_order": len(raw_trace),
             "order_to_lot": len(order_trace),

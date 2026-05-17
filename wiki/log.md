@@ -2,6 +2,14 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-18] warehouse-tasks | Added reachtruck task foundation
+
+- Added [`requirements/warehouse_tasks_reachtruck_tz.md`](requirements/warehouse_tasks_reachtruck_tz.md).
+- Added migration `026_apply.sql` for common table `RRL_WAREHOUSE_TASK`.
+- Defined `RAW_TO_PRODUCTION` tasks for moving raw pallets to production.
+- Defined `FG_TO_STORAGE` tasks for moving released finished-goods pallets to finished-goods storage cells.
+- Added backend endpoints under `/api/warehouse-tasks` for driver task list and status changes.
+
 ## [2026-05-18] mes-production-page-split | Split raw supply from MES order passport
 
 - Removed the duplicated raw-supply planning grid from `production-orders.html`.

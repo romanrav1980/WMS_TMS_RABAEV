@@ -361,6 +361,8 @@ class MesCompletionPallet(BaseModel):
     quantity: float | None = None
     pack_count: float | None = None
     sscc: str | None = None
+    target_ware_id: int | None = None
+    target_cell: str | None = "FG_RECEIVE"
 
 
 class MesCompleteOrderRequest(BaseModel):
@@ -711,3 +713,10 @@ class MesRawTransferTaskConfirmRequest(BaseModel):
 class MesRawTransferTaskCancelRequest(BaseModel):
     reason: str | None = None
     cancelled_by: str | None = None
+
+
+class WarehouseTaskStatusRequest(BaseModel):
+    assigned_to: str | None = None
+    fact_qty: float | None = Field(default=None, ge=0)
+    reason: str | None = None
+    updated_by: str | None = None
