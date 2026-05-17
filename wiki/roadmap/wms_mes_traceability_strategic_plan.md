@@ -65,6 +65,28 @@ VetIS / Mercury         CRPT / Honest Sign
 
 ## Этапы Развития
 
+## Текущая Точка Остановки На 2026-05-17
+
+Текущая реализованная база уже прошла дальше первоначального `Traceability Spine`:
+
+- код сохранен и запушен в ветку `origin/codex/oracle-rabaev-restore-point-2026-05-11`;
+- актуальный верхний коммит: `041abfa Add MES HTTP workflow smoke`;
+- Oracle VM защищена snapshot `wms-mes-after-012-2026-05-17`, UUID `d6dc40b3-279f-4995-9af1-ef3d732b04ee`;
+- локальный SQL restore bundle лежит в `db/restore_points/rabaev_orcl_wms_mes_after_012_2026-05-17` и не публикуется в GitHub из-за размера;
+- реализованы и применены migrations `003..012`, включая regulatory lifecycle, API audit/replay, rights admin, trace/outbox, BOM, article length 40, MES completion, warehouse role flags;
+- backend FastAPI имеет рабочие endpoints для BOM, MES, traceability/outbox, API audit, rights admin, warehouse settings;
+- raw admin UI имеет страницы BOM, MES production orders, warehouses, rights, API audit и external outbox;
+- MES workflow проверен через HTTP smoke: `BOM -> order -> issue raw -> complete -> apply WMS -> genealogy`;
+- stock effects MES не пишут `RRL_REMAINS` напрямую, а проходят через legacy `RRL_EVENTS` и существующий trigger;
+- Oracle invalid objects после smoke: `0`.
+
+Стратегически мы остановились на границе между `MES Core MVP` и следующими доменными контурами:
+
+1. Базовый MES lifecycle уже доказан технически.
+2. Операторский raw UI существует, но это еще не полноценная production admin app.
+3. Traceability/genealogy для production order уже читается, но еще не доведена до shipment/customer/recall.
+4. Mercury/CRPT пока подготовлены архитектурно и mock/outbox-слоем, но реальные сертификаты, подписи и форматы интеграции еще не подключены.
+
 ### Этап 0. Зафиксировать текущую устойчивую базу
 
 Цель: не потерять уже восстановленную и скомпилированную базу.
@@ -77,7 +99,7 @@ VetIS / Mercury         CRPT / Honest Sign
 - права админки работают через legacy `RUSERS` / `USER_GROUP` / `RIGHTS`;
 - anti-mojibake check выполняется перед завершением изменений.
 
-Статус: в основном выполнено.
+Статус: выполнено для текущего MVP-инкремента. Есть GitHub push, VirtualBox snapshot, SQL restore bundle, wiki/log и smoke-проверки.
 
 ### Этап 1. Traceability Spine
 
@@ -97,6 +119,8 @@ VetIS / Mercury         CRPT / Honest Sign
 - можно строить цепочку сырье -> производство -> готовая партия -> DataMatrix/SSCC -> отгрузка;
 - outbox гарантирует, что событие не потеряется;
 - внешние адаптеры можно подключать без изменения операторских экранов.
+
+Статус: базовая инфраструктура выполнена через migration `008`, backend service/router, worker skeleton, mock adapters и external outbox admin page. Требуется дальнейшее наполнение событиями из shipment, labeling, Mercury и CRPT.
 
 ### Этап 2. MES Core
 
@@ -118,6 +142,8 @@ VetIS / Mercury         CRPT / Honest Sign
 - выпуск можно принять из внешней системы через папку + JSON;
 - ошибки импорта не создают частичные данные.
 
+Статус: частично выполнено. BOM, production order, raw issue, production completion, FG pallet release, WMS bridge и genealogy smoke работают. Еще не реализованы file exchange worker, полноценная операторская админка, QA/QC hold в production workflow и производственные статусы уровня смены/линии.
+
 ### Этап 3. Labeling, Printing, Aggregation
 
 Цель: закрыть Честный Знак на уровне внутренней готовности.
@@ -137,6 +163,8 @@ VetIS / Mercury         CRPT / Honest Sign
 - для каждого DataMatrix известны партия, production order, паллета, SSCC, отгрузка и клиент;
 - для клиента, принимающего агрегацию, можно передавать SSCC;
 - для клиента без агрегации можно передавать полный список CIS.
+
+Статус: следующий крупный функциональный блок после стабилизации production workflow. В БД уже есть часть CRPT/aggregation сущностей из migrations `001/003`, но полноценный Labeling Service, печать и проверка кодов еще не реализованы.
 
 ### Этап 4. Regulatory Connectors
 
@@ -158,6 +186,8 @@ VetIS / Mercury         CRPT / Honest Sign
 - можно повторить неуспешную отправку;
 - можно доказать, какой payload был отправлен и какой ответ получен;
 - линия не блокируется из-за временной недоступности внешнего API.
+
+Статус: подготовлена инфраструктура audit/outbox/adapter log/mock worker. Реальные Mercury/CRPT connectors, сертификаты, подписи, форматы payload и retry/dead-letter регламенты еще впереди.
 
 ### Этап 5. Shipment и Recall
 
@@ -244,4 +274,13 @@ MVP считается архитектурно состоятельным, ко
 
 ## Стратегический Следующий Шаг
 
-Первый практический шаг реализации: `migration 008` для traceability spine и outbox, затем worker и admin page внешних отправок.
+Текущий стратегический следующий шаг: довести `MES Core` от доказанного HTTP smoke до устойчивого операторского процесса.
+
+Приоритетная линия:
+
+1. Production workflow в админке: удобный выбор BOM, заказ, сырье, выпуск, WMS apply, genealogy.
+2. File exchange для production release: папка + JSON, idempotency, archive/error/out.
+3. QA/QC hold: блокировка партии/паллеты и влияние на readiness.
+4. Labeling/aggregation MVP: GTIN/DataMatrix/SSCC, статусы кодов, паллетная агрегация.
+5. Shipment readiness и Recall: связать production genealogy с отгрузкой и клиентом.
+6. Реальные Mercury/CRPT adapters поверх уже существующего audit/outbox слоя.

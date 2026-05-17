@@ -25,16 +25,22 @@
 
 ## Текущий Статус Исполнения
 
-На 2026-05-17 начат Sprint 1:
+На 2026-05-17 стартовый цикл `Traceability + MES Core` доведен до воспроизводимого API workflow:
 
-- подготовлены `008_apply.sql`, `008_verify.sql`, `008_rollback.sql`, `008_smoke_cleanup.sql`;
-- `008_apply.sql` применен к Oracle `RABAEV@127.0.0.1:1521/orcl`;
-- `008_verify.sql` прошел без ошибок, текущих invalid objects нет;
-- добавлен backend router для traceability и external outbox;
-- добавлен backend service для чтения genealogy, outbox, adapter requests и retry;
-- добавлен worker skeleton с mock Mercury/CRPT-style adapter;
-- добавлена отдельная raw admin page `external-outbox.html`.
-- реализован первый MES BOM-инкремент: migration `009`, package `RRL_BOM_API`, FastAPI `/api/bom`, raw admin page `bom.html`, PL/SQL/API smoke.
+- migrations `003..012` подготовлены, применены и описаны;
+- traceability spine/outbox выполнен через migration `008`;
+- worker skeleton и mock adapter слой добавлены;
+- external outbox admin page добавлена;
+- BOM MVP выполнен через migration `009`, package `RRL_BOM_API`, FastAPI `/api/bom`, raw admin page `bom.html`, PL/SQL/API/load smoke;
+- article/material fields widened to 40 через migration `010`;
+- MES production completion выполнен через migration `011`, package `RRL_MES_PRODUCTION_API`, FastAPI `/api/mes`, raw page `production-orders.html`;
+- warehouse role flags и тестовый стенд складов выполнены через migration `012`;
+- MES HTTP smoke `tests/smoke/mes_http_workflow.py` прошел полный путь `BOM -> order -> issue raw -> complete -> apply WMS -> genealogy`;
+- cleanup `tests/smoke/cleanup_mes_http_workflow.sql` оставляет `HTTP-MES-*` хвосты на `0`;
+- Oracle invalid objects после smoke: `0`;
+- код запушен до commit `041abfa`.
+
+Текущая остановка: техническая основа MES работает через API и raw UI, но операторский workflow еще требует доведения до удобного production-grade процесса.
 
 ## Правила Работы
 
@@ -223,6 +229,48 @@ DB/API:
 - raw usage и finished goods lot связываются через trace edges;
 - можно построить genealogy.
 
+Статус: MVP выполнен через migration `011` и HTTP smoke. Осталось довести UX и рабочие ограничения:
+
+- выбирать BOM по артикулу/дате без ручного `BOM_ID`;
+- показывать BOM snapshot рядом с заказом;
+- выдавать сырье по строкам BOM, а не только ручным вводом;
+- валидировать обязательное сырье и план/факт;
+- показывать WMS bridge status понятным операторским языком;
+- показывать genealogy не только JSON, но и таблицами сырье/партия/паллеты/события;
+- добавить cleanup/retry сценарии для failed movements в UI.
+
+### Задача 7.1. Production Workflow UX
+
+Цель: превратить доказанный API workflow в операторский сценарий.
+
+Файлы:
+
+- `wiki-raw/wms_admin_ui_reference/production-orders.html`
+- `wiki-raw/wms_admin_ui_reference/production-orders.js`
+- `api/wms_api_server/app/services/mes_service.py`
+- `api/wms_api_server/app/routers/mes.py`
+
+Работы:
+
+1. Добавить поиск/подбор BOM по `target_articul`, `active_on`, `is_primary`.
+2. Добавить кнопку `Создать заказ из BOM` без ручного знания `BOM_ID`.
+3. Показывать плановые строки BOM snapshot как отдельную таблицу.
+4. Добавить таблицу выдачи сырья по строкам BOM.
+5. Добавить готовые действия:
+   - `Выдать сырье`;
+   - `Завершить производство`;
+   - `Применить в WMS`;
+   - `Показать genealogy`;
+   - `Повторить ошибочные движения`.
+6. Сделать readable status для movement statuses: `MES_POSTED`, `APPLIED_TO_WMS`, `FAILED`, `RETRY`.
+
+Критерий готовности:
+
+- оператор может пройти сценарий без SQL и без ручного вызова API;
+- `tests/smoke/mes_http_workflow.py` остается зеленым;
+- после cleanup нет тестовых хвостов;
+- invalid objects = `0`.
+
 ### Задача 8. File Exchange Worker
 
 Функции:
@@ -239,6 +287,41 @@ DB/API:
 - повторный `messageId` идемпотентен;
 - конфликт hash отклоняется;
 - ошибка JSON не создает бизнес-данных.
+
+Статус: не начато. Это следующий backend-инкремент после UX production workflow.
+
+### Задача 8.1. Production Release File Exchange MVP
+
+Цель: принять выпуск партии из внешней системы через папку и JSON, как было зафиксировано в ТЗ.
+
+Минимальные папки:
+
+- `exchange/production_release/in`
+- `exchange/production_release/processing`
+- `exchange/production_release/archive`
+- `exchange/production_release/error`
+- `exchange/production_release/out`
+
+Минимальный JSON:
+
+- `messageId`
+- `sourceSystem`
+- `orderNo`
+- `targetArticul`
+- `bomCode` или `bomId`
+- `factQty`
+- `unitCode`
+- `prodBatchNo`
+- `rawIssues[]`
+- `pallets[]`
+
+Критерий готовности:
+
+- повтор `messageId` идемпотентен;
+- конфликт payload hash уходит в error;
+- успешный файл создает/обновляет production order, completion, movements, trace/outbox;
+- ответ пишется в `out`;
+- ошибка пишется в `RRL_FILE_EXCHANGE_LOG` и `error`.
 
 ## Sprint 5: Labeling и Aggregation Increment
 
@@ -275,16 +358,14 @@ DB/API:
 
 ## Immediate Execution Checklist
 
-Первый набор файлов, который нужно сделать прямо сейчас:
+Актуальный следующий набор файлов:
 
-1. `008_apply.sql`
-2. `008_verify.sql`
-3. `008_rollback.sql`
-4. `008_smoke_cleanup.sql`
-5. update `feed_factory_traceability_schema.md`
-6. update API README с будущим outbox/admin surface
-7. backend `traceability_service.py`
-8. backend `traceability.py`
+1. Доработать `production-orders.html/js` до operator workflow.
+2. Добавить API helper для подбора primary BOM по артикулу при создании заказа.
+3. Расширить MES detail endpoint удобными полями для UI: BOM snapshot, movement summary, genealogy summary.
+4. Добавить smoke для UI-compatible сценария или расширить `tests/smoke/mes_http_workflow.py`.
+5. Подготовить `production_release_file_exchange` worker и JSON schema.
+6. Обновить wiki после каждого инкремента.
 
 ## Verification Checklist
 
@@ -307,3 +388,17 @@ Sprint 1 завершен, когда:
 - API может читать genealogy и outbox;
 - admin права для external outbox заведены через legacy rights model;
 - все проверки кодировки и синтаксиса проходят.
+
+Статус: Sprint 1 выполнен.
+
+## Definition Of Done Для Следующего Инкремента
+
+Следующий инкремент считается готовым, когда:
+
+- production order можно создать из BOM без ручного SQL;
+- сырье можно выдать по строкам BOM snapshot;
+- завершение выпуска и WMS apply доступны из admin workflow;
+- genealogy читается из admin UI;
+- HTTP smoke и cleanup проходят;
+- Oracle invalid objects = `0`;
+- изменения закоммичены и запушены.

@@ -12,6 +12,13 @@ Append-only log of root wiki updates.
 - Re-applied the warehouse seed after the encoding fix and verified Oracle stores Russian seed text as valid AL32UTF8.
 - Added `stop-listeners.bat` / `scripts/stop-listeners.ps1` for controlled shutdown of local API, frontend, terminal, and worker listeners.
 
+## [2026-05-17] strategy-tactics-checkpoint | Recorded current stop point and next plans
+
+- Updated strategic roadmap to reflect the actual stop point after migrations `003..012`, GitHub push, VirtualBox snapshot, SQL restore bundle, and MES HTTP workflow.
+- Updated tactical roadmap so it no longer points to the already-finished `008` work as the next step.
+- Current strategic stop point: base Traceability/MES/API infrastructure is working; next strategic focus is turning MES Core into an operator-ready production workflow, then file exchange, QA/QC, labeling/aggregation, shipment/recall, and real Mercury/CRPT adapters.
+- Current tactical stop point: `tests/smoke/mes_http_workflow.py` proves the full API path; next tactical work is production-order UX, BOM selection, BOM snapshot display, raw issue by BOM lines, readable movement statuses, genealogy tables, and retry controls.
+
 ## [2026-05-17] oracle-restore-point-after-012 | Protected current Oracle state
 
 - Pushed code commit `659342b` to `origin/codex/oracle-rabaev-restore-point-2026-05-11`.
