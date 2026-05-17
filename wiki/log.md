@@ -2,6 +2,12 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-17] picking-planning | Drafted picking planning requirements
+
+- Added [`requirements/picking_planning_tz.md`](requirements/picking_planning_tz.md).
+- Fixed the architectural decision that `IS_SHIPMENT_ALLOWED` is a picking-planning criterion, not a hard WMS block.
+- Captured customer shelf-life rules, customer-specific palletization, route/dock context, full-pallet-first planning, case picking, weight/volume limits, pick route order, regular pick faces, and future dynamic pick faces.
+
 ## [2026-05-17] batch-shipment-readiness | Added aging norm on finished-goods lots
 
 - Added migration `013_batch-shipment-readiness` with article-level `SHIPMENT_AGING_HOURS` and batch-level `SHIPMENT_ALLOWED_AT`.
