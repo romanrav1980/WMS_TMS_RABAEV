@@ -13,6 +13,12 @@ The schema supports:
 - Honest Sign / CRPT codes and SSCC aggregation;
 - production-release JSON file exchange;
 - regulatory outbox processing.
+- Mercury площадки, операции и журнал регуляторных событий;
+- CRPT lifecycle for ввод/вывод из оборота.
+- API audit/replay journal for recovery after API or server crashes.
+- traceability events, genealogy edges, durable event outbox, adapter request log, and QA hold.
+- BOM recipes, component lines, and audit journal for MES production planning.
+- MES production orders, order BOM snapshots, production completion journal, and the WMS event bridge through `RRL_EVENTS`.
 
 ## Migration
 
@@ -21,6 +27,21 @@ SQL files:
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/001_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/001_apply.sql)
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/001_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/001_rollback.sql)
 - [`../../db/migrations/2026-05-17_feed_factory_traceability/001_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/001_verify.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/003_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/003_apply.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/003_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/003_verify.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/003_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/003_rollback.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/004_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/004_apply.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/004_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/004_verify.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/004_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/004_rollback.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/008_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/008_apply.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/008_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/008_verify.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/008_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/008_rollback.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/009_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/009_apply.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/009_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/009_verify.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/009_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/009_rollback.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/011_apply.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/011_apply.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/011_verify.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/011_verify.sql)
+- [`../../db/migrations/2026-05-17_feed_factory_traceability/011_rollback.sql`](../../db/migrations/2026-05-17_feed_factory_traceability/011_rollback.sql)
 
 Status: applied to local Oracle VM schema `RABAEV@127.0.0.1:1521/orcl` after explicit approval.
 
@@ -57,6 +78,23 @@ The ledger is intentionally kept as a small foundation table so future Oracle ch
 - `RRL_FILE_EXCHANGE_LOG`: production-release JSON file import journal.
 - `RRL_CLIENT_REG_PROFILE`: client-specific regulatory transfer profile.
 - `RRL_SYSTEM_SETTINGS`: system settings, including production batch source mode.
+- `RRL_MERCURY_SITE`: local mirror of Mercury/VetIS production площадки.
+- `RRL_MERCURY_OPERATION`: Mercury production/raw-material operation lifecycle.
+- `RRL_REG_OPERATION_JOURNAL`: shared operation journal for Mercury and CRPT events.
+- `RRL_CRPT_CIRCULATION`: ввод/вывод из оборота events for Honest Sign codes.
+- `RRL_API_CALL_LOG`: complete API request/response audit log used for local recovery and replay.
+- `RRL_TRACE_EVENT`: immutable internal event facts used by the genealogy model.
+- `RRL_TRACE_EDGE`: directed links between raw lots, VSD, production orders, finished lots, codes, SSCC, shipments, and customers.
+- `RRL_EVENT_OUTBOX`: durable internal event queue for guaranteed future processing.
+- `RRL_ADAPTER_REQUEST_LOG`: outbound Mercury/CRPT adapter request and response journal.
+- `RRL_QUALITY_HOLD`: minimal QA hold table for blocking raw lots, finished lots, pallets, shipments, or codes.
+- `RRL_BOM`: BOM header, target product, base quantity, validity period, primary flag, version, and lifecycle status.
+- `RRL_BOM_LINE`: BOM component lines for raw materials, semifinished goods, packaging, additives, and service rows.
+- `RRL_BOM_AUDIT`: BOM lifecycle and edit audit journal.
+- `RRL_PRODUCTION_ORDER`: MES production order header created from a selected BOM.
+- `RRL_PROD_ORDER_BOM_LINE`: immutable snapshot of BOM lines used by a production order.
+- `RRL_MES_MOVEMENT`: MES movement journal for raw issue, raw consumption, finished lot release, and pallet release.
+- `RRL_MES_COMPLETION`: idempotent production completion journal.
 
 ## PL/SQL API
 
@@ -77,6 +115,142 @@ Main operations:
 - `REGISTER_FILE_MESSAGE`, `MARK_FILE_PROCESSED`, `MARK_FILE_ERROR`: maintain JSON folder-exchange journal.
 - `GET_SETTING` and `SET_SETTING`: read and update traceability settings.
 
+Migration `2026-05-17-003-regulatory-lifecycle-entities` adds package `RRL_REGULATORY_API`.
+
+Main operations:
+
+- `UPSERT_MERCURY_SITE`: create/update Mercury площадка mapping.
+- `CREATE_MERCURY_OPERATION` and `UPDATE_MERCURY_OPERATION`: track Mercury production operation state.
+- `SET_CRPT_CODE_STATUS`: change CRPT code lifecycle status and write ввод/вывод events.
+- `WRITE_JOURNAL`: append a regulatory journal row.
+
+The rollback script for this migration is intentionally safe: it drops only `RRL_REGULATORY_API` and keeps tables/columns because those tables may contain regulatory history.
+
+Migration `2026-05-17-004-api-audit-replay` adds package `RRL_API_AUDIT_API`.
+
+Main operations:
+
+- `START_CALL`: write a request before the API handler executes.
+- `FINISH_CALL`: write response status/body or error after execution.
+- `MARK_REPLAY_RESULT`: link replay attempts back to the source call.
+
+FastAPI also writes a local JSONL journal under `api/wms_api_server/runtime/api_audit/`. The local log is intentionally ignored by Git and gives a second recovery trail if Oracle logging is temporarily unavailable.
+
+Replay is exposed through:
+
+- `GET /api/admin/api-calls`
+- `GET /api/admin/api-calls/{api_call_id}`
+- `POST /api/admin/api-calls/replay`
+
+Admin/replay endpoints are logged but marked non-replayable to avoid recursive replay loops.
+
+Migration `2026-05-17-005-admin-users-db-backed-auth` keeps admin authentication in the legacy rights system:
+
+- users: `RUSERS`;
+- groups: `USER_GROUP`;
+- group rights: `RIGHTS.RIGHT1`;
+- seeded admin: `RUSERS.ID = 'admin'`, `PASS = 'admin123'`, `USER_GROUP = 'GLOBAL_ADMIN'`;
+- `GLOBAL_ADMIN` keeps the old all-rights behavior from `RRL_HAS_WRIGHT`.
+
+Migration `2026-05-17-008-traceability-spine-outbox` prepares package `RRL_TRACEABILITY_API`.
+
+Main operations:
+
+- `ADD_TRACE_EVENT`: append an idempotent internal event fact.
+- `ADD_TRACE_EDGE`: add a genealogy edge between two business entities.
+- `ENQUEUE_EVENT`: add a durable outbox event for future worker processing.
+- `LOCK_NEXT_OUTBOX`: atomically lock the next pending/retry outbox event for a worker.
+- `MARK_OUTBOX_DONE` and `MARK_OUTBOX_ERROR`: complete or retry/dead-letter an outbox event.
+- `ADD_ADAPTER_REQUEST` and `UPDATE_ADAPTER_REQUEST`: store external adapter request/response diagnostics.
+- `CREATE_QUALITY_HOLD` and `RELEASE_QUALITY_HOLD`: manage minimal QA blocks.
+
+The migration also grants `GLOBAL_ADMIN` the new legacy rights:
+
+- `TRACEABILITY_VIEW`;
+- `EXTERNAL_OUTBOX_VIEW`;
+- `EXTERNAL_OUTBOX_RETRY`.
+
+The `008_rollback.sql` script is intentionally safe: it drops only `RRL_TRACEABILITY_API` and removes the migration ledger row. It does not drop trace/outbox/adapter/QA data tables.
+
+Migration `2026-05-17-009-bom-production-block` prepares package `RRL_BOM_API`.
+
+Main operations:
+
+- `CREATE_BOM`: create or idempotently find a BOM draft.
+- `UPDATE_BOM`: edit a draft header.
+- `ADD_LINE`, `UPDATE_LINE`, `DELETE_LINE`: maintain component lines only while the BOM is `DRAFT`.
+- `APPROVE_BOM`: approve a BOM after line validation and primary-overlap checks.
+- `BLOCK_BOM` and `ARCHIVE_BOM`: stop using a BOM without deleting history.
+- `MAKE_PRIMARY`: assign a primary BOM for a product/period after conflict checks.
+- `CLONE_BOM`: create a new draft version from an existing BOM.
+- `FIND_PRIMARY_BOM`: select the applicable primary BOM for future production-order creation.
+
+The migration also grants `GLOBAL_ADMIN` the new legacy rights:
+
+- `BOM_VIEW`;
+- `BOM_EDIT`;
+- `BOM_APPROVE`;
+- `BOM_BLOCK`;
+- `BOM_MAKE_PRIMARY`;
+- `BOM_USE_ALTERNATIVE`.
+
+The `009_rollback.sql` script is intentionally safe: it drops only `RRL_BOM_API` and removes the migration ledger row. It does not drop BOM recipe tables or audit history.
+
+Migration `2026-05-17-011-mes-production-completion` prepares package `RRL_MES_PRODUCTION_API`.
+
+Main operations:
+
+- `CREATE_ORDER`: create or idempotently find a MES production order and snapshot its BOM lines.
+- `ISSUE_RAW_TO_PRODUCTION`: write a raw-material issue movement into the MES journal.
+- `COMPLETE_ORDER`: create the finished-goods production batch, raw usage facts, finished lot movement, finished pallet movements, trace event, and outbox event.
+- `APPLY_MES_MOVEMENTS_TO_WMS`: apply WMS-visible movement effects by inserting into legacy `RRL_EVENTS`; the existing enabled trigger updates `RRL_REMAINS`.
+- `RETRY_MES_MOVEMENT`: return failed WMS-bridge movements to `MES_POSTED`.
+
+The bridge intentionally does not update `RRL_REMAINS` directly. It uses the old WMS event semantics:
+
+- `TYPE_EVENT = 1`: finished pallet receipt into `CELL_TO`;
+- `TYPE_EVENT = 2`: raw pallet movement from `CELL_FROM` to production `CELL_TO`;
+- `TYPE_EVENT = 3`: raw pallet consumption from production `CELL_FROM`.
+
+Negative legacy balances remain valid old-WMS behavior when `CELL_FROM` has no current stock.
+
+The migration also grants `GLOBAL_ADMIN` the new legacy rights:
+
+- `MES_PRODUCTION_VIEW`;
+- `MES_PRODUCTION_EDIT`;
+- `MES_PRODUCTION_COMPLETE`;
+- `MES_WMS_BRIDGE_APPLY`.
+
+The `011_rollback.sql` script is intentionally safe: it drops only `RRL_MES_PRODUCTION_API`, removes the MES rights, and removes the migration ledger row. It does not drop MES production-order or movement history.
+
+## WMS/MES Warehouse Settings
+
+Migration `2026-05-17-012-wms-warehouse-settings` extends legacy `RRL_WARES` with independent role flags:
+
+- `FLAG_RAW_MATERIAL`
+- `FLAG_PRODUCTION`
+- `FLAG_PRODUCTION_BUFFER`
+- `FLAG_FINISHED_GOODS`
+- `MES_ENABLED`
+- `DEFAULT_RECEIVE_CELL`
+- `DEFAULT_ISSUE_CELL`
+- `WARE_COMMENT`
+
+These are flags, not a single enum: one warehouse may simultaneously participate as raw material, production, production buffer, and finished-goods storage. This keeps old WMS warehouse rows intact while allowing the new MES/API layer to filter warehouses by operational role.
+
+The test stand seed creates:
+
+- `9101` / `TEST RAW MATERIAL`: 30 raw-material cells and 30 seeded raw-material pallets;
+- `9102` / `TEST PRODUCTION`: production cells `MES_PROD`, `MES_QA`, `MES_REWORK`;
+- `9103` / `TEST PRODUCTION BUFFER`: fresh-output buffer cells `MES_FG`, `BUF_QA`, `BUF_HOLD`;
+- `9104` / `TEST FINISHED GOODS`: rack cells `FG-A01-01..10` and `FG-A02-01..10`.
+
+Starting stock is written through `RRL_EVENTS TYPE_EVENT = 1`, so the legacy trigger remains the mechanism that updates `RRL_REMAINS`.
+
+The raw admin page is `wiki-raw/wms_admin_ui_reference/warehouses.html`; API endpoints are `GET /api/admin/warehouses` and `PATCH /api/admin/warehouses/{ware_id}`. Access is controlled by legacy rights `WAREHOUSE_SETTINGS_VIEW` and `WAREHOUSE_SETTINGS_EDIT`.
+
+SQL migration files are applied as strict UTF-8 by the local `OracleApply` helper. The `012_verify.sql` script includes a mojibake-marker count for seeded warehouse/article texts.
+
 Apply/verify result for `2026-05-17-002-feed-factory-traceability-api`:
 
 - Code checkpoint before apply: `b823af6`.
@@ -96,6 +270,18 @@ Apply/verify result for `2026-05-17-002-feed-factory-traceability-api`:
 - `MERCURY_STATUS`
 - `CRPT_STATUS`
 - `QUALITY_STATUS`
+
+`RRL_PROD_BATCH`, `RRL_RAW_BATCH`, and `RRL_MERCURY_BATCH` receive:
+
+- `MERCURY_SITE_ID`
+
+`RRL_CRPT_CODES` receives:
+
+- `WITHDRAWN_AT`
+- `INTRODUCTION_DOCUMENT_ID`
+- `WITHDRAWAL_DOCUMENT_ID`
+- `LAST_STATUS_AT`
+- `LAST_ERROR`
 
 `RRL_SBORKA_PALLET_ROWS` receives:
 

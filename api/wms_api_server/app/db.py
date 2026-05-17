@@ -29,4 +29,10 @@ def scalar_to_text(value: Any) -> str:
 
 def rows_as_dicts(cursor: oracledb.Cursor) -> list[dict[str, Any]]:
     columns = [column[0].lower() for column in cursor.description or []]
-    return [dict(zip(columns, row)) for row in cursor.fetchall()]
+    return [dict(zip(columns, [oracle_value(value) for value in row])) for row in cursor.fetchall()]
+
+
+def oracle_value(value: Any) -> Any:
+    if isinstance(value, oracledb.LOB):
+        return value.read()
+    return value

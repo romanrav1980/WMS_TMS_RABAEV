@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS PRO BOM</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="auth-pending" data-required-permission="bom_view">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span> PRO</div>
+        </div>
+
+        <nav class="nav">
+          <a class="nav-link" href="index.html">Главная</a>
+          <a class="nav-link" href="index.html">Производство</a>
+          <a class="nav-link more" href="production-orders.html" data-permission="mes_production_view">MES</a>
+          <a class="nav-link more active" href="bom.html" data-permission="bom_view">BOM</a>
+          <a class="nav-link more" href="index.html">Склады</a>
+          <a class="nav-link more" href="warehouses.html" data-permission="warehouse_settings_view">Типы складов</a>
+          <a class="nav-link more" href="index.html">Сырье</a>
+          <a class="nav-link more" href="index.html">Готовая продукция</a>
+          <a class="nav-link more" href="index.html">Настройки</a>
+          <a class="nav-link more" href="rights-admin.html" data-permission="rights_admin_view">Права</a>
+          <a class="nav-link more" href="index.html">KPI</a>
+          <a class="nav-link more" href="api-audit.html" data-permission="api_audit_view">API</a>
+          <a class="nav-link more" href="external-outbox.html" data-permission="external_outbox_view">Внешние отправки</a>
+          <a class="nav-link more" href="index.html">Отчеты</a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="factory-mark">
+            <span class="tower t1"></span>
+            <span class="tower t2"></span>
+            <span class="tower t3"></span>
+            <span class="plant-base"></span>
+          </div>
+          <div class="footer-line"><span>Смена</span><b>1 смена</b></div>
+          <div class="footer-line muted"><span>18.05.2025</span><span>10:24</span></div>
+          <div class="footer-line muted"><span>Версия</span><span>2.4.1</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="breadcrumbs"><b>Админ-панель WMS</b><span>/</span><b>BOM</b></div>
+          <div class="top-actions">
+            <label class="search">
+              <span>Поиск</span>
+              <input id="bomSearch" placeholder="Рецепт, товар, компонент..." />
+              <kbd>⌘ K</kbd>
+            </label>
+            <button class="round alert">12</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">Администратор</b><small id="adminUserRole">WMS</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="admin-page rights-page">
+          <article class="panel rights-users">
+            <header><h2>BOM: рецепты производства</h2><button id="bomRefresh" type="button">↻</button></header>
+            <div class="permission-strip">
+              <span>Просмотр: <b>bom_view</b></span>
+              <span>Редактирование: <b>bom_edit</b></span>
+              <span>Утверждение: <b>bom_approve</b></span>
+            </div>
+            <div class="rights-toolbar">
+              <label>API base<input id="bomBase" value="http://127.0.0.1:8088" /></label>
+              <label>Товар<input id="bomTargetFilter" placeholder="FG-001" /></label>
+              <label>Статус<select id="bomStatusFilter"><option value="">Все</option><option>DRAFT</option><option>APPROVED</option><option>ACTIVE</option><option>BLOCKED</option><option>ARCHIVED</option></select></label>
+              <label>Основной<select id="bomPrimaryFilter"><option value="">Все</option><option value="1">Да</option><option value="0">Нет</option></select></label>
+              <label>Дата<input id="bomActiveOnFilter" type="date" /></label>
+              <label>Лимит<input id="bomLimit" type="number" min="1" max="500" value="100" /></label>
+              <button id="bomLoad" type="button">Обновить</button>
+            </div>
+            <div class="rights-editor" data-permission="bom_edit">
+              <label>Код BOM<input id="bomNewCode" placeholder="BOM-FG-001-01" /></label>
+              <label>Название<input id="bomNewName" placeholder="Основной рецепт" /></label>
+              <label>Товар<input id="bomNewTarget" placeholder="FG-001" /></label>
+              <label>База<input id="bomNewBaseQty" type="number" step="0.001" value="1000" /></label>
+              <label>Ед.<input id="bomNewUnit" value="KG" /></label>
+              <label>С даты<input id="bomNewValidFrom" type="date" /></label>
+              <label>Основной<select id="bomNewPrimary"><option value="0">Нет</option><option value="1">Да</option></select></label>
+              <button id="bomCreate" type="button">Создать</button>
+            </div>
+            <div class="rights-summary"><span id="bomStatusText">Ожидание данных</span></div>
+            <div class="rights-table-wrap">
+              <table class="rights-table">
+                <thead><tr><th>ID</th><th>Код</th><th>Товар</th><th>Статус</th><th>Основной</th><th>Версия</th><th>База</th><th>Строк</th></tr></thead>
+                <tbody id="bomRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel rights-groups">
+            <header><h2>Карточка BOM</h2></header>
+            <div class="rights-summary"><span id="bomDetailStatus">Выберите рецепт</span></div>
+            <pre id="bomDetails"></pre>
+            <div class="rights-editor" data-permission="bom_edit">
+              <label>Строка<input id="bomLineNo" type="number" step="1" placeholder="10" /></label>
+              <label>Тип<select id="bomLineType"><option>RAW</option><option>SEMIFINISHED</option><option>PACKAGING</option><option>ADDITIVE</option><option>SERVICE</option></select></label>
+              <label>Артикул<input id="bomLineArticul" placeholder="RAW-001" /></label>
+              <label>Название<input id="bomLineName" placeholder="Сырье" /></label>
+              <label>Норма<input id="bomLineQty" type="number" step="0.001" /></label>
+              <label>Ед.<input id="bomLineUnit" value="KG" /></label>
+              <label>Потеря %<input id="bomLineLoss" type="number" step="0.001" value="0" /></label>
+              <button id="bomAddLine" type="button">Добавить строку</button>
+            </div>
+            <div class="rights-toolbar">
+              <label>Выпуск<input id="bomCalcQty" type="number" step="0.001" value="1000" /></label>
+              <button id="bomCalculate" type="button">Рассчитать</button>
+              <button id="bomApprove" type="button" data-permission="bom_approve">Утвердить</button>
+              <button id="bomMakePrimary" type="button" data-permission="bom_make_primary">Основной</button>
+              <button id="bomBlock" type="button" data-permission="bom_block">Блок</button>
+              <button id="bomArchive" type="button" data-permission="bom_block">Архив</button>
+            </div>
+            <div class="rights-table-wrap">
+              <table class="rights-table">
+                <thead><tr><th>Стр.</th><th>Тип</th><th>Артикул</th><th>Название</th><th>Норма</th><th>Ед.</th><th>Потери</th></tr></thead>
+                <tbody id="bomLineRows"></tbody>
+              </table>
+            </div>
+            <pre id="bomCalculation"></pre>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="admin-auth.js?v=20260517-bom"></script>
+    <script src="bom.js?v=20260517-bom"></script>
+  </body>
+</html>

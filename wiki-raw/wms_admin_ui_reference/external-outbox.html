@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS PRO External Outbox</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="auth-pending" data-required-permission="external_outbox_view">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span> PRO</div>
+        </div>
+
+        <nav class="nav">
+          <a class="nav-link" href="index.html">Главная</a>
+          <a class="nav-link" href="index.html">Производство</a>
+          <a class="nav-link more" href="bom.html" data-permission="bom_view">BOM</a>
+          <a class="nav-link more" href="index.html">Склады</a>
+          <a class="nav-link more" href="index.html">Сырье</a>
+          <a class="nav-link more" href="index.html">Готовая продукция</a>
+          <a class="nav-link more" href="index.html">Настройки</a>
+          <a class="nav-link more" href="rights-admin.html" data-permission="rights_admin_view">Права</a>
+          <a class="nav-link more" href="index.html">KPI</a>
+          <a class="nav-link more" href="api-audit.html" data-permission="api_audit_view">API</a>
+          <a class="nav-link more active" href="external-outbox.html" data-permission="external_outbox_view">Внешние отправки</a>
+          <a class="nav-link more" href="index.html">Отчеты</a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="factory-mark">
+            <span class="tower t1"></span>
+            <span class="tower t2"></span>
+            <span class="tower t3"></span>
+            <span class="plant-base"></span>
+          </div>
+          <div class="footer-line"><span>Смена</span><b>1 смена</b></div>
+          <div class="footer-line muted"><span>18.05.2025</span><span>10:24</span></div>
+          <div class="footer-line muted"><span>Версия</span><span>2.4.1</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="breadcrumbs"><b>Админ-панель WMS</b><span>/</span><b>Внешние отправки</b></div>
+          <div class="top-actions">
+            <label class="search">
+              <span>Поиск</span>
+              <input placeholder="Событие, система, статус, агрегат..." />
+              <kbd>⌘ K</kbd>
+            </label>
+            <button class="round alert">12</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">Администратор</b><small id="adminUserRole">WMS</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="admin-page">
+          <article class="panel api-audit-panel">
+            <header>
+              <h2>Внешние отправки: outbox и адаптеры</h2>
+              <button id="externalRefresh" type="button">↻</button>
+            </header>
+            <div class="permission-strip">
+              <span>Просмотр: <b>external_outbox_view</b></span>
+              <span>Повтор: <b>external_outbox_retry</b></span>
+            </div>
+            <div class="api-audit-toolbar">
+              <label>API base<input id="externalBase" value="http://127.0.0.1:8088" /></label>
+              <label>Система<select id="externalSystem"><option value="">Все</option><option>MERCURY</option><option>CRPT</option><option>INTERNAL</option></select></label>
+              <label>Статус<select id="externalStatus"><option value="">Все</option><option>PENDING</option><option>LOCKED</option><option>RETRY</option><option>DONE</option><option>ERROR</option><option>DEAD_LETTER</option></select></label>
+              <label>Событие<input id="externalEventType" placeholder="MercuryOperationRequested" /></label>
+              <label>Тип агрегата<input id="externalAggregateType" placeholder="PROD_BATCH" /></label>
+              <label>ID агрегата<input id="externalAggregateId" placeholder="12345 / SSCC" /></label>
+              <label>Лимит<input id="externalLimit" type="number" min="1" max="500" value="50" /></label>
+              <button id="externalDryRun" type="button">Dry run retry</button>
+              <button id="externalRetry" type="button" data-permission="external_outbox_retry">Повторить</button>
+            </div>
+            <div class="api-audit-summary"><span id="externalStatusText">Ожидание данных</span><span id="externalRetryStatus"></span></div>
+            <div class="api-audit-content">
+              <div class="api-audit-table-wrap">
+                <table class="api-audit-table">
+                  <thead><tr><th>ID</th><th>Создано</th><th>Система</th><th>Событие</th><th>Агрегат</th><th>Статус</th><th>Попытки</th><th>Ошибка</th></tr></thead>
+                  <tbody id="externalRows"></tbody>
+                </table>
+              </div>
+              <pre id="externalDetails"></pre>
+            </div>
+          </article>
+
+          <article class="panel api-audit-panel">
+            <header>
+              <h2>Журнал адаптеров</h2>
+              <button id="adapterRefresh" type="button">↻</button>
+            </header>
+            <div class="api-audit-summary"><span id="adapterStatusText">Ожидание данных</span></div>
+            <div class="api-audit-content">
+              <div class="api-audit-table-wrap">
+                <table class="api-audit-table">
+                  <thead><tr><th>ID</th><th>Outbox</th><th>Система</th><th>Тип</th><th>Ключ</th><th>HTTP</th><th>Статус</th><th>Внешний статус</th></tr></thead>
+                  <tbody id="adapterRows"></tbody>
+                </table>
+              </div>
+              <pre id="adapterDetails"></pre>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="admin-auth.js?v=20260517-outbox"></script>
+    <script src="external-outbox.js?v=20260517-outbox"></script>
+  </body>
+</html>

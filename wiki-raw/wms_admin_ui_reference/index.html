@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS PRO Admin Raw Reference</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="auth-pending" data-required-permission="wms_admin_login">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span> PRO</div>
+        </div>
+
+        <nav class="nav">
+          <a class="nav-link active" href="#">Главная</a>
+          <a class="nav-link" href="#">Производство</a>
+          <a class="nav-link more" href="production-orders.html" data-permission="mes_production_view">MES</a>
+          <a class="nav-link more" href="bom.html" data-permission="bom_view">BOM</a>
+          <a class="nav-link more" href="#">Склады</a>
+          <a class="nav-link more" href="warehouses.html" data-permission="warehouse_settings_view">Типы складов</a>
+          <a class="nav-link more" href="#">Сырье</a>
+          <a class="nav-link more" href="#">Готовая продукция</a>
+          <a class="nav-link more" href="#">Настройки</a>
+          <a class="nav-link more" href="rights-admin.html" data-permission="rights_admin_view">Права</a>
+          <a class="nav-link more" href="#">KPI</a>
+          <a class="nav-link more" href="api-audit.html" data-permission="api_audit_view">API</a>
+          <a class="nav-link more" href="external-outbox.html" data-permission="external_outbox_view">Внешние отправки</a>
+          <a class="nav-link more" href="#">Отчеты</a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="factory-mark">
+            <span class="tower t1"></span>
+            <span class="tower t2"></span>
+            <span class="tower t3"></span>
+            <span class="plant-base"></span>
+          </div>
+          <div class="footer-line"><span>Смена</span><b>1 смена</b></div>
+          <div class="footer-line muted"><span>18.05.2025</span><span>10:24</span></div>
+          <div class="footer-line muted"><span>Версия</span><span>2.4.1</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="breadcrumbs"><b>Админ-панель WMS</b><span>/</span><b>Производство</b></div>
+          <div class="top-actions">
+            <label class="search">
+              <span>Поиск</span>
+              <input placeholder="Поиск по заказам, материалам, документам..." />
+              <kbd>⌘ K</kbd>
+            </label>
+            <button class="round alert">12</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">Администратор</b><small id="adminUserRole">WMS</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="kpis">
+          <article class="kpi">
+            <h3>Производительность</h3>
+            <strong>14.8 <small>т/ч</small></strong>
+            <span>План: 13,7 т/ч</span>
+            <b class="up">+ 8,2%</b>
+            <svg viewBox="0 0 120 28"><polyline points="2,22 16,18 30,20 44,12 58,23 72,18 88,22 104,10 118,13"/></svg>
+          </article>
+          <article class="kpi violet">
+            <h3>OEE</h3>
+            <strong>78.6<small>%</small></strong>
+            <span>План: 75,0%</span>
+            <b class="up">+ 4,6%</b>
+            <svg viewBox="0 0 120 28"><polyline points="2,22 16,19 30,20 44,15 58,23 72,21 88,17 104,9 118,14"/></svg>
+          </article>
+          <article class="kpi teal">
+            <h3>Запасы сырья</h3>
+            <strong>5 842 <small>т</small></strong>
+            <span>Мин. порог: 2 000 т</span>
+            <b class="up">+ 3,1%</b>
+            <svg viewBox="0 0 120 28"><polyline points="2,24 14,17 26,21 38,15 52,23 68,20 82,25 100,10 118,14"/></svg>
+          </article>
+          <article class="kpi orange">
+            <h3>Запасы готовой продукции</h3>
+            <strong>3 276 <small>т</small></strong>
+            <span>Мин. порог: 1 500 т</span>
+            <b class="up">+ 2,7%</b>
+            <svg viewBox="0 0 120 28"><polyline points="2,23 16,15 30,20 44,17 58,25 72,21 88,24 104,14 118,17"/></svg>
+          </article>
+          <article class="kpi">
+            <h3>Точность склада</h3>
+            <strong>99.3<small>%</small></strong>
+            <span>План: 99,0%</span>
+            <b class="up">+ 0,3%</b>
+            <svg viewBox="0 0 120 28"><polyline points="2,22 16,17 30,23 44,18 58,24 74,17 90,23 106,13 118,18"/></svg>
+          </article>
+          <article class="kpi violet">
+            <h3>OTIF</h3>
+            <strong>96.1<small>%</small></strong>
+            <span>План: 95,0%</span>
+            <b class="up">+ 1,8%</b>
+            <svg viewBox="0 0 120 28"><polyline points="2,23 18,21 34,18 50,22 66,16 82,24 98,13 118,15"/></svg>
+          </article>
+          <article class="kpi teal">
+            <h3>Выполнение заказов</h3>
+            <strong>92.4<small>%</small></strong>
+            <span>План: 90,0%</span>
+            <b class="up">+ 2,5%</b>
+            <svg viewBox="0 0 120 28"><polyline points="2,23 16,20 30,14 44,23 58,20 72,24 88,17 104,10 118,14"/></svg>
+          </article>
+          <article class="kpi orange">
+            <h3>Оборачиваемость</h3>
+            <strong>6.2 <small>об/мес</small></strong>
+            <span>План: 6,5 об/мес</span>
+            <b class="down">- 0,4</b>
+            <svg viewBox="0 0 120 28"><polyline points="2,22 16,14 30,18 44,25 58,22 72,24 88,19 104,12 118,17"/></svg>
+          </article>
+        </section>
+
+        <section class="grid">
+          <article class="panel production">
+            <header><h2>1. Управление производством</h2><button>⚙</button></header>
+            <div class="status-strip">
+              <div><span>Статус производства</span><b class="pill green">Работает</b></div>
+              <div><span>Текущая смена</span><b>14,8 т/ч</b></div>
+              <div><span>План на смену</span><b>320 т</b></div>
+              <div><span>Выполнено</span><b class="green-text">78%</b><i><em style="width:78%"></em></i></div>
+              <div><span>Брак</span><b class="red-text">1,2%</b></div>
+            </div>
+
+            <div class="split">
+              <div>
+                <h3>Активные заказы</h3>
+                <table>
+                  <thead><tr><th>Заказ</th><th>Продукт</th><th>План</th><th>Выполнено</th><th>Статус</th></tr></thead>
+                  <tbody>
+                    <tr><td>ЗК-250518-01</td><td>Соль пищевая</td><td>120</td><td>92 (77%)</td><td><span class="tag blue">В работе</span></td></tr>
+                    <tr><td>ЗК-250518-02</td><td>Соль техническая</td><td>100</td><td>100 (100%)</td><td><span class="tag green">Завершен</span></td></tr>
+                    <tr><td>ЗК-250518-03</td><td>Соль таблетированная</td><td>80</td><td>46 (58%)</td><td><span class="tag blue">В работе</span></td></tr>
+                  </tbody>
+                </table>
+                <a href="#">Все заказы</a>
+              </div>
+              <div>
+                <h3>Статус линий</h3>
+                <table>
+                  <tbody>
+                    <tr><td>Линия 1</td><td><span class="tag green">Работает</span></td><td>82%</td><td>78%</td></tr>
+                    <tr><td>Линия 2</td><td><span class="tag green">Работает</span></td><td>76%</td><td>68%</td></tr>
+                    <tr><td>Линия 3</td><td><span class="tag red">Остановлена</span></td><td>0%</td><td>0%</td></tr>
+                    <tr><td>Линия 4</td><td><span class="tag amber">Наладка</span></td><td>58%</td><td>40%</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="timeline">
+              <h3>Производственный график</h3>
+              <div class="time-head"><span>Линия</span><span>06:00</span><span>08:00</span><span>10:00</span><span>12:00</span><span>14:00</span><span>16:00</span><span>18:00</span><span>20:00</span><span>22:00</span></div>
+              <div class="time-row"><span>Линия 1</span><i class="job green-job" style="left:17%;width:35%">ЗК-250518-01</i><i class="job blue-job" style="left:53%;width:24%">ЗК-250518-02</i></div>
+              <div class="time-row"><span>Линия 2</span><i class="job green-job" style="left:17%;width:32%">ЗК-250518-01</i><i class="job blue-job" style="left:49%;width:38%">ЗК-250518-03</i></div>
+              <div class="time-row"><span>Линия 3</span><i class="job gray-job" style="left:17%;width:22%">Тех. обслуживание</i></div>
+              <div class="time-row"><span>Линия 4</span><i class="job amber-job" style="left:17%;width:39%">Наладка</i><i class="job green-job" style="left:56%;width:40%">ЗК-250518-02</i></div>
+              <b class="now">10:24</b>
+            </div>
+          </article>
+
+          <article class="panel">
+            <header><h2>2. Складские операции: Соль (сырье)</h2><button>i</button></header>
+            <div class="raw-ops">
+              <div><h3>Движение сырья сегодня</h3><p><span>Поступило</span><b class="green-text">+ 1 250 т</b><small>8 поставок</small></p><p><span>Отгружено в пр-во</span><b class="red-text">- 1 180 т</b><small>12 перемещений</small></p></div>
+              <div><h3>Быстрые действия</h3><button>Приемка сырья</button><button>Выдача в производство</button><button>Перемещение по зонам</button><button>Инвентаризация</button></div>
+            </div>
+            <div class="stock-chart">
+              <h3>Остатки сырья, т</h3>
+              <svg viewBox="0 0 520 190">
+                <path class="chart-grid" d="M24 30H500M24 75H500M24 120H500M24 165H500" />
+                <path class="threshold" d="M24 166H500" />
+                <path class="area" d="M24 44 L64 68 L104 92 L144 82 L184 91 L224 78 L264 95 L304 100 L344 122 L384 111 L424 136 L464 128 L500 154 L500 170 L24 170 Z" />
+                <polyline class="line" points="24,44 64,68 104,92 144,82 184,91 224,78 264,95 304,100 344,122 384,111 424,136 464,128 500,154" />
+              </svg>
+            </div>
+          </article>
+
+          <article class="panel">
+            <header><h2>3. Складские операции: Готовая продукция</h2><button>i</button></header>
+            <div class="fg">
+              <div class="donut-wrap"><h3>Готовность к отгрузке</h3><div class="donut"><b>3 276<small>Всего</small></b></div><ul><li>Готово: <b>1 842 т</b></li><li>Резерв: <b>924 т</b></li><li>На складе: <b>510 т</b></li></ul></div>
+              <div><h3>Подбор заказов</h3><table><tbody><tr><td>ЗКЛ-250518-11</td><td>25</td><td><span class="tag blue">В подборе</span></td></tr><tr><td>ЗКЛ-250518-12</td><td>18</td><td><span class="tag green">Собрано</span></td></tr><tr><td>ЗКЛ-250518-13</td><td>32</td><td><span class="tag amber">Ожидает</span></td></tr></tbody></table><a href="#">Все заказы</a></div>
+            </div>
+            <div class="fg-bottom">
+              <div><h3>Топ локации по остаткам</h3><table><tbody><tr><td>FG-A-01</td><td>Соль пищевая</td><td>842</td></tr><tr><td>FG-B-12</td><td>Соль техническая</td><td>610</td></tr><tr><td>FG-C-03</td><td>Соль таблетир.</td><td>498</td></tr><tr><td>FG-A-07</td><td>Соль пищевая</td><td>420</td></tr></tbody></table></div>
+              <div class="shipments"><h3>Отгрузки сегодня</h3><p><span>Отгружено</span><b>12</b><small>заказов</small><strong>218 т</strong></p><p class="danger"><span>Отклонено</span><b>1</b><small>заказ</small><strong>2,4 т</strong></p></div>
+            </div>
+          </article>
+
+          <article class="panel settings raw-settings">
+            <header><h2>4. Настройки склада сырья</h2><button>⚙</button></header>
+            <div class="settings-grid four">
+              <div><h3>Общие настройки</h3><label>Контроль влажности<input type="checkbox" checked /></label><label>Авторазмещение<input type="checkbox" checked /></label><label>Проверка качества<input type="checkbox" checked /></label></div>
+              <div><h3>Зоны склада</h3><table><tbody><tr><td>Склад A</td><td>Влажная соль</td><td>78%</td></tr><tr><td>Склад B</td><td>Сухая соль</td><td>66%</td></tr><tr><td>Бункеры</td><td>Насыпная</td><td>55%</td></tr></tbody></table></div>
+              <div><h3>Правила пополнения</h3><label>Мин. остаток<input value="2 000" readonly /></label><label>Целевой остаток<input value="3 500" readonly /></label><label>Порог заказа<input value="2 200" readonly /></label></div>
+              <div><h3>Параметры вместимости</h3><p>Общая вместимость <b>8 500 т</b></p><p>Занято <b class="blue-text">5 842 т</b></p><p>Доступно <b class="green-text">2 658 т</b></p></div>
+            </div>
+          </article>
+
+          <article class="panel settings fg-settings">
+            <header><h2>5. Настройки склада готовой продукции</h2><button>i</button></header>
+            <div class="settings-grid">
+              <div><h3>Общие настройки</h3><label>Контроль срока годности<input type="checkbox" checked /></label><label>FEFO при отборе<input type="checkbox" checked /></label><label>Автоподбор локаций<input type="checkbox" checked /></label></div>
+              <div><h3>Стратегия хранения</h3><label>ABC-классификация<select><option>Включена</option></select></label><label>Привязка к зонам<select><option>По классам</option></select></label></div>
+              <div><h3>Приоритеты отгрузки</h3><label>Правило<select><option>По дате отгрузки</option></select></label><label>Приоритет срочных<select><option>Высокий</option></select></label></div>
+              <div><h3>Параметры склада</h3><p>Общая вместимость <b>5 000 пал.</b></p><p>Занято <b class="blue-text">3 276 пал.</b></p><p>Доступно <b class="green-text">1 724 пал.</b></p></div>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="admin-auth.js?v=20260517-admin123"></script>
+  </body>
+</html>

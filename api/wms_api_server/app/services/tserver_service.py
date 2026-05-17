@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 from typing import Any
 
 from ..db import scalar_to_text
@@ -22,6 +23,28 @@ ERROR_ZONE = "\u0417\u041e\u041d\u0410_\u041e\u0428\u0418\u0411\u041e\u041a"
 MATCHED = "\u0421\u041e\u0412\u041f\u0410\u041b\u041e"
 EXCESS = "\u0418\u0417\u041b\u0418\u0428\u041a\u0418"
 SHORTAGE = "\u041d\u0415\u0414\u041e\u0421\u0422\u0410\u0427\u0410"
+
+
+def normalize_pallet_identifier(value: str) -> str:
+    raw = (value or "").strip()
+    candidate = raw
+    if candidate.startswith("]C1") or candidate.startswith("]d2"):
+        candidate = candidate[3:]
+
+    compact = re.sub(r"[\s-]", "", candidate)
+
+    match = re.fullmatch(r"\(00\)(\d{18})", compact)
+    if match:
+        return match.group(1)
+
+    match = re.fullmatch(r"00(\d{18})", compact)
+    if match:
+        return match.group(1)
+
+    if re.fullmatch(r"\d{18}", compact):
+        return compact
+
+    return raw
 
 
 CALL_SPF_ALLOWLIST = {
@@ -126,38 +149,88 @@ class TserverService:
 
     def get_product_info(self, barcode: str) -> list[LegacyBlock]:
         trimmed = barcode.strip("0")
-        rows = self.gateway.fetch_all(
-            """
-            select distinct
-                   substr(UE_ADRUMS, length(UE_ADRUMS)-1, 1) PIC_LEVEL,
-                   UL_CPROIN,
-                   UE_ADRUMS,
-                   TB_ART.AR_LIBPRO,
-                   TB_ART.AR_PDSUVC,
-                   AR_PDSCAR,
-                   AR_PDSSPC,
-                   AR_PDSPAL,
-                   sfera_ean.EAN_SHT,
-                   sfera_ean.EAN_BL,
-                   sfera_ean.EAN_KOR,
-                   sfera_ean.SHT_IN_BL,
-                   sfera_ean.BL_IN_KOR
-              from refstock.TB_LCUMS
-              left join refstock.TB_EUMS on ue_usscc = ul_usscc and UE_DEPOT = 01 and UE_PROPRI = 'RM'
-              left join refstock.TB_ART on AR_CPROIN = UL_CPROIN and AR_donord = 'RM'
-              left join RABAEV.SFERA_EAN sfera_ean on UL_CPROIN = sfera_ean.TMC_UID
-             where ul_donord = 'RM'
-               and sfera_ean.TMC_UID is not null
-               and UE_ADRUMS is not null
-               and (
-                    EAN_SHT = :barcode or EAN_BL = :barcode or EAN_KOR = :barcode
-                    or EAN_SHT = :trimmed or EAN_BL = :trimmed or EAN_KOR = :trimmed
-               )
-               and length(UE_ADRUMS) >= 1
-               and substr(UE_ADRUMS, length(UE_ADRUMS)-1, 1) in ('1','2')
-            """,
-            {"barcode": barcode, "trimmed": trimmed},
-        )
+        try:
+            rows = self.gateway.fetch_all(
+                """
+                select distinct
+                       substr(UE_ADRUMS, length(UE_ADRUMS)-1, 1) PIC_LEVEL,
+                       UL_CPROIN,
+                       UE_ADRUMS,
+                       TB_ART.AR_LIBPRO,
+                       TB_ART.AR_PDSUVC,
+                       AR_PDSCAR,
+                       AR_PDSSPC,
+                       AR_PDSPAL,
+                       sfera_ean.EAN_SHT,
+                       sfera_ean.EAN_BL,
+                       sfera_ean.EAN_KOR,
+                       sfera_ean.SHT_IN_BL,
+                       sfera_ean.BL_IN_KOR
+                  from refstock.TB_LCUMS
+                  left join refstock.TB_EUMS on ue_usscc = ul_usscc and UE_DEPOT = 01 and UE_PROPRI = 'RM'
+                  left join refstock.TB_ART on AR_CPROIN = UL_CPROIN and AR_donord = 'RM'
+                  left join RABAEV.SFERA_EAN sfera_ean on UL_CPROIN = sfera_ean.TMC_UID
+                 where ul_donord = 'RM'
+                   and sfera_ean.TMC_UID is not null
+                   and UE_ADRUMS is not null
+                   and (
+                        EAN_SHT = :barcode or EAN_BL = :barcode or EAN_KOR = :barcode
+                        or EAN_SHT = :trimmed or EAN_BL = :trimmed or EAN_KOR = :trimmed
+                   )
+                   and length(UE_ADRUMS) >= 1
+                   and substr(UE_ADRUMS, length(UE_ADRUMS)-1, 1) in ('1','2')
+                """,
+                {"barcode": barcode, "trimmed": trimmed},
+            )
+        except Exception as exc:
+            if "ORA-00942" not in str(exc):
+                raise
+            rows = self.gateway.fetch_all(
+                """
+                select distinct *
+                  from (
+                        select e.TMC_UID as UL_CPROIN,
+                               a.CELL as UE_ADRUMS,
+                               coalesce(e.NAME, a.NAME) as AR_LIBPRO,
+                               a.COUNT_SHT_IN_BL as AR_PDSUVC,
+                               a.COUNT_SHT_IN_KOR as AR_PDSCAR,
+                               null as AR_PDSSPC,
+                               null as AR_PDSPAL,
+                               e.EAN_SHT,
+                               e.EAN_BL,
+                               e.EAN_KOR,
+                               e.SHT_IN_BL,
+                               e.BL_IN_KOR
+                          from RABAEV.SFERA_EAN e
+                          left join RABAEV.RRL_ARTICULS a on a.ACTICUL = e.TMC_UID
+                         where e.TMC_UID is not null
+                           and (
+                                e.EAN_SHT = :barcode or e.EAN_BL = :barcode or e.EAN_KOR = :barcode
+                                or e.EAN_SHT = :trimmed or e.EAN_BL = :trimmed or e.EAN_KOR = :trimmed
+                           )
+                        union all
+                        select a.ACTICUL as UL_CPROIN,
+                               a.CELL as UE_ADRUMS,
+                               a.NAME as AR_LIBPRO,
+                               a.COUNT_SHT_IN_BL as AR_PDSUVC,
+                               a.COUNT_SHT_IN_KOR as AR_PDSCAR,
+                               null as AR_PDSSPC,
+                               null as AR_PDSPAL,
+                               a.BARCODE_SHT as EAN_SHT,
+                               a.BARCODE_BL as EAN_BL,
+                               a.BARCODE_KOR as EAN_KOR,
+                               a.COUNT_SHT_IN_BL as SHT_IN_BL,
+                               round(a.COUNT_SHT_IN_KOR / nullif(a.COUNT_SHT_IN_BL, 0), 0) as BL_IN_KOR
+                          from RABAEV.RRL_ARTICULS a
+                         where a.ACTICUL is not null
+                           and (
+                                a.BARCODE_SHT = :barcode or a.BARCODE_BL = :barcode or a.BARCODE_KOR = :barcode
+                                or a.BARCODE_SHT = :trimmed or a.BARCODE_BL = :trimmed or a.BARCODE_KOR = :trimmed
+                           )
+                       )
+                """,
+                {"barcode": barcode, "trimmed": trimmed},
+            )
 
         return [
             LegacyBlock(
@@ -181,6 +254,7 @@ class TserverService:
         ]
 
     def get_lot_items(self, usscc: str) -> list[LegacyBlock]:
+        usscc = normalize_pallet_identifier(usscc)
         rows = self.gateway.fetch_all(
             """
             select p.PALLET_UID,
@@ -235,37 +309,58 @@ class TserverService:
         return blocks
 
     def get_place_items(self, place_id: str) -> list[LegacyBlock]:
-        rows = self.gateway.fetch_all(
-            """
-            select UL_CPROIN UID1,
-                   sum(UL_NQTUVC) QTY1,
-                   AR_LIBPRO NAME1,
-                   UE_ADRUMS ADDRESS1,
-                   sfera_ean.SHT_IN_BL,
-                   sfera_ean.BL_IN_KOR,
-                   sfera_ean.EAN_SHT,
-                   sfera_ean.EAN_BL,
-                   sfera_ean.EAN_KOR
-              from refstock.TB_LCUMS
-              left join refstock.TB_EUMS on ue_usscc = ul_usscc and UE_DEPOT = 01 and UE_PROPRI = 'RM'
-              left join refstock.TB_ART on AR_CPROIN = UL_CPROIN and AR_donord = 'RM'
-              left join refstock.tb_traums on ue_usscc = ut_usscc and ul_numlig = ut_numlig
-              left join RABAEV.SFERA_EAN sfera_ean on UL_CPROIN = sfera_ean.TMC_UID and manualenter = 'N'
-             where ul_donord = 'RM'
-               and ul_numorl is null
-               and UE_ADRUMS = :place_id
-               and ul_nqtuvc <> 0
-             group by UL_CPROIN,
-                      AR_LIBPRO,
-                      UE_ADRUMS,
-                      sfera_ean.EAN_SHT,
-                      sfera_ean.EAN_BL,
-                      sfera_ean.EAN_KOR,
-                      sfera_ean.SHT_IN_BL,
-                      sfera_ean.BL_IN_KOR
-            """,
-            {"place_id": place_id},
-        )
+        try:
+            rows = self.gateway.fetch_all(
+                """
+                select UL_CPROIN UID1,
+                       sum(UL_NQTUVC) QTY1,
+                       AR_LIBPRO NAME1,
+                       UE_ADRUMS ADDRESS1,
+                       sfera_ean.SHT_IN_BL,
+                       sfera_ean.BL_IN_KOR,
+                       sfera_ean.EAN_SHT,
+                       sfera_ean.EAN_BL,
+                       sfera_ean.EAN_KOR
+                  from refstock.TB_LCUMS
+                  left join refstock.TB_EUMS on ue_usscc = ul_usscc and UE_DEPOT = 01 and UE_PROPRI = 'RM'
+                  left join refstock.TB_ART on AR_CPROIN = UL_CPROIN and AR_donord = 'RM'
+                  left join refstock.tb_traums on ue_usscc = ut_usscc and ul_numlig = ut_numlig
+                  left join RABAEV.SFERA_EAN sfera_ean on UL_CPROIN = sfera_ean.TMC_UID and manualenter = 'N'
+                 where ul_donord = 'RM'
+                   and ul_numorl is null
+                   and UE_ADRUMS = :place_id
+                   and ul_nqtuvc <> 0
+                 group by UL_CPROIN,
+                          AR_LIBPRO,
+                          UE_ADRUMS,
+                          sfera_ean.EAN_SHT,
+                          sfera_ean.EAN_BL,
+                          sfera_ean.EAN_KOR,
+                          sfera_ean.SHT_IN_BL,
+                          sfera_ean.BL_IN_KOR
+                """,
+                {"place_id": place_id},
+            )
+        except Exception as exc:
+            if "ORA-00942" not in str(exc):
+                raise
+            rows = self.gateway.fetch_all(
+                """
+                select ACTICUL UID1,
+                       NORMA_UKLADKI QTY1,
+                       NAME NAME1,
+                       CELL ADDRESS1,
+                       COUNT_SHT_IN_BL SHT_IN_BL,
+                       round(COUNT_SHT_IN_KOR / nullif(COUNT_SHT_IN_BL, 0), 0) BL_IN_KOR,
+                       BARCODE_SHT EAN_SHT,
+                       BARCODE_BL EAN_BL,
+                       BARCODE_KOR EAN_KOR
+                  from RABAEV.RRL_ARTICULS
+                 where CELL = :place_id
+                 order by ACTICUL
+                """,
+                {"place_id": place_id},
+            )
         blocks = [LegacyBlock("PLACE_LINES", {"lines_count_must_be": str(len(rows))})]
         for pos, row in enumerate(rows, start=1):
             blocks.append(
@@ -289,6 +384,7 @@ class TserverService:
         return blocks
 
     def confirm_lot_check(self, usscc: str, request: LotCheckRequest) -> None:
+        usscc = normalize_pallet_identifier(usscc)
         statements: list[tuple[str, dict[str, Any]]] = [
             ("delete from LOT_AUDIT where SSCC = :usscc", {"usscc": usscc}),
             ("delete from LOT_AUDIT_ERROR_LINES where SSCC = :usscc", {"usscc": usscc}),

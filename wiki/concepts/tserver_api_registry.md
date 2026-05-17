@@ -22,6 +22,18 @@ The protocol is a UTF-16 TCP payload with a fixed-width length prefix and a key/
 
 The same payload can contain several `FUNC` blocks. This is used for batched audit/check responses, such as a header command followed by many error lines.
 
+## Pallet Identifier Rule
+
+Fields historically named `USSCC`, `PALLET_UID`, `PALLETID`, or "идентификатор паллеты" must be treated as pallet identifiers, not as SSCC-only fields.
+
+They may contain:
+
+- a standard 18-digit `SSCC`;
+- a GS1 AI `00` scan that should normalize to SSCC, such as `(00)123456789012345678`, `00123456789012345678`, or `]C100123456789012345678`;
+- an internal/legacy WMS pallet identifier, such as `OP_СТешв000451_1`.
+
+New UI labels should prefer `Идентификатор паллеты`, while API internals may keep legacy parameter names for compatibility.
+
 Primary code points:
 
 - [`Program.cs`](../../MINI%20WMS/Tserver/Tserver/Program.cs): `funct.split_program`, `funct.encode`, TCP listener, command dispatch.

@@ -12,6 +12,10 @@
 **/__pycache__/
 **/*.pyc
 **/*.pyo
+**/node_modules/
+**/dist/
+**/.vite/
+**/*.tsbuildinfo
 *.user
 *.suo
 *.cache
@@ -66,6 +70,8 @@ tmp/
 tmp-ssh/
 sqlnet.log
 *.log
+api/wms_api_server/runtime/
+tests/load/**/report.json
 desktop.ini
 Thumbs.db
 

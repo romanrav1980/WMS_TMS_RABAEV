@@ -23,6 +23,7 @@ SAP/SAP_INTEGRATION projects are intentionally out of scope for GitHub publicati
 - [`overview.md`](overview.md): project map and current boundaries
 - [`log.md`](log.md): append-only wiki maintenance log
 - `branches/`: four top-level architectural branches of the project
+- `architecture/`: engineering design documents and target architecture decisions
 - `subprojects/`: one page per major project area
 - `database/`: local wiki mirror of the Oracle schema and Oracle change protocol
 - `requirements/`: technical assignments and durable product requirements

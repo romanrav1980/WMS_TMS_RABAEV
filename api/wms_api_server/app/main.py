@@ -2,7 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import get_settings
-from .routers import health, production, tserver
+from .middleware.api_audit import ApiAuditMiddleware
+from .routers import admin_auth, admin_rights, api_audit, bom, health, mes, production, traceability, tserver, warehouses
 
 
 settings = get_settings()
@@ -16,7 +17,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(ApiAuditMiddleware)
 
 app.include_router(health.router)
 app.include_router(production.router)
 app.include_router(tserver.router)
+app.include_router(admin_auth.router)
+app.include_router(admin_rights.router)
+app.include_router(api_audit.router)
+app.include_router(traceability.router)
+app.include_router(bom.router)
+app.include_router(mes.router)
+app.include_router(warehouses.router)

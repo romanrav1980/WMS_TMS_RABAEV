@@ -23,6 +23,7 @@ Terminal workflows belong here:
 - [`../../MINI WMS/Tserver/`](../../MINI%20WMS/Tserver/)
 - [`../../MINI WMS/DeviceApplication3/`](../../MINI%20WMS/DeviceApplication3/)
 - [`../../WMSTerm/`](../../WMSTerm/)
+- [`../../terminal/wms_terminal_web/`](../../terminal/wms_terminal_web/)
 
 ## Observed Shape
 
@@ -52,6 +53,8 @@ The gateway layer talks to Oracle and calls `RABAEV.*` routines. The client side
 
 - [Tserver legacy API registry](../concepts/tserver_api_registry.md)
 - [Create WMS API server](../runbooks/create_api_server.md)
+- [Modern terminal app TZ](../requirements/modern_terminal_app_tz.md)
+- [WMS Terminal Web/PWA subproject](../subprojects/wms_terminal_web.md)
 
 ## Primary Sources
 

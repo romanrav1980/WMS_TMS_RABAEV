@@ -65,6 +65,15 @@ class OracleGateway:
             value = result.getvalue()
             return int(value)
 
+    def call_optional_number_plsql(self, block: str, params: dict[str, Any]) -> int | None:
+        with oracle_connection() as connection:
+            cursor = connection.cursor()
+            result = cursor.var(oracledb.NUMBER)
+            cursor.execute(block, {**params, "result": result})
+            connection.commit()
+            value = result.getvalue()
+            return int(value) if value is not None else None
+
     def execute_plsql(self, block: str, params: dict[str, Any]) -> None:
         with oracle_connection() as connection:
             cursor = connection.cursor()

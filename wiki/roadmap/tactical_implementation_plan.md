@@ -4,6 +4,8 @@
 
 Этот документ фиксирует ближайший порядок работ по задаче WMS/MES для фабрики кормов: выпуск партий готовой продукции, вовлечение сырья, Меркурий, Честный знак, агрегация, JSON-файловый обмен, API-граница и будущие Android-терминалы.
 
+Актуальный тактический sprint-план для реализации утвержденного EDD ведется отдельно: [`wms_mes_traceability_tactical_plan.md`](wms_mes_traceability_tactical_plan.md).
+
 Стратегическая рамка описана в [`strategic_development_plan.md`](strategic_development_plan.md). Этот план отвечает на вопрос, что делать дальше практически.
 
 ## Уже Сделано
@@ -120,25 +122,28 @@
 
 Цель: изолировать регуляторные интеграции от операторских приложений.
 
+Базовое правило: реальные адаптеры должны подключаться поверх уже созданного API audit/replay и регуляторного outbox. Нужно сохранять не только бизнес-статус, но и технический след внешней отправки: сертификат/alias, признак подписи, request/response, внешний document ID, retry count, error code, error message и correlation ID. Детали зафиксированы в [`../concepts/regulatory_adapter_audit.md`](../concepts/regulatory_adapter_audit.md).
+
 Честный знак:
 
 - маппинг `RRL_CRPT_CODES` и `RRL_CRPT_AGGREGATION` в исходящие документы;
 - поддержка отгрузки по `SSCC` для клиентов, принимающих агрегацию;
 - поддержка отгрузки полным списком `CIS` для клиентов, которые агрегацию не принимают;
 - хранение внешних document ID и статусов;
-- повторы через outbox.
+- повторы через outbox и adapter journal.
 
 Меркурий:
 
 - маппинг партии производства и вовлеченного сырья на понятия VetIS/Mercury;
 - хранение eVSD и stock entry identifiers;
 - обработка асинхронных статусов;
-- изоляция XML/WSDL и adapter-specific сложности от desktop и terminal clients.
+- изоляция XML/WSDL, сертификатов, подписи и adapter-specific сложности от desktop и terminal clients.
 
 Критерий готовности:
 
 - Оба адаптера могут работать в mock-режиме до получения реальных учетных данных.
 - Каждый исходящий запрос имеет сохраненный статус и внешний ID после получения ответа.
+- Админка позволяет открыть adapter/outbox событие, увидеть payload/ответ/ошибку и повторить отправку безопасным retry.
 
 ## Поток 5: Переход Legacy-Клиентов
 
@@ -199,6 +204,14 @@
 5. Добавить политику command/outbox processing.
 6. Подготовить mock adapters для Меркурия и Честного знака.
 7. Начать Android terminal prototype для read/status и одного confirmation flow.
+
+## Терминальное Приложение
+
+Техническое задание на современное терминальное приложение вынесено в отдельный документ:
+
+- [`../requirements/modern_terminal_app_tz.md`](../requirements/modern_terminal_app_tz.md)
+
+Принятый практический путь: сначала Web/PWA приложение, которое работает на Android-ТСД и на обычном ПК, затем при необходимости Android-обертка через Capacitor и scanner SDK производителя. Все новые терминальные операции должны идти через WMS API, а совместимость со старым `Tserver` проверяется через legacy registry и API compatibility handlers.
 
 ## Definition Of Done
 

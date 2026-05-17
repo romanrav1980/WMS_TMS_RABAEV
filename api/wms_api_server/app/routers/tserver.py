@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ..legacy_protocol import encode_legacy_blocks
+from ..legacy_protocol import encode_legacy_blocks, fault
 from ..schemas import (
     CallSpfRequest,
     LegacyBlockModel,
@@ -19,6 +19,11 @@ def _to_models(blocks) -> list[LegacyBlockModel]:
     return [LegacyBlockModel(function_name=block.function_name, values=block.values) for block in blocks]
 
 
+def _fault_response(exc: Exception) -> LegacyExecuteResponse:
+    blocks = [fault(str(exc))]
+    return LegacyExecuteResponse(payload=encode_legacy_blocks(blocks), blocks=_to_models(blocks))
+
+
 @router.post("/legacy/tserver/execute", response_model=LegacyExecuteResponse)
 def execute_legacy_tserver(request: LegacyExecuteRequest) -> LegacyExecuteResponse:
     payload, blocks = TserverService().execute_legacy_payload(request.payload)
@@ -27,24 +32,36 @@ def execute_legacy_tserver(request: LegacyExecuteRequest) -> LegacyExecuteRespon
 
 @router.get("/terminal/users/{user_id}", response_model=list[LegacyBlockModel])
 def get_terminal_user(user_id: str) -> list[LegacyBlockModel]:
-    return _to_models(TserverService().get_ruser(user_id))
+    try:
+        return _to_models(TserverService().get_ruser(user_id))
+    except Exception as exc:
+        return _to_models([fault(str(exc))])
 
 
 @router.get("/products/by-barcode/{barcode}", response_model=list[LegacyBlockModel])
 def get_product_by_barcode(barcode: str) -> list[LegacyBlockModel]:
-    return _to_models(TserverService().get_product_info(barcode))
+    try:
+        return _to_models(TserverService().get_product_info(barcode))
+    except Exception as exc:
+        return _to_models([fault(str(exc))])
 
 
 @router.get("/lots/{usscc}/items", response_model=LegacyExecuteResponse)
 def get_lot_items(usscc: str) -> LegacyExecuteResponse:
-    blocks = TserverService().get_lot_items(usscc)
-    return LegacyExecuteResponse(payload=encode_legacy_blocks(blocks), blocks=_to_models(blocks))
+    try:
+        blocks = TserverService().get_lot_items(usscc)
+        return LegacyExecuteResponse(payload=encode_legacy_blocks(blocks), blocks=_to_models(blocks))
+    except Exception as exc:
+        return _fault_response(exc)
 
 
 @router.get("/places/{place_id}/items", response_model=LegacyExecuteResponse)
 def get_place_items(place_id: str) -> LegacyExecuteResponse:
-    blocks = TserverService().get_place_items(place_id)
-    return LegacyExecuteResponse(payload=encode_legacy_blocks(blocks), blocks=_to_models(blocks))
+    try:
+        blocks = TserverService().get_place_items(place_id)
+        return LegacyExecuteResponse(payload=encode_legacy_blocks(blocks), blocks=_to_models(blocks))
+    except Exception as exc:
+        return _fault_response(exc)
 
 
 @router.post("/terminal/lots/{usscc}/check")

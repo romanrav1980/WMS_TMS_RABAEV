@@ -24,6 +24,8 @@ Important publication rule:
 
 ## Текущий Статус Реализации
 
+Актуальный стратегический план именно для WMS+MES+Traceability ведется в отдельном документе: [`wms_mes_traceability_strategic_plan.md`](wms_mes_traceability_strategic_plan.md).
+
 На 2026-05-17 первый слой реализации для фабрики кормов уже внесен в Oracle:
 
 - применена миграция `2026-05-17-001-feed-factory-traceability`;

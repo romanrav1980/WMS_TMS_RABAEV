@@ -13,6 +13,7 @@ This page catalogs raw sources that the root wiki compiles from.
 
 - [`../../EXTERNAL_INTEGRATION.MD`](../../EXTERNAL_INTEGRATION.MD)
 - [`../../NEW_BD_ENVIROMENT.md`](../../NEW_BD_ENVIROMENT.md)
+- [`../../wiki-raw/wms_admin_ui_reference/`](../../wiki-raw/wms_admin_ui_reference/): accepted raw visual reference for the future WMS admin panel
 
 ## Main Application
 
