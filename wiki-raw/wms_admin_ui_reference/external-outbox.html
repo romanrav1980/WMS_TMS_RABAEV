@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>WMS PRO External Outbox</title>
-    <link rel="stylesheet" href="styles.css?v=20260517-icons2" />
+    <link rel="stylesheet" href="styles.css?v=20260517-cleanui" />
   </head>
   <body class="auth-pending" data-required-permission="external_outbox_view">
     <div class="app">
@@ -54,12 +54,7 @@
               <h2>Внешние отправки: outbox и адаптеры</h2>
               <button id="externalRefresh" type="button">↻</button>
             </header>
-            <div class="permission-strip">
-              <span>Просмотр: <b>external_outbox_view</b></span>
-              <span>Повтор: <b>external_outbox_retry</b></span>
-            </div>
             <div class="api-audit-toolbar">
-              <label>API base<input id="externalBase" value="http://127.0.0.1:8088" /></label>
               <label>Система<select id="externalSystem"><option value="">Все</option><option>MERCURY</option><option>CRPT</option><option>INTERNAL</option></select></label>
               <label>Статус<select id="externalStatus"><option value="">Все</option><option>PENDING</option><option>LOCKED</option><option>RETRY</option><option>DONE</option><option>ERROR</option><option>DEAD_LETTER</option></select></label>
               <label>Событие<input id="externalEventType" placeholder="MercuryOperationRequested" /></label>
@@ -101,7 +96,7 @@
       </main>
     </div>
     <script src="admin-nav.js?v=20260517-navmodule"></script>
-    <script src="admin-auth.js?v=20260517-outbox"></script>
-    <script src="external-outbox.js?v=20260517-outbox"></script>
+    <script src="admin-auth.js?v=20260517-cleanui"></script>
+    <script src="external-outbox.js?v=20260517-cleanui"></script>
   </body>
 </html>

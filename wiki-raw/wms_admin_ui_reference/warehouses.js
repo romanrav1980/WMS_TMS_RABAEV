@@ -6,7 +6,7 @@ const warehouseState = {
 const whEl = (id) => document.getElementById(id);
 
 function whApiBase() {
-  return whEl("warehouseBase").value.replace(/\/$/, "");
+  return (window.wmsAdminAuth?.state?.apiBase || "http://127.0.0.1:8088").replace(/\/$/, "");
 }
 
 function whHeaders(extra = {}) {

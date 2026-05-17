@@ -10,11 +10,14 @@ from .routers import (
     bom,
     customer_orders,
     customer_rules,
+    finished_goods,
     health,
     mes,
     picking,
     production,
     products,
+    raw_material,
+    slow_sql,
     traceability,
     tserver,
     warehouses,
@@ -40,11 +43,14 @@ app.include_router(tserver.router)
 app.include_router(admin_auth.router)
 app.include_router(admin_rights.router)
 app.include_router(api_audit.router)
+app.include_router(slow_sql.router)
 app.include_router(traceability.router)
 app.include_router(bom.router)
 app.include_router(mes.router)
 app.include_router(warehouses.router)
 app.include_router(products.router)
+app.include_router(raw_material.router)
+app.include_router(finished_goods.router)
 app.include_router(customer_orders.router)
 app.include_router(customer_rules.router)
 app.include_router(picking.router)

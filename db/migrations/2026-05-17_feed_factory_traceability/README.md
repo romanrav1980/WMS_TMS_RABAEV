@@ -57,6 +57,10 @@ This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/
 - `017_smoke.sql`: smoke topology setup and case-pick task sequencing check.
 - `017_smoke_cleanup.sql`: cleanup for rows created by the fixed `SMOKE_017` user marker.
 - `017_rollback.sql`: safe no-op rollback note; full rollback should use a database snapshot.
+- `022_apply.sql`: additive slow SQL diagnostics table, sequence, indexes, and admin right.
+- `022_verify.sql`: read-only verification for slow SQL diagnostics.
+- `022_rollback.sql`: safe rollback for the slow SQL right and migration ledger only. It does not drop SQL diagnostic history.
+- `022_grant_native_views_system.sql`: optional SYSDBA grant script for Oracle-native `V$SQL` diagnostics.
 
 ## Scope
 
@@ -230,6 +234,18 @@ The `012_rollback.sql` script is intentionally safe: it removes only warehouse s
 The `014_rollback.sql` script is intentionally safe: it drops only `RRL_CUSTOMER_ORDER_API`. Customer registry, order, row, fulfillment, sequence, index, and mapping data are kept.
 
 The `015_rollback.sql` script is intentionally safe: it drops only `RRL_CUSTOMER_RULE_API`. Customer rule, vehicle type, shipment part, sequence, index, and setting data are kept.
+
+### 019 Customer Address Vehicles And Product Rules
+
+Migration `019_apply.sql` corrects the customer-rule model without dropping legacy data:
+
+- delivery/store address rows in `RRL_CUSTOMER_ADDRESS` receive vehicle type and capacity fields;
+- `RRL_CUSTOMER_PRODUCT_RULE` stores shelf-life and stacking requirements in one row per customer/address/article or product group;
+- existing shelf-life and stacking rules are copied into the unified table;
+- existing customer vehicle rules are copied to delivery addresses where possible;
+- `RRL_CUSTOMER_RULE_API` resolves vehicle capacity from the address first, then falls back to legacy vehicle rules and customer defaults.
+
+The older split rule tables remain for compatibility.
 
 The `016_rollback.sql` script is intentionally safe: it drops only `RRL_PICKING_API`. Picking plan, task, reservation, shortage, decision-log, sequence, index, and audit data are kept.
 
@@ -407,6 +423,26 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - PL/SQL smoke created a picking plan from real stock, built a wave preview, launched it, converted soft reservations to hard reservations, cancelled it, and cleanup left `SMOKE_018 = 0`.
 - HTTP smoke on `127.0.0.1:8088` created a wave through `/api/picking/waves`, added a plan, calculated preview, launched, read reservations/audit, cancelled, and cleanup left `SMOKE_018_HTTP = 0`.
 - Post-apply invalid-object check left `0 INVALID` current objects.
+
+`2026-05-17-019-customer-address-product-rules`:
+
+- Added vehicle/capacity fields to customer delivery addresses.
+- Added unified customer product rules that combine shelf-life and pallet stacking settings in one row.
+- Kept legacy customer rule tables as compatibility/history layer.
+
+`2026-05-17-020-raw-material-admin`:
+
+- Adds `RRL_RAW_MATERIAL_SKU` for raw SKU settings without changing legacy `RRL_ARTICULS` semantics.
+- Seeds raw SKU settings from `RM-%` articles and stock found in warehouses with `FLAG_RAW_MATERIAL = 1`.
+- Adds raw-material admin rights: `RAW_MATERIAL_VIEW`, `RAW_MATERIAL_EDIT`, `RAW_MATERIAL_STOCK_VIEW`, `RAW_MATERIAL_EXPORT`.
+- `020_rollback.sql` is non-destructive and keeps raw SKU settings unless an operator explicitly approves dropping data.
+
+`2026-05-17-021-finished-goods-admin`:
+
+- Adds `RRL_FINISHED_GOODS_SKU` for finished-goods SKU settings without replacing legacy `RRL_ARTICULS`.
+- Seeds finished-goods settings from existing finished-goods settings, `FG-%` articles, production batches, and stock found in warehouses with `FLAG_FINISHED_GOODS = 1` or `FLAG_PRODUCTION_BUFFER = 1`.
+- Adds finished-goods admin rights: `FINISHED_GOODS_VIEW`, `FINISHED_GOODS_EDIT`, `FINISHED_GOODS_STOCK_VIEW`, `FINISHED_GOODS_BATCH_VIEW`, `FINISHED_GOODS_EXPORT`.
+- `021_rollback.sql` is non-destructive and keeps finished-goods SKU settings unless an operator explicitly approves dropping data.
 
 ## Required Procedure For Future Reapply
 

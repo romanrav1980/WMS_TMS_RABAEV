@@ -25,6 +25,10 @@ Files:
 - [`customer-orders.js`](customer-orders.js): lightweight customer-order list/detail/import logic
 - [`product-shipment-settings.html`](product-shipment-settings.html): article-level aging norms for finished-goods shipment readiness
 - [`product-shipment-settings.js`](product-shipment-settings.js): lightweight settings list/detail/save logic
+- [`raw-material.html`](raw-material.html): raw-material SKU settings, raw warehouses, and stock by selected warehouse
+- [`raw-material.js`](raw-material.js): lightweight raw-material list/settings/stock logic
+- [`finished-goods.html`](finished-goods.html): finished-goods SKU settings, warehouses/buffers, production batches, pallets, and SSCC stock
+- [`finished-goods.js`](finished-goods.js): lightweight finished-goods list/settings/batch/stock logic
 
 Design notes:
 
@@ -38,7 +42,9 @@ Design notes:
 - [`bom.html`](bom.html) is a separate MES recipe/BOM page protected by `bom_view`; lifecycle buttons require `bom_edit`, `bom_approve`, `bom_block`, or `bom_make_primary`
 - [`customers.html`](customers.html) is protected by `customer_view`; customer card changes require `customer_edit`; rule creation requires `customer_rule_edit`
 - [`customer-orders.html`](customer-orders.html) is protected by `customer_order_view`; legacy import requires `customer_order_import`; fulfillment facts require `customer_fulfillment_view`
-- customer and customer-order pages use the global admin session API base from `admin-auth.js`; the operator-facing duplicate API base field is intentionally not shown
+- [`raw-material.html`](raw-material.html) is protected by `raw_material_view`; editing SKU settings requires `raw_material_edit`; stock rows require `raw_material_stock_view`
+- [`finished-goods.html`](finished-goods.html) is protected by `finished_goods_view`; editing SKU settings requires `finished_goods_edit`; stock rows require `finished_goods_stock_view`; batches require `finished_goods_batch_view`
+- raw admin pages use the global admin session connection settings from `admin-auth.js`; working screens do not show technical permission or API connection fields
 - [`product-shipment-settings.html`](product-shipment-settings.html) is protected by `quality_batch_view`; editing aging norms requires `quality_batch_edit`
 - API page lists calls from `GET /api/admin/api-calls`, opens details, runs dry-run replay, and can repeat selected ID or date ranges through `POST /api/admin/api-calls/replay`
 - [`admin-auth.js`](admin-auth.js) adds login/password entry and hides the API page unless the user has `api_audit_view`; real replay requires `api_audit_replay`

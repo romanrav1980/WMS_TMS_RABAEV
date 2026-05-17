@@ -2,9 +2,7 @@ const customerState = {
   customers: [],
   selectedId: null,
   detail: null,
-  shelfRules: [],
-  stackRules: [],
-  vehicleRules: [],
+  productRules: [],
   vehicleTypes: [],
 };
 
@@ -86,8 +84,7 @@ function renderVehicleSelects() {
       `<option value="${row.vehicle_type_id}">${escapeCustomer(row.vehicle_type_code)} / ${escapeCustomer(row.vehicle_type_name)}</option>`,
     ),
   ).join("");
-  customerEl("customerEditVehicle").innerHTML = options;
-  customerEl("customerRuleVehicle").innerHTML = options;
+  customerEl("customerAddressVehicle").innerHTML = options;
 }
 
 async function loadCustomers() {
@@ -138,8 +135,6 @@ function fillCustomerForm(customer) {
   customerEl("customerEditKpp").value = customer.kpp || "";
   customerEl("customerEditGln").value = customer.gln || "";
   customerEl("customerEditEdi").value = customer.edi_id || "";
-  customerEl("customerEditVehicle").value = customer.default_vehicle_type_id || "";
-  customerEl("customerEditSplit").value = String(customer.split_order_by_vehicle_capacity ?? 0);
   customerEl("customerEditShelfDays").value = customer.default_min_shelf_life_days ?? "";
   customerEl("customerEditShelfPercent").value = customer.default_min_shelf_life_percent ?? "";
 }
@@ -153,8 +148,6 @@ function customerPayload(mode) {
     kpp: customerText("customerEditKpp"),
     gln: customerText("customerEditGln"),
     edi_id: customerText("customerEditEdi"),
-    default_vehicle_type_id: customerNumber("customerEditVehicle"),
-    split_order_by_vehicle_capacity: Number(customerEl("customerEditSplit").value || 0),
     default_min_shelf_life_days: customerNumber("customerEditShelfDays"),
     default_min_shelf_life_percent: customerNumber("customerEditShelfPercent"),
     active: Number(customerEl("customerEditActive").value || 1),
@@ -186,6 +179,11 @@ async function addCustomerAddress() {
     region: customerText("customerAddressRegion"),
     postal_code: customerText("customerAddressPostal"),
     gln: customerText("customerAddressGln"),
+    vehicle_type_id: customerNumber("customerAddressVehicle"),
+    max_pallet_count: customerNumber("customerAddressVehiclePallets"),
+    max_weight: customerNumber("customerAddressVehicleWeight"),
+    max_volume: customerNumber("customerAddressVehicleVolume"),
+    split_order_by_capacity: Number(customerEl("customerAddressSplit").value || 1),
     active: 1,
     created_by: customerUser(),
   }));
@@ -201,6 +199,8 @@ function renderCustomerAddresses() {
       <td>${escapeCustomer(row.address_text)}</td>
       <td>${escapeCustomer(row.city)}</td>
       <td>${escapeCustomer(row.gln)}</td>
+      <td>${escapeCustomer(row.vehicle_type_code || row.vehicle_type_name || "")}</td>
+      <td>${escapeCustomer(row.max_pallet_count ?? "")}</td>
       <td>${Number(row.active || 0) === 1 ? "Да" : "Нет"}</td>
     </tr>
   `).join("");
@@ -218,90 +218,33 @@ function renderCustomerAddresses() {
 }
 
 async function loadCustomerRules(customerId) {
-  customerState.shelfRules = await customerRequest(`/api/customers/${customerId}/shelf-life-rules`);
-  customerState.stackRules = await customerRequest(`/api/customers/${customerId}/stack-rules`);
-  customerState.vehicleRules = await customerRequest(`/api/customers/${customerId}/vehicle-rules`);
+  customerState.productRules = await customerRequest(`/api/customers/${customerId}/product-rules`);
   renderCustomerRules();
 }
 
 function renderCustomerRules() {
-  const shelfRows = customerState.shelfRules.map((row) => ({
-    type: "Срок годности",
-    articul: row.articul,
-    days: row.min_shelf_life_days,
-    percent: row.min_shelf_life_percent,
-    cases: "",
-    vehicle: "",
-    active: row.active,
-  }));
-  const stackRows = customerState.stackRules.map((row) => ({
-    type: "Укладка",
-    articul: row.articul,
-    days: "",
-    percent: "",
-    cases: row.pallet_case_qty,
-    vehicle: row.allow_top_stacking === 1 ? "верх разрешен" : "",
-    active: row.active,
-  }));
-  const vehicleRows = customerState.vehicleRules.map((row) => ({
-    type: "Машина",
-    articul: "",
-    days: "",
-    percent: "",
-    cases: row.max_pallet_count,
-    vehicle: row.vehicle_type_code || row.vehicle_type_name,
-    active: row.active,
-  }));
-  customerEl("customerRuleRows").innerHTML = shelfRows.concat(stackRows, vehicleRows).map((row) => `
+  customerEl("customerRuleRows").innerHTML = customerState.productRules.map((row) => `
     <tr>
-      <td>${escapeCustomer(row.type)}</td>
-      <td>${escapeCustomer(row.articul)}</td>
-      <td>${escapeCustomer(row.days)}</td>
-      <td>${escapeCustomer(row.percent)}</td>
-      <td>${escapeCustomer(row.cases)}</td>
-      <td>${escapeCustomer(row.vehicle)}</td>
+      <td>${escapeCustomer(row.articul || row.product_group || "По умолчанию")}</td>
+      <td>${escapeCustomer(row.min_shelf_life_days)}</td>
+      <td>${escapeCustomer(row.min_shelf_life_percent)}</td>
+      <td>${escapeCustomer(row.pallet_case_qty)}</td>
+      <td>${escapeCustomer(row.pallet_layer_count)}</td>
+      <td>${Number(row.allow_top_stacking || 0) === 1 ? "Да" : "Нет"}</td>
       <td>${Number(row.active || 0) === 1 ? "Да" : "Нет"}</td>
     </tr>
   `).join("");
 }
 
-async function addShelfRule() {
+async function addProductRule() {
   if (!customerState.selectedId) throw new Error("Сначала выберите клиента");
-  await customerRequest(`/api/customers/${customerState.selectedId}/shelf-life-rules`, customerJson("POST", {
+  await customerRequest(`/api/customers/${customerState.selectedId}/product-rules`, customerJson("POST", {
     articul: customerText("customerRuleArticul"),
     min_shelf_life_days: customerNumber("customerRuleShelfDays"),
     min_shelf_life_percent: customerNumber("customerRuleShelfPercent"),
-    rule_priority: 100,
-    active: 1,
-    created_by: customerUser(),
-  }));
-  await loadCustomerRules(customerState.selectedId);
-}
-
-async function addStackRule() {
-  if (!customerState.selectedId) throw new Error("Сначала выберите клиента");
-  await customerRequest(`/api/customers/${customerState.selectedId}/stack-rules`, customerJson("POST", {
-    articul: customerText("customerRuleArticul"),
     pallet_case_qty: customerNumber("customerStackCases"),
     pallet_layer_count: customerNumber("customerStackLayers"),
     allow_top_stacking: Number(customerEl("customerStackTop").value || 0),
-    rule_priority: 100,
-    active: 1,
-    created_by: customerUser(),
-  }));
-  await loadCustomerRules(customerState.selectedId);
-}
-
-async function addVehicleRule() {
-  if (!customerState.selectedId) throw new Error("Сначала выберите клиента");
-  const vehicleTypeId = customerNumber("customerRuleVehicle");
-  if (!vehicleTypeId) throw new Error("Выберите тип машины");
-  await customerRequest(`/api/customers/${customerState.selectedId}/vehicle-rules`, customerJson("POST", {
-    vehicle_type_id: vehicleTypeId,
-    max_pallet_count: customerNumber("customerVehiclePallets"),
-    max_weight: customerNumber("customerVehicleWeight"),
-    max_volume: customerNumber("customerVehicleVolume"),
-    split_order_by_capacity: 1,
     rule_priority: 100,
     active: 1,
     created_by: customerUser(),
@@ -325,9 +268,7 @@ async function customerInit() {
   customerBind("customerCreate", createCustomer);
   customerBind("customerSave", saveCustomer);
   customerBind("customerAddAddress", addCustomerAddress);
-  customerBind("customerAddShelfRule", addShelfRule);
-  customerBind("customerAddStackRule", addStackRule);
-  customerBind("customerAddVehicleRule", addVehicleRule);
+  customerBind("customerAddProductRule", addProductRule);
   customerEl("customerSearchTop").addEventListener("keydown", (event) => {
     if (event.key === "Enter") loadCustomers();
   });

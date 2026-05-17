@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>WMS PRO BOM</title>
-    <link rel="stylesheet" href="styles.css?v=20260517-icons2" />
+    <link rel="stylesheet" href="styles.css?v=20260517-cleanui" />
   </head>
   <body class="auth-pending" data-required-permission="bom_view">
     <div class="app">
@@ -51,13 +51,7 @@
         <section class="admin-page rights-page">
           <article class="panel rights-users">
             <header><h2>BOM: рецепты производства</h2><button id="bomRefresh" type="button">↻</button></header>
-            <div class="permission-strip">
-              <span>Просмотр: <b>bom_view</b></span>
-              <span>Редактирование: <b>bom_edit</b></span>
-              <span>Утверждение: <b>bom_approve</b></span>
-            </div>
             <div class="rights-toolbar">
-              <label>API base<input id="bomBase" value="http://127.0.0.1:8088" /></label>
               <label>Товар<input id="bomTargetFilter" placeholder="FG-001" /></label>
               <label>Статус<select id="bomStatusFilter"><option value="">Все</option><option>DRAFT</option><option>APPROVED</option><option>ACTIVE</option><option>BLOCKED</option><option>ARCHIVED</option></select></label>
               <label>Основной<select id="bomPrimaryFilter"><option value="">Все</option><option value="1">Да</option><option value="0">Нет</option></select></label>
@@ -118,7 +112,7 @@
       </main>
     </div>
     <script src="admin-nav.js?v=20260517-navmodule"></script>
-    <script src="admin-auth.js?v=20260517-bom"></script>
-    <script src="bom.js?v=20260517-bom"></script>
+    <script src="admin-auth.js?v=20260517-cleanui"></script>
+    <script src="bom.js?v=20260517-cleanui"></script>
   </body>
 </html>

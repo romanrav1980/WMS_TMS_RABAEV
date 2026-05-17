@@ -2,6 +2,7 @@ from typing import Any
 
 from ..oracle_gateway import OracleGateway
 from ..schemas import (
+    CustomerProductRuleCreateRequest,
     CustomerShelfLifeRuleCreateRequest,
     CustomerStackRuleCreateRequest,
     CustomerVehicleRuleCreateRequest,
@@ -19,6 +20,78 @@ def _trim_text(value: Any, max_len: int, upper: bool = False) -> str | None:
 class CustomerRuleService:
     def __init__(self, gateway: OracleGateway | None = None) -> None:
         self.gateway = gateway or OracleGateway()
+
+    def list_product_rules(self, customer_id: int) -> list[dict[str, Any]]:
+        return self.gateway.fetch_all(
+            """
+            select CUSTOMER_PRODUCT_RULE_ID,
+                   CUSTOMER_ID,
+                   CUSTOMER_STORE_MAP_ID,
+                   ARTICUL,
+                   PRODUCT_GROUP,
+                   MIN_SHELF_LIFE_DAYS,
+                   MIN_SHELF_LIFE_PERCENT,
+                   PALLET_CASE_QTY,
+                   PALLET_LAYER_QTY,
+                   PALLET_LAYER_COUNT,
+                   MAX_PALLET_WEIGHT,
+                   MAX_PALLET_VOLUME,
+                   MAX_PALLET_HEIGHT,
+                   PALLET_TYPE,
+                   ALLOW_TOP_STACKING,
+                   MUST_BE_SEPARATE_PALLET,
+                   STACK_COMPATIBILITY_GROUP,
+                   RULE_PRIORITY,
+                   ACTIVE,
+                   VALID_FROM,
+                   VALID_TO,
+                   CREATED_AT
+              from RRL_CUSTOMER_PRODUCT_RULE
+             where CUSTOMER_ID = :customer_id
+             order by RULE_PRIORITY, CUSTOMER_PRODUCT_RULE_ID
+            """,
+            {"customer_id": customer_id},
+        )
+
+    def create_product_rule(self, customer_id: int, request: CustomerProductRuleCreateRequest) -> int:
+        return self.gateway.call_number_plsql(
+            """
+            declare
+              v_id number;
+            begin
+              select RRL_CUSTOMER_PRODUCT_RULE_SQ.nextval into v_id from dual;
+              insert into RRL_CUSTOMER_PRODUCT_RULE (
+                CUSTOMER_PRODUCT_RULE_ID, CUSTOMER_ID, CUSTOMER_STORE_MAP_ID,
+                ARTICUL, PRODUCT_GROUP, MIN_SHELF_LIFE_DAYS,
+                MIN_SHELF_LIFE_PERCENT, PALLET_CASE_QTY, PALLET_LAYER_QTY,
+                PALLET_LAYER_COUNT, MAX_PALLET_WEIGHT, MAX_PALLET_VOLUME,
+                MAX_PALLET_HEIGHT, PALLET_TYPE, ALLOW_TOP_STACKING,
+                MUST_BE_SEPARATE_PALLET, STACK_COMPATIBILITY_GROUP,
+                RULE_PRIORITY, ACTIVE, VALID_FROM, VALID_TO, CREATED_AT, CREATED_BY
+              ) values (
+                v_id, :customer_id, :customer_store_map_id,
+                cast(:articul as varchar2(40)), cast(:product_group as varchar2(100)),
+                :min_shelf_life_days, :min_shelf_life_percent,
+                :pallet_case_qty, :pallet_layer_qty, :pallet_layer_count,
+                :max_pallet_weight, :max_pallet_volume, :max_pallet_height,
+                cast(:pallet_type as varchar2(50)), :allow_top_stacking,
+                :must_be_separate_pallet, cast(:stack_compatibility_group as varchar2(100)),
+                :rule_priority, :active, nvl(:valid_from, trunc(sysdate)),
+                :valid_to, sysdate, cast(:created_by as varchar2(50))
+              );
+              :result := v_id;
+            end;
+            """,
+            {
+                "customer_id": customer_id,
+                **request.model_dump(),
+                "articul": _trim_text(request.articul, 40, upper=True),
+                "product_group": _trim_text(request.product_group, 100),
+                "pallet_type": _trim_text(request.pallet_type, 50),
+                "stack_compatibility_group": _trim_text(request.stack_compatibility_group, 100),
+                "created_by": _trim_text(request.created_by, 50),
+            },
+        )
 
     def list_shelf_life_rules(self, customer_id: int) -> list[dict[str, Any]]:
         return self.gateway.fetch_all(

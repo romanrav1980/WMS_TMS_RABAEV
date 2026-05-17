@@ -1,6 +1,54 @@
-# Wiki Log
+﻿# Wiki Log
 
 Append-only log of root wiki updates.
+
+## [2026-05-17] mes-raw-shortage-transfer-tz | Added BOM raw shortage and transfer task specification
+
+- Added [`requirements/mes_raw_shortage_replenishment_tz.md`](requirements/mes_raw_shortage_replenishment_tz.md).
+- Defined the pre-production BOM raw-material shortage calculation, free-stock logic, transfer tasks, reservations, Oracle tables, PL/SQL API, FastAPI endpoints, admin UI block, rights, audit/traceability events, MVP, and acceptance criteria.
+- The target result of shortage planning is a controlled transfer task from raw warehouse to production; old WMS stock is changed only after task confirmation through MES movement and the existing `RRL_EVENTS` bridge.
+
+## [2026-05-17] slow-sql-diagnostics | Added Oracle-native and API-bound SQL diagnostics
+
+- Added migration `022_apply.sql` for `RRL_SQL_SLOW_LOG`, its sequence/indexes, and the `slow_sql_view` admin right.
+- Added Oracle session tagging in the Python API through `DBMS_APPLICATION_INFO` and `DBMS_SESSION.CLIENT_IDENTIFIER`.
+- Added centralized slow SQL logging in `OracleGateway`, tied to API call id, request id, path, SQL hash, bind snapshot, elapsed time, and errors.
+- Added admin endpoints `GET /api/admin/slow-sql`, `/top`, `/oracle-top`, and detail by log id.
+- Extended the API audit admin page with a Slow SQL block for application log rows and Oracle-native top SQL.
+- Applied SYSDBA grants for `V$SQL`, `V$SESSION`, and `V$SQLAREA` so Oracle-native diagnostics are visible from the API.
+
+## [2026-05-17] mes-completion-e2e-smoke | Closed production completion contour
+
+- Extended MES completion to add idempotent trace links for `RAW_MATERIAL_PALLET -> PRODUCTION_ORDER -> FINISHED_GOODS_LOT -> PALLET -> SSCC`.
+- Extended `tests/smoke/mes_http_workflow.py` so the smoke now verifies BOM, production order, raw issue, production completion, WMS bridge apply, finished-goods batch visibility, finished-goods remains, trace edges, durable outbox, and API audit.
+- Runtime smoke passed with one produced lot, one finished-goods pallet remain, four expected trace edge groups, one outbox event, and API audit records.
+- Extended the raw MES admin page `production-orders.html` into an operator order passport: KPI summary, WMS bridge status, finished-goods batch/remains, traceability edges, and outbox events are visible directly from the selected production order.
+- Added `prod_batch_id` filters to finished-goods batch/remains API so the production order page can read the exact released lot and pallet stock.
+- Added operator workflow helpers on `production-orders.html`: auto order number, raw pallet selection from available raw-material stock by BOM line, issue all BOM raw lines, prefill finished-goods lot/pallet/SSCC, and run the full issue -> complete -> apply WMS cycle from the selected order.
+
+## [2026-05-17] raw-material-admin | Implemented raw-material admin page
+
+- Applied migration `020_apply.sql`: added `RRL_RAW_MATERIAL_SKU`, seeded raw SKU settings from current raw stock and `RM-%` articles, and added raw-material admin rights.
+- Added FastAPI endpoints `GET/PATCH /api/raw-material/skus`, `GET /api/raw-material/warehouses`, and `GET /api/raw-material/remains`.
+- Added raw admin page [`../wiki-raw/wms_admin_ui_reference/raw-material.html`](../wiki-raw/wms_admin_ui_reference/raw-material.html) with SKU settings, raw warehouses, and raw stock by selected warehouses.
+- Runtime smoke returned `30` raw SKUs, `2` raw warehouses, and sample stock rows; Oracle invalid-object check returned `0`.
+- Fixed the raw-material API contract so legacy `RRL_ARTICULS.ACTICUL` is exposed to the UI as `articul`.
+
+## [2026-05-17] finished-goods-admin | Implemented finished-goods admin MVP
+
+- Added [`requirements/finished_goods_admin_tz.md`](requirements/finished_goods_admin_tz.md) for the finished-goods admin page.
+- Applied migration `021_apply.sql`: added `RRL_FINISHED_GOODS_SKU` and finished-goods admin rights.
+- Added FastAPI endpoints `GET/PATCH /api/finished-goods/skus`, `GET /api/finished-goods/warehouses`, `GET /api/finished-goods/batches`, and `GET /api/finished-goods/remains`.
+- Added raw admin page [`../wiki-raw/wms_admin_ui_reference/finished-goods.html`](../wiki-raw/wms_admin_ui_reference/finished-goods.html) with SKU settings, warehouses/buffers, production batches, pallets, SSCC, CRPT, and aggregation columns.
+- Current Oracle test data has `3` finished-goods/buffer warehouses and `0` finished-goods SKUs/stock rows until MES release or a dedicated finished-goods seed creates data.
+
+## [2026-05-17] customer-address-vehicles-product-rules | Corrected customer rule model
+
+- Applied migration `019_apply.sql`: vehicle type and capacity settings now live on `RRL_CUSTOMER_ADDRESS`; unified product picking rules live in `RRL_CUSTOMER_PRODUCT_RULE`.
+- Migrated existing shelf-life and stacking demo data into unified product rules and copied existing customer vehicle demo settings to delivery addresses.
+- Added `GET/POST /api/customers/{customer_id}/product-rules` and updated the raw customer admin page to use one product-rule row for shelf-life plus stacking.
+- Removed visible technical permission strips and `API base` fields from raw admin working screens.
+- Added [`requirements/raw_material_admin_tz.md`](requirements/raw_material_admin_tz.md) for the future `Сырьё` admin page.
 
 ## [2026-05-17] raw-admin-nav-canonical | Unified RAW admin navigation
 

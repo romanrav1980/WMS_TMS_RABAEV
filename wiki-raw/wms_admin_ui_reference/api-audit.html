@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>WMS PRO API Audit</title>
-    <link rel="stylesheet" href="styles.css?v=20260517-icons2" />
+    <link rel="stylesheet" href="styles.css?v=20260517-slow-sql" />
   </head>
   <body class="auth-pending" data-required-permission="api_audit_view">
     <div class="app">
@@ -54,12 +54,7 @@
               <h2>API: журнал и повтор вызовов</h2>
               <button id="apiAuditRefresh" type="button">↻</button>
             </header>
-            <div class="permission-strip">
-              <span>Право просмотра: <b>api_audit_view</b></span>
-              <span>Право повтора: <b>api_audit_replay</b></span>
-            </div>
             <div class="api-audit-toolbar">
-              <label>API base<input id="apiAuditBase" value="http://127.0.0.1:8088" /></label>
               <label>Метод<select id="apiAuditMethod"><option value="">Все</option><option>GET</option><option>POST</option><option>PATCH</option><option>PUT</option><option>DELETE</option></select></label>
               <label>Путь<input id="apiAuditPath" placeholder="/api/production" /></label>
               <label>От ID<input id="apiAuditFromId" type="number" min="1" /></label>
@@ -81,11 +76,36 @@
               <pre id="apiAuditDetails"></pre>
             </div>
           </article>
+
+          <article class="panel api-audit-panel" id="slow-sql">
+            <header>
+              <h2>Slow SQL: долгие запросы</h2>
+              <button id="slowSqlRefresh" type="button">↻</button>
+            </header>
+            <div class="api-audit-toolbar">
+              <label>Путь API<input id="slowSqlPath" placeholder="/api/raw-material" /></label>
+              <label>Мин. мс<input id="slowSqlMinMs" type="number" min="0" value="500" /></label>
+              <label>Лимит<input id="slowSqlLimit" type="number" min="1" max="500" value="50" /></label>
+              <label>Hash SQL<input id="slowSqlHash" placeholder="опционально" /></label>
+              <button id="slowSqlTop" type="button">Топ запросов</button>
+              <button id="slowSqlOracleTop" type="button">Oracle top</button>
+            </div>
+            <div class="api-audit-summary"><span id="slowSqlStatus">Ожидание данных</span><span>Прикладной журнал + Oracle</span></div>
+            <div class="api-audit-content">
+              <div class="api-audit-table-wrap">
+                <table class="api-audit-table">
+                  <thead><tr><th>ID</th><th>Время</th><th>API</th><th>Операция</th><th>мс</th><th>Строк</th><th>Ошибка</th></tr></thead>
+                  <tbody id="slowSqlRows"></tbody>
+                </table>
+              </div>
+              <pre id="slowSqlDetails"></pre>
+            </div>
+          </article>
         </section>
       </main>
     </div>
     <script src="admin-nav.js?v=20260517-navmodule"></script>
-    <script src="admin-auth.js?v=20260517-admin123"></script>
-    <script src="api-audit.js?v=20260517-admin123"></script>
+    <script src="admin-auth.js?v=20260517-cleanui"></script>
+    <script src="api-audit.js?v=20260517-slow-sql"></script>
   </body>
 </html>

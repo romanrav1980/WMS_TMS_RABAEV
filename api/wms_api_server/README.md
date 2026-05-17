@@ -91,6 +91,14 @@ API audit and replay:
 - each call is written before execution as `STARTED` and updated/appended after execution as `DONE` or `ERROR`;
 - replayed calls carry `X-WMS-Replay-Of` and `X-WMS-Replay-Run-Id` and are logged as normal calls.
 
+Slow SQL diagnostics:
+
+- every Oracle call through `OracleGateway` sets `DBMS_APPLICATION_INFO.MODULE/ACTION` and `DBMS_SESSION.CLIENT_IDENTIFIER`;
+- API-bound SQL is tagged as `WMS_API:<api_call_id>`, so Oracle views such as `V$SQL` and `V$SESSION` can be filtered by the API call;
+- SQL calls above `WMS_SQL_SLOW_MS` are written to Oracle table `RRL_SQL_SLOW_LOG` with API path, API call id, SQL hash, parameters, elapsed time, row count, and error text;
+- local defaults: `WMS_SQL_SLOW_LOG_ENABLED=1`, `WMS_SQL_SLOW_MS=500`, `WMS_SQL_SLOW_MAX_TEXT_CHARS=4000`, `WMS_SQL_SLOW_MAX_PARAMS_CHARS=4000`;
+- `GET /api/admin/slow-sql/oracle-top` requires grants from SYSDBA, provided by `022_grant_native_views_system.sql`.
+
 Production traceability:
 
 - `POST /api/production-batches`
@@ -135,11 +143,19 @@ Admin API audit:
 - `GET /api/admin/api-calls/{api_call_id}`
 - `POST /api/admin/api-calls/replay` for selected calls or ID/date ranges; use `dry_run=true` before repeating side-effecting requests.
 
+Admin slow SQL diagnostics:
+
+- `GET /api/admin/slow-sql`
+- `GET /api/admin/slow-sql/{log_id}`
+- `GET /api/admin/slow-sql/top`
+- `GET /api/admin/slow-sql/oracle-top`
+
 Admin permissions:
 
 - `wms_admin_login`: may enter the admin shell.
 - `api_audit_view`: may open the API audit page, list calls, inspect details, and run dry-run replay.
 - `api_audit_replay`: may execute real replay.
+- `slow_sql_view`: may view slow SQL diagnostics and Oracle-native SQL statistics.
 - `rights_admin_view`: may open users/groups/rights administration.
 - `rights_admin_edit`: may edit user groups and group rights.
 - `quality_batch_view`: may view article aging norms and batch shipment readiness.
@@ -208,6 +224,27 @@ Batch quality and shipment readiness:
 - `GET /api/production-batches/{prod_batch_id}/status` returns `AGING_REQUIRED_HOURS`, `SHIPMENT_ALLOWED_AT`, `SHIPMENT_EFFECTIVE_STATUS`, and `IS_SHIPMENT_ALLOWED`.
 - The raw admin page is `http://127.0.0.1:3000/product-shipment-settings.html`.
 
+Raw material administration:
+
+- `GET /api/raw-material/skus`
+- `PATCH /api/raw-material/skus/{articul}`
+- `GET /api/raw-material/warehouses`
+- `GET /api/raw-material/remains`
+- These endpoints require Oracle migration `2026-05-17-020-raw-material-admin`.
+- They use permissions `raw_material_view`, `raw_material_edit`, and `raw_material_stock_view`.
+- The raw admin page is `http://127.0.0.1:3000/raw-material.html`.
+
+Finished goods administration:
+
+- `GET /api/finished-goods/skus`
+- `PATCH /api/finished-goods/skus/{articul}`
+- `GET /api/finished-goods/warehouses`
+- `GET /api/finished-goods/batches`
+- `GET /api/finished-goods/remains`
+- These endpoints require Oracle migration `2026-05-17-021-finished-goods-admin`.
+- They use permissions `finished_goods_view`, `finished_goods_edit`, `finished_goods_stock_view`, and `finished_goods_batch_view`.
+- The raw admin page is `http://127.0.0.1:3000/finished-goods.html`.
+
 Customer orders for picking planning:
 
 - `GET /api/customers`
@@ -215,6 +252,8 @@ Customer orders for picking planning:
 - `GET /api/customers/{customer_id}`
 - `PATCH /api/customers/{customer_id}`
 - `POST /api/customers/{customer_id}/addresses`
+- `GET /api/customers/{customer_id}/product-rules`
+- `POST /api/customers/{customer_id}/product-rules`
 - `GET /api/customers/{customer_id}/shelf-life-rules`
 - `POST /api/customers/{customer_id}/shelf-life-rules`
 - `GET /api/customers/{customer_id}/stack-rules`
@@ -227,7 +266,8 @@ Customer orders for picking planning:
 - `GET /api/customer-orders/{customer_order_id}/fulfillment`
 - `GET /api/vehicle-types`
 - `POST /api/vehicle-types`
-- These endpoints require Oracle migrations `2026-05-17-014-customer-order-foundation` and `2026-05-17-015-customer-rules-vehicle-capacity`.
+- Product rules are the current UI/API model for shelf-life plus stacking in one row. Vehicle capacity belongs to customer delivery addresses. The older split shelf/stack/vehicle endpoints remain for compatibility.
+- These endpoints require Oracle migrations `2026-05-17-014-customer-order-foundation`, `2026-05-17-015-customer-rules-vehicle-capacity`, and `2026-05-17-019-customer-address-vehicles-product-rules`.
 - They use permissions `customer_view`, `customer_edit`, `customer_order_view`, `customer_order_import`, `customer_fulfillment_view`, `customer_rule_view`, `customer_rule_edit`, `vehicle_type_view`, and `vehicle_type_edit`.
 - Raw admin pages: `wiki-raw/wms_admin_ui_reference/customers.html` and `wiki-raw/wms_admin_ui_reference/customer-orders.html`.
 
@@ -296,3 +336,6 @@ Checked on 2026-05-17:
 - The updated backend was launched through `serv.bat` and smoke-tested on `127.0.0.1:8088`.
 - Migration `016` apply/verify passed; `RRL_PICKING_API` is valid; HTTP smoke created, read, cancelled, and cleaned a picking plan through the new API.
 - Migration `017` apply/verify passed; `RRL_PICK_TOPOLOGY_API` and `RRL_PICKING_API` are valid; HTTP smoke created pick topology and verified case-pick task sequencing.
+- MES HTTP workflow smoke now verifies the full completion contour: BOM, production order, raw issue, completion, WMS bridge apply, finished-goods batch/remains visibility, trace links, durable outbox, and API audit.
+- The raw MES admin page `production-orders.html` now works as an operator order passport with WMS bridge status, finished-goods lot/remains, trace edges, and outbox events for the selected order.
+- The same page has operator workflow helpers: generate order number, select raw pallets from free raw stock by BOM line, issue all BOM raw lines, prefill finished-goods lot/pallet/SSCC, and run the full MES completion cycle.

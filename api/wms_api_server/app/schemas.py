@@ -391,6 +391,38 @@ class WarehouseSettingsUpdateRequest(BaseModel):
     ware_comment: str | None = None
 
 
+class RawMaterialSkuSettingsUpdateRequest(BaseModel):
+    is_raw_material: int | None = None
+    raw_group: str | None = None
+    mercury_required: int | None = None
+    lot_required: int | None = None
+    expiry_required: int | None = None
+    min_stock_qty: float | None = Field(default=None, ge=0)
+    target_stock_qty: float | None = Field(default=None, ge=0)
+    allowed_ware_ids: str | None = None
+    allowed_zone_codes: str | None = None
+    technologist_comment: str | None = None
+    active: int | None = None
+    updated_by: str | None = None
+
+
+class FinishedGoodsSkuSettingsUpdateRequest(BaseModel):
+    is_finished_goods: int | None = None
+    product_group: str | None = None
+    gtin: str | None = None
+    crpt_required: int | None = None
+    aggregation_required: int | None = None
+    sscc_required: int | None = None
+    pallet_label_required: int | None = None
+    quality_hold_required: int | None = None
+    default_pallet_case_qty: float | None = Field(default=None, ge=0)
+    default_layer_qty: float | None = Field(default=None, ge=0)
+    default_layer_count: float | None = Field(default=None, ge=0)
+    technologist_comment: str | None = None
+    active: int | None = None
+    updated_by: str | None = None
+
+
 class ProductShipmentSettingsUpdateRequest(BaseModel):
     shipment_aging_hours: float | None = Field(default=None, ge=0)
     shipment_aging_comment: str | None = None
@@ -437,6 +469,29 @@ class CustomerVehicleRuleCreateRequest(BaseModel):
     max_weight: float | None = Field(default=None, ge=0)
     max_volume: float | None = Field(default=None, ge=0)
     split_order_by_capacity: int = 1
+    rule_priority: int = 100
+    active: int = 1
+    valid_from: date | None = None
+    valid_to: date | None = None
+    created_by: str | None = None
+
+
+class CustomerProductRuleCreateRequest(BaseModel):
+    customer_store_map_id: int | None = None
+    articul: str | None = None
+    product_group: str | None = None
+    min_shelf_life_days: float | None = Field(default=None, ge=0)
+    min_shelf_life_percent: float | None = Field(default=None, ge=0, le=100)
+    pallet_case_qty: float | None = Field(default=None, ge=0)
+    pallet_layer_qty: float | None = Field(default=None, ge=0)
+    pallet_layer_count: float | None = Field(default=None, ge=0)
+    max_pallet_weight: float | None = Field(default=None, ge=0)
+    max_pallet_volume: float | None = Field(default=None, ge=0)
+    max_pallet_height: float | None = Field(default=None, ge=0)
+    pallet_type: str | None = None
+    allow_top_stacking: int = 0
+    must_be_separate_pallet: int = 0
+    stack_compatibility_group: str | None = None
     rule_priority: int = 100
     active: int = 1
     valid_from: date | None = None
@@ -493,6 +548,11 @@ class CustomerAddressCreateRequest(BaseModel):
     region: str | None = None
     postal_code: str | None = None
     gln: str | None = None
+    vehicle_type_id: int | None = None
+    max_pallet_count: float | None = Field(default=None, ge=0)
+    max_weight: float | None = Field(default=None, ge=0)
+    max_volume: float | None = Field(default=None, ge=0)
+    split_order_by_capacity: int = 1
     active: int = 1
     created_by: str | None = None
 

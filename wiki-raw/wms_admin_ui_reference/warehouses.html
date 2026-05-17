@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>WMS PRO Warehouses</title>
-    <link rel="stylesheet" href="styles.css?v=20260517-icons2" />
+    <link rel="stylesheet" href="styles.css?v=20260517-cleanui" />
   </head>
   <body class="auth-pending" data-required-permission="warehouse_settings_view">
     <div class="app">
@@ -49,12 +49,7 @@
         <section class="admin-page rights-page">
           <article class="panel rights-users">
             <header><h2>Настройки складов</h2><button id="warehouseRefresh" type="button">↻</button></header>
-            <div class="permission-strip">
-              <span>Просмотр: <b>warehouse_settings_view</b></span>
-              <span>Изменение: <b>warehouse_settings_edit</b></span>
-            </div>
             <div class="rights-toolbar">
-              <label>API base<input id="warehouseBase" value="http://127.0.0.1:8088" /></label>
               <label>Роль<select id="warehouseRoleFilter"><option value="">Все</option><option>RAW_MATERIAL</option><option>PRODUCTION</option><option>PRODUCTION_BUFFER</option><option>FINISHED_GOODS</option></select></label>
               <label>MES<select id="warehouseMesFilter"><option value="">Все</option><option value="1">Да</option><option value="0">Нет</option></select></label>
               <label>Лимит<input id="warehouseLimit" type="number" min="1" max="500" value="200" /></label>
@@ -89,7 +84,7 @@
       </main>
     </div>
     <script src="admin-nav.js?v=20260517-navmodule"></script>
-    <script src="admin-auth.js?v=20260517-warehouses"></script>
-    <script src="warehouses.js?v=20260517-warehouses"></script>
+    <script src="admin-auth.js?v=20260517-cleanui"></script>
+    <script src="warehouses.js?v=20260517-cleanui"></script>
   </body>
 </html>

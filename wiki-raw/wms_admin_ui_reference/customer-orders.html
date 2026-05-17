@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>WMS PRO Заказы клиентов</title>
-    <link rel="stylesheet" href="styles.css?v=20260517-icons2" />
+    <link rel="stylesheet" href="styles.css?v=20260517-cleanui" />
   </head>
   <body class="auth-pending" data-required-permission="customer_order_view">
     <div class="app">
@@ -49,11 +49,6 @@
         <section class="admin-page rights-page">
           <article class="panel rights-users">
             <header><h2>Реестр заказов клиентов</h2><button id="orderRefresh" type="button">Обновить</button></header>
-            <div class="permission-strip">
-              <span>Просмотр: <b>customer_order_view</b></span>
-              <span>Импорт legacy: <b>customer_order_import</b></span>
-              <span>Факт исполнения: <b>customer_fulfillment_view</b></span>
-            </div>
             <div class="rights-toolbar">
               <label>Статус<select id="orderStatus"><option value="">Все</option><option>IMPORTED</option><option>OPEN</option><option>PLANNED_FULL</option><option>PLANNED_PARTIAL</option><option>NO_STOCK</option><option>IN_WAVE</option><option>PICKING</option><option>FULFILLED</option><option>CANCELLED</option></select></label>
               <label>Заказ<input id="orderNo" placeholder="ORDER_NO" /></label>
@@ -97,7 +92,7 @@
       </main>
     </div>
     <script src="admin-nav.js?v=20260517-navmodule"></script>
-    <script src="admin-auth.js?v=20260517-admin123"></script>
-    <script src="customer-orders.js?v=20260517-retail"></script>
+    <script src="admin-auth.js?v=20260517-cleanui"></script>
+    <script src="customer-orders.js?v=20260517-cleanui"></script>
   </body>
 </html>

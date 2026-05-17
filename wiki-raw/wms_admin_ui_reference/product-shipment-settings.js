@@ -6,7 +6,7 @@ const productState = {
 const productEl = (id) => document.getElementById(id);
 
 function productApiBase() {
-  return productEl("productBase").value.replace(/\/$/, "");
+  return (window.wmsAdminAuth?.state?.apiBase || "http://127.0.0.1:8088").replace(/\/$/, "");
 }
 
 function productHeaders(extra = {}) {

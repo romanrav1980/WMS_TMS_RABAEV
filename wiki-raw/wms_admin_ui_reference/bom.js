@@ -6,7 +6,7 @@ const bomState = {
 const bomEl = (id) => document.getElementById(id);
 
 function bomApiBase() {
-  return bomEl("bomBase").value.replace(/\/$/, "");
+  return (window.wmsAdminAuth?.state?.apiBase || "http://127.0.0.1:8088").replace(/\/$/, "");
 }
 
 function bomHeaders(extra = {}) {

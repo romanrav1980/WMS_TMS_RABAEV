@@ -9,6 +9,7 @@ from ..auth import (
     require_permission,
 )
 from ..schemas import (
+    CustomerProductRuleCreateRequest,
     CustomerShelfLifeRuleCreateRequest,
     CustomerStackRuleCreateRequest,
     CustomerVehicleRuleCreateRequest,
@@ -17,6 +18,25 @@ from ..schemas import (
 from ..services.customer_rule_service import CustomerRuleService
 
 router = APIRouter(tags=["customer-rules"])
+
+
+@router.get("/api/customers/{customer_id}/product-rules")
+def list_product_rules(
+    customer_id: int,
+    _user: AdminUser = Depends(require_permission(CUSTOMER_RULE_VIEW_PERMISSION)),
+) -> list[dict]:
+    return CustomerRuleService().list_product_rules(customer_id)
+
+
+@router.post("/api/customers/{customer_id}/product-rules")
+def create_product_rule(
+    customer_id: int,
+    request: CustomerProductRuleCreateRequest,
+    user: AdminUser = Depends(require_permission(CUSTOMER_RULE_EDIT_PERMISSION)),
+) -> dict[str, int]:
+    request.created_by = request.created_by or user.username
+    rule_id = CustomerRuleService().create_product_rule(customer_id, request)
+    return {"customer_product_rule_id": rule_id}
 
 
 @router.get("/api/customers/{customer_id}/shelf-life-rules")

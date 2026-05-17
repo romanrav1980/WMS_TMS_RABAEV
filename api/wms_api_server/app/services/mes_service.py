@@ -65,7 +65,7 @@ class MesService:
 
     def complete_order(self, production_order_id: int, request: MesCompleteOrderRequest) -> int:
         payload = [_model_dict(pallet) for pallet in request.pallets]
-        return self.gateway.call_number_plsql(
+        completion_id = self.gateway.call_number_plsql(
             """
             begin
               :result := RRL_MES_PRODUCTION_API.complete_order(
@@ -89,6 +89,8 @@ class MesService:
                 "created_by": request.created_by,
             },
         )
+        self._ensure_completion_trace_links(production_order_id, request)
+        return completion_id
 
     def apply_wms(self, production_order_id: int, request: MesApplyWmsRequest) -> None:
         self.gateway.execute_plsql(
@@ -270,6 +272,212 @@ class MesService:
             "raw_usage": usages,
             "pallets": pallets,
         }
+
+    def _ensure_completion_trace_links(
+        self,
+        production_order_id: int,
+        request: MesCompleteOrderRequest,
+    ) -> None:
+        rows = self.gateway.fetch_all(
+            """
+            select PRODUCTION_ORDER_ID, ORDER_NO, PROD_BATCH_ID, FACT_QTY, UNIT_CODE
+              from RRL_PRODUCTION_ORDER
+             where PRODUCTION_ORDER_ID = :production_order_id
+            """,
+            {"production_order_id": production_order_id},
+        )
+        if not rows or rows[0].get("prod_batch_id") is None:
+            return
+
+        order = rows[0]
+        prod_batch_id = str(order["prod_batch_id"])
+        created_by = request.created_by or "API"
+        unit_code = request.unit_code or order.get("unit_code") or "KG"
+        trace_event_id = self._find_completion_trace_event_id(production_order_id)
+
+        self._add_trace_edge_once(
+            from_entity_type="PRODUCTION_ORDER",
+            from_entity_id=str(production_order_id),
+            to_entity_type="FINISHED_GOODS_LOT",
+            to_entity_id=prod_batch_id,
+            edge_type="PRODUCES",
+            quantity=request.fact_qty or order.get("fact_qty"),
+            unit_code=unit_code,
+            trace_event_id=trace_event_id,
+            created_by=created_by,
+        )
+
+        raw_usages = self.gateway.fetch_all(
+            """
+            select RAW_BATCH_ID, RAW_ARTICUL, QUANTITY_FACT, UNIT_CODE
+              from RRL_PROD_RAW_USAGE
+             where PRODUCTION_ORDER_ID = :production_order_id
+                or PROD_BATCH_ID = :prod_batch_id
+             order by RAW_USAGE_ID
+            """,
+            {"production_order_id": production_order_id, "prod_batch_id": order["prod_batch_id"]},
+        )
+        raw_pallets = self.gateway.fetch_all(
+            """
+            select UID_PALLET, RAW_BATCH_ID, RAW_ARTICUL, QUANTITY, UNIT_CODE
+              from RRL_MES_MOVEMENT
+             where PRODUCTION_ORDER_ID = :production_order_id
+               and MOVEMENT_TYPE = 'RAW_ISSUE_TO_PRODUCTION'
+               and STATUS <> 'CANCELLED'
+             order by MOVEMENT_ID
+            """,
+            {"production_order_id": production_order_id},
+        )
+
+        for raw in raw_usages:
+            if raw.get("raw_batch_id") is not None:
+                self._add_trace_edge_once(
+                    from_entity_type="RAW_MATERIAL_LOT",
+                    from_entity_id=str(raw["raw_batch_id"]),
+                    to_entity_type="PRODUCTION_ORDER",
+                    to_entity_id=str(production_order_id),
+                    edge_type="CONSUMED_BY",
+                    quantity=raw.get("quantity_fact"),
+                    unit_code=raw.get("unit_code") or unit_code,
+                    trace_event_id=trace_event_id,
+                    created_by=created_by,
+                )
+            elif raw.get("raw_articul"):
+                self._add_trace_edge_once(
+                    from_entity_type="RAW_MATERIAL_ARTICUL",
+                    from_entity_id=str(raw["raw_articul"]),
+                    to_entity_type="PRODUCTION_ORDER",
+                    to_entity_id=str(production_order_id),
+                    edge_type="CONSUMED_BY",
+                    quantity=raw.get("quantity_fact"),
+                    unit_code=raw.get("unit_code") or unit_code,
+                    trace_event_id=trace_event_id,
+                    created_by=created_by,
+                )
+
+        for raw in raw_pallets:
+            if raw.get("uid_pallet"):
+                self._add_trace_edge_once(
+                    from_entity_type="RAW_MATERIAL_PALLET",
+                    from_entity_id=str(raw["uid_pallet"]),
+                    to_entity_type="PRODUCTION_ORDER",
+                    to_entity_id=str(production_order_id),
+                    edge_type="CONSUMED_BY",
+                    quantity=raw.get("quantity"),
+                    unit_code=raw.get("unit_code") or unit_code,
+                    trace_event_id=trace_event_id,
+                    created_by=created_by,
+                )
+
+        pallets = self.gateway.fetch_all(
+            """
+            select UID_PALLET, SSCC, QUANTITY
+              from RRL_PROD_BATCH_PALLETS
+             where PROD_BATCH_ID = :prod_batch_id
+             order by PALLET_NO, UID_PALLET
+            """,
+            {"prod_batch_id": order["prod_batch_id"]},
+        )
+        for pallet in pallets:
+            uid_pallet = pallet.get("uid_pallet")
+            if not uid_pallet:
+                continue
+            self._add_trace_edge_once(
+                from_entity_type="FINISHED_GOODS_LOT",
+                from_entity_id=prod_batch_id,
+                to_entity_type="PALLET",
+                to_entity_id=str(uid_pallet),
+                edge_type="PACKED_AS",
+                quantity=pallet.get("quantity"),
+                unit_code=unit_code,
+                trace_event_id=trace_event_id,
+                created_by=created_by,
+            )
+            if pallet.get("sscc"):
+                self._add_trace_edge_once(
+                    from_entity_type="PALLET",
+                    from_entity_id=str(uid_pallet),
+                    to_entity_type="SSCC",
+                    to_entity_id=str(pallet["sscc"]),
+                    edge_type="HAS_SSCC",
+                    quantity=pallet.get("quantity"),
+                    unit_code=unit_code,
+                    trace_event_id=trace_event_id,
+                    created_by=created_by,
+                )
+
+    def _find_completion_trace_event_id(self, production_order_id: int) -> int | None:
+        rows = self.gateway.fetch_all(
+            """
+            select TRACE_EVENT_ID
+              from (
+                select TRACE_EVENT_ID
+                  from RRL_TRACE_EVENT
+                 where EVENT_TYPE = 'PRODUCTION_COMPLETED'
+                   and ENTITY_TYPE = 'PRODUCTION_ORDER'
+                   and ENTITY_ID = :entity_id
+                 order by TRACE_EVENT_ID desc
+              )
+             where rownum = 1
+            """,
+            {"entity_id": str(production_order_id)},
+        )
+        return int(rows[0]["trace_event_id"]) if rows else None
+
+    def _add_trace_edge_once(
+        self,
+        from_entity_type: str,
+        from_entity_id: str,
+        to_entity_type: str,
+        to_entity_id: str,
+        edge_type: str,
+        quantity: Any,
+        unit_code: str | None,
+        trace_event_id: int | None,
+        created_by: str | None,
+    ) -> None:
+        self.gateway.execute_plsql(
+            """
+            declare
+              v_count number;
+              v_edge_id number;
+            begin
+              select count(*)
+                into v_count
+                from RRL_TRACE_EDGE
+               where FROM_ENTITY_TYPE = :from_entity_type
+                 and FROM_ENTITY_ID = :from_entity_id
+                 and TO_ENTITY_TYPE = :to_entity_type
+                 and TO_ENTITY_ID = :to_entity_id
+                 and EDGE_TYPE = :edge_type;
+
+              if v_count = 0 then
+                v_edge_id := RRL_TRACEABILITY_API.add_trace_edge(
+                  p_from_entity_type => :from_entity_type,
+                  p_from_entity_id => :from_entity_id,
+                  p_to_entity_type => :to_entity_type,
+                  p_to_entity_id => :to_entity_id,
+                  p_edge_type => :edge_type,
+                  p_quantity => :quantity,
+                  p_unit_code => :unit_code,
+                  p_trace_event_id => :trace_event_id,
+                  p_created_by => :created_by
+                );
+              end if;
+            end;
+            """,
+            {
+                "from_entity_type": from_entity_type,
+                "from_entity_id": from_entity_id,
+                "to_entity_type": to_entity_type,
+                "to_entity_id": to_entity_id,
+                "edge_type": edge_type,
+                "quantity": quantity,
+                "unit_code": unit_code,
+                "trace_event_id": trace_event_id,
+                "created_by": created_by,
+            },
+        )
 
 
 def clamp_limit(value: int) -> int:

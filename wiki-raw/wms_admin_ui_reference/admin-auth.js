@@ -132,7 +132,6 @@ function showLogin() {
       <form id="adminLoginForm" class="login-card">
         <div class="brand login-brand"><div class="brand-mark">W</div><div class="brand-text"><span>WMS</span> PRO</div></div>
         <h1>Вход в админку</h1>
-        <label>API base<input id="loginApiBase" value="${escapeHtml(authState.apiBase)}" /></label>
         <label>Логин<input id="loginUser" value="admin" autocomplete="off" required /></label>
         <label>Пароль<input id="loginPassword" type="password" value="admin123" autocomplete="new-password" required /></label>
         <div class="login-hints">
@@ -156,7 +155,7 @@ function showLogin() {
         await login(
           authEl("loginUser").value.trim(),
           authEl("loginPassword").value,
-          authEl("loginApiBase").value.trim(),
+          authState.apiBase,
         );
       } catch (exc) {
         error.textContent = exc.message;

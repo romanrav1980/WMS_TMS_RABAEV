@@ -15,6 +15,10 @@ class Settings:
     audit_max_body_chars: int
     audit_capture_response_body: bool
     audit_replay_base_url: str
+    slow_sql_enabled: bool
+    slow_sql_threshold_ms: int
+    slow_sql_max_text_chars: int
+    slow_sql_max_params_chars: int
     admin_auth_enabled: bool
     production_exchange_root_dir: str
 
@@ -40,6 +44,10 @@ def get_settings() -> Settings:
         audit_max_body_chars=int(os.getenv("WMS_API_AUDIT_MAX_BODY_CHARS", "200000")),
         audit_capture_response_body=_bool_env("WMS_API_AUDIT_CAPTURE_RESPONSE_BODY", "1"),
         audit_replay_base_url=os.getenv("WMS_API_REPLAY_BASE_URL", "http://127.0.0.1:8088"),
+        slow_sql_enabled=_bool_env("WMS_SQL_SLOW_LOG_ENABLED", "1"),
+        slow_sql_threshold_ms=int(os.getenv("WMS_SQL_SLOW_MS", "500")),
+        slow_sql_max_text_chars=int(os.getenv("WMS_SQL_SLOW_MAX_TEXT_CHARS", "4000")),
+        slow_sql_max_params_chars=int(os.getenv("WMS_SQL_SLOW_MAX_PARAMS_CHARS", "4000")),
         admin_auth_enabled=_bool_env("WMS_ADMIN_AUTH_ENABLED", "1"),
         production_exchange_root_dir=os.getenv("WMS_PRODUCTION_EXCHANGE_ROOT_DIR", "exchange/production_release"),
     )

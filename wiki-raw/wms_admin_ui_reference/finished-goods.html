@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS PRO Готовая продукция</title>
+    <link rel="stylesheet" href="styles.css?v=20260517-finishedgoods" />
+  </head>
+  <body class="auth-pending" data-required-permission="finished_goods_view">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span> PRO</div>
+        </div>
+        <nav class="nav" data-admin-nav data-active-nav="finished"></nav>
+        <div class="sidebar-footer">
+          <div class="factory-mark">
+            <span class="tower t1"></span>
+            <span class="tower t2"></span>
+            <span class="tower t3"></span>
+            <span class="plant-base"></span>
+          </div>
+          <div class="footer-line"><span>Смена</span><b>1 смена</b></div>
+          <div class="footer-line muted"><span>18.05.2025</span><span>10:24</span></div>
+          <div class="footer-line muted"><span>Версия</span><span>2.4.1</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="breadcrumbs"><b>Админ-панель WMS</b><span>/</span><b>Готовая продукция</b></div>
+          <div class="top-actions">
+            <label class="search">
+              <span>Поиск</span>
+              <input id="fgSearchTop" placeholder="Товар, партия, паллета, SSCC..." />
+              <kbd>Ctrl K</kbd>
+            </label>
+            <button class="round alert">12</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">Администратор</b><small id="adminUserRole">WMS</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="admin-page finished-goods-page">
+          <article class="panel fg-sku-panel">
+            <header><h2>SKU готовой продукции</h2><button id="fgRefresh" type="button">Обновить</button></header>
+            <div class="rights-toolbar">
+              <label>Поиск<input id="fgSkuSearch" placeholder="Артикул или название" /></label>
+              <label>Только с остатком<select id="fgOnlyWithStock"><option value="">Все</option><option value="1">Да</option></select></label>
+              <label>Лимит<input id="fgSkuLimit" type="number" min="1" max="500" value="200" /></label>
+              <button id="fgLoadSkus" type="button">Показать</button>
+            </div>
+            <div class="rights-summary"><span id="fgSkuStatus">Ожидание данных</span></div>
+            <div class="rights-table-wrap raw-scroll">
+              <table class="rights-table">
+                <thead>
+                  <tr><th>Артикул</th><th>Название</th><th>GTIN</th><th>ЧЗ</th><th>Остаток</th><th>Паллет</th></tr>
+                </thead>
+                <tbody id="fgSkuRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel fg-warehouse-panel">
+            <header><h2>Склады и буферы</h2></header>
+            <div class="rights-summary"><span id="fgWarehouseStatus">Ожидание данных</span></div>
+            <div class="rights-table-wrap raw-scroll">
+              <table class="rights-table">
+                <thead>
+                  <tr><th></th><th>ID</th><th>Склад</th><th>Роль</th><th>Остаток</th><th>SKU</th></tr>
+                </thead>
+                <tbody id="fgWarehouseRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel fg-settings-panel">
+            <header><h2>Настройки SKU</h2></header>
+            <div class="rights-summary"><span id="fgSkuDetail">Выберите готовую продукцию</span></div>
+            <div class="rights-editor" data-permission="finished_goods_edit">
+              <label>Готовая продукция<select id="fgEditIsFinished"><option value="1">Да</option><option value="0">Нет</option></select></label>
+              <label>Группа<input id="fgEditGroup" /></label>
+              <label>GTIN<input id="fgEditGtin" maxlength="14" /></label>
+              <label>Честный Знак<select id="fgEditCrpt"><option value="0">Нет</option><option value="1">Да</option></select></label>
+              <label>Агрегация<select id="fgEditAggregation"><option value="0">Нет</option><option value="1">Да</option></select></label>
+              <label>SSCC<select id="fgEditSscc"><option value="1">Да</option><option value="0">Нет</option></select></label>
+              <label>Этикетка паллеты<select id="fgEditLabel"><option value="1">Да</option><option value="0">Нет</option></select></label>
+              <label>QA hold<select id="fgEditQualityHold"><option value="0">Нет</option><option value="1">Да</option></select></label>
+              <label>Коробов на паллете<input id="fgEditCases" type="number" min="0" step="1" /></label>
+              <label>Комментарий<input id="fgEditComment" /></label>
+              <button id="fgSaveSku" type="button">Сохранить</button>
+            </div>
+          </article>
+
+          <article class="panel fg-batches-panel">
+            <header><h2>Партии выпуска</h2><button id="fgLoadBatches" type="button">Обновить</button></header>
+            <div class="rights-toolbar">
+              <label>Артикул<input id="fgBatchArticul" /></label>
+              <label>Партия<input id="fgBatchNo" /></label>
+              <label>Качество<select id="fgBatchQuality"><option value="">Все</option><option>RELEASED</option><option>HOLD</option><option>BLOCKED</option><option>UNKNOWN</option></select></label>
+              <label>Лимит<input id="fgBatchLimit" type="number" min="1" max="500" value="200" /></label>
+            </div>
+            <div class="rights-summary"><span id="fgBatchStatus">Ожидание данных</span></div>
+            <div class="rights-table-wrap raw-scroll">
+              <table class="rights-table">
+                <thead>
+                  <tr><th>ID</th><th>Партия</th><th>Артикул</th><th>GTIN</th><th>Кол-во</th><th>Годен до</th><th>Качество</th><th>План.</th><th>CRPT</th><th>Паллет</th></tr>
+                </thead>
+                <tbody id="fgBatchRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel fg-remains-panel">
+            <header><h2>Паллеты и остатки</h2><button id="fgLoadRemains" type="button">Обновить</button></header>
+            <div class="rights-toolbar">
+              <label>Артикул<input id="fgRemainArticul" /></label>
+              <label>Партия<input id="fgRemainBatch" /></label>
+              <label>Ячейка<input id="fgRemainCell" /></label>
+              <label>Качество<select id="fgRemainQuality"><option value="">Все</option><option>RELEASED</option><option>HOLD</option><option>BLOCKED</option><option>UNKNOWN</option></select></label>
+              <label>Доступные<select id="fgRemainAvailable"><option value="1">Да</option><option value="0">Все</option></select></label>
+              <label>Лимит<input id="fgRemainLimit" type="number" min="1" max="1000" value="500" /></label>
+            </div>
+            <div class="rights-summary"><span id="fgRemainStatus">Ожидание данных</span></div>
+            <div class="rights-table-wrap raw-remains-scroll">
+              <table class="rights-table">
+                <thead>
+                  <tr><th>Склад</th><th>Ячейка</th><th>Паллета</th><th>SSCC</th><th>Артикул</th><th>Партия</th><th>Годен до</th><th>Кол-во</th><th>Доступно</th><th>Качество</th><th>CRPT</th><th>Агрегация</th></tr>
+                </thead>
+                <tbody id="fgRemainRows"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="admin-nav.js?v=20260517-navmodule"></script>
+    <script src="admin-auth.js?v=20260517-cleanui"></script>
+    <script src="finished-goods.js?v=20260517-finishedgoods"></script>
+  </body>
+</html>

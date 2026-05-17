@@ -16,6 +16,7 @@ The schema supports:
 - Mercury площадки, операции и журнал регуляторных событий;
 - CRPT lifecycle for ввод/вывод из оборота.
 - API audit/replay journal for recovery after API or server crashes.
+- slow SQL diagnostics tied to API calls and Oracle session metadata.
 - traceability events, genealogy edges, durable event outbox, adapter request log, and QA hold.
 - BOM recipes, component lines, and audit journal for MES production planning.
 - MES production orders, order BOM snapshots, production completion journal, and the WMS event bridge through `RRL_EVENTS`.
@@ -84,7 +85,9 @@ The ledger is intentionally kept as a small foundation table so future Oracle ch
 
 - `RRL_PROD_BATCH`: production batch header.
 - `RRL_PROD_BATCH_PALLETS`: production batch to WMS pallet mapping.
+- `RRL_FINISHED_GOODS_SKU`: admin settings for finished-goods articles, CRPT requirement, SSCC, aggregation, labels, and quality-hold behavior.
 - `RRL_RAW_BATCH`: raw-material batch.
+- `RRL_RAW_MATERIAL_SKU`: admin settings for articles that may be used as raw material; this table extends, but does not replace, legacy `RRL_ARTICULS`.
 - `RRL_PROD_RAW_USAGE`: raw-material usage in a production batch.
 - `RRL_MERCURY_BATCH`: Mercury identifiers, statuses, and product metadata for the production batch.
 - `RRL_CRPT_CODES`: item-level Honest Sign / CRPT codes.
@@ -99,6 +102,7 @@ The ledger is intentionally kept as a small foundation table so future Oracle ch
 - `RRL_REG_OPERATION_JOURNAL`: shared operation journal for Mercury and CRPT events.
 - `RRL_CRPT_CIRCULATION`: ввод/вывод из оборота events for Honest Sign codes.
 - `RRL_API_CALL_LOG`: complete API request/response audit log used for local recovery and replay.
+- `RRL_SQL_SLOW_LOG`: application-level slow SQL journal linked to API call id, request id, SQL hash, elapsed time, bind snapshot, result size, and error text.
 - `RRL_TRACE_EVENT`: immutable internal event facts used by the genealogy model.
 - `RRL_TRACE_EDGE`: directed links between raw lots, VSD, production orders, finished lots, codes, SSCC, shipments, and customers.
 - `RRL_EVENT_OUTBOX`: durable internal event queue for guaranteed future processing.
@@ -112,13 +116,14 @@ The ledger is intentionally kept as a small foundation table so future Oracle ch
 - `RRL_MES_MOVEMENT`: MES movement journal for raw issue, raw consumption, finished lot release, and pallet release.
 - `RRL_MES_COMPLETION`: idempotent production completion journal.
 - `RRL_CUSTOMER`: customer registry for picking planning.
-- `RRL_CUSTOMER_ADDRESS`: customer legal, delivery, billing, and store addresses.
+- `RRL_CUSTOMER_ADDRESS`: customer legal, delivery, billing, and store addresses. Delivery/store addresses also own the applicable vehicle type and capacity settings for that physical destination.
 - `RRL_CUSTOMER_STORE_MAP`: bridge from legacy `RRL_ORDERS.ADDR` to a canonical customer.
 - `RRL_CUSTOMER_ORDER`: canonical customer order imported from legacy WMS or future external sources.
 - `RRL_CUSTOMER_ORDER_ROW`: canonical customer order lines.
 - `RRL_CUSTOMER_ORDER_FULFILLMENT`: fulfillment fact rows linked to legacy assembly pallets.
-- `RRL_CUSTOMER_SHELF_LIFE_RULE`: customer, store, article, and product-group shelf-life acceptance rules.
-- `RRL_CUSTOMER_PRODUCT_STACK_RULE`: customer stacking, palletization, top-stacking, and compatibility rules.
+- `RRL_CUSTOMER_PRODUCT_RULE`: unified customer, store, article, and product-group picking rule that stores shelf-life acceptance and pallet stacking requirements in one row.
+- `RRL_CUSTOMER_SHELF_LIFE_RULE`: legacy-compatible shelf-life rule table retained for historical/API compatibility.
+- `RRL_CUSTOMER_PRODUCT_STACK_RULE`: legacy-compatible stacking rule table retained for historical/API compatibility.
 - `RRL_VEHICLE_TYPE`: vehicle capacity reference, including the default `TRUCK_33` type.
 - `RRL_CUSTOMER_VEHICLE_RULE`: customer vehicle preferences and split-by-capacity rules.
 - `RRL_SHIPMENT_PART`: planned customer-order split into one or more vehicle/shipment parts.

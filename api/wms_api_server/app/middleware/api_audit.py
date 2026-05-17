@@ -8,6 +8,7 @@ from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from ..config import get_settings
+from ..request_context import RequestContext, reset_request_context, set_request_context, update_request_context
 from ..services.api_audit_service import (
     ApiAuditService,
     body_digest,
@@ -30,6 +31,16 @@ class ApiAuditMiddleware(BaseHTTPMiddleware):
         audit = ApiAuditService(settings=settings)
         started = time.perf_counter()
         request_id = str(uuid.uuid4())
+        context_token = set_request_context(
+            RequestContext(
+                request_id=request_id,
+                method=request.method,
+                path=request.url.path,
+                query_string=request.url.query,
+                client_ip=request.client.host if request.client else None,
+                user_agent=request.headers.get("user-agent"),
+            )
+        )
         request_body_bytes = await request.body()
         request_body, request_truncated = decode_limited(
             request_body_bytes,
@@ -79,6 +90,7 @@ class ApiAuditMiddleware(BaseHTTPMiddleware):
                 "local_log_path": local_path,
             }
         )
+        update_request_context(api_call_id=api_call_id)
 
         async def receive() -> dict:
             return {"type": "http.request", "body": request_body_bytes, "more_body": False}
@@ -153,6 +165,8 @@ class ApiAuditMiddleware(BaseHTTPMiddleware):
                 }
             )
             raise
+        finally:
+            reset_request_context(context_token)
 
 
 def is_replayable(request: Request) -> bool:

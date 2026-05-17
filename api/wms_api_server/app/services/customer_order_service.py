@@ -164,11 +164,14 @@ class CustomerOrderService:
               select RRL_CUSTOMER_ADDRESS_SQ.nextval into v_id from dual;
               insert into RRL_CUSTOMER_ADDRESS (
                 CUSTOMER_ADDRESS_ID, CUSTOMER_ID, ADDRESS_TYPE, ADDRESS_TEXT,
-                CITY, REGION, POSTAL_CODE, GLN, ACTIVE, CREATED_AT, CREATED_BY
+                CITY, REGION, POSTAL_CODE, GLN,
+                VEHICLE_TYPE_ID, MAX_PALLET_COUNT, MAX_WEIGHT, MAX_VOLUME,
+                SPLIT_ORDER_BY_CAPACITY, ACTIVE, CREATED_AT, CREATED_BY
               ) values (
                 v_id, :customer_id, cast(:address_type as varchar2(30)), cast(:address_text as varchar2(1000)),
                 cast(:city as varchar2(100)), cast(:region as varchar2(100)), cast(:postal_code as varchar2(20)),
-                cast(:gln as varchar2(32)), nvl(:active, 1), sysdate, cast(:created_by as varchar2(50))
+                cast(:gln as varchar2(32)), :vehicle_type_id, :max_pallet_count, :max_weight, :max_volume,
+                nvl(:split_order_by_capacity, 1), nvl(:active, 1), sysdate, cast(:created_by as varchar2(50))
               );
               :result := v_id;
             end;
@@ -221,8 +224,19 @@ class CustomerOrderService:
                    REGION,
                    POSTAL_CODE,
                    GLN,
+                   VEHICLE_TYPE_ID,
+                   (select vt.VEHICLE_TYPE_CODE
+                      from RRL_VEHICLE_TYPE vt
+                     where vt.VEHICLE_TYPE_ID = a.VEHICLE_TYPE_ID) VEHICLE_TYPE_CODE,
+                   (select vt.VEHICLE_TYPE_NAME
+                      from RRL_VEHICLE_TYPE vt
+                     where vt.VEHICLE_TYPE_ID = a.VEHICLE_TYPE_ID) VEHICLE_TYPE_NAME,
+                   MAX_PALLET_COUNT,
+                   MAX_WEIGHT,
+                   MAX_VOLUME,
+                   SPLIT_ORDER_BY_CAPACITY,
                    ACTIVE
-              from RRL_CUSTOMER_ADDRESS
+              from RRL_CUSTOMER_ADDRESS a
              where CUSTOMER_ID = :customer_id
              order by ADDRESS_TYPE, CUSTOMER_ADDRESS_ID
             """,

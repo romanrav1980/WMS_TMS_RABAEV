@@ -7,7 +7,7 @@ const externalState = {
 const outboxEl = (id) => document.getElementById(id);
 
 function externalApiBase() {
-  return outboxEl("externalBase").value.replace(/\/$/, "");
+  return (window.wmsAdminAuth?.state?.apiBase || "http://127.0.0.1:8088").replace(/\/$/, "");
 }
 
 function externalHeaders(extra = {}) {

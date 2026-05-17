@@ -213,10 +213,12 @@ def upsert_delivery_address(cur: oracledb.Cursor, customer_id: int, payload: dic
             """
             insert into RRL_CUSTOMER_ADDRESS (
               CUSTOMER_ADDRESS_ID, CUSTOMER_ID, ADDRESS_TYPE, ADDRESS_TEXT, CITY, REGION,
-              POSTAL_CODE, GLN, ACTIVE, CREATED_AT, CREATED_BY
+              POSTAL_CODE, GLN, VEHICLE_TYPE_ID, MAX_PALLET_COUNT, MAX_WEIGHT, MAX_VOLUME,
+              SPLIT_ORDER_BY_CAPACITY, ACTIVE, CREATED_AT, CREATED_BY
             ) values (
               :address_id, :customer_id, 'DELIVERY', :address_text, :city, :region,
-              :postal_code, :address_gln, 1, sysdate, :marker
+              :postal_code, :address_gln, :vehicle_type_id, :max_pallet_count, :max_weight, :max_volume,
+              :split_by_vehicle, 1, sysdate, :marker
             )
             """,
             address_id=address_id,
@@ -233,6 +235,11 @@ def upsert_delivery_address(cur: oracledb.Cursor, customer_id: int, payload: dic
                    REGION = :region,
                    POSTAL_CODE = :postal_code,
                    GLN = :address_gln,
+                   VEHICLE_TYPE_ID = :vehicle_type_id,
+                   MAX_PALLET_COUNT = :max_pallet_count,
+                   MAX_WEIGHT = :max_weight,
+                   MAX_VOLUME = :max_volume,
+                   SPLIT_ORDER_BY_CAPACITY = :split_by_vehicle,
                    ACTIVE = 1,
                    UPDATED_AT = sysdate,
                    UPDATED_BY = :marker
@@ -352,6 +359,76 @@ def upsert_stack_rule(cur: oracledb.Cursor, customer_id: int, idx: int, articul:
         )
 
 
+def upsert_product_rule(cur: oracledb.Cursor, customer_id: int, idx: int, articul: str, days: int, percent: int) -> None:
+    rule_id = scalar(
+        cur,
+        """
+        select CUSTOMER_PRODUCT_RULE_ID
+          from RRL_CUSTOMER_PRODUCT_RULE
+         where CUSTOMER_ID = :customer_id
+           and CREATED_BY = :marker
+           and rownum = 1
+        """,
+        customer_id=customer_id,
+        marker=MARKER,
+    )
+    payload = {
+        "articul": articul,
+        "days": days,
+        "percent": percent,
+        "pallet_case_qty": STACK_CASES_CYCLE[idx % len(STACK_CASES_CYCLE)],
+        "pallet_layer_qty": 10 + (idx % 4),
+        "pallet_layer_count": 4 + (idx % 4),
+        "allow_top_stacking": 1 if idx % 5 in (0, 1) else 0,
+        "must_be_separate_pallet": 1 if idx in (5, 10, 15, 20) else 0,
+    }
+    if rule_id is None:
+        rule_id = nextval(cur, "RRL_CUSTOMER_PRODUCT_RULE_SQ")
+        cur.execute(
+            """
+            insert into RRL_CUSTOMER_PRODUCT_RULE (
+              CUSTOMER_PRODUCT_RULE_ID, CUSTOMER_ID, ARTICUL,
+              MIN_SHELF_LIFE_DAYS, MIN_SHELF_LIFE_PERCENT,
+              PALLET_CASE_QTY, PALLET_LAYER_QTY, PALLET_LAYER_COUNT,
+              ALLOW_TOP_STACKING, MUST_BE_SEPARATE_PALLET,
+              RULE_PRIORITY, ACTIVE, VALID_FROM, CREATED_AT, CREATED_BY
+            ) values (
+              :rule_id, :customer_id, :articul,
+              :days, :percent,
+              :pallet_case_qty, :pallet_layer_qty, :pallet_layer_count,
+              :allow_top_stacking, :must_be_separate_pallet,
+              10, 1, trunc(sysdate), sysdate, :marker
+            )
+            """,
+            rule_id=rule_id,
+            customer_id=customer_id,
+            marker=MARKER,
+            **payload,
+        )
+    else:
+        cur.execute(
+            """
+            update RRL_CUSTOMER_PRODUCT_RULE
+               set ARTICUL = :articul,
+                   MIN_SHELF_LIFE_DAYS = :days,
+                   MIN_SHELF_LIFE_PERCENT = :percent,
+                   PALLET_CASE_QTY = :pallet_case_qty,
+                   PALLET_LAYER_QTY = :pallet_layer_qty,
+                   PALLET_LAYER_COUNT = :pallet_layer_count,
+                   ALLOW_TOP_STACKING = :allow_top_stacking,
+                   MUST_BE_SEPARATE_PALLET = :must_be_separate_pallet,
+                   RULE_PRIORITY = 10,
+                   ACTIVE = 1,
+                   UPDATED_AT = sysdate,
+                   UPDATED_BY = :marker
+             where CUSTOMER_PRODUCT_RULE_ID = :rule_id
+            """,
+            rule_id=rule_id,
+            marker=MARKER,
+            **payload,
+        )
+
+
 def upsert_vehicle_rule(cur: oracledb.Cursor, customer_id: int, vehicle: tuple, vehicle_id: int, split: int) -> None:
     rule_id = scalar(
         cur,
@@ -445,16 +522,26 @@ def seed_customers(cur: oracledb.Cursor, vehicle_ids: dict[str, int], network: s
                 "region": record.region,
                 "postal_code": (f"35{idx:04d}" if is_magnit else f"14{idx:04d}"),
                 "address_gln": (f"46070020{idx:05d}" if is_magnit else f"46080020{idx:05d}"),
+                "vehicle_type_id": vehicle_ids[vehicle_code],
+                "max_pallet_count": vehicle[2],
+                "max_weight": vehicle[3],
+                "max_volume": vehicle[4],
+                "split_by_vehicle": split,
             },
         )
+        shelf_articul = PRODUCT_CYCLE[(idx - 1 if is_magnit else idx) % len(PRODUCT_CYCLE)]
+        stack_articul = PRODUCT_CYCLE[(idx if is_magnit else idx + 1) % len(PRODUCT_CYCLE)]
+        shelf_days = SHELF_DAYS_CYCLE[(idx + 1 if is_magnit else idx + 2) % len(SHELF_DAYS_CYCLE)]
+        shelf_percent = SHELF_PERCENT_CYCLE[(idx - 1 if is_magnit else idx) % len(SHELF_PERCENT_CYCLE)]
         upsert_shelf_rule(
             cur,
             customer_id,
-            PRODUCT_CYCLE[(idx - 1 if is_magnit else idx) % len(PRODUCT_CYCLE)],
-            SHELF_DAYS_CYCLE[(idx + 1 if is_magnit else idx + 2) % len(SHELF_DAYS_CYCLE)],
-            SHELF_PERCENT_CYCLE[(idx - 1 if is_magnit else idx) % len(SHELF_PERCENT_CYCLE)],
+            shelf_articul,
+            shelf_days,
+            shelf_percent,
         )
-        upsert_stack_rule(cur, customer_id, idx, PRODUCT_CYCLE[(idx if is_magnit else idx + 1) % len(PRODUCT_CYCLE)])
+        upsert_stack_rule(cur, customer_id, idx, stack_articul)
+        upsert_product_rule(cur, customer_id, idx, shelf_articul, shelf_days, shelf_percent)
         upsert_vehicle_rule(cur, customer_id, vehicle, vehicle_ids[vehicle_code], split)
 
 
@@ -467,6 +554,7 @@ def verify_counts(cur: oracledb.Cursor) -> tuple:
           (select count(*) from RRL_CUSTOMER_ADDRESS a join RRL_CUSTOMER c on c.CUSTOMER_ID = a.CUSTOMER_ID where c.CUSTOMER_CODE like 'MAGNIT-DC-%' or c.CUSTOMER_CODE like 'X5-DC-%') ADDRESS_CNT,
           (select count(*) from RRL_CUSTOMER_SHELF_LIFE_RULE r join RRL_CUSTOMER c on c.CUSTOMER_ID = r.CUSTOMER_ID where c.CUSTOMER_CODE like 'MAGNIT-DC-%' or c.CUSTOMER_CODE like 'X5-DC-%') SHELF_CNT,
           (select count(*) from RRL_CUSTOMER_PRODUCT_STACK_RULE r join RRL_CUSTOMER c on c.CUSTOMER_ID = r.CUSTOMER_ID where c.CUSTOMER_CODE like 'MAGNIT-DC-%' or c.CUSTOMER_CODE like 'X5-DC-%') STACK_CNT,
+          (select count(*) from RRL_CUSTOMER_PRODUCT_RULE r join RRL_CUSTOMER c on c.CUSTOMER_ID = r.CUSTOMER_ID where c.CUSTOMER_CODE like 'MAGNIT-DC-%' or c.CUSTOMER_CODE like 'X5-DC-%') PRODUCT_RULE_CNT,
           (select count(*) from RRL_CUSTOMER_VEHICLE_RULE r join RRL_CUSTOMER c on c.CUSTOMER_ID = r.CUSTOMER_ID where c.CUSTOMER_CODE like 'MAGNIT-DC-%' or c.CUSTOMER_CODE like 'X5-DC-%') VEHICLE_CNT,
           (select count(*) from USER_OBJECTS where STATUS <> 'VALID') INVALID_CNT
         from dual

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>WMS PRO Клиенты</title>
-    <link rel="stylesheet" href="styles.css?v=20260517-icons2" />
+    <link rel="stylesheet" href="styles.css?v=20260517-cleanui" />
   </head>
   <body class="auth-pending" data-required-permission="customer_view">
     <div class="app">
@@ -49,11 +49,6 @@
         <section class="admin-page rights-page">
           <article class="panel rights-users">
             <header><h2>Реестр клиентов</h2><button id="customerRefresh" type="button">Обновить</button></header>
-            <div class="permission-strip">
-              <span>Просмотр: <b>customer_view</b></span>
-              <span>Изменение: <b>customer_edit</b></span>
-              <span>Правила: <b>customer_rule_view / customer_rule_edit</b></span>
-            </div>
             <div class="rights-toolbar">
               <label>Поиск<input id="customerSearch" placeholder="Название, код, адрес" /></label>
               <label>Лимит<input id="customerLimit" type="number" min="1" max="500" value="200" /></label>
@@ -80,8 +75,6 @@
               <label>КПП<input id="customerEditKpp" /></label>
               <label>GLN<input id="customerEditGln" /></label>
               <label>EDI<input id="customerEditEdi" /></label>
-              <label>Тип машины<select id="customerEditVehicle"></select></label>
-              <label>Делить по емкости<select id="customerEditSplit"><option value="1">Да</option><option value="0">Нет</option></select></label>
               <label>Мин. срок, дни<input id="customerEditShelfDays" type="number" min="0" step="1" /></label>
               <label>Мин. срок, %<input id="customerEditShelfPercent" type="number" min="0" max="100" step="1" /></label>
               <button id="customerCreate" type="button">Создать</button>
@@ -94,12 +87,17 @@
               <label>Регион<input id="customerAddressRegion" /></label>
               <label>Индекс<input id="customerAddressPostal" /></label>
               <label>GLN<input id="customerAddressGln" /></label>
+              <label>Тип машины<select id="customerAddressVehicle"></select></label>
+              <label>Паллет<input id="customerAddressVehiclePallets" type="number" min="0" step="1" value="33" /></label>
+              <label>Вес<input id="customerAddressVehicleWeight" type="number" min="0" step="1" /></label>
+              <label>Объем<input id="customerAddressVehicleVolume" type="number" min="0" step="1" /></label>
+              <label>Делить по емкости<select id="customerAddressSplit"><option value="1">Да</option><option value="0">Нет</option></select></label>
               <button id="customerAddAddress" type="button">Добавить адрес</button>
             </div>
             <div class="rights-summary"><span>Адреса и legacy mapping</span></div>
             <div class="rights-table-wrap compact-scroll">
               <table class="rights-table">
-                <thead><tr><th>Тип</th><th>Адрес</th><th>Город</th><th>GLN</th><th>Активен</th></tr></thead>
+                <thead><tr><th>Тип</th><th>Адрес</th><th>Город</th><th>GLN</th><th>Машина</th><th>Паллет</th><th>Активен</th></tr></thead>
                 <tbody id="customerAddressRows"></tbody>
               </table>
               <table class="rights-table">
@@ -115,24 +113,14 @@
               <label>Артикул<input id="customerRuleArticul" placeholder="опционально" /></label>
               <label>Мин. срок, дни<input id="customerRuleShelfDays" type="number" min="0" step="1" /></label>
               <label>Мин. срок, %<input id="customerRuleShelfPercent" type="number" min="0" max="100" step="1" /></label>
-              <button id="customerAddShelfRule" type="button">Добавить срок</button>
-            </div>
-            <div class="rights-toolbar" data-permission="customer_rule_edit">
               <label>Коробов на паллете<input id="customerStackCases" type="number" min="0" step="1" /></label>
               <label>Ярусов<input id="customerStackLayers" type="number" min="0" step="1" /></label>
               <label>Можно сверху<select id="customerStackTop"><option value="0">Нет</option><option value="1">Да</option></select></label>
-              <button id="customerAddStackRule" type="button">Добавить укладку</button>
-            </div>
-            <div class="rights-toolbar" data-permission="customer_rule_edit">
-              <label>Тип машины<select id="customerRuleVehicle"></select></label>
-              <label>Паллет<input id="customerVehiclePallets" type="number" min="0" step="1" value="33" /></label>
-              <label>Вес<input id="customerVehicleWeight" type="number" min="0" step="1" /></label>
-              <label>Объем<input id="customerVehicleVolume" type="number" min="0" step="1" /></label>
-              <button id="customerAddVehicleRule" type="button">Добавить машину</button>
+              <button id="customerAddProductRule" type="button">Добавить правило</button>
             </div>
             <div class="rights-table-wrap compact-scroll">
               <table class="rights-table">
-                <thead><tr><th>Тип</th><th>Артикул</th><th>Дни</th><th>%</th><th>Коробов</th><th>Машина</th><th>Активно</th></tr></thead>
+                <thead><tr><th>Артикул</th><th>Дни</th><th>%</th><th>Коробов</th><th>Ярусов</th><th>Сверху</th><th>Активно</th></tr></thead>
                 <tbody id="customerRuleRows"></tbody>
               </table>
             </div>
@@ -141,7 +129,7 @@
       </main>
     </div>
     <script src="admin-nav.js?v=20260517-navmodule"></script>
-    <script src="admin-auth.js?v=20260517-admin123"></script>
-    <script src="customers.js?v=20260517-retail"></script>
+    <script src="admin-auth.js?v=20260517-cleanui"></script>
+    <script src="customers.js?v=20260517-cleanui"></script>
   </body>
 </html>

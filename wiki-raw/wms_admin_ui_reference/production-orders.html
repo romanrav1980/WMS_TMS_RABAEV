@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>WMS PRO MES</title>
-    <link rel="stylesheet" href="styles.css?v=20260517-icons2" />
+    <link rel="stylesheet" href="styles.css?v=20260517-mes-operator" />
   </head>
   <body class="auth-pending" data-required-permission="mes_production_view">
     <div class="app">
@@ -49,14 +49,7 @@
         <section class="admin-page rights-page">
           <article class="panel rights-users">
             <header><h2>MES: производственные заказы</h2><button id="mesRefresh" type="button">↻</button></header>
-            <div class="permission-strip">
-              <span>Просмотр: <b>mes_production_view</b></span>
-              <span>Изменение: <b>mes_production_edit</b></span>
-              <span>Завершение: <b>mes_production_complete</b></span>
-              <span>WMS bridge: <b>mes_wms_bridge_apply</b></span>
-            </div>
             <div class="rights-toolbar">
-              <label>API base<input id="mesBase" value="http://127.0.0.1:8088" /></label>
               <label>Статус<select id="mesStatusFilter"><option value="">Все</option><option>RELEASED</option><option>IN_PROGRESS</option><option>COMPLETED</option><option>CANCELLED</option></select></label>
               <label>Артикул<input id="mesTargetFilter" placeholder="FG-001" /></label>
               <label>Лимит<input id="mesLimit" type="number" min="1" max="500" value="100" /></label>
@@ -69,6 +62,7 @@
               <label>План<input id="mesNewQty" type="number" step="0.001" value="1000" /></label>
               <label>Ед.<input id="mesNewUnit" value="KG" /></label>
               <label>Линия<input id="mesNewLine" placeholder="LINE-1" /></label>
+              <button id="mesAutoOrderNo" type="button">Новый заказ</button>
               <button id="mesFindBom" type="button">Подобрать BOM</button>
               <button id="mesCreateOrder" type="button">Создать</button>
               <button id="mesFillDemo" type="button">Тестовые поля</button>
@@ -85,6 +79,12 @@
           <article class="panel rights-groups">
             <header><h2>Карточка заказа и движения</h2></header>
             <div class="rights-summary"><span id="mesDetailStatus">Выберите заказ</span></div>
+            <div class="mes-kpi-grid" id="mesKpiGrid">
+              <div><span>Статус</span><b id="mesKpiStatus">-</b></div>
+              <div><span>План</span><b id="mesKpiPlan">-</b></div>
+              <div><span>Факт</span><b id="mesKpiFact">-</b></div>
+              <div><span>WMS bridge</span><b id="mesKpiWms">-</b></div>
+            </div>
             <pre id="mesDetails"></pre>
             <div class="rights-summary"><span>План сырья из BOM snapshot</span></div>
             <div class="rights-table-wrap">
@@ -99,19 +99,30 @@
               <label>Кол-во<input id="mesRawQty" type="number" step="0.001" /></label>
               <label>Ячейка откуда<input id="mesRawFrom" placeholder="RAW-01" /></label>
               <label>Ячейка пр-ва<input id="mesRawTo" value="MES_PROD" /></label>
+              <button id="mesPickRaw" type="button">Подобрать сырьё</button>
               <button id="mesIssueRaw" type="button">Выдать сырье</button>
+              <button id="mesIssueAllRaw" type="button">Выдать BOM</button>
             </div>
             <div class="rights-editor" data-permission="mes_production_complete">
               <label>Партия<input id="mesLotNo" placeholder="LOT-0001" /></label>
               <label>Факт<input id="mesFactQty" type="number" step="0.001" /></label>
               <label>FG паллет<input id="mesFgPallet" placeholder="FG-PALLET-001" /></label>
               <label>SSCC<input id="mesFgSscc" placeholder="000000000000000001" /></label>
+              <button id="mesPrefillCompletion" type="button">Заполнить выпуск</button>
               <button id="mesCompleteOrder" type="button">Завершить</button>
               <button id="mesApplyWms" type="button" data-permission="mes_wms_bridge_apply">Применить в WMS</button>
+              <button id="mesRunFullCycle" type="button">Полный цикл</button>
               <button id="mesLoadGenealogy" type="button">Genealogy</button>
             </div>
             <div class="rights-summary"><span>Genealogy: сырье → заказ → партия → паллеты</span></div>
             <pre id="mesGenealogy"></pre>
+            <div class="rights-summary"><span>Готовая партия и остатки</span></div>
+            <div class="rights-table-wrap compact-scroll">
+              <table class="rights-table">
+                <thead><tr><th>Партия</th><th>Артикул</th><th>Качество</th><th>Отгрузка</th><th>Паллет</th><th>Остаток</th></tr></thead>
+                <tbody id="mesFinishedGoodsRows"></tbody>
+              </table>
+            </div>
             <div class="rights-table-wrap">
               <table class="rights-table">
                 <thead><tr><th>Сырье</th><th>План</th><th>Факт</th><th>Ед.</th><th>Когда</th><th>Кем</th></tr></thead>
@@ -130,12 +141,26 @@
                 <tbody id="mesMovementRows"></tbody>
               </table>
             </div>
+            <div class="rights-summary"><span>Traceability edges</span></div>
+            <div class="rights-table-wrap compact-scroll">
+              <table class="rights-table">
+                <thead><tr><th>Откуда</th><th>Куда</th><th>Связь</th><th>Кол-во</th><th>Событие</th></tr></thead>
+                <tbody id="mesTraceRows"></tbody>
+              </table>
+            </div>
+            <div class="rights-summary"><span>Outbox событий</span></div>
+            <div class="rights-table-wrap compact-scroll">
+              <table class="rights-table">
+                <thead><tr><th>ID</th><th>Событие</th><th>Цель</th><th>Статус</th><th>Попытки</th><th>Ошибка</th></tr></thead>
+                <tbody id="mesOutboxRows"></tbody>
+              </table>
+            </div>
           </article>
         </section>
       </main>
     </div>
     <script src="admin-nav.js?v=20260517-navmodule"></script>
-    <script src="admin-auth.js?v=20260517-mes"></script>
-    <script src="production-orders.js?v=20260517-mes"></script>
+    <script src="admin-auth.js?v=20260517-cleanui"></script>
+    <script src="production-orders.js?v=20260517-mes-operator"></script>
   </body>
 </html>

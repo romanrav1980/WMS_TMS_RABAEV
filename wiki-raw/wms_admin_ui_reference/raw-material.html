@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS PRO Сырье</title>
+    <link rel="stylesheet" href="styles.css?v=20260517-rawmaterial" />
+  </head>
+  <body class="auth-pending" data-required-permission="raw_material_view">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span> PRO</div>
+        </div>
+        <nav class="nav" data-admin-nav data-active-nav="raw"></nav>
+        <div class="sidebar-footer">
+          <div class="factory-mark">
+            <span class="tower t1"></span>
+            <span class="tower t2"></span>
+            <span class="tower t3"></span>
+            <span class="plant-base"></span>
+          </div>
+          <div class="footer-line"><span>Смена</span><b>1 смена</b></div>
+          <div class="footer-line muted"><span>18.05.2025</span><span>10:24</span></div>
+          <div class="footer-line muted"><span>Версия</span><span>2.4.1</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="breadcrumbs"><b>Админ-панель WMS</b><span>/</span><b>Сырье</b></div>
+          <div class="top-actions">
+            <label class="search">
+              <span>Поиск</span>
+              <input id="rawSearchTop" placeholder="Сырье, склад, паллета, партия..." />
+              <kbd>Ctrl K</kbd>
+            </label>
+            <button class="round alert">12</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">Администратор</b><small id="adminUserRole">WMS</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="admin-page raw-material-page">
+          <article class="panel raw-sku-panel">
+            <header><h2>SKU сырья</h2><button id="rawRefresh" type="button">Обновить</button></header>
+            <div class="rights-toolbar">
+              <label>Поиск<input id="rawSkuSearch" placeholder="Артикул или название" /></label>
+              <label>Только с остатком<select id="rawOnlyWithStock"><option value="">Все</option><option value="1">Да</option></select></label>
+              <label>Лимит<input id="rawSkuLimit" type="number" min="1" max="500" value="200" /></label>
+              <button id="rawLoadSkus" type="button">Показать</button>
+            </div>
+            <div class="rights-summary"><span id="rawSkuStatus">Ожидание данных</span></div>
+            <div class="rights-table-wrap raw-scroll">
+              <table class="rights-table">
+                <thead>
+                  <tr>
+                    <th>Артикул</th>
+                    <th>Название</th>
+                    <th>Группа</th>
+                    <th>Остаток</th>
+                    <th>Паллет</th>
+                  </tr>
+                </thead>
+                <tbody id="rawSkuRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel raw-warehouse-panel">
+            <header><h2>Склады сырья</h2></header>
+            <div class="rights-summary"><span id="rawWarehouseStatus">Ожидание данных</span></div>
+            <div class="rights-table-wrap raw-scroll">
+              <table class="rights-table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>ID</th>
+                    <th>Склад</th>
+                    <th>Остаток</th>
+                    <th>SKU</th>
+                  </tr>
+                </thead>
+                <tbody id="rawWarehouseRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel raw-settings-panel">
+            <header><h2>Настройки SKU</h2></header>
+            <div class="rights-summary"><span id="rawSkuDetail">Выберите сырье</span></div>
+            <div class="rights-editor" data-permission="raw_material_edit">
+              <label>Сырье<select id="rawEditIsRaw"><option value="1">Да</option><option value="0">Нет</option></select></label>
+              <label>Группа<input id="rawEditGroup" placeholder="MEAT, PACKAGING, ADDITIVE" /></label>
+              <label>Меркурий<select id="rawEditMercury"><option value="0">Нет</option><option value="1">Да</option></select></label>
+              <label>Партия обязательна<select id="rawEditLot"><option value="1">Да</option><option value="0">Нет</option></select></label>
+              <label>Срок годности<select id="rawEditExpiry"><option value="1">Да</option><option value="0">Нет</option></select></label>
+              <label>Мин. остаток<input id="rawEditMinQty" type="number" min="0" step="0.001" /></label>
+              <label>Целевой остаток<input id="rawEditTargetQty" type="number" min="0" step="0.001" /></label>
+              <label>Комментарий<input id="rawEditComment" /></label>
+              <button id="rawSaveSku" type="button">Сохранить</button>
+            </div>
+          </article>
+
+          <article class="panel raw-remains-panel">
+            <header><h2>Остатки сырья</h2><button id="rawLoadRemains" type="button">Обновить</button></header>
+            <div class="rights-toolbar">
+              <label>Артикул<input id="rawRemainArticul" placeholder="авто из выбранного SKU" /></label>
+              <label>Ячейка<input id="rawRemainCell" placeholder="ячейка" /></label>
+              <label>Партия<input id="rawRemainBatch" placeholder="партия / приход" /></label>
+              <label>Качество<select id="rawRemainQuality"><option value="">Все</option><option>RELEASED</option><option>HOLD</option><option>BLOCKED</option><option>UNKNOWN</option></select></label>
+              <label>Доступные<select id="rawRemainAvailable"><option value="1">Да</option><option value="0">Все</option></select></label>
+              <label>Лимит<input id="rawRemainLimit" type="number" min="1" max="1000" value="500" /></label>
+            </div>
+            <div class="rights-summary"><span id="rawRemainStatus">Ожидание данных</span></div>
+            <div class="rights-table-wrap raw-remains-scroll">
+              <table class="rights-table">
+                <thead>
+                  <tr>
+                    <th>Склад</th>
+                    <th>Ячейка</th>
+                    <th>Паллета</th>
+                    <th>SSCC</th>
+                    <th>Артикул</th>
+                    <th>Название</th>
+                    <th>Партия</th>
+                    <th>ВСД</th>
+                    <th>Годен до</th>
+                    <th>Кол-во</th>
+                    <th>Резерв</th>
+                    <th>Доступно</th>
+                    <th>Качество</th>
+                  </tr>
+                </thead>
+                <tbody id="rawRemainRows"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="admin-nav.js?v=20260517-navmodule"></script>
+    <script src="admin-auth.js?v=20260517-cleanui"></script>
+    <script src="raw-material.js?v=20260517-rawmaterial"></script>
+  </body>
+</html>
