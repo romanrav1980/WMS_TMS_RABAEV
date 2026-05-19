@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="128" viewBox="0 0 180 128">
+  <defs>
+    <linearGradient id="navyTop" x1="38" y1="38" x2="104" y2="70" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1d4f86"/>
+      <stop offset=".48" stop-color="#12385f"/>
+      <stop offset="1" stop-color="#0a1f37"/>
+    </linearGradient>
+    <linearGradient id="navySide" x1="70" y1="56" x2="111" y2="99" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0d3154"/>
+      <stop offset="1" stop-color="#061728"/>
+    </linearGradient>
+    <linearGradient id="yellow" x1="42" y1="57" x2="93" y2="92" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffd65a"/>
+      <stop offset=".55" stop-color="#f4a923"/>
+      <stop offset="1" stop-color="#b86a12"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="54" y1="22" x2="88" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f8fbff"/>
+      <stop offset=".55" stop-color="#9bd0f1"/>
+      <stop offset="1" stop-color="#4e88bb"/>
+    </linearGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2.5"/>
+      <feOffset dx="0" dy="5"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope=".36"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <ellipse cx="78" cy="99" rx="57" ry="15" fill="#0f172a" opacity=".22"/>
+  <g filter="url(#softShadow)" stroke-linejoin="round" stroke-linecap="round">
+    <!-- rear counterweight and engine body -->
+    <path d="M35 58 61 43 107 61 79 79Z" fill="url(#navyTop)" stroke="#05111f" stroke-width="2.2"/>
+    <path d="M79 79 107 61 107 83 79 104Z" fill="url(#navySide)" stroke="#05111f" stroke-width="2.2"/>
+    <path d="M35 58 79 79 79 104 35 82Z" fill="#0b2742" stroke="#05111f" stroke-width="2.2"/>
+    <path d="M42 62 61 52 88 63 68 75Z" fill="url(#yellow)" stroke="#7c490d" stroke-width="1.6"/>
+    <path d="M40 75 78 94" stroke="#f2a922" stroke-width="5"/>
+
+    <!-- cabin frame -->
+    <path d="M49 34 66 24 92 37 73 49Z" fill="#163f6d" stroke="#05111f" stroke-width="2"/>
+    <path d="M73 49 92 37 95 62 75 77Z" fill="#0c2846" stroke="#05111f" stroke-width="2"/>
+    <path d="M49 34 73 49 75 77 49 62Z" fill="#12385f" stroke="#05111f" stroke-width="2"/>
+    <path d="M57 34 66 28 82 37 72 43Z" fill="url(#glass)" stroke="#174c7f" stroke-width="1"/>
+    <path d="M72 47 85 40 86 57 74 66Z" fill="#9bc8e7" opacity=".86" stroke="#174c7f" stroke-width="1"/>
+
+    <!-- mast, carriage, forks -->
+    <path d="M107 25 116 30 116 91 107 86Z" fill="#111827" stroke="#020617" stroke-width="1.5"/>
+    <path d="M123 28 131 33 131 92 123 88Z" fill="#1f2937" stroke="#020617" stroke-width="1.5"/>
+    <path d="M109 45 129 54" stroke="#64748b" stroke-width="4"/>
+    <path d="M109 65 129 73" stroke="#64748b" stroke-width="4"/>
+    <path d="M122 83 166 69" stroke="#1f2937" stroke-width="5"/>
+    <path d="M123 93 169 79" stroke="#1f2937" stroke-width="5"/>
+    <path d="M137 78 168 68" stroke="#475569" stroke-width="2"/>
+
+    <!-- wheels -->
+    <g>
+      <ellipse cx="48" cy="89" rx="13" ry="9" fill="#050a12"/>
+      <ellipse cx="48" cy="89" rx="6" ry="4" fill="#f4b12c"/>
+      <ellipse cx="91" cy="103" rx="13" ry="9" fill="#050a12"/>
+      <ellipse cx="91" cy="103" rx="6" ry="4" fill="#f4b12c"/>
+      <ellipse cx="113" cy="82" rx="9" ry="6.5" fill="#050a12"/>
+      <ellipse cx="113" cy="82" rx="4" ry="3" fill="#f4b12c"/>
+    </g>
+
+    <!-- small highlights -->
+    <circle cx="41" cy="67" r="3.2" fill="#facc15"/>
+    <path d="M30 61 39 56" stroke="#fde68a" stroke-width="2"/>
+  </g>
+</svg>

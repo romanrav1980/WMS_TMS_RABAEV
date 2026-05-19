@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Collision, DetailSelection, DockPallet, PickFaceFill, ReplenishmentTask, ResourceState, WarehouseLayout } from "../types";
 import { cellById, eventLocation } from "../replay/reducer";
 import { collisionTitle } from "../replay/reducer";
+import reachtruckSpriteUrl from "../assets/reachtruck-isometric.svg";
 
 type SceneProps = {
   layout: WarehouseLayout;
@@ -26,6 +27,9 @@ const colors = {
   floor: "#e8eef5"
 };
 
+const reachtruckSprite = new Image();
+reachtruckSprite.src = reachtruckSpriteUrl;
+
 export function WarehouseScene({ layout, resources, collisions, pickFaceFill, dockPallets, tasks, minute, selectedWaveId, onSelect }: SceneProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const hitRegions = useRef<Array<{ x: number; y: number; r: number; selection: DetailSelection }>>([]);
@@ -33,10 +37,21 @@ export function WarehouseScene({ layout, resources, collisions, pickFaceFill, do
   const [navigation, setNavigation] = useState({ zoom: 1, panX: 0, panY: 0 });
   const [frameSize, setFrameSize] = useState({ width: 1090, height: 670 });
   const [hoverPickFace, setHoverPickFace] = useState<{ x: number; y: number; cellId: string; fill?: PickFaceFill } | null>(null);
+  const [reachtruckSpriteReady, setReachtruckSpriteReady] = useState(reachtruckSprite.complete);
   const visibleResources = useMemo(
     () => resources.filter((resource) => !selectedWaveId || resource.waveId === selectedWaveId || !resource.waveId),
     [resources, selectedWaveId]
   );
+
+  useEffect(() => {
+    if (reachtruckSprite.complete) {
+      setReachtruckSpriteReady(true);
+      return;
+    }
+    const handleLoad = () => setReachtruckSpriteReady(true);
+    reachtruckSprite.addEventListener("load", handleLoad);
+    return () => reachtruckSprite.removeEventListener("load", handleLoad);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -49,8 +64,8 @@ export function WarehouseScene({ layout, resources, collisions, pickFaceFill, do
     canvas.height = Math.floor(rect.height * scale);
     setFrameSize({ width: rect.width, height: rect.height });
     context.setTransform(scale, 0, 0, scale, 0, 0);
-    drawScene(context, rect.width, rect.height, layout, visibleResources, collisions, pickFaceFill, dockPallets, hitRegions.current, navigation, minute);
-  }, [layout, visibleResources, collisions, pickFaceFill, dockPallets, navigation, minute]);
+    drawScene(context, rect.width, rect.height, layout, visibleResources, collisions, pickFaceFill, dockPallets, hitRegions.current, navigation, minute, reachtruckSpriteReady ? reachtruckSprite : null);
+  }, [layout, visibleResources, collisions, pickFaceFill, dockPallets, navigation, minute, reachtruckSpriteReady]);
 
   const zoomBy = (delta: number) => {
     setNavigation((current) => ({ ...current, zoom: clamp(current.zoom + delta, .65, 2.4) }));
@@ -166,7 +181,8 @@ function drawScene(
   dockPallets: Record<string, DockPallet[]>,
   hitRegions: Array<{ x: number; y: number; r: number; selection: DetailSelection }>,
   navigation: ViewNavigation,
-  minute: number
+  minute: number,
+  reachtruckImage: HTMLImageElement | null
 ) {
   hitRegions.length = 0;
   const view = makeView(width, height, navigation);
@@ -185,9 +201,9 @@ function drawScene(
   drawTrails(ctx, view, resources, minute);
   for (const resource of resources) {
     const p = iso(view, resource.x, resource.y, resource.kind === "reachtruck" ? .9 : .55);
-    if (resource.kind === "reachtruck") drawReachtruckIcon(ctx, p.x, p.y, resourceHeading(view, resource), statusColor(resource.statusColor));
+    if (resource.kind === "reachtruck") drawReachtruckIcon(ctx, p.x, p.y, resourceHeading(view, resource), statusColor(resource.statusColor), reachtruckImage);
     else drawPickerIcon(ctx, p.x, p.y, statusColor(resource.statusColor));
-    drawHalo(ctx, p.x, p.y, statusColor(resource.statusColor), resource.kind === "reachtruck" ? 24 : 13);
+    if (resource.kind !== "reachtruck") drawHalo(ctx, p.x, p.y, statusColor(resource.statusColor), 13);
     hitRegions.push({ x: p.x, y: p.y, r: resource.kind === "reachtruck" ? 32 : 18, selection: { type: "resource", resource } });
   }
   for (const collision of collisions) {
@@ -502,91 +518,17 @@ function drawPickerIcon(ctx: CanvasRenderingContext2D, x: number, y: number, col
   ctx.restore();
 }
 
-function drawReachtruckIcon(ctx: CanvasRenderingContext2D, x: number, y: number, angle: number, color: string) {
+function drawReachtruckIcon(ctx: CanvasRenderingContext2D, x: number, y: number, _angle: number, color: string, image: HTMLImageElement | null) {
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(angle);
-  ctx.scale(1.2, 1.2);
-  ctx.fillStyle = "rgba(15,23,42,.22)";
-  ctx.beginPath();
-  ctx.ellipse(-1, 14, 27, 8, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Isometric reachtruck sprite: separate top/side/front planes instead of a flat badge.
-  poly(ctx, [[-24, -3], [-8, -12], [13, -3], [-3, 8]], "#f6c453", "#8a5b12", 1.1);
-  poly(ctx, [[-3, 8], [13, -3], [13, 8], [-3, 18]], "#d58a21", "#8a5b12", 1.1);
-  poly(ctx, [[-24, -3], [-3, 8], [-3, 18], [-24, 7]], "#b8741a", "#7c4a12", 1.1);
-
-  poly(ctx, [[-18, -17], [-8, -22], [3, -15], [-8, -9]], "#164f92", "#0f2f55", 1.1);
-  poly(ctx, [[-8, -9], [3, -15], [4, -4], [-8, 3]], "#0b315b", "#0f2f55", 1.1);
-  poly(ctx, [[-18, -17], [-8, -9], [-8, 3], [-18, -3]], "#0f3f75", "#0f2f55", 1.1);
-  poly(ctx, [[-14, -16], [-8, -19], [-2, -15], [-8, -12]], "#dbeafe", "#7aa7d9", .8);
-
-  ctx.strokeStyle = "#0f172a";
-  ctx.lineWidth = 3;
-  ctx.lineCap = "round";
-  ctx.beginPath();
-  ctx.moveTo(13, -24);
-  ctx.lineTo(13, 13);
-  ctx.moveTo(19, -21);
-  ctx.lineTo(19, 11);
-  ctx.stroke();
-  ctx.strokeStyle = "#475569";
-  ctx.lineWidth = 1.3;
-  for (const yRail of [-14, -4, 6]) {
-    ctx.beginPath();
-    ctx.moveTo(13, yRail);
-    ctx.lineTo(19, yRail - 1.5);
-    ctx.stroke();
+  if (image?.complete) {
+    ctx.drawImage(image, -55, -66, 110, 78);
   }
-
-  ctx.strokeStyle = "#1e293b";
-  ctx.lineWidth = 2.6;
-  ctx.beginPath();
-  ctx.moveTo(18, 7);
-  ctx.lineTo(37, 3);
-  ctx.moveTo(18, 13);
-  ctx.lineTo(37, 9);
-  ctx.stroke();
-
-  drawIsoWheel(ctx, -18, 9, 5.2);
-  drawIsoWheel(ctx, 2, 17, 5.2);
-  drawIsoWheel(ctx, 8, 6, 4.2);
-
   ctx.fillStyle = withAlpha(color, .86);
   ctx.beginPath();
-  ctx.arc(-24, 2, 3.7, 0, Math.PI * 2);
+  ctx.arc(-39, -11, 3.7, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
-}
-
-function drawIsoWheel(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(-.22);
-  ctx.fillStyle = "#0f172a";
-  ctx.beginPath();
-  ctx.ellipse(0, 0, radius, radius * .68, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = "#64748b";
-  ctx.beginPath();
-  ctx.ellipse(0, 0, radius * .43, radius * .27, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-}
-
-function poly(ctx: CanvasRenderingContext2D, points: Array<[number, number]>, fill: string, stroke: string, lineWidth: number) {
-  ctx.beginPath();
-  points.forEach(([x, y], index) => {
-    if (index === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  });
-  ctx.closePath();
-  ctx.fillStyle = fill;
-  ctx.fill();
-  ctx.strokeStyle = stroke;
-  ctx.lineWidth = lineWidth;
-  ctx.stroke();
 }
 
 function drawHalo(ctx: CanvasRenderingContext2D, x: number, y: number, color: string, radius: number) {
