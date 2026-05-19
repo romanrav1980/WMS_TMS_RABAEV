@@ -1032,3 +1032,9 @@ Append-only log of root wiki updates.
 - Clarified that dynamic/overflow cells are not pre-wave replenished and are used only for urgent situations: empty fixed pick-face or critical predictive lead-time.
 - Updated [`requirements/wave_case_pick_replenishment_tz.md`](requirements/wave_case_pick_replenishment_tz.md) with daily layout optimization outputs and urgent-only dynamic/generic release rules.
 - Adjusted the warehouse minute simulation runner so dynamic cells are selected deterministically at aisle ends, urgent replenishment may target them only after a shortage event, and waiting pick lines can be rerouted to an already replenished dynamic cell later on the route.
+
+## [2026-05-20] admin | Warehouse twin performance graph and map navigation
+
+- Updated the React warehouse digital twin with a bottom `Производительность ресурсов и коллизии` graph for picker load, RTP load, RTP queue, accumulated lost minutes, and top collision causes.
+- Added map navigation to the React warehouse scene: zoom in/out, reset view, mouse drag-pan, and transformed hit targets for resource/collision selection.
+- Recorded these UI requirements in [`requirements/large_warehouse_minute_simulation_tz.md`](requirements/large_warehouse_minute_simulation_tz.md).

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import "./styles.css";
 import { SHIFT_MINUTES, clock, inferWaveByMinute } from "./demoData";
 import { loadReplayData } from "./data/loaders";
-import { CapacityPanel, DetailCard, KpiRow, LeftPanel, RightPanel } from "./components/Panels";
+import { CapacityPanel, DetailCard, KpiRow, LeftPanel, ResourcePerformancePanel, RightPanel } from "./components/Panels";
 import { Timeline } from "./components/Timeline";
 import { WarehouseScene } from "./components/WarehouseScene";
 import { activeCollisions, currentMetrics, replenishmentTasksAt, resourceStateAt, visibleEvents } from "./replay/reducer";
@@ -149,6 +149,7 @@ export default function App() {
             onPlayToggle={() => setPlaying((value) => !value)}
             onSpeed={setSpeed}
           />
+          <ResourcePerformancePanel metrics={data.metrics} events={data.events} report={data.report} minute={minute} />
         </section>
       </main>
     </div>

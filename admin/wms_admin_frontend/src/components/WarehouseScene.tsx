@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Collision, DetailSelection, ResourceState, WarehouseLayout } from "../types";
 import { cellById, eventLocation } from "../replay/reducer";
 import { collisionTitle } from "../replay/reducer";
@@ -26,6 +26,9 @@ const colors = {
 export function WarehouseScene({ layout, resources, collisions, selectedWaveId, onSelect }: SceneProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const hitRegions = useRef<Array<{ x: number; y: number; r: number; selection: DetailSelection }>>([]);
+  const dragState = useRef<{ active: boolean; x: number; y: number; moved: boolean }>({ active: false, x: 0, y: 0, moved: false });
+  const [navigation, setNavigation] = useState({ zoom: 1, panX: 0, panY: 0 });
+  const [frameSize, setFrameSize] = useState({ width: 1090, height: 670 });
   const visibleResources = useMemo(
     () => resources.filter((resource) => !selectedWaveId || resource.waveId === selectedWaveId || !resource.waveId),
     [resources, selectedWaveId]
@@ -40,15 +43,43 @@ export function WarehouseScene({ layout, resources, collisions, selectedWaveId, 
     const scale = window.devicePixelRatio || 1;
     canvas.width = Math.floor(rect.width * scale);
     canvas.height = Math.floor(rect.height * scale);
+    setFrameSize({ width: rect.width, height: rect.height });
     context.setTransform(scale, 0, 0, scale, 0, 0);
-    drawScene(context, rect.width, rect.height, layout, visibleResources, collisions, hitRegions.current);
-  }, [layout, visibleResources, collisions]);
+    drawScene(context, rect.width, rect.height, layout, visibleResources, collisions, hitRegions.current, navigation);
+  }, [layout, visibleResources, collisions, navigation]);
+
+  const zoomBy = (delta: number) => {
+    setNavigation((current) => ({ ...current, zoom: clamp(current.zoom + delta, .65, 2.4) }));
+  };
 
   return (
     <div className="scene-frame">
       <canvas
         ref={canvasRef}
+        onMouseDown={(event) => {
+          dragState.current = { active: true, x: event.clientX, y: event.clientY, moved: false };
+        }}
+        onMouseMove={(event) => {
+          const drag = dragState.current;
+          if (!drag.active) return;
+          const dx = event.clientX - drag.x;
+          const dy = event.clientY - drag.y;
+          if (Math.abs(dx) + Math.abs(dy) > 2) drag.moved = true;
+          drag.x = event.clientX;
+          drag.y = event.clientY;
+          setNavigation((current) => ({ ...current, panX: current.panX + dx, panY: current.panY + dy }));
+        }}
+        onMouseUp={() => { dragState.current.active = false; }}
+        onMouseLeave={() => { dragState.current.active = false; }}
+        onWheel={(event) => {
+          event.preventDefault();
+          zoomBy(event.deltaY < 0 ? .12 : -.12);
+        }}
         onClick={(event) => {
+          if (dragState.current.moved) {
+            dragState.current.moved = false;
+            return;
+          }
           const rect = event.currentTarget.getBoundingClientRect();
           const x = event.clientX - rect.left;
           const y = event.clientY - rect.top;
@@ -56,13 +87,18 @@ export function WarehouseScene({ layout, resources, collisions, selectedWaveId, 
           if (hit) onSelect(hit.selection);
         }}
       />
+      <div className="scene-nav-controls" aria-label="Навигация по карте склада">
+        <button type="button" title="Приблизить" onClick={() => zoomBy(.15)}>+</button>
+        <button type="button" title="Отдалить" onClick={() => zoomBy(-.15)}>-</button>
+        <button type="button" title="Сбросить вид" onClick={() => setNavigation({ zoom: 1, panX: 0, panY: 0 })}>Сброс</button>
+      </div>
       <div className="scene-overlays">
         {visibleResources.map((resource) => (
           <button
             key={resource.id}
             type="button"
             className={`resource-badge ${resource.statusColor}`}
-            style={overlayStyle(layout, resource.x, resource.y, resource.kind === "reachtruck" ? 2.1 : 1.7)}
+            style={overlayStyle(resource.x, resource.y, resource.kind === "reachtruck" ? 2.1 : 1.7, frameSize, navigation)}
             onClick={() => onSelect({ type: "resource", resource })}
           >
             {resource.kind === "reachtruck" ? resource.id : `${resource.id} ${resource.speedRatio}%`}
@@ -76,7 +112,7 @@ export function WarehouseScene({ layout, resources, collisions, selectedWaveId, 
               key={collision.id}
               type="button"
               className={`callout ${collision.severity === "critical" ? "" : "warning"}`}
-              style={overlayStyle(layout, loc.x, loc.y, 3)}
+              style={overlayStyle(loc.x, loc.y, 3, frameSize, navigation)}
               onClick={() => onSelect({ type: "collision", collision })}
             >
               <b>{collisionTitle(collision.type)}</b>
@@ -96,10 +132,11 @@ function drawScene(
   layout: WarehouseLayout,
   resources: ResourceState[],
   collisions: Collision[],
-  hitRegions: Array<{ x: number; y: number; r: number; selection: DetailSelection }>
+  hitRegions: Array<{ x: number; y: number; r: number; selection: DetailSelection }>,
+  navigation: ViewNavigation
 ) {
   hitRegions.length = 0;
-  const view = makeView(width, height);
+  const view = makeView(width, height, navigation);
   const gradient = ctx.createLinearGradient(0, 0, width, height);
   gradient.addColorStop(0, "#f8fbff");
   gradient.addColorStop(.55, "#e8eef7");
@@ -245,8 +282,8 @@ function drawBox(ctx: CanvasRenderingContext2D, view: View, x: number, y: number
   polygon(ctx, [p3, b3, b4, p4], "#1d2b3d", "rgba(31,47,72,.25)", .4);
 }
 
-function overlayStyle(layout: WarehouseLayout, x: number, y: number, z: number): React.CSSProperties {
-  const view = makeView(1090, 670);
+function overlayStyle(x: number, y: number, z: number, frameSize: { width: number; height: number }, navigation: ViewNavigation): React.CSSProperties {
+  const view = makeView(frameSize.width, frameSize.height, navigation);
   const p = iso(view, x, y, z);
   return { left: `${p.x}px`, top: `${p.y}px` };
 }
@@ -274,10 +311,17 @@ function polygon(ctx: CanvasRenderingContext2D, points: Array<{ x: number; y: nu
   ctx.stroke();
 }
 
+type ViewNavigation = { zoom: number; panX: number; panY: number };
 type View = { originX: number; originY: number; sx: number; sy: number; z: number };
 
-function makeView(width: number, _height: number): View {
-  return { originX: width * .51, originY: 36, sx: 8.0, sy: 7.25, z: 8.5 };
+function makeView(width: number, _height: number, navigation: ViewNavigation = { zoom: 1, panX: 0, panY: 0 }): View {
+  return {
+    originX: width * .51 + navigation.panX,
+    originY: 36 + navigation.panY,
+    sx: 8.0 * navigation.zoom,
+    sy: 7.25 * navigation.zoom,
+    z: 8.5 * navigation.zoom
+  };
 }
 
 function iso(view: View, x: number, y: number, z = 0): { x: number; y: number } {
@@ -289,4 +333,8 @@ function iso(view: View, x: number, y: number, z = 0): { x: number; y: number } 
 
 function statusColor(name: ResourceState["statusColor"]): string {
   return colors[name] || colors.blue;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
 }

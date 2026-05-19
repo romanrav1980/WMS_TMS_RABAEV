@@ -1,4 +1,4 @@
-import type { Collision, DetailSelection, ReplenishmentTask, ResourceState, SimulationReport } from "../types";
+import type { Collision, DetailSelection, MinuteMetrics, ReplenishmentTask, ResourceState, SimulationReport, WarehouseEvent } from "../types";
 import { collisionTitle } from "../replay/reducer";
 
 export function KpiRow({ unitsDone, totalUnits, activePickers, collisions, overdue, avgSpeed }: {
@@ -126,6 +126,75 @@ export function CapacityPanel({ report }: { report: SimulationReport }) {
   );
 }
 
+export function ResourcePerformancePanel({ metrics, events, report, minute }: {
+  metrics: MinuteMetrics[];
+  events: WarehouseEvent[];
+  report: SimulationReport;
+  minute: number;
+}) {
+  const points = buildPerformancePoints(metrics, events, report);
+  if (!points.length) return null;
+  const current = nearestPoint(points, minute);
+  const maxQueue = Math.max(1, ...points.map((point) => point.queue));
+  const maxLost = Math.max(1, ...points.map((point) => point.lost));
+  const collisionTotals = buildCollisionTotals(events);
+  const topCollisions = Object.entries(collisionTotals).sort((a, b) => b[1] - a[1]).slice(0, 4);
+  const capacity = report.capacity_analysis;
+  return (
+    <section className="performance-panel">
+      <header>
+        <div>
+          <h2>Производительность ресурсов и коллизии</h2>
+          <p>График показывает, где очередь RTP и потери минут начинают съедать сменную мощность.</p>
+        </div>
+        <div className="performance-kpis">
+          <span><b>{Math.round(current.pickerLoad)}%</b> комплектовщики</span>
+          <span><b>{Math.round(current.reachLoad)}%</b> RTP</span>
+          <span><b>{current.queue}</b> очередь RTP</span>
+          <span><b>{current.lost}</b> потеряно мин</span>
+        </div>
+      </header>
+      <div className="performance-content">
+        <div className="performance-chart" aria-label="График производительности ресурсов">
+          <svg viewBox="0 0 960 230" role="img">
+            <g className="chart-grid">
+              {[0, 25, 50, 75, 100].map((tick) => <line key={tick} x1="44" x2="928" y1={yFor(100 - tick)} y2={yFor(100 - tick)} />)}
+            </g>
+            <path className="chart-area queue" d={areaPath(points, (point) => point.queue / maxQueue * 100)} />
+            <path className="chart-line picker" d={linePath(points, (point) => point.pickerLoad)} />
+            <path className="chart-line reach" d={linePath(points, (point) => point.reachLoad)} />
+            <path className="chart-line lost" d={linePath(points, (point) => point.lost / maxLost * 100)} />
+            <line className="chart-now" x1={xFor(minute)} x2={xFor(minute)} y1="22" y2="196" />
+            {[0, 180, 360, 540, 720].map((tick) => (
+              <g key={tick}>
+                <text x={xFor(tick)} y="220">{clockLabel(tick)}</text>
+              </g>
+            ))}
+          </svg>
+          <div className="performance-legend">
+            <span><i className="blue" /> Комплектовщики</span>
+            <span><i className="amber" /> RTP занятость</span>
+            <span><i className="queue" /> Очередь RTP</span>
+            <span><i className="red" /> Потери минут</span>
+          </div>
+        </div>
+        <div className="performance-diagnosis">
+          <b>Диагноз смены</b>
+          <span>Комплектовка: спрос x{Number(capacity?.picker_demand_to_capacity_ratio || 0).toFixed(2)}</span>
+          <span>RTP: спрос x{Number(capacity?.replenishment_demand_to_nominal_capacity_ratio || 0).toFixed(2)}</span>
+          <span>Выполнено отбора: {format(Number(capacity?.done_pick_boxes || 0))} / {format(Number(capacity?.total_pick_boxes || 0))} коробок</span>
+          <span>Пополнения: {format(Number(report.totals?.done_replenishment_tasks || 0))} / {format(Number(capacity?.replenishment_tasks || 0))} задач</span>
+          <div className="collision-breakdown">
+            {topCollisions.map(([type, count]) => (
+              <span key={type}><b>{collisionTitle(type)}</b><i>{count}</i></span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function CapacityLine({ label, done, demand, capacity, ratio }: { label: string; done: number; demand: number; capacity: number; ratio: number }) {
   const fill = Math.min(100, Math.round((done / Math.max(1, demand)) * 100));
   return (
@@ -152,4 +221,74 @@ function bottleneckLabel(code: string): string {
 
 function format(value: number) {
   return new Intl.NumberFormat("ru-RU").format(Math.round(value));
+}
+
+type PerformancePoint = {
+  minute: number;
+  pickerLoad: number;
+  reachLoad: number;
+  queue: number;
+  lost: number;
+};
+
+function buildPerformancePoints(metrics: MinuteMetrics[], events: WarehouseEvent[], report: SimulationReport): PerformancePoint[] {
+  const source: MinuteMetrics[] = metrics.length ? metrics : Array.from({ length: 25 }, (_, index) => ({ minute: index * 30 }));
+  const pickerCount = Number(report.scenario?.pickers || 24);
+  const reachtruckCount = Number(report.scenario?.reachtrucks || 12);
+  return source
+    .filter((row, index) => index % 10 === 0 || Number(row.minute) % 30 === 0 || Number(row.minute) === 720)
+    .map((row) => {
+      const minute = Number(row.minute || 0);
+      const collisions = events.filter((event) => event.event_type === "COLLISION" && Number(event.minute) <= minute);
+      const lost = collisions.reduce((sum, event) => sum + Number(event.lost_minutes || 1), 0);
+      return {
+        minute,
+        pickerLoad: clamp(Number(row.picker_busy || 0) / Math.max(1, pickerCount) * 100, 0, 100),
+        reachLoad: clamp(Number(row.reachtruck_busy || 0) / Math.max(1, reachtruckCount) * 100, 0, 100),
+        queue: Number(row.queued_replenishment || 0),
+        lost
+      };
+    });
+}
+
+function nearestPoint(points: PerformancePoint[], minute: number): PerformancePoint {
+  return points.reduce((best, point) => Math.abs(point.minute - minute) < Math.abs(best.minute - minute) ? point : best, points[0]);
+}
+
+function buildCollisionTotals(events: WarehouseEvent[]): Record<string, number> {
+  return events.reduce<Record<string, number>>((totals, event) => {
+    if (event.event_type !== "COLLISION") return totals;
+    const type = String(event.collision_type || "UNKNOWN");
+    totals[type] = (totals[type] || 0) + 1;
+    return totals;
+  }, {});
+}
+
+function linePath(points: PerformancePoint[], getValue: (point: PerformancePoint) => number): string {
+  return points.map((point, index) => `${index ? "L" : "M"}${xFor(point.minute).toFixed(1)} ${yFor(getValue(point)).toFixed(1)}`).join(" ");
+}
+
+function areaPath(points: PerformancePoint[], getValue: (point: PerformancePoint) => number): string {
+  if (!points.length) return "";
+  const top = linePath(points, getValue);
+  const last = points[points.length - 1];
+  const first = points[0];
+  return `${top} L${xFor(last.minute).toFixed(1)} 196 L${xFor(first.minute).toFixed(1)} 196 Z`;
+}
+
+function xFor(minute: number): number {
+  return 44 + clamp(minute, 0, 720) / 720 * 884;
+}
+
+function yFor(value: number): number {
+  return 196 - clamp(value, 0, 100) / 100 * 174;
+}
+
+function clockLabel(minute: number): string {
+  const total = 8 * 60 + minute;
+  return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
 }
