@@ -440,6 +440,35 @@ Apply/verify result for `2026-05-17-027-warehouse-task-qty-mode`:
 - Verify: `Statements=4; Errors=0`.
 - Runtime quantity-mode load smoke: `4` concurrent scenarios produced `4` done box tasks, `4` residual planned tasks, and `4` still-open pallet tasks after rejected partial pallet completion; cleanup removed `12` temporary rows.
 
+## Replenishment Release Policy Rules
+
+Migration `2026-05-20-037-replenishment-release-policy-rules` adds the strategy layer that decides when a reserved replenishment row becomes a driver-facing reachtruck task.
+
+New table:
+
+- `RRL_ARTICUL_REPLENISH_RULE`: default replenishment rule by SKU.
+
+Extended tables:
+
+- `RRL_PICK_FACE_ARTICUL`: adds `USE_ARTICUL_REPLENISH_RULE`, `REPLENISHMENT_RELEASE_POLICY`, `SAFETY_LAYER_QTY`, `PREDICTIVE_BUFFER_MIN`, `PICK_RATE_SOURCE`, and `RECHECK_ON_PICK_EVENT` for pair-level overrides.
+- `RRL_PICK_WAVE_DEMAND` and `RRL_PICK_WAVE_REPLENISH_TASK`: keep launch-time snapshots of the effective release policy.
+
+Effective-rule order:
+
+1. If `RRL_PICK_FACE_ARTICUL.USE_ARTICUL_REPLENISH_RULE = 1` and an active `RRL_ARTICUL_REPLENISH_RULE` exists for the SKU, use the SKU default.
+2. Otherwise use the `RRL_PICK_FACE_ARTICUL` pair settings.
+
+Supported release policies:
+
+- `LAYER_TRIGGER`: release when pick-face stock falls to the configured box/layer threshold.
+- `PREDICTIVE_LEAD_TIME`: release from pick events when predicted time-to-empty is near replenishment lead-time plus buffer.
+
+Apply/verify result for `2026-05-20-037-replenishment-release-policy-rules`:
+
+- Apply: `Statements=3; Errors=0`.
+- Verify: `Statements=5; Errors=0`.
+- Post-compile `USER_OBJECTS` invalid count: `0`.
+
 ## Warehouse Task Domain Sync
 
 Migration `2026-05-17-028-warehouse-task-domain-sync` adds `RRL_WAREHOUSE_TASK_SYNC`.

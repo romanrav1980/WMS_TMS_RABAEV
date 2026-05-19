@@ -106,18 +106,33 @@ SOURCE_DOC_ID = RRL_PICK_WAVE.PICK_WAVE_ID
 
 ## 6. Настройки Артикула / Pick Face
 
-Настройки хранятся на уровне артикула в pick face, потому что разные SKU в одной зоне отбора могут пополняться по разным правилам.
+Настройки могут задаваться на двух уровнях:
+
+- дефолтное правило артикула в `RRL_ARTICUL_REPLENISH_RULE`;
+- override для пары `артикул + pick face` в `RRL_PICK_FACE_ARTICUL`.
+
+Если для пары включено `USE_ARTICUL_REPLENISH_RULE = 1`, то расчет волны берет стратегию пополнения из дефолтного правила артикула. Если дефолта нет или наследование выключено, используются настройки пары `RRL_PICK_FACE_ARTICUL`. Это позволяет задать общую стратегию для SKU и переопределить ее для отдельной ячейки отбора.
 
 Реализованные поля `RRL_PICK_FACE_ARTICUL` в миграции `2026-05-17-029-wave-case-pick-replenishment-settings`:
 
 - `REPLENISHMENT_METHOD`: `IMMEDIATE`, `MINIMAX`;
+- `REPLENISHMENT_RELEASE_POLICY`: `LAYER_TRIGGER`, `PREDICTIVE_LEAD_TIME`;
 - `REPLENISHMENT_QTY_MODE`: `FULL_PALLET`, `HALF_PALLET`, `FILL_TO_VOLUME`;
 - `MIN_TRIGGER_BOX_QTY`;
 - `MIN_TRIGGER_LAYER_QTY`;
+- `SAFETY_LAYER_QTY`;
 - `BOXES_PER_LAYER`;
 - `BOXES_PER_PALLET`;
 - `BOX_VOLUME_M3`;
 - `ALLOW_PARTIAL_PALLET`;
+- `PREDICTIVE_BUFFER_MIN`;
+- `PICK_RATE_SOURCE`: `PLAN`, `FACT`, `MIXED`;
+- `RECHECK_ON_PICK_EVENT`.
+
+Стратегии выпуска водительской задачи:
+
+- `LAYER_TRIGGER`: после события отбора WMS выпускает следующую строку ричтраку, когда остаток в pick face опускается до настроенного числа слоев или коробок. Для принятого базового правила используется `MIN_TRIGGER_LAYER_QTY = 1`.
+- `PREDICTIVE_LEAD_TIME`: после события отбора WMS сравнивает прогнозное время до исчерпания pick face с lead-time пополнения, очередью и доступностью ричтраков. Задача выпускается тогда, когда откладывать ее уже рискованно.
 
 Емкость ячейки по объему берется из уже существующего `RRL_PICK_FACE.MAX_VOLUME`; отдельное поле `PICK_FACE_MAX_VOLUME_M3` не заводится, чтобы не дублировать топологию.
 
@@ -155,12 +170,17 @@ SOURCE_DOC_ID = RRL_PICK_WAVE.PICK_WAVE_ID
 Миграция `029` добавляет в `RRL_PICK_WAVE_REPLENISH_TASK` снимок настроек, примененных на запуске волны:
 
 - `REPLENISHMENT_METHOD`;
+- `REPLENISHMENT_RELEASE_POLICY`;
 - `REPLENISHMENT_QTY_MODE`;
 - `RELEASE_TRIGGER_QTY`;
+- `SAFETY_LAYER_QTY`;
 - `BOXES_PER_LAYER`;
 - `BOXES_PER_PALLET`;
 - `BOX_VOLUME_M3`;
 - `PICK_FACE_MAX_VOLUME`;
+- `PREDICTIVE_BUFFER_MIN`;
+- `PICK_RATE_SOURCE`;
+- `RECHECK_ON_PICK_EVENT`;
 - `WAIT_REASON`;
 - `RELEASED_AT`, `RELEASED_BY`.
 

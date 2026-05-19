@@ -595,6 +595,16 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - Runtime load `LOAD-WAVE-ZVT7J3`: `9` warehouse replenishment tasks `DONE`, `9` sync rows `SYNCED`, `9` stock-move ledger rows, `81` boxes moved into fixed/dynamic pick-face cells, failed HTTP requests `0`, invalid objects `0`.
 - `036_rollback.sql` is non-destructive and keeps stock-move history; it removes only the migration ledger row.
 
+`2026-05-20-037-replenishment-release-policy-rules`:
+
+- Adds `RRL_ARTICUL_REPLENISH_RULE` for SKU-level default replenishment release rules.
+- Extends `RRL_PICK_FACE_ARTICUL` with `USE_ARTICUL_REPLENISH_RULE`, `REPLENISHMENT_RELEASE_POLICY`, predictive lead-time parameters, safety layer settings, and pick-event recheck control.
+- Extends wave demand/replenishment snapshots with release-policy fields so wave execution keeps the effective rule used at launch.
+- Supported release policies are `LAYER_TRIGGER` and `PREDICTIVE_LEAD_TIME`.
+- Apply result: `Statements=3; Errors=0`.
+- Verify result: `Statements=5; Errors=0`.
+- `037_rollback.sql` is non-destructive and keeps rule data/columns; it removes only the migration ledger row.
+
 ## Required Procedure For Future Reapply
 
 1. Create or confirm a VirtualBox snapshot before applying to the live Oracle VM.

@@ -19,6 +19,7 @@ from ..auth import (
     require_permission,
 )
 from ..schemas import (
+    ArticulReplenishmentRuleUpsertRequest,
     PickFaceArticulUpsertRequest,
     PickFaceUpsertRequest,
     PickRouteCellUpsertRequest,
@@ -398,3 +399,25 @@ def assign_pick_face_articul(
     request.updated_by = request.updated_by or user.username
     pick_face_articul_id = PickingService().assign_pick_face_articul(request)
     return {"pick_face_articul_id": pick_face_articul_id}
+
+
+@router.get("/articul-replenishment-rules")
+def list_articul_replenishment_rules(
+    articul: str | None = None,
+    active_only: int | None = None,
+    _user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_VIEW_PERMISSION)),
+) -> list[dict]:
+    return PickingService().list_articul_replenishment_rules(
+        articul=articul,
+        active_only=active_only,
+    )
+
+
+@router.post("/articul-replenishment-rules")
+def upsert_articul_replenishment_rule(
+    request: ArticulReplenishmentRuleUpsertRequest,
+    user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_EDIT_PERMISSION)),
+) -> dict[str, int]:
+    request.updated_by = request.updated_by or user.username
+    articul_replenish_rule_id = PickingService().upsert_articul_replenishment_rule(request)
+    return {"articul_replenish_rule_id": articul_replenish_rule_id}

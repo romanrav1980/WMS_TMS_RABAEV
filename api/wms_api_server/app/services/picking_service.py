@@ -4,6 +4,7 @@ from fastapi import HTTPException
 
 from ..oracle_gateway import OracleGateway
 from ..schemas import (
+    ArticulReplenishmentRuleUpsertRequest,
     PickFaceArticulUpsertRequest,
     PickFaceUpsertRequest,
     PickRouteCellUpsertRequest,
@@ -420,12 +421,17 @@ class PickingService:
             update RRL_PICK_WAVE_REPLENISH_TASK rt
                set (
                  REPLENISHMENT_METHOD,
+                 REPLENISHMENT_RELEASE_POLICY,
                  REPLENISHMENT_QTY_MODE,
                  RELEASE_TRIGGER_QTY,
                  BOXES_PER_LAYER,
                  BOXES_PER_PALLET,
                  BOX_VOLUME_M3,
                  PICK_FACE_MAX_VOLUME,
+                 SAFETY_LAYER_QTY,
+                 PREDICTIVE_BUFFER_MIN,
+                 PICK_RATE_SOURCE,
+                 RECHECK_ON_PICK_EVENT,
                  QTY,
                  STATUS,
                  WAIT_REASON,
@@ -433,12 +439,17 @@ class PickingService:
                  UPDATED_BY
                ) = (
                  select cfg.REPLENISHMENT_METHOD,
+                        cfg.REPLENISHMENT_RELEASE_POLICY,
                         cfg.REPLENISHMENT_QTY_MODE,
                         cfg.RELEASE_TRIGGER_QTY,
                         cfg.BOXES_PER_LAYER,
                         cfg.BOXES_PER_PALLET,
                         cfg.BOX_VOLUME_M3,
                         cfg.PICK_FACE_MAX_VOLUME,
+                        cfg.SAFETY_LAYER_QTY,
+                        cfg.PREDICTIVE_BUFFER_MIN,
+                        cfg.PICK_RATE_SOURCE,
+                        cfg.RECHECK_ON_PICK_EVENT,
                         cfg.REPLENISH_QTY,
                         case
                           when rt.STATUS = 'NEW' and cfg.REPLENISHMENT_METHOD = 'MINIMAX' then 'WAIT_MINIMAX'
@@ -452,29 +463,54 @@ class PickingService:
                         sysdate,
                         substr(:updated_by, 1, 50)
                    from (
-                     select upper(nvl(pfa.REPLENISHMENT_METHOD, 'IMMEDIATE')) REPLENISHMENT_METHOD,
-                            upper(nvl(pfa.REPLENISHMENT_QTY_MODE, 'FILL_TO_VOLUME')) REPLENISHMENT_QTY_MODE,
+                     select coalesce(
+                              case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then upper(ar.REPLENISHMENT_METHOD) end,
+                              upper(pfa.REPLENISHMENT_METHOD),
+                              'IMMEDIATE'
+                            ) REPLENISHMENT_METHOD,
                             coalesce(
+                              case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then upper(ar.REPLENISHMENT_RELEASE_POLICY) end,
+                              upper(pfa.REPLENISHMENT_RELEASE_POLICY),
+                              'LAYER_TRIGGER'
+                            ) REPLENISHMENT_RELEASE_POLICY,
+                            coalesce(
+                              case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then upper(ar.REPLENISHMENT_QTY_MODE) end,
+                              upper(pfa.REPLENISHMENT_QTY_MODE),
+                              'FILL_TO_VOLUME'
+                            ) REPLENISHMENT_QTY_MODE,
+                            coalesce(
+                              case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.MIN_TRIGGER_BOX_QTY end,
                               pfa.MIN_TRIGGER_BOX_QTY,
+                              case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.MIN_TRIGGER_LAYER_QTY * ar.BOXES_PER_LAYER end,
                               pfa.MIN_TRIGGER_LAYER_QTY * pfa.BOXES_PER_LAYER,
                               pf.REPLENISHMENT_TRIGGER_QTY,
                               pfa.MIN_QTY,
                               pf.MIN_CASE_QTY
                             ) RELEASE_TRIGGER_QTY,
-                            pfa.BOXES_PER_LAYER,
-                            pfa.BOXES_PER_PALLET,
-                            pfa.BOX_VOLUME_M3,
+                            coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.BOXES_PER_LAYER end, pfa.BOXES_PER_LAYER) BOXES_PER_LAYER,
+                            coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.BOXES_PER_PALLET end, pfa.BOXES_PER_PALLET) BOXES_PER_PALLET,
+                            coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.BOX_VOLUME_M3 end, pfa.BOX_VOLUME_M3) BOX_VOLUME_M3,
                             pf.MAX_VOLUME PICK_FACE_MAX_VOLUME,
+                            coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.SAFETY_LAYER_QTY end, pfa.SAFETY_LAYER_QTY) SAFETY_LAYER_QTY,
+                            coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.PREDICTIVE_BUFFER_MIN end, pfa.PREDICTIVE_BUFFER_MIN) PREDICTIVE_BUFFER_MIN,
+                            coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.PICK_RATE_SOURCE end, pfa.PICK_RATE_SOURCE, 'MIXED') PICK_RATE_SOURCE,
+                            coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.RECHECK_ON_PICK_EVENT end, pfa.RECHECK_ON_PICK_EVENT, 1) RECHECK_ON_PICK_EVENT,
                             greatest(
                               rt.QTY,
                               nvl(
-                                case upper(nvl(pfa.REPLENISHMENT_QTY_MODE, 'FILL_TO_VOLUME'))
-                                  when 'FULL_PALLET' then pfa.BOXES_PER_PALLET
-                                  when 'HALF_PALLET' then ceil(pfa.BOXES_PER_PALLET / 2)
+                                case coalesce(
+                                       case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then upper(ar.REPLENISHMENT_QTY_MODE) end,
+                                       upper(pfa.REPLENISHMENT_QTY_MODE),
+                                       'FILL_TO_VOLUME'
+                                     )
+                                  when 'FULL_PALLET' then coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.BOXES_PER_PALLET end, pfa.BOXES_PER_PALLET)
+                                  when 'HALF_PALLET' then ceil(coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.BOXES_PER_PALLET end, pfa.BOXES_PER_PALLET) / 2)
                                   when 'FILL_TO_VOLUME' then
                                     case
-                                      when pf.MAX_VOLUME is not null and pfa.BOX_VOLUME_M3 is not null and pfa.BOX_VOLUME_M3 > 0
-                                        then floor(pf.MAX_VOLUME / pfa.BOX_VOLUME_M3)
+                                      when pf.MAX_VOLUME is not null
+                                       and coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.BOX_VOLUME_M3 end, pfa.BOX_VOLUME_M3) is not null
+                                       and coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.BOX_VOLUME_M3 end, pfa.BOX_VOLUME_M3) > 0
+                                        then floor(pf.MAX_VOLUME / coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.BOX_VOLUME_M3 end, pfa.BOX_VOLUME_M3))
                                       else pfa.MAX_QTY
                                     end
                                 end,
@@ -489,6 +525,9 @@ class PickingService:
                         and upper(pfa.ARTICUL) = upper(t.ARTICUL)
                         and pfa.ACTIVE = 1
                         and trunc(sysdate) between trunc(pfa.VALID_FROM) and nvl(trunc(pfa.VALID_TO), date '2999-12-31')
+                       left join RRL_ARTICUL_REPLENISH_RULE ar
+                         on upper(ar.ARTICUL) = upper(t.ARTICUL)
+                        and ar.ACTIVE = 1
                       where t.PICK_TASK_ID = rt.PICK_TASK_ID
                         and rownum = 1
                    ) cfg
@@ -514,20 +553,39 @@ class PickingService:
               select d.PICK_WAVE_DEMAND_ID,
                      nvl(fs.FREE_QTY, 0) PICK_FACE_FREE_QTY,
                      greatest(nvl(d.DEMAND_QTY, 0) - nvl(fs.FREE_QTY, 0), 0) DEFICIT_QTY,
-                     upper(nvl(pfa.REPLENISHMENT_METHOD, 'IMMEDIATE')) REPLENISHMENT_METHOD,
-                     upper(nvl(pfa.REPLENISHMENT_QTY_MODE, 'FILL_TO_VOLUME')) REPLENISHMENT_QTY_MODE,
+                     coalesce(
+                       case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then upper(ar.REPLENISHMENT_METHOD) end,
+                       upper(pfa.REPLENISHMENT_METHOD),
+                       'IMMEDIATE'
+                     ) REPLENISHMENT_METHOD,
+                     coalesce(
+                       case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then upper(ar.REPLENISHMENT_RELEASE_POLICY) end,
+                       upper(pfa.REPLENISHMENT_RELEASE_POLICY),
+                       'LAYER_TRIGGER'
+                     ) REPLENISHMENT_RELEASE_POLICY,
+                     coalesce(
+                       case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then upper(ar.REPLENISHMENT_QTY_MODE) end,
+                       upper(pfa.REPLENISHMENT_QTY_MODE),
+                       'FILL_TO_VOLUME'
+                     ) REPLENISHMENT_QTY_MODE,
                      shelf.MIN_SHELF_LIFE_DAYS,
                      shelf.MIN_SHELF_LIFE_PERCENT,
                      greatest(
                        greatest(nvl(d.DEMAND_QTY, 0) - nvl(fs.FREE_QTY, 0), 0),
                        nvl(
-                         case upper(nvl(pfa.REPLENISHMENT_QTY_MODE, 'FILL_TO_VOLUME'))
-                           when 'FULL_PALLET' then pfa.BOXES_PER_PALLET
-                           when 'HALF_PALLET' then ceil(pfa.BOXES_PER_PALLET / 2)
+                         case coalesce(
+                                case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then upper(ar.REPLENISHMENT_QTY_MODE) end,
+                                upper(pfa.REPLENISHMENT_QTY_MODE),
+                                'FILL_TO_VOLUME'
+                              )
+                           when 'FULL_PALLET' then coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.BOXES_PER_PALLET end, pfa.BOXES_PER_PALLET)
+                           when 'HALF_PALLET' then ceil(coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.BOXES_PER_PALLET end, pfa.BOXES_PER_PALLET) / 2)
                            when 'FILL_TO_VOLUME' then
                              case
-                               when pf.MAX_VOLUME is not null and pfa.BOX_VOLUME_M3 is not null and pfa.BOX_VOLUME_M3 > 0
-                                 then floor(pf.MAX_VOLUME / pfa.BOX_VOLUME_M3)
+                               when pf.MAX_VOLUME is not null
+                                and coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.BOX_VOLUME_M3 end, pfa.BOX_VOLUME_M3) is not null
+                                and coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.BOX_VOLUME_M3 end, pfa.BOX_VOLUME_M3) > 0
+                                 then floor(pf.MAX_VOLUME / coalesce(case when nvl(pfa.USE_ARTICUL_REPLENISH_RULE, 0) = 1 then ar.BOX_VOLUME_M3 end, pfa.BOX_VOLUME_M3))
                                else pfa.MAX_QTY
                              end
                          end,
@@ -542,6 +600,9 @@ class PickingService:
                  and upper(pfa.ARTICUL) = upper(d.ARTICUL)
                  and pfa.ACTIVE = 1
                  and trunc(sysdate) between trunc(pfa.VALID_FROM) and nvl(trunc(pfa.VALID_TO), date '2999-12-31')
+                left join RRL_ARTICUL_REPLENISH_RULE ar
+                  on upper(ar.ARTICUL) = upper(d.ARTICUL)
+                 and ar.ACTIVE = 1
                 left join (
                   select q.PICK_WAVE_ID,
                          q.ARTICUL,
@@ -630,6 +691,7 @@ class PickingService:
               d.PICK_FACE_FREE_QTY = s.PICK_FACE_FREE_QTY,
               d.REPLENISH_QTY = s.REPLENISH_QTY,
               d.REPLENISHMENT_METHOD = s.REPLENISHMENT_METHOD,
+              d.REPLENISHMENT_RELEASE_POLICY = s.REPLENISHMENT_RELEASE_POLICY,
               d.REPLENISHMENT_QTY_MODE = s.REPLENISHMENT_QTY_MODE,
               d.MIN_SHELF_LIFE_DAYS = s.MIN_SHELF_LIFE_DAYS,
               d.MIN_SHELF_LIFE_PERCENT = s.MIN_SHELF_LIFE_PERCENT
@@ -644,6 +706,7 @@ class PickingService:
                      d.PICK_FACE_FREE_QTY,
                      d.REPLENISH_QTY,
                      d.REPLENISHMENT_METHOD,
+                     d.REPLENISHMENT_RELEASE_POLICY,
                      d.REPLENISHMENT_QTY_MODE,
                      d.MIN_SHELF_LIFE_DAYS,
                      d.MIN_SHELF_LIFE_PERCENT,
@@ -663,6 +726,7 @@ class PickingService:
             when matched then update set
               rt.QTY = case when nvl(s.REPLENISH_QTY, 0) > 0 then s.REPLENISH_QTY else rt.QTY end,
               rt.REPLENISHMENT_METHOD = s.REPLENISHMENT_METHOD,
+              rt.REPLENISHMENT_RELEASE_POLICY = s.REPLENISHMENT_RELEASE_POLICY,
               rt.REPLENISHMENT_QTY_MODE = s.REPLENISHMENT_QTY_MODE,
               rt.MIN_SHELF_LIFE_DAYS = s.MIN_SHELF_LIFE_DAYS,
               rt.MIN_SHELF_LIFE_PERCENT = s.MIN_SHELF_LIFE_PERCENT,
@@ -1871,12 +1935,17 @@ class PickingService:
                        TARGET_CELL_CODE,
                        QTY,
                        REPLENISHMENT_METHOD,
+                       REPLENISHMENT_RELEASE_POLICY,
                        REPLENISHMENT_QTY_MODE,
                        RELEASE_TRIGGER_QTY,
                        BOXES_PER_LAYER,
                        BOXES_PER_PALLET,
                        BOX_VOLUME_M3,
                        PICK_FACE_MAX_VOLUME,
+                       SAFETY_LAYER_QTY,
+                       PREDICTIVE_BUFFER_MIN,
+                       PICK_RATE_SOURCE,
+                       RECHECK_ON_PICK_EVENT,
                        WAIT_REASON,
                        RELEASED_AT,
                        RELEASED_BY,
@@ -1905,12 +1974,17 @@ class PickingService:
                            rt.TARGET_CELL_CODE,
                            rt.QTY,
                            rt.REPLENISHMENT_METHOD,
+                           rt.REPLENISHMENT_RELEASE_POLICY,
                            rt.REPLENISHMENT_QTY_MODE,
                            rt.RELEASE_TRIGGER_QTY,
                            rt.BOXES_PER_LAYER,
                            rt.BOXES_PER_PALLET,
                            rt.BOX_VOLUME_M3,
                            rt.PICK_FACE_MAX_VOLUME,
+                           rt.SAFETY_LAYER_QTY,
+                           rt.PREDICTIVE_BUFFER_MIN,
+                           rt.PICK_RATE_SOURCE,
+                           rt.RECHECK_ON_PICK_EVENT,
                            rt.WAIT_REASON,
                            rt.RELEASED_AT,
                            rt.RELEASED_BY,
@@ -2531,14 +2605,20 @@ class PickingService:
                    MIN_QTY,
                    MAX_QTY,
                    CASE_PICK_ENABLED,
+                   USE_ARTICUL_REPLENISH_RULE,
                    REPLENISHMENT_METHOD,
+                   REPLENISHMENT_RELEASE_POLICY,
                    REPLENISHMENT_QTY_MODE,
                    MIN_TRIGGER_BOX_QTY,
                    MIN_TRIGGER_LAYER_QTY,
+                   SAFETY_LAYER_QTY,
                    BOXES_PER_LAYER,
                    BOXES_PER_PALLET,
                    BOX_VOLUME_M3,
                    ALLOW_PARTIAL_PALLET,
+                   PREDICTIVE_BUFFER_MIN,
+                   PICK_RATE_SOURCE,
+                   RECHECK_ON_PICK_EVENT,
                    ACTIVE,
                    VALID_FROM,
                    VALID_TO,
@@ -2588,32 +2668,158 @@ class PickingService:
         self.gateway.execute(
             """
             update RRL_PICK_FACE_ARTICUL
-               set REPLENISHMENT_METHOD = upper(nvl(:replenishment_method, 'IMMEDIATE')),
+               set USE_ARTICUL_REPLENISH_RULE = case when nvl(:use_articul_replenish_rule, 1) = 0 then 0 else 1 end,
+                   REPLENISHMENT_METHOD = upper(nvl(:replenishment_method, 'IMMEDIATE')),
+                   REPLENISHMENT_RELEASE_POLICY = upper(nvl(:replenishment_release_policy, 'LAYER_TRIGGER')),
                    REPLENISHMENT_QTY_MODE = upper(nvl(:replenishment_qty_mode, 'FILL_TO_VOLUME')),
                    MIN_TRIGGER_BOX_QTY = :min_trigger_box_qty,
                    MIN_TRIGGER_LAYER_QTY = :min_trigger_layer_qty,
+                   SAFETY_LAYER_QTY = :safety_layer_qty,
                    BOXES_PER_LAYER = :boxes_per_layer,
                    BOXES_PER_PALLET = :boxes_per_pallet,
                    BOX_VOLUME_M3 = :box_volume_m3,
                    ALLOW_PARTIAL_PALLET = case when nvl(:allow_partial_pallet, 1) = 0 then 0 else 1 end,
+                   PREDICTIVE_BUFFER_MIN = :predictive_buffer_min,
+                   PICK_RATE_SOURCE = upper(nvl(:pick_rate_source, 'MIXED')),
+                   RECHECK_ON_PICK_EVENT = case when nvl(:recheck_on_pick_event, 1) = 0 then 0 else 1 end,
                    UPDATED_AT = sysdate,
                    UPDATED_BY = substr(:updated_by, 1, 50)
              where PICK_FACE_ARTICUL_ID = :pick_face_articul_id
             """,
             {
                 "pick_face_articul_id": pick_face_articul_id,
+                "use_articul_replenish_rule": request.use_articul_replenish_rule,
                 "replenishment_method": request.replenishment_method,
+                "replenishment_release_policy": request.replenishment_release_policy,
                 "replenishment_qty_mode": request.replenishment_qty_mode,
                 "min_trigger_box_qty": request.min_trigger_box_qty,
                 "min_trigger_layer_qty": request.min_trigger_layer_qty,
+                "safety_layer_qty": request.safety_layer_qty,
                 "boxes_per_layer": request.boxes_per_layer,
                 "boxes_per_pallet": request.boxes_per_pallet,
                 "box_volume_m3": request.box_volume_m3,
                 "allow_partial_pallet": request.allow_partial_pallet,
+                "predictive_buffer_min": request.predictive_buffer_min,
+                "pick_rate_source": request.pick_rate_source,
+                "recheck_on_pick_event": request.recheck_on_pick_event,
                 "updated_by": request.updated_by,
             },
         )
         return pick_face_articul_id
+
+    def list_articul_replenishment_rules(
+        self,
+        articul: str | None = None,
+        active_only: int | None = None,
+    ) -> list[dict[str, Any]]:
+        conditions: list[str] = []
+        params: dict[str, Any] = {}
+        if articul:
+            conditions.append("upper(ARTICUL) = :articul")
+            params["articul"] = articul.upper()
+        if active_only is not None and int(active_only) == 1:
+            conditions.append("ACTIVE = 1")
+        where_sql = " where " + " and ".join(conditions) if conditions else ""
+        return self.gateway.fetch_all(
+            f"""
+            select ARTICUL_REPLENISH_RULE_ID,
+                   ARTICUL,
+                   REPLENISHMENT_METHOD,
+                   REPLENISHMENT_RELEASE_POLICY,
+                   REPLENISHMENT_QTY_MODE,
+                   MIN_TRIGGER_BOX_QTY,
+                   MIN_TRIGGER_LAYER_QTY,
+                   SAFETY_LAYER_QTY,
+                   BOXES_PER_LAYER,
+                   BOXES_PER_PALLET,
+                   BOX_VOLUME_M3,
+                   ALLOW_PARTIAL_PALLET,
+                   PREDICTIVE_BUFFER_MIN,
+                   PICK_RATE_SOURCE,
+                   RECHECK_ON_PICK_EVENT,
+                   ACTIVE,
+                   COMMENT_TEXT,
+                   CREATED_AT,
+                   UPDATED_AT
+              from RRL_ARTICUL_REPLENISH_RULE
+              {where_sql}
+             order by ARTICUL
+            """,
+            params,
+        )
+
+    def upsert_articul_replenishment_rule(self, request: ArticulReplenishmentRuleUpsertRequest) -> int:
+        params = request.model_dump()
+        if request.articul_replenish_rule_id is not None:
+            self.gateway.execute(
+                """
+                update RRL_ARTICUL_REPLENISH_RULE
+                   set ARTICUL = upper(:articul),
+                       REPLENISHMENT_METHOD = upper(nvl(:replenishment_method, 'MINIMAX')),
+                       REPLENISHMENT_RELEASE_POLICY = upper(nvl(:replenishment_release_policy, 'LAYER_TRIGGER')),
+                       REPLENISHMENT_QTY_MODE = upper(nvl(:replenishment_qty_mode, 'FILL_TO_VOLUME')),
+                       MIN_TRIGGER_BOX_QTY = :min_trigger_box_qty,
+                       MIN_TRIGGER_LAYER_QTY = :min_trigger_layer_qty,
+                       SAFETY_LAYER_QTY = :safety_layer_qty,
+                       BOXES_PER_LAYER = :boxes_per_layer,
+                       BOXES_PER_PALLET = :boxes_per_pallet,
+                       BOX_VOLUME_M3 = :box_volume_m3,
+                       ALLOW_PARTIAL_PALLET = case when nvl(:allow_partial_pallet, 1) = 0 then 0 else 1 end,
+                       PREDICTIVE_BUFFER_MIN = :predictive_buffer_min,
+                       PICK_RATE_SOURCE = upper(nvl(:pick_rate_source, 'MIXED')),
+                       RECHECK_ON_PICK_EVENT = case when nvl(:recheck_on_pick_event, 1) = 0 then 0 else 1 end,
+                       ACTIVE = case when nvl(:active, 1) = 0 then 0 else 1 end,
+                       COMMENT_TEXT = :comment_text,
+                       UPDATED_AT = sysdate,
+                       UPDATED_BY = substr(:updated_by, 1, 50)
+                 where ARTICUL_REPLENISH_RULE_ID = :articul_replenish_rule_id
+                """,
+                params,
+            )
+            return request.articul_replenish_rule_id
+
+        existing_rows = self.gateway.fetch_all(
+            """
+            select ARTICUL_REPLENISH_RULE_ID
+              from RRL_ARTICUL_REPLENISH_RULE
+             where upper(ARTICUL) = upper(:articul)
+            """,
+            {"articul": request.articul},
+        )
+        if existing_rows:
+            params["articul_replenish_rule_id"] = int(existing_rows[0]["articul_replenish_rule_id"])
+            request.articul_replenish_rule_id = params["articul_replenish_rule_id"]
+            return self.upsert_articul_replenishment_rule(request)
+
+        rule_id = self.gateway.call_number_plsql(
+            "begin select RRL_ART_REPL_RULE_SQ.nextval into :result from dual; end;",
+            {},
+        )
+        params["articul_replenish_rule_id"] = rule_id
+        self.gateway.execute(
+            """
+            insert into RRL_ARTICUL_REPLENISH_RULE (
+              ARTICUL_REPLENISH_RULE_ID, ARTICUL, REPLENISHMENT_METHOD,
+              REPLENISHMENT_RELEASE_POLICY, REPLENISHMENT_QTY_MODE,
+              MIN_TRIGGER_BOX_QTY, MIN_TRIGGER_LAYER_QTY, SAFETY_LAYER_QTY,
+              BOXES_PER_LAYER, BOXES_PER_PALLET, BOX_VOLUME_M3,
+              ALLOW_PARTIAL_PALLET, PREDICTIVE_BUFFER_MIN, PICK_RATE_SOURCE,
+              RECHECK_ON_PICK_EVENT, ACTIVE, COMMENT_TEXT, CREATED_BY, UPDATED_BY
+            ) values (
+              :articul_replenish_rule_id, upper(:articul), upper(nvl(:replenishment_method, 'MINIMAX')),
+              upper(nvl(:replenishment_release_policy, 'LAYER_TRIGGER')), upper(nvl(:replenishment_qty_mode, 'FILL_TO_VOLUME')),
+              :min_trigger_box_qty, :min_trigger_layer_qty, :safety_layer_qty,
+              :boxes_per_layer, :boxes_per_pallet, :box_volume_m3,
+              case when nvl(:allow_partial_pallet, 1) = 0 then 0 else 1 end,
+              :predictive_buffer_min, upper(nvl(:pick_rate_source, 'MIXED')),
+              case when nvl(:recheck_on_pick_event, 1) = 0 then 0 else 1 end,
+              case when nvl(:active, 1) = 0 then 0 else 1 end,
+              :comment_text, substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
+            )
+            """,
+            params,
+        )
+        return rule_id
 
     def list_shortages(self, pick_plan_id: int | None = None, limit: int = 200) -> list[dict[str, Any]]:
         conditions: list[str] = []

@@ -683,17 +683,44 @@ class PickFaceArticulUpsertRequest(BaseModel):
     min_qty: float | None = None
     max_qty: float | None = None
     case_pick_enabled: int = 1
+    use_articul_replenish_rule: int = 1
     replenishment_method: str = "IMMEDIATE"
+    replenishment_release_policy: str = "LAYER_TRIGGER"
     replenishment_qty_mode: str = "FILL_TO_VOLUME"
     min_trigger_box_qty: float | None = None
     min_trigger_layer_qty: float | None = None
+    safety_layer_qty: float | None = None
     boxes_per_layer: float | None = None
     boxes_per_pallet: float | None = None
     box_volume_m3: float | None = None
     allow_partial_pallet: int = 1
+    predictive_buffer_min: float | None = None
+    pick_rate_source: str = "MIXED"
+    recheck_on_pick_event: int = 1
     active: int = 1
     valid_from: date | None = None
     valid_to: date | None = None
+    updated_by: str | None = None
+
+
+class ArticulReplenishmentRuleUpsertRequest(BaseModel):
+    articul_replenish_rule_id: int | None = None
+    articul: str
+    replenishment_method: str = "MINIMAX"
+    replenishment_release_policy: str = "LAYER_TRIGGER"
+    replenishment_qty_mode: str = "FILL_TO_VOLUME"
+    min_trigger_box_qty: float | None = None
+    min_trigger_layer_qty: float | None = 1
+    safety_layer_qty: float | None = None
+    boxes_per_layer: float | None = None
+    boxes_per_pallet: float | None = None
+    box_volume_m3: float | None = None
+    allow_partial_pallet: int = 1
+    predictive_buffer_min: float | None = None
+    pick_rate_source: str = "MIXED"
+    recheck_on_pick_event: int = 1
+    active: int = 1
+    comment_text: str | None = None
     updated_by: str | None = None
 
 

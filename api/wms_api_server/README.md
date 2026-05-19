@@ -293,7 +293,10 @@ Pick topology:
 - `POST /api/picking/pick-faces`
 - `GET /api/picking/pick-faces/{pick_face_id}/articuls`
 - `POST /api/picking/pick-faces/{pick_face_id}/articuls`
+- `GET /api/picking/articul-replenishment-rules`
+- `POST /api/picking/articul-replenishment-rules`
 - These endpoints require Oracle migration `2026-05-17-017-pick-face-route`.
+- Article default replenishment rules and pick-face pair override settings require migration `2026-05-20-037-replenishment-release-policy-rules`.
 - They use permissions `pick_topology_view` and `pick_topology_edit`.
 - `CASE_PICK` tasks created by `/api/picking/plans` now receive `target_cell_code`, `pick_sequence`, `pick_face_id`, and `pick_route_cell_id` when topology is configured.
 

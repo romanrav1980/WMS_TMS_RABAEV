@@ -1018,3 +1018,10 @@ Append-only log of root wiki updates.
 - Clarified [`requirements/wave_case_pick_replenishment_tz.md`](requirements/wave_case_pick_replenishment_tz.md): early `HARD` source reservation is allowed, but it is not a driver-facing release.
 - Recorded the invariant `1 replenishment row -> 1 source reservation -> 1 warehouse task` and the rule that no-deficit cancelled rows must not keep a source reservation before driver task release.
 - Added the pick-face physical-capacity release rule: driver replenishment tasks wait while the current pick-face volume plus released quantity would exceed `PICK_FACE_MAX_VOLUME`.
+
+## [2026-05-20] wave | Accepted replenishment release policy strategy
+
+- Added migration `2026-05-20-037-replenishment-release-policy-rules` with SKU-level `RRL_ARTICUL_REPLENISH_RULE` defaults and pick-face pair override fields.
+- Updated [`requirements/wave_case_pick_replenishment_tz.md`](requirements/wave_case_pick_replenishment_tz.md) with `LAYER_TRIGGER` and `PREDICTIVE_LEAD_TIME` strategy rules, inheritance order, and predictive settings.
+- Updated the raw wave replenishment admin page with article default rules, pair inheritance, release-policy, safety layer, lead-time buffer, pick-rate source, and pick-event recheck controls.
+- Mirrored the schema change in [`database/feed_factory_traceability_schema.md`](database/feed_factory_traceability_schema.md) and the migration README.

@@ -4,9 +4,11 @@ const waveReplenishmentState = {
   stagingTasks: [],
   pickFaces: [],
   articuls: [],
+  articulRules: [],
   selectedWave: null,
   selectedPickFace: null,
   selectedArticul: null,
+  selectedArticulRule: null,
 };
 
 const waveRepEl = (id) => document.getElementById(id);
@@ -264,7 +266,7 @@ function renderPickFaceArticuls() {
     return `<tr${selected} data-pick-articul-id="${escapeWaveRepAttr(row.pick_face_articul_id)}">`
       + `<td>${escapeWaveRepHtml(row.pick_face_articul_id)}</td>`
       + `<td>${escapeWaveRepHtml(row.articul)}</td>`
-      + `<td>${escapeWaveRepHtml(row.replenishment_method || "IMMEDIATE")}</td>`
+      + `<td>${escapeWaveRepHtml(row.use_articul_replenish_rule ? "ARTICUL" : (row.replenishment_release_policy || "LAYER_TRIGGER"))}</td>`
       + `<td>${escapeWaveRepHtml(row.replenishment_qty_mode || "FILL_TO_VOLUME")}</td>`
       + `<td>${escapeWaveRepHtml(row.min_trigger_box_qty || row.min_trigger_layer_qty || "-")}</td>`
       + `<td>${escapeWaveRepHtml(row.boxes_per_pallet || "-")}</td>`
@@ -285,14 +287,103 @@ function fillRuleForm() {
   const row = waveReplenishmentState.selectedArticul;
   waveRepEl("waveReplenishmentRuleStatus").textContent = row ? `Правило #${row.pick_face_articul_id}` : "Выберите строку артикула";
   waveRepEl("waveRuleArticul").value = row?.articul || waveRepEl("waveReplenishmentPickArticul").value.trim();
+  waveRepEl("waveRuleInherit").value = String(row?.use_articul_replenish_rule ?? 1);
+  waveRepEl("waveRulePolicy").value = row?.replenishment_release_policy || "LAYER_TRIGGER";
   waveRepEl("waveRuleMethod").value = row?.replenishment_method || "IMMEDIATE";
   waveRepEl("waveRuleQtyMode").value = row?.replenishment_qty_mode || "FILL_TO_VOLUME";
   waveRepEl("waveRuleTriggerBoxes").value = row?.min_trigger_box_qty ?? "";
   waveRepEl("waveRuleTriggerLayers").value = row?.min_trigger_layer_qty ?? "";
+  waveRepEl("waveRuleSafetyLayers").value = row?.safety_layer_qty ?? "";
   waveRepEl("waveRuleBoxesLayer").value = row?.boxes_per_layer ?? "";
   waveRepEl("waveRuleBoxesPallet").value = row?.boxes_per_pallet ?? "";
   waveRepEl("waveRuleBoxVolume").value = row?.box_volume_m3 ?? "";
+  waveRepEl("waveRulePredictiveBuffer").value = row?.predictive_buffer_min ?? "";
+  waveRepEl("waveRulePickRateSource").value = row?.pick_rate_source || "MIXED";
+  waveRepEl("waveRuleRecheck").value = String(row?.recheck_on_pick_event ?? 1);
   waveRepEl("waveRulePartial").value = String(row?.allow_partial_pallet ?? 1);
+}
+
+async function loadArticulRules() {
+  const params = new URLSearchParams();
+  const articul = waveRepEl("waveArticulRuleFilter").value.trim();
+  if (articul) params.set("articul", articul);
+  waveReplenishmentState.articulRules = await waveRepFetch(`/api/picking/articul-replenishment-rules?${params.toString()}`);
+  renderArticulRules();
+  waveRepEl("waveArticulRuleStatus").textContent = `Правил: ${waveReplenishmentState.articulRules.length}`;
+}
+
+function renderArticulRules() {
+  waveRepEl("waveArticulRuleRows").innerHTML = waveReplenishmentState.articulRules.map((row) => {
+    const selected = waveReplenishmentState.selectedArticulRule?.articul_replenish_rule_id === row.articul_replenish_rule_id ? " class=\"selected\"" : "";
+    return `<tr${selected} data-articul-rule-id="${escapeWaveRepAttr(row.articul_replenish_rule_id)}">`
+      + `<td>${escapeWaveRepHtml(row.articul_replenish_rule_id)}</td>`
+      + `<td>${escapeWaveRepHtml(row.articul)}</td>`
+      + `<td>${escapeWaveRepHtml(row.replenishment_release_policy || "LAYER_TRIGGER")}</td>`
+      + `<td>${escapeWaveRepHtml(row.replenishment_method || "MINIMAX")}</td>`
+      + `<td>${escapeWaveRepHtml(row.min_trigger_box_qty || row.min_trigger_layer_qty || "-")}</td>`
+      + `<td>${escapeWaveRepHtml(row.pick_rate_source || "MIXED")}</td>`
+      + "</tr>";
+  }).join("") || "<tr><td colspan=\"6\">Нет правил артикула</td></tr>";
+  document.querySelectorAll("#waveArticulRuleRows tr[data-articul-rule-id]").forEach((row) => {
+    row.addEventListener("click", () => selectArticulRule(Number(row.dataset.articulRuleId)));
+  });
+}
+
+function selectArticulRule(ruleId) {
+  waveReplenishmentState.selectedArticulRule = waveReplenishmentState.articulRules.find((row) => Number(row.articul_replenish_rule_id) === ruleId) || null;
+  renderArticulRules();
+  fillArticulRuleForm();
+}
+
+function fillArticulRuleForm() {
+  const row = waveReplenishmentState.selectedArticulRule;
+  waveRepEl("waveArticulRuleArticul").value = row?.articul || waveRepEl("waveArticulRuleFilter").value.trim() || waveRepEl("waveReplenishmentPickArticul").value.trim();
+  waveRepEl("waveArticulRulePolicy").value = row?.replenishment_release_policy || "LAYER_TRIGGER";
+  waveRepEl("waveArticulRuleMethod").value = row?.replenishment_method || "MINIMAX";
+  waveRepEl("waveArticulRuleQtyMode").value = row?.replenishment_qty_mode || "FILL_TO_VOLUME";
+  waveRepEl("waveArticulRuleTriggerBoxes").value = row?.min_trigger_box_qty ?? "";
+  waveRepEl("waveArticulRuleTriggerLayers").value = row?.min_trigger_layer_qty ?? 1;
+  waveRepEl("waveArticulRuleSafetyLayers").value = row?.safety_layer_qty ?? "";
+  waveRepEl("waveArticulRuleBoxesLayer").value = row?.boxes_per_layer ?? "";
+  waveRepEl("waveArticulRuleBoxesPallet").value = row?.boxes_per_pallet ?? "";
+  waveRepEl("waveArticulRuleBoxVolume").value = row?.box_volume_m3 ?? "";
+  waveRepEl("waveArticulRulePredictiveBuffer").value = row?.predictive_buffer_min ?? "";
+  waveRepEl("waveArticulRulePickRateSource").value = row?.pick_rate_source || "MIXED";
+  waveRepEl("waveArticulRuleRecheck").value = String(row?.recheck_on_pick_event ?? 1);
+  waveRepEl("waveArticulRulePartial").value = String(row?.allow_partial_pallet ?? 1);
+}
+
+async function saveArticulRule() {
+  if (!waveRepCan("pick_topology_edit")) throw new Error("Нет права pick_topology_edit");
+  const current = waveReplenishmentState.selectedArticulRule;
+  const payload = {
+    articul_replenish_rule_id: current?.articul_replenish_rule_id || null,
+    articul: waveRepEl("waveArticulRuleArticul").value.trim(),
+    replenishment_method: waveRepEl("waveArticulRuleMethod").value,
+    replenishment_release_policy: waveRepEl("waveArticulRulePolicy").value,
+    replenishment_qty_mode: waveRepEl("waveArticulRuleQtyMode").value,
+    min_trigger_box_qty: numberOrNull(waveRepEl("waveArticulRuleTriggerBoxes").value),
+    min_trigger_layer_qty: numberOrNull(waveRepEl("waveArticulRuleTriggerLayers").value),
+    safety_layer_qty: numberOrNull(waveRepEl("waveArticulRuleSafetyLayers").value),
+    boxes_per_layer: numberOrNull(waveRepEl("waveArticulRuleBoxesLayer").value),
+    boxes_per_pallet: numberOrNull(waveRepEl("waveArticulRuleBoxesPallet").value),
+    box_volume_m3: numberOrNull(waveRepEl("waveArticulRuleBoxVolume").value),
+    predictive_buffer_min: numberOrNull(waveRepEl("waveArticulRulePredictiveBuffer").value),
+    pick_rate_source: waveRepEl("waveArticulRulePickRateSource").value,
+    recheck_on_pick_event: Number(waveRepEl("waveArticulRuleRecheck").value),
+    allow_partial_pallet: Number(waveRepEl("waveArticulRulePartial").value),
+    active: current?.active ?? 1,
+    updated_by: waveRepUser(),
+  };
+  if (!payload.articul) throw new Error("Укажите артикул");
+  await waveRepFetch("/api/picking/articul-replenishment-rules", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  waveRepEl("waveArticulRuleFilter").value = payload.articul;
+  await loadArticulRules();
+  waveRepEl("waveArticulRuleStatus").textContent = "Сохранено";
 }
 
 async function saveRule() {
@@ -307,13 +398,19 @@ async function saveRule() {
     min_qty: current?.min_qty ?? null,
     max_qty: current?.max_qty ?? null,
     case_pick_enabled: current?.case_pick_enabled ?? 1,
+    use_articul_replenish_rule: Number(waveRepEl("waveRuleInherit").value),
     replenishment_method: waveRepEl("waveRuleMethod").value,
+    replenishment_release_policy: waveRepEl("waveRulePolicy").value,
     replenishment_qty_mode: waveRepEl("waveRuleQtyMode").value,
     min_trigger_box_qty: numberOrNull(waveRepEl("waveRuleTriggerBoxes").value),
     min_trigger_layer_qty: numberOrNull(waveRepEl("waveRuleTriggerLayers").value),
+    safety_layer_qty: numberOrNull(waveRepEl("waveRuleSafetyLayers").value),
     boxes_per_layer: numberOrNull(waveRepEl("waveRuleBoxesLayer").value),
     boxes_per_pallet: numberOrNull(waveRepEl("waveRuleBoxesPallet").value),
     box_volume_m3: numberOrNull(waveRepEl("waveRuleBoxVolume").value),
+    predictive_buffer_min: numberOrNull(waveRepEl("waveRulePredictiveBuffer").value),
+    pick_rate_source: waveRepEl("waveRulePickRateSource").value,
+    recheck_on_pick_event: Number(waveRepEl("waveRuleRecheck").value),
     allow_partial_pallet: Number(waveRepEl("waveRulePartial").value),
     active: current?.active ?? 1,
     updated_by: waveRepUser(),
@@ -361,6 +458,7 @@ function showWaveRepError(error) {
   waveRepEl("waveReplenishmentStatusText").textContent = error.message;
   waveRepEl("waveReplenishmentDetailStatus").textContent = error.message;
   waveRepEl("waveReplenishmentPickStatus").textContent = error.message;
+  waveRepEl("waveArticulRuleStatus").textContent = error.message;
 }
 
 function initWaveReplenishmentPage() {
@@ -371,8 +469,11 @@ function initWaveReplenishmentPage() {
   waveRepEl("waveReplenishmentMinimaxCheck").addEventListener("click", () => runMinimaxCheck().catch(showWaveRepError));
   waveRepEl("waveStagingRelease").addEventListener("click", () => runStagingRelease().catch(showWaveRepError));
   waveRepEl("waveReplenishmentPickLoad").addEventListener("click", () => loadPickFaces().catch(showWaveRepError));
+  waveRepEl("waveArticulRuleLoad").addEventListener("click", () => loadArticulRules().catch(showWaveRepError));
+  waveRepEl("waveArticulRuleSave").addEventListener("click", () => saveArticulRule().catch(showWaveRepError));
   waveRepEl("waveRuleSave").addEventListener("click", () => saveRule().catch(showWaveRepError));
   loadWaveReplenishmentWaves().catch(showWaveRepError);
+  loadArticulRules().catch(showWaveRepError);
 }
 
 window.addEventListener("wms-admin-auth-ready", initWaveReplenishmentPage, { once: true });

@@ -146,17 +146,55 @@
           </article>
 
           <article class="panel rights-groups">
+            <header><h2>Правило артикула</h2></header>
+            <div class="rights-toolbar">
+              <label>Артикул<input id="waveArticulRuleFilter" placeholder="Артикул" /></label>
+              <button id="waveArticulRuleLoad" type="button">Найти</button>
+            </div>
+            <div class="rights-summary"><span id="waveArticulRuleStatus">Правило по умолчанию для всех pick-face артикула</span></div>
+            <div class="rights-table-wrap compact-scroll">
+              <table class="rights-table">
+                <thead><tr><th>ID</th><th>Артикул</th><th>Стратегия</th><th>Метод</th><th>Порог</th><th>Источник скорости</th></tr></thead>
+                <tbody id="waveArticulRuleRows"></tbody>
+              </table>
+            </div>
+            <div class="rights-editor" data-permission="pick_topology_edit">
+              <label>Артикул<input id="waveArticulRuleArticul" /></label>
+              <label>Стратегия<select id="waveArticulRulePolicy"><option>LAYER_TRIGGER</option><option>PREDICTIVE_LEAD_TIME</option></select></label>
+              <label>Метод<select id="waveArticulRuleMethod"><option>MINIMAX</option><option>IMMEDIATE</option></select></label>
+              <label>Режим<select id="waveArticulRuleQtyMode"><option>FILL_TO_VOLUME</option><option>FULL_PALLET</option><option>HALF_PALLET</option></select></label>
+              <label>Порог, коробки<input id="waveArticulRuleTriggerBoxes" type="number" min="0" step="1" /></label>
+              <label>Порог, слои<input id="waveArticulRuleTriggerLayers" type="number" min="0" step="1" /></label>
+              <label>Страховой запас, слои<input id="waveArticulRuleSafetyLayers" type="number" min="0" step="1" /></label>
+              <label>Коробок в слое<input id="waveArticulRuleBoxesLayer" type="number" min="0" step="1" /></label>
+              <label>Коробок на паллете<input id="waveArticulRuleBoxesPallet" type="number" min="0" step="1" /></label>
+              <label>Объем коробки<input id="waveArticulRuleBoxVolume" type="number" min="0" step="0.001" /></label>
+              <label>Буфер прогноза, мин<input id="waveArticulRulePredictiveBuffer" type="number" min="0" step="1" /></label>
+              <label>Скорость отбора<select id="waveArticulRulePickRateSource"><option>MIXED</option><option>FACT</option><option>PLAN</option></select></label>
+              <label>Проверка после отбора<select id="waveArticulRuleRecheck"><option value="1">Да</option><option value="0">Нет</option></select></label>
+              <label>Частичный паллет<select id="waveArticulRulePartial"><option value="1">Да</option><option value="0">Нет</option></select></label>
+              <button id="waveArticulRuleSave" type="button">Сохранить правило артикула</button>
+            </div>
+          </article>
+
+          <article class="panel rights-groups">
             <header><h2>Правило пополнения</h2></header>
             <div class="rights-summary"><span id="waveReplenishmentRuleStatus">Выберите строку артикула</span></div>
             <div class="rights-editor" data-permission="pick_topology_edit">
               <label>Артикул<input id="waveRuleArticul" /></label>
+              <label>Наследовать от артикула<select id="waveRuleInherit"><option value="1">Да</option><option value="0">Нет</option></select></label>
+              <label>Стратегия<select id="waveRulePolicy"><option>LAYER_TRIGGER</option><option>PREDICTIVE_LEAD_TIME</option></select></label>
               <label>Метод<select id="waveRuleMethod"><option>IMMEDIATE</option><option>MINIMAX</option></select></label>
               <label>Режим<select id="waveRuleQtyMode"><option>FILL_TO_VOLUME</option><option>FULL_PALLET</option><option>HALF_PALLET</option></select></label>
               <label>Порог, коробки<input id="waveRuleTriggerBoxes" type="number" min="0" step="1" /></label>
               <label>Порог, слои<input id="waveRuleTriggerLayers" type="number" min="0" step="1" /></label>
+              <label>Страховой запас, слои<input id="waveRuleSafetyLayers" type="number" min="0" step="1" /></label>
               <label>Коробок в слое<input id="waveRuleBoxesLayer" type="number" min="0" step="1" /></label>
               <label>Коробок на паллете<input id="waveRuleBoxesPallet" type="number" min="0" step="1" /></label>
               <label>Объем коробки<input id="waveRuleBoxVolume" type="number" min="0" step="0.001" /></label>
+              <label>Буфер прогноза, мин<input id="waveRulePredictiveBuffer" type="number" min="0" step="1" /></label>
+              <label>Скорость отбора<select id="waveRulePickRateSource"><option>MIXED</option><option>FACT</option><option>PLAN</option></select></label>
+              <label>Проверка после отбора<select id="waveRuleRecheck"><option value="1">Да</option><option value="0">Нет</option></select></label>
               <label>Частичный паллет<select id="waveRulePartial"><option value="1">Да</option><option value="0">Нет</option></select></label>
               <button id="waveRuleSave" type="button">Сохранить</button>
             </div>
