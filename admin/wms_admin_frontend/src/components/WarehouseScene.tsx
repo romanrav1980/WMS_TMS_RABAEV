@@ -109,8 +109,8 @@ export function WarehouseScene({ layout, resources, collisions, pickFaceFill, do
           <button
             key={resource.id}
             type="button"
-            className={`resource-badge ${resource.statusColor}`}
-            style={overlayStyle(resource.x, resource.y, resource.kind === "reachtruck" ? 2.1 : 1.7, frameSize, navigation)}
+            className={`resource-badge ${resource.kind === "reachtruck" ? "machine" : ""} ${resource.statusColor}`}
+            style={overlayStyle(resource.x, resource.y, resource.kind === "reachtruck" ? 3.1 : 1.7, frameSize, navigation)}
             onClick={() => onSelect({ type: "resource", resource })}
           >
             {resource.kind === "reachtruck" ? resource.id : `${resource.id} ${resource.speedRatio}%`}
@@ -187,8 +187,8 @@ function drawScene(
     const p = iso(view, resource.x, resource.y, resource.kind === "reachtruck" ? .9 : .55);
     if (resource.kind === "reachtruck") drawReachtruckIcon(ctx, p.x, p.y, resourceHeading(view, resource), statusColor(resource.statusColor));
     else drawPickerIcon(ctx, p.x, p.y, statusColor(resource.statusColor));
-    drawHalo(ctx, p.x, p.y, statusColor(resource.statusColor), resource.kind === "reachtruck" ? 18 : 13);
-    hitRegions.push({ x: p.x, y: p.y, r: resource.kind === "reachtruck" ? 24 : 18, selection: { type: "resource", resource } });
+    drawHalo(ctx, p.x, p.y, statusColor(resource.statusColor), resource.kind === "reachtruck" ? 24 : 13);
+    hitRegions.push({ x: p.x, y: p.y, r: resource.kind === "reachtruck" ? 32 : 18, selection: { type: "resource", resource } });
   }
   for (const collision of collisions) {
     const loc = collisionLocation(layout, collision);
@@ -506,71 +506,74 @@ function drawReachtruckIcon(ctx: CanvasRenderingContext2D, x: number, y: number,
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(angle);
+  ctx.scale(1.18, 1.18);
   ctx.shadowColor = "rgba(15,23,42,.28)";
   ctx.shadowBlur = 11;
   ctx.shadowOffsetY = 6;
   ctx.fillStyle = "rgba(15,23,42,.22)";
   ctx.beginPath();
-  ctx.ellipse(0, 10, 23, 8, 0, 0, Math.PI * 2);
+  ctx.ellipse(0, 11, 25, 8, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.shadowColor = "transparent";
 
   ctx.fillStyle = "#f2b13f";
   ctx.strokeStyle = "#9a6413";
   ctx.lineWidth = 1.2;
-  roundedRect(ctx, -18, -8, 29, 16, 4);
+  roundedRect(ctx, -21, -8, 33, 17, 4);
   ctx.fill();
   ctx.stroke();
+  ctx.fillStyle = "#d18a1f";
+  ctx.fillRect(-18, 4, 24, 4);
 
   ctx.fillStyle = "#113f75";
-  roundedRect(ctx, -14, -17, 15, 12, 3);
+  roundedRect(ctx, -16, -19, 17, 13, 3);
   ctx.fill();
   ctx.fillStyle = "#dbeafe";
-  ctx.fillRect(-10, -15, 7, 5);
+  ctx.fillRect(-12, -17, 8, 5);
   ctx.fillStyle = "#0f172a";
-  ctx.fillRect(-15, -5, 6, 12);
+  ctx.fillRect(-17, -5, 6, 13);
   ctx.fillStyle = "#fbbf24";
-  ctx.fillRect(-16, -10, 3, 8);
+  ctx.fillRect(-18, -11, 3, 9);
 
   ctx.strokeStyle = "#1f2937";
   ctx.lineWidth = 2.4;
   ctx.beginPath();
-  ctx.moveTo(10, -17);
-  ctx.lineTo(10, 13);
-  ctx.moveTo(15, -16);
-  ctx.lineTo(15, 12);
+  ctx.moveTo(11, -19);
+  ctx.lineTo(11, 15);
+  ctx.moveTo(17, -18);
+  ctx.lineTo(17, 14);
   ctx.stroke();
   ctx.strokeStyle = "#334155";
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.moveTo(11, -11);
-  ctx.lineTo(15, -11);
-  ctx.moveTo(11, 2);
-  ctx.lineTo(15, 2);
+  ctx.moveTo(12, -12);
+  ctx.lineTo(17, -12);
+  ctx.moveTo(12, 2);
+  ctx.lineTo(17, 2);
   ctx.stroke();
 
   ctx.strokeStyle = "#1e293b";
   ctx.lineWidth = 2.2;
   ctx.beginPath();
-  ctx.moveTo(15, 6);
-  ctx.lineTo(29, 3);
-  ctx.moveTo(15, 11);
-  ctx.lineTo(29, 8);
+  ctx.moveTo(17, 6);
+  ctx.lineTo(33, 3);
+  ctx.moveTo(17, 12);
+  ctx.lineTo(33, 9);
   ctx.stroke();
 
   ctx.fillStyle = "#111827";
   ctx.beginPath();
-  ctx.arc(-12, 9, 4.5, 0, Math.PI * 2);
-  ctx.arc(5, 9, 4.5, 0, Math.PI * 2);
+  ctx.arc(-14, 10, 4.8, 0, Math.PI * 2);
+  ctx.arc(6, 10, 4.8, 0, Math.PI * 2);
   ctx.fill();
   ctx.fillStyle = "#64748b";
   ctx.beginPath();
-  ctx.arc(-12, 9, 2, 0, Math.PI * 2);
-  ctx.arc(5, 9, 2, 0, Math.PI * 2);
+  ctx.arc(-14, 10, 2.1, 0, Math.PI * 2);
+  ctx.arc(6, 10, 2.1, 0, Math.PI * 2);
   ctx.fill();
   ctx.fillStyle = withAlpha(color, .86);
   ctx.beginPath();
-  ctx.arc(-18, -3, 3.5, 0, Math.PI * 2);
+  ctx.arc(-21, -3, 3.7, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 }

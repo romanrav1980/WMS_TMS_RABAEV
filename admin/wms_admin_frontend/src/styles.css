@@ -106,6 +106,8 @@ button { cursor: pointer; }
 .resource-badge, .callout { position: absolute; pointer-events: auto; transform: translate(-50%, -100%); filter: drop-shadow(0 8px 15px rgba(15,23,42,.16)); }
 .resource-badge { min-width: 62px; display: grid; gap: 2px; padding: 5px 7px; border-radius: 7px; border: 1px solid rgba(255,255,255,.8); background: #fff; color: var(--text); font-size: 11px; font-weight: 900; text-align: center; }
 .resource-badge span { color: var(--muted); font-size: 10px; }
+.resource-badge.machine { min-width: 34px; padding: 3px 5px; border-radius: 6px; transform: translate(-50%, -170%); background: rgba(255,255,255,.86); font-size: 9px; line-height: 1; }
+.resource-badge.machine span { display: none; }
 .resource-badge.green { color: #08764a; box-shadow: 0 0 0 5px rgba(25,167,101,.18); }
 .resource-badge.blue { color: var(--blue); box-shadow: 0 0 0 5px rgba(37,99,216,.18); }
 .resource-badge.amber { color: #a16207; box-shadow: 0 0 0 5px rgba(245,158,11,.2); }
