@@ -1,5 +1,5 @@
 import { clock, inferWaveByMinute, SHIFT_MINUTES } from "../demoData";
-import type { Collision, CollisionType, MinuteMetrics, PickFaceFill, ReplenishmentTask, ResourceState, StockSnapshot, WarehouseCell, WarehouseEvent, WarehouseLayout } from "../types";
+import type { Collision, CollisionType, DockPallet, MinuteMetrics, PickFaceFill, ReplenishmentTask, ResourceState, StockSnapshot, WarehouseCell, WarehouseEvent, WarehouseLayout } from "../types";
 
 const rootCauseByType: Record<string, string> = {
   PICK_FACE_EMPTY: "Комплектовщик пришел к ячейке отбора, но доступного остатка уже не хватило",
@@ -142,6 +142,36 @@ export function pickFaceFillAt(stock: StockSnapshot | undefined, events: Warehou
     const qty = Math.max(0, Number(qtyByCell[cell] || 0));
     return [cell, { qty, capacity, ratio: capacity > 0 ? Math.max(0, Math.min(1, qty / capacity)) : 0 }];
   }));
+}
+
+export function dockPalletsAt(events: WarehouseEvent[], minute: number): Record<string, DockPallet[]> {
+  const pallets = new Map<string, DockPallet>();
+  for (const event of events) {
+    if (Number(event.minute) > minute || !event.pallet_id) continue;
+    if (event.event_type === "PALLET_STAGED_TO_DOCK" && event.gate_id) {
+      pallets.set(event.pallet_id, {
+        palletId: event.pallet_id,
+        gateId: event.gate_id,
+        stagedBy: String(event.staged_by || "PICKER"),
+        resourceId: event.resource_id,
+        waveId: event.wave_id,
+        clientId: event.client_id,
+        minute: event.minute,
+      });
+    }
+    if (event.event_type === "PALLET_SHIPPED") {
+      pallets.delete(event.pallet_id);
+    }
+  }
+  const byGate: Record<string, DockPallet[]> = {};
+  for (const pallet of pallets.values()) {
+    byGate[pallet.gateId] = byGate[pallet.gateId] || [];
+    byGate[pallet.gateId].push(pallet);
+  }
+  for (const rows of Object.values(byGate)) {
+    rows.sort((a, b) => a.minute - b.minute || a.palletId.localeCompare(b.palletId));
+  }
+  return byGate;
 }
 
 export function cellById(layout: WarehouseLayout, id?: string): WarehouseCell | undefined {

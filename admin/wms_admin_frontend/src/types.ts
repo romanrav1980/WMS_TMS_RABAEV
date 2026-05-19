@@ -95,6 +95,16 @@ export type PickFaceFill = {
   ratio: number;
 };
 
+export type DockPallet = {
+  palletId: string;
+  gateId: string;
+  stagedBy: "PICKER" | "REACHTRUCK" | string;
+  resourceId?: string;
+  waveId?: string;
+  clientId?: string;
+  minute: number;
+};
+
 export type CollisionType =
   | "PICK_FACE_EMPTY"
   | "PICK_FACE_QUEUE"
@@ -177,4 +187,5 @@ export type DetailSelection =
   | { type: "resource"; resource: ResourceState }
   | { type: "collision"; collision: Collision }
   | { type: "task"; task: ReplenishmentTask }
+  | { type: "pickFace"; cellId: string; fill?: PickFaceFill }
   | null;

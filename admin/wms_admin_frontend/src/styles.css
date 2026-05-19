@@ -194,6 +194,7 @@ button { cursor: pointer; }
 .performance-kpis b { color: var(--text); font-size: 17px; line-height: 1; }
 .performance-content { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 14px; align-items: stretch; min-height: 0; }
 .performance-chart { display: grid; gap: 7px; min-width: 0; }
+.performance-chart { position: relative; }
 .performance-chart svg { width: 100%; height: 138px; display: block; border: 1px solid var(--line); border-radius: 8px; background: linear-gradient(180deg, #f8fbff, #fff); }
 .chart-grid line { stroke: #e5edf6; stroke-width: 1; }
 .chart-line { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
@@ -202,6 +203,10 @@ button { cursor: pointer; }
 .chart-line.lost { stroke: var(--red); }
 .chart-area.queue { fill: rgba(148,163,184,.22); stroke: rgba(100,116,139,.35); stroke-width: 1; }
 .chart-now { stroke: #0f172a; stroke-width: 2; stroke-dasharray: 5 5; opacity: .55; }
+.chart-hover { stroke: #ef4444; stroke-width: 1.4; stroke-dasharray: 3 5; opacity: .7; }
+.loss-marker { fill: #fff; stroke: var(--red); stroke-width: 2.4; cursor: context-menu; }
+.loss-marker-hit, .zero-marker-hit { fill: transparent; stroke: transparent; cursor: context-menu; pointer-events: all; }
+.zero-marker { stroke: #94a3b8; stroke-width: 1.4; opacity: .7; cursor: context-menu; }
 .performance-chart text { fill: var(--muted); font-size: 11px; font-weight: 800; text-anchor: middle; }
 .performance-legend { display: flex; flex-wrap: wrap; gap: 12px; color: var(--muted); font-size: 11px; font-weight: 850; }
 .performance-legend span { display: inline-flex; align-items: center; gap: 6px; }
@@ -213,6 +218,13 @@ button { cursor: pointer; }
 .collision-breakdown { display: grid; gap: 5px; margin-top: 4px; }
 .collision-breakdown span { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; padding: 6px 7px; border-radius: 7px; background: #fff7ed; color: #7a2e0e; }
 .collision-breakdown i { min-width: 26px; padding: 2px 5px; border-radius: 999px; background: #fed7aa; color: #7c2d12; font-style: normal; text-align: center; }
+.loss-tooltip { position: absolute; bottom: 34px; z-index: 6; width: 330px; display: grid; gap: 6px; padding: 10px; border: 1px solid #fecaca; border-radius: 8px; background: rgba(255,255,255,.97); box-shadow: var(--shadow); transform: translateX(-50%); pointer-events: none; }
+.loss-tooltip b { color: var(--red); font-size: 12px; }
+.loss-tooltip span { color: var(--muted); font-size: 11px; line-height: 1.35; font-weight: 800; }
+.loss-tooltip button { width: max-content; height: 26px; padding: 0 8px; border: 1px solid #fecaca; border-radius: 7px; background: #fff7f7; color: var(--red); font-size: 11px; font-weight: 900; pointer-events: auto; }
+.pickface-tooltip { position: absolute; z-index: 7; width: 330px; display: grid; gap: 6px; padding: 10px; border: 1px solid #fed7aa; border-radius: 8px; background: rgba(255,255,255,.97); box-shadow: var(--shadow); pointer-events: none; }
+.pickface-tooltip b { color: #7c2d12; font-size: 12px; }
+.pickface-tooltip span { color: var(--muted); font-size: 11px; line-height: 1.35; font-weight: 800; }
 
 @media (max-width: 1600px) {
   .twin-kpis { grid-template-columns: repeat(4, minmax(160px, 1fr)); }

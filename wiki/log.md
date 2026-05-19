@@ -1047,3 +1047,4 @@ Append-only log of root wiki updates.
 - Rendered each pick-face as a variable-height stock column: green when full, amber/red when low.
 - Changed the resource performance graph loss line to show minute-level collision loss spikes.
 - Adjusted the isometric camera and map layer to show clearer passage labels, gate labels, and dock staging/accumulation zones in the style of the warehouse digital-twin reference.
+- Added investigation UX: resource detail explains slowdown causes, dock staging shows staged pallets by source, non-green pick-face hover shows replenishment tasks/release state, and the loss graph has right-clickable loss/zero markers with cause breakdown.

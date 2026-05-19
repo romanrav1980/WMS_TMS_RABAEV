@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { Collision, DetailSelection, PickFaceFill, ResourceState, WarehouseLayout } from "../types";
+import type { Collision, DetailSelection, DockPallet, PickFaceFill, ReplenishmentTask, ResourceState, WarehouseLayout } from "../types";
 import { cellById, eventLocation } from "../replay/reducer";
 import { collisionTitle } from "../replay/reducer";
 
@@ -8,6 +8,8 @@ type SceneProps = {
   resources: ResourceState[];
   collisions: Collision[];
   pickFaceFill: Record<string, PickFaceFill>;
+  dockPallets: Record<string, DockPallet[]>;
+  tasks: ReplenishmentTask[];
   minute: number;
   selectedWaveId?: string;
   onSelect: (selection: DetailSelection) => void;
@@ -24,12 +26,13 @@ const colors = {
   floor: "#e8eef5"
 };
 
-export function WarehouseScene({ layout, resources, collisions, pickFaceFill, minute, selectedWaveId, onSelect }: SceneProps) {
+export function WarehouseScene({ layout, resources, collisions, pickFaceFill, dockPallets, tasks, minute, selectedWaveId, onSelect }: SceneProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const hitRegions = useRef<Array<{ x: number; y: number; r: number; selection: DetailSelection }>>([]);
   const dragState = useRef<{ active: boolean; x: number; y: number; moved: boolean }>({ active: false, x: 0, y: 0, moved: false });
   const [navigation, setNavigation] = useState({ zoom: 1, panX: 0, panY: 0 });
   const [frameSize, setFrameSize] = useState({ width: 1090, height: 670 });
+  const [hoverPickFace, setHoverPickFace] = useState<{ x: number; y: number; cellId: string; fill?: PickFaceFill } | null>(null);
   const visibleResources = useMemo(
     () => resources.filter((resource) => !selectedWaveId || resource.waveId === selectedWaveId || !resource.waveId),
     [resources, selectedWaveId]
@@ -46,8 +49,8 @@ export function WarehouseScene({ layout, resources, collisions, pickFaceFill, mi
     canvas.height = Math.floor(rect.height * scale);
     setFrameSize({ width: rect.width, height: rect.height });
     context.setTransform(scale, 0, 0, scale, 0, 0);
-    drawScene(context, rect.width, rect.height, layout, visibleResources, collisions, pickFaceFill, hitRegions.current, navigation, minute);
-  }, [layout, visibleResources, collisions, pickFaceFill, navigation, minute]);
+    drawScene(context, rect.width, rect.height, layout, visibleResources, collisions, pickFaceFill, dockPallets, hitRegions.current, navigation, minute);
+  }, [layout, visibleResources, collisions, pickFaceFill, dockPallets, navigation, minute]);
 
   const zoomBy = (delta: number) => {
     setNavigation((current) => ({ ...current, zoom: clamp(current.zoom + delta, .65, 2.4) }));
@@ -62,16 +65,23 @@ export function WarehouseScene({ layout, resources, collisions, pickFaceFill, mi
         }}
         onMouseMove={(event) => {
           const drag = dragState.current;
-          if (!drag.active) return;
-          const dx = event.clientX - drag.x;
-          const dy = event.clientY - drag.y;
-          if (Math.abs(dx) + Math.abs(dy) > 2) drag.moved = true;
-          drag.x = event.clientX;
-          drag.y = event.clientY;
-          setNavigation((current) => ({ ...current, panX: current.panX + dx, panY: current.panY + dy }));
+          const rect = event.currentTarget.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          if (drag.active) {
+            const dx = event.clientX - drag.x;
+            const dy = event.clientY - drag.y;
+            if (Math.abs(dx) + Math.abs(dy) > 2) drag.moved = true;
+            drag.x = event.clientX;
+            drag.y = event.clientY;
+            setNavigation((current) => ({ ...current, panX: current.panX + dx, panY: current.panY + dy }));
+            return;
+          }
+          const hit = hitRegions.current.find((region) => region.selection?.type === "pickFace" && Math.hypot(region.x - x, region.y - y) <= region.r);
+          setHoverPickFace(hit?.selection?.type === "pickFace" ? { x, y, cellId: hit.selection.cellId, fill: hit.selection.fill } : null);
         }}
         onMouseUp={() => { dragState.current.active = false; }}
-        onMouseLeave={() => { dragState.current.active = false; }}
+        onMouseLeave={() => { dragState.current.active = false; setHoverPickFace(null); }}
         onWheel={(event) => {
           event.preventDefault();
           zoomBy(event.deltaY < 0 ? .12 : -.12);
@@ -88,6 +98,7 @@ export function WarehouseScene({ layout, resources, collisions, pickFaceFill, mi
           if (hit) onSelect(hit.selection);
         }}
       />
+      {hoverPickFace && <PickFaceTooltip hover={hoverPickFace} tasks={tasks.filter((task) => task.targetCell === hoverPickFace.cellId)} />}
       <div className="scene-nav-controls" aria-label="Навигация по карте склада">
         <button type="button" title="Приблизить" onClick={() => zoomBy(.15)}>+</button>
         <button type="button" title="Отдалить" onClick={() => zoomBy(-.15)}>-</button>
@@ -126,6 +137,24 @@ export function WarehouseScene({ layout, resources, collisions, pickFaceFill, mi
   );
 }
 
+function PickFaceTooltip({ hover, tasks }: { hover: { x: number; y: number; cellId: string; fill?: PickFaceFill }; tasks: ReplenishmentTask[] }) {
+  const ratio = Math.round((hover.fill?.ratio || 0) * 100);
+  const openTasks = tasks.filter((task) => task.status !== "DONE");
+  const hardTasks = openTasks.filter((task) => ["RELEASED", "IN_PROGRESS"].includes(task.status));
+  return (
+    <div className="pickface-tooltip" style={{ left: hover.x + 16, top: hover.y + 16 }}>
+      <b>{hover.cellId} · заполнение {ratio}%</b>
+      <span>Остаток: {Math.round(hover.fill?.qty || 0)} / {Math.round(hover.fill?.capacity || 0)} коробок</span>
+      <span>Задачи пополнения: {openTasks.length || "нет"}</span>
+      <span>Hard / водитель РТК: {hardTasks.length ? hardTasks.map((task) => `${task.id} ${task.status}`).join(", ") : "нет выпущенной задачи"}</span>
+      {openTasks.slice(0, 3).map((task) => (
+        <span key={task.id}>{task.id}: {task.reason} · {task.status} · просрочка {task.overdueMinutes} мин</span>
+      ))}
+      {!openTasks.length && <span>Обоснование: пополнение ещё не выпущено или адрес ждёт release-policy.</span>}
+    </div>
+  );
+}
+
 function drawScene(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -134,6 +163,7 @@ function drawScene(
   resources: ResourceState[],
   collisions: Collision[],
   pickFaceFill: Record<string, PickFaceFill>,
+  dockPallets: Record<string, DockPallet[]>,
   hitRegions: Array<{ x: number; y: number; r: number; selection: DetailSelection }>,
   navigation: ViewNavigation,
   minute: number
@@ -148,9 +178,9 @@ function drawScene(
   ctx.fillRect(0, 0, width, height);
 
   drawFloor(ctx, view);
-  drawDockStaging(ctx, view, layout);
+  drawDockStaging(ctx, view, layout, dockPallets);
   drawGates(ctx, view, layout);
-  drawRacks(ctx, view, layout, pickFaceFill);
+  drawRacks(ctx, view, layout, pickFaceFill, hitRegions);
   drawHeatmap(ctx, view, layout, collisions);
   drawTrails(ctx, view, resources, minute);
   for (const resource of resources) {
@@ -208,16 +238,50 @@ function drawGates(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseL
   }
 }
 
-function drawDockStaging(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseLayout) {
+function drawDockStaging(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseLayout, dockPallets: Record<string, DockPallet[]>) {
   for (const gate of layout.gates.filter((_, index) => index % 2 === 0)) {
     const y = Number(gate.y_m || (gate.aisle - 1) * 4);
-    polygon(ctx, [iso(view, -4.8, y - 1.45), iso(view, -.7, y - 1.45), iso(view, -.7, y + 1.45), iso(view, -4.8, y + 1.45)], "rgba(34,197,94,.12)", "rgba(34,197,94,.45)", 1.1);
-    const label = iso(view, -3.7, y - 1.55, .08);
+    const pallets = dockPallets[gate.gate_id] || [];
+    polygon(ctx, [iso(view, -7.2, y - 1.72), iso(view, 13.2, y - 1.72), iso(view, 13.2, y + 1.72), iso(view, -7.2, y + 1.72)], "rgba(34,197,94,.12)", "rgba(34,197,94,.45)", 1.1);
+    const label = iso(view, -5.9, y - 1.88, .08);
     ctx.fillStyle = "rgba(21,128,61,.9)";
     ctx.font = "900 8px Segoe UI";
-    ctx.fillText(`НАКОПЛ. ${gate.gate_id}`, label.x - 16, label.y);
-    for (let stack = 0; stack < 2; stack += 1) {
-      drawBox(ctx, view, -3.8 + stack * 1.3, y - .72 + stack * .54, .05, .82, .62, .55, "#c99a55", "#475569");
+    ctx.fillText(`НАКОПЛЕНИЕ ${gate.gate_id}: ${pallets.length}/33`, label.x - 22, label.y);
+    pallets.slice(0, 33).forEach((pallet, index) => {
+      const row = index % 2;
+      const col = Math.floor(index / 2);
+      const x = -6.5 + col * 1.12;
+      const py = y - .92 + row * 1.22;
+      drawDockPallet(ctx, view, x, py, pallet);
+    });
+    if (!pallets.length) {
+      drawEmptyDockSlots(ctx, view, y);
+    }
+  }
+}
+
+function drawDockPallet(ctx: CanvasRenderingContext2D, view: View, x: number, y: number, pallet: DockPallet) {
+  if (pallet.stagedBy === "REACHTRUCK") {
+    drawBox(ctx, view, x, y, .05, .85, .72, .82, "#b7791f", "#334155");
+    return;
+  }
+  drawBox(ctx, view, x, y, .05, .85, .72, .28, "#d6a35e", "#475569");
+  for (let layer = 0; layer < 3; layer += 1) {
+    for (let box = 0; box < 2; box += 1) {
+      drawBox(ctx, view, x + box * .38, y + .08, .34 + layer * .22, .34, .52, .18, "#e8b86f", "#8b5e34");
+    }
+  }
+}
+
+function drawEmptyDockSlots(ctx: CanvasRenderingContext2D, view: View, y: number) {
+  for (let col = 0; col < 16; col += 1) {
+    for (let row = 0; row < 2; row += 1) {
+      polygon(ctx, [
+        iso(view, -6.5 + col * 1.12, y - .92 + row * 1.22),
+        iso(view, -5.65 + col * 1.12, y - .92 + row * 1.22),
+        iso(view, -5.65 + col * 1.12, y - .2 + row * 1.22),
+        iso(view, -6.5 + col * 1.12, y - .2 + row * 1.22),
+      ], "rgba(255,255,255,.16)", "rgba(34,197,94,.18)", .4);
     }
   }
 }
@@ -259,7 +323,7 @@ function drawSign(ctx: CanvasRenderingContext2D, x: number, y: number, text: str
   ctx.restore();
 }
 
-function drawRacks(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseLayout, pickFaceFill: Record<string, PickFaceFill>) {
+function drawRacks(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseLayout, pickFaceFill: Record<string, PickFaceFill>, hitRegions: Array<{ x: number; y: number; r: number; selection: DetailSelection }>) {
   for (const cell of layout.cells.filter((row) => Number(row.level) === 1)) {
     const fill = pickFaceFill[cell.cell_id];
     const ratio = fill ? fill.ratio : cell.role === "DYNAMIC_PICK_FACE" ? 0 : .55;
@@ -267,6 +331,10 @@ function drawRacks(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseL
     const topColor = cell.role === "DYNAMIC_PICK_FACE" && !fill ? "#7dd3fc" : fillColor(ratio);
     const sideColor = ratio < .18 ? "#5b1e1e" : ratio < .45 ? "#5f4120" : "#1d3f34";
     drawBox(ctx, view, Number(cell.x_m), Number(cell.y_m) - .45, 0, .82, .88, height, topColor, sideColor);
+    if (ratio < .85) {
+      const hit = iso(view, Number(cell.x_m) + .42, Number(cell.y_m), height + .2);
+      hitRegions.push({ x: hit.x, y: hit.y, r: 14, selection: { type: "pickFace", cellId: cell.cell_id, fill } });
+    }
     if (cell.slot % 10 === 1) {
       const p = iso(view, Number(cell.x_m), Number(cell.y_m) - .95, height + .3);
       ctx.fillStyle = "#174c9a";

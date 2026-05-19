@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import type { Collision, DetailSelection, MinuteMetrics, ReplenishmentTask, ResourceState, SimulationReport, WarehouseEvent } from "../types";
 import { collisionTitle } from "../replay/reducer";
 
@@ -68,15 +69,30 @@ export function RightPanel({ collisions, onSelect }: { collisions: Collision[]; 
   );
 }
 
-export function DetailCard({ selection }: { selection: DetailSelection }) {
+export function DetailCard({ selection, collisions, tasks }: { selection: DetailSelection; collisions: Collision[]; tasks: ReplenishmentTask[] }) {
   if (!selection) return null;
   if (selection.type === "resource") {
     const resource = selection.resource;
-    return <div className="detail-card"><b>{resource.id}</b><span>Статус: {resource.status}</span><span>Волна: {resource.waveId || "нет"}</span><span>Клиент: {resource.clientId || "нет"}</span><span>SKU: {resource.sku || "нет"}</span><span>Скорость: {resource.speedRatio}%</span></div>;
+    const issue = resourceIssue(resource, collisions, tasks);
+    return (
+      <div className="detail-card">
+        <b>{resource.id}</b>
+        <span>Статус: {resource.status} · скорость {resource.speedRatio}%</span>
+        <span>Волна: {resource.waveId || "нет"} · клиент: {resource.clientId || "нет"}</span>
+        <span>SKU: {resource.sku || "нет"} · задача: {resource.taskId || "нет"}</span>
+        <span>Причина: {issue.reason}</span>
+        <span>Влияющий ресурс: {issue.neighbor || "-"}</span>
+        <span>Потери/риск: {issue.loss}</span>
+      </div>
+    );
   }
   if (selection.type === "task") {
     const task = selection.task;
     return <div className="detail-card"><b>RTP задача {task.id}</b><span>Статус: {task.status}</span><span>Назначение: {task.targetCell}</span><span>SKU: {task.sku}</span><span>Режим: {task.mode === "CASE_REPLENISHMENT" ? "коробочное пополнение" : "паллетное пополнение"}</span><span>Просрочка: {task.overdueMinutes} мин</span><span>Причина: {task.reason}</span></div>;
+  }
+  if (selection.type === "pickFace") {
+    const ratio = Math.round((selection.fill?.ratio || 0) * 100);
+    return <div className="detail-card"><b>{selection.cellId}</b><span>Заполнение: {ratio}%</span><span>Остаток: {Math.round(selection.fill?.qty || 0)} / {Math.round(selection.fill?.capacity || 0)} коробок</span></div>;
   }
   const collision = selection.collision;
   return (
@@ -90,6 +106,37 @@ export function DetailCard({ selection }: { selection: DetailSelection }) {
       <span>Потери: {collision.lostMinutes} мин · ~{collision.productivityLoss}/час</span>
     </div>
   );
+}
+
+function resourceIssue(resource: ResourceState, collisions: Collision[], tasks: ReplenishmentTask[]): { reason: string; neighbor: string; loss: string } {
+  const directCollision = collisions.slice().reverse().find((collision) =>
+    collision.affectedResources.includes(resource.id) || collision.raw.resource_id === resource.id
+  );
+  if (directCollision) {
+    const neighbors = directCollision.affectedResources.filter((id) => id !== resource.id);
+    return {
+      reason: `${collisionTitle(directCollision.type)}: ${directCollision.rootCause}`,
+      neighbor: neighbors.join(", ") || String(directCollision.raw.resource_id || ""),
+      loss: `${directCollision.lostMinutes} мин · ${directCollision.locationLabel}`,
+    };
+  }
+  if (resource.kind === "reachtruck") {
+    const overdue = tasks.find((task) => task.status !== "DONE" && task.overdueMinutes > 0);
+    if (overdue) {
+      return {
+        reason: `Очередь RTP: не выполнено пополнение ${overdue.id}`,
+        neighbor: overdue.targetCell,
+        loss: `${overdue.overdueMinutes} мин ожидания · ${overdue.reason}`,
+      };
+    }
+  }
+  if (resource.statusColor === "amber") {
+    return { reason: "Замедление на маршруте: возможная плотность движения в соседнем сегменте", neighbor: "см. ближайшие коллизии", loss: "операционный риск" };
+  }
+  if (resource.statusColor === "gray") {
+    return { reason: "Ожидание следующего задания или освобождения зоны", neighbor: "-", loss: "без активной коллизии" };
+  }
+  return { reason: "Активной причины замедления не найдено", neighbor: "-", loss: "нет" };
 }
 
 export function CapacityPanel({ report }: { report: SimulationReport }) {
@@ -132,9 +179,19 @@ export function ResourcePerformancePanel({ metrics, events, report, minute }: {
   report: SimulationReport;
   minute: number;
 }) {
+  const [hoverMinute, setHoverMinute] = useState<number | null>(null);
+  const [pinnedMinute, setPinnedMinute] = useState<number | null>(null);
   const points = buildPerformancePoints(metrics, events, report);
+  const lossEventsByMinute = useMemo(() => buildLossEventsByMinute(events), [events]);
   if (!points.length) return null;
   const current = nearestPoint(points, minute);
+  const hover = pinnedMinute !== null ? nearestPoint(points, pinnedMinute) : hoverMinute === null ? null : nearestPoint(points, hoverMinute);
+  const hoverLossEvents = hover ? (lossEventsByMinute[hover.minute] || []) : [];
+  const selectMinuteFromSvg = (event: React.MouseEvent<SVGSVGElement>, preferLoss: boolean) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width * 960;
+    return nearestVisualPoint(points, x, preferLoss).minute;
+  };
   const maxQueue = Math.max(1, ...points.map((point) => point.queue));
   const maxLost = Math.max(1, ...points.map((point) => point.lost));
   const collisionTotals = buildCollisionTotals(events);
@@ -156,7 +213,13 @@ export function ResourcePerformancePanel({ metrics, events, report, minute }: {
       </header>
       <div className="performance-content">
         <div className="performance-chart" aria-label="График производительности ресурсов">
-          <svg viewBox="0 0 960 230" role="img">
+          <svg viewBox="0 0 960 230" role="img" onMouseLeave={() => setHoverMinute(null)} onContextMenu={(event) => {
+            event.preventDefault();
+            setPinnedMinute(selectMinuteFromSvg(event, true));
+          }} onMouseMove={(event) => {
+            if (pinnedMinute !== null) return;
+            setHoverMinute(selectMinuteFromSvg(event, true));
+          }}>
             <g className="chart-grid">
               {[0, 25, 50, 75, 100].map((tick) => <line key={tick} x1="44" x2="928" y1={yFor(100 - tick)} y2={yFor(100 - tick)} />)}
             </g>
@@ -164,13 +227,37 @@ export function ResourcePerformancePanel({ metrics, events, report, minute }: {
             <path className="chart-line picker" d={linePath(points, (point) => point.pickerLoad)} />
             <path className="chart-line reach" d={linePath(points, (point) => point.reachLoad)} />
             <path className="chart-line lost" d={linePath(points, (point) => point.lost / maxLost * 100)} />
+            {points.map((point) => point.lost > 0 ? (
+              <g key={`loss-${point.minute}`} onMouseEnter={() => setHoverMinute(point.minute)} onContextMenu={(event) => { event.preventDefault(); setPinnedMinute(point.minute); }}>
+                <circle className="loss-marker-hit" cx={xFor(point.minute)} cy={yFor(point.lost / maxLost * 100)} r="12" />
+                <circle className="loss-marker" cx={xFor(point.minute)} cy={yFor(point.lost / maxLost * 100)} r="4.5" />
+              </g>
+            ) : (
+              <g key={`zero-${point.minute}`} className="zero-marker" onMouseEnter={() => setHoverMinute(point.minute)} onContextMenu={(event) => { event.preventDefault(); setPinnedMinute(point.minute); }}>
+                <circle className="zero-marker-hit" cx={xFor(point.minute)} cy={yFor(0)} r="9" />
+                <line x1={xFor(point.minute) - 3} x2={xFor(point.minute) + 3} y1={yFor(0) - 3} y2={yFor(0) + 3} />
+                <line x1={xFor(point.minute) - 3} x2={xFor(point.minute) + 3} y1={yFor(0) + 3} y2={yFor(0) - 3} />
+              </g>
+            ))}
             <line className="chart-now" x1={xFor(minute)} x2={xFor(minute)} y1="22" y2="196" />
+            {hover && <line className="chart-hover" x1={xFor(hover.minute)} x2={xFor(hover.minute)} y1="22" y2="196" />}
             {[0, 180, 360, 540, 720].map((tick) => (
               <g key={tick}>
                 <text x={xFor(tick)} y="220">{clockLabel(tick)}</text>
               </g>
             ))}
           </svg>
+          {hover && (
+            <div className="loss-tooltip" style={{ left: `${Math.min(76, Math.max(12, (xFor(hover.minute) / 960) * 100))}%` }}>
+              <b>{clockLabel(hover.minute)} · потери {hover.lost} мин/мин{pinnedMinute !== null ? " · закреплено" : ""}</b>
+              {hoverLossEvents.length ? hoverLossEvents.slice(0, 5).map((event, index) => (
+                <span key={`${event.minute}-${event.collision_type}-${index}`}>
+                  {collisionTitle(String(event.collision_type || "UNKNOWN"))}: {(Array.isArray(event.resources) ? event.resources.join(", ") : event.resource_id) || "-"} · {event.cell || event.segment || event.gate_id || event.target_cell || "-"} · {event.lost_minutes || 1} мин
+                </span>
+              )) : <span>В эту минуту нет событий потерь. Правый клик по красному кружку покажет причины пика.</span>}
+              {pinnedMinute !== null && <button type="button" onClick={() => setPinnedMinute(null)}>Снять закрепление</button>}
+            </div>
+          )}
           <div className="performance-legend">
             <span><i className="blue" /> Комплектовщики</span>
             <span><i className="amber" /> RTP занятость</span>
@@ -257,12 +344,27 @@ function nearestPoint(points: PerformancePoint[], minute: number): PerformancePo
   return points.reduce((best, point) => Math.abs(point.minute - minute) < Math.abs(best.minute - minute) ? point : best, points[0]);
 }
 
+function nearestVisualPoint(points: PerformancePoint[], x: number, preferLoss: boolean): PerformancePoint {
+  const candidates = preferLoss && points.some((point) => point.lost > 0) ? points.filter((point) => point.lost > 0) : points;
+  return candidates.reduce((best, point) => Math.abs(xFor(point.minute) - x) < Math.abs(xFor(best.minute) - x) ? point : best, candidates[0]);
+}
+
 function buildCollisionTotals(events: WarehouseEvent[]): Record<string, number> {
   return events.reduce<Record<string, number>>((totals, event) => {
     if (event.event_type !== "COLLISION") return totals;
     const type = String(event.collision_type || "UNKNOWN");
     totals[type] = (totals[type] || 0) + 1;
     return totals;
+  }, {});
+}
+
+function buildLossEventsByMinute(events: WarehouseEvent[]): Record<number, WarehouseEvent[]> {
+  return events.reduce<Record<number, WarehouseEvent[]>>((rows, event) => {
+    if (event.event_type !== "COLLISION") return rows;
+    const minute = Number(event.minute || 0);
+    rows[minute] = rows[minute] || [];
+    rows[minute].push(event);
+    return rows;
   }, {});
 }
 
