@@ -1012,3 +1012,9 @@ Append-only log of root wiki updates.
 - Added `capacity_analysis` and `bottleneck_summary` to model-only `report.json` / `report.md`.
 - Added the React `Мощность смены` card with picker/RTP demand-to-capacity ratios and short bottleneck labels.
 - Captured Playwright screenshots for `SIM-20260520-000916-20260520` at compact and desktop viewports.
+
+## [2026-05-20] wave | Replenishment source reservation invariants
+
+- Clarified [`requirements/wave_case_pick_replenishment_tz.md`](requirements/wave_case_pick_replenishment_tz.md): early `HARD` source reservation is allowed, but it is not a driver-facing release.
+- Recorded the invariant `1 replenishment row -> 1 source reservation -> 1 warehouse task` and the rule that no-deficit cancelled rows must not keep a source reservation before driver task release.
+- Added the pick-face physical-capacity release rule: driver replenishment tasks wait while the current pick-face volume plus released quantity would exceed `PICK_FACE_MAX_VOLUME`.

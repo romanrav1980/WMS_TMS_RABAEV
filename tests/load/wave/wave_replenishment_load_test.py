@@ -323,7 +323,7 @@ def run_wave(
     readiness_summary = readiness_after_launch.get("summary") or {}
     if int(readiness_summary.get("open_replenishment_count") or 0) != len(active_replenishment):
         raise AssertionError(f"Wave {wave_id} readiness does not report open replenishment tasks.")
-    if not driver_replenishment:
+    if active_replenishment and not driver_replenishment:
         raise AssertionError(f"Wave {wave_id} did not release any driver-facing replenishment task.")
     if dynamic_pick_faces > 0 and replenishment_method == "IMMEDIATE":
         expected_driver_tasks = min(len(active_replenishment), dynamic_pick_faces + 1)
@@ -1002,6 +1002,7 @@ def collect_diagnostics(run_prefix: str) -> dict[str, int]:
                 and RESERVATION_DOMAIN = 'WAVE'
                 and SOURCE_DOC_TYPE = 'PICK_WAVE'
                 and RESERVATION_KIND = 'HARD'
+                and STATUS in ('ACTIVE', 'ALLOCATED', 'PICKING', 'CONSUMED')
                 """,
                 marker=run_prefix,
             ),
@@ -1124,6 +1125,16 @@ def collect_diagnostics(run_prefix: str) -> dict[str, int]:
             ),
             "warehouse_replenishment_duplicates": duplicate_warehouse_tasks(cursor, run_prefix),
             "source_reservation_duplicates": duplicate_source_reservations(cursor, run_prefix),
+            "cancelled_replenishment_with_source_reservation": count(
+                cursor,
+                "RRL_PICK_WAVE_REPLENISH_TASK",
+                """
+                CREATED_BY = :marker
+                and STATUS = 'CANCELLED'
+                and SOURCE_RESERVATION_ID is not null
+                """,
+                marker=run_prefix,
+            ),
             "invalid_objects": count(cursor, "USER_OBJECTS", "STATUS <> 'VALID'"),
         }
 
@@ -1168,6 +1179,11 @@ def assert_diagnostics(
         raise AssertionError("Duplicate warehouse replenishment tasks detected.")
     if diagnostics["source_reservation_duplicates"] != 0:
         raise AssertionError("Duplicate source pallet reservations detected.")
+    if diagnostics["cancelled_replenishment_with_source_reservation"] != 0:
+        raise AssertionError(
+            "Cancelled replenishment rows must not keep source reservations: "
+            f"{diagnostics['cancelled_replenishment_with_source_reservation']}."
+        )
     if diagnostics["done_warehouse_replenishment_tasks"] > 0:
         if diagnostics["warehouse_replenishment_sync_rows"] != diagnostics["done_warehouse_replenishment_tasks"]:
             raise AssertionError(
@@ -1483,7 +1499,7 @@ def duplicate_source_reservations(cursor: oracledb.Cursor, run_prefix: str) -> i
                and RESERVATION_DOMAIN = 'WAVE'
                and SOURCE_DOC_TYPE = 'PICK_WAVE'
                and RESERVATION_KIND = 'HARD'
-               and STATUS <> 'CANCELLED'
+               and STATUS in ('ACTIVE', 'ALLOCATED', 'PICKING')
              group by UID_PALLET, CELL
             having count(*) > 1
           )

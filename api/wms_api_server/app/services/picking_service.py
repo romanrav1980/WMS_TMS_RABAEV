@@ -110,16 +110,22 @@ class PickingService:
         )
         self._enrich_replenishment_settings(pick_wave_id, request.updated_by or "API")
         self._refresh_replenishment_deficit(pick_wave_id, request.updated_by or "API")
+        self._release_cancelled_replenishment_source_reservations(pick_wave_id, request.updated_by or "API")
         self._reserve_replenishment_sources(pick_wave_id, request.updated_by or "API")
+        self._hold_replenishment_rows_without_pick_face_capacity(pick_wave_id, request.updated_by or "API")
         self._release_next_replenishment_queue(pick_wave_id, request.updated_by or "API", include_minimax=False)
+        self._hold_replenishment_rows_without_pick_face_capacity(pick_wave_id, request.updated_by or "API")
         self._sync_replenishment_warehouse_tasks(pick_wave_id, request.updated_by or "API")
         CasePickService(self.gateway).ensure_wave_case_pick_tasks(pick_wave_id, request.updated_by or "API")
 
     def release_minimax_replenishment(self, pick_wave_id: int, request: PickWaveActionRequest) -> int:
         updated_by = request.updated_by or "API"
         self._refresh_replenishment_deficit(pick_wave_id, updated_by)
+        self._release_cancelled_replenishment_source_reservations(pick_wave_id, updated_by)
         self._reserve_replenishment_sources(pick_wave_id, updated_by)
+        self._hold_replenishment_rows_without_pick_face_capacity(pick_wave_id, updated_by)
         released_count = self._release_next_replenishment_queue(pick_wave_id, updated_by)
+        self._hold_replenishment_rows_without_pick_face_capacity(pick_wave_id, updated_by)
         self._sync_replenishment_warehouse_tasks(pick_wave_id, updated_by)
         return released_count
 
@@ -722,6 +728,52 @@ class PickingService:
                  order by PICK_WAVE_REPLENISH_TASK_ID
               ) loop
                 begin
+                  begin
+                    select sr.RESERVATION_ID,
+                           sr.UID_PALLET,
+                           sr.CELL,
+                           sr.WARE_ID,
+                           sr.QTY,
+                           p.PRODUCED_DATE,
+                           p.EXPIRY_DATE
+                      into v_reservation_id,
+                           v_uid_pallet,
+                           v_cell,
+                           v_ware_id,
+                           v_available_qty,
+                           v_produced_date,
+                           v_expiry_date
+                      from RRL_STOCK_RESERVATION sr
+                      left join RRL_PALLETS p
+                        on p.UID_PALLET = sr.UID_PALLET
+                     where sr.RESERVATION_DOMAIN = 'WAVE'
+                       and sr.SOURCE_DOC_TYPE = 'PICK_WAVE'
+                       and sr.SOURCE_DOC_ID = rt.PICK_WAVE_ID
+                       and sr.SOURCE_LINE_ID = rt.PICK_WAVE_REPLENISH_TASK_ID
+                       and sr.RESERVATION_KIND = 'HARD'
+                       and sr.STATUS in ('ACTIVE', 'ALLOCATED', 'PICKING')
+                       and rownum = 1;
+
+                    update RRL_PICK_WAVE_REPLENISH_TASK
+                       set SOURCE_RESERVATION_ID = v_reservation_id,
+                           PALLET_UID = v_uid_pallet,
+                           SOURCE_CELL_CODE = v_cell,
+                           SOURCE_AVAILABLE_QTY = v_available_qty,
+                           SOURCE_PRODUCED_DATE = v_produced_date,
+                           SOURCE_EXPIRY_DATE = v_expiry_date,
+                           WAIT_REASON = null,
+                           UPDATED_AT = sysdate,
+                           UPDATED_BY = substr(:updated_by, 1, 50)
+                     where PICK_WAVE_REPLENISH_TASK_ID = rt.PICK_WAVE_REPLENISH_TASK_ID;
+                  exception
+                    when no_data_found then
+                      v_reservation_id := null;
+                  end;
+
+                  if v_reservation_id is not null then
+                    continue;
+                  end if;
+
                   select UID_PALLET, CELL, WARE_ID, AVAILABLE_QTY, PRODUCED_DATE, EXPIRY_DATE
                     into v_uid_pallet, v_cell, v_ware_id, v_available_qty, v_produced_date, v_expiry_date
                     from (
@@ -823,6 +875,103 @@ class PickingService:
                 end;
               end loop;
             end;
+            """,
+            {"pick_wave_id": pick_wave_id, "updated_by": updated_by},
+        )
+
+    def _release_cancelled_replenishment_source_reservations(self, pick_wave_id: int, updated_by: str) -> None:
+        self.gateway.execute(
+            """
+            update RRL_STOCK_RESERVATION sr
+               set STATUS = 'RELEASED',
+                   RELEASED_AT = systimestamp,
+                   RELEASED_BY = substr(:updated_by, 1, 100),
+                   RELEASE_REASON = 'Replenishment row cancelled before driver task release'
+             where sr.RESERVATION_DOMAIN = 'WAVE'
+               and sr.SOURCE_DOC_TYPE = 'PICK_WAVE'
+               and sr.SOURCE_DOC_ID = :pick_wave_id
+               and sr.RESERVATION_KIND = 'HARD'
+               and sr.STATUS in ('ACTIVE', 'ALLOCATED', 'PICKING')
+               and exists (
+                 select 1
+                   from RRL_PICK_WAVE_REPLENISH_TASK rt
+                  where rt.PICK_WAVE_REPLENISH_TASK_ID = sr.SOURCE_LINE_ID
+                    and rt.PICK_WAVE_ID = :pick_wave_id
+                    and rt.STATUS = 'CANCELLED'
+                    and not exists (
+                      select 1
+                        from RRL_WAREHOUSE_TASK wt
+                       where wt.TASK_SOURCE = 'WAVE'
+                         and wt.TASK_TYPE = 'REPLENISHMENT'
+                         and wt.SOURCE_DOC_TYPE = 'PICK_WAVE'
+                         and wt.SOURCE_DOC_ID = rt.PICK_WAVE_ID
+                         and wt.SOURCE_TASK_ID = rt.PICK_WAVE_REPLENISH_TASK_ID
+                    )
+               )
+            """,
+            {"pick_wave_id": pick_wave_id, "updated_by": updated_by},
+        )
+        self.gateway.execute(
+            """
+            update RRL_PICK_WAVE_REPLENISH_TASK rt
+               set SOURCE_RESERVATION_ID = null,
+                   PALLET_UID = null,
+                   SOURCE_CELL_CODE = null,
+                   SOURCE_AVAILABLE_QTY = null,
+                   SOURCE_PRODUCED_DATE = null,
+                   SOURCE_EXPIRY_DATE = null,
+                   UPDATED_AT = sysdate,
+                   UPDATED_BY = substr(:updated_by, 1, 50)
+             where rt.PICK_WAVE_ID = :pick_wave_id
+               and rt.STATUS = 'CANCELLED'
+               and rt.SOURCE_RESERVATION_ID is not null
+               and not exists (
+                 select 1
+                   from RRL_WAREHOUSE_TASK wt
+                  where wt.TASK_SOURCE = 'WAVE'
+                    and wt.TASK_TYPE = 'REPLENISHMENT'
+                    and wt.SOURCE_DOC_TYPE = 'PICK_WAVE'
+                    and wt.SOURCE_DOC_ID = rt.PICK_WAVE_ID
+                    and wt.SOURCE_TASK_ID = rt.PICK_WAVE_REPLENISH_TASK_ID
+               )
+            """,
+            {"pick_wave_id": pick_wave_id, "updated_by": updated_by},
+        )
+
+    def _hold_replenishment_rows_without_pick_face_capacity(self, pick_wave_id: int, updated_by: str) -> None:
+        self.gateway.execute(
+            """
+            update RRL_PICK_WAVE_REPLENISH_TASK rt
+               set STATUS = case
+                     when nvl(rt.REPLENISHMENT_METHOD, 'IMMEDIATE') = 'MINIMAX' then 'WAIT_MINIMAX'
+                     else 'QUEUED'
+                   end,
+                   RELEASED_AT = null,
+                   RELEASED_BY = null,
+                   WAIT_REASON = 'Waiting for pick-face physical capacity before driver task release',
+                   UPDATED_AT = sysdate,
+                   UPDATED_BY = substr(:updated_by, 1, 50)
+             where rt.PICK_WAVE_ID = :pick_wave_id
+               and rt.STATUS = 'RELEASED'
+               and rt.PICK_FACE_MAX_VOLUME is not null
+               and rt.BOX_VOLUME_M3 is not null
+               and rt.BOX_VOLUME_M3 > 0
+               and (
+                 nvl((
+                   select sum(nvl(r.REMAIN, 0))
+                     from RRL_REMAINS r
+                    where r.CELL = rt.TARGET_CELL_CODE
+                 ), 0) + nvl(rt.QTY, 0)
+               ) * rt.BOX_VOLUME_M3 > rt.PICK_FACE_MAX_VOLUME
+               and not exists (
+                 select 1
+                   from RRL_WAREHOUSE_TASK wt
+                  where wt.TASK_SOURCE = 'WAVE'
+                    and wt.TASK_TYPE = 'REPLENISHMENT'
+                    and wt.SOURCE_DOC_TYPE = 'PICK_WAVE'
+                    and wt.SOURCE_DOC_ID = rt.PICK_WAVE_ID
+                    and wt.SOURCE_TASK_ID = rt.PICK_WAVE_REPLENISH_TASK_ID
+               )
             """,
             {"pick_wave_id": pick_wave_id, "updated_by": updated_by},
         )
@@ -1009,6 +1158,18 @@ class PickingService:
                     and nvl(d.TARGET_CELL_CODE, chr(0)) = nvl(rt.TARGET_CELL_CODE, chr(0))
                     and rownum = 1
                ), 0) > 0
+               and (
+                 rt.PICK_FACE_MAX_VOLUME is null
+                 or rt.BOX_VOLUME_M3 is null
+                 or rt.BOX_VOLUME_M3 <= 0
+                 or (
+                   nvl((
+                     select sum(nvl(r.REMAIN, 0))
+                       from RRL_REMAINS r
+                      where r.CELL = rt.TARGET_CELL_CODE
+                   ), 0) + nvl(rt.QTY, 0)
+                 ) * rt.BOX_VOLUME_M3 <= rt.PICK_FACE_MAX_VOLUME
+               )
             """,
                 {"pick_wave_id": pick_wave_id, "updated_by": updated_by},
             )
@@ -1054,6 +1215,18 @@ class PickingService:
                     and active_rt.ARTICUL = rt.ARTICUL
                     and nvl(active_rt.TARGET_CELL_CODE, chr(0)) = nvl(rt.TARGET_CELL_CODE, chr(0))
                     and active_rt.STATUS in ('RELEASED', 'ASSIGNED', 'IN_PROGRESS')
+               )
+               and (
+                 rt.PICK_FACE_MAX_VOLUME is null
+                 or rt.BOX_VOLUME_M3 is null
+                 or rt.BOX_VOLUME_M3 <= 0
+                 or (
+                   nvl((
+                     select sum(nvl(r.REMAIN, 0))
+                       from RRL_REMAINS r
+                      where r.CELL = rt.TARGET_CELL_CODE
+                   ), 0) + nvl(rt.QTY, 0)
+                 ) * rt.BOX_VOLUME_M3 <= rt.PICK_FACE_MAX_VOLUME
                )
             """,
             {"pick_wave_id": pick_wave_id, "updated_by": updated_by},
