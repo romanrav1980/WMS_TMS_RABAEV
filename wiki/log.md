@@ -1046,3 +1046,4 @@ Append-only log of root wiki updates.
 - Loaded `generated-stock.json` into the React replay and reconstructed current pick-face fill from initial stock, picking starts, and replenishment completions.
 - Rendered each pick-face as a variable-height stock column: green when full, amber/red when low.
 - Changed the resource performance graph loss line to show minute-level collision loss spikes.
+- Adjusted the isometric camera and map layer to show clearer passage labels, gate labels, and dock staging/accumulation zones in the style of the warehouse digital-twin reference.

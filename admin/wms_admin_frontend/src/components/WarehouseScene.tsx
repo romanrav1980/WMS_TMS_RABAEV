@@ -148,6 +148,7 @@ function drawScene(
   ctx.fillRect(0, 0, width, height);
 
   drawFloor(ctx, view);
+  drawDockStaging(ctx, view, layout);
   drawGates(ctx, view, layout);
   drawRacks(ctx, view, layout, pickFaceFill);
   drawHeatmap(ctx, view, layout, collisions);
@@ -176,34 +177,86 @@ function drawScene(
 }
 
 function drawFloor(ctx: CanvasRenderingContext2D, view: View) {
-  polygon(ctx, [iso(view, -8, -7), iso(view, 101, -7), iso(view, 101, 105), iso(view, -8, 105)], colors.floor, "#c9d5e2", 1);
-  for (const crossX of [0, 45, 90]) {
-    const label = crossX === 0 ? "фронтальный проезд" : crossX === 45 ? "пожарный проход" : "задний обход";
-    polygon(ctx, [iso(view, crossX - .8, -5), iso(view, crossX + .8, -5), iso(view, crossX + .8, 101), iso(view, crossX - .8, 101)], "rgba(37,99,216,.08)", "rgba(37,99,216,.22)", .7);
-    const p = iso(view, crossX - 1.5, -4.7, .05);
-    ctx.fillStyle = "rgba(23,76,154,.72)";
-    ctx.font = "800 9px Segoe UI";
-    ctx.fillText(label, p.x, p.y);
+  polygon(ctx, [iso(view, -10, -9), iso(view, 104, -9), iso(view, 104, 106), iso(view, -10, 106)], colors.floor, "#c9d5e2", 1);
+  const crossAisles = [
+    { x: 0, label: "ФРОНТАЛЬНЫЙ ПРОЕЗД", short: "FRONT" },
+    { x: 45, label: "ПОЖАРНЫЙ ПРОХОД", short: "FIRE" },
+    { x: 90, label: "ЗАДНИЙ ОБХОД", short: "REAR" },
+  ];
+  for (const cross of crossAisles) {
+    polygon(ctx, [iso(view, cross.x - 1.15, -6), iso(view, cross.x + 1.15, -6), iso(view, cross.x + 1.15, 102), iso(view, cross.x - 1.15, 102)], "rgba(37,99,216,.12)", "rgba(37,99,216,.35)", 1.1);
+    drawFloorLabel(ctx, view, cross.x, -7.3, cross.label, cross.short, "#1d4ed8");
+    drawFloorLabel(ctx, view, cross.x, 101.3, cross.label, cross.short, "#1d4ed8");
   }
   for (let aisle = 1; aisle <= 25; aisle += 1) {
     const y = (aisle - 1) * 4;
-    polygon(ctx, [iso(view, -2, y - .95), iso(view, 92, y - .95), iso(view, 92, y + .95), iso(view, -2, y + .95)], aisle % 2 ? "#f6f9fc" : "#edf3f9", "#cfdae7", .6);
+    polygon(ctx, [iso(view, -3, y - .95), iso(view, 94, y - .95), iso(view, 94, y + .95), iso(view, -3, y + .95)], aisle % 2 ? "#f6f9fc" : "#edf3f9", "#cfdae7", .6);
     const label = iso(view, -7, y);
     ctx.fillStyle = colors.blue;
-    ctx.font = "700 10px Segoe UI";
+    ctx.font = "900 11px Segoe UI";
     ctx.fillText(`A${String(aisle).padStart(2, "0")}`, label.x, label.y);
   }
 }
 
 function drawGates(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseLayout) {
-  for (const gate of layout.gates) {
+  for (const gate of layout.gates.filter((_, index) => index % 2 === 0)) {
     const y = Number(gate.y_m || (gate.aisle - 1) * 4);
-    drawBox(ctx, view, -5.8, y - .75, 0, 4.2, 1.5, .35, "#eff6ff", "#c7daf5");
-    const p = iso(view, -5.8, y);
-    ctx.fillStyle = colors.blue;
-    ctx.font = "800 9px Segoe UI";
-    ctx.fillText(gate.gate_id, p.x - 8, p.y - 7);
+    drawBox(ctx, view, -8.2, y - 1.05, 0, 2.8, 2.1, .42, "#dbeafe", "#7fa7d6");
+    drawBox(ctx, view, -9.05, y - .86, .42, .34, 1.7, 2.4, "#f8fafc", "#cbd5e1");
+    const p = iso(view, -8.5, y - .9, 3.1);
+    drawSign(ctx, p.x, p.y, gate.gate_id, "#2563d8", "#fff");
   }
+}
+
+function drawDockStaging(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseLayout) {
+  for (const gate of layout.gates.filter((_, index) => index % 2 === 0)) {
+    const y = Number(gate.y_m || (gate.aisle - 1) * 4);
+    polygon(ctx, [iso(view, -4.8, y - 1.45), iso(view, -.7, y - 1.45), iso(view, -.7, y + 1.45), iso(view, -4.8, y + 1.45)], "rgba(34,197,94,.12)", "rgba(34,197,94,.45)", 1.1);
+    const label = iso(view, -3.7, y - 1.55, .08);
+    ctx.fillStyle = "rgba(21,128,61,.9)";
+    ctx.font = "900 8px Segoe UI";
+    ctx.fillText(`НАКОПЛ. ${gate.gate_id}`, label.x - 16, label.y);
+    for (let stack = 0; stack < 2; stack += 1) {
+      drawBox(ctx, view, -3.8 + stack * 1.3, y - .72 + stack * .54, .05, .82, .62, .55, "#c99a55", "#475569");
+    }
+  }
+}
+
+function drawFloorLabel(ctx: CanvasRenderingContext2D, view: View, x: number, y: number, label: string, short: string, color: string) {
+  const p = iso(view, x, y, .12);
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(-0.24);
+  ctx.fillStyle = "rgba(255,255,255,.88)";
+  roundedRect(ctx, -54, -14, 108, 22, 5);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(37,99,216,.25)";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.font = "900 10px Segoe UI";
+  ctx.textAlign = "center";
+  ctx.fillText(label, 0, -1);
+  ctx.fillStyle = "rgba(100,116,139,.85)";
+  ctx.font = "800 7px Segoe UI";
+  ctx.fillText(short, 0, 8);
+  ctx.restore();
+}
+
+function drawSign(ctx: CanvasRenderingContext2D, x: number, y: number, text: string, background: string, color: string) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.fillStyle = background;
+  roundedRect(ctx, -16, -12, 32, 19, 5);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(255,255,255,.9)";
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.font = "900 10px Segoe UI";
+  ctx.textAlign = "center";
+  ctx.fillText(text, 0, 1);
+  ctx.restore();
 }
 
 function drawRacks(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseLayout, pickFaceFill: Record<string, PickFaceFill>) {
@@ -522,18 +575,18 @@ type View = { originX: number; originY: number; sx: number; sy: number; z: numbe
 
 function makeView(width: number, _height: number, navigation: ViewNavigation = { zoom: 1, panX: 0, panY: 0 }): View {
   return {
-    originX: width * .51 + navigation.panX,
-    originY: 36 + navigation.panY,
-    sx: 8.0 * navigation.zoom,
-    sy: 7.25 * navigation.zoom,
-    z: 8.5 * navigation.zoom
+    originX: width * .55 + navigation.panX,
+    originY: 26 + navigation.panY,
+    sx: 7.15 * navigation.zoom,
+    sy: 7.85 * navigation.zoom,
+    z: 9.6 * navigation.zoom
   };
 }
 
 function iso(view: View, x: number, y: number, z = 0): { x: number; y: number } {
   return {
-    x: view.originX + (x - y * 1.85) * view.sx,
-    y: view.originY + (x * .42 + y * 1.03) * view.sy - z * view.z
+    x: view.originX + (x - y * 1.45) * view.sx,
+    y: view.originY + (x * .50 + y * 1.02) * view.sy - z * view.z
   };
 }
 
