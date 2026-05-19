@@ -506,76 +506,87 @@ function drawReachtruckIcon(ctx: CanvasRenderingContext2D, x: number, y: number,
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(angle);
-  ctx.scale(1.18, 1.18);
-  ctx.shadowColor = "rgba(15,23,42,.28)";
-  ctx.shadowBlur = 11;
-  ctx.shadowOffsetY = 6;
+  ctx.scale(1.2, 1.2);
   ctx.fillStyle = "rgba(15,23,42,.22)";
   ctx.beginPath();
-  ctx.ellipse(0, 11, 25, 8, 0, 0, Math.PI * 2);
+  ctx.ellipse(-1, 14, 27, 8, 0, 0, Math.PI * 2);
   ctx.fill();
-  ctx.shadowColor = "transparent";
 
-  ctx.fillStyle = "#f2b13f";
-  ctx.strokeStyle = "#9a6413";
-  ctx.lineWidth = 1.2;
-  roundedRect(ctx, -21, -8, 33, 17, 4);
-  ctx.fill();
-  ctx.stroke();
-  ctx.fillStyle = "#d18a1f";
-  ctx.fillRect(-18, 4, 24, 4);
+  // Isometric reachtruck sprite: separate top/side/front planes instead of a flat badge.
+  poly(ctx, [[-24, -3], [-8, -12], [13, -3], [-3, 8]], "#f6c453", "#8a5b12", 1.1);
+  poly(ctx, [[-3, 8], [13, -3], [13, 8], [-3, 18]], "#d58a21", "#8a5b12", 1.1);
+  poly(ctx, [[-24, -3], [-3, 8], [-3, 18], [-24, 7]], "#b8741a", "#7c4a12", 1.1);
 
-  ctx.fillStyle = "#113f75";
-  roundedRect(ctx, -16, -19, 17, 13, 3);
-  ctx.fill();
-  ctx.fillStyle = "#dbeafe";
-  ctx.fillRect(-12, -17, 8, 5);
-  ctx.fillStyle = "#0f172a";
-  ctx.fillRect(-17, -5, 6, 13);
-  ctx.fillStyle = "#fbbf24";
-  ctx.fillRect(-18, -11, 3, 9);
+  poly(ctx, [[-18, -17], [-8, -22], [3, -15], [-8, -9]], "#164f92", "#0f2f55", 1.1);
+  poly(ctx, [[-8, -9], [3, -15], [4, -4], [-8, 3]], "#0b315b", "#0f2f55", 1.1);
+  poly(ctx, [[-18, -17], [-8, -9], [-8, 3], [-18, -3]], "#0f3f75", "#0f2f55", 1.1);
+  poly(ctx, [[-14, -16], [-8, -19], [-2, -15], [-8, -12]], "#dbeafe", "#7aa7d9", .8);
 
-  ctx.strokeStyle = "#1f2937";
-  ctx.lineWidth = 2.4;
+  ctx.strokeStyle = "#0f172a";
+  ctx.lineWidth = 3;
+  ctx.lineCap = "round";
   ctx.beginPath();
-  ctx.moveTo(11, -19);
-  ctx.lineTo(11, 15);
-  ctx.moveTo(17, -18);
-  ctx.lineTo(17, 14);
+  ctx.moveTo(13, -24);
+  ctx.lineTo(13, 13);
+  ctx.moveTo(19, -21);
+  ctx.lineTo(19, 11);
   ctx.stroke();
-  ctx.strokeStyle = "#334155";
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.moveTo(12, -12);
-  ctx.lineTo(17, -12);
-  ctx.moveTo(12, 2);
-  ctx.lineTo(17, 2);
-  ctx.stroke();
+  ctx.strokeStyle = "#475569";
+  ctx.lineWidth = 1.3;
+  for (const yRail of [-14, -4, 6]) {
+    ctx.beginPath();
+    ctx.moveTo(13, yRail);
+    ctx.lineTo(19, yRail - 1.5);
+    ctx.stroke();
+  }
 
   ctx.strokeStyle = "#1e293b";
-  ctx.lineWidth = 2.2;
+  ctx.lineWidth = 2.6;
   ctx.beginPath();
-  ctx.moveTo(17, 6);
-  ctx.lineTo(33, 3);
-  ctx.moveTo(17, 12);
-  ctx.lineTo(33, 9);
+  ctx.moveTo(18, 7);
+  ctx.lineTo(37, 3);
+  ctx.moveTo(18, 13);
+  ctx.lineTo(37, 9);
   ctx.stroke();
 
-  ctx.fillStyle = "#111827";
+  drawIsoWheel(ctx, -18, 9, 5.2);
+  drawIsoWheel(ctx, 2, 17, 5.2);
+  drawIsoWheel(ctx, 8, 6, 4.2);
+
+  ctx.fillStyle = withAlpha(color, .86);
   ctx.beginPath();
-  ctx.arc(-14, 10, 4.8, 0, Math.PI * 2);
-  ctx.arc(6, 10, 4.8, 0, Math.PI * 2);
+  ctx.arc(-24, 2, 3.7, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawIsoWheel(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(-.22);
+  ctx.fillStyle = "#0f172a";
+  ctx.beginPath();
+  ctx.ellipse(0, 0, radius, radius * .68, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.fillStyle = "#64748b";
   ctx.beginPath();
-  ctx.arc(-14, 10, 2.1, 0, Math.PI * 2);
-  ctx.arc(6, 10, 2.1, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = withAlpha(color, .86);
-  ctx.beginPath();
-  ctx.arc(-21, -3, 3.7, 0, Math.PI * 2);
+  ctx.ellipse(0, 0, radius * .43, radius * .27, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
+}
+
+function poly(ctx: CanvasRenderingContext2D, points: Array<[number, number]>, fill: string, stroke: string, lineWidth: number) {
+  ctx.beginPath();
+  points.forEach(([x, y], index) => {
+    if (index === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = fill;
+  ctx.fill();
+  ctx.strokeStyle = stroke;
+  ctx.lineWidth = lineWidth;
+  ctx.stroke();
 }
 
 function drawHalo(ctx: CanvasRenderingContext2D, x: number, y: number, color: string, radius: number) {
