@@ -1,0 +1,49 @@
+{
+  "name": "picker_4dir_sprite_sheet",
+  "image_png": "picker_4dir_sprite_sheet.png",
+  "image_webp": "picker_4dir_sprite_sheet.webp",
+  "cell_size": {
+    "width": 640,
+    "height": 640
+  },
+  "layout": {
+    "columns": 4,
+    "rows": 1
+  },
+  "camera": "fixed isometric camera",
+  "asset": "warehouse picker with electric pallet jack and pallet",
+  "directions": [
+    {
+      "name": "NE",
+      "angle_degrees": 45,
+      "x": 0,
+      "y": 0,
+      "w": 640,
+      "h": 640
+    },
+    {
+      "name": "SE",
+      "angle_degrees": 135,
+      "x": 640,
+      "y": 0,
+      "w": 640,
+      "h": 640
+    },
+    {
+      "name": "SW",
+      "angle_degrees": 225,
+      "x": 1280,
+      "y": 0,
+      "w": 640,
+      "h": 640
+    },
+    {
+      "name": "NW",
+      "angle_degrees": 315,
+      "x": 1920,
+      "y": 0,
+      "w": 640,
+      "h": 640
+    }
+  ]
+}

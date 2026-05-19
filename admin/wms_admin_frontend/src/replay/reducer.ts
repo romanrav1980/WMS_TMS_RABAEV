@@ -30,7 +30,7 @@ export function currentMetrics(metrics: MinuteMetrics[], minute: number): Minute
   return best;
 }
 
-export function resourceStateAt(layout: WarehouseLayout, events: WarehouseEvent[], minute: number, waveId?: string): ResourceState[] {
+export function resourceStateAt(layout: WarehouseLayout, events: WarehouseEvent[], minute: number, waveId?: string, trailTtlMinutes = 20): ResourceState[] {
   const resources = new Map<string, ResourceState>();
   for (const event of visibleEvents(events, minute, waveId)) {
     if (!event.resource_id) continue;
@@ -60,7 +60,7 @@ export function resourceStateAt(layout: WarehouseLayout, events: WarehouseEvent[
       driver: event.resource_id.startsWith("RT") ? `RTD${event.resource_id.slice(2)}` : "",
       trail: previous.trail
         .concat([{ x: loc.x, y: loc.y, minute: event.minute }])
-        .filter((point) => minute - point.minute <= 20)
+        .filter((point) => minute - point.minute <= trailTtlMinutes)
     });
   }
   for (let index = 1; index <= 10; index += 1) {
@@ -269,7 +269,7 @@ function reachtruckEventLocation(layout: WarehouseLayout, event: WarehouseEvent)
     const aisle = Number(cell.aisle || parseAisle(cell.cell_id) || 1);
     return {
       x: Number(cell.x_m),
-      y: Math.max(0, (aisle - 1) * 4 + 1.45),
+      y: Math.max(0, (aisle - 1) * 4),
       cell: cell.cell_id
     };
   }

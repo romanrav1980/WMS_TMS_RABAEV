@@ -1049,3 +1049,4 @@ Append-only log of root wiki updates.
 - Adjusted the isometric camera and map layer to show clearer passage labels, gate labels, and dock staging/accumulation zones in the style of the warehouse digital-twin reference.
 - Added investigation UX: resource detail explains slowdown causes, dock staging shows staged pallets by source, non-green pick-face hover shows replenishment tasks/release state, and the loss graph has right-clickable loss/zero markers with cause breakdown.
 - Added explicit dock accumulation/shipping dwell windows to the model, visible loading trucks at gates, mono-pallet dock staging events, and fixed loss-chart hit selection so zero markers do not jump to distant loss peaks.
+- Switched reachtrucks and pickers to supplied 4-direction raster sprite sheets, brightened aisle lanes, added two-sided pick-face rendering around each aisle, and exposed route trail TTL in model settings.

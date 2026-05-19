@@ -21,7 +21,8 @@ export default function App() {
     caseReplenishmentPerHour: 5,
     palletDropMinutes: 3,
     palletExchangeMinutes: 3,
-    dockPalletsPerHour: 15
+    dockPalletsPerHour: 15,
+    trailTtlMinutes: 20
   });
 
   useEffect(() => {
@@ -45,7 +46,7 @@ export default function App() {
     if (!data) return null;
     const events = visibleEvents(data.events, minute, selectedWaveId);
     const metrics = currentMetrics(data.metrics, minute);
-    const resources = resourceStateAt(data.layout, data.events, minute, selectedWaveId);
+    const resources = resourceStateAt(data.layout, data.events, minute, selectedWaveId, modelSettings.trailTtlMinutes);
     const collisions = activeCollisions(data.events, minute, 120, selectedWaveId);
     const tasks = replenishmentTasksAt(data.events, minute);
     const pickFaceFill = pickFaceFillAt(data.stock, data.events, minute);
@@ -168,6 +169,7 @@ type ModelSettings = {
   palletDropMinutes: number;
   palletExchangeMinutes: number;
   dockPalletsPerHour: number;
+  trailTtlMinutes: number;
 };
 
 function ModelSettingsPanel({ settings, forecastMultiplier, onChange }: {
@@ -184,6 +186,7 @@ function ModelSettingsPanel({ settings, forecastMultiplier, onChange }: {
       <SettingSlider label="Спуск паллеты" value={settings.palletDropMinutes} min={2} max={6} suffix="мин" onChange={(value) => onChange("palletDropMinutes", value)} />
       <SettingSlider label="Убрать/поставить" value={settings.palletExchangeMinutes} min={0} max={6} suffix="мин" onChange={(value) => onChange("palletExchangeMinutes", value)} />
       <SettingSlider label="Ворота" value={settings.dockPalletsPerHour} min={8} max={24} suffix="/час" onChange={(value) => onChange("dockPalletsPerHour", value)} />
+      <SettingSlider label="Шлейф маршрута" value={settings.trailTtlMinutes} min={5} max={20} suffix="мин" onChange={(value) => onChange("trailTtlMinutes", value)} />
     </div>
   );
 }
