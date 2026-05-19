@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Collision, DetailSelection, DockPallet, PickFaceFill, ReplenishmentTask, ResourceState, WarehouseLayout } from "../types";
 import { cellById, eventLocation } from "../replay/reducer";
 import { collisionTitle } from "../replay/reducer";
-import reachtruckSpriteUrl from "../assets/reachtruck-isometric.svg";
+import reachtruckSpriteUrl from "../assets/reachtruck-4dir-sprite-sheet.png";
 
 type SceneProps = {
   layout: WarehouseLayout;
@@ -518,17 +518,26 @@ function drawPickerIcon(ctx: CanvasRenderingContext2D, x: number, y: number, col
   ctx.restore();
 }
 
-function drawReachtruckIcon(ctx: CanvasRenderingContext2D, x: number, y: number, _angle: number, color: string, image: HTMLImageElement | null) {
+function drawReachtruckIcon(ctx: CanvasRenderingContext2D, x: number, y: number, angle: number, color: string, image: HTMLImageElement | null) {
   ctx.save();
   ctx.translate(x, y);
   if (image?.complete) {
-    ctx.drawImage(image, -55, -66, 110, 78);
+    const frame = reachtruckFrameForHeading(angle);
+    ctx.drawImage(image, frame * 512, 0, 512, 512, -48, -74, 96, 96);
   }
   ctx.fillStyle = withAlpha(color, .86);
   ctx.beginPath();
-  ctx.arc(-39, -11, 3.7, 0, Math.PI * 2);
+  ctx.arc(-35, -12, 3.7, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
+}
+
+function reachtruckFrameForHeading(angle: number): number {
+  const deg = (angle * 180 / Math.PI + 360) % 360;
+  if (deg >= 315 || deg < 45) return 1; // screen east / south-east
+  if (deg < 135) return 3; // screen south-west
+  if (deg < 225) return 2; // screen west / north-west
+  return 0; // screen north-east
 }
 
 function drawHalo(ctx: CanvasRenderingContext2D, x: number, y: number, color: string, radius: number) {

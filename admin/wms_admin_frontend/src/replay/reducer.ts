@@ -35,8 +35,9 @@ export function resourceStateAt(layout: WarehouseLayout, events: WarehouseEvent[
   for (const event of visibleEvents(events, minute, waveId)) {
     if (!event.resource_id) continue;
     const previous = resources.get(event.resource_id) || makeResource(event.resource_id);
-    const loc = eventLocation(layout, event) || { x: previous.x, y: previous.y, cell: previous.cell };
     const kind = event.resource_id.startsWith("RT") ? "reachtruck" : "picker";
+    const loc = (kind === "reachtruck" ? reachtruckEventLocation(layout, event) : eventLocation(layout, event))
+      || { x: previous.x, y: previous.y, cell: previous.cell };
     const speedRatio = kind === "picker" ? speedRatioForPicker(event.resource_id, minute) : 100;
     const status = statusLabel(kind, event, speedRatio);
     resources.set(event.resource_id, {
@@ -57,7 +58,9 @@ export function resourceStateAt(layout: WarehouseLayout, events: WarehouseEvent[
       queue: 0,
       utilization: clamp(Math.round((minute / SHIFT_MINUTES) * 100), 0, 100),
       driver: event.resource_id.startsWith("RT") ? `RTD${event.resource_id.slice(2)}` : "",
-      trail: previous.trail.concat([{ x: loc.x, y: loc.y, minute: event.minute }]).slice(-18)
+      trail: previous.trail
+        .concat([{ x: loc.x, y: loc.y, minute: event.minute }])
+        .filter((point) => minute - point.minute <= 20)
     });
   }
   for (let index = 1; index <= 10; index += 1) {
@@ -257,6 +260,20 @@ export function eventLocation(layout: WarehouseLayout, event: WarehouseEvent): {
     if (parsed) return { x: Number(parsed[2]) * 10 + 5, y: (Number(parsed[1]) - 1) * 4, cell: event.segment };
   }
   return null;
+}
+
+function reachtruckEventLocation(layout: WarehouseLayout, event: WarehouseEvent): { x: number; y: number; cell?: string } | null {
+  const cellId = event.target_cell || event.cell || event.source_cell;
+  const cell = cellById(layout, cellId);
+  if (cell) {
+    const aisle = Number(cell.aisle || parseAisle(cell.cell_id) || 1);
+    return {
+      x: Number(cell.x_m),
+      y: Math.max(0, (aisle - 1) * 4 + 1.45),
+      cell: cell.cell_id
+    };
+  }
+  return eventLocation(layout, event);
 }
 
 function makeResource(id: string): ResourceState {
