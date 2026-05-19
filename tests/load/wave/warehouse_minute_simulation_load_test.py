@@ -122,7 +122,8 @@ class DockTask:
     gate_id: str
     pallet_id: str
     status: str = "WAITING"
-    remaining_minutes: int = 4
+    remaining_minutes: int = 60
+    staged_minute: int = 0
 
 
 def parse_args() -> argparse.Namespace:
@@ -141,6 +142,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pallet-drop-minutes", type=int, default=3)
     parser.add_argument("--pallet-exchange-minutes-min", type=int, default=2)
     parser.add_argument("--pallet-exchange-minutes-max", type=int, default=3)
+    parser.add_argument("--dock-accumulation-minutes", type=int, default=60)
+    parser.add_argument("--dock-shipping-minutes", type=int, default=60)
     parser.add_argument("--congestion-slowdown-factor", type=float, default=4.0)
     parser.add_argument("--seed", type=int, default=20260519)
     parser.add_argument("--mode", choices=["model-only"], default="model-only")
@@ -477,8 +480,28 @@ class WarehouseMinuteSimulation:
             if client.wave_id != wave_id:
                 continue
             for pallet_id in client.mono_pallets:
-                task = DockTask(f"MONO-{pallet_id}", client.client_id, wave_id, client.gate_id, pallet_id, "WAITING", 4)
+                task = DockTask(
+                    f"MONO-{pallet_id}",
+                    client.client_id,
+                    wave_id,
+                    client.gate_id,
+                    pallet_id,
+                    "WAITING",
+                    self.args.dock_shipping_minutes,
+                    minute,
+                )
                 self.dock_queue.append(task)
+                truck = min(self.reachtrucks, key=lambda row: row.completed_ops)
+                self.emit(
+                    minute,
+                    "PALLET_STAGED_TO_DOCK",
+                    wave_id=wave_id,
+                    client_id=client.client_id,
+                    gate_id=client.gate_id,
+                    pallet_id=pallet_id,
+                    staged_by="REACHTRUCK",
+                    resource_id=truck.resource_id,
+                )
                 self.emit(minute, "MONO_PALLET_PLANNED", wave_id=wave_id, client_id=client.client_id, gate_id=client.gate_id, pallet_id=pallet_id)
 
     def release_replenishment(self, minute: int) -> None:
@@ -762,7 +785,16 @@ class WarehouseMinuteSimulation:
                 client.ready_minute = minute
                 for pallet_id in client.case_pallets:
                     staged_by = self.stage_case_pallet_to_dock(minute, client, pallet_id)
-                    self.dock_queue.append(DockTask(f"SHIP-{pallet_id}", client.client_id, client.wave_id, client.gate_id, pallet_id, "WAITING", 4))
+                    self.dock_queue.append(DockTask(
+                        f"SHIP-{pallet_id}",
+                        client.client_id,
+                        client.wave_id,
+                        client.gate_id,
+                        pallet_id,
+                        "WAITING",
+                        self.args.dock_shipping_minutes,
+                        minute,
+                    ))
                     self.emit(
                         minute,
                         "PALLET_STAGED_TO_DOCK",
@@ -787,6 +819,8 @@ class WarehouseMinuteSimulation:
                     self.emit(minute, "PALLET_SHIPPED", wave_id=task.wave_id, client_id=task.client_id, gate_id=task.gate_id, pallet_id=task.pallet_id)
         for task in self.dock_queue:
             if task.status != "WAITING" or task.gate_id in active_by_gate:
+                continue
+            if minute - task.staged_minute < self.args.dock_accumulation_minutes:
                 continue
             task.status = "LOADING"
             active_by_gate[task.gate_id] = task
@@ -1124,6 +1158,8 @@ class WarehouseMinuteSimulation:
                 "pallet_drop_minutes": self.args.pallet_drop_minutes,
                 "pallet_exchange_minutes_min": self.args.pallet_exchange_minutes_min,
                 "pallet_exchange_minutes_max": self.args.pallet_exchange_minutes_max,
+                "dock_accumulation_minutes": self.args.dock_accumulation_minutes,
+                "dock_shipping_minutes": self.args.dock_shipping_minutes,
             },
             "totals": {
                 "case_pallets": sum(len(client.case_pallets) for client in self.clients.values()),

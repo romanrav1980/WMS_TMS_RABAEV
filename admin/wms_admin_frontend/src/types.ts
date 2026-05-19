@@ -99,6 +99,7 @@ export type DockPallet = {
   palletId: string;
   gateId: string;
   stagedBy: "PICKER" | "REACHTRUCK" | string;
+  status?: "STAGED" | "LOADING";
   resourceId?: string;
   waveId?: string;
   clientId?: string;

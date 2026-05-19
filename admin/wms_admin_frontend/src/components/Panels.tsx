@@ -190,7 +190,8 @@ export function ResourcePerformancePanel({ metrics, events, report, minute }: {
   const selectMinuteFromSvg = (event: React.MouseEvent<SVGSVGElement>, preferLoss: boolean) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width * 960;
-    return nearestVisualPoint(points, x, preferLoss).minute;
+    const y = (event.clientY - rect.top) / rect.height * 230;
+    return nearestVisualPoint(points, x, y, preferLoss).minute;
   };
   const maxQueue = Math.max(1, ...points.map((point) => point.queue));
   const maxLost = Math.max(1, ...points.map((point) => point.lost));
@@ -344,9 +345,21 @@ function nearestPoint(points: PerformancePoint[], minute: number): PerformancePo
   return points.reduce((best, point) => Math.abs(point.minute - minute) < Math.abs(best.minute - minute) ? point : best, points[0]);
 }
 
-function nearestVisualPoint(points: PerformancePoint[], x: number, preferLoss: boolean): PerformancePoint {
-  const candidates = preferLoss && points.some((point) => point.lost > 0) ? points.filter((point) => point.lost > 0) : points;
-  return candidates.reduce((best, point) => Math.abs(xFor(point.minute) - x) < Math.abs(xFor(best.minute) - x) ? point : best, candidates[0]);
+function nearestVisualPoint(points: PerformancePoint[], x: number, y: number, preferLoss: boolean): PerformancePoint {
+  const distanceToBaseline = Math.abs(yFor(0) - y);
+  const nearestAll = nearestByX(points, x);
+  const lossPoints = points.filter((point) => point.lost > 0);
+  if (!preferLoss || !lossPoints.length) return nearestAll;
+  const nearestLoss = nearestByX(lossPoints, x);
+  const allDistance = Math.abs(xFor(nearestAll.minute) - x);
+  const lossDistance = Math.abs(xFor(nearestLoss.minute) - x);
+  if (nearestAll.lost === 0 && distanceToBaseline <= 18 && allDistance <= 18) return nearestAll;
+  if (lossDistance <= 18 || allDistance > 18) return nearestLoss;
+  return nearestAll;
+}
+
+function nearestByX(points: PerformancePoint[], x: number): PerformancePoint {
+  return points.reduce((best, point) => Math.abs(xFor(point.minute) - x) < Math.abs(xFor(best.minute) - x) ? point : best, points[0]);
 }
 
 function buildCollisionTotals(events: WarehouseEvent[]): Record<string, number> {

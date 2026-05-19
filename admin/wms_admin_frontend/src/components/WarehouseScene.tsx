@@ -242,11 +242,13 @@ function drawDockStaging(ctx: CanvasRenderingContext2D, view: View, layout: Ware
   for (const gate of layout.gates.filter((_, index) => index % 2 === 0)) {
     const y = Number(gate.y_m || (gate.aisle - 1) * 4);
     const pallets = dockPallets[gate.gate_id] || [];
+    const loading = pallets.find((pallet) => pallet.status === "LOADING");
     polygon(ctx, [iso(view, -7.2, y - 1.72), iso(view, 13.2, y - 1.72), iso(view, 13.2, y + 1.72), iso(view, -7.2, y + 1.72)], "rgba(34,197,94,.12)", "rgba(34,197,94,.45)", 1.1);
     const label = iso(view, -5.9, y - 1.88, .08);
     ctx.fillStyle = "rgba(21,128,61,.9)";
     ctx.font = "900 8px Segoe UI";
     ctx.fillText(`НАКОПЛЕНИЕ ${gate.gate_id}: ${pallets.length}/33`, label.x - 22, label.y);
+    if (loading) drawDockTruck(ctx, view, -10.4, y, loading, pallets.length);
     pallets.slice(0, 33).forEach((pallet, index) => {
       const row = index % 2;
       const col = Math.floor(index / 2);
@@ -258,6 +260,57 @@ function drawDockStaging(ctx: CanvasRenderingContext2D, view: View, layout: Ware
       drawEmptyDockSlots(ctx, view, y);
     }
   }
+}
+
+function drawDockTruck(ctx: CanvasRenderingContext2D, view: View, x: number, y: number, pallet: DockPallet, palletCount: number) {
+  const isTrailer = palletCount >= 33;
+  const color = gateTruckColor(pallet.gateId);
+  const bodyLength = isTrailer ? 4.4 : 2.65;
+  drawBox(ctx, view, x, y - 1.2, .12, bodyLength, 2.38, isTrailer ? 1.36 : 1.2, color.body, color.side);
+  drawBox(ctx, view, x + bodyLength - .27, y - .86, .16, .92, 1.72, .98, color.cab, "#1e293b");
+  drawBox(ctx, view, x + bodyLength - .03, y - .52, .84, .42, .72, .26, "#bfdbfe", "#1e3a8a");
+  drawTruckWheel(ctx, view, x + .55, y + .96);
+  drawTruckWheel(ctx, view, x + bodyLength - .75, y + .96);
+  drawTruckWheel(ctx, view, x + bodyLength + .12, y + .66);
+  if (isTrailer) drawTruckWheel(ctx, view, x + 2.15, y + .96);
+  const dockLine = iso(view, x + bodyLength + .55, y, .38);
+  const gateLine = iso(view, -8.5, y, .38);
+  ctx.save();
+  ctx.strokeStyle = "rgba(37,99,235,.42)";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([5, 5]);
+  ctx.beginPath();
+  ctx.moveTo(dockLine.x, dockLine.y);
+  ctx.lineTo(gateLine.x, gateLine.y);
+  ctx.stroke();
+  ctx.restore();
+  const p = iso(view, x + 1.3, y - 1.38, 1.68);
+  ctx.save();
+  ctx.fillStyle = "rgba(15,23,42,.78)";
+  ctx.font = "900 8px Segoe UI";
+  ctx.fillText(`${isTrailer ? "ФУРА" : "10Т"} ${pallet.gateId}`, p.x - 20, p.y - 4);
+  ctx.restore();
+}
+
+function gateTruckColor(gateId: string) {
+  const gateNumber = Number(String(gateId).replace(/\D/g, "")) || 0;
+  return gateNumber % 2 === 0
+    ? { body: "#facc15", side: "#a16207", cab: "#ef4444" }
+    : { body: "#ef4444", side: "#7f1d1d", cab: "#facc15" };
+}
+
+function drawTruckWheel(ctx: CanvasRenderingContext2D, view: View, x: number, y: number) {
+  const p = iso(view, x, y, .2);
+  ctx.save();
+  ctx.fillStyle = "#0f172a";
+  ctx.beginPath();
+  ctx.ellipse(p.x, p.y + 3, 5.5, 3.2, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#94a3b8";
+  ctx.beginPath();
+  ctx.ellipse(p.x, p.y + 3, 2.4, 1.4, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 }
 
 function drawDockPallet(ctx: CanvasRenderingContext2D, view: View, x: number, y: number, pallet: DockPallet) {
@@ -453,32 +506,71 @@ function drawReachtruckIcon(ctx: CanvasRenderingContext2D, x: number, y: number,
   ctx.save();
   ctx.translate(x, y);
   ctx.rotate(angle);
-  ctx.shadowColor = "rgba(15,23,42,.24)";
-  ctx.shadowBlur = 10;
-  ctx.shadowOffsetY = 5;
-  ctx.fillStyle = "#f59e0b";
-  roundedRect(ctx, -18, -9, 28, 16, 4);
+  ctx.shadowColor = "rgba(15,23,42,.28)";
+  ctx.shadowBlur = 11;
+  ctx.shadowOffsetY = 6;
+  ctx.fillStyle = "rgba(15,23,42,.22)";
+  ctx.beginPath();
+  ctx.ellipse(0, 10, 23, 8, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.shadowColor = "transparent";
-  ctx.fillStyle = "#1f2937";
-  ctx.fillRect(8, -13, 5, 24);
-  ctx.fillStyle = color;
-  roundedRect(ctx, -13, -13, 15, 9, 3);
+
+  ctx.fillStyle = "#f2b13f";
+  ctx.strokeStyle = "#9a6413";
+  ctx.lineWidth = 1.2;
+  roundedRect(ctx, -18, -8, 29, 16, 4);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = "#113f75";
+  roundedRect(ctx, -14, -17, 15, 12, 3);
   ctx.fill();
   ctx.fillStyle = "#dbeafe";
-  ctx.fillRect(-9, -11, 7, 5);
+  ctx.fillRect(-10, -15, 7, 5);
+  ctx.fillStyle = "#0f172a";
+  ctx.fillRect(-15, -5, 6, 12);
+  ctx.fillStyle = "#fbbf24";
+  ctx.fillRect(-16, -10, 3, 8);
+
   ctx.strokeStyle = "#1f2937";
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 2.4;
   ctx.beginPath();
-  ctx.moveTo(13, -8);
-  ctx.lineTo(25, -8);
-  ctx.moveTo(13, 7);
-  ctx.lineTo(25, 7);
+  ctx.moveTo(10, -17);
+  ctx.lineTo(10, 13);
+  ctx.moveTo(15, -16);
+  ctx.lineTo(15, 12);
   ctx.stroke();
+  ctx.strokeStyle = "#334155";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(11, -11);
+  ctx.lineTo(15, -11);
+  ctx.moveTo(11, 2);
+  ctx.lineTo(15, 2);
+  ctx.stroke();
+
+  ctx.strokeStyle = "#1e293b";
+  ctx.lineWidth = 2.2;
+  ctx.beginPath();
+  ctx.moveTo(15, 6);
+  ctx.lineTo(29, 3);
+  ctx.moveTo(15, 11);
+  ctx.lineTo(29, 8);
+  ctx.stroke();
+
   ctx.fillStyle = "#111827";
   ctx.beginPath();
-  ctx.arc(-10, 9, 4, 0, Math.PI * 2);
-  ctx.arc(5, 9, 4, 0, Math.PI * 2);
+  ctx.arc(-12, 9, 4.5, 0, Math.PI * 2);
+  ctx.arc(5, 9, 4.5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#64748b";
+  ctx.beginPath();
+  ctx.arc(-12, 9, 2, 0, Math.PI * 2);
+  ctx.arc(5, 9, 2, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = withAlpha(color, .86);
+  ctx.beginPath();
+  ctx.arc(-18, -3, 3.5, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 }

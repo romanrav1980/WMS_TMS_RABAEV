@@ -153,10 +153,24 @@ export function dockPalletsAt(events: WarehouseEvent[], minute: number): Record<
         palletId: event.pallet_id,
         gateId: event.gate_id,
         stagedBy: String(event.staged_by || "PICKER"),
+        status: "STAGED",
         resourceId: event.resource_id,
         waveId: event.wave_id,
         clientId: event.client_id,
         minute: event.minute,
+      });
+    }
+    if (event.event_type === "PALLET_LOADING_STARTED" && event.gate_id) {
+      const previous = pallets.get(event.pallet_id);
+      pallets.set(event.pallet_id, {
+        palletId: event.pallet_id,
+        gateId: event.gate_id,
+        stagedBy: previous?.stagedBy || "REACHTRUCK",
+        status: "LOADING",
+        resourceId: previous?.resourceId || event.resource_id,
+        waveId: event.wave_id || previous?.waveId,
+        clientId: event.client_id || previous?.clientId,
+        minute: previous?.minute || event.minute,
       });
     }
     if (event.event_type === "PALLET_SHIPPED") {
