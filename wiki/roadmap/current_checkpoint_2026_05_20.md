@@ -91,17 +91,29 @@ Pallet staging to dock records who staged it through `staged_by=PICKER` or `stag
 
 Continue with the digital twin before moving to integrated Oracle mode:
 
-1. Run and stabilize the model-only runner after crash recovery.
-2. Run `warehouse_simulation_ui_contract_check.mjs` against the latest generated evidence.
-3. Run `npm.cmd run build` in `admin/wms_admin_frontend`.
-4. Start the React admin through `front.bat` and capture fresh Playwright screenshots.
-5. Improve the replay/scene so the main loss causes are visible directly on the map:
+1. Done after recovery: the model-only runner was stabilized and regenerated `SIM-20260520-000916-20260520`.
+2. Done after recovery: `warehouse_simulation_ui_contract_check.mjs` passed against the regenerated evidence.
+3. Done after recovery: `npm.cmd run build` passed in `admin/wms_admin_frontend`.
+4. Done after recovery: React admin screenshots were captured:
+   - `runtime/test-evidence/warehouse-minute-simulation/react-admin-capacity-000916-clean.png`
+   - `runtime/test-evidence/warehouse-minute-simulation/react-admin-capacity-000916-desktop-clean.png`
+5. Continue improving the replay/scene so the main loss causes are visible directly on the map:
    - reachtruck shortage queue depth;
    - blocked routes;
    - empty pick faces;
    - route completion delays;
    - dock queue and pallet-to-dock delay.
-6. Only after the model-only evidence and UI are stable, add `integrated` stage-points that call API/Oracle without writing millions of minute events.
+6. Add a scenario comparison mode for "what if" resource planning: more pickers, more RTP, faster case replenishment, lower wave size, and different wave spacing.
+7. Only after the model-only evidence and UI are stable, add `integrated` stage-points that call API/Oracle without writing millions of minute events.
+
+## Recovery Follow-up
+
+The first recovery run exposed two useful fixes:
+
+- `is_congested_location` was missing from the runner and is now restored.
+- Picker assignment no longer blocks all free pickers on the first empty pick-face line when other pickable lines exist.
+
+The current run is intentionally not "green": it demonstrates a capacity violation. `capacity_analysis` shows that the scenario needs more resources or a different wave profile before the shift can close.
 
 ## Safety Notes
 

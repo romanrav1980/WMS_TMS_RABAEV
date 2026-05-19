@@ -60,6 +60,28 @@ export type SimulationReport = {
   run_id?: string;
   scenario?: Record<string, number | string>;
   totals?: Record<string, number | string>;
+  capacity_analysis?: {
+    total_pick_boxes?: number;
+    done_pick_boxes?: number;
+    picker_box_capacity_per_shift?: number;
+    picker_demand_to_capacity_ratio?: number;
+    replenishment_tasks?: number;
+    case_replenishment_tasks?: number;
+    pallet_replenishment_tasks?: number;
+    reachtruck_nominal_capacity_per_shift?: number;
+    case_replenishment_capacity_if_all_case?: number;
+    replenishment_demand_to_nominal_capacity_ratio?: number;
+  };
+  bottleneck_summary?: Array<{
+    code: string;
+    severity: "warning" | "critical";
+    message: string;
+    demand?: number;
+    capacity?: number;
+    ratio?: number;
+    count?: number;
+    lost_minutes?: number;
+  }>;
 };
 
 export type CollisionType =

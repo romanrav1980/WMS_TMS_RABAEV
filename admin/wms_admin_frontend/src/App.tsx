@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import "./styles.css";
 import { SHIFT_MINUTES, clock, inferWaveByMinute } from "./demoData";
 import { loadReplayData } from "./data/loaders";
-import { DetailCard, KpiRow, LeftPanel, RightPanel } from "./components/Panels";
+import { CapacityPanel, DetailCard, KpiRow, LeftPanel, RightPanel } from "./components/Panels";
 import { Timeline } from "./components/Timeline";
 import { WarehouseScene } from "./components/WarehouseScene";
 import { activeCollisions, currentMetrics, replenishmentTasksAt, resourceStateAt, visibleEvents } from "./replay/reducer";
@@ -126,6 +126,7 @@ export default function App() {
                 forecastMultiplier={state.forecastMultiplier}
                 onChange={(key, value) => setModelSettings((current) => ({ ...current, [key]: value }))}
               />
+              <CapacityPanel report={data.report} />
               <DetailCard selection={selection} />
               <div className="legend-card"><span><i className="green" /> Норма</span><span><i className="blue" /> Движение</span><span><i className="amber" /> Риск</span><span><i className="red" /> Коллизия</span><span><i className="gray" /> Ожидание</span></div>
               <div className="route-widget">

@@ -1,4 +1,4 @@
-import type { Collision, DetailSelection, ReplenishmentTask, ResourceState } from "../types";
+import type { Collision, DetailSelection, ReplenishmentTask, ResourceState, SimulationReport } from "../types";
 import { collisionTitle } from "../replay/reducer";
 
 export function KpiRow({ unitsDone, totalUnits, activePickers, collisions, overdue, avgSpeed }: {
@@ -69,7 +69,7 @@ export function RightPanel({ collisions, onSelect }: { collisions: Collision[]; 
 }
 
 export function DetailCard({ selection }: { selection: DetailSelection }) {
-  if (!selection) return <div className="detail-card"><b>Склад</b><span>Нажмите ресурс, задачу или коллизию.</span></div>;
+  if (!selection) return null;
   if (selection.type === "resource") {
     const resource = selection.resource;
     return <div className="detail-card"><b>{resource.id}</b><span>Статус: {resource.status}</span><span>Волна: {resource.waveId || "нет"}</span><span>Клиент: {resource.clientId || "нет"}</span><span>SKU: {resource.sku || "нет"}</span><span>Скорость: {resource.speedRatio}%</span></div>;
@@ -90,6 +90,64 @@ export function DetailCard({ selection }: { selection: DetailSelection }) {
       <span>Потери: {collision.lostMinutes} мин · ~{collision.productivityLoss}/час</span>
     </div>
   );
+}
+
+export function CapacityPanel({ report }: { report: SimulationReport }) {
+  const capacity = report.capacity_analysis;
+  const bottlenecks = report.bottleneck_summary || [];
+  if (!capacity && !bottlenecks.length) return null;
+  const pickerRatio = Number(capacity?.picker_demand_to_capacity_ratio || 0);
+  const reachRatio = Number(capacity?.replenishment_demand_to_nominal_capacity_ratio || 0);
+  return (
+    <div className="capacity-card">
+      <header><b>Мощность смены</b><span>{pickerRatio > 1 || reachRatio > 1 ? "дефицит" : "норма"}</span></header>
+      <div className="capacity-lines">
+        <CapacityLine
+          label="Комплектовка"
+          done={Number(capacity?.done_pick_boxes || 0)}
+          demand={Number(capacity?.total_pick_boxes || 0)}
+          capacity={Number(capacity?.picker_box_capacity_per_shift || 0)}
+          ratio={pickerRatio}
+        />
+        <CapacityLine
+          label="RTP"
+          done={Number(report.totals?.done_replenishment_tasks || 0)}
+          demand={Number(capacity?.replenishment_tasks || 0)}
+          capacity={Number(capacity?.reachtruck_nominal_capacity_per_shift || 0)}
+          ratio={reachRatio}
+        />
+      </div>
+      <div className="bottleneck-chips">
+        {bottlenecks.slice(0, 3).map((item) => (
+          <span key={item.code} className={item.severity}>{bottleneckLabel(item.code)}{item.ratio ? ` x${item.ratio}` : ""}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CapacityLine({ label, done, demand, capacity, ratio }: { label: string; done: number; demand: number; capacity: number; ratio: number }) {
+  const fill = Math.min(100, Math.round((done / Math.max(1, demand)) * 100));
+  return (
+    <div className="capacity-line">
+      <span><b>{label}</b><em>{format(done)} / {format(demand)}</em></span>
+      <span className="capacity-bar"><i className={ratio > 1.25 ? "red" : ratio > 1 ? "amber" : "green"} style={{ width: `${Math.max(4, fill)}%` }} /></span>
+      <span className="capacity-note">мощность {format(capacity)} · спрос x{ratio.toFixed(2)}</span>
+    </div>
+  );
+}
+
+function bottleneckLabel(code: string): string {
+  const labels: Record<string, string> = {
+    PICKER_CAPACITY_SHORTAGE: "мало комплектовщиков",
+    REACHTRUCK_CAPACITY_SHORTAGE: "мало RTP",
+    REACH_RESOURCE_SHORTAGE: "очередь RTP",
+    ROUTE_COMPLETION_DELAY: "хвост маршрутов",
+    REACHTRUCK_PICKER_PASS: "пересечения",
+    REACHTRUCK_CROSSING: "встречные RTP",
+    PICK_FACE_EMPTY: "пустой отбор",
+  };
+  return labels[code] || code.replace(/_/g, " ").toLowerCase();
 }
 
 function format(value: number) {

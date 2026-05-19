@@ -539,15 +539,15 @@ class WarehouseMinuteSimulation:
         for picker in self.pickers:
             if picker.status != "IDLE":
                 continue
+            line = self.next_pickable_line()
+            if line:
+                self.start_picker_line(minute, picker, line)
+                continue
             blocked_line = self.next_waiting_line_with_empty_pick_face()
             if blocked_line:
                 self.block_picker_on_empty_pick_face(minute, picker, blocked_line)
-                continue
-            line = self.next_pickable_line()
-            if not line:
+            else:
                 picker.wait_minutes += 1
-                continue
-            self.start_picker_line(minute, picker, line)
 
     def start_picker_line(self, minute: int, picker: Picker, line: OrderLine, include_walk: bool = True) -> None:
             cell = self.cells_by_id[line.pick_cell]
@@ -931,6 +931,21 @@ class WarehouseMinuteSimulation:
     def reachtruck_passes_picker(self, truck: Reachtruck, picker: Picker) -> bool:
         return abs(truck.y_m - picker.y_m) <= 1.2 and abs(truck.x_m - picker.x_m) <= 8.0
 
+    def is_congested_location(self, x_m: float, y_m: float) -> bool:
+        target_segment = segment_key(x_m, y_m)
+        load = 0
+        for picker in self.pickers:
+            if picker.status == "PICKING" and segment_key(picker.x_m, picker.y_m) == target_segment:
+                load += 1
+        for truck in self.reachtrucks:
+            if truck.status == "MOVING_PALLET" and segment_key(truck.x_m, truck.y_m) == target_segment:
+                load += 2
+            if truck.status == "MOVING_PALLET" and truck.target_cell:
+                target = self.cells_by_id.get(truck.target_cell)
+                if target and abs(target["y_m"] - y_m) <= 1.2 and abs(target["x_m"] - x_m) <= 8.0:
+                    return True
+        return load >= 4
+
     def reserve_storage_pallet(self, sku_id: str) -> dict[str, Any] | None:
         rows = self.storage_stock.get(sku_id, [])
         return rows.pop(0) if rows else None
@@ -990,6 +1005,14 @@ class WarehouseMinuteSimulation:
 
     def build_report(self) -> dict[str, Any]:
         total_lines = sum(len(client.lines) for client in self.clients.values())
+        total_pick_boxes = sum(line.qty_boxes for client in self.clients.values() for line in client.lines)
+        done_pick_boxes = sum(line.qty_boxes for client in self.clients.values() for line in client.lines if line.status == "DONE")
+        shift_hours = self.shift_minutes / 60
+        picker_box_capacity = int(sum(picker.boxes_per_hour for picker in self.pickers) * shift_hours)
+        reachtruck_nominal_capacity = int(sum(truck.operations_per_hour for truck in self.reachtrucks) * shift_hours)
+        case_replenishment_capacity = int(self.args.reachtrucks * self.args.case_replenishment_per_hour * shift_hours)
+        case_replenishment_tasks = sum(1 for task in self.replenishment_queue if task.replenishment_mode == "CASE_REPLENISHMENT")
+        pallet_replenishment_tasks = sum(1 for task in self.replenishment_queue if task.replenishment_mode == "PALLET_REPLENISHMENT")
         wave_completion: dict[str, int | None] = {}
         for wave_no in range(1, self.args.waves + 1):
             wave_id = f"WAVE-SIM-{wave_no:02d}"
@@ -1044,6 +1067,25 @@ class WarehouseMinuteSimulation:
                 "reachtruck_busy_minutes_avg": round(statistics.mean(reach_util), 2) if reach_util else 0,
                 "reachtruck_busy_minutes_max": max(reach_util) if reach_util else 0,
             },
+            "capacity_analysis": {
+                "total_pick_boxes": total_pick_boxes,
+                "done_pick_boxes": done_pick_boxes,
+                "picker_box_capacity_per_shift": picker_box_capacity,
+                "picker_demand_to_capacity_ratio": round(total_pick_boxes / max(1, picker_box_capacity), 2),
+                "replenishment_tasks": len(self.replenishment_queue),
+                "case_replenishment_tasks": case_replenishment_tasks,
+                "pallet_replenishment_tasks": pallet_replenishment_tasks,
+                "reachtruck_nominal_capacity_per_shift": reachtruck_nominal_capacity,
+                "case_replenishment_capacity_if_all_case": case_replenishment_capacity,
+                "replenishment_demand_to_nominal_capacity_ratio": round(len(self.replenishment_queue) / max(1, reachtruck_nominal_capacity), 2),
+            },
+            "bottleneck_summary": self.build_bottleneck_summary(
+                total_pick_boxes=total_pick_boxes,
+                picker_box_capacity=picker_box_capacity,
+                reachtruck_nominal_capacity=reachtruck_nominal_capacity,
+                count_by_type=count_by_type,
+                lost_by_type=lost_by_type,
+            ),
             "artifacts": {
                 "layout": "layout.json",
                 "events": "events.jsonl",
@@ -1055,6 +1097,50 @@ class WarehouseMinuteSimulation:
                 "animation_page": "wiki-raw/wms_admin_ui_reference/warehouse-simulation.html",
             },
         }
+
+    def build_bottleneck_summary(
+        self,
+        total_pick_boxes: int,
+        picker_box_capacity: int,
+        reachtruck_nominal_capacity: int,
+        count_by_type: dict[str, int],
+        lost_by_type: dict[str, int],
+    ) -> list[dict[str, Any]]:
+        summary: list[dict[str, Any]] = []
+        if total_pick_boxes > picker_box_capacity:
+            summary.append(
+                {
+                    "code": "PICKER_CAPACITY_SHORTAGE",
+                    "severity": "critical",
+                    "message": "Коробочный спрос смены превышает расчетную мощность комплектовщиков.",
+                    "demand": total_pick_boxes,
+                    "capacity": picker_box_capacity,
+                    "ratio": round(total_pick_boxes / max(1, picker_box_capacity), 2),
+                }
+            )
+        replenishment_tasks = len(self.replenishment_queue)
+        if replenishment_tasks > reachtruck_nominal_capacity:
+            summary.append(
+                {
+                    "code": "REACHTRUCK_CAPACITY_SHORTAGE",
+                    "severity": "critical",
+                    "message": "Количество задач пополнения превышает номинальную сменную мощность ричтраков.",
+                    "demand": replenishment_tasks,
+                    "capacity": reachtruck_nominal_capacity,
+                    "ratio": round(replenishment_tasks / max(1, reachtruck_nominal_capacity), 2),
+                }
+            )
+        for collision_type, lost_minutes in sorted(lost_by_type.items(), key=lambda item: item[1], reverse=True)[:3]:
+            summary.append(
+                {
+                    "code": collision_type,
+                    "severity": "warning",
+                    "message": "Операционная коллизия входит в топ потерь смены.",
+                    "count": count_by_type.get(collision_type, 0),
+                    "lost_minutes": lost_minutes,
+                }
+            )
+        return summary
 
     def write_events(self) -> None:
         path = self.out_dir / "events.jsonl"
@@ -1094,6 +1180,21 @@ class WarehouseMinuteSimulation:
         ]
         for key, count in sorted(report["collision_count_by_type"].items()):
             lines.append(f"- `{key}`: count `{count}`, lost minutes `{report['lost_minutes_by_type'].get(key, 0)}`")
+        lines.extend(
+            [
+                "",
+                "## Capacity Analysis",
+                "",
+                f"- Pick demand: `{report['capacity_analysis']['total_pick_boxes']}` boxes; picker shift capacity: `{report['capacity_analysis']['picker_box_capacity_per_shift']}` boxes; ratio `{report['capacity_analysis']['picker_demand_to_capacity_ratio']}`.",
+                f"- Replenishment demand: `{report['capacity_analysis']['replenishment_tasks']}` tasks; reachtruck nominal capacity: `{report['capacity_analysis']['reachtruck_nominal_capacity_per_shift']}` tasks; ratio `{report['capacity_analysis']['replenishment_demand_to_nominal_capacity_ratio']}`.",
+                f"- Replenishment mix: `{report['capacity_analysis']['pallet_replenishment_tasks']}` pallet tasks, `{report['capacity_analysis']['case_replenishment_tasks']}` case tasks.",
+                "",
+                "## Bottleneck Summary",
+                "",
+            ]
+        )
+        for item in report["bottleneck_summary"]:
+            lines.append(f"- `{item['code']}` ({item['severity']}): {item['message']}")
         lines.extend(
             [
                 "",

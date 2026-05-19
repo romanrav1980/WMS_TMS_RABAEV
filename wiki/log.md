@@ -1005,3 +1005,10 @@ Append-only log of root wiki updates.
 - Added [`roadmap/current_checkpoint_2026_05_20.md`](roadmap/current_checkpoint_2026_05_20.md).
 - Preserved the active digital-twin context: model-only runner, evidence contract, raw HTML replay, React admin frontend, latest evidence run, implemented physical-model refinements, and next stabilization steps.
 - Linked the checkpoint from the root wiki index.
+
+## [2026-05-20] simulation | Added warehouse digital twin capacity explanation
+
+- Restored the runner's congested-location check and corrected picker assignment priority so available pick lines are picked before a picker is blocked on an empty pick-face.
+- Added `capacity_analysis` and `bottleneck_summary` to model-only `report.json` / `report.md`.
+- Added the React `Мощность смены` card with picker/RTP demand-to-capacity ratios and short bottleneck labels.
+- Captured Playwright screenshots for `SIM-20260520-000916-20260520` at compact and desktop viewports.

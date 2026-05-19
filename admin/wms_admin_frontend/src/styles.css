@@ -130,6 +130,19 @@ button { cursor: pointer; }
 .setting-slider { display: grid; gap: 4px; }
 .setting-slider b { color: var(--text); font-size: 11px; }
 .setting-slider input { width: 100%; accent-color: var(--blue); }
+.capacity-card { position: absolute; left: 32px; top: 74px; z-index: 3; width: 318px; display: grid; gap: 10px; padding: 12px; border: 1px solid rgba(223,232,243,.9); border-radius: 10px; background: rgba(255,255,255,.94); box-shadow: var(--shadow); }
+.capacity-card header, .capacity-line span:first-child { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.capacity-card header b { font-size: 13px; }
+.capacity-card header span { color: var(--red); font-size: 11px; font-weight: 900; text-transform: uppercase; }
+.capacity-lines { display: grid; gap: 8px; }
+.capacity-line { display: grid; gap: 4px; }
+.capacity-line b { font-size: 12px; }
+.capacity-line em, .capacity-note { color: var(--muted); font-size: 11px; font-style: normal; font-weight: 850; }
+.capacity-bar { height: 6px; border-radius: 999px; background: #e5eaf1; overflow: hidden; }
+.capacity-bar i { display: block; height: 100%; border-radius: inherit; }
+.bottleneck-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.bottleneck-chips span { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 5px 7px; border-radius: 999px; color: #7a2e0e; background: #fff7ed; font-size: 10px; font-weight: 900; }
+.bottleneck-chips .critical { color: #991b1b; background: #fef2f2; }
 .collision-card { grid-template-columns: 34px 1fr; align-items: start; }
 .collision-icon { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 999px; color: #fff; background: var(--red); font-weight: 900; }
 .collision-card.warning .collision-icon { background: var(--amber); }
@@ -144,6 +157,17 @@ button { cursor: pointer; }
 .mini-control { width: 38px; font-size: 18px; }
 .timeline-controls select { width: 64px; padding: 0 8px; }
 .live-button { min-width: 62px; color: #08764a; background: #ecfdf3; }
+
+@media (max-height: 820px) {
+  .model-settings-card { width: 260px; gap: 6px; padding: 10px; }
+  .model-settings-card .setting-slider:nth-of-type(n+5) { display: none; }
+  .capacity-card { width: 300px; }
+  .route-widget { display: none; }
+}
+
+@media (max-width: 1300px) {
+  .legend-card { display: none; }
+}
 .timeline-track-wrap { position: relative; height: 72px; display: grid; align-items: end; padding: 0 6px 2px; }
 .timeline-ticks { display: grid; grid-template-columns: repeat(13, 1fr); color: var(--muted); font-size: 12px; }
 .timeline-ticks span { text-align: center; }
