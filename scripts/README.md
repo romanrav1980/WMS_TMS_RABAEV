@@ -21,7 +21,7 @@ Current behavior:
 - `serv.bat` starts `api/wms_api_server` through `python -m uvicorn`.
 - `worker.bat` starts `api/wms_api_server` through `python -m app.workers.outbox_worker --loop`.
 - `production-exchange.bat` starts `api/wms_api_server` through `python -m app.workers.production_exchange_worker --loop`.
-- `front.bat` starts `admin/wms_admin_frontend` with `npm start` when that React project exists.
+- `front.bat` starts `admin/wms_admin_frontend` with `npm.cmd run start` when that React project exists.
 - Until the React admin frontend is created, `front.bat` serves the raw UI reference from `wiki-raw/wms_admin_ui_reference` through `python -m http.server`.
 - `terminal.bat` starts `terminal/wms_terminal_web` with `npm run dev`.
 
@@ -62,3 +62,19 @@ tests\load\bom\run_bom_load_test.bat --products 2 --boms-per-product 2 --lines-p
 ```
 
 The runner uses the shared `serv.bat` startup path if the backend is not responding, writes `tests/load/bom/report.json`, and deletes only test BOM rows whose `BOM_CODE` starts with `LOAD-BOM-`.
+
+Wave replenishment load tests live in [`../tests/load/wave`](../tests/load/wave). The runner creates temporary picking topology, customer orders, picking plans, launches waves through the HTTP API, verifies that wave replenishment creates `RRL_WAREHOUSE_TASK` rows, and can execute those warehouse tasks through assign/start/complete:
+
+```powershell
+python tests/load/wave/wave_replenishment_load_test.py --waves 8 --orders-per-wave 2 --concurrency 4 --execute-tasks --cleanup
+```
+
+The cleanup deletes only rows whose `CREATED_BY` starts with `LOAD-WAVE-`.
+
+Warehouse task quantity-mode checks live in [`../tests/load/warehouse_tasks`](../tests/load/warehouse_tasks). The runner creates temporary `BOX` and `PALLET` tasks, verifies partial box completion creates a residual task, verifies partial pallet completion is rejected, and can run the scenario concurrently:
+
+```powershell
+python tests/load/warehouse_tasks/warehouse_task_qty_mode_load_test.py --iterations 8 --concurrency 4 --cleanup
+```
+
+The cleanup deletes only rows created by the runner marker.

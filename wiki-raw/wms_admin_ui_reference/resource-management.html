@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS Управление ресурсами</title>
+    <link rel="stylesheet" href="styles.css?v=20260519-resource-management" />
+  </head>
+  <body class="auth-pending" data-required-permission="resource_management_view">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span></div>
+        </div>
+        <nav class="nav" data-admin-nav data-active-nav="resource-management"></nav>
+        <div class="sidebar-footer">
+          <div class="footer-line"><span>Смена</span><b>Дневная</b></div>
+          <div class="footer-line muted"><span>19.05.2026</span><span>15:30</span></div>
+          <div class="footer-line muted"><span>Модуль</span><span>Resources</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar resource-topbar">
+          <div class="breadcrumbs"><b>Управление ресурсами склада</b></div>
+          <div class="top-actions">
+            <select class="resource-top-select" aria-label="Склад">
+              <option>Склад: Основной склад (MSK-1)</option>
+              <option>Производство: Площадка 1</option>
+            </select>
+            <input class="resource-top-date" type="date" value="2026-05-19" aria-label="Дата" />
+            <button class="resource-refresh" type="button">Обновить</button>
+            <button class="round alert">7</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">Диспетчер смены</b><small id="adminUserRole">Resources</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="resource-page">
+          <section class="resource-kpis" aria-label="Показатели ресурсов">
+            <article class="resource-kpi">
+              <span class="resource-kpi-icon blue">RT</span>
+              <div><b>18 <small>/ 25</small></b><span>Активные ресурсы</span><em>72% занято</em></div>
+              <svg viewBox="0 0 80 24" aria-hidden="true"><path d="M2 20 L10 18 L18 21 L26 8 L34 19 L42 6 L50 21 L58 4 L66 19 L78 2" /></svg>
+            </article>
+            <article class="resource-kpi">
+              <span class="resource-kpi-icon green">OK</span>
+              <div><b>7</b><span>Доступно ресурсов</span><em>28% свободно</em></div>
+              <svg viewBox="0 0 80 24" aria-hidden="true"><path d="M2 22 L18 22 L30 21 L42 20 L54 14 L66 10 L78 3" /></svg>
+            </article>
+            <article class="resource-kpi">
+              <span class="resource-kpi-icon blue">IN</span>
+              <div><b>12</b><span>В работе</span><em>Задач выполняется</em></div>
+            </article>
+            <article class="resource-kpi">
+              <span class="resource-kpi-icon orange">II</span>
+              <div><b>3</b><span>В простое</span><em>Перерыв / ожидание</em></div>
+            </article>
+            <article class="resource-kpi">
+              <span class="resource-kpi-icon red">!</span>
+              <div><b>2</b><span>С опозданием (SLA)</span><em>Требуют внимания</em></div>
+            </article>
+          </section>
+
+          <section class="resource-controls">
+            <div class="resource-tabs" id="resourceTabs" role="tablist">
+              <button class="active" data-resource-tab="all" type="button">Все ресурсы</button>
+              <button data-resource-tab="REACHTRUCK" type="button">Ричтраки</button>
+              <button data-resource-tab="KIKA" type="button">KIKA</button>
+              <button data-resource-tab="FORKLIFT" type="button">Погрузчики</button>
+              <button data-resource-tab="TROLLEY" type="button">Тележки</button>
+              <button data-resource-tab="CASE_PICKER" type="button">Комплектовщики</button>
+              <button data-resource-tab="LOADING_TEAM" type="button">Бригады погрузки</button>
+              <button data-resource-tab="COOKING" type="button">Варка</button>
+              <button data-resource-tab="PACKING" type="button">Фасовка</button>
+            </div>
+            <div class="resource-filters">
+              <select id="resourceZoneFilter" aria-label="Зона">
+                <option value="">Все зоны</option>
+                <option>A1</option>
+                <option>B1</option>
+                <option>C1</option>
+                <option>Производство</option>
+              </select>
+              <select id="resourceStatusFilter" aria-label="Статус">
+                <option value="">Все статусы</option>
+                <option value="В работе">В работе</option>
+                <option value="Доступен">Доступен</option>
+                <option value="В простое">В простое</option>
+                <option value="Недоступен">Недоступен</option>
+              </select>
+              <button id="resourceReset" type="button">Сбросить фильтры</button>
+            </div>
+          </section>
+
+          <article class="panel resource-table-panel">
+            <div class="resource-table-wrap">
+              <table class="resource-table">
+                <thead>
+                  <tr>
+                    <th>Ресурс</th><th>Тип</th><th>Техника</th><th>Водитель / оператор</th><th>Смена</th><th>Зона</th><th>Статус</th><th>Текущая задача</th><th>Следующая задача</th><th>Прогресс смены</th><th></th>
+                  </tr>
+                </thead>
+                <tbody id="resourceRows"></tbody>
+              </table>
+            </div>
+            <footer class="resource-table-footer">
+              <span id="resourceTotal">Всего: 0 ресурсов</span>
+              <span>1&nbsp;&nbsp;2&nbsp;&nbsp;3&nbsp;&nbsp;...</span>
+            </footer>
+          </article>
+
+          <article class="panel resource-gantt-panel">
+            <header>
+              <h2>План-факт Gantt</h2>
+              <div class="resource-gantt-actions">
+                <button type="button">Сегодня</button>
+                <button class="active" type="button">День</button>
+                <button type="button">Неделя</button>
+                <button type="button">Месяц</button>
+                <button type="button">Настроить вид</button>
+              </div>
+            </header>
+            <div class="resource-gantt" id="resourceGantt"></div>
+            <div class="resource-legend">
+              <span><i class="fact"></i>Факт</span>
+              <span><i class="plan"></i>План</span>
+              <span><i class="future"></i>План не начат</span>
+              <span><i class="late"></i>Задержка</span>
+              <span><i class="idle"></i>Простой / перерыв</span>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="admin-nav.js"></script>
+    <script src="admin-auth.js"></script>
+    <script src="resource-management.js"></script>
+  </body>
+</html>

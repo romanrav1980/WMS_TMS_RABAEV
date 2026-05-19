@@ -12,7 +12,7 @@ set "REACT_FRONT_DIR=%~dp0admin\wms_admin_frontend"
 set "RAW_FRONT_DIR=%~dp0wiki-raw\wms_admin_ui_reference"
 
 echo Checking port %FRONT_PORT%...
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\kill-port.ps1" -Port %FRONT_PORT% -CommandLineLike "*http.server %FRONT_PORT%*" -CommandLineLike "*--port %FRONT_PORT%*" -WaitSeconds 2 -FailIfBusy
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\kill-port.ps1" -Port %FRONT_PORT% -CommandLineLike "*http.server %FRONT_PORT%*","*--port %FRONT_PORT%*" -WaitSeconds 2 -FailIfBusy
 if errorlevel 1 (
   color 4F
   echo Frontend port cleanup failed.
@@ -25,7 +25,7 @@ if exist "%REACT_FRONT_DIR%\package.json" (
   echo Starting WMS admin frontend...
   echo   REACT_APP_API_BASE_URL=%REACT_APP_API_BASE_URL%
   echo   PORT=%PORT%
-  npm start
+  npm.cmd run start
 ) else (
   cd /d "%RAW_FRONT_DIR%"
   echo React admin frontend is not created yet.

@@ -1,0 +1,102 @@
+{
+  "run_prefix": "LOAD-WAVE-THSGDQ",
+  "elapsed_s": 14.043,
+  "waves": 1,
+  "full_pallet_articuls": 1,
+  "concurrent_release_workers": 1,
+  "request_count": 13,
+  "failed_request_count": 0,
+  "mixed_case_pick": true,
+  "repeat_release": true,
+  "diagnostics": {
+    "waves": 1,
+    "full_pallet_wave_tasks_done": 1,
+    "case_pick_wave_tasks": 1,
+    "case_pick_wave_tasks_done": 1,
+    "warehouse_picking_moves": 1,
+    "done_warehouse_picking_moves": 1,
+    "synced_picking_moves": 1,
+    "duplicate_picking_moves": 0,
+    "invalid_objects": 0
+  },
+  "latency_ms": {
+    "GET /api/picking/waves/{id}/tasks": {
+      "count": 1,
+      "min": 808.03,
+      "p50": 808.03,
+      "p95": 808.03,
+      "max": 808.03
+    },
+    "GET /health": {
+      "count": 1,
+      "min": 628.97,
+      "p50": 628.97,
+      "p95": 628.97,
+      "max": 628.97
+    },
+    "POST /api/picking/waves": {
+      "count": 1,
+      "min": 924.39,
+      "p50": 924.39,
+      "p95": 924.39,
+      "max": 924.39
+    },
+    "POST /api/picking/waves/{id}/calculate": {
+      "count": 1,
+      "min": 768.72,
+      "p50": 768.72,
+      "p95": 768.72,
+      "max": 768.72
+    },
+    "POST /api/picking/waves/{id}/launch": {
+      "count": 1,
+      "min": 2027.74,
+      "p50": 2027.74,
+      "p95": 2027.74,
+      "max": 2027.74
+    },
+    "POST /api/picking/waves/{id}/plans": {
+      "count": 2,
+      "min": 541.19,
+      "p50": 544.13,
+      "p95": 547.07,
+      "max": 547.07
+    },
+    "POST /api/picking/waves/{id}/staging/release": {
+      "count": 2,
+      "min": 715.19,
+      "p50": 715.72,
+      "p95": 716.25,
+      "max": 716.25
+    },
+    "POST /api/picking/waves/{id}/tasks/{id}/complete": {
+      "count": 1,
+      "min": 1902.46,
+      "p50": 1902.46,
+      "p95": 1902.46,
+      "max": 1902.46
+    },
+    "POST /api/warehouse-tasks/{id}/assign": {
+      "count": 1,
+      "min": 697.97,
+      "p50": 697.97,
+      "p95": 697.97,
+      "max": 697.97
+    },
+    "POST /api/warehouse-tasks/{id}/complete": {
+      "count": 1,
+      "min": 2287.54,
+      "p50": 2287.54,
+      "p95": 2287.54,
+      "max": 2287.54
+    },
+    "POST /api/warehouse-tasks/{id}/start": {
+      "count": 1,
+      "min": 689.9,
+      "p50": 689.9,
+      "p95": 689.9,
+      "max": 689.9
+    }
+  },
+  "errors": []
+}

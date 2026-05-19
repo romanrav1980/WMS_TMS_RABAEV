@@ -121,8 +121,13 @@ def main() -> int:
     fg_storage_tasks = [task for task in warehouse_tasks if task.get("task_type") == "FG_TO_STORAGE"]
     if not fg_storage_tasks:
         raise AssertionError("Expected FG_TO_STORAGE warehouse task for released finished-goods pallet.")
-    if fg_storage_tasks[0].get("to_cell") != fg_target_cell:
-        raise AssertionError(f"Expected FG target cell {fg_target_cell}, got {fg_storage_tasks[0].get('to_cell')}")
+    fg_storage_task = fg_storage_tasks[0]
+    if fg_storage_task.get("to_cell") != fg_target_cell:
+        raise AssertionError(f"Expected FG target cell {fg_target_cell}, got {fg_storage_task.get('to_cell')}")
+    complete_warehouse_task(client, fg_storage_task, "http-smoke")
+    fg_sync = client.get(f"/api/warehouse-tasks/{fg_storage_task['task_id']}/sync")
+    if fg_sync.get("sync_status") != "SYNCED":
+        raise AssertionError(f"Expected FG_TO_STORAGE sync SYNCED, got {fg_sync}")
 
     raw_trace = client.get(f"/api/trace/entities/RAW_MATERIAL_PALLET/{urllib.parse.quote(raw_pallet)}/forward")
     order_trace = client.get(f"/api/trace/entities/PRODUCTION_ORDER/{order_id}/forward")
@@ -204,6 +209,18 @@ class Client:
 
     def post(self, path: str, payload):
         return self.request("POST", path, payload=payload)
+
+
+def complete_warehouse_task(client: Client, warehouse_task: dict, user_name: str) -> None:
+    payload = {
+        "assigned_to": user_name,
+        "scanned_pallet": warehouse_task.get("uid_pallet") or warehouse_task.get("sscc"),
+        "scanned_from_cell": warehouse_task.get("from_cell"),
+        "scanned_to_cell": warehouse_task.get("to_cell"),
+    }
+    client.post(f"/api/warehouse-tasks/{warehouse_task['task_id']}/assign", payload)
+    client.post(f"/api/warehouse-tasks/{warehouse_task['task_id']}/start", payload)
+    client.post(f"/api/warehouse-tasks/{warehouse_task['task_id']}/complete", payload)
 
 
 if __name__ == "__main__":

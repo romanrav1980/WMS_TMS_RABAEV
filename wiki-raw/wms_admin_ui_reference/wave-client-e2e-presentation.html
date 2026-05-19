@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Клиентский сценарий волны</title>
+    <style>
+      :root {
+        --bg: #f4f7fb;
+        --ink: #10233f;
+        --muted: #60728b;
+        --line: #d8e2ee;
+        --blue: #2478f2;
+        --green: #16a36a;
+        --amber: #e58a00;
+        --red: #d92d20;
+        --panel: #fff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Segoe UI", Arial, sans-serif;
+        letter-spacing: 0;
+      }
+
+      .deck {
+        display: grid;
+        gap: 18px;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 18px;
+      }
+
+      .slide {
+        min-height: 720px;
+        display: grid;
+        align-content: start;
+        gap: 22px;
+        padding: 40px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
+      }
+
+      .title-slide {
+        align-content: center;
+        background: linear-gradient(135deg, #fff 0%, #edf6ff 100%);
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 940px;
+        font-size: 52px;
+        line-height: 1.06;
+      }
+
+      h2 {
+        font-size: 34px;
+        line-height: 1.16;
+      }
+
+      h3 {
+        font-size: 20px;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+        font-size: 20px;
+        line-height: 1.42;
+      }
+
+      ul {
+        display: grid;
+        gap: 10px;
+        margin: 0;
+        padding-left: 24px;
+      }
+
+      .kicker {
+        color: var(--blue);
+        font-size: 16px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .card {
+        display: grid;
+        gap: 10px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfdff;
+      }
+
+      .card b {
+        color: var(--ink);
+        font-size: 20px;
+      }
+
+      .card span {
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.35;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: 1fr 44px 1fr 44px 1fr 44px 1fr;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .branch-flow {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+
+      .lane {
+        display: grid;
+        gap: 10px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfdff;
+      }
+
+      .node {
+        min-height: 82px;
+        display: grid;
+        place-items: center;
+        padding: 13px;
+        border: 2px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        font-size: 17px;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .node.blue {
+        border-color: #b8d5ff;
+        background: #eef6ff;
+      }
+
+      .node.green {
+        border-color: #bdebd5;
+        background: #effaf4;
+      }
+
+      .node.amber {
+        border-color: #f3d39a;
+        background: #fff7e8;
+      }
+
+      .node.red {
+        border-color: #fac5bf;
+        background: #fff1ef;
+      }
+
+      .arrow {
+        color: var(--blue);
+        font-size: 30px;
+        font-weight: 900;
+        text-align: center;
+      }
+
+      .down {
+        color: var(--blue);
+        font-size: 24px;
+        font-weight: 900;
+        text-align: center;
+      }
+
+      .status {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .pill {
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #fff;
+        color: var(--ink);
+        font-weight: 800;
+      }
+
+      .pill.good {
+        border-color: #bdebd5;
+        background: #effaf4;
+        color: #08764a;
+      }
+
+      .pill.warn {
+        border-color: #f3d39a;
+        background: #fff7e8;
+        color: #8a5300;
+      }
+
+      .pill.bad {
+        border-color: #fac5bf;
+        background: #fff1ef;
+        color: #a1261c;
+      }
+
+      .sequence {
+        display: grid;
+        gap: 10px;
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 44px 1fr;
+        gap: 12px;
+        align-items: start;
+      }
+
+      .num {
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+        font-weight: 900;
+      }
+
+      .table {
+        display: grid;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .tr {
+        display: grid;
+        grid-template-columns: 1fr 1.4fr 1.4fr;
+      }
+
+      .tr > div {
+        padding: 14px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.35;
+      }
+
+      .tr > div:last-child {
+        border-right: 0;
+      }
+
+      .tr:last-child > div {
+        border-bottom: 0;
+      }
+
+      .th > div {
+        background: #eef6ff;
+        color: var(--ink);
+        font-weight: 900;
+      }
+
+      code {
+        padding: 2px 6px;
+        border-radius: 5px;
+        background: #eef2f7;
+        color: var(--ink);
+        font-size: 16px;
+      }
+
+      .code {
+        padding: 18px;
+        border-radius: 8px;
+        background: #10233f;
+        color: #e8f1ff;
+        font-size: 18px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+
+      @media (max-width: 900px) {
+        .slide {
+          min-height: auto;
+          padding: 24px;
+        }
+
+        h1 {
+          font-size: 38px;
+        }
+
+        h2 {
+          font-size: 28px;
+        }
+
+        .grid-2,
+        .grid-3,
+        .branch-flow,
+        .flow {
+          grid-template-columns: 1fr;
+        }
+
+        .arrow {
+          transform: rotate(90deg);
+        }
+
+        .tr {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="deck">
+      <section class="slide title-slide">
+        <div class="kicker">Клиентская приемка</div>
+        <h1>Сценарий волны: пополнение, стеллаж, коробочный отбор</h1>
+        <p>Один показательный процесс от заказов клиентов до готовности волны к отгрузке.</p>
+        <div class="status">
+          <span class="pill good">Wave-first</span>
+          <span class="pill">RRL_WAREHOUSE_TASK</span>
+          <span class="pill warn">Readiness</span>
+          <span class="pill">ТСД ричтрака</span>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Цель</div>
+        <h2>Что должен увидеть клиент</h2>
+        <div class="grid-2">
+          <div class="card">
+            <b>Не технические таблицы, а складской маршрут</b>
+            <span>Оператор запускает волну, водитель выполняет физические перемещения, комплектовщик закрывает коробочный отбор, диспетчер видит готовность.</span>
+          </div>
+          <div class="card">
+            <b>Три потока в одной волне</b>
+            <span>Пополнение pick face, прямой полный паллет со стеллажа и покоробочная комплектация управляются одним документом.</span>
+          </div>
+        </div>
+        <div class="flow">
+          <div class="node blue">Заказы клиентов</div>
+          <div class="arrow">></div>
+          <div class="node blue">Волна</div>
+          <div class="arrow">></div>
+          <div class="node amber">Физические задачи</div>
+          <div class="arrow">></div>
+          <div class="node green">READY</div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Архитектура</div>
+        <h2>Волна остается управляющим документом</h2>
+        <div class="grid-3">
+          <div class="card">
+            <b>Пополнение</b>
+            <span><code>TASK_TYPE = REPLENISHMENT</code><br />Источник: волна, строка пополнения pick face.</span>
+          </div>
+          <div class="card">
+            <b>Стеллаж</b>
+            <span><code>TASK_TYPE = PICKING_MOVE</code><br />Полный паллет подается из хранения в грузовую зону.</span>
+          </div>
+          <div class="card">
+            <b>Коробка</b>
+            <span><code>CASE_PICK</code><br />Комплектовщик закрывает факт по коробкам из pick face.</span>
+          </div>
+        </div>
+        <div class="code">TASK_SOURCE = WAVE
+SOURCE_DOC_TYPE = PICK_WAVE
+SOURCE_DOC_ID = RRL_PICK_WAVE.PICK_WAVE_ID</div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Данные</div>
+        <h2>Тестовая волна из трех SKU</h2>
+        <div class="table">
+          <div class="tr th">
+            <div>SKU</div>
+            <div>Складской поток</div>
+            <div>Ожидаемый результат</div>
+          </div>
+          <div class="tr">
+            <div><b>SKU-A</b></div>
+            <div>В pick face не хватает коробок</div>
+            <div>Создается <code>REPLENISHMENT</code> для ричтрака</div>
+          </div>
+          <div class="tr">
+            <div><b>SKU-B</b></div>
+            <div>Полный паллет подходит заказу</div>
+            <div><code>FULL_PALLET</code> + <code>PICKING_MOVE</code></div>
+          </div>
+          <div class="tr">
+            <div><b>SKU-C</b></div>
+            <div>В pick face достаточно остатка</div>
+            <div>Закрывается <code>CASE_PICK</code></div>
+          </div>
+        </div>
+        <p>Дополнительно: клиенты с правилами свежести 70%, 50% и без настройки, чтобы проверить выбор source pallet по правилам клиента.</p>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Процесс</div>
+        <h2>Разветвление после расчета волны</h2>
+        <div class="branch-flow">
+          <div class="lane">
+            <div class="node amber">Нехватка в pick face</div>
+            <div class="down">v</div>
+            <div class="node">RRL_PICK_WAVE_REPLENISH_TASK</div>
+            <div class="down">v</div>
+            <div class="node blue">RRL_WAREHOUSE_TASK REPLENISHMENT</div>
+            <div class="down">v</div>
+            <div class="node green">DONE / SYNCED</div>
+          </div>
+          <div class="lane">
+            <div class="node amber">Полный паллет</div>
+            <div class="down">v</div>
+            <div class="node">FULL_PALLET wave task</div>
+            <div class="down">v</div>
+            <div class="node blue">PICKING_MOVE</div>
+            <div class="down">v</div>
+            <div class="node green">Паллет в грузовой зоне</div>
+          </div>
+          <div class="lane">
+            <div class="node amber">Коробочный отбор</div>
+            <div class="down">v</div>
+            <div class="node">CASE_PICK wave task</div>
+            <div class="down">v</div>
+            <div class="node blue">Факт коробок</div>
+            <div class="down">v</div>
+            <div class="node green">CASE_PICK DONE</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Шаги приемки</div>
+        <h2>Что делает пользователь</h2>
+        <div class="sequence">
+          <div class="step"><div class="num">1</div><p>Оператор создает волну, добавляет pick plans и нажимает расчет.</p></div>
+          <div class="step"><div class="num">2</div><p>Оператор запускает волну, система создает hard reservations и доменные задачи.</p></div>
+          <div class="step"><div class="num">3</div><p>Водитель ричтрака пополняет pick face по задаче <code>REPLENISHMENT</code>.</p></div>
+          <div class="step"><div class="num">4</div><p>Водитель подает полный паллет со стеллажа через <code>PICKING_MOVE</code>.</p></div>
+          <div class="step"><div class="num">5</div><p>Комплектовщик закрывает <code>CASE_PICK</code> фактическим количеством коробок.</p></div>
+          <div class="step"><div class="num">6</div><p>Диспетчер открывает readiness и видит <code>READY</code> или понятные блокеры.</p></div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Readiness</div>
+        <h2>Финальная готовность волны</h2>
+        <div class="grid-2">
+          <div class="card">
+            <b>READY</b>
+            <span>Все пополнения, staging и case-pick закрыты, domain sync дошел до `SYNCED`, shortage отсутствует.</span>
+          </div>
+          <div class="card">
+            <b>BLOCKED</b>
+            <span>Система показывает, что именно мешает закрытию: пополнение, полный паллет, коробочный отбор, sync error или shortage.</span>
+          </div>
+        </div>
+        <div class="code">GET /api/picking/waves/{pick_wave_id}/readiness
+
+summary.open_replenishment_count = 0
+summary.open_staging_count = 0
+summary.open_case_pick_count = 0
+summary.sync_error_count = 0
+summary.shortage_count = 0</div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Контроль качества</div>
+        <h2>Negative и Oracle-проверки</h2>
+        <div class="grid-2">
+          <div class="card">
+            <b>Negative</b>
+            <span>Неверный паллет, неверная ячейка источника, неверная целевая ячейка, повторный staging release, попытка закрытия при `BLOCKED` readiness.</span>
+          </div>
+          <div class="card">
+            <b>Oracle</b>
+            <span>Нет дублей `RRL_WAREHOUSE_TASK`, нет двойных source reservations, invalid objects = 0, все completed tasks имеют `SYNCED`.</span>
+          </div>
+        </div>
+        <div class="status">
+          <span class="pill good">duplicate WHT = 0</span>
+          <span class="pill good">source duplicates = 0</span>
+          <span class="pill good">SYNCED</span>
+          <span class="pill good">READY</span>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Автоматизация</div>
+        <h2>Следующий технический шаг</h2>
+        <p>Сценарий нужно оформить в единый runner, который сможет запускать приемку из API/Oracle и формировать отчет.</p>
+        <div class="code">tests/load/wave/wave_user_scenarios_load_test.py
+
+--scenario client-end-to-end
+--with-replenishment
+--with-full-pallet-staging
+--with-case-pick
+--with-negative-scans
+--cleanup</div>
+        <div class="status">
+          <span class="pill">Документ готов</span>
+          <span class="pill">Презентация готова</span>
+          <span class="pill warn">Runner следующий</span>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

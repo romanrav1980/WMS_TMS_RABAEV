@@ -534,6 +534,7 @@ class MesService:
         self,
         task_id: int,
         request: MesRawTransferTaskConfirmRequest,
+        sync_warehouse_task: bool = True,
     ) -> int:
         task = self.get_raw_transfer_task_or_404(task_id)
         if task.get("task_status") not in {"PLANNED", "IN_PROGRESS"}:
@@ -579,7 +580,8 @@ class MesService:
                     "consumed_by": request.confirmed_by or "API",
                 },
             )
-        self._sync_warehouse_task_from_raw_task(task_id, "DONE", request.confirmed_by or "API", fact_qty)
+        if sync_warehouse_task:
+            self._sync_warehouse_task_from_raw_task(task_id, "DONE", request.confirmed_by or "API", fact_qty)
         return movement_id
 
     def cancel_raw_transfer_task(
@@ -936,14 +938,14 @@ class MesService:
               TASK_ID, TASK_TYPE, TASK_SOURCE, SOURCE_TASK_ID, SOURCE_DOC_TYPE,
               SOURCE_DOC_ID, PRODUCTION_ORDER_ID, RAW_ARTICUL, UID_PALLET, SSCC,
               FROM_WARE_ID, FROM_CELL, TO_WARE_ID, TO_CELL, QTY, UNIT_CODE,
-              PRIORITY, STATUS, CREATED_AT, CREATED_BY
+              QTY_MODE, PRIORITY, STATUS, CREATED_AT, CREATED_BY
             )
             select RRL_WAREHOUSE_TASK_SQ.nextval, 'RAW_TO_PRODUCTION',
                    'MES_RAW_SUPPLY', t.TASK_ID, 'PRODUCTION_ORDER',
                    t.PRODUCTION_ORDER_ID, t.PRODUCTION_ORDER_ID, t.RAW_ARTICUL,
                    t.UID_PALLET, t.SSCC, t.FROM_WARE_ID, t.FROM_CELL,
                    t.TO_WARE_ID, t.TO_CELL, t.TASK_QTY, t.UNIT_CODE,
-                   t.PRIORITY, t.TASK_STATUS, t.CREATED_AT, t.CREATED_BY
+                   'BOX', t.PRIORITY, t.TASK_STATUS, t.CREATED_AT, t.CREATED_BY
               from RRL_MES_RAW_TRANSFER_TASK t
              where t.PRODUCTION_ORDER_ID = :production_order_id
                and t.TASK_STATUS in ('PLANNED', 'IN_PROGRESS')
@@ -972,6 +974,7 @@ class MesService:
                 update RRL_WAREHOUSE_TASK
                    set STATUS = 'DONE',
                        QTY = nvl(:fact_qty, QTY),
+                       FACT_QTY = nvl(:fact_qty, QTY),
                        FINISHED_AT = systimestamp,
                        ASSIGNED_TO = nvl(ASSIGNED_TO, :updated_by),
                        LAST_ERROR = null
@@ -1032,7 +1035,7 @@ class MesService:
               TASK_ID, TASK_TYPE, TASK_SOURCE, SOURCE_MOVEMENT_ID,
               SOURCE_DOC_TYPE, SOURCE_DOC_ID, PRODUCTION_ORDER_ID, PROD_BATCH_ID,
               TARGET_ARTICUL, UID_PALLET, SSCC, FROM_CELL, TO_WARE_ID,
-              TO_CELL, QTY, UNIT_CODE, PRIORITY, STATUS, CREATED_AT, CREATED_BY
+              TO_CELL, QTY, UNIT_CODE, QTY_MODE, PRIORITY, STATUS, CREATED_AT, CREATED_BY
             )
             select RRL_WAREHOUSE_TASK_SQ.nextval, 'FG_TO_STORAGE',
                    'MES_COMPLETION', m.MOVEMENT_ID, 'PRODUCTION_ORDER',
@@ -1040,7 +1043,7 @@ class MesService:
                    o.TARGET_ARTICUL, m.UID_PALLET, m.SSCC,
                    nvl(m.SOURCE_LOCATION, 'MES_PRODUCTION'),
                    :target_ware_id, nvl(m.TARGET_LOCATION, 'FG_RECEIVE'),
-                   nvl(m.QUANTITY, 0), m.UNIT_CODE, 100, 'PLANNED',
+                   nvl(m.QUANTITY, 0), m.UNIT_CODE, 'PALLET', 100, 'PLANNED',
                    systimestamp, :created_by
               from RRL_MES_MOVEMENT m
               join RRL_PRODUCTION_ORDER o

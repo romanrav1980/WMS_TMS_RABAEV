@@ -2,6 +2,388 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-19] simulation | Warehouse digital twin first model-only layer
+
+- Added `tests/load/wave/warehouse_minute_simulation_load_test.py` as the first model-only runner for the 12-hour warehouse digital twin: layout, clients, hourly waves, SKU demand, initial stock, pickers, reachtrucks, replenishment, picking, shipping, collisions, events, CSV metrics, JSON report, markdown report, and HTML evidence stub.
+- Added raw UI player `wiki-raw/wms_admin_ui_reference/warehouse-simulation.html`, `warehouse-simulation.js`, and `warehouse-simulation.css` for loading `layout.json`, `events.jsonl`, and `report.json`, then playing the warehouse animation with resource layers, collision heatmap, event feed, filters, KPIs, and shift graph.
+- Registered the page in raw admin navigation as `Симуляция склада`.
+- Updated the large warehouse simulation TZ with the first implementation checkpoint and linked the current status from the root wiki index.
+
+## [2026-05-19] simulation-ui | Isometric warehouse digital twin control tower
+
+- Reworked `warehouse-simulation.html/js/css` into a premium logistics control-tower page close to the digital-twin reference: top online bar, KPI row, left `Задачи пополнения (RTP)` panel, central isometric warehouse scene, right `Коллизии и причины` panel, route progress widget, resource badges, collision callouts, heatmap, and bottom playback timeline.
+- The page now supports demo fallback, file inputs, `?runId=...`, `?evidenceDir=...`, `#minute=...`, and `window.WAREHOUSE_SIMULATION_EVIDENCE_DIR` for loading `layout.json`, `events.jsonl`, `metrics-by-minute.csv`, `collision-report.csv`, and `report.json`.
+- Added click detail cards for resources, RTP tasks, and collisions.
+- Added `tests/load/wave/warehouse_simulation_ui_contract_check.mjs` for UI evidence contract checks and replay-state reconstruction.
+- Captured Playwright screenshots for the current demo/evidence run: `T00_initial_layout.png`, `T03_peak_congestion.png`, `T05_reachtruck_queue.png`, and `T06_dock_queue.png`.
+
+## [2026-05-19] admin-frontend | React admin project for digital twin
+
+- Created `admin/wms_admin_frontend` as the first full React + TypeScript + Vite admin frontend project.
+- Implemented the warehouse digital twin as the first screen of the React admin at `http://127.0.0.1:3000/`: KPI row, RTP task queue, isometric warehouse scene, collision root-cause panel, detail cards, route widget, and playback timeline.
+- Added typed replay contracts and loaders for `layout.json`, `events.jsonl`, `metrics-by-minute.csv`, and `report.json`; the Vite dev server allows repo-root evidence reads through `/@fs`.
+- Updated `front.bat` to start the React admin with `npm.cmd run start` and fixed its `kill-port.ps1` invocation for multiple command-line patterns.
+- Verified `npm.cmd run build` and captured `runtime/test-evidence/warehouse-minute-simulation/react-admin-3000-digital-twin.png` from the live React admin on port `3000`.
+
+## [2026-05-19] requirements | Large warehouse minute simulation TZ
+
+- Added [`requirements/large_warehouse_minute_simulation_tz.md`](requirements/large_warehouse_minute_simulation_tz.md) for the expanded real-warehouse load test: 50 clients, hourly waves, 1000 SKU, 1500 pick faces, 10 pickers, 5 reachtrucks, 12-hour minute simulation, collision/resource-shortage metrics, evidence screenshots, and warehouse animation page.
+- Linked the new requirement from [`index.md`](index.md).
+
+## [2026-05-19] runtime | Wave replenishment physical stock bridge
+
+- Added migration `036_warehouse_task_stock_move_ledger` with `RRL_WAREHOUSE_TASK_STOCK_MOVE` and `RRL_WH_TASK_STOCK_MOVE_SQ` for idempotent physical application of completed warehouse-task stock moves.
+- Extended `WarehouseTaskDomainSyncService` so `WAVE / REPLENISHMENT / PICK_WAVE` sync now moves `RRL_REMAINS` from task `FROM_CELL` to `TO_CELL` before consuming the hard source reservation.
+- Applied `036_apply.sql` to local Oracle with `Statements=3; Errors=0`; `036_verify.sql` passed with `Statements=5; Errors=0`.
+- Runtime load `LOAD-WAVE-ZVT7J3` passed: `10` pick plans, `9` replenishment rows, `9` warehouse tasks `DONE`, `9` sync rows `SYNCED`, `9` consumed reservations, `9` stock-move ledger rows, moved quantity `81`, failed HTTP requests `0`, invalid Oracle objects `0`.
+- Updated evidence report `runtime/test-evidence/wave-10sku-stock/report.md`; final `RRL_REMAINS` now shows `81` boxes moved into one fixed pick face plus eight dynamic pick faces, with source pallets reduced accordingly.
+- Added staged evidence runner `tests/load/wave/wave_replenishment_evidence_capture.py` and captured screenshots for run `LOAD-WAVE-TZDG0Y`, wave `132`: `summary.png`, `T0_FIXTURE..T6_FINAL.png`, `ARM-wave-replenishment-T2.png`, and `TSD-reachtruck-T2.png` under `runtime/test-evidence/wave-10sku-stock/stage-evidence/`.
+- Fixed raw UI evidence behavior: `wave-replenishment.js` now starts from the shared `wms-admin-auth-ready` event and can auto-select `?wave_id=...`; `reachtruck-tsd.js` can filter evidence by `task_source`, `task_type`, and `source_doc_id`.
+
+## [2026-05-19] architecture | Wave-resource-sync-evidence execution contract
+
+- Added [`architecture/wave_resource_execution_evidence_architecture.md`](architecture/wave_resource_execution_evidence_architecture.md) as the accepted architecture decision for the next WMS process work.
+- Fixed the four operating rules: wave is the central process object; people/equipment tasks go through `RRL_RESOURCE_*`; TSD facts synchronize through `RRL_WAREHOUSE_TASK_SYNC` or case-pick events; every process must ship with evidence-driven tests, ARM/TSD screenshots, and reports.
+- Added [`runbooks/evidence_driven_process_testing.md`](runbooks/evidence_driven_process_testing.md) as the reusable acceptance checklist for business-process testing packages.
+- Linked the architecture decision and runbook from the root wiki index and current checkpoint so future sessions start from this contract.
+- Started the first tactical execution item, "one SKU / many drops": fixed `tests/load/wave/wave_replenishment_load_test.py` cleanup so old `LOAD-WAVE-*` case-pick child rows do not block repeated runs.
+- Runtime run `LOAD-WAVE-WZBXBD`, wave `127`, passed with `10` pick plans, `9` wave replenishment rows, `9` warehouse replenishment tasks `DONE`, `9` sync rows `SYNCED`, failed HTTP requests `0`, duplicates `0`, invalid Oracle objects `0`; report: `runtime/test-evidence/wave-10sku-stock/report.md`.
+- Stock evidence observation: `RRL_STOCK_RESERVATION` rows reached `CONSUMED`, but final `RRL_REMAINS` still shows source storage quantity, so the next tactical step is explicit proof or implementation of the legacy physical movement bridge for wave replenishment.
+
+## [2026-05-19] load-test | Case-pick wave model and evidence run
+
+- Added [`requirements/case_pick_wave_load_test_tz.md`](requirements/case_pick_wave_load_test_tz.md) for the load/model scenario: `7` clients, `8..15` customer pallets per client, `78` customer pallets total, staged pick-face replenishment, case picking, replenishment during picking, and screenshot evidence.
+- Added runner [`../tests/load/wave/case_pick_wave_load_test.py`](../tests/load/wave/case_pick_wave_load_test.py) that creates an isolated `LOAD-WAVE-*` warehouse fixture with one empty pick-face cell, `78` storage cells, `78` source pallets, batch/expiry dates, customer orders, wave launch, case-pick tasks, replenishment execution, staged picking progress, report generation, and headless-browser screenshots.
+- Runtime Oracle/API load passed for run `LOAD-WAVE-T4VMOX`, wave `126`: `7` clients, `78` orders/plans/customer pallets, `78` case-pick tasks, `78` picked lines, `1` warehouse replenishment task `DONE`, `1` sync row `SYNCED`, duplicate warehouse tasks `0`, invalid Oracle objects `0`.
+- Evidence written under `runtime/test-evidence/case-pick-wave-load/`: `report.json`, `report.md`, `evidence-presentation.html`, `summary.png`, and screenshots `T0_FIXTURE..T9_FINAL`.
+- Added [`../tests/load/wave/case_pick_live_ui_capture.py`](../tests/load/wave/case_pick_live_ui_capture.py) and captured live raw UI evidence under `runtime/test-evidence/case-pick-wave-load/live-ui/`: `arm-case-pick-management.png` shows ARM completion management for wave `126`, and `tsd-case-pick.png` shows the compact picker TSD on real API data.
+- Adjusted the picker TSD raw page so evidence mode can load `scope=all` without sending an empty `resource_id` query parameter.
+- Adjusted the clean warehouse fixture so each storage pallet has `100` boxes; this matches the current replenishment release rule that an eligible source pallet must cover the aggregated `rt.QTY` while the customer order still remains a case-pick line rather than full-pallet picking.
+- Linked the new requirement from the root wiki index.
+
+## [2026-05-19] raw-ui | Case-pick management ARM prototype
+
+- Added raw admin page [`../wiki-raw/wms_admin_ui_reference/case-pick-management.html`](../wiki-raw/wms_admin_ui_reference/case-pick-management.html) following the attached `Управление комплектацией` design: KPI cards, filters, picker/route table, route detail panel, route progress, problem blocks, and lower analytics.
+- Added [`../wiki-raw/wms_admin_ui_reference/case-pick-management.js`](../wiki-raw/wms_admin_ui_reference/case-pick-management.js) backed by `/api/case-pick/tasks` and `/api/case-pick/shorts`, with demo fallback, filtering, picker transfer, TSD handoff, and short approval/rejection actions.
+- Extended `CasePickService.list_tasks` so `/api/case-pick/tasks?scope=all` returns an ARM projection: route identifiers, route pallet counts/progress, picker/resource/equipment context, pending short blocker, problem text, and last case-pick event.
+- Registered the page in raw admin navigation as `Комплектация` protected by `case_pick_view`; operational transfer uses `case_pick_manage`, and short confirmation uses `case_pick_short_approve`.
+- Extended the route collectability block so dispatchers see each route as `route -> pallets -> pickers`, with route progress percent, completed/active pallet counts, remaining percent, per-pallet progress, and the blocking pallet/picker holding route closure.
+- Runtime ARM smoke passed on local Oracle with fixture `LOAD-WAVE-THSGDQ-STAGE-001`: `/api/case-pick/tasks?scope=all` returned one customer pallet with route, route pallet counts, pending short blocker, and last event.
+- Updated the raw UI README and root wiki index so future sessions find the ARM together with the case-pick TSD contour.
+
+## [2026-05-19] runtime | Case-pick TSD first implementation
+
+- Added migration `035_case_pick_tsd_runtime` with normalized `PALLET_TYPE`, address-level customer pallet rules, warehouse case-pick settings, customer-pallet tasks, case-pick lines, shorts/write-offs, inventory tasks, offline/idempotency event journal, and `INVENTORY` resource type.
+- Added `CasePickService` and `/api/case-pick` endpoints for wave task generation, TSD task list/detail, claim/start/confirm/short/close, transfer, short approval/rejection, and pallet type administration.
+- Hooked wave launch to generate case-pick customer-pallet tasks and `SSCC` via `CasePickService.ensure_wave_case_pick_tasks`.
+- Added compact raw TSD page [`../wiki-raw/wms_admin_ui_reference/case-pick-tsd.html`](../wiki-raw/wms_admin_ui_reference/case-pick-tsd.html) and script [`../wiki-raw/wms_admin_ui_reference/case-pick-tsd.js`](../wiki-raw/wms_admin_ui_reference/case-pick-tsd.js).
+- Updated `api-med`, database schema mirror, migration README, and raw UI navigation/README.
+- Applied `035_apply.sql` to local Oracle after fixing a seed alias; final apply passed with `Statements=7; Errors=0`, and `035_verify.sql` passed with `Statements=7; Errors=0`.
+- Service smoke passed: temporary wave with two case-pick lines generated one customer-pallet task/`SSCC`, confirmed one line, created and approved one short, created an inventory task, closed the pallet to `WAIT_CONTROL`, and cleaned up.
+
+## [2026-05-19] requirements | Case-pick TSD open questions closed
+
+- Closed the remaining case-pick TSD business questions in [`requirements/case_pick_tsd_tz.md`](requirements/case_pick_tsd_tz.md).
+- Recorded that mismatched SKU/barcode is not picked into the customer pallet; the shift lead fixes master data first, then the picker repeats normal picking.
+- Fixed `PALLET_TYPE` as an address-level customer property, with `EURO_PALLET` as the fallback when the address has no specific rule.
+- Recorded inventory tasks from shorts as separate-resource tasks, with warehouse settings deciding automatic assignment to controller, storekeeper, shift lead, or inventory role.
+- Set offline duration to no longer than completion of already issued tasks, and fixed `SSCC` generation as part of `wave launch`.
+- Updated the root wiki index description for the case-pick TSD requirement.
+
+## [2026-05-19] requirements | Case-pick TSD decisions closed
+
+- Updated [`requirements/case_pick_tsd_tz.md`](requirements/case_pick_tsd_tz.md) with closed decisions: customer pallet is `SSCC`, generated at wave launch; started pallets can be transferred by the shift lead; shorts require shift-lead confirmation; confirmed shorts may create inventory tasks by warehouse setting; label printing defaults to after picking; TSD offline mode is required with conflict sync limits.
+- Recorded the code check: resource types already include `TROLLEY`/`CASE_PICKER`; customer rules have textual `PALLET_TYPE`, but no normalized client load-unit reference exists yet.
+- Clarified that `PALLET_TYPE` should be expanded into the full normalized client load-unit reference itself, not treated as a separate layer above the existing concept.
+- Recorded the legacy weight-control basis: `RRL_PALLET_WEIGHT2`, `RRL_CARTON_WEIGHT2`, `RRL_TRIAL_BY_WEIGHT2`, `RRL_SBORKA_PALLETS_HISTORY.WEIGHT_CHECK`, and `CHECK_WEIGHT`.
+- Updated the root wiki index description for the case-pick TSD requirement.
+
+## [2026-05-19] requirements | Case-pick TSD and shorts/write-offs
+
+- Added [`requirements/case_pick_tsd_tz.md`](requirements/case_pick_tsd_tz.md) for picker TSD case picking of one to three customer pallets, strict/admin pick routes, warehouse scan and shortage behavior settings, replenishment waiting, shorts/write-offs, rights, and control workflow.
+- Linked the new case-pick TSD requirement from the root wiki index.
+
+## [2026-05-19] database-api | Resource-management foundation migration and API
+
+- Added migration `034_resource_management_foundation` with `RRL_RESOURCE_*` tables, seeded resource types, resource rights, and nullable resource links on `RRL_WAREHOUSE_TASK`.
+- Added FastAPI resource-management router and service for resource types, equipment, resources, shifts, sessions, heartbeat, pause, resume, and logout.
+- Applied `034_apply.sql` to local Oracle with `Statements=5; Errors=0`; `034_verify.sql` passed with `Statements=7; Errors=0`; API service smoke returned `8` resource types.
+- Updated API method library, API README, migration README, and database schema mirror.
+- Clarified the resource/TSD boundary: shift session gates entry into the working TSD screen; task dispatch does not need a separate active-session security gate.
+- Added TSD shift login endpoint and raw TSD shift panel; warehouse-task assign/start/complete now persist `RESOURCE_ID`, `RESOURCE_SESSION_ID`, `EQUIPMENT_ID`, and `RRL_RESOURCE_FACT_EVENT` execution facts.
+
+## [2026-05-19] requirements | Separate warehouse and production resource-management module
+
+- Added [`requirements/resource_management_module_tz.md`](requirements/resource_management_module_tz.md) for the standalone resource module covering warehouse equipment, pickers with trolleys, loading teams, cooking, packing, shifts, sessions, dispatch, and plan-fact Gantt.
+- Added raw admin prototype [`../wiki-raw/wms_admin_ui_reference/resource-management.html`](../wiki-raw/wms_admin_ui_reference/resource-management.html) and [`../wiki-raw/wms_admin_ui_reference/resource-management.js`](../wiki-raw/wms_admin_ui_reference/resource-management.js) following the attached operational admin design.
+- Registered the resource page in raw admin navigation and README.
+
+## [2026-05-19] warehouse-resource-planning-tz | Added reachtruck/KIKA resource planning assignment
+
+- Added [`requirements/warehouse_resource_planning_tz.md`](requirements/warehouse_resource_planning_tz.md).
+- Captured reachtruck, KIKA, forklift, operators, shifts, resource sessions, planned Gantt, factual Gantt, plan-fact load analysis, dispatch rules, API candidates, rights, load checks, and MVP increments.
+- Updated [`requirements/warehouse_tasks_reachtruck_tz.md`](requirements/warehouse_tasks_reachtruck_tz.md) with the resource-planning link and rule that TSD tasks should be issued only after an active driver/equipment shift session.
+- Linked the new requirement from the root wiki index.
+
+## [2026-05-19] wave-client-e2e-load-evidence | Ran load test and captured visual evidence
+
+- Ran API/Oracle load test for the client wave evidence scenario:
+  `python tests\load\wave\wave_replenishment_load_test.py --waves 2 --orders-per-wave 10 --concurrency 2 --replenishment-method IMMEDIATE --drain-replenishment-queue --cleanup --report tests/load/wave/replenishment_queue_evidence_run_report.json`.
+- Result: `2` launched waves, `20` pick plans, `18` replenishment tasks, `18` hard source reservations, `18` warehouse tasks `DONE`, `18` sync rows `SYNCED`, failed requests `0`, duplicate warehouse tasks `0`, duplicate source reservations `0`, invalid Oracle objects `0`.
+- Captured admin evidence screenshots `T0..T6` from `shift-supervisor-wave.html` under `runtime/test-evidence/wave-client-e2e/`.
+- Captured TSD screenshots for `PLANNED`, `ASSIGNED`, and `IN_PROGRESS` reachtruck states under `runtime/test-evidence/wave-client-e2e/`.
+- Added `runtime/test-evidence/wave-client-e2e/report.md` and `runtime/test-evidence/wave-client-e2e/evidence-presentation.html`.
+- Added demo-safe raw UI mode `?demo=1` for screenshot capture and static TSD evidence states.
+
+## [2026-05-19] wave-client-e2e-stock-evidence | Added stock-evidence testing method and supervisor panel
+
+- Updated [`requirements/wave_client_e2e_acceptance_scenario.md`](requirements/wave_client_e2e_acceptance_scenario.md) with a separate method for proving free stock and physical stock changes by process stage.
+- Added the required pre-test site panel: [`../wiki-raw/wms_admin_ui_reference/shift-supervisor-wave.html`](../wiki-raw/wms_admin_ui_reference/shift-supervisor-wave.html).
+- Added [`../wiki-raw/wms_admin_ui_reference/shift-supervisor-wave.js`](../wiki-raw/wms_admin_ui_reference/shift-supervisor-wave.js) with a static `T0..T6` stage model for screenshots, readiness, TSD actions, and free/physical stock deltas.
+- Updated raw UI navigation and README so the page is available as `Панель смены`.
+- Added the photo/video evidence protocol: screenshot the admin site at each stage, record TSD actions, and produce a final report explaining why free and physical stock changed at the correct steps.
+
+## [2026-05-19] wave-client-e2e-package | Split scenario into TZ and presentation
+
+- Added [`requirements/wave_client_e2e_acceptance_scenario.md`](requirements/wave_client_e2e_acceptance_scenario.md) as a separate client acceptance scenario for wave creation, pick-face replenishment, direct rack/full-pallet picking, case picking, readiness, negative checks, Oracle checks, and automation.
+- Added [`../wiki-raw/wms_admin_ui_reference/wave-client-e2e-presentation.html`](../wiki-raw/wms_admin_ui_reference/wave-client-e2e-presentation.html) as a standalone HTML slide deck for presenting the scenario.
+- Updated the raw UI reference README and root wiki index.
+- Left a cross-link from the broader user-scenarios TZ to the new detailed document.
+
+## [2026-05-19] wave-client-e2e-scenario | Added client acceptance scenario
+
+- Extended [`requirements/wave_user_scenarios_functional_tz.md`](requirements/wave_user_scenarios_functional_tz.md) with a client end-to-end acceptance scenario.
+- The scenario covers wave creation, pick-face replenishment, direct rack/full-pallet picking, case picking, final wave readiness, negative scans, duplicate prevention, and Oracle checks.
+- Updated the root wiki index so future sessions find this as the client-facing acceptance flow.
+
+## [2026-05-19] wave-readiness-api | Added wave readiness checkpoint
+
+- Added `GET /api/picking/waves/{pick_wave_id}/readiness` to the picking API.
+- The endpoint reports `READY` / `BLOCKED`, summary counts, and grouped blockers for open replenishment, full-pallet staging, case-pick, domain-sync, and shortage conditions.
+- Extended `tests/load/wave/wave_replenishment_load_test.py` so the drain scenario checks readiness after launch and after replenishment queue drain.
+- Runtime test passed: `10` replenishment rows, `10` warehouse tasks `DONE`, `10` sync rows `SYNCED`, duplicate warehouse tasks `0`, invalid Oracle objects `0`, and after drain `open_replenishment_count = 0`, `sync_error_count = 0`.
+- Extended the same load script with an isolated generic source fixture and `source_reservation_duplicates` diagnostics.
+- Fixed source reservation selection so hard replenishment source reservations are issued in a serialized section, consumed hard reservations are subtracted until stock bridge closure is complete, and a source pallet must cover the planned row quantity.
+- Multi-wave drain passed: `2` launched waves, `18` replenishment rows, `18` hard source reservations, `18` warehouse tasks `DONE`, `18` sync rows `SYNCED`, source reservation duplicates `0`, warehouse task duplicates `0`, invalid Oracle objects `0`.
+- Updated `api-med`, API README, root wiki index, and the wave replenishment queue strategic/tactical change file.
+
+## [2026-05-19] wave-replenishment-queue-change-plan | Added strategic/tactical change file
+
+- Added [`roadmap/wave_replenishment_queue_change_plan_2026_05_19.md`](roadmap/wave_replenishment_queue_change_plan_2026_05_19.md).
+- Captured the accepted same-SKU replenishment queue model, completed DB/backend/test changes, dynamic/generic pick-face release proof, tactical next steps, strategic stages, risks, and Definition of Done.
+- Linked the change file from the root wiki index.
+- Updated the raw wave replenishment UI with queue filters, `Queued/Wait/Driver/Done` KPI, source reservation column, warehouse-task status column, and explicit wait-reason display.
+- JavaScript syntax check passed for `wiki-raw/wms_admin_ui_reference/wave-replenishment.js`.
+
+## [2026-05-19] wave-replenishment-queue-tz | Accepted queued same-SKU replenishment model
+
+- Updated [`requirements/wave_case_pick_replenishment_tz.md`](requirements/wave_case_pick_replenishment_tz.md) with the accepted model for multiple replenishments of one SKU in one wave.
+- Fixed the rule: create multiple domain replenishment rows and hard source reservations, but release only the first conflicting fixed-pick-face task to `RRL_WAREHOUSE_TASK`.
+- Added `QUEUED` / `WAIT_FREE_CELL` semantics and the separate dynamic/generic pick-face branch: if a free non-dedicated pick cell exists, release the needed part to the reachtruck driver immediately.
+- Updated the user-scenario acceptance TZ and root wiki index to point future sessions at this rule.
+- Added migration `032_apply.sql` / `032_verify.sql` / `032_rollback.sql`; live Oracle apply and verify passed with `Statements=3; Errors=0`.
+- Backend now reserves sources for queued replenishment rows, creates driver-facing tasks only for released rows, releases queued dynamic/generic rows into free pick-face cells, and releases fixed Minimax rows one at a time.
+- Updated the `api-med` page and API README with the queue/release semantics for `POST /api/picking/waves/{pick_wave_id}/replenishment/minimax-check` and wave launch.
+- Runtime queue test passed: `10` domain replenishment rows, `10` hard source reservations, `1` warehouse task, `9` queued rows, duplicate warehouse tasks `0`, invalid objects `0`.
+- Minimax regression passed: first row released after case-pick fact trigger, remaining rows queued, duplicate warehouse tasks `0`, invalid objects `0`.
+- Added `--dynamic-pick-faces` to `tests/load/wave/wave_replenishment_load_test.py`.
+- Dynamic/generic pick-face load passed: `10` domain rows, `10` hard source reservations, `3` free dynamic cells, `4` immediate warehouse tasks (`1` fixed + `3` dynamic), `6` queued rows, duplicate warehouse tasks `0`, invalid objects `0`.
+- Added `--drain-replenishment-queue` to `tests/load/wave/wave_replenishment_load_test.py`.
+- Queue drain load passed: `10` domain rows, `10` hard source reservations, `10` sequential warehouse tasks, `10` warehouse tasks `DONE`, `10` domain rows `DONE`, `10` sync rows `SYNCED`, `10` source reservations `CONSUMED`, active source reservations `0`, duplicate warehouse tasks `0`, invalid objects `0`.
+- Added migration `033_apply.sql` / `033_verify.sql` / `033_rollback.sql` for `RRL_PICK_FACE_ASSIGNMENT`; live Oracle apply passed with `Statements=3; Errors=0`, verify passed with `Statements=5; Errors=0`.
+- Backend dynamic/generic queue release now creates an active `cell -> wave/articul` assignment before releasing the row to a driver-facing warehouse task; active-cell uniqueness prevents double assignment.
+- Dynamic assignment load passed: `3` dynamic warehouse tasks, `3` active dynamic assignments, `4` total warehouse tasks (`1` fixed + `3` dynamic), duplicate warehouse tasks `0`, invalid objects `0`.
+- Fixed drain regression after assignment changes passed: `10` domain rows `DONE`, `10` warehouse tasks `DONE`, `10` sync rows `SYNCED`, `10` source reservations `CONSUMED`, active source reservations `0`, duplicate warehouse tasks `0`, invalid objects `0`.
+
+## [2026-05-19] wave-user-scenarios-test-run | Ran functional scenario tests
+
+- Ran wave launch/replenishment scenario: `python tests\load\wave\wave_replenishment_load_test.py --waves 1 --orders-per-wave 10 --concurrency 1 --replenishment-method IMMEDIATE --execute-tasks --cleanup --report tests/load/wave/user_scenario_replenishment_10x_report.json`.
+- Result: one wave from `10` pick plans launched and completed, reservations/sync reached `DONE/SYNCED`, duplicate replenishment tasks `0`, invalid Oracle objects `0`, cleanup `0`.
+- Finding: the current runtime aggregates the `10` orders for one SKU into `1` replenishment row/task, so the explicit acceptance case "one SKU requires 10 separate replenishment drops" is not yet covered by runtime behavior.
+- Ran staging/truck-readiness scenario: `python tests\load\wave\wave_staging_load_test.py --waves 2 --full-pallet-articuls 2 --mixed-case-pick --repeat-release --concurrent-release-workers 3 --cleanup --report tests/load/wave/user_scenario_staging_truck_readiness_report.json`.
+- Result: `2` waves, `4` full-pallet `PICKING_MOVE` tasks, `2` case-pick tasks, concurrent repeated staging release, all `DONE/SYNCED`, duplicate picking moves `0`, invalid Oracle objects `0`, cleanup `0`.
+- Full shipment dispatch/fura lifecycle was not executed because shipment tables/API are still a future increment; current test covers wave staging readiness for truck loading.
+
+## [2026-05-19] wave-user-scenarios-functional-tz | Added scenario acceptance TZ
+
+- Added [`requirements/wave_user_scenarios_functional_tz.md`](requirements/wave_user_scenarios_functional_tz.md).
+- Documented three user functional scenarios: assembling a wave from orders, launching a wave with reservations/reachtruck execution and 10x replenishment collision, and truck shipment readiness/dispatch.
+- Fixed the acceptance rule that shipment/fura context must reference the wave, while reachtruck tasks remain `TASK_SOURCE = WAVE`, `SOURCE_DOC_TYPE = PICK_WAVE`.
+- Added checks for hard reservation lifecycle, domain sync, duplicate `RRL_WAREHOUSE_TASK` suppression, wrong scan behavior, partial `BOX`, full `PALLET`, and future shipment lifecycle/API.
+
+## [2026-05-19] wave-staging-concurrent-load | Hardened concurrent staging release
+
+- Extended `tests/load/wave/wave_staging_load_test.py` with `--waves`, `--full-pallet-articuls`, and `--concurrent-release-workers`.
+- The first concurrent run exposed a real race: parallel `POST /api/picking/waves/{pick_wave_id}/staging/release` could hit `ORA-00001` on `RRL_WAREHOUSE_TASK_U1`.
+- Updated `PickingService.release_wave_staging` to insert candidate rows in a PL/SQL loop and treat `dup_val_on_index` as idempotent duplicate suppression.
+- Runtime load passed: `2` waves, `2` full-pallet articuls per wave, `3` concurrent release workers, repeated release, `4` `PICKING_MOVE` tasks, `4` `DONE/SYNCED`, `2` case-pick tasks done, duplicate picking moves `0`, invalid Oracle objects `0`, cleanup `0`.
+
+## [2026-05-19] wave-staging-operator-ui | Added staging release to raw wave UI
+
+- Updated `wiki-raw/wms_admin_ui_reference/wave-replenishment.html` and `wave-replenishment.js`.
+- Operators can enter a loading/staging cell, call `POST /api/picking/waves/{pick_wave_id}/staging/release`, and see linked `PICKING_MOVE` warehouse task status for full-pallet wave rows.
+- JavaScript syntax check passed with `node --check wiki-raw\wms_admin_ui_reference\wave-replenishment.js`.
+
+## [2026-05-19] wave-staging-mixed-load | Added mixed wave and repeat-release coverage
+
+- Extended `tests/load/wave/wave_staging_load_test.py` with `--mixed-case-pick` and `--repeat-release`.
+- The mixed scenario creates one wave with one `FULL_PALLET` task and one `CASE_PICK` task, releases staging, repeats staging release, completes the case-pick task, and completes the `PICKING_MOVE` reachtruck task.
+- Fixed load cleanup so `RRL_WAREHOUSE_TASK_SYNC` rows for `PICKING_MOVE` are removed together with temporary `LOAD-WAVE-*` data.
+- Runtime smoke passed: `FULL_PALLET DONE = 1`, `CASE_PICK DONE = 1`, `PICKING_MOVE DONE/SYNCED = 1`, duplicate picking moves `0`, invalid Oracle objects `0`, cleanup `0`.
+
+## [2026-05-19] wave-loading-zone-staging | Added PICKING_MOVE release and sync
+
+- Added wave staging release as `POST /api/picking/waves/{pick_wave_id}/staging/release`.
+- Full-pallet wave rows now release `RRL_WAREHOUSE_TASK` rows with `TASK_TYPE = PICKING_MOVE`, `TASK_SOURCE = WAVE`, and `SOURCE_DOC_TYPE = PICK_WAVE`.
+- Domain sync now supports `WAVE / PICKING_MOVE / PICK_WAVE`, closes the linked full-pallet wave task, records the staging cell, and consumes related picking reservations.
+- Added `tests/load/wave/wave_staging_load_test.py`.
+- Runtime smoke passed: one full-pallet wave row, one `PICKING_MOVE` warehouse task, final `DONE/SYNCED`, duplicate picking moves `0`, invalid Oracle objects `0`, cleanup `0`.
+- Updated warehouse-task TZ, domain-sync TZ, api-med, API README, wiki index, and current checkpoint.
+
+## [2026-05-19] wave-replenishment-shelf-life-load | Added strict freshness load scenario
+
+- Extended `tests/load/wave/wave_replenishment_load_test.py` with `--shelf-life-scenario`.
+- The scenario creates controlled stale/middle/fresh source pallets and wave customers with 70%, 50%, and no shelf-life settings.
+- Runtime check passed: selected the fresh source pallet under the strictest 70% rule, completed `1` warehouse replenishment task, domain sync reached `SYNCED`, duplicate warehouse tasks `0`, invalid objects `0`, cleanup `0`.
+
+## [2026-05-19] wave-minimax-auto-trigger | Added case-pick fact trigger
+
+- Added migration `031_apply.sql` / `031_verify.sql` / `031_rollback.sql`.
+- `RRL_PICK_TASK` and `RRL_PICK_WAVE_TASK` now store picking facts needed by automatic Minimax release.
+- Added `POST /api/picking/waves/{pick_wave_id}/tasks/{pick_task_id}/complete`.
+- The endpoint records `CASE_PICK` fact, consumes picking reservations, recalculates pick-face free stock, and releases eligible `WAIT_MINIMAX` replenishment rows into `RRL_WAREHOUSE_TASK`.
+- Load check passed: `1` wave, `3` orders, auto Minimax trigger, `1` warehouse replenishment task, final domain sync `SYNCED`, duplicate warehouse tasks `0`, invalid objects `0`, cleanup `0`.
+
+## [2026-05-18] wave-case-pick-replenishment-settings | Added first runtime layer
+
+- Added migration `029_apply.sql` / `029_verify.sql` / `029_rollback.sql` for wave case-pick replenishment settings.
+- `RRL_PICK_FACE_ARTICUL` now stores replenishment method, quantity mode, Minimax thresholds, layer/pallet dimensions, box volume, and partial-pallet permission.
+- `RRL_PICK_WAVE_REPLENISH_TASK` now stores the wave-launch settings snapshot and supports `WAIT_MINIMAX` / `RELEASED`.
+- Backend wave launch enriches replenishment rows from pick-face article settings, and `WAIT_MINIMAX` rows are withheld from driver-facing `RRL_WAREHOUSE_TASK`.
+- Live Oracle apply/verify passed; mixed runtime smoke after migration produced `5` sync rows, all `SYNCED`, `0` duplicate sync keys, `0` invalid objects.
+
+## [2026-05-18] wave-case-pick-replenishment-runtime | Added free-stock and Minimax release
+
+- Backend now calculates pick-face free stock from `RRL_REMAINS` by target cell/articul minus active hard `RRL_STOCK_RESERVATION`.
+- Wave launch cancels no-deficit replenishment rows, releases `IMMEDIATE` deficit rows, and keeps `MINIMAX` deficit rows in `WAIT_MINIMAX`.
+- Added `POST /api/picking/waves/{pick_wave_id}/replenishment/minimax-check` to release eligible Minimax rows and create warehouse tasks.
+- Fixed warehouse-task sync so cancelled/waiting replenishment rows do not create driver-facing tasks.
+- Added load-test mode `--replenishment-method MINIMAX`; runtime Minimax smoke passed with `1` wave, `1` released warehouse task after check, final sync `SYNCED`, invalid objects `0`.
+
+## [2026-05-18] wave-replenishment-source-reservation | Added customer freshness and hard source reservation
+
+- Added migration `030_apply.sql` / `030_verify.sql` / `030_rollback.sql`.
+- Replenishment now chooses a source pallet from `RRL_REMAINS` / `RRL_PALLETS` using FEFO after subtracting active hard reservations and active warehouse tasks.
+- Source selection applies the strictest customer shelf-life requirement in the wave from `RRL_CUSTOMER_PRODUCT_RULE` or customer defaults; if no requirement exists, ordinary FEFO applies.
+- A hard `RRL_STOCK_RESERVATION` is created before the driver-facing replenishment task is created.
+- Wave replenishment domain sync consumes the source reservation on completion; wave cancel/release releases active source reservations.
+- Live Oracle apply/verify passed; Minimax and mixed dispatcher/domain-sync load tests passed with `0` invalid objects and no duplicate sync keys.
+
+## [2026-05-18] wave-replenishment-operator-ui | Added raw UI page
+
+- Added `wiki-raw/wms_admin_ui_reference/wave-replenishment.html` and `wave-replenishment.js`.
+- The page lists waves, shows wave replenishment rows, runs Minimax check, and edits pick-face replenishment settings.
+- Added the page to `admin-nav.js` as `Пополнение волны`.
+- Documented permissions: `pick_wave_view`, `pick_wave_launch`, and `pick_topology_edit`.
+
+## [2026-05-18] wave-execution-plan-context | Fixed tactical and strategic next plan
+
+- Updated [`roadmap/current_checkpoint_2026_05_18.md`](roadmap/current_checkpoint_2026_05_18.md) with the current verified foundation, mixed dispatcher/domain-sync load result, and next work.
+- Recorded the context rule to preserve: wave is the only controlling document for picking execution; shipment and production orders may feed a wave but should not become independent reachtruck task sources for picking/staging.
+- Set immediate next implementation to `IMMEDIATE` wave case-pick replenishment, followed by `MINIMAX`, wave loading-zone staging, and production waves.
+- Updated [`roadmap/picking_wave_implementation_plan.md`](roadmap/picking_wave_implementation_plan.md) with the wave-only execution source rule and the case-pick replenishment stage.
+
+## [2026-05-18] wave-case-pick-replenishment-tz | Captured pick-face replenishment strategy
+
+- Added [`requirements/wave_case_pick_replenishment_tz.md`](requirements/wave_case_pick_replenishment_tz.md).
+- Fixed the architecture rule that the wave is the only controlling document for picking execution; shipment and production orders are context of the wave, not independent reachtruck task sources.
+- Documented `IMMEDIATE` and `MINIMAX` replenishment strategies for case picking.
+- Documented replenishment quantity modes: full pallet, half pallet, and fill-to-volume by pick-face cubic capacity.
+- Updated warehouse-task and domain-sync requirements so staging to loading zone uses `TASK_SOURCE = WAVE`, `TASK_TYPE = PICKING_MOVE`, and `SOURCE_DOC_TYPE = PICK_WAVE`.
+
+## [2026-05-18] mixed-dispatcher-sync-load | Added mixed load test for warehouse task domain sync
+
+- Added `tests/load/warehouse_tasks/mixed_dispatcher_sync_load_test.py`.
+- The runner executes wave replenishment, MES raw supply, finished-goods storage, partial box residual completion, and retry idempotency in one mixed scenario.
+- Runtime load passed with `--wave-count 2 --orders-per-wave 1 --raw-orders 2 --workers 3 --cleanup-wave`: `6` new sync rows, all `SYNCED`, `0` duplicate `SYNC_KEY`, `0` invalid Oracle objects, and retry on a synced task returned `SYNCED`.
+- Wrote the latest report to `tests/load/warehouse_tasks/mixed_dispatcher_sync_report.json`.
+- Updated the API README and operations runbook with the command and expected checks.
+
+## [2026-05-18] warehouse-task-sync-operator-guidance | Added UI guidance and runbook scenarios
+
+- Added handler presets to the sync supervisor page: raw supply, finished-goods placement, and wave replenishment.
+- Added scenario guidance in the sync detail panel with checks, retry risk text, and dangerous retry highlighting for already-applied finished-goods placement mismatches.
+- Expanded [`runbooks/warehouse_task_domain_sync_operations.md`](runbooks/warehouse_task_domain_sync_operations.md) with shift checklist, RAW/FG/WAVE triage scripts, API checks, SQL diagnostics, retry rules, and escalation criteria.
+
+## [2026-05-18] warehouse-task-sync-supervisor-ui | Added sync monitoring page and operations runbook
+
+- Added raw admin page `warehouse-task-sync.html` and script `warehouse-task-sync.js` for monitoring `RRL_WAREHOUSE_TASK_SYNC`.
+- The page supports filters by sync status, task source, document type, document id, quick search, KPI counters, diagnostics, retry, and opening the linked warehouse task.
+- Added navigation item `Sync заданий`.
+- Added [`runbooks/warehouse_task_domain_sync_operations.md`](runbooks/warehouse_task_domain_sync_operations.md) as the future operations instruction for sync statuses, error triage, retry rules, and smoke checks.
+- Updated `warehouse-tasks.js` to accept `?task_id=...` links from the sync monitor.
+
+## [2026-05-18] fg-storage-domain-sync | Added FG_TO_STORAGE handler
+
+- Extended `WarehouseTaskDomainSyncService` with `MES_COMPLETION / FG_TO_STORAGE / PRODUCTION_ORDER`.
+- The handler verifies the linked `FG_PALLET_RELEASE` movement, checks pallet identity, and confirms physical placement without creating a second production release.
+- If the movement is already `APPLIED_TO_WMS`, the handler requires the target cell to match the warehouse task and marks sync `SYNCED`; if it is still pending, it updates `TARGET_LOCATION` and runs the existing WMS bridge once.
+- Updated `tests/smoke/mes_http_workflow.py` to complete `FG_TO_STORAGE` through `/api/warehouse-tasks` and verify `RRL_WAREHOUSE_TASK_SYNC`.
+- Runtime MES workflow smoke passed; latest `MES_COMPLETION` sync row is `SYNCED`.
+
+## [2026-05-18] mes-raw-supply-domain-sync | Added RAW_TO_PRODUCTION handler
+
+- Extended `WarehouseTaskDomainSyncService` with `MES_RAW_SUPPLY / RAW_TO_PRODUCTION / PRODUCTION_ORDER`.
+- Completing a raw supply warehouse task now confirms the linked `RRL_MES_RAW_TRANSFER_TASK`, consumes the hard reservation, and creates `RAW_ISSUE_TO_PRODUCTION` through the existing MES service.
+- Partial `BOX` completion accumulates `FACT_QTY`, leaves the MES task `IN_PROGRESS`, and closes MES after the residual warehouse task is completed.
+- Updated `tests/smoke/mes_raw_supply_smoke.py` to verify both full and partial/residual completion through `/api/warehouse-tasks`.
+- Runtime smoke passed with `--orders 2 --workers 1`; latest verified sync rows for `MES_RAW_SUPPLY` are `SYNCED`.
+
+## [2026-05-18] warehouse-task-domain-sync-runtime | Added first domain sync dispatcher
+
+- Added migration `028_apply.sql` / `028_verify.sql` / `028_rollback.sql` for `RRL_WAREHOUSE_TASK_SYNC`.
+- Implemented `WarehouseTaskDomainSyncService` with idempotent sync row creation, retry, list/get APIs, and the first handler for `WAVE / REPLENISHMENT / PICK_WAVE`.
+- Added endpoints `GET /api/warehouse-tasks/domain-sync`, `GET /api/warehouse-tasks/{task_id}/sync`, and `POST /api/warehouse-tasks/{task_id}/sync/retry`.
+- Runtime apply/verify passed on live Oracle: `028_apply.sql` `Statements=3; Errors=0`, `028_verify.sql` `Statements=5; Errors=0`.
+- Runtime wave load smoke passed with `2` waves x `1` order and task execution: `2` sync rows created, `2` `SYNCED`, duplicate warehouse tasks `0`, invalid objects `0`, cleanup clean.
+
+## [2026-05-18] warehouse-task-domain-sync-tz | Added domain synchronization technical assignment
+
+- Added [`requirements/warehouse_task_domain_sync_tz.md`](requirements/warehouse_task_domain_sync_tz.md).
+- Described the business process that turns a completed `RRL_WAREHOUSE_TASK` driver fact into MES raw supply, finished-goods placement, wave replenishment, and shipment staging domain closure.
+- Added Mermaid flow, sequence, state, routing, and error-handling diagrams.
+- Linked the new TZ from the wiki index.
+
+## [2026-05-18] reachtruck-task-partial-qty | Added full-pallet and partial box completion
+
+- Updated `WarehouseTaskService.complete_task` so blank `fact_qty` means the planned quantity was moved, while a lower provided fact quantity closes the current task and creates a residual `PLANNED` task for the remaining quantity.
+- Added migration `027_apply.sql` for explicit warehouse task quantity mode: `QTY_MODE`, `FACT_QTY`, and `PARENT_TASK_ID`.
+- Updated compact TSD page completion actions: `Паллет` confirms a full pallet without quantity entry, and `Коробки` uses optional fact quantity where empty means planned quantity.
+- Updated the dispatcher and TSD pages to show quantity mode, fact quantity, and residual parent linkage.
+- Documented the full-pallet versus box-count completion rule in `warehouse_tasks_reachtruck_tz.md` and the `api-med` method library.
+- Runtime partial-completion smoke passed: temporary `MANUAL` task with `10 BOX` was completed with `fact_qty = 4`, leaving the original task `DONE` with `4` and creating a residual `PLANNED` task with `6`; temporary rows were cleaned.
+- Migration `027_apply.sql` and `027_verify.sql` were applied to live Oracle with `Statements=3; Errors=0` and `Statements=4; Errors=0`.
+- Added `tests/load/warehouse_tasks/warehouse_task_qty_mode_load_test.py`; runtime check with `4` scenarios and `2` workers passed with `4` box done rows, `4` residual planned rows, `4` open pallet rows, and cleanup deleted `12` rows.
+
+## [2026-05-18] reachtruck-tsd | Added compact driver terminal page
+
+- Added `wiki-raw/wms_admin_ui_reference/reachtruck-tsd.html` as a compact one-column TSD page for reachtruck task execution.
+- Added `reachtruck-tsd.js` to load active warehouse tasks, show one task at a time, and call assign/start/complete/cancel with scan fields.
+- Linked the TSD page from raw admin navigation and documented it in the warehouse-task TZ, current checkpoint, and `api-med` method library.
+
+## [2026-05-18] wave-replenishment-warehouse-tasks | Unified wave replenishment with reachtruck tasks
+
+- Fixed the product rule that wave pick-face replenishment is physical warehouse work and must be represented in `RRL_WAREHOUSE_TASK`.
+- Recorded `TASK_TYPE = REPLENISHMENT`, `TASK_SOURCE = WAVE`, `SOURCE_DOC_TYPE = PICK_WAVE` for wave replenishment tasks.
+- Clarified that `RRL_PICK_WAVE_REPLENISH_TASK` can remain a domain/calculation link, but driver assignment/start/complete/cancel goes through the common warehouse-task queue.
+- Added `tests/load/wave/wave_replenishment_load_test.py` for API/Oracle load testing of wave launch, replenishment warehouse-task creation, optional driver task execution, diagnostics, and cleanup.
+- Runtime load checks passed: `8` waves x `2` orders with task execution created and completed `16` warehouse replenishment tasks; `16` waves x `2` orders create/launch/read created `32` replenishment tasks. Both left `0` duplicate warehouse tasks, `0` invalid Oracle objects, and clean `LOAD-WAVE-*` cleanup.
+- Added the architecture rule that customer-wave pick-face replenishment, shipment-zone replenishment, finished-goods placement, and production replenishment converge on `RRL_WAREHOUSE_TASK`; the source document fields carry the business contour.
+- Added the raw admin page `wiki-raw/wms_admin_ui_reference/warehouse-tasks.html` and script `warehouse-tasks.js` for the unified execution queue.
+- Added [`concepts/api_method_library.md`](concepts/api_method_library.md) as the maintained `api-med` catalog for API methods, permissions, request parameters, side effects, scan validation, and load-test verification.
+- Added scan validation to `POST /api/warehouse-tasks/{task_id}/complete`: pallet scan must match `UID_PALLET` or `SSCC`, destination cell scan must match `TO_CELL`, and source cell scan is checked when provided.
+- Runtime scan-validation load smoke passed with `2` waves x `1` order, task assign/start/complete, `2` done warehouse replenishment tasks, `2` done wave replenishment rows, `0` duplicates, `0` invalid Oracle objects, and clean cleanup.
+
 ## [2026-05-18] reboot-checkpoint | Recorded warehouse-task next plan
 
 - Added [`roadmap/current_checkpoint_2026_05_18.md`](roadmap/current_checkpoint_2026_05_18.md) as the current reboot checkpoint.
@@ -607,3 +989,19 @@ Append-only log of root wiki updates.
 - Added `wiki-raw/` for immutable imported sources.
 - Added `AGENTS.md` as the agent-facing schema/onramp.
 - Recorded that SAP/SAP_INTEGRATION projects are excluded from GitHub publication.
+
+## [2026-05-19] simulation | Warehouse digital twin physical collision refinement
+
+- Updated the large warehouse minute simulation model with 60-minute pre-wave replenishment planning.
+- Added pick-face capacity limits so a wave cannot preload more stock than physically fits in the selection cell.
+- Modeled hard picker blocking on empty pick-face addresses instead of skipping to another available order line.
+- Added evidence events for reactive RTP replenishment, route completion delay, pallet staging to dock by picker or reachtruck, reachtruck crossing, and reachtruck passing a picker in a narrow aisle.
+- Added reachtruck operation timing, case-replenishment speed assumptions, runner productivity parameters, and the React model-settings panel.
+- Replaced direct Manhattan cross-row travel with U-shaped routing through the front cross-aisle, middle fire passage, or rear bypass for both pickers and reachtrucks.
+- Updated the React admin digital twin to display the new collision/root-cause types.
+
+## [2026-05-20] checkpoint | Recovered warehouse digital twin context after system crash
+
+- Added [`roadmap/current_checkpoint_2026_05_20.md`](roadmap/current_checkpoint_2026_05_20.md).
+- Preserved the active digital-twin context: model-only runner, evidence contract, raw HTML replay, React admin frontend, latest evidence run, implemented physical-model refinements, and next stabilization steps.
+- Linked the checkpoint from the root wiki index.

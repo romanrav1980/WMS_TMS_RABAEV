@@ -1,0 +1,88 @@
+{
+  "run_prefix": "LOAD-WAVE-SGK2CC",
+  "elapsed_s": 7.575,
+  "request_count": 10,
+  "failed_request_count": 0,
+  "diagnostics": {
+    "waves": 1,
+    "full_pallet_wave_tasks_done": 1,
+    "warehouse_picking_moves": 1,
+    "done_warehouse_picking_moves": 1,
+    "synced_picking_moves": 1,
+    "duplicate_picking_moves": 0,
+    "invalid_objects": 0
+  },
+  "latency_ms": {
+    "GET /api/picking/waves/{id}/tasks": {
+      "count": 1,
+      "min": 468.72,
+      "p50": 468.72,
+      "p95": 468.72,
+      "max": 468.72
+    },
+    "GET /health": {
+      "count": 1,
+      "min": 453.36,
+      "p50": 453.36,
+      "p95": 453.36,
+      "max": 453.36
+    },
+    "POST /api/picking/waves": {
+      "count": 1,
+      "min": 609.34,
+      "p50": 609.34,
+      "p95": 609.34,
+      "max": 609.34
+    },
+    "POST /api/picking/waves/{id}/calculate": {
+      "count": 1,
+      "min": 423.72,
+      "p50": 423.72,
+      "p95": 423.72,
+      "max": 423.72
+    },
+    "POST /api/picking/waves/{id}/launch": {
+      "count": 1,
+      "min": 1215.03,
+      "p50": 1215.03,
+      "p95": 1215.03,
+      "max": 1215.03
+    },
+    "POST /api/picking/waves/{id}/plans": {
+      "count": 1,
+      "min": 428.75,
+      "p50": 428.75,
+      "p95": 428.75,
+      "max": 428.75
+    },
+    "POST /api/picking/waves/{id}/staging/release": {
+      "count": 1,
+      "min": 688.94,
+      "p50": 688.94,
+      "p95": 688.94,
+      "max": 688.94
+    },
+    "POST /api/warehouse-tasks/{id}/assign": {
+      "count": 1,
+      "min": 675.68,
+      "p50": 675.68,
+      "p95": 675.68,
+      "max": 675.68
+    },
+    "POST /api/warehouse-tasks/{id}/complete": {
+      "count": 1,
+      "min": 2150.65,
+      "p50": 2150.65,
+      "p95": 2150.65,
+      "max": 2150.65
+    },
+    "POST /api/warehouse-tasks/{id}/start": {
+      "count": 1,
+      "min": 694.98,
+      "p50": 694.98,
+      "p95": 694.98,
+      "max": 694.98
+    }
+  },
+  "errors": []
+}

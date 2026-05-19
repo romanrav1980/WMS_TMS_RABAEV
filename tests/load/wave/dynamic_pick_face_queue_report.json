@@ -1,0 +1,82 @@
+{
+  "run_prefix": "LOAD-WAVE-U6GUPG",
+  "waves": 1,
+  "orders_per_wave": 10,
+  "concurrency": 1,
+  "execute_tasks": false,
+  "replenishment_method": "IMMEDIATE",
+  "auto_minimax_trigger": false,
+  "shelf_life_scenario": false,
+  "dynamic_pick_faces": 3,
+  "elapsed_s": 9.758,
+  "request_count": 16,
+  "failed_request_count": 0,
+  "diagnostics": {
+    "waves": 1,
+    "launched_waves": 1,
+    "pick_plans": 10,
+    "wave_replenishment_tasks": 10,
+    "queued_wave_replenishment_tasks": 6,
+    "source_reservations": 10,
+    "warehouse_replenishment_tasks": 4,
+    "dynamic_warehouse_replenishment_tasks": 3,
+    "done_warehouse_replenishment_tasks": 0,
+    "done_wave_replenishment_tasks": 0,
+    "warehouse_replenishment_sync_rows": 0,
+    "synced_warehouse_replenishment_sync_rows": 0,
+    "warehouse_replenishment_duplicates": 0,
+    "invalid_objects": 0
+  },
+  "latency_ms": {
+    "GET /api/picking/waves/{id}/replenishment-tasks": {
+      "count": 1,
+      "min": 460.79,
+      "p50": 460.79,
+      "p95": 460.79,
+      "max": 460.79
+    },
+    "GET /api/warehouse-tasks?task_type=REPLENISHMENT": {
+      "count": 1,
+      "min": 456.62,
+      "p50": 456.62,
+      "p95": 456.62,
+      "max": 456.62
+    },
+    "GET /health": {
+      "count": 1,
+      "min": 460.32,
+      "p50": 460.32,
+      "p95": 460.32,
+      "max": 460.32
+    },
+    "POST /api/picking/waves": {
+      "count": 1,
+      "min": 455.23,
+      "p50": 455.23,
+      "p95": 455.23,
+      "max": 455.23
+    },
+    "POST /api/picking/waves/{id}/calculate": {
+      "count": 1,
+      "min": 481.68,
+      "p50": 481.68,
+      "p95": 481.68,
+      "max": 481.68
+    },
+    "POST /api/picking/waves/{id}/launch": {
+      "count": 1,
+      "min": 2920.4,
+      "p50": 2920.4,
+      "p95": 2920.4,
+      "max": 2920.4
+    },
+    "POST /api/picking/waves/{id}/plans": {
+      "count": 10,
+      "min": 401.41,
+      "p50": 462.9,
+      "p95": 639.01,
+      "max": 639.01
+    }
+  },
+  "errors": []
+}

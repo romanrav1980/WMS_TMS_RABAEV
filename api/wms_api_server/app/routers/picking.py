@@ -23,9 +23,11 @@ from ..schemas import (
     PickFaceUpsertRequest,
     PickRouteCellUpsertRequest,
     PickRouteUpsertRequest,
+    PickTaskCompleteRequest,
     PickWaveActionRequest,
     PickWaveAddPlanRequest,
     PickWaveCreateRequest,
+    PickWaveStagingReleaseRequest,
     PickingPlanCancelRequest,
     PickingPlanCreateRequest,
 )
@@ -176,6 +178,17 @@ def get_pick_wave(
     return wave
 
 
+@router.get("/waves/{pick_wave_id}/readiness")
+def get_pick_wave_readiness(
+    pick_wave_id: int,
+    _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+) -> dict:
+    readiness = PickingService().get_wave_readiness(pick_wave_id)
+    if readiness is None:
+        raise HTTPException(status_code=404, detail="Pick wave not found.")
+    return readiness
+
+
 @router.post("/waves/{pick_wave_id}/plans")
 def add_pick_wave_plan(
     pick_wave_id: int,
@@ -231,6 +244,28 @@ def release_pick_wave_reservations(
     return {"pick_wave_id": pick_wave_id, "status": "PREVIEW"}
 
 
+@router.post("/waves/{pick_wave_id}/replenishment/minimax-check")
+def release_pick_wave_minimax_replenishment(
+    pick_wave_id: int,
+    request: PickWaveActionRequest,
+    user: AdminUser = Depends(require_permission(PICK_WAVE_LAUNCH_PERMISSION)),
+) -> dict[str, str | int]:
+    request.updated_by = request.updated_by or user.username
+    released_count = PickingService().release_minimax_replenishment(pick_wave_id, request)
+    return {"pick_wave_id": pick_wave_id, "status": "CHECKED", "released_count": released_count}
+
+
+@router.post("/waves/{pick_wave_id}/staging/release")
+def release_pick_wave_staging(
+    pick_wave_id: int,
+    request: PickWaveStagingReleaseRequest,
+    user: AdminUser = Depends(require_permission(PICK_WAVE_LAUNCH_PERMISSION)),
+) -> dict[str, str | int]:
+    request.updated_by = request.updated_by or user.username
+    released_count = PickingService().release_wave_staging(pick_wave_id, request)
+    return {"pick_wave_id": pick_wave_id, "status": "RELEASED", "released_count": released_count}
+
+
 @router.get("/waves/{pick_wave_id}/reservations")
 def list_pick_wave_reservations(
     pick_wave_id: int,
@@ -256,6 +291,17 @@ def list_pick_wave_tasks(
     _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
 ) -> list[dict]:
     return PickingService().list_wave_tasks(pick_wave_id, limit=limit)
+
+
+@router.post("/waves/{pick_wave_id}/tasks/{pick_task_id}/complete")
+def complete_pick_wave_task(
+    pick_wave_id: int,
+    pick_task_id: int,
+    request: PickTaskCompleteRequest,
+    user: AdminUser = Depends(require_permission(PICK_WAVE_LAUNCH_PERMISSION)),
+) -> dict[str, str | int | float]:
+    request.completed_by = request.completed_by or user.username
+    return PickingService().complete_wave_pick_task(pick_wave_id, pick_task_id, request)
 
 
 @router.get("/waves/{pick_wave_id}/audit")

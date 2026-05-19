@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS PRO Панель старшего смены</title>
+    <link rel="stylesheet" href="styles.css?v=20260519-shift-supervisor-wave" />
+    <style>
+      .shift-page {
+        display: grid;
+        grid-template-columns: minmax(760px, 1fr) 360px;
+        gap: 16px;
+        padding: 18px;
+      }
+
+      .shift-main {
+        display: grid;
+        gap: 16px;
+      }
+
+      .shift-kpis {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(120px, 1fr));
+        gap: 12px;
+      }
+
+      .shift-kpi {
+        min-height: 118px;
+        display: grid;
+        gap: 7px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .shift-kpi small {
+        color: var(--muted);
+        font-weight: 750;
+      }
+
+      .shift-kpi strong {
+        color: var(--text);
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      .shift-kpi span {
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .shift-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .shift-panel {
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .shift-panel header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .shift-panel h2,
+      .shift-panel h3 {
+        margin: 0;
+      }
+
+      .stage-controls {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+      }
+
+      .stage-button {
+        min-height: 54px;
+        padding: 8px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--text);
+        cursor: pointer;
+        font-weight: 800;
+      }
+
+      .stage-button.active {
+        border-color: var(--blue);
+        color: #fff;
+        background: var(--blue);
+      }
+
+      .progress-line {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 8px;
+      }
+
+      .progress-step {
+        position: relative;
+        display: grid;
+        gap: 7px;
+        justify-items: center;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .progress-step i {
+        width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        border: 2px solid #cbd7e6;
+        background: #fff;
+        color: var(--muted);
+        font-style: normal;
+      }
+
+      .progress-step.done i {
+        border-color: var(--green);
+        background: var(--green);
+        color: #fff;
+      }
+
+      .progress-step.active i {
+        border-color: var(--blue);
+        background: var(--blue);
+        color: #fff;
+      }
+
+      .stage-note {
+        min-height: 76px;
+        padding: 12px;
+        border-radius: 8px;
+        background: #eef6ff;
+        color: #174c9a;
+        font-weight: 750;
+        line-height: 1.45;
+      }
+
+      .stock-table,
+      .evidence-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .stock-table th,
+      .stock-table td,
+      .evidence-table th,
+      .evidence-table td {
+        padding: 10px;
+        border-bottom: 1px solid var(--soft-line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .stock-table th,
+      .evidence-table th {
+        color: var(--muted);
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      .stock-table td {
+        font-weight: 760;
+      }
+
+      .stock-table small {
+        display: block;
+        color: var(--muted);
+        font-weight: 650;
+      }
+
+      .delta-up {
+        color: var(--green);
+      }
+
+      .delta-down {
+        color: var(--red);
+      }
+
+      .delta-flat {
+        color: var(--muted);
+      }
+
+      .monitor-grid {
+        display: grid;
+        grid-template-columns: 150px repeat(4, 1fr);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .monitor-cell {
+        min-height: 62px;
+        display: grid;
+        align-content: center;
+        gap: 4px;
+        padding: 10px;
+        border-right: 1px solid var(--soft-line);
+        border-bottom: 1px solid var(--soft-line);
+        background: #fff;
+      }
+
+      .monitor-cell:nth-child(5n) {
+        border-right: 0;
+      }
+
+      .monitor-head {
+        background: #f7fbff;
+        color: var(--text);
+        font-weight: 850;
+      }
+
+      .monitor-cell b {
+        color: var(--text);
+      }
+
+      .monitor-cell span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .right-stack {
+        display: grid;
+        gap: 16px;
+      }
+
+      .wave-passport {
+        display: grid;
+        gap: 12px;
+      }
+
+      .passport-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--soft-line);
+      }
+
+      .passport-row span {
+        color: var(--muted);
+        font-weight: 750;
+      }
+
+      .passport-row b {
+        text-align: right;
+      }
+
+      .tsd-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .tsd-item {
+        display: grid;
+        grid-template-columns: 34px 1fr auto;
+        gap: 10px;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfdff;
+      }
+
+      .tsd-item i {
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: #eef6ff;
+        color: var(--blue);
+        font-style: normal;
+        font-weight: 900;
+      }
+
+      .tsd-item span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 72px;
+        padding: 6px 8px;
+        border-radius: 999px;
+        background: #eef6ff;
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .badge.good {
+        background: #e9f8f0;
+        color: #08764a;
+      }
+
+      .badge.warn {
+        background: #fff5e5;
+        color: #8a5300;
+      }
+
+      .badge.bad {
+        background: #fff1ef;
+        color: #a1261c;
+      }
+
+      @media (max-width: 1500px) {
+        .shift-page {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body class="auth-pending" data-required-permission="pick_wave_view">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span> PRO</div>
+        </div>
+        <nav class="nav" data-admin-nav data-active-nav="shift-supervisor"></nav>
+        <div class="sidebar-footer">
+          <div class="footer-line"><span>Смена</span><b>Дневная</b></div>
+          <div class="footer-line muted"><span>19.05.2026</span><span>10:24</span></div>
+          <div class="footer-line muted"><span>Роль</span><span>Старший смены</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="breadcrumbs"><b>WMS PRO</b><span>/</span><b>Панель старшего смены</b></div>
+          <div class="top-actions">
+            <label class="search">
+              <span>Поиск</span>
+              <input placeholder="Поиск по заказам, SKU, ячейкам, заданиям..." />
+              <kbd>Ctrl K</kbd>
+            </label>
+            <label class="search">
+              <span>Склад</span>
+              <select><option>Склад 1 (Москва)</option></select>
+            </label>
+            <label class="search">
+              <span>Смена</span>
+              <select><option>Дневная (08:00 - 20:00)</option></select>
+            </label>
+            <button class="round alert">12</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">Иванов И.И.</b><small id="adminUserRole">Старший смены</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="shift-page">
+          <div class="shift-main">
+            <div class="shift-kpis">
+              <div class="shift-kpi"><small>Активные волны</small><strong id="kpiWaves">1</strong><span>WAV-2025-05-19-01</span></div>
+              <div class="shift-kpi"><small>Пополнение</small><strong id="kpiRepl">126</strong><span id="kpiReplSub">84 в работе</span></div>
+              <div class="shift-kpi"><small>Комплектация</small><strong id="kpiPick">248</strong><span id="kpiPickSub">176 в работе</span></div>
+              <div class="shift-kpi"><small>Прямой стеллаж</small><strong id="kpiRack">154</strong><span id="kpiRackSub">32% от общей</span></div>
+              <div class="shift-kpi"><small>Коробочный отбор</small><strong id="kpiCase">94</strong><span id="kpiCaseSub">27% от общей</span></div>
+              <div class="shift-kpi"><small>Блокеры</small><strong id="kpiBlockers">3</strong><span id="kpiBlockersSub">Readiness BLOCKED</span></div>
+            </div>
+
+            <article class="shift-panel">
+              <header>
+                <h2>Этап доказательного тестирования</h2>
+                <span class="badge warn" id="stageStatusBadge">T0 BASELINE</span>
+              </header>
+              <div class="stage-controls" id="stageControls"></div>
+              <div class="stage-note" id="stageNote"></div>
+            </article>
+
+            <div class="shift-grid">
+              <article class="shift-panel">
+                <header>
+                  <h2>Прогресс волны WAV-2025-05-19-01</h2>
+                  <span id="progressUpdated" class="badge">обновлено сейчас</span>
+                </header>
+                <div class="progress-line" id="progressLine"></div>
+              </article>
+
+              <article class="shift-panel">
+                <header>
+                  <h2>Readiness</h2>
+                  <span id="readinessBadge" class="badge bad">BLOCKED</span>
+                </header>
+                <div class="monitor-grid">
+                  <div class="monitor-cell monitor-head">Блокер</div>
+                  <div class="monitor-cell monitor-head">Пополнение</div>
+                  <div class="monitor-cell monitor-head">Стеллаж</div>
+                  <div class="monitor-cell monitor-head">Коробки</div>
+                  <div class="monitor-cell monitor-head">Sync</div>
+                  <div class="monitor-cell">Открыто</div>
+                  <div class="monitor-cell"><b id="openRepl">1</b><span>REPLENISHMENT</span></div>
+                  <div class="monitor-cell"><b id="openRack">1</b><span>PICKING_MOVE</span></div>
+                  <div class="monitor-cell"><b id="openCase">1</b><span>CASE_PICK</span></div>
+                  <div class="monitor-cell"><b id="openSync">0</b><span>errors</span></div>
+                </div>
+              </article>
+            </div>
+
+            <article class="shift-panel">
+              <header>
+                <h2>Остатки: свободные и физические</h2>
+                <span class="badge" id="stockSnapshot">T0</span>
+              </header>
+              <table class="stock-table">
+                <thead>
+                  <tr>
+                    <th>Поток</th>
+                    <th>SKU / Ячейка</th>
+                    <th>Физический остаток</th>
+                    <th>Свободный остаток</th>
+                    <th>Что доказываем</th>
+                  </tr>
+                </thead>
+                <tbody id="stockRows"></tbody>
+              </table>
+            </article>
+
+            <article class="shift-panel">
+              <header>
+                <h2>Мониторинг выполнения</h2>
+                <span class="badge" id="monitorStage">T0</span>
+              </header>
+              <div class="monitor-grid">
+                <div class="monitor-cell monitor-head">План</div>
+                <div class="monitor-cell monitor-head">Пополнение</div>
+                <div class="monitor-cell monitor-head">Отбор из ячеек</div>
+                <div class="monitor-cell monitor-head">Отбор со стеллажа</div>
+                <div class="monitor-cell monitor-head">Коробочная комплектация</div>
+                <div class="monitor-cell">В работе</div>
+                <div class="monitor-cell"><b id="monReplWork">0</b><span>из 1</span></div>
+                <div class="monitor-cell"><b id="monPickWork">0</b><span>из 1</span></div>
+                <div class="monitor-cell"><b id="monRackWork">0</b><span>из 1</span></div>
+                <div class="monitor-cell"><b id="monCaseWork">0</b><span>из 1</span></div>
+                <div class="monitor-cell">Выполнено</div>
+                <div class="monitor-cell"><b id="monReplDone">0</b><span>DONE</span></div>
+                <div class="monitor-cell"><b id="monPickDone">0</b><span>DONE</span></div>
+                <div class="monitor-cell"><b id="monRackDone">0</b><span>DONE</span></div>
+                <div class="monitor-cell"><b id="monCaseDone">0</b><span>DONE</span></div>
+              </div>
+            </article>
+          </div>
+
+          <aside class="right-stack">
+            <article class="shift-panel">
+              <header>
+                <h2>Паспорт волны</h2>
+                <span class="badge good">В работе</span>
+              </header>
+              <div class="wave-passport">
+                <div class="passport-row"><span>Волна</span><b>WAV-2025-05-19-01</b></div>
+                <div class="passport-row"><span>Заказов</span><b>23</b></div>
+                <div class="passport-row"><span>SKU</span><b>87</b></div>
+                <div class="passport-row"><span>Позиции</span><b>362</b></div>
+                <div class="passport-row"><span>Объем</span><b>48,6 м3</b></div>
+                <div class="passport-row"><span>Вес</span><b>412 кг</b></div>
+                <div class="passport-row"><span>Типы отбора</span><b>154 / 94 / 64</b></div>
+                <div class="passport-row"><span>Готовность</span><b id="passportReady">Ожидает</b></div>
+              </div>
+            </article>
+
+            <article class="shift-panel">
+              <header>
+                <h2>Действия на ТСД</h2>
+                <span class="badge" id="tsdBadge">ожидает</span>
+              </header>
+              <div class="tsd-list" id="tsdList"></div>
+            </article>
+
+            <article class="shift-panel">
+              <header>
+                <h2>Протокол фиксации</h2>
+                <span class="badge">T0..T6</span>
+              </header>
+              <table class="evidence-table">
+                <thead><tr><th>Этап</th><th>Сайт</th><th>ТСД</th></tr></thead>
+                <tbody id="evidenceRows"></tbody>
+              </table>
+            </article>
+          </aside>
+        </section>
+      </main>
+    </div>
+    <script src="admin-nav.js"></script>
+    <script src="admin-auth.js"></script>
+    <script src="shift-supervisor-wave.js"></script>
+  </body>
+</html>

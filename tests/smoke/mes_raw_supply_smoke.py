@@ -62,10 +62,23 @@ def main() -> int:
         suffix,
     )
     confirm_task = next(task for task in confirm_tasks if task.get("task_status") == "PLANNED")
-    confirm_result = client.post(
-        f"/api/mes/raw-transfer-tasks/{confirm_task['task_id']}/confirm",
-        {"confirmed_by": "raw-supply-smoke"},
+    confirm_warehouse_tasks = client.get(
+        f"/api/warehouse-tasks?production_order_id={confirm_order_id}&task_type=RAW_TO_PRODUCTION&limit=20"
     )
+    confirm_warehouse_task = next(
+        task
+        for task in confirm_warehouse_tasks
+        if int(task.get("source_task_id") or 0) == int(confirm_task["task_id"])
+    )
+    complete_payload = {
+        "assigned_to": "raw-supply-smoke",
+        "scanned_pallet": confirm_warehouse_task.get("uid_pallet") or confirm_warehouse_task.get("sscc"),
+        "scanned_from_cell": confirm_warehouse_task.get("from_cell"),
+        "scanned_to_cell": confirm_warehouse_task.get("to_cell"),
+    }
+    client.post(f"/api/warehouse-tasks/{confirm_warehouse_task['task_id']}/assign", complete_payload)
+    client.post(f"/api/warehouse-tasks/{confirm_warehouse_task['task_id']}/start", complete_payload)
+    client.post(f"/api/warehouse-tasks/{confirm_warehouse_task['task_id']}/complete", complete_payload)
     confirmed_task = client.get(f"/api/mes/raw-transfer-tasks/{confirm_task['task_id']}")
     if confirmed_task.get("task_status") != "DONE":
         raise AssertionError(f"Expected confirmed task DONE, got {confirmed_task.get('task_status')}")
@@ -76,6 +89,42 @@ def main() -> int:
         raise AssertionError("Expected RAW_TO_PRODUCTION warehouse task for confirmed raw supply task.")
     if not any(task.get("status") == "DONE" for task in confirmed_warehouse_tasks):
         raise AssertionError("Expected confirmed RAW_TO_PRODUCTION warehouse task to be DONE.")
+    sync = client.get(f"/api/warehouse-tasks/{confirm_warehouse_task['task_id']}/sync")
+    if sync.get("sync_status") != "SYNCED":
+        raise AssertionError(f"Expected RAW_TO_PRODUCTION sync SYNCED, got {sync}")
+
+    partial_bom_id, partial_target = create_bom(client, suffix + "P")
+    partial_order_id, partial_tasks = create_and_release_order(
+        client,
+        1000,
+        partial_bom_id,
+        partial_target,
+        suffix,
+        planned_qty=2,
+    )
+    partial_task = next(task for task in partial_tasks if task.get("task_status") == "PLANNED")
+    partial_warehouse_task = find_warehouse_task_for_raw_task(client, partial_order_id, partial_task["task_id"])
+    complete_warehouse_task(client, partial_warehouse_task, fact_qty=1)
+    partially_confirmed_task = client.get(f"/api/mes/raw-transfer-tasks/{partial_task['task_id']}")
+    if partially_confirmed_task.get("task_status") != "IN_PROGRESS":
+        raise AssertionError(f"Expected partial raw task IN_PROGRESS, got {partially_confirmed_task}")
+    residual_task = next(
+        task
+        for task in client.get(
+            f"/api/warehouse-tasks?production_order_id={partial_order_id}&task_type=RAW_TO_PRODUCTION&limit=20"
+        )
+        if task.get("status") == "PLANNED"
+        and int(task.get("parent_task_id") or 0) == int(partial_warehouse_task["task_id"])
+    )
+    complete_warehouse_task(client, residual_task)
+    completed_partial_task = client.get(f"/api/mes/raw-transfer-tasks/{partial_task['task_id']}")
+    if completed_partial_task.get("task_status") != "DONE":
+        raise AssertionError(f"Expected partial raw task DONE after residual, got {completed_partial_task}")
+    partial_sync_rows = client.get(
+        f"/api/warehouse-tasks/domain-sync?task_source=MES_RAW_SUPPLY&source_doc_id={partial_order_id}&limit=20"
+    )
+    if len([row for row in partial_sync_rows if row.get("sync_status") == "SYNCED"]) < 2:
+        raise AssertionError(f"Expected both partial sync rows SYNCED, got {partial_sync_rows}")
 
     for task_id in created_tasks:
         client.post(
@@ -109,7 +158,9 @@ def main() -> int:
         "tasks_cancelled": len(created_tasks),
         "confirm_order_id": confirm_order_id,
         "confirm_task_id": confirm_task["task_id"],
-        "movement_id": confirm_result["id"],
+        "confirm_warehouse_task_id": confirm_warehouse_task["task_id"],
+        "partial_order_id": partial_order_id,
+        "partial_task_id": partial_task["task_id"],
         "confirmed_warehouse_tasks": len(confirmed_warehouse_tasks),
         "elapsed_sec": round(elapsed, 3),
         "ops_per_sec": round((args.orders * 3 + 10) / elapsed, 2),
@@ -149,12 +200,13 @@ def create_and_release_order(
     bom_id: int,
     target: str,
     suffix: str,
+    planned_qty: float = 1,
 ) -> tuple[int, list[dict]]:
     order = client.post("/api/mes/production-orders", {
         "order_no": f"RAW-SUPPLY-{suffix}-{index:03d}",
         "bom_id": bom_id,
         "target_articul": target,
-        "planned_qty": 1,
+        "planned_qty": planned_qty,
         "unit_code": "KG",
         "ware_id": TO_WARE_ID,
         "production_line": "LINE-SMOKE",
@@ -174,6 +226,25 @@ def create_and_release_order(
     if not any(task.get("task_status") == "PLANNED" for task in tasks):
         raise AssertionError(f"Expected planned raw transfer task for order {order_id}")
     return order_id, tasks
+
+
+def find_warehouse_task_for_raw_task(client: "Client", order_id: int, raw_task_id: int) -> dict:
+    tasks = client.get(f"/api/warehouse-tasks?production_order_id={order_id}&task_type=RAW_TO_PRODUCTION&limit=20")
+    return next(task for task in tasks if int(task.get("source_task_id") or 0) == int(raw_task_id))
+
+
+def complete_warehouse_task(client: "Client", warehouse_task: dict, fact_qty: float | None = None) -> None:
+    payload = {
+        "assigned_to": "raw-supply-smoke",
+        "scanned_pallet": warehouse_task.get("uid_pallet") or warehouse_task.get("sscc"),
+        "scanned_from_cell": warehouse_task.get("from_cell"),
+        "scanned_to_cell": warehouse_task.get("to_cell"),
+    }
+    if fact_qty is not None:
+        payload["fact_qty"] = fact_qty
+    client.post(f"/api/warehouse-tasks/{warehouse_task['task_id']}/assign", payload)
+    client.post(f"/api/warehouse-tasks/{warehouse_task['task_id']}/start", payload)
+    client.post(f"/api/warehouse-tasks/{warehouse_task['task_id']}/complete", payload)
 
 
 class Client:

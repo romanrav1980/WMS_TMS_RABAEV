@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS PRO Синхронизация заданий</title>
+    <link rel="stylesheet" href="styles.css?v=20260518-warehouse-sync" />
+  </head>
+  <body class="auth-pending" data-required-permission="warehouse_task_view">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span> PRO</div>
+        </div>
+        <nav class="nav" data-admin-nav data-active-nav="warehouse-task-sync"></nav>
+        <div class="sidebar-footer">
+          <div class="factory-mark">
+            <span class="tower t1"></span>
+            <span class="tower t2"></span>
+            <span class="tower t3"></span>
+            <span class="plant-base"></span>
+          </div>
+          <div class="footer-line"><span>Контур</span><b>Domain sync</b></div>
+          <div class="footer-line muted"><span>18.05.2026</span><span>10:24</span></div>
+          <div class="footer-line muted"><span>Версия</span><span>2.4.1</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="breadcrumbs"><b>Админ-панель WMS</b><span>/</span><b>Синхронизация заданий</b></div>
+          <div class="top-actions">
+            <label class="search">
+              <span>Поиск</span>
+              <input id="warehouseSyncSearch" placeholder="ID, источник, ошибка, документ..." />
+              <kbd>Ctrl K</kbd>
+            </label>
+            <button class="round alert" id="warehouseSyncErrorBadge" type="button">0</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">Администратор</b><small id="adminUserRole">WMS</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="admin-page warehouse-sync-page">
+          <article class="panel warehouse-sync-list-panel">
+            <header>
+              <h2>Мониторинг закрытия бизнес-процессов</h2>
+              <button id="warehouseSyncRefresh" type="button">Обновить</button>
+            </header>
+            <div class="rights-toolbar warehouse-sync-toolbar">
+              <label>Статус
+                <select id="warehouseSyncStatus">
+                  <option value="">Все</option>
+                  <option value="ERROR">ERROR</option>
+                  <option value="RETRY_PENDING">RETRY_PENDING</option>
+                  <option value="PENDING">PENDING</option>
+                  <option value="IN_PROGRESS">IN_PROGRESS</option>
+                  <option value="SYNCED">SYNCED</option>
+                </select>
+              </label>
+              <label>Источник
+                <select id="warehouseSyncSource">
+                  <option value="">Все</option>
+                  <option value="WAVE">WAVE</option>
+                  <option value="MES_RAW_SUPPLY">MES_RAW_SUPPLY</option>
+                  <option value="MES_COMPLETION">MES_COMPLETION</option>
+                  <option value="PICKING">PICKING</option>
+                </select>
+              </label>
+              <label>Документ
+                <select id="warehouseSyncDocType">
+                  <option value="">Все</option>
+                  <option value="PICK_WAVE">PICK_WAVE</option>
+                  <option value="PRODUCTION_ORDER">PRODUCTION_ORDER</option>
+                  <option value="SHIPMENT">SHIPMENT</option>
+                  <option value="PRODUCTION_WAVE">PRODUCTION_WAVE</option>
+                </select>
+              </label>
+              <label>ID документа<input id="warehouseSyncDocId" type="number" min="1" placeholder="ID" /></label>
+              <label>Лимит<input id="warehouseSyncLimit" type="number" min="1" max="500" value="150" /></label>
+              <button id="warehouseSyncLoad" type="button">Показать</button>
+            </div>
+            <div class="warehouse-sync-tabs" role="tablist">
+              <button type="button" data-sync-preset="attention" class="active">Требуют внимания</button>
+              <button type="button" data-sync-preset="errors">Ошибки</button>
+              <button type="button" data-sync-preset="pending">Очередь</button>
+              <button type="button" data-sync-preset="synced">Закрыты</button>
+              <button type="button" data-sync-preset="raw">Сырье</button>
+              <button type="button" data-sync-preset="fg">Готовая продукция</button>
+              <button type="button" data-sync-preset="wave">Волна</button>
+              <button type="button" data-sync-preset="all">Все</button>
+            </div>
+            <div class="warehouse-sync-kpi">
+              <div><span>Ошибки</span><b id="warehouseSyncKpiError">0</b></div>
+              <div><span>Retry</span><b id="warehouseSyncKpiRetry">0</b></div>
+              <div><span>В очереди</span><b id="warehouseSyncKpiPending">0</b></div>
+              <div><span>Закрыто</span><b id="warehouseSyncKpiSynced">0</b></div>
+            </div>
+            <div class="rights-summary">
+              <span id="warehouseSyncStatusText">Ожидание данных</span>
+              <span id="warehouseSyncSelectionText">Sync не выбран</span>
+            </div>
+            <div class="rights-table-wrap warehouse-sync-scroll">
+              <table class="rights-table warehouse-sync-table">
+                <thead>
+                  <tr>
+                    <th>Sync</th><th>Task</th><th>Источник</th><th>Документ</th><th>Статус</th><th>Попытка</th><th>Обновлено</th><th>Ошибка</th>
+                  </tr>
+                </thead>
+                <tbody id="warehouseSyncRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel warehouse-sync-detail-panel">
+            <header><h2>Диагностика</h2></header>
+            <div class="rights-summary"><span id="warehouseSyncDetailStatus">Выберите строку sync</span></div>
+            <dl class="warehouse-task-detail-list">
+              <div><dt>Sync</dt><dd id="warehouseSyncDetailId">-</dd></div>
+              <div><dt>Задание</dt><dd id="warehouseSyncDetailTask">-</dd></div>
+              <div><dt>Маршрут</dt><dd id="warehouseSyncDetailRoute">-</dd></div>
+              <div><dt>Документ</dt><dd id="warehouseSyncDetailDocument">-</dd></div>
+              <div><dt>Ключ</dt><dd id="warehouseSyncDetailKey">-</dd></div>
+              <div><dt>Время</dt><dd id="warehouseSyncDetailTime">-</dd></div>
+              <div><dt>Исполнитель</dt><dd id="warehouseSyncDetailUser">-</dd></div>
+              <div><dt>Ошибка</dt><dd id="warehouseSyncDetailError">-</dd></div>
+            </dl>
+            <div class="warehouse-sync-scenario">
+              <b id="warehouseSyncScenarioTitle">Сценарий не выбран</b>
+              <ul id="warehouseSyncScenarioChecks"></ul>
+              <div id="warehouseSyncRetryRisk" class="warehouse-sync-risk">Выберите строку sync для оценки retry.</div>
+            </div>
+            <div class="warehouse-sync-actions" data-permission="warehouse_task_execute">
+              <button id="warehouseSyncRetry" type="button">Повторить sync</button>
+              <button id="warehouseSyncOpenTask" type="button">Открыть задание</button>
+            </div>
+            <div class="warehouse-sync-help">
+              <b>Разбор статусов</b>
+              <span><strong>ERROR</strong> требует проверки причины и retry после исправления данных.</span>
+              <span><strong>RETRY_PENDING</strong> означает, что строка подготовлена к повторной обработке.</span>
+              <span><strong>SYNCED</strong> означает, что физический факт доведен до доменного процесса.</span>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="admin-nav.js"></script>
+    <script src="admin-auth.js"></script>
+    <script src="warehouse-task-sync.js"></script>
+  </body>
+</html>

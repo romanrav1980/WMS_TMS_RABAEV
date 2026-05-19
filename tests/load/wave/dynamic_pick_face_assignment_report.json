@@ -1,0 +1,86 @@
+{
+  "run_prefix": "LOAD-WAVE-O4FTUH",
+  "waves": 1,
+  "orders_per_wave": 10,
+  "concurrency": 1,
+  "execute_tasks": false,
+  "replenishment_method": "IMMEDIATE",
+  "auto_minimax_trigger": false,
+  "shelf_life_scenario": false,
+  "dynamic_pick_faces": 3,
+  "drain_replenishment_queue": false,
+  "elapsed_s": 12.616,
+  "request_count": 16,
+  "failed_request_count": 0,
+  "diagnostics": {
+    "waves": 1,
+    "launched_waves": 1,
+    "pick_plans": 10,
+    "wave_replenishment_tasks": 10,
+    "queued_wave_replenishment_tasks": 6,
+    "source_reservations": 10,
+    "active_source_reservations": 10,
+    "consumed_source_reservations": 0,
+    "warehouse_replenishment_tasks": 4,
+    "dynamic_warehouse_replenishment_tasks": 3,
+    "dynamic_pick_face_assignments": 3,
+    "done_warehouse_replenishment_tasks": 0,
+    "done_wave_replenishment_tasks": 0,
+    "warehouse_replenishment_sync_rows": 0,
+    "synced_warehouse_replenishment_sync_rows": 0,
+    "warehouse_replenishment_duplicates": 0,
+    "invalid_objects": 0
+  },
+  "latency_ms": {
+    "GET /api/picking/waves/{id}/replenishment-tasks": {
+      "count": 1,
+      "min": 633.96,
+      "p50": 633.96,
+      "p95": 633.96,
+      "max": 633.96
+    },
+    "GET /api/warehouse-tasks?task_type=REPLENISHMENT": {
+      "count": 1,
+      "min": 636.64,
+      "p50": 636.64,
+      "p95": 636.64,
+      "max": 636.64
+    },
+    "GET /health": {
+      "count": 1,
+      "min": 440.19,
+      "p50": 440.19,
+      "p95": 440.19,
+      "max": 440.19
+    },
+    "POST /api/picking/waves": {
+      "count": 1,
+      "min": 581.33,
+      "p50": 581.33,
+      "p95": 581.33,
+      "max": 581.33
+    },
+    "POST /api/picking/waves/{id}/calculate": {
+      "count": 1,
+      "min": 862.59,
+      "p50": 862.59,
+      "p95": 862.59,
+      "max": 862.59
+    },
+    "POST /api/picking/waves/{id}/launch": {
+      "count": 1,
+      "min": 4350.46,
+      "p50": 4350.46,
+      "p95": 4350.46,
+      "max": 4350.46
+    },
+    "POST /api/picking/waves/{id}/plans": {
+      "count": 10,
+      "min": 431.34,
+      "p50": 519.77,
+      "p95": 687.66,
+      "max": 687.66
+    }
+  },
+  "errors": []
+}

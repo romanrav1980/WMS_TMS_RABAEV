@@ -8,6 +8,7 @@ from .routers import (
     admin_rights,
     api_audit,
     bom,
+    case_pick,
     customer_orders,
     customer_rules,
     finished_goods,
@@ -17,6 +18,7 @@ from .routers import (
     production,
     products,
     raw_material,
+    resource_management,
     slow_sql,
     stock_reservations,
     traceability,
@@ -56,5 +58,7 @@ app.include_router(finished_goods.router)
 app.include_router(customer_orders.router)
 app.include_router(customer_rules.router)
 app.include_router(picking.router)
+app.include_router(case_pick.router)
 app.include_router(stock_reservations.router)
 app.include_router(warehouse_tasks.router)
+app.include_router(resource_management.router)

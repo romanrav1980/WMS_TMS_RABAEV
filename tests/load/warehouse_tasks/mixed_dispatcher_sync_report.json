@@ -1,0 +1,265 @@
+{
+  "status": "ok",
+  "elapsed_s": 35.309,
+  "baseline_sync_id": 42,
+  "jobs": {
+    "wave_replenishment": {
+      "elapsed_s": 11.133,
+      "summary": {
+        "run_prefix": "LOAD-WAVE-2O6JXJ",
+        "waves": 1,
+        "orders_per_wave": 1,
+        "concurrency": 1,
+        "execute_tasks": true,
+        "elapsed_s": 9.253,
+        "request_count": 11,
+        "failed_request_count": 0,
+        "diagnostics": {
+          "waves": 1,
+          "launched_waves": 1,
+          "pick_plans": 1,
+          "wave_replenishment_tasks": 1,
+          "warehouse_replenishment_tasks": 1,
+          "done_warehouse_replenishment_tasks": 1,
+          "done_wave_replenishment_tasks": 1,
+          "warehouse_replenishment_sync_rows": 1,
+          "synced_warehouse_replenishment_sync_rows": 1,
+          "warehouse_replenishment_duplicates": 0,
+          "invalid_objects": 0
+        },
+        "latency_ms": {
+          "GET /api/picking/waves/{id}/replenishment-tasks": {
+            "count": 2,
+            "min": 513.49,
+            "p50": 519.33,
+            "p95": 525.17,
+            "max": 525.17
+          },
+          "GET /api/warehouse-tasks?task_type=REPLENISHMENT": {
+            "count": 1,
+            "min": 463.97,
+            "p50": 463.97,
+            "p95": 463.97,
+            "max": 463.97
+          },
+          "GET /health": {
+            "count": 1,
+            "min": 403.72,
+            "p50": 403.72,
+            "p95": 403.72,
+            "max": 403.72
+          },
+          "POST /api/picking/waves": {
+            "count": 1,
+            "min": 880.72,
+            "p50": 880.72,
+            "p95": 880.72,
+            "max": 880.72
+          },
+          "POST /api/picking/waves/{id}/calculate": {
+            "count": 1,
+            "min": 689.8,
+            "p50": 689.8,
+            "p95": 689.8,
+            "max": 689.8
+          },
+          "POST /api/picking/waves/{id}/launch": {
+            "count": 1,
+            "min": 1706.68,
+            "p50": 1706.68,
+            "p95": 1706.68,
+            "max": 1706.68
+          },
+          "POST /api/picking/waves/{id}/plans": {
+            "count": 1,
+            "min": 706.86,
+            "p50": 706.86,
+            "p95": 706.86,
+            "max": 706.86
+          },
+          "POST /api/warehouse-tasks/{id}/assign": {
+            "count": 1,
+            "min": 853.46,
+            "p50": 853.46,
+            "p95": 853.46,
+            "max": 853.46
+          },
+          "POST /api/warehouse-tasks/{id}/complete": {
+            "count": 1,
+            "min": 1977.18,
+            "p50": 1977.18,
+            "p95": 1977.18,
+            "max": 1977.18
+          },
+          "POST /api/warehouse-tasks/{id}/start": {
+            "count": 1,
+            "min": 769.87,
+            "p50": 769.87,
+            "p95": 769.87,
+            "max": 769.87
+          }
+        },
+        "errors": []
+      },
+      "stderr": ""
+    },
+    "fg_storage": {
+      "elapsed_s": 21.047,
+      "summary": {
+        "status": "ok",
+        "bom_id": 82,
+        "production_order_id": 86,
+        "order_no": "HTTP-MES-ORDER-20260518230502",
+        "lot_no": "HTTP-MES-LOT-20260518230502",
+        "movements": 4,
+        "applied_movements": 3,
+        "raw_usage": 1,
+        "pallets": 1,
+        "finished_goods_batches": 1,
+        "finished_goods_remains": 1,
+        "warehouse_tasks": 1,
+        "fg_storage_tasks": 1,
+        "trace_edges": {
+          "raw_to_order": 1,
+          "order_to_lot": 1,
+          "lot_to_pallet": 1,
+          "pallet_to_sscc": 1
+        },
+        "outbox_events": 1,
+        "api_audit_calls": 20,
+        "slow_sql_rows": 2
+      },
+      "stderr": ""
+    },
+    "raw_supply": {
+      "elapsed_s": 34.027,
+      "summary": {
+        "status": "ok",
+        "bom_id": 80,
+        "orders_released": 1,
+        "tasks_cancelled": 1,
+        "confirm_order_id": 85,
+        "confirm_task_id": 64,
+        "confirm_warehouse_task_id": 180,
+        "partial_order_id": 87,
+        "partial_task_id": 65,
+        "confirmed_warehouse_tasks": 1,
+        "elapsed_sec": 33.341,
+        "ops_per_sec": 0.39
+      },
+      "stderr": ""
+    }
+  },
+  "diagnostics": {
+    "sync_rows": 5,
+    "status_counts": {
+      "SYNCED": 5
+    },
+    "source_status_counts": [
+      {
+        "task_source": "MES_COMPLETION",
+        "task_type": "FG_TO_STORAGE",
+        "source_doc_type": "PRODUCTION_ORDER",
+        "sync_status": "SYNCED",
+        "cnt": 1
+      },
+      {
+        "task_source": "MES_RAW_SUPPLY",
+        "task_type": "RAW_TO_PRODUCTION",
+        "source_doc_type": "PRODUCTION_ORDER",
+        "sync_status": "SYNCED",
+        "cnt": 3
+      },
+      {
+        "task_source": "WAVE",
+        "task_type": "REPLENISHMENT",
+        "source_doc_type": "PICK_WAVE",
+        "sync_status": "SYNCED",
+        "cnt": 1
+      }
+    ],
+    "duplicate_sync_keys": 0,
+    "invalid_objects": 0
+  },
+  "retry_result": {
+    "selected": {
+      "task_id": 183,
+      "sync_id": 48,
+      "task_source": "MES_RAW_SUPPLY",
+      "task_type": "RAW_TO_PRODUCTION"
+    },
+    "response": {
+      "status": "ok",
+      "sync": {
+        "sync_id": 48,
+        "task_id": 183,
+        "task_source": "MES_RAW_SUPPLY",
+        "task_type": "RAW_TO_PRODUCTION",
+        "source_doc_type": "PRODUCTION_ORDER",
+        "source_doc_id": 87,
+        "source_task_id": 65,
+        "source_movement_id": 182,
+        "sync_key": "WT:183:MES_RAW_SUPPLY:RAW_TO_PRODUCTION:65:182",
+        "sync_status": "SYNCED",
+        "sync_attempt": 1,
+        "last_error": null,
+        "created_at": "2026-05-18T14:05:20.684368",
+        "updated_at": "2026-05-18T14:05:21.943463",
+        "synced_at": "2026-05-18T14:05:21.943463",
+        "updated_by": "raw-supply-smoke"
+      }
+    }
+  },
+  "diagnostics_after_retry": {
+    "sync_rows": 5,
+    "status_counts": {
+      "SYNCED": 5
+    },
+    "source_status_counts": [
+      {
+        "task_source": "MES_COMPLETION",
+        "task_type": "FG_TO_STORAGE",
+        "source_doc_type": "PRODUCTION_ORDER",
+        "sync_status": "SYNCED",
+        "cnt": 1
+      },
+      {
+        "task_source": "MES_RAW_SUPPLY",
+        "task_type": "RAW_TO_PRODUCTION",
+        "source_doc_type": "PRODUCTION_ORDER",
+        "sync_status": "SYNCED",
+        "cnt": 3
+      },
+      {
+        "task_source": "WAVE",
+        "task_type": "REPLENISHMENT",
+        "source_doc_type": "PICK_WAVE",
+        "sync_status": "SYNCED",
+        "cnt": 1
+      }
+    ],
+    "duplicate_sync_keys": 0,
+    "invalid_objects": 0
+  },
+  "api_metrics": {
+    "request_count": 2,
+    "failed_request_count": 0,
+    "latency_ms": {
+      "GET /health": {
+        "count": 1,
+        "min": 436.48,
+        "p50": 436.48,
+        "p95": 436.48,
+        "max": 436.48
+      },
+      "POST /api/warehouse-tasks/{id}/sync/retry": {
+        "count": 1,
+        "min": 391.04,
+        "p50": 391.04,
+        "p95": 391.04,
+        "max": 391.04
+      }
+    },
+    "errors": []
+  }
+}

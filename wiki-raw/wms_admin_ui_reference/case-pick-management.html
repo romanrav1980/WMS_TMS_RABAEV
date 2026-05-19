@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS Управление комплектацией</title>
+    <link rel="stylesheet" href="styles.css?v=20260519-case-pick-management" />
+    <style>
+      .case-page {
+        display: grid;
+        gap: 14px;
+        padding: 14px 18px 22px;
+        background: #f8fbff;
+      }
+
+      .case-title {
+        display: grid;
+        gap: 4px;
+      }
+
+      .case-title h1 {
+        margin: 0;
+        color: #0b1f3a;
+        font-size: 25px;
+        line-height: 1.1;
+      }
+
+      .case-title span {
+        color: #52667f;
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .case-topbar {
+        align-items: center;
+      }
+
+      .case-kpis {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(160px, 1fr));
+        gap: 12px;
+      }
+
+      .case-kpi {
+        position: relative;
+        min-height: 98px;
+        display: grid;
+        grid-template-columns: 44px 1fr;
+        gap: 12px;
+        padding: 18px 16px;
+        border: 1px solid var(--soft-line);
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .case-kpi i {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
+        font-style: normal;
+        font-weight: 900;
+      }
+
+      .case-kpi .blue { color: #175cd3; background: #dbeafe; }
+      .case-kpi .green { color: #087443; background: #dcfae6; }
+      .case-kpi .orange { color: #b54708; background: #fff1dc; }
+      .case-kpi .red { color: #b42318; background: #fee4e2; }
+      .case-kpi .violet { color: #4f46e5; background: #ecebff; }
+
+      .case-kpi strong {
+        display: block;
+        color: #0b1f3a;
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      .case-kpi b {
+        display: block;
+        margin-bottom: 8px;
+        color: #213858;
+        font-size: 12px;
+      }
+
+      .case-kpi span,
+      .case-kpi small {
+        color: #60738f;
+        font-size: 11px;
+        font-weight: 750;
+      }
+
+      .case-kpi svg {
+        position: absolute;
+        right: 12px;
+        bottom: 10px;
+        width: 74px;
+        height: 28px;
+        fill: none;
+        stroke: #17b26a;
+        stroke-width: 2;
+      }
+
+      .case-filters {
+        display: grid;
+        grid-template-columns: minmax(300px, 1.2fr) repeat(4, minmax(150px, .6fr)) auto;
+        gap: 10px;
+      }
+
+      .case-filters input,
+      .case-filters select,
+      .case-filters button,
+      .case-action-button {
+        height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #fff;
+        color: #243b5a;
+        padding: 0 12px;
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .case-filters button,
+      .case-action-button {
+        color: #175cd3;
+      }
+
+      .case-main-grid {
+        display: grid;
+        grid-template-columns: minmax(760px, 1fr) 348px;
+        gap: 14px;
+        align-items: start;
+      }
+
+      .case-panel {
+        border: 1px solid var(--soft-line);
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .case-panel header {
+        min-height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--soft-line);
+      }
+
+      .case-panel h2,
+      .case-panel h3 {
+        margin: 0;
+        color: #0b1f3a;
+        font-size: 15px;
+      }
+
+      .case-table-wrap {
+        overflow: auto;
+      }
+
+      .case-table {
+        width: 100%;
+        min-width: 1120px;
+        border-collapse: collapse;
+      }
+
+      .case-table th,
+      .case-table td {
+        height: 50px;
+        padding: 9px 10px;
+        border-bottom: 1px solid #edf2f7;
+        text-align: left;
+        vertical-align: middle;
+        font-size: 12px;
+      }
+
+      .case-table th {
+        color: #52667f;
+        background: #fbfdff;
+        font-size: 11px;
+        font-weight: 850;
+      }
+
+      .case-picker {
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .case-avatar {
+        width: 26px;
+        height: 26px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: #e8f7ef;
+        color: #087443;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .case-picker b,
+      .case-strong {
+        display: block;
+        color: #0b1f3a;
+        font-weight: 850;
+      }
+
+      .case-muted,
+      .case-table small {
+        display: block;
+        margin-top: 3px;
+        color: #60738f;
+        font-size: 11px;
+        font-weight: 650;
+      }
+
+      .case-progress {
+        display: grid;
+        grid-template-columns: 1fr 42px;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .case-bar {
+        height: 7px;
+        border-radius: 999px;
+        background: #dfe7f1;
+        overflow: hidden;
+      }
+
+      .case-bar i {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: #17b26a;
+      }
+
+      .case-bar.orange i { background: #f79009; }
+      .case-bar.blue i { background: #2478f2; }
+      .case-bar.red i { background: #f04438; }
+
+      .case-badge {
+        display: inline-flex;
+        min-height: 22px;
+        align-items: center;
+        justify-content: center;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 850;
+        white-space: nowrap;
+      }
+
+      .case-badge.green { color: #087443; background: #dcfae6; }
+      .case-badge.orange { color: #b54708; background: #fff1dc; }
+      .case-badge.red { color: #b42318; background: #fee4e2; }
+      .case-badge.blue { color: #175cd3; background: #dbeafe; }
+      .case-badge.gray { color: #52667f; background: #eef3f8; }
+      .case-badge.violet { color: #4f46e5; background: #ecebff; }
+
+      .case-problem {
+        color: #f04438;
+        font-weight: 850;
+      }
+
+      .case-detail {
+        display: grid;
+        gap: 12px;
+        padding: 14px;
+      }
+
+      .case-detail-title {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .case-detail-title b {
+        color: #0b1f3a;
+        font-size: 15px;
+      }
+
+      .case-detail-title button {
+        border: 0;
+        background: transparent;
+        color: #60738f;
+        font-size: 20px;
+      }
+
+      .case-detail-progress strong {
+        display: block;
+        color: #0aa35f;
+        font-size: 30px;
+        line-height: 1;
+      }
+
+      .case-detail-progress span {
+        float: right;
+        color: #243b5a;
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .case-detail-list {
+        display: grid;
+        gap: 9px;
+      }
+
+      .case-detail-row {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #edf2f7;
+        font-size: 12px;
+      }
+
+      .case-alert {
+        display: grid;
+        gap: 8px;
+        padding: 12px;
+        border: 1px solid #fecdca;
+        border-radius: 8px;
+        background: #fff5f5;
+        color: #b42318;
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .case-alert b {
+        color: #b42318;
+      }
+
+      .case-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .case-actions button {
+        min-height: 36px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #fff;
+        color: #175cd3;
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .case-actions button.danger {
+        color: #b42318;
+        border-color: #fecdca;
+        background: #fff5f5;
+      }
+
+      .case-bottom-grid {
+        display: grid;
+        grid-template-columns: 1.45fr .72fr .72fr .72fr;
+        gap: 14px;
+      }
+
+      .case-route-board {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(160px, 1fr));
+        gap: 10px;
+        padding: 12px;
+      }
+
+      .case-route-card {
+        display: grid;
+        gap: 9px;
+        min-height: 168px;
+        padding: 12px;
+        border: 1px solid #edf2f7;
+        border-radius: 8px;
+        background: #fbfdff;
+      }
+
+      .case-route-card.case-blocked {
+        border-color: #fecdca;
+        background: #fffafa;
+      }
+
+      .case-route-head {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .case-route-head b {
+        display: block;
+        color: #0b1f3a;
+        font-size: 13px;
+      }
+
+      .case-route-head strong {
+        color: #0aa35f;
+        font-size: 22px;
+        line-height: 1;
+      }
+
+      .case-route-card.case-warn .case-route-head strong { color: #f79009; }
+      .case-route-card.case-blocked .case-route-head strong { color: #f04438; }
+
+      .case-route-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        color: #52667f;
+        font-size: 11px;
+        font-weight: 750;
+      }
+
+      .case-route-pallets {
+        display: grid;
+        gap: 5px;
+      }
+
+      .case-route-pallet {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 6px;
+        align-items: center;
+        color: #243b5a;
+        font-size: 11px;
+        font-weight: 750;
+      }
+
+      .case-route-pallet span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .case-route-blocker {
+        display: grid;
+        gap: 3px;
+        min-height: 48px;
+        padding: 8px;
+        border-radius: 7px;
+        background: #fff5f5;
+        color: #b42318;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .case-route-blocker.ok {
+        background: #f0fdf4;
+        color: #087443;
+      }
+
+      .case-mini-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .case-mini-table td {
+        padding: 8px 10px;
+        border-bottom: 1px solid #edf2f7;
+        font-size: 12px;
+      }
+
+      .case-donut {
+        width: 128px;
+        height: 128px;
+        margin: 8px auto;
+        border-radius: 50%;
+        background: conic-gradient(#17b26a 0 20%, #f79009 20% 80%, #b8c2d2 80% 100%);
+        position: relative;
+      }
+
+      .case-donut::after {
+        content: "";
+        position: absolute;
+        inset: 28px;
+        border-radius: 50%;
+        background: #fff;
+      }
+
+      .case-legend {
+        display: grid;
+        gap: 7px;
+        color: #52667f;
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .case-legend i {
+        width: 8px;
+        height: 8px;
+        display: inline-block;
+        margin-right: 7px;
+        border-radius: 50%;
+        background: #17b26a;
+      }
+
+      .case-legend .orange { background: #f79009; }
+      .case-legend .gray { background: #b8c2d2; }
+
+      .case-wide-grid {
+        display: grid;
+        grid-template-columns: .9fr .8fr .9fr .9fr .75fr 1fr;
+        gap: 14px;
+      }
+
+      @media (max-width: 1200px) {
+        .case-kpis { grid-template-columns: repeat(3, 1fr); }
+        .case-route-board { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+        .case-main-grid,
+        .case-bottom-grid,
+        .case-wide-grid { grid-template-columns: 1fr; }
+        .case-filters { grid-template-columns: 1fr 1fr; }
+      }
+
+      @media (max-width: 720px) {
+        .case-route-board { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body class="auth-pending" data-required-permission="case_pick_view">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span></div>
+        </div>
+        <nav class="nav" data-admin-nav data-active-nav="case-pick-management"></nav>
+        <div class="sidebar-footer">
+          <div class="footer-line"><span>Модуль</span><b>Комплектация</b></div>
+          <div class="footer-line muted"><span>19.05.2026</span><span>15:30</span></div>
+          <div class="footer-line muted"><span>Смена</span><span>Дневная</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar case-topbar">
+          <div class="case-title">
+            <h1>Управление комплектацией</h1>
+            <span>Мониторинг работы комплектовщиков и выполнение рейсов в реальном времени</span>
+          </div>
+          <div class="top-actions">
+            <select class="resource-top-select" aria-label="Склад">
+              <option>Склад: Основной склад (MSK-1)</option>
+            </select>
+            <input class="resource-top-date" type="date" value="2026-05-19" aria-label="Дата" />
+            <button id="caseRefresh" class="resource-refresh" type="button">Обновить</button>
+            <button class="round alert">2</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar">ДС</span>
+              <div><b id="adminUserName">Диспетчер смены</b><small id="adminUserRole">Комплектация</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="case-page">
+          <section class="case-kpis" id="caseKpis"></section>
+
+          <section class="case-filters">
+            <input id="caseSearch" placeholder="Поиск по комплектовщику, поддону, рейсу..." />
+            <select id="caseZoneFilter"><option value="">Все зоны</option><option>A</option><option>B</option><option>C</option></select>
+            <select id="caseStatusFilter"><option value="">Все статусы</option><option>IN_PROGRESS</option><option>PARTIAL</option><option>WAIT_CONTROL</option><option>NEW</option></select>
+            <select id="caseWaveFilter"><option value="">Все рейсы</option></select>
+            <select id="caseTrolleyFilter"><option value="">Все типы тележек</option><option>1 паллета</option><option>2 паллета</option><option>3 паллета</option></select>
+            <button id="caseConfigure" type="button">Настроить вид</button>
+          </section>
+
+          <section class="case-main-grid">
+            <article class="case-panel">
+              <div class="case-table-wrap">
+                <table class="case-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Комплектовщик</th>
+                      <th>Тележка</th>
+                      <th>Рейс</th>
+                      <th>Поддон / SSCC</th>
+                      <th>Кол-во поддонов</th>
+                      <th>Прогресс / План</th>
+                      <th>Эффективность</th>
+                      <th>Статус</th>
+                      <th>Проблема</th>
+                      <th>Последнее действие</th>
+                    </tr>
+                  </thead>
+                  <tbody id="caseRows"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <aside class="case-panel">
+              <div class="case-detail" id="caseDetail"></div>
+            </aside>
+          </section>
+
+          <section class="case-bottom-grid">
+            <article class="case-panel">
+              <header><h2>Собираемость рейсов</h2></header>
+              <div class="case-route-board" id="caseRoutes"></div>
+            </article>
+            <article class="case-panel">
+              <header><h2>Распределение рейсов</h2></header>
+              <div class="case-donut"></div>
+              <div class="case-legend">
+                <span><i></i>Завершены <b id="caseDoneCount"></b></span>
+                <span><i class="orange"></i>В работе <b id="caseWorkCount"></b></span>
+                <span><i class="gray"></i>Ожидают <b id="caseWaitCount"></b></span>
+              </div>
+            </article>
+            <article class="case-panel">
+              <header><h2>Топ задержанных рейсов</h2></header>
+              <table class="case-mini-table" id="caseDelayed"></table>
+            </article>
+            <article class="case-panel">
+              <header><h2>Распределение по прогрессу</h2></header>
+              <table class="case-mini-table" id="caseProgressBands"></table>
+            </article>
+          </section>
+
+          <section class="case-wide-grid">
+            <article class="case-panel">
+              <header><h2>Общий прогресс по волнам</h2></header>
+              <table class="case-mini-table" id="caseWaves"></table>
+            </article>
+            <article class="case-panel">
+              <header><h2>Производительность</h2></header>
+              <div class="case-detail-progress" style="padding:18px">
+                <strong id="caseProductivity">102%</strong>
+                <small class="case-muted">по сравнению с планом</small>
+                <svg viewBox="0 0 180 54" style="width:100%;height:54px;fill:none;stroke:#17b26a;stroke-width:3"><path d="M4 48 L18 31 L31 42 L45 19 L60 35 L76 24 L92 31 L108 21 L126 27 L143 19 L160 12 L176 2"/></svg>
+              </div>
+            </article>
+            <article class="case-panel">
+              <header><h2>Статусы комплектовщиков</h2></header>
+              <table class="case-mini-table" id="casePickerStatuses"></table>
+            </article>
+            <article class="case-panel">
+              <header><h2>Распределение по рейсам</h2></header>
+              <div class="case-donut"></div>
+            </article>
+            <article class="case-panel">
+              <header><h2>Топ проблем</h2></header>
+              <table class="case-mini-table" id="caseProblems"></table>
+            </article>
+            <article class="case-panel">
+              <header><h2>Последние проблемы</h2><button class="case-action-button" type="button">Смотреть все</button></header>
+              <table class="case-mini-table" id="caseLastProblems"></table>
+            </article>
+          </section>
+        </section>
+      </main>
+    </div>
+    <script src="admin-nav.js"></script>
+    <script src="admin-auth.js"></script>
+    <script src="case-pick-management.js"></script>
+  </body>
+</html>

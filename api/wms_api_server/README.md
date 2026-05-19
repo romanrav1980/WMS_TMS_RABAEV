@@ -303,18 +303,22 @@ Wave picking:
 - `POST /api/picking/waves`
 - `GET /api/picking/waves/candidates`
 - `GET /api/picking/waves/{pick_wave_id}`
+- `GET /api/picking/waves/{pick_wave_id}/readiness`
 - `POST /api/picking/waves/{pick_wave_id}/plans`
 - `POST /api/picking/waves/{pick_wave_id}/calculate`
 - `POST /api/picking/waves/{pick_wave_id}/launch`
 - `POST /api/picking/waves/{pick_wave_id}/cancel`
 - `POST /api/picking/waves/{pick_wave_id}/release-reservations`
+- `POST /api/picking/waves/{pick_wave_id}/replenishment/minimax-check`
+- `POST /api/picking/waves/{pick_wave_id}/staging/release`
 - `GET /api/picking/waves/{pick_wave_id}/reservations`
 - `GET /api/picking/waves/{pick_wave_id}/replenishment-tasks`
 - `GET /api/picking/waves/{pick_wave_id}/tasks`
+- `POST /api/picking/waves/{pick_wave_id}/tasks/{pick_task_id}/complete`
 - `GET /api/picking/waves/{pick_wave_id}/audit`
 - These endpoints require Oracle migration `2026-05-17-018-wave-picking-core`.
 - They use permissions `pick_wave_view`, `pick_wave_create`, `pick_wave_calculate`, `pick_wave_launch`, `pick_wave_cancel`, `pick_wave_release_reserves`, and `pick_wave_audit_view`.
-- Launch creates hard operational reservations and picking/replenishment tasks. It still does not update legacy stock tables directly.
+- Launch creates hard operational reservations and picking/replenishment tasks. Same-SKU repeated replenishment can create several domain rows and hard source reservations, but driver-facing `RRL_WAREHOUSE_TASK` rows are created only for released rows; `QUEUED`, `WAIT_FREE_CELL`, and `WAIT_MINIMAX` stay invisible to the driver. Completing a wave pick task records `FACT_QTY` and triggers automatic Minimax/queue release for eligible rows. If a free dynamic/generic pick-face cell exists, a queued row can be released there immediately. Full-pallet staging release creates `PICKING_MOVE` reachtruck tasks for loading/staging cells under the same `PICK_WAVE` document. Wave readiness reports blocking replenishment, full-pallet staging, case-pick, domain-sync, and shortage conditions before dispatch. It still does not update legacy stock tables directly unless a local test explicitly sends `adjust_pick_face_stock = true`.
 
 Common stock reservations:
 
@@ -352,9 +356,75 @@ Warehouse reachtruck tasks:
 - `POST /api/warehouse-tasks/{task_id}/start`
 - `POST /api/warehouse-tasks/{task_id}/complete`
 - `POST /api/warehouse-tasks/{task_id}/cancel`
+- `GET /api/warehouse-tasks/domain-sync`
+- `GET /api/warehouse-tasks/{task_id}/sync`
+- `POST /api/warehouse-tasks/{task_id}/sync/retry`
+- Raw supervisor UI: `wiki-raw/wms_admin_ui_reference/warehouse-task-sync.html`.
+- Wave replenishment and staging UI: `wiki-raw/wms_admin_ui_reference/wave-replenishment.html`.
+- Operations runbook: `wiki/runbooks/warehouse_task_domain_sync_operations.md`.
 - These endpoints require Oracle migration `2026-05-17-026-warehouse-tasks`.
+- Quantity-mode fields require Oracle migration `2026-05-17-027-warehouse-task-qty-mode`.
+- Domain sync endpoints require Oracle migration `2026-05-17-028-warehouse-task-domain-sync`.
 - They use permissions `warehouse_task_view` and `warehouse_task_execute`.
 - MES raw supply creates `RAW_TO_PRODUCTION` tasks; production completion creates `FG_TO_STORAGE` tasks for finished-goods pallets.
+- Wave launch creates `REPLENISHMENT` tasks with `TASK_SOURCE = WAVE` for pick-face replenishment, so reachtruck drivers use the same task queue for wave replenishment.
+- Minimax check recalculates pick-face free stock and releases eligible `WAIT_MINIMAX` wave replenishment rows into `RRL_WAREHOUSE_TASK`.
+- Wave staging release creates `PICKING_MOVE` tasks with `TASK_SOURCE = WAVE`, `SOURCE_DOC_TYPE = PICK_WAVE`, and `SOURCE_TASK_ID = RRL_PICK_WAVE_TASK.PICK_WAVE_TASK_ID` for full-pallet movement into a loading/staging zone.
+- The raw wave UI can run staging release, enter the loading/staging cell, and show linked `PICKING_MOVE` status for full-pallet wave rows.
+- The list endpoint supports filters by `status`, `task_type`, `task_source`, `assigned_to`, `production_order_id`, `source_doc_type`, and `source_doc_id`.
+- `QTY_MODE = PALLET` means full-pallet work; `QTY_MODE = BOX` means box/count work.
+- Blank `fact_qty` on complete means the planned task quantity was moved. Lower `fact_qty` is allowed only for `BOX` tasks and creates a residual `PLANNED` task with `PARENT_TASK_ID`.
+- Current domain sync handlers support `WAVE / REPLENISHMENT / PICK_WAVE`, `WAVE / PICKING_MOVE / PICK_WAVE`, `MES_RAW_SUPPLY / RAW_TO_PRODUCTION / PRODUCTION_ORDER`, and `MES_COMPLETION / FG_TO_STORAGE / PRODUCTION_ORDER`; all write `RRL_WAREHOUSE_TASK_SYNC`.
+- For `RAW_TO_PRODUCTION`, completing the warehouse task confirms the MES raw transfer task. Partial box completion leaves the MES task `IN_PROGRESS`, stores accumulated `FACT_QTY`, creates a residual warehouse task, and closes MES only after the residual task is completed.
+- For `FG_TO_STORAGE`, completing the warehouse task confirms physical placement of the released finished-goods pallet. If the linked `FG_PALLET_RELEASE` is already applied to WMS, the handler only verifies the target cell and marks sync `SYNCED`; if it is still pending, the handler updates `TARGET_LOCATION` and runs the existing WMS bridge once.
+- For `PICKING_MOVE`, completing the warehouse task closes the full-pallet wave task, records the staging cell fact, and consumes related picking reservations.
+
+Case-pick TSD:
+
+- `POST /api/case-pick/waves/{pick_wave_id}/ensure`
+- `GET /api/case-pick/tasks`
+- `GET /api/case-pick/tasks/{case_pick_task_id}`
+- `POST /api/case-pick/tasks/{case_pick_task_id}/claim`
+- `POST /api/case-pick/tasks/{case_pick_task_id}/start`
+- `POST /api/case-pick/tasks/{case_pick_task_id}/transfer`
+- `POST /api/case-pick/tasks/{case_pick_task_id}/lines/{line_id}/confirm`
+- `POST /api/case-pick/tasks/{case_pick_task_id}/lines/{line_id}/short`
+- `POST /api/case-pick/tasks/{case_pick_task_id}/close-pallet`
+- `GET /api/case-pick/shorts`
+- `POST /api/case-pick/shorts/{short_id}/approve`
+- `POST /api/case-pick/shorts/{short_id}/reject`
+- `GET /api/case-pick/pallet-types`
+- `POST /api/case-pick/pallet-types`
+- These endpoints require Oracle migration `2026-05-19-035-case-pick-tsd-runtime`.
+- They use permissions `case_pick_view`, `case_pick_execute`, `case_pick_manage`, and `case_pick_short_approve`.
+- Wave launch automatically calls `CasePickService.ensure_wave_case_pick_tasks`, generating one customer-pallet task and `SSCC` for case-pick lines per customer order.
+- `GET /api/case-pick/tasks?scope=all` returns the dispatcher ARM projection for route collectability: route identifiers, route pallet counts/progress, picker/resource/equipment context, pending short blocker, problem text, and last case-pick event.
+- Line confirmation rejects mismatched SKU/barcode scans; the picker cannot place that product into the customer pallet until master data is fixed.
+- Approved shorts can create a separate `RRL_INVENTORY_TASK` for the `INVENTORY` resource type.
+- Compact raw TSD page: `wiki-raw/wms_admin_ui_reference/case-pick-tsd.html`.
+- Raw dispatcher ARM page: `wiki-raw/wms_admin_ui_reference/case-pick-management.html`.
+
+Resource management:
+
+- `GET /api/resources/types`
+- `GET /api/resources/equipment`
+- `POST /api/resources/equipment`
+- `GET /api/resources`
+- `POST /api/resources`
+- `GET /api/resources/shifts`
+- `POST /api/resources/shifts`
+- `GET /api/resources/sessions`
+- `POST /api/resources/sessions/login`
+- `POST /api/resources/sessions/tsd-login`
+- `POST /api/resources/sessions/{session_id}/heartbeat`
+- `POST /api/resources/sessions/{session_id}/pause`
+- `POST /api/resources/sessions/{session_id}/resume`
+- `POST /api/resources/sessions/{session_id}/logout`
+- These endpoints require Oracle migration `2026-05-19-034-resource-management-foundation`.
+- They use permissions `resource_management_view`, `resource_management_edit`, `resource_shift_view`, `resource_shift_edit`, `resource_session_view`, and `resource_session_manage`.
+- The resource layer covers reachtrucks, KIKA, forklifts, trolleys, pickers, loading teams, cooking, and packing.
+- TSD shift-gated login is exposed through `POST /api/resources/sessions/tsd-login`: a driver/picker without `RRL_RESOURCE_SESSION` does not enter the working TSD screen.
+- Warehouse-task `assign/start/complete` accepts `resource_id`, `resource_session_id`, and `equipment_id`, writes them to `RRL_WAREHOUSE_TASK`, and appends `RRL_RESOURCE_FACT_EVENT` rows for plan-fact analysis.
 
 ## Notes
 
@@ -382,5 +452,13 @@ Checked on 2026-05-17:
 - Migration `023` apply/verify passed; HTTP smoke created a `SOFT` reservation with empty physical fields, promoted it to `HARD` with warehouse/cell/pallet, consumed it, and cleaned the smoke row.
 - Migration `024` apply/verify passed; HTTP smoke created a BOM/order, calculated raw demand, created a hard raw reservation and transfer task, then cancelled the smoke task/reservation without touching legacy stock.
 - Migration `025` apply/verify passed; backend release-to-production now uses `RRL_MES_RAW_SUPPLY_API`.
+- Migration `034` apply/verify passed; `ResourceManagementService().list_resource_types()` returned `8` seeded resource types.
 - MES raw supply load smoke passed: 12 parallel partial hard reservations on one raw pallet were created and cancelled; one transfer task was confirmed and its reservation moved to `CONSUMED`.
+- Warehouse-task MES raw supply smoke passed through the reachtruck path: `RAW_TO_PRODUCTION` completion synchronized `RRL_MES_RAW_TRANSFER_TASK`, including partial/residual box completion.
+- MES HTTP workflow smoke now completes `FG_TO_STORAGE` through `/api/warehouse-tasks` and verifies `MES_COMPLETION` domain sync as `SYNCED`.
+- Mixed dispatcher/domain-sync load passed: `python tests\load\warehouse_tasks\mixed_dispatcher_sync_load_test.py --wave-count 2 --orders-per-wave 1 --raw-orders 2 --workers 3 --cleanup-wave` created `6` new sync rows across `WAVE`, `MES_RAW_SUPPLY`, and `MES_COMPLETION`; all were `SYNCED`, duplicate `SYNC_KEY` count was `0`, invalid Oracle objects were `0`, and retry on an already synced task returned `SYNCED`.
 - Permanent smoke/load script: `python tests\smoke\mes_raw_supply_smoke.py --orders 12 --workers 4`.
+- Wave replenishment shelf-life load passed: `python tests\load\wave\wave_replenishment_load_test.py --waves 1 --orders-per-wave 3 --concurrency 1 --replenishment-method IMMEDIATE --shelf-life-scenario --execute-tasks --cleanup --report tests/load/wave/shelf_life_report.json` selected the fresh source pallet under the strictest 70% customer shelf-life rule, synced `DONE/SYNCED`, and left cleanup `0`.
+- Wave loading-zone staging smoke passed: `python tests\load\wave\wave_staging_load_test.py --cleanup --report tests/load/wave/staging_report.json` created one full-pallet wave task, released one `PICKING_MOVE` reachtruck task, completed it through assign/start/complete, reached `DONE/SYNCED`, found duplicate picking moves `0`, invalid Oracle objects `0`, and left cleanup `0`.
+- Mixed wave staging smoke passed: `python tests\load\wave\wave_staging_load_test.py --mixed-case-pick --repeat-release --cleanup --report tests/load/wave/staging_mixed_report.json` verified one `FULL_PALLET` and one `CASE_PICK` in the same wave, completed both flows, repeated staging release with no duplicate `PICKING_MOVE`, reached `DONE/SYNCED`, invalid Oracle objects `0`, and cleanup `0`.
+- Multi-wave concurrent staging smoke passed: `python tests\load\wave\wave_staging_load_test.py --waves 2 --full-pallet-articuls 2 --mixed-case-pick --repeat-release --concurrent-release-workers 3 --cleanup --report tests/load/wave/staging_multi_report.json` verified `2` waves, `4` full-pallet `PICKING_MOVE` tasks, `2` case-pick tasks, concurrent repeated release, duplicate picking moves `0`, `DONE/SYNCED = 4`, invalid Oracle objects `0`, and cleanup `0`.

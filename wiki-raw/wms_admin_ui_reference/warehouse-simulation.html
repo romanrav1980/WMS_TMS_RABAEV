@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS PRO Цифровой двойник склада</title>
+    <link rel="stylesheet" href="styles.css?v=20260519-warehouse-simulation-iso" />
+    <link rel="stylesheet" href="warehouse-simulation.css?v=20260519-warehouse-simulation-iso" />
+  </head>
+  <body class="auth-pending" data-required-permission="pick_wave_view">
+    <div class="app twin-app">
+      <aside class="sidebar twin-sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span> PRO</div>
+        </div>
+        <nav class="nav" data-admin-nav data-active-nav="warehouse-simulation"></nav>
+        <div class="sidebar-footer">
+          <div class="footer-line"><span>Смена</span><b>08:00-20:00</b></div>
+          <div class="footer-line muted"><span>Run</span><span id="sidebarRunId">demo</span></div>
+          <div class="footer-line muted"><span>Режим</span><span>Replay</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace twin-workspace">
+        <header class="twin-topbar">
+          <div class="twin-title">
+            <div class="cube-logo" aria-hidden="true">
+              <span></span><i></i><b></b>
+            </div>
+            <div>
+              <h1>Цифровой двойник склада</h1>
+              <p><span class="online-dot"></span> Онлайн · replay evidence</p>
+            </div>
+          </div>
+          <div class="twin-top-controls">
+            <label>Смена
+              <select id="shiftSelect"><option>1 (08:00-20:00)</option></select>
+            </label>
+            <label>Волна
+              <select id="waveFilter"><option value="">Все волны</option></select>
+            </label>
+            <label>Зона
+              <select id="zoneFilter"><option value="">Все зоны</option></select>
+            </label>
+            <div class="twin-clock">
+              <span>Время</span>
+              <b id="currentClock">08:00</b>
+            </div>
+            <button class="icon-button" id="loadDemo" type="button" aria-label="Demo">D</button>
+            <button class="icon-button alert" id="notificationCount" type="button" aria-label="Уведомления">0</button>
+            <div class="profile compact-profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">demo</b><small id="adminUserRole">operator</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="twin-page">
+          <section class="twin-kpis" aria-label="KPI">
+            <article><span>Производительность</span><b id="kpiProductivity">100%</b><em id="kpiProductivitySub">к плану</em><i class="spark green"></i></article>
+            <article><span>Обработано единиц</span><b id="kpiUnits">0 / 0</b><em>план смены</em><i class="bar blue" id="unitsBar"></i></article>
+            <article><span>Активные комплектовщики</span><b id="kpiPickers">0 / 10</b><em>в работе</em><i class="ring blue"></i></article>
+            <article><span>SLA пополнения</span><b id="kpiSla">100%</b><em id="kpiSlaSub">цель 95%</em><i class="ring amber"></i></article>
+            <article><span>Просроченные задачи</span><b id="kpiOverdue">0</b><em>RTP очередь</em><i class="spark red"></i></article>
+            <article><span>Коллизии</span><b id="kpiCollisions">0</b><em id="kpiCollisionsSub">активные</em><i class="warn-symbol">!</i></article>
+            <article><span>Средняя скорость</span><b id="kpiSpeed">1,21 м/с</b><em>комплектовщики</em><i class="spark green"></i></article>
+          </section>
+
+          <section class="twin-grid">
+            <aside class="twin-panel twin-left-panel">
+              <header>
+                <div>
+                  <h2>Задачи пополнения (RTP)</h2>
+                  <p>Очередь, причины просрочки и влияние на отбор</p>
+                </div>
+                <button class="chevron-button" type="button">›</button>
+              </header>
+              <div class="tabs" role="tablist">
+                <button class="active" id="tabOverdue" type="button">Просроченные <span id="overdueTabCount">0</span></button>
+                <button id="tabAllTasks" type="button">Все <span id="allTaskCount">0</span></button>
+              </div>
+              <div class="rtp-task-list" id="rtpTaskList"></div>
+              <div class="rtp-driver-card" id="rtpDriverCard"></div>
+              <div class="evidence-loader">
+                <b>Evidence</b>
+                <span id="evidenceStatus">demo fallback</span>
+                <label>layout<input id="layoutFile" type="file" accept=".json,application/json" /></label>
+                <label>events<input id="eventsFile" type="file" accept=".jsonl,.txt,application/json" /></label>
+                <label>metrics<input id="metricsFile" type="file" accept=".csv,text/csv" /></label>
+                <label>collisions<input id="collisionsFile" type="file" accept=".csv,text/csv" /></label>
+                <label>report<input id="reportFile" type="file" accept=".json,application/json" /></label>
+              </div>
+            </aside>
+
+            <article class="twin-scene-card">
+              <div class="scene-toolbar">
+                <div>
+                  <b id="sceneRunId">demo</b>
+                  <span id="sceneSubtitle">25 аллей · G01..G25 · изометрический replay</span>
+                </div>
+                <div class="layer-toggles">
+                  <label><input type="checkbox" data-layer="pickers" checked /> Комплектовщики</label>
+                  <label><input type="checkbox" data-layer="reachtrucks" checked /> RTP</label>
+                  <label><input type="checkbox" data-layer="routes" checked /> Маршруты</label>
+                  <label><input type="checkbox" data-layer="collisions" checked /> Коллизии</label>
+                  <label><input type="checkbox" data-layer="heatmap" checked /> Heatmap</label>
+                </div>
+              </div>
+              <div class="scene-frame">
+                <canvas id="warehouseCanvas" width="1320" height="820"></canvas>
+                <div id="sceneOverlays" class="scene-overlays"></div>
+                <div id="detailCard" class="detail-card">
+                  <b>Склад</b>
+                  <span>Нажмите ресурс, маршрут или коллизию.</span>
+                </div>
+                <div class="legend-card">
+                  <span><i class="green"></i> Норма</span>
+                  <span><i class="blue"></i> Движение</span>
+                  <span><i class="amber"></i> Риск</span>
+                  <span><i class="red"></i> Коллизия</span>
+                  <span><i class="gray"></i> Ожидание</span>
+                </div>
+                <div class="route-widget" id="routeWidget"></div>
+              </div>
+            </article>
+
+            <aside class="twin-panel twin-right-panel">
+              <header>
+                <div>
+                  <h2>Коллизии и причины</h2>
+                  <p>Root cause, потери и затронутые маршруты</p>
+                </div>
+                <select id="collisionTypeFilter" aria-label="Тип коллизии">
+                  <option value="">Все</option>
+                </select>
+              </header>
+              <div class="collision-feed" id="collisionFeed"></div>
+            </aside>
+          </section>
+
+          <footer class="timeline-panel">
+            <div class="timeline-controls">
+              <button id="playPause" class="play-button" type="button">Pause</button>
+              <button id="stepBack" class="mini-control" type="button" aria-label="Назад">‹</button>
+              <button id="stepForward" class="mini-control" type="button" aria-label="Вперед">›</button>
+              <select id="speedSelect" aria-label="Скорость">
+                <option value="1">x1</option>
+                <option value="5" selected>x5</option>
+                <option value="10">x10</option>
+                <option value="60">x60</option>
+              </select>
+              <button id="liveButton" class="live-button" type="button">LIVE</button>
+            </div>
+            <div class="timeline-track-wrap">
+              <div class="timeline-ticks">
+                <span>08:00</span><span>09:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span><span>14:00</span><span>15:00</span><span>16:00</span><span>17:00</span><span>18:00</span><span>19:00</span><span>20:00</span>
+              </div>
+              <div class="timeline-markers" id="timelineMarkers"></div>
+              <input id="timeScrubber" type="range" min="0" max="720" step="1" value="102" aria-label="Минута смены" />
+              <b class="time-badge" id="timeBadge">09:42</b>
+            </div>
+            <button id="calendarButton" class="mini-control" type="button" aria-label="Календарь">□</button>
+          </footer>
+        </section>
+      </main>
+    </div>
+    <script src="admin-nav.js"></script>
+    <script src="admin-auth.js"></script>
+    <script src="warehouse-simulation.js?v=20260519-warehouse-simulation-iso"></script>
+  </body>
+</html>

@@ -71,6 +71,9 @@ This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/
 - `025_verify.sql`: read-only verification for the raw-supply package and invalid objects.
 - `025_rollback.sql`: safe rollback for the raw-supply package only. It does not drop demand, reservation, task, or movement history.
 - `026_apply.sql`: common warehouse reachtruck tasks for MES raw supply and finished-goods storage.
+- `027_apply.sql`: quantity mode, fact quantity, and residual task links for warehouse tasks.
+- `028_apply.sql`: domain synchronization queue for completed warehouse tasks.
+- `036_apply.sql`: warehouse-task stock-move ledger for idempotent physical `RRL_REMAINS` movement from completed TSD facts.
 - `026_verify.sql`: read-only verification for warehouse task entities.
 - `026_rollback.sql`: safe rollback for warehouse task rights and migration ledger only. It does not drop warehouse task history.
 
@@ -496,6 +499,101 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - Adds task types `RAW_TO_PRODUCTION` and `FG_TO_STORAGE` for MES raw supply and finished-goods storage.
 - Adds admin rights `WAREHOUSE_TASK_VIEW` and `WAREHOUSE_TASK_EXECUTE`.
 - `026_rollback.sql` is non-destructive and keeps task history; it removes only rights and the migration ledger row.
+
+`2026-05-17-027-warehouse-task-qty-mode`:
+
+- Adds `QTY_MODE` to distinguish full-pallet work from box/count work.
+- Adds `FACT_QTY` for completed physical fact and `PARENT_TASK_ID` for residual tasks created after partial completion.
+- Adds lookup indexes by quantity mode/status and parent task.
+- `027_rollback.sql` is non-destructive and keeps task history/columns; it removes only the migration ledger row.
+
+`2026-05-17-028-warehouse-task-domain-sync`:
+
+- Adds `RRL_WAREHOUSE_TASK_SYNC` for domain synchronization after driver task completion.
+- Adds `SYNC_KEY`, `SYNC_STATUS`, `SYNC_ATTEMPT`, `LAST_ERROR`, source document fields, and timestamps.
+- Adds indexes for task lookup, status queue processing, source document lookup, and unique sync key idempotency.
+- `028_rollback.sql` is non-destructive and keeps sync history; it removes only the migration ledger row.
+
+`2026-05-17-029-wave-case-pick-replenishment-settings`:
+
+- Adds pick-face article replenishment settings to `RRL_PICK_FACE_ARTICUL`: method, quantity mode, Minimax thresholds, layer/pallet dimensions, box volume, and partial-pallet permission.
+- Extends `RRL_PICK_WAVE_REPLENISH_TASK` with the replenishment settings snapshot used at wave launch.
+- Extends replenishment task statuses with `WAIT_MINIMAX` and `RELEASED`.
+- Apply result: `Statements=3; Errors=0`.
+- Verify result: `Statements=6; Errors=0`.
+- `029_rollback.sql` is non-destructive and keeps replenishment settings/history; it removes only the migration ledger row.
+
+`2026-05-17-030-wave-replenishment-source-reservation`:
+
+- Adds customer shelf-life snapshots to `RRL_PICK_WAVE_DEMAND`.
+- Adds source-pallet reservation fields to `RRL_PICK_WAVE_REPLENISH_TASK`.
+- Source selection uses `RRL_REMAINS` / `RRL_PALLETS`, subtracts active hard reservations and active warehouse tasks, applies the strictest customer shelf-life requirement in the wave, and then sorts by FEFO.
+- Creates hard `RRL_STOCK_RESERVATION` rows before driver-facing replenishment tasks are created.
+- Apply result: `Statements=3; Errors=0`.
+- Verify result: `Statements=5; Errors=0`.
+- `030_rollback.sql` is non-destructive and keeps reservation/snapshot history; it removes only the migration ledger row.
+
+`2026-05-19-031-wave-pick-task-fact-minimax-trigger`:
+
+- Adds `FACT_QTY` and `DONE_BY` to `RRL_PICK_TASK`.
+- Adds `FACT_QTY`, `DONE_AT`, and `DONE_BY` to `RRL_PICK_WAVE_TASK`.
+- These fields are used by the API fact endpoint that closes `CASE_PICK` wave tasks and triggers Minimax release automatically.
+- Apply result: `Statements=3; Errors=0`.
+- Verify result: `Statements=4; Errors=0`.
+- `031_rollback.sql` is non-destructive and keeps pick-task fact history; it removes only the migration ledger row.
+
+`2026-05-19-032-wave-replenishment-queue-statuses`:
+
+- Extends `RRL_PICK_WAVE_REPLENISH_TASK.STATUS` with `QUEUED` and `WAIT_FREE_CELL`.
+- `QUEUED` is used for same-SKU repeated drops that already belong to the wave but must not create simultaneous conflicting reachtruck tasks for one fixed pick-face cell.
+- `WAIT_FREE_CELL` is used when a queued replenishment can be released only after a free dynamic/generic pick-face cell appears.
+- Backend queue release creates driver-facing `RRL_WAREHOUSE_TASK` rows only for `RELEASED`, `ASSIGNED`, or `IN_PROGRESS` replenishment rows.
+- Apply result: `Statements=3; Errors=0`.
+- Verify result: `Statements=3; Errors=0`.
+- `032_rollback.sql` is non-destructive and keeps queue statuses/history; it removes only the migration ledger row.
+
+`2026-05-19-033-dynamic-pick-face-assignments`:
+
+- Adds `RRL_PICK_FACE_ASSIGNMENT` for temporary dynamic/generic pick-face cell assignment by wave and articul.
+- Adds sequence `RRL_PICK_FACE_ASSIGN_SQ`.
+- Adds a unique active-cell index so a dynamic cell can have only one active assignment at a time.
+- Backend dynamic queue release creates an active assignment before updating the replenishment row to `RELEASED`.
+- Apply result: `Statements=3; Errors=0`.
+- Verify result: `Statements=5; Errors=0`.
+- `033_rollback.sql` is non-destructive and keeps assignment history; it removes only the migration ledger row.
+
+`2026-05-19-034-resource-management-foundation`:
+
+- Adds resource-management foundation tables: `RRL_RESOURCE_TYPE`, `RRL_RESOURCE_EQUIPMENT`, `RRL_RESOURCE`, `RRL_RESOURCE_SHIFT`, `RRL_RESOURCE_SESSION`, `RRL_RESOURCE_ASSIGNMENT`, and `RRL_RESOURCE_FACT_EVENT`.
+- Seeds resource types for reachtrucks, KIKA, forklifts, trolleys, case pickers, loading teams, cooking, and packing.
+- Adds nullable resource planning links to `RRL_WAREHOUSE_TASK`: `RESOURCE_ID`, `RESOURCE_SESSION_ID`, `EQUIPMENT_ID`, planned timestamps, and dispatch priority.
+- Adds `GLOBAL_ADMIN` rights for resource management, shift/session management, Gantt, dispatch, and forced task assignment.
+- Apply result: `Statements=5; Errors=0`.
+- Verify result: `Statements=7; Errors=0`.
+- `034_rollback.sql` is non-destructive and keeps resource tables/history; it removes only the new rights and the migration ledger row.
+
+`2026-05-19-035-case-pick-tsd-runtime`:
+
+- Adds normalized `PALLET_TYPE` reference tables: `RRL_PALLET_TYPE` and `RRL_CUSTOMER_PALLET_TYPE_RULE`.
+- Seeds `EURO_PALLET` (`1.6 m3`), `AMERICAN_PALLET`, and `TROLLEY`.
+- Adds warehouse case-pick settings, customer-pallet picker tasks, picker lines, shorts/write-offs, inventory tasks, and idempotent case-pick events.
+- Extends `RRL_PICK_WAVE_TASK` and `RRL_PICK_TASK` with `CASE_PICK_TASK_ID` and `CASE_PICK_LINE_ID`.
+- Seeds the `INVENTORY` resource type for inventory tasks created from approved shorts.
+- Adds `GLOBAL_ADMIN` rights for case-pick TSD execution, case-pick management, short approval, and inventory task execution.
+- Apply result: first run created idempotent DDL and stopped on a seed alias; rerun after fix completed with `Statements=7; Errors=0`.
+- Verify result: `Statements=7; Errors=0`.
+- Service smoke: temporary wave with two case-pick lines generated a customer-pallet task and `SSCC`, confirmed one line, shorted/approved another line, created an inventory task, closed the pallet to `WAIT_CONTROL`, and cleaned up.
+- `035_rollback.sql` is non-destructive and keeps case-pick runtime history; it removes only the migration ledger row.
+
+`2026-05-19-036-warehouse-task-stock-move-ledger`:
+
+- Adds `RRL_WAREHOUSE_TASK_STOCK_MOVE` as the idempotency ledger for physical stock movement applied from completed warehouse tasks.
+- Adds sequence `RRL_WH_TASK_STOCK_MOVE_SQ`.
+- Runtime `WAVE / REPLENISHMENT / PICK_WAVE` domain sync now moves the pallet identifier from `FROM_CELL` to `TO_CELL` in `RRL_REMAINS`, records one ledger row per `TASK_ID`, and then consumes the hard source reservation.
+- Apply result: `Statements=3; Errors=0`.
+- Verify result: `Statements=5; Errors=0`.
+- Runtime load `LOAD-WAVE-ZVT7J3`: `9` warehouse replenishment tasks `DONE`, `9` sync rows `SYNCED`, `9` stock-move ledger rows, `81` boxes moved into fixed/dynamic pick-face cells, failed HTTP requests `0`, invalid objects `0`.
+- `036_rollback.sql` is non-destructive and keeps stock-move history; it removes only the migration ledger row.
 
 ## Required Procedure For Future Reapply
 

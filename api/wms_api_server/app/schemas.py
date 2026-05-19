@@ -54,6 +54,69 @@ class IdResponse(BaseModel):
     id: int
 
 
+class ResourceEquipmentCreateRequest(BaseModel):
+    equipment_code: str
+    equipment_type: str
+    equipment_name: str | None = None
+    ware_id: int | None = None
+    home_zone_code: str | None = None
+    capacity_class: str | None = None
+    service_status: str | None = "ACTIVE"
+    active: int = 1
+    created_by: str | None = None
+
+
+class ResourceCreateRequest(BaseModel):
+    resource_code: str
+    resource_name: str
+    resource_type: str
+    resource_class: str | None = None
+    equipment_id: int | None = None
+    user_id: str | None = None
+    team_code: str | None = None
+    ware_id: int | None = None
+    zone_code: str | None = None
+    status: str | None = "AVAILABLE"
+    active: int = 1
+    created_by: str | None = None
+
+
+class ResourceShiftCreateRequest(BaseModel):
+    shift_code: str
+    shift_date: date
+    start_at: datetime
+    finish_at: datetime
+    ware_id: int | None = None
+    site_code: str | None = None
+    status: str | None = "PLANNED"
+    created_by: str | None = None
+
+
+class ResourceSessionLoginRequest(BaseModel):
+    shift_id: int
+    resource_id: int
+    equipment_id: int | None = None
+    operator_user_id: str | None = None
+    terminal_id: str | None = None
+    zone_code: str | None = None
+    created_by: str | None = None
+
+
+class ResourceSessionStatusRequest(BaseModel):
+    updated_by: str | None = None
+    reason: str | None = None
+
+
+class ResourceTsdLoginRequest(BaseModel):
+    driver_code: str | None = None
+    password: str | None = None
+    barcode: str | None = None
+    equipment_code: str | None = None
+    terminal_id: str | None = None
+    ware_id: int | None = None
+    zone_code: str | None = None
+
+
 class PalletAttachRequest(BaseModel):
     uid_pallet: str
     pallet_no: int | None = None
@@ -620,6 +683,14 @@ class PickFaceArticulUpsertRequest(BaseModel):
     min_qty: float | None = None
     max_qty: float | None = None
     case_pick_enabled: int = 1
+    replenishment_method: str = "IMMEDIATE"
+    replenishment_qty_mode: str = "FILL_TO_VOLUME"
+    min_trigger_box_qty: float | None = None
+    min_trigger_layer_qty: float | None = None
+    boxes_per_layer: float | None = None
+    boxes_per_pallet: float | None = None
+    box_volume_m3: float | None = None
+    allow_partial_pallet: int = 1
     active: int = 1
     valid_from: date | None = None
     valid_to: date | None = None
@@ -645,6 +716,80 @@ class PickWaveAddPlanRequest(BaseModel):
 
 class PickWaveActionRequest(BaseModel):
     reason: str | None = None
+    updated_by: str | None = None
+
+
+class PickTaskCompleteRequest(BaseModel):
+    fact_qty: float | None = Field(default=None, ge=0)
+    scanned_pallet: str | None = None
+    scanned_from_cell: str | None = None
+    scanned_to_cell: str | None = None
+    adjust_pick_face_stock: bool = False
+    completed_by: str | None = None
+
+
+class PickWaveStagingReleaseRequest(BaseModel):
+    to_cell: str
+    updated_by: str | None = None
+
+
+class CasePickTaskActionRequest(BaseModel):
+    resource_id: int | None = None
+    resource_session_id: int | None = None
+    equipment_id: int | None = None
+    actor: str | None = None
+    reason: str | None = None
+
+
+class CasePickLineConfirmRequest(BaseModel):
+    fact_qty: float | None = Field(default=None, ge=0)
+    scan_cell: str | None = None
+    scan_product: str | None = None
+    scan_box: str | None = None
+    scan_container: str | None = None
+    offline_event_id: str | None = None
+    resource_id: int | None = None
+    resource_session_id: int | None = None
+    equipment_id: int | None = None
+    actor: str | None = None
+
+
+class CasePickLineShortRequest(BaseModel):
+    picked_qty: float | None = Field(default=None, ge=0)
+    short_qty: float | None = Field(default=None, ge=0)
+    reason_text: str | None = None
+    offline_event_id: str | None = None
+    resource_id: int | None = None
+    resource_session_id: int | None = None
+    equipment_id: int | None = None
+    actor: str | None = None
+
+
+class CasePickTransferRequest(BaseModel):
+    to_resource_id: int
+    to_resource_session_id: int | None = None
+    to_equipment_id: int | None = None
+    reason: str | None = None
+    actor: str | None = None
+
+
+class CasePickShortDecisionRequest(BaseModel):
+    reason_text: str | None = None
+    actor: str | None = None
+
+
+class PalletTypeUpsertRequest(BaseModel):
+    pallet_type_id: int | None = None
+    pallet_type_code: str
+    pallet_type_name: str
+    load_unit_class: str = "PALLET"
+    default_volume_m3: float | None = Field(default=None, ge=0)
+    default_weight_kg: float | None = Field(default=None, ge=0)
+    length_mm: float | None = Field(default=None, ge=0)
+    width_mm: float | None = Field(default=None, ge=0)
+    height_mm: float | None = Field(default=None, ge=0)
+    default_max_client_pallets: int = Field(default=1, ge=1, le=3)
+    active: int = 1
     updated_by: str | None = None
 
 
@@ -717,6 +862,12 @@ class MesRawTransferTaskCancelRequest(BaseModel):
 
 class WarehouseTaskStatusRequest(BaseModel):
     assigned_to: str | None = None
+    resource_id: int | None = None
+    resource_session_id: int | None = None
+    equipment_id: int | None = None
     fact_qty: float | None = Field(default=None, ge=0)
+    scanned_pallet: str | None = None
+    scanned_from_cell: str | None = None
+    scanned_to_cell: str | None = None
     reason: str | None = None
     updated_by: str | None = None

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТСД комплектовщика</title>
+    <link rel="stylesheet" href="styles.css?v=20260519-case-pick-tsd" />
+  </head>
+  <body class="auth-pending tsd-terminal-body" data-required-permission="case_pick_view">
+    <main class="app tsd-app">
+      <section class="workspace tsd-workspace">
+        <header class="tsd-header">
+          <div>
+            <b>ТСД сборки</b>
+            <span id="cpTsdState">Ожидание</span>
+          </div>
+          <button id="cpTsdRefresh" type="button">Обновить</button>
+        </header>
+
+        <section class="tsd-operator">
+          <label>Комплектовщик / ШК<input id="cpTsdPicker" autocomplete="off" /></label>
+          <label>Пароль<input id="cpTsdPassword" type="password" autocomplete="off" /></label>
+          <label>Тележка<input id="cpTsdEquipment" autocomplete="off" placeholder="TR-01" /></label>
+          <label>Режим
+            <select id="cpTsdScope">
+              <option value="mine">Мои + свободные</option>
+              <option value="free">Свободные</option>
+              <option value="all">Все</option>
+            </select>
+          </label>
+          <button id="cpTsdShiftLogin" type="button">Смена</button>
+          <button id="cpTsdShiftLogout" type="button">Выход смены</button>
+        </section>
+
+        <section class="tsd-task-card">
+          <div class="tsd-task-top">
+            <span id="cpTsdStatus" class="task-badge planned">-</span>
+            <b id="cpTsdTaskId">-</b>
+          </div>
+          <h1 id="cpTsdOperation">Нет поддона</h1>
+          <div class="tsd-route">
+            <div><span>Ячейка</span><b id="cpTsdCell">-</b></div>
+            <div><span>Поддон</span><b id="cpTsdSscc">-</b></div>
+          </div>
+          <dl class="tsd-facts">
+            <div><dt>Клиент</dt><dd id="cpTsdCustomer">-</dd></div>
+            <div><dt>Заказ</dt><dd id="cpTsdOrder">-</dd></div>
+            <div><dt>SKU</dt><dd id="cpTsdArticul">-</dd></div>
+            <div><dt>Кол-во</dt><dd id="cpTsdQty">-</dd></div>
+          </dl>
+        </section>
+
+        <section class="tsd-scans" data-permission="case_pick_execute">
+          <label>Ячейка<input id="cpTsdScanCell" autocomplete="off" inputmode="text" /></label>
+          <label>Товар / ШК<input id="cpTsdScanProduct" autocomplete="off" inputmode="text" /></label>
+          <label>Коробка<input id="cpTsdScanBox" autocomplete="off" inputmode="text" /></label>
+          <label>Факт<input id="cpTsdFactQty" type="number" min="0" step="0.001" inputmode="decimal" placeholder="план" /></label>
+        </section>
+
+        <section class="tsd-actions" data-permission="case_pick_execute">
+          <button id="cpTsdPrev" type="button">Назад</button>
+          <button id="cpTsdNext" type="button">Дальше</button>
+          <button id="cpTsdClaim" type="button">Взять</button>
+          <button id="cpTsdStart" type="button">Старт</button>
+          <button id="cpTsdConfirm" class="primary" type="button">Собрано</button>
+          <button id="cpTsdShort" class="danger" type="button">Нет товара</button>
+          <button id="cpTsdClose" class="primary" type="button">Закрыть</button>
+        </section>
+
+        <footer class="tsd-footer">
+          <span id="cpTsdCounter">0 / 0</span>
+          <span id="cpTsdSession">Смена не открыта</span>
+          <button id="adminLogout" type="button">Выход</button>
+        </footer>
+      </section>
+    </main>
+    <script src="admin-auth.js"></script>
+    <script src="case-pick-tsd.js"></script>
+  </body>
+</html>

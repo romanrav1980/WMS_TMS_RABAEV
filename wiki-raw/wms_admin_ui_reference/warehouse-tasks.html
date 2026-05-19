@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS PRO Складские задания</title>
+    <link rel="stylesheet" href="styles.css?v=20260518-warehouse-tasks" />
+  </head>
+  <body class="auth-pending" data-required-permission="warehouse_task_view">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span> PRO</div>
+        </div>
+        <nav class="nav" data-admin-nav data-active-nav="warehouse-tasks"></nav>
+        <div class="sidebar-footer">
+          <div class="factory-mark">
+            <span class="tower t1"></span>
+            <span class="tower t2"></span>
+            <span class="tower t3"></span>
+            <span class="plant-base"></span>
+          </div>
+          <div class="footer-line"><span>Смена</span><b>1 смена</b></div>
+          <div class="footer-line muted"><span>18.05.2026</span><span>10:24</span></div>
+          <div class="footer-line muted"><span>Версия</span><span>2.4.1</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="breadcrumbs"><b>Админ-панель WMS</b><span>/</span><b>Складские задания</b></div>
+          <div class="top-actions">
+            <label class="search">
+              <span>Поиск</span>
+              <input id="warehouseTaskSearch" placeholder="Паллет, SSCC, ячейка, исполнитель..." />
+              <kbd>Ctrl K</kbd>
+            </label>
+            <button class="round alert">12</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">Администратор</b><small id="adminUserRole">WMS</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="admin-page warehouse-task-page">
+          <article class="panel warehouse-task-list-panel">
+            <header>
+              <h2>Очередь исполнения</h2>
+              <button id="warehouseTaskRefresh" type="button">Обновить</button>
+            </header>
+            <div class="rights-toolbar warehouse-task-toolbar">
+              <label>Статус
+                <select id="warehouseTaskStatus">
+                  <option value="">Все</option>
+                  <option>PLANNED</option>
+                  <option>ASSIGNED</option>
+                  <option>IN_PROGRESS</option>
+                  <option>DONE</option>
+                  <option>CANCELLED</option>
+                  <option>ERROR</option>
+                </select>
+              </label>
+              <label>Операция
+                <select id="warehouseTaskType">
+                  <option value="">Все</option>
+                  <option value="REPLENISHMENT">Пополнение</option>
+                  <option value="RAW_TO_PRODUCTION">Сырье в производство</option>
+                  <option value="FG_TO_STORAGE">Готовая продукция</option>
+                  <option value="PICKING_MOVE">Комплектация</option>
+                  <option value="OTHER">Другое</option>
+                </select>
+              </label>
+              <label>Источник
+                <select id="warehouseTaskSource">
+                  <option value="">Все</option>
+                  <option value="WAVE">Волна</option>
+                  <option value="MES_COMPLETION">Выпуск</option>
+                  <option value="MES_RAW_SUPPLY">Снабжение производства</option>
+                  <option value="PICKING">Комплектация</option>
+                  <option value="MANUAL">Ручная</option>
+                </select>
+              </label>
+              <label>Документ<input id="warehouseTaskSourceDoc" type="number" min="1" placeholder="ID волны/заказа" /></label>
+              <label>Исполнитель<input id="warehouseTaskAssignee" placeholder="driver" /></label>
+              <label>Лимит<input id="warehouseTaskLimit" type="number" min="1" max="500" value="150" /></label>
+              <button id="warehouseTaskLoad" type="button">Показать</button>
+            </div>
+            <div class="warehouse-task-tabs" role="tablist">
+              <button type="button" data-task-preset="all" class="active">Все</button>
+              <button type="button" data-task-preset="wave-pickface">Pick face</button>
+              <button type="button" data-task-preset="shipping-zone">Грузовая зона</button>
+              <button type="button" data-task-preset="finished-goods">Готовая продукция</button>
+              <button type="button" data-task-preset="production-wave">Производство</button>
+            </div>
+            <div class="rights-summary">
+              <span id="warehouseTaskStatusText">Ожидание данных</span>
+              <span id="warehouseTaskSelectionText">Задание не выбрано</span>
+            </div>
+            <div class="rights-table-wrap warehouse-task-scroll">
+              <table class="rights-table warehouse-task-table">
+                <thead>
+                  <tr>
+                    <th>ID</th><th>Операция</th><th>Источник</th><th>Режим</th><th>Паллет</th><th>Откуда</th><th>Куда</th><th>План/факт</th><th>Статус</th><th>Исполнитель</th>
+                  </tr>
+                </thead>
+                <tbody id="warehouseTaskRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel warehouse-task-detail-panel">
+            <header><h2>Исполнение</h2></header>
+            <div class="warehouse-task-kind-grid">
+              <div><span>Pick face</span><b id="warehouseTaskKpiPickFace">0</b></div>
+              <div><span>Отгрузка</span><b id="warehouseTaskKpiShipping">0</b></div>
+              <div><span>Производство</span><b id="warehouseTaskKpiProduction">0</b></div>
+              <div><span>Готовая продукция</span><b id="warehouseTaskKpiFinished">0</b></div>
+            </div>
+            <div class="rights-summary"><span id="warehouseTaskDetailStatus">Выберите задание</span></div>
+            <dl class="warehouse-task-detail-list">
+              <div><dt>Операция</dt><dd id="warehouseTaskDetailOperation">-</dd></div>
+              <div><dt>Документ</dt><dd id="warehouseTaskDetailDocument">-</dd></div>
+              <div><dt>Паллет</dt><dd id="warehouseTaskDetailPallet">-</dd></div>
+              <div><dt>Маршрут</dt><dd id="warehouseTaskDetailRoute">-</dd></div>
+              <div><dt>Режим</dt><dd id="warehouseTaskDetailMode">-</dd></div>
+              <div><dt>Количество</dt><dd id="warehouseTaskDetailQty">-</dd></div>
+              <div><dt>Родитель</dt><dd id="warehouseTaskDetailParent">-</dd></div>
+              <div><dt>Ошибка</dt><dd id="warehouseTaskDetailError">-</dd></div>
+            </dl>
+            <div class="rights-editor warehouse-task-execute" data-permission="warehouse_task_execute">
+              <label>Исполнитель<input id="warehouseTaskEditAssignee" placeholder="driver" /></label>
+              <label>Скан паллета<input id="warehouseTaskScanPallet" placeholder="UID или SSCC" /></label>
+              <label>Скан откуда<input id="warehouseTaskScanFrom" placeholder="Ячейка" /></label>
+              <label>Скан куда<input id="warehouseTaskScanTo" placeholder="Ячейка" /></label>
+              <label>Факт<input id="warehouseTaskFactQty" type="number" min="0" step="0.001" /></label>
+              <label>Причина отмены<input id="warehouseTaskCancelReason" placeholder="Причина" /></label>
+              <button id="warehouseTaskAssign" type="button">Взять</button>
+              <button id="warehouseTaskStart" type="button">Начать</button>
+              <button id="warehouseTaskComplete" type="button">Завершить</button>
+              <button id="warehouseTaskCancel" type="button">Отменить</button>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="admin-nav.js"></script>
+    <script src="admin-auth.js"></script>
+    <script src="warehouse-tasks.js"></script>
+  </body>
+</html>

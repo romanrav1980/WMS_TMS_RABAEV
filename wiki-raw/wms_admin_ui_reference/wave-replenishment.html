@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WMS PRO Пополнение волны</title>
+    <link rel="stylesheet" href="styles.css?v=20260519-wave-replenishment-queue" />
+  </head>
+  <body class="auth-pending" data-required-permission="pick_wave_view">
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">W</div>
+          <div class="brand-text"><span>WMS</span> PRO</div>
+        </div>
+        <nav class="nav" data-admin-nav data-active-nav="wave-replenishment"></nav>
+        <div class="sidebar-footer">
+          <div class="factory-mark">
+            <span class="tower t1"></span>
+            <span class="tower t2"></span>
+            <span class="tower t3"></span>
+            <span class="plant-base"></span>
+          </div>
+          <div class="footer-line"><span>Смена</span><b>1 смена</b></div>
+          <div class="footer-line muted"><span>18.05.2026</span><span>10:24</span></div>
+          <div class="footer-line muted"><span>Версия</span><span>2.4.1</span></div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="breadcrumbs"><b>Админ-панель WMS</b><span>/</span><b>Пополнение волны</b></div>
+          <div class="top-actions">
+            <label class="search">
+              <span>Поиск</span>
+              <input id="waveReplenishmentSearch" placeholder="Волна, артикул, паллет, ячейка..." />
+              <kbd>Ctrl K</kbd>
+            </label>
+            <button class="round alert">12</button>
+            <button class="round">?</button>
+            <div class="profile">
+              <span class="avatar"></span>
+              <div><b id="adminUserName">Администратор</b><small id="adminUserRole">WMS</small></div>
+              <button id="adminLogout" class="logout-button" type="button">Выйти</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="admin-page warehouse-task-page">
+          <article class="panel warehouse-task-list-panel">
+            <header>
+              <h2>Волны</h2>
+              <button id="waveReplenishmentRefresh" type="button">Обновить</button>
+            </header>
+            <div class="rights-toolbar">
+              <label>Статус
+                <select id="waveReplenishmentWaveStatus">
+                  <option value="">Все</option>
+                  <option>LAUNCHED</option>
+                  <option>PREVIEW</option>
+                  <option>DRAFT</option>
+                  <option>CANCELLED</option>
+                </select>
+              </label>
+              <label>Склад<input id="waveReplenishmentWareId" type="number" min="1" /></label>
+              <label>Лимит<input id="waveReplenishmentLimit" type="number" min="1" max="500" value="100" /></label>
+              <button id="waveReplenishmentLoad" type="button">Показать</button>
+            </div>
+            <div class="rights-summary">
+              <span id="waveReplenishmentStatusText">Ожидание данных</span>
+              <span id="waveReplenishmentSelectionText">Волна не выбрана</span>
+            </div>
+            <div class="rights-table-wrap warehouse-task-scroll">
+              <table class="rights-table warehouse-task-table">
+                <thead><tr><th>ID</th><th>Код</th><th>Статус</th><th>Склад</th><th>Заказы</th><th>Задачи</th></tr></thead>
+                <tbody id="waveReplenishmentWaveRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel warehouse-task-detail-panel">
+            <header>
+              <h2>Пополнение</h2>
+              <div class="panel-actions">
+                <button id="waveReplenishmentMinimaxCheck" type="button" data-permission="pick_wave_launch">Minimax</button>
+                <button id="waveStagingRelease" type="button" data-permission="pick_wave_launch">В грузовую зону</button>
+              </div>
+            </header>
+            <div class="rights-toolbar">
+              <label>Грузовая зона<input id="waveStagingToCell" placeholder="LOAD-ZONE-01" /></label>
+              <label>Строки
+                <select id="waveReplenishmentTaskFilter">
+                  <option value="">Все</option>
+                  <option value="DRIVER">У водителя</option>
+                  <option value="WAITING">Ожидают</option>
+                  <option value="QUEUED">QUEUED</option>
+                  <option value="WAIT_FREE_CELL">WAIT_FREE_CELL</option>
+                  <option value="WAIT_MINIMAX">WAIT_MINIMAX</option>
+                  <option value="RELEASED">RELEASED</option>
+                  <option value="DONE">DONE</option>
+                  <option value="FAILED">FAILED</option>
+                </select>
+              </label>
+            </div>
+            <div class="warehouse-task-kind-grid">
+              <div><span>Queued</span><b id="waveReplenishmentKpiQueued">0</b></div>
+              <div><span>Wait</span><b id="waveReplenishmentKpiWait">0</b></div>
+              <div><span>Driver</span><b id="waveReplenishmentKpiDriver">0</b></div>
+              <div><span>Done</span><b id="waveReplenishmentKpiDone">0</b></div>
+            </div>
+            <div class="rights-summary"><span id="waveReplenishmentDetailStatus">Выберите волну</span></div>
+            <div class="rights-table-wrap compact-scroll">
+              <table class="rights-table">
+                <thead>
+                  <tr><th>ID</th><th>Очередь</th><th>Артикул</th><th>Источник</th><th>Куда</th><th>Кол-во</th><th>Резерв</th><th>WHT</th><th>Причина</th></tr>
+                </thead>
+                <tbody id="waveReplenishmentTaskRows"></tbody>
+              </table>
+              <table class="rights-table">
+                <thead>
+                  <tr><th>Wave task</th><th>Статус</th><th>Артикул</th><th>Паллет</th><th>Откуда</th><th>Куда</th><th>WHT</th><th>Водитель</th></tr>
+                </thead>
+                <tbody id="waveStagingTaskRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel rights-users">
+            <header><h2>Настройки pick-face</h2></header>
+            <div class="rights-toolbar">
+              <label>Склад<input id="waveReplenishmentPickWareId" type="number" min="1" /></label>
+              <label>Артикул<input id="waveReplenishmentPickArticul" placeholder="Артикул" /></label>
+              <button id="waveReplenishmentPickLoad" type="button">Найти</button>
+            </div>
+            <div class="rights-summary"><span id="waveReplenishmentPickStatus">Ожидание данных</span></div>
+            <div class="rights-table-wrap compact-scroll">
+              <table class="rights-table">
+                <thead><tr><th>ID</th><th>Ячейка</th><th>Склад</th><th>Артикулов</th></tr></thead>
+                <tbody id="waveReplenishmentPickFaceRows"></tbody>
+              </table>
+              <table class="rights-table">
+                <thead><tr><th>ID</th><th>Артикул</th><th>Метод</th><th>Режим</th><th>Порог</th><th>Паллет</th></tr></thead>
+                <tbody id="waveReplenishmentPickArticulRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel rights-groups">
+            <header><h2>Правило пополнения</h2></header>
+            <div class="rights-summary"><span id="waveReplenishmentRuleStatus">Выберите строку артикула</span></div>
+            <div class="rights-editor" data-permission="pick_topology_edit">
+              <label>Артикул<input id="waveRuleArticul" /></label>
+              <label>Метод<select id="waveRuleMethod"><option>IMMEDIATE</option><option>MINIMAX</option></select></label>
+              <label>Режим<select id="waveRuleQtyMode"><option>FILL_TO_VOLUME</option><option>FULL_PALLET</option><option>HALF_PALLET</option></select></label>
+              <label>Порог, коробки<input id="waveRuleTriggerBoxes" type="number" min="0" step="1" /></label>
+              <label>Порог, слои<input id="waveRuleTriggerLayers" type="number" min="0" step="1" /></label>
+              <label>Коробок в слое<input id="waveRuleBoxesLayer" type="number" min="0" step="1" /></label>
+              <label>Коробок на паллете<input id="waveRuleBoxesPallet" type="number" min="0" step="1" /></label>
+              <label>Объем коробки<input id="waveRuleBoxVolume" type="number" min="0" step="0.001" /></label>
+              <label>Частичный паллет<select id="waveRulePartial"><option value="1">Да</option><option value="0">Нет</option></select></label>
+              <button id="waveRuleSave" type="button">Сохранить</button>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="admin-nav.js"></script>
+    <script src="admin-auth.js"></script>
+    <script src="wave-replenishment.js"></script>
+  </body>
+</html>

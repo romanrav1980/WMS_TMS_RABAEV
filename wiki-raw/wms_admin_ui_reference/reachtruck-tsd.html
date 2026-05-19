@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ТСД ричтрака</title>
+    <link rel="stylesheet" href="styles.css?v=20260518-reachtruck-tsd" />
+  </head>
+  <body class="auth-pending tsd-terminal-body" data-required-permission="warehouse_task_view">
+    <main class="app tsd-app">
+      <section class="workspace tsd-workspace">
+        <header class="tsd-header">
+          <div>
+            <b>ТСД ричтрака</b>
+            <span id="rtTsdState">Ожидание</span>
+          </div>
+          <button id="rtTsdRefresh" type="button">Обновить</button>
+        </header>
+
+        <section class="tsd-operator">
+          <label>Водитель / ШК<input id="rtTsdDriver" autocomplete="off" /></label>
+          <label>Пароль<input id="rtTsdPassword" type="password" autocomplete="off" /></label>
+          <label>Техника<input id="rtTsdEquipment" autocomplete="off" placeholder="RT-01" /></label>
+          <label>Режим
+            <select id="rtTsdScope">
+              <option value="mine">Мои + свободные</option>
+              <option value="free">Свободные</option>
+              <option value="all">Все</option>
+            </select>
+          </label>
+          <button id="rtTsdShiftLogin" type="button">Смена</button>
+          <button id="rtTsdShiftLogout" type="button">Выход смены</button>
+        </section>
+
+        <section class="tsd-task-card">
+          <div class="tsd-task-top">
+            <span id="rtTsdStatus" class="task-badge planned">-</span>
+            <b id="rtTsdTaskId">-</b>
+          </div>
+          <h1 id="rtTsdOperation">Нет задания</h1>
+          <div class="tsd-route">
+            <div><span>Откуда</span><b id="rtTsdFrom">-</b></div>
+            <div><span>Куда</span><b id="rtTsdTo">-</b></div>
+          </div>
+          <dl class="tsd-facts">
+            <div><dt>Паллет</dt><dd id="rtTsdPallet">-</dd></div>
+            <div><dt>Режим</dt><dd id="rtTsdMode">-</dd></div>
+            <div><dt>Кол-во</dt><dd id="rtTsdQty">-</dd></div>
+            <div><dt>Документ</dt><dd id="rtTsdDoc">-</dd></div>
+          </dl>
+        </section>
+
+        <section class="tsd-scans" data-permission="warehouse_task_execute">
+          <label>Паллет<input id="rtTsdScanPallet" autocomplete="off" inputmode="text" /></label>
+          <label>Откуда<input id="rtTsdScanFrom" autocomplete="off" inputmode="text" /></label>
+          <label>Куда<input id="rtTsdScanTo" autocomplete="off" inputmode="text" /></label>
+          <label>Коробки факт<input id="rtTsdFactQty" type="number" min="0" step="0.001" inputmode="decimal" placeholder="пусто = план" /></label>
+        </section>
+
+        <section class="tsd-actions" data-permission="warehouse_task_execute">
+          <button id="rtTsdPrev" type="button">Назад</button>
+          <button id="rtTsdNext" type="button">Дальше</button>
+          <button id="rtTsdAssign" type="button">Взять</button>
+          <button id="rtTsdStart" type="button">Старт</button>
+          <button id="rtTsdCompletePallet" class="primary" type="button">Паллет</button>
+          <button id="rtTsdCompleteBoxes" class="primary" type="button">Коробки</button>
+          <button id="rtTsdCancel" class="danger" type="button">Отмена</button>
+        </section>
+
+        <footer class="tsd-footer">
+          <span id="rtTsdCounter">0 / 0</span>
+          <span id="rtTsdSession">Смена не открыта</span>
+          <button id="adminLogout" type="button">Выход</button>
+        </footer>
+      </section>
+    </main>
+    <script src="admin-auth.js"></script>
+    <script src="reachtruck-tsd.js"></script>
+  </body>
+</html>

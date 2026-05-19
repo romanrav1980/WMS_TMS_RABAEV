@@ -420,6 +420,293 @@ The raw admin page is `wiki-raw/wms_admin_ui_reference/warehouses.html`; API end
 
 SQL migration files are applied as strict UTF-8 by the local `OracleApply` helper. The `012_verify.sql` script includes a mojibake-marker count for seeded warehouse/article texts.
 
+## Warehouse Task Quantity Mode
+
+Migration `2026-05-17-027-warehouse-task-qty-mode` extends `RRL_WAREHOUSE_TASK` with quantity execution semantics:
+
+- `QTY_MODE`: `PALLET` for full-pallet work and `BOX` for box/count work;
+- `FACT_QTY`: confirmed physical quantity when the task is completed;
+- `PARENT_TASK_ID`: original task id for residual tasks created after partial completion.
+
+Operational rule:
+
+- `PALLET` tasks are completed as full pallet moves and cannot be partially completed through `fact_qty`;
+- `BOX` tasks can be completed with no `fact_qty`, meaning planned quantity was moved;
+- `BOX` tasks completed with a lower `fact_qty` close the current task and create a new `PLANNED` residual task with `PARENT_TASK_ID`.
+
+Apply/verify result for `2026-05-17-027-warehouse-task-qty-mode`:
+
+- Apply: `Statements=3; Errors=0`.
+- Verify: `Statements=4; Errors=0`.
+- Runtime quantity-mode load smoke: `4` concurrent scenarios produced `4` done box tasks, `4` residual planned tasks, and `4` still-open pallet tasks after rejected partial pallet completion; cleanup removed `12` temporary rows.
+
+## Warehouse Task Domain Sync
+
+Migration `2026-05-17-028-warehouse-task-domain-sync` adds `RRL_WAREHOUSE_TASK_SYNC`.
+
+Purpose:
+
+- keep an idempotent sync record after a driver completes a warehouse task;
+- route completed physical facts back to domain documents;
+- preserve errors and retries without losing the driver fact.
+
+Key fields:
+
+- `TASK_ID`;
+- `TASK_SOURCE`, `TASK_TYPE`, `SOURCE_DOC_TYPE`, `SOURCE_DOC_ID`;
+- `SOURCE_TASK_ID`, `SOURCE_MOVEMENT_ID`;
+- `SYNC_KEY`;
+- `SYNC_STATUS`: `PENDING`, `IN_PROGRESS`, `SYNCED`, `ERROR`, `RETRY_PENDING`;
+- `SYNC_ATTEMPT`;
+- `LAST_ERROR`;
+- `CREATED_AT`, `UPDATED_AT`, `SYNCED_AT`.
+
+Current implemented handler:
+
+- `WAVE / REPLENISHMENT / PICK_WAVE`.
+
+The handler updates `RRL_PICK_WAVE_REPLENISH_TASK`: if residual warehouse tasks still exist for the same `SOURCE_TASK_ID`, the wave replenishment row stays `IN_PROGRESS`; otherwise it becomes `DONE`.
+
+Migration `2026-05-19-036-warehouse-task-stock-move-ledger` adds `RRL_WAREHOUSE_TASK_STOCK_MOVE` so completed warehouse-task facts can update legacy `RRL_REMAINS` exactly once per `TASK_ID`.
+
+Runtime rule for `WAVE / REPLENISHMENT / PICK_WAVE` after migration `036`:
+
+- on each completed driver-facing replenishment task, the sync handler moves `FACT_QTY` or planned `QTY` from `RRL_WAREHOUSE_TASK.FROM_CELL` to `TO_CELL` for the pallet identifier;
+- the move is recorded in `RRL_WAREHOUSE_TASK_STOCK_MOVE`;
+- retry of `RRL_WAREHOUSE_TASK_SYNC` skips the physical move if a ledger row for the same `TASK_ID` already exists;
+- after the physical move, the linked hard source reservation is consumed and the wave replenishment row becomes `DONE`.
+
+Apply/verify result for `2026-05-19-036-warehouse-task-stock-move-ledger`:
+
+- Apply: `Statements=3; Errors=0`.
+- Verify: `Statements=5; Errors=0`.
+- Runtime load `LOAD-WAVE-ZVT7J3`: `9` replenishment warehouse tasks completed, `9` sync rows reached `SYNCED`, `9` source reservations were consumed, and `RRL_REMAINS` moved `81` boxes into one fixed pick face plus eight dynamic pick faces.
+
+Apply/verify result for `2026-05-17-028-warehouse-task-domain-sync`:
+
+- Apply: `Statements=3; Errors=0`.
+- Verify: `Statements=5; Errors=0`.
+- Runtime wave load smoke: `2` waves x `1` order with task execution created `2` sync rows, `2` reached `SYNCED`, duplicate warehouse tasks `0`, invalid objects `0`, cleanup clean.
+
+## Wave Case-Pick Replenishment Settings
+
+Migration `2026-05-17-029-wave-case-pick-replenishment-settings` extends the wave replenishment model for pick-face case-picking.
+
+`RRL_PICK_FACE_ARTICUL` now stores SKU-specific replenishment settings:
+
+- `REPLENISHMENT_METHOD`: `IMMEDIATE` or `MINIMAX`;
+- `REPLENISHMENT_QTY_MODE`: `FULL_PALLET`, `HALF_PALLET`, or `FILL_TO_VOLUME`;
+- `MIN_TRIGGER_BOX_QTY`, `MIN_TRIGGER_LAYER_QTY`;
+- `BOXES_PER_LAYER`, `BOXES_PER_PALLET`, `BOX_VOLUME_M3`;
+- `ALLOW_PARTIAL_PALLET`.
+
+`RRL_PICK_WAVE_REPLENISH_TASK` now stores the settings snapshot used by a launched wave:
+
+- `REPLENISHMENT_METHOD`, `REPLENISHMENT_QTY_MODE`;
+- `RELEASE_TRIGGER_QTY`;
+- `BOXES_PER_LAYER`, `BOXES_PER_PALLET`, `BOX_VOLUME_M3`;
+- `PICK_FACE_MAX_VOLUME`;
+- `WAIT_REASON`, `RELEASED_AT`, `RELEASED_BY`.
+
+The status constraint now allows `WAIT_MINIMAX` and `RELEASED`. `WAIT_MINIMAX` rows are domain demand only and must not create driver-facing `RRL_WAREHOUSE_TASK` until the Minimax trigger releases them.
+
+Backend runtime after migration:
+
+- wave launch enriches replenishment rows from `RRL_PICK_FACE_ARTICUL`;
+- pick-face free stock is calculated from `RRL_REMAINS` by target cell/articul minus active hard `RRL_STOCK_RESERVATION`;
+- rows with no deficit are cancelled and do not create driver tasks;
+- `IMMEDIATE` deficit rows are marked `RELEASED` and become `RRL_WAREHOUSE_TASK`;
+- `MINIMAX` deficit rows stay `WAIT_MINIMAX` until `POST /api/picking/waves/{id}/replenishment/minimax-check` releases them.
+
+Migration `2026-05-19-032-wave-replenishment-queue-statuses` extends the same status constraint again:
+
+- `QUEUED`: repeated same-SKU replenishment row with source demand/reservation, waiting behind another fixed pick-face replenishment;
+- `WAIT_FREE_CELL`: row waiting for a free dynamic/generic pick-face cell.
+
+Runtime queue rules:
+
+- `RRL_WAREHOUSE_TASK` is created only for replenishment rows in `RELEASED`, `ASSIGNED`, or `IN_PROGRESS`;
+- queued rows may already have a hard source reservation, but they are invisible to the driver until release;
+- fixed pick-face rows release one at a time through Minimax/queue checks;
+- if an active dynamic/generic pick-face cell has no hard SKU assignment, no stock, no active hard reservation, and no active inbound warehouse task, a queued row can be released to that cell immediately.
+
+Apply/verify result for `2026-05-19-032-wave-replenishment-queue-statuses`:
+
+- Apply: `Statements=3; Errors=0`.
+- Verify: `Statements=3; Errors=0`.
+- Queue runtime load: `1` wave, `10` pick plans, `10` replenishment domain rows, `10` hard source reservations, `1` driver-facing warehouse task, `9` queued rows, duplicate warehouse tasks `0`, invalid objects `0`, cleanup `0`.
+- Minimax regression load: `1` wave, `3` replenishment domain rows, first task released after case-pick fact trigger, `2` queued rows, duplicate warehouse tasks `0`, invalid objects `0`, cleanup `0`.
+- Dynamic/generic pick-face load: `1` wave, `10` replenishment domain rows, `10` hard source reservations, `3` free dynamic pick-face cells, `4` driver-facing warehouse tasks immediately released (`1` fixed + `3` dynamic), `6` queued rows, duplicate warehouse tasks `0`, invalid objects `0`, cleanup `0`.
+- Queue drain load: `1` wave, `10` replenishment domain rows, `10` hard source reservations, `10` sequential warehouse tasks, `10` warehouse tasks `DONE`, `10` domain rows `DONE`, `10` sync rows `SYNCED`, `10` source reservations `CONSUMED`, active source reservations `0`, duplicate warehouse tasks `0`, invalid objects `0`, cleanup `0`.
+
+Migration `2026-05-19-033-dynamic-pick-face-assignments` adds explicit temporary dynamic pick-face assignment.
+
+`RRL_PICK_FACE_ASSIGNMENT` stores:
+
+- `PICK_FACE_ASSIGNMENT_ID`;
+- `PICK_FACE_ID`, `CELL_CODE`;
+- `PICK_WAVE_ID`;
+- `PICK_WAVE_REPLENISH_TASK_ID`;
+- `ARTICUL`;
+- `ASSIGNMENT_KIND`: `DYNAMIC` or `OVERFLOW`;
+- `STATUS`: `ACTIVE`, `RELEASED`, `CANCELLED`;
+- assignment and release timestamps/users.
+
+Runtime rules:
+
+- dynamic/generic queue release must insert `RRL_PICK_FACE_ASSIGNMENT` before marking the replenishment row `RELEASED`;
+- the unique active-cell index prevents two active assignments for the same dynamic cell;
+- active assignments are released when wave reservations/tasks are cancelled or released;
+- fixed pick-face queue release is not allowed to release a second fixed row while another row for the same wave/articul/target cell is already `RELEASED`, `ASSIGNED`, or `IN_PROGRESS`.
+
+Apply/verify result for `2026-05-19-033-dynamic-pick-face-assignments`:
+
+- Apply: `Statements=3; Errors=0`.
+- Verify: `Statements=5; Errors=0`.
+- Dynamic assignment load: `1` wave, `10` replenishment domain rows, `10` hard source reservations, `3` dynamic warehouse tasks, `3` active dynamic assignments, `4` total warehouse tasks (`1` fixed + `3` dynamic), duplicate warehouse tasks `0`, invalid objects `0`, cleanup `0`.
+- Fixed drain regression after assignment changes: `10` domain rows `DONE`, `10` warehouse tasks `DONE`, `10` sync rows `SYNCED`, `10` source reservations `CONSUMED`, active source reservations `0`, duplicate warehouse tasks `0`, invalid objects `0`, cleanup `0`.
+
+## Resource Management Foundation
+
+Migration `2026-05-19-034-resource-management-foundation` adds the separate resource-management data layer.
+
+New tables:
+
+- `RRL_RESOURCE_TYPE`: resource types and classes. Seeded types are `REACHTRUCK`, `KIKA`, `FORKLIFT`, `TROLLEY`, `CASE_PICKER`, `LOADING_TEAM`, `COOKING`, and `PACKING`.
+- `RRL_RESOURCE_EQUIPMENT`: physical equipment and production equipment units.
+- `RRL_RESOURCE`: planning resource. This can be a physical resource, a person resource, a team, or production equipment.
+- `RRL_RESOURCE_SHIFT`: planned shift/calendar interval.
+- `RRL_RESOURCE_SESSION`: active/factual session for a resource in a shift. Unique active-session indexes prevent double use of the same resource, equipment, or operator.
+- `RRL_RESOURCE_ASSIGNMENT`: planned/factual assignment interval used for Gantt and future dispatch.
+- `RRL_RESOURCE_FACT_EVENT`: event journal for login, heartbeat, pause, resume, assignment, start, completion, cancellation, error, and replan facts.
+
+`RRL_WAREHOUSE_TASK` now has nullable resource-planning fields: `RESOURCE_ID`, `RESOURCE_SESSION_ID`, `EQUIPMENT_ID`, `PLANNED_START_AT`, `PLANNED_FINISH_AT`, and `DISPATCH_PRIORITY`.
+
+Rights added for `GLOBAL_ADMIN`: `RESOURCE_MANAGEMENT_VIEW`, `RESOURCE_MANAGEMENT_EDIT`, `RESOURCE_SHIFT_VIEW`, `RESOURCE_SHIFT_EDIT`, `RESOURCE_SESSION_VIEW`, `RESOURCE_SESSION_MANAGE`, `RESOURCE_GANTT_VIEW`, `RESOURCE_GANTT_REPLAN`, `RESOURCE_DISPATCH_MANAGE`, and `WAREHOUSE_TASK_FORCE_ASSIGN`.
+
+Runtime intent:
+
+- drivers and pickers should enter the working TSD screen only through active resource sessions;
+- production resources such as cooking and packing can be shown in the same plan-fact Gantt as warehouse resources;
+- the first API layer exposes resource types, equipment, resources, shifts, and sessions; the next increment is TSD shift-gated login plus writing `RESOURCE_ID`, `RESOURCE_SESSION_ID`, and `EQUIPMENT_ID` into warehouse-task execution facts.
+
+Apply/verify result for `2026-05-19-034-resource-management-foundation`:
+
+- Apply: `Statements=5; Errors=0`.
+- Verify: `Statements=7; Errors=0`.
+- API service smoke: `ResourceManagementService().list_resource_types()` returned `8` seeded types.
+
+## Case-Pick TSD Runtime Foundation
+
+Migration `2026-05-19-035-case-pick-tsd-runtime` adds the first runtime layer for compact picker TSD case picking.
+
+New and extended tables:
+
+- `RRL_PALLET_TYPE`: normalized `PALLET_TYPE` reference. Seeded codes are `EURO_PALLET`, `AMERICAN_PALLET`, and `TROLLEY`; `EURO_PALLET` carries the default `1.6 m3` norm.
+- `RRL_CUSTOMER_PALLET_TYPE_RULE`: address-level customer pallet-type rules, with optional store-map technical link.
+- `RRL_CASE_PICK_SETTING`: warehouse settings for scan requirements, quantity confirmation, shortage behavior, pallet close stage, label print stage, inventory-on-short, and offline scope.
+- `RRL_CASE_PICK_TASK`: customer-pallet task for the picker, with `SSCC`, assignment, resource/session/equipment context, totals, and lifecycle status.
+- `RRL_CASE_PICK_LINE`: SKU/cell line inside the customer-pallet task, linked to `RRL_PICK_WAVE_TASK` and `RRL_PICK_TASK`.
+- `RRL_CASE_PICK_SHORT`: picker short/write-off request requiring shift-lead approval.
+- `RRL_INVENTORY_TASK`: separate resource task created from approved shorts when the warehouse setting requires inventory.
+- `RRL_CASE_PICK_EVENT`: event journal with optional `OFFLINE_EVENT_ID` for idempotent TSD sync.
+- `RRL_WAREHOUSE_TASK_STOCK_MOVE`: idempotency ledger for physical stock moves applied from completed `RRL_WAREHOUSE_TASK` facts into legacy `RRL_REMAINS`.
+
+`RRL_PICK_WAVE_TASK` and `RRL_PICK_TASK` receive nullable `CASE_PICK_TASK_ID` and `CASE_PICK_LINE_ID` links.
+
+Resource seed:
+
+- `RRL_RESOURCE_TYPE` receives `INVENTORY` for separate inventory-check resources.
+
+Rights added for `GLOBAL_ADMIN`:
+
+- `CASE_PICK_VIEW`;
+- `CASE_PICK_EXECUTE`;
+- `CASE_PICK_MANAGE`;
+- `CASE_PICK_SHORT_APPROVE`;
+- `INVENTORY_TASK_VIEW`;
+- `INVENTORY_TASK_EXECUTE`.
+
+Runtime rules:
+
+- wave launch generates customer-pallet case-pick tasks and `SSCC` through `CasePickService.ensure_wave_case_pick_tasks`;
+- dispatcher ARM reads `GET /api/case-pick/tasks?scope=all`, where the service projects `route -> customer pallets -> pickers`, route progress, active/done pallet counts, pending short blocker, and last case-pick event from `RRL_CASE_PICK_TASK`, `RRL_CASE_PICK_LINE`, `RRL_CASE_PICK_SHORT`, `RRL_CASE_PICK_EVENT`, and resource tables;
+- mismatched SKU/barcode is rejected and cannot be placed into the customer pallet;
+- shorts are created by the picker and approved by shift lead;
+- approved shorts can create a separate inventory task;
+- offline facts are deduplicated by `OFFLINE_EVENT_ID`.
+
+Apply/verify result for `2026-05-19-035-case-pick-tsd-runtime`:
+
+- Apply: first run created the idempotent DDL and stopped on a missing alias in the `INVENTORY` resource seed; the alias was fixed and rerun completed with `Statements=7; Errors=0`.
+- Verify: `Statements=7; Errors=0`.
+- Service smoke: created a temporary launched wave with two `CASE_PICK` lines, generated one customer-pallet task with `SSCC`, confirmed one line, created and approved one short, created one inventory task, closed the pallet to `WAIT_CONTROL`, and cleaned up the fixture.
+
+Apply/verify result for `2026-05-17-029-wave-case-pick-replenishment-settings`:
+
+- Apply: `Statements=3; Errors=0`.
+- Verify: `Statements=6; Errors=0`.
+- Mixed runtime smoke after migration: `1` wave, `1` raw order, finished-goods placement, retry idempotency; `5` sync rows, all `SYNCED`, duplicate sync keys `0`, invalid objects `0`.
+- Dedicated Minimax runtime smoke: `1` wave, `1` `WAIT_MINIMAX` replenishment row before check, `1` released warehouse task after check, final sync `SYNCED`, invalid objects `0`.
+
+Migration `2026-05-17-030-wave-replenishment-source-reservation` extends wave replenishment with source-pallet reservation and customer shelf-life snapshots.
+
+`RRL_PICK_WAVE_DEMAND` now stores:
+
+- `MIN_SHELF_LIFE_DAYS`;
+- `MIN_SHELF_LIFE_PERCENT`.
+
+`RRL_PICK_WAVE_REPLENISH_TASK` now stores:
+
+- `SOURCE_RESERVATION_ID`;
+- `SOURCE_AVAILABLE_QTY`;
+- `SOURCE_PRODUCED_DATE`;
+- `SOURCE_EXPIRY_DATE`;
+- `MIN_SHELF_LIFE_DAYS`;
+- `MIN_SHELF_LIFE_PERCENT`.
+
+Runtime rules:
+
+- source pallet is selected from `RRL_REMAINS` / `RRL_PALLETS`;
+- active hard reservations and active warehouse tasks reduce source availability;
+- the strictest customer shelf-life requirement in the wave is applied;
+- if no customer shelf-life requirement exists, ordinary FEFO applies;
+- a hard `RRL_STOCK_RESERVATION` is created before the driver task;
+- completing the wave replenishment consumes the reservation; cancelling/releasing the wave releases it.
+
+Apply/verify result for `2026-05-17-030-wave-replenishment-source-reservation`:
+
+- Apply: `Statements=3; Errors=0`.
+- Verify: `Statements=5; Errors=0`.
+- Dedicated Minimax runtime smoke after reservation changes: passed with final sync `SYNCED`, duplicate warehouse tasks `0`, invalid objects `0`.
+- Mixed dispatcher/domain-sync load after reservation changes: `5` sync rows, all `SYNCED`, duplicate sync keys `0`, invalid objects `0`.
+
+Migration `2026-05-19-031-wave-pick-task-fact-minimax-trigger` extends wave picking with task facts used by automatic Minimax release.
+
+`RRL_PICK_TASK` now stores:
+
+- `FACT_QTY`;
+- `DONE_BY`.
+
+`RRL_PICK_WAVE_TASK` now stores:
+
+- `FACT_QTY`;
+- `DONE_AT`;
+- `DONE_BY`.
+
+Runtime rules:
+
+- `POST /api/picking/waves/{pick_wave_id}/tasks/{pick_task_id}/complete` records the `CASE_PICK` fact.
+- The endpoint consumes related picking reservations and then runs Minimax release for the wave.
+- Driver-facing replenishment still remains in `RRL_WAREHOUSE_TASK`; the pick-task fact is the domain trigger, not a reachtruck task.
+
+Apply/verify result for `2026-05-19-031-wave-pick-task-fact-minimax-trigger`:
+
+- Apply: `Statements=3; Errors=0`.
+- Verify: `Statements=4; Errors=0`.
+- After package recompilation, invalid objects: `0`.
+- Auto-Minimax runtime load: `1` wave, `3` orders, `CASE_PICK` fact released `1` Minimax replenishment row, final warehouse/domain sync `DONE/SYNCED`, duplicates `0`, cleanup `0`.
+
 Apply/verify result for `2026-05-17-002-feed-factory-traceability-api`:
 
 - Code checkpoint before apply: `b823af6`.

@@ -72,6 +72,7 @@ tmp-ssh/
 sqlnet.log
 *.log
 api/wms_api_server/runtime/
+runtime/test-evidence/
 tests/load/**/report.json
 exchange/production_release/in/*
 exchange/production_release/processing/*

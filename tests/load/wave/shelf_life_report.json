@@ -1,0 +1,96 @@
+{
+  "run_prefix": "LOAD-WAVE-6553ME",
+  "waves": 1,
+  "orders_per_wave": 3,
+  "concurrency": 1,
+  "execute_tasks": true,
+  "elapsed_s": 8.299,
+  "request_count": 13,
+  "failed_request_count": 0,
+  "diagnostics": {
+    "waves": 1,
+    "launched_waves": 1,
+    "pick_plans": 3,
+    "wave_replenishment_tasks": 1,
+    "warehouse_replenishment_tasks": 1,
+    "done_warehouse_replenishment_tasks": 1,
+    "done_wave_replenishment_tasks": 1,
+    "warehouse_replenishment_sync_rows": 1,
+    "synced_warehouse_replenishment_sync_rows": 1,
+    "warehouse_replenishment_duplicates": 0,
+    "invalid_objects": 0
+  },
+  "latency_ms": {
+    "GET /api/picking/waves/{id}/replenishment-tasks": {
+      "count": 2,
+      "min": 414.69,
+      "p50": 476.16,
+      "p95": 537.64,
+      "max": 537.64
+    },
+    "GET /api/warehouse-tasks?task_type=REPLENISHMENT": {
+      "count": 1,
+      "min": 466.73,
+      "p50": 466.73,
+      "p95": 466.73,
+      "max": 466.73
+    },
+    "GET /health": {
+      "count": 1,
+      "min": 374.86,
+      "p50": 374.86,
+      "p95": 374.86,
+      "max": 374.86
+    },
+    "POST /api/picking/waves": {
+      "count": 1,
+      "min": 394.37,
+      "p50": 394.37,
+      "p95": 394.37,
+      "max": 394.37
+    },
+    "POST /api/picking/waves/{id}/calculate": {
+      "count": 1,
+      "min": 474.8,
+      "p50": 474.8,
+      "p95": 474.8,
+      "max": 474.8
+    },
+    "POST /api/picking/waves/{id}/launch": {
+      "count": 1,
+      "min": 1291.99,
+      "p50": 1291.99,
+      "p95": 1291.99,
+      "max": 1291.99
+    },
+    "POST /api/picking/waves/{id}/plans": {
+      "count": 3,
+      "min": 402.58,
+      "p50": 421.51,
+      "p95": 491.7,
+      "max": 491.7
+    },
+    "POST /api/warehouse-tasks/{id}/assign": {
+      "count": 1,
+      "min": 585.07,
+      "p50": 585.07,
+      "p95": 585.07,
+      "max": 585.07
+    },
+    "POST /api/warehouse-tasks/{id}/complete": {
+      "count": 1,
+      "min": 1931.68,
+      "p50": 1931.68,
+      "p95": 1931.68,
+      "max": 1931.68
+    },
+    "POST /api/warehouse-tasks/{id}/start": {
+      "count": 1,
+      "min": 692.65,
+      "p50": 692.65,
+      "p95": 692.65,
+      "max": 692.65
+    }
+  },
+  "errors": []
+}

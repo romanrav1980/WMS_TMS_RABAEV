@@ -1,0 +1,122 @@
+{
+  "run_prefix": "LOAD-WAVE-GR7YVP",
+  "waves": 2,
+  "orders_per_wave": 10,
+  "concurrency": 2,
+  "execute_tasks": false,
+  "replenishment_method": "IMMEDIATE",
+  "auto_minimax_trigger": false,
+  "shelf_life_scenario": false,
+  "dynamic_pick_faces": 0,
+  "drain_replenishment_queue": true,
+  "elapsed_s": 85.741,
+  "request_count": 129,
+  "failed_request_count": 0,
+  "diagnostics": {
+    "waves": 2,
+    "launched_waves": 2,
+    "pick_plans": 20,
+    "wave_replenishment_tasks": 18,
+    "queued_wave_replenishment_tasks": 0,
+    "source_reservations": 18,
+    "active_source_reservations": 0,
+    "consumed_source_reservations": 18,
+    "warehouse_replenishment_tasks": 18,
+    "dynamic_warehouse_replenishment_tasks": 0,
+    "dynamic_pick_face_assignments": 0,
+    "done_warehouse_replenishment_tasks": 18,
+    "done_wave_replenishment_tasks": 18,
+    "warehouse_replenishment_sync_rows": 18,
+    "synced_warehouse_replenishment_sync_rows": 18,
+    "warehouse_replenishment_duplicates": 0,
+    "source_reservation_duplicates": 0,
+    "invalid_objects": 0
+  },
+  "latency_ms": {
+    "GET /api/picking/waves/{id}/readiness": {
+      "count": 4,
+      "min": 1066.25,
+      "p50": 1157.62,
+      "p95": 1984.1,
+      "max": 1984.1
+    },
+    "GET /api/picking/waves/{id}/replenishment-tasks": {
+      "count": 24,
+      "min": 464.96,
+      "p50": 581.06,
+      "p95": 748.73,
+      "max": 917.31
+    },
+    "GET /api/warehouse-tasks?task_type=REPLENISHMENT": {
+      "count": 2,
+      "min": 428.29,
+      "p50": 572.17,
+      "p95": 716.04,
+      "max": 716.04
+    },
+    "GET /health": {
+      "count": 1,
+      "min": 406.88,
+      "p50": 406.88,
+      "p95": 406.88,
+      "max": 406.88
+    },
+    "POST /api/picking/waves": {
+      "count": 2,
+      "min": 566.55,
+      "p50": 621.15,
+      "p95": 675.75,
+      "max": 675.75
+    },
+    "POST /api/picking/waves/{id}/calculate": {
+      "count": 2,
+      "min": 638.49,
+      "p50": 771.27,
+      "p95": 904.04,
+      "max": 904.04
+    },
+    "POST /api/picking/waves/{id}/launch": {
+      "count": 2,
+      "min": 3812.49,
+      "p50": 5020.39,
+      "p95": 6228.3,
+      "max": 6228.3
+    },
+    "POST /api/picking/waves/{id}/plans": {
+      "count": 20,
+      "min": 537.76,
+      "p50": 684.03,
+      "p95": 897.0,
+      "max": 921.73
+    },
+    "POST /api/picking/waves/{id}/replenishment/minimax-check": {
+      "count": 18,
+      "min": 1214.7,
+      "p50": 1425.94,
+      "p95": 1977.78,
+      "max": 2865.69
+    },
+    "POST /api/warehouse-tasks/{id}/assign": {
+      "count": 18,
+      "min": 685.08,
+      "p50": 894.08,
+      "p95": 1076.44,
+      "max": 1213.42
+    },
+    "POST /api/warehouse-tasks/{id}/complete": {
+      "count": 18,
+      "min": 2891.84,
+      "p50": 3381.07,
+      "p95": 3872.88,
+      "max": 3908.95
+    },
+    "POST /api/warehouse-tasks/{id}/start": {
+      "count": 18,
+      "min": 716.63,
+      "p50": 884.14,
+      "p95": 1277.36,
+      "max": 2102.91
+    }
+  },
+  "errors": []
+}

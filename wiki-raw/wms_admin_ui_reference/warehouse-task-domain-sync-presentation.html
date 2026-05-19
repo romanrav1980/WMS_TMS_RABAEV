@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Доменная синхронизация складских заданий</title>
+    <style>
+      :root {
+        --bg: #f4f7fb;
+        --ink: #10233f;
+        --muted: #60728b;
+        --line: #d8e2ee;
+        --blue: #2478f2;
+        --green: #16a36a;
+        --amber: #e58a00;
+        --red: #d92d20;
+        --panel: #fff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Segoe UI", Arial, sans-serif;
+        letter-spacing: 0;
+      }
+
+      .deck {
+        display: grid;
+        gap: 18px;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 18px;
+      }
+
+      .slide {
+        min-height: 720px;
+        display: grid;
+        align-content: start;
+        gap: 22px;
+        padding: 42px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
+      }
+
+      .title-slide {
+        align-content: center;
+        background: linear-gradient(135deg, #fff 0%, #eef6ff 100%);
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 900px;
+        font-size: 52px;
+        line-height: 1.05;
+      }
+
+      h2 {
+        font-size: 34px;
+        line-height: 1.16;
+      }
+
+      h3 {
+        font-size: 20px;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+        font-size: 20px;
+        line-height: 1.42;
+      }
+
+      ul {
+        display: grid;
+        gap: 12px;
+        margin: 0;
+        padding-left: 24px;
+      }
+
+      .kicker {
+        color: var(--blue);
+        font-size: 16px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .card {
+        display: grid;
+        gap: 10px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfdff;
+      }
+
+      .card b {
+        color: var(--ink);
+        font-size: 20px;
+      }
+
+      .card span {
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.35;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        align-items: center;
+      }
+
+      .node {
+        min-height: 92px;
+        display: grid;
+        place-items: center;
+        padding: 14px;
+        border: 2px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        font-size: 18px;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .node.blue {
+        border-color: #b8d5ff;
+        background: #eef6ff;
+      }
+
+      .node.green {
+        border-color: #bdebd5;
+        background: #effaf4;
+      }
+
+      .node.amber {
+        border-color: #f3d39a;
+        background: #fff7e8;
+      }
+
+      .arrow {
+        color: var(--blue);
+        font-size: 28px;
+        font-weight: 900;
+        text-align: center;
+      }
+
+      .status {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .pill {
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #fff;
+        color: var(--ink);
+        font-weight: 800;
+      }
+
+      .pill.good {
+        border-color: #bdebd5;
+        background: #effaf4;
+        color: #08764a;
+      }
+
+      .pill.warn {
+        border-color: #f3d39a;
+        background: #fff7e8;
+        color: #8a5300;
+      }
+
+      .pill.bad {
+        border-color: #fac5bf;
+        background: #fff1ef;
+        color: #a1261c;
+      }
+
+      .sequence {
+        display: grid;
+        gap: 10px;
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 46px 1fr;
+        gap: 12px;
+        align-items: start;
+      }
+
+      .num {
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 6px;
+        background: var(--blue);
+        color: #fff;
+        font-weight: 900;
+      }
+
+      .table {
+        display: grid;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1.1fr 1.1fr 1.3fr 1.7fr;
+      }
+
+      .row > div {
+        padding: 12px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        font-size: 15px;
+      }
+
+      .row > div:last-child {
+        border-right: 0;
+      }
+
+      .row.header > div {
+        background: #eef6ff;
+        color: var(--ink);
+        font-weight: 900;
+      }
+
+      .small {
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .footer {
+        margin-top: auto;
+        color: #8291a5;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      @media print {
+        body {
+          background: #fff;
+        }
+
+        .deck {
+          display: block;
+          max-width: none;
+          padding: 0;
+        }
+
+        .slide {
+          min-height: 100vh;
+          break-after: page;
+          border: 0;
+          border-radius: 0;
+          box-shadow: none;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .slide {
+          min-height: auto;
+          padding: 24px;
+        }
+
+        h1 {
+          font-size: 36px;
+        }
+
+        h2 {
+          font-size: 26px;
+        }
+
+        .grid-2,
+        .grid-3,
+        .flow,
+        .row {
+          grid-template-columns: 1fr;
+        }
+
+        .arrow {
+          transform: rotate(90deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="deck">
+      <section class="slide title-slide">
+        <div class="kicker">WMS / MES / Reachtruck</div>
+        <h1>Доменная синхронизация складских заданий</h1>
+        <p>Как факт водителя в `RRL_WAREHOUSE_TASK` должен закрывать MES, волны, пополнение и отгрузку без двойного движения остатков.</p>
+        <div class="footer">Основано на ТЗ `warehouse_task_domain_sync_tz.md`</div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Проблема</div>
+        <h2>Физический факт уже есть, но бизнес-процесс может остаться открытым</h2>
+        <div class="grid-2">
+          <div class="card">
+            <b>Что уже работает</b>
+            <span>Водитель берет задачу, сканирует паллет и ячейку, подтверждает полный паллет или коробки. Warehouse task становится `DONE`.</span>
+          </div>
+          <div class="card">
+            <b>Чего не хватает</b>
+            <span>MES-задача, волна, пополнение или отгрузка должны получить этот факт и закрыть свой доменный шаг.</span>
+          </div>
+        </div>
+        <ul>
+          <li>Без синхронизации можно увидеть `DONE` у водителя, но `IN_PROGRESS` в MES или волне.</li>
+          <li>Нельзя напрямую менять старые остатки WMS из водительской задачи.</li>
+          <li>Нужна идемпотентность: один факт водителя = одно бизнес-закрытие.</li>
+        </ul>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Целевая архитектура</div>
+        <h2>Warehouse task фиксирует физику, доменный обработчик закрывает бизнес</h2>
+        <div class="flow">
+          <div class="node blue">Бизнес-документ</div>
+          <div class="arrow">→</div>
+          <div class="node">RRL_WAREHOUSE_TASK</div>
+          <div class="arrow">→</div>
+          <div class="node green">ТСД ричтрака</div>
+        </div>
+        <div class="flow">
+          <div class="node green">Факт DONE</div>
+          <div class="arrow">→</div>
+          <div class="node amber">Domain Sync Dispatcher</div>
+          <div class="arrow">→</div>
+          <div class="node blue">MES / Wave / Shipment</div>
+        </div>
+        <p>Диспетчер синхронизации выбирает обработчик по `TASK_SOURCE`, `TASK_TYPE`, `SOURCE_DOC_TYPE` и ссылкам на исходные документы.</p>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Количество</div>
+        <h2>Полный паллет и коробки обрабатываются по-разному</h2>
+        <div class="grid-2">
+          <div class="card">
+            <b>QTY_MODE = PALLET</b>
+            <span>Водитель нажимает `Паллет`. Частичный факт запрещен. Задача закрывается только как полный паллет.</span>
+          </div>
+          <div class="card">
+            <b>QTY_MODE = BOX</b>
+            <span>Водитель нажимает `Коробки`. Пустой факт означает план. Меньший факт создает остаточную задачу.</span>
+          </div>
+        </div>
+        <div class="status">
+          <span class="pill good">10 BOX → факт пусто = DONE 10</span>
+          <span class="pill warn">10 BOX → факт 4 = DONE 4 + PLANNED 6</span>
+          <span class="pill bad">100 PALLET → факт 50 = ошибка</span>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Последовательность</div>
+        <h2>Что происходит после нажатия `Готово` на ТСД</h2>
+        <div class="sequence">
+          <div class="step"><div class="num">1</div><p>API блокирует warehouse task и проверяет статус.</p></div>
+          <div class="step"><div class="num">2</div><p>Проверяются сканы паллета, ячейки источника и ячейки назначения.</p></div>
+          <div class="step"><div class="num">3</div><p>Фиксируются `DONE`, `FACT_QTY`, `FINISHED_AT`; при частичном `BOX` создается остаточная задача.</p></div>
+          <div class="step"><div class="num">4</div><p>Создается запись доменной синхронизации `PENDING`.</p></div>
+          <div class="step"><div class="num">5</div><p>Dispatcher вызывает обработчик MES, Wave или Shipment.</p></div>
+          <div class="step"><div class="num">6</div><p>Обработчик закрывает доменную задачу, резерв или movement и помечает sync как `SYNCED`.</p></div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Маршрутизация</div>
+        <h2>Как выбрать доменный обработчик</h2>
+        <div class="table">
+          <div class="row header">
+            <div>TASK_SOURCE</div>
+            <div>TASK_TYPE</div>
+            <div>Обработчик</div>
+            <div>Результат</div>
+          </div>
+          <div class="row">
+            <div>MES_RAW_SUPPLY</div>
+            <div>RAW_TO_PRODUCTION</div>
+            <div>RawSupplyTaskSyncHandler</div>
+            <div>Закрыть raw transfer task, погасить hard reserve, создать RAW_ISSUE_TO_PRODUCTION.</div>
+          </div>
+          <div class="row">
+            <div>MES_COMPLETION</div>
+            <div>FG_TO_STORAGE</div>
+            <div>FinishedGoodsStorageSyncHandler</div>
+            <div>Подтвердить размещение выпущенного паллета без повторного выпуска.</div>
+          </div>
+          <div class="row">
+            <div>WAVE</div>
+            <div>REPLENISHMENT</div>
+            <div>WaveReplenishmentSyncHandler</div>
+            <div>Закрыть пополнение pick face, учитывать остаточные задачи.</div>
+          </div>
+          <div class="row">
+            <div>WAVE</div>
+            <div>PICKING_MOVE</div>
+            <div>ShipmentStagingSyncHandler</div>
+            <div>Подтвердить спуск паллета или коробок в грузовую зону.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Sync-state</div>
+        <h2>Нужна явная таблица синхронизации</h2>
+        <div class="grid-2">
+          <div>
+            <h3>RRL_WAREHOUSE_TASK_SYNC</h3>
+            <ul>
+              <li>`TASK_ID` и источник бизнес-документа</li>
+              <li>`SYNC_STATUS`: PENDING, IN_PROGRESS, SYNCED, ERROR</li>
+              <li>`SYNC_ATTEMPT`, `LAST_ERROR`, `SYNC_KEY`</li>
+              <li>время создания, обновления и успешной синхронизации</li>
+            </ul>
+          </div>
+          <div>
+            <div class="status">
+              <span class="pill warn">PENDING</span>
+              <span class="pill warn">IN_PROGRESS</span>
+              <span class="pill good">SYNCED</span>
+              <span class="pill bad">ERROR</span>
+              <span class="pill warn">RETRY_PENDING</span>
+            </div>
+            <p class="small">Так мы не теряем физический факт, даже если доменный обработчик или bridge временно упал.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Идемпотентность</div>
+        <h2>Retry не должен создавать двойные движения</h2>
+        <div class="grid-3">
+          <div class="card">
+            <b>Один sync-key</b>
+            <span>Уникальный ключ связывает task, source и movement.</span>
+          </div>
+          <div class="card">
+            <b>Проверка домена</b>
+            <span>Handler сначала проверяет, не закрыт ли документ ранее.</span>
+          </div>
+          <div class="card">
+            <b>Без прямых остатков</b>
+            <span>Физические остатки меняются только через WMS/MES bridge.</span>
+          </div>
+        </div>
+        <ul>
+          <li>Повторный retry не списывает сырье второй раз.</li>
+          <li>Повторный retry не создает второй movement.</li>
+          <li>Остаточная задача создается один раз.</li>
+        </ul>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Ошибки</div>
+        <h2>Физический факт принят, бизнес-синхронизация может ждать retry</h2>
+        <div class="flow">
+          <div class="node green">Task DONE</div>
+          <div class="arrow">→</div>
+          <div class="node amber">Sync ERROR</div>
+          <div class="arrow">→</div>
+          <div class="node blue">Диспетчер retry</div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <b>ТСД</b>
+            <span>Показывает короткий результат: факт принят, бизнес-синхронизация ожидает.</span>
+          </div>
+          <div class="card">
+            <b>Диспетчерская</b>
+            <span>Показывает подробный `LAST_ERROR`, число попыток и кнопку retry.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">MVP</div>
+        <h2>Что реализовать первым</h2>
+        <div class="sequence">
+          <div class="step"><div class="num">1</div><p>Добавить `RRL_WAREHOUSE_TASK_SYNC`.</p></div>
+          <div class="step"><div class="num">2</div><p>После `complete` создавать sync row и вызывать dispatcher.</p></div>
+          <div class="step"><div class="num">3</div><p>Реализовать handlers: `WAVE/REPLENISHMENT`, `MES_RAW_SUPPLY`, `MES_COMPLETION`.</p></div>
+          <div class="step"><div class="num">4</div><p>Добавить retry endpoint и отображение sync-status в диспетчерской.</p></div>
+          <div class="step"><div class="num">5</div><p>Расширить load tests: полный паллет, коробки, частичный факт, retry, ошибки.</p></div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Критерии приемки</div>
+        <h2>Когда считаем доменную синхронизацию готовой</h2>
+        <ul>
+          <li>Закрытие warehouse task создает или обновляет sync row.</li>
+          <li>Повторный sync не создает дублей movement/reservation.</li>
+          <li>`MES_RAW_SUPPLY` закрывает raw transfer task и hard reserve.</li>
+          <li>`FG_TO_STORAGE` фиксирует размещение без повторного выпуска продукции.</li>
+          <li>`WAVE/REPLENISHMENT` корректно работает с остаточными задачами.</li>
+          <li>Ошибки видны диспетчеру, retry исправляет временный сбой.</li>
+          <li>Нагрузочный тест проходит без lost residual tasks и duplicate movements.</li>
+        </ul>
+        <div class="footer">Следующий технический шаг: migration + backend dispatcher + первый handler для WAVE/REPLENISHMENT.</div>
+      </section>
+    </main>
+  </body>
+</html>
