@@ -84,6 +84,17 @@ export type SimulationReport = {
   }>;
 };
 
+export type StockSnapshot = {
+  pick_face_stock?: Record<string, number>;
+  pick_face_capacity?: Record<string, number>;
+};
+
+export type PickFaceFill = {
+  qty: number;
+  capacity: number;
+  ratio: number;
+};
+
 export type CollisionType =
   | "PICK_FACE_EMPTY"
   | "PICK_FACE_QUEUE"
@@ -159,6 +170,7 @@ export type ReplayData = {
   events: WarehouseEvent[];
   metrics: MinuteMetrics[];
   report: SimulationReport;
+  stock?: StockSnapshot;
 };
 
 export type DetailSelection =

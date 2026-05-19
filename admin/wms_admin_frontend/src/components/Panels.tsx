@@ -175,7 +175,7 @@ export function ResourcePerformancePanel({ metrics, events, report, minute }: {
             <span><i className="blue" /> Комплектовщики</span>
             <span><i className="amber" /> RTP занятость</span>
             <span><i className="queue" /> Очередь RTP</span>
-            <span><i className="red" /> Потери минут</span>
+            <span><i className="red" /> Потери минут/мин</span>
           </div>
         </div>
         <div className="performance-diagnosis">
@@ -239,8 +239,10 @@ function buildPerformancePoints(metrics: MinuteMetrics[], events: WarehouseEvent
     .filter((row, index) => index % 10 === 0 || Number(row.minute) % 30 === 0 || Number(row.minute) === 720)
     .map((row) => {
       const minute = Number(row.minute || 0);
-      const collisions = events.filter((event) => event.event_type === "COLLISION" && Number(event.minute) <= minute);
-      const lost = collisions.reduce((sum, event) => sum + Number(event.lost_minutes || 1), 0);
+      const sameMinuteLoss = events
+        .filter((event) => event.event_type === "COLLISION" && Number(event.minute) === minute)
+        .reduce((sum, event) => sum + Number(event.lost_minutes || 1), 0);
+      const lost = Number(row.lost_minutes || sameMinuteLoss);
       return {
         minute,
         pickerLoad: clamp(Number(row.picker_busy || 0) / Math.max(1, pickerCount) * 100, 0, 100),

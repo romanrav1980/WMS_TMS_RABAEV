@@ -1,5 +1,5 @@
 import { clock, inferWaveByMinute, SHIFT_MINUTES } from "../demoData";
-import type { Collision, CollisionType, MinuteMetrics, ReplenishmentTask, ResourceState, WarehouseCell, WarehouseEvent, WarehouseLayout } from "../types";
+import type { Collision, CollisionType, MinuteMetrics, PickFaceFill, ReplenishmentTask, ResourceState, StockSnapshot, WarehouseCell, WarehouseEvent, WarehouseLayout } from "../types";
 
 const rootCauseByType: Record<string, string> = {
   PICK_FACE_EMPTY: "Комплектовщик пришел к ячейке отбора, но доступного остатка уже не хватило",
@@ -57,7 +57,7 @@ export function resourceStateAt(layout: WarehouseLayout, events: WarehouseEvent[
       queue: 0,
       utilization: clamp(Math.round((minute / SHIFT_MINUTES) * 100), 0, 100),
       driver: event.resource_id.startsWith("RT") ? `RTD${event.resource_id.slice(2)}` : "",
-      trail: previous.trail.concat([{ x: loc.x, y: loc.y, minute: event.minute }]).slice(-9)
+      trail: previous.trail.concat([{ x: loc.x, y: loc.y, minute: event.minute }]).slice(-18)
     });
   }
   for (let index = 1; index <= 10; index += 1) {
@@ -122,6 +122,26 @@ export function replenishmentTasksAt(events: WarehouseEvent[], minute: number): 
     });
   }
   return Array.from(tasks.values()).sort((a, b) => b.overdueMinutes - a.overdueMinutes || b.ageMinutes - a.ageMinutes);
+}
+
+export function pickFaceFillAt(stock: StockSnapshot | undefined, events: WarehouseEvent[], minute: number): Record<string, PickFaceFill> {
+  const qtyByCell: Record<string, number> = { ...(stock?.pick_face_stock || {}) };
+  const capacityByCell: Record<string, number> = { ...(stock?.pick_face_capacity || {}) };
+  for (const event of events) {
+    if (Number(event.minute) > minute) continue;
+    if (event.event_type === "PICKER_TASK_STARTED" && event.cell) {
+      qtyByCell[event.cell] = Math.max(0, Number(qtyByCell[event.cell] || 0) - Number(event.qty_boxes || 0));
+    }
+    if (event.event_type === "REPLENISHMENT_DONE" && event.target_cell) {
+      const capacity = Number(capacityByCell[event.target_cell] || 600);
+      capacityByCell[event.target_cell] = capacity;
+      qtyByCell[event.target_cell] = Math.min(capacity, Number(qtyByCell[event.target_cell] || 0) + Number(event.qty_boxes || 0));
+    }
+  }
+  return Object.fromEntries(Object.entries(capacityByCell).map(([cell, capacity]) => {
+    const qty = Math.max(0, Number(qtyByCell[cell] || 0));
+    return [cell, { qty, capacity, ratio: capacity > 0 ? Math.max(0, Math.min(1, qty / capacity)) : 0 }];
+  }));
 }
 
 export function cellById(layout: WarehouseLayout, id?: string): WarehouseCell | undefined {

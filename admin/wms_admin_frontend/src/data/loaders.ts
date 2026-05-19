@@ -1,5 +1,5 @@
 import { buildDemoEvents, buildDemoLayout, buildDemoMetrics, buildDemoReport } from "../demoData";
-import type { MinuteMetrics, ReplayData, SimulationReport, WarehouseEvent, WarehouseLayout } from "../types";
+import type { MinuteMetrics, ReplayData, SimulationReport, StockSnapshot, WarehouseEvent, WarehouseLayout } from "../types";
 
 const REPO_ROOT = "/@fs/C:/projects/TMS";
 
@@ -15,17 +15,19 @@ export async function loadReplayData(): Promise<ReplayData> {
 
   try {
     const baseUrl = evidenceBaseUrl(evidenceDir);
-    const [layout, eventsText, metricsText, report] = await Promise.all([
+    const [layout, eventsText, metricsText, report, stock] = await Promise.all([
       fetchJson<WarehouseLayout>(`${baseUrl}/layout.json`),
       fetchText(`${baseUrl}/events.jsonl`),
       fetchTextOptional(`${baseUrl}/metrics-by-minute.csv`),
-      fetchJsonOptional<SimulationReport>(`${baseUrl}/report.json`)
+      fetchJsonOptional<SimulationReport>(`${baseUrl}/report.json`),
+      fetchJsonOptional<StockSnapshot>(`${baseUrl}/generated-stock.json`)
     ]);
     return {
       layout,
       events: parseJsonl(eventsText),
       metrics: metricsText ? parseCsv(metricsText) : [],
-      report: report || {}
+      report: report || {},
+      stock: stock || {}
     };
   } catch (exc) {
     console.warn("Unable to load evidence, using demo fallback", exc);
@@ -38,7 +40,8 @@ export function demoReplayData(): ReplayData {
     layout: buildDemoLayout(),
     events: buildDemoEvents(),
     metrics: buildDemoMetrics(),
-    report: buildDemoReport()
+    report: buildDemoReport(),
+    stock: {}
   };
 }
 

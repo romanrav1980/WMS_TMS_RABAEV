@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { Collision, DetailSelection, ResourceState, WarehouseLayout } from "../types";
+import type { Collision, DetailSelection, PickFaceFill, ResourceState, WarehouseLayout } from "../types";
 import { cellById, eventLocation } from "../replay/reducer";
 import { collisionTitle } from "../replay/reducer";
 
@@ -7,6 +7,7 @@ type SceneProps = {
   layout: WarehouseLayout;
   resources: ResourceState[];
   collisions: Collision[];
+  pickFaceFill: Record<string, PickFaceFill>;
   minute: number;
   selectedWaveId?: string;
   onSelect: (selection: DetailSelection) => void;
@@ -23,7 +24,7 @@ const colors = {
   floor: "#e8eef5"
 };
 
-export function WarehouseScene({ layout, resources, collisions, selectedWaveId, onSelect }: SceneProps) {
+export function WarehouseScene({ layout, resources, collisions, pickFaceFill, minute, selectedWaveId, onSelect }: SceneProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const hitRegions = useRef<Array<{ x: number; y: number; r: number; selection: DetailSelection }>>([]);
   const dragState = useRef<{ active: boolean; x: number; y: number; moved: boolean }>({ active: false, x: 0, y: 0, moved: false });
@@ -45,8 +46,8 @@ export function WarehouseScene({ layout, resources, collisions, selectedWaveId, 
     canvas.height = Math.floor(rect.height * scale);
     setFrameSize({ width: rect.width, height: rect.height });
     context.setTransform(scale, 0, 0, scale, 0, 0);
-    drawScene(context, rect.width, rect.height, layout, visibleResources, collisions, hitRegions.current, navigation);
-  }, [layout, visibleResources, collisions, navigation]);
+    drawScene(context, rect.width, rect.height, layout, visibleResources, collisions, pickFaceFill, hitRegions.current, navigation, minute);
+  }, [layout, visibleResources, collisions, pickFaceFill, navigation, minute]);
 
   const zoomBy = (delta: number) => {
     setNavigation((current) => ({ ...current, zoom: clamp(current.zoom + delta, .65, 2.4) }));
@@ -132,8 +133,10 @@ function drawScene(
   layout: WarehouseLayout,
   resources: ResourceState[],
   collisions: Collision[],
+  pickFaceFill: Record<string, PickFaceFill>,
   hitRegions: Array<{ x: number; y: number; r: number; selection: DetailSelection }>,
-  navigation: ViewNavigation
+  navigation: ViewNavigation,
+  minute: number
 ) {
   hitRegions.length = 0;
   const view = makeView(width, height, navigation);
@@ -146,15 +149,15 @@ function drawScene(
 
   drawFloor(ctx, view);
   drawGates(ctx, view, layout);
-  drawRacks(ctx, view, layout);
+  drawRacks(ctx, view, layout, pickFaceFill);
   drawHeatmap(ctx, view, layout, collisions);
-  drawTrails(ctx, view, resources);
+  drawTrails(ctx, view, resources, minute);
   for (const resource of resources) {
     const p = iso(view, resource.x, resource.y, resource.kind === "reachtruck" ? .9 : .55);
-    if (resource.kind === "reachtruck") drawBox(ctx, view, resource.x - .7, resource.y - .35, .05, 1.4, .7, .55, statusColor(resource.statusColor), "#243042");
-    else drawPerson(ctx, p.x, p.y, statusColor(resource.statusColor));
+    if (resource.kind === "reachtruck") drawReachtruckIcon(ctx, p.x, p.y, resourceHeading(view, resource), statusColor(resource.statusColor));
+    else drawPickerIcon(ctx, p.x, p.y, statusColor(resource.statusColor));
     drawHalo(ctx, p.x, p.y, statusColor(resource.statusColor), resource.kind === "reachtruck" ? 18 : 13);
-    hitRegions.push({ x: p.x, y: p.y, r: 18, selection: { type: "resource", resource } });
+    hitRegions.push({ x: p.x, y: p.y, r: resource.kind === "reachtruck" ? 24 : 18, selection: { type: "resource", resource } });
   }
   for (const collision of collisions) {
     const loc = collisionLocation(layout, collision);
@@ -203,11 +206,14 @@ function drawGates(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseL
   }
 }
 
-function drawRacks(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseLayout) {
-  for (const cell of layout.cells.filter((row) => Number(row.level) === 1 && row.slot % 2 === 1)) {
-    const height = cell.role === "DYNAMIC_PICK_FACE" ? 1.6 : cell.role === "DUPLICATE_A_PICK_FACE" ? 2.15 : 1.9;
-    const topColor = cell.role === "DYNAMIC_PICK_FACE" ? "#7dd3fc" : cell.role === "DUPLICATE_A_PICK_FACE" ? "#c4b5fd" : colors.pallet;
-    drawBox(ctx, view, Number(cell.x_m), Number(cell.y_m) - .55, 0, 1.05, 1.1, height, topColor, colors.rack);
+function drawRacks(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseLayout, pickFaceFill: Record<string, PickFaceFill>) {
+  for (const cell of layout.cells.filter((row) => Number(row.level) === 1)) {
+    const fill = pickFaceFill[cell.cell_id];
+    const ratio = fill ? fill.ratio : cell.role === "DYNAMIC_PICK_FACE" ? 0 : .55;
+    const height = .28 + ratio * 2.45;
+    const topColor = cell.role === "DYNAMIC_PICK_FACE" && !fill ? "#7dd3fc" : fillColor(ratio);
+    const sideColor = ratio < .18 ? "#5b1e1e" : ratio < .45 ? "#5f4120" : "#1d3f34";
+    drawBox(ctx, view, Number(cell.x_m), Number(cell.y_m) - .45, 0, .82, .88, height, topColor, sideColor);
     if (cell.slot % 10 === 1) {
       const p = iso(view, Number(cell.x_m), Number(cell.y_m) - .95, height + .3);
       ctx.fillStyle = "#174c9a";
@@ -217,21 +223,63 @@ function drawRacks(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseL
   }
 }
 
-function drawTrails(ctx: CanvasRenderingContext2D, view: View, resources: ResourceState[]) {
+function drawTrails(ctx: CanvasRenderingContext2D, view: View, resources: ResourceState[], minute: number) {
   for (const resource of resources) {
     if (resource.trail.length < 2) continue;
-    ctx.strokeStyle = resource.kind === "reachtruck" ? "rgba(37,99,216,.55)" : "rgba(25,167,101,.48)";
-    ctx.lineWidth = resource.kind === "reachtruck" ? 3 : 2;
-    ctx.setLineDash(resource.kind === "reachtruck" ? [9, 7] : [5, 5]);
-    ctx.beginPath();
-    resource.trail.forEach((point, index) => {
-      const p = iso(view, point.x, point.y, .25);
-      if (index === 0) ctx.moveTo(p.x, p.y);
-      else ctx.lineTo(p.x, p.y);
-    });
-    ctx.stroke();
-    ctx.setLineDash([]);
+    const baseColor = resource.kind === "reachtruck" ? colors.blue : colors.green;
+    const lineWidth = resource.kind === "reachtruck" ? 3.2 : 2.4;
+    const dash = resource.kind === "reachtruck" ? [11, 8] : [6, 7];
+    for (let index = 1; index < resource.trail.length; index += 1) {
+      const previous = resource.trail[index - 1];
+      const current = resource.trail[index];
+      drawRouteIntent(ctx, view, previous, current);
+      const route = routeWaypoints(previous, current).map((point) => iso(view, point.x, point.y, .28));
+      const age = resource.trail.length - index;
+      const alpha = Math.max(.22, 1 - age * .055);
+      for (let routeIndex = 1; routeIndex < route.length; routeIndex += 1) {
+        const from = route[routeIndex - 1];
+        const to = route[routeIndex];
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = "rgba(255,255,255,.82)";
+        ctx.lineWidth = lineWidth + 3;
+        ctx.lineCap = "round";
+        ctx.setLineDash(dash);
+        ctx.lineDashOffset = -((minute * (resource.kind === "reachtruck" ? 2.6 : 1.8)) % 18);
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.stroke();
+        ctx.strokeStyle = withAlpha(baseColor, resource.kind === "reachtruck" ? .86 : .78);
+        ctx.lineWidth = lineWidth;
+        ctx.lineCap = "round";
+        ctx.setLineDash(dash);
+        ctx.lineDashOffset = -((minute * (resource.kind === "reachtruck" ? 2.6 : 1.8)) % 18);
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.stroke();
+        drawMovingArrow(ctx, from, to, baseColor, alpha, minute + index * 3 + routeIndex * 5, resource.kind === "reachtruck" ? 8 : 6);
+        ctx.restore();
+      }
+    }
   }
+}
+
+function drawRouteIntent(ctx: CanvasRenderingContext2D, view: View, from: { x: number; y: number }, to: { x: number; y: number }) {
+  const start = iso(view, from.x, from.y, .12);
+  const end = iso(view, to.x, to.y, .12);
+  const distance = routeDistance(from, to);
+  ctx.save();
+  ctx.globalAlpha = .38;
+  ctx.strokeStyle = distanceColor(distance);
+  ctx.lineWidth = 1.2;
+  ctx.setLineDash([2, 8]);
+  ctx.beginPath();
+  ctx.moveTo(start.x, start.y);
+  ctx.lineTo(end.x, end.y);
+  ctx.stroke();
+  ctx.restore();
 }
 
 function drawHeatmap(ctx: CanvasRenderingContext2D, view: View, layout: WarehouseLayout, collisions: Collision[]) {
@@ -249,14 +297,69 @@ function drawHeatmap(ctx: CanvasRenderingContext2D, view: View, layout: Warehous
   }
 }
 
-function drawPerson(ctx: CanvasRenderingContext2D, x: number, y: number, color: string) {
+function drawPickerIcon(ctx: CanvasRenderingContext2D, x: number, y: number, color: string) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.shadowColor = "rgba(15,23,42,.22)";
+  ctx.shadowBlur = 9;
+  ctx.shadowOffsetY = 5;
+  ctx.fillStyle = "#fff";
+  ctx.beginPath();
+  ctx.arc(0, -9, 13, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.shadowColor = "transparent";
   ctx.fillStyle = color;
   ctx.beginPath();
-  ctx.arc(x, y - 8, 5, 0, Math.PI * 2);
+  ctx.arc(0, -10, 9, 0, Math.PI * 2);
   ctx.fill();
-  ctx.fillRect(x - 4, y - 4, 8, 13);
+  ctx.fillStyle = "#fbbf24";
+  ctx.beginPath();
+  ctx.arc(0, -14, 8, Math.PI, 0);
+  ctx.fill();
+  ctx.fillRect(-8, -14, 16, 3);
   ctx.fillStyle = "#fff";
-  ctx.fillRect(x - 8, y + 4, 16, 4);
+  ctx.beginPath();
+  ctx.arc(0, -9, 3.2, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#0f172a";
+  ctx.fillRect(-5.5, -1, 11, 13);
+  ctx.fillStyle = color;
+  ctx.fillRect(-9, 3, 18, 4);
+  ctx.restore();
+}
+
+function drawReachtruckIcon(ctx: CanvasRenderingContext2D, x: number, y: number, angle: number, color: string) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.shadowColor = "rgba(15,23,42,.24)";
+  ctx.shadowBlur = 10;
+  ctx.shadowOffsetY = 5;
+  ctx.fillStyle = "#f59e0b";
+  roundedRect(ctx, -18, -9, 28, 16, 4);
+  ctx.fill();
+  ctx.shadowColor = "transparent";
+  ctx.fillStyle = "#1f2937";
+  ctx.fillRect(8, -13, 5, 24);
+  ctx.fillStyle = color;
+  roundedRect(ctx, -13, -13, 15, 9, 3);
+  ctx.fill();
+  ctx.fillStyle = "#dbeafe";
+  ctx.fillRect(-9, -11, 7, 5);
+  ctx.strokeStyle = "#1f2937";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(13, -8);
+  ctx.lineTo(25, -8);
+  ctx.moveTo(13, 7);
+  ctx.lineTo(25, 7);
+  ctx.stroke();
+  ctx.fillStyle = "#111827";
+  ctx.beginPath();
+  ctx.arc(-10, 9, 4, 0, Math.PI * 2);
+  ctx.arc(5, 9, 4, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 }
 
 function drawHalo(ctx: CanvasRenderingContext2D, x: number, y: number, color: string, radius: number) {
@@ -267,6 +370,109 @@ function drawHalo(ctx: CanvasRenderingContext2D, x: number, y: number, color: st
   ctx.arc(x, y, radius, 0, Math.PI * 2);
   ctx.stroke();
   ctx.globalAlpha = 1;
+}
+
+function drawMovingArrow(ctx: CanvasRenderingContext2D, from: { x: number; y: number }, to: { x: number; y: number }, color: string, alpha: number, phaseMinute: number, size: number) {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const length = Math.hypot(dx, dy);
+  if (length < 8) return;
+  const t = ((phaseMinute % 18) / 18);
+  const x = from.x + dx * t;
+  const y = from.y + dy * t;
+  const angle = Math.atan2(dy, dx);
+  ctx.save();
+  ctx.globalAlpha = Math.min(.9, alpha + .15);
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(size, 0);
+  ctx.lineTo(-size * .65, -size * .5);
+  ctx.lineTo(-size * .28, 0);
+  ctx.lineTo(-size * .65, size * .5);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+function resourceHeading(view: View, resource: ResourceState): number {
+  const trail = resource.trail;
+  if (trail.length >= 2) {
+    const route = routeWaypoints(trail[trail.length - 2], trail[trail.length - 1]);
+    const fromPoint = route[Math.max(0, route.length - 2)];
+    const toPoint = route[route.length - 1];
+    const from = iso(view, fromPoint.x, fromPoint.y, .25);
+    const to = iso(view, toPoint.x, toPoint.y, .25);
+    return Math.atan2(to.y - from.y, to.x - from.x);
+  }
+  return -Math.PI / 8;
+}
+
+function routeWaypoints(from: { x: number; y: number }, to: { x: number; y: number }): Array<{ x: number; y: number }> {
+  if (Math.abs(from.y - to.y) < 1.2) return [from, to];
+  const crossAisles = [0, 45, 90];
+  const viaX = crossAisles.reduce((best, candidate) => {
+    const bestDistance = Math.abs(from.x - best) + Math.abs(to.x - best);
+    const candidateDistance = Math.abs(from.x - candidate) + Math.abs(to.x - candidate);
+    return candidateDistance < bestDistance ? candidate : best;
+  }, crossAisles[0]);
+  return compactRoute([
+    from,
+    { x: viaX, y: from.y },
+    { x: viaX, y: to.y },
+    to
+  ]);
+}
+
+function compactRoute(points: Array<{ x: number; y: number }>): Array<{ x: number; y: number }> {
+  return points.filter((point, index) => {
+    const previous = points[index - 1];
+    return !previous || Math.abs(previous.x - point.x) > .05 || Math.abs(previous.y - point.y) > .05;
+  });
+}
+
+function routeDistance(from: { x: number; y: number }, to: { x: number; y: number }): number {
+  const route = routeWaypoints(from, to);
+  return route.slice(1).reduce((sum, point, index) => {
+    const previous = route[index];
+    return sum + Math.abs(point.x - previous.x) + Math.abs(point.y - previous.y);
+  }, 0);
+}
+
+function distanceColor(distance: number): string {
+  if (distance < 18) return "rgba(25,167,101,.72)";
+  if (distance < 48) return "rgba(245,158,11,.72)";
+  return "rgba(238,62,55,.72)";
+}
+
+function fillColor(ratio: number): string {
+  if (ratio < .18) return "#ef4444";
+  if (ratio < .42) return "#f59e0b";
+  if (ratio < .72) return "#84cc16";
+  return "#22c55e";
+}
+
+function roundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+function withAlpha(color: string, alpha: number): string {
+  const value = color.replace("#", "");
+  const r = parseInt(value.slice(0, 2), 16);
+  const g = parseInt(value.slice(2, 4), 16);
+  const b = parseInt(value.slice(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
 }
 
 function drawBox(ctx: CanvasRenderingContext2D, view: View, x: number, y: number, z: number, dx: number, dy: number, dz: number, topColor: string, sideColor: string) {

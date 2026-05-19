@@ -5,7 +5,7 @@ import { loadReplayData } from "./data/loaders";
 import { CapacityPanel, DetailCard, KpiRow, LeftPanel, ResourcePerformancePanel, RightPanel } from "./components/Panels";
 import { Timeline } from "./components/Timeline";
 import { WarehouseScene } from "./components/WarehouseScene";
-import { activeCollisions, currentMetrics, replenishmentTasksAt, resourceStateAt, visibleEvents } from "./replay/reducer";
+import { activeCollisions, currentMetrics, pickFaceFillAt, replenishmentTasksAt, resourceStateAt, visibleEvents } from "./replay/reducer";
 import type { DetailSelection, ReplayData } from "./types";
 
 export default function App() {
@@ -48,6 +48,7 @@ export default function App() {
     const resources = resourceStateAt(data.layout, data.events, minute, selectedWaveId);
     const collisions = activeCollisions(data.events, minute, 120, selectedWaveId);
     const tasks = replenishmentTasksAt(data.events, minute);
+    const pickFaceFill = pickFaceFillAt(data.stock, data.events, minute);
     const unitsDone = Number(metrics?.done_pick_lines || events.filter((event) => event.event_type === "PICKER_TASK_DONE").length);
     const totalUnits = Number(metrics?.total_pick_lines || data.report.totals?.pick_lines || Math.max(1, unitsDone));
     const activePickers = resources.filter((resource) => resource.kind === "picker" && resource.status !== "ожид.").length;
@@ -55,7 +56,7 @@ export default function App() {
       ? resources.filter((resource) => resource.kind === "picker").reduce((sum, resource) => sum + resource.speedRatio, 0) / activePickers / 100 * 1.21
       : 0;
     const forecastMultiplier = modelSettings.pickerSpeedPct / 100 * modelSettings.reachtruckOpsPct / 100 * (modelSettings.dockPalletsPerHour / 15);
-    return { events, resources, collisions, tasks, unitsDone, totalUnits, activePickers, avgSpeed: avgSpeed * modelSettings.pickerSpeedPct / 100, forecastMultiplier };
+    return { events, resources, collisions, tasks, pickFaceFill, unitsDone, totalUnits, activePickers, avgSpeed: avgSpeed * modelSettings.pickerSpeedPct / 100, forecastMultiplier };
   }, [data, minute, selectedWaveId, modelSettings]);
 
   if (!data || !state) {
@@ -117,6 +118,7 @@ export default function App() {
                 layout={data.layout}
                 resources={state.resources}
                 collisions={state.collisions}
+                pickFaceFill={state.pickFaceFill}
                 minute={minute}
                 selectedWaveId={selectedWaveId}
                 onSelect={setSelection}

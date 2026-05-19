@@ -1035,6 +1035,14 @@ Append-only log of root wiki updates.
 
 ## [2026-05-20] admin | Warehouse twin performance graph and map navigation
 
-- Updated the React warehouse digital twin with a bottom `Производительность ресурсов и коллизии` graph for picker load, RTP load, RTP queue, accumulated lost minutes, and top collision causes.
+- Updated the React warehouse digital twin with a bottom `Производительность ресурсов и коллизии` graph for picker load, RTP load, RTP queue, lost-minute trend, and top collision causes.
 - Added map navigation to the React warehouse scene: zoom in/out, reset view, mouse drag-pan, and transformed hit targets for resource/collision selection.
 - Recorded these UI requirements in [`requirements/large_warehouse_minute_simulation_tz.md`](requirements/large_warehouse_minute_simulation_tz.md).
+
+## [2026-05-20] admin | Warehouse twin routes and pick-face fill
+
+- Added canvas icons for pickers and reachtrucks in the React warehouse digital twin.
+- Replaced direct resource trails with fading dotted U-route trails through allowed cross-aisles, plus a thin start/end intent connector colored by route length.
+- Loaded `generated-stock.json` into the React replay and reconstructed current pick-face fill from initial stock, picking starts, and replenishment completions.
+- Rendered each pick-face as a variable-height stock column: green when full, amber/red when low.
+- Changed the resource performance graph loss line to show minute-level collision loss spikes.
