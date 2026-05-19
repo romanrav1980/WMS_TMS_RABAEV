@@ -1025,3 +1025,10 @@ Append-only log of root wiki updates.
 - Updated [`requirements/wave_case_pick_replenishment_tz.md`](requirements/wave_case_pick_replenishment_tz.md) with `LAYER_TRIGGER` and `PREDICTIVE_LEAD_TIME` strategy rules, inheritance order, and predictive settings.
 - Updated the raw wave replenishment admin page with article default rules, pair inheritance, release-policy, safety layer, lead-time buffer, pick-rate source, and pick-event recheck controls.
 - Mirrored the schema change in [`database/feed_factory_traceability_schema.md`](database/feed_factory_traceability_schema.md) and the migration README.
+
+## [2026-05-20] simulation | Urgent-only dynamic pick-face policy
+
+- Updated [`requirements/large_warehouse_minute_simulation_tz.md`](requirements/large_warehouse_minute_simulation_tz.md) with the test-layout rule that 10% of pick-face cells are dynamic/overflow cells at the end of each aisle.
+- Clarified that dynamic/overflow cells are not pre-wave replenished and are used only for urgent situations: empty fixed pick-face or critical predictive lead-time.
+- Updated [`requirements/wave_case_pick_replenishment_tz.md`](requirements/wave_case_pick_replenishment_tz.md) with daily layout optimization outputs and urgent-only dynamic/generic release rules.
+- Adjusted the warehouse minute simulation runner so dynamic cells are selected deterministically at aisle ends, urgent replenishment may target them only after a shortage event, and waiting pick lines can be rerouted to an already replenished dynamic cell later on the route.

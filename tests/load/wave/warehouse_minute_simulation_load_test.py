@@ -181,6 +181,7 @@ class WarehouseMinuteSimulation:
         self.pick_face_stock = self.build_initial_pick_stock()
         self.storage_stock = self.build_initial_storage_stock()
         self.replenishment_queue: list[ReplenishmentTask] = []
+        self.dynamic_cell_sku: dict[str, str] = {}
         self.dock_queue: list[DockTask] = []
         self.active_waves: set[str] = set()
         self.completed_lines: set[str] = set()
@@ -229,8 +230,10 @@ class WarehouseMinuteSimulation:
         dynamic_pick_faces: set[str] = set()
         duplicate_pick_faces: set[str] = set()
         pick_face_ids = [f"A{aisle:02d}-S{slot:03d}-L1" for aisle in range(1, aisles + 1) for slot in range(1, slots + 1)]
-        for cell_id in self.rng.sample(pick_face_ids, 300):
-            dynamic_pick_faces.add(cell_id)
+        dynamic_slots_per_aisle = max(1, round(slots * 0.10))
+        for aisle in range(1, aisles + 1):
+            for slot in range(slots - dynamic_slots_per_aisle + 1, slots + 1):
+                dynamic_pick_faces.add(f"A{aisle:02d}-S{slot:03d}-L1")
         remaining = [cell_id for cell_id in pick_face_ids if cell_id not in dynamic_pick_faces]
         for cell_id in self.rng.sample(remaining, 200):
             duplicate_pick_faces.add(cell_id)
@@ -259,7 +262,10 @@ class WarehouseMinuteSimulation:
                 "aisle_length_m": 90,
                 "aisle_spacing_m": 4,
                 "slot_spacing_m": 1.5,
-                "pick_faces": self.args.pick_faces,
+                "pick_faces": len(pick_face_ids),
+                "dynamic_pick_face_policy": "10_PERCENT_END_OF_AISLE_URGENT_ONLY",
+                "dynamic_pick_faces": len(dynamic_pick_faces),
+                "dynamic_slots_per_aisle": dynamic_slots_per_aisle,
             },
             "gates": gates,
             "cells": cells,
@@ -453,10 +459,6 @@ class WarehouseMinuteSimulation:
                     if not source:
                         continue
                     target_cell = sku.pick_cell
-                    if idx > 0 and sku.dynamic_allowed:
-                        dynamic_cell = self.find_free_dynamic_cell()
-                        if dynamic_cell:
-                            target_cell = dynamic_cell
                     task_qty = min(100, needed - idx * 100)
                     task = ReplenishmentTask(
                         task_id=f"RPL-{wave_id}-{sku_id}-{idx + 1:02d}",
@@ -568,6 +570,8 @@ class WarehouseMinuteSimulation:
             picker.pick_minutes += speed_minutes
             line.status = "IN_PROGRESS"
             self.pick_face_stock[line.pick_cell] = self.pick_face_stock.get(line.pick_cell, 0) - line.qty_boxes
+            if cell["role"] == "DYNAMIC_PICK_FACE" and self.pick_face_stock.get(line.pick_cell, 0) <= 0:
+                self.dynamic_cell_sku.pop(line.pick_cell, None)
             self.emit(
                 minute,
                 "PICKER_TASK_STARTED",
@@ -583,6 +587,25 @@ class WarehouseMinuteSimulation:
             )
 
     def block_picker_on_empty_pick_face(self, minute: int, picker: Picker, line: OrderLine) -> None:
+        reroute_cell = self.find_dynamic_cell_for_waiting_line(line)
+        if reroute_cell:
+            original_cell = line.pick_cell
+            line.pick_cell = reroute_cell
+            self.emit(
+                minute,
+                "PICK_LINE_REROUTED_TO_DYNAMIC_CELL",
+                resource_id=picker.resource_id,
+                wave_id=line.wave_id,
+                client_id=line.client_id,
+                pallet_id=line.pallet_id,
+                sku_id=line.sku_id,
+                original_cell=original_cell,
+                reroute_cell=reroute_cell,
+                reason="FIXED_PICK_FACE_EMPTY_DYNAMIC_CELL_HAS_URGENT_STOCK_FURTHER_ON_ROUTE",
+            )
+            self.start_picker_line(minute, picker, line)
+            return
+
         cell = self.cells_by_id[line.pick_cell]
         picker.x_m = cell["x_m"]
         picker.y_m = cell["y_m"]
@@ -632,7 +655,7 @@ class WarehouseMinuteSimulation:
 
     def ensure_reactive_replenishment(self, minute: int, line: OrderLine) -> None:
         already_open = any(
-            task.sku_id == line.sku_id and task.target_cell == line.pick_cell and task.status in {"QUEUED", "RELEASED", "IN_PROGRESS"}
+            task.sku_id == line.sku_id and task.status in {"QUEUED", "RELEASED", "IN_PROGRESS"}
             for task in self.replenishment_queue
         )
         if already_open:
@@ -640,20 +663,27 @@ class WarehouseMinuteSimulation:
         source = self.reserve_storage_pallet(line.sku_id)
         if not source:
             return
-        capacity = self.pick_face_capacity.get(line.pick_cell, 100)
-        current = max(0, self.pick_face_stock.get(line.pick_cell, 0))
-        qty = max(1, min(100, capacity - current))
+        urgent_dynamic_cell = self.find_free_dynamic_cell_for_urgent_line(line)
+        target_cell = urgent_dynamic_cell or line.pick_cell
+        capacity = self.pick_face_capacity.get(target_cell, 100)
+        current = max(0, self.pick_face_stock.get(target_cell, 0))
+        free_capacity = capacity - current
+        if free_capacity <= 0:
+            return
+        qty = min(100, free_capacity)
         task = ReplenishmentTask(
             task_id=f"RPL-REACTIVE-{line.wave_id}-{line.sku_id}-{minute:03d}",
             wave_id=line.wave_id,
             sku_id=line.sku_id,
             source_cell=source["cell_id"],
-            target_cell=line.pick_cell,
+            target_cell=target_cell,
             qty_boxes=qty,
             replenishment_mode="CASE_REPLENISHMENT" if qty < 80 else "PALLET_REPLENISHMENT",
             status="QUEUED",
         )
         self.replenishment_queue.append(task)
+        if urgent_dynamic_cell:
+            self.dynamic_cell_sku[urgent_dynamic_cell] = line.sku_id
         self.emit(
             minute,
             "REACTIVE_REPLENISHMENT_PLANNED",
@@ -665,7 +695,7 @@ class WarehouseMinuteSimulation:
             source_cell=task.source_cell,
             target_cell=task.target_cell,
             qty_boxes=task.qty_boxes,
-            reason="PICK_FACE_CAPACITY_EXHAUSTED",
+            reason="URGENT_DYNAMIC_CELL" if urgent_dynamic_cell else "PICK_FACE_CAPACITY_EXHAUSTED",
         )
 
     def progress_resources(self, minute: int) -> None:
@@ -677,6 +707,8 @@ class WarehouseMinuteSimulation:
                     task.done_minute = minute
                     self.pick_face_stock[task.target_cell] = self.pick_face_stock.get(task.target_cell, 0) + task.qty_boxes
                     target = self.cells_by_id[task.target_cell]
+                    if target["role"] == "DYNAMIC_PICK_FACE":
+                        self.dynamic_cell_sku[task.target_cell] = task.sku_id
                     truck.x_m = target["x_m"]
                     truck.y_m = target["y_m"]
                     truck.completed_ops += 1
@@ -958,6 +990,45 @@ class WarehouseMinuteSimulation:
                 return cell_id
         return None
 
+    def find_free_dynamic_cell_for_urgent_line(self, line: OrderLine) -> str | None:
+        current_cell = self.cells_by_id.get(line.pick_cell)
+        if not current_cell:
+            return None
+        used_targets = {task.target_cell for task in self.replenishment_queue if task.status in {"QUEUED", "RELEASED", "IN_PROGRESS"}}
+        candidates = []
+        for cell in self.layout["cells"]:
+            cell_id = cell["cell_id"]
+            if cell["role"] != "DYNAMIC_PICK_FACE" or cell_id in used_targets:
+                continue
+            if self.dynamic_cell_sku.get(cell_id) or self.pick_face_stock.get(cell_id, 0) > 0:
+                continue
+            same_aisle_later = cell["aisle"] == current_cell["aisle"] and cell["slot"] >= current_cell["slot"]
+            later_global_route = (cell["aisle"], cell["slot"]) > (current_cell["aisle"], current_cell["slot"])
+            if same_aisle_later or later_global_route:
+                candidates.append(cell)
+        candidates.sort(key=lambda row: (row["aisle"] != current_cell["aisle"], row["aisle"], row["slot"]))
+        return candidates[0]["cell_id"] if candidates else None
+
+    def find_dynamic_cell_for_waiting_line(self, line: OrderLine) -> str | None:
+        current_cell = self.cells_by_id.get(line.pick_cell)
+        if not current_cell:
+            return None
+        candidates = []
+        for cell in self.layout["cells"]:
+            cell_id = cell["cell_id"]
+            if cell["role"] != "DYNAMIC_PICK_FACE":
+                continue
+            if self.dynamic_cell_sku.get(cell_id) != line.sku_id:
+                continue
+            if self.pick_face_stock.get(cell_id, 0) < line.qty_boxes:
+                continue
+            same_aisle_later = cell["aisle"] == current_cell["aisle"] and cell["slot"] >= current_cell["slot"]
+            later_global_route = (cell["aisle"], cell["slot"]) > (current_cell["aisle"], current_cell["slot"])
+            if same_aisle_later or later_global_route:
+                candidates.append(cell)
+        candidates.sort(key=lambda row: (row["aisle"] != current_cell["aisle"], row["aisle"], row["slot"]))
+        return candidates[0]["cell_id"] if candidates else None
+
     def find_line(self, line_id: str | None) -> OrderLine | None:
         if not line_id:
             return None
@@ -1013,6 +1084,13 @@ class WarehouseMinuteSimulation:
         case_replenishment_capacity = int(self.args.reachtrucks * self.args.case_replenishment_per_hour * shift_hours)
         case_replenishment_tasks = sum(1 for task in self.replenishment_queue if task.replenishment_mode == "CASE_REPLENISHMENT")
         pallet_replenishment_tasks = sum(1 for task in self.replenishment_queue if task.replenishment_mode == "PALLET_REPLENISHMENT")
+        reroute_events = sum(1 for event in self.events if event["event_type"] == "PICK_LINE_REROUTED_TO_DYNAMIC_CELL")
+        dynamic_pick_faces = [cell for cell in self.layout["cells"] if cell["role"] == "DYNAMIC_PICK_FACE"]
+        layout_pick_faces = [cell for cell in self.layout["cells"] if cell["level"] == 1]
+        end_of_aisle_dynamic_pick_faces = [
+            cell for cell in dynamic_pick_faces
+            if cell["slot"] > self.layout["warehouse"]["slots_per_aisle"] - self.layout["warehouse"]["dynamic_slots_per_aisle"]
+        ]
         wave_completion: dict[str, int | None] = {}
         for wave_no in range(1, self.args.waves + 1):
             wave_id = f"WAVE-SIM-{wave_no:02d}"
@@ -1057,6 +1135,7 @@ class WarehouseMinuteSimulation:
                 "shipped_pallets": len(self.shipped_pallets),
                 "collisions": len(self.collision_rows),
                 "lost_minutes": sum(row["lost_minutes"] for row in self.collision_rows),
+                "dynamic_reroutes": reroute_events,
             },
             "wave_completion_minutes": wave_completion,
             "collision_count_by_type": count_by_type,
@@ -1078,6 +1157,9 @@ class WarehouseMinuteSimulation:
                 "reachtruck_nominal_capacity_per_shift": reachtruck_nominal_capacity,
                 "case_replenishment_capacity_if_all_case": case_replenishment_capacity,
                 "replenishment_demand_to_nominal_capacity_ratio": round(len(self.replenishment_queue) / max(1, reachtruck_nominal_capacity), 2),
+                "dynamic_pick_faces": len(dynamic_pick_faces),
+                "end_of_aisle_dynamic_pick_faces": len(end_of_aisle_dynamic_pick_faces),
+                "dynamic_pick_face_share": round(len(dynamic_pick_faces) / max(1, len(layout_pick_faces)), 2),
             },
             "bottleneck_summary": self.build_bottleneck_summary(
                 total_pick_boxes=total_pick_boxes,
@@ -1188,6 +1270,8 @@ class WarehouseMinuteSimulation:
                 f"- Pick demand: `{report['capacity_analysis']['total_pick_boxes']}` boxes; picker shift capacity: `{report['capacity_analysis']['picker_box_capacity_per_shift']}` boxes; ratio `{report['capacity_analysis']['picker_demand_to_capacity_ratio']}`.",
                 f"- Replenishment demand: `{report['capacity_analysis']['replenishment_tasks']}` tasks; reachtruck nominal capacity: `{report['capacity_analysis']['reachtruck_nominal_capacity_per_shift']}` tasks; ratio `{report['capacity_analysis']['replenishment_demand_to_nominal_capacity_ratio']}`.",
                 f"- Replenishment mix: `{report['capacity_analysis']['pallet_replenishment_tasks']}` pallet tasks, `{report['capacity_analysis']['case_replenishment_tasks']}` case tasks.",
+                f"- Dynamic pick-face: `{report['capacity_analysis']['dynamic_pick_faces']}` cells (`{report['capacity_analysis']['dynamic_pick_face_share']}` share), end-of-aisle urgent overflow cells `{report['capacity_analysis']['end_of_aisle_dynamic_pick_faces']}`.",
+                f"- Dynamic urgent reroutes: `{report['totals']['dynamic_reroutes']}` pick lines.",
                 "",
                 "## Bottleneck Summary",
                 "",
