@@ -1421,6 +1421,9 @@ function validationLabel(key: string) {
     duplicate_cells: "Дубли ячеек",
     pick_faces_without_aisle: "Pick-face без аллеи",
     pick_faces_without_side: "Pick-face без стороны",
+    multiple_active_pick_routes: "Несколько активных обходов",
+    duplicate_route_sequence: "Дубли порядка обхода",
+    duplicate_route_cell: "Повтор ячейки в обходе",
     gates_missing: "Нет ворот",
     distances_missing: "Нет расстояний"
   };

@@ -867,3 +867,35 @@ Before rollback, export any data already written to the new traceability tables.
 - Initial invalid object check found `RRL_PICK_TOPOLOGY_API` package body invalid; manual `alter package RRL_PICK_TOPOLOGY_API compile body` succeeded.
 - Final invalid object check excluding recycle-bin objects: `0 INVALID`.
 - API smoke through `http://127.0.0.1:8088`: topology created, `48` cells generated, `4` gates generated, gate distances recalculated twice (`192` rows each time), `48` Z-route rows built, one topology cell patched, validation returned `valid=true`.
+
+## Warehouse Topology 040: Linear Pick Route Order
+
+Migration `2026-05-20-040-linear-pick-route-order` implements the accepted route-order architecture:
+
+- `RRL_PICK_ROUTE_CELL.PICK_SEQUENCE` is a decimal Oracle `NUMBER` route rank; restored live schemas may keep it unconstrained, which is wider than `NUMBER(18,6)` and avoids rewriting populated route rows;
+- the base WMS route is a linear order of route points, not a graph of alternative edges;
+- only one active non-archived `PICK` route is allowed per topology;
+- active route rows are unique by `(PICK_ROUTE_ID, PICK_SEQUENCE)`;
+- active route rows with physical topology cells are unique by `(PICK_ROUTE_ID, TOPOLOGY_CELL_ID)`;
+- UI arrows are derived from neighboring sorted route rows and are not stored as separate edge rows.
+
+Migration files:
+
+- `db/migrations/2026-05-17_feed_factory_traceability/040_apply.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/040_verify.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/040_rollback.sql`.
+
+The API build path now reuses the single active route for a topology and archives other active `PICK` route headers before writing the new linear order. Topology validation reports:
+
+- `multiple_active_pick_routes`;
+- `duplicate_route_sequence`;
+- `duplicate_route_cell`.
+
+Live apply note, `2026-05-20`:
+
+- Target: `RABAEV@127.0.0.1:1521/orcl`.
+- `040_apply.sql` and `040_verify.sql` completed with zero SQL errors.
+- `PICK_SEQUENCE` is `NUMBER` in the restored schema.
+- Unique indexes present: `RRL_PICK_ROUTE_UX_ACTIVE_TOPO`, `RRL_PICK_ROUTE_CELL_UX_SEQ`, `RRL_PICK_ROUTE_CELL_UX_CELL`.
+- Invariant query returned zero violations for active route topology, route sequence, and route cell membership.
+- API smoke on `http://127.0.0.1:8088` rebuilt topology `1` route `CASE-Z-MAIN` into existing route `104`: map returns `48` route rows from `104`, exactly one active route remains, validation returned `valid=true`.

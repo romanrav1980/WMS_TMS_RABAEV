@@ -155,18 +155,16 @@ class WarehouseTopologyService:
             {"topology_id": topology_id},
         )
         routes = self.list_pick_routes(topology_id=topology_id)
+        active_route = next((route for route in routes if route.get("active") == 1 and route.get("status") != "ARCHIVED"), None)
         route_cells = self.gateway.fetch_all(
             """
             select rc.*
               from RRL_PICK_ROUTE_CELL rc
-             join RRL_PICK_ROUTE r
-                on r.PICK_ROUTE_ID = rc.PICK_ROUTE_ID
-             where r.TOPOLOGY_ID = :topology_id
-               and r.ACTIVE = 1
+             where rc.PICK_ROUTE_ID = :pick_route_id
                and rc.ACTIVE = 1
              order by rc.PICK_ROUTE_ID, rc.PICK_SEQUENCE
             """,
-            {"topology_id": topology_id},
+            {"pick_route_id": active_route.get("pick_route_id") if active_route else -1},
         )
         return {
             "topology": topology_rows[0],
@@ -511,6 +509,50 @@ class WarehouseTopologyService:
                 """,
                 {"topology_id": topology_id},
             ),
+            "multiple_active_pick_routes": self.gateway.fetch_all(
+                """
+                select TOPOLOGY_ID, count(*) CNT
+                  from RRL_PICK_ROUTE
+                 where TOPOLOGY_ID = :topology_id
+                   and ROUTE_KIND = 'PICK'
+                   and ACTIVE = 1
+                   and STATUS <> 'ARCHIVED'
+                 group by TOPOLOGY_ID
+                having count(*) > 1
+                """,
+                {"topology_id": topology_id},
+            ),
+            "duplicate_route_sequence": self.gateway.fetch_all(
+                """
+                select r.PICK_ROUTE_ID, rc.PICK_SEQUENCE, count(*) CNT
+                  from RRL_PICK_ROUTE r
+                  join RRL_PICK_ROUTE_CELL rc
+                    on rc.PICK_ROUTE_ID = r.PICK_ROUTE_ID
+                 where r.TOPOLOGY_ID = :topology_id
+                   and r.ACTIVE = 1
+                   and r.STATUS <> 'ARCHIVED'
+                   and rc.ACTIVE = 1
+                 group by r.PICK_ROUTE_ID, rc.PICK_SEQUENCE
+                having count(*) > 1
+                """,
+                {"topology_id": topology_id},
+            ),
+            "duplicate_route_cell": self.gateway.fetch_all(
+                """
+                select r.PICK_ROUTE_ID, rc.TOPOLOGY_CELL_ID, count(*) CNT
+                  from RRL_PICK_ROUTE r
+                  join RRL_PICK_ROUTE_CELL rc
+                    on rc.PICK_ROUTE_ID = r.PICK_ROUTE_ID
+                 where r.TOPOLOGY_ID = :topology_id
+                   and r.ACTIVE = 1
+                   and r.STATUS <> 'ARCHIVED'
+                   and rc.ACTIVE = 1
+                   and rc.TOPOLOGY_CELL_ID is not null
+                 group by r.PICK_ROUTE_ID, rc.TOPOLOGY_CELL_ID
+                having count(*) > 1
+                """,
+                {"topology_id": topology_id},
+            ),
         }
         error_count = sum(len(value) for value in checks.values())
         if error_count == 0:
@@ -604,23 +646,24 @@ class WarehouseTopologyService:
             raise HTTPException(status_code=404, detail="Warehouse topology not found.")
         pick_route_id = request.pick_route_id
         if not pick_route_id:
-            existing_by_code = self.gateway.fetch_all(
+            existing_for_topology = self.gateway.fetch_all(
                 """
                 select PICK_ROUTE_ID
                   from RRL_PICK_ROUTE
                  where TOPOLOGY_ID = :topology_id
                    and WARE_ID = :ware_id
-                   and upper(ROUTE_CODE) = upper(:route_code)
+                   and ROUTE_KIND = 'PICK'
                    and ACTIVE = 1
-                   and rownum = 1
+                   and STATUS <> 'ARCHIVED'
+                 order by case STATUS when 'PUBLISHED' then 1 when 'VALIDATED' then 2 when 'DRAFT' then 3 else 9 end,
+                          PICK_ROUTE_ID desc
                 """,
                 {
                     "topology_id": request.topology_id,
                     "ware_id": request.ware_id,
-                    "route_code": request.route_code,
                 },
             )
-            pick_route_id = existing_by_code[0]["pick_route_id"] if existing_by_code else self._nextval("RRL_PICK_ROUTE_SQ")
+            pick_route_id = existing_for_topology[0]["pick_route_id"] if existing_for_topology else self._nextval("RRL_PICK_ROUTE_SQ")
         existing = self.gateway.fetch_all(
             "select PICK_ROUTE_ID from RRL_PICK_ROUTE where PICK_ROUTE_ID = :pick_route_id",
             {"pick_route_id": pick_route_id},
@@ -656,6 +699,7 @@ class WarehouseTopologyService:
                 """,
                 route_params,
             )
+            self._archive_other_pick_routes(request.topology_id, pick_route_id, request.updated_by)
             self.gateway.execute(
                 """
                 update RRL_PICK_ROUTE_CELL
@@ -667,6 +711,7 @@ class WarehouseTopologyService:
                 {"pick_route_id": pick_route_id, "updated_by": request.updated_by},
             )
         else:
+            self._archive_other_pick_routes(request.topology_id, pick_route_id, request.updated_by)
             self.gateway.execute(
                 """
                 insert into RRL_PICK_ROUTE (
@@ -726,6 +771,7 @@ class WarehouseTopologyService:
             ))
         if statements:
             self.gateway.execute_many(statements)
+        self._assert_linear_route_invariants(pick_route_id)
         self._log_change(request.topology_id, "PICK_ROUTE", pick_route_id, "BUILD", None, request.model_dump(), request.updated_by)
         return {"pick_route_id": pick_route_id, "route_cell_count": len(cells)}
 
@@ -868,6 +914,52 @@ class WarehouseTopologyService:
             {"topology_id": topology_id},
         )
         return rows[0] if rows else None
+
+    def _archive_other_pick_routes(self, topology_id: int, keep_route_id: int, user: str | None) -> None:
+        self.gateway.execute(
+            """
+            update RRL_PICK_ROUTE
+               set STATUS = 'ARCHIVED',
+                   ACTIVE = 0,
+                   UPDATED_AT = sysdate,
+                   UPDATED_BY = substr(:user_id, 1, 50)
+             where TOPOLOGY_ID = :topology_id
+               and ROUTE_KIND = 'PICK'
+               and PICK_ROUTE_ID <> :keep_route_id
+               and ACTIVE = 1
+            """,
+            {"topology_id": topology_id, "keep_route_id": keep_route_id, "user_id": user},
+        )
+
+    def _assert_linear_route_invariants(self, pick_route_id: int) -> None:
+        checks = self.gateway.fetch_all(
+            """
+            select 'DUP_SEQUENCE' CHECK_KIND, count(*) CNT
+              from (
+                select PICK_SEQUENCE
+                  from RRL_PICK_ROUTE_CELL
+                 where PICK_ROUTE_ID = :pick_route_id
+                   and ACTIVE = 1
+                 group by PICK_SEQUENCE
+                having count(*) > 1
+              )
+            union all
+            select 'DUP_CELL' CHECK_KIND, count(*) CNT
+              from (
+                select TOPOLOGY_CELL_ID
+                  from RRL_PICK_ROUTE_CELL
+                 where PICK_ROUTE_ID = :pick_route_id
+                   and ACTIVE = 1
+                   and TOPOLOGY_CELL_ID is not null
+                 group by TOPOLOGY_CELL_ID
+                having count(*) > 1
+              )
+            """,
+            {"pick_route_id": pick_route_id},
+        )
+        failed = [row for row in checks if int(row.get("cnt") or 0) > 0]
+        if failed:
+            raise HTTPException(status_code=409, detail={"message": "Pick route violates linear order invariants.", "checks": failed})
 
     def _aisle_exists(self, topology_id: int, aisle_code: str) -> bool:
         return bool(self.gateway.fetch_all(

@@ -1159,3 +1159,11 @@ Append-only log of root wiki updates.
 - `RRL_PICK_ROUTE_CELL` is defined as route points with `PICK_SEQUENCE NUMBER`, while UI arrows are derived from neighboring sorted rows.
 - Recorded route invariants: one outgoing arrow per non-terminal cell, one incoming arrow per non-start cell, no branching, and no alternative routes in the base topology module.
 - Added uniqueness guidance for `PICK_ROUTE_ID + TOPOLOGY_CELL_ID`, `PICK_ROUTE_ID + PICK_SEQUENCE`, and split pick-face slot variants.
+
+## 2026-05-20 - Linear pick route invariants implementation
+
+- Added Oracle migration `040` for linear pick-route invariants: one active non-archived `PICK` route per topology, unique active route sequence, and unique active physical cell membership.
+- Updated the topology API to reuse the active topology route, archive older active routes, return route rows only for the active route, and validate duplicate route/sequence/cell violations.
+- Applied `040_apply.sql` and `040_verify.sql` to local Oracle `RABAEV@127.0.0.1:1521/orcl`; follow-up queries showed all three invariant violation counts as `0`.
+- API smoke rebuilt topology `1` route `CASE-Z-MAIN` as route `104`, returned `48` active route rows, and validation returned `valid=true`.
+- Captured evidence screenshot `runtime/test-evidence/topology-linear-route-order-wait.png`.
