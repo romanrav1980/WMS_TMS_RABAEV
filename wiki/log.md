@@ -1094,3 +1094,10 @@ Append-only log of root wiki updates.
 - Added route build `cell_ids` support and made repeated route builds reuse an existing active route by `topology_id + ware_id + route_code`.
 - Added visual aisle-end-to-gate links and moved gates farther from racks to represent the 18-24 m dock/staging gap.
 - Captured evidence screenshot `runtime/test-evidence/warehouse-topology-route-links-final.png`.
+
+## 2026-05-20 - Split pick-face requirement
+
+- Extended `warehouse_topology_pick_route_tz.md` with split pick-face modeling: physical pick-face place versus child operational pick-face slots.
+- Added target object `RRL_TOPOLOGY_PICK_FACE_SLOT`, slot generation settings, route implications, PL/SQL/API contracts, admin UI requirements, invariants, and acceptance criteria.
+- Captured the rule that movement distance belongs to the physical cell, while picking sequence and TSD address may point to a child slot such as a `3 x 3` small-goods grid.
+- Updated `wiki/index.md` to surface split pick-face slots in the topology requirement summary.
