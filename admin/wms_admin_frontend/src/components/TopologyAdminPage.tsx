@@ -123,6 +123,7 @@ type ValidationResult = {
   checks: Record<string, unknown[]>;
 };
 
+type ApiState = "loading" | "demo" | "api" | "saving";
 type RoutePattern = "Z" | "U_SHAPE" | "SNAKE" | "LINEAR";
 type SvgSelectionRect = { x1: number; y1: number; x2: number; y2: number };
 type SvgPoint = { x: number; y: number };
@@ -145,8 +146,8 @@ function apiFetch(input: RequestInfo | URL, init: RequestInit = {}) {
 }
 
 export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
-  const [map, setMap] = useState<TopologyMap>(() => demoTopologyMap());
-  const [apiState, setApiState] = useState<"demo" | "api" | "saving">("demo");
+  const [map, setMap] = useState<TopologyMap>(() => emptyTopologyMap());
+  const [apiState, setApiState] = useState<ApiState>("loading");
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [rightTab, setRightTab] = useState<"general" | "params" | "stats">("general");
   const [mapMode, setMapMode] = useState<"3d" | "plan" | "list">("3d");
@@ -181,7 +182,10 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
       if (loaded) {
         setMap(loaded);
         setApiState("api");
+        return;
       }
+      setMap(demoTopologyMap());
+      setApiState("demo");
     });
   }, []);
 
@@ -189,7 +193,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
     if (selectedId === null && map.cells.length) {
       setSelectedId(map.cells[0].topology_cell_id);
     }
-  }, [map.cells, selectedId]);
+  }, [map?.cells, selectedId]);
 
   const selectedCell = map.cells.find((cell) => cell.topology_cell_id === selectedId) || null;
   const activeRoute = map.routes[0] || null;
@@ -212,6 +216,15 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
       .sort((a, b) => Number(a.distance_m || 0) - Number(b.distance_m || 0))
       .slice(0, 4);
   }, [map.distances, selectedId]);
+
+  if (apiState === "loading" && map.cells.length === 0) {
+    return (
+      <div className="loading-screen">
+        <b>Управление топологией склада</b>
+        <span>Загружаю опубликованную топологию и порядок обхода...</span>
+      </div>
+    );
+  }
 
   function toggleAisle(aisleCode: string) {
     setSelectedAisles((current) => current.includes(aisleCode)
@@ -540,7 +553,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
             <button onClick={handleValidate}>Проверить</button>
             <button onClick={handlePublishTopology}>Опубликовать</button>
             <span className={`topology-status ${map.topology.status.toLowerCase()}`}>{map.topology.status}</span>
-            <span className="api-pill">{apiState === "api" ? "API" : apiState === "saving" ? "Сохранение" : "Demo"}</span>
+            <span className="api-pill">{apiState === "api" ? "API" : apiState === "saving" ? "Сохранение" : apiState === "loading" ? "Загрузка" : "Demo"}</span>
           </div>
         </header>
 
@@ -639,11 +652,13 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                 <button onClick={() => setView((current) => ({ ...current, zoom: Math.min(2.2, Number((current.zoom + 0.15).toFixed(2))) }))}>+</button>
                 <button onClick={() => setView((current) => ({ ...current, zoom: Math.max(0.65, Number((current.zoom - 0.15).toFixed(2))) }))}>-</button>
                 <button onClick={() => setView({ zoom: 1, panX: 0, panY: 0 })}>Сброс</button>
+                <button className={selectionMode ? "active" : ""} onClick={() => setSelectionMode((current) => !current)}>□ Рамка</button>
                 <button onClick={() => setView((current) => ({ ...current, panX: current.panX - 30 }))}>←</button>
                 <button onClick={() => setView((current) => ({ ...current, panX: current.panX + 30 }))}>→</button>
                 <button onClick={() => setView((current) => ({ ...current, panY: current.panY - 30 }))}>↑</button>
                 <button onClick={() => setView((current) => ({ ...current, panY: current.panY + 30 }))}>↓</button>
               </div>
+              {selectionMode && <div className="selection-mode-hint">Режим рамки: протяните мышью по ячейкам отбора</div>}
               <TopologySvg
                 map={map}
                 routeByCell={routeByCell}
@@ -665,6 +680,10 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
               {routeMenu && (
                 <div className="route-context-menu" style={{ left: routeMenu.x, top: routeMenu.y }}>
                   <b>Стратегия обхода</b>
+                  <button onClick={() => {
+                    setSelectionMode(true);
+                    setRouteMenu(null);
+                  }}>Включить рамку</button>
                   {(["Z", "U_SHAPE", "SNAKE", "LINEAR"] as RoutePattern[]).map((pattern) => (
                     <button key={pattern} onClick={() => handleBuildRoute(pattern)}>{pattern}</button>
                   ))}
@@ -884,6 +903,30 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
           </g>
         ))}
 
+        {layers.gates && <g className="topology-dock-zone">
+          {map.gates.slice(0, 10).map((gate) => {
+            const x = sx(gate.x, bounds);
+            const isShipping = gate.gate_kind !== "RECEIVING";
+            return (
+              <g key={`staging-${gate.topology_gate_id}`}>
+                <rect
+                  x={x - 24}
+                  y="512"
+                  width="48"
+                  height="34"
+                  rx="5"
+                  fill={isShipping ? "#dcfce7" : "#dbeafe"}
+                  stroke={isShipping ? "#22c55e" : "#3b82f6"}
+                  strokeDasharray="7 5"
+                  opacity=".82"
+                />
+                {layers.labels && <text x={x} y="507" className="staging-label">накопл.</text>}
+              </g>
+            );
+          })}
+          {layers.labels && <text x="820" y="548">Зона накопления перед воротами</text>}
+        </g>}
+
         {layers.aisles && map.aisles.map((aisle) => {
           const x1 = sx(aisle.x1, bounds);
           const y1 = sy(aisle.y1, bounds);
@@ -953,10 +996,6 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
           );
         })}
 
-        {layers.gates && <g className="topology-dock-zone">
-          <rect x="812" y="74" width="108" height="484" rx="8" fill="#e0f2fe" stroke="#38bdf8" strokeDasharray="8 6" />
-          {layers.labels && <text x="866" y="62">Зона накопления / ворота</text>}
-        </g>}
         {selectionRect && (
           <rect
             x={selectionRect.x1}
@@ -1036,6 +1075,26 @@ function normalizeMap(raw: TopologyMap): TopologyMap {
 
 function normalizeKeys(value: Record<string, unknown>): Record<string, unknown> {
   return Object.fromEntries(Object.entries(value).map(([key, item]) => [key.toLowerCase(), item]));
+}
+
+function emptyTopologyMap(): TopologyMap {
+  return {
+    topology: {
+      topology_id: 0,
+      ware_id: 1,
+      ware_name: "Основной склад",
+      topology_code: "LOADING",
+      topology_name: "Загрузка топологии",
+      version_no: 1,
+      status: "DRAFT"
+    },
+    aisles: [],
+    gates: [],
+    cells: [],
+    distances: [],
+    routes: [],
+    route_cells: []
+  };
 }
 
 function demoTopologyMap(): TopologyMap {

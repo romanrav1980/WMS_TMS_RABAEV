@@ -66,12 +66,12 @@ export default function App() {
     return { events, resources, collisions, tasks, pickFaceFill, dockPallets, unitsDone, totalUnits, activePickers, avgSpeed: avgSpeed * modelSettings.pickerSpeedPct / 100, forecastMultiplier };
   }, [data, minute, selectedWaveId, modelSettings]);
 
-  if (!data || !state) {
-    return <main className="loading-screen"><b>WMS PRO</b><span>Загружаем цифровой двойник склада...</span></main>;
-  }
-
   if (page === "topology") {
     return <TopologyAdminPage onBack={() => setPage("twin")} />;
+  }
+
+  if (!data || !state) {
+    return <main className="loading-screen"><b>WMS PRO</b><span>Загружаем цифровой двойник склада...</span></main>;
   }
 
   const currentWave = selectedWaveId || inferWaveByMinute(minute);

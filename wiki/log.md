@@ -1107,3 +1107,11 @@ Append-only log of root wiki updates.
 - Added route-area selection controls to the topology admin: explicit rectangle mode, all/left/right/invert/clear actions, and Ctrl/Shift-click toggling for individual cells.
 - Changed local and API route ordering so `LINEAR` no longer renders the same as `Z`: linear walks side-first, while Z/SNAKE keep alternating aisle direction.
 - Captured evidence screenshot `runtime/test-evidence/topology-selection-route-tools.png`.
+
+## 2026-05-20 - Topology selection cleanup and dock/staging split
+
+- Moved the route rectangle mode control onto the map toolbar and added `Включить рамку` to the map context menu.
+- Fixed topology page loading so `?page=topology` no longer waits for digital-twin replay data and no longer flashes a large demo topology before the API topology loads.
+- Separated dock gates from staging accumulation in the topology map: gates remain on the dock line, staging is shown as distinct accumulation pads.
+- Cleaned up stray frontend preview/dev processes and verified only product port `3000` remains listening.
+- Captured evidence screenshots `runtime/test-evidence/topology-selection-mode-dock-staging.png` and `runtime/test-evidence/topology-context-menu-selection-mode.png`.
