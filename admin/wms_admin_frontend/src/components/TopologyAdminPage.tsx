@@ -617,7 +617,10 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
             <select
               value={map.topology.topology_id}
               disabled={apiState === "loading" || apiState === "saving" || !topologyOptions.length}
-              onChange={(event) => handleTopologyChange(Number(event.currentTarget.value))}
+              onChange={(event) => {
+                const topologyId = Number(event.currentTarget.value);
+                handleTopologyChange(topologyId);
+              }}
             >
               {(topologyOptions.length ? topologyOptions : [map.topology]).map((topology) => (
                 <option key={topology.topology_id} value={topology.topology_id}>
@@ -671,7 +674,10 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
             <NumberField label="Аллеи" value={generator.aisle_count} min={1} max={24} onChange={(value) => setGenerator((current) => ({ ...current, aisle_count: value }))} />
             <NumberField label="Ячеек на сторону" value={generator.bays_per_aisle} min={4} max={80} onChange={(value) => setGenerator((current) => ({ ...current, bays_per_aisle: value }))} />
             <NumberField label="Ярусы" value={generator.levels} min={1} max={4} onChange={(value) => setGenerator((current) => ({ ...current, levels: value }))} />
-            <label className="topology-check"><input type="checkbox" checked={generator.create_both_sides === 1} onChange={(event) => setGenerator((current) => ({ ...current, create_both_sides: event.target.checked ? 1 : 0 }))} /> две стороны прохода</label>
+            <label className="topology-check"><input type="checkbox" checked={generator.create_both_sides === 1} onChange={(event) => {
+              const createBothSides = event.currentTarget.checked ? 1 : 0;
+              setGenerator((current) => ({ ...current, create_both_sides: createBothSides }));
+            }} /> две стороны прохода</label>
           </section>
 
           <section>
@@ -753,7 +759,10 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                     max={1200}
                     step={10}
                     value={Math.round(view.zoom * 100)}
-                    onChange={(event) => setView((current) => ({ ...current, zoom: clampZoom(Number(event.currentTarget.value) / 100) }))}
+                    onChange={(event) => {
+                      const zoom = clampZoom(Number(event.currentTarget.value) / 100);
+                      setView((current) => ({ ...current, zoom }));
+                    }}
                   />
                 </label>
                 <button onClick={() => setView({ zoom: 1, panX: 0, panY: 0 })}>Сброс</button>
@@ -850,8 +859,14 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                 {rightTab === "params" && (
                   <>
                     <span>Координаты физической ячейки фиксируются топологией. На этой странице редактируется порядок обхода и связи между ячейками.</span>
-                    <label className="inspector-field"><span>Сторона</span><select value={selectedCell.side_code} onChange={(event) => updateSelectedCell("side_code", event.target.value)}><option>LEFT</option><option>RIGHT</option><option>CENTER</option></select></label>
-                    <label className="inspector-field"><span>Тип</span><select value={selectedCell.cell_kind} onChange={(event) => updateSelectedCell("cell_kind", event.target.value)}><option>PICK_FACE</option><option>DYNAMIC_PICK_FACE</option><option>STORAGE</option><option>STAGING</option></select></label>
+                    <label className="inspector-field"><span>Сторона</span><select value={selectedCell.side_code} onChange={(event) => {
+                      const value = event.currentTarget.value;
+                      updateSelectedCell("side_code", value);
+                    }}><option>LEFT</option><option>RIGHT</option><option>CENTER</option></select></label>
+                    <label className="inspector-field"><span>Тип</span><select value={selectedCell.cell_kind} onChange={(event) => {
+                      const value = event.currentTarget.value;
+                      updateSelectedCell("cell_kind", value);
+                    }}><option>PICK_FACE</option><option>DYNAMIC_PICK_FACE</option><option>STORAGE</option><option>STAGING</option></select></label>
                   </>
                 )}
                 {rightTab === "stats" && (
@@ -929,7 +944,10 @@ function NumberField({ label, value, min, max, onChange }: {
   return (
     <label className="number-field">
       <span>{label}</span>
-      <input type="number" min={min} max={max} value={value} onChange={(event) => onChange(Number(event.target.value))} />
+      <input type="number" min={min} max={max} value={value} onChange={(event) => {
+        const nextValue = Number(event.currentTarget.value);
+        onChange(nextValue);
+      }} />
     </label>
   );
 }
@@ -939,7 +957,10 @@ function LayerToggle({ label, checked, onChange }: { label: string; checked: boo
 }
 
 function InspectorField({ label, value, onChange }: { label: string; value: number; onChange: (value: string) => void }) {
-  return <label className="inspector-field"><span>{label}</span><input type="number" value={value} step="0.1" onChange={(event) => onChange(event.target.value)} /></label>;
+  return <label className="inspector-field"><span>{label}</span><input type="number" value={value} step="0.1" onChange={(event) => {
+    const nextValue = event.currentTarget.value;
+    onChange(nextValue);
+  }} /></label>;
 }
 
 function TopologyCellTable({ cells, selectedId, onSelect }: { cells: TopologyCell[]; selectedId: number | null; onSelect: (id: number) => void }) {
@@ -1105,6 +1126,24 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
 
         {layers.distances && selectedId && drawDistanceLines(map, selectedId, bounds, mode)}
 
+        {layers.route && (
+          <g className="route-link-layer">
+            {routeSegments.map((segment) => (
+              <line
+                key={`${segment.rowId}-${segment.fromCellId}-${segment.toCellId}`}
+                className="route-link-line"
+                x1={segment.x1}
+                y1={segment.y1}
+                x2={segment.x2}
+                y2={segment.y2}
+                markerEnd="url(#route-arrow)"
+              >
+                <title>{segment.title}</title>
+              </line>
+            ))}
+          </g>
+        )}
+
         {layers.cells && map.cells.filter((cell) => cell.active === 1).map((cell) => {
           const aisle = map.aisles.find((item) => item.aisle_code === cell.aisle_code);
           const point = projectCellPoint(cell, bounds, mode, aisle);
@@ -1155,24 +1194,6 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
         })}
 
         {layers.aisles && drawPassageOverlay(map, bounds, mode, layers.labels)}
-
-        {layers.route && (
-          <g className="route-link-layer">
-            {routeSegments.map((segment) => (
-              <line
-                key={`${segment.rowId}-${segment.fromCellId}-${segment.toCellId}`}
-                className="route-link-line"
-                x1={segment.x1}
-                y1={segment.y1}
-                x2={segment.x2}
-                y2={segment.y2}
-                markerEnd="url(#route-arrow)"
-              >
-                <title>{segment.title}</title>
-              </line>
-            ))}
-          </g>
-        )}
 
         {selectionRect && (
           <rect

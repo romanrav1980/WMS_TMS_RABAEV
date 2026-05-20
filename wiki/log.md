@@ -1188,3 +1188,9 @@ Append-only log of root wiki updates.
 - Added a visible passage overlay for the topology admin map: light corridor strokes, dotted section boundaries, directional passage arrows, and front/rear passage labels so physical aisles remain visible under dense pick-face and route layers.
 - Expanded topology map zoom from small fixed +/- steps to a slider-driven `10%..1200%` range with a percent indicator.
 - Enabled the top topology selector: it now lists available warehouse topology versions and reloads the map by selected `TOPOLOGY_ID` instead of showing a disabled warehouse placeholder.
+
+## 2026-05-20 - Topology runtime crash fix
+
+- Fixed the topology page runtime crash `Cannot read properties of null (reading 'value')` by reading form values synchronously before entering React state updater callbacks.
+- Moved route arrows below pick-face cell nodes so route lines no longer intercept cell clicks while still remaining visible between cells.
+- Verified the page with a Playwright regression: zoom keyboard changes, topology switching, layer checkbox toggles, generator input edits, cell click, and no React error boundary.
