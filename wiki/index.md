@@ -32,7 +32,7 @@ Start here for a fresh session:
 
 - [database/index.md](database/index.md): local wiki mirror of the Oracle `RABAEV` schema and change discipline
 - [database/oracle_change_protocol.md](database/oracle_change_protocol.md): required workflow for Oracle structure changes
-- [database/feed_factory_traceability_schema.md](database/feed_factory_traceability_schema.md): schema mirror for feed-factory traceability, Mercury/CRPT lifecycle, API audit/replay, wave stock movement ledger, and regulatory journal migrations
+- [database/feed_factory_traceability_schema.md](database/feed_factory_traceability_schema.md): schema mirror for feed-factory traceability, Mercury/CRPT lifecycle, API audit/replay, wave stock movement ledger, regulatory journal migrations, and live apply notes for the warehouse topology 038/039 layer
 
 ## Concepts
 

@@ -123,7 +123,22 @@ type ValidationResult = {
   checks: Record<string, unknown[]>;
 };
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
+const API_BASIC_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
+
+function apiHeaders(extra?: HeadersInit): HeadersInit {
+  return {
+    Authorization: `Basic ${btoa(API_BASIC_AUTH)}`,
+    ...extra
+  };
+}
+
+function apiFetch(input: RequestInfo | URL, init: RequestInit = {}) {
+  return fetch(input, {
+    ...init,
+    headers: apiHeaders(init.headers)
+  });
+}
 
 export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
   const [map, setMap] = useState<TopologyMap>(() => demoTopologyMap());
@@ -204,7 +219,8 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
     setApiState((current) => current === "api" ? "saving" : current);
     const local = generateLocalTopology(map.topology, generator);
     try {
-      const response = await fetch(`${API_BASE}/api/admin/warehouse-topologies/${map.topology.topology_id}/generate-cells`, {
+      const topologyId = apiState === "api" ? map.topology.topology_id : await createApiTopology();
+      const response = await apiFetch(`${API_BASE}/api/admin/warehouse-topologies/${topologyId}/generate-cells`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -218,7 +234,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
         })
       });
       if (response.ok) {
-        const loaded = await loadTopologyMap(map.topology.topology_id);
+        const loaded = await loadTopologyMap(topologyId);
         if (loaded) setMap(loaded);
         setApiState("api");
         return;
@@ -235,7 +251,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
     setMap(route);
     setApiState((current) => current === "api" ? "saving" : current);
     try {
-      const response = await fetch(`${API_BASE}/api/admin/pick-routes/build`, {
+      const response = await apiFetch(`${API_BASE}/api/admin/pick-routes/build`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -265,12 +281,12 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
     setMap(recalculateLocalGateDistances(map));
     setApiState((current) => current === "api" ? "saving" : current);
     try {
-      await fetch(`${API_BASE}/api/admin/warehouse-topologies/${map.topology.topology_id}/generate-gates`, {
+      await apiFetch(`${API_BASE}/api/admin/warehouse-topologies/${map.topology.topology_id}/generate-gates`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ gate_count: 10, gate_kind: "SHIPPING", overwrite_existing: 0 })
       });
-      const response = await fetch(`${API_BASE}/api/admin/warehouse-topologies/${map.topology.topology_id}/distances/recalculate`, {
+      const response = await apiFetch(`${API_BASE}/api/admin/warehouse-topologies/${map.topology.topology_id}/distances/recalculate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ flow_kind: "BOTH", picker_speed_mps: 1.1, reachtruck_speed_mps: 1.8 })
@@ -292,7 +308,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
     setValidation(local);
     setApiState((current) => current === "api" ? "saving" : current);
     try {
-      const response = await fetch(`${API_BASE}/api/admin/warehouse-topologies/${map.topology.topology_id}/validate`, {
+      const response = await apiFetch(`${API_BASE}/api/admin/warehouse-topologies/${map.topology.topology_id}/validate`, {
         method: "POST"
       });
       if (response.ok) {
@@ -312,7 +328,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
     if (!local.valid) return;
     setApiState((current) => current === "api" ? "saving" : current);
     try {
-      const response = await fetch(`${API_BASE}/api/admin/warehouse-topologies/${map.topology.topology_id}/publish`, {
+      const response = await apiFetch(`${API_BASE}/api/admin/warehouse-topologies/${map.topology.topology_id}/publish`, {
         method: "POST"
       });
       if (response.ok) {
@@ -332,7 +348,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
     if (!selectedCell) return;
     setApiState((current) => current === "api" ? "saving" : current);
     try {
-      const response = await fetch(`${API_BASE}/api/admin/topology-cells/${selectedCell.topology_cell_id}`, {
+      const response = await apiFetch(`${API_BASE}/api/admin/topology-cells/${selectedCell.topology_cell_id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -459,7 +475,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
         <header className="topology-topbar">
           <div className="topology-title">
             <h1>Управление топологией склада</h1>
-            <span>{map.topology.status === "PUBLISHED" ? "Опубликованная мастер-версия" : "Черновик мастер-данных"}</span>
+            <span>{topologyStatusText(map.topology.status)}</span>
           </div>
           <label className="topology-warehouse-select">
             <span>Склад</span>
@@ -875,7 +891,7 @@ function topologyStats(map: TopologyMap) {
 
 async function loadInitialTopology(): Promise<TopologyMap | null> {
   try {
-    const response = await fetch(`${API_BASE}/api/admin/warehouse-topologies`, { cache: "no-store" });
+    const response = await apiFetch(`${API_BASE}/api/admin/warehouse-topologies`, { cache: "no-store" });
     if (!response.ok) return null;
     const topologies = await response.json() as Topology[];
     const topology = topologies.find((item) => item.status === "PUBLISHED") || topologies[0];
@@ -887,9 +903,28 @@ async function loadInitialTopology(): Promise<TopologyMap | null> {
 }
 
 async function loadTopologyMap(topologyId: number): Promise<TopologyMap | null> {
-  const response = await fetch(`${API_BASE}/api/admin/warehouse-topologies/${topologyId}/map`, { cache: "no-store" });
+  const response = await apiFetch(`${API_BASE}/api/admin/warehouse-topologies/${topologyId}/map`, { cache: "no-store" });
   if (!response.ok) return null;
   return normalizeMap(await response.json());
+}
+
+async function createApiTopology(): Promise<number> {
+  const response = await apiFetch(`${API_BASE}/api/admin/warehouse-topologies`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      ware_id: 1,
+      topology_code: `MAIN-${new Date().toISOString().slice(0, 10)}`,
+      topology_name: "Основная топология отбора",
+      version_no: 1,
+      comment_text: "Создано из админки топологии склада"
+    })
+  });
+  if (!response.ok) {
+    throw new Error(`Topology create failed: ${response.status}`);
+  }
+  const created = await response.json() as { topology_id: number };
+  return created.topology_id;
 }
 
 function normalizeMap(raw: TopologyMap): TopologyMap {
@@ -1097,6 +1132,16 @@ function validationLabel(key: string) {
     distances_missing: "Нет расстояний"
   };
   return labels[key] || key;
+}
+
+function topologyStatusText(status: TopologyStatus) {
+  const labels: Record<TopologyStatus, string> = {
+    DRAFT: "Черновик мастер-данных",
+    VALIDATED: "Проверенная версия мастер-данных",
+    PUBLISHED: "Опубликованная мастер-версия",
+    ARCHIVED: "Архивная версия"
+  };
+  return labels[status] || status;
 }
 
 function drawDistanceLines(map: TopologyMap, selectedId: number, bounds: MapBounds) {

@@ -4,7 +4,8 @@ chcp 65001 > nul
 setlocal enableextensions enabledelayedexpansion
 
 set "FRONT_PORT=3000"
-set "REACT_APP_API_BASE_URL=http://127.0.0.1:8088"
+set "VITE_API_BASE=http://127.0.0.1:8088"
+set "VITE_ADMIN_BASIC_AUTH=admin:admin123"
 set "BROWSER=none"
 set "PORT=%FRONT_PORT%"
 
@@ -23,7 +24,7 @@ if errorlevel 1 (
 if exist "%REACT_FRONT_DIR%\package.json" (
   cd /d "%REACT_FRONT_DIR%"
   echo Starting WMS admin frontend...
-  echo   REACT_APP_API_BASE_URL=%REACT_APP_API_BASE_URL%
+  echo   VITE_API_BASE=%VITE_API_BASE%
   echo   PORT=%PORT%
   npm.cmd run start
 ) else (

@@ -1077,3 +1077,11 @@ Append-only log of root wiki updates.
 - Extended the React topology admin with layer controls, `3D Вид` / `2D План` / `Список` modes, zoom/pan controls, mouse drag-pan, draggable topology cells, editable inspector fields, validation feedback, save action, and a cell table.
 - Fixed repeated gate-distance recalculation by changing the service write path from insert-after-deactivate to `merge` upsert on `TOPOLOGY_CELL_ID + TOPOLOGY_GATE_ID + FLOW_KIND`.
 - Added the manual acceptance flow and current UI readiness notes to `wiki/requirements/warehouse_topology_pick_route_tz.md`.
+
+## 2026-05-20 - Topology Oracle/API acceptance pass
+
+- Applied Oracle migrations `038_apply.sql` and `039_apply.sql` to `RABAEV@127.0.0.1:1521/orcl`; both verify scripts passed.
+- Recompiled `RRL_PICK_TOPOLOGY_API` package body after the first invalid-object check; final `USER_OBJECTS` invalid count is `0`.
+- Updated the topology admin frontend to default to API `http://127.0.0.1:8088` with local Basic auth `admin/admin123`, matching `serv.bat`.
+- Ran an API smoke: created topology, generated cells/gates, recalculated gate distances twice, built Z-route rows, patched a cell, and validated topology successfully.
+- Captured evidence screenshot `runtime/test-evidence/warehouse-topology-admin-api-oracle-final.png`.

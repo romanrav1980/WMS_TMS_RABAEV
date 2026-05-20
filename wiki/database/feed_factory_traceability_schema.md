@@ -854,3 +854,16 @@ Rollback script:
 - keeps the migration ledger/settings foundation tables themselves if present.
 
 Before rollback, export any data already written to the new traceability tables.
+
+## Live Apply: Warehouse Topology 038/039
+
+2026-05-20 live Oracle apply result for the topology layer:
+
+- Target: `RABAEV@127.0.0.1:1521/orcl`.
+- Migration `038_apply.sql`: `Statements=4; Errors=0`.
+- Migration `039_apply.sql`: `Statements=3; Errors=0`.
+- Verify `038_verify.sql`: `Statements=6; Errors=0`.
+- Verify `039_verify.sql`: `Statements=4; Errors=0`.
+- Initial invalid object check found `RRL_PICK_TOPOLOGY_API` package body invalid; manual `alter package RRL_PICK_TOPOLOGY_API compile body` succeeded.
+- Final invalid object check excluding recycle-bin objects: `0 INVALID`.
+- API smoke through `http://127.0.0.1:8088`: topology created, `48` cells generated, `4` gates generated, gate distances recalculated twice (`192` rows each time), `48` Z-route rows built, one topology cell patched, validation returned `valid=true`.
