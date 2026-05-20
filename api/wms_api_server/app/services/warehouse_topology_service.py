@@ -119,6 +119,7 @@ class WarehouseTopologyService:
                    ) NEAREST_INBOUND_GATE_DISTANCE_M
               from RRL_TOPOLOGY_CELL c
              where c.TOPOLOGY_ID = :topology_id
+               and c.ACTIVE = 1
              order by c.AISLE_CODE, c.BAY_NO, c.SIDE_CODE, c.LEVEL_NO, c.CELL_CODE
             """,
             {"topology_id": topology_id},
@@ -198,7 +199,7 @@ class WarehouseTopologyService:
         created_aisles = 0
         created_cells = 0
         statements: list[tuple[str, dict[str, Any]]] = []
-        sides = ["LEFT", "RIGHT"] if int(request.create_both_sides or 1) == 1 else ["LEFT"]
+        sides = ["LEFT", "RIGHT"] if int(request.create_both_sides) == 1 else ["LEFT"]
         for aisle_offset in range(request.aisle_count):
             aisle_no = request.start_aisle_no + aisle_offset
             aisle_code = f"{request.aisle_prefix}{aisle_no:02d}"

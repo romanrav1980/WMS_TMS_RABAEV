@@ -152,7 +152,10 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
   const [apiState, setApiState] = useState<ApiState>("loading");
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [rightTab, setRightTab] = useState<"general" | "params" | "stats">("general");
-  const [mapMode, setMapMode] = useState<"3d" | "plan" | "list">("3d");
+  const [mapMode, setMapMode] = useState<"3d" | "plan" | "list">("plan");
+  const [navCollapsed, setNavCollapsed] = useState(false);
+  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
+  const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false);
   const [view, setView] = useState({ zoom: 1, panX: 0, panY: 0 });
   const [panDrag, setPanDrag] = useState<{ startX: number; startY: number; originX: number; originY: number } | null>(null);
   const [areaDrag, setAreaDrag] = useState<AreaDragState | null>(null);
@@ -539,23 +542,41 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
   }
 
   return (
-    <div className="topology-admin">
-      <aside className="topology-nav">
-        <div className="topology-nav-brand"><b>W</b><span>Управление топологией склада</span></div>
-        <button onClick={onBack}>⌂ Обзор</button>
+    <div className={`topology-admin ${navCollapsed ? "nav-collapsed" : ""}`}>
+      <aside className={`topology-nav ${navCollapsed ? "collapsed" : ""}`}>
+        <div className="topology-nav-brand">
+          <b>W</b>
+          <span>Управление топологией склада</span>
+          <button
+            className="topology-nav-collapse"
+            onClick={() => setNavCollapsed((current) => !current)}
+            title={navCollapsed ? "Развернуть меню" : "Свернуть меню"}
+          >
+            {navCollapsed ? "›" : "‹"}
+          </button>
+        </div>
+        <button onClick={onBack} title="Обзор"><span>⌂</span><em>Обзор</em></button>
         <small>Топология</small>
-        {["Склад", "Аллеи", "Ячейки", "Ворота", "Зоны", "Оборудование", "Типы ячеек"].map((item, index) => (
-          <button key={item} className={index === 0 ? "active" : ""}>{item}</button>
+        {[
+          ["▣", "Склад"],
+          ["╂", "Аллеи"],
+          ["□", "Ячейки"],
+          ["▰", "Ворота"],
+          ["◇", "Зоны"],
+          ["⚙", "Оборудование"],
+          ["▤", "Типы ячеек"]
+        ].map(([icon, item], index) => (
+          <button key={item} className={index === 0 ? "active" : ""} title={item}><span>{icon}</span><em>{item}</em></button>
         ))}
         <small>Аналитика</small>
-        <button>Загрузка</button>
-        <button>Емкость</button>
-        <button>Контроль</button>
+        <button title="Загрузка"><span>↯</span><em>Загрузка</em></button>
+        <button title="Емкость"><span>▥</span><em>Емкость</em></button>
+        <button title="Контроль"><span>◉</span><em>Контроль</em></button>
         <small>Настройки</small>
-        <button>Справочники</button>
-        <button>Правила</button>
-        <button>Параметры</button>
-        <em>Версия 1.0.0<br />© WMS</em>
+        <button title="Справочники"><span>☷</span><em>Справочники</em></button>
+        <button title="Правила"><span>↔</span><em>Правила</em></button>
+        <button title="Параметры"><span>⚙</span><em>Параметры</em></button>
+        <p>Версия 1.0.0<br />© WMS</p>
       </aside>
 
       <main className="topology-shell">
@@ -581,8 +602,11 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
           </div>
         </header>
 
-        <section className="topology-layout">
-          <aside className="topology-left">
+        <section className={`topology-layout ${leftPanelCollapsed ? "left-collapsed" : ""} ${rightPanelCollapsed ? "right-collapsed" : ""}`}>
+          <aside className={`topology-left ${leftPanelCollapsed ? "collapsed" : ""}`}>
+          <button className="panel-collapse-button" onClick={() => setLeftPanelCollapsed((current) => !current)} title={leftPanelCollapsed ? "Развернуть левую панель" : "Свернуть левую панель"}>
+            {leftPanelCollapsed ? "›" : "‹"}
+          </button>
           <section>
             <h2>{map.topology.topology_name || map.topology.topology_code}</h2>
             <p>{map.topology.ware_name || `Склад ${map.topology.ware_id}`} · версия {map.topology.version_no}</p>
@@ -655,10 +679,9 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
           <div className="topology-map-title">
             <div>
               <b>Карта ячеек отбора</b>
-              <span>3D вид · топология редактируется отдельно от ежедневных волн</span>
+              <span>2D план · порядок обхода редактируется отдельно от ежедневных волн</span>
             </div>
             <div className="topology-view-tabs">
-              <button className={mapMode === "3d" ? "active" : ""} onClick={() => setMapMode("3d")}>3D Вид</button>
               <button className={mapMode === "plan" ? "active" : ""} onClick={() => setMapMode("plan")}>2D План</button>
               <button className={mapMode === "list" ? "active" : ""} onClick={() => setMapMode("list")}>Список</button>
             </div>
@@ -752,7 +775,10 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
           )}
         </main>
 
-          <aside className="topology-right">
+          <aside className={`topology-right ${rightPanelCollapsed ? "collapsed" : ""}`}>
+          <button className="panel-collapse-button" onClick={() => setRightPanelCollapsed((current) => !current)} title={rightPanelCollapsed ? "Развернуть правую панель" : "Свернуть правую панель"}>
+            {rightPanelCollapsed ? "‹" : "›"}
+          </button>
           <section>
             <div className="inspector-heading"><h3>{selectedCell?.aisle_code || "Аллея A03"}</h3><button onClick={() => setSelectedId(null)}>×</button></div>
             <div className="inspector-tabs">

@@ -1174,3 +1174,11 @@ Append-only log of root wiki updates.
 - Clarified that `FROM/TO` values in UI arrows are computed from neighboring rows sorted by `PICK_SEQUENCE` and are not stored as table fields.
 - Added topology validation check `pick_faces_on_inactive_route` so active pick-face assignments cannot silently use archived route rows during picking.
 - Verified local topology validation on API port `8088`: topology `1` returned `valid=true`, including an empty `pick_faces_on_inactive_route` check.
+
+## 2026-05-20 - Large topology admin load fixture
+
+- Created live Oracle topology `LOAD-1500-2CH-60` for the digital-twin load case: `1500` active pick-face cells, chambers `CH01=720` and `CH02=780`, row length `60`, `13` aisles, `10` gates, `15000` gate-distance rows.
+- Built one active linear/Z pick route `CASE-Z-1500` with `1500` `RRL_PICK_ROUTE_CELL` rows and validation `valid=true`.
+- Fixed topology generation so `create_both_sides=0` creates a single-side aisle instead of falling back to both sides.
+- Changed the topology admin route-management page to open in `2D План`, keep the route-order layer visible when enabled, and add collapsible left/right panels plus compact global navigation so the 1500-cell map gets more working space.
+- Captured evidence screenshots `runtime/test-evidence/topology-1500-two-chambers.png`, `runtime/test-evidence/topology-1500-two-chambers-2d.png`, `runtime/test-evidence/topology-1500-side-panels-expanded.png`, and `runtime/test-evidence/topology-1500-maximized-map.png`.
