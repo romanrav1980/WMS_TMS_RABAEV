@@ -890,3 +890,9 @@ Evidence screenshots:
 - `runtime/test-evidence/topology-fixed-layout-before.png`.
 - `runtime/test-evidence/topology-fixed-frame-drag-selection.png`.
 - `runtime/test-evidence/topology-fixed-context-menu-final.png`.
+
+Дополнительное исправление после ручной проверки: при `pointermove` нельзя передавать React `event` внутрь functional `setState`, потому что к моменту выполнения updater `event.currentTarget` может быть `null`. Координата рамки должна вычисляться сразу в обработчике события, а в state передается уже готовая точка. Это закрывает ошибку `Cannot read properties of null (reading 'getBoundingClientRect')`.
+
+Regression evidence:
+
+- `runtime/test-evidence/topology-frame-pointermove-regression.png`.

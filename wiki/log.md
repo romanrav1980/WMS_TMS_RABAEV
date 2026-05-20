@@ -1124,3 +1124,9 @@ Append-only log of root wiki updates.
 - Added an admin React error boundary so runtime page errors show diagnostics instead of a blank white screen.
 - Verified rectangle selection, repeated `Рамка` clicks, and context-menu mass-selection actions.
 - Captured evidence screenshots `runtime/test-evidence/topology-fixed-layout-before.png`, `runtime/test-evidence/topology-fixed-frame-drag-selection.png`, and `runtime/test-evidence/topology-fixed-context-menu-final.png`.
+
+## 2026-05-20 - Topology pointermove regression fix
+
+- Fixed `Cannot read properties of null (reading 'getBoundingClientRect')` in frame selection by computing the SVG point before entering the functional state updater.
+- Re-ran a Playwright regression with repeated frame drags and multiple pointermove events on product port `3000`; page errors count was `0` and the UI error boundary did not render.
+- Captured evidence screenshot `runtime/test-evidence/topology-frame-pointermove-regression.png`.

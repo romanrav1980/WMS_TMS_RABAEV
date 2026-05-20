@@ -468,7 +468,8 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
 
   function handleMapPointerMove(event: PointerEvent<SVGSVGElement>) {
     if (areaDrag) {
-      setAreaDrag((current) => current ? { ...current, current: svgPointFromEvent(event, view) } : current);
+      const point = svgPointFromEvent(event, view);
+      setAreaDrag((current) => current ? { ...current, current: point } : current);
       return;
     }
     if (panDrag) {
