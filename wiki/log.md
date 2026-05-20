@@ -1057,3 +1057,10 @@ Append-only log of root wiki updates.
 - Captured the architecture decision that warehouse topology and pick-route order are rare versioned master-data processes, not daily order-planning outputs.
 - Specified topology/version tables, pick-route extensions, PL/SQL/API contracts, admin page behavior, recommendation flow, invariants, MVP scope, and digital-twin integration requirements.
 - Updated `wiki/index.md` with the new requirements page.
+
+## 2026-05-20 - Warehouse topology first implementation
+
+- Added migration `038` for versioned warehouse topology master data, topology cells/aisles/zones, recommendations, change log, and pick-route topology extensions.
+- Added FastAPI admin topology router/service for topology list/map, cell generation, validation, publish, cell patch, and Z-route build.
+- Added the React `Управление топологией склада` page with dark navigation, map/generator, two-sided pick-face rendering, route sequence preview, inspector, and recommendation panels.
+- Updated database and topology requirement wiki pages with the first implementation checkpoint.

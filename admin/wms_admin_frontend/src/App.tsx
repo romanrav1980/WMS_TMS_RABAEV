@@ -4,6 +4,7 @@ import { SHIFT_MINUTES, clock, inferWaveByMinute } from "./demoData";
 import { loadReplayData } from "./data/loaders";
 import { CapacityPanel, DetailCard, KpiRow, LeftPanel, ResourcePerformancePanel, RightPanel } from "./components/Panels";
 import { Timeline } from "./components/Timeline";
+import { TopologyAdminPage } from "./components/TopologyAdminPage";
 import { WarehouseScene } from "./components/WarehouseScene";
 import { activeCollisions, currentMetrics, dockPalletsAt, pickFaceFillAt, replenishmentTasksAt, resourceStateAt, visibleEvents } from "./replay/reducer";
 import type { DetailSelection, ReplayData } from "./types";
@@ -14,6 +15,10 @@ export default function App() {
   const [playing, setPlaying] = useState(true);
   const [speed, setSpeed] = useState(5);
   const [selectedWaveId, setSelectedWaveId] = useState("");
+  const [page, setPage] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("page") === "topology" ? "topology" : "twin";
+  });
   const [selection, setSelection] = useState<DetailSelection>(null);
   const [modelSettings, setModelSettings] = useState({
     pickerSpeedPct: 100,
@@ -65,6 +70,10 @@ export default function App() {
     return <main className="loading-screen"><b>WMS PRO</b><span>Загружаем цифровой двойник склада...</span></main>;
   }
 
+  if (page === "topology") {
+    return <TopologyAdminPage onBack={() => setPage("twin")} />;
+  }
+
   const currentWave = selectedWaveId || inferWaveByMinute(minute);
   const runId = data.report.run_id || data.layout.run_id || "demo";
   const overdueCount = state.tasks.filter((task) => task.overdueMinutes > 0 && task.status !== "DONE").length;
@@ -73,7 +82,10 @@ export default function App() {
     <div className="admin-app">
       <aside className="mini-sidebar">
         <div className="brand-mark">W</div>
-        {["⌂", "↗", "▦", "▣", "▤", "▥", "⌁", "▧", "●"].map((icon, index) => <button key={index} className={index === 6 ? "active" : ""}>{icon}</button>)}
+        {["⌂", "↗", "▦", "▣", "▤", "▥"].map((icon, index) => <button key={index}>{icon}</button>)}
+        <button className="active">⌁</button>
+        <button title="Управление топологией склада" onClick={() => setPage("topology")}>⌗</button>
+        <button>●</button>
       </aside>
 
       <main className="admin-workspace">

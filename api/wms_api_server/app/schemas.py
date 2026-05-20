@@ -632,6 +632,66 @@ class PickingPlanCancelRequest(BaseModel):
     updated_by: str | None = None
 
 
+class WarehouseTopologyCreateRequest(BaseModel):
+    ware_id: int
+    topology_code: str
+    topology_name: str | None = None
+    comment_text: str | None = None
+    created_by: str | None = None
+
+
+class WarehouseTopologyGenerateRequest(BaseModel):
+    zone_code: str = "PICK"
+    zone_name: str | None = "Зона отбора"
+    section_code: str = "S01"
+    aisle_prefix: str = "A"
+    aisle_count: int = Field(default=6, ge=1, le=80)
+    bays_per_aisle: int = Field(default=24, ge=1, le=300)
+    levels: int = Field(default=1, ge=1, le=10)
+    start_aisle_no: int = Field(default=1, ge=1)
+    start_x: float = 8
+    start_y: float = 8
+    aisle_spacing_m: float = 5
+    bay_spacing_m: float = 1.4
+    pick_face_depth_m: float = 1.1
+    cell_width_m: float = 1.1
+    cell_height_m: float = 1.4
+    max_volume_m3: float | None = 1.5
+    max_weight_kg: float | None = 900
+    create_both_sides: int = 1
+    cell_kind: str = "PICK_FACE"
+    overwrite_existing: int = 0
+    updated_by: str | None = None
+
+
+class TopologyCellPatchRequest(BaseModel):
+    x: float | None = None
+    y: float | None = None
+    z: float | None = None
+    zone_code: str | None = None
+    section_code: str | None = None
+    aisle_code: str | None = None
+    side_code: str | None = None
+    cell_kind: str | None = None
+    active: int | None = None
+    updated_by: str | None = None
+
+
+class PickRouteBuildRequest(BaseModel):
+    topology_id: int
+    pick_route_id: int | None = None
+    route_code: str
+    route_name: str | None = None
+    ware_id: int
+    zone_code: str | None = None
+    aisle_codes: list[str] | None = None
+    route_pattern: str = "Z"
+    side_order: list[str] = Field(default_factory=lambda: ["LEFT", "RIGHT"])
+    start_side: str = "LEFT"
+    strict_sequence: int = 1
+    updated_by: str | None = None
+
+
 class PickRouteUpsertRequest(BaseModel):
     pick_route_id: int | None = None
     route_code: str

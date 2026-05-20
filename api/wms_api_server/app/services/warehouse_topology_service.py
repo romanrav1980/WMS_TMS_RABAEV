@@ -1,0 +1,672 @@
+from typing import Any
+
+from fastapi import HTTPException
+
+from ..oracle_gateway import OracleGateway
+from ..schemas import (
+    PickRouteBuildRequest,
+    TopologyCellPatchRequest,
+    WarehouseTopologyCreateRequest,
+    WarehouseTopologyGenerateRequest,
+)
+
+
+class WarehouseTopologyService:
+    def __init__(self, gateway: OracleGateway | None = None) -> None:
+        self.gateway = gateway or OracleGateway()
+
+    def list_topologies(self, ware_id: int | None = None, status: str | None = None) -> list[dict[str, Any]]:
+        conditions: list[str] = []
+        params: dict[str, Any] = {}
+        if ware_id is not None:
+            conditions.append("t.WARE_ID = :ware_id")
+            params["ware_id"] = ware_id
+        if status:
+            conditions.append("upper(t.STATUS) = :status")
+            params["status"] = status.upper()
+        where_sql = " where " + " and ".join(conditions) if conditions else ""
+        return self.gateway.fetch_all(
+            f"""
+            select t.TOPOLOGY_ID,
+                   t.WARE_ID,
+                   w.NAME WARE_NAME,
+                   t.TOPOLOGY_CODE,
+                   t.TOPOLOGY_NAME,
+                   t.VERSION_NO,
+                   t.STATUS,
+                   t.COMMENT_TEXT,
+                   t.CREATED_AT,
+                   t.UPDATED_AT,
+                   t.PUBLISHED_AT,
+                   (select count(*) from RRL_TOPOLOGY_CELL c where c.TOPOLOGY_ID = t.TOPOLOGY_ID and c.ACTIVE = 1) CELL_COUNT,
+                   (select count(*) from RRL_TOPOLOGY_AISLE a where a.TOPOLOGY_ID = t.TOPOLOGY_ID and a.ACTIVE = 1) AISLE_COUNT
+              from RRL_WAREHOUSE_TOPOLOGY t
+              left join RRL_WARES w
+                on w.ID = t.WARE_ID
+              {where_sql}
+             order by t.WARE_ID, t.VERSION_NO desc, t.TOPOLOGY_CODE
+            """,
+            params,
+        )
+
+    def create_topology(self, request: WarehouseTopologyCreateRequest) -> int:
+        topology_id = self._nextval("RRL_WH_TOPOLOGY_SQ")
+        self.gateway.execute(
+            """
+            insert into RRL_WAREHOUSE_TOPOLOGY (
+              TOPOLOGY_ID, WARE_ID, TOPOLOGY_CODE, TOPOLOGY_NAME,
+              VERSION_NO, STATUS, COMMENT_TEXT, CREATED_BY, UPDATED_BY
+            ) values (
+              :topology_id, :ware_id, upper(:topology_code), :topology_name,
+              1, 'DRAFT', :comment_text, substr(:created_by, 1, 50), substr(:created_by, 1, 50)
+            )
+            """,
+            {"topology_id": topology_id, **request.model_dump()},
+        )
+        self._log_change(topology_id, "TOPOLOGY", topology_id, "CREATE", None, request.model_dump(), request.created_by)
+        return topology_id
+
+    def get_topology_map(self, topology_id: int) -> dict[str, Any] | None:
+        topology_rows = self.gateway.fetch_all(
+            """
+            select t.TOPOLOGY_ID, t.WARE_ID, w.NAME WARE_NAME, t.TOPOLOGY_CODE,
+                   t.TOPOLOGY_NAME, t.VERSION_NO, t.STATUS, t.COMMENT_TEXT,
+                   t.CREATED_AT, t.UPDATED_AT, t.PUBLISHED_AT
+              from RRL_WAREHOUSE_TOPOLOGY t
+              left join RRL_WARES w on w.ID = t.WARE_ID
+             where t.TOPOLOGY_ID = :topology_id
+            """,
+            {"topology_id": topology_id},
+        )
+        if not topology_rows:
+            return None
+        zones = self.gateway.fetch_all(
+            """
+            select *
+              from RRL_TOPOLOGY_ZONE
+             where TOPOLOGY_ID = :topology_id
+             order by ZONE_CODE
+            """,
+            {"topology_id": topology_id},
+        )
+        aisles = self.gateway.fetch_all(
+            """
+            select *
+              from RRL_TOPOLOGY_AISLE
+             where TOPOLOGY_ID = :topology_id
+             order by AISLE_CODE
+            """,
+            {"topology_id": topology_id},
+        )
+        cells = self.gateway.fetch_all(
+            """
+            select *
+              from RRL_TOPOLOGY_CELL
+             where TOPOLOGY_ID = :topology_id
+             order by AISLE_CODE, BAY_NO, SIDE_CODE, LEVEL_NO, CELL_CODE
+            """,
+            {"topology_id": topology_id},
+        )
+        routes = self.list_pick_routes(topology_id=topology_id)
+        route_cells = self.gateway.fetch_all(
+            """
+            select rc.*
+              from RRL_PICK_ROUTE_CELL rc
+              join RRL_PICK_ROUTE r
+                on r.PICK_ROUTE_ID = rc.PICK_ROUTE_ID
+             where r.TOPOLOGY_ID = :topology_id
+             order by rc.PICK_ROUTE_ID, rc.PICK_SEQUENCE
+            """,
+            {"topology_id": topology_id},
+        )
+        return {
+            "topology": topology_rows[0],
+            "zones": zones,
+            "aisles": aisles,
+            "cells": cells,
+            "routes": routes,
+            "route_cells": route_cells,
+        }
+
+    def generate_cells(self, topology_id: int, request: WarehouseTopologyGenerateRequest) -> dict[str, int]:
+        topology = self._topology(topology_id)
+        if not topology:
+            raise HTTPException(status_code=404, detail="Warehouse topology not found.")
+        if topology.get("status") == "PUBLISHED":
+            raise HTTPException(status_code=409, detail="Published topology cannot be edited; clone it first.")
+
+        if request.overwrite_existing:
+            self.gateway.execute(
+                """
+                update RRL_TOPOLOGY_CELL
+                   set ACTIVE = 0, UPDATED_AT = sysdate, UPDATED_BY = substr(:updated_by, 1, 50)
+                 where TOPOLOGY_ID = :topology_id
+                """,
+                {"topology_id": topology_id, "updated_by": request.updated_by},
+            )
+
+        self._ensure_zone(topology_id, request)
+        created_aisles = 0
+        created_cells = 0
+        statements: list[tuple[str, dict[str, Any]]] = []
+        sides = ["LEFT", "RIGHT"] if int(request.create_both_sides or 1) == 1 else ["LEFT"]
+        for aisle_offset in range(request.aisle_count):
+            aisle_no = request.start_aisle_no + aisle_offset
+            aisle_code = f"{request.aisle_prefix}{aisle_no:02d}"
+            x = request.start_x + aisle_offset * request.aisle_spacing_m
+            y1 = request.start_y
+            y2 = request.start_y + (request.bays_per_aisle - 1) * request.bay_spacing_m
+            if not self._aisle_exists(topology_id, aisle_code):
+                created_aisles += 1
+                statements.append((
+                    """
+                    insert into RRL_TOPOLOGY_AISLE (
+                      TOPOLOGY_AISLE_ID, TOPOLOGY_ID, ZONE_CODE, AISLE_CODE, AISLE_NAME,
+                      AISLE_KIND, DIRECTION_CODE, X1, Y1, X2, Y2, WIDTH_M,
+                      ALLOW_PICKER, ALLOW_REACHTRUCK, CREATED_BY, UPDATED_BY
+                    ) values (
+                      RRL_TOPOLOGY_AISLE_SQ.nextval, :topology_id, :zone_code, :aisle_code, :aisle_name,
+                      'PICK_AISLE', 'BOTH', :x1, :y1, :x2, :y2, :width_m,
+                      1, 1, substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
+                    )
+                    """,
+                    {
+                        "topology_id": topology_id,
+                        "zone_code": request.zone_code,
+                        "aisle_code": aisle_code,
+                        "aisle_name": f"Аллея {aisle_code}",
+                        "x1": x,
+                        "y1": y1,
+                        "x2": x,
+                        "y2": y2,
+                        "width_m": request.aisle_spacing_m,
+                        "updated_by": request.updated_by,
+                    },
+                ))
+            for bay in range(1, request.bays_per_aisle + 1):
+                for level in range(1, request.levels + 1):
+                    for side in sides:
+                        side_code = side.upper()
+                        cell_code = f"{aisle_code}-B{bay:03d}-L{level}-{side_code[0]}"
+                        if self._cell_exists(topology_id, cell_code):
+                            continue
+                        created_cells += 1
+                        side_shift = -request.pick_face_depth_m if side_code == "LEFT" else request.pick_face_depth_m
+                        statements.append((
+                            """
+                            insert into RRL_TOPOLOGY_CELL (
+                              TOPOLOGY_CELL_ID, TOPOLOGY_ID, WARE_ID, CELL_CODE, LEGACY_CELL_CODE,
+                              ZONE_CODE, SECTION_CODE, AISLE_CODE, BAY_NO, LEVEL_NO, POSITION_NO,
+                              SIDE_CODE, CELL_KIND, MAX_VOLUME_M3, MAX_WEIGHT_KG,
+                              X, Y, Z, WIDTH, DEPTH, HEIGHT, ANGLE_DEG, CREATED_BY, UPDATED_BY
+                            ) values (
+                              RRL_TOPOLOGY_CELL_SQ.nextval, :topology_id, :ware_id, :cell_code, :cell_code,
+                              :zone_code, :section_code, :aisle_code, :bay_no, :level_no, :position_no,
+                              :side_code, :cell_kind, :max_volume_m3, :max_weight_kg,
+                              :x, :y, :z, :width, :depth, :height, 0, substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
+                            )
+                            """,
+                            {
+                                "topology_id": topology_id,
+                                "ware_id": topology["ware_id"],
+                                "cell_code": cell_code,
+                                "zone_code": request.zone_code,
+                                "section_code": request.section_code,
+                                "aisle_code": aisle_code,
+                                "bay_no": bay,
+                                "level_no": level,
+                                "position_no": bay,
+                                "side_code": side_code,
+                                "cell_kind": request.cell_kind,
+                                "max_volume_m3": request.max_volume_m3,
+                                "max_weight_kg": request.max_weight_kg,
+                                "x": x + side_shift,
+                                "y": request.start_y + (bay - 1) * request.bay_spacing_m,
+                                "z": (level - 1) * request.cell_height_m,
+                                "width": request.cell_width_m,
+                                "depth": request.pick_face_depth_m,
+                                "height": request.cell_height_m,
+                                "updated_by": request.updated_by,
+                            },
+                        ))
+        if statements:
+            self.gateway.execute_many(statements)
+        self._log_change(topology_id, "CELL", None, "GENERATE", None, request.model_dump(), request.updated_by)
+        return {"topology_id": topology_id, "created_aisles": created_aisles, "created_cells": created_cells}
+
+    def patch_cell(self, topology_cell_id: int, request: TopologyCellPatchRequest) -> None:
+        rows = self.gateway.fetch_all(
+            "select TOPOLOGY_ID, ACTIVE from RRL_TOPOLOGY_CELL where TOPOLOGY_CELL_ID = :id",
+            {"id": topology_cell_id},
+        )
+        if not rows:
+            raise HTTPException(status_code=404, detail="Topology cell not found.")
+        updates: list[str] = ["UPDATED_AT = sysdate", "UPDATED_BY = substr(:updated_by, 1, 50)"]
+        params: dict[str, Any] = {"topology_cell_id": topology_cell_id, "updated_by": request.updated_by}
+        for field, column in (
+            ("x", "X"),
+            ("y", "Y"),
+            ("z", "Z"),
+            ("zone_code", "ZONE_CODE"),
+            ("section_code", "SECTION_CODE"),
+            ("aisle_code", "AISLE_CODE"),
+            ("side_code", "SIDE_CODE"),
+            ("cell_kind", "CELL_KIND"),
+            ("active", "ACTIVE"),
+        ):
+            value = getattr(request, field)
+            if value is not None:
+                updates.append(f"{column} = :{field}")
+                params[field] = value.upper() if isinstance(value, str) and field.endswith("_code") else value
+        self.gateway.execute(
+            f"""
+            update RRL_TOPOLOGY_CELL
+               set {", ".join(updates)}
+             where TOPOLOGY_CELL_ID = :topology_cell_id
+            """,
+            params,
+        )
+        self._log_change(rows[0]["topology_id"], "CELL", topology_cell_id, "PATCH", None, request.model_dump(), request.updated_by)
+
+    def validate_topology(self, topology_id: int) -> dict[str, Any]:
+        checks = {
+            "duplicate_cells": self.gateway.fetch_all(
+                """
+                select CELL_CODE, count(*) CNT
+                  from RRL_TOPOLOGY_CELL
+                 where TOPOLOGY_ID = :topology_id
+                   and ACTIVE = 1
+                 group by CELL_CODE
+                having count(*) > 1
+                """,
+                {"topology_id": topology_id},
+            ),
+            "pick_faces_without_aisle": self.gateway.fetch_all(
+                """
+                select CELL_CODE
+                  from RRL_TOPOLOGY_CELL
+                 where TOPOLOGY_ID = :topology_id
+                   and ACTIVE = 1
+                   and CELL_KIND in ('PICK_FACE', 'DYNAMIC_PICK_FACE')
+                   and AISLE_CODE is null
+                """,
+                {"topology_id": topology_id},
+            ),
+            "pick_faces_without_side": self.gateway.fetch_all(
+                """
+                select CELL_CODE
+                  from RRL_TOPOLOGY_CELL
+                 where TOPOLOGY_ID = :topology_id
+                   and ACTIVE = 1
+                   and CELL_KIND in ('PICK_FACE', 'DYNAMIC_PICK_FACE')
+                   and SIDE_CODE not in ('LEFT', 'RIGHT')
+                """,
+                {"topology_id": topology_id},
+            ),
+        }
+        error_count = sum(len(value) for value in checks.values())
+        if error_count == 0:
+            self.gateway.execute(
+                """
+                update RRL_WAREHOUSE_TOPOLOGY
+                   set STATUS = case when STATUS = 'DRAFT' then 'VALIDATED' else STATUS end,
+                       UPDATED_AT = sysdate
+                 where TOPOLOGY_ID = :topology_id
+                """,
+                {"topology_id": topology_id},
+            )
+        return {"topology_id": topology_id, "valid": error_count == 0, "error_count": error_count, "checks": checks}
+
+    def publish_topology(self, topology_id: int, user: str) -> None:
+        topology = self._topology(topology_id)
+        if not topology:
+            raise HTTPException(status_code=404, detail="Warehouse topology not found.")
+        validation = self.validate_topology(topology_id)
+        if not validation["valid"]:
+            raise HTTPException(status_code=409, detail={"message": "Topology has validation errors.", "validation": validation})
+        self.gateway.execute(
+            """
+            update RRL_WAREHOUSE_TOPOLOGY
+               set STATUS = 'ARCHIVED',
+                   UPDATED_AT = sysdate,
+                   UPDATED_BY = substr(:user, 1, 50)
+             where WARE_ID = :ware_id
+               and TOPOLOGY_ID <> :topology_id
+               and STATUS = 'PUBLISHED'
+            """,
+            {"ware_id": topology["ware_id"], "topology_id": topology_id, "user": user},
+        )
+        self.gateway.execute(
+            """
+            update RRL_WAREHOUSE_TOPOLOGY
+               set STATUS = 'PUBLISHED',
+                   PUBLISHED_AT = sysdate,
+                   PUBLISHED_BY = substr(:user, 1, 50),
+                   UPDATED_AT = sysdate,
+                   UPDATED_BY = substr(:user, 1, 50)
+             where TOPOLOGY_ID = :topology_id
+            """,
+            {"topology_id": topology_id, "user": user},
+        )
+        self._log_change(topology_id, "TOPOLOGY", topology_id, "PUBLISH", None, {"status": "PUBLISHED"}, user)
+
+    def list_pick_routes(
+        self,
+        topology_id: int | None = None,
+        ware_id: int | None = None,
+        status: str | None = None,
+    ) -> list[dict[str, Any]]:
+        conditions: list[str] = []
+        params: dict[str, Any] = {}
+        if topology_id is not None:
+            conditions.append("r.TOPOLOGY_ID = :topology_id")
+            params["topology_id"] = topology_id
+        if ware_id is not None:
+            conditions.append("r.WARE_ID = :ware_id")
+            params["ware_id"] = ware_id
+        if status:
+            conditions.append("upper(r.STATUS) = :status")
+            params["status"] = status.upper()
+        where_sql = " where " + " and ".join(conditions) if conditions else ""
+        return self.gateway.fetch_all(
+            f"""
+            select r.PICK_ROUTE_ID, r.TOPOLOGY_ID, r.WARE_ID, w.NAME WARE_NAME,
+                   r.ROUTE_CODE, r.ROUTE_NAME, r.ROUTE_KIND, r.ROUTE_PATTERN,
+                   r.ZONE_CODE, r.START_POINT_CODE, r.END_POINT_CODE,
+                   r.STRICT_SEQUENCE, r.STATUS, r.ACTIVE, r.PUBLISHED_AT,
+                   count(rc.PICK_ROUTE_CELL_ID) CELL_COUNT
+              from RRL_PICK_ROUTE r
+              left join RRL_WARES w on w.ID = r.WARE_ID
+              left join RRL_PICK_ROUTE_CELL rc on rc.PICK_ROUTE_ID = r.PICK_ROUTE_ID and rc.ACTIVE = 1
+              {where_sql}
+             group by r.PICK_ROUTE_ID, r.TOPOLOGY_ID, r.WARE_ID, w.NAME,
+                      r.ROUTE_CODE, r.ROUTE_NAME, r.ROUTE_KIND, r.ROUTE_PATTERN,
+                      r.ZONE_CODE, r.START_POINT_CODE, r.END_POINT_CODE,
+                      r.STRICT_SEQUENCE, r.STATUS, r.ACTIVE, r.PUBLISHED_AT
+             order by r.WARE_ID, r.ROUTE_CODE
+            """,
+            params,
+        )
+
+    def build_pick_route(self, request: PickRouteBuildRequest) -> dict[str, int]:
+        topology = self._topology(request.topology_id)
+        if not topology:
+            raise HTTPException(status_code=404, detail="Warehouse topology not found.")
+        pick_route_id = request.pick_route_id or self._nextval("RRL_PICK_ROUTE_SQ")
+        existing = self.gateway.fetch_all(
+            "select PICK_ROUTE_ID from RRL_PICK_ROUTE where PICK_ROUTE_ID = :pick_route_id",
+            {"pick_route_id": pick_route_id},
+        )
+        if existing:
+            self.gateway.execute(
+                """
+                update RRL_PICK_ROUTE
+                   set TOPOLOGY_ID = :topology_id,
+                       ROUTE_CODE = upper(:route_code),
+                       ROUTE_NAME = :route_name,
+                       WARE_ID = :ware_id,
+                       ROUTE_KIND = 'PICK',
+                       ROUTE_PATTERN = upper(:route_pattern),
+                       ZONE_CODE = :zone_code,
+                       STRICT_SEQUENCE = :strict_sequence,
+                       STATUS = 'DRAFT',
+                       ACTIVE = 1,
+                       UPDATED_AT = sysdate,
+                       UPDATED_BY = substr(:updated_by, 1, 50)
+                 where PICK_ROUTE_ID = :pick_route_id
+                """,
+                {**request.model_dump(), "pick_route_id": pick_route_id},
+            )
+            self.gateway.execute(
+                """
+                update RRL_PICK_ROUTE_CELL
+                   set ACTIVE = 0,
+                       UPDATED_AT = sysdate,
+                       UPDATED_BY = substr(:updated_by, 1, 50)
+                 where PICK_ROUTE_ID = :pick_route_id
+                """,
+                {"pick_route_id": pick_route_id, "updated_by": request.updated_by},
+            )
+        else:
+            self.gateway.execute(
+                """
+                insert into RRL_PICK_ROUTE (
+                  PICK_ROUTE_ID, TOPOLOGY_ID, ROUTE_CODE, ROUTE_NAME, WARE_ID,
+                  ROUTE_KIND, ROUTE_PATTERN, ZONE_CODE, STRICT_SEQUENCE,
+                  STATUS, ACTIVE, CREATED_BY, UPDATED_BY
+                ) values (
+                  :pick_route_id, :topology_id, upper(:route_code), :route_name, :ware_id,
+                  'PICK', upper(:route_pattern), :zone_code, :strict_sequence,
+                  'DRAFT', 1, substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
+                )
+                """,
+                {**request.model_dump(), "pick_route_id": pick_route_id},
+            )
+
+        cells = self._route_source_cells(request)
+        if not cells:
+            raise HTTPException(status_code=409, detail="No active pick-face cells found for selected topology area.")
+        side_rank = {side.upper(): index for index, side in enumerate(request.side_order or ["LEFT", "RIGHT"])}
+        cells.sort(key=lambda row: (
+            str(row.get("aisle_code") or ""),
+            float(row.get("bay_no") or 0),
+            side_rank.get(str(row.get("side_code") or "").upper(), 99),
+            float(row.get("level_no") or 0),
+        ))
+        statements: list[tuple[str, dict[str, Any]]] = []
+        for index, cell in enumerate(cells, start=1):
+            prev = cells[index - 2] if index > 1 else None
+            distance = self._distance(prev, cell) if prev else 0
+            statements.append((
+                """
+                insert into RRL_PICK_ROUTE_CELL (
+                  PICK_ROUTE_CELL_ID, PICK_ROUTE_ID, TOPOLOGY_CELL_ID, WARE_ID, CELL_CODE,
+                  PICK_SEQUENCE, ZONE_CODE, SECTION_CODE, AISLE_CODE, SIDE_CODE,
+                  BAY_NO, LEVEL_NO, DIRECTION_CODE, VISIT_GROUP_NO, PATH_SEGMENT_NO,
+                  DISTANCE_FROM_PREV_M, TURN_COST_SEC, ACTIVE, CREATED_BY, UPDATED_BY
+                ) values (
+                  RRL_PICK_ROUTE_CELL_SQ.nextval, :pick_route_id, :topology_cell_id, :ware_id, :cell_code,
+                  :pick_sequence, :zone_code, :section_code, :aisle_code, :side_code,
+                  :bay_no, :level_no, :direction_code, :visit_group_no, :path_segment_no,
+                  :distance_from_prev_m, :turn_cost_sec, 1, substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
+                )
+                """,
+                {
+                    "pick_route_id": pick_route_id,
+                    "topology_cell_id": cell.get("topology_cell_id"),
+                    "ware_id": cell.get("ware_id"),
+                    "cell_code": cell.get("cell_code"),
+                    "pick_sequence": index,
+                    "zone_code": cell.get("zone_code"),
+                    "section_code": cell.get("section_code"),
+                    "aisle_code": cell.get("aisle_code"),
+                    "side_code": cell.get("side_code"),
+                    "bay_no": cell.get("bay_no"),
+                    "level_no": cell.get("level_no"),
+                    "direction_code": "FORWARD",
+                    "visit_group_no": 1,
+                    "path_segment_no": index,
+                    "distance_from_prev_m": distance,
+                    "turn_cost_sec": 0 if not prev or prev.get("aisle_code") == cell.get("aisle_code") else 20,
+                    "updated_by": request.updated_by,
+                },
+            ))
+        if statements:
+            self.gateway.execute_many(statements)
+        self._log_change(request.topology_id, "PICK_ROUTE", pick_route_id, "BUILD", None, request.model_dump(), request.updated_by)
+        return {"pick_route_id": pick_route_id, "route_cell_count": len(cells)}
+
+    def publish_pick_route(self, pick_route_id: int, user: str) -> None:
+        rows = self.gateway.fetch_all(
+            "select TOPOLOGY_ID, WARE_ID from RRL_PICK_ROUTE where PICK_ROUTE_ID = :pick_route_id",
+            {"pick_route_id": pick_route_id},
+        )
+        if not rows:
+            raise HTTPException(status_code=404, detail="Pick route not found.")
+        route = rows[0]
+        cell_count = self.gateway.fetch_all(
+            """
+            select count(*) CNT
+              from RRL_PICK_ROUTE_CELL
+             where PICK_ROUTE_ID = :pick_route_id
+               and ACTIVE = 1
+            """,
+            {"pick_route_id": pick_route_id},
+        )[0]["cnt"]
+        if int(cell_count or 0) == 0:
+            raise HTTPException(status_code=409, detail="Pick route has no active cells.")
+        self.gateway.execute(
+            """
+            update RRL_PICK_ROUTE
+               set STATUS = 'ARCHIVED',
+                   ACTIVE = 0,
+                   UPDATED_AT = sysdate,
+                   UPDATED_BY = substr(:user, 1, 50)
+             where TOPOLOGY_ID = :topology_id
+               and PICK_ROUTE_ID <> :pick_route_id
+               and ROUTE_KIND = 'PICK'
+               and STATUS = 'PUBLISHED'
+            """,
+            {"topology_id": route.get("topology_id"), "pick_route_id": pick_route_id, "user": user},
+        )
+        self.gateway.execute(
+            """
+            update RRL_PICK_ROUTE
+               set STATUS = 'PUBLISHED',
+                   ACTIVE = 1,
+                   PUBLISHED_AT = sysdate,
+                   PUBLISHED_BY = substr(:user, 1, 50),
+                   UPDATED_AT = sysdate,
+                   UPDATED_BY = substr(:user, 1, 50)
+             where PICK_ROUTE_ID = :pick_route_id
+            """,
+            {"pick_route_id": pick_route_id, "user": user},
+        )
+        self._log_change(route.get("topology_id"), "PICK_ROUTE", pick_route_id, "PUBLISH", None, {"status": "PUBLISHED"}, user)
+
+    def _route_source_cells(self, request: PickRouteBuildRequest) -> list[dict[str, Any]]:
+        conditions = [
+            "TOPOLOGY_ID = :topology_id",
+            "ACTIVE = 1",
+            "CELL_KIND in ('PICK_FACE', 'DYNAMIC_PICK_FACE')",
+        ]
+        params: dict[str, Any] = {"topology_id": request.topology_id}
+        if request.zone_code:
+            conditions.append("ZONE_CODE = :zone_code")
+            params["zone_code"] = request.zone_code
+        if request.aisle_codes:
+            placeholders = []
+            for index, aisle_code in enumerate(request.aisle_codes):
+                key = f"aisle_{index}"
+                placeholders.append(f":{key}")
+                params[key] = aisle_code
+            conditions.append(f"AISLE_CODE in ({', '.join(placeholders)})")
+        return self.gateway.fetch_all(
+            f"""
+            select TOPOLOGY_CELL_ID, TOPOLOGY_ID, WARE_ID, CELL_CODE, ZONE_CODE,
+                   SECTION_CODE, AISLE_CODE, BAY_NO, LEVEL_NO, SIDE_CODE, X, Y, Z
+              from RRL_TOPOLOGY_CELL
+             where {" and ".join(conditions)}
+            """,
+            params,
+        )
+
+    def _ensure_zone(self, topology_id: int, request: WarehouseTopologyGenerateRequest) -> None:
+        exists = self.gateway.fetch_all(
+            "select TOPOLOGY_ZONE_ID from RRL_TOPOLOGY_ZONE where TOPOLOGY_ID = :topology_id and ZONE_CODE = :zone_code",
+            {"topology_id": topology_id, "zone_code": request.zone_code},
+        )
+        if exists:
+            return
+        self.gateway.execute(
+            """
+            insert into RRL_TOPOLOGY_ZONE (
+              TOPOLOGY_ZONE_ID, TOPOLOGY_ID, ZONE_CODE, ZONE_NAME, ZONE_KIND,
+              X, Y, WIDTH, HEIGHT, CREATED_BY, UPDATED_BY
+            ) values (
+              RRL_TOPOLOGY_ZONE_SQ.nextval, :topology_id, :zone_code, :zone_name, 'PICKING',
+              :x, :y, :width, :height, substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
+            )
+            """,
+            {
+                "topology_id": topology_id,
+                "zone_code": request.zone_code,
+                "zone_name": request.zone_name,
+                "x": request.start_x - request.aisle_spacing_m,
+                "y": request.start_y - request.bay_spacing_m,
+                "width": request.aisle_count * request.aisle_spacing_m + request.aisle_spacing_m,
+                "height": request.bays_per_aisle * request.bay_spacing_m + request.bay_spacing_m,
+                "updated_by": request.updated_by,
+            },
+        )
+
+    def _topology(self, topology_id: int) -> dict[str, Any] | None:
+        rows = self.gateway.fetch_all(
+            "select * from RRL_WAREHOUSE_TOPOLOGY where TOPOLOGY_ID = :topology_id",
+            {"topology_id": topology_id},
+        )
+        return rows[0] if rows else None
+
+    def _aisle_exists(self, topology_id: int, aisle_code: str) -> bool:
+        return bool(self.gateway.fetch_all(
+            "select 1 from RRL_TOPOLOGY_AISLE where TOPOLOGY_ID = :topology_id and AISLE_CODE = :aisle_code",
+            {"topology_id": topology_id, "aisle_code": aisle_code},
+        ))
+
+    def _cell_exists(self, topology_id: int, cell_code: str) -> bool:
+        return bool(self.gateway.fetch_all(
+            "select 1 from RRL_TOPOLOGY_CELL where TOPOLOGY_ID = :topology_id and CELL_CODE = :cell_code and ACTIVE = 1",
+            {"topology_id": topology_id, "cell_code": cell_code},
+        ))
+
+    def _nextval(self, sequence_name: str) -> int:
+        return self.gateway.call_number_plsql(f"begin select {sequence_name}.nextval into :result from dual; end;", {})
+
+    def _log_change(
+        self,
+        topology_id: int | None,
+        entity_kind: str,
+        entity_id: int | None,
+        change_kind: str,
+        old_value: Any,
+        new_value: Any,
+        user: str | None,
+    ) -> None:
+        if topology_id is None:
+            return
+        self.gateway.execute(
+            """
+            insert into RRL_TOPOLOGY_CHANGE_LOG (
+              CHANGE_ID, TOPOLOGY_ID, ENTITY_KIND, ENTITY_ID, CHANGE_KIND,
+              OLD_VALUE_JSON, NEW_VALUE_JSON, CREATED_BY
+            ) values (
+              RRL_TOPO_CHANGE_LOG_SQ.nextval, :topology_id, :entity_kind, :entity_id, :change_kind,
+              :old_value_json, :new_value_json, substr(:user_id, 1, 50)
+            )
+            """,
+            {
+                "topology_id": topology_id,
+                "entity_kind": entity_kind,
+                "entity_id": entity_id,
+                "change_kind": change_kind,
+                "old_value_json": _json_text(old_value),
+                "new_value_json": _json_text(new_value),
+                "user_id": user,
+            },
+        )
+
+    @staticmethod
+    def _distance(prev: dict[str, Any] | None, cell: dict[str, Any]) -> float:
+        if not prev:
+            return 0
+        dx = float(cell.get("x") or 0) - float(prev.get("x") or 0)
+        dy = float(cell.get("y") or 0) - float(prev.get("y") or 0)
+        return round((dx * dx + dy * dy) ** 0.5, 2)
+
+
+def _json_text(value: Any) -> str | None:
+    if value is None:
+        return None
+    import json
+
+    return json.dumps(value, ensure_ascii=False, default=str)[:4000]

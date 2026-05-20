@@ -24,6 +24,7 @@ The schema supports:
 - customer shelf-life rules, product stacking rules, vehicle types, vehicle capacity rules, and shipment parts.
 - picking plans, picking tasks, soft demand, hard WMS reservations, shortage protocol, and decision log.
 - pick routes, pick-face locations, SKU-to-pick-face assignments, and case-pick task sequencing.
+- versioned warehouse topology master data, graphical topology administration objects, and pick-route links to topology versions.
 
 ## Migration
 
@@ -138,6 +139,12 @@ The ledger is intentionally kept as a small foundation table so future Oracle ch
 - `RRL_PICK_ROUTE_CELL`: ordered route cells with `PICK_SEQUENCE`.
 - `RRL_PICK_FACE`: configured regular/dynamic pick-face locations.
 - `RRL_PICK_FACE_ARTICUL`: article-to-pick-face assignment with priority and validity period.
+- `RRL_WAREHOUSE_TOPOLOGY`: versioned warehouse topology header used as rare master data, not daily wave output.
+- `RRL_TOPOLOGY_ZONE`: topology zones for receiving, picking, dynamic pick-face, staging, shipping, and service areas.
+- `RRL_TOPOLOGY_AISLE`: physical aisles and cross-aisles with picker/reachtruck permissions and coordinates.
+- `RRL_TOPOLOGY_CELL`: physical cells with coordinates, side of aisle, kind, volume, and weight capacity.
+- `RRL_TOPOLOGY_RECOMMENDATION`: analytical recommendations for topology changes that require administrator acceptance.
+- `RRL_TOPOLOGY_CHANGE_LOG`: audit log for topology and route administration changes.
 
 ## PL/SQL API
 
@@ -468,6 +475,31 @@ Apply/verify result for `2026-05-20-037-replenishment-release-policy-rules`:
 - Apply: `Statements=3; Errors=0`.
 - Verify: `Statements=5; Errors=0`.
 - Post-compile `USER_OBJECTS` invalid count: `0`.
+
+## Warehouse Topology Master Data
+
+Migration `2026-05-20-038-warehouse-topology-master-data` introduces the first implementation layer for the `Управление топологией склада` module.
+
+New tables:
+
+- `RRL_WAREHOUSE_TOPOLOGY`: versioned topology header with `DRAFT`, `VALIDATED`, `PUBLISHED`, and `ARCHIVED` statuses.
+- `RRL_TOPOLOGY_ZONE`: graphical and logical warehouse zones.
+- `RRL_TOPOLOGY_AISLE`: pick aisles and cross-aisles with map coordinates and resource permissions.
+- `RRL_TOPOLOGY_CELL`: physical cells with aisle side, coordinates, dimensions, cell kind, and capacity.
+- `RRL_TOPOLOGY_RECOMMENDATION`: non-automatic optimization recommendations from operational statistics.
+- `RRL_TOPOLOGY_CHANGE_LOG`: audit journal for topology administration changes.
+
+Extended tables:
+
+- `RRL_PICK_ROUTE`: adds `TOPOLOGY_ID`, `ROUTE_PATTERN`, start/end point, strict sequence, lifecycle status, publish fields, zone, and comment.
+- `RRL_PICK_ROUTE_CELL`: adds `TOPOLOGY_CELL_ID`, section, bay, direction, route segment, distance, and turn-cost fields.
+
+API/runtime intent:
+
+- daily picking/wave planning uses a published topology and published pick route;
+- topology and route changes are administrator-controlled master-data actions, not daily order-plan recalculations;
+- the first FastAPI layer exposes topology list/map, generation, validation, publish, cell patch, Z-route build, and route publish endpoints under `/api/admin`;
+- the React admin page `Управление топологией склада` provides the initial map/generator/route inspector and demo fallback.
 
 ## Warehouse Task Domain Sync
 
