@@ -658,6 +658,16 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                 <button onClick={() => setView((current) => ({ ...current, panY: current.panY - 30 }))}>↑</button>
                 <button onClick={() => setView((current) => ({ ...current, panY: current.panY + 30 }))}>↓</button>
               </div>
+              <div className="map-selection-tools">
+                <b>Выделение</b>
+                <button className={selectionMode ? "active" : ""} onClick={() => setSelectionMode((current) => !current)}>Рамка</button>
+                <button onClick={() => selectRouteCells("all")}>Все</button>
+                <button onClick={() => selectRouteCells("left")}>Левая</button>
+                <button onClick={() => selectRouteCells("right")}>Правая</button>
+                <button onClick={() => selectRouteCells("invert")}>Инверт.</button>
+                <button onClick={() => selectRouteCells("clear")}>Сброс</button>
+                <span>{selectedRouteCellIds.size ? `${selectedRouteCellIds.size} ячеек` : "нет области"}</span>
+              </div>
               {selectionMode && <div className="selection-mode-hint">Режим рамки: протяните мышью по ячейкам отбора</div>}
               <TopologySvg
                 map={map}
@@ -680,10 +690,32 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
               {routeMenu && (
                 <div className="route-context-menu" style={{ left: routeMenu.x, top: routeMenu.y }}>
                   <b>Стратегия обхода</b>
+                  <span>Массовое выделение</span>
                   <button onClick={() => {
                     setSelectionMode(true);
                     setRouteMenu(null);
                   }}>Включить рамку</button>
+                  <button onClick={() => {
+                    selectRouteCells("all");
+                    setRouteMenu(null);
+                  }}>Выделить все</button>
+                  <button onClick={() => {
+                    selectRouteCells("left");
+                    setRouteMenu(null);
+                  }}>Выделить левую сторону</button>
+                  <button onClick={() => {
+                    selectRouteCells("right");
+                    setRouteMenu(null);
+                  }}>Выделить правую сторону</button>
+                  <button onClick={() => {
+                    selectRouteCells("invert");
+                    setRouteMenu(null);
+                  }}>Инвертировать</button>
+                  <button onClick={() => {
+                    selectRouteCells("clear");
+                    setRouteMenu(null);
+                  }}>Снять выделение</button>
+                  <span>Построить обход</span>
                   {(["Z", "U_SHAPE", "SNAKE", "LINEAR"] as RoutePattern[]).map((pattern) => (
                     <button key={pattern} onClick={() => handleBuildRoute(pattern)}>{pattern}</button>
                   ))}
@@ -861,7 +893,7 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
       return cell ? { routeCell, cell } : null;
     })
     .filter(Boolean) as Array<{ routeCell: PickRouteCell; cell: TopologyCell }>;
-  const path = routePath(routeCells.map(({ cell }) => cell), bounds);
+  const path = routePath(routeCells.map(({ cell }) => cell), bounds, mode);
 
   return (
     <svg
@@ -889,52 +921,71 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
       <g transform={`translate(${view.panX} ${view.panY}) scale(${view.zoom})`}>
         {layers.zones && (
           <>
-            <rect x="44" y="54" width="858" height="480" rx="4" fill="#eef5fb" stroke="#b6c5d5" />
-            {mode === "3d" && <path d="M44 54 L164 18 L938 88 L902 534 Z" fill="#f4f8fc" stroke="#d1dbe7" opacity=".72" />}
-            {mode === "3d" && <path d="M44 534 L902 534 L938 88 L164 18" fill="none" stroke="#94a3b8" strokeWidth="2" opacity=".55" />}
+            {mode === "plan" && <rect x="44" y="54" width="858" height="480" rx="3" fill="#eef5fb" stroke="#b6c5d5" />}
+            {mode === "3d" && (
+              <>
+                <path d="M92 112 L820 44 L936 486 L178 574 Z" fill="#f2f7fb" stroke="#b6c5d5" strokeWidth="1.4" />
+                <path d="M178 574 L936 486 L936 526 L178 616 Z" fill="#d9e4ee" stroke="#b6c5d5" />
+                <path d="M820 44 L936 486 L936 526 L836 86 Z" fill="#e9eef5" stroke="#c5d1dd" />
+                <path d="M92 112 L820 44 L836 86 L108 154 Z" fill="#ffffff" stroke="#d1dbe7" opacity=".72" />
+              </>
+            )}
           </>
         )}
 
         {layers.gates && map.gates.slice(0, 10).map((gate) => (
           <g key={gate.topology_gate_id}>
-            <rect x={sx(gate.x, bounds) - 22} y="568" width="48" height="36" rx="3" fill={gate.gate_kind === "RECEIVING" ? "#0f766e" : "#27364a"} stroke="#0f172a" />
-            <rect x={sx(gate.x, bounds) - 8} y="604" width="8" height="15" fill="#fbbf24" />
-            {layers.labels && <text x={sx(gate.x, bounds) + 2} y="562" className="gate-label">{gate.gate_code}</text>}
+            {(() => {
+              const point = projectPoint(gate.x, gate.y, bounds, mode);
+              const gateY = mode === "3d" ? point.y + 26 : 568;
+              return (
+                <>
+                  <rect x={point.x - 20} y={gateY} width="42" height="30" rx="2" fill={gate.gate_kind === "RECEIVING" ? "#0f766e" : "#27364a"} stroke="#0f172a" />
+                  <rect x={point.x - 7} y={gateY + 30} width="7" height="12" fill="#fbbf24" />
+                  {drawTruckIcon(point.x + 33, gateY + 3, gate.topology_gate_id)}
+                  {layers.labels && <text x={point.x + 1} y={gateY - 5} className="gate-label">{gate.gate_code}</text>}
+                </>
+              );
+            })()}
           </g>
         ))}
 
         {layers.gates && <g className="topology-dock-zone">
           {map.gates.slice(0, 10).map((gate) => {
-            const x = sx(gate.x, bounds);
+            const point = projectPoint(gate.x, gate.y, bounds, mode);
+            const x = point.x;
+            const y = mode === "3d" ? point.y - 20 : 512;
             const isShipping = gate.gate_kind !== "RECEIVING";
             return (
               <g key={`staging-${gate.topology_gate_id}`}>
                 <rect
                   x={x - 24}
-                  y="512"
+                  y={y}
                   width="48"
-                  height="34"
+                  height="30"
                   rx="5"
                   fill={isShipping ? "#dcfce7" : "#dbeafe"}
                   stroke={isShipping ? "#22c55e" : "#3b82f6"}
                   strokeDasharray="7 5"
                   opacity=".82"
                 />
-                {layers.labels && <text x={x} y="507" className="staging-label">накопл.</text>}
+                {layers.labels && <text x={x} y={y - 4} className="staging-label">накопл.</text>}
               </g>
             );
           })}
-          {layers.labels && <text x="820" y="548">Зона накопления перед воротами</text>}
+          {layers.labels && <text x="820" y={mode === "3d" ? 584 : 548}>Зона накопления перед воротами</text>}
         </g>}
 
         {layers.aisles && map.aisles.map((aisle) => {
-          const x1 = sx(aisle.x1, bounds);
-          const y1 = sy(aisle.y1, bounds);
-          const x2 = sx(aisle.x2, bounds);
-          const y2 = sy(aisle.y2, bounds);
+          const start = projectPoint(aisle.x1, aisle.y1, bounds, mode);
+          const end = projectPoint(aisle.x2, aisle.y2, bounds, mode);
+          const x1 = start.x;
+          const y1 = start.y;
+          const x2 = end.x;
+          const y2 = end.y;
           return (
             <g key={aisle.topology_aisle_id}>
-              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={Number(aisle.aisle_code.replace(/\D/g, "")) <= 5 ? "#86efac" : "#93c5fd"} strokeWidth={aisle.aisle_kind === "PICK_AISLE" ? 44 : 28} strokeLinecap="round" opacity=".38" />
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={Number(aisle.aisle_code.replace(/\D/g, "")) <= 5 ? "#86efac" : "#93c5fd"} strokeWidth={aisle.aisle_kind === "PICK_AISLE" ? mode === "3d" ? 32 : 44 : 28} strokeLinecap="round" opacity=".34" />
               <line x1={x1 - 14} y1={y1} x2={x2 - 14} y2={y2} stroke="#1d4ed8" strokeWidth="3" opacity=".65" />
               <line x1={x1 + 14} y1={y1} x2={x2 + 14} y2={y2} stroke="#1d4ed8" strokeWidth="3" opacity=".65" />
               <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#2563d8" strokeWidth="2.4" strokeDasharray="9 8" strokeLinecap="round" opacity=".72" />
@@ -948,11 +999,12 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
 
         {layers.gates && drawAisleGateLinks(map, bounds)}
 
-        {layers.distances && selectedId && drawDistanceLines(map, selectedId, bounds)}
+        {layers.distances && selectedId && drawDistanceLines(map, selectedId, bounds, mode)}
 
         {layers.cells && map.cells.filter((cell) => cell.active === 1).map((cell) => {
-          const x = sx(cell.x, bounds);
-          const y = sy(cell.y, bounds);
+          const point = projectPoint(cell.x, cell.y, bounds, mode);
+          const x = point.x;
+          const y = point.y;
           const routeCell = routeByCell.get(cell.topology_cell_id);
           const selected = selectedId === cell.topology_cell_id;
           const inRouteSelection = selectedRouteCellIds.has(cell.topology_cell_id);
@@ -974,6 +1026,7 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
                 stroke={selected ? "#f59e0b" : inRouteSelection ? "#7c3aed" : "#37506d"}
                 strokeWidth={selected || inRouteSelection ? 3 : 1}
               />
+              {mode === "3d" && <path d={`M ${x - 10} ${y + 8} L ${x - 3} ${y + 14} L ${x + 17} ${y + 14} L ${x + 10} ${y + 8} Z`} fill="#8b6f3e" opacity=".5" />}
               <rect
                 x={x - 10}
                 y={y - 8}
@@ -1336,7 +1389,7 @@ function topologyStatusText(status: TopologyStatus) {
   return labels[status] || status;
 }
 
-function drawDistanceLines(map: TopologyMap, selectedId: number, bounds: MapBounds) {
+function drawDistanceLines(map: TopologyMap, selectedId: number, bounds: MapBounds, mode: "3d" | "plan" | "list") {
   const cell = map.cells.find((item) => item.topology_cell_id === selectedId);
   if (!cell) return null;
   return map.distances
@@ -1346,7 +1399,9 @@ function drawDistanceLines(map: TopologyMap, selectedId: number, bounds: MapBoun
     .map((distance) => {
       const gate = map.gates.find((item) => item.topology_gate_id === distance.topology_gate_id);
       if (!gate) return null;
-      return <line key={distance.cell_gate_distance_id} x1={sx(cell.x, bounds)} y1={sy(cell.y, bounds)} x2={sx(gate.x, bounds)} y2="586" stroke="#0f766e" strokeWidth="2" strokeDasharray="6 6" opacity=".56" />;
+      const from = projectPoint(cell.x, cell.y, bounds, mode);
+      const to = projectPoint(gate.x, gate.y, bounds, mode);
+      return <line key={distance.cell_gate_distance_id} x1={from.x} y1={from.y} x2={to.x} y2={mode === "3d" ? to.y + 30 : 586} stroke="#0f766e" strokeWidth="2" strokeDasharray="6 6" opacity=".56" />;
     });
 }
 
@@ -1377,20 +1432,22 @@ function drawAisleGateLinks(map: TopologyMap, bounds: MapBounds) {
   });
 }
 
-function routePath(cells: TopologyCell[], bounds: MapBounds) {
+function routePath(cells: TopologyCell[], bounds: MapBounds, mode: "3d" | "plan" | "list") {
   if (!cells.length) return "";
   const commands: string[] = [];
   cells.forEach((cell, index) => {
-    const x = sx(cell.x, bounds);
-    const y = sy(cell.y, bounds);
+    const point = projectPoint(cell.x, cell.y, bounds, mode);
+    const x = point.x;
+    const y = point.y;
     if (index === 0) {
       commands.push(`M ${x} ${y}`);
       return;
     }
     const prev = cells[index - 1];
     if (prev.aisle_code && cell.aisle_code && prev.aisle_code !== cell.aisle_code) {
-      const px = sx(prev.x, bounds);
-      const py = sy(prev.y, bounds);
+      const prevPoint = projectPoint(prev.x, prev.y, bounds, mode);
+      const px = prevPoint.x;
+      const py = prevPoint.y;
       const connectorY = Math.abs(prev.y - bounds.maxY) <= Math.abs(prev.y - bounds.minY)
         ? Math.max(py, y) + 18
         : Math.min(py, y) - 18;
@@ -1400,6 +1457,35 @@ function routePath(cells: TopologyCell[], bounds: MapBounds) {
     commands.push(`L ${x} ${y}`);
   });
   return commands.join(" ");
+}
+
+function projectPoint(x: number, y: number, bounds: MapBounds, mode: "3d" | "plan" | "list") {
+  const flatX = sx(x, bounds);
+  const flatY = sy(y, bounds);
+  if (mode !== "3d") return { x: flatX, y: flatY };
+  const centerX = 500;
+  const baseY = 326;
+  return {
+    x: centerX + (flatX - centerX) * .82 + (flatY - baseY) * .32,
+    y: 116 + (flatY - 70) * .72 - (flatX - centerX) * .08
+  };
+}
+
+function drawTruckIcon(x: number, y: number, index: number) {
+  const red = index % 3 === 0;
+  const cab = red ? "#dc2626" : "#facc15";
+  const trailer = red ? "#f87171" : "#fde68a";
+  return (
+    <g transform={`translate(${x} ${y})`} className="dock-truck-icon">
+      <path d="M0 8 L30 8 L36 15 L36 25 L0 25 Z" fill={trailer} stroke="#334155" />
+      <path d="M30 12 L42 12 L48 18 L48 25 L36 25 L36 15 Z" fill={cab} stroke="#334155" />
+      <path d="M35 14 L42 18 L35 18 Z" fill="#dbeafe" stroke="#334155" />
+      <circle cx="9" cy="27" r="4" fill="#111827" />
+      <circle cx="37" cy="27" r="4" fill="#111827" />
+      <circle cx="9" cy="27" r="1.5" fill="#e5e7eb" />
+      <circle cx="37" cy="27" r="1.5" fill="#e5e7eb" />
+    </g>
+  );
 }
 
 function shortCellLabel(cell: TopologyCell) {

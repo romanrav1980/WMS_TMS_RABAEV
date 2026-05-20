@@ -287,16 +287,20 @@ button { cursor: pointer; }
 .topology-view-tabs { display: inline-flex; padding: 3px; border: 1px solid #d8e2ee; border-radius: 8px; background: #fff; }
 .topology-view-tabs button { height: 30px; min-width: 74px; border: 0; border-radius: 6px; background: transparent; color: #64748b; font-size: 12px; font-weight: 900; }
 .topology-view-tabs button.active { background: #eaf3ff; color: #0969e8; }
-.map-legend { display: flex; gap: 12px; padding: 8px 10px; border: 1px solid #dce6f2; border-radius: 7px; background: #fff; }
+.map-legend { display: flex; gap: 10px; padding: 6px 8px; border: 1px solid #dce6f2; border-radius: 6px; background: #fff; }
 .map-legend span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-.map-legend i { width: 11px; height: 11px; border-radius: 3px; }
+.map-legend i { width: 10px; height: 10px; border-radius: 3px; }
 .cell-left { background: #58b76b; } .cell-right { background: #4d86d9; } .cell-route { background: #ef3b82; }
 .topology-map-wrap { position: relative; min-height: 0; }
 .topology-map-controls { position: absolute; z-index: 3; left: 14px; top: 14px; display: flex; gap: 6px; padding: 6px; border: 1px solid rgba(216,226,238,.9); border-radius: 9px; background: rgba(255,255,255,.94); box-shadow: 0 12px 28px rgba(15,31,53,.12); }
 .topology-map-controls button { min-width: 32px; height: 30px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0f1f35; font-weight: 900; }
 .topology-map-controls button:nth-child(3), .topology-map-controls button:nth-child(4) { min-width: 58px; color: #64748b; font-size: 11px; }
 .topology-map-controls button.active { border-color: #0969e8; background: #0969e8; color: #fff; }
-.selection-mode-hint { position: absolute; z-index: 3; left: 14px; top: 62px; padding: 7px 9px; border: 1px solid #bfdbfe; border-radius: 8px; background: rgba(239,246,255,.96); color: #1d4ed8; font-size: 11px; font-weight: 900; box-shadow: 0 10px 24px rgba(15,31,53,.09); }
+.map-selection-tools { position: absolute; z-index: 3; left: 14px; top: 58px; display: flex; align-items: center; flex-wrap: wrap; gap: 5px; max-width: 520px; padding: 6px; border: 1px solid rgba(216,226,238,.92); border-radius: 8px; background: rgba(255,255,255,.94); box-shadow: 0 10px 24px rgba(15,31,53,.1); }
+.map-selection-tools b, .map-selection-tools span { color: #64748b; font-size: 11px; font-weight: 900; }
+.map-selection-tools button { height: 26px; min-width: 48px; padding: 0 7px; border: 1px solid #d8e2ee; border-radius: 6px; background: #fff; color: #0f1f35; font-size: 11px; font-weight: 900; }
+.map-selection-tools button.active { border-color: #0969e8; background: #0969e8; color: #fff; }
+.selection-mode-hint { position: absolute; z-index: 3; left: 14px; top: 104px; padding: 6px 8px; border: 1px solid #bfdbfe; border-radius: 7px; background: rgba(239,246,255,.96); color: #1d4ed8; font-size: 11px; font-weight: 900; box-shadow: 0 10px 24px rgba(15,31,53,.09); }
 .topology-svg { width: 100%; height: 100%; min-height: 620px; display: block; border: 1px solid #dce6f2; border-radius: 8px; background: #fff; box-shadow: 0 18px 40px rgba(15,31,53,.08); touch-action: none; user-select: none; }
 .topology-svg.plan-mode { background: #f8fbff; }
 .topology-cell-node { cursor: pointer; }
@@ -306,9 +310,11 @@ button { cursor: pointer; }
 .cell-code-label { fill: #334155; font-size: 7px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: rgba(255,255,255,.86); stroke-width: 3px; pointer-events: none; }
 .gate-link path { stroke: #0f766e; stroke-width: 1.8; stroke-dasharray: 8 7; opacity: .62; }
 .gate-link text { fill: #0f766e; font-size: 10px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #fff; stroke-width: 3px; }
-.route-context-menu { position: absolute; z-index: 6; min-width: 154px; display: grid; gap: 6px; padding: 9px; border: 1px solid #d8e2ee; border-radius: 8px; background: rgba(255,255,255,.97); box-shadow: 0 14px 32px rgba(15,31,53,.16); }
+.route-context-menu { position: absolute; z-index: 6; min-width: 178px; display: grid; gap: 5px; padding: 8px; border: 1px solid #d8e2ee; border-radius: 7px; background: rgba(255,255,255,.97); box-shadow: 0 14px 32px rgba(15,31,53,.16); }
 .route-context-menu b { font-size: 12px; }
-.route-context-menu button { height: 30px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0969e8; font-weight: 900; }
+.route-context-menu span { color: #64748b; font-size: 10px; font-weight: 900; text-transform: uppercase; }
+.route-context-menu button { height: 27px; border: 1px solid #d8e2ee; border-radius: 6px; background: #fff; color: #0969e8; font-weight: 900; }
+.dock-truck-icon { filter: drop-shadow(0 5px 7px rgba(15,31,53,.16)); }
 .inspector-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .inspector-heading button { width: 26px; height: 26px; border: 0; background: transparent; color: #64748b; font-size: 22px; }
 .inspector-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; border-bottom: 1px solid #dce6f2; }
