@@ -1064,3 +1064,10 @@ Append-only log of root wiki updates.
 - Added FastAPI admin topology router/service for topology list/map, cell generation, validation, publish, cell patch, and Z-route build.
 - Added the React `Управление топологией склада` page with dark navigation, map/generator, two-sided pick-face rendering, route sequence preview, inspector, and recommendation panels.
 - Updated database and topology requirement wiki pages with the first implementation checkpoint.
+
+## 2026-05-20 - Topology gate distances
+
+- Added migration `039` for `RRL_TOPOLOGY_GATE` and `RRL_TOPOLOGY_CELL_GATE_DIST`.
+- Added API support to generate gates and recalculate inbound/outbound cell-to-gate distances with travel-time estimates.
+- Updated the topology admin map inspector to show nearest outbound/inbound gate distances and closest gate travel times.
+- Documented that gate-distance planning affects outbound movement to shipping gates and inbound movement from receiving gates to storage.

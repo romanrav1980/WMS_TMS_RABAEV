@@ -272,6 +272,7 @@ button { cursor: pointer; }
 .aisle-tags button { height: 28px; min-width: 42px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0f1f35; font-size: 12px; font-weight: 900; }
 .aisle-tags button.active { border-color: #0969e8; background: #eaf3ff; color: #0969e8; }
 .wide-action { min-height: 38px; border: 0; border-radius: 7px; background: #0969e8; color: #fff; font-weight: 900; line-height: 1.15; white-space: normal; }
+.secondary-action { background: #0f766e; }
 .topology-map-panel { min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); padding: 18px 16px; background: #f5f8fc; }
 .topology-map-title { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 0 12px; }
 .topology-map-title b { display: block; font-size: 15px; }
@@ -291,6 +292,9 @@ button { cursor: pointer; }
 .inspector-tabs button.active { border-color: #0969e8; color: #0969e8; }
 .cell-inspector, .route-summary { display: grid; gap: 8px; color: #64748b; font-size: 12px; font-weight: 800; }
 .cell-inspector b, .route-summary b { color: #0f1f35; font-size: 15px; }
+.gate-distance-list { display: grid; gap: 5px; margin-top: 4px; }
+.gate-distance-list span { display: grid; grid-template-columns: 44px 1fr; align-items: center; gap: 8px; padding: 6px 7px; border-radius: 7px; background: #eef7ff; color: #0f4b8f; }
+.gate-distance-list b { color: #0969e8; font-size: 12px; }
 .nudge-grid { display: grid; grid-template-columns: repeat(3, 36px); gap: 6px; justify-content: center; margin-top: 8px; }
 .nudge-grid button { height: 32px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0969e8; font-weight: 900; }
 .nudge-grid button:first-child { grid-column: 2; }

@@ -692,6 +692,27 @@ class PickRouteBuildRequest(BaseModel):
     updated_by: str | None = None
 
 
+class TopologyGateGenerateRequest(BaseModel):
+    gate_count: int = Field(default=10, ge=1, le=80)
+    gate_prefix: str = "G"
+    gate_kind: str = "SHIPPING"
+    start_x: float = 4
+    start_y: float = 34
+    spacing_m: float = 4.2
+    staging_zone_code: str | None = "DOCK"
+    vehicle_class: str | None = None
+    overwrite_existing: int = 0
+    updated_by: str | None = None
+
+
+class TopologyDistanceRecalculateRequest(BaseModel):
+    flow_kind: str = "BOTH"
+    picker_speed_mps: float = Field(default=1.1, gt=0)
+    reachtruck_speed_mps: float = Field(default=1.8, gt=0)
+    use_reachtruck_for_storage: int = 1
+    updated_by: str | None = None
+
+
 class PickRouteUpsertRequest(BaseModel):
     pick_route_id: int | None = None
     route_code: str

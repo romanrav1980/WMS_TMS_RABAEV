@@ -25,6 +25,7 @@ The schema supports:
 - picking plans, picking tasks, soft demand, hard WMS reservations, shortage protocol, and decision log.
 - pick routes, pick-face locations, SKU-to-pick-face assignments, and case-pick task sequencing.
 - versioned warehouse topology master data, graphical topology administration objects, and pick-route links to topology versions.
+- topology gates and cell-to-gate distance matrix for inbound/outbound travel-time planning.
 
 ## Migration
 
@@ -145,6 +146,8 @@ The ledger is intentionally kept as a small foundation table so future Oracle ch
 - `RRL_TOPOLOGY_CELL`: physical cells with coordinates, side of aisle, kind, volume, and weight capacity.
 - `RRL_TOPOLOGY_RECOMMENDATION`: analytical recommendations for topology changes that require administrator acceptance.
 - `RRL_TOPOLOGY_CHANGE_LOG`: audit log for topology and route administration changes.
+- `RRL_TOPOLOGY_GATE`: topology gates for receiving, shipping, or both.
+- `RRL_TOPOLOGY_CELL_GATE_DIST`: distance/time matrix from topology cells to gates by inbound/outbound flow.
 
 ## PL/SQL API
 
@@ -500,6 +503,13 @@ API/runtime intent:
 - topology and route changes are administrator-controlled master-data actions, not daily order-plan recalculations;
 - the first FastAPI layer exposes topology list/map, generation, validation, publish, cell patch, Z-route build, and route publish endpoints under `/api/admin`;
 - the React admin page `Управление топологией склада` provides the initial map/generator/route inspector and demo fallback.
+
+Migration `2026-05-20-039-topology-gate-distance-matrix` adds gate-distance planning:
+
+- `RRL_TOPOLOGY_GATE` stores receiving/shipping gates with coordinates and staging-zone context.
+- `RRL_TOPOLOGY_CELL_GATE_DIST` stores distance and travel-time estimates from pick/storage cells to gates for `INBOUND`, `OUTBOUND`, or `BOTH` flows.
+- The FastAPI topology service can generate gates and recalculate the matrix using an MVP Manhattan-distance estimate.
+- The admin map exposes nearest inbound/outbound gate distances in the selected cell inspector.
 
 ## Warehouse Task Domain Sync
 

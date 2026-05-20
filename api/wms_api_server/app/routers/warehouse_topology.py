@@ -13,6 +13,8 @@ from ..auth import (
 from ..schemas import (
     PickRouteBuildRequest,
     TopologyCellPatchRequest,
+    TopologyDistanceRecalculateRequest,
+    TopologyGateGenerateRequest,
     WarehouseTopologyCreateRequest,
     WarehouseTopologyGenerateRequest,
 )
@@ -59,6 +61,26 @@ def generate_cells(
 ) -> dict[str, int]:
     request.updated_by = request.updated_by or user.username
     return WarehouseTopologyService().generate_cells(topology_id, request)
+
+
+@router.post("/warehouse-topologies/{topology_id}/generate-gates")
+def generate_gates(
+    topology_id: int,
+    request: TopologyGateGenerateRequest,
+    user: AdminUser = Depends(require_permission(WAREHOUSE_TOPOLOGY_EDIT_PERMISSION)),
+) -> dict[str, int]:
+    request.updated_by = request.updated_by or user.username
+    return WarehouseTopologyService().generate_gates(topology_id, request)
+
+
+@router.post("/warehouse-topologies/{topology_id}/distances/recalculate")
+def recalculate_gate_distances(
+    topology_id: int,
+    request: TopologyDistanceRecalculateRequest,
+    user: AdminUser = Depends(require_permission(WAREHOUSE_TOPOLOGY_EDIT_PERMISSION)),
+) -> dict[str, int]:
+    request.updated_by = request.updated_by or user.username
+    return WarehouseTopologyService().recalculate_gate_distances(topology_id, request)
 
 
 @router.post("/warehouse-topologies/{topology_id}/validate")

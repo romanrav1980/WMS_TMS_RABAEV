@@ -6,6 +6,8 @@ from ..oracle_gateway import OracleGateway
 from ..schemas import (
     PickRouteBuildRequest,
     TopologyCellPatchRequest,
+    TopologyDistanceRecalculateRequest,
+    TopologyGateGenerateRequest,
     WarehouseTopologyCreateRequest,
     WarehouseTopologyGenerateRequest,
 )
@@ -100,10 +102,55 @@ class WarehouseTopologyService:
         )
         cells = self.gateway.fetch_all(
             """
+            select c.*,
+                   (
+                     select min(d.DISTANCE_M)
+                       from RRL_TOPOLOGY_CELL_GATE_DIST d
+                      where d.TOPOLOGY_CELL_ID = c.TOPOLOGY_CELL_ID
+                        and d.ACTIVE = 1
+                        and d.FLOW_KIND in ('OUTBOUND', 'BOTH')
+                   ) NEAREST_OUTBOUND_GATE_DISTANCE_M,
+                   (
+                     select min(d.DISTANCE_M)
+                       from RRL_TOPOLOGY_CELL_GATE_DIST d
+                      where d.TOPOLOGY_CELL_ID = c.TOPOLOGY_CELL_ID
+                        and d.ACTIVE = 1
+                        and d.FLOW_KIND in ('INBOUND', 'BOTH')
+                   ) NEAREST_INBOUND_GATE_DISTANCE_M
+              from RRL_TOPOLOGY_CELL c
+             where c.TOPOLOGY_ID = :topology_id
+             order by c.AISLE_CODE, c.BAY_NO, c.SIDE_CODE, c.LEVEL_NO, c.CELL_CODE
+            """,
+            {"topology_id": topology_id},
+        )
+        gates = self.gateway.fetch_all(
+            """
             select *
-              from RRL_TOPOLOGY_CELL
+              from RRL_TOPOLOGY_GATE
              where TOPOLOGY_ID = :topology_id
-             order by AISLE_CODE, BAY_NO, SIDE_CODE, LEVEL_NO, CELL_CODE
+             order by GATE_CODE
+            """,
+            {"topology_id": topology_id},
+        )
+        distances = self.gateway.fetch_all(
+            """
+            select d.CELL_GATE_DISTANCE_ID,
+                   d.TOPOLOGY_ID,
+                   d.TOPOLOGY_CELL_ID,
+                   d.TOPOLOGY_GATE_ID,
+                   g.GATE_CODE,
+                   g.GATE_KIND,
+                   d.FLOW_KIND,
+                   d.DISTANCE_M,
+                   d.TRAVEL_TIME_SEC,
+                   d.ROUTE_KIND,
+                   d.CALC_METHOD
+              from RRL_TOPOLOGY_CELL_GATE_DIST d
+              join RRL_TOPOLOGY_GATE g
+                on g.TOPOLOGY_GATE_ID = d.TOPOLOGY_GATE_ID
+             where d.TOPOLOGY_ID = :topology_id
+               and d.ACTIVE = 1
+             order by d.TOPOLOGY_CELL_ID, d.DISTANCE_M, g.GATE_CODE
             """,
             {"topology_id": topology_id},
         )
@@ -123,7 +170,9 @@ class WarehouseTopologyService:
             "topology": topology_rows[0],
             "zones": zones,
             "aisles": aisles,
+            "gates": gates,
             "cells": cells,
+            "distances": distances,
             "routes": routes,
             "route_cells": route_cells,
         }
@@ -233,6 +282,140 @@ class WarehouseTopologyService:
             self.gateway.execute_many(statements)
         self._log_change(topology_id, "CELL", None, "GENERATE", None, request.model_dump(), request.updated_by)
         return {"topology_id": topology_id, "created_aisles": created_aisles, "created_cells": created_cells}
+
+    def generate_gates(self, topology_id: int, request: TopologyGateGenerateRequest) -> dict[str, int]:
+        topology = self._topology(topology_id)
+        if not topology:
+            raise HTTPException(status_code=404, detail="Warehouse topology not found.")
+        if topology.get("status") == "PUBLISHED":
+            raise HTTPException(status_code=409, detail="Published topology cannot be edited; clone it first.")
+        if request.overwrite_existing:
+            self.gateway.execute(
+                """
+                update RRL_TOPOLOGY_GATE
+                   set ACTIVE = 0, UPDATED_AT = sysdate, UPDATED_BY = substr(:updated_by, 1, 50)
+                 where TOPOLOGY_ID = :topology_id
+                """,
+                {"topology_id": topology_id, "updated_by": request.updated_by},
+            )
+        statements: list[tuple[str, dict[str, Any]]] = []
+        created_gates = 0
+        for index in range(1, request.gate_count + 1):
+            gate_code = f"{request.gate_prefix}{index:02d}"
+            exists = self.gateway.fetch_all(
+                """
+                select 1
+                  from RRL_TOPOLOGY_GATE
+                 where TOPOLOGY_ID = :topology_id
+                   and GATE_CODE = :gate_code
+                   and ACTIVE = 1
+                """,
+                {"topology_id": topology_id, "gate_code": gate_code},
+            )
+            if exists:
+                continue
+            created_gates += 1
+            statements.append((
+                """
+                insert into RRL_TOPOLOGY_GATE (
+                  TOPOLOGY_GATE_ID, TOPOLOGY_ID, WARE_ID, GATE_CODE, GATE_NAME,
+                  GATE_KIND, STAGING_ZONE_CODE, VEHICLE_CLASS, X, Y, CREATED_BY, UPDATED_BY
+                ) values (
+                  RRL_TOPOLOGY_GATE_SQ.nextval, :topology_id, :ware_id, :gate_code, :gate_name,
+                  upper(:gate_kind), :staging_zone_code, :vehicle_class, :x, :y,
+                  substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
+                )
+                """,
+                {
+                    "topology_id": topology_id,
+                    "ware_id": topology["ware_id"],
+                    "gate_code": gate_code,
+                    "gate_name": f"Ворота {gate_code}",
+                    "gate_kind": request.gate_kind,
+                    "staging_zone_code": request.staging_zone_code,
+                    "vehicle_class": request.vehicle_class,
+                    "x": request.start_x + (index - 1) * request.spacing_m,
+                    "y": request.start_y,
+                    "updated_by": request.updated_by,
+                },
+            ))
+        if statements:
+            self.gateway.execute_many(statements)
+        self._log_change(topology_id, "GATE", None, "GENERATE", None, request.model_dump(), request.updated_by)
+        return {"topology_id": topology_id, "created_gates": created_gates}
+
+    def recalculate_gate_distances(
+        self,
+        topology_id: int,
+        request: TopologyDistanceRecalculateRequest,
+    ) -> dict[str, int]:
+        topology = self._topology(topology_id)
+        if not topology:
+            raise HTTPException(status_code=404, detail="Warehouse topology not found.")
+        cells = self.gateway.fetch_all(
+            """
+            select TOPOLOGY_CELL_ID, CELL_CODE, CELL_KIND, X, Y
+              from RRL_TOPOLOGY_CELL
+             where TOPOLOGY_ID = :topology_id
+               and ACTIVE = 1
+               and CELL_KIND in ('PICK_FACE', 'DYNAMIC_PICK_FACE', 'STORAGE')
+            """,
+            {"topology_id": topology_id},
+        )
+        gates = self.gateway.fetch_all(
+            """
+            select TOPOLOGY_GATE_ID, GATE_CODE, GATE_KIND, X, Y
+              from RRL_TOPOLOGY_GATE
+             where TOPOLOGY_ID = :topology_id
+               and ACTIVE = 1
+            """,
+            {"topology_id": topology_id},
+        )
+        if not cells or not gates:
+            raise HTTPException(status_code=409, detail="Topology must contain active cells and gates before distance calculation.")
+        self.gateway.execute(
+            """
+            update RRL_TOPOLOGY_CELL_GATE_DIST
+               set ACTIVE = 0,
+                   UPDATED_AT = sysdate,
+                   UPDATED_BY = substr(:updated_by, 1, 50)
+             where TOPOLOGY_ID = :topology_id
+               and FLOW_KIND = upper(:flow_kind)
+            """,
+            {"topology_id": topology_id, "flow_kind": request.flow_kind, "updated_by": request.updated_by},
+        )
+        statements: list[tuple[str, dict[str, Any]]] = []
+        flow_kind = request.flow_kind.upper()
+        for cell in cells:
+            speed = request.reachtruck_speed_mps if cell.get("cell_kind") == "STORAGE" and request.use_reachtruck_for_storage else request.picker_speed_mps
+            for gate in gates:
+                distance_m = self._gate_distance(cell, gate)
+                statements.append((
+                    """
+                    insert into RRL_TOPOLOGY_CELL_GATE_DIST (
+                      CELL_GATE_DISTANCE_ID, TOPOLOGY_ID, TOPOLOGY_CELL_ID, TOPOLOGY_GATE_ID,
+                      FLOW_KIND, DISTANCE_M, TRAVEL_TIME_SEC, ROUTE_KIND, CALC_METHOD,
+                      ACTIVE, CREATED_BY, UPDATED_BY
+                    ) values (
+                      RRL_TOPO_CELL_GATE_DIST_SQ.nextval, :topology_id, :topology_cell_id, :topology_gate_id,
+                      :flow_kind, :distance_m, :travel_time_sec, 'TOPOLOGY_ESTIMATE', 'MANHATTAN',
+                      1, substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
+                    )
+                    """,
+                    {
+                        "topology_id": topology_id,
+                        "topology_cell_id": cell["topology_cell_id"],
+                        "topology_gate_id": gate["topology_gate_id"],
+                        "flow_kind": flow_kind,
+                        "distance_m": distance_m,
+                        "travel_time_sec": round(distance_m / speed, 1),
+                        "updated_by": request.updated_by,
+                    },
+                ))
+        if statements:
+            self.gateway.execute_many(statements)
+        self._log_change(topology_id, "DISTANCE", None, "RECALCULATE", None, request.model_dump(), request.updated_by)
+        return {"topology_id": topology_id, "distance_count": len(statements)}
 
     def patch_cell(self, topology_cell_id: int, request: TopologyCellPatchRequest) -> None:
         rows = self.gateway.fetch_all(
@@ -662,6 +845,13 @@ class WarehouseTopologyService:
         dx = float(cell.get("x") or 0) - float(prev.get("x") or 0)
         dy = float(cell.get("y") or 0) - float(prev.get("y") or 0)
         return round((dx * dx + dy * dy) ** 0.5, 2)
+
+    @staticmethod
+    def _gate_distance(cell: dict[str, Any], gate: dict[str, Any]) -> float:
+        # Manhattan distance is the MVP approximation: travel follows aisles/cross-aisles, not a direct diagonal.
+        dx = abs(float(cell.get("x") or 0) - float(gate.get("x") or 0))
+        dy = abs(float(cell.get("y") or 0) - float(gate.get("y") or 0))
+        return round(dx + dy, 2)
 
 
 def _json_text(value: Any) -> str | None:

@@ -35,6 +35,8 @@ type TopologyCell = {
   depth: number;
   height: number;
   active: number;
+  nearest_outbound_gate_distance_m?: number;
+  nearest_inbound_gate_distance_m?: number;
 };
 
 type TopologyAisle = {
@@ -59,6 +61,34 @@ type PickRoute = {
   cell_count?: number;
 };
 
+type TopologyGate = {
+  topology_gate_id: number;
+  topology_id: number;
+  ware_id: number;
+  gate_code: string;
+  gate_name?: string;
+  gate_kind: "RECEIVING" | "SHIPPING" | "BOTH";
+  staging_zone_code?: string;
+  vehicle_class?: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  active: number;
+};
+
+type CellGateDistance = {
+  cell_gate_distance_id: number;
+  topology_id: number;
+  topology_cell_id: number;
+  topology_gate_id: number;
+  gate_code: string;
+  gate_kind: string;
+  flow_kind: "INBOUND" | "OUTBOUND" | "BOTH";
+  distance_m: number;
+  travel_time_sec?: number;
+};
+
 type PickRouteCell = {
   pick_route_cell_id: number;
   pick_route_id: number;
@@ -70,7 +100,9 @@ type PickRouteCell = {
 type TopologyMap = {
   topology: Topology;
   aisles: TopologyAisle[];
+  gates: TopologyGate[];
   cells: TopologyCell[];
+  distances: CellGateDistance[];
   routes: PickRoute[];
   route_cells: PickRouteCell[];
 };
@@ -108,6 +140,13 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
     return result;
   }, [map.route_cells]);
   const stats = useMemo(() => topologyStats(map), [map]);
+  const distancesForSelected = useMemo(() => {
+    if (!selectedId) return [];
+    return map.distances
+      .filter((distance) => distance.topology_cell_id === selectedId)
+      .sort((a, b) => Number(a.distance_m || 0) - Number(b.distance_m || 0))
+      .slice(0, 4);
+  }, [map.distances, selectedId]);
 
   function toggleAisle(aisleCode: string) {
     setSelectedAisles((current) => current.includes(aisleCode)
@@ -172,6 +211,32 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
       }
     } catch {
       // Keep local preview.
+    }
+    setApiState("demo");
+  }
+
+  async function handleRecalculateDistances() {
+    setMap(recalculateLocalGateDistances(map));
+    setApiState((current) => current === "api" ? "saving" : current);
+    try {
+      await fetch(`${API_BASE}/api/admin/warehouse-topologies/${map.topology.topology_id}/generate-gates`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gate_count: 10, gate_kind: "SHIPPING", overwrite_existing: 0 })
+      });
+      const response = await fetch(`${API_BASE}/api/admin/warehouse-topologies/${map.topology.topology_id}/distances/recalculate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ flow_kind: "BOTH", picker_speed_mps: 1.1, reachtruck_speed_mps: 1.8 })
+      });
+      if (response.ok) {
+        const loaded = await loadTopologyMap(map.topology.topology_id);
+        if (loaded) setMap(loaded);
+        setApiState("api");
+        return;
+      }
+    } catch {
+      // Demo fallback keeps calculated local distances.
     }
     setApiState("demo");
   }
@@ -259,6 +324,12 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
             </div>
             <button className="wide-action" onClick={handleBuildRoute}>Построить Z-обход</button>
           </section>
+
+          <section>
+            <h3>Ворота и расстояния</h3>
+            <p>Матрица расстояний влияет на скорость перемещения к отгрузке и от приемки к хранению.</p>
+            <button className="wide-action secondary-action" onClick={handleRecalculateDistances}>Пересчитать до ворот</button>
+          </section>
         </aside>
 
         <main className="topology-map-panel">
@@ -287,6 +358,16 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                 <span>Тип: {selectedCell.cell_kind}</span>
                 <span>Координаты: {selectedCell.x.toFixed(1)} / {selectedCell.y.toFixed(1)}</span>
                 <span>Емкость: {selectedCell.max_volume_m3 || 0} м³ · {selectedCell.max_weight_kg || 0} кг</span>
+                <span>До отгрузки: {formatDistance(selectedCell.nearest_outbound_gate_distance_m)}</span>
+                <span>От приемки: {formatDistance(selectedCell.nearest_inbound_gate_distance_m)}</span>
+                <div className="gate-distance-list">
+                  {distancesForSelected.map((distance) => (
+                    <span key={distance.cell_gate_distance_id}>
+                      <b>{distance.gate_code}</b>
+                      {Math.round(distance.distance_m)} м · {formatSeconds(distance.travel_time_sec)}
+                    </span>
+                  ))}
+                </div>
                 <div className="nudge-grid">
                   <button onClick={() => moveSelected(0, -0.4)}>↑</button>
                   <button onClick={() => moveSelected(-0.4, 0)}>←</button>
@@ -377,11 +458,11 @@ function TopologySvg({ map, routeByCell, selectedId, onSelect }: {
       <path d="M44 534 L902 534 L938 88 L164 18" fill="none" stroke="#94a3b8" strokeWidth="2" opacity=".55" />
       <rect x="66" y="468" width="78" height="44" fill="#dbe7f2" stroke="#94a3b8" />
       <text x="105" y="494" className="gate-label">G01</text>
-      {[1, 2, 3, 4, 5, 6, 7, 8].map((gate) => (
-        <g key={gate}>
-          <rect x={70 + gate * 82} y="490" width="48" height="36" rx="3" fill="#27364a" stroke="#0f172a" />
-          <rect x={84 + gate * 82} y="526" width="8" height="15" fill="#fbbf24" />
-          <text x={94 + gate * 82} y="484" className="gate-label">G{String(gate + 1).padStart(2, "0")}</text>
+      {map.gates.slice(0, 10).map((gate) => (
+        <g key={gate.topology_gate_id}>
+          <rect x={sx(gate.x, bounds) - 22} y="490" width="48" height="36" rx="3" fill={gate.gate_kind === "RECEIVING" ? "#0f766e" : "#27364a"} stroke="#0f172a" />
+          <rect x={sx(gate.x, bounds) - 8} y="526" width="8" height="15" fill="#fbbf24" />
+          <text x={sx(gate.x, bounds) + 2} y="484" className="gate-label">{gate.gate_code}</text>
         </g>
       ))}
 
@@ -487,7 +568,9 @@ function normalizeMap(raw: TopologyMap): TopologyMap {
   return {
     topology: normalizeKeys(raw.topology) as Topology,
     aisles: (raw.aisles || []).map((item) => normalizeKeys(item) as TopologyAisle),
+    gates: (raw.gates || []).map((item) => normalizeKeys(item) as TopologyGate),
     cells: (raw.cells || []).map((item) => normalizeKeys(item) as TopologyCell),
+    distances: (raw.distances || []).map((item) => normalizeKeys(item) as CellGateDistance),
     routes: (raw.routes || []).map((item) => normalizeKeys(item) as PickRoute),
     route_cells: (raw.route_cells || []).map((item) => normalizeKeys(item) as PickRouteCell)
   };
@@ -570,7 +653,8 @@ function generateLocalTopology(topology: Topology, options: {
       }
     }
   }
-  return { topology: { ...topology, cell_count: cells.length, aisle_count: aisles.length }, aisles, cells, routes: [], route_cells: [] };
+  const gates = buildDemoGates(topology);
+  return recalculateLocalGateDistances({ topology: { ...topology, cell_count: cells.length, aisle_count: aisles.length }, aisles, gates, cells, distances: [], routes: [], route_cells: [] });
 }
 
 function buildLocalZRoute(map: TopologyMap, aisleCodes: string[]): TopologyMap {
@@ -600,6 +684,65 @@ function buildLocalZRoute(map: TopologyMap, aisleCodes: string[]): TopologyMap {
     }],
     route_cells: routeCells
   };
+}
+
+function buildDemoGates(topology: Topology): TopologyGate[] {
+  return Array.from({ length: 10 }, (_, index) => ({
+    topology_gate_id: index + 1,
+    topology_id: topology.topology_id,
+    ware_id: topology.ware_id,
+    gate_code: `G${String(index + 1).padStart(2, "0")}`,
+    gate_name: `Ворота G${String(index + 1).padStart(2, "0")}`,
+    gate_kind: index < 2 ? "RECEIVING" : "SHIPPING",
+    staging_zone_code: "DOCK",
+    x: 4 + index * 4.2,
+    y: 34,
+    width: 2.8,
+    height: 3.2,
+    active: 1
+  }));
+}
+
+function recalculateLocalGateDistances(map: TopologyMap): TopologyMap {
+  const distances: CellGateDistance[] = [];
+  let id = 1;
+  const cells = map.cells.map((cell) => {
+    const cellDistances = map.gates.map((gate) => {
+      const distance = Math.abs(cell.x - gate.x) + Math.abs(cell.y - gate.y);
+      const speed = cell.cell_kind === "STORAGE" ? 1.8 : 1.1;
+      const item: CellGateDistance = {
+        cell_gate_distance_id: id++,
+        topology_id: map.topology.topology_id,
+        topology_cell_id: cell.topology_cell_id,
+        topology_gate_id: gate.topology_gate_id,
+        gate_code: gate.gate_code,
+        gate_kind: gate.gate_kind,
+        flow_kind: "BOTH",
+        distance_m: Number(distance.toFixed(1)),
+        travel_time_sec: Number((distance / speed).toFixed(1))
+      };
+      distances.push(item);
+      return item;
+    });
+    const outbound = cellDistances.filter((distance) => distance.gate_kind !== "RECEIVING").sort((a, b) => a.distance_m - b.distance_m)[0];
+    const inbound = cellDistances.filter((distance) => distance.gate_kind !== "SHIPPING").sort((a, b) => a.distance_m - b.distance_m)[0];
+    return {
+      ...cell,
+      nearest_outbound_gate_distance_m: outbound?.distance_m,
+      nearest_inbound_gate_distance_m: inbound?.distance_m
+    };
+  });
+  return { ...map, cells, distances };
+}
+
+function formatDistance(value?: number) {
+  return typeof value === "number" ? `${Math.round(value)} м` : "не рассчитано";
+}
+
+function formatSeconds(value?: number) {
+  if (typeof value !== "number") return "нет времени";
+  if (value < 60) return `${Math.round(value)} сек`;
+  return `${Math.floor(value / 60)} мин ${Math.round(value % 60)} сек`;
 }
 
 function mapBounds(cells: TopologyCell[], aisles: TopologyAisle[]) {
