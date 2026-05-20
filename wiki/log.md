@@ -1152,3 +1152,10 @@ Append-only log of root wiki updates.
 - Adjusted pick-face visual scale: larger cells, wider aisle travel lane, and closer rack backs between neighboring aisles.
 - Verified on product port `3000`: route summary shows `48 ячеек в последовательности`, `.route-link-line` count is `47`, marker arrows are present, and tooltip samples include `pick_route_cell_id`.
 - Captured evidence screenshots `runtime/test-evidence/topology-one-active-route-arrows-2d.png` and `runtime/test-evidence/topology-one-active-route-arrows-svg.png`.
+
+## 2026-05-20 - Topology route order architecture decision
+
+- Captured the architecture decision that the base WMS pick route is a linear order, not an alternative graph.
+- `RRL_PICK_ROUTE_CELL` is defined as route points with `PICK_SEQUENCE NUMBER`, while UI arrows are derived from neighboring sorted rows.
+- Recorded route invariants: one outgoing arrow per non-terminal cell, one incoming arrow per non-start cell, no branching, and no alternative routes in the base topology module.
+- Added uniqueness guidance for `PICK_ROUTE_ID + TOPOLOGY_CELL_ID`, `PICK_ROUTE_ID + PICK_SEQUENCE`, and split pick-face slot variants.
