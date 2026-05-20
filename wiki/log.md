@@ -1194,3 +1194,8 @@ Append-only log of root wiki updates.
 - Fixed the topology page runtime crash `Cannot read properties of null (reading 'value')` by reading form values synchronously before entering React state updater callbacks.
 - Moved route arrows below pick-face cell nodes so route lines no longer intercept cell clicks while still remaining visible between cells.
 - Verified the page with a Playwright regression: zoom keyboard changes, topology switching, layer checkbox toggles, generator input edits, cell click, and no React error boundary.
+
+## 2026-05-20 - Topology zoom visual stabilization
+
+- Fixed the bad large-zoom topology visual by making map labels and route sequence badges zoom-aware: warehouse geometry scales, but service labels keep a stable screen size.
+- Verified `550%` zoom with Playwright: no page errors, no React error boundary, aisle labels stay compact, and evidence screenshot `runtime/test-evidence/topology-zoom-550-labels-fixed.png` was captured.

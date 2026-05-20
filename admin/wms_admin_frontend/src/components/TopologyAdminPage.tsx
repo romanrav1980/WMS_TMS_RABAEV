@@ -1015,6 +1015,9 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
     })
     .filter(Boolean) as Array<{ routeCell: PickRouteCell; cell: TopologyCell }>;
   const routeSegments = buildRouteSegments(routeCells, bounds, mode, map.aisles);
+  const invZoom = 1 / view.zoom;
+  const badgeX = 13 * invZoom;
+  const badgeY = -13 * invZoom;
 
   return (
     <svg
@@ -1070,7 +1073,7 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
                   <rect x={point.x - 20} y={gateY} width="42" height="30" rx="2" fill={gate.gate_kind === "RECEIVING" ? "#0f766e" : "#27364a"} stroke="#0f172a" />
                   <rect x={point.x - 7} y={gateY + 30} width="7" height="12" fill="#fbbf24" />
                   {drawTruckIcon(point.x + 33, gateY + 3, gate.topology_gate_id)}
-                  {layers.labels && <text x={point.x + 1} y={gateY - 5} className="gate-label">{gate.gate_code}</text>}
+                  {layers.labels && <text x={point.x + invZoom} y={gateY - 5 * invZoom} className="gate-label" style={scaledTextStyle(13, 4, view.zoom)}>{gate.gate_code}</text>}
                 </>
               );
             })()}
@@ -1096,11 +1099,11 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
                   strokeDasharray="7 5"
                   opacity=".82"
                 />
-                {layers.labels && <text x={x} y={y - 4} className="staging-label">накопл.</text>}
+                {layers.labels && <text x={x} y={y - 4 * invZoom} className="staging-label" style={scaledTextStyle(10, 3, view.zoom)}>накопл.</text>}
               </g>
             );
           })}
-          {layers.labels && <text x="820" y={mode === "3d" ? 584 : 548}>Зона накопления перед воротами</text>}
+          {layers.labels && <text x="820" y={mode === "3d" ? 584 : 548} style={scaledTextStyle(13, 4, view.zoom)}>Зона накопления перед воротами</text>}
         </g>}
 
         {layers.aisles && map.aisles.map((aisle) => {
@@ -1116,8 +1119,8 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
               <line x1={x1 - 20} y1={y1} x2={x2 - 20} y2={y2} stroke="#1d4ed8" strokeWidth="3" opacity=".65" />
               <line x1={x1 + 20} y1={y1} x2={x2 + 20} y2={y2} stroke="#1d4ed8" strokeWidth="3" opacity=".65" />
               <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#2563d8" strokeWidth="2.4" strokeDasharray="9 8" strokeLinecap="round" opacity=".72" />
-              {layers.labels && <text x={x1 - 22} y={y1 - 12} className="aisle-label">{aisle.aisle_code}</text>}
-              {layers.labels && <text x={x2 + 22} y={y2 + 18} className="aisle-label">{aisle.aisle_code}</text>}
+              {layers.labels && <text x={x1 - 22 * invZoom} y={y1 - 12 * invZoom} className="aisle-label" style={scaledTextStyle(13, 4, view.zoom)}>{aisle.aisle_code}</text>}
+              {layers.labels && <text x={x2 + 22 * invZoom} y={y2 + 18 * invZoom} className="aisle-label" style={scaledTextStyle(13, 4, view.zoom)}>{aisle.aisle_code}</text>}
             </g>
           );
         })}
@@ -1182,18 +1185,18 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
               />
               {layers.labels && routeCell && routeCell.pick_sequence % 6 === 1 && (
                 <>
-                  <circle cx={x + 13} cy={y - 13} r="9" fill="#fff" stroke="#ef3b82" strokeWidth="2" />
-                  <text x={x + 13} y={y - 10} className="route-sequence">{routeCell.pick_sequence}</text>
+                  <circle cx={x + badgeX} cy={y + badgeY} r={9 * invZoom} fill="#fff" stroke="#ef3b82" strokeWidth={2 * invZoom} />
+                  <text x={x + badgeX} y={y - 10 * invZoom} className="route-sequence" style={scaledTextStyle(8, 0, view.zoom)}>{routeCell.pick_sequence}</text>
                 </>
               )}
               {layers.labels && (
-                <text x={x} y={y + 19} className="cell-code-label">{shortCellLabel(cell)}</text>
+                <text x={x} y={y + 19 * invZoom} className="cell-code-label" style={scaledTextStyle(7, 3, view.zoom)}>{shortCellLabel(cell)}</text>
               )}
             </g>
           );
         })}
 
-        {layers.aisles && drawPassageOverlay(map, bounds, mode, layers.labels)}
+        {layers.aisles && drawPassageOverlay(map, bounds, mode, layers.labels, view.zoom)}
 
         {selectionRect && (
           <rect
@@ -1224,6 +1227,13 @@ function topologyStats(map: TopologyMap, activeRouteCellCount = map.route_cells.
 
 function clampZoom(value: number) {
   return Math.min(MAX_TOPOLOGY_ZOOM, Math.max(MIN_TOPOLOGY_ZOOM, Number(value.toFixed(2))));
+}
+
+function scaledTextStyle(fontPx: number, strokePx: number, zoom: number) {
+  return {
+    fontSize: `${fontPx / zoom}px`,
+    strokeWidth: strokePx ? `${strokePx / zoom}px` : undefined
+  };
 }
 
 async function loadInitialTopology(): Promise<{ topologies: Topology[]; map: TopologyMap } | null> {
@@ -1561,15 +1571,16 @@ function drawDistanceLines(map: TopologyMap, selectedId: number, bounds: MapBoun
   });
 }
 
-function drawPassageOverlay(map: TopologyMap, bounds: MapBounds, mode: "3d" | "plan" | "list", showLabels: boolean) {
+function drawPassageOverlay(map: TopologyMap, bounds: MapBounds, mode: "3d" | "plan" | "list", showLabels: boolean, zoom: number) {
   const pickAisles = map.aisles.filter((aisle) => aisle.aisle_kind === "PICK_AISLE");
   const sectionRects = groupedSectionRects(map.cells.filter((cell) => cell.active === 1), bounds, mode);
+  const invZoom = 1 / zoom;
   return (
     <g className="topology-passage-layer">
       {sectionRects.map((rect) => (
         <g key={rect.sectionCode} className="section-boundary">
           <rect x={rect.x} y={rect.y} width={rect.width} height={rect.height} rx="2" />
-          {showLabels && <text x={rect.x + rect.width / 2} y={rect.y + rect.height + 22}>{rect.sectionCode}</text>}
+          {showLabels && <text x={rect.x + rect.width / 2} y={rect.y + rect.height + 22 * invZoom} style={scaledTextStyle(13, 4, zoom)}>{rect.sectionCode}</text>}
         </g>
       ))}
       {pickAisles.map((aisle, index) => {
@@ -1587,15 +1598,15 @@ function drawPassageOverlay(map: TopologyMap, bounds: MapBounds, mode: "3d" | "p
             <line x1={from.x} y1={from.y + (directionDown ? 22 : -22)} x2={to.x} y2={to.y + (directionDown ? -22 : 22)} className="passage-direction" markerEnd="url(#passage-arrow)" />
             {showLabels && (
               <>
-                <text x={start.x} y={start.y - 20} className="passage-label">{aisle.aisle_code}</text>
-                <text x={end.x} y={end.y + 28} className="passage-label">{aisle.aisle_code}</text>
-                {aisleNo % 3 === 1 && <text x={start.x + 18} y={(start.y + end.y) / 2} className="passage-width-label">проход 3 м</text>}
+                <text x={start.x} y={start.y - 20 * invZoom} className="passage-label" style={scaledTextStyle(16, 5, zoom)}>{aisle.aisle_code}</text>
+                <text x={end.x} y={end.y + 28 * invZoom} className="passage-label" style={scaledTextStyle(16, 5, zoom)}>{aisle.aisle_code}</text>
+                {aisleNo % 3 === 1 && <text x={start.x + 18 * invZoom} y={(start.y + end.y) / 2} className="passage-width-label" style={scaledTextStyle(10, 3, zoom)}>проход 3 м</text>}
               </>
             )}
           </g>
         );
       })}
-      {drawCrossPassages(pickAisles, bounds, mode)}
+      {drawCrossPassages(pickAisles, bounds, mode, zoom)}
     </g>
   );
 }
@@ -1620,8 +1631,9 @@ function groupedSectionRects(cells: TopologyCell[], bounds: MapBounds, mode: "3d
   });
 }
 
-function drawCrossPassages(aisles: TopologyAisle[], bounds: MapBounds, mode: "3d" | "plan" | "list") {
+function drawCrossPassages(aisles: TopologyAisle[], bounds: MapBounds, mode: "3d" | "plan" | "list", zoom: number) {
   if (aisles.length < 2) return null;
+  const invZoom = 1 / zoom;
   const sorted = [...aisles].sort((a, b) => a.x1 - b.x1);
   const first = sorted[0];
   const last = sorted[sorted.length - 1];
@@ -1633,8 +1645,8 @@ function drawCrossPassages(aisles: TopologyAisle[], bounds: MapBounds, mode: "3d
     <g className="cross-passage">
       <line x1={topStart.x} y1={topStart.y - 22} x2={topEnd.x} y2={topEnd.y - 22} markerEnd="url(#passage-arrow)" />
       <line x1={bottomEnd.x} y1={bottomEnd.y + 22} x2={bottomStart.x} y2={bottomStart.y + 22} markerEnd="url(#passage-arrow)" />
-      <text x={(topStart.x + topEnd.x) / 2} y={topStart.y - 34}>фронтальный проход</text>
-      <text x={(bottomStart.x + bottomEnd.x) / 2} y={bottomStart.y + 42}>тыловой проход</text>
+      <text x={(topStart.x + topEnd.x) / 2} y={topStart.y - 34 * invZoom} style={scaledTextStyle(13, 4, zoom)}>фронтальный проход</text>
+      <text x={(bottomStart.x + bottomEnd.x) / 2} y={bottomStart.y + 42 * invZoom} style={scaledTextStyle(13, 4, zoom)}>тыловой проход</text>
     </g>
   );
 }
