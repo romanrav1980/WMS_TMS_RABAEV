@@ -1115,3 +1115,12 @@ Append-only log of root wiki updates.
 - Separated dock gates from staging accumulation in the topology map: gates remain on the dock line, staging is shown as distinct accumulation pads.
 - Cleaned up stray frontend preview/dev processes and verified only product port `3000` remains listening.
 - Captured evidence screenshots `runtime/test-evidence/topology-selection-mode-dock-staging.png` and `runtime/test-evidence/topology-context-menu-selection-mode.png`.
+
+## 2026-05-20 - Topology frame-mode stabilization
+
+- Reproduced the topology `Рамка` scenario on product port `3000` with Playwright.
+- Fixed the white-screen-looking layout by giving the topology map panel three grid rows: title, selection toolbar, and SVG map.
+- Moved mass selection controls into a compact non-overlapping toolbar above the SVG map.
+- Added an admin React error boundary so runtime page errors show diagnostics instead of a blank white screen.
+- Verified rectangle selection, repeated `Рамка` clicks, and context-menu mass-selection actions.
+- Captured evidence screenshots `runtime/test-evidence/topology-fixed-layout-before.png`, `runtime/test-evidence/topology-fixed-frame-drag-selection.png`, and `runtime/test-evidence/topology-fixed-context-menu-final.png`.

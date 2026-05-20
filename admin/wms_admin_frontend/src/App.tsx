@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { Component, useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
 import "./styles.css";
 import { SHIFT_MINUTES, clock, inferWaveByMinute } from "./demoData";
 import { loadReplayData } from "./data/loaders";
@@ -67,7 +68,11 @@ export default function App() {
   }, [data, minute, selectedWaveId, modelSettings]);
 
   if (page === "topology") {
-    return <TopologyAdminPage onBack={() => setPage("twin")} />;
+    return (
+      <AppErrorBoundary resetKey={page}>
+        <TopologyAdminPage onBack={() => setPage("twin")} />
+      </AppErrorBoundary>
+    );
   }
 
   if (!data || !state) {
@@ -79,6 +84,7 @@ export default function App() {
   const overdueCount = state.tasks.filter((task) => task.overdueMinutes > 0 && task.status !== "DONE").length;
 
   return (
+    <AppErrorBoundary resetKey={page}>
     <div className="admin-app">
       <aside className="mini-sidebar">
         <div className="brand-mark">W</div>
@@ -171,7 +177,37 @@ export default function App() {
         </section>
       </main>
     </div>
+    </AppErrorBoundary>
   );
+}
+
+class AppErrorBoundary extends Component<{ children: ReactNode; resetKey: string }, { error: Error | null }> {
+  state: { error: Error | null } = { error: null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  componentDidUpdate(prevProps: { resetKey: string }) {
+    if (prevProps.resetKey !== this.props.resetKey && this.state.error) {
+      this.setState({ error: null });
+    }
+  }
+
+  componentDidCatch(error: Error) {
+    console.error("Admin UI runtime error", error);
+  }
+
+  render() {
+    if (!this.state.error) return this.props.children;
+    return (
+      <main className="loading-screen error-screen">
+        <b>Ошибка интерфейса</b>
+        <span>{this.state.error.message}</span>
+        <button onClick={() => this.setState({ error: null })}>Вернуться к странице</button>
+      </main>
+    );
+  }
 }
 
 type ModelSettings = {

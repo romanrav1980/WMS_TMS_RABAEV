@@ -872,3 +872,21 @@ Evidence screenshot:
 - `runtime/test-evidence/topology-selection-route-tools.png`.
 - `runtime/test-evidence/topology-selection-mode-dock-staging.png`.
 - `runtime/test-evidence/topology-context-menu-selection-mode.png`.
+
+## 26. Стабилизация Режима Рамки От 2026-05-20
+
+Проверка пользовательского кейса `?page=topology -> Рамка` показала, что экран мог выглядеть как белый лист не из-за отсутствия данных, а из-за ошибки раскладки: панель массового выделения была добавлена как третья строка в grid-контейнер, рассчитанный на две строки. В результате строка панели занимала всю доступную высоту, а SVG-карта уезжала ниже видимой области.
+
+Зафиксированы правила для админки:
+
+- панель массового выделения должна быть отдельной компактной строкой между заголовком карты и SVG, а не абсолютным слоем поверх карты;
+- `topology-map-panel` обязан иметь строки `header / selection tools / map`, чтобы карта не уезжала вниз;
+- кнопка `Рамка` на верхней панели и кнопка `Рамка` в панели выделения должны включать один и тот же режим;
+- правое меню карты должно сохранять массовые действия `Включить рамку`, `Выделить все`, `Выделить левую сторону`, `Выделить правую сторону`, `Инвертировать`, `Снять выделение`;
+- runtime-ошибка React-страницы должна показывать диагностическую панель, а не пустой белый экран.
+
+Evidence screenshots:
+
+- `runtime/test-evidence/topology-fixed-layout-before.png`.
+- `runtime/test-evidence/topology-fixed-frame-drag-selection.png`.
+- `runtime/test-evidence/topology-fixed-context-menu-final.png`.

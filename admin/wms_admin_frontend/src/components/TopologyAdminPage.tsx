@@ -647,6 +647,18 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
           {mapMode === "list" ? (
             <TopologyCellTable cells={map.cells} selectedId={selectedId} onSelect={setSelectedId} />
           ) : (
+            <>
+            <div className="map-selection-tools">
+              <b>Выделение</b>
+              <button className={selectionMode ? "active" : ""} onClick={() => setSelectionMode((current) => !current)}>Рамка</button>
+              <button onClick={() => selectRouteCells("all")}>Все</button>
+              <button onClick={() => selectRouteCells("left")}>Левая</button>
+              <button onClick={() => selectRouteCells("right")}>Правая</button>
+              <button onClick={() => selectRouteCells("invert")}>Инверт.</button>
+              <button onClick={() => selectRouteCells("clear")}>Сброс</button>
+              <span>{selectedRouteCellIds.size ? `${selectedRouteCellIds.size} ячеек` : "нет области"}</span>
+              {selectionMode && <span className="selection-mode-hint">Протяните рамку по ячейкам отбора</span>}
+            </div>
             <div className="topology-map-wrap">
               <div className="topology-map-controls">
                 <button onClick={() => setView((current) => ({ ...current, zoom: Math.min(2.2, Number((current.zoom + 0.15).toFixed(2))) }))}>+</button>
@@ -658,17 +670,6 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                 <button onClick={() => setView((current) => ({ ...current, panY: current.panY - 30 }))}>↑</button>
                 <button onClick={() => setView((current) => ({ ...current, panY: current.panY + 30 }))}>↓</button>
               </div>
-              <div className="map-selection-tools">
-                <b>Выделение</b>
-                <button className={selectionMode ? "active" : ""} onClick={() => setSelectionMode((current) => !current)}>Рамка</button>
-                <button onClick={() => selectRouteCells("all")}>Все</button>
-                <button onClick={() => selectRouteCells("left")}>Левая</button>
-                <button onClick={() => selectRouteCells("right")}>Правая</button>
-                <button onClick={() => selectRouteCells("invert")}>Инверт.</button>
-                <button onClick={() => selectRouteCells("clear")}>Сброс</button>
-                <span>{selectedRouteCellIds.size ? `${selectedRouteCellIds.size} ячеек` : "нет области"}</span>
-              </div>
-              {selectionMode && <div className="selection-mode-hint">Режим рамки: протяните мышью по ячейкам отбора</div>}
               <TopologySvg
                 map={map}
                 routeByCell={routeByCell}
@@ -722,6 +723,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                 </div>
               )}
             </div>
+            </>
           )}
         </main>
 
