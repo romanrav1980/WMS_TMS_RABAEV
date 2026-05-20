@@ -1077,13 +1077,15 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
             {(() => {
               const point = projectPoint(gate.x, gate.y, bounds, mode);
               const gateY = mode === "3d" ? point.y + 26 : 568;
+              const dockScale = Math.min(1, invZoom);
               return (
-                <>
-                  <rect x={point.x - 20} y={gateY} width="42" height="30" rx="2" fill={gate.gate_kind === "RECEIVING" ? "#0f766e" : "#27364a"} stroke="#0f172a" />
-                  <rect x={point.x - 7} y={gateY + 30} width="7" height="12" fill="#fbbf24" />
-                  {drawTruckIcon(point.x + 33, gateY + 3, gate.topology_gate_id)}
-                  {layers.labels && <text x={point.x + invZoom} y={gateY - 5 * invZoom} className="gate-label" style={scaledTextStyle(13, 4, view.zoom)}>{gate.gate_code}</text>}
-                </>
+                <g className="dock-gate-node" transform={`translate(${point.x} ${gateY}) scale(${dockScale})`}>
+                  <title>{`${gate.gate_code} · ${gate.gate_kind === "RECEIVING" ? "приемка" : "отгрузка"} · доковый контекст фиксированного размера`}</title>
+                  <rect x="-19" y="0" width="38" height="27" rx="2" fill={gate.gate_kind === "RECEIVING" ? "#0f766e" : "#27364a"} stroke="#0f172a" />
+                  <rect x="-4" y="27" width="8" height="12" fill="#fbbf24" />
+                  {drawTruckIcon(22, 1, gate.topology_gate_id)}
+                  {layers.labels && <text x="0" y="-5" className="gate-label">{gate.gate_code}</text>}
+                </g>
               );
             })()}
           </g>
@@ -1108,7 +1110,7 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
           );
         })}
 
-        {layers.gates && drawAisleGateLinks(map, bounds)}
+        {layers.gates && drawAisleGateLinks(map, bounds, view.zoom)}
 
         {layers.distances && selectedId && drawDistanceLines(map, selectedId, bounds, mode)}
 
@@ -1848,9 +1850,10 @@ function drawCrossPassages(aisles: TopologyAisle[], bounds: MapBounds, mode: "3d
   );
 }
 
-function drawAisleGateLinks(map: TopologyMap, bounds: MapBounds) {
+function drawAisleGateLinks(map: TopologyMap, bounds: MapBounds, zoom: number) {
   const shippingGates = map.gates.filter((gate) => gate.active === 1 && gate.gate_kind !== "RECEIVING");
   if (!shippingGates.length) return null;
+  const invZoom = 1 / zoom;
   return map.aisles.filter((aisle) => aisle.aisle_kind === "PICK_AISLE").flatMap((aisle) => {
     const ends = [
       { code: "верхний торец", x: aisle.x1, y: aisle.y1 },
@@ -1868,7 +1871,7 @@ function drawAisleGateLinks(map: TopologyMap, bounds: MapBounds) {
       return (
         <g key={`${aisle.aisle_code}-${end.code}-${nearestGate.gate.gate_code}`} className="gate-link">
           <path d={`M ${x1} ${y1} L ${x1} ${Math.min(560, y2 - 36)} L ${x2} ${Math.min(560, y2 - 36)} L ${x2} ${y2}`} fill="none" />
-          <text x={(x1 + x2) / 2} y={Math.min(552, y2 - 44)}>{Math.round(nearestGate.distance)} м</text>
+          <text x={(x1 + x2) / 2} y={Math.min(552, y2 - 44 * invZoom)} style={scaledTextStyle(10, 3, zoom)}>{Math.round(nearestGate.distance)} м</text>
         </g>
       );
     });
@@ -1946,18 +1949,23 @@ function projectPoint(x: number, y: number, bounds: MapBounds, mode: "3d" | "pla
 }
 
 function drawTruckIcon(x: number, y: number, index: number) {
-  const red = index % 3 === 0;
-  const cab = red ? "#dc2626" : "#facc15";
-  const trailer = red ? "#f87171" : "#fde68a";
+  const variant = index % 3;
+  const cab = variant === 0 ? "#dc2626" : variant === 1 ? "#facc15" : "#0ea5e9";
+  const trailer = variant === 0 ? "#fecaca" : variant === 1 ? "#fde68a" : "#cbd5e1";
+  const longTruck = variant !== 0;
   return (
-    <g transform={`translate(${x} ${y})`} className="dock-truck-icon">
-      <path d="M0 8 L30 8 L36 15 L36 25 L0 25 Z" fill={trailer} stroke="#334155" />
-      <path d="M30 12 L42 12 L48 18 L48 25 L36 25 L36 15 Z" fill={cab} stroke="#334155" />
-      <path d="M35 14 L42 18 L35 18 Z" fill="#dbeafe" stroke="#334155" />
-      <circle cx="9" cy="27" r="4" fill="#111827" />
-      <circle cx="37" cy="27" r="4" fill="#111827" />
-      <circle cx="9" cy="27" r="1.5" fill="#e5e7eb" />
-      <circle cx="37" cy="27" r="1.5" fill="#e5e7eb" />
+    <g transform={`translate(${x - 14} ${y})`} className="dock-truck-icon">
+      <path d="M4 16 H24 V58 H4 Z" fill={trailer} stroke="#475569" strokeWidth="1.2" />
+      {longTruck && <path d="M8 21 V53 M13 21 V53 M18 21 V53" stroke="#94a3b8" strokeWidth=".7" opacity=".8" />}
+      {!longTruck && <path d="M7 21 H21 V53 H7 Z" fill="#9ca3af" opacity=".45" />}
+      <path d="M3 5 C3 2 6 0 14 0 C22 0 25 2 25 5 L27 17 H1 Z" fill={cab} stroke="#334155" strokeWidth="1.2" />
+      <path d="M7 5 H21 L23 12 H5 Z" fill="#bae6fd" stroke="#334155" strokeWidth=".8" opacity=".95" />
+      <path d="M8 2 H20" stroke="#64748b" strokeWidth="1.4" strokeLinecap="round" />
+      <circle cx="5" cy="14" r="1.2" fill="#f59e0b" />
+      <circle cx="14" cy="14" r="1.2" fill="#f59e0b" />
+      <circle cx="23" cy="14" r="1.2" fill="#f59e0b" />
+      <rect x="4" y="58" width="5" height="2" fill="#ef4444" />
+      <rect x="19" y="58" width="5" height="2" fill="#ef4444" />
     </g>
   );
 }

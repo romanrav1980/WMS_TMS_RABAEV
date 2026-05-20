@@ -378,7 +378,8 @@ button[aria-disabled="true"] { cursor: help; }
 .route-context-menu b { font-size: 12px; }
 .route-context-menu span { color: #64748b; font-size: 10px; font-weight: 900; text-transform: uppercase; }
 .route-context-menu button { height: 27px; border: 1px solid #d8e2ee; border-radius: 6px; background: #fff; color: #0969e8; font-weight: 900; }
-.dock-truck-icon { filter: drop-shadow(0 5px 7px rgba(15,31,53,.16)); }
+.dock-gate-node, .dock-gate-node * { vector-effect: non-scaling-stroke; }
+.dock-truck-icon { filter: drop-shadow(0 5px 7px rgba(15,31,53,.16)); pointer-events: none; }
 .inspector-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .inspector-heading button { width: 26px; height: 26px; border: 0; background: transparent; color: #64748b; font-size: 22px; }
 .inspector-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; border-bottom: 1px solid #dce6f2; }
