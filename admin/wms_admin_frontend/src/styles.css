@@ -315,10 +315,13 @@ button { cursor: pointer; }
 .map-legend i { width: 10px; height: 10px; border-radius: 3px; }
 .cell-left { background: #58b76b; } .cell-right { background: #4d86d9; } .cell-route { background: #ef3b82; }
 .topology-map-wrap { position: relative; min-height: 0; }
-.topology-map-controls { position: absolute; z-index: 3; left: 14px; top: 14px; display: flex; gap: 6px; padding: 6px; border: 1px solid rgba(216,226,238,.9); border-radius: 9px; background: rgba(255,255,255,.94); box-shadow: 0 12px 28px rgba(15,31,53,.12); }
+.topology-map-controls { position: absolute; z-index: 3; left: 14px; top: 14px; display: flex; align-items: center; gap: 6px; padding: 6px; border: 1px solid rgba(216,226,238,.9); border-radius: 9px; background: rgba(255,255,255,.94); box-shadow: 0 12px 28px rgba(15,31,53,.12); }
 .topology-map-controls button { min-width: 32px; height: 30px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0f1f35; font-weight: 900; }
-.topology-map-controls button:nth-child(3), .topology-map-controls button:nth-child(4) { min-width: 58px; color: #64748b; font-size: 11px; }
+.topology-map-controls button:nth-child(4), .topology-map-controls button:nth-child(5) { min-width: 58px; color: #64748b; font-size: 11px; }
 .topology-map-controls button.active { border-color: #0969e8; background: #0969e8; color: #fff; }
+.topology-zoom-slider { height: 30px; min-width: 210px; display: grid; grid-template-columns: 44px 1fr; align-items: center; gap: 7px; padding: 0 9px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0f1f35; font-size: 11px; font-weight: 900; }
+.topology-zoom-slider span { color: #0969e8; text-align: right; }
+.topology-zoom-slider input { width: 100%; accent-color: #0969e8; }
 .map-selection-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; margin: 0 0 8px; padding: 6px 8px; border: 1px solid rgba(216,226,238,.92); border-radius: 8px; background: rgba(255,255,255,.96); box-shadow: 0 8px 18px rgba(15,31,53,.08); }
 .map-selection-tools b, .map-selection-tools span { color: #64748b; font-size: 11px; font-weight: 900; }
 .map-selection-tools button { height: 26px; min-width: 48px; padding: 0 7px; border: 1px solid #d8e2ee; border-radius: 6px; background: #fff; color: #0f1f35; font-size: 11px; font-weight: 900; }
@@ -331,8 +334,18 @@ button { cursor: pointer; }
 .staging-label { fill: #0f766e; font-size: 10px; }
 .route-sequence { fill: #ef3b82; font-size: 8px; font-weight: 900; text-anchor: middle; }
 .cell-code-label { fill: #334155; font-size: 7px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: rgba(255,255,255,.86); stroke-width: 3px; pointer-events: none; }
+.topology-passage-layer { pointer-events: none; }
+.section-boundary rect { fill: none; stroke: #8b5a2b; stroke-width: 1.7; stroke-dasharray: 7 6; opacity: .78; vector-effect: non-scaling-stroke; }
+.section-boundary text, .cross-passage text { fill: #7c4a1f; font-size: 13px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #f8fbff; stroke-width: 4px; }
+.passage-fill { stroke: rgba(255,255,255,.74); stroke-width: 22; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.passage-edge { stroke: #8b5a2b; stroke-width: 1.5; stroke-dasharray: 7 6; opacity: .72; vector-effect: non-scaling-stroke; }
+.passage-direction, .cross-passage line { stroke: #8b5a2b; stroke-width: 2.2; stroke-linecap: round; opacity: .86; vector-effect: non-scaling-stroke; }
+.passage-direction { stroke-dasharray: 13 9; }
+.cross-passage line { stroke-dasharray: 10 7; }
+.passage-label { fill: #0b4ea2; font-size: 16px; font-weight: 950; text-anchor: middle; paint-order: stroke; stroke: #f8fbff; stroke-width: 5px; }
+.passage-width-label { fill: #7c4a1f; font-size: 10px; font-weight: 900; writing-mode: vertical-rl; text-anchor: middle; paint-order: stroke; stroke: #f8fbff; stroke-width: 3px; }
 .route-link-layer { pointer-events: stroke; }
-.route-link-line { stroke: #ef3b82; stroke-width: 3.2; stroke-dasharray: 9 6; stroke-linecap: round; opacity: .86; cursor: help; vector-effect: non-scaling-stroke; }
+.route-link-line { stroke: #ef3b82; stroke-width: 2.5; stroke-dasharray: 9 7; stroke-linecap: round; opacity: .58; cursor: help; vector-effect: non-scaling-stroke; }
 .route-link-line:hover { stroke-width: 5; opacity: 1; }
 .gate-link path { stroke: #0f766e; stroke-width: 1.8; stroke-dasharray: 8 7; opacity: .62; }
 .gate-link text { fill: #0f766e; font-size: 10px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #fff; stroke-width: 3px; }

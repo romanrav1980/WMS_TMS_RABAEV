@@ -132,6 +132,8 @@ type SvgPoint = { x: number; y: number };
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
 const API_BASIC_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
+const MIN_TOPOLOGY_ZOOM = 0.1;
+const MAX_TOPOLOGY_ZOOM = 12;
 
 function apiHeaders(extra?: HeadersInit): HeadersInit {
   return {
@@ -149,6 +151,7 @@ function apiFetch(input: RequestInfo | URL, init: RequestInit = {}) {
 
 export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
   const [map, setMap] = useState<TopologyMap>(() => emptyTopologyMap());
+  const [topologyOptions, setTopologyOptions] = useState<Topology[]>([]);
   const [apiState, setApiState] = useState<ApiState>("loading");
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [rightTab, setRightTab] = useState<"general" | "params" | "stats">("general");
@@ -184,8 +187,9 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     loadInitialTopology().then((loaded) => {
-      if (loaded) {
-        setMap(loaded);
+      if (loaded?.map) {
+        setTopologyOptions(loaded.topologies);
+        setMap(loaded.map);
         setApiState("api");
         return;
       }
@@ -300,7 +304,12 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
       });
       if (response.ok) {
         const loaded = await loadTopologyMap(topologyId);
-        if (loaded) setMap(loaded);
+        if (loaded) {
+          setMap(loaded);
+          setTopologyOptions((current) => current.some((item) => item.topology_id === loaded.topology.topology_id)
+            ? current
+            : [...current, loaded.topology]);
+        }
         setApiState("api");
         return;
       }
@@ -309,6 +318,24 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
     }
     setMap(local);
     setApiState("demo");
+  }
+
+  async function handleTopologyChange(topologyId: number) {
+    if (!topologyId || topologyId === map.topology.topology_id) return;
+    setApiState("loading");
+    const loaded = await loadTopologyMap(topologyId);
+    if (loaded) {
+      setMap(loaded);
+      setSelectedId(null);
+      setSelectedRouteCellIds(new Set());
+      setSelectedAisles(loaded.aisles.filter((aisle) => aisle.aisle_kind === "PICK_AISLE").slice(0, 3).map((aisle) => aisle.aisle_code));
+      setDirtyCells(new Set());
+      setValidation(null);
+      setView({ zoom: 1, panX: 0, panY: 0 });
+      setApiState("api");
+      return;
+    }
+    setApiState("api");
   }
 
   async function handleBuildRoute(pattern: RoutePattern = routePattern) {
@@ -587,8 +614,16 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
           </div>
           <label className="topology-warehouse-select">
             <span>Склад</span>
-            <select value={map.topology.ware_id} disabled>
-              <option value={map.topology.ware_id}>{map.topology.ware_name || "Основной склад"}</option>
+            <select
+              value={map.topology.topology_id}
+              disabled={apiState === "loading" || apiState === "saving" || !topologyOptions.length}
+              onChange={(event) => handleTopologyChange(Number(event.currentTarget.value))}
+            >
+              {(topologyOptions.length ? topologyOptions : [map.topology]).map((topology) => (
+                <option key={topology.topology_id} value={topology.topology_id}>
+                  {topology.ware_name || `Склад ${topology.ware_id}`} · {topology.topology_code} · v{topology.version_no}
+                </option>
+              ))}
             </select>
           </label>
           <div className="topology-actions">
@@ -708,8 +743,19 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
             </div>
             <div className="topology-map-wrap">
               <div className="topology-map-controls">
-                <button onClick={() => setView((current) => ({ ...current, zoom: Math.min(2.2, Number((current.zoom + 0.15).toFixed(2))) }))}>+</button>
-                <button onClick={() => setView((current) => ({ ...current, zoom: Math.max(0.65, Number((current.zoom - 0.15).toFixed(2))) }))}>-</button>
+                <button onClick={() => setView((current) => ({ ...current, zoom: clampZoom(Number((current.zoom * 1.25).toFixed(2))) }))}>+</button>
+                <button onClick={() => setView((current) => ({ ...current, zoom: clampZoom(Number((current.zoom / 1.25).toFixed(2))) }))}>-</button>
+                <label className="topology-zoom-slider" title="Масштаб карты">
+                  <span>{Math.round(view.zoom * 100)}%</span>
+                  <input
+                    type="range"
+                    min={10}
+                    max={1200}
+                    step={10}
+                    value={Math.round(view.zoom * 100)}
+                    onChange={(event) => setView((current) => ({ ...current, zoom: clampZoom(Number(event.currentTarget.value) / 100) }))}
+                  />
+                </label>
                 <button onClick={() => setView({ zoom: 1, panX: 0, panY: 0 })}>Сброс</button>
                 <button className={selectionMode ? "active" : ""} onClick={() => setSelectionMode((current) => !current)}>□ Рамка</button>
                 <button onClick={() => setView((current) => ({ ...current, panX: current.panX - 30 }))}>←</button>
@@ -973,6 +1019,9 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
         <marker id="route-arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
           <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef3b82" />
         </marker>
+        <marker id="passage-arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b5a2b" />
+        </marker>
       </defs>
       <rect width="1000" height="650" fill="#f8fbff" />
       <g transform={`translate(${view.panX} ${view.panY}) scale(${view.zoom})`}>
@@ -1105,6 +1154,8 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
           );
         })}
 
+        {layers.aisles && drawPassageOverlay(map, bounds, mode, layers.labels)}
+
         {layers.route && (
           <g className="route-link-layer">
             {routeSegments.map((segment) => (
@@ -1150,14 +1201,19 @@ function topologyStats(map: TopologyMap, activeRouteCellCount = map.route_cells.
   };
 }
 
-async function loadInitialTopology(): Promise<TopologyMap | null> {
+function clampZoom(value: number) {
+  return Math.min(MAX_TOPOLOGY_ZOOM, Math.max(MIN_TOPOLOGY_ZOOM, Number(value.toFixed(2))));
+}
+
+async function loadInitialTopology(): Promise<{ topologies: Topology[]; map: TopologyMap } | null> {
   try {
     const response = await apiFetch(`${API_BASE}/api/admin/warehouse-topologies`, { cache: "no-store" });
     if (!response.ok) return null;
-    const topologies = await response.json() as Topology[];
+    const topologies = ((await response.json()) as Topology[]).map((item) => normalizeKeys(item) as Topology);
     const topology = topologies.find((item) => item.status === "PUBLISHED") || topologies[0];
     if (!topology) return null;
-    return loadTopologyMap(topology.topology_id);
+    const map = await loadTopologyMap(topology.topology_id);
+    return map ? { topologies, map } : null;
   } catch {
     return null;
   }
@@ -1481,7 +1537,85 @@ function drawDistanceLines(map: TopologyMap, selectedId: number, bounds: MapBoun
       const from = projectCellPoint(cell, bounds, mode, aisle);
       const to = projectPoint(gate.x, gate.y, bounds, mode);
       return <line key={distance.cell_gate_distance_id} x1={from.x} y1={from.y} x2={to.x} y2={mode === "3d" ? to.y + 30 : 586} stroke="#0f766e" strokeWidth="2" strokeDasharray="6 6" opacity=".56" />;
-    });
+  });
+}
+
+function drawPassageOverlay(map: TopologyMap, bounds: MapBounds, mode: "3d" | "plan" | "list", showLabels: boolean) {
+  const pickAisles = map.aisles.filter((aisle) => aisle.aisle_kind === "PICK_AISLE");
+  const sectionRects = groupedSectionRects(map.cells.filter((cell) => cell.active === 1), bounds, mode);
+  return (
+    <g className="topology-passage-layer">
+      {sectionRects.map((rect) => (
+        <g key={rect.sectionCode} className="section-boundary">
+          <rect x={rect.x} y={rect.y} width={rect.width} height={rect.height} rx="2" />
+          {showLabels && <text x={rect.x + rect.width / 2} y={rect.y + rect.height + 22}>{rect.sectionCode}</text>}
+        </g>
+      ))}
+      {pickAisles.map((aisle, index) => {
+        const start = projectAislePoint(aisle, aisle.y1, bounds, mode);
+        const end = projectAislePoint(aisle, aisle.y2, bounds, mode);
+        const directionDown = index % 2 === 0;
+        const from = directionDown ? start : end;
+        const to = directionDown ? end : start;
+        const aisleNo = Number(aisle.aisle_code.replace(/\D/g, ""));
+        return (
+          <g key={`passage-${aisle.topology_aisle_id}`} className="passage-corridor">
+            <line x1={start.x} y1={start.y} x2={end.x} y2={end.y} className="passage-fill" />
+            <line x1={start.x - 13} y1={start.y} x2={end.x - 13} y2={end.y} className="passage-edge" />
+            <line x1={start.x + 13} y1={start.y} x2={end.x + 13} y2={end.y} className="passage-edge" />
+            <line x1={from.x} y1={from.y + (directionDown ? 22 : -22)} x2={to.x} y2={to.y + (directionDown ? -22 : 22)} className="passage-direction" markerEnd="url(#passage-arrow)" />
+            {showLabels && (
+              <>
+                <text x={start.x} y={start.y - 20} className="passage-label">{aisle.aisle_code}</text>
+                <text x={end.x} y={end.y + 28} className="passage-label">{aisle.aisle_code}</text>
+                {aisleNo % 3 === 1 && <text x={start.x + 18} y={(start.y + end.y) / 2} className="passage-width-label">проход 3 м</text>}
+              </>
+            )}
+          </g>
+        );
+      })}
+      {drawCrossPassages(pickAisles, bounds, mode)}
+    </g>
+  );
+}
+
+function groupedSectionRects(cells: TopologyCell[], bounds: MapBounds, mode: "3d" | "plan" | "list") {
+  const groups = new Map<string, TopologyCell[]>();
+  cells.forEach((cell) => {
+    const key = cell.section_code || "Секция";
+    groups.set(key, [...(groups.get(key) || []), cell]);
+  });
+  return Array.from(groups.entries()).map(([sectionCode, sectionCells]) => {
+    const points = sectionCells.map((cell) => projectPoint(cell.x, cell.y, bounds, mode));
+    const xs = points.map((point) => point.x);
+    const ys = points.map((point) => point.y);
+    const padX = mode === "plan" ? 42 : 34;
+    const padY = mode === "plan" ? 28 : 26;
+    const minX = Math.min(...xs) - padX;
+    const maxX = Math.max(...xs) + padX;
+    const minY = Math.min(...ys) - padY;
+    const maxY = Math.max(...ys) + padY;
+    return { sectionCode, x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+  });
+}
+
+function drawCrossPassages(aisles: TopologyAisle[], bounds: MapBounds, mode: "3d" | "plan" | "list") {
+  if (aisles.length < 2) return null;
+  const sorted = [...aisles].sort((a, b) => a.x1 - b.x1);
+  const first = sorted[0];
+  const last = sorted[sorted.length - 1];
+  const topStart = projectAislePoint(first, first.y1, bounds, mode);
+  const topEnd = projectAislePoint(last, last.y1, bounds, mode);
+  const bottomStart = projectAislePoint(first, first.y2, bounds, mode);
+  const bottomEnd = projectAislePoint(last, last.y2, bounds, mode);
+  return (
+    <g className="cross-passage">
+      <line x1={topStart.x} y1={topStart.y - 22} x2={topEnd.x} y2={topEnd.y - 22} markerEnd="url(#passage-arrow)" />
+      <line x1={bottomEnd.x} y1={bottomEnd.y + 22} x2={bottomStart.x} y2={bottomStart.y + 22} markerEnd="url(#passage-arrow)" />
+      <text x={(topStart.x + topEnd.x) / 2} y={topStart.y - 34}>фронтальный проход</text>
+      <text x={(bottomStart.x + bottomEnd.x) / 2} y={bottomStart.y + 42}>тыловой проход</text>
+    </g>
+  );
 }
 
 function drawAisleGateLinks(map: TopologyMap, bounds: MapBounds) {

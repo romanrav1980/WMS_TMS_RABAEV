@@ -1182,3 +1182,9 @@ Append-only log of root wiki updates.
 - Fixed topology generation so `create_both_sides=0` creates a single-side aisle instead of falling back to both sides.
 - Changed the topology admin route-management page to open in `2D План`, keep the route-order layer visible when enabled, and add collapsible left/right panels plus compact global navigation so the 1500-cell map gets more working space.
 - Captured evidence screenshots `runtime/test-evidence/topology-1500-two-chambers.png`, `runtime/test-evidence/topology-1500-two-chambers-2d.png`, `runtime/test-evidence/topology-1500-side-panels-expanded.png`, and `runtime/test-evidence/topology-1500-maximized-map.png`.
+
+## 2026-05-20 - Topology passage visibility and deep zoom
+
+- Added a visible passage overlay for the topology admin map: light corridor strokes, dotted section boundaries, directional passage arrows, and front/rear passage labels so physical aisles remain visible under dense pick-face and route layers.
+- Expanded topology map zoom from small fixed +/- steps to a slider-driven `10%..1200%` range with a percent indicator.
+- Enabled the top topology selector: it now lists available warehouse topology versions and reloads the map by selected `TOPOLOGY_ID` instead of showing a disabled warehouse placeholder.
