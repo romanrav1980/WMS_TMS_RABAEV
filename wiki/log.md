@@ -1136,3 +1136,10 @@ Append-only log of root wiki updates.
 - Fixed frame-selection lag by converting browser pointer coordinates to SVG coordinates through `getScreenCTM().inverse()` instead of manual width/height scaling.
 - Verified the frame follows the pointer numerically on product port `3000`: drag end and frame bottom-right matched with `dx=0`, `dy=0`, page errors `0`.
 - Captured evidence screenshot `runtime/test-evidence/topology-frame-follows-pointer.png`.
+
+## 2026-05-20 - Topology additive frame selection
+
+- Changed route-area frame selection so a normal frame replaces the current cell set, while `Shift + frame` adds the new area to the existing set.
+- Extended selected aisle tracking the same way, so additive areas remain available for route strategy build.
+- Verified on product port `3000`: first frame selected `15` cells, `Shift + frame` increased the selection to `21`, page errors `0`.
+- Captured evidence screenshot `runtime/test-evidence/topology-shift-additive-frame-selection.png`.

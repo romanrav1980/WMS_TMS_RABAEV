@@ -126,6 +126,7 @@ type ValidationResult = {
 type ApiState = "loading" | "demo" | "api" | "saving";
 type RoutePattern = "Z" | "U_SHAPE" | "SNAKE" | "LINEAR";
 type SvgSelectionRect = { x1: number; y1: number; x2: number; y2: number };
+type AreaDragState = { start: SvgPoint; current: SvgPoint; additive: boolean };
 type SvgPoint = { x: number; y: number };
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
@@ -153,7 +154,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
   const [mapMode, setMapMode] = useState<"3d" | "plan" | "list">("3d");
   const [view, setView] = useState({ zoom: 1, panX: 0, panY: 0 });
   const [panDrag, setPanDrag] = useState<{ startX: number; startY: number; originX: number; originY: number } | null>(null);
-  const [areaDrag, setAreaDrag] = useState<{ start: SvgPoint; current: SvgPoint } | null>(null);
+  const [areaDrag, setAreaDrag] = useState<AreaDragState | null>(null);
   const [selectionMode, setSelectionMode] = useState(false);
   const [routeMenu, setRouteMenu] = useState<{ x: number; y: number } | null>(null);
   const [dirtyCells, setDirtyCells] = useState<Set<number>>(() => new Set());
@@ -486,7 +487,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
     setRouteMenu(null);
     if (selectionMode || event.altKey || event.shiftKey) {
       const point = svgPointFromEvent(event, view);
-      setAreaDrag({ start: point, current: point });
+      setAreaDrag({ start: point, current: point, additive: event.shiftKey });
       return;
     }
     setPanDrag({ startX: event.clientX, startY: event.clientY, originX: view.panX, originY: view.panY });
@@ -501,9 +502,19 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
         const y = sy(cell.y, bounds);
         return cell.active === 1 && cell.cell_kind.includes("PICK_FACE") && x >= rect.x1 && x <= rect.x2 && y >= rect.y1 && y <= rect.y2;
       });
-      setSelectedRouteCellIds(new Set(selectedCells.map((cell) => cell.topology_cell_id)));
+      const selectedIds = selectedCells.map((cell) => cell.topology_cell_id);
+      setSelectedRouteCellIds((current) => {
+        if (!areaDrag.additive) return new Set(selectedIds);
+        const next = new Set(current);
+        selectedIds.forEach((id) => next.add(id));
+        return next;
+      });
       const aisles = Array.from(new Set(selectedCells.map((cell) => cell.aisle_code).filter(Boolean))) as string[];
-      if (aisles.length) setSelectedAisles(aisles.sort());
+      if (aisles.length) {
+        setSelectedAisles((current) => areaDrag.additive
+          ? Array.from(new Set([...current, ...aisles])).sort()
+          : aisles.sort());
+      }
       setAreaDrag(null);
     }
     setPanDrag(null);

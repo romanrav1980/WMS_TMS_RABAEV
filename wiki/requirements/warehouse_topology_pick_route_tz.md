@@ -902,3 +902,13 @@ Regression evidence:
 Evidence:
 
 - `runtime/test-evidence/topology-frame-follows-pointer.png`.
+
+Правило расширения выделения:
+
+- обычная рамка заменяет текущую область выбранными ячейками;
+- `Shift + рамка` добавляет новую область к уже выделенным ячейкам и расширяет список выбранных аллей, не сбрасывая старый набор;
+- Ctrl/Shift-click по отдельной ячейке остается точечным toggle-механизмом.
+
+Evidence:
+
+- `runtime/test-evidence/topology-shift-additive-frame-selection.png`.
