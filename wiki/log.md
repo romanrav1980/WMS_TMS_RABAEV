@@ -1085,3 +1085,12 @@ Append-only log of root wiki updates.
 - Updated the topology admin frontend to default to API `http://127.0.0.1:8088` with local Basic auth `admin/admin123`, matching `serv.bat`.
 - Ran an API smoke: created topology, generated cells/gates, recalculated gate distances twice, built Z-route rows, patched a cell, and validated topology successfully.
 - Captured evidence screenshot `runtime/test-evidence/warehouse-topology-admin-api-oracle-final.png`.
+
+## 2026-05-20 - Topology route-link editing
+
+- Changed topology admin semantics from moving physical pick-face cells to editing route links and visit sequence over fixed cells.
+- Added pick-face labels, area selection with Shift/Alt drag, route strategy buttons, right-click route strategy menu, and selected-area route building.
+- Updated local and API route building so Z/SNAKE alternate aisle direction and connect between nearest aisle ends instead of drawing long diagonals.
+- Added route build `cell_ids` support and made repeated route builds reuse an existing active route by `topology_id + ware_id + route_code`.
+- Added visual aisle-end-to-gate links and moved gates farther from racks to represent the 18-24 m dock/staging gap.
+- Captured evidence screenshot `runtime/test-evidence/warehouse-topology-route-links-final.png`.

@@ -685,6 +685,7 @@ class PickRouteBuildRequest(BaseModel):
     ware_id: int
     zone_code: str | None = None
     aisle_codes: list[str] | None = None
+    cell_ids: list[int] | None = None
     route_pattern: str = "Z"
     side_order: list[str] = Field(default_factory=lambda: ["LEFT", "RIGHT"])
     start_side: str = "LEFT"

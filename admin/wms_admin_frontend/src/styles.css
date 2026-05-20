@@ -271,6 +271,10 @@ button { cursor: pointer; }
 .aisle-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .aisle-tags button { height: 28px; min-width: 42px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0f1f35; font-size: 12px; font-weight: 900; }
 .aisle-tags button.active { border-color: #0969e8; background: #eaf3ff; color: #0969e8; }
+.route-strategy-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.route-strategy-grid button { min-height: 30px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0f1f35; font-size: 12px; font-weight: 900; }
+.route-strategy-grid button.active { border-color: #0969e8; background: #eaf3ff; color: #0969e8; }
+.selection-counter { color: #64748b; font-size: 11px; font-weight: 900; }
 .wide-action { min-height: 38px; border: 0; border-radius: 7px; background: #0969e8; color: #fff; font-weight: 900; line-height: 1.15; white-space: normal; }
 .secondary-action { background: #0f766e; }
 .topology-map-panel { min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); padding: 18px 16px; background: #f5f8fc; }
@@ -293,6 +297,12 @@ button { cursor: pointer; }
 .topology-cell-node { cursor: pointer; }
 .aisle-label, .gate-label, .topology-dock-zone text { fill: #174ea6; font-size: 13px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #fff; stroke-width: 4px; }
 .route-sequence { fill: #ef3b82; font-size: 8px; font-weight: 900; text-anchor: middle; }
+.cell-code-label { fill: #334155; font-size: 7px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: rgba(255,255,255,.86); stroke-width: 3px; pointer-events: none; }
+.gate-link path { stroke: #0f766e; stroke-width: 1.8; stroke-dasharray: 8 7; opacity: .62; }
+.gate-link text { fill: #0f766e; font-size: 10px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #fff; stroke-width: 3px; }
+.route-context-menu { position: absolute; z-index: 6; min-width: 154px; display: grid; gap: 6px; padding: 9px; border: 1px solid #d8e2ee; border-radius: 8px; background: rgba(255,255,255,.97); box-shadow: 0 14px 32px rgba(15,31,53,.16); }
+.route-context-menu b { font-size: 12px; }
+.route-context-menu button { height: 30px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0969e8; font-weight: 900; }
 .inspector-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .inspector-heading button { width: 26px; height: 26px; border: 0; background: transparent; color: #64748b; font-size: 22px; }
 .inspector-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; border-bottom: 1px solid #dce6f2; }

@@ -159,9 +159,11 @@ class WarehouseTopologyService:
             """
             select rc.*
               from RRL_PICK_ROUTE_CELL rc
-              join RRL_PICK_ROUTE r
+             join RRL_PICK_ROUTE r
                 on r.PICK_ROUTE_ID = rc.PICK_ROUTE_ID
              where r.TOPOLOGY_ID = :topology_id
+               and r.ACTIVE = 1
+               and rc.ACTIVE = 1
              order by rc.PICK_ROUTE_ID, rc.PICK_SEQUENCE
             """,
             {"topology_id": topology_id},
@@ -589,7 +591,9 @@ class WarehouseTopologyService:
                       r.ROUTE_CODE, r.ROUTE_NAME, r.ROUTE_KIND, r.ROUTE_PATTERN,
                       r.ZONE_CODE, r.START_POINT_CODE, r.END_POINT_CODE,
                       r.STRICT_SEQUENCE, r.STATUS, r.ACTIVE, r.PUBLISHED_AT
-             order by r.WARE_ID, r.ROUTE_CODE
+             order by r.WARE_ID, r.ROUTE_CODE, r.ACTIVE desc,
+                      case r.STATUS when 'PUBLISHED' then 1 when 'DRAFT' then 2 when 'VALIDATED' then 3 else 9 end,
+                      r.PICK_ROUTE_ID desc
             """,
             params,
         )
@@ -598,7 +602,25 @@ class WarehouseTopologyService:
         topology = self._topology(request.topology_id)
         if not topology:
             raise HTTPException(status_code=404, detail="Warehouse topology not found.")
-        pick_route_id = request.pick_route_id or self._nextval("RRL_PICK_ROUTE_SQ")
+        pick_route_id = request.pick_route_id
+        if not pick_route_id:
+            existing_by_code = self.gateway.fetch_all(
+                """
+                select PICK_ROUTE_ID
+                  from RRL_PICK_ROUTE
+                 where TOPOLOGY_ID = :topology_id
+                   and WARE_ID = :ware_id
+                   and upper(ROUTE_CODE) = upper(:route_code)
+                   and ACTIVE = 1
+                   and rownum = 1
+                """,
+                {
+                    "topology_id": request.topology_id,
+                    "ware_id": request.ware_id,
+                    "route_code": request.route_code,
+                },
+            )
+            pick_route_id = existing_by_code[0]["pick_route_id"] if existing_by_code else self._nextval("RRL_PICK_ROUTE_SQ")
         existing = self.gateway.fetch_all(
             "select PICK_ROUTE_ID from RRL_PICK_ROUTE where PICK_ROUTE_ID = :pick_route_id",
             {"pick_route_id": pick_route_id},
@@ -663,13 +685,7 @@ class WarehouseTopologyService:
         cells = self._route_source_cells(request)
         if not cells:
             raise HTTPException(status_code=409, detail="No active pick-face cells found for selected topology area.")
-        side_rank = {side.upper(): index for index, side in enumerate(request.side_order or ["LEFT", "RIGHT"])}
-        cells.sort(key=lambda row: (
-            str(row.get("aisle_code") or ""),
-            float(row.get("bay_no") or 0),
-            side_rank.get(str(row.get("side_code") or "").upper(), 99),
-            float(row.get("level_no") or 0),
-        ))
+        cells = self._order_route_cells(cells, request)
         statements: list[tuple[str, dict[str, Any]]] = []
         for index, cell in enumerate(cells, start=1):
             prev = cells[index - 2] if index > 1 else None
@@ -778,6 +794,13 @@ class WarehouseTopologyService:
                 placeholders.append(f":{key}")
                 params[key] = aisle_code
             conditions.append(f"AISLE_CODE in ({', '.join(placeholders)})")
+        if request.cell_ids:
+            placeholders = []
+            for index, cell_id in enumerate(request.cell_ids):
+                key = f"cell_{index}"
+                placeholders.append(f":{key}")
+                params[key] = cell_id
+            conditions.append(f"TOPOLOGY_CELL_ID in ({', '.join(placeholders)})")
         return self.gateway.fetch_all(
             f"""
             select TOPOLOGY_CELL_ID, TOPOLOGY_ID, WARE_ID, CELL_CODE, ZONE_CODE,
@@ -787,6 +810,26 @@ class WarehouseTopologyService:
             """,
             params,
         )
+
+    def _order_route_cells(self, cells: list[dict[str, Any]], request: PickRouteBuildRequest) -> list[dict[str, Any]]:
+        pattern = (request.route_pattern or "Z").upper()
+        side_rank = {side.upper(): index for index, side in enumerate(request.side_order or ["LEFT", "RIGHT"])}
+        aisle_order = {code: index for index, code in enumerate(request.aisle_codes or [])}
+        groups: dict[str, list[dict[str, Any]]] = {}
+        for cell in cells:
+            groups.setdefault(str(cell.get("aisle_code") or ""), []).append(cell)
+
+        ordered: list[dict[str, Any]] = []
+        sorted_groups = sorted(groups.items(), key=lambda item: (aisle_order.get(item[0], 999), item[0]))
+        for index, (_aisle_code, aisle_cells) in enumerate(sorted_groups):
+            reverse = (pattern in {"Z", "SNAKE"} and index % 2 == 1) or pattern == "U_SHAPE"
+            aisle_cells.sort(key=lambda row: (
+                -float(row.get("bay_no") or 0) if reverse else float(row.get("bay_no") or 0),
+                side_rank.get(str(row.get("side_code") or "").upper(), 99),
+                float(row.get("level_no") or 0),
+            ))
+            ordered.extend(aisle_cells)
+        return ordered
 
     def _ensure_zone(self, topology_id: int, request: WarehouseTopologyGenerateRequest) -> None:
         exists = self.gateway.fetch_all(
