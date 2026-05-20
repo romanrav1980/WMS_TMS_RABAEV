@@ -896,3 +896,9 @@ Evidence screenshots:
 Regression evidence:
 
 - `runtime/test-evidence/topology-frame-pointermove-regression.png`.
+
+Дополнительная регрессия по точности рамки: координаты мыши должны переводиться в SVG через `getScreenCTM().inverse()`, а не через ручное масштабирование по `getBoundingClientRect().height`. Из-за `preserveAspectRatio="xMidYMin meet"` фактическая viewBox-область может занимать не всю высоту SVG-элемента, поэтому ручной `scaleY = 650 / rect.height` давал заметное отставание рамки от курсора. Приемочный тест должен сравнивать экранный `getBoundingClientRect()` рамки с фактическими координатами drag; допустимое расхождение не более 3 px.
+
+Evidence:
+
+- `runtime/test-evidence/topology-frame-follows-pointer.png`.

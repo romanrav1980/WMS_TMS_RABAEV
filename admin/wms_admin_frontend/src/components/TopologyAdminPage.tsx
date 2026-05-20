@@ -1497,12 +1497,23 @@ function shortCellLabel(cell: TopologyCell) {
 }
 
 function svgPointFromEvent(event: PointerEvent<SVGSVGElement>, view: { zoom: number; panX: number; panY: number }): SvgPoint {
-  const rect = event.currentTarget.getBoundingClientRect();
-  const scaleX = 1000 / Math.max(1, rect.width);
-  const scaleY = 650 / Math.max(1, rect.height);
+  const svg = event.currentTarget;
+  const matrix = svg.getScreenCTM();
+  if (matrix) {
+    const point = svg.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    const svgPoint = point.matrixTransform(matrix.inverse());
+    return {
+      x: (svgPoint.x - view.panX) / view.zoom,
+      y: (svgPoint.y - view.panY) / view.zoom
+    };
+  }
+  const rect = svg.getBoundingClientRect();
+  const scale = 1000 / Math.max(1, rect.width);
   return {
-    x: ((event.clientX - rect.left) * scaleX - view.panX) / view.zoom,
-    y: ((event.clientY - rect.top) * scaleY - view.panY) / view.zoom
+    x: ((event.clientX - rect.left) * scale - view.panX) / view.zoom,
+    y: ((event.clientY - rect.top) * scale - view.panY) / view.zoom
   };
 }
 

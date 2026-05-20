@@ -1130,3 +1130,9 @@ Append-only log of root wiki updates.
 - Fixed `Cannot read properties of null (reading 'getBoundingClientRect')` in frame selection by computing the SVG point before entering the functional state updater.
 - Re-ran a Playwright regression with repeated frame drags and multiple pointermove events on product port `3000`; page errors count was `0` and the UI error boundary did not render.
 - Captured evidence screenshot `runtime/test-evidence/topology-frame-pointermove-regression.png`.
+
+## 2026-05-20 - Topology frame coordinate accuracy
+
+- Fixed frame-selection lag by converting browser pointer coordinates to SVG coordinates through `getScreenCTM().inverse()` instead of manual width/height scaling.
+- Verified the frame follows the pointer numerically on product port `3000`: drag end and frame bottom-right matched with `dx=0`, `dy=0`, page errors `0`.
+- Captured evidence screenshot `runtime/test-evidence/topology-frame-follows-pointer.png`.
