@@ -392,15 +392,38 @@ class WarehouseTopologyService:
                 distance_m = self._gate_distance(cell, gate)
                 statements.append((
                     """
-                    insert into RRL_TOPOLOGY_CELL_GATE_DIST (
-                      CELL_GATE_DISTANCE_ID, TOPOLOGY_ID, TOPOLOGY_CELL_ID, TOPOLOGY_GATE_ID,
-                      FLOW_KIND, DISTANCE_M, TRAVEL_TIME_SEC, ROUTE_KIND, CALC_METHOD,
-                      ACTIVE, CREATED_BY, UPDATED_BY
-                    ) values (
-                      RRL_TOPO_CELL_GATE_DIST_SQ.nextval, :topology_id, :topology_cell_id, :topology_gate_id,
-                      :flow_kind, :distance_m, :travel_time_sec, 'TOPOLOGY_ESTIMATE', 'MANHATTAN',
-                      1, substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
-                    )
+                    merge into RRL_TOPOLOGY_CELL_GATE_DIST d
+                    using (
+                      select :topology_id TOPOLOGY_ID,
+                             :topology_cell_id TOPOLOGY_CELL_ID,
+                             :topology_gate_id TOPOLOGY_GATE_ID,
+                             :flow_kind FLOW_KIND,
+                             :distance_m DISTANCE_M,
+                             :travel_time_sec TRAVEL_TIME_SEC,
+                             substr(:updated_by, 1, 50) UPDATED_BY
+                        from dual
+                    ) s
+                       on (d.TOPOLOGY_CELL_ID = s.TOPOLOGY_CELL_ID
+                       and d.TOPOLOGY_GATE_ID = s.TOPOLOGY_GATE_ID
+                       and d.FLOW_KIND = s.FLOW_KIND)
+                     when matched then update
+                       set d.TOPOLOGY_ID = s.TOPOLOGY_ID,
+                           d.DISTANCE_M = s.DISTANCE_M,
+                           d.TRAVEL_TIME_SEC = s.TRAVEL_TIME_SEC,
+                           d.ROUTE_KIND = 'TOPOLOGY_ESTIMATE',
+                           d.CALC_METHOD = 'MANHATTAN',
+                           d.ACTIVE = 1,
+                           d.UPDATED_AT = sysdate,
+                           d.UPDATED_BY = s.UPDATED_BY
+                     when not matched then insert (
+                       CELL_GATE_DISTANCE_ID, TOPOLOGY_ID, TOPOLOGY_CELL_ID, TOPOLOGY_GATE_ID,
+                       FLOW_KIND, DISTANCE_M, TRAVEL_TIME_SEC, ROUTE_KIND, CALC_METHOD,
+                       ACTIVE, CREATED_BY, UPDATED_BY
+                     ) values (
+                       RRL_TOPO_CELL_GATE_DIST_SQ.nextval, s.TOPOLOGY_ID, s.TOPOLOGY_CELL_ID, s.TOPOLOGY_GATE_ID,
+                       s.FLOW_KIND, s.DISTANCE_M, s.TRAVEL_TIME_SEC, 'TOPOLOGY_ESTIMATE', 'MANHATTAN',
+                       1, s.UPDATED_BY, s.UPDATED_BY
+                     )
                     """,
                     {
                         "topology_id": topology_id,
@@ -580,6 +603,17 @@ class WarehouseTopologyService:
             "select PICK_ROUTE_ID from RRL_PICK_ROUTE where PICK_ROUTE_ID = :pick_route_id",
             {"pick_route_id": pick_route_id},
         )
+        route_params = {
+            "pick_route_id": pick_route_id,
+            "topology_id": request.topology_id,
+            "route_code": request.route_code,
+            "route_name": request.route_name,
+            "ware_id": request.ware_id,
+            "route_pattern": request.route_pattern,
+            "zone_code": request.zone_code,
+            "strict_sequence": request.strict_sequence,
+            "updated_by": request.updated_by,
+        }
         if existing:
             self.gateway.execute(
                 """
@@ -598,7 +632,7 @@ class WarehouseTopologyService:
                        UPDATED_BY = substr(:updated_by, 1, 50)
                  where PICK_ROUTE_ID = :pick_route_id
                 """,
-                {**request.model_dump(), "pick_route_id": pick_route_id},
+                route_params,
             )
             self.gateway.execute(
                 """
@@ -623,7 +657,7 @@ class WarehouseTopologyService:
                   'DRAFT', 1, substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
                 )
                 """,
-                {**request.model_dump(), "pick_route_id": pick_route_id},
+                route_params,
             )
 
         cells = self._route_source_cells(request)

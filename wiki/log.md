@@ -1071,3 +1071,9 @@ Append-only log of root wiki updates.
 - Added API support to generate gates and recalculate inbound/outbound cell-to-gate distances with travel-time estimates.
 - Updated the topology admin map inspector to show nearest outbound/inbound gate distances and closest gate travel times.
 - Documented that gate-distance planning affects outbound movement to shipping gates and inbound movement from receiving gates to storage.
+
+## 2026-05-20 - Topology admin test-ready pass
+
+- Extended the React topology admin with layer controls, `3D Вид` / `2D План` / `Список` modes, zoom/pan controls, mouse drag-pan, draggable topology cells, editable inspector fields, validation feedback, save action, and a cell table.
+- Fixed repeated gate-distance recalculation by changing the service write path from insert-after-deactivate to `merge` upsert on `TOPOLOGY_CELL_ID + TOPOLOGY_GATE_ID + FLOW_KIND`.
+- Added the manual acceptance flow and current UI readiness notes to `wiki/requirements/warehouse_topology_pick_route_tz.md`.

@@ -242,14 +242,14 @@ button { cursor: pointer; }
 .topology-nav button.active { background: linear-gradient(135deg, #1556a7, #1b65c5); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
 .topology-nav small { margin: 16px 10px 4px; color: #8aa0ba; font-size: 10px; text-transform: uppercase; letter-spacing: .04em; }
 .topology-nav em { align-self: end; margin: 30px 10px 0; color: #7890aa; font-size: 11px; font-style: normal; line-height: 1.6; }
-.topology-shell { min-width: 0; display: grid; grid-template-rows: 58px minmax(0, 1fr); }
-.topology-topbar { display: grid; grid-template-columns: 1fr 240px auto; align-items: center; gap: 18px; padding: 8px 18px; border-bottom: 1px solid #dce6f2; background: #fff; }
+.topology-shell { min-width: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.topology-topbar { display: grid; grid-template-columns: minmax(240px, 1fr) 240px auto; align-items: center; gap: 18px; min-height: 58px; padding: 8px 18px; border-bottom: 1px solid #dce6f2; background: #fff; }
 .topology-title h1 { margin: 0; font-size: 17px; }
 .topology-title span { display: block; margin-top: 3px; color: #64748b; font-size: 11px; font-weight: 800; }
 .topology-warehouse-select { height: 42px; display: grid; align-content: center; padding: 0 12px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #64748b; font-size: 10px; font-weight: 850; }
 .topology-warehouse-select select { border: 0; outline: 0; color: #0f1f35; background: transparent; font-weight: 800; }
-.topology-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
-.topology-actions button { height: 42px; min-width: 112px; padding: 0 14px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0f1f35; font-weight: 850; box-shadow: 0 8px 18px rgba(15,31,53,.05); }
+.topology-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.topology-actions button { height: 40px; min-width: 96px; padding: 0 12px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0f1f35; font-weight: 850; box-shadow: 0 8px 18px rgba(15,31,53,.05); }
 .topology-actions button.primary { border-color: #0969e8; background: #0969e8; color: #fff; }
 .topology-status, .api-pill { height: 30px; display: inline-grid; place-items: center; padding: 0 10px; border-radius: 999px; background: #eef6ff; color: #0969e8; font-size: 11px; font-weight: 900; }
 .topology-status.published { background: #eaf8ef; color: #168a4c; }
@@ -277,11 +277,19 @@ button { cursor: pointer; }
 .topology-map-title { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 0 12px; }
 .topology-map-title b { display: block; font-size: 15px; }
 .topology-map-title span { color: #64748b; font-size: 12px; font-weight: 800; }
+.topology-view-tabs { display: inline-flex; padding: 3px; border: 1px solid #d8e2ee; border-radius: 8px; background: #fff; }
+.topology-view-tabs button { height: 30px; min-width: 74px; border: 0; border-radius: 6px; background: transparent; color: #64748b; font-size: 12px; font-weight: 900; }
+.topology-view-tabs button.active { background: #eaf3ff; color: #0969e8; }
 .map-legend { display: flex; gap: 12px; padding: 8px 10px; border: 1px solid #dce6f2; border-radius: 7px; background: #fff; }
 .map-legend span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
 .map-legend i { width: 11px; height: 11px; border-radius: 3px; }
 .cell-left { background: #58b76b; } .cell-right { background: #4d86d9; } .cell-route { background: #ef3b82; }
-.topology-svg { width: 100%; height: 100%; min-height: 620px; display: block; border: 1px solid #dce6f2; border-radius: 8px; background: #fff; box-shadow: 0 18px 40px rgba(15,31,53,.08); }
+.topology-map-wrap { position: relative; min-height: 0; }
+.topology-map-controls { position: absolute; z-index: 3; left: 14px; top: 14px; display: flex; gap: 6px; padding: 6px; border: 1px solid rgba(216,226,238,.9); border-radius: 9px; background: rgba(255,255,255,.94); box-shadow: 0 12px 28px rgba(15,31,53,.12); }
+.topology-map-controls button { min-width: 32px; height: 30px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0f1f35; font-weight: 900; }
+.topology-map-controls button:nth-child(3) { min-width: 58px; color: #64748b; font-size: 11px; }
+.topology-svg { width: 100%; height: 100%; min-height: 620px; display: block; border: 1px solid #dce6f2; border-radius: 8px; background: #fff; box-shadow: 0 18px 40px rgba(15,31,53,.08); touch-action: none; user-select: none; }
+.topology-svg.plan-mode { background: #f8fbff; }
 .topology-cell-node { cursor: pointer; }
 .aisle-label, .gate-label, .topology-dock-zone text { fill: #174ea6; font-size: 13px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #fff; stroke-width: 4px; }
 .route-sequence { fill: #ef3b82; font-size: 8px; font-weight: 900; text-anchor: middle; }
@@ -292,6 +300,14 @@ button { cursor: pointer; }
 .inspector-tabs button.active { border-color: #0969e8; color: #0969e8; }
 .cell-inspector, .route-summary { display: grid; gap: 8px; color: #64748b; font-size: 12px; font-weight: 800; }
 .cell-inspector b, .route-summary b { color: #0f1f35; font-size: 15px; }
+.inspector-field { display: grid; grid-template-columns: 74px 1fr; align-items: center; gap: 8px; color: #64748b; font-size: 12px; font-weight: 850; }
+.inspector-field input, .inspector-field select { height: 32px; width: 100%; border: 1px solid #d8e2ee; border-radius: 7px; padding: 0 8px; background: #fff; color: #0f1f35; font-weight: 800; }
+.save-cell-button { min-height: 36px; border: 1px solid #0969e8; border-radius: 7px; background: #0969e8; color: #fff; font-weight: 900; }
+.save-cell-button:disabled { border-color: #d8e2ee; background: #eef2f7; color: #94a3b8; cursor: default; }
+.validation-card { display: grid; gap: 5px; padding: 9px; border-radius: 8px; font-size: 12px; font-weight: 850; }
+.validation-card.ok { background: #eaf8ef; color: #168a4c; }
+.validation-card.bad { background: #fff7df; color: #805500; }
+.validation-card b { color: #0f1f35; }
 .gate-distance-list { display: grid; gap: 5px; margin-top: 4px; }
 .gate-distance-list span { display: grid; grid-template-columns: 44px 1fr; align-items: center; gap: 8px; padding: 6px 7px; border-radius: 7px; background: #eef7ff; color: #0f4b8f; }
 .gate-distance-list b { color: #0969e8; font-size: 12px; }
@@ -304,3 +320,9 @@ button { cursor: pointer; }
 .topology-recommendation { display: grid; gap: 5px; padding: 9px; border-radius: 8px; background: #f3f7fb; color: #64748b; font-size: 12px; font-weight: 800; }
 .topology-recommendation.warning { background: #fff7df; color: #805500; }
 .topology-recommendation b { color: #0f1f35; }
+.topology-table-wrap { min-height: 620px; border: 1px solid #dce6f2; border-radius: 8px; background: #fff; box-shadow: 0 18px 40px rgba(15,31,53,.08); overflow: auto; }
+.topology-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.topology-table th, .topology-table td { padding: 9px 10px; border-bottom: 1px solid #edf2f7; text-align: left; white-space: nowrap; }
+.topology-table th { position: sticky; top: 0; background: #f8fbff; color: #64748b; font-weight: 900; z-index: 1; }
+.topology-table tr { cursor: pointer; }
+.topology-table tr.selected, .topology-table tbody tr:hover { background: #eaf3ff; }
