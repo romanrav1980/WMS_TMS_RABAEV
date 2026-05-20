@@ -1016,8 +1016,7 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
     .filter(Boolean) as Array<{ routeCell: PickRouteCell; cell: TopologyCell }>;
   const routeSegments = buildRouteSegments(routeCells, bounds, mode, map.aisles);
   const invZoom = 1 / view.zoom;
-  const badgeX = 13 * invZoom;
-  const badgeY = -13 * invZoom;
+  const cellVisual = getCellVisualSize(map.cells, bounds, mode);
 
   return (
     <svg
@@ -1119,8 +1118,6 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
               <line x1={x1 - 20} y1={y1} x2={x2 - 20} y2={y2} stroke="#1d4ed8" strokeWidth="3" opacity=".65" />
               <line x1={x1 + 20} y1={y1} x2={x2 + 20} y2={y2} stroke="#1d4ed8" strokeWidth="3" opacity=".65" />
               <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#2563d8" strokeWidth="2.4" strokeDasharray="9 8" strokeLinecap="round" opacity=".72" />
-              {layers.labels && <text x={x1 - 22 * invZoom} y={y1 - 12 * invZoom} className="aisle-label" style={scaledTextStyle(13, 4, view.zoom)}>{aisle.aisle_code}</text>}
-              {layers.labels && <text x={x2 + 22 * invZoom} y={y2 + 18 * invZoom} className="aisle-label" style={scaledTextStyle(13, 4, view.zoom)}>{aisle.aisle_code}</text>}
             </g>
           );
         })}
@@ -1164,34 +1161,28 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
               filter={selected ? "url(#soft-shadow)" : undefined}
             >
               <rect
-                x={x - 14}
-                y={y - 10}
-                width="28"
-                height="20"
-                rx="3"
-                fill="#d9b879"
-                stroke={selected ? "#f59e0b" : inRouteSelection ? "#7c3aed" : "#37506d"}
-                strokeWidth={selected || inRouteSelection ? 3 : 1}
+                x={x - cellVisual.width / 2}
+                y={y - cellVisual.height / 2}
+                width={cellVisual.width}
+                height={cellVisual.height}
+                rx="0"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth={cellVisual.separatorWidth}
+                className="pick-face-cell-separator"
               />
-              {mode === "3d" && <path d={`M ${x - 14} ${y + 10} L ${x - 6} ${y + 17} L ${x + 22} ${y + 17} L ${x + 14} ${y + 10} Z`} fill="#8b6f3e" opacity=".5" />}
               <rect
-                x={x - 14}
-                y={y - 10}
-                width="28"
-                height="6"
-                rx="2"
-                fill={cell.side_code === "LEFT" ? "#58b76b" : cell.side_code === "RIGHT" ? "#4d86d9" : "#94a3b8"}
-                strokeWidth="0"
+                x={x - cellVisual.width / 2}
+                y={y - cellVisual.height / 2}
+                width={cellVisual.width}
+                height={cellVisual.height}
+                rx="0"
+                fill={cellFill(cell)}
+                stroke={selected ? "#f59e0b" : inRouteSelection ? "#7c3aed" : "#37506d"}
+                strokeWidth={selected || inRouteSelection ? 2.2 : 1.15}
+                className="pick-face-cell-rect"
               />
-              {layers.labels && routeCell && routeCell.pick_sequence % 6 === 1 && (
-                <>
-                  <circle cx={x + badgeX} cy={y + badgeY} r={9 * invZoom} fill="#fff" stroke="#ef3b82" strokeWidth={2 * invZoom} />
-                  <text x={x + badgeX} y={y - 10 * invZoom} className="route-sequence" style={scaledTextStyle(8, 0, view.zoom)}>{routeCell.pick_sequence}</text>
-                </>
-              )}
-              {layers.labels && (
-                <text x={x} y={y + 19 * invZoom} className="cell-code-label" style={scaledTextStyle(7, 3, view.zoom)}>{shortCellLabel(cell)}</text>
-              )}
+              {mode === "3d" && <path d={`M ${x - cellVisual.width / 2} ${y + cellVisual.height / 2} L ${x - cellVisual.width / 2 + 8} ${y + cellVisual.height / 2 + 7} L ${x + cellVisual.width / 2 + 8} ${y + cellVisual.height / 2 + 7} L ${x + cellVisual.width / 2} ${y + cellVisual.height / 2} Z`} fill="#8b6f3e" opacity=".5" />}
             </g>
           );
         })}
@@ -1211,6 +1202,7 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
           />
         )}
       </g>
+      {layers.labels && drawFixedLabelOverlay(map, routeByCell, bounds, mode, view)}
     </svg>
   );
 }
@@ -1234,6 +1226,48 @@ function scaledTextStyle(fontPx: number, strokePx: number, zoom: number) {
     fontSize: `${fontPx / zoom}px`,
     strokeWidth: strokePx ? `${strokePx / zoom}px` : undefined
   };
+}
+
+function getCellVisualSize(cells: TopologyCell[], bounds: MapBounds, mode: "3d" | "plan" | "list") {
+  const projectedSteps: number[] = [];
+  const groups = new Map<string, TopologyCell[]>();
+  cells.filter((cell) => cell.active === 1).forEach((cell) => {
+    const key = `${cell.aisle_code || ""}:${cell.side_code || ""}:${cell.level_no || 1}`;
+    groups.set(key, [...(groups.get(key) || []), cell]);
+  });
+  groups.forEach((groupCells) => {
+    const ys = groupCells
+      .map((cell) => projectPoint(cell.x, cell.y, bounds, mode).y)
+      .sort((a, b) => a - b);
+    for (let index = 1; index < ys.length; index += 1) {
+      const delta = Math.abs(ys[index] - ys[index - 1]);
+      if (delta > 0.5) projectedSteps.push(delta);
+    }
+  });
+  const step = median(projectedSteps) || 14;
+  const height = Math.max(4.8, Math.min(18, step * 0.72));
+  const width = mode === "3d" ? 13 : 16;
+  return {
+    width,
+    height,
+    capHeight: 0,
+    radius: 0,
+    separatorWidth: 4.5
+  };
+}
+
+function cellFill(cell: TopologyCell) {
+  if (cell.cell_kind === "DYNAMIC_PICK_FACE") return "#fef08a";
+  if (cell.side_code === "LEFT") return "#a7f3d0";
+  if (cell.side_code === "RIGHT") return "#bfdbfe";
+  return "#e2e8f0";
+}
+
+function median(values: number[]) {
+  if (!values.length) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
 }
 
 async function loadInitialTopology(): Promise<{ topologies: Topology[]; map: TopologyMap } | null> {
@@ -1569,6 +1603,57 @@ function drawDistanceLines(map: TopologyMap, selectedId: number, bounds: MapBoun
       const to = projectPoint(gate.x, gate.y, bounds, mode);
       return <line key={distance.cell_gate_distance_id} x1={from.x} y1={from.y} x2={to.x} y2={mode === "3d" ? to.y + 30 : 586} stroke="#0f766e" strokeWidth="2" strokeDasharray="6 6" opacity=".56" />;
   });
+}
+
+function drawFixedLabelOverlay(
+  map: TopologyMap,
+  routeByCell: Map<number, PickRouteCell>,
+  bounds: MapBounds,
+  mode: "3d" | "plan" | "list",
+  view: { zoom: number; panX: number; panY: number }
+) {
+  const activeCells = map.cells.filter((cell) => cell.active === 1);
+  const denseMap = activeCells.length > 300;
+  const showCellCodes = !denseMap && view.zoom <= 2.8;
+  const routeBadgeStep = view.zoom >= 4 ? 6 : view.zoom >= 2 ? 12 : 30;
+  const routeBadgeRadius = view.zoom >= 4 ? 10 : 7;
+  return (
+    <g className="fixed-map-label-layer">
+      {activeCells.map((cell) => {
+        const aisle = map.aisles.find((item) => item.aisle_code === cell.aisle_code);
+        const point = toViewportPoint(projectCellPoint(cell, bounds, mode, aisle), view);
+        const routeCell = routeByCell.get(cell.topology_cell_id);
+        return (
+          <g key={`fixed-label-${cell.topology_cell_id}`}>
+            {routeCell && routeCell.pick_sequence % routeBadgeStep === 1 && (
+              <>
+                <circle cx={point.x + 13} cy={point.y - 13} r={routeBadgeRadius} className="fixed-route-badge" />
+                <text x={point.x + 13} y={point.y - 9} className="route-sequence">{routeCell.pick_sequence}</text>
+              </>
+            )}
+            {showCellCodes && <text x={point.x} y={point.y + 19} className="cell-code-label">{shortCellLabel(cell)}</text>}
+          </g>
+        );
+      })}
+      {map.aisles.map((aisle) => {
+        const start = toViewportPoint(projectAislePoint(aisle, aisle.y1, bounds, mode), view);
+        const end = toViewportPoint(projectAislePoint(aisle, aisle.y2, bounds, mode), view);
+        return (
+          <g key={`fixed-aisle-label-${aisle.topology_aisle_id}`}>
+            <text x={start.x - 22} y={start.y - 12} className="aisle-label">{aisle.aisle_code}</text>
+            <text x={end.x + 22} y={end.y + 18} className="aisle-label">{aisle.aisle_code}</text>
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+function toViewportPoint(point: SvgPoint, view: { zoom: number; panX: number; panY: number }): SvgPoint {
+  return {
+    x: view.panX + point.x * view.zoom,
+    y: view.panY + point.y * view.zoom
+  };
 }
 
 function drawPassageOverlay(map: TopologyMap, bounds: MapBounds, mode: "3d" | "plan" | "list", showLabels: boolean, zoom: number) {
