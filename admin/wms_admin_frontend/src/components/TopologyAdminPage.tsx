@@ -1607,31 +1607,68 @@ function drawDockStagingZone(map: TopologyMap, bounds: MapBounds, mode: "3d" | "
   const gap = 3;
   const width = slotColumns * slotWidth + (slotColumns + 1) * gap;
   const height = slotRows * slotHeight + (slotRows + 1) * gap;
+  const centerGate = shippingGates[Math.max(0, Math.floor(shippingGates.length / 2) - 1)];
+  const centerPoint = centerGate ? projectPoint(centerGate.x, centerGate.y, bounds, mode) : { x: 500, y: 568 };
+  const receivingColumns = 5;
+  const receivingRows = 4;
+  const receivingSlotWidth = 13;
+  const receivingSlotHeight = 9;
+  const receivingGap = 3;
+  const receivingWidth = receivingColumns * receivingSlotWidth + (receivingColumns + 1) * receivingGap;
+  const receivingHeight = receivingRows * receivingSlotHeight + (receivingRows + 1) * receivingGap;
+  const receivingX = centerPoint.x - receivingWidth / 2;
+  const receivingY = mode === "plan" ? 494 : centerPoint.y - 76;
   return (
-    <g className="topology-dock-zone">
-      <title>Зона накопления транспортных паллет перед воротами отгрузки. Паллеты выставляются сюда перед загрузкой автомобиля.</title>
-      <rect x={minX} y={y} width={width} height={height} rx="2" className="dock-staging-base" />
-      {Array.from({ length: slotColumns * slotRows }, (_, index) => {
-        const column = index % slotColumns;
-        const row = Math.floor(index / slotColumns);
-        return (
-          <rect
-            key={`dock-slot-${index}`}
-            x={minX + gap + column * (slotWidth + gap)}
-            y={y + gap + row * (slotHeight + gap)}
-            width={slotWidth}
-            height={slotHeight}
-            rx="0"
-            className={index < 9 ? "dock-staging-slot occupied" : "dock-staging-slot"}
-          />
-        );
-      })}
-      {showLabels && (
-        <text x={minX + width / 2} y={y - 8 * invZoom} className="staging-label" style={scaledTextStyle(10, 3, zoom)}>
-          Накопление ТП
-        </text>
-      )}
-    </g>
+    <>
+      <g className="topology-receiving-zone">
+        <title>Зона приемки у центрального докового разрыва: 20 паллетомест для входящих паллет перед размещением на хранение.</title>
+        <rect x={receivingX} y={receivingY} width={receivingWidth} height={receivingHeight} rx="2" className="receiving-staging-base" />
+        {Array.from({ length: receivingColumns * receivingRows }, (_, index) => {
+          const column = index % receivingColumns;
+          const row = Math.floor(index / receivingColumns);
+          return (
+            <rect
+              key={`receiving-slot-${index}`}
+              x={receivingX + receivingGap + column * (receivingSlotWidth + receivingGap)}
+              y={receivingY + receivingGap + row * (receivingSlotHeight + receivingGap)}
+              width={receivingSlotWidth}
+              height={receivingSlotHeight}
+              rx="0"
+              className="receiving-staging-slot"
+            />
+          );
+        })}
+        {showLabels && (
+          <text x={receivingX + receivingWidth / 2} y={receivingY - 7 * invZoom} className="receiving-staging-label" style={scaledTextStyle(10, 3, zoom)}>
+            Приемка 20 п/м
+          </text>
+        )}
+      </g>
+      <g className="topology-dock-zone">
+        <title>Зона накопления транспортных паллет перед воротами отгрузки. Паллеты выставляются сюда перед загрузкой автомобиля.</title>
+        <rect x={minX} y={y} width={width} height={height} rx="2" className="dock-staging-base" />
+        {Array.from({ length: slotColumns * slotRows }, (_, index) => {
+          const column = index % slotColumns;
+          const row = Math.floor(index / slotColumns);
+          return (
+            <rect
+              key={`dock-slot-${index}`}
+              x={minX + gap + column * (slotWidth + gap)}
+              y={y + gap + row * (slotHeight + gap)}
+              width={slotWidth}
+              height={slotHeight}
+              rx="0"
+              className={index < 9 ? "dock-staging-slot occupied" : "dock-staging-slot"}
+            />
+          );
+        })}
+        {showLabels && (
+          <text x={minX + width / 2} y={y - 8 * invZoom} className="staging-label" style={scaledTextStyle(10, 3, zoom)}>
+            Накопление ТП
+          </text>
+        )}
+      </g>
+    </>
   );
 }
 
@@ -1670,6 +1707,7 @@ function drawFixedLabelOverlay(
         );
       })}
       {map.aisles.map((aisle) => {
+        if (denseMap && view.zoom < 1.8) return null;
         const start = toViewportPoint(projectAislePoint(aisle, aisle.y1, bounds, mode), view);
         const end = toViewportPoint(projectAislePoint(aisle, aisle.y2, bounds, mode), view);
         return (
@@ -1725,7 +1763,10 @@ function toViewportPoint(point: SvgPoint, view: { zoom: number; panX: number; pa
 
 function drawPassageOverlay(map: TopologyMap, bounds: MapBounds, mode: "3d" | "plan" | "list", showLabels: boolean, zoom: number) {
   const pickAisles = map.aisles.filter((aisle) => aisle.aisle_kind === "PICK_AISLE");
-  const sectionRects = groupedSectionRects(map.cells.filter((cell) => cell.active === 1), bounds, mode);
+  const activeCells = map.cells.filter((cell) => cell.active === 1);
+  const denseMap = activeCells.length > 300;
+  const showAisleLabels = showLabels && (!denseMap || zoom >= 1.8);
+  const sectionRects = groupedSectionRects(activeCells, bounds, mode);
   const invZoom = 1 / zoom;
   return (
     <g className="topology-passage-layer">
@@ -1748,7 +1789,7 @@ function drawPassageOverlay(map: TopologyMap, bounds: MapBounds, mode: "3d" | "p
             <line x1={start.x - 13} y1={start.y} x2={end.x - 13} y2={end.y} className="passage-edge" />
             <line x1={start.x + 13} y1={start.y} x2={end.x + 13} y2={end.y} className="passage-edge" />
             <line x1={from.x} y1={from.y + (directionDown ? 22 : -22)} x2={to.x} y2={to.y + (directionDown ? -22 : 22)} className="passage-direction" markerEnd="url(#passage-arrow)" />
-            {showLabels && (
+            {showAisleLabels && (
               <>
                 <text x={start.x} y={start.y - 20 * invZoom} className="passage-label" style={scaledTextStyle(16, 5, zoom)}>{aisle.aisle_code}</text>
                 <text x={end.x} y={end.y + 28 * invZoom} className="passage-label" style={scaledTextStyle(16, 5, zoom)}>{aisle.aisle_code}</text>
@@ -1758,7 +1799,7 @@ function drawPassageOverlay(map: TopologyMap, bounds: MapBounds, mode: "3d" | "p
           </g>
         );
       })}
-      {drawCrossPassages(pickAisles, bounds, mode, zoom)}
+      {drawCrossPassages(pickAisles, bounds, mode, zoom, showAisleLabels)}
     </g>
   );
 }
@@ -1783,7 +1824,7 @@ function groupedSectionRects(cells: TopologyCell[], bounds: MapBounds, mode: "3d
   });
 }
 
-function drawCrossPassages(aisles: TopologyAisle[], bounds: MapBounds, mode: "3d" | "plan" | "list", zoom: number) {
+function drawCrossPassages(aisles: TopologyAisle[], bounds: MapBounds, mode: "3d" | "plan" | "list", zoom: number, showLabels: boolean) {
   if (aisles.length < 2) return null;
   const invZoom = 1 / zoom;
   const sorted = [...aisles].sort((a, b) => a.x1 - b.x1);
@@ -1797,8 +1838,12 @@ function drawCrossPassages(aisles: TopologyAisle[], bounds: MapBounds, mode: "3d
     <g className="cross-passage">
       <line x1={topStart.x} y1={topStart.y - 22} x2={topEnd.x} y2={topEnd.y - 22} markerEnd="url(#passage-arrow)" />
       <line x1={bottomEnd.x} y1={bottomEnd.y + 22} x2={bottomStart.x} y2={bottomStart.y + 22} markerEnd="url(#passage-arrow)" />
-      <text x={(topStart.x + topEnd.x) / 2} y={topStart.y - 34 * invZoom} style={scaledTextStyle(13, 4, zoom)}>фронтальный проход</text>
-      <text x={(bottomStart.x + bottomEnd.x) / 2} y={bottomStart.y + 42 * invZoom} style={scaledTextStyle(13, 4, zoom)}>тыловой проход</text>
+      {showLabels && (
+        <>
+          <text x={(topStart.x + topEnd.x) / 2} y={topStart.y - 34 * invZoom} style={scaledTextStyle(13, 4, zoom)}>фронтальный проход</text>
+          <text x={(bottomStart.x + bottomEnd.x) / 2} y={bottomStart.y + 42 * invZoom} style={scaledTextStyle(13, 4, zoom)}>тыловой проход</text>
+        </>
+      )}
     </g>
   );
 }
