@@ -1050,3 +1050,10 @@ Append-only log of root wiki updates.
 - Added investigation UX: resource detail explains slowdown causes, dock staging shows staged pallets by source, non-green pick-face hover shows replenishment tasks/release state, and the loss graph has right-clickable loss/zero markers with cause breakdown.
 - Added explicit dock accumulation/shipping dwell windows to the model, visible loading trucks at gates, mono-pallet dock staging events, and fixed loss-chart hit selection so zero markers do not jump to distant loss peaks.
 - Switched reachtrucks and pickers to supplied 4-direction raster sprite sheets, brightened aisle lanes, added two-sided pick-face rendering around each aisle, and exposed route trail TTL in model settings.
+
+## 2026-05-20 - Warehouse topology and pick route TZ
+
+- Added `wiki/requirements/warehouse_topology_pick_route_tz.md`.
+- Captured the architecture decision that warehouse topology and pick-route order are rare versioned master-data processes, not daily order-planning outputs.
+- Specified topology/version tables, pick-route extensions, PL/SQL/API contracts, admin page behavior, recommendation flow, invariants, MVP scope, and digital-twin integration requirements.
+- Updated `wiki/index.md` with the new requirements page.
