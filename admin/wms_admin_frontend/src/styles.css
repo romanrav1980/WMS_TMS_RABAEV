@@ -308,6 +308,9 @@ button { cursor: pointer; }
 .staging-label { fill: #0f766e; font-size: 10px; }
 .route-sequence { fill: #ef3b82; font-size: 8px; font-weight: 900; text-anchor: middle; }
 .cell-code-label { fill: #334155; font-size: 7px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: rgba(255,255,255,.86); stroke-width: 3px; pointer-events: none; }
+.route-link-layer { pointer-events: stroke; }
+.route-link-line { stroke: #ef3b82; stroke-width: 3.2; stroke-dasharray: 9 6; stroke-linecap: round; opacity: .86; cursor: help; vector-effect: non-scaling-stroke; }
+.route-link-line:hover { stroke-width: 5; opacity: 1; }
 .gate-link path { stroke: #0f766e; stroke-width: 1.8; stroke-dasharray: 8 7; opacity: .62; }
 .gate-link text { fill: #0f766e; font-size: 10px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #fff; stroke-width: 3px; }
 .route-context-menu { position: absolute; z-index: 6; min-width: 178px; display: grid; gap: 5px; padding: 8px; border: 1px solid #d8e2ee; border-radius: 7px; background: rgba(255,255,255,.97); box-shadow: 0 14px 32px rgba(15,31,53,.16); }

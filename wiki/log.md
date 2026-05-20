@@ -1143,3 +1143,12 @@ Append-only log of root wiki updates.
 - Extended selected aisle tracking the same way, so additive areas remain available for route strategy build.
 - Verified on product port `3000`: first frame selected `15` cells, `Shift + frame` increased the selection to `21`, page errors `0`.
 - Captured evidence screenshot `runtime/test-evidence/topology-shift-additive-frame-selection.png`.
+
+## 2026-05-20 - Topology route arrows from active route table
+
+- Changed route visualization from one decorative polyline to directed per-row arrows representing `RRL_PICK_ROUTE_CELL` transitions.
+- Added arrow tooltips with the current route-row fields plus computed `FROM/TO` topology-cell identifiers.
+- Fixed the map to render only the active route header's rows instead of all route rows returned for the topology; the checked API payload had `240` rows across multiple routes, while the active route view now renders `48` rows and `47` arrows.
+- Adjusted pick-face visual scale: larger cells, wider aisle travel lane, and closer rack backs between neighboring aisles.
+- Verified on product port `3000`: route summary shows `48 ячеек в последовательности`, `.route-link-line` count is `47`, marker arrows are present, and tooltip samples include `pick_route_cell_id`.
+- Captured evidence screenshots `runtime/test-evidence/topology-one-active-route-arrows-2d.png` and `runtime/test-evidence/topology-one-active-route-arrows-svg.png`.

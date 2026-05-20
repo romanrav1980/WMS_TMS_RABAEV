@@ -95,6 +95,7 @@ type PickRouteCell = {
   topology_cell_id?: number;
   cell_code: string;
   pick_sequence: number;
+  [key: string]: unknown;
 };
 
 type TopologyMap = {
@@ -197,15 +198,24 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
   }, [map?.cells, selectedId]);
 
   const selectedCell = map.cells.find((cell) => cell.topology_cell_id === selectedId) || null;
-  const activeRoute = map.routes[0] || null;
+  const activeRoute = map.routes.find((route) => route.status !== "ARCHIVED" && route.route_pattern === routePattern)
+    || map.routes.find((route) => route.status !== "ARCHIVED")
+    || map.routes[0]
+    || null;
+  const activeRouteCells = useMemo(() => {
+    if (!activeRoute) return [];
+    return map.route_cells
+      .filter((routeCell) => routeCell.pick_route_id === activeRoute.pick_route_id)
+      .sort((a, b) => Number(a.pick_sequence || 0) - Number(b.pick_sequence || 0));
+  }, [activeRoute, map.route_cells]);
   const routeByCell = useMemo(() => {
     const result = new Map<number, PickRouteCell>();
-    map.route_cells.forEach((routeCell) => {
+    activeRouteCells.forEach((routeCell) => {
       if (routeCell.topology_cell_id) result.set(routeCell.topology_cell_id, routeCell);
     });
     return result;
-  }, [map.route_cells]);
-  const stats = useMemo(() => topologyStats(map), [map]);
+  }, [activeRouteCells]);
+  const stats = useMemo(() => topologyStats(map, activeRouteCells.length), [map, activeRouteCells]);
   const selectedRouteCell = selectedId ? routeByCell.get(selectedId) : undefined;
   const selectedCellIndex = selectedCell ? map.cells.findIndex((cell) => cell.topology_cell_id === selectedCell.topology_cell_id) : -1;
   const prevCell = selectedCellIndex > 0 ? map.cells[selectedCellIndex - 1] : null;
@@ -498,8 +508,10 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
       const bounds = mapBounds(map.cells, map.aisles);
       const rect = normalizeRect(areaDrag.start, areaDrag.current);
       const selectedCells = map.cells.filter((cell) => {
-        const x = sx(cell.x, bounds);
-        const y = sy(cell.y, bounds);
+        const aisle = map.aisles.find((item) => item.aisle_code === cell.aisle_code);
+        const point = projectCellPoint(cell, bounds, mapMode, aisle);
+        const x = point.x;
+        const y = point.y;
         return cell.active === 1 && cell.cell_kind.includes("PICK_FACE") && x >= rect.x1 && x <= rect.x2 && y >= rect.y1 && y <= rect.y2;
       });
       const selectedIds = selectedCells.map((cell) => cell.topology_cell_id);
@@ -684,6 +696,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
               </div>
               <TopologySvg
                 map={map}
+                routeCells={activeRouteCells}
                 routeByCell={routeByCell}
                 selectedId={selectedId}
                 selectedRouteCellIds={selectedRouteCellIds}
@@ -806,11 +819,11 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
               <div className="route-summary">
                 <b>{activeRoute.route_code}</b>
                 <span>{activeRoute.route_pattern || "Z"} · {activeRoute.status || "DRAFT"}</span>
-                <span>{map.route_cells.length} ячеек в последовательности</span>
+                <span>{activeRouteCells.length} ячеек в последовательности</span>
               </div>
             ) : <p>Постройте Z-обход для выбранных аллей.</p>}
             <div className="route-list">
-              {map.route_cells.slice(0, 12).map((routeCell) => (
+              {activeRouteCells.slice(0, 12).map((routeCell) => (
                 <span key={routeCell.pick_route_cell_id}><b>{routeCell.pick_sequence}</b>{routeCell.cell_code}</span>
               ))}
             </div>
@@ -882,8 +895,9 @@ function TopologyCellTable({ cells, selectedId, onSelect }: { cells: TopologyCel
 
 type MapBounds = { minX: number; maxX: number; minY: number; maxY: number };
 
-function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selectionRect, layers, mode, view, isPanning, isSelecting, onSelect, onCellPointerDown, onPointerDown, onPointerMove, onPointerUp, onContextMenu }: {
+function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedId, selectedRouteCellIds, selectionRect, layers, mode, view, isPanning, isSelecting, onSelect, onCellPointerDown, onPointerDown, onPointerMove, onPointerUp, onContextMenu }: {
   map: TopologyMap;
+  routeCells: PickRouteCell[];
   routeByCell: Map<number, PickRouteCell>;
   selectedId: number | null;
   selectedRouteCellIds: Set<number>;
@@ -901,13 +915,13 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
   onContextMenu: (event: PointerEvent<SVGSVGElement>) => void;
 }) {
   const bounds = mapBounds(map.cells, map.aisles);
-  const routeCells = map.route_cells
+  const routeCells = activeRouteCells
     .map((routeCell) => {
       const cell = map.cells.find((item) => item.topology_cell_id === routeCell.topology_cell_id);
       return cell ? { routeCell, cell } : null;
     })
     .filter(Boolean) as Array<{ routeCell: PickRouteCell; cell: TopologyCell }>;
-  const path = routePath(routeCells.map(({ cell }) => cell), bounds, mode);
+  const routeSegments = buildRouteSegments(routeCells, bounds, mode, map.aisles);
 
   return (
     <svg
@@ -930,6 +944,9 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
         <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="0" dy="6" stdDeviation="5" floodColor="#1f2f48" floodOpacity=".18" />
         </filter>
+        <marker id="route-arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef3b82" />
+        </marker>
       </defs>
       <rect width="1000" height="650" fill="#f8fbff" />
       <g transform={`translate(${view.panX} ${view.panY}) scale(${view.zoom})`}>
@@ -991,17 +1008,17 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
         </g>}
 
         {layers.aisles && map.aisles.map((aisle) => {
-          const start = projectPoint(aisle.x1, aisle.y1, bounds, mode);
-          const end = projectPoint(aisle.x2, aisle.y2, bounds, mode);
+          const start = projectAislePoint(aisle, aisle.y1, bounds, mode);
+          const end = projectAislePoint(aisle, aisle.y2, bounds, mode);
           const x1 = start.x;
           const y1 = start.y;
           const x2 = end.x;
           const y2 = end.y;
           return (
             <g key={aisle.topology_aisle_id}>
-              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={Number(aisle.aisle_code.replace(/\D/g, "")) <= 5 ? "#86efac" : "#93c5fd"} strokeWidth={aisle.aisle_kind === "PICK_AISLE" ? mode === "3d" ? 32 : 44 : 28} strokeLinecap="round" opacity=".34" />
-              <line x1={x1 - 14} y1={y1} x2={x2 - 14} y2={y2} stroke="#1d4ed8" strokeWidth="3" opacity=".65" />
-              <line x1={x1 + 14} y1={y1} x2={x2 + 14} y2={y2} stroke="#1d4ed8" strokeWidth="3" opacity=".65" />
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={Number(aisle.aisle_code.replace(/\D/g, "")) <= 5 ? "#86efac" : "#93c5fd"} strokeWidth={aisle.aisle_kind === "PICK_AISLE" ? mode === "3d" ? 34 : 40 : 28} strokeLinecap="round" opacity=".34" />
+              <line x1={x1 - 20} y1={y1} x2={x2 - 20} y2={y2} stroke="#1d4ed8" strokeWidth="3" opacity=".65" />
+              <line x1={x1 + 20} y1={y1} x2={x2 + 20} y2={y2} stroke="#1d4ed8" strokeWidth="3" opacity=".65" />
               <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#2563d8" strokeWidth="2.4" strokeDasharray="9 8" strokeLinecap="round" opacity=".72" />
               {layers.labels && <text x={x1 - 22} y={y1 - 12} className="aisle-label">{aisle.aisle_code}</text>}
               {layers.labels && <text x={x2 + 22} y={y2 + 18} className="aisle-label">{aisle.aisle_code}</text>}
@@ -1009,14 +1026,13 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
           );
         })}
 
-        {layers.route && path && <path d={path} fill="none" stroke="#ef3b82" strokeWidth="4" strokeDasharray="10 8" strokeLinecap="round" strokeLinejoin="round" opacity=".72" />}
-
         {layers.gates && drawAisleGateLinks(map, bounds)}
 
         {layers.distances && selectedId && drawDistanceLines(map, selectedId, bounds, mode)}
 
         {layers.cells && map.cells.filter((cell) => cell.active === 1).map((cell) => {
-          const point = projectPoint(cell.x, cell.y, bounds, mode);
+          const aisle = map.aisles.find((item) => item.aisle_code === cell.aisle_code);
+          const point = projectCellPoint(cell, bounds, mode, aisle);
           const x = point.x;
           const y = point.y;
           const routeCell = routeByCell.get(cell.topology_cell_id);
@@ -1031,21 +1047,21 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
               filter={selected ? "url(#soft-shadow)" : undefined}
             >
               <rect
-                x={x - 10}
-                y={y - 8}
-                width="20"
-                height="16"
+                x={x - 14}
+                y={y - 10}
+                width="28"
+                height="20"
                 rx="3"
                 fill="#d9b879"
                 stroke={selected ? "#f59e0b" : inRouteSelection ? "#7c3aed" : "#37506d"}
                 strokeWidth={selected || inRouteSelection ? 3 : 1}
               />
-              {mode === "3d" && <path d={`M ${x - 10} ${y + 8} L ${x - 3} ${y + 14} L ${x + 17} ${y + 14} L ${x + 10} ${y + 8} Z`} fill="#8b6f3e" opacity=".5" />}
+              {mode === "3d" && <path d={`M ${x - 14} ${y + 10} L ${x - 6} ${y + 17} L ${x + 22} ${y + 17} L ${x + 14} ${y + 10} Z`} fill="#8b6f3e" opacity=".5" />}
               <rect
-                x={x - 10}
-                y={y - 8}
-                width="20"
-                height="5"
+                x={x - 14}
+                y={y - 10}
+                width="28"
+                height="6"
                 rx="2"
                 fill={cell.side_code === "LEFT" ? "#58b76b" : cell.side_code === "RIGHT" ? "#4d86d9" : "#94a3b8"}
                 strokeWidth="0"
@@ -1062,6 +1078,24 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
             </g>
           );
         })}
+
+        {layers.route && (
+          <g className="route-link-layer">
+            {routeSegments.map((segment) => (
+              <line
+                key={`${segment.rowId}-${segment.fromCellId}-${segment.toCellId}`}
+                className="route-link-line"
+                x1={segment.x1}
+                y1={segment.y1}
+                x2={segment.x2}
+                y2={segment.y2}
+                markerEnd="url(#route-arrow)"
+              >
+                <title>{segment.title}</title>
+              </line>
+            ))}
+          </g>
+        )}
 
         {selectionRect && (
           <rect
@@ -1080,12 +1114,12 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
   );
 }
 
-function topologyStats(map: TopologyMap) {
+function topologyStats(map: TopologyMap, activeRouteCellCount = map.route_cells.length) {
   return {
     aisles: map.aisles.filter((aisle) => aisle.aisle_kind === "PICK_AISLE").length,
     pickFaces: map.cells.filter((cell) => cell.cell_kind === "PICK_FACE" && cell.active === 1).length,
     dynamic: map.cells.filter((cell) => cell.cell_kind === "DYNAMIC_PICK_FACE" && cell.active === 1).length,
-    routeCells: map.route_cells.length,
+    routeCells: activeRouteCellCount,
     gates: map.gates.filter((gate) => gate.active === 1).length
   };
 }
@@ -1413,7 +1447,8 @@ function drawDistanceLines(map: TopologyMap, selectedId: number, bounds: MapBoun
     .map((distance) => {
       const gate = map.gates.find((item) => item.topology_gate_id === distance.topology_gate_id);
       if (!gate) return null;
-      const from = projectPoint(cell.x, cell.y, bounds, mode);
+      const aisle = map.aisles.find((item) => item.aisle_code === cell.aisle_code);
+      const from = projectCellPoint(cell, bounds, mode, aisle);
       const to = projectPoint(gate.x, gate.y, bounds, mode);
       return <line key={distance.cell_gate_distance_id} x1={from.x} y1={from.y} x2={to.x} y2={mode === "3d" ? to.y + 30 : 586} stroke="#0f766e" strokeWidth="2" strokeDasharray="6 6" opacity=".56" />;
     });
@@ -1446,31 +1481,61 @@ function drawAisleGateLinks(map: TopologyMap, bounds: MapBounds) {
   });
 }
 
-function routePath(cells: TopologyCell[], bounds: MapBounds, mode: "3d" | "plan" | "list") {
-  if (!cells.length) return "";
-  const commands: string[] = [];
-  cells.forEach((cell, index) => {
-    const point = projectPoint(cell.x, cell.y, bounds, mode);
-    const x = point.x;
-    const y = point.y;
-    if (index === 0) {
-      commands.push(`M ${x} ${y}`);
-      return;
-    }
-    const prev = cells[index - 1];
-    if (prev.aisle_code && cell.aisle_code && prev.aisle_code !== cell.aisle_code) {
-      const prevPoint = projectPoint(prev.x, prev.y, bounds, mode);
-      const px = prevPoint.x;
-      const py = prevPoint.y;
-      const connectorY = Math.abs(prev.y - bounds.maxY) <= Math.abs(prev.y - bounds.minY)
-        ? Math.max(py, y) + 18
-        : Math.min(py, y) - 18;
-      commands.push(`L ${px} ${connectorY}`);
-      commands.push(`L ${x} ${connectorY}`);
-    }
-    commands.push(`L ${x} ${y}`);
+function buildRouteSegments(
+  rows: Array<{ routeCell: PickRouteCell; cell: TopologyCell }>,
+  bounds: MapBounds,
+  mode: "3d" | "plan" | "list",
+  aisles: TopologyAisle[]
+) {
+  return rows.slice(1).map(({ routeCell, cell }, index) => {
+    const previous = rows[index];
+    const fromAisle = aisles.find((item) => item.aisle_code === previous.cell.aisle_code);
+    const toAisle = aisles.find((item) => item.aisle_code === cell.aisle_code);
+    const from = projectCellPoint(previous.cell, bounds, mode, fromAisle);
+    const to = projectCellPoint(cell, bounds, mode, toAisle);
+    const routeFields = Object.entries(routeCell)
+      .map(([key, value]) => `${key}=${String(value ?? "")}`)
+      .join("\n");
+    return {
+      rowId: routeCell.pick_route_cell_id,
+      fromCellId: previous.cell.topology_cell_id,
+      toCellId: cell.topology_cell_id,
+      x1: from.x,
+      y1: from.y,
+      x2: to.x,
+      y2: to.y,
+      title: [
+        "Таблица: RRL_PICK_ROUTE_CELL",
+        routeFields,
+        `FROM_TO: ${previous.routeCell.pick_sequence} -> ${routeCell.pick_sequence}`,
+        `FROM_TOPOLOGY_CELL_ID=${previous.cell.topology_cell_id}`,
+        `FROM_CELL_CODE=${previous.cell.cell_code}`,
+        `TO_TOPOLOGY_CELL_ID=${cell.topology_cell_id}`,
+        `TO_CELL_CODE=${cell.cell_code}`,
+        `FROM_PICK_ROUTE_CELL_ID=${previous.routeCell.pick_route_cell_id}`,
+        `TO_PICK_ROUTE_CELL_ID=${routeCell.pick_route_cell_id}`
+      ].join("\n")
+    };
   });
-  return commands.join(" ");
+}
+
+function projectCellPoint(cell: TopologyCell, bounds: MapBounds, mode: "3d" | "plan" | "list", aisle?: TopologyAisle) {
+  const travel = projectTravelPoint(cell, bounds, mode, aisle);
+  const side = cell.side_code === "LEFT" ? -1 : cell.side_code === "RIGHT" ? 1 : 0;
+  const offset = mode === "3d" ? 30 : 34;
+  return {
+    x: travel.x + side * offset,
+    y: travel.y
+  };
+}
+
+function projectTravelPoint(cell: TopologyCell, bounds: MapBounds, mode: "3d" | "plan" | "list", aisle?: TopologyAisle) {
+  const centerX = aisle ? aisle.x1 : cell.side_code === "LEFT" ? cell.x + 1.2 : cell.side_code === "RIGHT" ? cell.x - 1.2 : cell.x;
+  return projectPoint(centerX, cell.y, bounds, mode);
+}
+
+function projectAislePoint(aisle: TopologyAisle, y: number, bounds: MapBounds, mode: "3d" | "plan" | "list") {
+  return projectPoint(aisle.x1, y, bounds, mode);
 }
 
 function projectPoint(x: number, y: number, bounds: MapBounds, mode: "3d" | "plan" | "list") {
