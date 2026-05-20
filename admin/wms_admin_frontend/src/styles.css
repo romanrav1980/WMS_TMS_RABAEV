@@ -274,6 +274,9 @@ button { cursor: pointer; }
 .route-strategy-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
 .route-strategy-grid button { min-height: 30px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0f1f35; font-size: 12px; font-weight: 900; }
 .route-strategy-grid button.active { border-color: #0969e8; background: #eaf3ff; color: #0969e8; }
+.selection-toolbar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.selection-toolbar button { min-height: 28px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0f1f35; font-size: 11px; font-weight: 900; }
+.selection-toolbar button.active { border-color: #0969e8; background: #0969e8; color: #fff; }
 .selection-counter { color: #64748b; font-size: 11px; font-weight: 900; }
 .wide-action { min-height: 38px; border: 0; border-radius: 7px; background: #0969e8; color: #fff; font-weight: 900; line-height: 1.15; white-space: normal; }
 .secondary-action { background: #0f766e; }

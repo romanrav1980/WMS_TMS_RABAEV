@@ -153,6 +153,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
   const [view, setView] = useState({ zoom: 1, panX: 0, panY: 0 });
   const [panDrag, setPanDrag] = useState<{ startX: number; startY: number; originX: number; originY: number } | null>(null);
   const [areaDrag, setAreaDrag] = useState<{ start: SvgPoint; current: SvgPoint } | null>(null);
+  const [selectionMode, setSelectionMode] = useState(false);
   const [routeMenu, setRouteMenu] = useState<{ x: number; y: number } | null>(null);
   const [dirtyCells, setDirtyCells] = useState<Set<number>>(() => new Set());
   const [validation, setValidation] = useState<ValidationResult | null>(null);
@@ -217,6 +218,35 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
       ? current.filter((code) => code !== aisleCode)
       : [...current, aisleCode].sort());
     setSelectedRouteCellIds(new Set());
+  }
+
+  function selectablePickFaceCells() {
+    return map.cells.filter((cell) => cell.active === 1
+      && cell.cell_kind.includes("PICK_FACE")
+      && selectedAisles.includes(cell.aisle_code || ""));
+  }
+
+  function selectRouteCells(scope: "all" | "left" | "right" | "clear" | "invert") {
+    if (scope === "clear") {
+      setSelectedRouteCellIds(new Set());
+      return;
+    }
+    const candidates = selectablePickFaceCells();
+    if (scope === "invert") {
+      setSelectedRouteCellIds((current) => {
+        const next = new Set(current);
+        candidates.forEach((cell) => {
+          if (next.has(cell.topology_cell_id)) next.delete(cell.topology_cell_id);
+          else next.add(cell.topology_cell_id);
+        });
+        return next;
+      });
+      return;
+    }
+    const side = scope === "left" ? "LEFT" : scope === "right" ? "RIGHT" : null;
+    setSelectedRouteCellIds(new Set(candidates
+      .filter((cell) => !side || cell.side_code === side)
+      .map((cell) => cell.topology_cell_id)));
   }
 
   function toggleLayer(layer: keyof MapLayerState) {
@@ -415,7 +445,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
     event.stopPropagation();
     setSelectedId(cell.topology_cell_id);
     setSelectedRouteCellIds((current) => {
-      if (!event.ctrlKey && !event.metaKey) return current;
+      if (!event.ctrlKey && !event.metaKey && !event.shiftKey && !selectionMode) return current;
       const next = new Set(current);
       if (next.has(cell.topology_cell_id)) next.delete(cell.topology_cell_id);
       else next.add(cell.topology_cell_id);
@@ -440,7 +470,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
   function handleMapPointerDown(event: PointerEvent<SVGSVGElement>) {
     if (event.button !== 0) return;
     setRouteMenu(null);
-    if (event.altKey || event.shiftKey) {
+    if (selectionMode || event.altKey || event.shiftKey) {
       const point = svgPointFromEvent(event, view);
       setAreaDrag({ start: point, current: point });
       return;
@@ -564,7 +594,15 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                 </button>
               ))}
             </div>
-            <p>Выделение области: Shift/Alt + протянуть мышью по карте. Правый клик по карте открывает назначение стратегии для выбранной области.</p>
+            <div className="selection-toolbar">
+              <button className={selectionMode ? "active" : ""} onClick={() => setSelectionMode((current) => !current)}>Рамка</button>
+              <button onClick={() => selectRouteCells("all")}>Все</button>
+              <button onClick={() => selectRouteCells("left")}>Левая</button>
+              <button onClick={() => selectRouteCells("right")}>Правая</button>
+              <button onClick={() => selectRouteCells("invert")}>Инверт.</button>
+              <button onClick={() => selectRouteCells("clear")}>Сброс</button>
+            </div>
+            <p>В режиме “Рамка” протяните мышью по карте. Без режима карта двигается мышью; Ctrl/Shift-клик по ячейке добавляет или убирает ее из области.</p>
             <button className="wide-action" onClick={() => handleBuildRoute(routePattern)}>Применить стратегию</button>
             <span className="selection-counter">{selectedRouteCellIds.size ? `Выделено ячеек: ${selectedRouteCellIds.size}` : "Область не выделена"}</span>
           </section>
@@ -616,6 +654,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                 mode={mapMode}
                 view={view}
                 isPanning={Boolean(panDrag)}
+                isSelecting={selectionMode || Boolean(areaDrag)}
                 onSelect={setSelectedId}
                 onCellPointerDown={handleCellPointerDown}
                 onPointerDown={handleMapPointerDown}
@@ -778,7 +817,7 @@ function TopologyCellTable({ cells, selectedId, onSelect }: { cells: TopologyCel
 
 type MapBounds = { minX: number; maxX: number; minY: number; maxY: number };
 
-function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selectionRect, layers, mode, view, isPanning, onSelect, onCellPointerDown, onPointerDown, onPointerMove, onPointerUp, onContextMenu }: {
+function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selectionRect, layers, mode, view, isPanning, isSelecting, onSelect, onCellPointerDown, onPointerDown, onPointerMove, onPointerUp, onContextMenu }: {
   map: TopologyMap;
   routeByCell: Map<number, PickRouteCell>;
   selectedId: number | null;
@@ -788,6 +827,7 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
   mode: "3d" | "plan" | "list";
   view: { zoom: number; panX: number; panY: number };
   isPanning: boolean;
+  isSelecting: boolean;
   onSelect: (id: number) => void;
   onCellPointerDown: (event: PointerEvent<SVGGElement>, cell: TopologyCell) => void;
   onPointerDown: (event: PointerEvent<SVGSVGElement>) => void;
@@ -816,7 +856,7 @@ function TopologySvg({ map, routeByCell, selectedId, selectedRouteCellIds, selec
       onPointerUp={onPointerUp}
       onPointerLeave={onPointerUp}
       onContextMenu={onContextMenu}
-      style={{ cursor: isPanning ? "grabbing" : "grab" }}
+      style={{ cursor: isSelecting ? "crosshair" : isPanning ? "grabbing" : "grab" }}
     >
       <defs>
         <pattern id="topology-grid" width="32" height="32" patternUnits="userSpaceOnUse">
@@ -1121,10 +1161,12 @@ function orderRouteCells(
   const ordered: TopologyCell[] = [];
   groups.forEach(([, aisleCells], index) => {
     const reverse = pattern === "Z" || pattern === "SNAKE" ? index % 2 === 1 : pattern === "U_SHAPE";
+    const sideFirst = pattern === "LINEAR" || pattern === "U_SHAPE";
     ordered.push(...aisleCells.sort((a, b) => {
       const bayDiff = Number(a.bay_no || 0) - Number(b.bay_no || 0);
       const levelDiff = Number(a.level_no || 0) - Number(b.level_no || 0);
       const sideDiff = sideRank[a.side_code] - sideRank[b.side_code];
+      if (sideFirst) return sideDiff || (reverse ? -bayDiff : bayDiff) || levelDiff;
       return (reverse ? -bayDiff : bayDiff) || sideDiff || levelDiff;
     }));
   });

@@ -1101,3 +1101,9 @@ Append-only log of root wiki updates.
 - Added target object `RRL_TOPOLOGY_PICK_FACE_SLOT`, slot generation settings, route implications, PL/SQL/API contracts, admin UI requirements, invariants, and acceptance criteria.
 - Captured the rule that movement distance belongs to the physical cell, while picking sequence and TSD address may point to a child slot such as a `3 x 3` small-goods grid.
 - Updated `wiki/index.md` to surface split pick-face slots in the topology requirement summary.
+
+## 2026-05-20 - Topology route selection UX
+
+- Added route-area selection controls to the topology admin: explicit rectangle mode, all/left/right/invert/clear actions, and Ctrl/Shift-click toggling for individual cells.
+- Changed local and API route ordering so `LINEAR` no longer renders the same as `Z`: linear walks side-first, while Z/SNAKE keep alternating aisle direction.
+- Captured evidence screenshot `runtime/test-evidence/topology-selection-route-tools.png`.

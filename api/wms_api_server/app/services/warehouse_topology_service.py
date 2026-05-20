@@ -823,9 +823,11 @@ class WarehouseTopologyService:
         sorted_groups = sorted(groups.items(), key=lambda item: (aisle_order.get(item[0], 999), item[0]))
         for index, (_aisle_code, aisle_cells) in enumerate(sorted_groups):
             reverse = (pattern in {"Z", "SNAKE"} and index % 2 == 1) or pattern == "U_SHAPE"
+            side_first = pattern in {"LINEAR", "U_SHAPE"}
             aisle_cells.sort(key=lambda row: (
+                side_rank.get(str(row.get("side_code") or "").upper(), 99) if side_first else 0,
                 -float(row.get("bay_no") or 0) if reverse else float(row.get("bay_no") or 0),
-                side_rank.get(str(row.get("side_code") or "").upper(), 99),
+                0 if side_first else side_rank.get(str(row.get("side_code") or "").upper(), 99),
                 float(row.get("level_no") or 0),
             ))
             ordered.extend(aisle_cells)
