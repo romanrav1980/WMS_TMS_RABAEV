@@ -1167,3 +1167,10 @@ Append-only log of root wiki updates.
 - Applied `040_apply.sql` and `040_verify.sql` to local Oracle `RABAEV@127.0.0.1:1521/orcl`; follow-up queries showed all three invariant violation counts as `0`.
 - API smoke rebuilt topology `1` route `CASE-Z-MAIN` as route `104`, returned `48` active route rows, and validation returned `valid=true`.
 - Captured evidence screenshot `runtime/test-evidence/topology-linear-route-order-wait.png`.
+
+## 2026-05-20 - Pick route ranked-list clarification
+
+- Updated topology, TSD case-pick, and picking-planning TZ pages to state that `RRL_PICK_ROUTE_CELL` is a ranked list of route points, not an edge/link table.
+- Clarified that `FROM/TO` values in UI arrows are computed from neighboring rows sorted by `PICK_SEQUENCE` and are not stored as table fields.
+- Added topology validation check `pick_faces_on_inactive_route` so active pick-face assignments cannot silently use archived route rows during picking.
+- Verified local topology validation on API port `8088`: topology `1` returned `valid=true`, including an empty `pick_faces_on_inactive_route` check.

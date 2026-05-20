@@ -553,6 +553,25 @@ class WarehouseTopologyService:
                 """,
                 {"topology_id": topology_id},
             ),
+            "pick_faces_on_inactive_route": self.gateway.fetch_all(
+                """
+                select pf.PICK_FACE_ID,
+                       pf.CELL_CODE,
+                       pf.PICK_ROUTE_CELL_ID,
+                       rc.PICK_ROUTE_ID,
+                       r.STATUS,
+                       r.ACTIVE
+                  from RRL_PICK_FACE pf
+                  join RRL_PICK_ROUTE_CELL rc
+                    on rc.PICK_ROUTE_CELL_ID = pf.PICK_ROUTE_CELL_ID
+                  join RRL_PICK_ROUTE r
+                    on r.PICK_ROUTE_ID = rc.PICK_ROUTE_ID
+                 where pf.ACTIVE = 1
+                   and r.TOPOLOGY_ID = :topology_id
+                   and (r.ACTIVE <> 1 or r.STATUS = 'ARCHIVED' or rc.ACTIVE <> 1)
+                """,
+                {"topology_id": topology_id},
+            ),
         }
         error_count = sum(len(value) for value in checks.values())
         if error_count == 0:

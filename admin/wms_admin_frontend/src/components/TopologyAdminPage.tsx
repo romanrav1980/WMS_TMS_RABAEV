@@ -1424,6 +1424,7 @@ function validationLabel(key: string) {
     multiple_active_pick_routes: "Несколько активных обходов",
     duplicate_route_sequence: "Дубли порядка обхода",
     duplicate_route_cell: "Повтор ячейки в обходе",
+    pick_faces_on_inactive_route: "Pick-face на архивном обходе",
     gates_missing: "Нет ворот",
     distances_missing: "Нет расстояний"
   };
@@ -1510,13 +1511,14 @@ function buildRouteSegments(
       title: [
         "Таблица: RRL_PICK_ROUTE_CELL",
         routeFields,
-        `FROM_TO: ${previous.routeCell.pick_sequence} -> ${routeCell.pick_sequence}`,
-        `FROM_TOPOLOGY_CELL_ID=${previous.cell.topology_cell_id}`,
-        `FROM_CELL_CODE=${previous.cell.cell_code}`,
-        `TO_TOPOLOGY_CELL_ID=${cell.topology_cell_id}`,
-        `TO_CELL_CODE=${cell.cell_code}`,
-        `FROM_PICK_ROUTE_CELL_ID=${previous.routeCell.pick_route_cell_id}`,
-        `TO_PICK_ROUTE_CELL_ID=${routeCell.pick_route_cell_id}`
+        "Вычисленный переход UI, не поля таблицы:",
+        `sequence: ${previous.routeCell.pick_sequence} -> ${routeCell.pick_sequence}`,
+        `from.topology_cell_id=${previous.cell.topology_cell_id}`,
+        `from.cell_code=${previous.cell.cell_code}`,
+        `to.topology_cell_id=${cell.topology_cell_id}`,
+        `to.cell_code=${cell.cell_code}`,
+        `from.pick_route_cell_id=${previous.routeCell.pick_route_cell_id}`,
+        `to.pick_route_cell_id=${routeCell.pick_route_cell_id}`
       ].join("\n")
     };
   });

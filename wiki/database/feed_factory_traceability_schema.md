@@ -878,6 +878,7 @@ Migration `2026-05-20-040-linear-pick-route-order` implements the accepted route
 - active route rows are unique by `(PICK_ROUTE_ID, PICK_SEQUENCE)`;
 - active route rows with physical topology cells are unique by `(PICK_ROUTE_ID, TOPOLOGY_CELL_ID)`;
 - UI arrows are derived from neighboring sorted route rows and are not stored as separate edge rows.
+- topology validation also checks that active pick faces do not point to inactive or archived route rows, because picking runtime copies `PICK_SEQUENCE` from the route-row assignment.
 
 Migration files:
 
