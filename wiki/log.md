@@ -1204,3 +1204,15 @@ Append-only log of root wiki updates.
 - Corrected the pick-face cell geometry itself: cells now render as Excel-like rectangles with crisp borders and height derived from the actual projected bay step, leaving a visible separator between neighboring cells at deep zoom. Evidence screenshot: `runtime/test-evidence/topology-zoom-550-excel-cells.png`.
 - Reworked the pick-face drawing closer to an Excel-like grid: each pick-face is a sharp rectangular cell with a persistent white separator stroke, route lines are visually weaker under the cells, dense 1500-cell maps suppress per-cell address noise, and sequence badges are throttled by zoom.
 - Verified the current product page on `127.0.0.1:3000`: `npm.cmd run build` passed, Playwright screenshot `runtime/test-evidence/topology-zoom-550-excel-grid-fixed.png` was captured at `595%`, and sampled neighboring cells had `29px` height with `11px` vertical separation and no interface errors.
+
+## 2026-05-21 - UI tooltip and placeholder rule
+
+- Added the general UI rule `wiki/concepts/ui_interaction_rules.md`: interactive elements must have tooltips, and future/placeholder controls must be visually marked as such.
+- Applied the first increment to the topology admin page: working controls now have explanatory `title` hints, while future menu items and import/export placeholders use a hatched gray `future-control` style and explicit placeholder tooltips.
+
+## 2026-05-21 - Topology YA tooltips and staging cleanup
+
+- Added full SVG hover tooltips for pick-face cells (`ЯО`): physical cell fields plus active `RRL_PICK_ROUTE_CELL` order data.
+- Added on-cell `bay-pick_sequence` labels at deep zoom, e.g. `4-7`, so the row and collection order are visible directly on the ЯО.
+- Reworked the transport-pallet staging visualization into a separate right-side dock grid with 32 pallet slots instead of drawing a crooked block over the gate labels and rear passage.
+- Visual smoke captured `runtime/test-evidence/topology-ya-overview-staging.png` and `runtime/test-evidence/topology-ya-zoom-labels-and-staging.png`; the run found `1500` ЯО labels at zoom, route tooltip data present, `32` staging slots, and no interface error boundary.

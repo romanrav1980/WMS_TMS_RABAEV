@@ -42,6 +42,7 @@ Start here for a fresh session:
 - [concepts/api_method_library.md](concepts/api_method_library.md): maintained `api-med` catalog of API methods, permissions, parameters, side effects, readiness checks, and verification
 - [concepts/regulatory_adapter_audit.md](concepts/regulatory_adapter_audit.md): audit/replay rules for real Mercury and Honest Sign adapters
 - [concepts/tserver_api_registry.md](concepts/tserver_api_registry.md): legacy terminal API commands and `CALL_SPF` procedure registry
+- [concepts/ui_interaction_rules.md](concepts/ui_interaction_rules.md): общие правила всплывающих подсказок и визуального обозначения будущих/заглушечных UI-элементов
 - [concepts/wiki_operating_model.md](concepts/wiki_operating_model.md): how this repository uses the Karpathy wiki pattern
 
 ## Runbooks

@@ -17,6 +17,20 @@
 body { margin: 0; min-width: 1440px; background: var(--bg); color: var(--text); font-family: Inter, "Segoe UI", Arial, sans-serif; letter-spacing: 0; }
 button, input, select { font: inherit; }
 button { cursor: pointer; }
+button[aria-disabled="true"] { cursor: help; }
+.future-control {
+  color: #64748b !important;
+  border-color: #d8e2ee !important;
+  background:
+    repeating-linear-gradient(135deg, rgba(148,163,184,.18) 0 7px, rgba(255,255,255,.55) 7px 14px),
+    #f1f5f9 !important;
+  box-shadow: none !important;
+  opacity: .86;
+}
+.future-control:hover {
+  border-color: #94a3b8 !important;
+  opacity: 1;
+}
 
 .loading-screen { min-height: 100vh; display: grid; place-content: center; gap: 10px; color: var(--muted); }
 .loading-screen b { color: var(--blue); font-size: 32px; }
@@ -336,7 +350,11 @@ button { cursor: pointer; }
 .fixed-route-badge { fill: rgba(255,255,255,.96); stroke: #ef3b82; stroke-width: 2.5px; filter: drop-shadow(0 2px 4px rgba(15,31,53,.18)); }
 .aisle-label, .gate-label, .topology-dock-zone text, .staging-label { fill: #174ea6; font-size: 13px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #fff; stroke-width: 4px; }
 .staging-label { fill: #0f766e; font-size: 10px; }
+.dock-staging-base { fill: rgba(240,253,244,.9); stroke: #22c55e; stroke-width: 1.4; stroke-dasharray: 6 4; vector-effect: non-scaling-stroke; }
+.dock-staging-slot { fill: rgba(255,255,255,.9); stroke: #16a34a; stroke-width: .75; vector-effect: non-scaling-stroke; }
+.dock-staging-slot.occupied { fill: #bbf7d0; }
 .route-sequence { fill: #ef3b82; font-size: 9px; font-weight: 950; text-anchor: middle; paint-order: stroke; stroke: rgba(255,255,255,.92); stroke-width: 2px; }
+.ya-order-label { fill: #0f1f35; font-size: 9px; font-weight: 950; text-anchor: middle; dominant-baseline: middle; paint-order: stroke; stroke: rgba(255,255,255,.88); stroke-width: 2px; }
 .cell-code-label { fill: #334155; font-size: 7px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: rgba(255,255,255,.86); stroke-width: 3px; pointer-events: none; }
 .topology-passage-layer { pointer-events: none; }
 .section-boundary rect { fill: none; stroke: #8b5a2b; stroke-width: 1.7; stroke-dasharray: 7 6; opacity: .78; vector-effect: non-scaling-stroke; }

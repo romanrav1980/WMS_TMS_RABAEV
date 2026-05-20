@@ -585,24 +585,24 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
         <button onClick={onBack} title="Обзор"><span>⌂</span><em>Обзор</em></button>
         <small>Топология</small>
         {[
-          ["▣", "Склад"],
-          ["╂", "Аллеи"],
-          ["□", "Ячейки"],
-          ["▰", "Ворота"],
-          ["◇", "Зоны"],
-          ["⚙", "Оборудование"],
-          ["▤", "Типы ячеек"]
-        ].map(([icon, item], index) => (
-          <button key={item} className={index === 0 ? "active" : ""} title={item}><span>{icon}</span><em>{item}</em></button>
+          ["▣", "Склад", "Рабочая страница управления картой склада, ячейками и порядком обхода"],
+          ["╂", "Аллеи", "Будущий раздел для отдельного справочника аллей"],
+          ["□", "Ячейки", "Будущий раздел для отдельного списка физических ячеек"],
+          ["▰", "Ворота", "Будущий раздел для справочника ворот и зон накопления"],
+          ["◇", "Зоны", "Будущий раздел для зон склада"],
+          ["⚙", "Оборудование", "Будущий раздел для складского оборудования"],
+          ["▤", "Типы ячеек", "Будущий раздел для типов и габаритов ячеек"]
+        ].map(([icon, item, hint], index) => (
+          <button key={item} className={index === 0 ? "active" : "future-control"} title={hint} aria-disabled={index === 0 ? undefined : true}><span>{icon}</span><em>{item}</em></button>
         ))}
         <small>Аналитика</small>
-        <button title="Загрузка"><span>↯</span><em>Загрузка</em></button>
-        <button title="Емкость"><span>▥</span><em>Емкость</em></button>
-        <button title="Контроль"><span>◉</span><em>Контроль</em></button>
+        <button className="future-control" title="Будущий аналитический раздел загрузки склада" aria-disabled="true"><span>↯</span><em>Загрузка</em></button>
+        <button className="future-control" title="Будущий аналитический раздел по емкости склада" aria-disabled="true"><span>▥</span><em>Емкость</em></button>
+        <button className="future-control" title="Будущий раздел контроля качества топологии и операций" aria-disabled="true"><span>◉</span><em>Контроль</em></button>
         <small>Настройки</small>
-        <button title="Справочники"><span>☷</span><em>Справочники</em></button>
-        <button title="Правила"><span>↔</span><em>Правила</em></button>
-        <button title="Параметры"><span>⚙</span><em>Параметры</em></button>
+        <button className="future-control" title="Будущий раздел справочников топологии" aria-disabled="true"><span>☷</span><em>Справочники</em></button>
+        <button className="future-control" title="Будущий раздел правил построения и проверки топологии" aria-disabled="true"><span>↔</span><em>Правила</em></button>
+        <button className="future-control" title="Будущий раздел системных параметров топологии" aria-disabled="true"><span>⚙</span><em>Параметры</em></button>
         <p>Версия 1.0.0<br />© WMS</p>
       </aside>
 
@@ -612,7 +612,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
             <h1>Управление топологией склада</h1>
             <span>{topologyStatusText(map.topology.status)}</span>
           </div>
-          <label className="topology-warehouse-select">
+          <label className="topology-warehouse-select" title="Выбор версии топологии склада, которую нужно открыть на карте">
             <span>Склад</span>
             <select
               value={map.topology.topology_id}
@@ -630,11 +630,11 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
             </select>
           </label>
           <div className="topology-actions">
-            <button>Импорт</button>
-            <button>Экспорт</button>
-            <button className="primary" onClick={handleGenerate}>+ Добавить</button>
-            <button onClick={handleValidate}>Проверить</button>
-            <button onClick={handlePublishTopology}>Опубликовать</button>
+            <button className="future-control" title="Заглушка: будущий импорт топологии из файла или внешней системы" aria-disabled="true">Импорт</button>
+            <button className="future-control" title="Заглушка: будущий экспорт версии топологии в файл" aria-disabled="true">Экспорт</button>
+            <button className="primary" onClick={handleGenerate} title="Сгенерировать или добавить структуру топологии по параметрам генератора">+ Добавить</button>
+            <button onClick={handleValidate} title="Проверить текущую топологию перед публикацией">Проверить</button>
+            <button onClick={handlePublishTopology} title="Опубликовать проверенную версию топологии для использования в WMS">Опубликовать</button>
             <span className={`topology-status ${map.topology.status.toLowerCase()}`}>{map.topology.status}</span>
             <span className="api-pill">{apiState === "api" ? "API" : apiState === "saving" ? "Сохранение" : apiState === "loading" ? "Загрузка" : "Demo"}</span>
           </div>
@@ -684,35 +684,35 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
             <h3>Участок обхода</h3>
             <div className="aisle-tags">
               {map.aisles.filter((aisle) => aisle.aisle_kind === "PICK_AISLE").map((aisle) => (
-                <button key={aisle.aisle_code} className={selectedAisles.includes(aisle.aisle_code) ? "active" : ""} onClick={() => toggleAisle(aisle.aisle_code)}>
+                <button key={aisle.aisle_code} className={selectedAisles.includes(aisle.aisle_code) ? "active" : ""} onClick={() => toggleAisle(aisle.aisle_code)} title={`Включить или исключить аллею ${aisle.aisle_code} из участка построения обхода`}>
                   {aisle.aisle_code}
                 </button>
               ))}
             </div>
             <div className="route-strategy-grid">
               {(["Z", "U_SHAPE", "SNAKE", "LINEAR"] as RoutePattern[]).map((pattern) => (
-                <button key={pattern} className={routePattern === pattern ? "active" : ""} onClick={() => handleBuildRoute(pattern)}>
+                <button key={pattern} className={routePattern === pattern ? "active" : ""} onClick={() => handleBuildRoute(pattern)} title={routePatternHint(pattern)}>
                   {pattern}
                 </button>
               ))}
             </div>
             <div className="selection-toolbar">
-              <button className={selectionMode ? "active" : ""} onClick={() => setSelectionMode((current) => !current)}>Рамка</button>
-              <button onClick={() => selectRouteCells("all")}>Все</button>
-              <button onClick={() => selectRouteCells("left")}>Левая</button>
-              <button onClick={() => selectRouteCells("right")}>Правая</button>
-              <button onClick={() => selectRouteCells("invert")}>Инверт.</button>
-              <button onClick={() => selectRouteCells("clear")}>Сброс</button>
+              <button className={selectionMode ? "active" : ""} onClick={() => setSelectionMode((current) => !current)} title="Включить режим выделения ячеек рамкой на карте">Рамка</button>
+              <button onClick={() => selectRouteCells("all")} title="Выделить все pick-face ячейки выбранных аллей">Все</button>
+              <button onClick={() => selectRouteCells("left")} title="Выделить только левые ячейки выбранных аллей">Левая</button>
+              <button onClick={() => selectRouteCells("right")} title="Выделить только правые ячейки выбранных аллей">Правая</button>
+              <button onClick={() => selectRouteCells("invert")} title="Инвертировать текущее выделение в выбранных аллеях">Инверт.</button>
+              <button onClick={() => selectRouteCells("clear")} title="Снять текущее выделение ячеек">Сброс</button>
             </div>
             <p>В режиме “Рамка” протяните мышью по карте. Без режима карта двигается мышью; Ctrl/Shift-клик по ячейке добавляет или убирает ее из области.</p>
-            <button className="wide-action" onClick={() => handleBuildRoute(routePattern)}>Применить стратегию</button>
+            <button className="wide-action" onClick={() => handleBuildRoute(routePattern)} title="Построить порядок обхода для выделенных ячеек по выбранной стратегии">Применить стратегию</button>
             <span className="selection-counter">{selectedRouteCellIds.size ? `Выделено ячеек: ${selectedRouteCellIds.size}` : "Область не выделена"}</span>
           </section>
 
           <section>
             <h3>Ворота и расстояния</h3>
             <p>Матрица расстояний влияет на скорость перемещения к отгрузке и от приемки к хранению.</p>
-            <button className="wide-action secondary-action" onClick={handleRecalculateDistances}>Пересчитать до ворот</button>
+            <button className="wide-action secondary-action" onClick={handleRecalculateDistances} title="Пересчитать матрицу расстояний от ячеек до ворот приемки и отгрузки">Пересчитать до ворот</button>
           </section>
         </aside>
 
@@ -723,8 +723,8 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
               <span>2D план · порядок обхода редактируется отдельно от ежедневных волн</span>
             </div>
             <div className="topology-view-tabs">
-              <button className={mapMode === "plan" ? "active" : ""} onClick={() => setMapMode("plan")}>2D План</button>
-              <button className={mapMode === "list" ? "active" : ""} onClick={() => setMapMode("list")}>Список</button>
+              <button className={mapMode === "plan" ? "active" : ""} onClick={() => setMapMode("plan")} title="Открыть 2D карту для редактирования порядка обхода">2D План</button>
+              <button className={mapMode === "list" ? "active" : ""} onClick={() => setMapMode("list")} title="Открыть табличный список ячеек топологии">Список</button>
             </div>
             <div className="map-legend">
               <span><i className="cell-left" /> Левая сторона</span>
@@ -738,19 +738,19 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
             <>
             <div className="map-selection-tools">
               <b>Выделение</b>
-              <button className={selectionMode ? "active" : ""} onClick={() => setSelectionMode((current) => !current)}>Рамка</button>
-              <button onClick={() => selectRouteCells("all")}>Все</button>
-              <button onClick={() => selectRouteCells("left")}>Левая</button>
-              <button onClick={() => selectRouteCells("right")}>Правая</button>
-              <button onClick={() => selectRouteCells("invert")}>Инверт.</button>
-              <button onClick={() => selectRouteCells("clear")}>Сброс</button>
+              <button className={selectionMode ? "active" : ""} onClick={() => setSelectionMode((current) => !current)} title="Включить режим выделения прямоугольной областью">Рамка</button>
+              <button onClick={() => selectRouteCells("all")} title="Выделить все ячейки выбранных аллей">Все</button>
+              <button onClick={() => selectRouteCells("left")} title="Выделить левую сторону проходов">Левая</button>
+              <button onClick={() => selectRouteCells("right")} title="Выделить правую сторону проходов">Правая</button>
+              <button onClick={() => selectRouteCells("invert")} title="Инвертировать выделенные и невыделенные ячейки">Инверт.</button>
+              <button onClick={() => selectRouteCells("clear")} title="Очистить выделение ячеек">Сброс</button>
               <span>{selectedRouteCellIds.size ? `${selectedRouteCellIds.size} ячеек` : "нет области"}</span>
               {selectionMode && <span className="selection-mode-hint">Протяните рамку по ячейкам отбора</span>}
             </div>
             <div className="topology-map-wrap">
               <div className="topology-map-controls">
-                <button onClick={() => setView((current) => ({ ...current, zoom: clampZoom(Number((current.zoom * 1.25).toFixed(2))) }))}>+</button>
-                <button onClick={() => setView((current) => ({ ...current, zoom: clampZoom(Number((current.zoom / 1.25).toFixed(2))) }))}>-</button>
+                <button onClick={() => setView((current) => ({ ...current, zoom: clampZoom(Number((current.zoom * 1.25).toFixed(2))) }))} title="Приблизить карту">+</button>
+                <button onClick={() => setView((current) => ({ ...current, zoom: clampZoom(Number((current.zoom / 1.25).toFixed(2))) }))} title="Отдалить карту">-</button>
                 <label className="topology-zoom-slider" title="Масштаб карты">
                   <span>{Math.round(view.zoom * 100)}%</span>
                   <input
@@ -765,12 +765,12 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                     }}
                   />
                 </label>
-                <button onClick={() => setView({ zoom: 1, panX: 0, panY: 0 })}>Сброс</button>
-                <button className={selectionMode ? "active" : ""} onClick={() => setSelectionMode((current) => !current)}>□ Рамка</button>
-                <button onClick={() => setView((current) => ({ ...current, panX: current.panX - 30 }))}>←</button>
-                <button onClick={() => setView((current) => ({ ...current, panX: current.panX + 30 }))}>→</button>
-                <button onClick={() => setView((current) => ({ ...current, panY: current.panY - 30 }))}>↑</button>
-                <button onClick={() => setView((current) => ({ ...current, panY: current.panY + 30 }))}>↓</button>
+                <button onClick={() => setView({ zoom: 1, panX: 0, panY: 0 })} title="Вернуть масштаб и положение карты по умолчанию">Сброс</button>
+                <button className={selectionMode ? "active" : ""} onClick={() => setSelectionMode((current) => !current)} title="Включить или выключить выделение рамкой">□ Рамка</button>
+                <button onClick={() => setView((current) => ({ ...current, panX: current.panX - 30 }))} title="Сдвинуть карту влево">←</button>
+                <button onClick={() => setView((current) => ({ ...current, panX: current.panX + 30 }))} title="Сдвинуть карту вправо">→</button>
+                <button onClick={() => setView((current) => ({ ...current, panY: current.panY - 30 }))} title="Сдвинуть карту вверх">↑</button>
+                <button onClick={() => setView((current) => ({ ...current, panY: current.panY + 30 }))} title="Сдвинуть карту вниз">↓</button>
               </div>
               <TopologySvg
                 map={map}
@@ -795,33 +795,33 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                 <div className="route-context-menu" style={{ left: routeMenu.x, top: routeMenu.y }}>
                   <b>Стратегия обхода</b>
                   <span>Массовое выделение</span>
-                  <button onClick={() => {
+                  <button title="Переключить карту в режим выделения ячеек рамкой" onClick={() => {
                     setSelectionMode(true);
                     setRouteMenu(null);
                   }}>Включить рамку</button>
-                  <button onClick={() => {
+                  <button title="Выделить все ячейки выбранных аллей" onClick={() => {
                     selectRouteCells("all");
                     setRouteMenu(null);
                   }}>Выделить все</button>
-                  <button onClick={() => {
+                  <button title="Выделить ячейки слева от прохода" onClick={() => {
                     selectRouteCells("left");
                     setRouteMenu(null);
                   }}>Выделить левую сторону</button>
-                  <button onClick={() => {
+                  <button title="Выделить ячейки справа от прохода" onClick={() => {
                     selectRouteCells("right");
                     setRouteMenu(null);
                   }}>Выделить правую сторону</button>
-                  <button onClick={() => {
+                  <button title="Инвертировать выделение в выбранном участке" onClick={() => {
                     selectRouteCells("invert");
                     setRouteMenu(null);
                   }}>Инвертировать</button>
-                  <button onClick={() => {
+                  <button title="Очистить выделение участка обхода" onClick={() => {
                     selectRouteCells("clear");
                     setRouteMenu(null);
                   }}>Снять выделение</button>
                   <span>Построить обход</span>
                   {(["Z", "U_SHAPE", "SNAKE", "LINEAR"] as RoutePattern[]).map((pattern) => (
-                    <button key={pattern} onClick={() => handleBuildRoute(pattern)}>{pattern}</button>
+                    <button key={pattern} title={routePatternHint(pattern)} onClick={() => handleBuildRoute(pattern)}>{pattern}</button>
                   ))}
                 </div>
               )}
@@ -835,11 +835,11 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
             {rightPanelCollapsed ? "‹" : "›"}
           </button>
           <section>
-            <div className="inspector-heading"><h3>{selectedCell?.aisle_code || "Аллея A03"}</h3><button onClick={() => setSelectedId(null)}>×</button></div>
+            <div className="inspector-heading"><h3>{selectedCell?.aisle_code || "Аллея A03"}</h3><button onClick={() => setSelectedId(null)} title="Закрыть выбор ячейки в инспекторе">×</button></div>
             <div className="inspector-tabs">
-              <button className={rightTab === "general" ? "active" : ""} onClick={() => setRightTab("general")}>Общее</button>
-              <button className={rightTab === "params" ? "active" : ""} onClick={() => setRightTab("params")}>Параметры</button>
-              <button className={rightTab === "stats" ? "active" : ""} onClick={() => setRightTab("stats")}>Статистика</button>
+              <button className={rightTab === "general" ? "active" : ""} onClick={() => setRightTab("general")} title="Показать общие данные выбранной ячейки">Общее</button>
+              <button className={rightTab === "params" ? "active" : ""} onClick={() => setRightTab("params")} title="Показать редактируемые параметры выбранной ячейки">Параметры</button>
+              <button className={rightTab === "stats" ? "active" : ""} onClick={() => setRightTab("stats")} title="Показать статистику, соседей и расстояния выбранной ячейки">Статистика</button>
             </div>
             {selectedCell ? (
               <div className="cell-inspector">
@@ -853,7 +853,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                     <span>До отгрузки: {formatDistance(selectedCell.nearest_outbound_gate_distance_m)}</span>
                     <span>От приемки: {formatDistance(selectedCell.nearest_inbound_gate_distance_m)}</span>
                     <span>Порядок обхода: {selectedRouteCell ? `#${selectedRouteCell.pick_sequence}` : "не входит"}</span>
-                    <button className="save-cell-button" disabled={!dirtyCells.has(selectedCell.topology_cell_id)} onClick={handleSaveSelectedCell}>Сохранить ячейку</button>
+                    <button className="save-cell-button" disabled={!dirtyCells.has(selectedCell.topology_cell_id)} onClick={handleSaveSelectedCell} title={dirtyCells.has(selectedCell.topology_cell_id) ? "Сохранить изменения выбранной ячейки" : "Нет несохраненных изменений выбранной ячейки"}>Сохранить ячейку</button>
                   </>
                 )}
                 {rightTab === "params" && (
@@ -897,7 +897,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                 ))}
               </div>
             ) : <p>Запустите проверку перед публикацией топологии.</p>}
-            <button className="save-cell-button" onClick={handleValidate}>Проверить топологию</button>
+            <button className="save-cell-button" onClick={handleValidate} title="Запустить проверку целостности топологии и порядка обхода">Проверить топологию</button>
           </section>
 
           <section>
@@ -942,7 +942,7 @@ function NumberField({ label, value, min, max, onChange }: {
   onChange: (value: number) => void;
 }) {
   return (
-    <label className="number-field">
+    <label className="number-field" title={`${label}: значение от ${min} до ${max}`}>
       <span>{label}</span>
       <input type="number" min={min} max={max} value={value} onChange={(event) => {
         const nextValue = Number(event.currentTarget.value);
@@ -953,14 +953,24 @@ function NumberField({ label, value, min, max, onChange }: {
 }
 
 function LayerToggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
-  return <label className="topology-check"><input type="checkbox" checked={checked} onChange={onChange} /> {label}</label>;
+  return <label className="topology-check" title={`Показать или скрыть слой "${label}" на карте`}><input type="checkbox" checked={checked} onChange={onChange} /> {label}</label>;
 }
 
 function InspectorField({ label, value, onChange }: { label: string; value: number; onChange: (value: string) => void }) {
-  return <label className="inspector-field"><span>{label}</span><input type="number" value={value} step="0.1" onChange={(event) => {
+  return <label className="inspector-field" title={`Редактировать поле "${label}" выбранной ячейки`}><span>{label}</span><input type="number" value={value} step="0.1" onChange={(event) => {
     const nextValue = event.currentTarget.value;
     onChange(nextValue);
   }} /></label>;
+}
+
+function routePatternHint(pattern: RoutePattern) {
+  const hints: Record<RoutePattern, string> = {
+    Z: "Построить Z-порядок: соседние проходы обходятся от ближайшего торца",
+    U_SHAPE: "Построить П-образный порядок обхода участка",
+    SNAKE: "Построить змейку с чередованием направления по аллеям",
+    LINEAR: "Построить линейный порядок без чередования Z"
+  };
+  return hints[pattern];
 }
 
 function TopologyCellTable({ cells, selectedId, onSelect }: { cells: TopologyCell[]; selectedId: number | null; onSelect: (id: number) => void }) {
@@ -1079,31 +1089,7 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
           </g>
         ))}
 
-        {layers.gates && <g className="topology-dock-zone">
-          {map.gates.slice(0, 10).map((gate) => {
-            const point = projectPoint(gate.x, gate.y, bounds, mode);
-            const x = point.x;
-            const y = mode === "3d" ? point.y - 20 : 512;
-            const isShipping = gate.gate_kind !== "RECEIVING";
-            return (
-              <g key={`staging-${gate.topology_gate_id}`}>
-                <rect
-                  x={x - 24}
-                  y={y}
-                  width="48"
-                  height="30"
-                  rx="5"
-                  fill={isShipping ? "#dcfce7" : "#dbeafe"}
-                  stroke={isShipping ? "#22c55e" : "#3b82f6"}
-                  strokeDasharray="7 5"
-                  opacity=".82"
-                />
-                {layers.labels && <text x={x} y={y - 4 * invZoom} className="staging-label" style={scaledTextStyle(10, 3, view.zoom)}>накопл.</text>}
-              </g>
-            );
-          })}
-          {layers.labels && <text x="820" y={mode === "3d" ? 584 : 548} style={scaledTextStyle(13, 4, view.zoom)}>Зона накопления перед воротами</text>}
-        </g>}
+        {layers.gates && drawDockStagingZone(map, bounds, mode, layers.labels, view.zoom)}
 
         {layers.aisles && map.aisles.map((aisle) => {
           const start = projectAislePoint(aisle, aisle.y1, bounds, mode);
@@ -1160,6 +1146,7 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
               onPointerDown={(event) => onCellPointerDown(event, cell)}
               filter={selected ? "url(#soft-shadow)" : undefined}
             >
+              <title>{cellTooltip(cell, routeCell)}</title>
               <rect
                 x={x - cellVisual.width / 2}
                 y={y - cellVisual.height / 2}
@@ -1605,6 +1592,49 @@ function drawDistanceLines(map: TopologyMap, selectedId: number, bounds: MapBoun
   });
 }
 
+function drawDockStagingZone(map: TopologyMap, bounds: MapBounds, mode: "3d" | "plan" | "list", showLabels: boolean, zoom: number) {
+  const shippingGates = map.gates.filter((gate) => gate.active === 1 && gate.gate_kind !== "RECEIVING").slice(0, 10);
+  if (!shippingGates.length) return null;
+  const invZoom = 1 / zoom;
+  const points = shippingGates.map((gate) => projectPoint(gate.x, gate.y, bounds, mode));
+  const rackRight = Math.max(...map.cells.filter((cell) => cell.active === 1).map((cell) => projectPoint(cell.x, cell.y, bounds, mode).x));
+  const minX = mode === "plan" ? Math.min(870, rackRight + 36) : Math.min(878, Math.max(...points.map((point) => point.x)) + 26);
+  const y = mode === "plan" ? 178 : Math.max(190, Math.min(...points.map((point) => point.y)) - 112);
+  const slotColumns = 2;
+  const slotRows = 16;
+  const slotWidth = 20;
+  const slotHeight = 10;
+  const gap = 3;
+  const width = slotColumns * slotWidth + (slotColumns + 1) * gap;
+  const height = slotRows * slotHeight + (slotRows + 1) * gap;
+  return (
+    <g className="topology-dock-zone">
+      <title>Зона накопления транспортных паллет перед воротами отгрузки. Паллеты выставляются сюда перед загрузкой автомобиля.</title>
+      <rect x={minX} y={y} width={width} height={height} rx="2" className="dock-staging-base" />
+      {Array.from({ length: slotColumns * slotRows }, (_, index) => {
+        const column = index % slotColumns;
+        const row = Math.floor(index / slotColumns);
+        return (
+          <rect
+            key={`dock-slot-${index}`}
+            x={minX + gap + column * (slotWidth + gap)}
+            y={y + gap + row * (slotHeight + gap)}
+            width={slotWidth}
+            height={slotHeight}
+            rx="0"
+            className={index < 9 ? "dock-staging-slot occupied" : "dock-staging-slot"}
+          />
+        );
+      })}
+      {showLabels && (
+        <text x={minX + width / 2} y={y - 8 * invZoom} className="staging-label" style={scaledTextStyle(10, 3, zoom)}>
+          Накопление ТП
+        </text>
+      )}
+    </g>
+  );
+}
+
 function drawFixedLabelOverlay(
   map: TopologyMap,
   routeByCell: Map<number, PickRouteCell>,
@@ -1615,6 +1645,7 @@ function drawFixedLabelOverlay(
   const activeCells = map.cells.filter((cell) => cell.active === 1);
   const denseMap = activeCells.length > 300;
   const showCellCodes = !denseMap && view.zoom <= 2.8;
+  const showCellRouteCodes = view.zoom >= 3.5;
   const routeBadgeStep = view.zoom >= 4 ? 6 : view.zoom >= 2 ? 12 : 30;
   const routeBadgeRadius = view.zoom >= 4 ? 10 : 7;
   return (
@@ -1630,6 +1661,9 @@ function drawFixedLabelOverlay(
                 <circle cx={point.x + 13} cy={point.y - 13} r={routeBadgeRadius} className="fixed-route-badge" />
                 <text x={point.x + 13} y={point.y - 9} className="route-sequence">{routeCell.pick_sequence}</text>
               </>
+            )}
+            {showCellRouteCodes && routeCell && (
+              <text x={point.x} y={point.y + 3} className="ya-order-label">{pickFaceRouteLabel(cell, routeCell)}</text>
             )}
             {showCellCodes && <text x={point.x} y={point.y + 19} className="cell-code-label">{shortCellLabel(cell)}</text>}
           </g>
@@ -1647,6 +1681,39 @@ function drawFixedLabelOverlay(
       })}
     </g>
   );
+}
+
+function cellTooltip(cell: TopologyCell, routeCell?: PickRouteCell) {
+  const routeFields = routeCell
+    ? Object.entries(routeCell)
+      .map(([key, value]) => `${key}: ${String(value ?? "")}`)
+      .join("\n")
+    : "не входит в активный порядок обхода";
+  return [
+    `ЯО: ${cell.cell_code}`,
+    `topology_cell_id: ${cell.topology_cell_id}`,
+    `topology_id: ${cell.topology_id}`,
+    `ware_id: ${cell.ware_id}`,
+    `зона: ${cell.zone_code || ""}`,
+    `секция: ${cell.section_code || ""}`,
+    `аллея: ${cell.aisle_code || ""}`,
+    `ряд/bay: ${cell.bay_no || ""}`,
+    `ярус: ${cell.level_no || ""}`,
+    `сторона: ${cell.side_code}`,
+    `тип: ${cell.cell_kind}`,
+    `координаты: X=${cell.x}, Y=${cell.y}, Z=${cell.z}`,
+    `габариты: ${cell.width} x ${cell.depth} x ${cell.height}`,
+    `емкость: ${cell.max_volume_m3 || 0} м3 / ${cell.max_weight_kg || 0} кг`,
+    `до отгрузки: ${formatDistance(cell.nearest_outbound_gate_distance_m)}`,
+    `от приемки: ${formatDistance(cell.nearest_inbound_gate_distance_m)}`,
+    "",
+    "Порядок сбора:",
+    routeFields
+  ].join("\n");
+}
+
+function pickFaceRouteLabel(cell: TopologyCell, routeCell: PickRouteCell) {
+  return `${cell.bay_no || 0}-${routeCell.pick_sequence}`;
 }
 
 function toViewportPoint(point: SvgPoint, view: { zoom: number; panX: number; panY: number }): SvgPoint {
