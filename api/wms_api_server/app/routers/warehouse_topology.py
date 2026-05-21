@@ -91,6 +91,14 @@ def validate_topology(
     return WarehouseTopologyService().validate_topology(topology_id)
 
 
+@router.post("/warehouse-topologies/{topology_id}/normalize-cell-codes")
+def normalize_topology_cell_codes(
+    topology_id: int,
+    user: AdminUser = Depends(require_permission(WAREHOUSE_TOPOLOGY_EDIT_PERMISSION)),
+) -> dict[str, int]:
+    return WarehouseTopologyService().normalize_pick_face_cell_codes(topology_id, user.username)
+
+
 @router.post("/warehouse-topologies/{topology_id}/publish")
 def publish_topology(
     topology_id: int,

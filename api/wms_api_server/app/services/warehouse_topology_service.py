@@ -510,6 +510,51 @@ class WarehouseTopologyService:
                 """,
                 {"topology_id": topology_id},
             ),
+            "pick_faces_with_noncanonical_cell_code": self.gateway.fetch_all(
+                """
+                select CELL_CODE, AISLE_CODE, BAY_NO, LEVEL_NO, SIDE_CODE,
+                       AISLE_CODE
+                       || '-B' || lpad(nvl(BAY_NO, POSITION_NO), 3, '0')
+                       || '-L' || lpad(nvl(LEVEL_NO, 1), 1, '0')
+                       || '-' || case
+                                    when SIDE_CODE = 'LEFT' then 'L'
+                                    when SIDE_CODE = 'RIGHT' then 'R'
+                                    else 'C'
+                                  end EXPECTED_CELL_CODE
+                  from RRL_TOPOLOGY_CELL
+                 where TOPOLOGY_ID = :topology_id
+                   and ACTIVE = 1
+                   and CELL_KIND in ('PICK_FACE', 'DYNAMIC_PICK_FACE')
+                   and AISLE_CODE is not null
+                   and nvl(BAY_NO, POSITION_NO) is not null
+                   and nvl(CELL_CODE, chr(0)) <>
+                       AISLE_CODE
+                       || '-B' || lpad(nvl(BAY_NO, POSITION_NO), 3, '0')
+                       || '-L' || lpad(nvl(LEVEL_NO, 1), 1, '0')
+                       || '-' || case
+                                    when SIDE_CODE = 'LEFT' then 'L'
+                                    when SIDE_CODE = 'RIGHT' then 'R'
+                                    else 'C'
+                                  end
+                 order by AISLE_CODE, BAY_NO, SIDE_CODE, LEVEL_NO
+                """,
+                {"topology_id": topology_id},
+            ),
+            "route_cells_with_stale_cell_code": self.gateway.fetch_all(
+                """
+                select rc.PICK_ROUTE_CELL_ID, rc.CELL_CODE, c.CELL_CODE EXPECTED_CELL_CODE
+                  from RRL_PICK_ROUTE_CELL rc
+                  join RRL_TOPOLOGY_CELL c
+                    on c.TOPOLOGY_CELL_ID = rc.TOPOLOGY_CELL_ID
+                  join RRL_PICK_ROUTE r
+                    on r.PICK_ROUTE_ID = rc.PICK_ROUTE_ID
+                 where r.TOPOLOGY_ID = :topology_id
+                   and rc.ACTIVE = 1
+                   and nvl(rc.CELL_CODE, chr(0)) <> substr(c.CELL_CODE, 1, 60)
+                 order by rc.PICK_ROUTE_CELL_ID
+                """,
+                {"topology_id": topology_id},
+            ),
             "multiple_active_pick_routes": self.gateway.fetch_all(
                 """
                 select TOPOLOGY_ID, count(*) CNT
@@ -520,6 +565,24 @@ class WarehouseTopologyService:
                    and STATUS <> 'ARCHIVED'
                  group by TOPOLOGY_ID
                 having count(*) > 1
+                """,
+                {"topology_id": topology_id},
+            ),
+            "active_pick_routes_without_cells": self.gateway.fetch_all(
+                """
+                select r.PICK_ROUTE_ID, r.ROUTE_CODE, r.STATUS, r.ACTIVE
+                  from RRL_PICK_ROUTE r
+                 where r.TOPOLOGY_ID = :topology_id
+                   and r.ROUTE_KIND = 'PICK'
+                   and r.ACTIVE = 1
+                   and r.STATUS <> 'ARCHIVED'
+                   and not exists (
+                         select 1
+                           from RRL_PICK_ROUTE_CELL rc
+                          where rc.PICK_ROUTE_ID = r.PICK_ROUTE_ID
+                            and rc.ACTIVE = 1
+                       )
+                 order by r.PICK_ROUTE_ID
                 """,
                 {"topology_id": topology_id},
             ),
@@ -586,6 +649,146 @@ class WarehouseTopologyService:
                 {"topology_id": topology_id},
             )
         return {"topology_id": topology_id, "valid": error_count == 0, "error_count": error_count, "checks": checks}
+
+    def normalize_pick_face_cell_codes(self, topology_id: int, user: str | None) -> dict[str, int]:
+        topology = self._topology(topology_id)
+        if not topology:
+            raise HTTPException(status_code=404, detail="Warehouse topology not found.")
+        candidates = self.gateway.fetch_all(
+            """
+            select count(*) CNT
+              from RRL_TOPOLOGY_CELL
+             where TOPOLOGY_ID = :topology_id
+               and ACTIVE = 1
+               and CELL_KIND in ('PICK_FACE', 'DYNAMIC_PICK_FACE')
+               and AISLE_CODE is not null
+               and nvl(BAY_NO, POSITION_NO) is not null
+               and nvl(CELL_CODE, chr(0)) <>
+                   AISLE_CODE
+                   || '-B' || lpad(nvl(BAY_NO, POSITION_NO), 3, '0')
+                   || '-L' || lpad(nvl(LEVEL_NO, 1), 1, '0')
+                   || '-' || case
+                                when SIDE_CODE = 'LEFT' then 'L'
+                                when SIDE_CODE = 'RIGHT' then 'R'
+                                else 'C'
+                              end
+            """,
+            {"topology_id": topology_id},
+        )
+        candidate_count = int(candidates[0].get("cnt") or 0) if candidates else 0
+        updated_cells = self.gateway.execute(
+            """
+            merge into RRL_TOPOLOGY_CELL c
+            using (
+              select r.*
+                from (
+                  select d.*,
+                         count(*) over (partition by d.TOPOLOGY_ID, d.NEW_CELL_CODE) SAME_NEW_CODE_COUNT
+                    from (
+                      select c.TOPOLOGY_CELL_ID,
+                             c.TOPOLOGY_ID,
+                             c.CELL_CODE OLD_CELL_CODE,
+                             c.AISLE_CODE
+                             || '-B' || lpad(nvl(c.BAY_NO, c.POSITION_NO), 3, '0')
+                             || '-L' || lpad(nvl(c.LEVEL_NO, 1), 1, '0')
+                             || '-' || case
+                                          when c.SIDE_CODE = 'LEFT' then 'L'
+                                          when c.SIDE_CODE = 'RIGHT' then 'R'
+                                          else 'C'
+                                        end NEW_CELL_CODE
+                        from RRL_TOPOLOGY_CELL c
+                       where c.TOPOLOGY_ID = :topology_id
+                         and c.ACTIVE = 1
+                         and c.CELL_KIND in ('PICK_FACE', 'DYNAMIC_PICK_FACE')
+                         and c.AISLE_CODE is not null
+                         and nvl(c.BAY_NO, c.POSITION_NO) is not null
+                    ) d
+                ) r
+               where nvl(r.OLD_CELL_CODE, chr(0)) <> r.NEW_CELL_CODE
+                 and r.SAME_NEW_CODE_COUNT = 1
+                 and not exists (
+                   select 1
+                     from RRL_TOPOLOGY_CELL x
+                    where x.TOPOLOGY_ID = r.TOPOLOGY_ID
+                      and x.TOPOLOGY_CELL_ID <> r.TOPOLOGY_CELL_ID
+                      and x.CELL_CODE = r.NEW_CELL_CODE
+                 )
+            ) s
+            on (c.TOPOLOGY_CELL_ID = s.TOPOLOGY_CELL_ID)
+            when matched then update set
+              c.LEGACY_CELL_CODE = nvl(c.LEGACY_CELL_CODE, c.CELL_CODE),
+              c.CELL_CODE = substr(s.NEW_CELL_CODE, 1, 80),
+              c.UPDATED_AT = sysdate,
+              c.UPDATED_BY = substr(:updated_by, 1, 50)
+            """,
+            {"topology_id": topology_id, "updated_by": user or "TOPOLOGY_API"},
+        )
+        updated_route_cells = self.gateway.execute(
+            """
+            update RRL_PICK_ROUTE_CELL rc
+               set rc.CELL_CODE = (
+                     select substr(c.CELL_CODE, 1, 60)
+                       from RRL_TOPOLOGY_CELL c
+                      where c.TOPOLOGY_CELL_ID = rc.TOPOLOGY_CELL_ID
+                   ),
+                   rc.UPDATED_AT = sysdate,
+                   rc.UPDATED_BY = substr(:updated_by, 1, 50)
+             where rc.TOPOLOGY_CELL_ID is not null
+               and exists (
+                     select 1
+                       from RRL_PICK_ROUTE r
+                       join RRL_TOPOLOGY_CELL c
+                         on c.TOPOLOGY_CELL_ID = rc.TOPOLOGY_CELL_ID
+                      where r.PICK_ROUTE_ID = rc.PICK_ROUTE_ID
+                        and r.TOPOLOGY_ID = :topology_id
+                        and nvl(rc.CELL_CODE, chr(0)) <> substr(c.CELL_CODE, 1, 60)
+                   )
+            """,
+            {"topology_id": topology_id, "updated_by": user or "TOPOLOGY_API"},
+        )
+        remaining = self.gateway.fetch_all(
+            """
+            select count(*) CNT
+              from RRL_TOPOLOGY_CELL
+             where TOPOLOGY_ID = :topology_id
+               and ACTIVE = 1
+               and CELL_KIND in ('PICK_FACE', 'DYNAMIC_PICK_FACE')
+               and AISLE_CODE is not null
+               and nvl(BAY_NO, POSITION_NO) is not null
+               and nvl(CELL_CODE, chr(0)) <>
+                   AISLE_CODE
+                   || '-B' || lpad(nvl(BAY_NO, POSITION_NO), 3, '0')
+                   || '-L' || lpad(nvl(LEVEL_NO, 1), 1, '0')
+                   || '-' || case
+                                when SIDE_CODE = 'LEFT' then 'L'
+                                when SIDE_CODE = 'RIGHT' then 'R'
+                                else 'C'
+                              end
+            """,
+            {"topology_id": topology_id},
+        )
+        remaining_count = int(remaining[0].get("cnt") or 0) if remaining else 0
+        self._log_change(
+            topology_id,
+            "CELL",
+            None,
+            "NORMALIZE_CELL_CODES",
+            None,
+            {
+                "candidate_count": candidate_count,
+                "updated_cells": updated_cells,
+                "updated_route_cells": updated_route_cells,
+                "remaining_count": remaining_count,
+            },
+            user,
+        )
+        return {
+            "topology_id": topology_id,
+            "candidate_count": candidate_count,
+            "updated_cells": int(updated_cells or 0),
+            "updated_route_cells": int(updated_route_cells or 0),
+            "remaining_count": remaining_count,
+        }
 
     def publish_topology(self, topology_id: int, user: str) -> None:
         topology = self._topology(topology_id)
@@ -664,6 +867,7 @@ class WarehouseTopologyService:
         topology = self._topology(request.topology_id)
         if not topology:
             raise HTTPException(status_code=404, detail="Warehouse topology not found.")
+        self.normalize_pick_face_cell_codes(request.topology_id, request.updated_by)
         pick_route_id = request.pick_route_id
         if not pick_route_id:
             existing_for_topology = self.gateway.fetch_all(
@@ -879,6 +1083,10 @@ class WarehouseTopologyService:
 
     def _order_route_cells(self, cells: list[dict[str, Any]], request: PickRouteBuildRequest) -> list[dict[str, Any]]:
         pattern = (request.route_pattern or "Z").upper()
+        if pattern == "LINEAR":
+            pattern = "PI_SHAPE"
+        if pattern == "SNAKE":
+            pattern = "U_SHAPE"
         side_rank = {side.upper(): index for index, side in enumerate(request.side_order or ["LEFT", "RIGHT"])}
         aisle_order = {code: index for index, code in enumerate(request.aisle_codes or [])}
         groups: dict[str, list[dict[str, Any]]] = {}
@@ -888,14 +1096,25 @@ class WarehouseTopologyService:
         ordered: list[dict[str, Any]] = []
         sorted_groups = sorted(groups.items(), key=lambda item: (aisle_order.get(item[0], 999), item[0]))
         for index, (_aisle_code, aisle_cells) in enumerate(sorted_groups):
-            reverse = (pattern in {"Z", "SNAKE"} and index % 2 == 1) or pattern == "U_SHAPE"
-            side_first = pattern in {"LINEAR", "U_SHAPE"}
-            aisle_cells.sort(key=lambda row: (
-                side_rank.get(str(row.get("side_code") or "").upper(), 99) if side_first else 0,
-                -float(row.get("bay_no") or 0) if reverse else float(row.get("bay_no") or 0),
-                0 if side_first else side_rank.get(str(row.get("side_code") or "").upper(), 99),
-                float(row.get("level_no") or 0),
-            ))
+            reverse = pattern == "Z" and index % 2 == 1
+            side_first = pattern in {"U_SHAPE", "PI_SHAPE"}
+
+            def route_sort_key(row: dict[str, Any]) -> tuple[float, float, float, float]:
+                rank = float(side_rank.get(str(row.get("side_code") or "").upper(), 99))
+                bay = float(row.get("bay_no") or 0)
+                level = float(row.get("level_no") or 0)
+                if pattern == "U_SHAPE":
+                    return (rank, bay if rank == 0 else -bay, level, 0)
+                if pattern == "PI_SHAPE":
+                    return (rank, -bay if rank == 0 else bay, level, 0)
+                return (
+                    rank if side_first else 0,
+                    -bay if reverse else bay,
+                    0 if side_first else rank,
+                    level,
+                )
+
+            aisle_cells.sort(key=route_sort_key)
             ordered.extend(aisle_cells)
         return ordered
 

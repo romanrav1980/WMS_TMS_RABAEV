@@ -1006,6 +1006,22 @@ Append-only log of root wiki updates.
 - Preserved the active digital-twin context: model-only runner, evidence contract, raw HTML replay, React admin frontend, latest evidence run, implemented physical-model refinements, and next stabilization steps.
 - Linked the checkpoint from the root wiki index.
 
+## 2026-05-22 - Warehouse topology acceptance TZ
+
+- Added [`requirements/warehouse_topology_acceptance_tz_2026_05_22.md`](requirements/warehouse_topology_acceptance_tz_2026_05_22.md) as the narrow tactical ТЗ for finishing topology admin, warehouse topology API, Oracle route invariants, and visual evidence.
+- Linked the May 22 topology acceptance ТЗ from the root wiki index.
+- Ran the first topology acceptance diagnostic: `LOAD-1500-2CH-60` is topology `2`; API had active route `105 / CASE-Z-MAIN` with `0` route rows, so the UI `0 ячеек в последовательности` screenshot was data/API state, not a renderer-only issue.
+- Rebuilt route `105 / CASE-Z-MAIN` through `/api/admin/pick-routes/build`; API now returns `1500` route cells with sequence `1..1500`.
+- Added topology validation check `active_pick_routes_without_cells` so active non-archived pick routes without route rows no longer pass as clean topology.
+- Captured visual evidence `admin/wms_admin_frontend/runtime/test-evidence/topology-2026-05-22-vd-loading-diagnostic.png`; the page shows `1500` ЯО, `1500` in route, and `1500 ячеек в последовательности`.
+- Verified `npm.cmd run build` and `scripts/check-encoding.ps1`.
+- Fixed the topology visual defect where dock staging/consolidation grids overlapped pick-face rows; the renderer now keeps the physical order `warehouse -> pallet staging -> gates -> truck`.
+- Captured evidence `admin/wms_admin_frontend/runtime/test-evidence/topology-2026-05-22-dock-order-fixed-gate-line.png`.
+- Split `SNAKE` route ordering from `Z`: SNAKE now walks one aisle side first and returns on the opposite side instead of jumping diagonally between left/right pick-face cells on every bay. Applied the same rule to frontend preview and backend route build.
+- Replaced the user-facing `LINEAR` route variant with `П-образно` and renamed `U_SHAPE` to `U-образно`; both now use explicit U/П ordering rules instead of N/И-like diagonal ordering. Backend treats legacy `LINEAR` as `PI_SHAPE`.
+- Removed user-facing `SNAKE` after analysis showed it duplicates `U-образно`; backend now treats legacy `SNAKE` as `U_SHAPE`.
+- Updated topology map pick-face geometry so neighboring pallet places visually form continuous rows with the short rectangle side facing the aisle. Cell labels are rendered inside rectangles only at usable zoom/small-map scale, not on dense `1500`-cell overview. Evidence: `admin/wms_admin_frontend/runtime/test-evidence/topology-2026-05-22-pallet-places-touching-clean-overview.png`.
+
 ## [2026-05-20] simulation | Added warehouse digital twin capacity explanation
 
 - Restored the runner's congested-location check and corrected picker assignment priority so available pick lines are picked before a picker is blocked on an empty pick-face.
@@ -1221,3 +1237,13 @@ Append-only log of root wiki updates.
 - Corrected the deep-zoom dock context: dock gates and trucks now compensate map zoom, trucks are drawn as top-down SVG vehicles similar to the provided reference, and gate-distance labels scale down with zoom instead of becoming huge labels over the dock. Targeted Playwright evidence: `runtime/test-evidence/topology-ya-zoom-dock-context.png`, with trucks measured at about `22 x 50 px` and no interface error boundary.
 - Reworked dock staging semantics: every active gate now has its own shared receiving/shipping staging grid with `33` pallet places (`2 x 16` plus reserve) drawn in `1200 x 800` proportions, and trucks are aligned rear-first to the gates. Aisle labels are now rendered above the aisles in the fixed label layer. Visual smoke `runtime/test-evidence/topology-per-gate-staging-overview.png` reports `10` staging bases, `330` dock slots, all `13` aisle labels, and no interface error boundary.
 - Adjusted aisle-name labels again after visual review: labels now sit on the top of their own aisle axes with compact white-backed badges instead of floating as one shared line above the map. Evidence screenshot: `runtime/test-evidence/topology-aisle-labels-on-aisles.png`.
+
+## 2026-05-22 - Topology acceptance TZ and pallet geometry
+
+- Created the limited acceptance TZ for topology admin under `wiki/requirements/warehouse_topology_acceptance_tz_2026_05_22.md`, scoped to topology admin, warehouse topology API, Oracle route invariants, and visual evidence.
+- Fixed topology route acceptance checks for the large `LOAD-1500-2CH-60` case: active routes without route rows are now validation errors, cell-code normalization is available through the topology API, and route build normalizes stale route cell codes before rebuilding.
+- Simplified route strategy names in the topology UI to `Z`, `U-образно`, and `П-образно`; legacy `SNAKE` is treated as `U-образно`, and legacy `LINEAR` is treated as `П-образно`.
+- Corrected the 2D visual order of dock semantics to `склад -> зона накопления паллет -> ворота -> машина`.
+- Corrected pick-face pallet geometry: pallet places render as horizontal `1200 x 800` rectangles, adjacent places in one row share the long side, the `800 мм` side faces the aisle, and the aisle between left/right rows represents `3 м`.
+- Tightened the pallet grid to the Excel-like acceptance rule: vertical neighbors in one row have zero visual gap, back-to-back neighboring rows between adjacent aisles have zero visual gap, and only the opposite left/right rows around an aisle keep the `3 м` passage.
+- Fixed the overlap regression by using minimum projected vertical and aisle spacing for geometry limits instead of median spacing. Numeric check for topology `1` returned `overlapCount = 0`; evidence screenshot: `runtime/test-evidence/topology-2026-05-22-no-overlap-measured-grid.png`.

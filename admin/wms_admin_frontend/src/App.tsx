@@ -18,7 +18,7 @@ export default function App() {
   const [speed, setSpeed] = useState(5);
   const [selectedWaveId, setSelectedWaveId] = useState("");
   const [page, setPage] = useState(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(window.location.search.replace(/;/g, "&"));
     const pg = params.get("page");
     return pg === "topology" ? "topology" : pg === "transport" ? "transport" : "twin";
   });

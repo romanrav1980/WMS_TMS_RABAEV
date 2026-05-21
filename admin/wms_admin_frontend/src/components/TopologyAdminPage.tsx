@@ -125,7 +125,7 @@ type ValidationResult = {
 };
 
 type ApiState = "loading" | "demo" | "api" | "saving";
-type RoutePattern = "Z" | "U_SHAPE" | "SNAKE" | "LINEAR";
+type RoutePattern = "Z" | "U_SHAPE" | "PI_SHAPE";
 type SvgSelectionRect = { x1: number; y1: number; x2: number; y2: number };
 type AreaDragState = { start: SvgPoint; current: SvgPoint; additive: boolean };
 type SvgPoint = { x: number; y: number };
@@ -134,6 +134,7 @@ const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
 const API_BASIC_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
 const MIN_TOPOLOGY_ZOOM = 0.1;
 const MAX_TOPOLOGY_ZOOM = 12;
+const PLAN_DOCK_GATE_Y = 690;
 
 function apiHeaders(extra?: HeadersInit): HeadersInit {
   return {
@@ -353,7 +354,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
           topology_id: map.topology.topology_id,
           ware_id: map.topology.ware_id,
           route_code: `CASE-${pattern}-MAIN`,
-          route_name: `Основной ${pattern}-обход отбора`,
+          route_name: `Основной ${routePatternLabel(pattern)} обход отбора`,
           route_pattern: pattern,
           aisle_codes: selectedAisles,
           cell_ids: selectedCellIds.length ? selectedCellIds : null,
@@ -536,10 +537,11 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
   function handleMapPointerUp() {
     if (areaDrag) {
       const bounds = mapBounds(map.cells, map.aisles);
+      const cellVisual = getCellVisualSize(map.cells, bounds, mapMode, map.aisles);
       const rect = normalizeRect(areaDrag.start, areaDrag.current);
       const selectedCells = map.cells.filter((cell) => {
         const aisle = map.aisles.find((item) => item.aisle_code === cell.aisle_code);
-        const point = projectCellPoint(cell, bounds, mapMode, aisle);
+        const point = projectCellPoint(cell, bounds, mapMode, aisle, cellVisual);
         const x = point.x;
         const y = point.y;
         return cell.active === 1 && cell.cell_kind.includes("PICK_FACE") && x >= rect.x1 && x <= rect.x2 && y >= rect.y1 && y <= rect.y2;
@@ -690,9 +692,9 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
               ))}
             </div>
             <div className="route-strategy-grid">
-              {(["Z", "U_SHAPE", "SNAKE", "LINEAR"] as RoutePattern[]).map((pattern) => (
+              {(["Z", "U_SHAPE", "PI_SHAPE"] as RoutePattern[]).map((pattern) => (
                 <button key={pattern} className={routePattern === pattern ? "active" : ""} onClick={() => handleBuildRoute(pattern)} title={routePatternHint(pattern)}>
-                  {pattern}
+                  {routePatternLabel(pattern)}
                 </button>
               ))}
             </div>
@@ -820,8 +822,8 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
                     setRouteMenu(null);
                   }}>Снять выделение</button>
                   <span>Построить обход</span>
-                  {(["Z", "U_SHAPE", "SNAKE", "LINEAR"] as RoutePattern[]).map((pattern) => (
-                    <button key={pattern} title={routePatternHint(pattern)} onClick={() => handleBuildRoute(pattern)}>{pattern}</button>
+                  {(["Z", "U_SHAPE", "PI_SHAPE"] as RoutePattern[]).map((pattern) => (
+                    <button key={pattern} title={routePatternHint(pattern)} onClick={() => handleBuildRoute(pattern)}>{routePatternLabel(pattern)}</button>
                   ))}
                 </div>
               )}
@@ -905,7 +907,7 @@ export function TopologyAdminPage({ onBack }: { onBack: () => void }) {
             {activeRoute ? (
               <div className="route-summary">
                 <b>{activeRoute.route_code}</b>
-                <span>{activeRoute.route_pattern || "Z"} · {activeRoute.status || "DRAFT"}</span>
+                <span>{routePatternLabel(activeRoute.route_pattern || "Z")} · {activeRoute.status || "DRAFT"}</span>
                 <span>{activeRouteCells.length} ячеек в последовательности</span>
               </div>
             ) : <p>Постройте Z-обход для выбранных аллей.</p>}
@@ -966,11 +968,21 @@ function InspectorField({ label, value, onChange }: { label: string; value: numb
 function routePatternHint(pattern: RoutePattern) {
   const hints: Record<RoutePattern, string> = {
     Z: "Построить Z-порядок: соседние проходы обходятся от ближайшего торца",
-    U_SHAPE: "Построить П-образный порядок обхода участка",
-    SNAKE: "Построить змейку с чередованием направления по аллеям",
-    LINEAR: "Построить линейный порядок без чередования Z"
+    U_SHAPE: "Построить U-образный обход: вниз по одной стороне, перемычка снизу, вверх по другой стороне",
+    PI_SHAPE: "Построить П-образный обход: вверх по одной стороне, перемычка сверху, вниз по другой стороне"
   };
   return hints[pattern];
+}
+
+function routePatternLabel(pattern: string) {
+  const labels: Record<string, string> = {
+    Z: "Z",
+    SNAKE: "U-образно",
+    U_SHAPE: "U-образно",
+    PI_SHAPE: "П-образно",
+    LINEAR: "П-образно"
+  };
+  return labels[pattern] || pattern;
 }
 
 function TopologyCellTable({ cells, selectedId, onSelect }: { cells: TopologyCell[]; selectedId: number | null; onSelect: (id: number) => void }) {
@@ -1024,14 +1036,16 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
       return cell ? { routeCell, cell } : null;
     })
     .filter(Boolean) as Array<{ routeCell: PickRouteCell; cell: TopologyCell }>;
-  const routeSegments = buildRouteSegments(routeCells, bounds, mode, map.aisles);
+  const cellVisual = getCellVisualSize(map.cells, bounds, mode, map.aisles);
+  const routeSegments = buildRouteSegments(routeCells, bounds, mode, map.aisles, cellVisual);
   const invZoom = 1 / view.zoom;
-  const cellVisual = getCellVisualSize(map.cells, bounds, mode);
+  const denseCellMap = map.cells.filter((cell) => cell.active === 1).length > 300;
+  const showInsideCellLabels = layers.labels && (!denseCellMap || view.zoom >= 2.4) && view.zoom <= 6;
 
   return (
     <svg
       className={`topology-svg ${mode === "plan" ? "plan-mode" : ""}`}
-      viewBox="0 0 1000 650"
+      viewBox="0 0 1000 760"
       preserveAspectRatio="xMidYMin meet"
       role="img"
       aria-label="Карта топологии склада"
@@ -1056,7 +1070,7 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
           <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b5a2b" />
         </marker>
       </defs>
-      <rect width="1000" height="650" fill="#f8fbff" />
+      <rect width="1000" height="760" fill="#f8fbff" />
       <g transform={`translate(${view.panX} ${view.panY}) scale(${view.zoom})`}>
         {layers.zones && (
           <>
@@ -1076,7 +1090,7 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
           <g key={gate.topology_gate_id}>
             {(() => {
               const point = projectPoint(gate.x, gate.y, bounds, mode);
-              const gateY = mode === "3d" ? point.y + 26 : 568;
+              const gateY = mode === "3d" ? point.y + 26 : PLAN_DOCK_GATE_Y;
               const dockScale = Math.min(1, invZoom);
               return (
                 <g className="dock-gate-node" transform={`translate(${point.x} ${gateY}) scale(${dockScale})`}>
@@ -1110,7 +1124,9 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
 
         {layers.gates && drawAisleGateLinks(map, bounds, view.zoom)}
 
-        {layers.distances && selectedId && drawDistanceLines(map, selectedId, bounds, mode)}
+        {layers.distances && selectedId && drawDistanceLines(map, selectedId, bounds, mode, cellVisual)}
+
+        {layers.aisles && drawPassageOverlay(map, bounds, mode, layers.labels, view.zoom)}
 
         {layers.route && (
           <g className="route-link-layer">
@@ -1132,7 +1148,7 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
 
         {layers.cells && map.cells.filter((cell) => cell.active === 1).map((cell) => {
           const aisle = map.aisles.find((item) => item.aisle_code === cell.aisle_code);
-          const point = projectCellPoint(cell, bounds, mode, aisle);
+          const point = projectCellPoint(cell, bounds, mode, aisle, cellVisual);
           const x = point.x;
           const y = point.y;
           const routeCell = routeByCell.get(cell.topology_cell_id);
@@ -1169,12 +1185,13 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
                 strokeWidth={selected || inRouteSelection ? 2.2 : 1.15}
                 className="pick-face-cell-rect"
               />
+              {showInsideCellLabels && (
+                <text x={x} y={y + 1} className="pick-face-inside-label">{shortCellLabel(cell)}</text>
+              )}
               {mode === "3d" && <path d={`M ${x - cellVisual.width / 2} ${y + cellVisual.height / 2} L ${x - cellVisual.width / 2 + 8} ${y + cellVisual.height / 2 + 7} L ${x + cellVisual.width / 2 + 8} ${y + cellVisual.height / 2 + 7} L ${x + cellVisual.width / 2} ${y + cellVisual.height / 2} Z`} fill="#8b6f3e" opacity=".5" />}
             </g>
           );
         })}
-
-        {layers.aisles && drawPassageOverlay(map, bounds, mode, layers.labels, view.zoom)}
 
         {layers.gates && drawDockStagingZone(map, bounds, mode, layers.labels, view.zoom)}
 
@@ -1191,7 +1208,7 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
           />
         )}
       </g>
-      {layers.labels && drawFixedLabelOverlay(map, routeByCell, bounds, mode, view)}
+      {layers.labels && drawFixedLabelOverlay(map, routeByCell, bounds, mode, view, cellVisual)}
     </svg>
   );
 }
@@ -1217,7 +1234,7 @@ function scaledTextStyle(fontPx: number, strokePx: number, zoom: number) {
   };
 }
 
-function getCellVisualSize(cells: TopologyCell[], bounds: MapBounds, mode: "3d" | "plan" | "list") {
+function getCellVisualSize(cells: TopologyCell[], bounds: MapBounds, mode: "3d" | "plan" | "list", aisles: TopologyAisle[] = []) {
   const projectedSteps: number[] = [];
   const groups = new Map<string, TopologyCell[]>();
   cells.filter((cell) => cell.active === 1).forEach((cell) => {
@@ -1233,15 +1250,31 @@ function getCellVisualSize(cells: TopologyCell[], bounds: MapBounds, mode: "3d" 
       if (delta > 0.5) projectedSteps.push(delta);
     }
   });
-  const step = median(projectedSteps) || 14;
-  const height = Math.max(4.8, Math.min(18, step * 0.72));
-  const width = mode === "3d" ? 13 : 16;
+  const step = projectedSteps.length ? Math.min(...projectedSteps) : 14;
+  const passageWidth = mode === "3d" ? 32 : 38;
+  const aisleSteps: number[] = [];
+  const projectedAisleXs = aisles
+    .filter((aisle) => aisle.aisle_kind === "PICK_AISLE")
+    .map((aisle) => projectAislePoint(aisle, aisle.y1, bounds, mode).x)
+    .sort((a, b) => a - b);
+  for (let index = 1; index < projectedAisleXs.length; index += 1) {
+    const delta = Math.abs(projectedAisleXs[index] - projectedAisleXs[index - 1]);
+    if (delta > 1) aisleSteps.push(delta);
+  }
+  const height = Math.max(4.5, step);
+  const widthByPalletRatio = height * 1.5;
+  const minAisleStep = aisleSteps.length ? Math.min(...aisleSteps) : 0;
+  const maxWidthWithoutOverlap = minAisleStep > passageWidth
+    ? Math.max(8, (minAisleStep - passageWidth) / 2)
+    : widthByPalletRatio;
+  const width = Math.max(8, Math.min(widthByPalletRatio, maxWidthWithoutOverlap));
   return {
     width,
     height,
     capHeight: 0,
     radius: 0,
-    separatorWidth: 4.5
+    separatorWidth: 0,
+    passageWidth
   };
 }
 
@@ -1264,13 +1297,22 @@ async function loadInitialTopology(): Promise<{ topologies: Topology[]; map: Top
     const response = await apiFetch(`${API_BASE}/api/admin/warehouse-topologies`, { cache: "no-store" });
     if (!response.ok) return null;
     const topologies = ((await response.json()) as Topology[]).map((item) => normalizeKeys(item) as Topology);
-    const topology = topologies.find((item) => item.status === "PUBLISHED") || topologies[0];
+    const requestedTopologyId = initialTopologyIdFromUrl();
+    const topology = topologies.find((item) => item.topology_id === requestedTopologyId)
+      || topologies.find((item) => item.status === "PUBLISHED")
+      || topologies[0];
     if (!topology) return null;
     const map = await loadTopologyMap(topology.topology_id);
     return map ? { topologies, map } : null;
   } catch {
     return null;
   }
+}
+
+function initialTopologyIdFromUrl() {
+  const value = new URLSearchParams(window.location.search.replace(/;/g, "&")).get("topologyId");
+  const topologyId = Number(value);
+  return Number.isFinite(topologyId) && topologyId > 0 ? topologyId : null;
 }
 
 async function loadTopologyMap(topologyId: number): Promise<TopologyMap | null> {
@@ -1437,7 +1479,7 @@ function buildLocalRoute(map: TopologyMap, aisleCodes: string[], pattern: RouteP
       pick_route_id: 1,
       topology_id: map.topology.topology_id,
       route_code: `CASE-${pattern}-MAIN`,
-      route_name: `Основной ${pattern}-обход отбора`,
+      route_name: `Основной ${routePatternLabel(pattern)} обход отбора`,
       route_pattern: pattern,
       status: "DRAFT",
       cell_count: routeCells.length
@@ -1456,12 +1498,23 @@ function orderRouteCells(
     .sort((a, b) => (aisleOrder.get(a[0]) ?? 999) - (aisleOrder.get(b[0]) ?? 999));
   const ordered: TopologyCell[] = [];
   groups.forEach(([, aisleCells], index) => {
-    const reverse = pattern === "Z" || pattern === "SNAKE" ? index % 2 === 1 : pattern === "U_SHAPE";
-    const sideFirst = pattern === "LINEAR" || pattern === "U_SHAPE";
+    const reverse = pattern === "Z" ? index % 2 === 1 : false;
+    const sideFirst = pattern === "U_SHAPE" || pattern === "PI_SHAPE";
     ordered.push(...aisleCells.sort((a, b) => {
       const bayDiff = Number(a.bay_no || 0) - Number(b.bay_no || 0);
       const levelDiff = Number(a.level_no || 0) - Number(b.level_no || 0);
       const sideDiff = sideRank[a.side_code] - sideRank[b.side_code];
+      if (pattern === "U_SHAPE" || pattern === "PI_SHAPE") {
+        const aSideRank = sideRank[a.side_code] ?? 99;
+        const bSideRank = sideRank[b.side_code] ?? 99;
+        const uBayDiff = pattern === "U_SHAPE"
+          ? aSideRank === 0 ? bayDiff : -bayDiff
+          : aSideRank === 0 ? -bayDiff : bayDiff;
+        const otherUBayDiff = pattern === "U_SHAPE"
+          ? bSideRank === 0 ? bayDiff : -bayDiff
+          : bSideRank === 0 ? -bayDiff : bayDiff;
+        return sideDiff || (aSideRank === bSideRank ? uBayDiff : otherUBayDiff) || levelDiff;
+      }
       if (sideFirst) return sideDiff || (reverse ? -bayDiff : bayDiff) || levelDiff;
       return (reverse ? -bayDiff : bayDiff) || sideDiff || levelDiff;
     }));
@@ -1577,7 +1630,7 @@ function topologyStatusText(status: TopologyStatus) {
   return labels[status] || status;
 }
 
-function drawDistanceLines(map: TopologyMap, selectedId: number, bounds: MapBounds, mode: "3d" | "plan" | "list") {
+function drawDistanceLines(map: TopologyMap, selectedId: number, bounds: MapBounds, mode: "3d" | "plan" | "list", cellVisual: ReturnType<typeof getCellVisualSize>) {
   const cell = map.cells.find((item) => item.topology_cell_id === selectedId);
   if (!cell) return null;
   return map.distances
@@ -1588,9 +1641,9 @@ function drawDistanceLines(map: TopologyMap, selectedId: number, bounds: MapBoun
       const gate = map.gates.find((item) => item.topology_gate_id === distance.topology_gate_id);
       if (!gate) return null;
       const aisle = map.aisles.find((item) => item.aisle_code === cell.aisle_code);
-      const from = projectCellPoint(cell, bounds, mode, aisle);
+      const from = projectCellPoint(cell, bounds, mode, aisle, cellVisual);
       const to = projectPoint(gate.x, gate.y, bounds, mode);
-      return <line key={distance.cell_gate_distance_id} x1={from.x} y1={from.y} x2={to.x} y2={mode === "3d" ? to.y + 30 : 586} stroke="#0f766e" strokeWidth="2" strokeDasharray="6 6" opacity=".56" />;
+      return <line key={distance.cell_gate_distance_id} x1={from.x} y1={from.y} x2={to.x} y2={mode === "3d" ? to.y + 30 : PLAN_DOCK_GATE_Y + 18} stroke="#0f766e" strokeWidth="2" strokeDasharray="6 6" opacity=".56" />;
   });
 }
 
@@ -1611,9 +1664,9 @@ function drawDockStagingZone(map: TopologyMap, bounds: MapBounds, mode: "3d" | "
     <>
       {activeGates.map((gate) => {
         const point = projectPoint(gate.x, gate.y, bounds, mode);
-        const gateY = mode === "3d" ? point.y + 26 : 568;
+        const gateY = mode === "3d" ? point.y + 26 : PLAN_DOCK_GATE_Y;
         const x = point.x - width / 2;
-        const y = gateY - height - reserveHeight - gap * 4;
+        const y = gateY - height - reserveHeight - gap * 5;
         const occupied = gate.gate_kind === "RECEIVING" ? 4 : 9;
         return (
           <g key={`dock-staging-${gate.topology_gate_id}`} className="topology-dock-zone">
@@ -1659,11 +1712,12 @@ function drawFixedLabelOverlay(
   routeByCell: Map<number, PickRouteCell>,
   bounds: MapBounds,
   mode: "3d" | "plan" | "list",
-  view: { zoom: number; panX: number; panY: number }
+  view: { zoom: number; panX: number; panY: number },
+  cellVisual: ReturnType<typeof getCellVisualSize>
 ) {
   const activeCells = map.cells.filter((cell) => cell.active === 1);
   const denseMap = activeCells.length > 300;
-  const showCellCodes = !denseMap && view.zoom <= 2.8;
+  const showCellCodes = false;
   const showCellRouteCodes = view.zoom >= 3.5;
   const routeBadgeStep = view.zoom >= 4 ? 6 : view.zoom >= 2 ? 12 : 30;
   const routeBadgeRadius = view.zoom >= 4 ? 10 : 7;
@@ -1671,7 +1725,7 @@ function drawFixedLabelOverlay(
     <g className="fixed-map-label-layer">
       {activeCells.map((cell) => {
         const aisle = map.aisles.find((item) => item.aisle_code === cell.aisle_code);
-        const point = toViewportPoint(projectCellPoint(cell, bounds, mode, aisle), view);
+        const point = toViewportPoint(projectCellPoint(cell, bounds, mode, aisle, cellVisual), view);
         const routeCell = routeByCell.get(cell.topology_cell_id);
         return (
           <g key={`fixed-label-${cell.topology_cell_id}`}>
@@ -1849,7 +1903,7 @@ function drawAisleGateLinks(map: TopologyMap, bounds: MapBounds, zoom: number) {
       const x1 = sx(end.x, bounds);
       const y1 = sy(end.y, bounds);
       const x2 = sx(nearestGate.gate.x, bounds);
-      const y2 = 586;
+      const y2 = PLAN_DOCK_GATE_Y + 18;
       return (
         <g key={`${aisle.aisle_code}-${end.code}-${nearestGate.gate.gate_code}`} className="gate-link">
           <path d={`M ${x1} ${y1} L ${x1} ${Math.min(560, y2 - 36)} L ${x2} ${Math.min(560, y2 - 36)} L ${x2} ${y2}`} fill="none" />
@@ -1864,14 +1918,15 @@ function buildRouteSegments(
   rows: Array<{ routeCell: PickRouteCell; cell: TopologyCell }>,
   bounds: MapBounds,
   mode: "3d" | "plan" | "list",
-  aisles: TopologyAisle[]
+  aisles: TopologyAisle[],
+  cellVisual: ReturnType<typeof getCellVisualSize>
 ) {
   return rows.slice(1).map(({ routeCell, cell }, index) => {
     const previous = rows[index];
     const fromAisle = aisles.find((item) => item.aisle_code === previous.cell.aisle_code);
     const toAisle = aisles.find((item) => item.aisle_code === cell.aisle_code);
-    const from = projectCellPoint(previous.cell, bounds, mode, fromAisle);
-    const to = projectCellPoint(cell, bounds, mode, toAisle);
+    const from = projectCellPoint(previous.cell, bounds, mode, fromAisle, cellVisual);
+    const to = projectCellPoint(cell, bounds, mode, toAisle, cellVisual);
     const routeFields = Object.entries(routeCell)
       .map(([key, value]) => `${key}=${String(value ?? "")}`)
       .join("\n");
@@ -1899,10 +1954,18 @@ function buildRouteSegments(
   });
 }
 
-function projectCellPoint(cell: TopologyCell, bounds: MapBounds, mode: "3d" | "plan" | "list", aisle?: TopologyAisle) {
+function projectCellPoint(
+  cell: TopologyCell,
+  bounds: MapBounds,
+  mode: "3d" | "plan" | "list",
+  aisle?: TopologyAisle,
+  cellVisual?: ReturnType<typeof getCellVisualSize>
+) {
   const travel = projectTravelPoint(cell, bounds, mode, aisle);
   const side = cell.side_code === "LEFT" ? -1 : cell.side_code === "RIGHT" ? 1 : 0;
-  const offset = mode === "3d" ? 30 : 34;
+  const width = cellVisual?.width ?? (mode === "3d" ? 36 : 45);
+  const passageWidth = cellVisual?.passageWidth ?? (mode === "3d" ? 32 : 38);
+  const offset = (width + passageWidth) / 2;
   return {
     x: travel.x + side * offset,
     y: travel.y

@@ -346,6 +346,7 @@ button[aria-disabled="true"] { cursor: help; }
 .topology-cell-node { cursor: pointer; }
 .pick-face-cell-separator { shape-rendering: crispEdges; vector-effect: non-scaling-stroke; pointer-events: none; }
 .pick-face-cell-rect { shape-rendering: crispEdges; vector-effect: non-scaling-stroke; }
+.pick-face-inside-label { fill: #0f1f35; font-size: 5.7px; font-weight: 950; text-anchor: middle; dominant-baseline: middle; pointer-events: none; paint-order: stroke; stroke: rgba(255,255,255,.72); stroke-width: 1px; }
 .fixed-map-label-layer { pointer-events: none; }
 .fixed-route-badge { fill: rgba(255,255,255,.96); stroke: #ef3b82; stroke-width: 2.5px; filter: drop-shadow(0 2px 4px rgba(15,31,53,.18)); }
 .aisle-label, .gate-label, .topology-dock-zone text, .staging-label { fill: #174ea6; font-size: 13px; font-weight: 900; text-anchor: middle; paint-order: stroke; stroke: #fff; stroke-width: 4px; }
@@ -586,3 +587,21 @@ button[aria-disabled="true"] { cursor: help; }
 
 /* Цена в футере */
 .dispatch-price { margin-left: auto; font-size: 14px; font-weight: 700; color: #166534; }
+
+/* Phase 2.1 — переключатель режима просмотра СТ */
+.dispatch-viewmode-toggle { display: flex; flex-shrink: 0; border-bottom: 1px solid #e2e8f0; }
+.dispatch-viewmode-btn { flex: 1; padding: 7px 4px; border: none; border-bottom: 2px solid transparent; background: #f8fafc; font-size: 12px; font-weight: 600; color: #64748b; cursor: pointer; transition: all .12s; }
+.dispatch-viewmode-btn:hover { background: #f0f4f8; color: #334155; }
+.dispatch-viewmode-btn.active { color: #1d4ed8; border-bottom-color: #2563eb; background: #fff; }
+
+/* Phase 2.1 — кластерные карточки */
+.dispatch-cluster-list { overflow-y: auto; flex: 1; padding: 4px 6px; }
+.dispatch-cluster-card { border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 4px; background: #fff; overflow: hidden; }
+.dispatch-cluster-card:hover { border-color: #bfdbfe; }
+.dispatch-cluster-header { display: flex; align-items: center; gap: 7px; padding: 9px 10px; cursor: pointer; user-select: none; }
+.dispatch-cluster-header:hover { background: #f8fbff; }
+.dispatch-cluster-raion { font-weight: 700; font-size: 13px; color: #1e3a5f; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dispatch-cluster-sel { background: #dbeafe; color: #1d4ed8; border-radius: 8px; padding: 1px 6px; font-size: 10px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+.dispatch-cluster-meta { font-size: 11px; color: #64748b; white-space: nowrap; flex-shrink: 0; }
+.dispatch-cluster-toggle { color: #94a3b8; font-size: 10px; flex-shrink: 0; }
+.dispatch-cluster-body { border-top: 1px solid #e8edf4; padding: 2px 4px 4px; background: #fafcff; }
