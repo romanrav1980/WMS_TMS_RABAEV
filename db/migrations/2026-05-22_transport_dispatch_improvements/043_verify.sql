@@ -1,0 +1,9 @@
+-- Migration 043 verify
+SELECT column_name
+  FROM all_tab_columns
+ WHERE owner = 'RABAEV'
+   AND table_name = 'RRL_V_AVAILABLE_STS'
+ ORDER BY column_id;
+-- Ожидаем: ST_NUMBER, ADDR, REGION, RAION, ORD, SHIROTA, DOLGOTA,
+--          TRANSPORT_TYPE, NEEDS_HYDRO_BOARD, WARE_ID, NAPR,
+--          PALLETS_COUNT, WEIGHT_KG, VOLUME_M3, STDATE, TRANSTASK_ID, VERIFY_PERC

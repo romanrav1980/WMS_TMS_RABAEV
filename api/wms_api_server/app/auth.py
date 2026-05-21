@@ -96,6 +96,7 @@ INVENTORY_TASK_EXECUTE_PERMISSION = "inventory_task_execute"
 TRANSPORT_DISPATCH_VIEW_PERMISSION = "transport_dispatch_view"
 TRANSPORT_DISPATCH_EDIT_PERMISSION = "transport_dispatch_edit"
 TRANSPORT_DISPATCH_CLOSE_PERMISSION = "transport_dispatch_close"
+TRANSPORT_SEND_EMPTY_TRUCK_PERMISSION = "send_empty_truck"
 
 security = HTTPBasic(auto_error=False)
 

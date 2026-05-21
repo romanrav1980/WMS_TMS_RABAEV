@@ -1,0 +1,155 @@
+# Техническое Задание: Биллинг Транспорта
+
+Статус: проектирование (отдельная фаза).
+
+Дата: 2026-05-22.
+
+Связанные документы:
+
+- [Транспортный диспетчер](transport_dispatch_tz.md)
+- [Oracle Change Protocol](../database/oracle_change_protocol.md)
+
+---
+
+## 1. Назначение
+
+Модуль `Биллинг Транспорта` управляет финансовой стороной рейсов:
+
+- Расчёт стоимости каждого рейса.
+- Группировка рейсов в платёжные заказы (счета к перевозчику).
+- Контроль оплаты заказов.
+- Журнал биллинга для бухгалтерии.
+
+В C# реализован в форме `BillingTransport.cs`. Работает поверх модуля транспортного диспетчера — рейс должен существовать и быть назначен на водителя/ТС до включения в биллинг.
+
+---
+
+## 2. Ключевые Термины
+
+- `PAY_ORDER_ID` — ID платёжного заказа в `RRL_BILL_ORDERS`. Хранится в `RRL_TRANSPORT_TASK.PAY_ORDER_ID`.
+- `Биллинг-заказ` — счёт на перевозку за период: несколько рейсов одного перевозчика.
+- `PRICE` — стоимость рейса. Заполняется при вызове `RRL_TT_REORDER_ADR`, хранится в `RRL_TRANSPORT_TASK.PRICE`.
+- `SOBSTVENNYY` — признак собственного водителя. Биллинг актуален только для наёмных (`SOBSTVENNYY = 0`).
+
+---
+
+## 3. Таблицы БД
+
+### 3.1 RRL_BILL_ORDERS
+
+Платёжные заказы (счета к оплате перевозчику).
+
+| Колонка | Тип | Описание |
+|---------|-----|----------|
+| ID | INTEGER | PK |
+| NUM | VARCHAR2 | Номер счёта |
+| COMPANY | VARCHAR2 | Транспортная компания (перевозчик) |
+| DATEOFORDER | DATE | Дата создания |
+| DATEFROM | DATE | Начало периода |
+| DATETO | DATE | Конец периода |
+| CLOSED | INTEGER | Закрыт ли (1/0) |
+| PAYED | INTEGER | Оплачен ли (1/0) |
+
+### 3.2 RRL_TRANSPORT_TASK.PAY_ORDER_ID
+
+Связь рейса с биллинг-заказом: `PAY_ORDER_ID` — FK на `RRL_BILL_ORDERS.ID`.
+
+---
+
+## 4. Oracle-функции и процедуры
+
+| Объект | Тип | Описание |
+|--------|-----|----------|
+| `TRANSPORT_TASK.stoim_tt(tt_id)` | FUNCTION | Стоимость рейса по товарным ценам |
+| `RABAEV.RRL_ADD_TT_2_BILLINGORDER(tt_id, order_id)` | PROCEDURE | Привязать рейс к биллинг-заказу |
+| `RABAEV.RRL_BILL_ADD_TTBILL(...)` | PROCEDURE | Создать биллинг-запись |
+| `RABAEV.RRL_CLOSE_BILLINGORDER(order_id)` | PROCEDURE | Закрыть платёжный заказ |
+| `RABAEV.RRL_PAY_BILLINGORDER(order_id)` | PROCEDURE | Отметить заказ как оплаченный |
+
+Право для расчёта цены: `CALC_TT_PRICE`, `CREATE_TT_PRICE`.
+Право для редактирования биллинга: `EDIT_BILL_TT`.
+
+---
+
+## 5. Функциональные требования
+
+### 5.1 Список рейсов с биллинг-статусом
+
+В `GET /api/admin/transport/tasks` добавить поля:
+- `PAY_ORDER_ID` — привязан ли к счёту.
+- `PRICE` — уже есть в Phase 1.
+
+### 5.2 Управление биллинг-заказами
+
+Эндпоинты:
+
+```
+GET    /api/admin/transport/billing/orders
+       ?company=&date_from=&date_to=&closed=&payed=
+
+POST   /api/admin/transport/billing/orders
+       Body: { company, date_from, date_to }
+
+PATCH  /api/admin/transport/billing/orders/{order_id}/close
+PATCH  /api/admin/transport/billing/orders/{order_id}/pay
+
+GET    /api/admin/transport/billing/orders/{order_id}/tasks
+       — список рейсов в заказе
+
+POST   /api/admin/transport/billing/orders/{order_id}/tasks
+       Body: { tt_ids: [1, 2, 3] }
+       — привязать рейсы к заказу (RRL_ADD_TT_2_BILLINGORDER)
+
+DELETE /api/admin/transport/billing/orders/{order_id}/tasks/{tt_id}
+       — отвязать рейс
+```
+
+### 5.3 Расчёт и редактирование цены рейса
+
+```
+POST   /api/admin/transport/tasks/{task_id}/recalculate-price
+       — вызов TRANSPORT_TASK.stoim_tt или RRL_TT_REORDER_ADR
+
+PATCH  /api/admin/transport/tasks/{task_id}/price
+       Body: { price: 15000.00 }
+       — ручная корректировка. Право: CREATE_TT_PRICE
+```
+
+### 5.4 UI (BillingTransport)
+
+Отдельная вкладка или страница «Биллинг» в TransportDispatchPage или отдельный роут `?page=transport-billing`.
+
+Компоненты:
+- Таблица биллинг-заказов с фильтрами (компания, период, статус оплаты).
+- Детали заказа: список рейсов, суммарная стоимость, кнопки «Закрыть» / «Оплачен».
+- Диалог привязки рейсов к заказу (выбор из незакрытых рейсов того же перевозчика за период).
+
+---
+
+## 6. Права доступа
+
+| Право | Действие |
+|-------|----------|
+| `EDIT_BILL_TT` | Редактирование биллинга, привязка рейсов к заказам |
+| `CALC_TT_PRICE` | Запуск пересчёта цены |
+| `CREATE_TT_PRICE` | Ручная установка цены |
+
+---
+
+## 7. Порядок Реализации
+
+| Шаг | Что делать |
+|-----|-----------|
+| 1 | `BillingService` + эндпоинты CRUD биллинг-заказов |
+| 2 | Эндпоинт привязки рейсов к заказу |
+| 3 | Эндпоинты закрыть / оплачен |
+| 4 | Эндпоинт пересчёта цены |
+| 5 | Frontend: страница биллинга |
+| 6 | Frontend: диалог привязки рейсов |
+
+---
+
+## 8. Зависимости
+
+- Реализуется после полного завершения `transport_dispatch_tz.md` (все улучшения Phase 1).
+- Требует наличия водителей с заполненным полем `DOVERENNOST_OT` для группировки по компании.

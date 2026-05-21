@@ -532,3 +532,57 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-dialog-field span { color: #64748b; font-weight: 700; font-size: 12px; }
 .dispatch-dialog-field select, .dispatch-dialog-field input { border: 1px solid #e2e8f0; border-radius: 6px; padding: 7px 10px; font-size: 13px; }
 .dispatch-dialog-actions { display: flex; gap: 10px; margin-top: 8px; }
+
+/* ---- Improvements 2026-05-22 ---- */
+
+/* Фильтры панели СТ */
+.dispatch-st-filters { display: flex; flex-direction: column; gap: 5px; padding: 6px 10px 4px; border-bottom: 1px solid #e2e8f0; }
+.dispatch-filter-input { border: 1px solid #cbd5e1; border-radius: 5px; padding: 4px 8px; font-size: 12px; width: 100%; box-sizing: border-box; }
+.dispatch-filter-input:focus { outline: none; border-color: #3b82f6; }
+.dispatch-filter-check { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #475569; cursor: pointer; }
+
+/* Район в строке СТ */
+.dispatch-st-raion-sm { font-size: 10px; color: #94a3b8; white-space: nowrap; }
+
+/* Бейдж % сборки */
+.dispatch-verify-pill { font-size: 10px; font-weight: 700; border-radius: 10px; padding: 1px 5px; white-space: nowrap; }
+.dispatch-verify-done { background: #dcfce7; color: #166534; }
+.dispatch-verify-partial { background: #fef9c3; color: #854d0e; }
+.dispatch-verify-low { background: #fee2e2; color: #991b1b; }
+
+/* ТК в карточке рейса */
+.dispatch-tk-badge { font-size: 10px; background: #e0f2fe; color: #0369a1; border-radius: 8px; padding: 1px 6px; margin-left: 4px; }
+.dispatch-tk-inline { font-size: 11px; color: #64748b; }
+
+/* Индикатор готовности рейса */
+.dispatch-readiness { display: flex; align-items: center; gap: 5px; margin-top: 4px; }
+.dispatch-readiness-track { flex: 1; height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden; }
+.dispatch-readiness-fill { height: 100%; border-radius: 2px; transition: width .3s; }
+.dispatch-readiness-done { background: #22c55e; }
+.dispatch-readiness-partial { background: #f59e0b; }
+.dispatch-readiness-zero { background: #ef4444; }
+.dispatch-readiness-label { font-size: 10px; color: #64748b; white-space: nowrap; }
+
+/* Заголовок таблицы состава рейса */
+.dispatch-st-task-header { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px; cursor: default; }
+.dispatch-st-task-header:hover { background: transparent; }
+
+/* Колонки таблицы состава рейса */
+.dispatch-st-zone { width: 50px; font-size: 12px; color: #475569; flex-shrink: 0; }
+.dispatch-st-window { width: 90px; font-size: 11px; color: #475569; flex-shrink: 0; white-space: nowrap; }
+.dispatch-st-loadtype { width: 54px; flex-shrink: 0; }
+
+/* Редактируемый порядок ORD */
+.dispatch-ord-val { cursor: pointer; border-bottom: 1px dashed #94a3b8; min-width: 18px; display: inline-block; text-align: center; }
+.dispatch-ord-val:hover { border-color: #3b82f6; color: #3b82f6; }
+.dispatch-ord-input { width: 36px; padding: 1px 3px; border: 1px solid #3b82f6; border-radius: 3px; font-size: 12px; text-align: center; }
+
+/* Тип погрузки */
+.dispatch-loadtype-select { font-size: 11px; border: 1px solid #cbd5e1; border-radius: 4px; padding: 1px 2px; background: #fff; cursor: pointer; width: 46px; }
+.dispatch-lt-badge { font-size: 11px; font-weight: 700; border-radius: 4px; padding: 1px 4px; }
+.dispatch-lt-empty { color: #94a3b8; font-size: 11px; }
+.dispatch-lt-г { background: #f1f5f9; color: #334155; }
+.dispatch-lt-п { background: #dbeafe; color: #1d4ed8; }
+
+/* Цена в футере */
+.dispatch-price { margin-left: auto; font-size: 14px; font-weight: 700; color: #166534; }

@@ -1001,3 +1001,15 @@ class TransportTaskUpdateRequest(BaseModel):
 class TransportStAssignRequest(BaseModel):
     st_numbers: list[str] = Field(..., min_length=1, description="Список номеров СТ для назначения в рейс")
     updated_by: str | None = None
+
+
+class TransportStLoadTypeRequest(BaseModel):
+    load_type: str = Field(
+        default="",
+        description="Способ погрузки: '' = стандарт, 'Г' = гос. борт, 'П' = прицеп",
+        pattern="^(|Г|П)$",
+    )
+
+
+class TransportStOrderRequest(BaseModel):
+    ord: int = Field(..., ge=0, description="Порядковый номер адреса доставки в рейсе (ORD)")
