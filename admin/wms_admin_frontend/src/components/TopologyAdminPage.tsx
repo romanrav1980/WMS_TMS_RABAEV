@@ -1083,15 +1083,13 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
                   <title>{`${gate.gate_code} · ${gate.gate_kind === "RECEIVING" ? "приемка" : "отгрузка"} · доковый контекст фиксированного размера`}</title>
                   <rect x="-19" y="0" width="38" height="27" rx="2" fill={gate.gate_kind === "RECEIVING" ? "#0f766e" : "#27364a"} stroke="#0f172a" />
                   <rect x="-4" y="27" width="8" height="12" fill="#fbbf24" />
-                  {drawTruckIcon(22, 1, gate.topology_gate_id)}
+                  {drawTruckIcon(0, 31, gate.topology_gate_id)}
                   {layers.labels && <text x="0" y="-5" className="gate-label">{gate.gate_code}</text>}
                 </g>
               );
             })()}
           </g>
         ))}
-
-        {layers.gates && drawDockStagingZone(map, bounds, mode, layers.labels, view.zoom)}
 
         {layers.aisles && map.aisles.map((aisle) => {
           const start = projectAislePoint(aisle, aisle.y1, bounds, mode);
@@ -1177,6 +1175,8 @@ function TopologySvg({ map, routeCells: activeRouteCells, routeByCell, selectedI
         })}
 
         {layers.aisles && drawPassageOverlay(map, bounds, mode, layers.labels, view.zoom)}
+
+        {layers.gates && drawDockStagingZone(map, bounds, mode, layers.labels, view.zoom)}
 
         {selectionRect && (
           <rect
@@ -1595,81 +1595,61 @@ function drawDistanceLines(map: TopologyMap, selectedId: number, bounds: MapBoun
 }
 
 function drawDockStagingZone(map: TopologyMap, bounds: MapBounds, mode: "3d" | "plan" | "list", showLabels: boolean, zoom: number) {
-  const shippingGates = map.gates.filter((gate) => gate.active === 1 && gate.gate_kind !== "RECEIVING").slice(0, 10);
-  if (!shippingGates.length) return null;
+  const activeGates = map.gates.filter((gate) => gate.active === 1).slice(0, 10);
+  if (!activeGates.length) return null;
   const invZoom = 1 / zoom;
-  const points = shippingGates.map((gate) => projectPoint(gate.x, gate.y, bounds, mode));
-  const rackRight = Math.max(...map.cells.filter((cell) => cell.active === 1).map((cell) => projectPoint(cell.x, cell.y, bounds, mode).x));
-  const minX = mode === "plan" ? Math.min(870, rackRight + 36) : Math.min(878, Math.max(...points.map((point) => point.x)) + 26);
-  const y = mode === "plan" ? 178 : Math.max(190, Math.min(...points.map((point) => point.y)) - 112);
   const slotColumns = 2;
   const slotRows = 16;
-  const slotWidth = 20;
-  const slotHeight = 10;
-  const gap = 3;
+  const slotWidth = 7.5;
+  const slotHeight = 5;
+  const gap = 1.2;
   const width = slotColumns * slotWidth + (slotColumns + 1) * gap;
   const height = slotRows * slotHeight + (slotRows + 1) * gap;
-  const centerGate = shippingGates[Math.max(0, Math.floor(shippingGates.length / 2) - 1)];
-  const centerPoint = centerGate ? projectPoint(centerGate.x, centerGate.y, bounds, mode) : { x: 500, y: 568 };
-  const receivingColumns = 5;
-  const receivingRows = 4;
-  const receivingSlotWidth = 13;
-  const receivingSlotHeight = 9;
-  const receivingGap = 3;
-  const receivingWidth = receivingColumns * receivingSlotWidth + (receivingColumns + 1) * receivingGap;
-  const receivingHeight = receivingRows * receivingSlotHeight + (receivingRows + 1) * receivingGap;
-  const receivingX = centerPoint.x - receivingWidth / 2;
-  const receivingY = mode === "plan" ? 494 : centerPoint.y - 76;
+  const reserveWidth = slotWidth * 2 + gap;
+  const reserveHeight = slotHeight;
   return (
     <>
-      <g className="topology-receiving-zone">
-        <title>Зона приемки у центрального докового разрыва: 20 паллетомест для входящих паллет перед размещением на хранение.</title>
-        <rect x={receivingX} y={receivingY} width={receivingWidth} height={receivingHeight} rx="2" className="receiving-staging-base" />
-        {Array.from({ length: receivingColumns * receivingRows }, (_, index) => {
-          const column = index % receivingColumns;
-          const row = Math.floor(index / receivingColumns);
-          return (
+      {activeGates.map((gate) => {
+        const point = projectPoint(gate.x, gate.y, bounds, mode);
+        const gateY = mode === "3d" ? point.y + 26 : 568;
+        const x = point.x - width / 2;
+        const y = gateY - height - reserveHeight - gap * 4;
+        const occupied = gate.gate_kind === "RECEIVING" ? 4 : 9;
+        return (
+          <g key={`dock-staging-${gate.topology_gate_id}`} className="topology-dock-zone">
+            <title>{`${gate.gate_code}: общая зона приемки/накопления перед воротами, 33 паллетоместа. Паллетоместо 1200 x 800 мм, пропорция 3:2.`}</title>
+            <rect x={x} y={y} width={width} height={height + reserveHeight + gap * 3} rx="2" className="dock-staging-base" />
+            {Array.from({ length: slotColumns * slotRows }, (_, index) => {
+              const column = index % slotColumns;
+              const row = Math.floor(index / slotColumns);
+              return (
+                <rect
+                  key={`dock-slot-${gate.topology_gate_id}-${index}`}
+                  x={x + gap + column * (slotWidth + gap)}
+                  y={y + gap + row * (slotHeight + gap)}
+                  width={slotWidth}
+                  height={slotHeight}
+                  rx="0"
+                  className={index < occupied ? "dock-staging-slot occupied" : "dock-staging-slot"}
+                />
+              );
+            })}
             <rect
-              key={`receiving-slot-${index}`}
-              x={receivingX + receivingGap + column * (receivingSlotWidth + receivingGap)}
-              y={receivingY + receivingGap + row * (receivingSlotHeight + receivingGap)}
-              width={receivingSlotWidth}
-              height={receivingSlotHeight}
+              x={x + gap}
+              y={y + gap + slotRows * (slotHeight + gap)}
+              width={reserveWidth}
+              height={reserveHeight}
               rx="0"
-              className="receiving-staging-slot"
+              className="dock-staging-slot reserve"
             />
-          );
-        })}
-        {showLabels && (
-          <text x={receivingX + receivingWidth / 2} y={receivingY - 7 * invZoom} className="receiving-staging-label" style={scaledTextStyle(10, 3, zoom)}>
-            Приемка 20 п/м
-          </text>
-        )}
-      </g>
-      <g className="topology-dock-zone">
-        <title>Зона накопления транспортных паллет перед воротами отгрузки. Паллеты выставляются сюда перед загрузкой автомобиля.</title>
-        <rect x={minX} y={y} width={width} height={height} rx="2" className="dock-staging-base" />
-        {Array.from({ length: slotColumns * slotRows }, (_, index) => {
-          const column = index % slotColumns;
-          const row = Math.floor(index / slotColumns);
-          return (
-            <rect
-              key={`dock-slot-${index}`}
-              x={minX + gap + column * (slotWidth + gap)}
-              y={y + gap + row * (slotHeight + gap)}
-              width={slotWidth}
-              height={slotHeight}
-              rx="0"
-              className={index < 9 ? "dock-staging-slot occupied" : "dock-staging-slot"}
-            />
-          );
-        })}
-        {showLabels && (
-          <text x={minX + width / 2} y={y - 8 * invZoom} className="staging-label" style={scaledTextStyle(10, 3, zoom)}>
-            Накопление ТП
-          </text>
-        )}
-      </g>
+            {showLabels && zoom >= 1.2 && zoom <= 3 && (
+              <text x={x + width / 2} y={y - 7 * invZoom} className="staging-label" style={scaledTextStyle(9, 3, zoom)}>
+                33 п/м
+              </text>
+            )}
+          </g>
+        );
+      })}
     </>
   );
 }
@@ -1709,13 +1689,14 @@ function drawFixedLabelOverlay(
         );
       })}
       {map.aisles.map((aisle) => {
-        if (denseMap && view.zoom < 1.8) return null;
+        if (denseMap && view.zoom < .75) return null;
         const start = toViewportPoint(projectAislePoint(aisle, aisle.y1, bounds, mode), view);
         const end = toViewportPoint(projectAislePoint(aisle, aisle.y2, bounds, mode), view);
+        const labelX = (start.x + end.x) / 2;
+        const labelY = Math.min(start.y, end.y) - 14;
         return (
           <g key={`fixed-aisle-label-${aisle.topology_aisle_id}`}>
-            <text x={start.x - 22} y={start.y - 12} className="aisle-label">{aisle.aisle_code}</text>
-            <text x={end.x + 22} y={end.y + 18} className="aisle-label">{aisle.aisle_code}</text>
+            <text x={labelX} y={labelY} className="aisle-label map-aisle-code">{aisle.aisle_code}</text>
           </g>
         );
       })}
@@ -1955,17 +1936,17 @@ function drawTruckIcon(x: number, y: number, index: number) {
   const longTruck = variant !== 0;
   return (
     <g transform={`translate(${x - 14} ${y})`} className="dock-truck-icon">
-      <path d="M4 16 H24 V58 H4 Z" fill={trailer} stroke="#475569" strokeWidth="1.2" />
-      {longTruck && <path d="M8 21 V53 M13 21 V53 M18 21 V53" stroke="#94a3b8" strokeWidth=".7" opacity=".8" />}
-      {!longTruck && <path d="M7 21 H21 V53 H7 Z" fill="#9ca3af" opacity=".45" />}
-      <path d="M3 5 C3 2 6 0 14 0 C22 0 25 2 25 5 L27 17 H1 Z" fill={cab} stroke="#334155" strokeWidth="1.2" />
-      <path d="M7 5 H21 L23 12 H5 Z" fill="#bae6fd" stroke="#334155" strokeWidth=".8" opacity=".95" />
-      <path d="M8 2 H20" stroke="#64748b" strokeWidth="1.4" strokeLinecap="round" />
-      <circle cx="5" cy="14" r="1.2" fill="#f59e0b" />
-      <circle cx="14" cy="14" r="1.2" fill="#f59e0b" />
-      <circle cx="23" cy="14" r="1.2" fill="#f59e0b" />
-      <rect x="4" y="58" width="5" height="2" fill="#ef4444" />
-      <rect x="19" y="58" width="5" height="2" fill="#ef4444" />
+      <path d="M4 0 H24 V42 H4 Z" fill={trailer} stroke="#475569" strokeWidth="1.2" />
+      {longTruck && <path d="M8 5 V37 M13 5 V37 M18 5 V37" stroke="#94a3b8" strokeWidth=".7" opacity=".8" />}
+      {!longTruck && <path d="M7 5 H21 V37 H7 Z" fill="#9ca3af" opacity=".45" />}
+      <path d="M3 53 C3 56 6 58 14 58 C22 58 25 56 25 53 L27 41 H1 Z" fill={cab} stroke="#334155" strokeWidth="1.2" />
+      <path d="M7 53 H21 L23 46 H5 Z" fill="#bae6fd" stroke="#334155" strokeWidth=".8" opacity=".95" />
+      <path d="M8 56 H20" stroke="#64748b" strokeWidth="1.4" strokeLinecap="round" />
+      <circle cx="5" cy="44" r="1.2" fill="#f59e0b" />
+      <circle cx="14" cy="44" r="1.2" fill="#f59e0b" />
+      <circle cx="23" cy="44" r="1.2" fill="#f59e0b" />
+      <rect x="4" y="-2" width="5" height="2" fill="#ef4444" />
+      <rect x="19" y="-2" width="5" height="2" fill="#ef4444" />
     </g>
   );
 }
