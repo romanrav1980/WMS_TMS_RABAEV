@@ -1693,9 +1693,10 @@ function drawFixedLabelOverlay(
         const start = toViewportPoint(projectAislePoint(aisle, aisle.y1, bounds, mode), view);
         const end = toViewportPoint(projectAislePoint(aisle, aisle.y2, bounds, mode), view);
         const labelX = (start.x + end.x) / 2;
-        const labelY = Math.min(start.y, end.y) - 14;
+        const labelY = Math.min(start.y, end.y) + 10;
         return (
           <g key={`fixed-aisle-label-${aisle.topology_aisle_id}`}>
+            <rect x={labelX - 19} y={labelY - 8} width="38" height="13" rx="2" className="map-aisle-code-bg" />
             <text x={labelX} y={labelY} className="aisle-label map-aisle-code">{aisle.aisle_code}</text>
           </g>
         );
