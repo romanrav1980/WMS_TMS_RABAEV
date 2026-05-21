@@ -93,6 +93,9 @@ CASE_PICK_MANAGE_PERMISSION = "case_pick_manage"
 CASE_PICK_SHORT_APPROVE_PERMISSION = "case_pick_short_approve"
 INVENTORY_TASK_VIEW_PERMISSION = "inventory_task_view"
 INVENTORY_TASK_EXECUTE_PERMISSION = "inventory_task_execute"
+TRANSPORT_DISPATCH_VIEW_PERMISSION = "transport_dispatch_view"
+TRANSPORT_DISPATCH_EDIT_PERMISSION = "transport_dispatch_edit"
+TRANSPORT_DISPATCH_CLOSE_PERMISSION = "transport_dispatch_close"
 
 security = HTTPBasic(auto_error=False)
 

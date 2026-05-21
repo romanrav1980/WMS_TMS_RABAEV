@@ -6,6 +6,7 @@ import { loadReplayData } from "./data/loaders";
 import { CapacityPanel, DetailCard, KpiRow, LeftPanel, ResourcePerformancePanel, RightPanel } from "./components/Panels";
 import { Timeline } from "./components/Timeline";
 import { TopologyAdminPage } from "./components/TopologyAdminPage";
+import { TransportDispatchPage } from "./components/TransportDispatchPage";
 import { WarehouseScene } from "./components/WarehouseScene";
 import { activeCollisions, currentMetrics, dockPalletsAt, pickFaceFillAt, replenishmentTasksAt, resourceStateAt, visibleEvents } from "./replay/reducer";
 import type { DetailSelection, ReplayData } from "./types";
@@ -75,6 +76,14 @@ export default function App() {
     );
   }
 
+  if (page === "transport") {
+    return (
+      <AppErrorBoundary resetKey={page}>
+        <TransportDispatchPage onBack={() => setPage("twin")} />
+      </AppErrorBoundary>
+    );
+  }
+
   if (!data || !state) {
     return <main className="loading-screen"><b>WMS PRO</b><span>Загружаем цифровой двойник склада...</span></main>;
   }
@@ -91,6 +100,7 @@ export default function App() {
         {["⌂", "↗", "▦", "▣", "▤", "▥"].map((icon, index) => <button key={index}>{icon}</button>)}
         <button className="active">⌁</button>
         <button title="Управление топологией склада" onClick={() => setPage("topology")}>⌗</button>
+        <button title="Диспетчер отгрузки" onClick={() => setPage("transport")}>⇧</button>
         <button>●</button>
       </aside>
 

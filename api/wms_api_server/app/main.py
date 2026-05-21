@@ -22,6 +22,7 @@ from .routers import (
     slow_sql,
     stock_reservations,
     traceability,
+    transport,
     tserver,
     warehouse_topology,
     warehouse_tasks,
@@ -64,3 +65,4 @@ app.include_router(stock_reservations.router)
 app.include_router(warehouse_tasks.router)
 app.include_router(resource_management.router)
 app.include_router(warehouse_topology.router)
+app.include_router(transport.router)

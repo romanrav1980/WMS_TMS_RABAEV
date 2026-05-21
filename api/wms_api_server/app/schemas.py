@@ -979,4 +979,25 @@ class WarehouseTaskStatusRequest(BaseModel):
     scanned_from_cell: str | None = None
     scanned_to_cell: str | None = None
     reason: str | None = None
+
+
+# ---------------------------------------------------------------------------
+# Transport dispatch — Phase 1 (manual operator assignment)
+# ---------------------------------------------------------------------------
+
+class TransportTaskCreateRequest(BaseModel):
+    transtype: str = Field(..., description="Тип транспорта (TRANSTYPE), например '10', '15', '20реф'")
+    shipment_date: date = Field(..., description="Дата отгрузки")
+
+
+class TransportTaskUpdateRequest(BaseModel):
+    transport: str | None = None        # гос. номер ТС
+    voditel_id: int | None = None       # ID водителя из RRL_TR_VODITEL
+    dock: str | None = None             # докстанция
+    shipment_time: str | None = None    # запланированное время отгрузки HH:MM
+    primechanie: str | None = None      # примечание диспетчера
+
+
+class TransportStAssignRequest(BaseModel):
+    st_numbers: list[str] = Field(..., min_length=1, description="Список номеров СТ для назначения в рейс")
     updated_by: str | None = None
