@@ -19,7 +19,8 @@ export default function App() {
   const [selectedWaveId, setSelectedWaveId] = useState("");
   const [page, setPage] = useState(() => {
     const params = new URLSearchParams(window.location.search);
-    return params.get("page") === "topology" ? "topology" : "twin";
+    const pg = params.get("page");
+    return pg === "topology" ? "topology" : pg === "transport" ? "transport" : "twin";
   });
   const [selection, setSelection] = useState<DetailSelection>(null);
   const [modelSettings, setModelSettings] = useState({
