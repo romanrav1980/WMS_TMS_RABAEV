@@ -748,6 +748,12 @@ class WarehouseTopologyService:
             )
 
         cells = self._route_source_cells(request)
+        if not cells and request.cell_ids:
+            request.cell_ids = None
+            cells = self._route_source_cells(request)
+        if not cells and request.aisle_codes:
+            request.aisle_codes = None
+            cells = self._route_source_cells(request)
         if not cells:
             raise HTTPException(status_code=409, detail="No active pick-face cells found for selected topology area.")
         cells = self._order_route_cells(cells, request)
@@ -888,8 +894,11 @@ class WarehouseTopologyService:
         ordered: list[dict[str, Any]] = []
         sorted_groups = sorted(groups.items(), key=lambda item: (aisle_order.get(item[0], 999), item[0]))
         for index, (_aisle_code, aisle_cells) in enumerate(sorted_groups):
-            reverse = (pattern in {"Z", "SNAKE"} and index % 2 == 1) or pattern == "U_SHAPE"
-            side_first = pattern in {"LINEAR", "U_SHAPE"}
+            if pattern == "U_SHAPE":
+                ordered.extend(self._order_aisle_as_u_shape(aisle_cells, side_rank))
+                continue
+            reverse = pattern in {"Z", "SNAKE"} and index % 2 == 1
+            side_first = pattern == "LINEAR"
             aisle_cells.sort(key=lambda row: (
                 side_rank.get(str(row.get("side_code") or "").upper(), 99) if side_first else 0,
                 -float(row.get("bay_no") or 0) if reverse else float(row.get("bay_no") or 0),
@@ -898,6 +907,26 @@ class WarehouseTopologyService:
             ))
             ordered.extend(aisle_cells)
         return ordered
+
+    def _order_aisle_as_u_shape(self, cells: list[dict[str, Any]], side_rank: dict[str, int]) -> list[dict[str, Any]]:
+        def by_bay_asc(row: dict[str, Any]) -> tuple[float, float, int]:
+            return (
+                float(row.get("bay_no") or 0),
+                float(row.get("level_no") or 0),
+                side_rank.get(str(row.get("side_code") or "").upper(), 99),
+            )
+
+        def by_bay_desc(row: dict[str, Any]) -> tuple[float, float, int]:
+            return (
+                -float(row.get("bay_no") or 0),
+                float(row.get("level_no") or 0),
+                side_rank.get(str(row.get("side_code") or "").upper(), 99),
+            )
+
+        left = [row for row in cells if str(row.get("side_code") or "").upper() == "LEFT"]
+        right = [row for row in cells if str(row.get("side_code") or "").upper() == "RIGHT"]
+        center = [row for row in cells if str(row.get("side_code") or "").upper() not in {"LEFT", "RIGHT"}]
+        return sorted(left, key=by_bay_asc) + sorted(right, key=by_bay_desc) + sorted(center, key=by_bay_asc)
 
     def _ensure_zone(self, topology_id: int, request: WarehouseTopologyGenerateRequest) -> None:
         exists = self.gateway.fetch_all(

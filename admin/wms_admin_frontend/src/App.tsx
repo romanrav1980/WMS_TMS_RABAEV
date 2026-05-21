@@ -6,6 +6,7 @@ import { loadReplayData } from "./data/loaders";
 import { CapacityPanel, DetailCard, KpiRow, LeftPanel, ResourcePerformancePanel, RightPanel } from "./components/Panels";
 import { Timeline } from "./components/Timeline";
 import { TopologyAdminPage } from "./components/TopologyAdminPage";
+import { TopologyGridEditorPage } from "./components/TopologyGridEditorPage";
 import { WarehouseScene } from "./components/WarehouseScene";
 import { activeCollisions, currentMetrics, dockPalletsAt, pickFaceFillAt, replenishmentTasksAt, resourceStateAt, visibleEvents } from "./replay/reducer";
 import type { DetailSelection, ReplayData } from "./types";
@@ -70,7 +71,15 @@ export default function App() {
   if (page === "topology") {
     return (
       <AppErrorBoundary resetKey={page}>
-        <TopologyAdminPage onBack={() => setPage("twin")} />
+        <TopologyAdminPage onBack={() => setPage("twin")} onCreateNew={() => setPage("topology-editor")} />
+      </AppErrorBoundary>
+    );
+  }
+
+  if (page === "topology-editor") {
+    return (
+      <AppErrorBoundary resetKey={page}>
+        <TopologyGridEditorPage onBack={() => setPage("topology")} />
       </AppErrorBoundary>
     );
   }

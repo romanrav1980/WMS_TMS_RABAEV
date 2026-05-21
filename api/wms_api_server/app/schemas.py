@@ -980,3 +980,70 @@ class WarehouseTaskStatusRequest(BaseModel):
     scanned_to_cell: str | None = None
     reason: str | None = None
     updated_by: str | None = None
+
+
+# =============================================================================
+# Topology Grid Editor — схемы для POST /api/admin/topologies/from-grid
+# =============================================================================
+
+class GridSlotDivision(BaseModel):
+    """Деление ячейки на мелкоштучные слоты."""
+    cols: int = Field(ge=1, le=5, description="Число слотов по ширине")
+    rows: int = Field(ge=1, le=5, description="Число слотов по высоте")
+
+
+class GridCellInput(BaseModel):
+    """Одна ячейка сетки редактора."""
+    row: int = Field(ge=1, description="1-based номер бая (строка сетки)")
+    col: int = Field(ge=1, description="1-based номер столбца сетки")
+    role: str = Field(description="'left' или 'right'")
+    aisle_id: str | None = Field(default=None, description="Локальный ID аллеи (A1, A2...)")
+    slot_division: GridSlotDivision | None = Field(
+        default=None,
+        description="Мелкоштучное деление ячейки (опционально)",
+    )
+
+
+class GridAisleInput(BaseModel):
+    """Аллея (пара L+R столбцов) из редактора."""
+    id: str               = Field(description="Локальный ID: 'A1', 'A2', ...")
+    label: str            = Field(description="Отображаемое название аллеи")
+    left_col: int         = Field(ge=1, description="1-based номер левого столбца")
+    right_col: int        = Field(ge=1, description="1-based номер правого столбца")
+    passage_col: int | None = Field(default=None)
+    distance_meters: float | None = Field(default=None)
+    custom_distance: bool = Field(default=False)
+
+
+class GridPickSequenceItem(BaseModel):
+    """Один элемент маршрута: ячейка + порядковый номер обхода."""
+    row: int           = Field(ge=1)
+    col: int           = Field(ge=1)
+    pick_sequence: int = Field(ge=0)
+
+
+class GridSettings(BaseModel):
+    """Настройки сетки: физические размеры."""
+    aisle_width_meters: float = Field(default=3.5, ge=0.1, le=50)
+    bay_height_meters:  float = Field(default=1.5,  ge=0.1, le=20)
+
+
+class GridData(BaseModel):
+    """Полное содержимое сетки редактора."""
+    rows:           int                        = Field(ge=1, le=500)
+    cols:           int                        = Field(ge=1, le=200)
+    settings:       GridSettings               = Field(default_factory=GridSettings)
+    cells:          list[GridCellInput]        = Field(default_factory=list)
+    aisles:         list[GridAisleInput]       = Field(default_factory=list)
+    route_pattern:  str | None                 = Field(default="U")
+    pick_sequences: list[GridPickSequenceItem] = Field(default_factory=list)
+
+
+class GridPayload(BaseModel):
+    """
+    Payload для POST /api/admin/topologies/from-grid.
+    Передаётся целиком из React-редактора при сохранении черновика.
+    """
+    warehouse_id: int = Field(ge=1, description="ID склада (RRL_WARES.ID)")
+    label: str        = Field(min_length=1, max_length=200)
+    grid: GridData

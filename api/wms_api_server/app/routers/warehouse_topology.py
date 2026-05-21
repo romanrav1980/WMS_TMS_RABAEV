@@ -11,6 +11,7 @@ from ..auth import (
     require_permission,
 )
 from ..schemas import (
+    GridPayload,
     PickRouteBuildRequest,
     TopologyCellPatchRequest,
     TopologyDistanceRecalculateRequest,
@@ -137,3 +138,29 @@ def publish_pick_route(
 ) -> dict[str, int | str]:
     WarehouseTopologyService().publish_pick_route(pick_route_id, user.username)
     return {"pick_route_id": pick_route_id, "status": "PUBLISHED"}
+
+
+# ---------------------------------------------------------------------------
+# Grid editor endpoints (topology-grid-editor feature)
+# ---------------------------------------------------------------------------
+
+@router.post("/topologies/from-grid")
+def create_topology_from_grid(
+    payload: GridPayload,
+    user: AdminUser = Depends(require_permission(WAREHOUSE_TOPOLOGY_EDIT_PERMISSION)),
+) -> dict:
+    from ..services.topology_grid_service import TopologyGridService
+    return TopologyGridService().create_topology_from_grid(payload, user.username)
+
+
+@router.get("/topologies/{topology_id}/as-grid")
+def get_topology_as_grid(
+    topology_id: int,
+    _user: AdminUser = Depends(require_permission(WAREHOUSE_TOPOLOGY_VIEW_PERMISSION)),
+) -> dict:
+    """
+    Возвращает GridState для повторного открытия топологии в редакторе.
+    Восстанавливает: аллеи, ячейки с ролями, мелкоштучные слоты, маршрут.
+    """
+    from ..services.topology_grid_service import TopologyGridService
+    return TopologyGridService().get_topology_as_grid(topology_id)
