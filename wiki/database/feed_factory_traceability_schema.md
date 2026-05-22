@@ -549,6 +549,32 @@ Live apply note, `2026-05-22`:
 - Final compact checks: `6` tables, `6` sequences, `6` key indexes, smoke leftovers `0`, slot-parent violations `0`, route-storage-slot violations `0`, invalid current objects `0`.
 - The `DEFAULT` profile has `FAILED_LOGIN_ATTEMPTS = 10` and `PASSWORD_LOCK_TIME = 1`, so the most likely lock cause was repeated failed login attempts by a local process or tool; standard session audit did not retain a concrete failed-login source row.
 
+Migration `2026-05-22-042-warehouse-map-draft-publish-api` adds the first Oracle-side publish boundary for the large warehouse map editor:
+
+- `RRL_PICK_ROUTE_CELL_UX_SLOT` enforces unique active route rows by `(PICK_ROUTE_ID, CELL_SLOT_ID)` for slot-based picking.
+- `RRL_WAREHOUSE_MAP_API.VALIDATE_DRAFT(canvas_id, pick_route_id)` returns compact JSON-like validation status for canvas/camera/passages and route rows.
+- `RRL_WAREHOUSE_MAP_API.PUBLISH_DRAFT(canvas_id, pick_route_id, published_by)` validates first, publishes the canvas, archives other active routes for the topology, and publishes the selected route.
+- Validation rejects invalid camera dimensions, invalid passage widths, duplicate camera codes, duplicate route sequence/cell/slot rows, route rows to `STORAGE_SLOT`, route rows to non-pick topology cells, and route rows without a cell or slot reference.
+
+Migration files:
+
+- `db/migrations/2026-05-17_feed_factory_traceability/042_apply.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/042_verify.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/042_smoke.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/042_smoke_cleanup.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/042_rollback.sql`.
+
+Live apply note, `2026-05-22`:
+
+- Target: `RABAEV@127.0.0.1:1521/orcl`.
+- Connection smoke returned `RABAEV`.
+- Apply: `Statements=6; Errors=0`.
+- Verify before smoke: `Statements=7; Errors=0`.
+- Smoke: `Statements=12; Errors=0`; the smoke proves storage-slot route rows block publish, then a corrected route publishes successfully.
+- Smoke cleanup: `Statements=12; Errors=0`.
+- Final verify: `Statements=7; Errors=0`.
+- The first apply attempt failed only on SQL*Plus diagnostic syntax `show errors package ...`; those lines were removed because `tools/oracle_apply` supports exact `show errors` only.
+
 ## Warehouse Task Domain Sync
 
 Migration `2026-05-17-028-warehouse-task-domain-sync` adds `RRL_WAREHOUSE_TASK_SYNC`.

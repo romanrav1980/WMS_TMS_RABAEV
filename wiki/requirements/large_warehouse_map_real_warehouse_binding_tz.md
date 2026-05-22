@@ -604,10 +604,19 @@ Storage пресеты:
 - каждый command, toolbar button, sidebar button, field, dropdown, checkbox, menu item, inspector field и интерактивный элемент карты имеет `help_id`;
 - короткая подсказка открывается по hover/focus;
 - подробная помощь открывается через маленький значок `?`, `i` или книгу рядом с группой настроек, полем или сложной командой;
+- любая подробная подсказка должна отвечать на пять вопросов:
+  - что это за элемент;
+  - какие данные он принимает на вход или от чего зависит;
+  - что делает;
+  - для чего существует;
+  - краткая инструкция по применению;
+- если объект сложный, popover может содержать расширенную инструкцию, но без постоянного текста внутри панели;
 - одна и та же команда показывает одинаковый help в toolbar, sidebar и right-click menu;
+- help может открываться из right-click menu, чтобы не занимать место в основной панели;
 - disabled/future actions показывают help с причиной недоступности и следующим ожидаемым шагом;
 - help не должен быть длинным постоянным текстом внутри панели;
-- popover/help-card не должен сдвигать layout, закрывать активную ячейку, рамку выделения, route row или критичные кнопки сохранения;
+- help должен открываться всплывающим popover поверх интерфейса, а не постоянной карточкой внутри боковой панели;
+- popover не должен сдвигать layout, закрывать активную ячейку, рамку выделения, route row или критичные кнопки сохранения;
 - help можно закрыть `Esc`, кликом вне карточки или потерей focus;
 - на compact viewport help открывается по клику на значок и занимает ограниченную область с прокруткой внутри popover.
 
@@ -1253,13 +1262,20 @@ gantt
   Sprint 10. DB schema foundation               :done, s10, 2026-05-22, 1d
   Sprint 11. Warehouse/canvas load API          :done, s11, after s10, 1d
   Sprint 12. UI shell and camera creation       :done, s12, after s11, 1d
-  section Planned
-  Sprint 13. Canvas objects and passages        :s13, after s12, 1d
-  Sprint 14. Topology projection and cell slots :s14, after s13, 1d
-  Sprint 15. Draft save, diff and locking       :s15, after s14, 1d
-  Sprint 16. Pick route order editor            :s16, after s15, 1d
-  Sprint 17. Validation and publish             :s17, after s16, 1d
-  Sprint 18. Evidence hardening                 :s18, after s17, 1d
+  Sprint 13. Canvas objects and passages        :done, s13, after s12, 1d
+  Sprint 14. Topology projection and cell slots :done, s14, after s13, 1d
+  Sprint 15. Draft save, diff and locking       :done, s15, after s14, 1d
+  Sprint 16. Pick route order editor            :done, s16, after s15, 1d
+  Sprint 17. Validation and publish             :done, s17, after s16, 1d
+  Sprint 18. Evidence hardening                 :done, s18, after s17, 1d
+  Sprint 19. Oracle publish invariant pack      :done, s19, after s18, 1d
+  Sprint 20. DB-backed save/load API switch     :done, s20, after s19, 1d
+  Sprint 21. Projection-to-topology persistence :done, s21, after s20, 1d
+  Sprint 22. Route rows to Oracle pick route    :done, s22, after s21, 1d
+  Sprint 23. Oracle publish action              :done, s23, after s22, 1d
+  Sprint 24. UI publish controls and evidence   :done, s24, after s23, 1d
+  Sprint 25. Published warehouse reload          :done, s25, after s24, 1d
+  Sprint 26. Final acceptance checkpoint         :done, s26, after s25, 1d
 ```
 
 ### Sprint 10. DB Schema Foundation
@@ -1484,6 +1500,11 @@ Sprint 12 close evidence, `2026-05-22`:
   - short tooltip on hover/focus;
   - `?`/book icon help popover for complex groups;
   - shared help text between toolbar, sidebar and context menu;
+- дробные ячейки:
+  - sidebar controls for pick split preset;
+  - sidebar controls for storage split preset;
+  - right-click menu commands for fractional pick and fractional storage;
+  - shared popover help explaining physical cell vs child slots;
 - context menu commands:
   - `Canvas -> Добавить стену`;
   - `Проходы -> Создать проход`;
@@ -1509,8 +1530,9 @@ Sprint 12 close evidence, `2026-05-22`:
 - paste format показывает validation reason, если цель выходит за границы камеры или пересекает protected/dependency cells;
 - paste format пишет изменения в undo/redo stack;
 - у команд, полей и dropdown есть `help_id` и короткая подсказка;
-- у сложных групп `Камера`, `Проходы`, `Стандартный layout`, `Draft` есть значок `?`/книга с help-card;
+- у сложных групп `Камера`, `Проходы`, `Стандартный layout`, `Draft`, `Дробная ячейка` есть значок `?`/книга с help popover;
 - help popover не перекрывает активное выделение и не ухудшает читаемость боковой панели;
+- команды создания дробной ячейки отбора и дробной ячейки хранения доступны не только в боковой панели, но и в right-click меню;
 - все geometry поля сохраняются в метрах;
 - canvas object без `TOPOLOGY_CELL_ID` не теряется при reload;
 - diff показывает измененные canvas objects/passages/links.
@@ -1540,6 +1562,15 @@ Evidence:
 - screenshot format painter source/target preview and pasted result;
 - screenshot context help popover near complex sidebar group;
 - API/Oracle count report.
+
+Sprint 13 closure evidence, 2026-05-22:
+
+- `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint13-format-painter.png` - format painter role-pattern copy/paste.
+- `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint13-objects-passages.png` - canvas object, passage and camera link saved and reloaded.
+- `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint13-inspector.png` - inspector shows saved objects/passages/links.
+- `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint13-help.png` - command help-card is shown in the side panel without covering canvas.
+- `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint13-negative.png` - smoke includes `negativeWidth=true`, proving passage `width_m <= 0` is rejected.
+- `npm.cmd run build` passed after Sprint 13 UI changes.
 
 ### Sprint 14. Topology Projection And Generalized Cell Slots
 
@@ -1672,6 +1703,8 @@ Evidence:
   - gates;
   - route rows;
 - stale save возвращает conflict;
+- metadata/canvas objects/passages/camera links сохраняются через тот же revision-lock;
+- diff показывает, изменились ли metadata, objects, passages и camera links относительно base snapshot;
 - команды из context menu сохраняются тем же механизмом;
 - published version не меняется без publish.
 
@@ -1680,6 +1713,7 @@ Evidence:
 - API smoke create draft from active;
 - API smoke patch object/passage/cells/slots and reload;
 - API smoke diff;
+- browser smoke metadata/canvas object/passage/camera link patch, stale conflict and expanded diff;
 - negative stale version conflict;
 - browser smoke edit 100 cells plus passage plus storage slots, save, reload;
 - Oracle verify draft counts.
@@ -1688,7 +1722,14 @@ Evidence:
 
 - diff JSON sample;
 - screenshot dirty/diff panel;
+- screenshot metadata/object/passage/link diff panel;
 - Oracle verify output.
+
+Sprint 15.2 closure evidence, 2026-05-22:
+
+- `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint15-diff-locking.png` - cells diff and optimistic locking smoke.
+- `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint15-metadata-diff.png` - metadata, canvas object, passage and camera link diff with stale save rejection.
+- Backend compile, frontend build, encoding check and `git diff --check` passed; `git diff --check` reports only existing LF/CRLF warnings.
 
 ### Sprint 16. Pick Route Load And Order Editor
 
@@ -1737,6 +1778,13 @@ Evidence:
 - screenshot route table;
 - screenshot route labels on map;
 - API route JSON sample.
+
+Sprint 16 closure evidence, 2026-05-22:
+
+- `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint16-route-editor.png` - browser smoke route table, route order labels on canvas, numeric `PICK_SEQUENCE` sorting and storage-slot exclusion.
+- MVP route draft is stored in warehouse-map draft as `route_rows`; publish and DB route validation remain Sprint 17.
+- `SNAKE` is not exposed in the route pattern selector or context menu.
+- Backend compile and frontend build passed.
 
 ### Sprint 17. Route Save, Validation And Publish
 
@@ -1798,6 +1846,13 @@ Evidence:
 - screenshot before/after publish;
 - wiki/database update.
 
+Sprint 17 closure evidence, 2026-05-22:
+
+- `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint17-route-validate-publish.png` - browser smoke with route validation, duplicate `PICK_SEQUENCE` rejection, valid route and publish result.
+- MVP publish writes a local published draft artifact with route row count; Oracle route publish remains a later DB integration step after this draft contract is stable.
+- Validation now blocks duplicate route sequences, duplicate route cells, route rows outside grid, storage-slot/storage-cell route rows and non-pick cells.
+- Backend compile, frontend build, encoding check and `git diff --check` passed; `git diff --check` reports only LF/CRLF warnings.
+
 ### Sprint 18. Evidence Hardening And Performance Gate
 
 Цель: закрепить проект как пригодный к дальнейшей реализации без раздувания контекста.
@@ -1846,6 +1901,334 @@ Evidence:
 - markdown evidence report;
 - screenshots under runtime evidence;
 - final sprint Gantt.
+
+Sprint 18 closure evidence, 2026-05-22:
+
+- `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint18-hardening.png` - final browser smoke with performance metrics, route editor, validation/publish evidence and floating help popover.
+- `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint18-evidence-report.md` - local evidence report listing sprint screenshots and smoke checks.
+- Smoke URL: `http://127.0.0.1:3000/?page=warehouse-map;smoke=sprint18-hardening`.
+- Result: `SMOKE PASS`, `18 900` cells, `3 150` selected visible cells, DOM budget below `1000`, help coverage true, route rows visible.
+- Oracle route publish/verify remains outside this MVP hardening slice because current publish writes a local draft artifact; the next DB integration slice must move the same contract into Oracle and add Oracle invariant checks.
+
+### Sprint 19. Oracle Publish Invariant Pack
+
+Цель: перенести границу validation/publish из runtime-draft слоя в Oracle-совместимый DB-контракт и зафиксировать route invariants для canvas/slot модели.
+
+Состав работ:
+
+- добавить migration `042` поверх таблиц `041`;
+- добавить уникальность активного route row по `CELL_SLOT_ID`;
+- добавить PL/SQL package `RRL_WAREHOUSE_MAP_API`;
+- реализовать `VALIDATE_DRAFT(canvas_id, pick_route_id)`;
+- реализовать `PUBLISH_DRAFT(canvas_id, pick_route_id, published_by)`;
+- запретить публикацию маршрута, где storage slot или non-pick cell попадает в порядок отбора;
+- добавить verify/smoke/cleanup scripts для живого Oracle.
+
+Критерии приемки:
+
+- `042_apply.sql` применяется на `RABAEV@127.0.0.1:1521/orcl` без SQL errors;
+- `042_verify.sql` возвращает ноль нарушений route sequence/cell/slot uniqueness;
+- smoke доказывает negative case: route row на `STORAGE_SLOT` делает draft invalid и publish падает;
+- smoke доказывает positive case: после деактивации ошибочного row validation становится valid, canvas получает `PUBLISHED`, route получает `PUBLISHED`;
+- cleanup удаляет smoke fixtures, финальный verify остается зеленым.
+
+Тесты:
+
+- Oracle connection smoke: `select user from dual`;
+- `042_apply.sql`;
+- `042_verify.sql`;
+- `042_smoke.sql`;
+- `042_smoke_cleanup.sql`;
+- финальный `042_verify.sql`;
+- UTF-8 encoding check.
+
+Sprint 19 closure evidence, 2026-05-22:
+
+- Connection smoke returned `RABAEV`.
+- `042_apply.sql`: `Statements=6; Errors=0`.
+- `042_verify.sql` before smoke: `Statements=7; Errors=0`.
+- `042_smoke.sql`: `Statements=12; Errors=0`.
+- `042_smoke_cleanup.sql`: `Statements=12; Errors=0`.
+- Final `042_verify.sql`: `Statements=7; Errors=0`.
+- First apply attempt found one script-runner compatibility issue: `show errors package ...` is not accepted by `OracleApply`; the migration now omits those SQL*Plus diagnostic lines.
+
+### Sprint 20. DB-Backed Save/Load API Switch
+
+Цель: дать редактору явный API-мост между runtime draft-store и Oracle canvas storage, не ломая текущую скорость Canvas-редактора.
+
+Состав работ:
+
+- добавить `POST /api/admin/warehouse-map-drafts/{draft_id}/save-to-db`;
+- добавить `POST /api/admin/warehouse-map-drafts/load-from-db`;
+- сохранять полный draft payload в `RRL_WAREHOUSE_MAP_CANVAS.RENDERER_STATE_JSON`;
+- создавать или обновлять базовую `RRL_WAREHOUSE_MAP_CAMERA` под размер сетки;
+- при load создавать новый runtime draft из Oracle payload;
+- сохранить roles, metadata, objects, passages, camera links, fractional pick/storage slots и route rows;
+- оставить существующий runtime draft-store совместимым до следующего слоя projection-to-topology.
+
+Критерии приемки:
+
+- через HTTP API можно создать draft, назначить pick cells, построить route, сохранить draft в Oracle canvas и загрузить обратно;
+- загруженный draft проходит `validate`;
+- route row count после загрузки равен исходному;
+- Oracle canvas содержит `warehouse_map_draft_payload_version`;
+- для canvas существует активная camera;
+- `042_verify.sql` после smoke остается зеленым.
+
+Тесты:
+
+- Python compile для затронутых API/service/smoke files;
+- service smoke `tests/smoke/warehouse_map_draft_db_switch_smoke.py`;
+- HTTP smoke `tests/smoke/warehouse_map_draft_db_switch_http_smoke.py`;
+- Oracle `042_verify.sql`;
+- UTF-8 encoding check.
+
+Sprint 20 closure evidence, 2026-05-22:
+
+- Service smoke saved draft to Oracle canvas `12`, created camera `25`, loaded a fresh draft, preserved `8` route rows, and validation stayed `true`.
+- HTTP smoke saved draft to Oracle canvas `13`, created camera `26`, loaded a fresh draft through `/load-from-db`, preserved `8` route rows, and validation stayed `true`.
+- Direct Oracle smoke counters: `canvas_payload_count = 1`, `camera_count = 1`.
+- Final Oracle `042_verify.sql`: `Statements=7; Errors=0`.
+
+### Sprint 21. Projection-To-Topology Persistence
+
+Цель: сохранить preview projection из Canvas draft в реальные Oracle topology tables без публикации и без смешивания с маршрутом обхода.
+
+Состав работ:
+
+- добавить `POST /api/admin/warehouse-map-drafts/{draft_id}/projection/save-to-topology`;
+- создавать новую `RRL_WAREHOUSE_TOPOLOGY` в статусе `DRAFT`;
+- записывать физические ячейки в `RRL_TOPOLOGY_CELL`;
+- записывать дробные pick/storage child slots в `RRL_TOPOLOGY_CELL_SLOT`;
+- проставлять `SLOT_LAYER_KIND` у физических родителей дробных ячеек;
+- связывать сохраненный canvas с новой `TOPOLOGY_ID`;
+- не создавать route rows в этом спринте;
+- исправить default нового пустого draft: все ячейки по умолчанию `BLOCKED`, а не `PICK_FACE`.
+
+Критерии приемки:
+
+- service smoke сохраняет fractional pick cell, fractional storage cell и aisle в Oracle topology;
+- HTTP smoke делает то же через настоящий API endpoint;
+- в Oracle появляются `3` physical topology cells;
+- в Oracle появляются `2` `PICK_FACE_SLOT` и `2` `STORAGE_SLOT`;
+- canvas получает ссылку на созданную topology;
+- storage slots не появляются в `RRL_PICK_ROUTE_CELL`;
+- `042_verify.sql` остается зеленым.
+
+Тесты:
+
+- Python compile для API/service/smoke files;
+- `tests/smoke/warehouse_map_projection_topology_smoke.py`;
+- `tests/smoke/warehouse_map_projection_topology_http_smoke.py`;
+- Oracle `042_verify.sql`;
+- UTF-8 encoding check.
+
+Sprint 21 closure evidence, 2026-05-22:
+
+- Service smoke saved projection to topology `9`: `topology_cell_count = 3`, `pick_face_slot_count = 2`, `storage_slot_count = 2`, `storage_slots_in_route = 0`.
+- HTTP smoke saved projection to topology `10`: `topology_cell_count = 3`, `pick_face_slot_count = 2`, `storage_slot_count = 2`, `storage_slots_in_route = 0`.
+- Final Oracle `042_verify.sql`: `Statements=7; Errors=0`.
+- Default empty draft role is now `BLOCKED`; this prevents an empty map from projecting every unedited cell as a pick-face.
+
+### Sprint 22. Route Rows To Oracle Pick Route
+
+Цель: сохранить draft route rows из Canvas editor в реальные Oracle `RRL_PICK_ROUTE` и `RRL_PICK_ROUTE_CELL`, используя уже сохраненную topology projection.
+
+Состав работ:
+
+- добавить `POST /api/admin/warehouse-map-drafts/{draft_id}/route/save-to-db`;
+- создавать `RRL_PICK_ROUTE` в статусе `DRAFT`;
+- записывать обычные pick-face route rows через `TOPOLOGY_CELL_ID`;
+- записывать дробные pick-face route rows через `CELL_SLOT_ID`;
+- отклонять storage cells/slots и non-pick cells;
+- после записи проверять route через `RRL_WAREHOUSE_MAP_API.VALIDATE_DRAFT`;
+- не выполнять publish в этом спринте.
+
+Критерии приемки:
+
+- service smoke строит маршрут по двум обычным pick cells и одной дробной pick-face ячейке;
+- route сохраняется в Oracle как `3` active route rows;
+- `2` rows связаны через `TOPOLOGY_CELL_ID`;
+- `1` row связан через `PICK_FACE_SLOT`;
+- `0` rows связаны со `STORAGE_SLOT`;
+- Oracle validation возвращает `valid=true`;
+- `042_verify.sql` остается зеленым.
+
+Тесты:
+
+- Python compile для API/service/smoke files;
+- `tests/smoke/warehouse_map_route_oracle_smoke.py`;
+- `tests/smoke/warehouse_map_route_oracle_http_smoke.py`;
+- Oracle `042_verify.sql`;
+- UTF-8 encoding check.
+
+Sprint 22 closure evidence, 2026-05-22:
+
+- Service smoke saved pick route `110`: `route_row_count = 3`, `physical_cell_rows = 2`, `pick_slot_rows = 1`, `storage_slot_rows = 0`, Oracle validation `valid=true`.
+- HTTP smoke saved pick route `111`: `route_row_count = 3`, `physical_cell_rows = 2`, `pick_slot_rows = 1`, `storage_slot_rows = 0`, Oracle validation `valid=true`.
+- Final Oracle `042_verify.sql`: `Statements=7; Errors=0`.
+
+### Sprint 23. Oracle Publish Action
+
+Цель: добавить рабочее API-действие публикации уже сохраненных canvas, topology projection и pick route в Oracle.
+
+Состав работ:
+
+- добавить `POST /api/admin/warehouse-map-drafts/{draft_id}/publish-oracle`;
+- перед публикацией повторно вызывать `RRL_WAREHOUSE_MAP_API.VALIDATE_DRAFT`;
+- вызывать `RRL_WAREHOUSE_MAP_API.PUBLISH_DRAFT(canvas_id, pick_route_id, published_by)`;
+- переводить связанную `RRL_WAREHOUSE_TOPOLOGY` в `PUBLISHED`;
+- сохранять результат Oracle publish обратно в runtime draft;
+- оставить старый локальный `/publish` совместимым до UI-перехода.
+
+Критерии приемки:
+
+- service smoke проходит полный путь `save-to-db -> projection/save-to-topology -> route/save-to-db -> publish-oracle`;
+- HTTP smoke проходит тот же путь через настоящий API endpoint;
+- после publish `RRL_WAREHOUSE_MAP_CANVAS.STATUS = PUBLISHED`;
+- после publish `RRL_WAREHOUSE_TOPOLOGY.STATUS = PUBLISHED`;
+- после publish `RRL_PICK_ROUTE.STATUS = PUBLISHED` и `ACTIVE = 1`;
+- Oracle validation возвращает `valid=true`;
+- route содержит `0` storage-slot rows;
+- `042_verify.sql` остается зеленым.
+
+Тесты:
+
+- Python compile для API/service/smoke files;
+- `tests/smoke/warehouse_map_publish_oracle_smoke.py`;
+- `tests/smoke/warehouse_map_publish_oracle_http_smoke.py`;
+- Oracle `042_verify.sql`;
+- UTF-8 encoding check.
+
+Sprint 23 closure evidence, 2026-05-22:
+
+- Service smoke published canvas `20`, topology `14`, pick route `113`: canvas/topology/route statuses are `PUBLISHED`, route row count `3`, storage-slot rows `0`, Oracle validation `valid=true`.
+- HTTP smoke published canvas `21`, topology `15`, pick route `114`: canvas/topology/route statuses are `PUBLISHED`, route row count `3`, storage-slot rows `0`, Oracle validation `valid=true`.
+- Final Oracle `042_verify.sql`: `Statements=7; Errors=0`.
+
+### Sprint 24. UI Publish Controls And Evidence
+
+Цель: вывести Oracle save/publish цепочку в UI редактора, не смешивая ее со старым локальным runtime publish.
+
+Состав работ:
+
+- добавить UI-команды `Save canvas DB`, `Save topology DB`, `Save route DB`, `Publish Oracle`;
+- блокировать команды до появления нужных зависимостей: склад, API draft, Oracle canvas, topology, route rows;
+- показывать Oracle draft links: `canvas_id`, `topology_id`, `pick_route_id`;
+- показывать результат publish: canvas/topology/route statuses, route row count и validation;
+- добавить visual smoke `smoke=sprint24-oracle-publish`;
+- сохранить browser screenshot evidence.
+
+Критерии приемки:
+
+- UI показывает отдельную Oracle publish цепочку рядом с порядком обхода;
+- `Publish Oracle` недоступен, пока нет сохраненных canvas, topology и route;
+- после publish UI показывает `PUBLISHED` для canvas, topology и route;
+- HTTP smoke доказывает настоящий `/publish-oracle` endpoint;
+- visual smoke дает screenshot evidence;
+- `042_verify.sql` остается зеленым.
+
+Тесты:
+
+- frontend build;
+- backend Python compile;
+- browser screenshot smoke `smoke=sprint24-oracle-publish`;
+- `tests/smoke/warehouse_map_publish_oracle_http_smoke.py`;
+- Oracle `042_verify.sql`;
+- UTF-8 encoding check.
+
+Sprint 24 closure evidence, 2026-05-22:
+
+- Screenshot: `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint24-oracle-publish.png`.
+- Browser smoke chip: `SMOKE PASS`, canvas/topology/route statuses are `PUBLISHED`, route rows `3`.
+- HTTP smoke published canvas `22`, topology `16`, pick route `115`: canvas/topology/route statuses are `PUBLISHED`, route row count `3`, storage-slot rows `0`, Oracle validation `valid=true`.
+- Final Oracle `042_verify.sql`: `Statements=7; Errors=0`.
+
+### Sprint 25. Published Warehouse Reload
+
+Цель: доказать, что опубликованная карта склада читается обратно через рабочий warehouse state API как canvas + topology + pick route.
+
+Состав работ:
+
+- расширить отображение `Реальный склад` в UI: canvas status, topology status, route count, route rows и первые published routes;
+- добавить visual smoke `smoke=sprint25-published-reload`;
+- добавить HTTP smoke, который создает draft, сохраняет canvas/topology/route, публикует через Oracle, затем перечитывает `/api/admin/warehouse-map/warehouses/{ware_id}/state`;
+- проверить, что route rows возвращаются из state API и storage-slot rows исключены.
+
+Критерии приемки:
+
+- `/warehouse-map/warehouses/{ware_id}/state` после publish возвращает canvas `PUBLISHED`;
+- state возвращает topology `PUBLISHED`;
+- state возвращает active pick route `PUBLISHED`;
+- route содержит `3` rows;
+- `route_rows_excluded_storage_slots = 0`;
+- UI evidence показывает published reload;
+- `042_verify.sql` остается зеленым.
+
+Тесты:
+
+- frontend build;
+- backend Python compile;
+- `tests/smoke/warehouse_map_published_reload_http_smoke.py`;
+- browser screenshot smoke `smoke=sprint25-published-reload`;
+- Oracle `042_verify.sql`;
+- UTF-8 encoding check.
+
+Sprint 25 closure evidence, 2026-05-22:
+
+- HTTP smoke published canvas `23`, topology `17`, pick route `116`, then reloaded warehouse state: canvas/topology/route statuses are `PUBLISHED`, route row count `3`, state route rows `3`, excluded storage rows `0`.
+- Screenshot: `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint25-published-reload.png`.
+- Final Oracle `042_verify.sql`: `Statements=7; Errors=0`.
+
+### Sprint 26. Final Acceptance Checkpoint
+
+Цель: закрыть рабочую цепочку ТЗ без расширения контекста и зафиксировать, что текущий slice дошел до end-to-end состояния.
+
+Финальная проверяемая цепочка:
+
+1. Canvas draft создается и редактируется в легком 2D editor.
+2. Draft payload сохраняется в Oracle canvas.
+3. Projection сохраняется в Oracle topology/cells/slots.
+4. Pick route rows сохраняются в Oracle route tables.
+5. Oracle package валидирует route invariants.
+6. Oracle publish переводит canvas/topology/route в `PUBLISHED`.
+7. Warehouse state reload читает опубликованные canvas/topology/route обратно.
+8. UI показывает published reload как рабочее состояние склада.
+
+Критерии приемки:
+
+- Gantt показывает Sprints 19-26 закрытыми;
+- все backend/frontend compile/build проверки зеленые;
+- latest HTTP reload smoke зеленый;
+- latest Oracle `042_verify.sql` зеленый;
+- visual evidence для publish и reload существует;
+- оставшиеся границы явно названы и не смешаны с текущим закрытым slice.
+
+Тесты:
+
+- frontend build;
+- backend Python compile;
+- `tests/smoke/warehouse_map_published_reload_http_smoke.py`;
+- browser screenshot smokes for Sprint 24 and Sprint 25;
+- Oracle `042_verify.sql`;
+- UTF-8 encoding check;
+- `git diff --check`.
+
+Sprint 26 closure evidence, 2026-05-22:
+
+- Final chain evidence exists for DB save/load, projection persistence, route save, Oracle publish and published reload in Sprints 20-25.
+- Latest HTTP reload smoke: canvas `23`, topology `17`, pick route `116`, all `PUBLISHED`, route rows `3`, excluded storage rows `0`.
+- Latest visual evidence:
+  - `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint24-oracle-publish.png`;
+  - `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint25-published-reload.png`.
+- Latest Oracle `042_verify.sql`: `Statements=7; Errors=0`.
+- Final checks: frontend build OK, backend Python compile OK, UTF-8 encoding OK, `git diff --check` has no whitespace errors.
+
+Оставшиеся границы после закрытого slice:
+
+- production-grade UI сценарий выбора уже опубликованного склада может быть улучшен отдельным UX спринтом;
+- cleanup/commit scope нужно делать отдельно, потому что в рабочем дереве есть unrelated legacy/untracked материалы;
+- runtime evidence screenshots остаются временными и не обязаны входить в commit.
 
 ## 15. Definition Of Done
 

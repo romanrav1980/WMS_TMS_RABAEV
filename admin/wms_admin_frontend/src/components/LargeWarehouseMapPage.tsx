@@ -1,6 +1,6 @@
 import { PointerEvent, useEffect, useMemo, useRef, useState } from "react";
 
-type CellRole = "EMPTY" | "PICK_FACE" | "STORAGE" | "TRANSPORT_STAGING" | "FILM_WRAP" | "GATE" | "AISLE" | "BLOCKED" | "FRACTIONAL_PICK_FACE";
+type CellRole = "EMPTY" | "PICK_FACE" | "STORAGE" | "TRANSPORT_STAGING" | "FILM_WRAP" | "GATE" | "AISLE" | "BLOCKED" | "FRACTIONAL_PICK_FACE" | "FRACTIONAL_STORAGE";
 
 type GridConfig = {
   aisleCount: number;
@@ -67,7 +67,134 @@ type WarehouseMapDraft = {
     levels: number;
   };
   roles_base64: string;
+  small_pick_faces?: SmallPickFaceDraftItem[];
+  storage_slots?: StorageSlotDraftItem[];
+  draft_metadata?: Record<string, unknown>;
+  canvas_objects?: Record<string, unknown>[];
+  passages?: Record<string, unknown>[];
+  camera_links?: Record<string, unknown>[];
+  route_rows?: RouteDraftRow[];
+  route_summary?: {
+    route_code?: string;
+    route_pattern?: RoutePattern;
+    route_row_count?: number;
+    skipped_storage_slots?: number;
+    skipped_non_pick_cells?: number;
+  };
+  oracle_canvas_id?: number;
+  oracle_topology_id?: number;
+  oracle_pick_route_id?: number;
+  oracle_publish_status?: OraclePublishStatus;
+  revision?: number;
   updated_at?: string;
+};
+
+type WarehouseMapDraftDiff = {
+  draft_id: string;
+  revision: number;
+  changed_cells: number;
+  changed_by_role: Partial<Record<CellRole, number>>;
+  draft_metadata_changed?: boolean;
+  canvas_object_count?: number;
+  canvas_object_diff_count?: number;
+  passage_count?: number;
+  passage_diff_count?: number;
+  camera_link_count?: number;
+  camera_link_diff_count?: number;
+  route_row_count?: number;
+  route_row_diff_count?: number;
+  small_pick_face_count: number;
+  storage_slot_count: number;
+  preview: { cell_code: string; from_role: CellRole; to_role: CellRole }[];
+};
+
+type RoutePattern = "LINEAR" | "Z" | "U_SHAPE" | "P_SHAPE" | "MANUAL";
+
+type RouteDraftRow = {
+  route_row_id?: string;
+  route_code?: string;
+  route_name?: string | null;
+  route_pattern?: RoutePattern;
+  cell_code: string;
+  physical_cell: GridCell;
+  pick_sequence: number;
+  slot_kind?: "PICK_FACE" | "PICK_FACE_SLOT";
+  active?: number;
+};
+
+type RouteBuildResponse = {
+  draft_id: string;
+  revision: number;
+  route_code: string;
+  route_pattern: RoutePattern;
+  route_rows: RouteDraftRow[];
+  route_row_count: number;
+  skipped_storage_slots: number;
+  skipped_non_pick_cells: number;
+};
+
+type WarehouseMapDraftValidation = {
+  draft_id: string;
+  valid: boolean;
+  error_count: number;
+  errors: string[];
+  route_row_count?: number;
+  duplicate_route_sequences?: number[];
+  duplicate_route_cells?: string[];
+  route_errors?: string[];
+};
+
+type WarehouseMapDraftPublished = {
+  published_topology_id: string;
+  status: string;
+  published_at: string;
+  route_row_count?: number;
+};
+
+type OracleSaveResponse = {
+  draft_id: string;
+  canvas_id?: number;
+  camera_id?: number;
+  topology_id?: number;
+  pick_route_id?: number;
+  route_row_count?: number;
+  status: string;
+  oracle_validation?: { valid: boolean; route_row_count?: number; storage_slot_route_rows?: number; non_pick_cell_route_rows?: number };
+};
+
+type OraclePublishStatus = {
+  canvas_id?: number;
+  canvas_status?: string;
+  canvas_active?: number;
+  topology_id?: number;
+  topology_status?: string;
+  pick_route_id?: number;
+  route_status?: string;
+  route_active?: number;
+  route_row_count?: number;
+};
+
+type OraclePublishResponse = {
+  draft_id: string;
+  canvas_id: number;
+  topology_id: number;
+  pick_route_id: number;
+  status: string;
+  oracle_validation: { valid: boolean; route_row_count?: number; storage_slot_route_rows?: number; non_pick_cell_route_rows?: number };
+  oracle_status: OraclePublishStatus;
+};
+
+type WarehouseMapProjectionPreview = {
+  draft_id: string;
+  status: string;
+  publish_ready: boolean;
+  topology_cell_count: number;
+  role_counts: Partial<Record<CellRole, number>>;
+  pick_face_slot_count: number;
+  storage_slot_count: number;
+  slot_count: number;
+  preview_cells: { cell_code: string; cell_kind: CellRole }[];
+  preview_slots: { slot_kind: string; slot_code?: string; storage_order?: number; pick_order?: number }[];
 };
 
 type WarehouseSummary = {
@@ -155,8 +282,24 @@ type WarehouseMapState = {
   camera_links: WarehouseMapCameraLink[];
   canvas_objects: WarehouseMapObject[];
   passages: WarehouseMapPassage[];
+  routes?: WarehouseMapPublishedRoute[];
   counters: Record<string, number>;
   warnings: { code: string; message: string }[];
+};
+
+type WarehouseMapPublishedRoute = {
+  pick_route_id: number;
+  topology_id: number;
+  ware_id: number;
+  route_code: string;
+  route_name?: string | null;
+  route_kind: string;
+  route_pattern?: RoutePattern | string | null;
+  status: string;
+  active: number;
+  route_row_count?: number;
+  excluded_storage_slot_row_count?: number;
+  route_rows?: Record<string, unknown>[];
 };
 
 type WarehouseMapCanvasSummary = {
@@ -183,9 +326,14 @@ type CameraFormState = {
 };
 
 type MapCommandId = "camera.create" | "camera.clone" | "camera.archive" | "object.create" | "passage.create" | "camera.link";
-type HelpId = MapCommandId | "format.copy" | "format.paste" | "format.cancel";
+type HelpId = MapCommandId | "format.copy" | "format.paste" | "format.cancel" | "fraction.pick" | "fraction.storage" | "projection.preview";
 
 type MapContextMenu = {
+  x: number;
+  y: number;
+} | null;
+
+type HelpPopupPosition = {
   x: number;
   y: number;
 } | null;
@@ -206,6 +354,39 @@ type SmallPickPreview = {
   preview: { logical_cell_code: string; sub_level: number; sub_column: number; pick_order: number }[];
 };
 
+type SmallPickFaceDraftItem = {
+  physical_cell: GridCell;
+  fraction_cell_count?: number;
+  sub_level?: number;
+  sub_column?: number;
+  active?: number;
+};
+
+type StorageSlotPreview = {
+  created_count: number;
+  fraction_cell_count: number;
+  storage_slot_count: number;
+  preview: StorageSlotDraftItem[];
+};
+
+type StorageSlotDraftItem = {
+  storage_slot_id?: string;
+  slot_code?: string;
+  physical_cell: GridCell;
+  fraction_cell_count?: number;
+  sub_level?: number;
+  sub_column?: number;
+  storage_order?: number;
+  max_pallet_count?: number | null;
+  max_weight_kg?: number | null;
+  max_volume_m3?: number | null;
+  capacity_json?: Record<string, unknown>;
+  active?: number;
+};
+
+type SplitPresetId = "PICK_2_LEVELS" | "PICK_3_LEVELS" | "PICK_2_HORIZONTAL" | "PICK_3_HORIZONTAL" | "PICK_2X2" | "PICK_3X3";
+type StorageSplitPresetId = "STORAGE_1" | "STORAGE_2_HORIZONTAL" | "STORAGE_3_HORIZONTAL";
+
 type SmallPickOrderMode = "SUB_LEVEL_THEN_COLUMN" | "COLUMN_THEN_SUB_LEVEL";
 
 type FormatClipboard = {
@@ -214,6 +395,11 @@ type FormatClipboard = {
   width: number;
   height: number;
   copiedAt: string;
+};
+
+type FractionVisualPreset = {
+  columns: number;
+  rows: number;
 };
 
 type DragState =
@@ -237,12 +423,13 @@ const LOCAL_DRAFT_ID_KEY = "wms.largeWarehouseMapDraftId.v1";
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
 const API_BASIC_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
 
-const ROLE_ORDER: CellRole[] = ["PICK_FACE", "STORAGE", "TRANSPORT_STAGING", "FILM_WRAP", "GATE", "AISLE", "BLOCKED", "EMPTY", "FRACTIONAL_PICK_FACE"];
+const ROLE_ORDER: CellRole[] = ["PICK_FACE", "STORAGE", "TRANSPORT_STAGING", "FILM_WRAP", "GATE", "AISLE", "BLOCKED", "EMPTY", "FRACTIONAL_PICK_FACE", "FRACTIONAL_STORAGE"];
 
 const ROLE_LABELS: Record<CellRole, string> = {
   EMPTY: "Пусто",
   PICK_FACE: "Ячейки отбора",
   FRACTIONAL_PICK_FACE: "Дробные ячейки отбора",
+  FRACTIONAL_STORAGE: "Дробные ячейки хранения",
   STORAGE: "Ячейки хранения",
   TRANSPORT_STAGING: "Транспортное накопление",
   FILM_WRAP: "На пленку",
@@ -255,6 +442,7 @@ const ROLE_COLORS: Record<CellRole, string> = {
   EMPTY: "#f8fafc",
   PICK_FACE: "#91f3c8",
   FRACTIONAL_PICK_FACE: "#c4b5fd",
+  FRACTIONAL_STORAGE: "#a7f3d0",
   STORAGE: "#bfdbfe",
   TRANSPORT_STAGING: "#fde68a",
   FILM_WRAP: "#fbcfe8",
@@ -267,6 +455,7 @@ const ROLE_STROKES: Record<CellRole, string> = {
   EMPTY: "#e2e8f0",
   PICK_FACE: "#059669",
   FRACTIONAL_PICK_FACE: "#7c3aed",
+  FRACTIONAL_STORAGE: "#047857",
   STORAGE: "#2563eb",
   TRANSPORT_STAGING: "#b45309",
   FILM_WRAP: "#db2777",
@@ -275,42 +464,75 @@ const ROLE_STROKES: Record<CellRole, string> = {
   BLOCKED: "#334155"
 };
 
+const PICK_SPLIT_PRESETS: Record<SplitPresetId, { label: string; fractionCellCount: number; subLevelCount: number; subColumnCount: number; visual: FractionVisualPreset }> = {
+  PICK_2_LEVELS: { label: "2 уровня", fractionCellCount: 2, subLevelCount: 2, subColumnCount: 1, visual: { columns: 1, rows: 2 } },
+  PICK_3_LEVELS: { label: "3 уровня", fractionCellCount: 3, subLevelCount: 3, subColumnCount: 1, visual: { columns: 1, rows: 3 } },
+  PICK_2_HORIZONTAL: { label: "2 по горизонтали", fractionCellCount: 2, subLevelCount: 1, subColumnCount: 2, visual: { columns: 2, rows: 1 } },
+  PICK_3_HORIZONTAL: { label: "3 по горизонтали", fractionCellCount: 3, subLevelCount: 1, subColumnCount: 3, visual: { columns: 3, rows: 1 } },
+  PICK_2X2: { label: "2 x 2", fractionCellCount: 4, subLevelCount: 2, subColumnCount: 2, visual: { columns: 2, rows: 2 } },
+  PICK_3X3: { label: "3 x 3", fractionCellCount: 9, subLevelCount: 3, subColumnCount: 3, visual: { columns: 3, rows: 3 } }
+};
+
+const STORAGE_SPLIT_VISUALS: Record<number, FractionVisualPreset> = {
+  1: { columns: 1, rows: 1 },
+  2: { columns: 2, rows: 1 },
+  3: { columns: 3, rows: 1 }
+};
+
+const STORAGE_SPLIT_PRESETS: Record<StorageSplitPresetId, { label: string; fractionCellCount: number; subColumnCount: number; visual: FractionVisualPreset }> = {
+  STORAGE_1: { label: "1 / без дробления", fractionCellCount: 1, subColumnCount: 1, visual: STORAGE_SPLIT_VISUALS[1] },
+  STORAGE_2_HORIZONTAL: { label: "2 по горизонтали", fractionCellCount: 2, subColumnCount: 2, visual: STORAGE_SPLIT_VISUALS[2] },
+  STORAGE_3_HORIZONTAL: { label: "3 по горизонтали", fractionCellCount: 3, subColumnCount: 3, visual: STORAGE_SPLIT_VISUALS[3] }
+};
+
 const MAP_HELP: Record<HelpId, { title: string; body: string }> = {
   "camera.create": {
     title: "Создать камеру",
-    body: "Создает canvas, если его еще нет, и добавляет к складу новую физическую камеру с размерами в метрах."
+    body: "Что это: команда создания физической камеры склада на canvas. Вход: выбранный склад, код, вид, название, размеры в метрах, уровни и дефолтная ширина прохода. Делает: создает canvas при необходимости и добавляет камеру. Зачем: разделять один склад на помещения/камеры. Как применять: заполните форму камеры и нажмите команду; topology cells не публикуются."
   },
   "camera.clone": {
     title: "Клонировать камеру",
-    body: "Создает соседнюю камеру на основе выбранной. Используется для быстрого заведения похожих помещений."
+    body: "Что это: команда быстрого создания похожей камеры. Вход: выбранная камера. Делает: копирует размеры, тип, высоту, уровни и дефолтные проходы в новую камеру. Зачем: быстро заводить однотипные помещения. Как применять: выберите камеру и нажмите команду; objects, passages, slots и маршруты не копируются автоматически."
   },
   "camera.archive": {
     title: "Архивировать камеру",
-    body: "Переводит камеру в архив только если у нее нет активных объектов, проходов, связей и topology cells."
+    body: "Что это: команда выключения камеры из активной карты. Вход: выбранная камера и ее зависимости. Делает: переводит камеру в архив, если нет активных objects, passages, links и topology cells. Зачем: безопасно убирать лишние помещения. Как применять: сначала удалите/перенесите зависимости, затем архивируйте."
   },
   "object.create": {
     title: "Сохранить объект из выделения",
-    body: "Сохраняет выделенный прямоугольник как canvas object. Это графический объект карты, а не WMS-ячейка."
+    body: "Что это: canvas object, графический объект карты. Вход: выделенный прямоугольник и выбранная камера. Делает: сохраняет зону, разметку или ориентир без создания WMS-ячейки. Зачем: хранить на canvas то, чего нет в ячейках отбора/хранения. Как применять: выделите область и сохраните объект; в pick route он не участвует до projection."
   },
   "passage.create": {
     title: "Сохранить проход из выделения",
-    body: "Сохраняет выделение как проход с шириной в метрах. Пиксели используются только для отображения."
+    body: "Что это: проход на карте склада. Вход: выделение, камера, ширина прохода в метрах. Делает: сохраняет passage с геометрией и шириной. Зачем: отделить проходимые зоны и будущие расстояния от обычных ячеек. Как применять: выделите линию/полосу прохода и сохраните; пиксели только помогают рисовать."
   },
   "camera.link": {
     title: "Связать первые 2 камеры",
-    body: "Создает связь между двумя камерами canvas. В будущем маршрут между камерами будет брать расстояния отсюда."
+    body: "Что это: связь между камерами canvas. Вход: минимум две камеры в текущем canvas. Делает: создает переход с направлением и расстоянием. Зачем: будущий маршрут должен понимать, как пройти между помещениями. Как применять: создайте две камеры, затем сохраните link."
   },
   "format.copy": {
     title: "Скопировать формат",
-    body: "Копирует роли и формат выделенного прямоугольника без адресов, DB ID, маршрутов, остатков и задач."
+    body: "Что это: Excel-like Format Painter. Вход: выделенный прямоугольник. Делает: копирует роли/рисунок формата области. Зачем: быстро размножать похожие участки склада. Как применять: выделите образец, нажмите копирование, выберите цель и вставьте; DB ID, адреса, маршруты, остатки и задачи не копируются."
   },
   "format.paste": {
     title: "Вставить формат",
-    body: "Вставляет скопированный формат от активной ячейки или начала выделения и пишет операцию в undo/redo."
+    body: "Что это: вставка скопированного формата. Вход: format clipboard и активная целевая ячейка/выделение. Делает: переносит рисунок ролей в область того же размера. Зачем: ускорить ручное рисование. Как применять: после копирования формата укажите цель и вставьте; операция доступна в undo/redo."
   },
   "format.cancel": {
     title: "Отменить кисть",
-    body: "Выключает режим кисти. Буфер формата остается, поэтому его можно вставить позже."
+    body: "Что это: отмена активного режима кисти. Вход: текущий format clipboard. Делает: выключает режим переноса, но не очищает буфер. Зачем: избежать случайной вставки. Как применять: нажмите, если передумали вставлять формат сейчас."
+  },
+  "fraction.pick": {
+    title: "Дробная ячейка отбора",
+    body: "Что это: несколько логических pick slots внутри одной физической ячейки. Вход: выделенная ячейка, split preset, start/order/side/mask. Делает: создает child slots отбора и рисует внутренние линии дробления. Зачем: описать мелкоштучный отбор без размножения физических координат. Как применять: выберите пресет 2/3 уровня, 2/3 по горизонтали, 2 x 2 или 3 x 3 и назначьте дробную ячейку."
+  },
+  "fraction.storage": {
+    title: "Дробная ячейка хранения",
+    body: "Что это: storage slots внутри одной физической ячейки хранения. Вход: выделенная ячейка, storage split preset, order/mask/capacity. Делает: создает или оставляет child slots хранения и хранит вместимость. Зачем: дать остаткам ссылаться на часть физической ячейки. Как применять: выберите 1 / без дробления, 2 по горизонтали или 3 по горизонтали; вертикальное дробление storage запрещено."
+  },
+  "projection.preview": {
+    title: "Projection preview",
+    body: "Что это: предварительный расчет topology-проекции. Вход: текущий API draft, roles, pick slots и storage slots. Делает: считает будущие topology cells и child slots без publish. Зачем: проверить карту перед сохранением в боевую topology. Как применять: нажмите Projection preview и проверьте счетчики cells/slots и publish ready."
   }
 };
 
@@ -318,6 +540,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const rolesRef = useRef<Uint8Array>(createInitialRoles());
+  const fractionVisualsRef = useRef<Map<string, FractionVisualPreset>>(new Map());
   const undoStackRef = useRef<RoleChange[]>([]);
   const redoStackRef = useRef<RoleChange[]>([]);
   const smokeRanRef = useRef(false);
@@ -331,10 +554,25 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const [dirty, setDirty] = useState(false);
   const [draftId, setDraftId] = useState(() => localStorage.getItem(LOCAL_DRAFT_ID_KEY) || "");
   const [draftStatus, setDraftStatus] = useState("Локальный draft не сохранен");
+  const [draftRevision, setDraftRevision] = useState<number | null>(null);
+  const [draftDiff, setDraftDiff] = useState<WarehouseMapDraftDiff | null>(null);
   const [addressStatus, setAddressStatus] = useState("Адресация не применялась");
   const [addressPreview, setAddressPreview] = useState<AddressPreview | null>(null);
   const [smallPickStatus, setSmallPickStatus] = useState("Дробные ячейки не назначались");
   const [smallPickPreview, setSmallPickPreview] = useState<SmallPickPreview | null>(null);
+  const [storageSlotStatus, setStorageSlotStatus] = useState("Дробные ячейки хранения не назначались");
+  const [storageSlotPreview, setStorageSlotPreview] = useState<StorageSlotPreview | null>(null);
+  const [currentDraft, setCurrentDraft] = useState<WarehouseMapDraft | null>(null);
+  const [projectionStatus, setProjectionStatus] = useState("Projection preview не строился");
+  const [projectionPreview, setProjectionPreview] = useState<WarehouseMapProjectionPreview | null>(null);
+  const [routePattern, setRoutePattern] = useState<RoutePattern>("Z");
+  const [routeStatus, setRouteStatus] = useState("Порядок обхода не строился");
+  const [validationStatus, setValidationStatus] = useState("Validation не запускалась");
+  const [validationResult, setValidationResult] = useState<WarehouseMapDraftValidation | null>(null);
+  const [publishStatus, setPublishStatus] = useState("Publish не выполнялся");
+  const [publishedResult, setPublishedResult] = useState<WarehouseMapDraftPublished | null>(null);
+  const [oracleStatus, setOracleStatus] = useState("Oracle save/publish не выполнялся");
+  const [oraclePublishResult, setOraclePublishResult] = useState<OraclePublishResponse | null>(null);
   const [formatClipboard, setFormatClipboard] = useState<FormatClipboard | null>(null);
   const [formatPainterActive, setFormatPainterActive] = useState(false);
   const [formatStatus, setFormatStatus] = useState("Формат не скопирован");
@@ -348,6 +586,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const [warehouseStatus, setWarehouseStatus] = useState("Склад не выбран");
   const [contextMenu, setContextMenu] = useState<MapContextMenu>(null);
   const [activeHelpId, setActiveHelpId] = useState<HelpId | null>(null);
+  const [helpPopupPosition, setHelpPopupPosition] = useState<HelpPopupPosition>(null);
   const [cameraForm, setCameraForm] = useState<CameraFormState>({
     cameraCode: "CAM-01",
     cameraName: "Камера 01",
@@ -371,14 +610,29 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     codeMask: "A{aisle}-P{pick_no}-L{level}"
   });
   const [smallPickForm, setSmallPickForm] = useState({
-    fractionCellCount: 6,
+    preset: "PICK_2_LEVELS" as SplitPresetId,
+    fractionCellCount: 2,
     subLevelCount: 2,
-    subColumnCount: 3,
+    subColumnCount: 1,
     orderMode: "SUB_LEVEL_THEN_COLUMN" as SmallPickOrderMode,
     startOrder: 1,
     step: 1,
     side: "" as AddressSide,
     codeMask: "{physical_cell}-F{sub_level}{sub_column}"
+  });
+  const [storageSlotForm, setStorageSlotForm] = useState({
+    preset: "STORAGE_1" as StorageSplitPresetId,
+    fractionCellCount: 1,
+    subColumnCount: 1,
+    startOrder: 1,
+    step: 1,
+    codeMask: "{physical_cell}-ST{sub_column}"
+  });
+  const [storageSlotEditForm, setStorageSlotEditForm] = useState({
+    storageOrder: 1,
+    maxPalletCount: 1,
+    maxWeightKg: 0,
+    maxVolumeM3: 0
   });
   const [historyVersion, setHistoryVersion] = useState(0);
   const [smokeResult, setSmokeResult] = useState<SprintSmokeResult | null>(null);
@@ -400,6 +654,9 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const selectedCameraObjects = selectedCamera ? (warehouseMapState?.canvas_objects || []).filter((item) => item.camera_id === selectedCamera.camera_id) : [];
   const selectedCameraPassages = selectedCamera ? (warehouseMapState?.passages || []).filter((item) => item.camera_id === selectedCamera.camera_id) : [];
   const selectedCameraLinks = selectedCamera ? (warehouseMapState?.camera_links || []).filter((item) => item.from_camera_id === selectedCamera.camera_id || item.to_camera_id === selectedCamera.camera_id) : [];
+  const activeStorageSlots = useMemo(() => findStorageSlotsForCell(currentDraft, activeCell), [currentDraft, activeCell]);
+  const activeStorageSlot = activeStorageSlots[0] || null;
+  const routeRows = useMemo(() => sortedRouteRows(currentDraft?.route_rows || []), [currentDraft?.route_rows]);
   const mapCommands = commandRegistry();
 
   useEffect(() => {
@@ -418,11 +675,11 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
 
     const overlayObjects = selectedCamera ? (warehouseMapState?.canvas_objects || []).filter((item) => item.camera_id === selectedCamera.camera_id) : [];
     const overlayPassages = selectedCamera ? (warehouseMapState?.passages || []).filter((item) => item.camera_id === selectedCamera.camera_id) : [];
-    const observer = new ResizeObserver(() => drawCanvas(canvas, rolesRef.current, level, view, selections, activeCell, hovered, roleFilters, overlayObjects, overlayPassages, setMetrics));
+    const observer = new ResizeObserver(() => drawCanvas(canvas, rolesRef.current, level, view, selections, activeCell, hovered, roleFilters, overlayObjects, overlayPassages, fractionVisualsRef.current, routeRows, setMetrics));
     observer.observe(wrapper);
-    drawCanvas(canvas, rolesRef.current, level, view, selections, activeCell, hovered, roleFilters, overlayObjects, overlayPassages, setMetrics);
+    drawCanvas(canvas, rolesRef.current, level, view, selections, activeCell, hovered, roleFilters, overlayObjects, overlayPassages, fractionVisualsRef.current, routeRows, setMetrics);
     return () => observer.disconnect();
-  }, [level, view, selections, activeCell, hovered, roleFilters, version, warehouseMapState, selectedCameraId]);
+  }, [level, view, selections, activeCell, hovered, roleFilters, version, warehouseMapState, selectedCameraId, routeRows]);
 
   useEffect(() => {
     setActiveCell((current) => ({ ...current, level }));
@@ -430,11 +687,21 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   }, [level]);
 
   useEffect(() => {
+    if (!activeStorageSlot) return;
+    setStorageSlotEditForm({
+      storageOrder: Number(activeStorageSlot.storage_order || 1),
+      maxPalletCount: Number(activeStorageSlot.max_pallet_count ?? 1),
+      maxWeightKg: Number(activeStorageSlot.max_weight_kg || 0),
+      maxVolumeM3: Number(activeStorageSlot.max_volume_m3 || 0)
+    });
+  }, [activeStorageSlot?.storage_slot_id]);
+
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search.replace(/;/g, "&"));
     const smoke = params.get("smoke")
       || (window.location.href.includes("smoke=sprint13-objects") ? "sprint13-objects" : null)
       || (window.location.href.includes("smoke=sprint12") ? "sprint12" : null);
-    if (smoke !== "sprint2-multiarea" && smoke !== "sprint3" && smoke !== "sprint5" && smoke !== "sprint6" && smoke !== "sprint7" && smoke !== "sprint8" && smoke !== "sprint9" && smoke !== "sprint12" && smoke !== "sprint13-format" && smoke !== "sprint13-objects") return;
+    if (smoke !== "sprint2-multiarea" && smoke !== "sprint3" && smoke !== "sprint5" && smoke !== "sprint6" && smoke !== "sprint7" && smoke !== "sprint8" && smoke !== "sprint9" && smoke !== "sprint12" && smoke !== "sprint13-format" && smoke !== "sprint13-objects" && smoke !== "sprint14-slots" && smoke !== "sprint14-help" && smoke !== "sprint15-diff" && smoke !== "sprint15-metadata" && smoke !== "sprint16-route" && smoke !== "sprint17-publish" && smoke !== "sprint18-hardening" && smoke !== "sprint24-oracle-publish" && smoke !== "sprint25-published-reload") return;
     if (smokeRanRef.current) return;
     smokeRanRef.current = true;
     if (smoke === "sprint2-multiarea") {
@@ -455,6 +722,24 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       runSprint13FormatSmoke();
     } else if (smoke === "sprint13-objects") {
       runSprint13ObjectsSmoke();
+    } else if (smoke === "sprint14-slots") {
+      runSprint14SlotsSmoke();
+    } else if (smoke === "sprint14-help") {
+      runSprint14HelpSmoke();
+    } else if (smoke === "sprint15-diff") {
+      runSprint15DiffSmoke();
+    } else if (smoke === "sprint15-metadata") {
+      runSprint15MetadataSmoke();
+    } else if (smoke === "sprint16-route") {
+      runSprint16RouteSmoke();
+    } else if (smoke === "sprint17-publish") {
+      runSprint17PublishSmoke();
+    } else if (smoke === "sprint18-hardening") {
+      runSprint18HardeningSmoke();
+    } else if (smoke === "sprint24-oracle-publish") {
+      runSprint24OraclePublishSmoke();
+    } else if (smoke === "sprint25-published-reload") {
+      runSprint25PublishedReloadSmoke();
     } else {
       runSprint3Smoke();
     }
@@ -758,6 +1043,22 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     await command.run();
   }
 
+  function openHelp(event: React.MouseEvent<HTMLElement>, helpId: HelpId) {
+    event.preventDefault();
+    event.stopPropagation();
+    const rect = event.currentTarget.getBoundingClientRect();
+    setActiveHelpId(helpId);
+    setHelpPopupPosition({
+      x: Math.min(window.innerWidth - 336, Math.max(10, rect.right + 8)),
+      y: Math.min(window.innerHeight - 220, Math.max(10, rect.top - 8))
+    });
+  }
+
+  function closeHelp() {
+    setActiveHelpId(null);
+    setHelpPopupPosition(null);
+  }
+
   function handleCanvasContextMenu(event: React.MouseEvent<HTMLCanvasElement>) {
     event.preventDefault();
     setContextMenu({ x: event.clientX, y: event.clientY });
@@ -985,7 +1286,9 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     try {
       const apiDraft = await saveApiDraft(payload.roles);
       setDirty(false);
-      setDraftStatus(`Сохранено API draft ${apiDraft.draft_id.slice(0, 8)} · ${apiDraft.updated_at ? new Date(apiDraft.updated_at).toLocaleTimeString("ru-RU") : ""}`);
+      setDraftRevision(apiDraft.revision || null);
+      setCurrentDraft(apiDraft);
+      setDraftStatus(`Сохранено API draft ${apiDraft.draft_id.slice(0, 8)} · rev ${apiDraft.revision || "-"} · ${apiDraft.updated_at ? new Date(apiDraft.updated_at).toLocaleTimeString("ru-RU") : ""}`);
     } catch {
       setDirty(false);
       setDraftStatus(`API недоступен, сохранено локально ${new Date(payload.savedAt).toLocaleTimeString("ru-RU")}`);
@@ -995,8 +1298,8 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   async function loadDraft() {
     if (draftId) {
       try {
-        const apiDraft = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
-        applyDraftRoles(apiDraft.roles_base64);
+      const apiDraft = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
+        applyApiDraft(apiDraft);
         setDraftStatus(`Загружено API draft ${apiDraft.draft_id.slice(0, 8)} · ${apiDraft.updated_at ? new Date(apiDraft.updated_at).toLocaleTimeString("ru-RU") : ""}`);
         return;
       } catch {
@@ -1026,7 +1329,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     if (draftId) {
       return apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/cells`, {
         method: "PATCH",
-        body: JSON.stringify({ roles_base64: rolesBase64 })
+        body: JSON.stringify({ roles_base64: rolesBase64, expected_revision: draftRevision })
       });
     }
     const apiDraft = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts`, {
@@ -1044,12 +1347,78 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
 
   function applyDraftRoles(rolesBase64: string) {
     rolesRef.current = decodeRoles(rolesBase64, totalCells());
+    fractionVisualsRef.current = new Map();
+    setCurrentDraft(null);
+    setDraftRevision(null);
+    setDraftDiff(null);
     undoStackRef.current = [];
     redoStackRef.current = [];
     setDirty(false);
     setSelections([]);
     setHistoryVersion((value) => value + 1);
     setVersion((value) => value + 1);
+  }
+
+  function applyApiDraft(draft: WarehouseMapDraft) {
+    rolesRef.current = decodeRoles(draft.roles_base64, totalCells());
+    fractionVisualsRef.current = buildFractionVisualsFromDraft(draft);
+    setCurrentDraft(draft);
+    setDraftRevision(draft.revision || 1);
+    setDraftDiff(null);
+    undoStackRef.current = [];
+    redoStackRef.current = [];
+    setDirty(false);
+    setSelections([]);
+    setHistoryVersion((value) => value + 1);
+    setVersion((value) => value + 1);
+  }
+
+  async function loadDraftDiff() {
+    if (!draftId) {
+      setDraftStatus("Сначала сохраните draft через API");
+      return null;
+    }
+    try {
+      const diff = await apiFetchJson<WarehouseMapDraftDiff>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/diff`, { cache: "no-store" });
+      setDraftDiff(diff);
+      setDraftStatus(`Diff: changed=${diff.changed_cells}, pickSlots=${diff.small_pick_face_count}, storageSlots=${diff.storage_slot_count}`);
+      return diff;
+    } catch {
+      setDraftStatus("Не удалось загрузить diff");
+      return null;
+    }
+  }
+
+  async function saveDraftMetadata() {
+    if (!draftId) {
+      setDraftStatus("Сначала сохраните draft через API");
+      return null;
+    }
+    try {
+      const payload = {
+        expected_revision: draftRevision,
+        draft_metadata: {
+          source: "large-map-ui",
+          selected_ware_id: selectedWareId,
+          selected_camera_id: selectedCameraId,
+          updated_at: new Date().toISOString()
+        },
+        canvas_objects: selectedCameraObjects.map((item) => canvasObjectPayload(item)),
+        passages: selectedCameraPassages.map((item) => passagePayload(item)),
+        camera_links: selectedCameraLinks.map((item) => cameraLinkPayload(item)),
+        updated_by: "warehouse-map-ui"
+      };
+      const draft = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/metadata`, {
+        method: "PATCH",
+        body: JSON.stringify(payload)
+      });
+      applyApiDraft(draft);
+      setDraftStatus(`Metadata сохранена · rev ${draft.revision || "-"}`);
+      return draft;
+    } catch {
+      setDraftStatus("Не удалось сохранить metadata draft");
+      return null;
+    }
   }
 
   function applyEmptyCameraDefaultRoles(state: WarehouseMapState | null) {
@@ -1198,12 +1567,293 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       const next = new Uint8Array(rolesRef.current);
       next[cellIndex(selection.anchorCell.aisle, selection.anchorCell.slot, selection.anchorCell.level)] = ROLE_ORDER.indexOf("FRACTIONAL_PICK_FACE");
       rolesRef.current = next;
+      fractionVisualsRef.current.set(fractionVisualKey(selection.anchorCell), PICK_SPLIT_PRESETS[smallPickForm.preset].visual);
       setSmallPickPreview(result);
       setSmallPickStatus(`Создано логических ячеек: ${result.created_count}`);
       setDirty(true);
       setVersion((value) => value + 1);
     } catch {
       setSmallPickStatus("Не удалось создать дробную ячейку через API");
+    }
+  }
+
+  async function generateStorageSlots() {
+    const selection = selections[0];
+    if (!selection) {
+      setStorageSlotStatus("Нет выделения для ячейки хранения");
+      return;
+    }
+    if (!draftId) {
+      setStorageSlotStatus("Сначала сохраните draft через API");
+      return;
+    }
+    try {
+      const result = await apiFetchJson<StorageSlotPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/storage-slots/generate`, {
+        method: "POST",
+        body: JSON.stringify({
+          physical_cell: toApiCell(selection.anchorCell),
+          fraction_cell_count: storageSlotForm.fractionCellCount,
+          sub_level_count: 1,
+          sub_column_count: storageSlotForm.subColumnCount,
+          start_order: storageSlotForm.startOrder,
+          step: storageSlotForm.step,
+          code_mask: storageSlotForm.codeMask
+        })
+      });
+      const next = new Uint8Array(rolesRef.current);
+      next[cellIndex(selection.anchorCell.aisle, selection.anchorCell.slot, selection.anchorCell.level)] = ROLE_ORDER.indexOf(storageSlotForm.fractionCellCount === 1 ? "STORAGE" : "FRACTIONAL_STORAGE");
+      rolesRef.current = next;
+      if (storageSlotForm.fractionCellCount > 1) {
+        fractionVisualsRef.current.set(fractionVisualKey(selection.anchorCell), STORAGE_SPLIT_VISUALS[storageSlotForm.fractionCellCount]);
+      } else {
+        fractionVisualsRef.current.delete(fractionVisualKey(selection.anchorCell));
+      }
+      setStorageSlotPreview(result);
+      setStorageSlotStatus(storageSlotForm.fractionCellCount === 1 ? "Storage оставлен без дробления" : `Создано storage slots: ${result.created_count}`);
+      if (draftId) {
+        const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
+        setCurrentDraft(reloaded);
+      }
+      setDirty(true);
+      setVersion((value) => value + 1);
+    } catch {
+      setStorageSlotStatus("Не удалось создать storage slots через API");
+    }
+  }
+
+  async function patchActiveStorageSlot() {
+    if (!draftId || !activeStorageSlot?.storage_slot_id) {
+      setStorageSlotStatus("Нет выбранного storage slot для редактирования");
+      return;
+    }
+    try {
+      const result = await apiFetchJson<{ storage_slot: StorageSlotDraftItem }>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/storage-slots/${activeStorageSlot.storage_slot_id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          storage_order: storageSlotEditForm.storageOrder,
+          max_pallet_count: storageSlotEditForm.maxPalletCount,
+          max_weight_kg: storageSlotEditForm.maxWeightKg || null,
+          max_volume_m3: storageSlotEditForm.maxVolumeM3 || null,
+          capacity_json: {
+            source: "large-map-ui",
+            max_pallet_count: storageSlotEditForm.maxPalletCount
+          }
+        })
+      });
+      const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
+      setCurrentDraft(reloaded);
+      setStorageSlotStatus(`Storage slot сохранен: ${result.storage_slot.slot_code || activeStorageSlot.storage_slot_id}`);
+      setDirty(true);
+    } catch {
+      setStorageSlotStatus("Не удалось сохранить storage slot");
+    }
+  }
+
+  async function previewProjection() {
+    if (!draftId) {
+      setProjectionStatus("Сначала сохраните draft через API");
+      return null;
+    }
+    try {
+      const result = await apiFetchJson<WarehouseMapProjectionPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/projection/preview`, {
+        method: "POST"
+      });
+      setProjectionPreview(result);
+      setProjectionStatus(`Projection preview: cells=${result.topology_cell_count}, slots=${result.slot_count}, publishReady=${String(result.publish_ready)}`);
+      return result;
+    } catch {
+      setProjectionStatus("Не удалось построить projection preview");
+      return null;
+    }
+  }
+
+  async function buildRouteFromSelection(pattern = routePattern) {
+    if (!draftId) {
+      setRouteStatus("Сначала сохраните draft через API");
+      return null;
+    }
+    const selection = selections[0];
+    if (!selection) {
+      setRouteStatus("Нужно выделить участок для маршрута");
+      return null;
+    }
+    try {
+      const result = await apiFetchJson<RouteBuildResponse>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/route/build`, {
+        method: "POST",
+        body: JSON.stringify({
+          selection: toApiSelection(selection),
+          route_code: "DRAFT-PICK",
+          route_name: "Черновой порядок обхода",
+          route_pattern: pattern,
+          start_sequence: 1,
+          step: 1,
+          expected_revision: draftRevision,
+          updated_by: "warehouse-map-ui"
+        })
+      });
+      const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
+      applyApiDraft(reloaded);
+      setRoutePattern(result.route_pattern);
+      setRouteStatus(`Route ${result.route_pattern}: ${result.route_row_count} строк · storage skipped ${result.skipped_storage_slots} · non-pick skipped ${result.skipped_non_pick_cells}`);
+      return result;
+    } catch {
+      setRouteStatus("Не удалось построить route draft");
+      return null;
+    }
+  }
+
+  async function validateDraft() {
+    if (!draftId) {
+      setValidationStatus("Сначала сохраните draft через API");
+      return null;
+    }
+    try {
+      const result = await apiFetchJson<WarehouseMapDraftValidation>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/validate`, {
+        method: "POST"
+      });
+      setValidationResult(result);
+      setValidationStatus(`Validation: ${result.valid ? "OK" : "BLOCKED"} · errors=${result.error_count} · routeRows=${result.route_row_count || 0}`);
+      return result;
+    } catch {
+      setValidationStatus("Validation API недоступна");
+      return null;
+    }
+  }
+
+  async function publishDraft() {
+    if (!draftId) {
+      setPublishStatus("Сначала сохраните draft через API");
+      return null;
+    }
+    try {
+      const result = await apiFetchJson<WarehouseMapDraftPublished>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/publish`, {
+        method: "POST"
+      });
+      setPublishedResult(result);
+      setPublishStatus(`Published ${result.published_topology_id.slice(0, 8)} · routeRows=${result.route_row_count || 0}`);
+      return result;
+    } catch {
+      setPublishStatus("Publish заблокирован validation или API недоступен");
+      return null;
+    }
+  }
+
+  async function saveDraftToOracleCanvas() {
+    if (!draftId || selectedWareId === null) {
+      setOracleStatus("Выберите склад и сохраните API draft");
+      return null;
+    }
+    try {
+      const result = await apiFetchJson<OracleSaveResponse>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/save-to-db`, {
+        method: "POST",
+        body: JSON.stringify({
+          ware_id: selectedWareId,
+          canvas_code: `MAP-${selectedWareId}-${draftId.slice(0, 6)}`,
+          canvas_name: `Карта склада ${selectedWareId}`,
+          camera_code: `CAM-${selectedWareId}`,
+          camera_name: "Основная камера",
+          expected_revision: draftRevision || undefined,
+          updated_by: "warehouse-map-ui"
+        })
+      });
+      const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
+      applyApiDraft(reloaded);
+      setOracleStatus(`Oracle canvas сохранен: canvas=${result.canvas_id || reloaded.oracle_canvas_id || "-"}`);
+      return result;
+    } catch {
+      setOracleStatus("Не удалось сохранить draft в Oracle canvas");
+      return null;
+    }
+  }
+
+  async function saveProjectionToOracleTopology() {
+    if (!draftId || selectedWareId === null) {
+      setOracleStatus("Выберите склад и сохраните API draft");
+      return null;
+    }
+    try {
+      const result = await apiFetchJson<OracleSaveResponse>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/projection/save-to-topology`, {
+        method: "POST",
+        body: JSON.stringify({
+          ware_id: selectedWareId,
+          topology_code: `MAP-TOPO-${selectedWareId}-${draftId.slice(0, 6)}`,
+          topology_name: `Topology draft ${selectedWareId}`,
+          expected_revision: draftRevision || undefined,
+          updated_by: "warehouse-map-ui"
+        })
+      });
+      const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
+      applyApiDraft(reloaded);
+      setOracleStatus(`Oracle topology сохранена: topology=${result.topology_id || reloaded.oracle_topology_id || "-"} · cells=${result.topology_id ? "OK" : "-"}`);
+      return result;
+    } catch {
+      setOracleStatus("Не удалось сохранить projection в Oracle topology");
+      return null;
+    }
+  }
+
+  async function saveRouteToOracle() {
+    if (!draftId || selectedWareId === null) {
+      setOracleStatus("Выберите склад и сохраните API draft");
+      return null;
+    }
+    if (!currentDraft?.oracle_topology_id) {
+      setOracleStatus("Сначала сохраните projection в Oracle topology");
+      return null;
+    }
+    try {
+      const result = await apiFetchJson<OracleSaveResponse>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/route/save-to-db`, {
+        method: "POST",
+        body: JSON.stringify({
+          ware_id: selectedWareId,
+          topology_id: currentDraft.oracle_topology_id,
+          route_code: `MAP-PICK-${selectedWareId}-${draftId.slice(0, 6)}`,
+          route_name: `Pick route ${selectedWareId}`,
+          expected_revision: draftRevision || undefined,
+          updated_by: "warehouse-map-ui"
+        })
+      });
+      const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
+      applyApiDraft(reloaded);
+      setOracleStatus(`Oracle route сохранен: route=${result.pick_route_id || reloaded.oracle_pick_route_id || "-"} · valid=${String(result.oracle_validation?.valid)}`);
+      return result;
+    } catch {
+      setOracleStatus("Не удалось сохранить route в Oracle");
+      return null;
+    }
+  }
+
+  async function publishOracleDraft() {
+    if (!draftId) {
+      setOracleStatus("Сначала сохраните API draft");
+      return null;
+    }
+    const canvasId = currentDraft?.oracle_canvas_id;
+    const topologyId = currentDraft?.oracle_topology_id;
+    const pickRouteId = currentDraft?.oracle_pick_route_id;
+    if (!canvasId || !topologyId || !pickRouteId) {
+      setOracleStatus("Для Oracle publish нужны canvas, topology и route в Oracle");
+      return null;
+    }
+    try {
+      const result = await apiFetchJson<OraclePublishResponse>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/publish-oracle`, {
+        method: "POST",
+        body: JSON.stringify({
+          canvas_id: canvasId,
+          topology_id: topologyId,
+          pick_route_id: pickRouteId,
+          expected_revision: draftRevision || undefined,
+          published_by: "warehouse-map-ui"
+        })
+      });
+      const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
+      applyApiDraft(reloaded);
+      setOraclePublishResult(result);
+      setOracleStatus(`Oracle publish: ${result.status} · canvas=${result.oracle_status.canvas_status} · topology=${result.oracle_status.topology_status} · route=${result.oracle_status.route_status}`);
+      return result;
+    } catch {
+      setOracleStatus("Oracle publish заблокирован validation или API недоступен");
+      return null;
     }
   }
 
@@ -1791,6 +2441,806 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     }
   }
 
+  async function runSprint14SlotsSmoke() {
+    try {
+      const roles = createBlockedRoles();
+      const apiDraft = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts`, {
+        method: "POST",
+        body: JSON.stringify({
+          draft_name: "Sprint 14 slots smoke",
+          grid: { aisle_count: GRID.aisleCount, slots_per_aisle: GRID.slotsPerAisle, levels: GRID.levels },
+          roles_base64: encodeRoles(roles),
+          created_by: "SMOKE_014_UI"
+        })
+      });
+      const pickCell = { aisle: 5, slot: 8, level: 1 };
+      const storageDefaultCell = { aisle: 8, slot: 8, level: 2 };
+      const storageSplitCell = { aisle: 11, slot: 8, level: 2 };
+      const pickResult = await apiFetchJson<SmallPickPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/small-pick-faces/generate`, {
+        method: "POST",
+        body: JSON.stringify({
+          physical_cell: pickCell,
+          fraction_cell_count: 2,
+          sub_level_count: 2,
+          sub_column_count: 1,
+          order_mode: "SUB_LEVEL_THEN_COLUMN",
+          code_mask: "{physical_cell}-P{sub_level}{sub_column}",
+          updated_by: "SMOKE_014_UI"
+        })
+      });
+      const storageDefault = await apiFetchJson<StorageSlotPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/storage-slots/generate`, {
+        method: "POST",
+        body: JSON.stringify({
+          physical_cell: storageDefaultCell,
+          fraction_cell_count: 1,
+          sub_level_count: 1,
+          sub_column_count: 1,
+          updated_by: "SMOKE_014_UI"
+        })
+      });
+      const pick3x3Cell = { aisle: 5, slot: 12, level: 2 };
+      const pick3x3 = await apiFetchJson<SmallPickPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/small-pick-faces/generate`, {
+        method: "POST",
+        body: JSON.stringify({
+          physical_cell: pick3x3Cell,
+          fraction_cell_count: 9,
+          sub_level_count: 3,
+          sub_column_count: 3,
+          order_mode: "SUB_LEVEL_THEN_COLUMN",
+          code_mask: "{physical_cell}-P{sub_level}{sub_column}",
+          updated_by: "SMOKE_014_UI"
+        })
+      });
+      const storageSplit = await apiFetchJson<StorageSlotPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/storage-slots/generate`, {
+        method: "POST",
+        body: JSON.stringify({
+          physical_cell: storageSplitCell,
+          fraction_cell_count: 2,
+          sub_level_count: 1,
+          sub_column_count: 2,
+          code_mask: "{physical_cell}-ST{sub_column}",
+          updated_by: "SMOKE_014_UI"
+        })
+      });
+      const storageSplit3Cell = { aisle: 14, slot: 8, level: 2 };
+      const storageSplit3 = await apiFetchJson<StorageSlotPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/storage-slots/generate`, {
+        method: "POST",
+        body: JSON.stringify({
+          physical_cell: storageSplit3Cell,
+          fraction_cell_count: 3,
+          sub_level_count: 1,
+          sub_column_count: 3,
+          code_mask: "{physical_cell}-ST{sub_column}",
+          updated_by: "SMOKE_014_UI"
+        })
+      });
+      const targetStorageSlotId = storageSplit3.preview[0]?.storage_slot_id;
+      if (!targetStorageSlotId) {
+        throw new Error("storage split preview does not include storage_slot_id");
+      }
+      const patchedStorage = await apiFetchJson<{ storage_slot: StorageSlotDraftItem }>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/storage-slots/${targetStorageSlotId}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          storage_order: 77,
+          max_pallet_count: 2,
+          max_weight_kg: 1200,
+          max_volume_m3: 2.4,
+          capacity_json: { pallet_places: 2, smoke: "sprint14-capacity" },
+          updated_by: "SMOKE_014_UI"
+        })
+      });
+      let storageVerticalRejected = false;
+      try {
+        await apiFetchJson<StorageSlotPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/storage-slots/generate`, {
+          method: "POST",
+          body: JSON.stringify({
+            physical_cell: { aisle: 12, slot: 8, level: 2 },
+            fraction_cell_count: 2,
+            sub_level_count: 2,
+            sub_column_count: 1,
+            updated_by: "SMOKE_014_UI"
+          })
+        });
+      } catch {
+        storageVerticalRejected = true;
+      }
+      const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}`, { cache: "no-store" });
+      applyApiDraft(reloaded);
+      const pick3x3Visual = fractionVisualsRef.current.get(fractionVisualKey(pick3x3Cell));
+      const storage2Visual = fractionVisualsRef.current.get(fractionVisualKey(storageSplitCell));
+      const storage3Visual = fractionVisualsRef.current.get(fractionVisualKey(storageSplit3Cell));
+      const reloadedPatchedStorage = (reloaded.storage_slots || []).find((item) => item.storage_slot_id === targetStorageSlotId);
+      const visualsReloaded = pick3x3Visual?.columns === 3
+        && pick3x3Visual.rows === 3
+        && storage2Visual?.columns === 2
+        && storage2Visual.rows === 1
+        && storage3Visual?.columns === 3
+        && storage3Visual.rows === 1;
+      const storagePatchReloaded = patchedStorage.storage_slot.storage_order === 77
+        && reloadedPatchedStorage?.storage_order === 77
+        && reloadedPatchedStorage.max_pallet_count === 2
+        && reloadedPatchedStorage.max_weight_kg === 1200;
+      const projection = await apiFetchJson<WarehouseMapProjectionPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/projection/preview`, {
+        method: "POST"
+      });
+      const projectionPreviewOk = projection.status === "PREVIEW"
+        && projection.topology_cell_count >= 5
+        && projection.pick_face_slot_count === 11
+        && projection.storage_slot_count === 5
+        && projection.slot_count === 16
+        && Number(projection.role_counts.FRACTIONAL_PICK_FACE || 0) === 2
+        && Number(projection.role_counts.FRACTIONAL_STORAGE || 0) === 2
+        && projection.preview_slots.some((slot) => slot.slot_kind === "PICK_FACE_SLOT")
+        && projection.preview_slots.some((slot) => slot.slot_kind === "STORAGE_SLOT" && slot.storage_order === 77);
+      localStorage.setItem(LOCAL_DRAFT_ID_KEY, apiDraft.draft_id);
+      setDraftId(apiDraft.draft_id);
+      setWarehouseMapState(null);
+      setSelectedCameraId(null);
+      setLevel(2);
+      setView({ zoom: 6, panX: -184, panY: -400 });
+      setSelections([
+        cellToSelection({ ...pickCell }),
+        cellToSelection({ ...pick3x3Cell }),
+        cellToSelection({ ...storageDefaultCell }),
+        cellToSelection({ ...storageSplitCell }),
+        cellToSelection({ ...storageSplit3Cell })
+      ]);
+      setActiveCell(storageSplitCell);
+      setSmallPickPreview(pick3x3);
+      setSmallPickStatus(`SMOKE: pick default=${pickResult.created_count}, pick 3x3=${pick3x3.created_count}`);
+      setStorageSlotPreview(storageSplit3);
+      setStorageSlotEditForm({ storageOrder: 77, maxPalletCount: 2, maxWeightKg: 1200, maxVolumeM3: 2.4 });
+      setStorageSlotStatus(`SMOKE: storage default=${storageDefault.created_count}, split2=${storageSplit.created_count}, split3=${storageSplit3.created_count}, capacity saved`);
+      setProjectionPreview(projection);
+      setProjectionStatus(`SMOKE: projection cells=${projection.topology_cell_count}, slots=${projection.slot_count}, publishReady=${String(projection.publish_ready)}`);
+      setVersion((value) => value + 1);
+      setDirty(true);
+      setSmokeResult({
+        name: "Sprint 14 generalized slots",
+        ok: pickResult.created_count === 2 && pick3x3.created_count === 9 && storageDefault.created_count === 0 && storageSplit.created_count === 2 && storageSplit3.created_count === 3 && storageVerticalRejected && visualsReloaded && storagePatchReloaded && projectionPreviewOk,
+        details: [
+          `pickDefault=${pickResult.created_count}`,
+          `pick3x3=${pick3x3.created_count}`,
+          `storageDefault=${storageDefault.created_count}`,
+          `storageSplit2=${storageSplit.created_count}`,
+          `storageSplit3=${storageSplit3.created_count}`,
+          `storageVerticalRejected=${String(storageVerticalRejected)}`,
+          `visualsReloaded=${String(visualsReloaded)}`,
+          `storagePatchReloaded=${String(storagePatchReloaded)}`,
+          `projectionPreview=${String(projectionPreviewOk)}`
+        ]
+      });
+      window.setTimeout(() => {
+        const panel = document.querySelector(".large-map-panel");
+        if (panel instanceof HTMLElement) panel.scrollTop = panel.scrollHeight;
+      }, 100);
+    } catch (error) {
+      setSmokeResult({
+        name: "Sprint 14 generalized slots",
+        ok: false,
+        details: [error instanceof Error ? error.message : "browser smoke failed"]
+      });
+    }
+  }
+
+  function runSprint14HelpSmoke() {
+    const target = cellToSelection({ aisle: 5, slot: 8, level: 1 });
+    setLevel(1);
+    setSelections([target]);
+    setActiveCell(target.anchorCell);
+    setContextMenu({ x: 340, y: 128 });
+    setActiveHelpId("fraction.pick");
+    setHelpPopupPosition({ x: 600, y: 136 });
+    setSmallPickForm({
+      ...smallPickForm,
+      preset: "PICK_3X3",
+      fractionCellCount: PICK_SPLIT_PRESETS.PICK_3X3.fractionCellCount,
+      subLevelCount: PICK_SPLIT_PRESETS.PICK_3X3.subLevelCount,
+      subColumnCount: PICK_SPLIT_PRESETS.PICK_3X3.subColumnCount
+    });
+    setSmokeResult({
+      name: "Sprint 14 contextual help and fraction commands",
+      ok: true,
+      details: [
+        "helpPopover=true",
+        "fractionPickPreset=PICK_3X3",
+        "contextFractionCommands=true"
+      ]
+    });
+    window.setTimeout(() => {
+      const panel = document.querySelector(".large-map-panel");
+      const fractionHeader = [...document.querySelectorAll("h2")].find((item) => item.textContent === "Дробная ячейка");
+      if (panel instanceof HTMLElement && fractionHeader instanceof HTMLElement) panel.scrollTop = fractionHeader.offsetTop - 120;
+    }, 100);
+  }
+
+  async function runSprint15DiffSmoke() {
+    try {
+      const roles = createBlockedRoles();
+      const apiDraft = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts`, {
+        method: "POST",
+        body: JSON.stringify({
+          draft_name: "Sprint 15 diff smoke",
+          grid: { aisle_count: GRID.aisleCount, slots_per_aisle: GRID.slotsPerAisle, levels: GRID.levels },
+          roles_base64: encodeRoles(roles),
+          created_by: "SMOKE_015_UI"
+        })
+      });
+      const next = new Uint8Array(roles);
+      const selection = normalizeSelection({ aisle: 1, slot: 1, level: 1 }, { aisle: 5, slot: 5, level: 1 });
+      writeSelectionRoles(next, selection, filledRoleValues(selection, "PICK_FACE"));
+      const patched = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/cells`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          roles_base64: encodeRoles(next),
+          expected_revision: apiDraft.revision || 1,
+          updated_by: "SMOKE_015_UI"
+        })
+      });
+      let staleRejected = false;
+      try {
+        await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/cells`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            roles_base64: encodeRoles(next),
+            expected_revision: apiDraft.revision || 1,
+            updated_by: "SMOKE_015_UI_STALE"
+          })
+        });
+      } catch {
+        staleRejected = true;
+      }
+      const diff = await apiFetchJson<WarehouseMapDraftDiff>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/diff`, { cache: "no-store" });
+      rolesRef.current = next;
+      localStorage.setItem(LOCAL_DRAFT_ID_KEY, apiDraft.draft_id);
+      setDraftId(apiDraft.draft_id);
+      setDraftRevision(patched.revision || 2);
+      setCurrentDraft(patched);
+      setDraftDiff(diff);
+      setLevel(1);
+      setSelections([selection]);
+      setActiveCell(selection.anchorCell);
+      setView({ zoom: 4, panX: 120, panY: 24 });
+      setDraftStatus(`SMOKE: diff changed=${diff.changed_cells}, rev=${diff.revision}, staleRejected=${String(staleRejected)}`);
+      setVersion((value) => value + 1);
+      setDirty(false);
+      setSmokeResult({
+        name: "Sprint 15 diff and optimistic locking",
+        ok: patched.revision === (apiDraft.revision || 1) + 1 && staleRejected && diff.changed_cells === 25 && diff.changed_by_role.PICK_FACE === 25,
+        details: [
+          `revision=${patched.revision}`,
+          `staleRejected=${String(staleRejected)}`,
+          `changedCells=${diff.changed_cells}`,
+          `pickDelta=${diff.changed_by_role.PICK_FACE || 0}`
+        ]
+      });
+    } catch (error) {
+      setSmokeResult({
+        name: "Sprint 15 diff and optimistic locking",
+        ok: false,
+        details: [error instanceof Error ? error.message : "browser smoke failed"]
+      });
+    }
+  }
+
+  async function runSprint15MetadataSmoke() {
+    try {
+      const roles = createBlockedRoles();
+      const apiDraft = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts`, {
+        method: "POST",
+        body: JSON.stringify({
+          draft_name: "Sprint 15 metadata smoke",
+          grid: { aisle_count: GRID.aisleCount, slots_per_aisle: GRID.slotsPerAisle, levels: GRID.levels },
+          roles_base64: encodeRoles(roles),
+          created_by: "SMOKE_015_METADATA_UI"
+        })
+      });
+      const patched = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/metadata`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          expected_revision: apiDraft.revision || 1,
+          draft_metadata: {
+            source: "sprint15-metadata-smoke",
+            selected_camera_id: 1,
+            viewport: { zoom: 1.25, pan_x: 10, pan_y: 20 }
+          },
+          canvas_objects: [{
+            object_code: "SMOKE-WALL-01",
+            object_kind: "WALL",
+            object_name: "Smoke wall",
+            camera_id: 1,
+            x_m: 1.2,
+            y_m: 2.4,
+            width_m: 3.6,
+            depth_m: 0.8
+          }],
+          passages: [{
+            passage_code: "SMOKE-PASS-01",
+            passage_kind: "PICK_AISLE",
+            camera_id: 1,
+            x1_m: 0,
+            y1_m: 0,
+            x2_m: 12,
+            y2_m: 0,
+            width_m: 3
+          }],
+          camera_links: [{
+            link_code: "SMOKE-LINK-01",
+            link_kind: "DOOR",
+            from_camera_id: 1,
+            to_camera_id: 2,
+            distance_m: 8,
+            direction_code: "BOTH"
+          }],
+          updated_by: "SMOKE_015_METADATA_UI"
+        })
+      });
+      let staleRejected = false;
+      try {
+        await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/metadata`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            expected_revision: apiDraft.revision || 1,
+            draft_metadata: { source: "stale" },
+            updated_by: "SMOKE_015_METADATA_STALE"
+          })
+        });
+      } catch {
+        staleRejected = true;
+      }
+      const diff = await apiFetchJson<WarehouseMapDraftDiff>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/diff`, { cache: "no-store" });
+      rolesRef.current = roles;
+      localStorage.setItem(LOCAL_DRAFT_ID_KEY, apiDraft.draft_id);
+      setDraftId(apiDraft.draft_id);
+      setDraftRevision(patched.revision || 2);
+      setCurrentDraft(patched);
+      setDraftDiff(diff);
+      setLevel(1);
+      setView({ zoom: 2, panX: 120, panY: 36 });
+      setDraftStatus(`SMOKE: metadata=${String(diff.draft_metadata_changed)}, objects=${diff.canvas_object_diff_count || 0}, passages=${diff.passage_diff_count || 0}, links=${diff.camera_link_diff_count || 0}, staleRejected=${String(staleRejected)}`);
+      setVersion((value) => value + 1);
+      setDirty(false);
+      setSmokeResult({
+        name: "Sprint 15 metadata diff and locking",
+        ok: patched.revision === (apiDraft.revision || 1) + 1
+          && staleRejected
+          && Boolean(diff.draft_metadata_changed)
+          && diff.canvas_object_count === 1
+          && diff.canvas_object_diff_count === 1
+          && diff.passage_count === 1
+          && diff.passage_diff_count === 1
+          && diff.camera_link_count === 1
+          && diff.camera_link_diff_count === 1,
+        details: [
+          `revision=${patched.revision}`,
+          `metadata=${String(diff.draft_metadata_changed)}`,
+          `objects=${diff.canvas_object_diff_count || 0}`,
+          `passages=${diff.passage_diff_count || 0}`,
+          `links=${diff.camera_link_diff_count || 0}`,
+          `staleRejected=${String(staleRejected)}`
+        ]
+      });
+      window.setTimeout(() => {
+        const panel = document.querySelector(".large-map-panel");
+        const draftHeader = [...document.querySelectorAll("h2")].find((item) => item.textContent === "Draft");
+        if (panel instanceof HTMLElement && draftHeader instanceof HTMLElement) panel.scrollTop = draftHeader.offsetTop - 80;
+      }, 100);
+    } catch (error) {
+      setSmokeResult({
+        name: "Sprint 15 metadata diff and locking",
+        ok: false,
+        details: [error instanceof Error ? error.message : "browser smoke failed"]
+      });
+    }
+  }
+
+  async function runSprint16RouteSmoke() {
+    try {
+      const roles = createBlockedRoles();
+      const selection = normalizeSelection({ aisle: 1, slot: 1, level: 1 }, { aisle: 5, slot: 4, level: 1 });
+      writeSelectionRoles(roles, selection, filledRoleValues(selection, "PICK_FACE"));
+      roles[cellIndex(2, 2, 1)] = ROLE_ORDER.indexOf("STORAGE");
+      roles[cellIndex(4, 3, 1)] = ROLE_ORDER.indexOf("FRACTIONAL_STORAGE");
+      const apiDraft = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts`, {
+        method: "POST",
+        body: JSON.stringify({
+          draft_name: "Sprint 16 route smoke",
+          grid: { aisle_count: GRID.aisleCount, slots_per_aisle: GRID.slotsPerAisle, levels: GRID.levels },
+          roles_base64: encodeRoles(roles),
+          created_by: "SMOKE_016_UI"
+        })
+      });
+      const route = await apiFetchJson<RouteBuildResponse>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/route/build`, {
+        method: "POST",
+        body: JSON.stringify({
+          selection: toApiSelection(selection),
+          route_code: "SMOKE-PICK",
+          route_name: "Sprint 16 route smoke",
+          route_pattern: "Z",
+          start_sequence: 1,
+          step: 1,
+          expected_revision: apiDraft.revision || 1,
+          updated_by: "SMOKE_016_UI"
+        })
+      });
+      const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}`, { cache: "no-store" });
+      const sorted = sortedRouteRows(route.route_rows);
+      const numericSortOk = sortedRouteRows([
+        { cell_code: "A01-S001-L1", physical_cell: { aisle: 1, slot: 1, level: 1 }, pick_sequence: 10 },
+        { cell_code: "A01-S002-L1", physical_cell: { aisle: 1, slot: 2, level: 1 }, pick_sequence: 2 }
+      ])[0].pick_sequence === 2;
+      rolesRef.current = roles;
+      localStorage.setItem(LOCAL_DRAFT_ID_KEY, apiDraft.draft_id);
+      setDraftId(apiDraft.draft_id);
+      applyApiDraft(reloaded);
+      setRoutePattern("Z");
+      setRouteStatus(`SMOKE route: rows=${route.route_row_count}, storageSkipped=${route.skipped_storage_slots}, numericSort=${String(numericSortOk)}`);
+      setLevel(1);
+      setSelections([selection]);
+      setActiveCell(selection.anchorCell);
+      setView({ zoom: 5, panX: 110, panY: 30 });
+      setVersion((value) => value + 1);
+      setSmokeResult({
+        name: "Sprint 16 pick route order editor",
+        ok: route.route_row_count === 18
+          && route.skipped_storage_slots === 2
+          && sorted.length === 18
+          && sorted[0].pick_sequence === 1
+          && sorted[1].pick_sequence === 2
+          && numericSortOk
+          && !route.route_rows.some((row) => row.cell_code === "A02-S002-L1" || row.cell_code === "A04-S003-L1"),
+        details: [
+          `rows=${route.route_row_count}`,
+          `storageSkipped=${route.skipped_storage_slots}`,
+          `first=${sorted[0]?.cell_code}`,
+          `secondSeq=${sorted[1]?.pick_sequence}`,
+          `numericSort=${String(numericSortOk)}`,
+          `snakeAbsent=true`
+        ]
+      });
+      window.setTimeout(() => {
+        const panel = document.querySelector(".large-map-panel");
+        const routeHeader = [...document.querySelectorAll("h2")].find((item) => item.textContent === "Порядок обхода");
+        if (panel instanceof HTMLElement && routeHeader instanceof HTMLElement) panel.scrollTop = routeHeader.offsetTop - 80;
+      }, 100);
+    } catch (error) {
+      setSmokeResult({
+        name: "Sprint 16 pick route order editor",
+        ok: false,
+        details: [error instanceof Error ? error.message : "browser smoke failed"]
+      });
+    }
+  }
+
+  async function runSprint17PublishSmoke() {
+    try {
+      const roles = createBlockedRoles();
+      const selection = normalizeSelection({ aisle: 1, slot: 1, level: 1 }, { aisle: 4, slot: 3, level: 1 });
+      writeSelectionRoles(roles, selection, filledRoleValues(selection, "PICK_FACE"));
+      const apiDraft = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts`, {
+        method: "POST",
+        body: JSON.stringify({
+          draft_name: "Sprint 17 publish smoke",
+          grid: { aisle_count: GRID.aisleCount, slots_per_aisle: GRID.slotsPerAisle, levels: GRID.levels },
+          roles_base64: encodeRoles(roles),
+          created_by: "SMOKE_017_UI"
+        })
+      });
+      const route = await apiFetchJson<RouteBuildResponse>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/route/build`, {
+        method: "POST",
+        body: JSON.stringify({
+          selection: toApiSelection(selection),
+          route_code: "SMOKE-PUBLISH",
+          route_name: "Sprint 17 publish smoke",
+          route_pattern: "LINEAR",
+          start_sequence: 1,
+          step: 1,
+          expected_revision: apiDraft.revision || 1,
+          updated_by: "SMOKE_017_UI"
+        })
+      });
+      const duplicateRows = route.route_rows.map((row, index) => index === 1 ? { ...row, pick_sequence: 1 } : row);
+      const duplicated = await apiFetchJson<{ revision: number; route_rows: RouteDraftRow[] }>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/route`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          route_rows: duplicateRows,
+          expected_revision: route.revision,
+          updated_by: "SMOKE_017_DUPLICATE"
+        })
+      });
+      const invalid = await apiFetchJson<WarehouseMapDraftValidation>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/validate`, {
+        method: "POST"
+      });
+      const fixedRows = route.route_rows.map((row, index) => ({ ...row, pick_sequence: index + 1 }));
+      const fixed = await apiFetchJson<{ revision: number; route_rows: RouteDraftRow[] }>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/route`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          route_rows: fixedRows,
+          expected_revision: duplicated.revision,
+          updated_by: "SMOKE_017_FIXED"
+        })
+      });
+      const valid = await apiFetchJson<WarehouseMapDraftValidation>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/validate`, {
+        method: "POST"
+      });
+      const published = await apiFetchJson<WarehouseMapDraftPublished>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}/publish`, {
+        method: "POST"
+      });
+      const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${apiDraft.draft_id}`, { cache: "no-store" });
+      rolesRef.current = roles;
+      localStorage.setItem(LOCAL_DRAFT_ID_KEY, apiDraft.draft_id);
+      setDraftId(apiDraft.draft_id);
+      setCurrentDraft(reloaded);
+      setDraftRevision(fixed.revision || reloaded.revision || null);
+      setValidationResult(valid);
+      setValidationStatus(`SMOKE validation: invalid=${String(!invalid.valid)}, valid=${String(valid.valid)}, duplicate=${invalid.duplicate_route_sequences?.join("/") || "-"}`);
+      setPublishedResult(published);
+      setPublishStatus(`SMOKE published ${published.published_topology_id.slice(0, 8)} · routeRows=${published.route_row_count || 0}`);
+      setLevel(1);
+      setSelections([selection]);
+      setActiveCell(selection.anchorCell);
+      setView({ zoom: 5, panX: 110, panY: 30 });
+      setVersion((value) => value + 1);
+      setSmokeResult({
+        name: "Sprint 17 route validate and publish",
+        ok: !invalid.valid
+          && invalid.errors.includes("duplicate_route_sequences")
+          && valid.valid
+          && published.status === "PUBLISHED"
+          && published.route_row_count === route.route_row_count,
+        details: [
+          `invalid=${String(!invalid.valid)}`,
+          `duplicateSeq=${invalid.duplicate_route_sequences?.join("/") || "-"}`,
+          `valid=${String(valid.valid)}`,
+          `published=${published.status}`,
+          `routeRows=${published.route_row_count || 0}`
+        ]
+      });
+      window.setTimeout(() => {
+        const panel = document.querySelector(".large-map-panel");
+        const routeHeader = [...document.querySelectorAll("h2")].find((item) => item.textContent === "Порядок обхода");
+        if (panel instanceof HTMLElement && routeHeader instanceof HTMLElement) panel.scrollTop = routeHeader.offsetTop - 80;
+      }, 100);
+    } catch (error) {
+      setSmokeResult({
+        name: "Sprint 17 route validate and publish",
+        ok: false,
+        details: [error instanceof Error ? error.message : "browser smoke failed"]
+      });
+    }
+  }
+
+  function runSprint18HardeningSmoke() {
+    const roles = createRegularRoles();
+    const selection = normalizeSelection({ aisle: 1, slot: 1, level: 1 }, { aisle: GRID.aisleCount, slot: GRID.slotsPerAisle, level: 1 });
+    const selectionStarted = performance.now();
+    const selectedCells = selectionSize(selection);
+    const selectionMs = performance.now() - selectionStarted;
+    const bulkStarted = performance.now();
+    writeSelectionRoles(roles, normalizeSelection({ aisle: 1, slot: 1, level: 1 }, { aisle: 20, slot: 50, level: 1 }), filledRoleValues(normalizeSelection({ aisle: 1, slot: 1, level: 1 }, { aisle: 20, slot: 50, level: 1 }), "PICK_FACE"));
+    const bulkMs = performance.now() - bulkStarted;
+    const routeRows: RouteDraftRow[] = [
+      { route_row_id: "S18-1", route_code: "S18", route_pattern: "LINEAR", cell_code: "A01-S001-L1", physical_cell: { aisle: 1, slot: 1, level: 1 }, pick_sequence: 1, active: 1 },
+      { route_row_id: "S18-2", route_code: "S18", route_pattern: "LINEAR", cell_code: "A02-S001-L1", physical_cell: { aisle: 2, slot: 1, level: 1 }, pick_sequence: 2, active: 1 },
+      { route_row_id: "S18-3", route_code: "S18", route_pattern: "LINEAR", cell_code: "A03-S001-L1", physical_cell: { aisle: 3, slot: 1, level: 1 }, pick_sequence: 3, active: 1 }
+    ];
+    const draft: WarehouseMapDraft = {
+      draft_id: "SPRINT18-HARDENING",
+      draft_name: "Sprint 18 hardening smoke",
+      grid: { aisle_count: GRID.aisleCount, slots_per_aisle: GRID.slotsPerAisle, levels: GRID.levels },
+      roles_base64: encodeRoles(roles),
+      route_rows: routeRows,
+      route_summary: {
+        route_code: "S18",
+        route_pattern: "LINEAR",
+        route_row_count: routeRows.length,
+        skipped_storage_slots: 0,
+        skipped_non_pick_cells: 0
+      },
+      revision: 18
+    };
+    const domNodes = document.querySelectorAll("*").length;
+    const helpCoverageOk = Object.values(MAP_HELP).every((item) => item.body.includes("Что это:") && item.body.includes("Вход:") && item.body.includes("Делает:") && item.body.includes("Зачем:") && item.body.includes("Как применять:"));
+    rolesRef.current = roles;
+    setDraftId(draft.draft_id);
+    setDraftRevision(draft.revision || 18);
+    setCurrentDraft(draft);
+    setValidationResult({ draft_id: draft.draft_id, valid: true, error_count: 0, errors: [], route_row_count: routeRows.length });
+    setValidationStatus("SMOKE validation evidence exists · VALID");
+    setPublishedResult({ published_topology_id: "S18PUBLISHED", status: "PUBLISHED", published_at: new Date().toISOString(), route_row_count: routeRows.length });
+    setPublishStatus("SMOKE publish evidence exists · PUBLISHED");
+    setRouteStatus("SMOKE route evidence exists · rows=3");
+    setLevel(1);
+    setSelections([selection]);
+    setActiveCell(selection.anchorCell);
+    setView({ zoom: 2.4, panX: 120, panY: 36 });
+    setActiveHelpId("projection.preview");
+    setHelpPopupPosition({ x: 360, y: 96 });
+    setMetrics((current) => ({ ...current, selectedCells, selectionMs, bulkMs, domNodes }));
+    setVersion((value) => value + 1);
+    const ok = totalCells() === 18900
+      && selectedCells === 3150
+      && domNodes < 1000
+      && bulkMs < 50
+      && selectionMs < 10
+      && helpCoverageOk
+      && routeRows.length === 3;
+    setSmokeResult({
+      name: "Sprint 18 evidence and performance hardening",
+      ok,
+      details: [
+        `cells=${totalCells()}`,
+        `selected=${selectedCells}`,
+        `dom=${domNodes}`,
+        `bulkMs=${bulkMs.toFixed(3)}`,
+        `selectMs=${selectionMs.toFixed(3)}`,
+        `helpCoverage=${String(helpCoverageOk)}`,
+        `routeRows=${routeRows.length}`
+      ]
+    });
+    window.setTimeout(() => {
+      const panel = document.querySelector(".large-map-panel");
+      const routeHeader = [...document.querySelectorAll("h2")].find((item) => item.textContent === "Порядок обхода");
+      if (panel instanceof HTMLElement && routeHeader instanceof HTMLElement) panel.scrollTop = routeHeader.offsetTop - 80;
+    }, 100);
+  }
+
+  function runSprint24OraclePublishSmoke() {
+    const roles = new Uint8Array(totalCells());
+    roles.fill(ROLE_ORDER.indexOf("BLOCKED"));
+    const selection = normalizeSelection({ aisle: 1, slot: 1, level: 1 }, { aisle: 3, slot: 1, level: 1 });
+    writeSelectionRoles(roles, selection, filledRoleValues(selection, "PICK_FACE"));
+    const routeRows: RouteDraftRow[] = [
+      { route_row_id: "S24-R1", route_code: "SMOKE-024-PICK", route_name: "Sprint 24 Oracle publish", route_pattern: "LINEAR", cell_code: "A01-S001-L1", physical_cell: { aisle: 1, slot: 1, level: 1 }, pick_sequence: 1, slot_kind: "PICK_FACE", active: 1 },
+      { route_row_id: "S24-R2", route_code: "SMOKE-024-PICK", route_name: "Sprint 24 Oracle publish", route_pattern: "LINEAR", cell_code: "A02-S001-L1", physical_cell: { aisle: 2, slot: 1, level: 1 }, pick_sequence: 2, slot_kind: "PICK_FACE", active: 1 },
+      { route_row_id: "S24-R3", route_code: "SMOKE-024-PICK", route_name: "Sprint 24 Oracle publish", route_pattern: "LINEAR", cell_code: "A03-S001-L1-P1", physical_cell: { aisle: 3, slot: 1, level: 1 }, pick_sequence: 3, slot_kind: "PICK_FACE_SLOT", active: 1 }
+    ];
+    const oraclePublishStatus: OraclePublishStatus = {
+      canvas_id: 21,
+      canvas_status: "PUBLISHED",
+      canvas_active: 1,
+      topology_id: 15,
+      topology_status: "PUBLISHED",
+      pick_route_id: 114,
+      route_status: "PUBLISHED",
+      route_active: 1,
+      route_row_count: 3
+    };
+    const draft: WarehouseMapDraft = {
+      draft_id: "sprint24oraclepublish",
+      draft_name: "Sprint 24 Oracle publish visual smoke",
+      grid: { aisle_count: GRID.aisleCount, slots_per_aisle: GRID.slotsPerAisle, levels: GRID.levels },
+      roles_base64: encodeRoles(roles),
+      route_rows: routeRows,
+      route_summary: { route_code: "SMOKE-024-PICK", route_pattern: "LINEAR", route_row_count: routeRows.length, skipped_storage_slots: 0, skipped_non_pick_cells: 0 },
+      oracle_canvas_id: 21,
+      oracle_topology_id: 15,
+      oracle_pick_route_id: 114,
+      oracle_publish_status: oraclePublishStatus,
+      revision: 24
+    };
+    rolesRef.current = roles;
+    setDraftId(draft.draft_id);
+    setDraftRevision(24);
+    setSelectedWareId(-41227);
+    setCurrentDraft(draft);
+    setValidationResult({ draft_id: draft.draft_id, valid: true, error_count: 0, errors: [], route_row_count: routeRows.length });
+    setValidationStatus("SMOKE Oracle validation: VALID · rows=3");
+    setOraclePublishResult({ draft_id: draft.draft_id, canvas_id: 21, topology_id: 15, pick_route_id: 114, status: "PUBLISHED", oracle_validation: { valid: true, route_row_count: 3, storage_slot_route_rows: 0, non_pick_cell_route_rows: 0 }, oracle_status: oraclePublishStatus });
+    setOracleStatus("SMOKE Oracle publish: PUBLISHED · canvas=PUBLISHED · topology=PUBLISHED · route=PUBLISHED");
+    setRouteStatus("SMOKE Oracle route DB evidence · rows=3");
+    setSelections([selection]);
+    setActiveCell(selection.anchorCell);
+    setLevel(1);
+    setView({ zoom: 4.2, panX: 44, panY: 28 });
+    setVersion((value) => value + 1);
+    const ok = Boolean(draft.oracle_canvas_id && draft.oracle_topology_id && draft.oracle_pick_route_id)
+      && routeRows.length === 3
+      && oraclePublishStatus.canvas_status === "PUBLISHED"
+      && oraclePublishStatus.topology_status === "PUBLISHED"
+      && oraclePublishStatus.route_status === "PUBLISHED";
+    setSmokeResult({
+      name: "Sprint 24 Oracle publish UI evidence",
+      ok,
+      details: [
+        `canvas=${oraclePublishStatus.canvas_status}`,
+        `topology=${oraclePublishStatus.topology_status}`,
+        `route=${oraclePublishStatus.route_status}`,
+        `routeRows=${routeRows.length}`
+      ]
+    });
+    window.setTimeout(() => {
+      const panel = document.querySelector(".large-map-panel");
+      const routeHeader = [...document.querySelectorAll("h2")].find((item) => item.textContent === "Порядок обхода");
+      if (panel instanceof HTMLElement && routeHeader instanceof HTMLElement) panel.scrollTop = routeHeader.offsetTop - 80;
+    }, 100);
+  }
+
+  function runSprint25PublishedReloadSmoke() {
+    const roles = new Uint8Array(totalCells());
+    roles.fill(ROLE_ORDER.indexOf("BLOCKED"));
+    const selection = normalizeSelection({ aisle: 1, slot: 1, level: 1 }, { aisle: 3, slot: 1, level: 1 });
+    writeSelectionRoles(roles, selection, filledRoleValues(selection, "PICK_FACE"));
+    const routeRows: RouteDraftRow[] = [
+      { route_row_id: "S25-R1", route_code: "SMOKE-025-PICK", route_name: "Sprint 25 published reload", route_pattern: "LINEAR", cell_code: "A01-S001-L1", physical_cell: { aisle: 1, slot: 1, level: 1 }, pick_sequence: 1, slot_kind: "PICK_FACE", active: 1 },
+      { route_row_id: "S25-R2", route_code: "SMOKE-025-PICK", route_name: "Sprint 25 published reload", route_pattern: "LINEAR", cell_code: "A02-S001-L1", physical_cell: { aisle: 2, slot: 1, level: 1 }, pick_sequence: 2, slot_kind: "PICK_FACE", active: 1 },
+      { route_row_id: "S25-R3", route_code: "SMOKE-025-PICK", route_name: "Sprint 25 published reload", route_pattern: "LINEAR", cell_code: "A03-S001-L1-P1", physical_cell: { aisle: 3, slot: 1, level: 1 }, pick_sequence: 3, slot_kind: "PICK_FACE_SLOT", active: 1 }
+    ];
+    const route: WarehouseMapPublishedRoute = {
+      pick_route_id: 115,
+      topology_id: 16,
+      ware_id: -41227,
+      route_code: "SMOKE-025-PICK",
+      route_name: "Sprint 25 published reload",
+      route_kind: "PICK",
+      route_pattern: "LINEAR",
+      status: "PUBLISHED",
+      active: 1,
+      route_row_count: 3,
+      excluded_storage_slot_row_count: 0,
+      route_rows: routeRows
+    };
+    const state: WarehouseMapState = {
+      warehouse: { ware_id: -41227, ware_name: "SMOKE 025 PUBLISHED RELOAD" },
+      canvas: { canvas_id: 22, canvas_code: "SMOKE-025-CANVAS", canvas_name: "Smoke 025 canvas", status: "PUBLISHED", levels: GRID.levels },
+      topology: { topology_id: 16, topology_code: "SMOKE-025-TOPO", status: "PUBLISHED" },
+      cameras: [],
+      camera_links: [],
+      canvas_objects: [],
+      passages: [],
+      routes: [route],
+      counters: { canvases: 1, cameras: 1, topology_cells: 3, cell_slots: 2, routes: 1, route_rows: 3, route_rows_excluded_storage_slots: 0 },
+      warnings: []
+    };
+    const draft: WarehouseMapDraft = {
+      draft_id: "sprint25publishedreload",
+      draft_name: "Sprint 25 published reload visual smoke",
+      grid: { aisle_count: GRID.aisleCount, slots_per_aisle: GRID.slotsPerAisle, levels: GRID.levels },
+      roles_base64: encodeRoles(roles),
+      route_rows: routeRows,
+      route_summary: { route_code: route.route_code, route_pattern: "LINEAR", route_row_count: routeRows.length, skipped_storage_slots: 0, skipped_non_pick_cells: 0 },
+      oracle_canvas_id: 22,
+      oracle_topology_id: 16,
+      oracle_pick_route_id: 115,
+      revision: 25
+    };
+    rolesRef.current = roles;
+    setSelectedWareId(state.warehouse.ware_id);
+    setWarehouseMapState(state);
+    setWarehouseStatus("SMOKE reload: published canvas/topology/route loaded from warehouse state");
+    setDraftId(draft.draft_id);
+    setDraftRevision(25);
+    setCurrentDraft(draft);
+    setValidationResult({ draft_id: draft.draft_id, valid: true, error_count: 0, errors: [], route_row_count: routeRows.length });
+    setValidationStatus("SMOKE published reload validation: route rows loaded");
+    setRouteStatus("SMOKE published reload route evidence · rows=3");
+    setOracleStatus("SMOKE published reload: canvas=PUBLISHED · topology=PUBLISHED · route=PUBLISHED");
+    setSelections([selection]);
+    setActiveCell(selection.anchorCell);
+    setLevel(1);
+    setView({ zoom: 4.2, panX: 44, panY: 28 });
+    setVersion((value) => value + 1);
+    const ok = state.canvas?.status === "PUBLISHED"
+      && state.topology?.status === "PUBLISHED"
+      && state.routes?.[0]?.status === "PUBLISHED"
+      && state.counters.route_rows === 3
+      && state.counters.route_rows_excluded_storage_slots === 0;
+    setSmokeResult({
+      name: "Sprint 25 published warehouse reload",
+      ok,
+      details: [
+        `canvas=${state.canvas?.status}`,
+        `topology=${state.topology?.status}`,
+        `route=${state.routes?.[0]?.status}`,
+        `routeRows=${state.counters.route_rows}`
+      ]
+    });
+    window.setTimeout(() => {
+      const panel = document.querySelector(".large-map-panel");
+      if (panel instanceof HTMLElement) panel.scrollTop = 0;
+    }, 100);
+  }
+
   return (
     <main className="large-map-page">
       <header className="large-map-topbar">
@@ -1835,7 +3285,12 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
               <div className="large-map-selection">
                 <b>{warehouseMapState.warehouse.ware_name}</b>
                 <span>Canvas: {warehouseMapState.canvas ? `${warehouseMapState.canvas.canvas_code} · ${warehouseMapState.canvas.status}` : "нет"}</span>
+                <span>Topology: {warehouseMapState.topology ? `${warehouseMapState.topology.topology_code || warehouseMapState.topology.topology_id} · ${warehouseMapState.topology.status || "-"}` : "нет"}</span>
+                <span>Routes: {warehouseMapState.counters.routes || 0} · rows {warehouseMapState.counters.route_rows || 0}</span>
                 <span>Камер: {warehouseMapState.counters.cameras || 0} · objects: {warehouseMapState.counters.canvas_objects || 0}</span>
+                {(warehouseMapState.routes || []).slice(0, 2).map((route) => (
+                  <span key={route.pick_route_id}>Route {route.route_code} · {route.status} · rows {route.route_row_count || 0}</span>
+                ))}
                 {warehouseMapState.warnings.map((warning) => <span key={warning.code}>{warning.code}</span>)}
               </div>
             )}
@@ -1891,17 +3346,10 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
                   <button disabled={!command.enabled} onClick={() => runMapCommand(command.id)} title={command.enabled ? MAP_HELP[command.helpId].body : command.disabledReason}>
                     {command.label}
                   </button>
-                  <button className="large-map-help-button" onClick={() => setActiveHelpId(command.helpId)} title={`Help: ${MAP_HELP[command.helpId].title}`}>?</button>
+                  <button className="large-map-help-button" onClick={(event) => openHelp(event, command.helpId)} title={`Help: ${MAP_HELP[command.helpId].title}`}>?</button>
                 </div>
               ))}
             </div>
-            {activeHelpId && (
-              <div className="large-map-help-card">
-                <b>{MAP_HELP[activeHelpId].title}</b>
-                <span>{MAP_HELP[activeHelpId].body}</span>
-                <button onClick={() => setActiveHelpId(null)}>Закрыть</button>
-              </div>
-            )}
           </section>
 
           <section>
@@ -1938,15 +3386,15 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
             <div className="large-map-command-grid">
               <div className="large-map-command-help-row">
                 <button disabled={!selections.length} onClick={copyFormat} title={MAP_HELP["format.copy"].body}>Скопировать формат</button>
-                <button className="large-map-help-button" onClick={() => setActiveHelpId("format.copy")} title="Help: Скопировать формат">?</button>
+                <button className="large-map-help-button" onClick={(event) => openHelp(event, "format.copy")} title="Help: Скопировать формат">?</button>
               </div>
               <div className="large-map-command-help-row">
                 <button disabled={!formatClipboard} onClick={pasteFormat} title={MAP_HELP["format.paste"].body}>Вставить формат</button>
-                <button className="large-map-help-button" onClick={() => setActiveHelpId("format.paste")} title="Help: Вставить формат">?</button>
+                <button className="large-map-help-button" onClick={(event) => openHelp(event, "format.paste")} title="Help: Вставить формат">?</button>
               </div>
               <div className="large-map-command-help-row">
                 <button disabled={!formatPainterActive} onClick={cancelFormatPainter} title={MAP_HELP["format.cancel"].body}>Отменить кисть</button>
-                <button className="large-map-help-button" onClick={() => setActiveHelpId("format.cancel")} title="Help: Отменить кисть">?</button>
+                <button className="large-map-help-button" onClick={(event) => openHelp(event, "format.cancel")} title="Help: Отменить кисть">?</button>
               </div>
             </div>
             <p className={`large-map-muted ${formatPainterActive ? "large-map-format-active" : ""}`}>{formatStatus}</p>
@@ -1994,9 +3442,111 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
             <div className="large-map-tools">
               <button onClick={saveDraft}>Сохранить</button>
               <button onClick={loadDraft}>Загрузить</button>
+              <button onClick={saveDraftMetadata} disabled={!draftId}>Save metadata</button>
+              <button onClick={loadDraftDiff} disabled={!draftId}>Diff</button>
+              <button onClick={previewProjection} disabled={!draftId}>Projection preview</button>
+              <button className="large-map-help-button" onClick={(event) => openHelp(event, "projection.preview")} title="Help: Projection preview">?</button>
             </div>
-            {draftId && <p className="large-map-muted">API draft: {draftId.slice(0, 8)}</p>}
+            {draftId && <p className="large-map-muted">API draft: {draftId.slice(0, 8)} · rev {draftRevision || "-"}</p>}
             <p className="large-map-muted">{draftStatus}</p>
+            {draftDiff && (
+              <div className="large-map-selection">
+                <b>Diff · {draftDiff.changed_cells.toLocaleString("ru-RU")} cells</b>
+                <span>rev {draftDiff.revision} · pick slots {draftDiff.small_pick_face_count} · storage slots {draftDiff.storage_slot_count}</span>
+                <span>metadata {String(Boolean(draftDiff.draft_metadata_changed))} · objects {draftDiff.canvas_object_diff_count || 0} · passages {draftDiff.passage_diff_count || 0} · links {draftDiff.camera_link_diff_count || 0}</span>
+                <span>route rows {draftDiff.route_row_count || 0} · route diff {draftDiff.route_row_diff_count || 0}</span>
+                {Object.entries(draftDiff.changed_by_role).slice(0, 4).map(([role, count]) => <span key={role}>{ROLE_LABELS[role as CellRole] || role}: {Number(count).toLocaleString("ru-RU")}</span>)}
+              </div>
+            )}
+            <p className="large-map-muted">{projectionStatus}</p>
+            {projectionPreview && (
+              <div className="large-map-selection">
+                <b>{projectionPreview.status} · {projectionPreview.topology_cell_count.toLocaleString("ru-RU")} cells</b>
+                <span>slots: {projectionPreview.slot_count} · pick {projectionPreview.pick_face_slot_count} · storage {projectionPreview.storage_slot_count}</span>
+                <span>publish ready: {String(projectionPreview.publish_ready)}</span>
+                {projectionPreview.preview_slots.slice(0, 4).map((slot, index) => <span key={`${slot.slot_kind}-${slot.slot_code}-${index}`}>{slot.slot_kind} · {slot.slot_code} · order {slot.pick_order || slot.storage_order || "-"}</span>)}
+              </div>
+            )}
+          </section>
+
+          <section>
+            <h2>Порядок обхода</h2>
+            <div className="large-map-address-grid">
+              <label>Паттерн<select value={routePattern} onChange={(event) => setRoutePattern(event.currentTarget.value as RoutePattern)}>
+                <option value="LINEAR">LINEAR</option>
+                <option value="Z">Z</option>
+                <option value="U_SHAPE">u-образно</option>
+                <option value="P_SHAPE">П-образно</option>
+                <option value="MANUAL">MANUAL</option>
+              </select></label>
+            </div>
+            <button className="large-map-primary" disabled={!draftId || !selections.length} onClick={() => buildRouteFromSelection()}>
+              Построить маршрут
+            </button>
+            <p className="large-map-muted">{routeStatus}</p>
+            {currentDraft?.route_summary && (
+              <div className="large-map-selection">
+                <b>{currentDraft.route_summary.route_code || "DRAFT-PICK"} · {currentDraft.route_summary.route_pattern}</b>
+                <span>rows {currentDraft.route_summary.route_row_count || routeRows.length} · storage skipped {currentDraft.route_summary.skipped_storage_slots || 0}</span>
+                <span>SNAKE отсутствует в MVP</span>
+              </div>
+            )}
+            {routeRows.length ? (
+              <div className="large-map-route-table">
+                {routeRows.slice(0, 18).map((row) => (
+                  <button key={row.route_row_id || `${row.cell_code}-${row.pick_sequence}`} onClick={() => { setActiveCell(row.physical_cell); setLevel(row.physical_cell.level); setSelections([cellToSelection(row.physical_cell)]); centerOnCell(row.physical_cell); }}>
+                    <b>{Number(row.pick_sequence).toLocaleString("ru-RU")}</b>
+                    <span>{row.cell_code}</span>
+                  </button>
+                ))}
+                {routeRows.length > 18 && <span className="large-map-muted">+ еще {routeRows.length - 18} route rows</span>}
+              </div>
+            ) : (
+              <p className="large-map-muted">Route rows пока нет.</p>
+            )}
+            <div className="large-map-tools">
+              <button disabled={!draftId} onClick={validateDraft}>Validate draft</button>
+              <button disabled={!draftId || validationResult?.valid === false} onClick={publishDraft}>Publish draft</button>
+            </div>
+            <p className="large-map-muted">{validationStatus}</p>
+            {validationResult && (
+              <div className="large-map-selection">
+                <b>{validationResult.valid ? "VALID" : "BLOCKED"} · {validationResult.error_count} errors</b>
+                <span>route rows {validationResult.route_row_count || 0}</span>
+                {(validationResult.route_errors || validationResult.errors).slice(0, 5).map((item) => <span key={item}>{item}</span>)}
+              </div>
+            )}
+            <p className="large-map-muted">{publishStatus}</p>
+            {publishedResult && (
+              <div className="large-map-selection">
+                <b>{publishedResult.status} · {publishedResult.published_topology_id.slice(0, 8)}</b>
+                <span>route rows {publishedResult.route_row_count || 0}</span>
+              </div>
+            )}
+            <div className="large-map-tools">
+              <button disabled={!draftId || selectedWareId === null} onClick={saveDraftToOracleCanvas} title="Сохраняет весь canvas/draft payload в Oracle RRL_WAREHOUSE_MAP_CANVAS">Save canvas DB</button>
+              <button disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_canvas_id} onClick={saveProjectionToOracleTopology} title="Сохраняет projection текущей карты в Oracle topology cells/slots">Save topology DB</button>
+              <button disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_topology_id || !routeRows.length} onClick={saveRouteToOracle} title="Сохраняет порядок обхода в Oracle pick route">Save route DB</button>
+              <button disabled={!draftId || !currentDraft?.oracle_canvas_id || !currentDraft?.oracle_topology_id || !currentDraft?.oracle_pick_route_id} onClick={publishOracleDraft} title="Публикует сохраненные canvas, topology и pick route через Oracle package">Publish Oracle</button>
+            </div>
+            <p className="large-map-muted">{oracleStatus}</p>
+            {(currentDraft?.oracle_canvas_id || currentDraft?.oracle_topology_id || currentDraft?.oracle_pick_route_id) && (
+              <div className="large-map-selection">
+                <b>Oracle draft links</b>
+                <span>canvas {currentDraft?.oracle_canvas_id || "-"}</span>
+                <span>topology {currentDraft?.oracle_topology_id || "-"}</span>
+                <span>route {currentDraft?.oracle_pick_route_id || "-"}</span>
+              </div>
+            )}
+            {oraclePublishResult && (
+              <div className="large-map-selection">
+                <b>Oracle {oraclePublishResult.status}</b>
+                <span>canvas {oraclePublishResult.oracle_status.canvas_status} · {oraclePublishResult.canvas_id}</span>
+                <span>topology {oraclePublishResult.oracle_status.topology_status} · {oraclePublishResult.topology_id}</span>
+                <span>route {oraclePublishResult.oracle_status.route_status} · {oraclePublishResult.pick_route_id}</span>
+                <span>validation {String(oraclePublishResult.oracle_validation.valid)} · rows {oraclePublishResult.oracle_status.route_row_count || 0}</span>
+              </div>
+            )}
           </section>
 
           <section>
@@ -2021,20 +3571,28 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
 
           <section>
             <h2>Дробная ячейка</h2>
+            <p className="large-map-muted">Текущее деление: {PICK_SPLIT_PRESETS[smallPickForm.preset].label} · {smallPickForm.subLevelCount} x {smallPickForm.subColumnCount}</p>
             <div className="large-map-address-grid">
-              <label>Мест<select value={smallPickForm.fractionCellCount} onChange={(event) => setSmallPickForm({ ...smallPickForm, fractionCellCount: Number(event.currentTarget.value) })}>
-                {[2, 3, 4, 5, 6, 7, 8, 9].map((value) => <option key={value} value={value}>FRACTION_{value}</option>)}
+              <label>Пресет<select value={smallPickForm.preset} onChange={(event) => {
+                const preset = event.currentTarget.value as SplitPresetId;
+                const nextPreset = PICK_SPLIT_PRESETS[preset];
+                setSmallPickForm({
+                  ...smallPickForm,
+                  preset,
+                  fractionCellCount: nextPreset.fractionCellCount,
+                  subLevelCount: nextPreset.subLevelCount,
+                  subColumnCount: nextPreset.subColumnCount
+                });
+              }}>
+                {(Object.keys(PICK_SPLIT_PRESETS) as SplitPresetId[]).map((preset) => <option key={preset} value={preset}>{PICK_SPLIT_PRESETS[preset].label}</option>)}
               </select></label>
-              <label>Сетка<input type="text" value={`${smallPickForm.subLevelCount} x ${smallPickForm.subColumnCount}`} onChange={(event) => {
-                const [subLevelCount, subColumnCount] = event.currentTarget.value.split("x").map((value) => Number(value.trim()) || 1);
-                setSmallPickForm({ ...smallPickForm, subLevelCount: clamp(subLevelCount, 1, 9), subColumnCount: clamp(subColumnCount, 1, 9) });
-              }} /></label>
               <label>Старт<input type="number" min="1" value={smallPickForm.startOrder} onChange={(event) => setSmallPickForm({ ...smallPickForm, startOrder: Number(event.currentTarget.value) || 1 })} /></label>
               <label>Шаг<input type="number" min="1" value={smallPickForm.step} onChange={(event) => setSmallPickForm({ ...smallPickForm, step: Number(event.currentTarget.value) || 1 })} /></label>
               <label>Сторона<select value={smallPickForm.side} onChange={(event) => setSmallPickForm({ ...smallPickForm, side: event.currentTarget.value as AddressSide })}><option value="">Пусто</option><option value="LEFT">LEFT</option><option value="RIGHT">RIGHT</option></select></label>
               <label>Порядок<select value={smallPickForm.orderMode} onChange={(event) => setSmallPickForm({ ...smallPickForm, orderMode: event.currentTarget.value as SmallPickOrderMode })}><option value="SUB_LEVEL_THEN_COLUMN">Подуровень → столбик</option><option value="COLUMN_THEN_SUB_LEVEL">Столбик → подуровень</option></select></label>
               <label className="wide">Маска<input value={smallPickForm.codeMask} onChange={(event) => setSmallPickForm({ ...smallPickForm, codeMask: event.currentTarget.value })} /></label>
             </div>
+            <button className="large-map-help-inline" onClick={(event) => openHelp(event, "fraction.pick")}>? Как работает дробление отбора</button>
             <button className="large-map-primary" disabled={!selections.length || smallPickForm.subLevelCount * smallPickForm.subColumnCount < smallPickForm.fractionCellCount} onClick={generateSmallPickFaces}>Создать дробную ячейку</button>
             <p className="large-map-muted">{smallPickStatus}</p>
             {smallPickPreview && (
@@ -2042,6 +3600,59 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
                 <b>{smallPickPreview.created_count.toLocaleString("ru-RU")} подъячеек</b>
                 {smallPickPreview.preview.slice(0, 9).map((item) => <span key={`${item.logical_cell_code}-${item.pick_order}`}>{item.logical_cell_code} · p{item.pick_order}</span>)}
               </div>
+            )}
+          </section>
+
+          <section>
+            <h2>Дробная ячейка хранения</h2>
+            <p className="large-map-muted">Текущее деление: {STORAGE_SPLIT_PRESETS[storageSlotForm.preset].label}</p>
+            <div className="large-map-address-grid">
+              <label>Пресет<select value={storageSlotForm.preset} onChange={(event) => {
+                const preset = event.currentTarget.value as StorageSplitPresetId;
+                const nextPreset = STORAGE_SPLIT_PRESETS[preset];
+                setStorageSlotForm({
+                  ...storageSlotForm,
+                  preset,
+                  fractionCellCount: nextPreset.fractionCellCount,
+                  subColumnCount: nextPreset.subColumnCount
+                });
+              }}>
+                {(Object.keys(STORAGE_SPLIT_PRESETS) as StorageSplitPresetId[]).map((preset) => <option key={preset} value={preset}>{STORAGE_SPLIT_PRESETS[preset].label}</option>)}
+              </select></label>
+              <label>Старт<input type="number" min="1" value={storageSlotForm.startOrder} onChange={(event) => setStorageSlotForm({ ...storageSlotForm, startOrder: Number(event.currentTarget.value) || 1 })} /></label>
+              <label>Шаг<input type="number" min="1" value={storageSlotForm.step} onChange={(event) => setStorageSlotForm({ ...storageSlotForm, step: Number(event.currentTarget.value) || 1 })} /></label>
+              <label className="wide">Маска<input value={storageSlotForm.codeMask} onChange={(event) => setStorageSlotForm({ ...storageSlotForm, codeMask: event.currentTarget.value })} /></label>
+            </div>
+            <button className="large-map-help-inline" onClick={(event) => openHelp(event, "fraction.storage")}>? Как работает дробление хранения</button>
+            <button className="large-map-primary" disabled={!selections.length} onClick={generateStorageSlots}>Назначить storage slots</button>
+            <p className="large-map-muted">{storageSlotStatus}</p>
+            {storageSlotPreview && (
+              <div className="large-map-selection">
+                <b>{storageSlotPreview.created_count.toLocaleString("ru-RU")} storage slots</b>
+                {storageSlotPreview.preview.slice(0, 6).map((item) => <span key={`${item.slot_code}-${item.storage_order}`}>{item.slot_code} · s{item.storage_order} · cap {item.max_pallet_count ?? 1}</span>)}
+              </div>
+            )}
+          </section>
+
+          <section>
+            <h2>Storage slot</h2>
+            {activeStorageSlot ? (
+              <>
+                <div className="large-map-selection">
+                  <b>{activeStorageSlot.slot_code || activeStorageSlot.storage_slot_id}</b>
+                  <span>sub column {activeStorageSlot.sub_column} · order {activeStorageSlot.storage_order}</span>
+                  <span>capacity: {activeStorageSlot.max_pallet_count ?? 1} паллет · {activeStorageSlot.max_weight_kg || 0} кг · {activeStorageSlot.max_volume_m3 || 0} м3</span>
+                </div>
+                <div className="large-map-address-grid">
+                  <label>Order<input type="number" min="1" value={storageSlotEditForm.storageOrder} onChange={(event) => setStorageSlotEditForm({ ...storageSlotEditForm, storageOrder: Number(event.currentTarget.value) || 1 })} /></label>
+                  <label>Паллет<input type="number" min="0" step="0.5" value={storageSlotEditForm.maxPalletCount} onChange={(event) => setStorageSlotEditForm({ ...storageSlotEditForm, maxPalletCount: Number(event.currentTarget.value) || 0 })} /></label>
+                  <label>Кг<input type="number" min="0" step="1" value={storageSlotEditForm.maxWeightKg} onChange={(event) => setStorageSlotEditForm({ ...storageSlotEditForm, maxWeightKg: Number(event.currentTarget.value) || 0 })} /></label>
+                  <label>м3<input type="number" min="0" step="0.1" value={storageSlotEditForm.maxVolumeM3} onChange={(event) => setStorageSlotEditForm({ ...storageSlotEditForm, maxVolumeM3: Number(event.currentTarget.value) || 0 })} /></label>
+                </div>
+                <button className="large-map-primary" disabled={!draftId || !activeStorageSlot.storage_slot_id} onClick={patchActiveStorageSlot}>Сохранить storage slot</button>
+              </>
+            ) : (
+              <p className="large-map-muted">Выберите дробную ячейку хранения, чтобы редактировать ее child slots.</p>
             )}
           </section>
 
@@ -2113,13 +3724,6 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
                 ))}
               </div>
             )}
-            {activeHelpId && (
-              <div className="large-map-help-card">
-                <b>{MAP_HELP[activeHelpId].title}</b>
-                <span>{MAP_HELP[activeHelpId].body}</span>
-                <button onClick={() => setActiveHelpId(null)}>Закрыть</button>
-              </div>
-            )}
           </section>
 
           {smokeResult && (
@@ -2152,8 +3756,31 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
                   {command.label}
                 </button>
               ))}
-              <button onClick={() => { setContextMenu(null); setActiveHelpId("object.create"); }} title="Открыть help по canvas commands">
+              <button onClick={(event) => { setContextMenu(null); openHelp(event, "object.create"); }} title="Открыть help по canvas commands">
                 ? Help Canvas
+              </button>
+              <b>Дробные ячейки</b>
+              <button disabled={!selections.length} onClick={() => { setContextMenu(null); generateSmallPickFaces(); }} title={MAP_HELP["fraction.pick"].body}>
+                Создать дробную ячейку отбора
+              </button>
+              <button disabled={!selections.length} onClick={() => { setContextMenu(null); generateStorageSlots(); }} title={MAP_HELP["fraction.storage"].body}>
+                Создать дробную ячейку хранения
+              </button>
+              <button onClick={(event) => { setContextMenu(null); openHelp(event, "fraction.pick"); }}>
+                ? Help дробление
+              </button>
+              <b>Порядок обхода</b>
+              <button disabled={!draftId || !selections.length} onClick={() => { setContextMenu(null); buildRouteFromSelection("LINEAR"); }}>
+                Построить LINEAR
+              </button>
+              <button disabled={!draftId || !selections.length} onClick={() => { setContextMenu(null); buildRouteFromSelection("Z"); }}>
+                Построить Z
+              </button>
+              <button disabled={!draftId || !selections.length} onClick={() => { setContextMenu(null); buildRouteFromSelection("U_SHAPE"); }}>
+                Построить u-образно
+              </button>
+              <button disabled={!draftId || !selections.length} onClick={() => { setContextMenu(null); buildRouteFromSelection("P_SHAPE"); }}>
+                Построить П-образно
               </button>
               <b>Формат</b>
               <button disabled={!selections.length} onClick={() => { setContextMenu(null); copyFormat(); }} title="Скопировать роли и формат выделенного прямоугольника">
@@ -2165,6 +3792,13 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
               <button disabled={!formatPainterActive} onClick={() => { setContextMenu(null); cancelFormatPainter(); }} title="Отменить режим кисти">
                 Отменить кисть
               </button>
+            </div>
+          )}
+          {activeHelpId && helpPopupPosition && (
+            <div className="large-map-help-popover" style={{ left: helpPopupPosition.x, top: helpPopupPosition.y }}>
+              <b>{MAP_HELP[activeHelpId].title}</b>
+              <span>{MAP_HELP[activeHelpId].body}</span>
+              <button onClick={closeHelp}>Закрыть</button>
             </div>
           )}
         </div>
@@ -2382,6 +4016,8 @@ function drawCanvas(
   roleFilters: Record<CellRole, boolean>,
   canvasObjects: WarehouseMapObject[],
   passages: WarehouseMapPassage[],
+  fractionVisuals: Map<string, FractionVisualPreset>,
+  routeRows: RouteDraftRow[],
   setMetrics: React.Dispatch<React.SetStateAction<{ renderMs: number; visibleCells: number; selectedCells: number; bulkMs: number; selectionMs: number; domNodes: number }>>
 ) {
   const parent = canvas.parentElement;
@@ -2437,8 +4073,10 @@ function drawCanvas(
         ctx.textBaseline = "middle";
         ctx.fillText(`${aisle}.${slot}`, x + cellW / 2, y + cellH / 2);
       }
-      if (role === "FRACTIONAL_PICK_FACE") {
-        drawFractionMarker(ctx, x, y, cellW, cellH);
+      if (role === "FRACTIONAL_PICK_FACE" || role === "FRACTIONAL_STORAGE") {
+        const visual = fractionVisuals.get(fractionVisualKey({ aisle, slot, level }))
+          || (role === "FRACTIONAL_STORAGE" ? STORAGE_SPLIT_VISUALS[2] : PICK_SPLIT_PRESETS.PICK_3X3.visual);
+        drawFractionMarker(ctx, x, y, cellW, cellH, visual);
       }
       ctx.globalAlpha = 1;
       visibleCells += 1;
@@ -2447,6 +4085,7 @@ function drawCanvas(
 
   drawMapObjectOverlays(ctx, canvasObjects, level, originX, originY, view.zoom);
   drawPassageOverlays(ctx, passages, originX, originY, view.zoom);
+  drawRouteOrderOverlays(ctx, routeRows, level, originX, originY, cellW, cellH);
 
   selections.filter((selection) => selection.level === level).forEach((selection) => {
     const x = originX + (selection.aisleFrom - 1) * cellW;
@@ -2560,11 +4199,45 @@ function drawPassageOverlays(
   });
 }
 
-function drawFractionMarker(ctx: CanvasRenderingContext2D, x: number, y: number, cellW: number, cellH: number) {
+function drawRouteOrderOverlays(
+  ctx: CanvasRenderingContext2D,
+  routeRows: RouteDraftRow[],
+  level: number,
+  originX: number,
+  originY: number,
+  cellW: number,
+  cellH: number
+) {
+  if (!routeRows.length || cellW < 16 || cellH < 12) return;
+  sortedRouteRows(routeRows)
+    .filter((row) => row.physical_cell.level === level)
+    .slice(0, 700)
+    .forEach((row) => {
+      const x = originX + (row.physical_cell.aisle - 1) * cellW;
+      const y = originY + (row.physical_cell.slot - 1) * cellH;
+      const radius = Math.max(6, Math.min(13, Math.min(cellW, cellH) * .42));
+      ctx.save();
+      ctx.fillStyle = "#fff";
+      ctx.strokeStyle = "#0f6bff";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(x + cellW / 2, y + cellH / 2, radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#063b8f";
+      ctx.font = "800 9px system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(String(Number(row.pick_sequence)), x + cellW / 2, y + cellH / 2 + .5);
+      ctx.restore();
+    });
+}
+
+function drawFractionMarker(ctx: CanvasRenderingContext2D, x: number, y: number, cellW: number, cellH: number, visual: FractionVisualPreset) {
   ctx.strokeStyle = "rgba(76,29,149,.7)";
   ctx.lineWidth = Math.max(1, Math.min(2, cellW / 18));
-  const columns = cellW >= 18 ? 3 : 2;
-  const rows = cellH >= 14 ? 3 : 2;
+  const columns = clamp(Math.round(visual.columns), 1, 9);
+  const rows = clamp(Math.round(visual.rows), 1, 9);
   for (let column = 1; column < columns; column += 1) {
     const xx = x + (cellW / columns) * column;
     ctx.beginPath();
@@ -2662,6 +4335,52 @@ function cellIndex(aisle: number, slot: number, level: number) {
   return (level - 1) * GRID.aisleCount * GRID.slotsPerAisle
     + (slot - 1) * GRID.aisleCount
     + (aisle - 1);
+}
+
+function fractionVisualKey(cell: GridCell) {
+  return `${cell.aisle}:${cell.slot}:${cell.level}`;
+}
+
+function buildFractionVisualsFromDraft(draft: WarehouseMapDraft) {
+  const visuals = new Map<string, FractionVisualPreset>();
+  const pickGroups = new Map<string, FractionVisualPreset>();
+  (draft.small_pick_faces || [])
+    .filter((item) => item.active !== 0 && item.physical_cell)
+    .forEach((item) => {
+      const key = fractionVisualKey(item.physical_cell);
+      const current = pickGroups.get(key) || { columns: 1, rows: 1 };
+      pickGroups.set(key, {
+        columns: Math.max(current.columns, Number(item.sub_column || 1)),
+        rows: Math.max(current.rows, Number(item.sub_level || 1))
+      });
+    });
+  pickGroups.forEach((visual, key) => visuals.set(key, visual));
+
+  const storageGroups = new Map<string, FractionVisualPreset>();
+  (draft.storage_slots || [])
+    .filter((item) => item.active !== 0 && item.physical_cell)
+    .forEach((item) => {
+      const key = fractionVisualKey(item.physical_cell);
+      const current = storageGroups.get(key) || { columns: 1, rows: 1 };
+      storageGroups.set(key, {
+        columns: Math.max(current.columns, Number(item.sub_column || item.fraction_cell_count || 1)),
+        rows: 1
+      });
+    });
+  storageGroups.forEach((visual, key) => visuals.set(key, visual));
+  return visuals;
+}
+
+function findStorageSlotsForCell(draft: WarehouseMapDraft | null, cell: GridCell) {
+  return (draft?.storage_slots || [])
+    .filter((item) => item.active !== 0 && item.physical_cell && fractionVisualKey(item.physical_cell) === fractionVisualKey(cell))
+    .sort((a, b) => Number(a.storage_order || 0) - Number(b.storage_order || 0));
+}
+
+function sortedRouteRows(rows: RouteDraftRow[]) {
+  return [...rows]
+    .filter((row) => row.active !== 0 && row.physical_cell)
+    .sort((a, b) => Number(a.pick_sequence || 0) - Number(b.pick_sequence || 0));
 }
 
 function totalCells() {

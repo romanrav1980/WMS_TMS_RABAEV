@@ -1385,3 +1385,148 @@ Append-only log of root wiki updates.
 - Added Sprint 13 negative browser smoke coverage: passage save with `width_m = 0` is rejected by the API validation and reported as `negativeWidth=true`.
 - Captured closure evidence `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint13-negative.png`.
 - Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` Gantt: Sprint 13 is now marked done and Sprint 14 is the next planned sprint.
+
+## 2026-05-22 - Sprint 14 generalized slots first slice
+
+- Started Sprint 14 with the generalized pick/storage slot slice on the warehouse-map draft API.
+- Added `FRACTIONAL_STORAGE` as a map role and added storage-slot generation for drafts: default storage split `1 / без дробления` creates no child slots and keeps the physical cell as `STORAGE`; explicit horizontal split `2` or `3` creates `STORAGE_SLOT` children.
+- Added UI presets for `Дробная ячейка хранения` and browser smoke `smoke=sprint14-slots`.
+- Visual evidence captured: `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint14-slots.png`; smoke proves `pickDefault=2`, `storageDefault=0`, `storageSplit=2`, and `storageVerticalRejected=true`.
+
+## 2026-05-22 - Sprint 14 split presets and visual split lines
+
+- Replaced free-form pick-face split grid input with stable presets: `2 уровня`, `3 уровня`, `2 по горизонтали`, `3 по горизонтали`, `2 x 2`, and `3 x 3`.
+- Added Canvas split-line rendering from the chosen preset instead of a generic marker: pick `3 x 3` draws two vertical and two horizontal dividers; storage `2/3 по горизонтали` draws only vertical dividers.
+- Updated `smoke=sprint14-slots` evidence to zoom into the fractional cells and prove `pickDefault=2`, `pick3x3=9`, `storageDefault=0`, `storageSplit2=2`, `storageSplit3=3`, and `storageVerticalRejected=true`.
+- Visual evidence captured: `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint14-split-lines.png`; frontend build passed.
+
+## 2026-05-22 - Sprint 14 reload split metadata
+
+- Added frontend reconstruction of fractional-cell Canvas split visuals from draft API payloads: `small_pick_faces` restore pick rows/columns, and `storage_slots` restore horizontal storage columns.
+- API draft loading now applies both `roles_base64` and child-slot metadata, so reloaded fractional cells keep their split-line rendering instead of falling back to a generic marker.
+- Updated `smoke=sprint14-slots` to reload the draft from API before checking visuals; evidence proves `visualsReloaded=true`.
+- Visual evidence captured: `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint14-reload-split-lines.png`; frontend build passed.
+
+## 2026-05-22 - Sprint 14 storage slot capacity/order editing
+
+- Added `PATCH /api/admin/warehouse-map-drafts/{draft_id}/storage-slots/{storage_slot_id}` for editing storage child slot `storage_order`, capacity fields, `capacity_json`, and active flag.
+- Storage slot generation now seeds capacity fields, and draft validation checks storage slot parent role, horizontal-only fraction model, order, duplicate codes, count mismatch, and duplicate sub-column positions.
+- Added a `Storage slot` UI panel for the active fractional storage cell, with order and capacity edit fields backed by the draft API.
+- Updated `smoke=sprint14-slots` to patch a storage slot, reload the draft, and prove `storagePatchReloaded=true`; visual evidence captured at `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint14-storage-slot-capacity.png`.
+
+## 2026-05-22 - Sprint 14 topology projection preview
+
+- Added preview-only draft projection endpoint `POST /api/admin/warehouse-map-drafts/{draft_id}/projection/preview`.
+- The preview converts draft roles into topology-like cell rows without publishing, and includes pick/storage child slots as `PICK_FACE_SLOT` and `STORAGE_SLOT` rows with order/capacity metadata.
+- Added a `Projection preview` UI action in the Draft panel with counts for projected cells, slots, pick slots, storage slots, and publish readiness.
+- Updated `smoke=sprint14-slots` to prove projection preview after reload and storage-slot patch; evidence captured at `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint14-projection-preview.png`.
+
+## 2026-05-22 - Warehouse map help popovers and fractional context menu
+
+- Replaced in-panel help cards in the large warehouse map editor with fixed popover help so instructions no longer expand the left sidebar layout.
+- Expanded help text for camera/canvas/format/fraction/projection commands and added visible help actions for fractional pick/storage settings.
+- Added right-click context menu commands for `Создать дробную ячейку отбора` and `Создать дробную ячейку хранения`; the sidebar now shows the active fractional split preset summary.
+- Updated the real warehouse binding TZ to require popover-only help and fractional-cell commands in both sidebar and right-click menu.
+- Visual evidence captured: `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint14-help-fraction-context.png`.
+
+## 2026-05-22 - Warehouse map help content rule
+
+- Accepted the help-content rule for the warehouse map editor: every detailed hint must explain what the element is, what input/dependencies it uses, what it does, why it exists, and how to apply it.
+- Updated current map help strings to follow this structured rule for camera, canvas object, passage, camera link, format painter, fractional pick/storage, and projection preview.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` to allow full instructions in popover/right-click help without occupying permanent sidebar space.
+
+## 2026-05-22 - Sprint 15 diff and optimistic draft locking
+
+- Started Sprint 15 with a narrow draft-save safety slice on the existing warehouse-map draft API.
+- Added draft `revision`, `base_roles_base64`, optimistic revision checking on `PATCH /api/admin/warehouse-map-drafts/{draft_id}/cells`, and `GET /api/admin/warehouse-map-drafts/{draft_id}/diff`.
+- Added UI revision display and a `Diff` action in the Draft panel.
+- Added browser smoke `smoke=sprint15-diff`; evidence proves `revision=2`, stale revision rejection, and `changedCells=25` at `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint15-diff-locking.png`.
+## 2026-05-22 - Large Warehouse Map Sprint 15.2 metadata diff
+
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` with Sprint 15.2 acceptance for metadata/canvas object/passage/camera link save through revision-lock and expanded diff.
+- Updated `index.md` to mention optimistic draft diff/locking for cells plus canvas metadata/objects/passages/links.
+
+## 2026-05-22 - Large Warehouse Map Sprint 16 route editor
+
+- Implemented draft pick-route build and preview for the large warehouse map editor.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` with Sprint 16 closure evidence and clarified that publish/DB validation remains Sprint 17.
+- Updated `index.md` to mention draft pick-route order preview.
+
+## 2026-05-22 - Large Warehouse Map Sprint 17 route validation and publish
+
+- Implemented route row patching, validation of duplicate sequences/cells and storage/non-pick route rows, plus draft publish evidence.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` with Sprint 17 closure evidence and the remaining Oracle publish boundary.
+- Updated `index.md` to mention route validation/publish draft evidence.
+
+## 2026-05-22 - Large Warehouse Map Sprint 18 hardening
+
+- Added final Sprint 18 browser smoke for the large warehouse map: performance budget, route validation/publish evidence and floating help popover.
+- Added local runtime evidence report `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint18-evidence-report.md`.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` and `index.md` with Sprint 18 hardening evidence and the remaining Oracle integration boundary.
+
+## 2026-05-22 - Large Warehouse Map Sprint 19 Oracle publish invariant pack
+
+- Added migration `042` with `RRL_WAREHOUSE_MAP_API.VALIDATE_DRAFT`, `RRL_WAREHOUSE_MAP_API.PUBLISH_DRAFT`, and active route uniqueness by `CELL_SLOT_ID`.
+- Applied and verified `042` on live `RABAEV@127.0.0.1:1521/orcl`: apply, verify, smoke, cleanup, and final verify all completed with zero SQL errors.
+- Smoke proved that a route row pointing to `STORAGE_SLOT` blocks publish, while the corrected route publishes the canvas and pick route.
+- Updated `database/feed_factory_traceability_schema.md`, `requirements/large_warehouse_map_real_warehouse_binding_tz.md`, and `index.md`.
+
+## 2026-05-22 - Large Warehouse Map Sprint 20 DB-backed save/load API switch
+
+- Added `POST /api/admin/warehouse-map-drafts/{draft_id}/save-to-db` and `POST /api/admin/warehouse-map-drafts/load-from-db`.
+- The first DB-backed switch stores the complete editor draft payload in `RRL_WAREHOUSE_MAP_CANVAS.RENDERER_STATE_JSON` and ensures a default `RRL_WAREHOUSE_MAP_CAMERA` sized from the draft grid.
+- Service smoke and HTTP smoke both saved a draft to Oracle, loaded it back as a fresh runtime draft, preserved `8` route rows, and passed draft validation.
+- Final `042_verify.sql` stayed green with `Statements=7; Errors=0`.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` and `index.md`.
+
+## 2026-05-22 - Large Warehouse Map Sprint 21 projection-to-topology persistence
+
+- Added `POST /api/admin/warehouse-map-drafts/{draft_id}/projection/save-to-topology`.
+- Projection persistence now creates a `DRAFT` `RRL_WAREHOUSE_TOPOLOGY`, writes physical cells to `RRL_TOPOLOGY_CELL`, writes fractional pick/storage children to `RRL_TOPOLOGY_CELL_SLOT`, and links the canvas to the new topology.
+- Corrected new empty draft defaults to `BLOCKED` cells, matching the accepted rule that a clean empty camera is unavailable by default.
+- Service and HTTP smokes both saved `3` physical cells, `2` pick slots, and `2` storage slots; both verified `storage_slots_in_route = 0`.
+- Final `042_verify.sql` stayed green with `Statements=7; Errors=0`.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` and `index.md`.
+
+## 2026-05-22 - Large Warehouse Map Sprint 22 route rows to Oracle pick route
+
+- Added `POST /api/admin/warehouse-map-drafts/{draft_id}/route/save-to-db`.
+- Route save now creates a `DRAFT` `RRL_PICK_ROUTE`, writes normal pick cells through `TOPOLOGY_CELL_ID`, and writes fractional pick-face route rows through `CELL_SLOT_ID`.
+- Service and HTTP smokes each saved `3` route rows: `2` physical pick-cell rows, `1` pick-slot row, and `0` storage-slot rows.
+- `RRL_WAREHOUSE_MAP_API.VALIDATE_DRAFT` returned `valid=true` for both saved routes; final `042_verify.sql` stayed green with `Statements=7; Errors=0`.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` and `index.md`.
+
+## 2026-05-22 - Large Warehouse Map Sprint 23 Oracle publish action
+
+- Added `POST /api/admin/warehouse-map-drafts/{draft_id}/publish-oracle`.
+- Oracle publish now validates through `RRL_WAREHOUSE_MAP_API.VALIDATE_DRAFT`, calls `RRL_WAREHOUSE_MAP_API.PUBLISH_DRAFT`, marks the linked topology as `PUBLISHED`, and stores the publish result in the runtime draft.
+- Service and HTTP smokes each completed the full path from canvas save to topology projection, route save and Oracle publish.
+- Smoke evidence: canvas/topology/route statuses became `PUBLISHED`, route row count stayed `3`, storage-slot route rows stayed `0`, and Oracle validation returned `valid=true`.
+- Final `042_verify.sql` stayed green with `Statements=7; Errors=0`.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` and `index.md`.
+
+## 2026-05-22 - Large Warehouse Map Sprint 24 UI publish controls and evidence
+
+- Added UI controls for the Oracle save/publish chain: `Save canvas DB`, `Save topology DB`, `Save route DB`, and `Publish Oracle`.
+- The UI now shows Oracle draft links for canvas, topology and pick route, plus Oracle publish statuses for canvas/topology/route.
+- Added visual smoke `smoke=sprint24-oracle-publish`; screenshot evidence is stored at `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint24-oracle-publish.png`.
+- HTTP smoke re-proved `/publish-oracle`: canvas/topology/route published, route row count `3`, storage-slot rows `0`, Oracle validation `valid=true`.
+- Final `042_verify.sql` stayed green with `Statements=7; Errors=0`.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` and `index.md`.
+
+## 2026-05-22 - Large Warehouse Map Sprint 25 published warehouse reload
+
+- Updated the large warehouse map UI to show published warehouse reload state: canvas status, topology status, route count, route rows and route status.
+- Added visual smoke `smoke=sprint25-published-reload`; screenshot evidence is stored at `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint25-published-reload.png`.
+- Added HTTP smoke `tests/smoke/warehouse_map_published_reload_http_smoke.py`.
+- The smoke publishes a draft, then reloads `/api/admin/warehouse-map/warehouses/{ware_id}/state` and verifies canvas/topology/route are `PUBLISHED`, route rows are `3`, and excluded storage route rows are `0`.
+- Final `042_verify.sql` stayed green with `Statements=7; Errors=0`.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` and `index.md`.
+
+## 2026-05-22 - Large Warehouse Map Sprint 26 final acceptance checkpoint
+
+- Closed the real-warehouse binding sprint chain in `requirements/large_warehouse_map_real_warehouse_binding_tz.md`.
+- Final checkpoint documents the end-to-end path: draw/edit, save canvas, save topology, save route, validate, publish and reload published warehouse state.
+- Confirmed evidence locations for Sprint 24 Oracle publish UI and Sprint 25 published reload UI.
+- Recorded remaining boundaries: production UX polish for published warehouse selection, separate commit cleanup scope, and temporary runtime screenshot policy.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` and `index.md`.

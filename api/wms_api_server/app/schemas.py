@@ -1000,6 +1000,16 @@ class WarehouseMapDraftCreateRequest(BaseModel):
 
 class WarehouseMapDraftCellsPatchRequest(BaseModel):
     roles_base64: str
+    expected_revision: int | None = Field(default=None, ge=1)
+    updated_by: str | None = None
+
+
+class WarehouseMapDraftMetadataPatchRequest(BaseModel):
+    expected_revision: int | None = Field(default=None, ge=1)
+    draft_metadata: dict[str, Any] | None = None
+    canvas_objects: list[dict[str, Any]] | None = None
+    passages: list[dict[str, Any]] | None = None
+    camera_links: list[dict[str, Any]] | None = None
     updated_by: str | None = None
 
 
@@ -1010,6 +1020,69 @@ class WarehouseMapSelectionRequest(BaseModel):
     slot_to: int = Field(ge=1)
     level_from: int = Field(default=1, ge=1)
     level_to: int = Field(default=1, ge=1)
+
+
+class WarehouseMapDraftRouteBuildRequest(BaseModel):
+    selection: WarehouseMapSelectionRequest
+    route_code: str = "DRAFT-PICK"
+    route_name: str | None = None
+    route_pattern: str = Field(default="Z", pattern="^(LINEAR|Z|U_SHAPE|P_SHAPE|MANUAL)$")
+    start_sequence: float = 1
+    step: float = Field(default=1, gt=0)
+    expected_revision: int | None = Field(default=None, ge=1)
+    updated_by: str | None = None
+
+
+class WarehouseMapDraftRoutePatchRequest(BaseModel):
+    route_rows: list[dict[str, Any]] = Field(default_factory=list, max_length=20000)
+    expected_revision: int | None = Field(default=None, ge=1)
+    updated_by: str | None = None
+
+
+class WarehouseMapDraftLoadFromDbRequest(BaseModel):
+    canvas_id: int = Field(gt=0)
+    draft_name: str | None = Field(default=None, max_length=200)
+    created_by: str | None = None
+
+
+class WarehouseMapDraftSaveToDbRequest(BaseModel):
+    ware_id: int
+    canvas_id: int | None = Field(default=None, gt=0)
+    canvas_code: str | None = Field(default=None, max_length=80)
+    canvas_name: str | None = Field(default=None, max_length=200)
+    camera_code: str | None = Field(default=None, max_length=80)
+    camera_name: str | None = Field(default=None, max_length=200)
+    comment_text: str | None = Field(default=None, max_length=1000)
+    expected_revision: int | None = Field(default=None, ge=1)
+    updated_by: str | None = None
+
+
+class WarehouseMapDraftProjectionSaveRequest(BaseModel):
+    ware_id: int
+    topology_code: str | None = Field(default=None, max_length=80)
+    topology_name: str | None = Field(default=None, max_length=200)
+    comment_text: str | None = Field(default=None, max_length=1000)
+    expected_revision: int | None = Field(default=None, ge=1)
+    updated_by: str | None = None
+
+
+class WarehouseMapDraftRouteSaveToDbRequest(BaseModel):
+    ware_id: int
+    topology_id: int | None = Field(default=None, gt=0)
+    route_code: str | None = Field(default=None, max_length=80)
+    route_name: str | None = Field(default=None, max_length=200)
+    route_pattern: str | None = Field(default=None, pattern="^(LINEAR|Z|U_SHAPE|P_SHAPE|MANUAL)$")
+    strict_sequence: int = Field(default=1, ge=0, le=1)
+    expected_revision: int | None = Field(default=None, ge=1)
+    updated_by: str | None = None
+
+
+class WarehouseMapDraftOraclePublishRequest(BaseModel):
+    canvas_id: int | None = Field(default=None, gt=0)
+    topology_id: int | None = Field(default=None, gt=0)
+    pick_route_id: int | None = Field(default=None, gt=0)
+    expected_revision: int | None = Field(default=None, ge=1)
+    published_by: str | None = Field(default=None, max_length=50)
 
 
 class WarehouseMapBulkRoleRequest(BaseModel):
@@ -1067,6 +1140,29 @@ class WarehouseMapSmallPickFaceRenumberRequest(BaseModel):
     order_mode: str = Field(default="SUB_LEVEL_THEN_COLUMN", pattern="^(SUB_LEVEL_THEN_COLUMN|COLUMN_THEN_SUB_LEVEL)$")
     start_order: int = Field(default=1, ge=1)
     step: int = Field(default=1, ge=1)
+    updated_by: str | None = None
+
+
+class WarehouseMapStorageSlotGenerateRequest(BaseModel):
+    physical_cell: WarehouseMapCellRef | None = None
+    physical_cells: list[WarehouseMapCellRef] | None = None
+    fraction_cell_count: int = Field(default=1, ge=1, le=3)
+    sub_level_count: int = Field(default=1, ge=1, le=1)
+    sub_column_count: int = Field(default=1, ge=1, le=3)
+    start_order: int = Field(default=1, ge=1)
+    step: int = Field(default=1, ge=1)
+    code_mask: str = "{physical_cell}-ST{sub_column}"
+    updated_by: str | None = None
+
+
+class WarehouseMapStorageSlotPatchRequest(BaseModel):
+    slot_code: str | None = None
+    storage_order: int | None = Field(default=None, ge=1)
+    max_pallet_count: float | None = Field(default=None, ge=0)
+    max_weight_kg: float | None = Field(default=None, ge=0)
+    max_volume_m3: float | None = Field(default=None, ge=0)
+    capacity_json: dict[str, Any] | None = None
+    active: int | None = Field(default=None, ge=0, le=1)
     updated_by: str | None = None
 
 

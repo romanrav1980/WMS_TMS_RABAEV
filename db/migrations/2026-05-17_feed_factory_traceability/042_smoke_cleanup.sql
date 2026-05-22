@@ -1,0 +1,24 @@
+prompt [migration 2026-05-22-042] warehouse map draft publish API - smoke cleanup
+
+delete from RRL_PICK_ROUTE_CELL where CREATED_BY = 'SMOKE_042' or UPDATED_BY = 'SMOKE_042';
+delete from RRL_PICK_ROUTE where CREATED_BY = 'SMOKE_042' or UPDATED_BY = 'SMOKE_042';
+delete from RRL_TOPOLOGY_CELL_SLOT where CREATED_BY = 'SMOKE_042' or UPDATED_BY = 'SMOKE_042';
+delete from RRL_TOPOLOGY_CELL where CREATED_BY = 'SMOKE_042' or UPDATED_BY = 'SMOKE_042';
+delete from RRL_WAREHOUSE_TOPOLOGY where CREATED_BY = 'SMOKE_042' or UPDATED_BY = 'SMOKE_042';
+delete from RRL_WAREHOUSE_MAP_CAMERA_LINK where CREATED_BY = 'SMOKE_042' or UPDATED_BY = 'SMOKE_042';
+delete from RRL_WAREHOUSE_MAP_PASSAGE where CREATED_BY = 'SMOKE_042' or UPDATED_BY = 'SMOKE_042';
+delete from RRL_WAREHOUSE_MAP_OBJECT where CREATED_BY = 'SMOKE_042' or UPDATED_BY = 'SMOKE_042';
+delete from RRL_WAREHOUSE_MAP_CAMERA where CREATED_BY = 'SMOKE_042' or UPDATED_BY = 'SMOKE_042';
+delete from RRL_WAREHOUSE_MAP_CANVAS where CREATED_BY = 'SMOKE_042' or UPDATED_BY = 'SMOKE_042';
+
+commit;
+
+select 'SMOKE_042_REMAINING_CANVAS' object_kind, count(*) cnt
+  from RRL_WAREHOUSE_MAP_CANVAS
+ where CREATED_BY = 'SMOKE_042' or UPDATED_BY = 'SMOKE_042'
+union all
+select 'SMOKE_042_REMAINING_ROUTE', count(*)
+  from RRL_PICK_ROUTE
+ where CREATED_BY = 'SMOKE_042' or UPDATED_BY = 'SMOKE_042';
+
+prompt [migration 2026-05-22-042] smoke cleanup done
