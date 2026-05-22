@@ -4,15 +4,15 @@
     </configSections>
     <appSettings>
         <add key="OracleDSN"      value="127.0.0.1:1521/orcl" />
-        <add key="OracleUser"     value="RABAEV" />
-        <add key="OraclePassword" value="RABAEVWMS" />
+        <add key="OracleUser"     value="CHANGE_ME" />
+        <add key="OraclePassword" value="CHANGE_ME" />
     </appSettings>
     <connectionStrings>
         <add name="WindowsApplication2.Properties.Settings.ConnectionString7"
-            connectionString="Data Source=refstock;Persist Security Info=True;User ID=refstock;Password=refstock;Unicode=True"
+            connectionString="Data Source=refstock;Persist Security Info=True;User ID=CHANGE_ME;Password=CHANGE_ME;Unicode=True"
             providerName="System.Data.OracleClient" />
         <add name="WindowsApplication2.Properties.Settings.ConnectionString8"
-            connectionString="Data Source=refstock;Persist Security Info=True;User ID=Rabaev;Password=Rabaev11;Unicode=True"
+            connectionString="Data Source=refstock;Persist Security Info=True;User ID=CHANGE_ME;Password=CHANGE_ME;Unicode=True"
             providerName="System.Data.OracleClient" />
     </connectionStrings>
 </configuration>

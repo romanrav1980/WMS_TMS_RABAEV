@@ -96,3 +96,4 @@ WindowsApplication2/**/obj/
 WindowsApplication2/**/*.user
 WindowsApplication2/**/*.suo
 WindowsApplication2/**/.vs/
+WindowsApplication2/**/app.config
