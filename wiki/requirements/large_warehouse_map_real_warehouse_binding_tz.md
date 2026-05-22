@@ -693,6 +693,12 @@ Canvas
   Вставить формат
   Отменить копирование формата
 
+Левое меню
+  Быстрый sticky-блок Формат
+    Скопировать
+    Вставить формат
+    Отменить кисть
+
 Ячейки
   Назначить роль
     Ячейки отбора
@@ -711,7 +717,7 @@ Canvas
   Вставить роли
 
 Дробная ячейка
-  Создать дробную ячейку отбора
+  Отбор (tree / раскрываемый пункт)
     Пресет: 2 уровня (default)
     Пресет: 3 уровня
     Пресет: 2 по горизонтали
@@ -721,7 +727,7 @@ Canvas
     Пресет: 3 уровня x 2 по горизонтали
     Пресет: 3 x 3
     Прочие (disabled until custom grid is implemented)
-  Создать дробную ячейку хранения
+  Хранение (tree / раскрываемый пункт)
     Пресет: 1 / без дробления (default)
     Пресет: 2 по горизонтали
     Пресет: 3 по горизонтали
@@ -1492,7 +1498,9 @@ Sprint 12 close evidence, `2026-05-22`:
 - inspector для selected object/passage/link;
 - undo/redo для canvas object commands;
 - Excel-like format painter:
+  - sticky sidebar command `Скопировать` / `Скопировать формат`, чтобы format painter не терялся при прокрутке длинной панели;
   - toolbar/context-menu command `Скопировать формат` with brush/broom icon;
+  - где возможно, Excel-подобные команды должны иметь узнаваемые пиктограммы рядом с текстом: кисть/метелка для copy format, clipboard для paste, отмена кисти для cancel, без перегруза постоянным текстом;
   - `format_clipboard` for selected rectangle role/slot-format snapshot;
   - `Вставить формат` from target anchor-cell;
   - validation before overwriting protected cells;
@@ -1505,7 +1513,7 @@ Sprint 12 close evidence, `2026-05-22`:
 - дробные ячейки:
   - sidebar controls for pick split preset;
   - sidebar controls for storage split preset;
-  - right-click menu commands for fractional pick and fractional storage;
+  - right-click menu groups are tree/collapsible: `Отбор -> split presets`, `Хранение -> split presets`, so lists with more than two variants do not consume the whole context menu;
   - shared popover help explaining physical cell vs child slots;
 - context menu commands:
   - `Canvas -> Добавить стену`;

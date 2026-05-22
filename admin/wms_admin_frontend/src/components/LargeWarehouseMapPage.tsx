@@ -1,6 +1,7 @@
 import { PointerEvent, useEffect, useMemo, useRef, useState } from "react";
 
 type CellRole = "EMPTY" | "PICK_FACE" | "STORAGE" | "TRANSPORT_STAGING" | "FILM_WRAP" | "GATE" | "AISLE" | "BLOCKED" | "FRACTIONAL_PICK_FACE" | "FRACTIONAL_STORAGE";
+type CommandIconKind = "brush" | "paste" | "cancel" | "camera" | "pick" | "storage" | "route" | "help";
 
 type GridConfig = {
   aisleCount: number;
@@ -669,6 +670,35 @@ const MODULE_GUIDE = [
     ]
   }
 ];
+
+function CommandIcon({ kind }: { kind: CommandIconKind }) {
+  if (kind === "brush") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 1.8 14.2 5.5 6.8 12.9 3.1 9.2z" /><path d="M2.4 10.1 5.9 13.6 4.8 14.8H1.2v-3.6z" /><path d="M9.2 3.1 12.9 6.8" /></svg>;
+  }
+  if (kind === "paste") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 2.8h6v2H5z" /><path d="M4 4H2.8v10.2h8.6V13" /><path d="M7.2 6.2h6v7.6h-6z" /><path d="M8.4 8.4H12" /><path d="M8.4 10.5H12" /></svg>;
+  }
+  if (kind === "cancel") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4 12 12" /><path d="M12 4 4 12" /><path d="M2.2 8a5.8 5.8 0 1 0 11.6 0 5.8 5.8 0 0 0-11.6 0z" /></svg>;
+  }
+  if (kind === "camera") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.4 5.2h3l1-1.6h3.2l1 1.6h3v7.4H2.4z" /><path d="M6 8.9a2 2 0 1 0 4 0 2 2 0 0 0-4 0z" /></svg>;
+  }
+  if (kind === "pick") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 3h11v10h-11z" /><path d="M2.5 8h11" /><path d="M8 3v10" /></svg>;
+  }
+  if (kind === "storage") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.4 4.4 8 2l5.6 2.4v7.2L8 14l-5.6-2.4z" /><path d="M2.4 4.4 8 6.8l5.6-2.4" /><path d="M8 6.8V14" /></svg>;
+  }
+  if (kind === "route") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 12.5c3.2 0 2-9 5-9s1.8 9 5 9" /><path d="M2.2 12.5h2" /><path d="M11.8 12.5h2" /></svg>;
+  }
+  return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" /><path d="M6.4 6.3a1.8 1.8 0 1 1 2.4 1.7c-.6.3-.8.7-.8 1.4" /><path d="M8 11.8v.1" /></svg>;
+}
+
+function IconLabel({ icon, children }: { icon: CommandIconKind; children: string }) {
+  return <span className="large-map-icon-label"><CommandIcon kind={icon} />{children}</span>;
+}
 
 export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -3467,6 +3497,19 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
 
       <section className="large-map-workspace">
         <aside className="large-map-panel">
+          <section className="large-map-quick-format">
+            <h2>Формат</h2>
+            <div className="large-map-command-grid">
+              <div className="large-map-command-help-row">
+                <button disabled={!selections.length} onClick={copyFormat} title={MAP_HELP["format.copy"].body}><IconLabel icon="brush">Скопировать</IconLabel></button>
+                <button className="large-map-help-button" onClick={(event) => openHelp(event, "format.copy")} title="Help: Скопировать формат">?</button>
+              </div>
+              <button disabled={!formatClipboard} onClick={pasteFormat} title={MAP_HELP["format.paste"].body}><IconLabel icon="paste">Вставить формат</IconLabel></button>
+              <button disabled={!formatPainterActive} onClick={cancelFormatPainter} title={MAP_HELP["format.cancel"].body}><IconLabel icon="cancel">Отменить кисть</IconLabel></button>
+            </div>
+            <p className={`large-map-muted ${formatPainterActive ? "large-map-format-active" : ""}`}>{formatStatus}</p>
+          </section>
+
           <section>
             <h2>Реальный склад <button className="large-map-help-button" onClick={(event) => openHelp(event, "warehouse.state")} title="Help: Реальный склад">?</button></h2>
             <label className="large-map-field">
@@ -3619,15 +3662,15 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
             <h2>Формат</h2>
             <div className="large-map-command-grid">
               <div className="large-map-command-help-row">
-                <button disabled={!selections.length} onClick={copyFormat} title={MAP_HELP["format.copy"].body}>Скопировать формат</button>
+                <button disabled={!selections.length} onClick={copyFormat} title={MAP_HELP["format.copy"].body}><IconLabel icon="brush">Скопировать формат</IconLabel></button>
                 <button className="large-map-help-button" onClick={(event) => openHelp(event, "format.copy")} title="Help: Скопировать формат">?</button>
               </div>
               <div className="large-map-command-help-row">
-                <button disabled={!formatClipboard} onClick={pasteFormat} title={MAP_HELP["format.paste"].body}>Вставить формат</button>
+                <button disabled={!formatClipboard} onClick={pasteFormat} title={MAP_HELP["format.paste"].body}><IconLabel icon="paste">Вставить формат</IconLabel></button>
                 <button className="large-map-help-button" onClick={(event) => openHelp(event, "format.paste")} title="Help: Вставить формат">?</button>
               </div>
               <div className="large-map-command-help-row">
-                <button disabled={!formatPainterActive} onClick={cancelFormatPainter} title={MAP_HELP["format.cancel"].body}>Отменить кисть</button>
+                <button disabled={!formatPainterActive} onClick={cancelFormatPainter} title={MAP_HELP["format.cancel"].body}><IconLabel icon="cancel">Отменить кисть</IconLabel></button>
                 <button className="large-map-help-button" onClick={(event) => openHelp(event, "format.cancel")} title="Help: Отменить кисть">?</button>
               </div>
             </div>
@@ -3985,54 +4028,63 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           />
           {contextMenu && (
             <div className="large-map-context-menu" style={{ left: contextMenu.x, top: contextMenu.y }}>
-              <b>Камера</b>
-              {mapCommands.map((command) => (
-                <button key={command.id} disabled={!command.enabled} onClick={() => runMapCommand(command.id)} title={command.enabled ? MAP_HELP[command.helpId].body : command.disabledReason}>
-                  {command.label}
+              <details className="large-map-context-tree">
+                <summary><IconLabel icon="camera">Камера</IconLabel></summary>
+                {mapCommands.map((command) => (
+                  <button key={command.id} disabled={!command.enabled} onClick={() => { setContextMenu(null); runMapCommand(command.id); }} title={command.enabled ? MAP_HELP[command.helpId].body : command.disabledReason}>
+                    {command.label}
+                  </button>
+                ))}
+                <button onClick={(event) => { setContextMenu(null); openHelp(event, "object.create"); }} title="Открыть help по canvas commands">
+                  ? Help Canvas
                 </button>
-              ))}
-              <button onClick={(event) => { setContextMenu(null); openHelp(event, "object.create"); }} title="Открыть help по canvas commands">
-                ? Help Canvas
-              </button>
-              <b>Дробные ячейки</b>
-              <span className="large-map-context-subtitle">Создать дробную ячейку отбора</span>
-              {(Object.keys(PICK_SPLIT_PRESETS) as SplitPresetId[]).map((preset) => (
-                <button key={`ctx-pick-${preset}`} disabled={!selections.length} onClick={() => { setContextMenu(null); generateSmallPickFaces(preset); }} title={MAP_HELP["fraction.pick"].body}>
-                  Отбор · {PICK_SPLIT_PRESETS[preset].label}
-                </button>
-              ))}
-              <span className="large-map-context-subtitle">Создать дробную ячейку хранения</span>
-              {(Object.keys(STORAGE_SPLIT_PRESETS) as StorageSplitPresetId[]).map((preset) => (
-                <button key={`ctx-storage-${preset}`} disabled={!selections.length} onClick={() => { setContextMenu(null); generateStorageSlots(preset); }} title={MAP_HELP["fraction.storage"].body}>
-                  Хранение · {STORAGE_SPLIT_PRESETS[preset].label}
-                </button>
-              ))}
+              </details>
+              <details className="large-map-context-tree">
+                <summary><IconLabel icon="pick">Отбор</IconLabel></summary>
+                {(Object.keys(PICK_SPLIT_PRESETS) as SplitPresetId[]).map((preset) => (
+                  <button key={`ctx-pick-${preset}`} disabled={!selections.length} onClick={() => { setContextMenu(null); generateSmallPickFaces(preset); }} title={MAP_HELP["fraction.pick"].body}>
+                    Дробление · {PICK_SPLIT_PRESETS[preset].label}
+                  </button>
+                ))}
+              </details>
+              <details className="large-map-context-tree">
+                <summary><IconLabel icon="storage">Хранение</IconLabel></summary>
+                {(Object.keys(STORAGE_SPLIT_PRESETS) as StorageSplitPresetId[]).map((preset) => (
+                  <button key={`ctx-storage-${preset}`} disabled={!selections.length} onClick={() => { setContextMenu(null); generateStorageSlots(preset); }} title={MAP_HELP["fraction.storage"].body}>
+                    Дробление · {STORAGE_SPLIT_PRESETS[preset].label}
+                  </button>
+                ))}
+              </details>
               <button onClick={(event) => { setContextMenu(null); openHelp(event, "fraction.pick"); }}>
-                ? Help дробление
+                <IconLabel icon="help">Help дробление</IconLabel>
               </button>
-              <b>Порядок обхода</b>
-              <button disabled={!draftId || !selections.length} onClick={() => { setContextMenu(null); buildRouteFromSelection("LINEAR"); }}>
-                Построить LINEAR
-              </button>
-              <button disabled={!draftId || !selections.length} onClick={() => { setContextMenu(null); buildRouteFromSelection("Z"); }}>
-                Построить Z
-              </button>
-              <button disabled={!draftId || !selections.length} onClick={() => { setContextMenu(null); buildRouteFromSelection("U_SHAPE"); }}>
-                Построить u-образно
-              </button>
-              <button disabled={!draftId || !selections.length} onClick={() => { setContextMenu(null); buildRouteFromSelection("P_SHAPE"); }}>
-                Построить П-образно
-              </button>
-              <b>Формат</b>
-              <button disabled={!selections.length} onClick={() => { setContextMenu(null); copyFormat(); }} title="Скопировать роли и формат выделенного прямоугольника">
-                Скопировать формат
-              </button>
-              <button disabled={!formatClipboard} onClick={() => { setContextMenu(null); pasteFormat(); }} title="Вставить скопированный формат от активной ячейки">
-                Вставить формат
-              </button>
-              <button disabled={!formatPainterActive} onClick={() => { setContextMenu(null); cancelFormatPainter(); }} title="Отменить режим кисти">
-                Отменить кисть
-              </button>
+              <details className="large-map-context-tree">
+                <summary><IconLabel icon="route">Порядок обхода</IconLabel></summary>
+                <button disabled={!draftId || !selections.length} onClick={() => { setContextMenu(null); buildRouteFromSelection("LINEAR"); }}>
+                  Построить LINEAR
+                </button>
+                <button disabled={!draftId || !selections.length} onClick={() => { setContextMenu(null); buildRouteFromSelection("Z"); }}>
+                  Построить Z
+                </button>
+                <button disabled={!draftId || !selections.length} onClick={() => { setContextMenu(null); buildRouteFromSelection("U_SHAPE"); }}>
+                  Построить u-образно
+                </button>
+                <button disabled={!draftId || !selections.length} onClick={() => { setContextMenu(null); buildRouteFromSelection("P_SHAPE"); }}>
+                  Построить П-образно
+                </button>
+              </details>
+              <details className="large-map-context-tree" open>
+                <summary><IconLabel icon="brush">Формат</IconLabel></summary>
+                <button disabled={!selections.length} onClick={() => { setContextMenu(null); copyFormat(); }} title="Скопировать роли и формат выделенного прямоугольника">
+                  <IconLabel icon="brush">Скопировать формат</IconLabel>
+                </button>
+                <button disabled={!formatClipboard} onClick={() => { setContextMenu(null); pasteFormat(); }} title="Вставить скопированный формат от активной ячейки">
+                  <IconLabel icon="paste">Вставить формат</IconLabel>
+                </button>
+                <button disabled={!formatPainterActive} onClick={() => { setContextMenu(null); cancelFormatPainter(); }} title="Отменить режим кисти">
+                  <IconLabel icon="cancel">Отменить кисть</IconLabel>
+                </button>
+              </details>
             </div>
           )}
           {activeHelpId && helpPopupPosition && (

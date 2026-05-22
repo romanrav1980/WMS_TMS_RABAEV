@@ -447,6 +447,7 @@ button[aria-disabled="true"] { cursor: help; }
 .large-map-workspace { min-height: 0; display: grid; grid-template-columns: 286px 1fr; gap: 10px; padding: 10px; }
 .large-map-panel { min-height: 0; overflow: auto; display: grid; align-content: start; gap: 10px; }
 .large-map-panel section { display: grid; gap: 8px; padding: 12px; border: 1px solid #d8e2ee; border-radius: 8px; background: #fff; box-shadow: 0 14px 34px rgba(15,31,53,.06); }
+.large-map-panel section.large-map-quick-format { position: sticky; top: 0; z-index: 8; border-color: #bfdbfe; background: #fbfdff; }
 .large-map-panel h2 { margin: 0; font-size: 13px; }
 .large-map-levels, .large-map-tools { display: flex; gap: 6px; flex-wrap: wrap; }
 .large-map-levels button, .large-map-tools button { min-height: 30px; border: 1px solid #d8e2ee; border-radius: 7px; background: #f8fbff; color: #0969e8; font-weight: 900; }
@@ -464,6 +465,8 @@ button[aria-disabled="true"] { cursor: help; }
 .large-map-command-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
 .large-map-command-grid button { min-height: 32px; border: 1px solid #d8e2ee; border-radius: 7px; background: #f8fbff; color: #0969e8; font-size: 12px; font-weight: 900; }
 .large-map-command-grid button:disabled, .large-map-tools button:disabled, .large-map-field select:disabled { color: #94a3b8; border-color: #d5dde8; background: repeating-linear-gradient(135deg, #eef2f7, #eef2f7 6px, #e2e8f0 6px, #e2e8f0 12px); cursor: not-allowed; }
+.large-map-icon-label { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.large-map-command-icon { width: 15px; height: 15px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.45; stroke-linecap: round; stroke-linejoin: round; }
 .large-map-command-help-row { display: grid; grid-template-columns: 1fr 32px; gap: 5px; }
 .large-map-help-button { padding: 0; text-align: center !important; }
 .large-map-help-inline { min-height: 28px; border: 1px solid #bfdbfe; border-radius: 7px; background: #eff6ff; color: #0969e8; font-size: 11px; font-weight: 900; text-align: left; padding: 0 8px; }
@@ -527,6 +530,12 @@ button[aria-disabled="true"] { cursor: help; }
 .large-map-context-subtitle { padding: 2px 6px; color: #64748b; font-size: 11px; font-weight: 900; }
 .large-map-context-menu button { min-height: 30px; border: 1px solid #d8e2ee; border-radius: 7px; background: #f8fbff; color: #0969e8; font-size: 12px; font-weight: 900; text-align: left; }
 .large-map-context-menu button:disabled { color: #94a3b8; background: repeating-linear-gradient(135deg, #eef2f7, #eef2f7 6px, #e2e8f0 6px, #e2e8f0 12px); cursor: not-allowed; }
+.large-map-context-tree { display: grid; gap: 5px; }
+.large-map-context-tree summary { min-height: 30px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 8px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0f1f35; font-size: 12px; font-weight: 950; cursor: pointer; }
+.large-map-context-tree summary::-webkit-details-marker { display: none; }
+.large-map-context-tree summary::marker { content: ""; }
+.large-map-context-tree summary::after { content: "›"; color: #0969e8; font-size: 16px; line-height: 1; transition: transform .12s ease; }
+.large-map-context-tree[open] summary::after { transform: rotate(90deg); }
 
 /* ============================================================
    Transport Dispatch Page
