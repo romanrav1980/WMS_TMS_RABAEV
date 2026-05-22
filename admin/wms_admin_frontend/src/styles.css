@@ -525,17 +525,17 @@ button[aria-disabled="true"] { cursor: help; }
 .large-map-smoke span { color: #475569; font-size: 11px; font-weight: 850; }
 .large-map-canvas-wrap { min-width: 0; min-height: 0; position: relative; border: 1px solid #d8e2ee; border-radius: 8px; background: #f8fbff; overflow: hidden; box-shadow: 0 16px 42px rgba(15,31,53,.08); }
 .large-map-canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: crosshair; }
-.large-map-context-menu { position: fixed; z-index: 40; display: grid; gap: 5px; width: 238px; max-height: min(680px, calc(100vh - 20px)); overflow: auto; padding: 8px; border: 1px solid #cbd8e6; border-radius: 8px; background: rgba(255,255,255,.98); box-shadow: 0 18px 44px rgba(15,31,53,.22); }
+.large-map-context-menu { position: fixed; z-index: 40; display: grid; gap: 5px; width: 238px; max-height: min(680px, calc(100vh - 20px)); overflow: visible; padding: 8px; border: 1px solid #cbd8e6; border-radius: 8px; background: rgba(255,255,255,.98); box-shadow: 0 18px 44px rgba(15,31,53,.22); }
 .large-map-context-menu b { padding: 4px 6px; color: #0f1f35; font-size: 12px; }
 .large-map-context-subtitle { padding: 2px 6px; color: #64748b; font-size: 11px; font-weight: 900; }
 .large-map-context-menu button { min-height: 30px; border: 1px solid #d8e2ee; border-radius: 7px; background: #f8fbff; color: #0969e8; font-size: 12px; font-weight: 900; text-align: left; }
 .large-map-context-menu button:disabled { color: #94a3b8; background: repeating-linear-gradient(135deg, #eef2f7, #eef2f7 6px, #e2e8f0 6px, #e2e8f0 12px); cursor: not-allowed; }
-.large-map-context-tree { display: grid; gap: 5px; }
-.large-map-context-tree summary { min-height: 30px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 8px; border: 1px solid #d8e2ee; border-radius: 7px; background: #fff; color: #0f1f35; font-size: 12px; font-weight: 950; cursor: pointer; }
-.large-map-context-tree summary::-webkit-details-marker { display: none; }
-.large-map-context-tree summary::marker { content: ""; }
-.large-map-context-tree summary::after { content: "›"; color: #0969e8; font-size: 16px; line-height: 1; transition: transform .12s ease; }
-.large-map-context-tree[open] summary::after { transform: rotate(90deg); }
+.large-map-context-flyout { position: relative; display: grid; gap: 5px; }
+.large-map-context-parent { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #0f1f35 !important; background: #fff !important; }
+.large-map-context-flyout.active > .large-map-context-parent { border-color: #0969e8; background: #f4f9ff !important; box-shadow: inset 0 0 0 1px #0969e8; }
+.large-map-context-parent > span:last-child { color: #0969e8; font-size: 16px; line-height: 1; }
+.large-map-context-submenu { position: absolute; top: 0; left: calc(100% + 8px); z-index: 45; display: none; min-width: 230px; max-height: min(560px, calc(100vh - 40px)); overflow: auto; gap: 5px; padding: 8px; border: 1px solid #cbd8e6; border-radius: 8px; background: rgba(255,255,255,.98); box-shadow: 0 18px 44px rgba(15,31,53,.22); }
+.large-map-context-flyout.active .large-map-context-submenu, .large-map-context-flyout:hover .large-map-context-submenu, .large-map-context-flyout:focus-within .large-map-context-submenu { display: grid; }
 
 /* ============================================================
    Transport Dispatch Page
