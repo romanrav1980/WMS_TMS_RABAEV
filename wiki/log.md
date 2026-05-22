@@ -1560,3 +1560,7 @@ Append-only log of root wiki updates.
 
 - Добавлено ТЗ функционального тестирования `large_warehouse_map_functional_testing_tz.md` для приемки карты большого склада на существующем Oracle-складе без canvas.
 - Сценарий покрывает создание canvas, двух камер, до 10 ворот, около 1500 storage cells на камеру, pick cells на 6 уровнях, mixed route patterns, save/publish/reload evidence, аудит help/надписей и выход в следующее ТЗ оптимизации экранов/меню.
+## 2026-05-23 01:14 +05:00
+
+- Добавлено ТЗ `large_warehouse_map_excel_canvas_actions_tz.md`: расширение управления canvas по аналогии с Excel, включая таблицу функций Excel, необходимость аналога в warehouse canvas, действие и рекомендуемую иконку.
+- Принято правило для warehouse map: каждая рабочая функция должна иметь действие в левом меню и дубликат в context menu внутри подходящего дерева; `Сохранить канвас` должен быть доступен в обоих местах.

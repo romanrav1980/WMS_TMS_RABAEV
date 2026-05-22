@@ -1,8 +1,8 @@
 import { PointerEvent, useEffect, useMemo, useRef, useState } from "react";
 
 type CellRole = "EMPTY" | "PICK_FACE" | "STORAGE" | "TRANSPORT_STAGING" | "FILM_WRAP" | "GATE" | "AISLE" | "BLOCKED" | "FRACTIONAL_PICK_FACE" | "FRACTIONAL_STORAGE";
-type CommandIconKind = "brush" | "paste" | "cancel" | "camera" | "pick" | "storage" | "route" | "help";
-type ContextFlyoutId = "camera" | "pick" | "storage" | "route" | "format";
+type CommandIconKind = "brush" | "paste" | "cancel" | "camera" | "pick" | "storage" | "route" | "help" | "save" | "actions";
+type ContextFlyoutId = "actions" | "camera" | "pick" | "storage" | "route" | "format";
 
 type GridConfig = {
   aisleCount: number;
@@ -694,6 +694,12 @@ function CommandIcon({ kind }: { kind: CommandIconKind }) {
   if (kind === "route") {
     return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 12.5c3.2 0 2-9 5-9s1.8 9 5 9" /><path d="M2.2 12.5h2" /><path d="M11.8 12.5h2" /></svg>;
   }
+  if (kind === "save") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.8h8l2 2v8.4H3z" /><path d="M5 2.8v4h5v-4" /><path d="M5.2 10.2h5.6v3" /></svg>;
+  }
+  if (kind === "actions") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.2v2" /><path d="M8 11.8v2" /><path d="M2.2 8h2" /><path d="M11.8 8h2" /><path d="M4.2 4.2 5.6 5.6" /><path d="M10.4 10.4l1.4 1.4" /><path d="M11.8 4.2l-1.4 1.4" /><path d="M5.6 10.4l-1.4 1.4" /><path d="M6 8a2 2 0 1 0 4 0 2 2 0 0 0-4 0z" /></svg>;
+  }
   return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" /><path d="M6.4 6.3a1.8 1.8 0 1 1 2.4 1.7c-.6.3-.8.7-.8 1.4" /><path d="M8 11.8v.1" /></svg>;
 }
 
@@ -750,7 +756,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const [selectedCameraId, setSelectedCameraId] = useState<number | null>(null);
   const [warehouseStatus, setWarehouseStatus] = useState("Склад не выбран");
   const [contextMenu, setContextMenu] = useState<MapContextMenu>(null);
-  const [contextFlyout, setContextFlyout] = useState<ContextFlyoutId>("pick");
+  const [contextFlyout, setContextFlyout] = useState<ContextFlyoutId>("actions");
   const [activeHelpId, setActiveHelpId] = useState<HelpId | null>(null);
   const [helpPopupPosition, setHelpPopupPosition] = useState<HelpPopupPosition>(null);
   const [moduleGuideOpen, setModuleGuideOpen] = useState(false);
@@ -1259,7 +1265,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   function handleCanvasContextMenu(event: React.MouseEvent<HTMLCanvasElement>) {
     event.preventDefault();
     setContextMenu({ x: event.clientX, y: event.clientY });
-    setContextFlyout("pick");
+    setContextFlyout("actions");
   }
 
   function goToSearchAddress() {
@@ -1555,13 +1561,13 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     return apiDraft;
   }
 
-  async function ensureApiDraftForSlotCommand() {
+  async function ensureApiDraftForCommand(reason = "операции") {
     if (draftId) return draftId;
     const apiDraft = await saveApiDraft(encodeRoles(rolesRef.current));
     setDirty(false);
     setDraftRevision(apiDraft.revision || null);
     setCurrentDraft(apiDraft);
-    setDraftStatus(`Создан API draft ${apiDraft.draft_id.slice(0, 8)} для дробных slots`);
+    setDraftStatus(`Создан API draft ${apiDraft.draft_id.slice(0, 8)} для ${reason}`);
     return apiDraft.draft_id;
   }
 
@@ -1784,7 +1790,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       }));
     }
     try {
-      const targetDraftId = await ensureApiDraftForSlotCommand();
+      const targetDraftId = await ensureApiDraftForCommand("дробных slots");
       const result = await apiFetchJson<SmallPickPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${targetDraftId}/small-pick-faces/generate`, {
         method: "POST",
         body: JSON.stringify({
@@ -1843,7 +1849,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       return;
     }
     try {
-      const targetDraftId = await ensureApiDraftForSlotCommand();
+      const targetDraftId = await ensureApiDraftForCommand("дробных storage slots");
       const result = await apiFetchJson<StorageSlotPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${targetDraftId}/storage-slots/generate`, {
         method: "POST",
         body: JSON.stringify({
@@ -2001,16 +2007,17 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   }
 
   async function saveDraftToOracleCanvas() {
-    if (!draftId || selectedWareId === null) {
-      setOracleStatus("Выберите склад и сохраните API draft");
+    if (selectedWareId === null) {
+      setOracleStatus("Выберите склад для сохранения канваса");
       return null;
     }
     try {
-      const result = await apiFetchJson<OracleSaveResponse>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/save-to-db`, {
+      const targetDraftId = await ensureApiDraftForCommand("сохранения канваса");
+      const result = await apiFetchJson<OracleSaveResponse>(`${API_BASE}/api/admin/warehouse-map-drafts/${targetDraftId}/save-to-db`, {
         method: "POST",
         body: JSON.stringify({
           ware_id: selectedWareId,
-          canvas_code: `MAP-${selectedWareId}-${draftId.slice(0, 6)}`,
+          canvas_code: `MAP-${selectedWareId}-${targetDraftId.slice(0, 6)}`,
           canvas_name: `Карта склада ${selectedWareId}`,
           camera_code: `CAM-${selectedWareId}`,
           camera_name: "Основная камера",
@@ -2018,7 +2025,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           updated_by: "warehouse-map-ui"
         })
       });
-      const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
+      const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${targetDraftId}`, { cache: "no-store" });
       applyApiDraft(reloaded);
       setOracleStatus(`Oracle canvas сохранен: canvas=${result.canvas_id || reloaded.oracle_canvas_id || "-"}`);
       return result;
@@ -3544,6 +3551,16 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
             <p className={`large-map-muted ${formatPainterActive ? "large-map-format-active" : ""}`}>{formatStatus}</p>
           </section>
 
+          <section className="large-map-quick-actions">
+            <h2>Действия <button className="large-map-help-button" onClick={(event) => openHelp(event, "oracle.publish")} title="Help: Oracle save/publish">?</button></h2>
+            <div className="large-map-command-grid">
+              <button disabled={selectedWareId === null} onClick={saveDraftToOracleCanvas} title="Сохраняет текущий canvas выбранного склада в Oracle; API draft будет создан автоматически, если его еще нет">
+                <IconLabel icon="save">Сохранить канвас</IconLabel>
+              </button>
+            </div>
+            <p className="large-map-muted">{oracleStatus}</p>
+          </section>
+
           <section>
             <h2>Реальный склад <button className="large-map-help-button" onClick={(event) => openHelp(event, "warehouse.state")} title="Help: Реальный склад">?</button></h2>
             <label className="large-map-field">
@@ -3835,7 +3852,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
               </div>
             )}
             <div className="large-map-tools">
-              <button disabled={!draftId || selectedWareId === null} onClick={saveDraftToOracleCanvas} title="Сохраняет весь canvas/draft payload в Oracle RRL_WAREHOUSE_MAP_CANVAS">Save canvas DB</button>
+              <button disabled={selectedWareId === null} onClick={saveDraftToOracleCanvas} title="Сохраняет весь canvas/draft payload в Oracle RRL_WAREHOUSE_MAP_CANVAS"><IconLabel icon="save">Сохранить канвас</IconLabel></button>
               <button disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_canvas_id} onClick={saveProjectionToOracleTopology} title="Сохраняет projection текущей карты в Oracle topology cells/slots">Save topology DB</button>
               <button disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_topology_id || !routeRows.length} onClick={saveRouteToOracle} title="Сохраняет порядок обхода в Oracle pick route">Save route DB</button>
               <button disabled={!draftId || !currentDraft?.oracle_canvas_id || !currentDraft?.oracle_topology_id || !currentDraft?.oracle_pick_route_id} onClick={publishOracleDraft} title="Публикует сохраненные canvas, topology и pick route через Oracle package">Publish Oracle</button>
@@ -4062,6 +4079,23 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           />
           {contextMenu && (
             <div className="large-map-context-menu" style={{ left: contextMenu.x, top: contextMenu.y }}>
+              <div className={`large-map-context-flyout ${contextFlyout === "actions" ? "active" : ""}`} onMouseEnter={() => setContextFlyout("actions")}>
+                <button className="large-map-context-parent" onClick={() => setContextFlyout("actions")}><IconLabel icon="actions">Действия</IconLabel><span>›</span></button>
+                <div className="large-map-context-submenu">
+                  <button disabled={selectedWareId === null} onClick={() => { setContextMenu(null); saveDraftToOracleCanvas(); }} title="Сохраняет текущий canvas выбранного склада в Oracle">
+                    <IconLabel icon="save">Сохранить канвас</IconLabel>
+                  </button>
+                  <button disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_canvas_id} onClick={() => { setContextMenu(null); saveProjectionToOracleTopology(); }} title="Сохраняет projection текущей карты в Oracle topology cells/slots">
+                    Save topology DB
+                  </button>
+                  <button disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_topology_id || !routeRows.length} onClick={() => { setContextMenu(null); saveRouteToOracle(); }} title="Сохраняет порядок обхода в Oracle pick route">
+                    Save route DB
+                  </button>
+                  <button disabled={!draftId || !currentDraft?.oracle_canvas_id || !currentDraft?.oracle_topology_id || !currentDraft?.oracle_pick_route_id} onClick={() => { setContextMenu(null); publishOracleDraft(); }} title="Публикует сохраненные canvas, topology и pick route через Oracle package">
+                    Publish Oracle
+                  </button>
+                </div>
+              </div>
               <div className={`large-map-context-flyout ${contextFlyout === "camera" ? "active" : ""}`} onMouseEnter={() => setContextFlyout("camera")}>
                 <button className="large-map-context-parent" onClick={() => setContextFlyout("camera")}><IconLabel icon="camera">Камера</IconLabel><span>›</span></button>
                 <div className="large-map-context-submenu">
