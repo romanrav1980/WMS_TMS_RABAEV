@@ -397,7 +397,7 @@ type StorageSlotDraftItem = {
   active?: number;
 };
 
-type SplitPresetId = "PICK_2_LEVELS" | "PICK_3_LEVELS" | "PICK_2_HORIZONTAL" | "PICK_3_HORIZONTAL" | "PICK_2X2" | "PICK_3X3";
+type SplitPresetId = "PICK_2_LEVELS" | "PICK_3_LEVELS" | "PICK_2_HORIZONTAL" | "PICK_3_HORIZONTAL" | "PICK_2X2" | "PICK_2X3" | "PICK_3X2" | "PICK_3X3";
 type StorageSplitPresetId = "STORAGE_1" | "STORAGE_2_HORIZONTAL" | "STORAGE_3_HORIZONTAL";
 
 type SmallPickOrderMode = "SUB_LEVEL_THEN_COLUMN" | "COLUMN_THEN_SUB_LEVEL";
@@ -483,6 +483,8 @@ const PICK_SPLIT_PRESETS: Record<SplitPresetId, { label: string; fractionCellCou
   PICK_2_HORIZONTAL: { label: "2 по горизонтали", fractionCellCount: 2, subLevelCount: 1, subColumnCount: 2, visual: { columns: 2, rows: 1 } },
   PICK_3_HORIZONTAL: { label: "3 по горизонтали", fractionCellCount: 3, subLevelCount: 1, subColumnCount: 3, visual: { columns: 3, rows: 1 } },
   PICK_2X2: { label: "2 x 2", fractionCellCount: 4, subLevelCount: 2, subColumnCount: 2, visual: { columns: 2, rows: 2 } },
+  PICK_2X3: { label: "2 уровня x 3 по горизонтали", fractionCellCount: 6, subLevelCount: 2, subColumnCount: 3, visual: { columns: 3, rows: 2 } },
+  PICK_3X2: { label: "3 уровня x 2 по горизонтали", fractionCellCount: 6, subLevelCount: 3, subColumnCount: 2, visual: { columns: 2, rows: 3 } },
   PICK_3X3: { label: "3 x 3", fractionCellCount: 9, subLevelCount: 3, subColumnCount: 3, visual: { columns: 3, rows: 3 } }
 };
 
@@ -529,7 +531,7 @@ const MAP_HELP: Record<HelpId, { title: string; body: string }> = {
   },
   "roles.assign": {
     title: "Роли ячеек",
-    body: "Что это: режим назначения функциональной роли физическим ячейкам сетки 800 x 1200 мм. Вход: активная роль, одно или несколько выделений, текущий уровень L1-L6. Делает: меняет роли выбранных ячеек в API draft и оставляет операцию в undo/redo. Зачем: карта склада создается через массовое назначение зон отбора, хранения, накопления, ворот, проходов, пустых и недоступных областей. Как применять: выделите область как в Excel, выберите роль и нажмите Назначить выделению; Shift-выделение сохраняет несколько областей."
+    body: "Что это: режим назначения функциональной роли физическим ячейкам сетки 800 x 1200 мм. Вход: активная роль, одно или несколько выделений, текущий уровень L1-L6. Делает: меняет роли выбранных ячеек в API draft и оставляет операцию в undo/redo. Зачем: карта склада создается через массовое назначение зон отбора, хранения, накопления, ворот, проходов, пустых и недоступных областей. Как применять: выделите область как в Excel, выберите роль и нажмите Назначить выделению; Shift-выделение сохраняет несколько областей. Важно: дробные роли не красятся как обычные роли, а создаются через выбранный пресет дробления рядом с ролью."
   },
   "navigation.map": {
     title: "Навигация по карте",
@@ -565,11 +567,11 @@ const MAP_HELP: Record<HelpId, { title: string; body: string }> = {
   },
   "fraction.pick": {
     title: "Дробная ячейка отбора",
-    body: "Что это: несколько логических pick slots внутри одной физической ячейки. Вход: выделенная ячейка, split preset, start/order/side/mask. Делает: создает child slots отбора и рисует внутренние линии дробления. Зачем: описать мелкоштучный отбор без размножения физических координат. Как применять: выберите пресет 2/3 уровня, 2/3 по горизонтали, 2 x 2 или 3 x 3 и назначьте дробную ячейку."
+    body: "Что это: несколько логических pick slots внутри одной физической ячейки. Вход: выделенная ячейка, split preset, start/order/side/mask. Делает: создает child slots отбора и рисует внутренние линии дробления. Зачем: описать мелкоштучный отбор без размножения физических координат. Как применять: выберите пресет 2/3 уровня, 2/3 по горизонтали, 2 x 2 или 3 x 3 и назначьте дробную ячейку. По умолчанию используется 2 уровня; 3 x 3 создается только при явном выборе этого пресета."
   },
   "fraction.storage": {
     title: "Дробная ячейка хранения",
-    body: "Что это: storage slots внутри одной физической ячейки хранения. Вход: выделенная ячейка, storage split preset, order/mask/capacity. Делает: создает или оставляет child slots хранения и хранит вместимость. Зачем: дать остаткам ссылаться на часть физической ячейки. Как применять: выберите 1 / без дробления, 2 по горизонтали или 3 по горизонтали; вертикальное дробление storage запрещено."
+    body: "Что это: storage slots внутри одной физической ячейки хранения. Вход: выделенная ячейка, storage split preset, order/mask/capacity. Делает: создает или оставляет child slots хранения и хранит вместимость. Зачем: дать остаткам ссылаться на часть физической ячейки. Как применять: выберите 1 / без дробления, 2 по горизонтали или 3 по горизонтали; вертикальное дробление storage запрещено. По умолчанию storage остается без дробления, а FRACTIONAL_STORAGE появляется только при явном выборе 2 или 3 по горизонтали."
   },
   "projection.preview": {
     title: "Projection preview",
@@ -1350,6 +1352,18 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     markChanged(targetSelections, elapsed);
   }
 
+  async function applyActiveRoleAction() {
+    if (activeRole === "FRACTIONAL_PICK_FACE") {
+      await generateSmallPickFaces();
+      return;
+    }
+    if (activeRole === "FRACTIONAL_STORAGE") {
+      await generateStorageSlots();
+      return;
+    }
+    assignRole();
+  }
+
   function undo() {
     const change = undoStackRef.current.pop();
     if (!change) return;
@@ -1698,8 +1712,10 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     }
   }
 
-  async function generateSmallPickFaces() {
+  async function generateSmallPickFaces(presetOverride?: SplitPresetId) {
     const selection = selections[0];
+    const presetId = presetOverride || smallPickForm.preset;
+    const preset = PICK_SPLIT_PRESETS[presetId];
     if (!selection) {
       setSmallPickStatus("Нет выделения для дробной ячейки");
       return;
@@ -1708,18 +1724,27 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       setSmallPickStatus("Сначала сохраните draft через API");
       return;
     }
-    if (smallPickForm.subLevelCount * smallPickForm.subColumnCount < smallPickForm.fractionCellCount) {
+    if (preset.subLevelCount * preset.subColumnCount < preset.fractionCellCount) {
       setSmallPickStatus("Сетка меньше количества дробных мест");
       return;
+    }
+    if (presetOverride && presetOverride !== smallPickForm.preset) {
+      setSmallPickForm((current) => ({
+        ...current,
+        preset: presetOverride,
+        fractionCellCount: preset.fractionCellCount,
+        subLevelCount: preset.subLevelCount,
+        subColumnCount: preset.subColumnCount
+      }));
     }
     try {
       const result = await apiFetchJson<SmallPickPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/small-pick-faces/generate`, {
         method: "POST",
         body: JSON.stringify({
           physical_cell: toApiCell(selection.anchorCell),
-          fraction_cell_count: smallPickForm.fractionCellCount,
-          sub_level_count: smallPickForm.subLevelCount,
-          sub_column_count: smallPickForm.subColumnCount,
+          fraction_cell_count: preset.fractionCellCount,
+          sub_level_count: preset.subLevelCount,
+          sub_column_count: preset.subColumnCount,
           order_mode: smallPickForm.orderMode,
           start_order: smallPickForm.startOrder,
           step: smallPickForm.step,
@@ -1730,9 +1755,9 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       const next = new Uint8Array(rolesRef.current);
       next[cellIndex(selection.anchorCell.aisle, selection.anchorCell.slot, selection.anchorCell.level)] = ROLE_ORDER.indexOf("FRACTIONAL_PICK_FACE");
       rolesRef.current = next;
-      fractionVisualsRef.current.set(fractionVisualKey(selection.anchorCell), PICK_SPLIT_PRESETS[smallPickForm.preset].visual);
+      fractionVisualsRef.current.set(fractionVisualKey(selection.anchorCell), preset.visual);
       setSmallPickPreview(result);
-      setSmallPickStatus(`Создано логических ячеек: ${result.created_count}`);
+      setSmallPickStatus(`Создано логических ячеек: ${result.created_count} · ${preset.label}`);
       setDirty(true);
       setVersion((value) => value + 1);
     } catch {
@@ -1740,8 +1765,10 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     }
   }
 
-  async function generateStorageSlots() {
+  async function generateStorageSlots(presetOverride?: StorageSplitPresetId) {
     const selection = selections[0];
+    const presetId = presetOverride || storageSlotForm.preset;
+    const preset = STORAGE_SPLIT_PRESETS[presetId];
     if (!selection) {
       setStorageSlotStatus("Нет выделения для ячейки хранения");
       return;
@@ -1755,24 +1782,32 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
         method: "POST",
         body: JSON.stringify({
           physical_cell: toApiCell(selection.anchorCell),
-          fraction_cell_count: storageSlotForm.fractionCellCount,
+          fraction_cell_count: preset.fractionCellCount,
           sub_level_count: 1,
-          sub_column_count: storageSlotForm.subColumnCount,
+          sub_column_count: preset.subColumnCount,
           start_order: storageSlotForm.startOrder,
           step: storageSlotForm.step,
           code_mask: storageSlotForm.codeMask
         })
       });
+      if (presetOverride && presetOverride !== storageSlotForm.preset) {
+        setStorageSlotForm((current) => ({
+          ...current,
+          preset: presetOverride,
+          fractionCellCount: preset.fractionCellCount,
+          subColumnCount: preset.subColumnCount
+        }));
+      }
       const next = new Uint8Array(rolesRef.current);
-      next[cellIndex(selection.anchorCell.aisle, selection.anchorCell.slot, selection.anchorCell.level)] = ROLE_ORDER.indexOf(storageSlotForm.fractionCellCount === 1 ? "STORAGE" : "FRACTIONAL_STORAGE");
+      next[cellIndex(selection.anchorCell.aisle, selection.anchorCell.slot, selection.anchorCell.level)] = ROLE_ORDER.indexOf(preset.fractionCellCount === 1 ? "STORAGE" : "FRACTIONAL_STORAGE");
       rolesRef.current = next;
-      if (storageSlotForm.fractionCellCount > 1) {
-        fractionVisualsRef.current.set(fractionVisualKey(selection.anchorCell), STORAGE_SPLIT_VISUALS[storageSlotForm.fractionCellCount]);
+      if (preset.fractionCellCount > 1) {
+        fractionVisualsRef.current.set(fractionVisualKey(selection.anchorCell), preset.visual);
       } else {
         fractionVisualsRef.current.delete(fractionVisualKey(selection.anchorCell));
       }
       setStorageSlotPreview(result);
-      setStorageSlotStatus(storageSlotForm.fractionCellCount === 1 ? "Storage оставлен без дробления" : `Создано storage slots: ${result.created_count}`);
+      setStorageSlotStatus(preset.fractionCellCount === 1 ? "Storage оставлен без дробления" : `Создано storage slots: ${result.created_count} · ${preset.label}`);
       if (draftId) {
         const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
         setCurrentDraft(reloaded);
@@ -3537,8 +3572,41 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
                 </button>
               ))}
             </div>
-            <button className="large-map-primary" disabled={!selections.length} onClick={() => assignRole()}>
-              Назначить выделению
+            {activeRole === "FRACTIONAL_PICK_FACE" && (
+              <div className="large-map-address-grid large-map-inline-preset">
+                <label className="wide">Как дробить отбор<select value={smallPickForm.preset} onChange={(event) => {
+                  const preset = event.currentTarget.value as SplitPresetId;
+                  const nextPreset = PICK_SPLIT_PRESETS[preset];
+                  setSmallPickForm({
+                    ...smallPickForm,
+                    preset,
+                    fractionCellCount: nextPreset.fractionCellCount,
+                    subLevelCount: nextPreset.subLevelCount,
+                    subColumnCount: nextPreset.subColumnCount
+                  });
+                }}>
+                  {(Object.keys(PICK_SPLIT_PRESETS) as SplitPresetId[]).map((preset) => <option key={preset} value={preset}>{PICK_SPLIT_PRESETS[preset].label}</option>)}
+                </select></label>
+              </div>
+            )}
+            {activeRole === "FRACTIONAL_STORAGE" && (
+              <div className="large-map-address-grid large-map-inline-preset">
+                <label className="wide">Как дробить хранение<select value={storageSlotForm.preset} onChange={(event) => {
+                  const preset = event.currentTarget.value as StorageSplitPresetId;
+                  const nextPreset = STORAGE_SPLIT_PRESETS[preset];
+                  setStorageSlotForm({
+                    ...storageSlotForm,
+                    preset,
+                    fractionCellCount: nextPreset.fractionCellCount,
+                    subColumnCount: nextPreset.subColumnCount
+                  });
+                }}>
+                  {(Object.keys(STORAGE_SPLIT_PRESETS) as StorageSplitPresetId[]).map((preset) => <option key={preset} value={preset}>{STORAGE_SPLIT_PRESETS[preset].label}</option>)}
+                </select></label>
+              </div>
+            )}
+            <button className="large-map-primary" disabled={!selections.length} onClick={applyActiveRoleAction}>
+              {activeRole === "FRACTIONAL_PICK_FACE" ? "Создать дробные ячейки отбора" : activeRole === "FRACTIONAL_STORAGE" ? "Создать дробные ячейки хранения" : "Назначить выделению"}
             </button>
             <div className="large-map-history">
               <button disabled={!canUndo} onClick={undo} title="Отменить последнее назначение роли">↶ Undo</button>
@@ -3760,7 +3828,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
               <label className="wide">Маска<input value={smallPickForm.codeMask} onChange={(event) => setSmallPickForm({ ...smallPickForm, codeMask: event.currentTarget.value })} /></label>
             </div>
             <button className="large-map-help-inline" onClick={(event) => openHelp(event, "fraction.pick")}>? Как работает дробление отбора</button>
-            <button className="large-map-primary" disabled={!selections.length || smallPickForm.subLevelCount * smallPickForm.subColumnCount < smallPickForm.fractionCellCount} onClick={generateSmallPickFaces}>Создать дробную ячейку</button>
+            <button className="large-map-primary" disabled={!selections.length || smallPickForm.subLevelCount * smallPickForm.subColumnCount < smallPickForm.fractionCellCount} onClick={() => generateSmallPickFaces()}>Создать дробную ячейку</button>
             <p className="large-map-muted">{smallPickStatus}</p>
             {smallPickPreview && (
               <div className="large-map-selection">
@@ -3791,7 +3859,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
               <label className="wide">Маска<input value={storageSlotForm.codeMask} onChange={(event) => setStorageSlotForm({ ...storageSlotForm, codeMask: event.currentTarget.value })} /></label>
             </div>
             <button className="large-map-help-inline" onClick={(event) => openHelp(event, "fraction.storage")}>? Как работает дробление хранения</button>
-            <button className="large-map-primary" disabled={!selections.length} onClick={generateStorageSlots}>Назначить storage slots</button>
+            <button className="large-map-primary" disabled={!selections.length} onClick={() => generateStorageSlots()}>Назначить storage slots</button>
             <p className="large-map-muted">{storageSlotStatus}</p>
             {storageSlotPreview && (
               <div className="large-map-selection">
@@ -3927,12 +3995,18 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
                 ? Help Canvas
               </button>
               <b>Дробные ячейки</b>
-              <button disabled={!selections.length} onClick={() => { setContextMenu(null); generateSmallPickFaces(); }} title={MAP_HELP["fraction.pick"].body}>
-                Создать дробную ячейку отбора
-              </button>
-              <button disabled={!selections.length} onClick={() => { setContextMenu(null); generateStorageSlots(); }} title={MAP_HELP["fraction.storage"].body}>
-                Создать дробную ячейку хранения
-              </button>
+              <span className="large-map-context-subtitle">Создать дробную ячейку отбора</span>
+              {(Object.keys(PICK_SPLIT_PRESETS) as SplitPresetId[]).map((preset) => (
+                <button key={`ctx-pick-${preset}`} disabled={!selections.length} onClick={() => { setContextMenu(null); generateSmallPickFaces(preset); }} title={MAP_HELP["fraction.pick"].body}>
+                  Отбор · {PICK_SPLIT_PRESETS[preset].label}
+                </button>
+              ))}
+              <span className="large-map-context-subtitle">Создать дробную ячейку хранения</span>
+              {(Object.keys(STORAGE_SPLIT_PRESETS) as StorageSplitPresetId[]).map((preset) => (
+                <button key={`ctx-storage-${preset}`} disabled={!selections.length} onClick={() => { setContextMenu(null); generateStorageSlots(preset); }} title={MAP_HELP["fraction.storage"].body}>
+                  Хранение · {STORAGE_SPLIT_PRESETS[preset].label}
+                </button>
+              ))}
               <button onClick={(event) => { setContextMenu(null); openHelp(event, "fraction.pick"); }}>
                 ? Help дробление
               </button>
@@ -4263,7 +4337,7 @@ function drawCanvas(
       }
       if (role === "FRACTIONAL_PICK_FACE" || role === "FRACTIONAL_STORAGE") {
         const visual = fractionVisuals.get(fractionVisualKey({ aisle, slot, level }))
-          || (role === "FRACTIONAL_STORAGE" ? STORAGE_SPLIT_VISUALS[2] : PICK_SPLIT_PRESETS.PICK_3X3.visual);
+          || (role === "FRACTIONAL_STORAGE" ? STORAGE_SPLIT_VISUALS[1] : PICK_SPLIT_PRESETS.PICK_2_LEVELS.visual);
         drawFractionMarker(ctx, x, y, cellW, cellH, visual);
       }
       ctx.globalAlpha = 1;

@@ -1544,3 +1544,8 @@ Append-only log of root wiki updates.
 - The button opens a large modal guide describing the module purpose, screen structure, data objects, drawing workflow, fractional cells, draft/diff safety, Oracle save/publish, published reload, help rules and operational limits.
 - Added direct URL opening through `guide=module`; visual evidence captured at `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-module-instruction-modal.png`.
 - Updated the real-warehouse binding TZ checkpoint with the instruction-modal follow-up.
+## 2026-05-22 18:41 +05:00
+
+- Уточнено финальное ТЗ карты больших складов: дробные pick/storage роли не применяются как обычная заливка, а всегда запускают создание child slots через явный split preset.
+- Зафиксировано правило: pick fallback/default = `2 уровня`, storage default = `1 / без дробления`, context menu обязан показывать варианты пресетов, а `3 x 3` допустим только при явном выборе оператора.
+- Обновлен индекс wiki для текущего описания fractional preset controls.
