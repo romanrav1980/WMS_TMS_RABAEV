@@ -1366,3 +1366,22 @@ Append-only log of root wiki updates.
 - Implemented the first Sprint 13 vertical slice in `admin/wms_admin_frontend/src/components/LargeWarehouseMapPage.tsx`: `Скопировать формат`, `Вставить формат`, and `Отменить кисть` now work from the left panel and the right-click context menu.
 - Format paste copies only the role pattern of the selected rectangle into a target rectangle with matching size, validates map boundaries, keeps the operation undoable/redoable, and leaves IDs/addressing/route facts outside the copied payload.
 - Added browser smoke `smoke=sprint13-format` and visual evidence `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint13-format-painter.png`; frontend build and encoding checks passed.
+
+## 2026-05-22 - Sprint 13 canvas objects/passages implementation
+
+- Added DB-backed write endpoints for warehouse map camera objects, passages, and camera links: `PATCH /api/admin/warehouse-map/cameras/{camera_id}/objects`, `PATCH /api/admin/warehouse-map/cameras/{camera_id}/passages`, and `PATCH /api/admin/warehouse-map/canvases/{canvas_id}/camera-links`.
+- Extended the large warehouse map UI with commands that save a selected rectangle as a canvas object, save a selected rectangle as a meter-based passage, and link the first two cameras in a canvas; all commands are available through the shared command registry and right-click context menu.
+- Added Canvas overlays for saved objects and passages so reload evidence is visible on the map, and added browser smoke `smoke=sprint13-objects`.
+- Visual evidence captured: `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint13-objects-passages.png`; frontend build, backend compile, OpenAPI endpoint visibility, and encoding checks passed.
+
+## 2026-05-22 - Sprint 13 inspector and context help
+
+- Added a compact inspector for the selected warehouse-map camera: it shows saved canvas objects, passages, camera links, dimensions in meters, passage width, link direction, and link distance.
+- Added command-level context help with stable help ids for camera, canvas object, passage, camera link, and format painter commands; help cards are shown inside the side panel so they do not cover the canvas.
+- Visual evidence captured: `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint13-inspector.png` and `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint13-help.png`; frontend build and encoding checks passed.
+
+## 2026-05-22 - Sprint 13 closure
+
+- Added Sprint 13 negative browser smoke coverage: passage save with `width_m = 0` is rejected by the API validation and reported as `negativeWidth=true`.
+- Captured closure evidence `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint13-negative.png`.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` Gantt: Sprint 13 is now marked done and Sprint 14 is the next planned sprint.

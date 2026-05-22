@@ -89,6 +89,8 @@ type WarehouseMapCamera = {
   width_m: number;
   depth_m: number;
   height_m: number;
+  default_passage_width_m: number;
+  default_aisle_spacing_m?: number;
   levels: number;
   active: number;
 };
@@ -181,6 +183,7 @@ type CameraFormState = {
 };
 
 type MapCommandId = "camera.create" | "camera.clone" | "camera.archive" | "object.create" | "passage.create" | "camera.link";
+type HelpId = MapCommandId | "format.copy" | "format.paste" | "format.cancel";
 
 type MapContextMenu = {
   x: number;
@@ -272,6 +275,45 @@ const ROLE_STROKES: Record<CellRole, string> = {
   BLOCKED: "#334155"
 };
 
+const MAP_HELP: Record<HelpId, { title: string; body: string }> = {
+  "camera.create": {
+    title: "Создать камеру",
+    body: "Создает canvas, если его еще нет, и добавляет к складу новую физическую камеру с размерами в метрах."
+  },
+  "camera.clone": {
+    title: "Клонировать камеру",
+    body: "Создает соседнюю камеру на основе выбранной. Используется для быстрого заведения похожих помещений."
+  },
+  "camera.archive": {
+    title: "Архивировать камеру",
+    body: "Переводит камеру в архив только если у нее нет активных объектов, проходов, связей и topology cells."
+  },
+  "object.create": {
+    title: "Сохранить объект из выделения",
+    body: "Сохраняет выделенный прямоугольник как canvas object. Это графический объект карты, а не WMS-ячейка."
+  },
+  "passage.create": {
+    title: "Сохранить проход из выделения",
+    body: "Сохраняет выделение как проход с шириной в метрах. Пиксели используются только для отображения."
+  },
+  "camera.link": {
+    title: "Связать первые 2 камеры",
+    body: "Создает связь между двумя камерами canvas. В будущем маршрут между камерами будет брать расстояния отсюда."
+  },
+  "format.copy": {
+    title: "Скопировать формат",
+    body: "Копирует роли и формат выделенного прямоугольника без адресов, DB ID, маршрутов, остатков и задач."
+  },
+  "format.paste": {
+    title: "Вставить формат",
+    body: "Вставляет скопированный формат от активной ячейки или начала выделения и пишет операцию в undo/redo."
+  },
+  "format.cancel": {
+    title: "Отменить кисть",
+    body: "Выключает режим кисти. Буфер формата остается, поэтому его можно вставить позже."
+  }
+};
+
 export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -305,6 +347,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const [selectedCameraId, setSelectedCameraId] = useState<number | null>(null);
   const [warehouseStatus, setWarehouseStatus] = useState("Склад не выбран");
   const [contextMenu, setContextMenu] = useState<MapContextMenu>(null);
+  const [activeHelpId, setActiveHelpId] = useState<HelpId | null>(null);
   const [cameraForm, setCameraForm] = useState<CameraFormState>({
     cameraCode: "CAM-01",
     cameraName: "Камера 01",
@@ -354,6 +397,9 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const canUndo = undoStackRef.current.length > 0;
   const canRedo = redoStackRef.current.length > 0;
   const selectedCamera = warehouseMapState?.cameras.find((camera) => camera.camera_id === selectedCameraId) || warehouseMapState?.cameras[0] || null;
+  const selectedCameraObjects = selectedCamera ? (warehouseMapState?.canvas_objects || []).filter((item) => item.camera_id === selectedCamera.camera_id) : [];
+  const selectedCameraPassages = selectedCamera ? (warehouseMapState?.passages || []).filter((item) => item.camera_id === selectedCamera.camera_id) : [];
+  const selectedCameraLinks = selectedCamera ? (warehouseMapState?.camera_links || []).filter((item) => item.from_camera_id === selectedCamera.camera_id || item.to_camera_id === selectedCamera.camera_id) : [];
   const mapCommands = commandRegistry();
 
   useEffect(() => {
@@ -385,7 +431,9 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search.replace(/;/g, "&"));
-    const smoke = params.get("smoke") || (window.location.href.includes("smoke=sprint12") ? "sprint12" : null);
+    const smoke = params.get("smoke")
+      || (window.location.href.includes("smoke=sprint13-objects") ? "sprint13-objects" : null)
+      || (window.location.href.includes("smoke=sprint12") ? "sprint12" : null);
     if (smoke !== "sprint2-multiarea" && smoke !== "sprint3" && smoke !== "sprint5" && smoke !== "sprint6" && smoke !== "sprint7" && smoke !== "sprint8" && smoke !== "sprint9" && smoke !== "sprint12" && smoke !== "sprint13-format" && smoke !== "sprint13-objects") return;
     if (smokeRanRef.current) return;
     smokeRanRef.current = true;
@@ -563,14 +611,90 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     }
   }
 
+  async function saveCanvasObjectFromSelection() {
+    if (!selectedCamera || !selections.length) return;
+    try {
+      const selection = selections[0];
+      const existing = (warehouseMapState?.canvas_objects || [])
+        .filter((item) => item.camera_id === selectedCamera.camera_id)
+        .map(canvasObjectPayload);
+      const nextObject = selectionObjectPayload(selection, selectedCamera, existing.length + 1);
+      const result = await apiFetchJson<{ object_count: number; state: WarehouseMapState }>(`${API_BASE}/api/admin/warehouse-map/cameras/${selectedCamera.camera_id}/objects`, {
+        method: "PATCH",
+        body: JSON.stringify({ objects: [...existing, nextObject], updated_by: "warehouse-map-ui" })
+      });
+      setWarehouseMapState(result.state);
+      setDirty(true);
+      setWarehouseStatus(`Canvas object сохранен: ${result.object_count}`);
+    } catch (error) {
+      setWarehouseStatus(error instanceof Error ? error.message : "Не удалось сохранить canvas object");
+    }
+  }
+
+  async function savePassageFromSelection() {
+    if (!selectedCamera || !selections.length) return;
+    try {
+      const selection = selections[0];
+      const existing = (warehouseMapState?.passages || [])
+        .filter((item) => item.camera_id === selectedCamera.camera_id)
+        .map(passagePayload);
+      const nextPassage = selectionPassagePayload(selection, selectedCamera, existing.length + 1);
+      const result = await apiFetchJson<{ passage_count: number; state: WarehouseMapState }>(`${API_BASE}/api/admin/warehouse-map/cameras/${selectedCamera.camera_id}/passages`, {
+        method: "PATCH",
+        body: JSON.stringify({ passages: [...existing, nextPassage], updated_by: "warehouse-map-ui" })
+      });
+      setWarehouseMapState(result.state);
+      setDirty(true);
+      setWarehouseStatus(`Проход сохранен: ${result.passage_count}`);
+    } catch (error) {
+      setWarehouseStatus(error instanceof Error ? error.message : "Не удалось сохранить проход");
+    }
+  }
+
+  async function saveCameraLink() {
+    const canvas = warehouseMapState?.canvas;
+    const cameras = warehouseMapState?.cameras || [];
+    if (!canvas || cameras.length < 2) return;
+    try {
+      const [fromCamera, toCamera] = cameras;
+      const existing = (warehouseMapState?.camera_links || []).map(cameraLinkPayload);
+      const nextLink = {
+        link_code: `LINK-${fromCamera.camera_code}-${toCamera.camera_code}`,
+        link_kind: "DOOR",
+        from_camera_id: fromCamera.camera_id,
+        to_camera_id: toCamera.camera_id,
+        from_point_x_m: Number(fromCamera.width_m || 0),
+        from_point_y_m: Number(fromCamera.depth_m || 0) / 2,
+        from_point_z_m: 0,
+        to_point_x_m: 0,
+        to_point_y_m: Number(toCamera.depth_m || 0) / 2,
+        to_point_z_m: 0,
+        distance_m: 3,
+        direction_code: "BOTH"
+      };
+      const result = await apiFetchJson<{ camera_link_count: number; state: WarehouseMapState }>(`${API_BASE}/api/admin/warehouse-map/canvases/${canvas.canvas_id}/camera-links`, {
+        method: "PATCH",
+        body: JSON.stringify({ camera_links: [...existing, nextLink], updated_by: "warehouse-map-ui" })
+      });
+      setWarehouseMapState(result.state);
+      setDirty(true);
+      setWarehouseStatus(`Связь камер сохранена: ${result.camera_link_count}`);
+    } catch (error) {
+      setWarehouseStatus(error instanceof Error ? error.message : "Не удалось сохранить связь камер");
+    }
+  }
+
   function commandRegistry() {
     const hasWarehouse = selectedWareId !== null;
     const hasCamera = Boolean(selectedCamera);
+    const hasSelection = selections.length > 0;
+    const canLinkCameras = Boolean(warehouseMapState?.canvas && (warehouseMapState?.cameras.length || 0) >= 2);
     return [
       {
         id: "camera.create" as MapCommandId,
         group: "Камера",
         label: "Создать камеру",
+        helpId: "camera.create" as HelpId,
         enabled: hasWarehouse,
         disabledReason: hasWarehouse ? "" : "Сначала выберите склад",
         run: createCameraFromForm
@@ -579,6 +703,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
         id: "camera.clone" as MapCommandId,
         group: "Камера",
         label: "Клонировать камеру",
+        helpId: "camera.clone" as HelpId,
         enabled: hasCamera,
         disabledReason: hasCamera ? "" : "Нет выбранной камеры",
         run: cloneSelectedCamera
@@ -587,9 +712,37 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
         id: "camera.archive" as MapCommandId,
         group: "Камера",
         label: "Архивировать камеру",
+        helpId: "camera.archive" as HelpId,
         enabled: hasCamera,
         disabledReason: hasCamera ? "" : "Нет выбранной камеры",
         run: archiveSelectedCamera
+      },
+      {
+        id: "object.create" as MapCommandId,
+        group: "Canvas",
+        label: "Сохранить объект из выделения",
+        helpId: "object.create" as HelpId,
+        enabled: hasCamera && hasSelection,
+        disabledReason: hasCamera ? "Сначала выделите область" : "Нет выбранной камеры",
+        run: saveCanvasObjectFromSelection
+      },
+      {
+        id: "passage.create" as MapCommandId,
+        group: "Canvas",
+        label: "Сохранить проход из выделения",
+        helpId: "passage.create" as HelpId,
+        enabled: hasCamera && hasSelection,
+        disabledReason: hasCamera ? "Сначала выделите область" : "Нет выбранной камеры",
+        run: savePassageFromSelection
+      },
+      {
+        id: "camera.link" as MapCommandId,
+        group: "Canvas",
+        label: "Связать первые 2 камеры",
+        helpId: "camera.link" as HelpId,
+        enabled: canLinkCameras,
+        disabledReason: "Нужны canvas и минимум две камеры",
+        run: saveCameraLink
       }
     ];
   }
@@ -1493,6 +1646,151 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     });
   }
 
+  async function runSprint13ObjectsSmoke() {
+    const params = new URLSearchParams(window.location.search.replace(/;/g, "&"));
+    const smokeWareId = Number(params.get("ware_id") || 0);
+    if (!smokeWareId && smokeWareId !== 0) return;
+    const suffix = Date.now().toString().slice(-6);
+    try {
+      setSelectedWareId(smokeWareId);
+      let state = await apiFetchJson<WarehouseMapState>(`${API_BASE}/api/admin/warehouse-map/warehouses/${smokeWareId}/state`, { cache: "no-store" });
+      if (!state.canvas) {
+        state = await apiFetchJson<WarehouseMapState>(`${API_BASE}/api/admin/warehouse-map/warehouses/${smokeWareId}/canvases`, {
+          method: "POST",
+          body: JSON.stringify({
+            canvas_code: `SMOKE-013-${Math.abs(smokeWareId)}-${suffix}`,
+            canvas_name: "Sprint 13 objects smoke canvas",
+            levels: GRID.levels,
+            created_by: "SMOKE_013_UI"
+          })
+        });
+      }
+      if (!state.canvas) throw new Error("Smoke canvas was not created");
+      const canvasId = state.canvas.canvas_id;
+      let cameras = state.cameras;
+      if (!cameras.length) {
+        const created = await apiFetchJson<{ camera: WarehouseMapCamera; state: WarehouseMapState }>(`${API_BASE}/api/admin/warehouse-map/canvases/${canvasId}/cameras`, {
+          method: "POST",
+          body: JSON.stringify({
+            ...cameraPayload(cameraForm),
+            camera_code: `S13-CAM-A-${suffix}`,
+            camera_name: "Sprint 13 smoke camera A",
+            created_by: "SMOKE_013_UI"
+          })
+        });
+        state = created.state;
+        cameras = state.cameras;
+      }
+      if (cameras.length < 2) {
+        const created = await apiFetchJson<{ camera: WarehouseMapCamera; state: WarehouseMapState }>(`${API_BASE}/api/admin/warehouse-map/canvases/${canvasId}/cameras`, {
+          method: "POST",
+          body: JSON.stringify({
+            ...cameraPayload(cameraForm),
+            camera_code: `S13-CAM-B-${suffix}`,
+            camera_name: "Sprint 13 smoke camera B",
+            origin_x_m: cameraForm.originX + cameraForm.width + 3,
+            created_by: "SMOKE_013_UI"
+          })
+        });
+        state = created.state;
+        cameras = state.cameras;
+      }
+      const camera = cameras[0];
+      const objectSelection = normalizeSelection({ aisle: 4, slot: 8, level: 1 }, { aisle: 10, slot: 20, level: 1 });
+      const passageSelection = normalizeSelection({ aisle: 12, slot: 8, level: 1 }, { aisle: 14, slot: 42, level: 1 });
+      const objectPatch = await apiFetchJson<{ state: WarehouseMapState }>(`${API_BASE}/api/admin/warehouse-map/cameras/${camera.camera_id}/objects`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          objects: [selectionObjectPayload(objectSelection, camera, 1, "S13-ZONE-001")],
+          updated_by: "SMOKE_013_UI"
+        })
+      });
+      const passagePatch = await apiFetchJson<{ state: WarehouseMapState }>(`${API_BASE}/api/admin/warehouse-map/cameras/${camera.camera_id}/passages`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          passages: [selectionPassagePayload(passageSelection, camera, 1, "S13-PASS-001")],
+          updated_by: "SMOKE_013_UI"
+        })
+      });
+      const linkPatch = await apiFetchJson<{ state: WarehouseMapState }>(`${API_BASE}/api/admin/warehouse-map/canvases/${canvasId}/camera-links`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          camera_links: [{
+            link_code: "S13-LINK-001",
+            link_kind: "DOOR",
+            from_camera_id: cameras[0].camera_id,
+            to_camera_id: cameras[1].camera_id,
+            from_point_x_m: Number(cameras[0].width_m || 0),
+            from_point_y_m: Number(cameras[0].depth_m || 0) / 2,
+            to_point_x_m: 0,
+            to_point_y_m: Number(cameras[1].depth_m || 0) / 2,
+            distance_m: 3,
+            direction_code: "BOTH"
+          }],
+          updated_by: "SMOKE_013_UI"
+        })
+      });
+      let negativeWidthRejected = false;
+      try {
+        await apiFetchJson<{ state: WarehouseMapState }>(`${API_BASE}/api/admin/warehouse-map/cameras/${camera.camera_id}/passages`, {
+          method: "PATCH",
+          body: JSON.stringify({
+            passages: [{
+              ...selectionPassagePayload(passageSelection, camera, 99, "S13-BAD-WIDTH"),
+              width_m: 0
+            }],
+            updated_by: "SMOKE_013_UI"
+          })
+        });
+      } catch {
+        negativeWidthRejected = true;
+      }
+      const reloaded = await apiFetchJson<WarehouseMapState>(`${API_BASE}/api/admin/warehouse-map/canvases/${canvasId}`, { cache: "no-store" });
+      const objectSaved = reloaded.canvas_objects.some((item) => item.camera_id === camera.camera_id && item.object_code === "S13-ZONE-001");
+      const passageSaved = reloaded.passages.some((item) => item.camera_id === camera.camera_id && item.passage_code === "S13-PASS-001" && Number(item.width_m) === 3);
+      const linkSaved = reloaded.camera_links.some((item) => item.link_code === "S13-LINK-001");
+      setWarehouseMapState(reloaded);
+      setCanvasList(reloaded.canvas ? [{
+        canvas_id: reloaded.canvas.canvas_id,
+        canvas_code: reloaded.canvas.canvas_code,
+        canvas_name: reloaded.canvas.canvas_name,
+        status: reloaded.canvas.status,
+        camera_count: reloaded.cameras.length
+      }] : []);
+      setSelectedCameraId(camera.camera_id);
+      setLevel(1);
+      setSelections([objectSelection, passageSelection]);
+      setActiveCell(objectSelection.anchorCell);
+      applyEmptyCameraDefaultRoles(reloaded);
+      setDirty(true);
+      setWarehouseStatus("Sprint 13 smoke: canvas object, passage и связь камер сохранены и перезагружены");
+      setSmokeResult({
+        name: "Sprint 13 canvas objects/passages",
+        ok: objectSaved && passageSaved && linkSaved && negativeWidthRejected && objectPatch.state.counters.canvas_objects >= 1 && passagePatch.state.counters.passages >= 1 && linkPatch.state.counters.camera_links >= 1,
+        details: [
+          `ware=${smokeWareId}`,
+          `camera=${camera.camera_code}`,
+          `objectSaved=${String(objectSaved)}`,
+          `passageSaved=${String(passageSaved)}`,
+          `linkSaved=${String(linkSaved)}`,
+          `negativeWidth=${String(negativeWidthRejected)}`,
+          `reload=true`
+        ]
+      });
+      setActiveHelpId("passage.create");
+      window.setTimeout(() => {
+        const panel = document.querySelector(".large-map-panel");
+        if (panel instanceof HTMLElement) panel.scrollTop = panel.scrollHeight;
+      }, 100);
+    } catch (error) {
+      setSmokeResult({
+        name: "Sprint 13 canvas objects/passages",
+        ok: false,
+        details: [error instanceof Error ? error.message : "browser smoke failed"]
+      });
+    }
+  }
+
   return (
     <main className="large-map-page">
       <header className="large-map-topbar">
@@ -1589,11 +1887,21 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
             </div>
             <div className="large-map-command-grid">
               {mapCommands.map((command) => (
-                <button key={command.id} disabled={!command.enabled} onClick={() => runMapCommand(command.id)} title={command.enabled ? command.label : command.disabledReason}>
-                  {command.label}
-                </button>
+                <div key={command.id} className="large-map-command-help-row">
+                  <button disabled={!command.enabled} onClick={() => runMapCommand(command.id)} title={command.enabled ? MAP_HELP[command.helpId].body : command.disabledReason}>
+                    {command.label}
+                  </button>
+                  <button className="large-map-help-button" onClick={() => setActiveHelpId(command.helpId)} title={`Help: ${MAP_HELP[command.helpId].title}`}>?</button>
+                </div>
               ))}
             </div>
+            {activeHelpId && (
+              <div className="large-map-help-card">
+                <b>{MAP_HELP[activeHelpId].title}</b>
+                <span>{MAP_HELP[activeHelpId].body}</span>
+                <button onClick={() => setActiveHelpId(null)}>Закрыть</button>
+              </div>
+            )}
           </section>
 
           <section>
@@ -1628,15 +1936,18 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           <section>
             <h2>Формат</h2>
             <div className="large-map-command-grid">
-              <button disabled={!selections.length} onClick={copyFormat} title="Скопировать роли и формат первого выделенного прямоугольника без адресов, остатков и ID">
-                Скопировать формат
-              </button>
-              <button disabled={!formatClipboard} onClick={pasteFormat} title="Вставить скопированный формат от активной ячейки или начала выделения">
-                Вставить формат
-              </button>
-              <button disabled={!formatPainterActive} onClick={cancelFormatPainter} title="Отменить режим копирования формата, сохранив буфер">
-                Отменить кисть
-              </button>
+              <div className="large-map-command-help-row">
+                <button disabled={!selections.length} onClick={copyFormat} title={MAP_HELP["format.copy"].body}>Скопировать формат</button>
+                <button className="large-map-help-button" onClick={() => setActiveHelpId("format.copy")} title="Help: Скопировать формат">?</button>
+              </div>
+              <div className="large-map-command-help-row">
+                <button disabled={!formatClipboard} onClick={pasteFormat} title={MAP_HELP["format.paste"].body}>Вставить формат</button>
+                <button className="large-map-help-button" onClick={() => setActiveHelpId("format.paste")} title="Help: Вставить формат">?</button>
+              </div>
+              <div className="large-map-command-help-row">
+                <button disabled={!formatPainterActive} onClick={cancelFormatPainter} title={MAP_HELP["format.cancel"].body}>Отменить кисть</button>
+                <button className="large-map-help-button" onClick={() => setActiveHelpId("format.cancel")} title="Help: Отменить кисть">?</button>
+              </div>
             </div>
             <p className={`large-map-muted ${formatPainterActive ? "large-map-format-active" : ""}`}>{formatStatus}</p>
           </section>
@@ -1770,6 +2081,13 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
               {ROLE_ORDER.filter((role) => roleCounts[role]).map((role) => (
                 <span key={role}><i style={{ background: ROLE_COLORS[role] }} />{ROLE_LABELS[role]} <b>{roleCounts[role].toLocaleString("ru-RU")}</b></span>
               ))}
+              {warehouseMapState && (
+                <>
+                  <span><i style={{ background: "#ede9fe" }} />Canvas objects <b>{Number(warehouseMapState.counters.canvas_objects || 0).toLocaleString("ru-RU")}</b></span>
+                  <span><i style={{ background: "#fed7aa" }} />Passages <b>{Number(warehouseMapState.counters.passages || 0).toLocaleString("ru-RU")}</b></span>
+                  <span><i style={{ background: "#dbeafe" }} />Camera links <b>{Number(warehouseMapState.counters.camera_links || 0).toLocaleString("ru-RU")}</b></span>
+                </>
+              )}
             </div>
           </section>
 
@@ -1780,6 +2098,28 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
               <span>{ROLE_LABELS[ROLE_ORDER[rolesRef.current[cellIndex(activeCell.aisle, activeCell.slot, activeCell.level)]]]}</span>
               <span>Координаты: аллея {activeCell.aisle}, слот {activeCell.slot}, уровень {activeCell.level}</span>
             </div>
+            {selectedCamera && (
+              <div className="large-map-object-inspector">
+                <b>{selectedCamera.camera_code}</b>
+                <span>objects: {selectedCameraObjects.length} · passages: {selectedCameraPassages.length} · links: {selectedCameraLinks.length}</span>
+                {selectedCameraObjects.slice(0, 4).map((item) => (
+                  <span key={`object-${item.map_object_id}`}>object {item.object_code} · {item.object_kind} · {Number(item.width_m || 0).toFixed(1)} x {Number(item.depth_m || 0).toFixed(1)} м</span>
+                ))}
+                {selectedCameraPassages.slice(0, 4).map((item) => (
+                  <span key={`passage-${item.passage_id}`}>passage {item.passage_code} · {item.passage_kind} · width {Number(item.width_m || 0).toFixed(1)} м</span>
+                ))}
+                {selectedCameraLinks.slice(0, 3).map((item) => (
+                  <span key={`link-${item.camera_link_id}`}>link {item.link_code} · {item.direction_code} · {Number(item.distance_m || 0).toFixed(1)} м</span>
+                ))}
+              </div>
+            )}
+            {activeHelpId && (
+              <div className="large-map-help-card">
+                <b>{MAP_HELP[activeHelpId].title}</b>
+                <span>{MAP_HELP[activeHelpId].body}</span>
+                <button onClick={() => setActiveHelpId(null)}>Закрыть</button>
+              </div>
+            )}
           </section>
 
           {smokeResult && (
@@ -1808,10 +2148,13 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
             <div className="large-map-context-menu" style={{ left: contextMenu.x, top: contextMenu.y }}>
               <b>Камера</b>
               {mapCommands.map((command) => (
-                <button key={command.id} disabled={!command.enabled} onClick={() => runMapCommand(command.id)} title={command.enabled ? command.label : command.disabledReason}>
+                <button key={command.id} disabled={!command.enabled} onClick={() => runMapCommand(command.id)} title={command.enabled ? MAP_HELP[command.helpId].body : command.disabledReason}>
                   {command.label}
                 </button>
               ))}
+              <button onClick={() => { setContextMenu(null); setActiveHelpId("object.create"); }} title="Открыть help по canvas commands">
+                ? Help Canvas
+              </button>
               <b>Формат</b>
               <button disabled={!selections.length} onClick={() => { setContextMenu(null); copyFormat(); }} title="Скопировать роли и формат выделенного прямоугольника">
                 Скопировать формат
@@ -1942,6 +2285,92 @@ function copyAisleRoles(roles: Uint8Array, sourceAisle: number, targetAisles: nu
   });
 }
 
+function selectionObjectPayload(selection: CellSelection, camera: WarehouseMapCamera, orderNo: number, objectCode?: string) {
+  const widthCells = selection.aisleTo - selection.aisleFrom + 1;
+  const depthCells = selection.slotTo - selection.slotFrom + 1;
+  return {
+    object_code: objectCode || `OBJ-${camera.camera_code}-${String(orderNo).padStart(3, "0")}`,
+    object_kind: "ZONE",
+    object_name: "Canvas object",
+    level_no: selection.level,
+    x_m: Number(((selection.aisleFrom - 1) * CELL_WIDTH_MM / 1000).toFixed(3)),
+    y_m: Number(((selection.slotFrom - 1) * CELL_HEIGHT_MM / 1000).toFixed(3)),
+    z_m: 0,
+    width_m: Number((widthCells * CELL_WIDTH_MM / 1000).toFixed(3)),
+    depth_m: Number((depthCells * CELL_HEIGHT_MM / 1000).toFixed(3)),
+    height_m: Number(camera.height_m || 0) || 3,
+    angle_deg: 0,
+    geometry_json: { shape: "rect", source: "selection" },
+    style_json: { fill: "#f5f3ff", stroke: "#7c3aed" }
+  };
+}
+
+function canvasObjectPayload(item: WarehouseMapObject) {
+  return {
+    object_code: item.object_code,
+    object_kind: item.object_kind,
+    object_name: item.object_name,
+    level_no: item.level_no,
+    x_m: Number(item.x_m || 0),
+    y_m: Number(item.y_m || 0),
+    z_m: Number(item.z_m || 0),
+    width_m: item.width_m == null ? undefined : Number(item.width_m),
+    depth_m: item.depth_m == null ? undefined : Number(item.depth_m),
+    height_m: item.height_m == null ? undefined : Number(item.height_m),
+    angle_deg: Number(item.angle_deg || 0),
+    geometry_json: item.geometry_json,
+    style_json: item.style_json
+  };
+}
+
+function selectionPassagePayload(selection: CellSelection, camera: WarehouseMapCamera, orderNo: number, passageCode?: string) {
+  const centerAisle = selection.aisleFrom - 1 + (selection.aisleTo - selection.aisleFrom + 1) / 2;
+  return {
+    passage_code: passageCode || `PASS-${camera.camera_code}-${String(orderNo).padStart(3, "0")}`,
+    passage_name: "Проход",
+    passage_kind: "PICK_AISLE",
+    x1_m: Number((centerAisle * CELL_WIDTH_MM / 1000).toFixed(3)),
+    y1_m: Number(((selection.slotFrom - 1) * CELL_HEIGHT_MM / 1000).toFixed(3)),
+    z1_m: 0,
+    x2_m: Number((centerAisle * CELL_WIDTH_MM / 1000).toFixed(3)),
+    y2_m: Number((selection.slotTo * CELL_HEIGHT_MM / 1000).toFixed(3)),
+    z2_m: 0,
+    width_m: Number(camera.default_passage_width_m || 3),
+    aisle_spacing_m: Number(camera.default_aisle_spacing_m || 0) || undefined,
+    geometry_json: { shape: "line", source: "selection" },
+    allowed_resource_mask: "ALL"
+  };
+}
+
+function passagePayload(item: WarehouseMapPassage) {
+  return {
+    passage_code: item.passage_code,
+    passage_name: item.passage_name,
+    passage_kind: item.passage_kind,
+    x1_m: Number(item.x1_m || 0),
+    y1_m: Number(item.y1_m || 0),
+    z1_m: Number(item.z1_m || 0),
+    x2_m: Number(item.x2_m || 0),
+    y2_m: Number(item.y2_m || 0),
+    z2_m: Number(item.z2_m || 0),
+    width_m: Number(item.width_m || 3),
+    aisle_spacing_m: item.aisle_spacing_m == null ? undefined : Number(item.aisle_spacing_m),
+    geometry_json: item.geometry_json,
+    allowed_resource_mask: item.allowed_resource_mask
+  };
+}
+
+function cameraLinkPayload(item: WarehouseMapCameraLink) {
+  return {
+    link_code: item.link_code,
+    link_kind: item.link_kind,
+    from_camera_id: item.from_camera_id,
+    to_camera_id: item.to_camera_id,
+    distance_m: Number(item.distance_m || 0),
+    direction_code: item.direction_code
+  };
+}
+
 function drawCanvas(
   canvas: HTMLCanvasElement,
   roles: Uint8Array,
@@ -1951,6 +2380,8 @@ function drawCanvas(
   activeCell: GridCell,
   hovered: GridCell | null,
   roleFilters: Record<CellRole, boolean>,
+  canvasObjects: WarehouseMapObject[],
+  passages: WarehouseMapPassage[],
   setMetrics: React.Dispatch<React.SetStateAction<{ renderMs: number; visibleCells: number; selectedCells: number; bulkMs: number; selectionMs: number; domNodes: number }>>
 ) {
   const parent = canvas.parentElement;
@@ -2014,6 +2445,9 @@ function drawCanvas(
     }
   }
 
+  drawMapObjectOverlays(ctx, canvasObjects, level, originX, originY, view.zoom);
+  drawPassageOverlays(ctx, passages, originX, originY, view.zoom);
+
   selections.filter((selection) => selection.level === level).forEach((selection) => {
     const x = originX + (selection.aisleFrom - 1) * cellW;
     const y = originY + (selection.slotFrom - 1) * cellH;
@@ -2059,6 +2493,71 @@ function drawCanvas(
     selectedCells: selectionListSize(selections),
     domNodes: document.querySelectorAll("*").length
   }));
+}
+
+function drawMapObjectOverlays(
+  ctx: CanvasRenderingContext2D,
+  canvasObjects: WarehouseMapObject[],
+  level: number,
+  originX: number,
+  originY: number,
+  zoom: number
+) {
+  canvasObjects
+    .filter((item) => !item.level_no || Number(item.level_no) === level)
+    .forEach((item) => {
+      const x = originX + Number(item.x_m || 0) / (CELL_WIDTH_MM / 1000) * BASE_CELL_WIDTH * zoom;
+      const y = originY + Number(item.y_m || 0) / (CELL_HEIGHT_MM / 1000) * BASE_CELL_HEIGHT * zoom;
+      const w = Math.max(3, Number(item.width_m || 1) / (CELL_WIDTH_MM / 1000) * BASE_CELL_WIDTH * zoom);
+      const h = Math.max(3, Number(item.depth_m || 1) / (CELL_HEIGHT_MM / 1000) * BASE_CELL_HEIGHT * zoom);
+      ctx.save();
+      ctx.fillStyle = "rgba(124,58,237,.16)";
+      ctx.strokeStyle = "#7c3aed";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([7, 4]);
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeRect(x, y, w, h);
+      if (w > 42 && h > 18) {
+        ctx.setLineDash([]);
+        ctx.fillStyle = "#4c1d95";
+        ctx.font = "800 10px system-ui, sans-serif";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText(item.object_code || item.object_kind, x + 5, y + 4);
+      }
+      ctx.restore();
+    });
+}
+
+function drawPassageOverlays(
+  ctx: CanvasRenderingContext2D,
+  passages: WarehouseMapPassage[],
+  originX: number,
+  originY: number,
+  zoom: number
+) {
+  passages.forEach((item) => {
+    const x1 = originX + Number(item.x1_m || 0) / (CELL_WIDTH_MM / 1000) * BASE_CELL_WIDTH * zoom;
+    const y1 = originY + Number(item.y1_m || 0) / (CELL_HEIGHT_MM / 1000) * BASE_CELL_HEIGHT * zoom;
+    const x2 = originX + Number(item.x2_m || 0) / (CELL_WIDTH_MM / 1000) * BASE_CELL_WIDTH * zoom;
+    const y2 = originY + Number(item.y2_m || 0) / (CELL_HEIGHT_MM / 1000) * BASE_CELL_HEIGHT * zoom;
+    ctx.save();
+    ctx.strokeStyle = "rgba(180,83,9,.86)";
+    ctx.lineWidth = Math.max(3, Number(item.width_m || 3) / (CELL_WIDTH_MM / 1000) * BASE_CELL_WIDTH * zoom);
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.strokeStyle = "#fff7ed";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([7, 5]);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.restore();
+  });
 }
 
 function drawFractionMarker(ctx: CanvasRenderingContext2D, x: number, y: number, cellW: number, cellH: number) {

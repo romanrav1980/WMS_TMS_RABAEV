@@ -1,0 +1,376 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E4537E9F-2542-4774-BC57-F5E4AA449DC0}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WindowsApplication2</RootNamespace>
+    <AssemblyName>WindowsApplication2</AssemblyName>
+    <ManifestCertificateThumbprint>E319EB3FBFC9FFC9A0584815684AE294B724214B</ManifestCertificateThumbprint>
+    <ManifestKeyFile>WindowsApplication2_TemporaryKey.pfx</ManifestKeyFile>
+    <GenerateManifests>true</GenerateManifests>
+    <SignManifests>false</SignManifests>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <ApplicationIcon>Cube.ico</ApplicationIcon>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <PublishUrl>http://localhost/WindowsApplication2/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <TargetCulture>ru</TargetCulture>
+    <ApplicationRevision>9</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.OracleClient" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BillingTransport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BillingTransport.Designer.cs">
+      <DependentUpon>BillingTransport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code128Content.cs" />
+    <Compile Include="Code128Rendering.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="input.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="input.Designer.cs">
+      <DependentUpon>input.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PPage2.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="BillingTransport.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>BillingTransport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form2.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="input.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>input.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rrl_objects.resx">
+      <DependentUpon>rrl_objects.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TRANSPORT.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TRANSPORT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VODITEL.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>VODITEL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Безопасность.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Безопасность.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ВыбратьСтолбцы.resx">
+      <DependentUpon>ВыбратьСтолбцы.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ЗАПРОСЫ.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ЗАПРОСЫ.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ИнтеграцияИКроссДокинг.resx">
+      <DependentUpon>ИнтеграцияИКроссДокинг.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ИсторияДвиженийТовара.resx">
+      <DependentUpon>ИсторияДвиженийТовара.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ОшибкиСборки.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ОшибкиСборки.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Поставщики.resx">
+      <DependentUpon>Поставщики.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ПРАЙСЫ.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ПРАЙСЫ.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ПриемкаРейсаКроссДокинга.resx">
+      <DependentUpon>ПриемкаРейсаКроссДокинга.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Расстояния.resx">
+      <DependentUpon>Расстояния.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ревизии.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Ревизии.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="СверкаЦен.resx">
+      <DependentUpon>СверкаЦен.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Список прайсов.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Список прайсов.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="rrl_objects.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="rrl_objects.Designer.cs">
+      <DependentUpon>rrl_objects.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs" />
+    <Compile Include="TRANSPORT.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TRANSPORT.Designer.cs">
+      <DependentUpon>TRANSPORT.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VODITEL.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VODITEL.Designer.cs">
+      <DependentUpon>VODITEL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Безопасность.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Безопасность.Designer.cs">
+      <DependentUpon>Безопасность.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ВыбратьСтолбцы.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ВыбратьСтолбцы.Designer.cs">
+      <DependentUpon>ВыбратьСтолбцы.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ЗАПРОСЫ.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ЗАПРОСЫ.Designer.cs">
+      <DependentUpon>ЗАПРОСЫ.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ИнтеграцияИКроссДокинг.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ИнтеграцияИКроссДокинг.Designer.cs">
+      <DependentUpon>ИнтеграцияИКроссДокинг.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ИсторияДвиженийТовара.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ИсторияДвиженийТовара.Designer.cs">
+      <DependentUpon>ИсторияДвиженийТовара.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ОшибкиСборки.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ОшибкиСборки.Designer.cs">
+      <DependentUpon>ОшибкиСборки.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Поставщики.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Поставщики.Designer.cs">
+      <DependentUpon>Поставщики.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ПРАЙСЫ.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ПРАЙСЫ.Designer.cs">
+      <DependentUpon>ПРАЙСЫ.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ПриемкаРейсаКроссДокинга.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ПриемкаРейсаКроссДокинга.Designer.cs">
+      <DependentUpon>ПриемкаРейсаКроссДокинга.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Расстояния.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Расстояния.Designer.cs">
+      <DependentUpon>Расстояния.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Ревизии.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ревизии.Designer.cs">
+      <DependentUpon>Ревизии.cs</DependentUpon>
+    </Compile>
+    <Compile Include="СверкаЦен.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="СверкаЦен.Designer.cs">
+      <DependentUpon>СверкаЦен.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Список прайсов.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Список прайсов.Designer.cs">
+      <DependentUpon>Список прайсов.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\not_distrib.gif" />
+    <None Include="Resources\100perc.gif" />
+    <None Include="Resources\90perc.gif" />
+    <None Include="Resources\70perc.gif" />
+    <None Include="Resources\50perc.gif" />
+    <None Include="Resources\10perc.gif" />
+    <None Include="Resources\0perc.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="ADODB">
+      <Guid>{00000205-0000-0010-8000-00AA006D2EA4}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>5</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="DAO">
+      <Guid>{00025E01-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>9</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Cube.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -85,6 +85,14 @@ desktop.ini
 Thumbs.db
 
 # -------------------------------------------------------
-# Compiled outputs inside root-level WindowsApplication2 (legacy copy)
+# WindowsApplication2 — C# WinForms (source tracked, build artifacts excluded)
 # -------------------------------------------------------
-WindowsApplication2/
+WindowsApplication2/**/*.exe
+WindowsApplication2/**/*.dll
+WindowsApplication2/**/*.pdb
+WindowsApplication2/**/*.pfx
+WindowsApplication2/**/bin/
+WindowsApplication2/**/obj/
+WindowsApplication2/**/*.user
+WindowsApplication2/**/*.suo
+WindowsApplication2/**/.vs/
