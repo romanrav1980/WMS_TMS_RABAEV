@@ -326,7 +326,20 @@ type CameraFormState = {
 };
 
 type MapCommandId = "camera.create" | "camera.clone" | "camera.archive" | "object.create" | "passage.create" | "camera.link";
-type HelpId = MapCommandId | "format.copy" | "format.paste" | "format.cancel" | "fraction.pick" | "fraction.storage" | "projection.preview";
+type HelpId = MapCommandId
+  | "warehouse.state"
+  | "roles.assign"
+  | "navigation.map"
+  | "templates.layout"
+  | "draft.local"
+  | "route.editor"
+  | "oracle.publish"
+  | "format.copy"
+  | "format.paste"
+  | "format.cancel"
+  | "fraction.pick"
+  | "fraction.storage"
+  | "projection.preview";
 
 type MapContextMenu = {
   x: number;
@@ -486,6 +499,10 @@ const STORAGE_SPLIT_PRESETS: Record<StorageSplitPresetId, { label: string; fract
 };
 
 const MAP_HELP: Record<HelpId, { title: string; body: string }> = {
+  "warehouse.state": {
+    title: "Реальный склад",
+    body: "Что это: блок выбора склада и чтения опубликованной карты из Oracle. Вход: WARE_ID выбранного склада, active/published canvas, topology, cameras, passages, slots и pick route. Делает: загружает рабочее состояние склада и показывает статусы canvas/topology/routes. Зачем: оператор должен видеть, с каким реальным складом связана карта, а не работать с абстрактным черновиком. Как применять: выберите склад, нажмите Обновить, проверьте canvas/topology status, route count и warnings перед редактированием."
+  },
   "camera.create": {
     title: "Создать камеру",
     body: "Что это: команда создания физической камеры склада на canvas. Вход: выбранный склад, код, вид, название, размеры в метрах, уровни и дефолтная ширина прохода. Делает: создает canvas при необходимости и добавляет камеру. Зачем: разделять один склад на помещения/камеры. Как применять: заполните форму камеры и нажмите команду; topology cells не публикуются."
@@ -510,6 +527,18 @@ const MAP_HELP: Record<HelpId, { title: string; body: string }> = {
     title: "Связать первые 2 камеры",
     body: "Что это: связь между камерами canvas. Вход: минимум две камеры в текущем canvas. Делает: создает переход с направлением и расстоянием. Зачем: будущий маршрут должен понимать, как пройти между помещениями. Как применять: создайте две камеры, затем сохраните link."
   },
+  "roles.assign": {
+    title: "Роли ячеек",
+    body: "Что это: режим назначения функциональной роли физическим ячейкам сетки 800 x 1200 мм. Вход: активная роль, одно или несколько выделений, текущий уровень L1-L6. Делает: меняет роли выбранных ячеек в API draft и оставляет операцию в undo/redo. Зачем: карта склада создается через массовое назначение зон отбора, хранения, накопления, ворот, проходов, пустых и недоступных областей. Как применять: выделите область как в Excel, выберите роль и нажмите Назначить выделению; Shift-выделение сохраняет несколько областей."
+  },
+  "navigation.map": {
+    title: "Навигация по карте",
+    body: "Что это: инструменты масштаба, поиска адреса и быстрого перехода по большой Canvas-карте. Вход: zoom, pan, адрес формата A01-S001-L1 или текущая выделенная область. Делает: приближает, отдаляет, центрирует карту, ищет ячейку и показывает обзор по аллеям. Зачем: на карте 35 x 90 x 6 нельзя работать только прокруткой, оператору нужны Excel-подобные быстрые переходы. Как применять: используйте Fit для всей карты, Fit selected для выделения, поле поиска для адреса и полосу аллей для прыжка к нужной аллее."
+  },
+  "templates.layout": {
+    title: "Шаблоны layout",
+    body: "Что это: быстрые генераторы типовых участков склада на выделенной области или на базовой карте. Вход: текущее выделение, активный уровень и выбранный шаблон. Делает: массово назначает роли ячеек как регулярный склад, проходы, ворота с накоплением, пленку или копию аллеи. Зачем: склад быстрее рисовать из повторяющихся блоков, чем назначать тысячи ячеек вручную. Как применять: сначала выделите нужный прямоугольник, затем примените шаблон и визуально проверьте, что границы и роли легли правильно."
+  },
   "format.copy": {
     title: "Скопировать формат",
     body: "Что это: Excel-like Format Painter. Вход: выделенный прямоугольник. Делает: копирует роли/рисунок формата области. Зачем: быстро размножать похожие участки склада. Как применять: выделите образец, нажмите копирование, выберите цель и вставьте; DB ID, адреса, маршруты, остатки и задачи не копируются."
@@ -521,6 +550,18 @@ const MAP_HELP: Record<HelpId, { title: string; body: string }> = {
   "format.cancel": {
     title: "Отменить кисть",
     body: "Что это: отмена активного режима кисти. Вход: текущий format clipboard. Делает: выключает режим переноса, но не очищает буфер. Зачем: избежать случайной вставки. Как применять: нажмите, если передумали вставлять формат сейчас."
+  },
+  "draft.local": {
+    title: "Draft и diff",
+    body: "Что это: runtime/API черновик карты до публикации в Oracle. Вход: roles_base64, metadata, canvas objects, passages, camera links, route rows и ожидаемая revision. Делает: сохраняет/загружает draft, показывает diff, строит projection preview и защищает от stale update. Зачем: оператор может редактировать карту безопасно, не меняя опубликованный склад до отдельного publish. Как применять: регулярно нажимайте Сохранить, проверяйте Diff и Projection preview перед сохранением topology и маршрута в Oracle."
+  },
+  "route.editor": {
+    title: "Порядок обхода",
+    body: "Что это: редактор draft pick route поверх карты склада. Вход: выделенная область, route pattern LINEAR/Z/u-образно/П-образно/MANUAL, роли ячеек и дробные pick slots. Делает: строит строки маршрута с числовым PICK_SEQUENCE, валидирует дубли и исключает storage/non-pick rows. Зачем: порядок отбора должен быть мастер-данными склада и потом попадать в Oracle pick route. Как применять: выделите только pick-face область, выберите паттерн, постройте маршрут, нажмите Validate draft и проверьте route rows."
+  },
+  "oracle.publish": {
+    title: "Oracle save/publish",
+    body: "Что это: цепочка переноса draft в реальные Oracle master-data объекта. Вход: выбранный склад, сохраненный API draft, Oracle canvas, topology projection и pick route. Делает: Save canvas DB пишет renderer payload, Save topology DB пишет cells/slots, Save route DB пишет PICK_ROUTE/PICK_ROUTE_CELL, Publish Oracle вызывает RRL_WAREHOUSE_MAP_API.PUBLISH_DRAFT и переводит canvas/topology/route в PUBLISHED. Зачем: новые волны должны читать только опубликованные рабочие версии, а не визуальный черновик. Как применять: выполняйте кнопки слева направо; если кнопка серая, сначала выполните предыдущий шаг или validation."
   },
   "fraction.pick": {
     title: "Дробная ячейка отбора",
@@ -695,6 +736,24 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       maxVolumeM3: Number(activeStorageSlot.max_volume_m3 || 0)
     });
   }, [activeStorageSlot?.storage_slot_id]);
+
+  useEffect(() => {
+    if (!activeHelpId) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeHelp();
+    };
+    const onPointerDown = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest(".large-map-help-popover") || target?.closest(".large-map-help-button") || target?.closest(".large-map-help-inline")) return;
+      closeHelp();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("mousedown", onPointerDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("mousedown", onPointerDown);
+    };
+  }, [activeHelpId]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search.replace(/;/g, "&"));
@@ -3267,7 +3326,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       <section className="large-map-workspace">
         <aside className="large-map-panel">
           <section>
-            <h2>Реальный склад</h2>
+            <h2>Реальный склад <button className="large-map-help-button" onClick={(event) => openHelp(event, "warehouse.state")} title="Help: Реальный склад">?</button></h2>
             <label className="large-map-field">
               <span>Склад</span>
               <select value={selectedWareId ?? ""} onChange={(event) => setSelectedWareId(event.currentTarget.value ? Number(event.currentTarget.value) : null)}>
@@ -3362,7 +3421,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           </section>
 
           <section>
-            <h2>Роли</h2>
+            <h2>Роли <button className="large-map-help-button" onClick={(event) => openHelp(event, "roles.assign")} title="Help: Роли ячеек">?</button></h2>
             <div className="large-map-roles">
               {ROLE_ORDER.map((role) => (
                 <button key={role} className={activeRole === role ? "active" : ""} onClick={() => setActiveRole(role)} title={ROLE_LABELS[role]}>
@@ -3401,7 +3460,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           </section>
 
           <section>
-            <h2>Навигация</h2>
+            <h2>Навигация <button className="large-map-help-button" onClick={(event) => openHelp(event, "navigation.map")} title="Help: Навигация">?</button></h2>
             <div className="large-map-tools">
               <button onClick={() => updateZoom(view.zoom * 1.2)} title="Увеличить масштаб карты">+</button>
               <button onClick={() => updateZoom(view.zoom / 1.2)} title="Уменьшить масштаб карты">-</button>
@@ -3427,7 +3486,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           </section>
 
           <section>
-            <h2>Шаблоны</h2>
+            <h2>Шаблоны <button className="large-map-help-button" onClick={(event) => openHelp(event, "templates.layout")} title="Help: Шаблоны layout">?</button></h2>
             <div className="large-map-template-grid">
               <button onClick={applyRegularTemplate} title="Сбросить карту в регулярный склад: L1 отбор, L2-L6 хранение">Регулярный склад</button>
               <button onClick={applyAisleTemplate} title="Нарисовать регулярные транспортные проходы">Проходы</button>
@@ -3438,7 +3497,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           </section>
 
           <section>
-            <h2>Draft</h2>
+            <h2>Draft <button className="large-map-help-button" onClick={(event) => openHelp(event, "draft.local")} title="Help: Draft и diff">?</button></h2>
             <div className="large-map-tools">
               <button onClick={saveDraft}>Сохранить</button>
               <button onClick={loadDraft}>Загрузить</button>
@@ -3470,7 +3529,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           </section>
 
           <section>
-            <h2>Порядок обхода</h2>
+            <h2>Порядок обхода <button className="large-map-help-button" onClick={(event) => openHelp(event, "route.editor")} title="Help: Порядок обхода">?</button></h2>
             <div className="large-map-address-grid">
               <label>Паттерн<select value={routePattern} onChange={(event) => setRoutePattern(event.currentTarget.value as RoutePattern)}>
                 <option value="LINEAR">LINEAR</option>
@@ -3528,6 +3587,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
               <button disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_canvas_id} onClick={saveProjectionToOracleTopology} title="Сохраняет projection текущей карты в Oracle topology cells/slots">Save topology DB</button>
               <button disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_topology_id || !routeRows.length} onClick={saveRouteToOracle} title="Сохраняет порядок обхода в Oracle pick route">Save route DB</button>
               <button disabled={!draftId || !currentDraft?.oracle_canvas_id || !currentDraft?.oracle_topology_id || !currentDraft?.oracle_pick_route_id} onClick={publishOracleDraft} title="Публикует сохраненные canvas, topology и pick route через Oracle package">Publish Oracle</button>
+              <button className="large-map-help-button" onClick={(event) => openHelp(event, "oracle.publish")} title="Help: Oracle save/publish">?</button>
             </div>
             <p className="large-map-muted">{oracleStatus}</p>
             {(currentDraft?.oracle_canvas_id || currentDraft?.oracle_topology_id || currentDraft?.oracle_pick_route_id) && (

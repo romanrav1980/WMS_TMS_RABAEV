@@ -2223,6 +2223,7 @@ Sprint 26 closure evidence, 2026-05-22:
   - `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint25-published-reload.png`.
 - Latest Oracle `042_verify.sql`: `Statements=7; Errors=0`.
 - Final checks: frontend build OK, backend Python compile OK, UTF-8 encoding OK, `git diff --check` has no whitespace errors.
+- Post-check help audit: large warehouse map help popovers now cover real warehouse reload, roles, navigation, templates, draft/diff, route editor and Oracle save/publish; all `MAP_HELP` entries contain the five required blocks `Что это`, `Вход`, `Делает`, `Зачем`, `Как применять`; help closes by `Esc` and outside click.
 
 Оставшиеся границы после закрытого slice:
 

@@ -1530,3 +1530,10 @@ Append-only log of root wiki updates.
 - Confirmed evidence locations for Sprint 24 Oracle publish UI and Sprint 25 published reload UI.
 - Recorded remaining boundaries: production UX polish for published warehouse selection, separate commit cleanup scope, and temporary runtime screenshot policy.
 - Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` and `index.md`.
+
+## 2026-05-22 - Large Warehouse Map help audit follow-up
+
+- Rechecked the large warehouse map UI against the context-help rule.
+- Added detailed popover help for real warehouse reload, roles, navigation, layout templates, draft/diff, route editor, and Oracle save/publish.
+- Verified all `MAP_HELP` entries contain the five required blocks: `Что это`, `Вход`, `Делает`, `Зачем`, `Как применять`.
+- Added help closing behavior by `Esc` and outside click to match the TZ.
