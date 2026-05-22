@@ -11,6 +11,9 @@ transport_service.py — Сервис диспетчера отгрузки.
   — set_st_load_type() — изменить способ погрузки СТ (Г/П)
   — set_st_order()     — изменить порядок адреса (ORD) в рейсе
 
+Фаза 2.1 (кластеры):
+  — list_clusters()    — группировка свободных СТ по RRL_ADDR.RAION
+
 Все мутации данных выполняются через существующие Oracle-функции:
   RRL_TRASPORT_TASK_ADD  — создать рейс
   RRL_TT_ADD_PALL        — назначить / снять СТ (tt_id=0 → снять)
@@ -33,6 +36,41 @@ class TransportService:
     # ------------------------------------------------------------------
     # Справочники
     # ------------------------------------------------------------------
+
+    # ------------------------------------------------------------------
+    # Кластеры свободных СТ (Phase 2.1)
+    # ------------------------------------------------------------------
+
+    def list_clusters(
+        self,
+        stdate: date | None = None,
+        ware_ids: list[int] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Группирует свободные СТ по RAION. Вычисляется в Python поверх list_available_sts."""
+        sts = self.list_available_sts(stdate=stdate, unassigned_only=True, ware_ids=ware_ids)
+        clusters: dict[str, dict[str, Any]] = {}
+        for st in sts:
+            raion: str = st.get("RAION") or "(без района)"
+            if raion not in clusters:
+                clusters[raion] = {
+                    "RAION": raion,
+                    "ST_COUNT": 0,
+                    "PALLET_COUNT": 0,
+                    "WEIGHT_KG": 0.0,
+                    "VOLUME_M3": 0.0,
+                    "STS": [],
+                }
+            c = clusters[raion]
+            c["ST_COUNT"] += 1
+            c["PALLET_COUNT"] += st.get("PALLETS_COUNT") or 0
+            c["WEIGHT_KG"] = round(c["WEIGHT_KG"] + (st.get("WEIGHT_KG") or 0), 0)
+            c["VOLUME_M3"] = round(c["VOLUME_M3"] + (st.get("VOLUME_M3") or 0), 2)
+            c["STS"].append(st)
+        # Районы с именами — по алфавиту; «без района» — в конец
+        return sorted(
+            clusters.values(),
+            key=lambda x: (x["RAION"] == "(без района)", x["RAION"]),
+        )
 
     def list_vehicles(self, active_only: bool = True) -> list[dict[str, Any]]:
         where = "WHERE BLOCKED = 0" if active_only else ""

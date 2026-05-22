@@ -26,6 +26,7 @@ The schema supports:
 - pick routes, pick-face locations, SKU-to-pick-face assignments, and case-pick task sequencing.
 - versioned warehouse topology master data, graphical topology administration objects, and pick-route links to topology versions.
 - topology gates and cell-to-gate distance matrix for inbound/outbound travel-time planning.
+- saved large-warehouse map canvas objects, physical chambers/cameras, passages, camera links, and generalized child slots for pick-face and storage cells.
 
 ## Migration
 
@@ -148,6 +149,12 @@ The ledger is intentionally kept as a small foundation table so future Oracle ch
 - `RRL_TOPOLOGY_CHANGE_LOG`: audit log for topology and route administration changes.
 - `RRL_TOPOLOGY_GATE`: topology gates for receiving, shipping, or both.
 - `RRL_TOPOLOGY_CELL_GATE_DIST`: distance/time matrix from topology cells to gates by inbound/outbound flow.
+- `RRL_WAREHOUSE_MAP_CANVAS`: saved canvas header for the large-warehouse map editor, linked to a warehouse and optional topology version.
+- `RRL_WAREHOUSE_MAP_CAMERA`: physical warehouse chamber/camera cuboids with meter coordinates, dimensions, grid size, levels, and camera kind.
+- `RRL_WAREHOUSE_MAP_OBJECT`: persisted canvas-only objects such as walls, columns, labels, measurement objects, service zones, docks, and cell blocks.
+- `RRL_WAREHOUSE_MAP_PASSAGE`: saved passage geometry with width and optional regular spacing in meters.
+- `RRL_WAREHOUSE_MAP_CAMERA_LINK`: future cross-camera route links with endpoints, distance, direction, and allowed resources.
+- `RRL_TOPOLOGY_CELL_SLOT`: generalized child slot layer under a physical `RRL_TOPOLOGY_CELL`; `PICK_FACE_SLOT` is used by pick routes, while `STORAGE_SLOT` is available for stock/reservation/task references.
 
 ## PL/SQL API
 
@@ -510,6 +517,37 @@ Migration `2026-05-20-039-topology-gate-distance-matrix` adds gate-distance plan
 - `RRL_TOPOLOGY_CELL_GATE_DIST` stores distance and travel-time estimates from pick/storage cells to gates for `INBOUND`, `OUTBOUND`, or `BOTH` flows.
 - The FastAPI topology service can generate gates and recalculate the matrix using an MVP Manhattan-distance estimate.
 - The admin map exposes nearest inbound/outbound gate distances in the selected cell inspector.
+
+Migration `2026-05-22-041-warehouse-map-canvas-slots` prepares Sprint 10 of `рисование карты больших складов` real-warehouse binding:
+
+- `RRL_WAREHOUSE_MAP_CANVAS` stores the canvas as a first-class plan object instead of deriving it only from pick-face cells.
+- `RRL_WAREHOUSE_MAP_CAMERA` stores physical chambers/cameras as cuboids in meters: origin, width, depth, height, grid cell size, levels, camera kind, and default passage width.
+- `RRL_WAREHOUSE_MAP_OBJECT`, `RRL_WAREHOUSE_MAP_PASSAGE`, and `RRL_WAREHOUSE_MAP_CAMERA_LINK` preserve non-cell layout objects, passages, and future cross-camera route links.
+- `RRL_TOPOLOGY_CELL.SLOT_LAYER_KIND` declares whether a physical cell owns `PICK_FACE_SLOT`, `STORAGE_SLOT`, or explicit future `MIXED` children.
+- `RRL_TOPOLOGY_CELL_SLOT` is the common child slot table. It enforces valid fraction counts `1..9`, separates pick order from storage order, and prevents accidental pick/storage mixing by referencing the parent cell's declared slot layer.
+- `RRL_PICK_ROUTE_CELL`, `RRL_STOCK_RESERVATION`, and `RRL_WAREHOUSE_TASK` now have nullable slot references so later sprints can route by pick slots and attach stock/tasks to storage slots.
+- Unique active indexes guard canvas code per warehouse, camera code per canvas, passage/link code, slot code per topology, and slot position inside a physical cell.
+
+Migration files:
+
+- `db/migrations/2026-05-17_feed_factory_traceability/041_apply.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/041_verify.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/041_smoke.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/041_smoke_cleanup.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/041_rollback.sql`.
+
+Live apply note, `2026-05-22`:
+
+- Target: `RABAEV@127.0.0.1:1521/orcl`.
+- The first apply attempt was blocked by `ORA-28000: The account is locked`.
+- `RABAEV` was unlocked through the VM DBA path, then `041_apply.sql`, `041_verify.sql`, `041_smoke.sql`, `041_smoke_cleanup.sql`, and final `041_verify.sql` completed with zero SQL errors.
+- Apply: `Statements=3; Errors=0`.
+- Verify before smoke: `Statements=13; Errors=0`.
+- Smoke: `Statements=12; Errors=0`.
+- Smoke cleanup: `Statements=13; Errors=0`.
+- Final verify: `Statements=13; Errors=0`.
+- Final compact checks: `6` tables, `6` sequences, `6` key indexes, smoke leftovers `0`, slot-parent violations `0`, route-storage-slot violations `0`, invalid current objects `0`.
+- The `DEFAULT` profile has `FAILED_LOGIN_ATTEMPTS = 10` and `PASSWORD_LOCK_TIME = 1`, so the most likely lock cause was repeated failed login attempts by a local process or tool; standard session audit did not retain a concrete failed-login source row.
 
 ## Warehouse Task Domain Sync
 

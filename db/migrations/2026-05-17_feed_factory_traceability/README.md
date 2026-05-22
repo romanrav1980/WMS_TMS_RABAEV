@@ -74,6 +74,11 @@ This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/
 - `027_apply.sql`: quantity mode, fact quantity, and residual task links for warehouse tasks.
 - `028_apply.sql`: domain synchronization queue for completed warehouse tasks.
 - `036_apply.sql`: warehouse-task stock-move ledger for idempotent physical `RRL_REMAINS` movement from completed TSD facts.
+- `041_apply.sql`: additive warehouse map canvas, chamber/camera, passage, camera-link, and generalized pick/storage child slot foundation.
+- `041_verify.sql`: read-only verification for warehouse map canvas/slot objects and invariants.
+- `041_smoke.sql`: smoke test for saving one canvas with two cameras plus pick/storage child slots and negative constraint probes.
+- `041_smoke_cleanup.sql`: cleanup for rows created by the fixed `SMOKE_041` marker.
+- `041_rollback.sql`: non-destructive rollback note for the warehouse map canvas/slot foundation.
 - `026_verify.sql`: read-only verification for warehouse task entities.
 - `026_rollback.sql`: safe rollback for warehouse task rights and migration ledger only. It does not drop warehouse task history.
 
@@ -604,6 +609,14 @@ SQL files in this migration directory are UTF-8. The tracked `tools/oracle_apply
 - Apply result: `Statements=3; Errors=0`.
 - Verify result: `Statements=5; Errors=0`.
 - `037_rollback.sql` is non-destructive and keeps rule data/columns; it removes only the migration ledger row.
+
+`2026-05-22-041-warehouse-map-canvas-slots`:
+
+- Adds saved warehouse map canvas tables for the large-map editor: `RRL_WAREHOUSE_MAP_CANVAS`, `RRL_WAREHOUSE_MAP_CAMERA`, `RRL_WAREHOUSE_MAP_OBJECT`, `RRL_WAREHOUSE_MAP_PASSAGE`, and `RRL_WAREHOUSE_MAP_CAMERA_LINK`.
+- Adds `RRL_TOPOLOGY_CELL_SLOT` as the common child slot table under a physical topology cell. `PICK_FACE_SLOT` belongs to route/order logic, while `STORAGE_SLOT` is available for stock/reservation/task references.
+- Extends `RRL_TOPOLOGY_CELL` with `SLOT_LAYER_KIND` and `WAREHOUSE_MAP_CAMERA_ID`.
+- Extends `RRL_PICK_ROUTE_CELL`, `RRL_STOCK_RESERVATION`, and `RRL_WAREHOUSE_TASK` with nullable slot references for later route/storage sprints.
+- Live apply on `2026-05-22` initially hit `ORA-28000: The account is locked`; after unlock, apply/verify/smoke/cleanup/final verify completed with zero SQL errors and invalid current objects `0`.
 
 ## Required Procedure For Future Reapply
 

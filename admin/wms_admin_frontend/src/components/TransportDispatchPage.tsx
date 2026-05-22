@@ -80,8 +80,17 @@ type TransportType = {
   NAME: string | null;
 };
 
+type TransportCluster = {
+  RAION: string;
+  ST_COUNT: number;
+  PALLET_COUNT: number;
+  WEIGHT_KG: number;
+  VOLUME_M3: number;
+  STS: AvailableSt[];
+};
+
 // ---------------------------------------------------------------------------
-// Config
+// Config / API
 // ---------------------------------------------------------------------------
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
@@ -95,27 +104,16 @@ async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, { ...init, headers: apiHeaders() });
   if (!res.ok) {
     let detail = res.statusText;
-    try {
-      const body = await res.json();
-      detail = body?.detail || detail;
-    } catch { /* ignore */ }
+    try { const b = await res.json(); detail = b?.detail || detail; } catch { /* */ }
     throw new Error(`${res.status}: ${detail}`);
   }
   return res.json() as Promise<T>;
 }
 
-function todayIso(): string {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function fmtDate(s: string | null): string {
-  if (!s) return "—";
-  return s.slice(0, 10);
-}
-
+function todayIso(): string { return new Date().toISOString().slice(0, 10); }
+function fmtDate(s: string | null): string { return s ? s.slice(0, 10) : "—"; }
 function fmtTime(s: string | null): string {
   if (!s) return "";
-  // ISO datetime: "2026-05-22T09:00:00" → "09:00"
   const t = s.includes("T") ? s.slice(11, 16) : s.slice(0, 5);
   return t || "";
 }
@@ -146,19 +144,29 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [stDate, setStDate] = useState(todayIso());
   const [selectedStNums, setSelectedStNums] = useState<Set<string>>(new Set());
 
-  // Фильтры панели доступных СТ
+  const [viewMode, setViewMode] = useState<"flat" | "clusters">("flat");
+  const [clusters, setClusters] = useState<TransportCluster[]>([]);
+  const [expandedRaions, setExpandedRaions] = useState<Set<string>>(new Set());
+
+  // Filters
   const [addrMask, setAddrMask] = useState("");
   const [stMask, setStMask] = useState("");
   const [assembledOnly, setAssembledOnly] = useState(false);
+  const [unassignedOnly, setUnassignedOnly] = useState(true);
+  const [maxWeightKg, setMaxWeightKg] = useState<number | null>(null);
+  const [maxVolM3, setMaxVolM3] = useState<number | null>(null);
+  const [trTypeFilter, setTrTypeFilter] = useState("");
+
   const debouncedAddrMask = useDebounce(addrMask, 300);
   const debouncedStMask = useDebounce(stMask, 300);
+  const debouncedMaxWeight = useDebounce(maxWeightKg, 500);
+  const debouncedMaxVol = useDebounce(maxVolM3, 500);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [createDialog, setCreateDialog] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editDraft, setEditDraft] = useState<Partial<TransportTask>>({});
-
   const editRef = useRef(editDraft);
   editRef.current = editDraft;
 
@@ -170,34 +178,30 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       apiFetch<Vehicle[]>("/api/admin/transport/vehicles"),
       apiFetch<Driver[]>("/api/admin/transport/drivers"),
       apiFetch<TransportType[]>("/api/admin/transport/types"),
-    ]).then(([v, d, t]) => {
-      setVehicles(v);
-      setDrivers(d);
-      setTransportTypes(t);
-    }).catch(() => {
-      setVehicles([
-        { ID: 61, NUM: "Т368ХН", TR_TYPE: "10", MARKA: "MAN", PALLETS: 11, GIDROBORT: 0 },
-        { ID: 62, NUM: "Е152НХ", TR_TYPE: "10", MARKA: "КАМАЗ", PALLETS: 12, GIDROBORT: 0 },
-        { ID: 66, NUM: "Р234УХ", TR_TYPE: "15", MARKA: "КАМАЗ", PALLETS: 11, GIDROBORT: 1 },
-      ]);
-      setDrivers([
-        { ID: 6, FULL_NAME: "Сташков Иван Викторович", TEL: "8-952-74-109-09", SOBSTVENNYY: 1, DOVERENNOST_OT: null },
-        { ID: 7, FULL_NAME: "Петров Алексей", TEL: "", SOBSTVENNYY: 0, DOVERENNOST_OT: "ООО Транс-Авто" },
-      ]);
-      setTransportTypes([
-        { TRANSPORTTYPE: "10", NAME: "Тент 10т" },
-        { TRANSPORTTYPE: "15", NAME: "Тент 15т" },
-        { TRANSPORTTYPE: "20реф", NAME: "Рефрижератор 20т" },
-      ]);
-    });
+    ]).then(([v, d, t]) => { setVehicles(v); setDrivers(d); setTransportTypes(t); })
+      .catch(() => {
+        setVehicles([
+          { ID: 61, NUM: "Т368ХН", TR_TYPE: "10", MARKA: "MAN", PALLETS: 11, GIDROBORT: 0 },
+          { ID: 62, NUM: "Е152НХ", TR_TYPE: "10", MARKA: "КАМАЗ", PALLETS: 12, GIDROBORT: 0 },
+          { ID: 66, NUM: "Р234УХ", TR_TYPE: "15", MARKA: "КАМАЗ", PALLETS: 11, GIDROBORT: 1 },
+        ]);
+        setDrivers([
+          { ID: 6, FULL_NAME: "Сташков Иван Викторович", TEL: "8-952-74-109-09", SOBSTVENNYY: 1, DOVERENNOST_OT: null },
+          { ID: 7, FULL_NAME: "Петров Алексей", TEL: "", SOBSTVENNYY: 0, DOVERENNOST_OT: "ООО Транс-Авто" },
+        ]);
+        setTransportTypes([
+          { TRANSPORTTYPE: "10", NAME: "Тент 10т" },
+          { TRANSPORTTYPE: "15", NAME: "Тент 15т" },
+          { TRANSPORTTYPE: "20реф", NAME: "Рефрижератор 20т" },
+        ]);
+      });
   }, []);
 
   // ------------------------------------------------------------------
-  // Load tasks for date
+  // Load tasks
   // ------------------------------------------------------------------
   const loadTasks = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true); setError(null);
     try {
       const data = await apiFetch<TransportTask[]>(
         `/api/admin/transport/tasks?shipment_date=${filterDate}&include_readiness=true`
@@ -206,48 +210,64 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     } catch (e) {
       setError(String(e));
       setTasks(demoTasks(filterDate));
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   }, [filterDate]);
 
   useEffect(() => { loadTasks(); }, [loadTasks]);
 
   // ------------------------------------------------------------------
-  // Load available STs (перезагружается при любом изменении фильтров)
+  // Load available STs
   // ------------------------------------------------------------------
   const loadAvailableSts = useCallback(async () => {
     try {
-      const params = new URLSearchParams({ stdate: stDate, unassigned_only: "true" });
+      const params = new URLSearchParams({ stdate: stDate });
+      if (unassignedOnly) params.set("unassigned_only", "true");
       if (debouncedAddrMask) params.set("addr_mask", debouncedAddrMask);
       if (debouncedStMask) params.set("st_mask", debouncedStMask);
       if (assembledOnly) params.set("assembled_only", "true");
+      if (debouncedMaxWeight != null) params.set("max_weight_kg", String(debouncedMaxWeight));
+      if (debouncedMaxVol != null) params.set("max_volume_m3", String(debouncedMaxVol));
       const data = await apiFetch<AvailableSt[]>(`/api/admin/transport/available-sts?${params}`);
-      setAvailableSts(data);
+      const filtered = trTypeFilter ? data.filter(s => s.TRANSPORT_TYPE === trTypeFilter) : data;
+      setAvailableSts(filtered);
     } catch {
       setAvailableSts(demoAvailableSts(stDate));
     }
-  }, [stDate, debouncedAddrMask, debouncedStMask, assembledOnly]);
+  }, [stDate, debouncedAddrMask, debouncedStMask, assembledOnly, unassignedOnly, debouncedMaxWeight, debouncedMaxVol, trTypeFilter]);
 
   useEffect(() => { loadAvailableSts(); }, [loadAvailableSts]);
 
   // ------------------------------------------------------------------
-  // Select task → load its STs
+  // Load clusters
+  // ------------------------------------------------------------------
+  const loadClusters = useCallback(async () => {
+    try {
+      const params = new URLSearchParams({ stdate: stDate });
+      const data = await apiFetch<TransportCluster[]>(`/api/admin/transport/clusters?${params}`);
+      setClusters(data);
+    } catch {
+      setClusters(demoClusters(stDate));
+    }
+  }, [stDate]);
+
+  useEffect(() => {
+    if (viewMode === "clusters") loadClusters();
+  }, [viewMode, loadClusters]);
+
+  // ------------------------------------------------------------------
+  // Select task
   // ------------------------------------------------------------------
   async function selectTask(task: TransportTask) {
     setSelectedTask(task);
     setEditMode(false);
-    setSelectedStNums(new Set());
     try {
       const data = await apiFetch<TaskSt[]>(`/api/admin/transport/tasks/${task.ID}/sts`);
       setTaskSts(data);
-    } catch {
-      setTaskSts([]);
-    }
+    } catch { setTaskSts([]); }
   }
 
   // ------------------------------------------------------------------
-  // Assign selected STs to task
+  // Assign STs
   // ------------------------------------------------------------------
   async function handleAssign() {
     if (!selectedTask || selectedStNums.size === 0) return;
@@ -257,20 +277,16 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
         `/api/admin/transport/tasks/${selectedTask.ID}/sts`,
         { method: "POST", body: JSON.stringify({ st_numbers: Array.from(selectedStNums) }) }
       );
-      if (result.warnings.length > 0) {
-        setError(result.warnings.join("; "));
-      }
+      if (result.warnings.length > 0) setError(result.warnings.join("; "));
       setSelectedStNums(new Set());
-      await Promise.all([selectTask(selectedTask), loadTasks(), loadAvailableSts()]);
-    } catch (e) {
-      setError(String(e));
-    } finally {
-      setLoading(false);
-    }
+      const reloads: Promise<void>[] = [selectTask(selectedTask), loadTasks(), loadAvailableSts()];
+      if (viewMode === "clusters") reloads.push(loadClusters());
+      await Promise.all(reloads);
+    } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
   // ------------------------------------------------------------------
-  // Unassign ST from task
+  // Unassign ST
   // ------------------------------------------------------------------
   async function handleUnassign(stNumber: string) {
     if (!selectedTask) return;
@@ -280,17 +296,12 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
         `/api/admin/transport/tasks/${selectedTask.ID}/sts/${encodeURIComponent(stNumber)}`,
         { method: "DELETE" }
       );
-      await Promise.all([selectTask(selectedTask), loadTasks(), loadAvailableSts()]);
-    } catch (e) {
-      setError(String(e));
-    } finally {
-      setLoading(false);
-    }
+      const reloads: Promise<void>[] = [selectTask(selectedTask), loadTasks(), loadAvailableSts()];
+      if (viewMode === "clusters") reloads.push(loadClusters());
+      await Promise.all(reloads);
+    } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
-  // ------------------------------------------------------------------
-  // Set load_type for ST in task
-  // ------------------------------------------------------------------
   async function handleSetLoadType(stNumber: string, loadType: string) {
     if (!selectedTask) return;
     try {
@@ -298,17 +309,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
         `/api/admin/transport/tasks/${selectedTask.ID}/sts/${encodeURIComponent(stNumber)}/load-type`,
         { method: "PATCH", body: JSON.stringify({ load_type: loadType }) }
       );
-      setTaskSts(prev => prev.map(s =>
-        s.ST_NUMBER === stNumber ? { ...s, LOAD_TYPE: loadType || null } : s
-      ));
-    } catch (e) {
-      setError(String(e));
-    }
+      setTaskSts(prev => prev.map(s => s.ST_NUMBER === stNumber ? { ...s, LOAD_TYPE: loadType || null } : s));
+    } catch (e) { setError(String(e)); }
   }
 
-  // ------------------------------------------------------------------
-  // Set ORD for ST in task
-  // ------------------------------------------------------------------
   async function handleSetOrder(stNumber: string, ord: number) {
     if (!selectedTask) return;
     try {
@@ -316,17 +320,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
         `/api/admin/transport/tasks/${selectedTask.ID}/sts/${encodeURIComponent(stNumber)}/order`,
         { method: "PATCH", body: JSON.stringify({ ord }) }
       );
-      setTaskSts(prev => prev.map(s =>
-        s.ST_NUMBER === stNumber ? { ...s, ORD: ord } : s
-      ));
-    } catch (e) {
-      setError(String(e));
-    }
+      setTaskSts(prev => prev.map(s => s.ST_NUMBER === stNumber ? { ...s, ORD: ord } : s));
+    } catch (e) { setError(String(e)); }
   }
 
-  // ------------------------------------------------------------------
-  // Create task
-  // ------------------------------------------------------------------
   async function handleCreate(transtype: string, shipment_date: string) {
     setLoading(true);
     try {
@@ -338,16 +335,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       await loadTasks();
       const newTask = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${res.task_id}`);
       selectTask(newTask);
-    } catch (e) {
-      setError(String(e));
-    } finally {
-      setLoading(false);
-    }
+    } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
-  // ------------------------------------------------------------------
-  // Save task edits
-  // ------------------------------------------------------------------
   async function handleSaveEdit() {
     if (!selectedTask) return;
     setLoading(true);
@@ -360,31 +350,18 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       const updated = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${selectedTask.ID}`);
       setSelectedTask(updated);
       setTasks(prev => prev.map(t => t.ID === updated.ID ? updated : t));
-    } catch (e) {
-      setError(String(e));
-    } finally {
-      setLoading(false);
-    }
+    } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
-  // ------------------------------------------------------------------
-  // Close / Cancel task
-  // ------------------------------------------------------------------
   async function handleClose() {
     if (!selectedTask) return;
     if (!confirm(`Закрыть рейс #${selectedTask.ID} как отгруженный?`)) return;
     setLoading(true);
     try {
       await apiFetch(`/api/admin/transport/tasks/${selectedTask.ID}/close`, { method: "POST" });
-      setSelectedTask(null);
-      setTaskSts([]);
+      setSelectedTask(null); setTaskSts([]);
       await loadTasks();
-    } catch (e) {
-      // Показываем полное сообщение от can_print (422)
-      setError(String(e));
-    } finally {
-      setLoading(false);
-    }
+    } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
   async function handleCancel() {
@@ -393,369 +370,397 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     setLoading(true);
     try {
       await apiFetch(`/api/admin/transport/tasks/${selectedTask.ID}/cancel`, { method: "POST" });
-      setSelectedTask(null);
-      setTaskSts([]);
+      setSelectedTask(null); setTaskSts([]);
       await loadTasks();
     } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
   // ------------------------------------------------------------------
-  // Render
+  // Toggle helpers
   // ------------------------------------------------------------------
-  const totalWeight = taskSts.reduce((s, st) => s + (st.WEIGHT_KG || 0), 0);
-  const totalPallets = taskSts.reduce((s, st) => s + (st.PALLETS_COUNT || 0), 0);
+  function toggleSt(stNum: string) {
+    setSelectedStNums(prev => {
+      const next = new Set(prev);
+      next.has(stNum) ? next.delete(stNum) : next.add(stNum);
+      return next;
+    });
+  }
+
+  function toggleRaion(raion: string) {
+    setExpandedRaions(prev => {
+      const next = new Set(prev);
+      next.has(raion) ? next.delete(raion) : next.add(raion);
+      return next;
+    });
+  }
+
+  // ------------------------------------------------------------------
+  // PMV counters
+  // ------------------------------------------------------------------
+  const selSts = availableSts.filter(s => selectedStNums.has(s.ST_NUMBER));
+  const selP = selSts.reduce((s, x) => s + (x.PALLETS_COUNT || 0), 0);
+  const selM = selSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
+  const selV = selSts.reduce((s, x) => s + (x.VOLUME_M3 || 0), 0);
+  const tripP = taskSts.reduce((s, x) => s + (x.PALLETS_COUNT || 0), 0);
+  const tripM = taskSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
+
   const selectedVehicle = vehicles.find(v => v.NUM === selectedTask?.TRANSPORT);
 
+  // ------------------------------------------------------------------
+  // Render
+  // ------------------------------------------------------------------
   return (
     <div className="dispatch-shell">
-      {/* ---- Topbar ---- */}
+      {/* Topbar */}
       <header className="dispatch-topbar">
-        <button className="dispatch-back" onClick={onBack} title="Назад">◄</button>
+        <button className="dispatch-back" onClick={onBack}>◄</button>
         <div className="dispatch-title">
           <h1>Диспетчер отгрузки</h1>
           <span className="dispatch-subtitle">Ручное планирование рейсов</span>
         </div>
-        <label className="dispatch-date-pick">
-          <span>Дата отгрузки</span>
-          <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)} />
-        </label>
-        <button className="dispatch-new-btn" onClick={() => setCreateDialog(true)}>
-          + Создать рейс
-        </button>
         {loading && <span className="dispatch-spinner">●</span>}
         {error && (
-          <span
-            className="dispatch-error"
-            title={error}
-            onClick={() => setError(null)}
-            style={{ cursor: "pointer" }}
-          >
-            ⚠ {error.slice(0, 80)}
+          <span className="dispatch-error" title={error} onClick={() => setError(null)} style={{ cursor: "pointer" }}>
+            ⚠ {error.slice(0, 120)}
           </span>
         )}
       </header>
 
-      <div className="dispatch-body">
-        {/* ---- Left: task list + available STs ---- */}
-        <aside className="dispatch-left">
-          {/* Task list */}
-          <section className="dispatch-panel">
-            <div className="dispatch-panel-header">
-              <b>Рейсы на {filterDate}</b>
-              <span className="dispatch-count">{tasks.length}</span>
-            </div>
-            <div className="dispatch-task-list">
-              {tasks.length === 0 && (
-                <div className="dispatch-empty">Рейсов нет. Создайте первый.</div>
-              )}
-              {tasks.map(task => (
-                <div
-                  key={task.ID}
-                  className={`dispatch-task-card ${selectedTask?.ID === task.ID ? "selected" : ""} ${task.CONDITION === "Отгружен" ? "closed" : ""}`}
-                  onClick={() => selectTask(task)}
-                >
-                  <div className="dispatch-task-card-top">
-                    <b>#{task.ID}</b>
-                    {task.TRANSPORT && <span className="dispatch-vehicle-badge">{task.TRANSPORT}</span>}
-                    <span className={`dispatch-cond ${condClass(task.CONDITION)}`}>
-                      {task.CONDITION || "Новый"}
-                    </span>
-                  </div>
-                  <div className="dispatch-task-card-mid">
-                    {task.TRANSTYPE && <span className="dispatch-type-chip">{task.TRANSTYPE}</span>}
-                    <span>{task.ST_COUNT} СТ · {task.PALLET_COUNT} пал</span>
-                    {task.DOCK && <span>· Д{task.DOCK}</span>}
-                  </div>
-                  {task.VODITEL_NAME && (
-                    <div className="dispatch-task-card-bot">
-                      {task.VODITEL_NAME}
-                      {task.IS_OWN_DRIVER === 0 && task.TK_NAME && (
-                        <span className="dispatch-tk-badge">{task.TK_NAME}</span>
-                      )}
-                    </div>
-                  )}
-                  {task.READY_PERC !== null && task.READY_PERC !== undefined && (
-                    <ReadinessBar perc={task.READY_PERC} unready={task.UNREADY_COUNT} />
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
+      <div className="dispatch-workspace">
+        {/* ============================================================
+            CENTER
+            ============================================================ */}
+        <div className="dispatch-center">
 
-          {/* Available STs */}
-          <section className="dispatch-panel dispatch-available-panel">
-            <div className="dispatch-panel-header">
-              <b>Свободные СТ</b>
-              <label className="dispatch-st-date">
-                <input
-                  type="date"
-                  value={stDate}
-                  onChange={e => { setStDate(e.target.value); setSelectedStNums(new Set()); }}
-                />
-              </label>
-              <span className="dispatch-count">{availableSts.length}</span>
+          {/* ---- ST toolbar ---- */}
+          <div className="dispatch-st-toolbar">
+            <label className="dispatch-tbl-label">
+              Дата СТ:
+              <input type="date" value={stDate}
+                onChange={e => { setStDate(e.target.value); setSelectedStNums(new Set()); }} />
+            </label>
+            <div className="dispatch-vmtoggle">
+              <button className={viewMode === "flat" ? "active" : ""} onClick={() => setViewMode("flat")}>По СТ</button>
+              <button className={viewMode === "clusters" ? "active" : ""} onClick={() => setViewMode("clusters")}>По районам</button>
             </div>
-
-            {/* Фильтры */}
-            <div className="dispatch-st-filters">
-              <input
-                className="dispatch-filter-input"
-                type="text"
-                placeholder="Адрес / регион"
-                value={addrMask}
-                onChange={e => setAddrMask(e.target.value)}
-              />
-              <input
-                className="dispatch-filter-input"
-                type="text"
-                placeholder="Номер СТ"
-                value={stMask}
-                onChange={e => setStMask(e.target.value)}
-              />
-              <label className="dispatch-filter-check">
-                <input
-                  type="checkbox"
-                  checked={assembledOnly}
-                  onChange={e => setAssembledOnly(e.target.checked)}
-                />
-                Только собранные
-              </label>
-            </div>
-
-            <div className="dispatch-st-list">
-              {availableSts.length === 0 && (
-                <div className="dispatch-empty">Нет свободных СТ по фильтрам.</div>
-              )}
-              {availableSts.map(st => {
-                const checked = selectedStNums.has(st.ST_NUMBER);
-                return (
-                  <label key={st.ST_NUMBER} className={`dispatch-st-row ${checked ? "selected" : ""}`}>
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={() => {
-                        setSelectedStNums(prev => {
-                          const next = new Set(prev);
-                          if (next.has(st.ST_NUMBER)) next.delete(st.ST_NUMBER);
-                          else next.add(st.ST_NUMBER);
-                          return next;
-                        });
-                      }}
-                    />
-                    <span className="dispatch-st-num">{st.ST_NUMBER}</span>
-                    <span className="dispatch-st-addr">{st.REGION || st.ADDR || "—"}</span>
-                    {st.RAION && <span className="dispatch-st-raion-sm">{st.RAION}</span>}
-                    <span className="dispatch-st-meta">
-                      {st.PALLETS_COUNT} пал
-                      {st.WEIGHT_KG ? ` · ${st.WEIGHT_KG} кг` : ""}
-                    </span>
-                    {st.NEEDS_HYDRO_BOARD === 1 && <span className="dispatch-hydro" title="Гидроборт">Г</span>}
-                    {st.VERIFY_PERC !== null && st.VERIFY_PERC !== undefined && (
-                      <VerifyPill perc={st.VERIFY_PERC} />
-                    )}
-                  </label>
-                );
-              })}
-            </div>
+            <span className="dispatch-pmv">
+              P={selP}&nbsp; M={selM.toFixed(0)}&nbsp; V={selV.toFixed(2)}
+              {selectedStNums.size > 0 && <b>&nbsp;({selectedStNums.size} выбр.)</b>}
+            </span>
             {selectedStNums.size > 0 && selectedTask && (
-              <div className="dispatch-assign-bar">
-                <span>{selectedStNums.size} СТ выбрано</span>
-                <button className="dispatch-assign-btn" onClick={handleAssign} disabled={loading}>
-                  → Назначить в рейс #{selectedTask.ID}
-                </button>
-              </div>
+              <button className="dispatch-add-btn" onClick={handleAssign} disabled={loading}>
+                Добавить в рейс #{selectedTask.ID}
+              </button>
             )}
-          </section>
-        </aside>
+            {selectedStNums.size > 0 && !selectedTask && (
+              <span className="dispatch-hint">↓ Выберите рейс</span>
+            )}
+            <button className="dispatch-refresh-btn"
+              onClick={() => { loadAvailableSts(); if (viewMode === "clusters") loadClusters(); }}
+              title="Обновить список СТ">⟳</button>
+            <span className="dispatch-tcount">{availableSts.length} СТ</span>
+          </div>
 
-        {/* ---- Right: task detail ---- */}
-        <main className="dispatch-detail">
-          {!selectedTask ? (
-            <div className="dispatch-no-selection">
-              <span>Выберите рейс слева или создайте новый</span>
+          {/* ---- Available STs table ---- */}
+          <div className="dispatch-st-section">
+            <table className="dispatch-grid">
+              <thead>
+                <tr>
+                  <th style={{ width: 22 }}></th>
+                  <th>Пал.</th>
+                  <th>Вес</th>
+                  <th>Объём</th>
+                  <th>Регион</th>
+                  <th>Адрес</th>
+                  <th>СТ №</th>
+                  <th>В рейсе</th>
+                  <th>Дата СТ</th>
+                  <th>%</th>
+                  <th>Район</th>
+                  <th>Тип ТС</th>
+                  <th>Г</th>
+                </tr>
+              </thead>
+              <tbody>
+                {viewMode === "flat" && (
+                  availableSts.length === 0
+                    ? <tr><td colSpan={13} className="dispatch-grid-empty">Нет свободных СТ по текущим фильтрам</td></tr>
+                    : availableSts.map(st => (
+                        <AvailableStRow key={st.ST_NUMBER} st={st}
+                          checked={selectedStNums.has(st.ST_NUMBER)}
+                          onToggle={() => toggleSt(st.ST_NUMBER)} />
+                      ))
+                )}
+                {viewMode === "clusters" && (
+                  clusters.length === 0
+                    ? <tr><td colSpan={13} className="dispatch-grid-empty">Нет свободных СТ</td></tr>
+                    : clusters.map(cluster => (
+                        <ClusterGroup
+                          key={cluster.RAION}
+                          cluster={cluster}
+                          expanded={expandedRaions.has(cluster.RAION)}
+                          onToggle={() => toggleRaion(cluster.RAION)}
+                          selectedNums={selectedStNums}
+                          onToggleSt={toggleSt}
+                        />
+                      ))
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* ---- Trips table ---- */}
+          <div className="dispatch-trips-section">
+            <div className="dispatch-trips-toolbar">
+              <b>Рейсы на</b>
+              <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)} />
+              <button className="dispatch-new-btn" onClick={() => setCreateDialog(true)}>+ Создать рейс</button>
+              <button className="dispatch-refresh-btn" onClick={loadTasks} title="Обновить рейсы">⟳</button>
+              <span className="dispatch-tcount">{tasks.length} рейс(ов)</span>
             </div>
-          ) : (
-            <>
-              {/* Detail header */}
-              <div className="dispatch-detail-header">
-                <div>
-                  <h2>Рейс #{selectedTask.ID}</h2>
+            <div className="dispatch-trips-table-wrap">
+              <table className="dispatch-grid">
+                <thead>
+                  <tr>
+                    <th>Время</th><th>ID</th><th>СТ</th><th>Пал.</th>
+                    <th>Тип</th><th>Машина</th><th>Дата</th><th>Водитель</th>
+                    <th>Докст.</th><th>Районы</th><th>Цена</th><th>Статус</th><th>%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tasks.length === 0
+                    ? <tr><td colSpan={13} className="dispatch-grid-empty">Нет рейсов на {filterDate}. Нажмите «+ Создать рейс».</td></tr>
+                    : tasks.map(task => (
+                        <tr key={task.ID}
+                          className={["dispatch-gr",
+                            selectedTask?.ID === task.ID ? "selected" : "",
+                            task.CONDITION === "Отгружен" ? "grid-closed" : "",
+                          ].filter(Boolean).join(" ")}
+                          onClick={() => selectTask(task)}>
+                          <td>{fmtTime(task.SHIPMENT_TIME) || "—"}</td>
+                          <td><b>#{task.ID}</b></td>
+                          <td className="num-r">{task.ST_COUNT}</td>
+                          <td className="num-r">{task.PALLET_COUNT}</td>
+                          <td>{task.TRANSTYPE ?? "—"}</td>
+                          <td>{task.TRANSPORT ?? "—"}</td>
+                          <td>{fmtDate(task.SHIPMENT_DATE)}</td>
+                          <td>
+                            {task.VODITEL_NAME ?? "—"}
+                            {task.IS_OWN_DRIVER === 0 && task.TK_NAME && (
+                              <span className="dispatch-tk-badge">{task.TK_NAME}</span>
+                            )}
+                          </td>
+                          <td>{task.DOCK ?? "—"}</td>
+                          <td className="col-flex">{task.TEMP_REGION ?? "—"}</td>
+                          <td>{task.PRICE != null ? task.PRICE.toLocaleString("ru-RU") + " ₽" : "—"}</td>
+                          <td><span className={`dispatch-cond ${condClass(task.CONDITION)}`}>{task.CONDITION ?? "Новый"}</span></td>
+                          <td>{task.READY_PERC != null
+                            ? <ReadinessBar perc={task.READY_PERC} unready={task.UNREADY_COUNT} />
+                            : "—"}</td>
+                        </tr>
+                      ))
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* ---- Trip detail ---- */}
+          {selectedTask ? (
+            <div className="dispatch-trip-detail-section">
+              <div className="dispatch-trip-detail-hdr">
+                <div className="dispatch-trip-title-row">
+                  <b>Рейс #{selectedTask.ID}</b>
                   <span className={`dispatch-cond-big ${condClass(selectedTask.CONDITION)}`}>
-                    {selectedTask.CONDITION || "Новый"}
+                    {selectedTask.CONDITION ?? "Новый"}
                   </span>
-                  {selectedTask.READY_PERC !== null && selectedTask.READY_PERC !== undefined && (
+                  {selectedTask.READY_PERC != null && (
                     <ReadinessBar perc={selectedTask.READY_PERC} unready={selectedTask.UNREADY_COUNT} />
                   )}
-                </div>
-                <div className="dispatch-detail-actions">
-                  {!editMode ? (
-                    <button className="dispatch-edit-btn" onClick={() => { setEditMode(true); setEditDraft({}); }}>
-                      Редактировать
-                    </button>
-                  ) : (
-                    <>
-                      <button className="dispatch-save-btn" onClick={handleSaveEdit} disabled={loading}>Сохранить</button>
-                      <button className="dispatch-cancel-edit-btn" onClick={() => setEditMode(false)}>Отмена</button>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Реквизиты */}
-              <div className="dispatch-meta-grid">
-                <MetaField label="Машина">
-                  {editMode ? (
-                    <select
-                      value={editDraft.TRANSPORT ?? selectedTask.TRANSPORT ?? ""}
-                      onChange={e => setEditDraft(d => ({ ...d, TRANSPORT: e.target.value || null }))}
-                    >
-                      <option value="">— не выбрана —</option>
-                      {vehicles.map(v => (
-                        <option key={v.ID} value={v.NUM}>
-                          {v.NUM} · {v.MARKA} · {v.TR_TYPE} · {v.PALLETS} пал
-                          {v.GIDROBORT ? " · Гидроборт" : ""}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <span>{selectedTask.TRANSPORT || "—"}{selectedVehicle ? ` · ${selectedVehicle.MARKA}` : ""}</span>
-                  )}
-                </MetaField>
-
-                <MetaField label="Тип">
-                  <span>{selectedTask.TRANSTYPE || "—"}</span>
-                </MetaField>
-
-                <MetaField label="Водитель">
-                  {editMode ? (
-                    <select
-                      value={editDraft.VODITEL_ID ?? selectedTask.VODITEL_ID ?? ""}
-                      onChange={e => setEditDraft(d => ({ ...d, VODITEL_ID: e.target.value ? Number(e.target.value) : null }))}
-                    >
-                      <option value="">— не выбран —</option>
-                      {drivers.map(d => (
-                        <option key={d.ID} value={d.ID}>
-                          {d.FULL_NAME || `#${d.ID}`}
-                          {d.SOBSTVENNYY === 0 && d.DOVERENNOST_OT ? ` (${d.DOVERENNOST_OT})` : ""}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <span>
-                      {selectedTask.VODITEL_NAME || "—"}
-                      {selectedTask.VODITEL_TEL ? ` · ${selectedTask.VODITEL_TEL}` : ""}
-                      {selectedTask.IS_OWN_DRIVER === 0 && selectedTask.TK_NAME && (
-                        <span className="dispatch-tk-inline"> · {selectedTask.TK_NAME}</span>
-                      )}
-                    </span>
-                  )}
-                </MetaField>
-
-                <MetaField label="Докстанция">
-                  {editMode ? (
-                    <input
-                      type="text"
-                      value={editDraft.DOCK ?? selectedTask.DOCK ?? ""}
-                      onChange={e => setEditDraft(d => ({ ...d, DOCK: e.target.value || null }))}
-                      placeholder="Д1"
-                    />
-                  ) : (
-                    <span>{selectedTask.DOCK || "—"}</span>
-                  )}
-                </MetaField>
-
-                <MetaField label="Время отгрузки">
-                  {editMode ? (
-                    <input
-                      type="time"
-                      value={editDraft.SHIPMENT_TIME ?? fmtTime(selectedTask.SHIPMENT_TIME)}
-                      onChange={e => setEditDraft(d => ({ ...d, SHIPMENT_TIME: e.target.value || null }))}
-                    />
-                  ) : (
-                    <span>{fmtTime(selectedTask.SHIPMENT_TIME) || "—"}</span>
-                  )}
-                </MetaField>
-
-                <MetaField label="Примечание">
-                  {editMode ? (
-                    <input
-                      type="text"
-                      value={editDraft.PRIMECHANIE ?? selectedTask.PRIMECHANIE ?? ""}
-                      onChange={e => setEditDraft(d => ({ ...d, PRIMECHANIE: e.target.value || null }))}
-                      placeholder="Комментарий диспетчера"
-                    />
-                  ) : (
-                    <span>{selectedTask.PRIMECHANIE || "—"}</span>
-                  )}
-                </MetaField>
-              </div>
-
-              {/* СТ в рейсе */}
-              <div className="dispatch-sts-header">
-                <b>Заказы в рейсе</b>
-                <span className="dispatch-count">{taskSts.length} СТ · {totalPallets} пал · {totalWeight.toFixed(0)} кг</span>
-              </div>
-              <div className="dispatch-sts-table">
-                {/* Заголовок таблицы */}
-                {taskSts.length > 0 && (
-                  <div className="dispatch-st-task-row dispatch-st-task-header">
-                    <span className="dispatch-st-ord">#</span>
-                    <span className="dispatch-st-num">СТ</span>
-                    <span className="dispatch-st-region">Адрес</span>
-                    <span className="dispatch-st-zone">Зона</span>
-                    <span className="dispatch-st-window">Окно</span>
-                    <span className="dispatch-st-pall">Пал</span>
-                    <span className="dispatch-st-wt">Кг</span>
-                    <span className="dispatch-st-loadtype">Погр.</span>
-                    <span></span>
-                  </div>
-                )}
-                {taskSts.length === 0 && (
-                  <div className="dispatch-empty">Рейс пуст. Назначьте СТ из левой панели.</div>
-                )}
-                {taskSts.map(st => (
-                  <TaskStRow
-                    key={st.ST_NUMBER}
-                    st={st}
-                    disabled={loading || selectedTask.CONDITION === "Отгружен"}
-                    onUnassign={() => handleUnassign(st.ST_NUMBER)}
-                    onSetLoadType={lt => handleSetLoadType(st.ST_NUMBER, lt)}
-                    onSetOrder={ord => handleSetOrder(st.ST_NUMBER, ord)}
-                  />
-                ))}
-              </div>
-
-              {/* Footer actions */}
-              <div className="dispatch-detail-footer">
-                {selectedTask.CONDITION !== "Отгружен" && (
-                  <button
-                    className="dispatch-close-btn"
-                    onClick={handleClose}
-                    disabled={loading || taskSts.length === 0}
-                  >
-                    Закрыть рейс (Отгружен)
-                  </button>
-                )}
-                {selectedTask.CONDITION !== "Отгружен" && (
-                  <button className="dispatch-cancel-task-btn" onClick={handleCancel} disabled={loading}>
-                    Отменить рейс
-                  </button>
-                )}
-                {selectedTask.CONDITION === "Отгружен" && (
-                  <span className="dispatch-closed-label">Рейс отгружен · только чтение</span>
-                )}
-                {selectedTask.PRICE != null && (
-                  <span className="dispatch-price">
-                    {selectedTask.PRICE.toLocaleString("ru-RU")} ₽
+                  <span className="dispatch-pmv" style={{ marginLeft: "auto" }}>
+                    P={tripP}&nbsp; M={tripM.toFixed(0)}
                   </span>
-                )}
+                  {!editMode
+                    ? <button className="dispatch-edit-btn" onClick={() => { setEditMode(true); setEditDraft({}); }}>Редактировать</button>
+                    : <>
+                        <button className="dispatch-save-btn" onClick={handleSaveEdit} disabled={loading}>Сохранить</button>
+                        <button className="dispatch-cancel-edit-btn" onClick={() => setEditMode(false)}>Отмена</button>
+                      </>
+                  }
+                  {selectedTask.CONDITION !== "Отгружен" && <>
+                    <button className="dispatch-close-btn"
+                      onClick={handleClose} disabled={loading || taskSts.length === 0}>
+                      Закрыть рейс
+                    </button>
+                    <button className="dispatch-cancel-task-btn" onClick={handleCancel} disabled={loading}>
+                      Отменить
+                    </button>
+                  </>}
+                  {selectedTask.CONDITION === "Отгружен" && (
+                    <span className="dispatch-closed-label">Рейс отгружен · только чтение</span>
+                  )}
+                  {selectedTask.PRICE != null && (
+                    <span className="dispatch-price">{selectedTask.PRICE.toLocaleString("ru-RU")} ₽</span>
+                  )}
+                </div>
+
+                <div className="dispatch-trip-meta-row">
+                  <span className="dispatch-trip-ml">Машина:</span>
+                  {editMode
+                    ? <select className="dispatch-trip-ms"
+                        value={editDraft.TRANSPORT ?? selectedTask.TRANSPORT ?? ""}
+                        onChange={e => setEditDraft(d => ({ ...d, TRANSPORT: e.target.value || null }))}>
+                        <option value="">— не выбрана —</option>
+                        {vehicles.map(v => (
+                          <option key={v.ID} value={v.NUM}>
+                            {v.NUM} · {v.MARKA} · {v.TR_TYPE} · {v.PALLETS} пал{v.GIDROBORT ? " · Г" : ""}
+                          </option>
+                        ))}
+                      </select>
+                    : <span>{selectedTask.TRANSPORT ?? "—"}{selectedVehicle?.MARKA ? ` · ${selectedVehicle.MARKA}` : ""}</span>
+                  }
+
+                  <span className="dispatch-trip-ml">Водитель:</span>
+                  {editMode
+                    ? <select className="dispatch-trip-ms"
+                        value={editDraft.VODITEL_ID ?? selectedTask.VODITEL_ID ?? ""}
+                        onChange={e => setEditDraft(d => ({ ...d, VODITEL_ID: e.target.value ? Number(e.target.value) : null }))}>
+                        <option value="">— не выбран —</option>
+                        {drivers.map(d => (
+                          <option key={d.ID} value={d.ID}>
+                            {d.FULL_NAME ?? `#${d.ID}`}
+                            {d.SOBSTVENNYY === 0 && d.DOVERENNOST_OT ? ` (${d.DOVERENNOST_OT})` : ""}
+                          </option>
+                        ))}
+                      </select>
+                    : <span>
+                        {selectedTask.VODITEL_NAME ?? "—"}
+                        {selectedTask.VODITEL_TEL ? ` · ${selectedTask.VODITEL_TEL}` : ""}
+                        {selectedTask.IS_OWN_DRIVER === 0 && selectedTask.TK_NAME && (
+                          <span className="dispatch-tk-inline"> · {selectedTask.TK_NAME}</span>
+                        )}
+                      </span>
+                  }
+
+                  <span className="dispatch-trip-ml">Докст.:</span>
+                  {editMode
+                    ? <input type="text" className="dispatch-trip-mi"
+                        value={editDraft.DOCK ?? selectedTask.DOCK ?? ""}
+                        onChange={e => setEditDraft(d => ({ ...d, DOCK: e.target.value || null }))}
+                        placeholder="Д1" />
+                    : <span>{selectedTask.DOCK ?? "—"}</span>
+                  }
+
+                  <span className="dispatch-trip-ml">Время:</span>
+                  {editMode
+                    ? <input type="time" className="dispatch-trip-mi"
+                        value={editDraft.SHIPMENT_TIME ?? fmtTime(selectedTask.SHIPMENT_TIME)}
+                        onChange={e => setEditDraft(d => ({ ...d, SHIPMENT_TIME: e.target.value || null }))} />
+                    : <span>{fmtTime(selectedTask.SHIPMENT_TIME) || "—"}</span>
+                  }
+
+                  <span className="dispatch-trip-ml">Прим.:</span>
+                  {editMode
+                    ? <input type="text" className="dispatch-trip-mi dispatch-trip-mi-w"
+                        value={editDraft.PRIMECHANIE ?? selectedTask.PRIMECHANIE ?? ""}
+                        onChange={e => setEditDraft(d => ({ ...d, PRIMECHANIE: e.target.value || null }))}
+                        placeholder="Примечание диспетчера" />
+                    : <span>{selectedTask.PRIMECHANIE ?? "—"}</span>
+                  }
+                </div>
               </div>
-            </>
+
+              <div className="dispatch-trip-sts-wrap">
+                <table className="dispatch-grid">
+                  <thead>
+                    <tr>
+                      <th style={{ width: 34 }}>#</th>
+                      <th style={{ width: 80 }}>СТ №</th>
+                      <th>Адрес</th>
+                      <th>Пал.</th>
+                      <th>Вес</th>
+                      <th>Зона</th>
+                      <th>Окно</th>
+                      <th>Погр.</th>
+                      <th style={{ width: 26 }}></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {taskSts.length === 0
+                      ? <tr><td colSpan={9} className="dispatch-grid-empty">Рейс пуст. Выберите СТ выше и нажмите «Добавить в рейс».</td></tr>
+                      : taskSts.map(st => (
+                          <TaskStTableRow
+                            key={st.ST_NUMBER}
+                            st={st}
+                            disabled={loading || selectedTask.CONDITION === "Отгружен"}
+                            onUnassign={() => handleUnassign(st.ST_NUMBER)}
+                            onSetLoadType={lt => handleSetLoadType(st.ST_NUMBER, lt)}
+                            onSetOrder={ord => handleSetOrder(st.ST_NUMBER, ord)}
+                          />
+                        ))
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : (
+            <div className="dispatch-no-task">
+              {tasks.length > 0 && "← Выберите рейс в таблице выше"}
+            </div>
           )}
-        </main>
+        </div>
+
+        {/* ============================================================
+            RIGHT FILTER PANEL  (~C# panel2, light-green background)
+            ============================================================ */}
+        <div className="dispatch-right-panel">
+          <div className="dispatch-fp-label">Тип ТС</div>
+          <select className="dispatch-fp-select" value={trTypeFilter}
+            onChange={e => setTrTypeFilter(e.target.value)}>
+            <option value="">Все</option>
+            {transportTypes.map(t => (
+              <option key={t.TRANSPORTTYPE} value={t.TRANSPORTTYPE}>
+                {t.TRANSPORTTYPE}{t.NAME ? ` — ${t.NAME}` : ""}
+              </option>
+            ))}
+          </select>
+
+          <div className="dispatch-fp-label">АДР</div>
+          <input className="dispatch-fp-input" type="text" value={addrMask}
+            onChange={e => setAddrMask(e.target.value)} placeholder="Адрес / регион" />
+
+          <div className="dispatch-fp-label">СТ</div>
+          <textarea className="dispatch-fp-textarea" value={stMask} rows={3}
+            onChange={e => setStMask(e.target.value)}
+            placeholder={"Номер СТ\n(несколько через\nперенос строки)"} />
+
+          <label className="dispatch-fp-check">
+            <input type="checkbox" checked={unassignedOnly}
+              onChange={e => setUnassignedOnly(e.target.checked)} />
+            НЕ РАСПРЕДЕЛЕННЫЕ
+          </label>
+          <label className="dispatch-fp-check">
+            <input type="checkbox" checked={assembledOnly}
+              onChange={e => setAssembledOnly(e.target.checked)} />
+            Только собранные
+          </label>
+
+          <div className="dispatch-fp-sep" />
+
+          <div className="dispatch-fp-label">V&lt; (м³)</div>
+          <input className="dispatch-fp-input" type="number" min={0} step={0.1}
+            value={maxVolM3 ?? ""}
+            onChange={e => setMaxVolM3(e.target.value ? Number(e.target.value) : null)}
+            placeholder="—" />
+
+          <div className="dispatch-fp-label">M&lt; (кг)</div>
+          <input className="dispatch-fp-input" type="number" min={0} step={10}
+            value={maxWeightKg ?? ""}
+            onChange={e => setMaxWeightKg(e.target.value ? Number(e.target.value) : null)}
+            placeholder="—" />
+        </div>
       </div>
 
-      {/* ---- Create task dialog ---- */}
       {createDialog && (
         <CreateTaskDialog
           filterDate={filterDate}
@@ -769,15 +774,81 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 }
 
 // ---------------------------------------------------------------------------
-// TaskStRow — строка состава рейса с inline-редактированием
+// AvailableStRow
 // ---------------------------------------------------------------------------
 
-function TaskStRow({
-  st,
-  disabled,
-  onUnassign,
-  onSetLoadType,
-  onSetOrder,
+function AvailableStRow({
+  st, checked, onToggle, isChild = false,
+}: {
+  st: AvailableSt;
+  checked: boolean;
+  onToggle: () => void;
+  isChild?: boolean;
+}) {
+  return (
+    <tr className={["dispatch-gr", checked ? "selected" : "", isChild ? "dispatch-grid-cluster-child" : ""].filter(Boolean).join(" ")}
+      onClick={onToggle}>
+      <td onClick={e => e.stopPropagation()}>
+        <input type="checkbox" checked={checked} onChange={onToggle} />
+      </td>
+      <td className="num-r">{st.PALLETS_COUNT}</td>
+      <td className="num-r">{st.WEIGHT_KG.toFixed(0)}</td>
+      <td className="num-r">{st.VOLUME_M3 != null ? st.VOLUME_M3.toFixed(2) : "—"}</td>
+      <td>{st.REGION ?? "—"}</td>
+      <td className="col-flex">{st.ADDR ?? "—"}</td>
+      <td className="dispatch-gc-stnum">{st.ST_NUMBER}</td>
+      <td>{st.TRANSTASK_ID ? `#${st.TRANSTASK_ID}` : "—"}</td>
+      <td>{fmtDate(st.STDATE)}</td>
+      <td>{st.VERIFY_PERC != null ? <VerifyPill perc={st.VERIFY_PERC} /> : "—"}</td>
+      <td>{st.RAION ?? "—"}</td>
+      <td>{st.TRANSPORT_TYPE ?? "—"}</td>
+      <td className="num-c">{st.NEEDS_HYDRO_BOARD ? <span className="dispatch-hydro">Г</span> : ""}</td>
+    </tr>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// ClusterGroup — cluster header row + child ST rows
+// ---------------------------------------------------------------------------
+
+function ClusterGroup({
+  cluster, expanded, onToggle, selectedNums, onToggleSt,
+}: {
+  cluster: TransportCluster;
+  expanded: boolean;
+  onToggle: () => void;
+  selectedNums: Set<string>;
+  onToggleSt: (stNum: string) => void;
+}) {
+  const selCount = cluster.STS.filter(s => selectedNums.has(s.ST_NUMBER)).length;
+  return (
+    <>
+      <tr className="dispatch-grid-cluster-hdr" onClick={onToggle}>
+        <td colSpan={13}>
+          <span className="dispatch-grid-cluster-arrow">{expanded ? "▼" : "▶"}</span>
+          <b>{cluster.RAION}</b>
+          <span className="dispatch-grid-cluster-meta">
+            {" "}— {cluster.ST_COUNT} СТ · {cluster.PALLET_COUNT} пал · {cluster.WEIGHT_KG.toFixed(0)} кг
+          </span>
+          {selCount > 0 && <span className="dispatch-cluster-sel">{selCount} выбр.</span>}
+        </td>
+      </tr>
+      {expanded && cluster.STS.map(st => (
+        <AvailableStRow key={st.ST_NUMBER} st={st}
+          checked={selectedNums.has(st.ST_NUMBER)}
+          onToggle={() => onToggleSt(st.ST_NUMBER)}
+          isChild />
+      ))}
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// TaskStTableRow — row in trip detail table
+// ---------------------------------------------------------------------------
+
+function TaskStTableRow({
+  st, disabled, onUnassign, onSetLoadType, onSetOrder,
 }: {
   st: TaskSt;
   disabled: boolean;
@@ -804,69 +875,48 @@ function TaskStRow({
   }
 
   return (
-    <div className="dispatch-st-task-row">
-      {/* Порядок — кликабельный для редактирования */}
-      <span className="dispatch-st-ord" title="Изменить порядок">
+    <tr className="dispatch-gr">
+      <td>
         {ordEdit ? (
-          <input
-            className="dispatch-ord-input"
-            type="number"
-            min={0}
-            value={ordVal}
-            autoFocus
+          <input className="dispatch-ord-input" type="number" min={0} value={ordVal} autoFocus
             onChange={e => setOrdVal(e.target.value)}
             onBlur={commitOrder}
-            onKeyDown={e => { if (e.key === "Enter") commitOrder(); if (e.key === "Escape") { setOrdEdit(false); setOrdVal(String(st.ORD ?? "")); } }}
-            onClick={e => e.stopPropagation()}
-          />
+            onKeyDown={e => {
+              if (e.key === "Enter") commitOrder();
+              if (e.key === "Escape") { setOrdEdit(false); setOrdVal(String(st.ORD ?? "")); }
+            }} />
         ) : (
-          <span
-            className="dispatch-ord-val"
+          <span className="dispatch-ord-val"
             onClick={() => { if (!disabled) setOrdEdit(true); }}
-            title={disabled ? "" : "Нажмите для изменения порядка"}
-          >
+            title={disabled ? "" : "Изменить порядок"}>
             {st.ORD ?? "—"}
           </span>
         )}
-      </span>
-
-      <span className="dispatch-st-num">{st.ST_NUMBER}</span>
-      <span className="dispatch-st-region">
+      </td>
+      <td className="dispatch-gc-stnum">{st.ST_NUMBER}</td>
+      <td className="col-flex">
         {st.REGION || st.ADDR || "—"}
         {st.RAION && <span className="dispatch-st-raion-sm"> · {st.RAION}</span>}
-      </span>
-      <span className="dispatch-st-zone">{st.ZONE || "—"}</span>
-      <span className="dispatch-st-window" title="Временное окно доставки">{timeWindow}</span>
-      <span className="dispatch-st-pall">{st.PALLETS_COUNT} пал</span>
-      <span className="dispatch-st-wt">{st.WEIGHT_KG.toFixed(0)} кг</span>
-
-      {/* Тип погрузки */}
-      <span className="dispatch-st-loadtype">
-        {disabled ? (
-          <LoadTypeBadge value={st.LOAD_TYPE} />
-        ) : (
-          <select
-            className="dispatch-loadtype-select"
-            value={st.LOAD_TYPE ?? ""}
-            onChange={e => onSetLoadType(e.target.value)}
-            title="Способ погрузки"
-          >
-            <option value="">—</option>
-            <option value="Г">Г</option>
-            <option value="П">П</option>
-          </select>
-        )}
-      </span>
-
-      <button
-        className="dispatch-unassign-btn"
-        title="Снять СТ с рейса"
-        disabled={disabled}
-        onClick={onUnassign}
-      >
-        ✕
-      </button>
-    </div>
+      </td>
+      <td className="num-r">{st.PALLETS_COUNT}</td>
+      <td className="num-r">{st.WEIGHT_KG.toFixed(0)}</td>
+      <td>{st.ZONE ?? "—"}</td>
+      <td style={{ whiteSpace: "nowrap" }}>{timeWindow}</td>
+      <td>
+        {disabled
+          ? <LoadTypeBadge value={st.LOAD_TYPE} />
+          : <select className="dispatch-loadtype-select" value={st.LOAD_TYPE ?? ""}
+              onChange={e => onSetLoadType(e.target.value)}>
+              <option value="">—</option>
+              <option value="Г">Г</option>
+              <option value="П">П</option>
+            </select>
+        }
+      </td>
+      <td>
+        <button className="dispatch-unassign-btn" disabled={disabled} onClick={onUnassign} title="Снять СТ с рейса">✕</button>
+      </td>
+    </tr>
   );
 }
 
@@ -874,20 +924,9 @@ function TaskStRow({
 // Sub-components
 // ---------------------------------------------------------------------------
 
-function MetaField({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="dispatch-meta-field">
-      <span className="dispatch-meta-label">{label}</span>
-      <div className="dispatch-meta-value">{children}</div>
-    </div>
-  );
-}
-
 function LoadTypeBadge({ value }: { value: string | null }) {
   if (!value) return <span className="dispatch-lt-empty">—</span>;
-  return (
-    <span className={`dispatch-lt-badge dispatch-lt-${value.toLowerCase()}`}>{value}</span>
-  );
+  return <span className={`dispatch-lt-badge dispatch-lt-${value.toLowerCase()}`}>{value}</span>;
 }
 
 function VerifyPill({ perc }: { perc: number }) {
@@ -900,12 +939,12 @@ function VerifyPill({ perc }: { perc: number }) {
 }
 
 function ReadinessBar({ perc, unready }: { perc: number; unready: number | null | undefined }) {
-  if (perc === null || perc === undefined) return null;
   const cls = perc >= 100 ? "done" : perc > 0 ? "partial" : "zero";
   return (
     <div className="dispatch-readiness">
       <div className="dispatch-readiness-track">
-        <div className={`dispatch-readiness-fill dispatch-readiness-${cls}`} style={{ width: `${Math.min(perc, 100)}%` }} />
+        <div className={`dispatch-readiness-fill dispatch-readiness-${cls}`}
+          style={{ width: `${Math.min(perc, 100)}%` }} />
       </div>
       <span className="dispatch-readiness-label">
         {perc >= 100 ? "Собран" : `${perc}%${unready ? ` (−${unready})` : ""}`}
@@ -915,10 +954,7 @@ function ReadinessBar({ perc, unready }: { perc: number; unready: number | null 
 }
 
 function CreateTaskDialog({
-  filterDate,
-  transportTypes,
-  onConfirm,
-  onClose,
+  filterDate, transportTypes, onConfirm, onClose,
 }: {
   filterDate: string;
   transportTypes: TransportType[];
@@ -948,9 +984,7 @@ function CreateTaskDialog({
           <input type="date" value={shipDate} onChange={e => setShipDate(e.target.value)} />
         </label>
         <div className="dispatch-dialog-actions">
-          <button className="dispatch-new-btn" onClick={() => onConfirm(transtype, shipDate)}>
-            Создать
-          </button>
+          <button className="dispatch-new-btn" onClick={() => onConfirm(transtype, shipDate)}>Создать</button>
           <button className="dispatch-cancel-edit-btn" onClick={onClose}>Отмена</button>
         </div>
       </div>
@@ -970,7 +1004,7 @@ function condClass(cond: string | null): string {
 }
 
 // ---------------------------------------------------------------------------
-// Demo data (when API is unavailable)
+// Demo data
 // ---------------------------------------------------------------------------
 
 function demoTasks(date: string): TransportTask[] {
@@ -981,8 +1015,7 @@ function demoTasks(date: string): TransportTask[] {
       VODITEL_TEL: "8-952-74-109-09", TK_NAME: null, IS_OWN_DRIVER: 1,
       PRIMECHANIE: null, DOCK: "Д1", SHIPMENT_TIME: null,
       TEMP_REGION: "Москва, Химки, Лобня", PRICE: null,
-      PALLET_COUNT: 12, ST_COUNT: 3, DELETED: 0,
-      READY_PERC: 67, UNREADY_COUNT: 4,
+      PALLET_COUNT: 12, ST_COUNT: 3, DELETED: 0, READY_PERC: 67, UNREADY_COUNT: 4,
     },
     {
       ID: 1248, TRANSPORT: "В703РО", TRANSTYPE: "15", CONDITION: "Спланирован",
@@ -990,8 +1023,7 @@ function demoTasks(date: string): TransportTask[] {
       VODITEL_TEL: null, TK_NAME: "ООО Транс-Авто", IS_OWN_DRIVER: 0,
       PRIMECHANIE: null, DOCK: "Д2", SHIPMENT_TIME: null,
       TEMP_REGION: "Красногорск", PRICE: null,
-      PALLET_COUNT: 8, ST_COUNT: 2, DELETED: 0,
-      READY_PERC: 100, UNREADY_COUNT: 0,
+      PALLET_COUNT: 8, ST_COUNT: 2, DELETED: 0, READY_PERC: 100, UNREADY_COUNT: 0,
     },
     {
       ID: 1249, TRANSPORT: null, TRANSTYPE: "10", CONDITION: "Спланирован",
@@ -999,9 +1031,17 @@ function demoTasks(date: string): TransportTask[] {
       VODITEL_TEL: null, TK_NAME: null, IS_OWN_DRIVER: null,
       PRIMECHANIE: null, DOCK: null, SHIPMENT_TIME: null,
       TEMP_REGION: null, PRICE: null,
-      PALLET_COUNT: 0, ST_COUNT: 0, DELETED: 0,
-      READY_PERC: 0, UNREADY_COUNT: 0,
+      PALLET_COUNT: 0, ST_COUNT: 0, DELETED: 0, READY_PERC: 0, UNREADY_COUNT: 0,
     },
+  ];
+}
+
+function demoClusters(date: string): TransportCluster[] {
+  const sts = demoAvailableSts(date);
+  return [
+    { RAION: "ЦАО", ST_COUNT: 1, PALLET_COUNT: 3, WEIGHT_KG: 450, VOLUME_M3: 2.1, STS: [sts[0]] },
+    { RAION: "Химки", ST_COUNT: 1, PALLET_COUNT: 6, WEIGHT_KG: 890, VOLUME_M3: 4.2, STS: [sts[2]] },
+    { RAION: "(без района)", ST_COUNT: 2, PALLET_COUNT: 9, WEIGHT_KG: 1400, VOLUME_M3: 6.8, STS: [sts[1], sts[3]] },
   ];
 }
 

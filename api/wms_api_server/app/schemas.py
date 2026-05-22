@@ -982,6 +982,206 @@ class WarehouseTaskStatusRequest(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Large warehouse map drafts
+# ---------------------------------------------------------------------------
+
+class WarehouseMapGrid(BaseModel):
+    aisle_count: int = Field(default=35, ge=1, le=500)
+    slots_per_aisle: int = Field(default=90, ge=1, le=1000)
+    levels: int = Field(default=6, ge=1, le=50)
+
+
+class WarehouseMapDraftCreateRequest(BaseModel):
+    draft_name: str = "Рисование карты больших складов"
+    grid: WarehouseMapGrid = Field(default_factory=WarehouseMapGrid)
+    roles_base64: str | None = None
+    created_by: str | None = None
+
+
+class WarehouseMapDraftCellsPatchRequest(BaseModel):
+    roles_base64: str
+    updated_by: str | None = None
+
+
+class WarehouseMapSelectionRequest(BaseModel):
+    aisle_from: int = Field(ge=1)
+    aisle_to: int = Field(ge=1)
+    slot_from: int = Field(ge=1)
+    slot_to: int = Field(ge=1)
+    level_from: int = Field(default=1, ge=1)
+    level_to: int = Field(default=1, ge=1)
+
+
+class WarehouseMapBulkRoleRequest(BaseModel):
+    selection: WarehouseMapSelectionRequest | None = None
+    selections: list[WarehouseMapSelectionRequest] | None = None
+    role: str
+    updated_by: str | None = None
+
+
+class WarehouseMapCellRef(BaseModel):
+    aisle: int = Field(ge=1)
+    slot: int = Field(ge=1)
+    level: int = Field(default=1, ge=1)
+
+
+class WarehouseMapPickFaceAddressRequest(BaseModel):
+    selection: WarehouseMapSelectionRequest
+    anchor_cell: WarehouseMapCellRef
+    focus_cell: WarehouseMapCellRef
+    aisle_no: int = Field(ge=1)
+    start_pick_no: int = Field(default=1, ge=1)
+    step: int = Field(default=1, ge=1)
+    direction: str = Field(default="START_TO_END", pattern="^(START_TO_END|END_TO_START)$")
+    side: str | None = Field(default=None, pattern="^(LEFT|RIGHT)$")
+    code_mask: str = "A{aisle}-P{pick_no}-L{level}"
+    updated_by: str | None = None
+
+
+class WarehouseMapSmallPickFaceGenerateRequest(BaseModel):
+    physical_cell: WarehouseMapCellRef | None = None
+    physical_cells: list[WarehouseMapCellRef] | None = None
+    fraction_cell_count: int = Field(ge=2, le=9)
+    sub_level_count: int = Field(default=1, ge=1, le=9)
+    sub_column_count: int = Field(default=3, ge=1, le=9)
+    order_mode: str = Field(default="SUB_LEVEL_THEN_COLUMN", pattern="^(SUB_LEVEL_THEN_COLUMN|COLUMN_THEN_SUB_LEVEL)$")
+    start_order: int = Field(default=1, ge=1)
+    step: int = Field(default=1, ge=1)
+    side: str | None = Field(default=None, pattern="^(LEFT|RIGHT)$")
+    code_mask: str = "{physical_cell}-F{sub_level}{sub_column}"
+    updated_by: str | None = None
+
+
+class WarehouseMapSmallPickFacePatchRequest(BaseModel):
+    logical_cell_code: str | None = None
+    sub_level: int | None = Field(default=None, ge=1, le=9)
+    sub_column: int | None = Field(default=None, ge=1, le=9)
+    pick_order: int | None = Field(default=None, ge=1)
+    side: str | None = Field(default=None, pattern="^(LEFT|RIGHT)$")
+    active: int | None = Field(default=None, ge=0, le=1)
+    updated_by: str | None = None
+
+
+class WarehouseMapSmallPickFaceRenumberRequest(BaseModel):
+    physical_cell: WarehouseMapCellRef
+    order_mode: str = Field(default="SUB_LEVEL_THEN_COLUMN", pattern="^(SUB_LEVEL_THEN_COLUMN|COLUMN_THEN_SUB_LEVEL)$")
+    start_order: int = Field(default=1, ge=1)
+    step: int = Field(default=1, ge=1)
+    updated_by: str | None = None
+
+
+class WarehouseMapCanvasCreateRequest(BaseModel):
+    canvas_code: str | None = Field(default=None, max_length=80)
+    canvas_name: str | None = Field(default=None, max_length=200)
+    topology_id: int | None = None
+    grid_cell_width_m: float = Field(default=1.2, gt=0)
+    grid_cell_depth_m: float = Field(default=0.8, gt=0)
+    levels: int = Field(default=6, ge=1, le=50)
+    viewport_json: dict[str, Any] | None = None
+    renderer_state_json: dict[str, Any] | None = None
+    comment_text: str | None = Field(default=None, max_length=1000)
+    created_by: str | None = None
+
+
+class WarehouseMapCameraCreateRequest(BaseModel):
+    camera_code: str = Field(max_length=80)
+    camera_name: str = Field(max_length=200)
+    camera_kind: str = Field(default="DRY", pattern="^(DRY|COLD|FREEZER|DOCK|SERVICE|MIXED)$")
+    origin_x_m: float = 0
+    origin_y_m: float = 0
+    origin_z_m: float = 0
+    width_m: float = Field(gt=0)
+    depth_m: float = Field(gt=0)
+    height_m: float = Field(gt=0)
+    grid_cell_width_m: float = Field(default=1.2, gt=0)
+    grid_cell_depth_m: float = Field(default=0.8, gt=0)
+    levels: int = Field(default=6, ge=1, le=50)
+    boundary_json: dict[str, Any] | None = None
+    default_passage_width_m: float = Field(default=3, gt=0)
+    default_aisle_spacing_m: float | None = Field(default=None, gt=0)
+    created_by: str | None = None
+
+
+class WarehouseMapCameraCloneRequest(BaseModel):
+    camera_code: str | None = Field(default=None, max_length=80)
+    camera_name: str | None = Field(default=None, max_length=200)
+    origin_x_m: float | None = None
+    origin_y_m: float | None = None
+    origin_z_m: float | None = None
+    created_by: str | None = None
+
+
+class WarehouseMapArchiveRequest(BaseModel):
+    reason: str | None = Field(default=None, max_length=500)
+    updated_by: str | None = None
+
+
+class WarehouseMapObjectPatchItem(BaseModel):
+    object_code: str | None = Field(default=None, max_length=100)
+    object_kind: str = Field(pattern="^(CELL_BLOCK|WALL|COLUMN|PASSAGE|ZONE|LABEL|MEASURE|DOCK|SERVICE|BACKGROUND_REF)$")
+    object_name: str | None = Field(default=None, max_length=200)
+    topology_cell_id: int | None = None
+    level_no: int | None = Field(default=None, ge=1)
+    x_m: float = 0
+    y_m: float = 0
+    z_m: float = 0
+    width_m: float | None = Field(default=None, gt=0)
+    depth_m: float | None = Field(default=None, gt=0)
+    height_m: float | None = Field(default=None, gt=0)
+    angle_deg: float = 0
+    geometry_json: dict[str, Any] | None = None
+    style_json: dict[str, Any] | None = None
+
+
+class WarehouseMapObjectsPatchRequest(BaseModel):
+    objects: list[WarehouseMapObjectPatchItem] = Field(default_factory=list, max_length=5000)
+    updated_by: str | None = None
+
+
+class WarehouseMapPassagePatchItem(BaseModel):
+    passage_code: str | None = Field(default=None, max_length=80)
+    passage_name: str | None = Field(default=None, max_length=200)
+    passage_kind: str = Field(default="PICK_AISLE", pattern="^(PICK_AISLE|CROSS_AISLE|MAIN_TRANSPORT|DOCK_PASSAGE|SERVICE)$")
+    x1_m: float = 0
+    y1_m: float = 0
+    z1_m: float = 0
+    x2_m: float = 0
+    y2_m: float = 0
+    z2_m: float = 0
+    width_m: float = Field(default=3, gt=0)
+    aisle_spacing_m: float | None = Field(default=None, gt=0)
+    geometry_json: dict[str, Any] | None = None
+    allowed_resource_mask: str | None = Field(default=None, max_length=200)
+
+
+class WarehouseMapPassagesPatchRequest(BaseModel):
+    passages: list[WarehouseMapPassagePatchItem] = Field(default_factory=list, max_length=1000)
+    updated_by: str | None = None
+
+
+class WarehouseMapCameraLinkPatchItem(BaseModel):
+    link_code: str | None = Field(default=None, max_length=80)
+    link_kind: str = Field(default="DOOR", pattern="^(DOOR|CORRIDOR|GATE|LIFT|STAGING_PASSAGE|SERVICE)$")
+    from_camera_id: int
+    to_camera_id: int
+    from_point_x_m: float = 0
+    from_point_y_m: float = 0
+    from_point_z_m: float = 0
+    to_point_x_m: float = 0
+    to_point_y_m: float = 0
+    to_point_z_m: float = 0
+    distance_m: float = Field(default=0, ge=0)
+    travel_time_sec: float | None = Field(default=None, ge=0)
+    direction_code: str = Field(default="BOTH", pattern="^(BOTH|FROM_TO|TO_FROM)$")
+    allowed_resource_mask: str | None = Field(default=None, max_length=200)
+
+
+class WarehouseMapCameraLinksPatchRequest(BaseModel):
+    camera_links: list[WarehouseMapCameraLinkPatchItem] = Field(default_factory=list, max_length=1000)
+    updated_by: str | None = None
+
+
+# ---------------------------------------------------------------------------
 # Transport dispatch — Phase 1 (manual operator assignment)
 # ---------------------------------------------------------------------------
 

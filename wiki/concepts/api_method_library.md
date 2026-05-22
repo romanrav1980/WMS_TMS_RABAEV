@@ -26,6 +26,118 @@ Runtime:
 - rights: legacy `RIGHTS.RIGHT1`, with `GLOBAL_ADMIN` treated as all-rights
 - request audit: Oracle `RRL_API_CALL_LOG` plus local JSONL under `api/wms_api_server/runtime/api_audit/`
 
+## Warehouse Map
+
+### `GET /api/admin/warehouse-map/warehouses/{ware_id}/state`
+
+Purpose: load the real warehouse map state for the large Canvas editor.
+
+Permission: `WAREHOUSE_TOPOLOGY_VIEW`.
+
+Response shape:
+
+- `warehouse`: warehouse passport from `RRL_WARES`;
+- `canvas`: selected active canvas from `RRL_WAREHOUSE_MAP_CANVAS`, or `null`;
+- `topology`: selected topology from `RRL_WAREHOUSE_TOPOLOGY`, or `null`;
+- `cameras`, `camera_links`, `canvas_objects`, `passages`;
+- `zones`, `aisles`, `gates`, `topology_cells`, `cell_slots`;
+- `routes`: active pick-route headers with nested `route_rows`;
+- `counters`;
+- `warnings`.
+
+Rules:
+
+- If `canvas_id` query parameter is passed, the canvas must belong to the requested warehouse.
+- If there is no canvas/topology yet, the endpoint returns a valid empty state with warnings instead of failing.
+- Physical `topology_cells` and child `cell_slots` stay in separate arrays.
+- Route rows referencing `STORAGE_SLOT` are excluded from `routes[*].route_rows` and counted in `route_rows_excluded_storage_slots`.
+
+Side effects: none.
+
+Verification: `tests/smoke/warehouse_map_state_api_smoke.py`.
+
+### `GET /api/admin/warehouse-map/warehouses/{ware_id}/canvases`
+
+Purpose: list active saved canvas headers for a real warehouse.
+
+Permission: `WAREHOUSE_TOPOLOGY_VIEW`.
+
+Response includes canvas header, linked topology names, camera/object/passage/link counts, status, version, renderer, grid size, and timestamps.
+
+Side effects: none.
+
+### `GET /api/admin/warehouse-map/canvases/{canvas_id}`
+
+Purpose: load the same full map state by concrete canvas id.
+
+Permission: `WAREHOUSE_TOPOLOGY_VIEW`.
+
+Rules: returns `404` when the canvas is missing or inactive.
+
+Side effects: none.
+
+### `POST /api/admin/warehouse-map/warehouses/{ware_id}/canvases`
+
+Purpose: create the first DB-backed Canvas header for a real warehouse, or create another draft canvas version.
+
+Permission: `WAREHOUSE_TOPOLOGY_EDIT`.
+
+Request fields:
+
+- `canvas_code`, optional; if omitted the API generates a warehouse-scoped code;
+- `canvas_name`;
+- optional `topology_id`, which must belong to the same warehouse;
+- `grid_cell_width_m`, `grid_cell_depth_m`, `levels`;
+- optional `viewport_json`, `renderer_state_json`, `comment_text`.
+
+Response: full warehouse map state for the created canvas.
+
+Side effects: inserts `RRL_WAREHOUSE_MAP_CANVAS`; does not create cameras, objects, passages, topology cells, or route rows.
+
+Verification: `tests/smoke/warehouse_map_camera_api_smoke.py`.
+
+### `POST /api/admin/warehouse-map/canvases/{canvas_id}/cameras`
+
+Purpose: create one cuboid camera/chamber inside a saved warehouse canvas.
+
+Permission: `WAREHOUSE_TOPOLOGY_EDIT`.
+
+Request fields: `camera_code`, `camera_name`, `camera_kind`, origin `x/y/z`, `width_m`, `depth_m`, `height_m`, grid cell size, `levels`, default passage width, default aisle spacing, and optional `boundary_json`.
+
+Rules:
+
+- `camera_code` is unique among active cameras in the same canvas.
+- Camera creation does not generate WMS topology cells; projection is a later operation.
+
+Response: created camera plus full refreshed warehouse map state.
+
+### `POST /api/admin/warehouse-map/cameras/{camera_id}/clone`
+
+Purpose: duplicate camera geometry as a new draft camera in the same canvas.
+
+Permission: `WAREHOUSE_TOPOLOGY_EDIT`.
+
+Rules: caller may override code/name/origin. If no code is provided, the API generates a `-COPY` code that is unique in the canvas.
+
+Response: cloned camera plus full refreshed warehouse map state.
+
+### `POST /api/admin/warehouse-map/cameras/{camera_id}/archive`
+
+Purpose: archive an active camera when it has no active dependent canvas/topology objects.
+
+Permission: `WAREHOUSE_TOPOLOGY_EDIT`.
+
+Blocking dependencies:
+
+- active `RRL_WAREHOUSE_MAP_OBJECT`;
+- active `RRL_WAREHOUSE_MAP_PASSAGE`;
+- active `RRL_WAREHOUSE_MAP_CAMERA_LINK`;
+- active `RRL_TOPOLOGY_CELL` referencing the camera.
+
+Rules: blocked archives return `409` with `disabled_reason = active_dependencies` and dependency counts.
+
+Response: archive status plus full refreshed warehouse map state.
+
 ## Warehouse Tasks
 
 ### `GET /api/case-pick/tasks`

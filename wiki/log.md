@@ -2,6 +2,17 @@
 
 Append-only log of root wiki updates.
 
+## [2026-05-22] requirements | Large warehouse map drawing TZ
+
+- Added [`requirements/large_warehouse_map_drawing_tz.md`](requirements/large_warehouse_map_drawing_tz.md) as a separate technical assignment for an Excel-like lightweight 2D editor for drawing large warehouse maps.
+- The new TZ analyzes and separates responsibilities from `warehouse_digital_twin_codex_spec.md`, `large_warehouse_minute_simulation_tz.md`, and `warehouse_topology_pick_route_tz.md`.
+- Target scale is `35` aisles x `90` slots x `6` levels (`18 900` addressable cells), with bulk selection of `90-100` cells, zoom/pan, role assignment, lightweight Canvas/WebGL rendering, and performance evidence requirements.
+- Started the Canvas 2D MVP as `?page=warehouse-map`: added `LargeWarehouseMapPage`, compact `Uint8Array` role storage for `18 900` cells, one-level `35 x 90` canvas rendering, zoom/pan, drag selection, role assignment, and perf counters.
+- Added a sprint-by-sprint acceptance/test matrix to the TZ so every sprint has explicit working criteria and proof requirements, including numeric performance checks rather than screenshot-only acceptance.
+- Accepted the rule that each sprint starts with explicit acceptance criteria and each sprint close updates the sprint Gantt. Marked Sprint 2 done and Sprint 3 active in the large warehouse map drawing TZ; Sprint 3 implementation started with dirty state, undo/redo, and role-change history for bulk assignments.
+- Closed Sprint 3 with repeatable `?page=warehouse-map;smoke=sprint3` smoke: 100-cell selection, `AISLE` bulk assignment, dirty state, undo/redo restoration, and numeric `bulkMs`. Updated Gantt to mark Sprint 3 done and Sprint 4 active.
+- Started Sprint 4 frontend draft persistence: added compact base64 serialization of the `Uint8Array` role grid to localStorage with save/load controls and grid compatibility checks. API-backed draft endpoints remain pending for Sprint 4 completion.
+
 ## [2026-05-19] simulation | Warehouse digital twin first model-only layer
 
 - Added `tests/load/wave/warehouse_minute_simulation_load_test.py` as the first model-only runner for the 12-hour warehouse digital twin: layout, clients, hourly waves, SKU demand, initial stock, pickers, reachtrucks, replenishment, picking, shipping, collisions, events, CSV metrics, JSON report, markdown report, and HTML evidence stub.
@@ -1247,3 +1258,111 @@ Append-only log of root wiki updates.
 - Corrected pick-face pallet geometry: pallet places render as horizontal `1200 x 800` rectangles, adjacent places in one row share the long side, the `800 мм` side faces the aisle, and the aisle between left/right rows represents `3 м`.
 - Tightened the pallet grid to the Excel-like acceptance rule: vertical neighbors in one row have zero visual gap, back-to-back neighboring rows between adjacent aisles have zero visual gap, and only the opposite left/right rows around an aisle keep the `3 м` passage.
 - Fixed the overlap regression by using minimum projected vertical and aisle spacing for geometry limits instead of median spacing. Numeric check for topology `1` returned `overlapCount = 0`; evidence screenshot: `runtime/test-evidence/topology-2026-05-22-no-overlap-measured-grid.png`.
+
+## 2026-05-22 - Large warehouse map selection refinement
+
+- Accepted the Excel-like selection refinement for `wiki/requirements/large_warehouse_map_drawing_tz.md`: selected areas must remain visible when switching levels, and `Shift/Ctrl + drag` must add independent selection areas instead of merging them into one large rectangle.
+- Implemented the frontend selection model as a list of areas in `LargeWarehouseMapPage`: bulk role assignment, undo/redo, canvas drawing, metrics, and the Sprint 3 smoke now operate on one or many selected areas.
+- Clarified the sprint-close reporting rule: only after a sprint is completed and checks pass, the report should say `Предлагаю приступить к спринту <название спринта>.`
+- Closed Sprint 4 for large warehouse map drafts: added `/api/admin/warehouse-map-drafts`, runtime JSON draft storage, compact `roles_base64`, bulk-role update, validation, and frontend API save/load with localStorage fallback. Live API smoke changed `100` cells in a `18 900`-cell draft and validated it successfully.
+- Closed Sprint 5 for large warehouse map templates: added fast Canvas-editor template operations for regular grid, transport aisles, dock gates plus staging, film-wrap zone, and copying the active aisle to selected target aisles. Added `?page=warehouse-map;smoke=sprint5` as numeric evidence for counts and copy behavior, and advanced the Gantt to Sprint 6.
+- Accepted the general placeholder styling rule refinement: any button or UI element without assigned functionality must use gray hatching where possible, or a muted gray style where hatching is not practical.
+- Expanded the large warehouse map TZ with pick-face addressing requirements: selection must preserve visible start/end, pick-face blocks need aisle number, internal pick number, numbering direction, optional `LEFT`/`RIGHT`, and configurable address masks. Assigned this to Sprint 6 before publish.
+- Added a separate small-piece picking requirement: one physical cell may contain multiple logical pick-face addresses with `sub_level` and `sub_column`. Assigned this to Sprint 9 to keep the publish sprint bounded.
+- Detailed the small-piece picking TZ to separate physical warehouse location from logical pick-face addresses: physical cells remain the topology/routing location, child small-pick faces carry `logical_cell_code`, `sub_level`, `sub_column`, and numeric `pick_order`. The numeric order can be reassigned without changing physical geometry or parent cell identity.
+- Refined small-piece picking as a separate cell kind `FRACTIONAL_PICK_FACE`: one physical field split into `2..9` logical pick-face addresses. A single logical place remains ordinary `PICK_FACE`; fractional types `FRACTION_2..FRACTION_9` define how many logical products/addresses fit inside the physical cell.
+- Checked sprint placement for fractional pick-face work and tightened Sprint 9 criteria/tests: it now explicitly covers `FRACTIONAL_PICK_FACE`, `FRACTION_2..FRACTION_9`, `fraction_cell_count = 2..9`, numeric `pick_order`, validation negatives, and browser/API smoke. Sprint 6 validation wording now states fractional checks become blocking only after Sprint 9 is implemented.
+- Closed Sprint 6 for large warehouse map validation/publish: selection now stores visible start/end markers, the editor includes pick-face address assignment with masks and direction, the draft API generates `pick_face_addresses`, validation catches duplicate address codes, and publish creates a runtime `PUBLISHED` topology snapshot. Added `?page=warehouse-map;smoke=sprint6` and advanced the Gantt to Sprint 7.
+- Applied the accepted placeholder/disabled styling rule to frontend buttons: disabled buttons now get a muted gray hatched style by default.
+- Closed Sprint 7 for the large warehouse map performance gate: added `?page=warehouse-map;smoke=sprint7` to check total cells, visible cells, DOM node budget, selection sizes `100/1000/3150`, and finite render/select/bulk timings. Captured screenshot and markdown evidence under `admin/wms_admin_frontend/runtime/test-evidence/`, then advanced the Gantt to Sprint 8.
+- Closed Sprint 8 for large warehouse map UX polish: added quick address search, `Fit selected`, role filters, an aisle overview strip, active-cell inspector, and `?page=warehouse-map;smoke=sprint8` evidence for the operator workflow. Advanced the Gantt to Sprint 9.
+
+## 2026-05-22 - Large warehouse map Sprint 9 closed
+
+- Closed Sprint 9 for fractional/small-piece pick faces. Added `FRACTIONAL_PICK_FACE` to the large-map editor and draft API, implemented generation of `FRACTION_2..FRACTION_9` child logical pick faces, validation for duplicate logical codes/count/position/parent-role invariants, numeric `pick_order` renumbering, and browser smoke URL `?page=warehouse-map;smoke=sprint9`.
+- Updated `requirements/large_warehouse_map_drawing_tz.md` Gantt so Sprint 9 is marked done and recorded the API/browser evidence scope for the closed sprint.
+
+## 2026-05-22 - Real warehouse map binding TZ
+
+- Added `requirements/large_warehouse_map_real_warehouse_binding_tz.md` for the next stage after drawing the map: selecting a real Oracle warehouse, loading its topology and active pick route, editing the Canvas map, saving DB-backed drafts, and publishing only after validation.
+- The new TZ reuses only route-order data logic from `warehouse_topology_pick_route_tz.md`: route rows are a linear ranked list with numeric `PICK_SEQUENCE`, not stored `FROM -> TO` graph edges. The Canvas editor remains the graphical surface.
+- Added the new requirement to `wiki/index.md` and defined Sprint 10-15 acceptance/tests for canvas/chamber storage, warehouse load, DB-backed save, route order editing, route validation, and publish/Oracle invariants.
+- Refined the TZ so Canvas is a first-class saved layout object, not only a projection from pick-face cells. Added warehouse cameras/chambers as cuboids with `x,y,z,width,depth,height`, separate canvas per camera, passage objects with meter distances, camera links for future cross-camera routes, target DB tables, API endpoints, validation rules, and revised Sprint 10-15 acceptance/tests.
+- Expanded the TZ with a detailed camera creation workflow inside one warehouse: create from empty form/template/copy, validate unique `camera_code`, keep creation separate from cell generation, support camera clone/archive APIs, and block archive when published/active dependencies exist.
+- Added the requirement that all primary editor functions must be duplicated in a right-click context menu backed by the same command registry as toolbar/panels. The menu is tree-structured by warehouse, camera, canvas objects, passages, cells, fractional cells, route order, and view commands, with shared permissions, disabled reasons, validation, and undo/redo.
+- Generalized fractional cells beyond pick-face: storage cells may also be split into child logical slots. The TZ now requires a common `RRL_TOPOLOGY_CELL_SLOT`-style model with `PICK_FACE_SLOT` and `STORAGE_SLOT`, storage slot capacity/order fields, validation to prevent accidental mixed slot kinds, and route rules that keep `STORAGE_SLOT` out of pick routes.
+- Reworked the implementation plan into detailed Sprint 10-18 structure: DB schema foundation, warehouse/canvas load API, UI shell and camera creation, canvas objects/passages/links, topology projection and generalized slots, DB-backed draft save/diff/locking, pick-route order editor, validation/publish, and evidence/performance hardening.
+
+## 2026-05-22 - Large warehouse map Sprint 10 DB foundation closed
+
+- Added migration `041_apply.sql` for saved warehouse map canvas/camera/object/passage/camera-link tables plus the generalized `RRL_TOPOLOGY_CELL_SLOT` layer.
+- Added nullable slot references to `RRL_PICK_ROUTE_CELL`, `RRL_STOCK_RESERVATION`, and `RRL_WAREHOUSE_TASK`, and added `RRL_TOPOLOGY_CELL.SLOT_LAYER_KIND` so physical cells can declare `PICK_FACE_SLOT`, `STORAGE_SLOT`, or explicit future `MIXED`.
+- Added `041_verify.sql`, `041_smoke.sql`, `041_smoke_cleanup.sql`, and non-destructive `041_rollback.sql`.
+- Updated `wiki/database/feed_factory_traceability_schema.md`, `db/migrations/2026-05-17_feed_factory_traceability/README.md`, and `wiki/index.md`.
+- Live Oracle apply initially hit `ORA-28000: The account is locked`; `RABAEV` was unlocked through the VM DBA path. The `DEFAULT` profile locks after `10` failed login attempts for `1` day; standard session audit did not retain a concrete failed-login source row.
+- Applied `041_apply.sql` to `RABAEV@127.0.0.1:1521/orcl`: `Statements=3; Errors=0`.
+- Ran `041_verify.sql`: `Statements=13; Errors=0`; ran `041_smoke.sql`: `Statements=12; Errors=0`; ran `041_smoke_cleanup.sql`: `Statements=13; Errors=0`; ran final `041_verify.sql`: `Statements=13; Errors=0`.
+- Final compact checks returned `6` migration tables, `6` sequences, `6` key indexes, smoke leftovers `0`, slot-parent violations `0`, route-storage-slot violations `0`, and invalid current objects `0`.
+
+## 2026-05-22 - Large warehouse map Sprint 11 closed
+
+- Added DB-backed read API for the real warehouse map: `GET /api/admin/warehouse-map/warehouses/{ware_id}/state`, `GET /api/admin/warehouse-map/warehouses/{ware_id}/canvases`, and `GET /api/admin/warehouse-map/canvases/{canvas_id}`.
+- Added `WarehouseMapService` to assemble warehouse passport, canvas, topology, cameras, camera links, canvas objects, passages, zones, aisles, gates, physical cells, child slots, active pick routes, counters, and warnings.
+- Kept physical `topology_cells` separate from child `cell_slots`; route rows referencing `STORAGE_SLOT` are excluded from route summary and counted as `route_rows_excluded_storage_slots`.
+- Added `tests/smoke/warehouse_map_state_api_smoke.py`; the smoke creates temporary Oracle data, hits the HTTP API on a local test server, compares counters with direct Oracle counts, verifies empty warehouse warnings, verifies `STORAGE_SLOT` exclusion, and cleans all fixture rows.
+- Smoke result: counters matched direct Oracle counts; temporary fixture cleanup left warehouses/canvas/routes `0`, route storage-slot violations `0`, and invalid current objects `0`.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` Gantt and evidence, and registered the new endpoints in `concepts/api_method_library.md`.
+
+## 2026-05-22 - Large warehouse map Sprint 12 closed
+
+- Added DB-backed Canvas/camera write endpoints for the real warehouse map: create canvas, create camera, clone camera, and archive camera.
+- Extended `WarehouseMapService` with camera code uniqueness checks, topology/warehouse ownership checks, generated canvas codes, generated camera copy codes, and archive blocking by active object/passage/camera-link/topology-cell dependencies.
+- Added Sprint 12 UI shell to `LargeWarehouseMapPage`: real warehouse selector, canvas/camera selectors, camera creation form, shared command registry, and right-click `Камера` command menu with disabled placeholder styling.
+- Corrected the empty-camera default: when a real canvas has cameras but no topology cells, canvas objects, passages, or links, all `18 900` editor cells reset to `Недоступно` instead of pretending to be storage cells. Evidence: `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint12-empty-camera-blocked.png`.
+- Added `tests/smoke/warehouse_map_camera_api_smoke.py`; it creates a temporary warehouse through Oracle, creates canvas/camera through HTTP, verifies duplicate camera code `409`, clones a camera, archives a dependency-free clone, blocks archive with active dependency `409`, verifies counts, and cleans the fixture.
+- Sprint 12 checks passed: API smoke ok, cleanup left temporary warehouse/canvas/cameras `0`, invalid Oracle objects `0`, frontend `npm.cmd run build` ok, visual shell evidence `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint12-shell.png`, and browser smoke evidence `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint12-create-ui.png`.
+- The browser smoke used temporary warehouse `-41213`, created canvas `SMOKE-012-UI-41213`, created two cameras through the browser API flow, displayed the right-click camera menu, and cleanup left UI smoke warehouse/canvas/cameras `0`.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` Gantt/evidence, `concepts/api_method_library.md`, and `wiki/index.md`.
+
+## 2026-05-22 - Real warehouse map TZ bootstrap and standard layouts
+
+- Expanded `requirements/large_warehouse_map_real_warehouse_binding_tz.md` with a dedicated bootstrap scenario for warehouses that already have pick/storage cells in Oracle but do not yet have saved canvas layouts.
+- The bootstrap scenario now requires preview/apply flow, source hierarchy from active topology then legacy warehouse cell catalog, preservation of source DB IDs, unplaced/unknown cell lists, and a hard rule that unknown cells remain `Недоступно` until explicitly assigned.
+- Added selected-area standard layout requirements: `Аллеи отбора/хранения` with 3-column modules (`LEFT_CELL + PASSAGE + RIGHT_CELL`) where `90 x 10` proposes `3` alleys plus `1` reserved/unavailable column, and `Ворота + хранение` with gates along the top boundary, two staging bands before every gate, and storage below.
+- Assigned work across existing sprints: Sprint 13 gets canvas-level preview/apply and context-menu commands for standard layouts; Sprint 14 gets bootstrap/import from existing DB cells plus projection of standard layouts into `RRL_TOPOLOGY_CELL`/slots; Sprint 15 gets DB-backed save/diff for bootstrap mappings and generated layout metadata.
+
+## 2026-05-22 - Fractional slot split presets
+
+- Updated `requirements/large_warehouse_map_drawing_tz.md` with mandatory dropdown presets for `Дробные ячейки отбора`: default `2 уровня`, explicit mappings to `fraction_cell_count`, `sub_level_count`, `sub_column_count`, and disabled `Прочие` until custom grids exist.
+- Updated `requirements/large_warehouse_map_real_warehouse_binding_tz.md` with split preset rules for real warehouse slots: pick-face defaults to `2 уровня`, storage defaults to `1 / без дробления`, and storage can only be explicitly split horizontally into `1 x 2` or `1 x 3`.
+- Assigned the real pick/storage preset implementation to Sprint 14 with API/unit/browser checks for defaults, allowed storage horizontal splits, and rejected storage vertical presets.
+
+## 2026-05-22 - Fractional slot visual split lines
+
+- Added the visual metaphor requirement that fractional pick/storage cells remain one physical rectangle but draw internal split lines according to the selected `sub_level_count x sub_column_count` preset.
+- Documented examples: `FRACTION_9 / 3 x 3` draws `2` vertical and `2` horizontal internal lines; split by `2` draws one line through the middle; storage horizontal splits draw one or two vertical lines.
+- Assigned implementation and visual evidence to Sprint 14 in `requirements/large_warehouse_map_real_warehouse_binding_tz.md`, alongside generalized slots and split presets.
+
+## 2026-05-22 - Context help system for warehouse map editor
+
+- Expanded `concepts/ui_interaction_rules.md` from basic tooltips to a two-level context help rule: short hover/focus tooltip plus `?`/`i`/book help-card for complex groups, without permanently adding long explanatory text to the UI.
+- Added `Context Help` requirements to `requirements/large_warehouse_map_drawing_tz.md` and `requirements/large_warehouse_map_real_warehouse_binding_tz.md`: every command, field, dropdown, menu item and interactive map element gets a stable `help_id`, and disabled/future actions explain why they are unavailable.
+- Assigned implementation to Sprint 13 as the shared help framework for commands/fields/groups, with Sprint 18 coverage hardening and visual evidence checks.
+
+## 2026-05-22 - Dock staging template correction
+
+- Corrected the large warehouse map `Ворота + накопление` template so a gate module uses two neighboring cells and the staging pallet places below it also run in rows of two cells.
+- Removed the hardcoded four-pallet staging depth for selected-area use: staging now extends from the row below the gates to the lower boundary of the selected rectangle.
+- Updated `requirements/large_warehouse_map_drawing_tz.md` and `requirements/large_warehouse_map_real_warehouse_binding_tz.md` to capture this as a Sprint 13 acceptance/test requirement for standard layouts.
+
+## 2026-05-22 - Excel-like format painter for warehouse map
+
+- Added `Format Painter / Копирование Формата` to `requirements/large_warehouse_map_drawing_tz.md`: a brush/broom command copies a selected rectangle's roles and semantic formatting, then pastes the same pattern from a target anchor-cell.
+- Clarified that format painter copies roles, split presets, child-slot structure as a template, and capacity/policy templates, but must not copy DB IDs, physical/logical codes, route rows, stock, reservations, tasks, or facts.
+- Assigned implementation to Sprint 13 in `requirements/large_warehouse_map_real_warehouse_binding_tz.md` as shared toolbar/context-menu commands `format.copy`, `format.paste`, and `format.cancel`, with undo/redo, validation, and browser smoke evidence.
+
+## 2026-05-22 - Sprint 13 format painter implementation
+
+- Implemented the first Sprint 13 vertical slice in `admin/wms_admin_frontend/src/components/LargeWarehouseMapPage.tsx`: `Скопировать формат`, `Вставить формат`, and `Отменить кисть` now work from the left panel and the right-click context menu.
+- Format paste copies only the role pattern of the selected rectangle into a target rectangle with matching size, validates map boundaries, keeps the operation undoable/redoable, and leaves IDs/addressing/route facts outside the copied payload.
+- Added browser smoke `smoke=sprint13-format` and visual evidence `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-sprint13-format-painter.png`; frontend build and encoding checks passed.

@@ -24,6 +24,8 @@ from .routers import (
     traceability,
     transport,
     tserver,
+    warehouse_map_drafts,
+    warehouse_map,
     warehouse_topology,
     warehouse_tasks,
     warehouses,
@@ -64,5 +66,7 @@ app.include_router(case_pick.router)
 app.include_router(stock_reservations.router)
 app.include_router(warehouse_tasks.router)
 app.include_router(resource_management.router)
+app.include_router(warehouse_map_drafts.router)
+app.include_router(warehouse_map.router)
 app.include_router(warehouse_topology.router)
 app.include_router(transport.router)

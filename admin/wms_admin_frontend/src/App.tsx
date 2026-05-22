@@ -5,6 +5,7 @@ import { SHIFT_MINUTES, clock, inferWaveByMinute } from "./demoData";
 import { loadReplayData } from "./data/loaders";
 import { CapacityPanel, DetailCard, KpiRow, LeftPanel, ResourcePerformancePanel, RightPanel } from "./components/Panels";
 import { Timeline } from "./components/Timeline";
+import { LargeWarehouseMapPage } from "./components/LargeWarehouseMapPage";
 import { TopologyAdminPage } from "./components/TopologyAdminPage";
 import { TransportDispatchPage } from "./components/TransportDispatchPage";
 import { WarehouseScene } from "./components/WarehouseScene";
@@ -20,7 +21,7 @@ export default function App() {
   const [page, setPage] = useState(() => {
     const params = new URLSearchParams(window.location.search.replace(/;/g, "&"));
     const pg = params.get("page");
-    return pg === "topology" ? "topology" : pg === "transport" ? "transport" : "twin";
+    return pg === "topology" ? "topology" : pg === "transport" ? "transport" : pg === "warehouse-map" ? "warehouse-map" : "twin";
   });
   const [selection, setSelection] = useState<DetailSelection>(null);
   const [modelSettings, setModelSettings] = useState({
@@ -85,6 +86,14 @@ export default function App() {
     );
   }
 
+  if (page === "warehouse-map") {
+    return (
+      <AppErrorBoundary resetKey={page}>
+        <LargeWarehouseMapPage onBack={() => setPage("twin")} />
+      </AppErrorBoundary>
+    );
+  }
+
   if (!data || !state) {
     return <main className="loading-screen"><b>WMS PRO</b><span>Загружаем цифровой двойник склада...</span></main>;
   }
@@ -99,8 +108,9 @@ export default function App() {
       <aside className="mini-sidebar">
         <div className="brand-mark">W</div>
         {["⌂", "↗", "▦", "▣", "▤", "▥"].map((icon, index) => <button key={index}>{icon}</button>)}
-        <button className="active">⌁</button>
+        <button className={page === "twin" ? "active" : ""}>⌁</button>
         <button title="Управление топологией склада" onClick={() => setPage("topology")}>⌗</button>
+        <button title="Рисование карты больших складов" onClick={() => setPage("warehouse-map")}>▦</button>
         <button title="Диспетчер отгрузки" onClick={() => setPage("transport")}>⇧</button>
         <button>●</button>
       </aside>

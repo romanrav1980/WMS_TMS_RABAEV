@@ -14,6 +14,7 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   PATCH  /api/admin/transport/tasks/{id}/sts/{st}/load-type — изменить тип погрузки
   PATCH  /api/admin/transport/tasks/{id}/sts/{st}/order   — изменить порядок адреса
   GET    /api/admin/transport/available-sts               — свободные СТ (с фильтрами)
+  GET    /api/admin/transport/clusters                    — свободные СТ, сгруппированные по RAION (Phase 2.1)
   GET    /api/admin/transport/vehicles                    — справочник ТС
   GET    /api/admin/transport/drivers                     — справочник водителей
   GET    /api/admin/transport/types                       — справочник типов транспорта
@@ -96,6 +97,19 @@ def list_available_sts(
         max_weight_kg=max_weight_kg,
         max_volume_m3=max_volume_m3,
     )
+
+
+# ------------------------------------------------------------------
+# Кластеры (Phase 2.1)
+# ------------------------------------------------------------------
+
+@router.get("/clusters")
+def list_clusters(
+    stdate: date | None = None,
+    ware_ids: Annotated[list[int] | None, Query()] = None,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    return TransportService().list_clusters(stdate=stdate, ware_ids=ware_ids)
 
 
 # ------------------------------------------------------------------

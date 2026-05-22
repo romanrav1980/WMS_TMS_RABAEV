@@ -32,17 +32,17 @@ Start here for a fresh session:
 
 - [database/index.md](database/index.md): local wiki mirror of the Oracle `RABAEV` schema and change discipline
 - [database/oracle_change_protocol.md](database/oracle_change_protocol.md): required workflow for Oracle structure changes
-- [database/feed_factory_traceability_schema.md](database/feed_factory_traceability_schema.md): schema mirror for feed-factory traceability, Mercury/CRPT lifecycle, API audit/replay, wave stock movement ledger, regulatory journal migrations, warehouse topology 038/039, and linear pick-route invariant migration 040
+- [database/feed_factory_traceability_schema.md](database/feed_factory_traceability_schema.md): schema mirror for feed-factory traceability, Mercury/CRPT lifecycle, API audit/replay, wave stock movement ledger, regulatory journal migrations, warehouse topology 038/039, linear pick-route invariant migration 040, and warehouse map canvas/slot migration 041
 
 ## Concepts
 
 - [concepts/external_integration_supermag.md](concepts/external_integration_supermag.md): `SUPERMAG` / `Sfera` as external ERP source
 - [concepts/legacy_rights_model.md](concepts/legacy_rights_model.md): legacy `RUSERS` / `USER_GROUP` / `RIGHTS` model used by admin pages
 - [concepts/oracle_environment.md](concepts/oracle_environment.md): recommended Oracle environment and schema separation
-- [concepts/api_method_library.md](concepts/api_method_library.md): maintained `api-med` catalog of API methods, permissions, parameters, side effects, readiness checks, and verification
+- [concepts/api_method_library.md](concepts/api_method_library.md): maintained `api-med` catalog of API methods, permissions, parameters, side effects, readiness checks, and verification, including the warehouse-map state API
 - [concepts/regulatory_adapter_audit.md](concepts/regulatory_adapter_audit.md): audit/replay rules for real Mercury and Honest Sign adapters
 - [concepts/tserver_api_registry.md](concepts/tserver_api_registry.md): legacy terminal API commands and `CALL_SPF` procedure registry
-- [concepts/ui_interaction_rules.md](concepts/ui_interaction_rules.md): общие правила всплывающих подсказок и визуального обозначения будущих/заглушечных UI-элементов
+- [concepts/ui_interaction_rules.md](concepts/ui_interaction_rules.md): общие правила всплывающих подсказок, контекстной help-системы и визуального обозначения будущих/заглушечных UI-элементов
 - [concepts/wiki_operating_model.md](concepts/wiki_operating_model.md): how this repository uses the Karpathy wiki pattern
 
 ## Runbooks
@@ -75,6 +75,8 @@ Start here for a fresh session:
 - [requirements/feed_factory_mercury_crpt_tz.md](requirements/feed_factory_mercury_crpt_tz.md): Russian technical assignment for feed-factory production, raw-material usage, Mercury, Honest Sign, aggregation, and shipment modes
 - [requirements/finished_goods_admin_tz.md](requirements/finished_goods_admin_tz.md): Russian technical assignment for the finished-goods admin page: SKU settings, warehouses, production batches, pallets, SSCC, and stock
 - [requirements/large_warehouse_minute_simulation_tz.md](requirements/large_warehouse_minute_simulation_tz.md): Russian technical assignment and first model-only implementation note for a 12-hour real-warehouse digital-twin load test with 50 clients, 10 waves, 1000 SKU, 1500 pick faces, urgent-only dynamic/overflow pick-face cells, minute-by-minute movement simulation, collision detection, resource shortage analysis, screenshots, and warehouse animation page
+- [requirements/large_warehouse_map_drawing_tz.md](requirements/large_warehouse_map_drawing_tz.md): Russian technical assignment for an Excel-like lightweight 2D editor for drawing large warehouse maps at `35 x 90 x 6` scale, assigning cell roles, zooming/panning, multi-area bulk selection, level-persistent selection, format painter, context help, fractional pick-face split presets with visual split lines, and publishing drafts into topology
+- [requirements/large_warehouse_map_real_warehouse_binding_tz.md](requirements/large_warehouse_map_real_warehouse_binding_tz.md): Russian technical assignment for binding the large warehouse map editor to real Oracle warehouses; now includes DB-backed canvas/camera APIs, empty-camera unavailable default, bootstrap canvas from existing DB cells, selected-area standard layouts, format painter, context help, and pick/storage fractional slot presets with Canvas split-line rendering
 - [requirements/mes_production_completion_prompt.md](requirements/mes_production_completion_prompt.md): prompt for implementing MES production completion through a movement journal and controlled legacy WMS bridge
 - [requirements/mes_raw_shortage_replenishment_tz.md](requirements/mes_raw_shortage_replenishment_tz.md): Russian technical assignment for BOM raw-material shortage calculation and transfer tasks from raw warehouse to production
 - [requirements/modern_terminal_app_tz.md](requirements/modern_terminal_app_tz.md): Russian technical assignment for the modern Web/PWA terminal app replacing the legacy terminal OS client
