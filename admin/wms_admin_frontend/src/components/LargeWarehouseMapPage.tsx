@@ -577,6 +577,97 @@ const MAP_HELP: Record<HelpId, { title: string; body: string }> = {
   }
 };
 
+const MODULE_GUIDE = [
+  {
+    title: "Назначение модуля",
+    body: [
+      "Модуль рисования карты больших складов нужен для Excel-подобного создания и сопровождения складской 2D-карты на базе сетки физических ячеек 800 x 1200 мм.",
+      "Он связывает визуальную карту с реальным складом Oracle: canvas хранит геометрию и визуальные объекты, topology хранит физические WMS-ячейки, child slots описывают дробные ячейки отбора и хранения, pick route хранит порядок обхода.",
+      "Главное правило: оператор работает с draft, а рабочие волны должны читать только опубликованные canvas/topology/route после validation и Oracle publish."
+    ]
+  },
+  {
+    title: "Структура экрана",
+    body: [
+      "Верхняя панель показывает название модуля, размер карты, статус draft, smoke/evidence индикатор и performance metrics.",
+      "Левая панель содержит рабочие блоки: реальный склад, камера, уровни, роли, формат, навигация, шаблоны, draft, порядок обхода, дробные ячейки отбора и хранения, фильтры и счетчики.",
+      "Центральная область - Canvas 2D renderer. Он рисует только видимую часть большой карты, поэтому карта 35 аллей x 90 слотов x 6 уровней остается легкой и не превращает каждую ячейку в DOM-элемент."
+    ]
+  },
+  {
+    title: "Основные объекты данных",
+    body: [
+      "Warehouse - реальный склад из Oracle, выбранный оператором перед сохранением в базу.",
+      "Canvas - сохраняемый объект планировки. В нем живет renderer_state_json, камеры, проходы, подписи, визуальные зоны и связь с topology.",
+      "Camera - физическое помещение или камера склада. У камеры есть размеры в метрах, origin x/y/z, уровни, тип и дефолтные параметры проходов.",
+      "Topology cell - физическая WMS-ячейка, полученная из карты через projection. Она может быть pick-face, storage, staging, gate, aisle и так далее.",
+      "Cell slot - дочерний логический slot внутри физической ячейки. Pick slots участвуют в маршруте отбора, storage slots используются для остатков/хранения.",
+      "Pick route - линейный порядок обхода. Истина маршрута - строки с числовым PICK_SEQUENCE; линии и стрелки на карте являются представлением, а не источником данных."
+    ]
+  },
+  {
+    title: "Рисование карты",
+    body: [
+      "По умолчанию пустая камера считается недоступной областью, а не хранением. Роли назначаются явно.",
+      "Выделение работает как в Excel: можно выделять прямоугольники, сохранять выделение при переключении уровней и использовать Shift для нескольких областей.",
+      "Роли назначаются массово: ячейки отбора, хранения, транспортное накопление, пленка, ворота, проходы, недоступно, пусто, дробный отбор и дробное хранение.",
+      "Шаблоны ускоряют разметку типовых зон: регулярный склад, проходы, ворота с накоплением, пленка и копирование аллеи."
+    ]
+  },
+  {
+    title: "Дробные ячейки",
+    body: [
+      "Дробная ячейка - физическая ячейка, внутри которой создаются несколько логических child slots.",
+      "Для отбора доступны варианты дробления от 2 до 9 логических мест: по уровням, по горизонтали, 2 x 2, 3 x 3. Визуально такие ячейки рисуются внутренними линиями.",
+      "Для хранения доступен дефолт 1 / без дробления, а также дробление по горизонтали на 2 или 3 storage slots.",
+      "Маршрут отбора может ссылаться только на pick slots. Storage slots не должны попадать в pick route."
+    ]
+  },
+  {
+    title: "Draft, diff и безопасное сохранение",
+    body: [
+      "Draft - это runtime/API черновик карты. Он хранит roles_base64, metadata, objects, passages, camera links, route rows и revision.",
+      "Revision защищает от stale update: если кто-то сохранил более свежую версию, конфликт должен быть виден до перезаписи.",
+      "Diff показывает измененные ячейки, metadata, объекты, проходы, связи камер и route rows.",
+      "Projection preview считает будущие topology cells/slots без записи опубликованной версии."
+    ]
+  },
+  {
+    title: "Oracle save/publish workflow",
+    body: [
+      "Правильная последовательность: Save canvas DB -> Save topology DB -> Save route DB -> Publish Oracle.",
+      "Save canvas DB сохраняет полный draft payload в RRL_WAREHOUSE_MAP_CANVAS.RENDERER_STATE_JSON и создает/обновляет базовую камеру.",
+      "Save topology DB создает draft topology и записывает RRL_TOPOLOGY_CELL плюс RRL_TOPOLOGY_CELL_SLOT.",
+      "Save route DB записывает RRL_PICK_ROUTE и RRL_PICK_ROUTE_CELL; обычные pick cells идут через TOPOLOGY_CELL_ID, дробные pick slots через CELL_SLOT_ID.",
+      "Publish Oracle вызывает RRL_WAREHOUSE_MAP_API.VALIDATE_DRAFT и затем RRL_WAREHOUSE_MAP_API.PUBLISH_DRAFT. После успешной публикации canvas, topology и route становятся PUBLISHED."
+    ]
+  },
+  {
+    title: "Reload опубликованного склада",
+    body: [
+      "После publish рабочая проверка делается через warehouse state API: /api/admin/warehouse-map/warehouses/{ware_id}/state.",
+      "State должен вернуть published canvas, linked published topology, active published pick route и route rows.",
+      "Если в маршруте оказались storage slots или non-pick cells, Oracle validation должен заблокировать publish, а state не должен становиться рабочим источником для волн."
+    ]
+  },
+  {
+    title: "Help и подсказки",
+    body: [
+      "Короткие подсказки доступны через title/hover, а подробные подсказки открываются через знак вопроса.",
+      "Каждая подробная подсказка отвечает на пять вопросов: что это, какие входные данные нужны, что делает элемент, зачем он нужен и как им пользоваться.",
+      "Подсказки не занимают постоянное место в боковой панели: они открываются popover или этой инструкцией. Закрытие работает кнопкой, Esc и кликом вне окна."
+    ]
+  },
+  {
+    title: "Ограничения и контроль",
+    body: [
+      "Evidence screenshots лежат во временной runtime-папке и не являются частью обязательного commit scope.",
+      "Перед закрытием изменений нужно проверять frontend build, backend compile, Oracle verify 042, encoding check и diff whitespace.",
+      "Если кнопка серая, это нормальный сигнал зависимости: обычно нужно выбрать склад, сохранить draft, сохранить topology, построить route или пройти validation."
+    ]
+  }
+];
+
 export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -628,6 +719,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const [contextMenu, setContextMenu] = useState<MapContextMenu>(null);
   const [activeHelpId, setActiveHelpId] = useState<HelpId | null>(null);
   const [helpPopupPosition, setHelpPopupPosition] = useState<HelpPopupPosition>(null);
+  const [moduleGuideOpen, setModuleGuideOpen] = useState(false);
   const [cameraForm, setCameraForm] = useState<CameraFormState>({
     cameraCode: "CAM-01",
     cameraName: "Камера 01",
@@ -756,7 +848,19 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   }, [activeHelpId]);
 
   useEffect(() => {
+    if (!moduleGuideOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setModuleGuideOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [moduleGuideOpen]);
+
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search.replace(/;/g, "&"));
+    if (params.get("guide") === "module") {
+      setModuleGuideOpen(true);
+    }
     const smoke = params.get("smoke")
       || (window.location.href.includes("smoke=sprint13-objects") ? "sprint13-objects" : null)
       || (window.location.href.includes("smoke=sprint12") ? "sprint12" : null);
@@ -3308,6 +3412,9 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           <h1>Рисование карты больших складов</h1>
           <p>Canvas 2D MVP · {GRID.aisleCount} аллей × {GRID.slotsPerAisle} слотов × {GRID.levels} уровней · {totalCells().toLocaleString("ru-RU")} ячеек</p>
         </div>
+        <button className="large-map-guide-button" onClick={() => setModuleGuideOpen(true)} title="Открыть подробную инструкцию по модулю">
+          Инструкция
+        </button>
         <span className={`large-map-dirty ${dirty ? "dirty" : ""}`}>{dirty ? "DRAFT DIRTY" : "DRAFT CLEAN"}</span>
         {smokeResult && (
           <span className={`large-map-smoke-chip ${smokeResult.ok ? "ok" : "bad"}`}>
@@ -3859,6 +3966,27 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
               <b>{MAP_HELP[activeHelpId].title}</b>
               <span>{MAP_HELP[activeHelpId].body}</span>
               <button onClick={closeHelp}>Закрыть</button>
+            </div>
+          )}
+          {moduleGuideOpen && (
+            <div className="large-map-guide-backdrop" onMouseDown={() => setModuleGuideOpen(false)}>
+              <div className="large-map-guide-modal" role="dialog" aria-modal="true" aria-label="Инструкция по модулю карты склада" onMouseDown={(event) => event.stopPropagation()}>
+                <div className="large-map-guide-head">
+                  <div>
+                    <b>Инструкция по модулю карты больших складов</b>
+                    <span>Структура, назначение, workflow и контроль публикации</span>
+                  </div>
+                  <button onClick={() => setModuleGuideOpen(false)} title="Закрыть инструкцию">Закрыть</button>
+                </div>
+                <div className="large-map-guide-body">
+                  {MODULE_GUIDE.map((section) => (
+                    <section key={section.title}>
+                      <h3>{section.title}</h3>
+                      {section.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                    </section>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
         </div>

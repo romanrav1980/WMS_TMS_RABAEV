@@ -2224,6 +2224,7 @@ Sprint 26 closure evidence, 2026-05-22:
 - Latest Oracle `042_verify.sql`: `Statements=7; Errors=0`.
 - Final checks: frontend build OK, backend Python compile OK, UTF-8 encoding OK, `git diff --check` has no whitespace errors.
 - Post-check help audit: large warehouse map help popovers now cover real warehouse reload, roles, navigation, templates, draft/diff, route editor and Oracle save/publish; all `MAP_HELP` entries contain the five required blocks `Что это`, `Вход`, `Делает`, `Зачем`, `Как применять`; help closes by `Esc` and outside click.
+- Module instruction follow-up: the UI has a topbar `Инструкция` button and direct URL flag `guide=module` that open a large modal guide with module purpose, screen structure, data objects, drawing workflow, fractional cells, draft/diff safety, Oracle save/publish, published reload, help rules and operational limits. Visual evidence: `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-module-instruction-modal.png`.
 
 Оставшиеся границы после закрытого slice:
 

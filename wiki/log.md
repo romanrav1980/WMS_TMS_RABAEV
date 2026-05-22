@@ -1537,3 +1537,10 @@ Append-only log of root wiki updates.
 - Added detailed popover help for real warehouse reload, roles, navigation, layout templates, draft/diff, route editor, and Oracle save/publish.
 - Verified all `MAP_HELP` entries contain the five required blocks: `Что это`, `Вход`, `Делает`, `Зачем`, `Как применять`.
 - Added help closing behavior by `Esc` and outside click to match the TZ.
+
+## 2026-05-22 - Large Warehouse Map module instruction modal
+
+- Added a topbar `Инструкция` button to the large warehouse map editor.
+- The button opens a large modal guide describing the module purpose, screen structure, data objects, drawing workflow, fractional cells, draft/diff safety, Oracle save/publish, published reload, help rules and operational limits.
+- Added direct URL opening through `guide=module`; visual evidence captured at `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-module-instruction-modal.png`.
+- Updated the real-warehouse binding TZ checkpoint with the instruction-modal follow-up.
