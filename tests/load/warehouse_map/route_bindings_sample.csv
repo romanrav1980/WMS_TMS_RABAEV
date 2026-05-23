@@ -1,0 +1,2 @@
+cell_code,articul,priority,min_qty,max_qty,case_pick_enabled,active
+REPLACE_WITH_CELL_CODE,REPLACE_WITH_ARTICUL,100,,,1,1
