@@ -7,6 +7,7 @@ from ..schemas import (
     ArticulReplenishmentRuleUpsertRequest,
     PickFaceArticulUpsertRequest,
     PickFaceUpsertRequest,
+    PickRouteConsumptionMaterializeRequest,
     PickRouteCellUpsertRequest,
     PickRouteUpsertRequest,
     PickTaskCompleteRequest,
@@ -2220,6 +2221,139 @@ class PickingService:
         summary["ready_for_wave_case_pick"] = len(blockers) == 0
         summary["blockers"] = blockers
         return summary
+
+    def materialize_route_consumption(
+        self,
+        ware_id: int,
+        request: PickRouteConsumptionMaterializeRequest,
+    ) -> dict[str, Any]:
+        route_conditions = [
+            "rc.WARE_ID = :ware_id",
+            "rc.ACTIVE = 1",
+            "r.ACTIVE = 1",
+            "nvl(r.STATUS, 'ACTIVE') <> 'ARCHIVED'",
+            "(r.STATUS = 'PUBLISHED' or r.PUBLISHED_AT is not null)",
+            "(rc.CELL_SLOT_ID is null or s.SLOT_KIND = 'PICK_FACE_SLOT')",
+        ]
+        params: dict[str, Any] = {"ware_id": ware_id, "limit": request.limit}
+        if request.pick_route_id is not None:
+            route_conditions.append("rc.PICK_ROUTE_ID = :pick_route_id")
+            params["pick_route_id"] = request.pick_route_id
+        where_sql = " and ".join(route_conditions)
+        route_rows = self.gateway.fetch_all(
+            f"""
+            select *
+              from (
+                select rc.PICK_ROUTE_CELL_ID,
+                       rc.PICK_ROUTE_ID,
+                       rc.WARE_ID,
+                       rc.CELL_CODE,
+                       rc.PICK_SEQUENCE,
+                       pf.PICK_FACE_ID
+                  from RRL_PICK_ROUTE_CELL rc
+                  join RRL_PICK_ROUTE r
+                    on r.PICK_ROUTE_ID = rc.PICK_ROUTE_ID
+                  left join RRL_TOPOLOGY_CELL_SLOT s
+                    on s.CELL_SLOT_ID = rc.CELL_SLOT_ID
+                  left join RRL_PICK_FACE pf
+                    on pf.PICK_ROUTE_CELL_ID = rc.PICK_ROUTE_CELL_ID
+                   and pf.ACTIVE = 1
+                 where {where_sql}
+                 order by rc.PICK_SEQUENCE, rc.PICK_ROUTE_CELL_ID
+              )
+             where rownum <= :limit
+            """,
+            params,
+        )
+
+        bindings_by_route_cell: dict[int, list[Any]] = {}
+        bindings_by_cell: dict[str, list[Any]] = {}
+        for binding in request.bindings:
+            if binding.pick_route_cell_id is not None:
+                bindings_by_route_cell.setdefault(int(binding.pick_route_cell_id), []).append(binding)
+            if binding.cell_code:
+                bindings_by_cell.setdefault(binding.cell_code.strip().upper(), []).append(binding)
+
+        created_pick_faces = 0
+        existing_pick_faces = 0
+        skipped_without_pick_face = 0
+        assigned_articuls = 0
+        materialized: list[dict[str, Any]] = []
+
+        for row in route_rows:
+            pick_face_id = row.get("pick_face_id")
+            if pick_face_id:
+                existing_pick_faces += 1
+            elif int(request.create_missing_pick_faces or 0) == 1:
+                if int(request.dry_run or 0) == 1:
+                    pick_face_id = 0
+                else:
+                    pick_face_id = self.upsert_pick_face(
+                        PickFaceUpsertRequest(
+                            ware_id=ware_id,
+                            cell_code=str(row["cell_code"]),
+                            pick_face_code=f"PF-{row['cell_code']}",
+                            pick_face_type="REGULAR",
+                            pick_route_id=int(row["pick_route_id"]),
+                            pick_route_cell_id=int(row["pick_route_cell_id"]),
+                            pick_sequence=float(row["pick_sequence"] or 0),
+                            active=1,
+                            comment_text="Materialized from published warehouse route",
+                            updated_by=request.updated_by,
+                        )
+                    )
+                created_pick_faces += 1
+            else:
+                skipped_without_pick_face += 1
+                materialized.append({
+                    "pick_route_cell_id": row.get("pick_route_cell_id"),
+                    "cell_code": row.get("cell_code"),
+                    "pick_face_id": None,
+                    "assigned_articuls": 0,
+                })
+                continue
+
+            row_bindings = list(bindings_by_route_cell.get(int(row["pick_route_cell_id"]), []))
+            row_bindings.extend(bindings_by_cell.get(str(row["cell_code"]).upper(), []))
+            row_assigned = 0
+            for binding in row_bindings:
+                if int(request.dry_run or 0) != 1:
+                    self.assign_pick_face_articul(
+                        PickFaceArticulUpsertRequest(
+                            pick_face_id=int(pick_face_id),
+                            articul=binding.articul,
+                            priority=binding.priority,
+                            min_qty=binding.min_qty,
+                            max_qty=binding.max_qty,
+                            case_pick_enabled=binding.case_pick_enabled,
+                            active=binding.active,
+                            valid_from=binding.valid_from,
+                            valid_to=binding.valid_to,
+                            updated_by=request.updated_by,
+                        )
+                    )
+                assigned_articuls += 1
+                row_assigned += 1
+            materialized.append({
+                "pick_route_cell_id": row.get("pick_route_cell_id"),
+                "cell_code": row.get("cell_code"),
+                "pick_face_id": int(pick_face_id),
+                "assigned_articuls": row_assigned,
+            })
+
+        readiness = self.get_route_consumption_readiness(ware_id)
+        return {
+            "ware_id": ware_id,
+            "pick_route_id": request.pick_route_id,
+            "route_cells_seen": len(route_rows),
+            "created_pick_faces": created_pick_faces,
+            "existing_pick_faces": existing_pick_faces,
+            "skipped_without_pick_face": skipped_without_pick_face,
+            "assigned_articuls": assigned_articuls,
+            "dry_run": int(request.dry_run or 0),
+            "readiness": readiness,
+            "items": materialized[:200],
+        }
 
     def list_wave_audit(self, pick_wave_id: int, limit: int = 200) -> list[dict[str, Any]]:
         params = {"pick_wave_id": pick_wave_id, "limit": min(max(limit, 1), 1000)}

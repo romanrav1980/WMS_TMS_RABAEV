@@ -785,6 +785,28 @@ class PickFaceArticulUpsertRequest(BaseModel):
     updated_by: str | None = None
 
 
+class PickRouteConsumptionArticulBinding(BaseModel):
+    pick_route_cell_id: int | None = None
+    cell_code: str | None = None
+    articul: str
+    priority: float = 100
+    min_qty: float | None = None
+    max_qty: float | None = None
+    case_pick_enabled: int = 1
+    active: int = 1
+    valid_from: date | None = None
+    valid_to: date | None = None
+
+
+class PickRouteConsumptionMaterializeRequest(BaseModel):
+    pick_route_id: int | None = None
+    create_missing_pick_faces: int = 1
+    bindings: list[PickRouteConsumptionArticulBinding] = Field(default_factory=list)
+    dry_run: int = 0
+    limit: int = Field(default=1000, ge=1, le=5000)
+    updated_by: str | None = None
+
+
 class ArticulReplenishmentRuleUpsertRequest(BaseModel):
     articul_replenish_rule_id: int | None = None
     articul: str
