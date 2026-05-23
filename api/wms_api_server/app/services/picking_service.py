@@ -2115,6 +2115,112 @@ class PickingService:
             params,
         )
 
+    def get_route_consumption_readiness(self, ware_id: int) -> dict[str, Any]:
+        rows = self.gateway.fetch_all(
+            """
+            select :ware_id WARE_ID,
+                   (select count(*)
+                      from RRL_WAREHOUSE_TOPOLOGY t
+                     where t.WARE_ID = :ware_id
+                       and t.STATUS = 'PUBLISHED') PUBLISHED_TOPOLOGY_COUNT,
+                   (select count(*)
+                      from RRL_PICK_ROUTE r
+                     where r.WARE_ID = :ware_id
+                       and r.ACTIVE = 1
+                       and nvl(r.STATUS, 'ACTIVE') <> 'ARCHIVED') ACTIVE_PICK_ROUTE_COUNT,
+                   (select count(*)
+                      from RRL_PICK_ROUTE r
+                     where r.WARE_ID = :ware_id
+                       and r.ACTIVE = 1
+                       and nvl(r.STATUS, 'ACTIVE') <> 'ARCHIVED'
+                       and (r.STATUS = 'PUBLISHED' or r.PUBLISHED_AT is not null)) PUBLISHED_PICK_ROUTE_COUNT,
+                   (select count(*)
+                      from RRL_PICK_ROUTE_CELL rc
+                      join RRL_PICK_ROUTE r
+                        on r.PICK_ROUTE_ID = rc.PICK_ROUTE_ID
+                     where rc.WARE_ID = :ware_id
+                       and rc.ACTIVE = 1
+                       and r.ACTIVE = 1
+                       and nvl(r.STATUS, 'ACTIVE') <> 'ARCHIVED'
+                       and (r.STATUS = 'PUBLISHED' or r.PUBLISHED_AT is not null)) ROUTE_CELL_COUNT,
+                   (select count(*)
+                      from RRL_PICK_ROUTE_CELL rc
+                      join RRL_PICK_ROUTE r
+                        on r.PICK_ROUTE_ID = rc.PICK_ROUTE_ID
+                      join RRL_TOPOLOGY_CELL_SLOT s
+                        on s.CELL_SLOT_ID = rc.CELL_SLOT_ID
+                     where rc.WARE_ID = :ware_id
+                       and rc.ACTIVE = 1
+                       and r.ACTIVE = 1
+                       and nvl(r.STATUS, 'ACTIVE') <> 'ARCHIVED'
+                       and s.SLOT_KIND <> 'PICK_FACE_SLOT') STORAGE_ROUTE_VIOLATION_COUNT,
+                   (select count(distinct pf.PICK_FACE_ID)
+                      from RRL_PICK_FACE pf
+                      join RRL_PICK_ROUTE_CELL rc
+                        on rc.PICK_ROUTE_CELL_ID = pf.PICK_ROUTE_CELL_ID
+                      join RRL_PICK_ROUTE r
+                        on r.PICK_ROUTE_ID = rc.PICK_ROUTE_ID
+                     where pf.WARE_ID = :ware_id
+                       and pf.ACTIVE = 1
+                       and rc.ACTIVE = 1
+                       and r.ACTIVE = 1
+                       and nvl(r.STATUS, 'ACTIVE') <> 'ARCHIVED'
+                       and (r.STATUS = 'PUBLISHED' or r.PUBLISHED_AT is not null)) PICK_FACE_COUNT,
+                   (select count(*)
+                      from RRL_PICK_ROUTE_CELL rc
+                      join RRL_PICK_ROUTE r
+                        on r.PICK_ROUTE_ID = rc.PICK_ROUTE_ID
+                     where rc.WARE_ID = :ware_id
+                       and rc.ACTIVE = 1
+                       and r.ACTIVE = 1
+                       and nvl(r.STATUS, 'ACTIVE') <> 'ARCHIVED'
+                       and (r.STATUS = 'PUBLISHED' or r.PUBLISHED_AT is not null)
+                       and not exists (
+                         select 1
+                           from RRL_PICK_FACE pf
+                          where pf.PICK_ROUTE_CELL_ID = rc.PICK_ROUTE_CELL_ID
+                            and pf.ACTIVE = 1
+                       )) ROUTE_CELLS_WITHOUT_PICK_FACE_COUNT,
+                   (select count(*)
+                      from RRL_PICK_FACE_ARTICUL pfa
+                      join RRL_PICK_FACE pf
+                        on pf.PICK_FACE_ID = pfa.PICK_FACE_ID
+                      join RRL_PICK_ROUTE_CELL rc
+                        on rc.PICK_ROUTE_CELL_ID = pf.PICK_ROUTE_CELL_ID
+                      join RRL_PICK_ROUTE r
+                        on r.PICK_ROUTE_ID = rc.PICK_ROUTE_ID
+                     where pf.WARE_ID = :ware_id
+                       and pfa.ACTIVE = 1
+                       and pfa.CASE_PICK_ENABLED = 1
+                       and pf.ACTIVE = 1
+                       and rc.ACTIVE = 1
+                       and r.ACTIVE = 1
+                       and nvl(r.STATUS, 'ACTIVE') <> 'ARCHIVED'
+                       and (r.STATUS = 'PUBLISHED' or r.PUBLISHED_AT is not null)
+                       and trunc(sysdate) between trunc(pfa.VALID_FROM) and nvl(trunc(pfa.VALID_TO), date '2999-12-31')) CASE_PICK_ARTICUL_BINDING_COUNT
+              from dual
+            """,
+            {"ware_id": ware_id},
+        )
+        row = rows[0] if rows else {"ware_id": ware_id}
+        summary = {str(key).lower(): value for key, value in row.items()}
+        blockers: list[str] = []
+        if int(summary.get("published_topology_count") or 0) <= 0:
+            blockers.append("NO_PUBLISHED_TOPOLOGY")
+        if int(summary.get("published_pick_route_count") or 0) <= 0:
+            blockers.append("NO_PUBLISHED_PICK_ROUTE")
+        if int(summary.get("route_cell_count") or 0) <= 0:
+            blockers.append("NO_ROUTE_CELLS")
+        if int(summary.get("storage_route_violation_count") or 0) > 0:
+            blockers.append("STORAGE_SLOT_IN_PICK_ROUTE")
+        if int(summary.get("pick_face_count") or 0) <= 0:
+            blockers.append("NO_PICK_FACE_BINDINGS")
+        if int(summary.get("case_pick_articul_binding_count") or 0) <= 0:
+            blockers.append("NO_CASE_PICK_ARTICUL_BINDINGS")
+        summary["ready_for_wave_case_pick"] = len(blockers) == 0
+        summary["blockers"] = blockers
+        return summary
+
     def list_wave_audit(self, pick_wave_id: int, limit: int = 200) -> list[dict[str, Any]]:
         params = {"pick_wave_id": pick_wave_id, "limit": min(max(limit, 1), 1000)}
         return self.gateway.fetch_all(

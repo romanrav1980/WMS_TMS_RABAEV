@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, Path
 
 from ..auth import (
     AdminUser,
@@ -312,6 +314,14 @@ def list_pick_wave_audit(
     _user: AdminUser = Depends(require_permission(PICK_WAVE_AUDIT_VIEW_PERMISSION)),
 ) -> list[dict]:
     return PickingService().list_wave_audit(pick_wave_id, limit=limit)
+
+
+@router.get("/warehouses/{ware_id}/route-consumption-readiness")
+def get_route_consumption_readiness(
+    ware_id: Annotated[int, Path(gt=0)],
+    _user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_VIEW_PERMISSION)),
+) -> dict:
+    return PickingService().get_route_consumption_readiness(ware_id)
 
 
 @router.get("/routes")
