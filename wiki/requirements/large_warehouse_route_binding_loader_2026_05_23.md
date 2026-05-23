@@ -35,4 +35,13 @@ JSON:
 
 ## Следующий шаг
 
+## Evidence
+
+- PR #4 merged into `feature/transport-dispatch-phase1`.
+- API restarted from `C:\projects\TMS_warehouse_next`.
+- `GET /api/picking/warehouses/1/route-consumption-readiness` returns `pick_face_count = 205`, `route_cells_without_pick_face_count = 0`, `storage_route_violation_count = 0`, and only `NO_CASE_PICK_ARTICUL_BINDINGS` remains.
+- HTTP dry-run with `route_bindings_sample.csv` succeeds against the live API: `route_cells_seen = 1`, `existing_pick_faces = 1`, `created_pick_faces = 0`, `assigned_articuls = 0`, `dry_run = 1`.
+
+## Следующий шаг
+
 Подставить реальные `cell_code` / `pick_route_cell_id` и `articul`, выполнить `--dry-run`, затем `--apply`, после чего проверить `route-consumption-readiness`. Цель следующего checkpoint: `ready_for_wave_case_pick = true`.

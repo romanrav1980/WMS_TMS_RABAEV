@@ -1720,3 +1720,10 @@ Append-only log of root wiki updates.
 - Added `tests/load/warehouse_map/route_bindings_sample.csv`.
 - Added `requirements/large_warehouse_route_binding_loader_2026_05_23.md` and updated the wiki index.
 - Next checkpoint is to run the loader with real `cell_code` / `pick_route_cell_id` and `articul` data, then confirm `ready_for_wave_case_pick = true`.
+
+## 2026-05-23 12:49 +05:00
+
+- Merged PR #4 and restarted the WMS API from `C:\projects\TMS_warehouse_next`.
+- Verified the live readiness endpoint on `WARE_ID=1`: `pick_face_count=205`, `route_cells_without_pick_face_count=0`, `storage_route_violation_count=0`, blocker `NO_CASE_PICK_ARTICUL_BINDINGS`.
+- Verified the binding loader against the live API in dry-run mode with `route_bindings_sample.csv`: `route_cells_seen=1`, `existing_pick_faces=1`, `created_pick_faces=0`, `assigned_articuls=0`, `dry_run=1`.
+- Real SKU-to-pick-face CSV/JSON data is now the only missing input before applying bindings and expecting `ready_for_wave_case_pick=true`.
