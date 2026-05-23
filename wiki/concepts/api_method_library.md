@@ -464,6 +464,33 @@ Operator UI:
 
 - `wiki-raw/wms_admin_ui_reference/wave-replenishment.html`.
 
+### `GET /api/picking/warehouses/{ware_id}/route-consumption-readiness`
+
+Purpose: report whether a published warehouse-map topology/route is consumable by wave/case-pick planning.
+
+Permission: `pick_topology_view`.
+
+Parameters:
+
+- `ware_id`: positive Oracle warehouse id; `0` is rejected at the FastAPI path layer.
+
+Reads:
+
+- `RRL_WAREHOUSE_TOPOLOGY` for published topology count.
+- `RRL_PICK_ROUTE` and `RRL_PICK_ROUTE_CELL` for published route/cell counts.
+- `RRL_TOPOLOGY_CELL_SLOT` to detect forbidden storage-slot rows in pick routes.
+- `RRL_PICK_FACE` and `RRL_PICK_FACE_ARTICUL` to prove wave/case-pick can resolve article pick faces and route order.
+
+Response:
+
+- Counts for published topology, active/published pick routes, route cells, storage-route violations, pick-face bindings, route cells without pick faces, and case-pick articul bindings.
+- `ready_for_wave_case_pick`: `true` only when published route cells exist, storage-route violations are zero, and pick-face plus articul bindings exist.
+- `blockers`: stable codes such as `NO_PICK_FACE_BINDINGS`, `NO_CASE_PICK_ARTICUL_BINDINGS`, or `STORAGE_SLOT_IN_PICK_ROUTE`.
+
+Verification:
+
+- Direct service check on `WARE_ID=1` returned published topology/route counts and `storage_route_violation_count = 0`, but `ready_for_wave_case_pick = false` because no active `RRL_PICK_FACE` or `RRL_PICK_FACE_ARTICUL` bindings exist yet.
+
 Router:
 
 - [`../../api/wms_api_server/app/routers/warehouse_tasks.py`](../../api/wms_api_server/app/routers/warehouse_tasks.py)

@@ -1694,3 +1694,11 @@ Append-only log of root wiki updates.
 - Completed the minimal final release gate: `npm.cmd run build`, encoding check, `git diff --check`, and idempotency smoke on `WARE_ID=1` with `canvas=55`, `topology=46`, `route=133`, and retry flags `true`.
 - Prepared the commit/PR package by staging the scoped warehouse-map release files only; unrelated agent/onramp, WinForms transport, transport docs, legacy imports, runtime evidence, and `test-results/` remain unstaged.
 - Next strategic step is an explicit commit/PR of the staged warehouse-map release package.
+
+## 2026-05-23 12:01 +05:00
+
+- Started the first post-release route-consumption sprint in the clean `C:\projects\TMS_warehouse_next` worktree from merge commit `f53cd3d`.
+- Added `GET /api/picking/warehouses/{ware_id}/route-consumption-readiness` as a read-only bridge check from published warehouse-map route rows to wave/case-pick consumability.
+- The endpoint rejects `ware_id=0`, requires `pick_topology_view`, and reports published topology/route counts, route-cell counts, storage-slot route violations, pick-face bindings, missing pick-face route cells, and case-pick articul bindings.
+- Direct service-call evidence on `WARE_ID=1`: published topology `6`, published pick routes `6`, route cells `205`, storage-route violations `0`, pick-face bindings `0`, articul bindings `0`, `ready_for_wave_case_pick=false`, blockers `NO_PICK_FACE_BINDINGS` and `NO_CASE_PICK_ARTICUL_BINDINGS`.
+- Added `requirements/large_warehouse_route_consumption_readiness_2026_05_23.md`, updated API docs and api-method library, and recorded the next sprint as `published route cell -> pick face -> articul binding`.

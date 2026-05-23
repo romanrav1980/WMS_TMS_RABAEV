@@ -319,9 +319,11 @@ Wave picking:
 - `GET /api/picking/waves/{pick_wave_id}/tasks`
 - `POST /api/picking/waves/{pick_wave_id}/tasks/{pick_task_id}/complete`
 - `GET /api/picking/waves/{pick_wave_id}/audit`
+- `GET /api/picking/warehouses/{ware_id}/route-consumption-readiness`
 - These endpoints require Oracle migration `2026-05-17-018-wave-picking-core`.
 - They use permissions `pick_wave_view`, `pick_wave_create`, `pick_wave_calculate`, `pick_wave_launch`, `pick_wave_cancel`, `pick_wave_release_reserves`, and `pick_wave_audit_view`.
 - Launch creates hard operational reservations and picking/replenishment tasks. Same-SKU repeated replenishment can create several domain rows and hard source reservations, but driver-facing `RRL_WAREHOUSE_TASK` rows are created only for released rows; `QUEUED`, `WAIT_FREE_CELL`, and `WAIT_MINIMAX` stay invisible to the driver. Completing a wave pick task records `FACT_QTY` and triggers automatic Minimax/queue release for eligible rows. If a free dynamic/generic pick-face cell exists, a queued row can be released there immediately. Full-pallet staging release creates `PICKING_MOVE` reachtruck tasks for loading/staging cells under the same `PICK_WAVE` document. Wave readiness reports blocking replenishment, full-pallet staging, case-pick, domain-sync, and shortage conditions before dispatch. It still does not update legacy stock tables directly unless a local test explicitly sends `adjust_pick_face_stock = true`.
+- Route consumption readiness is a bridge check between the published warehouse map and wave/case-pick execution: it verifies published topology/route rows, route-cell count, storage-slot route violations, pick-face bindings, and case-pick articul bindings before wave launch relies on route order.
 
 Common stock reservations:
 
