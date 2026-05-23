@@ -144,6 +144,106 @@ class WarehouseMapService:
         )
         return self.get_canvas_state(canvas_id)
 
+    def archive_canvas(self, canvas_id: int, request: WarehouseMapArchiveRequest, username: str | None) -> dict[str, Any]:
+        canvas = self._require_canvas(canvas_id)
+        updated_by = request.updated_by or username
+        topology_id = canvas.get("topology_id")
+        with self.gateway.transaction("WAREHOUSE_MAP_CANVAS_ARCHIVE") as cursor:
+            cursor.execute(
+                """
+                update RRL_WAREHOUSE_MAP_CAMERA_LINK
+                   set ACTIVE = 0,
+                       UPDATED_AT = sysdate,
+                       UPDATED_BY = substr(:updated_by, 1, 50)
+                 where CANVAS_ID = :canvas_id
+                   and ACTIVE = 1
+                """,
+                {"canvas_id": canvas_id, "updated_by": updated_by},
+            )
+            cursor.execute(
+                """
+                update RRL_WAREHOUSE_MAP_PASSAGE
+                   set ACTIVE = 0,
+                       UPDATED_AT = sysdate,
+                       UPDATED_BY = substr(:updated_by, 1, 50)
+                 where CANVAS_ID = :canvas_id
+                   and ACTIVE = 1
+                """,
+                {"canvas_id": canvas_id, "updated_by": updated_by},
+            )
+            cursor.execute(
+                """
+                update RRL_WAREHOUSE_MAP_OBJECT
+                   set ACTIVE = 0,
+                       UPDATED_AT = sysdate,
+                       UPDATED_BY = substr(:updated_by, 1, 50)
+                 where CANVAS_ID = :canvas_id
+                   and ACTIVE = 1
+                """,
+                {"canvas_id": canvas_id, "updated_by": updated_by},
+            )
+            cursor.execute(
+                """
+                update RRL_WAREHOUSE_MAP_CAMERA
+                   set STATUS = 'ARCHIVED',
+                       ACTIVE = 0,
+                       UPDATED_AT = sysdate,
+                       UPDATED_BY = substr(:updated_by, 1, 50)
+                 where CANVAS_ID = :canvas_id
+                   and ACTIVE = 1
+                """,
+                {"canvas_id": canvas_id, "updated_by": updated_by},
+            )
+            if topology_id is not None:
+                cursor.execute(
+                    """
+                    update RRL_PICK_ROUTE
+                       set STATUS = 'ARCHIVED',
+                           ACTIVE = 0,
+                           UPDATED_AT = sysdate,
+                           UPDATED_BY = substr(:updated_by, 1, 50)
+                     where TOPOLOGY_ID = :topology_id
+                       and ROUTE_KIND = 'PICK'
+                       and ACTIVE = 1
+                    """,
+                    {"topology_id": topology_id, "updated_by": updated_by},
+                )
+                cursor.execute(
+                    """
+                    update RRL_WAREHOUSE_TOPOLOGY
+                       set STATUS = 'ARCHIVED',
+                           UPDATED_AT = systimestamp,
+                           UPDATED_BY = substr(:updated_by, 1, 50)
+                     where TOPOLOGY_ID = :topology_id
+                       and STATUS <> 'ARCHIVED'
+                    """,
+                    {"topology_id": topology_id, "updated_by": updated_by},
+                )
+            cursor.execute(
+                """
+                update RRL_WAREHOUSE_MAP_CANVAS
+                   set STATUS = 'ARCHIVED',
+                       ACTIVE = 0,
+                       COMMENT_TEXT = substr(
+                         coalesce(COMMENT_TEXT || chr(10), '') ||
+                         '[ARCHIVED] ' || coalesce(:reason, 'warehouse map canvas archive'),
+                         1,
+                         1000
+                       ),
+                       UPDATED_AT = sysdate,
+                       UPDATED_BY = substr(:updated_by, 1, 50)
+                 where CANVAS_ID = :canvas_id
+                   and ACTIVE = 1
+                """,
+                {"canvas_id": canvas_id, "reason": request.reason, "updated_by": updated_by},
+            )
+        return {
+            "canvas_id": canvas_id,
+            "topology_id": int(topology_id) if topology_id is not None else None,
+            "status": "ARCHIVED",
+            "active": 0,
+        }
+
     def create_camera(self, canvas_id: int, request: WarehouseMapCameraCreateRequest, username: str | None) -> dict[str, Any]:
         canvas = self._require_canvas(canvas_id)
         camera_id = self._nextval("RRL_WH_MAP_CAMERA_SQ")

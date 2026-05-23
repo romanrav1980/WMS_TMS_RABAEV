@@ -79,6 +79,11 @@ This migration was applied to the local Oracle VM schema `RABAEV@127.0.0.1:1521/
 - `041_smoke.sql`: smoke test for saving one canvas with two cameras plus pick/storage child slots and negative constraint probes.
 - `041_smoke_cleanup.sql`: cleanup for rows created by the fixed `SMOKE_041` marker.
 - `041_rollback.sql`: non-destructive rollback note for the warehouse map canvas/slot foundation.
+- `044_apply.sql`: deletes legacy fixture warehouse `WARE_ID=0` warehouse-map/topology/route data and adds positive warehouse-id constraints.
+- `044_verify.sql`: verifies that `WARE_ID=0` is absent and positive-id constraints are enabled.
+- `044_smoke.sql`: negative smoke proving Oracle rejects `RRL_WARES.ID=0` and warehouse-map canvas `WARE_ID=0`.
+- `044_smoke_cleanup.sql`: cleanup for defensive smoke rows.
+- `044_rollback.sql`: metadata-only rollback note; deleted fixture rows require a database snapshot to restore.
 - `026_verify.sql`: read-only verification for warehouse task entities.
 - `026_rollback.sql`: safe rollback for warehouse task rights and migration ledger only. It does not drop warehouse task history.
 

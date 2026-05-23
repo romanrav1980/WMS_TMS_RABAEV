@@ -5,6 +5,7 @@ import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 from uuid import uuid4
 
 from fastapi import HTTPException
@@ -134,15 +135,57 @@ class WarehouseMapDraftService:
         grid = WarehouseMapGrid(**draft["grid"])
         updated_by = request.updated_by or username
         canvas_id = request.canvas_id or int(draft.get("oracle_canvas_id") or 0) or None
+        canvas: dict | None = None
+        idempotency_key = self._idempotency_key(request.idempotency_key)
+        if canvas_id is None and idempotency_key:
+            existing_canvas = self._find_canvas_by_idempotency_key(request.ware_id, idempotency_key)
+            if existing_canvas:
+                canvas_id = int(existing_canvas["canvas_id"])
+                canvas = existing_canvas
+                camera_id = self._first_camera_id(canvas_id)
+                draft["oracle_canvas_id"] = canvas_id
+                draft["oracle_canvas_code"] = existing_canvas.get("canvas_code")
+                draft["oracle_canvas_idempotency_key"] = idempotency_key
+                draft["oracle_camera_id"] = camera_id
+                draft["oracle_ware_id"] = request.ware_id
+                draft["last_db_save_at"] = self._now()
+                draft["updated_at"] = draft["last_db_save_at"]
+                draft["updated_by"] = updated_by
+                self._write(draft)
+                return {
+                    "draft_id": draft_id,
+                    "canvas_id": canvas_id,
+                    "camera_id": camera_id,
+                    "ware_id": request.ware_id,
+                    "revision": int(draft.get("revision") or 1),
+                    "status": "SAVED_TO_DB",
+                    "idempotent": True,
+                    "idempotency_key": idempotency_key,
+                    "validation": validation,
+                    "role_counts": draft.get("role_counts", {}),
+                    "route_row_count": len([item for item in draft.get("route_rows", []) if item.get("active", 1)]),
+                    "saved_at": draft["last_db_save_at"],
+                }
+        if canvas_id is None and request.canvas_code:
+            existing_canvas = self._find_canvas_by_code(request.ware_id, self._canvas_code(request, draft, 0))
+            if existing_canvas:
+                canvas_id = int(existing_canvas["canvas_id"])
+                canvas = existing_canvas
         if canvas_id is not None:
-            canvas = self._require_canvas(canvas_id)
+            canvas = canvas or self._require_canvas(canvas_id)
             if int(canvas["ware_id"]) != request.ware_id:
                 raise HTTPException(status_code=409, detail="Canvas belongs to another warehouse.")
             self._update_canvas_payload(canvas_id, request, draft, grid, updated_by)
         else:
             canvas_id = self._create_canvas_payload(request, draft, grid, updated_by)
+            canvas = self._require_canvas(canvas_id)
+        if idempotency_key:
+            self._set_canvas_idempotency_key(canvas_id, idempotency_key, updated_by)
+            canvas["idempotency_key"] = idempotency_key
         camera_id = self._ensure_default_camera(canvas_id, request.ware_id, request, grid, updated_by)
         draft["oracle_canvas_id"] = canvas_id
+        draft["oracle_canvas_code"] = canvas.get("canvas_code") if canvas else request.canvas_code
+        draft["oracle_canvas_idempotency_key"] = idempotency_key or (canvas.get("idempotency_key") if canvas else None)
         draft["oracle_camera_id"] = camera_id
         draft["oracle_ware_id"] = request.ware_id
         draft["last_db_save_at"] = self._now()
@@ -158,6 +201,7 @@ class WarehouseMapDraftService:
             "ware_id": request.ware_id,
             "revision": int(draft.get("revision") or 1),
             "status": "SAVED_TO_DB",
+            "idempotency_key": draft.get("oracle_canvas_idempotency_key"),
             "validation": validation,
             "role_counts": draft.get("role_counts", {}),
             "route_row_count": len([item for item in draft.get("route_rows", []) if item.get("active", 1)]),
@@ -479,53 +523,122 @@ class WarehouseMapDraftService:
         self._require_warehouse(request.ware_id)
         grid = WarehouseMapGrid(**draft["grid"])
         roles = self._decode_roles(draft["roles_base64"], grid)
-        topology_id = self._nextval("RRL_WH_TOPOLOGY_SQ")
-        topology_code = self._topology_code(request, draft, topology_id)
         updated_by = request.updated_by or username
         camera_id = draft.get("oracle_camera_id")
+        camera_regions = self._projection_camera_regions(draft, int(camera_id) if camera_id else None)
 
-        self.gateway.execute(
-            """
-            insert into RRL_WAREHOUSE_TOPOLOGY (
+        projection_cells = self._projection_cells(grid, roles)
+        projected_cells: dict[str, int] = {}
+        role_counts: dict[str, int] = {}
+        slot_counts = {"PICK_FACE_SLOT": 0, "STORAGE_SLOT": 0}
+        topology_id = 0
+        topology_code = ""
+        idempotency_key = self._idempotency_key(request.idempotency_key)
+        if idempotency_key:
+            existing_topology = self._find_topology_by_idempotency_key(request.ware_id, idempotency_key)
+            if existing_topology:
+                topology_id = int(existing_topology["topology_id"])
+                topology_code = str(existing_topology["topology_code"])
+                existing_counts = self._topology_projection_counts(topology_id)
+                draft["oracle_topology_id"] = topology_id
+                draft["oracle_topology_code"] = topology_code
+                draft["oracle_topology_idempotency_key"] = idempotency_key
+                draft["last_projection_save_at"] = self._now()
+                draft["updated_at"] = draft["last_projection_save_at"]
+                draft["updated_by"] = updated_by
+                self._write(draft)
+                return {
+                    "draft_id": draft_id,
+                    "topology_id": topology_id,
+                    "topology_code": topology_code,
+                    "status": "SAVED_TO_TOPOLOGY",
+                    "idempotent": True,
+                    "idempotency_key": idempotency_key,
+                    "topology_cell_count": existing_counts["topology_cell_count"],
+                    "role_counts": existing_counts["role_counts"],
+                    "pick_face_slot_count": existing_counts["pick_face_slot_count"],
+                    "storage_slot_count": existing_counts["storage_slot_count"],
+                    "slot_count": existing_counts["slot_count"],
+                    "validation": validation,
+                }
+        if request.topology_code or draft.get("oracle_topology_code"):
+            candidate_code = self._topology_code(request, draft, 0)
+            existing_topology = self._find_topology_by_code(request.ware_id, candidate_code)
+            if existing_topology:
+                topology_id = int(existing_topology["topology_id"])
+                topology_code = str(existing_topology["topology_code"])
+                existing_counts = self._topology_projection_counts(topology_id)
+                draft["oracle_topology_id"] = topology_id
+                draft["oracle_topology_code"] = topology_code
+                draft["last_projection_save_at"] = self._now()
+                draft["updated_at"] = draft["last_projection_save_at"]
+                draft["updated_by"] = updated_by
+                self._write(draft)
+                return {
+                    "draft_id": draft_id,
+                    "topology_id": topology_id,
+                    "topology_code": topology_code,
+                    "status": "SAVED_TO_TOPOLOGY",
+                    "idempotent": True,
+                    "idempotency_key": existing_topology.get("idempotency_key"),
+                    "topology_cell_count": existing_counts["topology_cell_count"],
+                    "role_counts": existing_counts["role_counts"],
+                    "pick_face_slot_count": existing_counts["pick_face_slot_count"],
+                    "storage_slot_count": existing_counts["storage_slot_count"],
+                    "slot_count": existing_counts["slot_count"],
+                    "validation": validation,
+                }
+        cell_insert_sql = """
+            insert into RRL_TOPOLOGY_CELL (
+              TOPOLOGY_CELL_ID, TOPOLOGY_ID, WARE_ID, CELL_CODE,
+              AISLE_CODE, BAY_NO, LEVEL_NO, POSITION_NO, SIDE_CODE, CELL_KIND,
+              X, Y, Z, WIDTH, DEPTH, HEIGHT, SLOT_LAYER_KIND, WAREHOUSE_MAP_CAMERA_ID,
+              CREATED_BY, UPDATED_BY
+            ) values (
+              :topology_cell_id, :topology_id, :ware_id, :cell_code,
+              :aisle_code, :bay_no, :level_no, :position_no, 'CENTER', :cell_kind,
+              :x, :y, :z, 1.2, 0.8, 1.6, :slot_layer_kind, :camera_id,
+              substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
+            )
+        """
+        with self.gateway.transaction("WAREHOUSE_MAP_PROJECTION_SAVE_BULK") as cursor:
+            cursor.execute("select RRL_WH_TOPOLOGY_SQ.nextval from dual")
+            topology_id = int(cursor.fetchone()[0])
+            topology_code = self._topology_code(request, draft, topology_id)
+            cursor.execute(
+                """
+                insert into RRL_WAREHOUSE_TOPOLOGY (
               TOPOLOGY_ID, WARE_ID, TOPOLOGY_CODE, TOPOLOGY_NAME, VERSION_NO,
-              STATUS, COMMENT_TEXT, CREATED_BY, UPDATED_BY
+              STATUS, COMMENT_TEXT, IDEMPOTENCY_KEY, CREATED_BY, UPDATED_BY
             ) values (
               :topology_id, :ware_id, :topology_code, :topology_name, 1,
-              'DRAFT', :comment_text, substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
+              'DRAFT', :comment_text, :idempotency_key, substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
             )
             """,
             {
-                "topology_id": topology_id,
-                "ware_id": request.ware_id,
+                    "topology_id": topology_id,
+                    "ware_id": request.ware_id,
                 "topology_code": topology_code,
                 "topology_name": request.topology_name or draft.get("draft_name") or f"Topology {topology_id}",
                 "comment_text": request.comment_text or f"Projection from warehouse map draft {draft_id}",
+                "idempotency_key": idempotency_key,
                 "updated_by": updated_by,
             },
         )
-
-        cell_statements: list[tuple[str, dict]] = []
-        projected_cells: dict[str, int] = {}
-        role_counts: dict[str, int] = {}
-        for cell in self._projection_cells(grid, roles):
-            topology_cell_id = self._nextval("RRL_TOPOLOGY_CELL_SQ")
-            projected_cells[cell["cell_code"]] = topology_cell_id
-            role_counts[cell["cell_kind"]] = role_counts.get(cell["cell_kind"], 0) + 1
-            cell_statements.append((
-                """
-                insert into RRL_TOPOLOGY_CELL (
-                  TOPOLOGY_CELL_ID, TOPOLOGY_ID, WARE_ID, CELL_CODE,
-                  AISLE_CODE, BAY_NO, LEVEL_NO, POSITION_NO, SIDE_CODE, CELL_KIND,
-                  X, Y, Z, WIDTH, DEPTH, HEIGHT, SLOT_LAYER_KIND, WAREHOUSE_MAP_CAMERA_ID,
-                  CREATED_BY, UPDATED_BY
-                ) values (
-                  :topology_cell_id, :topology_id, :ware_id, :cell_code,
-                  :aisle_code, :bay_no, :level_no, :position_no, 'CENTER', :cell_kind,
-                  :x, :y, :z, 1.2, 0.8, 1.6, :slot_layer_kind, :camera_id,
-                  substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
+            topology_cell_ids: list[int] = []
+            if projection_cells:
+                cursor.execute(
+                    "select RRL_TOPOLOGY_CELL_SQ.nextval VALUE from dual connect by level <= :count",
+                    {"count": len(projection_cells)},
                 )
-                """,
-                {
+                topology_cell_ids = [int(row[0]) for row in cursor.fetchall()]
+
+            cell_rows: list[dict] = []
+            for cell, topology_cell_id in zip(projection_cells, topology_cell_ids):
+                projected_cells[cell["cell_code"]] = topology_cell_id
+                role_counts[cell["cell_kind"]] = role_counts.get(cell["cell_kind"], 0) + 1
+                cell_camera_id = self._camera_id_for_projected_cell(camera_regions, cell)
+                cell_rows.append({
                     "topology_cell_id": topology_cell_id,
                     "topology_id": topology_id,
                     "ware_id": request.ware_id,
@@ -539,35 +652,35 @@ class WarehouseMapDraftService:
                     "y": cell["y"],
                     "z": cell["z"],
                     "slot_layer_kind": cell["slot_layer_kind"],
-                    "camera_id": camera_id,
+                    "camera_id": cell_camera_id,
                     "updated_by": updated_by,
-                },
-            ))
-        if cell_statements:
-            self.gateway.execute_many(cell_statements)
+                })
+            if cell_rows:
+                cursor.executemany(cell_insert_sql, cell_rows)
 
-        slot_statements: list[tuple[str, dict]] = []
-        slot_counts = {"PICK_FACE_SLOT": 0, "STORAGE_SLOT": 0}
-        for slot in self._projection_slot_rows(draft, projected_cells, topology_id, updated_by):
-            slot_statements.append((slot["sql"], slot["params"]))
-            slot_counts[slot["params"]["slot_kind"]] += 1
-        if slot_statements:
-            self.gateway.execute_many(slot_statements)
-
-        self.gateway.execute(
-            """
-            update RRL_WAREHOUSE_MAP_CANVAS
-               set TOPOLOGY_ID = :topology_id,
-                   UPDATED_AT = sysdate,
-                   UPDATED_BY = substr(:updated_by, 1, 50)
-             where CANVAS_ID = :canvas_id
-               and ACTIVE = 1
-            """,
-            {"topology_id": topology_id, "canvas_id": draft.get("oracle_canvas_id"), "updated_by": updated_by},
-        ) if draft.get("oracle_canvas_id") else 0
+            grouped_slots: dict[str, list[dict]] = {}
+            for slot in self._projection_slot_rows(draft, projected_cells, topology_id, updated_by):
+                grouped_slots.setdefault(slot["sql"], []).append(slot["params"])
+                slot_counts[slot["params"]["slot_kind"]] += 1
+            if grouped_slots:
+                for sql, rows in grouped_slots.items():
+                    cursor.executemany(sql, rows)
+            if draft.get("oracle_canvas_id"):
+                cursor.execute(
+                    """
+                    update RRL_WAREHOUSE_MAP_CANVAS
+                       set TOPOLOGY_ID = :topology_id,
+                           UPDATED_AT = sysdate,
+                           UPDATED_BY = substr(:updated_by, 1, 50)
+                     where CANVAS_ID = :canvas_id
+                       and ACTIVE = 1
+                    """,
+                    {"topology_id": topology_id, "canvas_id": draft.get("oracle_canvas_id"), "updated_by": updated_by},
+                )
 
         draft["oracle_topology_id"] = topology_id
         draft["oracle_topology_code"] = topology_code
+        draft["oracle_topology_idempotency_key"] = idempotency_key
         draft["last_projection_save_at"] = self._now()
         draft["updated_at"] = draft["last_projection_save_at"]
         draft["updated_by"] = updated_by
@@ -577,6 +690,7 @@ class WarehouseMapDraftService:
             "topology_id": topology_id,
             "topology_code": topology_code,
             "status": "SAVED_TO_TOPOLOGY",
+            "idempotency_key": idempotency_key,
             "topology_cell_count": len(projected_cells),
             "role_counts": role_counts,
             "pick_face_slot_count": slot_counts["PICK_FACE_SLOT"],
@@ -605,6 +719,30 @@ class WarehouseMapDraftService:
         route_name = request.route_name or route_rows[0].get("route_name") or f"Pick route {topology_id}"
         route_pattern = request.route_pattern or route_rows[0].get("route_pattern") or "MANUAL"
         updated_by = request.updated_by or username
+        idempotency_key = self._idempotency_key(request.idempotency_key)
+        existing_route = self._find_route_by_idempotency_key(topology_id, idempotency_key) if idempotency_key else None
+        existing_route = existing_route or self._active_pick_route_for_topology(topology_id, route_code)
+        if existing_route:
+            pick_route_id = int(existing_route["pick_route_id"])
+            oracle_validation = self._validate_oracle_draft(int(canvas_id), pick_route_id)
+            row_count = self._route_row_count(pick_route_id)
+            draft["oracle_pick_route_id"] = pick_route_id
+            draft["last_route_save_at"] = self._now()
+            draft["updated_at"] = draft["last_route_save_at"]
+            draft["updated_by"] = updated_by
+            self._write(draft)
+            return {
+                "draft_id": draft_id,
+                "pick_route_id": pick_route_id,
+                "topology_id": topology_id,
+                "topology_code": topology.get("topology_code"),
+                "route_code": str(existing_route.get("route_code") or route_code),
+                "route_row_count": row_count,
+                "status": "SAVED_TO_DB",
+                "idempotent": True,
+                "idempotency_key": existing_route.get("idempotency_key"),
+                "oracle_validation": oracle_validation,
+            }
 
         pick_route_id = self._nextval("RRL_PICK_ROUTE_SQ")
         self.gateway.execute(
@@ -612,11 +750,11 @@ class WarehouseMapDraftService:
             insert into RRL_PICK_ROUTE (
               PICK_ROUTE_ID, TOPOLOGY_ID, ROUTE_CODE, ROUTE_NAME, WARE_ID,
               ROUTE_KIND, ROUTE_PATTERN, STRICT_SEQUENCE, STATUS, ACTIVE,
-              CREATED_BY, UPDATED_BY
+              IDEMPOTENCY_KEY, CREATED_BY, UPDATED_BY
             ) values (
               :pick_route_id, :topology_id, :route_code, :route_name, :ware_id,
               'PICK', :route_pattern, :strict_sequence, 'DRAFT', 1,
-              substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
+              :idempotency_key, substr(:updated_by, 1, 50), substr(:updated_by, 1, 50)
             )
             """,
             {
@@ -627,6 +765,7 @@ class WarehouseMapDraftService:
                 "ware_id": request.ware_id,
                 "route_pattern": route_pattern,
                 "strict_sequence": request.strict_sequence,
+                "idempotency_key": idempotency_key,
                 "updated_by": updated_by,
             },
         )
@@ -671,6 +810,7 @@ class WarehouseMapDraftService:
             raise HTTPException(status_code=409, detail={"message": "Oracle route validation failed.", "validation": oracle_validation})
 
         draft["oracle_pick_route_id"] = pick_route_id
+        draft["oracle_pick_route_idempotency_key"] = idempotency_key
         draft["last_route_save_at"] = self._now()
         draft["updated_at"] = draft["last_route_save_at"]
         draft["updated_by"] = updated_by
@@ -683,6 +823,7 @@ class WarehouseMapDraftService:
             "route_code": route_code,
             "route_row_count": len(route_rows),
             "status": "SAVED_TO_DB",
+            "idempotency_key": idempotency_key,
             "oracle_validation": oracle_validation,
         }
 
@@ -704,6 +845,26 @@ class WarehouseMapDraftService:
             raise HTTPException(status_code=409, detail={"message": "Oracle route validation failed.", "validation": oracle_validation})
 
         published_by = request.published_by or username
+        idempotency_key = self._idempotency_key(request.idempotency_key)
+        statuses = self._oracle_publish_status(canvas_id, topology_id, pick_route_id)
+        if (
+            idempotency_key
+            and statuses.get("canvas_status") == "PUBLISHED"
+            and statuses.get("topology_status") == "PUBLISHED"
+            and statuses.get("route_status") == "PUBLISHED"
+            and self._canvas_publish_idempotency_key(canvas_id) == idempotency_key
+        ):
+            return {
+                "draft_id": draft_id,
+                "canvas_id": canvas_id,
+                "topology_id": topology_id,
+                "pick_route_id": pick_route_id,
+                "status": "PUBLISHED",
+                "idempotent": True,
+                "idempotency_key": idempotency_key,
+                "oracle_validation": oracle_validation,
+                "oracle_status": statuses,
+            }
         try:
             self.gateway.execute_plsql(
                 """
@@ -745,10 +906,13 @@ class WarehouseMapDraftService:
             {"pick_route_id": pick_route_id, "published_by": published_by},
         )
 
+        if idempotency_key:
+            self._set_canvas_publish_idempotency_key(canvas_id, idempotency_key, published_by)
         statuses = self._oracle_publish_status(canvas_id, topology_id, pick_route_id)
         draft["status"] = "PUBLISHED"
         draft["oracle_published_at"] = self._now()
         draft["oracle_published_by"] = published_by
+        draft["oracle_publish_idempotency_key"] = idempotency_key
         draft["oracle_publish_validation"] = oracle_validation
         draft["oracle_publish_status"] = statuses
         draft["updated_at"] = draft["oracle_published_at"]
@@ -760,6 +924,7 @@ class WarehouseMapDraftService:
             "topology_id": topology_id,
             "pick_route_id": pick_route_id,
             "status": "PUBLISHED",
+            "idempotency_key": idempotency_key,
             "oracle_validation": oracle_validation,
             "oracle_status": statuses,
         }
@@ -1079,6 +1244,58 @@ class WarehouseMapDraftService:
             raise HTTPException(status_code=404, detail="Warehouse map canvas not found.")
         return rows[0]
 
+    def _find_canvas_by_code(self, ware_id: int, canvas_code: str) -> dict | None:
+        rows = self.gateway.fetch_all(
+            """
+            select *
+              from RRL_WAREHOUSE_MAP_CANVAS
+             where WARE_ID = :ware_id
+               and ACTIVE = 1
+               and upper(CANVAS_CODE) = upper(:canvas_code)
+            """,
+            {"ware_id": ware_id, "canvas_code": canvas_code},
+        )
+        return rows[0] if rows else None
+
+    def _find_canvas_by_idempotency_key(self, ware_id: int, idempotency_key: str) -> dict | None:
+        rows = self.gateway.fetch_all(
+            """
+            select *
+              from RRL_WAREHOUSE_MAP_CANVAS
+             where WARE_ID = :ware_id
+               and ACTIVE = 1
+               and upper(IDEMPOTENCY_KEY) = upper(:idempotency_key)
+            """,
+            {"ware_id": ware_id, "idempotency_key": idempotency_key},
+        )
+        return rows[0] if rows else None
+
+    def _set_canvas_idempotency_key(self, canvas_id: int, idempotency_key: str, updated_by: str | None) -> None:
+        self.gateway.execute(
+            """
+            update RRL_WAREHOUSE_MAP_CANVAS
+               set IDEMPOTENCY_KEY = :idempotency_key,
+                   UPDATED_AT = sysdate,
+                   UPDATED_BY = substr(:updated_by, 1, 50)
+             where CANVAS_ID = :canvas_id
+               and ACTIVE = 1
+            """,
+            {"canvas_id": canvas_id, "idempotency_key": idempotency_key, "updated_by": updated_by},
+        )
+
+    def _first_camera_id(self, canvas_id: int) -> int | None:
+        rows = self.gateway.fetch_all(
+            """
+            select CAMERA_ID
+              from RRL_WAREHOUSE_MAP_CAMERA
+             where CANVAS_ID = :canvas_id
+               and ACTIVE = 1
+             order by CAMERA_ID
+            """,
+            {"canvas_id": canvas_id},
+        )
+        return int(rows[0]["camera_id"]) if rows else None
+
     def _require_topology(self, topology_id: int, ware_id: int) -> dict:
         rows = self.gateway.fetch_all(
             """
@@ -1093,6 +1310,115 @@ class WarehouseMapDraftService:
         if not rows:
             raise HTTPException(status_code=404, detail="Warehouse topology not found.")
         return rows[0]
+
+    def _find_topology_by_code(self, ware_id: int, topology_code: str) -> dict | None:
+        rows = self.gateway.fetch_all(
+            """
+            select *
+              from RRL_WAREHOUSE_TOPOLOGY
+             where WARE_ID = :ware_id
+               and upper(TOPOLOGY_CODE) = upper(:topology_code)
+               and STATUS <> 'ARCHIVED'
+            """,
+            {"ware_id": ware_id, "topology_code": topology_code},
+        )
+        return rows[0] if rows else None
+
+    def _find_topology_by_idempotency_key(self, ware_id: int, idempotency_key: str) -> dict | None:
+        rows = self.gateway.fetch_all(
+            """
+            select *
+              from RRL_WAREHOUSE_TOPOLOGY
+             where WARE_ID = :ware_id
+               and upper(IDEMPOTENCY_KEY) = upper(:idempotency_key)
+               and STATUS <> 'ARCHIVED'
+            """,
+            {"ware_id": ware_id, "idempotency_key": idempotency_key},
+        )
+        return rows[0] if rows else None
+
+    def _topology_projection_counts(self, topology_id: int) -> dict:
+        rows = self.gateway.fetch_all(
+            """
+            select CELL_KIND, count(*) CNT
+              from RRL_TOPOLOGY_CELL
+             where TOPOLOGY_ID = :topology_id
+               and ACTIVE = 1
+             group by CELL_KIND
+            """,
+            {"topology_id": topology_id},
+        )
+        role_counts = {str(row["cell_kind"]): int(row["cnt"] or 0) for row in rows}
+        slot_rows = self.gateway.fetch_all(
+            """
+            select SLOT_KIND, count(*) CNT
+              from RRL_TOPOLOGY_CELL_SLOT
+             where TOPOLOGY_ID = :topology_id
+               and ACTIVE = 1
+             group by SLOT_KIND
+            """,
+            {"topology_id": topology_id},
+        )
+        slot_counts = {str(row["slot_kind"]): int(row["cnt"] or 0) for row in slot_rows}
+        pick_slots = slot_counts.get("PICK_FACE_SLOT", 0)
+        storage_slots = slot_counts.get("STORAGE_SLOT", 0)
+        return {
+            "topology_cell_count": sum(role_counts.values()),
+            "role_counts": role_counts,
+            "pick_face_slot_count": pick_slots,
+            "storage_slot_count": storage_slots,
+            "slot_count": pick_slots + storage_slots,
+        }
+
+    def _active_pick_route_for_topology(self, topology_id: int, route_code: str | None = None) -> dict | None:
+        params: dict[str, Any] = {"topology_id": topology_id, "route_code": route_code}
+        rows = self.gateway.fetch_all(
+            """
+            select *
+              from (
+                select *
+                  from RRL_PICK_ROUTE
+                 where TOPOLOGY_ID = :topology_id
+                   and ROUTE_KIND = 'PICK'
+                   and ACTIVE = 1
+                   and STATUS <> 'ARCHIVED'
+                   and (:route_code is null or upper(ROUTE_CODE) = upper(:route_code))
+                 order by case STATUS when 'PUBLISHED' then 1 when 'DRAFT' then 2 else 3 end,
+                          PICK_ROUTE_ID desc
+              )
+             where rownum = 1
+            """,
+            params,
+        )
+        return rows[0] if rows else None
+
+    def _find_route_by_idempotency_key(self, topology_id: int, idempotency_key: str) -> dict | None:
+        rows = self.gateway.fetch_all(
+            """
+            select *
+              from RRL_PICK_ROUTE
+             where TOPOLOGY_ID = :topology_id
+               and ROUTE_KIND = 'PICK'
+               and ACTIVE = 1
+               and STATUS <> 'ARCHIVED'
+               and upper(IDEMPOTENCY_KEY) = upper(:idempotency_key)
+             order by PICK_ROUTE_ID desc
+            """,
+            {"topology_id": topology_id, "idempotency_key": idempotency_key},
+        )
+        return rows[0] if rows else None
+
+    def _route_row_count(self, pick_route_id: int) -> int:
+        rows = self.gateway.fetch_all(
+            """
+            select count(*) CNT
+              from RRL_PICK_ROUTE_CELL
+             where PICK_ROUTE_ID = :pick_route_id
+               and ACTIVE = 1
+            """,
+            {"pick_route_id": pick_route_id},
+        )
+        return int(rows[0]["cnt"] or 0)
 
     def _oracle_draft_payload(self, canvas: dict) -> dict | None:
         text = canvas.get("renderer_state_json")
@@ -1280,6 +1606,17 @@ class WarehouseMapDraftService:
         code = "".join(ch if ch.isalnum() or ch in {"-", "_"} else "-" for ch in str(raw).upper()).strip("-_")
         return (code or f"MAP-ROUTE-{topology_id}")[:80]
 
+    def _idempotency_key(self, value: str | None) -> str | None:
+        if value is None:
+            return None
+        key = str(value).strip()
+        if not key:
+            return None
+        allowed = {"-", "_", ".", ":", "/"}
+        normalized = "".join(ch if ch.isalnum() or ch in allowed else "-" for ch in key)
+        normalized = normalized.strip("-_./:")
+        return normalized[:120] or None
+
     def _projection_cells(self, grid: WarehouseMapGrid, roles: bytearray) -> list[dict]:
         projected_roles = {
             "PICK_FACE": ("PICK_FACE", None),
@@ -1312,6 +1649,64 @@ class WarehouseMapDraftService:
                         "z": round((level - 1) * 1.6, 3),
                     })
         return cells
+
+    def _projection_camera_regions(self, draft: dict, default_camera_id: int | None) -> list[dict]:
+        if default_camera_id is None:
+            return []
+        metadata = draft.get("draft_metadata") or {}
+        raw_regions = metadata.get("camera_regions") or []
+        if not raw_regions:
+            return [{
+                "camera_id": default_camera_id,
+                "aisle_from": 1,
+                "aisle_to": 10**9,
+                "slot_from": 1,
+                "slot_to": 10**9,
+                "level_from": 1,
+                "level_to": 10**9,
+            }]
+
+        canvas_id = int(draft.get("oracle_canvas_id") or 0)
+        active_camera_ids = self._active_camera_ids(canvas_id)
+        regions: list[dict] = []
+        for item in raw_regions:
+            region_camera_id = int(item.get("camera_id") or 0)
+            if region_camera_id not in active_camera_ids:
+                raise HTTPException(status_code=409, detail=f"Camera region points to inactive or foreign camera: {region_camera_id}")
+            regions.append({
+                "camera_id": region_camera_id,
+                "aisle_from": int(item.get("aisle_from") or 1),
+                "aisle_to": int(item.get("aisle_to") or 10**9),
+                "slot_from": int(item.get("slot_from") or 1),
+                "slot_to": int(item.get("slot_to") or 10**9),
+                "level_from": int(item.get("level_from") or 1),
+                "level_to": int(item.get("level_to") or 10**9),
+            })
+        return regions
+
+    def _active_camera_ids(self, canvas_id: int) -> set[int]:
+        if canvas_id <= 0:
+            return set()
+        rows = self.gateway.fetch_all(
+            """
+            select CAMERA_ID
+              from RRL_WAREHOUSE_MAP_CAMERA
+             where CANVAS_ID = :canvas_id
+               and ACTIVE = 1
+            """,
+            {"canvas_id": canvas_id},
+        )
+        return {int(item["camera_id"]) for item in rows}
+
+    def _camera_id_for_projected_cell(self, regions: list[dict], cell: dict) -> int | None:
+        for region in regions:
+            if (
+                region["aisle_from"] <= int(cell["aisle"]) <= region["aisle_to"]
+                and region["slot_from"] <= int(cell["slot"]) <= region["slot_to"]
+                and region["level_from"] <= int(cell["level"]) <= region["level_to"]
+            ):
+                return int(region["camera_id"])
+        return int(regions[0]["camera_id"]) if regions else None
 
     def _projection_slot_rows(
         self,
@@ -1554,11 +1949,48 @@ class WarehouseMapDraftService:
         )
         return rows[0] if rows else {}
 
+    def _canvas_publish_idempotency_key(self, canvas_id: int) -> str | None:
+        rows = self.gateway.fetch_all(
+            """
+            select PUBLISH_IDEMPOTENCY_KEY
+              from RRL_WAREHOUSE_MAP_CANVAS
+             where CANVAS_ID = :canvas_id
+            """,
+            {"canvas_id": canvas_id},
+        )
+        if not rows:
+            return None
+        value = rows[0].get("publish_idempotency_key")
+        return str(value) if value else None
+
+    def _set_canvas_publish_idempotency_key(self, canvas_id: int, idempotency_key: str, published_by: str | None) -> None:
+        self.gateway.execute(
+            """
+            update RRL_WAREHOUSE_MAP_CANVAS
+               set PUBLISH_IDEMPOTENCY_KEY = :idempotency_key,
+                   UPDATED_AT = sysdate,
+                   UPDATED_BY = substr(:published_by, 1, 50)
+             where CANVAS_ID = :canvas_id
+            """,
+            {"canvas_id": canvas_id, "idempotency_key": idempotency_key, "published_by": published_by},
+        )
+
     def _json_text(self, value) -> str:
         return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
 
     def _nextval(self, sequence_name: str) -> int:
         return self.gateway.call_number_plsql(f"begin select {sequence_name}.nextval into :result from dual; end;", {})
+
+    def _nextvals(self, sequence_name: str, count: int) -> list[int]:
+        if count <= 0:
+            return []
+        if not sequence_name.replace("_", "").isalnum():
+            raise HTTPException(status_code=400, detail="Invalid sequence name.")
+        rows = self.gateway.fetch_all(
+            f"select {sequence_name}.nextval VALUE from dual connect by level <= :count",
+            {"count": count},
+        )
+        return [int(item["value"]) for item in rows]
 
     def _reset_base_snapshots(self, draft: dict) -> None:
         draft["base_roles_base64"] = draft.get("roles_base64")
