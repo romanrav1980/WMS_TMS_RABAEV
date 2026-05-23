@@ -76,26 +76,36 @@ def list_transport_types(
 @router.get("/available-sts")
 def list_available_sts(
     stdate: date | None = None,
+    date_to: date | None = None,
     unassigned_only: bool = True,
     ware_id: int | None = None,
     ware_ids: Annotated[list[int] | None, Query()] = None,
     addr_mask: str | None = None,
     st_mask: str | None = None,
+    st_mask_exclude: bool = False,
+    transport_type: str | None = None,
     assembled_only: bool = False,
+    not_assembled_only: bool = False,
     max_weight_kg: float | None = None,
     max_volume_m3: float | None = None,
+    articul: str | None = None,
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
     return TransportService().list_available_sts(
         stdate=stdate,
+        date_to=date_to,
         unassigned_only=unassigned_only,
         ware_id=ware_id,
         ware_ids=ware_ids,
         addr_mask=addr_mask,
         st_mask=st_mask,
+        st_mask_exclude=st_mask_exclude,
+        transport_type=transport_type,
         assembled_only=assembled_only,
+        not_assembled_only=not_assembled_only,
         max_weight_kg=max_weight_kg,
         max_volume_m3=max_volume_m3,
+        articul=articul,
     )
 
 

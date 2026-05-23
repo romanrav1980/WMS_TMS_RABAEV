@@ -30,11 +30,24 @@ wiki/
   templates/        ← шаблоны для сессий
 ```
 
-## Активная работа
+## Активная работа: ТМС-2
 
-**Текущая фаза:** Transport Phase 2.1 — «Кластеры на панели»
+**ТМС-2** — проект полной замены C# WinForms транспортного модуля (`tabPage6`, `TRANSPORT.cs`, `BillingTransport.cs`) на FastAPI + React. Включает 4 блока:
 
-Execution plan: [wiki/roadmap/transport_execution_plan.md](wiki/roadmap/transport_execution_plan.md)
+1. **Диспетчер** — ручное формирование рейсов: таблица СТ, выделение, создание/закрытие рейса, состав маршрута.
+2. **MAP + Автоматическое планирование** — визуальное отображение всех заявок на карте OpenStreetMap; автоматическое распределение заявок по машинам через решение задачи **CVRPTW** (коммивояжёр с ограничениями вместимости и временных окон) средствами OR-Tools. Диспетчер жмёт одну кнопку — система строит оптимальные маршруты.
+3. **ARM / Диаграмма Ганта** — транспорт как ресурс: загрузка машин по времени, нормативы операций, план-факт.
+4. **Биллинг** — выставление и учёт счетов по закрытым рейсам.
+
+**Текущая фаза:** Sprint 1 (Таблица заявок и фильтры — расширить до 16 колонок)
+
+| Документ ТМС-2 | Путь |
+|---------------|------|
+| ТЗ Диспетчер + MAP + ARM | [wiki/requirements/transport_dispatch_tz.md](wiki/requirements/transport_dispatch_tz.md) |
+| ТЗ Биллинг | [wiki/requirements/transport_billing_tz.md](wiki/requirements/transport_billing_tz.md) |
+| **План по спринтам (живой)** | [wiki/roadmap/transport_execution_plan.md](wiki/roadmap/transport_execution_plan.md) |
+| Roadmap фаз | [wiki/roadmap/transport_roadmap.md](wiki/roadmap/transport_roadmap.md) |
+| Тестовые данные | [db/migrations/2026-05-23_dobrotseny_seed/](db/migrations/2026-05-23_dobrotseny_seed/) |
 
 ## Ключевые файлы транспортного модуля
 

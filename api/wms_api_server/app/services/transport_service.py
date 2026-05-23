@@ -411,14 +411,19 @@ class TransportService:
     def list_available_sts(
         self,
         stdate: date | None = None,
+        date_to: date | None = None,
         unassigned_only: bool = True,
         ware_id: int | None = None,
         ware_ids: list[int] | None = None,
         addr_mask: str | None = None,
         st_mask: str | None = None,
+        st_mask_exclude: bool = False,
+        transport_type: str | None = None,
         assembled_only: bool = False,
+        not_assembled_only: bool = False,
         max_weight_kg: float | None = None,
         max_volume_m3: float | None = None,
+        articul: str | None = None,
     ) -> list[dict[str, Any]]:
         conditions: list[str] = []
         having: list[str] = []
@@ -426,9 +431,18 @@ class TransportService:
 
         if unassigned_only:
             conditions.append("TRANSTASK_ID IS NULL")
-        if stdate is not None:
+
+        # Дата СТ: точное равенство или диапазон
+        if stdate is not None and date_to is None:
             conditions.append("TRUNC(STDATE) = :stdate")
             params["stdate"] = stdate
+        elif stdate is not None and date_to is not None:
+            conditions.append("TRUNC(STDATE) >= :stdate AND TRUNC(STDATE) <= :date_to")
+            params["stdate"] = stdate
+            params["date_to"] = date_to
+        elif date_to is not None:
+            conditions.append("TRUNC(STDATE) <= :date_to")
+            params["date_to"] = date_to
 
         # Фильтр по складам: ware_ids приоритетнее одиночного ware_id
         effective_ware_ids = ware_ids or ([ware_id] if ware_id is not None else None)
@@ -445,11 +459,30 @@ class TransportService:
             params["addr_mask"] = f"%{addr_mask}%"
 
         if st_mask:
-            conditions.append("UPPER(ST_NUMBER) LIKE UPPER(:st_mask)")
+            op = "NOT LIKE" if st_mask_exclude else "LIKE"
+            conditions.append(f"UPPER(ST_NUMBER) {op} UPPER(:st_mask)")
             params["st_mask"] = f"%{st_mask}%"
+
+        if transport_type:
+            conditions.append("TRANSPORT_TYPE = :transport_type")
+            params["transport_type"] = transport_type
+
+        if articul:
+            conditions.append(
+                """EXISTS (
+                    SELECT 1
+                      FROM RABAEV.RRL_SBORKA_PALLETS SP2
+                      JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R2 ON R2.PALLET_UID = SP2.PALLET_UID
+                     WHERE SP2.ST_NUMBER = V.ST_NUMBER
+                       AND UPPER(R2.ARTICUL) LIKE UPPER(:articul)
+                )"""
+            )
+            params["articul"] = f"%{articul}%"
 
         if assembled_only:
             having.append("VERIFY_PERC > 0")
+        elif not_assembled_only:
+            having.append("(VERIFY_PERC IS NULL OR VERIFY_PERC = 0)")
 
         if max_weight_kg is not None:
             having.append("WEIGHT_KG < :max_weight_kg")
@@ -462,16 +495,19 @@ class TransportService:
         where_sql = "WHERE " + " AND ".join(conditions) if conditions else ""
         having_sql = "HAVING " + " AND ".join(having) if having else ""
 
+        # Псевдоним V нужен для коррелированного подзапроса по articul
         return self.gateway.fetch_all(
             f"""
-            SELECT ST_NUMBER, ADDR, REGION, RAION, ORD,
-                   TRANSPORT_TYPE, NEEDS_HYDRO_BOARD,
-                   WARE_ID, NAPR, PALLETS_COUNT, WEIGHT_KG, VOLUME_M3,
-                   STDATE, TRANSTASK_ID, VERIFY_PERC
-              FROM RABAEV.RRL_V_AVAILABLE_STS
+            SELECT V.ST_NUMBER, V.ADDR, V.REGION, V.RAION, V.ORD,
+                   V.TRANSPORT_TYPE, V.NEEDS_HYDRO_BOARD, V.STOL, V.PRIM1,
+                   V.WARE_ID, V.NAPR,
+                   V.PALLETS_COUNT, V.WEIGHT_KG, V.VOLUME_M3,
+                   V.STDATE, V.DATE_LOAD, V.TRANSTASK_ID,
+                   V.VERIFY_PERC, V.SUGAR
+              FROM RABAEV.RRL_V_AVAILABLE_STS V
               {where_sql}
               {having_sql}
-             ORDER BY ORD NULLS LAST, REGION, ST_NUMBER
+             ORDER BY V.ORD NULLS LAST, V.REGION, V.ST_NUMBER
             """,
             params,
         )

@@ -51,11 +51,16 @@ type AvailableSt = {
   WEIGHT_KG: number;
   VOLUME_M3: number | null;
   STDATE: string | null;
+  DATE_LOAD: string | null;
   TRANSTASK_ID: number | null;
   TRANSPORT_TYPE: string | null;
   NEEDS_HYDRO_BOARD: number;
+  STOL: number;
+  PRIM1: string | null;
   NAPR: string | null;
+  WARE_ID: number;
   VERIFY_PERC: number | null;
+  SUGAR: number;
 };
 
 type Vehicle = {
@@ -151,16 +156,21 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   // Filters
   const [addrMask, setAddrMask] = useState("");
   const [stMask, setStMask] = useState("");
+  const [stMaskExclude, setStMaskExclude] = useState(false);
   const [assembledOnly, setAssembledOnly] = useState(false);
+  const [notAssembledOnly, setNotAssembledOnly] = useState(false);
   const [unassignedOnly, setUnassignedOnly] = useState(true);
+  const [dateTo, setDateTo] = useState<string>("");
   const [maxWeightKg, setMaxWeightKg] = useState<number | null>(null);
   const [maxVolM3, setMaxVolM3] = useState<number | null>(null);
   const [trTypeFilter, setTrTypeFilter] = useState("");
+  const [articulFilter, setArticulFilter] = useState("");
 
   const debouncedAddrMask = useDebounce(addrMask, 300);
   const debouncedStMask = useDebounce(stMask, 300);
   const debouncedMaxWeight = useDebounce(maxWeightKg, 500);
   const debouncedMaxVol = useDebounce(maxVolM3, 500);
+  const debouncedArticul = useDebounce(articulFilter, 400);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -221,19 +231,26 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const loadAvailableSts = useCallback(async () => {
     try {
       const params = new URLSearchParams({ stdate: stDate });
-      if (unassignedOnly) params.set("unassigned_only", "true");
+      if (!unassignedOnly) params.set("unassigned_only", "false");
+      if (dateTo) params.set("date_to", dateTo);
       if (debouncedAddrMask) params.set("addr_mask", debouncedAddrMask);
-      if (debouncedStMask) params.set("st_mask", debouncedStMask);
+      if (debouncedStMask) {
+        params.set("st_mask", debouncedStMask);
+        if (stMaskExclude) params.set("st_mask_exclude", "true");
+      }
+      if (trTypeFilter) params.set("transport_type", trTypeFilter);
       if (assembledOnly) params.set("assembled_only", "true");
+      if (notAssembledOnly) params.set("not_assembled_only", "true");
       if (debouncedMaxWeight != null) params.set("max_weight_kg", String(debouncedMaxWeight));
       if (debouncedMaxVol != null) params.set("max_volume_m3", String(debouncedMaxVol));
+      if (debouncedArticul) params.set("articul", debouncedArticul);
       const data = await apiFetch<AvailableSt[]>(`/api/admin/transport/available-sts?${params}`);
-      const filtered = trTypeFilter ? data.filter(s => s.TRANSPORT_TYPE === trTypeFilter) : data;
-      setAvailableSts(filtered);
+      setAvailableSts(data);
     } catch {
       setAvailableSts(demoAvailableSts(stDate));
     }
-  }, [stDate, debouncedAddrMask, debouncedStMask, assembledOnly, unassignedOnly, debouncedMaxWeight, debouncedMaxVol, trTypeFilter]);
+  }, [stDate, dateTo, debouncedAddrMask, debouncedStMask, stMaskExclude, trTypeFilter,
+      assembledOnly, notAssembledOnly, unassignedOnly, debouncedMaxWeight, debouncedMaxVol, debouncedArticul]);
 
   useEffect(() => { loadAvailableSts(); }, [loadAvailableSts]);
 
@@ -467,6 +484,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               <thead>
                 <tr>
                   <th style={{ width: 22 }}></th>
+                  <th title="Склад">Скл</th>
                   <th>Пал.</th>
                   <th>Вес</th>
                   <th>Объём</th>
@@ -478,13 +496,15 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   <th>%</th>
                   <th>Район</th>
                   <th>Тип ТС</th>
-                  <th>Г</th>
+                  <th title="Стол-лифт">Стол</th>
+                  <th title="Примечание">Прим.</th>
+                  <th title="Сахар">Сах</th>
                 </tr>
               </thead>
               <tbody>
                 {viewMode === "flat" && (
                   availableSts.length === 0
-                    ? <tr><td colSpan={13} className="dispatch-grid-empty">Нет свободных СТ по текущим фильтрам</td></tr>
+                    ? <tr><td colSpan={16} className="dispatch-grid-empty">Нет свободных СТ по текущим фильтрам</td></tr>
                     : availableSts.map(st => (
                         <AvailableStRow key={st.ST_NUMBER} st={st}
                           checked={selectedStNums.has(st.ST_NUMBER)}
@@ -493,7 +513,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 )}
                 {viewMode === "clusters" && (
                   clusters.length === 0
-                    ? <tr><td colSpan={13} className="dispatch-grid-empty">Нет свободных СТ</td></tr>
+                    ? <tr><td colSpan={16} className="dispatch-grid-empty">Нет свободных СТ</td></tr>
                     : clusters.map(cluster => (
                         <ClusterGroup
                           key={cluster.RAION}
@@ -733,6 +753,17 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           <textarea className="dispatch-fp-textarea" value={stMask} rows={3}
             onChange={e => setStMask(e.target.value)}
             placeholder={"Номер СТ\n(несколько через\nперенос строки)"} />
+          <label className="dispatch-fp-check dispatch-fp-check-sm">
+            <input type="checkbox" checked={stMaskExclude}
+              onChange={e => setStMaskExclude(e.target.checked)} />
+            НЕ эти СТ (исключить)
+          </label>
+
+          <div className="dispatch-fp-label">Артикул</div>
+          <input className="dispatch-fp-input" type="text" value={articulFilter}
+            onChange={e => setArticulFilter(e.target.value)} placeholder="Код артикула" />
+
+          <div className="dispatch-fp-sep" />
 
           <label className="dispatch-fp-check">
             <input type="checkbox" checked={unassignedOnly}
@@ -741,11 +772,26 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           </label>
           <label className="dispatch-fp-check">
             <input type="checkbox" checked={assembledOnly}
-              onChange={e => setAssembledOnly(e.target.checked)} />
+              onChange={e => {
+                setAssembledOnly(e.target.checked);
+                if (e.target.checked) setNotAssembledOnly(false);
+              }} />
             Только собранные
+          </label>
+          <label className="dispatch-fp-check">
+            <input type="checkbox" checked={notAssembledOnly}
+              onChange={e => {
+                setNotAssembledOnly(e.target.checked);
+                if (e.target.checked) setAssembledOnly(false);
+              }} />
+            Только НЕ собранные
           </label>
 
           <div className="dispatch-fp-sep" />
+
+          <div className="dispatch-fp-label">Дата до</div>
+          <input className="dispatch-fp-input" type="date" value={dateTo}
+            onChange={e => setDateTo(e.target.value)} />
 
           <div className="dispatch-fp-label">V&lt; (м³)</div>
           <input className="dispatch-fp-input" type="number" min={0} step={0.1}
@@ -774,6 +820,23 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 }
 
 // ---------------------------------------------------------------------------
+// Warehouse color mapping (§3.4)
+// ---------------------------------------------------------------------------
+
+const WARE_COLOR_CLASS: Record<number, string> = {
+  5: "dispatch-ware-5",
+  6: "dispatch-ware-6",
+  7: "dispatch-ware-7",
+  9201: "dispatch-ware-9201",
+  9202: "dispatch-ware-9202",
+  9203: "dispatch-ware-9203",
+};
+
+function wareColorClass(wareId: number): string {
+  return WARE_COLOR_CLASS[wareId] ?? "";
+}
+
+// ---------------------------------------------------------------------------
 // AvailableStRow
 // ---------------------------------------------------------------------------
 
@@ -785,12 +848,18 @@ function AvailableStRow({
   onToggle: () => void;
   isChild?: boolean;
 }) {
+  const rowClass = [
+    "dispatch-gr",
+    checked ? "selected" : wareColorClass(st.WARE_ID),
+    isChild ? "dispatch-grid-cluster-child" : "",
+  ].filter(Boolean).join(" ");
+
   return (
-    <tr className={["dispatch-gr", checked ? "selected" : "", isChild ? "dispatch-grid-cluster-child" : ""].filter(Boolean).join(" ")}
-      onClick={onToggle}>
+    <tr className={rowClass} onClick={onToggle}>
       <td onClick={e => e.stopPropagation()}>
         <input type="checkbox" checked={checked} onChange={onToggle} />
       </td>
+      <td className="num-c dispatch-ware-cell" title={`Склад ${st.WARE_ID}`}>{st.WARE_ID}</td>
       <td className="num-r">{st.PALLETS_COUNT}</td>
       <td className="num-r">{st.WEIGHT_KG.toFixed(0)}</td>
       <td className="num-r">{st.VOLUME_M3 != null ? st.VOLUME_M3.toFixed(2) : "—"}</td>
@@ -802,7 +871,9 @@ function AvailableStRow({
       <td>{st.VERIFY_PERC != null ? <VerifyPill perc={st.VERIFY_PERC} /> : "—"}</td>
       <td>{st.RAION ?? "—"}</td>
       <td>{st.TRANSPORT_TYPE ?? "—"}</td>
-      <td className="num-c">{st.NEEDS_HYDRO_BOARD ? <span className="dispatch-hydro">Г</span> : ""}</td>
+      <td className="num-c">{st.STOL ? <span className="dispatch-stol">С</span> : ""}</td>
+      <td className="dispatch-prim1" title={st.PRIM1 ?? ""}>{st.PRIM1 ? st.PRIM1.slice(0, 20) : ""}</td>
+      <td className="num-c">{st.SUGAR ? <span className="dispatch-sugar">С</span> : ""}</td>
     </tr>
   );
 }
@@ -824,7 +895,7 @@ function ClusterGroup({
   return (
     <>
       <tr className="dispatch-grid-cluster-hdr" onClick={onToggle}>
-        <td colSpan={13}>
+        <td colSpan={16}>
           <span className="dispatch-grid-cluster-arrow">{expanded ? "▼" : "▶"}</span>
           <b>{cluster.RAION}</b>
           <span className="dispatch-grid-cluster-meta">

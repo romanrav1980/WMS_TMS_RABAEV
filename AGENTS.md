@@ -37,6 +37,28 @@ Before making non-trivial project decisions, start here:
 - For local Windows runs, prefer root `serv.bat` for the WMS API server, root `front.bat` for the WMS admin frontend/raw UI reference, and root `terminal.bat` for the WMS terminal Web/PWA app. These scripts clear their target ports before starting.
 - Pallet identifier fields are not SSCC-only fields. They must accept both standard SSCC values and other internal/legacy WMS pallet identifiers; label them as `Идентификатор паллеты` where possible.
 
+## Активный проект: ТМС-2
+
+**ТМС-2** (Transport Management System 2) — текущий приоритет разработки. Полная замена C# WinForms транспортного модуля на FastAPI + React. 4 блока, 17 спринтов:
+
+| Блок | Спринты | Суть |
+|------|---------|------|
+| Диспетчер | 1–6 | Таблица СТ, создание/закрытие рейсов |
+| MAP + VRP | 7–10 | Карта OpenStreetMap (Leaflet), авто-план через OR-Tools CVRPTW |
+| ARM / Ганта | 11–14 | SVG-диаграмма Ганта, нормативы водителей |
+| Биллинг | 15–17 | Счета по рейсам, Oracle-пакеты |
+
+Ключевые документы:
+- ТЗ: [`wiki/requirements/transport_dispatch_tz.md`](wiki/requirements/transport_dispatch_tz.md)
+- **План спринтов (living checklist):** [`wiki/roadmap/transport_execution_plan.md`](wiki/roadmap/transport_execution_plan.md)
+- Тестовые данные «Добра Цен»: `db/migrations/2026-05-23_dobrotseny_seed/` (seed 046+047, 77 адресов, 385 СТ, ✅ применён в dev)
+
+Инструмент → спринты: **код-код ($20)** — спринты 1,2,3,5,6,10,14,15,16,17; **кодекс ($200)** — спринты 8 (VRP), 12 (Ганта); **КК+КС** — спринты 4,7,9,11,13.
+
+Следующий активный спринт: **Sprint 1** (расширить `GET /available-sts`, таблица 16 колонок).
+
+---
+
 ## Current Regulatory Layer
 
 - Mercury and Honest Sign support now has a second additive layer: migration `2026-05-17-003-regulatory-lifecycle-entities`, package `RRL_REGULATORY_API`, Mercury sites/operations, shared regulatory journal, and CRPT circulation lifecycle.

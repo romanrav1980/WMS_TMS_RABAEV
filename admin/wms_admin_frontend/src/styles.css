@@ -696,6 +696,8 @@ button[aria-disabled="true"] { cursor: help; }
 
 /* ---- Misc badges ---- */
 .dispatch-hydro { background: #fef9c3; color: #854d0e; border-radius: 4px; padding: 0 5px; font-size: 10px; font-weight: 900; }
+.dispatch-stol  { background: #e0f2fe; color: #0369a1; border-radius: 4px; padding: 0 5px; font-size: 10px; font-weight: 900; }
+.dispatch-sugar { background: #fce7f3; color: #9d174d; border-radius: 4px; padding: 0 5px; font-size: 10px; font-weight: 900; }
 .dispatch-tk-badge { font-size: 10px; background: #e0f2fe; color: #0369a1; border-radius: 8px; padding: 1px 6px; margin-left: 4px; }
 .dispatch-tk-inline { font-size: 11px; color: #64748b; }
 .dispatch-st-raion-sm { font-size: 10px; color: #94a3b8; white-space: nowrap; }
@@ -703,6 +705,19 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-verify-done { background: #dcfce7; color: #166534; }
 .dispatch-verify-partial { background: #fef9c3; color: #854d0e; }
 .dispatch-verify-low { background: #fee2e2; color: #991b1b; }
+.dispatch-ware-cell { font-size: 10px; color: #64748b; }
+.dispatch-prim1 { font-size: 10px; color: #475569; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dispatch-fp-check-sm { font-size: 10px; color: #64748b; margin-top: 2px; }
+
+/* ---- Цветовая подсветка строк по складу (§3.4) ---- */
+/* Производственные склады */
+.dispatch-ware-5    { background-color: #fee2e2 !important; }
+.dispatch-ware-6    { background-color: #ffffff; }
+.dispatch-ware-7    { background-color: #dcfce7 !important; }
+/* Тестовые данные «Добра Цен» */
+.dispatch-ware-9201 { background-color: #ecfdf5 !important; }
+.dispatch-ware-9202 { background-color: #fffbeb !important; }
+.dispatch-ware-9203 { background-color: #f0f9ff !important; }
 
 /* ---- Readiness bar ---- */
 .dispatch-readiness { display: inline-flex; align-items: center; gap: 5px; }
