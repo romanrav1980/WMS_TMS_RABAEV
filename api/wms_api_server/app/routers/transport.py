@@ -131,12 +131,22 @@ def list_tasks(
     shipment_date: date | None = None,
     condition: str | None = None,
     include_readiness: bool = False,
+    task_id: int | None = None,
+    transport_mask: str | None = None,
+    company_mask: str | None = None,
+    date_to: date | None = None,
+    no_payments_only: bool = False,
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
     return TransportService().list_tasks(
         shipment_date=shipment_date,
         condition=condition,
         include_readiness=include_readiness,
+        task_id=task_id,
+        transport_mask=transport_mask,
+        company_mask=company_mask,
+        date_to=date_to,
+        no_payments_only=no_payments_only,
     )
 
 

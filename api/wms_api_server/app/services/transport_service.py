@@ -117,6 +117,11 @@ class TransportService:
         condition: str | None = None,
         include_deleted: bool = False,
         include_readiness: bool = False,
+        task_id: int | None = None,
+        transport_mask: str | None = None,
+        company_mask: str | None = None,
+        date_to: date | None = None,
+        no_payments_only: bool = False,
     ) -> list[dict[str, Any]]:
         conditions: list[str] = []
         params: dict[str, Any] = {}
@@ -126,9 +131,23 @@ class TransportService:
         if shipment_date is not None:
             conditions.append("TRUNC(TT.SHIPMENT_DATE) = :shipment_date")
             params["shipment_date"] = shipment_date
+        if date_to is not None:
+            conditions.append("TRUNC(TT.SHIPMENT_DATE) <= :date_to")
+            params["date_to"] = date_to
         if condition:
             conditions.append("TT.CONDITION = :condition")
             params["condition"] = condition
+        if task_id is not None:
+            conditions.append("TT.ID = :task_id_f")
+            params["task_id_f"] = task_id
+        if transport_mask:
+            conditions.append("UPPER(TT.TRANSPORT) LIKE UPPER(:transport_mask)")
+            params["transport_mask"] = f"%{transport_mask}%"
+        if company_mask:
+            conditions.append("UPPER(NVL(V.DOVERENNOST_OT,'')) LIKE UPPER(:company_mask)")
+            params["company_mask"] = f"%{company_mask}%"
+        if no_payments_only:
+            conditions.append("(TT.PAY_ORDER_ID IS NULL OR TT.PAY_ORDER_ID = 0)")
 
         where_sql = "WHERE " + " AND ".join(conditions) if conditions else ""
 
@@ -156,24 +175,30 @@ class TransportService:
                    TT.DOCK,
                    TT.SHIPMENT_TIME,
                    TT.TEMP_REGION,
+                   TT.TEMP_REGION                         AS REGIONS,
                    TT.TEMP_WEIGHT,
                    TT.PRICE,
                    TT.DELETED,
-                   COUNT(SP.ID)                           AS PALLET_COUNT,
-                   COUNT(DISTINCT SP.ST_NUMBER)           AS ST_COUNT
+                   TT.USER_ID                             AS LOGIST,
+                   TT.PAY_ORDER_ID,
+                   COUNT(DISTINCT SP.PALLET_UID)          AS PALLET_COUNT,
+                   COUNT(DISTINCT SP.ST_NUMBER)           AS ST_COUNT,
+                   ROUND(SUM(NVL(R.TARESIZE,0) * NVL(R.PACK_COUNT,0)) / 1000000, 2) AS VOLUME_M3
                    {readiness_cols}
               FROM RABAEV.RRL_TRANSPORT_TASK TT
               LEFT JOIN RABAEV.RRL_TR_VODITEL V ON V.ID = TT.VODITEL_ID
               LEFT JOIN RABAEV.RRL_SBORKA_PALLETS SP
                 ON SP.TRANSTASK_ID = TT.ID
-               AND (SP.DELETED IS NULL OR SP.DELETED <> 1)
+               AND SP.CONDITION <> 2
+              LEFT JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = SP.PALLET_UID
               {where_sql}
              GROUP BY TT.ID, TT.CREATEDATE, TT.TRANSPORT, TT.TRANSTYPE,
                       TT.CONDITION, TT.SHIPMENT_DATE, TT.PLANNED_DELIVERY_DATE,
                       TT.VODITEL_ID, V.F, V.I, V.O, V.TEL,
                       V.DOVERENNOST_OT, V.SOBSTVENNYY,
                       TT.PRIMECHANIE, TT.DOCK, TT.SHIPMENT_TIME,
-                      TT.TEMP_REGION, TT.TEMP_WEIGHT, TT.PRICE, TT.DELETED
+                      TT.TEMP_REGION, TT.TEMP_WEIGHT, TT.PRICE, TT.DELETED,
+                      TT.USER_ID, TT.PAY_ORDER_ID
              ORDER BY TT.SHIPMENT_DATE DESC, TT.ID DESC
             """,
             params,
@@ -313,21 +338,23 @@ class TransportService:
             """
             SELECT SP.ST_NUMBER,
                    SP.ADDR,
-                   NVL(A.REGION, SP.ADDR)             AS REGION,
+                   NVL(A.REGION, SP.ADDR)                        AS REGION,
                    A.RAION,
                    SP.ORD,
-                   COUNT(DISTINCT SP.PALLET_UID)       AS PALLETS_COUNT,
-                   ROUND(SUM(NVL(R.ORDER_WEIGHT,0)),0) AS WEIGHT_KG,
-                   MAX(SP.STDATE)                      AS STDATE,
-                   MAX(SP.ZONE)                        AS ZONE,
-                   MAX(SP.ZONE_TIME_PLAN_IN)           AS TIME_FROM,
-                   MAX(SP.ZONE_TIME_PLAN_OUT)          AS TIME_TO,
-                   MAX(SP.LOAD_TYPE)                   AS LOAD_TYPE
+                   COUNT(DISTINCT SP.PALLET_UID)                  AS PALLETS_COUNT,
+                   ROUND(SUM(NVL(R.ORDER_WEIGHT,0)),0)            AS WEIGHT_KG,
+                   MAX(SP.STDATE)                                 AS STDATE,
+                   MAX(SP.ZONE)                                   AS ZONE,
+                   MAX(SP.ZONE_TIME_PLAN_IN)                      AS TIME_FROM,
+                   MAX(SP.ZONE_TIME_PLAN_OUT)                     AS TIME_TO,
+                   MAX(SP.LOAD_TYPE)                              AS LOAD_TYPE,
+                   MAX(SP.WARE_ID)                                AS WARE_ID,
+                   MAX(RABAEV.RRL_ST_VERYFY_PERC(SP.ST_NUMBER))  AS VERIFY_PERC
               FROM RABAEV.RRL_SBORKA_PALLETS SP
               JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = SP.PALLET_UID
               LEFT JOIN RABAEV.RRL_ADDR A ON A.ADDR = SP.ADDR
              WHERE SP.TRANSTASK_ID = :task_id
-               AND (SP.DELETED IS NULL OR SP.DELETED <> 1)
+               AND SP.CONDITION <> 2
              GROUP BY SP.ST_NUMBER, SP.ADDR, A.REGION, A.RAION, SP.ORD
              ORDER BY SP.ORD NULLS LAST, SP.ST_NUMBER
             """,
@@ -345,7 +372,7 @@ class TransportService:
                  WHERE ST_NUMBER = :st
                    AND TRANSTASK_ID IS NOT NULL
                    AND TRANSTASK_ID <> :task_id
-                   AND (DELETED IS NULL OR DELETED <> 1)
+                   AND CONDITION <> 2
                    AND ROWNUM = 1
                 """,
                 {"st": st, "task_id": task_id},
@@ -384,7 +411,7 @@ class TransportService:
                SET LOAD_TYPE = :load_type
              WHERE ST_NUMBER   = :st_number
                AND TRANSTASK_ID = :task_id
-               AND (DELETED IS NULL OR DELETED <> 1)
+               AND CONDITION <> 2
             """,
             {"load_type": load_type or None, "st_number": st_number, "task_id": task_id},
         )
@@ -399,7 +426,7 @@ class TransportService:
                SET ORD = :ord_value
              WHERE ST_NUMBER   = :st_number
                AND TRANSTASK_ID = :task_id
-               AND (DELETED IS NULL OR DELETED <> 1)
+               AND CONDITION <> 2
             """,
             {"ord_value": ord_value, "st_number": st_number, "task_id": task_id},
         )
