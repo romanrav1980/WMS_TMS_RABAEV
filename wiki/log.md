@@ -1712,3 +1712,11 @@ Append-only log of root wiki updates.
 - Verified explicit articul binding path with `dry_run=1`: one published route cell matched one existing pick face and reported `assigned_articuls=1` without writing a fake SKU binding.
 - Readiness now blocks only on `NO_CASE_PICK_ARTICUL_BINDINGS`; real SKU-to-pick-face mapping is the next sprint.
 - Added `requirements/large_warehouse_route_consumption_materialization_2026_05_23.md` and updated API docs, api-method library, and wiki index.
+
+## 2026-05-23 12:39 +05:00
+
+- Merged PR #3 (`b343d6c`) and started the SKU-to-pick-face binding loader sprint.
+- Added `tests/load/warehouse_map/warehouse_route_binding_loader.cjs`, a CSV/JSON runner that defaults to `--dry-run`, supports `--validate-only`, and requires explicit `--apply` for writes.
+- Added `tests/load/warehouse_map/route_bindings_sample.csv`.
+- Added `requirements/large_warehouse_route_binding_loader_2026_05_23.md` and updated the wiki index.
+- Next checkpoint is to run the loader with real `cell_code` / `pick_route_cell_id` and `articul` data, then confirm `ready_for_wave_case_pick = true`.
