@@ -1702,3 +1702,13 @@ Append-only log of root wiki updates.
 - The endpoint rejects `ware_id=0`, requires `pick_topology_view`, and reports published topology/route counts, route-cell counts, storage-slot route violations, pick-face bindings, missing pick-face route cells, and case-pick articul bindings.
 - Direct service-call evidence on `WARE_ID=1`: published topology `6`, published pick routes `6`, route cells `205`, storage-route violations `0`, pick-face bindings `0`, articul bindings `0`, `ready_for_wave_case_pick=false`, blockers `NO_PICK_FACE_BINDINGS` and `NO_CASE_PICK_ARTICUL_BINDINGS`.
 - Added `requirements/large_warehouse_route_consumption_readiness_2026_05_23.md`, updated API docs and api-method library, and recorded the next sprint as `published route cell -> pick face -> articul binding`.
+
+## 2026-05-23 12:24 +05:00
+
+- Continued route consumption with `POST /api/picking/warehouses/{ware_id}/route-consumption/materialize`.
+- The endpoint materializes active published pick-route cells into `RRL_PICK_FACE`, optionally assigns explicit articul bindings, supports `dry_run`, rejects `ware_id=0`, and requires `pick_topology_edit`.
+- Applied materialization on `WARE_ID=1`: `205` route cells produced `205` new pick faces, with storage-route violations remaining `0`.
+- Re-ran materialization idempotently: `created_pick_faces=0`, `existing_pick_faces=205`, `skipped_without_pick_face=0`.
+- Verified explicit articul binding path with `dry_run=1`: one published route cell matched one existing pick face and reported `assigned_articuls=1` without writing a fake SKU binding.
+- Readiness now blocks only on `NO_CASE_PICK_ARTICUL_BINDINGS`; real SKU-to-pick-face mapping is the next sprint.
+- Added `requirements/large_warehouse_route_consumption_materialization_2026_05_23.md` and updated API docs, api-method library, and wiki index.

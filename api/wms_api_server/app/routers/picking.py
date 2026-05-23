@@ -24,6 +24,7 @@ from ..schemas import (
     ArticulReplenishmentRuleUpsertRequest,
     PickFaceArticulUpsertRequest,
     PickFaceUpsertRequest,
+    PickRouteConsumptionMaterializeRequest,
     PickRouteCellUpsertRequest,
     PickRouteUpsertRequest,
     PickTaskCompleteRequest,
@@ -322,6 +323,16 @@ def get_route_consumption_readiness(
     _user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_VIEW_PERMISSION)),
 ) -> dict:
     return PickingService().get_route_consumption_readiness(ware_id)
+
+
+@router.post("/warehouses/{ware_id}/route-consumption/materialize")
+def materialize_route_consumption(
+    ware_id: Annotated[int, Path(gt=0)],
+    request: PickRouteConsumptionMaterializeRequest,
+    user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_EDIT_PERMISSION)),
+) -> dict:
+    request.updated_by = request.updated_by or user.username
+    return PickingService().materialize_route_consumption(ware_id, request)
 
 
 @router.get("/routes")

@@ -491,6 +491,42 @@ Verification:
 
 - Direct service check on `WARE_ID=1` returned published topology/route counts and `storage_route_violation_count = 0`, but `ready_for_wave_case_pick = false` because no active `RRL_PICK_FACE` or `RRL_PICK_FACE_ARTICUL` bindings exist yet.
 
+### `POST /api/picking/warehouses/{ware_id}/route-consumption/materialize`
+
+Purpose: materialize the bridge from published pick-route cells to wave/case-pick consumable pick faces, and optionally bind explicit articuls to those pick faces.
+
+Permission: `pick_topology_edit`.
+
+Parameters:
+
+- `ware_id`: positive Oracle warehouse id; `0` is rejected at the FastAPI path layer.
+
+Request body:
+
+- `pick_route_id`: optional route filter; when omitted, all active published routes for the warehouse are considered.
+- `create_missing_pick_faces`: `1` creates missing `RRL_PICK_FACE` rows for route cells; `0` only binds to existing faces.
+- `bindings`: optional list of articul bindings by `pick_route_cell_id` and/or `cell_code`.
+- `dry_run`: `1` reports what would be created/assigned without writing.
+- `limit`: safety cap, default `1000`, max `5000`.
+
+Writes:
+
+- `RRL_PICK_FACE` through `RRL_PICK_TOPOLOGY_API.upsert_pick_face`.
+- `RRL_PICK_FACE_ARTICUL` through `RRL_PICK_TOPOLOGY_API.assign_articul` when explicit bindings are supplied.
+
+Invariants:
+
+- Reads only active, published, non-archived pick routes.
+- Excludes storage slots from materialization; only whole-cell route rows or `PICK_FACE_SLOT` route rows are eligible.
+- Re-running is duplicate-safe for existing active `PICK_ROUTE_CELL_ID` pick faces.
+- Articul bindings are not guessed; SKU-to-cell binding remains explicit business input.
+
+Verification:
+
+- On `WARE_ID=1`, first run materialized `205` pick faces from `205` published route cells and left storage-route violations at `0`.
+- Retry created `0` new pick faces and found `205` existing pick faces.
+- Readiness now reports only `NO_CASE_PICK_ARTICUL_BINDINGS` until real SKU bindings are supplied.
+
 Router:
 
 - [`../../api/wms_api_server/app/routers/warehouse_tasks.py`](../../api/wms_api_server/app/routers/warehouse_tasks.py)
