@@ -1046,7 +1046,7 @@ class WarehouseMapDraftLoadFromDbRequest(BaseModel):
 
 
 class WarehouseMapDraftSaveToDbRequest(BaseModel):
-    ware_id: int
+    ware_id: int = Field(gt=0)
     canvas_id: int | None = Field(default=None, gt=0)
     canvas_code: str | None = Field(default=None, max_length=80)
     canvas_name: str | None = Field(default=None, max_length=200)
@@ -1054,26 +1054,29 @@ class WarehouseMapDraftSaveToDbRequest(BaseModel):
     camera_name: str | None = Field(default=None, max_length=200)
     comment_text: str | None = Field(default=None, max_length=1000)
     expected_revision: int | None = Field(default=None, ge=1)
+    idempotency_key: str | None = Field(default=None, max_length=120)
     updated_by: str | None = None
 
 
 class WarehouseMapDraftProjectionSaveRequest(BaseModel):
-    ware_id: int
+    ware_id: int = Field(gt=0)
     topology_code: str | None = Field(default=None, max_length=80)
     topology_name: str | None = Field(default=None, max_length=200)
     comment_text: str | None = Field(default=None, max_length=1000)
     expected_revision: int | None = Field(default=None, ge=1)
+    idempotency_key: str | None = Field(default=None, max_length=120)
     updated_by: str | None = None
 
 
 class WarehouseMapDraftRouteSaveToDbRequest(BaseModel):
-    ware_id: int
+    ware_id: int = Field(gt=0)
     topology_id: int | None = Field(default=None, gt=0)
     route_code: str | None = Field(default=None, max_length=80)
     route_name: str | None = Field(default=None, max_length=200)
     route_pattern: str | None = Field(default=None, pattern="^(LINEAR|Z|U_SHAPE|P_SHAPE|MANUAL)$")
     strict_sequence: int = Field(default=1, ge=0, le=1)
     expected_revision: int | None = Field(default=None, ge=1)
+    idempotency_key: str | None = Field(default=None, max_length=120)
     updated_by: str | None = None
 
 
@@ -1082,6 +1085,7 @@ class WarehouseMapDraftOraclePublishRequest(BaseModel):
     topology_id: int | None = Field(default=None, gt=0)
     pick_route_id: int | None = Field(default=None, gt=0)
     expected_revision: int | None = Field(default=None, ge=1)
+    idempotency_key: str | None = Field(default=None, max_length=120)
     published_by: str | None = Field(default=None, max_length=50)
 
 

@@ -1,6 +1,7 @@
 import hashlib
 import json
 import time
+from contextlib import contextmanager
 from typing import Any
 
 import oracledb
@@ -90,8 +91,11 @@ class OracleGateway:
             row_count = 0
             error_text = None
             try:
+                grouped: dict[str, list[dict[str, Any]]] = {}
                 for sql, params in statements:
-                    cursor.execute(sql, params)
+                    grouped.setdefault(sql, []).append(params)
+                for sql, rows in grouped.items():
+                    cursor.executemany(sql, rows)
                     row_count += max(cursor.rowcount or 0, 0)
                 connection.commit()
             except Exception as exc:
@@ -99,7 +103,7 @@ class OracleGateway:
                 connection.rollback()
                 raise
             finally:
-                summary_sql = f"execute_many statements={len(statements)}"
+                summary_sql = f"execute_many statements={len(statements)} groups={len(set(sql for sql, _ in statements))}"
                 summary_params = {"statement_count": len(statements)}
                 self._log_slow_sql(
                     connection=connection,
@@ -109,6 +113,31 @@ class OracleGateway:
                     row_count=row_count,
                     error_text=error_text,
                     operation_kind="EXECUTE_MANY",
+                )
+
+    @contextmanager
+    def transaction(self, operation_name: str):
+        with oracle_connection() as connection:
+            cursor = connection.cursor()
+            self._apply_session_context(cursor)
+            started = time.perf_counter()
+            error_text = None
+            try:
+                yield cursor
+                connection.commit()
+            except Exception as exc:
+                error_text = str(exc)
+                connection.rollback()
+                raise
+            finally:
+                self._log_slow_sql(
+                    connection=connection,
+                    sql=operation_name,
+                    params={},
+                    started=started,
+                    row_count=cursor.rowcount if cursor.rowcount is not None else None,
+                    error_text=error_text,
+                    operation_kind="TRANSACTION",
                 )
 
     def call_varchar_function(self, function_name: str, params: dict[str, Any]) -> str:

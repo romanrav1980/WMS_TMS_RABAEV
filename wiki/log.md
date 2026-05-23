@@ -1564,3 +1564,133 @@ Append-only log of root wiki updates.
 
 - Добавлено ТЗ `large_warehouse_map_excel_canvas_actions_tz.md`: расширение управления canvas по аналогии с Excel, включая таблицу функций Excel, необходимость аналога в warehouse canvas, действие и рекомендуемую иконку.
 - Принято правило для warehouse map: каждая рабочая функция должна иметь действие в левом меню и дубликат в context menu внутри подходящего дерева; `Сохранить канвас` должен быть доступен в обоих местах.
+
+## 2026-05-23 01:24 +05:00
+
+- Updated `requirements/large_warehouse_map_excel_canvas_actions_tz.md` with the first implementation checkpoint for an Excel-like `Главная` ribbon on the large warehouse map screen.
+- Updated `wiki/index.md` so the Excel canvas actions TZ points to the ribbon checkpoint and preserves the rule that left-panel and context-menu functions remain intact.
+
+## 2026-05-23 01:40 +05:00
+
+- Extended `requirements/large_warehouse_map_excel_canvas_actions_tz.md` with the `Excel Actions 2` checkpoint: editing, filters, navigation, and validation must be available across ribbon, left panel, and context menu.
+- Updated `wiki/index.md` to point future sessions to the parity checkpoint for warehouse-map Excel-like actions.
+
+## 2026-05-23 01:49 +05:00
+
+- Extended `requirements/large_warehouse_map_excel_canvas_actions_tz.md` with the `Excel Actions 3` checkpoint: compact Excel-style ribbon/context menu, template/layout actions in ribbon/context tree, and multi-pattern route buttons.
+- Updated `wiki/index.md` so future sessions see the Excel Actions 3 compactness and P1 template/route scope.
+
+## 2026-05-23 02:16 +05:00
+
+- Added `requirements/large_warehouse_map_functional_testing_result_2026_05_23.md` with the Playwright functional audit result for the large warehouse map.
+- Recorded two fixes found during the audit: pick-address visual labels now render on canvas, and route draft rebuild preserves the working selection for repeated route-pattern tests.
+- Updated `wiki/index.md` with the functional audit result page.
+
+## 2026-05-23 02:35 +05:00
+
+- Added `requirements/large_warehouse_map_publish_reload_fixture_result_2026_05_23.md` with the `Publish/Reload Fixture` acceptance result.
+- The isolated `WARE_ID=0` fixture published `canvas=35`, `topology=19`, and `pick_route=117`, then reloaded warehouse state with `19/19 PASS`, `144` route rows, and `0` storage/non-pick route rows.
+- Visual evidence was captured under `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-publish-reload-fixture-ui.png`; runtime evidence remains outside committed scope.
+
+## 2026-05-23 02:58 +05:00
+
+- Corrected the fractional pick-face addressing decision: a physical place may be a fractional pick parent, but `pick-face address` remains valid only for full-size `PICK_FACE`.
+- Fractional picking must address child `PICK_FACE_SLOT` records through the split mask; `FRACTIONAL_PICK_FACE` physical parents must not pass full-size pick-face address validation.
+
+## 2026-05-23 03:18 +05:00
+
+- Fixed the warehouse-map projection save architecture: `OracleGateway.execute_many()` now uses grouped `cursor.executemany(...)`, and topology cell ids are allocated in one sequence query instead of one round-trip per cell.
+- Two-camera fixture evidence: `5042` topology cells and `8` slots saved in `3936 ms` instead of about `762 seconds`; route save `1683 ms`, publish `1183 ms`, reload `4470 ms`.
+- Added `requirements/large_warehouse_map_projection_bulk_save_fix_2026_05_23.md` and updated the wiki index with the performance fix result.
+
+## 2026-05-23 03:30 +05:00
+
+- Tightened the warehouse-map projection save fix: header insert, topology cell id allocation, topology cells, slots, and canvas topology binding now run inside one Oracle bulk transaction.
+- Re-tested the same two-camera draft `0276161812484df69fceffd9c9018e6c`: `5042` topology cells and `8` slots saved in `2737 ms`, inside the accepted `2-3` second target.
+- Recorded the future architecture rule: large mass saves must not multiply API/DB operations by cell count; use bulk writes and change architecture before increasing timeouts.
+
+## 2026-05-23 03:36 +05:00
+
+- Ran a small load test for the fixed warehouse-map `projection/save-to-topology` endpoint on the same two-camera draft.
+- Five sequential saves of `5042` topology cells and `8` slots completed successfully with timings `2251`, `2656`, `2524`, `2625`, and `2310 ms`; average `2473 ms`, max `2656 ms`.
+- Reload after the series confirmed canvas `37` points to topology `30` with `5042` cells, `8` slots, `2` cameras, and `1` camera link.
+
+## 2026-05-23 03:47 +05:00
+
+- Continued the large warehouse-map two-camera scale acceptance on the fixed bulk-save architecture.
+- The fixture created draft `180df8b4f7954e57a7d6d182a903893b`, canvas `38`, topology `31`, route `119`, cameras `53/54`, and one camera link.
+- Scale evidence: `3000` storage cells, `1202` pick cells, `5042` topology cells, `8` slots, `200` route rows, and `0` storage/non-pick route rows after reload.
+- API audit timings: `projection/save-to-topology = 2002 ms`, `route/save-to-db = 1670 ms`, `publish-oracle = 876 ms`, reload warehouse state `2377 ms`.
+- Added `requirements/large_warehouse_map_two_camera_scale_result_2026_05_23.md` and updated the wiki index; runtime screenshot evidence is `admin/wms_admin_frontend/runtime/test-evidence/warehouse-map-two-camera-scale-fixture-ui.png`.
+
+## 2026-05-23 04:11 +05:00
+
+- Implemented `Fixture Cleanup & Idempotent Publish` for warehouse-map acceptance.
+- Added `POST /api/admin/warehouse-map/canvases/{canvas_id}/archive`, which archives canvas, cameras, links/objects/passages, linked topology, and active pick routes without physically deleting evidence rows.
+- Added idempotent retry behavior for warehouse-map save chain: `save-to-db` reuses existing `canvas_code`, `projection/save-to-topology` returns existing `topology_code`, and `route/save-to-db` returns the active pick route for the topology.
+- Added `tests/load/warehouse_map/warehouse_map_fixture_cleanup.cjs`; it archives old active `FX-/TC-` fixture canvases and keeps the latest active fixture by default.
+- Verified cleanup and repeatability: old active fixture count went from `5` to `1`, a new two-camera scale run created canvas `39` / topology `34` / route `121`, retry returned `idempotent=true` for topology and route, and final cleanup left only canvas `39` active.
+- Added `requirements/large_warehouse_map_fixture_cleanup_idempotency_result_2026_05_23.md` and updated the wiki index.
+
+## 2026-05-23 04:27 +05:00
+
+- Added production operation idempotency keys to the warehouse-map save/publish chain: canvas save, topology projection save, route save, and publish now accept `idempotency_key`.
+- Added migration `043` with `IDEMPOTENCY_KEY` / `PUBLISH_IDEMPOTENCY_KEY` columns and active/non-archived unique indexes for canvas, topology, route, and publish retries.
+- Applied and verified `043_apply.sql -> 043_verify.sql -> 043_smoke.sql -> 043_smoke_cleanup.sql -> 043_verify.sql` against `RABAEV@127.0.0.1:1521/orcl` with zero SQL errors.
+- Added `tests/load/warehouse_map/warehouse_map_operation_idempotency_smoke.cjs`; it proved repeated topology, route, and publish requests return the same Oracle ids with `idempotent=true`.
+- Re-ran the two-camera scale fixture after the idempotency change: canvas `42`, topology `37`, route `124`, `5042` topology cells, `8` slots, `200` route rows, and `14/14` PASS.
+- Added `requirements/large_warehouse_map_operation_idempotency_result_2026_05_23.md`, updated the database schema mirror, and updated the wiki index.
+
+## 2026-05-23 04:43 +05:00
+
+- Completed the `Publish/reload UX polish and docs` checkpoint for the large warehouse map.
+- Extended the Excel-like ribbon and left `Действия` block with the full Oracle workflow: `Сохранить канвас`, `Save topology`, `Save route`, `Publish Oracle`, and `Reload`.
+- Added visible workflow step states and operation idempotency keys to the UI, and updated the Oracle publish help/module guide text to explain idempotent retries.
+- Added UI smoke mode `smoke=sprint27-publish-ux` and captured visual evidence under `admin/wms_admin_frontend/runtime/test-evidence/`.
+- Verified `npm.cmd run build`, Python compile, Playwright screenshot smoke, and backend idempotency smoke run `20260522234145` with `canvas=43`, `topology=38`, `route=125`.
+- Added `requirements/large_warehouse_map_publish_reload_ux_result_2026_05_23.md` and updated the wiki index.
+
+## 2026-05-23 11:01 +05:00
+
+- Completed the `Full UI functional acceptance` strategic gate for the large warehouse map.
+- Excluded `WARE_ID=0` from the active acceptance path to avoid confusing fixture warehouse `0` with an empty/unselected warehouse state; fixture/load defaults now use `WARE_ID=1`.
+- Re-ran UI functional audit with a non-zero Oracle warehouse: `19/19 PASS`.
+- Re-ran the two-camera scale fixture on `WARE_ID=1`: `canvas=47`, `topology=39`, `route=126`, `5042` topology cells, `8` slots, `200` route rows, and `0` storage route rows after reload.
+- Re-ran idempotency regression on `WARE_ID=1`: `canvas=48`, `topology=40`, `route=127`, with topology/route/publish retries returning `idempotent=true`.
+- Added `requirements/large_warehouse_map_full_ui_functional_acceptance_result_2026_05_23.md` and updated the wiki index; next strategic gate is `Final model invariant review`.
+
+## 2026-05-23 11:06 +05:00
+
+- Completed the `Final model invariant review` strategic gate for the large warehouse map.
+- Reviewed the durable rules: Canvas remains a planning/layout object, published topology/route are the operational source, explicit publish requires Oracle validation, and `STORAGE_SLOT` rows stay separate from pick route rows.
+- Re-ran targeted regressions on `WARE_ID=1`: idempotency run `20260523060507` produced `canvas=49`, `topology=41`, `route=128`; scale fixture run `20260523060507` produced `canvas=50`, `topology=42`, `route=129`, `5042` topology cells, `8` slots, `200` route rows, and `0` storage route rows.
+- Re-ran Oracle verifies: `042_verify.sql` returned `Statements=7; Errors=0`; `043_verify.sql` returned `Statements=6; Errors=0`.
+- Added `requirements/large_warehouse_map_final_model_invariant_review_2026_05_23.md` and updated the wiki index; next strategic gate is `Release checkpoint and cleanup`.
+
+## 2026-05-23 11:09 +05:00
+
+- Completed the `Release checkpoint and cleanup` strategic gate for the large warehouse map.
+- Updated `concepts/api_method_library.md` with accepted warehouse-map invariants and method summaries for canvas save, projection save, route save, and Oracle publish.
+- Added production guards to warehouse-map fixture/load scripts: `WARE_ID=0` is rejected, and non-local API runs require explicit `WMS_FIXTURE_WARE_ID`; local developer default remains `WARE_ID=1`.
+- Added `requirements/large_warehouse_map_release_checkpoint_cleanup_2026_05_23.md` with release scope, out-of-scope dirty worktree items, production readiness notes, evidence, and next steps.
+- Updated the wiki index. Commit/publish still needs explicit scope review because unrelated WinForms, transport, legacy import, and runtime evidence files are present in the working tree.
+
+## 2026-05-23 11:22 +05:00
+
+- Removed and banned the zero warehouse for the large warehouse map path.
+- Added migration `044` to delete live `RRL_WARES.ID=0` plus related warehouse-map/topology/route fixture rows, then enforce positive warehouse identifiers in Oracle check constraints.
+- Initial `044_apply.sql` attempt exposed a missing child cleanup path through `RRL_WH_MAP_CANVAS_FK1`; the migration was corrected to delete dependent rows/canvases before topology rows.
+- Corrected live run passed: `044_apply.sql` `Statements=3; Errors=0`, `044_verify.sql` `Statements=9; Errors=0`, `044_smoke.sql` `Statements=1; Errors=0`, `044_smoke_cleanup.sql` `Statements=3; Errors=0`, final `044_verify.sql` `Statements=9; Errors=0`.
+- API validation now rejects warehouse-map `ware_id=0` path/request inputs before Oracle constraints.
+- Post-ban regressions on `WARE_ID=1` passed: idempotency smoke `canvas=53`, `topology=44`, `route=131`; two-camera scale fixture `canvas=54`, `topology=45`, `route=132`, `5042` topology cells and `0` storage route rows; cleanup kept `canvas=54`.
+- Updated `concepts/api_method_library.md`, `database/feed_factory_traceability_schema.md`, migration README, wiki index, and added `requirements/large_warehouse_map_zero_warehouse_ban_2026_05_23.md`.
+
+## 2026-05-23 11:34 +05:00
+
+- Continued the strategic release plan with explicit `Scope review` for the large warehouse map.
+- Classified the warehouse-map release package: UI, WMS API, Oracle migrations `043/044`, load/smoke tools, and maintained wiki pages.
+- Marked unrelated worktree material out of scope for this release: agent/onramp edits, WinForms transport files, transport docs, legacy source imports, and generated runtime evidence.
+- Added `requirements/large_warehouse_map_release_scope_review_2026_05_23.md` and updated the wiki index.
+- Completed the minimal final release gate: `npm.cmd run build`, encoding check, `git diff --check`, and idempotency smoke on `WARE_ID=1` with `canvas=55`, `topology=46`, `route=133`, and retry flags `true`.
+- Prepared the commit/PR package by staging the scoped warehouse-map release files only; unrelated agent/onramp, WinForms transport, transport docs, legacy imports, runtime evidence, and `test-results/` remain unstaged.
+- Next strategic step is an explicit commit/PR of the staged warehouse-map release package.

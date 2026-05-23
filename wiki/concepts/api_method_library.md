@@ -28,6 +28,20 @@ Runtime:
 
 ## Warehouse Map
 
+### Accepted Model Invariants
+
+These rules were accepted in `large_warehouse_map_final_model_invariant_review_2026_05_23.md` and apply across warehouse-map save, projection, route, publish, and reload endpoints.
+
+- Canvas is a saved planning/layout object. It stores renderer state and warehouse geometry, but it is not the runtime source of picking truth.
+- Topology projection is the operational bridge from Canvas into `RRL_WAREHOUSE_TOPOLOGY`, `RRL_TOPOLOGY_CELL`, and `RRL_TOPOLOGY_CELL_SLOT`.
+- Pick routes are saved into `RRL_PICK_ROUTE` and `RRL_PICK_ROUTE_CELL`; route transitions are derived from ordered `PICK_SEQUENCE`.
+- `STORAGE_SLOT` rows are available for stock/reservation/task references, but they are not pick route points.
+- Route rows may reference physical `PICK_FACE` cells or `PICK_FACE_SLOT` child slots only.
+- Publish is explicit and must pass Oracle `RRL_WAREHOUSE_MAP_API.VALIDATE_DRAFT`.
+- Retried save/projection/route/publish operations should use explicit idempotency keys.
+- Runtime picking, replenishment, warehouse tasks, and digital twin consumers must consume published warehouse state, not infer topology directly from Canvas renderer state.
+- Warehouse identifiers must be positive. Migration `2026-05-23-044-ban-zero-warehouse-id` deletes `WARE_ID=0` fixture data and adds Oracle check constraints so `RRL_WARES.ID=0` and warehouse-map `WARE_ID=0` rows cannot be inserted again.
+
 ### `GET /api/admin/warehouse-map/warehouses/{ware_id}/state`
 
 Purpose: load the real warehouse map state for the large Canvas editor.
@@ -47,6 +61,7 @@ Response shape:
 
 Rules:
 
+- `ware_id` must be positive; `0` is rejected by API validation and by Oracle constraints.
 - If `canvas_id` query parameter is passed, the canvas must belong to the requested warehouse.
 - If there is no canvas/topology yet, the endpoint returns a valid empty state with warnings instead of failing.
 - Physical `topology_cells` and child `cell_slots` stay in separate arrays.
@@ -55,6 +70,95 @@ Rules:
 Side effects: none.
 
 Verification: `tests/smoke/warehouse_map_state_api_smoke.py`.
+
+### `POST /api/admin/warehouse-map-drafts/{draft_id}/save-to-db`
+
+Purpose: save the current runtime draft payload into a DB-backed warehouse canvas.
+
+Permission: `WAREHOUSE_TOPOLOGY_EDIT`.
+
+Request fields include `ware_id`, canvas/camera code/name fields, optional `canvas_id`, optional `expected_revision`, optional `idempotency_key`, and audit fields.
+
+Side effects:
+
+- creates or updates `RRL_WAREHOUSE_MAP_CANVAS`;
+- ensures a default `RRL_WAREHOUSE_MAP_CAMERA`;
+- stores `warehouse_map_draft_payload_version` in `RENDERER_STATE_JSON`;
+- does not create topology cells or route rows.
+
+Idempotency:
+
+- explicit `idempotency_key` resolves an existing active canvas for the same warehouse;
+- production UI sends stable keys such as `WMAP-{ware_id}-{draft_id}-CANVAS`.
+
+### `POST /api/admin/warehouse-map-drafts/{draft_id}/projection/save-to-topology`
+
+Purpose: save the Canvas draft projection into Oracle topology tables without publishing it.
+
+Permission: `WAREHOUSE_TOPOLOGY_EDIT`.
+
+Side effects:
+
+- creates `RRL_WAREHOUSE_TOPOLOGY` in `DRAFT`;
+- writes physical cells into `RRL_TOPOLOGY_CELL`;
+- writes child pick/storage slots into `RRL_TOPOLOGY_CELL_SLOT`;
+- links the saved canvas to the new topology.
+
+Rules:
+
+- projection uses bulk writes, not per-cell API/DB round trips;
+- `PICK_FACE_SLOT` and `STORAGE_SLOT` are counted separately;
+- storage child slots are saved for storage references, not for picking routes.
+
+Idempotency:
+
+- explicit `idempotency_key` resolves an existing non-archived topology for the same warehouse.
+
+### `POST /api/admin/warehouse-map-drafts/{draft_id}/route/save-to-db`
+
+Purpose: save draft pick route rows into Oracle route tables for an already saved topology.
+
+Permission: `WAREHOUSE_TOPOLOGY_EDIT`.
+
+Side effects:
+
+- creates `RRL_PICK_ROUTE` in `DRAFT`;
+- writes ordered rows into `RRL_PICK_ROUTE_CELL`;
+- runs Oracle draft validation after insert;
+- archives the newly created route and returns `409` if Oracle validation fails.
+
+Rules:
+
+- route rows may point to physical `PICK_FACE` cells or `PICK_FACE_SLOT` child slots;
+- route rows pointing to `STORAGE_SLOT`, non-pick slots, missing cells, or non-pick physical cells are rejected;
+- storage slots are never silently converted into pick points.
+
+Idempotency:
+
+- explicit `idempotency_key` resolves an existing active non-archived route for the same topology.
+
+### `POST /api/admin/warehouse-map-drafts/{draft_id}/publish-oracle`
+
+Purpose: explicitly publish a saved canvas/topology/route set into the Oracle operational model.
+
+Permission: `WAREHOUSE_TOPOLOGY_PUBLISH`.
+
+Preconditions:
+
+- draft has a saved Oracle canvas;
+- draft has a saved Oracle topology projection;
+- draft has a saved Oracle pick route;
+- `RRL_WAREHOUSE_MAP_API.VALIDATE_DRAFT(canvas_id, pick_route_id)` returns valid.
+
+Side effects:
+
+- calls `RRL_WAREHOUSE_MAP_API.PUBLISH_DRAFT`;
+- marks the linked topology and route as published;
+- stores publish status and idempotency metadata in the runtime draft.
+
+Idempotency:
+
+- explicit publish `idempotency_key` resolves an already published canvas/topology/route set when the stored publish key matches.
 
 ### `GET /api/admin/warehouse-map/warehouses/{ware_id}/canvases`
 

@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, Path
 
 from ..auth import AdminUser, WAREHOUSE_TOPOLOGY_EDIT_PERMISSION, WAREHOUSE_TOPOLOGY_VIEW_PERMISSION, require_permission
 from ..schemas import (
@@ -17,7 +19,7 @@ router = APIRouter(prefix="/api/admin/warehouse-map", tags=["warehouse-map"])
 
 @router.get("/warehouses/{ware_id}/canvases")
 def list_warehouse_map_canvases(
-    ware_id: int,
+    ware_id: Annotated[int, Path(gt=0)],
     _user: AdminUser = Depends(require_permission(WAREHOUSE_TOPOLOGY_VIEW_PERMISSION)),
 ) -> list[dict]:
     return WarehouseMapService().list_canvases(ware_id)
@@ -25,7 +27,7 @@ def list_warehouse_map_canvases(
 
 @router.get("/warehouses/{ware_id}/state")
 def get_warehouse_map_state(
-    ware_id: int,
+    ware_id: Annotated[int, Path(gt=0)],
     canvas_id: int | None = None,
     _user: AdminUser = Depends(require_permission(WAREHOUSE_TOPOLOGY_VIEW_PERMISSION)),
 ) -> dict:
@@ -40,9 +42,18 @@ def get_warehouse_map_canvas_state(
     return WarehouseMapService().get_canvas_state(canvas_id)
 
 
+@router.post("/canvases/{canvas_id}/archive")
+def archive_warehouse_map_canvas(
+    canvas_id: int,
+    request: WarehouseMapArchiveRequest,
+    user: AdminUser = Depends(require_permission(WAREHOUSE_TOPOLOGY_EDIT_PERMISSION)),
+) -> dict:
+    return WarehouseMapService().archive_canvas(canvas_id, request, user.username)
+
+
 @router.post("/warehouses/{ware_id}/canvases")
 def create_warehouse_map_canvas(
-    ware_id: int,
+    ware_id: Annotated[int, Path(gt=0)],
     request: WarehouseMapCanvasCreateRequest,
     user: AdminUser = Depends(require_permission(WAREHOUSE_TOPOLOGY_EDIT_PERMISSION)),
 ) -> dict:

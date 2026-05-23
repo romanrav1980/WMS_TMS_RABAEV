@@ -575,6 +575,75 @@ Live apply note, `2026-05-22`:
 - Final verify: `Statements=7; Errors=0`.
 - The first apply attempt failed only on SQL*Plus diagnostic syntax `show errors package ...`; those lines were removed because `tools/oracle_apply` supports exact `show errors` only.
 
+Migration `2026-05-23-043-warehouse-map-operation-idempotency` adds explicit operation idempotency keys for the warehouse-map save/publish chain:
+
+- `RRL_WAREHOUSE_MAP_CANVAS.IDEMPOTENCY_KEY` stores the canvas-save operation key.
+- `RRL_WAREHOUSE_MAP_CANVAS.PUBLISH_IDEMPOTENCY_KEY` stores the publish operation key.
+- `RRL_WAREHOUSE_TOPOLOGY.IDEMPOTENCY_KEY` stores the projection-save operation key.
+- `RRL_PICK_ROUTE.IDEMPOTENCY_KEY` stores the route-save operation key.
+- Function-based unique indexes enforce one active/non-archived result per operation key:
+  - `RRL_WH_MAP_CANVAS_UX_IDEMP`;
+  - `RRL_WH_MAP_CANVAS_UX_PUBIDEMP`;
+  - `RRL_WH_TOPOLOGY_UX_IDEMP`;
+  - `RRL_PICK_ROUTE_UX_IDEMP`.
+
+Migration files:
+
+- `db/migrations/2026-05-17_feed_factory_traceability/043_apply.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/043_verify.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/043_smoke.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/043_smoke_cleanup.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/043_rollback.sql`.
+
+Live apply note, `2026-05-23`:
+
+- Target: `RABAEV@127.0.0.1:1521/orcl`.
+- Apply: `Statements=3; Errors=0`.
+- Verify before smoke: `Statements=6; Errors=0`.
+- Smoke: `Statements=9; Errors=0`.
+- Smoke cleanup: `Statements=5; Errors=0`.
+- Final verify: `Statements=6; Errors=0`.
+- API smoke then proved retry behavior: topology, route, and publish retries return the same Oracle ids with `idempotent=true`.
+
+## Warehouse Map Zero Warehouse Ban
+
+Migration `2026-05-23-044-ban-zero-warehouse-id` removes the legacy fixture warehouse `WARE_ID=0` and prevents it from returning.
+
+Purpose:
+
+- delete `RRL_WARES.ID=0`;
+- delete warehouse-map/topology/route fixture rows tied to `WARE_ID=0`;
+- enforce positive warehouse identifiers in warehouse-map operational tables.
+
+Enabled constraints:
+
+- `RRL_WARES_CK_ID_POS`;
+- `RRL_WH_MAP_CANVAS_CK_WARE_POS`;
+- `RRL_WH_MAP_CAMERA_CK_WARE_POS`;
+- `RRL_WH_TOPOLOGY_CK_WARE_POS`;
+- `RRL_TOPO_CELL_CK_WARE_POS`;
+- `RRL_TOPO_GATE_CK_WARE_POS`;
+- `RRL_TOPO_REC_CK_WARE_POS`;
+- `RRL_PICK_ROUTE_CK_WARE_POS`;
+- `RRL_PICK_ROUTE_CELL_CK_WARE_POS`.
+
+Migration files:
+
+- `db/migrations/2026-05-17_feed_factory_traceability/044_apply.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/044_verify.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/044_smoke.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/044_smoke_cleanup.sql`;
+- `db/migrations/2026-05-17_feed_factory_traceability/044_rollback.sql`.
+
+Live apply note, `2026-05-23`:
+
+- Initial apply attempt exposed a missing delete dependency for `RRL_WH_MAP_CANVAS_FK1`; the migration was corrected to delete child rows and canvases before topology rows.
+- Apply after correction: `Statements=3; Errors=0`.
+- Verify: `Statements=9; Errors=0`.
+- Smoke: `Statements=1; Errors=0`.
+- Smoke cleanup: `Statements=3; Errors=0`.
+- Final verify: `Statements=9; Errors=0`.
+
 ## Warehouse Task Domain Sync
 
 Migration `2026-05-17-028-warehouse-task-domain-sync` adds `RRL_WAREHOUSE_TASK_SYNC`.

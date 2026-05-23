@@ -1,8 +1,9 @@
 import { PointerEvent, useEffect, useMemo, useRef, useState } from "react";
 
 type CellRole = "EMPTY" | "PICK_FACE" | "STORAGE" | "TRANSPORT_STAGING" | "FILM_WRAP" | "GATE" | "AISLE" | "BLOCKED" | "FRACTIONAL_PICK_FACE" | "FRACTIONAL_STORAGE";
-type CommandIconKind = "brush" | "paste" | "cancel" | "camera" | "pick" | "storage" | "route" | "help" | "save" | "actions";
-type ContextFlyoutId = "actions" | "camera" | "pick" | "storage" | "route" | "format";
+type CommandIconKind = "brush" | "paste" | "cancel" | "camera" | "pick" | "storage" | "route" | "help" | "save" | "actions" | "undo" | "redo" | "search" | "fit" | "zoom" | "fill" | "validate" | "sigma" | "filter" | "open" | "publish" | "clear" | "address" | "table";
+type ContextFlyoutId = "actions" | "camera" | "templates" | "pick" | "storage" | "route" | "format" | "edit" | "navigation" | "filters" | "validation";
+type OracleWorkflowStepId = "canvas" | "topology" | "route" | "publish" | "reload";
 
 type GridConfig = {
   aisleCount: number;
@@ -30,6 +31,11 @@ type CellSelection = {
   slotTo: number;
   anchorCell: GridCell;
   focusCell: GridCell;
+};
+
+type AddressVisualLabel = {
+  cell: GridCell;
+  label: string;
 };
 
 type RoleChange =
@@ -86,6 +92,10 @@ type WarehouseMapDraft = {
   oracle_canvas_id?: number;
   oracle_topology_id?: number;
   oracle_pick_route_id?: number;
+  oracle_canvas_idempotency_key?: string;
+  oracle_topology_idempotency_key?: string;
+  oracle_pick_route_idempotency_key?: string;
+  oracle_publish_idempotency_key?: string;
   oracle_publish_status?: OraclePublishStatus;
   revision?: number;
   updated_at?: string;
@@ -161,6 +171,8 @@ type OracleSaveResponse = {
   pick_route_id?: number;
   route_row_count?: number;
   status: string;
+  idempotent?: boolean;
+  idempotency_key?: string;
   oracle_validation?: { valid: boolean; route_row_count?: number; storage_slot_route_rows?: number; non_pick_cell_route_rows?: number };
 };
 
@@ -182,6 +194,8 @@ type OraclePublishResponse = {
   topology_id: number;
   pick_route_id: number;
   status: string;
+  idempotent?: boolean;
+  idempotency_key?: string;
   oracle_validation: { valid: boolean; route_row_count?: number; storage_slot_route_rows?: number; non_pick_cell_route_rows?: number };
   oracle_status: OraclePublishStatus;
 };
@@ -565,7 +579,7 @@ const MAP_HELP: Record<HelpId, { title: string; body: string }> = {
   },
   "oracle.publish": {
     title: "Oracle save/publish",
-    body: "Что это: цепочка переноса draft в реальные Oracle master-data объекта. Вход: выбранный склад, сохраненный API draft, Oracle canvas, topology projection и pick route. Делает: Save canvas DB пишет renderer payload, Save topology DB пишет cells/slots, Save route DB пишет PICK_ROUTE/PICK_ROUTE_CELL, Publish Oracle вызывает RRL_WAREHOUSE_MAP_API.PUBLISH_DRAFT и переводит canvas/topology/route в PUBLISHED. Зачем: новые волны должны читать только опубликованные рабочие версии, а не визуальный черновик. Как применять: выполняйте кнопки слева направо; если кнопка серая, сначала выполните предыдущий шаг или validation."
+    body: "Что это: цепочка переноса draft в реальные Oracle master-data объекта. Вход: выбранный склад, сохраненный API draft, Oracle canvas, topology projection, pick route и operation idempotency key. Делает: Save canvas DB пишет renderer payload, Save topology DB пишет cells/slots bulk-операцией, Save route DB пишет PICK_ROUTE/PICK_ROUTE_CELL, Publish Oracle вызывает RRL_WAREHOUSE_MAP_API.PUBLISH_DRAFT, затем Reload читает опубликованный warehouse state. Зачем: новые волны должны читать только опубликованные рабочие версии, а повтор запроса после timeout не должен создавать дубли. Как применять: выполняйте кнопки слева направо; зеленый шаг выполнен, синий доступен, серый заблокирован предыдущим условием."
   },
   "fraction.pick": {
     title: "Дробная ячейка отбора",
@@ -643,7 +657,8 @@ const MODULE_GUIDE = [
       "Save canvas DB сохраняет полный draft payload в RRL_WAREHOUSE_MAP_CANVAS.RENDERER_STATE_JSON и создает/обновляет базовую камеру.",
       "Save topology DB создает draft topology и записывает RRL_TOPOLOGY_CELL плюс RRL_TOPOLOGY_CELL_SLOT.",
       "Save route DB записывает RRL_PICK_ROUTE и RRL_PICK_ROUTE_CELL; обычные pick cells идут через TOPOLOGY_CELL_ID, дробные pick slots через CELL_SLOT_ID.",
-      "Publish Oracle вызывает RRL_WAREHOUSE_MAP_API.VALIDATE_DRAFT и затем RRL_WAREHOUSE_MAP_API.PUBLISH_DRAFT. После успешной публикации canvas, topology и route становятся PUBLISHED."
+      "Publish Oracle вызывает RRL_WAREHOUSE_MAP_API.VALIDATE_DRAFT и затем RRL_WAREHOUSE_MAP_API.PUBLISH_DRAFT. После успешной публикации canvas, topology и route становятся PUBLISHED.",
+      "Каждый шаг отправляет idempotency key. Если браузер оборвался или пользователь повторил кнопку, API должен вернуть уже созданный canvas/topology/route/publish без повторной массовой вставки."
     ]
   },
   {
@@ -700,6 +715,48 @@ function CommandIcon({ kind }: { kind: CommandIconKind }) {
   if (kind === "actions") {
     return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.2v2" /><path d="M8 11.8v2" /><path d="M2.2 8h2" /><path d="M11.8 8h2" /><path d="M4.2 4.2 5.6 5.6" /><path d="M10.4 10.4l1.4 1.4" /><path d="M11.8 4.2l-1.4 1.4" /><path d="M5.6 10.4l-1.4 1.4" /><path d="M6 8a2 2 0 1 0 4 0 2 2 0 0 0-4 0z" /></svg>;
   }
+  if (kind === "undo") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.2 5H2.8V1.8" /><path d="M3.1 5.1a5.5 5.5 0 1 1 .8 6.8" /></svg>;
+  }
+  if (kind === "redo") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M9.8 5h3.4V1.8" /><path d="M12.9 5.1a5.5 5.5 0 1 0-.8 6.8" /></svg>;
+  }
+  if (kind === "search") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.8 11.2a4.4 4.4 0 1 1 0-8.8 4.4 4.4 0 0 1 0 8.8z" /><path d="M10 10 14 14" /></svg>;
+  }
+  if (kind === "fit") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 6V2.5H6" /><path d="M10 2.5h3.5V6" /><path d="M13.5 10v3.5H10" /><path d="M6 13.5H2.5V10" /><path d="M5 5h6v6H5z" /></svg>;
+  }
+  if (kind === "zoom") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.7 11a4.3 4.3 0 1 1 0-8.6 4.3 4.3 0 0 1 0 8.6z" /><path d="M10 10 14 14" /><path d="M6.7 4.8v3.8" /><path d="M4.8 6.7h3.8" /></svg>;
+  }
+  if (kind === "fill") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 8.5 3l4.1 4.1-5.5 5.5z" /><path d="M2.6 8.9h9.8" /><path d="M12.8 11.4c.7.7 1.2 1.3 1.2 1.8a1.2 1.2 0 0 1-2.4 0c0-.5.5-1.1 1.2-1.8z" /></svg>;
+  }
+  if (kind === "validate") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8.3 6.2 12 13.5 4.5" /><path d="M2.5 3h8" /><path d="M2.5 13h11" /></svg>;
+  }
+  if (kind === "sigma") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M12.5 2.8h-9L8 8l-4.5 5.2h9" /></svg>;
+  }
+  if (kind === "filter") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 3h11L9.2 8v4.6l-2.4 1V8z" /></svg>;
+  }
+  if (kind === "open") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 5.2h4l1.2 1.3H14v6.7H2z" /><path d="M2 5.2V3.6h4.2l1.1 1.2H12v1.7" /></svg>;
+  }
+  if (kind === "publish") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13.5V3" /><path d="M4.6 6.4 8 3l3.4 3.4" /><path d="M3 13.5h10" /></svg>;
+  }
+  if (kind === "clear") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.2 10.8 9 5l3.8 3.8L7 14.6H3.2z" /><path d="M7.6 6.4l3.8 3.8" /><path d="M2 14.6h12" /></svg>;
+  }
+  if (kind === "address") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3.2h10v9.6H3z" /><path d="M5 5.4h3.2" /><path d="M5 8h6" /><path d="M5 10.6h4.4" /><path d="M11.3 2.2v2" /><path d="M4.7 2.2v2" /></svg>;
+  }
+  if (kind === "table") {
+    return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 3h11v10h-11z" /><path d="M2.5 6.3h11" /><path d="M2.5 9.6h11" /><path d="M6.2 3v10" /><path d="M9.8 3v10" /></svg>;
+  }
   return <svg className="large-map-command-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" /><path d="M6.4 6.3a1.8 1.8 0 1 1 2.4 1.7c-.6.3-.8.7-.8 1.4" /><path d="M8 11.8v.1" /></svg>;
 }
 
@@ -712,6 +769,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const rolesRef = useRef<Uint8Array>(createInitialRoles());
   const fractionVisualsRef = useRef<Map<string, FractionVisualPreset>>(new Map());
+  const addressLabelsRef = useRef<Map<string, string>>(new Map());
   const undoStackRef = useRef<RoleChange[]>([]);
   const redoStackRef = useRef<RoleChange[]>([]);
   const smokeRanRef = useRef(false);
@@ -744,6 +802,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const [publishedResult, setPublishedResult] = useState<WarehouseMapDraftPublished | null>(null);
   const [oracleStatus, setOracleStatus] = useState("Oracle save/publish не выполнялся");
   const [oraclePublishResult, setOraclePublishResult] = useState<OraclePublishResponse | null>(null);
+  const [oracleBusyStep, setOracleBusyStep] = useState<OracleWorkflowStepId | null>(null);
   const [formatClipboard, setFormatClipboard] = useState<FormatClipboard | null>(null);
   const [formatPainterActive, setFormatPainterActive] = useState(false);
   const [formatStatus, setFormatStatus] = useState("Формат не скопирован");
@@ -848,9 +907,9 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
 
     const overlayObjects = selectedCamera ? (warehouseMapState?.canvas_objects || []).filter((item) => item.camera_id === selectedCamera.camera_id) : [];
     const overlayPassages = selectedCamera ? (warehouseMapState?.passages || []).filter((item) => item.camera_id === selectedCamera.camera_id) : [];
-    const observer = new ResizeObserver(() => drawCanvas(canvas, rolesRef.current, level, view, selections, activeCell, hovered, roleFilters, overlayObjects, overlayPassages, fractionVisualsRef.current, routeRows, setMetrics));
+    const observer = new ResizeObserver(() => drawCanvas(canvas, rolesRef.current, level, view, selections, activeCell, hovered, roleFilters, overlayObjects, overlayPassages, fractionVisualsRef.current, addressLabelsRef.current, routeRows, setMetrics));
     observer.observe(wrapper);
-    drawCanvas(canvas, rolesRef.current, level, view, selections, activeCell, hovered, roleFilters, overlayObjects, overlayPassages, fractionVisualsRef.current, routeRows, setMetrics);
+    drawCanvas(canvas, rolesRef.current, level, view, selections, activeCell, hovered, roleFilters, overlayObjects, overlayPassages, fractionVisualsRef.current, addressLabelsRef.current, routeRows, setMetrics);
     return () => observer.disconnect();
   }, [level, view, selections, activeCell, hovered, roleFilters, version, warehouseMapState, selectedCameraId, routeRows]);
 
@@ -904,7 +963,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     const smoke = params.get("smoke")
       || (window.location.href.includes("smoke=sprint13-objects") ? "sprint13-objects" : null)
       || (window.location.href.includes("smoke=sprint12") ? "sprint12" : null);
-    if (smoke !== "sprint2-multiarea" && smoke !== "sprint3" && smoke !== "sprint5" && smoke !== "sprint6" && smoke !== "sprint7" && smoke !== "sprint8" && smoke !== "sprint9" && smoke !== "sprint12" && smoke !== "sprint13-format" && smoke !== "sprint13-objects" && smoke !== "sprint14-slots" && smoke !== "sprint14-help" && smoke !== "sprint15-diff" && smoke !== "sprint15-metadata" && smoke !== "sprint16-route" && smoke !== "sprint17-publish" && smoke !== "sprint18-hardening" && smoke !== "sprint24-oracle-publish" && smoke !== "sprint25-published-reload") return;
+    if (smoke !== "sprint2-multiarea" && smoke !== "sprint3" && smoke !== "sprint5" && smoke !== "sprint6" && smoke !== "sprint7" && smoke !== "sprint8" && smoke !== "sprint9" && smoke !== "sprint12" && smoke !== "sprint13-format" && smoke !== "sprint13-objects" && smoke !== "sprint14-slots" && smoke !== "sprint14-help" && smoke !== "sprint15-diff" && smoke !== "sprint15-metadata" && smoke !== "sprint16-route" && smoke !== "sprint17-publish" && smoke !== "sprint18-hardening" && smoke !== "sprint24-oracle-publish" && smoke !== "sprint25-published-reload" && smoke !== "sprint27-publish-ux") return;
     if (smokeRanRef.current) return;
     smokeRanRef.current = true;
     if (smoke === "sprint2-multiarea") {
@@ -943,6 +1002,8 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       runSprint24OraclePublishSmoke();
     } else if (smoke === "sprint25-published-reload") {
       runSprint25PublishedReloadSmoke();
+    } else if (smoke === "sprint27-publish-ux") {
+      runSprint27PublishUxSmoke();
     } else {
       runSprint3Smoke();
     }
@@ -1015,7 +1076,36 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
 
   async function refreshWarehouseMap() {
     if (selectedWareId === null) return;
+    setOracleBusyStep("reload");
     await loadWarehouseMap(selectedWareId);
+    setOracleBusyStep(null);
+  }
+
+  function oracleOperationKey(phase: OracleWorkflowStepId, targetDraftId = draftId) {
+    const draftPart = (targetDraftId || currentDraft?.draft_id || "no-draft").slice(0, 18);
+    const warePart = selectedWareId === null ? "no-ware" : String(selectedWareId);
+    return `WMAP-${warePart}-${draftPart}-${phase}`.toUpperCase();
+  }
+
+  function oracleStepState(step: OracleWorkflowStepId) {
+    if (step === "canvas") return currentDraft?.oracle_canvas_id ? "done" : selectedWareId === null ? "blocked" : "ready";
+    if (step === "topology") return currentDraft?.oracle_topology_id ? "done" : !draftId || selectedWareId === null || !currentDraft?.oracle_canvas_id ? "blocked" : "ready";
+    if (step === "route") return currentDraft?.oracle_pick_route_id ? "done" : !draftId || selectedWareId === null || !currentDraft?.oracle_topology_id || !routeRows.length ? "blocked" : "ready";
+    if (step === "publish") return oraclePublishResult?.status === "PUBLISHED" || currentDraft?.oracle_publish_status?.canvas_status === "PUBLISHED" ? "done" : !draftId || !currentDraft?.oracle_canvas_id || !currentDraft?.oracle_topology_id || !currentDraft?.oracle_pick_route_id ? "blocked" : "ready";
+    return warehouseMapState?.canvas?.status === "PUBLISHED" ? "done" : selectedWareId === null ? "blocked" : "ready";
+  }
+
+  function oracleStepDetails(step: OracleWorkflowStepId) {
+    if (step === "canvas") return currentDraft?.oracle_canvas_id ? `canvas ${currentDraft.oracle_canvas_id}` : "draft payload";
+    if (step === "topology") return currentDraft?.oracle_topology_id ? `topology ${currentDraft.oracle_topology_id}` : "cells/slots";
+    if (step === "route") return currentDraft?.oracle_pick_route_id ? `route ${currentDraft.oracle_pick_route_id}` : `${routeRows.length} rows`;
+    if (step === "publish") return oraclePublishResult?.status === "PUBLISHED" ? "PUBLISHED" : currentDraft?.oracle_publish_status?.canvas_status || "package";
+    return warehouseMapState?.canvas ? `${warehouseMapState.canvas.status} · routes ${warehouseMapState.counters.routes || 0}` : "state";
+  }
+
+  function oracleStepClass(step: OracleWorkflowStepId) {
+    const state = oracleStepState(step);
+    return `large-map-oracle-step ${state} ${oracleBusyStep === step ? "busy" : ""}`;
   }
 
   async function ensureCanvas() {
@@ -1294,6 +1384,10 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     setRoleFilters((current) => ({ ...current, [role]: !current[role] }));
   }
 
+  function setAllRoleFilters(visible: boolean) {
+    setRoleFilters(Object.fromEntries(ROLE_ORDER.map((role) => [role, visible])) as Record<CellRole, boolean>);
+  }
+
   function updateZoom(nextZoom: number, anchor?: { x: number; y: number }) {
     setView((current) => {
       const zoom = Math.max(.2, Math.min(14, Number(nextZoom.toFixed(2))));
@@ -1389,6 +1483,18 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     const targetSelections = selections.map((selection) => ({ ...selection, level }));
     const elapsed = applyRoleChange(targetSelections, role);
     markChanged(targetSelections, elapsed);
+  }
+
+  function clearSelectedArea() {
+    if (!selections.length) return;
+    assignRole("EMPTY");
+    setAddressStatus("Выделение очищено: роль заменена на Пусто");
+  }
+
+  function blockSelectedArea() {
+    if (!selections.length) return;
+    assignRole("BLOCKED");
+    setAddressStatus("Выделение помечено как Недоступно");
   }
 
   async function applyActiveRoleAction() {
@@ -1574,6 +1680,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   function applyDraftRoles(rolesBase64: string) {
     rolesRef.current = decodeRoles(rolesBase64, totalCells());
     fractionVisualsRef.current = new Map();
+    addressLabelsRef.current = new Map();
     setCurrentDraft(null);
     setDraftRevision(null);
     setDraftDiff(null);
@@ -1756,6 +1863,8 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       });
       setAddressPreview(result);
       setAddressStatus(`Назначено адресов: ${result.assigned_count}`);
+      addressLabelsRef.current = createAddressVisualLabels(selection, addressForm);
+      setVersion((value) => value + 1);
     } catch {
       setAddressStatus("Не удалось назначить адреса через API");
     }
@@ -1961,6 +2070,8 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       });
       const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
       applyApiDraft(reloaded);
+      setSelections([{ ...selection }]);
+      setActiveCell(selection.anchorCell);
       setRoutePattern(result.route_pattern);
       setRouteStatus(`Route ${result.route_pattern}: ${result.route_row_count} строк · storage skipped ${result.skipped_storage_slots} · non-pick skipped ${result.skipped_non_pick_cells}`);
       return result;
@@ -2011,8 +2122,10 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       setOracleStatus("Выберите склад для сохранения канваса");
       return null;
     }
+    setOracleBusyStep("canvas");
     try {
       const targetDraftId = await ensureApiDraftForCommand("сохранения канваса");
+      const idempotencyKey = oracleOperationKey("canvas", targetDraftId);
       const result = await apiFetchJson<OracleSaveResponse>(`${API_BASE}/api/admin/warehouse-map-drafts/${targetDraftId}/save-to-db`, {
         method: "POST",
         body: JSON.stringify({
@@ -2022,16 +2135,19 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           camera_code: `CAM-${selectedWareId}`,
           camera_name: "Основная камера",
           expected_revision: draftRevision || undefined,
+          idempotency_key: idempotencyKey,
           updated_by: "warehouse-map-ui"
         })
       });
       const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${targetDraftId}`, { cache: "no-store" });
       applyApiDraft(reloaded);
-      setOracleStatus(`Oracle canvas сохранен: canvas=${result.canvas_id || reloaded.oracle_canvas_id || "-"}`);
+      setOracleStatus(`Canvas DB: ${result.idempotent ? "повтор без дубля" : "сохранен"} · canvas=${result.canvas_id || reloaded.oracle_canvas_id || "-"} · key=${result.idempotency_key || idempotencyKey}`);
       return result;
     } catch {
       setOracleStatus("Не удалось сохранить draft в Oracle canvas");
       return null;
+    } finally {
+      setOracleBusyStep(null);
     }
   }
 
@@ -2040,7 +2156,9 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       setOracleStatus("Выберите склад и сохраните API draft");
       return null;
     }
+    setOracleBusyStep("topology");
     try {
+      const idempotencyKey = oracleOperationKey("topology");
       const result = await apiFetchJson<OracleSaveResponse>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/projection/save-to-topology`, {
         method: "POST",
         body: JSON.stringify({
@@ -2048,16 +2166,19 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           topology_code: `MAP-TOPO-${selectedWareId}-${draftId.slice(0, 6)}`,
           topology_name: `Topology draft ${selectedWareId}`,
           expected_revision: draftRevision || undefined,
+          idempotency_key: idempotencyKey,
           updated_by: "warehouse-map-ui"
         })
       });
       const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
       applyApiDraft(reloaded);
-      setOracleStatus(`Oracle topology сохранена: topology=${result.topology_id || reloaded.oracle_topology_id || "-"} · cells=${result.topology_id ? "OK" : "-"}`);
+      setOracleStatus(`Topology DB: ${result.idempotent ? "повтор без дубля" : "сохранена"} · topology=${result.topology_id || reloaded.oracle_topology_id || "-"} · key=${result.idempotency_key || idempotencyKey}`);
       return result;
     } catch {
       setOracleStatus("Не удалось сохранить projection в Oracle topology");
       return null;
+    } finally {
+      setOracleBusyStep(null);
     }
   }
 
@@ -2070,7 +2191,9 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       setOracleStatus("Сначала сохраните projection в Oracle topology");
       return null;
     }
+    setOracleBusyStep("route");
     try {
+      const idempotencyKey = oracleOperationKey("route");
       const result = await apiFetchJson<OracleSaveResponse>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/route/save-to-db`, {
         method: "POST",
         body: JSON.stringify({
@@ -2079,16 +2202,19 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           route_code: `MAP-PICK-${selectedWareId}-${draftId.slice(0, 6)}`,
           route_name: `Pick route ${selectedWareId}`,
           expected_revision: draftRevision || undefined,
+          idempotency_key: idempotencyKey,
           updated_by: "warehouse-map-ui"
         })
       });
       const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
       applyApiDraft(reloaded);
-      setOracleStatus(`Oracle route сохранен: route=${result.pick_route_id || reloaded.oracle_pick_route_id || "-"} · valid=${String(result.oracle_validation?.valid)}`);
+      setOracleStatus(`Route DB: ${result.idempotent ? "повтор без дубля" : "сохранен"} · route=${result.pick_route_id || reloaded.oracle_pick_route_id || "-"} · valid=${String(result.oracle_validation?.valid)} · key=${result.idempotency_key || idempotencyKey}`);
       return result;
     } catch {
       setOracleStatus("Не удалось сохранить route в Oracle");
       return null;
+    } finally {
+      setOracleBusyStep(null);
     }
   }
 
@@ -2104,7 +2230,9 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       setOracleStatus("Для Oracle publish нужны canvas, topology и route в Oracle");
       return null;
     }
+    setOracleBusyStep("publish");
     try {
+      const idempotencyKey = oracleOperationKey("publish");
       const result = await apiFetchJson<OraclePublishResponse>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}/publish-oracle`, {
         method: "POST",
         body: JSON.stringify({
@@ -2112,17 +2240,21 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
           topology_id: topologyId,
           pick_route_id: pickRouteId,
           expected_revision: draftRevision || undefined,
+          idempotency_key: idempotencyKey,
           published_by: "warehouse-map-ui"
         })
       });
       const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${draftId}`, { cache: "no-store" });
       applyApiDraft(reloaded);
       setOraclePublishResult(result);
-      setOracleStatus(`Oracle publish: ${result.status} · canvas=${result.oracle_status.canvas_status} · topology=${result.oracle_status.topology_status} · route=${result.oracle_status.route_status}`);
+      setOracleStatus(`Publish Oracle: ${result.idempotent ? "повтор без дубля" : result.status} · canvas=${result.oracle_status.canvas_status} · topology=${result.oracle_status.topology_status} · route=${result.oracle_status.route_status} · key=${result.idempotency_key || idempotencyKey}`);
+      if (selectedWareId !== null) await loadWarehouseMap(selectedWareId);
       return result;
     } catch {
       setOracleStatus("Oracle publish заблокирован validation или API недоступен");
       return null;
+    } finally {
+      setOracleBusyStep(null);
     }
   }
 
@@ -2277,7 +2409,16 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
       preview_first: firstCodes.slice(0, 3).map((cell_code) => ({ cell_code })),
       preview_last: firstCodes.slice(-3).map((cell_code) => ({ cell_code }))
     });
+    addressLabelsRef.current = createAddressVisualLabels(targetSelection, {
+      aisleNo: 7,
+      startPickNo: 1,
+      step: 1,
+      direction: "START_TO_END",
+      side: "LEFT",
+      codeMask: "A{aisle}-P{pick_no}-L{level}-{side}"
+    });
     setAddressStatus("Sprint 6 smoke preview сформирован");
+    setVersion((value) => value + 1);
     setMetrics((current) => ({ ...current, selectedCells: selectionSize(targetSelection), selectionMs: .001 }));
     setSmokeResult({
       name: "Sprint 6 addressing direction preview",
@@ -3510,6 +3651,80 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     }, 100);
   }
 
+  function runSprint27PublishUxSmoke() {
+    const publishStatus: OraclePublishStatus = {
+      canvas_id: 42,
+      canvas_status: "PUBLISHED",
+      canvas_active: 1,
+      topology_id: 37,
+      topology_status: "PUBLISHED",
+      pick_route_id: 124,
+      route_status: "PUBLISHED",
+      route_active: 1,
+      route_row_count: 200
+    };
+    const routeRows: RouteDraftRow[] = [
+      { route_row_id: "S27-R1", route_code: "SMOKE-027-PICK", route_name: "Sprint 27 publish UX", route_pattern: "LINEAR", cell_code: "A01-S001-L1", physical_cell: { aisle: 1, slot: 1, level: 1 }, pick_sequence: 1, slot_kind: "PICK_FACE", active: 1 }
+    ];
+    const draft: WarehouseMapDraft = {
+      draft_id: "sprint27publishux",
+      draft_name: "Sprint 27 publish UX smoke",
+      grid: { aisle_count: GRID.aisleCount, slots_per_aisle: GRID.slotsPerAisle, levels: GRID.levels },
+      roles_base64: encodeRoles(rolesRef.current),
+      route_rows: routeRows,
+      route_summary: { route_code: "SMOKE-027-PICK", route_pattern: "LINEAR", route_row_count: routeRows.length, skipped_storage_slots: 0, skipped_non_pick_cells: 0 },
+      oracle_canvas_id: 42,
+      oracle_topology_id: 37,
+      oracle_pick_route_id: 124,
+      oracle_canvas_idempotency_key: "WMAP-0-S27-CANVAS",
+      oracle_topology_idempotency_key: "WMAP-0-S27-TOPOLOGY",
+      oracle_pick_route_idempotency_key: "WMAP-0-S27-ROUTE",
+      oracle_publish_idempotency_key: "WMAP-0-S27-PUBLISH",
+      oracle_publish_status: publishStatus,
+      revision: 27,
+      updated_at: new Date().toISOString()
+    };
+    const state: WarehouseMapState = {
+      warehouse: { ware_id: 0, ware_name: "Sprint 27 Warehouse" },
+      canvas: { canvas_id: 42, canvas_code: "TC-CANVAS-S27", canvas_name: "Sprint 27 Canvas", status: "PUBLISHED", levels: GRID.levels },
+      topology: { topology_id: 37, topology_code: "TC-TOPO-S27", status: "PUBLISHED" },
+      cameras: [],
+      camera_links: [],
+      canvas_objects: [],
+      passages: [],
+      routes: [{ pick_route_id: 124, topology_id: 37, ware_id: 0, route_code: "SMOKE-027-PICK", route_name: "Sprint 27 route", route_kind: "PICK", route_pattern: "LINEAR", status: "PUBLISHED", active: 1, route_row_count: 200, excluded_storage_slot_row_count: 0, route_rows: routeRows }],
+      counters: { canvases: 1, cameras: 2, camera_links: 1, canvas_objects: 0, passages: 0, zones: 0, aisles: 0, gates: 0, topology_cells: 5042, cell_slots: 8, pick_slots: 4, storage_slots: 4, routes: 1, route_rows: 200, route_rows_excluded_storage_slots: 0 },
+      warnings: []
+    };
+    setCurrentDraft(draft);
+    setDraftId(draft.draft_id);
+    setDraftRevision(draft.revision || null);
+    setSelectedWareId(0);
+    setWarehouseMapState(state);
+    setOraclePublishResult({
+      draft_id: draft.draft_id,
+      canvas_id: 42,
+      topology_id: 37,
+      pick_route_id: 124,
+      status: "PUBLISHED",
+      idempotent: true,
+      idempotency_key: "WMAP-0-S27-PUBLISH",
+      oracle_validation: { valid: true, route_row_count: 200, storage_slot_route_rows: 0, non_pick_cell_route_rows: 0 },
+      oracle_status: publishStatus
+    });
+    setOracleStatus("SMOKE publish UX: workflow steps visible · idempotency keys visible · reload=PUBLISHED");
+    setSmokeResult({
+      name: "Sprint 27 publish/reload UX",
+      ok: true,
+      details: ["canvas=done", "topology=done", "route=done", "publish=done", "reload=done", "idempotency=visible"]
+    });
+    window.setTimeout(() => {
+      const panel = document.querySelector(".large-map-panel");
+      const actionsHeader = [...document.querySelectorAll("h2")].find((item) => item.textContent?.includes("Действия"));
+      if (panel instanceof HTMLElement && actionsHeader instanceof HTMLElement) panel.scrollTop = actionsHeader.offsetTop - 40;
+    }, 100);
+  }
+
   return (
     <main className="large-map-page">
       <header className="large-map-topbar">
@@ -3536,6 +3751,191 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
         </div>
       </header>
 
+      <section className="large-map-ribbon" aria-label="Excel-подобная лента команд карты склада">
+        <div className="large-map-ribbon-tabs" role="tablist" aria-label="Разделы команд">
+          <button className="active" type="button">Главная</button>
+          <button type="button" disabled title="Будущий раздел для вставки объектов canvas">Вставка</button>
+          <button type="button" disabled title="Будущий раздел для layout и печати">Разметка</button>
+          <button type="button" disabled title="Будущий раздел для проверки и отчетов">Данные</button>
+        </div>
+        <div className="large-map-ribbon-body">
+          <div className="large-map-ribbon-group large-map-ribbon-group-clipboard">
+            <div className="large-map-ribbon-buttons">
+              <button className="large-map-ribbon-button big" type="button" disabled={!selections.length} onClick={copyFormat} title={selections.length ? MAP_HELP["format.copy"].body : "Сначала выделите область карты"}>
+                <CommandIcon kind="brush" />
+                <span>Скопировать<br />формат</span>
+              </button>
+              <div className="large-map-ribbon-stack">
+                <button className="large-map-ribbon-button" type="button" disabled={!formatClipboard} onClick={pasteFormat} title={formatClipboard ? MAP_HELP["format.paste"].body : "Сначала скопируйте формат"}>
+                  <IconLabel icon="paste">Вставить формат</IconLabel>
+                </button>
+                <button className="large-map-ribbon-button" type="button" disabled={!formatPainterActive} onClick={cancelFormatPainter} title={formatPainterActive ? MAP_HELP["format.cancel"].body : "Кисть формата сейчас не активна"}>
+                  <IconLabel icon="cancel">Отменить кисть</IconLabel>
+                </button>
+                <div className="large-map-ribbon-row">
+                  <button className="large-map-ribbon-button square" type="button" disabled={!canUndo} onClick={undo} title="Отменить последнее действие"><CommandIcon kind="undo" /><span>Undo</span></button>
+                  <button className="large-map-ribbon-button square" type="button" disabled={!canRedo} onClick={redo} title="Повторить отмененное действие"><CommandIcon kind="redo" /><span>Redo</span></button>
+                </div>
+              </div>
+            </div>
+            <b>Буфер обмена</b>
+          </div>
+
+          <div className="large-map-ribbon-group">
+            <div className="large-map-ribbon-buttons">
+              <button className="large-map-ribbon-button big" type="button" disabled={selectedWareId === null} onClick={saveDraftToOracleCanvas} title={selectedWareId === null ? "Выберите склад, чтобы сохранить canvas" : "Сохранить текущий canvas/draft payload выбранного склада в Oracle"}>
+                <CommandIcon kind="save" />
+                <span>Сохранить<br />канвас</span>
+              </button>
+              <div className="large-map-ribbon-stack">
+                <button className="large-map-ribbon-button" type="button" onClick={saveDraft} title="Сохранить локальный/API draft карты">
+                  <IconLabel icon="save">Сохранить draft</IconLabel>
+                </button>
+                <button className="large-map-ribbon-button" type="button" onClick={loadDraft} title="Загрузить локальный/API draft карты">
+                  <IconLabel icon="open">Загрузить draft</IconLabel>
+                </button>
+                <button className="large-map-ribbon-button" type="button" disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_canvas_id} onClick={saveProjectionToOracleTopology} title="Сохранить topology projection: физические cells и child slots">
+                  <IconLabel icon="table">Save topology</IconLabel>
+                </button>
+                <button className="large-map-ribbon-button" type="button" disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_topology_id || !routeRows.length} onClick={saveRouteToOracle} title="Сохранить pick route rows в Oracle">
+                  <IconLabel icon="route">Save route</IconLabel>
+                </button>
+                <button className="large-map-ribbon-button" type="button" disabled={!draftId || !currentDraft?.oracle_canvas_id || !currentDraft?.oracle_topology_id || !currentDraft?.oracle_pick_route_id} onClick={publishOracleDraft} title="Опубликовать сохраненные canvas, topology и route в Oracle">
+                  <IconLabel icon="publish">Publish Oracle</IconLabel>
+                </button>
+                <button className="large-map-ribbon-button" type="button" disabled={selectedWareId === null} onClick={refreshWarehouseMap} title="Перезагрузить опубликованное состояние склада из Oracle">
+                  <IconLabel icon="open">Reload</IconLabel>
+                </button>
+              </div>
+            </div>
+            <b>Публикация</b>
+          </div>
+
+          <div className="large-map-ribbon-group">
+            <div className="large-map-ribbon-buttons">
+              <button className="large-map-ribbon-button big" type="button" onClick={applyRegularTemplate} title="Создать регулярный склад: L1 отбор, L2-L6 хранение">
+                <CommandIcon kind="table" />
+                <span>Регулярный<br />склад</span>
+              </button>
+              <div className="large-map-ribbon-stack">
+                <button className="large-map-ribbon-button" type="button" onClick={applyAisleTemplate} title="Нарисовать регулярные транспортные проходы">
+                  <IconLabel icon="route">Проходы</IconLabel>
+                </button>
+                <button className="large-map-ribbon-button" type="button" onClick={applyDockTemplate} title="Нарисовать ворота и накопление до нижней границы шаблона">
+                  <IconLabel icon="storage">Ворота + накопл.</IconLabel>
+                </button>
+                <button className="large-map-ribbon-button" type="button" onClick={copyAisleTemplate} title="Скопировать активную аллею на выделенные аллеи">
+                  <IconLabel icon="brush">Копировать аллею</IconLabel>
+                </button>
+              </div>
+            </div>
+            <b>Шаблоны</b>
+          </div>
+
+          <div className="large-map-ribbon-group large-map-ribbon-group-fill">
+            <div className="large-map-ribbon-buttons">
+              <button className="large-map-ribbon-button big" type="button" disabled={!selections.length} onClick={applyActiveRoleAction} title={selections.length ? "Назначить выделению активную роль из левой панели" : "Сначала выделите ячейки"}>
+                <CommandIcon kind="fill" />
+                <span>Залить<br />ролью</span>
+              </button>
+              <div className="large-map-ribbon-role-grid">
+                {(["PICK_FACE", "STORAGE", "TRANSPORT_STAGING", "GATE", "AISLE", "BLOCKED"] as CellRole[]).map((role) => (
+                  <button key={role} className={activeRole === role ? "active" : ""} type="button" disabled={!selections.length} onClick={() => assignRole(role)} title={`${ROLE_LABELS[role]}: назначить роль выделенной области`}>
+                    <i style={{ background: ROLE_COLORS[role], borderColor: ROLE_STROKES[role] }} />
+                    <span>{ROLE_LABELS[role]}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <b>Ячейки</b>
+          </div>
+
+          <div className="large-map-ribbon-group">
+            <div className="large-map-ribbon-buttons">
+              <button className="large-map-ribbon-button big" type="button" disabled={!selections.length} onClick={clearSelectedArea} title={selections.length ? "Очистить выделение: заменить роль на Пусто" : "Сначала выделите ячейки"}>
+                <CommandIcon kind="clear" />
+                <span>Очистить<br />выделение</span>
+              </button>
+              <div className="large-map-ribbon-stack">
+                <button className="large-map-ribbon-button" type="button" disabled={!selections.length} onClick={blockSelectedArea} title="Пометить выделение как недоступные cells">
+                  <IconLabel icon="cancel">Недоступно</IconLabel>
+                </button>
+                <button className="large-map-ribbon-button" type="button" disabled={!selections.length} onClick={generatePickFaceAddresses} title="Назначить адреса отбора по текущей маске и направлению">
+                  <IconLabel icon="address">Адресация отбора</IconLabel>
+                </button>
+                <button className="large-map-ribbon-button" type="button" disabled={!selections.length} onClick={applyActiveRoleAction} title="Заменить роль выделения активной ролью из левой панели">
+                  <IconLabel icon="fill">Заменить роль</IconLabel>
+                </button>
+              </div>
+            </div>
+            <b>Редактирование</b>
+          </div>
+
+          <div className="large-map-ribbon-group">
+            <div className="large-map-ribbon-stack wide">
+              <div className="large-map-ribbon-search">
+                <input value={searchText} onChange={(event) => setSearchText(event.currentTarget.value)} placeholder="A01-S001-L1" title="Адрес, gate или ячейка для поиска" />
+                <button className="large-map-ribbon-button square" type="button" onClick={goToSearchAddress} title="Найти адрес на карте"><CommandIcon kind="search" /><span>Найти</span></button>
+              </div>
+              <div className="large-map-ribbon-row">
+                <button className="large-map-ribbon-button square" type="button" onClick={() => updateZoom(view.zoom * 1.2)} title="Увеличить масштаб"><CommandIcon kind="zoom" /><span>+</span></button>
+                <button className="large-map-ribbon-button square" type="button" onClick={() => updateZoom(view.zoom / 1.2)} title="Уменьшить масштаб"><CommandIcon kind="zoom" /><span>-</span></button>
+                <button className="large-map-ribbon-button square" type="button" onClick={resetView} title="Вернуть масштаб 100%"><span>100%</span></button>
+                <button className="large-map-ribbon-button square" type="button" onClick={fitMap} title="Уместить всю карту"><CommandIcon kind="fit" /><span>Fit</span></button>
+                <button className="large-map-ribbon-button square" type="button" disabled={!selections.length} onClick={fitSelected} title="Уместить выделенную область"><CommandIcon kind="fit" /><span>Sel</span></button>
+              </div>
+            </div>
+            <b>Навигация</b>
+          </div>
+
+          <div className="large-map-ribbon-group">
+            <div className="large-map-ribbon-stack wide">
+              <div className="large-map-ribbon-row">
+                <button className="large-map-ribbon-button" type="button" onClick={() => setAllRoleFilters(true)} title="Показать все роли на карте">
+                  <IconLabel icon="filter">Все роли</IconLabel>
+                </button>
+                <button className="large-map-ribbon-button" type="button" onClick={() => setAllRoleFilters(false)} title="Скрыть все роли, затем включите нужные">
+                  <IconLabel icon="filter">Скрыть все</IconLabel>
+                </button>
+              </div>
+              <div className="large-map-ribbon-filter-strip">
+                {ROLE_ORDER.slice(0, 8).map((role) => (
+                  <button key={`ribbon-filter-${role}`} className={roleFilters[role] ? "active" : ""} type="button" onClick={() => toggleRoleFilter(role)} title={`Показать/скрыть ${ROLE_LABELS[role]}`}>
+                    <i style={{ background: ROLE_COLORS[role], borderColor: ROLE_STROKES[role] }} />
+                  </button>
+                ))}
+              </div>
+            </div>
+            <b>Фильтр</b>
+          </div>
+
+          <div className="large-map-ribbon-group">
+            <div className="large-map-ribbon-buttons">
+              <button className="large-map-ribbon-button big" type="button" disabled={!draftId} onClick={validateDraft} title={draftId ? "Проверить draft: адреса, slots, route rows и publish-блокировки" : "Сначала сохраните draft"}>
+                <CommandIcon kind="validate" />
+                <span>Validate<br />draft</span>
+              </button>
+              <div className="large-map-ribbon-stack">
+                <button className="large-map-ribbon-button" type="button" disabled={!draftId} onClick={previewProjection} title="Предпросмотр projection в topology cells/slots">
+                  <IconLabel icon="filter">Projection preview</IconLabel>
+                </button>
+                <div className="large-map-ribbon-row">
+                  <button className="large-map-ribbon-button square" type="button" disabled={!draftId || !selections.length} onClick={() => buildRouteFromSelection("LINEAR")} title="Построить LINEAR порядок обхода"><span>LINEAR</span></button>
+                  <button className="large-map-ribbon-button square" type="button" disabled={!draftId || !selections.length} onClick={() => buildRouteFromSelection("Z")} title="Построить Z порядок обхода"><span>Z</span></button>
+                  <button className="large-map-ribbon-button square" type="button" disabled={!draftId || !selections.length} onClick={() => buildRouteFromSelection("U_SHAPE")} title="Построить u-образный порядок обхода"><span>u</span></button>
+                  <button className="large-map-ribbon-button square" type="button" disabled={!draftId || !selections.length} onClick={() => buildRouteFromSelection("P_SHAPE")} title="Построить П-образный порядок обхода"><span>П</span></button>
+                </div>
+                <div className="large-map-ribbon-kpis">
+                  <span><CommandIcon kind="sigma" /> {selectedCount.toLocaleString("ru-RU")} selected</span>
+                  <span>{routeRows.length.toLocaleString("ru-RU")} route rows</span>
+                </div>
+              </div>
+            </div>
+            <b>Проверка</b>
+          </div>
+        </div>
+      </section>
+
       <section className="large-map-workspace">
         <aside className="large-map-panel">
           <section className="large-map-quick-format">
@@ -3553,12 +3953,60 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
 
           <section className="large-map-quick-actions">
             <h2>Действия <button className="large-map-help-button" onClick={(event) => openHelp(event, "oracle.publish")} title="Help: Oracle save/publish">?</button></h2>
+            <div className="large-map-oracle-flow" aria-label="Состояние цепочки публикации Oracle">
+              <div className={oracleStepClass("canvas")}>
+                <b>1</b><span>Canvas DB</span><em>{oracleStepDetails("canvas")}</em>
+              </div>
+              <div className={oracleStepClass("topology")}>
+                <b>2</b><span>Topology DB</span><em>{oracleStepDetails("topology")}</em>
+              </div>
+              <div className={oracleStepClass("route")}>
+                <b>3</b><span>Route DB</span><em>{oracleStepDetails("route")}</em>
+              </div>
+              <div className={oracleStepClass("publish")}>
+                <b>4</b><span>Publish</span><em>{oracleStepDetails("publish")}</em>
+              </div>
+              <div className={oracleStepClass("reload")}>
+                <b>5</b><span>Reload</span><em>{oracleStepDetails("reload")}</em>
+              </div>
+            </div>
             <div className="large-map-command-grid">
               <button disabled={selectedWareId === null} onClick={saveDraftToOracleCanvas} title="Сохраняет текущий canvas выбранного склада в Oracle; API draft будет создан автоматически, если его еще нет">
                 <IconLabel icon="save">Сохранить канвас</IconLabel>
               </button>
+              <button disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_canvas_id} onClick={saveProjectionToOracleTopology} title="Сохраняет projection текущей карты в Oracle topology cells/slots">
+                <IconLabel icon="table">Save topology DB</IconLabel>
+              </button>
+              <button disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_topology_id || !routeRows.length} onClick={saveRouteToOracle} title="Сохраняет порядок обхода в Oracle pick route">
+                <IconLabel icon="route">Save route DB</IconLabel>
+              </button>
+              <button disabled={!draftId || !currentDraft?.oracle_canvas_id || !currentDraft?.oracle_topology_id || !currentDraft?.oracle_pick_route_id} onClick={publishOracleDraft} title="Публикует сохраненные canvas, topology и pick route через Oracle package">
+                <IconLabel icon="publish">Publish Oracle</IconLabel>
+              </button>
+              <button disabled={selectedWareId === null} onClick={refreshWarehouseMap} title="Перезагрузить опубликованное состояние склада из Oracle">
+                <IconLabel icon="open">Reload Oracle</IconLabel>
+              </button>
             </div>
             <p className="large-map-muted">{oracleStatus}</p>
+          </section>
+
+          <section className="large-map-quick-edit">
+            <h2>Редактирование</h2>
+            <div className="large-map-command-grid">
+              <button disabled={!selections.length} onClick={applyActiveRoleAction} title="Заменить роль выделения активной ролью из блока Роли">
+                <IconLabel icon="fill">Заменить роль</IconLabel>
+              </button>
+              <button disabled={!selections.length} onClick={clearSelectedArea} title="Очистить выделение: заменить роль на Пусто">
+                <IconLabel icon="clear">Очистить выделение</IconLabel>
+              </button>
+              <button disabled={!selections.length} onClick={generatePickFaceAddresses} title="Автозаполнить адреса отбора по текущей маске">
+                <IconLabel icon="address">Назначить адреса</IconLabel>
+              </button>
+              <button disabled={!draftId} onClick={validateDraft} title="Проверить draft перед публикацией">
+                <IconLabel icon="validate">Validate draft</IconLabel>
+              </button>
+            </div>
+            <p className="large-map-muted">Excel-быстрые действия дублируются в ribbon и context menu.</p>
           </section>
 
           <section>
@@ -3851,11 +4299,19 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
                 <span>route rows {publishedResult.route_row_count || 0}</span>
               </div>
             )}
+            <div className="large-map-oracle-flow wide" aria-label="Подробный статус Oracle workflow">
+              <div className={oracleStepClass("canvas")}><b>1</b><span>Canvas DB</span><em>{oracleStepDetails("canvas")}</em></div>
+              <div className={oracleStepClass("topology")}><b>2</b><span>Topology DB</span><em>{oracleStepDetails("topology")}</em></div>
+              <div className={oracleStepClass("route")}><b>3</b><span>Route DB</span><em>{oracleStepDetails("route")}</em></div>
+              <div className={oracleStepClass("publish")}><b>4</b><span>Publish Oracle</span><em>{oracleStepDetails("publish")}</em></div>
+              <div className={oracleStepClass("reload")}><b>5</b><span>Reload</span><em>{oracleStepDetails("reload")}</em></div>
+            </div>
             <div className="large-map-tools">
               <button disabled={selectedWareId === null} onClick={saveDraftToOracleCanvas} title="Сохраняет весь canvas/draft payload в Oracle RRL_WAREHOUSE_MAP_CANVAS"><IconLabel icon="save">Сохранить канвас</IconLabel></button>
               <button disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_canvas_id} onClick={saveProjectionToOracleTopology} title="Сохраняет projection текущей карты в Oracle topology cells/slots">Save topology DB</button>
               <button disabled={!draftId || selectedWareId === null || !currentDraft?.oracle_topology_id || !routeRows.length} onClick={saveRouteToOracle} title="Сохраняет порядок обхода в Oracle pick route">Save route DB</button>
               <button disabled={!draftId || !currentDraft?.oracle_canvas_id || !currentDraft?.oracle_topology_id || !currentDraft?.oracle_pick_route_id} onClick={publishOracleDraft} title="Публикует сохраненные canvas, topology и pick route через Oracle package">Publish Oracle</button>
+              <button disabled={selectedWareId === null} onClick={refreshWarehouseMap} title="Перезагружает опубликованную карту склада из Oracle">Reload Oracle</button>
               <button className="large-map-help-button" onClick={(event) => openHelp(event, "oracle.publish")} title="Help: Oracle save/publish">?</button>
             </div>
             <p className="large-map-muted">{oracleStatus}</p>
@@ -3863,8 +4319,11 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
               <div className="large-map-selection">
                 <b>Oracle draft links</b>
                 <span>canvas {currentDraft?.oracle_canvas_id || "-"}</span>
+                <span>canvas key {currentDraft?.oracle_canvas_idempotency_key || "-"}</span>
                 <span>topology {currentDraft?.oracle_topology_id || "-"}</span>
+                <span>topology key {currentDraft?.oracle_topology_idempotency_key || "-"}</span>
                 <span>route {currentDraft?.oracle_pick_route_id || "-"}</span>
+                <span>route key {currentDraft?.oracle_pick_route_idempotency_key || "-"}</span>
               </div>
             )}
             {oraclePublishResult && (
@@ -3874,6 +4333,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
                 <span>topology {oraclePublishResult.oracle_status.topology_status} · {oraclePublishResult.topology_id}</span>
                 <span>route {oraclePublishResult.oracle_status.route_status} · {oraclePublishResult.pick_route_id}</span>
                 <span>validation {String(oraclePublishResult.oracle_validation.valid)} · rows {oraclePublishResult.oracle_status.route_row_count || 0}</span>
+                <span>publish key {oraclePublishResult.idempotency_key || currentDraft?.oracle_publish_idempotency_key || "-"}</span>
               </div>
             )}
           </section>
@@ -4096,6 +4556,23 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
                   </button>
                 </div>
               </div>
+              <div className={`large-map-context-flyout ${contextFlyout === "edit" ? "active" : ""}`} onMouseEnter={() => setContextFlyout("edit")}>
+                <button className="large-map-context-parent" onClick={() => setContextFlyout("edit")}><IconLabel icon="fill">Редактирование</IconLabel><span>›</span></button>
+                <div className="large-map-context-submenu">
+                  <button disabled={!selections.length} onClick={() => { setContextMenu(null); applyActiveRoleAction(); }} title="Назначить выделению активную роль из левой панели">
+                    <IconLabel icon="fill">Заменить активной ролью</IconLabel>
+                  </button>
+                  <button disabled={!selections.length} onClick={() => { setContextMenu(null); clearSelectedArea(); }} title="Очистить выделение: заменить роль на Пусто">
+                    <IconLabel icon="clear">Очистить выделение</IconLabel>
+                  </button>
+                  <button disabled={!selections.length} onClick={() => { setContextMenu(null); blockSelectedArea(); }} title="Пометить выделение как недоступное">
+                    <IconLabel icon="cancel">Сделать недоступным</IconLabel>
+                  </button>
+                  <button disabled={!selections.length} onClick={() => { setContextMenu(null); generatePickFaceAddresses(); }} title="Автозаполнить адреса отбора по текущей маске">
+                    <IconLabel icon="address">Назначить адреса отбора</IconLabel>
+                  </button>
+                </div>
+              </div>
               <div className={`large-map-context-flyout ${contextFlyout === "camera" ? "active" : ""}`} onMouseEnter={() => setContextFlyout("camera")}>
                 <button className="large-map-context-parent" onClick={() => setContextFlyout("camera")}><IconLabel icon="camera">Камера</IconLabel><span>›</span></button>
                 <div className="large-map-context-submenu">
@@ -4107,6 +4584,26 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
                 <button onClick={(event) => { setContextMenu(null); openHelp(event, "object.create"); }} title="Открыть help по canvas commands">
                   ? Help Canvas
                 </button>
+                </div>
+              </div>
+              <div className={`large-map-context-flyout ${contextFlyout === "templates" ? "active" : ""}`} onMouseEnter={() => setContextFlyout("templates")}>
+                <button className="large-map-context-parent" onClick={() => setContextFlyout("templates")}><IconLabel icon="table">Шаблоны</IconLabel><span>›</span></button>
+                <div className="large-map-context-submenu">
+                  <button onClick={() => { setContextMenu(null); applyRegularTemplate(); }} title="Создать регулярный склад: L1 отбор, L2-L6 хранение">
+                    <IconLabel icon="table">Регулярный склад</IconLabel>
+                  </button>
+                  <button onClick={() => { setContextMenu(null); applyAisleTemplate(); }} title="Нарисовать регулярные транспортные проходы">
+                    <IconLabel icon="route">Проходы</IconLabel>
+                  </button>
+                  <button onClick={() => { setContextMenu(null); applyDockTemplate(); }} title="Нарисовать ворота и транспортное накопление">
+                    <IconLabel icon="storage">Ворота + накопление</IconLabel>
+                  </button>
+                  <button onClick={() => { setContextMenu(null); applyFilmTemplate(); }} title="Нарисовать зону размещения на пленку">
+                    <IconLabel icon="fill">На пленку</IconLabel>
+                  </button>
+                  <button onClick={() => { setContextMenu(null); copyAisleTemplate(); }} title="Скопировать активную аллею на выделенные аллеи">
+                    <IconLabel icon="brush">Копировать аллею</IconLabel>
+                  </button>
                 </div>
               </div>
               <div className={`large-map-context-flyout ${contextFlyout === "pick" ? "active" : ""}`} onMouseEnter={() => setContextFlyout("pick")}>
@@ -4143,6 +4640,52 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
               <button onClick={(event) => { setContextMenu(null); openHelp(event, "fraction.pick"); }}>
                 <IconLabel icon="help">Help дробление</IconLabel>
               </button>
+              <div className={`large-map-context-flyout ${contextFlyout === "navigation" ? "active" : ""}`} onMouseEnter={() => setContextFlyout("navigation")}>
+                <button className="large-map-context-parent" onClick={() => setContextFlyout("navigation")}><IconLabel icon="search">Навигация</IconLabel><span>›</span></button>
+                <div className="large-map-context-submenu">
+                  <button onClick={() => { setContextMenu(null); goToSearchAddress(); }} title="Перейти к адресу из поля поиска">
+                    <IconLabel icon="search">Найти адрес</IconLabel>
+                  </button>
+                  <button onClick={() => { setContextMenu(null); fitMap(); }} title="Уместить всю карту">
+                    <IconLabel icon="fit">Fit map</IconLabel>
+                  </button>
+                  <button disabled={!selections.length} onClick={() => { setContextMenu(null); fitSelected(); }} title="Уместить выделенную область">
+                    <IconLabel icon="fit">Fit selected</IconLabel>
+                  </button>
+                  <button onClick={() => { setContextMenu(null); resetView(); }} title="Вернуть масштаб 100%">
+                    100%
+                  </button>
+                </div>
+              </div>
+              <div className={`large-map-context-flyout ${contextFlyout === "filters" ? "active" : ""}`} onMouseEnter={() => setContextFlyout("filters")}>
+                <button className="large-map-context-parent" onClick={() => setContextFlyout("filters")}><IconLabel icon="filter">Фильтр ролей</IconLabel><span>›</span></button>
+                <div className="large-map-context-submenu">
+                  <button onClick={() => setAllRoleFilters(true)}><IconLabel icon="filter">Показать все роли</IconLabel></button>
+                  <button onClick={() => setAllRoleFilters(false)}><IconLabel icon="filter">Скрыть все роли</IconLabel></button>
+                  <span className="large-map-context-subtitle">Роли</span>
+                  {ROLE_ORDER.map((role) => (
+                    <button key={`ctx-filter-${role}`} className={roleFilters[role] ? "active" : ""} onClick={() => toggleRoleFilter(role)} title={`Показать/скрыть ${ROLE_LABELS[role]}`}>
+                      <i className="large-map-context-role-dot" style={{ background: ROLE_COLORS[role], borderColor: ROLE_STROKES[role] }} />
+                      {roleFilters[role] ? "✓ " : ""}
+                      {ROLE_LABELS[role]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className={`large-map-context-flyout ${contextFlyout === "validation" ? "active" : ""}`} onMouseEnter={() => setContextFlyout("validation")}>
+                <button className="large-map-context-parent" onClick={() => setContextFlyout("validation")}><IconLabel icon="validate">Проверка</IconLabel><span>›</span></button>
+                <div className="large-map-context-submenu">
+                  <button disabled={!draftId} onClick={() => { setContextMenu(null); validateDraft(); }} title="Проверить draft перед публикацией">
+                    <IconLabel icon="validate">Validate draft</IconLabel>
+                  </button>
+                  <button disabled={!draftId} onClick={() => { setContextMenu(null); previewProjection(); }} title="Предпросмотр projection в topology cells/slots">
+                    <IconLabel icon="filter">Projection preview</IconLabel>
+                  </button>
+                  <span className="large-map-context-subtitle">Счетчики</span>
+                  <button disabled title="Информационный счетчик выбранных ячеек"><IconLabel icon="sigma">{`${selectedCount.toLocaleString("ru-RU")} selected`}</IconLabel></button>
+                  <button disabled title="Информационный счетчик route rows"><IconLabel icon="route">{`${routeRows.length.toLocaleString("ru-RU")} route rows`}</IconLabel></button>
+                </div>
+              </div>
               <div className={`large-map-context-flyout ${contextFlyout === "route" ? "active" : ""}`} onMouseEnter={() => setContextFlyout("route")}>
                 <button className="large-map-context-parent" onClick={() => setContextFlyout("route")}><IconLabel icon="route">Порядок обхода</IconLabel><span>›</span></button>
                 <div className="large-map-context-submenu">
@@ -4420,6 +4963,7 @@ function drawCanvas(
   canvasObjects: WarehouseMapObject[],
   passages: WarehouseMapPassage[],
   fractionVisuals: Map<string, FractionVisualPreset>,
+  addressLabels: Map<string, string>,
   routeRows: RouteDraftRow[],
   setMetrics: React.Dispatch<React.SetStateAction<{ renderMs: number; visibleCells: number; selectedCells: number; bulkMs: number; selectionMs: number; domNodes: number }>>
 ) {
@@ -4470,11 +5014,15 @@ function drawCanvas(
         ctx.strokeRect(x + .5, y + .5, Math.max(1, cellW - 1), Math.max(1, cellH - 1));
       }
       if (drawText) {
+        const label = addressLabels.get(fractionVisualKey({ aisle, slot, level })) || `${aisle}.${slot}`;
         ctx.fillStyle = "#0f1f35";
-        ctx.font = "700 9px system-ui, sans-serif";
+        const fontSize = addressLabels.has(fractionVisualKey({ aisle, slot, level }))
+          ? Math.max(5.5, Math.min(9, (cellW - 3) / Math.max(label.length * .56, 1)))
+          : 9;
+        ctx.font = `800 ${fontSize}px system-ui, sans-serif`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(`${aisle}.${slot}`, x + cellW / 2, y + cellH / 2);
+        ctx.fillText(label, x + cellW / 2, y + cellH / 2, Math.max(4, cellW - 3));
       }
       if (role === "FRACTIONAL_PICK_FACE" || role === "FRACTIONAL_STORAGE") {
         const visual = fractionVisuals.get(fractionVisualKey({ aisle, slot, level }))
@@ -4825,6 +5373,15 @@ function previewAddressCodes(selection: CellSelection, form: { aisleNo: number; 
   const cells = orderedSelectionCells(selection);
   if (form.direction === "END_TO_START") cells.reverse();
   return cells.slice(0, maxCount).map((cell, index) => formatAddressCode(form.codeMask, form.aisleNo, form.startPickNo + index * form.step, cell.level, form.side));
+}
+
+function createAddressVisualLabels(selection: CellSelection, form: { aisleNo: number; startPickNo: number; step: number; direction: AddressDirection; side: AddressSide; codeMask: string }) {
+  const cells = orderedSelectionCells(selection);
+  if (form.direction === "END_TO_START") cells.reverse();
+  return new Map(cells.map((cell, index) => [
+    fractionVisualKey(cell),
+    formatAddressCode(form.codeMask, form.aisleNo, form.startPickNo + index * form.step, cell.level, form.side)
+  ]));
 }
 
 function createSmallPickClientPreview(
