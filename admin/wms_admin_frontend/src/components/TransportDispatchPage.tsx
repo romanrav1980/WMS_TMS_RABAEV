@@ -179,6 +179,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [editDraft, setEditDraft] = useState<Partial<TransportTask>>({});
   const editRef = useRef(editDraft);
   editRef.current = editDraft;
+  const lastClickedIdxRef = useRef<number | null>(null);
 
   // ------------------------------------------------------------------
   // Load reference data once
@@ -341,16 +342,36 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     } catch (e) { setError(String(e)); }
   }
 
-  async function handleCreate(transtype: string, shipment_date: string) {
+  async function handleCreate(params: {
+    transtype: string; shipment_date: string;
+    vehicle: string; driver_id: number | null; dock: string;
+  }) {
     setLoading(true);
     try {
       const res = await apiFetch<{ task_id: number }>(
         "/api/admin/transport/tasks",
-        { method: "POST", body: JSON.stringify({ transtype, shipment_date }) }
+        { method: "POST", body: JSON.stringify({ transtype: params.transtype, shipment_date: params.shipment_date }) }
       );
+      const taskId = res.task_id;
+      if (params.vehicle || params.driver_id || params.dock) {
+        await apiFetch(`/api/admin/transport/tasks/${taskId}`, {
+          method: "PATCH",
+          body: JSON.stringify({ TRANSPORT: params.vehicle || null, VODITEL_ID: params.driver_id, DOCK: params.dock || null }),
+        });
+      }
+      if (selectedStNums.size > 0) {
+        const result = await apiFetch<{ assigned: number; warnings: string[] }>(
+          `/api/admin/transport/tasks/${taskId}/sts`,
+          { method: "POST", body: JSON.stringify({ st_numbers: Array.from(selectedStNums) }) }
+        );
+        if (result.warnings.length > 0) setError(result.warnings.join("; "));
+        setSelectedStNums(new Set());
+      }
       setCreateDialog(false);
-      await loadTasks();
-      const newTask = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${res.task_id}`);
+      const reloads: Promise<unknown>[] = [loadTasks(), loadAvailableSts()];
+      if (viewMode === "clusters") reloads.push(loadClusters());
+      await Promise.all(reloads);
+      const newTask = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${taskId}`);
       selectTask(newTask);
     } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
@@ -399,6 +420,34 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     setSelectedStNums(prev => {
       const next = new Set(prev);
       next.has(stNum) ? next.delete(stNum) : next.add(stNum);
+      return next;
+    });
+  }
+
+  function handleStToggle(stNum: string, idx: number) {
+    lastClickedIdxRef.current = idx;
+    toggleSt(stNum);
+  }
+
+  function handleShiftClick(idx: number) {
+    const last = lastClickedIdxRef.current;
+    if (last === null) { handleStToggle(availableSts[idx].ST_NUMBER, idx); return; }
+    const [a, b] = [Math.min(last, idx), Math.max(last, idx)];
+    const range = availableSts.slice(a, b + 1).map(s => s.ST_NUMBER);
+    setSelectedStNums(prev => {
+      const next = new Set(prev);
+      const allSel = range.every(n => next.has(n));
+      range.forEach(n => allSel ? next.delete(n) : next.add(n));
+      return next;
+    });
+    lastClickedIdxRef.current = idx;
+  }
+
+  function handleSelectByField(field: "RAION" | "REGION", value: string | null) {
+    if (!value) return;
+    setSelectedStNums(prev => {
+      const next = new Set(prev);
+      availableSts.filter(s => s[field] === value).forEach(s => next.add(s.ST_NUMBER));
       return next;
     });
   }
@@ -505,10 +554,12 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 {viewMode === "flat" && (
                   availableSts.length === 0
                     ? <tr><td colSpan={16} className="dispatch-grid-empty">Нет свободных СТ по текущим фильтрам</td></tr>
-                    : availableSts.map(st => (
-                        <AvailableStRow key={st.ST_NUMBER} st={st}
+                    : availableSts.map((st, idx) => (
+                        <AvailableStRow key={st.ST_NUMBER} st={st} idx={idx}
                           checked={selectedStNums.has(st.ST_NUMBER)}
-                          onToggle={() => toggleSt(st.ST_NUMBER)} />
+                          onToggle={() => handleStToggle(st.ST_NUMBER, idx)}
+                          onShiftClick={handleShiftClick}
+                          onSelectByField={handleSelectByField} />
                       ))
                 )}
                 {viewMode === "clusters" && (
@@ -534,7 +585,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             <div className="dispatch-trips-toolbar">
               <b>Рейсы на</b>
               <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)} />
-              <button className="dispatch-new-btn" onClick={() => setCreateDialog(true)}>+ Создать рейс</button>
+              <button className="dispatch-new-btn" onClick={() => setCreateDialog(true)}>
+                {selectedStNums.size > 0 ? `+ Создать маршрут (${selectedStNums.size})` : "+ Создать маршрут"}
+              </button>
               <button className="dispatch-refresh-btn" onClick={loadTasks} title="Обновить рейсы">⟳</button>
               <span className="dispatch-tcount">{tasks.length} рейс(ов)</span>
             </div>
@@ -811,6 +864,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
         <CreateTaskDialog
           filterDate={filterDate}
           transportTypes={transportTypes}
+          vehicles={vehicles}
+          drivers={drivers}
+          selectedCount={selectedStNums.size}
           onConfirm={handleCreate}
           onClose={() => setCreateDialog(false)}
         />
@@ -841,12 +897,15 @@ function wareColorClass(wareId: number): string {
 // ---------------------------------------------------------------------------
 
 function AvailableStRow({
-  st, checked, onToggle, isChild = false,
+  st, checked, onToggle, isChild = false, idx = 0, onShiftClick, onSelectByField,
 }: {
   st: AvailableSt;
   checked: boolean;
   onToggle: () => void;
   isChild?: boolean;
+  idx?: number;
+  onShiftClick?: (idx: number) => void;
+  onSelectByField?: (field: "RAION" | "REGION", value: string | null) => void;
 }) {
   const rowClass = [
     "dispatch-gr",
@@ -854,8 +913,19 @@ function AvailableStRow({
     isChild ? "dispatch-grid-cluster-child" : "",
   ].filter(Boolean).join(" ");
 
+  function handleRowClick(e: React.MouseEvent) {
+    if (e.shiftKey && onShiftClick) onShiftClick(idx);
+    else onToggle();
+  }
+
+  function handleFieldClick(e: React.MouseEvent, field: "RAION" | "REGION", value: string | null) {
+    if (!onSelectByField) return;
+    e.stopPropagation();
+    onSelectByField(field, value);
+  }
+
   return (
-    <tr className={rowClass} onClick={onToggle}>
+    <tr className={rowClass} onClick={handleRowClick}>
       <td onClick={e => e.stopPropagation()}>
         <input type="checkbox" checked={checked} onChange={onToggle} />
       </td>
@@ -863,13 +933,17 @@ function AvailableStRow({
       <td className="num-r">{st.PALLETS_COUNT}</td>
       <td className="num-r">{st.WEIGHT_KG.toFixed(0)}</td>
       <td className="num-r">{st.VOLUME_M3 != null ? st.VOLUME_M3.toFixed(2) : "—"}</td>
-      <td>{st.REGION ?? "—"}</td>
+      <td className={onSelectByField ? "dispatch-region-cell" : ""}
+          onClick={e => handleFieldClick(e, "REGION", st.REGION)}
+          title={onSelectByField ? "Выделить все СТ региона" : ""}>{st.REGION ?? "—"}</td>
       <td className="col-flex">{st.ADDR ?? "—"}</td>
       <td className="dispatch-gc-stnum">{st.ST_NUMBER}</td>
       <td>{st.TRANSTASK_ID ? `#${st.TRANSTASK_ID}` : "—"}</td>
       <td>{fmtDate(st.STDATE)}</td>
       <td>{st.VERIFY_PERC != null ? <VerifyPill perc={st.VERIFY_PERC} /> : "—"}</td>
-      <td>{st.RAION ?? "—"}</td>
+      <td className={onSelectByField ? "dispatch-region-cell" : ""}
+          onClick={e => handleFieldClick(e, "RAION", st.RAION)}
+          title={onSelectByField ? "Выделить все СТ района" : ""}>{st.RAION ?? "—"}</td>
       <td>{st.TRANSPORT_TYPE ?? "—"}</td>
       <td className="num-c">{st.STOL ? <span className="dispatch-stol">С</span> : ""}</td>
       <td className="dispatch-prim1" title={st.PRIM1 ?? ""}>{st.PRIM1 ? st.PRIM1.slice(0, 20) : ""}</td>
@@ -1025,20 +1099,26 @@ function ReadinessBar({ perc, unready }: { perc: number; unready: number | null 
 }
 
 function CreateTaskDialog({
-  filterDate, transportTypes, onConfirm, onClose,
+  filterDate, transportTypes, vehicles, drivers, selectedCount, onConfirm, onClose,
 }: {
   filterDate: string;
   transportTypes: TransportType[];
-  onConfirm: (transtype: string, date: string) => void;
+  vehicles: Vehicle[];
+  drivers: Driver[];
+  selectedCount: number;
+  onConfirm: (params: { transtype: string; shipment_date: string; vehicle: string; driver_id: number | null; dock: string }) => void;
   onClose: () => void;
 }) {
   const [transtype, setTranstype] = useState(transportTypes[0]?.TRANSPORTTYPE || "10");
   const [shipDate, setShipDate] = useState(filterDate);
+  const [vehicle, setVehicle] = useState("");
+  const [driverId, setDriverId] = useState<number | null>(null);
+  const [dock, setDock] = useState("");
 
   return (
     <div className="dispatch-dialog-overlay" onClick={onClose}>
       <div className="dispatch-dialog" onClick={e => e.stopPropagation()}>
-        <h3>Создать рейс</h3>
+        <h3>Создать маршрут{selectedCount > 0 ? ` · ${selectedCount} СТ` : ""}</h3>
         <label className="dispatch-dialog-field">
           <span>Тип транспорта</span>
           <select value={transtype} onChange={e => setTranstype(e.target.value)}>
@@ -1051,11 +1131,42 @@ function CreateTaskDialog({
           </select>
         </label>
         <label className="dispatch-dialog-field">
+          <span>Машина</span>
+          <select value={vehicle} onChange={e => setVehicle(e.target.value)}>
+            <option value="">— не выбрана —</option>
+            {vehicles.map(v => (
+              <option key={v.ID} value={v.NUM}>
+                {v.NUM} · {v.MARKA ?? "?"} · {v.TR_TYPE ?? "?"}{v.PALLETS ? ` · ${v.PALLETS} пал` : ""}
+                {v.GIDROBORT ? " · Г" : ""}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="dispatch-dialog-field">
+          <span>Водитель</span>
+          <select value={driverId ?? ""} onChange={e => setDriverId(e.target.value ? Number(e.target.value) : null)}>
+            <option value="">— не выбран —</option>
+            {drivers.map(d => (
+              <option key={d.ID} value={d.ID}>
+                {d.FULL_NAME ?? `#${d.ID}`}
+                {d.SOBSTVENNYY === 0 && d.DOVERENNOST_OT ? ` (${d.DOVERENNOST_OT})` : ""}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="dispatch-dialog-field">
+          <span>Докст.</span>
+          <input type="text" value={dock} onChange={e => setDock(e.target.value)} placeholder="Д1" />
+        </label>
+        <label className="dispatch-dialog-field">
           <span>Дата отгрузки</span>
           <input type="date" value={shipDate} onChange={e => setShipDate(e.target.value)} />
         </label>
         <div className="dispatch-dialog-actions">
-          <button className="dispatch-new-btn" onClick={() => onConfirm(transtype, shipDate)}>Создать</button>
+          <button className="dispatch-new-btn"
+            onClick={() => onConfirm({ transtype, shipment_date: shipDate, vehicle, driver_id: driverId, dock })}>
+            Создать{selectedCount > 0 ? ` (${selectedCount} СТ)` : ""}
+          </button>
           <button className="dispatch-cancel-edit-btn" onClick={onClose}>Отмена</button>
         </div>
       </div>
@@ -1118,9 +1229,21 @@ function demoClusters(date: string): TransportCluster[] {
 
 function demoAvailableSts(date: string): AvailableSt[] {
   return [
-    { ST_NUMBER: "0441", ADDR: "Москва, ул. Ленина 5", REGION: "Москва", RAION: "ЦАО", PALLETS_COUNT: 3, WEIGHT_KG: 450, VOLUME_M3: 2.1, STDATE: date, TRANSTASK_ID: null, TRANSPORT_TYPE: "10", NEEDS_HYDRO_BOARD: 0, NAPR: null, VERIFY_PERC: 100 },
-    { ST_NUMBER: "0442", ADDR: "Красногорск, пр. Мира 12", REGION: "Красногорск", RAION: null, PALLETS_COUNT: 5, WEIGHT_KG: 780, VOLUME_M3: 3.8, STDATE: date, TRANSTASK_ID: null, TRANSPORT_TYPE: "10", NEEDS_HYDRO_BOARD: 0, NAPR: null, VERIFY_PERC: 75 },
-    { ST_NUMBER: "0443", ADDR: "Химки, ул. Победы 3", REGION: "Химки", RAION: null, PALLETS_COUNT: 6, WEIGHT_KG: 890, VOLUME_M3: 4.2, STDATE: date, TRANSTASK_ID: null, TRANSPORT_TYPE: "15", NEEDS_HYDRO_BOARD: 1, NAPR: null, VERIFY_PERC: 0 },
-    { ST_NUMBER: "0445", ADDR: "Лобня, ул. Свободы 8", REGION: "Лобня", RAION: null, PALLETS_COUNT: 4, WEIGHT_KG: 620, VOLUME_M3: 3.0, STDATE: date, TRANSTASK_ID: null, TRANSPORT_TYPE: "10", NEEDS_HYDRO_BOARD: 0, NAPR: null, VERIFY_PERC: 50 },
+    { ST_NUMBER: "0441", ADDR: "Москва, ул. Ленина 5", REGION: "Москва", RAION: "ЦАО",
+      PALLETS_COUNT: 3, WEIGHT_KG: 450, VOLUME_M3: 2.1, STDATE: date, DATE_LOAD: date,
+      TRANSTASK_ID: null, TRANSPORT_TYPE: "10", NEEDS_HYDRO_BOARD: 0, STOL: 0, PRIM1: null,
+      NAPR: null, WARE_ID: 5, VERIFY_PERC: 100, SUGAR: 0 },
+    { ST_NUMBER: "0442", ADDR: "Красногорск, пр. Мира 12", REGION: "Красногорск", RAION: null,
+      PALLETS_COUNT: 5, WEIGHT_KG: 780, VOLUME_M3: 3.8, STDATE: date, DATE_LOAD: date,
+      TRANSTASK_ID: null, TRANSPORT_TYPE: "10", NEEDS_HYDRO_BOARD: 0, STOL: 0, PRIM1: null,
+      NAPR: null, WARE_ID: 5, VERIFY_PERC: 75, SUGAR: 0 },
+    { ST_NUMBER: "0443", ADDR: "Химки, ул. Победы 3", REGION: "Химки", RAION: null,
+      PALLETS_COUNT: 6, WEIGHT_KG: 890, VOLUME_M3: 4.2, STDATE: date, DATE_LOAD: date,
+      TRANSTASK_ID: null, TRANSPORT_TYPE: "15", NEEDS_HYDRO_BOARD: 1, STOL: 1, PRIM1: "Гидроборт",
+      NAPR: null, WARE_ID: 6, VERIFY_PERC: 0, SUGAR: 1 },
+    { ST_NUMBER: "0445", ADDR: "Лобня, ул. Свободы 8", REGION: "Лобня", RAION: null,
+      PALLETS_COUNT: 4, WEIGHT_KG: 620, VOLUME_M3: 3.0, STDATE: date, DATE_LOAD: date,
+      TRANSTASK_ID: null, TRANSPORT_TYPE: "10", NEEDS_HYDRO_BOARD: 0, STOL: 0, PRIM1: null,
+      NAPR: null, WARE_ID: 7, VERIFY_PERC: 50, SUGAR: 0 },
   ];
 }

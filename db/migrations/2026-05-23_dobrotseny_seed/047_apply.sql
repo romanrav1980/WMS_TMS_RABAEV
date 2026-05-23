@@ -193,7 +193,7 @@ DECLARE
   v_row_cnt      NUMBER;
   v_art_cat      NUMBER;
   v_art_num      NUMBER;
-  v_art_prefix   VARCHAR2(5);
+  v_art_prefix   VARCHAR2(20);
   v_acticul      VARCHAR2(40);
   v_weight       NUMBER;
   v_taresize     NUMBER;
@@ -328,11 +328,11 @@ BEGIN
         -- Вставка паллеты
         INSERT INTO RRL_SBORKA_PALLETS (
           ST_NUMBER, ADDR, WARE_ID, PALLET_UID,
-          STDATE, TRANSTASK_ID, DELETED,
+          STDATE, TRANSTASK_ID, CONDITION,
           ORD, ZONE, LOAD_TYPE, NAPR
         ) VALUES (
           v_st_num, v_addr_str, v_ware_id, v_pall_uid,
-          v_stdate, NULL, NULL,
+          v_stdate, NULL, 0,
           i,        -- ORD = порядок по умолчанию из RRL_ADDR
           CASE MOD(v_ware_id, 3)
             WHEN 0 THEN 'ЗОНА-А'
@@ -370,7 +370,7 @@ BEGIN
 
           INSERT INTO RRL_SBORKA_PALLET_ROWS (
             PALLET_UID,
-            ACTICUL,
+            ARTICUL,
             ORDER_WEIGHT,
             TARESIZE,
             PACK_COUNT
