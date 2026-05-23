@@ -10,6 +10,7 @@ function usage() {
     "  node tests/load/warehouse_map/warehouse_route_binding_loader.cjs --ware-id 1 --file bindings.json --dry-run",
     "  node tests/load/warehouse_map/warehouse_route_binding_loader.cjs --ware-id 1 --file bindings.csv --apply",
     "  node tests/load/warehouse_map/warehouse_route_binding_loader.cjs --file bindings.csv --validate-only",
+    "  node tests/load/warehouse_map/warehouse_route_binding_loader.cjs --ware-id 1 --discover-from-stock --out discovered.csv",
     "",
     "JSON shape:",
     "  [{\"cell_code\":\"A1-001-L1\",\"articul\":\"SKU-1\"}]",
@@ -28,6 +29,8 @@ function parseArgs(argv) {
     pickRouteId: null,
     limit: 5000,
     validateOnly: false,
+    discoverFromStock: false,
+    out: null,
   };
   for (let index = 2; index < argv.length; index += 1) {
     const item = argv[index];
@@ -40,6 +43,8 @@ function parseArgs(argv) {
     else if (item === "--apply") args.dryRun = false;
     else if (item === "--dry-run") args.dryRun = true;
     else if (item === "--validate-only") args.validateOnly = true;
+    else if (item === "--discover-from-stock") args.discoverFromStock = true;
+    else if (item === "--out") args.out = argv[++index];
     else if (item === "--pick-route-id") args.pickRouteId = Number(argv[++index]);
     else if (item === "--limit") args.limit = Number(argv[++index]);
     else throw new Error(`Unknown argument: ${item}\n${usage()}`);
@@ -47,8 +52,11 @@ function parseArgs(argv) {
   if (!Number.isInteger(args.wareId) || args.wareId <= 0) {
     throw new Error("--ware-id must be a positive non-zero warehouse id.");
   }
-  if (!args.file) {
+  if (!args.file && !args.discoverFromStock) {
     throw new Error(`--file is required.\n${usage()}`);
+  }
+  if (args.discoverFromStock && !args.out) {
+    throw new Error("--out is required with --discover-from-stock.");
   }
   return args;
 }
@@ -170,6 +178,10 @@ async function api(method, url, body) {
 
 async function main() {
   const args = parseArgs(process.argv);
+  if (args.discoverFromStock) {
+    await discoverFromStock(args);
+    return;
+  }
   const bindings = loadBindings(args.file).map(normalizeBinding);
   if (args.validateOnly) {
     console.log(JSON.stringify({
@@ -201,6 +213,63 @@ async function main() {
   if (!args.dryRun) {
     console.log("Applied bindings. Re-run readiness before launching wave/case-pick.");
   }
+}
+
+async function discoverFromStock(args) {
+  const faces = await api("GET", `/api/picking/pick-faces?ware_id=${args.wareId}&active_only=1`);
+  const readiness = await api("GET", `/api/picking/warehouses/${args.wareId}/route-consumption-readiness`);
+  const stockRows = await discoverStockRows(args.wareId, faces);
+  const csv = toCsv(["cell_code", "pick_route_cell_id", "articul", "priority", "min_qty", "max_qty", "case_pick_enabled", "active"], stockRows);
+  fs.writeFileSync(path.resolve(args.out), csv, "utf8");
+  console.log(JSON.stringify({
+    ware_id: args.wareId,
+    output: path.resolve(args.out),
+    pick_faces_seen: faces.length,
+    discovered_bindings: stockRows.length,
+    readiness,
+  }, null, 2));
+}
+
+async function discoverStockRows(wareId, faces) {
+  const byCell = new Map();
+  for (const face of faces) {
+    if (!face.cell_code || !face.pick_route_cell_id) continue;
+    byCell.set(String(face.cell_code).toUpperCase(), face);
+  }
+  const rows = [];
+  for (const face of byCell.values()) {
+    const stock = await api("GET", `/api/finished-goods/remains?ware_id=${wareId}&cell=${encodeURIComponent(face.cell_code)}&limit=100`);
+    for (const item of stock) {
+      const articul = item.articul || item.ARTICUL;
+      const qty = Number(item.qty || item.remain || item.REMAIN || 0);
+      if (!articul || qty <= 0) continue;
+      rows.push({
+        cell_code: face.cell_code,
+        pick_route_cell_id: face.pick_route_cell_id,
+        articul,
+        priority: 100,
+        min_qty: "",
+        max_qty: "",
+        case_pick_enabled: 1,
+        active: 1,
+      });
+    }
+  }
+  return rows;
+}
+
+function toCsv(headers, rows) {
+  const lines = [headers.join(",")];
+  for (const row of rows) {
+    lines.push(headers.map((header) => csvValue(row[header])).join(","));
+  }
+  return `${lines.join("\n")}\n`;
+}
+
+function csvValue(value) {
+  const text = value === undefined || value === null ? "" : String(value);
+  if (!/[",\r\n]/.test(text)) return text;
+  return `"${text.replace(/"/g, '""')}"`;
 }
 
 main().catch((error) => {
