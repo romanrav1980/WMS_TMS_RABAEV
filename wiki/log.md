@@ -1727,3 +1727,10 @@ Append-only log of root wiki updates.
 - Verified the live readiness endpoint on `WARE_ID=1`: `pick_face_count=205`, `route_cells_without_pick_face_count=0`, `storage_route_violation_count=0`, blocker `NO_CASE_PICK_ARTICUL_BINDINGS`.
 - Verified the binding loader against the live API in dry-run mode with `route_bindings_sample.csv`: `route_cells_seen=1`, `existing_pick_faces=1`, `created_pick_faces=0`, `assigned_articuls=0`, `dry_run=1`.
 - Real SKU-to-pick-face CSV/JSON data is now the only missing input before applying bindings and expecting `ready_for_wave_case_pick=true`.
+
+## 2026-05-23 13:01 +05:00
+
+- Continued the real SKU binding step with stock discovery from materialized pick-face cells.
+- Extended the binding loader with `--discover-from-stock --out <csv>` so it can export candidate `cell_code,pick_route_cell_id,articul` rows from current stock before any `--apply`.
+- Live discovery on `WARE_ID=1` checked `205` pick faces and found `0` candidate bindings from current stock in those cells.
+- No binding apply was run; the remaining blocker is still real SKU-to-pick-face business data or stock placed in the pick-face cells.
