@@ -21,6 +21,10 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   GET    /api/admin/transport/sts/{st_number}/pallets     — паллеты СТ (Sprint 6)
   GET    /api/admin/transport/planner/orders             — СТ с координатами для карты (Sprint 7)
   GET    /api/admin/transport/routing/status             — статус геокодирования (Sprint 7)
+  POST   /api/admin/transport/distance-matrix/rebuild    — пересчитать матрицу расстояний (Sprint 8)
+  POST   /api/admin/transport/planner/solve              — запустить VRP-оптимизатор (Sprint 8)
+  POST   /api/admin/transport/planner/apply              — применить план (создать рейсы) (Sprint 8)
+  GET    /api/admin/transport/planner/metrics            — метрики последнего плана (Sprint 8)
 """
 
 from datetime import date
@@ -41,8 +45,12 @@ from ..schemas import (
     TransportStOrderRequest,
     TransportTaskCreateRequest,
     TransportTaskUpdateRequest,
+    VrpSolveRequest,
+    VrpApplyRequest,
+    VrpPlanResponse,
 )
 from ..services.transport_service import TransportService
+from ..services.distance_matrix_service import DistanceMatrixService
 
 router = APIRouter(prefix="/api/admin/transport", tags=["transport-dispatch"])
 
@@ -286,3 +294,61 @@ def get_routing_status(
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> dict:
     return TransportService().get_routing_status()
+
+
+# ---------------------------------------------------------------------------
+# Sprint 8 — Матрица расстояний + VRP-оптимизатор
+# ---------------------------------------------------------------------------
+
+@router.post("/distance-matrix/rebuild")
+def rebuild_distance_matrix(
+    source: str = Query(default="auto", description="auto|haversine|osrm|valhalla"),
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> dict:
+    """Пересчитывает матрицу расстояний RRL_ADDR_DISTANCE_MATRIX."""
+    return DistanceMatrixService().rebuild(source=source)
+
+
+@router.post("/planner/solve")
+def solve_vrp(
+    body: VrpSolveRequest,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> VrpPlanResponse:
+    """
+    Запускает VRP-оптимизатор (OR-Tools CVRPTW или Clarke-Wright fallback).
+    Сохраняет план в RRL_PLANNER_PLANS и возвращает структуру плана.
+    """
+    svc = TransportService()
+    return svc.solve_vrp(
+        plan_date=body.plan_date,
+        ware_ids=body.ware_ids,
+        transport_type=body.transport_type,
+        time_limit_s=body.time_limit_s,
+        source=body.source,
+    )
+
+
+@router.post("/planner/apply")
+def apply_vrp_plan(
+    body: VrpApplyRequest,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> dict:
+    """
+    Создаёт рейсы (TRANSPORT_TASK) по сохранённому плану через Oracle-пакеты.
+    Возвращает {"tasks_created": int, "plan_id": int}.
+    """
+    svc = TransportService()
+    return svc.apply_vrp_plan(
+        plan_id=body.plan_id,
+        shipment_date=body.shipment_date,
+        dock=body.dock,
+    )
+
+
+@router.get("/planner/metrics")
+def get_planner_metrics(
+    plan_id: int | None = Query(default=None, description="ID плана; null = последний"),
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> dict:
+    """Возвращает агрегированные метрики плана."""
+    return TransportService().get_plan_metrics(plan_id=plan_id)

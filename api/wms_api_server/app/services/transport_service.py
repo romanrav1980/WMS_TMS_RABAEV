@@ -14,19 +14,31 @@ transport_service.py — Сервис диспетчера отгрузки.
 Фаза 2.1 (кластеры):
   — list_clusters()    — группировка свободных СТ по RRL_ADDR.RAION
 
+Sprint 8 (VRP):
+  — solve_vrp()        — запуск OR-Tools/Clarke-Wright, сохранение плана
+  — apply_vrp_plan()   — создать рейсы из плана через Oracle-пакеты
+  — get_plan_metrics() — агрегированные метрики плана
+
 Все мутации данных выполняются через существующие Oracle-функции:
   RRL_TRASPORT_TASK_ADD  — создать рейс
   RRL_TT_ADD_PALL        — назначить / снять СТ (tt_id=0 → снять)
   RRL_TT_REORDER_ADR     — пересортировать СТ в рейсе по ORD адреса
 """
 
+import json
 from datetime import date
 from typing import Any
 
 from fastapi import HTTPException
 
 from ..oracle_gateway import OracleGateway
-from ..schemas import TransportTaskCreateRequest, TransportTaskUpdateRequest
+from ..schemas import (
+    TransportTaskCreateRequest,
+    TransportTaskUpdateRequest,
+    VrpPlanResponse,
+    VrpRouteItem,
+    VrpRouteStop,
+)
 
 
 class TransportService:
@@ -634,3 +646,261 @@ class TransportService:
             """,
             {"st_number": st_number},
         )
+
+    # ------------------------------------------------------------------
+    # VRP — Sprint 8
+    # ------------------------------------------------------------------
+
+    def solve_vrp(
+        self,
+        plan_date: date,
+        ware_ids: list[int] | None = None,
+        transport_type: str | None = None,
+        time_limit_s: int = 30,
+        source: str = "auto",
+    ) -> VrpPlanResponse:
+        """Запускает VRP-решатель, сохраняет план и возвращает ответ."""
+        from .vrp_solver import VrpOrder, VrpVehicle, solve as vrp_solve
+        from .distance_matrix_service import DistanceMatrixService
+
+        # Load orders
+        raw_orders = self.get_planner_orders(
+            plan_date=plan_date,
+            ware_ids=ware_ids,
+            transport_type=transport_type,
+        )
+        orders = [
+            VrpOrder(
+                st_number=o["ST_NUMBER"],
+                addr=o["ADDR"] or "",
+                lat=float(o["LAT"]) if o.get("LAT") else 0.0,
+                lon=float(o["LON"]) if o.get("LON") else 0.0,
+                pallets=int(o.get("PALLETS_COUNT") or 0),
+                weight_kg=float(o.get("WEIGHT_KG") or 0),
+                ware_id=int(o.get("WARE_ID") or 0),
+                transport_type=o.get("TRANSPORT_TYPE"),
+                tw_strict=bool(o.get("TW_STRICT")),
+                unload_norm_min=int(o.get("UNLOAD_NORM_MIN") or 30),
+            )
+            for o in raw_orders
+            if o.get("LAT") and o.get("LON")
+        ]
+
+        # Load vehicles
+        raw_vehicles = self.list_vehicles(active_only=True)
+        vehicles = [
+            VrpVehicle(
+                id=int(v["ID"]),
+                num=str(v["NUM"] or ""),
+                tr_type=str(v.get("TR_TYPE") or ""),
+                max_pallets=int(v.get("PALLETS") or 20),
+                max_tons=float(v.get("MAX_TONS") or v.get("MAX_VEHICLE_TONS") or 20),
+                gidrobort=bool(v.get("GIDROBORT")),
+            )
+            for v in raw_vehicles
+        ]
+
+        if not vehicles:
+            raise HTTPException(status_code=422, detail="Нет активных ТС")
+
+        # Load distance cache
+        addr_list = [o.addr for o in orders if o.addr]
+        dist_cache = DistanceMatrixService(self.gateway).get_matrix_as_dict(addr_list)
+
+        # Solve
+        plan = vrp_solve(
+            orders=orders,
+            vehicles=vehicles,
+            dist_cache=dist_cache or None,
+            time_limit_s=time_limit_s,
+        )
+
+        # Save plan to Oracle
+        plan_json = json.dumps(
+            {
+                "solver": plan.solver_used,
+                "routes": [
+                    {
+                        "vehicle_id": r.vehicle.id,
+                        "vehicle_num": r.vehicle.num,
+                        "stops": [s.st_number for s in r.stops],
+                        "total_km": r.total_km,
+                        "total_pallets": r.total_pallets,
+                    }
+                    for r in plan.routes
+                ],
+                "unassigned": [o.st_number for o in plan.unassigned],
+                "total_km": plan.total_km,
+                "fleet_utilization_pct": plan.fleet_utilization_pct,
+                "tw_violations": plan.tw_violations,
+                "score": plan.score,
+            },
+            ensure_ascii=False,
+        )
+        # Get next ID from sequence, then insert
+        seq_row = self.gateway.fetch_all("SELECT SEQ_PLANNER_PLANS.NEXTVAL AS NV FROM DUAL")
+        plan_id: int | None = int(seq_row[0]["NV"]) if seq_row else None
+
+        if plan_id is not None:
+            self.gateway.execute(
+                """
+                INSERT INTO RABAEV.RRL_PLANNER_PLANS
+                       (ID, PLAN_DATE, CREATED_AT, SOLVER, SCORE, PLAN_JSON)
+                VALUES (:plan_id, :plan_date, SYSDATE, :solver, :score, :plan_json)
+                """,
+                {
+                    "plan_id":   plan_id,
+                    "plan_date": plan_date,
+                    "solver":    plan.solver_used,
+                    "score":     plan.score,
+                    "plan_json": plan_json,
+                },
+            )
+
+        # Build response
+        route_items = [
+            VrpRouteItem(
+                vehicle_id=r.vehicle.id,
+                vehicle_num=r.vehicle.num,
+                vehicle_type=r.vehicle.tr_type,
+                max_pallets=r.vehicle.max_pallets,
+                total_pallets=r.total_pallets,
+                total_kg=r.total_kg,
+                total_km=r.total_km,
+                total_duration_min=r.total_duration_min,
+                utilization_pct=r.utilization_pct,
+                stops=[
+                    VrpRouteStop(
+                        st_number=s.st_number,
+                        addr=s.addr,
+                        lat=s.lat,
+                        lon=s.lon,
+                        pallets=s.pallets,
+                        weight_kg=s.weight_kg,
+                        ware_id=s.ware_id,
+                        unload_norm_min=s.unload_norm_min,
+                        tw_from=s.tw_from,
+                        tw_to=s.tw_to,
+                        tw_strict=s.tw_strict,
+                    )
+                    for s in r.stops
+                ],
+            )
+            for r in plan.routes
+        ]
+
+        return VrpPlanResponse(
+            plan_id=plan_id,
+            routes=route_items,
+            unassigned_sts=[o.st_number for o in plan.unassigned],
+            total_km=plan.total_km,
+            fleet_utilization_pct=plan.fleet_utilization_pct,
+            tw_violations=plan.tw_violations,
+            score=plan.score,
+            solver_used=plan.solver_used,
+            solve_time_ms=plan.solve_time_ms,
+        )
+
+    def apply_vrp_plan(
+        self,
+        plan_id: int,
+        shipment_date: date,
+        dock: str | None = None,
+    ) -> dict[str, Any]:
+        """Создаёт рейсы по сохранённому плану через Oracle-функции."""
+        rows = self.gateway.fetch_all(
+            "SELECT PLAN_JSON, SOLVER FROM RABAEV.RRL_PLANNER_PLANS WHERE ID = :plan_id",
+            {"plan_id": plan_id},
+        )
+        if not rows:
+            raise HTTPException(status_code=404, detail=f"Plan {plan_id} not found")
+
+        plan_data = json.loads(rows[0]["PLAN_JSON"])
+        tasks_created = 0
+        user_id = "vrp_auto"
+
+        for route in plan_data.get("routes", []):
+            vehicle_num = route.get("vehicle_num", "")
+            vehicle_id  = route.get("vehicle_id")
+            stop_sts: list[str] = route.get("stops", [])
+            if not stop_sts:
+                continue
+
+            # Create task via Oracle function (transtype default 20)
+            req = TransportTaskCreateRequest(transtype="20", shipment_date=shipment_date)
+            tt_id = self.create_task(req, user_id=user_id)
+
+            # Set vehicle, driver, dock
+            upd = TransportTaskUpdateRequest(
+                transport=vehicle_num or None,
+                voditel_id=vehicle_id,
+                dock=dock,
+            )
+            try:
+                self.update_task(tt_id, upd, user_id=user_id)
+            except Exception:
+                pass
+
+            # Assign STs
+            try:
+                self.assign_sts(tt_id, stop_sts, user_id=user_id)
+            except Exception:
+                pass
+
+            tasks_created += 1
+
+        # Mark plan as applied
+        self.gateway.execute(
+            "UPDATE RABAEV.RRL_PLANNER_PLANS SET APPLIED_AT = SYSDATE WHERE ID = :plan_id",
+            {"plan_id": plan_id},
+        )
+
+        return {"tasks_created": tasks_created, "plan_id": plan_id}
+
+    def get_plan_metrics(self, plan_id: int | None = None) -> dict[str, Any]:
+        """Возвращает метрики плана. plan_id=None → последний план."""
+        if plan_id is None:
+            rows = self.gateway.fetch_all(
+                """
+                SELECT ID, PLAN_DATE, SOLVER, SCORE, PLAN_JSON, CREATED_AT, APPLIED_AT
+                  FROM RABAEV.RRL_PLANNER_PLANS
+                 ORDER BY ID DESC
+                 FETCH FIRST 1 ROWS ONLY
+                """
+            )
+        else:
+            rows = self.gateway.fetch_all(
+                """
+                SELECT ID, PLAN_DATE, SOLVER, SCORE, PLAN_JSON, CREATED_AT, APPLIED_AT
+                  FROM RABAEV.RRL_PLANNER_PLANS
+                 WHERE ID = :plan_id
+                """,
+                {"plan_id": plan_id},
+            )
+
+        if not rows:
+            return {
+                "plan_id": None,
+                "routes": 0,
+                "total_km": 0.0,
+                "fleet_utilization_pct": 0.0,
+                "tw_violations": 0,
+                "score": 0.0,
+                "solver_used": "none",
+                "applied": False,
+                "plan_date": None,
+            }
+
+        row = rows[0]
+        plan_data = json.loads(row["PLAN_JSON"] or "{}")
+        return {
+            "plan_id": int(row["ID"]),
+            "routes": len(plan_data.get("routes", [])),
+            "total_km": float(plan_data.get("total_km") or 0),
+            "fleet_utilization_pct": float(plan_data.get("fleet_utilization_pct") or 0),
+            "tw_violations": int(plan_data.get("tw_violations") or 0),
+            "score": float(plan_data.get("score") or 0),
+            "solver_used": plan_data.get("solver", row.get("SOLVER") or "none"),
+            "applied": row.get("APPLIED_AT") is not None,
+            "plan_date": str(row["PLAN_DATE"])[:10] if row.get("PLAN_DATE") else None,
+        }

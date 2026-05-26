@@ -1315,3 +1315,60 @@ class TransportStLoadTypeRequest(BaseModel):
 
 class TransportStOrderRequest(BaseModel):
     ord: int = Field(..., ge=0, description="Порядковый номер адреса доставки в рейсе (ORD)")
+
+
+# ---------------------------------------------------------------------------
+# VRP / Planner (Sprint 8)
+# ---------------------------------------------------------------------------
+
+class VrpRouteStop(BaseModel):
+    st_number: str
+    addr: str | None
+    lat: float | None
+    lon: float | None
+    pallets: int
+    weight_kg: float
+    ware_id: int
+    unload_norm_min: int
+    tw_from: int
+    tw_to: int
+    tw_strict: bool
+
+
+class VrpRouteItem(BaseModel):
+    vehicle_id: int
+    vehicle_num: str
+    vehicle_type: str
+    max_pallets: int
+    total_pallets: int
+    total_kg: float
+    total_km: float
+    total_duration_min: int
+    utilization_pct: float
+    stops: list[VrpRouteStop]
+
+
+class VrpPlanResponse(BaseModel):
+    plan_id: int | None = None
+    routes: list[VrpRouteItem]
+    unassigned_sts: list[str]
+    total_km: float
+    fleet_utilization_pct: float
+    tw_violations: int
+    score: float
+    solver_used: str
+    solve_time_ms: int
+
+
+class VrpSolveRequest(BaseModel):
+    plan_date: date = Field(..., description="Дата СТ для планирования")
+    ware_ids: list[int] | None = None
+    transport_type: str | None = None
+    time_limit_s: int = Field(default=30, ge=5, le=120)
+    source: str = Field(default="auto", description="Провайдер матрицы: auto|haversine|osrm|valhalla")
+
+
+class VrpApplyRequest(BaseModel):
+    plan_id: int = Field(..., description="ID плана из RRL_PLANNER_PLANS для применения")
+    shipment_date: date = Field(..., description="Дата отгрузки создаваемых рейсов")
+    dock: str | None = None

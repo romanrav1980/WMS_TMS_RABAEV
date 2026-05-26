@@ -846,6 +846,37 @@ button[aria-disabled="true"] { cursor: help; }
 .planner-legend-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
 .planner-hint { font-size: 10px; color: var(--muted); line-height: 1.4; }
 .planner-provider-badge { margin-top: 8px; font-size: 10px; color: var(--muted); background: var(--soft); border-radius: 5px; padding: 5px 8px; line-height: 1.5; }
+.planner-matrix-btn { display: block; margin-top: 5px; font-size: 10px; padding: 2px 7px; border: 1px solid var(--line); border-radius: 4px; background: var(--card); color: var(--blue); }
+.planner-matrix-btn:hover { background: var(--soft); }
+
+/* VRP solve controls */
+.planner-solve-btn { width: 100%; padding: 9px 0; background: #1d4ed8; color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; margin-top: 6px; }
+.planner-solve-btn:hover:not(:disabled) { background: #1e40af; }
+.planner-apply-btn { width: 100%; padding: 8px 0; background: #16a34a; color: #fff; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; margin-top: 5px; }
+.planner-apply-btn:hover:not(:disabled) { background: #15803d; }
+.planner-apply-done { text-align: center; font-size: 12px; font-weight: 600; color: #16a34a; margin-top: 6px; }
+.planner-solve-timer { font-size: 12px; color: var(--amber); font-weight: 600; background: #fef3c7; border-radius: 4px; padding: 2px 8px; }
+
+/* Plan metrics block */
+.planner-metrics-block { display: flex; flex-direction: column; gap: 5px; background: var(--soft); border-radius: 6px; padding: 8px 10px; }
+.planner-warn-val { color: var(--red); }
+.planner-solver-row { flex-direction: column; gap: 2px; }
+.planner-solver-badge { font-size: 10px; background: var(--line); padding: 1px 6px; border-radius: 10px; color: var(--text); }
+
+/* Right plan panel */
+.planner-right-panel { width: 220px; min-width: 220px; max-width: 220px; background: var(--card); border-left: 1px solid var(--line); overflow-y: auto; padding: 12px 10px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+.planner-rp-title { font-size: 12px; font-weight: 700; color: var(--text); padding-bottom: 6px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.planner-rp-unassigned { color: var(--amber); }
+.planner-rp-list { display: flex; flex-direction: column; gap: 8px; }
+.planner-rp-route { border: 1px solid var(--line); border-radius: 6px; padding: 7px 8px; background: var(--soft); }
+.planner-rp-vehicle { display: flex; align-items: center; gap: 5px; font-size: 12px; }
+.planner-rp-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.planner-rp-type { font-size: 10px; color: var(--muted); margin-left: auto; }
+.planner-rp-stats { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); margin-top: 3px; }
+.planner-rp-bar { height: 5px; background: var(--line); border-radius: 3px; margin: 4px 0; overflow: hidden; }
+.planner-rp-bar-fill { height: 100%; border-radius: 3px; transition: width .3s; }
+.planner-rp-util { font-size: 10px; font-weight: 700; text-align: right; color: var(--text); }
+.planner-rp-stops { font-size: 10px; color: var(--muted); }
 
 /* Leaflet popup */
 .planner-popup { font-size: 12px; min-width: 160px; }
