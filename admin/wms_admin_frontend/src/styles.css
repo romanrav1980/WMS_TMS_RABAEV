@@ -811,3 +811,18 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-dialog-field select, .dispatch-dialog-field input { border: 1px solid #e2e8f0; border-radius: 6px; padding: 7px 10px; font-size: 13px; }
 .dispatch-dialog-actions { display: flex; gap: 10px; margin-top: 8px; }
 .dispatch-cluster-body { border-top: 1px solid #e8edf4; padding: 2px 4px 4px; background: #fafcff; }
+
+/* ---- Sprint 6: Pallet panel ---- */
+.dispatch-pallet-btn { background: none; border: 1px solid #e2e8f0; color: #64748b; border-radius: 4px; width: 22px; height: 22px; cursor: pointer; font-size: 12px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+.dispatch-pallet-btn:hover { background: #f0f9ff; border-color: #38bdf8; }
+.dispatch-pallet-btn.active { background: #e0f2fe; border-color: #0ea5e9; }
+.dispatch-pallet-panel { margin-top: 8px; border: 1px solid #bae6fd; border-radius: 8px; background: #f0f9ff; overflow: hidden; }
+.dispatch-pallet-panel-hdr { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; background: #e0f2fe; border-bottom: 1px solid #bae6fd; font-size: 13px; }
+.dispatch-pallet-close-btn { background: none; border: none; color: #64748b; font-size: 13px; cursor: pointer; padding: 0 2px; line-height: 1; }
+.dispatch-pallet-close-btn:hover { color: #ef4444; }
+.dispatch-pallet-grid { font-size: 11px; width: 100%; }
+.dispatch-pallet-grid th { background: #f8fafc; font-size: 10px; color: #475569; padding: 3px 6px; border-bottom: 1px solid #e2e8f0; }
+.dispatch-pallet-hdr-row td { background: #f8fafc; border-top: 2px solid #bae6fd; padding: 3px 6px; font-size: 11px; }
+.dispatch-pallet-art-row td { padding: 2px 6px; border-top: 1px solid #f1f5f9; color: #475569; }
+.dispatch-pallet-art { font-family: "Courier New", monospace; font-size: 11px; color: #1e3a5f; }
+.dispatch-pallet-art-count { color: #64748b; font-style: italic; font-size: 10px; }

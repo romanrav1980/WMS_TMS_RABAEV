@@ -18,6 +18,7 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   GET    /api/admin/transport/vehicles                    — справочник ТС
   GET    /api/admin/transport/drivers                     — справочник водителей
   GET    /api/admin/transport/types                       — справочник типов транспорта
+  GET    /api/admin/transport/sts/{st_number}/pallets     — паллеты СТ (Sprint 6)
 """
 
 from datetime import date
@@ -246,3 +247,15 @@ def set_st_order(
 ) -> dict:
     TransportService().set_st_order(task_id, st_number, req.ord, user.username)
     return {"task_id": task_id, "st_number": st_number, "ord": req.ord}
+
+
+# ------------------------------------------------------------------
+# Паллеты СТ (Sprint 6)
+# ------------------------------------------------------------------
+
+@router.get("/sts/{st_number}/pallets")
+def list_st_pallets(
+    st_number: str,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    return TransportService().list_st_pallets(st_number)

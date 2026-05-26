@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -111,6 +111,17 @@ type TransportCluster = {
   STS: AvailableSt[];
 };
 
+type StPalletRow = {
+  PALLET_UID: string;
+  ZONE: string | null;
+  LOAD_TYPE: string | null;
+  ORD: number | null;
+  ARTICUL: string | null;
+  ORDER_WEIGHT: number;
+  PACK_COUNT: number;
+  ROW_VOLUME_M3: number;
+};
+
 // ---------------------------------------------------------------------------
 // Config / API
 // ---------------------------------------------------------------------------
@@ -199,6 +210,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const lastClickedIdxRef = useRef<number | null>(null);
 
   const [editingTranstypeId, setEditingTranstypeId] = useState<number | null>(null);
+  const [palletStNum, setPalletStNum] = useState<string | null>(null);
+  const [stPallets, setStPallets] = useState<StPalletRow[]>([]);
+  const [palletLoading, setPalletLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"tasks" | "routes">("tasks");
   const [routeShipDate, setRouteShipDate] = useState(todayIso());
   const [routeTaskId, setRouteTaskId] = useState("");
@@ -321,10 +335,24 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     setSelectedTask(task);
     setEditMode(false);
     setNoteText(task.PRIMECHANIE ?? "");
+    setPalletStNum(null);
+    setStPallets([]);
     try {
       const data = await apiFetch<TaskSt[]>(`/api/admin/transport/tasks/${task.ID}/sts`);
       setTaskSts(data);
     } catch { setTaskSts([]); }
+  }
+
+  async function handleShowPallets(stNum: string) {
+    if (palletStNum === stNum) { setPalletStNum(null); return; }
+    setPalletStNum(stNum);
+    setPalletLoading(true);
+    try {
+      const data = await apiFetch<StPalletRow[]>(
+        `/api/admin/transport/sts/${encodeURIComponent(stNum)}/pallets`
+      );
+      setStPallets(data);
+    } catch { setStPallets([]); } finally { setPalletLoading(false); }
   }
 
   // ------------------------------------------------------------------
@@ -857,26 +885,37 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                       <th>Зона</th>
                       <th>Окно</th>
                       <th>Погр.</th>
+                      <th style={{ width: 26 }} title="Паллеты">📦</th>
                       <th style={{ width: 26 }}></th>
                     </tr>
                   </thead>
                   <tbody>
                     {taskSts.length === 0
-                      ? <tr><td colSpan={9} className="dispatch-grid-empty">Рейс пуст. Выберите СТ выше и нажмите «Добавить в рейс».</td></tr>
+                      ? <tr><td colSpan={10} className="dispatch-grid-empty">Рейс пуст. Выберите СТ выше и нажмите «Добавить в рейс».</td></tr>
                       : taskSts.map(st => (
                           <TaskStTableRow
                             key={st.ST_NUMBER}
                             st={st}
                             disabled={loading || selectedTask.CONDITION === "Отгружен"}
+                            isPalletOpen={palletStNum === st.ST_NUMBER}
                             onUnassign={() => handleUnassign(st.ST_NUMBER)}
                             onSetLoadType={lt => handleSetLoadType(st.ST_NUMBER, lt)}
                             onSetOrder={ord => handleSetOrder(st.ST_NUMBER, ord)}
+                            onShowPallets={() => handleShowPallets(st.ST_NUMBER)}
                           />
                         ))
                     }
                   </tbody>
                 </table>
               </div>
+              {palletStNum && (
+                <PalletPanel
+                  stNum={palletStNum}
+                  rows={stPallets}
+                  loading={palletLoading}
+                  onClose={() => setPalletStNum(null)}
+                />
+              )}
             </div>
           ) : (
             <div className="dispatch-no-task">
@@ -1010,26 +1049,37 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                       <th>Вр.От</th>
                       <th>Вр.До</th>
                       <th>Погр.</th>
+                      <th style={{ width: 26 }} title="Паллеты">📦</th>
                       <th style={{ width: 26 }}></th>
                     </tr>
                   </thead>
                   <tbody>
                     {taskSts.length === 0
-                      ? <tr><td colSpan={11} className="dispatch-grid-empty">Рейс пуст.</td></tr>
+                      ? <tr><td colSpan={12} className="dispatch-grid-empty">Рейс пуст.</td></tr>
                       : taskSts.map(st => (
                           <RouteTaskStRow
                             key={st.ST_NUMBER}
                             st={st}
                             disabled={loading || selectedTask.CONDITION === "Отгружен"}
+                            isPalletOpen={palletStNum === st.ST_NUMBER}
                             onUnassign={() => handleUnassign(st.ST_NUMBER)}
                             onSetLoadType={lt => handleSetLoadType(st.ST_NUMBER, lt)}
                             onSetOrder={ord => handleSetOrder(st.ST_NUMBER, ord)}
+                            onShowPallets={() => handleShowPallets(st.ST_NUMBER)}
                           />
                         ))
                     }
                   </tbody>
                 </table>
               </div>
+              {palletStNum && (
+                <PalletPanel
+                  stNum={palletStNum}
+                  rows={stPallets}
+                  loading={palletLoading}
+                  onClose={() => setPalletStNum(null)}
+                />
+              )}
             </div>
           ) : (
             <div className="dispatch-no-task">
@@ -1281,13 +1331,15 @@ function ClusterGroup({
 // ---------------------------------------------------------------------------
 
 function RouteTaskStRow({
-  st, disabled, onUnassign, onSetLoadType, onSetOrder,
+  st, disabled, isPalletOpen, onUnassign, onSetLoadType, onSetOrder, onShowPallets,
 }: {
   st: TaskSt;
   disabled: boolean;
+  isPalletOpen: boolean;
   onUnassign: () => void;
   onSetLoadType: (lt: string) => void;
   onSetOrder: (ord: number) => void;
+  onShowPallets: () => void;
 }) {
   const [ordEdit, setOrdEdit] = useState(false);
   const [ordVal, setOrdVal] = useState(String(st.ORD ?? ""));
@@ -1341,6 +1393,14 @@ function RouteTaskStRow({
         }
       </td>
       <td>
+        <button
+          className={`dispatch-pallet-btn${isPalletOpen ? " active" : ""}`}
+          onClick={onShowPallets}
+          title={isPalletOpen ? "Скрыть паллеты" : "Показать паллеты"}>
+          📦
+        </button>
+      </td>
+      <td>
         <button className="dispatch-unassign-btn" disabled={disabled} onClick={onUnassign} title="Снять СТ с рейса">✕</button>
       </td>
     </tr>
@@ -1352,13 +1412,15 @@ function RouteTaskStRow({
 // ---------------------------------------------------------------------------
 
 function TaskStTableRow({
-  st, disabled, onUnassign, onSetLoadType, onSetOrder,
+  st, disabled, isPalletOpen, onUnassign, onSetLoadType, onSetOrder, onShowPallets,
 }: {
   st: TaskSt;
   disabled: boolean;
+  isPalletOpen: boolean;
   onUnassign: () => void;
   onSetLoadType: (lt: string) => void;
   onSetOrder: (ord: number) => void;
+  onShowPallets: () => void;
 }) {
   const [ordEdit, setOrdEdit] = useState(false);
   const [ordVal, setOrdVal] = useState(String(st.ORD ?? ""));
@@ -1418,9 +1480,103 @@ function TaskStTableRow({
         }
       </td>
       <td>
+        <button
+          className={`dispatch-pallet-btn${isPalletOpen ? " active" : ""}`}
+          onClick={onShowPallets}
+          title={isPalletOpen ? "Скрыть паллеты" : "Показать паллеты"}>
+          📦
+        </button>
+      </td>
+      <td>
         <button className="dispatch-unassign-btn" disabled={disabled} onClick={onUnassign} title="Снять СТ с рейса">✕</button>
       </td>
     </tr>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Sprint 6: Pallet panel
+// ---------------------------------------------------------------------------
+
+function PalletPanel({
+  stNum, rows, loading, onClose,
+}: {
+  stNum: string;
+  rows: StPalletRow[];
+  loading: boolean;
+  onClose: () => void;
+}) {
+  return (
+    <div className="dispatch-pallet-panel">
+      <div className="dispatch-pallet-panel-hdr">
+        <b>Паллеты СТ {stNum}</b>
+        <button className="dispatch-pallet-close-btn" onClick={onClose} title="Закрыть">✕</button>
+      </div>
+      {loading ? (
+        <div className="dispatch-grid-empty">Загрузка...</div>
+      ) : rows.length === 0 ? (
+        <div className="dispatch-grid-empty">Нет данных о паллетах</div>
+      ) : (
+        <PalletGroupedTable rows={rows} />
+      )}
+    </div>
+  );
+}
+
+function PalletGroupedTable({ rows }: { rows: StPalletRow[] }) {
+  type PalletGroup = { zone: string | null; loadType: string | null; ord: number | null; rows: StPalletRow[] };
+  const pallets = new Map<string, PalletGroup>();
+  for (const row of rows) {
+    if (!pallets.has(row.PALLET_UID)) {
+      pallets.set(row.PALLET_UID, { zone: row.ZONE, loadType: row.LOAD_TYPE, ord: row.ORD, rows: [] });
+    }
+    if (row.ARTICUL) pallets.get(row.PALLET_UID)!.rows.push(row);
+  }
+
+  return (
+    <table className="dispatch-grid dispatch-pallet-grid">
+      <thead>
+        <tr>
+          <th>Паллет UID</th>
+          <th>Зона</th>
+          <th>Борт</th>
+          <th style={{ width: 40 }}>ПОР</th>
+          <th>Артикул</th>
+          <th className="num-r">Вес,кг</th>
+          <th className="num-r">Упак.</th>
+          <th className="num-r">Объём</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Array.from(pallets.entries()).map(([uid, p]) => {
+          const totalWeight = p.rows.reduce((s, r) => s + r.ORDER_WEIGHT, 0);
+          const totalPack = p.rows.reduce((s, r) => s + r.PACK_COUNT, 0);
+          return (
+            <Fragment key={uid}>
+              <tr className="dispatch-pallet-hdr-row">
+                <td><b>{uid}</b></td>
+                <td>{p.zone ?? "—"}</td>
+                <td><LoadTypeBadge value={p.loadType} /></td>
+                <td className="num-c">{p.ord ?? "—"}</td>
+                <td className="dispatch-pallet-art-count">{p.rows.length} артикулов</td>
+                <td className="num-r"><b>{totalWeight.toFixed(0)}</b></td>
+                <td className="num-r"><b>{totalPack}</b></td>
+                <td className="num-r"></td>
+              </tr>
+              {p.rows.map((r, i) => (
+                <tr key={i} className="dispatch-pallet-art-row">
+                  <td colSpan={4} />
+                  <td className="dispatch-pallet-art">{r.ARTICUL}</td>
+                  <td className="num-r">{r.ORDER_WEIGHT.toFixed(0)}</td>
+                  <td className="num-r">{r.PACK_COUNT}</td>
+                  <td className="num-r">{r.ROW_VOLUME_M3.toFixed(3)}</td>
+                </tr>
+              ))}
+            </Fragment>
+          );
+        })}
+      </tbody>
+    </table>
   );
 }
 

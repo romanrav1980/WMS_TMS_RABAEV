@@ -544,3 +544,26 @@ class TransportService:
             """,
             params,
         )
+
+    # ------------------------------------------------------------------
+    # Паллеты СТ (Sprint 6)
+    # ------------------------------------------------------------------
+
+    def list_st_pallets(self, st_number: str) -> list[dict[str, Any]]:
+        """Возвращает плоский список строк паллет для СТ — группировка по PALLET_UID на фронте."""
+        return self.gateway.fetch_all(
+            """
+            SELECT SP.PALLET_UID, SP.ZONE, SP.LOAD_TYPE, SP.ORD,
+                   R.ARTICUL,
+                   ROUND(NVL(R.ORDER_WEIGHT, 0), 0)                          AS ORDER_WEIGHT,
+                   NVL(R.PACK_COUNT, 0)                                       AS PACK_COUNT,
+                   ROUND(NVL(R.TARESIZE, 0) * NVL(R.PACK_COUNT, 0) / 1000000, 3) AS ROW_VOLUME_M3
+              FROM RABAEV.RRL_SBORKA_PALLETS SP
+              LEFT JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = SP.PALLET_UID
+             WHERE SP.ST_NUMBER = :st_number
+               AND NVL(SP.CONDITION, 0) <> 2
+               AND (SP.DELETED IS NULL OR SP.DELETED <> 1)
+             ORDER BY SP.ORD NULLS LAST, SP.PALLET_UID, R.ARTICUL
+            """,
+            {"st_number": st_number},
+        )
