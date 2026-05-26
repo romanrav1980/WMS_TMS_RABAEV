@@ -19,6 +19,8 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   GET    /api/admin/transport/drivers                     — справочник водителей
   GET    /api/admin/transport/types                       — справочник типов транспорта
   GET    /api/admin/transport/sts/{st_number}/pallets     — паллеты СТ (Sprint 6)
+  GET    /api/admin/transport/planner/orders             — СТ с координатами для карты (Sprint 7)
+  GET    /api/admin/transport/routing/status             — статус геокодирования (Sprint 7)
 """
 
 from datetime import date
@@ -259,3 +261,28 @@ def list_st_pallets(
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
     return TransportService().list_st_pallets(st_number)
+
+
+# ------------------------------------------------------------------
+# Планировщик / карта заказов (Sprint 7)
+# ------------------------------------------------------------------
+
+@router.get("/planner/orders")
+def get_planner_orders(
+    date: date | None = None,
+    ware_ids: Annotated[list[int] | None, Query()] = None,
+    transport_type: str | None = None,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    return TransportService().get_planner_orders(
+        plan_date=date,
+        ware_ids=ware_ids,
+        transport_type=transport_type,
+    )
+
+
+@router.get("/routing/status")
+def get_routing_status(
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> dict:
+    return TransportService().get_routing_status()

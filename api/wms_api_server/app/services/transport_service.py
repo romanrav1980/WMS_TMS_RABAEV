@@ -546,6 +546,73 @@ class TransportService:
         )
 
     # ------------------------------------------------------------------
+    # Планировщик / карта заказов (Sprint 7)
+    # ------------------------------------------------------------------
+
+    def get_planner_orders(
+        self,
+        plan_date: date | None = None,
+        ware_ids: list[int] | None = None,
+        transport_type: str | None = None,
+    ) -> list[dict[str, Any]]:
+        """Возвращает свободные СТ с координатами для отображения на карте."""
+        conditions: list[str] = ["TRANSTASK_ID IS NULL"]
+        params: dict[str, Any] = {}
+
+        if plan_date is not None:
+            conditions.append("TRUNC(STDATE) = :plan_date")
+            params["plan_date"] = plan_date
+
+        effective_ware_ids = ware_ids or []
+        if effective_ware_ids:
+            placeholders = ", ".join(f":wid{i}" for i in range(len(effective_ware_ids)))
+            conditions.append(f"WARE_ID IN ({placeholders})")
+            for i, wid in enumerate(effective_ware_ids):
+                params[f"wid{i}"] = wid
+
+        if transport_type:
+            conditions.append("TRANSPORT_TYPE = :transport_type")
+            params["transport_type"] = transport_type
+
+        where_sql = "WHERE " + " AND ".join(conditions)
+
+        return self.gateway.fetch_all(
+            f"""
+            SELECT ST_NUMBER, ADDR, REGION, RAION,
+                   SHIROTA       AS LAT,
+                   DOLGOTA       AS LON,
+                   PALLETS_COUNT, WEIGHT_KG, VOLUME_M3,
+                   WARE_ID, TRANSPORT_TYPE, NEEDS_HYDRO_BOARD,
+                   MAX_VEHICLE_TONS, TW_STRICT, UNLOAD_NORM_MIN,
+                   VERIFY_PERC, STDATE
+              FROM RABAEV.RRL_V_AVAILABLE_STS
+              {where_sql}
+             ORDER BY REGION NULLS LAST, ST_NUMBER
+            """,
+            params,
+        )
+
+    def get_routing_status(self) -> dict[str, Any]:
+        """Возвращает статус геокодирования адресов."""
+        rows = self.gateway.fetch_all(
+            """
+            SELECT COUNT(*)                                                AS TOTAL_ADDRS,
+                   SUM(CASE WHEN SHIROTA IS NOT NULL AND SHIROTA <> 0
+                            THEN 1 ELSE 0 END)                            AS GEOCODED
+              FROM RABAEV.RRL_ADDR
+            """
+        )
+        total = int(rows[0]["TOTAL_ADDRS"] or 0) if rows else 0
+        geocoded = int(rows[0]["GEOCODED"] or 0) if rows else 0
+        return {
+            "provider": "haversine",
+            "provider_available": True,
+            "total_addresses": total,
+            "geocoded_count": geocoded,
+            "ungeocoded_count": total - geocoded,
+        }
+
+    # ------------------------------------------------------------------
     # Паллеты СТ (Sprint 6)
     # ------------------------------------------------------------------
 

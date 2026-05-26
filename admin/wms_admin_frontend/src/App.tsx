@@ -8,6 +8,7 @@ import { Timeline } from "./components/Timeline";
 import { LargeWarehouseMapPage } from "./components/LargeWarehouseMapPage";
 import { TopologyAdminPage } from "./components/TopologyAdminPage";
 import { TransportDispatchPage } from "./components/TransportDispatchPage";
+import { TransportPlannerPage } from "./components/TransportPlannerPage";
 import { WarehouseScene } from "./components/WarehouseScene";
 import { activeCollisions, currentMetrics, dockPalletsAt, pickFaceFillAt, replenishmentTasksAt, resourceStateAt, visibleEvents } from "./replay/reducer";
 import type { DetailSelection, ReplayData } from "./types";
@@ -21,7 +22,7 @@ export default function App() {
   const [page, setPage] = useState(() => {
     const params = new URLSearchParams(window.location.search.replace(/;/g, "&"));
     const pg = params.get("page");
-    return pg === "topology" ? "topology" : pg === "transport" ? "transport" : pg === "warehouse-map" ? "warehouse-map" : "twin";
+    return pg === "topology" ? "topology" : pg === "transport" ? "transport" : pg === "warehouse-map" ? "warehouse-map" : pg === "planner" ? "planner" : "twin";
   });
   const [selection, setSelection] = useState<DetailSelection>(null);
   const [modelSettings, setModelSettings] = useState({
@@ -86,6 +87,14 @@ export default function App() {
     );
   }
 
+  if (page === "planner") {
+    return (
+      <AppErrorBoundary resetKey={page}>
+        <TransportPlannerPage onBack={() => setPage("twin")} />
+      </AppErrorBoundary>
+    );
+  }
+
   if (page === "warehouse-map") {
     return (
       <AppErrorBoundary resetKey={page}>
@@ -112,6 +121,7 @@ export default function App() {
         <button title="Управление топологией склада" onClick={() => setPage("topology")}>⌗</button>
         <button title="Рисование карты больших складов" onClick={() => setPage("warehouse-map")}>▦</button>
         <button title="Диспетчер отгрузки" onClick={() => setPage("transport")}>⇧</button>
+        <button title="Планировщик маршрутов (карта)" onClick={() => setPage("planner")}>⊕</button>
         <button>●</button>
       </aside>
 
