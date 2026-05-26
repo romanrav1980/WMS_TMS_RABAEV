@@ -33,6 +33,7 @@ from fastapi import HTTPException
 
 from ..oracle_gateway import OracleGateway
 from ..schemas import (
+    OperationFactUpdate,
     TransportTaskCreateRequest,
     TransportTaskUpdateRequest,
     VrpPlanResponse,
@@ -1064,3 +1065,250 @@ class TransportService:
             "sample_counts": counts,
             "stddev": round(stddev, 1),
         }
+
+    # ------------------------------------------------------------------
+    # Sprint 11 — ARM: операции и нормативы
+    # ------------------------------------------------------------------
+
+    def _load_norms(self) -> dict[str, dict]:
+        """Загружает нормативы из RRL_TRANSPORT_NORMS → {code: {dur, per_unit}}."""
+        rows = self.gateway.fetch_all(
+            "SELECT OPERATION_CODE, DURATION_MIN, PER_UNIT FROM RABAEV.RRL_TRANSPORT_NORMS"
+        )
+        return {
+            r["OPERATION_CODE"]: {
+                "duration_min": float(r["DURATION_MIN"]),
+                "per_unit": int(r["PER_UNIT"] or 0),
+            }
+            for r in rows
+        }
+
+    def plan_operations(self, task_id: int) -> list[dict]:
+        """Рассчитывает и сохраняет цепочку плановых операций рейса.
+
+        Цепочка: DOCK_ASSIGN → WAIT_LOAD → LOADING → CLOSE_GATE → DOCUMENTS →
+                 DEPART → DRIVE → UNLOAD → LOAD_RETURNS → DRIVE_BACK →
+                 RETURN_HANDOVER → CLEAN_RETURNS
+        Начальная точка отсчёта — SHIPMENT_TIME рейса (или 06:00 если не задано).
+        """
+        from datetime import datetime, timedelta
+
+        # Загрузить рейс
+        task = self.get_task(task_id)
+
+        # Определить начальное время
+        raw_time = task.get("SHIPMENT_TIME")
+        if raw_time:
+            # SHIPMENT_TIME может прийти как datetime или строка
+            if isinstance(raw_time, datetime):
+                start_dt = raw_time
+            else:
+                try:
+                    start_dt = datetime.strptime(str(raw_time)[:16], "%Y-%m-%d %H:%M")
+                except ValueError:
+                    plan_date = task.get("SHIPMENT_DATE") or datetime.today()
+                    if not isinstance(plan_date, datetime):
+                        plan_date = datetime.combine(plan_date, datetime.min.time())
+                    start_dt = plan_date.replace(hour=6, minute=0, second=0, microsecond=0)
+        else:
+            plan_date = task.get("SHIPMENT_DATE")
+            if plan_date:
+                if isinstance(plan_date, datetime):
+                    start_dt = plan_date.replace(hour=6, minute=0, second=0, microsecond=0)
+                else:
+                    from datetime import date as date_cls
+                    if isinstance(plan_date, date_cls):
+                        start_dt = datetime.combine(plan_date, datetime.min.time()).replace(hour=6)
+                    else:
+                        start_dt = datetime.today().replace(hour=6, minute=0, second=0, microsecond=0)
+            else:
+                start_dt = datetime.today().replace(hour=6, minute=0, second=0, microsecond=0)
+
+        # Суммарные паллеты рейса
+        sts = self.get_task_sts(task_id)
+        total_pallets = sum(int(s.get("PALLETS_COUNT") or 0) for s in sts)
+        if total_pallets <= 0:
+            total_pallets = 1  # минимум 1, чтобы LOADING/UNLOAD не были 0
+
+        norms = self._load_norms()
+
+        # Порядок операций в цепочке
+        CHAIN = [
+            "DOCK_ASSIGN", "WAIT_LOAD", "LOADING", "CLOSE_GATE", "DOCUMENTS",
+            "DEPART", "DRIVE", "UNLOAD", "LOAD_RETURNS", "DRIVE_BACK",
+            "RETURN_HANDOVER", "CLEAN_RETURNS",
+        ]
+
+        # Удалить старые операции этого рейса
+        self.gateway.execute(
+            "DELETE FROM RABAEV.RRL_TT_OPERATIONS WHERE TT_ID = :tt_id",
+            {"tt_id": task_id},
+        )
+
+        result = []
+        current_dt = start_dt
+        for ord_num, code in enumerate(CHAIN, start=1):
+            norm = norms.get(code, {"duration_min": 0.0, "per_unit": 0})
+            dur = norm["duration_min"]
+            if norm["per_unit"]:
+                dur = dur * total_pallets
+
+            plan_start = current_dt
+            plan_end = current_dt + timedelta(minutes=dur)
+
+            # INSERT нового шага
+            rows = self.gateway.fetch_all(
+                "SELECT RABAEV.SEQ_TT_OPERATIONS.NEXTVAL AS NV FROM DUAL"
+            )
+            op_id = int(rows[0]["NV"])
+
+            self.gateway.execute(
+                """
+                INSERT INTO RABAEV.RRL_TT_OPERATIONS
+                  (ID, TT_ID, OPERATION_CODE, ORD, DURATION_MIN, PLAN_START, PLAN_END)
+                VALUES
+                  (:id, :tt_id, :code, :ord, :dur,
+                   TO_DATE(:ps, 'YYYY-MM-DD HH24:MI'), TO_DATE(:pe, 'YYYY-MM-DD HH24:MI'))
+                """,
+                {
+                    "id": op_id,
+                    "tt_id": task_id,
+                    "code": code,
+                    "ord": ord_num,
+                    "dur": round(dur, 2),
+                    "ps": plan_start.strftime("%Y-%m-%d %H:%M"),
+                    "pe": plan_end.strftime("%Y-%m-%d %H:%M"),
+                },
+            )
+
+            result.append(
+                {
+                    "op_id": op_id,
+                    "tt_id": task_id,
+                    "operation_code": code,
+                    "ord": ord_num,
+                    "duration_min": round(dur, 2),
+                    "plan_start": plan_start.strftime("%Y-%m-%d %H:%M"),
+                    "plan_end": plan_end.strftime("%Y-%m-%d %H:%M"),
+                    "fact_start": None,
+                    "fact_end": None,
+                    "delta_min": None,
+                    "note": None,
+                }
+            )
+
+            current_dt = plan_end
+
+        return result
+
+    def get_operations(self, task_id: int) -> list[dict]:
+        """Список операций рейса с расчётом отклонения."""
+        rows = self.gateway.fetch_all(
+            """
+            SELECT ID, TT_ID, OPERATION_CODE, ORD, DURATION_MIN,
+                   TO_CHAR(PLAN_START, 'YYYY-MM-DD HH24:MI') AS PLAN_START,
+                   TO_CHAR(PLAN_END,   'YYYY-MM-DD HH24:MI') AS PLAN_END,
+                   TO_CHAR(FACT_START, 'YYYY-MM-DD HH24:MI') AS FACT_START,
+                   TO_CHAR(FACT_END,   'YYYY-MM-DD HH24:MI') AS FACT_END,
+                   NOTE
+              FROM RABAEV.RRL_TT_OPERATIONS
+             WHERE TT_ID = :tt_id
+             ORDER BY ORD
+            """,
+            {"tt_id": task_id},
+        )
+
+        from datetime import datetime as dt
+
+        def _parse(s):
+            return dt.strptime(s, "%Y-%m-%d %H:%M") if s else None
+
+        result = []
+        for r in rows:
+            delta = None
+            if r["FACT_END"] and r["PLAN_END"]:
+                delta = round(
+                    (_parse(r["FACT_END"]) - _parse(r["PLAN_END"])).total_seconds() / 60, 1
+                )
+            result.append(
+                {
+                    "op_id": int(r["ID"]),
+                    "tt_id": int(r["TT_ID"]),
+                    "operation_code": r["OPERATION_CODE"],
+                    "ord": int(r["ORD"]),
+                    "duration_min": float(r["DURATION_MIN"] or 0),
+                    "plan_start": r["PLAN_START"],
+                    "plan_end": r["PLAN_END"],
+                    "fact_start": r["FACT_START"],
+                    "fact_end": r["FACT_END"],
+                    "delta_min": delta,
+                    "note": r["NOTE"],
+                }
+            )
+        return result
+
+    def update_operation_fact(self, op_id: int, data: OperationFactUpdate) -> dict:
+        """Обновляет fact_start / fact_end операции."""
+        sets = []
+        params: dict[str, Any] = {"op_id": op_id}
+
+        if data.fact_start is not None:
+            sets.append("FACT_START = TO_DATE(:fact_start, 'YYYY-MM-DD HH24:MI')")
+            params["fact_start"] = data.fact_start
+        if data.fact_end is not None:
+            sets.append("FACT_END = TO_DATE(:fact_end, 'YYYY-MM-DD HH24:MI')")
+            params["fact_end"] = data.fact_end
+        if data.note is not None:
+            sets.append("NOTE = :note")
+            params["note"] = data.note
+
+        if not sets:
+            raise HTTPException(status_code=400, detail="Нет полей для обновления")
+
+        rows_updated = self.gateway.execute(
+            f"UPDATE RABAEV.RRL_TT_OPERATIONS SET {', '.join(sets)} WHERE ID = :op_id",
+            params,
+        )
+        if not rows_updated:
+            raise HTTPException(status_code=404, detail=f"Operation {op_id} not found")
+
+        return {"op_id": op_id, "updated": True}
+
+    def get_vehicles_gantt(self, gantt_date: date) -> list[dict]:
+        """Данные Ганта для всех машин на день."""
+        # Найти рейсы на дату
+        tasks = self.gateway.fetch_all(
+            """
+            SELECT TT.ID AS TT_ID, TT.TRANSPORT AS VEHICLE_NUM, TT.TRANSTYPE AS VEHICLE_TYPE,
+                   V.ID AS VEHICLE_ID
+              FROM RABAEV.RRL_TRANSPORT_TASK TT
+              LEFT JOIN RABAEV.RRL_TRANSPORTS V ON V.GNUM = TT.TRANSPORT
+             WHERE TT.SHIPMENT_DATE = TO_DATE(:d, 'YYYY-MM-DD')
+               AND TT.STATUS NOT IN ('Deleted', 'Удалён')
+            """,
+            {"d": str(gantt_date)},
+        )
+
+        result = []
+        seen_vehicles: set[str] = set()
+        for t in tasks:
+            vnum = t.get("VEHICLE_NUM") or ""
+            if vnum in seen_vehicles:
+                # Merge operations into existing vehicle entry
+                for entry in result:
+                    if entry["vehicle_num"] == vnum:
+                        entry["operations"].extend(
+                            self.get_operations(int(t["TT_ID"]))
+                        )
+                continue
+            seen_vehicles.add(vnum)
+            result.append(
+                {
+                    "vehicle_id": int(t["VEHICLE_ID"] or 0),
+                    "vehicle_num": vnum,
+                    "vehicle_type": t.get("VEHICLE_TYPE") or "",
+                    "operations": self.get_operations(int(t["TT_ID"])),
+                }
+            )
+
+        return result

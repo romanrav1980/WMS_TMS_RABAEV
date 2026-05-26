@@ -28,6 +28,10 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   GET    /api/admin/transport/planner/templates          — похожие исторические планы (Sprint 9)
   GET    /api/admin/transport/planner/history            — история применённых планов + Score (Sprint 10)
   GET    /api/admin/transport/planner/demand-forecast    — прогноз числа СТ на дату (Sprint 10)
+  POST   /api/admin/transport/tasks/{id}/plan-operations — рассчитать операции ARM (Sprint 11)
+  GET    /api/admin/transport/tasks/{id}/operations      — список операций рейса (Sprint 11)
+  PATCH  /api/admin/transport/operations/{op_id}/fact    — зафиксировать fact_start/fact_end (Sprint 11)
+  GET    /api/admin/transport/vehicles/gantt             — Ганта-данные всех машин на день (Sprint 11)
 """
 
 from datetime import date
@@ -43,6 +47,7 @@ from ..auth import (
     require_permission,
 )
 from ..schemas import (
+    OperationFactUpdate,
     TransportStAssignRequest,
     TransportStLoadTypeRequest,
     TransportStOrderRequest,
@@ -169,7 +174,13 @@ def create_task(
     req: TransportTaskCreateRequest,
     user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
 ) -> dict:
-    task_id = TransportService().create_task(req, user.username)
+    svc = TransportService()
+    task_id = svc.create_task(req, user.username)
+    # Авто-пересчёт цепочки операций ARM после создания рейса
+    try:
+        svc.plan_operations(task_id)
+    except Exception:
+        pass  # Не блокируем создание рейса при ошибке ARM (таблицы могут не существовать в dev)
     return {"task_id": task_id}
 
 
@@ -393,3 +404,44 @@ def get_demand_forecast(
     return TransportService().get_demand_forecast(
         target_date=target_date, lookback_weeks=lookback_weeks
     )
+
+
+# ---------------------------------------------------------------------------
+# Sprint 11 — ARM: операции и нормативы
+# ---------------------------------------------------------------------------
+
+@router.post("/tasks/{task_id}/plan-operations")
+def plan_operations(
+    task_id: int,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> list[dict]:
+    """Рассчитывает и сохраняет цепочку плановых операций рейса по нормативам."""
+    return TransportService().plan_operations(task_id)
+
+
+@router.get("/tasks/{task_id}/operations")
+def get_operations(
+    task_id: int,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    """Список операций рейса с плановыми и фактическими временами."""
+    return TransportService().get_operations(task_id)
+
+
+@router.patch("/operations/{op_id}/fact")
+def update_operation_fact(
+    op_id: int,
+    data: OperationFactUpdate,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> dict:
+    """Фиксирует fact_start / fact_end операции (ввод диспетчера или мобильного водителя)."""
+    return TransportService().update_operation_fact(op_id, data)
+
+
+@router.get("/vehicles/gantt")
+def get_vehicles_gantt(
+    gantt_date: date = Query(default=..., description="Дата для Ганта"),
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    """Данные диаграммы Ганта для всех машин на день."""
+    return TransportService().get_vehicles_gantt(gantt_date)

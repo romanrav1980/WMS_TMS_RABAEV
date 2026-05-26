@@ -1373,3 +1373,34 @@ class VrpApplyRequest(BaseModel):
     plan_id: int = Field(..., description="ID плана из RRL_PLANNER_PLANS для применения")
     shipment_date: date = Field(..., description="Дата отгрузки создаваемых рейсов")
     dock: str | None = None
+
+
+# ---------------------------------------------------------------------------
+# Sprint 11 — ARM: модель операций и нормативы
+# ---------------------------------------------------------------------------
+
+class OperationPlan(BaseModel):
+    op_id: int
+    tt_id: int
+    operation_code: str
+    ord: int
+    duration_min: float
+    plan_start: str | None = None
+    plan_end: str | None = None
+    fact_start: str | None = None
+    fact_end: str | None = None
+    delta_min: float | None = None
+    note: str | None = None
+
+
+class OperationFactUpdate(BaseModel):
+    fact_start: str | None = Field(None, description="ISO datetime YYYY-MM-DD HH:MM")
+    fact_end: str | None = Field(None, description="ISO datetime YYYY-MM-DD HH:MM")
+    note: str | None = None
+
+
+class VehicleGanttDay(BaseModel):
+    vehicle_id: int
+    vehicle_num: str
+    vehicle_type: str
+    operations: list[OperationPlan]
