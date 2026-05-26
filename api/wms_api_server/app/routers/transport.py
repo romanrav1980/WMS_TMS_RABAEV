@@ -25,6 +25,7 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   POST   /api/admin/transport/planner/solve              — запустить VRP-оптимизатор (Sprint 8)
   POST   /api/admin/transport/planner/apply              — применить план (создать рейсы) (Sprint 8)
   GET    /api/admin/transport/planner/metrics            — метрики последнего плана (Sprint 8)
+  GET    /api/admin/transport/planner/templates          — похожие исторические планы (Sprint 9)
 """
 
 from datetime import date
@@ -325,6 +326,7 @@ def solve_vrp(
         transport_type=body.transport_type,
         time_limit_s=body.time_limit_s,
         source=body.source,
+        solver=body.solver,
     )
 
 
@@ -352,3 +354,18 @@ def get_planner_metrics(
 ) -> dict:
     """Возвращает агрегированные метрики плана."""
     return TransportService().get_plan_metrics(plan_id=plan_id)
+
+
+@router.get("/planner/templates")
+def get_planner_templates(
+    plan_date: date = Query(default=..., description="Дата СТ для поиска похожих планов"),
+    lookback_days: int = Query(default=90, ge=7, le=365),
+    min_jaccard: float = Query(default=0.7, ge=0.1, le=1.0),
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    """Возвращает исторические планы с Jaccard ≥ min_jaccard за последние lookback_days дней."""
+    return TransportService().get_plan_templates(
+        plan_date=plan_date,
+        lookback_days=lookback_days,
+        min_jaccard=min_jaccard,
+    )

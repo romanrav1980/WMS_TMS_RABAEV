@@ -1366,6 +1366,7 @@ class VrpSolveRequest(BaseModel):
     transport_type: str | None = None
     time_limit_s: int = Field(default=30, ge=5, le=120)
     source: str = Field(default="auto", description="Провайдер матрицы: auto|haversine|osrm|valhalla")
+    solver: str = Field(default="auto", description="Решатель: auto|ortools|cluster|savings")
 
 
 class VrpApplyRequest(BaseModel):

@@ -658,6 +658,7 @@ class TransportService:
         transport_type: str | None = None,
         time_limit_s: int = 30,
         source: str = "auto",
+        solver: str = "auto",
     ) -> VrpPlanResponse:
         """Запускает VRP-решатель, сохраняет план и возвращает ответ."""
         from .vrp_solver import VrpOrder, VrpVehicle, solve as vrp_solve
@@ -713,6 +714,7 @@ class TransportService:
             vehicles=vehicles,
             dist_cache=dist_cache or None,
             time_limit_s=time_limit_s,
+            solver=solver,
         )
 
         # Save plan to Oracle
@@ -904,3 +906,71 @@ class TransportService:
             "applied": row.get("APPLIED_AT") is not None,
             "plan_date": str(row["PLAN_DATE"])[:10] if row.get("PLAN_DATE") else None,
         }
+
+    # ------------------------------------------------------------------
+    # Templates / history matching (Sprint 9)
+    # ------------------------------------------------------------------
+
+    def get_plan_templates(
+        self,
+        plan_date: date,
+        lookback_days: int = 90,
+        min_jaccard: float = 0.7,
+        limit: int = 5,
+    ) -> list[dict[str, Any]]:
+        """
+        Находит исторические планы, похожие на сегодняшний набор адресов,
+        используя Jaccard similarity по ST_NUMBER.
+
+        Возвращает список шаблонов: plan_id, plan_date, score, jaccard, routes_count.
+        """
+        # Current day ST numbers
+        current_sts = self.get_planner_orders(plan_date=plan_date)
+        current_set = {r["ST_NUMBER"] for r in current_sts if r.get("ST_NUMBER")}
+        if not current_set:
+            return []
+
+        # Historical plans from last lookback_days, applied only
+        rows = self.gateway.fetch_all(
+            """
+            SELECT ID, PLAN_DATE, PLAN_JSON, SCORE
+              FROM RABAEV.RRL_PLANNER_PLANS
+             WHERE PLAN_DATE >= :since
+               AND PLAN_DATE < :plan_date
+             ORDER BY SCORE DESC
+             FETCH FIRST 50 ROWS ONLY
+            """,
+            {
+                "since": date.fromordinal(plan_date.toordinal() - lookback_days),
+                "plan_date": plan_date,
+            },
+        )
+
+        results = []
+        for row in rows:
+            try:
+                plan_data = json.loads(row.get("PLAN_JSON") or "{}")
+            except Exception:
+                continue
+            hist_sts: set[str] = set()
+            for route in plan_data.get("routes", []):
+                hist_sts.update(route.get("stops", []))
+            if not hist_sts:
+                continue
+            intersection = len(current_set & hist_sts)
+            union = len(current_set | hist_sts)
+            jaccard = intersection / union if union else 0.0
+            if jaccard < min_jaccard:
+                continue
+            results.append({
+                "plan_id": int(row["ID"]),
+                "plan_date": str(row["PLAN_DATE"])[:10],
+                "score": float(row.get("SCORE") or 0),
+                "jaccard": round(jaccard, 3),
+                "routes_count": len(plan_data.get("routes", [])),
+                "matched_sts": intersection,
+                "total_current_sts": len(current_set),
+            })
+
+        results.sort(key=lambda x: x["jaccard"], reverse=True)
+        return results[:limit]

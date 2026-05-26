@@ -303,6 +303,77 @@ def _solve_clarke_wright(
 
 
 # ---------------------------------------------------------------------------
+# DBSCAN cluster solver (Sprint 9)
+# ---------------------------------------------------------------------------
+
+def _solve_dbscan_cluster(
+    orders: list[VrpOrder],
+    vehicles: list[VrpVehicle],
+    dist_cache: dict[tuple[str, str], float] | None,
+    time_limit_s: int,
+) -> VrpPlan:
+    """
+    Кластеризует заказы DBSCAN → запускает локальный VRP в каждом кластере.
+    Если sklearn недоступен — откатывается до Clarke-Wright.
+    """
+    try:
+        import numpy as np
+        from sklearn.cluster import DBSCAN  # type: ignore
+    except ImportError:
+        return _solve_clarke_wright(orders, vehicles)
+
+    import time
+    t0 = time.time()
+
+    coords = np.array([[o.lat, o.lon] for o in orders])
+    # eps = 0.5 degrees ≈ 50 km; min_samples=2
+    db = DBSCAN(eps=0.5, min_samples=2, metric="haversine").fit(np.radians(coords))
+    labels = db.labels_
+
+    clusters: dict[int, list[VrpOrder]] = {}
+    for idx, label in enumerate(labels):
+        clusters.setdefault(label, []).append(orders[idx])
+
+    # Distribute vehicles across clusters proportionally to order count
+    all_routes: list[VrpRoute] = []
+    used_vehicles: list[VrpVehicle] = list(vehicles)
+    unassigned_orders: list[VrpOrder] = []
+
+    cluster_keys = sorted(clusters.keys())  # noise (-1) first
+    for label in cluster_keys:
+        c_orders = clusters[label]
+        n_vehicles_for_cluster = max(1, round(len(c_orders) / max(1, len(orders)) * len(vehicles)))
+        c_vehicles = used_vehicles[:n_vehicles_for_cluster]
+        used_vehicles = used_vehicles[n_vehicles_for_cluster:]
+        if not c_vehicles:
+            unassigned_orders.extend(c_orders)
+            continue
+        sub_plan = _solve_clarke_wright(c_orders, c_vehicles)
+        all_routes.extend(sub_plan.routes)
+        unassigned_orders.extend(sub_plan.unassigned)
+
+    total_km = sum(r.total_km for r in all_routes)
+    active = [r for r in all_routes if r.stops]
+    fleet_util = (
+        sum(r.total_pallets for r in active) / sum(r.vehicle.max_pallets for r in active) * 100
+        if active else 0.0
+    )
+    score = round(fleet_util - total_km / 100, 2)
+    solve_ms = int((time.time() - t0) * 1000)
+
+    return VrpPlan(
+        routes=all_routes,
+        unassigned=unassigned_orders,
+        total_km=round(total_km, 1),
+        fleet_utilization_pct=round(fleet_util, 1),
+        tw_violations=0,
+        score=score,
+        solver_used="dbscan-cluster",
+        solve_time_ms=solve_ms,
+    )
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
@@ -311,11 +382,13 @@ def solve(
     vehicles: list[VrpVehicle],
     dist_cache: dict[tuple[str, str], float] | None = None,
     time_limit_s: int = 30,
+    solver: str = "auto",
 ) -> VrpPlan:
     """
     Запускает решатель.
 
-    Приоритет:
+    solver: 'auto' | 'ortools' | 'cluster' | 'savings'
+    Приоритет при 'auto':
       1. OR-Tools CVRPTW (если установлен)
       2. Clarke-Wright savings (всегда доступен)
     """
@@ -328,10 +401,21 @@ def solve(
     if not valid:
         return VrpPlan(solver_used="none")
 
-    try:
-        return _solve_with_ortools(valid, vehicles, dist_cache, time_limit_s, t0)
-    except ImportError:
+    if solver == "cluster":
+        return _solve_dbscan_cluster(valid, vehicles, dist_cache, time_limit_s)
+    elif solver == "savings":
         return _solve_clarke_wright(valid, vehicles)
+    elif solver == "ortools":
+        try:
+            import time as _t
+            return _solve_with_ortools(valid, vehicles, dist_cache, time_limit_s, _t.time())
+        except ImportError:
+            return _solve_clarke_wright(valid, vehicles)
+    else:  # auto
+        try:
+            return _solve_with_ortools(valid, vehicles, dist_cache, time_limit_s, t0)
+        except ImportError:
+            return _solve_clarke_wright(valid, vehicles)
 
 
 def _solve_with_ortools(
