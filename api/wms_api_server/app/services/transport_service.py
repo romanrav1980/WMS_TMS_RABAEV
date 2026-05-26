@@ -974,3 +974,93 @@ class TransportService:
 
         results.sort(key=lambda x: x["jaccard"], reverse=True)
         return results[:limit]
+
+    # ------------------------------------------------------------------
+    # History + demand forecast (Sprint 10)
+    # ------------------------------------------------------------------
+
+    def get_plan_history(
+        self,
+        date_from: date,
+        date_to: date,
+    ) -> list[dict[str, Any]]:
+        """История применённых планов за период с метриками Score, утилизация, пробег."""
+        rows = self.gateway.fetch_all(
+            """
+            SELECT ID, PLAN_DATE, SOLVER, SCORE, PLAN_JSON, CREATED_AT, APPLIED_AT
+              FROM RABAEV.RRL_PLANNER_PLANS
+             WHERE PLAN_DATE >= :date_from
+               AND PLAN_DATE <= :date_to
+             ORDER BY PLAN_DATE
+            """,
+            {"date_from": date_from, "date_to": date_to},
+        )
+        result = []
+        for row in rows:
+            try:
+                plan_data = json.loads(row.get("PLAN_JSON") or "{}")
+            except Exception:
+                plan_data = {}
+            result.append({
+                "plan_id": int(row["ID"]),
+                "plan_date": str(row["PLAN_DATE"])[:10],
+                "solver": plan_data.get("solver", row.get("SOLVER") or "none"),
+                "score": float(plan_data.get("score") or row.get("SCORE") or 0),
+                "routes": len(plan_data.get("routes", [])),
+                "total_km": float(plan_data.get("total_km") or 0),
+                "fleet_utilization_pct": float(plan_data.get("fleet_utilization_pct") or 0),
+                "tw_violations": int(plan_data.get("tw_violations") or 0),
+                "applied": row.get("APPLIED_AT") is not None,
+            })
+        return result
+
+    def get_demand_forecast(
+        self,
+        target_date: date,
+        lookback_weeks: int = 8,
+    ) -> dict[str, Any]:
+        """
+        Прогноз числа СТ на целевую дату по историческим данным аналогичного дня недели.
+        Использует COUNT(*) из RRL_V_AVAILABLE_STS за предыдущие N недель того же дня.
+        """
+        dow = target_date.weekday()  # 0=Mon … 6=Sun
+        # Build list of same-weekday dates going back
+        sample_dates = [
+            date.fromordinal(target_date.toordinal() - 7 * (i + 1))
+            for i in range(lookback_weeks)
+        ]
+        counts: list[int] = []
+        for sample_date in sample_dates:
+            rows = self.gateway.fetch_all(
+                """
+                SELECT COUNT(*) AS CNT
+                  FROM RABAEV.RRL_V_AVAILABLE_STS
+                 WHERE TRUNC(STDATE) = :stdate
+                """,
+                {"stdate": sample_date},
+            )
+            if rows:
+                counts.append(int(rows[0]["CNT"] or 0))
+
+        if not counts:
+            return {
+                "target_date": str(target_date),
+                "day_of_week": dow,
+                "forecast_sts": 0,
+                "confidence": "none",
+                "samples": 0,
+            }
+
+        avg = round(sum(counts) / len(counts), 0)
+        stddev = (sum((c - avg) ** 2 for c in counts) / len(counts)) ** 0.5
+        confidence = "high" if stddev < avg * 0.15 else "medium" if stddev < avg * 0.3 else "low"
+
+        return {
+            "target_date": str(target_date),
+            "day_of_week": dow,
+            "forecast_sts": int(avg),
+            "confidence": confidence,
+            "samples": len(counts),
+            "sample_counts": counts,
+            "stddev": round(stddev, 1),
+        }

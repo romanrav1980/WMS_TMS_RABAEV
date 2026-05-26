@@ -7,6 +7,7 @@ import {
 } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import type { LatLngExpression } from "leaflet";
+import { PlannerAnalyticsTab } from "./PlannerAnalyticsTab";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -223,6 +224,9 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
   const [templates, setTemplates] = useState<PlanTemplate[]>([]);
   const [loadingTemplates, setLoadingTemplates] = useState(false);
 
+  // Tab: 'map' | 'analytics'
+  const [activeTab, setActiveTab] = useState<"map" | "analytics">("map");
+
   const visibleOrders = orders.filter(o => o.LAT && o.LON);
   const noCoords = orders.filter(o => !o.LAT || !o.LON);
   const totalPallets = visibleOrders.reduce((s, o) => s + o.PALLETS_COUNT, 0);
@@ -386,7 +390,13 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
         <button className="dispatch-back" onClick={onBack}>◄</button>
         <div className="dispatch-title">
           <h1>Планировщик маршрутов</h1>
-          <span className="dispatch-subtitle">Карта + кластеры + VRP · Sprint 9</span>
+          <span className="dispatch-subtitle">Карта + VRP + Аналитика · Sprint 10</span>
+        </div>
+        <div className="planner-tabs">
+          <button className={`planner-tab ${activeTab === "map" ? "active" : ""}`}
+            onClick={() => setActiveTab("map")}>Карта</button>
+          <button className={`planner-tab ${activeTab === "analytics" ? "active" : ""}`}
+            onClick={() => setActiveTab("analytics")}>Аналитика</button>
         </div>
         {(loading || solving) && <span className="dispatch-spinner">●</span>}
         {solving && <span className="planner-solve-timer">Решаем... {solveElapsed}с</span>}
@@ -406,7 +416,13 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
         )}
       </header>
 
-      <div className="planner-workspace">
+      {activeTab === "analytics" && (
+        <div className="planner-analytics-wrap">
+          <PlannerAnalyticsTab targetDate={filterDate} />
+        </div>
+      )}
+
+      <div className="planner-workspace" style={{ display: activeTab === "map" ? "flex" : "none" }}>
         {/* ---- Left filter panel ---- */}
         <aside className="planner-left-panel">
           <div className="dispatch-fp-label">Дата СТ</div>

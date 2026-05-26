@@ -26,6 +26,8 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   POST   /api/admin/transport/planner/apply              — применить план (создать рейсы) (Sprint 8)
   GET    /api/admin/transport/planner/metrics            — метрики последнего плана (Sprint 8)
   GET    /api/admin/transport/planner/templates          — похожие исторические планы (Sprint 9)
+  GET    /api/admin/transport/planner/history            — история применённых планов + Score (Sprint 10)
+  GET    /api/admin/transport/planner/demand-forecast    — прогноз числа СТ на дату (Sprint 10)
 """
 
 from datetime import date
@@ -368,4 +370,26 @@ def get_planner_templates(
         plan_date=plan_date,
         lookback_days=lookback_days,
         min_jaccard=min_jaccard,
+    )
+
+
+@router.get("/planner/history")
+def get_planner_history(
+    date_from: date = Query(default=..., description="Начало периода"),
+    date_to: date = Query(default=..., description="Конец периода"),
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    """История применённых планов с метриками (Score, утилизация, пробег)."""
+    return TransportService().get_plan_history(date_from=date_from, date_to=date_to)
+
+
+@router.get("/planner/demand-forecast")
+def get_demand_forecast(
+    target_date: date = Query(default=..., description="Дата для прогноза"),
+    lookback_weeks: int = Query(default=8, ge=2, le=52),
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> dict:
+    """Прогноз числа СТ на целевую дату на основе истории аналогичных дней недели."""
+    return TransportService().get_demand_forecast(
+        target_date=target_date, lookback_weeks=lookback_weeks
     )
