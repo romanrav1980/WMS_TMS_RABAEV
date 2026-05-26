@@ -702,9 +702,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                           <td>{fmtDate(task.SHIPMENT_DATE)}</td>
                           <td>
                             {task.VODITEL_NAME ?? "—"}
-                            {task.IS_OWN_DRIVER === 0 && task.TK_NAME && (
-                              <span className="dispatch-tk-badge">{task.TK_NAME}</span>
-                            )}
+                            <DriverOwnerBadge isOwn={task.IS_OWN_DRIVER} tkName={task.TK_NAME} />
                           </td>
                           <td>{task.DOCK ?? "—"}</td>
                           <td className="col-flex">{task.TEMP_REGION ?? "—"}</td>
@@ -792,9 +790,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     : <span>
                         {selectedTask.VODITEL_NAME ?? "—"}
                         {selectedTask.VODITEL_TEL ? ` · ${selectedTask.VODITEL_TEL}` : ""}
-                        {selectedTask.IS_OWN_DRIVER === 0 && selectedTask.TK_NAME && (
-                          <span className="dispatch-tk-inline"> · {selectedTask.TK_NAME}</span>
-                        )}
+                        <DriverOwnerBadge isOwn={selectedTask.IS_OWN_DRIVER} tkName={selectedTask.TK_NAME} />
                       </span>
                   }
 
@@ -945,7 +941,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                           }
                         </td>
                         <td>{task.TRANSPORT ?? "—"}</td>
-                        <td>{task.VODITEL_NAME ?? "—"}</td>
+                        <td>
+                          {task.VODITEL_NAME ?? "—"}
+                          <DriverOwnerBadge isOwn={task.IS_OWN_DRIVER} tkName={task.TK_NAME} />
+                        </td>
                         <td>{task.DOCK ?? "—"}</td>
                         <td className="col-flex">{task.REGIONS ?? task.TEMP_REGION ?? "—"}</td>
                         <td>{task.PRICE != null ? task.PRICE.toLocaleString("ru-RU") + " ₽" : "—"}</td>
@@ -1229,12 +1228,12 @@ function AvailableStRow({
       <td className="dispatch-gc-stnum">{st.ST_NUMBER}</td>
       <td>{st.TRANSTASK_ID ? `#${st.TRANSTASK_ID}` : "—"}</td>
       <td>{fmtDate(st.STDATE)}</td>
-      <td>{st.VERIFY_PERC != null ? <VerifyPill perc={st.VERIFY_PERC} /> : "—"}</td>
+      <td>{st.VERIFY_PERC != null ? <VerifyBar perc={st.VERIFY_PERC} /> : "—"}</td>
       <td className={onSelectByField ? "dispatch-region-cell" : ""}
           onClick={e => handleFieldClick(e, "RAION", st.RAION)}
           title={onSelectByField ? "Выделить все СТ района" : ""}>{st.RAION ?? "—"}</td>
-      <td>{st.TRANSPORT_TYPE ?? "—"}</td>
-      <td className="num-c">{st.STOL ? <span className="dispatch-stol">С</span> : ""}</td>
+      <td><TransportTypeBadge value={st.TRANSPORT_TYPE} /></td>
+      <td className="num-c" title={st.STOL ? "Требуется стол-лифт / гидроборт" : ""}>{st.STOL ? "♿" : ""}</td>
       <td className="dispatch-prim1" title={st.PRIM1 ?? ""}>{st.PRIM1 ? st.PRIM1.slice(0, 20) : ""}</td>
       <td className="num-c">{st.SUGAR ? <span className="dispatch-sugar">С</span> : ""}</td>
     </tr>
@@ -1532,6 +1531,43 @@ function CreateTaskDialog({
       </div>
     </div>
   );
+}
+
+// ---------------------------------------------------------------------------
+// Sprint 5 components
+// ---------------------------------------------------------------------------
+
+const TR_TYPE_MAP: Record<string, { label: string; cls: string }> = {
+  "10":    { label: "Тент 10т",  cls: "tr-10"  },
+  "15":    { label: "Тент 15т",  cls: "tr-15"  },
+  "20реф": { label: "Реф 20т",   cls: "tr-ref" },
+  "20":    { label: "Тент 20т",  cls: "tr-20"  },
+};
+
+function TransportTypeBadge({ value }: { value: string | null }) {
+  if (!value || value === "0") return <span className="dispatch-tr-empty">—</span>;
+  const info = TR_TYPE_MAP[value];
+  return info
+    ? <span className={`dispatch-tr-badge dispatch-tr-${info.cls}`} title={value}>{info.label}</span>
+    : <span className="dispatch-tr-badge dispatch-tr-other" title={value}>{value}</span>;
+}
+
+function VerifyBar({ perc }: { perc: number }) {
+  const cls = perc >= 100 ? "done" : perc >= 50 ? "partial" : "low";
+  return (
+    <div className="dispatch-verify-bar" title={`Сборка: ${perc}%`}>
+      <div className="dispatch-verify-bar-track">
+        <div className={`dispatch-verify-bar-fill dispatch-verify-${cls}`} style={{ width: `${Math.min(perc, 100)}%` }} />
+      </div>
+      <span className="dispatch-verify-bar-label">{perc}%</span>
+    </div>
+  );
+}
+
+function DriverOwnerBadge({ isOwn, tkName }: { isOwn: number | null; tkName: string | null }) {
+  if (isOwn === 1) return <span className="dispatch-own-badge">Свой</span>;
+  if (isOwn === 0) return <span className="dispatch-hired-badge">{tkName ? tkName : "Наёмный"}</span>;
+  return null;
 }
 
 // ---------------------------------------------------------------------------
