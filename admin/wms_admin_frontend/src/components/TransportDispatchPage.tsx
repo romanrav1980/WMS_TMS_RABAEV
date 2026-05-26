@@ -37,6 +37,8 @@ type TaskUpdateDraft = {
   voditel_id?: number | null;
   dock?: string | null;
   shipment_time?: string | null;
+  shipment_date?: string | null;
+  transtype?: string | null;
   primechanie?: string | null;
 };
 
@@ -196,6 +198,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   editRef.current = editDraft;
   const lastClickedIdxRef = useRef<number | null>(null);
 
+  const [editingTranstypeId, setEditingTranstypeId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<"tasks" | "routes">("tasks");
   const [routeShipDate, setRouteShipDate] = useState(todayIso());
   const [routeTaskId, setRouteTaskId] = useState("");
@@ -451,6 +454,18 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       setSelectedTask(null); setTaskSts([]);
       await loadTasks();
     } catch (e) { setError(String(e)); } finally { setLoading(false); }
+  }
+
+  async function handleUpdateTranstype(taskId: number, transtype: string) {
+    setEditingTranstypeId(null);
+    try {
+      await apiFetch(`/api/admin/transport/tasks/${taskId}`, {
+        method: "PATCH",
+        body: JSON.stringify({ transtype: transtype || null }),
+      });
+      setTasks(prev => prev.map(t => t.ID === taskId ? { ...t, TRANSTYPE: transtype || null } : t));
+      if (selectedTask?.ID === taskId) setSelectedTask(prev => prev ? { ...prev, TRANSTYPE: transtype || null } : prev);
+    } catch (e) { setError(String(e)); }
   }
 
   async function handleSaveNote() {
@@ -800,6 +815,29 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     : <span>{fmtTime(selectedTask.SHIPMENT_TIME) || "—"}</span>
                   }
 
+                  <span className="dispatch-trip-ml">Дата:</span>
+                  {editMode
+                    ? <input type="date" className="dispatch-trip-mi"
+                        value={editDraft.shipment_date ?? fmtDate(selectedTask.SHIPMENT_DATE)}
+                        onChange={e => setEditDraft(d => ({ ...d, shipment_date: e.target.value || null }))} />
+                    : <span>{fmtDate(selectedTask.SHIPMENT_DATE)}</span>
+                  }
+
+                  <span className="dispatch-trip-ml">Тип ТС:</span>
+                  {editMode
+                    ? <select className="dispatch-trip-ms"
+                        value={editDraft.transtype ?? selectedTask.TRANSTYPE ?? ""}
+                        onChange={e => setEditDraft(d => ({ ...d, transtype: e.target.value || null }))}>
+                        <option value="">— тип —</option>
+                        {transportTypes.map(t => (
+                          <option key={t.TRANSPORTTYPE} value={t.TRANSPORTTYPE}>
+                            {t.TRANSPORTTYPE}{t.NAME ? ` — ${t.NAME}` : ""}
+                          </option>
+                        ))}
+                      </select>
+                    : <span>{selectedTask.TRANSTYPE ?? "—"}</span>
+                  }
+
                   <span className="dispatch-trip-ml">Прим.:</span>
                   {editMode
                     ? <input type="text" className="dispatch-trip-mi dispatch-trip-mi-w"
@@ -890,7 +928,22 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                         <td className="num-r">{task.PALLET_COUNT}</td>
                         <td className="num-r">{task.TEMP_WEIGHT != null ? task.TEMP_WEIGHT.toFixed(0) : "—"}</td>
                         <td className="num-r">{task.VOLUME_M3 != null ? task.VOLUME_M3.toFixed(2) : "—"}</td>
-                        <td>{task.TRANSTYPE ?? "—"}</td>
+                        <td onClick={e => { e.stopPropagation(); if (task.CONDITION !== "Отгружен") setEditingTranstypeId(task.ID); }}
+                            title={task.CONDITION !== "Отгружен" ? "Изменить тип ТС" : ""}>
+                          {editingTranstypeId === task.ID
+                            ? <select className="dispatch-loadtype-select" autoFocus
+                                value={task.TRANSTYPE ?? ""}
+                                onClick={e => e.stopPropagation()}
+                                onChange={e => handleUpdateTranstype(task.ID, e.target.value)}
+                                onBlur={() => setEditingTranstypeId(null)}>
+                                <option value="">—</option>
+                                {transportTypes.map(t => (
+                                  <option key={t.TRANSPORTTYPE} value={t.TRANSPORTTYPE}>{t.TRANSPORTTYPE}</option>
+                                ))}
+                              </select>
+                            : <span className="dispatch-inline-edit">{task.TRANSTYPE ?? "—"}</span>
+                          }
+                        </td>
                         <td>{task.TRANSPORT ?? "—"}</td>
                         <td>{task.VODITEL_NAME ?? "—"}</td>
                         <td>{task.DOCK ?? "—"}</td>

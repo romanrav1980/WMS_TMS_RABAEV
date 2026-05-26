@@ -282,6 +282,12 @@ class TransportService:
         if req.shipment_time is not None:
             sets.append("SHIPMENT_TIME = TO_DATE(:shipment_time, 'HH24:MI')")
             params["shipment_time"] = req.shipment_time
+        if req.shipment_date is not None:
+            sets.append("SHIPMENT_DATE = TO_DATE(:shipment_date, 'YYYY-MM-DD')")
+            params["shipment_date"] = str(req.shipment_date)
+        if req.transtype is not None:
+            sets.append("TRANSTYPE = :transtype")
+            params["transtype"] = req.transtype
 
         if not sets:
             return

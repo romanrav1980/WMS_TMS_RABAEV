@@ -1295,6 +1295,8 @@ class TransportTaskUpdateRequest(BaseModel):
     voditel_id: int | None = None       # ID водителя из RRL_TR_VODITEL
     dock: str | None = None             # докстанция
     shipment_time: str | None = None    # запланированное время отгрузки HH:MM
+    shipment_date: date | None = None   # дата отгрузки
+    transtype: str | None = None        # тип транспорта (TRANSTYPE)
     primechanie: str | None = None      # примечание диспетчера
 
 
