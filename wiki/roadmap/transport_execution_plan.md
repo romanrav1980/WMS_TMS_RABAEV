@@ -46,7 +46,8 @@
 | 28 | Диспетчер: Excel-экспорт списка рейсов | Диспетчер | 0.5 нед | 🟢 КК | ✅ `284c754` 2026-05-28 |
 | 29 | Phase 2 полуавто: создать рейс из кластера (⚡ Рейс) | Диспетчер | 0.5 нед | 🟢 КК | ✅ `2f97815` 2026-05-28 |
 | 30 | Live load bar — заполненность машины по паллетам | Диспетчер | 0.5 нед | 🟢 КК | ✅ `9436717` 2026-05-28 |
-| **Итого** | | | **~23.5 нед** | | |
+| 31 | ClusterSidebar — левая панель карточек районов | Диспетчер | 0.5 нед | 🟢 КК | ✅ `86d3a71` 2026-05-28 |
+| **Итого** | | | **~24 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -621,6 +622,27 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 31 — ClusterSidebar — левая панель карточек районов
+
+**Инструмент:** 🟢 КК (код-код $20) — чисто фронтенд, повторяет логику ClusterGroup
+
+**Цель:** дать диспетчеру быстрый обзор всех районов в виде карточек в левой панели вместо прокрутки таблицы. Кликабельные карточки синхронизированы с раскрытыми кластерами в таблице.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `ClusterSidebar` компонент — список карточек, итоговая строка | Frontend | `TransportDispatchPage.tsx` |
+| Рендер в `dispatch-workspace` перед `dispatch-center` (только `viewMode===clusters && activeTab===tasks`) | Frontend | `TransportDispatchPage.tsx` |
+| `.cluster-sidebar`, `.cluster-card`, `.cluster-card-active`, `.cluster-card-create-btn` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `86d3a71` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint31_functional.py` — 8 кейсов (агрегация, сортировка, поля кластера)  
+- `tests/transport/sprint31_usability_checklist.md` — 20 проверок  
+- `tests/transport/transport_sprint31_load_test.py` — 5 users, 60s, NFR clusters+tasks p95 ≤ 300ms  
 
 ---
 
