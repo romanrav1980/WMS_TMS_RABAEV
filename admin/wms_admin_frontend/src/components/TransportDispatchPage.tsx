@@ -848,6 +848,18 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 
       <div className="dispatch-workspace">
         {/* ============================================================
+            LEFT — Cluster sidebar (Sprint 31, visible when clusters mode)
+            ============================================================ */}
+        {viewMode === "clusters" && activeTab === "tasks" && (
+          <ClusterSidebar
+            clusters={clusters}
+            expandedRaions={expandedRaions}
+            onToggle={toggleRaion}
+            onCreateTask={raion => setClusterCreateRaion(raion)}
+          />
+        )}
+
+        {/* ============================================================
             CENTER
             ============================================================ */}
         <div className="dispatch-center">
@@ -1754,6 +1766,59 @@ function LoadBar({ label, value, max, unit }: { label: string; value: number; ma
       </div>
       <span className="load-bar-text" style={{ color }}>{value} / {max} {unit} ({pct}%)</span>
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// ClusterSidebar — Sprint 31, left panel with cluster summary cards
+// ---------------------------------------------------------------------------
+
+function ClusterSidebar({
+  clusters, expandedRaions, onToggle, onCreateTask,
+}: {
+  clusters: TransportCluster[];
+  expandedRaions: Set<string>;
+  onToggle: (raion: string) => void;
+  onCreateTask: (raion: string) => void;
+}) {
+  const total = clusters.reduce((s, c) => ({ st: s.st + c.ST_COUNT, pal: s.pal + c.PALLET_COUNT, kg: s.kg + c.WEIGHT_KG }), { st: 0, pal: 0, kg: 0 });
+
+  return (
+    <aside className="cluster-sidebar">
+      <div className="cluster-sidebar-header">
+        <span className="cluster-sidebar-title">Кластеры</span>
+        <span className="cluster-sidebar-total">{clusters.length} р-нов · {total.st} СТ · {total.pal} пал</span>
+      </div>
+      <div className="cluster-sidebar-list">
+        {clusters.length === 0 && (
+          <div className="cluster-sidebar-empty">Нет свободных СТ</div>
+        )}
+        {clusters.map(c => {
+          const active = expandedRaions.has(c.RAION);
+          return (
+            <div
+              key={c.RAION}
+              className={`cluster-card${active ? " cluster-card-active" : ""}`}
+              onClick={() => onToggle(c.RAION)}
+            >
+              <div className="cluster-card-name">{c.RAION}</div>
+              <div className="cluster-card-meta">
+                <span>{c.ST_COUNT} СТ</span>
+                <span>{c.PALLET_COUNT} пал</span>
+                <span>{c.WEIGHT_KG.toFixed(0)} кг</span>
+              </div>
+              <button
+                className="cluster-card-create-btn"
+                onClick={e => { e.stopPropagation(); onCreateTask(c.RAION); }}
+                title={`Создать рейс из района «${c.RAION}»`}
+              >
+                ⚡ Рейс
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </aside>
   );
 }
 
