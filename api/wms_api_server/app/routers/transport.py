@@ -135,6 +135,7 @@ def list_available_sts(
     max_weight_kg: float | None = None,
     max_volume_m3: float | None = None,
     articul: str | None = None,
+    raion: str | None = None,
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
     return TransportService().list_available_sts(
@@ -152,6 +153,7 @@ def list_available_sts(
         max_weight_kg=max_weight_kg,
         max_volume_m3=max_volume_m3,
         articul=articul,
+        raion=raion,
     )
 
 

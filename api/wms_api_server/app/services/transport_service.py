@@ -101,13 +101,13 @@ class TransportService:
           4. RRL_TT_ADD_PALL × N   — назначить все СТ
           5. RRL_TT_REORDER_ADR    — оптимизировать порядок
         """
-        # 1. Собрать свободные СТ района
-        all_sts = self.list_available_sts(
+        # 1. Собрать свободные СТ района — server-side raion filter (Sprint 35)
+        sts = self.list_available_sts(
             stdate=req.stdate,
             unassigned_only=True,
             ware_ids=req.ware_ids,
+            raion=raion,
         )
-        sts = [st for st in all_sts if (st.get("RAION") or "(без района)") == raion]
         if not sts:
             raise HTTPException(
                 status_code=404,
@@ -551,6 +551,7 @@ class TransportService:
         max_weight_kg: float | None = None,
         max_volume_m3: float | None = None,
         articul: str | None = None,
+        raion: str | None = None,
     ) -> list[dict[str, Any]]:
         conditions: list[str] = []
         having: list[str] = []
@@ -618,6 +619,13 @@ class TransportService:
         if max_volume_m3 is not None:
             having.append("VOLUME_M3 < :max_volume_m3")
             params["max_volume_m3"] = max_volume_m3
+
+        if raion is not None:
+            if raion == "(без района)":
+                conditions.append("RAION IS NULL")
+            else:
+                conditions.append("RAION = :raion")
+                params["raion"] = raion
 
         where_sql = "WHERE " + " AND ".join(conditions) if conditions else ""
         having_sql = "HAVING " + " AND ".join(having) if having else ""
