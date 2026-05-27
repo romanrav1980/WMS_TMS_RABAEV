@@ -1645,6 +1645,45 @@ class TransportService:
             for r in rows
         ]
 
+    def recalculate_price(self, task_id: int) -> dict:
+        """Пересчитывает стоимость рейса через Oracle-функцию TRANSPORT_TASK.stoim_tt."""
+        task = self.get_task(task_id)
+        if not task:
+            raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+        rows = self.gateway.fetch_all(
+            "SELECT RABAEV.TRANSPORT_TASK.stoim_tt(:tt_id) AS PRICE FROM DUAL",
+            {"tt_id": task_id},
+        )
+        new_price = float(rows[0]["PRICE"] or 0) if rows else 0.0
+        return {"task_id": task_id, "price": new_price}
+
+    def set_task_price(self, task_id: int, price: float) -> dict:
+        """Ручная установка стоимости рейса (право CREATE_TT_PRICE)."""
+        task = self.get_task(task_id)
+        if not task:
+            raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+        self.gateway.execute(
+            "BEGIN UPDATE RABAEV.RRL_TRANSPORT_TASK SET PRICE = :price WHERE ID = :tt_id; END;",
+            {"price": price, "tt_id": task_id},
+        )
+        return {"task_id": task_id, "price": price}
+
+    def remove_task_from_billing_order(self, order_id: int, tt_id: int) -> dict:
+        """Отвязывает рейс от биллинг-заказа (обнуляет PAY_ORDER_ID)."""
+        order = self.get_billing_order(order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail=f"Billing order {order_id} not found")
+        if order.get("closed"):
+            raise HTTPException(status_code=409, detail="Нельзя изменить закрытый счёт")
+        rowcount = self.gateway.execute(
+            "BEGIN UPDATE RABAEV.RRL_TRANSPORT_TASK SET PAY_ORDER_ID = NULL "
+            "WHERE ID = :tt_id AND PAY_ORDER_ID = :order_id; END;",
+            {"tt_id": tt_id, "order_id": order_id},
+        )
+        if rowcount == 0:
+            raise HTTPException(status_code=404, detail=f"Task {tt_id} not in order {order_id}")
+        return {"order_id": order_id, "tt_id": tt_id, "removed": True}
+
     def get_plan_fact(self, date_from: date, date_to: date, vehicle: str | None = None) -> list[dict]:
         """Сводный план-фактный отчёт по всем рейсам периода."""
         params: dict[str, Any] = {

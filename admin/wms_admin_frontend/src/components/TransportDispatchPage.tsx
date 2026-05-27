@@ -237,6 +237,11 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [billingOrder, setBillingOrder] = useState<BillingOrder | null>(null);
   const [billingActionLoading, setBillingActionLoading] = useState(false);
 
+  // Price management (Sprint 18)
+  const [priceRecalcLoading, setPriceRecalcLoading] = useState(false);
+  const [priceLoading, setPriceLoading] = useState(false);
+  const [manualPrice, setManualPrice] = useState("");
+
   // Billing registry (Sprint 17)
   const [billingOrders, setBillingOrders] = useState<BillingOrder[]>([]);
   const [billingLoading, setBillingLoading] = useState(false);
@@ -397,6 +402,36 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
         setBillingOrder(bo);
       } catch { setBillingOrder(null); }
     }
+  }
+
+  async function handleRecalculatePrice() {
+    if (!selectedTask) return;
+    setPriceRecalcLoading(true);
+    try {
+      const res = await apiFetch<{ task_id: number; price: number }>(
+        `/api/admin/transport/tasks/${selectedTask.ID}/recalculate-price`,
+        { method: "POST" }
+      );
+      setSelectedTask(prev => prev ? { ...prev, PRICE: res.price } : prev);
+      setTasks(prev => prev.map(t => t.ID === selectedTask.ID ? { ...t, PRICE: res.price } : t));
+    } catch { /* ignore */ } finally { setPriceRecalcLoading(false); }
+  }
+
+  async function handleSetPrice(e: React.FormEvent) {
+    e.preventDefault();
+    if (!selectedTask || !manualPrice) return;
+    const price = parseFloat(manualPrice);
+    if (isNaN(price) || price < 0) return;
+    setPriceLoading(true);
+    try {
+      await apiFetch(`/api/admin/transport/tasks/${selectedTask.ID}/price`, {
+        method: "PATCH",
+        body: JSON.stringify({ price }),
+      });
+      setSelectedTask(prev => prev ? { ...prev, PRICE: price } : prev);
+      setTasks(prev => prev.map(t => t.ID === selectedTask.ID ? { ...t, PRICE: price } : t));
+      setManualPrice("");
+    } catch { /* ignore */ } finally { setPriceLoading(false); }
   }
 
   async function handleShowPallets(stNum: string) {
@@ -1166,6 +1201,27 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     onPay={handleBillingPay}
                   />
                 )}
+                <div className="price-section">
+                  <span className="price-label">Цена рейса:</span>
+                  <span className="price-value">
+                    {(selectedTask.PRICE ?? 0) > 0
+                      ? (selectedTask.PRICE ?? 0).toLocaleString("ru-RU") + " ₽"
+                      : "—"}
+                  </span>
+                  <button className="price-recalc-btn" onClick={handleRecalculatePrice}
+                    disabled={priceRecalcLoading} title="Пересчитать цену через Oracle stoim_tt">
+                    {priceRecalcLoading ? "…" : "⟳ Пересчитать"}
+                  </button>
+                  <form className="price-manual-form" onSubmit={handleSetPrice}>
+                    <input type="number" className="price-input" value={manualPrice}
+                      onChange={e => setManualPrice(e.target.value)}
+                      min={0} step={0.01} placeholder="Сумма ₽" />
+                    <button type="submit" className="price-save-btn"
+                      disabled={priceLoading || !manualPrice}>
+                      Сохранить
+                    </button>
+                  </form>
+                </div>
               </div>
               <div className="dispatch-trip-sts-wrap">
                 <table className="dispatch-grid">

@@ -43,6 +43,9 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   GET    /api/admin/transport/billing/orders/{id}/tasks — рейсы в заказе (Sprint 15)
   GET    /api/admin/transport/tasks/{id}/billing        — биллинг-данные рейса (Sprint 15)
   POST   /api/admin/transport/tasks/{id}/billing/open   — создать счёт для рейса (Sprint 15)
+  DELETE /api/admin/transport/billing/orders/{id}/tasks/{tt_id} — отвязать рейс от заказа (Sprint 18)
+  POST   /api/admin/transport/tasks/{id}/recalculate-price — пересчёт цены через stoim_tt (Sprint 18)
+  PATCH  /api/admin/transport/tasks/{id}/price          — ручная установка цены (Sprint 18)
 """
 
 from datetime import date
@@ -61,6 +64,7 @@ from ..schemas import (
     BillingAddTasksRequest,
     BillingOrderCreate,
     OperationFactUpdate,
+    PriceUpdateRequest,
     TransportStAssignRequest,
     TransportStLoadTypeRequest,
     TransportStOrderRequest,
@@ -586,3 +590,32 @@ def open_billing_for_task(
 ) -> dict:
     """Создать биллинг-заказ для рейса и привязать к нему."""
     return TransportService().open_billing_for_task(task_id)
+
+
+@router.delete("/billing/orders/{order_id}/tasks/{tt_id}")
+def remove_task_from_billing_order(
+    order_id: int,
+    tt_id: int,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> dict:
+    """Отвязать рейс от биллинг-заказа (обнулить PAY_ORDER_ID)."""
+    return TransportService().remove_task_from_billing_order(order_id, tt_id)
+
+
+@router.post("/tasks/{task_id}/recalculate-price")
+def recalculate_task_price(
+    task_id: int,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> dict:
+    """Пересчитать стоимость рейса через Oracle-функцию TRANSPORT_TASK.stoim_tt."""
+    return TransportService().recalculate_price(task_id)
+
+
+@router.patch("/tasks/{task_id}/price")
+def set_task_price(
+    task_id: int,
+    req: PriceUpdateRequest,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> dict:
+    """Ручная установка стоимости рейса (право CREATE_TT_PRICE)."""
+    return TransportService().set_task_price(task_id, req.price)

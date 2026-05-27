@@ -1431,3 +1431,7 @@ class BillingOrder(BaseModel):
     payed: int = 0
     task_count: int | None = None
     total_price: float | None = None
+
+
+class PriceUpdateRequest(BaseModel):
+    price: float = Field(..., ge=0, description="Новая стоимость рейса в рублях")
