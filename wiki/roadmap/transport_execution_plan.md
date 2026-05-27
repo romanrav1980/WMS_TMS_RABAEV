@@ -48,7 +48,8 @@
 | 30 | Live load bar — заполненность машины по паллетам | Диспетчер | 0.5 нед | 🟢 КК | ✅ `9436717` 2026-05-28 |
 | 31 | ClusterSidebar — левая панель карточек районов | Диспетчер | 0.5 нед | 🟢 КК | ✅ `86d3a71` 2026-05-28 |
 | 32 | Phase 2 ✅: предупреждение о перегрузе | Диспетчер | 0.5 нед | 🟢 КК | ✅ `286c0c7` 2026-05-28 |
-| **Итого** | | | **~24.5 нед** | | |
+| 33 | Режим «Кратко» в таблице маршрутов (§3.8.1) | Диспетчер | 0.5 нед | 🟢 КК | ✅ `b5b12d1` 2026-05-28 |
+| **Итого** | | | **~25 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -623,6 +624,28 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 33 — Режим «Кратко» в таблице маршрутов
+
+**Инструмент:** 🟢 КК (код-код $20) — условный рендер колонок, минимальный JS
+
+**Цель:** §3.8.1 ТЗ — чекбокс «КРАТКО» в тулбаре таблицы маршрутов. Скрывает 6 второстепенных колонок (Объём, Тип, Цена, ТК, Логист, 💰), оставляя 9 эссенциальных.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `routeBriefMode` state | Frontend | `TransportDispatchPage.tsx` |
+| «Кратко» checkbox в тулбаре | Frontend | `TransportDispatchPage.tsx` |
+| Условный рендер 6 колонок через `{!routeBriefMode && …}` | Frontend | `TransportDispatchPage.tsx` |
+| `.routes-brief-toggle`, `.routes-brief.dispatch-grid td/th` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `b5b12d1` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint33_functional.py` — 12 pytest-кейсов (видимость колонок в обоих режимах)  
+- `tests/transport/sprint33_usability_checklist.md` — 16 проверок  
+- `tests/transport/transport_sprint33_load_test.py` — 5 users, 60s, NFR GET /tasks p95 ≤ 300ms  
 
 ---
 
