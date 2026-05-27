@@ -1701,6 +1701,78 @@ class TransportService:
         )
         return {"task_id": task_id, "price": price}
 
+    def export_billing_order_xlsx(self, order_id: int) -> bytes:
+        """Генерирует XLSX-файл с составом биллинг-заказа (Sprint 26, DoD §12 #7)."""
+        import io
+        from openpyxl import Workbook
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+
+        order = self.get_billing_order(order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail=f"Billing order {order_id} not found")
+
+        tasks = self.get_billing_order_tasks(order_id)
+
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Счёт"
+
+        # ── header block ──────────────────────────────────────────────────────
+        hdr_fill = PatternFill("solid", fgColor="1D4ED8")
+        hdr_font = Font(color="FFFFFF", bold=True, size=11)
+        thin = Side(style="thin")
+        border = Border(left=thin, right=thin, top=thin, bottom=thin)
+
+        meta = [
+            ("Счёт №",      order.get("num") or f"#{order_id}"),
+            ("Компания",    order.get("company") or ""),
+            ("Период с",    order.get("date_from") or ""),
+            ("Период по",   order.get("date_to") or ""),
+            ("Статус",      "Оплачен" if order.get("payed") else ("Закрыт" if order.get("closed") else "Выставлен")),
+            ("Платёж №",    order.get("num_plat") or ""),
+        ]
+        for row_idx, (label, value) in enumerate(meta, start=1):
+            ws.cell(row=row_idx, column=1, value=label).font = Font(bold=True)
+            ws.cell(row=row_idx, column=2, value=value)
+
+        start_row = len(meta) + 2
+
+        # ── column headers ────────────────────────────────────────────────────
+        columns = ["№ рейса", "ТС", "Дата отгрузки", "Статус", "Сумма, ₽"]
+        for col_idx, col_name in enumerate(columns, start=1):
+            cell = ws.cell(row=start_row, column=col_idx, value=col_name)
+            cell.font = hdr_font
+            cell.fill = hdr_fill
+            cell.alignment = Alignment(horizontal="center")
+            cell.border = border
+
+        # ── data rows ─────────────────────────────────────────────────────────
+        total = 0.0
+        for data_row, t in enumerate(tasks, start=start_row + 1):
+            ws.cell(row=data_row, column=1, value=t["tt_id"]).border = border
+            ws.cell(row=data_row, column=2, value=t.get("transport") or "").border = border
+            ws.cell(row=data_row, column=3, value=t.get("shipment_date") or "").border = border
+            ws.cell(row=data_row, column=4, value=t.get("status") or "").border = border
+            price_cell = ws.cell(row=data_row, column=5, value=t.get("price") or 0)
+            price_cell.border = border
+            price_cell.number_format = '#,##0.00'
+            total += float(t.get("price") or 0)
+
+        # ── total row ─────────────────────────────────────────────────────────
+        total_row = start_row + len(tasks) + 1
+        ws.cell(row=total_row, column=4, value="Итого:").font = Font(bold=True)
+        total_cell = ws.cell(row=total_row, column=5, value=total)
+        total_cell.font = Font(bold=True)
+        total_cell.number_format = '#,##0.00'
+
+        # ── column widths ─────────────────────────────────────────────────────
+        for col, width in zip("ABCDE", [12, 22, 16, 18, 16]):
+            ws.column_dimensions[col].width = width
+
+        buf = io.BytesIO()
+        wb.save(buf)
+        return buf.getvalue()
+
     def remove_task_from_billing_order(self, order_id: int, tt_id: int) -> dict:
         """Отвязывает рейс от биллинг-заказа (обнуляет PAY_ORDER_ID)."""
         order = self.get_billing_order(order_id)

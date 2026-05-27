@@ -47,12 +47,14 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   POST   /api/admin/transport/tasks/{id}/recalculate-price — пересчёт цены через RRL_UPDATE_PRICE (Sprint 18)
   PATCH  /api/admin/transport/tasks/{id}/price          — ручная установка цены (Sprint 18)
   GET    /api/admin/transport/billing/companies         — справочник транспортных компаний (Sprint 22)
+  GET    /api/admin/transport/billing/orders/{id}/export.xlsx — экспорт счёта в Excel (Sprint 26)
 """
 
 from datetime import date
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query
+from fastapi.responses import StreamingResponse
 
 from ..auth import (
     AdminUser,
@@ -561,6 +563,22 @@ def get_billing_order_tasks(
 ) -> list[dict]:
     """Рейсы, привязанные к биллинг-заказу."""
     return TransportService().get_billing_order_tasks(order_id)
+
+
+@router.get("/billing/orders/{order_id}/export.xlsx")
+def export_billing_order_xlsx(
+    order_id: int,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+):
+    """Экспорт счёта в Excel (.xlsx) — Sprint 26, DoD §12 #7."""
+    import io
+    data = TransportService().export_billing_order_xlsx(order_id)
+    filename = f"billing_order_{order_id}.xlsx"
+    return StreamingResponse(
+        io.BytesIO(data),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 
 @router.post("/billing/orders/{order_id}/tasks")

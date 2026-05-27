@@ -165,6 +165,18 @@ async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+async function downloadBlob(path: string, filename: string): Promise<void> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    headers: { Authorization: `Basic ${btoa(API_BASIC_AUTH)}` },
+  });
+  if (!res.ok) throw new Error(`${res.status}: ${res.statusText}`);
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
 function todayIso(): string { return new Date().toISOString().slice(0, 10); }
 function fmtDate(s: string | null): string { return s ? s.slice(0, 10) : "—"; }
 function fmtTime(s: string | null): string {
@@ -2391,6 +2403,7 @@ function BillingOrderDetailPanel({
   onDetachTask?: (tt_id: number) => Promise<void>;
 }) {
   const [detachingId, setDetachingId] = useState<number | null>(null);
+  const [xlsxLoading, setXlsxLoading] = useState(false);
   const { text, cls } = billingStatusLabel(order);
   const total = tasks.reduce((s, t) => s + t.price, 0);
   const canDetach = !order.closed && !order.payed && !!onDetachTask;
@@ -2400,6 +2413,17 @@ function BillingOrderDetailPanel({
     if (!confirm(`Снять рейс #${tt_id} со счёта ${order.num ?? `#${order.order_id}`}?`)) return;
     setDetachingId(tt_id);
     try { await onDetachTask(tt_id); } finally { setDetachingId(null); }
+  }
+
+  async function handleDownloadXlsx() {
+    setXlsxLoading(true);
+    try {
+      const num = (order.num ?? `order_${order.order_id}`).replace(/[/\\]/g, "-");
+      await downloadBlob(
+        `/api/admin/transport/billing/orders/${order.order_id}/export.xlsx`,
+        `billing_${num}.xlsx`,
+      );
+    } catch (e) { alert(String(e)); } finally { setXlsxLoading(false); }
   }
 
   return (
@@ -2457,10 +2481,16 @@ function BillingOrderDetailPanel({
           <div className="billing-detail-total">
             Итого: <b>{total.toLocaleString("ru-RU")} ₽</b>
           </div>
-          <button className="billing-csv-btn billing-detail-export-btn"
-            onClick={() => exportOrderTasksCsv(order, tasks)}>
-            ⬇ Скачать CSV
-          </button>
+          <div className="billing-detail-export-row">
+            <button className="billing-xlsx-btn billing-detail-export-btn"
+              onClick={handleDownloadXlsx} disabled={xlsxLoading}>
+              {xlsxLoading ? "…" : "⬇ Excel"}
+            </button>
+            <button className="billing-csv-btn billing-detail-export-btn"
+              onClick={() => exportOrderTasksCsv(order, tasks)}>
+              ⬇ CSV
+            </button>
+          </div>
         </>
       )}
     </div>
