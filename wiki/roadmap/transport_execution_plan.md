@@ -42,7 +42,8 @@
 | 24 | VRP: Drag-and-drop перестановка СТ между маршрутами | MAP | 0.5 нед | 🟢 КК | ✅ `0c4ad0c` 2026-05-27 |
 | 25 | Биллинг: снять рейс с биллинга | Billing | 0.5 нед | 🟢 КК | ✅ `7a3e833` 2026-05-27 |
 | 26 | Биллинг: Excel-экспорт счёта | Billing | 0.5 нед | 🟢 КК | ✅ `5f6e110` 2026-05-27 |
-| **Итого** | | | **~21.5 нед** | | |
+| 27 | Биллинг: Excel-экспорт реестра счетов | Billing | 0.5 нед | 🟢 КК | ✅ `23682f3` 2026-05-28 |
+| **Итого** | | | **~22 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -617,6 +618,29 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 27 — Биллинг: Excel-экспорт реестра счетов
+
+**Инструмент:** 🟢 КК (код-код $20) — аналогичный паттерн Sprint 26, другой набор данных
+
+**Цель:** кнопка `[Скачать Excel]` в тулбаре реестра счетов (по макету TZ B §11) выгружает все счета текущего фильтра в XLSX. Дополняет Sprint 26 (экспорт одного счёта) до полного покрытия DoD.
+
+**ТЗ:** B §11 (макет — `[Скачать Excel]` в заголовке реестра)
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `export_billing_registry_xlsx(...)` — реестр счетов с теми же фильтрами что `list_billing_orders` | Backend | `transport_service.py` |
+| `GET /billing/orders/export.xlsx` — размещён ДО `/{order_id}` чтобы избежать конфликта маршрутов | Backend | `transport.py` |
+| `handleRegistryXlsx` + кнопка «⬇ Excel» в `BillingRegistryTab` тулбаре | Frontend | `TransportDispatchPage.tsx` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `23682f3` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint27_functional.py` — 12 pytest-кейсов (MIME, magic bytes, route conflict, row count, filter)  
+- `tests/transport/sprint27_usability_checklist.md` — 19 юзабилити-проверок  
+- `tests/transport/transport_sprint27_load_test.py` — 5 users, 60s, NFR registry export p95 ≤ 800ms  
 
 ---
 
