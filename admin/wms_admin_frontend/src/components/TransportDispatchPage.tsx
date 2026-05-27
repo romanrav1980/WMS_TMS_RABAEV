@@ -224,7 +224,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [palletStNum, setPalletStNum] = useState<string | null>(null);
   const [stPallets, setStPallets] = useState<StPalletRow[]>([]);
   const [palletLoading, setPalletLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<"tasks" | "routes">("tasks");
+  const [activeTab, setActiveTab] = useState<"tasks" | "routes" | "billing">("tasks");
   const [routeShipDate, setRouteShipDate] = useState(todayIso());
   const [routeTaskId, setRouteTaskId] = useState("");
   const [routeCarMask, setRouteCarMask] = useState("");
@@ -236,6 +236,16 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [openingBilling, setOpeningBilling] = useState(false);
   const [billingOrder, setBillingOrder] = useState<BillingOrder | null>(null);
   const [billingActionLoading, setBillingActionLoading] = useState(false);
+
+  // Billing registry (Sprint 17)
+  const [billingOrders, setBillingOrders] = useState<BillingOrder[]>([]);
+  const [billingLoading, setBillingLoading] = useState(false);
+  const [billingDateFrom, setBillingDateFrom] = useState(() => {
+    const d = new Date(); d.setDate(1); return d.toISOString().slice(0, 10);
+  });
+  const [billingDateTo, setBillingDateTo] = useState(todayIso());
+  const [billingCompany, setBillingCompany] = useState("");
+  const [billingStatus, setBillingStatus] = useState<"all" | "open" | "closed" | "paid">("all");
   const debouncedRouteTaskId = useDebounce(routeTaskId, 300);
   const debouncedRouteCarMask = useDebounce(routeCarMask, 300);
   const debouncedRouteCompany = useDebounce(routeCompanyMask, 300);
@@ -296,6 +306,28 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       debouncedRouteCompany, routeDateTo, routeNoPayments]);
 
   useEffect(() => { loadTasks(); }, [loadTasks]);
+
+  // ------------------------------------------------------------------
+  // Load billing orders (Sprint 17)
+  // ------------------------------------------------------------------
+  const loadBillingOrders = useCallback(async () => {
+    setBillingLoading(true);
+    try {
+      const p = new URLSearchParams();
+      if (billingDateFrom) p.set("date_from", billingDateFrom);
+      if (billingDateTo)   p.set("date_to", billingDateTo);
+      if (billingCompany)  p.set("company", billingCompany);
+      if (billingStatus === "open")   { p.set("closed", "0"); p.set("payed", "0"); }
+      if (billingStatus === "closed") { p.set("closed", "1"); p.set("payed", "0"); }
+      if (billingStatus === "paid")   { p.set("payed", "1"); }
+      const data = await apiFetch<BillingOrder[]>(`/api/admin/transport/billing/orders?${p}`);
+      setBillingOrders(data);
+    } catch { setBillingOrders([]); } finally { setBillingLoading(false); }
+  }, [billingDateFrom, billingDateTo, billingCompany, billingStatus]);
+
+  useEffect(() => {
+    if (activeTab === "billing") loadBillingOrders();
+  }, [activeTab, loadBillingOrders]);
 
   // ------------------------------------------------------------------
   // Load available STs
@@ -670,6 +702,11 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               className={`dispatch-tab${activeTab === "routes" ? " active" : ""}`}
               onClick={() => { setActiveTab("routes"); setSelectedTask(null); setTaskSts([]); }}>
               Маршруты
+            </button>
+            <button
+              className={`dispatch-tab${activeTab === "billing" ? " active" : ""}`}
+              onClick={() => { setActiveTab("billing"); setSelectedTask(null); setTaskSts([]); }}>
+              Биллинг
             </button>
           </div>
 
@@ -1184,6 +1221,25 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 
           </> /* end activeTab === "routes" */}
 
+          {/* ============================================================
+              BILLING TAB  (Sprint 17)
+              ============================================================ */}
+          {activeTab === "billing" && (
+            <BillingRegistryTab
+              orders={billingOrders}
+              loading={billingLoading}
+              dateFrom={billingDateFrom}
+              dateTo={billingDateTo}
+              company={billingCompany}
+              status={billingStatus}
+              onDateFromChange={setBillingDateFrom}
+              onDateToChange={setBillingDateTo}
+              onCompanyChange={setBillingCompany}
+              onStatusChange={setBillingStatus}
+              onRefresh={loadBillingOrders}
+            />
+          )}
+
         </div>
 
         {/* ============================================================
@@ -1262,7 +1318,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             onChange={e => setMaxWeightKg(e.target.value ? Number(e.target.value) : null)}
             placeholder="—" />
         </div>
-        ) : (
+        ) : activeTab === "routes" ? (
         <div className="dispatch-right-panel">
           <div className="dispatch-fp-label">Фильтр по ID</div>
           <input className="dispatch-fp-input" type="number" value={routeTaskId}
@@ -1290,7 +1346,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           <input className="dispatch-fp-input" type="date" value={routeDateTo}
             onChange={e => setRouteDateTo(e.target.value)} />
         </div>
-        )}
+        ) : null}
       </div>
 
       {createDialog && (
@@ -1933,6 +1989,150 @@ function BillingOrderCard({
           <span className="billing-done-label">Счёт закрыт и оплачен</span>
         )}
       </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// BillingRegistryTab (Sprint 17)
+// ---------------------------------------------------------------------------
+
+type BillingStatusFilter = "all" | "open" | "closed" | "paid";
+
+function billingOrderStatusText(order: BillingOrder): string {
+  if (order.payed)  return "Оплачен";
+  if (order.closed) return "Закрыт";
+  return "Выставлен";
+}
+
+function exportBillingCsv(orders: BillingOrder[]) {
+  const BOM = "﻿";
+  const header = "Счёт;Компания;Дата от;Дата до;Рейсов;Сумма ₽;Статус";
+  const rows = orders.map(o =>
+    [
+      o.num ?? o.order_id,
+      o.company ?? "",
+      o.date_from ?? "",
+      o.date_to ?? "",
+      o.task_count ?? 0,
+      o.total_price ?? 0,
+      billingOrderStatusText(o),
+    ].join(";")
+  );
+  const csv = BOM + [header, ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `billing-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function BillingRegistryTab({
+  orders, loading, dateFrom, dateTo, company, status,
+  onDateFromChange, onDateToChange, onCompanyChange, onStatusChange, onRefresh,
+}: {
+  orders: BillingOrder[];
+  loading: boolean;
+  dateFrom: string;
+  dateTo: string;
+  company: string;
+  status: BillingStatusFilter;
+  onDateFromChange: (v: string) => void;
+  onDateToChange: (v: string) => void;
+  onCompanyChange: (v: string) => void;
+  onStatusChange: (v: BillingStatusFilter) => void;
+  onRefresh: () => void;
+}) {
+  // Totals by company
+  const totals: Record<string, number> = {};
+  for (const o of orders) {
+    const key = o.company ?? "—";
+    totals[key] = (totals[key] ?? 0) + (o.total_price ?? 0);
+  }
+
+  return (
+    <div className="billing-registry">
+      <div className="billing-registry-toolbar">
+        <span className="billing-registry-title">Реестр счетов</span>
+        <label>
+          <span className="billing-fp-label">С</span>
+          <input type="date" className="billing-fp-input" value={dateFrom}
+            onChange={e => onDateFromChange(e.target.value)} />
+        </label>
+        <label>
+          <span className="billing-fp-label">По</span>
+          <input type="date" className="billing-fp-input" value={dateTo}
+            onChange={e => onDateToChange(e.target.value)} />
+        </label>
+        <input type="text" className="billing-fp-input billing-fp-wide" placeholder="Компания (ТК)"
+          value={company} onChange={e => onCompanyChange(e.target.value)} />
+        <select className="billing-fp-select" value={status}
+          onChange={e => onStatusChange(e.target.value as BillingStatusFilter)}>
+          <option value="all">Все статусы</option>
+          <option value="open">Выставлен</option>
+          <option value="closed">Закрыт</option>
+          <option value="paid">Оплачен</option>
+        </select>
+        <button className="billing-refresh-btn" onClick={onRefresh} disabled={loading}>⟳</button>
+        <button className="billing-csv-btn" onClick={() => exportBillingCsv(orders)}
+          disabled={orders.length === 0}>
+          ⬇ Скачать CSV
+        </button>
+      </div>
+
+      {loading
+        ? <div className="billing-registry-loading">Загрузка…</div>
+        : orders.length === 0
+          ? <div className="billing-registry-empty">Нет счетов за выбранный период</div>
+          : <>
+              <table className="billing-registry-table">
+                <thead>
+                  <tr>
+                    <th>Счёт</th>
+                    <th>Компания</th>
+                    <th>Дата от</th>
+                    <th>Дата до</th>
+                    <th>Рейсов</th>
+                    <th>Сумма ₽</th>
+                    <th>Статус</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.map(o => (
+                    <tr key={o.order_id}>
+                      <td className="billing-num-cell">{o.num ?? `#${o.order_id}`}</td>
+                      <td>{o.company ?? "—"}</td>
+                      <td>{o.date_from ?? "—"}</td>
+                      <td>{o.date_to ?? "—"}</td>
+                      <td className="billing-count-cell">{o.task_count ?? 0}</td>
+                      <td className="billing-price-cell">
+                        {(o.total_price ?? 0) > 0
+                          ? (o.total_price ?? 0).toLocaleString("ru-RU") + " ₽"
+                          : "—"}
+                      </td>
+                      <td>
+                        <span className={`billing-status-tag ${
+                          o.payed ? "billing-status-paid" :
+                          o.closed ? "billing-status-closed" : "billing-status-open"
+                        }`}>{billingOrderStatusText(o)}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <div className="billing-totals">
+                <b>Итого по ТК:</b>
+                {Object.entries(totals).map(([tk, sum]) => (
+                  <span key={tk} className="billing-totals-row">
+                    {tk}: <b>{sum.toLocaleString("ru-RU")} ₽</b>
+                  </span>
+                ))}
+              </div>
+            </>
+      }
     </div>
   );
 }
