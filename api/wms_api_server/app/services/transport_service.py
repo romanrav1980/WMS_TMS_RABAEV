@@ -1867,6 +1867,96 @@ class TransportService:
             raise HTTPException(status_code=404, detail=f"Task {tt_id} not in order {order_id}")
         return {"order_id": order_id, "tt_id": tt_id, "removed": True}
 
+    def export_tasks_xlsx(
+        self,
+        shipment_date: date | None = None,
+        condition: str | None = None,
+        task_id: int | None = None,
+        transport_mask: str | None = None,
+        company_mask: str | None = None,
+        date_to: date | None = None,
+        no_payments_only: bool = False,
+    ) -> bytes:
+        """Генерирует XLSX-список рейсов (Sprint 28, ТЗ §3 «В Excel»)."""
+        import io
+        from openpyxl import Workbook
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+
+        tasks = self.list_tasks(
+            shipment_date=shipment_date,
+            condition=condition,
+            task_id=task_id,
+            transport_mask=transport_mask,
+            company_mask=company_mask,
+            date_to=date_to,
+            no_payments_only=no_payments_only,
+        )
+
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Рейсы"
+
+        hdr_fill = PatternFill("solid", fgColor="1D4ED8")
+        hdr_font = Font(color="FFFFFF", bold=True, size=10)
+        thin = Side(style="thin")
+        border = Border(left=thin, right=thin, top=thin, bottom=thin)
+
+        filter_date = str(shipment_date) if shipment_date else "все даты"
+        ws.cell(row=1, column=1, value=f"Рейсы: {filter_date}").font = Font(bold=True, size=12)
+
+        columns = [
+            ("Дата", "SHIPMENT_DATE", 12),
+            ("#", "ID", 8),
+            ("Пал.", "PALLET_COUNT", 7),
+            ("Вес кг", "TEMP_WEIGHT", 10),
+            ("Объём м³", "VOLUME_M3", 10),
+            ("Тип ТС", "TRANSTYPE", 12),
+            ("Машина", "TRANSPORT", 16),
+            ("Водитель", "VODITEL_NAME", 22),
+            ("ДОК", "DOCK", 10),
+            ("Регионы", "REGIONS", 24),
+            ("Цена ₽", "PRICE", 14),
+            ("ТК", "TK_NAME", 20),
+            ("Логист", "LOGIST", 14),
+            ("Статус", "CONDITION", 14),
+        ]
+
+        header_row = 3
+        for col_idx, (label, _field, width) in enumerate(columns, start=1):
+            cell = ws.cell(row=header_row, column=col_idx, value=label)
+            cell.font = hdr_font
+            cell.fill = hdr_fill
+            cell.alignment = Alignment(horizontal="center")
+            cell.border = border
+            ws.column_dimensions[chr(64 + col_idx)].width = width
+
+        for row_idx, t in enumerate(tasks, start=header_row + 1):
+            vals = [
+                str(t.get("SHIPMENT_DATE") or "")[:10],
+                t.get("ID"),
+                t.get("PALLET_COUNT"),
+                t.get("TEMP_WEIGHT"),
+                t.get("VOLUME_M3"),
+                t.get("TRANSTYPE"),
+                t.get("TRANSPORT"),
+                t.get("VODITEL_NAME"),
+                t.get("DOCK"),
+                t.get("REGIONS") or t.get("TEMP_REGION"),
+                float(t.get("PRICE") or 0) or None,
+                t.get("TK_NAME"),
+                t.get("LOGIST"),
+                t.get("CONDITION"),
+            ]
+            for col_idx, val in enumerate(vals, start=1):
+                cell = ws.cell(row=row_idx, column=col_idx, value=val)
+                cell.border = border
+                if col_idx == 11 and val is not None:
+                    cell.number_format = '#,##0.00'
+
+        buf = io.BytesIO()
+        wb.save(buf)
+        return buf.getvalue()
+
     def get_plan_fact(self, date_from: date, date_to: date, vehicle: str | None = None) -> list[dict]:
         """Сводный план-фактный отчёт по всем рейсам периода."""
         params: dict[str, Any] = {

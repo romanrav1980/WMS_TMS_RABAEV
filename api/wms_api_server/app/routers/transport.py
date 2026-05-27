@@ -49,6 +49,7 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   GET    /api/admin/transport/billing/companies         — справочник транспортных компаний (Sprint 22)
   GET    /api/admin/transport/billing/orders/{id}/export.xlsx — экспорт счёта в Excel (Sprint 26)
   GET    /api/admin/transport/billing/orders/export.xlsx     — экспорт реестра счетов в Excel (Sprint 27)
+  GET    /api/admin/transport/tasks/export.xlsx             — экспорт списка рейсов в Excel (Sprint 28)
 """
 
 from datetime import date
@@ -168,6 +169,36 @@ def list_clusters(
 # ------------------------------------------------------------------
 # Рейсы
 # ------------------------------------------------------------------
+
+@router.get("/tasks/export.xlsx")
+def export_tasks_xlsx(
+    shipment_date: date | None = None,
+    condition:     str | None = Query(default=None),
+    task_id:       int | None = Query(default=None),
+    transport_mask: str | None = Query(default=None),
+    company_mask:  str | None = Query(default=None),
+    date_to:       date | None = Query(default=None),
+    no_payments_only: bool = False,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+):
+    """Экспорт списка рейсов в Excel — Sprint 28, ТЗ §3 «В Excel»."""
+    import io
+    data = TransportService().export_tasks_xlsx(
+        shipment_date=shipment_date,
+        condition=condition,
+        task_id=task_id,
+        transport_mask=transport_mask,
+        company_mask=company_mask,
+        date_to=date_to,
+        no_payments_only=no_payments_only,
+    )
+    fname = f"transport_tasks_{shipment_date or 'all'}.xlsx"
+    return StreamingResponse(
+        io.BytesIO(data),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="{fname}"'},
+    )
+
 
 @router.get("/tasks")
 def list_tasks(

@@ -254,6 +254,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [routeCompanyMask, setRouteCompanyMask] = useState("");
   const [routeDateTo, setRouteDateTo] = useState("");
   const [routeNoPayments, setRouteNoPayments] = useState(false);
+  const [routesXlsxLoading, setRoutesXlsxLoading] = useState(false);
   const [noteText, setNoteText] = useState("");
   const [billingDialog, setBillingDialog] = useState(false);
   const [openingBilling, setOpeningBilling] = useState(false);
@@ -691,6 +692,23 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       setTasks(prev => prev.map(t => t.ID === updated.ID ? updated : t));
       setBillingOrder(null);
     } catch (e) { setError(String(e)); } finally { setBillingActionLoading(false); }
+  }
+
+  async function handleRoutesXlsx() {
+    setRoutesXlsxLoading(true);
+    try {
+      const p = new URLSearchParams();
+      if (routeShipDate) p.set("shipment_date", routeShipDate);
+      if (routeDateTo) p.set("date_to", routeDateTo);
+      if (routeTaskId) p.set("task_id", routeTaskId);
+      if (routeCarMask) p.set("transport_mask", routeCarMask);
+      if (routeCompanyMask) p.set("company_mask", routeCompanyMask);
+      if (routeNoPayments) p.set("no_payments_only", "true");
+      await downloadBlob(
+        `/api/admin/transport/tasks/export.xlsx?${p}`,
+        `transport_tasks_${routeShipDate || "all"}.xlsx`,
+      );
+    } catch (e) { setError(String(e)); } finally { setRoutesXlsxLoading(false); }
   }
 
   async function handleBillingClose() {
@@ -1162,6 +1180,12 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             <input type="date" value={routeShipDate} onChange={e => setRouteShipDate(e.target.value)} />
             <button className="dispatch-refresh-btn" onClick={loadTasks} title="Обновить рейсы">⟳</button>
             <span className="dispatch-tcount">{tasks.length} рейс(ов)</span>
+            <button className="billing-xlsx-btn routes-xlsx-btn"
+              onClick={handleRoutesXlsx}
+              disabled={routesXlsxLoading || tasks.length === 0}
+              title="Экспорт в Excel">
+              {routesXlsxLoading ? "…" : "⬇ Excel"}
+            </button>
           </div>
 
           {/* ---- Routes table ---- */}
