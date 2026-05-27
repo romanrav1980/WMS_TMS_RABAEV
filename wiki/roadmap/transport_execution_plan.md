@@ -41,7 +41,8 @@
 | 23 | Биллинг: детальный просмотр счёта + экспорт CSV | Billing | 0.5 нед | 🟢 КК | ✅ `f4413b4` 2026-05-27 |
 | 24 | VRP: Drag-and-drop перестановка СТ между маршрутами | MAP | 0.5 нед | 🟢 КК | ✅ `0c4ad0c` 2026-05-27 |
 | 25 | Биллинг: снять рейс с биллинга | Billing | 0.5 нед | 🟢 КК | ✅ `7a3e833` 2026-05-27 |
-| **Итого** | | | **~21 нед** | | |
+| 26 | Биллинг: Excel-экспорт счёта | Billing | 0.5 нед | 🟢 КК | ✅ `5f6e110` 2026-05-27 |
+| **Итого** | | | **~21.5 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -616,6 +617,32 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 26 — Биллинг: Excel-экспорт счёта
+
+**Инструмент:** 🟢 КК (код-код $20) — бэкенд openpyxl, фронт blob-download
+
+**Цель:** закрыть DoD-критерий §12 #7 — «Экспорт в Excel содержит все рейсы выбранного счёта с суммой и реквизитами». Кнопка «⬇ Excel» в панели деталей счёта скачивает XLSX-файл.
+
+**ТЗ:** B §12 критерий 7, B §11 (макет — `[Скачать Excel]`)
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `openpyxl` в requirements.txt | Backend | `requirements.txt` |
+| `export_billing_order_xlsx(order_id)` — генерация XLSX через openpyxl | Backend | `transport_service.py` |
+| `GET /billing/orders/{id}/export.xlsx` — StreamingResponse с XLSX | Backend | `transport.py` |
+| `downloadBlob(path, filename)` — helper для blob-download с auth | Frontend | `TransportDispatchPage.tsx` |
+| `handleDownloadXlsx` + кнопка «⬇ Excel» в `BillingOrderDetailPanel` | Frontend | `TransportDispatchPage.tsx` |
+| CSS: `.billing-xlsx-btn`, `.billing-detail-export-row` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `5f6e110` · **Дата:** 2026-05-27  
+**Тесты:**  
+- `tests/transport/test_sprint26_functional.py` — 11 pytest-кейсов (MIME, ZIP magic, content-disposition, XLSX content, row count)  
+- `tests/transport/sprint26_usability_checklist.md` — 18 юзабилити-проверок  
+- `tests/transport/transport_sprint26_load_test.py` — 5 users, 60s, NFR export p95 ≤ 500ms  
 
 ---
 
