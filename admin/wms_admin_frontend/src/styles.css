@@ -1083,6 +1083,7 @@ button[aria-disabled="true"] { cursor: help; }
 .billing-order-company { color: #374151; }
 .billing-order-period  { color: #64748b; font-size: 11px; }
 .billing-order-price   { margin-left: auto; font-weight: 700; color: #1e293b; }
+.billing-order-numplat { font-size: 11px; color: #64748b; white-space: nowrap; }
 .billing-order-card-actions { display: flex; gap: 8px; }
 .billing-close-btn { padding: 4px 12px; border: 1px solid #1d4ed8; border-radius: 6px; background: #eff6ff; color: #1d4ed8; cursor: pointer; font-size: 12px; font-weight: 600; }
 .billing-close-btn:hover { background: #dbeafe; }
@@ -1113,6 +1114,7 @@ button[aria-disabled="true"] { cursor: help; }
 .billing-num-cell { font-weight: 700; color: #1e293b; white-space: nowrap; }
 .billing-price-cell { text-align: right; font-weight: 600; white-space: nowrap; }
 .billing-count-cell { text-align: center; }
+.billing-numplat-cell { color: #475569; font-size: 12px; white-space: nowrap; }
 .billing-status-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
 .billing-status-tag.billing-status-open   { background: #fef3c7; color: #92400e; }
 .billing-status-tag.billing-status-closed { background: #dbeafe; color: #1d4ed8; }

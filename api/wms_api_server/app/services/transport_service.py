@@ -1472,7 +1472,7 @@ class TransportService:
         where = " AND ".join(conditions)
         rows = self.gateway.fetch_all(
             f"""
-            SELECT B.ID, B.NUM, B.COMPANY,
+            SELECT B.ID, B.NUM, B.COMPANY, B.NUM_PLAT,
                    TO_CHAR(B.DATEOFORDER, 'YYYY-MM-DD') AS DATEOFORDER,
                    TO_CHAR(B.DATEFROM,    'YYYY-MM-DD') AS DATEFROM,
                    TO_CHAR(B.DATETO,      'YYYY-MM-DD') AS DATETO,
@@ -1482,7 +1482,7 @@ class TransportService:
               FROM RABAEV.RRL_BILL_ORDERS B
               LEFT JOIN RABAEV.RRL_TRANSPORT_TASK TT ON TT.PAY_ORDER_ID = B.ID
              WHERE {where}
-             GROUP BY B.ID, B.NUM, B.COMPANY, B.DATEOFORDER, B.DATEFROM, B.DATETO, B.CLOSED, B.PAYED
+             GROUP BY B.ID, B.NUM, B.COMPANY, B.NUM_PLAT, B.DATEOFORDER, B.DATEFROM, B.DATETO, B.CLOSED, B.PAYED
              ORDER BY B.ID DESC
             """,
             params,
@@ -1499,6 +1499,7 @@ class TransportService:
                 "payed": int(r.get("PAYED") or 0),
                 "task_count": int(r.get("TASK_COUNT") or 0),
                 "total_price": float(r.get("TOTAL_PRICE") or 0),
+                "num_plat": r.get("NUM_PLAT"),
             }
             for r in rows
         ]
@@ -1561,7 +1562,7 @@ class TransportService:
         """Один биллинг-заказ по ID."""
         rows = self.gateway.fetch_all(
             """
-            SELECT B.ID, B.NUM, B.COMPANY,
+            SELECT B.ID, B.NUM, B.COMPANY, B.NUM_PLAT,
                    TO_CHAR(B.DATEOFORDER, 'YYYY-MM-DD') AS DATEOFORDER,
                    TO_CHAR(B.DATEFROM,    'YYYY-MM-DD') AS DATEFROM,
                    TO_CHAR(B.DATETO,      'YYYY-MM-DD') AS DATETO,
@@ -1571,7 +1572,7 @@ class TransportService:
               FROM RABAEV.RRL_BILL_ORDERS B
               LEFT JOIN RABAEV.RRL_TRANSPORT_TASK TT ON TT.PAY_ORDER_ID = B.ID
              WHERE B.ID = :order_id
-             GROUP BY B.ID, B.NUM, B.COMPANY, B.DATEOFORDER, B.DATEFROM, B.DATETO, B.CLOSED, B.PAYED
+             GROUP BY B.ID, B.NUM, B.COMPANY, B.NUM_PLAT, B.DATEOFORDER, B.DATEFROM, B.DATETO, B.CLOSED, B.PAYED
             """,
             {"order_id": order_id},
         )
@@ -1589,6 +1590,7 @@ class TransportService:
             "payed": int(r.get("PAYED") or 0),
             "task_count": int(r.get("TASK_COUNT") or 0),
             "total_price": float(r.get("TOTAL_PRICE") or 0),
+            "num_plat": r.get("NUM_PLAT"),
         }
 
     def close_billing_order(self, order_id: int) -> dict:
@@ -1664,16 +1666,29 @@ class TransportService:
         ]
 
     def recalculate_price(self, task_id: int) -> dict:
-        """Пересчитывает стоимость рейса через Oracle-функцию TRANSPORT_TASK.stoim_tt."""
+        """Пересчитывает и сохраняет стоимость рейса через Oracle-функцию RRL_UPDATE_PRICE."""
         task = self.get_task(task_id)
         if not task:
             raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+        # RRL_UPDATE_PRICE обновляет PRICE в БД и возвращает новое значение
         rows = self.gateway.fetch_all(
-            "SELECT RABAEV.TRANSPORT_TASK.stoim_tt(:tt_id) AS PRICE FROM DUAL",
+            "SELECT RABAEV.RRL_UPDATE_PRICE(:tt_id) AS PRICE FROM DUAL",
             {"tt_id": task_id},
         )
         new_price = float(rows[0]["PRICE"] or 0) if rows else 0.0
         return {"task_id": task_id, "price": new_price}
+
+    def list_billing_companies(self) -> list[str]:
+        """Справочник транспортных компаний из RRL_BILL_COMPANY."""
+        rows = self.gateway.fetch_all(
+            """
+            SELECT COMPANYNAME
+              FROM RABAEV.RRL_BILL_COMPANY
+             WHERE DELETED = 0
+             ORDER BY POS
+            """,
+        )
+        return [str(r["COMPANYNAME"]) for r in rows if r.get("COMPANYNAME")]
 
     def set_task_price(self, task_id: int, price: float) -> dict:
         """Ручная установка стоимости рейса (право CREATE_TT_PRICE)."""

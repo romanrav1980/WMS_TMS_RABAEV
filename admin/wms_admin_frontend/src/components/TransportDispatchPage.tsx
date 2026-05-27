@@ -131,6 +131,9 @@ type BillingOrder = {
   date_to: string | null;
   closed: number;
   payed: number;
+  task_count?: number | null;
+  total_price?: number | null;
+  num_plat?: string | null;
 };
 
 // ---------------------------------------------------------------------------
@@ -1977,9 +1980,16 @@ function OpenBillingDialog({
   const [existingOrders, setExistingOrders] = useState<BillingOrder[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+  const [companies, setCompanies] = useState<string[]>([]);
 
   const company = task.TK_NAME ?? "";
   const shipDate = fmtDate(task.SHIPMENT_DATE);
+
+  useEffect(() => {
+    apiFetch<string[]>("/api/admin/transport/billing/companies")
+      .then(setCompanies)
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!company) return;
@@ -2003,6 +2013,11 @@ function OpenBillingDialog({
         <div className="dispatch-dialog-field">
           <span>Транспортная компания</span>
           <span className="billing-dialog-company">{company || "Неизвестная ТК"}</span>
+          {companies.length > 0 && (
+            <datalist id="billing-companies-list">
+              {companies.map(c => <option key={c} value={c} />)}
+            </datalist>
+          )}
         </div>
         <div className="dispatch-dialog-field">
           <span>Дата</span>
@@ -2087,6 +2102,9 @@ function BillingOrderCard({
         {order.total_price != null && order.total_price > 0 && (
           <span className="billing-order-price">{order.total_price.toLocaleString("ru-RU")} ₽</span>
         )}
+        {order.num_plat && (
+          <span className="billing-order-numplat">№ платёж.: {order.num_plat}</span>
+        )}
       </div>
       <div className="billing-order-card-actions">
         {!order.closed && !order.payed && (
@@ -2121,7 +2139,7 @@ function billingOrderStatusText(order: BillingOrder): string {
 
 function exportBillingCsv(orders: BillingOrder[]) {
   const BOM = "﻿";
-  const header = "Счёт;Компания;Дата от;Дата до;Рейсов;Сумма ₽;Статус";
+  const header = "Счёт;Компания;Дата от;Дата до;Рейсов;Сумма ₽;Статус;№ платёжного";
   const rows = orders.map(o =>
     [
       o.num ?? o.order_id,
@@ -2131,6 +2149,7 @@ function exportBillingCsv(orders: BillingOrder[]) {
       o.task_count ?? 0,
       o.total_price ?? 0,
       billingOrderStatusText(o),
+      o.num_plat ?? "",
     ].join(";")
   );
   const csv = BOM + [header, ...rows].join("\n");
@@ -2211,6 +2230,7 @@ function BillingRegistryTab({
                     <th>Рейсов</th>
                     <th>Сумма ₽</th>
                     <th>Статус</th>
+                    <th>№ платёжного</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2232,6 +2252,7 @@ function BillingRegistryTab({
                           o.closed ? "billing-status-closed" : "billing-status-open"
                         }`}>{billingOrderStatusText(o)}</span>
                       </td>
+                      <td className="billing-numplat-cell">{o.num_plat ?? "—"}</td>
                     </tr>
                   ))}
                 </tbody>

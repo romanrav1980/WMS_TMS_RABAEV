@@ -44,8 +44,9 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   GET    /api/admin/transport/tasks/{id}/billing        — биллинг-данные рейса (Sprint 15)
   POST   /api/admin/transport/tasks/{id}/billing/open   — создать счёт для рейса (Sprint 15)
   DELETE /api/admin/transport/billing/orders/{id}/tasks/{tt_id} — отвязать рейс от заказа (Sprint 18)
-  POST   /api/admin/transport/tasks/{id}/recalculate-price — пересчёт цены через stoim_tt (Sprint 18)
+  POST   /api/admin/transport/tasks/{id}/recalculate-price — пересчёт цены через RRL_UPDATE_PRICE (Sprint 18)
   PATCH  /api/admin/transport/tasks/{id}/price          — ручная установка цены (Sprint 18)
+  GET    /api/admin/transport/billing/companies         — справочник транспортных компаний (Sprint 22)
 """
 
 from datetime import date
@@ -622,3 +623,11 @@ def set_task_price(
 ) -> dict:
     """Ручная установка стоимости рейса (право CREATE_TT_PRICE)."""
     return TransportService().set_task_price(task_id, req.price)
+
+
+@router.get("/billing/companies")
+def list_billing_companies(
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[str]:
+    """Справочник транспортных компаний из RRL_BILL_COMPANY (Sprint 22)."""
+    return TransportService().list_billing_companies()

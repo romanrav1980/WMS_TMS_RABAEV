@@ -1431,6 +1431,7 @@ class BillingOrder(BaseModel):
     payed: int = 0
     task_count: int | None = None
     total_price: float | None = None
+    num_plat: str | None = None
 
 
 class PriceUpdateRequest(BaseModel):
