@@ -1132,3 +1132,9 @@ button[aria-disabled="true"] { cursor: help; }
 .price-save-btn { padding: 3px 10px; border: 1px solid var(--green); border-radius: 5px; background: #f0fdf4; color: var(--green); cursor: pointer; font-size: 12px; font-weight: 600; }
 .price-save-btn:hover { background: #dcfce7; }
 .price-save-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* Sprint 19 — Диалог привязки к существующему счёту */
+.billing-link-section { margin: 10px 0; padding: 10px; background: #f8fafc; border: 1px solid var(--line); border-radius: 6px; }
+.billing-link-label { font-size: 11px; color: #64748b; font-weight: 600; margin-bottom: 6px; }
+.billing-link-radio { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #374151; cursor: pointer; padding: 3px 0; }
+.billing-link-radio input[type="radio"] { cursor: pointer; }

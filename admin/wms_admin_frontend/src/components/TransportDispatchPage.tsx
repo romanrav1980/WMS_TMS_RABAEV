@@ -599,14 +599,25 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     } catch (e) { setError(String(e)); }
   }
 
-  async function handleOpenBilling() {
+  async function handleOpenBilling(existingOrderId: number | null) {
     if (!selectedTask) return;
     setOpeningBilling(true);
     try {
-      const order = await apiFetch<BillingOrder>(
-        `/api/admin/transport/tasks/${selectedTask.ID}/billing/open`,
-        { method: "POST" }
-      );
+      let order: BillingOrder;
+      if (existingOrderId) {
+        await apiFetch(`/api/admin/transport/billing/orders/${existingOrderId}/tasks`, {
+          method: "POST",
+          body: JSON.stringify({ tt_ids: [selectedTask.ID] }),
+        });
+        order = await apiFetch<BillingOrder>(
+          `/api/admin/transport/billing/orders/${existingOrderId}`
+        );
+      } else {
+        order = await apiFetch<BillingOrder>(
+          `/api/admin/transport/tasks/${selectedTask.ID}/billing/open`,
+          { method: "POST" }
+        );
+      }
       const updated = { ...selectedTask, PAY_ORDER_ID: order.order_id };
       setSelectedTask(updated);
       setTasks(prev => prev.map(t => t.ID === updated.ID ? updated : t));
@@ -1960,11 +1971,27 @@ function OpenBillingDialog({
 }: {
   task: TransportTask;
   loading: boolean;
-  onConfirm: () => void;
+  onConfirm: (existingOrderId: number | null) => void;
   onClose: () => void;
 }) {
-  const company = task.TK_NAME ?? "Неизвестная ТК";
+  const [existingOrders, setExistingOrders] = useState<BillingOrder[]>([]);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+
+  const company = task.TK_NAME ?? "";
   const shipDate = fmtDate(task.SHIPMENT_DATE);
+
+  useEffect(() => {
+    if (!company) return;
+    setLoadingOrders(true);
+    apiFetch<BillingOrder[]>(
+      `/api/admin/transport/billing/orders?company=${encodeURIComponent(company)}&closed=0&payed=0`
+    )
+      .then(orders => setExistingOrders(orders.filter(o => !o.closed && !o.payed)))
+      .catch(() => {})
+      .finally(() => setLoadingOrders(false));
+  }, [company]);
+
   return (
     <div className="dispatch-dialog-overlay">
       <div className="dispatch-dialog">
@@ -1975,7 +2002,7 @@ function OpenBillingDialog({
         </div>
         <div className="dispatch-dialog-field">
           <span>Транспортная компания</span>
-          <span className="billing-dialog-company">{company}</span>
+          <span className="billing-dialog-company">{company || "Неизвестная ТК"}</span>
         </div>
         <div className="dispatch-dialog-field">
           <span>Дата</span>
@@ -1985,15 +2012,46 @@ function OpenBillingDialog({
           <span>Цена рейса</span>
           <span>{task.PRICE != null ? task.PRICE.toLocaleString("ru-RU") + " ₽" : "—"}</span>
         </div>
-        <p className="billing-dialog-hint">
-          Будет создан биллинг-заказ и рейс привязан к нему.
-          После выставления счёта рейс нельзя расформировать.
-        </p>
+
+        {loadingOrders && (
+          <p className="billing-dialog-hint">Загружаю существующие счета…</p>
+        )}
+        {!loadingOrders && existingOrders.length > 0 && (
+          <div className="billing-link-section">
+            <div className="billing-link-label">Привязать к счёту:</div>
+            <label className="billing-link-radio">
+              <input type="radio" name="order_choice" value="new"
+                checked={selectedOrderId === null}
+                onChange={() => setSelectedOrderId(null)} />
+              Создать новый счёт
+            </label>
+            {existingOrders.map(o => (
+              <label key={o.order_id} className="billing-link-radio">
+                <input type="radio" name="order_choice" value={o.order_id}
+                  checked={selectedOrderId === o.order_id}
+                  onChange={() => setSelectedOrderId(o.order_id)} />
+                {o.num ?? `#${o.order_id}`}
+                {o.date_from ? ` (${o.date_from}${o.date_to && o.date_to !== o.date_from ? ` – ${o.date_to}` : ""})` : ""}
+              </label>
+            ))}
+          </div>
+        )}
+
+        {!loadingOrders && existingOrders.length === 0 && (
+          <p className="billing-dialog-hint">
+            Будет создан новый биллинг-заказ и рейс привязан к нему.
+            После выставления счёта рейс нельзя расформировать.
+          </p>
+        )}
+
         <div className="dispatch-dialog-actions">
-          <button className="dispatch-new-btn" onClick={onConfirm} disabled={loading}>
-            {loading ? "Создаём…" : "Создать счёт"}
+          <button className="dispatch-new-btn"
+            onClick={() => onConfirm(selectedOrderId)} disabled={loading}>
+            {loading ? "…" : selectedOrderId ? "Добавить к счёту" : "Создать счёт"}
           </button>
-          <button className="dispatch-cancel-edit-btn" onClick={onClose} disabled={loading}>Отмена</button>
+          <button className="dispatch-cancel-edit-btn" onClick={onClose} disabled={loading}>
+            Отмена
+          </button>
         </div>
       </div>
     </div>
