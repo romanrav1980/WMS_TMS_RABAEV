@@ -1173,3 +1173,11 @@ button[aria-disabled="true"] { cursor: help; }
 .billing-detail-id { font-weight: 600; color: #1e293b; }
 .billing-detail-total { font-size: 12px; color: #374151; border-top: 2px solid var(--line); padding-top: 6px; }
 .billing-detail-export-btn { margin-top: 4px; font-size: 11px; padding: 4px 10px; }
+
+/* Sprint 25 — Снять с биллинга */
+.billing-detach-btn { padding: 4px 12px; border: 1px solid #fca5a5; border-radius: 5px; background: #fff5f5; color: #dc2626; cursor: pointer; font-size: 12px; font-weight: 600; }
+.billing-detach-btn:hover { background: #fee2e2; border-color: #ef4444; }
+.billing-detach-btn:disabled { opacity: 0.4; cursor: default; }
+.billing-detach-task-btn { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 13px; line-height: 1; padding: 0 2px; border-radius: 3px; }
+.billing-detach-task-btn:hover { color: #ef4444; background: #fee2e2; }
+.billing-detach-task-btn:disabled { opacity: 0.4; cursor: default; }
