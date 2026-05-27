@@ -52,7 +52,8 @@
 | 34 | Bugfix: cancel_task освобождает СТ перед удалением | Диспетчер | 0.25 нед | 🟢 КК | ✅ `73cd887` 2026-05-28 |
 | 35 | Оптимизация: server-side raion filter в list_available_sts | Диспетчер | 0.25 нед | 🟢 КК | ✅ `c60c420` 2026-05-28 |
 | 36 | Массовое снятие СТ с рейса (чекбоксы + «Снять выбранные») | Диспетчер | 0.25 нед | 🟢 КК | ✅ `7aa8b16` 2026-05-28 |
-| **Итого** | | | **~25.75 нед** | | |
+| 37 | «Выделить всё» в таблице СТ + авто-обновление данных (60 с) | Диспетчер | 0.25 нед | 🟢 КК | ✅ `a287a02` 2026-05-28 |
+| **Итого** | | | **~26 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -627,6 +628,31 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 37 — «Выделить всё» + авто-обновление данных
+
+**Инструмент:** 🟢 КК (код-код $20) — чисто фронтенд, state + setInterval
+
+**Цель:** две UX-улучшения:
+1. Чекбокс «Выделить всё» в шапке таблицы доступных СТ (flat-режим) — один клик выделяет/снимает все видимые СТ.
+2. Авто-обновление: каждые 60 секунд страница автоматически перезагружает данные (СТ, рейсы, кластеры), пока диалоги закрыты и нет активного редактирования.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `autoRefresh` state + `lastRefreshAt` timestamp | Frontend | `TransportDispatchPage.tsx` |
+| `useEffect` с `setInterval(60_000)`: reload STs/tasks/clusters, guard против loading/dialog/editMode | Frontend | `TransportDispatchPage.tsx` |
+| «Авто» checkbox + время последнего обновления в ST toolbar | Frontend | `TransportDispatchPage.tsx` |
+| Header `<th>` select-all checkbox (flat mode only): toggle all/none | Frontend | `TransportDispatchPage.tsx` |
+| `.dispatch-autorefresh-toggle`, `.dispatch-last-refresh` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `a287a02` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint37_functional.py` — 18 pytest-кейсов (select-all toggle, partial→all, auto-refresh guards, enable/disable)  
+- `tests/transport/sprint37_usability_checklist.md` — 20 юзабилити-проверок  
+- `tests/transport/transport_sprint37_load_test.py` — 10 users, 90s polling, NFR /available-sts p95 ≤ 400ms под concurrent auto-refresh  
 
 ---
 
