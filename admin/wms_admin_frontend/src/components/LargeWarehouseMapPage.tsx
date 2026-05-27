@@ -773,6 +773,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   const undoStackRef = useRef<RoleChange[]>([]);
   const redoStackRef = useRef<RoleChange[]>([]);
   const smokeRanRef = useRef(false);
+  const warehouseLoadSeqRef = useRef(0);
   const [version, setVersion] = useState(0);
   const [level, setLevel] = useState(1);
   const [activeRole, setActiveRole] = useState<CellRole>("PICK_FACE");
@@ -897,6 +898,7 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     if (selectedWareId === null) return;
+    resetWarehouseWorkspace(`Загрузка склада ${selectedWareId}...`);
     loadWarehouseMap(selectedWareId);
   }, [selectedWareId]);
 
@@ -1054,22 +1056,30 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   }
 
   async function loadWarehouseMap(wareId: number) {
+    const loadSeq = ++warehouseLoadSeqRef.current;
     try {
       setWarehouseStatus("Загрузка карты склада...");
       const [state, canvases] = await Promise.all([
         apiFetchJson<WarehouseMapState>(`${API_BASE}/api/admin/warehouse-map/warehouses/${wareId}/state`, { cache: "no-store" }),
         apiFetchJson<WarehouseMapCanvasSummary[]>(`${API_BASE}/api/admin/warehouse-map/warehouses/${wareId}/canvases`, { cache: "no-store" })
       ]);
+      if (loadSeq !== warehouseLoadSeqRef.current || selectedWareId !== wareId) return;
       setWarehouseMapState(state);
       setCanvasList(canvases);
       const activeCamera = state.cameras.find((camera) => camera.camera_id === selectedCameraId) || state.cameras[0] || null;
       setSelectedCameraId(activeCamera?.camera_id ?? null);
-      applyEmptyCameraDefaultRoles(state);
+      if (!state.canvas) {
+        resetWarehouseWorkspace("У склада пока нет canvas");
+      } else {
+        applyEmptyCameraDefaultRoles(state);
+      }
       setWarehouseStatus(state.canvas ? `Загружен canvas ${state.canvas.canvas_code}` : "У склада пока нет canvas");
     } catch {
+      if (loadSeq !== warehouseLoadSeqRef.current || selectedWareId !== wareId) return;
       setWarehouseMapState(null);
       setCanvasList([]);
       setSelectedCameraId(null);
+      resetWarehouseWorkspace("Не удалось загрузить карту склада");
       setWarehouseStatus("Не удалось загрузить карту склада");
     }
   }
@@ -1706,6 +1716,34 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     setVersion((value) => value + 1);
   }
 
+  function resetWarehouseWorkspace(status?: string) {
+    rolesRef.current = createBlockedRoles();
+    fractionVisualsRef.current = new Map();
+    addressLabelsRef.current = new Map();
+    setCurrentDraft(null);
+    setDraftRevision(null);
+    setDraftDiff(null);
+    setValidationResult(null);
+    setPublishedResult(null);
+    setOraclePublishResult(null);
+    setSelections([]);
+    setSelectedCameraId(null);
+    setActiveCell({ aisle: 1, slot: 1, level });
+    setActiveRole("PICK_FACE");
+    setAddressStatus("Адресация не применялась");
+    setValidationStatus("Validation не выполнялась");
+    setPublishStatus("Publish не выполнялся");
+    setRouteStatus("Маршрут не построен");
+    setOracleStatus("Oracle workflow не выполнялся");
+    setDirty(false);
+    undoStackRef.current = [];
+    redoStackRef.current = [];
+    setHistoryVersion((value) => value + 1);
+    setVersion((value) => value + 1);
+    setMetrics((current) => ({ ...current, selectedCells: 0, bulkMs: 0, selectionMs: 0 }));
+    if (status) setWarehouseStatus(status);
+  }
+
   async function loadDraftDiff() {
     if (!draftId) {
       setDraftStatus("Сначала сохраните draft через API");
@@ -1785,21 +1823,30 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     return performance.now() - started;
   }
 
-  function applyTemplate(templateName: string, nextRoles: Uint8Array) {
+  function applyTemplate(templateName: string, nextRoles: Uint8Array, keptSelections: CellSelection[] = []) {
     const started = performance.now();
     const before = new Uint8Array(rolesRef.current);
     rolesRef.current = nextRoles;
     undoStackRef.current.push({ kind: "template", templateName, before, after: new Uint8Array(nextRoles) });
     redoStackRef.current = [];
     setDirty(true);
-    setSelections([]);
+    setSelections(keptSelections);
     setHistoryVersion((value) => value + 1);
     setVersion((value) => value + 1);
-    setMetrics((current) => ({ ...current, bulkMs: performance.now() - started, selectedCells: 0 }));
+    setMetrics((current) => ({ ...current, bulkMs: performance.now() - started, selectedCells: selectionListSize(keptSelections) }));
   }
 
   function applyRegularTemplate() {
-    applyTemplate("regular-grid", createRegularRoles());
+    if (!selections.length) {
+      applyTemplate("regular-grid", createRegularRoles());
+      setDraftStatus("Регулярный склад применен ко всей карте: L1 = отбор, L2-L6 = хранение");
+      return;
+    }
+    const targetSelections = selections.map((selection) => ({ ...selection, level }));
+    const next = new Uint8Array(rolesRef.current);
+    drawRegularZone(next, targetSelections);
+    applyTemplate("regular-grid-selection", next, targetSelections);
+    setDraftStatus(`Регулярный склад применен только к выделению: ${selectionListSize(targetSelections)} ячеек footprint`);
   }
 
   function applyAisleTemplate() {
@@ -1871,10 +1918,11 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   }
 
   async function generateSmallPickFaces(presetOverride?: SplitPresetId, customPreset?: PickSplitPreset) {
-    const selection = selections[0];
+    const targetSelections = selections.map((selection) => ({ ...selection, level }));
+    const targetCells = selectedGridCells(targetSelections);
     const presetId = presetOverride || smallPickForm.preset;
     const preset = customPreset || PICK_SPLIT_PRESETS[presetId];
-    if (!selection) {
+    if (!targetCells.length) {
       setSmallPickStatus("Нет выделения для дробной ячейки");
       return;
     }
@@ -1900,26 +1948,40 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
     }
     try {
       const targetDraftId = await ensureApiDraftForCommand("дробных slots");
-      const result = await apiFetchJson<SmallPickPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${targetDraftId}/small-pick-faces/generate`, {
-        method: "POST",
-        body: JSON.stringify({
-          physical_cell: toApiCell(selection.anchorCell),
-          fraction_cell_count: preset.fractionCellCount,
-          sub_level_count: preset.subLevelCount,
-          sub_column_count: preset.subColumnCount,
-          order_mode: smallPickForm.orderMode,
-          start_order: smallPickForm.startOrder,
-          step: smallPickForm.step,
-          side: smallPickForm.side || null,
-          code_mask: smallPickForm.codeMask
-        })
-      });
+      const results: SmallPickPreview[] = [];
+      for (let cellIndex = 0; cellIndex < targetCells.length; cellIndex += 1) {
+        const cell = targetCells[cellIndex];
+        const startOrder = smallPickForm.startOrder + cellIndex * preset.fractionCellCount * smallPickForm.step;
+        const result = await apiFetchJson<SmallPickPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${targetDraftId}/small-pick-faces/generate`, {
+          method: "POST",
+          body: JSON.stringify({
+            physical_cell: toApiCell(cell),
+            fraction_cell_count: preset.fractionCellCount,
+            sub_level_count: preset.subLevelCount,
+            sub_column_count: preset.subColumnCount,
+            order_mode: smallPickForm.orderMode,
+            start_order: startOrder,
+            step: smallPickForm.step,
+            side: smallPickForm.side || null,
+            code_mask: smallPickForm.codeMask
+          })
+        });
+        results.push(result);
+      }
       const next = new Uint8Array(rolesRef.current);
-      next[cellIndex(selection.anchorCell.aisle, selection.anchorCell.slot, selection.anchorCell.level)] = ROLE_ORDER.indexOf("FRACTIONAL_PICK_FACE");
+      targetCells.forEach((cell) => {
+        next[cellIndex(cell.aisle, cell.slot, cell.level)] = ROLE_ORDER.indexOf("FRACTIONAL_PICK_FACE");
+        fractionVisualsRef.current.set(fractionVisualKey(cell), preset.visual);
+      });
       rolesRef.current = next;
-      fractionVisualsRef.current.set(fractionVisualKey(selection.anchorCell), preset.visual);
-      setSmallPickPreview(result);
-      setSmallPickStatus(`Создано логических ячеек: ${result.created_count} · ${preset.label}`);
+      const totalCreated = results.reduce((total, result) => total + result.created_count, 0);
+      setSmallPickPreview({
+        created_count: totalCreated,
+        fraction_cell_count: preset.fractionCellCount,
+        small_pick_face_count: results.reduce((total, result) => total + result.small_pick_face_count, 0),
+        preview: results.flatMap((result) => result.preview).slice(0, 18)
+      });
+      setSmallPickStatus(`Создано логических ячеек: ${totalCreated} · ${preset.label} · физических ячеек: ${targetCells.length}`);
       const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${targetDraftId}`, { cache: "no-store" });
       setCurrentDraft(reloaded);
       setDirty(true);
@@ -1950,27 +2012,34 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
   }
 
   async function generateStorageSlots(presetOverride?: StorageSplitPresetId) {
-    const selection = selections[0];
+    const targetSelections = selections.map((selection) => ({ ...selection, level }));
+    const targetCells = selectedGridCells(targetSelections);
     const presetId = presetOverride || storageSlotForm.preset;
     const preset = STORAGE_SPLIT_PRESETS[presetId];
-    if (!selection) {
+    if (!targetCells.length) {
       setStorageSlotStatus("Нет выделения для ячейки хранения");
       return;
     }
     try {
       const targetDraftId = await ensureApiDraftForCommand("дробных storage slots");
-      const result = await apiFetchJson<StorageSlotPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${targetDraftId}/storage-slots/generate`, {
-        method: "POST",
-        body: JSON.stringify({
-          physical_cell: toApiCell(selection.anchorCell),
-          fraction_cell_count: preset.fractionCellCount,
-          sub_level_count: 1,
-          sub_column_count: preset.subColumnCount,
-          start_order: storageSlotForm.startOrder,
-          step: storageSlotForm.step,
-          code_mask: storageSlotForm.codeMask
-        })
-      });
+      const results: StorageSlotPreview[] = [];
+      for (let cellIndex = 0; cellIndex < targetCells.length; cellIndex += 1) {
+        const cell = targetCells[cellIndex];
+        const startOrder = storageSlotForm.startOrder + cellIndex * preset.fractionCellCount * storageSlotForm.step;
+        const result = await apiFetchJson<StorageSlotPreview>(`${API_BASE}/api/admin/warehouse-map-drafts/${targetDraftId}/storage-slots/generate`, {
+          method: "POST",
+          body: JSON.stringify({
+            physical_cell: toApiCell(cell),
+            fraction_cell_count: preset.fractionCellCount,
+            sub_level_count: 1,
+            sub_column_count: preset.subColumnCount,
+            start_order: startOrder,
+            step: storageSlotForm.step,
+            code_mask: storageSlotForm.codeMask
+          })
+        });
+        results.push(result);
+      }
       if (presetOverride && presetOverride !== storageSlotForm.preset) {
         setStorageSlotForm((current) => ({
           ...current,
@@ -1980,15 +2049,23 @@ export function LargeWarehouseMapPage({ onBack }: { onBack: () => void }) {
         }));
       }
       const next = new Uint8Array(rolesRef.current);
-      next[cellIndex(selection.anchorCell.aisle, selection.anchorCell.slot, selection.anchorCell.level)] = ROLE_ORDER.indexOf(preset.fractionCellCount === 1 ? "STORAGE" : "FRACTIONAL_STORAGE");
+      targetCells.forEach((cell) => {
+        next[cellIndex(cell.aisle, cell.slot, cell.level)] = ROLE_ORDER.indexOf(preset.fractionCellCount === 1 ? "STORAGE" : "FRACTIONAL_STORAGE");
+        if (preset.fractionCellCount > 1) {
+          fractionVisualsRef.current.set(fractionVisualKey(cell), preset.visual);
+        } else {
+          fractionVisualsRef.current.delete(fractionVisualKey(cell));
+        }
+      });
       rolesRef.current = next;
-      if (preset.fractionCellCount > 1) {
-        fractionVisualsRef.current.set(fractionVisualKey(selection.anchorCell), preset.visual);
-      } else {
-        fractionVisualsRef.current.delete(fractionVisualKey(selection.anchorCell));
-      }
-      setStorageSlotPreview(result);
-      setStorageSlotStatus(preset.fractionCellCount === 1 ? "Storage оставлен без дробления" : `Создано storage slots: ${result.created_count} · ${preset.label}`);
+      const totalCreated = results.reduce((total, result) => total + result.created_count, 0);
+      setStorageSlotPreview({
+        created_count: totalCreated,
+        fraction_cell_count: preset.fractionCellCount,
+        storage_slot_count: results.reduce((total, result) => total + result.storage_slot_count, 0),
+        preview: results.flatMap((result) => result.preview).slice(0, 18)
+      });
+      setStorageSlotStatus(preset.fractionCellCount === 1 ? `Storage оставлен без дробления: ${targetCells.length} физических ячеек` : `Создано storage slots: ${totalCreated} · ${preset.label} · физических ячеек: ${targetCells.length}`);
       const reloaded = await apiFetchJson<WarehouseMapDraft>(`${API_BASE}/api/admin/warehouse-map-drafts/${targetDraftId}`, { cache: "no-store" });
       setCurrentDraft(reloaded);
       setDirty(true);
@@ -4782,6 +4859,21 @@ function createRegularRoles() {
   return roles;
 }
 
+function drawRegularZone(roles: Uint8Array, selections: CellSelection[]) {
+  const pickFace = ROLE_ORDER.indexOf("PICK_FACE");
+  const storage = ROLE_ORDER.indexOf("STORAGE");
+  selections.forEach((selection) => {
+    for (let level = 1; level <= GRID.levels; level += 1) {
+      const role = level === 1 ? pickFace : storage;
+      for (let aisle = selection.aisleFrom; aisle <= selection.aisleTo; aisle += 1) {
+        for (let slot = selection.slotFrom; slot <= selection.slotTo; slot += 1) {
+          roles[cellIndex(aisle, slot, level)] = role;
+        }
+      }
+    }
+  });
+}
+
 function isEmptyRealCameraState(state: WarehouseMapState) {
   return Boolean(state.canvas)
     && state.cameras.length > 0
@@ -5348,6 +5440,20 @@ function selectionSize(selection: CellSelection) {
 
 function selectionListSize(selections: CellSelection[]) {
   return selections.reduce((total, selection) => total + selectionSize(selection), 0);
+}
+
+function selectedGridCells(selections: CellSelection[]) {
+  const seen = new Set<string>();
+  const cells: GridCell[] = [];
+  selections.forEach((selection) => {
+    orderedSelectionCells(selection).forEach((cell) => {
+      const key = fractionVisualKey(cell);
+      if (seen.has(key)) return;
+      seen.add(key);
+      cells.push(cell);
+    });
+  });
+  return cells;
 }
 
 function toApiSelection(selection: CellSelection) {
