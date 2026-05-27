@@ -1071,3 +1071,21 @@ button[aria-disabled="true"] { cursor: help; }
 .billing-open-btn:hover { background: #dcfce7; }
 .billing-dialog-company { font-weight: 700; color: #1e293b; }
 .billing-dialog-hint { font-size: 11px; color: #64748b; margin: 8px 0; line-height: 1.5; }
+
+/* Sprint 16 — Биллинг: статус счёта */
+.billing-order-card { margin: 8px 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: #fffbeb; }
+.billing-order-card-header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; font-size: 12px; }
+.billing-order-num { font-weight: 700; color: #1e293b; }
+.billing-order-status { font-weight: 600; }
+.billing-status-open   { color: #92400e; }
+.billing-status-closed { color: #1d4ed8; }
+.billing-status-paid   { color: #166534; }
+.billing-order-company { color: #374151; }
+.billing-order-period  { color: #64748b; font-size: 11px; }
+.billing-order-price   { margin-left: auto; font-weight: 700; color: #1e293b; }
+.billing-order-card-actions { display: flex; gap: 8px; }
+.billing-close-btn { padding: 4px 12px; border: 1px solid #1d4ed8; border-radius: 6px; background: #eff6ff; color: #1d4ed8; cursor: pointer; font-size: 12px; font-weight: 600; }
+.billing-close-btn:hover { background: #dbeafe; }
+.billing-pay-btn { padding: 4px 12px; border: 1px solid var(--green); border-radius: 6px; background: #f0fdf4; color: var(--green); cursor: pointer; font-size: 12px; font-weight: 600; }
+.billing-pay-btn:hover { background: #dcfce7; }
+.billing-done-label { font-size: 12px; color: #166534; font-weight: 600; }

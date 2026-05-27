@@ -36,6 +36,9 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   GET    /api/admin/transport/plan-fact                  — сводный план-фактный отчёт (Sprint 13/14)
   GET    /api/admin/transport/billing/orders             — список биллинг-заказов (Sprint 15)
   POST   /api/admin/transport/billing/orders             — создать биллинг-заказ (Sprint 15)
+  GET    /api/admin/transport/billing/orders/{id}        — один заказ (Sprint 16)
+  PATCH  /api/admin/transport/billing/orders/{id}/close  — закрыть заказ (Sprint 16)
+  PATCH  /api/admin/transport/billing/orders/{id}/pay    — отметить оплаченным (Sprint 16)
   POST   /api/admin/transport/billing/orders/{id}/tasks — привязать рейсы к заказу (Sprint 15)
   GET    /api/admin/transport/billing/orders/{id}/tasks — рейсы в заказе (Sprint 15)
   GET    /api/admin/transport/tasks/{id}/billing        — биллинг-данные рейса (Sprint 15)
@@ -510,6 +513,37 @@ def create_billing_order(
     orders = svc.list_billing_orders()
     order = next((o for o in orders if o["order_id"] == order_id), {"order_id": order_id})
     return order
+
+
+@router.get("/billing/orders/{order_id}", response_model=None)
+def get_billing_order(
+    order_id: int,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> dict:
+    """Один биллинг-заказ по ID."""
+    data = TransportService().get_billing_order(order_id)
+    if data is None:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail=f"Billing order {order_id} not found")
+    return data
+
+
+@router.patch("/billing/orders/{order_id}/close")
+def close_billing_order(
+    order_id: int,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> dict:
+    """Закрыть биллинг-заказ (вызывает RRL_CLOSE_BILLINGORDER)."""
+    return TransportService().close_billing_order(order_id)
+
+
+@router.patch("/billing/orders/{order_id}/pay")
+def pay_billing_order(
+    order_id: int,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> dict:
+    """Отметить биллинг-заказ как оплаченный (вызывает RRL_PAY_BILLINGORDER)."""
+    return TransportService().pay_billing_order(order_id)
 
 
 @router.get("/billing/orders/{order_id}/tasks")

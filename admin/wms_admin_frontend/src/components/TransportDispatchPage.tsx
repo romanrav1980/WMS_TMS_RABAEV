@@ -234,6 +234,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [noteText, setNoteText] = useState("");
   const [billingDialog, setBillingDialog] = useState(false);
   const [openingBilling, setOpeningBilling] = useState(false);
+  const [billingOrder, setBillingOrder] = useState<BillingOrder | null>(null);
+  const [billingActionLoading, setBillingActionLoading] = useState(false);
   const debouncedRouteTaskId = useDebounce(routeTaskId, 300);
   const debouncedRouteCarMask = useDebounce(routeCarMask, 300);
   const debouncedRouteCompany = useDebounce(routeCompanyMask, 300);
@@ -350,10 +352,19 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     setNoteText(task.PRIMECHANIE ?? "");
     setPalletStNum(null);
     setStPallets([]);
+    setBillingOrder(null);
     try {
       const data = await apiFetch<TaskSt[]>(`/api/admin/transport/tasks/${task.ID}/sts`);
       setTaskSts(data);
     } catch { setTaskSts([]); }
+    if (task.PAY_ORDER_ID) {
+      try {
+        const bo = await apiFetch<BillingOrder>(
+          `/api/admin/transport/billing/orders/${task.PAY_ORDER_ID}`
+        );
+        setBillingOrder(bo);
+      } catch { setBillingOrder(null); }
+    }
   }
 
   async function handleShowPallets(stNum: string) {
@@ -532,8 +543,35 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       const updated = { ...selectedTask, PAY_ORDER_ID: order.order_id };
       setSelectedTask(updated);
       setTasks(prev => prev.map(t => t.ID === updated.ID ? updated : t));
+      setBillingOrder(order);
       setBillingDialog(false);
     } catch (e) { setError(String(e)); } finally { setOpeningBilling(false); }
+  }
+
+  async function handleBillingClose() {
+    if (!billingOrder) return;
+    if (!confirm(`Закрыть счёт ${billingOrder.num ?? `#${billingOrder.order_id}`}?`)) return;
+    setBillingActionLoading(true);
+    try {
+      const updated = await apiFetch<BillingOrder>(
+        `/api/admin/transport/billing/orders/${billingOrder.order_id}/close`,
+        { method: "PATCH" }
+      );
+      setBillingOrder(updated);
+    } catch (e) { setError(String(e)); } finally { setBillingActionLoading(false); }
+  }
+
+  async function handleBillingPay() {
+    if (!billingOrder) return;
+    if (!confirm(`Отметить счёт ${billingOrder.num ?? `#${billingOrder.order_id}`} как оплаченный?`)) return;
+    setBillingActionLoading(true);
+    try {
+      const updated = await apiFetch<BillingOrder>(
+        `/api/admin/transport/billing/orders/${billingOrder.order_id}/pay`,
+        { method: "PATCH" }
+      );
+      setBillingOrder(updated);
+    } catch (e) { setError(String(e)); } finally { setBillingActionLoading(false); }
   }
 
   // ------------------------------------------------------------------
@@ -1083,6 +1121,14 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     Сохранить примечание
                   </button>
                 </div>
+                {billingOrder && (
+                  <BillingOrderCard
+                    order={billingOrder}
+                    loading={billingActionLoading}
+                    onClose={handleBillingClose}
+                    onPay={handleBillingPay}
+                  />
+                )}
               </div>
               <div className="dispatch-trip-sts-wrap">
                 <table className="dispatch-grid">
@@ -1837,6 +1883,55 @@ function OpenBillingDialog({
           </button>
           <button className="dispatch-cancel-edit-btn" onClick={onClose} disabled={loading}>Отмена</button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// BillingOrderCard (Sprint 16)
+// ---------------------------------------------------------------------------
+
+function billingStatusLabel(order: BillingOrder): { text: string; cls: string } {
+  if (order.payed)  return { text: "🟢 Оплачен",  cls: "billing-status-paid" };
+  if (order.closed) return { text: "🔵 Закрыт",   cls: "billing-status-closed" };
+  return              { text: "🟡 Выставлен", cls: "billing-status-open" };
+}
+
+function BillingOrderCard({
+  order, loading, onClose, onPay,
+}: {
+  order: BillingOrder;
+  loading: boolean;
+  onClose: () => void;
+  onPay: () => void;
+}) {
+  const { text, cls } = billingStatusLabel(order);
+  return (
+    <div className="billing-order-card">
+      <div className="billing-order-card-header">
+        <span className="billing-order-num">{order.num ?? `#${order.order_id}`}</span>
+        <span className={`billing-order-status ${cls}`}>{text}</span>
+        <span className="billing-order-company">{order.company ?? "—"}</span>
+        <span className="billing-order-period">{order.date_from} – {order.date_to}</span>
+        {order.total_price != null && order.total_price > 0 && (
+          <span className="billing-order-price">{order.total_price.toLocaleString("ru-RU")} ₽</span>
+        )}
+      </div>
+      <div className="billing-order-card-actions">
+        {!order.closed && !order.payed && (
+          <button className="billing-close-btn" onClick={onClose} disabled={loading}>
+            Закрыть счёт
+          </button>
+        )}
+        {order.closed && !order.payed && (
+          <button className="billing-pay-btn" onClick={onPay} disabled={loading}>
+            Отметить оплаченным
+          </button>
+        )}
+        {order.payed && (
+          <span className="billing-done-label">Счёт закрыт и оплачен</span>
+        )}
       </div>
     </div>
   );

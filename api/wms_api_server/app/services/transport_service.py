@@ -1539,6 +1539,66 @@ class TransportService:
             "payed": int(r.get("PAYED") or 0),
         }
 
+    def get_billing_order(self, order_id: int) -> dict | None:
+        """Один биллинг-заказ по ID."""
+        rows = self.gateway.fetch_all(
+            """
+            SELECT B.ID, B.NUM, B.COMPANY,
+                   TO_CHAR(B.DATEOFORDER, 'YYYY-MM-DD') AS DATEOFORDER,
+                   TO_CHAR(B.DATEFROM,    'YYYY-MM-DD') AS DATEFROM,
+                   TO_CHAR(B.DATETO,      'YYYY-MM-DD') AS DATETO,
+                   B.CLOSED, B.PAYED,
+                   COUNT(TT.ID)           AS TASK_COUNT,
+                   SUM(NVL(TT.PRICE, 0)) AS TOTAL_PRICE
+              FROM RABAEV.RRL_BILL_ORDERS B
+              LEFT JOIN RABAEV.RRL_TRANSPORT_TASK TT ON TT.PAY_ORDER_ID = B.ID
+             WHERE B.ID = :order_id
+             GROUP BY B.ID, B.NUM, B.COMPANY, B.DATEOFORDER, B.DATEFROM, B.DATETO, B.CLOSED, B.PAYED
+            """,
+            {"order_id": order_id},
+        )
+        if not rows:
+            return None
+        r = rows[0]
+        return {
+            "order_id": int(r["ID"]),
+            "num": r.get("NUM"),
+            "company": r.get("COMPANY"),
+            "date_of_order": r.get("DATEOFORDER"),
+            "date_from": r.get("DATEFROM"),
+            "date_to": r.get("DATETO"),
+            "closed": int(r.get("CLOSED") or 0),
+            "payed": int(r.get("PAYED") or 0),
+            "task_count": int(r.get("TASK_COUNT") or 0),
+            "total_price": float(r.get("TOTAL_PRICE") or 0),
+        }
+
+    def close_billing_order(self, order_id: int) -> dict:
+        """Закрывает биллинг-заказ через Oracle-процедуру."""
+        order = self.get_billing_order(order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail=f"Billing order {order_id} not found")
+        if order["closed"]:
+            raise HTTPException(status_code=409, detail="Заказ уже закрыт")
+        self.gateway.execute(
+            "BEGIN RABAEV.RRL_CLOSE_BILLINGORDER(:order_id); END;",
+            {"order_id": order_id},
+        )
+        return self.get_billing_order(order_id) or {"order_id": order_id, "closed": 1}
+
+    def pay_billing_order(self, order_id: int) -> dict:
+        """Отмечает биллинг-заказ как оплаченный через Oracle-процедуру."""
+        order = self.get_billing_order(order_id)
+        if not order:
+            raise HTTPException(status_code=404, detail=f"Billing order {order_id} not found")
+        if order["payed"]:
+            raise HTTPException(status_code=409, detail="Заказ уже оплачен")
+        self.gateway.execute(
+            "BEGIN RABAEV.RRL_PAY_BILLINGORDER(:order_id); END;",
+            {"order_id": order_id},
+        )
+        return self.get_billing_order(order_id) or {"order_id": order_id, "payed": 1}
+
     def open_billing_for_task(self, tt_id: int) -> dict:
         """Создаёт биллинг-заказ для рейса и привязывает его.
 
