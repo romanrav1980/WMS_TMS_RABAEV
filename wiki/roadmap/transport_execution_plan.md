@@ -40,7 +40,8 @@
 | 22 | Биллинг: справочник компаний + NUM_PLAT | Billing | 0.5 нед | 🟢 КК | ✅ `ef09a1c` 2026-05-27 |
 | 23 | Биллинг: детальный просмотр счёта + экспорт CSV | Billing | 0.5 нед | 🟢 КК | ✅ `f4413b4` 2026-05-27 |
 | 24 | VRP: Drag-and-drop перестановка СТ между маршрутами | MAP | 0.5 нед | 🟢 КК | ✅ `0c4ad0c` 2026-05-27 |
-| **Итого** | | | **~20.5 нед** | | |
+| 25 | Биллинг: снять рейс с биллинга | Billing | 0.5 нед | 🟢 КК | ✅ `7a3e833` 2026-05-27 |
+| **Итого** | | | **~21 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -615,6 +616,31 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 25 — Биллинг: снять рейс с биллинга
+
+**Инструмент:** 🟢 КК (код-код $20) — UI для DELETE-эндпоинта, существующего с Sprint 18
+
+**Цель:** диспетчер может отвязать рейс от счёта через кнопку «Снять с биллинга» в карточке рейса (диспетчер) или через ✕ в панели деталей счёта (реестр биллинга). Закрывает оставшийся DoD-критерий по отвязке рейсов от счёта.
+
+**ТЗ:** B §11 (workflow биллинга)
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `handleDetachFromBilling` — отвязка рейса из карточки + confirm | Frontend | `TransportDispatchPage.tsx` |
+| `BillingOrderCard`: проп `onDetach?` + кнопка «Снять с биллинга» | Frontend | `TransportDispatchPage.tsx` |
+| `BillingOrderDetailPanel`: проп `onDetachTask?` + ✕ на каждой строке рейса | Frontend | `TransportDispatchPage.tsx` |
+| Защита: `!order.closed && !order.payed` — кнопки скрыты | Frontend | `TransportDispatchPage.tsx` |
+| CSS: `.billing-detach-btn`, `.billing-detach-task-btn` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `7a3e833` · **Дата:** 2026-05-27  
+**Тесты:**  
+- `tests/transport/test_sprint25_functional.py` — 9 pytest-кейсов (detach endpoint, closed/payed rejection, tasks structure)  
+- `tests/transport/sprint25_usability_checklist.md` — 18 юзабилити-проверок  
+- `tests/transport/transport_sprint25_load_test.py` — 5 users, 60s, NFR orders/tasks p95 ≤ 300ms  
 
 ---
 
