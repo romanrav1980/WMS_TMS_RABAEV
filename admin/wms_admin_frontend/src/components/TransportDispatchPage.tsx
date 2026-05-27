@@ -2275,6 +2275,25 @@ function BillingRegistryTab({
   onRefresh: () => void;
   onOrderSelect: (order: BillingOrder) => void;
 }) {
+  const [registryXlsxLoading, setRegistryXlsxLoading] = useState(false);
+
+  async function handleRegistryXlsx() {
+    setRegistryXlsxLoading(true);
+    try {
+      const p = new URLSearchParams();
+      if (dateFrom) p.set("date_from", dateFrom);
+      if (dateTo)   p.set("date_to",   dateTo);
+      if (company)  p.set("company",   company);
+      if (status === "open")   { p.set("closed", "0"); p.set("payed", "0"); }
+      if (status === "closed") { p.set("closed", "1"); p.set("payed", "0"); }
+      if (status === "paid")   p.set("payed", "1");
+      await downloadBlob(
+        `/api/admin/transport/billing/orders/export.xlsx?${p}`,
+        "billing_registry.xlsx",
+      );
+    } catch (e) { alert(String(e)); } finally { setRegistryXlsxLoading(false); }
+  }
+
   // Totals by company
   const totals: Record<string, number> = {};
   for (const o of orders) {
@@ -2306,9 +2325,13 @@ function BillingRegistryTab({
           <option value="paid">Оплачен</option>
         </select>
         <button className="billing-refresh-btn" onClick={onRefresh} disabled={loading}>⟳</button>
+        <button className="billing-xlsx-btn" onClick={handleRegistryXlsx}
+          disabled={registryXlsxLoading || orders.length === 0}>
+          {registryXlsxLoading ? "…" : "⬇ Excel"}
+        </button>
         <button className="billing-csv-btn" onClick={() => exportBillingCsv(orders)}
           disabled={orders.length === 0}>
-          ⬇ Скачать CSV
+          ⬇ CSV
         </button>
       </div>
 

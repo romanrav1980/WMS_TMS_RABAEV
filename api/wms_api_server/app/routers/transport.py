@@ -48,6 +48,7 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   PATCH  /api/admin/transport/tasks/{id}/price          — ручная установка цены (Sprint 18)
   GET    /api/admin/transport/billing/companies         — справочник транспортных компаний (Sprint 22)
   GET    /api/admin/transport/billing/orders/{id}/export.xlsx — экспорт счёта в Excel (Sprint 26)
+  GET    /api/admin/transport/billing/orders/export.xlsx     — экспорт реестра счетов в Excel (Sprint 27)
 """
 
 from datetime import date
@@ -510,6 +511,25 @@ def list_billing_orders(
 ) -> list[dict]:
     """Список биллинг-заказов с суммой и числом рейсов."""
     return TransportService().list_billing_orders(company, date_from, date_to, closed, payed)
+
+
+@router.get("/billing/orders/export.xlsx")
+def export_billing_registry_xlsx(
+    company:   str | None = Query(default=None),
+    date_from: date | None = Query(default=None),
+    date_to:   date | None = Query(default=None),
+    closed:    int | None = Query(default=None),
+    payed:     int | None = Query(default=None),
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+):
+    """Экспорт реестра биллинг-заказов в Excel — Sprint 27."""
+    import io
+    data = TransportService().export_billing_registry_xlsx(company, date_from, date_to, closed, payed)
+    return StreamingResponse(
+        io.BytesIO(data),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": 'attachment; filename="billing_registry.xlsx"'},
+    )
 
 
 @router.post("/billing/orders")

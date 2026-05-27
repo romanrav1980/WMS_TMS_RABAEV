@@ -1773,6 +1773,84 @@ class TransportService:
         wb.save(buf)
         return buf.getvalue()
 
+    def export_billing_registry_xlsx(
+        self,
+        company: str | None = None,
+        date_from: date | None = None,
+        date_to: date | None = None,
+        closed: int | None = None,
+        payed: int | None = None,
+    ) -> bytes:
+        """Генерирует XLSX-реестр всех счетов по фильтру (Sprint 27)."""
+        import io
+        from openpyxl import Workbook
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+
+        orders = self.list_billing_orders(company, date_from, date_to, closed, payed)
+
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Реестр счетов"
+
+        hdr_fill = PatternFill("solid", fgColor="1D4ED8")
+        hdr_font = Font(color="FFFFFF", bold=True, size=11)
+        thin = Side(style="thin")
+        border = Border(left=thin, right=thin, top=thin, bottom=thin)
+
+        status_map = {(0, 0): "Выставлен", (1, 0): "Закрыт", (1, 1): "Оплачен", (0, 1): "Оплачен"}
+
+        # filter info row
+        ws.cell(row=1, column=1, value="Реестр биллинг-заказов").font = Font(bold=True, size=12)
+        filters_str = " | ".join(filter(None, [
+            f"Компания: {company}" if company else None,
+            f"С: {date_from}" if date_from else None,
+            f"По: {date_to}" if date_to else None,
+        ])) or "Все счета"
+        ws.cell(row=2, column=1, value=filters_str).font = Font(color="444444", size=10)
+
+        header_row = 4
+        columns = ["№ счёта", "Компания", "Период с", "Период по", "Рейсов", "Сумма ₽", "Статус", "№ платёжа", "Дата создания"]
+        for col_idx, col_name in enumerate(columns, start=1):
+            cell = ws.cell(row=header_row, column=col_idx, value=col_name)
+            cell.font = hdr_font
+            cell.fill = hdr_fill
+            cell.alignment = Alignment(horizontal="center")
+            cell.border = border
+
+        total_sum = 0.0
+        for row_idx, o in enumerate(orders, start=header_row + 1):
+            status = status_map.get((int(o.get("closed") or 0), int(o.get("payed") or 0)), "—")
+            price = float(o.get("total_price") or 0)
+            total_sum += price
+            for col_idx, val in enumerate([
+                o.get("num") or f"#{o['order_id']}",
+                o.get("company") or "",
+                o.get("date_from") or "",
+                o.get("date_to") or "",
+                int(o.get("task_count") or 0),
+                price,
+                status,
+                o.get("num_plat") or "",
+                o.get("date_of_order") or "",
+            ], start=1):
+                cell = ws.cell(row=row_idx, column=col_idx, value=val)
+                cell.border = border
+                if col_idx == 6:
+                    cell.number_format = '#,##0.00'
+
+        total_row = header_row + len(orders) + 1
+        ws.cell(row=total_row, column=5, value="Итого:").font = Font(bold=True)
+        total_cell = ws.cell(row=total_row, column=6, value=total_sum)
+        total_cell.font = Font(bold=True)
+        total_cell.number_format = '#,##0.00'
+
+        for col, width in zip("ABCDEFGHI", [16, 26, 12, 12, 8, 16, 12, 16, 14]):
+            ws.column_dimensions[col].width = width
+
+        buf = io.BytesIO()
+        wb.save(buf)
+        return buf.getvalue()
+
     def remove_task_from_billing_order(self, order_id: int, tt_id: int) -> dict:
         """Отвязывает рейс от биллинг-заказа (обнуляет PAY_ORDER_ID)."""
         order = self.get_billing_order(order_id)
