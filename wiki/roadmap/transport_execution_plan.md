@@ -53,7 +53,8 @@
 | 35 | Оптимизация: server-side raion filter в list_available_sts | Диспетчер | 0.25 нед | 🟢 КК | ✅ `c60c420` 2026-05-28 |
 | 36 | Массовое снятие СТ с рейса (чекбоксы + «Снять выбранные») | Диспетчер | 0.25 нед | 🟢 КК | ✅ `7aa8b16` 2026-05-28 |
 | 37 | «Выделить всё» в таблице СТ + авто-обновление данных (60 с) | Диспетчер | 0.25 нед | 🟢 КК | ✅ `a287a02` 2026-05-28 |
-| **Итого** | | | **~26 нед** | | |
+| 38 | «Копировать рейс» — клонировать реквизиты без СТ | Диспетчер | 0.25 нед | 🟢 КК | ✅ `ad2a56f` 2026-05-28 |
+| **Итого** | | | **~26.25 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -628,6 +629,27 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 38 — «Копировать рейс»
+
+**Инструмент:** 🟢 КК (код-код $20) — фронтенд + вызов существующих эндпоинтов
+
+**Цель:** диспетчер может скопировать рейс одной кнопкой — создаётся новый рейс с теми же реквизитами (машина, водитель, дата, тип ТС, время, докст.) но без СТ. Полезно для ежедневных повторяющихся маршрутов.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `handleCopyTask()` — POST /tasks + PATCH если есть реквизиты, navigate to new task | Frontend | `TransportDispatchPage.tsx` |
+| «📋 Копировать» button в `dispatch-trip-title-row` (tasks tab + routes tab) | Frontend | `TransportDispatchPage.tsx` |
+| `.dispatch-copy-task-btn` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `ad2a56f` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint38_functional.py` — 14 pytest-кейсов (inherit fields, no STs, no price, no pay_order, tab switch, multiple copies)  
+- `tests/transport/sprint38_usability_checklist.md` — 17 юзабилити-проверок  
+- `tests/transport/transport_sprint38_load_test.py` — 5 users, 60s, NFR POST/tasks p95 ≤ 500ms  
 
 ---
 
