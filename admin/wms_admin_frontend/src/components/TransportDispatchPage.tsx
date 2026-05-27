@@ -242,6 +242,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const editRef = useRef(editDraft);
   editRef.current = editDraft;
   const lastClickedIdxRef = useRef<number | null>(null);
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [lastRefreshAt, setLastRefreshAt] = useState<string>("");
 
   const [editingTranstypeId, setEditingTranstypeId] = useState<number | null>(null);
   const [palletStNum, setPalletStNum] = useState<string | null>(null);
@@ -414,6 +416,22 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       assembledOnly, notAssembledOnly, unassignedOnly, debouncedMaxWeight, debouncedMaxVol, debouncedArticul]);
 
   useEffect(() => { loadAvailableSts(); }, [loadAvailableSts]);
+
+  // ------------------------------------------------------------------
+  // Auto-refresh every 60 s (Sprint 37)
+  // ------------------------------------------------------------------
+  useEffect(() => {
+    if (!autoRefresh) return;
+    const id = setInterval(() => {
+      if (loading || createDialog || editMode || clusterCreateRaion || billingDialog) return;
+      loadAvailableSts();
+      loadTasks();
+      if (viewMode === "clusters") loadClusters();
+      setLastRefreshAt(new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }));
+    }, 60_000);
+    return () => clearInterval(id);
+  }, [autoRefresh, loading, createDialog, editMode, clusterCreateRaion, billingDialog,
+      loadAvailableSts, loadTasks, loadClusters, viewMode]);
 
   // ------------------------------------------------------------------
   // Load clusters
@@ -934,6 +952,11 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             <button className="dispatch-refresh-btn"
               onClick={() => { loadAvailableSts(); if (viewMode === "clusters") loadClusters(); }}
               title="Обновить список СТ">⟳</button>
+            <label className="dispatch-autorefresh-toggle" title="Автообновление каждые 60 сек">
+              <input type="checkbox" checked={autoRefresh} onChange={e => setAutoRefresh(e.target.checked)} />
+              Авто
+            </label>
+            {autoRefresh && lastRefreshAt && <span className="dispatch-last-refresh">{lastRefreshAt}</span>}
             <span className="dispatch-tcount">{availableSts.length} СТ</span>
           </div>
 
@@ -942,7 +965,23 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             <table className="dispatch-grid">
               <thead>
                 <tr>
-                  <th style={{ width: 22 }}></th>
+                  <th style={{ width: 22 }}>
+                    {viewMode === "flat" && availableSts.length > 0 && (
+                      <input
+                        type="checkbox"
+                        title="Выделить / снять все"
+                        checked={availableSts.length > 0 && availableSts.every(s => selectedStNums.has(s.ST_NUMBER))}
+                        onChange={() => {
+                          const allSelected = availableSts.every(s => selectedStNums.has(s.ST_NUMBER));
+                          if (allSelected) {
+                            setSelectedStNums(new Set());
+                          } else {
+                            setSelectedStNums(new Set(availableSts.map(s => s.ST_NUMBER)));
+                          }
+                        }}
+                      />
+                    )}
+                  </th>
                   <th title="Склад">Скл</th>
                   <th>Пал.</th>
                   <th>Вес</th>
