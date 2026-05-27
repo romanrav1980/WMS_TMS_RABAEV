@@ -255,6 +255,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [routeDateTo, setRouteDateTo] = useState("");
   const [routeNoPayments, setRouteNoPayments] = useState(false);
   const [routesXlsxLoading, setRoutesXlsxLoading] = useState(false);
+  const [routeBriefMode, setRouteBriefMode] = useState(false);
   const [noteText, setNoteText] = useState("");
   const [billingDialog, setBillingDialog] = useState(false);
   const [openingBilling, setOpeningBilling] = useState(false);
@@ -1240,6 +1241,11 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             <input type="date" value={routeShipDate} onChange={e => setRouteShipDate(e.target.value)} />
             <button className="dispatch-refresh-btn" onClick={loadTasks} title="Обновить рейсы">⟳</button>
             <span className="dispatch-tcount">{tasks.length} рейс(ов)</span>
+            <label className="routes-brief-toggle" title="Свёрнутый режим: скрыть второстепенные колонки">
+              <input type="checkbox" checked={routeBriefMode}
+                onChange={e => setRouteBriefMode(e.target.checked)} />
+              Кратко
+            </label>
             <button className="billing-xlsx-btn routes-xlsx-btn"
               onClick={handleRoutesXlsx}
               disabled={routesXlsxLoading || tasks.length === 0}
@@ -1250,17 +1256,24 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 
           {/* ---- Routes table ---- */}
           <div className="dispatch-trips-table-wrap dispatch-routes-table-wrap">
-            <table className="dispatch-grid">
+            <table className={`dispatch-grid${routeBriefMode ? " routes-brief" : ""}`}>
               <thead>
                 <tr>
-                  <th>Отгрузка</th><th>#</th><th>Пал.</th><th>Вес</th><th>Объём</th>
-                  <th>Тип</th><th>Машина</th><th>Водитель</th><th>ДОК</th>
-                  <th>Регионы</th><th>Цена</th><th>ТК</th><th>Логист</th><th>Статус</th><th title="Биллинг">💰</th>
+                  <th>Отгрузка</th><th>#</th><th>Пал.</th><th>Вес</th>
+                  {!routeBriefMode && <th>Объём</th>}
+                  {!routeBriefMode && <th>Тип</th>}
+                  <th>Машина</th><th>Водитель</th><th>ДОК</th>
+                  <th>Регионы</th>
+                  {!routeBriefMode && <th>Цена</th>}
+                  {!routeBriefMode && <th>ТК</th>}
+                  {!routeBriefMode && <th>Логист</th>}
+                  <th>Статус</th>
+                  {!routeBriefMode && <th title="Биллинг">💰</th>}
                 </tr>
               </thead>
               <tbody>
                 {tasks.length === 0
-                  ? <tr><td colSpan={14} className="dispatch-grid-empty">Нет рейсов по фильтрам</td></tr>
+                  ? <tr><td colSpan={routeBriefMode ? 8 : 15} className="dispatch-grid-empty">Нет рейсов по фильтрам</td></tr>
                   : tasks.map(task => (
                       <tr key={task.ID}
                         className={["dispatch-gr",
@@ -1272,35 +1285,37 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                         <td><b>#{task.ID}</b></td>
                         <td className="num-r">{task.PALLET_COUNT}</td>
                         <td className="num-r">{task.TEMP_WEIGHT != null ? task.TEMP_WEIGHT.toFixed(0) : "—"}</td>
-                        <td className="num-r">{task.VOLUME_M3 != null ? task.VOLUME_M3.toFixed(2) : "—"}</td>
-                        <td onClick={e => { e.stopPropagation(); if (task.CONDITION !== "Отгружен") setEditingTranstypeId(task.ID); }}
-                            title={task.CONDITION !== "Отгружен" ? "Изменить тип ТС" : ""}>
-                          {editingTranstypeId === task.ID
-                            ? <select className="dispatch-loadtype-select" autoFocus
-                                value={task.TRANSTYPE ?? ""}
-                                onClick={e => e.stopPropagation()}
-                                onChange={e => handleUpdateTranstype(task.ID, e.target.value)}
-                                onBlur={() => setEditingTranstypeId(null)}>
-                                <option value="">—</option>
-                                {transportTypes.map(t => (
-                                  <option key={t.TRANSPORTTYPE} value={t.TRANSPORTTYPE}>{t.TRANSPORTTYPE}</option>
-                                ))}
-                              </select>
-                            : <span className="dispatch-inline-edit">{task.TRANSTYPE ?? "—"}</span>
-                          }
-                        </td>
+                        {!routeBriefMode && <td className="num-r">{task.VOLUME_M3 != null ? task.VOLUME_M3.toFixed(2) : "—"}</td>}
+                        {!routeBriefMode && (
+                          <td onClick={e => { e.stopPropagation(); if (task.CONDITION !== "Отгружен") setEditingTranstypeId(task.ID); }}
+                              title={task.CONDITION !== "Отгружен" ? "Изменить тип ТС" : ""}>
+                            {editingTranstypeId === task.ID
+                              ? <select className="dispatch-loadtype-select" autoFocus
+                                  value={task.TRANSTYPE ?? ""}
+                                  onClick={e => e.stopPropagation()}
+                                  onChange={e => handleUpdateTranstype(task.ID, e.target.value)}
+                                  onBlur={() => setEditingTranstypeId(null)}>
+                                  <option value="">—</option>
+                                  {transportTypes.map(t => (
+                                    <option key={t.TRANSPORTTYPE} value={t.TRANSPORTTYPE}>{t.TRANSPORTTYPE}</option>
+                                  ))}
+                                </select>
+                              : <span className="dispatch-inline-edit">{task.TRANSTYPE ?? "—"}</span>
+                            }
+                          </td>
+                        )}
                         <td>{task.TRANSPORT ?? "—"}</td>
                         <td>
                           {task.VODITEL_NAME ?? "—"}
-                          <DriverOwnerBadge isOwn={task.IS_OWN_DRIVER} tkName={task.TK_NAME} />
+                          {!routeBriefMode && <DriverOwnerBadge isOwn={task.IS_OWN_DRIVER} tkName={task.TK_NAME} />}
                         </td>
                         <td>{task.DOCK ?? "—"}</td>
                         <td className="col-flex">{task.REGIONS ?? task.TEMP_REGION ?? "—"}</td>
-                        <td>{task.PRICE != null ? task.PRICE.toLocaleString("ru-RU") + " ₽" : "—"}</td>
-                        <td>{task.TK_NAME ?? "—"}</td>
-                        <td>{task.LOGIST ?? "—"}</td>
+                        {!routeBriefMode && <td>{task.PRICE != null ? task.PRICE.toLocaleString("ru-RU") + " ₽" : "—"}</td>}
+                        {!routeBriefMode && <td>{task.TK_NAME ?? "—"}</td>}
+                        {!routeBriefMode && <td>{task.LOGIST ?? "—"}</td>}
                         <td><span className={`dispatch-cond ${condClass(task.CONDITION)}`}>{task.CONDITION ?? "Новый"}</span></td>
-                        <td>{task.PAY_ORDER_ID ? <span className="billing-badge-sm">💰</span> : "—"}</td>
+                        {!routeBriefMode && <td>{task.PAY_ORDER_ID ? <span className="billing-badge-sm">💰</span> : "—"}</td>}
                       </tr>
                     ))
                 }
