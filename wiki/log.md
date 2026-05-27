@@ -1694,3 +1694,52 @@ Append-only log of root wiki updates.
 - Completed the minimal final release gate: `npm.cmd run build`, encoding check, `git diff --check`, and idempotency smoke on `WARE_ID=1` with `canvas=55`, `topology=46`, `route=133`, and retry flags `true`.
 - Prepared the commit/PR package by staging the scoped warehouse-map release files only; unrelated agent/onramp, WinForms transport, transport docs, legacy imports, runtime evidence, and `test-results/` remain unstaged.
 - Next strategic step is an explicit commit/PR of the staged warehouse-map release package.
+
+## 2026-05-26 - Large warehouse map regular template selection scope
+
+- Fixed the `Регулярный склад` ribbon/template action in `LargeWarehouseMapPage`: when the operator has an active selection, the regular layout is now applied only to the selected footprint instead of repainting the whole warehouse map.
+- The selected footprint is expanded across levels by template semantics (`L1 = PICK_FACE`, `L2..L6 = STORAGE`), while the old full-map generation remains available when no selection exists.
+- Updated `requirements/large_warehouse_map_excel_canvas_actions_tz.md` and `wiki/index.md` with the accepted selection-scope rule.
+
+## 2026-05-26 - Large warehouse map UI regression checklist and stale canvas fix
+
+- Added `requirements/large_warehouse_map_ui_test_plan_2026_05_26.md` with UI tests for warehouse switching, no-canvas stale-state reset, selection-scoped drawing, templates, fractional cells, draft/canvas save, route build, Oracle publish/reload, and negative cases.
+- Fixed stale canvas state in `LargeWarehouseMapPage`: selecting a warehouse with no canvas now resets roles to blocked/unavailable cells and clears route, validation, publish, Oracle workflow, selected camera, selection, fraction visuals, and address labels.
+- Added request sequencing for warehouse state loads so late API responses from an earlier warehouse selection cannot overwrite the currently selected warehouse.
+- Added `tests/ui/warehouse_map_ui_smoke.cjs`, a route-mocked Playwright smoke for stale no-canvas reset and selection-scoped `Регулярный склад`; local run passed for `WM-UI-03`, `WM-UI-11`, `WM-UI-36`, and partial switch/status coverage.
+
+## 2026-05-26 - Large warehouse map fractional selection scope
+
+- Fixed fractional pick generation in `LargeWarehouseMapPage`: `Дробные ячейки отбора` now iterates every physical cell in every selected rectangle instead of only `selections[0].anchorCell`.
+- Applied the same selection-wide scope to fractional storage generation so storage split commands do not silently affect only one physical cell.
+- Extended `tests/ui/warehouse_map_ui_smoke.cjs` with `WM-UI-20`: a 36-cell selection with preset `2/1` must generate 36 physical cells and 72 logical cells.
+- Updated `requirements/large_warehouse_map_excel_canvas_actions_tz.md`, `requirements/large_warehouse_map_ui_test_plan_2026_05_26.md`, and the wiki index with the fractional-selection rule and run result.
+
+## 2026-05-26 - Large warehouse map per-element UI test requirement
+
+- Reviewed `requirements/large_warehouse_map_ui_test_plan_2026_05_26.md` for completeness.
+- Added the acceptance rule that every enabled/working UI element on `?page=warehouse-map` must have at least one functional test; visual smoke tests are not enough.
+- Added the Functional UI Element Coverage Matrix covering page shell, ribbon, templates, roles, editing, navigation, filters, warehouse/camera controls, fractional pick/storage, draft, route, Oracle workflow, and context-menu duplicate entries.
+- Audited current automated coverage and recorded that the present suite is still a regression smoke plus API workflow smoke, not a complete per-element functional suite.
+- Expanded `tests/ui/warehouse_map_ui_smoke.cjs` into a broader functional UI element suite on port `3000`: it now clicks and verifies format painter, role buttons, editing commands, templates, navigation, filters, levels, camera/object/passage/link/archive commands, fractional storage, draft/diff/projection, route patterns, and Oracle workflow buttons.
+- Cleaned extra frontend dev server on port `3001`; active local UI server is `127.0.0.1:3000`.
+- Extended the suite again toward practical per-element coverage: added camera numeric field payload checks, address/fractional form interactions, custom `V/G`, context-menu representative duplicate commands, back button, isolated draft controls, and isolated route/oracle flows.
+- Recorded the remaining reasonable-gap list in the UI test plan: storage-slot edit in route-mocked flow, full context-menu parity beyond representative duplicates, zoom slider/aisle overview, and negative retry/error UX.
+
+## 2026-05-27 - Large warehouse map reboot anchor
+
+- Added `requirements/large_warehouse_map_current_status.md` as the fresh-session anchor for the active `warehouse-map` workstream.
+- The status page records active scope, out-of-scope transport work, the `3000`-only frontend rule, latest fixes, UI smoke command, last green evidence, remaining reasonable gaps, and the recommended next steps.
+- Updated `wiki/index.md` so future sessions can discover the status anchor before reading the longer UI test plan.
+
+## 2026-05-27 - Large warehouse map half-day UI scope
+
+- Compressed the active UI verification target to a half-day acceptance pack in `requirements/large_warehouse_map_current_status.md` and `requirements/large_warehouse_map_ui_test_plan_2026_05_26.md`.
+- The pack keeps warehouse state isolation, selection-scoped drawing, fractional cells, core controls, canvas/camera creation, draft/route/Oracle publish path, representative context menu, and shell controls.
+- The pack explicitly defers exhaustive context-menu parity, every form variant, zoom slider/aisle overview, brittle storage-slot edit, and negative/retry UX beyond no-canvas and late-response protection.
+
+## 2026-05-27 - Large warehouse map half-day UI execution
+
+- Ran the compressed `warehouse-map` UI acceptance pack on `http://127.0.0.1:3000/?page=warehouse-map`; `tests/ui/warehouse_map_ui_smoke.cjs` passed with `ok=true`.
+- Recorded green evidence for no-canvas reset, late-response protection, selection-scoped `Регулярный склад`, fractional pick across all selected physical cells, draft controls, route/oracle flow, representative context-menu commands, and back button.
+- Verified `npm.cmd run build` and scoped `git diff --check`; build completed with the already-known Leaflet/Rollup and chunk-size warnings.
