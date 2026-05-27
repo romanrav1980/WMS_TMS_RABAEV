@@ -94,6 +94,16 @@ type TaskCard = {
   operations: Operation[];
 };
 
+type PlanFactItem = {
+  tt_id: number;
+  vehicle: string;
+  shipment_date: string;
+  status: string;
+  operations: Operation[];
+  total_delta_min: number;
+  rest_violations: number;
+};
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -188,12 +198,13 @@ function GridLines({ rowCount }: { rowCount: number }) {
 }
 
 function OpBlock({
-  op, rowY, onHover, onLeave, onClick,
+  op, rowY, onHover, onLeave, onClick, onContextMenu,
 }: {
   op: Operation; rowY: number;
   onHover: (e: React.MouseEvent<SVGRectElement>, op: Operation) => void;
   onLeave: () => void;
   onClick: (op: Operation) => void;
+  onContextMenu: (e: React.MouseEvent, op: Operation) => void;
 }) {
   const startMin = parseMinFromStr(op.plan_start);
   const endMin   = parseMinFromStr(op.plan_end);
@@ -221,6 +232,7 @@ function OpBlock({
         onMouseEnter={(e) => onHover(e, op)}
         onMouseLeave={onLeave}
         onClick={() => onClick(op)}
+        onContextMenu={(e) => onContextMenu(e as unknown as React.MouseEvent, op)}
       />
       {w > 32 && (
         <text
@@ -233,6 +245,65 @@ function OpBlock({
         </text>
       )}
     </g>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Fact mark modal
+// ---------------------------------------------------------------------------
+function FactMarkModal({
+  op, onClose, onSave,
+}: {
+  op: Operation;
+  onClose: () => void;
+  onSave: (op_id: number, fact_start: string, fact_end: string) => Promise<void>;
+}) {
+  const [factStart, setFactStart] = useState(op.plan_start?.slice(0, 16) ?? "");
+  const [factEnd,   setFactEnd]   = useState(op.plan_end?.slice(0, 16) ?? "");
+  const [saving, setSaving]       = useState(false);
+
+  const label = OP_LABEL[op.operation_code] || op.operation_code;
+
+  const handleSave = async () => {
+    if (!factStart) return;
+    setSaving(true);
+    try { await onSave(op.op_id, factStart.replace("T", " "), factEnd.replace("T", " ")); }
+    finally { setSaving(false); }
+  };
+
+  return (
+    <div className="gantt-card-overlay" onClick={onClose}>
+      <div className="gantt-card" onClick={e => e.stopPropagation()}>
+        <div className="gantt-card-title">Отметить факт · {label}</div>
+        <div className="gantt-card-row">
+          <span>План:</span>
+          <span>{op.plan_start?.slice(-5)} – {op.plan_end?.slice(-5)}</span>
+        </div>
+        <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+          <label style={{ fontSize: 12, color: "#64748b" }}>
+            Факт начало
+            <input type="datetime-local" value={factStart.replace(" ", "T")}
+              onChange={e => setFactStart(e.target.value)}
+              style={{ display: "block", marginTop: 4, width: "100%", fontSize: 13 }} />
+          </label>
+          <label style={{ fontSize: 12, color: "#64748b" }}>
+            Факт конец
+            <input type="datetime-local" value={factEnd.replace(" ", "T")}
+              onChange={e => setFactEnd(e.target.value)}
+              style={{ display: "block", marginTop: 4, width: "100%", fontSize: 13 }} />
+          </label>
+        </div>
+        <div className="gantt-card-actions">
+          <button className="gantt-card-close-btn" onClick={onClose}>Отмена</button>
+          <button
+            style={{ padding: "6px 14px", border: 0, borderRadius: 6, background: "#2563eb", color: "#fff", fontSize: 12, cursor: "pointer" }}
+            onClick={handleSave} disabled={saving}
+          >
+            {saving ? "Сохранение…" : "Сохранить"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -250,6 +321,11 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
   const [tooltip, setTooltip]             = useState<Tooltip | null>(null);
   const [taskCard, setTaskCard]           = useState<TaskCard | null>(null);
   const [vehicleFilter, setVehicleFilter] = useState("");
+  const [activeTab, setActiveTab]         = useState<"gantt" | "analytics">("gantt");
+  const [ctxMenu, setCtxMenu]             = useState<{ x: number; y: number; op: Operation } | null>(null);
+  const [factModal, setFactModal]         = useState<{ op: Operation } | null>(null);
+  const [planFact, setPlanFact]           = useState<PlanFactItem[]>([]);
+  const [pfLoading, setPfLoading]         = useState(false);
   const scrollRef                         = useRef<HTMLDivElement>(null);
 
   // Tick current-time line every minute
@@ -280,6 +356,48 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
 
   useEffect(() => { fetchGantt(ganttDate); }, [ganttDate, fetchGantt]);
 
+  // Fetch plan-fact for analytics tab
+  const fetchPlanFact = useCallback(async (date: string) => {
+    setPfLoading(true);
+    try {
+      const r = await fetch(
+        `/api/admin/transport/plan-fact?date_from=${date}&date_to=${date}`,
+        { headers: { Authorization: "Basic " + btoa("admin:admin123") } }
+      );
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      setPlanFact(await r.json());
+    } catch {
+      setPlanFact([]);
+    } finally {
+      setPfLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === "analytics") fetchPlanFact(ganttDate);
+  }, [activeTab, ganttDate, fetchPlanFact]);
+
+  // CSV export
+  const exportCsv = useCallback(() => {
+    const rows: string[] = ["Рейс;Машина;Дата;Операция;План начало;План конец;Факт начало;Факт конец;Δ мин"];
+    for (const item of planFact) {
+      for (const op of item.operations) {
+        rows.push([
+          item.tt_id, item.vehicle, item.shipment_date,
+          OP_LABEL[op.operation_code] || op.operation_code,
+          op.plan_start ?? "", op.plan_end ?? "",
+          op.fact_start ?? "", op.fact_end ?? "",
+          op.delta_min ?? "",
+        ].join(";"));
+      }
+    }
+    const blob = new Blob(["﻿" + rows.join("\n")], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `plan-fact-${ganttDate}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  }, [planFact, ganttDate]);
+
   // Filtered vehicle list
   const filtered = vehicles.filter(
     (v) => !vehicleFilter || v.vehicle_num.toLowerCase().includes(vehicleFilter.toLowerCase())
@@ -309,6 +427,11 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
     if (!v) return;
     setTaskCard({ tt_id: op.tt_id, vehicle_num: v.vehicle_num, operations: v.operations });
   }, [filtered]);
+
+  const handleOpContextMenu = useCallback((e: React.MouseEvent, op: Operation) => {
+    e.preventDefault();
+    setCtxMenu({ x: e.clientX, y: e.clientY, op });
+  }, []);
 
   // SVG height
   const svgH = HEADER_H + filtered.length * ROW_H + 2;
@@ -370,19 +493,31 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
           onChange={e => setVehicleFilter(e.target.value)}
         />
 
+        {/* Tab switcher */}
+        <div className="gantt-tab-group">
+          <button
+            className={`gantt-tab-btn${activeTab === "gantt" ? " active" : ""}`}
+            onClick={() => setActiveTab("gantt")}
+          >Ганта</button>
+          <button
+            className={`gantt-tab-btn${activeTab === "analytics" ? " active" : ""}`}
+            onClick={() => setActiveTab("analytics")}
+          >Аналитика</button>
+        </div>
+
         <button
           className="gantt-refresh-btn"
-          onClick={() => fetchGantt(ganttDate)}
-          disabled={loading}
+          onClick={() => { fetchGantt(ganttDate); if (activeTab === "analytics") fetchPlanFact(ganttDate); }}
+          disabled={loading || pfLoading}
         >
-          {loading ? "…" : "⟳"}
+          {(loading || pfLoading) ? "…" : "⟳"}
         </button>
       </header>
 
       {error && <div className="gantt-error">{error}</div>}
 
-      {/* ---- Main body ---- */}
-      <div className="gantt-body">
+      {/* ---- Main body (hidden on analytics tab) ---- */}
+      <div className="gantt-body" style={{ display: activeTab === "analytics" ? "none" : "flex" }}>
         {/* Left: vehicle info column */}
         <div className="gantt-left-col">
           {/* Header placeholder */}
@@ -436,6 +571,7 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
                       onHover={handleOpHover}
                       onLeave={handleOpLeave}
                       onClick={handleOpClick}
+                      onContextMenu={handleOpContextMenu}
                     />
                   ))}
                 </g>
@@ -459,8 +595,8 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
         </div>
       </div>
 
-      {/* ---- Legend ---- */}
-      <div className="gantt-legend">
+      {/* ---- Legend (hidden on analytics) ---- */}
+      <div className="gantt-legend" style={{ display: activeTab === "analytics" ? "none" : "flex" }}>
         {LEGEND_GROUPS.map((g) => (
           <span key={g.label} className="gantt-legend-item">
             <span className="gantt-legend-swatch" style={{ background: g.color }} />
@@ -469,8 +605,8 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
         ))}
       </div>
 
-      {/* ---- Summary row ---- */}
-      <div className="gantt-summary">
+      {/* ---- Summary row (hidden on analytics) ---- */}
+      <div className="gantt-summary" style={{ display: activeTab === "analytics" ? "none" : "flex" }}>
         <div className="gantt-sum-item">
           <span className="gantt-sum-count">{summary.total}</span>
           <span className="gantt-sum-label">Всего машин</span>
@@ -488,8 +624,8 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
         })}
       </div>
 
-      {/* ---- Bottom panels ---- */}
-      <div className="gantt-panels">
+      {/* ---- Bottom panels (hidden on analytics) ---- */}
+      <div className="gantt-panels" style={{ display: activeTab === "analytics" ? "none" : "flex" }}>
         {/* Upcoming */}
         <div className="gantt-panel">
           <div className="gantt-panel-title">Ближайшие операции</div>
@@ -531,6 +667,116 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
       </div>
 
       {/* ---- Tooltip ---- */}
+      {/* ---- Analytics tab ---- */}
+      {activeTab === "analytics" && (
+        <div className="gantt-analytics">
+          <div className="gantt-analytics-toolbar">
+            <span className="gantt-analytics-title">План-факт анализ · {ganttDate}</span>
+            <button className="gantt-csv-btn" onClick={exportCsv} disabled={planFact.length === 0}>
+              ⬇ Экспорт CSV
+            </button>
+          </div>
+          {pfLoading && <div className="gantt-loading">Загрузка…</div>}
+          {!pfLoading && planFact.length === 0 && (
+            <div className="gantt-empty">Нет рейсов с операциями за {ganttDate}</div>
+          )}
+          {planFact.map(item => (
+            <div key={item.tt_id} className="gantt-pf-task">
+              <div className="gantt-pf-task-header">
+                <span className="gantt-pf-task-id">Рейс #{item.tt_id}</span>
+                <span className="gantt-pf-task-veh">{item.vehicle}</span>
+                <span className="gantt-pf-task-status">{item.status}</span>
+                {item.rest_violations > 0 && (
+                  <span className="gantt-pf-violations">⚠ {item.rest_violations} нар. отдыха</span>
+                )}
+                <span className="gantt-pf-delta-total">
+                  Σ Δ: {item.total_delta_min > 0 ? "+" : ""}{item.total_delta_min} мин
+                </span>
+              </div>
+              <table className="gantt-pf-table">
+                <thead>
+                  <tr>
+                    <th>Операция</th>
+                    <th>Длит.</th>
+                    <th>План</th>
+                    <th>Факт</th>
+                    <th>Δ мин</th>
+                    <th style={{ width: 120 }}>Отклонение</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {item.operations.map(op => {
+                    const delta = op.delta_min;
+                    const barColor = delta === null ? "#e2e8f0"
+                      : Math.abs(delta) <= 15 ? "#16a34a"
+                      : Math.abs(delta) <= 60 ? "#d97706" : "#dc2626";
+                    const barWidth = delta === null ? 0 : Math.min(Math.abs(delta) / 120 * 100, 100);
+                    return (
+                      <tr key={op.op_id}>
+                        <td>
+                          <span className="gantt-pf-op-dot"
+                            style={{ background: OP_COLOR[op.operation_code] || "#94a3b8" }} />
+                          {OP_LABEL[op.operation_code] || op.operation_code}
+                        </td>
+                        <td>{Math.round(op.duration_min)} мин</td>
+                        <td>{op.plan_start?.slice(-5)} – {op.plan_end?.slice(-5)}</td>
+                        <td>{op.fact_start ? `${op.fact_start.slice(-5)} – ${op.fact_end?.slice(-5) ?? "…"}` : "—"}</td>
+                        <td style={{ color: barColor, fontWeight: 600 }}>
+                          {delta !== null ? `${delta > 0 ? "+" : ""}${delta}` : "—"}
+                        </td>
+                        <td>
+                          <div className="gantt-pf-bar-wrap">
+                            <div className="gantt-pf-bar"
+                              style={{ width: `${barWidth}%`, background: barColor }} />
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ---- Context menu ---- */}
+      {ctxMenu && (
+        <div className="gantt-ctx-overlay" onClick={() => setCtxMenu(null)}>
+          <div className="gantt-ctx-menu" style={{ left: ctxMenu.x, top: ctxMenu.y }}
+            onClick={e => e.stopPropagation()}>
+            <div className="gantt-ctx-item" onClick={() => {
+              const v = filtered.find(vv => vv.operations.some(o => o.op_id === ctxMenu.op.op_id));
+              if (v) setTaskCard({ tt_id: ctxMenu.op.tt_id, vehicle_num: v.vehicle_num, operations: v.operations });
+              setCtxMenu(null);
+            }}>Открыть рейс</div>
+            <div className="gantt-ctx-item" onClick={() => { setFactModal({ op: ctxMenu.op }); setCtxMenu(null); }}>
+              Отметить факт
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- Fact marking modal ---- */}
+      {factModal && (
+        <FactMarkModal
+          op={factModal.op}
+          onClose={() => setFactModal(null)}
+          onSave={async (op_id, fact_start, fact_end) => {
+            await fetch(`/api/admin/transport/operations/${op_id}/fact`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Basic " + btoa("admin:admin123"),
+              },
+              body: JSON.stringify({ fact_start, fact_end }),
+            });
+            setFactModal(null);
+            fetchGantt(ganttDate);
+          }}
+        />
+      )}
+
       {/* ---- Task card modal ---- */}
       {taskCard && (
         <div className="gantt-card-overlay" onClick={() => setTaskCard(null)}>

@@ -1029,3 +1029,37 @@ button[aria-disabled="true"] { cursor: help; }
 .gantt-card-actions { display: flex; gap: 8px; margin-top: 14px; justify-content: flex-end; }
 .gantt-card-close-btn { padding: 6px 14px; border: 1px solid var(--line); border-radius: 6px; background: #fff; cursor: pointer; font-size: 12px; }
 .gantt-card-close-btn:hover { background: #f1f5f9; }
+
+/* Gantt tab group */
+.gantt-tab-group { display: flex; gap: 0; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
+.gantt-tab-btn { padding: 4px 14px; border: none; background: #fff; cursor: pointer; font-size: 12px; color: #64748b; }
+.gantt-tab-btn.active { background: var(--blue); color: #fff; font-weight: 600; }
+.gantt-tab-btn:hover:not(.active) { background: #f1f5f9; }
+
+/* Analytics tab */
+.gantt-analytics { flex: 1; overflow-y: auto; padding: 12px 16px; background: #f8fafc; }
+.gantt-analytics-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.gantt-analytics-title { font-size: 14px; font-weight: 700; color: #1e293b; }
+.gantt-csv-btn { padding: 5px 12px; border: 1px solid var(--blue); border-radius: 6px; background: #fff; color: var(--blue); cursor: pointer; font-size: 12px; }
+.gantt-csv-btn:hover { background: #eff6ff; }
+.gantt-csv-btn:disabled { opacity: .5; cursor: default; }
+.gantt-pf-task { background: #fff; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+.gantt-pf-task-header { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #f8fafc; border-bottom: 1px solid var(--line); font-size: 12px; }
+.gantt-pf-task-id   { font-weight: 700; color: #1e293b; }
+.gantt-pf-task-veh  { font-weight: 600; color: var(--blue); }
+.gantt-pf-task-status { color: #64748b; }
+.gantt-pf-violations { color: #dc2626; font-weight: 600; }
+.gantt-pf-delta-total { margin-left: auto; font-weight: 600; color: #374151; }
+.gantt-pf-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.gantt-pf-table th { text-align: left; padding: 5px 10px; color: #64748b; font-weight: 600; border-bottom: 1px solid #e2e8f0; text-transform: uppercase; font-size: 10px; }
+.gantt-pf-table td { padding: 4px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+.gantt-pf-table tr:last-child td { border-bottom: none; }
+.gantt-pf-op-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+.gantt-pf-bar-wrap { width: 100%; background: #f1f5f9; border-radius: 3px; height: 8px; }
+.gantt-pf-bar { height: 8px; border-radius: 3px; transition: width .2s; }
+
+/* Context menu */
+.gantt-ctx-overlay { position: fixed; inset: 0; z-index: 3000; }
+.gantt-ctx-menu { position: fixed; background: #fff; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.12); min-width: 160px; overflow: hidden; z-index: 3001; }
+.gantt-ctx-item { padding: 8px 16px; font-size: 12px; cursor: pointer; color: #374151; }
+.gantt-ctx-item:hover { background: #f1f5f9; }
