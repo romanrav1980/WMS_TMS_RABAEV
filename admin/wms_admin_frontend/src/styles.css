@@ -1140,3 +1140,23 @@ button[aria-disabled="true"] { cursor: help; }
 .billing-link-label { font-size: 11px; color: #64748b; font-weight: 600; margin-bottom: 6px; }
 .billing-link-radio { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #374151; cursor: pointer; padding: 3px 0; }
 .billing-link-radio input[type="radio"] { cursor: pointer; }
+
+/* Sprint 23 — Детальный просмотр счёта */
+.billing-row-clickable { cursor: pointer; }
+.billing-row-clickable:hover { background: #eff6ff !important; }
+.billing-row-selected { background: #dbeafe !important; cursor: pointer; }
+.billing-detail-panel { min-width: 260px; max-width: 320px; overflow-y: auto; }
+.billing-detail-container { display: flex; flex-direction: column; gap: 8px; padding: 4px 0; }
+.billing-detail-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.billing-detail-num { font-weight: 700; font-size: 14px; color: #1e293b; }
+.billing-detail-close-btn { margin-left: auto; background: none; border: none; font-size: 14px; cursor: pointer; color: #64748b; padding: 2px 4px; }
+.billing-detail-close-btn:hover { color: #ef4444; }
+.billing-detail-meta { display: flex; flex-direction: column; gap: 2px; font-size: 11px; color: #64748b; }
+.billing-detail-loading, .billing-detail-empty { font-size: 12px; color: #94a3b8; text-align: center; padding: 16px 0; }
+.billing-detail-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.billing-detail-table th { padding: 4px 6px; background: #f1f5f9; border-bottom: 2px solid var(--line); text-align: left; white-space: nowrap; font-weight: 600; color: #374151; }
+.billing-detail-table td { padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.billing-detail-table tbody tr:hover { background: #f8fafc; }
+.billing-detail-id { font-weight: 600; color: #1e293b; }
+.billing-detail-total { font-size: 12px; color: #374151; border-top: 2px solid var(--line); padding-top: 6px; }
+.billing-detail-export-btn { margin-top: 4px; font-size: 11px; padding: 4px 10px; }

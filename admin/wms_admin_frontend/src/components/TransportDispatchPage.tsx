@@ -136,6 +136,14 @@ type BillingOrder = {
   num_plat?: string | null;
 };
 
+type BillingOrderTask = {
+  tt_id: number;
+  transport: string | null;
+  status: string | null;
+  price: number;
+  shipment_date: string | null;
+};
+
 // ---------------------------------------------------------------------------
 // Config / API
 // ---------------------------------------------------------------------------
@@ -254,6 +262,11 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [billingDateTo, setBillingDateTo] = useState(todayIso());
   const [billingCompany, setBillingCompany] = useState("");
   const [billingStatus, setBillingStatus] = useState<"all" | "open" | "closed" | "paid">("all");
+
+  // Billing order detail panel (Sprint 23)
+  const [selectedBillingOrder, setSelectedBillingOrder] = useState<BillingOrder | null>(null);
+  const [billingOrderTasks, setBillingOrderTasks] = useState<BillingOrderTask[]>([]);
+  const [billingOrderTasksLoading, setBillingOrderTasksLoading] = useState(false);
   const debouncedRouteTaskId = useDebounce(routeTaskId, 300);
   const debouncedRouteCarMask = useDebounce(routeCarMask, 300);
   const debouncedRouteCompany = useDebounce(routeCompanyMask, 300);
@@ -336,6 +349,25 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   useEffect(() => {
     if (activeTab === "billing") loadBillingOrders();
   }, [activeTab, loadBillingOrders]);
+
+  // ------------------------------------------------------------------
+  // Load billing order detail tasks (Sprint 23)
+  // ------------------------------------------------------------------
+  async function handleBillingOrderSelect(order: BillingOrder) {
+    if (selectedBillingOrder?.order_id === order.order_id) {
+      setSelectedBillingOrder(null);
+      setBillingOrderTasks([]);
+      return;
+    }
+    setSelectedBillingOrder(order);
+    setBillingOrderTasksLoading(true);
+    try {
+      const data = await apiFetch<BillingOrderTask[]>(
+        `/api/admin/transport/billing/orders/${order.order_id}/tasks`
+      );
+      setBillingOrderTasks(data);
+    } catch { setBillingOrderTasks([]); } finally { setBillingOrderTasksLoading(false); }
+  }
 
   // ------------------------------------------------------------------
   // Load available STs
@@ -1302,11 +1334,13 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               dateTo={billingDateTo}
               company={billingCompany}
               status={billingStatus}
+              selectedOrderId={selectedBillingOrder?.order_id ?? null}
               onDateFromChange={setBillingDateFrom}
               onDateToChange={setBillingDateTo}
               onCompanyChange={setBillingCompany}
               onStatusChange={setBillingStatus}
               onRefresh={loadBillingOrders}
+              onOrderSelect={handleBillingOrderSelect}
             />
           )}
 
@@ -1387,6 +1421,15 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             value={maxWeightKg ?? ""}
             onChange={e => setMaxWeightKg(e.target.value ? Number(e.target.value) : null)}
             placeholder="—" />
+        </div>
+        ) : activeTab === "billing" && selectedBillingOrder ? (
+        <div className="dispatch-right-panel billing-detail-panel">
+          <BillingOrderDetailPanel
+            order={selectedBillingOrder}
+            tasks={billingOrderTasks}
+            loading={billingOrderTasksLoading}
+            onClose={() => { setSelectedBillingOrder(null); setBillingOrderTasks([]); }}
+          />
         </div>
         ) : activeTab === "routes" ? (
         <div className="dispatch-right-panel">
@@ -2163,8 +2206,8 @@ function exportBillingCsv(orders: BillingOrder[]) {
 }
 
 function BillingRegistryTab({
-  orders, loading, dateFrom, dateTo, company, status,
-  onDateFromChange, onDateToChange, onCompanyChange, onStatusChange, onRefresh,
+  orders, loading, dateFrom, dateTo, company, status, selectedOrderId,
+  onDateFromChange, onDateToChange, onCompanyChange, onStatusChange, onRefresh, onOrderSelect,
 }: {
   orders: BillingOrder[];
   loading: boolean;
@@ -2172,11 +2215,13 @@ function BillingRegistryTab({
   dateTo: string;
   company: string;
   status: BillingStatusFilter;
+  selectedOrderId: number | null;
   onDateFromChange: (v: string) => void;
   onDateToChange: (v: string) => void;
   onCompanyChange: (v: string) => void;
   onStatusChange: (v: BillingStatusFilter) => void;
   onRefresh: () => void;
+  onOrderSelect: (order: BillingOrder) => void;
 }) {
   // Totals by company
   const totals: Record<string, number> = {};
@@ -2235,7 +2280,9 @@ function BillingRegistryTab({
                 </thead>
                 <tbody>
                   {orders.map(o => (
-                    <tr key={o.order_id}>
+                    <tr key={o.order_id}
+                      className={selectedOrderId === o.order_id ? "billing-row-selected" : "billing-row-clickable"}
+                      onClick={() => onOrderSelect(o)}>
                       <td className="billing-num-cell">{o.num ?? `#${o.order_id}`}</td>
                       <td>{o.company ?? "—"}</td>
                       <td>{o.date_from ?? "—"}</td>
@@ -2268,6 +2315,93 @@ function BillingRegistryTab({
               </div>
             </>
       }
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// BillingOrderDetailPanel (Sprint 23)
+// ---------------------------------------------------------------------------
+
+function exportOrderTasksCsv(order: BillingOrder, tasks: BillingOrderTask[]) {
+  const BOM = "﻿";
+  const header = "Рейс;Авто;Дата;Статус;Сумма ₽";
+  const rows = tasks.map(t =>
+    [t.tt_id, t.transport ?? "", t.shipment_date ?? "", t.status ?? "", t.price].join(";")
+  );
+  const total = tasks.reduce((s, t) => s + t.price, 0);
+  rows.push(["", "", "", "ИТОГО", total].join(";"));
+  const csv = BOM + [header, ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `order-${order.num ?? order.order_id}-tasks.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function BillingOrderDetailPanel({
+  order, tasks, loading, onClose,
+}: {
+  order: BillingOrder;
+  tasks: BillingOrderTask[];
+  loading: boolean;
+  onClose: () => void;
+}) {
+  const { text, cls } = billingStatusLabel(order);
+  const total = tasks.reduce((s, t) => s + t.price, 0);
+
+  return (
+    <div className="billing-detail-container">
+      <div className="billing-detail-header">
+        <span className="billing-detail-num">{order.num ?? `#${order.order_id}`}</span>
+        <span className={`billing-order-status ${cls}`}>{text}</span>
+        <button className="billing-detail-close-btn" onClick={onClose} title="Закрыть">✕</button>
+      </div>
+      <div className="billing-detail-meta">
+        <span>{order.company ?? "—"}</span>
+        <span>{order.date_from} – {order.date_to}</span>
+        {order.num_plat && <span>№ плат.: {order.num_plat}</span>}
+      </div>
+
+      {loading ? (
+        <div className="billing-detail-loading">Загрузка…</div>
+      ) : tasks.length === 0 ? (
+        <div className="billing-detail-empty">Рейсов нет</div>
+      ) : (
+        <>
+          <table className="billing-detail-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Авто</th>
+                <th>Дата</th>
+                <th className="billing-price-cell">Сумма ₽</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tasks.map(t => (
+                <tr key={t.tt_id}>
+                  <td className="billing-detail-id">#{t.tt_id}</td>
+                  <td>{t.transport ?? "—"}</td>
+                  <td>{t.shipment_date ?? "—"}</td>
+                  <td className="billing-price-cell">
+                    {t.price > 0 ? t.price.toLocaleString("ru-RU") + " ₽" : "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="billing-detail-total">
+            Итого: <b>{total.toLocaleString("ru-RU")} ₽</b>
+          </div>
+          <button className="billing-csv-btn billing-detail-export-btn"
+            onClick={() => exportOrderTasksCsv(order, tasks)}>
+            ⬇ Скачать CSV
+          </button>
+        </>
+      )}
     </div>
   );
 }
