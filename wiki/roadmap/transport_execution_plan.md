@@ -47,7 +47,8 @@
 | 29 | Phase 2 полуавто: создать рейс из кластера (⚡ Рейс) | Диспетчер | 0.5 нед | 🟢 КК | ✅ `2f97815` 2026-05-28 |
 | 30 | Live load bar — заполненность машины по паллетам | Диспетчер | 0.5 нед | 🟢 КК | ✅ `9436717` 2026-05-28 |
 | 31 | ClusterSidebar — левая панель карточек районов | Диспетчер | 0.5 нед | 🟢 КК | ✅ `86d3a71` 2026-05-28 |
-| **Итого** | | | **~24 нед** | | |
+| 32 | Phase 2 ✅: предупреждение о перегрузе | Диспетчер | 0.5 нед | 🟢 КК | ✅ `286c0c7` 2026-05-28 |
+| **Итого** | | | **~24.5 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -622,6 +623,29 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 32 — Phase 2 ✅: предупреждение о перегрузе
+
+**Инструмент:** 🟢 КК (код-код $20) — чисто фронтенд, one-liner condition
+
+**Цель:** замкнуть Phase 2 — «предупреждение при превышении MAX_PALLET_LOAD». Красный баннер появляется под load bar когда в рейсе больше паллет, чем допускает машина.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| Overload banner `{tripP > selectedVehicle.PALLETS && <div className="dispatch-overload-warn">…}` | Frontend | `TransportDispatchPage.tsx` |
+| В обоих панелях: tasks tab + routes tab | Frontend | `TransportDispatchPage.tsx` |
+| `.dispatch-overload-warn` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `286c0c7` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint32_functional.py` — 8 pytest-кейсов (границы, формат сообщения, интеграция с LoadBar)  
+- `tests/transport/sprint32_usability_checklist.md` — 17 проверок + Phase 2 чеклист  
+- `tests/transport/transport_sprint32_load_test.py` — 5 users, 60s, NFR task/sts/vehicles p95  
+
+**Phase 2 «Полуавто» теперь полностью закрыта.**
 
 ---
 
