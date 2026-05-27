@@ -256,6 +256,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [routeNoPayments, setRouteNoPayments] = useState(false);
   const [routesXlsxLoading, setRoutesXlsxLoading] = useState(false);
   const [routeBriefMode, setRouteBriefMode] = useState(false);
+  const [selectedTripStNums, setSelectedTripStNums] = useState<Set<string>>(new Set());
   const [noteText, setNoteText] = useState("");
   const [billingDialog, setBillingDialog] = useState(false);
   const [openingBilling, setOpeningBilling] = useState(false);
@@ -441,6 +442,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     setPalletStNum(null);
     setStPallets([]);
     setBillingOrder(null);
+    setSelectedTripStNums(new Set());
     try {
       const data = await apiFetch<TaskSt[]>(`/api/admin/transport/tasks/${task.ID}/sts`);
       setTaskSts(data);
@@ -527,6 +529,26 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
         `/api/admin/transport/tasks/${selectedTask.ID}/sts/${encodeURIComponent(stNumber)}`,
         { method: "DELETE" }
       );
+      const reloads: Promise<void>[] = [selectTask(selectedTask), loadTasks(), loadAvailableSts()];
+      if (viewMode === "clusters") reloads.push(loadClusters());
+      await Promise.all(reloads);
+    } catch (e) { setError(String(e)); } finally { setLoading(false); }
+  }
+
+  async function handleBulkUnassign() {
+    if (!selectedTask || selectedTripStNums.size === 0) return;
+    if (!confirm(`Снять ${selectedTripStNums.size} СТ с рейса #${selectedTask.ID}?`)) return;
+    setLoading(true);
+    try {
+      await Promise.all(
+        Array.from(selectedTripStNums).map(st =>
+          apiFetch(
+            `/api/admin/transport/tasks/${selectedTask.ID}/sts/${encodeURIComponent(st)}`,
+            { method: "DELETE" }
+          )
+        )
+      );
+      setSelectedTripStNums(new Set());
       const reloads: Promise<void>[] = [selectTask(selectedTask), loadTasks(), loadAvailableSts()];
       if (viewMode === "clusters") reloads.push(loadClusters());
       await Promise.all(reloads);
@@ -1178,10 +1200,23 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 </div>
               )}
 
+              {selectedTripStNums.size > 0 && selectedTask.CONDITION !== "Отгружен" && !selectedTask.PAY_ORDER_ID && (
+                <div className="dispatch-trip-bulk-bar">
+                  <span>{selectedTripStNums.size} СТ выбрано</span>
+                  <button className="dispatch-bulk-unassign-btn" onClick={handleBulkUnassign} disabled={loading}>
+                    Снять выбранные
+                  </button>
+                  <button className="dispatch-cancel-edit-btn" onClick={() => setSelectedTripStNums(new Set())}>
+                    Отмена
+                  </button>
+                </div>
+              )}
+
               <div className="dispatch-trip-sts-wrap">
                 <table className="dispatch-grid">
                   <thead>
                     <tr>
+                      <th style={{ width: 22 }}></th>
                       <th style={{ width: 34 }}>#</th>
                       <th style={{ width: 80 }}>СТ №</th>
                       <th>Адрес</th>
@@ -1203,6 +1238,13 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                             st={st}
                             disabled={loading || selectedTask.CONDITION === "Отгружен" || !!selectedTask.PAY_ORDER_ID}
                             isPalletOpen={palletStNum === st.ST_NUMBER}
+                            checked={selectedTripStNums.has(st.ST_NUMBER)}
+                            onToggleCheck={() => setSelectedTripStNums(prev => {
+                              const next = new Set(prev);
+                              if (next.has(st.ST_NUMBER)) next.delete(st.ST_NUMBER);
+                              else next.add(st.ST_NUMBER);
+                              return next;
+                            })}
                             onUnassign={() => handleUnassign(st.ST_NUMBER)}
                             onSetLoadType={lt => handleSetLoadType(st.ST_NUMBER, lt)}
                             onSetOrder={ord => handleSetOrder(st.ST_NUMBER, ord)}
@@ -1940,11 +1982,13 @@ function RouteTaskStRow({
 // ---------------------------------------------------------------------------
 
 function TaskStTableRow({
-  st, disabled, isPalletOpen, onUnassign, onSetLoadType, onSetOrder, onShowPallets,
+  st, disabled, isPalletOpen, checked, onToggleCheck, onUnassign, onSetLoadType, onSetOrder, onShowPallets,
 }: {
   st: TaskSt;
   disabled: boolean;
   isPalletOpen: boolean;
+  checked?: boolean;
+  onToggleCheck?: () => void;
   onUnassign: () => void;
   onSetLoadType: (lt: string) => void;
   onSetOrder: (ord: number) => void;
@@ -1969,7 +2013,12 @@ function TaskStTableRow({
   }
 
   return (
-    <tr className="dispatch-gr">
+    <tr className={`dispatch-gr${checked ? " selected" : ""}`}>
+      <td onClick={e => e.stopPropagation()}>
+        {onToggleCheck && !disabled && (
+          <input type="checkbox" checked={!!checked} onChange={onToggleCheck} />
+        )}
+      </td>
       <td>
         {ordEdit ? (
           <input className="dispatch-ord-input" type="number" min={0} value={ordVal} autoFocus
