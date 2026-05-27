@@ -1160,7 +1160,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 </div>
               </div>
 
-              {/* Sprint 30 — Live load metrics bar */}
+              {/* Sprint 30/32 — Live load metrics + overload warning */}
               {selectedVehicle?.PALLETS && tripP > 0 && (
                 <div className="dispatch-load-bar-wrap">
                   <LoadBar
@@ -1169,6 +1169,11 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     max={selectedVehicle.PALLETS}
                     unit="пал"
                   />
+                  {tripP > selectedVehicle.PALLETS && (
+                    <div className="dispatch-overload-warn">
+                      ⚠ Перегруз: {tripP} пал &gt; {selectedVehicle.PALLETS} пал (норма для {selectedVehicle.NUM})
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -1381,6 +1386,18 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   </form>
                 </div>
               </div>
+              {/* Sprint 32 — load bar in routes tab */}
+              {selectedVehicle?.PALLETS && tripP > 0 && (
+                <div className="dispatch-load-bar-wrap">
+                  <LoadBar label="Паллеты" value={tripP} max={selectedVehicle.PALLETS} unit="пал" />
+                  {tripP > selectedVehicle.PALLETS && (
+                    <div className="dispatch-overload-warn">
+                      ⚠ Перегруз: {tripP} пал &gt; {selectedVehicle.PALLETS} пал (норма для {selectedVehicle.NUM})
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="dispatch-trip-sts-wrap">
                 <table className="dispatch-grid">
                   <thead>

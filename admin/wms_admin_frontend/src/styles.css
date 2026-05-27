@@ -1219,6 +1219,18 @@ button[aria-disabled="true"] { cursor: help; }
 }
 .cluster-card-create-btn:hover { background: #e0e7ff; }
 
+/* Sprint 32 — Overload warning */
+.dispatch-overload-warn {
+  margin-top: 4px;
+  padding: 4px 8px;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  color: #b91c1c;
+  font-size: 11px;
+  font-weight: 600;
+}
+
 /* Sprint 30 — Live load metrics bar */
 .dispatch-load-bar-wrap { padding: 4px 12px 0; }
 .load-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
