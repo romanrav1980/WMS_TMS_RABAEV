@@ -338,6 +338,12 @@ class TransportService:
             raise HTTPException(status_code=404, detail=f"Task {task_id} not found or already closed")
 
     def cancel_task(self, task_id: int, user_id: str) -> None:
+        task = self.get_task(task_id)
+        if task and task.get("PAY_ORDER_ID"):
+            raise HTTPException(
+                status_code=409,
+                detail=f"Рейс включён в счёт №{task['PAY_ORDER_ID']} — расформирование запрещено",
+            )
         self.gateway.execute(
             """
             UPDATE RABAEV.RRL_TRANSPORT_TASK
@@ -381,6 +387,12 @@ class TransportService:
         )
 
     def assign_sts(self, task_id: int, st_numbers: list[str], user_id: str) -> dict[str, Any]:
+        task = self.get_task(task_id)
+        if task and task.get("PAY_ORDER_ID"):
+            raise HTTPException(
+                status_code=409,
+                detail=f"Рейс включён в счёт №{task['PAY_ORDER_ID']} — добавление СТ запрещено",
+            )
         warnings: list[str] = []
 
         for st in st_numbers:
@@ -414,6 +426,12 @@ class TransportService:
         return {"assigned": len(st_numbers), "warnings": warnings}
 
     def unassign_st(self, task_id: int, st_number: str, user_id: str) -> None:
+        task = self.get_task(task_id)
+        if task and task.get("PAY_ORDER_ID"):
+            raise HTTPException(
+                status_code=409,
+                detail=f"Рейс включён в счёт №{task['PAY_ORDER_ID']} — снятие СТ запрещено",
+            )
         # TT_ID = 0 → снять СТ с любого рейса
         self.gateway.call_varchar_function(
             "RABAEV.RRL_TT_ADD_PALL",
