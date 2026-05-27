@@ -44,7 +44,8 @@
 | 26 | Биллинг: Excel-экспорт счёта | Billing | 0.5 нед | 🟢 КК | ✅ `5f6e110` 2026-05-27 |
 | 27 | Биллинг: Excel-экспорт реестра счетов | Billing | 0.5 нед | 🟢 КК | ✅ `23682f3` 2026-05-28 |
 | 28 | Диспетчер: Excel-экспорт списка рейсов | Диспетчер | 0.5 нед | 🟢 КК | ✅ `284c754` 2026-05-28 |
-| **Итого** | | | **~22.5 нед** | | |
+| 29 | Phase 2 полуавто: создать рейс из кластера (⚡ Рейс) | Диспетчер | 0.5 нед | 🟢 КК | ✅ `2f97815` 2026-05-28 |
+| **Итого** | | | **~23 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -619,6 +620,34 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 29 — Phase 2 полуавто: создать рейс из кластера (⚡ Рейс)
+
+**Инструмент:** 🟢 КК (код-код $20)
+
+**Цель:** одна кнопка «⚡ Рейс» в заголовке каждого кластера (режим «Кластеры») открывает мини-диалог и создаёт рейс из всех свободных СТ района одним запросом. Закрывает Phase 2 полуавто (roadmap §2).
+
+**ТЗ:** Phase 2 Полуавто — roadmap [transport_roadmap.md](transport_roadmap.md)
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `ClusterCreateTaskRequest` — Pydantic-схема | Backend | `schemas.py` |
+| `create_task_from_cluster(raion, req, user_id)` — фильтрует СТ по RAION, создаёт рейс, назначает | Backend | `transport_service.py` |
+| `POST /clusters/{raion}/create-task` | Backend | `transport.py` |
+| `clusterCreateRaion`, `clusterCreateLoading` — state | Frontend | `TransportDispatchPage.tsx` |
+| `handleCreateFromCluster(params)` — вызов API, reload, select | Frontend | `TransportDispatchPage.tsx` |
+| `ClusterQuickCreateDialog` — диалог с summary, vehicle avail check | Frontend | `TransportDispatchPage.tsx` |
+| `onCreateTask?` prop + «⚡ Рейс» button в `ClusterGroup` header | Frontend | `TransportDispatchPage.tsx` |
+| `.cluster-create-task-btn`, `.cluster-dialog-summary`, `.cluster-dialog-date` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `2f97815` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint29_functional.py` — 8 pytest-кейсов (404 когда нет СТ, создание, update_task при vehicle, фильтрация, null RAION, schema defaults)  
+- `tests/transport/sprint29_usability_checklist.md` — 20 юзабилити-проверок  
+- `tests/transport/transport_sprint29_load_test.py` — 3 users, 60s, NFR clusters p95 ≤ 300ms, create-task p95 ≤ 1500ms  
 
 ---
 
