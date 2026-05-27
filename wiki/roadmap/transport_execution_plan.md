@@ -50,7 +50,8 @@
 | 32 | Phase 2 ✅: предупреждение о перегрузе | Диспетчер | 0.5 нед | 🟢 КК | ✅ `286c0c7` 2026-05-28 |
 | 33 | Режим «Кратко» в таблице маршрутов (§3.8.1) | Диспетчер | 0.5 нед | 🟢 КК | ✅ `b5b12d1` 2026-05-28 |
 | 34 | Bugfix: cancel_task освобождает СТ перед удалением | Диспетчер | 0.25 нед | 🟢 КК | ✅ `73cd887` 2026-05-28 |
-| **Итого** | | | **~25.25 нед** | | |
+| 35 | Оптимизация: server-side raion filter в list_available_sts | Диспетчер | 0.25 нед | 🟢 КК | ✅ `c60c420` 2026-05-28 |
+| **Итого** | | | **~25.5 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -625,6 +626,28 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 35 — Оптимизация: server-side raion filter
+
+**Инструмент:** 🟢 КК (код-код $20) — бэкенд, одно условие в SQL
+
+**Цель:** `create_task_from_cluster` раньше делал 2 операции: fetch всех свободных СТ → Python-фильтрация по RAION. Теперь Oracle фильтрует в SQL одним запросом. NFR создания рейса из кластера снижен с 1500ms до 1200ms.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| Параметр `raion` в `list_available_sts()` | Backend | `transport_service.py` |
+| `«(без района)» → RAION IS NULL`, иначе `RAION = :raion` | Backend | `transport_service.py` |
+| `create_task_from_cluster` передаёт `raion=raion` (убрана Python-фильтрация) | Backend | `transport_service.py` |
+| `raion` в `GET /available-sts` endpoint | Backend | `transport.py` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `c60c420` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint35_functional.py` — 9 pytest-кейсов (SQL условия, без района IS NULL, с spецсимволами, integ)  
+- `tests/transport/sprint35_usability_checklist.md` — 14 проверок  
+- `tests/transport/transport_sprint35_load_test.py` — 5 users, 60s, NFR filtered p95 ≤ 200ms  
 
 ---
 
