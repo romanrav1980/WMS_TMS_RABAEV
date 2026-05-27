@@ -51,7 +51,8 @@
 | 33 | Режим «Кратко» в таблице маршрутов (§3.8.1) | Диспетчер | 0.5 нед | 🟢 КК | ✅ `b5b12d1` 2026-05-28 |
 | 34 | Bugfix: cancel_task освобождает СТ перед удалением | Диспетчер | 0.25 нед | 🟢 КК | ✅ `73cd887` 2026-05-28 |
 | 35 | Оптимизация: server-side raion filter в list_available_sts | Диспетчер | 0.25 нед | 🟢 КК | ✅ `c60c420` 2026-05-28 |
-| **Итого** | | | **~25.5 нед** | | |
+| 36 | Массовое снятие СТ с рейса (чекбоксы + «Снять выбранные») | Диспетчер | 0.25 нед | 🟢 КК | ✅ `7aa8b16` 2026-05-28 |
+| **Итого** | | | **~25.75 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -626,6 +627,31 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 36 — Массовое снятие СТ с рейса
+
+**Инструмент:** 🟢 КК (код-код $20) — чисто фронтенд, чекбоксы + bulk bar
+
+**Цель:** диспетчер может снять несколько СТ с рейса одним кликом через мультиселект, не нажимая ✕ на каждой строке по отдельности.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `selectedTripStNums: Set<string>` state + сброс при смене рейса | Frontend | `TransportDispatchPage.tsx` |
+| `handleBulkUnassign()` — параллельные DELETE через `Promise.all` | Frontend | `TransportDispatchPage.tsx` |
+| Чекбокс-колонка (width 22) в шапке таблицы состава рейса | Frontend | `TransportDispatchPage.tsx` |
+| `TaskStTableRow`: props `checked?` + `onToggleCheck?` + ячейка с `<input type="checkbox">` | Frontend | `TransportDispatchPage.tsx` |
+| Amber bulk bar сверху таблицы: «N СТ выбрано» + «Снять выбранные» + «Отмена» | Frontend | `TransportDispatchPage.tsx` |
+| Guard: bar и чекбоксы скрыты для «Отгружен» и `PAY_ORDER_ID` | Frontend | `TransportDispatchPage.tsx` |
+| `.dispatch-trip-bulk-bar`, `.dispatch-bulk-unassign-btn` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `7aa8b16` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint36_functional.py` — 13 pytest-кейсов (toggle, guard conditions, bulk unassign, clear on task switch)  
+- `tests/transport/sprint36_usability_checklist.md` — 18 юзабилити-проверок  
+- `tests/transport/transport_sprint36_load_test.py` — 5 users, 60s, NFR single DELETE p95 ≤ 300ms, bulk burst p95 ≤ 800ms  
 
 ---
 
