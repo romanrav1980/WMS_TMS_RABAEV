@@ -227,6 +227,11 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
   // Tab: 'map' | 'analytics'
   const [activeTab, setActiveTab] = useState<"map" | "analytics">("map");
 
+  // Drag-and-drop editing of plan routes (Sprint 24)
+  const [localRoutes, setLocalRoutes] = useState<VrpRouteItem[] | null>(null);
+  const [expandedRouteIdx, setExpandedRouteIdx] = useState<number | null>(null);
+  const dragSrc = useRef<{ routeIdx: number; stopIdx: number } | null>(null);
+
   const visibleOrders = orders.filter(o => o.LAT && o.LON);
   const noCoords = orders.filter(o => !o.LAT || !o.LON);
   const totalPallets = visibleOrders.reduce((s, o) => s + o.PALLETS_COUNT, 0);
@@ -324,6 +329,8 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
         body: JSON.stringify(body),
       });
       setPlan(result);
+      setLocalRoutes(JSON.parse(JSON.stringify(result.routes)));
+      setExpandedRouteIdx(null);
     } catch (e) {
       setSolveError(String(e));
     } finally {
@@ -378,10 +385,47 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
     } finally { setApplying(false); }
   }, [filterDate]);
 
+  // ---------------------------------------------------------------------------
+  // Drag-and-drop route editing (Sprint 24)
+  // ---------------------------------------------------------------------------
+
+  function handleDragStart(routeIdx: number, stopIdx: number) {
+    dragSrc.current = { routeIdx, stopIdx };
+  }
+
+  function handleDrop(targetRouteIdx: number) {
+    const src = dragSrc.current;
+    if (!src || !localRoutes) return;
+    if (src.routeIdx === targetRouteIdx) { dragSrc.current = null; return; }
+    const routes = localRoutes.map(r => ({ ...r, stops: [...r.stops] }));
+    const [moved] = routes[src.routeIdx].stops.splice(src.stopIdx, 1);
+    routes[targetRouteIdx].stops.push(moved);
+    // Recalculate metrics for both affected routes
+    for (const ri of [src.routeIdx, targetRouteIdx]) {
+      const r = routes[ri];
+      r.total_pallets = r.stops.reduce((s, stop) => s + stop.pallets, 0);
+      r.total_kg = r.stops.reduce((s, stop) => s + stop.weight_kg, 0);
+      r.utilization_pct = r.max_pallets > 0
+        ? Math.round((r.total_pallets / r.max_pallets) * 100)
+        : 0;
+    }
+    setLocalRoutes(routes);
+    dragSrc.current = null;
+  }
+
+  function resetLocalRoutes() {
+    if (plan) setLocalRoutes(JSON.parse(JSON.stringify(plan.routes)));
+  }
+
+  const displayRoutes = localRoutes ?? plan?.routes ?? [];
+  const routesModified = localRoutes !== null && plan !== null &&
+    JSON.stringify(localRoutes.map(r => r.stops.map(s => s.st_number))) !==
+    JSON.stringify(plan.routes.map(r => r.stops.map(s => s.st_number)));
+
   // Polylines for plan routes
-  const routePolylines = plan?.routes.map(route =>
+  const routePolylines = displayRoutes.map(route =>
     route.stops.filter(s => s.lat && s.lon).map(s => [s.lat!, s.lon!] as [number, number])
-  ) ?? [];
+  );
 
   return (
     <div className="planner-shell">
@@ -492,7 +536,7 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
               onClick={handleApplyPlan}
               disabled={applying || !plan.plan_id}
             >
-              {applying ? "⏳ Создаём..." : `✓ Применить план (${plan.routes.length} рейсов)`}
+              {applying ? "⏳ Создаём..." : `✓ Применить план (${displayRoutes.length} рейсов)`}
             </button>
           )}
 
@@ -676,24 +720,36 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
         </div>
 
         {/* ---- Right plan panel ---- */}
-        {(plan && plan.routes.length > 0) || templates.length > 0 ? (
+        {(plan && displayRoutes.length > 0) || templates.length > 0 ? (
           <aside className="planner-right-panel">
             {/* Routes list */}
-            {plan && plan.routes.length > 0 && (
+            {plan && displayRoutes.length > 0 && (
               <>
                 <div className="planner-rp-title">
-                  Рейсов: {plan.routes.length}
+                  Рейсов: {displayRoutes.length}
                   {plan.unassigned_sts.length > 0 && (
                     <span className="planner-rp-unassigned"> · {plan.unassigned_sts.length} без рейса</span>
                   )}
+                  {routesModified && (
+                    <button className="planner-reset-btn" onClick={resetLocalRoutes} title="Сбросить изменения">↺</button>
+                  )}
                 </div>
+                {routesModified && (
+                  <div className="planner-modified-hint">Порядок изменён вручную. «Применить план» создаст исходный план.</div>
+                )}
                 <div className="planner-rp-list">
-                  {plan.routes.map((route, idx) => (
-                    <div className="planner-rp-route" key={route.vehicle_id}>
-                      <div className="planner-rp-vehicle">
+                  {displayRoutes.map((route, idx) => (
+                    <div className="planner-rp-route"
+                      key={route.vehicle_id}
+                      onDragOver={e => e.preventDefault()}
+                      onDrop={() => handleDrop(idx)}>
+                      <div className="planner-rp-vehicle"
+                        onClick={() => setExpandedRouteIdx(expandedRouteIdx === idx ? null : idx)}
+                        style={{ cursor: "pointer" }}>
                         <span className="planner-rp-dot" style={{ background: routeColor(idx) }} />
                         <b>{route.vehicle_num}</b>
                         <span className="planner-rp-type">{route.vehicle_type}</span>
+                        <span className="planner-rp-expand-icon">{expandedRouteIdx === idx ? "▲" : "▼"}</span>
                       </div>
                       <div className="planner-rp-stats">
                         <span>{route.total_pallets} пал / {route.max_pallets}</span>
@@ -712,6 +768,21 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
                       </div>
                       <div className="planner-rp-util">{route.utilization_pct.toFixed(0)}%</div>
                       <div className="planner-rp-stops">{route.stops.length} адресов</div>
+                      {expandedRouteIdx === idx && (
+                        <div className="planner-rp-stop-list">
+                          {route.stops.map((stop, si) => (
+                            <div key={stop.st_number}
+                              className="planner-rp-stop-item"
+                              draggable
+                              onDragStart={() => handleDragStart(idx, si)}>
+                              <span className="planner-rp-stop-dot" style={{ background: wareColor(stop.ware_id) }} />
+                              <span className="planner-rp-stop-st">{stop.st_number}</span>
+                              <span className="planner-rp-stop-addr">{stop.addr ?? "—"}</span>
+                              <span className="planner-rp-stop-pal">{stop.pallets}пал</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

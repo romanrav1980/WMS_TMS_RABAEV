@@ -877,6 +877,19 @@ button[aria-disabled="true"] { cursor: help; }
 .planner-rp-bar-fill { height: 100%; border-radius: 3px; transition: width .3s; }
 .planner-rp-util { font-size: 10px; font-weight: 700; text-align: right; color: var(--text); }
 .planner-rp-stops { font-size: 10px; color: var(--muted); }
+.planner-rp-expand-icon { margin-left: auto; font-size: 9px; color: var(--muted); }
+/* Sprint 24 — drag-and-drop stop editing */
+.planner-rp-stop-list { margin-top: 6px; border-top: 1px solid var(--line); padding-top: 4px; display: flex; flex-direction: column; gap: 2px; }
+.planner-rp-stop-item { display: flex; align-items: center; gap: 4px; font-size: 10px; cursor: grab; padding: 2px 4px; border-radius: 3px; user-select: none; }
+.planner-rp-stop-item:hover { background: #e0e7ff; }
+.planner-rp-stop-item:active { cursor: grabbing; }
+.planner-rp-stop-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.planner-rp-stop-st { font-weight: 600; color: #1e293b; white-space: nowrap; }
+.planner-rp-stop-addr { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+.planner-rp-stop-pal { color: var(--muted); white-space: nowrap; }
+.planner-reset-btn { margin-left: auto; background: none; border: 1px solid var(--line); border-radius: 4px; font-size: 11px; cursor: pointer; padding: 1px 5px; color: var(--muted); }
+.planner-reset-btn:hover { color: #ef4444; border-color: #ef4444; }
+.planner-modified-hint { font-size: 10px; color: #f59e0b; padding: 2px 0 4px; }
 
 /* Sprint 9 — clusters, polygon selection, templates */
 .planner-layer-toggle { font-size: 11px; color: var(--text); margin: 5px 0; }
