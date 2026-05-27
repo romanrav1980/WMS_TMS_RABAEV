@@ -1174,6 +1174,30 @@ button[aria-disabled="true"] { cursor: help; }
 .billing-detail-total { font-size: 12px; color: #374151; border-top: 2px solid var(--line); padding-top: 6px; }
 .billing-detail-export-btn { margin-top: 4px; font-size: 11px; padding: 4px 10px; }
 
+/* Sprint 29 — Создать рейс из кластера */
+.cluster-create-task-btn {
+  margin-left: 10px;
+  padding: 2px 10px;
+  border: 1px solid #6366f1;
+  border-radius: 4px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.cluster-create-task-btn:hover { background: #e0e7ff; border-color: #4f46e5; }
+.cluster-dialog-summary {
+  font-size: 13px;
+  color: #374151;
+  background: #f1f5f9;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-bottom: 4px;
+}
+.cluster-dialog-date { font-size: 12px; color: #6b7280; margin-bottom: 10px; }
+
 /* Sprint 28 — Excel-экспорт списка рейсов */
 .routes-xlsx-btn { margin-left: auto; }
 

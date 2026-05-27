@@ -12,7 +12,8 @@ transport_service.py — Сервис диспетчера отгрузки.
   — set_st_order()     — изменить порядок адреса (ORD) в рейсе
 
 Фаза 2.1 (кластеры):
-  — list_clusters()    — группировка свободных СТ по RRL_ADDR.RAION
+  — list_clusters()            — группировка свободных СТ по RRL_ADDR.RAION
+  — create_task_from_cluster() — создать рейс из всех СТ района (Sprint 29)
 
 Sprint 8 (VRP):
   — solve_vrp()        — запуск OR-Tools/Clarke-Wright, сохранение плана
@@ -84,6 +85,60 @@ class TransportService:
             clusters.values(),
             key=lambda x: (x["RAION"] == "(без района)", x["RAION"]),
         )
+
+    def create_task_from_cluster(
+        self,
+        raion: str,
+        req: "ClusterCreateTaskRequest",
+        user_id: str,
+    ) -> dict[str, Any]:
+        """Создаёт рейс из всех свободных СТ района одним запросом (Sprint 29, Phase 2).
+
+        Последовательность:
+          1. list_available_sts → фильтр по raion
+          2. RRL_TRASPORT_TASK_ADD  — создать рейс
+          3. UPDATE TRANSPORT/VODITEL/DOCK (если переданы)
+          4. RRL_TT_ADD_PALL × N   — назначить все СТ
+          5. RRL_TT_REORDER_ADR    — оптимизировать порядок
+        """
+        # 1. Собрать свободные СТ района
+        all_sts = self.list_available_sts(
+            stdate=req.stdate,
+            unassigned_only=True,
+            ware_ids=req.ware_ids,
+        )
+        sts = [st for st in all_sts if (st.get("RAION") or "(без района)") == raion]
+        if not sts:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Нет свободных СТ в районе «{raion}» на {req.stdate}",
+            )
+
+        # 2. Создать рейс
+        from ..schemas import TransportTaskCreateRequest as _TtCreate, TransportTaskUpdateRequest as _TtUpd
+        task_id = self.create_task(
+            _TtCreate(transtype=req.transtype, shipment_date=req.stdate),
+            user_id,
+        )
+
+        # 3. Назначить машину/водителя/докст. (если переданы)
+        if req.vehicle or req.driver_id or req.dock:
+            self.update_task(
+                task_id,
+                _TtUpd(transport=req.vehicle, voditel_id=req.driver_id, dock=req.dock),
+                user_id,
+            )
+
+        # 4–5. Назначить СТ + оптимизировать порядок
+        st_numbers = [str(s["ST_NUMBER"]) for s in sts]
+        result = self.assign_sts(task_id, st_numbers, user_id)
+
+        return {
+            "task_id": task_id,
+            "raion": raion,
+            "st_count": len(st_numbers),
+            "warnings": result.get("warnings", []),
+        }
 
     def list_vehicles(self, active_only: bool = True) -> list[dict[str, Any]]:
         where = "WHERE BLOCKED = 0" if active_only else ""

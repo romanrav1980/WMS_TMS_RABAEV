@@ -50,6 +50,7 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   GET    /api/admin/transport/billing/orders/{id}/export.xlsx — экспорт счёта в Excel (Sprint 26)
   GET    /api/admin/transport/billing/orders/export.xlsx     — экспорт реестра счетов в Excel (Sprint 27)
   GET    /api/admin/transport/tasks/export.xlsx             — экспорт списка рейсов в Excel (Sprint 28)
+  POST   /api/admin/transport/clusters/{raion}/create-task — создать рейс из района (Sprint 29)
 """
 
 from datetime import date
@@ -71,6 +72,7 @@ from ..auth import (
 from ..schemas import (
     BillingAddTasksRequest,
     BillingOrderCreate,
+    ClusterCreateTaskRequest,
     OperationFactUpdate,
     PriceUpdateRequest,
     TransportStAssignRequest,
@@ -164,6 +166,16 @@ def list_clusters(
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
     return TransportService().list_clusters(stdate=stdate, ware_ids=ware_ids)
+
+
+@router.post("/clusters/{raion}/create-task")
+def create_task_from_cluster(
+    raion: str,
+    req: ClusterCreateTaskRequest,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> dict:
+    """Создать рейс из всех свободных СТ района одним запросом — Sprint 29, Phase 2 полуавто."""
+    return TransportService().create_task_from_cluster(raion, req, _user.username)
 
 
 # ------------------------------------------------------------------

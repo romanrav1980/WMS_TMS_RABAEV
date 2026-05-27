@@ -258,6 +258,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [noteText, setNoteText] = useState("");
   const [billingDialog, setBillingDialog] = useState(false);
   const [openingBilling, setOpeningBilling] = useState(false);
+  const [clusterCreateRaion, setClusterCreateRaion] = useState<string | null>(null);
+  const [clusterCreateLoading, setClusterCreateLoading] = useState(false);
   const [billingOrder, setBillingOrder] = useState<BillingOrder | null>(null);
   const [billingActionLoading, setBillingActionLoading] = useState(false);
 
@@ -584,6 +586,34 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       const newTask = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${taskId}`);
       selectTask(newTask);
     } catch (e) { setError(String(e)); } finally { setLoading(false); }
+  }
+
+  async function handleCreateFromCluster(params: {
+    raion: string; transtype: string; vehicle: string; driver_id: number | null; dock: string;
+  }) {
+    setClusterCreateLoading(true);
+    try {
+      const res = await apiFetch<{ task_id: number; st_count: number; warnings: string[] }>(
+        `/api/admin/transport/clusters/${encodeURIComponent(params.raion)}/create-task`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            stdate: stDate,
+            transtype: params.transtype,
+            vehicle: params.vehicle || null,
+            driver_id: params.driver_id,
+            dock: params.dock || null,
+            ware_ids: null,
+          }),
+        }
+      );
+      if (res.warnings.length > 0) setError(res.warnings.join("; "));
+      setClusterCreateRaion(null);
+      await Promise.all([loadTasks(), loadClusters(), loadAvailableSts()]);
+      const newTask = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${res.task_id}`);
+      setActiveTab("tasks");
+      selectTask(newTask);
+    } catch (e) { setError(String(e)); } finally { setClusterCreateLoading(false); }
   }
 
   async function handleSaveEdit() {
@@ -918,6 +948,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                           onToggle={() => toggleRaion(cluster.RAION)}
                           selectedNums={selectedStNums}
                           onToggleSt={toggleSt}
+                          onCreateTask={() => setClusterCreateRaion(cluster.RAION)}
                         />
                       ))
                 )}
@@ -1552,6 +1583,23 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           onClose={() => setBillingDialog(false)}
         />
       )}
+
+      {clusterCreateRaion && (() => {
+        const cluster = clusters.find(c => c.RAION === clusterCreateRaion);
+        if (!cluster) return null;
+        return (
+          <ClusterQuickCreateDialog
+            cluster={cluster}
+            stDate={stDate}
+            transportTypes={transportTypes}
+            vehicles={vehicles}
+            drivers={drivers}
+            loading={clusterCreateLoading}
+            onConfirm={handleCreateFromCluster}
+            onClose={() => setClusterCreateRaion(null)}
+          />
+        );
+      })()}
     </div>
   );
 }
@@ -1638,13 +1686,14 @@ function AvailableStRow({
 // ---------------------------------------------------------------------------
 
 function ClusterGroup({
-  cluster, expanded, onToggle, selectedNums, onToggleSt,
+  cluster, expanded, onToggle, selectedNums, onToggleSt, onCreateTask,
 }: {
   cluster: TransportCluster;
   expanded: boolean;
   onToggle: () => void;
   selectedNums: Set<string>;
   onToggleSt: (stNum: string) => void;
+  onCreateTask?: () => void;
 }) {
   const selCount = cluster.STS.filter(s => selectedNums.has(s.ST_NUMBER)).length;
   return (
@@ -1657,6 +1706,15 @@ function ClusterGroup({
             {" "}— {cluster.ST_COUNT} СТ · {cluster.PALLET_COUNT} пал · {cluster.WEIGHT_KG.toFixed(0)} кг
           </span>
           {selCount > 0 && <span className="dispatch-cluster-sel">{selCount} выбр.</span>}
+          {onCreateTask && (
+            <button
+              className="cluster-create-task-btn"
+              onClick={e => { e.stopPropagation(); onCreateTask(); }}
+              title={`Создать рейс из всех СТ района «${cluster.RAION}»`}
+            >
+              ⚡ Рейс
+            </button>
+          )}
         </td>
       </tr>
       {expanded && cluster.STS.map(st => (
@@ -2072,6 +2130,112 @@ function CreateTaskDialog({
             Создать{selectedCount > 0 ? ` (${selectedCount} СТ)` : ""}
           </button>
           <button className="dispatch-cancel-edit-btn" onClick={onClose}>Отмена</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// ClusterQuickCreateDialog — Sprint 29, Phase 2 полуавто
+// ---------------------------------------------------------------------------
+
+function ClusterQuickCreateDialog({
+  cluster, stDate, transportTypes, vehicles, drivers, loading, onConfirm, onClose,
+}: {
+  cluster: TransportCluster;
+  stDate: string;
+  transportTypes: TransportType[];
+  vehicles: Vehicle[];
+  drivers: Driver[];
+  loading: boolean;
+  onConfirm: (params: { raion: string; transtype: string; vehicle: string; driver_id: number | null; dock: string }) => void;
+  onClose: () => void;
+}) {
+  const [transtype, setTranstype] = useState(transportTypes[0]?.TRANSPORTTYPE || "10");
+  const [vehicle, setVehicle] = useState("");
+  const [driverId, setDriverId] = useState<number | null>(null);
+  const [dock, setDock] = useState("");
+  const [avail, setAvail] = useState<VehicleAvail[]>([]);
+  const [availLoading, setAvailLoading] = useState(false);
+
+  useEffect(() => {
+    if (!stDate) return;
+    setAvailLoading(true);
+    apiFetch<VehicleAvail[]>(
+      `/api/admin/transport/vehicles/available?shipment_time=${stDate}+09:00&pallets=${cluster.PALLET_COUNT}`
+    )
+      .then(setAvail)
+      .catch(() => setAvail([]))
+      .finally(() => setAvailLoading(false));
+  }, [stDate, cluster.PALLET_COUNT]);
+
+  const availMap = new Map(avail.map(a => [a.vehicle_num, a]));
+  const selectedAvail = availMap.get(vehicle);
+
+  return (
+    <div className="dispatch-dialog-overlay" onClick={onClose}>
+      <div className="dispatch-dialog" onClick={e => e.stopPropagation()}>
+        <h3>⚡ Рейс из кластера «{cluster.RAION}»</h3>
+        <div className="cluster-dialog-summary">
+          {cluster.ST_COUNT} СТ · {cluster.PALLET_COUNT} пал · {cluster.WEIGHT_KG.toFixed(0)} кг · {cluster.VOLUME_M3.toFixed(2)} м³
+        </div>
+        <div className="cluster-dialog-date">Дата: {stDate}</div>
+        <label className="dispatch-dialog-field">
+          <span>Тип транспорта</span>
+          <select value={transtype} onChange={e => setTranstype(e.target.value)}>
+            {transportTypes.map(t => (
+              <option key={t.TRANSPORTTYPE} value={t.TRANSPORTTYPE}>
+                {t.TRANSPORTTYPE}{t.NAME ? ` — ${t.NAME}` : ""}
+              </option>
+            ))}
+            {transportTypes.length === 0 && <option value="10">10</option>}
+          </select>
+        </label>
+        <label className="dispatch-dialog-field">
+          <span>Машина {availLoading && <span style={{ fontSize: 10, color: "#94a3b8" }}>обновление…</span>}</span>
+          <select value={vehicle} onChange={e => setVehicle(e.target.value)}>
+            <option value="">— не выбрана —</option>
+            {vehicles.map(v => {
+              const a = availMap.get(v.NUM);
+              const dot = a ? AVAIL_DOT[a.status] : "";
+              return (
+                <option key={v.ID} value={v.NUM}>
+                  {dot} {v.NUM} · {v.MARKA ?? "?"}{v.PALLETS ? ` · ${v.PALLETS}пал` : ""}
+                  {a?.free_at ? ` · св. ${a.free_at}` : ""}
+                </option>
+              );
+            })}
+          </select>
+          {selectedAvail && selectedAvail.status === "red" && (
+            <div className="dispatch-avail-warn">⚠ {selectedAvail.detail} — конфликт возможен</div>
+          )}
+          {selectedAvail && selectedAvail.status === "yellow" && (
+            <div className="dispatch-avail-info">ℹ {selectedAvail.detail}</div>
+          )}
+        </label>
+        <label className="dispatch-dialog-field">
+          <span>Водитель</span>
+          <select value={driverId ?? ""} onChange={e => setDriverId(e.target.value ? Number(e.target.value) : null)}>
+            <option value="">— не выбран —</option>
+            {drivers.map(d => (
+              <option key={d.ID} value={d.ID}>
+                {d.FULL_NAME ?? `#${d.ID}`}
+                {d.SOBSTVENNYY === 0 && d.DOVERENNOST_OT ? ` (${d.DOVERENNOST_OT})` : ""}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="dispatch-dialog-field">
+          <span>Докст.</span>
+          <input type="text" value={dock} onChange={e => setDock(e.target.value)} placeholder="Д1" />
+        </label>
+        <div className="dispatch-dialog-actions">
+          <button className="dispatch-new-btn" disabled={loading}
+            onClick={() => onConfirm({ raion: cluster.RAION, transtype, vehicle, driver_id: driverId, dock })}>
+            {loading ? "Создаём…" : `Создать рейс (${cluster.ST_COUNT} СТ)`}
+          </button>
+          <button className="dispatch-cancel-edit-btn" onClick={onClose} disabled={loading}>Отмена</button>
         </div>
       </div>
     </div>

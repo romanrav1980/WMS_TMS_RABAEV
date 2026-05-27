@@ -1410,6 +1410,16 @@ class VehicleGanttDay(BaseModel):
 # Sprint 15 — Биллинг: создание счёта
 # ---------------------------------------------------------------------------
 
+class ClusterCreateTaskRequest(BaseModel):
+    """Создать рейс из кластера (Sprint 29, Phase 2 полуавто)."""
+    stdate: date = Field(..., description="Дата отгрузки")
+    transtype: str = Field(default="10", description="Тип транспорта")
+    vehicle: str | None = None
+    driver_id: int | None = None
+    dock: str | None = None
+    ware_ids: list[int] | None = None
+
+
 class BillingOrderCreate(BaseModel):
     company: str = Field(..., description="Транспортная компания (перевозчик)")
     date_from: str = Field(..., description="Начало периода YYYY-MM-DD")
