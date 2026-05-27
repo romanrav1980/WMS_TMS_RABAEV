@@ -661,6 +661,26 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     } catch (e) { setError(String(e)); } finally { setOpeningBilling(false); }
   }
 
+  async function handleDetachFromBilling() {
+    if (!billingOrder || !selectedTask) return;
+    if (billingOrder.closed || billingOrder.payed) {
+      setError("Нельзя снять рейс с закрытого или оплаченного счёта");
+      return;
+    }
+    if (!confirm(`Снять рейс #${selectedTask.ID} со счёта ${billingOrder.num ?? `#${billingOrder.order_id}`}?`)) return;
+    setBillingActionLoading(true);
+    try {
+      await apiFetch(
+        `/api/admin/transport/billing/orders/${billingOrder.order_id}/tasks/${selectedTask.ID}`,
+        { method: "DELETE" }
+      );
+      const updated = { ...selectedTask, PAY_ORDER_ID: null };
+      setSelectedTask(updated);
+      setTasks(prev => prev.map(t => t.ID === updated.ID ? updated : t));
+      setBillingOrder(null);
+    } catch (e) { setError(String(e)); } finally { setBillingActionLoading(false); }
+  }
+
   async function handleBillingClose() {
     if (!billingOrder) return;
     if (!confirm(`Закрыть счёт ${billingOrder.num ?? `#${billingOrder.order_id}`}?`)) return;
@@ -1245,6 +1265,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     loading={billingActionLoading}
                     onClose={handleBillingClose}
                     onPay={handleBillingPay}
+                    onDetach={handleDetachFromBilling}
                   />
                 )}
                 <div className="price-section">
@@ -1429,6 +1450,19 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             tasks={billingOrderTasks}
             loading={billingOrderTasksLoading}
             onClose={() => { setSelectedBillingOrder(null); setBillingOrderTasks([]); }}
+            onDetachTask={async (tt_id: number) => {
+              if (!selectedBillingOrder) return;
+              await apiFetch(
+                `/api/admin/transport/billing/orders/${selectedBillingOrder.order_id}/tasks/${tt_id}`,
+                { method: "DELETE" }
+              );
+              setBillingOrderTasks(prev => prev.filter(t => t.tt_id !== tt_id));
+              setBillingOrders(prev => prev.map(o =>
+                o.order_id === selectedBillingOrder.order_id
+                  ? { ...o, task_count: (o.task_count ?? 1) - 1 }
+                  : o
+              ));
+            }}
           />
         </div>
         ) : activeTab === "routes" ? (
@@ -2127,12 +2161,13 @@ function billingStatusLabel(order: BillingOrder): { text: string; cls: string } 
 }
 
 function BillingOrderCard({
-  order, loading, onClose, onPay,
+  order, loading, onClose, onPay, onDetach,
 }: {
   order: BillingOrder;
   loading: boolean;
   onClose: () => void;
   onPay: () => void;
+  onDetach?: () => void;
 }) {
   const { text, cls } = billingStatusLabel(order);
   return (
@@ -2162,6 +2197,11 @@ function BillingOrderCard({
         )}
         {order.payed && (
           <span className="billing-done-label">Счёт закрыт и оплачен</span>
+        )}
+        {onDetach && !order.closed && !order.payed && (
+          <button className="billing-detach-btn" onClick={onDetach} disabled={loading}>
+            Снять с биллинга
+          </button>
         )}
       </div>
     </div>
@@ -2342,15 +2382,25 @@ function exportOrderTasksCsv(order: BillingOrder, tasks: BillingOrderTask[]) {
 }
 
 function BillingOrderDetailPanel({
-  order, tasks, loading, onClose,
+  order, tasks, loading, onClose, onDetachTask,
 }: {
   order: BillingOrder;
   tasks: BillingOrderTask[];
   loading: boolean;
   onClose: () => void;
+  onDetachTask?: (tt_id: number) => Promise<void>;
 }) {
+  const [detachingId, setDetachingId] = useState<number | null>(null);
   const { text, cls } = billingStatusLabel(order);
   const total = tasks.reduce((s, t) => s + t.price, 0);
+  const canDetach = !order.closed && !order.payed && !!onDetachTask;
+
+  async function handleDetach(tt_id: number) {
+    if (!onDetachTask) return;
+    if (!confirm(`Снять рейс #${tt_id} со счёта ${order.num ?? `#${order.order_id}`}?`)) return;
+    setDetachingId(tt_id);
+    try { await onDetachTask(tt_id); } finally { setDetachingId(null); }
+  }
 
   return (
     <div className="billing-detail-container">
@@ -2378,6 +2428,7 @@ function BillingOrderDetailPanel({
                 <th>Авто</th>
                 <th>Дата</th>
                 <th className="billing-price-cell">Сумма ₽</th>
+                {canDetach && <th />}
               </tr>
             </thead>
             <tbody>
@@ -2389,6 +2440,16 @@ function BillingOrderDetailPanel({
                   <td className="billing-price-cell">
                     {t.price > 0 ? t.price.toLocaleString("ru-RU") + " ₽" : "—"}
                   </td>
+                  {canDetach && (
+                    <td>
+                      <button className="billing-detach-task-btn"
+                        onClick={() => handleDetach(t.tt_id)}
+                        disabled={detachingId === t.tt_id}
+                        title="Снять рейс со счёта">
+                        {detachingId === t.tt_id ? "…" : "✕"}
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
