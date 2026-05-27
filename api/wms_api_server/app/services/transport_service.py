@@ -399,6 +399,14 @@ class TransportService:
                 status_code=409,
                 detail=f"Рейс включён в счёт №{task['PAY_ORDER_ID']} — расформирование запрещено",
             )
+        # Unassign all STs first so they become available for new trips.
+        # RRL_TT_ADD_PALL(TT_ID=0) detaches an ST from any task.
+        sts = self.get_task_sts(task_id)
+        for st in sts:
+            self.gateway.call_varchar_function(
+                "RABAEV.RRL_TT_ADD_PALL",
+                {"TT_ID": 0, "ST_NUMBER1": st["ST_NUMBER"]},
+            )
         self.gateway.execute(
             """
             UPDATE RABAEV.RRL_TRANSPORT_TASK
