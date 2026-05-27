@@ -1613,6 +1613,14 @@ function ReadinessBar({ perc, unready }: { perc: number; unready: number | null 
   );
 }
 
+type VehicleAvail = {
+  vehicle_id: number; vehicle_num: string; vehicle_type: string;
+  marka: string; max_pallets: number; gidrobort: boolean;
+  free_at: string | null; delay_min: number; status: "green" | "yellow" | "red"; detail: string;
+};
+
+const AVAIL_DOT: Record<string, string> = { green: "🟢", yellow: "🟡", red: "🔴" };
+
 function CreateTaskDialog({
   filterDate, transportTypes, vehicles, drivers, selectedCount, onConfirm, onClose,
 }: {
@@ -1626,9 +1634,29 @@ function CreateTaskDialog({
 }) {
   const [transtype, setTranstype] = useState(transportTypes[0]?.TRANSPORTTYPE || "10");
   const [shipDate, setShipDate] = useState(filterDate);
+  const [shipTime, setShipTime] = useState("09:00");
   const [vehicle, setVehicle] = useState("");
   const [driverId, setDriverId] = useState<number | null>(null);
   const [dock, setDock] = useState("");
+  const [avail, setAvail] = useState<VehicleAvail[]>([]);
+  const [availLoading, setAvailLoading] = useState(false);
+
+  const selectedAvail = avail.find(a => a.vehicle_num === vehicle);
+
+  // Reload availability when date/time changes
+  useEffect(() => {
+    if (!shipDate || !shipTime) return;
+    setAvailLoading(true);
+    apiFetch<VehicleAvail[]>(
+      `/api/admin/transport/vehicles/available?shipment_time=${shipDate}+${shipTime}&pallets=0`
+    )
+      .then(setAvail)
+      .catch(() => setAvail([]))
+      .finally(() => setAvailLoading(false));
+  }, [shipDate, shipTime]);
+
+  // Merge availability into vehicle list
+  const availMap = new Map(avail.map(a => [a.vehicle_num, a]));
 
   return (
     <div className="dispatch-dialog-overlay" onClick={onClose}>
@@ -1646,16 +1674,38 @@ function CreateTaskDialog({
           </select>
         </label>
         <label className="dispatch-dialog-field">
-          <span>Машина</span>
+          <span>Дата отгрузки</span>
+          <div style={{ display: "flex", gap: 6 }}>
+            <input type="date" value={shipDate} onChange={e => setShipDate(e.target.value)} />
+            <input type="time" value={shipTime} onChange={e => setShipTime(e.target.value)}
+              style={{ width: 90 }} />
+          </div>
+        </label>
+        <label className="dispatch-dialog-field">
+          <span>Машина {availLoading && <span style={{ fontSize: 10, color: "#94a3b8" }}>обновление…</span>}</span>
           <select value={vehicle} onChange={e => setVehicle(e.target.value)}>
             <option value="">— не выбрана —</option>
-            {vehicles.map(v => (
-              <option key={v.ID} value={v.NUM}>
-                {v.NUM} · {v.MARKA ?? "?"} · {v.TR_TYPE ?? "?"}{v.PALLETS ? ` · ${v.PALLETS} пал` : ""}
-                {v.GIDROBORT ? " · Г" : ""}
-              </option>
-            ))}
+            {vehicles.map(v => {
+              const a = availMap.get(v.NUM);
+              const dot = a ? AVAIL_DOT[a.status] : "";
+              return (
+                <option key={v.ID} value={v.NUM}>
+                  {dot} {v.NUM} · {v.MARKA ?? "?"}{v.PALLETS ? ` · ${v.PALLETS}пал` : ""}
+                  {a?.free_at ? ` · св. ${a.free_at}` : ""}
+                </option>
+              );
+            })}
           </select>
+          {selectedAvail && selectedAvail.status === "red" && (
+            <div className="dispatch-avail-warn">
+              ⚠ {selectedAvail.detail} — конфликт возможен
+            </div>
+          )}
+          {selectedAvail && selectedAvail.status === "yellow" && (
+            <div className="dispatch-avail-info">
+              ℹ {selectedAvail.detail}
+            </div>
+          )}
         </label>
         <label className="dispatch-dialog-field">
           <span>Водитель</span>
@@ -1672,10 +1722,6 @@ function CreateTaskDialog({
         <label className="dispatch-dialog-field">
           <span>Докст.</span>
           <input type="text" value={dock} onChange={e => setDock(e.target.value)} placeholder="Д1" />
-        </label>
-        <label className="dispatch-dialog-field">
-          <span>Дата отгрузки</span>
-          <input type="date" value={shipDate} onChange={e => setShipDate(e.target.value)} />
         </label>
         <div className="dispatch-dialog-actions">
           <button className="dispatch-new-btn"

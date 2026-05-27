@@ -1312,3 +1312,164 @@ class TransportService:
             )
 
         return result
+
+    # ------------------------------------------------------------------
+    # Sprint 13 — Умный подбор машины и конфликты
+    # ------------------------------------------------------------------
+
+    def get_vehicles_available(self, shipment_time: str, pallets: int) -> list[dict]:
+        """Возвращает список машин с индикатором доступности к времени отгрузки.
+
+        Проверки:
+          1. Машина не занята в запрашиваемый интервал (текущая занятость).
+          2. CLEAN_RETURNS.PLAN_END завершена до shipment_time (освобождение).
+          3. Вместимость машины достаточна для переданного числа паллет.
+          4. Машина не заблокирована (BLOCKED = 0).
+
+        Статус:
+          green  — машина свободна к shipment_time
+          yellow — освобождается < 60 мин позже
+          red    — освободится > 60 мин позже или не хватает паллет
+        """
+        from datetime import datetime as dt
+
+        try:
+            requested_dt = dt.strptime(shipment_time[:16], "%Y-%m-%d %H:%M")
+        except ValueError:
+            raise HTTPException(status_code=422, detail="shipment_time must be YYYY-MM-DD HH:MM")
+
+        ship_date = requested_dt.date()
+
+        # All active vehicles
+        vehicles = self.list_vehicles(active_only=True)
+
+        # Last PLAN_END per vehicle for that day (from RRL_TT_OPERATIONS via task join)
+        rows = self.gateway.fetch_all(
+            """
+            SELECT V.NUM AS VEHICLE_NUM, V.ID AS VEHICLE_ID, V.MARKA, V.TR_TYPE,
+                   V.PALLETS AS MAX_PALLETS, V.GIDROBORT,
+                   MAX(TO_CHAR(OPS.PLAN_END, 'YYYY-MM-DD HH24:MI')) AS LAST_OP_END
+              FROM RABAEV.RRL_TR_VEHICLE V
+              LEFT JOIN RABAEV.RRL_TRANSPORT_TASK TT
+                ON TT.TRANSPORT = V.NUM
+               AND TT.SHIPMENT_DATE = TO_DATE(:d, 'YYYY-MM-DD')
+               AND TT.STATUS NOT IN ('Deleted', 'Удалён')
+              LEFT JOIN RABAEV.RRL_TT_OPERATIONS OPS
+                ON OPS.TT_ID = TT.ID
+             WHERE V.BLOCKED = 0
+             GROUP BY V.NUM, V.ID, V.MARKA, V.TR_TYPE, V.PALLETS, V.GIDROBORT
+             ORDER BY V.TR_TYPE, V.NUM
+            """,
+            {"d": str(ship_date)},
+        )
+
+        result = []
+        for r in rows:
+            last_end_str = r.get("LAST_OP_END")
+            max_pallets = int(r.get("MAX_PALLETS") or 0)
+
+            # Pallet capacity check
+            capacity_ok = max_pallets == 0 or max_pallets >= pallets
+
+            if last_end_str:
+                try:
+                    last_end_dt = dt.strptime(last_end_str[:16], "%Y-%m-%d %H:%M")
+                except ValueError:
+                    last_end_dt = None
+            else:
+                last_end_dt = None
+
+            if last_end_dt is None:
+                # No operations for this day → free all day
+                free_at = None
+                delay_min = 0
+            else:
+                delay_min = (last_end_dt - requested_dt).total_seconds() / 60
+                free_at = last_end_dt.strftime("%H:%M")
+
+            if not capacity_ok:
+                status = "red"
+                detail = f"Паллет {max_pallets}, запрошено {pallets}"
+            elif delay_min <= 0:
+                status = "green"
+                detail = "Свободна"
+            elif delay_min <= 60:
+                status = "yellow"
+                detail = f"Освободится в {free_at}"
+            else:
+                status = "red"
+                detail = f"Занята до {free_at}"
+
+            result.append(
+                {
+                    "vehicle_id": int(r.get("VEHICLE_ID") or 0),
+                    "vehicle_num": r.get("VEHICLE_NUM") or "",
+                    "vehicle_type": r.get("TR_TYPE") or "",
+                    "marka": r.get("MARKA") or "",
+                    "max_pallets": max_pallets,
+                    "gidrobort": bool(r.get("GIDROBORT")),
+                    "free_at": free_at,
+                    "delay_min": round(delay_min, 0),
+                    "status": status,
+                    "detail": detail,
+                }
+            )
+
+        # Sort: green first, then yellow, then red
+        order = {"green": 0, "yellow": 1, "red": 2}
+        result.sort(key=lambda x: (order.get(x["status"], 3), x["vehicle_num"]))
+        return result
+
+    def get_plan_fact(self, date_from: date, date_to: date, vehicle: str | None = None) -> list[dict]:
+        """Сводный план-фактный отчёт по всем рейсам периода."""
+        params: dict[str, Any] = {
+            "d_from": str(date_from),
+            "d_to": str(date_to),
+        }
+        vehicle_clause = ""
+        if vehicle:
+            vehicle_clause = "AND TT.TRANSPORT = :vehicle"
+            params["vehicle"] = vehicle
+
+        tasks = self.gateway.fetch_all(
+            f"""
+            SELECT TT.ID AS TT_ID,
+                   TT.TRANSPORT AS VEHICLE,
+                   TO_CHAR(TT.SHIPMENT_DATE, 'YYYY-MM-DD') AS SHIPMENT_DATE,
+                   TT.STATUS
+              FROM RABAEV.RRL_TRANSPORT_TASK TT
+             WHERE TT.SHIPMENT_DATE BETWEEN TO_DATE(:d_from, 'YYYY-MM-DD')
+                                        AND TO_DATE(:d_to,   'YYYY-MM-DD')
+               AND TT.STATUS NOT IN ('Deleted', 'Удалён')
+               {vehicle_clause}
+             ORDER BY TT.SHIPMENT_DATE, TT.TRANSPORT
+            """,
+            params,
+        )
+
+        result = []
+        for t in tasks:
+            ops = self.get_operations(int(t["TT_ID"]))
+            total_delta = sum(
+                abs(op["delta_min"]) for op in ops if op["delta_min"] is not None
+            )
+            # Count rest violations: DRIVE + DRIVE_BACK total > 540 min (9 h)
+            drive_min = sum(
+                op["duration_min"]
+                for op in ops
+                if op["operation_code"] in ("DRIVE", "DRIVE_BACK")
+            )
+            rest_violations = 1 if drive_min > 540 else 0
+
+            result.append(
+                {
+                    "tt_id": int(t["TT_ID"]),
+                    "vehicle": t.get("VEHICLE") or "",
+                    "shipment_date": t.get("SHIPMENT_DATE") or "",
+                    "status": t.get("STATUS") or "",
+                    "operations": ops,
+                    "total_delta_min": round(total_delta, 1),
+                    "rest_violations": rest_violations,
+                }
+            )
+        return result

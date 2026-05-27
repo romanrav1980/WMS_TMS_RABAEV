@@ -1010,3 +1010,22 @@ button[aria-disabled="true"] { cursor: help; }
 .gantt-tt-row   { display: flex; justify-content: space-between; gap: 12px; margin-top: 3px; color: #cbd5e1; }
 .gantt-tt-row span:first-child { color: #94a3b8; }
 .gantt-tt-delta { font-weight: 600; }
+
+/* Sprint 13 — availability indicators in create dialog */
+.dispatch-avail-warn { font-size: 11px; color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; border-radius: 4px; padding: 4px 8px; margin-top: 4px; }
+.dispatch-avail-info { font-size: 11px; color: #92400e; background: #fffbeb; border: 1px solid #fde68a; border-radius: 4px; padding: 4px 8px; margin-top: 4px; }
+
+/* Gantt task-card modal (Sprint 13) */
+.gantt-card-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 2000; display: flex; align-items: center; justify-content: center; }
+.gantt-card { background: #fff; border-radius: 12px; padding: 20px 24px; min-width: 320px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,.2); }
+.gantt-card-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #1e293b; }
+.gantt-card-row { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; padding: 5px 0; border-bottom: 1px solid #f1f5f9; }
+.gantt-card-row span:first-child { color: #64748b; }
+.gantt-card-row span:last-child { font-weight: 500; color: #1e293b; }
+.gantt-card-ops { margin-top: 10px; }
+.gantt-card-ops-title { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; }
+.gantt-card-op { display: flex; align-items: center; gap: 6px; font-size: 11px; padding: 2px 0; }
+.gantt-card-op-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.gantt-card-actions { display: flex; gap: 8px; margin-top: 14px; justify-content: flex-end; }
+.gantt-card-close-btn { padding: 6px 14px; border: 1px solid var(--line); border-radius: 6px; background: #fff; cursor: pointer; font-size: 12px; }
+.gantt-card-close-btn:hover { background: #f1f5f9; }

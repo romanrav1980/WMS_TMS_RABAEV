@@ -88,6 +88,12 @@ type Tooltip = {
   op: Operation;
 };
 
+type TaskCard = {
+  tt_id: number;
+  vehicle_num: string;
+  operations: Operation[];
+};
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -182,11 +188,12 @@ function GridLines({ rowCount }: { rowCount: number }) {
 }
 
 function OpBlock({
-  op, rowY, onHover, onLeave,
+  op, rowY, onHover, onLeave, onClick,
 }: {
   op: Operation; rowY: number;
   onHover: (e: React.MouseEvent<SVGRectElement>, op: Operation) => void;
   onLeave: () => void;
+  onClick: (op: Operation) => void;
 }) {
   const startMin = parseMinFromStr(op.plan_start);
   const endMin   = parseMinFromStr(op.plan_end);
@@ -213,6 +220,7 @@ function OpBlock({
         style={{ cursor: "pointer" }}
         onMouseEnter={(e) => onHover(e, op)}
         onMouseLeave={onLeave}
+        onClick={() => onClick(op)}
       />
       {w > 32 && (
         <text
@@ -240,6 +248,7 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
     const n = new Date(); return n.getHours() * 60 + n.getMinutes();
   });
   const [tooltip, setTooltip]             = useState<Tooltip | null>(null);
+  const [taskCard, setTaskCard]           = useState<TaskCard | null>(null);
   const [vehicleFilter, setVehicleFilter] = useState("");
   const scrollRef                         = useRef<HTMLDivElement>(null);
 
@@ -293,6 +302,13 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
     setTooltip({ x: rect.left + rect.width / 2, y: rect.top - 8, op });
   }, []);
   const handleOpLeave = useCallback(() => setTooltip(null), []);
+
+  const handleOpClick = useCallback((op: Operation) => {
+    // Find which vehicle this op belongs to
+    const v = filtered.find(vv => vv.operations.some(o => o.op_id === op.op_id));
+    if (!v) return;
+    setTaskCard({ tt_id: op.tt_id, vehicle_num: v.vehicle_num, operations: v.operations });
+  }, [filtered]);
 
   // SVG height
   const svgH = HEADER_H + filtered.length * ROW_H + 2;
@@ -419,6 +435,7 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
                       rowY={rowY}
                       onHover={handleOpHover}
                       onLeave={handleOpLeave}
+                      onClick={handleOpClick}
                     />
                   ))}
                 </g>
@@ -514,6 +531,44 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
       </div>
 
       {/* ---- Tooltip ---- */}
+      {/* ---- Task card modal ---- */}
+      {taskCard && (
+        <div className="gantt-card-overlay" onClick={() => setTaskCard(null)}>
+          <div className="gantt-card" onClick={e => e.stopPropagation()}>
+            <div className="gantt-card-title">Рейс #{taskCard.tt_id} · {taskCard.vehicle_num}</div>
+            <div className="gantt-card-ops">
+              <div className="gantt-card-ops-title">Цепочка операций</div>
+              {taskCard.operations.map(op => (
+                <div key={op.op_id} className="gantt-card-op">
+                  <span className="gantt-card-op-dot"
+                    style={{ background: OP_COLOR[op.operation_code] || "#94a3b8" }} />
+                  <span style={{ minWidth: 90, fontSize: 11 }}>{OP_LABEL[op.operation_code] || op.operation_code}</span>
+                  <span style={{ color: "#64748b", fontSize: 11 }}>
+                    {op.plan_start?.slice(-5)} – {op.plan_end?.slice(-5)}
+                  </span>
+                  {op.fact_start && (
+                    <span style={{ color: "#16a34a", fontSize: 10, marginLeft: 4 }}>
+                      ✓ {op.fact_start.slice(-5)}
+                    </span>
+                  )}
+                  {op.delta_min !== null && (
+                    <span style={{
+                      fontSize: 10, marginLeft: 4,
+                      color: Math.abs(op.delta_min) <= 15 ? "#16a34a" : Math.abs(op.delta_min) <= 60 ? "#d97706" : "#dc2626"
+                    }}>
+                      {op.delta_min > 0 ? "+" : ""}{op.delta_min}м
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="gantt-card-actions">
+              <button className="gantt-card-close-btn" onClick={() => setTaskCard(null)}>Закрыть</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {tooltip && (
         <div
           className="gantt-tooltip"

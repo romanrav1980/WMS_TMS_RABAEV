@@ -32,6 +32,8 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   GET    /api/admin/transport/tasks/{id}/operations      — список операций рейса (Sprint 11)
   PATCH  /api/admin/transport/operations/{op_id}/fact    — зафиксировать fact_start/fact_end (Sprint 11)
   GET    /api/admin/transport/vehicles/gantt             — Ганта-данные всех машин на день (Sprint 11)
+  GET    /api/admin/transport/vehicles/available         — доступность машин к времени отгрузки (Sprint 13)
+  GET    /api/admin/transport/plan-fact                  — сводный план-фактный отчёт (Sprint 13/14)
 """
 
 from datetime import date
@@ -445,3 +447,28 @@ def get_vehicles_gantt(
 ) -> list[dict]:
     """Данные диаграммы Ганта для всех машин на день."""
     return TransportService().get_vehicles_gantt(gantt_date)
+
+
+# ---------------------------------------------------------------------------
+# Sprint 13 — Умный подбор машины и план-факт
+# ---------------------------------------------------------------------------
+
+@router.get("/vehicles/available")
+def get_vehicles_available(
+    shipment_time: str = Query(default=..., description="Плановое время отгрузки YYYY-MM-DD HH:MM"),
+    pallets: int = Query(default=0, ge=0, description="Требуемое число паллет"),
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    """Список машин с индикатором доступности (green/yellow/red) к времени отгрузки."""
+    return TransportService().get_vehicles_available(shipment_time, pallets)
+
+
+@router.get("/plan-fact")
+def get_plan_fact(
+    date_from: date = Query(default=..., description="Начало периода"),
+    date_to:   date = Query(default=..., description="Конец периода"),
+    vehicle:   str | None = Query(default=None, description="Фильтр по гос. номеру"),
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    """Сводный план-фактный отчёт по всем рейсам периода."""
+    return TransportService().get_plan_fact(date_from, date_to, vehicle)
