@@ -49,7 +49,8 @@
 | 31 | ClusterSidebar — левая панель карточек районов | Диспетчер | 0.5 нед | 🟢 КК | ✅ `86d3a71` 2026-05-28 |
 | 32 | Phase 2 ✅: предупреждение о перегрузе | Диспетчер | 0.5 нед | 🟢 КК | ✅ `286c0c7` 2026-05-28 |
 | 33 | Режим «Кратко» в таблице маршрутов (§3.8.1) | Диспетчер | 0.5 нед | 🟢 КК | ✅ `b5b12d1` 2026-05-28 |
-| **Итого** | | | **~25 нед** | | |
+| 34 | Bugfix: cancel_task освобождает СТ перед удалением | Диспетчер | 0.25 нед | 🟢 КК | ✅ `73cd887` 2026-05-28 |
+| **Итого** | | | **~25.25 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -624,6 +625,27 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 34 — Bugfix: cancel_task освобождает СТ перед удалением
+
+**Инструмент:** 🟢 КК (код-код $20) — бэкенд, одна функция
+
+**Проблема:** `cancel_task` ставил `DELETED=1` без снятия СТ с рейса. После отмены СТ оставались с `TRANSTASK_ID` удалённого рейса и не появлялись в доступных для нового рейса.
+
+**Исправление:** перед `UPDATE DELETED=1` — цикл `RRL_TT_ADD_PALL(TT_ID=0)` для каждого СТ из `get_task_sts()`.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `cancel_task`: добавить цикл unassign перед DELETE | Backend | `transport_service.py` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `73cd887` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint34_functional.py` — 6 pytest-кейсов (пустой рейс, N СТ, порядок операций, 409, большой рейс)  
+- `tests/transport/sprint34_usability_checklist.md` — 12 проверок  
+- `tests/transport/transport_sprint34_load_test.py` — 2 users, 30s, NFR cancel p95 ≤ 500ms  
 
 ---
 
