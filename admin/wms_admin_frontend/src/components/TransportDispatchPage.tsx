@@ -1148,6 +1148,18 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 </div>
               </div>
 
+              {/* Sprint 30 — Live load metrics bar */}
+              {selectedVehicle?.PALLETS && tripP > 0 && (
+                <div className="dispatch-load-bar-wrap">
+                  <LoadBar
+                    label="Паллеты"
+                    value={tripP}
+                    max={selectedVehicle.PALLETS}
+                    unit="пал"
+                  />
+                </div>
+              )}
+
               <div className="dispatch-trip-sts-wrap">
                 <table className="dispatch-grid">
                   <thead>
@@ -1724,6 +1736,24 @@ function ClusterGroup({
           isChild />
       ))}
     </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// LoadBar — Sprint 30, live capacity bar (pallets vs vehicle max)
+// ---------------------------------------------------------------------------
+
+function LoadBar({ label, value, max, unit }: { label: string; value: number; max: number; unit: string }) {
+  const pct = Math.min(100, Math.round((value / max) * 100));
+  const color = pct >= 100 ? "#ef4444" : pct >= 85 ? "#f59e0b" : "#22c55e";
+  return (
+    <div className="load-bar-row">
+      <span className="load-bar-label">{label}</span>
+      <div className="load-bar-track">
+        <div className="load-bar-fill" style={{ width: `${pct}%`, background: color }} />
+      </div>
+      <span className="load-bar-text" style={{ color }}>{value} / {max} {unit} ({pct}%)</span>
+    </div>
   );
 }
 

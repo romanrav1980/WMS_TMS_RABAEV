@@ -1174,6 +1174,14 @@ button[aria-disabled="true"] { cursor: help; }
 .billing-detail-total { font-size: 12px; color: #374151; border-top: 2px solid var(--line); padding-top: 6px; }
 .billing-detail-export-btn { margin-top: 4px; font-size: 11px; padding: 4px 10px; }
 
+/* Sprint 30 — Live load metrics bar */
+.dispatch-load-bar-wrap { padding: 4px 12px 0; }
+.load-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.load-bar-label { font-size: 11px; color: #6b7280; width: 60px; flex-shrink: 0; }
+.load-bar-track { flex: 1; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+.load-bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+.load-bar-text { font-size: 11px; font-weight: 600; white-space: nowrap; min-width: 120px; }
+
 /* Sprint 29 — Создать рейс из кластера */
 .cluster-create-task-btn {
   margin-left: 10px;
