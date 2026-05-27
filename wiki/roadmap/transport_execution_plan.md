@@ -43,7 +43,8 @@
 | 25 | Биллинг: снять рейс с биллинга | Billing | 0.5 нед | 🟢 КК | ✅ `7a3e833` 2026-05-27 |
 | 26 | Биллинг: Excel-экспорт счёта | Billing | 0.5 нед | 🟢 КК | ✅ `5f6e110` 2026-05-27 |
 | 27 | Биллинг: Excel-экспорт реестра счетов | Billing | 0.5 нед | 🟢 КК | ✅ `23682f3` 2026-05-28 |
-| **Итого** | | | **~22 нед** | | |
+| 28 | Диспетчер: Excel-экспорт списка рейсов | Диспетчер | 0.5 нед | 🟢 КК | ✅ `284c754` 2026-05-28 |
+| **Итого** | | | **~22.5 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -618,6 +619,30 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 28 — Диспетчер: Excel-экспорт списка рейсов
+
+**Инструмент:** 🟢 КК (код-код $20) — аналогичный паттерн Sprints 26-27, другой источник данных
+
+**Цель:** закрыть ТЗ §3 — кнопка «В Excel» во вкладке «Маршруты». Скачивает XLSX со всеми рейсами текущего фильтра (дата, авто, компания, «без оплат»).
+
+**ТЗ:** §3 «В Excel» (кнопка в тулбаре таблицы маршрутов)
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `export_tasks_xlsx(...)` — XLSX-список рейсов, те же фильтры что `list_tasks` | Backend | `transport_service.py` |
+| `GET /tasks/export.xlsx` — размещён ДО `/{task_id}` | Backend | `transport.py` |
+| `handleRoutesXlsx` + кнопка «⬇ Excel» в тулбаре вкладки «Маршруты» | Frontend | `TransportDispatchPage.tsx` |
+| `.routes-xlsx-btn` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `284c754` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint28_functional.py` — 12 pytest-кейсов (MIME, magic, route conflict, row count, filters)  
+- `tests/transport/sprint28_usability_checklist.md` — 17 юзабилити-проверок  
+- `tests/transport/transport_sprint28_load_test.py` — 5 users, 60s, NFR tasks export p95 ≤ 600ms  
 
 ---
 
