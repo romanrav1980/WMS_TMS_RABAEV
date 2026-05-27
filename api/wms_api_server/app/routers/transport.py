@@ -55,6 +55,9 @@ from fastapi import APIRouter, Depends, Query
 
 from ..auth import (
     AdminUser,
+    BILLING_CALC_PRICE_PERMISSION,
+    BILLING_CREATE_PRICE_PERMISSION,
+    BILLING_EDIT_PERMISSION,
     TRANSPORT_DISPATCH_CLOSE_PERMISSION,
     TRANSPORT_DISPATCH_EDIT_PERMISSION,
     TRANSPORT_DISPATCH_VIEW_PERMISSION,
@@ -509,7 +512,7 @@ def list_billing_orders(
 @router.post("/billing/orders")
 def create_billing_order(
     req: BillingOrderCreate,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+    _user: AdminUser = Depends(require_permission(BILLING_EDIT_PERMISSION)),
 ) -> dict:
     """Создать новый биллинг-заказ."""
     svc = TransportService()
@@ -535,7 +538,7 @@ def get_billing_order(
 @router.patch("/billing/orders/{order_id}/close")
 def close_billing_order(
     order_id: int,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+    _user: AdminUser = Depends(require_permission(BILLING_EDIT_PERMISSION)),
 ) -> dict:
     """Закрыть биллинг-заказ (вызывает RRL_CLOSE_BILLINGORDER)."""
     return TransportService().close_billing_order(order_id)
@@ -544,7 +547,7 @@ def close_billing_order(
 @router.patch("/billing/orders/{order_id}/pay")
 def pay_billing_order(
     order_id: int,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+    _user: AdminUser = Depends(require_permission(BILLING_EDIT_PERMISSION)),
 ) -> dict:
     """Отметить биллинг-заказ как оплаченный (вызывает RRL_PAY_BILLINGORDER)."""
     return TransportService().pay_billing_order(order_id)
@@ -563,7 +566,7 @@ def get_billing_order_tasks(
 def add_tasks_to_billing_order(
     order_id: int,
     req: BillingAddTasksRequest,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+    _user: AdminUser = Depends(require_permission(BILLING_EDIT_PERMISSION)),
 ) -> dict:
     """Привязать рейсы к биллинг-заказу."""
     TransportService().add_tasks_to_order(order_id, req.tt_ids)
@@ -586,7 +589,7 @@ def get_task_billing(
 @router.post("/tasks/{task_id}/billing/open")
 def open_billing_for_task(
     task_id: int,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+    _user: AdminUser = Depends(require_permission(BILLING_EDIT_PERMISSION)),
 ) -> dict:
     """Создать биллинг-заказ для рейса и привязать к нему."""
     return TransportService().open_billing_for_task(task_id)
@@ -596,7 +599,7 @@ def open_billing_for_task(
 def remove_task_from_billing_order(
     order_id: int,
     tt_id: int,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+    _user: AdminUser = Depends(require_permission(BILLING_EDIT_PERMISSION)),
 ) -> dict:
     """Отвязать рейс от биллинг-заказа (обнулить PAY_ORDER_ID)."""
     return TransportService().remove_task_from_billing_order(order_id, tt_id)
@@ -605,7 +608,7 @@ def remove_task_from_billing_order(
 @router.post("/tasks/{task_id}/recalculate-price")
 def recalculate_task_price(
     task_id: int,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+    _user: AdminUser = Depends(require_permission(BILLING_CALC_PRICE_PERMISSION)),
 ) -> dict:
     """Пересчитать стоимость рейса через Oracle-функцию TRANSPORT_TASK.stoim_tt."""
     return TransportService().recalculate_price(task_id)
@@ -615,7 +618,7 @@ def recalculate_task_price(
 def set_task_price(
     task_id: int,
     req: PriceUpdateRequest,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+    _user: AdminUser = Depends(require_permission(BILLING_CREATE_PRICE_PERMISSION)),
 ) -> dict:
     """Ручная установка стоимости рейса (право CREATE_TT_PRICE)."""
     return TransportService().set_task_price(task_id, req.price)

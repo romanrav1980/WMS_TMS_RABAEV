@@ -96,6 +96,9 @@ INVENTORY_TASK_EXECUTE_PERMISSION = "inventory_task_execute"
 TRANSPORT_DISPATCH_VIEW_PERMISSION = "transport_dispatch_view"
 TRANSPORT_DISPATCH_EDIT_PERMISSION = "transport_dispatch_edit"
 TRANSPORT_DISPATCH_CLOSE_PERMISSION = "transport_dispatch_close"
+BILLING_EDIT_PERMISSION = "edit_bill_tt"
+BILLING_CALC_PRICE_PERMISSION = "calc_tt_price"
+BILLING_CREATE_PRICE_PERMISSION = "create_tt_price"
 TRANSPORT_SEND_EMPTY_TRUCK_PERMISSION = "send_empty_truck"
 
 security = HTTPBasic(auto_error=False)
