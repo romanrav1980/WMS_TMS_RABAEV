@@ -122,6 +122,17 @@ type StPalletRow = {
   ROW_VOLUME_M3: number;
 };
 
+type BillingOrder = {
+  order_id: number;
+  num: string | null;
+  company: string | null;
+  date_of_order: string | null;
+  date_from: string | null;
+  date_to: string | null;
+  closed: number;
+  payed: number;
+};
+
 // ---------------------------------------------------------------------------
 // Config / API
 // ---------------------------------------------------------------------------
@@ -221,6 +232,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [routeDateTo, setRouteDateTo] = useState("");
   const [routeNoPayments, setRouteNoPayments] = useState(false);
   const [noteText, setNoteText] = useState("");
+  const [billingDialog, setBillingDialog] = useState(false);
+  const [openingBilling, setOpeningBilling] = useState(false);
   const debouncedRouteTaskId = useDebounce(routeTaskId, 300);
   const debouncedRouteCarMask = useDebounce(routeCarMask, 300);
   const debouncedRouteCompany = useDebounce(routeCompanyMask, 300);
@@ -508,6 +521,21 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     } catch (e) { setError(String(e)); }
   }
 
+  async function handleOpenBilling() {
+    if (!selectedTask) return;
+    setOpeningBilling(true);
+    try {
+      const order = await apiFetch<BillingOrder>(
+        `/api/admin/transport/tasks/${selectedTask.ID}/billing/open`,
+        { method: "POST" }
+      );
+      const updated = { ...selectedTask, PAY_ORDER_ID: order.order_id };
+      setSelectedTask(updated);
+      setTasks(prev => prev.map(t => t.ID === updated.ID ? updated : t));
+      setBillingDialog(false);
+    } catch (e) { setError(String(e)); } finally { setOpeningBilling(false); }
+  }
+
   // ------------------------------------------------------------------
   // Toggle helpers
   // ------------------------------------------------------------------
@@ -774,13 +802,23 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                       onClick={handleClose} disabled={loading || taskSts.length === 0}>
                       Закрыть рейс
                     </button>
-                    <button className="dispatch-cancel-task-btn" onClick={handleCancel} disabled={loading}>
+                    <button className="dispatch-cancel-task-btn"
+                      onClick={handleCancel}
+                      disabled={loading || !!selectedTask.PAY_ORDER_ID}>
                       Отменить
                     </button>
                   </>}
                   {selectedTask.CONDITION === "Отгружен" && (
                     <span className="dispatch-closed-label">Рейс отгружен · только чтение</span>
                   )}
+                  {selectedTask.PAY_ORDER_ID
+                    ? <span className="billing-badge">💰 Счёт #{selectedTask.PAY_ORDER_ID}</span>
+                    : selectedTask.CONDITION === "Отгружен" && selectedTask.IS_OWN_DRIVER === 0 && (
+                        <button className="billing-open-btn" onClick={() => setBillingDialog(true)}>
+                          Выставить счёт
+                        </button>
+                      )
+                  }
                   {selectedTask.PRICE != null && (
                     <span className="dispatch-price">{selectedTask.PRICE.toLocaleString("ru-RU")} ₽</span>
                   )}
@@ -896,7 +934,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                           <TaskStTableRow
                             key={st.ST_NUMBER}
                             st={st}
-                            disabled={loading || selectedTask.CONDITION === "Отгружен"}
+                            disabled={loading || selectedTask.CONDITION === "Отгружен" || !!selectedTask.PAY_ORDER_ID}
                             isPalletOpen={palletStNum === st.ST_NUMBER}
                             onUnassign={() => handleUnassign(st.ST_NUMBER)}
                             onSetLoadType={lt => handleSetLoadType(st.ST_NUMBER, lt)}
@@ -945,7 +983,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 <tr>
                   <th>Отгрузка</th><th>#</th><th>Пал.</th><th>Вес</th><th>Объём</th>
                   <th>Тип</th><th>Машина</th><th>Водитель</th><th>ДОК</th>
-                  <th>Регионы</th><th>Цена</th><th>ТК</th><th>Логист</th><th>Статус</th>
+                  <th>Регионы</th><th>Цена</th><th>ТК</th><th>Логист</th><th>Статус</th><th title="Биллинг">💰</th>
                 </tr>
               </thead>
               <tbody>
@@ -990,6 +1028,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                         <td>{task.TK_NAME ?? "—"}</td>
                         <td>{task.LOGIST ?? "—"}</td>
                         <td><span className={`dispatch-cond ${condClass(task.CONDITION)}`}>{task.CONDITION ?? "Новый"}</span></td>
+                        <td>{task.PAY_ORDER_ID ? <span className="billing-badge-sm">💰</span> : "—"}</td>
                       </tr>
                     ))
                 }
@@ -1017,13 +1056,23 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                       onClick={handleClose} disabled={loading || taskSts.length === 0}>
                       Закрыть рейс
                     </button>
-                    <button className="dispatch-cancel-task-btn" onClick={handleCancel} disabled={loading}>
+                    <button className="dispatch-cancel-task-btn"
+                      onClick={handleCancel}
+                      disabled={loading || !!selectedTask.PAY_ORDER_ID}>
                       Отменить
                     </button>
                   </>}
                   {selectedTask.CONDITION === "Отгружен" && (
                     <span className="dispatch-closed-label">Рейс отгружен · только чтение</span>
                   )}
+                  {selectedTask.PAY_ORDER_ID
+                    ? <span className="billing-badge">💰 Счёт #{selectedTask.PAY_ORDER_ID}</span>
+                    : selectedTask.CONDITION === "Отгружен" && selectedTask.IS_OWN_DRIVER === 0 && (
+                        <button className="billing-open-btn" onClick={() => setBillingDialog(true)}>
+                          Выставить счёт
+                        </button>
+                      )
+                  }
                 </div>
                 <div className="dispatch-note-row">
                   <span className="dispatch-trip-ml">Примечание:</span>
@@ -1060,7 +1109,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                           <RouteTaskStRow
                             key={st.ST_NUMBER}
                             st={st}
-                            disabled={loading || selectedTask.CONDITION === "Отгружен"}
+                            disabled={loading || selectedTask.CONDITION === "Отгружен" || !!selectedTask.PAY_ORDER_ID}
                             isPalletOpen={palletStNum === st.ST_NUMBER}
                             onUnassign={() => handleUnassign(st.ST_NUMBER)}
                             onSetLoadType={lt => handleSetLoadType(st.ST_NUMBER, lt)}
@@ -1207,6 +1256,15 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           selectedCount={selectedStNums.size}
           onConfirm={handleCreate}
           onClose={() => setCreateDialog(false)}
+        />
+      )}
+
+      {billingDialog && selectedTask && (
+        <OpenBillingDialog
+          task={selectedTask}
+          loading={openingBilling}
+          onConfirm={handleOpenBilling}
+          onClose={() => setBillingDialog(false)}
         />
       )}
     </div>
@@ -1729,6 +1787,55 @@ function CreateTaskDialog({
             Создать{selectedCount > 0 ? ` (${selectedCount} СТ)` : ""}
           </button>
           <button className="dispatch-cancel-edit-btn" onClick={onClose}>Отмена</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// OpenBillingDialog (Sprint 15)
+// ---------------------------------------------------------------------------
+
+function OpenBillingDialog({
+  task, loading, onConfirm, onClose,
+}: {
+  task: TransportTask;
+  loading: boolean;
+  onConfirm: () => void;
+  onClose: () => void;
+}) {
+  const company = task.TK_NAME ?? "Неизвестная ТК";
+  const shipDate = fmtDate(task.SHIPMENT_DATE);
+  return (
+    <div className="dispatch-dialog-overlay">
+      <div className="dispatch-dialog">
+        <div className="dispatch-dialog-title">Выставить счёт</div>
+        <div className="dispatch-dialog-field">
+          <span>Рейс</span>
+          <span>#{task.ID} · {task.TRANSPORT ?? "—"}</span>
+        </div>
+        <div className="dispatch-dialog-field">
+          <span>Транспортная компания</span>
+          <span className="billing-dialog-company">{company}</span>
+        </div>
+        <div className="dispatch-dialog-field">
+          <span>Дата</span>
+          <span>{shipDate}</span>
+        </div>
+        <div className="dispatch-dialog-field">
+          <span>Цена рейса</span>
+          <span>{task.PRICE != null ? task.PRICE.toLocaleString("ru-RU") + " ₽" : "—"}</span>
+        </div>
+        <p className="billing-dialog-hint">
+          Будет создан биллинг-заказ и рейс привязан к нему.
+          После выставления счёта рейс нельзя расформировать.
+        </p>
+        <div className="dispatch-dialog-actions">
+          <button className="dispatch-new-btn" onClick={onConfirm} disabled={loading}>
+            {loading ? "Создаём…" : "Создать счёт"}
+          </button>
+          <button className="dispatch-cancel-edit-btn" onClick={onClose} disabled={loading}>Отмена</button>
         </div>
       </div>
     </div>

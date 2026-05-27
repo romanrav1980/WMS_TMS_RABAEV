@@ -1404,3 +1404,30 @@ class VehicleGanttDay(BaseModel):
     vehicle_num: str
     vehicle_type: str
     operations: list[OperationPlan]
+
+
+# ---------------------------------------------------------------------------
+# Sprint 15 — Биллинг: создание счёта
+# ---------------------------------------------------------------------------
+
+class BillingOrderCreate(BaseModel):
+    company: str = Field(..., description="Транспортная компания (перевозчик)")
+    date_from: str = Field(..., description="Начало периода YYYY-MM-DD")
+    date_to: str = Field(..., description="Конец периода YYYY-MM-DD")
+
+
+class BillingAddTasksRequest(BaseModel):
+    tt_ids: list[int] = Field(..., description="Список ID рейсов для привязки к заказу")
+
+
+class BillingOrder(BaseModel):
+    order_id: int
+    num: str | None = None
+    company: str | None = None
+    date_of_order: str | None = None
+    date_from: str | None = None
+    date_to: str | None = None
+    closed: int = 0
+    payed: int = 0
+    task_count: int | None = None
+    total_price: float | None = None

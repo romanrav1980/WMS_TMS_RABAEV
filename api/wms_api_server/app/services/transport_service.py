@@ -1420,6 +1420,171 @@ class TransportService:
         result.sort(key=lambda x: (order.get(x["status"], 3), x["vehicle_num"]))
         return result
 
+    # ------------------------------------------------------------------
+    # Sprint 15 — Биллинг: создание счёта
+    # ------------------------------------------------------------------
+
+    def list_billing_orders(
+        self,
+        company: str | None = None,
+        date_from: date | None = None,
+        date_to: date | None = None,
+        closed: int | None = None,
+        payed: int | None = None,
+    ) -> list[dict]:
+        """Список биллинг-заказов с суммой и числом рейсов."""
+        conditions = ["1=1"]
+        params: dict[str, Any] = {}
+        if company:
+            conditions.append("UPPER(B.COMPANY) LIKE UPPER(:company)")
+            params["company"] = f"%{company}%"
+        if date_from:
+            conditions.append("B.DATEFROM >= TO_DATE(:df, 'YYYY-MM-DD')")
+            params["df"] = str(date_from)
+        if date_to:
+            conditions.append("B.DATETO <= TO_DATE(:dt, 'YYYY-MM-DD')")
+            params["dt"] = str(date_to)
+        if closed is not None:
+            conditions.append("B.CLOSED = :closed")
+            params["closed"] = closed
+        if payed is not None:
+            conditions.append("B.PAYED = :payed")
+            params["payed"] = payed
+
+        where = " AND ".join(conditions)
+        rows = self.gateway.fetch_all(
+            f"""
+            SELECT B.ID, B.NUM, B.COMPANY,
+                   TO_CHAR(B.DATEOFORDER, 'YYYY-MM-DD') AS DATEOFORDER,
+                   TO_CHAR(B.DATEFROM,    'YYYY-MM-DD') AS DATEFROM,
+                   TO_CHAR(B.DATETO,      'YYYY-MM-DD') AS DATETO,
+                   B.CLOSED, B.PAYED,
+                   COUNT(TT.ID)            AS TASK_COUNT,
+                   SUM(NVL(TT.PRICE, 0))  AS TOTAL_PRICE
+              FROM RABAEV.RRL_BILL_ORDERS B
+              LEFT JOIN RABAEV.RRL_TRANSPORT_TASK TT ON TT.PAY_ORDER_ID = B.ID
+             WHERE {where}
+             GROUP BY B.ID, B.NUM, B.COMPANY, B.DATEOFORDER, B.DATEFROM, B.DATETO, B.CLOSED, B.PAYED
+             ORDER BY B.ID DESC
+            """,
+            params,
+        )
+        return [
+            {
+                "order_id": int(r["ID"]),
+                "num": r.get("NUM"),
+                "company": r.get("COMPANY"),
+                "date_of_order": r.get("DATEOFORDER"),
+                "date_from": r.get("DATEFROM"),
+                "date_to": r.get("DATETO"),
+                "closed": int(r.get("CLOSED") or 0),
+                "payed": int(r.get("PAYED") or 0),
+                "task_count": int(r.get("TASK_COUNT") or 0),
+                "total_price": float(r.get("TOTAL_PRICE") or 0),
+            }
+            for r in rows
+        ]
+
+    def create_billing_order(self, company: str, date_from: str, date_to: str) -> int:
+        """Создаёт новый биллинг-заказ и возвращает его ID."""
+        rows = self.gateway.fetch_all("SELECT RABAEV.SEQ_BILL_ORDERS.NEXTVAL AS NV FROM DUAL")
+        order_id = int(rows[0]["NV"])
+        num = f"БТ-{order_id:04d}"
+        self.gateway.execute(
+            """
+            INSERT INTO RABAEV.RRL_BILL_ORDERS
+              (ID, NUM, COMPANY, DATEOFORDER, DATEFROM, DATETO, CLOSED, PAYED)
+            VALUES
+              (:id, :num, :company, SYSDATE,
+               TO_DATE(:df, 'YYYY-MM-DD'), TO_DATE(:dt, 'YYYY-MM-DD'), 0, 0)
+            """,
+            {"id": order_id, "num": num, "company": company, "df": date_from, "dt": date_to},
+        )
+        return order_id
+
+    def add_tasks_to_order(self, order_id: int, tt_ids: list[int]) -> None:
+        """Привязывает рейсы к биллинг-заказу через Oracle-процедуру."""
+        for tt_id in tt_ids:
+            self.gateway.execute(
+                "BEGIN RABAEV.RRL_ADD_TT_2_BILLINGORDER(:tt_id, :order_id); END;",
+                {"tt_id": tt_id, "order_id": order_id},
+            )
+
+    def get_task_billing(self, tt_id: int) -> dict | None:
+        """Возвращает данные биллинг-заказа для рейса или None."""
+        rows = self.gateway.fetch_all(
+            """
+            SELECT B.ID, B.NUM, B.COMPANY,
+                   TO_CHAR(B.DATEOFORDER, 'YYYY-MM-DD') AS DATEOFORDER,
+                   TO_CHAR(B.DATEFROM,    'YYYY-MM-DD') AS DATEFROM,
+                   TO_CHAR(B.DATETO,      'YYYY-MM-DD') AS DATETO,
+                   B.CLOSED, B.PAYED
+              FROM RABAEV.RRL_TRANSPORT_TASK TT
+              JOIN RABAEV.RRL_BILL_ORDERS B ON B.ID = TT.PAY_ORDER_ID
+             WHERE TT.ID = :tt_id
+            """,
+            {"tt_id": tt_id},
+        )
+        if not rows:
+            return None
+        r = rows[0]
+        return {
+            "order_id": int(r["ID"]),
+            "num": r.get("NUM"),
+            "company": r.get("COMPANY"),
+            "date_of_order": r.get("DATEOFORDER"),
+            "date_from": r.get("DATEFROM"),
+            "date_to": r.get("DATETO"),
+            "closed": int(r.get("CLOSED") or 0),
+            "payed": int(r.get("PAYED") or 0),
+        }
+
+    def open_billing_for_task(self, tt_id: int) -> dict:
+        """Создаёт биллинг-заказ для рейса и привязывает его.
+
+        Компания берётся из поля DOVERENNOST_OT водителя рейса.
+        Дата периода = дата отгрузки рейса.
+        """
+        task = self.get_task(tt_id)
+        if not task:
+            raise HTTPException(status_code=404, detail=f"Task {tt_id} not found")
+        if task.get("PAY_ORDER_ID"):
+            raise HTTPException(status_code=409, detail="Рейс уже включён в биллинг-заказ")
+
+        company = task.get("TK_NAME") or task.get("DOVERENNOST_OT") or "Неизвестная ТК"
+        ship_date = str(task.get("SHIPMENT_DATE") or "")[:10]
+        if not ship_date:
+            from datetime import date as _date
+            ship_date = str(_date.today())
+
+        order_id = self.create_billing_order(company=company, date_from=ship_date, date_to=ship_date)
+        self.add_tasks_to_order(order_id, [tt_id])
+
+        return self.get_task_billing(tt_id) or {"order_id": order_id}
+
+    def get_billing_order_tasks(self, order_id: int) -> list[dict]:
+        """Список рейсов в биллинг-заказе."""
+        rows = self.gateway.fetch_all(
+            """
+            SELECT TT.ID, TT.TRANSPORT, TT.STATUS, TT.PRICE,
+                   TO_CHAR(TT.SHIPMENT_DATE, 'YYYY-MM-DD') AS SHIPMENT_DATE
+              FROM RABAEV.RRL_TRANSPORT_TASK TT
+             WHERE TT.PAY_ORDER_ID = :order_id
+             ORDER BY TT.SHIPMENT_DATE, TT.ID
+            """,
+            {"order_id": order_id},
+        )
+        return [
+            {
+                "tt_id": int(r["ID"]),
+                "transport": r.get("TRANSPORT"),
+                "status": r.get("STATUS"),
+                "price": float(r.get("PRICE") or 0),
+                "shipment_date": r.get("SHIPMENT_DATE"),
+            }
+            for r in rows
+        ]
+
     def get_plan_fact(self, date_from: date, date_to: date, vehicle: str | None = None) -> list[dict]:
         """Сводный план-фактный отчёт по всем рейсам периода."""
         params: dict[str, Any] = {

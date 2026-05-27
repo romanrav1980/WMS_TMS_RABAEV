@@ -34,6 +34,12 @@ transport.py — FastAPI роутер диспетчера отгрузки.
   GET    /api/admin/transport/vehicles/gantt             — Ганта-данные всех машин на день (Sprint 11)
   GET    /api/admin/transport/vehicles/available         — доступность машин к времени отгрузки (Sprint 13)
   GET    /api/admin/transport/plan-fact                  — сводный план-фактный отчёт (Sprint 13/14)
+  GET    /api/admin/transport/billing/orders             — список биллинг-заказов (Sprint 15)
+  POST   /api/admin/transport/billing/orders             — создать биллинг-заказ (Sprint 15)
+  POST   /api/admin/transport/billing/orders/{id}/tasks — привязать рейсы к заказу (Sprint 15)
+  GET    /api/admin/transport/billing/orders/{id}/tasks — рейсы в заказе (Sprint 15)
+  GET    /api/admin/transport/tasks/{id}/billing        — биллинг-данные рейса (Sprint 15)
+  POST   /api/admin/transport/tasks/{id}/billing/open   — создать счёт для рейса (Sprint 15)
 """
 
 from datetime import date
@@ -49,6 +55,8 @@ from ..auth import (
     require_permission,
 )
 from ..schemas import (
+    BillingAddTasksRequest,
+    BillingOrderCreate,
     OperationFactUpdate,
     TransportStAssignRequest,
     TransportStLoadTypeRequest,
@@ -472,3 +480,75 @@ def get_plan_fact(
 ) -> list[dict]:
     """Сводный план-фактный отчёт по всем рейсам периода."""
     return TransportService().get_plan_fact(date_from, date_to, vehicle)
+
+
+# ---------------------------------------------------------------------------
+# Sprint 15 — Биллинг: создание счёта
+# ---------------------------------------------------------------------------
+
+@router.get("/billing/orders")
+def list_billing_orders(
+    company:   str | None = Query(default=None, description="Фильтр по компании"),
+    date_from: date | None = Query(default=None, description="Начало периода"),
+    date_to:   date | None = Query(default=None, description="Конец периода"),
+    closed:    int | None = Query(default=None, description="0=открыт, 1=закрыт"),
+    payed:     int | None = Query(default=None, description="0=не оплачен, 1=оплачен"),
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    """Список биллинг-заказов с суммой и числом рейсов."""
+    return TransportService().list_billing_orders(company, date_from, date_to, closed, payed)
+
+
+@router.post("/billing/orders")
+def create_billing_order(
+    req: BillingOrderCreate,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> dict:
+    """Создать новый биллинг-заказ."""
+    svc = TransportService()
+    order_id = svc.create_billing_order(req.company, req.date_from, req.date_to)
+    orders = svc.list_billing_orders()
+    order = next((o for o in orders if o["order_id"] == order_id), {"order_id": order_id})
+    return order
+
+
+@router.get("/billing/orders/{order_id}/tasks")
+def get_billing_order_tasks(
+    order_id: int,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    """Рейсы, привязанные к биллинг-заказу."""
+    return TransportService().get_billing_order_tasks(order_id)
+
+
+@router.post("/billing/orders/{order_id}/tasks")
+def add_tasks_to_billing_order(
+    order_id: int,
+    req: BillingAddTasksRequest,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> dict:
+    """Привязать рейсы к биллинг-заказу."""
+    TransportService().add_tasks_to_order(order_id, req.tt_ids)
+    return {"order_id": order_id, "added": len(req.tt_ids)}
+
+
+@router.get("/tasks/{task_id}/billing")
+def get_task_billing(
+    task_id: int,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> dict:
+    """Биллинг-данные рейса (заказ, к которому привязан)."""
+    data = TransportService().get_task_billing(task_id)
+    if data is None:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Рейс не привязан к биллинг-заказу")
+    return data
+
+
+@router.post("/tasks/{task_id}/billing/open")
+def open_billing_for_task(
+    task_id: int,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> dict:
+    """Создать биллинг-заказ для рейса и привязать к нему."""
+    return TransportService().open_billing_for_task(task_id)
