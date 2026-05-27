@@ -694,6 +694,36 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
+  // Sprint 38 — copy trip
+  async function handleCopyTask() {
+    if (!selectedTask) return;
+    setLoading(true);
+    try {
+      const res = await apiFetch<{ task_id: number }>(
+        "/api/admin/transport/tasks",
+        { method: "POST", body: JSON.stringify({ transtype: selectedTask.TRANSTYPE, shipment_date: selectedTask.SHIPMENT_DATE }) }
+      );
+      const taskId = res.task_id;
+      const patch: Record<string, string | number | null> = {};
+      if (selectedTask.TRANSPORT)   patch.transport   = selectedTask.TRANSPORT;
+      if (selectedTask.VODITEL_ID)  patch.voditel_id  = selectedTask.VODITEL_ID;
+      if (selectedTask.DOCK)        patch.dock        = selectedTask.DOCK;
+      if (selectedTask.SHIPMENT_TIME) patch.shipment_time = selectedTask.SHIPMENT_TIME;
+      if (Object.keys(patch).length > 0) {
+        await apiFetch(`/api/admin/transport/tasks/${taskId}`, {
+          method: "PATCH",
+          body: JSON.stringify(patch),
+        });
+      }
+      const reloads: Promise<unknown>[] = [loadTasks(), loadAvailableSts()];
+      if (viewMode === "clusters") reloads.push(loadClusters());
+      await Promise.all(reloads);
+      const newTask = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${taskId}`);
+      setActiveTab("tasks");
+      selectTask(newTask);
+    } catch (e) { setError(String(e)); } finally { setLoading(false); }
+  }
+
   async function handleUpdateTranstype(taskId: number, transtype: string) {
     setEditingTranstypeId(null);
     try {
@@ -1108,6 +1138,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                         <button className="dispatch-cancel-edit-btn" onClick={() => setEditMode(false)}>Отмена</button>
                       </>
                   }
+                  <button className="dispatch-copy-task-btn" onClick={handleCopyTask}
+                    disabled={loading} title="Создать новый рейс с теми же реквизитами (без СТ)">
+                    📋 Копировать
+                  </button>
                   {selectedTask.CONDITION !== "Отгружен" && <>
                     <button className="dispatch-close-btn"
                       onClick={handleClose} disabled={loading || taskSts.length === 0}>
@@ -1419,6 +1453,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   <span className="dispatch-pmv" style={{ marginLeft: "auto" }}>
                     P={tripP}&nbsp; M={tripM.toFixed(0)}
                   </span>
+                  <button className="dispatch-copy-task-btn" onClick={handleCopyTask}
+                    disabled={loading} title="Создать новый рейс с теми же реквизитами (без СТ)">
+                    📋 Копировать
+                  </button>
                   {selectedTask.CONDITION !== "Отгружен" && <>
                     <button className="dispatch-close-btn"
                       onClick={handleClose} disabled={loading || taskSts.length === 0}>

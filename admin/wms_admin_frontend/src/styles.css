@@ -1219,6 +1219,19 @@ button[aria-disabled="true"] { cursor: help; }
 }
 .cluster-card-create-btn:hover { background: #e0e7ff; }
 
+/* Sprint 38 — Copy trip button */
+.dispatch-copy-task-btn {
+  padding: 3px 10px;
+  border: 1px solid #a3b4c8;
+  border-radius: 5px;
+  background: #f0f4fa;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.dispatch-copy-task-btn:hover { background: #dbeafe; border-color: var(--blue); color: var(--blue); }
+
 /* Sprint 37 — Select-all checkbox + auto-refresh */
 .dispatch-autorefresh-toggle {
   display: flex;
