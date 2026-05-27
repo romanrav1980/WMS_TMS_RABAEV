@@ -45,7 +45,8 @@
 | 27 | Биллинг: Excel-экспорт реестра счетов | Billing | 0.5 нед | 🟢 КК | ✅ `23682f3` 2026-05-28 |
 | 28 | Диспетчер: Excel-экспорт списка рейсов | Диспетчер | 0.5 нед | 🟢 КК | ✅ `284c754` 2026-05-28 |
 | 29 | Phase 2 полуавто: создать рейс из кластера (⚡ Рейс) | Диспетчер | 0.5 нед | 🟢 КК | ✅ `2f97815` 2026-05-28 |
-| **Итого** | | | **~23 нед** | | |
+| 30 | Live load bar — заполненность машины по паллетам | Диспетчер | 0.5 нед | 🟢 КК | ✅ `9436717` 2026-05-28 |
+| **Итого** | | | **~23.5 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -620,6 +621,27 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 30 — Live load bar
+
+**Инструмент:** 🟢 КК (код-код $20) — чисто фронтенд, логика простая
+
+**Цель:** показать диспетчеру степень заполнения машины прямо в панели рейса, не выходя из UI. Цветовая индикация: зелёный (<85%), жёлтый (85–99%), красный (≥100%).
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `LoadBar` компонент — progress track с цветом | Frontend | `TransportDispatchPage.tsx` |
+| Рендер в панели рейса: `selectedVehicle.PALLETS && tripP > 0` | Frontend | `TransportDispatchPage.tsx` |
+| `.load-bar-row`, `.load-bar-track`, `.load-bar-fill`, `.load-bar-text` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `9436717` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint30_functional.py` — 9 кейсов (пороги, clamping, regression clusters)  
+- `tests/transport/sprint30_usability_checklist.md` — 17 проверок  
+- `tests/transport/transport_sprint30_load_test.py` — 5 users, 60s, NFR task detail p95 ≤ 300ms  
 
 ---
 
