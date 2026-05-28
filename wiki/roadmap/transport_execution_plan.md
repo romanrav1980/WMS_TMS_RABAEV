@@ -86,7 +86,12 @@
 | 68 | Ctrl+Enter — добавить выделенные СТ в рейс (keyboard shortcut) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `d3f3685` 2026-05-28 |
 | 69 | Delete — снять выделенные СТ с рейса (keyboard shortcut) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `326f499` 2026-05-28 |
 | 70 | «Все» / «Нет» — тулбар выделения всех СТ рейса | Диспетчер | 0.1 нед | 🟢 КК | ✅ `340b52a` 2026-05-28 |
-| **Итого** | | | **~30.6 нед** | | |
+| 71 | Sticky thead в таблице рейсов (dispatch-trips-table-wrap) | Диспетчер | 0.05 нед | 🟢 КК | ✅ `52ad3c8` 2026-05-28 |
+| 72 | Inline-фильтр по СТ/адресу внутри состава рейса | Диспетчер | 0.1 нед | 🟢 КК | ✅ `edb30aa` 2026-05-28 |
+| 73 | Колонка «Логист» в таблице рейсов (§3.8.1 ТЗ) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `716a0b9` 2026-05-28 |
+| 74 | Свернуть/развернуть состав рейса (▲/▼ кнопка) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `ee3a1dd` 2026-05-28 |
+| 75 | V= (объём м³) в итогах заголовка рейса | Диспетчер | 0.05 нед | 🟢 КК | ✅ `02402b0` 2026-05-28 |
+| **Итого** | | | **~31.1 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -937,10 +942,13 @@ UI не меняется, но при создании каждого рейса
 
 **Статус:** ✅ Завершён
 **Коммит:** `73cd887` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — functional tests обновлены под фактический set-based transactional contract; добавлен UI smoke и обучающий HTML pack. Нагрузочный тест сделан безопасным service-level runner, чтобы не отменять реальные рейсы в dev Oracle.
 **Тесты:**
-- `tests/transport/test_sprint34_functional.py` — 6 pytest-кейсов (пустой рейс, N СТ, порядок операций, 409, большой рейс)
+- `tests/transport/test_sprint34_functional.py` — 6 pytest-кейсов (transaction, 404/409, порядок операций, cache clear) → `6 passed`
+- `tests/ui/transport_sprint34_ui_smoke.cjs` — UI smoke: cancel confirmation, POST cancel, toast, refresh
+- `tests/ui/transport_sprint34_training_capture.cjs` → `wiki-raw/tms2_training/sprint34_cancel_releases_st_2026_05_28/index.html`
 - `tests/transport/sprint34_usability_checklist.md` — 12 проверок
-- `tests/transport/transport_sprint34_load_test.py` — 2 users, 30s, NFR cancel p95 ≤ 500ms
+- `tests/transport/transport_sprint34_load_test.py` — safe mocked service load; p95 12.54 ms
 
 ---
 
@@ -959,10 +967,13 @@ UI не меняется, но при создании каждого рейса
 
 **Статус:** ✅ Завершён
 **Коммит:** `b5b12d1` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — добавлен UI smoke и обучающий HTML pack для режима «Кратко»; Locust-only load script заменён на Windows-safe runner.
 **Тесты:**
-- `tests/transport/test_sprint33_functional.py` — 12 pytest-кейсов (видимость колонок в обоих режимах)
+- `tests/transport/test_sprint33_functional.py` — 13 pytest-кейсов (видимость колонок в обоих режимах) → `13 passed`
+- `tests/ui/transport_sprint33_ui_smoke.cjs` — UI smoke: скрытие второстепенных колонок и сохранение ключевых
+- `tests/ui/transport_sprint33_training_capture.cjs` → `wiki-raw/tms2_training/sprint33_routes_brief_mode_2026_05_28/index.html`
 - `tests/transport/sprint33_usability_checklist.md` — 16 проверок
-- `tests/transport/transport_sprint33_load_test.py` — 5 users, 60s, NFR GET /tasks p95 ≤ 300ms
+- `tests/transport/transport_sprint33_load_test.py` — Windows-safe load gate; warm p95 tasks 163.8 ms
 
 ---
 
