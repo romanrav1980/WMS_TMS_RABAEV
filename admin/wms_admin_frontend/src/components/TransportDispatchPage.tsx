@@ -1304,6 +1304,15 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 ? `${wareFilteredSts.length} / ${availableSts.length} СТ`
                 : `${availableSts.length} СТ`}
             </span>
+            {/* Sprint 63 — not-assembled badge */}
+            {(() => {
+              const notReady = wareFilteredSts.filter(s => s.VERIFY_PERC != null && s.VERIFY_PERC < 100).length;
+              return notReady > 0
+                ? <span className="dispatch-notready-badge" title="СТ с неполной сборкой (VERIFY_PERC &lt; 100%)">
+                    ⚠ {notReady} не собрано
+                  </span>
+                : null;
+            })()}
             {/* Sprint 49 — dense mode toggle */}
             <label className="dispatch-dense-toggle" title="Компактный режим: уменьшить отступы в таблице СТ">
               <input type="checkbox" checked={stDenseMode} onChange={e => setStDenseMode(e.target.checked)} />
