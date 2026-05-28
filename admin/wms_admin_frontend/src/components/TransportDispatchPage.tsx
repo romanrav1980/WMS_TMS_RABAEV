@@ -1024,6 +1024,11 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const selP = selSts.reduce((s, x) => s + (x.PALLETS_COUNT || 0), 0);
   const selM = selSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
   const selV = selSts.reduce((s, x) => s + (x.VOLUME_M3 || 0), 0);
+
+  // Sprint 55 — totals for ALL visible STs (current filter)
+  const allP = availableSts.reduce((s, x) => s + (x.PALLETS_COUNT || 0), 0);
+  const allM = availableSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
+  const allV = availableSts.reduce((s, x) => s + (x.VOLUME_M3 || 0), 0);
   const tripP = taskSts.reduce((s, x) => s + (x.PALLETS_COUNT || 0), 0);
   const tripM = taskSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
 
@@ -1146,9 +1151,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               <button className={viewMode === "flat" ? "active" : ""} onClick={() => setViewMode("flat")}>По СТ</button>
               <button className={viewMode === "clusters" ? "active" : ""} onClick={() => setViewMode("clusters")}>По районам</button>
             </div>
-            <span className="dispatch-pmv">
-              P={selP}&nbsp; M={selM.toFixed(0)}&nbsp; V={selV.toFixed(2)}
-              {selectedStNums.size > 0 && <b>&nbsp;({selectedStNums.size} выбр.)</b>}
+            <span className="dispatch-pmv dispatch-pmv-all" title="Итоги по всем видимым СТ">
+              П={allP}&nbsp;·&nbsp;{allM.toFixed(0)}&nbsp;кг&nbsp;·&nbsp;{allV.toFixed(1)}&nbsp;м³
             </span>
             {selectedStNums.size > 0 && selectedTask && (
               <button className="dispatch-add-btn" onClick={handleAssign} disabled={loading}>

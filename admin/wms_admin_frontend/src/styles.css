@@ -617,6 +617,8 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-vmtoggle button:hover:not(.active) { background: #e8edf4; }
 .dispatch-pmv { font-size: 12px; font-weight: 700; color: #1e3a5f; white-space: nowrap; padding: 0 2px; }
 .dispatch-pmv b { color: #2563eb; }
+/* Sprint 55 — all-visible totals strip */
+.dispatch-pmv-all { color: var(--muted); font-weight: 600; font-size: 11px; }
 .dispatch-add-btn { background: #16a34a; color: #fff; border: none; border-radius: 5px; padding: 4px 10px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .dispatch-add-btn:hover:not(:disabled) { background: #15803d; }
 .dispatch-add-btn:disabled { opacity: .5; cursor: not-allowed; }
