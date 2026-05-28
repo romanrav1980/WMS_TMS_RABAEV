@@ -35,6 +35,9 @@ from .routers import driver_mobile
 from .routers import notifications
 from .routers import transport_kpi
 from .routers import gps
+from .routers import transport_tariffs
+from .routers import export_1c
+from .routers import maintenance
 
 
 settings = get_settings()
@@ -80,3 +83,6 @@ app.include_router(driver_mobile.router)      # Sprint 103-105: driver PWA
 app.include_router(notifications.router)      # Sprint 106-107: push + email
 app.include_router(transport_kpi.router)      # Sprint 108-109: KPI dashboard
 app.include_router(gps.router)               # Sprint 110-111: GPS positions
+app.include_router(transport_tariffs.router) # Sprint 112: tariff grid
+app.include_router(export_1c.router)         # Sprint 113: 1C export
+app.include_router(maintenance.router)       # Sprint 114: archiving
