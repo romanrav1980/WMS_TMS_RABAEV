@@ -875,6 +875,19 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     } catch (e) { setError(String(e)); } finally { setBillingActionLoading(false); }
   }
 
+  // Sprint 45 — jump from assigned ST to its trip in the routes tab
+  async function handleGotoTrip(taskId: number) {
+    setActiveTab("routes");
+    const found = tasks.find(t => t.ID === taskId);
+    if (found) { selectTask(found); return; }
+    try {
+      const task = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${taskId}`);
+      setRouteShipDate(task.SHIPMENT_DATE ?? routeShipDate);
+      await loadTasks();
+      selectTask(task);
+    } catch { /* ignore */ }
+  }
+
   // ------------------------------------------------------------------
   // Toggle helpers
   // ------------------------------------------------------------------
@@ -1153,7 +1166,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                           checked={selectedStNums.has(st.ST_NUMBER)}
                           onToggle={() => handleStToggle(st.ST_NUMBER, idx)}
                           onShiftClick={handleShiftClick}
-                          onSelectByField={handleSelectByField} />
+                          onSelectByField={handleSelectByField}
+                          onGotoTrip={handleGotoTrip} />
                       ))
                 )}
                 {viewMode === "clusters" && (
@@ -1981,7 +1995,7 @@ function wareColorClass(wareId: number): string {
 // ---------------------------------------------------------------------------
 
 function AvailableStRow({
-  st, checked, onToggle, isChild = false, idx = 0, onShiftClick, onSelectByField,
+  st, checked, onToggle, isChild = false, idx = 0, onShiftClick, onSelectByField, onGotoTrip,
 }: {
   st: AvailableSt;
   checked: boolean;
@@ -1990,6 +2004,7 @@ function AvailableStRow({
   idx?: number;
   onShiftClick?: (idx: number) => void;
   onSelectByField?: (field: "RAION" | "REGION", value: string | null) => void;
+  onGotoTrip?: (taskId: number) => void;
 }) {
   const rowClass = [
     "dispatch-gr",
@@ -2022,7 +2037,13 @@ function AvailableStRow({
           title={onSelectByField ? "Выделить все СТ региона" : ""}>{st.REGION ?? "—"}</td>
       <td className="col-flex">{st.ADDR ?? "—"}</td>
       <td className="dispatch-gc-stnum">{st.ST_NUMBER}</td>
-      <td>{st.TRANSTASK_ID ? `#${st.TRANSTASK_ID}` : "—"}</td>
+      <td>{st.TRANSTASK_ID
+        ? <button className="dispatch-goto-trip-btn"
+            title={`Перейти к рейсу #${st.TRANSTASK_ID}`}
+            onClick={e => { e.stopPropagation(); onGotoTrip?.(st.TRANSTASK_ID!); }}>
+            #{st.TRANSTASK_ID} →
+          </button>
+        : "—"}</td>
       <td>{fmtDate(st.STDATE)}</td>
       <td>{st.VERIFY_PERC != null ? <VerifyBar perc={st.VERIFY_PERC} /> : "—"}</td>
       <td className={onSelectByField ? "dispatch-region-cell" : ""}

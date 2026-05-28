@@ -1219,6 +1219,12 @@ button[aria-disabled="true"] { cursor: help; }
 }
 .cluster-card-create-btn:hover { background: #e0e7ff; }
 
+/* Sprint 45 — «Перейти к рейсу» кнопка в таблице СТ */
+.dispatch-goto-trip-btn { padding: 1px 6px; border: 1px solid #a3b4d0; border-radius: 4px; background: #eef3fb; color: #1d4ed8; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.dispatch-goto-trip-btn:hover { background: #dbeafe; border-color: #2563d8; }
+
+/* Sprint 44 — нет CSS (event handler only) */
+
 /* Sprint 43 — Sortable column headers */
 .dispatch-sortable-th { cursor: pointer; user-select: none; white-space: nowrap; }
 .dispatch-sortable-th:hover { background: #e8eef7; }
