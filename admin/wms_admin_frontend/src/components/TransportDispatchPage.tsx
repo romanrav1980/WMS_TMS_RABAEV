@@ -1752,6 +1752,24 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 </div>
               )}
 
+              {/* Sprint 70 — select-all / deselect-all for trip STs */}
+              {taskSts.length > 0 && selectedTask.CONDITION !== "Отгружен" && !selectedTask.PAY_ORDER_ID && (
+                <div className="dispatch-trip-sts-toolbar">
+                  <button className="dispatch-trip-selall-btn"
+                    onClick={() => setSelectedTripStNums(new Set(taskSts.map(s => s.ST_NUMBER)))}
+                    title="Выделить все СТ рейса">
+                    Все
+                  </button>
+                  <button className="dispatch-trip-selall-btn"
+                    onClick={() => setSelectedTripStNums(new Set())}
+                    disabled={selectedTripStNums.size === 0}
+                    title="Снять выделение">
+                    Нет
+                  </button>
+                  <span className="dispatch-trip-sts-count">{taskSts.length} СТ в рейсе</span>
+                </div>
+              )}
+
               <div className="dispatch-trip-sts-wrap">
                 <table className="dispatch-grid">
                   <thead>
