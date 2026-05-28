@@ -106,7 +106,12 @@
 | 88 | Кнопка «→+1» — перенос рейса на следующий день | Диспетчер | 0.1 нед | 🟢 КК | ✅ `ae4af11` 2026-05-28 |
 | 89 | Фильтр «⚠ Только несобранные» в составе рейса (trip detail STs toolbar) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `0de2322` 2026-05-28 |
 | 90 | Копирование номера СТ в буфер обмена по клику (TaskStTableRow + RouteTaskStRow) | Диспетчер | 0.05 нед | 🟢 КК | ✅ `0a97b23` 2026-05-28 |
-| **Итого** | | | **~32.5 нед** | | |
+| 91 | Сортировка СТ в составе рейса по временному окну (кнопка «⏱ Окна») | Диспетчер | 0.05 нед | 🟢 КК | ✅ `498e19b` 2026-05-29 |
+| 92 | Кнопка «📋 СТ» — копировать все номера СТ состава рейса в буфер | Диспетчер | 0.05 нед | 🟢 КК | ✅ `bd22120` 2026-05-29 |
+| 93 | Счётчик пустых рейсов (⚠ N пустых) в сводке дня | Диспетчер | 0.05 нед | 🟢 КК | ✅ `ee057ca` 2026-05-29 |
+| 94 | Amber left-border для рейсов с несобранными СТ (tasks + routes tab) | Диспетчер | 0.05 нед | 🟢 КК | ✅ `19aec6d` 2026-05-29 |
+| 95 | Tooltip примечания (PRIMECHANIE) на строке рейса при наведении | Диспетчер | 0.05 нед | 🟢 КК | ✅ `6d7553e` 2026-05-29 |
+| **Итого** | | | **~33.0 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -761,6 +766,54 @@ UI не меняется, но при создании каждого рейса
 - `tests/ui/transport_sprint39_training_capture.cjs` → `wiki-raw/tms2_training/sprint39_filter_badge_reset_2026_05_28/index.html`
 - `tests/transport/sprint39_usability_checklist.md` — 19 юзабилити-проверок
 - `tests/transport/transport_sprint39_load_test.py` — Windows-safe no-mutation runner; p95: no filters 39.2 ms, addr_mask 30.1 ms, type+assembled 29.4 ms, unassigned=false 37.0 ms
+
+---
+
+### Sprint 47 — localStorage: сохранение даты, вкладки и режима просмотра
+
+**Инструмент:** 🟢 КК (код-код $20) — frontend state persistence
+
+**Цель:** после reload диспетчер возвращается к выбранной дате, вкладке и режиму просмотра, а не теряет рабочий контекст.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `lsGet()` helper с fallback при ошибках storage | Frontend | `TransportDispatchPage.tsx` |
+| Restore `tms_filterDate`, `tms_routeShipDate`, `tms_viewMode`, `tms_activeTab` | Frontend | `TransportDispatchPage.tsx` |
+| Persist key state через `localStorage.setItem()` effects | Frontend | `TransportDispatchPage.tsx` |
+
+**Статус:** ✅ Завершён
+**Коммит:** `571643a` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — Locust-load заменён на Windows-safe runner через общий project config; добавлен UI smoke восстановления вкладки/дат и обучающий HTML pack.
+**Тесты:**
+- `tests/transport/test_sprint47_functional.py` — 9 pytest-кейсов (defaults, restore, persist, storage error fallback) → `9 passed`
+- `tests/ui/transport_sprint47_ui_smoke.cjs` — UI smoke: localStorage восстанавливает вкладку «Маршруты», дату маршрутов и дату заявок.
+- `tests/ui/transport_sprint47_training_capture.cjs` → `wiki-raw/tms2_training/sprint47_localstorage_persistence_2026_05_28/index.html`
+- `tests/transport/sprint47_usability_checklist.md` — usability checklist
+- `tests/transport/transport_sprint47_load_test.py` — Windows-safe no-mutation runner; p95 tasks 72.2 ms, available-sts 30.3 ms, clusters 28.7 ms
+
+---
+
+### Sprint 46 — Кнопки ◄ ► быстрого переключения дня в тулбарах
+
+**Инструмент:** 🟢 КК (код-код $20) — чисто фронтенд, shared date helper
+
+**Цель:** диспетчер быстро переходит на соседний день в списках «Заявки» и «Маршруты» без ручного редактирования даты.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `shiftDate(iso, days)` — общий helper с переходами через месяц/год/leap year | Frontend | `TransportDispatchPage.tsx` |
+| Кнопки `◄`/`►` рядом с датой рейсов во вкладке «Заявки» | Frontend | `TransportDispatchPage.tsx` |
+| Кнопки `◄`/`►` рядом с датой маршрутов во вкладке «Маршруты» | Frontend | `TransportDispatchPage.tsx` |
+
+**Статус:** ✅ Завершён
+**Коммит:** `123e8eb` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — Locust-load заменён на Windows-safe runner через общий project config; добавлен UI smoke обеих панелей дат и обучающий HTML pack.
+**Тесты:**
+- `tests/transport/test_sprint46_functional.py` — 12 pytest-кейсов (±1 день, границы месяца/года, leap year, обе панели используют общий helper) → `12 passed`
+- `tests/ui/transport_sprint46_ui_smoke.cjs` — UI smoke: `◄`/`►` меняют дату во вкладках «Заявки» и «Маршруты».
+- `tests/ui/transport_sprint46_training_capture.cjs` → `wiki-raw/tms2_training/sprint46_day_step_buttons_2026_05_28/index.html`
+- `tests/transport/sprint46_usability_checklist.md` — usability checklist
+- `tests/transport/transport_sprint46_load_test.py` — Windows-safe no-mutation runner; p95 tasks day step 47.8 ms, available-sts day step 34.6 ms
 
 ---
 
