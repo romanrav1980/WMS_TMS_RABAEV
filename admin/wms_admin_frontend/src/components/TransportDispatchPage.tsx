@@ -757,6 +757,61 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   }
 
   // Sprint 38 — copy trip
+  function handlePrintRoute() {
+    if (!selectedTask || taskSts.length === 0) return;
+    const task = selectedTask;
+    const sts = taskSts;
+    const date = task.SHIPMENT_DATE ?? "";
+    const rows = sts.map((s, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${s.ORD ?? "—"}</td>
+        <td>${s.ADDR ?? ""}</td>
+        <td>${s.RAION ?? ""}</td>
+        <td>${s.PALLETS_COUNT}</td>
+        <td>${s.WEIGHT_KG.toFixed(0)}</td>
+        <td style="min-width:80px">&nbsp;</td>
+      </tr>`).join("");
+    const html = `<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8">
+      <title>Маршрутный лист №${task.ID}</title>
+      <style>
+        body { font: 12px Arial, sans-serif; margin: 20px; }
+        h2 { font-size: 14px; margin-bottom: 4px; }
+        .meta { font-size: 12px; margin-bottom: 12px; border: 1px solid #aaa; padding: 6px 10px; }
+        .meta span { margin-right: 24px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #888; padding: 4px 6px; font-size: 11px; }
+        th { background: #f0f0f0; }
+        tfoot td { font-weight: bold; }
+        @media print { @page { size: A4 portrait; margin: 15mm; } }
+      </style></head><body>
+      <h2>Маршрутный лист — Рейс #${task.ID}</h2>
+      <div class="meta">
+        <span>Дата: <b>${date}</b></span>
+        <span>Машина: <b>${task.TRANSPORT ?? "—"}</b>${task.TRANSTYPE ? ` (${task.TRANSTYPE})` : ""}</span>
+        <span>Водитель: <b>${task.VODITEL_NAME ?? "—"}</b></span>
+        <span>Док: <b>${task.DOCK ?? "—"}</b></span>
+        <span>Статус: <b>${task.CONDITION ?? "Новый"}</b></span>
+      </div>
+      <table>
+        <thead><tr>
+          <th>#</th><th>Пор.</th><th>Адрес</th><th>Район</th>
+          <th>Пал.</th><th>Вес кг</th><th>Подпись</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+        <tfoot><tr>
+          <td colspan="4">ИТОГО</td>
+          <td>${sts.reduce((s, x) => s + x.PALLETS_COUNT, 0)}</td>
+          <td>${sts.reduce((s, x) => s + x.WEIGHT_KG, 0).toFixed(0)}</td>
+          <td></td>
+        </tr></tfoot>
+      </table>
+      <script>window.onload=()=>{window.print();}<\/script>
+      </body></html>`;
+    const w = window.open("", "_blank");
+    if (w) { w.document.write(html); w.document.close(); }
+  }
+
   async function handleCopyTask() {
     if (!selectedTask) return;
     setLoading(true);
@@ -1214,7 +1269,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   <th className="dispatch-sortable-th" onClick={() => toggleStSort("TRANSPORT_TYPE")}>Тип ТС{stSortField === "TRANSPORT_TYPE" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
                   <th title="Стол-лифт">Стол</th>
                   <th title="Примечание">Прим.</th>
-                  <th className="dispatch-sortable-th" title="Сахар" onClick={() => toggleStSort("SUGAR")}>Сах{stSortField === "SUGAR" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
+                  <th className="dispatch-sortable-th" title="Полнопалетная отборка" onClick={() => toggleStSort("SUGAR")}>Полнопал.{stSortField === "SUGAR" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
                 </tr>
               </thead>
               <tbody>
@@ -1392,6 +1447,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   <button className="dispatch-copy-task-btn" onClick={handleCopyTask}
                     disabled={loading} title="Создать новый рейс с теми же реквизитами (без СТ)">
                     📋 Копировать
+                  </button>
+                  <button className="dispatch-print-btn" onClick={handlePrintRoute}
+                    disabled={taskSts.length === 0} title="Распечатать маршрутный лист">
+                    🖨 Печать
                   </button>
                   {selectedTask.CONDITION !== "Отгружен" && <>
                     <button className="dispatch-close-btn"
@@ -1728,6 +1787,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   <button className="dispatch-copy-task-btn" onClick={handleCopyTask}
                     disabled={loading} title="Создать новый рейс с теми же реквизитами (без СТ)">
                     📋 Копировать
+                  </button>
+                  <button className="dispatch-print-btn" onClick={handlePrintRoute}
+                    disabled={taskSts.length === 0} title="Распечатать маршрутный лист">
+                    🖨 Печать
                   </button>
                   {selectedTask.CONDITION !== "Отгружен" && <>
                     <button className="dispatch-close-btn"
@@ -2155,7 +2218,7 @@ function AvailableStRow({
       <td><TransportTypeBadge value={st.TRANSPORT_TYPE} /></td>
       <td className="num-c" title={st.STOL ? "Требуется стол-лифт / гидроборт" : ""}>{st.STOL ? "♿" : ""}</td>
       <td className="dispatch-prim1" title={st.PRIM1 ?? ""}>{st.PRIM1 ? st.PRIM1.slice(0, 20) : ""}</td>
-      <td className="num-c">{st.SUGAR ? <span className="dispatch-sugar">С</span> : ""}</td>
+      <td className="num-c">{st.SUGAR ? <span className="dispatch-sugar" title="Полнопалетная отборка">П</span> : ""}</td>
     </tr>
   );
 }
