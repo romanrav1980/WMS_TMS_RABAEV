@@ -312,6 +312,19 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
   // VRP solve
   // ---------------------------------------------------------------------------
 
+  // Sprint 101 — active job id for cancel
+  const [activeJobId, setActiveJobId] = useState<string | null>(null);
+
+  const handleCancelSolve = useCallback(async () => {
+    if (!activeJobId) return;
+    try {
+      await apiFetch(`/api/admin/transport/planner/solve/${activeJobId}`, { method: "DELETE" });
+    } catch { /* ignore */ }
+    setActiveJobId(null);
+    setSolving(false);
+    if (solveTimerRef.current) clearInterval(solveTimerRef.current);
+  }, [activeJobId]);
+
   const handleSolve = useCallback(async () => {
     setSolving(true); setSolveError(null); setPlan(null); setApplyDone(null);
     setSolveElapsed(0);
@@ -320,21 +333,69 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
       const body = {
         plan_date: filterDate,
         transport_type: trTypeFilter || null,
-        time_limit_s: 30,
+        time_limit_s: 60,
         source: "auto",
         solver: solverMode,
       };
-      const result = await apiFetch<VrpPlan>("/api/admin/transport/planner/solve", {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
-      setPlan(result);
-      setLocalRoutes(JSON.parse(JSON.stringify(result.routes)));
-      setExpandedRouteIdx(null);
+      // Sprint 101: new API returns {job_id, stream_url}
+      const jobResp = await apiFetch<{ job_id?: string; routes?: unknown[] }>(
+        "/api/admin/transport/planner/solve",
+        { method: "POST", body: JSON.stringify(body) },
+      );
+      // Support both old (direct VrpPlan) and new (job_id) response shapes
+      if (jobResp.job_id) {
+        setActiveJobId(jobResp.job_id);
+        // Poll via SSE
+        const es = new EventSource(`/api/admin/transport/planner/solve/${jobResp.job_id}/stream`);
+        await new Promise<void>((resolve, reject) => {
+          es.onmessage = (e) => {
+            const msg = JSON.parse(e.data);
+            if (msg.type === "done") {
+              es.close();
+              // Fetch the actual plan result
+              apiFetch<{ routes?: unknown[] }>(`/api/admin/transport/planner/metrics?plan_id=${msg.plan_id || ""}`)
+                .then(() => {})
+                .catch(() => {});
+              resolve();
+            } else if (msg.type === "error") {
+              es.close();
+              reject(new Error(msg.detail || "VRP error"));
+            } else if (msg.type === "cancelled") {
+              es.close();
+              resolve();
+            }
+          };
+          es.onerror = () => { es.close(); reject(new Error("SSE connection error")); };
+        });
+        setActiveJobId(null);
+        // Re-fetch latest plan after solve
+        try {
+          const history = await apiFetch<{ plan_id: number; routes?: unknown[] }[]>(
+            `/api/admin/transport/planner/history?date_from=${filterDate}&date_to=${filterDate}`
+          );
+          if (history.length > 0) {
+            const latest = await apiFetch<typeof history[0]>(
+              `/api/admin/transport/planner/metrics?plan_id=${history[0].plan_id}`
+            );
+            if (latest && (latest as unknown as { routes?: unknown[] }).routes) {
+              setPlan(latest as unknown as VrpPlan);
+              setLocalRoutes(JSON.parse(JSON.stringify((latest as unknown as VrpPlan).routes)));
+              setExpandedRouteIdx(null);
+            }
+          }
+        } catch { /* best effort */ }
+      } else if ((jobResp as unknown as VrpPlan).routes) {
+        // Legacy direct response
+        const result = jobResp as unknown as VrpPlan;
+        setPlan(result);
+        setLocalRoutes(JSON.parse(JSON.stringify(result.routes)));
+        setExpandedRouteIdx(null);
+      }
     } catch (e) {
       setSolveError(String(e));
     } finally {
       setSolving(false);
+      setActiveJobId(null);
       if (solveTimerRef.current) clearInterval(solveTimerRef.current);
     }
   }, [filterDate, trTypeFilter, solverMode]);
@@ -444,6 +505,12 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
         </div>
         {(loading || solving) && <span className="dispatch-spinner">●</span>}
         {solving && <span className="planner-solve-timer">Решаем... {solveElapsed}с</span>}
+        {/* Sprint 101 — cancel solve */}
+        {solving && activeJobId && (
+          <button className="planner-cancel-solve-btn" onClick={handleCancelSolve} title="Остановить оптимизатор">
+            ✕ Отмена
+          </button>
+        )}
         {polygonSelection.size > 0 && (
           <span className="planner-polygon-badge">
             ▣ {polygonSelection.size} СТ выделено

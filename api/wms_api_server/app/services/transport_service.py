@@ -1190,6 +1190,7 @@ class TransportService:
         time_limit_s: int = 30,
         source: str = "auto",
         solver: str = "auto",
+        cancel_event: "threading.Event | None" = None,
     ) -> VrpPlanResponse:
         """Запускает VRP-решатель, сохраняет план и возвращает ответ."""
         from .vrp_solver import VrpOrder, VrpVehicle, solve as vrp_solve

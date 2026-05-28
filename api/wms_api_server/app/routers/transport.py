@@ -56,6 +56,8 @@ transport.py — FastAPI роутер диспетчера отгрузки.
 from datetime import date
 from typing import Annotated
 
+import threading
+
 from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse
 
@@ -94,6 +96,7 @@ from ..schemas import (
 from ..services.transport_service import TransportService
 from ..services.distance_matrix_service import DistanceMatrixService
 from ..services.ws_manager import ws_manager
+from ..services.vrp_job_store import vrp_job_store
 
 router = APIRouter(prefix="/api/admin/transport", tags=["transport-dispatch"])
 
@@ -514,20 +517,83 @@ def rebuild_distance_matrix(
 def solve_vrp(
     body: VrpSolveRequest,
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
-) -> VrpPlanResponse:
+) -> dict:
     """
-    Запускает VRP-оптимизатор (OR-Tools CVRPTW или Clarke-Wright fallback).
-    Сохраняет план в RRL_PLANNER_PLANS и возвращает структуру плана.
+    Sprint 101: запускает VRP в фоновом потоке, возвращает job_id.
+    Прогресс доступен через GET /planner/solve/{job_id}/stream (SSE).
+    Отмена: DELETE /planner/solve/{job_id}.
     """
+    job = vrp_job_store.create()
     svc = TransportService()
-    return svc.solve_vrp(
-        plan_date=body.plan_date,
-        ware_ids=body.ware_ids,
-        transport_type=body.transport_type,
-        time_limit_s=body.time_limit_s,
-        source=body.source,
-        solver=body.solver,
+    timeout_s = min(int(body.time_limit_s or 60), 120)
+
+    def _run() -> None:
+        try:
+            job.put_event({"type": "progress", "step": "starting", "pct": 0})
+            result = svc.solve_vrp(
+                plan_date=body.plan_date,
+                ware_ids=body.ware_ids,
+                transport_type=body.transport_type,
+                time_limit_s=timeout_s,
+                source=body.source,
+                solver=body.solver,
+                cancel_event=job.cancel_event,
+            )
+            if job.cancel_event.is_set():
+                return
+            job.result = result.model_dump() if hasattr(result, "model_dump") else dict(result)
+            job.put_event({
+                "type": "done",
+                "plan_id": job.result.get("plan_id"),
+                "score": job.result.get("score"),
+                "routes_count": len(job.result.get("routes", [])),
+            })
+        except Exception as exc:
+            job.put_event({"type": "error", "detail": str(exc)})
+        finally:
+            job.done = True
+
+    t = threading.Thread(target=_run, daemon=True)
+    t.start()
+
+    # Timeout watchdog
+    def _timeout() -> None:
+        import time as _time
+        _time.sleep(timeout_s)
+        if not job.done:
+            job.cancel_event.set()
+            job.done = True
+            job.put_event({"type": "error", "detail": f"timeout_{timeout_s}s"})
+
+    threading.Thread(target=_timeout, daemon=True).start()
+
+    return {"job_id": job.job_id, "stream_url": f"/api/admin/transport/planner/solve/{job.job_id}/stream"}
+
+
+@router.get("/planner/solve/{job_id}/stream")
+async def stream_vrp_job(
+    job_id: str,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+):
+    """Sprint 101: SSE-стрим прогресса VRP-задачи."""
+    job = vrp_job_store.get(job_id)
+    if not job:
+        from fastapi import HTTPException as _HTTPException
+        raise _HTTPException(status_code=404, detail=f"Job {job_id} not found")
+    return StreamingResponse(
+        job.stream(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+@router.delete("/planner/solve/{job_id}", status_code=204)
+def cancel_vrp_job(
+    job_id: str,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+) -> None:
+    """Sprint 101: отменить запущенный VRP-оптимизатор."""
+    vrp_job_store.cancel(job_id)
 
 
 @router.post("/planner/apply")
