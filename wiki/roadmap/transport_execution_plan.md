@@ -66,7 +66,12 @@
 | 48 | Кнопка «Сегодня» для сброса даты фильтра | Диспетчер | 0.1 нед | 🟢 КК | ✅ `41deff6` 2026-05-28 |
 | 49 | Компактный режим таблицы СТ (toggle «Компактно») | Диспетчер | 0.1 нед | 🟢 КК | ✅ `c7faca3` 2026-05-28 |
 | 50 | Зелёная полоска для полностью собранных СТ (VERIFY_PERC=100%) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `f3a7a42` 2026-05-28 |
-| **Итого** | | | **~28.4 нед** | | |
+| 51 | Закреплённая панель выделения (count · P · M · V + кнопки) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `ad061e9` 2026-05-28 |
+| 52 | Сортировка таблицы доступных СТ по клику на заголовок колонки | Диспетчер | 0.1 нед | 🟢 КК | ✅ `e19b892` 2026-05-28 |
+| 53 | Сворачивание панели фильтров (collapse/expand + localStorage) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `8db5812` 2026-05-28 |
+| 54 | Кнопка «⬇ CSV» в sel-bar — экспорт выделенных СТ в файл | Диспетчер | 0.1 нед | 🟢 КК | ✅ `32cd67b` 2026-05-28 |
+| 55 | Итоги по всем видимым СТ (П/кг/м³) в тулбаре таблицы | Диспетчер | 0.1 нед | 🟢 КК | ✅ `3e912d4` 2026-05-28 |
+| **Итого** | | | **~28.9 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -81,6 +86,7 @@
 
 Область: ТМС-2, Sprint 1–20. Проверка идёт не по галочкам, а по рабочим API/DB/test paths.
 
+- Block I / Sprint 1–6 fresh gate: добавлены прямые Sprint 1–3 tests и UI smoke Sprint 1–6; `pytest tests\transport\test_sprint1_functional.py ... tests\transport\test_sprint6_functional.py -q -ra --tb=short` -> `78 passed`; UI smoke Sprint 1–6 passed; Sprint 4–6 load NFR passed after connection pooling, set-based readiness, short caches, stable seed-date `2026-05-25`, and lightweight audit for high-frequency read-only transport GET endpoints.
 - Блок I / Sprint 1–6: актуальный functional layer есть для Sprint 4–6; `pytest tests\transport\test_sprint4_functional.py tests\transport\test_sprint5_functional.py tests\transport\test_sprint6_functional.py -q -ra --tb=short` -> `40 passed, 14 skipped`.
 - Блок II / Sprint 7–10: применены dev Oracle migrations `051_apply.sql` и `052_apply.sql`; `pytest tests\transport\test_sprint7_functional.py tests\transport\test_sprint8_functional.py tests\transport\test_sprint9_functional.py tests\transport\test_sprint10_functional.py -q -ra --tb=short` -> `54 passed, 7 skipped`.
 - Блок III / Sprint 11–14: применена dev Oracle migration `053_apply.sql` с legacy-compatible правкой FK; `pytest tests\transport\test_sprint11_functional.py tests\transport\test_sprint12_functional.py tests\transport\test_sprint13_functional.py tests\transport\test_sprint14_functional.py -q -ra --tb=short` -> `54 passed, 1 skipped`.
