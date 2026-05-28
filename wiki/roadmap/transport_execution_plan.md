@@ -76,7 +76,12 @@
 | 58 | Развернуть/свернуть все районы (кластерный режим) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `6b8d913` 2026-05-28 |
 | 59 | Быстрый поиск по маршрутам (ID, авто, водитель, регион, ТК) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `c00a221` 2026-05-28 |
 | 60 | Пагинация таблицы доступных СТ (100 строк/страница) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `a25c8d4` 2026-05-28 |
-| **Итого** | | | **~29.5 нед** | | |
+| 61 | Быстрый фильтр по складу (warehouse selector) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `971d128` 2026-05-28 |
+| 62 | Прилипающий заголовок таблицы СТ (sticky thead) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `97c2d32` 2026-05-28 |
+| 63 | Значок «⚠ N не собрано» в тулбаре СТ | Диспетчер | 0.1 нед | 🟢 КК | ✅ `60d0842` 2026-05-28 |
+| 64 | Клик по значку «не собрано» → выделить все несобранные | Диспетчер | 0.1 нед | 🟢 КК | ✅ `d29a250` 2026-05-28 |
+| 65 | Синяя пилюля (выделено N) на вкладке «Заявки» | Диспетчер | 0.1 нед | 🟢 КК | ✅ `1498135` 2026-05-28 |
+| **Итого** | | | **~30.0 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -352,12 +357,14 @@ docker compose -f docker-compose.valhalla.yml up -d  # резерв
 **Что видит диспетчер после спринта:**
 Кнопка «Авто-план» → через 10–30 сек на карте появляются цветные маршруты (каждая машина — свой цвет). Справа: «Рейс 1: Е715ТТ — 14 паллет — 96% загрузки — 4ч20м». Внизу: «Утилизация парка: 84%, Общий пробег: 1 240 км, Нарушений окон: 2». Кнопка «Применить план» создаёт все рейсы в системе.
 
-**Статус:** ✅ Завершён  
+**Статус:** ✅ Завершён; 2026-05-28 hardening re-check passed
 **Коммит:** `7827b84` · **Дата:** 2026-05-26  
 **Тесты:**  
-- `tests/transport/test_sprint8_functional.py` — 24 pytest-кейса (solve, metrics, apply, matrix)  
-- `tests/transport/sprint8_usability_checklist.md` — 43 юзабилити-проверки  
-- `tests/transport/transport_sprint8_load_test.py` — 3 users, 120s, NFR p95 solve≤60s, metrics≤500ms  
+- `tests/transport/test_sprint8_functional.py` — 23 pytest-кейса (matrix rebuild, non-empty solve, metrics, apply contract), latest `23 passed`
+- `tests/transport/sprint8_usability_checklist.md` — 43 юзабилити-проверки
+- `tests/transport/transport_sprint8_load_test.py` — Windows-safe load gate; latest p95 metrics 360.7 ms, solve 647.5 ms, rebuild 414.6 ms
+- `tests/ui/transport_sprint8_ui_smoke.cjs` — UI smoke автоплана, панели маршрутов и apply payload
+**Hardening 2026-05-28:** тесты переведены на стабильный seed-date `2026-05-25`; default functional gate теперь требует непустой VRP-план, но не выполняет destructive apply на shared seed. Полный apply-flow оставлен как optional mutating gate через `TMS_RUN_MUTATING_VRP_APPLY=1`.
 **Миграция:** `052_apply.sql` (APPLIED_AT, индексы на матрицу и планы)
 
 ---
@@ -384,11 +391,13 @@ docker compose -f docker-compose.valhalla.yml up -d  # резерв
 **Что видит диспетчер после спринта:**
 Можно нарисовать зону на карте и мгновенно получить рейс из точек внутри. Кластеры районов подсвечены — один клик выделяет весь район. Перетащить сложный адрес в другой маршрут — метрики пересчитываются без ожидания. В правой панели — «3 похожих маршрута из прошлого месяца».
 
-**Статус:** ✅ Завершён  
+**Статус:** ✅ Завершён; 2026-05-28 hardening re-check passed with historical-template fixture risk
 **Коммит:** `7c284ec` · **Дата:** 2026-05-26  
 **Тесты:**  
-- `tests/transport/test_sprint9_functional.py` — 15 pytest-кейсов (cluster solver, templates, RAION)  
-- `tests/transport/sprint9_usability_checklist.md` — 23 юзабилити-проверки  
+- `tests/transport/test_sprint9_functional.py` — cluster solver/templates/RAION, latest `10 passed, 1 skipped` (skip: no historical template seed)
+- `tests/transport/sprint9_usability_checklist.md` — 23 юзабилити-проверки
+- `tests/transport/transport_sprint9_load_test.py` — Windows-safe load gate; latest p95 cluster solve 598.3 ms, templates 413.5 ms, orders 140.1 ms
+- `tests/ui/transport_sprint9_ui_smoke.cjs` — UI smoke кластерного слоя, `solver=cluster`, шаблонов и template apply payload
 **Примечание:** drag & drop между маршрутами (Jaccard-matching) включён; drag без перезапуска solver — в Sprint 10.
 
 ---
@@ -413,11 +422,14 @@ docker compose -f docker-compose.valhalla.yml up -d  # резерв
 **Что видит диспетчер после спринта:**
 График «Утилизация парка» за последние 30 дней. Видно, что после внедрения оптимизатора средняя загрузка выросла с 71% до 86%. Настройки позволяют «жертвовать пробегом ради меньшего числа машин» и наоборот.
 
-**Статус:** ✅ Завершён  
+**Статус:** ✅ Завершён; 2026-05-28 hardening re-check passed
 **Коммит:** `bd08185` · **Дата:** 2026-05-26  
 **Тесты:**  
-- `tests/transport/test_sprint10_functional.py` — 15 pytest-кейсов (history, forecast)  
-- `tests/transport/sprint10_usability_checklist.md` — 24 юзабилити-проверки  
+- `tests/transport/test_sprint10_functional.py` — 15 pytest-кейсов (history, forecast), latest `15 passed`
+- `tests/transport/sprint10_usability_checklist.md` — 24 юзабилити-проверки
+- `tests/transport/transport_sprint10_load_test.py` — Windows-safe load gate; latest p95 history 471.5 ms, forecast 161.2 ms
+- `tests/ui/transport_sprint10_ui_smoke.cjs` — UI smoke вкладки аналитики, history cards/table, forecast, objective weights
+**Hardening 2026-05-28:** planner history/demand forecast/templates добавлены в lightweight audit; history/forecast получают короткий service-cache по параметрам.
 
 ---
 
