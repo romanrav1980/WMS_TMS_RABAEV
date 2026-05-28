@@ -1233,6 +1233,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const dayTotalPallets = tasks.reduce((s, t) => s + (t.PALLET_COUNT || 0), 0);
   const dayTotalWeight  = tasks.reduce((s, t) => s + (t.TEMP_WEIGHT  || 0), 0);
   const dayClosedTasks  = tasks.filter(t => t.CONDITION === "Отгружен").length;
+  // Sprint 93 — empty trips warning (active trips with 0 STs/pallets)
+  const dayEmptyTasks = tasks.filter(
+    t => t.CONDITION !== "Отгружен" && t.CONDITION !== "Отменён" && !(t.PALLET_COUNT > 0)
+  ).length;
 
   // Sprint 43 — sortable trips table (tasks tab)
   const [tasksSortField, setTasksSortField] = useState<string | null>(null);
@@ -1615,6 +1619,16 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   <span className="dispatch-ds-label">Отгружено</span>
                   <span className="dispatch-ds-value">{dayClosedTasks} / {dayTotalTasks}</span>
                 </span>
+                {/* Sprint 93 — empty trips warning */}
+                {dayEmptyTasks > 0 && (
+                  <>
+                    <span className="dispatch-ds-sep">·</span>
+                    <span className="dispatch-ds-item dispatch-ds-empty-warn"
+                      title="Активные рейсы без СТ">
+                      ⚠ {dayEmptyTasks} пустых
+                    </span>
+                  </>
+                )}
               </div>
             )}
             <div className="dispatch-trips-table-wrap">
