@@ -14,8 +14,7 @@ Run:
 import pytest
 import requests
 
-BASE = "http://127.0.0.1:8088"
-AUTH = ("admin", "admin123")
+from tests.transport.config import API_BASE as BASE, API_AUTH as AUTH
 
 
 def get(path: str, **kwargs) -> requests.Response:
@@ -82,7 +81,7 @@ class TestBillingOrderTasks:
 
     def test_404_for_nonexistent_order(self):
         r = get("/api/admin/transport/billing/orders/999999999/tasks")
-        assert r.status_code in (200, 404)
+        assert r.status_code == 404
 
     def test_requires_auth(self):
         oid = first_order_id()

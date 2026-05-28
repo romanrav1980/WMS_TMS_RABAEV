@@ -14,8 +14,7 @@ Run:
 import pytest
 import requests
 
-BASE = "http://127.0.0.1:8088"
-AUTH = ("admin", "admin123")
+from tests.transport.config import API_BASE as BASE, API_AUTH as AUTH
 
 
 def get(path: str, **kwargs) -> requests.Response:

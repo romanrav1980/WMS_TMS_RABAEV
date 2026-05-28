@@ -12,8 +12,7 @@ Run:
 import pytest
 import requests
 
-BASE = "http://127.0.0.1:8088"
-AUTH = ("admin", "admin123")
+from tests.transport.config import API_BASE as BASE, API_AUTH as AUTH
 
 XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 XLSX_MAGIC = b"PK\x03\x04"  # ZIP/OOXML magic bytes
