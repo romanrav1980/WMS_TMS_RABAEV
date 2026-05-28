@@ -2729,6 +2729,15 @@ function RouteTaskStRow({
 }) {
   const [ordEdit, setOrdEdit] = useState(false);
   const [ordVal, setOrdVal] = useState(String(st.ORD ?? ""));
+  // Sprint 90 — copy ST number to clipboard on click
+  const [stCopied, setStCopied] = useState(false);
+
+  function copyStNum() {
+    navigator.clipboard.writeText(st.ST_NUMBER).then(() => {
+      setStCopied(true);
+      setTimeout(() => setStCopied(false), 1500);
+    }).catch(() => {});
+  }
 
   function commitOrder() {
     setOrdEdit(false);
@@ -2762,7 +2771,11 @@ function RouteTaskStRow({
         {st.REGION || st.ADDR || "—"}
         {st.RAION && <span className="dispatch-st-raion-sm"> · {st.RAION}</span>}
       </td>
-      <td className="dispatch-gc-stnum">{st.ST_NUMBER}</td>
+      <td className="dispatch-gc-stnum dispatch-st-copy-cell"
+        onClick={copyStNum} title="Копировать номер СТ">
+        {st.ST_NUMBER}
+        {stCopied && <span className="dispatch-st-copied">✓</span>}
+      </td>
       <td>{st.VERIFY_PERC != null ? <VerifyPill perc={st.VERIFY_PERC} /> : "—"}</td>
       <td>{st.ZONE ?? "—"}</td>
       <td style={{ whiteSpace: "nowrap" }}>{fmtTime(st.TIME_FROM) || "—"}</td>
@@ -2812,6 +2825,8 @@ function TaskStTableRow({
 }) {
   const [ordEdit, setOrdEdit] = useState(false);
   const [ordVal, setOrdVal] = useState(String(st.ORD ?? ""));
+  // Sprint 90 — copy ST number to clipboard on click
+  const [stCopied, setStCopied] = useState(false);
 
   const timeWindow = (() => {
     const f = fmtTime(st.TIME_FROM);
@@ -2826,6 +2841,13 @@ function TaskStTableRow({
     const n = parseInt(ordVal, 10);
     if (!isNaN(n) && n !== st.ORD) onSetOrder(n);
     else setOrdVal(String(st.ORD ?? ""));
+  }
+
+  function copyStNum() {
+    navigator.clipboard.writeText(st.ST_NUMBER).then(() => {
+      setStCopied(true);
+      setTimeout(() => setStCopied(false), 1500);
+    }).catch(() => {});
   }
 
   const unready = st.VERIFY_PERC != null && st.VERIFY_PERC < 100;
@@ -2854,7 +2876,11 @@ function TaskStTableRow({
           </span>
         )}
       </td>
-      <td className="dispatch-gc-stnum">{st.ST_NUMBER}</td>
+      <td className="dispatch-gc-stnum dispatch-st-copy-cell"
+        onClick={copyStNum} title="Копировать номер СТ">
+        {st.ST_NUMBER}
+        {stCopied && <span className="dispatch-st-copied">✓</span>}
+      </td>
       <td className="col-flex">
         {st.REGION || st.ADDR || "—"}
         {st.RAION && <span className="dispatch-st-raion-sm"> · {st.RAION}</span>}
