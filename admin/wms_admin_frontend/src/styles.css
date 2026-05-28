@@ -1295,6 +1295,11 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-ds-value { font-weight: 700; color: var(--text); }
 .dispatch-ds-sep { color: var(--muted); opacity: 0.5; }
 
+/* Sprint 67 — Amber row for unready STs in trip detail */
+.dispatch-gr-unready td { background: #fffbeb !important; }
+.dispatch-gr-unready:hover td { background: #fef3c7 !important; }
+.dispatch-gr-unready.selected td { background: #fde68a !important; }
+
 /* Sprint 65 — Selection count badge on Tasks tab */
 .dispatch-tab-badge { display: inline-block; margin-left: 5px; min-width: 18px; height: 16px; line-height: 16px; padding: 0 4px; background: var(--blue); color: #fff; border-radius: 8px; font-size: 10px; font-weight: 800; text-align: center; vertical-align: middle; }
 

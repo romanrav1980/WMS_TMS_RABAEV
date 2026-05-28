@@ -2600,8 +2600,10 @@ function TaskStTableRow({
     else setOrdVal(String(st.ORD ?? ""));
   }
 
+  const unready = st.VERIFY_PERC != null && st.VERIFY_PERC < 100;
+
   return (
-    <tr className={`dispatch-gr${checked ? " selected" : ""}`}>
+    <tr className={`dispatch-gr${checked ? " selected" : ""}${unready ? " dispatch-gr-unready" : ""}`}>
       <td onClick={e => e.stopPropagation()}>
         {onToggleCheck && !disabled && (
           <input type="checkbox" checked={!!checked} onChange={onToggleCheck} />
