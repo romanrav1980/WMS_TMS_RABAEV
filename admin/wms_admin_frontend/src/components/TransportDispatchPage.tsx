@@ -214,6 +214,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [stSortField, setStSortField] = useState<string | null>(null);
   const [stSortDir, setStSortDir]     = useState<"asc" | "desc">("asc");
 
+  // Sprint 53 — collapsible filter panel
+  const [fpCollapsed, setFpCollapsed] = useState(() => lsGet("tms_fpCollapsed", "0") === "1");
+
   // Sprint 47 — localStorage persistence helpers
   function lsGet(key: string, fallback: string): string {
     try { return localStorage.getItem(key) || fallback; } catch { return fallback; }
@@ -465,6 +468,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   useEffect(() => { try { localStorage.setItem("tms_routeShipDate", routeShipDate); } catch { /* */ } }, [routeShipDate]);
   useEffect(() => { try { localStorage.setItem("tms_viewMode",     viewMode);     } catch { /* */ } }, [viewMode]);
   useEffect(() => { try { localStorage.setItem("tms_activeTab",    activeTab);    } catch { /* */ } }, [activeTab]);
+  useEffect(() => { try { localStorage.setItem("tms_fpCollapsed",  fpCollapsed ? "1" : "0"); } catch { /* */ } }, [fpCollapsed]);
 
   // Sprint 44 — global Escape handler
   // ------------------------------------------------------------------
@@ -1876,21 +1880,30 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             RIGHT FILTER PANEL  (~C# panel2, light-green background)
             ============================================================ */}
         {activeTab === "tasks" ? (
-        <div className="dispatch-right-panel">
+        <div className={`dispatch-right-panel${fpCollapsed ? " dispatch-fp-collapsed" : ""}`}>
           <div className="dispatch-fp-header-row">
-            <span className="dispatch-fp-title">
-              Фильтры
-              {activeFilterCount > 0 && (
-                <span className="dispatch-fp-badge">{activeFilterCount}</span>
-              )}
-            </span>
-            {activeFilterCount > 0 && (
+            {!fpCollapsed && (
+              <span className="dispatch-fp-title">
+                Фильтры
+                {activeFilterCount > 0 && (
+                  <span className="dispatch-fp-badge">{activeFilterCount}</span>
+                )}
+              </span>
+            )}
+            {fpCollapsed && activeFilterCount > 0 && (
+              <span className="dispatch-fp-badge dispatch-fp-badge-alone">{activeFilterCount}</span>
+            )}
+            {!fpCollapsed && activeFilterCount > 0 && (
               <button className="dispatch-fp-reset-btn" onClick={handleResetFilters} title="Сбросить все фильтры">
                 × Сбросить
               </button>
             )}
+            <button className="dispatch-fp-collapse-btn" onClick={() => setFpCollapsed(v => !v)}
+              title={fpCollapsed ? "Развернуть панель фильтров" : "Свернуть панель фильтров"}>
+              {fpCollapsed ? "›" : "‹"}
+            </button>
           </div>
-          <div className="dispatch-fp-label">Тип ТС</div>
+          {!fpCollapsed && <><div className="dispatch-fp-label">Тип ТС</div>
           <select className="dispatch-fp-select" value={trTypeFilter}
             onChange={e => setTrTypeFilter(e.target.value)}>
             <option value="">Все</option>
@@ -1960,6 +1973,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             value={maxWeightKg ?? ""}
             onChange={e => setMaxWeightKg(e.target.value ? Number(e.target.value) : null)}
             placeholder="—" />
+          </>}
         </div>
         ) : activeTab === "billing" && selectedBillingOrder ? (
         <div className="dispatch-right-panel billing-detail-panel">

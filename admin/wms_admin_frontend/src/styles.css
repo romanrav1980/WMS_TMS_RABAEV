@@ -1289,6 +1289,12 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-ds-value { font-weight: 700; color: var(--text); }
 .dispatch-ds-sep { color: var(--muted); opacity: 0.5; }
 
+/* Sprint 53 — Collapsible filter panel */
+.dispatch-fp-collapsed { width: 30px !important; min-width: 30px !important; padding: 6px 4px !important; overflow: hidden; }
+.dispatch-fp-collapse-btn { margin-left: auto; padding: 1px 5px; border: 1px solid #c0d4c0; border-radius: 4px; background: #fff; color: var(--muted); font-size: 13px; font-weight: 700; line-height: 1; }
+.dispatch-fp-collapse-btn:hover { background: #e8f0fb; color: var(--blue); border-color: var(--blue); }
+.dispatch-fp-badge-alone { margin: 0 auto 4px; }
+
 /* Sprint 39 — Active filters badge + reset */
 .dispatch-fp-header-row {
   display: flex;
