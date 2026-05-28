@@ -1421,6 +1421,10 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-reschedule-btn { padding: 3px 8px; border: 1px solid #a3b4c8; border-radius: 4px; background: #fff; color: var(--muted); font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .dispatch-reschedule-btn:hover:not(:disabled) { background: #fef9c3; border-color: #ca8a04; color: #92400e; }
 .dispatch-reschedule-btn:disabled { opacity: .4; cursor: not-allowed; }
+/* Sprint 89 — Unready-only toggle in trip detail STs toolbar */
+.dispatch-trip-unready-btn { padding: 2px 7px; border: 1px solid #f59e0b; border-radius: 4px; background: #fff; color: #92400e; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.dispatch-trip-unready-btn:hover { background: #fef3c7; }
+.dispatch-trip-unready-btn.active { background: #fef3c7; border-color: #d97706; font-weight: 800; box-shadow: 0 0 0 2px #fde68a; }
 
 /* Sprint 38 — Copy trip button */
 .dispatch-copy-task-btn {

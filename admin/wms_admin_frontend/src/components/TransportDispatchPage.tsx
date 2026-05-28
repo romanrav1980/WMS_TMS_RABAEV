@@ -299,6 +299,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [tripStFilter, setTripStFilter] = useState("");
   // Sprint 74 — collapse trip detail STs section
   const [tripDetailCollapsed, setTripDetailCollapsed] = useState(false);
+  // Sprint 89 — show only unready STs in trip detail
+  const [tripStUnreadyOnly, setTripStUnreadyOnly] = useState(false);
   const [noteText, setNoteText] = useState("");
   const [billingDialog, setBillingDialog] = useState(false);
   const [openingBilling, setOpeningBilling] = useState(false);
@@ -495,11 +497,15 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   // ------------------------------------------------------------------
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      const tag = (e.target as HTMLElement).tagName;
-      const inInput = tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA";
+      const target = e.target as HTMLElement;
+      const tag = target.tagName;
+      const inputType = tag === "INPUT" ? ((target as HTMLInputElement).type || "text") : "";
+      const inTextInput = tag === "TEXTAREA"
+        || tag === "SELECT"
+        || (tag === "INPUT" && !["checkbox", "radio", "button", "submit"].includes(inputType));
       // Ctrl+Enter → add selected STs to trip
       if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-        if (inInput) return;
+        if (inTextInput) return;
         if (selectedStNums.size > 0 && selectedTask && activeTab === "tasks") {
           e.preventDefault();
           handleAssign();
@@ -508,7 +514,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       }
       // Delete → unassign selected trip STs
       if (e.key === "Delete") {
-        if (inInput) return;
+        if (inTextInput) return;
         if (selectedTripStNums.size > 0 && selectedTask && activeTab === "tasks") {
           e.preventDefault();
           handleBulkUnassign();
@@ -516,7 +522,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
         return;
       }
       if (e.key !== "Escape") return;
-      if (inInput) return;
+      if (inTextInput) return;
       if (createDialog) { setCreateDialog(false); return; }
       if (clusterCreateRaion) { setClusterCreateRaion(null); return; }
       if (editMode) { setEditMode(false); return; }
@@ -556,6 +562,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     setSelectedTripStNums(new Set());
     setTripStFilter(""); // Sprint 72: reset filter on task switch
     setTripDetailCollapsed(false); // Sprint 74: expand detail on task switch
+    setTripStUnreadyOnly(false); // Sprint 89: reset unready-only toggle on task switch
     try {
       const data = await apiFetch<TaskSt[]>(`/api/admin/transport/tasks/${task.ID}/sts`);
       setTaskSts(data);
@@ -1188,14 +1195,22 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const tripV = taskSts.reduce((s, x) => s + (x.VOLUME_M3 || 0), 0);
 
   // Sprint 72 — filter within trip detail STs
-  const filteredTaskSts = tripStFilter
-    ? taskSts.filter(s => {
-        const q = tripStFilter.toLowerCase();
-        return s.ST_NUMBER.toLowerCase().includes(q)
-          || (s.ADDR ?? "").toLowerCase().includes(q)
-          || (s.REGION ?? "").toLowerCase().includes(q);
-      })
-    : taskSts;
+  // Sprint 89 — also filter by unready-only toggle
+  const filteredTaskSts = (() => {
+    let sts = taskSts;
+    if (tripStFilter) {
+      const q = tripStFilter.toLowerCase();
+      sts = sts.filter(s =>
+        s.ST_NUMBER.toLowerCase().includes(q)
+        || (s.ADDR ?? "").toLowerCase().includes(q)
+        || (s.REGION ?? "").toLowerCase().includes(q)
+      );
+    }
+    if (tripStUnreadyOnly) {
+      sts = sts.filter(s => s.VERIFY_PERC !== null && s.VERIFY_PERC < 100);
+    }
+    return sts;
+  })();
 
   const selectedVehicle = vehicles.find(v => v.NUM === selectedTask?.TRANSPORT);
 
@@ -1220,8 +1235,15 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 
   const sortedTasks = tasksSortField
     ? [...tasks].sort((a, b) => {
-        const va = (a as Record<string, unknown>)[tasksSortField] ?? "";
-        const vb = (b as Record<string, unknown>)[tasksSortField] ?? "";
+        const vaRaw = (a as Record<string, unknown>)[tasksSortField];
+        const vbRaw = (b as Record<string, unknown>)[tasksSortField];
+        const aEmpty = vaRaw == null || vaRaw === "";
+        const bEmpty = vbRaw == null || vbRaw === "";
+        if (aEmpty && bEmpty) return 0;
+        if (aEmpty) return 1;
+        if (bEmpty) return -1;
+        const va = typeof vaRaw === "string" ? vaRaw.toLowerCase() : vaRaw;
+        const vb = typeof vbRaw === "string" ? vbRaw.toLowerCase() : vbRaw;
         const cmp = va < vb ? -1 : va > vb ? 1 : 0;
         return tasksSortDir === "asc" ? cmp : -cmp;
       })
@@ -1879,8 +1901,17 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   {tripStFilter && (
                     <button className="dispatch-trip-filter-clear" onClick={() => setTripStFilter("")} title="Сбросить">×</button>
                   )}
+                  {/* Sprint 89 — unready-only toggle */}
+                  {taskSts.some(s => s.VERIFY_PERC !== null && s.VERIFY_PERC < 100) && (
+                    <button
+                      className={`dispatch-trip-unready-btn${tripStUnreadyOnly ? " active" : ""}`}
+                      onClick={() => setTripStUnreadyOnly(v => !v)}
+                      title="Показать только несобранные СТ">
+                      ⚠ Несобр.
+                    </button>
+                  )}
                   <span className="dispatch-trip-sts-count">
-                    {tripStFilter ? `${filteredTaskSts.length} / ${taskSts.length}` : taskSts.length} СТ
+                    {(tripStFilter || tripStUnreadyOnly) ? `${filteredTaskSts.length} / ${taskSts.length}` : taskSts.length} СТ
                   </span>
                   {/* Sprint 77 — export trip STs to CSV */}
                   <button className="dispatch-trip-csv-btn"
