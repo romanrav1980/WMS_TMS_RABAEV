@@ -1241,6 +1241,10 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-st-ready { border-left: 3px solid var(--green) !important; }
 .dispatch-st-ready td:first-child { padding-left: 5px; }
 
+/* Sprint 83 — Unready available ST amber left-border */
+.dispatch-avail-unready { border-left: 3px solid #f59e0b !important; }
+.dispatch-avail-unready td:first-child { padding-left: 5px; }
+
 /* Sprint 49 — Dense mode for STs table */
 .dispatch-grid-dense td, .dispatch-grid-dense th { padding: 1px 4px !important; font-size: 10.5px !important; }
 .dispatch-dense-toggle { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }

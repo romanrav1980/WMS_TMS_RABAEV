@@ -2449,10 +2449,12 @@ function AvailableStRow({
   onGotoTrip?: (taskId: number) => void;
 }) {
   // Sprint 50 — green left-border for fully-assembled STs
+  // Sprint 83 — amber left-border for unready STs (VERIFY_PERC < 100 and not null)
   const rowClass = [
     "dispatch-gr",
     checked ? "selected" : wareColorClass(st.WARE_ID),
     !checked && (st.VERIFY_PERC ?? 0) >= 100 ? "dispatch-st-ready" : "",
+    !checked && st.VERIFY_PERC !== null && st.VERIFY_PERC < 100 ? "dispatch-avail-unready" : "",
     isChild ? "dispatch-grid-cluster-child" : "",
   ].filter(Boolean).join(" ");
 
