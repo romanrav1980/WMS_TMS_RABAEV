@@ -227,6 +227,17 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
   // Tab: 'map' | 'analytics'
   const [activeTab, setActiveTab] = useState<"map" | "analytics">("map");
 
+  // Sprint 111 — GPS live positions
+  const [vehiclePositions, setVehiclePositions] = useState<{vehicle_id:number;num_plat:string;lat:number;lon:number;speed_kmh:number;last_seen:string}[]>([]);
+  useEffect(() => {
+    const loadPositions = () =>
+      apiFetch<typeof vehiclePositions>("/api/admin/transport/vehicles/positions")
+        .then(setVehiclePositions).catch(() => {});
+    loadPositions();
+    const timer = setInterval(loadPositions, 30000);
+    return () => clearInterval(timer);
+  }, []); // eslint-disable-line
+
   // Drag-and-drop editing of plan routes (Sprint 24)
   const [localRoutes, setLocalRoutes] = useState<VrpRouteItem[] | null>(null);
   const [expandedRouteIdx, setExpandedRouteIdx] = useState<number | null>(null);
@@ -783,6 +794,20 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
                 </CircleMarker>
               );
             })}
+            {/* Sprint 111 — GPS vehicle positions */}
+            {vehiclePositions.filter(p => p.lat && p.lon).map(p => (
+              <CircleMarker
+                key={`gps-${p.vehicle_id}`}
+                center={[p.lat, p.lon]}
+                radius={7}
+                pathOptions={{ color: "#f59e0b", fillColor: "#fbbf24", fillOpacity: 0.9, weight: 2 }}
+              >
+                <Popup>
+                  <div><b>🚛 {p.num_plat}</b></div>
+                  <div>{p.speed_kmh} км/ч · {p.last_seen?.slice(11,16)}</div>
+                </Popup>
+              </CircleMarker>
+            ))}
           </MapContainer>
         </div>
 

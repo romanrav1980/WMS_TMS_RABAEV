@@ -34,6 +34,7 @@ from .routers import users as users_router
 from .routers import driver_mobile
 from .routers import notifications
 from .routers import transport_kpi
+from .routers import gps
 
 
 settings = get_settings()
@@ -78,3 +79,4 @@ app.include_router(users_router.router)       # Sprint 99-100: user management
 app.include_router(driver_mobile.router)      # Sprint 103-105: driver PWA
 app.include_router(notifications.router)      # Sprint 106-107: push + email
 app.include_router(transport_kpi.router)      # Sprint 108-109: KPI dashboard
+app.include_router(gps.router)               # Sprint 110-111: GPS positions
