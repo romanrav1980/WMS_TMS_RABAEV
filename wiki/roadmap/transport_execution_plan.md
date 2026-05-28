@@ -54,7 +54,8 @@
 | 36 | Массовое снятие СТ с рейса (чекбоксы + «Снять выбранные») | Диспетчер | 0.25 нед | 🟢 КК | ✅ `7aa8b16` 2026-05-28 |
 | 37 | «Выделить всё» в таблице СТ + авто-обновление данных (60 с) | Диспетчер | 0.25 нед | 🟢 КК | ✅ `a287a02` 2026-05-28 |
 | 38 | «Копировать рейс» — клонировать реквизиты без СТ | Диспетчер | 0.25 нед | 🟢 КК | ✅ `ad2a56f` 2026-05-28 |
-| **Итого** | | | **~26.25 нед** | | |
+| 39 | Badge активных фильтров + кнопка «× Сбросить» | Диспетчер | 0.25 нед | 🟢 КК | ✅ `1a19f0d` 2026-05-28 |
+| **Итого** | | | **~26.5 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -62,6 +63,23 @@
 - 🔴 **КС** — кодекс ($200) ведёт спринт: сложный алгоритм или нетипичный UI-компонент (Sprint 8: VRP, Sprint 12: Ганта)
 
 **Инфраструктура OSRM/Valhalla** разворачивается в Docker Desktop (Windows, выделить ≥10 GB RAM) перед Sprint 8. При покупке сервера — перенести контейнеры без изменения кода.
+
+---
+
+## Hardening checkpoint — 2026-05-28
+
+Область: ТМС-2, Sprint 1–20. Проверка идёт не по галочкам, а по рабочим API/DB/test paths.
+
+- Блок I / Sprint 1–6: актуальный functional layer есть для Sprint 4–6; `pytest tests\transport\test_sprint4_functional.py tests\transport\test_sprint5_functional.py tests\transport\test_sprint6_functional.py -q -ra --tb=short` -> `40 passed, 14 skipped`.
+- Блок II / Sprint 7–10: применены dev Oracle migrations `051_apply.sql` и `052_apply.sql`; `pytest tests\transport\test_sprint7_functional.py tests\transport\test_sprint8_functional.py tests\transport\test_sprint9_functional.py tests\transport\test_sprint10_functional.py -q -ra --tb=short` -> `54 passed, 7 skipped`.
+- Блок III / Sprint 11–14: применена dev Oracle migration `053_apply.sql` с legacy-compatible правкой FK; `pytest tests\transport\test_sprint11_functional.py tests\transport\test_sprint12_functional.py tests\transport\test_sprint13_functional.py tests\transport\test_sprint14_functional.py -q -ra --tb=short` -> `54 passed, 1 skipped`.
+- Блок IV / Sprint 15–20: применена dev Oracle migration `054_apply.sql` с legacy-compatible расширением `RRL_BILL_ORDERS.COMPANY`; `pytest tests\transport\test_sprint15_functional.py tests\transport\test_sprint16_functional.py tests\transport\test_sprint17_functional.py tests\transport\test_sprint18_functional.py tests\transport\test_sprint19_functional.py tests\transport\test_sprint20_functional.py -q -ra --tb=short` -> `62 passed`.
+- Общий контроль Sprint 4–20: `pytest tests\transport\test_sprint4_functional.py ... tests\transport\test_sprint20_functional.py -q -ra --tb=short` -> `211 passed, 21 skipped` за 7:04.
+- Исправлены обнаруженные дефекты: uppercase/lowercase contract для transport rows, лишний `user_id` bind в `PATCH /tasks/{id}`, закрытие пустого рейса, реальные колонки `RRL_TRANSPORT_TYPE`, паллетный запрос без несуществующего `SP.DELETED`, быстрый empty-date path для `available-sts`/planner orders, Sprint 8 `DISTANCE_KM/UPDATED_AT`, batch rebuild матрицы, `PAYLOAD` вместо `PLAN_JSON`, forecast без тяжёлой view.
+- Для ARM/Ганта исправлены: alias `Газель -> 5` для legacy `TRANSTYPE`, Sprint 11 operations tables, Gantt на `RRL_TR_VEHICLE` вместо отсутствующей `RRL_TRANSPORTS`, авто-планирование операций для рейсов без цепочки, корректная агрегация рейсов без машины, `CONDITION AS STATUS`/`DELETED` в availability и plan-fact.
+- Для биллинга исправлены: DML-функции Oracle вызываются из PL/SQL blocks, а не `SELECT FROM DUAL`; `RRL_ADD_TT_2_BILLINGORDER`/close/pay возвращают реальные ошибки; add/remove не выдают partial-success; `get_task()` возвращает `PAY_ORDER_ID`, поэтому billed-рейсы защищены от cancel/assign/unassign; Sprint 15/18/19/20 тестовые данные теперь используют реальные рейсы с ТК и рассчитанной ценой.
+- Риск: skips связаны с отсутствием подходящих свободных СТ/истории в текущем seed на относительную дату теста; для финального приёмочного прогона нужен стабильный dated fixture вместо `date.today()+1`.
+- Риск MAP/VRP: Sprint 8 route-detail assertions остаются skipped при текущем dev seed, потому что solver возвращает `solver_used=none` и 0 маршрутов на тестовые даты; нужен стабильный fixture с геокодированными СТ и активным ТС для полного apply-plan acceptance.
 
 ---
 
@@ -629,6 +647,28 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
 - `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
 - `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+
+---
+
+### Sprint 39 — Badge активных фильтров + «× Сбросить»
+
+**Инструмент:** 🟢 КК (код-код $20) — чисто фронтенд, derived state + reset function
+
+**Цель:** диспетчер сразу видит, сколько фильтров активно, и может сбросить все одним кликом — без ручного обхода каждого поля.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `activeFilterCount` computed — считает все отклонения от дефолтов | Frontend | `TransportDispatchPage.tsx` |
+| `handleResetFilters()` — сбрасывает все 11 filter state-переменных | Frontend | `TransportDispatchPage.tsx` |
+| `dispatch-fp-header-row`: строка «Фильтры» + badge + кнопка | Frontend | `TransportDispatchPage.tsx` |
+| `.dispatch-fp-header-row`, `.dispatch-fp-badge`, `.dispatch-fp-reset-btn` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `1a19f0d` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint39_functional.py` — 24 pytest-кейса (каждый фильтр по отдельности, all-active=11, reset=0, badge/btn visibility)  
+- `tests/transport/sprint39_usability_checklist.md` — 19 юзабилити-проверок  
+- `tests/transport/transport_sprint39_load_test.py` — 5 users, 60s, NFR /available-sts c разными фильтрами p95 ≤ 400ms  
 
 ---
 
