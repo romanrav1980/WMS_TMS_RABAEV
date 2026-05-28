@@ -1979,6 +1979,12 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               title="Экспорт в Excel">
               {routesXlsxLoading ? "…" : "⬇ Excel"}
             </button>
+            <button className="dispatch-trip-csv-btn"
+              onClick={() => exportRoutesCsv(searchedRouteTasks, routeShipDate)}
+              disabled={searchedRouteTasks.length === 0}
+              title="Экспорт таблицы маршрутов в CSV">
+              ⬇ CSV
+            </button>
           </div>
 
           {/* ---- Routes table ---- */}
@@ -3559,6 +3565,37 @@ function exportTaskStsCsv(sts: TaskSt[], taskId: number) {
   const a = document.createElement("a");
   a.href = url;
   a.download = `trip-${taskId}-sts.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Sprint 86 — Export routes tab trips table to CSV
+function exportRoutesCsv(tasks: TransportTask[], date: string) {
+  const BOM = "﻿";
+  const header = "ID;Дата;Время;Машина;Водитель;ТК;Пал.;Вес кг;Объём м³;Регионы;Цена ₽;Статус;% сборки;ДОК;Логист";
+  const rows = tasks.map(t => [
+    t.ID,
+    t.SHIPMENT_DATE ? fmtDate(t.SHIPMENT_DATE) : "",
+    t.SHIPMENT_TIME ? fmtTime(t.SHIPMENT_TIME) : "",
+    t.TRANSPORT ?? "",
+    t.VODITEL_NAME ?? "",
+    t.TK_NAME ?? "",
+    t.PALLET_COUNT,
+    t.TEMP_WEIGHT != null ? t.TEMP_WEIGHT.toFixed(0) : "",
+    t.VOLUME_M3 != null ? t.VOLUME_M3.toFixed(2) : "",
+    t.REGIONS ?? t.TEMP_REGION ?? "",
+    t.PRICE != null ? t.PRICE : "",
+    t.CONDITION ?? "",
+    t.READY_PERC != null ? t.READY_PERC + "%" : "",
+    t.DOCK ?? "",
+    t.LOGIST ?? "",
+  ].join(";"));
+  const csv = BOM + [header, ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `routes-${date}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
