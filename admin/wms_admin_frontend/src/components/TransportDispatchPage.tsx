@@ -1219,6 +1219,26 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             </table>
           </div>
 
+          {/* Sprint 51 — sticky selection bar */}
+          {selectedStNums.size > 0 && (
+            <div className="dispatch-sel-bar">
+              <span className="dispatch-sel-bar-count">{selectedStNums.size} выбр.</span>
+              <span className="dispatch-sel-bar-sep">·</span>
+              <span className="dispatch-sel-bar-stat">P={selP}</span>
+              <span className="dispatch-sel-bar-sep">·</span>
+              <span className="dispatch-sel-bar-stat">M={selM.toFixed(0)} кг</span>
+              <span className="dispatch-sel-bar-sep">·</span>
+              <span className="dispatch-sel-bar-stat">V={selV.toFixed(2)} м³</span>
+              <button className="dispatch-sel-bar-create" onClick={() => setCreateDialog(true)}>+ Создать маршрут</button>
+              {selectedTask && (
+                <button className="dispatch-sel-bar-add" onClick={handleAssign} disabled={loading}>
+                  Добавить в #{selectedTask.ID}
+                </button>
+              )}
+              <button className="dispatch-sel-bar-clear" onClick={() => setSelectedStNums(new Set())} title="Снять выделение">✕</button>
+            </div>
+          )}
+
           {/* ---- Trips table ---- */}
           <div className="dispatch-trips-section">
             <div className="dispatch-trips-toolbar">

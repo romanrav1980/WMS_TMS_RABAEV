@@ -1219,6 +1219,16 @@ button[aria-disabled="true"] { cursor: help; }
 }
 .cluster-card-create-btn:hover { background: #e0e7ff; }
 
+/* Sprint 51 — Sticky selection bar */
+.dispatch-sel-bar { display: flex; align-items: center; gap: 6px; padding: 5px 10px; background: #fffbeb; border: 1px solid #f59e0b; border-radius: 5px; margin: 2px 0; font-size: 12px; flex-wrap: wrap; }
+.dispatch-sel-bar-count { font-weight: 800; color: #92400e; }
+.dispatch-sel-bar-sep { color: #d97706; opacity: .5; }
+.dispatch-sel-bar-stat { color: #334155; font-weight: 600; }
+.dispatch-sel-bar-create { padding: 2px 10px; border: 1px solid #2563d8; border-radius: 4px; background: var(--blue); color: #fff; font-size: 11px; font-weight: 700; margin-left: 4px; }
+.dispatch-sel-bar-add { padding: 2px 10px; border: 1px solid #16a34a; border-radius: 4px; background: var(--green); color: #fff; font-size: 11px; font-weight: 700; }
+.dispatch-sel-bar-clear { margin-left: auto; padding: 1px 7px; border: 1px solid #d1d5db; border-radius: 4px; background: #fff; color: var(--muted); font-size: 12px; }
+.dispatch-sel-bar-clear:hover { background: #fee2e2; color: var(--red); border-color: var(--red); }
+
 /* Sprint 50 — Fully-assembled ST row highlight */
 .dispatch-st-ready { border-left: 3px solid var(--green) !important; }
 .dispatch-st-ready td:first-child { padding-left: 5px; }
