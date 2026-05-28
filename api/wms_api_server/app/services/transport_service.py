@@ -92,6 +92,14 @@ def _clear_vehicle_availability_cache() -> None:
         _VEHICLE_AVAILABILITY_CACHE.clear()
 
 
+def _invalidate_ref_cache(prefix: str) -> None:
+    """Инвалидировать записи _REF_CACHE с ключами, начинающимися на prefix."""
+    with _REF_CACHE_LOCK:
+        stale = [k for k in list(_REF_CACHE.keys()) if k[0] == prefix]
+        for k in stale:
+            _REF_CACHE.pop(k, None)
+
+
 def _cached_ref(key: tuple[str, Any], loader: Callable[[], list[dict[str, Any]]]) -> list[dict[str, Any]]:
     now = time.monotonic()
     with _REF_CACHE_LOCK:
@@ -229,6 +237,96 @@ class TransportService:
 
         return _cached_ref(("vehicles", active_only), load)
 
+    # ------------------------------------------------------------------
+    # Sprint 97 — Fleet CRUD: Vehicles
+    # ------------------------------------------------------------------
+
+    def list_vehicles_full(self) -> list[dict[str, Any]]:
+        """Все ТС включая soft-deleted=false — для страницы управления флотом."""
+        rows = self.gateway.fetch_all(
+            """
+            SELECT V.ID,
+                   V.NUM_PLAT,
+                   V.TRANSTYPE    AS TRANSTYPE_ID,
+                   TT.TRANSPORTTYPE AS TRANSTYPE_NAME,
+                   V.MAX_WEIGHT_KG,
+                   V.PALLETS      AS MAX_PALLETS,
+                   NVL(V.SOBSTVENNYY, 1) AS SOBSTVENNYY,
+                   V.DOVERENNOST_OT
+              FROM RABAEV.RRL_TR_VEHICLE V
+              LEFT JOIN RABAEV.RRL_TRANSPORT_TYPE TT ON TT.TRANSPORTTYPE = V.TRANSTYPE
+             WHERE NVL(V.DELETED, 0) = 0
+             ORDER BY V.ID
+            """
+        )
+        return [_upper_keys(r) for r in rows]
+
+    def create_vehicle(
+        self,
+        num_plat: str,
+        transtype_id: str | None,
+        max_weight_kg: int,
+        max_pallets: int,
+        sobstvennyy: bool,
+        doverennost_ot: str | None,
+    ) -> int:
+        row = self.gateway.fetch_all(
+            """
+            SELECT RABAEV.RRL_TR_VEHICLE_ADD(
+                :num_plat, :transtype_id, :max_weight_kg, :max_pallets,
+                :sobstvennyy, :doverennost_ot
+            ) AS NEW_ID FROM DUAL
+            """,
+            {
+                "num_plat": num_plat,
+                "transtype_id": transtype_id,
+                "max_weight_kg": max_weight_kg,
+                "max_pallets": max_pallets,
+                "sobstvennyy": 1 if sobstvennyy else 0,
+                "doverennost_ot": doverennost_ot,
+            },
+        )
+        _invalidate_ref_cache("vehicles")
+        return int(row[0]["new_id"])
+
+    def update_vehicle(
+        self,
+        vehicle_id: int,
+        num_plat: str,
+        transtype_id: str | None,
+        max_weight_kg: int,
+        max_pallets: int,
+        sobstvennyy: bool,
+        doverennost_ot: str | None,
+    ) -> None:
+        self.gateway.execute(
+            """
+            BEGIN
+              RABAEV.RRL_TR_VEHICLE_UPDATE(
+                :vid, :num_plat, :transtype_id, :max_weight_kg,
+                :max_pallets, :sobstvennyy, :doverennost_ot
+              );
+            END;
+            """,
+            {
+                "vid": vehicle_id,
+                "num_plat": num_plat,
+                "transtype_id": transtype_id,
+                "max_weight_kg": max_weight_kg,
+                "max_pallets": max_pallets,
+                "sobstvennyy": 1 if sobstvennyy else 0,
+                "doverennost_ot": doverennost_ot,
+            },
+        )
+        _invalidate_ref_cache("vehicles")
+
+    def delete_vehicle(self, vehicle_id: int) -> None:
+        self.gateway.execute(
+            "BEGIN RABAEV.RRL_TR_VEHICLE_DEL(:vid); END;",
+            {"vid": vehicle_id},
+        )
+        _invalidate_ref_cache("vehicles")
+
     def list_drivers(self, active_only: bool = True) -> list[dict[str, Any]]:
         def load() -> list[dict[str, Any]]:
             where = "WHERE (DELETED IS NULL OR DELETED = 0)" if active_only else ""
@@ -245,6 +343,70 @@ class TransportService:
             )
 
         return _cached_ref(("drivers", active_only), load)
+
+    # ------------------------------------------------------------------
+    # Sprint 98 — Fleet CRUD: Drivers
+    # ------------------------------------------------------------------
+
+    def list_drivers_full(self) -> list[dict[str, Any]]:
+        """Все водители для страницы управления флотом."""
+        rows = self.gateway.fetch_all(
+            """
+            SELECT ID,
+                   TRIM(NVL(F,'') || ' ' || NVL(I,'') || ' ' || NVL(O,'')) AS FULL_NAME,
+                   TEL            AS PHONE,
+                   LICENSE_NUMBER,
+                   COMPANY,
+                   SOBSTVENNYY,
+                   DOVERENNOST_OT
+              FROM RABAEV.RRL_TR_VODITEL
+             WHERE NVL(DELETED, 0) = 0
+             ORDER BY F, I
+            """
+        )
+        return [_upper_keys(r) for r in rows]
+
+    def create_driver(
+        self,
+        name: str,
+        phone: str | None,
+        license_number: str | None,
+        company: str | None,
+    ) -> int:
+        row = self.gateway.fetch_all(
+            """
+            SELECT RABAEV.RRL_TR_VODITEL_ADD(:name, :phone, :license_number, :company) AS NEW_ID FROM DUAL
+            """,
+            {"name": name, "phone": phone, "license_number": license_number, "company": company},
+        )
+        _invalidate_ref_cache("drivers")
+        return int(row[0]["new_id"])
+
+    def update_driver(
+        self,
+        driver_id: int,
+        name: str,
+        phone: str | None,
+        license_number: str | None,
+        company: str | None,
+    ) -> None:
+        self.gateway.execute(
+            """
+            BEGIN
+              RABAEV.RRL_TR_VODITEL_UPDATE(:did, :name, :phone, :license_number, :company);
+            END;
+            """,
+            {"did": driver_id, "name": name, "phone": phone,
+             "license_number": license_number, "company": company},
+        )
+        _invalidate_ref_cache("drivers")
+
+    def delete_driver(self, driver_id: int) -> None:
+        self.gateway.execute(
+            "BEGIN RABAEV.RRL_TR_VODITEL_DEL(:did); END;",
+            {"did": driver_id},
+        )
+        _invalidate_ref_cache("drivers")
 
     def list_transport_types(self) -> list[dict[str, Any]]:
         def load() -> list[dict[str, Any]]:
@@ -966,6 +1128,12 @@ class TransportService:
 
     def get_routing_status(self) -> dict[str, Any]:
         """Возвращает статус геокодирования адресов."""
+        from .routing import HaversineProvider, OsrmProvider, ValhallaProvider, get_active_provider
+
+        active_provider = get_active_provider()
+        osrm_available = OsrmProvider().is_available()
+        valhalla_available = ValhallaProvider().is_available()
+        haversine_available = HaversineProvider().is_available()
         rows = self.gateway.fetch_all(
             """
             SELECT COUNT(*)                                                AS TOTAL_ADDRS,
@@ -977,8 +1145,12 @@ class TransportService:
         total = int(rows[0]["TOTAL_ADDRS"] or 0) if rows else 0
         geocoded = int(rows[0]["GEOCODED"] or 0) if rows else 0
         return {
-            "provider": "haversine",
+            "provider": active_provider.name,
             "provider_available": True,
+            "active_provider": active_provider.name,
+            "osrm_available": osrm_available,
+            "valhalla_available": valhalla_available,
+            "haversine_available": haversine_available,
             "total_addresses": total,
             "geocoded_count": geocoded,
             "ungeocoded_count": total - geocoded,

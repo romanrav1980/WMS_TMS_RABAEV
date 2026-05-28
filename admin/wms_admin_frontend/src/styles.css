@@ -1577,3 +1577,51 @@ button[aria-disabled="true"] { cursor: help; }
 .billing-detach-task-btn { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 13px; line-height: 1; padding: 0 2px; border-radius: 3px; }
 .billing-detach-task-btn:hover { color: #ef4444; background: #fee2e2; }
 .billing-detach-task-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* =========================================================
+   Fleet Management Page (Sprint 97-98)
+   ========================================================= */
+.fleet-shell { display: flex; flex-direction: column; height: 100vh; background: var(--bg-main); color: var(--text-primary); font-family: var(--font); }
+.fleet-topbar { display: flex; align-items: center; gap: 12px; padding: 0 20px; height: 52px; background: var(--topbar-bg); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.fleet-back { background: none; border: none; color: #93c5fd; font-size: 16px; cursor: pointer; padding: 4px 8px; border-radius: 4px; }
+.fleet-back:hover { background: rgba(255,255,255,.1); }
+.fleet-title h1 { font-size: 15px; font-weight: 900; margin: 0; color: #fff; }
+.fleet-subtitle { font-size: 10px; color: #93c5fd; }
+.fleet-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--panel-bg); flex-shrink: 0; }
+.fleet-tab-btn { padding: 10px 20px; border: none; background: none; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color .15s; }
+.fleet-tab-btn:hover { color: var(--text-primary); }
+.fleet-tab-active { color: var(--accent) !important; border-bottom-color: var(--accent) !important; }
+.fleet-content { flex: 1; overflow: auto; padding: 16px 20px; }
+.fleet-section { display: flex; flex-direction: column; gap: 12px; }
+.fleet-toolbar { display: flex; align-items: center; gap: 10px; }
+.fleet-add-btn { padding: 6px 14px; background: var(--accent); color: #fff; border: none; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.fleet-add-btn:hover { filter: brightness(1.1); }
+.fleet-loading { font-size: 12px; color: var(--text-muted); }
+.fleet-error { font-size: 12px; color: #f87171; cursor: pointer; }
+.fleet-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.fleet-table th { text-align: left; padding: 6px 8px; background: var(--panel-bg); border-bottom: 2px solid var(--border); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
+.fleet-table td { padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.fleet-table tr:hover td { background: var(--row-hover); }
+.fleet-id { color: var(--text-muted); font-size: 11px; }
+.fleet-numplat { font-weight: 700; font-family: monospace; }
+.fleet-num { text-align: right; }
+.fleet-empty { text-align: center; padding: 24px; color: var(--text-muted); font-size: 13px; }
+.fleet-actions { white-space: nowrap; text-align: right; }
+.fleet-edit-btn { background: none; border: none; cursor: pointer; font-size: 14px; padding: 2px 4px; border-radius: 3px; color: #60a5fa; }
+.fleet-edit-btn:hover { background: #eff6ff; }
+.fleet-del-btn  { background: none; border: none; cursor: pointer; font-size: 14px; padding: 2px 4px; border-radius: 3px; color: #94a3b8; }
+.fleet-del-btn:hover { background: #fee2e2; color: #ef4444; }
+.fleet-owner-badge { display: inline-block; padding: 2px 6px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+.fleet-own    { background: #dcfce7; color: #166534; }
+.fleet-hired  { background: #fef9c3; color: #854d0e; }
+/* Modal */
+.fleet-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+.fleet-modal { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; width: 420px; max-width: 95vw; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,.4); }
+.fleet-modal-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; color: #fff; }
+.fleet-form-grid { display: grid; grid-template-columns: 120px 1fr; gap: 8px 10px; align-items: center; margin-bottom: 16px; }
+.fleet-form-grid label { font-size: 12px; color: var(--text-muted); }
+.fleet-form-grid input, .fleet-form-grid select { padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: var(--input-bg); color: var(--text-primary); width: 100%; box-sizing: border-box; }
+.fleet-modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.fleet-modal-cancel { padding: 6px 14px; border: 1px solid var(--border); border-radius: 5px; background: none; color: var(--text-muted); font-size: 12px; cursor: pointer; }
+.fleet-modal-save   { padding: 6px 14px; background: var(--accent); color: #fff; border: none; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.fleet-modal-save:disabled { opacity: .5; cursor: default; }

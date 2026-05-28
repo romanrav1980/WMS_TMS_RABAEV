@@ -67,6 +67,7 @@ from ..auth import (
     TRANSPORT_DISPATCH_CLOSE_PERMISSION,
     TRANSPORT_DISPATCH_EDIT_PERMISSION,
     TRANSPORT_DISPATCH_VIEW_PERMISSION,
+    TRANSPORT_FLEET_EDIT_PERMISSION,
     require_permission,
     load_admin_user,
 )
@@ -75,6 +76,8 @@ from ..schemas import (
     BillingAddTasksRequest,
     BillingOrderCreate,
     ClusterCreateTaskRequest,
+    DriverCreateRequest,
+    DriverUpdateRequest,
     OperationFactUpdate,
     PriceUpdateRequest,
     TransportStAssignRequest,
@@ -82,6 +85,8 @@ from ..schemas import (
     TransportStOrderRequest,
     TransportTaskCreateRequest,
     TransportTaskUpdateRequest,
+    VehicleCreateRequest,
+    VehicleUpdateRequest,
     VrpSolveRequest,
     VrpApplyRequest,
     VrpPlanResponse,
@@ -104,11 +109,109 @@ def list_vehicles(
     return TransportService().list_vehicles()
 
 
+# Sprint 97 — Fleet CRUD: Vehicles
+@router.get("/vehicles/full")
+def list_vehicles_full(
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    """Полный список ТС с деталями для страницы управления флотом (Sprint 97)."""
+    return TransportService().list_vehicles_full()
+
+
+@router.post("/vehicles", status_code=201)
+def create_vehicle(
+    req: VehicleCreateRequest,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_FLEET_EDIT_PERMISSION)),
+) -> dict:
+    new_id = TransportService().create_vehicle(
+        num_plat=req.num_plat,
+        transtype_id=req.transtype_id,
+        max_weight_kg=req.max_weight_kg,
+        max_pallets=req.max_pallets,
+        sobstvennyy=req.sobstvennyy,
+        doverennost_ot=req.doverennost_ot,
+    )
+    return {"id": new_id}
+
+
+@router.patch("/vehicles/{vehicle_id}")
+def update_vehicle(
+    vehicle_id: int,
+    req: VehicleUpdateRequest,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_FLEET_EDIT_PERMISSION)),
+) -> dict:
+    TransportService().update_vehicle(
+        vehicle_id=vehicle_id,
+        num_plat=req.num_plat,
+        transtype_id=req.transtype_id,
+        max_weight_kg=req.max_weight_kg,
+        max_pallets=req.max_pallets,
+        sobstvennyy=req.sobstvennyy,
+        doverennost_ot=req.doverennost_ot,
+    )
+    return {"id": vehicle_id}
+
+
+@router.delete("/vehicles/{vehicle_id}", status_code=204)
+def delete_vehicle(
+    vehicle_id: int,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_FLEET_EDIT_PERMISSION)),
+) -> None:
+    TransportService().delete_vehicle(vehicle_id)
+
+
 @router.get("/drivers")
 def list_drivers(
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
     return TransportService().list_drivers()
+
+
+# Sprint 98 — Fleet CRUD: Drivers
+@router.get("/drivers/full")
+def list_drivers_full(
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    """Полный список водителей для страницы управления флотом (Sprint 98)."""
+    return TransportService().list_drivers_full()
+
+
+@router.post("/drivers", status_code=201)
+def create_driver(
+    req: DriverCreateRequest,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_FLEET_EDIT_PERMISSION)),
+) -> dict:
+    new_id = TransportService().create_driver(
+        name=req.name,
+        phone=req.phone,
+        license_number=req.license_number,
+        company=req.company,
+    )
+    return {"id": new_id}
+
+
+@router.patch("/drivers/{driver_id}")
+def update_driver(
+    driver_id: int,
+    req: DriverUpdateRequest,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_FLEET_EDIT_PERMISSION)),
+) -> dict:
+    TransportService().update_driver(
+        driver_id=driver_id,
+        name=req.name,
+        phone=req.phone,
+        license_number=req.license_number,
+        company=req.company,
+    )
+    return {"id": driver_id}
+
+
+@router.delete("/drivers/{driver_id}", status_code=204)
+def delete_driver(
+    driver_id: int,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_FLEET_EDIT_PERMISSION)),
+) -> None:
+    TransportService().delete_driver(driver_id)
 
 
 @router.get("/types")

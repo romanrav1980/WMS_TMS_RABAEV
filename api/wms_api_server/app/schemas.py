@@ -1446,3 +1446,39 @@ class BillingOrder(BaseModel):
 
 class PriceUpdateRequest(BaseModel):
     price: float = Field(..., ge=0, description="Новая стоимость рейса в рублях")
+
+
+# ---------------------------------------------------------------------------
+# Sprint 97-98 — Fleet CRUD (Vehicles + Drivers)
+# ---------------------------------------------------------------------------
+
+class VehicleCreateRequest(BaseModel):
+    num_plat: str = Field(..., min_length=1, max_length=20, description="Гос. номер")
+    transtype_id: str | None = Field(None, description="Тип ТС (FK RRL_TRANSPORT_TYPE)")
+    max_weight_kg: int = Field(10000, ge=0, description="Грузоподъёмность кг")
+    max_pallets: int = Field(20, ge=0, description="Вместимость паллет")
+    sobstvennyy: bool = Field(True, description="Собственный (true) / Наёмный (false)")
+    doverennost_ot: str | None = Field(None, description="Транспортная компания")
+
+
+class VehicleUpdateRequest(BaseModel):
+    num_plat: str = Field(..., min_length=1, max_length=20)
+    transtype_id: str | None = None
+    max_weight_kg: int = Field(10000, ge=0)
+    max_pallets: int = Field(20, ge=0)
+    sobstvennyy: bool = True
+    doverennost_ot: str | None = None
+
+
+class DriverCreateRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=100, description="ФИО водителя")
+    phone: str | None = Field(None, max_length=30)
+    license_number: str | None = Field(None, max_length=30, description="Номер ВУ")
+    company: str | None = Field(None, max_length=100, description="ТК если наёмный")
+
+
+class DriverUpdateRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=100)
+    phone: str | None = None
+    license_number: str | None = None
+    company: str | None = None

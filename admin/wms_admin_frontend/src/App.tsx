@@ -10,6 +10,7 @@ import { TopologyAdminPage } from "./components/TopologyAdminPage";
 import { TransportDispatchPage } from "./components/TransportDispatchPage";
 import { TransportGanttPage } from "./components/TransportGanttPage";
 import { TransportPlannerPage } from "./components/TransportPlannerPage";
+import { FleetManagementPage } from "./components/FleetManagementPage";
 import { WarehouseScene } from "./components/WarehouseScene";
 import { activeCollisions, currentMetrics, dockPalletsAt, pickFaceFillAt, replenishmentTasksAt, resourceStateAt, visibleEvents } from "./replay/reducer";
 import type { DetailSelection, ReplayData } from "./types";
@@ -23,7 +24,7 @@ export default function App() {
   const [page, setPage] = useState(() => {
     const params = new URLSearchParams(window.location.search.replace(/;/g, "&"));
     const pg = params.get("page");
-    return pg === "topology" ? "topology" : pg === "transport" ? "transport" : pg === "warehouse-map" ? "warehouse-map" : pg === "planner" ? "planner" : pg === "gantt" ? "gantt" : "twin";
+    return pg === "topology" ? "topology" : pg === "transport" ? "transport" : pg === "warehouse-map" ? "warehouse-map" : pg === "planner" ? "planner" : pg === "gantt" ? "gantt" : pg === "fleet" ? "fleet" : "twin";
   });
   const [selection, setSelection] = useState<DetailSelection>(null);
   const [modelSettings, setModelSettings] = useState({
@@ -104,6 +105,14 @@ export default function App() {
     );
   }
 
+  if (page === "fleet") {
+    return (
+      <AppErrorBoundary resetKey={page}>
+        <FleetManagementPage onBack={() => setPage("twin")} />
+      </AppErrorBoundary>
+    );
+  }
+
   if (page === "warehouse-map") {
     return (
       <AppErrorBoundary resetKey={page}>
@@ -132,6 +141,7 @@ export default function App() {
         <button title="Диспетчер отгрузки" onClick={() => setPage("transport")}>⇧</button>
         <button title="Планировщик маршрутов (карта)" onClick={() => setPage("planner")}>⊕</button>
         <button title="Диаграмма Ганта (ARM)" onClick={() => setPage("gantt")}>▬</button>
+        <button title="Управление флотом (ТС + Водители)" onClick={() => setPage("fleet")}>🚛</button>
         <button>●</button>
       </aside>
 
