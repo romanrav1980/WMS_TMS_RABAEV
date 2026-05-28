@@ -1667,6 +1667,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                               && task.READY_PERC != null && task.READY_PERC > 0 && task.READY_PERC < 100)
                               ? "dispatch-trip-unready" : "",
                           ].filter(Boolean).join(" ")}
+                          title={task.PRIMECHANIE ? `Примечание: ${task.PRIMECHANIE}` : undefined}
                           onClick={() => selectTask(task)}>
                           <td>{fmtTime(task.SHIPMENT_TIME) || "—"}</td>
                           <td><b>#{task.ID}</b></td>
@@ -2135,6 +2136,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                             && task.READY_PERC != null && task.READY_PERC > 0 && task.READY_PERC < 100)
                             ? "dispatch-trip-unready" : "",
                         ].filter(Boolean).join(" ")}
+                        title={task.PRIMECHANIE ? `Примечание: ${task.PRIMECHANIE}` : undefined}
                         onClick={() => selectTask(task)}>
                         <td>{fmtDate(task.SHIPMENT_DATE)}</td>
                         <td><b>#{task.ID}</b></td>
