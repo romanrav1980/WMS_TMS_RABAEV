@@ -797,7 +797,12 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 
   async function handleClose() {
     if (!selectedTask) return;
-    if (!confirm(`Закрыть рейс #${selectedTask.ID} как отгруженный?`)) return;
+    // Sprint 87 — warn if any trip STs are not fully assembled
+    const unreadyCount = taskSts.filter(s => s.VERIFY_PERC !== null && s.VERIFY_PERC < 100).length;
+    const confirmMsg = unreadyCount > 0
+      ? `⚠ ${unreadyCount} из ${taskSts.length} СТ не полностью собраны.\nЗакрыть рейс #${selectedTask.ID} как отгруженный?`
+      : `Закрыть рейс #${selectedTask.ID} как отгруженный?`;
+    if (!confirm(confirmMsg)) return;
     const closedId = selectedTask.ID;
     setLoading(true);
     try {
