@@ -71,7 +71,12 @@
 | 53 | Сворачивание панели фильтров (collapse/expand + localStorage) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `8db5812` 2026-05-28 |
 | 54 | Кнопка «⬇ CSV» в sel-bar — экспорт выделенных СТ в файл | Диспетчер | 0.1 нед | 🟢 КК | ✅ `32cd67b` 2026-05-28 |
 | 55 | Итоги по всем видимым СТ (П/кг/м³) в тулбаре таблицы | Диспетчер | 0.1 нед | 🟢 КК | ✅ `3e912d4` 2026-05-28 |
-| **Итого** | | | **~28.9 нед** | | |
+| 56 | Печать маршрутного листа (HTML-окно + window.print()) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `c41a6e0` 2026-05-28 |
+| 57 | Быстрое добавление СТ по номеру (quick-add row) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `1d77f41` 2026-05-28 |
+| 58 | Развернуть/свернуть все районы (кластерный режим) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `6b8d913` 2026-05-28 |
+| 59 | Быстрый поиск по маршрутам (ID, авто, водитель, регион, ТК) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `c00a221` 2026-05-28 |
+| 60 | Пагинация таблицы доступных СТ (100 строк/страница) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `a25c8d4` 2026-05-28 |
+| **Итого** | | | **~29.5 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -116,7 +121,7 @@
 
 | Задача | Кто | Файл |
 |--------|-----|------|
-| Расширить `GET /available-sts`: добавить `RAION`, `TRANSPORT_TYPE`, `STOL`, `PRIM1`, `VERIFY_PERC`, `SUGAR`, `DATE_LOAD` | Backend | `transport_service.py` |
+| Расширить `GET /available-sts`: добавить `RAION`, `TRANSPORT_TYPE`, `STOL`, `PRIM1`, `VERIFY_PERC`, `SUGAR` legacy-признак полнопалетной отборки, `DATE_LOAD` | Backend | `transport_service.py` |
 | Добавить query-параметры: `addr_mask`, `st_mask`, `st_mask_exclude`, `ware_ids`, `transport_type`, `assembled_only`, `not_assembled_only`, `max_weight_kg`, `max_volume_m3`, `date_to`, `articul` | Backend | `transport.py` |
 | Расширить `AvailableSt` схему | Backend | `schemas.py` |
 | Таблица СТ: 16 колонок согласно §3.3 | Frontend | `TransportDispatchPage.tsx` |
@@ -124,7 +129,7 @@
 | Панель фильтров (§3.6): все поля, дебаунс 300 мс | Frontend | `TransportDispatchPage.tsx` |
 
 **Что видит диспетчер после спринта:**
-Таблица СТ с полным набором данных: склад (цветная), паллеты, вес, объём, регион, адрес, ST-номер, рейс, район, тип ТС, гидроборт, стол, примечание, дата загрузки, сахар. Работают все фильтры: по дате, складу, адресу, СТ, типу ТС, весу/объёму.
+Таблица СТ с полным набором данных: склад (цветная), паллеты, вес, объём, регион, адрес, ST-номер, рейс, район, тип ТС, гидроборт, стол, примечание, дата загрузки, полнопалетная отборка. Работают все фильтры: по дате, складу, адресу, СТ, типу ТС, весу/объёму.
 
 **Коммит:** `672a47b` · **Дата:** 2026-05-23
 
@@ -297,12 +302,14 @@
 **Что видит диспетчер после спринта:**
 Новый раздел «Планировщик» в меню. Карта России с цветными значками заказов. Большой кружок = много паллет. Красная рамка = только 10-тонник. Значок ⏰ = жёсткое временно́е окно. Фильтр по складу убирает/показывает нужные точки.
 
-**Статус:** ✅ Завершён  
+**Статус:** ✅ Завершён; 2026-05-28 hardening re-check passed
 **Коммит:** `3b19a91` · **Дата:** 2026-05-26  
 **Тесты:**  
-- `tests/transport/test_sprint7_functional.py` — 12 pytest-кейсов (planner/orders, routing/status)  
+- `tests/transport/test_sprint7_functional.py` — 14 pytest-кейсов (planner/orders, routing/status), `14 passed` on `2026-05-25` seed
 - `tests/transport/sprint7_usability_checklist.md` — 39 юзабилити-проверок  
-- `tests/transport/transport_sprint7_load_test.py` — 30 users, 60s, NFR p95 ≤ 600ms для /planner/orders  
+- `tests/transport/transport_sprint7_load_test.py` — thread load, NFR p95 ≤ 600ms для `/planner/orders`; latest p95 `/planner/orders` 97.5 ms, `/routing/status` 35.8 ms
+- `tests/ui/transport_sprint7_ui_smoke.cjs` — UI smoke карты, фильтра типа ТС, геокодинг-статуса, marker popup
+**Hardening 2026-05-28:** `/planner/orders` переведён с тяжелого `RRL_V_AVAILABLE_STS` на прямую set-based выборку по `RRL_SBORKA_PALLETS`/`RRL_SBORKA_PALLET_ROWS`/`RRL_ADDR`; read-only MAP endpoints добавлены в lightweight audit; исправлен dev runtime crash Leaflet под React StrictMode.
 **Миграция:** `051_apply.sql` (MAX_VEHICLE_TONS, TW_STRICT, UNLOAD_NORM_MIN в RRL_ADDR; дистанционная матрица; seed-координаты ДЦ%)
 
 ---
