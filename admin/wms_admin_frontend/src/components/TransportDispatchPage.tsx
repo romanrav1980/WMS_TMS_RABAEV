@@ -1304,13 +1304,19 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 ? `${wareFilteredSts.length} / ${availableSts.length} СТ`
                 : `${availableSts.length} СТ`}
             </span>
-            {/* Sprint 63 — not-assembled badge */}
+            {/* Sprint 63 — not-assembled badge; Sprint 64 — click to select */}
             {(() => {
-              const notReady = wareFilteredSts.filter(s => s.VERIFY_PERC != null && s.VERIFY_PERC < 100).length;
-              return notReady > 0
-                ? <span className="dispatch-notready-badge" title="СТ с неполной сборкой (VERIFY_PERC &lt; 100%)">
-                    ⚠ {notReady} не собрано
-                  </span>
+              const notReadySts = wareFilteredSts.filter(s => s.VERIFY_PERC != null && s.VERIFY_PERC < 100);
+              return notReadySts.length > 0
+                ? <button className="dispatch-notready-badge dispatch-notready-select-btn"
+                    title="Кликни, чтобы выделить все несобранные СТ"
+                    onClick={() => setSelectedStNums(prev => {
+                      const next = new Set(prev);
+                      notReadySts.forEach(s => next.add(s.ST_NUMBER));
+                      return next;
+                    })}>
+                    ⚠ {notReadySts.length} не собрано
+                  </button>
                 : null;
             })()}
             {/* Sprint 49 — dense mode toggle */}

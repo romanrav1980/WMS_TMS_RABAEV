@@ -1295,8 +1295,10 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-ds-value { font-weight: 700; color: var(--text); }
 .dispatch-ds-sep { color: var(--muted); opacity: 0.5; }
 
-/* Sprint 63 — Not-assembled badge in ST toolbar */
+/* Sprint 63/64 — Not-assembled badge + click-to-select */
 .dispatch-notready-badge { font-size: 11px; font-weight: 700; color: #92400e; background: #fef3c7; border: 1px solid #fbbf24; border-radius: 4px; padding: 1px 7px; white-space: nowrap; }
+.dispatch-notready-select-btn { cursor: pointer; }
+.dispatch-notready-select-btn:hover { background: #fde68a; border-color: #f59e0b; }
 
 /* Sprint 61 — Warehouse quick-filter select */
 .dispatch-ware-select { padding: 2px 6px; border: 1px solid #b0c4d8; border-radius: 4px; font-size: 12px; background: #fff; color: var(--text); max-width: 130px; }
