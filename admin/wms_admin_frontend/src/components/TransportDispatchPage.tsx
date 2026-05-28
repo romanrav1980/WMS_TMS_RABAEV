@@ -573,6 +573,27 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   // ------------------------------------------------------------------
   // Assign STs
   // ------------------------------------------------------------------
+  // Sprint 57 — quick add ST by number
+  const [quickAddInput, setQuickAddInput] = useState("");
+
+  async function handleQuickAddSt() {
+    const num = quickAddInput.trim();
+    if (!selectedTask || !num) return;
+    setLoading(true);
+    try {
+      const result = await apiFetch<{ assigned: number; warnings: string[] }>(
+        `/api/admin/transport/tasks/${selectedTask.ID}/sts`,
+        { method: "POST", body: JSON.stringify({ st_numbers: [num] }) }
+      );
+      if (result.warnings.length > 0) setError(result.warnings.join("; "));
+      setQuickAddInput("");
+      const reloads: Promise<void>[] = [selectTask(selectedTask), loadTasks(), loadAvailableSts()];
+      if (viewMode === "clusters") reloads.push(loadClusters());
+      await Promise.all(reloads);
+      showToast(`СТ ${num} добавлен в рейс #${selectedTask.ID}`);
+    } catch (e) { setError(String(e)); } finally { setLoading(false); }
+  }
+
   async function handleAssign() {
     if (!selectedTask || selectedStNums.size === 0) return;
     setLoading(true);
@@ -1595,6 +1616,26 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 </div>
               )}
 
+              {/* Sprint 57 — quick-add ST by number */}
+              {selectedTask.CONDITION !== "Отгружен" && !selectedTask.PAY_ORDER_ID && (
+                <div className="dispatch-quick-add-row">
+                  <span className="dispatch-quick-add-label">+ СТ №:</span>
+                  <input
+                    className="dispatch-quick-add-input"
+                    type="text"
+                    value={quickAddInput}
+                    placeholder="Введите номер СТ…"
+                    onChange={e => setQuickAddInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === "Enter") handleQuickAddSt(); }}
+                  />
+                  <button className="dispatch-quick-add-btn"
+                    onClick={handleQuickAddSt}
+                    disabled={loading || !quickAddInput.trim()}>
+                    Добавить
+                  </button>
+                </div>
+              )}
+
               <div className="dispatch-trip-sts-wrap">
                 <table className="dispatch-grid">
                   <thead>
@@ -2218,7 +2259,7 @@ function AvailableStRow({
       <td><TransportTypeBadge value={st.TRANSPORT_TYPE} /></td>
       <td className="num-c" title={st.STOL ? "Требуется стол-лифт / гидроборт" : ""}>{st.STOL ? "♿" : ""}</td>
       <td className="dispatch-prim1" title={st.PRIM1 ?? ""}>{st.PRIM1 ? st.PRIM1.slice(0, 20) : ""}</td>
-      <td className="num-c">{st.SUGAR ? <span className="dispatch-sugar" title="Полнопалетная отборка">П</span> : ""}</td>
+      <td className="num-c">{st.SUGAR ? <span className="dispatch-polnopallet" title="Полнопалетная отборка">П</span> : ""}</td>
     </tr>
   );
 }

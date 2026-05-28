@@ -699,7 +699,7 @@ button[aria-disabled="true"] { cursor: help; }
 /* ---- Misc badges ---- */
 .dispatch-hydro { background: #fef9c3; color: #854d0e; border-radius: 4px; padding: 0 5px; font-size: 10px; font-weight: 900; }
 .dispatch-stol  { background: #e0f2fe; color: #0369a1; border-radius: 4px; padding: 0 5px; font-size: 10px; font-weight: 900; }
-.dispatch-sugar { background: #fce7f3; color: #9d174d; border-radius: 4px; padding: 0 5px; font-size: 10px; font-weight: 900; }
+.dispatch-polnopallet { background: #fce7f3; color: #9d174d; border-radius: 4px; padding: 0 5px; font-size: 10px; font-weight: 900; }
 .dispatch-tk-badge { font-size: 10px; background: #e0f2fe; color: #0369a1; border-radius: 8px; padding: 1px 6px; margin-left: 4px; }
 .dispatch-tk-inline { font-size: 11px; color: #64748b; }
 .dispatch-st-raion-sm { font-size: 10px; color: #94a3b8; white-space: nowrap; }
@@ -1292,6 +1292,14 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-ds-label { color: var(--muted); }
 .dispatch-ds-value { font-weight: 700; color: var(--text); }
 .dispatch-ds-sep { color: var(--muted); opacity: 0.5; }
+
+/* Sprint 57 — Quick add ST by number */
+.dispatch-quick-add-row { display: flex; align-items: center; gap: 5px; padding: 3px 0; }
+.dispatch-quick-add-label { font-size: 11px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+.dispatch-quick-add-input { flex: 1; padding: 3px 6px; border: 1px solid #b0c4d8; border-radius: 4px; font-size: 12px; }
+.dispatch-quick-add-input:focus { outline: none; border-color: var(--blue); }
+.dispatch-quick-add-btn { padding: 3px 10px; border: 1px solid #16a34a; border-radius: 4px; background: var(--green); color: #fff; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.dispatch-quick-add-btn:hover:not(:disabled) { background: #14a060; }
 
 /* Sprint 56 — Print route sheet button */
 .dispatch-print-btn { padding: 3px 10px; border: 1px solid #a3b4c8; border-radius: 5px; background: #f0f4fa; color: #334155; font-size: 12px; }
