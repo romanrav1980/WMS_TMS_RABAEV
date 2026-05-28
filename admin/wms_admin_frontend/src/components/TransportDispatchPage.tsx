@@ -1234,6 +1234,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               className={`dispatch-tab${activeTab === "tasks" ? " active" : ""}`}
               onClick={() => { setActiveTab("tasks"); setSelectedTask(null); setTaskSts([]); }}>
               Заявки
+              {/* Sprint 65 — selection count badge */}
+              {selectedStNums.size > 0 && (
+                <span className="dispatch-tab-badge">{selectedStNums.size}</span>
+              )}
             </button>
             <button
               className={`dispatch-tab${activeTab === "routes" ? " active" : ""}`}
