@@ -1219,6 +1219,10 @@ button[aria-disabled="true"] { cursor: help; }
 }
 .cluster-card-create-btn:hover { background: #e0e7ff; }
 
+/* Sprint 46 — Day step buttons ◄ ► */
+.dispatch-day-step-btn { padding: 2px 7px; border: 1px solid #c8d6e5; border-radius: 4px; background: #f5f8fc; color: var(--muted); font-size: 13px; font-weight: 700; line-height: 1; }
+.dispatch-day-step-btn:hover { background: #e2eaf5; color: var(--text); border-color: #a3b4c8; }
+
 /* Sprint 45 — «Перейти к рейсу» кнопка в таблице СТ */
 .dispatch-goto-trip-btn { padding: 1px 6px; border: 1px solid #a3b4d0; border-radius: 4px; background: #eef3fb; color: #1d4ed8; font-size: 11px; font-weight: 700; white-space: nowrap; }
 .dispatch-goto-trip-btn:hover { background: #dbeafe; border-color: #2563d8; }

@@ -966,6 +966,13 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     setArticulFilter("");
   }
 
+  // Sprint 46 — date step helpers (±1 day)
+  function shiftDate(iso: string, days: number): string {
+    const d = new Date(iso);
+    d.setDate(d.getDate() + days);
+    return d.toISOString().slice(0, 10);
+  }
+
   // ------------------------------------------------------------------
   // PMV counters
   // ------------------------------------------------------------------
@@ -1193,7 +1200,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           <div className="dispatch-trips-section">
             <div className="dispatch-trips-toolbar">
               <b>Рейсы на</b>
+              <button className="dispatch-day-step-btn" onClick={() => setFilterDate(d => shiftDate(d, -1))} title="Предыдущий день">◄</button>
               <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)} />
+              <button className="dispatch-day-step-btn" onClick={() => setFilterDate(d => shiftDate(d, 1))} title="Следующий день">►</button>
               <button className="dispatch-new-btn" onClick={() => setCreateDialog(true)}>
                 {selectedStNums.size > 0 ? `+ Создать маршрут (${selectedStNums.size})` : "+ Создать маршрут"}
               </button>
@@ -1518,7 +1527,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           {/* ---- Routes toolbar ---- */}
           <div className="dispatch-trips-toolbar">
             <b>Маршруты за</b>
+            <button className="dispatch-day-step-btn" onClick={() => setRouteShipDate(d => shiftDate(d, -1))} title="Предыдущий день">◄</button>
             <input type="date" value={routeShipDate} onChange={e => setRouteShipDate(e.target.value)} />
+            <button className="dispatch-day-step-btn" onClick={() => setRouteShipDate(d => shiftDate(d, 1))} title="Следующий день">►</button>
             <button className="dispatch-refresh-btn" onClick={loadTasks} title="Обновить рейсы">⟳</button>
             <span className="dispatch-tcount">{filteredRouteTasks.length}/{tasks.length} рейс(ов)</span>
             {/* Sprint 41 — status filter buttons */}
