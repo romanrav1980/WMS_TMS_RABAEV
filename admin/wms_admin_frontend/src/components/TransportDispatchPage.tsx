@@ -303,6 +303,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [tripStUnreadyOnly, setTripStUnreadyOnly] = useState(false);
   // Sprint 91 — sort trip detail STs by time window
   const [tripStSortByTime, setTripStSortByTime] = useState(false);
+  // Sprint 92 — copy all ST numbers to clipboard
+  const [tripStsCopied, setTripStsCopied] = useState(false);
   const [noteText, setNoteText] = useState("");
   const [billingDialog, setBillingDialog] = useState(false);
   const [openingBilling, setOpeningBilling] = useState(false);
@@ -566,6 +568,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     setTripDetailCollapsed(false); // Sprint 74: expand detail on task switch
     setTripStUnreadyOnly(false); // Sprint 89: reset unready-only toggle on task switch
     setTripStSortByTime(false); // Sprint 91: reset time-sort on task switch
+    setTripStsCopied(false); // Sprint 92: reset copy feedback on task switch
     try {
       const data = await apiFetch<TaskSt[]>(`/api/admin/transport/tasks/${task.ID}/sts`);
       setTaskSts(data);
@@ -1933,6 +1936,19 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   <span className="dispatch-trip-sts-count">
                     {(tripStFilter || tripStUnreadyOnly) ? `${filteredTaskSts.length} / ${taskSts.length}` : taskSts.length} СТ
                   </span>
+                  {/* Sprint 92 — copy all ST numbers to clipboard */}
+                  <button
+                    className={`dispatch-trip-copy-sts-btn${tripStsCopied ? " copied" : ""}`}
+                    onClick={() => {
+                      const nums = filteredTaskSts.map(s => s.ST_NUMBER).join("\n");
+                      navigator.clipboard.writeText(nums).then(() => {
+                        setTripStsCopied(true);
+                        setTimeout(() => setTripStsCopied(false), 1800);
+                      }).catch(() => {});
+                    }}
+                    title="Скопировать все номера СТ в буфер обмена">
+                    {tripStsCopied ? "✓ Скопировано" : "📋 СТ"}
+                  </button>
                   {/* Sprint 77 — export trip STs to CSV */}
                   <button className="dispatch-trip-csv-btn"
                     onClick={() => exportTaskStsCsv(filteredTaskSts, selectedTask.ID)}

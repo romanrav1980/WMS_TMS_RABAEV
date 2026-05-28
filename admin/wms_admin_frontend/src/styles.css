@@ -1425,6 +1425,10 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-trip-unready-btn { padding: 2px 7px; border: 1px solid #f59e0b; border-radius: 4px; background: #fff; color: #92400e; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; }
 .dispatch-trip-unready-btn:hover { background: #fef3c7; }
 .dispatch-trip-unready-btn.active { background: #fef3c7; border-color: #d97706; font-weight: 800; box-shadow: 0 0 0 2px #fde68a; }
+/* Sprint 92 — Copy all ST numbers to clipboard */
+.dispatch-trip-copy-sts-btn { padding: 2px 7px; border: 1px solid #9ca3af; border-radius: 4px; background: #fff; color: #374151; font-size: 11px; cursor: pointer; white-space: nowrap; }
+.dispatch-trip-copy-sts-btn:hover { background: #f3f4f6; border-color: #6b7280; }
+.dispatch-trip-copy-sts-btn.copied { background: #dcfce7; border-color: #16a34a; color: #15803d; font-weight: 700; }
 /* Sprint 91 — Sort trip STs by time window */
 .dispatch-trip-timesort-btn { padding: 2px 7px; border: 1px solid #6366f1; border-radius: 4px; background: #fff; color: #4338ca; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; }
 .dispatch-trip-timesort-btn:hover { background: #eef2ff; }
