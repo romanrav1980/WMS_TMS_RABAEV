@@ -150,6 +150,7 @@ type BillingOrderTask = {
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
 const API_BASIC_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
+const ST_PAGE_SIZE = 100;
 
 function apiHeaders(): HeadersInit {
   return { Authorization: `Basic ${btoa(API_BASIC_AUTH)}`, "Content-Type": "application/json" };
@@ -213,6 +214,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   // Sprint 52 — sortable STs table
   const [stSortField, setStSortField] = useState<string | null>(null);
   const [stSortDir, setStSortDir]     = useState<"asc" | "desc">("asc");
+
+  // Sprint 60 — pagination for STs table
+  const [stPage, setStPage] = useState(0);
 
   // Sprint 53 — collapsible filter panel
   const [fpCollapsed, setFpCollapsed] = useState(() => lsGet("tms_fpCollapsed", "0") === "1");
@@ -1019,6 +1023,11 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       })
     : availableSts;
 
+  // Sprint 60 — paginated slice; reset to page 0 when data or sort changes
+  useEffect(() => { setStPage(0); }, [availableSts, stSortField, stSortDir]);
+  const stTotalPages = Math.max(1, Math.ceil(sortedSts.length / ST_PAGE_SIZE));
+  const pagedSts = sortedSts.slice(stPage * ST_PAGE_SIZE, (stPage + 1) * ST_PAGE_SIZE);
+
   function handleStToggle(stNum: string, idx: number) {
     lastClickedIdxRef.current = idx;
     toggleSt(stNum);
@@ -1320,14 +1329,17 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 {viewMode === "flat" && (
                   sortedSts.length === 0
                     ? <tr><td colSpan={16} className="dispatch-grid-empty">Нет свободных СТ по текущим фильтрам</td></tr>
-                    : sortedSts.map((st, idx) => (
-                        <AvailableStRow key={st.ST_NUMBER} st={st} idx={idx}
-                          checked={selectedStNums.has(st.ST_NUMBER)}
-                          onToggle={() => handleStToggle(st.ST_NUMBER, idx)}
-                          onShiftClick={handleShiftClick}
-                          onSelectByField={handleSelectByField}
-                          onGotoTrip={handleGotoTrip} />
-                      ))
+                    : pagedSts.map((st, pageIdx) => {
+                        const idx = stPage * ST_PAGE_SIZE + pageIdx;
+                        return (
+                          <AvailableStRow key={st.ST_NUMBER} st={st} idx={idx}
+                            checked={selectedStNums.has(st.ST_NUMBER)}
+                            onToggle={() => handleStToggle(st.ST_NUMBER, idx)}
+                            onShiftClick={handleShiftClick}
+                            onSelectByField={handleSelectByField}
+                            onGotoTrip={handleGotoTrip} />
+                        );
+                      })
                 )}
                 {viewMode === "clusters" && (
                   clusters.length === 0
@@ -1347,6 +1359,17 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               </tbody>
             </table>
           </div>
+
+          {/* Sprint 60 — pagination bar */}
+          {viewMode === "flat" && stTotalPages > 1 && (
+            <div className="dispatch-st-pagination">
+              <button className="dispatch-page-btn" onClick={() => setStPage(0)} disabled={stPage === 0}>◄◄</button>
+              <button className="dispatch-page-btn" onClick={() => setStPage(p => p - 1)} disabled={stPage === 0}>◄</button>
+              <span className="dispatch-page-info">Стр. {stPage + 1} из {stTotalPages} · {sortedSts.length} СТ</span>
+              <button className="dispatch-page-btn" onClick={() => setStPage(p => p + 1)} disabled={stPage >= stTotalPages - 1}>►</button>
+              <button className="dispatch-page-btn" onClick={() => setStPage(stTotalPages - 1)} disabled={stPage >= stTotalPages - 1}>►►</button>
+            </div>
+          )}
 
           {/* Sprint 51 — sticky selection bar */}
           {selectedStNums.size > 0 && (
