@@ -96,7 +96,12 @@
 | 78 | Сохранение фильтров (нераспределённые/собранные) в localStorage | Диспетчер | 0.1 нед | 🟢 КК | ✅ `b95745b` 2026-05-28 |
 | 79 | Колонка «ТК» в таблице рейсов (§3.8.1 ТЗ) | Диспетчер | 0.05 нед | 🟢 КК | ✅ `2b8b5d5` 2026-05-28 |
 | 80 | NAPR (Направление) в таблице доступных СТ | Диспетчер | 0.1 нед | 🟢 КК | ✅ `e8849e9` 2026-05-28 |
-| **Итого** | | | **~31.6 нед** | | |
+| 81 | Клавиатурная навигация ↑/↓ по рейсам (tasks + routes tab) + VOLUME_M3 в TaskSt type | Диспетчер | 0.1 нед | 🟢 КК | ✅ `091ad4a` 2026-05-28 |
+| 82 | Фикс dispatch-st-ready (=== 1.0 → >= 100) + Persist stDate/dateTo в localStorage | Диспетчер | 0.1 нед | 🟢 КК | ✅ `09d71ab` 2026-05-28 |
+| 83 | Amber-рамка для несобранных доступных СТ (dispatch-avail-unready, левая граница) | Диспетчер | 0.05 нед | 🟢 КК | ✅ `1cfd0b7` 2026-05-28 |
+| 84 | READY_PERC (% сборки) колонка в таблице маршрутов (routes tab) | Диспетчер | 0.05 нед | 🟢 КК | ✅ `90e6e25` 2026-05-28 |
+| 85 | Сводка маршрутов — Рейсов/Пал./Вес/Отгружено под таблицей routes tab | Диспетчер | 0.05 нед | 🟢 КК | ✅ `6f015da` 2026-05-28 |
+| **Итого** | | | **~32 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -879,10 +884,13 @@ UI не меняется, но при создании каждого рейса
 
 **Статус:** ✅ Завершён
 **Коммит:** `a287a02` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — добавлен UI smoke и обучающий HTML pack для select-all и «Авто»; Locust-only load script заменён на Windows-safe concurrent polling runner.
 **Тесты:**
-- `tests/transport/test_sprint37_functional.py` — 18 pytest-кейсов (select-all toggle, partial→all, auto-refresh guards, enable/disable)
+- `tests/transport/test_sprint37_functional.py` — 18 pytest-кейсов (select-all toggle, partial→all, auto-refresh guards, enable/disable) → `18 passed`
+- `tests/ui/transport_sprint37_ui_smoke.cjs` — UI smoke: select-all выбирает все видимые СТ, «Авто» toggles
+- `tests/ui/transport_sprint37_training_capture.cjs` → `wiki-raw/tms2_training/sprint37_select_all_autorefresh_2026_05_28/index.html`
 - `tests/transport/sprint37_usability_checklist.md` — 20 юзабилити-проверок
-- `tests/transport/transport_sprint37_load_test.py` — 10 users, 90s polling, NFR /available-sts p95 ≤ 400ms под concurrent auto-refresh
+- `tests/transport/transport_sprint37_load_test.py` — Windows-safe polling gate; p95 available STs 69.9 ms, tasks 78.8 ms, clusters 66.5 ms
 
 ---
 
@@ -904,10 +912,13 @@ UI не меняется, но при создании каждого рейса
 
 **Статус:** ✅ Завершён
 **Коммит:** `7aa8b16` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — backend `unassign_st` получил guard для «Отгружен»; functional tests обновлены под актуальный метод `unassign_st`. Locust-only load script заменён на Windows-safe no-mutation runner.
 **Тесты:**
-- `tests/transport/test_sprint36_functional.py` — 13 pytest-кейсов (toggle, guard conditions, bulk unassign, clear on task switch)
+- `tests/transport/test_sprint36_functional.py` — 16 pytest-кейсов (DELETE contract, guard conditions, toggle, bulk unassign, clear on task switch) → `16 passed`
+- `tests/ui/transport_sprint36_ui_smoke.cjs` — UI smoke: выбрать 2 СТ, bulk remove, refresh
+- `tests/ui/transport_sprint36_training_capture.cjs` → `wiki-raw/tms2_training/sprint36_bulk_unassign_2026_05_28/index.html`
 - `tests/transport/sprint36_usability_checklist.md` — 18 юзабилити-проверок
-- `tests/transport/transport_sprint36_load_test.py` — 5 users, 60s, NFR single DELETE p95 ≤ 300ms, bulk burst p95 ≤ 800ms
+- `tests/transport/transport_sprint36_load_test.py` — Windows-safe no-mutation runner; p95 single DELETE 171.4 ms, GET STs 160.6 ms, bulk burst 178.0 ms
 
 ---
 
@@ -926,10 +937,13 @@ UI не меняется, но при создании каждого рейса
 
 **Статус:** ✅ Завершён
 **Коммит:** `c60c420` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — functional tests переведены на реальный import path и очищают cache между кейсами; исправлен edge-case `raion=""`, который больше не добавляет пустой SQL-фильтр. Locust-only load script заменён на Windows-safe runner без мутации Oracle.
 **Тесты:**
-- `tests/transport/test_sprint35_functional.py` — 9 pytest-кейсов (SQL условия, без района IS NULL, с spецсимволами, integ)
+- `tests/transport/test_sprint35_functional.py` — 8 pytest-кейсов (SQL условия, без района IS NULL, спецсимволы, create-task contract) → `8 passed`
+- `tests/ui/transport_sprint35_ui_smoke.cjs` — UI smoke: «По районам» → «Рейс», POST содержит выбранный район
+- `tests/ui/transport_sprint35_training_capture.cjs` → `wiki-raw/tms2_training/sprint35_raion_filter_2026_05_28/index.html`
 - `tests/transport/sprint35_usability_checklist.md` — 14 проверок
-- `tests/transport/transport_sprint35_load_test.py` — 5 users, 60s, NFR filtered p95 ≤ 200ms
+- `tests/transport/transport_sprint35_load_test.py` — Windows-safe load gate; p95 all STs 37.2 ms, filtered 30.1 ms, safe empty create 158.6 ms
 
 ---
 
