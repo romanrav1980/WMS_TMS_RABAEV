@@ -1293,6 +1293,11 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-ds-value { font-weight: 700; color: var(--text); }
 .dispatch-ds-sep { color: var(--muted); opacity: 0.5; }
 
+/* Sprint 58 — Expand/collapse all clusters */
+.dispatch-cluster-expand-btns { display: flex; gap: 3px; }
+.dispatch-cluster-exp-btn { padding: 2px 7px; border: 1px solid #b0c4d8; border-radius: 4px; background: #f5f8fc; color: var(--muted); font-size: 11px; font-weight: 600; }
+.dispatch-cluster-exp-btn:hover { background: #e8f0fb; color: var(--blue); border-color: var(--blue); }
+
 /* Sprint 57 — Quick add ST by number */
 .dispatch-quick-add-row { display: flex; align-items: center; gap: 5px; padding: 3px 0; }
 .dispatch-quick-add-label { font-size: 11px; color: var(--muted); font-weight: 600; white-space: nowrap; }

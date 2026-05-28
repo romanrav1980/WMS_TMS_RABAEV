@@ -1227,6 +1227,14 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               <button className={viewMode === "flat" ? "active" : ""} onClick={() => setViewMode("flat")}>По СТ</button>
               <button className={viewMode === "clusters" ? "active" : ""} onClick={() => setViewMode("clusters")}>По районам</button>
             </div>
+            {viewMode === "clusters" && (
+              <div className="dispatch-cluster-expand-btns">
+                <button className="dispatch-cluster-exp-btn" title="Развернуть все районы"
+                  onClick={() => setExpandedRaions(new Set(clusters.map(c => c.RAION)))}>⊞ Все</button>
+                <button className="dispatch-cluster-exp-btn" title="Свернуть все районы"
+                  onClick={() => setExpandedRaions(new Set())}>⊟ Нет</button>
+              </div>
+            )}
             <span className="dispatch-pmv dispatch-pmv-all" title="Итоги по всем видимым СТ">
               П={allP}&nbsp;·&nbsp;{allM.toFixed(0)}&nbsp;кг&nbsp;·&nbsp;{allV.toFixed(1)}&nbsp;м³
             </span>
