@@ -1823,6 +1823,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                       <th>Адрес</th>
                       <th>Пал.</th>
                       <th>Вес</th>
+                      <th title="Объём м³">Объём</th>
                       <th title="% сборки">%</th>
                       <th>Зона</th>
                       <th>Окно</th>
@@ -1833,9 +1834,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   </thead>
                   <tbody>
                     {taskSts.length === 0
-                      ? <tr><td colSpan={12} className="dispatch-grid-empty">Рейс пуст. Выберите СТ выше и нажмите «Добавить в рейс».</td></tr>
+                      ? <tr><td colSpan={13} className="dispatch-grid-empty">Рейс пуст. Выберите СТ выше и нажмите «Добавить в рейс».</td></tr>
                       : filteredTaskSts.length === 0
-                        ? <tr><td colSpan={12} className="dispatch-grid-empty">Нет СТ, совпадающих с фильтром.</td></tr>
+                        ? <tr><td colSpan={13} className="dispatch-grid-empty">Нет СТ, совпадающих с фильтром.</td></tr>
                       : filteredTaskSts.map(st => (
                           <TaskStTableRow
                             key={st.ST_NUMBER}
@@ -2722,6 +2723,7 @@ function TaskStTableRow({
       </td>
       <td className="num-r">{st.PALLETS_COUNT}</td>
       <td className="num-r">{st.WEIGHT_KG.toFixed(0)}</td>
+      <td className="num-r">{st.VOLUME_M3 != null ? st.VOLUME_M3.toFixed(2) : "—"}</td>
       <td>{st.VERIFY_PERC != null ? <VerifyBar perc={st.VERIFY_PERC} /> : "—"}</td>
       <td>{st.ZONE ?? "—"}</td>
       <td style={{ whiteSpace: "nowrap" }}>{timeWindow}</td>
