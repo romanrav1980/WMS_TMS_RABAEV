@@ -236,6 +236,15 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Sprint 42 — toast notifications
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  function showToast(msg: string) {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    setToastMsg(msg);
+    toastTimerRef.current = setTimeout(() => setToastMsg(null), 3000);
+  }
   const [createDialog, setCreateDialog] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editDraft, setEditDraft] = useState<TaskUpdateDraft>({});
@@ -418,22 +427,6 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   useEffect(() => { loadAvailableSts(); }, [loadAvailableSts]);
 
   // ------------------------------------------------------------------
-  // Auto-refresh every 60 s (Sprint 37)
-  // ------------------------------------------------------------------
-  useEffect(() => {
-    if (!autoRefresh) return;
-    const id = setInterval(() => {
-      if (loading || createDialog || editMode || clusterCreateRaion || billingDialog) return;
-      loadAvailableSts();
-      loadTasks();
-      if (viewMode === "clusters") loadClusters();
-      setLastRefreshAt(new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }));
-    }, 60_000);
-    return () => clearInterval(id);
-  }, [autoRefresh, loading, createDialog, editMode, clusterCreateRaion, billingDialog,
-      loadAvailableSts, loadTasks, loadClusters, viewMode]);
-
-  // ------------------------------------------------------------------
   // Load clusters
   // ------------------------------------------------------------------
   const loadClusters = useCallback(async () => {
@@ -449,6 +442,22 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   useEffect(() => {
     if (viewMode === "clusters") loadClusters();
   }, [viewMode, loadClusters]);
+
+  // ------------------------------------------------------------------
+  // Auto-refresh every 60 s (Sprint 37)
+  // ------------------------------------------------------------------
+  useEffect(() => {
+    if (!autoRefresh) return;
+    const id = setInterval(() => {
+      if (loading || createDialog || editMode || clusterCreateRaion || billingDialog) return;
+      loadAvailableSts();
+      loadTasks();
+      if (viewMode === "clusters") loadClusters();
+      setLastRefreshAt(new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }));
+    }, 60_000);
+    return () => clearInterval(id);
+  }, [autoRefresh, loading, createDialog, editMode, clusterCreateRaion, billingDialog,
+      loadAvailableSts, loadTasks, loadClusters, viewMode]);
 
   // ------------------------------------------------------------------
   // Select task
@@ -533,6 +542,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       const reloads: Promise<void>[] = [selectTask(selectedTask), loadTasks(), loadAvailableSts()];
       if (viewMode === "clusters") reloads.push(loadClusters());
       await Promise.all(reloads);
+      showToast(`${result.assigned} СТ добавлено в рейс #${selectedTask.ID}`);
     } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
@@ -566,10 +576,12 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           )
         )
       );
+      const unassignedCount = selectedTripStNums.size;
       setSelectedTripStNums(new Set());
       const reloads: Promise<void>[] = [selectTask(selectedTask), loadTasks(), loadAvailableSts()];
       if (viewMode === "clusters") reloads.push(loadClusters());
       await Promise.all(reloads);
+      showToast(`${unassignedCount} СТ снято с рейса #${selectedTask.ID}`);
     } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
@@ -626,6 +638,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       await Promise.all(reloads);
       const newTask = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${taskId}`);
       selectTask(newTask);
+      showToast(`Рейс #${taskId} создан`);
     } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
@@ -654,6 +667,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       const newTask = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${res.task_id}`);
       setActiveTab("tasks");
       selectTask(newTask);
+      showToast(`Рейс #${res.task_id} создан из кластера «${params.raion}», ${res.st_count} СТ`);
     } catch (e) { setError(String(e)); } finally { setClusterCreateLoading(false); }
   }
 
@@ -675,22 +689,26 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   async function handleClose() {
     if (!selectedTask) return;
     if (!confirm(`Закрыть рейс #${selectedTask.ID} как отгруженный?`)) return;
+    const closedId = selectedTask.ID;
     setLoading(true);
     try {
-      await apiFetch(`/api/admin/transport/tasks/${selectedTask.ID}/close`, { method: "POST" });
+      await apiFetch(`/api/admin/transport/tasks/${closedId}/close`, { method: "POST" });
       setSelectedTask(null); setTaskSts([]);
       await loadTasks();
+      showToast(`Рейс #${closedId} закрыт`);
     } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
   async function handleCancel() {
     if (!selectedTask) return;
     if (!confirm(`Отменить рейс #${selectedTask.ID}? Это действие необратимо.`)) return;
+    const cancelledId = selectedTask.ID;
     setLoading(true);
     try {
-      await apiFetch(`/api/admin/transport/tasks/${selectedTask.ID}/cancel`, { method: "POST" });
+      await apiFetch(`/api/admin/transport/tasks/${cancelledId}/cancel`, { method: "POST" });
       setSelectedTask(null); setTaskSts([]);
       await loadTasks();
+      showToast(`Рейс #${cancelledId} отменён`);
     } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
@@ -721,6 +739,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       const newTask = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${taskId}`);
       setActiveTab("tasks");
       selectTask(newTask);
+      showToast(`Рейс #${taskId} создан как копия рейса #${selectedTask.ID}`);
     } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
@@ -965,6 +984,13 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           </span>
         )}
       </header>
+
+      {/* Sprint 42 — toast notification */}
+      {toastMsg && (
+        <div className="dispatch-toast" onClick={() => setToastMsg(null)}>
+          ✓ {toastMsg}
+        </div>
+      )}
 
       <div className="dispatch-workspace">
         {/* ============================================================
