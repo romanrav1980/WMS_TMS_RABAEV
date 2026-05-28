@@ -1529,7 +1529,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     {(["SHIPMENT_TIME:Время","ID:ID","ST_COUNT:СТ","PALLET_COUNT:Пал.",
                        "TRANSTYPE:Тип","TRANSPORT:Машина","SHIPMENT_DATE:Дата","VODITEL_NAME:Водитель",
                        "DOCK:Докст.","REGIONS:Районы","PRICE:Цена","CONDITION:Статус","READY_PERC:%",
-                       "LOGIST:Логист"] as const
+                       "TK_NAME:ТК","LOGIST:Логист"] as const
                     ).map(col => {
                       const [field, label] = col.split(":");
                       const active = tasksSortField === field;
@@ -1545,7 +1545,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 </thead>
                 <tbody>
                   {sortedTasks.length === 0
-                    ? <tr><td colSpan={14} className="dispatch-grid-empty">Нет рейсов на {filterDate}. Нажмите «+ Создать рейс».</td></tr>
+                    ? <tr><td colSpan={15} className="dispatch-grid-empty">Нет рейсов на {filterDate}. Нажмите «+ Создать рейс».</td></tr>
                     : sortedTasks.map(task => (
                         <tr key={task.ID}
                           className={["dispatch-gr",
@@ -1572,6 +1572,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                           <td>{task.READY_PERC != null
                             ? <ReadinessBar perc={task.READY_PERC} unready={task.UNREADY_COUNT} />
                             : "—"}</td>
+                          <td>{task.TK_NAME ?? "—"}</td>
                           <td>{task.LOGIST ?? "—"}</td>
                         </tr>
                       ))
