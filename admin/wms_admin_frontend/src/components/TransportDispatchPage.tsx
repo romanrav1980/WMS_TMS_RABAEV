@@ -1409,6 +1409,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   <th className="dispatch-sortable-th" onClick={() => toggleStSort("VERIFY_PERC")}>%{stSortField === "VERIFY_PERC" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
                   <th className="dispatch-sortable-th" onClick={() => toggleStSort("RAION")}>Район{stSortField === "RAION" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
                   <th className="dispatch-sortable-th" onClick={() => toggleStSort("TRANSPORT_TYPE")}>Тип ТС{stSortField === "TRANSPORT_TYPE" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
+                  <th className="dispatch-sortable-th" title="Направление" onClick={() => toggleStSort("NAPR")}>Напр.{stSortField === "NAPR" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
                   <th title="Стол-лифт">Стол</th>
                   <th title="Примечание">Прим.</th>
                   <th className="dispatch-sortable-th" title="Полнопалетная отборка" onClick={() => toggleStSort("SUGAR")}>Полнопал.{stSortField === "SUGAR" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
@@ -1417,7 +1418,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               <tbody>
                 {viewMode === "flat" && (
                   sortedSts.length === 0
-                    ? <tr><td colSpan={16} className="dispatch-grid-empty">Нет свободных СТ по текущим фильтрам</td></tr>
+                    ? <tr><td colSpan={17} className="dispatch-grid-empty">Нет свободных СТ по текущим фильтрам</td></tr>
                     : pagedSts.map((st, pageIdx) => {
                         const idx = stPage * ST_PAGE_SIZE + pageIdx;
                         return (
@@ -2461,6 +2462,7 @@ function AvailableStRow({
           onClick={e => handleFieldClick(e, "RAION", st.RAION)}
           title={onSelectByField ? "Выделить все СТ района" : ""}>{st.RAION ?? "—"}</td>
       <td><TransportTypeBadge value={st.TRANSPORT_TYPE} /></td>
+      <td title={st.NAPR ?? ""}>{st.NAPR ? <span className="dispatch-napr-badge">{st.NAPR}</span> : ""}</td>
       <td className="num-c" title={st.STOL ? "Требуется стол-лифт / гидроборт" : ""}>{st.STOL ? "♿" : ""}</td>
       <td className="dispatch-prim1" title={st.PRIM1 ?? ""}>{st.PRIM1 ? st.PRIM1.slice(0, 20) : ""}</td>
       <td className="num-c">{st.SUGAR ? <span className="dispatch-polnopallet" title="Полнопалетная отборка">П</span> : ""}</td>
