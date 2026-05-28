@@ -1810,6 +1810,12 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   <span className="dispatch-trip-sts-count">
                     {tripStFilter ? `${filteredTaskSts.length} / ${taskSts.length}` : taskSts.length} СТ
                   </span>
+                  {/* Sprint 77 — export trip STs to CSV */}
+                  <button className="dispatch-trip-csv-btn"
+                    onClick={() => exportTaskStsCsv(filteredTaskSts, selectedTask.ID)}
+                    title="Скачать состав рейса в CSV">
+                    ⬇ CSV
+                  </button>
                 </div>
               )}
 
@@ -3467,6 +3473,34 @@ function exportSelectedStsCsv(sts: AvailableSt[], date: string) {
   const a = document.createElement("a");
   a.href = url;
   a.download = `selected-sts-${date}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Sprint 77 — Export trip detail STs to CSV
+function exportTaskStsCsv(sts: TaskSt[], taskId: number) {
+  const BOM = "﻿";
+  const header = "#;СТ №;Адрес;Регион;Паллет;Вес кг;Объём м³;% сборки;Зона;Тип погр.";
+  const rows = sts.map(s => [
+    s.ORD ?? "",
+    s.ST_NUMBER,
+    `${s.REGION ?? ""}${s.ADDR ? " " + s.ADDR : ""}`.trim(),
+    s.RAION ?? "",
+    s.PALLETS_COUNT,
+    s.WEIGHT_KG.toFixed(0),
+    s.VOLUME_M3 != null ? s.VOLUME_M3.toFixed(2) : "",
+    s.VERIFY_PERC != null ? s.VERIFY_PERC + "%" : "",
+    s.ZONE ?? "",
+    s.LOAD_TYPE ?? "",
+  ].join(";"));
+  const total = sts.reduce((a, s) => ({ p: a.p + s.PALLETS_COUNT, m: a.m + s.WEIGHT_KG }), { p: 0, m: 0 });
+  rows.push(["ИТОГО", "", "", "", total.p, total.m.toFixed(0), "", "", "", ""].join(";"));
+  const csv = BOM + [header, ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `trip-${taskId}-sts.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }

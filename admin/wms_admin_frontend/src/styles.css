@@ -1297,6 +1297,10 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-ds-value { font-weight: 700; color: var(--text); }
 .dispatch-ds-sep { color: var(--muted); opacity: 0.5; }
 
+/* Sprint 77 — export trip STs CSV button */
+.dispatch-trip-csv-btn { padding: 1px 7px; border: 1px solid #b0c4d8; border-radius: 4px; background: #fff; color: var(--text); font-size: 11px; font-weight: 700; margin-left: auto; }
+.dispatch-trip-csv-btn:hover { background: #e8f0fb; border-color: var(--blue); color: var(--blue); }
+
 /* Sprint 74 — collapse toggle for trip detail */
 .dispatch-trip-collapse-btn { padding: 0 6px; border: 1px solid #b0c4d8; border-radius: 4px; background: #f5f8fc; color: var(--muted); font-size: 11px; line-height: 18px; cursor: pointer; }
 .dispatch-trip-collapse-btn:hover { background: #e8f0fb; border-color: var(--blue); color: var(--blue); }
