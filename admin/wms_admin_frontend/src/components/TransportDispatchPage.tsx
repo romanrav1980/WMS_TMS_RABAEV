@@ -207,6 +207,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [transportTypes, setTransportTypes] = useState<TransportType[]>([]);
 
+  // Sprint 49 — dense mode for STs table
+  const [stDenseMode, setStDenseMode] = useState(false);
+
   // Sprint 47 — localStorage persistence helpers
   function lsGet(key: string, fallback: string): string {
     try { return localStorage.getItem(key) || fallback; } catch { return fallback; }
@@ -1138,11 +1141,16 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             </label>
             {autoRefresh && lastRefreshAt && <span className="dispatch-last-refresh">{lastRefreshAt}</span>}
             <span className="dispatch-tcount">{availableSts.length} СТ</span>
+            {/* Sprint 49 — dense mode toggle */}
+            <label className="dispatch-dense-toggle" title="Компактный режим: уменьшить отступы в таблице СТ">
+              <input type="checkbox" checked={stDenseMode} onChange={e => setStDenseMode(e.target.checked)} />
+              Компактно
+            </label>
           </div>
 
           {/* ---- Available STs table ---- */}
           <div className="dispatch-st-section">
-            <table className="dispatch-grid">
+            <table className={`dispatch-grid${stDenseMode ? " dispatch-grid-dense" : ""}`}>
               <thead>
                 <tr>
                   <th style={{ width: 22 }}>
