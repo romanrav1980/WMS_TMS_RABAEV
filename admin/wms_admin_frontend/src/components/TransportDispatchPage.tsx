@@ -934,6 +934,18 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const dayTotalWeight  = tasks.reduce((s, t) => s + (t.TEMP_WEIGHT  || 0), 0);
   const dayClosedTasks  = tasks.filter(t => t.CONDITION === "Отгружен").length;
 
+  // Sprint 41 — client-side status filter for routes tab
+  const [routeCondFilter, setRouteCondFilter] = useState<"all" | "active" | "closed" | "cancelled">("all");
+  const routeCondCounts = {
+    active:    tasks.filter(t => t.CONDITION !== "Отгружен" && t.CONDITION !== "Отменён").length,
+    closed:    tasks.filter(t => t.CONDITION === "Отгружен").length,
+    cancelled: tasks.filter(t => t.CONDITION === "Отменён").length,
+  };
+  const filteredRouteTasks = routeCondFilter === "all"       ? tasks
+    : routeCondFilter === "active"    ? tasks.filter(t => t.CONDITION !== "Отгружен" && t.CONDITION !== "Отменён")
+    : routeCondFilter === "closed"    ? tasks.filter(t => t.CONDITION === "Отгружен")
+    : tasks.filter(t => t.CONDITION === "Отменён");
+
   // ------------------------------------------------------------------
   // Render
   // ------------------------------------------------------------------
@@ -1416,7 +1428,22 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             <b>Маршруты за</b>
             <input type="date" value={routeShipDate} onChange={e => setRouteShipDate(e.target.value)} />
             <button className="dispatch-refresh-btn" onClick={loadTasks} title="Обновить рейсы">⟳</button>
-            <span className="dispatch-tcount">{tasks.length} рейс(ов)</span>
+            <span className="dispatch-tcount">{filteredRouteTasks.length}/{tasks.length} рейс(ов)</span>
+            {/* Sprint 41 — status filter buttons */}
+            <div className="dispatch-cond-filter">
+              {(["all", "active", "closed", "cancelled"] as const).map(f => {
+                const labels: Record<string, string> = { all: "Все", active: "Активен", closed: "Отгружен", cancelled: "Отменён" };
+                const counts: Record<string, number> = { all: tasks.length, ...routeCondCounts };
+                return (
+                  <button key={f}
+                    className={`dispatch-cond-filter-btn${routeCondFilter === f ? " active" : ""}${f !== "all" ? ` cond-${f}` : ""}`}
+                    onClick={() => setRouteCondFilter(f)}>
+                    {labels[f]}
+                    {counts[f] > 0 && <span className="dispatch-cond-filter-cnt">{counts[f]}</span>}
+                  </button>
+                );
+              })}
+            </div>
             <label className="routes-brief-toggle" title="Свёрнутый режим: скрыть второстепенные колонки">
               <input type="checkbox" checked={routeBriefMode}
                 onChange={e => setRouteBriefMode(e.target.checked)} />
@@ -1448,13 +1475,14 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 </tr>
               </thead>
               <tbody>
-                {tasks.length === 0
+                {filteredRouteTasks.length === 0
                   ? <tr><td colSpan={routeBriefMode ? 8 : 15} className="dispatch-grid-empty">Нет рейсов по фильтрам</td></tr>
-                  : tasks.map(task => (
+                  : filteredRouteTasks.map(task => (
                       <tr key={task.ID}
                         className={["dispatch-gr",
                           selectedTask?.ID === task.ID ? "selected" : "",
                           task.CONDITION === "Отгружен" ? "grid-closed" : "",
+                          task.CONDITION === "Отменён" ? "grid-cancelled" : "",
                         ].filter(Boolean).join(" ")}
                         onClick={() => selectTask(task)}>
                         <td>{fmtDate(task.SHIPMENT_DATE)}</td>

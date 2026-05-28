@@ -1219,6 +1219,19 @@ button[aria-disabled="true"] { cursor: help; }
 }
 .cluster-card-create-btn:hover { background: #e0e7ff; }
 
+/* Sprint 41 — Routes status filter buttons */
+.dispatch-cond-filter { display: flex; align-items: center; gap: 3px; }
+.dispatch-cond-filter-btn { display: flex; align-items: center; gap: 4px; padding: 2px 8px; border: 1px solid #c8d6e5; border-radius: 4px; background: #f5f8fc; color: var(--muted); font-size: 11px; font-weight: 600; transition: background .12s, color .12s; }
+.dispatch-cond-filter-btn:hover { background: #e8eef7; color: var(--text); }
+.dispatch-cond-filter-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+.dispatch-cond-filter-btn.cond-active.active { background: #2563d8; border-color: #2563d8; }
+.dispatch-cond-filter-btn.cond-closed.active { background: var(--green); border-color: var(--green); }
+.dispatch-cond-filter-btn.cond-cancelled.active { background: var(--gray); border-color: var(--gray); }
+.dispatch-cond-filter-cnt { display: inline-flex; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 999px; background: rgba(255,255,255,.35); color: inherit; font-size: 10px; font-weight: 800; align-items: center; justify-content: center; }
+.dispatch-cond-filter-btn:not(.active) .dispatch-cond-filter-cnt { background: #dde8f5; color: #334155; }
+.grid-cancelled { background: #f8f8fa !important; color: var(--muted); }
+.grid-cancelled td { opacity: .65; }
+
 /* Sprint 40 — Day summary strip */
 .dispatch-day-summary {
   display: flex;
