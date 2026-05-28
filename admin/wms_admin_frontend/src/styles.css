@@ -1749,3 +1749,56 @@ button[aria-disabled="true"] { cursor: help; }
 .driver-op-done  { background: #16a34a; color: #fff; }
 .driver-op-btn:disabled { opacity: .5; cursor: default; }
 .driver-op-check { font-size: 18px; color: #22c55e; }
+
+/* =========================================================
+   KPI Dashboard (Sprint 108-109)
+   ========================================================= */
+.kpi-shell { display: flex; flex-direction: column; height: 100vh; background: var(--bg-main); color: var(--text-primary); }
+.kpi-topbar { display: flex; align-items: center; gap: 12px; padding: 0 20px; height: 52px; background: var(--topbar-bg); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.kpi-back { background: none; border: none; color: #93c5fd; font-size: 16px; cursor: pointer; padding: 4px 8px; border-radius: 4px; }
+.kpi-back:hover { background: rgba(255,255,255,.1); }
+.kpi-title h1 { font-size: 15px; font-weight: 900; margin: 0; color: #fff; }
+.kpi-subtitle { font-size: 10px; color: #93c5fd; }
+.kpi-date-range { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.kpi-date-range input { padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--input-bg); color: var(--text-primary); font-size: 12px; }
+.kpi-tabs { display: flex; border-bottom: 2px solid var(--border); background: var(--panel-bg); flex-shrink: 0; }
+.kpi-tab-btn { padding: 10px 20px; border: none; background: none; color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+.kpi-tab-btn:hover { color: var(--text-primary); }
+.kpi-tab-active { color: var(--accent) !important; border-bottom-color: var(--accent) !important; }
+.kpi-content { flex: 1; overflow: auto; padding: 20px; }
+.kpi-section { display: flex; flex-direction: column; gap: 20px; }
+.kpi-loading { color: var(--text-muted); font-size: 13px; }
+.kpi-empty { text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px; }
+/* Summary cards */
+.kpi-cards { display: flex; gap: 12px; flex-wrap: wrap; }
+.kpi-card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; min-width: 130px; flex: 1; }
+.kpi-card-green { border-left: 3px solid #22c55e; }
+.kpi-card-blue  { border-left: 3px solid #3b82f6; }
+.kpi-card-amber { border-left: 3px solid #f59e0b; }
+.kpi-card-value { font-size: 22px; font-weight: 900; color: #fff; }
+.kpi-card-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+/* Row of charts */
+.kpi-row { display: flex; gap: 16px; flex-wrap: wrap; }
+.kpi-chart-card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; flex: 1; min-width: 240px; }
+.kpi-chart-wide { flex: 2; min-width: 400px; }
+.kpi-chart-title { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
+/* Bar chart */
+.kpi-bar-chart { display: flex; align-items: flex-end; height: 120px; gap: 3px; overflow-x: auto; padding-bottom: 4px; }
+.kpi-bar-col { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 18px; flex: 1; }
+.kpi-bar { width: 100%; background: var(--accent); border-radius: 2px 2px 0 0; min-height: 2px; }
+.kpi-bar-label { font-size: 9px; color: var(--text-muted); }
+/* Table */
+.kpi-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.kpi-table th { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 10px; text-transform: uppercase; }
+.kpi-table td { padding: 5px 6px; border-bottom: 1px solid var(--border); }
+.kpi-num { text-align: right; }
+/* Horizontal bars */
+.kpi-hbar-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.kpi-hbar-label { width: 140px; font-size: 12px; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi-hbar-track { flex: 1; height: 18px; background: #334155; border-radius: 3px; position: relative; overflow: hidden; }
+.kpi-hbar-total { position: absolute; left: 0; top: 0; height: 100%; background: #475569; border-radius: 3px; }
+.kpi-hbar-paid  { position: absolute; left: 0; top: 0; height: 100%; background: #22c55e; border-radius: 3px; z-index: 1; }
+.kpi-hbar-value { width: 100px; font-size: 12px; font-weight: 700; color: #fff; text-align: right; }
+.kpi-legend { display: flex; gap: 16px; margin-top: 10px; font-size: 11px; }
+.kpi-leg-paid::before  { content: "■ "; color: #22c55e; }
+.kpi-leg-total::before { content: "■ "; color: #475569; }
