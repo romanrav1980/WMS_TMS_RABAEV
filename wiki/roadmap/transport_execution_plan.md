@@ -101,7 +101,12 @@
 | 83 | Amber-рамка для несобранных доступных СТ (dispatch-avail-unready, левая граница) | Диспетчер | 0.05 нед | 🟢 КК | ✅ `1cfd0b7` 2026-05-28 |
 | 84 | READY_PERC (% сборки) колонка в таблице маршрутов (routes tab) | Диспетчер | 0.05 нед | 🟢 КК | ✅ `90e6e25` 2026-05-28 |
 | 85 | Сводка маршрутов — Рейсов/Пал./Вес/Отгружено под таблицей routes tab | Диспетчер | 0.05 нед | 🟢 КК | ✅ `6f015da` 2026-05-28 |
-| **Итого** | | | **~32 нед** | | |
+| 86 | CSV-экспорт таблицы маршрутов (routes tab) с 15 колонками | Диспетчер | 0.1 нед | 🟢 КК | ✅ `5b1a213` 2026-05-28 |
+| 87 | Расширенный confirm закрытия рейса: предупреждение о несобранных СТ | Диспетчер | 0.05 нед | 🟢 КК | ✅ `440ca06` 2026-05-28 |
+| 88 | Кнопка «→+1» — перенос рейса на следующий день | Диспетчер | 0.1 нед | 🟢 КК | ✅ `ae4af11` 2026-05-28 |
+| 89 | Фильтр «⚠ Только несобранные» в составе рейса (trip detail STs toolbar) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `0de2322` 2026-05-28 |
+| 90 | Копирование номера СТ в буфер обмена по клику (TaskStTableRow + RouteTaskStRow) | Диспетчер | 0.05 нед | 🟢 КК | ✅ `0a97b23` 2026-05-28 |
+| **Итого** | | | **~32.5 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -749,10 +754,61 @@ UI не меняется, но при создании каждого рейса
 
 **Статус:** ✅ Завершён
 **Коммит:** `1a19f0d` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — Locust-load заменён на Windows-safe runner; добавлен UI smoke бейджа/сброса и обучающий HTML pack.
 **Тесты:**
-- `tests/transport/test_sprint39_functional.py` — 24 pytest-кейса (каждый фильтр по отдельности, all-active=11, reset=0, badge/btn visibility)
+- `tests/transport/test_sprint39_functional.py` — 26 pytest-кейсов (каждый фильтр по отдельности, all-active=11, reset=0, badge/btn visibility)
+- `tests/ui/transport_sprint39_ui_smoke.cjs` — UI smoke: активный фильтр показывает badge/reset, `× Сбросить` очищает поле и скрывает элементы.
+- `tests/ui/transport_sprint39_training_capture.cjs` → `wiki-raw/tms2_training/sprint39_filter_badge_reset_2026_05_28/index.html`
 - `tests/transport/sprint39_usability_checklist.md` — 19 юзабилити-проверок
-- `tests/transport/transport_sprint39_load_test.py` — 5 users, 60s, NFR /available-sts c разными фильтрами p95 ≤ 400ms
+- `tests/transport/transport_sprint39_load_test.py` — Windows-safe no-mutation runner; p95: no filters 39.2 ms, addr_mask 30.1 ms, type+assembled 29.4 ms, unassigned=false 37.0 ms
+
+---
+
+### Sprint 45 — Кнопка «#ID →» для перехода к рейсу из таблицы СТ
+
+**Инструмент:** 🟢 КК (код-код $20) — фронтенд + существующий `GET /tasks/{id}`
+
+**Цель:** диспетчер видит, в каком рейсе находится распределённая СТ, и может одним кликом перейти к этому рейсу во вкладке «Маршруты».
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `handleGotoTrip(taskId)` — переключить вкладку, выбрать рейс, при необходимости загрузить `GET /tasks/{id}` | Frontend | `TransportDispatchPage.tsx` |
+| Кнопка `#ID →` в строке СТ при truthy `TRANSTASK_ID` | Frontend | `TransportDispatchPage.tsx` |
+| `stopPropagation()` у кнопки, чтобы не переключать checkbox строки | Frontend | `TransportDispatchPage.tsx` |
+
+**Статус:** ✅ Завершён
+**Коммит:** `2476a00` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — тестовая модель выровнена с UI: `TRANSTASK_ID=0` считается как отсутствие рейса; Locust-load заменён на Windows-safe runner; добавлен UI smoke и обучающий HTML pack.
+**Тесты:**
+- `tests/transport/test_sprint45_functional.py` — 11 pytest-кейсов (visibility, existing/fetched trip, date change, `TRANSTASK_ID=0`) → `11 passed`
+- `tests/ui/transport_sprint45_ui_smoke.cjs` — UI smoke: кнопка `#4501 →` переключает на «Маршруты» и выбирает рейс; `#0 →` не отображается.
+- `tests/ui/transport_sprint45_training_capture.cjs` → `wiki-raw/tms2_training/sprint45_goto_trip_2026_05_28/index.html`
+- `tests/transport/sprint45_usability_checklist.md` — usability checklist
+- `tests/transport/transport_sprint45_load_test.py` — Windows-safe no-mutation runner; p95 available-sts all 42.9 ms, tasks routes 78.2 ms, missing task 163.8 ms
+
+---
+
+### Sprint 44 — Глобальный Escape: снятие выделения и закрытие диалогов
+
+**Инструмент:** 🟢 КК (код-код $20) — чисто фронтенд, global key handler
+
+**Цель:** Escape закрывает текущий контекст или снимает выделение по предсказуемому приоритету: диалог создания, диалог кластера, edit mode, выделенные свободные СТ, выделенные СТ рейса.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| Global `keydown` handler для `Escape` | Frontend | `TransportDispatchPage.tsx` |
+| Приоритет закрытия/очистки контекстов | Frontend | `TransportDispatchPage.tsx` |
+| Защита текстовых input/select/textarea от перехвата Escape | Frontend | `TransportDispatchPage.tsx` |
+
+**Статус:** ✅ Завершён
+**Коммит:** `9f1c8a5` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — исправлено: checkbox/radio больше не блокируют глобальный Escape, поэтому выделение СТ снимается сразу после клика по чекбоксу; Locust-load заменён на Windows-safe runner; добавлен UI smoke и обучающий HTML pack.
+**Тесты:**
+- `tests/transport/test_sprint44_functional.py` — 12 pytest-кейсов (приоритет Escape actions) → `12 passed`
+- `tests/ui/transport_sprint44_ui_smoke.cjs` — UI smoke: Escape снимает выделение свободной СТ и закрывает диалог создания рейса.
+- `tests/ui/transport_sprint44_training_capture.cjs` → `wiki-raw/tms2_training/sprint44_escape_handler_2026_05_28/index.html`
+- `tests/transport/sprint44_usability_checklist.md` — usability checklist
+- `tests/transport/transport_sprint44_load_test.py` — Windows-safe no-mutation runner; p95 tasks 89.1 ms, available-sts 43.9 ms, clusters 39.1 ms
 
 ---
 
@@ -772,10 +828,13 @@ UI не меняется, но при создании каждого рейса
 
 **Статус:** ✅ Завершён
 **Коммит:** `86a8908` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — исправлен comparator: пустые значения всегда в конце, включая desc; Locust-load заменён на Windows-safe runner; добавлен UI smoke и обучающий HTML pack.
 **Тесты:**
-- `tests/transport/test_sprint43_functional.py` — 13 pytest-кейсов (asc/desc, null-last, stable, all fields)
+- `tests/transport/test_sprint43_functional.py` — 14 pytest-кейсов (asc/desc, null-last в asc/desc, stable, all fields) → `14 passed`
+- `tests/ui/transport_sprint43_ui_smoke.cjs` — UI smoke: сортировка `ID` asc/desc и `Машина` asc/desc с null-last.
+- `tests/ui/transport_sprint43_training_capture.cjs` → `wiki-raw/tms2_training/sprint43_sortable_trips_2026_05_28/index.html`
 - `tests/transport/sprint43_usability_checklist.md` — 16 юзабилити-проверок
-- `tests/transport/transport_sprint43_load_test.py` — 7 users, 60s, NFR p95 ≤ 700ms
+- `tests/transport/transport_sprint43_load_test.py` — Windows-safe no-mutation runner; p95 sortable source 85.2 ms, date range 38.8 ms, adjacent available-sts 37.5 ms
 
 ---
 
@@ -794,10 +853,13 @@ UI не меняется, но при создании каждого рейса
 
 **Статус:** ✅ Завершён
 **Коммит:** `abae320` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — Locust-load заменён на Windows-safe no-mutation runner; добавлен UI smoke toast + dismiss и обучающий HTML pack.
 **Тесты:**
-- `tests/transport/test_sprint42_functional.py` — 13 pytest-кейсов (все форматы сообщений)
+- `tests/transport/test_sprint42_functional.py` — 13 pytest-кейсов (все форматы сообщений) → `13 passed`
+- `tests/ui/transport_sprint42_ui_smoke.cjs` — UI smoke: успешная операция показывает toast, клик скрывает уведомление.
+- `tests/ui/transport_sprint42_training_capture.cjs` → `wiki-raw/tms2_training/sprint42_toast_notifications_2026_05_28/index.html`
 - `tests/transport/sprint42_usability_checklist.md` — 15 юзабилити-проверок
-- `tests/transport/transport_sprint42_load_test.py` — 5 users, 60s, NFR POST /tasks p95 ≤ 600ms
+- `tests/transport/transport_sprint42_load_test.py` — Windows-safe runner без Oracle-мутаций; p95 tasks 59.8 ms, available-sts 44.1 ms, validation-only POST 186.4 ms
 
 ---
 
@@ -817,10 +879,13 @@ UI не меняется, но при создании каждого рейса
 
 **Статус:** ✅ Завершён
 **Коммит:** `04302e3` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — Locust-load заменён на Windows-safe runner; добавлен UI smoke фильтра статусов и обучающий HTML pack.
 **Тесты:**
-- `tests/transport/test_sprint41_functional.py` — 14 pytest-кейсов (all/active/closed/cancelled, counts, edge cases)
+- `tests/transport/test_sprint41_functional.py` — 14 pytest-кейсов (all/active/closed/cancelled, counts, edge cases) → `14 passed`
+- `tests/ui/transport_sprint41_ui_smoke.cjs` — UI smoke: фильтры `Отгружен`, `Отменён`, `Все` показывают корректные строки.
+- `tests/ui/transport_sprint41_training_capture.cjs` → `wiki-raw/tms2_training/sprint41_routes_status_filter_2026_05_28/index.html`
 - `tests/transport/sprint41_usability_checklist.md` — 17 юзабилити-проверок
-- `tests/transport/transport_sprint41_load_test.py` — 6 users, 60s, NFR p95 ≤ 700ms
+- `tests/transport/transport_sprint41_load_test.py` — Windows-safe no-mutation runner; p95 all statuses 53.0 ms, date range 88.2 ms, no payments 126.2 ms
 
 ---
 
@@ -838,10 +903,13 @@ UI не меняется, но при создании каждого рейса
 
 **Статус:** ✅ Завершён
 **Коммит:** `0fab5d7` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — functional helper выровнен с React-контрактом `null -> 0`; Locust-load заменён на Windows-safe runner; добавлен UI smoke и обучающий HTML pack.
 **Тесты:**
-- `tests/transport/test_sprint40_functional.py` — 11 pytest-кейсов (empty, single, mixed, null weight/pallets, large dataset)
+- `tests/transport/test_sprint40_functional.py` — 11 pytest-кейсов (empty, single, mixed, null weight/pallets, large dataset) → `11 passed`
+- `tests/ui/transport_sprint40_ui_smoke.cjs` — UI smoke: строка сводки показывает `2` рейса, `15` паллет, `2300` кг, `1 / 2` отгружено.
+- `tests/ui/transport_sprint40_training_capture.cjs` → `wiki-raw/tms2_training/sprint40_day_summary_2026_05_28/index.html`
 - `tests/transport/sprint40_usability_checklist.md` — 13 юзабилити-проверок
-- `tests/transport/transport_sprint40_load_test.py` — 5 users, 60s, NFR p95 ≤ 800ms
+- `tests/transport/transport_sprint40_load_test.py` — Windows-safe no-mutation runner; p95 tasks 83.3 ms, all statuses 54.1 ms, adjacent available-sts 43.2 ms
 
 ---
 
@@ -859,10 +927,13 @@ UI не меняется, но при создании каждого рейса
 
 **Статус:** ✅ Завершён
 **Коммит:** `ad2a56f` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — добавлен backend contract test: `PATCH /tasks/{id}` для missing task теперь возвращает 404, а не ложный success. Добавлен UI smoke и обучающий HTML pack; Locust-only load script заменён на no-mutation runner.
 **Тесты:**
-- `tests/transport/test_sprint38_functional.py` — 14 pytest-кейсов (inherit fields, no STs, no price, no pay_order, tab switch, multiple copies)
+- `tests/transport/test_sprint38_functional.py` — 15 pytest-кейсов (inherit fields, no STs, no price, no pay_order, tab switch, multiple copies, missing PATCH -> 404) → `15 passed`
+- `tests/ui/transport_sprint38_ui_smoke.cjs` — UI smoke: copy source trip, POST/PATCH/GET sequence, new trip selected
+- `tests/ui/transport_sprint38_training_capture.cjs` → `wiki-raw/tms2_training/sprint38_copy_trip_2026_05_28/index.html`
 - `tests/transport/sprint38_usability_checklist.md` — 17 юзабилити-проверок
-- `tests/transport/transport_sprint38_load_test.py` — 5 users, 60s, NFR POST/tasks p95 ≤ 500ms
+- `tests/transport/transport_sprint38_load_test.py` — no-mutation load gate; p95 tasks list 167.3 ms, missing GET 167.2 ms, missing PATCH 161.1 ms
 
 ---
 
