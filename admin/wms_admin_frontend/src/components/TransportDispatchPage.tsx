@@ -478,9 +478,20 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   useEffect(() => { try { localStorage.setItem("tms_fpCollapsed",  fpCollapsed ? "1" : "0"); } catch { /* */ } }, [fpCollapsed]);
 
   // Sprint 44 — global Escape handler
+  // Sprint 68 — Ctrl+Enter: assign selected STs to current trip
   // ------------------------------------------------------------------
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
+      // Ctrl+Enter → add selected STs to trip
+      if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+        const tag = (e.target as HTMLElement).tagName;
+        if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
+        if (selectedStNums.size > 0 && selectedTask && activeTab === "tasks") {
+          e.preventDefault();
+          handleAssign();
+        }
+        return;
+      }
       if (e.key !== "Escape") return;
       const tag = (e.target as HTMLElement).tagName;
       if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
@@ -492,7 +503,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     }
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [createDialog, clusterCreateRaion, editMode, selectedStNums, selectedTripStNums]);
+  }, [createDialog, clusterCreateRaion, editMode, selectedStNums, selectedTripStNums, selectedTask, activeTab]);
 
   // ------------------------------------------------------------------
   // Auto-refresh every 60 s (Sprint 37)
@@ -1278,7 +1289,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               П={allP}&nbsp;·&nbsp;{allM.toFixed(0)}&nbsp;кг&nbsp;·&nbsp;{allV.toFixed(1)}&nbsp;м³
             </span>
             {selectedStNums.size > 0 && selectedTask && (
-              <button className="dispatch-add-btn" onClick={handleAssign} disabled={loading}>
+              <button className="dispatch-add-btn" onClick={handleAssign} disabled={loading}
+                title="Ctrl+Enter">
                 Добавить в рейс #{selectedTask.ID}
               </button>
             )}
@@ -1429,7 +1441,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               <span className="dispatch-sel-bar-stat">V={selV.toFixed(2)} м³</span>
               <button className="dispatch-sel-bar-create" onClick={() => setCreateDialog(true)}>+ Создать маршрут</button>
               {selectedTask && (
-                <button className="dispatch-sel-bar-add" onClick={handleAssign} disabled={loading}>
+                <button className="dispatch-sel-bar-add" onClick={handleAssign} disabled={loading}
+                  title="Ctrl+Enter">
                   Добавить в #{selectedTask.ID}
                 </button>
               )}
