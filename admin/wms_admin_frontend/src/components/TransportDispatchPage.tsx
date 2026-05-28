@@ -953,6 +953,28 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const dayTotalWeight  = tasks.reduce((s, t) => s + (t.TEMP_WEIGHT  || 0), 0);
   const dayClosedTasks  = tasks.filter(t => t.CONDITION === "Отгружен").length;
 
+  // Sprint 43 — sortable trips table (tasks tab)
+  const [tasksSortField, setTasksSortField] = useState<string | null>(null);
+  const [tasksSortDir, setTasksSortDir]   = useState<"asc" | "desc">("asc");
+
+  function toggleTasksSort(field: string) {
+    if (tasksSortField === field) {
+      setTasksSortDir(d => d === "asc" ? "desc" : "asc");
+    } else {
+      setTasksSortField(field);
+      setTasksSortDir("asc");
+    }
+  }
+
+  const sortedTasks = tasksSortField
+    ? [...tasks].sort((a, b) => {
+        const va = (a as Record<string, unknown>)[tasksSortField] ?? "";
+        const vb = (b as Record<string, unknown>)[tasksSortField] ?? "";
+        const cmp = va < vb ? -1 : va > vb ? 1 : 0;
+        return tasksSortDir === "asc" ? cmp : -cmp;
+      })
+    : tasks;
+
   // Sprint 41 — client-side status filter for routes tab
   const [routeCondFilter, setRouteCondFilter] = useState<"all" | "active" | "closed" | "cancelled">("all");
   const routeCondCounts = {
@@ -1174,19 +1196,31 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               <table className="dispatch-grid">
                 <thead>
                   <tr>
-                    <th>Время</th><th>ID</th><th>СТ</th><th>Пал.</th>
-                    <th>Тип</th><th>Машина</th><th>Дата</th><th>Водитель</th>
-                    <th>Докст.</th><th>Районы</th><th>Цена</th><th>Статус</th><th>%</th>
+                    {(["SHIPMENT_TIME:Время","ID:ID","ST_COUNT:СТ","PALLET_COUNT:Пал.",
+                       "TRANSTYPE:Тип","TRANSPORT:Машина","SHIPMENT_DATE:Дата","VODITEL_NAME:Водитель",
+                       "DOCK:Докст.","REGIONS:Районы","PRICE:Цена","CONDITION:Статус","READY_PERC:%"] as const
+                    ).map(col => {
+                      const [field, label] = col.split(":");
+                      const active = tasksSortField === field;
+                      return (
+                        <th key={field} className="dispatch-sortable-th"
+                          onClick={() => toggleTasksSort(field)}
+                          title={`Сортировать по «${label}»`}>
+                          {label}{active ? (tasksSortDir === "asc" ? " ▲" : " ▼") : ""}
+                        </th>
+                      );
+                    })}
                   </tr>
                 </thead>
                 <tbody>
-                  {tasks.length === 0
+                  {sortedTasks.length === 0
                     ? <tr><td colSpan={13} className="dispatch-grid-empty">Нет рейсов на {filterDate}. Нажмите «+ Создать рейс».</td></tr>
-                    : tasks.map(task => (
+                    : sortedTasks.map(task => (
                         <tr key={task.ID}
                           className={["dispatch-gr",
                             selectedTask?.ID === task.ID ? "selected" : "",
                             task.CONDITION === "Отгружен" ? "grid-closed" : "",
+                            task.CONDITION === "Отменён" ? "grid-cancelled" : "",
                           ].filter(Boolean).join(" ")}
                           onClick={() => selectTask(task)}>
                           <td>{fmtTime(task.SHIPMENT_TIME) || "—"}</td>
