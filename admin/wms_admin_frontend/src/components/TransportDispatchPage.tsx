@@ -1231,6 +1231,11 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       })
     : filteredRouteTasks;
 
+  // Sprint 85 — routes tab summary (visible trips aggregate)
+  const routeTotalPallets = searchedRouteTasks.reduce((s, t) => s + (t.PALLET_COUNT || 0), 0);
+  const routeTotalWeight  = searchedRouteTasks.reduce((s, t) => s + (t.TEMP_WEIGHT  || 0), 0);
+  const routeClosedCount  = searchedRouteTasks.filter(t => t.CONDITION === "Отгружен").length;
+
   // Sprint 81 — ↑/↓ keyboard navigation between trips
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -2048,6 +2053,16 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               </tbody>
             </table>
           </div>
+
+          {/* Sprint 85 — routes tab summary strip */}
+          {searchedRouteTasks.length > 0 && (
+            <div className="dispatch-routes-summary">
+              <span>Рейсов: <b>{searchedRouteTasks.length}</b></span>
+              <span>Пал.: <b>{routeTotalPallets}</b></span>
+              <span>Вес: <b>{routeTotalWeight.toFixed(0)} кг</b></span>
+              <span>Отгружено: <b>{routeClosedCount}</b></span>
+            </div>
+          )}
 
           {/* ---- Route detail ---- */}
           {selectedTask ? (
