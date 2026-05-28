@@ -1154,6 +1154,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const allV = wareFilteredSts.reduce((s, x) => s + (x.VOLUME_M3 || 0), 0);
   const tripP = taskSts.reduce((s, x) => s + (x.PALLETS_COUNT || 0), 0);
   const tripM = taskSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
+  const tripV = taskSts.reduce((s, x) => s + (x.VOLUME_M3 || 0), 0);
 
   // Sprint 72 — filter within trip detail STs
   const filteredTaskSts = tripStFilter
@@ -1595,7 +1596,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     <ReadinessBar perc={selectedTask.READY_PERC} unready={selectedTask.UNREADY_COUNT} />
                   )}
                   <span className="dispatch-pmv" style={{ marginLeft: "auto" }}>
-                    P={tripP}&nbsp; M={tripM.toFixed(0)}
+                    P={tripP}&nbsp; M={tripM.toFixed(0)}&nbsp; V={tripV.toFixed(2)}
                   </span>
                   {!editMode
                     ? <button className="dispatch-edit-btn" onClick={() => { setEditMode(true); setEditDraft({}); }}>Редактировать</button>
@@ -2014,7 +2015,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     <ReadinessBar perc={selectedTask.READY_PERC} unready={selectedTask.UNREADY_COUNT} />
                   )}
                   <span className="dispatch-pmv" style={{ marginLeft: "auto" }}>
-                    P={tripP}&nbsp; M={tripM.toFixed(0)}
+                    P={tripP}&nbsp; M={tripM.toFixed(0)}&nbsp; V={tripV.toFixed(2)}
                   </span>
                   <button className="dispatch-copy-task-btn" onClick={handleCopyTask}
                     disabled={loading} title="Создать новый рейс с теми же реквизитами (без СТ)">
