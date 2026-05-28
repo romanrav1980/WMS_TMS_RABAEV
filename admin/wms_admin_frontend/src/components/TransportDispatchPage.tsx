@@ -1990,12 +1990,13 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   {!routeBriefMode && <th>ТК</th>}
                   {!routeBriefMode && <th>Логист</th>}
                   <th>Статус</th>
+                  {!routeBriefMode && <th title="% сборки">%</th>}
                   {!routeBriefMode && <th title="Биллинг">💰</th>}
                 </tr>
               </thead>
               <tbody>
                 {searchedRouteTasks.length === 0
-                  ? <tr><td colSpan={routeBriefMode ? 8 : 15} className="dispatch-grid-empty">Нет рейсов по фильтрам</td></tr>
+                  ? <tr><td colSpan={routeBriefMode ? 8 : 16} className="dispatch-grid-empty">Нет рейсов по фильтрам</td></tr>
                   : searchedRouteTasks.map(task => (
                       <tr key={task.ID}
                         data-taskid={task.ID}
@@ -2039,6 +2040,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                         {!routeBriefMode && <td>{task.TK_NAME ?? "—"}</td>}
                         {!routeBriefMode && <td>{task.LOGIST ?? "—"}</td>}
                         <td><span className={`dispatch-cond ${condClass(task.CONDITION)}`}>{task.CONDITION ?? "Новый"}</span></td>
+                        {!routeBriefMode && <td>{task.READY_PERC != null ? <ReadinessBar perc={task.READY_PERC} unready={task.UNREADY_COUNT} /> : "—"}</td>}
                         {!routeBriefMode && <td>{task.PAY_ORDER_ID ? <span className="billing-badge-sm">💰</span> : "—"}</td>}
                       </tr>
                     ))
