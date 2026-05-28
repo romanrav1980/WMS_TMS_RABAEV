@@ -26,7 +26,8 @@ from datetime import date, timedelta
 BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
 AUTH = ("admin", "admin123")
 TODAY = date.today().isoformat()
-TOMORROW = (date.today() + timedelta(days=1)).isoformat()
+SPRINT5_DATE = os.environ.get("TMS_SPRINT5_STDATE", "2026-05-25")
+TOMORROW = SPRINT5_DATE
 
 KNOWN_TRANSPORT_TYPES = {"10", "15", "20реф", "20", "0", ""}
 
@@ -205,11 +206,11 @@ class TestDriverOwnershipFields:
 
 
 # ---------------------------------------------------------------------------
-# SUGAR field (used in ST table)
+# SUGAR is the legacy API field for "полнопалетная отборка".
 # ---------------------------------------------------------------------------
 
-class TestSugarField:
-    def test_sugar_field_present_and_binary(self, api):
+class TestFullPalletPickField:
+    def test_legacy_full_pallet_pick_field_present_and_binary(self, api):
         r = api.get(f"{BASE_URL}/api/admin/transport/available-sts",
                     params={"stdate": TOMORROW})
         data = r.json()

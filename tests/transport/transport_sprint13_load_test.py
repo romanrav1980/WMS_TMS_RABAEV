@@ -1,74 +1,128 @@
 """
-transport_sprint13_load_test.py — Load tests for Sprint 13 (vehicle availability).
+Windows-safe load check for TMS-2 Sprint 13 (vehicle availability).
 
-NFR targets:
-  GET /vehicles/available  p95 ≤ 500 ms
-  GET /plan-fact           p95 ≤ 1000 ms
+Checks:
+  GET /vehicles/available  p95 <= 500 ms
+  GET /plan-fact           p95 <= 1000 ms
+  GET /vehicles/gantt      p95 <= 500 ms
 
 Run:
-    locust -f tests/transport/transport_sprint13_load_test.py \
-        --host http://127.0.0.1:8088 --users 8 --spawn-rate 3 --run-time 60s --headless
+    python tests/transport/transport_sprint13_load_test.py
 """
 
-from locust import HttpUser, task, between, events
-from datetime import date, timedelta
+from __future__ import annotations
 
-TODAY    = date.today().isoformat()
-TOMORROW = (date.today() + timedelta(days=1)).isoformat()
-LAST_30  = (date.today() - timedelta(days=30)).isoformat()
-SHIP_TIME = f"{TOMORROW} 09:00"
+import concurrent.futures as cf
+import os
+import statistics
+import sys
+import time
+from dataclasses import dataclass
+
+import requests
 
 
-class AvailabilityUser(HttpUser):
-    wait_time = between(1, 2)
-    auth = ("admin", "admin123")
+BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
+AUTH = ("admin", "admin123")
+PLAN_DATE = "2026-05-25"
+SHIP_TIME = f"{PLAN_DATE} 09:00"
 
-    @task(5)
-    def get_available(self):
-        self.client.get(
-            "/api/admin/transport/vehicles/available",
-            params={"shipment_time": SHIP_TIME, "pallets": 0},
-            auth=self.auth,
-            name="GET /vehicles/available",
+
+@dataclass
+class EndpointCase:
+    name: str
+    method: str
+    path: str
+    target_ms: float
+    requests: int
+    workers: int
+    params: dict | None = None
+
+
+def percentile(values: list[float], pct: float) -> float:
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    index = min(len(ordered) - 1, int(round((pct / 100) * (len(ordered) - 1))))
+    return ordered[index]
+
+
+def request_once(case: EndpointCase) -> tuple[float, int, str]:
+    started = time.perf_counter()
+    try:
+        response = requests.request(
+            case.method,
+            f"{BASE_URL}{case.path}",
+            auth=AUTH,
+            params=case.params,
+            timeout=20,
         )
-
-    @task(3)
-    def get_plan_fact(self):
-        self.client.get(
-            "/api/admin/transport/plan-fact",
-            params={"date_from": LAST_30, "date_to": TODAY},
-            auth=self.auth,
-            name="GET /plan-fact",
-        )
-
-    @task(2)
-    def get_gantt(self):
-        self.client.get(
-            "/api/admin/transport/vehicles/gantt",
-            params={"gantt_date": TOMORROW},
-            auth=self.auth,
-            name="GET /vehicles/gantt",
-        )
+        elapsed_ms = (time.perf_counter() - started) * 1000
+        return elapsed_ms, response.status_code, response.text[:240]
+    except Exception as exc:  # noqa: BLE001 - load runner must report transport failures.
+        elapsed_ms = (time.perf_counter() - started) * 1000
+        return elapsed_ms, 0, repr(exc)
 
 
-@events.quitting.add_listener
-def check_nfr(environment, **kwargs):
-    stats = environment.runner.stats
-    failures = []
+def run_case(case: EndpointCase) -> bool:
+    with cf.ThreadPoolExecutor(max_workers=case.workers) as pool:
+        results = list(pool.map(lambda _: request_once(case), range(case.requests)))
 
-    targets = {
-        "GET /vehicles/available": ("GET",  500),
-        "GET /plan-fact":          ("GET", 1000),
-        "GET /vehicles/gantt":     ("GET", 2000),
-    }
+    latencies = [elapsed for elapsed, _, _ in results]
+    failures = [(status, body) for _, status, body in results if status < 200 or status >= 300]
+    p95 = percentile(latencies, 95)
+    avg = statistics.mean(latencies) if latencies else 0.0
 
-    for name, (method, threshold_ms) in targets.items():
-        entry = stats.entries.get((name, method))
-        if entry and entry.num_requests > 0:
-            p95 = entry.get_response_time_percentile(0.95)
-            if p95 > threshold_ms:
-                failures.append(f"NFR FAIL: {name} p95={p95:.0f}ms > {threshold_ms}ms")
-
+    print(
+        f"{case.name}: requests={case.requests} workers={case.workers} "
+        f"avg={avg:.1f}ms p95={p95:.1f}ms target={case.target_ms:.0f}ms "
+        f"failures={len(failures)}"
+    )
     if failures:
-        print("\n".join(failures))
-        environment.process_exit_code = 1
+        print(f"  first failure: HTTP {failures[0][0]} {failures[0][1]}")
+        return False
+    if p95 > case.target_ms:
+        print(f"  NFR FAIL: p95 {p95:.1f}ms > {case.target_ms:.0f}ms")
+        return False
+    return True
+
+
+def main() -> int:
+    cases = [
+        EndpointCase(
+            name="GET /vehicles/available",
+            method="GET",
+            path="/api/admin/transport/vehicles/available",
+            target_ms=500,
+            requests=70,
+            workers=8,
+            params={"shipment_time": SHIP_TIME, "pallets": 0},
+        ),
+        EndpointCase(
+            name="GET /plan-fact",
+            method="GET",
+            path="/api/admin/transport/plan-fact",
+            target_ms=1000,
+            requests=60,
+            workers=8,
+            params={"date_from": "2026-05-01", "date_to": PLAN_DATE},
+        ),
+        EndpointCase(
+            name="GET /vehicles/gantt",
+            method="GET",
+            path="/api/admin/transport/vehicles/gantt",
+            target_ms=500,
+            requests=50,
+            workers=8,
+            params={"gantt_date": PLAN_DATE},
+        ),
+    ]
+
+    ok = True
+    for case in cases:
+        ok = run_case(case) and ok
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

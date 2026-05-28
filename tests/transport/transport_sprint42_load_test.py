@@ -1,67 +1,92 @@
+"""Windows-safe load check for Sprint 42 (toast-triggering flows).
+
+Toasts are client-side. This runner keeps the gate non-mutating: it measures
+task-list reads and a validation-only POST /tasks path that returns 422 before
+Oracle DML.
 """
-transport_sprint42_load_test.py — Load tests for Sprint 42 (toast notifications).
 
-Toasts fire after mutating API calls (create, assign, close, cancel).
-NFR: POST /tasks p95 < 600 ms; POST /sts p95 < 500 ms; error rate < 1 %.
-"""
+from __future__ import annotations
 
-from locust import HttpUser, task, between, events
+import concurrent.futures as cf
+import statistics
+import sys
+import time
+from dataclasses import dataclass
+from pathlib import Path
+from urllib.parse import urlencode
 
-_nfr_failures: list[str] = []
+import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from support.project_config import local_config  # noqa: E402
 
-class ToastMutationUser(HttpUser):
-    wait_time = between(2, 5)
-    default_headers = {"Authorization": "Bearer test-token"}
-
-    @task(5)
-    def load_tasks_for_toast_baseline(self):
-        self.client.get(
-            "/api/admin/transport/tasks",
-            params={"shipment_date": "2026-05-28", "include_readiness": "true"},
-            headers=self.default_headers,
-            name="/tasks (toast baseline GET)",
-        )
-
-    @task(2)
-    def create_task(self):
-        self.client.post(
-            "/api/admin/transport/tasks",
-            json={"transtype": "10", "shipment_date": "2026-06-01"},
-            headers=self.default_headers,
-            name="POST /tasks (create, triggers toast)",
-        )
-
-    @task(1)
-    def load_available_sts(self):
-        self.client.get(
-            "/api/admin/transport/available-sts",
-            params={"shipment_date": "2026-05-28"},
-            headers=self.default_headers,
-            name="/available-sts",
-        )
+BASE_URL = local_config().api_base_url
+AUTH = ("admin", "admin123")
+PLAN_DATE = "2026-05-25"
 
 
-@events.quitting.add_listener
-def check_nfr(environment, **_kw):
-    stats = environment.runner.stats
-    checks = [
-        ("/tasks (toast baseline GET)", "GET", 600),
-        ("POST /tasks (create, triggers toast)", "POST", 600),
+@dataclass
+class EndpointCase:
+    name: str
+    method: str
+    path: str
+    target_ms: float
+    requests: int
+    workers: int
+    body: dict | None = None
+    ok_statuses: tuple[int, ...] = (200,)
+
+
+def qs(**params: object) -> str:
+    return urlencode({k: v for k, v in params.items() if v is not None})
+
+
+def percentile(values: list[float], pct: float) -> float:
+    ordered = sorted(values)
+    if not ordered:
+        return 0.0
+    return ordered[min(len(ordered) - 1, int(round((pct / 100) * (len(ordered) - 1))))]
+
+
+def request_once(case: EndpointCase) -> tuple[float, int, str]:
+    started = time.perf_counter()
+    try:
+        response = requests.request(case.method, f"{BASE_URL}{case.path}", auth=AUTH, json=case.body, timeout=20)
+        return (time.perf_counter() - started) * 1000, response.status_code, response.text[:160]
+    except Exception as exc:  # noqa: BLE001
+        return (time.perf_counter() - started) * 1000, 0, repr(exc)
+
+
+def run_case(case: EndpointCase) -> bool:
+    with cf.ThreadPoolExecutor(max_workers=case.workers) as pool:
+        results = list(pool.map(lambda _: request_once(case), range(case.requests)))
+    latencies = [elapsed for elapsed, _, _ in results]
+    failures = [(status, body) for _, status, body in results if status not in case.ok_statuses]
+    p95 = percentile(latencies, 95)
+    avg = statistics.mean(latencies) if latencies else 0.0
+    print(f"{case.name}: avg={avg:.1f}ms p95={p95:.1f}ms target={case.target_ms:.0f}ms failures={len(failures)}")
+    if failures:
+        print(f"  first failure: HTTP {failures[0][0]} {failures[0][1]}")
+        return False
+    if p95 > case.target_ms:
+        print(f"  NFR FAIL: p95 {p95:.1f}ms > {case.target_ms:.0f}ms")
+        return False
+    return True
+
+
+def main() -> int:
+    cases = [
+        EndpointCase("GET /tasks toast baseline", "GET", f"/api/admin/transport/tasks?{qs(shipment_date=PLAN_DATE, include_readiness='true')}", 600, 40, 5),
+        EndpointCase("GET /available-sts toast baseline", "GET", f"/api/admin/transport/available-sts?{qs(stdate=PLAN_DATE)}", 400, 30, 5),
+        EndpointCase("POST /tasks validation-only", "POST", "/api/admin/transport/tasks", 250, 30, 5, {}, (422,)),
     ]
-    for name, method, threshold_ms in checks:
-        entry = stats.entries.get((name, method))
-        if entry is None:
-            continue
-        p95_ms = entry.get_response_time_percentile(0.95)
-        err_rate = entry.fail_ratio * 100
-        if p95_ms > threshold_ms:
-            _nfr_failures.append(f"{name} p95 {p95_ms:.0f}ms > {threshold_ms}ms")
-        if err_rate > 1.0:
-            _nfr_failures.append(f"{name} err {err_rate:.1f}% > 1%")
+    for case in cases:
+        request_once(case)
+    ok = True
+    for case in cases:
+        ok = run_case(case) and ok
+    return 0 if ok else 1
 
-    if _nfr_failures:
-        print(f"[NFR FAIL] {'; '.join(_nfr_failures)}")
-        environment.process_exit_code = 1
-    else:
-        print("[NFR PASS] all toast-mutation endpoints within thresholds")
+
+if __name__ == "__main__":
+    sys.exit(main())

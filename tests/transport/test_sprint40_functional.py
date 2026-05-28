@@ -17,8 +17,8 @@ def make_task(pallet_count: int = 0, weight: float = 0.0,
 def compute_day_summary(tasks: list[dict]) -> dict:
     return {
         "total_tasks":   len(tasks),
-        "total_pallets": sum(t.get("PALLET_COUNT", 0) for t in tasks),
-        "total_weight":  sum(t.get("TEMP_WEIGHT", 0.0) for t in tasks),
+        "total_pallets": sum(t.get("PALLET_COUNT") or 0 for t in tasks),
+        "total_weight":  sum(t.get("TEMP_WEIGHT") or 0.0 for t in tasks),
         "closed_tasks":  sum(1 for t in tasks if t.get("CONDITION") == "Отгружен"),
     }
 

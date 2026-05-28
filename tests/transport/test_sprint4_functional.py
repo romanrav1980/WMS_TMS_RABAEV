@@ -31,7 +31,8 @@ from datetime import date, timedelta
 BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
 AUTH = ("admin", "admin123")
 TODAY = date.today().isoformat()
-TOMORROW = (date.today() + timedelta(days=1)).isoformat()
+SPRINT4_DATE = os.environ.get("TMS_SPRINT4_STDATE", "2026-05-25")
+TOMORROW = SPRINT4_DATE
 
 
 # ---------------------------------------------------------------------------

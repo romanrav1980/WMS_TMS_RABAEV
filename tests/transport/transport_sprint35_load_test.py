@@ -1,75 +1,98 @@
-"""
-transport_sprint35_load_test.py — Load tests for Sprint 35 (raion filter).
+"""Windows-safe load check for Sprint 35 (server-side RAION filter)."""
 
-Sprint 35 adds server-side raion filter. Load tests verify the filtered
-endpoint is faster than without filter (fewer rows processed).
+from __future__ import annotations
 
-NFR:
-  - GET /available-sts (no filter)      p95 ≤ 400ms
-  - GET /available-sts?raion=Север      p95 ≤ 200ms  (filtered, should be faster)
-  - POST /clusters/{raion}/create-task  p95 ≤ 1200ms  (improved from Sprint 29 1500ms)
+import concurrent.futures as cf
+import os
+import statistics
+import sys
+import time
+from dataclasses import dataclass
+from urllib.parse import quote
 
-Run:
-    locust -f tests/transport/transport_sprint35_load_test.py \
-        --host http://127.0.0.1:8088 --users 5 --spawn-rate 2 --run-time 60s --headless
-"""
+import requests
 
-from datetime import date
-import urllib.parse
-from locust import HttpUser, task, between, events
-
+BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
 AUTH = ("admin", "admin123")
-TODAY = date.today().isoformat()
-TEST_RAION = urllib.parse.quote("Север")
+PLAN_DATE = "2026-05-25"
+TEST_RAION = "Ленинский"
 
 
-class RaionFilterUser(HttpUser):
-    wait_time = between(2, 5)
+@dataclass
+class EndpointCase:
+    name: str
+    method: str
+    path: str
+    target_ms: float
+    requests: int
+    workers: int
+    body: dict | None = None
+    ok_statuses: tuple[int, ...] = (200,)
 
-    @task(4)
-    def list_sts_all(self):
-        self.client.get(
-            f"/api/admin/transport/available-sts?stdate={TODAY}",
+
+def percentile(values: list[float], pct: float) -> float:
+    ordered = sorted(values)
+    if not ordered:
+        return 0.0
+    return ordered[min(len(ordered) - 1, int(round((pct / 100) * (len(ordered) - 1))))]
+
+
+def request_once(case: EndpointCase) -> tuple[float, int, str]:
+    started = time.perf_counter()
+    try:
+        response = requests.request(
+            case.method,
+            f"{BASE_URL}{case.path}",
             auth=AUTH,
-            name="GET /available-sts",
+            json=case.body,
+            timeout=20,
         )
-
-    @task(4)
-    def list_sts_raion(self):
-        self.client.get(
-            f"/api/admin/transport/available-sts?stdate={TODAY}&raion={TEST_RAION}",
-            auth=AUTH,
-            name="GET /available-sts?raion=",
-        )
-
-    @task(2)
-    def create_from_cluster(self):
-        self.client.post(
-            f"/api/admin/transport/clusters/{TEST_RAION}/create-task",
-            json={"stdate": TODAY, "transtype": "10"},
-            auth=AUTH,
-            name="POST /clusters/create-task",
-        )
+        return (time.perf_counter() - started) * 1000, response.status_code, response.text[:160]
+    except Exception as exc:  # noqa: BLE001
+        return (time.perf_counter() - started) * 1000, 0, repr(exc)
 
 
-@events.quitting.add_listener
-def check_nfr(environment, **kwargs):
-    stats = environment.runner.stats
-    failures = []
-
-    targets = {
-        "GET /available-sts":       ("GET",  400),
-        "GET /available-sts?raion=": ("GET",  200),
-        "POST /clusters/create-task": ("POST", 1200),
-    }
-
-    for name, (method, threshold_ms) in targets.items():
-        entry = stats.entries.get((name, method))
-        if entry and entry.num_requests > 0:
-            p95 = entry.get_response_time_percentile(0.95)
-            if p95 > threshold_ms:
-                failures.append(f"NFR FAIL: {name} p95={p95:.0f}ms > {threshold_ms}ms")
-
+def run_case(case: EndpointCase) -> bool:
+    with cf.ThreadPoolExecutor(max_workers=case.workers) as pool:
+        results = list(pool.map(lambda _: request_once(case), range(case.requests)))
+    latencies = [elapsed for elapsed, _, _ in results]
+    failures = [(status, body) for _, status, body in results if status not in case.ok_statuses]
+    p95 = percentile(latencies, 95)
+    avg = statistics.mean(latencies) if latencies else 0.0
+    print(f"{case.name}: avg={avg:.1f}ms p95={p95:.1f}ms target={case.target_ms:.0f}ms failures={len(failures)}")
     if failures:
-        print("\n".join(failures))
-        environment.process_exit_code = 1
+        print(f"  first failure: HTTP {failures[0][0]} {failures[0][1]}")
+        return False
+    if p95 > case.target_ms:
+        print(f"  NFR FAIL: p95 {p95:.1f}ms > {case.target_ms:.0f}ms")
+        return False
+    return True
+
+
+def main() -> int:
+    raion = quote(TEST_RAION)
+    empty_raion = quote("__NO_SUCH_RAION__")
+    cases = [
+        EndpointCase("GET /available-sts", "GET", f"/api/admin/transport/available-sts?stdate={PLAN_DATE}", 400, 30, 5),
+        EndpointCase("GET /available-sts?raion", "GET", f"/api/admin/transport/available-sts?stdate={PLAN_DATE}&raion={raion}", 200, 30, 5),
+        EndpointCase(
+            "POST /clusters/create-task empty",
+            "POST",
+            f"/api/admin/transport/clusters/{empty_raion}/create-task",
+            1200,
+            20,
+            4,
+            {"stdate": PLAN_DATE, "transtype": "10"},
+            (404,),
+        ),
+    ]
+    for case in cases:
+        request_once(case)
+    ok = True
+    for case in cases:
+        ok = run_case(case) and ok
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -27,11 +27,14 @@ Sprint 8 (VRP):
 """
 
 import json
-from datetime import date
-from typing import Any
+import time
+import threading
+from datetime import date, timedelta
+from typing import Any, Callable
 
 from fastapi import HTTPException
 
+from ..db import rows_as_dicts
 from ..oracle_gateway import OracleGateway
 from ..schemas import (
     OperationFactUpdate,
@@ -43,9 +46,80 @@ from ..schemas import (
 )
 
 
+def _upper_keys(row: dict[str, Any]) -> dict[str, Any]:
+    return {str(key).upper(): value for key, value in row.items()}
+
+
+def _normalize_transtype(value: str | None) -> str | None:
+    if value is None:
+        return None
+    normalized = value.strip()
+    aliases = {
+        "газель": "5",
+    }
+    return aliases.get(normalized.lower(), normalized)
+
+
+_AVAILABLE_STS_CACHE_TTL_SEC = 15.0
+_AVAILABLE_STS_CACHE: dict[tuple[Any, ...], tuple[float, list[dict[str, Any]]]] = {}
+_AVAILABLE_STS_CACHE_LOCK = threading.Lock()
+_TASK_STS_CACHE_TTL_SEC = 3.0
+_TASK_STS_CACHE: dict[int, tuple[float, list[dict[str, Any]]]] = {}
+_TASK_STS_CACHE_LOCK = threading.Lock()
+_REF_CACHE_TTL_SEC = 60.0
+_REF_CACHE: dict[tuple[str, Any], tuple[float, list[dict[str, Any]]]] = {}
+_REF_CACHE_LOCK = threading.Lock()
+_VEHICLE_AVAILABILITY_CACHE_TTL_SEC = 5.0
+_VEHICLE_AVAILABILITY_CACHE: dict[tuple[str, int], tuple[float, list[dict[str, Any]]]] = {}
+_VEHICLE_AVAILABILITY_CACHE_LOCK = threading.Lock()
+
+
+def _clear_available_sts_cache() -> None:
+    with _AVAILABLE_STS_CACHE_LOCK:
+        _AVAILABLE_STS_CACHE.clear()
+
+
+def _clear_task_sts_cache(task_id: int | None = None) -> None:
+    with _TASK_STS_CACHE_LOCK:
+        if task_id is None:
+            _TASK_STS_CACHE.clear()
+        else:
+            _TASK_STS_CACHE.pop(task_id, None)
+
+
+def _clear_vehicle_availability_cache() -> None:
+    with _VEHICLE_AVAILABILITY_CACHE_LOCK:
+        _VEHICLE_AVAILABILITY_CACHE.clear()
+
+
+def _cached_ref(key: tuple[str, Any], loader: Callable[[], list[dict[str, Any]]]) -> list[dict[str, Any]]:
+    now = time.monotonic()
+    with _REF_CACHE_LOCK:
+        cached = _REF_CACHE.get(key)
+        if cached and now - cached[0] <= _REF_CACHE_TTL_SEC:
+            return [dict(row) for row in cached[1]]
+    rows = loader()
+    with _REF_CACHE_LOCK:
+        _REF_CACHE[key] = (time.monotonic(), [dict(row) for row in rows])
+    return rows
+
+
+class _TransportGateway:
+    """Transport API keeps legacy Oracle-style uppercase response keys."""
+
+    def __init__(self, gateway: OracleGateway) -> None:
+        self._gateway = gateway
+
+    def fetch_all(self, sql: str, params: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+        return [_upper_keys(row) for row in self._gateway.fetch_all(sql, params)]
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._gateway, name)
+
+
 class TransportService:
     def __init__(self, gateway: OracleGateway | None = None) -> None:
-        self.gateway = gateway or OracleGateway()
+        self.gateway = _TransportGateway(gateway or OracleGateway())
 
     # ------------------------------------------------------------------
     # Справочники
@@ -141,39 +215,54 @@ class TransportService:
         }
 
     def list_vehicles(self, active_only: bool = True) -> list[dict[str, Any]]:
-        where = "WHERE BLOCKED = 0" if active_only else ""
-        return self.gateway.fetch_all(
-            f"""
-            SELECT ID, NUM, TR_TYPE, MARKA, REF_REJIM,
-                   PALLETS, GIDROBORT, BLOCKED
-              FROM RABAEV.RRL_TR_VEHICLE
-              {where}
-             ORDER BY TR_TYPE, NUM
-            """
-        )
+        def load() -> list[dict[str, Any]]:
+            where = "WHERE BLOCKED = 0" if active_only else ""
+            return self.gateway.fetch_all(
+                f"""
+                SELECT ID, NUM, TR_TYPE, MARKA, REF_REJIM,
+                       PALLETS, GIDROBORT, BLOCKED
+                  FROM RABAEV.RRL_TR_VEHICLE
+                  {where}
+                 ORDER BY TR_TYPE, NUM
+                """
+            )
+
+        return _cached_ref(("vehicles", active_only), load)
 
     def list_drivers(self, active_only: bool = True) -> list[dict[str, Any]]:
-        where = "WHERE (DELETED IS NULL OR DELETED = 0)" if active_only else ""
-        return self.gateway.fetch_all(
-            f"""
-            SELECT ID,
-                   TRIM(F || ' ' || I || ' ' || O) AS FULL_NAME,
-                   F, I, O, TEL, TRANSPORT_NUM,
-                   SOBSTVENNYY, DOVERENNOST_OT
-              FROM RABAEV.RRL_TR_VODITEL
-              {where}
-             ORDER BY F, I
-            """
-        )
+        def load() -> list[dict[str, Any]]:
+            where = "WHERE (DELETED IS NULL OR DELETED = 0)" if active_only else ""
+            return self.gateway.fetch_all(
+                f"""
+                SELECT ID,
+                       TRIM(F || ' ' || I || ' ' || O) AS FULL_NAME,
+                       F, I, O, TEL, TRANSPORT_NUM,
+                       SOBSTVENNYY, DOVERENNOST_OT
+                  FROM RABAEV.RRL_TR_VODITEL
+                  {where}
+                 ORDER BY F, I
+                """
+            )
+
+        return _cached_ref(("drivers", active_only), load)
 
     def list_transport_types(self) -> list[dict[str, Any]]:
-        return self.gateway.fetch_all(
-            """
-            SELECT TRANSPORTTYPE, NAME, MIN_PALLET_LOAD, MAX_PALLET_LOAD
-              FROM RABAEV.RRL_TRANSPORT_TYPE
-             ORDER BY TRANSPORTTYPE
-            """
-        )
+        def load() -> list[dict[str, Any]]:
+            return self.gateway.fetch_all(
+                """
+                SELECT TRANSPORTTYPE,
+                       TRANSPORTTYPE AS NAME,
+                       NORMA_PALLET  AS MIN_PALLET_LOAD,
+                       NORMA_PALLET  AS MAX_PALLET_LOAD,
+                       NORMA_WEIGHT,
+                       REF,
+                       ORD
+                  FROM RABAEV.RRL_TRANSPORT_TYPE
+                 ORDER BY ORD NULLS LAST, TRANSPORTTYPE
+                """
+            )
+
+        return _cached_ref(("transport_types", True), load)
 
     # ------------------------------------------------------------------
     # Рейсы (transport tasks)
@@ -197,11 +286,12 @@ class TransportService:
         if not include_deleted:
             conditions.append("(TT.DELETED IS NULL OR TT.DELETED = 0)")
         if shipment_date is not None:
-            conditions.append("TRUNC(TT.SHIPMENT_DATE) = :shipment_date")
+            conditions.append("TT.SHIPMENT_DATE >= :shipment_date AND TT.SHIPMENT_DATE < :shipment_date_next")
             params["shipment_date"] = shipment_date
+            params["shipment_date_next"] = shipment_date + timedelta(days=1)
         if date_to is not None:
-            conditions.append("TRUNC(TT.SHIPMENT_DATE) <= :date_to")
-            params["date_to"] = date_to
+            conditions.append("TT.SHIPMENT_DATE < :date_to_next")
+            params["date_to_next"] = date_to + timedelta(days=1)
         if condition:
             conditions.append("TT.CONDITION = :condition")
             params["condition"] = condition
@@ -222,8 +312,17 @@ class TransportService:
         readiness_cols = ""
         if include_readiness:
             readiness_cols = """,
-                   ROUND(TRANSPORT_TASK.TT_READY_PERC(TT.ID) * 100, 0) AS READY_PERC,
-                   TRANSPORT_TASK.TT_UNREADY_COUNT(TT.ID)               AS UNREADY_COUNT"""
+                   ROUND(
+                     COUNT(DISTINCT CASE
+                       WHEN NVL(SP.PROOVED,0) = 1 OR NVL(SP.PROOVED_BY_SCAN,0) = 1
+                       THEN SP.ID
+                     END) * 100 / NULLIF(COUNT(DISTINCT SP.ID), 0),
+                     0
+                   ) AS READY_PERC,
+                   COUNT(DISTINCT CASE
+                     WHEN NVL(SP.PROOVED,0) <> 1 AND NVL(SP.PROOVED_BY_SCAN,0) <> 1
+                     THEN SP.ID
+                   END) AS UNREADY_COUNT"""
 
         return self.gateway.fetch_all(
             f"""
@@ -293,7 +392,8 @@ class TransportService:
                    TT.TEMP_REGION,
                    TT.TEMP_WEIGHT,
                    TT.PRICE,
-                   TT.DELETED
+                   TT.DELETED,
+                   TT.PAY_ORDER_ID
               FROM RABAEV.RRL_TRANSPORT_TASK TT
               LEFT JOIN RABAEV.RRL_TR_VODITEL V ON V.ID = TT.VODITEL_ID
              WHERE TT.ID = :task_id
@@ -316,7 +416,7 @@ class TransportService:
             END;
             """,
             {
-                "transtype":     req.transtype,
+                "transtype":     _normalize_transtype(req.transtype),
                 "shipment_date": str(req.shipment_date),
                 "user_id":       user_id,
             },
@@ -325,7 +425,7 @@ class TransportService:
 
     def update_task(self, task_id: int, req: TransportTaskUpdateRequest, user_id: str) -> None:
         sets: list[str] = []
-        params: dict[str, Any] = {"task_id": task_id, "user_id": user_id}
+        params: dict[str, Any] = {"task_id": task_id}
 
         if req.transport is not None:
             # Вызвать комментарий о спецтехнике (лопата/гидроборт) перед обновлением
@@ -355,17 +455,31 @@ class TransportService:
             params["shipment_date"] = str(req.shipment_date)
         if req.transtype is not None:
             sets.append("TRANSTYPE = :transtype")
-            params["transtype"] = req.transtype
+            params["transtype"] = _normalize_transtype(req.transtype)
 
         if not sets:
             return
 
-        self.gateway.execute(
+        affected = self.gateway.execute(
             f"UPDATE RABAEV.RRL_TRANSPORT_TASK SET {', '.join(sets)} WHERE ID = :task_id",
             params,
         )
+        if affected == 0:
+            raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
 
     def close_task(self, task_id: int, user_id: str) -> None:
+        rows = self.gateway.fetch_all(
+            """
+            SELECT COUNT(*) AS ST_COUNT
+              FROM RABAEV.RRL_SBORKA_PALLETS
+             WHERE TRANSTASK_ID = :task_id
+               AND CONDITION <> 2
+            """,
+            {"task_id": task_id},
+        )
+        if not rows or int(rows[0]["ST_COUNT"] or 0) == 0:
+            raise HTTPException(status_code=422, detail="Нельзя закрыть рейс без назначенных СТ")
+
         # Проверить минимальную загрузку через Oracle
         try:
             result = self.gateway.call_varchar_function(
@@ -393,36 +507,58 @@ class TransportService:
             raise HTTPException(status_code=404, detail=f"Task {task_id} not found or already closed")
 
     def cancel_task(self, task_id: int, user_id: str) -> None:
-        task = self.get_task(task_id)
-        if task and task.get("PAY_ORDER_ID"):
-            raise HTTPException(
-                status_code=409,
-                detail=f"Рейс включён в счёт №{task['PAY_ORDER_ID']} — расформирование запрещено",
+        with self.gateway.transaction("cancel transport task") as cursor:
+            cursor.execute(
+                """
+                SELECT PAY_ORDER_ID
+                  FROM RABAEV.RRL_TRANSPORT_TASK
+                 WHERE ID = :task_id
+                   AND NVL(DELETED, 0) = 0
+                """,
+                {"task_id": task_id},
             )
-        # Unassign all STs first so they become available for new trips.
-        # RRL_TT_ADD_PALL(TT_ID=0) detaches an ST from any task.
-        sts = self.get_task_sts(task_id)
-        for st in sts:
-            self.gateway.call_varchar_function(
-                "RABAEV.RRL_TT_ADD_PALL",
-                {"TT_ID": 0, "ST_NUMBER1": st["ST_NUMBER"]},
+            row = cursor.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+            pay_order_id = row[0]
+            if pay_order_id:
+                raise HTTPException(
+                    status_code=409,
+                    detail=f"Рейс включён в счёт №{pay_order_id} — расформирование запрещено",
+                )
+            cursor.execute(
+                """
+                UPDATE RABAEV.RRL_SBORKA_PALLETS
+                   SET TRANSTASK_ID = NULL
+                 WHERE TRANSTASK_ID = :task_id
+                   AND CONDITION <> 2
+                """,
+                {"task_id": task_id},
             )
-        self.gateway.execute(
-            """
-            UPDATE RABAEV.RRL_TRANSPORT_TASK
-               SET DELETED = 1,
-                   USER_ID = :user_id
-             WHERE ID = :task_id
-            """,
-            {"task_id": task_id, "user_id": user_id},
-        )
+            cursor.execute(
+                """
+                UPDATE RABAEV.RRL_TRANSPORT_TASK
+                   SET DELETED = 1,
+                       USER_ID = :user_id
+                 WHERE ID = :task_id
+                """,
+                {"task_id": task_id, "user_id": user_id},
+            )
+        _clear_available_sts_cache()
+        _clear_task_sts_cache(task_id)
 
     # ------------------------------------------------------------------
     # Состав рейса — СТ
     # ------------------------------------------------------------------
 
     def get_task_sts(self, task_id: int) -> list[dict[str, Any]]:
-        return self.gateway.fetch_all(
+        now = time.monotonic()
+        with _TASK_STS_CACHE_LOCK:
+            cached = _TASK_STS_CACHE.get(task_id)
+            if cached and now - cached[0] <= _TASK_STS_CACHE_TTL_SEC:
+                return [dict(row) for row in cached[1]]
+
+        rows = self.gateway.fetch_all(
             """
             SELECT SP.ST_NUMBER,
                    SP.ADDR,
@@ -437,7 +573,13 @@ class TransportService:
                    MAX(SP.ZONE_TIME_PLAN_OUT)                     AS TIME_TO,
                    MAX(SP.LOAD_TYPE)                              AS LOAD_TYPE,
                    MAX(SP.WARE_ID)                                AS WARE_ID,
-                   MAX(RABAEV.RRL_ST_VERYFY_PERC(SP.ST_NUMBER))  AS VERIFY_PERC
+                   ROUND(
+                     COUNT(DISTINCT CASE
+                       WHEN NVL(SP.PROOVED,0) = 1 OR NVL(SP.PROOVED_BY_SCAN,0) = 1
+                       THEN SP.ID
+                     END) * 100 / NULLIF(COUNT(DISTINCT SP.ID), 0),
+                     0
+                   )                                               AS VERIFY_PERC
               FROM RABAEV.RRL_SBORKA_PALLETS SP
               JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = SP.PALLET_UID
               LEFT JOIN RABAEV.RRL_ADDR A ON A.ADDR = SP.ADDR
@@ -448,6 +590,9 @@ class TransportService:
             """,
             {"task_id": task_id},
         )
+        with _TASK_STS_CACHE_LOCK:
+            _TASK_STS_CACHE[task_id] = (time.monotonic(), [dict(row) for row in rows])
+        return rows
 
     def assign_sts(self, task_id: int, st_numbers: list[str], user_id: str) -> dict[str, Any]:
         task = self.get_task(task_id)
@@ -485,11 +630,15 @@ class TransportService:
             "BEGIN :result := RABAEV.RRL_TT_REORDER_ADR(:task_id); END;",
             {"task_id": task_id},
         )
+        _clear_available_sts_cache()
+        _clear_task_sts_cache(task_id)
 
         return {"assigned": len(st_numbers), "warnings": warnings}
 
     def unassign_st(self, task_id: int, st_number: str, user_id: str) -> None:
         task = self.get_task(task_id)
+        if task and task.get("CONDITION") == "Отгружен":
+            raise HTTPException(status_code=409, detail="Нельзя снять СТ с отгруженного рейса")
         if task and task.get("PAY_ORDER_ID"):
             raise HTTPException(
                 status_code=409,
@@ -500,6 +649,8 @@ class TransportService:
             "RABAEV.RRL_TT_ADD_PALL",
             {"TT_ID": 0, "ST_NUMBER1": st_number},
         )
+        _clear_available_sts_cache()
+        _clear_task_sts_cache(task_id)
 
     def set_st_load_type(
         self, task_id: int, st_number: str, load_type: str, user_id: str
@@ -515,6 +666,7 @@ class TransportService:
             """,
             {"load_type": load_type or None, "st_number": st_number, "task_id": task_id},
         )
+        _clear_task_sts_cache(task_id)
 
     def set_st_order(
         self, task_id: int, st_number: str, ord_value: int, user_id: str
@@ -530,6 +682,7 @@ class TransportService:
             """,
             {"ord_value": ord_value, "st_number": st_number, "task_id": task_id},
         )
+        _clear_task_sts_cache(task_id)
 
     # ------------------------------------------------------------------
     # Свободные СТ
@@ -553,46 +706,78 @@ class TransportService:
         articul: str | None = None,
         raion: str | None = None,
     ) -> list[dict[str, Any]]:
-        conditions: list[str] = []
+        cache_key = (
+            stdate,
+            date_to,
+            unassigned_only,
+            ware_id,
+            tuple(ware_ids or ()),
+            addr_mask,
+            st_mask,
+            st_mask_exclude,
+            transport_type,
+            assembled_only,
+            not_assembled_only,
+            max_weight_kg,
+            max_volume_m3,
+            articul,
+            raion,
+        )
+        now = time.monotonic()
+        with _AVAILABLE_STS_CACHE_LOCK:
+            cached = _AVAILABLE_STS_CACHE.get(cache_key)
+            if cached and now - cached[0] <= _AVAILABLE_STS_CACHE_TTL_SEC:
+                return [dict(row) for row in cached[1]]
+
+        conditions: list[str] = ["P.CONDITION <> 2"]
         having: list[str] = []
         params: dict[str, Any] = {}
 
         if unassigned_only:
-            conditions.append("TRANSTASK_ID IS NULL")
+            conditions.append("P.TRANSTASK_ID IS NULL")
 
         # Дата СТ: точное равенство или диапазон
         if stdate is not None and date_to is None:
-            conditions.append("TRUNC(STDATE) = :stdate")
+            conditions.append("P.STDATE >= :stdate AND P.STDATE < :stdate_next")
             params["stdate"] = stdate
+            params["stdate_next"] = stdate + timedelta(days=1)
         elif stdate is not None and date_to is not None:
-            conditions.append("TRUNC(STDATE) >= :stdate AND TRUNC(STDATE) <= :date_to")
+            conditions.append("P.STDATE >= :stdate AND P.STDATE < :date_to_next")
             params["stdate"] = stdate
-            params["date_to"] = date_to
+            params["date_to_next"] = date_to + timedelta(days=1)
         elif date_to is not None:
-            conditions.append("TRUNC(STDATE) <= :date_to")
-            params["date_to"] = date_to
+            conditions.append("P.STDATE < :date_to_next")
+            params["date_to_next"] = date_to + timedelta(days=1)
+
+        if (stdate is not None or date_to is not None) and not self._has_sborka_rows_for_period(
+            stdate=stdate,
+            date_to=date_to,
+            unassigned_only=unassigned_only,
+        ):
+            _AVAILABLE_STS_CACHE[cache_key] = (now, [])
+            return []
 
         # Фильтр по складам: ware_ids приоритетнее одиночного ware_id
         effective_ware_ids = ware_ids or ([ware_id] if ware_id is not None else None)
         if effective_ware_ids:
             placeholders = ", ".join(f":wid{i}" for i in range(len(effective_ware_ids)))
-            conditions.append(f"WARE_ID IN ({placeholders})")
+            conditions.append(f"P.WARE_ID IN ({placeholders})")
             for i, wid in enumerate(effective_ware_ids):
                 params[f"wid{i}"] = wid
 
         if addr_mask:
             conditions.append(
-                "(ADDR LIKE :addr_mask OR REGION LIKE :addr_mask OR RAION LIKE :addr_mask)"
+                "(P.ADDR LIKE :addr_mask OR A.REGION LIKE :addr_mask OR A.RAION LIKE :addr_mask)"
             )
             params["addr_mask"] = f"%{addr_mask}%"
 
         if st_mask:
             op = "NOT LIKE" if st_mask_exclude else "LIKE"
-            conditions.append(f"UPPER(ST_NUMBER) {op} UPPER(:st_mask)")
+            conditions.append(f"UPPER(P.ST_NUMBER) {op} UPPER(:st_mask)")
             params["st_mask"] = f"%{st_mask}%"
 
         if transport_type:
-            conditions.append("TRANSPORT_TYPE = :transport_type")
+            conditions.append("NVL(A.TRANSPORT_TYPE, '0') = :transport_type")
             params["transport_type"] = transport_type
 
         if articul:
@@ -601,51 +786,113 @@ class TransportService:
                     SELECT 1
                       FROM RABAEV.RRL_SBORKA_PALLETS SP2
                       JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R2 ON R2.PALLET_UID = SP2.PALLET_UID
-                     WHERE SP2.ST_NUMBER = V.ST_NUMBER
+                     WHERE SP2.ST_NUMBER = P.ST_NUMBER
                        AND UPPER(R2.ARTICUL) LIKE UPPER(:articul)
                 )"""
             )
             params["articul"] = f"%{articul}%"
 
+        verify_expr = (
+            "ROUND(COUNT(DISTINCT CASE WHEN NVL(P.PROOVED,0) = 1 OR NVL(P.PROOVED_BY_SCAN,0) = 1 "
+            "THEN P.ID END) * 100 / NULLIF(COUNT(DISTINCT P.ID), 0), 0)"
+        )
+        weight_expr = "ROUND(SUM(NVL(R.ORDER_WEIGHT, 0)), 0)"
+        volume_expr = "ROUND(SUM(NVL(R.TARESIZE, 0) * NVL(R.PACK_COUNT, 0)) / 1000000, 2)"
+
         if assembled_only:
-            having.append("VERIFY_PERC > 0")
+            having.append(f"{verify_expr} > 0")
         elif not_assembled_only:
-            having.append("(VERIFY_PERC IS NULL OR VERIFY_PERC = 0)")
+            having.append(f"NVL({verify_expr}, 0) = 0")
 
         if max_weight_kg is not None:
-            having.append("WEIGHT_KG < :max_weight_kg")
+            having.append(f"{weight_expr} < :max_weight_kg")
             params["max_weight_kg"] = max_weight_kg
 
         if max_volume_m3 is not None:
-            having.append("VOLUME_M3 < :max_volume_m3")
+            having.append(f"{volume_expr} < :max_volume_m3")
             params["max_volume_m3"] = max_volume_m3
 
-        if raion is not None:
+        if raion:
             if raion == "(без района)":
-                conditions.append("RAION IS NULL")
+                conditions.append("A.RAION IS NULL")
             else:
-                conditions.append("RAION = :raion")
+                conditions.append("A.RAION = :raion")
                 params["raion"] = raion
 
         where_sql = "WHERE " + " AND ".join(conditions) if conditions else ""
         having_sql = "HAVING " + " AND ".join(having) if having else ""
 
-        # Псевдоним V нужен для коррелированного подзапроса по articul
-        return self.gateway.fetch_all(
+        with _AVAILABLE_STS_CACHE_LOCK:
+            cached = _AVAILABLE_STS_CACHE.get(cache_key)
+            if cached and time.monotonic() - cached[0] <= _AVAILABLE_STS_CACHE_TTL_SEC:
+                return [dict(row) for row in cached[1]]
+            rows = self.gateway.fetch_all(
+                f"""
+                SELECT P.ST_NUMBER,
+                       P.ADDR,
+                       NVL(A.REGION, P.ADDR) AS REGION,
+                       A.RAION,
+                       A.ORD,
+                       NVL(A.TRANSPORT_TYPE, '0') AS TRANSPORT_TYPE,
+                       NVL(A.STOL, 0) AS NEEDS_HYDRO_BOARD,
+                       NVL(A.STOL, 0) AS STOL,
+                       A.PRIM1,
+                       P.WARE_ID,
+                       MAX(P.NAPR) AS NAPR,
+                       COUNT(DISTINCT P.PALLET_UID) AS PALLETS_COUNT,
+                       {weight_expr} AS WEIGHT_KG,
+                       {volume_expr} AS VOLUME_M3,
+                       MIN(P.STDATE) AS STDATE,
+                       MIN(P.STDATE) AS DATE_LOAD,
+                       MAX(P.TRANSTASK_ID) AS TRANSTASK_ID,
+                       NVL({verify_expr}, 0) AS VERIFY_PERC,
+                       MAX(CASE WHEN R.ARTICUL IN ('Т0000008795', 'Т0000127793', 'Т0000127794') THEN 1 ELSE 0 END) AS SUGAR
+                  FROM RABAEV.RRL_SBORKA_PALLETS P
+                  JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = P.PALLET_UID
+                  LEFT JOIN RABAEV.RRL_ADDR A ON A.ADDR = P.ADDR
+                  {where_sql}
+                 GROUP BY P.ST_NUMBER, P.ADDR, A.REGION, A.RAION, A.ORD,
+                          A.TRANSPORT_TYPE, A.STOL, A.PRIM1, P.WARE_ID
+                  {having_sql}
+                 ORDER BY A.ORD NULLS LAST, NVL(A.REGION, P.ADDR), P.ST_NUMBER
+                """,
+                params,
+            )
+            _AVAILABLE_STS_CACHE[cache_key] = (time.monotonic(), [dict(row) for row in rows])
+            return rows
+
+    def _has_sborka_rows_for_period(
+        self,
+        stdate: date | None,
+        date_to: date | None,
+        unassigned_only: bool,
+    ) -> bool:
+        conditions: list[str] = []
+        params: dict[str, Any] = {}
+        if unassigned_only:
+            conditions.append("TRANSTASK_ID IS NULL")
+        if stdate is not None and date_to is None:
+            conditions.append("STDATE >= :stdate AND STDATE < :stdate_next")
+            params["stdate"] = stdate
+            params["stdate_next"] = stdate + timedelta(days=1)
+        elif stdate is not None and date_to is not None:
+            conditions.append("STDATE >= :stdate AND STDATE < :date_to_next")
+            params["stdate"] = stdate
+            params["date_to_next"] = date_to + timedelta(days=1)
+        elif date_to is not None:
+            conditions.append("STDATE < :date_to_next")
+            params["date_to_next"] = date_to + timedelta(days=1)
+        where_sql = "WHERE " + " AND ".join(conditions) if conditions else ""
+        rows = self.gateway.fetch_all(
             f"""
-            SELECT V.ST_NUMBER, V.ADDR, V.REGION, V.RAION, V.ORD,
-                   V.TRANSPORT_TYPE, V.NEEDS_HYDRO_BOARD, V.STOL, V.PRIM1,
-                   V.WARE_ID, V.NAPR,
-                   V.PALLETS_COUNT, V.WEIGHT_KG, V.VOLUME_M3,
-                   V.STDATE, V.DATE_LOAD, V.TRANSTASK_ID,
-                   V.VERIFY_PERC, V.SUGAR
-              FROM RABAEV.RRL_V_AVAILABLE_STS V
+            SELECT 1 AS HAS_ROWS
+              FROM RABAEV.RRL_SBORKA_PALLETS
               {where_sql}
-              {having_sql}
-             ORDER BY V.ORD NULLS LAST, V.REGION, V.ST_NUMBER
+               AND ROWNUM = 1
             """,
             params,
         )
+        return bool(rows)
 
     # ------------------------------------------------------------------
     # Планировщик / карта заказов (Sprint 7)
@@ -658,38 +905,61 @@ class TransportService:
         transport_type: str | None = None,
     ) -> list[dict[str, Any]]:
         """Возвращает свободные СТ с координатами для отображения на карте."""
-        conditions: list[str] = ["TRANSTASK_ID IS NULL"]
+        conditions: list[str] = ["P.TRANSTASK_ID IS NULL", "P.CONDITION <> 2"]
         params: dict[str, Any] = {}
 
         if plan_date is not None:
-            conditions.append("TRUNC(STDATE) = :plan_date")
+            conditions.append("P.STDATE >= :plan_date AND P.STDATE < :plan_date_next")
             params["plan_date"] = plan_date
+            params["plan_date_next"] = plan_date + timedelta(days=1)
+            if not self._has_sborka_rows_for_period(
+                stdate=plan_date,
+                date_to=None,
+                unassigned_only=True,
+            ):
+                return []
 
         effective_ware_ids = ware_ids or []
         if effective_ware_ids:
             placeholders = ", ".join(f":wid{i}" for i in range(len(effective_ware_ids)))
-            conditions.append(f"WARE_ID IN ({placeholders})")
+            conditions.append(f"P.WARE_ID IN ({placeholders})")
             for i, wid in enumerate(effective_ware_ids):
                 params[f"wid{i}"] = wid
 
         if transport_type:
-            conditions.append("TRANSPORT_TYPE = :transport_type")
+            conditions.append("NVL(A.TRANSPORT_TYPE, '0') = :transport_type")
             params["transport_type"] = transport_type
 
         where_sql = "WHERE " + " AND ".join(conditions)
 
         return self.gateway.fetch_all(
             f"""
-            SELECT ST_NUMBER, ADDR, REGION, RAION,
-                   SHIROTA       AS LAT,
-                   DOLGOTA       AS LON,
-                   PALLETS_COUNT, WEIGHT_KG, VOLUME_M3,
-                   WARE_ID, TRANSPORT_TYPE, NEEDS_HYDRO_BOARD,
-                   MAX_VEHICLE_TONS, TW_STRICT, UNLOAD_NORM_MIN,
-                   VERIFY_PERC, STDATE
-              FROM RABAEV.RRL_V_AVAILABLE_STS
+            SELECT P.ST_NUMBER,
+                   P.ADDR,
+                   NVL(A.REGION, P.ADDR) AS REGION,
+                   A.RAION,
+                   A.SHIROTA AS LAT,
+                   A.DOLGOTA AS LON,
+                   COUNT(DISTINCT P.PALLET_UID) AS PALLETS_COUNT,
+                   ROUND(SUM(NVL(R.ORDER_WEIGHT, 0)), 0) AS WEIGHT_KG,
+                   ROUND(SUM(NVL(R.TARESIZE, 0) * NVL(R.PACK_COUNT, 0)) / 1000000, 2) AS VOLUME_M3,
+                   P.WARE_ID,
+                   NVL(A.TRANSPORT_TYPE, '0') AS TRANSPORT_TYPE,
+                   NVL(A.STOL, 0) AS NEEDS_HYDRO_BOARD,
+                   A.MAX_VEHICLE_TONS AS MAX_VEHICLE_TONS,
+                   NVL(A.TW_STRICT, 0) AS TW_STRICT,
+                   NVL(A.UNLOAD_NORM_MIN, 30) AS UNLOAD_NORM_MIN,
+                   NVL(ROUND(COUNT(DISTINCT CASE WHEN NVL(P.PROOVED,0) = 1 OR NVL(P.PROOVED_BY_SCAN,0) = 1
+                                  THEN P.ID END) * 100 / NULLIF(COUNT(DISTINCT P.ID), 0), 0), 0) AS VERIFY_PERC,
+                   MIN(P.STDATE) AS STDATE
+              FROM RABAEV.RRL_SBORKA_PALLETS P
+              JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = P.PALLET_UID
+              LEFT JOIN RABAEV.RRL_ADDR A ON A.ADDR = P.ADDR
               {where_sql}
-             ORDER BY REGION NULLS LAST, ST_NUMBER
+             GROUP BY P.ST_NUMBER, P.ADDR, A.REGION, A.RAION, A.SHIROTA, A.DOLGOTA,
+                      P.WARE_ID, A.TRANSPORT_TYPE, A.STOL, A.MAX_VEHICLE_TONS,
+                      A.TW_STRICT, A.UNLOAD_NORM_MIN
+             ORDER BY NVL(A.REGION, P.ADDR) NULLS LAST, P.ST_NUMBER
             """,
             params,
         )
@@ -728,10 +998,9 @@ class TransportService:
                    NVL(R.PACK_COUNT, 0)                                       AS PACK_COUNT,
                    ROUND(NVL(R.TARESIZE, 0) * NVL(R.PACK_COUNT, 0) / 1000000, 3) AS ROW_VOLUME_M3
               FROM RABAEV.RRL_SBORKA_PALLETS SP
-              LEFT JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = SP.PALLET_UID
+             LEFT JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = SP.PALLET_UID
              WHERE SP.ST_NUMBER = :st_number
                AND NVL(SP.CONDITION, 0) <> 2
-               AND (SP.DELETED IS NULL OR SP.DELETED <> 1)
              ORDER BY SP.ORD NULLS LAST, SP.PALLET_UID, R.ARTICUL
             """,
             {"st_number": st_number},
@@ -837,7 +1106,7 @@ class TransportService:
             self.gateway.execute(
                 """
                 INSERT INTO RABAEV.RRL_PLANNER_PLANS
-                       (ID, PLAN_DATE, CREATED_AT, SOLVER, SCORE, PLAN_JSON)
+                       (ID, PLAN_DATE, CREATED_AT, SOLVER, SCORE, PAYLOAD)
                 VALUES (:plan_id, :plan_date, SYSDATE, :solver, :score, :plan_json)
                 """,
                 {
@@ -901,7 +1170,7 @@ class TransportService:
     ) -> dict[str, Any]:
         """Создаёт рейсы по сохранённому плану через Oracle-функции."""
         rows = self.gateway.fetch_all(
-            "SELECT PLAN_JSON, SOLVER FROM RABAEV.RRL_PLANNER_PLANS WHERE ID = :plan_id",
+            "SELECT PAYLOAD AS PLAN_JSON, SOLVER FROM RABAEV.RRL_PLANNER_PLANS WHERE ID = :plan_id",
             {"plan_id": plan_id},
         )
         if not rows:
@@ -930,14 +1199,14 @@ class TransportService:
             )
             try:
                 self.update_task(tt_id, upd, user_id=user_id)
-            except Exception:
-                pass
-
-            # Assign STs
-            try:
                 self.assign_sts(tt_id, stop_sts, user_id=user_id)
-            except Exception:
-                pass
+            except HTTPException:
+                raise
+            except Exception as exc:
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"Не удалось применить маршрут VRP для рейса {tt_id}: {exc}",
+                ) from exc
 
             tasks_created += 1
 
@@ -954,7 +1223,7 @@ class TransportService:
         if plan_id is None:
             rows = self.gateway.fetch_all(
                 """
-                SELECT ID, PLAN_DATE, SOLVER, SCORE, PLAN_JSON, CREATED_AT, APPLIED_AT
+                SELECT ID, PLAN_DATE, SOLVER, SCORE, PAYLOAD AS PLAN_JSON, CREATED_AT, APPLIED_AT
                   FROM RABAEV.RRL_PLANNER_PLANS
                  ORDER BY ID DESC
                  FETCH FIRST 1 ROWS ONLY
@@ -963,7 +1232,7 @@ class TransportService:
         else:
             rows = self.gateway.fetch_all(
                 """
-                SELECT ID, PLAN_DATE, SOLVER, SCORE, PLAN_JSON, CREATED_AT, APPLIED_AT
+                SELECT ID, PLAN_DATE, SOLVER, SCORE, PAYLOAD AS PLAN_JSON, CREATED_AT, APPLIED_AT
                   FROM RABAEV.RRL_PLANNER_PLANS
                  WHERE ID = :plan_id
                 """,
@@ -1023,7 +1292,7 @@ class TransportService:
         # Historical plans from last lookback_days, applied only
         rows = self.gateway.fetch_all(
             """
-            SELECT ID, PLAN_DATE, PLAN_JSON, SCORE
+            SELECT ID, PLAN_DATE, PAYLOAD AS PLAN_JSON, SCORE
               FROM RABAEV.RRL_PLANNER_PLANS
              WHERE PLAN_DATE >= :since
                AND PLAN_DATE < :plan_date
@@ -1075,9 +1344,16 @@ class TransportService:
         date_to: date,
     ) -> list[dict[str, Any]]:
         """История применённых планов за период с метриками Score, утилизация, пробег."""
+        cache_key = ("planner_history", date_from, date_to)
+        now = time.monotonic()
+        with _REF_CACHE_LOCK:
+            cached = _REF_CACHE.get(cache_key)
+            if cached and now - cached[0] <= _REF_CACHE_TTL_SEC:
+                return [dict(row) for row in cached[1]]
+
         rows = self.gateway.fetch_all(
             """
-            SELECT ID, PLAN_DATE, SOLVER, SCORE, PLAN_JSON, CREATED_AT, APPLIED_AT
+            SELECT ID, PLAN_DATE, SOLVER, SCORE, PAYLOAD AS PLAN_JSON, CREATED_AT, APPLIED_AT
               FROM RABAEV.RRL_PLANNER_PLANS
              WHERE PLAN_DATE >= :date_from
                AND PLAN_DATE <= :date_to
@@ -1102,6 +1378,8 @@ class TransportService:
                 "tw_violations": int(plan_data.get("tw_violations") or 0),
                 "applied": row.get("APPLIED_AT") is not None,
             })
+        with _REF_CACHE_LOCK:
+            _REF_CACHE[cache_key] = (time.monotonic(), [dict(row) for row in result])
         return result
 
     def get_demand_forecast(
@@ -1113,6 +1391,13 @@ class TransportService:
         Прогноз числа СТ на целевую дату по историческим данным аналогичного дня недели.
         Использует COUNT(*) из RRL_V_AVAILABLE_STS за предыдущие N недель того же дня.
         """
+        cache_key = ("demand_forecast", target_date, lookback_weeks)
+        now = time.monotonic()
+        with _REF_CACHE_LOCK:
+            cached = _REF_CACHE.get(cache_key)
+            if cached and now - cached[0] <= _REF_CACHE_TTL_SEC:
+                return dict(cached[1][0])
+
         dow = target_date.weekday()  # 0=Mon … 6=Sun
         # Build list of same-weekday dates going back
         sample_dates = [
@@ -1123,29 +1408,37 @@ class TransportService:
         for sample_date in sample_dates:
             rows = self.gateway.fetch_all(
                 """
-                SELECT COUNT(*) AS CNT
-                  FROM RABAEV.RRL_V_AVAILABLE_STS
-                 WHERE TRUNC(STDATE) = :stdate
+                SELECT COUNT(DISTINCT ST_NUMBER) AS CNT
+                  FROM RABAEV.RRL_SBORKA_PALLETS
+                 WHERE STDATE >= :stdate
+                   AND STDATE < :stdate_next
+                   AND TRANSTASK_ID IS NULL
                 """,
-                {"stdate": sample_date},
+                {
+                    "stdate": sample_date,
+                    "stdate_next": sample_date + timedelta(days=1),
+                },
             )
             if rows:
                 counts.append(int(rows[0]["CNT"] or 0))
 
         if not counts:
-            return {
+            result = {
                 "target_date": str(target_date),
                 "day_of_week": dow,
                 "forecast_sts": 0,
                 "confidence": "none",
                 "samples": 0,
             }
+            with _REF_CACHE_LOCK:
+                _REF_CACHE[cache_key] = (time.monotonic(), [dict(result)])
+            return result
 
         avg = round(sum(counts) / len(counts), 0)
         stddev = (sum((c - avg) ** 2 for c in counts) / len(counts)) ** 0.5
         confidence = "high" if stddev < avg * 0.15 else "medium" if stddev < avg * 0.3 else "low"
 
-        return {
+        result = {
             "target_date": str(target_date),
             "day_of_week": dow,
             "forecast_sts": int(avg),
@@ -1154,6 +1447,9 @@ class TransportService:
             "sample_counts": counts,
             "stddev": round(stddev, 1),
         }
+        with _REF_CACHE_LOCK:
+            _REF_CACHE[cache_key] = (time.monotonic(), [dict(result)])
+        return result
 
     # ------------------------------------------------------------------
     # Sprint 11 — ARM: операции и нормативы
@@ -1161,8 +1457,11 @@ class TransportService:
 
     def _load_norms(self) -> dict[str, dict]:
         """Загружает нормативы из RRL_TRANSPORT_NORMS → {code: {dur, per_unit}}."""
-        rows = self.gateway.fetch_all(
-            "SELECT OPERATION_CODE, DURATION_MIN, PER_UNIT FROM RABAEV.RRL_TRANSPORT_NORMS"
+        rows = _cached_ref(
+            ("transport_norms", None),
+            lambda: self.gateway.fetch_all(
+                "SELECT OPERATION_CODE, DURATION_MIN, PER_UNIT FROM RABAEV.RRL_TRANSPORT_NORMS"
+            ),
         )
         return {
             r["OPERATION_CODE"]: {
@@ -1228,13 +1527,7 @@ class TransportService:
             "RETURN_HANDOVER", "CLEAN_RETURNS",
         ]
 
-        # Удалить старые операции этого рейса
-        self.gateway.execute(
-            "DELETE FROM RABAEV.RRL_TT_OPERATIONS WHERE TT_ID = :tt_id",
-            {"tt_id": task_id},
-        )
-
-        result = []
+        insert_rows = []
         current_dt = start_dt
         for ord_num, code in enumerate(CHAIN, start=1):
             norm = norms.get(code, {"duration_min": 0.0, "per_unit": 0})
@@ -1244,51 +1537,51 @@ class TransportService:
 
             plan_start = current_dt
             plan_end = current_dt + timedelta(minutes=dur)
-
-            # INSERT нового шага
-            rows = self.gateway.fetch_all(
-                "SELECT RABAEV.SEQ_TT_OPERATIONS.NEXTVAL AS NV FROM DUAL"
-            )
-            op_id = int(rows[0]["NV"])
-
-            self.gateway.execute(
-                """
-                INSERT INTO RABAEV.RRL_TT_OPERATIONS
-                  (ID, TT_ID, OPERATION_CODE, ORD, DURATION_MIN, PLAN_START, PLAN_END)
-                VALUES
-                  (:id, :tt_id, :code, :ord, :dur,
-                   TO_DATE(:ps, 'YYYY-MM-DD HH24:MI'), TO_DATE(:pe, 'YYYY-MM-DD HH24:MI'))
-                """,
+            insert_rows.append(
                 {
-                    "id": op_id,
                     "tt_id": task_id,
                     "code": code,
                     "ord": ord_num,
                     "dur": round(dur, 2),
                     "ps": plan_start.strftime("%Y-%m-%d %H:%M"),
                     "pe": plan_end.strftime("%Y-%m-%d %H:%M"),
-                },
-            )
-
-            result.append(
-                {
-                    "op_id": op_id,
-                    "tt_id": task_id,
-                    "operation_code": code,
-                    "ord": ord_num,
-                    "duration_min": round(dur, 2),
-                    "plan_start": plan_start.strftime("%Y-%m-%d %H:%M"),
-                    "plan_end": plan_end.strftime("%Y-%m-%d %H:%M"),
-                    "fact_start": None,
-                    "fact_end": None,
-                    "delta_min": None,
-                    "note": None,
                 }
             )
-
             current_dt = plan_end
 
-        return result
+        with self.gateway.transaction("plan_operations") as cursor:
+            cursor.execute(
+                "DELETE FROM RABAEV.RRL_TT_OPERATIONS WHERE TT_ID = :tt_id",
+                {"tt_id": task_id},
+            )
+            cursor.executemany(
+                """
+                INSERT INTO RABAEV.RRL_TT_OPERATIONS
+                  (ID, TT_ID, OPERATION_CODE, ORD, DURATION_MIN, PLAN_START, PLAN_END)
+                VALUES
+                  (RABAEV.SEQ_TT_OPERATIONS.NEXTVAL, :tt_id, :code, :ord, :dur,
+                   TO_DATE(:ps, 'YYYY-MM-DD HH24:MI'), TO_DATE(:pe, 'YYYY-MM-DD HH24:MI'))
+                """,
+                insert_rows,
+            )
+            cursor.execute(
+                """
+                SELECT ID, TT_ID, OPERATION_CODE, ORD, DURATION_MIN,
+                       TO_CHAR(PLAN_START, 'YYYY-MM-DD HH24:MI') AS PLAN_START,
+                       TO_CHAR(PLAN_END,   'YYYY-MM-DD HH24:MI') AS PLAN_END,
+                       TO_CHAR(FACT_START, 'YYYY-MM-DD HH24:MI') AS FACT_START,
+                       TO_CHAR(FACT_END,   'YYYY-MM-DD HH24:MI') AS FACT_END,
+                       NOTE
+                  FROM RABAEV.RRL_TT_OPERATIONS
+                 WHERE TT_ID = :tt_id
+                 ORDER BY ORD
+                """,
+                {"tt_id": task_id},
+            )
+            rows = [_upper_keys(row) for row in rows_as_dicts(cursor)]
+
+        _clear_vehicle_availability_cache()
+        return [self._operation_row_to_dict(row) for row in rows]
 
     def get_operations(self, task_id: int) -> list[dict]:
         """Список операций рейса с расчётом отклонения."""
@@ -1307,34 +1600,30 @@ class TransportService:
             {"tt_id": task_id},
         )
 
+        return [self._operation_row_to_dict(r) for r in rows]
+
+    def _operation_row_to_dict(self, r: dict[str, Any]) -> dict[str, Any]:
         from datetime import datetime as dt
 
-        def _parse(s):
-            return dt.strptime(s, "%Y-%m-%d %H:%M") if s else None
+        def _parse(value: Any):
+            return dt.strptime(str(value), "%Y-%m-%d %H:%M") if value else None
 
-        result = []
-        for r in rows:
-            delta = None
-            if r["FACT_END"] and r["PLAN_END"]:
-                delta = round(
-                    (_parse(r["FACT_END"]) - _parse(r["PLAN_END"])).total_seconds() / 60, 1
-                )
-            result.append(
-                {
-                    "op_id": int(r["ID"]),
-                    "tt_id": int(r["TT_ID"]),
-                    "operation_code": r["OPERATION_CODE"],
-                    "ord": int(r["ORD"]),
-                    "duration_min": float(r["DURATION_MIN"] or 0),
-                    "plan_start": r["PLAN_START"],
-                    "plan_end": r["PLAN_END"],
-                    "fact_start": r["FACT_START"],
-                    "fact_end": r["FACT_END"],
-                    "delta_min": delta,
-                    "note": r["NOTE"],
-                }
-            )
-        return result
+        delta = None
+        if r.get("FACT_END") and r.get("PLAN_END"):
+            delta = round((_parse(r["FACT_END"]) - _parse(r["PLAN_END"])).total_seconds() / 60, 1)
+        return {
+            "op_id": int(r["ID"]),
+            "tt_id": int(r["TT_ID"]),
+            "operation_code": r["OPERATION_CODE"],
+            "ord": int(r["ORD"]),
+            "duration_min": float(r["DURATION_MIN"] or 0),
+            "plan_start": r.get("PLAN_START"),
+            "plan_end": r.get("PLAN_END"),
+            "fact_start": r.get("FACT_START"),
+            "fact_end": r.get("FACT_END"),
+            "delta_min": delta,
+            "note": r.get("NOTE"),
+        }
 
     def update_operation_fact(self, op_id: int, data: OperationFactUpdate) -> dict:
         """Обновляет fact_start / fact_end операции."""
@@ -1361,45 +1650,68 @@ class TransportService:
         if not rows_updated:
             raise HTTPException(status_code=404, detail=f"Operation {op_id} not found")
 
+        _clear_vehicle_availability_cache()
         return {"op_id": op_id, "updated": True}
 
     def get_vehicles_gantt(self, gantt_date: date) -> list[dict]:
         """Данные Ганта для всех машин на день."""
-        # Найти рейсы на дату
-        tasks = self.gateway.fetch_all(
+        rows = self.gateway.fetch_all(
             """
             SELECT TT.ID AS TT_ID, TT.TRANSPORT AS VEHICLE_NUM, TT.TRANSTYPE AS VEHICLE_TYPE,
-                   V.ID AS VEHICLE_ID
+                   V.ID AS VEHICLE_ID,
+                   OPS.ID, OPS.OPERATION_CODE, OPS.ORD, OPS.DURATION_MIN,
+                   TO_CHAR(OPS.PLAN_START, 'YYYY-MM-DD HH24:MI') AS PLAN_START,
+                   TO_CHAR(OPS.PLAN_END,   'YYYY-MM-DD HH24:MI') AS PLAN_END,
+                   TO_CHAR(OPS.FACT_START, 'YYYY-MM-DD HH24:MI') AS FACT_START,
+                   TO_CHAR(OPS.FACT_END,   'YYYY-MM-DD HH24:MI') AS FACT_END,
+                   OPS.NOTE
               FROM RABAEV.RRL_TRANSPORT_TASK TT
-              LEFT JOIN RABAEV.RRL_TRANSPORTS V ON V.GNUM = TT.TRANSPORT
-             WHERE TT.SHIPMENT_DATE = TO_DATE(:d, 'YYYY-MM-DD')
-               AND TT.STATUS NOT IN ('Deleted', 'Удалён')
+              LEFT JOIN RABAEV.RRL_TR_VEHICLE V ON V.NUM = TT.TRANSPORT
+              JOIN RABAEV.RRL_TT_OPERATIONS OPS ON OPS.TT_ID = TT.ID
+             WHERE TT.SHIPMENT_DATE >= TO_DATE(:d, 'YYYY-MM-DD')
+               AND TT.SHIPMENT_DATE <  TO_DATE(:d, 'YYYY-MM-DD') + 1
+               AND NVL(TT.DELETED, 0) = 0
+             ORDER BY NVL(TT.TRANSPORT, ' '), TT.ID, OPS.ORD
             """,
             {"d": str(gantt_date)},
         )
 
         result = []
-        seen_vehicles: set[str] = set()
-        for t in tasks:
-            vnum = t.get("VEHICLE_NUM") or ""
-            if vnum in seen_vehicles:
-                # Merge operations into existing vehicle entry
-                for entry in result:
-                    if entry["vehicle_num"] == vnum:
-                        entry["operations"].extend(
-                            self.get_operations(int(t["TT_ID"]))
-                        )
-                continue
-            seen_vehicles.add(vnum)
-            result.append(
-                {
-                    "vehicle_id": int(t["VEHICLE_ID"] or 0),
+        by_vehicle: dict[str, dict[str, Any]] = {}
+        for row in rows:
+            tt_id = int(row["TT_ID"])
+            vnum = row.get("VEHICLE_NUM") or ""
+            vehicle_key = vnum or f"task:{tt_id}"
+            entry = by_vehicle.get(vehicle_key)
+            if entry is None:
+                entry = {
+                    "_vehicle_key": vehicle_key,
+                    "vehicle_id": int(row["VEHICLE_ID"] or 0),
                     "vehicle_num": vnum,
-                    "vehicle_type": t.get("VEHICLE_TYPE") or "",
-                    "operations": self.get_operations(int(t["TT_ID"])),
+                    "vehicle_type": row.get("VEHICLE_TYPE") or "",
+                    "operations": [],
                 }
+                by_vehicle[vehicle_key] = entry
+                result.append(entry)
+            entry["operations"].append(
+                self._operation_row_to_dict(
+                    {
+                        "ID": row["ID"],
+                        "TT_ID": row["TT_ID"],
+                        "OPERATION_CODE": row["OPERATION_CODE"],
+                        "ORD": row["ORD"],
+                        "DURATION_MIN": row["DURATION_MIN"],
+                        "PLAN_START": row["PLAN_START"],
+                        "PLAN_END": row["PLAN_END"],
+                        "FACT_START": row["FACT_START"],
+                        "FACT_END": row["FACT_END"],
+                        "NOTE": row["NOTE"],
+                    }
+                )
             )
 
+        for entry in result:
+            entry.pop("_vehicle_key", None)
         return result
 
     # ------------------------------------------------------------------
@@ -1428,9 +1740,12 @@ class TransportService:
             raise HTTPException(status_code=422, detail="shipment_time must be YYYY-MM-DD HH:MM")
 
         ship_date = requested_dt.date()
-
-        # All active vehicles
-        vehicles = self.list_vehicles(active_only=True)
+        cache_key = (requested_dt.strftime("%Y-%m-%d %H:%M"), int(pallets or 0))
+        now = time.monotonic()
+        with _VEHICLE_AVAILABILITY_CACHE_LOCK:
+            cached = _VEHICLE_AVAILABILITY_CACHE.get(cache_key)
+            if cached and now - cached[0] <= _VEHICLE_AVAILABILITY_CACHE_TTL_SEC:
+                return [dict(row) for row in cached[1]]
 
         # Last PLAN_END per vehicle for that day (from RRL_TT_OPERATIONS via task join)
         rows = self.gateway.fetch_all(
@@ -1441,8 +1756,9 @@ class TransportService:
               FROM RABAEV.RRL_TR_VEHICLE V
               LEFT JOIN RABAEV.RRL_TRANSPORT_TASK TT
                 ON TT.TRANSPORT = V.NUM
-               AND TT.SHIPMENT_DATE = TO_DATE(:d, 'YYYY-MM-DD')
-               AND TT.STATUS NOT IN ('Deleted', 'Удалён')
+               AND TT.SHIPMENT_DATE >= TO_DATE(:d, 'YYYY-MM-DD')
+               AND TT.SHIPMENT_DATE <  TO_DATE(:d, 'YYYY-MM-DD') + 1
+               AND NVL(TT.DELETED, 0) = 0
               LEFT JOIN RABAEV.RRL_TT_OPERATIONS OPS
                 ON OPS.TT_ID = TT.ID
              WHERE V.BLOCKED = 0
@@ -1507,6 +1823,8 @@ class TransportService:
         # Sort: green first, then yellow, then red
         order = {"green": 0, "yellow": 1, "red": 2}
         result.sort(key=lambda x: (order.get(x["status"], 3), x["vehicle_num"]))
+        with _VEHICLE_AVAILABILITY_CACHE_LOCK:
+            _VEHICLE_AVAILABILITY_CACHE[cache_key] = (time.monotonic(), [dict(row) for row in result])
         return result
 
     # ------------------------------------------------------------------
@@ -1593,12 +1911,16 @@ class TransportService:
         return order_id
 
     def add_tasks_to_order(self, order_id: int, tt_ids: list[int]) -> None:
-        """Привязывает рейсы к биллинг-заказу через Oracle-процедуру."""
+        """Привязывает рейсы к биллинг-заказу через legacy Oracle-функцию."""
+        if not self.get_billing_order(order_id):
+            raise HTTPException(status_code=404, detail=f"Billing order {order_id} not found")
         for tt_id in tt_ids:
-            self.gateway.execute(
-                "BEGIN RABAEV.RRL_ADD_TT_2_BILLINGORDER(:tt_id, :order_id); END;",
-                {"tt_id": tt_id, "order_id": order_id},
+            result = self.gateway.call_varchar_plsql(
+                "BEGIN :result := RABAEV.RRL_ADD_TT_2_BILLINGORDER(:bill_id, :tt_id, :act); END;",
+                {"bill_id": order_id, "tt_id": tt_id, "act": 1},
             )
+            if result and result.lower() not in ("ok", "ок", "1", "true"):
+                raise HTTPException(status_code=409, detail=result)
 
     def get_task_billing(self, tt_id: int) -> dict | None:
         """Возвращает данные биллинг-заказа для рейса или None."""
@@ -1671,10 +1993,12 @@ class TransportService:
             raise HTTPException(status_code=404, detail=f"Billing order {order_id} not found")
         if order["closed"]:
             raise HTTPException(status_code=409, detail="Заказ уже закрыт")
-        self.gateway.execute(
-            "BEGIN RABAEV.RRL_CLOSE_BILLINGORDER(:order_id); END;",
-            {"order_id": order_id},
+        result = self.gateway.call_varchar_plsql(
+            "BEGIN :result := RABAEV.RRL_CLOSE_BILLINGORDER(:bill_id, :act); END;",
+            {"bill_id": order_id, "act": 1},
         )
+        if result and result.lower() not in ("ok", "ок", "1", "true"):
+            raise HTTPException(status_code=409, detail=result)
         return self.get_billing_order(order_id) or {"order_id": order_id, "closed": 1}
 
     def pay_billing_order(self, order_id: int) -> dict:
@@ -1684,10 +2008,12 @@ class TransportService:
             raise HTTPException(status_code=404, detail=f"Billing order {order_id} not found")
         if order["payed"]:
             raise HTTPException(status_code=409, detail="Заказ уже оплачен")
-        self.gateway.execute(
-            "BEGIN RABAEV.RRL_PAY_BILLINGORDER(:order_id); END;",
-            {"order_id": order_id},
+        result = self.gateway.call_varchar_plsql(
+            "BEGIN :result := RABAEV.RRL_PAY_BILLINGORDER(:bill_id, :act); END;",
+            {"bill_id": order_id, "act": 1},
         )
+        if result and result.lower() not in ("ok", "ок", "1", "true"):
+            raise HTTPException(status_code=409, detail=result)
         return self.get_billing_order(order_id) or {"order_id": order_id, "payed": 1}
 
     def open_billing_for_task(self, tt_id: int) -> dict:
@@ -1703,6 +2029,11 @@ class TransportService:
             raise HTTPException(status_code=409, detail="Рейс уже включён в биллинг-заказ")
 
         company = task.get("TK_NAME") or task.get("DOVERENNOST_OT") or "Неизвестная ТК"
+        if company == "Неизвестная ТК" or float(task.get("PRICE") or 0) <= 0:
+            raise HTTPException(
+                status_code=409,
+                detail="Рейс не готов к биллингу: не указана ТК или не рассчитана сумма",
+            )
         ship_date = str(task.get("SHIPMENT_DATE") or "")[:10]
         if not ship_date:
             from datetime import date as _date
@@ -1715,9 +2046,11 @@ class TransportService:
 
     def get_billing_order_tasks(self, order_id: int) -> list[dict]:
         """Список рейсов в биллинг-заказе."""
+        if self.get_billing_order(order_id) is None:
+            raise HTTPException(status_code=404, detail=f"Billing order {order_id} not found")
         rows = self.gateway.fetch_all(
             """
-            SELECT TT.ID, TT.TRANSPORT, TT.STATUS, TT.PRICE,
+            SELECT TT.ID, TT.TRANSPORT, TT.CONDITION AS STATUS, TT.PRICE,
                    TO_CHAR(TT.SHIPMENT_DATE, 'YYYY-MM-DD') AS SHIPMENT_DATE
               FROM RABAEV.RRL_TRANSPORT_TASK TT
              WHERE TT.PAY_ORDER_ID = :order_id
@@ -1741,23 +2074,25 @@ class TransportService:
         task = self.get_task(task_id)
         if not task:
             raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
-        # RRL_UPDATE_PRICE обновляет PRICE в БД и возвращает новое значение
-        rows = self.gateway.fetch_all(
-            "SELECT RABAEV.RRL_UPDATE_PRICE(:tt_id) AS PRICE FROM DUAL",
+        # RRL_UPDATE_PRICE updates PRICE, so it must be called from PL/SQL, not SELECT ... FROM DUAL.
+        new_price = self.gateway.call_optional_number_plsql(
+            "BEGIN :result := RABAEV.RRL_UPDATE_PRICE(:tt_id); END;",
             {"tt_id": task_id},
         )
-        new_price = float(rows[0]["PRICE"] or 0) if rows else 0.0
-        return {"task_id": task_id, "price": new_price}
+        return {"task_id": task_id, "price": float(new_price or 0)}
 
     def list_billing_companies(self) -> list[str]:
         """Справочник транспортных компаний из RRL_BILL_COMPANY."""
-        rows = self.gateway.fetch_all(
-            """
-            SELECT COMPANYNAME
-              FROM RABAEV.RRL_BILL_COMPANY
-             WHERE DELETED = 0
-             ORDER BY POS
-            """,
+        rows = _cached_ref(
+            ("billing_companies", True),
+            lambda: self.gateway.fetch_all(
+                """
+                SELECT COMPANYNAME
+                  FROM RABAEV.RRL_BILL_COMPANY
+                 WHERE DELETED = 0
+                 ORDER BY POS
+                """
+            ),
         )
         return [str(r["COMPANYNAME"]) for r in rows if r.get("COMPANYNAME")]
 
@@ -1774,15 +2109,18 @@ class TransportService:
 
     def export_billing_order_xlsx(self, order_id: int) -> bytes:
         """Генерирует XLSX-файл с составом биллинг-заказа (Sprint 26, DoD §12 #7)."""
-        import io
-        from openpyxl import Workbook
-        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-
         order = self.get_billing_order(order_id)
         if not order:
             raise HTTPException(status_code=404, detail=f"Billing order {order_id} not found")
 
         tasks = self.get_billing_order_tasks(order_id)
+
+        try:
+            import io
+            from openpyxl import Workbook
+            from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        except ImportError:
+            return self._export_billing_order_xlsx_zip(order_id, order, tasks)
 
         wb = Workbook()
         ws = wb.active
@@ -1844,6 +2182,98 @@ class TransportService:
         wb.save(buf)
         return buf.getvalue()
 
+    def _export_billing_order_xlsx_zip(self, order_id: int, order: dict, tasks: list[dict]) -> bytes:
+        """Минимальный XLSX без внешних зависимостей для окружений без openpyxl."""
+        import html
+        import io
+        import zipfile
+
+        def cell_ref(row: int, col: int) -> str:
+            letters = ""
+            while col:
+                col, rem = divmod(col - 1, 26)
+                letters = chr(65 + rem) + letters
+            return f"{letters}{row}"
+
+        def value_cell(row: int, col: int, value: object) -> str:
+            ref = cell_ref(row, col)
+            if isinstance(value, (int, float)):
+                return f'<c r="{ref}"><v>{value}</v></c>'
+            text = html.escape("" if value is None else str(value))
+            return f'<c r="{ref}" t="inlineStr"><is><t>{text}</t></is></c>'
+
+        meta = [
+            ("Счёт №", order.get("num") or f"#{order_id}"),
+            ("Компания", order.get("company") or ""),
+            ("Период с", order.get("date_from") or ""),
+            ("Период по", order.get("date_to") or ""),
+            ("Статус", "Оплачен" if order.get("payed") else ("Закрыт" if order.get("closed") else "Выставлен")),
+            ("Платёж №", order.get("num_plat") or ""),
+        ]
+        rows: list[list[object]] = [list(row) for row in meta]
+        rows.append([])
+        rows.append(["№ рейса", "ТС", "Дата отгрузки", "Статус", "Сумма, ₽"])
+        total = 0.0
+        for task in tasks:
+            price = float(task.get("price") or 0)
+            total += price
+            rows.append([
+                task.get("tt_id"),
+                task.get("transport") or "",
+                task.get("shipment_date") or "",
+                task.get("status") or "",
+                price,
+            ])
+        rows.append(["", "", "", "Итого:", total])
+
+        sheet_rows = []
+        for row_idx, row in enumerate(rows, start=1):
+            cells = "".join(value_cell(row_idx, col_idx, value) for col_idx, value in enumerate(row, start=1))
+            sheet_rows.append(f'<row r="{row_idx}">{cells}</row>')
+        sheet_xml = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+            '<sheetData>'
+            + "".join(sheet_rows)
+            + '</sheetData></worksheet>'
+        )
+        workbook_xml = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
+            'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+            '<sheets><sheet name="Счёт" sheetId="1" r:id="rId1"/></sheets></workbook>'
+        )
+        workbook_rels = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
+            '</Relationships>'
+        )
+        root_rels = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'
+            '</Relationships>'
+        )
+        content_types = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+            '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+            '<Default Extension="xml" ContentType="application/xml"/>'
+            '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+            '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+            '</Types>'
+        )
+
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr("[Content_Types].xml", content_types)
+            archive.writestr("_rels/.rels", root_rels)
+            archive.writestr("xl/workbook.xml", workbook_xml)
+            archive.writestr("xl/_rels/workbook.xml.rels", workbook_rels)
+            archive.writestr("xl/worksheets/sheet1.xml", sheet_xml)
+        return buf.getvalue()
+
     def export_billing_registry_xlsx(
         self,
         company: str | None = None,
@@ -1853,11 +2283,14 @@ class TransportService:
         payed: int | None = None,
     ) -> bytes:
         """Генерирует XLSX-реестр всех счетов по фильтру (Sprint 27)."""
-        import io
-        from openpyxl import Workbook
-        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-
         orders = self.list_billing_orders(company, date_from, date_to, closed, payed)
+
+        try:
+            import io
+            from openpyxl import Workbook
+            from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        except ImportError:
+            return self._export_billing_registry_xlsx_zip(orders, company, date_from, date_to)
 
         wb = Workbook()
         ws = wb.active
@@ -1922,6 +2355,109 @@ class TransportService:
         wb.save(buf)
         return buf.getvalue()
 
+    def _export_billing_registry_xlsx_zip(
+        self,
+        orders: list[dict],
+        company: str | None,
+        date_from: date | None,
+        date_to: date | None,
+    ) -> bytes:
+        """Минимальный XLSX-реестр без openpyxl."""
+        import html
+        import io
+        import zipfile
+
+        def cell_ref(row: int, col: int) -> str:
+            letters = ""
+            while col:
+                col, rem = divmod(col - 1, 26)
+                letters = chr(65 + rem) + letters
+            return f"{letters}{row}"
+
+        def value_cell(row: int, col: int, value: object) -> str:
+            ref = cell_ref(row, col)
+            if isinstance(value, (int, float)):
+                return f'<c r="{ref}"><v>{value}</v></c>'
+            text = html.escape("" if value is None else str(value))
+            return f'<c r="{ref}" t="inlineStr"><is><t>{text}</t></is></c>'
+
+        status_map = {(0, 0): "Выставлен", (1, 0): "Закрыт", (1, 1): "Оплачен", (0, 1): "Оплачен"}
+        filters_str = " | ".join(filter(None, [
+            f"Компания: {company}" if company else None,
+            f"С: {date_from}" if date_from else None,
+            f"По: {date_to}" if date_to else None,
+        ])) or "Все счета"
+        rows: list[list[object]] = [
+            ["Реестр биллинг-заказов"],
+            [filters_str],
+            [],
+            ["№ счёта", "Компания", "Период с", "Период по", "Рейсов", "Сумма ₽", "Статус", "№ платёжа", "Дата создания"],
+        ]
+        total_sum = 0.0
+        for order in orders:
+            status = status_map.get((int(order.get("closed") or 0), int(order.get("payed") or 0)), "—")
+            price = float(order.get("total_price") or 0)
+            total_sum += price
+            rows.append([
+                order.get("num") or f"#{order['order_id']}",
+                order.get("company") or "",
+                order.get("date_from") or "",
+                order.get("date_to") or "",
+                int(order.get("task_count") or 0),
+                price,
+                status,
+                order.get("num_plat") or "",
+                order.get("date_of_order") or "",
+            ])
+        rows.append(["", "", "", "", "Итого:", total_sum])
+
+        sheet_rows = []
+        for row_idx, row in enumerate(rows, start=1):
+            cells = "".join(value_cell(row_idx, col_idx, value) for col_idx, value in enumerate(row, start=1))
+            sheet_rows.append(f'<row r="{row_idx}">{cells}</row>')
+        sheet_xml = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+            '<sheetData>'
+            + "".join(sheet_rows)
+            + '</sheetData></worksheet>'
+        )
+        workbook_xml = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
+            'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+            '<sheets><sheet name="Реестр счетов" sheetId="1" r:id="rId1"/></sheets></workbook>'
+        )
+        workbook_rels = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
+            '</Relationships>'
+        )
+        root_rels = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'
+            '</Relationships>'
+        )
+        content_types = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+            '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+            '<Default Extension="xml" ContentType="application/xml"/>'
+            '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+            '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+            '</Types>'
+        )
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr("[Content_Types].xml", content_types)
+            archive.writestr("_rels/.rels", root_rels)
+            archive.writestr("xl/workbook.xml", workbook_xml)
+            archive.writestr("xl/_rels/workbook.xml.rels", workbook_rels)
+            archive.writestr("xl/worksheets/sheet1.xml", sheet_xml)
+        return buf.getvalue()
+
     def remove_task_from_billing_order(self, order_id: int, tt_id: int) -> dict:
         """Отвязывает рейс от биллинг-заказа (обнуляет PAY_ORDER_ID)."""
         order = self.get_billing_order(order_id)
@@ -1929,9 +2465,15 @@ class TransportService:
             raise HTTPException(status_code=404, detail=f"Billing order {order_id} not found")
         if order.get("closed"):
             raise HTTPException(status_code=409, detail="Нельзя изменить закрытый счёт")
+        if order.get("payed"):
+            raise HTTPException(status_code=409, detail="Нельзя изменить оплаченный счёт")
         rowcount = self.gateway.execute(
-            "BEGIN UPDATE RABAEV.RRL_TRANSPORT_TASK SET PAY_ORDER_ID = NULL "
-            "WHERE ID = :tt_id AND PAY_ORDER_ID = :order_id; END;",
+            """
+            UPDATE RABAEV.RRL_TRANSPORT_TASK
+               SET PAY_ORDER_ID = NULL
+             WHERE ID = :tt_id
+               AND PAY_ORDER_ID = :order_id
+            """,
             {"tt_id": tt_id, "order_id": order_id},
         )
         if rowcount == 0:
@@ -1949,10 +2491,6 @@ class TransportService:
         no_payments_only: bool = False,
     ) -> bytes:
         """Генерирует XLSX-список рейсов (Sprint 28, ТЗ §3 «В Excel»)."""
-        import io
-        from openpyxl import Workbook
-        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-
         tasks = self.list_tasks(
             shipment_date=shipment_date,
             condition=condition,
@@ -1962,6 +2500,13 @@ class TransportService:
             date_to=date_to,
             no_payments_only=no_payments_only,
         )
+
+        try:
+            import io
+            from openpyxl import Workbook
+            from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        except ImportError:
+            return self._export_tasks_xlsx_zip(tasks, shipment_date)
 
         wb = Workbook()
         ws = wb.active
@@ -2028,6 +2573,96 @@ class TransportService:
         wb.save(buf)
         return buf.getvalue()
 
+    def _export_tasks_xlsx_zip(self, tasks: list[dict], shipment_date: date | None) -> bytes:
+        """Минимальный XLSX-список рейсов без openpyxl."""
+        import html
+        import io
+        import zipfile
+
+        def cell_ref(row: int, col: int) -> str:
+            letters = ""
+            while col:
+                col, rem = divmod(col - 1, 26)
+                letters = chr(65 + rem) + letters
+            return f"{letters}{row}"
+
+        def value_cell(row: int, col: int, value: object) -> str:
+            ref = cell_ref(row, col)
+            if isinstance(value, (int, float)):
+                return f'<c r="{ref}"><v>{value}</v></c>'
+            text = html.escape("" if value is None else str(value))
+            return f'<c r="{ref}" t="inlineStr"><is><t>{text}</t></is></c>'
+
+        rows: list[list[object]] = [
+            [f"Рейсы: {shipment_date if shipment_date else 'все даты'}"],
+            [],
+            ["Дата", "#", "Пал.", "Вес кг", "Объём м³", "Тип ТС", "Машина", "Водитель", "ДОК", "Регионы", "Цена ₽", "ТК", "Логист", "Статус"],
+        ]
+        for task in tasks:
+            rows.append([
+                str(task.get("SHIPMENT_DATE") or "")[:10],
+                task.get("ID"),
+                task.get("PALLET_COUNT"),
+                task.get("TEMP_WEIGHT"),
+                task.get("VOLUME_M3"),
+                task.get("TRANSTYPE"),
+                task.get("TRANSPORT"),
+                task.get("VODITEL_NAME"),
+                task.get("DOCK"),
+                task.get("REGIONS") or task.get("TEMP_REGION"),
+                float(task.get("PRICE") or 0),
+                task.get("TK_NAME"),
+                task.get("LOGIST"),
+                task.get("CONDITION"),
+            ])
+
+        sheet_rows = []
+        for row_idx, row in enumerate(rows, start=1):
+            cells = "".join(value_cell(row_idx, col_idx, value) for col_idx, value in enumerate(row, start=1))
+            sheet_rows.append(f'<row r="{row_idx}">{cells}</row>')
+        sheet_xml = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+            '<sheetData>'
+            + "".join(sheet_rows)
+            + '</sheetData></worksheet>'
+        )
+        workbook_xml = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
+            'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+            '<sheets><sheet name="Рейсы" sheetId="1" r:id="rId1"/></sheets></workbook>'
+        )
+        workbook_rels = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
+            '</Relationships>'
+        )
+        root_rels = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'
+            '</Relationships>'
+        )
+        content_types = (
+            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+            '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+            '<Default Extension="xml" ContentType="application/xml"/>'
+            '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+            '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+            '</Types>'
+        )
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr("[Content_Types].xml", content_types)
+            archive.writestr("_rels/.rels", root_rels)
+            archive.writestr("xl/workbook.xml", workbook_xml)
+            archive.writestr("xl/_rels/workbook.xml.rels", workbook_rels)
+            archive.writestr("xl/worksheets/sheet1.xml", sheet_xml)
+        return buf.getvalue()
+
     def get_plan_fact(self, date_from: date, date_to: date, vehicle: str | None = None) -> list[dict]:
         """Сводный план-фактный отчёт по всем рейсам периода."""
         params: dict[str, Any] = {
@@ -2044,11 +2679,11 @@ class TransportService:
             SELECT TT.ID AS TT_ID,
                    TT.TRANSPORT AS VEHICLE,
                    TO_CHAR(TT.SHIPMENT_DATE, 'YYYY-MM-DD') AS SHIPMENT_DATE,
-                   TT.STATUS
+                   TT.CONDITION AS STATUS
               FROM RABAEV.RRL_TRANSPORT_TASK TT
-             WHERE TT.SHIPMENT_DATE BETWEEN TO_DATE(:d_from, 'YYYY-MM-DD')
-                                        AND TO_DATE(:d_to,   'YYYY-MM-DD')
-               AND TT.STATUS NOT IN ('Deleted', 'Удалён')
+             WHERE TT.SHIPMENT_DATE >= TO_DATE(:d_from, 'YYYY-MM-DD')
+               AND TT.SHIPMENT_DATE <  TO_DATE(:d_to,   'YYYY-MM-DD') + 1
+               AND NVL(TT.DELETED, 0) = 0
                {vehicle_clause}
              ORDER BY TT.SHIPMENT_DATE, TT.TRANSPORT
             """,

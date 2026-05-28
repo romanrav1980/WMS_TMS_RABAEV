@@ -72,7 +72,7 @@ class TestClusterDataIntegrity:
     def test_cluster_fields_present(self):
         """All required cluster fields must be present for sidebar rendering."""
         from unittest.mock import patch
-        from app.services.transport_service import TransportService
+        from api.wms_api_server.app.services.transport_service import TransportService
         from datetime import date
 
         sts = [
@@ -90,7 +90,7 @@ class TestClusterDataIntegrity:
     def test_clusters_sorted_alphabetically_no_raion_last(self):
         """Clusters sorted alphabetically; «(без района)» always last."""
         from unittest.mock import patch
-        from app.services.transport_service import TransportService
+        from api.wms_api_server.app.services.transport_service import TransportService
         from datetime import date
 
         sts = [

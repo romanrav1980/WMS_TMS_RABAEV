@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>ТМС-2 Block II: MAP / VRP</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; color: #172033; background: #f4f7fb; }
+    header { padding: 28px 36px; background: #174035; color: white; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 24px 48px; }
+    section { background: white; border: 1px solid #d8e0ea; border-radius: 8px; padding: 22px; margin: 0 0 22px; }
+    h1, h2 { margin-top: 0; }
+    h2 { color: #174035; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .card { background: #f8fbff; border: 1px solid #d8e0ea; border-radius: 6px; padding: 14px; }
+    img { width: 100%; border: 1px solid #c7d2e0; border-radius: 6px; display: block; }
+    figure { margin: 0 0 24px; }
+    figcaption { font-size: 14px; color: #41516a; margin-top: 8px; line-height: 1.45; }
+    table { width: 100%; border-collapse: collapse; }
+    td, th { border: 1px solid #d8e0ea; padding: 8px; vertical-align: top; }
+    th { background: #eef4fb; text-align: left; }
+    code { background: #eef4fb; padding: 1px 4px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ТМС-2 Block II: MAP / VRP</h1>
+    <p>Sprint 7-10. Карта заказов, матрица расстояний, автоплан рейсов, кластеры, шаблоны и аналитика.</p>
+  </header>
+  <main>
+    <section>
+      <h2>Зачем этот блок</h2>
+      <p>Block II превращает список СТ в географическую картину дня: диспетчер видит точки на карте, запускает VRP-оптимизатор, получает маршруты по машинам, применяет план и анализирует качество планирования.</p>
+      <div class="grid">
+        <div class="card"><b>Вход</b><br>СТ с адресами, координатами, паллетами, весом, типом ТС и временными окнами.</div>
+        <div class="card"><b>Процесс</b><br>Карта заказов, матрица расстояний, VRP, кластерный solver, исторические шаблоны.</div>
+        <div class="card"><b>Результат</b><br>План рейсов с маршрутами, метриками, утилизацией, применением и аналитикой.</div>
+      </div>
+    </section>
+    <section>
+      <h2>Структура данных</h2>
+      <table>
+        <tr><th>Объект</th><th>Поля</th><th>Источник</th></tr>
+        <tr><td>Заказ на карте</td><td><code>ST_NUMBER</code>, <code>LAT/LON</code>, <code>PALLETS_COUNT</code>, <code>TRANSPORT_TYPE</code>, <code>TW_STRICT</code>, <code>UNLOAD_NORM_MIN</code></td><td><code>RRL_SBORKA_PALLETS</code>, <code>RRL_ADDR</code></td></tr>
+        <tr><td>Матрица расстояний</td><td><code>FROM_ADDR</code>, <code>TO_ADDR</code>, <code>DISTANCE_KM</code>, <code>DURATION_MIN</code>, <code>SOURCE</code></td><td><code>RRL_ADDR_DISTANCE_MATRIX</code></td></tr>
+        <tr><td>VRP-план</td><td><code>PLAN_DATE</code>, <code>SOLVER</code>, <code>SCORE</code>, <code>PAYLOAD</code>, <code>APPLIED_AT</code></td><td><code>RRL_PLANNER_PLANS</code></td></tr>
+      </table>
+    </section>
+    <section>
+      <h2>Как работать</h2>
+      <figure><img src="screenshots/01_map_orders.png" alt="Карта заказов" /><figcaption><b>1. Карта заказов.</b> СТ отображаются как точки на карте. Размер показывает паллеты, цвет связан со складом, статус геокодирования виден в левой панели.</figcaption></figure>
+      <figure><img src="screenshots/02_marker_popup.png" alt="Карточка СТ" /><figcaption><b>2. Карточка СТ.</b> Клик по маркеру открывает адрес, район, паллеты, вес, дату, тип ТС, жесткое окно и требования к гидроборту.</figcaption></figure>
+      <figure><img src="screenshots/03_vrp_plan.png" alt="VRP план" /><figcaption><b>3. Авто-план.</b> Кнопка «Авто-план» запускает solver. Справа появляются рейсы, машины, загрузка, пробег, длительность, score и список остановок.</figcaption></figure>
+      <figure><img src="screenshots/04_clusters_templates.png" alt="Кластеры и шаблоны" /><figcaption><b>4. Кластеры и шаблоны.</b> Слой кластеров помогает работать районами, а блок похожих маршрутов предлагает исторические планы с Jaccard-сходством.</figcaption></figure>
+      <figure><img src="screenshots/05_apply_plan.png" alt="Применение плана" /><figcaption><b>5. Применение плана.</b> После проверки маршрутов диспетчер применяет план: система создает рейсы через транспортные Oracle-функции.</figcaption></figure>
+      <figure><img src="screenshots/06_analytics.png" alt="Аналитика" /><figcaption><b>6. Аналитика.</b> Вкладка показывает историю планов, среднюю утилизацию, лучший Score, настройки целевой функции и прогноз спроса.</figcaption></figure>
+    </section>
+    <section>
+      <h2>Бизнес-процессы</h2>
+      <ol>
+        <li><b>Географическая оценка дня:</b> открыть карту, проверить количество СТ на карте, адреса без координат и требования к ТС.</li>
+        <li><b>Расчет расстояний:</b> пересчитать матрицу расстояний по активному routing provider, сохранить пары адресов в Oracle.</li>
+        <li><b>Автопланирование:</b> запустить VRP solver, получить набор рейсов с остановками, пробегом, загрузкой и нарушениями временных окон.</li>
+        <li><b>Ручная корректировка:</b> включить кластеры, выделять районы, смотреть похожие исторические маршруты и применять подходящий шаблон.</li>
+        <li><b>Применение плана:</b> создать рейсы из утвержденного плана, не превращая partial-success в success.</li>
+        <li><b>Аналитика качества:</b> сравнить планы по Score, утилизации, пробегу и прогнозу числа СТ.</li>
+      </ol>
+    </section>
+    <section>
+      <h2>Результат проверки</h2>
+      <p>Block II Sprint 7-10 прошёл fresh hardening gate: functional <code>62 passed, 1 skipped</code>, UI smoke Sprint 7-10 passed, load NFR Sprint 7-10 passed. Единственный backend skip — отсутствие historical-plan Oracle fixture для шаблонов Sprint 9.</p>
+    </section>
+  </main>
+</body>
+</html>

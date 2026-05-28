@@ -1,93 +1,140 @@
 """
-transport_sprint12_load_test.py — Load tests for Sprint 12 (Gantt diagram).
+Windows-safe load check for TMS-2 Sprint 12 (Gantt diagram).
 
-NFR targets (§12 ТЗ):
-  GET /vehicles/gantt (30 vehicles × 15 ops)  p95 ≤ 2000 ms
-  GET /tasks/{id}/operations                  p95 ≤  200 ms
+Checks the Gantt read path after Sprint 11 set-based optimization:
+  GET /vehicles/gantt          p95 <= 500 ms
+  GET /tasks/{id}/operations   p95 <= 200 ms
 
 Run:
-    locust -f tests/transport/transport_sprint12_load_test.py \
-        --host http://127.0.0.1:8088 --users 10 --spawn-rate 3 --run-time 60s --headless
+    python tests/transport/transport_sprint12_load_test.py
 """
 
-from locust import HttpUser, task, between, events
-from datetime import date, timedelta
-import random
+from __future__ import annotations
 
-TODAY    = date.today().isoformat()
-TOMORROW = (date.today() + timedelta(days=1)).isoformat()
+import concurrent.futures as cf
+import os
+import statistics
+import sys
+import time
+from dataclasses import dataclass
 
-_task_ids: list[int] = []
+import requests
 
 
-class GanttUser(HttpUser):
-    wait_time = between(1, 3)
-    auth = ("admin", "admin123")
+BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
+AUTH = ("admin", "admin123")
+PLAN_DATE = "2026-05-25"
 
-    def on_start(self):
-        r = self.client.post(
-            "/api/admin/transport/tasks",
-            json={"transtype": "Газель", "shipment_date": TOMORROW},
-            auth=self.auth,
-            name="POST /tasks (setup)",
+
+@dataclass
+class EndpointCase:
+    name: str
+    method: str
+    path: str
+    target_ms: float
+    requests: int
+    workers: int
+    params: dict | None = None
+
+
+def percentile(values: list[float], pct: float) -> float:
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    index = min(len(ordered) - 1, int(round((pct / 100) * (len(ordered) - 1))))
+    return ordered[index]
+
+
+def request_once(case: EndpointCase) -> tuple[float, int, str]:
+    started = time.perf_counter()
+    try:
+        response = requests.request(
+            case.method,
+            f"{BASE_URL}{case.path}",
+            auth=AUTH,
+            params=case.params,
+            timeout=20,
         )
-        if r.status_code in (200, 201):
-            tid = r.json().get("task_id")
-            if tid:
-                _task_ids.append(tid)
-                self.client.post(
-                    f"/api/admin/transport/tasks/{tid}/plan-operations",
-                    auth=self.auth,
-                    name="POST /tasks/{id}/plan-operations (setup)",
-                )
-
-    @task(5)
-    def get_gantt_tomorrow(self):
-        self.client.get(
-            "/api/admin/transport/vehicles/gantt",
-            params={"gantt_date": TOMORROW},
-            auth=self.auth,
-            name="GET /vehicles/gantt",
-        )
-
-    @task(3)
-    def get_gantt_today(self):
-        self.client.get(
-            "/api/admin/transport/vehicles/gantt",
-            params={"gantt_date": TODAY},
-            auth=self.auth,
-            name="GET /vehicles/gantt",
-        )
-
-    @task(2)
-    def get_operations(self):
-        if not _task_ids:
-            return
-        tid = random.choice(_task_ids)
-        self.client.get(
-            f"/api/admin/transport/tasks/{tid}/operations",
-            auth=self.auth,
-            name="GET /tasks/{id}/operations",
-        )
+        elapsed_ms = (time.perf_counter() - started) * 1000
+        return elapsed_ms, response.status_code, response.text[:240]
+    except Exception as exc:  # noqa: BLE001 - load runner must report transport failures.
+        elapsed_ms = (time.perf_counter() - started) * 1000
+        return elapsed_ms, 0, repr(exc)
 
 
-@events.quitting.add_listener
-def check_nfr(environment, **kwargs):
-    stats = environment.runner.stats
-    failures = []
+def run_case(case: EndpointCase) -> bool:
+    with cf.ThreadPoolExecutor(max_workers=case.workers) as pool:
+        results = list(pool.map(lambda _: request_once(case), range(case.requests)))
 
-    targets = {
-        "GET /vehicles/gantt":          ("GET",   2000),
-        "GET /tasks/{id}/operations":   ("GET",    200),
-    }
+    latencies = [elapsed for elapsed, _, _ in results]
+    failures = [(status, body) for _, status, body in results if status < 200 or status >= 300]
+    p95 = percentile(latencies, 95)
+    avg = statistics.mean(latencies) if latencies else 0.0
 
-    for name, (method, threshold_ms) in targets.items():
-        entry = stats.entries.get((name, method))
-        if entry and entry.num_requests > 0:
-            p95 = entry.get_response_time_percentile(0.95)
-            if p95 > threshold_ms:
-                failures.append(f"NFR FAIL: {name} p95={p95:.0f}ms > {threshold_ms}ms")
-
+    print(
+        f"{case.name}: requests={case.requests} workers={case.workers} "
+        f"avg={avg:.1f}ms p95={p95:.1f}ms target={case.target_ms:.0f}ms "
+        f"failures={len(failures)}"
+    )
     if failures:
-        print("\n".join(failures))
-        environment.process_exit_code = 1
+        print(f"  first failure: HTTP {failures[0][0]} {failures[0][1]}")
+        return False
+    if p95 > case.target_ms:
+        print(f"  NFR FAIL: p95 {p95:.1f}ms > {case.target_ms:.0f}ms")
+        return False
+    return True
+
+
+def setup_tasks(count: int = 5) -> list[int]:
+    task_ids: list[int] = []
+    for _ in range(count):
+        response = requests.post(
+            f"{BASE_URL}/api/admin/transport/tasks",
+            auth=AUTH,
+            json={"transtype": "Газель", "shipment_date": PLAN_DATE},
+            timeout=20,
+        )
+        if response.status_code not in (200, 201):
+            raise RuntimeError(f"task setup failed: HTTP {response.status_code} {response.text[:240]}")
+        task_id = int(response.json()["task_id"])
+        ops_response = requests.post(
+            f"{BASE_URL}/api/admin/transport/tasks/{task_id}/plan-operations",
+            auth=AUTH,
+            timeout=20,
+        )
+        if ops_response.status_code != 200:
+            raise RuntimeError(f"operation setup failed: HTTP {ops_response.status_code} {ops_response.text[:240]}")
+        task_ids.append(task_id)
+    return task_ids
+
+
+def main() -> int:
+    task_ids = setup_tasks()
+    cases = [
+        EndpointCase(
+            name="GET /vehicles/gantt",
+            method="GET",
+            path="/api/admin/transport/vehicles/gantt",
+            target_ms=500,
+            requests=80,
+            workers=10,
+            params={"gantt_date": PLAN_DATE},
+        ),
+        EndpointCase(
+            name="GET /tasks/{id}/operations",
+            method="GET",
+            path=f"/api/admin/transport/tasks/{task_ids[0]}/operations",
+            target_ms=200,
+            requests=80,
+            workers=10,
+        ),
+    ]
+
+    ok = True
+    for case in cases:
+        ok = run_case(case) and ok
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

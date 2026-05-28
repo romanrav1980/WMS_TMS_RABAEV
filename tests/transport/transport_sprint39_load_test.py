@@ -1,86 +1,109 @@
-"""
-transport_sprint39_load_test.py — Load tests for Sprint 39 (filter reset).
+"""Windows-safe load check for Sprint 39 (filter badge/reset).
 
-Sprint 39 is pure frontend — no new endpoints.
-Load test verifies the available-sts endpoint remains fast
-when called with the full range of filter combinations that the
-reset button clears, since this is the primary endpoint affected
-by filter state changes.
-
-NFR:
-  - GET /available-sts (no filters)          p95 ≤ 400ms
-  - GET /available-sts (addr_mask filter)    p95 ≤ 300ms
-  - GET /available-sts (type + assembled)    p95 ≤ 300ms
-
-Run:
-    locust -f tests/transport/transport_sprint39_load_test.py \
-        --host http://127.0.0.1:8088 --users 5 --spawn-rate 2 --run-time 60s --headless
+Sprint 39 is a frontend feature, but it changes how quickly users can flip
+filter state. This runner measures the read endpoint that receives those
+filter combinations. It does not mutate Oracle data.
 """
 
-from datetime import date
-import urllib.parse
-from locust import HttpUser, task, between, events
+from __future__ import annotations
 
+import concurrent.futures as cf
+import statistics
+import sys
+import time
+from dataclasses import dataclass
+from pathlib import Path
+from urllib.parse import urlencode
+
+import requests
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from support.project_config import local_config  # noqa: E402
+
+BASE_URL = local_config().api_base_url
 AUTH = ("admin", "admin123")
-TODAY = date.today().isoformat()
+PLAN_DATE = "2026-05-25"
 
 
-class FilterResetUser(HttpUser):
-    wait_time = between(2, 4)
-
-    @task(3)
-    def sts_no_filter(self):
-        self.client.get(
-            f"/api/admin/transport/available-sts?stdate={TODAY}",
-            auth=AUTH,
-            name="GET /available-sts (no filter)",
-        )
-
-    @task(3)
-    def sts_addr_filter(self):
-        addr = urllib.parse.quote("Пермь")
-        self.client.get(
-            f"/api/admin/transport/available-sts?stdate={TODAY}&addr_mask={addr}",
-            auth=AUTH,
-            name="GET /available-sts (addr_mask)",
-        )
-
-    @task(2)
-    def sts_type_assembled(self):
-        self.client.get(
-            f"/api/admin/transport/available-sts?stdate={TODAY}&transport_type=10&assembled_only=true",
-            auth=AUTH,
-            name="GET /available-sts (type+assembled)",
-        )
-
-    @task(2)
-    def sts_all_unassigned_false(self):
-        self.client.get(
-            f"/api/admin/transport/available-sts?stdate={TODAY}&unassigned_only=false",
-            auth=AUTH,
-            name="GET /available-sts (all, no filter)",
-        )
+@dataclass
+class EndpointCase:
+    name: str
+    path: str
+    target_ms: float
+    requests: int
+    workers: int
+    ok_statuses: tuple[int, ...] = (200,)
 
 
-@events.quitting.add_listener
-def check_nfr(environment, **kwargs):
-    stats = environment.runner.stats
-    failures = []
+def qs(**params: object) -> str:
+    return urlencode({k: v for k, v in params.items() if v is not None})
 
-    targets = {
-        "GET /available-sts (no filter)":      ("GET", 400),
-        "GET /available-sts (addr_mask)":      ("GET", 300),
-        "GET /available-sts (type+assembled)": ("GET", 300),
-        "GET /available-sts (all, no filter)": ("GET", 400),
-    }
 
-    for name, (method, threshold_ms) in targets.items():
-        entry = stats.entries.get((name, method))
-        if entry and entry.num_requests > 0:
-            p95 = entry.get_response_time_percentile(0.95)
-            if p95 > threshold_ms:
-                failures.append(f"NFR FAIL: {name} p95={p95:.0f}ms > {threshold_ms}ms")
+def percentile(values: list[float], pct: float) -> float:
+    ordered = sorted(values)
+    if not ordered:
+        return 0.0
+    return ordered[min(len(ordered) - 1, int(round((pct / 100) * (len(ordered) - 1))))]
 
+
+def request_once(case: EndpointCase) -> tuple[float, int, str]:
+    started = time.perf_counter()
+    try:
+        response = requests.get(f"{BASE_URL}{case.path}", auth=AUTH, timeout=20)
+        return (time.perf_counter() - started) * 1000, response.status_code, response.text[:160]
+    except Exception as exc:  # noqa: BLE001
+        return (time.perf_counter() - started) * 1000, 0, repr(exc)
+
+
+def run_case(case: EndpointCase) -> bool:
+    with cf.ThreadPoolExecutor(max_workers=case.workers) as pool:
+        results = list(pool.map(lambda _: request_once(case), range(case.requests)))
+    latencies = [elapsed for elapsed, _, _ in results]
+    failures = [(status, body) for _, status, body in results if status not in case.ok_statuses]
+    p95 = percentile(latencies, 95)
+    avg = statistics.mean(latencies) if latencies else 0.0
+    print(f"{case.name}: avg={avg:.1f}ms p95={p95:.1f}ms target={case.target_ms:.0f}ms failures={len(failures)}")
     if failures:
-        print("\n".join(failures))
-        environment.process_exit_code = 1
+        print(f"  first failure: HTTP {failures[0][0]} {failures[0][1]}")
+        return False
+    if p95 > case.target_ms:
+        print(f"  NFR FAIL: p95 {p95:.1f}ms > {case.target_ms:.0f}ms")
+        return False
+    return True
+
+
+def main() -> int:
+    cases = [
+        EndpointCase("GET /available-sts no filters", f"/api/admin/transport/available-sts?{qs(stdate=PLAN_DATE)}", 400, 40, 5),
+        EndpointCase(
+            "GET /available-sts addr_mask",
+            f"/api/admin/transport/available-sts?{qs(stdate=PLAN_DATE, addr_mask='Пермь')}",
+            300,
+            40,
+            5,
+        ),
+        EndpointCase(
+            "GET /available-sts type+assembled",
+            f"/api/admin/transport/available-sts?{qs(stdate=PLAN_DATE, transport_type='10', assembled_only='true')}",
+            300,
+            40,
+            5,
+        ),
+        EndpointCase(
+            "GET /available-sts unassigned=false",
+            f"/api/admin/transport/available-sts?{qs(stdate=PLAN_DATE, unassigned_only='false')}",
+            400,
+            40,
+            5,
+        ),
+    ]
+    for case in cases:
+        request_once(case)
+    ok = True
+    for case in cases:
+        ok = run_case(case) and ok
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

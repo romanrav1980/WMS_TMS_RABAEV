@@ -22,9 +22,11 @@ Start here for a fresh session:
 - [subprojects/windowsapplication2.md](subprojects/windowsapplication2.md): legacy WinForms WMS/TMS desktop application
 - [subprojects/oracle_schema.md](subprojects/oracle_schema.md): reconstructed Oracle schema and deployment scripts
 - [subprojects/wms_terminal_web.md](subprojects/wms_terminal_web.md): modern Web/PWA terminal application replacing the legacy terminal OS client
+- [subprojects/tms2_current_status.md](subprojects/tms2_current_status.md): reboot anchor for the active TMS-2 workstream, current Sprint 1-20 hardening status, fresh Sprint 1-6 functional/UI/load gate, risks, and next steps
 
 ## Architecture
 
+- [architecture/tms2_system_map.md](architecture/tms2_system_map.md): architecture map for the active TMS-2 transport replacement, covering frontend, FastAPI, service layer, Oracle objects, blocks, API contracts, and verification paths
 - [architecture/wms_mes_traceability_edd.md](architecture/wms_mes_traceability_edd.md): engineering design document for the WMS+MES+Traceability target architecture with Mercury and Honest Sign separation
 - [architecture/wave_resource_execution_evidence_architecture.md](architecture/wave_resource_execution_evidence_architecture.md): accepted architecture decision that wave is the central operational object, people/equipment tasks use the resource model, TSD facts synchronize through warehouse-task sync or case-pick events, and every business process requires evidence-driven testing
 
@@ -32,7 +34,12 @@ Start here for a fresh session:
 
 - [database/index.md](database/index.md): local wiki mirror of the Oracle `RABAEV` schema and change discipline
 - [database/oracle_change_protocol.md](database/oracle_change_protocol.md): required workflow for Oracle structure changes
+- [database/tms2_oracle_contract.md](database/tms2_oracle_contract.md): Oracle contract for TMS-2, including real legacy table columns, DML function call rules, schema drift notes, and migration status
 - [database/feed_factory_traceability_schema.md](database/feed_factory_traceability_schema.md): schema mirror for feed-factory traceability, Mercury/CRPT lifecycle, API audit/replay, wave stock movement ledger, regulatory journal migrations, warehouse topology 038/039, linear pick-route invariant migration 040, warehouse map canvas/slot migration 041, and Oracle publish invariant package 042
+
+## Incidents
+
+- [incidents/tms2_known_failures.md](incidents/tms2_known_failures.md): known TMS-2 failure modes and fixes, including Oracle DML function calls, billed-trip protection, planner schema drift, Gantt schema drift, and VRP partial success
 
 ## Concepts
 
@@ -48,6 +55,7 @@ Start here for a fresh session:
 ## Runbooks
 
 - [../scripts/README.md](../scripts/README.md): local Windows launch scripts for WMS API, admin frontend/raw UI reference, and terminal Web/PWA app
+- [runbooks/tms2_local_verification.md](runbooks/tms2_local_verification.md): local verification runbook for TMS-2 ports, Oracle env, migrations, functional tests by block, skip interpretation, encoding checks, and frontend smoke
 - [runbooks/create_api_server.md](runbooks/create_api_server.md): recommended API server stack and migration plan from `Tserver`
 - [runbooks/evidence_driven_process_testing.md](runbooks/evidence_driven_process_testing.md): обязательный runbook для evidence-driven приемки бизнес-процессов: сценарий, модель данных, runner, Oracle/API инварианты, ARM/TSD screenshots, reports
 - [../api/wms_api_server/README.md](../api/wms_api_server/README.md): first Python FastAPI implementation for WMS/TMS API and `Tserver` compatibility
@@ -96,6 +104,7 @@ Start here for a fresh session:
 - [requirements/mes_production_completion_prompt.md](requirements/mes_production_completion_prompt.md): prompt for implementing MES production completion through a movement journal and controlled legacy WMS bridge
 - [requirements/mes_raw_shortage_replenishment_tz.md](requirements/mes_raw_shortage_replenishment_tz.md): Russian technical assignment for BOM raw-material shortage calculation and transfer tasks from raw warehouse to production
 - [requirements/modern_terminal_app_tz.md](requirements/modern_terminal_app_tz.md): Russian technical assignment for the modern Web/PWA terminal app replacing the legacy terminal OS client
+- [requirements/tms2_acceptance_matrix.md](requirements/tms2_acceptance_matrix.md): strategic acceptance matrix for TMS-2 Sprint 1-20, mapping user flows to API, Oracle contracts, tests, gaps, and release gates
 - [requirements/picking_planning_tz.md](requirements/picking_planning_tz.md): Russian technical assignment for customer-order picking planning, reservations, customer rules, route/dock context, and shipment-part splitting
 - [requirements/raw_material_admin_tz.md](requirements/raw_material_admin_tz.md): Russian technical assignment for the raw-material admin page: raw SKU settings, raw warehouses, and stock by selected warehouses
 - [requirements/resource_management_module_tz.md](requirements/resource_management_module_tz.md): Russian technical assignment for a separate resource-management module covering reachtrucks, KIKA, forklifts, trolleys, pickers, loading teams, cooking, packing, shifts, sessions, dispatch, and plan-fact Gantt

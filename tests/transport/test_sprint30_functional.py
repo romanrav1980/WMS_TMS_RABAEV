@@ -90,7 +90,7 @@ class TestClustersEndpointRegression:
     def test_list_clusters_returns_list(self):
         """GET /clusters returns a list (even if empty)."""
         from unittest.mock import patch
-        from app.services.transport_service import TransportService
+        from api.wms_api_server.app.services.transport_service import TransportService
         from datetime import date
 
         with patch.object(TransportService, "list_clusters", return_value=[]) as mock_lc:
@@ -101,7 +101,7 @@ class TestClustersEndpointRegression:
     def test_list_clusters_groups_by_raion(self):
         """list_clusters aggregates STs by RAION correctly."""
         from unittest.mock import patch, MagicMock
-        from app.services.transport_service import TransportService
+        from api.wms_api_server.app.services.transport_service import TransportService
         from datetime import date
 
         sts = [

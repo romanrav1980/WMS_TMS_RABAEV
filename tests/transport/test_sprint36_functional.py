@@ -1,4 +1,4 @@
-"""
+﻿"""
 test_sprint36_functional.py — Functional tests for Sprint 36 (bulk ST removal).
 
 Sprint 36 adds multi-select checkboxes in the trip detail table so the
@@ -45,10 +45,10 @@ class TestDeleteStEndpointContract:
         svc = TransportService.__new__(TransportService)
         svc.gateway = gateway
 
-        # Simulate remove_st_from_task
+        # Simulate unassign_st
         with patch.object(svc, "get_task", return_value=make_task()), \
              patch.object(svc, "get_task_sts", return_value=[make_st("ST-001")]):
-            svc.remove_st_from_task(task_id=1, st_number="ST-001", user_id="u1")
+            svc.unassign_st(task_id=1, st_number="ST-001", user_id="u1")
 
         gateway.call_varchar_function.assert_called_once_with(
             "RABAEV.RRL_TT_ADD_PALL", {"TT_ID": 0, "ST_NUMBER1": "ST-001"}
@@ -65,7 +65,7 @@ class TestDeleteStEndpointContract:
 
         with patch.object(svc, "get_task", return_value=make_task(condition="Отгружен")):
             with pytest.raises(HTTPException) as exc_info:
-                svc.remove_st_from_task(task_id=1, st_number="ST-001", user_id="u1")
+                svc.unassign_st(task_id=1, st_number="ST-001", user_id="u1")
         assert exc_info.value.status_code == 409
 
     def test_delete_raises_for_billed_task(self):
@@ -79,7 +79,7 @@ class TestDeleteStEndpointContract:
 
         with patch.object(svc, "get_task", return_value=make_task(pay_order_id=42)):
             with pytest.raises(HTTPException) as exc_info:
-                svc.remove_st_from_task(task_id=1, st_number="ST-001", user_id="u1")
+                svc.unassign_st(task_id=1, st_number="ST-001", user_id="u1")
         assert exc_info.value.status_code == 409
 
 

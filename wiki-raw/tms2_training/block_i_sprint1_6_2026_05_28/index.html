@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>ТМС-2 Block I: Диспетчер рейсов</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; color: #172033; background: #f4f7fb; }
+    header { padding: 28px 36px; background: #113a5c; color: white; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 24px 48px; }
+    section { background: white; border: 1px solid #d8e0ea; border-radius: 8px; padding: 22px; margin: 0 0 22px; }
+    h1, h2, h3 { margin-top: 0; }
+    h2 { color: #113a5c; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .card { background: #f8fbff; border: 1px solid #d8e0ea; border-radius: 6px; padding: 14px; }
+    img { width: 100%; border: 1px solid #c7d2e0; border-radius: 6px; display: block; }
+    figure { margin: 0 0 24px; }
+    figcaption { font-size: 14px; color: #41516a; margin-top: 8px; line-height: 1.45; }
+    table { width: 100%; border-collapse: collapse; }
+    td, th { border: 1px solid #d8e0ea; padding: 8px; vertical-align: top; }
+    th { background: #eef4fb; text-align: left; }
+    code { background: #eef4fb; padding: 1px 4px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ТМС-2 Block I: Диспетчер и жизненный цикл рейса</h1>
+    <p>Sprint 1-6. Учебная визуальная инструкция по результатам успешного functional/UI/load gate.</p>
+  </header>
+  <main>
+    <section>
+      <h2>Зачем этот блок</h2>
+      <p>Block I заменяет ежедневную работу диспетчера из legacy WinForms: увидеть свободные СТ, отфильтровать и выделить их, создать рейс, проверить состав, отредактировать реквизиты, управлять порядком/типом погрузки и открыть паллетную детализацию.</p>
+      <div class="grid">
+        <div class="card"><b>Вход</b><br>СТ из сборки, адреса, паллеты, вес, объём, готовность, требования к ТС.</div>
+        <div class="card"><b>Процесс</b><br>Выделение СТ, создание/редактирование рейса, назначение/снятие СТ, закрытие рейса.</div>
+        <div class="card"><b>Результат</b><br>Рейс с составом, реквизитами, порядком объезда, типом погрузки и контролем готовности.</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Структура данных</h2>
+      <table>
+        <tr><th>Объект</th><th>Основные поля</th><th>Источник</th></tr>
+        <tr><td>СТ</td><td><code>ST_NUMBER</code>, <code>ADDR</code>, <code>REGION</code>, <code>RAION</code>, <code>PALLETS_COUNT</code>, <code>WEIGHT_KG</code>, <code>VOLUME_M3</code>, <code>VERIFY_PERC</code>, <code>TRANSTASK_ID</code></td><td><code>RRL_SBORKA_PALLETS</code>, <code>RRL_SBORKA_PALLET_ROWS</code>, <code>RRL_ADDR</code></td></tr>
+        <tr><td>Рейс</td><td><code>ID</code>, <code>TRANSTYPE</code>, <code>TRANSPORT</code>, <code>VODITEL_ID</code>, <code>DOCK</code>, <code>SHIPMENT_DATE</code>, <code>READY_PERC</code>, <code>PAY_ORDER_ID</code></td><td><code>RRL_TRANSPORT_TASK</code>, <code>RRL_TR_VEHICLE</code>, <code>RRL_TR_VODITEL</code></td></tr>
+        <tr><td>Паллеты СТ</td><td><code>PALLET_UID</code>, <code>ZONE</code>, <code>LOAD_TYPE</code>, <code>ORD</code>, <code>ARTICUL</code>, <code>ORDER_WEIGHT</code>, <code>PACK_COUNT</code></td><td><code>RRL_SBORKA_PALLETS</code>, <code>RRL_SBORKA_PALLET_ROWS</code></td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Как работать</h2>
+      <figure>
+        <img src="screenshots/01_requests_table.png" alt="Таблица СТ" />
+        <figcaption><b>1. Таблица заявок.</b> Диспетчер начинает с вкладки заявок: видит склад, паллеты, вес, объём, регион, адрес, номер СТ, дату, готовность сборки, район, тип ТС, признак гидроборта/стола, примечание и полнопалетную отборку.</figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/02_selection_summary.png" alt="Выделение СТ" />
+        <figcaption><b>2. Выделение СТ.</b> Чекбокс выбирает СТ; строка итогов показывает количество выбранных СТ, паллеты, массу и объём без дополнительного запроса к серверу.</figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/03_create_trip_dialog.png" alt="Создание рейса" />
+        <figcaption><b>3. Создание рейса.</b> Из выделения открывается диалог создания: тип ТС, машина, водитель, док и дата отгрузки. После создания выбранные СТ назначаются на рейс.</figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/04_routes_detail.png" alt="Список и состав рейса" />
+        <figcaption><b>4. Маршруты и состав.</b> Вкладка маршрутов показывает список рейсов, готовность, ТК/свой водитель, цену и статус. При выборе рейса ниже открывается состав СТ.</figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/05_edit_trip.png" alt="Редактирование рейса" />
+        <figcaption><b>5. Редактирование рейса.</b> В карточке рейса можно изменить машину, водителя, док, время, дату, тип ТС и примечание. Снятие СТ и закрытие рейса доступны из той же формы.</figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/06_pallets_panel.png" alt="Паллеты заявки" />
+        <figcaption><b>6. Паллеты заявки.</b> Кнопка паллет открывает детализацию по выбранной СТ: паллеты, зона, тип погрузки, порядок, артикулы, вес, упаковки и объём.</figcaption>
+      </figure>
+    </section>
+
+    <section>
+      <h2>Бизнес-процессы</h2>
+      <ol>
+        <li><b>Планирование дня:</b> выбрать дату, отфильтровать свободные СТ, проверить готовность и требования к машине.</li>
+        <li><b>Формирование рейса:</b> выделить группу СТ, выбрать тип ТС/водителя/док, создать рейс и проверить, что СТ ушли в состав.</li>
+        <li><b>Оперативное редактирование:</b> поправить реквизиты рейса, порядок объезда и тип погрузки, снять ошибочно назначенную СТ.</li>
+        <li><b>Контроль перед отгрузкой:</b> проверить readiness, состав, паллеты, адреса и требования гидроборта/стола.</li>
+        <li><b>Закрытие:</b> закрыть рейс как отгруженный; пустой рейс или рейс с бизнес-ошибкой не должен закрываться молча.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Результат проверки</h2>
+      <p>Block I Sprint 1-6 прошёл gate: functional tests <code>78 passed</code>, UI smoke Sprint 1-6 passed, load NFR Sprint 4-6 passed, frontend build passed.</p>
+    </section>
+  </main>
+</body>
+</html>

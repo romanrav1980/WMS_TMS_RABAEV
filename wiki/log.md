@@ -1743,3 +1743,394 @@ Append-only log of root wiki updates.
 - Ran the compressed `warehouse-map` UI acceptance pack on `http://127.0.0.1:3000/?page=warehouse-map`; `tests/ui/warehouse_map_ui_smoke.cjs` passed with `ok=true`.
 - Recorded green evidence for no-canvas reset, late-response protection, selection-scoped `Регулярный склад`, fractional pick across all selected physical cells, draft controls, route/oracle flow, representative context-menu commands, and back button.
 - Verified `npm.cmd run build` and scoped `git diff --check`; build completed with the already-known Leaflet/Rollup and chunk-size warnings.
+
+## 2026-05-28 - TMS-2 Sprint 1-10 hardening checkpoint
+
+- Scoped work to TMS-2 only and left warehouse-map/MES/WMS picking aside.
+- Audited transport status, files, and functional tests; Sprint 1-3 currently have no dedicated functional test files, while Sprint 4-20 do.
+- Hardened Block I transport dispatcher paths: uppercase transport API row contract, task update bind parameters, empty-trip close validation, real `RRL_TRANSPORT_TYPE` columns, pallet query schema compatibility, and faster empty-date `available-sts`.
+- Applied local Oracle migrations `051_apply.sql` and `052_apply.sql` for Sprint 7/8 dev schema, then fixed MAP/VRP service compatibility with `DISTANCE_KM`/`UPDATED_AT` and `PAYLOAD`.
+- Optimized Sprint 8 distance matrix rebuild from per-pair Oracle commits to batched `execute_many`; 79 geocoded addresses now rebuild 6162 pairs in about 1-2 seconds locally.
+- Reworked Sprint 10 demand forecast to count distinct ST numbers from `RRL_SBORKA_PALLETS` by date range instead of repeated `TRUNC()` scans over `RRL_V_AVAILABLE_STS`.
+- Verification: Block I `test_sprint4..6_functional.py` -> `40 passed, 14 skipped`; Block II `test_sprint7..10_functional.py` -> `54 passed, 7 skipped`.
+
+## 2026-05-28 - TMS-2 Sprint 11-14 hardening checkpoint
+
+- Applied Sprint 11 Oracle migration `053_apply.sql` after making `RRL_TT_OPERATIONS` compatible with the legacy `RRL_TRANSPORT_TASK` table that lacks a suitable FK target.
+- Added `transtype` alias normalization for `Газель -> 5` before legacy Oracle writes.
+- Fixed ARM/Gantt schema drift: Gantt now joins `RRL_TR_VEHICLE`, uses `DELETED` and date ranges, separates no-vehicle tasks, and creates operation chains lazily for tasks that appear in Gantt without planned operations.
+- Fixed vehicle availability and plan-fact reports to use real legacy columns (`CONDITION AS STATUS`, `DELETED`) instead of non-existent `STATUS`.
+- Verification: Block III `test_sprint11..14_functional.py` -> `54 passed, 1 skipped`.
+
+## 2026-05-28 - TMS-2 Sprint 15-20 hardening checkpoint
+
+- Applied Sprint 15 billing migration `054_apply.sql` in dev after widening legacy `RRL_BILL_ORDERS.COMPANY` to fit seeded company names.
+- Fixed billing Oracle DML functions so `RRL_UPDATE_PRICE`, `RRL_ADD_TT_2_BILLINGORDER`, `RRL_CLOSE_BILLINGORDER`, and `RRL_PAY_BILLINGORDER` are called through PL/SQL blocks, not SQL `SELECT FROM DUAL` paths.
+- Fixed billing add/remove behavior: nonexistent orders return 404, Oracle business-rule messages return 409, and remove uses a plain `UPDATE` so rowcount reflects real unlinking.
+- Fixed Sprint 20 billed-trip protection by returning `PAY_ORDER_ID` from `get_task()`; cancel, assign ST, and unassign ST now reject billed trips with 409.
+- Hardened Sprint 15/18/19/20 functional fixtures to use real billable trips with carrier and calculated price instead of empty artificial trips.
+- Removed silent partial-success from Sprint 8 VRP apply: route update/assignment failures now fail the API call instead of being swallowed.
+- Verification: Block IV `test_sprint15..20_functional.py` -> `62 passed`; Sprint 8 focused rerun -> `19 passed, 2 skipped` because the current dev seed produces no VRP routes.
+- Final transport functional control for Sprint 4-20: `211 passed, 21 skipped` in 7:04; remaining skips are tied to missing dated seed rows for free STs, geocoded STs, VRP routes, historical plans, or vehicle fixtures.
+
+## 2026-05-28 - TMS-2 strategic documentation anchors
+
+- Added `subprojects/tms2_current_status.md` as the reboot anchor for the active TMS-2 workstream: scope, last hardening checkpoint, tests, fixed defects, risks, local run rules, and next strategic steps.
+- Added `requirements/tms2_acceptance_matrix.md` to define Sprint 1-20 acceptance by user flow, API contract, Oracle contract, functional gate, known gaps, and release gate.
+- Updated `wiki/index.md` so future sessions can discover both TMS-2 anchors before reading the longer sprint roadmap.
+
+## 2026-05-28 - TMS-2 architecture and verification docs
+
+- Added `architecture/tms2_system_map.md` with the TMS-2 runtime layers, block boundaries, key API paths, Oracle ownership, and verification references.
+- Added `database/tms2_oracle_contract.md` with real Oracle table/column contracts, DML function call rules, known schema drift, and migration status for Sprint 1-20.
+- Added `runbooks/tms2_local_verification.md` with ports, Oracle env, migration command, pytest gates by block, full Sprint 4-20 command, skip policy, encoding checks, and frontend smoke.
+- Added `incidents/tms2_known_failures.md` to preserve the fixes for ORA-14551, billed-trip protection, billing unlink rowcount, fake billing fixtures, planner drift, Gantt drift, and VRP partial success.
+- Updated `wiki/index.md` with the new TMS-2 architecture, database, runbook, and incident documents.
+
+## 2026-05-28 - TMS-2 Block I Sprint 1-6 functional/UI/load hardening
+
+- Added direct Sprint 1-3 functional tests, Sprint 1-6 Playwright UI smoke tests, and stabilized Sprint 1-6 load scripts on seed-date `2026-05-25`.
+- Fixed Sprint 1 `available-sts` performance by replacing the heavy view/function path with set-based aggregation over real legacy tables plus short cache and single-flight protection.
+- Fixed Sprint 3 route list 500 caused by stale alias `P.CONDITION` in the task-list SQL.
+- Fixed frontend runtime error in `TransportDispatchPage.tsx` caused by `loadClusters` being used before initialization.
+- Added lazy Oracle connection pooling in `api/wms_api_server/app/db.py`; this removed per-query connection setup from hot transport paths.
+- Replaced per-row PL/SQL readiness calls with set-based readiness in task lists and task composition.
+- Added short caches for transport reference data and task composition, with explicit invalidation on assignment/order/load-type/cancel changes.
+- Moved high-frequency read-only transport GET endpoints to lightweight audit without Oracle start/finish audit; mutating endpoints still use full API audit.
+- Verification: Sprint 1-6 functional gate -> `78 passed`; UI smoke Sprint 1-6 -> all passed; Sprint 4 load -> all NFR passed; Sprint 5 load -> all NFR passed; Sprint 6 load -> all NFR passed; frontend build passed with existing Vite warnings.
+
+## 2026-05-28 - TMS-2 Block I training presentation
+
+- Added `tests/ui/transport_block1_training_capture.cjs` to generate a reusable HTML training pack with mocked UI screenshots for the successfully accepted Block I dispatcher functionality.
+- Generated `wiki-raw/tms2_training/block_i_sprint1_6_2026_05_28/index.html` with six screenshots covering the ST table, selection summary, create-trip dialog, route detail, trip editing, and pallet detail panel.
+- Recorded the new operating rule: after large sprints or sprint blocks, successful test evidence should also produce a visual HTML instruction for initial user training, including purpose, data structure, result, screenshots, and business processes.
+
+## 2026-05-28 - TMS-2 terminology: полнопалетная отборка
+
+- Standardized user-facing terminology: the historical legacy term means `полнопалетная отборка`; future user-facing text should use only `Полнопалетная отборка`.
+- Kept backend/API legacy field name `SUGAR` and legacy function `RRL_SUGAR_HAS` for compatibility, but updated UI labels, tooltips, tests, checklist text, roadmap, TZ, and training copy to use `Полнопалетная отборка`.
+
+## 2026-05-28 - TMS-2 Sprint 7 hardening
+
+- Fixed `/api/admin/transport/planner/orders` latency by replacing the heavy `RRL_V_AVAILABLE_STS` path with direct set-based aggregation over `RRL_SBORKA_PALLETS`, `RRL_SBORKA_PALLET_ROWS`, and `RRL_ADDR`.
+- Added `/planner/orders` and `/routing/status` to lightweight audit because they are high-frequency read-only MAP endpoints.
+- Added `tests/ui/transport_sprint7_ui_smoke.cjs`; it covers the planner page, map markers, geocoding status, transport-type filter, reload action, and marker popup.
+- Fixed a dev UI crash on the planner map (`Map container is already initialized`) by rendering the React app without StrictMode; Leaflet now works on local frontend port `3000`.
+- Verification: `test_sprint7_functional.py` -> `14 passed`; `transport_sprint7_load_test.py` -> p95 `/planner/orders` 97.5 ms, `/routing/status` 35.8 ms; UI smoke Sprint 1-7 passed; frontend build passed with existing bundle-size and `react-leaflet-draw` warnings.
+
+## 2026-05-28 - TMS-2 Sprint 8 hardening
+
+- Stabilized Sprint 8 tests on seed-date `2026-05-25`; the functional gate now requires a non-empty VRP plan instead of skipping route assertions on empty plans.
+- Kept destructive `/planner/apply` full-flow out of the default shared-seed gate; optional mutating apply is available with `TMS_RUN_MUTATING_VRP_APPLY=1`.
+- Replaced the Locust-only Sprint 8 load script with a Windows-safe Python runner.
+- Added `tests/ui/transport_sprint8_ui_smoke.cjs` covering `Авто-план`, route metrics/right panel, route expansion, and apply payload.
+- Verification: `test_sprint8_functional.py` -> `23 passed`; `transport_sprint8_load_test.py` -> metrics p95 360.7 ms, solve p95 647.5 ms, matrix rebuild p95 414.6 ms; Sprint 8 UI smoke passed.
+
+## 2026-05-28 - TMS-2 Sprint 9 hardening
+
+- Stabilized Sprint 9 cluster/RAION checks on seed-date `2026-05-25`; cluster solver now must return non-empty routes.
+- Added `tests/transport/transport_sprint9_load_test.py` for cluster solve, templates, and planner orders.
+- Added `tests/ui/transport_sprint9_ui_smoke.cjs` covering cluster layer toggle, `solver=cluster`, historical template rendering, and template apply payload.
+- Verification: `test_sprint9_functional.py` -> `10 passed, 1 skipped`; the remaining skip is the missing historical-plan Oracle fixture. Load gate passed with p95 cluster solve 598.3 ms, templates 413.5 ms, orders 140.1 ms; Sprint 9 UI smoke passed.
+
+## 2026-05-28 - TMS-2 Sprint 10 hardening
+
+- Added `tests/transport/transport_sprint10_load_test.py` for planner history and demand forecast.
+- Added `tests/ui/transport_sprint10_ui_smoke.cjs` covering analytics tab history cards/table, objective weights, and demand forecast.
+- Moved planner history, demand forecast, and templates GET endpoints to lightweight audit and added short service-cache for history/forecast query params.
+- Verification: `test_sprint10_functional.py` -> `15 passed`; load p95 history 471.5 ms, forecast 161.2 ms; Sprint 10 UI smoke passed.
+
+## 2026-05-28 - TMS-2 training evidence rule
+
+- Fixed the project rule: after each closed sprint or functional block, create an HTML training/evidence pack under `wiki-raw/tms2_training/`.
+- Each pack must explain why the block exists, its data structure, expected result, included business processes, and show screenshots proving successful execution of those processes.
+- Added `tests/ui/transport_block2_training_capture.cjs` to generate the Block II Sprint 7-10 MAP/VRP presentation.
+
+## 2026-05-28 - TMS-2 Sprint 11 hardening
+
+- Added `tests/ui/transport_sprint11_ui_smoke.cjs` covering the Gantt page, task card, context-menu fact marking, and plan-fact analytics tab.
+- Replaced the Locust-only Sprint 11 load script with a Windows-safe Python runner.
+- Fixed Sprint 11 performance: cached operation norms, made `plan-operations` insert the whole chain in one transaction, moved hot read endpoints to lightweight audit, and changed `GET /vehicles/gantt` from N+1/lazy-mutation behavior to a set-based read over `RRL_TT_OPERATIONS`.
+- Added `tests/ui/transport_sprint11_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint11_arm_gantt_2026_05_28/index.html`.
+- Verification: `test_sprint11_functional.py` -> `20 passed`; load gate passed with operations p95 160.8 ms, fact p95 219.5 ms, gantt p95 195.5 ms, plan-operations p95 175.7 ms; Sprint 11 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 12 hardening
+
+- Replaced the Locust-only Sprint 12 load script with a Windows-safe Python runner for Gantt and operation-read paths.
+- Added `tests/ui/transport_sprint12_ui_smoke.cjs` covering the Gantt page, legend, summary, hover tooltip, vehicle filter, date navigation, and deviations panel.
+- Added `tests/ui/transport_sprint12_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint12_gantt_dashboard_2026_05_28/index.html`.
+- Verification: `test_sprint12_functional.py` -> `12 passed`; load gate passed with gantt p95 158.0 ms and operations p95 86.0 ms; Sprint 12 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 13 hardening
+
+- Stabilized Sprint 13 functional tests on seed-date `2026-05-25` and added setup for a vehicle-backed plan-fact task; the previous vehicle-filter skip is gone.
+- Replaced the Locust-only Sprint 13 load script with a Windows-safe Python runner.
+- Fixed `/vehicles/available` load by adding a short availability cache and lightweight audit; cache is invalidated when operations are replanned or fact times change.
+- Added `tests/ui/transport_sprint13_ui_smoke.cjs` covering availability statuses and conflict warnings in the create-route dialog.
+- Added `tests/ui/transport_sprint13_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint13_vehicle_availability_2026_05_28/index.html`.
+- Verification: `test_sprint13_functional.py` -> `16 passed`; load gate passed with available p95 455.1 ms, plan-fact p95 651.1 ms, gantt p95 197.2 ms; Sprint 13 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 14 hardening
+
+- Replaced the Locust-only Sprint 14 load script with a Windows-safe Python runner.
+- Added `tests/ui/transport_sprint14_ui_smoke.cjs` covering the plan-fact analytics tab, rest violations, deviation bars, and CSV export.
+- Added `tests/ui/transport_sprint14_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint14_plan_fact_2026_05_28/index.html`.
+- Verification: `test_sprint14_functional.py` -> `7 passed`; load gate passed with plan-fact 1 day p95 420.1 ms, plan-fact 30 days p95 291.3 ms, gantt p95 125.5 ms; Sprint 14 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 15 hardening
+
+- Replaced the Locust-only Sprint 15 load script with a Windows-safe Python runner for billing list/create/task-billing paths.
+- Added `GET /billing/orders` to lightweight audit because the billing registry is a hot read endpoint.
+- Added `tests/ui/transport_sprint15_ui_smoke.cjs` covering closed task selection, billing-open dialog, create billing order, and PAY_ORDER_ID badge.
+- Added `tests/ui/transport_sprint15_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint15_billing_open_2026_05_28/index.html`.
+- Verification: `test_sprint15_functional.py` -> `12 passed`; load gate passed with list p95 283.0 ms, filtered list p95 85.0 ms, create p95 174.3 ms, task billing p95 189.4 ms; Sprint 15 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 16 hardening
+
+- Replaced the Locust-only Sprint 16 load script with a Windows-safe Python runner for billing order read/close/pay paths.
+- Added read-only `GET /billing/orders/{id}` to lightweight audit; close/pay remain full audited mutations.
+- Added `tests/ui/transport_sprint16_ui_smoke.cjs` covering the billing status lifecycle in the task card.
+- Added `tests/ui/transport_sprint16_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint16_billing_lifecycle_2026_05_28/index.html`.
+- Verification: `test_sprint16_functional.py` -> `11 passed`; load gate passed with get order p95 151.1 ms, close p95 86.3 ms, pay p95 75.1 ms; Sprint 16 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 17 hardening
+
+- Replaced the Locust-only Sprint 17 load script with a Windows-safe Python runner for billing registry filters.
+- Added `tests/ui/transport_sprint17_ui_smoke.cjs` covering billing registry tab, company filter, totals, and CSV export.
+- Added `tests/ui/transport_sprint17_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint17_billing_registry_2026_05_28/index.html`.
+- Verification: `test_sprint17_functional.py` -> `12 passed`; load gate passed with list p95 112.2 ms, date filter p95 127.5 ms, company filter p95 146.5 ms, paid filter p95 64.4 ms; Sprint 17 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 18 hardening
+
+- Replaced the Locust-only Sprint 18 load script with a Windows-safe Python runner for price recalc, manual price, and billing-list control path.
+- Added `tests/ui/transport_sprint18_ui_smoke.cjs` covering task price display, Oracle-style recalculation action, and manual price save.
+- Added `tests/ui/transport_sprint18_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint18_price_management_2026_05_28/index.html`.
+- Verification: `test_sprint18_functional.py` -> `11 passed`; load gate passed with set-price p95 205.3 ms, recalculate p95 92.8 ms, billing list p95 74.7 ms; Sprint 18 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 19 hardening
+
+- Replaced the Locust-only Sprint 19 load script with a Windows-safe Python runner for open-order filter, order tasks, and add-task-to-order paths.
+- Added `tests/ui/transport_sprint19_ui_smoke.cjs` covering link-to-existing-order in the billing-open dialog.
+- Added `tests/ui/transport_sprint19_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint19_link_existing_billing_2026_05_28/index.html`.
+- Verification: `test_sprint19_functional.py` -> `9 passed`; load gate passed with open-order filter p95 121.1 ms, order tasks p95 48.2 ms, add task p95 89.0 ms; Sprint 19 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 20 hardening
+
+- Replaced the Locust-only Sprint 20 load script with a Windows-safe Python runner for billed-task early-409 protection and allowed price update.
+- Added `tests/ui/transport_sprint20_ui_smoke.cjs` covering billed badge/card and disabled cancel action in the route card.
+- Added `tests/ui/transport_sprint20_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint20_billed_task_protection_2026_05_28/index.html`.
+- Verification: `test_sprint20_functional.py` -> `7 passed`; load gate passed with billed cancel p95 192.3 ms, billed assign p95 156.3 ms, allowed price p95 174.3 ms; Sprint 20 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 21 hardening
+
+- Replaced the Locust-only Sprint 21 load script with a Windows-safe Python runner for billing RBAC read/mutation paths.
+- Fixed Sprint 21 UI error handling: price recalculation and manual price 403 responses are now shown in `.dispatch-error` instead of being silently ignored.
+- Added `tests/ui/transport_sprint21_ui_smoke.cjs` covering denied billing price operations in the route card.
+- Added `tests/ui/transport_sprint21_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint21_billing_rbac_2026_05_28/index.html`.
+- Verification: `test_sprint21_functional.py` -> `9 passed`; load gate passed with list p95 76.9 ms, filtered list p95 60.7 ms, create p95 159.8 ms, recalc p95 185.6 ms, manual price p95 167.9 ms; Sprint 21 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 22 hardening
+
+- Replaced the Locust-only Sprint 22 load script with a Windows-safe Python runner for billing company lookup and `NUM_PLAT` registry reads.
+- Added `GET /billing/companies` to lightweight audit and cached the Oracle company directory through the shared reference cache.
+- Added `tests/ui/transport_sprint22_ui_smoke.cjs` covering `NUM_PLAT` in registry/detail and company datalist in the billing dialog.
+- Added `tests/ui/transport_sprint22_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint22_company_directory_num_plat_2026_05_28/index.html`.
+- Verification: `test_sprint22_functional.py` -> `10 passed`; load gate passed with companies p95 189.5 ms, orders p95 164.9 ms, filtered orders p95 86.5 ms; Sprint 22 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 23 hardening
+
+- Replaced the Locust-only Sprint 23 load script with a Windows-safe Python runner for billing order detail reads.
+- Fixed `GET /billing/orders/{id}/tasks` to return 404 for an unknown billing order instead of silently returning an empty list.
+- Added `tests/ui/transport_sprint23_ui_smoke.cjs` covering the billing detail panel, task rows, totals, and CSV export.
+- Added `tests/ui/transport_sprint23_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint23_billing_order_detail_2026_05_28/index.html`.
+- Verification: `test_sprint23_functional.py` -> `9 passed`; load gate passed with orders p95 227.5 ms, order tasks p95 123.6 ms, companies p95 38.8 ms; Sprint 23 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 24 hardening
+
+- Replaced the Locust-only Sprint 24 load script with a Windows-safe Python runner for planner metrics/history/routing status.
+- Added `GET /planner/metrics` to lightweight audit and fixed the load gate to send required `date_from/date_to` to planner history.
+- Added `tests/ui/transport_sprint24_ui_smoke.cjs` covering VRP route stop drag-and-drop, modified indicator, reset, and no backend apply call before explicit apply.
+- Added `tests/ui/transport_sprint24_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint24_vrp_drag_drop_2026_05_28/index.html`.
+- Verification: `test_sprint24_functional.py` -> `9 passed`; load gate passed with metrics p95 37.0 ms, history p95 36.9 ms, routing status p95 31.9 ms; Sprint 24 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 25 hardening
+
+- Replaced the Locust-only Sprint 25 load script with a Windows-safe Python runner for billing list/detail/company reads.
+- Fixed `remove_task_from_billing_order()` so paid billing orders reject detach attempts with 409, matching closed-order protection.
+- Added `tests/ui/transport_sprint25_ui_smoke.cjs` covering detach from the route card and from the billing detail panel.
+- Added `tests/ui/transport_sprint25_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint25_detach_billing_2026_05_28/index.html`.
+- Verification: `test_sprint25_functional.py` -> `7 passed, 3 skipped` due to missing closed/payed task seed; load gate passed with orders p95 278.9 ms, order tasks p95 105.9 ms, companies p95 41.4 ms; Sprint 25 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 26 hardening
+
+- Replaced the Locust-only Sprint 26 load script with a Windows-safe Python runner for order XLSX export.
+- Fixed `export_billing_order_xlsx()` so missing `openpyxl` no longer causes 500; unknown order is checked before generation and returns 404, with a stdlib `zipfile` fallback XLSX generator.
+- Added `tests/ui/transport_sprint26_ui_smoke.cjs` covering Excel download from the billing detail panel.
+- Added `tests/ui/transport_sprint26_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint26_billing_order_xlsx_2026_05_28/index.html`.
+- Verification: `test_sprint26_functional.py` -> `7 passed, 4 skipped` due to openpyxl not installed on the test runner; load gate passed with orders p95 138.2 ms, order tasks p95 57.9 ms, export p95 75.5 ms; Sprint 26 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 27 hardening
+
+- Replaced the Locust-only Sprint 27 load script with a Windows-safe Python runner for registry XLSX export and per-order export regression.
+- Fixed `export_billing_registry_xlsx()` so missing `openpyxl` no longer causes 500; registry export now has a stdlib `zipfile` fallback XLSX generator.
+- Added `tests/ui/transport_sprint27_ui_smoke.cjs` covering Excel download from the billing registry toolbar.
+- Added `tests/ui/transport_sprint27_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint27_billing_registry_xlsx_2026_05_28/index.html`.
+- Verification: `test_sprint27_functional.py` -> `8 passed, 5 skipped` due to openpyxl not installed on the test runner; load gate passed with orders p95 137.7 ms, registry export p95 139.1 ms, order export p95 95.0 ms; Sprint 27 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 28 hardening
+
+- Replaced the Locust-only Sprint 28 load script with a Windows-safe Python runner for dated task list and task XLSX export.
+- Fixed `export_tasks_xlsx()` so missing `openpyxl` no longer causes 500; task export now has a stdlib `zipfile` fallback XLSX generator.
+- Added `tests/ui/transport_sprint28_ui_smoke.cjs` covering Excel download from the routes toolbar.
+- Added `tests/ui/transport_sprint28_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint28_tasks_xlsx_2026_05_28/index.html`.
+- Verification: `test_sprint28_functional.py` -> `9 passed, 4 skipped` due to openpyxl not installed on the test runner; load gate passed with tasks p95 153.2 ms and dated export p95 308.6 ms; Sprint 28 UI smoke and training capture passed. Risk: unfiltered export remains heavy on broad history.
+
+## 2026-05-28 - TMS-2 Sprint 29 hardening
+
+- Replaced the Locust-only Sprint 29 load script with a Windows-safe Python runner for clusters and a safe negative create-task path.
+- Fixed Sprint 29 functional imports to use `api.wms_api_server.app.*` and aligned tests with server-side `raion` filtering in `list_available_sts`.
+- Added `GET /clusters` to lightweight audit.
+- Added `tests/ui/transport_sprint29_ui_smoke.cjs` covering cluster mode, create dialog, POST create-task, and selecting the new route.
+- Added `tests/ui/transport_sprint29_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint29_cluster_create_task_2026_05_28/index.html`.
+- Verification: `test_sprint29_functional.py` -> `8 passed`; load gate passed with clusters p95 41.3 ms and safe empty create p95 110.7 ms; Sprint 29 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 30 hardening
+
+- Replaced the Locust-only Sprint 30 load script with a Windows-safe Python runner using a real task from the dev API.
+- Fixed Sprint 30 functional imports to use `api.wms_api_server.app.*`.
+- Added `tests/ui/transport_sprint30_ui_smoke.cjs` covering the live load bar in the route card.
+- Added `tests/ui/transport_sprint30_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint30_load_bar_2026_05_28/index.html`.
+- Verification: `test_sprint30_functional.py` -> `11 passed`; load gate passed with task detail p95 215.3 ms, task STs p95 149.6 ms, clusters p95 37.1 ms; Sprint 30 UI smoke and training capture passed.
+- Saved Sprint 21-30 checkpoint in `wiki/subprojects/tms2_current_status.md`.
+
+## 2026-05-28 - TMS-2 Sprint 31 hardening
+
+- Fixed Sprint 31 functional imports to use `api.wms_api_server.app.*`.
+- Replaced the Locust-only Sprint 31 load script with a Windows-safe Python runner for clusters/tasks.
+- Added `tests/ui/transport_sprint31_ui_smoke.cjs` covering the left cluster sidebar, totals, active card, and quick-create dialog.
+- Added `tests/ui/transport_sprint31_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint31_cluster_sidebar_2026_05_28/index.html`.
+- Verification: `test_sprint31_functional.py` -> `6 passed`; Sprint 31 UI smoke and training capture passed.
+- Verification: load gate passed on fresh API with clusters p95 200.5 ms and tasks p95 247.8 ms after replacing broad `date_to` with exact `shipment_date`.
+
+## 2026-05-28 - TMS-2 Sprint 32 hardening
+
+- Replaced the Locust-only Sprint 32 load script with a Windows-safe Python runner for task detail, task STs, and vehicles.
+- Added `tests/ui/transport_sprint32_ui_smoke.cjs` covering overload warning with load bar clamped at 100%.
+- Added `tests/ui/transport_sprint32_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint32_overload_warning_2026_05_28/index.html`.
+- Verification: `test_sprint32_functional.py` -> `11 passed`; load gate passed with task p95 186.3 ms, task STs p95 160.6 ms, vehicles p95 75.7 ms; Sprint 32 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 33 hardening
+
+- Replaced the Locust-only Sprint 33 load script with a Windows-safe Python runner for exact-date route list.
+- Added `tests/ui/transport_sprint33_ui_smoke.cjs` covering «Кратко» mode column hiding/restoring assumptions.
+- Added `tests/ui/transport_sprint33_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint33_routes_brief_mode_2026_05_28/index.html`.
+- Verification: `test_sprint33_functional.py` -> `13 passed`; warm load gate passed with tasks p95 163.8 ms; Sprint 33 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 34 hardening
+
+- Updated Sprint 34 functional tests to the current set-based transactional cancel contract instead of the older per-ST Oracle function expectation.
+- Replaced the mutating Locust cancel load script with a safe mocked service-level runner.
+- Added `tests/ui/transport_sprint34_ui_smoke.cjs` covering cancel confirmation, POST cancel, toast, and route list refresh.
+- Added `tests/ui/transport_sprint34_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint34_cancel_releases_st_2026_05_28/index.html`.
+- Verification: `test_sprint34_functional.py` -> `6 passed`; safe load p95 12.54 ms; Sprint 34 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 context checkpoint after Sprint 34
+
+- Saved a context checkpoint in `wiki/subprojects/tms2_current_status.md` after the user's explicit request.
+- Next sprint is Sprint 35: server-side `raion` filter optimization.
+- Reminder preserved: frontend stays on port 3000; do not touch warehouse-map/MES/WMS-picking unless explicitly requested.
+
+## 2026-05-28 - TMS-2 Sprint 35 hardening
+
+- Fixed Sprint 35 functional tests to use `api.wms_api_server.app.*` imports and clear the available ST cache between cases.
+- Fixed `list_available_sts(raion="")` so an empty raion does not add a useless `A.RAION = :raion` filter.
+- Replaced the Locust-only Sprint 35 load script with a Windows-safe no-mutation runner for all STs, filtered STs, and safe empty cluster create.
+- Added `tests/ui/transport_sprint35_ui_smoke.cjs` covering create-from-cluster URL with selected raion.
+- Added `tests/ui/transport_sprint35_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint35_raion_filter_2026_05_28/index.html`.
+- Verification: `test_sprint35_functional.py` -> `8 passed`; load p95 all STs 37.2 ms, filtered 30.1 ms, safe empty create 158.6 ms; Sprint 35 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 36 hardening
+
+- Fixed backend `unassign_st` to reject shipped tasks with 409, matching the UI guard and business process.
+- Updated Sprint 36 functional tests to call the current `unassign_st` service method.
+- Replaced the Locust-only Sprint 36 load script with a Windows-safe no-mutation runner for safe 404 DELETE paths and bulk bursts.
+- Added `tests/ui/transport_sprint36_ui_smoke.cjs` covering selecting two STs and removing them via the bulk bar.
+- Added `tests/ui/transport_sprint36_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint36_bulk_unassign_2026_05_28/index.html`.
+- Verification: `test_sprint36_functional.py` -> `16 passed`; load p95 single DELETE 171.4 ms, GET STs 160.6 ms, bulk burst 178.0 ms; Sprint 36 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 37 hardening
+
+- Replaced the Locust-only Sprint 37 load script with a Windows-safe concurrent polling runner for available STs, tasks, and clusters.
+- Added `tests/ui/transport_sprint37_ui_smoke.cjs` covering select-all visible STs and the auto-refresh toggle.
+- Added `tests/ui/transport_sprint37_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint37_select_all_autorefresh_2026_05_28/index.html`.
+- Verification: `test_sprint37_functional.py` -> `18 passed`; load p95 available STs 69.9 ms, tasks 78.8 ms, clusters 66.5 ms; Sprint 37 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 38 hardening
+
+- Fixed `update_task()` to return 404 when the update rowcount is 0, preventing missing-task PATCH from being reported as success.
+- Added a Sprint 38 backend contract test for missing PATCH -> 404.
+- Replaced the mutating Locust Sprint 38 load script with a no-mutation runner for exact task list and missing-task GET/PATCH paths.
+- Added `tests/ui/transport_sprint38_ui_smoke.cjs` covering copy-trip POST/PATCH/GET and new task selection.
+- Added `tests/ui/transport_sprint38_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint38_copy_trip_2026_05_28/index.html`.
+- Verification: `test_sprint38_functional.py` -> `15 passed`; load p95 tasks list 167.3 ms, missing GET 167.2 ms, missing PATCH 161.1 ms; Sprint 38 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 39 hardening
+
+- Replaced the Locust-only Sprint 39 load script with a Windows-safe no-mutation runner for `/available-sts` filter combinations.
+- Added `tests/ui/transport_sprint39_ui_smoke.cjs` covering the active-filter badge, reset button visibility, and clearing the address filter.
+- Added `tests/ui/transport_sprint39_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint39_filter_badge_reset_2026_05_28/index.html`.
+- Verification: `test_sprint39_functional.py` -> `26 passed`; load p95 no filters 39.2 ms, addr_mask 30.1 ms, type+assembled 29.4 ms, unassigned=false 37.0 ms; Sprint 39 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 40 hardening
+
+- Aligned the Sprint 40 functional helper with the React null-as-zero summary contract for `PALLET_COUNT` and `TEMP_WEIGHT`.
+- Replaced the Locust-only Sprint 40 load script with a Windows-safe no-mutation runner for task list reads and adjacent available ST reads.
+- Added `tests/ui/transport_sprint40_ui_smoke.cjs` covering the day summary values.
+- Added `tests/ui/transport_sprint40_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint40_day_summary_2026_05_28/index.html`.
+- Verification: `test_sprint40_functional.py` -> `11 passed`; load p95 tasks 83.3 ms, all statuses 54.1 ms, adjacent available-sts 43.2 ms; Sprint 40 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 41 hardening
+
+- Replaced the Locust-only Sprint 41 load script with a Windows-safe no-mutation runner for routes-tab task list reads.
+- Added `tests/ui/transport_sprint41_ui_smoke.cjs` covering shipped/cancelled/all route status filters.
+- Added `tests/ui/transport_sprint41_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint41_routes_status_filter_2026_05_28/index.html`.
+- Verification: `test_sprint41_functional.py` -> `14 passed`; load p95 all statuses 53.0 ms, date range 88.2 ms, no payments 126.2 ms; Sprint 41 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 42 hardening
+
+- Replaced the mutating Locust Sprint 42 load script with a Windows-safe runner that uses read baselines plus validation-only `POST /tasks` returning 422.
+- Added `tests/ui/transport_sprint42_ui_smoke.cjs` covering success toast display and click dismissal.
+- Added `tests/ui/transport_sprint42_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint42_toast_notifications_2026_05_28/index.html`.
+- Verification: `test_sprint42_functional.py` -> `13 passed`; load p95 tasks 59.8 ms, available-sts 44.1 ms, validation-only POST 186.4 ms; Sprint 42 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 43 hardening
+
+- Fixed the React trips-table comparator so empty values remain last for both ascending and descending sorts.
+- Added a Sprint 43 functional regression for null-last descending sort.
+- Replaced the Locust-only Sprint 43 load script with a Windows-safe no-mutation runner.
+- Added `tests/ui/transport_sprint43_ui_smoke.cjs` covering ID asc/desc and vehicle asc/desc with null-last.
+- Added `tests/ui/transport_sprint43_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint43_sortable_trips_2026_05_28/index.html`.
+- Verification: `test_sprint43_functional.py` -> `14 passed`; load p95 sortable source 85.2 ms, date range 38.8 ms, adjacent available-sts 37.5 ms; Sprint 43 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 44 hardening
+
+- Fixed the global Escape handler so checkbox/radio focus no longer blocks selection cleanup; text inputs, selects, and textareas remain protected.
+- Replaced the Locust-only Sprint 44 load script with a Windows-safe no-mutation runner.
+- Added `tests/ui/transport_sprint44_ui_smoke.cjs` covering Escape selection clear and create-dialog close.
+- Added `tests/ui/transport_sprint44_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint44_escape_handler_2026_05_28/index.html`.
+- Verification: `test_sprint44_functional.py` -> `12 passed`; load p95 tasks 89.1 ms, available-sts 43.9 ms, clusters 39.1 ms; Sprint 44 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 45 hardening
+
+- Aligned the Sprint 45 functional helper with the UI rule that `TRANSTASK_ID=0` is null-like and should not render a goto-trip button.
+- Replaced the Locust-only Sprint 45 load script with a Windows-safe no-mutation runner.
+- Added `tests/ui/transport_sprint45_ui_smoke.cjs` covering `#ID →` navigation from ST row to selected route.
+- Added `tests/ui/transport_sprint45_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint45_goto_trip_2026_05_28/index.html`.
+- Verification: `test_sprint45_functional.py` -> `11 passed`; load p95 available-sts all 42.9 ms, tasks routes 78.2 ms, missing task 163.8 ms; Sprint 45 UI smoke and training capture passed.
+
+## 2026-05-28 - Project endpoint configuration
+
+- Added `config/project.defaults.json` as the shared tracked source for local host, frontend port, API bind host, API port, terminal frontend port, and Oracle DSN defaults.
+- Added `tests/support/project_config.cjs` and `tests/support/project_config.py` so UI/load tests can derive URLs from the shared config plus env overrides.
+- Updated `front.bat`, `serv.bat`, `admin/wms_admin_frontend/vite.config.ts`, and `api/wms_api_server/app/config.py` to read endpoint defaults from the shared config.
+- Updated fresh TMS-2 Sprint 39-45 UI/load scripts to stop hardcoding local base URLs.

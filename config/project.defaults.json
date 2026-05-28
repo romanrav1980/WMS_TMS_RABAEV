@@ -1,0 +1,10 @@
+{
+  "local": {
+    "loopbackHost": "127.0.0.1",
+    "apiBindHost": "0.0.0.0",
+    "frontendPort": 3000,
+    "terminalFrontendPort": 3010,
+    "apiPort": 8088,
+    "oracleDsn": "127.0.0.1:1521/orcl"
+  }
+}

@@ -1,4 +1,4 @@
-"""
+﻿"""
 test_sprint35_functional.py — Functional tests for Sprint 35.
 
 Sprint 35: add `raion` filter to list_available_sts.
@@ -8,18 +8,23 @@ Sprint 35: add `raion` filter to list_available_sts.
 - «(без района)» → IS NULL in SQL.
 """
 
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import patch, MagicMock
+
+from api.wms_api_server.app.services import transport_service as service_module
+from api.wms_api_server.app.services.transport_service import TransportService
 
 
 class TestRaionFilter:
+    def setup_method(self):
+        service_module._clear_available_sts_cache()
 
     def _make_st(self, raion, st="ST001"):
         return {"ST_NUMBER": st, "RAION": raion, "PALLETS_COUNT": 2, "WEIGHT_KG": 80.0}
 
     def test_raion_filter_passes_to_service(self):
         """GET /available-sts?raion=Север passes raion to list_available_sts."""
-        from app.services.transport_service import TransportService
         svc = TransportService()
         with patch.object(svc.gateway, "fetch_all", return_value=[]) as mock_fetch:
             svc.list_available_sts(raion="Север")
@@ -29,7 +34,6 @@ class TestRaionFilter:
 
     def test_no_raion_filter_omits_condition(self):
         """Without raion=, SQL has no RAION condition."""
-        from app.services.transport_service import TransportService
         svc = TransportService()
         with patch.object(svc.gateway, "fetch_all", return_value=[]) as mock_fetch:
             svc.list_available_sts()
@@ -39,7 +43,6 @@ class TestRaionFilter:
 
     def test_bez_raiona_maps_to_is_null(self):
         """«(без района)» → IS NULL in SQL."""
-        from app.services.transport_service import TransportService
         svc = TransportService()
         with patch.object(svc.gateway, "fetch_all", return_value=[]) as mock_fetch:
             svc.list_available_sts(raion="(без района)")
@@ -49,22 +52,22 @@ class TestRaionFilter:
 
     def test_raion_combined_with_stdate(self):
         """raion + stdate both appear in SQL."""
-        from app.services.transport_service import TransportService
         from datetime import date
         svc = TransportService()
-        with patch.object(svc.gateway, "fetch_all", return_value=[]) as mock_fetch:
+        with patch.object(svc.gateway, "fetch_all", side_effect=[[{"HAS_ROWS": 1}], []]) as mock_fetch:
             svc.list_available_sts(stdate=date.today(), raion="Юг")
-        sql = mock_fetch.call_args[0][0]
+        sql = mock_fetch.call_args_list[-1][0][0]
         assert "RAION = :raion" in sql
         assert ":stdate" in sql
 
 
 class TestCreateTaskFromClusterUsesServerFilter:
+    def setup_method(self):
+        service_module._clear_available_sts_cache()
 
     def test_cluster_create_calls_list_available_sts_with_raion(self):
         """create_task_from_cluster passes raion to list_available_sts (server-side filter)."""
-        from app.services.transport_service import TransportService
-        from app.schemas import ClusterCreateTaskRequest
+        from api.wms_api_server.app.schemas import ClusterCreateTaskRequest
         from datetime import date
 
         svc = TransportService()
@@ -86,8 +89,7 @@ class TestCreateTaskFromClusterUsesServerFilter:
 
     def test_cluster_create_no_longer_filters_in_python(self):
         """With raion passed to list_available_sts, all returned STs belong to the target district."""
-        from app.services.transport_service import TransportService
-        from app.schemas import ClusterCreateTaskRequest
+        from api.wms_api_server.app.schemas import ClusterCreateTaskRequest
         from datetime import date
 
         svc = TransportService()
@@ -112,10 +114,11 @@ class TestCreateTaskFromClusterUsesServerFilter:
 
 
 class TestRaionFilterEdgeCases:
+    def setup_method(self):
+        service_module._clear_available_sts_cache()
 
     def test_raion_with_special_chars(self):
         """raion filter properly passes special chars to Oracle parameter."""
-        from app.services.transport_service import TransportService
         svc = TransportService()
         with patch.object(svc.gateway, "fetch_all", return_value=[]) as mock_fetch:
             svc.list_available_sts(raion="г. Пермь/Мотовилиха")
@@ -124,9 +127,9 @@ class TestRaionFilterEdgeCases:
 
     def test_empty_string_raion_not_filtered(self):
         """raion='' (empty string) should NOT add a filter (falsy check)."""
-        from app.services.transport_service import TransportService
         svc = TransportService()
         with patch.object(svc.gateway, "fetch_all", return_value=[]) as mock_fetch:
-            svc.list_available_sts(raion=None)
+            svc.list_available_sts(raion="")
         sql = mock_fetch.call_args[0][0]
-        assert "RAION" not in sql.replace("V.RAION", "")  # column in SELECT is ok, filter is not
+        assert "RAION = :raion" not in sql
+        assert "RAION IS NULL" not in sql

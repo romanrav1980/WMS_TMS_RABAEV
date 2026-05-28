@@ -18,14 +18,13 @@ import statistics
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import date, timedelta
 from typing import Any
 
 import requests
 
 DEFAULT_BASE_URL = "http://127.0.0.1:8088"
 AUTH = ("admin", "admin123")
-TOMORROW = (date.today() + timedelta(days=1)).isoformat()
+TOMORROW = "2026-05-25"
 
 NFR = {
     "GET /available-sts":         500,
@@ -113,7 +112,12 @@ def wait_for_api(base: str, timeout: int = 30) -> None:
     deadline = time.time() + timeout
     while time.time() < deadline:
         try:
-            r = requests.get(f"{base}/api/admin/transport/tasks", auth=AUTH, timeout=5)
+            r = requests.get(
+                f"{base}/api/admin/transport/tasks",
+                auth=AUTH,
+                params={"shipment_date": TOMORROW},
+                timeout=5,
+            )
             if r.status_code < 500:
                 return
         except requests.exceptions.ConnectionError:
@@ -160,7 +164,7 @@ def run(base_url: str, users: int, duration: int) -> None:
     violations = 0
     for label, s in sorted(report.items()):
         nfr_s = f"{s['nfr_ms']}ms" if s["nfr_ms"] else "—"
-        ok_s  = "✅" if s["nfr_ok"] else ("❌" if s["nfr_ok"] is False else "—")
+        ok_s  = "OK" if s["nfr_ok"] else ("FAIL" if s["nfr_ok"] is False else "-")
         if s["nfr_ok"] is False:
             violations += 1
         print(f"{label:<38} {s['count']:>5} {s['errors']:>4} "
@@ -170,10 +174,10 @@ def run(base_url: str, users: int, duration: int) -> None:
     print("-" * 85)
     print(f"Total: {total} requests, {errs} errors, {rps:.1f} rps")
     if violations:
-        print(f"❌ NFR нарушено: {violations}. Добавить индекс IDX_SP_ST_NUMBER.")
+        print(f"NFR FAILED: {violations}. Add/check IDX_SP_ST_NUMBER.")
         sys.exit(1)
     else:
-        print("✅ Все NFR соблюдены.")
+        print("All NFR checks passed.")
 
 
 def parse_args() -> argparse.Namespace:

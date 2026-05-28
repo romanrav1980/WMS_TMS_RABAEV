@@ -15,15 +15,12 @@ from __future__ import annotations
 import os
 import pytest
 import requests
-from datetime import date, timedelta
-
 BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
 AUTH = ("admin", "admin123")
-TODAY    = date.today().isoformat()
-TOMORROW = (date.today() + timedelta(days=1)).isoformat()
-LAST_30  = (date.today() - timedelta(days=30)).isoformat()
+PLAN_DATE = "2026-05-25"
+LAST_30 = "2026-05-01"
 
-SHIP_TIME = f"{TOMORROW} 09:00"
+SHIP_TIME = f"{PLAN_DATE} 09:00"
 
 
 @pytest.fixture(scope="session")
@@ -32,6 +29,34 @@ def api():
     s.auth = AUTH
     s.headers.update({"Content-Type": "application/json"})
     return s
+
+
+@pytest.fixture(scope="session")
+def plan_fact_vehicle(api):
+    vehicles = api.get(f"{BASE_URL}/api/admin/transport/vehicles")
+    if vehicles.status_code != 200 or not vehicles.json():
+        pytest.skip("Нет машин")
+    vehicle = vehicles.json()[0].get("NUM") or vehicles.json()[0].get("vehicle_num")
+    if not vehicle:
+        pytest.skip("Нет машины")
+
+    created = api.post(
+        f"{BASE_URL}/api/admin/transport/tasks",
+        json={"transtype": "Газель", "shipment_date": PLAN_DATE, "vehicle": vehicle},
+    )
+    if created.status_code not in (200, 201):
+        pytest.skip(f"Не удалось создать рейс: {created.status_code} {created.text}")
+    task_id = created.json()["task_id"]
+
+    ops_response = api.post(f"{BASE_URL}/api/admin/transport/tasks/{task_id}/plan-operations")
+    if ops_response.status_code != 200 or not ops_response.json():
+        pytest.skip(f"Не удалось создать операции: {ops_response.status_code} {ops_response.text}")
+    first_op_id = ops_response.json()[0]["op_id"]
+    api.patch(
+        f"{BASE_URL}/api/admin/transport/operations/{first_op_id}/fact",
+        json={"fact_start": "2026-05-25 06:05", "fact_end": "2026-05-25 06:20"},
+    )
+    return vehicle
 
 
 # ---------------------------------------------------------------------------
@@ -109,19 +134,19 @@ class TestVehiclesAvailable:
 # ---------------------------------------------------------------------------
 
 class TestPlanFact:
-    def test_plan_fact_200(self, api):
+    def test_plan_fact_200(self, api, plan_fact_vehicle):
         r = api.get(f"{BASE_URL}/api/admin/transport/plan-fact",
-                    params={"date_from": LAST_30, "date_to": TODAY})
+                    params={"date_from": LAST_30, "date_to": PLAN_DATE})
         assert r.status_code == 200, f"{r.status_code}: {r.text}"
 
-    def test_plan_fact_is_list(self, api):
+    def test_plan_fact_is_list(self, api, plan_fact_vehicle):
         r = api.get(f"{BASE_URL}/api/admin/transport/plan-fact",
-                    params={"date_from": LAST_30, "date_to": TODAY})
+                    params={"date_from": LAST_30, "date_to": PLAN_DATE})
         assert isinstance(r.json(), list)
 
-    def test_plan_fact_required_fields(self, api):
+    def test_plan_fact_required_fields(self, api, plan_fact_vehicle):
         r = api.get(f"{BASE_URL}/api/admin/transport/plan-fact",
-                    params={"date_from": LAST_30, "date_to": TODAY})
+                    params={"date_from": LAST_30, "date_to": PLAN_DATE})
         data = r.json()
         if not data:
             pytest.skip("Нет рейсов за период")
@@ -131,32 +156,29 @@ class TestPlanFact:
             missing = required - set(item.keys())
             assert not missing, f"Missing: {missing}"
 
-    def test_plan_fact_operations_is_list(self, api):
+    def test_plan_fact_operations_is_list(self, api, plan_fact_vehicle):
         r = api.get(f"{BASE_URL}/api/admin/transport/plan-fact",
-                    params={"date_from": LAST_30, "date_to": TODAY})
+                    params={"date_from": LAST_30, "date_to": PLAN_DATE})
         for item in r.json():
             assert isinstance(item["operations"], list)
 
-    def test_plan_fact_vehicle_filter(self, api):
+    def test_plan_fact_vehicle_filter(self, api, plan_fact_vehicle):
         r_all = api.get(f"{BASE_URL}/api/admin/transport/plan-fact",
-                        params={"date_from": LAST_30, "date_to": TODAY})
+                        params={"date_from": LAST_30, "date_to": PLAN_DATE})
         if not r_all.json():
             pytest.skip("Нет рейсов")
-        veh = r_all.json()[0]["vehicle"]
-        if not veh:
-            pytest.skip("Нет машины")
         r_filtered = api.get(f"{BASE_URL}/api/admin/transport/plan-fact",
-                             params={"date_from": LAST_30, "date_to": TODAY, "vehicle": veh})
+                             params={"date_from": LAST_30, "date_to": PLAN_DATE, "vehicle": plan_fact_vehicle})
         assert r_filtered.status_code == 200
         for item in r_filtered.json():
-            assert item["vehicle"] == veh
+            assert item["vehicle"] == plan_fact_vehicle
 
     def test_plan_fact_missing_dates_422(self, api):
         r = api.get(f"{BASE_URL}/api/admin/transport/plan-fact")
         assert r.status_code == 422
 
-    def test_plan_fact_rest_violations_non_negative(self, api):
+    def test_plan_fact_rest_violations_non_negative(self, api, plan_fact_vehicle):
         r = api.get(f"{BASE_URL}/api/admin/transport/plan-fact",
-                    params={"date_from": LAST_30, "date_to": TODAY})
+                    params={"date_from": LAST_30, "date_to": PLAN_DATE})
         for item in r.json():
             assert item["rest_violations"] >= 0

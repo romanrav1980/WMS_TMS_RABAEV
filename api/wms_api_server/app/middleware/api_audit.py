@@ -28,8 +28,6 @@ class ApiAuditMiddleware(BaseHTTPMiddleware):
         if not settings.audit_enabled:
             return await call_next(request)
 
-        audit = ApiAuditService(settings=settings)
-        started = time.perf_counter()
         request_id = str(uuid.uuid4())
         context_token = set_request_context(
             RequestContext(
@@ -41,6 +39,16 @@ class ApiAuditMiddleware(BaseHTTPMiddleware):
                 user_agent=request.headers.get("user-agent"),
             )
         )
+        if is_lightweight_transport_read(request):
+            try:
+                response = await call_next(request)
+                response.headers["X-WMS-Request-Id"] = request_id
+                return response
+            finally:
+                reset_request_context(context_token)
+
+        audit = ApiAuditService(settings=settings)
+        started = time.perf_counter()
         request_body_bytes = await request.body()
         request_body, request_truncated = decode_limited(
             request_body_bytes,
@@ -176,6 +184,35 @@ def is_replayable(request: Request) -> bool:
     if path.startswith("/api/admin/api-calls") or path.startswith("/api/admin/auth"):
         return False
     return request.method.upper() in {"GET", "POST", "PUT", "PATCH", "DELETE"}
+
+
+def is_lightweight_transport_read(request: Request) -> bool:
+    if request.method.upper() != "GET":
+        return False
+    return request.url.path in {
+        "/api/admin/transport/available-sts",
+        "/api/admin/transport/planner/orders",
+        "/api/admin/transport/routing/status",
+        "/api/admin/transport/planner/history",
+        "/api/admin/transport/planner/demand-forecast",
+        "/api/admin/transport/planner/templates",
+        "/api/admin/transport/planner/metrics",
+        "/api/admin/transport/clusters",
+        "/api/admin/transport/vehicles/gantt",
+        "/api/admin/transport/vehicles/available",
+        "/api/admin/transport/plan-fact",
+        "/api/admin/transport/billing/orders",
+        "/api/admin/transport/billing/companies",
+        "/api/admin/transport/tasks",
+        "/api/admin/transport/vehicles",
+        "/api/admin/transport/drivers",
+        "/api/admin/transport/types",
+    } or (
+        request.url.path.startswith("/api/admin/transport/billing/orders/")
+        and request.method.upper() == "GET"
+    ) or (request.url.path.startswith("/api/admin/transport/sts/") and request.url.path.endswith("/pallets")) or (
+        request.url.path.startswith("/api/admin/transport/tasks/") and request.url.path.endswith("/operations")
+    )
 
 
 def _int_header(value: str | None) -> int | None:

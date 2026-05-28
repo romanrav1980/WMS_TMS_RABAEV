@@ -18,7 +18,7 @@ from datetime import date
 
 @pytest.fixture()
 def svc():
-    from app.services.transport_service import TransportService
+    from api.wms_api_server.app.services.transport_service import TransportService
     return TransportService()
 
 
@@ -35,17 +35,18 @@ class TestCreateTaskFromCluster:
 
     def test_raises_404_when_no_sts_in_raion(self, svc):
         from fastapi import HTTPException
-        from app.schemas import ClusterCreateTaskRequest
+        from api.wms_api_server.app.schemas import ClusterCreateTaskRequest
 
         req = ClusterCreateTaskRequest(stdate=date.today())
-        with patch.object(svc, "list_available_sts", return_value=[_make_st("ДругойРайон")]):
+        with patch.object(svc, "list_available_sts", return_value=[]) as mock_list:
             with pytest.raises(HTTPException) as exc:
                 svc.create_task_from_cluster("ТестРайон", req, "tester")
         assert exc.value.status_code == 404
         assert "ТестРайон" in exc.value.detail
+        assert mock_list.call_args.kwargs["raion"] == "ТестРайон"
 
     def test_creates_task_and_assigns_sts(self, svc):
-        from app.schemas import ClusterCreateTaskRequest
+        from api.wms_api_server.app.schemas import ClusterCreateTaskRequest
 
         req = ClusterCreateTaskRequest(stdate=date.today())
         sts = [_make_st("Север", f"ST{i:03d}") for i in range(3)]
@@ -67,7 +68,7 @@ class TestCreateTaskFromCluster:
         mock_assign.assert_called_once_with(42, ["ST000", "ST001", "ST002"], "tester")
 
     def test_calls_update_task_when_vehicle_provided(self, svc):
-        from app.schemas import ClusterCreateTaskRequest
+        from api.wms_api_server.app.schemas import ClusterCreateTaskRequest
 
         req = ClusterCreateTaskRequest(stdate=date.today(), vehicle="А001АА", dock="Д1")
         sts = [_make_st("Юг", "ST777")]
@@ -87,21 +88,21 @@ class TestCreateTaskFromCluster:
         assert update_req.transport == "А001АА"
         assert update_req.dock == "Д1"
 
-    def test_no_raion_sts_filtered_by_cluster(self, svc):
-        """STs with different raion are excluded even if same date."""
-        from app.schemas import ClusterCreateTaskRequest
+    def test_raion_is_passed_to_available_sts_query(self, svc):
+        """Cluster creation relies on server-side raion filtering in list_available_sts."""
+        from api.wms_api_server.app.schemas import ClusterCreateTaskRequest
         from fastapi import HTTPException
 
         req = ClusterCreateTaskRequest(stdate=date.today())
-        sts = [_make_st("Запад", "ST100"), _make_st("Восток", "ST200")]
 
-        with patch.object(svc, "list_available_sts", return_value=sts):
+        with patch.object(svc, "list_available_sts", return_value=[]) as mock_list:
             with pytest.raises(HTTPException) as exc:
                 svc.create_task_from_cluster("Север", req, "tester")
         assert exc.value.status_code == 404
+        assert mock_list.call_args.kwargs["raion"] == "Север"
 
     def test_sts_without_raion_appear_as_no_raion(self, svc):
-        from app.schemas import ClusterCreateTaskRequest
+        from api.wms_api_server.app.schemas import ClusterCreateTaskRequest
 
         req = ClusterCreateTaskRequest(stdate=date.today())
         no_raion_st = {"ST_NUMBER": "ST999", "RAION": None, "PALLETS": 1, "WEIGHT": 50.0}
@@ -125,12 +126,12 @@ class TestCreateTaskFromCluster:
 class TestClusterCreateTaskRequestSchema:
 
     def test_default_transtype(self):
-        from app.schemas import ClusterCreateTaskRequest
+        from api.wms_api_server.app.schemas import ClusterCreateTaskRequest
         req = ClusterCreateTaskRequest(stdate=date.today())
         assert req.transtype == "10"
 
     def test_optional_fields_are_none_by_default(self):
-        from app.schemas import ClusterCreateTaskRequest
+        from api.wms_api_server.app.schemas import ClusterCreateTaskRequest
         req = ClusterCreateTaskRequest(stdate=date.today())
         assert req.vehicle is None
         assert req.driver_id is None
@@ -138,7 +139,7 @@ class TestClusterCreateTaskRequestSchema:
         assert req.ware_ids is None
 
     def test_all_fields_accepted(self):
-        from app.schemas import ClusterCreateTaskRequest
+        from api.wms_api_server.app.schemas import ClusterCreateTaskRequest
         req = ClusterCreateTaskRequest(
             stdate=date.today(),
             transtype="20",

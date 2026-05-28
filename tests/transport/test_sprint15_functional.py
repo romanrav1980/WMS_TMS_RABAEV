@@ -36,18 +36,27 @@ def api():
 
 @pytest.fixture(scope="session")
 def closed_task_id(api):
-    """Создаём рейс, закрываем его — основа для биллинга."""
-    r = api.post(f"{BASE_URL}/api/admin/transport/tasks", json={
-        "transtype": "Газель", "shipment_date": TODAY,
-    })
-    if r.status_code not in (200, 201):
-        pytest.skip(f"Не удалось создать рейс: {r.status_code}")
-    tid = r.json()["task_id"]
-    # Close it
-    cr = api.post(f"{BASE_URL}/api/admin/transport/tasks/{tid}/close")
-    if cr.status_code not in (200, 201, 422):
-        pytest.skip(f"Не удалось закрыть рейс: {cr.status_code}")
-    return tid
+    """Находим реальный рейс, пригодный для выставления счета."""
+    r = api.get(
+        f"{BASE_URL}/api/admin/transport/tasks",
+        params={"date_to": TODAY, "no_payments_only": True},
+    )
+    if r.status_code != 200:
+        pytest.skip(f"Не удалось получить рейсы: {r.status_code}")
+    task = next(
+        (
+            row
+            for row in r.json()
+            if row.get("VODITEL_ID")
+            and row.get("TK_NAME")
+            and float(row.get("PRICE") or 0) > 0
+            and not row.get("PAY_ORDER_ID")
+        ),
+        None,
+    )
+    if not task:
+        pytest.skip("Нет рейса с ТК и рассчитанной стоимостью")
+    return int(task["ID"])
 
 
 class TestBillingOrders:

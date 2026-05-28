@@ -1,89 +1,145 @@
 """
-transport_sprint16_load_test.py — Load tests for Sprint 16 (billing: close/pay).
+Windows-safe load check for TMS-2 Sprint 16 (billing status lifecycle).
 
-NFR targets:
-  GET  /billing/orders/{id}    p95 ≤ 300 ms
-  PATCH /billing/orders/{id}/close p95 ≤ 500 ms
-  PATCH /billing/orders/{id}/pay   p95 ≤ 500 ms
+Checks:
+  GET   /billing/orders/{id}        p95 <= 300 ms
+  PATCH /billing/orders/{id}/close  p95 <= 500 ms
+  PATCH /billing/orders/{id}/pay    p95 <= 500 ms
 
 Run:
-    locust -f tests/transport/transport_sprint16_load_test.py \
-        --host http://127.0.0.1:8088 --users 5 --spawn-rate 2 --run-time 60s --headless
+    python tests/transport/transport_sprint16_load_test.py
 """
 
-from locust import HttpUser, task, between, events
-from datetime import date
+from __future__ import annotations
 
-TODAY = date.today().isoformat()
+import concurrent.futures as cf
+import os
+import statistics
+import sys
+import time
+from dataclasses import dataclass
 
-
-class BillingStatusUser(HttpUser):
-    wait_time = between(1, 3)
-    auth = ("admin", "admin123")
-    _order_id: int | None = None
-
-    def on_start(self):
-        r = self.client.post(
-            "/api/admin/transport/billing/orders",
-            json={"company": "ООО Нагрузка-16", "date_from": TODAY, "date_to": TODAY},
-            auth=self.auth,
-        )
-        if r.status_code in (200, 201):
-            self._order_id = r.json().get("order_id")
-
-    @task(5)
-    def get_order(self):
-        if not self._order_id:
-            return
-        self.client.get(
-            f"/api/admin/transport/billing/orders/{self._order_id}",
-            auth=self.auth,
-            name="GET /billing/orders/{id}",
-        )
-
-    @task(2)
-    def list_orders(self):
-        self.client.get(
-            "/api/admin/transport/billing/orders",
-            auth=self.auth,
-            name="GET /billing/orders",
-        )
-
-    @task(1)
-    def close_then_pay(self):
-        if not self._order_id:
-            return
-        self.client.patch(
-            f"/api/admin/transport/billing/orders/{self._order_id}/close",
-            auth=self.auth,
-            name="PATCH /billing/orders/{id}/close",
-        )
-        self.client.patch(
-            f"/api/admin/transport/billing/orders/{self._order_id}/pay",
-            auth=self.auth,
-            name="PATCH /billing/orders/{id}/pay",
-        )
+import requests
 
 
-@events.quitting.add_listener
-def check_nfr(environment, **kwargs):
-    stats = environment.runner.stats
-    failures = []
+BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
+AUTH = ("admin", "admin123")
+PLAN_DATE = "2026-05-25"
 
-    targets = {
-        "GET /billing/orders/{id}":         ("GET",   300),
-        "GET /billing/orders":              ("GET",   300),
-        "PATCH /billing/orders/{id}/close": ("PATCH", 500),
-        "PATCH /billing/orders/{id}/pay":   ("PATCH", 500),
-    }
 
-    for name, (method, threshold_ms) in targets.items():
-        entry = stats.entries.get((name, method))
-        if entry and entry.num_requests > 0:
-            p95 = entry.get_response_time_percentile(0.95)
-            if p95 > threshold_ms:
-                failures.append(f"NFR FAIL: {name} p95={p95:.0f}ms > {threshold_ms}ms")
+@dataclass
+class EndpointCase:
+    name: str
+    method: str
+    path: str
+    target_ms: float
+    requests: int
+    workers: int
+    ok_statuses: set[int] | None = None
 
+
+def percentile(values: list[float], pct: float) -> float:
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    index = min(len(ordered) - 1, int(round((pct / 100) * (len(ordered) - 1))))
+    return ordered[index]
+
+
+def request_once(case: EndpointCase) -> tuple[float, int, str]:
+    started = time.perf_counter()
+    try:
+        response = requests.request(case.method, f"{BASE_URL}{case.path}", auth=AUTH, timeout=20)
+        elapsed_ms = (time.perf_counter() - started) * 1000
+        return elapsed_ms, response.status_code, response.text[:240]
+    except Exception as exc:  # noqa: BLE001 - load runner must report transport failures.
+        elapsed_ms = (time.perf_counter() - started) * 1000
+        return elapsed_ms, 0, repr(exc)
+
+
+def run_case(case: EndpointCase) -> bool:
+    with cf.ThreadPoolExecutor(max_workers=case.workers) as pool:
+        results = list(pool.map(lambda _: request_once(case), range(case.requests)))
+
+    latencies = [elapsed for elapsed, _, _ in results]
+    ok_statuses = case.ok_statuses or set(range(200, 300))
+    failures = [(status, body) for _, status, body in results if status not in ok_statuses]
+    p95 = percentile(latencies, 95)
+    avg = statistics.mean(latencies) if latencies else 0.0
+
+    print(
+        f"{case.name}: requests={case.requests} workers={case.workers} "
+        f"avg={avg:.1f}ms p95={p95:.1f}ms target={case.target_ms:.0f}ms "
+        f"failures={len(failures)}"
+    )
     if failures:
-        print("\n".join(failures))
-        environment.process_exit_code = 1
+        print(f"  first failure: HTTP {failures[0][0]} {failures[0][1]}")
+        return False
+    if p95 > case.target_ms:
+        print(f"  NFR FAIL: p95 {p95:.1f}ms > {case.target_ms:.0f}ms")
+        return False
+    return True
+
+
+def create_order(company: str) -> int:
+    response = requests.post(
+        f"{BASE_URL}/api/admin/transport/billing/orders",
+        auth=AUTH,
+        json={"company": company, "date_from": PLAN_DATE, "date_to": PLAN_DATE},
+        timeout=20,
+    )
+    if response.status_code not in (200, 201):
+        raise RuntimeError(f"order setup failed: HTTP {response.status_code} {response.text[:240]}")
+    return int(response.json()["order_id"])
+
+
+def main() -> int:
+    read_order_id = create_order("ООО Нагрузка-16-GET")
+    close_order_id = create_order("ООО Нагрузка-16-CLOSE")
+    pay_order_id = create_order("ООО Нагрузка-16-PAY")
+
+    close_response = requests.patch(
+        f"{BASE_URL}/api/admin/transport/billing/orders/{pay_order_id}/close",
+        auth=AUTH,
+        timeout=20,
+    )
+    if close_response.status_code not in (200, 409):
+        raise RuntimeError(f"pay setup close failed: HTTP {close_response.status_code} {close_response.text[:240]}")
+
+    cases = [
+        EndpointCase(
+            name="GET /billing/orders/{id}",
+            method="GET",
+            path=f"/api/admin/transport/billing/orders/{read_order_id}",
+            target_ms=300,
+            requests=70,
+            workers=8,
+        ),
+        EndpointCase(
+            name="PATCH /billing/orders/{id}/close",
+            method="PATCH",
+            path=f"/api/admin/transport/billing/orders/{close_order_id}/close",
+            target_ms=500,
+            requests=20,
+            workers=2,
+            ok_statuses={200, 409},
+        ),
+        EndpointCase(
+            name="PATCH /billing/orders/{id}/pay",
+            method="PATCH",
+            path=f"/api/admin/transport/billing/orders/{pay_order_id}/pay",
+            target_ms=500,
+            requests=20,
+            workers=2,
+            ok_statuses={200, 409},
+        ),
+    ]
+
+    ok = True
+    for case in cases:
+        ok = run_case(case) and ok
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

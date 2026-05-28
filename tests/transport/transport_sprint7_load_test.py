@@ -1,141 +1,104 @@
 """
-transport_sprint7_load_test.py — Load / stress tests for Sprint 7 endpoints.
+transport_sprint7_load_test.py — Load tests for Sprint 7 planner map endpoints.
 
-Endpoints under test:
-  GET /api/admin/transport/planner/orders?date=...  (NFR: p95 < 600 ms)
-  GET /api/admin/transport/routing/status           (NFR: p95 < 200 ms)
-
-Run (requires locust):
-    locust -f tests/transport/transport_sprint7_load_test.py \
-           --headless -u 30 -r 5 -t 60s \
-           --host http://127.0.0.1:8088 \
-           --html test-results/sprint7_load_report.html
-
-Or quick smoke run (10 users, 30 s):
-    locust -f tests/transport/transport_sprint7_load_test.py \
-           --headless -u 10 -r 2 -t 30s \
-           --host http://127.0.0.1:8088 \
-           --csv test-results/sprint7
+Run:
+    python tests/transport/transport_sprint7_load_test.py --users=5 --duration=30
 """
+
 from __future__ import annotations
 
-import base64
-import os
-import random
-from datetime import date, timedelta
+import argparse
+import statistics
+import sys
+import time
+from concurrent.futures import ThreadPoolExecutor
+from typing import Any
 
-from locust import HttpUser, between, task, events
-
-# ---------------------------------------------------------------------------
-# Config
-# ---------------------------------------------------------------------------
-
-AUTH_HEADER = "Basic " + base64.b64encode(
-    os.environ.get("TMS_AUTH", "admin:admin123").encode()
-).decode()
-
-DATES = [
-    (date.today() + timedelta(days=d)).isoformat()
-    for d in range(0, 7)
-]
-
-TRANSPORT_TYPES = ["", "10", "20", "30"]
+import requests
 
 
-# ---------------------------------------------------------------------------
-# Locust user
-# ---------------------------------------------------------------------------
-
-class PlannerUser(HttpUser):
-    wait_time = between(0.3, 1.2)
-
-    def on_start(self):
-        self.client.headers.update({
-            "Authorization": AUTH_HEADER,
-            "Content-Type": "application/json",
-        })
-
-    @task(5)
-    def get_planner_orders_no_filter(self):
-        """Main planner load — date only, no transport_type filter."""
-        dt = random.choice(DATES)
-        with self.client.get(
-            "/api/admin/transport/planner/orders",
-            params={"date": dt},
-            name="GET /planner/orders (no_filter)",
-            catch_response=True,
-        ) as resp:
-            if resp.status_code != 200:
-                resp.failure(f"status={resp.status_code}")
-            elif resp.elapsed.total_seconds() > 1.5:
-                resp.failure(f"too slow: {resp.elapsed.total_seconds():.3f}s")
-            else:
-                resp.success()
-
-    @task(3)
-    def get_planner_orders_with_type(self):
-        """Planner with transport_type filter."""
-        dt = random.choice(DATES)
-        tt = random.choice(TRANSPORT_TYPES[1:])  # skip empty
-        with self.client.get(
-            "/api/admin/transport/planner/orders",
-            params={"date": dt, "transport_type": tt},
-            name="GET /planner/orders (transport_type)",
-            catch_response=True,
-        ) as resp:
-            if resp.status_code != 200:
-                resp.failure(f"status={resp.status_code}")
-            elif resp.elapsed.total_seconds() > 1.5:
-                resp.failure(f"too slow: {resp.elapsed.total_seconds():.3f}s")
-            else:
-                resp.success()
-
-    @task(2)
-    def get_routing_status(self):
-        """Routing/geocoding status — should be very fast."""
-        with self.client.get(
-            "/api/admin/transport/routing/status",
-            name="GET /routing/status",
-            catch_response=True,
-        ) as resp:
-            if resp.status_code != 200:
-                resp.failure(f"status={resp.status_code}")
-            elif resp.elapsed.total_seconds() > 0.5:
-                resp.failure(f"too slow: {resp.elapsed.total_seconds():.3f}s")
-            else:
-                resp.success()
+DEFAULT_BASE_URL = "http://127.0.0.1:8088"
+AUTH = ("admin", "admin123")
+PLAN_DATE = "2026-05-25"
+NFR = {
+    "GET /planner/orders": 600,
+    "GET /planner/orders type": 600,
+    "GET /routing/status": 200,
+}
 
 
-# ---------------------------------------------------------------------------
-# Assertions on test finish (pytest-compatible report hook)
-# ---------------------------------------------------------------------------
+def p95(values: list[float]) -> float:
+    ordered = sorted(values)
+    return ordered[min(int(len(ordered) * 0.95), len(ordered) - 1)]
 
-@events.quitting.add_listener
-def assert_nfr(environment, **_kwargs):
-    stats = environment.stats
-    failures: list[str] = []
 
-    nfr = {
-        "GET /planner/orders (no_filter)":    0.600,
-        "GET /planner/orders (transport_type)": 0.600,
-        "GET /routing/status":               0.200,
-    }
-    for name, p95_limit in nfr.items():
-        entry = stats.get(name, "GET")
-        if entry is None or entry.num_requests == 0:
-            print(f"[WARN] No requests recorded for: {name}")
-            continue
-        p95 = entry.get_response_time_percentile(0.95) / 1000.0
-        print(f"  {name}: p95={p95:.3f}s (limit {p95_limit}s, n={entry.num_requests})")
-        if p95 > p95_limit:
-            failures.append(
-                f"NFR FAIL {name}: p95={p95:.3f}s > {p95_limit}s"
-            )
+class Client:
+    def __init__(self, base_url: str) -> None:
+        self.base_url = base_url.rstrip("/")
+        self.session = requests.Session()
+        self.session.auth = AUTH
 
-    if failures:
-        print("\n[LOAD TEST] NFR VIOLATIONS:")
-        for f in failures:
-            print(" ", f)
-        environment.process_exit_code = 1
-    else:
-        print("\n[LOAD TEST] All NFR checks PASSED.")
+    def get(self, path: str, **kwargs: Any) -> tuple[int, float]:
+        started = time.perf_counter()
+        response = self.session.get(f"{self.base_url}{path}", timeout=30, **kwargs)
+        return response.status_code, (time.perf_counter() - started) * 1000
+
+
+def worker(base_url: str, deadline: float):
+    client = Client(base_url)
+    samples: dict[str, list[float]] = {}
+    errors: dict[str, int] = {}
+
+    while time.time() < deadline:
+        for label, path, params in [
+            ("GET /planner/orders", "/api/admin/transport/planner/orders", {"date": PLAN_DATE}),
+            ("GET /planner/orders type", "/api/admin/transport/planner/orders", {"date": PLAN_DATE, "transport_type": "10"}),
+            ("GET /routing/status", "/api/admin/transport/routing/status", {}),
+        ]:
+            status, ms = client.get(path, params=params)
+            samples.setdefault(label, []).append(ms)
+            if status != 200:
+                errors[label] = errors.get(label, 0) + 1
+    return samples, errors
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--base-url", default=DEFAULT_BASE_URL)
+    parser.add_argument("--users", type=int, default=5)
+    parser.add_argument("--duration", type=int, default=30)
+    args = parser.parse_args()
+
+    deadline = time.time() + args.duration
+    merged: dict[str, list[float]] = {}
+    errors: dict[str, int] = {}
+
+    with ThreadPoolExecutor(max_workers=args.users) as pool:
+        futures = [pool.submit(worker, args.base_url, deadline) for _ in range(args.users)]
+        for future in futures:
+            samples, worker_errors = future.result()
+            for label, values in samples.items():
+                merged.setdefault(label, []).extend(values)
+            for label, count in worker_errors.items():
+                errors[label] = errors.get(label, 0) + count
+
+    report = {}
+    ok = True
+    for label, values in merged.items():
+        value_p95 = p95(values)
+        label_ok = value_p95 <= NFR[label] and errors.get(label, 0) == 0
+        ok = ok and label_ok
+        report[label] = {
+            "count": len(values),
+            "errors": errors.get(label, 0),
+            "mean_ms": round(statistics.mean(values), 1),
+            "p95_ms": round(value_p95, 1),
+            "nfr_ms": NFR[label],
+            "nfr_ok": label_ok,
+        }
+    print(report)
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

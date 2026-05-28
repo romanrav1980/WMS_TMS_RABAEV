@@ -9,7 +9,7 @@ the trip and updates routeShipDate to match.
 
 
 def should_show_goto_btn(transtask_id: int | None) -> bool:
-    return transtask_id is not None
+    return bool(transtask_id)
 
 
 def goto_trip_action(

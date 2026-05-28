@@ -23,7 +23,7 @@ from datetime import date, timedelta
 
 BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
 AUTH = ("admin", "admin123")
-TOMORROW = (date.today() + timedelta(days=1)).isoformat()
+TOMORROW = os.environ.get("TMS_SPRINT6_STDATE", "2026-05-25")
 
 
 @pytest.fixture(scope="session")

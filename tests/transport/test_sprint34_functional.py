@@ -1,119 +1,112 @@
 """
 test_sprint34_functional.py — Functional tests for Sprint 34.
 
-Sprint 34 fixes cancel_task: unassign all STs before marking task DELETED=1.
-Previously, STs stayed locked to a deleted task and wouldn't appear as available.
-
-Bug: cancel_task SET DELETED=1 without calling RRL_TT_ADD_PALL(TT_ID=0) first.
-Fix: iterate get_task_sts, call unassign Oracle proc for each, then delete.
+Sprint 34 fixes cancel_task: release STs before marking the task deleted.
+Current implementation does this set-based in one transaction:
+1. SELECT active task and PAY_ORDER_ID.
+2. Reject billed task with 409.
+3. UPDATE RRL_SBORKA_PALLETS SET TRANSTASK_ID = NULL.
+4. UPDATE RRL_TRANSPORT_TASK SET DELETED = 1.
 """
 
+from __future__ import annotations
+
+from contextlib import contextmanager
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import patch, MagicMock, call
+from fastapi import HTTPException
+
+from api.wms_api_server.app.services.transport_service import TransportService
+
+
+class FakeCursor:
+    def __init__(self, row: tuple[int | None] | None = (None,)) -> None:
+        self.row = row
+        self.calls: list[tuple[str, dict]] = []
+
+    def execute(self, sql: str, params: dict) -> None:
+        self.calls.append((sql, params))
+
+    def fetchone(self) -> tuple[int | None] | None:
+        return self.row
+
+
+@contextmanager
+def fake_transaction(cursor: FakeCursor):
+    yield cursor
 
 
 class TestCancelTaskUnassignsSts:
-
-    def _make_sts(self, *st_nums: str) -> list[dict]:
-        return [{"ST_NUMBER": n, "PALLETS_COUNT": 1} for n in st_nums]
-
-    def test_cancel_with_no_sts_still_deletes(self):
-        from app.services.transport_service import TransportService
+    def test_cancel_active_task_unassigns_then_deletes(self):
         svc = TransportService()
-        with (
-            patch.object(svc, "get_task", return_value={"ID": 1, "PAY_ORDER_ID": None}),
-            patch.object(svc, "get_task_sts", return_value=[]),
-            patch.object(svc.gateway, "call_varchar_function") as mock_func,
-            patch.object(svc.gateway, "execute") as mock_exec,
-        ):
+        cursor = FakeCursor(row=(None,))
+        with patch.object(svc.gateway, "transaction", return_value=fake_transaction(cursor)):
             svc.cancel_task(1, "tester")
 
-        mock_func.assert_not_called()
-        mock_exec.assert_called_once()
-
-    def test_cancel_calls_unassign_for_each_st(self):
-        from app.services.transport_service import TransportService
-        svc = TransportService()
-        sts = self._make_sts("ST001", "ST002", "ST003")
-        with (
-            patch.object(svc, "get_task", return_value={"ID": 5, "PAY_ORDER_ID": None}),
-            patch.object(svc, "get_task_sts", return_value=sts),
-            patch.object(svc.gateway, "call_varchar_function") as mock_func,
-            patch.object(svc.gateway, "execute"),
-        ):
-            svc.cancel_task(5, "tester")
-
-        assert mock_func.call_count == 3
-        called_sts = {c.args[1]["ST_NUMBER1"] for c in mock_func.call_args_list}
-        assert called_sts == {"ST001", "ST002", "ST003"}
-        for c in mock_func.call_args_list:
-            assert c.args[1]["TT_ID"] == 0, "TT_ID must be 0 to unassign"
+        assert len(cursor.calls) == 3
+        assert "SELECT PAY_ORDER_ID" in cursor.calls[0][0]
+        assert "UPDATE RABAEV.RRL_SBORKA_PALLETS" in cursor.calls[1][0]
+        assert "SET TRANSTASK_ID = NULL" in cursor.calls[1][0]
+        assert cursor.calls[1][1]["task_id"] == 1
+        assert "UPDATE RABAEV.RRL_TRANSPORT_TASK" in cursor.calls[2][0]
+        assert "SET DELETED = 1" in cursor.calls[2][0]
+        assert cursor.calls[2][1] == {"task_id": 1, "user_id": "tester"}
 
     def test_cancel_raises_409_when_billed(self):
-        from app.services.transport_service import TransportService
-        from fastapi import HTTPException
         svc = TransportService()
-        with patch.object(svc, "get_task", return_value={"ID": 10, "PAY_ORDER_ID": 42}):
+        cursor = FakeCursor(row=(42,))
+        with patch.object(svc.gateway, "transaction", return_value=fake_transaction(cursor)):
             with pytest.raises(HTTPException) as exc:
                 svc.cancel_task(10, "tester")
+
         assert exc.value.status_code == 409
         assert "42" in exc.value.detail
+        assert len(cursor.calls) == 1
 
-    def test_cancel_unassign_happens_before_delete(self):
-        """Unassign calls must precede the DELETE update."""
-        from app.services.transport_service import TransportService
+    def test_cancel_raises_404_when_task_missing(self):
         svc = TransportService()
-        sts = self._make_sts("ST100")
-        call_order: list[str] = []
+        cursor = FakeCursor(row=None)
+        with patch.object(svc.gateway, "transaction", return_value=fake_transaction(cursor)):
+            with pytest.raises(HTTPException) as exc:
+                svc.cancel_task(10, "tester")
 
-        orig_func = svc.gateway.call_varchar_function
-        orig_exec = svc.gateway.execute
+        assert exc.value.status_code == 404
+        assert len(cursor.calls) == 1
 
-        with (
-            patch.object(svc, "get_task", return_value={"ID": 7, "PAY_ORDER_ID": None}),
-            patch.object(svc, "get_task_sts", return_value=sts),
-            patch.object(svc.gateway, "call_varchar_function", side_effect=lambda *a, **kw: call_order.append("unassign")),
-            patch.object(svc.gateway, "execute", side_effect=lambda *a, **kw: call_order.append("delete")),
-        ):
+    def test_unassign_happens_before_delete(self):
+        svc = TransportService()
+        cursor = FakeCursor(row=(0,))
+        with patch.object(svc.gateway, "transaction", return_value=fake_transaction(cursor)):
             svc.cancel_task(7, "tester")
 
-        assert call_order == ["unassign", "delete"], f"Unexpected order: {call_order}"
+        sql_order = [sql for sql, _ in cursor.calls]
+        unassign_idx = next(i for i, sql in enumerate(sql_order) if "RRL_SBORKA_PALLETS" in sql)
+        delete_idx = next(i for i, sql in enumerate(sql_order) if "RRL_TRANSPORT_TASK" in sql and "SET DELETED" in sql)
+        assert unassign_idx < delete_idx
 
-    def test_cancel_many_sts(self):
-        """Cancel handles large task (20 STs) without error."""
-        from app.services.transport_service import TransportService
+    def test_cache_is_cleared_after_cancel(self):
         svc = TransportService()
-        sts = self._make_sts(*[f"ST{i:03d}" for i in range(20)])
+        cursor = FakeCursor(row=(None,))
         with (
-            patch.object(svc, "get_task", return_value={"ID": 99, "PAY_ORDER_ID": None}),
-            patch.object(svc, "get_task_sts", return_value=sts),
-            patch.object(svc.gateway, "call_varchar_function"),
-            patch.object(svc.gateway, "execute"),
+            patch.object(svc.gateway, "transaction", return_value=fake_transaction(cursor)),
+            patch("api.wms_api_server.app.services.transport_service._clear_available_sts_cache") as clear_available,
+            patch("api.wms_api_server.app.services.transport_service._clear_task_sts_cache") as clear_task,
         ):
             svc.cancel_task(99, "tester")
 
+        clear_available.assert_called_once_with()
+        clear_task.assert_called_once_with(99)
 
-class TestCancelTaskIntegration:
 
-    def test_after_cancel_sts_visible_in_available(self):
-        """After cancel, unassigned STs should appear in available list (no TRANSTASK_ID filter needed)."""
-        from app.services.transport_service import TransportService
+class TestCancelTaskBusinessContract:
+    def test_cancel_does_not_call_oracle_when_billed(self):
         svc = TransportService()
+        cursor = FakeCursor(row=(123,))
+        with patch.object(svc.gateway, "transaction", return_value=fake_transaction(cursor)):
+            with pytest.raises(HTTPException):
+                svc.cancel_task(3, "tester")
 
-        # Simulate: task has 2 STs; cancel unassigns them;
-        # subsequent list_available_sts (unassigned_only=True) should include them.
-        sts = [
-            {"ST_NUMBER": "A1", "TRANSTASK_ID": None, "PALLETS_COUNT": 2},
-            {"ST_NUMBER": "A2", "TRANSTASK_ID": None, "PALLETS_COUNT": 1},
-        ]
-        with (
-            patch.object(svc, "get_task", return_value={"ID": 3, "PAY_ORDER_ID": None}),
-            patch.object(svc, "get_task_sts", return_value=sts),
-            patch.object(svc.gateway, "call_varchar_function"),
-            patch.object(svc.gateway, "execute"),
-            patch.object(svc, "list_available_sts", return_value=sts) as mock_avail,
-        ):
-            svc.cancel_task(3, "tester")
-            result = svc.list_available_sts(unassigned_only=True)
-
-        assert len(result) == 2
+        executed_sql = "\n".join(sql for sql, _ in cursor.calls)
+        assert "RRL_SBORKA_PALLETS" not in executed_sql
+        assert "SET DELETED = 1" not in executed_sql

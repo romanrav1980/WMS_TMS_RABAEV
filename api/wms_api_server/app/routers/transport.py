@@ -217,6 +217,7 @@ def export_tasks_xlsx(
 @router.get("/tasks")
 def list_tasks(
     shipment_date: date | None = None,
+    stdate: date | None = Query(default=None, description="Legacy alias for shipment_date"),
     condition: str | None = None,
     include_readiness: bool = False,
     task_id: int | None = None,
@@ -227,7 +228,7 @@ def list_tasks(
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
     return TransportService().list_tasks(
-        shipment_date=shipment_date,
+        shipment_date=shipment_date or stdate,
         condition=condition,
         include_readiness=include_readiness,
         task_id=task_id,
@@ -245,11 +246,6 @@ def create_task(
 ) -> dict:
     svc = TransportService()
     task_id = svc.create_task(req, user.username)
-    # Авто-пересчёт цепочки операций ARM после создания рейса
-    try:
-        svc.plan_operations(task_id)
-    except Exception:
-        pass  # Не блокируем создание рейса при ошибке ARM (таблицы могут не существовать в dev)
     return {"task_id": task_id}
 
 

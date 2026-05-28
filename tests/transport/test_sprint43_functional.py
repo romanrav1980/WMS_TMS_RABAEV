@@ -19,7 +19,9 @@ def make_task(**kwargs) -> dict:
 
 def sort_tasks(tasks: list[dict], field: str, direction: str = "asc") -> list[dict]:
     reverse = direction == "desc"
-    return sorted(tasks, key=lambda t: (t.get(field) is None, t.get(field) or ""), reverse=reverse)
+    non_empty = [t for t in tasks if t.get(field) not in (None, "")]
+    empty = [t for t in tasks if t.get(field) in (None, "")]
+    return sorted(non_empty, key=lambda t: t.get(field), reverse=reverse) + empty
 
 
 class TestSortableTasks:
@@ -93,6 +95,15 @@ class TestSortableTasks:
         ]
         result = sort_tasks(tasks, "PRICE", "asc")
         assert result[-1]["PRICE"] is None
+
+    def test_sort_by_price_null_last_desc(self):
+        tasks = [
+            make_task(ID=1, PRICE=5000),
+            make_task(ID=2, PRICE=None),
+            make_task(ID=3, PRICE=1000),
+        ]
+        result = sort_tasks(tasks, "PRICE", "desc")
+        assert [t["ID"] for t in result] == [1, 3, 2]
 
     def test_sort_direction_asc_default(self):
         tasks = self._tasks()

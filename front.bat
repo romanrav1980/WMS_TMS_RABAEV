@@ -3,8 +3,19 @@ color 27
 chcp 65001 > nul
 setlocal enableextensions enabledelayedexpansion
 
-set "FRONT_PORT=3000"
-set "VITE_API_BASE=http://127.0.0.1:8088"
+set "PROJECT_CONFIG=%~dp0config\project.defaults.json"
+for /f "usebackq delims=" %%A in (`powershell -NoProfile -Command "(Get-Content -Raw '%PROJECT_CONFIG%' | ConvertFrom-Json).local.loopbackHost"`) do set "LOCAL_HOST=%%A"
+for /f "usebackq delims=" %%A in (`powershell -NoProfile -Command "(Get-Content -Raw '%PROJECT_CONFIG%' | ConvertFrom-Json).local.frontendPort"`) do set "FRONT_PORT=%%A"
+for /f "usebackq delims=" %%A in (`powershell -NoProfile -Command "(Get-Content -Raw '%PROJECT_CONFIG%' | ConvertFrom-Json).local.apiPort"`) do set "API_PORT=%%A"
+
+if defined TMS_LOCAL_HOST set "LOCAL_HOST=%TMS_LOCAL_HOST%"
+if defined TMS_FRONTEND_PORT set "FRONT_PORT=%TMS_FRONTEND_PORT%"
+if defined TMS_API_PORT set "API_PORT=%TMS_API_PORT%"
+
+set "TMS_LOCAL_HOST=%LOCAL_HOST%"
+set "TMS_FRONTEND_PORT=%FRONT_PORT%"
+set "TMS_API_PORT=%API_PORT%"
+set "VITE_API_BASE=http://%LOCAL_HOST%:%API_PORT%"
 set "VITE_ADMIN_BASIC_AUTH=admin:admin123"
 set "BROWSER=none"
 set "PORT=%FRONT_PORT%"
@@ -31,8 +42,8 @@ if exist "%REACT_FRONT_DIR%\package.json" (
   cd /d "%RAW_FRONT_DIR%"
   echo React admin frontend is not created yet.
   echo Starting raw WMS admin UI reference...
-  echo   URL=http://127.0.0.1:%FRONT_PORT%/
-  python -m http.server %FRONT_PORT% --bind 127.0.0.1
+  echo   URL=http://%LOCAL_HOST%:%FRONT_PORT%/
+  python -m http.server %FRONT_PORT% --bind %LOCAL_HOST%
 )
 
 color 82

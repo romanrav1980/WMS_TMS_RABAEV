@@ -1,93 +1,97 @@
 """
-transport_sprint18_load_test.py — Load tests for Sprint 18 (price management).
-
-NFR targets:
-  POST  /tasks/{id}/recalculate-price p95 ≤ 1000 ms (Oracle function call)
-  PATCH /tasks/{id}/price             p95 ≤  300 ms
-  DELETE /billing/orders/{id}/tasks/{tt_id} p95 ≤ 300 ms
-
-Run:
-    locust -f tests/transport/transport_sprint18_load_test.py \
-        --host http://127.0.0.1:8088 --users 5 --spawn-rate 2 --run-time 60s --headless
+Windows-safe load check for TMS-2 Sprint 18 (price management).
 """
 
-from locust import HttpUser, task, between, events
-from datetime import date
+from __future__ import annotations
 
-TODAY = date.today().isoformat()
+import concurrent.futures as cf
+import os
+import statistics
+import sys
+import time
+from dataclasses import dataclass
+
+import requests
+
+BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
+AUTH = ("admin", "admin123")
+PLAN_DATE = "2026-05-25"
 
 
-class PriceManagementUser(HttpUser):
-    wait_time = between(1, 3)
-    auth = ("admin", "admin123")
-    _task_id: int | None = None
-    _order_id: int | None = None
+@dataclass
+class EndpointCase:
+    name: str
+    method: str
+    path: str
+    target_ms: float
+    requests: int
+    workers: int
+    json_payload: dict | None = None
 
-    def on_start(self):
-        r = self.client.get(
-            "/api/admin/transport/tasks",
-            params={"stdate": TODAY},
-            auth=self.auth,
+
+def percentile(values: list[float], pct: float) -> float:
+    ordered = sorted(values)
+    if not ordered:
+        return 0.0
+    return ordered[min(len(ordered) - 1, int(round((pct / 100) * (len(ordered) - 1))))]
+
+
+def request_once(case: EndpointCase) -> tuple[float, int, str]:
+    started = time.perf_counter()
+    try:
+        response = requests.request(
+            case.method,
+            f"{BASE_URL}{case.path}",
+            auth=AUTH,
+            json=case.json_payload,
+            timeout=20,
         )
-        if r.status_code == 200 and r.json():
-            self._task_id = r.json()[0]["ID"]
-
-        r2 = self.client.post(
-            "/api/admin/transport/billing/orders",
-            json={"company": "ООО Нагрузка-18", "date_from": TODAY, "date_to": TODAY},
-            auth=self.auth,
-        )
-        if r2.status_code in (200, 201):
-            self._order_id = r2.json().get("order_id")
-
-    @task(3)
-    def recalculate_price(self):
-        if not self._task_id:
-            return
-        self.client.post(
-            f"/api/admin/transport/tasks/{self._task_id}/recalculate-price",
-            auth=self.auth,
-            name="POST /tasks/{id}/recalculate-price",
-        )
-
-    @task(5)
-    def set_price(self):
-        if not self._task_id:
-            return
-        self.client.patch(
-            f"/api/admin/transport/tasks/{self._task_id}/price",
-            json={"price": 10000.0},
-            auth=self.auth,
-            name="PATCH /tasks/{id}/price",
-        )
-
-    @task(2)
-    def list_billing_orders(self):
-        self.client.get(
-            "/api/admin/transport/billing/orders",
-            auth=self.auth,
-            name="GET /billing/orders",
-        )
+        return (time.perf_counter() - started) * 1000, response.status_code, response.text[:240]
+    except Exception as exc:  # noqa: BLE001
+        return (time.perf_counter() - started) * 1000, 0, repr(exc)
 
 
-@events.quitting.add_listener
-def check_nfr(environment, **kwargs):
-    stats = environment.runner.stats
-    failures = []
-
-    targets = {
-        "POST /tasks/{id}/recalculate-price": ("POST", 1000),
-        "PATCH /tasks/{id}/price":            ("PATCH",  300),
-        "GET /billing/orders":                ("GET",    300),
-    }
-
-    for name, (method, threshold_ms) in targets.items():
-        entry = stats.entries.get((name, method))
-        if entry and entry.num_requests > 0:
-            p95 = entry.get_response_time_percentile(0.95)
-            if p95 > threshold_ms:
-                failures.append(f"NFR FAIL: {name} p95={p95:.0f}ms > {threshold_ms}ms")
-
+def run_case(case: EndpointCase) -> bool:
+    with cf.ThreadPoolExecutor(max_workers=case.workers) as pool:
+        results = list(pool.map(lambda _: request_once(case), range(case.requests)))
+    latencies = [elapsed for elapsed, _, _ in results]
+    failures = [(status, body) for _, status, body in results if status < 200 or status >= 300]
+    p95 = percentile(latencies, 95)
+    avg = statistics.mean(latencies) if latencies else 0.0
+    print(f"{case.name}: avg={avg:.1f}ms p95={p95:.1f}ms target={case.target_ms:.0f}ms failures={len(failures)}")
     if failures:
-        print("\n".join(failures))
-        environment.process_exit_code = 1
+        print(f"  first failure: HTTP {failures[0][0]} {failures[0][1]}")
+        return False
+    if p95 > case.target_ms:
+        print(f"  NFR FAIL: p95 {p95:.1f}ms > {case.target_ms:.0f}ms")
+        return False
+    return True
+
+
+def create_task() -> int:
+    response = requests.post(
+        f"{BASE_URL}/api/admin/transport/tasks",
+        auth=AUTH,
+        json={"transtype": "Газель", "shipment_date": PLAN_DATE},
+        timeout=20,
+    )
+    if response.status_code not in (200, 201):
+        raise RuntimeError(f"task setup failed: HTTP {response.status_code} {response.text[:240]}")
+    return int(response.json()["task_id"])
+
+
+def main() -> int:
+    task_id = create_task()
+    cases = [
+        EndpointCase("PATCH /tasks/{id}/price", "PATCH", f"/api/admin/transport/tasks/{task_id}/price", 300, 45, 5, {"price": 10000.0}),
+        EndpointCase("POST /tasks/{id}/recalculate-price", "POST", f"/api/admin/transport/tasks/{task_id}/recalculate-price", 1000, 20, 2),
+        EndpointCase("GET /billing/orders", "GET", "/api/admin/transport/billing/orders", 300, 50, 6),
+    ]
+    ok = True
+    for case in cases:
+        ok = run_case(case) and ok
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -2,7 +2,7 @@
 distance_matrix_service.py — Пересчёт и сохранение матрицы расстояний.
 
 Матрица хранится в RRL_ADDR_DISTANCE_MATRIX (FROM_ADDR VARCHAR2, TO_ADDR VARCHAR2,
-DIST_KM NUMBER, DURATION_MIN NUMBER, SOURCE VARCHAR2, CALC_AT DATE).
+DISTANCE_KM NUMBER, DURATION_MIN NUMBER, SOURCE VARCHAR2, UPDATED_AT DATE).
 Первичный ключ — (FROM_ADDR, TO_ADDR).
 
 Пересчёт делается за один проход:
@@ -19,12 +19,19 @@ from ..oracle_gateway import OracleGateway
 from .routing import RoutingProvider, get_active_provider
 
 
+def _upper_keys(row: dict[str, Any]) -> dict[str, Any]:
+    return {str(key).upper(): value for key, value in row.items()}
+
+
 class DistanceMatrixService:
     def __init__(self, gateway: OracleGateway | None = None) -> None:
         self.gateway = gateway or OracleGateway()
 
+    def _fetch_all(self, sql: str, params: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+        return [_upper_keys(row) for row in self.gateway.fetch_all(sql, params)]
+
     def get_geocoded_addresses(self) -> list[dict[str, Any]]:
-        return self.gateway.fetch_all(
+        return self._fetch_all(
             """
             SELECT ADDR, SHIROTA AS LAT, DOLGOTA AS LON
               FROM RABAEV.RRL_ADDR
@@ -62,6 +69,20 @@ class DistanceMatrixService:
         points = [(float(a["LAT"]), float(a["LON"])) for a in addrs]
         matrix = provider.build_matrix(points)
 
+        merge_sql = """
+            MERGE INTO RABAEV.RRL_ADDR_DISTANCE_MATRIX T
+            USING (SELECT :from_addr AS FROM_ADDR, :to_addr AS TO_ADDR FROM DUAL) S
+            ON (T.FROM_ADDR = S.FROM_ADDR AND T.TO_ADDR = S.TO_ADDR)
+            WHEN MATCHED THEN
+                UPDATE SET DISTANCE_KM = :dist_km,
+                           DURATION_MIN = :dur,
+                           SOURCE = :source,
+                           UPDATED_AT = SYSDATE
+            WHEN NOT MATCHED THEN
+                INSERT (FROM_ADDR, TO_ADDR, DISTANCE_KM, DURATION_MIN, SOURCE, UPDATED_AT)
+                VALUES (:from_addr, :to_addr, :dist_km, :dur, :source, SYSDATE)
+        """
+        statements: list[tuple[str, dict[str, Any]]] = []
         pairs = 0
         for i in range(n):
             for j in range(n):
@@ -70,29 +91,22 @@ class DistanceMatrixService:
                 dist_km = matrix[i][j]
                 # avg speed 50 km/h for duration estimate
                 duration_min = round(dist_km / 50.0 * 60, 0)
-                self.gateway.execute(
-                    """
-                    MERGE INTO RABAEV.RRL_ADDR_DISTANCE_MATRIX T
-                    USING (SELECT :from_addr AS FROM_ADDR, :to_addr AS TO_ADDR FROM DUAL) S
-                    ON (T.FROM_ADDR = S.FROM_ADDR AND T.TO_ADDR = S.TO_ADDR)
-                    WHEN MATCHED THEN
-                        UPDATE SET DIST_KM = :dist_km,
-                                   DURATION_MIN = :dur,
-                                   SOURCE = :source,
-                                   CALC_AT = SYSDATE
-                    WHEN NOT MATCHED THEN
-                        INSERT (FROM_ADDR, TO_ADDR, DIST_KM, DURATION_MIN, SOURCE, CALC_AT)
-                        VALUES (:from_addr, :to_addr, :dist_km, :dur, :source, SYSDATE)
-                    """,
-                    {
+                statements.append(
+                    (
+                        merge_sql,
+                        {
                         "from_addr": addrs[i]["ADDR"],
                         "to_addr":   addrs[j]["ADDR"],
                         "dist_km":   dist_km,
                         "dur":       duration_min,
                         "source":    provider.name,
-                    },
+                        },
+                    )
                 )
                 pairs += 1
+
+        if statements:
+            self.gateway.execute_many(statements)
 
         return {"pairs": pairs, "source": provider.name, "addresses": n}
 
@@ -105,13 +119,13 @@ class DistanceMatrixService:
             return {}
         placeholders = ",".join(f":a{i}" for i in range(len(addr_list)))
         params = {f"a{i}": a for i, a in enumerate(addr_list)}
-        rows = self.gateway.fetch_all(
+        rows = self._fetch_all(
             f"""
-            SELECT FROM_ADDR, TO_ADDR, DIST_KM
+            SELECT FROM_ADDR, TO_ADDR, DISTANCE_KM
               FROM RABAEV.RRL_ADDR_DISTANCE_MATRIX
              WHERE FROM_ADDR IN ({placeholders})
                AND TO_ADDR   IN ({placeholders})
             """,
             params,
         )
-        return {(r["FROM_ADDR"], r["TO_ADDR"]): float(r["DIST_KM"]) for r in rows}
+        return {(r["FROM_ADDR"], r["TO_ADDR"]): float(r["DISTANCE_KM"]) for r in rows}

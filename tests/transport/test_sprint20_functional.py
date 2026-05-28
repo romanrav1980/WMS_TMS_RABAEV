@@ -34,12 +34,42 @@ def api():
 @pytest.fixture(scope="session")
 def billed_task_id(api):
     """Find or create a task that has PAY_ORDER_ID set."""
-    r = api.get(f"{BASE_URL}/api/admin/transport/tasks", params={"stdate": TODAY})
+    r = api.get(f"{BASE_URL}/api/admin/transport/tasks", params={"date_to": TODAY})
     if r.status_code == 200:
         for task in r.json():
+            if task.get("PAY_ORDER_ID") and int(task.get("ST_COUNT") or 0) > 0:
+                return int(task["ID"])
+
+        billable = next(
+            (
+                task
+                for task in r.json()
+                if task.get("VODITEL_ID")
+                and task.get("TK_NAME")
+                and float(task.get("PRICE") or 0) > 0
+                and int(task.get("ST_COUNT") or 0) > 0
+                and not task.get("PAY_ORDER_ID")
+            ),
+            None,
+        )
+        if billable:
+            r_order = api.post(f"{BASE_URL}/api/admin/transport/billing/orders", json={
+                "company": billable["TK_NAME"],
+                "date_from": TODAY,
+                "date_to": TODAY,
+            })
+            if r_order.status_code in (200, 201):
+                order_id = r_order.json()["order_id"]
+                r_add = api.post(
+                    f"{BASE_URL}/api/admin/transport/billing/orders/{order_id}/tasks",
+                    json={"tt_ids": [int(billable["ID"])]},
+                )
+                if r_add.status_code == 200:
+                    return int(billable["ID"])
+        for task in r.json():
             if task.get("PAY_ORDER_ID"):
-                return task["ID"]
-    pytest.skip("No billed task found — run Sprint 15 tests first to create one")
+                return int(task["ID"])
+    pytest.skip("No billable task available for billed-trip protection tests")
 
 
 @pytest.fixture(scope="session")

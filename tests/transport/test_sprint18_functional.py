@@ -42,15 +42,29 @@ def task_id(api):
 @pytest.fixture(scope="session")
 def billing_order_with_task(api, task_id):
     """Create a billing order linked to a task."""
-    r_task = api.get(f"{BASE_URL}/api/admin/transport/tasks/{task_id}")
-    if r_task.status_code != 200:
-        pytest.skip("Cannot get task detail")
-    task = r_task.json()
-    if task.get("PAY_ORDER_ID"):
-        pytest.skip("Task already has a billing order")
+    r_tasks = api.get(
+        f"{BASE_URL}/api/admin/transport/tasks",
+        params={"date_to": TODAY, "no_payments_only": True},
+    )
+    if r_tasks.status_code != 200:
+        pytest.skip("Cannot get billable tasks")
+    task = next(
+        (
+            row
+            for row in r_tasks.json()
+            if row.get("VODITEL_ID")
+            and row.get("TK_NAME")
+            and float(row.get("PRICE") or 0) > 0
+            and not row.get("PAY_ORDER_ID")
+        ),
+        None,
+    )
+    if not task:
+        pytest.skip("No billable task with carrier and calculated price")
+    task_id = int(task["ID"])
 
     r = api.post(f"{BASE_URL}/api/admin/transport/billing/orders", json={
-        "company": "ООО Тест-18",
+        "company": task["TK_NAME"],
         "date_from": TODAY,
         "date_to": TODAY,
     })
@@ -58,10 +72,12 @@ def billing_order_with_task(api, task_id):
         pytest.skip(f"Cannot create billing order: {r.status_code}")
     order_id = r.json()["order_id"]
 
-    api.post(
+    r_add = api.post(
         f"{BASE_URL}/api/admin/transport/billing/orders/{order_id}/tasks",
         json={"tt_ids": [task_id]},
     )
+    if r_add.status_code != 200:
+        pytest.skip(f"Cannot link billable task to order: {r_add.status_code} {r_add.text}")
     return {"order_id": order_id, "task_id": task_id}
 
 

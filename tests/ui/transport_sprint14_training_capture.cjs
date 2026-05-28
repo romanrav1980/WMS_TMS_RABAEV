@@ -1,0 +1,131 @@
+const fs = require("fs");
+const path = require("path");
+const { chromium } = require("playwright");
+
+const APP_URL = process.env.WMS_UI_URL || "http://127.0.0.1:3000/?page=gantt";
+const OUT_DIR = path.resolve("wiki-raw/tms2_training/sprint14_plan_fact_2026_05_28");
+
+const operations = [
+  { op_id: 1401, tt_id: 6401, operation_code: "LOADING", ord: 1, duration_min: 45, plan_start: "2026-05-25 06:00", plan_end: "2026-05-25 06:45", fact_start: "2026-05-25 06:05", fact_end: "2026-05-25 07:12", delta_min: 27, note: null },
+  { op_id: 1402, tt_id: 6401, operation_code: "REST", ord: 2, duration_min: 30, plan_start: "2026-05-25 07:15", plan_end: "2026-05-25 07:45", fact_start: "2026-05-25 07:50", fact_end: "2026-05-25 08:05", delta_min: 20, note: null },
+  { op_id: 1403, tt_id: 6401, operation_code: "UNLOAD", ord: 3, duration_min: 30, plan_start: "2026-05-25 08:10", plan_end: "2026-05-25 08:40", fact_start: null, fact_end: null, delta_min: null, note: null },
+];
+
+async function installMocks(page) {
+  await page.route("**/api/admin/transport/vehicles/gantt?**", route => route.fulfill({ contentType: "application/json", body: "[]" }));
+  await page.route("**/api/admin/transport/plan-fact?**", route => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify([
+      { tt_id: 6401, vehicle: "В 415 ТТ 59", shipment_date: "2026-05-25", status: "В рейсе", total_delta_min: 47, rest_violations: 2, operations },
+      { tt_id: 6402, vehicle: "Е 714 НО 59", shipment_date: "2026-05-25", status: "Закрыт", total_delta_min: -5, rest_violations: 0, operations: [operations[2]] },
+    ]),
+  }));
+}
+
+async function shot(page, name) {
+  await page.screenshot({ path: path.join(OUT_DIR, "screenshots", name), fullPage: true });
+}
+
+function html() {
+  return `<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>ТМС-2 Sprint 14: План-факт</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; color: #172033; background: #f4f7fb; }
+    header { padding: 28px 36px; background: #4b3b68; color: white; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 24px 48px; }
+    section { background: white; border: 1px solid #d8e0ea; border-radius: 8px; padding: 22px; margin: 0 0 22px; }
+    h1, h2 { margin-top: 0; }
+    h2 { color: #4b3b68; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .card { background: #f8fbff; border: 1px solid #d8e0ea; border-radius: 6px; padding: 14px; }
+    img { width: 100%; border: 1px solid #c7d2e0; border-radius: 6px; display: block; }
+    figure { margin: 0 0 24px; }
+    figcaption { font-size: 14px; color: #41516a; margin-top: 8px; line-height: 1.45; }
+    table { width: 100%; border-collapse: collapse; }
+    td, th { border: 1px solid #d8e0ea; padding: 8px; vertical-align: top; }
+    th { background: #eef4fb; text-align: left; }
+    code { background: #eef4fb; padding: 1px 4px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ТМС-2 Sprint 14: План-фактный анализ</h1>
+    <p>Контроль отклонений по операциям рейса и экспорт результата.</p>
+  </header>
+  <main>
+    <section>
+      <h2>Зачем этот блок</h2>
+      <p>План-факт показывает, где транспортный процесс расходится с нормативом: погрузка, ожидание, отдых, разгрузка. Руководитель видит системные задержки и может менять процесс или нормативы.</p>
+      <div class="grid">
+        <div class="card"><b>Вход</b><br>Плановые и фактические времена операций рейса.</div>
+        <div class="card"><b>Процесс</b><br>Расчет дельт, подсветка отклонений, контроль нарушений отдыха.</div>
+        <div class="card"><b>Результат</b><br>Сводка по рейсам, таблица операций и CSV для разбора.</div>
+      </div>
+    </section>
+    <section>
+      <h2>Структура данных</h2>
+      <table>
+        <tr><th>Объект</th><th>Поля</th><th>Назначение</th></tr>
+        <tr><td>Рейс</td><td><code>tt_id</code>, <code>vehicle</code>, <code>status</code>, <code>total_delta_min</code>, <code>rest_violations</code></td><td>Сводка исполнения.</td></tr>
+        <tr><td>Операция</td><td><code>duration_min</code>, <code>plan_start/end</code>, <code>fact_start/end</code>, <code>delta_min</code></td><td>План-факт по шагу рейса.</td></tr>
+      </table>
+    </section>
+    <section>
+      <h2>Как работать</h2>
+      <figure><img src="screenshots/01_plan_fact.png" alt="План-факт" /><figcaption><b>1. Открыть аналитику.</b> Вкладка показывает рейсы за дату, суммарную дельту и статус.</figcaption></figure>
+      <figure><img src="screenshots/02_deviation_bars.png" alt="Бары отклонений" /><figcaption><b>2. Читать отклонения.</b> В таблице операции видно план, факт, дельту и визуальный бар отклонения.</figcaption></figure>
+      <figure><img src="screenshots/03_export_csv.png" alt="Экспорт CSV" /><figcaption><b>3. Экспортировать.</b> CSV выгружает строки рейсов и операций для внешнего анализа или совещания.</figcaption></figure>
+    </section>
+    <section>
+      <h2>Бизнес-процессы</h2>
+      <ol>
+        <li><b>Фиксация факта:</b> операции получают фактическое начало/окончание.</li>
+        <li><b>Контроль исполнения:</b> система считает дельты по операциям и суммарно по рейсу.</li>
+        <li><b>Контроль отдыха:</b> нарушения режима отдыха поднимаются в строку рейса.</li>
+        <li><b>Разбор причин:</b> диспетчер/руководитель смотрит повторяющиеся задержки и корректирует процесс.</li>
+        <li><b>Выгрузка:</b> CSV используется как доказательная таблица для анализа.</li>
+      </ol>
+    </section>
+    <section>
+      <h2>Результат проверки</h2>
+      <p>Sprint 14 закрыт функционально: backend tests <code>7 passed</code>, UI smoke passed, load NFR passed. Проверены план-факт API, таблица аналитики, нарушения отдыха, бары отклонений и CSV export.</p>
+    </section>
+  </main>
+</body>
+</html>`;
+}
+
+async function main() {
+  fs.mkdirSync(path.join(OUT_DIR, "screenshots"), { recursive: true });
+  const browser = await chromium.launch();
+  const context = await browser.newContext({ acceptDownloads: true, viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
+  await installMocks(page);
+
+  await page.goto(APP_URL);
+  await page.getByRole("heading", { name: "Диаграмма Ганта" }).waitFor({ timeout: 10000 });
+  await page.getByRole("button", { name: "Аналитика" }).click();
+  await page.getByText("План-факт анализ").waitFor({ timeout: 5000 });
+  await page.getByText("Рейс #6401").waitFor({ timeout: 5000 });
+  await shot(page, "01_plan_fact.png");
+
+  await page.locator(".gantt-pf-table td", { hasText: "Погрузка" }).waitFor({ timeout: 5000 });
+  await shot(page, "02_deviation_bars.png");
+
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: /Экспорт CSV/ }).click();
+  await downloadPromise;
+  await shot(page, "03_export_csv.png");
+
+  await browser.close();
+  fs.writeFileSync(path.join(OUT_DIR, "index.html"), html(), "utf8");
+  console.log(JSON.stringify({ ok: true, outDir: OUT_DIR }));
+}
+
+main().catch(error => {
+  console.error(error);
+  process.exit(1);
+});

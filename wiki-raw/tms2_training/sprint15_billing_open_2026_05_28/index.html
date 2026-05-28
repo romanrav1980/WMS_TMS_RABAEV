@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>ТМС-2 Sprint 15: Выставление счёта</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; color: #172033; background: #f4f7fb; }
+    header { padding: 28px 36px; background: #2f3d59; color: white; }
+    main { max-width: 1180px; margin: 0 auto; padding: 28px 24px 48px; }
+    section { background: white; border: 1px solid #d8e0ea; border-radius: 8px; padding: 22px; margin: 0 0 22px; }
+    h1, h2 { margin-top: 0; }
+    h2 { color: #2f3d59; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .card { background: #f8fbff; border: 1px solid #d8e0ea; border-radius: 6px; padding: 14px; }
+    img { width: 100%; border: 1px solid #c7d2e0; border-radius: 6px; display: block; }
+    figure { margin: 0 0 24px; }
+    figcaption { font-size: 14px; color: #41516a; margin-top: 8px; line-height: 1.45; }
+    table { width: 100%; border-collapse: collapse; }
+    td, th { border: 1px solid #d8e0ea; padding: 8px; vertical-align: top; }
+    th { background: #eef4fb; text-align: left; }
+    code { background: #eef4fb; padding: 1px 4px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ТМС-2 Sprint 15: Выставление счёта</h1>
+    <p>Закрытый рейс привязывается к биллинговому заказу транспортной компании.</p>
+  </header>
+  <main>
+    <section>
+      <h2>Зачем этот блок</h2>
+      <p>Sprint 15 запускает биллинговый контур: отгруженный рейс превращается в счёт, а рейс после этого защищается от редактирования и расформирования.</p>
+      <div class="grid">
+        <div class="card"><b>Вход</b><br>Отгруженный рейс, транспортная компания, цена рейса.</div>
+        <div class="card"><b>Процесс</b><br>Открыть рейс, нажать «Выставить счёт», создать новый заказ или привязать к существующему.</div>
+        <div class="card"><b>Результат</b><br>Рейс получает <code>PAY_ORDER_ID</code> и тег счёта.</div>
+      </div>
+    </section>
+    <section>
+      <h2>Структура данных</h2>
+      <table>
+        <tr><th>Объект</th><th>Поля</th><th>Назначение</th></tr>
+        <tr><td>Рейс</td><td><code>ID</code>, <code>TK_NAME</code>, <code>PRICE</code>, <code>PAY_ORDER_ID</code></td><td>Источник строки счёта и связь с заказом.</td></tr>
+        <tr><td>Биллинг-заказ</td><td><code>order_id</code>, <code>company</code>, <code>date_from</code>, <code>date_to</code>, <code>total_price</code></td><td>Документ для транспортной компании.</td></tr>
+      </table>
+    </section>
+    <section>
+      <h2>Как работать</h2>
+      <figure><img src="screenshots/01_closed_task.png" alt="Закрытый рейс" /><figcaption><b>1. Выбрать закрытый рейс.</b> Кнопка «Выставить счёт» доступна только для отгруженного рейса внешней транспортной компании.</figcaption></figure>
+      <figure><img src="screenshots/02_open_billing_dialog.png" alt="Диалог выставления счёта" /><figcaption><b>2. Проверить счёт.</b> Диалог показывает рейс, транспортную компанию, дату и цену. Если есть открытые счета этой ТК, можно привязать рейс к ним.</figcaption></figure>
+      <figure><img src="screenshots/03_billed_task.png" alt="Рейс со счётом" /><figcaption><b>3. Создать счёт.</b> После создания рейс получает тег счёта и становится защищенным от изменений.</figcaption></figure>
+    </section>
+    <section>
+      <h2>Бизнес-процессы</h2>
+      <ol>
+        <li><b>Подготовка:</b> рейс закрыт, водитель внешний, цена рассчитана.</li>
+        <li><b>Выставление:</b> диспетчер создает биллинговый заказ или добавляет рейс в открытый счет ТК.</li>
+        <li><b>Блокировка рейса:</b> наличие <code>PAY_ORDER_ID</code> запрещает расформирование и изменение состава.</li>
+        <li><b>Контроль:</b> рейс виден с тегом счета, дальше его ведет статусная машина биллинга.</li>
+      </ol>
+    </section>
+    <section>
+      <h2>Результат проверки</h2>
+      <p>Sprint 15 закрыт функционально: backend tests <code>12 passed</code>, UI smoke passed, load NFR passed. Проверены создание биллингового заказа, открытие счёта по рейсу, связь рейс-счёт и пользовательский диалог.</p>
+    </section>
+  </main>
+</body>
+</html>

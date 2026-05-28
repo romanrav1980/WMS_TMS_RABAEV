@@ -20,7 +20,6 @@ from datetime import date
 BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
 AUTH = ("admin", "admin123")
 TODAY = date.today().isoformat()
-COMPANY = "ООО Тест-19-Линк"
 
 
 @pytest.fixture(scope="session")
@@ -32,9 +31,34 @@ def api():
 
 
 @pytest.fixture(scope="session")
-def open_order(api):
+def task_for_link(api):
+    """Find a billable task that is not yet in a billing order."""
+    r = api.get(
+        f"{BASE_URL}/api/admin/transport/tasks",
+        params={"date_to": TODAY, "no_payments_only": True},
+    )
+    if r.status_code != 200 or not r.json():
+        pytest.skip("No unlinked tasks available")
+    task = next(
+        (
+            row
+            for row in r.json()
+            if row.get("VODITEL_ID")
+            and row.get("TK_NAME")
+            and float(row.get("PRICE") or 0) > 0
+            and not row.get("PAY_ORDER_ID")
+        ),
+        None,
+    )
+    if not task:
+        pytest.skip("No billable task with carrier and calculated price")
+    return {"id": int(task["ID"]), "company": task["TK_NAME"]}
+
+
+@pytest.fixture(scope="session")
+def open_order(api, task_for_link):
     r = api.post(f"{BASE_URL}/api/admin/transport/billing/orders", json={
-        "company": COMPANY,
+        "company": task_for_link["company"],
         "date_from": TODAY,
         "date_to": TODAY,
     })
@@ -44,27 +68,20 @@ def open_order(api):
 
 
 @pytest.fixture(scope="session")
-def task_for_link(api):
-    """Find a task that is not yet in a billing order."""
-    r = api.get(f"{BASE_URL}/api/admin/transport/tasks", params={"stdate": TODAY})
-    if r.status_code != 200 or not r.json():
-        pytest.skip("No tasks for today")
-    for task in r.json():
-        if not task.get("PAY_ORDER_ID"):
-            return task["ID"]
-    pytest.skip("No unlinked tasks available")
+def company_for_link(task_for_link):
+    return task_for_link["company"]
 
 
 class TestOpenOrdersFilter:
-    def test_filter_by_company_returns_matching(self, api, open_order):
+    def test_filter_by_company_returns_matching(self, api, open_order, company_for_link):
         r = api.get(
             f"{BASE_URL}/api/admin/transport/billing/orders",
-            params={"company": COMPANY},
+            params={"company": company_for_link},
         )
         assert r.status_code == 200
         data = r.json()
         assert any(o["order_id"] == open_order for o in data), \
-            f"Order {open_order} not found for company {COMPANY}"
+            f"Order {open_order} not found for company {company_for_link}"
 
     def test_filter_closed_0_excludes_closed(self, api, open_order):
         r = api.get(
@@ -84,10 +101,10 @@ class TestOpenOrdersFilter:
         for o in r.json():
             assert o["payed"] == 0
 
-    def test_combined_filter_open_orders_for_company(self, api, open_order):
+    def test_combined_filter_open_orders_for_company(self, api, open_order, company_for_link):
         r = api.get(
             f"{BASE_URL}/api/admin/transport/billing/orders",
-            params={"company": COMPANY, "closed": 0, "payed": 0},
+            params={"company": company_for_link, "closed": 0, "payed": 0},
         )
         assert r.status_code == 200
         data = r.json()
@@ -101,22 +118,22 @@ class TestLinkTaskToExistingOrder:
     def test_add_task_to_existing_order(self, api, open_order, task_for_link):
         r = api.post(
             f"{BASE_URL}/api/admin/transport/billing/orders/{open_order}/tasks",
-            json={"tt_ids": [task_for_link]},
+            json={"tt_ids": [task_for_link["id"]]},
         )
         assert r.status_code == 200, f"{r.status_code}: {r.text}"
 
     def test_task_appears_in_order_tasks(self, api, open_order, task_for_link):
         api.post(
             f"{BASE_URL}/api/admin/transport/billing/orders/{open_order}/tasks",
-            json={"tt_ids": [task_for_link]},
+            json={"tt_ids": [task_for_link["id"]]},
         )
         r = api.get(f"{BASE_URL}/api/admin/transport/billing/orders/{open_order}/tasks")
         assert r.status_code == 200
         task_ids = [t["tt_id"] for t in r.json()]
-        assert task_for_link in task_ids
+        assert task_for_link["id"] in task_ids
 
     def test_task_billing_reflects_existing_order(self, api, open_order, task_for_link):
-        r = api.get(f"{BASE_URL}/api/admin/transport/tasks/{task_for_link}/billing")
+        r = api.get(f"{BASE_URL}/api/admin/transport/tasks/{task_for_link['id']}/billing")
         if r.status_code == 200:
             assert r.json()["order_id"] == open_order
 

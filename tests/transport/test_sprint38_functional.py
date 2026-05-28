@@ -197,3 +197,21 @@ class TestCopyTaskLogic:
         t1 = sim.copy_task(source)
         t2 = sim.copy_task(source)
         assert t1["ID"] != t2["ID"]
+
+
+class TestCopyTaskBackendContracts:
+    def test_patch_missing_task_returns_404(self):
+        from fastapi import HTTPException
+
+        from api.wms_api_server.app.schemas import TransportTaskUpdateRequest
+        from api.wms_api_server.app.services.transport_service import TransportService
+
+        gateway = MagicMock()
+        gateway.execute.return_value = 0
+        svc = TransportService.__new__(TransportService)
+        svc.gateway = gateway
+
+        with pytest.raises(HTTPException) as exc:
+            svc.update_task(999999, TransportTaskUpdateRequest(primechanie="copy"), "tester")
+
+        assert exc.value.status_code == 404

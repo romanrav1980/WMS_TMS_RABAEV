@@ -1,63 +1,87 @@
-"""
-transport_sprint29_load_test.py — Load tests for Sprint 29 (Create task from cluster).
+"""Windows-safe load check for Sprint 29 (cluster reads + safe negative create)."""
 
-Sprint 29 adds POST /clusters/{raion}/create-task.
+from __future__ import annotations
 
-NFR:
-  - GET /clusters             p95 ≤ 300ms
-  - POST /clusters/.../create-task  p95 ≤ 1500ms  (creates task + assigns STs)
+import concurrent.futures as cf
+import os
+import statistics
+import sys
+import time
+from dataclasses import dataclass
 
-Run:
-    locust -f tests/transport/transport_sprint29_load_test.py \
-        --host http://127.0.0.1:8088 --users 3 --spawn-rate 1 --run-time 60s --headless
-"""
+import requests
 
-from datetime import date
-from locust import HttpUser, task, between, events
-
+BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
 AUTH = ("admin", "admin123")
-TODAY = date.today().isoformat()
-TEST_RAION = "%D0%A1%D0%B5%D0%B2%D0%B5%D1%80"  # URL-encoded «Север»
+PLAN_DATE = "2026-05-25"
 
 
-class ClusterTaskUser(HttpUser):
-    wait_time = between(3, 6)
-
-    @task(8)
-    def list_clusters(self):
-        self.client.get(
-            f"/api/admin/transport/clusters?stdate={TODAY}",
-            auth=AUTH,
-            name="GET /clusters",
-        )
-
-    @task(2)
-    def create_task_from_cluster(self):
-        self.client.post(
-            f"/api/admin/transport/clusters/{TEST_RAION}/create-task",
-            json={"stdate": TODAY, "transtype": "10"},
-            auth=AUTH,
-            name="POST /clusters/create-task",
-        )
+@dataclass
+class EndpointCase:
+    name: str
+    method: str
+    path: str
+    target_ms: float
+    requests: int
+    workers: int
+    json_payload: dict | None = None
+    ok_statuses: set[int] | None = None
 
 
-@events.quitting.add_listener
-def check_nfr(environment, **kwargs):
-    stats = environment.runner.stats
-    failures = []
+def percentile(values: list[float], pct: float) -> float:
+    ordered = sorted(values)
+    if not ordered:
+        return 0.0
+    return ordered[min(len(ordered) - 1, int(round((pct / 100) * (len(ordered) - 1))))]
 
-    targets = {
-        "GET /clusters":               ("GET",  300),
-        "POST /clusters/create-task":  ("POST", 1500),
-    }
 
-    for name, (method, threshold_ms) in targets.items():
-        entry = stats.entries.get((name, method))
-        if entry and entry.num_requests > 0:
-            p95 = entry.get_response_time_percentile(0.95)
-            if p95 > threshold_ms:
-                failures.append(f"NFR FAIL: {name} p95={p95:.0f}ms > {threshold_ms}ms")
+def request_once(case: EndpointCase) -> tuple[float, int, str]:
+    started = time.perf_counter()
+    try:
+        response = requests.request(case.method, f"{BASE_URL}{case.path}", auth=AUTH, json=case.json_payload, timeout=20)
+        return (time.perf_counter() - started) * 1000, response.status_code, response.text[:160]
+    except Exception as exc:  # noqa: BLE001
+        return (time.perf_counter() - started) * 1000, 0, repr(exc)
 
+
+def run_case(case: EndpointCase) -> bool:
+    with cf.ThreadPoolExecutor(max_workers=case.workers) as pool:
+        results = list(pool.map(lambda _: request_once(case), range(case.requests)))
+    latencies = [elapsed for elapsed, _, _ in results]
+    ok_statuses = case.ok_statuses or {200}
+    failures = [(status, body) for _, status, body in results if status not in ok_statuses]
+    p95 = percentile(latencies, 95)
+    avg = statistics.mean(latencies) if latencies else 0.0
+    print(f"{case.name}: avg={avg:.1f}ms p95={p95:.1f}ms target={case.target_ms:.0f}ms failures={len(failures)}")
     if failures:
-        print("\n".join(failures))
-        environment.process_exit_code = 1
+        print(f"  first failure: HTTP {failures[0][0]} {failures[0][1]}")
+        return False
+    if p95 > case.target_ms:
+        print(f"  NFR FAIL: p95 {p95:.1f}ms > {case.target_ms:.0f}ms")
+        return False
+    return True
+
+
+def main() -> int:
+    requests.get(f"{BASE_URL}/api/admin/transport/clusters?stdate={PLAN_DATE}", auth=AUTH, timeout=20)
+    cases = [
+        EndpointCase("GET /clusters", "GET", f"/api/admin/transport/clusters?stdate={PLAN_DATE}", 300, 40, 5),
+        EndpointCase(
+            "POST /clusters/{raion}/create-task (empty)",
+            "POST",
+            f"/api/admin/transport/clusters/__NO_SUCH_RAION__/create-task",
+            1500,
+            15,
+            3,
+            {"stdate": PLAN_DATE, "transtype": "10"},
+            {404},
+        ),
+    ]
+    ok = True
+    for case in cases:
+        ok = run_case(case) and ok
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

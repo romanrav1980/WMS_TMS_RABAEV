@@ -94,7 +94,7 @@
 | 13 | СТОЛ | `RRL_ADDR.STOL` | Флаг требования стол-лифта. |
 | 14 | Примечание | `RRL_ADDR.PRIM1` | Свободный комментарий к адресу. |
 | 15 | ДатаЗагрузки | `MIN(P.CREATE_DATE)` | Дата загрузки первой паллеты СТ. |
-| 16 | САХАР | `SUM(RRL_SUGAR_HAS(ARTICUL))` | Признак наличия сахара в СТ (специфика домена). |
+| 16 | Полнопалетная отборка | `SUM(RRL_SUGAR_HAS(ARTICUL))`, legacy API field `SUGAR` | Исторический legacy-термин в коде эквивалентен полнопалетной отборке; в пользовательских текстах писать только `Полнопалетная отборка`. |
 
 ### 3.4 Цветовая индикация строк
 
@@ -303,7 +303,7 @@ Oracle-функции Phase 1: `RRL_TRASPORT_TASK_ADD`, `RRL_TT_ADD_PALL`, `RRL_
 | `STOL` | `RRL_ADDR.STOL` |
 | `PRIM1` | `RRL_ADDR.PRIM1` |
 | `VERIFY_PERC` | `MAX(RRL_ST_VERYFY_PERC(P.ST_NUMBER))` |
-| `SUGAR` | `SUM(RRL_SUGAR_HAS(R.ARTICUL))` |
+| `SUGAR` | Legacy API-поле признака полнопалетной отборки: `SUM(RRL_SUGAR_HAS(R.ARTICUL))`; в UI/документации писать `Полнопалетная отборка`. |
 | `DATE_LOAD` | `MIN(P.CREATE_DATE)` |
 
 ### 5.6 Состав рейса — дополнительные поля
@@ -397,7 +397,7 @@ gateway.call_varchar_function(
 | `RRL_ST_VERYFY_PERC` | FUNCTION |
 | `RRL_GET_TT_INFO` | FUNCTION |
 | `RRL_SKLADNAME_BY_ID` | FUNCTION |
-| `RRL_SUGAR_HAS` | FUNCTION |
+| `RRL_SUGAR_HAS` | FUNCTION, legacy-имя функции определения полнопалетной отборки |
 
 ---
 

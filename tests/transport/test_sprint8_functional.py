@@ -16,11 +16,10 @@ from __future__ import annotations
 import os
 import pytest
 import requests
-from datetime import date, timedelta
 
 BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
 AUTH = ("admin", "admin123")
-TOMORROW = (date.today() + timedelta(days=1)).isoformat()
+PLAN_DATE = os.environ.get("TMS_SPRINT8_DATE", "2026-05-25")
 
 
 @pytest.fixture(scope="session")
@@ -79,7 +78,7 @@ class TestPlannerSolve:
     @pytest.fixture(scope="class")
     def plan(self, api):
         r = api.post(f"{BASE_URL}/api/admin/transport/planner/solve",
-                     json={"plan_date": TOMORROW, "time_limit_s": 15, "source": "haversine"})
+                     json={"plan_date": PLAN_DATE, "time_limit_s": 15, "source": "haversine", "solver": "savings"})
         if r.status_code == 422 and "Нет активных ТС" in r.text:
             pytest.skip("Нет активных ТС в тестовой БД")
         assert r.status_code == 200, f"Expected 200: {r.text}"
@@ -87,7 +86,7 @@ class TestPlannerSolve:
 
     def test_solve_returns_200(self, api):
         r = api.post(f"{BASE_URL}/api/admin/transport/planner/solve",
-                     json={"plan_date": TOMORROW, "time_limit_s": 10, "source": "haversine"})
+                     json={"plan_date": PLAN_DATE, "time_limit_s": 10, "source": "haversine", "solver": "savings"})
         assert r.status_code in (200, 422), f"Unexpected status {r.status_code}: {r.text}"
 
     def test_plan_has_required_fields(self, plan):
@@ -98,6 +97,9 @@ class TestPlannerSolve:
 
     def test_routes_is_list(self, plan):
         assert isinstance(plan["routes"], list)
+
+    def test_plan_has_routes_on_seed_date(self, plan):
+        assert plan["routes"], f"VRP returned empty routes for seed date {PLAN_DATE}"
 
     def test_solver_used_known(self, plan):
         known = {"ortools-cvrptw", "clarke-wright", "none"}
@@ -113,8 +115,6 @@ class TestPlannerSolve:
         assert plan["tw_violations"] >= 0
 
     def test_route_items_have_required_fields(self, plan):
-        if not plan["routes"]:
-            pytest.skip("Нет маршрутов в плане")
         required = {"vehicle_id", "vehicle_num", "vehicle_type", "max_pallets",
                     "total_pallets", "total_km", "utilization_pct", "stops"}
         for route in plan["routes"]:
@@ -122,8 +122,6 @@ class TestPlannerSolve:
             assert not missing, f"Route missing fields: {missing}"
 
     def test_stops_have_required_fields(self, plan):
-        if not plan["routes"]:
-            pytest.skip("Нет маршрутов в плане")
         required = {"st_number", "addr", "lat", "lon", "pallets", "weight_kg", "ware_id"}
         for route in plan["routes"]:
             for stop in route["stops"][:3]:
@@ -167,24 +165,30 @@ class TestPlannerMetrics:
 class TestPlannerApply:
     def test_apply_without_plan_id_returns_422(self, api):
         r = api.post(f"{BASE_URL}/api/admin/transport/planner/apply",
-                     json={"plan_id": 999999999, "shipment_date": TOMORROW})
+                     json={"plan_id": 999999999, "shipment_date": PLAN_DATE})
         assert r.status_code in (404, 422), f"Expected 404/422 for unknown plan_id: {r.status_code}"
 
-    def test_apply_full_flow(self, api):
-        """Создаём план → применяем → проверяем tasks_created."""
-        # Solve first
+    def test_solve_plan_is_persisted_for_manual_apply(self, api):
+        """Default gate is non-mutating: creates a plan but does not assign seed STs."""
         solve_r = api.post(f"{BASE_URL}/api/admin/transport/planner/solve",
-                           json={"plan_date": TOMORROW, "time_limit_s": 10, "source": "haversine"})
+                           json={"plan_date": PLAN_DATE, "time_limit_s": 10, "source": "haversine", "solver": "savings"})
         if solve_r.status_code == 422:
             pytest.skip("Нет активных ТС / СТ")
         plan = solve_r.json()
         plan_id = plan.get("plan_id")
-        if plan_id is None:
-            pytest.skip("plan_id не возвращён (Oracle недоступна?)")
+        assert isinstance(plan_id, int)
+        assert plan["routes"], "Saved plan must have at least one route before manual apply"
 
+    def test_apply_full_flow_optional_mutating(self, api):
+        """Mutating apply is disabled by default so the shared seed remains reusable."""
+        if os.environ.get("TMS_RUN_MUTATING_VRP_APPLY") != "1":
+            return
+        solve_r = api.post(f"{BASE_URL}/api/admin/transport/planner/solve",
+                           json={"plan_date": PLAN_DATE, "time_limit_s": 10, "source": "haversine", "solver": "savings"})
+        assert solve_r.status_code == 200, solve_r.text
+        plan = solve_r.json()
+        assert plan["routes"], "Cannot apply an empty plan"
         apply_r = api.post(f"{BASE_URL}/api/admin/transport/planner/apply",
-                           json={"plan_id": plan_id, "shipment_date": TOMORROW})
+                           json={"plan_id": plan["plan_id"], "shipment_date": PLAN_DATE})
         assert apply_r.status_code == 200, f"Apply failed: {apply_r.text}"
-        result = apply_r.json()
-        assert "tasks_created" in result
-        assert result["tasks_created"] >= 0
+        assert apply_r.json()["tasks_created"] > 0

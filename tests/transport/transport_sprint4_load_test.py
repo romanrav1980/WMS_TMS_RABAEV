@@ -37,7 +37,8 @@ import requests
 DEFAULT_BASE_URL = "http://127.0.0.1:8088"
 AUTH = ("admin", "admin123")
 TODAY = date.today().isoformat()
-TOMORROW = (date.today() + timedelta(days=1)).isoformat()
+SPRINT4_DATE = "2026-05-25"
+TOMORROW = SPRINT4_DATE
 
 # NFR thresholds (ms) from ТЗ §12
 NFR: dict[str, int] = {
@@ -165,9 +166,8 @@ def dispatcher_scenario(client: ApiClient, col: Collector, task_id: int | None,
     col.record("PATCH /tasks/{id}", ms, status == 200)
 
     # 6. Patch shipment_date (Sprint 4 new field)
-    new_date = (date.today() + timedelta(days=2)).isoformat()
     status, ms = client.patch(f"/api/admin/transport/tasks/{task_id}",
-                              {"shipment_date": new_date})
+                              {"shipment_date": SPRINT4_DATE})
     col.record("PATCH /tasks/{id}", ms, status == 200)
 
 
@@ -179,8 +179,12 @@ def wait_for_api(base_url: str, timeout: int = 30) -> None:
     deadline = time.time() + timeout
     while time.time() < deadline:
         try:
-            r = requests.get(f"{base_url}/api/admin/transport/tasks",
-                             auth=AUTH, timeout=5)
+            r = requests.get(
+                f"{base_url}/api/admin/transport/tasks",
+                auth=AUTH,
+                params={"shipment_date": SPRINT4_DATE},
+                timeout=5,
+            )
             if r.status_code < 500:
                 return
         except requests.exceptions.ConnectionError:
@@ -224,9 +228,10 @@ def run_load(base_url: str, users: int, duration: int) -> None:
     print()
 
     wait_for_api(base_url)
-    task_id = create_test_task(base_url)
-    if task_id:
-        print(f"  Тест-рейс: #{task_id}")
+    task_ids = [create_test_task(base_url) for _ in range(users)]
+    task_ids = [task_id for task_id in task_ids if task_id]
+    if task_ids:
+        print(f"  Test tasks: {', '.join('#' + str(task_id) for task_id in task_ids)}")
     else:
         print("  WARN: без тест-рейса — только GET-сценарии")
 
@@ -234,7 +239,7 @@ def run_load(base_url: str, users: int, duration: int) -> None:
     deadline = time.time() + duration
     iteration = 0
 
-    def worker_loop() -> None:
+    def worker_loop(task_id: int | None) -> None:
         nonlocal iteration
         client = ApiClient(base_url)
         while time.time() < deadline:
@@ -243,14 +248,17 @@ def run_load(base_url: str, users: int, duration: int) -> None:
             dispatcher_scenario(client, col, task_id, None, it)
 
     with ThreadPoolExecutor(max_workers=users) as pool:
-        futures = [pool.submit(worker_loop) for _ in range(users)]
+        futures = [
+            pool.submit(worker_loop, task_ids[i] if i < len(task_ids) else None)
+            for i in range(users)
+        ]
         for f in as_completed(futures):
             try:
                 f.result()
             except Exception as e:
                 print(f"Worker error: {e}", file=sys.stderr)
 
-    if task_id:
+    for task_id in task_ids:
         cleanup_test_task(base_url, task_id)
 
     # Report
@@ -265,7 +273,7 @@ def run_load(base_url: str, users: int, duration: int) -> None:
     nfr_violations = 0
     for label, s in sorted(report.items()):
         nfr_str = f"{s['nfr_ms']}ms" if s["nfr_ms"] else "—"
-        ok_str = "✅" if s["nfr_ok"] else ("❌" if s["nfr_ok"] is False else "—")
+        ok_str = "OK" if s["nfr_ok"] else ("FAIL" if s["nfr_ok"] is False else "-")
         if s["nfr_ok"] is False:
             nfr_violations += 1
         print(f"{label:<35} {s['count']:>5} {s['errors']:>4} "
@@ -277,10 +285,10 @@ def run_load(base_url: str, users: int, duration: int) -> None:
     print(f"Total: {total_req} requests, {total_err} errors, {rps:.1f} rps")
     print()
     if nfr_violations:
-        print(f"❌ NFR нарушено: {nfr_violations} эндпоинт(а). Требуется оптимизация.")
+        print(f"NFR FAILED: {nfr_violations} endpoint(s). Optimization required.")
         sys.exit(1)
     else:
-        print("✅ Все NFR соблюдены.")
+        print("All NFR checks passed.")
 
 
 # ---------------------------------------------------------------------------

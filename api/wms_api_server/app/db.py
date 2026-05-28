@@ -1,24 +1,43 @@
 from collections.abc import Iterator
 from contextlib import contextmanager
+import threading
 from typing import Any
 
 import oracledb
 
 from .config import get_settings
 
+_pool_lock = threading.Lock()
+_pool: oracledb.ConnectionPool | None = None
+
+
+def _oracle_pool() -> oracledb.ConnectionPool:
+    global _pool
+    if _pool is not None:
+        return _pool
+    with _pool_lock:
+        if _pool is None:
+            settings = get_settings()
+            _pool = oracledb.create_pool(
+                user=settings.oracle_user,
+                password=settings.oracle_password,
+                dsn=settings.oracle_dsn,
+                min=1,
+                max=12,
+                increment=1,
+                getmode=oracledb.POOL_GETMODE_WAIT,
+            )
+        return _pool
+
 
 @contextmanager
 def oracle_connection() -> Iterator[oracledb.Connection]:
-    settings = get_settings()
-    connection = oracledb.connect(
-        user=settings.oracle_user,
-        password=settings.oracle_password,
-        dsn=settings.oracle_dsn,
-    )
+    pool = _oracle_pool()
+    connection = pool.acquire()
     try:
         yield connection
     finally:
-        connection.close()
+        pool.release(connection)
 
 
 def scalar_to_text(value: Any) -> str:

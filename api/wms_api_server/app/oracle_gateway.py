@@ -165,6 +165,32 @@ class OracleGateway:
                     operation_kind="CALL_FUNCTION",
                 )
 
+    def call_varchar_plsql(self, block: str, params: dict[str, Any]) -> str:
+        with oracle_connection() as connection:
+            cursor = connection.cursor()
+            self._apply_session_context(cursor)
+            started = time.perf_counter()
+            error_text = None
+            result = cursor.var(oracledb.STRING)
+            try:
+                cursor.execute(block, {**params, "result": result})
+                connection.commit()
+                return scalar_to_text(result.getvalue())
+            except Exception as exc:
+                error_text = str(exc)
+                connection.rollback()
+                raise
+            finally:
+                self._log_slow_sql(
+                    connection=connection,
+                    sql=block,
+                    params=params,
+                    started=started,
+                    row_count=None,
+                    error_text=error_text,
+                    operation_kind="CALL_VARCHAR_PLSQL",
+                )
+
     def call_number_plsql(self, block: str, params: dict[str, Any]) -> int:
         with oracle_connection() as connection:
             cursor = connection.cursor()

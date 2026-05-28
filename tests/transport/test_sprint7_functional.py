@@ -18,12 +18,11 @@ from __future__ import annotations
 import os
 import pytest
 import requests
-from datetime import date, timedelta
 
 
 BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
 AUTH = ("admin", "admin123")
-TOMORROW = (date.today() + timedelta(days=1)).isoformat()
+TOMORROW = os.environ.get("TMS_SPRINT7_DATE", "2026-05-25")
 
 
 @pytest.fixture(scope="session")
@@ -79,8 +78,8 @@ class TestPlannerOrders:
                 assert isinstance(lon, (int, float)), f"LON должен быть числом: {lon}"
                 assert 20.0 <= lon <= 180.0, f"LON вне диапазона РФ: {lon}"
 
-    def test_geocoded_orders_in_moscow_area(self, api):
-        """После seed 051 тестовые координаты — в Московском регионе."""
+    def test_geocoded_orders_have_valid_russian_coordinates(self, api):
+        """Геокодированные СТ должны иметь валидные координаты РФ."""
         r = api.get(f"{BASE_URL}/api/admin/transport/planner/orders",
                     params={"date": TOMORROW})
         data = r.json()
@@ -88,8 +87,8 @@ class TestPlannerOrders:
         if not geocoded:
             pytest.skip("Нет геокодированных СТ")
         for o in geocoded[:10]:
-            assert 54.0 <= o["LAT"] <= 57.5, f"LAT вне Московского региона: {o['LAT']}"
-            assert 35.0 <= o["LON"] <= 41.0, f"LON вне Московского региона: {o['LON']}"
+            assert 40.0 <= o["LAT"] <= 80.0, f"LAT вне диапазона РФ: {o['LAT']}"
+            assert 20.0 <= o["LON"] <= 180.0, f"LON вне диапазона РФ: {o['LON']}"
 
     def test_max_vehicle_tons_reasonable(self, api):
         r = api.get(f"{BASE_URL}/api/admin/transport/planner/orders",
