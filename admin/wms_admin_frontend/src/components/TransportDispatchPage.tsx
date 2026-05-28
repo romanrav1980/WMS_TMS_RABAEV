@@ -210,6 +210,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   // Sprint 49 — dense mode for STs table
   const [stDenseMode, setStDenseMode] = useState(false);
 
+  // Sprint 52 — sortable STs table
+  const [stSortField, setStSortField] = useState<string | null>(null);
+  const [stSortDir, setStSortDir]     = useState<"asc" | "desc">("asc");
+
   // Sprint 47 — localStorage persistence helpers
   function lsGet(key: string, fallback: string): string {
     try { return localStorage.getItem(key) || fallback; } catch { return fallback; }
@@ -917,6 +921,24 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     });
   }
 
+  function toggleStSort(field: string) {
+    if (stSortField === field) {
+      setStSortDir(d => d === "asc" ? "desc" : "asc");
+    } else {
+      setStSortField(field);
+      setStSortDir("asc");
+    }
+  }
+
+  const sortedSts = stSortField
+    ? [...availableSts].sort((a, b) => {
+        const va = (a as Record<string, unknown>)[stSortField] ?? "";
+        const vb = (b as Record<string, unknown>)[stSortField] ?? "";
+        const cmp = va < vb ? -1 : va > vb ? 1 : 0;
+        return stSortDir === "asc" ? cmp : -cmp;
+      })
+    : availableSts;
+
   function handleStToggle(stNum: string, idx: number) {
     lastClickedIdxRef.current = idx;
     toggleSt(stNum);
@@ -924,9 +946,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 
   function handleShiftClick(idx: number) {
     const last = lastClickedIdxRef.current;
-    if (last === null) { handleStToggle(availableSts[idx].ST_NUMBER, idx); return; }
+    if (last === null) { handleStToggle(sortedSts[idx].ST_NUMBER, idx); return; }
     const [a, b] = [Math.min(last, idx), Math.max(last, idx)];
-    const range = availableSts.slice(a, b + 1).map(s => s.ST_NUMBER);
+    const range = sortedSts.slice(a, b + 1).map(s => s.ST_NUMBER);
     setSelectedStNums(prev => {
       const next = new Set(prev);
       const allSel = range.every(n => next.has(n));
@@ -1154,44 +1176,44 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               <thead>
                 <tr>
                   <th style={{ width: 22 }}>
-                    {viewMode === "flat" && availableSts.length > 0 && (
+                    {viewMode === "flat" && sortedSts.length > 0 && (
                       <input
                         type="checkbox"
                         title="Выделить / снять все"
-                        checked={availableSts.length > 0 && availableSts.every(s => selectedStNums.has(s.ST_NUMBER))}
+                        checked={sortedSts.length > 0 && sortedSts.every(s => selectedStNums.has(s.ST_NUMBER))}
                         onChange={() => {
-                          const allSelected = availableSts.every(s => selectedStNums.has(s.ST_NUMBER));
+                          const allSelected = sortedSts.every(s => selectedStNums.has(s.ST_NUMBER));
                           if (allSelected) {
                             setSelectedStNums(new Set());
                           } else {
-                            setSelectedStNums(new Set(availableSts.map(s => s.ST_NUMBER)));
+                            setSelectedStNums(new Set(sortedSts.map(s => s.ST_NUMBER)));
                           }
                         }}
                       />
                     )}
                   </th>
-                  <th title="Склад">Скл</th>
-                  <th>Пал.</th>
-                  <th>Вес</th>
-                  <th>Объём</th>
-                  <th>Регион</th>
-                  <th>Адрес</th>
-                  <th>СТ №</th>
-                  <th>В рейсе</th>
-                  <th>Дата СТ</th>
-                  <th>%</th>
-                  <th>Район</th>
-                  <th>Тип ТС</th>
+                  <th className="dispatch-sortable-th" title="Склад" onClick={() => toggleStSort("WARE_ID")}>Скл{stSortField === "WARE_ID" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
+                  <th className="dispatch-sortable-th" onClick={() => toggleStSort("PALLETS_COUNT")}>Пал.{stSortField === "PALLETS_COUNT" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
+                  <th className="dispatch-sortable-th" onClick={() => toggleStSort("WEIGHT_KG")}>Вес{stSortField === "WEIGHT_KG" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
+                  <th className="dispatch-sortable-th" onClick={() => toggleStSort("VOLUME_M3")}>Объём{stSortField === "VOLUME_M3" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
+                  <th className="dispatch-sortable-th" onClick={() => toggleStSort("REGION")}>Регион{stSortField === "REGION" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
+                  <th className="dispatch-sortable-th" onClick={() => toggleStSort("ADDR")}>Адрес{stSortField === "ADDR" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
+                  <th className="dispatch-sortable-th" onClick={() => toggleStSort("ST_NUMBER")}>СТ №{stSortField === "ST_NUMBER" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
+                  <th className="dispatch-sortable-th" onClick={() => toggleStSort("TRANSTASK_ID")}>В рейсе{stSortField === "TRANSTASK_ID" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
+                  <th className="dispatch-sortable-th" onClick={() => toggleStSort("STDATE")}>Дата СТ{stSortField === "STDATE" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
+                  <th className="dispatch-sortable-th" onClick={() => toggleStSort("VERIFY_PERC")}>%{stSortField === "VERIFY_PERC" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
+                  <th className="dispatch-sortable-th" onClick={() => toggleStSort("RAION")}>Район{stSortField === "RAION" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
+                  <th className="dispatch-sortable-th" onClick={() => toggleStSort("TRANSPORT_TYPE")}>Тип ТС{stSortField === "TRANSPORT_TYPE" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
                   <th title="Стол-лифт">Стол</th>
                   <th title="Примечание">Прим.</th>
-                  <th title="Сахар">Сах</th>
+                  <th className="dispatch-sortable-th" title="Сахар" onClick={() => toggleStSort("SUGAR")}>Сах{stSortField === "SUGAR" ? (stSortDir === "asc" ? " ▲" : " ▼") : ""}</th>
                 </tr>
               </thead>
               <tbody>
                 {viewMode === "flat" && (
-                  availableSts.length === 0
+                  sortedSts.length === 0
                     ? <tr><td colSpan={16} className="dispatch-grid-empty">Нет свободных СТ по текущим фильтрам</td></tr>
-                    : availableSts.map((st, idx) => (
+                    : sortedSts.map((st, idx) => (
                         <AvailableStRow key={st.ST_NUMBER} st={st} idx={idx}
                           checked={selectedStNums.has(st.ST_NUMBER)}
                           onToggle={() => handleStToggle(st.ST_NUMBER, idx)}
