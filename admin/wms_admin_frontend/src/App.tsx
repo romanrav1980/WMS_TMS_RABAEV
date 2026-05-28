@@ -12,6 +12,7 @@ import { TransportGanttPage } from "./components/TransportGanttPage";
 import { TransportPlannerPage } from "./components/TransportPlannerPage";
 import { FleetManagementPage } from "./components/FleetManagementPage";
 import { UserManagementPage } from "./components/UserManagementPage";
+import { DriverMobilePage } from "./components/DriverMobilePage";
 import { WarehouseScene } from "./components/WarehouseScene";
 import { activeCollisions, currentMetrics, dockPalletsAt, pickFaceFillAt, replenishmentTasksAt, resourceStateAt, visibleEvents } from "./replay/reducer";
 import type { DetailSelection, ReplayData } from "./types";
@@ -25,7 +26,7 @@ export default function App() {
   const [page, setPage] = useState(() => {
     const params = new URLSearchParams(window.location.search.replace(/;/g, "&"));
     const pg = params.get("page");
-    return pg === "topology" ? "topology" : pg === "transport" ? "transport" : pg === "warehouse-map" ? "warehouse-map" : pg === "planner" ? "planner" : pg === "gantt" ? "gantt" : pg === "fleet" ? "fleet" : pg === "users" ? "users" : "twin";
+    return pg === "topology" ? "topology" : pg === "transport" ? "transport" : pg === "warehouse-map" ? "warehouse-map" : pg === "planner" ? "planner" : pg === "gantt" ? "gantt" : pg === "fleet" ? "fleet" : pg === "users" ? "users" : pg === "driver" ? "driver" : "twin";
   });
   const [selection, setSelection] = useState<DetailSelection>(null);
   const [modelSettings, setModelSettings] = useState({
@@ -118,6 +119,14 @@ export default function App() {
     return (
       <AppErrorBoundary resetKey={page}>
         <UserManagementPage onBack={() => setPage("twin")} />
+      </AppErrorBoundary>
+    );
+  }
+
+  if (page === "driver") {
+    return (
+      <AppErrorBoundary resetKey={page}>
+        <DriverMobilePage />
       </AppErrorBoundary>
     );
   }

@@ -1695,3 +1695,57 @@ button[aria-disabled="true"] { cursor: help; }
 /* Sprint 101 — VRP cancel button */
 .planner-cancel-solve-btn { padding: 4px 10px; background: #dc2626; color: #fff; border: none; border-radius: 5px; font-size: 11px; font-weight: 700; cursor: pointer; margin-left: 6px; }
 .planner-cancel-solve-btn:hover { background: #b91c1c; }
+
+/* =========================================================
+   Driver Mobile PWA (Sprint 103-105)
+   ========================================================= */
+.driver-login { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #0f172a; }
+.driver-login-card { background: #1e293b; border-radius: 16px; padding: 40px 32px; text-align: center; width: 300px; box-shadow: 0 8px 32px rgba(0,0,0,.4); }
+.driver-login-logo { font-size: 48px; margin-bottom: 12px; }
+.driver-login-card h1 { color: #fff; font-size: 22px; font-weight: 900; margin: 0 0 6px; }
+.driver-login-card p { color: #94a3b8; font-size: 13px; margin: 0 0 20px; }
+.driver-login-card input { width: 100%; padding: 12px 14px; border: 1px solid #334155; border-radius: 8px; background: #0f172a; color: #fff; font-size: 18px; text-align: center; box-sizing: border-box; margin-bottom: 12px; }
+.driver-login-card button { width: 100%; padding: 12px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 800; cursor: pointer; }
+.driver-shell { display: flex; flex-direction: column; min-height: 100vh; background: #0f172a; color: #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.driver-header { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: #1e293b; border-bottom: 1px solid #334155; }
+.driver-logo { font-size: 24px; }
+.driver-title { flex: 1; font-size: 16px; font-weight: 800; color: #fff; }
+.driver-logout { background: none; border: none; color: #64748b; font-size: 18px; cursor: pointer; padding: 4px 8px; }
+.driver-error { background: #450a0a; color: #fca5a5; padding: 10px 16px; font-size: 13px; cursor: pointer; }
+.driver-tabs { display: flex; background: #1e293b; border-bottom: 1px solid #334155; }
+.driver-tab { flex: 1; padding: 12px; border: none; background: none; color: #64748b; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
+.driver-tab-active { color: var(--accent); border-bottom-color: var(--accent); }
+.driver-date-row { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: #1e293b; }
+.driver-date-row button { padding: 6px 12px; background: #334155; color: #e2e8f0; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; }
+.driver-date-row input { flex: 1; padding: 7px 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #e2e8f0; font-size: 14px; }
+.driver-today-btn { background: var(--accent) !important; color: #fff !important; font-weight: 700; }
+.driver-list { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.driver-loading, .driver-empty { text-align: center; padding: 40px; color: #64748b; font-size: 14px; }
+.driver-section-title { font-size: 13px; font-weight: 700; color: #94a3b8; padding: 4px 0 8px; text-transform: uppercase; letter-spacing: .5px; }
+.driver-trip-card { background: #1e293b; border-radius: 10px; padding: 14px 16px; cursor: pointer; border: 2px solid transparent; transition: border-color .15s; }
+.driver-trip-card:hover, .driver-trip-selected { border-color: var(--accent); }
+.driver-trip-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.driver-trip-id { font-size: 15px; font-weight: 800; color: #fff; }
+.driver-trip-cond { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: #334155; color: #94a3b8; }
+.driver-cond-отгружен { background: #dcfce7; color: #166534; }
+.driver-trip-plate { font-size: 13px; color: #94a3b8; margin-bottom: 8px; font-weight: 600; }
+.driver-trip-stats { display: flex; gap: 12px; font-size: 13px; color: #e2e8f0; }
+.driver-trip-note { margin-top: 8px; font-size: 12px; color: #64748b; font-style: italic; }
+.driver-st-card { display: flex; gap: 12px; background: #1e293b; border-radius: 8px; padding: 12px 14px; }
+.driver-st-ord { width: 28px; height: 28px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; }
+.driver-st-info { flex: 1; }
+.driver-st-addr { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+.driver-st-meta { font-size: 12px; color: #94a3b8; }
+.driver-op-card { display: flex; align-items: center; gap: 10px; background: #1e293b; border-radius: 8px; padding: 12px 14px; border-left: 3px solid #334155; }
+.driver-op-pending { border-left-color: #475569; }
+.driver-op-in_progress { border-left-color: #f59e0b; background: #1c1a0a; }
+.driver-op-done { border-left-color: #22c55e; opacity: .7; }
+.driver-op-info { flex: 1; }
+.driver-op-name { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+.driver-op-times { font-size: 11px; color: #64748b; }
+.driver-op-fact { color: #34d399; margin-left: 8px; }
+.driver-op-btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 13px; font-weight: 800; cursor: pointer; }
+.driver-op-start { background: #1d4ed8; color: #fff; }
+.driver-op-done  { background: #16a34a; color: #fff; }
+.driver-op-btn:disabled { opacity: .5; cursor: default; }
+.driver-op-check { font-size: 18px; color: #22c55e; }
