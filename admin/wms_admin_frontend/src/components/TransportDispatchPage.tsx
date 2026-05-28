@@ -444,6 +444,24 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   }, [viewMode, loadClusters]);
 
   // ------------------------------------------------------------------
+  // Sprint 44 — global Escape handler
+  // ------------------------------------------------------------------
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key !== "Escape") return;
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
+      if (createDialog) { setCreateDialog(false); return; }
+      if (clusterCreateRaion) { setClusterCreateRaion(null); return; }
+      if (editMode) { setEditMode(false); return; }
+      if (selectedStNums.size > 0) { setSelectedStNums(new Set()); return; }
+      if (selectedTripStNums.size > 0) { setSelectedTripStNums(new Set()); }
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [createDialog, clusterCreateRaion, editMode, selectedStNums, selectedTripStNums]);
+
+  // ------------------------------------------------------------------
   // Auto-refresh every 60 s (Sprint 37)
   // ------------------------------------------------------------------
   useEffect(() => {
