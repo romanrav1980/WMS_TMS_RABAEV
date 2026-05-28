@@ -1240,14 +1240,43 @@ class TransportService:
         addr_list = [o.addr for o in orders if o.addr]
         dist_cache = DistanceMatrixService(self.gateway).get_matrix_as_dict(addr_list)
 
-        # Solve
-        plan = vrp_solve(
-            orders=orders,
-            vehicles=vehicles,
-            dist_cache=dist_cache or None,
-            time_limit_s=time_limit_s,
-            solver=solver,
-        )
+        # Sprint 117 — Attention Model solver
+        if solver == "attention_model":
+            from .am_solver import is_available as am_available, solve_am
+            if am_available():
+                lats = [o.lat for o in orders]
+                lons = [o.lon for o in orders]
+                palls = [o.pallets for o in orders]
+                am_route = solve_am(lats, lons, palls)
+                if am_route is not None:
+                    # Reorder orders by AM result and wrap in a single-vehicle plan
+                    ordered_orders = [orders[i] for i in am_route if i < len(orders)]
+                    from .vrp_solver import VrpPlan as _VrpPlanInner, VrpRouteItem as _VrpRouteInner
+                    plan = _VrpPlanInner(
+                        solver_used="attention_model",
+                        routes=[_VrpRouteInner(
+                            vehicle=vehicles[0],
+                            stops=ordered_orders,
+                            total_km=0,
+                            total_pallets=sum(o.pallets for o in ordered_orders),
+                        )],
+                        score=0.0,
+                    )
+                    # Fall through to save plan
+                else:
+                    solver = "auto"  # fallback
+            else:
+                solver = "auto"  # fallback if no model
+
+        if solver != "attention_model":
+            # Solve
+            plan = vrp_solve(
+                orders=orders,
+                vehicles=vehicles,
+                dist_cache=dist_cache or None,
+                time_limit_s=time_limit_s,
+                solver=solver,
+            )
 
         # Save plan to Oracle
         plan_json = json.dumps(

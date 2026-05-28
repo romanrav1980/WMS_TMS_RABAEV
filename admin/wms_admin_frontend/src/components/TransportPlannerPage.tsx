@@ -200,7 +200,7 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
   // Filters
   const [filterDate, setFilterDate] = useState(todayIso());
   const [trTypeFilter, setTrTypeFilter] = useState("");
-  const [solverMode, setSolverMode] = useState<"auto" | "cluster" | "savings">("auto");
+  const [solverMode, setSolverMode] = useState<"auto" | "cluster" | "savings" | "attention_model">("auto");
 
   // Map layers
   const [showClusters, setShowClusters] = useState(false);
@@ -568,6 +568,7 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
             <option value="auto">auto (OR-Tools / CW)</option>
             <option value="cluster">cluster (DBSCAN)</option>
             <option value="savings">savings (Clarke-Wright)</option>
+            <option value="attention_model">🤖 AI (Attention Model)</option>
           </select>
 
           <div className="planner-layer-toggle">
