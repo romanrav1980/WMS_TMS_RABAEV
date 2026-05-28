@@ -602,6 +602,11 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-spinner { color: #60a5fa; font-size: 14px; animation: dispatch-spin 1s linear infinite; display: inline-block; margin-left: auto; }
 @keyframes dispatch-spin { to { transform: rotate(360deg); } }
 .dispatch-error { color: #fca5a5; font-size: 11px; max-width: 500px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 8px; }
+/* Sprint 96 — WebSocket status indicator */
+.dispatch-ws-indicator { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: 8px; letter-spacing: .5px; }
+.dispatch-ws-connected    { color: #4ade80; }
+.dispatch-ws-connecting   { color: #fbbf24; animation: dispatch-spin .8s linear infinite; }
+.dispatch-ws-disconnected { color: #f87171; }
 
 /* ---- Main workspace layout ---- */
 .dispatch-workspace { display: flex; flex: 1; min-height: 0; overflow: hidden; }
@@ -678,6 +683,7 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-gr.selected td { background: #dbeafe; }
 .dispatch-gr.grid-closed td { opacity: .55; }
 .dispatch-grid-empty { text-align: center; color: #94a3b8; padding: 10px 8px; font-size: 12px; cursor: default !important; }
+.dispatch-virtual-spacer td { padding: 0 !important; border-bottom: 0 !important; }
 .dispatch-gc-stnum { font-weight: 700; color: #1e3a5f; }
 .col-flex { max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
 .num-r { text-align: right; }

@@ -111,7 +111,31 @@
 | 93 | Счётчик пустых рейсов (⚠ N пустых) в сводке дня | Диспетчер | 0.05 нед | 🟢 КК | ✅ `ee057ca` 2026-05-29 |
 | 94 | Amber left-border для рейсов с несобранными СТ (tasks + routes tab) | Диспетчер | 0.05 нед | 🟢 КК | ✅ `19aec6d` 2026-05-29 |
 | 95 | Tooltip примечания (PRIMECHANIE) на строке рейса при наведении | Диспетчер | 0.05 нед | 🟢 КК | ✅ `6d7553e` 2026-05-29 |
-| **Итого** | | | **~33.0 нед** | | |
+| **96** | **WebSocket `/ws/dispatch` — события реального времени + reconnect** | Инфра | 0.5 нед | 🟡 КК+КС | ⬜ |
+| **97** | **Fleet CRUD: Транспортные средства (добавить / редактировать / удалить)** | Справочники | 0.5 нед | 🟢 КК | ⬜ |
+| **98** | **Fleet CRUD: Водители (добавить / редактировать / удалить)** | Справочники | 0.5 нед | 🟢 КК | ⬜ |
+| **99** | **Управление пользователями — просмотр (список, группы, права)** | Администрирование | 0.25 нед | 🟢 КК | ⬜ |
+| **100** | **Управление пользователями — редактирование прав RBAC** | Администрирование | 0.5 нед | 🟢 КК | ⬜ |
+| **101** | **SSE VRP: отмена запущенного solve + таймаут 60 сек** | MAP/VRP | 0.25 нед | 🟢 КК | ⬜ |
+| **102** | **Виртуализация таблицы СТ (@tanstack/react-virtual)** | Диспетчер | 0.25 нед | 🟢 КК | ⬜ |
+| **103** | **Mobile PWA водителя — страница «Мои рейсы»** | Mobile | 1 нед | 🟡 КК+КС | ⬜ |
+| **104** | **Mobile PWA — отметка факта операций (кнопки Начать/Готово)** | Mobile | 0.5 нед | 🟢 КК | ⬜ |
+| **105** | **Mobile PWA — офлайн-режим (IndexedDB + Background Sync)** | Mobile | 0.5 нед | 🟡 КК+КС | ⬜ |
+| **106** | **Browser Push-уведомления (Web Push API + VAPID)** | Уведомления | 0.5 нед | 🟡 КК+КС | ⬜ |
+| **107** | **Email-уведомления (SMTP + шаблоны)** | Уведомления | 0.5 нед | 🟢 КК | ⬜ |
+| **108** | **KPI Дашборд — операционные метрики (утилизация, рейсы, регионы)** | Аналитика | 0.5 нед | 🟢 КК | ⬜ |
+| **109** | **KPI Дашборд — финансовые метрики (биллинг по ТК, тренды)** | Аналитика | 0.5 нед | 🟢 КК | ⬜ |
+| **110** | **GPS: приём координат + хранение (RRL_VEHICLE_GPS_LAST)** | GPS | 1 нед | 🟡 КК+КС | ⬜ |
+| **111** | **GPS: live-иконки машин на карте, autoupdate 30 сек** | GPS | 0.5 нед | 🟢 КК | ⬜ |
+| **112** | **Тарифная сетка — просмотр и редактирование тарифов перевозок** | Биллинг | 1 нед | 🟡 КК+КС | ⬜ |
+| **113** | **Интеграция с 1С — экспорт биллинг-заказов в XML CommerceML** | Биллинг | 1 нед | 🟢 КК | ⬜ |
+| **114** | **Архивирование рейсов старше 2 лет + maintenance API** | Инфра | 0.5 нед | 🟢 КК | ⬜ |
+| **115** | **Attention Model — сбор датасета из исторических рейсов** | MAP/VRP | 1 нед | 🔴 КС | ⬜ |
+| **116** | **Attention Model — инференс API (solver=attention_model)** | MAP/VRP | 1 нед | 🔴 КС | ⬜ |
+| **117** | **Attention Model — UI интеграция (третья карточка решателя)** | MAP/VRP | 0.5 нед | 🟢 КК | ⬜ |
+| **118** | **Geofencing — геозоны адресов + детекция входа/выхода** | GPS | 1 нед | 🟡 КК+КС | ⬜ |
+| **119** | **Geofencing — авто-отметка факта UNLOAD по GPS** | GPS | 0.5 нед | 🟢 КК | ⬜ |
+| **Итого** | | | **~46.1 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -119,6 +143,10 @@
 - 🔴 **КС** — кодекс ($200) ведёт спринт: сложный алгоритм или нетипичный UI-компонент (Sprint 8: VRP, Sprint 12: Ганта)
 
 **Инфраструктура OSRM/Valhalla** разворачивается в Docker Desktop (Windows, выделить ≥10 GB RAM) перед Sprint 8. При покупке сервера — перенести контейнеры без изменения кода.
+
+2026-05-29 checkpoint: root `docker-compose.osrm.yml`, root `docker-compose.valhalla.yml`, and `scripts/tms2-routing-smoke.ps1` are now tracked. Backend provider probes use real OSRM/Valhalla endpoints and `/routing/status` exposes active provider availability.
+
+2026-05-29 release fixture checkpoint: migration `055_apply.sql` seeds a deterministic Sprint 9 historical planner template; Sprint 1-20 release runner now passes `265 passed` on seed date `2026-05-25`. Sprint 8 mutating apply was verified separately (`23 passed`) and then cleaned up from shared dev Oracle.
 
 ---
 
@@ -1641,6 +1669,130 @@ UI не меняется, но при создании каждого рейса
 [ ] 5. Проверить C# WinForms: открыть tabPage6 — убедиться что не сломан
 [ ] 6. Зафиксировать коммит-хэш и дату в этом файле (строка «Коммит:»)
 ```
+
+---
+
+## Блок VII — Фаза 3: Инфраструктура и справочники (Спринты 96–102)
+
+ТЗ: [tms2_phase3_tz.md](../requirements/tms2_phase3_tz.md)
+
+---
+
+### Sprint 96 — WebSocket `/ws/dispatch`
+
+**Инструмент:** 🟡 КК+КС
+
+**Цель:** несколько диспетчеров видят изменения друг друга в реальном времени без F5.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `ConnectionManager`: connect/disconnect/broadcast/broadcast_sync | Backend | `services/ws_manager.py` |
+| `WS /api/admin/transport/ws/dispatch` с auth по query-params | Backend | `routers/transport.py` |
+| Broadcasts после: create/close/cancel/update task, assign/unassign STs | Backend | `routers/transport.py` |
+| WebSocket hook в компоненте, exponential backoff reconnect | Frontend | `TransportDispatchPage.tsx` |
+| Индикатор соединения `● WS` в хедере | Frontend | `TransportDispatchPage.tsx` |
+
+**Коммит:** ⬜ · **Дата:** ⬜
+
+---
+
+### Sprint 97 — Fleet CRUD: Транспортные средства
+
+**Инструмент:** 🟢 КК
+
+**Цель:** диспетчер/администратор добавляет, редактирует и удаляет машины из веб-интерфейса.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| Миграция `055_apply.sql`: SEQ + RRL_TR_VEHICLE_ADD/UPDATE/DEL | DB | `055_apply.sql` |
+| `TRANSPORT_FLEET_EDIT_PERMISSION` константа | Backend | `auth.py` |
+| `POST/PATCH/DELETE /vehicles` эндпоинты + service | Backend | `transport.py`, `transport_service.py` |
+| Новая страница `FleetManagementPage.tsx` + роут `/fleet` | Frontend | `FleetManagementPage.tsx` |
+| Вкладка «ТС»: таблица + кнопки + диалог добавления/редактирования | Frontend | `FleetManagementPage.tsx` |
+
+**Коммит:** ⬜ · **Дата:** ⬜
+
+---
+
+### Sprint 98 — Fleet CRUD: Водители
+
+**Инструмент:** 🟢 КК
+
+**Цель:** добавить и редактировать водителей без прямого доступа к Oracle.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| Миграция `056_apply.sql`: SEQ + RRL_TR_VODITEL_ADD/UPDATE/DEL | DB | `056_apply.sql` |
+| `POST/PATCH/DELETE /drivers` эндпоинты + service | Backend | `transport.py`, `transport_service.py` |
+| Вкладка «Водители» в `FleetManagementPage.tsx` | Frontend | `FleetManagementPage.tsx` |
+
+**Коммит:** ⬜ · **Дата:** ⬜
+
+---
+
+### Sprint 99 — Управление пользователями (просмотр)
+
+**Инструмент:** 🟢 КК
+
+**Цель:** администратор видит список пользователей, групп и назначенных прав.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `GET /api/admin/users`, `GET /api/admin/users/groups`, `GET /api/admin/users/rights` | Backend | `routers/users.py` (новый) |
+| Новая страница `UserManagementPage.tsx` + роут `/admin/users` | Frontend | `UserManagementPage.tsx` |
+| Таблица пользователей; список групп с раскрываемыми правами | Frontend | `UserManagementPage.tsx` |
+
+**Коммит:** ⬜ · **Дата:** ⬜
+
+---
+
+### Sprint 100 — Управление пользователями (редактирование)
+
+**Инструмент:** 🟢 КК
+
+**Цель:** администратор добавляет/удаляет права группам, создаёт и удаляет пользователей.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| Миграция `057_apply.sql`: RRL_USER_ADD/DEL/SET_GROUP/SET_PASS + RRL_RIGHT_ADD/DEL | DB | `057_apply.sql` |
+| CRUD эндпоинты пользователей и прав групп | Backend | `routers/users.py` |
+| Чекбоксы прав для группы + диалог создания пользователя | Frontend | `UserManagementPage.tsx` |
+
+**Коммит:** ⬜ · **Дата:** ⬜
+
+---
+
+### Sprint 101 — SSE VRP: отмена и таймаут
+
+**Инструмент:** 🟢 КК
+
+**Цель:** кнопка «Отмена» останавливает OR-Tools без ожидания 60 сек.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `job_store: dict[str, asyncio.Task]` в сервисе | Backend | `services/vrp_solver.py` |
+| `DELETE /planner/solve/{job_id}` — отменить задачу | Backend | `transport.py` |
+| Таймаут 60 сек с событием SSE `error/timeout` | Backend | `services/vrp_solver.py` |
+| Кнопка «✕ Отмена» рядом со спиннером | Frontend | `TransportPlannerPage.tsx` |
+
+**Коммит:** ⬜ · **Дата:** ⬜
+
+---
+
+### Sprint 102 — Виртуализация таблицы СТ
+
+**Инструмент:** 🟢 КК
+
+**Цель:** таблица из 2000+ строк рендерится за ≤ 300 мс (§12.2 ТЗ).
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `npm install @tanstack/react-virtual` | Frontend | `package.json` |
+| Заменить пагинацию на `useVirtualizer` в таблице СТ | Frontend | `TransportDispatchPage.tsx` |
+| `paddingTop/paddingBottom` для tbody-spacer | Frontend | `TransportDispatchPage.tsx` |
+| Убрать стейт `currentPage` / кнопки пагинации | Frontend | `TransportDispatchPage.tsx` |
+
+**Коммит:** ⬜ · **Дата:** ⬜
 
 ### Период параллельной эксплуатации
 

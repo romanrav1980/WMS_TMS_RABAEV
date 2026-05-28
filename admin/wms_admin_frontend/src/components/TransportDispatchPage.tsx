@@ -152,6 +152,11 @@ type BillingOrderTask = {
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
 const API_BASIC_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
 const ST_PAGE_SIZE = 100;
+const ST_VIRTUAL_THRESHOLD = 60;
+const ST_VIRTUAL_OVERSCAN = 8;
+const ST_VIRTUAL_VIEWPORT_ROWS = 34;
+const ST_ROW_HEIGHT = 27;
+const ST_ROW_HEIGHT_DENSE = 22;
 
 function apiHeaders(): HeadersInit {
   return { Authorization: `Basic ${btoa(API_BASIC_AUTH)}`, "Content-Type": "application/json" };
@@ -205,6 +210,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [selectedTask, setSelectedTask] = useState<TransportTask | null>(null);
   const [taskSts, setTaskSts] = useState<TaskSt[]>([]);
   const [availableSts, setAvailableSts] = useState<AvailableSt[]>([]);
+  const stSectionRef = useRef<HTMLDivElement | null>(null);
+  const [stScrollTop, setStScrollTop] = useState(0);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [transportTypes, setTransportTypes] = useState<TransportType[]>([]);
@@ -337,6 +344,82 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const debouncedRouteCompany = useDebounce(routeCompanyMask, 300);
 
   // ------------------------------------------------------------------
+  // Sprint 96 — WebSocket real-time sync
+  // ------------------------------------------------------------------
+  const wsRef = useRef<WebSocket | null>(null);
+  const wsReconnectDelay = useRef(1000);
+  const [wsStatus, setWsStatus] = useState<"connected" | "connecting" | "disconnected">("disconnected");
+
+  const connectWS = useCallback(() => {
+    setWsStatus("connecting");
+    const proto = window.location.protocol === "https:" ? "wss" : "ws";
+    const host = window.location.hostname;
+    const port = "8088";
+    const url = `${proto}://${host}:${port}/api/admin/transport/ws/dispatch`;
+    let ws: WebSocket;
+    try { ws = new WebSocket(url); } catch { return; }
+    wsRef.current = ws;
+    ws.onopen = () => {
+      setWsStatus("connected");
+      wsReconnectDelay.current = 1000;
+    };
+    ws.onmessage = (e) => {
+      try {
+        const msg = JSON.parse(e.data as string) as { type: string; payload?: Record<string, unknown> };
+        const tid = (msg.payload as { task_id?: number })?.task_id;
+        switch (msg.type) {
+          case "task_created":
+          case "task_updated":
+          case "task_closed":
+          case "task_cancelled":
+            // будет вызвано loadTasks ниже через ref
+            wsTasksNeedReload.current = true;
+            break;
+          case "sts_assigned":
+          case "st_unassigned":
+          case "sts_bulk_unassigned":
+            wsTasksNeedReload.current = true;
+            wsStsNeedReload.current = true;
+            wsAffectedTaskId.current = typeof tid === "number" ? tid : null;
+            break;
+        }
+        // Короткий debounce чтобы не слать по 5 запросов при пачке событий
+        if (wsReloadTimer.current) clearTimeout(wsReloadTimer.current);
+        wsReloadTimer.current = window.setTimeout(() => {
+          if (wsTasksNeedReload.current) { loadTasksRef.current?.(); wsTasksNeedReload.current = false; }
+          if (wsStsNeedReload.current) { loadStsRef.current?.(); wsStsNeedReload.current = false; }
+          if (wsStsNeedReload.current && wsAffectedTaskId.current) {
+            const affId = wsAffectedTaskId.current;
+            loadTaskStsRef.current?.(affId);
+            wsAffectedTaskId.current = null;
+          }
+        }, 300);
+      } catch { /* ignore */ }
+    };
+    ws.onclose = () => {
+      setWsStatus("disconnected");
+      const delay = wsReconnectDelay.current;
+      wsReconnectDelay.current = Math.min(delay * 2, 30000);
+      setTimeout(connectWS, delay);
+    };
+    ws.onerror = () => { ws.close(); };
+    // ping каждые 25 сек чтобы не закрылось
+    const ping = setInterval(() => { if (ws.readyState === WebSocket.OPEN) ws.send("ping"); }, 25000);
+    return () => clearInterval(ping);
+  }, []); // eslint-disable-line
+
+  // Refs для стабильных ссылок на fetch-функции (устанавливаются ниже)
+  const loadTasksRef = useRef<(() => void) | null>(null);
+  const loadStsRef = useRef<(() => void) | null>(null);
+  const loadTaskStsRef = useRef<((id: number) => void) | null>(null);
+  const wsTasksNeedReload = useRef(false);
+  const wsStsNeedReload = useRef(false);
+  const wsAffectedTaskId = useRef<number | null>(null);
+  const wsReloadTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => { connectWS(); return () => wsRef.current?.close(); }, [connectWS]);
+
+  // ------------------------------------------------------------------
   // Load reference data once
   // ------------------------------------------------------------------
   useEffect(() => {
@@ -392,6 +475,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       debouncedRouteCompany, routeDateTo, routeNoPayments]);
 
   useEffect(() => { loadTasks(); }, [loadTasks]);
+  // Sprint 96 — держим актуальную ссылку на loadTasks для WS-обработчика
+  useEffect(() => { loadTasksRef.current = loadTasks; }, [loadTasks]);
 
   // ------------------------------------------------------------------
   // Load billing orders (Sprint 17)
@@ -462,6 +547,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       assembledOnly, notAssembledOnly, unassignedOnly, debouncedMaxWeight, debouncedMaxVol, debouncedArticul]);
 
   useEffect(() => { loadAvailableSts(); }, [loadAvailableSts]);
+  // Sprint 96 — держим актуальную ссылку на loadAvailableSts для WS-обработчика
+  useEffect(() => { loadStsRef.current = loadAvailableSts; }, [loadAvailableSts]);
 
   // ------------------------------------------------------------------
   // Load clusters
@@ -556,6 +643,15 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   // ------------------------------------------------------------------
   // Select task
   // ------------------------------------------------------------------
+  // Sprint 96 — WS ref для загрузки СТ выбранного рейса
+  const reloadSelectedTaskSts = useCallback(async (taskId: number) => {
+    try {
+      const data = await apiFetch<TaskSt[]>(`/api/admin/transport/tasks/${taskId}/sts`);
+      setTaskSts(data);
+    } catch { /* ignore */ }
+  }, []);
+  useEffect(() => { loadTaskStsRef.current = reloadSelectedTaskSts; }, [reloadSelectedTaskSts]);
+
   async function selectTask(task: TransportTask) {
     setSelectedTask(task);
     setEditMode(false);
@@ -1107,8 +1203,23 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 
   // Sprint 60 — paginated slice; reset to page 0 when data, sort, or ware-filter changes
   useEffect(() => { setStPage(0); }, [availableSts, stSortField, stSortDir, wareIdFilter]);
+  useEffect(() => {
+    setStScrollTop(0);
+    if (stSectionRef.current) stSectionRef.current.scrollTop = 0;
+  }, [stPage, availableSts, stSortField, stSortDir, wareIdFilter, stDenseMode, viewMode]);
   const stTotalPages = Math.max(1, Math.ceil(sortedSts.length / ST_PAGE_SIZE));
   const pagedSts = sortedSts.slice(stPage * ST_PAGE_SIZE, (stPage + 1) * ST_PAGE_SIZE);
+  const stVirtualRowHeight = stDenseMode ? ST_ROW_HEIGHT_DENSE : ST_ROW_HEIGHT;
+  const stVirtualEnabled = viewMode === "flat" && pagedSts.length > ST_VIRTUAL_THRESHOLD;
+  const stVirtualStart = stVirtualEnabled
+    ? Math.max(0, Math.floor(stScrollTop / stVirtualRowHeight) - ST_VIRTUAL_OVERSCAN)
+    : 0;
+  const stVirtualEnd = stVirtualEnabled
+    ? Math.min(pagedSts.length, stVirtualStart + ST_VIRTUAL_VIEWPORT_ROWS + ST_VIRTUAL_OVERSCAN * 2)
+    : pagedSts.length;
+  const visiblePagedSts = pagedSts.slice(stVirtualStart, stVirtualEnd);
+  const stVirtualTopPad = stVirtualEnabled ? stVirtualStart * stVirtualRowHeight : 0;
+  const stVirtualBottomPad = stVirtualEnabled ? (pagedSts.length - stVirtualEnd) * stVirtualRowHeight : 0;
 
   function handleStToggle(stNum: string, idx: number) {
     lastClickedIdxRef.current = idx;
@@ -1338,6 +1449,13 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           <span className="dispatch-subtitle">Ручное планирование рейсов</span>
         </div>
         {loading && <span className="dispatch-spinner">●</span>}
+        {/* Sprint 96 — WS connection status */}
+        <span
+          className={`dispatch-ws-indicator dispatch-ws-${wsStatus}`}
+          title={wsStatus === "connected" ? "Синхронизация активна" : wsStatus === "connecting" ? "Подключение…" : "Нет синхронизации"}
+        >
+          ● WS
+        </span>
         {error && (
           <span className="dispatch-error" title={error} onClick={() => setError(null)} style={{ cursor: "pointer" }}>
             ⚠ {error.slice(0, 120)}
@@ -1474,7 +1592,12 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           </div>
 
           {/* ---- Available STs table ---- */}
-          <div className="dispatch-st-section">
+          <div
+            className="dispatch-st-section"
+            ref={stSectionRef}
+            data-virtualized={viewMode === "flat" ? "true" : "false"}
+            onScroll={e => setStScrollTop(e.currentTarget.scrollTop)}
+          >
             <table className={`dispatch-grid${stDenseMode ? " dispatch-grid-dense" : ""}`}>
               <thead>
                 <tr>
@@ -1517,17 +1640,32 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 {viewMode === "flat" && (
                   sortedSts.length === 0
                     ? <tr><td colSpan={17} className="dispatch-grid-empty">Нет свободных СТ по текущим фильтрам</td></tr>
-                    : pagedSts.map((st, pageIdx) => {
-                        const idx = stPage * ST_PAGE_SIZE + pageIdx;
-                        return (
-                          <AvailableStRow key={st.ST_NUMBER} st={st} idx={idx}
-                            checked={selectedStNums.has(st.ST_NUMBER)}
-                            onToggle={() => handleStToggle(st.ST_NUMBER, idx)}
-                            onShiftClick={handleShiftClick}
-                            onSelectByField={handleSelectByField}
-                            onGotoTrip={handleGotoTrip} />
-                        );
-                      })
+                    : (
+                        <>
+                          {stVirtualTopPad > 0 && (
+                            <tr className="dispatch-virtual-spacer" aria-hidden="true">
+                              <td colSpan={17} style={{ height: stVirtualTopPad }} />
+                            </tr>
+                          )}
+                          {visiblePagedSts.map((st, visibleIdx) => {
+                            const pageIdx = stVirtualStart + visibleIdx;
+                            const idx = stPage * ST_PAGE_SIZE + pageIdx;
+                            return (
+                              <AvailableStRow key={st.ST_NUMBER} st={st} idx={idx}
+                                checked={selectedStNums.has(st.ST_NUMBER)}
+                                onToggle={() => handleStToggle(st.ST_NUMBER, idx)}
+                                onShiftClick={handleShiftClick}
+                                onSelectByField={handleSelectByField}
+                                onGotoTrip={handleGotoTrip} />
+                            );
+                          })}
+                          {stVirtualBottomPad > 0 && (
+                            <tr className="dispatch-virtual-spacer" aria-hidden="true">
+                              <td colSpan={17} style={{ height: stVirtualBottomPad }} />
+                            </tr>
+                          )}
+                        </>
+                      )
                 )}
                 {viewMode === "clusters" && (
                   clusters.length === 0

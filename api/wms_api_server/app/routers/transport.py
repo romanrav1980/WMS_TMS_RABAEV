@@ -56,7 +56,7 @@ transport.py — FastAPI роутер диспетчера отгрузки.
 from datetime import date
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse
 
 from ..auth import (
@@ -68,7 +68,9 @@ from ..auth import (
     TRANSPORT_DISPATCH_EDIT_PERMISSION,
     TRANSPORT_DISPATCH_VIEW_PERMISSION,
     require_permission,
+    load_admin_user,
 )
+from ..config import get_settings
 from ..schemas import (
     BillingAddTasksRequest,
     BillingOrderCreate,
@@ -86,6 +88,7 @@ from ..schemas import (
 )
 from ..services.transport_service import TransportService
 from ..services.distance_matrix_service import DistanceMatrixService
+from ..services.ws_manager import ws_manager
 
 router = APIRouter(prefix="/api/admin/transport", tags=["transport-dispatch"])
 
@@ -246,6 +249,10 @@ def create_task(
 ) -> dict:
     svc = TransportService()
     task_id = svc.create_task(req, user.username)
+    ws_manager.broadcast_sync({
+        "type": "task_created",
+        "payload": {"task_id": task_id, "shipment_date": str(req.shipment_date or "")},
+    })
     return {"task_id": task_id}
 
 
@@ -264,6 +271,7 @@ def update_task(
     user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
 ) -> dict:
     TransportService().update_task(task_id, req, user.username)
+    ws_manager.broadcast_sync({"type": "task_updated", "payload": {"task_id": task_id}})
     return {"task_id": task_id}
 
 
@@ -273,6 +281,7 @@ def close_task(
     user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_CLOSE_PERMISSION)),
 ) -> dict:
     TransportService().close_task(task_id, user.username)
+    ws_manager.broadcast_sync({"type": "task_closed", "payload": {"task_id": task_id}})
     return {"task_id": task_id, "condition": "Отгружен"}
 
 
@@ -282,6 +291,7 @@ def cancel_task(
     user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
 ) -> dict:
     TransportService().cancel_task(task_id, user.username)
+    ws_manager.broadcast_sync({"type": "task_cancelled", "payload": {"task_id": task_id}})
     return {"task_id": task_id, "deleted": True}
 
 
@@ -303,7 +313,12 @@ def assign_sts(
     req: TransportStAssignRequest,
     user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
 ) -> dict:
-    return TransportService().assign_sts(task_id, req.st_numbers, user.username)
+    result = TransportService().assign_sts(task_id, req.st_numbers, user.username)
+    ws_manager.broadcast_sync({
+        "type": "sts_assigned",
+        "payload": {"task_id": task_id, "st_numbers": req.st_numbers},
+    })
+    return result
 
 
 @router.delete("/tasks/{task_id}/sts/{st_number}")
@@ -313,6 +328,10 @@ def unassign_st(
     user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
 ) -> dict:
     TransportService().unassign_st(task_id, st_number, user.username)
+    ws_manager.broadcast_sync({
+        "type": "st_unassigned",
+        "payload": {"task_id": task_id, "st_number": st_number},
+    })
     return {"task_id": task_id, "st_number": st_number, "unassigned": True}
 
 
@@ -710,3 +729,41 @@ def list_billing_companies(
 ) -> list[str]:
     """Справочник транспортных компаний из RRL_BILL_COMPANY (Sprint 22)."""
     return TransportService().list_billing_companies()
+
+
+# ------------------------------------------------------------------
+# WebSocket — реальное время (Sprint 96)
+# ------------------------------------------------------------------
+
+@router.websocket("/ws/dispatch")
+async def ws_dispatch(websocket: WebSocket, u: str = "", p: str = ""):
+    """WebSocket-канал событий диспетчера.
+
+    Sprint 96: broadcast task_created/updated/closed/cancelled, sts_assigned/unassigned.
+    Аутентификация: query-параметры ?u=login&p=password.
+    При admin_auth_enabled=False принимает все соединения.
+    """
+    settings = get_settings()
+    if settings.admin_auth_enabled:
+        user = load_admin_user(u, p)
+        if user is None or "transport_dispatch_view" not in user.permissions and "*" not in user.permissions:
+            await websocket.close(code=4001)
+            return
+
+    await ws_manager.connect(websocket)
+    try:
+        while True:
+            # Читаем входящие сообщения (ping от клиента) чтобы не закрывалось соединение
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        ws_manager.disconnect(websocket)
+    except Exception:
+        ws_manager.disconnect(websocket)
+
+
+@router.get("/ws/status")
+def ws_status(
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> dict:
+    """Количество активных WebSocket-соединений (Sprint 96)."""
+    return {"connections": ws_manager.connection_count}
