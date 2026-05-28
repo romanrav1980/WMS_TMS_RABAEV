@@ -1417,6 +1417,11 @@ button[aria-disabled="true"] { cursor: help; }
 }
 .dispatch-fp-reset-btn:hover { background: #fee2e2; }
 
+/* Sprint 88 — Reschedule to next day button */
+.dispatch-reschedule-btn { padding: 3px 8px; border: 1px solid #a3b4c8; border-radius: 4px; background: #fff; color: var(--muted); font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.dispatch-reschedule-btn:hover:not(:disabled) { background: #fef9c3; border-color: #ca8a04; color: #92400e; }
+.dispatch-reschedule-btn:disabled { opacity: .4; cursor: not-allowed; }
+
 /* Sprint 38 — Copy trip button */
 .dispatch-copy-task-btn {
   padding: 3px 10px;

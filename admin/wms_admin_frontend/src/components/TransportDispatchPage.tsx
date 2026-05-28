@@ -826,6 +826,24 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     } catch (e) { setError(String(e)); } finally { setLoading(false); }
   }
 
+  // Sprint 88 — reschedule trip to next day
+  async function handleRescheduleNextDay() {
+    if (!selectedTask) return;
+    const newDate = shiftDate(selectedTask.SHIPMENT_DATE ?? todayIso(), 1);
+    if (!confirm(`Перенести рейс #${selectedTask.ID} на ${newDate}?`)) return;
+    setLoading(true);
+    try {
+      await apiFetch(
+        `/api/admin/transport/tasks/${selectedTask.ID}`,
+        { method: "PATCH", body: JSON.stringify({ shipment_date: newDate }) }
+      );
+      const updated = await apiFetch<TransportTask>(`/api/admin/transport/tasks/${selectedTask.ID}`);
+      setSelectedTask(updated);
+      setTasks(prev => prev.map(t => t.ID === updated.ID ? updated : t));
+      showToast(`Рейс #${selectedTask.ID} перенесён на ${newDate}`);
+    } catch (e) { setError(String(e)); } finally { setLoading(false); }
+  }
+
   // Sprint 38 — copy trip
   function handlePrintRoute() {
     if (!selectedTask || taskSts.length === 0) return;
@@ -1660,6 +1678,13 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     disabled={taskSts.length === 0} title="Распечатать маршрутный лист">
                     🖨 Печать
                   </button>
+                  {selectedTask.CONDITION !== "Отгружен" && !editMode && (
+                    <button className="dispatch-reschedule-btn"
+                      onClick={handleRescheduleNextDay} disabled={loading}
+                      title={`Перенести на ${shiftDate(selectedTask.SHIPMENT_DATE ?? todayIso(), 1)}`}>
+                      →+1
+                    </button>
+                  )}
                   {selectedTask.CONDITION !== "Отгружен" && <>
                     <button className="dispatch-close-btn"
                       onClick={handleClose} disabled={loading || taskSts.length === 0}>
@@ -2098,6 +2123,13 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     disabled={taskSts.length === 0} title="Распечатать маршрутный лист">
                     🖨 Печать
                   </button>
+                  {selectedTask.CONDITION !== "Отгружен" && (
+                    <button className="dispatch-reschedule-btn"
+                      onClick={handleRescheduleNextDay} disabled={loading}
+                      title={`Перенести на ${shiftDate(selectedTask.SHIPMENT_DATE ?? todayIso(), 1)}`}>
+                      →+1
+                    </button>
+                  )}
                   {selectedTask.CONDITION !== "Отгружен" && <>
                     <button className="dispatch-close-btn"
                       onClick={handleClose} disabled={loading || taskSts.length === 0}>
