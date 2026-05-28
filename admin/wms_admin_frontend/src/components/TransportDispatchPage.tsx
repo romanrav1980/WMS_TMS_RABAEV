@@ -1,4 +1,5 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual"; // Sprint 102
 
 // ---------------------------------------------------------------------------
 // Types
@@ -1201,25 +1202,28 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       })
     : wareFilteredSts;
 
-  // Sprint 60 — paginated slice; reset to page 0 when data, sort, or ware-filter changes
-  useEffect(() => { setStPage(0); }, [availableSts, stSortField, stSortDir, wareIdFilter]);
-  useEffect(() => {
-    setStScrollTop(0);
-    if (stSectionRef.current) stSectionRef.current.scrollTop = 0;
-  }, [stPage, availableSts, stSortField, stSortDir, wareIdFilter, stDenseMode, viewMode]);
-  const stTotalPages = Math.max(1, Math.ceil(sortedSts.length / ST_PAGE_SIZE));
-  const pagedSts = sortedSts.slice(stPage * ST_PAGE_SIZE, (stPage + 1) * ST_PAGE_SIZE);
+  // Sprint 102 — @tanstack/react-virtual: заменяет пагинацию и ручную виртуализацию
+  // sortedSts = все видимые СТ (без пагинации); virtualizer рендерит только видимые строки
   const stVirtualRowHeight = stDenseMode ? ST_ROW_HEIGHT_DENSE : ST_ROW_HEIGHT;
-  const stVirtualEnabled = viewMode === "flat" && pagedSts.length > ST_VIRTUAL_THRESHOLD;
-  const stVirtualStart = stVirtualEnabled
-    ? Math.max(0, Math.floor(stScrollTop / stVirtualRowHeight) - ST_VIRTUAL_OVERSCAN)
+  const stRowVirtualizer = useVirtualizer({
+    count: viewMode === "flat" ? sortedSts.length : 0,  // кластерный режим не виртуализируется
+    getScrollElement: () => stSectionRef.current,
+    estimateSize: () => stVirtualRowHeight,
+    overscan: 10,
+  });
+  const virtualItems = stRowVirtualizer.getVirtualItems();
+  const stTotalVirtualHeight = stRowVirtualizer.getTotalSize();
+  // Для совместимости со старым кодом — pagedSts теперь все строки
+  const pagedSts = sortedSts;
+  const stTotalPages = 1; // нет пагинации
+  // visiblePagedSts: в flat-режиме только виртуализированные строки
+  const visiblePagedSts = viewMode === "flat"
+    ? virtualItems.map(vi => ({ ...sortedSts[vi.index], _vi: vi }))
+    : sortedSts;
+  const stVirtualTopPad = viewMode === "flat" && virtualItems.length > 0 ? virtualItems[0].start : 0;
+  const stVirtualBottomPad = viewMode === "flat" && stTotalVirtualHeight > 0
+    ? stTotalVirtualHeight - (virtualItems.length > 0 ? virtualItems[virtualItems.length - 1].end : 0)
     : 0;
-  const stVirtualEnd = stVirtualEnabled
-    ? Math.min(pagedSts.length, stVirtualStart + ST_VIRTUAL_VIEWPORT_ROWS + ST_VIRTUAL_OVERSCAN * 2)
-    : pagedSts.length;
-  const visiblePagedSts = pagedSts.slice(stVirtualStart, stVirtualEnd);
-  const stVirtualTopPad = stVirtualEnabled ? stVirtualStart * stVirtualRowHeight : 0;
-  const stVirtualBottomPad = stVirtualEnabled ? (pagedSts.length - stVirtualEnd) * stVirtualRowHeight : 0;
 
   function handleStToggle(stNum: string, idx: number) {
     lastClickedIdxRef.current = idx;
@@ -1647,9 +1651,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                               <td colSpan={17} style={{ height: stVirtualTopPad }} />
                             </tr>
                           )}
-                          {visiblePagedSts.map((st, visibleIdx) => {
-                            const pageIdx = stVirtualStart + visibleIdx;
-                            const idx = stPage * ST_PAGE_SIZE + pageIdx;
+                          {/* Sprint 102 — render only virtualizer items */}
+                          {visiblePagedSts.map((st) => {
+                            const vi = (st as AvailableSt & { _vi?: { index: number } })._vi;
+                            const idx = vi ? vi.index : 0;
                             return (
                               <AvailableStRow key={st.ST_NUMBER} st={st} idx={idx}
                                 checked={selectedStNums.has(st.ST_NUMBER)}
@@ -1687,13 +1692,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           </div>
 
           {/* Sprint 60 — pagination bar */}
-          {viewMode === "flat" && stTotalPages > 1 && (
-            <div className="dispatch-st-pagination">
-              <button className="dispatch-page-btn" onClick={() => setStPage(0)} disabled={stPage === 0}>◄◄</button>
-              <button className="dispatch-page-btn" onClick={() => setStPage(p => p - 1)} disabled={stPage === 0}>◄</button>
-              <span className="dispatch-page-info">Стр. {stPage + 1} из {stTotalPages} · {sortedSts.length} СТ</span>
-              <button className="dispatch-page-btn" onClick={() => setStPage(p => p + 1)} disabled={stPage >= stTotalPages - 1}>►</button>
-              <button className="dispatch-page-btn" onClick={() => setStPage(stTotalPages - 1)} disabled={stPage >= stTotalPages - 1}>►►</button>
+          {/* Sprint 102 — пагинация заменена виртуализацией; показываем итог */}
+          {viewMode === "flat" && sortedSts.length > 0 && (
+            <div className="dispatch-st-pagination dispatch-st-virtual-info">
+              <span className="dispatch-page-info">Всего СТ: {sortedSts.length} · виртуализация активна</span>
             </div>
           )}
 
