@@ -538,6 +538,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   async function handleRecalculatePrice() {
     if (!selectedTask) return;
     setPriceRecalcLoading(true);
+    setError(null);
     try {
       const res = await apiFetch<{ task_id: number; price: number }>(
         `/api/admin/transport/tasks/${selectedTask.ID}/recalculate-price`,
@@ -545,7 +546,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       );
       setSelectedTask(prev => prev ? { ...prev, PRICE: res.price } : prev);
       setTasks(prev => prev.map(t => t.ID === selectedTask.ID ? { ...t, PRICE: res.price } : t));
-    } catch { /* ignore */ } finally { setPriceRecalcLoading(false); }
+    } catch (e) { setError(String(e)); } finally { setPriceRecalcLoading(false); }
   }
 
   async function handleSetPrice(e: React.FormEvent) {
@@ -554,6 +555,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     const price = parseFloat(manualPrice);
     if (isNaN(price) || price < 0) return;
     setPriceLoading(true);
+    setError(null);
     try {
       await apiFetch(`/api/admin/transport/tasks/${selectedTask.ID}/price`, {
         method: "PATCH",
@@ -562,7 +564,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       setSelectedTask(prev => prev ? { ...prev, PRICE: price } : prev);
       setTasks(prev => prev.map(t => t.ID === selectedTask.ID ? { ...t, PRICE: price } : t));
       setManualPrice("");
-    } catch { /* ignore */ } finally { setPriceLoading(false); }
+    } catch (e) { setError(String(e)); } finally { setPriceLoading(false); }
   }
 
   async function handleShowPallets(stNum: string) {
@@ -1736,6 +1738,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                       <th>Адрес</th>
                       <th>Пал.</th>
                       <th>Вес</th>
+                      <th title="% сборки">%</th>
                       <th>Зона</th>
                       <th>Окно</th>
                       <th>Погр.</th>
@@ -1745,7 +1748,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   </thead>
                   <tbody>
                     {taskSts.length === 0
-                      ? <tr><td colSpan={10} className="dispatch-grid-empty">Рейс пуст. Выберите СТ выше и нажмите «Добавить в рейс».</td></tr>
+                      ? <tr><td colSpan={12} className="dispatch-grid-empty">Рейс пуст. Выберите СТ выше и нажмите «Добавить в рейс».</td></tr>
                       : taskSts.map(st => (
                           <TaskStTableRow
                             key={st.ST_NUMBER}
@@ -2628,6 +2631,7 @@ function TaskStTableRow({
       </td>
       <td className="num-r">{st.PALLETS_COUNT}</td>
       <td className="num-r">{st.WEIGHT_KG.toFixed(0)}</td>
+      <td>{st.VERIFY_PERC != null ? <VerifyBar perc={st.VERIFY_PERC} /> : "—"}</td>
       <td>{st.ZONE ?? "—"}</td>
       <td style={{ whiteSpace: "nowrap" }}>{timeWindow}</td>
       <td>
