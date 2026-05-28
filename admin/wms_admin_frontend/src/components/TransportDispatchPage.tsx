@@ -1261,6 +1261,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   Добавить в #{selectedTask.ID}
                 </button>
               )}
+              <button className="dispatch-sel-bar-csv" onClick={() => exportSelectedStsCsv(selSts, stDate)} title="Скачать выделенные СТ в CSV">⬇ CSV</button>
               <button className="dispatch-sel-bar-clear" onClick={() => setSelectedStNums(new Set())} title="Снять выделение">✕</button>
             </div>
           )}
@@ -3132,6 +3133,37 @@ function BillingRegistryTab({
       }
     </div>
   );
+}
+
+// ---------------------------------------------------------------------------
+// Sprint 54 — export selected STs to CSV
+// ---------------------------------------------------------------------------
+
+function exportSelectedStsCsv(sts: AvailableSt[], date: string) {
+  const BOM = "﻿";
+  const header = "СТ №;Адрес;Регион;Район;Паллет;Вес кг;Объём м³;% сборки;Тип ТС;Рейс";
+  const rows = sts.map(s => [
+    s.ST_NUMBER,
+    s.ADDR ?? "",
+    s.REGION ?? "",
+    s.RAION ?? "",
+    s.PALLETS_COUNT,
+    s.WEIGHT_KG,
+    (s.VOLUME_M3 ?? 0).toFixed(2),
+    s.VERIFY_PERC != null ? (s.VERIFY_PERC * 100).toFixed(0) + "%" : "",
+    s.TRANSPORT_TYPE ?? "",
+    s.TRANSTASK_ID ? `#${s.TRANSTASK_ID}` : "",
+  ].join(";"));
+  const total = sts.reduce((acc, s) => ({ p: acc.p + s.PALLETS_COUNT, m: acc.m + s.WEIGHT_KG }), { p: 0, m: 0 });
+  rows.push(["ИТОГО", "", "", "", total.p, total.m.toFixed(0), "", "", "", ""].join(";"));
+  const csv = BOM + [header, ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `selected-sts-${date}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // ---------------------------------------------------------------------------
