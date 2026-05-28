@@ -886,6 +886,37 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   }
 
   // ------------------------------------------------------------------
+  // Sprint 39 — active filter count + reset
+  // ------------------------------------------------------------------
+  const activeFilterCount = [
+    addrMask,
+    stMask,
+    stMaskExclude,
+    assembledOnly,
+    notAssembledOnly,
+    !unassignedOnly,
+    dateTo,
+    maxWeightKg != null,
+    maxVolM3 != null,
+    trTypeFilter,
+    articulFilter,
+  ].filter(Boolean).length;
+
+  function handleResetFilters() {
+    setAddrMask("");
+    setStMask("");
+    setStMaskExclude(false);
+    setAssembledOnly(false);
+    setNotAssembledOnly(false);
+    setUnassignedOnly(true);
+    setDateTo("");
+    setMaxWeightKg(null);
+    setMaxVolM3(null);
+    setTrTypeFilter("");
+    setArticulFilter("");
+  }
+
+  // ------------------------------------------------------------------
   // PMV counters
   // ------------------------------------------------------------------
   const selSts = availableSts.filter(s => selectedStNums.has(s.ST_NUMBER));
@@ -1614,6 +1645,19 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             ============================================================ */}
         {activeTab === "tasks" ? (
         <div className="dispatch-right-panel">
+          <div className="dispatch-fp-header-row">
+            <span className="dispatch-fp-title">
+              Фильтры
+              {activeFilterCount > 0 && (
+                <span className="dispatch-fp-badge">{activeFilterCount}</span>
+              )}
+            </span>
+            {activeFilterCount > 0 && (
+              <button className="dispatch-fp-reset-btn" onClick={handleResetFilters} title="Сбросить все фильтры">
+                × Сбросить
+              </button>
+            )}
+          </div>
           <div className="dispatch-fp-label">Тип ТС</div>
           <select className="dispatch-fp-select" value={trTypeFilter}
             onChange={e => setTrTypeFilter(e.target.value)}>
