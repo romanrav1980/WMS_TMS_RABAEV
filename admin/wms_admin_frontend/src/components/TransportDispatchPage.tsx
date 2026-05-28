@@ -1218,6 +1218,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               <button className="dispatch-day-step-btn" onClick={() => setFilterDate(d => shiftDate(d, -1))} title="Предыдущий день">◄</button>
               <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)} />
               <button className="dispatch-day-step-btn" onClick={() => setFilterDate(d => shiftDate(d, 1))} title="Следующий день">►</button>
+              {filterDate !== todayIso() && (
+                <button className="dispatch-today-btn" onClick={() => setFilterDate(todayIso())} title="Перейти к сегодня">Сегодня</button>
+              )}
               <button className="dispatch-new-btn" onClick={() => setCreateDialog(true)}>
                 {selectedStNums.size > 0 ? `+ Создать маршрут (${selectedStNums.size})` : "+ Создать маршрут"}
               </button>
@@ -1545,6 +1548,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             <button className="dispatch-day-step-btn" onClick={() => setRouteShipDate(d => shiftDate(d, -1))} title="Предыдущий день">◄</button>
             <input type="date" value={routeShipDate} onChange={e => setRouteShipDate(e.target.value)} />
             <button className="dispatch-day-step-btn" onClick={() => setRouteShipDate(d => shiftDate(d, 1))} title="Следующий день">►</button>
+            {routeShipDate !== todayIso() && (
+              <button className="dispatch-today-btn" onClick={() => setRouteShipDate(todayIso())} title="Перейти к сегодня">Сегодня</button>
+            )}
             <button className="dispatch-refresh-btn" onClick={loadTasks} title="Обновить рейсы">⟳</button>
             <span className="dispatch-tcount">{filteredRouteTasks.length}/{tasks.length} рейс(ов)</span>
             {/* Sprint 41 — status filter buttons */}

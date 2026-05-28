@@ -1219,6 +1219,10 @@ button[aria-disabled="true"] { cursor: help; }
 }
 .cluster-card-create-btn:hover { background: #e0e7ff; }
 
+/* Sprint 48 — «Сегодня» button */
+.dispatch-today-btn { padding: 2px 8px; border: 1px solid #a3c0e8; border-radius: 4px; background: #e8f0fb; color: #1d4ed8; font-size: 11px; font-weight: 700; }
+.dispatch-today-btn:hover { background: #dbeafe; }
+
 /* Sprint 46 — Day step buttons ◄ ► */
 .dispatch-day-step-btn { padding: 2px 7px; border: 1px solid #c8d6e5; border-radius: 4px; background: #f5f8fc; color: var(--muted); font-size: 13px; font-weight: 700; line-height: 1; }
 .dispatch-day-step-btn:hover { background: #e2eaf5; color: var(--text); border-color: #a3b4c8; }
