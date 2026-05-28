@@ -1244,6 +1244,9 @@ button[aria-disabled="true"] { cursor: help; }
 /* Sprint 83 — Unready available ST amber left-border */
 .dispatch-avail-unready { border-left: 3px solid #f59e0b !important; }
 .dispatch-avail-unready td:first-child { padding-left: 5px; }
+/* Sprint 94 — Amber left-border for trips with partially assembled STs */
+.dispatch-trip-unready { border-left: 3px solid #f59e0b !important; }
+.dispatch-trip-unready td:first-child { padding-left: 5px; }
 
 /* Sprint 49 — Dense mode for STs table */
 .dispatch-grid-dense td, .dispatch-grid-dense th { padding: 1px 4px !important; font-size: 10.5px !important; }

@@ -1662,6 +1662,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                             selectedTask?.ID === task.ID ? "selected" : "",
                             task.CONDITION === "Отгружен" ? "grid-closed" : "",
                             task.CONDITION === "Отменён" ? "grid-cancelled" : "",
+                            // Sprint 94 — amber border for trips with unready STs
+                            (task.CONDITION !== "Отгружен" && task.CONDITION !== "Отменён"
+                              && task.READY_PERC != null && task.READY_PERC > 0 && task.READY_PERC < 100)
+                              ? "dispatch-trip-unready" : "",
                           ].filter(Boolean).join(" ")}
                           onClick={() => selectTask(task)}>
                           <td>{fmtTime(task.SHIPMENT_TIME) || "—"}</td>
@@ -2126,6 +2130,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                           selectedTask?.ID === task.ID ? "selected" : "",
                           task.CONDITION === "Отгружен" ? "grid-closed" : "",
                           task.CONDITION === "Отменён" ? "grid-cancelled" : "",
+                          // Sprint 94 — amber border for trips with unready STs
+                          (task.CONDITION !== "Отгружен" && task.CONDITION !== "Отменён"
+                            && task.READY_PERC != null && task.READY_PERC > 0 && task.READY_PERC < 100)
+                            ? "dispatch-trip-unready" : "",
                         ].filter(Boolean).join(" ")}
                         onClick={() => selectTask(task)}>
                         <td>{fmtDate(task.SHIPMENT_DATE)}</td>
