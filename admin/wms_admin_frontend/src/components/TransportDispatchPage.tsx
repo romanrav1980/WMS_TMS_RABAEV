@@ -296,6 +296,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [selectedTripStNums, setSelectedTripStNums] = useState<Set<string>>(new Set());
   // Sprint 72 — inline filter within trip detail STs
   const [tripStFilter, setTripStFilter] = useState("");
+  // Sprint 74 — collapse trip detail STs section
+  const [tripDetailCollapsed, setTripDetailCollapsed] = useState(false);
   const [noteText, setNoteText] = useState("");
   const [billingDialog, setBillingDialog] = useState(false);
   const [openingBilling, setOpeningBilling] = useState(false);
@@ -545,6 +547,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     setBillingOrder(null);
     setSelectedTripStNums(new Set());
     setTripStFilter(""); // Sprint 72: reset filter on task switch
+    setTripDetailCollapsed(false); // Sprint 74: expand detail on task switch
     try {
       const data = await apiFetch<TaskSt[]>(`/api/admin/transport/tasks/${task.ID}/sts`);
       setTaskSts(data);
@@ -1578,6 +1581,12 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             <div className="dispatch-trip-detail-section">
               <div className="dispatch-trip-detail-hdr">
                 <div className="dispatch-trip-title-row">
+                  {/* Sprint 74 — collapse toggle */}
+                  <button className="dispatch-trip-collapse-btn"
+                    onClick={() => setTripDetailCollapsed(c => !c)}
+                    title={tripDetailCollapsed ? "Развернуть состав" : "Свернуть состав"}>
+                    {tripDetailCollapsed ? "▼" : "▲"}
+                  </button>
                   <b>Рейс #{selectedTask.ID}</b>
                   <span className={`dispatch-cond-big ${condClass(selectedTask.CONDITION)}`}>
                     {selectedTask.CONDITION ?? "Новый"}
@@ -1717,6 +1726,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 </div>
               </div>
 
+              {/* Sprint 74 — collapsible STs section */}
+              {!tripDetailCollapsed && <>
+
               {/* Sprint 30/32 — Live load metrics + overload warning */}
               {selectedVehicle?.PALLETS && tripP > 0 && (
                 <div className="dispatch-load-bar-wrap">
@@ -1854,6 +1866,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   onClose={() => setPalletStNum(null)}
                 />
               )}
+
+              </> /* end Sprint 74 collapsible */}
             </div>
           ) : (
             <div className="dispatch-no-task">
