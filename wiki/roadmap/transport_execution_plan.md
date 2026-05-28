@@ -55,7 +55,11 @@
 | 37 | «Выделить всё» в таблице СТ + авто-обновление данных (60 с) | Диспетчер | 0.25 нед | 🟢 КК | ✅ `a287a02` 2026-05-28 |
 | 38 | «Копировать рейс» — клонировать реквизиты без СТ | Диспетчер | 0.25 нед | 🟢 КК | ✅ `ad2a56f` 2026-05-28 |
 | 39 | Badge активных фильтров + кнопка «× Сбросить» | Диспетчер | 0.25 нед | 🟢 КК | ✅ `1a19f0d` 2026-05-28 |
-| **Итого** | | | **~26.5 нед** | | |
+| 40 | Сводка дня над таблицей рейсов (Рейсов · Паллет · Вес · Отгружено) | Диспетчер | 0.25 нед | 🟢 КК | ✅ `0fab5d7` 2026-05-28 |
+| 41 | Фильтр рейсов по статусу (Все / Активен / Отгружен / Отменён) | Диспетчер | 0.25 нед | 🟢 КК | ✅ `04302e3` 2026-05-28 |
+| 42 | Toast-уведомления об успешных операциях (создание, закрытие, назначение СТ) | Диспетчер | 0.25 нед | 🟢 КК | ✅ `abae320` 2026-05-28 |
+| 43 | Сортировка таблицы рейсов по клику на заголовок колонки | Диспетчер | 0.25 нед | 🟢 КК | ✅ `86a8908` 2026-05-28 |
+| **Итого** | | | **~27.5 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -669,6 +673,95 @@ UI не меняется, но при создании каждого рейса
 - `tests/transport/test_sprint39_functional.py` — 24 pytest-кейса (каждый фильтр по отдельности, all-active=11, reset=0, badge/btn visibility)  
 - `tests/transport/sprint39_usability_checklist.md` — 19 юзабилити-проверок  
 - `tests/transport/transport_sprint39_load_test.py` — 5 users, 60s, NFR /available-sts c разными фильтрами p95 ≤ 400ms  
+
+---
+
+### Sprint 43 — Сортировка таблицы рейсов по колонкам
+
+**Инструмент:** 🟢 КК (код-код $20) — чисто фронтенд, derived state + Array.sort
+
+**Цель:** диспетчер кликает на заголовок колонки → таблица рейсов сортируется; повторный клик меняет направление. NULL-значения всегда в конце.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `tasksSortField` / `tasksSortDir` state + `toggleTasksSort()` | Frontend | `TransportDispatchPage.tsx` |
+| `sortedTasks` computed array (spread + sort) | Frontend | `TransportDispatchPage.tsx` |
+| Заголовки `dispatch-sortable-th` с hover + стрелкой ▲/▼ | Frontend | `TransportDispatchPage.tsx` |
+| `grid-cancelled` на отменённых рейсах в tasks-tab | Frontend | `TransportDispatchPage.tsx` |
+| `.dispatch-sortable-th` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `86a8908` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint43_functional.py` — 13 pytest-кейсов (asc/desc, null-last, stable, all fields)  
+- `tests/transport/sprint43_usability_checklist.md` — 16 юзабилити-проверок  
+- `tests/transport/transport_sprint43_load_test.py` — 7 users, 60s, NFR p95 ≤ 700ms  
+
+---
+
+### Sprint 42 — Toast-уведомления об успешных операциях
+
+**Инструмент:** 🟢 КК (код-код $20) — чисто фронтенд, state + setTimeout
+
+**Цель:** после создания/закрытия/отмены рейса и назначения/снятия СТ диспетчер видит зелёный toast вместо тишины; он исчезает через 3 с или закрывается кликом.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `toastMsg` state + `showToast()` helper с auto-dismiss 3 с | Frontend | `TransportDispatchPage.tsx` |
+| `showToast` вызовы в: create, createFromCluster, close, cancel, assign, bulkUnassign, copy | Frontend | `TransportDispatchPage.tsx` |
+| Toast JSX — фиксированная позиция bottom-right | Frontend | `TransportDispatchPage.tsx` |
+| `.dispatch-toast` + `@keyframes toast-in` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `abae320` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint42_functional.py` — 13 pytest-кейсов (все форматы сообщений)  
+- `tests/transport/sprint42_usability_checklist.md` — 15 юзабилити-проверок  
+- `tests/transport/transport_sprint42_load_test.py` — 5 users, 60s, NFR POST /tasks p95 ≤ 600ms  
+
+---
+
+### Sprint 41 — Фильтр рейсов по статусу в таблице маршрутов
+
+**Инструмент:** 🟢 КК (код-код $20) — чисто фронтенд, derived state
+
+**Цель:** диспетчер быстро фильтрует рейсы по статусу кнопками «Все / Активен / Отгружен / Отменён» с счётчиками; фильтрация клиентская.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `routeCondFilter` state + `filteredRouteTasks` computed | Frontend | `TransportDispatchPage.tsx` |
+| `routeCondCounts` — подсчёт по каждому статусу | Frontend | `TransportDispatchPage.tsx` |
+| Кнопки `.dispatch-cond-filter-btn` в тулбаре вкладки «Маршруты» | Frontend | `TransportDispatchPage.tsx` |
+| `grid-cancelled` на отменённых рейсах | Frontend | `TransportDispatchPage.tsx` |
+| `.dispatch-cond-filter`, `.dispatch-cond-filter-btn`, `.dispatch-cond-filter-cnt` | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `04302e3` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint41_functional.py` — 14 pytest-кейсов (all/active/closed/cancelled, counts, edge cases)  
+- `tests/transport/sprint41_usability_checklist.md` — 17 юзабилити-проверок  
+- `tests/transport/transport_sprint41_load_test.py` — 6 users, 60s, NFR p95 ≤ 700ms  
+
+---
+
+### Sprint 40 — Сводка дня над таблицей рейсов
+
+**Инструмент:** 🟢 КК (код-код $20) — чисто фронтенд, derived values
+
+**Цель:** диспетчер видит быструю сводку «Рейсов · Паллет · Вес кг · Отгружено X/N» над таблицей рейсов без дополнительных API-запросов.
+
+| Задача | Кто | Файл |
+|--------|-----|------|
+| `dayTotalTasks`, `dayTotalPallets`, `dayTotalWeight`, `dayClosedTasks` computed | Frontend | `TransportDispatchPage.tsx` |
+| `.dispatch-day-summary` strip JSX (голубоватый фон, разделители «·») | Frontend | `TransportDispatchPage.tsx` |
+| `.dispatch-day-summary`, `.dispatch-ds-*` CSS-классы | Frontend | `styles.css` |
+
+**Статус:** ✅ Завершён  
+**Коммит:** `0fab5d7` · **Дата:** 2026-05-28  
+**Тесты:**  
+- `tests/transport/test_sprint40_functional.py` — 11 pytest-кейсов (empty, single, mixed, null weight/pallets, large dataset)  
+- `tests/transport/sprint40_usability_checklist.md` — 13 юзабилити-проверок  
+- `tests/transport/transport_sprint40_load_test.py` — 5 users, 60s, NFR p95 ≤ 800ms  
 
 ---
 
