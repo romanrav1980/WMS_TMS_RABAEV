@@ -928,6 +928,12 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 
   const selectedVehicle = vehicles.find(v => v.NUM === selectedTask?.TRANSPORT);
 
+  // Sprint 40 — day summary (computed from already-loaded tasks list)
+  const dayTotalTasks   = tasks.length;
+  const dayTotalPallets = tasks.reduce((s, t) => s + (t.PALLET_COUNT || 0), 0);
+  const dayTotalWeight  = tasks.reduce((s, t) => s + (t.TEMP_WEIGHT  || 0), 0);
+  const dayClosedTasks  = tasks.filter(t => t.CONDITION === "Отгружен").length;
+
   // ------------------------------------------------------------------
   // Render
   // ------------------------------------------------------------------
@@ -1102,6 +1108,30 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               <button className="dispatch-refresh-btn" onClick={loadTasks} title="Обновить рейсы">⟳</button>
               <span className="dispatch-tcount">{tasks.length} рейс(ов)</span>
             </div>
+            {/* Sprint 40 — day summary strip */}
+            {dayTotalTasks > 0 && (
+              <div className="dispatch-day-summary">
+                <span className="dispatch-ds-item">
+                  <span className="dispatch-ds-label">Рейсов</span>
+                  <span className="dispatch-ds-value">{dayTotalTasks}</span>
+                </span>
+                <span className="dispatch-ds-sep">·</span>
+                <span className="dispatch-ds-item">
+                  <span className="dispatch-ds-label">Паллет</span>
+                  <span className="dispatch-ds-value">{dayTotalPallets}</span>
+                </span>
+                <span className="dispatch-ds-sep">·</span>
+                <span className="dispatch-ds-item">
+                  <span className="dispatch-ds-label">Вес кг</span>
+                  <span className="dispatch-ds-value">{dayTotalWeight.toFixed(0)}</span>
+                </span>
+                <span className="dispatch-ds-sep">·</span>
+                <span className="dispatch-ds-item">
+                  <span className="dispatch-ds-label">Отгружено</span>
+                  <span className="dispatch-ds-value">{dayClosedTasks} / {dayTotalTasks}</span>
+                </span>
+              </div>
+            )}
             <div className="dispatch-trips-table-wrap">
               <table className="dispatch-grid">
                 <thead>

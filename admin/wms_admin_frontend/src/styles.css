@@ -1219,6 +1219,23 @@ button[aria-disabled="true"] { cursor: help; }
 }
 .cluster-card-create-btn:hover { background: #e0e7ff; }
 
+/* Sprint 40 — Day summary strip */
+.dispatch-day-summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: #f0f7ff;
+  border: 1px solid #c7ddf8;
+  border-radius: 5px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+.dispatch-ds-item { display: flex; align-items: center; gap: 4px; }
+.dispatch-ds-label { color: var(--muted); }
+.dispatch-ds-value { font-weight: 700; color: var(--text); }
+.dispatch-ds-sep { color: var(--muted); opacity: 0.5; }
+
 /* Sprint 39 — Active filters badge + reset */
 .dispatch-fp-header-row {
   display: flex;
