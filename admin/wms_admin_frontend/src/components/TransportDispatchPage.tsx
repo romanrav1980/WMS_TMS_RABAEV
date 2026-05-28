@@ -207,11 +207,18 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [transportTypes, setTransportTypes] = useState<TransportType[]>([]);
 
-  const [filterDate, setFilterDate] = useState(todayIso());
-  const [stDate, setStDate] = useState(todayIso());
+  // Sprint 47 — localStorage persistence helpers
+  function lsGet(key: string, fallback: string): string {
+    try { return localStorage.getItem(key) || fallback; } catch { return fallback; }
+  }
+
+  const [filterDate, setFilterDate] = useState(() => lsGet("tms_filterDate", todayIso()));
+  const [stDate, setStDate] = useState(() => lsGet("tms_filterDate", todayIso()));
   const [selectedStNums, setSelectedStNums] = useState<Set<string>>(new Set());
 
-  const [viewMode, setViewMode] = useState<"flat" | "clusters">("flat");
+  const [viewMode, setViewMode] = useState<"flat" | "clusters">(
+    () => (lsGet("tms_viewMode", "flat") as "flat" | "clusters")
+  );
   const [clusters, setClusters] = useState<TransportCluster[]>([]);
   const [expandedRaions, setExpandedRaions] = useState<Set<string>>(new Set());
 
@@ -258,8 +265,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [palletStNum, setPalletStNum] = useState<string | null>(null);
   const [stPallets, setStPallets] = useState<StPalletRow[]>([]);
   const [palletLoading, setPalletLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<"tasks" | "routes" | "billing">("tasks");
-  const [routeShipDate, setRouteShipDate] = useState(todayIso());
+  const [activeTab, setActiveTab] = useState<"tasks" | "routes" | "billing">(
+    () => (lsGet("tms_activeTab", "tasks") as "tasks" | "routes" | "billing")
+  );
+  const [routeShipDate, setRouteShipDate] = useState(() => lsGet("tms_routeShipDate", todayIso()));
   const [routeTaskId, setRouteTaskId] = useState("");
   const [routeCarMask, setRouteCarMask] = useState("");
   const [routeCompanyMask, setRouteCompanyMask] = useState("");
@@ -444,6 +453,12 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   }, [viewMode, loadClusters]);
 
   // ------------------------------------------------------------------
+  // Sprint 47 — persist key state to localStorage
+  useEffect(() => { try { localStorage.setItem("tms_filterDate",   filterDate);   } catch { /* */ } }, [filterDate]);
+  useEffect(() => { try { localStorage.setItem("tms_routeShipDate", routeShipDate); } catch { /* */ } }, [routeShipDate]);
+  useEffect(() => { try { localStorage.setItem("tms_viewMode",     viewMode);     } catch { /* */ } }, [viewMode]);
+  useEffect(() => { try { localStorage.setItem("tms_activeTab",    activeTab);    } catch { /* */ } }, [activeTab]);
+
   // Sprint 44 — global Escape handler
   // ------------------------------------------------------------------
   useEffect(() => {
