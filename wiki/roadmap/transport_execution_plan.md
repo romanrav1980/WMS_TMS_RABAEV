@@ -1,4 +1,4 @@
-# ТМС-2 — План внедрения по спринтам
+﻿# ТМС-2 — План внедрения по спринтам
 
 **Проект:** ТМС-2 (Transport Management System 2) — полная замена C# WinForms транспортного модуля (tabPage6 / TRANSPORT.cs / BillingTransport.cs) на FastAPI + React.
 
@@ -81,7 +81,12 @@
 | 63 | Значок «⚠ N не собрано» в тулбаре СТ | Диспетчер | 0.1 нед | 🟢 КК | ✅ `60d0842` 2026-05-28 |
 | 64 | Клик по значку «не собрано» → выделить все несобранные | Диспетчер | 0.1 нед | 🟢 КК | ✅ `d29a250` 2026-05-28 |
 | 65 | Синяя пилюля (выделено N) на вкладке «Заявки» | Диспетчер | 0.1 нед | 🟢 КК | ✅ `1498135` 2026-05-28 |
-| **Итого** | | | **~30.0 нед** | | |
+| 66 | VERIFY_PERC (VerifyBar) в таблице состава рейса (TaskStTableRow) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `60dbc68` 2026-05-28 |
+| 67 | Amber-подсветка несобранных строк в составе рейса (VERIFY_PERC < 100) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `7ff119f` 2026-05-28 |
+| 68 | Ctrl+Enter — добавить выделенные СТ в рейс (keyboard shortcut) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `d3f3685` 2026-05-28 |
+| 69 | Delete — снять выделенные СТ с рейса (keyboard shortcut) | Диспетчер | 0.1 нед | 🟢 КК | ✅ `326f499` 2026-05-28 |
+| 70 | «Все» / «Нет» — тулбар выделения всех СТ рейса | Диспетчер | 0.1 нед | 🟢 КК | ✅ `340b52a` 2026-05-28 |
+| **Итого** | | | **~30.6 нед** | | |
 
 **Легенда инструментов:**
 - 🟢 **КК** — код-код ($20): весь спринт самостоятельно; задача типовая, паттерны в проекте есть
@@ -266,12 +271,12 @@
 **Что видит диспетчер после спринта:**
 В составе рейса можно изменить тип борта (прицеп/госборт) и порядок объезда кликом — без открытия отдельных форм. Вкладка «Паллеты заявки» показывает список паллет с артикулами.
 
-**Статус:** ✅ Завершён  
-**Коммит:** `23c3fe6` · **Дата:** 2026-05-26  
-**Тесты:**  
-- `tests/transport/test_sprint6_functional.py` — 10 pytest-кейсов (endpoint, fields, pallet count)  
-- `tests/transport/sprint6_usability_checklist.md` — 25 юзабилити-проверок  
-- `tests/transport/transport_sprint6_load_test.py` — 40 users, 60s, NFR p95 ≤ 200ms для `/sts/{st}/pallets`  
+**Статус:** ✅ Завершён
+**Коммит:** `23c3fe6` · **Дата:** 2026-05-26
+**Тесты:**
+- `tests/transport/test_sprint6_functional.py` — 10 pytest-кейсов (endpoint, fields, pallet count)
+- `tests/transport/sprint6_usability_checklist.md` — 25 юзабилити-проверок
+- `tests/transport/transport_sprint6_load_test.py` — 40 users, 60s, NFR p95 ≤ 200ms для `/sts/{st}/pallets`
 **Миграция:** `050_apply.sql` (no-op, схема без изменений)
 
 ---
@@ -308,10 +313,10 @@
 Новый раздел «Планировщик» в меню. Карта России с цветными значками заказов. Большой кружок = много паллет. Красная рамка = только 10-тонник. Значок ⏰ = жёсткое временно́е окно. Фильтр по складу убирает/показывает нужные точки.
 
 **Статус:** ✅ Завершён; 2026-05-28 hardening re-check passed
-**Коммит:** `3b19a91` · **Дата:** 2026-05-26  
-**Тесты:**  
+**Коммит:** `3b19a91` · **Дата:** 2026-05-26
+**Тесты:**
 - `tests/transport/test_sprint7_functional.py` — 14 pytest-кейсов (planner/orders, routing/status), `14 passed` on `2026-05-25` seed
-- `tests/transport/sprint7_usability_checklist.md` — 39 юзабилити-проверок  
+- `tests/transport/sprint7_usability_checklist.md` — 39 юзабилити-проверок
 - `tests/transport/transport_sprint7_load_test.py` — thread load, NFR p95 ≤ 600ms для `/planner/orders`; latest p95 `/planner/orders` 97.5 ms, `/routing/status` 35.8 ms
 - `tests/ui/transport_sprint7_ui_smoke.cjs` — UI smoke карты, фильтра типа ТС, геокодинг-статуса, marker popup
 **Hardening 2026-05-28:** `/planner/orders` переведён с тяжелого `RRL_V_AVAILABLE_STS` на прямую set-based выборку по `RRL_SBORKA_PALLETS`/`RRL_SBORKA_PALLET_ROWS`/`RRL_ADDR`; read-only MAP endpoints добавлены в lightweight audit; исправлен dev runtime crash Leaflet под React StrictMode.
@@ -358,8 +363,8 @@ docker compose -f docker-compose.valhalla.yml up -d  # резерв
 Кнопка «Авто-план» → через 10–30 сек на карте появляются цветные маршруты (каждая машина — свой цвет). Справа: «Рейс 1: Е715ТТ — 14 паллет — 96% загрузки — 4ч20м». Внизу: «Утилизация парка: 84%, Общий пробег: 1 240 км, Нарушений окон: 2». Кнопка «Применить план» создаёт все рейсы в системе.
 
 **Статус:** ✅ Завершён; 2026-05-28 hardening re-check passed
-**Коммит:** `7827b84` · **Дата:** 2026-05-26  
-**Тесты:**  
+**Коммит:** `7827b84` · **Дата:** 2026-05-26
+**Тесты:**
 - `tests/transport/test_sprint8_functional.py` — 23 pytest-кейса (matrix rebuild, non-empty solve, metrics, apply contract), latest `23 passed`
 - `tests/transport/sprint8_usability_checklist.md` — 43 юзабилити-проверки
 - `tests/transport/transport_sprint8_load_test.py` — Windows-safe load gate; latest p95 metrics 360.7 ms, solve 647.5 ms, rebuild 414.6 ms
@@ -392,8 +397,8 @@ docker compose -f docker-compose.valhalla.yml up -d  # резерв
 Можно нарисовать зону на карте и мгновенно получить рейс из точек внутри. Кластеры районов подсвечены — один клик выделяет весь район. Перетащить сложный адрес в другой маршрут — метрики пересчитываются без ожидания. В правой панели — «3 похожих маршрута из прошлого месяца».
 
 **Статус:** ✅ Завершён; 2026-05-28 hardening re-check passed with historical-template fixture risk
-**Коммит:** `7c284ec` · **Дата:** 2026-05-26  
-**Тесты:**  
+**Коммит:** `7c284ec` · **Дата:** 2026-05-26
+**Тесты:**
 - `tests/transport/test_sprint9_functional.py` — cluster solver/templates/RAION, latest `10 passed, 1 skipped` (skip: no historical template seed)
 - `tests/transport/sprint9_usability_checklist.md` — 23 юзабилити-проверки
 - `tests/transport/transport_sprint9_load_test.py` — Windows-safe load gate; latest p95 cluster solve 598.3 ms, templates 413.5 ms, orders 140.1 ms
@@ -423,8 +428,8 @@ docker compose -f docker-compose.valhalla.yml up -d  # резерв
 График «Утилизация парка» за последние 30 дней. Видно, что после внедрения оптимизатора средняя загрузка выросла с 71% до 86%. Настройки позволяют «жертвовать пробегом ради меньшего числа машин» и наоборот.
 
 **Статус:** ✅ Завершён; 2026-05-28 hardening re-check passed
-**Коммит:** `bd08185` · **Дата:** 2026-05-26  
-**Тесты:**  
+**Коммит:** `bd08185` · **Дата:** 2026-05-26
+**Тесты:**
 - `tests/transport/test_sprint10_functional.py` — 15 pytest-кейсов (history, forecast), latest `15 passed`
 - `tests/transport/sprint10_usability_checklist.md` — 24 юзабилити-проверки
 - `tests/transport/transport_sprint10_load_test.py` — Windows-safe load gate; latest p95 history 471.5 ms, forecast 161.2 ms
@@ -459,13 +464,17 @@ docker compose -f docker-compose.valhalla.yml up -d  # резерв
 **Что видит диспетчер после спринта:**
 UI не меняется, но при создании каждого рейса в Oracle автоматически создаётся цепочка из 12 операций с плановыми временами. Фундамент для Ганта готов.
 
-**Статус:** ✅ Завершён  
-**Коммит:** `66d9c2b` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint11_functional.py` — 22 pytest-кейса (plan-operations, get-operations, patch-fact, gantt)  
-- `tests/transport/sprint11_usability_checklist.md` — 25 юзабилити-проверок  
-- `tests/transport/transport_sprint11_load_test.py` — 5 users, 60s, NFR p95 plan-ops≤500ms, ops≤200ms, fact≤200ms  
+**Статус:** ✅ Завершён
+**Коммит:** `66d9c2b` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — доведено до рабочего состояния по API/UI/load/training.
+**Тесты:**
+- `tests/transport/test_sprint11_functional.py` — `20 passed` (plan-operations, get-operations, patch-fact, gantt)
+- `tests/ui/transport_sprint11_ui_smoke.cjs` — passed: Гант, карточка рейса, контекстная отметка факта, план-факт вкладка
+- `tests/transport/transport_sprint11_load_test.py` — passed: operations p95 160.8 ms, fact p95 219.5 ms, gantt p95 195.5 ms, plan-operations p95 175.7 ms
+- `tests/transport/sprint11_usability_checklist.md` — 25 юзабилити-проверок
 **Миграция:** `053_apply.sql` (RRL_TRANSPORT_NORMS + RRL_TT_OPERATIONS + 12 seed нормативов)
+**Training pack:** [`../../wiki-raw/tms2_training/sprint11_arm_gantt_2026_05_28/index.html`](../../wiki-raw/tms2_training/sprint11_arm_gantt_2026_05_28/index.html)
+**Performance fix:** `GET /vehicles/gantt` больше не делает N+1 и не мутирует данные на чтении; операции собираются set-based одним SQL, нормативы кешируются, `plan-operations` пишет цепочку пачкой в одной транзакции.
 
 ---
 
@@ -495,12 +504,15 @@ UI не меняется, но при создании каждого рейса
 **Что видит диспетчер после спринта:**
 Новый раздел «Диаграмма Ганта» в меню. Каждая строка — одна машина с именем водителя и фото. На временно́й шкале — цветные блоки: синие (погрузка), зелёные (переезд), жёлтые (выгрузка), фиолетовые (возвраты), серые (перерывы). Синяя вертикальная линия — сейчас. Снизу: «В рейсе: 12 (52%), Погрузка: 3 (13%), Нарушений: 2 ⚠».
 
-**Статус:** ✅ Завершён  
-**Коммит:** `3c97fa6` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint12_functional.py` — 12 pytest-кейсов (gantt 200, fields, op-codes, chain, durations)  
-- `tests/transport/sprint12_usability_checklist.md` — 46 юзабилити-проверок  
-- `tests/transport/transport_sprint12_load_test.py` — 10 users, 60s, NFR gantt≤2s, ops≤200ms  
+**Статус:** ✅ Завершён
+**Коммит:** `3c97fa6` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — доведено до рабочего состояния по API/UI/load/training.
+**Тесты:**
+- `tests/transport/test_sprint12_functional.py` — `12 passed` (gantt 200, fields, op-codes, chain, durations)
+- `tests/ui/transport_sprint12_ui_smoke.cjs` — passed: загрузка Ганта, легенда, сводка, hover tooltip, фильтр машин, дата-навигация, панель отклонений
+- `tests/transport/transport_sprint12_load_test.py` — passed: gantt p95 158.0 ms, operations p95 86.0 ms
+- `tests/transport/sprint12_usability_checklist.md` — 46 юзабилити-проверок
+**Training pack:** [`../../wiki-raw/tms2_training/sprint12_gantt_dashboard_2026_05_28/index.html`](../../wiki-raw/tms2_training/sprint12_gantt_dashboard_2026_05_28/index.html)
 
 ---
 
@@ -527,12 +539,16 @@ UI не меняется, но при создании каждого рейса
 **Что видит диспетчер после спринта:**
 В диалоге «Создать маршрут» у каждой машины написано «Свободна с 14:30» (зелёный), «Освободится в 16:10» (жёлтый) или «Занята, конфликт» (красный). Можно перетащить рейс на Ганте — он сдвигается, и если пересекается с другим — краснеет.
 
-**Статус:** ✅ Завершён  
-**Коммит:** `26e9278` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint13_functional.py` — 15 pytest-кейсов (available, plan-fact)  
-- `tests/transport/sprint13_usability_checklist.md` — 24 юзабилити-проверки  
-- `tests/transport/transport_sprint13_load_test.py` — 8 users, 60s, NFR available≤500ms, plan-fact≤1s  
+**Статус:** ✅ Завершён
+**Коммит:** `26e9278` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — доведено до рабочего состояния по API/UI/load/training.
+**Тесты:**
+- `tests/transport/test_sprint13_functional.py` — `16 passed` (available, plan-fact, vehicle filter without seed skip)
+- `tests/ui/transport_sprint13_ui_smoke.cjs` — passed: диалог создания рейса, availability API, green/yellow/red машины, предупреждения конфликта
+- `tests/transport/transport_sprint13_load_test.py` — passed: available p95 455.1 ms, plan-fact p95 651.1 ms, gantt p95 197.2 ms
+- `tests/transport/sprint13_usability_checklist.md` — 24 юзабилити-проверки
+**Training pack:** [`../../wiki-raw/tms2_training/sprint13_vehicle_availability_2026_05_28/index.html`](../../wiki-raw/tms2_training/sprint13_vehicle_availability_2026_05_28/index.html)
+**Performance fix:** `GET /vehicles/available` получил короткий service-cache и lightweight audit; cache сбрасывается при пересчёте операций и фиксации факта.
 
 ---
 
@@ -557,12 +573,15 @@ UI не меняется, но при создании каждого рейса
 **Что видит диспетчер после спринта:**
 Вкладка «Аналитика» показывает: «Погрузка: план 45 мин, факт 67 мин, +22 мин 🔴» для каждой операции. Руководство видит паттерн — погрузка стабильно опаздывает → нужно скорректировать норматив или процесс. 2 нарушения режима отдыха водителей — с деталями по каждому.
 
-**Статус:** ✅ Завершён  
-**Коммит:** `ab4b791` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint14_functional.py` — 7 pytest-кейсов (plan-fact delta, rest_violations)  
-- `tests/transport/sprint14_usability_checklist.md` — 29 юзабилити-проверок  
-- `tests/transport/transport_sprint14_load_test.py` — 10 users, 60s, NFR p95 plan-fact(1d)≤500ms, plan-fact(30d)≤2000ms  
+**Статус:** ✅ Завершён
+**Коммит:** `ab4b791` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — доведено до рабочего состояния по API/UI/load/training.
+**Тесты:**
+- `tests/transport/test_sprint14_functional.py` — `7 passed` (plan-fact delta, rest_violations)
+- `tests/ui/transport_sprint14_ui_smoke.cjs` — passed: вкладка «Аналитика», нарушения отдыха, бары отклонений, CSV export
+- `tests/transport/transport_sprint14_load_test.py` — passed: plan-fact 1 day p95 420.1 ms, plan-fact 30 days p95 291.3 ms, gantt p95 125.5 ms
+- `tests/transport/sprint14_usability_checklist.md` — 29 юзабилити-проверок
+**Training pack:** [`../../wiki-raw/tms2_training/sprint14_plan_fact_2026_05_28/index.html`](../../wiki-raw/tms2_training/sprint14_plan_fact_2026_05_28/index.html)
 
 ---
 
@@ -591,13 +610,17 @@ UI не меняется, но при создании каждого рейса
 **Что видит диспетчер после спринта:**
 На закрытом рейсе появляется кнопка «Выставить счёт». После нажатия — рейс получает метку `billed` и больше не доступен для редактирования.
 
-**Статус:** ✅ Завершён  
-**Коммит:** `950c8e2` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint15_functional.py` — 9 pytest-кейсов (create order, open billing, task billing)  
-- `tests/transport/sprint15_usability_checklist.md` — 22 юзабилити-проверки  
-- `tests/transport/transport_sprint15_load_test.py` — 8 users, 60s, NFR p95 list≤300ms, create≤500ms  
+**Статус:** ✅ Завершён
+**Коммит:** `950c8e2` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — доведено до рабочего состояния по API/UI/load/training.
+**Тесты:**
+- `tests/transport/test_sprint15_functional.py` — `12 passed` (create order, open billing, task billing, add task)
+- `tests/ui/transport_sprint15_ui_smoke.cjs` — passed: закрытый рейс, диалог «Выставить счёт», создание счёта, тег счёта
+- `tests/transport/transport_sprint15_load_test.py` — passed: list p95 283.0 ms, filtered list p95 85.0 ms, create p95 174.3 ms, task billing p95 189.4 ms
+- `tests/transport/sprint15_usability_checklist.md` — 22 юзабилити-проверки
 **Миграция:** `054_apply.sql` (SEQ_BILL_ORDERS + RRL_BILL_ORDERS идемпотентно)
+**Training pack:** [`../../wiki-raw/tms2_training/sprint15_billing_open_2026_05_28/index.html`](../../wiki-raw/tms2_training/sprint15_billing_open_2026_05_28/index.html)
+**Performance fix:** `GET /billing/orders` добавлен в lightweight audit; load runner допускает 404 для не привязанного рейса как корректный контракт `GET /tasks/{id}/billing`.
 
 ---
 
@@ -619,12 +642,16 @@ UI не меняется, но при создании каждого рейса
 **Что видит диспетчер после спринта:**
 Счёт проходит путь: 🟡 Выставлен → 🔵 Закрыт → 🟢 Оплачен. Каждый переход — кнопка с подтверждением.
 
-**Статус:** ✅ Завершён  
-**Коммит:** `5cbd227` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint16_functional.py` — 9 pytest-кейсов (get order, close, pay, 404)  
-- `tests/transport/sprint16_usability_checklist.md` — 19 юзабилити-проверок  
-- `tests/transport/transport_sprint16_load_test.py` — 5 users, 60s, NFR p95 get≤300ms, close/pay≤500ms  
+**Статус:** ✅ Завершён
+**Коммит:** `5cbd227` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — доведено до рабочего состояния по API/UI/load/training.
+**Тесты:**
+- `tests/transport/test_sprint16_functional.py` — `11 passed` (get order, close, pay, 404)
+- `tests/ui/transport_sprint16_ui_smoke.cjs` — passed: выставлен → закрыт → оплачен в карточке рейса
+- `tests/transport/transport_sprint16_load_test.py` — passed: get order p95 151.1 ms, close p95 86.3 ms, pay p95 75.1 ms
+- `tests/transport/sprint16_usability_checklist.md` — 19 юзабилити-проверок
+**Training pack:** [`../../wiki-raw/tms2_training/sprint16_billing_lifecycle_2026_05_28/index.html`](../../wiki-raw/tms2_training/sprint16_billing_lifecycle_2026_05_28/index.html)
+**Performance fix:** read-only `GET /billing/orders/{id}` добавлен в lightweight audit; close/pay остаются полными audit mutations.
 
 ---
 
@@ -648,13 +675,16 @@ UI не меняется, но при создании каждого рейса
 **Что видит диспетчер после спринта:**
 Вкладка «Биллинг» — таблица всех счетов с фильтрами. Внизу: «ООО Ромашка: 127 450 ₽ за май». Кнопка «Скачать CSV».
 
-**Статус:** ✅ Завершён  
-**Коммит:** `8b0bae7` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint17_functional.py` — 13 pytest-кейсов (list, filters by date/company/status, totals)  
-- `tests/transport/sprint17_usability_checklist.md` — 28 юзабилити-проверок (вкладка, фильтры, таблица, бейджи, итоги, CSV)  
-- `tests/transport/transport_sprint17_load_test.py` — 8 users, 60s, NFR p95 list≤300ms  
-**Исправлено:** баг правой панели — вкладка «Биллинг» корректно скрывает `dispatch-right-panel`
+**Статус:** ✅ Завершён
+**Коммит:** `8b0bae7` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — доведено до рабочего состояния по API/UI/load/training.
+**Тесты:**
+- `tests/transport/test_sprint17_functional.py` — `12 passed` (list, filters by date/company/status, totals)
+- `tests/ui/transport_sprint17_ui_smoke.cjs` — passed: вкладка «Биллинг», фильтр компании, итоги, CSV export
+- `tests/transport/transport_sprint17_load_test.py` — passed: list p95 112.2 ms, date filter p95 127.5 ms, company filter p95 146.5 ms, paid filter p95 64.4 ms
+- `tests/transport/sprint17_usability_checklist.md` — 28 юзабилити-проверок (вкладка, фильтры, таблица, бейджи, итоги, CSV)
+**Training pack:** [`../../wiki-raw/tms2_training/sprint17_billing_registry_2026_05_28/index.html`](../../wiki-raw/tms2_training/sprint17_billing_registry_2026_05_28/index.html)
+**Исправлено ранее:** баг правой панели — вкладка «Биллинг» корректно скрывает `dispatch-right-panel`
 
 ---
 
@@ -677,12 +707,15 @@ UI не меняется, но при создании каждого рейса
 **Что видит диспетчер после спринта:**
 В карточке рейса: «Цена рейса: 15 450 ₽ · ⟳ Пересчитать». Можно ввести сумму вручную и сохранить.
 
-**Статус:** ✅ Завершён  
-**Коммит:** `bc0ddae` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint18_functional.py` — 12 pytest-кейсов (recalculate, set price, remove from order, 404, 422)  
-- `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок  
-- `tests/transport/transport_sprint18_load_test.py` — 5 users, 60s, NFR recalculate≤1s, set-price≤300ms  
+**Статус:** ✅ Завершён
+**Коммит:** `bc0ddae` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — доведено до рабочего состояния по API/UI/load/training.
+**Тесты:**
+- `tests/transport/test_sprint18_functional.py` — `11 passed` (recalculate, set price, remove from order, 404, 422)
+- `tests/ui/transport_sprint18_ui_smoke.cjs` — passed: карточка рейса, пересчёт цены, ручное сохранение цены
+- `tests/transport/transport_sprint18_load_test.py` — passed: set-price p95 205.3 ms, recalculate p95 92.8 ms, billing list p95 74.7 ms
+- `tests/transport/sprint18_usability_checklist.md` — 15 юзабилити-проверок
+**Training pack:** [`../../wiki-raw/tms2_training/sprint18_price_management_2026_05_28/index.html`](../../wiki-raw/tms2_training/sprint18_price_management_2026_05_28/index.html)
 
 ---
 
@@ -699,12 +732,12 @@ UI не меняется, но при создании каждого рейса
 | `dispatch-fp-header-row`: строка «Фильтры» + badge + кнопка | Frontend | `TransportDispatchPage.tsx` |
 | `.dispatch-fp-header-row`, `.dispatch-fp-badge`, `.dispatch-fp-reset-btn` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `1a19f0d` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint39_functional.py` — 24 pytest-кейса (каждый фильтр по отдельности, all-active=11, reset=0, badge/btn visibility)  
-- `tests/transport/sprint39_usability_checklist.md` — 19 юзабилити-проверок  
-- `tests/transport/transport_sprint39_load_test.py` — 5 users, 60s, NFR /available-sts c разными фильтрами p95 ≤ 400ms  
+**Статус:** ✅ Завершён
+**Коммит:** `1a19f0d` · **Дата:** 2026-05-28
+**Тесты:**
+- `tests/transport/test_sprint39_functional.py` — 24 pytest-кейса (каждый фильтр по отдельности, all-active=11, reset=0, badge/btn visibility)
+- `tests/transport/sprint39_usability_checklist.md` — 19 юзабилити-проверок
+- `tests/transport/transport_sprint39_load_test.py` — 5 users, 60s, NFR /available-sts c разными фильтрами p95 ≤ 400ms
 
 ---
 
@@ -722,12 +755,12 @@ UI не меняется, но при создании каждого рейса
 | `grid-cancelled` на отменённых рейсах в tasks-tab | Frontend | `TransportDispatchPage.tsx` |
 | `.dispatch-sortable-th` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `86a8908` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint43_functional.py` — 13 pytest-кейсов (asc/desc, null-last, stable, all fields)  
-- `tests/transport/sprint43_usability_checklist.md` — 16 юзабилити-проверок  
-- `tests/transport/transport_sprint43_load_test.py` — 7 users, 60s, NFR p95 ≤ 700ms  
+**Статус:** ✅ Завершён
+**Коммит:** `86a8908` · **Дата:** 2026-05-28
+**Тесты:**
+- `tests/transport/test_sprint43_functional.py` — 13 pytest-кейсов (asc/desc, null-last, stable, all fields)
+- `tests/transport/sprint43_usability_checklist.md` — 16 юзабилити-проверок
+- `tests/transport/transport_sprint43_load_test.py` — 7 users, 60s, NFR p95 ≤ 700ms
 
 ---
 
@@ -744,12 +777,12 @@ UI не меняется, но при создании каждого рейса
 | Toast JSX — фиксированная позиция bottom-right | Frontend | `TransportDispatchPage.tsx` |
 | `.dispatch-toast` + `@keyframes toast-in` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `abae320` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint42_functional.py` — 13 pytest-кейсов (все форматы сообщений)  
-- `tests/transport/sprint42_usability_checklist.md` — 15 юзабилити-проверок  
-- `tests/transport/transport_sprint42_load_test.py` — 5 users, 60s, NFR POST /tasks p95 ≤ 600ms  
+**Статус:** ✅ Завершён
+**Коммит:** `abae320` · **Дата:** 2026-05-28
+**Тесты:**
+- `tests/transport/test_sprint42_functional.py` — 13 pytest-кейсов (все форматы сообщений)
+- `tests/transport/sprint42_usability_checklist.md` — 15 юзабилити-проверок
+- `tests/transport/transport_sprint42_load_test.py` — 5 users, 60s, NFR POST /tasks p95 ≤ 600ms
 
 ---
 
@@ -767,12 +800,12 @@ UI не меняется, но при создании каждого рейса
 | `grid-cancelled` на отменённых рейсах | Frontend | `TransportDispatchPage.tsx` |
 | `.dispatch-cond-filter`, `.dispatch-cond-filter-btn`, `.dispatch-cond-filter-cnt` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `04302e3` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint41_functional.py` — 14 pytest-кейсов (all/active/closed/cancelled, counts, edge cases)  
-- `tests/transport/sprint41_usability_checklist.md` — 17 юзабилити-проверок  
-- `tests/transport/transport_sprint41_load_test.py` — 6 users, 60s, NFR p95 ≤ 700ms  
+**Статус:** ✅ Завершён
+**Коммит:** `04302e3` · **Дата:** 2026-05-28
+**Тесты:**
+- `tests/transport/test_sprint41_functional.py` — 14 pytest-кейсов (all/active/closed/cancelled, counts, edge cases)
+- `tests/transport/sprint41_usability_checklist.md` — 17 юзабилити-проверок
+- `tests/transport/transport_sprint41_load_test.py` — 6 users, 60s, NFR p95 ≤ 700ms
 
 ---
 
@@ -788,12 +821,12 @@ UI не меняется, но при создании каждого рейса
 | `.dispatch-day-summary` strip JSX (голубоватый фон, разделители «·») | Frontend | `TransportDispatchPage.tsx` |
 | `.dispatch-day-summary`, `.dispatch-ds-*` CSS-классы | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `0fab5d7` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint40_functional.py` — 11 pytest-кейсов (empty, single, mixed, null weight/pallets, large dataset)  
-- `tests/transport/sprint40_usability_checklist.md` — 13 юзабилити-проверок  
-- `tests/transport/transport_sprint40_load_test.py` — 5 users, 60s, NFR p95 ≤ 800ms  
+**Статус:** ✅ Завершён
+**Коммит:** `0fab5d7` · **Дата:** 2026-05-28
+**Тесты:**
+- `tests/transport/test_sprint40_functional.py` — 11 pytest-кейсов (empty, single, mixed, null weight/pallets, large dataset)
+- `tests/transport/sprint40_usability_checklist.md` — 13 юзабилити-проверок
+- `tests/transport/transport_sprint40_load_test.py` — 5 users, 60s, NFR p95 ≤ 800ms
 
 ---
 
@@ -809,12 +842,12 @@ UI не меняется, но при создании каждого рейса
 | «📋 Копировать» button в `dispatch-trip-title-row` (tasks tab + routes tab) | Frontend | `TransportDispatchPage.tsx` |
 | `.dispatch-copy-task-btn` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `ad2a56f` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint38_functional.py` — 14 pytest-кейсов (inherit fields, no STs, no price, no pay_order, tab switch, multiple copies)  
-- `tests/transport/sprint38_usability_checklist.md` — 17 юзабилити-проверок  
-- `tests/transport/transport_sprint38_load_test.py` — 5 users, 60s, NFR POST/tasks p95 ≤ 500ms  
+**Статус:** ✅ Завершён
+**Коммит:** `ad2a56f` · **Дата:** 2026-05-28
+**Тесты:**
+- `tests/transport/test_sprint38_functional.py` — 14 pytest-кейсов (inherit fields, no STs, no price, no pay_order, tab switch, multiple copies)
+- `tests/transport/sprint38_usability_checklist.md` — 17 юзабилити-проверок
+- `tests/transport/transport_sprint38_load_test.py` — 5 users, 60s, NFR POST/tasks p95 ≤ 500ms
 
 ---
 
@@ -834,12 +867,12 @@ UI не меняется, но при создании каждого рейса
 | Header `<th>` select-all checkbox (flat mode only): toggle all/none | Frontend | `TransportDispatchPage.tsx` |
 | `.dispatch-autorefresh-toggle`, `.dispatch-last-refresh` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `a287a02` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint37_functional.py` — 18 pytest-кейсов (select-all toggle, partial→all, auto-refresh guards, enable/disable)  
-- `tests/transport/sprint37_usability_checklist.md` — 20 юзабилити-проверок  
-- `tests/transport/transport_sprint37_load_test.py` — 10 users, 90s polling, NFR /available-sts p95 ≤ 400ms под concurrent auto-refresh  
+**Статус:** ✅ Завершён
+**Коммит:** `a287a02` · **Дата:** 2026-05-28
+**Тесты:**
+- `tests/transport/test_sprint37_functional.py` — 18 pytest-кейсов (select-all toggle, partial→all, auto-refresh guards, enable/disable)
+- `tests/transport/sprint37_usability_checklist.md` — 20 юзабилити-проверок
+- `tests/transport/transport_sprint37_load_test.py` — 10 users, 90s polling, NFR /available-sts p95 ≤ 400ms под concurrent auto-refresh
 
 ---
 
@@ -859,12 +892,12 @@ UI не меняется, но при создании каждого рейса
 | Guard: bar и чекбоксы скрыты для «Отгружен» и `PAY_ORDER_ID` | Frontend | `TransportDispatchPage.tsx` |
 | `.dispatch-trip-bulk-bar`, `.dispatch-bulk-unassign-btn` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `7aa8b16` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint36_functional.py` — 13 pytest-кейсов (toggle, guard conditions, bulk unassign, clear on task switch)  
-- `tests/transport/sprint36_usability_checklist.md` — 18 юзабилити-проверок  
-- `tests/transport/transport_sprint36_load_test.py` — 5 users, 60s, NFR single DELETE p95 ≤ 300ms, bulk burst p95 ≤ 800ms  
+**Статус:** ✅ Завершён
+**Коммит:** `7aa8b16` · **Дата:** 2026-05-28
+**Тесты:**
+- `tests/transport/test_sprint36_functional.py` — 13 pytest-кейсов (toggle, guard conditions, bulk unassign, clear on task switch)
+- `tests/transport/sprint36_usability_checklist.md` — 18 юзабилити-проверок
+- `tests/transport/transport_sprint36_load_test.py` — 5 users, 60s, NFR single DELETE p95 ≤ 300ms, bulk burst p95 ≤ 800ms
 
 ---
 
@@ -881,12 +914,12 @@ UI не меняется, но при создании каждого рейса
 | `create_task_from_cluster` передаёт `raion=raion` (убрана Python-фильтрация) | Backend | `transport_service.py` |
 | `raion` в `GET /available-sts` endpoint | Backend | `transport.py` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `c60c420` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint35_functional.py` — 9 pytest-кейсов (SQL условия, без района IS NULL, с spецсимволами, integ)  
-- `tests/transport/sprint35_usability_checklist.md` — 14 проверок  
-- `tests/transport/transport_sprint35_load_test.py` — 5 users, 60s, NFR filtered p95 ≤ 200ms  
+**Статус:** ✅ Завершён
+**Коммит:** `c60c420` · **Дата:** 2026-05-28
+**Тесты:**
+- `tests/transport/test_sprint35_functional.py` — 9 pytest-кейсов (SQL условия, без района IS NULL, с spецсимволами, integ)
+- `tests/transport/sprint35_usability_checklist.md` — 14 проверок
+- `tests/transport/transport_sprint35_load_test.py` — 5 users, 60s, NFR filtered p95 ≤ 200ms
 
 ---
 
@@ -902,12 +935,12 @@ UI не меняется, но при создании каждого рейса
 |--------|-----|------|
 | `cancel_task`: добавить цикл unassign перед DELETE | Backend | `transport_service.py` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `73cd887` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint34_functional.py` — 6 pytest-кейсов (пустой рейс, N СТ, порядок операций, 409, большой рейс)  
-- `tests/transport/sprint34_usability_checklist.md` — 12 проверок  
-- `tests/transport/transport_sprint34_load_test.py` — 2 users, 30s, NFR cancel p95 ≤ 500ms  
+**Статус:** ✅ Завершён
+**Коммит:** `73cd887` · **Дата:** 2026-05-28
+**Тесты:**
+- `tests/transport/test_sprint34_functional.py` — 6 pytest-кейсов (пустой рейс, N СТ, порядок операций, 409, большой рейс)
+- `tests/transport/sprint34_usability_checklist.md` — 12 проверок
+- `tests/transport/transport_sprint34_load_test.py` — 2 users, 30s, NFR cancel p95 ≤ 500ms
 
 ---
 
@@ -924,12 +957,12 @@ UI не меняется, но при создании каждого рейса
 | Условный рендер 6 колонок через `{!routeBriefMode && …}` | Frontend | `TransportDispatchPage.tsx` |
 | `.routes-brief-toggle`, `.routes-brief.dispatch-grid td/th` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `b5b12d1` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint33_functional.py` — 12 pytest-кейсов (видимость колонок в обоих режимах)  
-- `tests/transport/sprint33_usability_checklist.md` — 16 проверок  
-- `tests/transport/transport_sprint33_load_test.py` — 5 users, 60s, NFR GET /tasks p95 ≤ 300ms  
+**Статус:** ✅ Завершён
+**Коммит:** `b5b12d1` · **Дата:** 2026-05-28
+**Тесты:**
+- `tests/transport/test_sprint33_functional.py` — 12 pytest-кейсов (видимость колонок в обоих режимах)
+- `tests/transport/sprint33_usability_checklist.md` — 16 проверок
+- `tests/transport/transport_sprint33_load_test.py` — 5 users, 60s, NFR GET /tasks p95 ≤ 300ms
 
 ---
 
@@ -945,12 +978,15 @@ UI не меняется, но при создании каждого рейса
 | В обоих панелях: tasks tab + routes tab | Frontend | `TransportDispatchPage.tsx` |
 | `.dispatch-overload-warn` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `286c0c7` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint32_functional.py` — 8 pytest-кейсов (границы, формат сообщения, интеграция с LoadBar)  
-- `tests/transport/sprint32_usability_checklist.md` — 17 проверок + Phase 2 чеклист  
-- `tests/transport/transport_sprint32_load_test.py` — 5 users, 60s, NFR task/sts/vehicles p95  
+**Статус:** ✅ Завершён
+**Коммит:** `286c0c7` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — добавлен UI smoke и обучающий HTML pack для overload banner; Locust-only load script заменён на Windows-safe runner.
+**Тесты:**
+- `tests/transport/test_sprint32_functional.py` — 11 pytest-кейсов (границы, формат сообщения, интеграция с LoadBar) → `11 passed`
+- `tests/ui/transport_sprint32_ui_smoke.cjs` — UI smoke: перегруженный рейс показывает 100% load bar и красный warning
+- `tests/ui/transport_sprint32_training_capture.cjs` → `wiki-raw/tms2_training/sprint32_overload_warning_2026_05_28/index.html`
+- `tests/transport/sprint32_usability_checklist.md` — 17 проверок + Phase 2 чеклист
+- `tests/transport/transport_sprint32_load_test.py` — Windows-safe load gate; p95 task 186.3 ms, task STs 160.6 ms, vehicles 75.7 ms
 
 **Phase 2 «Полуавто» теперь полностью закрыта.**
 
@@ -968,12 +1004,15 @@ UI не меняется, но при создании каждого рейса
 | Рендер в `dispatch-workspace` перед `dispatch-center` (только `viewMode===clusters && activeTab===tasks`) | Frontend | `TransportDispatchPage.tsx` |
 | `.cluster-sidebar`, `.cluster-card`, `.cluster-card-active`, `.cluster-card-create-btn` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `86d3a71` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint31_functional.py` — 8 кейсов (агрегация, сортировка, поля кластера)  
-- `tests/transport/sprint31_usability_checklist.md` — 20 проверок  
-- `tests/transport/transport_sprint31_load_test.py` — 5 users, 60s, NFR clusters+tasks p95 ≤ 300ms  
+**Статус:** ✅ Завершён
+**Коммит:** `86d3a71` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — functional tests переведены на реальный import path; добавлен UI smoke для левой панели районов и обучающий HTML pack. Locust-only load script заменён на Windows-safe runner; load gate использует `shipment_date`, а не broad `date_to`.
+**Тесты:**
+- `tests/transport/test_sprint31_functional.py` — 6 кейсов (агрегация, сортировка, поля кластера) → `6 passed`
+- `tests/ui/transport_sprint31_ui_smoke.cjs` — UI smoke: режим «По районам», sidebar totals, active card, dialog «Рейс»
+- `tests/ui/transport_sprint31_training_capture.cjs` → `wiki-raw/tms2_training/sprint31_cluster_sidebar_2026_05_28/index.html`
+- `tests/transport/sprint31_usability_checklist.md` — 20 проверок
+- `tests/transport/transport_sprint31_load_test.py` — Windows-safe load gate; p95 clusters 200.5 ms, tasks 247.8 ms
 
 ---
 
@@ -989,12 +1028,15 @@ UI не меняется, но при создании каждого рейса
 | Рендер в панели рейса: `selectedVehicle.PALLETS && tripP > 0` | Frontend | `TransportDispatchPage.tsx` |
 | `.load-bar-row`, `.load-bar-track`, `.load-bar-fill`, `.load-bar-text` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `9436717` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint30_functional.py` — 9 кейсов (пороги, clamping, regression clusters)  
-- `tests/transport/sprint30_usability_checklist.md` — 17 проверок  
-- `tests/transport/transport_sprint30_load_test.py` — 5 users, 60s, NFR task detail p95 ≤ 300ms  
+**Статус:** ✅ Завершён
+**Коммит:** `9436717` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — functional tests переведены на реальный import path; UI smoke покрывает отображение LoadBar 9/10 пал (90%).
+**Тесты:**
+- `tests/transport/test_sprint30_functional.py` — 11 кейсов (пороги, clamping, regression clusters)
+- `tests/ui/transport_sprint30_ui_smoke.cjs` — UI smoke: выбрать рейс, увидеть live load bar
+- `tests/ui/transport_sprint30_training_capture.cjs` → `wiki-raw/tms2_training/sprint30_load_bar_2026_05_28/index.html`
+- `tests/transport/sprint30_usability_checklist.md` — 17 проверок
+- `tests/transport/transport_sprint30_load_test.py` — Windows-safe load gate; p95: task detail 215.3 ms, task STs 149.6 ms, clusters 37.1 ms
 
 ---
 
@@ -1017,12 +1059,15 @@ UI не меняется, но при создании каждого рейса
 | `onCreateTask?` prop + «⚡ Рейс» button в `ClusterGroup` header | Frontend | `TransportDispatchPage.tsx` |
 | `.cluster-create-task-btn`, `.cluster-dialog-summary`, `.cluster-dialog-date` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `2f97815` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint29_functional.py` — 8 pytest-кейсов (404 когда нет СТ, создание, update_task при vehicle, фильтрация, null RAION, schema defaults)  
-- `tests/transport/sprint29_usability_checklist.md` — 20 юзабилити-проверок  
-- `tests/transport/transport_sprint29_load_test.py` — 3 users, 60s, NFR clusters p95 ≤ 300ms, create-task p95 ≤ 1500ms  
+**Статус:** ✅ Завершён
+**Коммит:** `2f97815` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — тесты переведены на реальный import path; проверяется server-side `raion` filter, clusters добавлен в lightweight audit; UI smoke покрывает диалог создания рейса из района.
+**Тесты:**
+- `tests/transport/test_sprint29_functional.py` — 8 pytest-кейсов (404 когда нет СТ, создание, update_task при vehicle, фильтрация, null RAION, schema defaults)
+- `tests/ui/transport_sprint29_ui_smoke.cjs` — UI smoke: режим «По районам» → «Рейс» → создание и выбор нового рейса
+- `tests/ui/transport_sprint29_training_capture.cjs` → `wiki-raw/tms2_training/sprint29_cluster_create_task_2026_05_28/index.html`
+- `tests/transport/sprint29_usability_checklist.md` — 20 юзабилити-проверок
+- `tests/transport/transport_sprint29_load_test.py` — Windows-safe load gate; p95: clusters 41.3 ms, safe empty create 110.7 ms
 
 ---
 
@@ -1041,12 +1086,15 @@ UI не меняется, но при создании каждого рейса
 | `handleRoutesXlsx` + кнопка «⬇ Excel» в тулбаре вкладки «Маршруты» | Frontend | `TransportDispatchPage.tsx` |
 | `.routes-xlsx-btn` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `284c754` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint28_functional.py` — 12 pytest-кейсов (MIME, magic, route conflict, row count, filters)  
-- `tests/transport/sprint28_usability_checklist.md` — 17 юзабилити-проверок  
-- `tests/transport/transport_sprint28_load_test.py` — 5 users, 60s, NFR tasks export p95 ≤ 600ms  
+**Статус:** ✅ Завершён
+**Коммит:** `284c754` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — export списка рейсов больше не падает без `openpyxl`, использует stdlib XLSX fallback; UI download покрыт smoke.
+**Тесты:**
+- `tests/transport/test_sprint28_functional.py` — `9 passed, 4 skipped` (MIME, magic, route conflict, filters; content checks skipped без openpyxl на test runner)
+- `tests/ui/transport_sprint28_ui_smoke.cjs` — UI smoke: скачать Excel списка рейсов
+- `tests/ui/transport_sprint28_training_capture.cjs` → `wiki-raw/tms2_training/sprint28_tasks_xlsx_2026_05_28/index.html`
+- `tests/transport/sprint28_usability_checklist.md` — 17 юзабилити-проверок
+- `tests/transport/transport_sprint28_load_test.py` — Windows-safe load gate; p95: tasks 153.2 ms, dated tasks export 308.6 ms
 
 ---
 
@@ -1064,12 +1112,15 @@ UI не меняется, но при создании каждого рейса
 | `GET /billing/orders/export.xlsx` — размещён ДО `/{order_id}` чтобы избежать конфликта маршрутов | Backend | `transport.py` |
 | `handleRegistryXlsx` + кнопка «⬇ Excel» в `BillingRegistryTab` тулбаре | Frontend | `TransportDispatchPage.tsx` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `23682f3` · **Дата:** 2026-05-28  
-**Тесты:**  
-- `tests/transport/test_sprint27_functional.py` — 12 pytest-кейсов (MIME, magic bytes, route conflict, row count, filter)  
-- `tests/transport/sprint27_usability_checklist.md` — 19 юзабилити-проверок  
-- `tests/transport/transport_sprint27_load_test.py` — 5 users, 60s, NFR registry export p95 ≤ 800ms  
+**Статус:** ✅ Завершён
+**Коммит:** `23682f3` · **Дата:** 2026-05-28
+**Hardening:** 2026-05-28 — registry export больше не падает без `openpyxl`, использует stdlib XLSX fallback; UI download покрыт smoke.
+**Тесты:**
+- `tests/transport/test_sprint27_functional.py` — `8 passed, 5 skipped` (MIME, magic bytes, route conflict, filters; content checks skipped без openpyxl на test runner)
+- `tests/ui/transport_sprint27_ui_smoke.cjs` — UI smoke: скачать Excel реестра
+- `tests/ui/transport_sprint27_training_capture.cjs` → `wiki-raw/tms2_training/sprint27_billing_registry_xlsx_2026_05_28/index.html`
+- `tests/transport/sprint27_usability_checklist.md` — 19 юзабилити-проверок
+- `tests/transport/transport_sprint27_load_test.py` — Windows-safe load gate; p95: orders 137.7 ms, registry export 139.1 ms, order export 95.0 ms
 
 ---
 
@@ -1090,12 +1141,15 @@ UI не меняется, но при создании каждого рейса
 | `handleDownloadXlsx` + кнопка «⬇ Excel» в `BillingOrderDetailPanel` | Frontend | `TransportDispatchPage.tsx` |
 | CSS: `.billing-xlsx-btn`, `.billing-detail-export-row` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `5f6e110` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint26_functional.py` — 11 pytest-кейсов (MIME, ZIP magic, content-disposition, XLSX content, row count)  
-- `tests/transport/sprint26_usability_checklist.md` — 18 юзабилити-проверок  
-- `tests/transport/transport_sprint26_load_test.py` — 5 users, 60s, NFR export p95 ≤ 500ms  
+**Статус:** ✅ Завершён
+**Коммит:** `5f6e110` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — export endpoint больше не падает без `openpyxl`: проверка счёта отдаёт 404 до генерации, XLSX fallback строится на стандартном `zipfile`; UI download покрыт smoke.
+**Тесты:**
+- `tests/transport/test_sprint26_functional.py` — `7 passed, 4 skipped` (content checks skipped без openpyxl на test runner; endpoint XLSX/ZIP/MIME проверен)
+- `tests/ui/transport_sprint26_ui_smoke.cjs` — UI smoke: открыть детали счёта и скачать Excel
+- `tests/ui/transport_sprint26_training_capture.cjs` → `wiki-raw/tms2_training/sprint26_billing_order_xlsx_2026_05_28/index.html`
+- `tests/transport/sprint26_usability_checklist.md` — 18 юзабилити-проверок
+- `tests/transport/transport_sprint26_load_test.py` — Windows-safe load gate; p95: orders 138.2 ms, order tasks 57.9 ms, export 75.5 ms
 
 ---
 
@@ -1115,12 +1169,15 @@ UI не меняется, но при создании каждого рейса
 | Защита: `!order.closed && !order.payed` — кнопки скрыты | Frontend | `TransportDispatchPage.tsx` |
 | CSS: `.billing-detach-btn`, `.billing-detach-task-btn` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `7a3e833` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint25_functional.py` — 9 pytest-кейсов (detach endpoint, closed/payed rejection, tasks structure)  
-- `tests/transport/sprint25_usability_checklist.md` — 18 юзабилити-проверок  
-- `tests/transport/transport_sprint25_load_test.py` — 5 users, 60s, NFR orders/tasks p95 ≤ 300ms  
+**Статус:** ✅ Завершён
+**Коммит:** `7a3e833` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — backend теперь запрещает отвязку от оплаченного счёта; UI smoke покрывает снятие из карточки рейса и из панели деталей счёта.
+**Тесты:**
+- `tests/transport/test_sprint25_functional.py` — 10 pytest-кейсов; `7 passed, 3 skipped` на dev seed без задач в закрытом/оплаченном счёте
+- `tests/ui/transport_sprint25_ui_smoke.cjs` — UI smoke: отвязка из карточки рейса и из деталей счёта
+- `tests/ui/transport_sprint25_training_capture.cjs` → `wiki-raw/tms2_training/sprint25_detach_billing_2026_05_28/index.html`
+- `tests/transport/sprint25_usability_checklist.md` — 18 юзабилити-проверок
+- `tests/transport/transport_sprint25_load_test.py` — Windows-safe load gate; p95: orders 278.9 ms, order tasks 105.9 ms, companies 41.4 ms
 
 ---
 
@@ -1141,12 +1198,15 @@ UI не меняется, но при создании каждого рейса
 | Полилинии карты используют `displayRoutes` | Frontend | `TransportPlannerPage.tsx` |
 | CSS: `.planner-rp-stop-item`, `.planner-rp-stop-list`, `.planner-modified-hint` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `0c4ad0c` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint24_functional.py` — 9 pytest-кейсов (структура stops, pallet calc, utilization)  
-- `tests/transport/sprint24_usability_checklist.md` — 19 юзабилити-проверок  
-- `tests/transport/transport_sprint24_load_test.py` — 5 users, 60s, NFR metrics p95 ≤ 200ms  
+**Статус:** ✅ Завершён
+**Коммит:** `0c4ad0c` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — добавлен UI smoke на drag-and-drop СТ между рейсами, индикатор ручной правки, сброс и отсутствие backend apply до явной команды; planner metrics переведен в lightweight audit.
+**Тесты:**
+- `tests/transport/test_sprint24_functional.py` — 9 pytest-кейсов (структура stops, pallet calc, utilization)
+- `tests/ui/transport_sprint24_ui_smoke.cjs` — UI smoke: drag ST между рейсами, пересчёт количества адресов, reset, без apply-вызова
+- `tests/ui/transport_sprint24_training_capture.cjs` → `wiki-raw/tms2_training/sprint24_vrp_drag_drop_2026_05_28/index.html`
+- `tests/transport/sprint24_usability_checklist.md` — 19 юзабилити-проверок
+- `tests/transport/transport_sprint24_load_test.py` — Windows-safe load gate; p95: metrics 37.0 ms, history 36.9 ms, routing status 31.9 ms
 
 ---
 
@@ -1168,12 +1228,15 @@ UI не меняется, но при создании каждого рейса
 | Правая панель для billing-вкладки (при наличии selectedBillingOrder) | Frontend | `TransportDispatchPage.tsx` |
 | CSS: `.billing-row-selected`, `.billing-row-clickable`, `.billing-detail-*` | Frontend | `styles.css` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `f4413b4` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint23_functional.py` — 9 pytest-кейсов (tasks endpoint, поля, согласованность с заголовком)  
-- `tests/transport/sprint23_usability_checklist.md` — 17 юзабилити-проверок  
-- `tests/transport/transport_sprint23_load_test.py` — 8 users, 60s, NFR tasks p95 ≤ 300ms  
+**Статус:** ✅ Завершён
+**Коммит:** `f4413b4` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — `GET /billing/orders/{id}/tasks` теперь возвращает 404 для неизвестного счёта; UI проверяет открытие панели, итог и CSV.
+**Тесты:**
+- `tests/transport/test_sprint23_functional.py` — 9 pytest-кейсов (tasks endpoint, поля, согласованность с заголовком)
+- `tests/ui/transport_sprint23_ui_smoke.cjs` — UI smoke: открыть счёт, увидеть рейсы/итог, скачать CSV
+- `tests/ui/transport_sprint23_training_capture.cjs` → `wiki-raw/tms2_training/sprint23_billing_order_detail_2026_05_28/index.html`
+- `tests/transport/sprint23_usability_checklist.md` — 17 юзабилити-проверок
+- `tests/transport/transport_sprint23_load_test.py` — Windows-safe load gate; p95: orders 227.5 ms, order tasks 123.6 ms, companies 38.8 ms
 
 ---
 
@@ -1194,12 +1257,15 @@ UI не меняется, но при создании каждого рейса
 | `<datalist>` компаний в диалоге «Выставить счёт» | Frontend | `TransportDispatchPage.tsx` |
 | Строка «№ платёж.» в BillingOrderCard | Frontend | `TransportDispatchPage.tsx` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `ef09a1c` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint22_functional.py` — 9 pytest-кейсов (companies endpoint, num_plat поле, регрессия схемы)  
-- `tests/transport/sprint22_usability_checklist.md` — 13 юзабилити-проверок  
-- `tests/transport/transport_sprint22_load_test.py` — 8 users, 60s, NFR companies p95 ≤ 200ms, orders p95 ≤ 300ms  
+**Статус:** ✅ Завершён
+**Коммит:** `ef09a1c` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — справочник компаний переведен в lightweight audit + reference-cache; UI проверяет `NUM_PLAT` в реестре/деталях и datalist компаний.
+**Тесты:**
+- `tests/transport/test_sprint22_functional.py` — 10 pytest-кейсов (companies endpoint, num_plat поле, регрессия схемы)
+- `tests/ui/transport_sprint22_ui_smoke.cjs` — UI smoke: `NUM_PLAT` в реестре/деталях, datalist компаний в диалоге счёта
+- `tests/ui/transport_sprint22_training_capture.cjs` → `wiki-raw/tms2_training/sprint22_company_directory_num_plat_2026_05_28/index.html`
+- `tests/transport/sprint22_usability_checklist.md` — 13 юзабилити-проверок
+- `tests/transport/transport_sprint22_load_test.py` — Windows-safe load gate; p95: companies 189.5 ms, orders 164.9 ms, filtered orders 86.5 ms
 
 ---
 
@@ -1218,12 +1284,15 @@ UI не меняется, но при создании каждого рейса
 | `BILLING_CREATE_PRICE_PERMISSION = "create_tt_price"` | Backend | `auth.py` |
 | Замена `TRANSPORT_DISPATCH_EDIT_PERMISSION` на биллинговые права в 8 эндпоинтах | Backend | `transport.py` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `f7e27ad` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint21_functional.py` — 6 pytest-кейсов (константы, доступность эндпоинтов)  
-- `tests/transport/sprint21_usability_checklist.md` — 13 юзабилити-проверок  
-- `tests/transport/transport_sprint21_load_test.py` — 8 users, 60s, NFR p95 ≤ 300/500ms  
+**Статус:** ✅ Завершён
+**Коммит:** `f7e27ad` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — проверен полный контур RBAC: backend permissions, UI error visibility, load gate, training pack.
+**Тесты:**
+- `tests/transport/test_sprint21_functional.py` — 9 pytest-кейсов (константы, доступность эндпоинтов)
+- `tests/ui/transport_sprint21_ui_smoke.cjs` — UI smoke: 403 от price/recalculate показывается пользователю и не считается успехом
+- `tests/ui/transport_sprint21_training_capture.cjs` → `wiki-raw/tms2_training/sprint21_billing_rbac_2026_05_28/index.html`
+- `tests/transport/sprint21_usability_checklist.md` — 13 юзабилити-проверок
+- `tests/transport/transport_sprint21_load_test.py` — Windows-safe load gate; p95: list 76.9 ms, filtered list 60.7 ms, create 159.8 ms, recalc 185.6 ms, manual price 167.9 ms
 
 ---
 
@@ -1241,12 +1310,15 @@ UI не меняется, но при создании каждого рейса
 | `assign_sts` — проверить PAY_ORDER_ID, 409 если выставлен | Backend | `transport_service.py` |
 | `unassign_st` — проверить PAY_ORDER_ID, 409 если выставлен | Backend | `transport_service.py` |
 
-**Статус:** ✅ Завершён  
-**Коммит:** `47abd76` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint20_functional.py` — 7 pytest-кейсов (cancel/assign/unassign → 409; note/price → 200)  
-- `tests/transport/sprint20_usability_checklist.md` — 12 юзабилити-проверок  
-- `tests/transport/transport_sprint20_load_test.py` — 5 users, 60s, NFR early-409 p95 ≤ 200ms  
+**Статус:** ✅ Завершён
+**Коммит:** `47abd76` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — доведено до рабочего состояния по API/UI/load/training.
+**Тесты:**
+- `tests/transport/test_sprint20_functional.py` — `7 passed` (cancel/assign/unassign → 409; note/price → 200)
+- `tests/ui/transport_sprint20_ui_smoke.cjs` — passed: billed badge, disabled cancel, billing card
+- `tests/transport/transport_sprint20_load_test.py` — passed: billed cancel p95 192.3 ms, billed assign p95 156.3 ms, allowed price p95 174.3 ms
+- `tests/transport/sprint20_usability_checklist.md` — 12 юзабилити-проверок
+**Training pack:** [`../../wiki-raw/tms2_training/sprint20_billed_task_protection_2026_05_28/index.html`](../../wiki-raw/tms2_training/sprint20_billed_task_protection_2026_05_28/index.html)
 
 ---
 
@@ -1268,12 +1340,15 @@ UI не меняется, но при создании каждого рейса
 **Что видит диспетчер после спринта:**
 В диалоге «Выставить счёт» появляется список открытых счетов этой ТК. Можно выбрать «БТ-0003 (01.05 – 31.05)» вместо создания нового.
 
-**Статус:** ✅ Завершён  
-**Коммит:** `6056aa9` · **Дата:** 2026-05-27  
-**Тесты:**  
-- `tests/transport/test_sprint19_functional.py` — 9 pytest-кейсов (filter open orders, add to existing, 404)  
-- `tests/transport/sprint19_usability_checklist.md` — 16 юзабилити-проверок  
-- `tests/transport/transport_sprint19_load_test.py` — 5 users, 60s, NFR filter≤300ms, add≤500ms  
+**Статус:** ✅ Завершён
+**Коммит:** `6056aa9` · **Дата:** 2026-05-27
+**Hardening:** 2026-05-28 — доведено до рабочего состояния по API/UI/load/training.
+**Тесты:**
+- `tests/transport/test_sprint19_functional.py` — `9 passed` (filter open orders, add to existing, 404)
+- `tests/ui/transport_sprint19_ui_smoke.cjs` — passed: выбор открытого счета ТК в диалоге и добавление рейса
+- `tests/transport/transport_sprint19_load_test.py` — passed: open-order filter p95 121.1 ms, order tasks p95 48.2 ms, add task p95 89.0 ms
+- `tests/transport/sprint19_usability_checklist.md` — 16 юзабилити-проверок
+**Training pack:** [`../../wiki-raw/tms2_training/sprint19_link_existing_billing_2026_05_28/index.html`](../../wiki-raw/tms2_training/sprint19_link_existing_billing_2026_05_28/index.html)
 
 ---
 
