@@ -301,6 +301,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [tripDetailCollapsed, setTripDetailCollapsed] = useState(false);
   // Sprint 89 — show only unready STs in trip detail
   const [tripStUnreadyOnly, setTripStUnreadyOnly] = useState(false);
+  // Sprint 91 — sort trip detail STs by time window
+  const [tripStSortByTime, setTripStSortByTime] = useState(false);
   const [noteText, setNoteText] = useState("");
   const [billingDialog, setBillingDialog] = useState(false);
   const [openingBilling, setOpeningBilling] = useState(false);
@@ -563,6 +565,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     setTripStFilter(""); // Sprint 72: reset filter on task switch
     setTripDetailCollapsed(false); // Sprint 74: expand detail on task switch
     setTripStUnreadyOnly(false); // Sprint 89: reset unready-only toggle on task switch
+    setTripStSortByTime(false); // Sprint 91: reset time-sort on task switch
     try {
       const data = await apiFetch<TaskSt[]>(`/api/admin/transport/tasks/${task.ID}/sts`);
       setTaskSts(data);
@@ -1196,6 +1199,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 
   // Sprint 72 — filter within trip detail STs
   // Sprint 89 — also filter by unready-only toggle
+  // Sprint 91 — also sort by TIME_FROM when toggled
   const filteredTaskSts = (() => {
     let sts = taskSts;
     if (tripStFilter) {
@@ -1208,6 +1212,13 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     }
     if (tripStUnreadyOnly) {
       sts = sts.filter(s => s.VERIFY_PERC !== null && s.VERIFY_PERC < 100);
+    }
+    if (tripStSortByTime) {
+      sts = [...sts].sort((a, b) => {
+        const fa = fmtTime(a.TIME_FROM) || "99:99";
+        const fb = fmtTime(b.TIME_FROM) || "99:99";
+        return fa.localeCompare(fb);
+      });
     }
     return sts;
   })();
@@ -1908,6 +1919,15 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                       onClick={() => setTripStUnreadyOnly(v => !v)}
                       title="Показать только несобранные СТ">
                       ⚠ Несобр.
+                    </button>
+                  )}
+                  {/* Sprint 91 — sort by time window */}
+                  {taskSts.some(s => s.TIME_FROM) && (
+                    <button
+                      className={`dispatch-trip-timesort-btn${tripStSortByTime ? " active" : ""}`}
+                      onClick={() => setTripStSortByTime(v => !v)}
+                      title="Сортировать по временному окну доставки">
+                      ⏱ Окна
                     </button>
                   )}
                   <span className="dispatch-trip-sts-count">
