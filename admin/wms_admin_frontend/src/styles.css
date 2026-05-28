@@ -1293,6 +1293,12 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-ds-value { font-weight: 700; color: var(--text); }
 .dispatch-ds-sep { color: var(--muted); opacity: 0.5; }
 
+/* Sprint 59 — Quick search in routes tab */
+.dispatch-route-search { padding: 3px 8px; border: 1px solid #b0c4d8; border-radius: 4px; font-size: 12px; width: 200px; }
+.dispatch-route-search:focus { outline: none; border-color: var(--blue); }
+.dispatch-route-search-clear { padding: 1px 6px; border: 1px solid #d1d5db; border-radius: 4px; background: #fff; color: var(--muted); font-size: 13px; font-weight: 700; }
+.dispatch-route-search-clear:hover { background: #fee2e2; color: var(--red); border-color: var(--red); }
+
 /* Sprint 58 — Expand/collapse all clusters */
 .dispatch-cluster-expand-btns { display: flex; gap: 3px; }
 .dispatch-cluster-exp-btn { padding: 2px 7px; border: 1px solid #b0c4d8; border-radius: 4px; background: #f5f8fc; color: var(--muted); font-size: 11px; font-weight: 600; }

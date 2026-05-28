@@ -1150,6 +1150,21 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     : routeCondFilter === "closed"    ? tasks.filter(t => t.CONDITION === "Отгружен")
     : tasks.filter(t => t.CONDITION === "Отменён");
 
+  // Sprint 59 — quick search in routes tab
+  const [routeSearchQuery, setRouteSearchQuery] = useState("");
+  const searchedRouteTasks = routeSearchQuery.trim()
+    ? filteredRouteTasks.filter(t => {
+        const q = routeSearchQuery.trim().toLowerCase();
+        return (
+          String(t.ID).includes(q) ||
+          (t.TRANSPORT ?? "").toLowerCase().includes(q) ||
+          (t.VODITEL_NAME ?? "").toLowerCase().includes(q) ||
+          (t.REGIONS ?? "").toLowerCase().includes(q) ||
+          (t.TK_NAME ?? "").toLowerCase().includes(q)
+        );
+      })
+    : filteredRouteTasks;
+
   // ------------------------------------------------------------------
   // Render
   // ------------------------------------------------------------------
@@ -1719,7 +1734,17 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               <button className="dispatch-today-btn" onClick={() => setRouteShipDate(todayIso())} title="Перейти к сегодня">Сегодня</button>
             )}
             <button className="dispatch-refresh-btn" onClick={loadTasks} title="Обновить рейсы">⟳</button>
-            <span className="dispatch-tcount">{filteredRouteTasks.length}/{tasks.length} рейс(ов)</span>
+            <span className="dispatch-tcount">{searchedRouteTasks.length}/{tasks.length} рейс(ов)</span>
+            <input
+              className="dispatch-route-search"
+              type="text"
+              value={routeSearchQuery}
+              onChange={e => setRouteSearchQuery(e.target.value)}
+              placeholder="Поиск: ID, авто, водитель, регион…"
+            />
+            {routeSearchQuery && (
+              <button className="dispatch-route-search-clear" onClick={() => setRouteSearchQuery("")} title="Сбросить поиск">×</button>
+            )}
             {/* Sprint 41 — status filter buttons */}
             <div className="dispatch-cond-filter">
               {(["all", "active", "closed", "cancelled"] as const).map(f => {
@@ -1766,9 +1791,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                 </tr>
               </thead>
               <tbody>
-                {filteredRouteTasks.length === 0
+                {searchedRouteTasks.length === 0
                   ? <tr><td colSpan={routeBriefMode ? 8 : 15} className="dispatch-grid-empty">Нет рейсов по фильтрам</td></tr>
-                  : filteredRouteTasks.map(task => (
+                  : searchedRouteTasks.map(task => (
                       <tr key={task.ID}
                         className={["dispatch-gr",
                           selectedTask?.ID === task.ID ? "selected" : "",
