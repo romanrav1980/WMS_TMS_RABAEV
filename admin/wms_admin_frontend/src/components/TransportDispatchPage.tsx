@@ -294,6 +294,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [routesXlsxLoading, setRoutesXlsxLoading] = useState(false);
   const [routeBriefMode, setRouteBriefMode] = useState(false);
   const [selectedTripStNums, setSelectedTripStNums] = useState<Set<string>>(new Set());
+  // Sprint 72 — inline filter within trip detail STs
+  const [tripStFilter, setTripStFilter] = useState("");
   const [noteText, setNoteText] = useState("");
   const [billingDialog, setBillingDialog] = useState(false);
   const [openingBilling, setOpeningBilling] = useState(false);
@@ -542,6 +544,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     setStPallets([]);
     setBillingOrder(null);
     setSelectedTripStNums(new Set());
+    setTripStFilter(""); // Sprint 72: reset filter on task switch
     try {
       const data = await apiFetch<TaskSt[]>(`/api/admin/transport/tasks/${task.ID}/sts`);
       setTaskSts(data);
@@ -1149,6 +1152,16 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const tripP = taskSts.reduce((s, x) => s + (x.PALLETS_COUNT || 0), 0);
   const tripM = taskSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
 
+  // Sprint 72 — filter within trip detail STs
+  const filteredTaskSts = tripStFilter
+    ? taskSts.filter(s => {
+        const q = tripStFilter.toLowerCase();
+        return s.ST_NUMBER.toLowerCase().includes(q)
+          || (s.ADDR ?? "").toLowerCase().includes(q)
+          || (s.REGION ?? "").toLowerCase().includes(q);
+      })
+    : taskSts;
+
   const selectedVehicle = vehicles.find(v => v.NUM === selectedTask?.TRANSPORT);
 
   // Sprint 40 — day summary (computed from already-loaded tasks list)
@@ -1753,20 +1766,35 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               )}
 
               {/* Sprint 70 — select-all / deselect-all for trip STs */}
-              {taskSts.length > 0 && selectedTask.CONDITION !== "Отгружен" && !selectedTask.PAY_ORDER_ID && (
+              {/* Sprint 72 — filter within trip STs */}
+              {taskSts.length > 0 && (
                 <div className="dispatch-trip-sts-toolbar">
-                  <button className="dispatch-trip-selall-btn"
-                    onClick={() => setSelectedTripStNums(new Set(taskSts.map(s => s.ST_NUMBER)))}
-                    title="Выделить все СТ рейса">
-                    Все
-                  </button>
-                  <button className="dispatch-trip-selall-btn"
-                    onClick={() => setSelectedTripStNums(new Set())}
-                    disabled={selectedTripStNums.size === 0}
-                    title="Снять выделение">
-                    Нет
-                  </button>
-                  <span className="dispatch-trip-sts-count">{taskSts.length} СТ в рейсе</span>
+                  {selectedTask.CONDITION !== "Отгружен" && !selectedTask.PAY_ORDER_ID && <>
+                    <button className="dispatch-trip-selall-btn"
+                      onClick={() => setSelectedTripStNums(new Set(filteredTaskSts.map(s => s.ST_NUMBER)))}
+                      title="Выделить все СТ рейса">
+                      Все
+                    </button>
+                    <button className="dispatch-trip-selall-btn"
+                      onClick={() => setSelectedTripStNums(new Set())}
+                      disabled={selectedTripStNums.size === 0}
+                      title="Снять выделение">
+                      Нет
+                    </button>
+                  </>}
+                  <input
+                    className="dispatch-trip-filter-input"
+                    type="text"
+                    value={tripStFilter}
+                    onChange={e => setTripStFilter(e.target.value)}
+                    placeholder="Фильтр по СТ/адресу…"
+                  />
+                  {tripStFilter && (
+                    <button className="dispatch-trip-filter-clear" onClick={() => setTripStFilter("")} title="Сбросить">×</button>
+                  )}
+                  <span className="dispatch-trip-sts-count">
+                    {tripStFilter ? `${filteredTaskSts.length} / ${taskSts.length}` : taskSts.length} СТ
+                  </span>
                 </div>
               )}
 
@@ -1791,7 +1819,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   <tbody>
                     {taskSts.length === 0
                       ? <tr><td colSpan={12} className="dispatch-grid-empty">Рейс пуст. Выберите СТ выше и нажмите «Добавить в рейс».</td></tr>
-                      : taskSts.map(st => (
+                      : filteredTaskSts.length === 0
+                        ? <tr><td colSpan={12} className="dispatch-grid-empty">Нет СТ, совпадающих с фильтром.</td></tr>
+                      : filteredTaskSts.map(st => (
                           <TaskStTableRow
                             key={st.ST_NUMBER}
                             st={st}
