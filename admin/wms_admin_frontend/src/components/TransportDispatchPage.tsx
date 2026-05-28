@@ -218,6 +218,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   // Sprint 60 — pagination for STs table
   const [stPage, setStPage] = useState(0);
 
+  // Sprint 61 — warehouse quick-filter
+  const [wareIdFilter, setWareIdFilter] = useState("");
+
   // Sprint 53 — collapsible filter panel
   const [fpCollapsed, setFpCollapsed] = useState(() => lsGet("tms_fpCollapsed", "0") === "1");
 
@@ -1014,17 +1017,23 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     }
   }
 
+  // Sprint 61 — warehouse quick-filter (client-side)
+  const wareOptions = [...new Set(availableSts.map(s => s.WARE_ID))].sort((a, b) => a - b);
+  const wareFilteredSts = wareIdFilter
+    ? availableSts.filter(s => String(s.WARE_ID) === wareIdFilter)
+    : availableSts;
+
   const sortedSts = stSortField
-    ? [...availableSts].sort((a, b) => {
+    ? [...wareFilteredSts].sort((a, b) => {
         const va = (a as Record<string, unknown>)[stSortField] ?? "";
         const vb = (b as Record<string, unknown>)[stSortField] ?? "";
         const cmp = va < vb ? -1 : va > vb ? 1 : 0;
         return stSortDir === "asc" ? cmp : -cmp;
       })
-    : availableSts;
+    : wareFilteredSts;
 
-  // Sprint 60 — paginated slice; reset to page 0 when data or sort changes
-  useEffect(() => { setStPage(0); }, [availableSts, stSortField, stSortDir]);
+  // Sprint 60 — paginated slice; reset to page 0 when data, sort, or ware-filter changes
+  useEffect(() => { setStPage(0); }, [availableSts, stSortField, stSortDir, wareIdFilter]);
   const stTotalPages = Math.max(1, Math.ceil(sortedSts.length / ST_PAGE_SIZE));
   const pagedSts = sortedSts.slice(stPage * ST_PAGE_SIZE, (stPage + 1) * ST_PAGE_SIZE);
 
@@ -1110,10 +1119,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const selM = selSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
   const selV = selSts.reduce((s, x) => s + (x.VOLUME_M3 || 0), 0);
 
-  // Sprint 55 — totals for ALL visible STs (current filter)
-  const allP = availableSts.reduce((s, x) => s + (x.PALLETS_COUNT || 0), 0);
-  const allM = availableSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
-  const allV = availableSts.reduce((s, x) => s + (x.VOLUME_M3 || 0), 0);
+  // Sprint 55 — totals for ALL visible STs (Sprint 61: warehouse-filtered)
+  const allP = wareFilteredSts.reduce((s, x) => s + (x.PALLETS_COUNT || 0), 0);
+  const allM = wareFilteredSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
+  const allV = wareFilteredSts.reduce((s, x) => s + (x.VOLUME_M3 || 0), 0);
   const tripP = taskSts.reduce((s, x) => s + (x.PALLETS_COUNT || 0), 0);
   const tripM = taskSts.reduce((s, x) => s + (x.WEIGHT_KG || 0), 0);
 
@@ -1278,7 +1287,23 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               Авто
             </label>
             {autoRefresh && lastRefreshAt && <span className="dispatch-last-refresh">{lastRefreshAt}</span>}
-            <span className="dispatch-tcount">{availableSts.length} СТ</span>
+            {/* Sprint 61 — warehouse quick-filter */}
+            {wareOptions.length > 1 && (
+              <select className="dispatch-ware-select"
+                value={wareIdFilter}
+                onChange={e => { setWareIdFilter(e.target.value); setSelectedStNums(new Set()); }}
+                title="Фильтр по складу">
+                <option value="">Все склады</option>
+                {wareOptions.map(w => (
+                  <option key={w} value={String(w)}>Скл. {w}</option>
+                ))}
+              </select>
+            )}
+            <span className="dispatch-tcount">
+              {wareIdFilter
+                ? `${wareFilteredSts.length} / ${availableSts.length} СТ`
+                : `${availableSts.length} СТ`}
+            </span>
             {/* Sprint 49 — dense mode toggle */}
             <label className="dispatch-dense-toggle" title="Компактный режим: уменьшить отступы в таблице СТ">
               <input type="checkbox" checked={stDenseMode} onChange={e => setStDenseMode(e.target.checked)} />

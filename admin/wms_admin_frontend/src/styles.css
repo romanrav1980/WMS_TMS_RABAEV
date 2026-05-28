@@ -1293,6 +1293,10 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-ds-value { font-weight: 700; color: var(--text); }
 .dispatch-ds-sep { color: var(--muted); opacity: 0.5; }
 
+/* Sprint 61 — Warehouse quick-filter select */
+.dispatch-ware-select { padding: 2px 6px; border: 1px solid #b0c4d8; border-radius: 4px; font-size: 12px; background: #fff; color: var(--text); max-width: 130px; }
+.dispatch-ware-select:focus { outline: none; border-color: var(--blue); }
+
 /* Sprint 60 — Pagination bar for STs table */
 .dispatch-st-pagination { display: flex; align-items: center; gap: 5px; padding: 4px 6px; background: #f5f8fc; border-top: 1px solid var(--line); }
 .dispatch-page-btn { padding: 2px 8px; border: 1px solid #b0c4d8; border-radius: 4px; background: #fff; color: var(--text); font-size: 12px; font-weight: 700; }
