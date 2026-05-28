@@ -640,6 +640,8 @@ button[aria-disabled="true"] { cursor: help; }
 .dispatch-new-btn { background: #2563eb; color: #fff; border: none; border-radius: 5px; padding: 4px 10px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .dispatch-new-btn:hover { background: #1d4ed8; }
 .dispatch-trips-table-wrap { flex: 1; overflow-y: auto; overflow-x: auto; min-height: 0; }
+/* Sprint 71 — sticky header in trips table */
+.dispatch-trips-table-wrap .dispatch-grid thead th { position: sticky; top: 0; z-index: 2; background: #eef3f8; }
 
 /* ---- Trip detail section ---- */
 .dispatch-trip-detail-section { flex: 0 0 26vh; min-height: 100px; display: flex; flex-direction: column; overflow: hidden; border-top: 2px solid #94a3b8; }
