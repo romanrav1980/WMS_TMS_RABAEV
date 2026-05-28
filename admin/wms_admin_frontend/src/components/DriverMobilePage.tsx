@@ -6,6 +6,13 @@
 
 import { useEffect, useState, useCallback } from "react";
 
+// Sprint 105 — register service worker for offline support
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/driver-sw.js").catch(() => {});
+  });
+}
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
