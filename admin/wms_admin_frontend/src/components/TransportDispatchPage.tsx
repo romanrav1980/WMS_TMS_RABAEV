@@ -2046,9 +2046,11 @@ function AvailableStRow({
   onSelectByField?: (field: "RAION" | "REGION", value: string | null) => void;
   onGotoTrip?: (taskId: number) => void;
 }) {
+  // Sprint 50 — green left-border for fully-assembled STs
   const rowClass = [
     "dispatch-gr",
     checked ? "selected" : wareColorClass(st.WARE_ID),
+    !checked && st.VERIFY_PERC === 1.0 ? "dispatch-st-ready" : "",
     isChild ? "dispatch-grid-cluster-child" : "",
   ].filter(Boolean).join(" ");
 
