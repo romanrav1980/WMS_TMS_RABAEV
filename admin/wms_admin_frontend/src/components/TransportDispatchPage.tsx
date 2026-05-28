@@ -57,6 +57,7 @@ type TaskSt = {
   LOAD_TYPE: string | null;
   WARE_ID: number | null;
   VERIFY_PERC: number | null;
+  VOLUME_M3: number | null;
 };
 
 type AvailableSt = {
@@ -1227,6 +1228,32 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       })
     : filteredRouteTasks;
 
+  // Sprint 81 — ↑/↓ keyboard navigation between trips
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
+      const list = activeTab === "tasks" ? sortedTasks : searchedRouteTasks;
+      if (list.length === 0) return;
+      e.preventDefault();
+      const idx = selectedTask ? list.findIndex(t => t.ID === selectedTask.ID) : -1;
+      const next = e.key === "ArrowDown"
+        ? (list[idx + 1] ?? list[0])
+        : (list[idx - 1] ?? list[list.length - 1]);
+      if (next) selectTask(next);
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [activeTab, sortedTasks, searchedRouteTasks, selectedTask]);
+
+  // Sprint 81 — scroll selected trip row into view on keyboard navigation
+  useEffect(() => {
+    if (!selectedTask) return;
+    document.querySelector(`[data-taskid="${selectedTask.ID}"]`)
+      ?.scrollIntoView({ block: "nearest" });
+  }, [selectedTask]);
+
   // ------------------------------------------------------------------
   // Render
   // ------------------------------------------------------------------
@@ -1549,6 +1576,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     ? <tr><td colSpan={15} className="dispatch-grid-empty">Нет рейсов на {filterDate}. Нажмите «+ Создать рейс».</td></tr>
                     : sortedTasks.map(task => (
                         <tr key={task.ID}
+                          data-taskid={task.ID}
                           className={["dispatch-gr",
                             selectedTask?.ID === task.ID ? "selected" : "",
                             task.CONDITION === "Отгружен" ? "grid-closed" : "",
@@ -1967,6 +1995,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   ? <tr><td colSpan={routeBriefMode ? 8 : 15} className="dispatch-grid-empty">Нет рейсов по фильтрам</td></tr>
                   : searchedRouteTasks.map(task => (
                       <tr key={task.ID}
+                        data-taskid={task.ID}
                         className={["dispatch-gr",
                           selectedTask?.ID === task.ID ? "selected" : "",
                           task.CONDITION === "Отгружен" ? "grid-closed" : "",
