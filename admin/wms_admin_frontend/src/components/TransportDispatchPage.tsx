@@ -231,7 +231,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   }
 
   const [filterDate, setFilterDate] = useState(() => lsGet("tms_filterDate", todayIso()));
-  const [stDate, setStDate] = useState(() => lsGet("tms_filterDate", todayIso()));
+  const [stDate, setStDate] = useState(() => lsGet("tms_stDate", todayIso()));
   const [selectedStNums, setSelectedStNums] = useState<Set<string>>(new Set());
 
   const [viewMode, setViewMode] = useState<"flat" | "clusters">(
@@ -247,7 +247,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [assembledOnly, setAssembledOnly] = useState(() => lsGet("tms_assembledOnly", "0") === "1");
   const [notAssembledOnly, setNotAssembledOnly] = useState(() => lsGet("tms_notAssembledOnly", "0") === "1");
   const [unassignedOnly, setUnassignedOnly] = useState(() => lsGet("tms_unassignedOnly", "1") === "1");
-  const [dateTo, setDateTo] = useState<string>("");
+  const [dateTo, setDateTo] = useState<string>(() => lsGet("tms_dateTo", ""));
   const [maxWeightKg, setMaxWeightKg] = useState<number | null>(null);
   const [maxVolM3, setMaxVolM3] = useState<number | null>(null);
   const [trTypeFilter, setTrTypeFilter] = useState("");
@@ -485,6 +485,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   useEffect(() => { try { localStorage.setItem("tms_unassignedOnly",    unassignedOnly    ? "1" : "0"); } catch { /* */ } }, [unassignedOnly]);
   useEffect(() => { try { localStorage.setItem("tms_assembledOnly",     assembledOnly     ? "1" : "0"); } catch { /* */ } }, [assembledOnly]);
   useEffect(() => { try { localStorage.setItem("tms_notAssembledOnly",  notAssembledOnly  ? "1" : "0"); } catch { /* */ } }, [notAssembledOnly]);
+  // Sprint 82 — persist ST date and date-to filter
+  useEffect(() => { try { localStorage.setItem("tms_stDate",  stDate);  } catch { /* */ } }, [stDate]);
+  useEffect(() => { try { localStorage.setItem("tms_dateTo",  dateTo);  } catch { /* */ } }, [dateTo]);
 
   // Sprint 44 — global Escape handler
   // Sprint 68 — Ctrl+Enter: assign selected STs to current trip
@@ -2449,7 +2452,7 @@ function AvailableStRow({
   const rowClass = [
     "dispatch-gr",
     checked ? "selected" : wareColorClass(st.WARE_ID),
-    !checked && st.VERIFY_PERC === 1.0 ? "dispatch-st-ready" : "",
+    !checked && (st.VERIFY_PERC ?? 0) >= 100 ? "dispatch-st-ready" : "",
     isChild ? "dispatch-grid-cluster-child" : "",
   ].filter(Boolean).join(" ");
 
