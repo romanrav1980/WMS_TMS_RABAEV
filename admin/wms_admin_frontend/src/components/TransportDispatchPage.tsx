@@ -479,22 +479,32 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 
   // Sprint 44 — global Escape handler
   // Sprint 68 — Ctrl+Enter: assign selected STs to current trip
+  // Sprint 69 — Delete: bulk-unassign selected trip STs
   // ------------------------------------------------------------------
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
+      const tag = (e.target as HTMLElement).tagName;
+      const inInput = tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA";
       // Ctrl+Enter → add selected STs to trip
       if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-        const tag = (e.target as HTMLElement).tagName;
-        if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
+        if (inInput) return;
         if (selectedStNums.size > 0 && selectedTask && activeTab === "tasks") {
           e.preventDefault();
           handleAssign();
         }
         return;
       }
+      // Delete → unassign selected trip STs
+      if (e.key === "Delete") {
+        if (inInput) return;
+        if (selectedTripStNums.size > 0 && selectedTask && activeTab === "tasks") {
+          e.preventDefault();
+          handleBulkUnassign();
+        }
+        return;
+      }
       if (e.key !== "Escape") return;
-      const tag = (e.target as HTMLElement).tagName;
-      if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
+      if (inInput) return;
       if (createDialog) { setCreateDialog(false); return; }
       if (clusterCreateRaion) { setClusterCreateRaion(null); return; }
       if (editMode) { setEditMode(false); return; }
@@ -1712,7 +1722,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               {selectedTripStNums.size > 0 && selectedTask.CONDITION !== "Отгружен" && !selectedTask.PAY_ORDER_ID && (
                 <div className="dispatch-trip-bulk-bar">
                   <span>{selectedTripStNums.size} СТ выбрано</span>
-                  <button className="dispatch-bulk-unassign-btn" onClick={handleBulkUnassign} disabled={loading}>
+                  <button className="dispatch-bulk-unassign-btn" onClick={handleBulkUnassign} disabled={loading}
+                    title="Delete">
                     Снять выбранные
                   </button>
                   <button className="dispatch-cancel-edit-btn" onClick={() => setSelectedTripStNums(new Set())}>
