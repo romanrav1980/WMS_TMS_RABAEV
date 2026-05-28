@@ -239,13 +239,13 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [clusters, setClusters] = useState<TransportCluster[]>([]);
   const [expandedRaions, setExpandedRaions] = useState<Set<string>>(new Set());
 
-  // Filters
+  // Filters (Sprint 78: checkbox filters persisted in localStorage)
   const [addrMask, setAddrMask] = useState("");
   const [stMask, setStMask] = useState("");
   const [stMaskExclude, setStMaskExclude] = useState(false);
-  const [assembledOnly, setAssembledOnly] = useState(false);
-  const [notAssembledOnly, setNotAssembledOnly] = useState(false);
-  const [unassignedOnly, setUnassignedOnly] = useState(true);
+  const [assembledOnly, setAssembledOnly] = useState(() => lsGet("tms_assembledOnly", "0") === "1");
+  const [notAssembledOnly, setNotAssembledOnly] = useState(() => lsGet("tms_notAssembledOnly", "0") === "1");
+  const [unassignedOnly, setUnassignedOnly] = useState(() => lsGet("tms_unassignedOnly", "1") === "1");
   const [dateTo, setDateTo] = useState<string>("");
   const [maxWeightKg, setMaxWeightKg] = useState<number | null>(null);
   const [maxVolM3, setMaxVolM3] = useState<number | null>(null);
@@ -480,6 +480,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   useEffect(() => { try { localStorage.setItem("tms_viewMode",     viewMode);     } catch { /* */ } }, [viewMode]);
   useEffect(() => { try { localStorage.setItem("tms_activeTab",    activeTab);    } catch { /* */ } }, [activeTab]);
   useEffect(() => { try { localStorage.setItem("tms_fpCollapsed",  fpCollapsed ? "1" : "0"); } catch { /* */ } }, [fpCollapsed]);
+  // Sprint 78 — persist filter checkbox state
+  useEffect(() => { try { localStorage.setItem("tms_unassignedOnly",    unassignedOnly    ? "1" : "0"); } catch { /* */ } }, [unassignedOnly]);
+  useEffect(() => { try { localStorage.setItem("tms_assembledOnly",     assembledOnly     ? "1" : "0"); } catch { /* */ } }, [assembledOnly]);
+  useEffect(() => { try { localStorage.setItem("tms_notAssembledOnly",  notAssembledOnly  ? "1" : "0"); } catch { /* */ } }, [notAssembledOnly]);
 
   // Sprint 44 — global Escape handler
   // Sprint 68 — Ctrl+Enter: assign selected STs to current trip
