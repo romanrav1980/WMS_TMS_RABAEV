@@ -80,12 +80,69 @@ def receive_gps_track(req: GpsTrackRequest) -> dict:
             """,
             {"vid": req.vehicle_id, "lat": req.lat, "lon": req.lon, "speed": req.speed_kmh},
         )
-    return {"ok": True, "vehicle_id": req.vehicle_id}
+    # Sprint 118-119 — check geofences and auto-mark operations
+    try:
+        from ..services.geofencing import check_geofences
+        geo_events = check_geofences(req.vehicle_id, req.lat, req.lon, gw)
+    except Exception:
+        geo_events = []
+
+    return {"ok": True, "vehicle_id": req.vehicle_id, "geo_events": geo_events}
 
 
 # ---------------------------------------------------------------------------
 # Sprint 110-111 — Read endpoints for map
 # ---------------------------------------------------------------------------
+
+@router.get("/api/admin/transport/geofences")
+def list_geofences(
+    addr_mask: str | None = Query(default=None),
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> list[dict]:
+    """Sprint 118: список геозон адресов (радиус в метрах)."""
+    gw = _gw()
+    where = "WHERE LATITUDE IS NOT NULL"
+    params: dict = {}
+    if addr_mask:
+        where += " AND UPPER(ADDR) LIKE UPPER(:mask)"
+        params["mask"] = f"%{addr_mask}%"
+    rows = gw.fetch_all(
+        f"""
+        SELECT ID, ADDR, LATITUDE, LONGITUDE,
+               NVL(GEO_FENCE_RADIUS_M, 200) AS RADIUS_M
+          FROM RABAEV.RRL_ADDR
+          {where}
+         ORDER BY ADDR
+         FETCH FIRST 200 ROWS ONLY
+        """,
+        params,
+    )
+    return [
+        {
+            "addr_id": int(r.get("id") or 0),
+            "addr": str(r.get("addr") or ""),
+            "lat": float(r.get("latitude") or 0),
+            "lon": float(r.get("longitude") or 0),
+            "radius_m": int(r.get("radius_m") or 200),
+        }
+        for r in rows
+    ]
+
+
+@router.patch("/api/admin/transport/geofences/{addr_id}")
+def update_geofence_radius(
+    addr_id: int,
+    body: dict,
+    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+) -> dict:
+    """Sprint 118: обновить радиус геозоны адреса."""
+    radius = int(body.get("radius_m") or 200)
+    _gw().execute(
+        "UPDATE RABAEV.RRL_ADDR SET GEO_FENCE_RADIUS_M = :r WHERE ID = :aid",
+        {"r": radius, "aid": addr_id},
+    )
+    return {"addr_id": addr_id, "radius_m": radius}
+
 
 @router.get("/api/admin/transport/vehicles/positions")
 def get_vehicle_positions(
