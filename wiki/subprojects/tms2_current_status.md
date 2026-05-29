@@ -638,6 +638,7 @@ Sprint 1-3 теперь имеют прямые functional tests, UI smoke и lo
 - Project rule added: every meaningful case, load test, release gate, and pilot rehearsal must include slow SQL/SKV review and a remediation decision for long queries.
 - Slow SQL review after final full gate (`from_log_id=1115`) found no critical transport SQL above `1000 ms`; one `/planner/history` entry was `685 ms` for `244` rows and accepted as non-critical.
 - Previous fresh slow SQL issue was fixed: billing tests no longer use broad `/tasks?date_to=...` fixture lookup that returned about `26k` rows and took `6-13s`; they now use explicit narrow legacy fixture dates.
+- GitHub Actions first push run for `df82914` reached the frontend dependency step and failed because `npm ci` used strict peer resolution against React 19 / `react-leaflet`; workflow now uses `npm ci --legacy-peer-deps` to match the accepted local frontend install mode.
 
 ## Continuous execution checkpoint — 2026-05-29
 
