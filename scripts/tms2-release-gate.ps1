@@ -3,7 +3,8 @@ param(
   [switch]$IncludeMutatingVrpApply,
   [switch]$IncludeSprint60To95,
   [switch]$IncludeUiSmoke,
-  [switch]$IncludeLoadSmoke
+  [switch]$IncludeLoadSmoke,
+  [switch]$IncludeWave3
 )
 
 $ErrorActionPreference = "Stop"
@@ -34,6 +35,7 @@ $env:TMS_SPRINT7_DATE   = $SeedDate
 $env:TMS_SPRINT8_DATE  = $SeedDate
 $env:TMS_SPRINT9_DATE  = $SeedDate  # Sprint 9 cluster/template solver uses same seed date
 $env:TMS_TRANSPORT_LOAD_SEED_DATE = $SeedDate
+$env:TMS_WAVE3_PLAN_DATE = $SeedDate
 $env:TMS_FAIL_ON_SKIPS = "1"
 
 if ($IncludeMutatingVrpApply) {
@@ -69,6 +71,9 @@ $coreTests = @(
   "tests\transport\test_sprint20_functional.py",
   "tests\transport\test_routing_infrastructure.py",
   "tests\transport\test_frontend_virtualization_nfr.py",
+  "tests\transport\test_final_vrp_daily_acceptance.py",
+  "tests\transport\test_wave3_business_factor_trace.py",
+  "tests\transport\test_wave3_full_system_coverage.py",
   "tests\transport\test_sprint96_functional.py",
   "tests\transport\test_sprint97_98_functional.py",
   "tests\transport\test_sprint99_100_functional.py",
@@ -93,6 +98,10 @@ if ($IncludeLoadSmoke) {
   foreach ($i in 60..95) {
     Invoke-External "python" @("tests\transport\transport_sprint${i}_load_test.py")
   }
+}
+
+if ($IncludeWave3) {
+  Invoke-External "python" @("tests\transport\transport_wave3_business_factor_load_test.py")
 }
 
 if ($IncludeUiSmoke) {

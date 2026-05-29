@@ -19,7 +19,7 @@ import requests
 
 BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
 AUTH = ("admin", "admin123")
-PLAN_DATE = os.environ.get("TMS_SPRINT8_DATE", "2026-05-25")
+PLAN_DATE = os.environ.get("TMS_SPRINT8_DATE", "2026-05-24")
 
 
 @pytest.fixture(scope="session")
@@ -188,7 +188,24 @@ class TestPlannerApply:
         assert solve_r.status_code == 200, solve_r.text
         plan = solve_r.json()
         assert plan["routes"], "Cannot apply an empty plan"
-        apply_r = api.post(f"{BASE_URL}/api/admin/transport/planner/apply",
-                           json={"plan_id": plan["plan_id"], "shipment_date": PLAN_DATE})
-        assert apply_r.status_code == 200, f"Apply failed: {apply_r.text}"
-        assert apply_r.json()["tasks_created"] > 0
+        created_task_ids = []
+        try:
+            apply_r = api.post(f"{BASE_URL}/api/admin/transport/planner/apply",
+                               json={"plan_id": plan["plan_id"], "shipment_date": PLAN_DATE})
+            assert apply_r.status_code == 200, f"Apply failed: {apply_r.text}"
+            applied = apply_r.json()
+            created_task_ids = applied.get("created_task_ids") or []
+            assert applied["tasks_created"] > 0
+            assert len(created_task_ids) == applied["tasks_created"]
+
+            assigned_count = 0
+            for task_id in created_task_ids:
+                sts_r = api.get(f"{BASE_URL}/api/admin/transport/tasks/{task_id}/sts")
+                assert sts_r.status_code == 200, f"Could not read task {task_id} STs: {sts_r.text}"
+                task_sts = sts_r.json()
+                assert task_sts, f"Applied VRP task {task_id} has no STs"
+                assigned_count += len(task_sts)
+            assert assigned_count > 0
+        finally:
+            for task_id in created_task_ids:
+                api.post(f"{BASE_URL}/api/admin/transport/tasks/{task_id}/cancel")

@@ -22,7 +22,7 @@ Start here for a fresh session:
 - [subprojects/windowsapplication2.md](subprojects/windowsapplication2.md): legacy WinForms WMS/TMS desktop application
 - [subprojects/oracle_schema.md](subprojects/oracle_schema.md): reconstructed Oracle schema and deployment scripts
 - [subprojects/wms_terminal_web.md](subprojects/wms_terminal_web.md): modern Web/PWA terminal application replacing the legacy terminal OS client
-- [subprojects/tms2_current_status.md](subprojects/tms2_current_status.md): reboot anchor for the active TMS-2 workstream, Sprint hardening status through Sprint 95, release gates, routing provider evidence, risks, and next steps
+- [subprojects/tms2_current_status.md](subprojects/tms2_current_status.md): reboot anchor for the active TMS-2 workstream, Sprint hardening status through Sprint 95, Wave 3 Business Factor Trace, release gates, routing provider evidence, risks, and next steps
 
 ## Architecture
 
@@ -56,8 +56,9 @@ Start here for a fresh session:
 
 - [../scripts/README.md](../scripts/README.md): local Windows launch scripts for WMS API, admin frontend/raw UI reference, and terminal Web/PWA app
 - [runbooks/tms2_local_verification.md](runbooks/tms2_local_verification.md): local verification runbook for TMS-2 ports, Oracle env, migrations, functional tests by block, skip interpretation, encoding checks, and frontend smoke
-- [runbooks/tms2_release_acceptance.md](runbooks/tms2_release_acceptance.md): final TMS-2 release acceptance runbook, including fixture apply, non-mutating release gate, Sprint 8 mutating apply evidence, live routing smoke/matrix rebuild, and 2000-row frontend NFR smoke
-- [runbooks/tms2_pilot_checklist.md](runbooks/tms2_pilot_checklist.md): 5-day parallel-operation pilot checklist for transport dispatch, MAP/VRP, billing, incident logging, stop criteria, and success criteria
+- [runbooks/tms2_release_acceptance.md](runbooks/tms2_release_acceptance.md): final TMS-2 release acceptance runbook, including the 446/234 final full gate, Wave 3 factor trace, v2 neighbor acceptance through the final handoff pass `130 passed, 7 skipped`, Sprint 8 mutating apply evidence, live routing smoke, 2000-row frontend NFR smoke, and fresh slow SQL decision
+- [runbooks/tms2_prod_migration_checklist.md](runbooks/tms2_prod_migration_checklist.md): production migration checklist for TMS-2, including the corrected prod migration sequence, prod exclusions for dev fixtures, applied-object checks, rights checks, rollback notes, and post-gate slow SQL review
+- [runbooks/tms2_pilot_checklist.md](runbooks/tms2_pilot_checklist.md): 5-day parallel-operation pilot checklist for transport dispatch, MAP/VRP, billing, Day 0 release freeze, daily reconciliation, incident logging, stop criteria, and success criteria
 - [runbooks/tms_mcp_servers.md](runbooks/tms_mcp_servers.md): local MCP servers for wiki recall, repository search, Oracle schema metadata, Playwright, and Docker/routing checks
 - [runbooks/slow_sql_review.md](runbooks/slow_sql_review.md): mandatory slow SQL/SKV review after every meaningful case, load test, release gate, and pilot rehearsal, with required remediation decisions
 - [runbooks/create_api_server.md](runbooks/create_api_server.md): recommended API server stack and migration plan from `Tserver`

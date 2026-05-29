@@ -13,6 +13,9 @@ from __future__ import annotations
 
 import math
 import os
+import socket
+import time
+from urllib.parse import urlparse
 from abc import ABC, abstractmethod
 from typing import Any
 
@@ -85,20 +88,37 @@ class HaversineProvider(RoutingProvider):
 
 OSRM_URL = os.environ.get("OSRM_URL", "http://localhost:5000")
 _OSRM_TIMEOUT = 15.0
+_HEALTH_TIMEOUT = float(os.environ.get("ROUTING_HEALTH_TIMEOUT", "0.05"))
+_AVAILABILITY_TTL_SEC = 30.0
+_AVAILABILITY_CACHE: dict[str, tuple[float, bool]] = {}
+
+
+def _cached_availability(name: str, loader: Any) -> bool:
+    now = time.monotonic()
+    cached = _AVAILABILITY_CACHE.get(name)
+    if cached and now - cached[0] <= _AVAILABILITY_TTL_SEC:
+        return cached[1]
+    value = bool(loader())
+    _AVAILABILITY_CACHE[name] = (time.monotonic(), value)
+    return value
+
+
+def _tcp_url_available(url: str) -> bool:
+    parsed = urlparse(url)
+    host = parsed.hostname or "localhost"
+    port = parsed.port or (443 if parsed.scheme == "https" else 80)
+    try:
+        with socket.create_connection((host, port), timeout=_HEALTH_TIMEOUT):
+            return True
+    except OSError:
+        return False
 
 
 class OsrmProvider(RoutingProvider):
     name = "osrm"
 
     def is_available(self) -> bool:
-        try:
-            r = httpx.get(
-                f"{OSRM_URL}/route/v1/driving/37.6173,55.7558;37.6173,55.7558?overview=false",
-                timeout=2.0,
-            )
-            return r.status_code == 200
-        except Exception:
-            return False
+        return _cached_availability(self.name, lambda: _tcp_url_available(OSRM_URL))
 
     def build_matrix(self, points: list[tuple[float, float]]) -> list[list[float]]:
         coords_str = ";".join(f"{lon},{lat}" for lat, lon in points)
@@ -126,14 +146,7 @@ class ValhallaProvider(RoutingProvider):
     name = "valhalla"
 
     def is_available(self) -> bool:
-        for path in ("/status", "/health"):
-            try:
-                r = httpx.get(f"{VALHALLA_URL}{path}", timeout=2.0)
-                if r.status_code == 200:
-                    return True
-            except Exception:
-                continue
-        return False
+        return _cached_availability(self.name, lambda: _tcp_url_available(VALHALLA_URL))
 
     def build_matrix(self, points: list[tuple[float, float]]) -> list[list[float]]:
         locations = [{"lat": lat, "lon": lon} for lat, lon in points]

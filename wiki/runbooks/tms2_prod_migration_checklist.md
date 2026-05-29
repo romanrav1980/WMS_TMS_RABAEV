@@ -11,7 +11,8 @@
 Каждая миграция идемпотентна (CREATE ... если не существует). Применять строго по порядку.
 
 ```
-042 → 043 → 046 → 047 → 044 → 045 → 051 → 052 → 053 → 054 → 055 → 056 → 058 → 060 → 062
+Prod: 042 → 043 → 051 → 052 → 053 → 054 → 055 → 056 → 058 → 060 → 062
+Dev/acceptance only, never prod: 046/047 Dobrotseny seed; Sprint 9 planner-template fixture.
 ```
 
 ---
@@ -20,7 +21,7 @@
 
 ```sql
 -- 1. Убедиться что dev/staging прошёл strict release gate без skips
--- scripts/tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeSprint60To95 -IncludeUiSmoke -IncludeLoadSmoke
+-- scripts/tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeSprint60To95 -IncludeUiSmoke -IncludeLoadSmoke -IncludeWave3
 -- Ожидаемо: no failed commands, no pytest skips, load/UI/NFR green
 
 -- 2. Сделать резервную копию схемы RABAEV
@@ -57,21 +58,19 @@ SELECT TABLESPACE_NAME, ROUND((BYTES-NVL(FREE,0))/1048576,1) AS USED_MB,
 
 | № | Файл | Содержание | Статус prod |
 |---|------|-----------|-------------|
-| 044 | `db/migrations/2026-05-27_transport_sprint11/044_apply.sql` | `RRL_TRANSPORT_NORMS`, `RRL_TT_OPERATIONS`, 12 seed нормативов | ⬜ Применить |
+| 053 | `db/migrations/2026-05-27_transport_sprint11/053_apply.sql` | `RRL_TRANSPORT_NORMS`, `RRL_TT_OPERATIONS`, 12 seed нормативов | ⬜ Применить |
 
 ### Блок IV — MAP / Координаты
 
 | № | Файл | Содержание | Статус prod |
 |---|------|-----------|-------------|
-| 045 | `db/migrations/2026-05-26_transport_sprint7/045_apply.sql` | `LATITUDE`, `LONGITUDE`, `MAX_VEHICLE_TONS`, `UNLOAD_NORM_MIN`, `TW_STRICT` в `RRL_ADDR`; `RRL_ADDR_DISTANCE_MATRIX`; `RRL_PLANNER_PLANS` | ⬜ Применить |
-| 051 | `db/migrations/2026-05-26_transport_sprint7/051_apply.sql` | Координаты dev-адресов (seed-like, но безопасно — UPDATE WHERE LATITUDE IS NULL) | ⬜ Проверить, применить если безопасно |
+| 051 | `db/migrations/2026-05-26_transport_sprint7/051_apply.sql` | `LATITUDE`, `LONGITUDE`, `MAX_VEHICLE_TONS`, `UNLOAD_NORM_MIN`, `TW_STRICT` в `RRL_ADDR`; `RRL_ADDR_DISTANCE_MATRIX`; `RRL_PLANNER_PLANS`; координаты dev-адресов через guarded update | ⬜ Проверить, применить если безопасно |
 | 052 | `db/migrations/2026-05-26_transport_sprint8/052_apply.sql` | `APPLIED_AT`, индексы на матрицу и планы | ⬜ Применить |
 
 ### Блок V — Биллинг
 
 | № | Файл | Содержание | Статус prod |
 |---|------|-----------|-------------|
-| 053 | `db/migrations/2026-05-27_transport_sprint11/053_apply.sql` | `RRL_TRANSPORT_NORMS` + `RRL_TT_OPERATIONS` + 12 нормативов (идемпотентно) | ⬜ Применить |
 | 054 | `db/migrations/2026-05-27_transport_sprint15/054_apply.sql` | `SEQ_BILL_ORDERS` + `RRL_BILL_ORDERS` | ⬜ Применить |
 
 ### Блок VI — Фаза 3 (Sprint 97–119)
@@ -95,12 +94,12 @@ SELECT TABLESPACE_NAME, ROUND((BYTES-NVL(FREE,0))/1048576,1) AS USED_MB,
 @db/migrations/2026-05-21_transport_dispatch_phase1/042_apply.sql
 @db/migrations/2026-05-22_transport_dispatch_improvements/043_apply.sql
 
--- === ARM / Gantt ===
-@db/migrations/2026-05-27_transport_sprint11/044_apply.sql
-
 -- === MAP / VRP ===
-@db/migrations/2026-05-26_transport_sprint7/045_apply.sql
+@db/migrations/2026-05-26_transport_sprint7/051_apply.sql
 @db/migrations/2026-05-26_transport_sprint8/052_apply.sql
+
+-- === ARM / Gantt ===
+@db/migrations/2026-05-27_transport_sprint11/053_apply.sql
 
 -- === Billing ===
 @db/migrations/2026-05-27_transport_sprint15/054_apply.sql
@@ -122,6 +121,35 @@ COMMIT;
 EXIT;
 ```
 
+## Проверка реально примененных миграций
+
+В текущем репозитории нет единой prod migration ledger, поэтому DBA фиксирует факт применения по объектам и smoke-запросам ниже. Если в конкретной среде есть собственная таблица учета миграций, сначала сверить ее с prod sequence `042,043,051,052,053,054,055,056,058,060,062`, затем подтвердить объектами.
+
+```sql
+-- 042/043
+SELECT COUNT(*) FROM USER_VIEWS WHERE VIEW_NAME = 'RRL_V_AVAILABLE_STS';
+
+-- 051/052
+SELECT COUNT(*) FROM USER_TAB_COLUMNS WHERE TABLE_NAME='RRL_ADDR' AND COLUMN_NAME IN ('LATITUDE','LONGITUDE','MAX_VEHICLE_TONS','UNLOAD_NORM_MIN','TW_STRICT');
+SELECT COUNT(*) FROM USER_TABLES WHERE TABLE_NAME IN ('RRL_ADDR_DISTANCE_MATRIX','RRL_PLANNER_PLANS');
+
+-- 053/054
+SELECT COUNT(*) FROM USER_TABLES WHERE TABLE_NAME IN ('RRL_TRANSPORT_NORMS','RRL_TT_OPERATIONS','RRL_BILL_ORDERS');
+
+-- 055/056/058/060/062
+SELECT COUNT(*) FROM USER_OBJECTS WHERE OBJECT_NAME IN ('RRL_TR_VEHICLE_ADD','RRL_TR_VEHICLE_UPDATE','RRL_TR_VEHICLE_DEL','RRL_TR_VODITEL_ADD','RRL_TR_VODITEL_UPDATE','RRL_TR_VODITEL_DEL');
+SELECT COUNT(*) FROM USER_TABLES WHERE TABLE_NAME IN ('RRL_PUSH_SUBSCRIPTIONS','RRL_NOTIFICATION_SETTINGS','RRL_VEHICLE_GPS','RRL_VEHICLE_GPS_LAST');
+SELECT COUNT(*) FROM USER_TAB_COLUMNS WHERE TABLE_NAME='RRL_ADDR' AND COLUMN_NAME='GEO_FENCE_RADIUS_M';
+```
+
+Separate prod-rights check:
+
+```sql
+SELECT ID, USER_GROUP FROM RUSERS WHERE NVL(DELETED,0)=0 AND ROWNUM <= 20;
+SELECT USER_GROUP, WRIGHT FROM USER_GROUP WHERE WRIGHT IN ('GLOBAL_ADMIN','TRANSPORT_VIEW','TRANSPORT_EDIT','TRANSPORT_FLEET_EDIT','RIGHTS_ADMIN_VIEW','RIGHTS_ADMIN_EDIT');
+SELECT WRIGHT FROM RIGHTS WHERE WRIGHT LIKE 'TRANSPORT%' OR WRIGHT LIKE 'RIGHTS_ADMIN%';
+```
+
 ---
 
 ## Smoke-проверки после каждой миграции
@@ -130,11 +158,11 @@ EXIT;
 -- После 042: проверить view
 SELECT COUNT(*) FROM RABAEV.RRL_V_AVAILABLE_STS WHERE ROWNUM <= 1;
 
--- После 044: проверить таблицу операций
+-- После 053: проверить таблицу операций
 SELECT COUNT(*) FROM RABAEV.RRL_TT_OPERATIONS;  -- 0 (пусто до создания рейсов)
 SELECT COUNT(*) FROM RABAEV.RRL_TRANSPORT_NORMS; -- 12 (seed нормативов)
 
--- После 045: проверить колонки
+-- После 051: проверить колонки
 SELECT LATITUDE, LONGITUDE FROM RABAEV.RRL_ADDR WHERE ROWNUM = 1;
 
 -- После 054: проверить таблицу биллинга
@@ -189,8 +217,8 @@ curl.exe -s -u admin:admin123 "http://127.0.0.1:8088/api/admin/slow-sql/oracle-t
 | Если ошибка в миграции | Действие |
 |------------------------|---------|
 | 042-043 | `@db/migrations/2026-05-21_transport_dispatch_phase1/042_rollback.sql` |
-| 044 | Нет rollback — DROP TABLE RRL_TRANSPORT_NORMS, RRL_TT_OPERATIONS |
-| 045 | `ALTER TABLE RRL_ADDR DROP COLUMN LATITUDE, LONGITUDE, ...` |
+| 051-052 | `@db/migrations/2026-05-26_transport_sprint7/051_rollback.sql` и `052_rollback.sql` |
+| 053 | `@db/migrations/2026-05-27_transport_sprint11/053_rollback.sql` |
 | 055-056 | `@db/migrations/2026-05-29_fleet_crud/055_rollback.sql` и `056_rollback.sql` |
 | 058-062 | DROP TABLE соответствующей таблицы |
 

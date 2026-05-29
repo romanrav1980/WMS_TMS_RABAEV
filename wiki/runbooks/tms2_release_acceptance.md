@@ -14,6 +14,7 @@
 - Billing Sprint 15-28.
 - Routing infrastructure checks for OSRM/Valhalla/Haversine.
 - Oracle fixture `055_apply.sql` for Sprint 9 historical templates.
+- Wave 3 Business Factor Trace: end-to-end factor participation tests and no-mutation factor-load runner.
 
 Не входит:
 
@@ -66,12 +67,30 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.
 Current accepted strict result:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeSprint60To95 -IncludeUiSmoke -IncludeLoadSmoke
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeSprint60To95 -IncludeUiSmoke -IncludeLoadSmoke -IncludeWave3
 ```
 
-Accepted 2026-05-29 result: core `427 passed`, Sprint 60-95 `234 passed`, load/UI/NFR passed, no pytest skips. The runner now fails on any native command error and `TMS_FAIL_ON_SKIPS=1`.
+Accepted 2026-05-29 final sign-off result after daily VRP acceptance, v2-strengthened full-system Wave 3 Business Factor Trace, and planner-history hardening: routing smoke passed; core `446 passed`, no pytest skips; Sprint 60-95 `234 passed`; all Sprint 60-95 load scripts passed; Wave 3 load passed; grouped UI smoke passed; 2000-row NFR smoke passed with `firstRenderMs=763`, bounded rows `31/43/33`. The runner fails on any native command error and `TMS_FAIL_ON_SKIPS=1`.
 
-Slow SQL review for the same run, using `from_log_id=1115`: no critical transport SQL above `1000 ms`; one `/planner/history` row at `685 ms`/`244` rows accepted as non-critical. Historical 6-13s `/tasks?date_to=...` gate entries were corrected by narrowing billing fixture date ranges.
+Slow SQL review after the final full gate, using `from_log_id=1153`: `[]` for `min_elapsed_ms=500`. Decision: no fresh transport SQL above the review threshold. The earlier `/planner/history` slow rows were fixed by bounding the endpoint to default `limit=25`, clamping explicit limits to `1..500`, sorting newest-first with `FETCH FIRST`, and serializing the cache lookup/fetch/store path to avoid a cold-cache stampede. Historical 6-13s `/tasks?date_to=...` gate entries were corrected by narrowing billing fixture date ranges.
+
+## Wave 3 Business Factor Trace
+
+Functional/E2E gate:
+
+```powershell
+python -m pytest tests\transport\test_wave3_business_factor_trace.py tests\transport\test_wave3_full_system_coverage.py -q -ra --tb=short
+```
+
+Expected: `14 passed`. The factor gate traces coordinates, pallet capacity, weight, warehouse, transport type, store time windows, `TW_STRICT`, unload norm, readiness, route totals, transport-type filtering, and four-slot vehicle availability from source contract to solver response. It also checks v2 data-fidelity patterns: values are non-default/distinct, `available-sts` matches `planner/orders`, VRP stops match planner time windows when Oracle values exist, and a cleanup-bound temp route preserves pallet/weight/readiness facts in `task/sts`. The full-system coverage lock imports real TMS-2 routers and requires every endpoint to have a Wave 3 business-process owner, factors, source/state evidence, functional gate, and load/UI/E2E evidence.
+
+No-mutation load gate:
+
+```powershell
+python tests\transport\transport_wave3_business_factor_load_test.py
+```
+
+Current local evidence from the final full sign-off gate: available STs p95 `62.3 ms`, planner orders p95 `283.4 ms`, vehicle availability p95 `148.4 ms`, routing status p95 `4268.2 ms` because it probes live providers, planner solve p95 `1339.4 ms`; all response factor contracts and non-default checks passed.
 
 ## Mutating Sprint 8 Apply Evidence
 
@@ -90,7 +109,7 @@ $env:TMS_RUN_MUTATING_VRP_APPLY='1'
 python -m pytest tests\transport\test_sprint8_functional.py -q -ra --tb=short
 ```
 
-Accepted result: `23 passed`; after the 2026-05-29 repeat run, active `vrp_auto` transport tasks for `2026-05-25` remained `0`.
+Accepted final-sprint result: `23 passed` on seed `2026-05-24`; the mutating test verifies created task IDs, reads assigned STs for each created route, and cancels those tasks in cleanup. Post-cleanup API check found `active_vrp_auto_tasks=0`.
 
 Cleanup pattern for shared dev after recording `MAX_ID`:
 
@@ -188,3 +207,4 @@ Release acceptance can be marked ready when:
 - slow SQL review is recorded and every long query has a decision;
 - encoding check passes;
 - `git diff --check` has no errors other than normal CRLF warnings.
+- fresh slow SQL review after the final full gate has no unresolved rows above the accepted threshold.

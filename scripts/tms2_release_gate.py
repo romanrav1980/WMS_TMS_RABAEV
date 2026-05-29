@@ -15,6 +15,9 @@ CORE_TESTS = [
     ROOT / "tests" / "transport" / "test_release_acceptance_docs.py",
     ROOT / "tests" / "transport" / "test_routing_infrastructure.py",
     ROOT / "tests" / "transport" / "test_frontend_virtualization_nfr.py",
+    ROOT / "tests" / "transport" / "test_final_vrp_daily_acceptance.py",
+    ROOT / "tests" / "transport" / "test_wave3_business_factor_trace.py",
+    ROOT / "tests" / "transport" / "test_wave3_full_system_coverage.py",
 ]
 PHASE3_TESTS = [
     ROOT / "tests" / "transport" / "test_sprint96_functional.py",
@@ -59,6 +62,7 @@ def main() -> int:
     parser.add_argument("--include-ui-smoke", action="store_true")
     parser.add_argument("--include-load-smoke", action="store_true")
     parser.add_argument("--include-mutating-vrp-apply", action="store_true")
+    parser.add_argument("--include-wave3", action="store_true")
     args = parser.parse_args()
 
     env = os.environ.copy()
@@ -72,6 +76,7 @@ def main() -> int:
     env["TMS_SPRINT8_DATE"] = args.seed_date
     env["TMS_SPRINT9_DATE"] = args.seed_date
     env["TMS_TRANSPORT_LOAD_SEED_DATE"] = args.seed_date
+    env["TMS_WAVE3_PLAN_DATE"] = args.seed_date
     env["TMS_FAIL_ON_SKIPS"] = "1"
     if args.include_mutating_vrp_apply:
         env["TMS_RUN_MUTATING_VRP_APPLY"] = "1"
@@ -92,6 +97,9 @@ def main() -> int:
     if args.include_ui_smoke:
         run(["node", str(ROOT / "tests" / "ui" / "transport_sprint60_95_ui_smoke.cjs")], env=env)
         run(["node", str(ROOT / "tests" / "ui" / "transport_table_2000_nfr_smoke.cjs")], env=env)
+
+    if args.include_wave3:
+        run([sys.executable, str(ROOT / "tests" / "transport" / "transport_wave3_business_factor_load_test.py")], env=env)
 
     return 0
 

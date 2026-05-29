@@ -84,6 +84,18 @@ class TestPlannerHistory:
         assert r.status_code == 200
         assert isinstance(r.json(), list)
 
+    def test_history_default_is_bounded(self, api):
+        r = api.get(f"{BASE_URL}/api/admin/transport/planner/history",
+                    params={"date_from": LAST_MONTH, "date_to": TODAY})
+        assert r.status_code == 200
+        assert len(r.json()) <= 25
+
+    def test_history_limit_param_is_respected(self, api):
+        r = api.get(f"{BASE_URL}/api/admin/transport/planner/history",
+                    params={"date_from": LAST_MONTH, "date_to": TODAY, "limit": 5})
+        assert r.status_code == 200
+        assert len(r.json()) <= 5
+
 
 # ---------------------------------------------------------------------------
 # GET /planner/demand-forecast

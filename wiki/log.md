@@ -2334,3 +2334,53 @@ Append-only log of root wiki updates.
 - Live routing evidence is already recorded: OSRM and Valhalla containers healthy, routing smoke passed, `/routing/status` selected `osrm`, and distance matrix rebuild returned `6162` OSRM pairs for `79` addresses.
 - Continue after reload from [`subprojects/tms2_current_status.md`](subprojects/tms2_current_status.md), then keep release gate, CI, routing, NFR, and slow SQL review green before moving into pilot/next sprint expansion.
 - Unrelated local dirty tree intentionally remains outside the TMS-2 commit scope: `WindowsApplication2/...`, `MINI WMS/...`, and `WMS перенос v1/...`.
+
+## 2026-05-29 - TMS-2 Final Sprint acceptance execution
+
+- Accepted the user-defined Final Sprint scope: strict release acceptance, Oracle/prod readiness, controlled Sprint 8 mutating VRP apply, routing/NFR proof, and slow SQL review without taking unrelated feature work.
+- Added `tests/transport/test_final_vrp_daily_acceptance.py` for the working daily planning example: seed date `2026-05-24`, Dobrotseny seed fleet `9201..9215`, four dispatch slots per vehicle, route capacity, routing provider mode, zero unassigned STs, and visible store time windows.
+- Fixed planner time-window propagation in `transport_service.py`: `get_planner_orders()` now reads `ZONE_TIME_PLAN_IN/OUT` and address `ORD`; `solve_vrp()` converts Oracle time values to minutes from the 06:00 shift start and uses deterministic `ORD`-based fallback windows when legacy ST rows have no window values.
+- Hardened mutating VRP apply evidence: `apply_vrp_plan()` returns `created_task_ids`; optional Sprint 8 mutating test verifies created task compositions and cancels the created tasks to release STs.
+- Wired the final VRP daily acceptance test into both `scripts/tms2-release-gate.ps1` and `scripts/tms2_release_gate.py`; aligned Sprint 8 default date with accepted seed `2026-05-24`.
+- Corrected `wiki/runbooks/tms2_prod_migration_checklist.md` to the actual migration file sequence (`042,043,051,052,053,054,055,056,058,060,062`), keeping Dobrotseny and planner-template fixtures out of prod.
+- Verification: final VRP daily gate `3 passed`; final+Sprint 8 targeted gate `26 passed`; mutating Sprint 8 gate `23 passed` and cleanup check `active_vrp_auto_tasks=0`; strict release gate `430 passed`; previous full gate with Sprint 60-95/load/UI/NFR passed with core `430 passed`, Sprint 60-95 `234 passed`, NFR `firstRenderMs=894`, rows `31/43/33`.
+- Slow SQL review after the current strict gate from `from_log_id=1119`: only fresh transport row above 500 ms was `/planner/history` at `887 ms` for `272` rows, accepted as non-critical; historical broad `/tasks` rows remain pre-fix evidence, not fresh blockers.
+
+## 2026-05-29 - TMS-2 Wave 3 Business Factor Trace
+
+- Added the third testing wave: `tests/transport/test_wave3_business_factor_trace.py`. It traces planner factors from source SQL to `/planner/orders`, `VrpOrder`, solver route response, route totals, transport-type filtering, and four-slot seed-fleet availability.
+- Expanded Wave 3 from planner-only to full-system coverage with `tests/transport/test_wave3_full_system_coverage.py`. The coverage lock imports real TMS-2 routers and fails if any endpoint in transport, driver mobile, GPS, KPI, tariffs, users, or admin-rights has no business-process owner and no linked functional/load/UI/E2E evidence.
+- Took the strongest v2 test-suite rules into Wave 3: checks now validate data values rather than only HTTP/status/key presence, require distinct/non-default values where seed data supports it, compare the same fact across endpoints, aggregate task composition rows before comparing to available-ST facts, and use cleanup-bound temp route flow for mutating fidelity evidence.
+- Added no-mutation load runner `tests/transport/transport_wave3_business_factor_load_test.py`; it validates response factor contracts under parallel planner/orders, vehicle availability, routing status, and planner solve calls.
+- Strengthened the load runner so every parallel response is checked for payload contract and non-default values; added `/available-sts` to the Wave 3 load profile.
+- Wired the Wave 3 functional gate into both release runners: `scripts/tms2-release-gate.ps1` and `scripts/tms2_release_gate.py`. The load runner is available through `-IncludeWave3` / `--include-wave3`.
+- Updated TMS-2 status, acceptance matrix, release acceptance runbook, and wiki index with the Wave 3 scope and evidence.
+- Verification: Wave 3 factor trace + full-system coverage -> `14 passed`; Wave 3 load runner passed with available-sts p95 `71.7 ms`, planner/orders p95 `316.3 ms`, availability p95 `117.8 ms`, routing status p95 `4409.8 ms`, solve p95 `1759.9 ms`; strict release gate `scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24` -> `444 passed`, no skips.
+- Slow SQL review after the Wave 3 strict gate from `from_log_id=1119`: `/planner/history` rows at `887 ms`/`272` rows, `1037 ms`/`291` rows, `1100 ms`/`302` rows, and `1358 ms`/`328` rows accepted as non-critical historical-list reads for release; backlog decision is to bound/window planner history as row count grows.
+
+## 2026-05-29 - TMS-2 final sign-off gate and planner-history hardening
+
+- Closed the slow-SQL backlog item found during Wave 3: `/planner/history` now has default `limit=25`, explicit limit clamp `1..500`, newest-first `FETCH FIRST`, and lock-protected cache lookup/fetch/store to avoid cold-cache duplicate Oracle reads under load.
+- Added Sprint 10 tests for bounded default history and explicit `limit` behavior.
+- Verification after the fix: `test_sprint10_functional.py` -> `17 passed`; `transport_sprint10_load_test.py` -> history p95 `259.2 ms`; targeted fresh slow SQL from `from_log_id=1153` returned `[]`.
+- Ran the final full sign-off gate: `scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeSprint60To95 -IncludeUiSmoke -IncludeLoadSmoke -IncludeWave3`.
+- Final gate evidence: routing smoke OSRM/Valhalla passed; core `446 passed`, no skips; Sprint 60-95 `234 passed`; all Sprint 60-95 load runners passed; Wave 3 load passed with available-sts p95 `62.3 ms`, planner/orders p95 `283.4 ms`, availability p95 `148.4 ms`, routing status p95 `4268.2 ms`, solve p95 `1339.4 ms`; UI smoke passed; 2000-row NFR smoke passed with `firstRenderMs=763`, rows `31/43/33`.
+- Mandatory slow SQL review after the final full gate from `from_log_id=1153`: `[]` for `min_elapsed_ms=500`; decision: no fresh transport slow SQL above threshold, old `/planner/history` rows are pre-fix evidence.
+- Updated TMS-2 status, release acceptance runbook, acceptance matrix, prod migration checklist, pilot checklist, and wiki index with final gate evidence, migration/right checks, Day 0 release freeze, and daily pilot reconciliation.
+
+## 2026-05-29 - TMS-2 v2 neighbor acceptance runbook
+
+- Executed the neighbor-agent v2 runbook on the local TMS-2 environment with seed `2026-05-24`: installed `pytest-html` and Playwright Chromium, verified seed availability, captured screenshots, ran groups 1-8 in order, and generated `reports/FULL_REPORT.html`.
+- Group evidence before the final aggregate: Data Fidelity `26 passed, 1 skipped`; E2E `24 passed`; VRP correctness `19 passed`; Billing `11 passed`; Fleet CRUD `11 passed`; ARM/Gantt `14 passed`; Edge Cases `14 passed`; Performance `16 passed`.
+- Final aggregate evidence: `python -m pytest tests/transport/v2/ -v --tb=short -s --html=reports/FULL_REPORT.html --self-contained-html` -> `129 passed, 7 skipped`, no failures.
+- v2-driven fixes: `/planner/orders` accepts `plan_date`; `get_planner_orders()` and `/routing/status` use bounded cached reads; `/available-sts` accepts `page/page_size`; duplicate ST assignment is a `409`; removing an ST absent from a route is a `404`; vehicle/driver PL/SQL creates use bind-return blocks; task assignment updates all pallet rows for a ST.
+- Test-suite hardening: mutating tests now pull a fresh unassigned ST pool instead of stale session-scope seed rows, aggregate repeated task/ST rows by `ST_NUMBER`, check values and business invariants, keep cleanup in context managers, and keep performance payload checks coupled to SLA checks.
+- Slow SQL review after the v2 full run from `from_log_id=1196`: `[]` for `min_elapsed_ms=500`; decision: no fresh transport SQL above threshold. Old `/planner/orders` 62k-row slow rows from `1163..1195` are pre-fix evidence for the missing `plan_date` alias.
+
+## 2026-05-29 - TMS-2 v2 handoff completion and frontend audit
+
+- Re-ran the v2 handoff in strict group order on seed `2026-05-24` after adding a data-fidelity guard for dispatcher status encoding.
+- Cleaned the 31 empty test routes dated `2026-05-29` through API cancellation instead of direct SQL mutation.
+- Fixed dispatcher status mojibake at the API boundary for legacy package-created open routes; `tests/transport/v2/test_02_data_fidelity.py` now fails if `CONDITION` returns question marks.
+- Fixed real frontend defects found during the ТЗ audit: `TransportGanttPage` now uses `VITE_API_BASE` for Gantt, plan-fact, and fact PATCH calls; `TransportDispatchPage` now authenticates the dispatcher WebSocket with the backend-required query credentials.
+- Verification: v2 aggregate -> `130 passed, 7 skipped`; frontend build passed; Playwright audit of transport, planner, gantt, fleet, and KPI pages found no question-mark status text, no Gantt HTML-as-JSON error, and no dispatcher WebSocket 403; slow SQL from `from_log_id=1196` remained `[]` above `500 ms`.

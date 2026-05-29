@@ -29,7 +29,7 @@ Sprint 8 (VRP):
 import json
 import time
 import threading
-from datetime import date, timedelta
+from datetime import date, datetime, time as dt_time, timedelta
 from typing import Any, Callable
 
 from fastapi import HTTPException
@@ -77,6 +77,7 @@ _VEHICLE_AVAILABILITY_CACHE_LOCK = threading.Lock()
 def _clear_available_sts_cache() -> None:
     with _AVAILABLE_STS_CACHE_LOCK:
         _AVAILABLE_STS_CACHE.clear()
+    _invalidate_ref_cache("planner_orders")
 
 
 def _clear_task_sts_cache(task_id: int | None = None) -> None:
@@ -98,6 +99,80 @@ def _invalidate_ref_cache(prefix: str) -> None:
         stale = [k for k in list(_REF_CACHE.keys()) if k[0] == prefix]
         for k in stale:
             _REF_CACHE.pop(k, None)
+
+
+def _minutes_from_shift_start(value: Any, shift_start_hour: int = 6, default: int | None = None) -> int | None:
+    """Convert Oracle date/time/string values to minutes from the dispatch shift start."""
+    if value is None:
+        return default
+    try:
+        if isinstance(value, datetime):
+            total = value.hour * 60 + value.minute
+        elif isinstance(value, dt_time):
+            total = value.hour * 60 + value.minute
+        else:
+            text = str(value).strip()
+            if not text:
+                return default
+            if "T" in text:
+                parsed = datetime.fromisoformat(text.replace("Z", ""))
+                total = parsed.hour * 60 + parsed.minute
+            elif " " in text and ":" in text:
+                parsed = datetime.strptime(text[:16], "%Y-%m-%d %H:%M")
+                total = parsed.hour * 60 + parsed.minute
+            elif ":" in text:
+                hh, mm = text[:5].split(":")
+                total = int(hh) * 60 + int(mm)
+            else:
+                return default
+    except Exception:
+        return default
+    return max(0, total - shift_start_hour * 60)
+
+
+def _fallback_time_window_from_ord(ord_value: Any) -> tuple[int, int]:
+    """Fallback store acceptance window when legacy ST rows do not carry one."""
+    try:
+        ord_int = max(1, int(ord_value or 1))
+    except Exception:
+        ord_int = 1
+    slot = (ord_int - 1) % 4
+    start = 60 + slot * 180  # 07:00, 10:00, 13:00, 16:00 from a 06:00 shift start
+    return start, start + 240
+
+
+def _clock_from_shift_minutes(minutes_from_shift: int, shift_start_hour: int = 6) -> str:
+    """Return HH:MM clock string from minutes after the dispatch shift start."""
+    total = (shift_start_hour * 60 + int(minutes_from_shift)) % (24 * 60)
+    return f"{total // 60:02d}:{total % 60:02d}"
+
+
+def _fill_visible_time_window(row: dict[str, Any]) -> dict[str, Any]:
+    """Expose the same fallback TW used by VRP on read endpoints for traceability."""
+    if row.get("TIME_FROM") is None or row.get("TIME_TO") is None:
+        fallback_from, fallback_to = _fallback_time_window_from_ord(row.get("ORD"))
+        if row.get("TIME_FROM") is None:
+            row["TIME_FROM"] = _clock_from_shift_minutes(fallback_from)
+        if row.get("TIME_TO") is None:
+            row["TIME_TO"] = _clock_from_shift_minutes(fallback_to)
+    if not row.get("ZONE"):
+        row["ZONE"] = row.get("RAION") or row.get("REGION") or row.get("ADDR")
+    return row
+
+
+def _normalize_task_condition(value: Any) -> Any:
+    """Legacy package-created open tasks can store Cyrillic as question marks."""
+    if isinstance(value, str) and value and set(value.strip()) == {"?"}:
+        return "Открыт"
+    return value
+
+
+def _normalize_task_row(row: dict[str, Any]) -> dict[str, Any]:
+    if "CONDITION" in row:
+        row["CONDITION"] = _normalize_task_condition(row.get("CONDITION"))
+    if "STATUS" in row:
+        row["STATUS"] = _normalize_task_condition(row.get("STATUS"))
+    return row
 
 
 def _cached_ref(key: tuple[str, Any], loader: Callable[[], list[dict[str, Any]]]) -> list[dict[str, Any]]:
@@ -271,8 +346,15 @@ class TransportService:
         doverennost_ot: str | None,
     ) -> int:
         # RRL_TR_VEHICLE_ADD uses actual column names (NUM, TR_TYPE) after 055_fix.sql
-        row = self.gateway.fetch_all(
-            "SELECT RABAEV.RRL_TR_VEHICLE_ADD(:num_plat, :transtype_id, :max_weight_kg, :max_pallets, :sobstvennyy, :doverennost_ot) AS NEW_ID FROM DUAL",
+        new_id = self.gateway.call_number_plsql(
+            """
+            BEGIN
+              :result := RABAEV.RRL_TR_VEHICLE_ADD(
+                :num_plat, :transtype_id, :max_weight_kg,
+                :max_pallets, :sobstvennyy, :doverennost_ot
+              );
+            END;
+            """,
             {
                 "num_plat": num_plat,
                 "transtype_id": transtype_id,
@@ -283,7 +365,7 @@ class TransportService:
             },
         )
         _invalidate_ref_cache("vehicles")
-        return int(row[0]["new_id"])
+        return new_id
 
     def update_vehicle(
         self,
@@ -369,14 +451,16 @@ class TransportService:
         license_number: str | None,
         company: str | None,
     ) -> int:
-        row = self.gateway.fetch_all(
+        new_id = self.gateway.call_number_plsql(
             """
-            SELECT RABAEV.RRL_TR_VODITEL_ADD(:name, :phone, :license_number, :company) AS NEW_ID FROM DUAL
+            BEGIN
+              :result := RABAEV.RRL_TR_VODITEL_ADD(:name, :phone, :license_number, :company);
+            END;
             """,
             {"name": name, "phone": phone, "license_number": license_number, "company": company},
         )
         _invalidate_ref_cache("drivers")
-        return int(row[0]["new_id"])
+        return new_id
 
     def update_driver(
         self,
@@ -490,7 +574,7 @@ class TransportService:
                      THEN SP.ID
                    END) AS UNREADY_COUNT"""
 
-        return self.gateway.fetch_all(
+        rows = self.gateway.fetch_all(
             f"""
             SELECT TT.ID,
                    TT.CREATEDATE,
@@ -536,6 +620,7 @@ class TransportService:
             """,
             params,
         )
+        return [_normalize_task_row(dict(row)) for row in rows]
 
     def get_task(self, task_id: int) -> dict[str, Any]:
         rows = self.gateway.fetch_all(
@@ -568,7 +653,7 @@ class TransportService:
         )
         if not rows:
             raise HTTPException(status_code=404, detail=f"Transport task {task_id} not found")
-        return rows[0]
+        return _normalize_task_row(dict(rows[0]))
 
     def create_task(self, req: TransportTaskCreateRequest, user_id: str) -> int:
         task_id = self.gateway.call_number_plsql(
@@ -786,10 +871,23 @@ class TransportService:
                 other_id = rows[0]["TRANSTASK_ID"]
                 warnings.append(f"СТ {st} уже назначено на рейс #{other_id}")
 
+        if warnings:
+            raise HTTPException(status_code=409, detail="; ".join(warnings))
+
         for st in st_numbers:
             self.gateway.call_varchar_function(
                 "RABAEV.RRL_TT_ADD_PALL",
                 {"TT_ID": task_id, "ST_NUMBER1": st},
+            )
+            self.gateway.execute(
+                """
+                UPDATE RABAEV.RRL_SBORKA_PALLETS
+                   SET TRANSTASK_ID = :task_id
+                 WHERE ST_NUMBER = :st
+                   AND CONDITION <> 2
+                   AND (TRANSTASK_ID IS NULL OR TRANSTASK_ID = :task_id)
+                """,
+                {"task_id": task_id, "st": st},
             )
 
         self.gateway.call_number_plsql(
@@ -809,6 +907,21 @@ class TransportService:
             raise HTTPException(
                 status_code=409,
                 detail=f"Рейс включён в счёт №{task['PAY_ORDER_ID']} — снятие СТ запрещено",
+            )
+        rows = self.gateway.fetch_all(
+            """
+            SELECT COUNT(*) AS CNT
+              FROM RABAEV.RRL_SBORKA_PALLETS
+             WHERE TRANSTASK_ID = :task_id
+               AND ST_NUMBER = :st_number
+               AND CONDITION <> 2
+            """,
+            {"task_id": task_id, "st_number": st_number},
+        )
+        if not rows or int(rows[0].get("CNT") or 0) == 0:
+            raise HTTPException(
+                status_code=404,
+                detail=f"СТ {st_number} не найдено в рейсе #{task_id}",
             )
         # TT_ID = 0 → снять СТ с любого рейса
         self.gateway.call_varchar_function(
@@ -1011,6 +1124,9 @@ class TransportService:
                        MIN(P.STDATE) AS STDATE,
                        MIN(P.STDATE) AS DATE_LOAD,
                        MAX(P.TRANSTASK_ID) AS TRANSTASK_ID,
+                       MAX(P.ZONE) AS ZONE,
+                       MIN(P.ZONE_TIME_PLAN_IN) AS TIME_FROM,
+                       MAX(P.ZONE_TIME_PLAN_OUT) AS TIME_TO,
                        NVL({verify_expr}, 0) AS VERIFY_PERC,
                        MAX(CASE WHEN R.ARTICUL IN ('Т0000008795', 'Т0000127793', 'Т0000127794') THEN 1 ELSE 0 END) AS SUGAR
                   FROM RABAEV.RRL_SBORKA_PALLETS P
@@ -1024,8 +1140,9 @@ class TransportService:
                 """,
                 params,
             )
-            _AVAILABLE_STS_CACHE[cache_key] = (time.monotonic(), [dict(row) for row in rows])
-            return rows
+            normalized = [_fill_visible_time_window(dict(row)) for row in rows]
+            _AVAILABLE_STS_CACHE[cache_key] = (time.monotonic(), [dict(row) for row in normalized])
+            return normalized
 
     def _has_sborka_rows_for_period(
         self,
@@ -1071,6 +1188,18 @@ class TransportService:
         transport_type: str | None = None,
     ) -> list[dict[str, Any]]:
         """Возвращает свободные СТ с координатами для отображения на карте."""
+        cache_key = (
+            "planner_orders",
+            plan_date,
+            tuple(ware_ids or ()),
+            transport_type,
+        )
+        now = time.monotonic()
+        with _REF_CACHE_LOCK:
+            cached = _REF_CACHE.get(cache_key)
+            if cached and now - cached[0] <= _REF_CACHE_TTL_SEC:
+                return [dict(row) for row in cached[1]]
+
         conditions: list[str] = ["P.TRANSTASK_ID IS NULL", "P.CONDITION <> 2"]
         params: dict[str, Any] = {}
 
@@ -1098,41 +1227,59 @@ class TransportService:
 
         where_sql = "WHERE " + " AND ".join(conditions)
 
-        return self.gateway.fetch_all(
-            f"""
-            SELECT P.ST_NUMBER,
-                   P.ADDR,
-                   NVL(A.REGION, P.ADDR) AS REGION,
-                   A.RAION,
-                   A.SHIROTA AS LAT,
-                   A.DOLGOTA AS LON,
-                   COUNT(DISTINCT P.PALLET_UID) AS PALLETS_COUNT,
-                   ROUND(SUM(NVL(R.ORDER_WEIGHT, 0)), 0) AS WEIGHT_KG,
-                   ROUND(SUM(NVL(R.TARESIZE, 0) * NVL(R.PACK_COUNT, 0)) / 1000000, 2) AS VOLUME_M3,
-                   P.WARE_ID,
-                   NVL(A.TRANSPORT_TYPE, '0') AS TRANSPORT_TYPE,
-                   NVL(A.STOL, 0) AS NEEDS_HYDRO_BOARD,
-                   A.MAX_VEHICLE_TONS AS MAX_VEHICLE_TONS,
-                   NVL(A.TW_STRICT, 0) AS TW_STRICT,
-                   NVL(A.UNLOAD_NORM_MIN, 30) AS UNLOAD_NORM_MIN,
-                   NVL(ROUND(COUNT(DISTINCT CASE WHEN NVL(P.PROOVED,0) = 1 OR NVL(P.PROOVED_BY_SCAN,0) = 1
-                                  THEN P.ID END) * 100 / NULLIF(COUNT(DISTINCT P.ID), 0), 0), 0) AS VERIFY_PERC,
-                   MIN(P.STDATE) AS STDATE
-              FROM RABAEV.RRL_SBORKA_PALLETS P
-              JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = P.PALLET_UID
-              LEFT JOIN RABAEV.RRL_ADDR A ON A.ADDR = P.ADDR
-              {where_sql}
-             GROUP BY P.ST_NUMBER, P.ADDR, A.REGION, A.RAION, A.SHIROTA, A.DOLGOTA,
-                      P.WARE_ID, A.TRANSPORT_TYPE, A.STOL, A.MAX_VEHICLE_TONS,
-                      A.TW_STRICT, A.UNLOAD_NORM_MIN
-             ORDER BY NVL(A.REGION, P.ADDR) NULLS LAST, P.ST_NUMBER
-            """,
-            params,
-        )
+        with _REF_CACHE_LOCK:
+            cached = _REF_CACHE.get(cache_key)
+            if cached and time.monotonic() - cached[0] <= _REF_CACHE_TTL_SEC:
+                return [dict(row) for row in cached[1]]
+            rows = self.gateway.fetch_all(
+                f"""
+                SELECT P.ST_NUMBER,
+                       P.ADDR,
+                       NVL(A.REGION, P.ADDR) AS REGION,
+                       A.RAION,
+                       A.ORD,
+                       MAX(P.ZONE) AS ZONE,
+                       A.SHIROTA AS LAT,
+                       A.DOLGOTA AS LON,
+                       COUNT(DISTINCT P.PALLET_UID) AS PALLETS_COUNT,
+                       ROUND(SUM(NVL(R.ORDER_WEIGHT, 0)), 0) AS WEIGHT_KG,
+                       ROUND(SUM(NVL(R.TARESIZE, 0) * NVL(R.PACK_COUNT, 0)) / 1000000, 2) AS VOLUME_M3,
+                       P.WARE_ID,
+                       NVL(A.TRANSPORT_TYPE, '0') AS TRANSPORT_TYPE,
+                       NVL(A.STOL, 0) AS NEEDS_HYDRO_BOARD,
+                       A.MAX_VEHICLE_TONS AS MAX_VEHICLE_TONS,
+                       MIN(P.ZONE_TIME_PLAN_IN) AS TIME_FROM,
+                       MAX(P.ZONE_TIME_PLAN_OUT) AS TIME_TO,
+                       NVL(A.TW_STRICT, 0) AS TW_STRICT,
+                       NVL(A.UNLOAD_NORM_MIN, 30) AS UNLOAD_NORM_MIN,
+                       NVL(ROUND(COUNT(DISTINCT CASE WHEN NVL(P.PROOVED,0) = 1 OR NVL(P.PROOVED_BY_SCAN,0) = 1
+                                      THEN P.ID END) * 100 / NULLIF(COUNT(DISTINCT P.ID), 0), 0), 0) AS VERIFY_PERC,
+                       MIN(P.STDATE) AS STDATE
+                  FROM RABAEV.RRL_SBORKA_PALLETS P
+                  JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = P.PALLET_UID
+                  LEFT JOIN RABAEV.RRL_ADDR A ON A.ADDR = P.ADDR
+                  {where_sql}
+                 GROUP BY P.ST_NUMBER, P.ADDR, A.REGION, A.RAION, A.ORD, A.SHIROTA, A.DOLGOTA,
+                          P.WARE_ID, A.TRANSPORT_TYPE, A.STOL, A.MAX_VEHICLE_TONS,
+                          A.TW_STRICT, A.UNLOAD_NORM_MIN
+                 ORDER BY NVL(A.REGION, P.ADDR) NULLS LAST, P.ST_NUMBER
+                """,
+                params,
+            )
+            normalized = [_fill_visible_time_window(dict(row)) for row in rows]
+            _REF_CACHE[cache_key] = (time.monotonic(), [dict(row) for row in normalized])
+        return normalized
 
     def get_routing_status(self) -> dict[str, Any]:
         """Возвращает статус геокодирования адресов."""
         from .routing import HaversineProvider, OsrmProvider, ValhallaProvider, get_active_provider
+
+        cache_key = ("routing_status",)
+        now = time.monotonic()
+        with _REF_CACHE_LOCK:
+            cached = _REF_CACHE.get(cache_key)
+            if cached and now - cached[0] <= _REF_CACHE_TTL_SEC:
+                return dict(cached[1][0])
 
         active_provider = get_active_provider()
         osrm_available = OsrmProvider().is_available()
@@ -1148,7 +1295,7 @@ class TransportService:
         )
         total = int(rows[0]["TOTAL_ADDRS"] or 0) if rows else 0
         geocoded = int(rows[0]["GEOCODED"] or 0) if rows else 0
-        return {
+        result = {
             "provider": active_provider.name,
             "provider_available": True,
             "active_provider": active_provider.name,
@@ -1159,6 +1306,9 @@ class TransportService:
             "geocoded_count": geocoded,
             "ungeocoded_count": total - geocoded,
         }
+        with _REF_CACHE_LOCK:
+            _REF_CACHE[cache_key] = (time.monotonic(), [dict(result)])
+        return result
 
     # ------------------------------------------------------------------
     # Паллеты СТ (Sprint 6)
@@ -1206,22 +1356,27 @@ class TransportService:
             ware_ids=ware_ids,
             transport_type=transport_type,
         )
-        orders = [
-            VrpOrder(
-                st_number=o["ST_NUMBER"],
-                addr=o["ADDR"] or "",
-                lat=float(o["LAT"]) if o.get("LAT") else 0.0,
-                lon=float(o["LON"]) if o.get("LON") else 0.0,
-                pallets=int(o.get("PALLETS_COUNT") or 0),
-                weight_kg=float(o.get("WEIGHT_KG") or 0),
-                ware_id=int(o.get("WARE_ID") or 0),
-                transport_type=o.get("TRANSPORT_TYPE"),
-                tw_strict=bool(o.get("TW_STRICT")),
-                unload_norm_min=int(o.get("UNLOAD_NORM_MIN") or 30),
+        orders: list[VrpOrder] = []
+        for o in raw_orders:
+            if not o.get("LAT") or not o.get("LON"):
+                continue
+            fallback_from, fallback_to = _fallback_time_window_from_ord(o.get("ORD"))
+            orders.append(
+                VrpOrder(
+                    st_number=o["ST_NUMBER"],
+                    addr=o["ADDR"] or "",
+                    lat=float(o["LAT"]) if o.get("LAT") else 0.0,
+                    lon=float(o["LON"]) if o.get("LON") else 0.0,
+                    pallets=int(o.get("PALLETS_COUNT") or 0),
+                    weight_kg=float(o.get("WEIGHT_KG") or 0),
+                    ware_id=int(o.get("WARE_ID") or 0),
+                    transport_type=o.get("TRANSPORT_TYPE"),
+                    tw_from=int(_minutes_from_shift_start(o.get("TIME_FROM"), default=fallback_from) or fallback_from),
+                    tw_to=int(_minutes_from_shift_start(o.get("TIME_TO"), default=fallback_to) or fallback_to),
+                    tw_strict=bool(o.get("TW_STRICT")),
+                    unload_norm_min=int(o.get("UNLOAD_NORM_MIN") or 30),
+                )
             )
-            for o in raw_orders
-            if o.get("LAT") and o.get("LON")
-        ]
 
         # Load vehicles
         raw_vehicles = self.list_vehicles(active_only=True)
@@ -1384,6 +1539,7 @@ class TransportService:
 
         plan_data = json.loads(rows[0]["PLAN_JSON"])
         tasks_created = 0
+        created_task_ids: list[int] = []
         user_id = "vrp_auto"
 
         for route in plan_data.get("routes", []):
@@ -1415,6 +1571,7 @@ class TransportService:
                 ) from exc
 
             tasks_created += 1
+            created_task_ids.append(tt_id)
 
         # Mark plan as applied
         self.gateway.execute(
@@ -1422,7 +1579,7 @@ class TransportService:
             {"plan_id": plan_id},
         )
 
-        return {"tasks_created": tasks_created, "plan_id": plan_id}
+        return {"tasks_created": tasks_created, "created_task_ids": created_task_ids, "plan_id": plan_id}
 
     def get_plan_metrics(self, plan_id: int | None = None) -> dict[str, Any]:
         """Возвращает метрики плана. plan_id=None → последний план."""
@@ -1548,43 +1705,44 @@ class TransportService:
         self,
         date_from: date,
         date_to: date,
+        limit: int = 25,
     ) -> list[dict[str, Any]]:
         """История применённых планов за период с метриками Score, утилизация, пробег."""
-        cache_key = ("planner_history", date_from, date_to)
+        bounded_limit = max(1, min(int(limit or 25), 500))
+        cache_key = ("planner_history", date_from, date_to, bounded_limit)
         now = time.monotonic()
         with _REF_CACHE_LOCK:
             cached = _REF_CACHE.get(cache_key)
             if cached and now - cached[0] <= _REF_CACHE_TTL_SEC:
                 return [dict(row) for row in cached[1]]
-
-        rows = self.gateway.fetch_all(
-            """
-            SELECT ID, PLAN_DATE, SOLVER, SCORE, PAYLOAD AS PLAN_JSON, CREATED_AT, APPLIED_AT
-              FROM RABAEV.RRL_PLANNER_PLANS
-             WHERE PLAN_DATE >= :date_from
-               AND PLAN_DATE <= :date_to
-             ORDER BY PLAN_DATE
-            """,
-            {"date_from": date_from, "date_to": date_to},
-        )
-        result = []
-        for row in rows:
-            try:
-                plan_data = json.loads(row.get("PLAN_JSON") or "{}")
-            except Exception:
-                plan_data = {}
-            result.append({
-                "plan_id": int(row["ID"]),
-                "plan_date": str(row["PLAN_DATE"])[:10],
-                "solver": plan_data.get("solver", row.get("SOLVER") or "none"),
-                "score": float(plan_data.get("score") or row.get("SCORE") or 0),
-                "routes": len(plan_data.get("routes", [])),
-                "total_km": float(plan_data.get("total_km") or 0),
-                "fleet_utilization_pct": float(plan_data.get("fleet_utilization_pct") or 0),
-                "tw_violations": int(plan_data.get("tw_violations") or 0),
-                "applied": row.get("APPLIED_AT") is not None,
-            })
-        with _REF_CACHE_LOCK:
+            rows = self.gateway.fetch_all(
+                """
+                SELECT ID, PLAN_DATE, SOLVER, SCORE, PAYLOAD AS PLAN_JSON, CREATED_AT, APPLIED_AT
+                  FROM RABAEV.RRL_PLANNER_PLANS
+                 WHERE PLAN_DATE >= :date_from
+                   AND PLAN_DATE <= :date_to
+                 ORDER BY PLAN_DATE DESC, ID DESC
+                 FETCH FIRST :limit ROWS ONLY
+                """,
+                {"date_from": date_from, "date_to": date_to, "limit": bounded_limit},
+            )
+            result = []
+            for row in rows:
+                try:
+                    plan_data = json.loads(row.get("PLAN_JSON") or "{}")
+                except Exception:
+                    plan_data = {}
+                result.append({
+                    "plan_id": int(row["ID"]),
+                    "plan_date": str(row["PLAN_DATE"])[:10],
+                    "solver": plan_data.get("solver", row.get("SOLVER") or "none"),
+                    "score": float(plan_data.get("score") or row.get("SCORE") or 0),
+                    "routes": len(plan_data.get("routes", [])),
+                    "total_km": float(plan_data.get("total_km") or 0),
+                    "fleet_utilization_pct": float(plan_data.get("fleet_utilization_pct") or 0),
+                    "tw_violations": int(plan_data.get("tw_violations") or 0),
+                    "applied": row.get("APPLIED_AT") is not None,
+                })
             _REF_CACHE[cache_key] = (time.monotonic(), [dict(row) for row in result])
         return result
 
@@ -2268,7 +2426,7 @@ class TransportService:
             {
                 "tt_id": int(r["ID"]),
                 "transport": r.get("TRANSPORT"),
-                "status": r.get("STATUS"),
+                "status": _normalize_task_condition(r.get("STATUS")),
                 "price": float(r.get("PRICE") or 0),
                 "shipment_date": r.get("SHIPMENT_DATE"),
             }

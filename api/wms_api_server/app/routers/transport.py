@@ -58,7 +58,7 @@ from typing import Annotated
 
 import threading
 
-from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse
 
 from ..auth import (
@@ -235,6 +235,8 @@ def list_available_sts(
     unassigned_only: bool = True,
     ware_id: int | None = None,
     ware_ids: Annotated[list[int] | None, Query()] = None,
+    page: int | None = Query(default=None, ge=1),
+    page_size: int | None = Query(default=None, ge=1, le=500),
     addr_mask: str | None = None,
     st_mask: str | None = None,
     st_mask_exclude: bool = False,
@@ -247,7 +249,7 @@ def list_available_sts(
     raion: str | None = None,
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
-    return TransportService().list_available_sts(
+    rows = TransportService().list_available_sts(
         stdate=stdate,
         date_to=date_to,
         unassigned_only=unassigned_only,
@@ -264,6 +266,12 @@ def list_available_sts(
         articul=articul,
         raion=raion,
     )
+    if page is not None or page_size is not None:
+        effective_page = page or 1
+        effective_size = page_size or 100
+        offset = (effective_page - 1) * effective_size
+        return rows[offset:offset + effective_size]
+    return rows
 
 
 # ------------------------------------------------------------------
@@ -486,12 +494,13 @@ def list_st_pallets(
 @router.get("/planner/orders")
 def get_planner_orders(
     date: date | None = None,
+    plan_date: date | None = Query(default=None, description="Legacy alias for date"),
     ware_ids: Annotated[list[int] | None, Query()] = None,
     transport_type: str | None = None,
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
     return TransportService().get_planner_orders(
-        plan_date=date,
+        plan_date=date or plan_date,
         ware_ids=ware_ids,
         transport_type=transport_type,
     )
@@ -609,7 +618,8 @@ def cancel_vrp_job(
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
 ) -> None:
     """Sprint 101: отменить запущенный VRP-оптимизатор."""
-    vrp_job_store.cancel(job_id)
+    if not vrp_job_store.cancel(job_id):
+        raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
 
 
 @router.post("/planner/apply")
@@ -657,10 +667,11 @@ def get_planner_templates(
 def get_planner_history(
     date_from: date = Query(default=..., description="Начало периода"),
     date_to: date = Query(default=..., description="Конец периода"),
+    limit: int = Query(default=25, ge=1, le=500, description="Максимум строк истории"),
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
     """История применённых планов с метриками (Score, утилизация, пробег)."""
-    return TransportService().get_plan_history(date_from=date_from, date_to=date_to)
+    return TransportService().get_plan_history(date_from=date_from, date_to=date_to, limit=limit)
 
 
 @router.get("/planner/demand-forecast")
@@ -709,11 +720,15 @@ def update_operation_fact(
 
 @router.get("/vehicles/gantt")
 def get_vehicles_gantt(
-    gantt_date: date = Query(default=..., description="Дата для Ганта"),
+    gantt_date: date | None = Query(default=None, description="Дата для Ганта"),
+    plan_date: date | None = Query(default=None, description="Legacy alias for gantt_date"),
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
     """Данные диаграммы Ганта для всех машин на день."""
-    return TransportService().get_vehicles_gantt(gantt_date)
+    effective_date = gantt_date or plan_date
+    if effective_date is None:
+        raise HTTPException(status_code=422, detail="gantt_date is required")
+    return TransportService().get_vehicles_gantt(effective_date)
 
 
 # ---------------------------------------------------------------------------

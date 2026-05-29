@@ -1,11 +1,22 @@
 from collections.abc import Iterator
 from contextlib import contextmanager
+import os
 import threading
 from typing import Any
 
 import oracledb
 
 from .config import get_settings
+
+# python-oracledb thin mode does not support CL8MSWIN1251 (old Russian Oracle charset).
+# If DB uses that charset, Cyrillic VARCHAR2 columns come back as "?????????".
+# Setting WMS_ORACLE_THICK_MODE=1 switches to thick mode (requires Oracle Instant Client)
+# which respects NLS_LANG and handles any charset correctly.
+if os.environ.get("WMS_ORACLE_THICK_MODE", "0") == "1":
+    try:
+        oracledb.init_oracle_client()
+    except Exception:
+        pass  # already initialised or client not found — stay in thin mode
 
 _pool_lock = threading.Lock()
 _pool: oracledb.ConnectionPool | None = None

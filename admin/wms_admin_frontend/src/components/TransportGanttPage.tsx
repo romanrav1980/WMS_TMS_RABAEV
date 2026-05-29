@@ -10,6 +10,12 @@ const ROW_H      = 52;    // vehicle row height px
 const HEADER_H   = 44;    // time axis header height px
 const LEFT_W     = 210;   // vehicle info column width px
 const CHART_W    = (AXIS_END - AXIS_START) * PX_MIN; // 1440px
+const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
+const API_BASIC_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
+
+function apiHeaders(extra: HeadersInit = {}): HeadersInit {
+  return { Authorization: `Basic ${btoa(API_BASIC_AUTH)}`, ...extra };
+}
 
 // ---------------------------------------------------------------------------
 // Operation colour groups (§10.6.3)
@@ -342,8 +348,8 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
     setError(null);
     try {
       const r = await fetch(
-        `/api/admin/transport/vehicles/gantt?gantt_date=${date}`,
-        { headers: { Authorization: "Basic " + btoa("admin:admin123") } }
+        `${API_BASE}/api/admin/transport/vehicles/gantt?gantt_date=${date}`,
+        { headers: apiHeaders() }
       );
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       setVehicles(await r.json());
@@ -361,8 +367,8 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
     setPfLoading(true);
     try {
       const r = await fetch(
-        `/api/admin/transport/plan-fact?date_from=${date}&date_to=${date}`,
-        { headers: { Authorization: "Basic " + btoa("admin:admin123") } }
+        `${API_BASE}/api/admin/transport/plan-fact?date_from=${date}&date_to=${date}`,
+        { headers: apiHeaders() }
       );
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       setPlanFact(await r.json());
@@ -763,12 +769,9 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
           op={factModal.op}
           onClose={() => setFactModal(null)}
           onSave={async (op_id, fact_start, fact_end) => {
-            await fetch(`/api/admin/transport/operations/${op_id}/fact`, {
+            await fetch(`${API_BASE}/api/admin/transport/operations/${op_id}/fact`, {
               method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Basic " + btoa("admin:admin123"),
-              },
+              headers: apiHeaders({ "Content-Type": "application/json" }),
               body: JSON.stringify({ fact_start, fact_end }),
             });
             setFactModal(null);

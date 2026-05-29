@@ -15,6 +15,11 @@ if defined TMS_API_PORT set "API_PORT=%TMS_API_PORT%"
 
 set "API_DIR=%~dp0api\wms_api_server"
 
+rem Oracle charset: CL8MSWIN1251/WE8MSWIN1251 databases need explicit NLS_LANG for
+rem python-oracledb thin mode to decode Cyrillic correctly. Without this,
+rem VARCHAR2 columns with Cyrillic data return "?????????" instead of actual text.
+if not defined NLS_LANG set "NLS_LANG=AMERICAN_AMERICA.AL32UTF8"
+
 if not defined WMS_ORACLE_USER set "WMS_ORACLE_USER=RABAEV"
 if not defined WMS_ORACLE_PASSWORD set "WMS_ORACLE_PASSWORD=RABAEVWMS"
 if not defined WMS_ORACLE_DSN set "WMS_ORACLE_DSN=%DEFAULT_ORACLE_DSN%"

@@ -353,10 +353,10 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 
   const connectWS = useCallback(() => {
     setWsStatus("connecting");
-    const proto = window.location.protocol === "https:" ? "wss" : "ws";
-    const host = window.location.hostname;
-    const port = "8088";
-    const url = `${proto}://${host}:${port}/api/admin/transport/ws/dispatch`;
+    const apiUrl = new URL(API_BASE);
+    const proto = apiUrl.protocol === "https:" ? "wss" : "ws";
+    const [u, p = ""] = API_BASIC_AUTH.split(":");
+    const url = `${proto}://${apiUrl.host}/api/admin/transport/ws/dispatch?u=${encodeURIComponent(u)}&p=${encodeURIComponent(p)}`;
     let ws: WebSocket;
     try { ws = new WebSocket(url); } catch { return; }
     wsRef.current = ws;
