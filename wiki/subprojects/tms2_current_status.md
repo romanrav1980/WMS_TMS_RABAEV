@@ -658,3 +658,12 @@ Sprint 1-3 теперь имеют прямые functional tests, UI smoke и lo
 - `scripts/tms2-routing-smoke.ps1` passed against the live local providers: OSRM route endpoint returned HTTP 200, Valhalla `/status` returned HTTP 200.
 - After restarting the local API with `serv.bat`, `/api/admin/transport/routing/status` reports `active_provider="osrm"`, `osrm_available=true`, `valhalla_available=true`, and `haversine_available=true`.
 - Rebuilt the transport distance matrix through the real OSRM provider: `POST /api/admin/transport/distance-matrix/rebuild?source=osrm` returned `{"pairs":6162,"source":"osrm","addresses":79}`.
+
+## Restart anchor — 2026-05-29
+
+- Branch to resume: `feature/transport-dispatch-phase1`; latest pushed commit before reload: `ac84454`.
+- GitHub Actions `TMS2 Regression` for `ac84454` is green on `ubuntu-latest` and `windows-latest`.
+- Release baseline is strict: no pytest skips, no ignored native command failures, accepted seed `2026-05-24`.
+- Local full gate evidence remains the strongest local proof: core `427 passed`, Sprint 60-95 `234 passed`, Sprint 60-95 load scripts passed, grouped UI smoke passed, and 2000-row NFR smoke passed.
+- Mandatory operating rule for the next session: every meaningful case, load test, release gate, and pilot rehearsal ends with slow SQL/SKV review and a code/index/pagination/cache/batch/acceptance decision.
+- Next strategic move: keep routing/NFR/release gates green, then run pilot checklist; only after pilot evidence expand toward mobile driver, GPS, KPI, and resource planning.

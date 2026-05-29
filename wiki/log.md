@@ -2324,3 +2324,13 @@ Append-only log of root wiki updates.
 - Verification: strict full gate `scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeSprint60To95 -IncludeUiSmoke -IncludeLoadSmoke` passed with core `427 passed`, Sprint 60-95 `234 passed`, all Sprint 60-95 load scripts passed, grouped UI smoke passed, and 2000-row NFR smoke passed (`firstRenderMs=802`, rows `31/43/33`).
 - Fresh slow SQL review after final gate (`from_log_id=1115`) found no critical transport SQL above `1000 ms`; only `/planner/history` at `685 ms` for `244` rows remained and was accepted as non-critical.
 - GitHub Actions first run for commit `df82914` failed at `npm ci` on React 19 / `react-leaflet` peer resolution; CI workflow now uses `npm ci --legacy-peer-deps`, matching the local frontend dependency mode.
+
+## 2026-05-29 - Restart checkpoint before session reload
+
+- Active branch: `feature/transport-dispatch-phase1`.
+- Latest pushed commit: `ac84454 Fix TMS2 CI frontend install`.
+- GitHub Actions run `TMS2 Regression` for `ac84454` completed successfully on both `ubuntu-latest` and `windows-latest`; it passed frontend dependency install, frontend build, Playwright UI smoke, NFR smoke, and `python scripts/tms2_release_gate.py --skip-live-routing`.
+- Local full strict gate evidence remains: `scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeSprint60To95 -IncludeUiSmoke -IncludeLoadSmoke` -> core `427 passed`, Sprint 60-95 `234 passed`, load/UI/NFR passed, no skips.
+- Live routing evidence is already recorded: OSRM and Valhalla containers healthy, routing smoke passed, `/routing/status` selected `osrm`, and distance matrix rebuild returned `6162` OSRM pairs for `79` addresses.
+- Continue after reload from [`subprojects/tms2_current_status.md`](subprojects/tms2_current_status.md), then keep release gate, CI, routing, NFR, and slow SQL review green before moving into pilot/next sprint expansion.
+- Unrelated local dirty tree intentionally remains outside the TMS-2 commit scope: `WindowsApplication2/...`, `MINI WMS/...`, and `WMS перенос v1/...`.
