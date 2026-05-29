@@ -2304,3 +2304,11 @@ Append-only log of root wiki updates.
 - Extended `scripts/tms2-release-gate.ps1` with optional Sprint 60-95 functional, load, and UI smoke switches.
 - Added `.github/workflows/tms2-regression.yml`, a Windows/Ubuntu proof gate that builds the frontend, runs mocked UI smoke, NFR smoke, and the Python release proof.
 - Verification: Sprint 91-95 functional -> `48 passed`; Sprint 91-95 load -> all passed; `transport_sprint60_95_ui_smoke.cjs` -> passed; `python scripts\tms2_release_gate.py --skip-live-routing` -> `245 passed`.
+
+## 2026-05-29 - Project-local MCP servers
+
+- Added `tools/mcp/tms_mcp_server.py`, a dependency-light stdio MCP server with modes for `wiki`, `repo`, `oracle`, and `docker`.
+- Added config examples for Codex and Claude Code: `config/mcp.codex.toml.example`, `config/mcp.claude.json.example`.
+- Added `scripts/test_mcp_servers.py` for local MCP handshake/tool smoke tests.
+- Added `wiki/runbooks/tms_mcp_servers.md` and linked it from `wiki/index.md`.
+- Playwright MCP uses the already installed official Playwright entrypoint from `admin/wms_admin_frontend/node_modules/playwright-core/lib/entry/mcp.js`.

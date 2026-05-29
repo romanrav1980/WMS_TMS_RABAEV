@@ -58,6 +58,7 @@ Start here for a fresh session:
 - [runbooks/tms2_local_verification.md](runbooks/tms2_local_verification.md): local verification runbook for TMS-2 ports, Oracle env, migrations, functional tests by block, skip interpretation, encoding checks, and frontend smoke
 - [runbooks/tms2_release_acceptance.md](runbooks/tms2_release_acceptance.md): final TMS-2 release acceptance runbook, including fixture apply, non-mutating release gate, Sprint 8 mutating apply evidence, live routing smoke/matrix rebuild, and 2000-row frontend NFR smoke
 - [runbooks/tms2_pilot_checklist.md](runbooks/tms2_pilot_checklist.md): 5-day parallel-operation pilot checklist for transport dispatch, MAP/VRP, billing, incident logging, stop criteria, and success criteria
+- [runbooks/tms_mcp_servers.md](runbooks/tms_mcp_servers.md): local MCP servers for wiki recall, repository search, Oracle schema metadata, Playwright, and Docker/routing checks
 - [runbooks/create_api_server.md](runbooks/create_api_server.md): recommended API server stack and migration plan from `Tserver`
 - [runbooks/evidence_driven_process_testing.md](runbooks/evidence_driven_process_testing.md): обязательный runbook для evidence-driven приемки бизнес-процессов: сценарий, модель данных, runner, Oracle/API инварианты, ARM/TSD screenshots, reports
 - [../api/wms_api_server/README.md](../api/wms_api_server/README.md): first Python FastAPI implementation for WMS/TMS API and `Tserver` compatibility

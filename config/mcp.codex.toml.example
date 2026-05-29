@@ -1,0 +1,23 @@
+# Copy these sections into %USERPROFILE%\.codex\config.toml or ~/.codex/config.toml.
+# Restart Codex after editing the user config; running sessions do not hot-load MCP tools.
+
+[mcp_servers.tms-wiki]
+command = "python"
+args = ["C:\\projects\\TMS\\tools\\mcp\\tms_mcp_server.py", "--server", "wiki"]
+
+[mcp_servers.tms-repo]
+command = "python"
+args = ["C:\\projects\\TMS\\tools\\mcp\\tms_mcp_server.py", "--server", "repo"]
+
+[mcp_servers.tms-oracle]
+command = "python"
+args = ["C:\\projects\\TMS\\tools\\mcp\\tms_mcp_server.py", "--server", "oracle"]
+env = { WMS_ORACLE_USER = "RABAEV", WMS_ORACLE_PASSWORD = "RABAEVWMS", WMS_ORACLE_DSN = "127.0.0.1:1521/orcl" }
+
+[mcp_servers.tms-playwright]
+command = "node"
+args = ["C:\\projects\\TMS\\admin\\wms_admin_frontend\\node_modules\\playwright-core\\lib\\entry\\mcp.js", "--headless", "--grant-permissions", "clipboard-read,clipboard-write"]
+
+[mcp_servers.tms-docker-routing]
+command = "python"
+args = ["C:\\projects\\TMS\\tools\\mcp\\tms_mcp_server.py", "--server", "docker"]

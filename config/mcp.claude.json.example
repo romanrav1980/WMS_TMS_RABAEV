@@ -1,0 +1,34 @@
+{
+  "mcpServers": {
+    "tms-wiki": {
+      "command": "python",
+      "args": ["C:\\projects\\TMS\\tools\\mcp\\tms_mcp_server.py", "--server", "wiki"]
+    },
+    "tms-repo": {
+      "command": "python",
+      "args": ["C:\\projects\\TMS\\tools\\mcp\\tms_mcp_server.py", "--server", "repo"]
+    },
+    "tms-oracle": {
+      "command": "python",
+      "args": ["C:\\projects\\TMS\\tools\\mcp\\tms_mcp_server.py", "--server", "oracle"],
+      "env": {
+        "WMS_ORACLE_USER": "RABAEV",
+        "WMS_ORACLE_PASSWORD": "RABAEVWMS",
+        "WMS_ORACLE_DSN": "127.0.0.1:1521/orcl"
+      }
+    },
+    "tms-playwright": {
+      "command": "node",
+      "args": [
+        "C:\\projects\\TMS\\admin\\wms_admin_frontend\\node_modules\\playwright-core\\lib\\entry\\mcp.js",
+        "--headless",
+        "--grant-permissions",
+        "clipboard-read,clipboard-write"
+      ]
+    },
+    "tms-docker-routing": {
+      "command": "python",
+      "args": ["C:\\projects\\TMS\\tools\\mcp\\tms_mcp_server.py", "--server", "docker"]
+    }
+  }
+}
