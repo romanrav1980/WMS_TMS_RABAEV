@@ -20,6 +20,8 @@ from datetime import date
 BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
 AUTH = ("admin", "admin123")
 TODAY = date.today().isoformat()
+BILLING_FIXTURE_FROM = "2011-03-04"
+BILLING_FIXTURE_TO = "2011-03-04"
 
 
 @pytest.fixture(scope="session")
@@ -35,7 +37,11 @@ def task_for_link(api):
     """Find a billable task that is not yet in a billing order."""
     r = api.get(
         f"{BASE_URL}/api/admin/transport/tasks",
-        params={"date_to": TODAY, "no_payments_only": True},
+        params={
+            "date_from": BILLING_FIXTURE_FROM,
+            "date_to": BILLING_FIXTURE_TO,
+            "no_payments_only": True,
+        },
     )
     if r.status_code != 200 or not r.json():
         pytest.skip("No unlinked tasks available")

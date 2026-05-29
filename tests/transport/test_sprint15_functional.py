@@ -24,6 +24,8 @@ BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
 AUTH = ("admin", "admin123")
 TODAY    = date.today().isoformat()
 TOMORROW = (date.today() + timedelta(days=1)).isoformat()
+BILLING_FIXTURE_FROM = "2011-03-03"
+BILLING_FIXTURE_TO = "2011-03-03"
 
 
 @pytest.fixture(scope="session")
@@ -39,7 +41,11 @@ def closed_task_id(api):
     """Находим реальный рейс, пригодный для выставления счета."""
     r = api.get(
         f"{BASE_URL}/api/admin/transport/tasks",
-        params={"date_to": TODAY, "no_payments_only": True},
+        params={
+            "date_from": BILLING_FIXTURE_FROM,
+            "date_to": BILLING_FIXTURE_TO,
+            "no_payments_only": True,
+        },
     )
     if r.status_code != 200:
         pytest.skip(f"Не удалось получить рейсы: {r.status_code}")

@@ -21,6 +21,8 @@ from datetime import date
 BASE_URL = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
 AUTH = ("admin", "admin123")
 TODAY = date.today().isoformat()
+BILLED_FIXTURE_FROM = "2010-09-10"
+BILLED_FIXTURE_TO = "2010-09-10"
 
 
 @pytest.fixture(scope="session")
@@ -34,7 +36,10 @@ def api():
 @pytest.fixture(scope="session")
 def billed_task_id(api):
     """Find or create a task that has PAY_ORDER_ID set."""
-    r = api.get(f"{BASE_URL}/api/admin/transport/tasks", params={"date_to": TODAY})
+    r = api.get(
+        f"{BASE_URL}/api/admin/transport/tasks",
+        params={"date_from": BILLED_FIXTURE_FROM, "date_to": BILLED_FIXTURE_TO},
+    )
     if r.status_code == 200:
         for task in r.json():
             if task.get("PAY_ORDER_ID") and int(task.get("ST_COUNT") or 0) > 0:

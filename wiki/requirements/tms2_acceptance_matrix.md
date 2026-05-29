@@ -183,18 +183,19 @@ Sprint 48-95 are implemented in the roadmap and have functional/load test files 
 python -m pytest tests\transport\test_sprint1_functional.py tests\transport\test_sprint2_functional.py tests\transport\test_sprint3_functional.py tests\transport\test_sprint4_functional.py tests\transport\test_sprint5_functional.py tests\transport\test_sprint6_functional.py tests\transport\test_sprint7_functional.py tests\transport\test_sprint8_functional.py tests\transport\test_sprint9_functional.py tests\transport\test_sprint10_functional.py tests\transport\test_sprint11_functional.py tests\transport\test_sprint12_functional.py tests\transport\test_sprint13_functional.py tests\transport\test_sprint14_functional.py tests\transport\test_sprint15_functional.py tests\transport\test_sprint16_functional.py tests\transport\test_sprint17_functional.py tests\transport\test_sprint18_functional.py tests\transport\test_sprint19_functional.py tests\transport\test_sprint20_functional.py tests\transport\test_routing_infrastructure.py tests\transport\test_frontend_virtualization_nfr.py -q -ra --tb=short
 ```
 
-Current non-mutating local result on 2026-05-29 after Phase 3 migrations (055-062) applied: `scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24` -> **`408 passed, 17 skipped, 0 failed`** in 166.09s.
+Current strict local result on 2026-05-29 after Phase 3 migrations (055-062) applied: `scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeSprint60To95 -IncludeUiSmoke -IncludeLoadSmoke` -> core **`427 passed`**, Sprint 60-95 **`234 passed`**, load/UI/NFR passed, **no pytest skips**.
 
 Спринты 96–119 добавлены в release gate. Seed date: **2026-05-24** (актуальные свободные СТ в dev Oracle).
 
 Полный release gate дополнительно требует:
 
 - Sprint 1-3 functional/UI/load tests are now present and must be included in the final command;
-- deterministic dated seed без skips для dispatcher and map flows: covered by seed date `2026-05-25` plus `055_apply.sql`;
+- deterministic dated seed без skips для dispatcher, map, and billing fixture flows: covered by seed date `2026-05-24`, Sprint 9 historical template `PLAN_DATE=2026-05-23`, and explicit narrow legacy billing fixture date ranges;
 - historical `RRL_PLANNER_PLANS` template fixture for Sprint 9: covered by `055_apply.sql`;
 - non-empty Sprint 8 VRP apply acceptance with `TMS_RUN_MUTATING_VRP_APPLY=1`: verified separately on 2026-05-29, `23 passed`; active `vrp_auto` transport tasks for the seed date remained `0`;
 - ручной Oracle/prod apply checklist для migrations 051-054;
 - routing infrastructure smoke: `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-routing-smoke.ps1`;
-- combined release gate runner: `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-25`;
+- combined strict release gate runner: `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeSprint60To95 -IncludeUiSmoke -IncludeLoadSmoke`;
+- mandatory slow SQL/SKV review after each gate: see `wiki/runbooks/slow_sql_review.md`;
 - NFR table rendering smoke on a 2000-row mocked or seeded dataset;
 - frontend smoke на `http://127.0.0.1:3000`, без порта `3001`.

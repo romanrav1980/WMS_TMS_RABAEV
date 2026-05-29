@@ -2312,3 +2312,14 @@ Append-only log of root wiki updates.
 - Added `scripts/test_mcp_servers.py` for local MCP handshake/tool smoke tests.
 - Added `wiki/runbooks/tms_mcp_servers.md` and linked it from `wiki/index.md`.
 - Playwright MCP uses the already installed official Playwright entrypoint from `admin/wms_admin_frontend/node_modules/playwright-core/lib/entry/mcp.js`.
+
+## 2026-05-29 - TMS-2 strict release gate and slow SQL rule
+
+- Hardened `scripts/tms2-release-gate.ps1` so every external `powershell`, `python`, and `node` command is checked through `Invoke-External`; non-zero native exits now fail the gate.
+- Set accepted release seed date to `2026-05-24` in the PowerShell and cross-platform Python release runners, and wired the seed into Sprint 1-9 plus load runner env.
+- Added `TMS_FAIL_ON_SKIPS=1` support through `tests/conftest.py`; strict release gate now treats pytest skips as blockers.
+- Updated Sprint 9 fixture migration `055_apply.sql` to create the historical template `PLAN_DATE=2026-05-23` from the `2026-05-24` ST set; `/planner/templates?plan_date=2026-05-24` returns `jaccard=1.0`, `matched_sts=308`, `total_current_sts=308`.
+- Fixed release-gate slow SQL from billing fixture lookup by replacing broad `/tasks?date_to=...` scans with explicit narrow legacy fixture date ranges in Sprint 15/18/19/20 tests.
+- Added project-level rule in `AGENTS.md` and new [`runbooks/slow_sql_review.md`](runbooks/slow_sql_review.md): every meaningful case/load/gate/pilot run must analyze long SQL/SKV queries and record a remediation decision.
+- Verification: strict full gate `scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeSprint60To95 -IncludeUiSmoke -IncludeLoadSmoke` passed with core `427 passed`, Sprint 60-95 `234 passed`, all Sprint 60-95 load scripts passed, grouped UI smoke passed, and 2000-row NFR smoke passed (`firstRenderMs=802`, rows `31/43/33`).
+- Fresh slow SQL review after final gate (`from_log_id=1115`) found no critical transport SQL above `1000 ms`; only `/planner/history` at `685 ms` for `244` rows remained and was accepted as non-critical.

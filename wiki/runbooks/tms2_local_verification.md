@@ -82,18 +82,18 @@ Full Sprint 4-20 gate:
 python -m pytest tests\transport\test_sprint4_functional.py tests\transport\test_sprint5_functional.py tests\transport\test_sprint6_functional.py tests\transport\test_sprint7_functional.py tests\transport\test_sprint8_functional.py tests\transport\test_sprint9_functional.py tests\transport\test_sprint10_functional.py tests\transport\test_sprint11_functional.py tests\transport\test_sprint12_functional.py tests\transport\test_sprint13_functional.py tests\transport\test_sprint14_functional.py tests\transport\test_sprint15_functional.py tests\transport\test_sprint16_functional.py tests\transport\test_sprint17_functional.py tests\transport\test_sprint18_functional.py tests\transport\test_sprint19_functional.py tests\transport\test_sprint20_functional.py -q -ra --tb=short
 ```
 
-Current baseline after TMS-2 fixture `055_apply.sql`: `265 passed` for the Sprint 1-20 release runner below.
+Current strict baseline after TMS-2 fixture `055_apply.sql`: no failed commands and no pytest skips. The full 2026-05-29 release gate on seed date `2026-05-24` produced core `427 passed`, Sprint 60-95 `234 passed`, load/UI/NFR passed.
 
 Stable release-gate runner for Sprint 1-20 plus routing/NFR static checks:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-25
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24
 ```
 
 Run the mutating VRP apply only on an isolated Oracle fixture:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-25 -IncludeMutatingVrpApply
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeMutatingVrpApply
 ```
 
 On shared dev Oracle, prefer running only `tests\transport\test_sprint8_functional.py` with `TMS_RUN_MUTATING_VRP_APPLY=1`, then clean up created tasks/ST assignments immediately.
@@ -163,7 +163,12 @@ node tests\ui\transport_table_2000_nfr_smoke.cjs
 
 It uses a mocked 2000-row available-ST dataset and confirms bounded DOM through pagination plus windowed row rendering.
 
+## Slow SQL Review
+
+Every meaningful case, load test, release gate, and pilot rehearsal must finish with the slow SQL/SKV review from [`slow_sql_review.md`](slow_sql_review.md). For release gates, record the last `LOG_ID` before the run and inspect fresh rows after the run with `from_log_id=<last_log_id_plus_1>`.
+
 ## Release and Pilot Docs
 
 - [`tms2_release_acceptance.md`](tms2_release_acceptance.md): final acceptance sequence.
 - [`tms2_pilot_checklist.md`](tms2_pilot_checklist.md): 5-day parallel-operation checklist and incident rules.
+- [`slow_sql_review.md`](slow_sql_review.md): mandatory slow SQL/SKV review and remediation decision rules.

@@ -53,7 +53,7 @@ def sprint_load_scripts(sprints: range) -> list[Path]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Cross-platform TMS-2 release/regression gate.")
-    parser.add_argument("--seed-date", default="2026-05-25")
+    parser.add_argument("--seed-date", default="2026-05-24")
     parser.add_argument("--skip-live-routing", action="store_true")
     parser.add_argument("--include-phase3", action="store_true")
     parser.add_argument("--include-ui-smoke", action="store_true")
@@ -65,8 +65,14 @@ def main() -> int:
     env["TMS_SPRINT1_STDATE"] = args.seed_date
     env["TMS_SPRINT2_STDATE"] = args.seed_date
     env["TMS_SPRINT3_STDATE"] = args.seed_date
+    env["TMS_SPRINT4_STDATE"] = args.seed_date
+    env["TMS_SPRINT5_STDATE"] = args.seed_date
+    env["TMS_SPRINT6_STDATE"] = args.seed_date
+    env["TMS_SPRINT7_DATE"] = args.seed_date
     env["TMS_SPRINT8_DATE"] = args.seed_date
     env["TMS_SPRINT9_DATE"] = args.seed_date
+    env["TMS_TRANSPORT_LOAD_SEED_DATE"] = args.seed_date
+    env["TMS_FAIL_ON_SKIPS"] = "1"
     if args.include_mutating_vrp_apply:
         env["TMS_RUN_MUTATING_VRP_APPLY"] = "1"
     else:

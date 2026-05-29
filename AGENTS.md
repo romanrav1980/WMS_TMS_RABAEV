@@ -36,6 +36,7 @@ Before making non-trivial project decisions, start here:
 - Do not publish SAP/SAP_INTEGRATION projects to GitHub. Treat any local SAP material as out of scope for this repository publication unless the user explicitly changes that rule.
 - For local Windows runs, prefer root `serv.bat` for the WMS API server, root `front.bat` for the WMS admin frontend/raw UI reference, and root `terminal.bat` for the WMS terminal Web/PWA app. These scripts clear their target ports before starting.
 - Pallet identifier fields are not SSCC-only fields. They must accept both standard SSCC values and other internal/legacy WMS pallet identifiers; label them as `Идентификатор паллеты` where possible.
+- After every meaningful functional case, load test, release gate, or pilot rehearsal, analyze the longest SQL/SKV queries. Use `RRL_SQL_SLOW_LOG`, `/api/admin/slow-sql`, Oracle top SQL, and local API audit as evidence. Long queries must produce an explicit decision: code rewrite, bounded query/window, batching, cache, index/migration, statistics/plan check, or a documented backlog item with owner and rationale.
 
 ## Активный проект: ТМС-2
 

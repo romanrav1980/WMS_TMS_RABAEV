@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import concurrent.futures as cf
+import os
 import statistics
 import sys
 import time
@@ -16,7 +17,7 @@ from support.project_config import local_config  # noqa: E402
 
 BASE_URL = local_config().api_base_url
 AUTH = ("admin", "admin123")
-SEED_DATE = "2026-05-25"
+SEED_DATE = os.environ.get("TMS_TRANSPORT_LOAD_SEED_DATE", "2026-05-24")
 
 
 @dataclass(frozen=True)

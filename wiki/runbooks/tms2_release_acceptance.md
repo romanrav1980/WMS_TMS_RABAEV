@@ -27,7 +27,8 @@
 1. Oracle dev/staging schema is available as `RABAEV`.
 2. API runs through root `serv.bat` or equivalent on `config/project.defaults.json -> local.apiPort`.
 3. Frontend runs through root `front.bat` or equivalent on `config/project.defaults.json -> local.frontendPort`; do not use port `3001`.
-4. Test seed date is `2026-05-25`.
+4. Test seed date is `2026-05-24`.
+5. Slow SQL/SKV review is mandatory after every release-gate run. See [`slow_sql_review.md`](slow_sql_review.md).
 5. Environment for Oracle apply:
 
 ```powershell
@@ -36,7 +37,7 @@ $env:TMS_ORACLE='User Id=RABAEV;Password=<password>;Data Source=127.0.0.1:1521/o
 
 ## Apply Acceptance Fixture
 
-Sprint 9 requires one historical planner template before `2026-05-25`.
+Sprint 9 requires one historical planner template before the accepted seed date.
 
 ```powershell
 dotnet run --project tools\oracle_apply\OracleApply.csproj -- TMS_ORACLE db\migrations\2026-05-29_tms2_planner_template_fixture\055_apply.sql --encoding=utf8
@@ -48,7 +49,7 @@ Verify:
 dotnet run --project tools\oracle_apply\OracleApply.csproj -- TMS_ORACLE --query "SELECT SOLVER, TO_CHAR(PLAN_DATE,'YYYY-MM-DD') AS PLAN_DATE FROM RRL_PLANNER_PLANS WHERE SOLVER='s9-template-fixture'"
 ```
 
-Expected: one row with `PLAN_DATE = 2026-05-24`.
+Expected: one row with `PLAN_DATE = 2026-05-23` for release seed `2026-05-24`. A best-effort compatibility row for `PLAN_DATE = 2026-05-24` may also exist when `2026-05-25` source STs are still present.
 
 Rollback if needed:
 
@@ -59,10 +60,18 @@ dotnet run --project tools\oracle_apply\OracleApply.csproj -- TMS_ORACLE db\migr
 ## Non-Mutating Release Gate
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-25
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24
 ```
 
-Current accepted result: `267 passed`.
+Current accepted strict result:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeSprint60To95 -IncludeUiSmoke -IncludeLoadSmoke
+```
+
+Accepted 2026-05-29 result: core `427 passed`, Sprint 60-95 `234 passed`, load/UI/NFR passed, no pytest skips. The runner now fails on any native command error and `TMS_FAIL_ON_SKIPS=1`.
+
+Slow SQL review for the same run, using `from_log_id=1115`: no critical transport SQL above `1000 ms`; one `/planner/history` row at `685 ms`/`244` rows accepted as non-critical. Historical 6-13s `/tasks?date_to=...` gate entries were corrected by narrowing billing fixture date ranges.
 
 ## Mutating Sprint 8 Apply Evidence
 
@@ -172,9 +181,10 @@ Current local evidence, 2026-05-29: `{"ok":true,"firstRenderMs":848,"renderedRow
 Release acceptance can be marked ready when:
 
 - `055_apply.sql` is applied and verified;
-- non-mutating release gate is `267 passed`;
+- strict release gate has no failed commands and no pytest skips;
 - Sprint 8 mutating apply evidence is recorded and cleaned up;
 - routing infrastructure smoke is documented for current provider mode;
 - frontend 2000-row smoke passes;
+- slow SQL review is recorded and every long query has a decision;
 - encoding check passes;
 - `git diff --check` has no errors other than normal CRLF warnings.

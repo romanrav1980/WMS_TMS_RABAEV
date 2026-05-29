@@ -629,6 +629,16 @@ Sprint 1-3 теперь имеют прямые functional tests, UI smoke и lo
 - Added routing data preparation script `scripts/tms2-routing-data-prep.ps1`; it prepares `osrm-data/`, copies the PBF for Valhalla, and runs OSRM extract/partition/customize. It intentionally requires an explicit `-PbfUrl` so large map downloads are user-controlled.
 - Added Playwright NFR smoke `tests/ui/transport_table_2000_nfr_smoke.cjs` for a mocked 2000-row available-ST dataset, bounded rendered rows, full-list virtual scroll, and selection. Verification on local frontend `3000`: `{"ok":true,"firstRenderMs":777,"renderedRows":31,"renderedAfterScroll":43,"renderedAtBottom":33}`.
 
+## Strict release gate and slow SQL checkpoint — 2026-05-29
+
+- `scripts/tms2-release-gate.ps1` now fails on any native command non-zero exit and sets `TMS_FAIL_ON_SKIPS=1`, so pytest skips are release blockers.
+- Accepted release seed is `2026-05-24`; Sprint 9 template fixture now creates `PLAN_DATE=2026-05-23` from the `2026-05-24` ST set. `/planner/templates?plan_date=2026-05-24` returned `jaccard=1.0`, `matched_sts=308`, `total_current_sts=308`.
+- Full strict gate passed: `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeSprint60To95 -IncludeUiSmoke -IncludeLoadSmoke`.
+- Gate evidence: core `427 passed`; Sprint 60-95 `234 passed`; Sprint 60-95 load scripts all passed; `transport_sprint60_95_ui_smoke.cjs` passed; `transport_table_2000_nfr_smoke.cjs` passed with `firstRenderMs=802`, bounded rows `31/43/33`.
+- Project rule added: every meaningful case, load test, release gate, and pilot rehearsal must include slow SQL/SKV review and a remediation decision for long queries.
+- Slow SQL review after final full gate (`from_log_id=1115`) found no critical transport SQL above `1000 ms`; one `/planner/history` entry was `685 ms` for `244` rows and accepted as non-critical.
+- Previous fresh slow SQL issue was fixed: billing tests no longer use broad `/tasks?date_to=...` fixture lookup that returned about `26k` rows and took `6-13s`; they now use explicit narrow legacy fixture dates.
+
 ## Continuous execution checkpoint — 2026-05-29
 
 - User requested continuous execution without pauses and hourly context fixation.

@@ -18,8 +18,16 @@ Run:
 from __future__ import annotations
 
 import os
+import sys
 import pytest
 import requests
+from datetime import date
+from pathlib import Path
+from unittest.mock import MagicMock
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "api" / "wms_api_server"))
+
+from app.services.transport_service import TransportService
 from datetime import date, timedelta
 
 
@@ -217,3 +225,28 @@ class TestFullPalletPickField:
         for row in data[:30]:
             assert "SUGAR" in row
             assert row["SUGAR"] in (0, 1), f"SUGAR={row['SUGAR']} не 0/1"
+
+
+class TestTasksDateWindow:
+    def test_tasks_without_date_is_bounded_by_default(self):
+        gateway = MagicMock()
+        gateway.fetch_all.return_value = []
+        TransportService(gateway=gateway).list_tasks()
+
+        sql, params = gateway.fetch_all.call_args.args
+        assert "TT.SHIPMENT_DATE >= :date_from" in sql
+        assert "TT.SHIPMENT_DATE < :date_to_next" in sql
+        assert "date_from" in params
+        assert "date_to_next" in params
+
+    def test_tasks_explicit_date_range_uses_lower_bound(self):
+        gateway = MagicMock()
+        gateway.fetch_all.return_value = []
+        TransportService(gateway=gateway).list_tasks(
+            date_from=date(2026, 4, 23),
+            date_to=date(2026, 5, 24),
+        )
+
+        sql, params = gateway.fetch_all.call_args.args
+        assert "TT.SHIPMENT_DATE >= :date_from" in sql
+        assert params["date_from"].isoformat() == "2026-04-23"

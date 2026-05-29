@@ -19,8 +19,9 @@
 ## Предварительные действия
 
 ```sql
--- 1. Убедиться что dev/staging прошёл release gate
--- scripts/tms2-release-gate.ps1 -SeedDate 2026-05-25 → 265+ passed
+-- 1. Убедиться что dev/staging прошёл strict release gate без skips
+-- scripts/tms2-release-gate.ps1 -SeedDate 2026-05-24 -IncludeSprint60To95 -IncludeUiSmoke -IncludeLoadSmoke
+-- Ожидаемо: no failed commands, no pytest skips, load/UI/NFR green
 
 -- 2. Сделать резервную копию схемы RABAEV
 expdp RABAEV/password schemas=RABAEV directory=BACKUP_DIR dumpfile=rabaev_before_tms2_$(date +%Y%m%d).dmp
@@ -168,6 +169,18 @@ python -m pytest tests\transport\test_sprint96_functional.py `
     -q -ra --tb=short
 # Ожидаем: 100+ passed, 0 failed
 ```
+
+## Post-gate: slow SQL/SKV review
+
+После каждого prod/staging gate обязательно выполнить [`slow_sql_review.md`](slow_sql_review.md):
+
+```powershell
+curl.exe -s -u admin:admin123 "http://127.0.0.1:8088/api/admin/slow-sql?limit=1"
+curl.exe -s -u admin:admin123 "http://127.0.0.1:8088/api/admin/slow-sql?from_log_id=<last_log_id_plus_1>&limit=30&min_elapsed_ms=500"
+curl.exe -s -u admin:admin123 "http://127.0.0.1:8088/api/admin/slow-sql/oracle-top?limit=20"
+```
+
+Любой свежий SQL выше `1000 ms` или повторяющийся SQL выше `500 ms` должен получить решение до pilot/prod sign-off: правка кода, сужение окна, batch/cache, индекс/миграция, statistics/plan check или оформленный backlog item.
 
 ---
 

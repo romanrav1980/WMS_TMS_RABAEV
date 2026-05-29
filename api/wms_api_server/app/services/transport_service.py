@@ -435,6 +435,7 @@ class TransportService:
         task_id: int | None = None,
         transport_mask: str | None = None,
         company_mask: str | None = None,
+        date_from: date | None = None,
         date_to: date | None = None,
         no_payments_only: bool = False,
     ) -> list[dict[str, Any]]:
@@ -447,6 +448,13 @@ class TransportService:
             conditions.append("TT.SHIPMENT_DATE >= :shipment_date AND TT.SHIPMENT_DATE < :shipment_date_next")
             params["shipment_date"] = shipment_date
             params["shipment_date_next"] = shipment_date + timedelta(days=1)
+        else:
+            if date_from is None and date_to is None:
+                date_to = date.today()
+                date_from = date_to - timedelta(days=31)
+            if date_from is not None:
+                conditions.append("TT.SHIPMENT_DATE >= :date_from")
+                params["date_from"] = date_from
         if date_to is not None:
             conditions.append("TT.SHIPMENT_DATE < :date_to_next")
             params["date_to_next"] = date_to + timedelta(days=1)
@@ -2685,6 +2693,7 @@ class TransportService:
         task_id: int | None = None,
         transport_mask: str | None = None,
         company_mask: str | None = None,
+        date_from: date | None = None,
         date_to: date | None = None,
         no_payments_only: bool = False,
     ) -> bytes:
@@ -2695,6 +2704,7 @@ class TransportService:
             task_id=task_id,
             transport_mask=transport_mask,
             company_mask=company_mask,
+            date_from=date_from,
             date_to=date_to,
             no_payments_only=no_payments_only,
         )
