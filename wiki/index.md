@@ -1,4 +1,4 @@
-# TMS Wiki Index
+﻿# TMS Wiki Index
 
 This is the maintained knowledge map for the TMS repository.
 
@@ -22,7 +22,7 @@ Start here for a fresh session:
 - [subprojects/windowsapplication2.md](subprojects/windowsapplication2.md): legacy WinForms WMS/TMS desktop application
 - [subprojects/oracle_schema.md](subprojects/oracle_schema.md): reconstructed Oracle schema and deployment scripts
 - [subprojects/wms_terminal_web.md](subprojects/wms_terminal_web.md): modern Web/PWA terminal application replacing the legacy terminal OS client
-- [subprojects/tms2_current_status.md](subprojects/tms2_current_status.md): reboot anchor for the active TMS-2 workstream, current Sprint 1-20 hardening status, fresh Sprint 1-6 functional/UI/load gate, risks, and next steps
+- [subprojects/tms2_current_status.md](subprojects/tms2_current_status.md): reboot anchor for the active TMS-2 workstream, Sprint hardening status through Sprint 90, release gates, routing provider evidence, risks, and next steps
 
 ## Architecture
 
@@ -56,6 +56,8 @@ Start here for a fresh session:
 
 - [../scripts/README.md](../scripts/README.md): local Windows launch scripts for WMS API, admin frontend/raw UI reference, and terminal Web/PWA app
 - [runbooks/tms2_local_verification.md](runbooks/tms2_local_verification.md): local verification runbook for TMS-2 ports, Oracle env, migrations, functional tests by block, skip interpretation, encoding checks, and frontend smoke
+- [runbooks/tms2_release_acceptance.md](runbooks/tms2_release_acceptance.md): final TMS-2 release acceptance runbook, including fixture apply, non-mutating release gate, Sprint 8 mutating apply evidence, live routing smoke/matrix rebuild, and 2000-row frontend NFR smoke
+- [runbooks/tms2_pilot_checklist.md](runbooks/tms2_pilot_checklist.md): 5-day parallel-operation pilot checklist for transport dispatch, MAP/VRP, billing, incident logging, stop criteria, and success criteria
 - [runbooks/create_api_server.md](runbooks/create_api_server.md): recommended API server stack and migration plan from `Tserver`
 - [runbooks/evidence_driven_process_testing.md](runbooks/evidence_driven_process_testing.md): обязательный runbook для evidence-driven приемки бизнес-процессов: сценарий, модель данных, runner, Oracle/API инварианты, ARM/TSD screenshots, reports
 - [../api/wms_api_server/README.md](../api/wms_api_server/README.md): first Python FastAPI implementation for WMS/TMS API and `Tserver` compatibility
@@ -104,7 +106,7 @@ Start here for a fresh session:
 - [requirements/mes_production_completion_prompt.md](requirements/mes_production_completion_prompt.md): prompt for implementing MES production completion through a movement journal and controlled legacy WMS bridge
 - [requirements/mes_raw_shortage_replenishment_tz.md](requirements/mes_raw_shortage_replenishment_tz.md): Russian technical assignment for BOM raw-material shortage calculation and transfer tasks from raw warehouse to production
 - [requirements/modern_terminal_app_tz.md](requirements/modern_terminal_app_tz.md): Russian technical assignment for the modern Web/PWA terminal app replacing the legacy terminal OS client
-- [requirements/tms2_acceptance_matrix.md](requirements/tms2_acceptance_matrix.md): strategic acceptance matrix for TMS-2 Sprint 1-20, mapping user flows to API, Oracle contracts, tests, gaps, and release gates
+- [requirements/tms2_acceptance_matrix.md](requirements/tms2_acceptance_matrix.md): strategic acceptance matrix for TMS-2 Sprint 1-95, mapping user flows to API, Oracle contracts, tests, infrastructure/NFR decisions, gaps, and release gates
 - [requirements/picking_planning_tz.md](requirements/picking_planning_tz.md): Russian technical assignment for customer-order picking planning, reservations, customer rules, route/dock context, and shipment-part splitting
 - [requirements/raw_material_admin_tz.md](requirements/raw_material_admin_tz.md): Russian technical assignment for the raw-material admin page: raw SKU settings, raw warehouses, and stock by selected warehouses
 - [requirements/resource_management_module_tz.md](requirements/resource_management_module_tz.md): Russian technical assignment for a separate resource-management module covering reachtrucks, KIKA, forklifts, trolleys, pickers, loading teams, cooking, packing, shifts, sessions, dispatch, and plan-fact Gantt

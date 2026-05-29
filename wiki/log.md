@@ -2134,3 +2134,164 @@ Append-only log of root wiki updates.
 - Added `tests/support/project_config.cjs` and `tests/support/project_config.py` so UI/load tests can derive URLs from the shared config plus env overrides.
 - Updated `front.bat`, `serv.bat`, `admin/wms_admin_frontend/vite.config.ts`, and `api/wms_api_server/app/config.py` to read endpoint defaults from the shared config.
 - Updated fresh TMS-2 Sprint 39-45 UI/load scripts to stop hardcoding local base URLs.
+
+## 2026-05-28 - TMS-2 Sprint 46 hardening
+
+- Replaced the Locust-only Sprint 46 load script with a Windows-safe no-mutation runner that reads API base URL from `tests/support/project_config.py`.
+- Added `tests/ui/transport_sprint46_ui_smoke.cjs` covering previous/next date buttons in both «Заявки» and «Маршруты».
+- Added `tests/ui/transport_sprint46_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint46_day_step_buttons_2026_05_28/index.html`.
+- Verification: `test_sprint46_functional.py` -> `12 passed`; load p95 tasks day step 47.8 ms, available-sts day step 34.6 ms; Sprint 46 UI smoke and training capture passed.
+
+## 2026-05-28 - TMS-2 Sprint 47 hardening
+
+- Replaced the Locust-only Sprint 47 load script with a Windows-safe no-mutation runner that reads API base URL from `tests/support/project_config.py`.
+- Added `tests/ui/transport_sprint47_ui_smoke.cjs` covering localStorage restore for active tab and dates.
+- Added `tests/ui/transport_sprint47_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint47_localstorage_persistence_2026_05_28/index.html`.
+- Verification: `test_sprint47_functional.py` -> `9 passed`; load p95 tasks 72.2 ms, available-sts 30.3 ms, clusters 28.7 ms; Sprint 47 UI smoke and training capture passed.
+
+## 2026-05-29 - TMS-2 routing infrastructure and table NFR
+
+- Added root `docker-compose.osrm.yml` and `docker-compose.valhalla.yml`, ignored local `osrm-data/` and `valhalla-data/`, and added `scripts/tms2-routing-smoke.ps1`.
+- Fixed routing provider health checks to use real OSRM route and Valhalla status probes; `/routing/status` now reports active provider and provider availability flags.
+- Added bounded DOM rendering to the available-ST table; current Sprint 102 UI uses `@tanstack/react-virtual` over the full available-ST list.
+- Added static gates `tests/transport/test_routing_infrastructure.py` and `tests/transport/test_frontend_virtualization_nfr.py`.
+- Added `scripts/tms2-release-gate.ps1` to run Sprint 1-20, routing, and table-NFR gates against a stable seed date, with opt-in mutating VRP apply for isolated Oracle fixtures.
+- Updated `wiki/requirements/tms2_acceptance_matrix.md`: Sprint 1-3 are passed, Sprint 48-95 are listed, WebSocket/SSE are deferred backlog decisions, and routing/NFR gates are documented.
+- Verification: non-mutating `scripts/tms2-release-gate.ps1 -SeedDate 2026-05-25` on local API `8088` -> `264 passed, 1 skipped` in 130.34s; the remaining skip is the known missing Sprint 9 historical-plan fixture.
+
+## 2026-05-29 - TMS-2 release gate fixture and mutating VRP apply
+
+- Added and live-applied `db/migrations/2026-05-29_tms2_planner_template_fixture/055_apply.sql`; rollback is `055_rollback.sql`.
+- The fixture creates one deterministic historical `RRL_PLANNER_PLANS` row (`SOLVER='s9-template-fixture'`, `PLAN_DATE=2026-05-24`) from free STs on `2026-05-25`; `/planner/templates?plan_date=2026-05-25` returns `jaccard=1.0`.
+- Verification: `test_sprint9_functional.py` -> `11 passed`; release runner `scripts/tms2-release-gate.ps1 -SeedDate 2026-05-25` -> `265 passed` in 123.89s.
+- Mutating Sprint 8 apply evidence: `TMS_RUN_MUTATING_VRP_APPLY=1 python -m pytest tests\transport\test_sprint8_functional.py -q -ra --tb=short` -> `23 passed`.
+- Shared dev cleanup after mutating evidence: released 300 `RRL_SBORKA_PALLETS` rows, marked 27 new `RRL_TRANSPORT_TASK` rows deleted, verified active new tasks after cleanup = 0.
+
+## 2026-05-29 - TMS-2 tactical rollout artifacts
+
+- Added [`wiki/runbooks/tms2_release_acceptance.md`](runbooks/tms2_release_acceptance.md) with final release sequence: fixture apply, non-mutating gate, mutating Sprint 8 evidence/cleanup, routing smoke, frontend 2000-row NFR smoke, and sign-off criteria.
+- Added [`wiki/runbooks/tms2_pilot_checklist.md`](runbooks/tms2_pilot_checklist.md) for the 5-day dispatcher pilot: daily start checks, full business flow, MAP/VRP flow, incident log, stop criteria, and success criteria.
+- Added `scripts/tms2-routing-data-prep.ps1` to explicitly download/prep routing data, run OSRM extract/partition/customize, and stage the PBF for Valhalla.
+- Added `tests/ui/transport_table_2000_nfr_smoke.cjs` for mocked 2000-row available-ST UI performance evidence: bounded DOM, full-list virtual scroll, and selection.
+- Added static doc/script gates in `tests/transport/test_release_acceptance_docs.py`, `test_routing_infrastructure.py`, and `test_frontend_virtualization_nfr.py`.
+- Verification: `node tests\ui\transport_table_2000_nfr_smoke.cjs` -> `{"ok":true,"firstRenderMs":848,"renderedRows":51,"renderedAfterScroll":52,"page2RenderedRows":51}`.
+
+## 2026-05-29 - TMS-2 continuous execution start
+
+- User requested continuous execution without pauses and hourly context fixation.
+- Started strategic routing-provider execution: prepare map data, start OSRM/Valhalla where possible, smoke live provider, rebuild distance matrix, and update release evidence.
+
+## 2026-05-29 - TMS-2 routing live-build checkpoint
+
+- Downloaded the Ural Geofabrik PBF locally and completed OSRM extract/partition/customize with `osrm/osrm-backend:latest`.
+- Live OSRM route smoke on local port `5000` returned `code=Ok`, distance `3642.8` for an Ekaterinburg test route.
+- Replaced unavailable routing images in compose/docs: OSRM `ghcr.io/project-osrm/osrm-backend:v5.27` -> `osrm/osrm-backend:latest`; Valhalla `ghcr.io/valhalla/valhalla:run-latest` -> `ghcr.io/gis-ops/docker-valhalla/valhalla:latest`.
+- Changed compose healthchecks away from missing `wget`; external `scripts/tms2-routing-smoke.ps1` remains the real HTTP provider check.
+- Valhalla is in-progress through the gis-ops two-stage build; current stage is `enhance` with local `valhalla_tiles` populated. Next evidence target is Valhalla `/status` and `/route`, then backend `/routing/status` and real-provider matrix rebuild.
+
+## 2026-05-29 - TMS-2 routing live provider accepted
+
+- Valhalla completed the gis-ops two-stage graph build from the Ural Geofabrik PBF, produced `valhalla_tiles.tar`, loaded 3820 tiles, and returned a real route for the Ekaterinburg test pair: status `Found route between points`, length `3.962` km.
+- Recreated OSRM and Valhalla containers after compose healthcheck fixes; both report Docker `healthy`.
+- Verification: `scripts/tms2-routing-smoke.ps1` passed against live local providers: OSRM route endpoint HTTP 200 and Valhalla `/status` HTTP 200.
+- Restarted the local API with `serv.bat`; `/routing/status` now reports `active_provider="osrm"`, `osrm_available=true`, `valhalla_available=true`, and `haversine_available=true`.
+- Rebuilt the distance matrix through real OSRM: `POST /distance-matrix/rebuild?source=osrm` returned `{"pairs":6162,"source":"osrm","addresses":79}`.
+- Fixed the frontend Vite/build break from new Fleet/KPI/User pages by adding shared `admin/wms_admin_frontend/src/api.ts`; `npm.cmd run build` now passes.
+- Updated the 2000-row NFR smoke to the current Sprint 102 full-list virtualizer model; verification returned `{"ok":true,"firstRenderMs":777,"renderedRows":31,"renderedAfterScroll":43,"renderedAtBottom":33}`.
+- Restored `/planner/solve` backward compatibility: direct `VrpPlan` is again the default response for Sprint 8/9 gates, while Sprint 101 job/SSE mode remains explicit through `?async_response=true`.
+- Verification after compatibility fix: `test_sprint8_functional.py`, `test_sprint9_functional.py`, and `test_sprint101_102_functional.py` -> `53 passed`; full release runner `scripts\tms2-release-gate.ps1 -SeedDate 2026-05-25` -> `267 passed`; mutating Sprint 8 apply -> `23 passed`.
+
+## 2026-05-29 - TMS-2 Sprint 48 hardening
+
+- Replaced the Locust-only Sprint 48 load script with a Windows-safe no-mutation runner that reads API base URL from `tests/support/project_config.py`.
+- Fixed the «Сегодня» button so it performs an immediate task reload for today's date in addition to updating client date state.
+- Added `tests/ui/transport_sprint48_ui_smoke.cjs` covering «Сегодня» in both «Заявки» and «Маршруты».
+- Added `tests/ui/transport_sprint48_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint48_today_button_2026_05_29/index.html`.
+- Verification: `test_sprint48_functional.py` -> `9 passed`; load p95 tasks today reset 328.0 ms, available-sts today reset 39.5 ms; Sprint 48 UI smoke and training capture passed.
+
+## 2026-05-29 - TMS-2 Sprint 49 hardening
+
+- Replaced the Locust-only Sprint 49 load script with a Windows-safe no-mutation runner that reads API base URL from `tests/support/project_config.py`.
+- Added `tests/ui/transport_sprint49_ui_smoke.cjs` covering compact-mode default off, dense class apply/remove, reduced row height, and selection persistence.
+- Added `tests/ui/transport_sprint49_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint49_dense_mode_2026_05_29/index.html`.
+- Verification: `test_sprint49_functional.py` -> `9 passed`; load p95 available-sts dense context 52.3 ms, tasks dense context 279.2 ms; Sprint 49 UI smoke and training capture passed.
+
+## 2026-05-29 - TMS-2 Sprint 50 hardening
+
+- Replaced the Locust-only Sprint 50 load script with a Windows-safe no-mutation runner that reads API base URL from `tests/support/project_config.py`.
+- Added `tests/ui/transport_sprint50_ui_smoke.cjs` covering ready highlight for `VERIFY_PERC=100`, no ready highlight for partial/null values, and selected-row priority.
+- Added `tests/ui/transport_sprint50_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint50_ready_highlight_2026_05_29/index.html`.
+- Verification: `test_sprint50_functional.py` -> `12 passed`; load p95 assembled ready-highlight 51.0 ms, all ready-highlight 101.3 ms; Sprint 50 UI smoke and training capture passed.
+
+## 2026-05-29 - TMS-2 Sprint 51 hardening
+
+- Replaced the Locust-only Sprint 51 load script with a Windows-safe no-mutation runner; removed the previous fake mutating assign call from the load profile.
+- Added `tests/ui/transport_sprint51_ui_smoke.cjs` covering hidden/visible selection bar state, count/P/M/V totals, action buttons, add-to-selected-trip visibility, and clear behavior.
+- Added `tests/ui/transport_sprint51_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint51_selection_bar_2026_05_29/index.html`.
+- Verification: `test_sprint51_functional.py` -> `11 passed`; load p95 available-sts selection-bar context 78.0 ms, tasks selection-bar context 310.5 ms; Sprint 51 UI smoke and training capture passed.
+
+## 2026-05-29 - TMS-2 Sprint 52 hardening
+
+- Replaced the Locust-only Sprint 52 load script with a Windows-safe no-mutation runner using `tests/support/project_config.py`.
+- Fixed available-ST client sorting so `null` values stay last in both ascending and descending order, matching the Sprint 52 acceptance rule.
+- Added `tests/ui/transport_sprint52_ui_smoke.cjs` covering `СТ №` sorting and `%` sorting with `VERIFY_PERC=null` last.
+- Added `tests/ui/transport_sprint52_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint52_st_sorting_2026_05_29/index.html`.
+- Verification: `test_sprint52_functional.py` -> `15 passed`; load p95 available-sts sort context 77.6 ms, warehouse sort context 52.9 ms, tasks sort context 305.4 ms; Sprint 52 UI smoke and training capture passed.
+
+## 2026-05-29 - TMS-2 Sprint 53 hardening
+
+- Replaced the Locust-only Sprint 53 load script with a Windows-safe no-mutation runner using `tests/support/project_config.py`.
+- Added `tests/ui/transport_sprint53_ui_smoke.cjs` covering filter-panel collapse/expand, collapsed width, `localStorage.tms_fpCollapsed`, and active-filter badge in the collapsed panel.
+- Added `tests/ui/transport_sprint53_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint53_filter_panel_collapse_2026_05_29/index.html`.
+- Verification: `test_sprint53_functional.py` -> `15 passed`; load p95 available-sts default 82.1 ms, addr filter 49.5 ms, tasks context 632.5 ms; Sprint 53 UI smoke and training capture passed.
+
+## 2026-05-29 - TMS-2 Sprint 54 hardening
+
+- Replaced the Locust-only Sprint 54 load script with a Windows-safe no-mutation runner using `tests/support/project_config.py`.
+- Added `tests/ui/transport_sprint54_ui_smoke.cjs` covering real browser download of selected STs to `selected-sts-YYYY-MM-DD.csv`, including UTF-8 BOM, semicolon delimiter, ST rows, readiness percent, trip number, and totals.
+- Added `tests/ui/transport_sprint54_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint54_selected_st_csv_2026_05_29/index.html` plus an example CSV artifact.
+- Verification: `test_sprint54_functional.py` -> `12 passed`; load p95 available-sts CSV context 55.4 ms, selected warehouse 46.3 ms, tasks context 317.4 ms; Sprint 54 UI smoke and training capture passed.
+
+## 2026-05-29 - TMS-2 Sprint 55 hardening
+
+- Replaced the Locust-only Sprint 55 load script with a Windows-safe no-mutation runner using `tests/support/project_config.py`.
+- Added `tests/ui/transport_sprint55_ui_smoke.cjs` covering all-visible `П/M/V` totals, selected totals remaining separate, and warehouse filter recalculation.
+- Added `tests/ui/transport_sprint55_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint55_visible_totals_2026_05_29/index.html`.
+- Verification: `test_sprint55_functional.py` -> `10 passed`; load p95 available-sts all 51.9 ms, warehouse 57.7 ms, unassigned 46.4 ms; Sprint 55 UI smoke and training capture passed.
+
+## 2026-05-29 - TMS-2 Sprint 56 hardening
+
+- Replaced the Locust-only Sprint 56 load script with a Windows-safe no-mutation runner that discovers a seed task and measures task composition reads.
+- Added `tests/ui/transport_sprint56_ui_smoke.cjs` covering route-sheet popup print content and disabled print for an empty trip.
+- Added `tests/ui/transport_sprint56_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint56_route_sheet_print_2026_05_29/index.html` plus `route-sheet-5601.html`.
+- Verification: `test_sprint56_functional.py` -> `14 passed`; load p95 task STs 293.4 ms, tasks 210.5 ms, available-sts 42.5 ms; Sprint 56 UI smoke and training capture passed.
+
+## 2026-05-29 - TMS-2 Sprint 57 hardening
+
+- Replaced the Locust-only Sprint 57 load script with a Windows-safe no-mutation runner; the previous fake mutating assign profile is removed from load testing.
+- Added `tests/ui/transport_sprint57_ui_smoke.cjs` covering quick-add Enter behavior, POST payload, input clearing, toast, and refreshed trip composition.
+- Added `tests/ui/transport_sprint57_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint57_quick_add_st_2026_05_29/index.html`.
+- Verification: `test_sprint57_functional.py` -> `14 passed`; load p95 task STs 251.4 ms, tasks 286.9 ms, available-sts 49.2 ms; Sprint 57 UI smoke and training capture passed.
+
+## 2026-05-29 - TMS-2 Sprint 58 hardening
+
+- Replaced the Locust-only Sprint 58 load script with a Windows-safe no-mutation runner using `tests/support/project_config.py`.
+- Added `tests/ui/transport_sprint58_ui_smoke.cjs` covering expand-all/collapse-all in cluster mode for both the ST table and cluster sidebar active state.
+- Added `tests/ui/transport_sprint58_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint58_expand_collapse_clusters_2026_05_29/index.html`.
+- Verification: `test_sprint58_functional.py` -> `10 passed`; load p95 clusters 78.8 ms, available-sts cluster context 48.4 ms; Sprint 58 UI smoke and training capture passed.
+
+## 2026-05-29 - TMS-2 Sprint 59 hardening and neighbor handoff pickup
+
+- Replaced the Locust-only Sprint 59 load script with a Windows-safe no-mutation runner using `tests/support/project_config.py`.
+- Added `tests/ui/transport_sprint59_ui_smoke.cjs` covering route search by vehicle, driver, carrier, no-match state, and clear button.
+- Added `tests/ui/transport_sprint59_training_capture.cjs` and generated `wiki-raw/tms2_training/sprint59_route_search_2026_05_29/index.html`.
+- Picked up the interrupted neighboring-agent work: removed the remaining nonexistent `SP.DELETED` filter from `driver_mobile.py` route composition SQL, keeping the real-column `RRL_TR_VEHICLE.NUM/TR_TYPE` correction in `gps.py`.
+- Verification: `test_sprint59_functional.py` -> `14 passed`; load p95 tasks 416.6 ms, car context 274.2 ms, task-id context 124.9 ms; Sprint 59 UI smoke and training capture passed; Python syntax AST parse for `driver_mobile.py`/`gps.py` passed.
+
+## 2026-05-29 - TMS-2 Sprint 60-90 cross-platform regression
+
+- Picked up the interrupted neighboring-agent context and kept the real-column fixes in `driver_mobile.py`/`gps.py`; remaining syntax check is covered by AST parse from the handoff and transport regression gates.
+- Added `tests/support/frontend_checks.py` so Sprint 66-81 TypeScript compile tests use the local compiler on both Windows and Linux-like systems instead of Windows-only `cmd /c node_modules\.bin\tsc.cmd` or `npx`.
+- Added `tests/support/transport_load_runner.py` and replaced Sprint 60-90 Locust-only load files with plain Python no-mutation runners that read `tests/support/project_config.py` and work on Windows/Linux shells.
+- Verification: Sprint 60-90 functional -> `186 passed`; Sprint 60-90 load gates -> all passed; frontend build passed; 2000-row virtualizer NFR smoke passed (`ok=true`, first render 852 ms); routing smoke passed for OSRM and Valhalla; encoding check passed; `git diff --check` passed with line-ending warnings only.
+- Acceptance note: Sprint 60-90 are now fresh functional/load green; Playwright/training hardening remains complete through Sprint 59 and targeted UI smoke is still required before production sign-off for Sprint 60-90 controls.

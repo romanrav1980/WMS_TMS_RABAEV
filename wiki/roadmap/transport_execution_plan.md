@@ -392,7 +392,7 @@
 wget https://download.geofabrik.de/russia-latest.osm.pbf -P ./osrm-data/
 # ... docker run osrm-extract, osrm-partition, osrm-customize
 docker compose -f docker-compose.osrm.yml up -d
-docker compose -f docker-compose.valhalla.yml up -d  # резерв
+$env:VALHALLA_FORCE_REBUILD='True'; $env:VALHALLA_USE_TILES_IGNORE_PBF='False'; docker compose -f docker-compose.valhalla.yml up -d  # резерв
 ```
 
 | Задача | Кто | Файл |
@@ -1807,16 +1807,16 @@ C# WinForms и React работают **одновременно** в течен
 # 2. Скачать карту России (~3 GB)
 wget https://download.geofabrik.de/russia-latest.osm.pbf -P ./osrm-data/
 # 3. Подготовить OSRM (однократно, ~30 мин)
-docker run --rm -v "$(pwd)/osrm-data:/data" ghcr.io/project-osrm/osrm-backend:v5.27 \
+docker run --rm -v "$(pwd)/osrm-data:/data" osrm/osrm-backend:latest \
   osrm-extract -p /opt/car.lua /data/russia-latest.osm.pbf
-docker run --rm -v "$(pwd)/osrm-data:/data" ghcr.io/project-osrm/osrm-backend:v5.27 \
+docker run --rm -v "$(pwd)/osrm-data:/data" osrm/osrm-backend:latest \
   osrm-partition /data/russia-latest.osrm
-docker run --rm -v "$(pwd)/osrm-data:/data" ghcr.io/project-osrm/osrm-backend:v5.27 \
+docker run --rm -v "$(pwd)/osrm-data:/data" osrm/osrm-backend:latest \
   osrm-customize /data/russia-latest.osrm
 # 4. Поднять контейнеры
 docker compose -f docker-compose.osrm.yml up -d
-docker compose -f docker-compose.valhalla.yml up -d
+$env:VALHALLA_FORCE_REBUILD='True'; $env:VALHALLA_USE_TILES_IGNORE_PBF='False'; docker compose -f docker-compose.valhalla.yml up -d
 # 5. Проверить
-curl http://localhost:5000/health   # OSRM
-curl http://localhost:8002/health   # Valhalla
+curl "http://localhost:5000/route/v1/driving/60.5975,56.8389;60.6122,56.8519?overview=false"   # OSRM
+curl http://localhost:8002/status   # Valhalla
 ```

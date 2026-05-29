@@ -1,20 +1,17 @@
-"""Sprint 76 load test — no new endpoints; volume column is client-side."""
-from locust import HttpUser, task, between
+﻿"""Cross-platform no-mutation load gate for Sprint 76.
+
+Run from the repository root with Python on Windows or Linux-like systems.
+It measures the dispatcher read context for the sprint feature without requiring
+Locust or mutating Oracle data.
+"""
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from support.transport_load_runner import run_read_gate  # noqa: E402
 
 
-class Sprint76LoadUser(HttpUser):
-    wait_time = between(0.5, 1.5)
-
-    def on_start(self):
-        self.client.post(
-            "/api/admin/auth/login",
-            json={"username": "admin", "password": "admin"},
-        )
-
-    @task(3)
-    def get_task_sts(self):
-        self.client.get("/api/admin/transport/task_sts?task_id=1")
-
-    @task(1)
-    def list_tasks(self):
-        self.client.get("/api/admin/transport/tasks?date=2026-05-28")
+if __name__ == "__main__":
+    raise SystemExit(run_read_gate(76, include_task_sts=True))

@@ -479,6 +479,40 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   // Sprint 96 — держим актуальную ссылку на loadTasks для WS-обработчика
   useEffect(() => { loadTasksRef.current = loadTasks; }, [loadTasks]);
 
+  const resetTaskDateToToday = useCallback(async () => {
+    const nextDate = todayIso();
+    setFilterDate(nextDate);
+    setLoading(true); setError(null);
+    try {
+      const data = await apiFetch<TransportTask[]>(
+        `/api/admin/transport/tasks?shipment_date=${nextDate}&include_readiness=true`
+      );
+      setTasks(data);
+    } catch (e) {
+      setError(String(e));
+      setTasks(demoTasks(nextDate));
+    } finally { setLoading(false); }
+  }, []);
+
+  const resetRouteDateToToday = useCallback(async () => {
+    const nextDate = todayIso();
+    setRouteShipDate(nextDate);
+    setLoading(true); setError(null);
+    try {
+      const p = new URLSearchParams({ include_readiness: "true", shipment_date: nextDate });
+      if (debouncedRouteTaskId) p.set("task_id", debouncedRouteTaskId);
+      if (debouncedRouteCarMask) p.set("transport_mask", debouncedRouteCarMask);
+      if (debouncedRouteCompany) p.set("company_mask", debouncedRouteCompany);
+      if (routeDateTo) p.set("date_to", routeDateTo);
+      if (routeNoPayments) p.set("no_payments_only", "true");
+      const data = await apiFetch<TransportTask[]>(`/api/admin/transport/tasks?${p}`);
+      setTasks(data);
+    } catch (e) {
+      setError(String(e));
+      setTasks(demoTasks(nextDate));
+    } finally { setLoading(false); }
+  }, [debouncedRouteTaskId, debouncedRouteCarMask, debouncedRouteCompany, routeDateTo, routeNoPayments]);
+
   // ------------------------------------------------------------------
   // Load billing orders (Sprint 17)
   // ------------------------------------------------------------------
@@ -1195,8 +1229,11 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
 
   const sortedSts = stSortField
     ? [...wareFilteredSts].sort((a, b) => {
-        const va = (a as Record<string, unknown>)[stSortField] ?? "";
-        const vb = (b as Record<string, unknown>)[stSortField] ?? "";
+        const va = (a as Record<string, unknown>)[stSortField];
+        const vb = (b as Record<string, unknown>)[stSortField];
+        if (va == null && vb == null) return 0;
+        if (va == null) return 1;
+        if (vb == null) return -1;
         const cmp = va < vb ? -1 : va > vb ? 1 : 0;
         return stSortDir === "asc" ? cmp : -cmp;
       })
@@ -1729,7 +1766,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)} />
               <button className="dispatch-day-step-btn" onClick={() => setFilterDate(d => shiftDate(d, 1))} title="Следующий день">►</button>
               {filterDate !== todayIso() && (
-                <button className="dispatch-today-btn" onClick={() => setFilterDate(todayIso())} title="Перейти к сегодня">Сегодня</button>
+                <button className="dispatch-today-btn" onClick={resetTaskDateToToday} title="Перейти к сегодня">Сегодня</button>
               )}
               <button className="dispatch-new-btn" onClick={() => setCreateDialog(true)}>
                 {selectedStNums.size > 0 ? `+ Создать маршрут (${selectedStNums.size})` : "+ Создать маршрут"}
@@ -2195,7 +2232,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
             <input type="date" value={routeShipDate} onChange={e => setRouteShipDate(e.target.value)} />
             <button className="dispatch-day-step-btn" onClick={() => setRouteShipDate(d => shiftDate(d, 1))} title="Следующий день">►</button>
             {routeShipDate !== todayIso() && (
-              <button className="dispatch-today-btn" onClick={() => setRouteShipDate(todayIso())} title="Перейти к сегодня">Сегодня</button>
+              <button className="dispatch-today-btn" onClick={resetRouteDateToToday} title="Перейти к сегодня">Сегодня</button>
             )}
             <button className="dispatch-refresh-btn" onClick={loadTasks} title="Обновить рейсы">⟳</button>
             <span className="dispatch-tcount">{searchedRouteTasks.length}/{tasks.length} рейс(ов)</span>

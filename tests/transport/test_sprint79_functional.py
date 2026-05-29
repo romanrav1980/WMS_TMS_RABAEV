@@ -1,4 +1,4 @@
-"""Sprint 79: ТК column in tasks-tab trips table (§3.8.1 ТЗ)."""
+﻿"""Sprint 79: ТК column in tasks-tab trips table (§3.8.1 ТЗ)."""
 import pytest
 
 
@@ -28,11 +28,6 @@ def test_colspan_15():
 
 
 def test_typescript_compiles():
-    import subprocess
-    r = subprocess.run(
-        ["npx", "tsc", "--noEmit"],
-        cwd="admin/wms_admin_frontend",
-        capture_output=True,
-        text=True,
-    )
+    from tests.support.frontend_checks import run_tsc_no_emit
+    r = run_tsc_no_emit()
     assert r.returncode == 0, f"TypeScript errors:\n{r.stdout}\n{r.stderr}"

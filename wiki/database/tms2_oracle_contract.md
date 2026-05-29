@@ -38,6 +38,8 @@ Known drift:
 | `RRL_ADDR_DISTANCE_MATRIX` | Матрица расстояний | `FROM_ADDR`, `TO_ADDR`, `DISTANCE_KM`, `DURATION_MIN`, `SOURCE`, `UPDATED_AT` |
 | `RRL_PLANNER_PLANS` | Сохраненные планы | `ID`, `PLAN_DATE`, `CREATED_AT`, `SOLVER`, `SCORE`, `PAYLOAD`, `APPLIED_AT` |
 
+Fixture note, 2026-05-29: migration `db/migrations/2026-05-29_tms2_planner_template_fixture/055_apply.sql` inserts one deterministic Sprint 9 historical planner-template row into `RRL_PLANNER_PLANS` (`SOLVER='s9-template-fixture'`, `PLAN_DATE=2026-05-24`) using free STs from seed date `2026-05-25`. Rollback deletes only this fixture row.
+
 Known drift:
 
 - Matrix column is `DISTANCE_KM`, not `DIST_KM`.
@@ -90,4 +92,3 @@ Before production:
 - Verify object existence and column names.
 - Run rollback rehearsal where possible.
 - Run functional gates from [`../requirements/tms2_acceptance_matrix.md`](../requirements/tms2_acceptance_matrix.md).
-

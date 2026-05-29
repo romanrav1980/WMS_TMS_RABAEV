@@ -152,8 +152,8 @@ def get_vehicle_positions(
     rows = _gw().fetch_all(
         """
         SELECT GL.VEHICLE_ID,
-               V.NUM_PLAT,
-               V.TRANSTYPE  AS TRANSPORT_TYPE,
+               V.NUM        AS NUM_PLAT,
+               V.TR_TYPE    AS TRANSPORT_TYPE,
                GL.LAT,
                GL.LON,
                GL.SPEED_KMH,

@@ -55,6 +55,21 @@
 
 Sprint 1-3 теперь имеют прямые functional tests, UI smoke и load coverage для таблицы СТ, выделения/создания рейса и базовой вкладки маршрутов.
 
+## Sprint 60-90 checkpoint
+
+Контекст сохранен на 2026-05-29 после подхвата прерванной соседней работы и свежего регресса Sprint 60-90.
+
+- Functional gate: `test_sprint60_functional.py` ... `test_sprint90_functional.py` -> `186 passed` за 175.64s.
+- Load gate: `transport_sprint60_load_test.py` ... `transport_sprint90_load_test.py` -> all passed. Скрипты переписаны как обычные кроссплатформенные Python no-mutation runners через `tests/support/transport_load_runner.py`, без зависимости от Locust и без Windows-only `npx.cmd`.
+- TypeScript compile checks Sprint 66-81 используют `tests/support/frontend_checks.py`, который выбирает локальный `tsc` для Windows и Linux-like систем.
+- Frontend build: `npm.cmd run build` passed.
+- NFR virtualizer smoke: `node tests\ui\transport_table_2000_nfr_smoke.cjs` -> `ok=true`, first render 852 ms, rendered rows 31/43/33.
+- Routing gate: `scripts\tms2-routing-smoke.ps1` passed; OSRM `/route` and Valhalla `/status` reachable.
+- Encoding gate: `scripts\check-encoding.ps1` passed.
+- `git diff --check`: passed; only line-ending warnings from Git autocrlf.
+
+Оставшийся acceptance нюанс: Sprint 60-90 закрыты функционально и нагрузочно, но per-sprint Playwright/training coverage пока есть только для Sprint 48-59. Перед production sign-off для 60-90 нужен targeted UI smoke по измененным контролам либо явная приемка ручным сценарием.
+
 ## Что исправлено в hardening
 
 - Transport API row contract приведен к legacy uppercase keys.
@@ -423,8 +438,199 @@ Sprint 1-3 теперь имеют прямые functional tests, UI smoke и lo
 - Свежие TMS-2 Sprint 39-45 UI/load scripts переведены с hardcoded local URLs на helpers.
 - Правило дальше: новые номера портов, IP и base URLs не хардкодить в sprint scripts; добавлять в общий config или использовать env override.
 
-1. Продолжить sequential hardening с Sprint 46.
+## Sprint 46 hardening checkpoint
+
+- Sprint 46 закрыт свежим gate на 2026-05-28.
+- Заменено: `tests/transport/transport_sprint46_load_test.py` больше не требует Locust; runner использует общий `tests/support/project_config.py`.
+- Добавлено: UI smoke для кнопок `◄`/`►` во вкладках «Заявки» и «Маршруты».
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint46_day_step_buttons_2026_05_28/index.html`](../../wiki-raw/tms2_training/sprint46_day_step_buttons_2026_05_28/index.html).
+- Functional: `tests/transport/test_sprint46_functional.py` -> `12 passed`.
+- Load: `tests/transport/transport_sprint46_load_test.py`; p95 tasks day step 47.8 ms, available-sts day step 34.6 ms.
+- UI: `tests/ui/transport_sprint46_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 47.
+
+## Sprint 47 hardening checkpoint
+
+- Sprint 47 закрыт свежим gate на 2026-05-28.
+- Заменено: `tests/transport/transport_sprint47_load_test.py` больше не требует Locust; runner использует общий `tests/support/project_config.py`.
+- Добавлено: UI smoke для восстановления `activeTab`, `routeShipDate`, `filterDate` из localStorage.
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint47_localstorage_persistence_2026_05_28/index.html`](../../wiki-raw/tms2_training/sprint47_localstorage_persistence_2026_05_28/index.html).
+- Functional: `tests/transport/test_sprint47_functional.py` -> `9 passed`.
+- Load: `tests/transport/transport_sprint47_load_test.py`; p95 tasks 72.2 ms, available-sts 30.3 ms, clusters 28.7 ms.
+- UI: `tests/ui/transport_sprint47_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 48.
+
+## Sprint 48 hardening checkpoint
+
+- Sprint 48 закрыт свежим gate на 2026-05-29.
+- Заменено: `tests/transport/transport_sprint48_load_test.py` больше не требует Locust; runner использует общий `tests/support/project_config.py`.
+- Исправлено: кнопка «Сегодня» теперь не только меняет дату и исчезает, но и сразу перезагружает рейсы через `GET /tasks?shipment_date=today`.
+- Добавлено: UI smoke для кнопки «Сегодня» во вкладках «Заявки» и «Маршруты».
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint48_today_button_2026_05_29/index.html`](../../wiki-raw/tms2_training/sprint48_today_button_2026_05_29/index.html).
+- Functional: `tests/transport/test_sprint48_functional.py` -> `9 passed`.
+- Load: `tests/transport/transport_sprint48_load_test.py`; p95 tasks today reset 328.0 ms, available-sts today reset 39.5 ms.
+- UI: `tests/ui/transport_sprint48_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 49.
+
+## Sprint 49 hardening checkpoint
+
+- Sprint 49 закрыт свежим gate на 2026-05-29.
+- Заменено: `tests/transport/transport_sprint49_load_test.py` больше не требует Locust; runner использует общий `tests/support/project_config.py`.
+- Добавлено: UI smoke для compact toggle: default off, `dispatch-grid-dense` applied/removed, row height reduced `24 -> 22`, selected ST preserved.
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint49_dense_mode_2026_05_29/index.html`](../../wiki-raw/tms2_training/sprint49_dense_mode_2026_05_29/index.html).
+- Functional: `tests/transport/test_sprint49_functional.py` -> `9 passed`.
+- Load: `tests/transport/transport_sprint49_load_test.py`; p95 available-sts dense context 52.3 ms, tasks dense context 279.2 ms.
+- UI: `tests/ui/transport_sprint49_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 50.
+
+## Sprint 50 hardening checkpoint
+
+- Sprint 50 закрыт свежим gate на 2026-05-29.
+- Заменено: `tests/transport/transport_sprint50_load_test.py` больше не требует Locust; runner использует общий `tests/support/project_config.py`.
+- Добавлено: UI smoke для ready highlight: `VERIFY_PERC=100` получает `dispatch-st-ready`, `75/null` не получают, selected row подавляет зеленую полосу.
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint50_ready_highlight_2026_05_29/index.html`](../../wiki-raw/tms2_training/sprint50_ready_highlight_2026_05_29/index.html).
+- Functional: `tests/transport/test_sprint50_functional.py` -> `12 passed`.
+- Load: `tests/transport/transport_sprint50_load_test.py`; p95 assembled ready-highlight 51.0 ms, all ready-highlight 101.3 ms.
+- UI: `tests/ui/transport_sprint50_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 51.
+
+## Sprint 51 hardening checkpoint
+
+- Sprint 51 закрыт свежим gate на 2026-05-29.
+- Заменено: `tests/transport/transport_sprint51_load_test.py` больше не требует Locust и больше не делает mutating fake assign; runner использует общий `tests/support/project_config.py`.
+- Добавлено: UI smoke для selection bar: hidden initially, count/P/M/V totals, create/CSV actions, `Добавить в #5101` after trip selection, clear hides the bar.
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint51_selection_bar_2026_05_29/index.html`](../../wiki-raw/tms2_training/sprint51_selection_bar_2026_05_29/index.html).
+- Functional: `tests/transport/test_sprint51_functional.py` -> `11 passed`.
+- Load: `tests/transport/transport_sprint51_load_test.py`; p95 available-sts selection-bar context 78.0 ms, tasks selection-bar context 310.5 ms.
+- UI: `tests/ui/transport_sprint51_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 52.
+
+## Sprint 52 hardening checkpoint
+
+- Sprint 52 закрыт свежим gate на 2026-05-29.
+- Заменено: `tests/transport/transport_sprint52_load_test.py` больше не требует Locust; runner использует общий `tests/support/project_config.py`.
+- Исправлено: сортировка доступных СТ держит пустые значения последними и при `asc`, и при `desc`.
+- Добавлено: UI smoke для сортировки `СТ №` и `%`, включая `VERIFY_PERC=null` в конце списка.
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint52_st_sorting_2026_05_29/index.html`](../../wiki-raw/tms2_training/sprint52_st_sorting_2026_05_29/index.html).
+- Functional: `tests/transport/test_sprint52_functional.py` -> `15 passed`.
+- Load: `tests/transport/transport_sprint52_load_test.py`; p95 available-sts sort context 77.6 ms, warehouse sort context 52.9 ms, tasks sort context 305.4 ms.
+- UI: `tests/ui/transport_sprint52_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 53.
+
+## Sprint 53 hardening checkpoint
+
+- Sprint 53 закрыт свежим gate на 2026-05-29.
+- Заменено: `tests/transport/transport_sprint53_load_test.py` больше не требует Locust; runner использует общий `tests/support/project_config.py`.
+- Добавлено: UI smoke для сворачивания/разворачивания панели фильтров, persistence `localStorage.tms_fpCollapsed`, ширины collapsed-панели и badge активных фильтров.
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint53_filter_panel_collapse_2026_05_29/index.html`](../../wiki-raw/tms2_training/sprint53_filter_panel_collapse_2026_05_29/index.html).
+- Functional: `tests/transport/test_sprint53_functional.py` -> `15 passed`.
+- Load: `tests/transport/transport_sprint53_load_test.py`; p95 available-sts default 82.1 ms, addr filter 49.5 ms, tasks context 632.5 ms.
+- UI: `tests/ui/transport_sprint53_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 54.
+
+## Sprint 54 hardening checkpoint
+
+- Sprint 54 закрыт свежим gate на 2026-05-29.
+- Заменено: `tests/transport/transport_sprint54_load_test.py` больше не требует Locust; runner использует общий `tests/support/project_config.py`.
+- Добавлено: UI smoke для реального browser download выделенных СТ в `selected-sts-YYYY-MM-DD.csv`, с UTF-8 BOM, `;` delimiter, строками СТ, `% сборки`, `#TRANSTASK_ID` и итоговой строкой.
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint54_selected_st_csv_2026_05_29/index.html`](../../wiki-raw/tms2_training/sprint54_selected_st_csv_2026_05_29/index.html) и пример CSV.
+- Functional: `tests/transport/test_sprint54_functional.py` -> `12 passed`.
+- Load: `tests/transport/transport_sprint54_load_test.py`; p95 available-sts CSV context 55.4 ms, selected warehouse 46.3 ms, tasks context 317.4 ms.
+- UI: `tests/ui/transport_sprint54_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 55.
+
+## Sprint 55 hardening checkpoint
+
+- Sprint 55 закрыт свежим gate на 2026-05-29.
+- Заменено: `tests/transport/transport_sprint55_load_test.py` больше не требует Locust; runner использует общий `tests/support/project_config.py`.
+- Добавлено: UI smoke для общего итога `П/M/V` по всем видимым СТ, независимости от выделения и пересчёта при фильтре склада.
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint55_visible_totals_2026_05_29/index.html`](../../wiki-raw/tms2_training/sprint55_visible_totals_2026_05_29/index.html).
+- Functional: `tests/transport/test_sprint55_functional.py` -> `10 passed`.
+- Load: `tests/transport/transport_sprint55_load_test.py`; p95 available-sts all 51.9 ms, warehouse 57.7 ms, unassigned 46.4 ms.
+- UI: `tests/ui/transport_sprint55_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 56.
+
+## Sprint 56 hardening checkpoint
+
+- Sprint 56 закрыт свежим gate на 2026-05-29.
+- Заменено: `tests/transport/transport_sprint56_load_test.py` больше не требует Locust; runner ищет реальный seed task и меряет чтение состава рейса без мутаций.
+- Добавлено: UI smoke для печати маршрутного листа через popup: рейс, машина, водитель, док, адреса, итоги; пустой рейс держит кнопку печати disabled.
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint56_route_sheet_print_2026_05_29/index.html`](../../wiki-raw/tms2_training/sprint56_route_sheet_print_2026_05_29/index.html) и сохранённый `route-sheet-5601.html`.
+- Functional: `tests/transport/test_sprint56_functional.py` -> `14 passed`.
+- Load: `tests/transport/transport_sprint56_load_test.py`; p95 task STs 293.4 ms, tasks 210.5 ms, available-sts 42.5 ms.
+- UI: `tests/ui/transport_sprint56_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 57.
+
+## Sprint 57 hardening checkpoint
+
+- Sprint 57 закрыт свежим gate на 2026-05-29.
+- Заменено: `tests/transport/transport_sprint57_load_test.py` больше не требует Locust и больше не делает fake mutating assign; runner меряет только read context.
+- Добавлено: UI smoke для быстрого добавления СТ по номеру: Enter, POST payload `{st_numbers:[...]}`, очистка input, toast и появление СТ в составе рейса.
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint57_quick_add_st_2026_05_29/index.html`](../../wiki-raw/tms2_training/sprint57_quick_add_st_2026_05_29/index.html).
+- Functional: `tests/transport/test_sprint57_functional.py` -> `14 passed`.
+- Load: `tests/transport/transport_sprint57_load_test.py`; p95 task STs 251.4 ms, tasks 286.9 ms, available-sts 49.2 ms.
+- UI: `tests/ui/transport_sprint57_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 58.
+
+## Sprint 58 hardening checkpoint
+
+- Sprint 58 закрыт свежим gate на 2026-05-29.
+- Заменено: `tests/transport/transport_sprint58_load_test.py` больше не требует Locust; runner меряет `/clusters` и ST read context без мутаций.
+- Добавлено: UI smoke для кнопок «⊞ Все»/«⊟ Нет»: строки СТ внутри районов появляются/исчезают, sidebar cards получают/теряют active state.
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint58_expand_collapse_clusters_2026_05_29/index.html`](../../wiki-raw/tms2_training/sprint58_expand_collapse_clusters_2026_05_29/index.html).
+- Functional: `tests/transport/test_sprint58_functional.py` -> `10 passed`.
+- Load: `tests/transport/transport_sprint58_load_test.py`; p95 clusters 78.8 ms, available-sts cluster context 48.4 ms.
+- UI: `tests/ui/transport_sprint58_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 59.
+
+## Sprint 59 hardening checkpoint
+
+- Sprint 59 закрыт свежим gate на 2026-05-29.
+- Заменено: `tests/transport/transport_sprint59_load_test.py` больше не требует Locust; runner меряет `/tasks` read context без мутаций.
+- Добавлено: UI smoke для поиска маршрутов по машине, водителю, ТК, no-match состоянию и clear button.
+- Добавлено: обучающий HTML pack [`../../wiki-raw/tms2_training/sprint59_route_search_2026_05_29/index.html`](../../wiki-raw/tms2_training/sprint59_route_search_2026_05_29/index.html).
+- Подхвачена незавершенная правка соседнего агента: в `driver_mobile.py` убран оставшийся несуществующий `SP.DELETED` для `RRL_SBORKA_PALLETS`; `gps.py` использует реальные `RRL_TR_VEHICLE.NUM/TR_TYPE`.
+- Functional: `tests/transport/test_sprint59_functional.py` -> `14 passed`.
+- Load: `tests/transport/transport_sprint59_load_test.py`; p95 tasks 416.6 ms, car context 274.2 ms, task-id context 124.9 ms.
+- UI: `tests/ui/transport_sprint59_ui_smoke.cjs` passed.
+- Следующий спринт: Sprint 60.
+
+1. Продолжить sequential hardening с Sprint 60.
 2. После каждого закрытого спринта или блока формировать HTML training pack в `wiki-raw/tms2_training/`: зачем блок, структура данных, результат, screenshots, бизнес-процессы и визуальное доказательство успешного выполнения.
 3. Создать стабильный dated seed для полного transport acceptance, чтобы убрать data-dependent skips вне Block I.
 4. Для Sprint 8 перед production отдельно прогнать mutating apply на контролируемом Oracle fixture: created tasks, assigned STs, no partial success.
 5. После Sprint 1-20 расширять hardening на Sprint 21-30 отдельным блоком, не смешивая с параллельными Sprint 30+ работами.
+
+## Infrastructure/NFR checkpoint — 2026-05-29
+
+- OSRM/Valhalla infrastructure is now present in the repo: root `docker-compose.osrm.yml`, root `docker-compose.valhalla.yml`, and `scripts/tms2-routing-smoke.ps1`.
+- Backend routing probes now match real services: OSRM is checked through `/route/v1/driving/...`, Valhalla through `/status` or `/health`; `/routing/status` reports `active_provider`, `osrm_available`, `valhalla_available`, and `haversine_available`.
+- The available-ST table NFR is accepted as bounded DOM through the Sprint 102 `@tanstack/react-virtual` implementation over the full available-ST list. Sprint 60 pagination remains a historical contract, but the current UI NFR is real virtual scrolling with top/bottom spacers.
+- Static gates added: `tests/transport/test_routing_infrastructure.py` and `tests/transport/test_frontend_virtualization_nfr.py`.
+- Acceptance matrix updated: Sprint 1-3 are no longer `Gap`; Sprint 48-95 are listed; WebSocket `/ws/dispatch` and SSE VRP progress are explicitly deferred backlog, not current release blockers.
+- Applied live Oracle fixture migration `db/migrations/2026-05-29_tms2_planner_template_fixture/055_apply.sql`; it inserts a deterministic `RRL_PLANNER_PLANS` historical template (`SOLVER='s9-template-fixture'`, `PLAN_DATE=2026-05-24`) from free STs on `2026-05-25`.
+- Sprint 9 historical templates are now zero-skip: `test_sprint9_functional.py` -> `11 passed`; `/planner/templates?plan_date=2026-05-25` returns `jaccard=1.0`.
+- Non-mutating release gate on local API `8088` with seed date `2026-05-25`: `scripts/tms2-release-gate.ps1 -SeedDate 2026-05-25` -> `267 passed` in 143.22s after fixture apply and routing/NFR hardening.
+- Sprint 8 mutating apply gate was run separately with `TMS_RUN_MUTATING_VRP_APPLY=1`: `test_sprint8_functional.py` -> `23 passed`. A follow-up Oracle check found `0` active `vrp_auto` transport tasks for seed date `2026-05-25`.
+- Added release and pilot operating docs: [`../runbooks/tms2_release_acceptance.md`](../runbooks/tms2_release_acceptance.md) and [`../runbooks/tms2_pilot_checklist.md`](../runbooks/tms2_pilot_checklist.md).
+- Added routing data preparation script `scripts/tms2-routing-data-prep.ps1`; it prepares `osrm-data/`, copies the PBF for Valhalla, and runs OSRM extract/partition/customize. It intentionally requires an explicit `-PbfUrl` so large map downloads are user-controlled.
+- Added Playwright NFR smoke `tests/ui/transport_table_2000_nfr_smoke.cjs` for a mocked 2000-row available-ST dataset, bounded rendered rows, full-list virtual scroll, and selection. Verification on local frontend `3000`: `{"ok":true,"firstRenderMs":777,"renderedRows":31,"renderedAfterScroll":43,"renderedAtBottom":33}`.
+
+## Continuous execution checkpoint — 2026-05-29
+
+- User requested continuous execution without pauses and hourly context fixation.
+- Active strategic target: bring up a real routing provider, then verify `/routing/status`, distance-matrix rebuild, and release evidence.
+- First routing-data attempt will use a regional Russia extract for practical local build time; Haversine remains fallback until OSRM/Valhalla responds.
+
+## Routing provider live-build checkpoint — 2026-05-29
+
+- OSRM regional provider path is now proven locally on the Ural Geofabrik extract (`russia-latest.osm.pbf`, 390 MB): `osrm-extract`, `osrm-partition`, and `osrm-customize` completed; `curl http://127.0.0.1:5000/route/v1/driving/60.5975,56.8389;60.6122,56.8519?overview=false` returned `code=Ok`, distance `3642.8`.
+- OSRM image references were corrected from unavailable `ghcr.io/project-osrm/osrm-backend:v5.27` to `osrm/osrm-backend:latest`.
+- OSRM compose healthcheck no longer depends on `wget` inside the OSRM image; live route verification is handled by `scripts/tms2-routing-smoke.ps1`.
+- Valhalla image references were corrected from unavailable `ghcr.io/valhalla/valhalla:run-latest` to `ghcr.io/gis-ops/docker-valhalla/valhalla:latest`.
+- Manual upstream `ghcr.io/valhalla/valhalla:latest` build produced tiles but no route/locate edges; the accepted build uses the gis-ops two-stage runner (`build`, then `enhance`) against the same local PBF.
+- Valhalla finished the regional graph build, produced `valhalla_tiles.tar`, loaded 3820 tiles, and returned a real route for the Ekaterinburg test pair: status `Found route between points`, length `3.962` km.
+- Recreated OSRM and Valhalla containers after compose healthcheck fixes; both are now Docker `healthy`.
+- `scripts/tms2-routing-smoke.ps1` passed against the live local providers: OSRM route endpoint returned HTTP 200, Valhalla `/status` returned HTTP 200.
+- After restarting the local API with `serv.bat`, `/api/admin/transport/routing/status` reports `active_provider="osrm"`, `osrm_available=true`, `valhalla_available=true`, and `haversine_available=true`.
+- Rebuilt the transport distance matrix through the real OSRM provider: `POST /api/admin/transport/distance-matrix/rebuild?source=osrm` returned `{"pairs":6162,"source":"osrm","addresses":79}`.

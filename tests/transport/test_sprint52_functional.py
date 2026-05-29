@@ -13,10 +13,13 @@ def sort_sts(
     direction: str = "asc",
 ) -> list[dict]:
     """Mirror the frontend sortedSts logic."""
-    def key(s: dict):
+    def value_key(s: dict):
         v = s.get(field)
-        return (v is None, v if v is not None else "")
-    return sorted(sts, key=key, reverse=(direction == "desc"))
+        return v if v is not None else ""
+
+    not_null = [s for s in sts if s.get(field) is not None]
+    nulls = [s for s in sts if s.get(field) is None]
+    return sorted(not_null, key=value_key, reverse=(direction == "desc")) + nulls
 
 
 class TestStSort:

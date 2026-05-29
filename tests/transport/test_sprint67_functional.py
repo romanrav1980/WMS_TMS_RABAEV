@@ -1,4 +1,4 @@
-"""Sprint 67: Amber row for unready STs in trip detail table."""
+﻿"""Sprint 67: Amber row for unready STs in trip detail table."""
 import pytest
 
 
@@ -22,11 +22,6 @@ def test_unready_css_defined():
 
 
 def test_typescript_compiles():
-    import subprocess
-    r = subprocess.run(
-        ["npx", "tsc", "--noEmit"],
-        cwd="admin/wms_admin_frontend",
-        capture_output=True,
-        text=True,
-    )
+    from tests.support.frontend_checks import run_tsc_no_emit
+    r = run_tsc_no_emit()
     assert r.returncode == 0, f"TypeScript errors:\n{r.stdout}\n{r.stderr}"

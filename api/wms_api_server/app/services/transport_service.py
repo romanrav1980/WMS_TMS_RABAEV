@@ -242,19 +242,19 @@ class TransportService:
     # ------------------------------------------------------------------
 
     def list_vehicles_full(self) -> list[dict[str, Any]]:
-        """Все ТС включая soft-deleted=false — для страницы управления флотом."""
+        """Все ТС для страницы управления флотом (Sprint 97)."""
         rows = self.gateway.fetch_all(
             """
             SELECT V.ID,
-                   V.NUM_PLAT,
-                   V.TRANSTYPE    AS TRANSTYPE_ID,
-                   TT.TRANSPORTTYPE AS TRANSTYPE_NAME,
-                   V.MAX_WEIGHT_KG,
-                   V.PALLETS      AS MAX_PALLETS,
-                   NVL(V.SOBSTVENNYY, 1) AS SOBSTVENNYY,
-                   V.DOVERENNOST_OT
+                   V.NUM          AS NUM_PLAT,
+                   V.TR_TYPE      AS TRANSTYPE_ID,
+                   V.TR_TYPE      AS TRANSTYPE_NAME,
+                   NVL(V.MAX_WEIGHT_KG, 10000) AS MAX_WEIGHT_KG,
+                   NVL(V.PALLETS, 20)           AS MAX_PALLETS,
+                   NVL(V.SOBSTVENNYY, 1)        AS SOBSTVENNYY,
+                   V.DOVERENNOST_OT,
+                   NVL(V.BLOCKED, 0)            AS BLOCKED
               FROM RABAEV.RRL_TR_VEHICLE V
-              LEFT JOIN RABAEV.RRL_TRANSPORT_TYPE TT ON TT.TRANSPORTTYPE = V.TRANSTYPE
              WHERE NVL(V.DELETED, 0) = 0
              ORDER BY V.ID
             """
@@ -270,13 +270,9 @@ class TransportService:
         sobstvennyy: bool,
         doverennost_ot: str | None,
     ) -> int:
+        # RRL_TR_VEHICLE_ADD uses actual column names (NUM, TR_TYPE) after 055_fix.sql
         row = self.gateway.fetch_all(
-            """
-            SELECT RABAEV.RRL_TR_VEHICLE_ADD(
-                :num_plat, :transtype_id, :max_weight_kg, :max_pallets,
-                :sobstvennyy, :doverennost_ot
-            ) AS NEW_ID FROM DUAL
-            """,
+            "SELECT RABAEV.RRL_TR_VEHICLE_ADD(:num_plat, :transtype_id, :max_weight_kg, :max_pallets, :sobstvennyy, :doverennost_ot) AS NEW_ID FROM DUAL",
             {
                 "num_plat": num_plat,
                 "transtype_id": transtype_id,

@@ -43,15 +43,15 @@ def get_driver_trips(
                TT.CONDITION,
                TT.PRIMECHANIE     AS NOTE,
                TT.PRICE,
-               COUNT(DISTINCT SP.ST_NUMBER) AS ST_COUNT,
-               SUM(DISTINCT SP.ORDER_WEIGHT) AS WEIGHT_KG
+               COUNT(DISTINCT SP.ST_NUMBER)  AS ST_COUNT,
+               NVL(TT.TEMP_WEIGHT, 0)        AS WEIGHT_KG
           FROM RABAEV.RRL_TRANSPORT_TASK TT
-          LEFT JOIN RABAEV.RRL_SBORKA_PALLETS SP ON SP.TRANSTASK_ID = TT.ID AND NVL(SP.DELETED,0)=0
+          LEFT JOIN RABAEV.RRL_SBORKA_PALLETS SP ON SP.TRANSTASK_ID = TT.ID
          WHERE TT.VODITEL_ID = :driver_id
            AND TRUNC(TT.SHIPMENT_DATE) = TRUNC(:trip_date)
            AND NVL(TT.DELETED, 0) = 0
          GROUP BY TT.ID, TT.SHIPMENT_DATE, TT.TRANSPORT, TT.TRANSTYPE,
-                  TT.CONDITION, TT.PRIMECHANIE, TT.PRICE
+                  TT.CONDITION, TT.PRIMECHANIE, TT.PRICE, TT.TEMP_WEIGHT
          ORDER BY TT.SHIPMENT_DATE
         """,
         {"driver_id": driver_id, "trip_date": trip_date},
@@ -94,7 +94,7 @@ def get_trip_sts(task_id: int, driver_id: int = Query(...)) -> list[dict]:
                SP.LOAD_TYPE,
                COUNT(SP.PALLET_UID)  AS PALLET_COUNT
           FROM RABAEV.RRL_SBORKA_PALLETS SP
-         WHERE SP.TRANSTASK_ID = :task_id AND NVL(SP.DELETED,0)=0
+         WHERE SP.TRANSTASK_ID = :task_id
          GROUP BY SP.ST_NUMBER, SP.ADDR, SP.ORD, SP.ZONE_TIME_PLAN_IN,
                   SP.ZONE_TIME_PLAN_OUT, SP.LOAD_TYPE
          ORDER BY SP.ORD NULLS LAST

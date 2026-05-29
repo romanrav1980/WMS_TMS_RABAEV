@@ -36,4 +36,4 @@ def test_2000_row_playwright_smoke_exists():
     assert "makeRows(2000)" in source
     assert 'data-virtualized") === "true"' in source
     assert "Too many rendered ST table rows" in source
-    assert "Стр. 2 из 20" in source
+    assert "NFR-ST-02000" in source

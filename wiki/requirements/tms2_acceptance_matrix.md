@@ -1,6 +1,6 @@
-# ТМС-2 — матрица приемки
+﻿# ТМС-2 — матрица приемки
 
-Дата обновления: 2026-05-28.
+Дата обновления: 2026-05-29.
 
 Назначение: фиксировать, что спринт считается рабочим только когда покрыт пользовательский путь, API contract, Oracle contract и functional test. Галочка в roadmap сама по себе не означает готовность.
 
@@ -95,53 +95,53 @@ Hard gate для Sprint 8 перед production: нужен non-empty fixture, �
 
 ## Блок VII — Dispatcher UX completion, Sprint 48-95
 
-Sprint 48-95 are implemented in the roadmap and have functional/load test files under `tests/transport/`. UI smoke coverage currently remains explicit through Sprint 47; for Sprint 48-95 the release criterion is functional/load plus targeted manual or Playwright smoke for the changed UI control before production sign-off.
+Sprint 48-95 are implemented in the roadmap and have functional/load test files under `tests/transport/`. UI smoke coverage is being hardened sequentially: Sprint 48-59 are covered with Playwright/training packs. Sprint 60-90 have a fresh 2026-05-29 functional/load regression: `186 passed`, and load gates are plain cross-platform Python no-mutation scripts using `tests/support/transport_load_runner.py`; for Sprint 60-95 production sign-off still requires targeted manual or Playwright smoke for each changed UI control.
 
 | Sprint | Пользовательский путь | API/DB contract | Functional gate | Статус |
 |---|---|---|---|---|
-| 48 | Диспетчер сбрасывает дату фильтра на сегодня | Client date state only; API contract unchanged | `test_sprint48_functional.py`, `transport_sprint48_load_test.py` | Passed; UI smoke gap |
-| 49 | Диспетчер включает компактный режим таблицы СТ | Client dense class; table contract unchanged | `test_sprint49_functional.py`, `transport_sprint49_load_test.py` | Passed; UI smoke gap |
-| 50 | Полностью собранные СТ получают зелёную полосу | `VERIFY_PERC >= 100` visual rule | `test_sprint50_functional.py`, `transport_sprint50_load_test.py` | Passed; UI smoke gap |
-| 51 | Закреплённая панель выделения показывает count/P/M/V и действия | Client summary from selected ST rows | `test_sprint51_functional.py`, `transport_sprint51_load_test.py` | Passed; UI smoke gap |
-| 52 | Диспетчер сортирует таблицу доступных СТ | Client sort over loaded/paged STs | `test_sprint52_functional.py`, `transport_sprint52_load_test.py` | Passed; UI smoke gap |
-| 53 | Диспетчер сворачивает/разворачивает панель фильтров | `localStorage` key for collapsed state | `test_sprint53_functional.py`, `transport_sprint53_load_test.py` | Passed; UI smoke gap |
-| 54 | Диспетчер экспортирует выделенные СТ в CSV | Client CSV over selected ST rows | `test_sprint54_functional.py`, `transport_sprint54_load_test.py` | Passed; UI smoke gap |
-| 55 | Тулбар показывает итоги по всем видимым СТ | Client aggregate over filtered rows | `test_sprint55_functional.py`, `transport_sprint55_load_test.py` | Passed; UI smoke gap |
-| 56 | Диспетчер печатает маршрутный лист | Client print window from selected task/STs | `test_sprint56_functional.py`, `transport_sprint56_load_test.py` | Passed; UI smoke gap |
-| 57 | Быстрое добавление СТ по номеру | Existing assign endpoint; client quick-add row | `test_sprint57_functional.py`, `transport_sprint57_load_test.py` | Passed; UI smoke gap |
-| 58 | Развернуть/свернуть все районы в кластерном режиме | Client expanded raion state | `test_sprint58_functional.py`, `transport_sprint58_load_test.py` | Passed; UI smoke gap |
-| 59 | Быстрый поиск по маршрутам | Client search over loaded tasks | `test_sprint59_functional.py`, `transport_sprint59_load_test.py` | Passed; UI smoke gap |
-| 60 | Пагинация таблицы доступных СТ по 100 строк | `ST_PAGE_SIZE = 100`; page/global index contract | `test_sprint60_functional.py`, `transport_sprint60_load_test.py` | Passed |
-| 61 | Быстрый фильтр по складу | Client warehouse filter resets page/selection | `test_sprint61_functional.py`, `transport_sprint61_load_test.py` | Passed |
-| 62 | Sticky header таблицы СТ | CSS sticky inside `.dispatch-st-section` | `test_sprint62_functional.py`, `transport_sprint62_load_test.py` | Passed |
-| 63 | Значок количества несобранных СТ | Client count from `VERIFY_PERC` | `test_sprint63_functional.py`, `transport_sprint63_load_test.py` | Passed |
-| 64 | Клик по значку выделяет все несобранные | Client selection over unready STs | `test_sprint64_functional.py`, `transport_sprint64_load_test.py` | Passed |
-| 65 | Вкладка «Заявки» показывает число выделенных | Client tab badge from selected set | `test_sprint65_functional.py`, `transport_sprint65_load_test.py` | Passed |
-| 66 | `VERIFY_PERC` отображается в составе рейса | Task ST row includes readiness bar | `test_sprint66_functional.py`, `transport_sprint66_load_test.py` | Passed |
-| 67 | Несобранные строки состава подсвечены amber | `VERIFY_PERC < 100` visual rule | `test_sprint67_functional.py`, `transport_sprint67_load_test.py` | Passed |
-| 68 | `Ctrl+Enter` добавляет выделенные СТ в рейс | Existing assign endpoint; keyboard handler | `test_sprint68_functional.py`, `transport_sprint68_load_test.py` | Passed |
-| 69 | `Delete` снимает выбранные СТ с рейса | Existing unassign endpoint; keyboard handler | `test_sprint69_functional.py`, `transport_sprint69_load_test.py` | Passed |
-| 70 | «Все»/«Нет» управляют выделением состава рейса | Client selected trip ST set | `test_sprint70_functional.py`, `transport_sprint70_load_test.py` | Passed |
-| 71 | Sticky header таблицы рейсов | CSS sticky inside routes wrapper | `test_sprint71_functional.py`, `transport_sprint71_load_test.py` | Passed |
-| 72 | Inline-фильтр по СТ/адресу в составе рейса | Client filter over selected task STs | `test_sprint72_functional.py`, `transport_sprint72_load_test.py` | Passed |
-| 73 | Колонка «Логист» в таблице рейсов | `LOGIST` field from task list | `test_sprint73_functional.py`, `transport_sprint73_load_test.py` | Passed |
-| 74 | Состав рейса сворачивается/разворачивается | Client expanded detail state | `test_sprint74_functional.py`, `transport_sprint74_load_test.py` | Passed |
-| 75 | Итоги заголовка рейса показывают объём | `VOLUME_M3` aggregate | `test_sprint75_functional.py`, `transport_sprint75_load_test.py` | Passed |
-| 76 | Состав рейса показывает `VOLUME_M3` | Task ST row field | `test_sprint76_functional.py`, `transport_sprint76_load_test.py` | Passed |
-| 77 | Состав рейса экспортируется в CSV | Client CSV over task STs | `test_sprint77_functional.py`, `transport_sprint77_load_test.py` | Passed |
-| 78 | Фильтры нераспределённые/собранные сохраняются | `localStorage` filter keys | `test_sprint78_functional.py`, `transport_sprint78_load_test.py` | Passed |
-| 79 | Таблица рейсов показывает ТК | `TK_NAME` field | `test_sprint79_functional.py`, `transport_sprint79_load_test.py` | Passed |
-| 80 | Таблица доступных СТ показывает направление | `NAPR` field | `test_sprint80_functional.py`, `transport_sprint80_load_test.py` | Passed |
-| 81 | Клавиатурная навигация по рейсам | Client selected task navigation | `test_sprint81_functional.py`, `transport_sprint81_load_test.py` | Passed |
-| 82 | Готовность и даты сохраняются корректно | `VERIFY_PERC >= 100`, persisted `stDate/dateTo` | `test_sprint82_functional.py`, `transport_sprint82_load_test.py` | Passed |
-| 83 | Несобранные доступные СТ получают amber border | `VERIFY_PERC < 100` visual rule | `test_sprint83_functional.py`, `transport_sprint83_load_test.py` | Passed |
-| 84 | Таблица маршрутов показывает `% сборки` | `READY_PERC` field | `test_sprint84_functional.py`, `transport_sprint84_load_test.py` | Passed |
-| 85 | Вкладка маршрутов показывает сводку | Client aggregate over route tasks | `test_sprint85_functional.py`, `transport_sprint85_load_test.py` | Passed |
-| 86 | Вкладка маршрутов экспортируется в CSV | Client CSV over route table | `test_sprint86_functional.py`, `transport_sprint86_load_test.py` | Passed |
-| 87 | Закрытие рейса предупреждает о несобранных СТ | Close confirmation includes unready count | `test_sprint87_functional.py`, `transport_sprint87_load_test.py` | Passed |
-| 88 | Рейс переносится на следующий день | `PATCH /tasks/{id}` shipment date update | `test_sprint88_functional.py`, `transport_sprint88_load_test.py` | Passed |
-| 89 | Состав рейса фильтруется по несобранным | Client filter by `VERIFY_PERC` | `test_sprint89_functional.py`, `transport_sprint89_load_test.py` | Passed |
-| 90 | Номер СТ копируется в буфер | Clipboard action in ST rows | `test_sprint90_functional.py`, `transport_sprint90_load_test.py` | Passed |
+| 48 | Диспетчер сбрасывает дату фильтра на сегодня | Client date state + immediate `GET /tasks?shipment_date=today` reload; API contract unchanged | `test_sprint48_functional.py`, `transport_sprint48_load_test.py`, `transport_sprint48_ui_smoke.cjs`; training pack `wiki-raw/tms2_training/sprint48_today_button_2026_05_29/` | Passed |
+| 49 | Диспетчер включает компактный режим таблицы СТ | Client dense class + virtualizer row-height switch; table contract unchanged | `test_sprint49_functional.py`, `transport_sprint49_load_test.py`, `transport_sprint49_ui_smoke.cjs`; training pack `wiki-raw/tms2_training/sprint49_dense_mode_2026_05_29/` | Passed |
+| 50 | Полностью собранные СТ получают зелёную полосу | `VERIFY_PERC >= 100` visual rule; selected row suppresses ready highlight | `test_sprint50_functional.py`, `transport_sprint50_load_test.py`, `transport_sprint50_ui_smoke.cjs`; training pack `wiki-raw/tms2_training/sprint50_ready_highlight_2026_05_29/` | Passed |
+| 51 | Закреплённая панель выделения показывает count/P/M/V и действия | Client summary from selected ST rows; selected task enables add-to-trip action | `test_sprint51_functional.py`, `transport_sprint51_load_test.py`, `transport_sprint51_ui_smoke.cjs`; training pack `wiki-raw/tms2_training/sprint51_selection_bar_2026_05_29/` | Passed |
+| 52 | Диспетчер сортирует таблицу доступных СТ | Client sort over loaded/paged STs; null values stay last in both directions | `test_sprint52_functional.py`, `transport_sprint52_load_test.py`, `transport_sprint52_ui_smoke.cjs`; training pack `wiki-raw/tms2_training/sprint52_st_sorting_2026_05_29/` | Passed |
+| 53 | Диспетчер сворачивает/разворачивает панель фильтров | `localStorage.tms_fpCollapsed`; collapsed panel keeps active-filter badge | `test_sprint53_functional.py`, `transport_sprint53_load_test.py`, `transport_sprint53_ui_smoke.cjs`; training pack `wiki-raw/tms2_training/sprint53_filter_panel_collapse_2026_05_29/` | Passed |
+| 54 | Диспетчер экспортирует выделенные СТ в CSV | Client CSV over selected ST rows; UTF-8 BOM, semicolon delimiter, totals row | `test_sprint54_functional.py`, `transport_sprint54_load_test.py`, `transport_sprint54_ui_smoke.cjs`; training pack `wiki-raw/tms2_training/sprint54_selected_st_csv_2026_05_29/` | Passed |
+| 55 | Тулбар показывает итоги по всем видимым СТ | Client aggregate over `wareFilteredSts`; selected totals remain separate | `test_sprint55_functional.py`, `transport_sprint55_load_test.py`, `transport_sprint55_ui_smoke.cjs`; training pack `wiki-raw/tms2_training/sprint55_visible_totals_2026_05_29/` | Passed |
+| 56 | Диспетчер печатает маршрутный лист | Client print window from selected task/STs; empty trips cannot print | `test_sprint56_functional.py`, `transport_sprint56_load_test.py`, `transport_sprint56_ui_smoke.cjs`; training pack `wiki-raw/tms2_training/sprint56_route_sheet_print_2026_05_29/` | Passed |
+| 57 | Быстрое добавление СТ по номеру | Existing assign endpoint; client quick-add row; load gate is no-mutation, UI smoke validates POST payload | `test_sprint57_functional.py`, `transport_sprint57_load_test.py`, `transport_sprint57_ui_smoke.cjs`; training pack `wiki-raw/tms2_training/sprint57_quick_add_st_2026_05_29/` | Passed |
+| 58 | Развернуть/свернуть все районы в кластерном режиме | Client `expandedRaions` state over loaded clusters | `test_sprint58_functional.py`, `transport_sprint58_load_test.py`, `transport_sprint58_ui_smoke.cjs`; training pack `wiki-raw/tms2_training/sprint58_expand_collapse_clusters_2026_05_29/` | Passed |
+| 59 | Быстрый поиск по маршрутам | Client search over loaded tasks by ID, vehicle, driver, region, carrier | `test_sprint59_functional.py`, `transport_sprint59_load_test.py`, `transport_sprint59_ui_smoke.cjs`; training pack `wiki-raw/tms2_training/sprint59_route_search_2026_05_29/` | Passed |
+| 60 | Пагинация таблицы доступных СТ по 100 строк | `ST_PAGE_SIZE = 100`; page/global index contract | `test_sprint60_functional.py`, `transport_sprint60_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 61 | Быстрый фильтр по складу | Client warehouse filter resets page/selection | `test_sprint61_functional.py`, `transport_sprint61_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 62 | Sticky header таблицы СТ | CSS sticky inside `.dispatch-st-section` | `test_sprint62_functional.py`, `transport_sprint62_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 63 | Значок количества несобранных СТ | Client count from `VERIFY_PERC` | `test_sprint63_functional.py`, `transport_sprint63_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 64 | Клик по значку выделяет все несобранные | Client selection over unready STs | `test_sprint64_functional.py`, `transport_sprint64_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 65 | Вкладка «Заявки» показывает число выделенных | Client tab badge from selected set | `test_sprint65_functional.py`, `transport_sprint65_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 66 | `VERIFY_PERC` отображается в составе рейса | Task ST row includes readiness bar | `test_sprint66_functional.py`, `transport_sprint66_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 67 | Несобранные строки состава подсвечены amber | `VERIFY_PERC < 100` visual rule | `test_sprint67_functional.py`, `transport_sprint67_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 68 | `Ctrl+Enter` добавляет выделенные СТ в рейс | Existing assign endpoint; keyboard handler | `test_sprint68_functional.py`, `transport_sprint68_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 69 | `Delete` снимает выбранные СТ с рейса | Existing unassign endpoint; keyboard handler | `test_sprint69_functional.py`, `transport_sprint69_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 70 | «Все»/«Нет» управляют выделением состава рейса | Client selected trip ST set | `test_sprint70_functional.py`, `transport_sprint70_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 71 | Sticky header таблицы рейсов | CSS sticky inside routes wrapper | `test_sprint71_functional.py`, `transport_sprint71_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 72 | Inline-фильтр по СТ/адресу в составе рейса | Client filter over selected task STs | `test_sprint72_functional.py`, `transport_sprint72_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 73 | Колонка «Логист» в таблице рейсов | `LOGIST` field from task list | `test_sprint73_functional.py`, `transport_sprint73_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 74 | Состав рейса сворачивается/разворачивается | Client expanded detail state | `test_sprint74_functional.py`, `transport_sprint74_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 75 | Итоги заголовка рейса показывают объём | `VOLUME_M3` aggregate | `test_sprint75_functional.py`, `transport_sprint75_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 76 | Состав рейса показывает `VOLUME_M3` | Task ST row field | `test_sprint76_functional.py`, `transport_sprint76_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 77 | Состав рейса экспортируется в CSV | Client CSV over task STs | `test_sprint77_functional.py`, `transport_sprint77_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 78 | Фильтры нераспределённые/собранные сохраняются | `localStorage` filter keys | `test_sprint78_functional.py`, `transport_sprint78_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 79 | Таблица рейсов показывает ТК | `TK_NAME` field | `test_sprint79_functional.py`, `transport_sprint79_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 80 | Таблица доступных СТ показывает направление | `NAPR` field | `test_sprint80_functional.py`, `transport_sprint80_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 81 | Клавиатурная навигация по рейсам | Client selected task navigation | `test_sprint81_functional.py`, `transport_sprint81_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 82 | Готовность и даты сохраняются корректно | `VERIFY_PERC >= 100`, persisted `stDate/dateTo` | `test_sprint82_functional.py`, `transport_sprint82_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 83 | Несобранные доступные СТ получают amber border | `VERIFY_PERC < 100` visual rule | `test_sprint83_functional.py`, `transport_sprint83_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 84 | Таблица маршрутов показывает `% сборки` | `READY_PERC` field | `test_sprint84_functional.py`, `transport_sprint84_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 85 | Вкладка маршрутов показывает сводку | Client aggregate over route tasks | `test_sprint85_functional.py`, `transport_sprint85_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 86 | Вкладка маршрутов экспортируется в CSV | Client CSV over route table | `test_sprint86_functional.py`, `transport_sprint86_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 87 | Закрытие рейса предупреждает о несобранных СТ | Close confirmation includes unready count | `test_sprint87_functional.py`, `transport_sprint87_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 88 | Рейс переносится на следующий день | `PATCH /tasks/{id}` shipment date update | `test_sprint88_functional.py`, `transport_sprint88_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 89 | Состав рейса фильтруется по несобранным | Client filter by `VERIFY_PERC` | `test_sprint89_functional.py`, `transport_sprint89_load_test.py` | Fresh functional/load passed 2026-05-29 |
+| 90 | Номер СТ копируется в буфер | Clipboard action in ST rows | `test_sprint90_functional.py`, `transport_sprint90_load_test.py` | Fresh functional/load passed 2026-05-29 |
 | 91 | Состав рейса сортируется по временным окнам | Client sort by time window | `test_sprint91_functional.py`, `transport_sprint91_load_test.py` | Passed |
 | 92 | Все номера СТ состава копируются в буфер | Clipboard action over task STs | `test_sprint92_functional.py`, `transport_sprint92_load_test.py` | Passed |
 | 93 | Сводка дня считает пустые рейсы | Client count where task has no STs | `test_sprint93_functional.py`, `transport_sprint93_load_test.py` | Passed |
@@ -153,7 +153,7 @@ Sprint 48-95 are implemented in the roadmap and have functional/load test files 
 | Требование | Решение | Gate |
 |---|---|---|
 | OSRM/Valhalla infrastructure | Добавлены `docker-compose.osrm.yml`, `docker-compose.valhalla.yml`; backend probes use real OSRM route endpoint and Valhalla `/status`; `/routing/status` exposes active provider and availability flags. | `test_routing_infrastructure.py`; `scripts/tms2-routing-smoke.ps1`; live smoke after starting containers |
-| Таблица СТ, 2000 строк | Принята комбинированная модель: server/client filtering + pagination by 100 + windowed row rendering inside current page. This replaces mandatory `@tanstack/react-virtual` dependency while keeping NFR intent: bounded DOM and stable scroll. | `test_frontend_virtualization_nfr.py`; frontend build; `node tests\ui\transport_table_2000_nfr_smoke.cjs` -> first render 848 ms, rendered rows 51-52 |
+| Таблица СТ, 2000 строк | Принята фактическая Sprint 102 модель: `@tanstack/react-virtual` по полному списку доступных СТ; Sprint 60 pagination остается историческим контрактом, но текущий UI держит bounded DOM через virtualizer, top/bottom spacers и стабильный scroll. | `test_frontend_virtualization_nfr.py`; frontend build; `node tests\ui\transport_table_2000_nfr_smoke.cjs` -> first render 777 ms, rendered rows 31/43/33 |
 | WebSocket `/ws/dispatch` | **Реализован Sprint 96.** `ws_manager.py` — ConnectionManager, broadcast_sync из sync endpoints. Клиент: exponential backoff reconnect 1→30s, обновление tasks/STs по событиям. | `test_sprint96_functional.py`; `transport_sprint96_ui_smoke.cjs` |
 | SSE VRP progress | **Реализован Sprint 101.** `POST /planner/solve` → `{job_id, stream_url}`; `GET /planner/solve/{id}/stream` — SSE; `DELETE /planner/solve/{id}` — отмена; 60s timeout watchdog. | `test_sprint101_102_functional.py` |
 
@@ -183,14 +183,16 @@ Sprint 48-95 are implemented in the roadmap and have functional/load test files 
 python -m pytest tests\transport\test_sprint1_functional.py tests\transport\test_sprint2_functional.py tests\transport\test_sprint3_functional.py tests\transport\test_sprint4_functional.py tests\transport\test_sprint5_functional.py tests\transport\test_sprint6_functional.py tests\transport\test_sprint7_functional.py tests\transport\test_sprint8_functional.py tests\transport\test_sprint9_functional.py tests\transport\test_sprint10_functional.py tests\transport\test_sprint11_functional.py tests\transport\test_sprint12_functional.py tests\transport\test_sprint13_functional.py tests\transport\test_sprint14_functional.py tests\transport\test_sprint15_functional.py tests\transport\test_sprint16_functional.py tests\transport\test_sprint17_functional.py tests\transport\test_sprint18_functional.py tests\transport\test_sprint19_functional.py tests\transport\test_sprint20_functional.py tests\transport\test_routing_infrastructure.py tests\transport\test_frontend_virtualization_nfr.py -q -ra --tb=short
 ```
 
-Current non-mutating local result on 2026-05-29 after all Phase 3 tests: `scripts\tms2-release-gate.ps1 -SeedDate 2026-05-25` -> **`267 passed`** in 119.72s.
+Current non-mutating local result on 2026-05-29 after Phase 3 migrations (055-062) applied: `scripts\tms2-release-gate.ps1 -SeedDate 2026-05-24` -> **`408 passed, 17 skipped, 0 failed`** in 166.09s.
+
+Спринты 96–119 добавлены в release gate. Seed date: **2026-05-24** (актуальные свободные СТ в dev Oracle).
 
 Полный release gate дополнительно требует:
 
 - Sprint 1-3 functional/UI/load tests are now present and must be included in the final command;
 - deterministic dated seed без skips для dispatcher and map flows: covered by seed date `2026-05-25` plus `055_apply.sql`;
 - historical `RRL_PLANNER_PLANS` template fixture for Sprint 9: covered by `055_apply.sql`;
-- non-empty Sprint 8 VRP apply acceptance with `TMS_RUN_MUTATING_VRP_APPLY=1`: verified separately on 2026-05-29, `23 passed`; cleanup restored shared seed;
+- non-empty Sprint 8 VRP apply acceptance with `TMS_RUN_MUTATING_VRP_APPLY=1`: verified separately on 2026-05-29, `23 passed`; active `vrp_auto` transport tasks for the seed date remained `0`;
 - ручной Oracle/prod apply checklist для migrations 051-054;
 - routing infrastructure smoke: `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-routing-smoke.ps1`;
 - combined release gate runner: `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-25`;

@@ -1,0 +1,31 @@
+services:
+  valhalla:
+    image: ghcr.io/gis-ops/docker-valhalla/valhalla:latest
+    container_name: tms2-valhalla
+    command: build_tiles
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./valhalla-data:/custom_files
+    environment:
+      # For first build either set VALHALLA_TILE_URLS to a .osm.pbf URL
+      # or put a local .osm.pbf under ./valhalla-data.
+      tile_urls: "${VALHALLA_TILE_URLS:-}"
+      force_rebuild: "${VALHALLA_FORCE_REBUILD:-False}"
+      build_elevation: "False"
+      build_admins: "False"
+      build_time_zones: "False"
+      serve_tiles: "True"
+      server_threads: "8"
+      use_tiles_ignore_pbf: "${VALHALLA_USE_TILES_IGNORE_PBF:-True}"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "bash -lc 'exec 3<>/dev/tcp/127.0.0.1/8002'"
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    restart: unless-stopped

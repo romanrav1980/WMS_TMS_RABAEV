@@ -82,7 +82,21 @@ Full Sprint 4-20 gate:
 python -m pytest tests\transport\test_sprint4_functional.py tests\transport\test_sprint5_functional.py tests\transport\test_sprint6_functional.py tests\transport\test_sprint7_functional.py tests\transport\test_sprint8_functional.py tests\transport\test_sprint9_functional.py tests\transport\test_sprint10_functional.py tests\transport\test_sprint11_functional.py tests\transport\test_sprint12_functional.py tests\transport\test_sprint13_functional.py tests\transport\test_sprint14_functional.py tests\transport\test_sprint15_functional.py tests\transport\test_sprint16_functional.py tests\transport\test_sprint17_functional.py tests\transport\test_sprint18_functional.py tests\transport\test_sprint19_functional.py tests\transport\test_sprint20_functional.py -q -ra --tb=short
 ```
 
-Current baseline: `211 passed, 21 skipped`.
+Current baseline after TMS-2 fixture `055_apply.sql`: `265 passed` for the Sprint 1-20 release runner below.
+
+Stable release-gate runner for Sprint 1-20 plus routing/NFR static checks:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-25
+```
+
+Run the mutating VRP apply only on an isolated Oracle fixture:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-release-gate.ps1 -SeedDate 2026-05-25 -IncludeMutatingVrpApply
+```
+
+On shared dev Oracle, prefer running only `tests\transport\test_sprint8_functional.py` with `TMS_RUN_MUTATING_VRP_APPLY=1`, then clean up created tasks/ST assignments immediately.
 
 ## Encoding and diff checks
 
@@ -124,3 +138,32 @@ Minimum manual smoke after API hardening:
 5. Open Gantt/plan-fact paths if exposed in current UI.
 6. Open billing registry.
 7. Verify no console/network 500 on primary tabs.
+
+## Routing and Table NFR Smoke
+
+OSRM/Valhalla compose and optional live endpoint smoke:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\tms2-routing-smoke.ps1
+```
+
+The script validates both compose files and checks live OSRM/Valhalla endpoints if containers are running. If neither container is up, Haversine fallback remains acceptable for normal local development.
+
+Static NFR gates:
+
+```powershell
+python -m pytest tests\transport\test_routing_infrastructure.py tests\transport\test_frontend_virtualization_nfr.py -q
+```
+
+For final release, run the visual/browser NFR smoke:
+
+```powershell
+node tests\ui\transport_table_2000_nfr_smoke.cjs
+```
+
+It uses a mocked 2000-row available-ST dataset and confirms bounded DOM through pagination plus windowed row rendering.
+
+## Release and Pilot Docs
+
+- [`tms2_release_acceptance.md`](tms2_release_acceptance.md): final acceptance sequence.
+- [`tms2_pilot_checklist.md`](tms2_pilot_checklist.md): 5-day parallel-operation checklist and incident rules.

@@ -1220,7 +1220,7 @@ C++-движок на графе дорог OpenStreetMap. Endpoint `/table/v1/d
 ```yaml
 services:
   osrm-backend:
-    image: ghcr.io/project-osrm/osrm-backend:v5.27
+    image: osrm/osrm-backend:latest
     volumes:
       - ./osrm-data:/data
     ports:
@@ -1241,15 +1241,15 @@ services:
 wget https://download.geofabrik.de/russia-latest.osm.pbf -P ./osrm-data/
 
 # 2. Извлечь граф дорог (car.lua — легковые + небольшие грузовики)
-docker run --rm -v "$(pwd)/osrm-data:/data" ghcr.io/project-osrm/osrm-backend:v5.27 \
+docker run --rm -v "$(pwd)/osrm-data:/data" osrm/osrm-backend:latest \
   osrm-extract -p /opt/car.lua /data/russia-latest.osm.pbf
 
 # 3. Разбить на блоки (MLD-алгоритм, быстрее CH для table-запросов)
-docker run --rm -v "$(pwd)/osrm-data:/data" ghcr.io/project-osrm/osrm-backend:v5.27 \
+docker run --rm -v "$(pwd)/osrm-data:/data" osrm/osrm-backend:latest \
   osrm-partition /data/russia-latest.osrm
 
 # 4. Настроить веса рёбер
-docker run --rm -v "$(pwd)/osrm-data:/data" ghcr.io/project-osrm/osrm-backend:v5.27 \
+docker run --rm -v "$(pwd)/osrm-data:/data" osrm/osrm-backend:latest \
   osrm-customize /data/russia-latest.osrm
 
 # 5. Поднять контейнер
@@ -1296,21 +1296,22 @@ class OsrmProvider(RoutingProvider):
 ```yaml
 services:
   valhalla:
-    image: ghcr.io/valhalla/valhalla:run-latest
+    image: ghcr.io/gis-ops/docker-valhalla/valhalla:latest
     volumes:
       - ./valhalla-data:/custom_files
     ports:
       - "8002:8002"
     environment:
       - tile_urls=https://download.geofabrik.de/russia-latest.osm.pbf
-      - use_tiles_ignore_pbf=True
-      - build_time_zones=True
-      - build_admins=True
-      - server_threads=4
+      - force_rebuild=True
+      - use_tiles_ignore_pbf=False
+      - build_time_zones=False
+      - build_admins=False
+      - server_threads=8
     restart: unless-stopped
     mem_limit: 8g
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      test: ["CMD-SHELL", "bash -lc 'exec 3<>/dev/tcp/127.0.0.1/8002'"]
       interval: 30s
       retries: 3
 ```
@@ -1561,8 +1562,8 @@ WebSocket от FastAPI → `socket.io` → Leaflet обновляет иконк
 | Кэш расстояний | Oracle table | — | `RRL_ADDR_DISTANCE_MATRIX`, матрица N×N |
 | Геокодирование | DaData.ru API | HTTP REST (облако) | Адрес → (lat, lon), нормализация RU-адресов |
 | Расстояния — MVP | Haversine × 1.3 | `numpy` (встроено) | Прямая линия с поправкой; всегда работает |
-| Расстояния — **основной** | **OSRM** | Docker `osrm-backend:v5.27` | Реальные дороги OSM; 300×300 за ~200 мс |
-| Расстояния — **резерв** | **Valhalla** | Docker `valhalla:run-latest` | Резерв OSRM; профиль `truck` с ограничениями |
+| Расстояния — **основной** | **OSRM** | Docker `osrm/osrm-backend:latest` | Реальные дороги OSM; 300×300 за ~200 мс |
+| Расстояния — **резерв** | **Valhalla** | Docker `ghcr.io/gis-ops/docker-valhalla/valhalla:latest` | Резерв OSRM; профиль `truck` с ограничениями |
 | Routing abstraction | `RoutingProvider` (ABC) | Python | Единый интерфейс; fallback OSRM→Valhalla→Haversine |
 | VRP-решатель (основной) | OR-Tools CVRPTW | `pip install ortools` | CVRPTW с временны́ми окнами и типом ТС |
 | VRP-решатель (резерв) | PyVRP | `pip install pyvrp` | HGS-алгоритм, быстрее OR-Tools на ряде данных |

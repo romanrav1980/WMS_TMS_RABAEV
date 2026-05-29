@@ -1,4 +1,4 @@
-"""Sprint 70: Select-all / deselect-all toolbar for trip STs."""
+﻿"""Sprint 70: Select-all / deselect-all toolbar for trip STs."""
 import pytest
 
 
@@ -18,8 +18,8 @@ def test_select_all_sets_all_st_numbers():
         encoding="utf-8",
     ).read()
     idx = src.index("Sprint 70")
-    snippet = src[idx : idx + 700]
-    assert "taskSts.map(s => s.ST_NUMBER)" in snippet, "select-all does not use taskSts"
+    snippet = src[idx : idx + 1000]
+    assert "filteredTaskSts.map(s => s.ST_NUMBER)" in snippet, "select-all does not use visible task STs"
     assert "new Set()" in snippet, "deselect-all (empty Set) missing"
 
 
@@ -33,11 +33,6 @@ def test_toolbar_css_defined():
 
 
 def test_typescript_compiles():
-    import subprocess
-    r = subprocess.run(
-        ["npx", "tsc", "--noEmit"],
-        cwd="admin/wms_admin_frontend",
-        capture_output=True,
-        text=True,
-    )
+    from tests.support.frontend_checks import run_tsc_no_emit
+    r = run_tsc_no_emit()
     assert r.returncode == 0, f"TypeScript errors:\n{r.stdout}\n{r.stderr}"

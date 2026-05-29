@@ -92,7 +92,10 @@ class OsrmProvider(RoutingProvider):
 
     def is_available(self) -> bool:
         try:
-            r = httpx.get(f"{OSRM_URL}/health", timeout=2.0)
+            r = httpx.get(
+                f"{OSRM_URL}/route/v1/driving/37.6173,55.7558;37.6173,55.7558?overview=false",
+                timeout=2.0,
+            )
             return r.status_code == 200
         except Exception:
             return False
@@ -123,11 +126,14 @@ class ValhallaProvider(RoutingProvider):
     name = "valhalla"
 
     def is_available(self) -> bool:
-        try:
-            r = httpx.get(f"{VALHALLA_URL}/health", timeout=2.0)
-            return r.status_code == 200
-        except Exception:
-            return False
+        for path in ("/status", "/health"):
+            try:
+                r = httpx.get(f"{VALHALLA_URL}{path}", timeout=2.0)
+                if r.status_code == 200:
+                    return True
+            except Exception:
+                continue
+        return False
 
     def build_matrix(self, points: list[tuple[float, float]]) -> list[list[float]]:
         locations = [{"lat": lat, "lon": lon} for lat, lon in points]

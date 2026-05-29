@@ -516,17 +516,29 @@ def rebuild_distance_matrix(
 @router.post("/planner/solve")
 def solve_vrp(
     body: VrpSolveRequest,
+    async_response: bool = Query(default=False, description="Return Sprint 101 job_id/SSE shape instead of direct VrpPlan"),
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
 ) -> dict:
     """
-    Sprint 101: запускает VRP в фоновом потоке, возвращает job_id.
-    Прогресс доступен через GET /planner/solve/{job_id}/stream (SSE).
-    Отмена: DELETE /planner/solve/{job_id}.
+    Sprint 8 compatibility: by default returns a direct VrpPlan.
+    Sprint 101 async mode is explicit via ?async_response=true:
+    returns job_id, progress via GET /planner/solve/{job_id}/stream (SSE),
+    cancellation via DELETE /planner/solve/{job_id}.
     """
-    job = vrp_job_store.create()
     svc = TransportService()
     timeout_s = min(int(body.time_limit_s or 60), 120)
+    if not async_response:
+        result = svc.solve_vrp(
+            plan_date=body.plan_date,
+            ware_ids=body.ware_ids,
+            transport_type=body.transport_type,
+            time_limit_s=timeout_s,
+            source=body.source,
+            solver=body.solver,
+        )
+        return result.model_dump() if hasattr(result, "model_dump") else dict(result)
 
+    job = vrp_job_store.create()
     def _run() -> None:
         try:
             job.put_event({"type": "progress", "step": "starting", "pct": 0})

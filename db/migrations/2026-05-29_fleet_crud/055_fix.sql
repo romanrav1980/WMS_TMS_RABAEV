@@ -1,0 +1,70 @@
+-- 055_fix.sql — Fix fleet CRUD functions to use actual RRL_TR_VEHICLE column names
+-- RRL_TR_VEHICLE uses: NUM (not NUM_PLAT), TR_TYPE (not TRANSTYPE)
+-- Add missing columns: SOBSTVENNYY, DOVERENNOST_OT, MAX_WEIGHT_KG
+
+BEGIN EXECUTE IMMEDIATE 'ALTER TABLE RABAEV.RRL_TR_VEHICLE ADD SOBSTVENNYY NUMBER(1) DEFAULT 1'; EXCEPTION WHEN OTHERS THEN NULL; END;
+/
+BEGIN EXECUTE IMMEDIATE 'ALTER TABLE RABAEV.RRL_TR_VEHICLE ADD DOVERENNOST_OT VARCHAR2(100)'; EXCEPTION WHEN OTHERS THEN NULL; END;
+/
+BEGIN EXECUTE IMMEDIATE 'ALTER TABLE RABAEV.RRL_TR_VEHICLE ADD MAX_WEIGHT_KG NUMBER(10) DEFAULT 10000'; EXCEPTION WHEN OTHERS THEN NULL; END;
+/
+BEGIN EXECUTE IMMEDIATE 'ALTER TABLE RABAEV.RRL_TR_VEHICLE ADD DELETED NUMBER(1) DEFAULT 0'; EXCEPTION WHEN OTHERS THEN NULL; END;
+/
+
+-- Recreate RRL_TR_VEHICLE_ADD with correct column names
+CREATE OR REPLACE FUNCTION RABAEV.RRL_TR_VEHICLE_ADD(
+    p_num_plat       VARCHAR2,
+    p_transtype_id   VARCHAR2 DEFAULT NULL,
+    p_max_weight_kg  NUMBER   DEFAULT 10000,
+    p_max_pallets    NUMBER   DEFAULT 20,
+    p_sobstvennyy    NUMBER   DEFAULT 1,
+    p_doverennost_ot VARCHAR2 DEFAULT NULL
+) RETURN NUMBER AS
+    v_id NUMBER;
+BEGIN
+    v_id := RABAEV.SEQ_TR_VEHICLE.NEXTVAL;
+    INSERT INTO RABAEV.RRL_TR_VEHICLE (
+        ID, NUM, TR_TYPE, PALLETS, MAX_WEIGHT_KG,
+        SOBSTVENNYY, DOVERENNOST_OT, DELETED, BLOCKED
+    ) VALUES (
+        v_id, p_num_plat, p_transtype_id, p_max_pallets, p_max_weight_kg,
+        p_sobstvennyy, p_doverennost_ot, 0, 0
+    );
+    RETURN v_id;
+EXCEPTION WHEN OTHERS THEN
+    RAISE_APPLICATION_ERROR(-20097, 'RRL_TR_VEHICLE_ADD error: ' || SQLERRM);
+END;
+/
+
+CREATE OR REPLACE PROCEDURE RABAEV.RRL_TR_VEHICLE_UPDATE(
+    p_id             NUMBER,
+    p_num_plat       VARCHAR2,
+    p_transtype_id   VARCHAR2,
+    p_max_weight_kg  NUMBER,
+    p_max_pallets    NUMBER,
+    p_sobstvennyy    NUMBER,
+    p_doverennost_ot VARCHAR2
+) AS
+BEGIN
+    UPDATE RABAEV.RRL_TR_VEHICLE
+       SET NUM            = p_num_plat,
+           TR_TYPE        = p_transtype_id,
+           MAX_WEIGHT_KG  = p_max_weight_kg,
+           PALLETS        = p_max_pallets,
+           SOBSTVENNYY    = p_sobstvennyy,
+           DOVERENNOST_OT = p_doverennost_ot
+     WHERE ID = p_id AND NVL(DELETED, 0) = 0;
+    IF SQL%ROWCOUNT = 0 THEN
+        RAISE_APPLICATION_ERROR(-20098, 'Vehicle not found: ' || p_id);
+    END IF;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE RABAEV.RRL_TR_VEHICLE_DEL(p_id NUMBER) AS
+BEGIN
+    UPDATE RABAEV.RRL_TR_VEHICLE SET DELETED = 1 WHERE ID = p_id;
+    IF SQL%ROWCOUNT = 0 THEN
+        RAISE_APPLICATION_ERROR(-20099, 'Vehicle not found: ' || p_id);
+    END IF;
+END;
+/

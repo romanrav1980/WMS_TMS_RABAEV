@@ -1,16 +1,17 @@
-"""Sprint 80 load test — NAPR is client-side display; no new endpoints."""
-from locust import HttpUser, task, between
+﻿"""Cross-platform no-mutation load gate for Sprint 80.
+
+Run from the repository root with Python on Windows or Linux-like systems.
+It measures the dispatcher read context for the sprint feature without requiring
+Locust or mutating Oracle data.
+"""
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from support.transport_load_runner import run_read_gate  # noqa: E402
 
 
-class Sprint80LoadUser(HttpUser):
-    wait_time = between(0.5, 1.5)
-
-    def on_start(self):
-        self.client.post(
-            "/api/admin/auth/login",
-            json={"username": "admin", "password": "admin"},
-        )
-
-    @task
-    def available_sts(self):
-        self.client.get("/api/admin/transport/available-sts?date=2026-05-28")
+if __name__ == "__main__":
+    raise SystemExit(run_read_gate(80, include_task_sts=True))

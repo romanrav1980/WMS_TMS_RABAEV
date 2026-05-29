@@ -1,20 +1,17 @@
-"""Sprint 69 load test — no new endpoints; Delete key is client-side."""
-from locust import HttpUser, task, between
+﻿"""Cross-platform no-mutation load gate for Sprint 69.
+
+Run from the repository root with Python on Windows or Linux-like systems.
+It measures the dispatcher read context for the sprint feature without requiring
+Locust or mutating Oracle data.
+"""
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from support.transport_load_runner import run_read_gate  # noqa: E402
 
 
-class Sprint69LoadUser(HttpUser):
-    wait_time = between(0.5, 1.5)
-
-    def on_start(self):
-        self.client.post(
-            "/api/admin/auth/login",
-            json={"username": "admin", "password": "admin"},
-        )
-
-    @task(2)
-    def unassign_st(self):
-        self.client.delete("/api/admin/transport/tasks/1/sts/ST-001")
-
-    @task(1)
-    def get_task_sts(self):
-        self.client.get("/api/admin/transport/task_sts?task_id=1")
+if __name__ == "__main__":
+    raise SystemExit(run_read_gate(69, include_task_sts=True))

@@ -10,6 +10,7 @@
 **/x86/
 **/TestResults/
 **/__pycache__/
+**/.pytest_cache/
 **/*.pyc
 **/*.pyo
 **/node_modules/
@@ -74,6 +75,8 @@ sqlnet.log
 api/wms_api_server/runtime/
 runtime/test-evidence/
 tests/load/**/report.json
+osrm-data/
+valhalla-data/
 exchange/production_release/in/*
 exchange/production_release/processing/*
 exchange/production_release/archive/*

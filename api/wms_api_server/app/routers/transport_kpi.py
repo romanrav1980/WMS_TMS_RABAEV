@@ -3,6 +3,10 @@ transport_kpi.py — KPI-дашборд для руководства.
 
 Sprint 108: операционные метрики (утилизация парка, рейсы по дням, регионы)
 Sprint 109: финансовые метрики (биллинг по ТК, тренды)
+
+Note: RRL_SBORKA_PALLETS does NOT have ORDER_WEIGHT or DELETED columns.
+Weight is taken from RRL_TRANSPORT_TASK.TEMP_WEIGHT (trip-level aggregate).
+Pallet count is taken from COUNT(SP.PALLET_UID) in RRL_SBORKA_PALLETS.
 """
 
 from datetime import date
@@ -29,21 +33,18 @@ def get_fleet_kpi(
     date_to: date = Query(...),
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
-    """Утилизация парка по дням — рейсов создано, паллет, вес (Sprint 108)."""
+    """Утилизация парка по дням (Sprint 108). Вес из TEMP_WEIGHT, паллеты из COUNT(PALLET_UID)."""
     rows = _gw().fetch_all(
         """
         SELECT TRUNC(TT.SHIPMENT_DATE) AS DAY,
                COUNT(DISTINCT TT.ID)        AS TRIPS_TOTAL,
                COUNT(DISTINCT CASE WHEN NVL(TT.CONDITION,'') IN ('Отгружен','Закрыт') THEN TT.ID END) AS TRIPS_CLOSED,
                SUM(SP.PALLET_COUNT)         AS PALLETS,
-               SUM(SP.WEIGHT_KG)            AS WEIGHT_KG
+               SUM(NVL(TT.TEMP_WEIGHT, 0)) AS WEIGHT_KG
           FROM RABAEV.RRL_TRANSPORT_TASK TT
           LEFT JOIN (
-            SELECT TRANSTASK_ID,
-                   COUNT(PALLET_UID) AS PALLET_COUNT,
-                   SUM(ORDER_WEIGHT) AS WEIGHT_KG
+            SELECT TRANSTASK_ID, COUNT(PALLET_UID) AS PALLET_COUNT
               FROM RABAEV.RRL_SBORKA_PALLETS
-             WHERE NVL(DELETED,0)=0
              GROUP BY TRANSTASK_ID
           ) SP ON SP.TRANSTASK_ID = TT.ID
          WHERE NVL(TT.DELETED,0)=0
@@ -78,12 +79,13 @@ def get_summary_kpi(
                COUNT(DISTINCT CASE WHEN NVL(TT.CONDITION,'') IN ('Отгружен','Закрыт') THEN TT.ID END) AS TRIPS_CLOSED,
                COUNT(DISTINCT TT.TRANSPORT) AS VEHICLES_USED,
                SUM(SP.PALLET_COUNT)        AS PALLETS,
-               SUM(SP.WEIGHT_KG)           AS WEIGHT_KG,
+               SUM(NVL(TT.TEMP_WEIGHT,0)) AS WEIGHT_KG,
                AVG(SP.PALLET_COUNT)        AS AVG_PALLETS_PER_TRIP
           FROM RABAEV.RRL_TRANSPORT_TASK TT
           LEFT JOIN (
-            SELECT TRANSTASK_ID, COUNT(PALLET_UID) AS PALLET_COUNT, SUM(ORDER_WEIGHT) AS WEIGHT_KG
-              FROM RABAEV.RRL_SBORKA_PALLETS WHERE NVL(DELETED,0)=0 GROUP BY TRANSTASK_ID
+            SELECT TRANSTASK_ID, COUNT(PALLET_UID) AS PALLET_COUNT
+              FROM RABAEV.RRL_SBORKA_PALLETS
+             GROUP BY TRANSTASK_ID
           ) SP ON SP.TRANSTASK_ID = TT.ID
          WHERE NVL(TT.DELETED,0)=0
            AND TRUNC(TT.SHIPMENT_DATE) BETWEEN :d1 AND :d2
@@ -120,16 +122,20 @@ def get_regions_kpi(
 
     rows = _gw().fetch_all(
         """
-        SELECT SP.REGION,
+        SELECT NVL(A.REGION, SP.ADDR) AS REGION,
                COUNT(DISTINCT TT.ID)   AS TRIPS,
                COUNT(SP.PALLET_UID)    AS PALLETS,
-               SUM(SP.ORDER_WEIGHT)    AS WEIGHT_KG
+               SUM(NVL(TT.TEMP_WEIGHT,0)/GREATEST(CNT.TRIP_ST_COUNT,1)) AS WEIGHT_KG
           FROM RABAEV.RRL_SBORKA_PALLETS SP
           JOIN RABAEV.RRL_TRANSPORT_TASK TT ON TT.ID = SP.TRANSTASK_ID
-         WHERE NVL(SP.DELETED,0)=0
-           AND NVL(TT.DELETED,0)=0
+          LEFT JOIN RABAEV.RRL_ADDR A ON A.ADDR = SP.ADDR
+          LEFT JOIN (
+            SELECT TRANSTASK_ID, COUNT(DISTINCT ST_NUMBER) AS TRIP_ST_COUNT
+              FROM RABAEV.RRL_SBORKA_PALLETS GROUP BY TRANSTASK_ID
+          ) CNT ON CNT.TRANSTASK_ID = TT.ID
+         WHERE NVL(TT.DELETED,0)=0
            AND TRUNC(TT.SHIPMENT_DATE) BETWEEN :d1 AND :d2
-         GROUP BY SP.REGION
+         GROUP BY NVL(A.REGION, SP.ADDR)
          ORDER BY PALLETS DESC
          FETCH FIRST 15 ROWS ONLY
         """,
@@ -167,7 +173,8 @@ def get_billing_kpi(
           FROM RABAEV.RRL_BILL_ORDERS BO
           LEFT JOIN (
             SELECT PAY_ORDER_ID, SUM(PRICE) AS TOTAL
-              FROM RABAEV.RRL_TRANSPORT_TASK WHERE NVL(DELETED,0)=0 AND PAY_ORDER_ID IS NOT NULL
+              FROM RABAEV.RRL_TRANSPORT_TASK
+             WHERE NVL(DELETED,0)=0 AND PAY_ORDER_ID IS NOT NULL
              GROUP BY PAY_ORDER_ID
           ) TT_SUM ON TT_SUM.PAY_ORDER_ID = BO.ID
          WHERE TRUNC(BO.DATEOFORDER) BETWEEN :d1 AND :d2
@@ -205,7 +212,8 @@ def get_billing_by_company(
           FROM RABAEV.RRL_BILL_ORDERS BO
           LEFT JOIN (
             SELECT PAY_ORDER_ID, SUM(PRICE) AS TOTAL
-              FROM RABAEV.RRL_TRANSPORT_TASK WHERE NVL(DELETED,0)=0 AND PAY_ORDER_ID IS NOT NULL
+              FROM RABAEV.RRL_TRANSPORT_TASK
+             WHERE NVL(DELETED,0)=0 AND PAY_ORDER_ID IS NOT NULL
              GROUP BY PAY_ORDER_ID
           ) TT_SUM ON TT_SUM.PAY_ORDER_ID = BO.ID
          WHERE TRUNC(BO.DATEOFORDER) BETWEEN :d1 AND :d2
