@@ -1,6 +1,9 @@
 param(
   [string]$SeedDate = "2026-05-25",
-  [switch]$IncludeMutatingVrpApply
+  [switch]$IncludeMutatingVrpApply,
+  [switch]$IncludeSprint60To95,
+  [switch]$IncludeUiSmoke,
+  [switch]$IncludeLoadSmoke
 )
 
 $ErrorActionPreference = "Stop"
@@ -52,3 +55,55 @@ python -m pytest `
   tests\transport\test_sprint108_114_functional.py `
   tests\transport\test_sprint115_119_functional.py `
   -q -ra --tb=short
+
+if ($IncludeSprint60To95) {
+  python -m pytest `
+    tests\transport\test_sprint60_functional.py `
+    tests\transport\test_sprint61_functional.py `
+    tests\transport\test_sprint62_functional.py `
+    tests\transport\test_sprint63_functional.py `
+    tests\transport\test_sprint64_functional.py `
+    tests\transport\test_sprint65_functional.py `
+    tests\transport\test_sprint66_functional.py `
+    tests\transport\test_sprint67_functional.py `
+    tests\transport\test_sprint68_functional.py `
+    tests\transport\test_sprint69_functional.py `
+    tests\transport\test_sprint70_functional.py `
+    tests\transport\test_sprint71_functional.py `
+    tests\transport\test_sprint72_functional.py `
+    tests\transport\test_sprint73_functional.py `
+    tests\transport\test_sprint74_functional.py `
+    tests\transport\test_sprint75_functional.py `
+    tests\transport\test_sprint76_functional.py `
+    tests\transport\test_sprint77_functional.py `
+    tests\transport\test_sprint78_functional.py `
+    tests\transport\test_sprint79_functional.py `
+    tests\transport\test_sprint80_functional.py `
+    tests\transport\test_sprint81_functional.py `
+    tests\transport\test_sprint82_functional.py `
+    tests\transport\test_sprint83_functional.py `
+    tests\transport\test_sprint84_functional.py `
+    tests\transport\test_sprint85_functional.py `
+    tests\transport\test_sprint86_functional.py `
+    tests\transport\test_sprint87_functional.py `
+    tests\transport\test_sprint88_functional.py `
+    tests\transport\test_sprint89_functional.py `
+    tests\transport\test_sprint90_functional.py `
+    tests\transport\test_sprint91_functional.py `
+    tests\transport\test_sprint92_functional.py `
+    tests\transport\test_sprint93_functional.py `
+    tests\transport\test_sprint94_functional.py `
+    tests\transport\test_sprint95_functional.py `
+    -q -ra --tb=short
+}
+
+if ($IncludeLoadSmoke) {
+  foreach ($i in 60..95) {
+    python "tests\transport\transport_sprint${i}_load_test.py"
+  }
+}
+
+if ($IncludeUiSmoke) {
+  node tests\ui\transport_sprint60_95_ui_smoke.cjs
+  node tests\ui\transport_table_2000_nfr_smoke.cjs
+}

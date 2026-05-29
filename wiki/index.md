@@ -22,7 +22,7 @@ Start here for a fresh session:
 - [subprojects/windowsapplication2.md](subprojects/windowsapplication2.md): legacy WinForms WMS/TMS desktop application
 - [subprojects/oracle_schema.md](subprojects/oracle_schema.md): reconstructed Oracle schema and deployment scripts
 - [subprojects/wms_terminal_web.md](subprojects/wms_terminal_web.md): modern Web/PWA terminal application replacing the legacy terminal OS client
-- [subprojects/tms2_current_status.md](subprojects/tms2_current_status.md): reboot anchor for the active TMS-2 workstream, Sprint hardening status through Sprint 90, release gates, routing provider evidence, risks, and next steps
+- [subprojects/tms2_current_status.md](subprojects/tms2_current_status.md): reboot anchor for the active TMS-2 workstream, Sprint hardening status through Sprint 95, release gates, routing provider evidence, risks, and next steps
 
 ## Architecture
 

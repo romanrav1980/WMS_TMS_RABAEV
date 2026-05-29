@@ -1,0 +1,81 @@
+name: TMS2 Regression
+
+on:
+  pull_request:
+    paths:
+      - "admin/wms_admin_frontend/**"
+      - "api/wms_api_server/**"
+      - "scripts/tms2*"
+      - "tests/transport/**"
+      - "tests/ui/transport_*"
+      - "wiki/**"
+      - ".github/workflows/tms2-regression.yml"
+  push:
+    branches:
+      - "feature/transport-dispatch-phase1"
+      - "main"
+
+jobs:
+  proof-gate:
+    name: Proof gate (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: admin/wms_admin_frontend/package-lock.json
+
+      - name: Python test dependencies
+        run: python -m pip install --upgrade pip pytest requests
+
+      - name: Frontend dependencies
+        working-directory: admin/wms_admin_frontend
+        run: npm ci
+
+      - name: Frontend build
+        working-directory: admin/wms_admin_frontend
+        run: npm run build
+
+      - name: Install Playwright Chromium
+        working-directory: admin/wms_admin_frontend
+        run: npx playwright install chromium
+
+      - name: Start frontend server and run UI smoke
+        run: |
+          cd admin/wms_admin_frontend
+          npm run dev -- --host 127.0.0.1 --port 3000 &
+          cd ../..
+          python - <<'PY'
+          import time
+          import urllib.request
+          deadline = time.time() + 60
+          while time.time() < deadline:
+              try:
+                  urllib.request.urlopen("http://127.0.0.1:3000/?page=transport", timeout=2).read(1)
+                  break
+              except Exception:
+                  time.sleep(1)
+          else:
+              raise SystemExit("frontend dev server did not become ready")
+          PY
+          node tests/ui/transport_sprint60_95_ui_smoke.cjs
+          node tests/ui/transport_table_2000_nfr_smoke.cjs
+
+      - name: Cross-platform release proof
+        run: python scripts/tms2_release_gate.py --skip-live-routing

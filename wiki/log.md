@@ -2295,3 +2295,12 @@ Append-only log of root wiki updates.
 - Added `tests/support/transport_load_runner.py` and replaced Sprint 60-90 Locust-only load files with plain Python no-mutation runners that read `tests/support/project_config.py` and work on Windows/Linux shells.
 - Verification: Sprint 60-90 functional -> `186 passed`; Sprint 60-90 load gates -> all passed; frontend build passed; 2000-row virtualizer NFR smoke passed (`ok=true`, first render 852 ms); routing smoke passed for OSRM and Valhalla; encoding check passed; `git diff --check` passed with line-ending warnings only.
 - Acceptance note: Sprint 60-90 are now fresh functional/load green; Playwright/training hardening remains complete through Sprint 59 and targeted UI smoke is still required before production sign-off for Sprint 60-90 controls.
+
+## 2026-05-29 - TMS-2 Sprint 60-95 proof gate and CI
+
+- Added grouped Playwright proof `tests/ui/transport_sprint60_95_ui_smoke.cjs` covering the user-visible controls from Sprint 60-95.
+- Converted Sprint 91-95 load gates from Locust-only profiles to cross-platform Python no-mutation runners through `tests/support/transport_load_runner.py`.
+- Added `scripts/tms2_release_gate.py`, a cross-platform release/proof runner with live-routing probes by default and `--skip-live-routing` for CI.
+- Extended `scripts/tms2-release-gate.ps1` with optional Sprint 60-95 functional, load, and UI smoke switches.
+- Added `.github/workflows/tms2-regression.yml`, a Windows/Ubuntu proof gate that builds the frontend, runs mocked UI smoke, NFR smoke, and the Python release proof.
+- Verification: Sprint 91-95 functional -> `48 passed`; Sprint 91-95 load -> all passed; `transport_sprint60_95_ui_smoke.cjs` -> passed; `python scripts\tms2_release_gate.py --skip-live-routing` -> `245 passed`.

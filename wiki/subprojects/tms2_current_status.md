@@ -70,6 +70,19 @@ Sprint 1-3 теперь имеют прямые functional tests, UI smoke и lo
 
 Оставшийся acceptance нюанс: Sprint 60-90 закрыты функционально и нагрузочно, но per-sprint Playwright/training coverage пока есть только для Sprint 48-59. Перед production sign-off для 60-90 нужен targeted UI smoke по измененным контролам либо явная приемка ручным сценарием.
 
+## Sprint 60-95 proof checkpoint
+
+Контекст сохранен на 2026-05-29 после закрытия доказательности Sprint 60-95 и добавления CI/release proof gate.
+
+- UI smoke: `node tests\ui\transport_sprint60_95_ui_smoke.cjs` -> passed. Один grouped smoke покрывает пользовательские признаки Sprint 60-95: виртуализация/warehouse filter/sticky headers/not-ready selection/tab badge, trip composition readiness/filter/select all/Delete/Ctrl+Enter/CSV/copy/time-sort, route table TK/LOGIST/readiness/summary/export, reschedule, close warning, empty-trip warning, unready border, note tooltip.
+- Functional gate: `python scripts\tms2_release_gate.py --skip-live-routing` -> `245 passed` за 178.44s. Gate включает acceptance docs, routing infrastructure static checks, frontend virtualization NFR contract, and Sprint 60-95 functional tests.
+- Sprint 91-95 functional: `48 passed`.
+- Sprint 91-95 load: all passed via cross-platform Python no-mutation runners. Sprint 91-95 no longer require Locust.
+- CI: `.github/workflows/tms2-regression.yml` added. It runs on Ubuntu and Windows, builds the frontend, starts Vite, runs `transport_sprint60_95_ui_smoke.cjs`, runs `transport_table_2000_nfr_smoke.cjs`, then runs `scripts/tms2_release_gate.py --skip-live-routing`.
+- Cross-platform release script: `scripts/tms2_release_gate.py` added. It supports live routing probes by default, `--skip-live-routing` for CI, optional UI/load smoke, and seed-date env wiring.
+
+Текущий acceptance нюанс после этого шага: Sprint 60-95 теперь имеют grouped UI smoke, not per-sprint training packs. Для production этого достаточно как автоматический proof gate, если бизнес-владелец принимает grouped evidence вместо 36 отдельных training pages.
+
 ## Что исправлено в hardening
 
 - Transport API row contract приведен к legacy uppercase keys.

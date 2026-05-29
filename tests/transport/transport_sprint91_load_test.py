@@ -1,60 +1,17 @@
+﻿"""Cross-platform no-mutation load gate for Sprint 91.
+
+Run from the repository root with Python on Windows or Linux-like systems.
+It measures the dispatcher read context for the sprint feature without requiring
+Locust or mutating Oracle data.
 """
-transport_sprint91_load_test.py — Load test for Sprint 91 (sort trip STs by time window).
+from __future__ import annotations
 
-Sort is pure frontend — no new backend endpoints.
-We test the /tasks/{id}/sts endpoint at selection-time load.
-NFR: p95 < 400 ms, error rate < 1 %.
-"""
+import sys
+from pathlib import Path
 
-from locust import HttpUser, task, between, events
-import os
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from support.transport_load_runner import run_read_gate  # noqa: E402
 
 
-class TimeSortUser(HttpUser):
-    wait_time = between(0.5, 1.5)
-    host = os.environ.get("TMS_API_BASE_URL", "http://127.0.0.1:8088")
-
-    def on_start(self):
-        self.client.post(
-            "/api/admin/auth/login",
-            json={"username": "dispatch_user", "password": "test"},
-        )
-
-    @task(6)
-    def load_available_sts(self):
-        from datetime import date
-        today = date.today().isoformat()
-        self.client.get(
-            f"/api/admin/transport/available-sts?date={today}",
-            name="/available-sts",
-        )
-
-    @task(4)
-    def load_task_sts(self):
-        self.client.get(
-            "/api/admin/transport/tasks/9999/sts",
-            name="/tasks/{id}/sts",
-        )
-
-    @task(2)
-    def load_tasks(self):
-        from datetime import date
-        today = date.today().isoformat()
-        self.client.get(
-            f"/api/admin/transport/tasks?date={today}",
-            name="/tasks",
-        )
-
-
-@events.quitting.add_listener
-def assert_nfr(environment, **kwargs):
-    stats = environment.runner.stats.get("/available-sts", "GET")
-    if stats and stats.num_requests > 0:
-        p95 = stats.get_response_time_percentile(0.95)
-        err = stats.num_failures / stats.num_requests
-        if p95 > 400:
-            environment.process_exit_code = 1
-            print(f"FAIL p95={p95:.0f}ms > 400ms")
-        if err > 0.01:
-            environment.process_exit_code = 1
-            print(f"FAIL error_rate={err:.1%} > 1%")
+if __name__ == "__main__":
+    raise SystemExit(run_read_gate(91, include_task_sts=True))
