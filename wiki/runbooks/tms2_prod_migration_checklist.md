@@ -53,6 +53,7 @@ SELECT TABLESPACE_NAME, ROUND((BYTES-NVL(FREE,0))/1048576,1) AS USED_MB,
 |---|------|-----------|-------------|
 | 046 | `db/migrations/2026-05-23_dobrotseny_seed/046_apply.sql` | Тестовые данные «Добра Цен» | ⛔ НЕ ПРИМЕНЯТЬ на prod |
 | 047 | `db/migrations/2026-05-23_dobrotseny_seed/047_apply.sql` | Тестовые данные «Добра Цен» | ⛔ НЕ ПРИМЕНЯТЬ на prod |
+| 063 | `db/migrations/2026-06-01_tms2_test_geocode/063_apply.sql` | Тестовая геокодировка legacy store addresses через city/raion centers + jitter | ⛔ НЕ ПРИМЕНЯТЬ на prod без отдельного бизнес sign-off |
 
 ### Блок III — ARM / Операции
 

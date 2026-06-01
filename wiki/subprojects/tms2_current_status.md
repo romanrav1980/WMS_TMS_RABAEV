@@ -697,3 +697,13 @@ Sprint 1-3 теперь имеют прямые functional tests, UI smoke и lo
 - Reports and screenshots remain local evidence under `reports/` and were intentionally not committed.
 - Dirty tree items outside this TMS-2 scope remain intentionally unowned by this checkpoint: `WindowsApplication2/...`, `MINI WMS/...`, and `WMS перенос v1/...`.
 - Next strategic move remains pilot readiness: keep release/routing/NFR gates green, run the Day 0 pilot checklist, then begin controlled parallel operation with daily reconciliation and mandatory slow SQL review after each meaningful run.
+
+## MAP/VRP test geocode — 2026-06-01
+
+- Added and applied dev/test migration `db/migrations/2026-06-01_tms2_test_geocode/063_apply.sql` to assign deterministic test coordinates to the 270 legacy store addresses that had missing `RRL_ADDR.SHIROTA/DOLGOTA`.
+- The migration backs up old values into `RRL_ADDR_TEST_GEOCODE_BAK` (`270` rows) and has `063_rollback.sql` for restore. It is a controlled acceptance fixture using city/raion centers plus deterministic jitter, not production-grade geocoding.
+- Verification after apply: `RRL_ADDR` now has `349` total addresses, `349` geocoded, `0` missing; `/api/admin/transport/routing/status` returns `geocoded_count=349`, `ungeocoded_count=0`.
+- Planner UI evidence: `reports/screenshots/tms2_geocode_2026_06_01/planner_2026_05_24_geocoded.png`; the warning `адресов без координат` is absent, the map page shows `272` seed STs on the map and `349 из 349 геокодировано`.
+- VRP smoke after geocode: `/planner/solve` on seed `2026-05-24` returned HTTP 200, `97` routes, `0` unassigned STs. Distance matrix was rebuilt with Haversine for `349` addresses and `121452` pairs.
+- Targeted tests: `tests/transport/test_sprint7_functional.py` -> `12 passed, 2 skipped`; v2 planner coordinate fidelity test -> `1 passed`.
+- Slow SQL decision: the fresh `/distance-matrix/rebuild?source=haversine` row took about `12.3 s` for `121452` batch rows. This is accepted as a one-off controlled rebuild after fixture geocoding, not a hot read path. For production-scale geocoding, keep rebuild manual/background and do not run it on every planner page load.

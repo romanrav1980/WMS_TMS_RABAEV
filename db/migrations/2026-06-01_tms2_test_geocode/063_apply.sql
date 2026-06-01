@@ -1,0 +1,235 @@
+-- Migration 063 — TMS-2 test geocode for legacy store addresses
+-- Date: 2026-06-01
+--
+-- Purpose:
+--   The transport planner map needs coordinates for the legacy store addresses
+--   that are present in RRL_ADDR but were never geocoded. This is a controlled
+--   test/acceptance fixture: city/raion centres plus deterministic ORA_HASH
+--   jitter, not production-grade geocoding.
+--
+-- Safety:
+--   * Only rows with missing SHIROTA/DOLGOTA are changed.
+--   * Original values are stored in RRL_ADDR_TEST_GEOCODE_BAK for rollback.
+--   * Do not apply this fixture to production without explicit business sign-off.
+
+prompt [063] TMS-2 test geocode for missing RRL_ADDR coordinates - apply
+
+DECLARE
+  v_count NUMBER;
+BEGIN
+  SELECT COUNT(*)
+    INTO v_count
+    FROM user_tables
+   WHERE table_name = 'RRL_ADDR_TEST_GEOCODE_BAK';
+
+  IF v_count = 0 THEN
+    EXECUTE IMMEDIATE '
+      CREATE TABLE RABAEV.RRL_ADDR_TEST_GEOCODE_BAK (
+        MIGRATION_TAG VARCHAR2(64) NOT NULL,
+        ADDR          VARCHAR2(500) NOT NULL,
+        OLD_SHIROTA   NUMBER,
+        OLD_DOLGOTA   NUMBER,
+        CREATED_AT    DATE DEFAULT SYSDATE NOT NULL,
+        CONSTRAINT RRL_ADDR_TEST_GEOCODE_BAK_PK PRIMARY KEY (MIGRATION_TAG, ADDR)
+      )';
+  END IF;
+END;
+/
+
+INSERT INTO RABAEV.RRL_ADDR_TEST_GEOCODE_BAK (MIGRATION_TAG, ADDR, OLD_SHIROTA, OLD_DOLGOTA)
+SELECT '063_tms2_test_geocode', A.ADDR, A.SHIROTA, A.DOLGOTA
+  FROM RABAEV.RRL_ADDR A
+ WHERE (A.SHIROTA IS NULL OR A.SHIROTA = 0 OR A.DOLGOTA IS NULL OR A.DOLGOTA = 0)
+   AND NOT EXISTS (
+       SELECT 1
+         FROM RABAEV.RRL_ADDR_TEST_GEOCODE_BAK B
+        WHERE B.MIGRATION_TAG = '063_tms2_test_geocode'
+          AND B.ADDR = A.ADDR
+   );
+
+UPDATE RABAEV.RRL_ADDR A
+   SET A.SHIROTA =
+       (
+       CASE
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СУРГУТ%' THEN 61.2540
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НЕФТЕЮГАНСК%' THEN 61.0998
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПЫТЬ-ЯХ%' THEN 60.7586
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НИЖНЕВАРТОВСК%' THEN 60.9397
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЛЯНТОР%' THEN 61.6195
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ФЕДОРОВСК%' THEN 61.6060
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%РАДУЖН%' THEN 62.1342
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПОКАЧИ%' THEN 61.7422
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НОЯБРЬСК%' THEN 63.2018
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЛАНГЕПАС%' THEN 61.2544
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ХАНТЫ-МАНСИЙСК%' THEN 61.0032
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЮГОРСК%' THEN 61.3133
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НЯГАН%' THEN 62.1455
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СЕВЕРОУРАЛЬСК%' THEN 60.1533
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КРАСНОТУР%' THEN 59.7665
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СЕРОВ%' THEN 59.6048
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КАРПИНСК%' THEN 59.7602
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ВОЛЧАНСК%' THEN 59.9351
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КАЛЬЯ%' THEN 60.0010
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НОВАЯ ЛЯЛЯ%' THEN 59.0550
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НИЖНИЙ ТАГИЛ%' OR UPPER(NVL(A.REGION, '')) LIKE '%НИЖНИЙ ТАГИЛ%' THEN 57.9101
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ВЕРХНЯЯ САЛДА%' THEN 58.0466
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%Н.САЛДА%' THEN 58.0776
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НОВОУРАЛЬСК%' THEN 57.2472
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КАЧКАНАР%' THEN 58.7052
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КРАСНОУРАЛЬСК%' THEN 58.3486
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КУШВА%' THEN 58.2825
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%Н.ТУРА%' THEN 58.6293
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ИРБИТ%' THEN 57.6705
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ТАВДА%' THEN 58.0425
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ТУРИНСК%' THEN 58.0394
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%РЕЖ%' THEN 57.3717
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%АЛАПАЕВСК%' THEN 57.8516
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%АРТЕМОВСК%' THEN 57.3384
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СИНЯЧИХ%' THEN 57.9847
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%БУЛАНАШ%' THEN 57.2788
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КИРОВГРАД%' THEN 57.4299
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ВЕРХНИЙ ТАГИЛ%' THEN 57.3765
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%В.НЕЙВИН%' THEN 57.2704
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЕКАТ%' OR UPPER(NVL(A.REGION, '')) LIKE '%ЕКАТ%' THEN 56.8389
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%БЕРЕЗОВСК%' THEN 56.9096
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПЫШМА%' THEN 56.9758
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%АРАМИЛЬ%' THEN 56.6945
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СЫСЕРТ%' THEN 56.5006
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПОЛЕВСК%' THEN 56.4958
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%УФАЛЕЙ%' THEN 56.0472
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КАМЕНСК%' THEN 56.4149
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%АСБЕСТ%' THEN 57.0052
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СУХОЙ ЛОГ%' THEN 56.9076
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КАМЫШЛОВ%' THEN 56.8465
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%БОГДАНОВИЧ%' THEN 56.7756
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЗАРЕЧНЫЙ%' THEN 56.8110
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПЕРВОУРАЛЬСК%' THEN 56.9081
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ДЕГТЯРСК%' THEN 56.7048
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%БИСЕРТЬ%' THEN 56.8617
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КРАСНОУФИМСК%' THEN 56.6123
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%МИХАЙЛОВСК%' THEN 56.4369
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КЫШТЫМ%' THEN 55.7060
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КУРГАН%' THEN 55.4410
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ШАДРИНСК%' THEN 56.0870
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЧЕЛЯБИНСК%' THEN 55.1644
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КОПЕЙСК%' THEN 55.1168
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%САТКА%' THEN 55.0425
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПЛАСТ%' THEN 54.3691
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%МАГНИТОГОРСК%' THEN 53.4072
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%УФА%' THEN 54.7351
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НЕФТЕКАМСК%' THEN 56.0884
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%БИРСК%' THEN 55.4157
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ИШИМБАЙ%' THEN 53.4546
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СТЕРЛИТАМАК%' THEN 53.6304
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ТЮМЕН%' THEN 57.1530
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ГОЛЫШМАН%' THEN 56.3979
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ГОЛЫМШАН%' THEN 56.3979
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ТУГУЛЫМ%' THEN 57.0591
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ТАЛИЦА%' THEN 57.0124
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ТОБОЛЬСК%' THEN 58.2000
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПЕРМ%' THEN 58.0105
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЛЫСЬВА%' THEN 58.0996
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЧУСОВ%' THEN 58.2975
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СОЛИКАМСК%' THEN 59.6483
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ГУБАХА%' THEN 58.8370
+         ELSE 56.8389
+       END
+       ) + (MOD(ORA_HASH(A.ADDR), 200) - 100) / 10000,
+       A.DOLGOTA =
+       (
+       CASE
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СУРГУТ%' THEN 73.3962
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НЕФТЕЮГАНСК%' THEN 72.6035
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПЫТЬ-ЯХ%' THEN 72.8365
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НИЖНЕВАРТОВСК%' THEN 76.5696
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЛЯНТОР%' THEN 72.1555
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ФЕДОРОВСК%' THEN 73.7140
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%РАДУЖН%' THEN 77.4589
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПОКАЧИ%' THEN 75.5941
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НОЯБРЬСК%' THEN 75.4509
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЛАНГЕПАС%' THEN 75.1807
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ХАНТЫ-МАНСИЙСК%' THEN 69.0189
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЮГОРСК%' THEN 63.3319
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НЯГАН%' THEN 65.4337
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СЕВЕРОУРАЛЬСК%' THEN 59.9525
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КРАСНОТУР%' THEN 60.2086
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СЕРОВ%' THEN 60.5752
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КАРПИНСК%' THEN 60.0107
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ВОЛЧАНСК%' THEN 60.0798
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КАЛЬЯ%' THEN 60.0000
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НОВАЯ ЛЯЛЯ%' THEN 60.5945
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НИЖНИЙ ТАГИЛ%' OR UPPER(NVL(A.REGION, '')) LIKE '%НИЖНИЙ ТАГИЛ%' THEN 59.9813
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ВЕРХНЯЯ САЛДА%' THEN 60.5560
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%Н.САЛДА%' THEN 60.7202
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НОВОУРАЛЬСК%' THEN 60.0956
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КАЧКАНАР%' THEN 59.4840
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КРАСНОУРАЛЬСК%' THEN 60.0407
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КУШВА%' THEN 59.7646
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%Н.ТУРА%' THEN 59.8526
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ИРБИТ%' THEN 63.0635
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ТАВДА%' THEN 65.2726
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ТУРИНСК%' THEN 63.6981
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%РЕЖ%' THEN 61.3913
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%АЛАПАЕВСК%' THEN 61.6963
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%АРТЕМОВСК%' THEN 61.8947
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СИНЯЧИХ%' THEN 61.6676
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%БУЛАНАШ%' THEN 61.9966
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КИРОВГРАД%' THEN 60.0626
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ВЕРХНИЙ ТАГИЛ%' THEN 59.9517
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%В.НЕЙВИН%' THEN 60.1376
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЕКАТ%' OR UPPER(NVL(A.REGION, '')) LIKE '%ЕКАТ%' THEN 60.6057
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%БЕРЕЗОВСК%' THEN 60.8019
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПЫШМА%' THEN 60.5651
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%АРАМИЛЬ%' THEN 60.8366
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СЫСЕРТ%' THEN 60.8190
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПОЛЕВСК%' THEN 60.2364
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%УФАЛЕЙ%' THEN 60.2313
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КАМЕНСК%' THEN 61.9187
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%АСБЕСТ%' THEN 61.4582
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СУХОЙ ЛОГ%' THEN 62.0358
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КАМЫШЛОВ%' THEN 62.7110
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%БОГДАНОВИЧ%' THEN 62.0494
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЗАРЕЧНЫЙ%' THEN 61.3254
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПЕРВОУРАЛЬСК%' THEN 59.9429
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ДЕГТЯРСК%' THEN 60.0866
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%БИСЕРТЬ%' THEN 59.0523
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КРАСНОУФИМСК%' THEN 57.7637
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%МИХАЙЛОВСК%' THEN 59.1136
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КЫШТЫМ%' THEN 60.5564
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КУРГАН%' THEN 65.3411
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ШАДРИНСК%' THEN 63.6297
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЧЕЛЯБИНСК%' THEN 61.4368
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%КОПЕЙСК%' THEN 61.6188
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%САТКА%' THEN 59.0289
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПЛАСТ%' THEN 60.8152
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%МАГНИТОГОРСК%' THEN 58.9791
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%УФА%' THEN 55.9587
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%НЕФТЕКАМСК%' THEN 54.2483
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%БИРСК%' THEN 55.5423
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ИШИМБАЙ%' THEN 56.0439
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СТЕРЛИТАМАК%' THEN 55.9308
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ТЮМЕН%' THEN 65.5343
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ГОЛЫШМАН%' THEN 68.3728
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ГОЛЫМШАН%' THEN 68.3728
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ТУГУЛЫМ%' THEN 64.6420
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ТАЛИЦА%' THEN 63.7325
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ТОБОЛЬСК%' THEN 68.2538
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ПЕРМ%' THEN 56.2502
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЛЫСЬВА%' THEN 57.8086
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ЧУСОВ%' THEN 57.8194
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%СОЛИКАМСК%' THEN 56.7710
+         WHEN UPPER(NVL(A.RAION, A.REGION)) LIKE '%ГУБАХА%' THEN 57.5544
+         ELSE 60.6057
+       END
+       ) + (MOD(ORA_HASH(A.ADDR, 17), 200) - 100) / 10000
+ WHERE EXISTS (
+       SELECT 1
+         FROM RABAEV.RRL_ADDR_TEST_GEOCODE_BAK B
+        WHERE B.MIGRATION_TAG = '063_tms2_test_geocode'
+          AND B.ADDR = A.ADDR
+   )
+   AND (A.SHIROTA IS NULL OR A.SHIROTA = 0 OR A.DOLGOTA IS NULL OR A.DOLGOTA = 0);
+
+COMMIT;
+
+prompt [063] TMS-2 test geocode for missing RRL_ADDR coordinates - done

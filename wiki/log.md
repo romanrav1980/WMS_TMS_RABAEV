@@ -2390,3 +2390,12 @@ Append-only log of root wiki updates.
 - Recorded the current restart anchor after the final handoff commit `446903b` (`Finalize TMS2 acceptance tests and frontend fixes`).
 - Preserved the evidence summary for the next session: v2 aggregate `130 passed, 7 skipped`, final full sign-off core `446 passed`, Sprint 60-95 `234 passed`, frontend build passed, and post-fix frontend audit clean on transport, planner, gantt, fleet, and KPI.
 - Explicitly kept local generated `reports/` and unrelated dirty tree material (`WindowsApplication2/...`, `MINI WMS/...`, `WMS перенос v1/...`) outside the TMS-2 checkpoint scope.
+
+## 2026-06-01 - TMS-2 MAP/VRP test geocode fixture
+
+- Added dev/test migration `db/migrations/2026-06-01_tms2_test_geocode/063_apply.sql` plus rollback/verify scripts.
+- Applied the migration to local Oracle: `RRL_ADDR` moved from `79/349` geocoded and `270` missing to `349/349` geocoded and `0` missing; `RRL_ADDR_TEST_GEOCODE_BAK` stores `270` original rows for rollback.
+- Verified API and UI: `/routing/status` returns `geocoded_count=349`, `ungeocoded_count=0`; planner on seed `2026-05-24` shows `272` STs on the map and no missing-coordinate warning.
+- Ran VRP smoke after geocode: `/planner/solve` returned `97` routes and `0` unassigned STs; rebuilt Haversine distance matrix for `349` addresses / `121452` pairs.
+- Tests: Sprint 7 functional -> `12 passed, 2 skipped`; v2 planner coordinate fidelity -> `1 passed`.
+- Slow SQL decision: the `12.3 s` distance-matrix batch rebuild is accepted as a controlled one-off fixture operation; it remains a manual/background operation, not a planner page-load path.

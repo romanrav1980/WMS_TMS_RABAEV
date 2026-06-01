@@ -1,6 +1,6 @@
 # ТМС-2 — Oracle contract
 
-Дата обновления: 2026-05-28.
+Дата обновления: 2026-06-01.
 
 Назначение: зафиксировать реальные Oracle-объекты, сигнатуры и compatibility-правила ТМС-2, чтобы не чинить одни и те же рассинхроны повторно.
 
@@ -35,10 +35,13 @@ Known drift:
 | Объект | Роль | Важные поля |
 |---|---|---|
 | `RRL_ADDR` | Адреса и координаты | `ADDR`, `SHIROTA`, `DOLGOTA` |
+| `RRL_ADDR_TEST_GEOCODE_BAK` | Backup для тестовой геокодировки | `MIGRATION_TAG`, `ADDR`, `OLD_SHIROTA`, `OLD_DOLGOTA`, `CREATED_AT` |
 | `RRL_ADDR_DISTANCE_MATRIX` | Матрица расстояний | `FROM_ADDR`, `TO_ADDR`, `DISTANCE_KM`, `DURATION_MIN`, `SOURCE`, `UPDATED_AT` |
 | `RRL_PLANNER_PLANS` | Сохраненные планы | `ID`, `PLAN_DATE`, `CREATED_AT`, `SOLVER`, `SCORE`, `PAYLOAD`, `APPLIED_AT` |
 
 Fixture note, 2026-05-29: migration `db/migrations/2026-05-29_tms2_planner_template_fixture/055_apply.sql` inserts a deterministic Sprint 9 historical planner-template row into `RRL_PLANNER_PLANS` (`SOLVER='s9-template-fixture'`, `PLAN_DATE=2026-05-23`) using free STs from accepted release seed date `2026-05-24`. A compatibility row for `PLAN_DATE=2026-05-24` is best-effort when `2026-05-25` source STs still exist. Rollback deletes both fixture rows.
+
+Fixture note, 2026-06-01: migration `db/migrations/2026-06-01_tms2_test_geocode/063_apply.sql` assigns deterministic test coordinates to legacy `RRL_ADDR` rows missing `SHIROTA/DOLGOTA`. It stores pre-change values in `RRL_ADDR_TEST_GEOCODE_BAK` and is intended for local/dev MAP/VRP acceptance only, not production-grade geocoding.
 
 Known drift:
 
@@ -85,6 +88,7 @@ Business rules observed in legacy source:
 | `052_apply.sql` | Distance matrix/planner support | Applied in dev |
 | `053_apply.sql` | ARM/Gantt operations/norms | Applied in dev after FK compatibility fix |
 | `054_apply.sql` | Billing support | Applied in dev after `COMPANY VARCHAR2(200)` compatibility fix |
+| `063_apply.sql` | Test geocode for legacy store addresses | Applied in dev; dev/test fixture only |
 
 Before production:
 
