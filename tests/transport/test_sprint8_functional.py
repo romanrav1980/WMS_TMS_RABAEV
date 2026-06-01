@@ -89,6 +89,15 @@ class TestPlannerSolve:
                      json={"plan_date": PLAN_DATE, "time_limit_s": 10, "source": "haversine", "solver": "savings"})
         assert r.status_code in (200, 422), f"Unexpected status {r.status_code}: {r.text}"
 
+    def test_auto_solver_returns_plan_or_business_422(self, api):
+        """UI default uses solver=auto, so the OR-Tools path must not 500."""
+        r = api.post(f"{BASE_URL}/api/admin/transport/planner/solve",
+                     json={"plan_date": PLAN_DATE, "time_limit_s": 10, "source": "auto", "solver": "auto"})
+        assert r.status_code in (200, 422), f"Auto solver must not crash: {r.status_code}: {r.text}"
+        if r.status_code == 200:
+            data = r.json()
+            assert data.get("routes"), "Auto solver returned 200 but no routes"
+
     def test_plan_has_required_fields(self, plan):
         required = {"routes", "unassigned_sts", "total_km", "fleet_utilization_pct",
                     "tw_violations", "score", "solver_used", "solve_time_ms"}

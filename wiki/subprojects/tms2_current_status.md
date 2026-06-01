@@ -707,3 +707,11 @@ Sprint 1-3 теперь имеют прямые functional tests, UI smoke и lo
 - VRP smoke after geocode: `/planner/solve` on seed `2026-05-24` returned HTTP 200, `97` routes, `0` unassigned STs. Distance matrix was rebuilt with Haversine for `349` addresses and `121452` pairs.
 - Targeted tests: `tests/transport/test_sprint7_functional.py` -> `12 passed, 2 skipped`; v2 planner coordinate fidelity test -> `1 passed`.
 - Slow SQL decision: the fresh `/distance-matrix/rebuild?source=haversine` row took about `12.3 s` for `121452` batch rows. This is accepted as a one-off controlled rebuild after fixture geocoding, not a hot read path. For production-scale geocoding, keep rebuild manual/background and do not run it on every planner page load.
+
+## Planner auto-plan UI fix — 2026-06-01
+
+- Fixed the planner `Авто-план` browser failure on seed date `2026-05-24`. The UI symptom was `TypeError: Failed to fetch`; the real backend error was a 500 `list index out of range` in the `solver=auto` OR-Tools path.
+- Root cause: the OR-Tools distance matrix treated the virtual depot as an order for the depot-to-depot cell, and the disjunction loop also included the depot node while skipping order 0. Direct API tests mostly used `solver=savings`, while mocked UI smoke intercepted `/planner/solve`, so the live browser default `solver=auto` path was not covered.
+- Fix: `vrp_solver.py` now handles depot-to-depot distance as `0` and adds disjunctions only for real order nodes. `test_sprint8_functional.py` now includes `solver=auto` regression coverage.
+- Related hardening: `distance-matrix/rebuild?source=auto` now falls back to Haversine if the active provider fails on a large batch, avoiding a 500 when OSRM rejects an oversized table URL.
+- Verification: Sprint 8 functional gate -> `24 passed`; Playwright live click on planner `Авто-план` returned HTTP 200, no failed requests, and rendered `Применить план (97 рейсов)` plus plan metrics.

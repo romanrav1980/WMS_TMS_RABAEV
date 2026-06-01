@@ -47,7 +47,8 @@ class DistanceMatrixService:
         source: 'auto' | 'haversine' | 'osrm' | 'valhalla'
         Возвращает: {"pairs": int, "source": str, "addresses": int}
         """
-        if source == "auto":
+        is_auto = source == "auto"
+        if is_auto:
             provider: RoutingProvider = get_active_provider()
         elif source == "haversine":
             from .routing import HaversineProvider
@@ -67,7 +68,14 @@ class DistanceMatrixService:
 
         n = len(addrs)
         points = [(float(a["LAT"]), float(a["LON"])) for a in addrs]
-        matrix = provider.build_matrix(points)
+        try:
+            matrix = provider.build_matrix(points)
+        except Exception:
+            if not is_auto:
+                raise
+            from .routing import HaversineProvider
+            provider = HaversineProvider()
+            matrix = provider.build_matrix(points)
 
         merge_sql = """
             MERGE INTO RABAEV.RRL_ADDR_DISTANCE_MATRIX T

@@ -2399,3 +2399,11 @@ Append-only log of root wiki updates.
 - Ran VRP smoke after geocode: `/planner/solve` returned `97` routes and `0` unassigned STs; rebuilt Haversine distance matrix for `349` addresses / `121452` pairs.
 - Tests: Sprint 7 functional -> `12 passed, 2 skipped`; v2 planner coordinate fidelity -> `1 passed`.
 - Slow SQL decision: the `12.3 s` distance-matrix batch rebuild is accepted as a controlled one-off fixture operation; it remains a manual/background operation, not a planner page-load path.
+
+## 2026-06-01 - TMS-2 planner auto-plan browser fix
+
+- Reproduced the user-facing `TypeError: Failed to fetch` by clicking `Авто-план` in the live planner UI on seed date `2026-05-24`; browser network showed `POST /api/admin/transport/planner/solve` failing with `net::ERR_FAILED`.
+- Root cause was backend 500, not frontend rendering: API audit recorded `list index out of range` in the live `solver=auto` path. Previous checks missed it because API tests used `solver=savings` and UI smokes mocked `/planner/solve`.
+- Fixed OR-Tools depot indexing in `api/wms_api_server/app/services/vrp_solver.py`: depot-to-depot distance is `0`, and disjunctions are added only for real order nodes.
+- Added Sprint 8 regression coverage for `solver=auto` and hardened distance-matrix auto mode to fallback to Haversine if the active routing provider rejects a large matrix request.
+- Verification: `tests/transport/test_sprint8_functional.py` -> `24 passed`; live Playwright click returned `POST /planner/solve` HTTP 200 with no failed requests and rendered `Применить план (97 рейсов)`.

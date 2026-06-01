@@ -176,7 +176,7 @@ def _solve_ortools(
 
     # Allow dropping orders (penalty = large number)
     penalty = 100_000
-    for node_idx in range(1, n_nodes):
+    for node_idx in range(n_orders):
         routing.AddDisjunction([manager.NodeToIndex(node_idx)], penalty)
 
     search_params = pywrapcp.DefaultRoutingSearchParameters()
@@ -433,6 +433,8 @@ def _solve_with_ortools(
 
     # Build integer distance matrix in metres
     def _km(i: int, j: int) -> float:
+        if i == depot_idx and j == depot_idx:
+            return 0.0
         if i == depot_idx or j == depot_idx:
             # depot at centre of gravity
             if i == depot_idx:
