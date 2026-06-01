@@ -695,7 +695,7 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
           >
             <AttributionControl
               position="bottomright"
-              prefix={'🐧 <a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>'}
+              prefix={false}
             />
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
