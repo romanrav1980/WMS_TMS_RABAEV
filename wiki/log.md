@@ -2384,3 +2384,9 @@ Append-only log of root wiki updates.
 - Fixed dispatcher status mojibake at the API boundary for legacy package-created open routes; `tests/transport/v2/test_02_data_fidelity.py` now fails if `CONDITION` returns question marks.
 - Fixed real frontend defects found during the ТЗ audit: `TransportGanttPage` now uses `VITE_API_BASE` for Gantt, plan-fact, and fact PATCH calls; `TransportDispatchPage` now authenticates the dispatcher WebSocket with the backend-required query credentials.
 - Verification: v2 aggregate -> `130 passed, 7 skipped`; frontend build passed; Playwright audit of transport, planner, gantt, fleet, and KPI pages found no question-mark status text, no Gantt HTML-as-JSON error, and no dispatcher WebSocket 403; slow SQL from `from_log_id=1196` remained `[]` above `500 ms`.
+
+## 2026-06-01 - TMS-2 restart checkpoint
+
+- Recorded the current restart anchor after the final handoff commit `446903b` (`Finalize TMS2 acceptance tests and frontend fixes`).
+- Preserved the evidence summary for the next session: v2 aggregate `130 passed, 7 skipped`, final full sign-off core `446 passed`, Sprint 60-95 `234 passed`, frontend build passed, and post-fix frontend audit clean on transport, planner, gantt, fleet, and KPI.
+- Explicitly kept local generated `reports/` and unrelated dirty tree material (`WindowsApplication2/...`, `MINI WMS/...`, `WMS перенос v1/...`) outside the TMS-2 checkpoint scope.

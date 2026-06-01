@@ -1,6 +1,6 @@
 # ТМС-2 — текущий статус
 
-Дата обновления: 2026-05-29.
+Дата обновления: 2026-06-01.
 
 Назначение файла: быстрый якорь для свежей сессии. Перед работой по ТМС-2 прочитать этот документ, затем [`../roadmap/transport_execution_plan.md`](../roadmap/transport_execution_plan.md), [`../requirements/transport_dispatch_tz.md`](../requirements/transport_dispatch_tz.md), [`../requirements/transport_billing_tz.md`](../requirements/transport_billing_tz.md) и [`../requirements/tms2_acceptance_matrix.md`](../requirements/tms2_acceptance_matrix.md).
 
@@ -688,3 +688,12 @@ Sprint 1-3 теперь имеют прямые functional tests, UI smoke и lo
 - v2 hardening decisions: `/planner/orders` now accepts `plan_date` alias, planner orders are cached with lock-protected cold-load to avoid Oracle stampede, `/available-sts` supports `page/page_size`, duplicate ST assignment now returns `409`, unassigning a missing ST returns `404`, and `/routing/status` uses fast cached TCP provider availability while real HTTP OSRM/Valhalla proof remains in `scripts/tms2-routing-smoke.ps1`.
 - Mandatory slow SQL review after the v2 full run from `from_log_id=1196`: `[]` for `min_elapsed_ms=500`. Decision: no fresh transport slow SQL above threshold; old `/planner/orders` 62k-row rows at log `1163..1195` are pre-fix evidence caused by the missing `plan_date` alias and are no longer current blockers.
 - Handoff cleanup and frontend audit: 31 empty test routes dated `2026-05-29` were cancelled through the transport API, not direct SQL. Dispatcher status question marks are normalized at the API boundary for legacy package-created open tasks; a v2 data-fidelity test now locks this. Frontend audit against `transport_dispatch_tz.md` found and fixed two runtime issues: `TransportGanttPage` used relative `/api/...` URLs and received Vite HTML instead of JSON, and dispatcher WebSocket connected without the backend-required auth query. Post-fix Playwright audit over transport, planner, gantt, fleet, and KPI pages found no question-mark status text, no HTML-as-JSON error, and no WebSocket 403. Frontend build passed.
+
+## Restart anchor — 2026-06-01
+
+- Latest TMS-2 handoff commit: `446903b` (`Finalize TMS2 acceptance tests and frontend fixes`).
+- Branch: `feature/transport-dispatch-phase1`.
+- Current green evidence to preserve: v2 aggregate `130 passed, 7 skipped`; final full sign-off gate `446 passed` core plus Sprint 60-95 `234 passed`; frontend build passed; post-fix frontend audit over transport, planner, gantt, fleet, and KPI pages found no question-mark status text, no Gantt HTML-as-JSON error, and no dispatcher WebSocket 403.
+- Reports and screenshots remain local evidence under `reports/` and were intentionally not committed.
+- Dirty tree items outside this TMS-2 scope remain intentionally unowned by this checkpoint: `WindowsApplication2/...`, `MINI WMS/...`, and `WMS перенос v1/...`.
+- Next strategic move remains pilot readiness: keep release/routing/NFR gates green, run the Day 0 pilot checklist, then begin controlled parallel operation with daily reconciliation and mandatory slow SQL review after each meaningful run.
