@@ -2,7 +2,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  CircleMarker, FeatureGroup, MapContainer,
+  AttributionControl, CircleMarker, FeatureGroup, MapContainer,
   Polygon, Polyline, Popup, TileLayer, useMap,
 } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
@@ -691,7 +691,12 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
             zoom={9}
             style={{ height: "100%", width: "100%" }}
             scrollWheelZoom
+            attributionControl={false}
           >
+            <AttributionControl
+              position="bottomright"
+              prefix={'🐧 <a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>'}
+            />
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
