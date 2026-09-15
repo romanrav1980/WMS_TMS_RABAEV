@@ -1,0 +1,43 @@
+{
+  "captured_at": "2026-09-15",
+  "head": "45eb08f1693687e5d400691fd01912a6d8a23bc4",
+  "scope": "Working-tree files, including pre-existing uncommitted changes; no product changes made by this analysis.",
+  "files": [
+    {
+      "path": "api/wms_api_server/app/services/vrp_solver.py",
+      "sha256": "BA16AD5A63CFF22633ECF1C1934EB3FEDFBA78E9A3144650A416258B2D5448CA"
+    },
+    {
+      "path": "api/wms_api_server/app/services/transport_service.py",
+      "sha256": "C636689BACA08CADF2976B235463E4DD56FEB16B92808D97F18EA9F9D411749D"
+    },
+    {
+      "path": "api/wms_api_server/app/oracle_gateway.py",
+      "sha256": "E63917604867B806EB0D7EEA867AD7C71CA5F8C43404279A10E4CDCD2FF82937"
+    },
+    {
+      "path": "api/wms_api_server/app/services/outbox_service.py",
+      "sha256": "4F015A8C3FDB94BDD0A146B215C15277B8825A8376D0AFED8DB0FF729A66D87E"
+    },
+    {
+      "path": "api/wms_api_server/app/services/warehouse_task_domain_sync_service.py",
+      "sha256": "44E61C3A5D97F063376363270CA671A157632D80024E94ADB856B0BFBF121BDB"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/015_apply.sql",
+      "sha256": "451D8861FE67F6D0A9BA4BE2C8A94CEDC48ABEB22C6C3D8880ECB4F04478A157"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/018_apply.sql",
+      "sha256": "DC463981CBCF871906BCD1BA41FF197F2F3BD80D72ACA01E8897727AFD26BA3B"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/019_apply.sql",
+      "sha256": "18BA20AEB564589EC2DC4BE3CDD546F4CB96781B9530F80127B9731C0010E25A"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/002_apply.sql",
+      "sha256": "F7AF5AFEC229051ECE39A81839C1ED9D9CE53B8ACA7C7BE4BA727F3F6775C47F"
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "mode": "offline only",
+  "savings": {
+    "incompatible_type_and_impossible_window_assigned": true,
+    "tw_violations": 0,
+    "duration": 0,
+    "zero_coordinate_lost": true
+  },
+  "ortools_installed": false,
+  "static_unbound_n_orders": true,
+  "fake_gateway_reapply_created": 2,
+  "fake_gateway_failure": {
+    "type": "HTTPException",
+    "create_called": 1
+  },
+  "vendor_files": 61,
+  "vendor_hash_mismatches": [],
+  "positive": [
+    {
+      "file": "01-assembly-plan.xml",
+      "errors": []
+    },
+    {
+      "file": "02-assembly-actual.xml",
+      "errors": []
+    },
+    {
+      "file": "03-assembly-actual-for-plan.xml",
+      "errors": []
+    },
+    {
+      "file": "04-despatch-advice.xml",
+      "errors": []
+    },
+    {
+      "file": "05-transport-instruction.xml",
+      "errors": []
+    },
+    {
+      "file": "06-transport-response.xml",
+      "errors": []
+    },
+    {
+      "file": "07-receiving-advice.xml",
+      "errors": []
+    },
+    {
+      "file": "08-loading-event.xml",
+      "errors": []
+    },
+    {
+      "file": "09-processing-result.xml",
+      "errors": []
+    },
+    {
+      "file": "10-wave-release.xml",
+      "errors": []
+    },
+    {
+      "file": "11-aggregation-event.xml",
+      "errors": []
+    }
+  ],
+  "split_one_to_many": {
+    "xsd_valid": true,
+    "errors": [
+      "Aggregation requires inputs, one output and relations"
+    ]
+  },
+  "negative": [
+    {
+      "case": "missing-sscc",
+      "rejected": true
+    },
+    {
+      "case": "bad-check-digit",
+      "rejected": true
+    },
+    {
+      "case": "missing-mode",
+      "rejected": true
+    },
+    {
+      "case": "wrong-status",
+      "rejected": true
+    },
+    {
+      "case": "unknown-extension",
+      "rejected": true
+    },
+    {
+      "case": "wrong-message-id",
+      "rejected": true
+    },
+    {
+      "case": "aggregation-without-relation",
+      "rejected": true
+    },
+    {
+      "case": "unsupported-profile-version",
+      "rejected": true
+    }
+  ]
+}

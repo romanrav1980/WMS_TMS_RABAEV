@@ -1,0 +1,43 @@
+{
+  "scope": "Offline interactive mockups; not production UI/API/Oracle/hardware tests",
+  "screenshots": [
+    "reachdispatch-a.png",
+    "reachdispatch-b.png",
+    "reachtruck-a.png",
+    "reachtruck-b.png",
+    "warehouse-a.png",
+    "warehouse-b.png",
+    "picker-a.png",
+    "quality-a.png",
+    "weight-a.png",
+    "crossdock-a.png",
+    "crossdock-b.png",
+    "loader-a.png",
+    "transport-a.png",
+    "transport-b.png",
+    "consolidation-a.png",
+    "consolidation-b.png",
+    "integration-a.png",
+    "integration-b.png",
+    "master-a.png",
+    "receipt-a.png",
+    "returns-a.png",
+    "exceptions-a.png",
+    "reachtruck-phone-360.png",
+    "quality-phone-360.png",
+    "reachdispatch-dark.png"
+  ],
+  "checks": [
+    "15 roles rendered; 7 alternative views captured",
+    "Reachtruck: wrong code stays on same step; complete movement on one screen",
+    "Dispatcher: taken task cannot reprioritize; waiting task has preview",
+    "Independent passes: mismatch blocks inspection transition",
+    "Weight: pass, excess, disconnected device blocks recheck",
+    "Loaded and departed are distinct; transit only after departure",
+    "Partial receipt requires reason and preserves shortage",
+    "All 15 roles fit 360px viewport (tables use local scrolling)",
+    "Dark appearance captured",
+    "No JavaScript page errors; no network API calls"
+  ],
+  "result": "PASS"
+}
