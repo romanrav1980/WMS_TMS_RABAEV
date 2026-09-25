@@ -74,3 +74,8 @@ Start here for a fresh session:
 - [WIKI_SCHEMA.md](WIKI_SCHEMA.md): root wiki schema and maintenance rules
 - [log.md](log.md): append-only wiki maintenance log
 - [../AGENTS.md](../AGENTS.md): agent-facing onramp for future sessions
+
+## WMS региональных табачных хабов
+
+- [Контекст проекта](requirements/tobacco_regional_hubs/CONTEXT.md): требования, архитектура, интеграции, решения и следующие действия.
+- [Опросник поставщика 2.0](requirements/tobacco_regional_hubs/supplier_questionnaire_v2/questionnaire.md): 100 вопросов, 15 областей, веса 100%, самостоятельные таблицы; MD и Word.

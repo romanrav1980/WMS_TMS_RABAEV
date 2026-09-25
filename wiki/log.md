@@ -490,3 +490,9 @@ Append-only log of root wiki updates.
 - Added `wiki-raw/` for immutable imported sources.
 - Added `AGENTS.md` as the agent-facing schema/onramp.
 - Recorded that SAP/SAP_INTEGRATION projects are excluded from GitHub publication.
+
+## 2026-09-25 — Публикация контекста WMS табачных хабов
+
+- По запросу пользователя опубликован отдельный документный пакет: требования и архитектура 1.0, опросник 2.0, Word, источники и ссылки Drive.
+- Зафиксированы помарочный учёт, несколько собственников, выкуп SAP, Track & Trace и подволны сборки. Шкалы 52 и 100 вопросов разделены.
+- Публикация выполнена отдельной веткой; незавершённые изменения кода и проекты SAP/SAP_INTEGRATION не включены.
