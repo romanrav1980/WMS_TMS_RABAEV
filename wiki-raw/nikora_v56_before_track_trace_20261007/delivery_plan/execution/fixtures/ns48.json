@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS48",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "R1 ждёт HU2; HU1 уже погружен; R2 неотгружен; пользователь LOGIST и PICKER",
+  "scenarios": [
+    {
+      "id": "NS48-TC01",
+      "initial": "HU2 отсутствует",
+      "action": "Отправить R1",
+      "expected": "Рейс ждёт",
+      "mandatory": true
+    },
+    {
+      "id": "NS48-TC02",
+      "initial": "LOGIST отвязал HU2 и назначил R2",
+      "action": "Проверить",
+      "expected": "R1 получает допустимый состав, HU2 остаётся под контролем R2",
+      "mandatory": true
+    },
+    {
+      "id": "NS48-TC03",
+      "initial": "PICKER отвязал",
+      "action": "Выполнить",
+      "expected": "Отказ права",
+      "mandatory": true
+    },
+    {
+      "id": "NS48-TC04",
+      "initial": "Погруженный HU1",
+      "action": "Перенести в R2",
+      "expected": "Сначала подтверждённая разгрузка",
+      "mandatory": true
+    },
+    {
+      "id": "NS48-TC05",
+      "initial": "Выезд R1",
+      "action": "Передать ERP",
+      "expected": "Статус пути по фактическому выезду, не по готовности ворот",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

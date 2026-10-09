@@ -1,0 +1,47 @@
+{
+    "namespace":  "DS-NS40",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "Малая коробка C-SMALL: 3 штуки по фактическому нетто 0.300 кг, тара 0.100; итоговое брутто 0.400; родитель HU1; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS40-TC01",
+                          "initial":  "Завершающие весы",
+                          "action":  "Зафиксировать коробку",
+                          "expected":  "Брутто 0.400, нетто 0.300, тара один раз",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS40-TC02",
+                          "initial":  "Коробка не перевешена",
+                          "action":  "Вложить с допуском",
+                          "expected":  "Не считается прошедшей обязательный завершающий контроль",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS40-TC03",
+                          "initial":  "Родитель освобождён от веса",
+                          "action":  "Проверить малую коробку",
+                          "expected":  "Освобождение родителя не отменяет её измерение",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS40-TC04",
+                          "initial":  "Магазин",
+                          "action":  "Прочитать отгрузочный состав",
+                          "expected":  "Доказанная масса C-SMALL сохранена",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS40-TT01",
+                          "initial":  "Семь отобранных кодов в малой коробке",
+                          "action":  "Выдать SSCC и подтвердить вложения",
+                          "expected":  "Новый логистический номер, те же семь кодов; регуляторная переагрегация не объявлена без требуемого подтверждения",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

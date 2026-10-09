@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS55",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "S1 передано 6 ROLL-A, водитель забрал 4; ещё не приняты складом; срок возврата SAME_DAY",
+  "scenarios": [
+    {
+      "id": "NS55-TC01",
+      "initial": "Передача и возврат",
+      "action": "Сверить",
+      "expected": "В магазине 2, на машине 4 до приёмки",
+      "mandatory": true
+    },
+    {
+      "id": "NS55-TC02",
+      "initial": "Склад принял 4",
+      "action": "Подтвердить",
+      "expected": "На машине 0, склад получил 4",
+      "mandatory": true
+    },
+    {
+      "id": "NS55-TC03",
+      "initial": "Повтор передачи",
+      "action": "Повторить",
+      "expected": "Остатки не удвоены",
+      "mandatory": true
+    },
+    {
+      "id": "NS55-TC04",
+      "initial": "Вложенные SSCC",
+      "action": "Учесть тару",
+      "expected": "Не увеличивают количество",
+      "mandatory": true
+    },
+    {
+      "id": "NS55-TC05",
+      "initial": "Срок SAME_DAY прошёл",
+      "action": "Открыть монитор",
+      "expected": "Департамент транспорта видит просрочку и организует вывоз",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

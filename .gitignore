@@ -100,3 +100,12 @@ WindowsApplication2/**/*.user
 WindowsApplication2/**/*.suo
 WindowsApplication2/**/.vs/
 WindowsApplication2/**/app.config
+
+# Local cutover checkpoints, keys and private SAP projects
+/runtime/
+**/SAP/
+**/SAP_INTEGRATION/
+**/.env
+**/*.pfx
+**/*.pem
+**/*.key

@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS46",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "HU1 допущен, ворота G1; сотрудник E1; HU2 ожидается с другого подсклада",
+  "scenarios": [
+    {
+      "id": "NS46-TC01",
+      "initial": "Взять HU1",
+      "action": "Подтвердить",
+      "expected": "Состояние перемещения, конечное место ещё не подтверждено",
+      "mandatory": true
+    },
+    {
+      "id": "NS46-TC02",
+      "initial": "Установить G1",
+      "action": "Сканировать",
+      "expected": "Фактический адрес G1",
+      "mandatory": true
+    },
+    {
+      "id": "NS46-TC03",
+      "initial": "Установить G2",
+      "action": "Сканировать",
+      "expected": "Несоответствие заданию, не ложная готовность G1",
+      "mandatory": true
+    },
+    {
+      "id": "NS46-TC04",
+      "initial": "HU2 не пришёл",
+      "action": "Показать рейс",
+      "expected": "Отсутствие видно, наличие плана не заменяет физического места",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

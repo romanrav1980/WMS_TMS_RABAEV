@@ -78,3 +78,8 @@ python tests/load/warehouse_tasks/warehouse_task_qty_mode_load_test.py --iterati
 ```
 
 The cleanup deletes only rows created by the runner marker.
+
+
+## NICORA NS00 reproducible environment
+
+[prepare-nicora-python.ps1](prepare-nicora-python.ps1) создаёт новую Windows/Python 3.13 venv из полного version/hash lock; [prepare-nicora-frontends.ps1](prepare-nicora-frontends.ps1) выполняет свежие npm ci/build по обоим lockfile. [start-nicora-dev.ps1](start-nicora-dev.ps1) запускает root bat из подготовленных зависимостей и при -Restart подтверждает остановку портов и новые PID. [Паспорт и ограничения](../wiki/runbooks/nicora_ns00_environment.md). Root serv.bat поддерживает TMS_PYTHON_CMD, front.bat — TMS_ADMIN_FRONTEND_DIR, terminal.bat — TMS_TERMINAL_FRONTEND_DIR/TMS_TERMINAL_PORT/TMS_API_BASE_URL; Vite запускается с --strictPort.

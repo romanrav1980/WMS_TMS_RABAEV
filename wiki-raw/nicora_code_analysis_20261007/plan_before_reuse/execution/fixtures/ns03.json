@@ -1,0 +1,47 @@
+{
+    "namespace":  "DS-NS03",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "Машины T36/T32, HU1/HU2, рейсы R1/R2, ERP message M1 и два источника склада; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS03-TC01",
+                          "initial":  "Вместимость T32",
+                          "action":  "Запланировать 33 места",
+                          "expected":  "Фактический результат описан, отличие от запрета 33-го места занесено в GAP",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS03-TC02",
+                          "initial":  "Доставка",
+                          "action":  "Пройти погрузку, выезд и приёмку",
+                          "expected":  "Факты и их источники перечислены, отсутствие этапа не скрыто общим статусом",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS03-TC03",
+                          "initial":  "Mock ERP",
+                          "action":  "Сравнить заглушку с реальным адаптером",
+                          "expected":  "Контрактный тест не объявлен подтверждённой интеграцией",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS03-TC04",
+                          "initial":  "Два плеча",
+                          "action":  "Назначить груз на подвоз и доставку",
+                          "expected":  "Найденная схема либо ограничение одного рейса подтверждены кодом и Oracle",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS03-TT01",
+                          "initial":  "Доступные источники и каналы",
+                          "action":  "Проверить передачу кодов, получателей, квитанций и повторы",
+                          "expected":  "Для каждой системы указаны реальные возможности, тестовый контур и отсутствующие доказательства; mock не считается живым адаптером",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

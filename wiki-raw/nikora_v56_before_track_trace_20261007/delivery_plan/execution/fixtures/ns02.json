@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS02",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "DS-BASE, заказы O1=40/O2=30/O3=30 коробок D10; остаток 100; две волны W1/W2",
+  "scenarios": [
+    {
+      "id": "NS02-TC01",
+      "initial": "Мягкий резерв",
+      "action": "Повторить и одновременно запустить расчёт",
+      "expected": "Фактический резерв и остаток записаны, соответствие или отличие от 100 классифицировано с доказательством",
+      "mandatory": true
+    },
+    {
+      "id": "NS02-TC02",
+      "initial": "Очередь пополнений",
+      "action": "Проверить мини-макс и волну одного SKU",
+      "expected": "Повторная подача выявлена либо её отсутствие доказано",
+      "mandatory": true
+    },
+    {
+      "id": "NS02-TC03",
+      "initial": "Правило отсутствует",
+      "action": "Проверить код и сценарий",
+      "expected": "Статус отсутствует или не проверено, а не ложное соответствует",
+      "mandatory": true
+    },
+    {
+      "id": "NS02-TC04",
+      "initial": "Тестовая ошибка",
+      "action": "Повторить на чистой фикстуре",
+      "expected": "Причина воспроизведена, привязана к требованию и участку кода",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

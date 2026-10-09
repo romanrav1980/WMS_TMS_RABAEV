@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS14",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Аллея AL1 односторонняя; ячейка P1 на 100 коробок; хранение S1; подсклады DRY/CHILL",
+  "scenarios": [
+    {
+      "id": "NS14-TC01",
+      "initial": "100 коробок",
+      "action": "Проверить вместимость P1",
+      "expected": "Адрес подходит",
+      "mandatory": true
+    },
+    {
+      "id": "NS14-TC02",
+      "initial": "101 коробка",
+      "action": "Назначить P1",
+      "expected": "Отказ либо разделение по допустимому заданию, переполнения нет",
+      "mandatory": true
+    },
+    {
+      "id": "NS14-TC03",
+      "initial": "Охлаждёнка в DRY",
+      "action": "Назначить адрес",
+      "expected": "Отказ по правилу обращения",
+      "mandatory": true
+    },
+    {
+      "id": "NS14-TC04",
+      "initial": "Маршрут P2→P1 против движения",
+      "action": "Проверить",
+      "expected": "Не выпускается как допустимый маршрут",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

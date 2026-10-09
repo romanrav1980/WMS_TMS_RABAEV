@@ -1,0 +1,54 @@
+{
+    "namespace":  "DS-NS50",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "DS-BASE: заказы 15:59, план 18:00, ричи 18:00, сборка после 20:00, рейс утром, BARCODE-магазин; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS50-TC01",
+                          "initial":  "Полный цикл",
+                          "action":  "Выполнить через реальные API и интерфейсы стенда",
+                          "expected":  "Заказ, резерв, волна, контроль, погрузка и приёмка связаны одним товарным балансом",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS50-TC02",
+                          "initial":  "Подача задержана",
+                          "action":  "Пробовать старт",
+                          "expected":  "Сборка не начинается до обеспечения",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS50-TC03",
+                          "initial":  "Дубликаты сканов",
+                          "action":  "Повторить этапы",
+                          "expected":  "Нет второго отбора или погрузки",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS50-TC04",
+                          "initial":  "ERP отключена после приёма заказа",
+                          "action":  "Продолжить",
+                          "expected":  "Физические операции идут, факты восстановлены через очередь",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS50-TC05",
+                          "initial":  "Закрытие магазина",
+                          "action":  "Сверить",
+                          "expected":  "Кросс-док и выезд не заменяют магазинную приёмку",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS50-TT01",
+                          "initial":  "TT-NONE, TT-TOBACCO и TT-MULTI с согласованными тестовыми данными",
+                          "action":  "Провести SAP→приёмка→отбор→отгрузка→назначение",
+                          "expected":  "Баланс, коды, состав и документы согласованы; одна физическая единица с двумя профилями учтена один раз",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

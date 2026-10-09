@@ -45,8 +45,15 @@ class TestDistanceMatrixRebuild:
                      params={"source": "haversine"})
         data = r.json()
         assert "pairs" in data, "Missing 'pairs'"
+        assert "computed_pairs" in data, "Missing 'computed_pairs' for incremental rebuild diagnostics"
+        assert "skipped_pairs" in data, "Missing 'skipped_pairs' for incremental rebuild diagnostics"
+        assert "cached" in data, "Missing 'cached' flag for no-op matrix rebuild"
+        assert "force" in data, "Missing 'force' flag for matrix rebuild mode"
         assert "source" in data, "Missing 'source'"
         assert "addresses" in data, "Missing 'addresses'"
+        assert data["computed_pairs"] + data["skipped_pairs"] == data["pairs"], (
+            "Matrix rebuild accounting mismatch: computed_pairs + skipped_pairs must equal pairs"
+        )
 
     def test_source_is_haversine(self, api):
         r = api.post(f"{BASE_URL}/api/admin/transport/distance-matrix/rebuild",
@@ -100,9 +107,40 @@ class TestPlannerSolve:
 
     def test_plan_has_required_fields(self, plan):
         required = {"routes", "unassigned_sts", "total_km", "fleet_utilization_pct",
-                    "tw_violations", "score", "solver_used", "solve_time_ms"}
+                    "tw_violations", "score", "solver_used", "solve_time_ms", "explain"}
         missing = required - set(plan.keys())
         assert not missing, f"Missing fields: {missing}"
+
+    def test_explain_contract_has_business_values(self, plan, api):
+        explain = plan.get("explain") or {}
+        required = {"input", "routing", "solver", "constraints", "fleet", "steps", "warnings"}
+        missing = required - set(explain.keys())
+        assert not missing, f"explain missing sections: {missing}"
+
+        orders_r = api.get(
+            f"{BASE_URL}/api/admin/transport/planner/orders",
+            params={"plan_date": PLAN_DATE},
+        )
+        assert orders_r.status_code == 200, orders_r.text
+        orders = orders_r.json()
+        with_coords = [o for o in orders if o.get("LAT") is not None and o.get("LON") is not None]
+
+        assert explain["input"]["orders_total"] == len(orders), (
+            "explain.input.orders_total must match /planner/orders for the same date"
+        )
+        assert explain["input"]["orders_with_coords"] == len(with_coords), (
+            "explain.input.orders_with_coords must prove coordinate filtering, not a default"
+        )
+        assert explain["input"]["orders_with_coords"] > 0, "No coordinate-backed orders reached the solver"
+        assert explain["routing"]["requested_source"] == "haversine"
+        assert explain["routing"]["matrix_pairs"] >= 0
+        assert explain["solver"]["used_solver"] == plan["solver_used"]
+        assert explain["fleet"]["vehicles_total"] >= explain["fleet"]["vehicles_used"] >= 0
+        assert explain["fleet"]["target_routes_per_vehicle"] == 4
+        assert explain["fleet"]["planned_routes"] == len(plan["routes"])
+        assert explain["fleet"]["over_capacity_routes"] == 0, "Seed plan must not overload vehicles"
+        step_codes = {s.get("code") for s in explain["steps"]}
+        assert {"orders_loaded", "vehicles_loaded", "distance_matrix_loaded", "optimization_done", "plan_saved"} <= step_codes
 
     def test_routes_is_list(self, plan):
         assert isinstance(plan["routes"], list)

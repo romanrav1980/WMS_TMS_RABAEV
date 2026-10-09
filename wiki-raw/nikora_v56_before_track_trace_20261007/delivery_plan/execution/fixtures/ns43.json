@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS43",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Результат NS42: не хватает 1 D10, лишняя 1 D04; запас D10 доступен; HU1 красный",
+  "scenarios": [
+    {
+      "id": "NS43-TC01",
+      "initial": "Вернуть D04",
+      "action": "Выполнить задание",
+      "expected": "1 D04 возвращена в предусмотренный запас, убрана из HU1",
+      "mandatory": true
+    },
+    {
+      "id": "NS43-TC02",
+      "initial": "Добавить D10",
+      "action": "Выполнить",
+      "expected": "Состав 2 D10+1 D02, повторного списания нет",
+      "mandatory": true
+    },
+    {
+      "id": "NS43-TC03",
+      "initial": "Старый контроль",
+      "action": "Попытаться выпустить",
+      "expected": "Не подходит к новой версии",
+      "mandatory": true
+    },
+    {
+      "id": "NS43-TC04",
+      "initial": "Повторный вес 42",
+      "action": "Проверить",
+      "expected": "Новый допуск, красный запрет снят только после обязательных действий",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

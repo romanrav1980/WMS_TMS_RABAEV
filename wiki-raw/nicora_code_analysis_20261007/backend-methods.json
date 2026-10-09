@@ -1,0 +1,1912 @@
+{
+  "__init__.py": [],
+  "am_solver.py": [
+    {
+      "name": "is_available",
+      "line": 19,
+      "end": 25
+    },
+    {
+      "name": "solve_am",
+      "line": 28,
+      "end": 109
+    },
+    {
+      "name": "forward",
+      "line": 57,
+      "end": 58
+    },
+    {
+      "name": "forward",
+      "line": 67,
+      "end": 70
+    }
+  ],
+  "api_audit_service.py": [
+    {
+      "name": "json_dumps",
+      "line": 372,
+      "end": 373
+    },
+    {
+      "name": "json_loads",
+      "line": 376,
+      "end": 383
+    },
+    {
+      "name": "utc_now_iso",
+      "line": 386,
+      "end": 387
+    },
+    {
+      "name": "body_digest",
+      "line": 390,
+      "end": 391
+    },
+    {
+      "name": "decode_limited",
+      "line": 394,
+      "end": 398
+    },
+    {
+      "name": "redact_headers",
+      "line": 401,
+      "end": 405
+    },
+    {
+      "name": "normalize_date_filter",
+      "line": 408,
+      "end": 414
+    },
+    {
+      "name": "start_call",
+      "line": 44,
+      "end": 71
+    },
+    {
+      "name": "finish_call",
+      "line": 73,
+      "end": 96
+    },
+    {
+      "name": "append_local",
+      "line": 98,
+      "end": 105
+    },
+    {
+      "name": "list_calls",
+      "line": 107,
+      "end": 152
+    },
+    {
+      "name": "get_call",
+      "line": 154,
+      "end": 169
+    },
+    {
+      "name": "replay_calls",
+      "line": 171,
+      "end": 263
+    }
+  ],
+  "bom_service.py": [
+    {
+      "name": "clamp_limit",
+      "line": 450,
+      "end": 451
+    },
+    {
+      "name": "to_float",
+      "line": 454,
+      "end": 457
+    },
+    {
+      "name": "apply_tolerance",
+      "line": 460,
+      "end": 463
+    },
+    {
+      "name": "list_boms",
+      "line": 20,
+      "end": 81
+    },
+    {
+      "name": "get_bom",
+      "line": 83,
+      "end": 120
+    },
+    {
+      "name": "list_lines",
+      "line": 122,
+      "end": 150
+    },
+    {
+      "name": "list_audit",
+      "line": 152,
+      "end": 169
+    },
+    {
+      "name": "create_bom",
+      "line": 171,
+      "end": 195
+    },
+    {
+      "name": "update_bom",
+      "line": 197,
+      "end": 222
+    },
+    {
+      "name": "add_line",
+      "line": 224,
+      "end": 251
+    },
+    {
+      "name": "update_line",
+      "line": 253,
+      "end": 280
+    },
+    {
+      "name": "delete_line",
+      "line": 282,
+      "end": 293
+    },
+    {
+      "name": "approve_bom",
+      "line": 295,
+      "end": 306
+    },
+    {
+      "name": "block_bom",
+      "line": 308,
+      "end": 320
+    },
+    {
+      "name": "archive_bom",
+      "line": 322,
+      "end": 334
+    },
+    {
+      "name": "make_primary",
+      "line": 336,
+      "end": 347
+    },
+    {
+      "name": "clone_bom",
+      "line": 349,
+      "end": 363
+    },
+    {
+      "name": "find_primary",
+      "line": 365,
+      "end": 393
+    },
+    {
+      "name": "calculate",
+      "line": 395,
+      "end": 447
+    }
+  ],
+  "case_pick_service.py": [
+    {
+      "name": "ensure_wave_case_pick_tasks",
+      "line": 29,
+      "end": 176
+    },
+    {
+      "name": "list_tasks",
+      "line": 178,
+      "end": 320
+    },
+    {
+      "name": "get_task",
+      "line": 322,
+      "end": 382
+    },
+    {
+      "name": "claim_task",
+      "line": 384,
+      "end": 410
+    },
+    {
+      "name": "start_task",
+      "line": 412,
+      "end": 427
+    },
+    {
+      "name": "confirm_line",
+      "line": 429,
+      "end": 495
+    },
+    {
+      "name": "short_line",
+      "line": 497,
+      "end": 555
+    },
+    {
+      "name": "close_task",
+      "line": 557,
+      "end": 579
+    },
+    {
+      "name": "transfer_task",
+      "line": 581,
+      "end": 610
+    },
+    {
+      "name": "list_shorts",
+      "line": 612,
+      "end": 653
+    },
+    {
+      "name": "approve_short",
+      "line": 655,
+      "end": 689
+    },
+    {
+      "name": "reject_short",
+      "line": 691,
+      "end": 705
+    },
+    {
+      "name": "list_pallet_types",
+      "line": 707,
+      "end": 726
+    },
+    {
+      "name": "upsert_pallet_type",
+      "line": 728,
+      "end": 780
+    }
+  ],
+  "customer_order_service.py": [
+    {
+      "name": "list_customers",
+      "line": 18,
+      "end": 59
+    },
+    {
+      "name": "create_customer",
+      "line": 61,
+      "end": 96
+    },
+    {
+      "name": "update_customer",
+      "line": 98,
+      "end": 156
+    },
+    {
+      "name": "create_customer_address",
+      "line": 158,
+      "end": 190
+    },
+    {
+      "name": "get_customer",
+      "line": 192,
+      "end": 261
+    },
+    {
+      "name": "list_customer_orders",
+      "line": 263,
+      "end": 324
+    },
+    {
+      "name": "get_customer_order",
+      "line": 326,
+      "end": 377
+    },
+    {
+      "name": "import_legacy_order",
+      "line": 379,
+      "end": 390
+    },
+    {
+      "name": "get_fulfillment",
+      "line": 392,
+      "end": 410
+    }
+  ],
+  "customer_rule_service.py": [
+    {
+      "name": "list_product_rules",
+      "line": 24,
+      "end": 54
+    },
+    {
+      "name": "create_product_rule",
+      "line": 56,
+      "end": 94
+    },
+    {
+      "name": "list_shelf_life_rules",
+      "line": 96,
+      "end": 116
+    },
+    {
+      "name": "create_shelf_life_rule",
+      "line": 118,
+      "end": 147
+    },
+    {
+      "name": "list_stack_rules",
+      "line": 149,
+      "end": 177
+    },
+    {
+      "name": "create_stack_rule",
+      "line": 179,
+      "end": 215
+    },
+    {
+      "name": "list_vehicle_rules",
+      "line": 217,
+      "end": 242
+    },
+    {
+      "name": "create_vehicle_rule",
+      "line": 244,
+      "end": 267
+    },
+    {
+      "name": "list_vehicle_types",
+      "line": 269,
+      "end": 286
+    },
+    {
+      "name": "create_vehicle_type",
+      "line": 288,
+      "end": 327
+    }
+  ],
+  "distance_matrix_service.py": [
+    {
+      "name": "get_geocoded_addresses",
+      "line": 33,
+      "end": 42
+    },
+    {
+      "name": "rebuild",
+      "line": 96,
+      "end": 244
+    },
+    {
+      "name": "get_matrix_as_dict",
+      "line": 246,
+      "end": 264
+    }
+  ],
+  "finished_goods_service.py": [
+    {
+      "name": "list_skus",
+      "line": 11,
+      "end": 116
+    },
+    {
+      "name": "update_sku_settings",
+      "line": 118,
+      "end": 173
+    },
+    {
+      "name": "list_warehouses",
+      "line": 175,
+      "end": 208
+    },
+    {
+      "name": "list_batches",
+      "line": 210,
+      "end": 289
+    },
+    {
+      "name": "list_remains",
+      "line": 291,
+      "end": 371
+    }
+  ],
+  "geofencing.py": [
+    {
+      "name": "haversine_m",
+      "line": 17,
+      "end": 23
+    },
+    {
+      "name": "check_geofences",
+      "line": 26,
+      "end": 88
+    }
+  ],
+  "mes_service.py": [
+    {
+      "name": "clamp_limit",
+      "line": 1329,
+      "end": 1330
+    },
+    {
+      "name": "create_order",
+      "line": 24,
+      "end": 48
+    },
+    {
+      "name": "issue_raw",
+      "line": 50,
+      "end": 68
+    },
+    {
+      "name": "complete_order",
+      "line": 70,
+      "end": 98
+    },
+    {
+      "name": "apply_wms",
+      "line": 100,
+      "end": 111
+    },
+    {
+      "name": "retry_movement",
+      "line": 113,
+      "end": 124
+    },
+    {
+      "name": "get_order",
+      "line": 126,
+      "end": 145
+    },
+    {
+      "name": "list_orders",
+      "line": 147,
+      "end": 177
+    },
+    {
+      "name": "list_order_lines",
+      "line": 179,
+      "end": 191
+    },
+    {
+      "name": "list_movements",
+      "line": 193,
+      "end": 229
+    },
+    {
+      "name": "calculate_raw_supply",
+      "line": 231,
+      "end": 335
+    },
+    {
+      "name": "get_raw_supply",
+      "line": 337,
+      "end": 381
+    },
+    {
+      "name": "release_to_production",
+      "line": 383,
+      "end": 450
+    },
+    {
+      "name": "list_raw_transfer_tasks",
+      "line": 452,
+      "end": 479
+    },
+    {
+      "name": "list_raw_shortages",
+      "line": 481,
+      "end": 518
+    },
+    {
+      "name": "get_raw_transfer_task_or_404",
+      "line": 520,
+      "end": 531
+    },
+    {
+      "name": "confirm_raw_transfer_task",
+      "line": 533,
+      "end": 585
+    },
+    {
+      "name": "cancel_raw_transfer_task",
+      "line": 587,
+      "end": 623
+    },
+    {
+      "name": "get_genealogy",
+      "line": 1072,
+      "end": 1120
+    }
+  ],
+  "outbox_service.py": [
+    {
+      "name": "process_next",
+      "line": 16,
+      "end": 60
+    },
+    {
+      "name": "lock_next",
+      "line": 62,
+      "end": 73
+    },
+    {
+      "name": "get_event",
+      "line": 75,
+      "end": 94
+    },
+    {
+      "name": "add_adapter_request",
+      "line": 96,
+      "end": 123
+    },
+    {
+      "name": "update_adapter_request",
+      "line": 125,
+      "end": 164
+    },
+    {
+      "name": "mark_done",
+      "line": 166,
+      "end": 177
+    },
+    {
+      "name": "mark_error",
+      "line": 179,
+      "end": 192
+    }
+  ],
+  "picking_service.py": [
+    {
+      "name": "create_plan",
+      "line": 26,
+      "end": 38
+    },
+    {
+      "name": "cancel_plan",
+      "line": 40,
+      "end": 51
+    },
+    {
+      "name": "create_wave",
+      "line": 53,
+      "end": 71
+    },
+    {
+      "name": "add_wave_plan",
+      "line": 73,
+      "end": 85
+    },
+    {
+      "name": "preview_wave",
+      "line": 87,
+      "end": 98
+    },
+    {
+      "name": "launch_wave",
+      "line": 100,
+      "end": 120
+    },
+    {
+      "name": "release_minimax_replenishment",
+      "line": 122,
+      "end": 131
+    },
+    {
+      "name": "complete_wave_pick_task",
+      "line": 133,
+      "end": 267
+    },
+    {
+      "name": "release_wave_staging",
+      "line": 269,
+      "end": 375
+    },
+    {
+      "name": "cancel_wave",
+      "line": 1301,
+      "end": 1314
+    },
+    {
+      "name": "release_wave_reservations",
+      "line": 1316,
+      "end": 1332
+    },
+    {
+      "name": "list_waves",
+      "line": 1437,
+      "end": 1501
+    },
+    {
+      "name": "list_wave_candidates",
+      "line": 1503,
+      "end": 1596
+    },
+    {
+      "name": "get_wave",
+      "line": 1598,
+      "end": 1666
+    },
+    {
+      "name": "get_wave_readiness",
+      "line": 1668,
+      "end": 1840
+    },
+    {
+      "name": "list_wave_lines",
+      "line": 1842,
+      "end": 1862
+    },
+    {
+      "name": "list_wave_demand",
+      "line": 1864,
+      "end": 1882
+    },
+    {
+      "name": "list_wave_reservations",
+      "line": 1884,
+      "end": 1921
+    },
+    {
+      "name": "list_wave_replenishment_tasks",
+      "line": 1923,
+      "end": 2018
+    },
+    {
+      "name": "list_wave_tasks",
+      "line": 2020,
+      "end": 2088
+    },
+    {
+      "name": "list_wave_shortages",
+      "line": 2090,
+      "end": 2116
+    },
+    {
+      "name": "list_wave_audit",
+      "line": 2118,
+      "end": 2137
+    },
+    {
+      "name": "list_plans",
+      "line": 2139,
+      "end": 2215
+    },
+    {
+      "name": "get_plan",
+      "line": 2217,
+      "end": 2318
+    },
+    {
+      "name": "list_reservations",
+      "line": 2320,
+      "end": 2384
+    },
+    {
+      "name": "list_routes",
+      "line": 2386,
+      "end": 2428
+    },
+    {
+      "name": "upsert_route",
+      "line": 2430,
+      "end": 2446
+    },
+    {
+      "name": "list_route_cells",
+      "line": 2448,
+      "end": 2490
+    },
+    {
+      "name": "upsert_route_cell",
+      "line": 2492,
+      "end": 2511
+    },
+    {
+      "name": "list_pick_faces",
+      "line": 2513,
+      "end": 2568
+    },
+    {
+      "name": "upsert_pick_face",
+      "line": 2570,
+      "end": 2596
+    },
+    {
+      "name": "list_pick_face_articuls",
+      "line": 2598,
+      "end": 2632
+    },
+    {
+      "name": "assign_pick_face_articul",
+      "line": 2634,
+      "end": 2708
+    },
+    {
+      "name": "list_articul_replenishment_rules",
+      "line": 2710,
+      "end": 2749
+    },
+    {
+      "name": "upsert_articul_replenishment_rule",
+      "line": 2751,
+      "end": 2822
+    },
+    {
+      "name": "list_shortages",
+      "line": 2824,
+      "end": 2864
+    }
+  ],
+  "product_service.py": [
+    {
+      "name": "list_shipment_settings",
+      "line": 11,
+      "end": 41
+    },
+    {
+      "name": "update_shipment_settings",
+      "line": 43,
+      "end": 60
+    }
+  ],
+  "production_exchange_service.py": [
+    {
+      "name": "required_text",
+      "line": 241,
+      "end": 245
+    },
+    {
+      "name": "ensure_dirs",
+      "line": 45,
+      "end": 47
+    },
+    {
+      "name": "process_once",
+      "line": 49,
+      "end": 55
+    },
+    {
+      "name": "process_file",
+      "line": 57,
+      "end": 133
+    },
+    {
+      "name": "get_log",
+      "line": 159,
+      "end": 168
+    },
+    {
+      "name": "register_message",
+      "line": 170,
+      "end": 193
+    },
+    {
+      "name": "mark_processed",
+      "line": 195,
+      "end": 207
+    },
+    {
+      "name": "mark_error",
+      "line": 209,
+      "end": 222
+    }
+  ],
+  "production_service.py": [
+    {
+      "name": "create_batch",
+      "line": 24,
+      "end": 56
+    },
+    {
+      "name": "attach_pallet",
+      "line": 58,
+      "end": 77
+    },
+    {
+      "name": "create_raw_batch",
+      "line": 79,
+      "end": 132
+    },
+    {
+      "name": "add_raw_usage",
+      "line": 134,
+      "end": 150
+    },
+    {
+      "name": "add_crpt_code",
+      "line": 152,
+      "end": 168
+    },
+    {
+      "name": "create_aggregation",
+      "line": 170,
+      "end": 184
+    },
+    {
+      "name": "add_aggregation_item",
+      "line": 186,
+      "end": 201
+    },
+    {
+      "name": "set_mercury_batch",
+      "line": 203,
+      "end": 223
+    },
+    {
+      "name": "upsert_mercury_site",
+      "line": 225,
+      "end": 244
+    },
+    {
+      "name": "create_mercury_operation",
+      "line": 246,
+      "end": 266
+    },
+    {
+      "name": "update_mercury_operation",
+      "line": 268,
+      "end": 286
+    },
+    {
+      "name": "set_crpt_code_status",
+      "line": 288,
+      "end": 305
+    },
+    {
+      "name": "get_batch_status",
+      "line": 307,
+      "end": 330
+    },
+    {
+      "name": "get_regulatory_status",
+      "line": 332,
+      "end": 410
+    },
+    {
+      "name": "list_mercury_sites",
+      "line": 412,
+      "end": 433
+    },
+    {
+      "name": "get_raw_batch",
+      "line": 435,
+      "end": 449
+    },
+    {
+      "name": "list_journal",
+      "line": 451,
+      "end": 481
+    },
+    {
+      "name": "list_outbox",
+      "line": 483,
+      "end": 512
+    }
+  ],
+  "raw_material_service.py": [
+    {
+      "name": "list_skus",
+      "line": 11,
+      "end": 92
+    },
+    {
+      "name": "update_sku_settings",
+      "line": 94,
+      "end": 143
+    },
+    {
+      "name": "list_warehouses",
+      "line": 145,
+      "end": 173
+    },
+    {
+      "name": "list_remains",
+      "line": 175,
+      "end": 252
+    }
+  ],
+  "resource_management_service.py": [
+    {
+      "name": "list_resource_types",
+      "line": 21,
+      "end": 37
+    },
+    {
+      "name": "list_equipment",
+      "line": 39,
+      "end": 73
+    },
+    {
+      "name": "create_equipment",
+      "line": 75,
+      "end": 102
+    },
+    {
+      "name": "list_resources",
+      "line": 104,
+      "end": 162
+    },
+    {
+      "name": "create_resource",
+      "line": 164,
+      "end": 197
+    },
+    {
+      "name": "list_shifts",
+      "line": 199,
+      "end": 232
+    },
+    {
+      "name": "create_shift",
+      "line": 234,
+      "end": 259
+    },
+    {
+      "name": "list_sessions",
+      "line": 261,
+      "end": 303
+    },
+    {
+      "name": "login_session",
+      "line": 305,
+      "end": 332
+    },
+    {
+      "name": "login_tsd",
+      "line": 334,
+      "end": 394
+    },
+    {
+      "name": "heartbeat",
+      "line": 396,
+      "end": 407
+    },
+    {
+      "name": "pause_session",
+      "line": 409,
+      "end": 410
+    },
+    {
+      "name": "resume_session",
+      "line": 412,
+      "end": 413
+    },
+    {
+      "name": "logout_session",
+      "line": 415,
+      "end": 428
+    }
+  ],
+  "routing.py": [
+    {
+      "name": "get_active_provider",
+      "line": 183,
+      "end": 188
+    },
+    {
+      "name": "is_available",
+      "line": 33,
+      "end": 34
+    },
+    {
+      "name": "build_matrix",
+      "line": 37,
+      "end": 42
+    },
+    {
+      "name": "is_available",
+      "line": 64,
+      "end": 65
+    },
+    {
+      "name": "build_matrix",
+      "line": 67,
+      "end": 82
+    },
+    {
+      "name": "is_available",
+      "line": 120,
+      "end": 121
+    },
+    {
+      "name": "build_matrix",
+      "line": 123,
+      "end": 134
+    },
+    {
+      "name": "is_available",
+      "line": 148,
+      "end": 149
+    },
+    {
+      "name": "build_matrix",
+      "line": 151,
+      "end": 169
+    }
+  ],
+  "slow_sql_service.py": [
+    {
+      "name": "list_entries",
+      "line": 10,
+      "end": 52
+    },
+    {
+      "name": "get_entry",
+      "line": 54,
+      "end": 66
+    },
+    {
+      "name": "top_entries",
+      "line": 68,
+      "end": 89
+    },
+    {
+      "name": "oracle_top_sql",
+      "line": 91,
+      "end": 124
+    }
+  ],
+  "stock_reservation_service.py": [
+    {
+      "name": "list_reservations",
+      "line": 22,
+      "end": 96
+    },
+    {
+      "name": "get_reservation",
+      "line": 98,
+      "end": 107
+    },
+    {
+      "name": "create_reservation",
+      "line": 109,
+      "end": 137
+    },
+    {
+      "name": "promote_to_hard",
+      "line": 139,
+      "end": 186
+    },
+    {
+      "name": "release_reservation",
+      "line": 188,
+      "end": 196
+    },
+    {
+      "name": "consume_reservation",
+      "line": 198,
+      "end": 206
+    },
+    {
+      "name": "cancel_reservation",
+      "line": 208,
+      "end": 216
+    }
+  ],
+  "traceability_service.py": [
+    {
+      "name": "normalize_entity_type",
+      "line": 278,
+      "end": 284
+    },
+    {
+      "name": "clamp_limit",
+      "line": 287,
+      "end": 288
+    },
+    {
+      "name": "list_edges",
+      "line": 12,
+      "end": 58
+    },
+    {
+      "name": "list_outbox",
+      "line": 60,
+      "end": 116
+    },
+    {
+      "name": "get_outbox_event",
+      "line": 118,
+      "end": 149
+    },
+    {
+      "name": "retry_outbox_event",
+      "line": 151,
+      "end": 189
+    },
+    {
+      "name": "list_adapter_requests",
+      "line": 191,
+      "end": 244
+    },
+    {
+      "name": "get_adapter_request",
+      "line": 246,
+      "end": 275
+    }
+  ],
+  "transport_service.py": [
+    {
+      "name": "fetch_all",
+      "line": 187,
+      "end": 188
+    },
+    {
+      "name": "list_clusters",
+      "line": 206,
+      "end": 235
+    },
+    {
+      "name": "create_task_from_cluster",
+      "line": 237,
+      "end": 289
+    },
+    {
+      "name": "list_vehicles",
+      "line": 291,
+      "end": 304
+    },
+    {
+      "name": "list_vehicles_full",
+      "line": 310,
+      "end": 328
+    },
+    {
+      "name": "create_vehicle",
+      "line": 330,
+      "end": 359
+    },
+    {
+      "name": "update_vehicle",
+      "line": 361,
+      "end": 390
+    },
+    {
+      "name": "delete_vehicle",
+      "line": 392,
+      "end": 397
+    },
+    {
+      "name": "list_drivers",
+      "line": 399,
+      "end": 414
+    },
+    {
+      "name": "list_drivers_full",
+      "line": 420,
+      "end": 436
+    },
+    {
+      "name": "create_driver",
+      "line": 438,
+      "end": 454
+    },
+    {
+      "name": "update_driver",
+      "line": 456,
+      "end": 473
+    },
+    {
+      "name": "delete_driver",
+      "line": 475,
+      "end": 480
+    },
+    {
+      "name": "list_transport_types",
+      "line": 482,
+      "end": 498
+    },
+    {
+      "name": "list_tasks",
+      "line": 504,
+      "end": 614
+    },
+    {
+      "name": "get_task",
+      "line": 616,
+      "end": 647
+    },
+    {
+      "name": "create_task",
+      "line": 649,
+      "end": 666
+    },
+    {
+      "name": "update_task",
+      "line": 668,
+      "end": 710
+    },
+    {
+      "name": "close_task",
+      "line": 712,
+      "end": 749
+    },
+    {
+      "name": "cancel_task",
+      "line": 751,
+      "end": 790
+    },
+    {
+      "name": "get_task_sts",
+      "line": 796,
+      "end": 837
+    },
+    {
+      "name": "assign_sts",
+      "line": 839,
+      "end": 891
+    },
+    {
+      "name": "unassign_st",
+      "line": 893,
+      "end": 923
+    },
+    {
+      "name": "set_st_load_type",
+      "line": 925,
+      "end": 939
+    },
+    {
+      "name": "set_st_order",
+      "line": 941,
+      "end": 955
+    },
+    {
+      "name": "list_available_sts",
+      "line": 961,
+      "end": 1136
+    },
+    {
+      "name": "get_planner_orders",
+      "line": 1175,
+      "end": 1262
+    },
+    {
+      "name": "get_routing_status",
+      "line": 1264,
+      "end": 1302
+    },
+    {
+      "name": "list_st_pallets",
+      "line": 1308,
+      "end": 1324
+    },
+    {
+      "name": "solve_vrp",
+      "line": 1330,
+      "end": 1693
+    },
+    {
+      "name": "apply_vrp_plan",
+      "line": 1695,
+      "end": 1751
+    },
+    {
+      "name": "get_plan_metrics",
+      "line": 1753,
+      "end": 1801
+    },
+    {
+      "name": "get_plan_templates",
+      "line": 1807,
+      "end": 1869
+    },
+    {
+      "name": "get_plan_history",
+      "line": 1875,
+      "end": 1918
+    },
+    {
+      "name": "get_demand_forecast",
+      "line": 1920,
+      "end": 1987
+    },
+    {
+      "name": "plan_operations",
+      "line": 2009,
+      "end": 2119
+    },
+    {
+      "name": "get_operations",
+      "line": 2121,
+      "end": 2138
+    },
+    {
+      "name": "update_operation_fact",
+      "line": 2163,
+      "end": 2189
+    },
+    {
+      "name": "get_vehicles_gantt",
+      "line": 2191,
+      "end": 2250
+    },
+    {
+      "name": "get_vehicles_available",
+      "line": 2256,
+      "end": 2363
+    },
+    {
+      "name": "list_billing_orders",
+      "line": 2369,
+      "end": 2429
+    },
+    {
+      "name": "create_billing_order",
+      "line": 2431,
+      "end": 2446
+    },
+    {
+      "name": "add_tasks_to_order",
+      "line": 2448,
+      "end": 2458
+    },
+    {
+      "name": "get_task_billing",
+      "line": 2460,
+      "end": 2487
+    },
+    {
+      "name": "get_billing_order",
+      "line": 2489,
+      "end": 2522
+    },
+    {
+      "name": "close_billing_order",
+      "line": 2524,
+      "end": 2537
+    },
+    {
+      "name": "pay_billing_order",
+      "line": 2539,
+      "end": 2552
+    },
+    {
+      "name": "open_billing_for_task",
+      "line": 2554,
+      "end": 2580
+    },
+    {
+      "name": "get_billing_order_tasks",
+      "line": 2582,
+      "end": 2605
+    },
+    {
+      "name": "recalculate_price",
+      "line": 2607,
+      "end": 2617
+    },
+    {
+      "name": "list_billing_companies",
+      "line": 2619,
+      "end": 2632
+    },
+    {
+      "name": "set_task_price",
+      "line": 2634,
+      "end": 2643
+    },
+    {
+      "name": "export_billing_order_xlsx",
+      "line": 2645,
+      "end": 2718
+    },
+    {
+      "name": "export_billing_registry_xlsx",
+      "line": 2812,
+      "end": 2891
+    },
+    {
+      "name": "remove_task_from_billing_order",
+      "line": 2996,
+      "end": 3016
+    },
+    {
+      "name": "export_tasks_xlsx",
+      "line": 3018,
+      "end": 3111
+    },
+    {
+      "name": "get_plan_fact",
+      "line": 3203,
+      "end": 3255
+    },
+    {
+      "name": "load",
+      "line": 292,
+      "end": 302
+    },
+    {
+      "name": "load",
+      "line": 400,
+      "end": 412
+    },
+    {
+      "name": "load",
+      "line": 483,
+      "end": 496
+    },
+    {
+      "name": "cell_ref",
+      "line": 2726,
+      "end": 2731
+    },
+    {
+      "name": "value_cell",
+      "line": 2733,
+      "end": 2738
+    },
+    {
+      "name": "cell_ref",
+      "line": 2905,
+      "end": 2910
+    },
+    {
+      "name": "value_cell",
+      "line": 2912,
+      "end": 2917
+    },
+    {
+      "name": "cell_ref",
+      "line": 3119,
+      "end": 3124
+    },
+    {
+      "name": "value_cell",
+      "line": 3126,
+      "end": 3131
+    }
+  ],
+  "tserver_service.py": [
+    {
+      "name": "normalize_pallet_identifier",
+      "line": 28,
+      "end": 47
+    },
+    {
+      "name": "execute_legacy_payload",
+      "line": 69,
+      "end": 80
+    },
+    {
+      "name": "get_ruser",
+      "line": 112,
+      "end": 148
+    },
+    {
+      "name": "get_product_info",
+      "line": 150,
+      "end": 254
+    },
+    {
+      "name": "get_lot_items",
+      "line": 256,
+      "end": 309
+    },
+    {
+      "name": "get_place_items",
+      "line": 311,
+      "end": 384
+    },
+    {
+      "name": "confirm_lot_check",
+      "line": 386,
+      "end": 448
+    },
+    {
+      "name": "confirm_place_check",
+      "line": 450,
+      "end": 501
+    },
+    {
+      "name": "confirm_order_check",
+      "line": 503,
+      "end": 539
+    },
+    {
+      "name": "call_spf",
+      "line": 541,
+      "end": 548
+    }
+  ],
+  "vrp_job_store.py": [
+    {
+      "name": "put_event",
+      "line": 26,
+      "end": 30
+    },
+    {
+      "name": "stream",
+      "line": 32,
+      "end": 49
+    },
+    {
+      "name": "create",
+      "line": 57,
+      "end": 61
+    },
+    {
+      "name": "get",
+      "line": 63,
+      "end": 64
+    },
+    {
+      "name": "cancel",
+      "line": 66,
+      "end": 73
+    },
+    {
+      "name": "cleanup_done",
+      "line": 75,
+      "end": 80
+    }
+  ],
+  "vrp_solver.py": [
+    {
+      "name": "solve",
+      "line": 380,
+      "end": 418
+    },
+    {
+      "name": "utilization_pct",
+      "line": 63,
+      "end": 66
+    },
+    {
+      "name": "dist_cb",
+      "line": 122,
+      "end": 125
+    },
+    {
+      "name": "pallet_demand",
+      "line": 131,
+      "end": 135
+    },
+    {
+      "name": "time_cb",
+      "line": 149,
+      "end": 155
+    }
+  ],
+  "warehouse_map_draft_service.py": [
+    {
+      "name": "list_drafts",
+      "line": 50,
+      "end": 53
+    },
+    {
+      "name": "create_draft",
+      "line": 55,
+      "end": 93
+    },
+    {
+      "name": "get_draft",
+      "line": 95,
+      "end": 96
+    },
+    {
+      "name": "load_from_db",
+      "line": 98,
+      "end": 126
+    },
+    {
+      "name": "save_to_db",
+      "line": 128,
+      "end": 209
+    },
+    {
+      "name": "patch_cells",
+      "line": 211,
+      "end": 222
+    },
+    {
+      "name": "patch_metadata",
+      "line": 224,
+      "end": 239
+    },
+    {
+      "name": "diff_draft",
+      "line": 241,
+      "end": 279
+    },
+    {
+      "name": "build_route",
+      "line": 281,
+      "end": 338
+    },
+    {
+      "name": "patch_route",
+      "line": 340,
+      "end": 362
+    },
+    {
+      "name": "bulk_role",
+      "line": 364,
+      "end": 396
+    },
+    {
+      "name": "validate_draft",
+      "line": 398,
+      "end": 438
+    },
+    {
+      "name": "preview_projection",
+      "line": 440,
+      "end": 515
+    },
+    {
+      "name": "save_projection_to_topology",
+      "line": 517,
+      "end": 700
+    },
+    {
+      "name": "save_route_to_db",
+      "line": 702,
+      "end": 828
+    },
+    {
+      "name": "publish_oracle",
+      "line": 830,
+      "end": 930
+    },
+    {
+      "name": "generate_pick_face_addresses",
+      "line": 932,
+      "end": 983
+    },
+    {
+      "name": "publish_draft",
+      "line": 985,
+      "end": 1011
+    },
+    {
+      "name": "generate_small_pick_faces",
+      "line": 1013,
+      "end": 1062
+    },
+    {
+      "name": "patch_small_pick_face",
+      "line": 1064,
+      "end": 1080
+    },
+    {
+      "name": "renumber_small_pick_faces",
+      "line": 1082,
+      "end": 1106
+    },
+    {
+      "name": "generate_storage_slots",
+      "line": 1108,
+      "end": 1165
+    },
+    {
+      "name": "patch_storage_slot",
+      "line": 1167,
+      "end": 1183
+    }
+  ],
+  "warehouse_map_service.py": [
+    {
+      "name": "list_canvases",
+      "line": 33,
+      "end": 89
+    },
+    {
+      "name": "get_warehouse_state",
+      "line": 91,
+      "end": 97
+    },
+    {
+      "name": "get_canvas_state",
+      "line": 99,
+      "end": 105
+    },
+    {
+      "name": "create_canvas",
+      "line": 107,
+      "end": 145
+    },
+    {
+      "name": "archive_canvas",
+      "line": 147,
+      "end": 245
+    },
+    {
+      "name": "create_camera",
+      "line": 247,
+      "end": 294
+    },
+    {
+      "name": "clone_camera",
+      "line": 296,
+      "end": 342
+    },
+    {
+      "name": "archive_camera",
+      "line": 344,
+      "end": 377
+    },
+    {
+      "name": "replace_camera_objects",
+      "line": 379,
+      "end": 434
+    },
+    {
+      "name": "replace_camera_passages",
+      "line": 436,
+      "end": 490
+    },
+    {
+      "name": "replace_camera_links",
+      "line": 492,
+      "end": 550
+    }
+  ],
+  "warehouse_service.py": [
+    {
+      "name": "role_to_column",
+      "line": 87,
+      "end": 93
+    },
+    {
+      "name": "list_warehouses",
+      "line": 11,
+      "end": 61
+    },
+    {
+      "name": "update_warehouse",
+      "line": 63,
+      "end": 78
+    }
+  ],
+  "warehouse_task_domain_sync_service.py": [
+    {
+      "name": "is_supported",
+      "line": 22,
+      "end": 23
+    },
+    {
+      "name": "dispatch_after_complete",
+      "line": 25,
+      "end": 30
+    },
+    {
+      "name": "retry_task_sync",
+      "line": 32,
+      "end": 41
+    },
+    {
+      "name": "get_task_sync",
+      "line": 43,
+      "end": 53
+    },
+    {
+      "name": "list_sync",
+      "line": 55,
+      "end": 101
+    }
+  ],
+  "warehouse_task_service.py": [
+    {
+      "name": "list_tasks",
+      "line": 15,
+      "end": 82
+    },
+    {
+      "name": "get_task_or_404",
+      "line": 84,
+      "end": 95
+    },
+    {
+      "name": "assign_task",
+      "line": 97,
+      "end": 129
+    },
+    {
+      "name": "start_task",
+      "line": 131,
+      "end": 162
+    },
+    {
+      "name": "complete_task",
+      "line": 164,
+      "end": 288
+    },
+    {
+      "name": "cancel_task",
+      "line": 317,
+      "end": 346
+    }
+  ],
+  "warehouse_topology_service.py": [
+    {
+      "name": "list_topologies",
+      "line": 20,
+      "end": 52
+    },
+    {
+      "name": "create_topology",
+      "line": 54,
+      "end": 69
+    },
+    {
+      "name": "get_topology_map",
+      "line": 71,
+      "end": 179
+    },
+    {
+      "name": "generate_cells",
+      "line": 181,
+      "end": 285
+    },
+    {
+      "name": "generate_gates",
+      "line": 287,
+      "end": 346
+    },
+    {
+      "name": "recalculate_gate_distances",
+      "line": 348,
+      "end": 442
+    },
+    {
+      "name": "patch_cell",
+      "line": 444,
+      "end": 476
+    },
+    {
+      "name": "validate_topology",
+      "line": 478,
+      "end": 651
+    },
+    {
+      "name": "normalize_pick_face_cell_codes",
+      "line": 653,
+      "end": 791
+    },
+    {
+      "name": "publish_topology",
+      "line": 793,
+      "end": 824
+    },
+    {
+      "name": "list_pick_routes",
+      "line": 826,
+      "end": 864
+    },
+    {
+      "name": "build_pick_route",
+      "line": 866,
+      "end": 1000
+    },
+    {
+      "name": "publish_pick_route",
+      "line": 1002,
+      "end": 1048
+    },
+    {
+      "name": "route_sort_key",
+      "line": 1102,
+      "end": 1115
+    }
+  ],
+  "ws_manager.py": [
+    {
+      "name": "connect",
+      "line": 28,
+      "end": 36
+    },
+    {
+      "name": "disconnect",
+      "line": 38,
+      "end": 43
+    },
+    {
+      "name": "broadcast",
+      "line": 45,
+      "end": 56
+    },
+    {
+      "name": "broadcast_sync",
+      "line": 58,
+      "end": 65
+    },
+    {
+      "name": "connection_count",
+      "line": 68,
+      "end": 69
+    }
+  ]
+}

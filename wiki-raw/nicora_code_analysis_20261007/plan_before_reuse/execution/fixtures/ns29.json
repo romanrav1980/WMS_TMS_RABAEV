@@ -1,0 +1,47 @@
+{
+    "namespace":  "DS-NS29",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "Категория B; ячейка 40 из 100 коробок; source=80; один SKU, партия и срок совпадают; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS29-TC01",
+                          "initial":  "Дефицит волны",
+                          "action":  "Пополнить занятую ячейку",
+                          "expected":  "Подача 60, в ячейке 100, в источнике 20",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS29-TC02",
+                          "initial":  "Свободно 60, source=30",
+                          "action":  "Пополнить",
+                          "expected":  "Подача 30",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS29-TC03",
+                          "initial":  "Другая партия, mixing=false",
+                          "action":  "Пополнить",
+                          "expected":  "Отказ смешения",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS29-TC04",
+                          "initial":  "Категория не B",
+                          "action":  "Применить правило B",
+                          "expected":  "Не применяется автоматически",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS29-TT01",
+                          "initial":  "Паллета с 12 единицами, отбор вмещает 5",
+                          "action":  "Пополнить пять единиц",
+                          "expected":  "В отборе пять конкретных кодов, на источнике семь; старый полный агрегат не подтверждает изменённую полноту",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

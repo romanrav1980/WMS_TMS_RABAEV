@@ -1,0 +1,54 @@
+{
+    "namespace":  "DS-NS09",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "Сообщения M1/M1-copy, SKU dictionary V2/V1, исходящий факт F1; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS09-TC01",
+                          "initial":  "M1 и повтор",
+                          "action":  "Импортировать",
+                          "expected":  "Один доменный эффект, оба обращения диагностируются",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS09-TC02",
+                          "initial":  "SKU V2 затем V1",
+                          "action":  "Обработать сообщения",
+                          "expected":  "Старая версия не затирает V2",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS09-TC03",
+                          "initial":  "Неверная кратность или код",
+                          "action":  "Обработать",
+                          "expected":  "Ошибка семантики с причиной, доменный эффект отсутствует",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS09-TC04",
+                          "initial":  "Факт F1",
+                          "action":  "Авария перед commit",
+                          "expected":  "Нет частичного факта без outbox либо outbox без факта",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS09-TT01",
+                          "initial":  "Тот же businessKey по CRPT и ЕГАИС",
+                          "action":  "Принять сообщения и повтор каждого",
+                          "expected":  "Обязательства разделены по системам, повтор не меняет запас; одинаковый ключ с другим payload отклонён",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS09-TT02",
+                          "initial":  "Код содержит ведущие нули, регистр и разделитель",
+                          "action":  "Передать и прочитать исходное сообщение",
+                          "expected":  "Значимые символы сохранены; транспортное принятие не назначает регуляторный SUCCESS",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

@@ -7,6 +7,7 @@ const rtTsd = {
 const rtTsdLabels = {
   RAW_TO_PRODUCTION: "Сырье в производство",
   FG_TO_STORAGE: "Готовая продукция",
+  PUTAWAY: "Размещение приёмки",
   REPLENISHMENT: "Пополнение",
   PICKING_MOVE: "Комплектация",
   OTHER: "Задание",
@@ -248,6 +249,7 @@ function rtTsdOperation(task) {
   if (task.task_type === "REPLENISHMENT" && task.task_source === "WAVE") return "Пополнение волны";
   if (task.task_type === "RAW_TO_PRODUCTION") return "В производство";
   if (task.task_type === "FG_TO_STORAGE") return "Разместить выпуск";
+  if (task.task_type === "PUTAWAY") return "Разместить приёмку";
   return rtTsdLabels[task.task_type] || task.task_type || "Задание";
 }
 

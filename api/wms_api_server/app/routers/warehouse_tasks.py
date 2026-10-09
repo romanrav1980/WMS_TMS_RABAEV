@@ -78,6 +78,7 @@ def assign_warehouse_task(
     request: WarehouseTaskStatusRequest,
     _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_EXECUTE_PERMISSION)),
 ) -> dict[str, str]:
+    request.updated_by = _user.username
     WarehouseTaskService().assign_task(task_id, request)
     return {"status": "ok"}
 
@@ -88,6 +89,7 @@ def start_warehouse_task(
     request: WarehouseTaskStatusRequest,
     _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_EXECUTE_PERMISSION)),
 ) -> dict[str, str]:
+    request.updated_by = _user.username
     WarehouseTaskService().start_task(task_id, request)
     return {"status": "ok"}
 
@@ -97,9 +99,10 @@ def complete_warehouse_task(
     task_id: int,
     request: WarehouseTaskStatusRequest,
     _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_EXECUTE_PERMISSION)),
-) -> dict[str, str]:
-    WarehouseTaskService().complete_task(task_id, request)
-    return {"status": "ok"}
+) -> dict:
+    request.updated_by = _user.username
+    result = WarehouseTaskService().complete_task(task_id, request, actor=_user.username)
+    return {"status": "ok", "result": result}
 
 
 @router.post("/{task_id}/sync/retry")
@@ -108,7 +111,7 @@ def retry_warehouse_task_sync(
     request: WarehouseTaskStatusRequest,
     _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_EXECUTE_PERMISSION)),
 ) -> dict:
-    sync = WarehouseTaskDomainSyncService().retry_task_sync(task_id, request.updated_by or request.assigned_to)
+    sync = WarehouseTaskDomainSyncService().retry_task_sync(task_id, _user.username)
     return {"status": "ok", "sync": sync}
 
 
@@ -118,5 +121,6 @@ def cancel_warehouse_task(
     request: WarehouseTaskStatusRequest,
     _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_EXECUTE_PERMISSION)),
 ) -> dict[str, str]:
+    request.updated_by = _user.username
     WarehouseTaskService().cancel_task(task_id, request)
     return {"status": "ok"}

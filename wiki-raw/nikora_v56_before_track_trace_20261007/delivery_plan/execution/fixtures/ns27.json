@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS27",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "P1=0; min=10; max=100; source=100; ёмкость P1=120; B1 пригодна",
+  "scenarios": [
+    {
+      "id": "NS27-TC01",
+      "initial": "Первый расчёт",
+      "action": "Создать подачу",
+      "expected": "Одна задача на 100",
+      "mandatory": true
+    },
+    {
+      "id": "NS27-TC02",
+      "initial": "Повтор расчёта",
+      "action": "Создать подачу",
+      "expected": "Второй задачи на те же 100 нет",
+      "mandatory": true
+    },
+    {
+      "id": "NS27-TC03",
+      "initial": "Открытая подача 100",
+      "action": "Рассчитать ёмкость",
+      "expected": "Учитывается уже назначенное количество",
+      "mandatory": true
+    },
+    {
+      "id": "NS27-TC04",
+      "initial": "Партия непригодна",
+      "action": "Назначить источник",
+      "expected": "Не выбирается",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

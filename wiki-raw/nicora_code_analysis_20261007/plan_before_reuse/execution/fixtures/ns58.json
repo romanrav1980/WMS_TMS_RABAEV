@@ -1,0 +1,54 @@
+{
+    "namespace":  "DS-NS58",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "План HU1/HU2; HU1 отгружен R1; HU2 не отгружен и назначен R2 завтра; HU2 физически в грузовой зоне; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS58-TC01",
+                          "initial":  "Реестр",
+                          "action":  "Сверить",
+                          "expected":  "HU2 имеет причину и R2, не исчезает",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS58-TC02",
+                          "initial":  "Грузовая зона содержит HU2",
+                          "action":  "Закрыть как пустую",
+                          "expected":  "Пустая зона не подтверждается ложно",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS58-TC03",
+                          "initial":  "После фактического вывоза всех мест",
+                          "action":  "Сверить",
+                          "expected":  "Остаток зоны 0",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS58-TC04",
+                          "initial":  "Затраты перенесённого товара",
+                          "action":  "Сверить",
+                          "expected":  "Отнесены на фактический рейс",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS58-TC05",
+                          "initial":  "ERP задержана",
+                          "action":  "Закрыть физический цикл",
+                          "expected":  "Факты сохранены для обмена, повтор не даёт вторых начислений",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS58-TT01",
+                          "initial":  "SAP закрыт, одна обязательная регуляторная квитанция отсутствует",
+                          "action":  "Закрыть контрольный реестр",
+                          "expected":  "Открытое обязательство видно у владельца; успех SAP не закрывает регуляторное состояние автоматически",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

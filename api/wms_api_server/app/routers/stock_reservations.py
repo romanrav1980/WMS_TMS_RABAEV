@@ -72,7 +72,7 @@ def create_stock_reservation(
     _user: AdminUser = Depends(require_permission(STOCK_RESERVATION_EDIT_PERMISSION)),
 ) -> IdResponse:
     try:
-        reservation_id = StockReservationService().create_reservation(request)
+        reservation_id = StockReservationService().create_reservation(request, actor=_user.username)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     return IdResponse(id=reservation_id)
@@ -86,7 +86,7 @@ def promote_stock_reservation_to_hard(
 ) -> dict[str, str]:
     service = StockReservationService()
     try:
-        service.promote_to_hard(reservation_id, request)
+        service.promote_to_hard(reservation_id, request, actor=_user.username)
     except LookupError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except ValueError as exc:
@@ -101,7 +101,7 @@ def release_stock_reservation(
     _user: AdminUser = Depends(require_permission(STOCK_RESERVATION_EDIT_PERMISSION)),
 ) -> dict[str, str]:
     try:
-        StockReservationService().release_reservation(reservation_id, request)
+        StockReservationService().release_reservation(reservation_id, request, actor=_user.username)
     except LookupError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     return {"status": "ok"}
@@ -114,7 +114,7 @@ def consume_stock_reservation(
     _user: AdminUser = Depends(require_permission(STOCK_RESERVATION_EDIT_PERMISSION)),
 ) -> dict[str, str]:
     try:
-        StockReservationService().consume_reservation(reservation_id, request)
+        StockReservationService().consume_reservation(reservation_id, request, actor=_user.username)
     except LookupError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     return {"status": "ok"}
@@ -127,7 +127,7 @@ def cancel_stock_reservation(
     _user: AdminUser = Depends(require_permission(STOCK_RESERVATION_EDIT_PERMISSION)),
 ) -> dict[str, str]:
     try:
-        StockReservationService().cancel_reservation(reservation_id, request)
+        StockReservationService().cancel_reservation(reservation_id, request, actor=_user.username)
     except LookupError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     return {"status": "ok"}

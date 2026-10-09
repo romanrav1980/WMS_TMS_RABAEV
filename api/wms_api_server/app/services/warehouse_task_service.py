@@ -1,4 +1,5 @@
 from typing import Any
+from decimal import Decimal
 
 from fastapi import HTTPException
 
@@ -95,6 +96,9 @@ class WarehouseTaskService:
         return rows[0]
 
     def assign_task(self, task_id: int, request: WarehouseTaskStatusRequest) -> None:
+        if not getattr(self.gateway, "transaction_bound", False):
+            from ..modules.inventory.public import run_existing_warehouse_task_action
+            return run_existing_warehouse_task_action(self.gateway, task_id, "assign_task", request)
         task = self.get_task_or_404(task_id)
         if task.get("status") not in {"PLANNED", "ASSIGNED"}:
             raise HTTPException(status_code=409, detail="Only planned/assigned task can be assigned.")
@@ -129,6 +133,9 @@ class WarehouseTaskService:
         self._sync_wave_picking_move_status(task, "ASSIGNED", assignee)
 
     def start_task(self, task_id: int, request: WarehouseTaskStatusRequest) -> None:
+        if not getattr(self.gateway, "transaction_bound", False):
+            from ..modules.inventory.public import run_existing_warehouse_task_action
+            return run_existing_warehouse_task_action(self.gateway, task_id, "start_task", request)
         task = self.get_task_or_404(task_id)
         if task.get("status") not in {"PLANNED", "ASSIGNED"}:
             raise HTTPException(status_code=409, detail="Only planned/assigned task can be started.")
@@ -161,14 +168,23 @@ class WarehouseTaskService:
         self._sync_wave_replenishment_status(task, "IN_PROGRESS", assignee)
         self._sync_wave_picking_move_status(task, "IN_PROGRESS", assignee)
 
-    def complete_task(self, task_id: int, request: WarehouseTaskStatusRequest) -> None:
+    def complete_task(self, task_id: int, request: WarehouseTaskStatusRequest, actor: str | None = None) -> dict:
+        from ..modules.inventory.public import complete_existing_warehouse_task
+        return complete_existing_warehouse_task(self.gateway, task_id, request, actor or request.updated_by or "API")
+
+    def _complete_task_locked(self, task_id: int, request: WarehouseTaskStatusRequest, actor: str) -> None:
+        state = self.gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
+        if not state or state[0]["state"] != "PREPARED":
+            raise HTTPException(409, detail={"code": "USE_TASK_COMPLETE_COMMAND", "task_id": task_id})
+        if not getattr(self.gateway, "transaction_bound", False):
+            raise RuntimeError("Warehouse completion requires the command transaction")
         task = self.get_task_or_404(task_id)
-        if task.get("status") in {"DONE", "CANCELLED"}:
-            raise HTTPException(status_code=409, detail="Task is already closed.")
         self._validate_completion_scans(task, request)
-        planned_qty = float(task.get("qty") or 0)
+        planned_qty = Decimal(str(task.get("qty") or 0))
         qty_mode = str(task.get("qty_mode") or "BOX").upper()
-        fact_qty = request.fact_qty
+        fact_qty = Decimal(str(request.fact_qty)) if request.fact_qty is not None else None
+        if planned_qty <= 0 or not planned_qty.is_finite() or (fact_qty is not None and not fact_qty.is_finite()):
+            raise HTTPException(status_code=400, detail="Finite positive task quantities are required.")
         if fact_qty is not None and fact_qty <= 0:
             raise HTTPException(status_code=400, detail="fact_qty must be greater than zero when provided.")
         if fact_qty is not None and fact_qty > planned_qty:
@@ -176,7 +192,7 @@ class WarehouseTaskService:
         if qty_mode == "PALLET" and fact_qty is not None and fact_qty < planned_qty:
             raise HTTPException(status_code=409, detail="Full-pallet task cannot be partially completed.")
 
-        assignee = request.assigned_to or request.updated_by
+        assignee = actor
         resource_ctx = self._resource_context(request)
         completed_qty = fact_qty if fact_qty is not None else planned_qty
         residual_qty = planned_qty - fact_qty if fact_qty is not None and fact_qty < planned_qty else 0
@@ -226,7 +242,7 @@ class WarehouseTaskService:
                           CREATED_BY, LAST_ERROR
                         )
                         select RRL_WAREHOUSE_TASK_SQ.nextval, TASK_TYPE, TASK_SOURCE,
-                               nvl(SOURCE_TASK_ID, :task_id), :task_id,
+                               SOURCE_TASK_ID, SOURCE_MOVEMENT_ID,
                                SOURCE_DOC_TYPE, SOURCE_DOC_ID, PRODUCTION_ORDER_ID,
                                PROD_BATCH_ID, RAW_ARTICUL, TARGET_ARTICUL,
                                UID_PALLET, SSCC, FROM_WARE_ID, FROM_CELL,
@@ -316,8 +332,18 @@ class WarehouseTaskService:
 
     def cancel_task(self, task_id: int, request: WarehouseTaskStatusRequest) -> None:
         task = self.get_task_or_404(task_id)
+        if task.get('task_source') == 'SAP_RECEIPT':
+            from ..modules.inventory.public import build_receiving_service
+            try:
+                build_receiving_service().cancel(task_id, request.reason or '', request.updated_by or 'API')
+            except (ValueError, LookupError) as exc:
+                raise HTTPException(status_code=409, detail=str(exc)) from exc
+            return
         if task.get("status") == "DONE":
             raise HTTPException(status_code=409, detail="Completed task cannot be cancelled.")
+        if not getattr(self.gateway, "transaction_bound", False):
+            from ..modules.inventory.public import run_existing_warehouse_task_action
+            return run_existing_warehouse_task_action(self.gateway, task_id, "cancel_task", request)
         self.gateway.execute(
             """
             update RRL_WAREHOUSE_TASK

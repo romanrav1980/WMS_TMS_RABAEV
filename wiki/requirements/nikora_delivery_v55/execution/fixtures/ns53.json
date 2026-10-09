@@ -1,0 +1,54 @@
+{
+    "namespace":  "DS-NS53",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "HU2 не найден, R1 задержан; EXP ищет, SECURITY подключена; SHIFT решает пересборку, KRO списание; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS53-TC01",
+                          "initial":  "Недостача",
+                          "action":  "Создать расследование",
+                          "expected":  "Экспедиция назначена на поиск, безопасность подключена",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS53-TC02",
+                          "initial":  "Срок поиска",
+                          "action":  "Проверить решение",
+                          "expected":  "Определён диспетчером, не скрытый автоматический таймер",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS53-TC03",
+                          "initial":  "PICKER списывает",
+                          "action":  "Выполнить",
+                          "expected":  "Отказ права",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS53-TC04",
+                          "initial":  "KRO подтвердил потерю",
+                          "action":  "Отразить",
+                          "expected":  "Корректировка с основанием и связью с инцидентом",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS53-TC05",
+                          "initial":  "HU2 найден после пересборки",
+                          "action":  "Отправить",
+                          "expected":  "Нет автоматической второй доставки одной потребности",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS53-TT01",
+                          "initial":  "Один код утрачен, остальные единицы найдены",
+                          "action":  "Оформить расследование и решение",
+                          "expected":  "Потеря привязана к коду и источнику; корректировка и регуляторные обязательства сохранены, чужой код не подставлен",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

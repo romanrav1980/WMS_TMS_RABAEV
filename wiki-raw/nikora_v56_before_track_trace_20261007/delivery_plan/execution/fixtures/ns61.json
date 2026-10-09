@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS61",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Подтверждённый отбор K1; outbox E1; фото F1; резервная копия; тестовый отказ API с RPO=0/RTO=300 секунд",
+  "scenarios": [
+    {
+      "id": "NS61-TC01",
+      "initial": "Остановить API",
+      "action": "Восстановить",
+      "expected": "K1 сохранён, API готов не позднее 300 секунд в данном сценарии",
+      "mandatory": true
+    },
+    {
+      "id": "NS61-TC02",
+      "initial": "Остановить worker",
+      "action": "Продолжить",
+      "expected": "E1 доставлено без повторного товарного эффекта",
+      "mandatory": true
+    },
+    {
+      "id": "NS61-TC03",
+      "initial": "Восстановить Oracle и фото",
+      "action": "Сверить",
+      "expected": "Баланс и SHA256 совпадают с выбранной точкой",
+      "mandatory": true
+    },
+    {
+      "id": "NS61-TC04",
+      "initial": "Потеря площадки",
+      "action": "Проверить паспорт",
+      "expected": "Проверяется отдельно по согласованным RPO/RTO, API-тест не считается доказательством",
+      "mandatory": true
+    },
+    {
+      "id": "NS61-TC05",
+      "initial": "Production-редакция NICORA",
+      "action": "Квалифицировать",
+      "expected": "Функции и восстановление проверены на фактически выбранной конфигурации",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

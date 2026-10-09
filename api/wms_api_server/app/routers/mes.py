@@ -82,9 +82,9 @@ def apply_wms(
     production_order_id: int,
     request: MesApplyWmsRequest,
     _user: AdminUser = Depends(require_permission(MES_WMS_BRIDGE_APPLY_PERMISSION)),
-) -> dict[str, str]:
-    MesService().apply_wms(production_order_id, request)
-    return {"status": "ok"}
+) -> dict:
+    result = MesService().apply_wms(production_order_id, request, actor=_user.username)
+    return {"status": "ok", "result": result}
 
 
 @router.get("/production-orders/{production_order_id}/genealogy")
@@ -101,6 +101,7 @@ def calculate_raw_supply(
     request: MesRawSupplyCalculateRequest,
     _user: AdminUser = Depends(require_permission(MES_RAW_SUPPLY_CALCULATE_PERMISSION)),
 ) -> dict:
+    request.calculated_by = _user.username
     return MesService().calculate_raw_supply(production_order_id, request)
 
 
@@ -118,6 +119,7 @@ def release_to_production(
     request: MesReleaseToProductionRequest,
     _user: AdminUser = Depends(require_permission(MES_RAW_TRANSFER_CREATE_PERMISSION)),
 ) -> dict:
+    request.created_by = _user.username
     return MesService().release_to_production(production_order_id, request)
 
 
@@ -165,6 +167,7 @@ def confirm_raw_transfer_task(
     request: MesRawTransferTaskConfirmRequest,
     _user: AdminUser = Depends(require_permission(MES_RAW_TRANSFER_CONFIRM_PERMISSION)),
 ) -> IdResponse:
+    request.confirmed_by = _user.username
     return IdResponse(id=MesService().confirm_raw_transfer_task(task_id, request))
 
 
@@ -174,6 +177,7 @@ def cancel_raw_transfer_task(
     request: MesRawTransferTaskCancelRequest,
     _user: AdminUser = Depends(require_permission(MES_RAW_TRANSFER_CANCEL_PERMISSION)),
 ) -> dict[str, str]:
+    request.cancelled_by = _user.username
     MesService().cancel_raw_transfer_task(task_id, request)
     return {"status": "ok"}
 

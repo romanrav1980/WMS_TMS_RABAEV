@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS07",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "2 процесса API; общий тестовый лимит 24 соединения; блокирующий аудит 2 секунды; 50 коротких запросов",
+  "scenarios": [
+    {
+      "id": "NS07-TC01",
+      "initial": "Аудит задержан",
+      "action": "Параллельно отправить короткий запрос",
+      "expected": "Короткий запрос обслужен до завершения задержанного аудита",
+      "mandatory": true
+    },
+    {
+      "id": "NS07-TC02",
+      "initial": "Пул занят",
+      "action": "Превысить тестовый лимит",
+      "expected": "Ожидание ограничено настройкой, нет бесконечного зависания",
+      "mandatory": true
+    },
+    {
+      "id": "NS07-TC03",
+      "initial": "50 запросов",
+      "action": "Сверить аудит",
+      "expected": "Обязательные события не потеряны, диагностические ошибки видимы",
+      "mandatory": true
+    },
+    {
+      "id": "NS07-TC04",
+      "initial": "Два процесса",
+      "action": "Измерить соединения",
+      "expected": "Общий установленный бюджет не превышен",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

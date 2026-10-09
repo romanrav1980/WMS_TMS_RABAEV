@@ -49,6 +49,7 @@ cd /d "%API_DIR%"
 
 set "PYTHON_CMD=python.exe"
 if exist ".venv\Scripts\python.exe" set "PYTHON_CMD=.venv\Scripts\python.exe"
+if defined TMS_PYTHON_CMD set "PYTHON_CMD=%TMS_PYTHON_CMD%"
 
 echo Starting WMS API server...
 echo   WMS_ORACLE_USER=%WMS_ORACLE_USER%
@@ -58,7 +59,7 @@ echo   WMS_API_AUDIT_ENABLED=%WMS_API_AUDIT_ENABLED%
 echo   WMS_ADMIN_AUTH_ENABLED=%WMS_ADMIN_AUTH_ENABLED%
 echo   Admin users are read from Oracle RUSERS/USER_GROUP/RIGHTS
 echo   URL=http://%LOCAL_HOST%:%API_PORT%/docs
-%PYTHON_CMD% -m uvicorn app.main:app --host %API_HOST% --port %API_PORT% --reload --no-use-colors
+"%PYTHON_CMD%" -m uvicorn app.main:app --host %API_HOST% --port %API_PORT% --reload --no-use-colors
 
 color 80
 echo Server exited. You can close this window.

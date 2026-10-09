@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS11",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Очередь 20 сообщений, возраст старшего 10 минут, одна команда 2 секунды, одно исчерпание пула",
+  "scenarios": [
+    {
+      "id": "NS11-TC01",
+      "initial": "Задержка очереди",
+      "action": "Открыть монитор",
+      "expected": "Показаны 20 и возраст 10 минут",
+      "mandatory": true
+    },
+    {
+      "id": "NS11-TC02",
+      "initial": "Команда 2 секунды",
+      "action": "Сопоставить журнал",
+      "expected": "Метрика и request ID относятся к той же команде",
+      "mandatory": true
+    },
+    {
+      "id": "NS11-TC03",
+      "initial": "Пул исчерпан",
+      "action": "Проверить предупреждение",
+      "expected": "Причина видна отдельно от ошибки ERP",
+      "mandatory": true
+    },
+    {
+      "id": "NS11-TC04",
+      "initial": "Большая история",
+      "action": "Открыть текущую смену",
+      "expected": "Выборка ограничена окном, не возвращает всю историю",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

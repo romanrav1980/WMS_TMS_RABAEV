@@ -34,9 +34,41 @@ async function rawSupplyFetch(path, options = {}) {
   const body = text ? JSON.parse(text) : {};
   if (!response.ok) {
     const detail = body.detail?.message || body.detail || body.message || `HTTP ${response.status}`;
-    throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+    const error = new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+    error.httpStatus = response.status;
+    error.detail = body.detail;
+    throw error;
   }
   return body;
+}
+
+// Preserve a command identity and its body across connection failures and page reloads.
+async function rawSupplyCommand(path, payload) {
+  const key = JSON.stringify(["nicora.rawSupplyIntent", rawSupplyApiBase(), rawSupplyUser(), path]);
+  const signature = JSON.stringify(payload);
+  const existing = localStorage.getItem(key);
+  let intent = existing ? JSON.parse(existing) : null;
+  if (intent && intent.signature !== signature) {
+    throw new Error("Сначала повторите незавершённую команду с прежними параметрами. Операция: " + intent.operation_id);
+  }
+  if (!intent) {
+    intent = { signature, operation_id: "MES.UI:" + crypto.randomUUID() };
+    localStorage.setItem(key, JSON.stringify(intent));
+  }
+  try {
+    const result = await rawSupplyFetch(path, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...payload, operation_id: intent.operation_id }),
+    });
+    localStorage.removeItem(key);
+    return result;
+  } catch (error) {
+    if (error.detail?.outcome_confirmed === true || [400, 401, 403, 422].includes(error.httpStatus)) {
+      localStorage.removeItem(key);
+    }
+    error.message += " Операция: " + intent.operation_id;
+    throw error;
+  }
 }
 
 function rawSupplyOrderParams() {
@@ -99,10 +131,8 @@ async function loadSelectedRawSupply() {
 async function calculateRawSupply() {
   if (!rawSupplyState.selectedOrder) throw new Error("Выберите производственный заказ");
   if (!rawSupplyCan("mes_raw_supply_calculate")) throw new Error("Нет права mes_raw_supply_calculate");
-  const result = await rawSupplyFetch(`/api/mes/production-orders/${rawSupplyState.selectedOrder.production_order_id}/raw-supply/calculate`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ calculated_by: rawSupplyUser() }),
+  const result = await rawSupplyCommand(`/api/mes/production-orders/${rawSupplyState.selectedOrder.production_order_id}/raw-supply/calculate`, {
+    calculated_by: rawSupplyUser(),
   });
   rawSupplyEl("rawSupplyOrderStatusText").textContent =
     `Расчет: потребность ${result.demand_count}, кандидаты ${result.candidate_count}, дефицит ${result.shortage_count}`;
@@ -113,15 +143,12 @@ async function calculateRawSupply() {
 async function releaseRawSupply() {
   if (!rawSupplyState.selectedOrder) throw new Error("Выберите производственный заказ");
   if (!rawSupplyCan("mes_raw_transfer_create")) throw new Error("Нет права mes_raw_transfer_create");
-  const result = await rawSupplyFetch(`/api/mes/production-orders/${rawSupplyState.selectedOrder.production_order_id}/release-to-production`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+  const result = await rawSupplyCommand(`/api/mes/production-orders/${rawSupplyState.selectedOrder.production_order_id}/release-to-production`, {
+
       to_ware_id: rawSupplyEl("rawSupplyToWare").value ? Number(rawSupplyEl("rawSupplyToWare").value) : null,
       to_cell: rawSupplyEl("rawSupplyToCell").value.trim() || "MES_PROD",
       allow_partial: Number(rawSupplyEl("rawSupplyAllowPartial").value || 0),
       created_by: rawSupplyUser(),
-    }),
   });
   rawSupplyEl("rawSupplyOrderStatusText").textContent = `Создано задач: ${result.created_task_count}`;
   await loadSelectedRawSupply();
@@ -140,20 +167,16 @@ async function loadRawSupplyShortages(selectedOnly = false) {
 
 async function confirmRawSupplyTask(taskId) {
   if (!rawSupplyCan("mes_raw_transfer_confirm")) throw new Error("Нет права mes_raw_transfer_confirm");
-  await rawSupplyFetch(`/api/mes/raw-transfer-tasks/${taskId}/confirm`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ confirmed_by: rawSupplyUser() }),
+  await rawSupplyCommand(`/api/mes/raw-transfer-tasks/${taskId}/confirm`, {
+    confirmed_by: rawSupplyUser(),
   });
   await afterRawSupplyTaskAction();
 }
 
 async function cancelRawSupplyTask(taskId) {
   if (!rawSupplyCan("mes_raw_transfer_cancel")) throw new Error("Нет права mes_raw_transfer_cancel");
-  await rawSupplyFetch(`/api/mes/raw-transfer-tasks/${taskId}/cancel`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ reason: "Отмена из админки снабжения", cancelled_by: rawSupplyUser() }),
+  await rawSupplyCommand(`/api/mes/raw-transfer-tasks/${taskId}/cancel`, {
+ reason: "Отмена из админки снабжения", cancelled_by: rawSupplyUser(),
   });
   await afterRawSupplyTaskAction();
 }

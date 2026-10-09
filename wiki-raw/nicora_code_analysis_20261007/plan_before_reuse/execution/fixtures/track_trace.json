@@ -1,0 +1,33 @@
+{
+  "dataset": "DS-TRACK-TRACE",
+  "synthetic": true,
+  "productionUse": false,
+  "seedStatus": "declarative_plan_not_executed",
+  "evidenceLevel": "CONTRACT_ONLY_NOT_REAL_PROVIDER_CODES",
+  "binding": "NS04 maps to actual RABAEV objects; NS16 obtains approved provider test codes and endpoints before live adapter PASS",
+  "products": [
+    {"sku":"TT-NONE","markingRequired":false,"regulatoryProfiles":[],"baseUnit":"EA","approved":true},
+    {"sku":"TT-TOBACCO","markingRequired":true,"regulatoryProfiles":["CHZ-TOBACCO-TEST-v1"],"markedUnit":"PACK","baseUnit":"PACK","unitsPerClosedBox":"12"},
+    {"sku":"TT-ALCO","markingRequired":true,"regulatoryProfiles":["EGAIS-ALCO-TEST-v1"],"markedUnit":"BOTTLE","baseUnit":"EA"},
+    {"sku":"TT-MULTI","markingRequired":true,"regulatoryProfiles":["OTHER-A-v1","OTHER-B-v1"],"markedUnit":"EA","baseUnit":"EA"},
+    {"sku":"TT-WEIGHT","markingRequired":true,"regulatoryProfiles":["OTHER-A-v1"],"markedUnit":"PACK","baseUnit":"KG","netKg":"9.80"},
+    {"sku":"TT-MISSING-PROFILE","markingRequired":true,"regulatoryProfiles":[],"expectedAdmission":"BLOCKED_MISSING_PROFILE"},
+    {"sku":"TT-VOLUME-DOC","markingRequired":false,"regulatoryProfiles":["VOLUME-DOCUMENT-TEST-v1"],"baseUnit":"L","individualCodesRequired":false}
+  ],
+  "profiles": [
+    {"id":"CHZ-TOBACCO-TEST-v1","system":"CRPT","jurisdiction":"TEST_RU","group":"TOBACCO","accountingMode":"SERIALIZED","allowedScanLevels":["ITEM","BOX","PALLET"],"externalVerificationRequired":true,"sourceOfHierarchy":"APPROVED_TEST_OPERATOR_DATA","liveTestDataStatus":"PENDING_EXTERNAL_DATA"},
+    {"id":"EGAIS-ALCO-TEST-v1","system":"EGAIS","jurisdiction":"TEST_RU","group":"ALCOHOL_MARKED","accountingMode":"SERIALIZED","allowedScanLevels":["ITEM"],"externalVerificationRequired":true,"liveTestDataStatus":"PENDING_EXTERNAL_DATA"},
+    {"id":"OTHER-A-v1","system":"OTHER_TEST_A","jurisdiction":"TEST","accountingMode":"SERIALIZED","allowedScanLevels":["ITEM","BOX"],"externalVerificationRequired":false},
+    {"id":"OTHER-B-v1","system":"OTHER_TEST_B","jurisdiction":"TEST","accountingMode":"SERIALIZED","allowedScanLevels":["ITEM"],"externalVerificationRequired":false},
+    {"id":"VOLUME-DOCUMENT-TEST-v1","system":"OTHER_DOCUMENT_TEST","jurisdiction":"TEST","accountingMode":"VOLUME_DOCUMENT","individualCodesRequired":false}
+  ],
+  "stockUnits": [{"id":"MULTI-U1","sku":"TT-MULTI","quantity":"1","systemCodes":["OTHER-A-U1","OTHER-B-U1"],"expectedPhysicalStock":"1"}],
+  "identifiers": [
+    {"id":"OTHER-A-U1","system":"OTHER_TEST_A","issuerScope":"TEST-ISSUER","scheme":"TEST-v1","canonicalIdentity":"000Aa-01","rawScan":"000Aa-01\u001dEND","stockUnit":"MULTI-U1"},
+    {"id":"OTHER-B-U1","system":"OTHER_TEST_B","issuerScope":"TEST-ISSUER","scheme":"TEST-v1","canonicalIdentity":"000Aa-01","stockUnit":"MULTI-U1"},
+    {"id":"CASE-SENSITIVE-SECOND","system":"OTHER_TEST_A","issuerScope":"TEST-ISSUER","scheme":"TEST-v1","canonicalIdentity":"000aa-01","expectedIdentity":"DISTINCT_FROM_OTHER-A-U1"}
+  ],
+  "packingExample": {"physicalUnits":"12","split":["5","7"],"oneActiveLoadUnitPerUnit":true,"ssccExample":"000000000000001014","ssccProductionRange":false,"hierarchyStatus":"CLOSED_PROVEN_OR_OPEN_REQUIRES_ACTUAL_CHILDREN"},
+  "providerDataPolicy": "Synthetic labels above are not CRPT or EGAIS format-valid marks. Real parser, signature/status and end-to-end adapter tests require approved operator test data. Do not change expected results or mark live adapter accepted using mock.",
+  "resetPolicy": "Remove only tagged DS-TRACK-TRACE fixture data with proved mapping and preserve unrelated RABAEV rows"
+}

@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS28",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "W1 требует 50; source=100 коробок на паллете; слот P1 свободен на 120; действующий мини-макс подаёт 100",
+  "scenarios": [
+    {
+      "id": "NS28-TC01",
+      "initial": "Без мини-макс",
+      "action": "Рассчитать под волну",
+      "expected": "Подача 100 целой паллетой, не 50",
+      "mandatory": true
+    },
+    {
+      "id": "NS28-TC02",
+      "initial": "Есть подача мини-макс 100",
+      "action": "Рассчитать",
+      "expected": "Вторая подача тех же 100 отсутствует",
+      "mandatory": true
+    },
+    {
+      "id": "NS28-TC03",
+      "initial": "P1 нет, разрешён RES1 на 120",
+      "action": "Назначить",
+      "expected": "RES1 выбран по диапазону и правилам",
+      "mandatory": true
+    },
+    {
+      "id": "NS28-TC04",
+      "initial": "Свободно 80, паллета 100",
+      "action": "Выпустить",
+      "expected": "Переполнение не допускается, нужен иной пригодный слот",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

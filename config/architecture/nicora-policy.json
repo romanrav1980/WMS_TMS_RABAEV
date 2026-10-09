@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "python_root": "api/wms_api_server/app",
+  "frontend_roots": ["admin/wms_admin_frontend", "terminal/wms_terminal_web"],
+  "limits": {"file_lines": 600, "function_lines": 100},
+  "domains": {
+    "master_data": {"owns": ["SKU and packaging", "locations", "stores", "vehicle and container reference data"]},
+    "inventory": {"owns": ["receipt and physical stock", "placement", "stock reservations"]},
+    "fulfillment": {"owns": ["warehouse waves", "picking", "handling-unit composition"]},
+    "quality": {"owns": ["weight and composition checks", "release bound to composition version"]},
+    "resources": {"owns": ["people and equipment sessions", "warehouse-task assignment and execution"]},
+    "transport": {"owns": ["trips and cargo assignment", "loading and route planning"]},
+    "delivery": {"owns": ["store receipt", "delivery discrepancies and returns"]},
+    "finance": {"owns": ["normative costs", "additional expenses", "billing"]},
+    "integrations": {"owns": ["ERP mappings", "inbox and outbox delivery", "equipment protocols"]},
+    "platform": {"owns": ["authentication", "diagnostic audit", "connection management"]}
+  },
+  "layers": ["api", "application", "domain", "infrastructure"],
+  "backend_public_files": ["public.py", "contracts.py"],
+  "frontend_public_files": ["index.ts", "index.tsx"],
+  "debt_owner": "NICORA architecture owner",
+  "debt_reason": "Existing legacy structure captured before incremental NICORA changes",
+  "debt_remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
+}

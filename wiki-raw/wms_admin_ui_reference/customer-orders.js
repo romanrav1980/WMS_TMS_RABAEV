@@ -3,6 +3,8 @@ const orderState = {
   selectedId: null,
   detail: null,
   fulfillment: [],
+  preparations: new Map(),
+  layoutOrderId: null,
 };
 
 const orderEl = (id) => document.getElementById(id);
@@ -152,6 +154,9 @@ function orderBind(id, handler) {
 }
 
 async function orderInit() {
+  orderBind('sapLayoutLoad', loadSapLayout);
+  orderBind('sapPrepareSt', prepareSapSt);
+  orderBind('sapAssignSt', assignPreparedSt);
   orderBind("orderLoad", loadOrders);
   orderBind("orderRefresh", loadOrders);
   orderBind("legacyImport", importLegacyOrder);
@@ -162,3 +167,43 @@ async function orderInit() {
 }
 
 window.addEventListener("wms-admin-auth-ready", orderInit);
+
+function sapLayoutRow(articul, quantity='', pallet=1) {
+  const tr=document.createElement('tr');
+  const article=document.createElement('td');article.textContent=articul;tr.dataset.articul=articul;
+  const qty=document.createElement('input');qty.type='text';qty.inputMode='decimal';qty.value=quantity;qty.dataset.field='quantity';qty.setAttribute('aria-label','Количество');
+  const number=document.createElement('input');number.type='number';number.min='1';number.max='100';number.value=pallet;number.dataset.field='pallet';number.setAttribute('aria-label','Паллета №');
+  const qtyCell=document.createElement('td');qtyCell.appendChild(qty);const palletCell=document.createElement('td');palletCell.appendChild(number);
+  const actions=document.createElement('td');const split=document.createElement('button');split.type='button';split.textContent='Разделить';split.onclick=()=>sapLayoutRow(articul,'',Number(number.value)+1);
+  const remove=document.createElement('button');remove.type='button';remove.textContent='Убрать';remove.onclick=()=>tr.remove();actions.append(split,remove);tr.append(article,qtyCell,palletCell,actions);orderEl('sapLayoutRows').appendChild(tr);
+}
+
+async function loadSapLayout() {
+  const id=orderState.selectedId;if(!id)throw new Error('Выберите заказ SAP.');
+  const detail=await orderRequest(`/api/integrations/sap/store-orders/${id}`);
+  if(orderState.selectedId!==id)return;
+  orderState.layoutOrderId=id;orderEl('sapLayoutRows').replaceChildren();
+  for(const row of orderState.detail.rows)sapLayoutRow(row.articul,String(row.order_qty));
+  if(detail.preparation_json){const result=typeof detail.preparation_json==='string'?JSON.parse(detail.preparation_json):detail.preparation_json;orderState.preparations.set(id,{result});orderEl('sapPreparationStatus').textContent=`Подготовлена СТ ${result.st_number}.`;}
+  else orderEl('sapPreparationStatus').textContent='Проверьте количество и номера паллет.';
+}
+
+async function prepareSapSt() {
+  const id=orderState.selectedId;if(!id||id!==orderState.layoutOrderId)throw new Error('Загрузите укладку выбранного заказа.');
+  const groups=new Map();
+  for(const tr of orderEl('sapLayoutRows').children){const number=Number(tr.querySelector('[data-field=pallet]').value);if(!Number.isInteger(number)||number<1||number>100)throw new Error('Номер паллеты: 1–100.');if(!groups.has(number))groups.set(number,[]);groups.get(number).push({articul:tr.dataset.articul,quantity:tr.querySelector('[data-field=quantity]').value.trim()});}
+  const pallets=[...groups.entries()].sort((a,b)=>a[0]-b[0]).map(([,lines])=>({lines}));
+  const signature=JSON.stringify(pallets);let operation=orderState.preparations.get(id);
+  if(operation?.result){orderEl('sapPreparationStatus').textContent=`Уже подготовлена СТ ${operation.result.st_number}.`;return;}
+  if(!operation||operation.signature!==signature){operation={signature,operation_id:crypto.randomUUID()};orderState.preparations.set(id,operation);}
+  operation.result=await orderRequest(`/api/integrations/sap/store-orders/${id}/prepare-st`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({operation_id:operation.operation_id,pallets})});
+  if(orderState.selectedId===id){orderEl('sapPreparationStatus').textContent=`СТ ${operation.result.st_number} подготовлена. Можно добавить её в существующий рейс.`;await loadOrderDetail(id);}
+}
+
+async function assignPreparedSt() {
+  const id=orderState.selectedId;const prepared=orderState.preparations.get(id)?.result;const trip=Number(orderEl('sapTripId').value);
+  if(!prepared||!Number.isSafeInteger(trip)||trip<=0)throw new Error('Подготовьте СТ и укажите существующий рейс.');
+  // Existing dispatcher endpoint; no second order/trip relation.
+  await orderRequest(`/api/admin/transport/tasks/${trip}/sts`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({st_numbers:[prepared.st_number]})});
+  if(orderState.selectedId===id)orderEl('sapPreparationStatus').textContent=`СТ ${prepared.st_number} добавлена в рейс ${trip}.`;
+}

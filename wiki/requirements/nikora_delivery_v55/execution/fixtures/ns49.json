@@ -1,0 +1,47 @@
+{
+    "namespace":  "DS-NS49",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "S1 режим BARCODE, HU1 на R1; S2 чужой магазин; S3 режим WEIGHT; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS49-TC01",
+                          "initial":  "S1 перед камерой",
+                          "action":  "Сканировать HU1",
+                          "expected":  "Зафиксирована приёмка итогового состава S1",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS49-TC02",
+                          "initial":  "Повтор",
+                          "action":  "Сканировать",
+                          "expected":  "Второго принятого количества нет",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS49-TC03",
+                          "initial":  "S2",
+                          "action":  "Принять HU1",
+                          "expected":  "Отказ адреса",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS49-TC04",
+                          "initial":  "S3 без показания",
+                          "action":  "Принять штрихкодом",
+                          "expected":  "Не закрывается обязательная весовая приёмка",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS49-TT01",
+                          "initial":  "Маркированное место с изменённым или неполным составом",
+                          "action":  "Считать SSCC назначения",
+                          "expected":  "Нельзя принять полноту по старому агрегату; расхождение и фактические коды имеют решение, без второго оприходования",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

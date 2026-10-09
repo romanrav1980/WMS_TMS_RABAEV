@@ -1,0 +1,54 @@
+{
+    "namespace":  "DS-NS34",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "AL1: P1 тяжёлый D10, P2 лёгкий D02; HU1; mixing=true для D02 с B1/B2; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS34-TC01",
+                          "initial":  "Отбор P1 затем P2",
+                          "action":  "Выполнить задания",
+                          "expected":  "Маршрут односторонний, тяжёлое основание раньше лёгкого",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS34-TC02",
+                          "initial":  "Будущее слотирование изменено",
+                          "action":  "Продолжить выданное задание",
+                          "expected":  "Источник и состав активного задания не переписаны",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS34-TC03",
+                          "initial":  "Маркированная коробка B2",
+                          "action":  "Сканировать",
+                          "expected":  "Фактическая B2 прослеживается",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS34-TC04",
+                          "initial":  "Нельзя установить фактическую партию при разрешённом смешении",
+                          "action":  "Списать",
+                          "expected":  "Учётно списана наиболее старая пригодная партия, факт способа определения сохранён",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS34-TC05",
+                          "initial":  "Неверная ячейка",
+                          "action":  "Подтвердить",
+                          "expected":  "Отказ без списания",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS34-TT01",
+                          "initial":  "Короб 12 кодов, отбор семи",
+                          "action":  "Подтвердить семь конкретных единиц",
+                          "expected":  "Семь кодов в грузовом месте заказа, пять на источнике; учёт старой полной упаковки не удваивает количество",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

@@ -1,0 +1,54 @@
+{
+    "namespace":  "DS-NS64",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "Паспорт пилота: предложены 3 магазина, 2 машины, до 100 проверенных SKU, DRY; 10 рабочих дней; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS64-TC00",
+                          "initial":  "Ещё нет живых операций; выбранный сухой scope",
+                          "action":  "Пройти PG-D: оборудование, восстановление, нагрузки и инструкции",
+                          "expected":  "Все обязательные сухие сценарии и 30-минутный двойной пик приняты; только затем начало 10-дневного наблюдения",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS64-TC01",
+                          "initial":  "День пилота",
+                          "action":  "Выполнить штатный цикл",
+                          "expected":  "Персонал работает штатными интерфейсами, ежедневные балансы сходятся",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS64-TC02",
+                          "initial":  "Критическое расхождение",
+                          "action":  "Обнаружить",
+                          "expected":  "Расширение остановлено, причина и исправление подтверждены",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS64-TC03",
+                          "initial":  "Наблюдение",
+                          "action":  "Завершить",
+                          "expected":  "10 рабочих дней и пороги паспорта соблюдены",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS64-TC04",
+                          "initial":  "Непроверенный новый магазин",
+                          "action":  "Расширить",
+                          "expected":  "Не объявлен принятым без квалификации",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS64-TT01",
+                          "initial":  "PG-D и ассортимент пилота",
+                          "action":  "Проверить все применимые профили и наблюдать маркированный поток",
+                          "expected":  "Обязательный профиль не исключён ради зелёного пилота; вне scope система остаётся непроверенной и не объявляется готовой",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

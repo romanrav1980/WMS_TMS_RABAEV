@@ -715,3 +715,13 @@ Sprint 1-3 теперь имеют прямые functional tests, UI smoke и lo
 - Fix: `vrp_solver.py` now handles depot-to-depot distance as `0` and adds disjunctions only for real order nodes. `test_sprint8_functional.py` now includes `solver=auto` regression coverage.
 - Related hardening: `distance-matrix/rebuild?source=auto` now falls back to Haversine if the active provider fails on a large batch, avoiding a 500 when OSRM rejects an oversized table URL.
 - Verification: Sprint 8 functional gate -> `24 passed`; Playwright live click on planner `Авто-план` returned HTTP 200, no failed requests, and rendered `Применить план (97 рейсов)` plus plan metrics.
+
+## Planner explain drawer — 2026-06-01
+
+- Implemented the MAP/VRP calculation explanation drawer from [`../requirements/tms2_planner_explain_panel_tz.md`](../requirements/tms2_planner_explain_panel_tz.md).
+- Backend `VrpPlanResponse` now returns `explain` with input counts, routing/provider facts, solver parameters, constraint flags, fleet utilization aggregates, calculation steps, and warnings. Saved `RRL_PLANNER_PLANS.PAYLOAD` also keeps the explain block so `/planner/metrics` can surface it.
+- Frontend `TransportPlannerPage` now opens `Детали расчета` after auto-plan, shows overview, parameters, calculation steps, fleet utilization, warnings, matrix rebuild messages, and copy-report action. The old browser `alert` for matrix rebuild was removed.
+- Tests: `tests/transport/test_sprint8_functional.py` -> `25 passed`; `tests/ui/transport_sprint8_ui_smoke.cjs` passed; frontend build passed; encoding check passed.
+- Follow-up performance fix: `/distance-matrix/rebuild` is now incremental by default. If a fresh full matrix for the selected or cached fallback provider already exists, the endpoint returns `cached=true`, `computed_pairs=0`, `skipped_pairs=121452` without provider matrix build and without `MERGE` of all rows. Full rewrite remains explicit through `force=true`.
+- Verification after the fix: live `POST /api/admin/transport/distance-matrix/rebuild?source=auto` returned about `0.57-0.60s`, `pairs=121452`, `computed_pairs=0`, `cached=true`; `tests/transport/test_sprint8_functional.py` -> `25 passed`; `tests/ui/transport_sprint8_ui_smoke.cjs` passed; frontend build passed.
+- Slow SQL decision after the fix from `from_log_id=1235`: `[]` for `min_elapsed_ms=500`. The previous `4.7-5.6s` `EXECUTE_MANY` rows are pre-fix evidence and no longer accepted as an open issue.

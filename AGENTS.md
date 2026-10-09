@@ -83,3 +83,15 @@ Before making non-trivial project decisions, start here:
 - Before finalizing changes that touch Russian wiki/HTML/SQL/Python/JavaScript text, run `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\check-encoding.ps1`.
 - Oracle SQL migrations are UTF-8 too. Apply them with `tools/oracle_apply/OracleApply.csproj` default settings; use `--encoding=cp1251` only for a confirmed legacy Windows-1251 script.
 - When a migration writes Russian seed/reference data, add or run a verification query for common mojibake markers before considering the migration clean.
+
+
+## GitHub Publication Discipline
+
+- GitHub обновляется только по прямому поручению пользователя. После очередного исправления документов не выполнять автоматически push, создание PR, fetch или проверки удалённой ветки.
+- Поручение опубликовать одну редакцию не является постоянным разрешением публиковать последующие редакции. Обычные правки сохраняются локально до нового поручения.
+
+## NICORA Modular Development Gate
+
+Before NICORA functional changes, read wiki/architecture/nicora_modular_development_contract.md and config/architecture/nicora-policy.json. New backend domains use app/modules/<area> with public.py/contracts.py boundaries; frontend features expose index.ts/index.tsx. Do not grow existing oversized legacy functions to add a new scenario.
+
+Run `python scripts/nicora_quality_gate.py` before accepting code changes. Architecture baseline is existing debt, not permission to add violations. Never regenerate or enlarge it to hide failures; `python scripts/check_architecture.py --tighten-baseline` only reduces paid-down allowances. Changes to ownership, policy or exceptions require documented rationale and independent review. This offline gate does not replace real business/API/Oracle, concurrency, hardware or slow-SQL acceptance.

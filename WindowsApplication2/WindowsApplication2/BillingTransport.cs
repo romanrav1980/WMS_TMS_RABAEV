@@ -187,7 +187,7 @@ namespace WindowsApplication2
 
         private string date2sql_ora(DateTime dt)
         {
-            return "'" + dt.Day + "." + dt.Month + "." + dt.Year + "'";
+            return "TO_DATE('" + dt.Day.ToString("D2") + "." + dt.Month.ToString("D2") + "." + dt.Year + "', 'DD.MM.YYYY')";
         }
 
 
@@ -200,8 +200,8 @@ namespace WindowsApplication2
                 company_filter = " and COMPANY= '" + Filter_company.Text + "' ";
             }
 
-            string strSQL = " select ID , NUM Номер , COMPANY Компания , DATEOFORDER ДатаСчета ,  "+
-            "   DATEFROM от , DATETO до , RRL_BILLINGORDER_sum(ID) , int2bool(closed) , int2bool(PAYED) , NUM_PLAT  " +
+            string strSQL = " select ID , NUM , COMPANY , DATEOFORDER ,  "+
+            "   DATEFROM , DATETO , RRL_BILLINGORDER_sum(ID) , int2bool(closed) , int2bool(PAYED) , NUM_PLAT  " +
                 " from  RABAEV.RRL_BILL_ORDERS where DATEOFORDER<=" + date2sql_ora( dateTimePicker2.Value ) +
                 " and DATEOFORDER>= " + date2sql_ora( dateTimePicker1.Value ) +" " + company_filter+" order by ID desc ";
 

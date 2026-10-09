@@ -23,7 +23,7 @@ Track and document all of these:
 2. Add or update SQL under `db/windowsapplication2_xp12_oracle/` for canonical schema work, under `db/migrations/YYYY-MM-DD_name/` for versioned reviewable changes, or under `db/compatibility_fixes/YYYY-MM-DD/` for dated compatibility patches.
 3. Give every migration a stable `MIGRATION_ID` and a paired rollback script.
 4. Commit or otherwise checkpoint the code version before applying the migration to live Oracle.
-5. For broad or destructive DDL, create or confirm a VirtualBox snapshot before applying anything.
+5. Choose recovery proportional to the change. For reversible package changes and additive empty metadata in the explicitly isolated dev RABAEV, save the affected sources/manifest and paired rollback; a full VM/database snapshot is not required. For destructive data changes or a broad cutover, define recovery for that concrete scope. Do not start VM/database copying as a routine package-install gate; the owner explicitly rejected that cost on 2026-10-08.
 6. Apply to live Oracle only after explicit permission when the operation can mutate data or structure.
 7. Verify:
    - connection target is `RABAEV@127.0.0.1:1521/orcl`

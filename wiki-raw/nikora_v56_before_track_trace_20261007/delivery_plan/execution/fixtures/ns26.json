@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS26",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Мягкий резерв 100; W1 требует 40; W2 требует 60; FRESH спрос 20 и фактический приход 0/20",
+  "scenarios": [
+    {
+      "id": "NS26-TC01",
+      "initial": "W1",
+      "action": "Перевести 40 в жёсткий",
+      "expected": "Мягкий 60 и жёсткий 40, общий 100",
+      "mandatory": true
+    },
+    {
+      "id": "NS26-TC02",
+      "initial": "Параллельные W1/W2",
+      "action": "Резервировать",
+      "expected": "Общий резерв не превышает пригодный запас",
+      "mandatory": true
+    },
+    {
+      "id": "NS26-TC03",
+      "initial": "Фреш до прихода",
+      "action": "Запустить обеспечение",
+      "expected": "Нет жёсткого резерва из вымышленного остатка",
+      "mandatory": true
+    },
+    {
+      "id": "NS26-TC04",
+      "initial": "Фреш после приёмки 20",
+      "action": "Обеспечить волну",
+      "expected": "Жёсткий резерв 20, источник фактического прихода сохранён",
+      "mandatory": true
+    },
+    {
+      "id": "NS26-TC05",
+      "initial": "Отмена W2",
+      "action": "Проверить W1",
+      "expected": "Жёсткий резерв W1 не освобождён",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

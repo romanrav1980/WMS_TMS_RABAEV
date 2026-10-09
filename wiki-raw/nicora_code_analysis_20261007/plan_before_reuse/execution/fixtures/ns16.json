@@ -1,0 +1,61 @@
+{
+    "namespace":  "DS-NS16",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "ERP SKU E-D10→D10, адрес E-S1→S1, сообщения D1/D1-copy; неоднозначный E-X; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS16-TC01",
+                          "initial":  "D1 и повтор",
+                          "action":  "Загрузить справочники",
+                          "expected":  "Одна карточка и одно соответствие кода",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS16-TC02",
+                          "initial":  "E-X имеет два адреса",
+                          "action":  "Импортировать",
+                          "expected":  "Ошибка неоднозначности, план не использует случайный адрес",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS16-TC03",
+                          "initial":  "Нет упаковки",
+                          "action":  "Импортировать SKU",
+                          "expected":  "Карточка не допущена, причина возвращена",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS16-TC04",
+                          "initial":  "Рабочий адаптер",
+                          "action":  "Сверить чтением после передачи",
+                          "expected":  "Принятые данные реально находятся в целевой БД",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS16-TT01",
+                          "initial":  "Действующая версия профиля SAP",
+                          "action":  "Передать более старую или неполную настройку",
+                          "expected":  "Старая версия не перезаписывает новую; неполная обязательность отклонена и имеет владельца",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS16-TT02",
+                          "initial":  "Согласованные тестовые контуры CRPT и ЕГАИС",
+                          "action":  "Выполнить отдельные допустимые проверки и получить ответы",
+                          "expected":  "Каждый адаптер имеет доказательство своего формата и квитанции; успех одного не принимается за успех другого; mock только PASS_CONTRACT",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS16-TT03",
+                          "initial":  "Новый профиль OTHER_TEST по общему договору",
+                          "action":  "Подключить адаптер и провести событие",
+                          "expected":  "Складской баланс не переписан, типы и статусы нового профиля изолированы; неизвестная обязательная система блокирует операцию",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

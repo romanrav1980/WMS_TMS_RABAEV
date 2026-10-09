@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS20",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Хранение B2 срок 05.11; EXP-IN B1 срок 31.10; FEFO; адреса S1 близкий высокий и S2 дальний подходящий по высоте",
+  "scenarios": [
+    {
+      "id": "NS20-TC01",
+      "initial": "B1 с приёмки",
+      "action": "Выбрать источник",
+      "expected": "B1 выбран по FEFO до B2 хранения",
+      "mandatory": true
+    },
+    {
+      "id": "NS20-TC02",
+      "initial": "SKU нет в хранении",
+      "action": "Разместить подходящий приход",
+      "expected": "Отбор рассматривается первым с проверкой ёмкости",
+      "mandatory": true
+    },
+    {
+      "id": "NS20-TC03",
+      "initial": "Приоритет скорости",
+      "action": "Выбрать хранение",
+      "expected": "Близкий пригодный адрес имеет приоритет",
+      "mandatory": true
+    },
+    {
+      "id": "NS20-TC04",
+      "initial": "Приоритет высоты с ограничением 20 м",
+      "action": "Выбрать S2 в 50 м",
+      "expected": "Удалённый адрес не выбирается вне разрешённого расстояния",
+      "mandatory": true
+    },
+    {
+      "id": "NS20-TC05",
+      "initial": "Занятый адрес",
+      "action": "Выдать размещение",
+      "expected": "Не допускается конфликт размещений",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

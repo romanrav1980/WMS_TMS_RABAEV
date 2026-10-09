@@ -1,0 +1,54 @@
+{
+    "namespace":  "DS-NS19",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "D10 в OLD1=40; NEW1 свободна; B1/B2 с разными сроками; mixing=false; резерв категории задан администратором; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS19-TC01",
+                          "initial":  "mixing=false",
+                          "action":  "Подать B2 в занятую B1 ячейку",
+                          "expected":  "Отказ",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS19-TC02",
+                          "initial":  "mixing=true для D10",
+                          "action":  "Подать B2",
+                          "expected":  "Разрешено только в отборе и при достаточной ёмкости",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS19-TC03",
+                          "initial":  "Потребность 30, OLD1=40",
+                          "action":  "Пополнить NEW1",
+                          "expected":  "Новая подача не нужна",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS19-TC04",
+                          "initial":  "Потребность 60, OLD1=40",
+                          "action":  "Планировать подачу",
+                          "expected":  "Допускается новый диапазон для дефицита, оба маршрута односторонние",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS19-TC05",
+                          "initial":  "Резерв другой категории",
+                          "action":  "Назначить",
+                          "expected":  "Не присваивается автоматически",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS19-TT01",
+                          "initial":  "Разрешённое смешение партий в отборе и индивидуальный код без достоверной партии",
+                          "action":  "Попытаться списать старейшую партию вместо проверки",
+                          "expected":  "Обязательная фактическая принадлежность не подменена; единица имеет исключение и не выпускается автоматически",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

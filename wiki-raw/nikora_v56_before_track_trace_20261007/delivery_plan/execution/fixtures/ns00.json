@@ -1,0 +1,31 @@
+{
+  "namespace": "DS-NS00",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Контур ORCL/RABAEV, 2 интерфейса, набор DS-BASE, существующая схема RABAEV и очистка только синтетического набора",
+  "scenarios": [
+    {
+      "id": "NS00-TC01",
+      "initial": "Чистая среда",
+      "action": "Развернуть API и интерфейсы по паспорту",
+      "expected": "API и оба интерфейса отвечают, версии записаны, ручных скрытых шагов нет",
+      "mandatory": true
+    },
+    {
+      "id": "NS00-TC02",
+      "initial": "ORCL/RABAEV",
+      "action": "Выполнить сброс тестовых данных",
+      "expected": "Удалены только строки набора DS-BASE, рабочий запас не изменён",
+      "mandatory": true
+    },
+    {
+      "id": "NS00-TC03",
+      "initial": "Прерывание запуска",
+      "action": "Перезапустить процесс",
+      "expected": "Приложение готово, зафиксированный тестовый факт сохранён",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

@@ -33,10 +33,6 @@ function Stop-ProcessTree {
       ($_.CommandLine -and $_.CommandLine -like "*parent_pid=$ProcessId*")
     }
 
-  foreach ($child in $children) {
-    Stop-ProcessTree -ProcessId ([int]$child.ProcessId)
-  }
-
   $process = Get-Process -Id $ProcessId -ErrorAction SilentlyContinue
   if ($process) {
     Write-Host "Stopping process PID $ProcessId ($($process.ProcessName))..."
@@ -50,6 +46,12 @@ function Stop-ProcessTree {
   } else {
     Write-Host "Process PID $ProcessId is not visible to Get-Process, trying taskkill tree..."
     & taskkill.exe /PID $ProcessId /T /F | Out-Host
+  }
+
+  # Stop the supervisor first: otherwise Uvicorn can respawn a killed child
+  # before the parent is terminated, leaving a new listener outside the snapshot.
+  foreach ($child in $children) {
+    Stop-ProcessTree -ProcessId ([int]$child.ProcessId)
   }
 }
 

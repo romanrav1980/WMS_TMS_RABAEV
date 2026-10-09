@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS63",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Полная смена 18:00–04:00, DRY/CHILL/FRESH, дежурный рич, весы и терминалы, все Q01–Q28",
+  "scenarios": [
+    {
+      "id": "NS63-TC01",
+      "initial": "Ночной цикл",
+      "action": "Выполнить",
+      "expected": "Операционный день и фактические времена корректны",
+      "mandatory": true
+    },
+    {
+      "id": "NS63-TC02",
+      "initial": "Пустая ячейка в 03:00",
+      "action": "Восстановить",
+      "expected": "Дежурный ресурс, общий таймер 5 минут",
+      "mandatory": true
+    },
+    {
+      "id": "NS63-TC03",
+      "initial": "Несколько подскладов",
+      "action": "Погрузить",
+      "expected": "Рейс ждёт фактические места всех частей",
+      "mandatory": true
+    },
+    {
+      "id": "NS63-TC04",
+      "initial": "Весовая ошибка",
+      "action": "Исправить",
+      "expected": "Нет выпуска без нового допустимого состава",
+      "mandatory": true
+    },
+    {
+      "id": "NS63-TC05",
+      "initial": "Закрыть смену",
+      "action": "Сверить",
+      "expected": "Товар, тара и затраты сходятся, все обязательные сценарии пройдены без подмены оборудования",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

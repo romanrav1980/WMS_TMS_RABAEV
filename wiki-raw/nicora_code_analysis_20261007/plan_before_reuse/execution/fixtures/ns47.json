@@ -1,0 +1,54 @@
+{
+    "namespace":  "DS-NS47",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "R1/T32 на G1; план 32 ROLL-A; HU1 допущен; HU-X чужого R2; HU-RED красный; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS47-TC01",
+                          "initial":  "HU1 и T32",
+                          "action":  "Подтвердить погрузку",
+                          "expected":  "Зафиксированы груз, конкретная машина, рейс, исполнитель и время",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS47-TC02",
+                          "initial":  "Повтор HU1",
+                          "action":  "Сканировать",
+                          "expected":  "Количество мест не увеличилось",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS47-TC03",
+                          "initial":  "HU-X или HU-RED",
+                          "action":  "Грузить",
+                          "expected":  "Отказ",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS47-TC04",
+                          "initial":  "33-е ROLL-A",
+                          "action":  "Грузить",
+                          "expected":  "Превышение сообщено диспетчеру до подтверждения",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS47-TC05",
+                          "initial":  "Дочерняя коробка",
+                          "action":  "Посчитать вместимость",
+                          "expected":  "Не добавляет второе физическое место",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS47-TT01",
+                          "initial":  "Состав готов, обязательная до отправления квитанция отсутствует",
+                          "action":  "Подтвердить отпуск, затем получить положительный результат",
+                          "expected":  "До требуемого ответа отпуск блокирован; после него ровно один допустимый факт, HTTP 200 сам по себе не даёт допуска",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

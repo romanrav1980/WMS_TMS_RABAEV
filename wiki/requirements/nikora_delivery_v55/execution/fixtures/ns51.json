@@ -1,0 +1,61 @@
+{
+    "namespace":  "DS-NS51",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "Источники A/B, HU-A/HU-B для S1; подвоз SH1/SH2; целевой R1; целевые ворота G1; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS51-TC01",
+                          "initial":  "HU-A/SH1",
+                          "action":  "Выгрузить, принять, развезти",
+                          "expected":  "Один подтверждённый факт приёмки и адрес G1",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS51-TC02",
+                          "initial":  "Повтор входного SSCC",
+                          "action":  "Принять",
+                          "expected":  "Нет второго прихода",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS51-TC03",
+                          "initial":  "SH2 задержан",
+                          "action":  "Пытаться выпустить R1",
+                          "expected":  "Решение ожидания или переноса принимает диспетчер, HU-B не скрыт",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS51-TC04",
+                          "initial":  "Недостача HU-B",
+                          "action":  "Изменить целевой рейс",
+                          "expected":  "Реестр ошибки и новое назначение сохранены",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS51-TC05",
+                          "initial":  "Приёмка A на кросс-доке",
+                          "action":  "Передать статус",
+                          "expected":  "Не создаётся магазинная доставка S1",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS51-TC06",
+                          "initial":  "Температурное отклонение",
+                          "action":  "Оформить",
+                          "expected":  "Решение диспетчера и режим задания записаны, автоматического датчика не требуется",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS51-TT01",
+                          "initial":  "Маркированная паллета принята на кросс-доке",
+                          "action":  "Разделить по назначениям и подтвердить передачу",
+                          "expected":  "Коды не созданы заново; у каждого один текущий груз и источник, применимые документы соответствуют получателям",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

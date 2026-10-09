@@ -69,6 +69,7 @@ namespace WindowsApplication2
 
         private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
+            if (TryPostExplicitCount(e)) return;
 
             string cell="";
             int revision_id1 = 0;
@@ -418,12 +419,12 @@ namespace WindowsApplication2
                 return;
             }
             if (articul2 == "") return;
-            double count1 = _parent.obj2double (t_count1.Text);
+            decimal count1 = InventoryDecimal(t_count1.Text);
             DateTime expiury_date = (t_expiury_date.Value);
-            double brak_perc1 = _parent.obj2double(t_brak_perc1.Text);
+            decimal brak_perc1 = InventoryDecimal(t_brak_perc1.Text);
             int pall_n = _parent.obj2int32(t_pall_n.Text);
-            double pall_weight1 = _parent.obj2double(t_pall_weight1.Text);
-            double tn_weight1 = _parent.obj2double(t_tn_weight1.Text);
+            decimal pall_weight1 = InventoryDecimal(t_pall_weight1.Text);
+            decimal tn_weight1 = InventoryDecimal(t_tn_weight1.Text);
             int count_kor1 = _parent.obj2int32(t_count_kor1.Text);
             int fasovka_id1 = 0;
             if (modifications.ContainsKey(t_fasovka.Text))
@@ -446,8 +447,13 @@ namespace WindowsApplication2
             values2["user_id2"] = _parent.wms_user.user_id;
             values2["NAKLAD_ID"] = NAKLAD_ID;
 
-            string pall_number3 = _parent.obj2str(_parent.wms_get_spfunction_value2("REVIZION.RRL_INV_CREATE_LINE5", 
-                values2, OracleType.VarChar, 255));
+            string pall_number3;
+            try
+            {
+                pall_number3 = PostInventoryFunction("REVIZION.RRL_INV_CREATE_LINE5", values2,
+                    "INVENTORY_PALLET:" + NAKLAD_ID + ":" + articul2 + ":" + cell1 + ":" + pall_n);
+            }
+            catch (Exception error) { MessageBox.Show(error.Message); return; }
 
             if (pall_number3 == "EXISTS")
             {
@@ -492,6 +498,17 @@ namespace WindowsApplication2
 
         private void очиститьОтрицаткельныеОстаткиПоДаннойРевизииToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (StockReleaseState() != "PREPARED")
+                {
+                    if (dataGridView1.CurrentRow != null)
+                        OpenLotInventory(_parent.obj2int32(dataGridView1.CurrentRow.Cells[0].Value),
+                            dataGridView2.CurrentRow == null ? "" : _parent.obj2str(dataGridView2.CurrentRow.Cells[1].Value));
+                    return;
+                }
+            }
+            catch (Exception error) { MessageBox.Show(error.Message); return; }
 
             Dictionary<string, object> values2 = new Dictionary<string, object>();
             int rev_id = _parent.obj2int32(dataGridView1.CurrentRow.Cells[0].Value);

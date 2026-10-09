@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS60",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "33 ROLL-A, T32, матрица трёх тестовых адресов, сроки и нормы из NS24; план P1",
+  "scenarios": [
+    {
+      "id": "NS60-TC01",
+      "initial": "Автоплан",
+      "action": "Рассчитать",
+      "expected": "Ни один рейс не превышает 32, исключённый заказ имеет объяснение либо создан допустимый дополнительный рейс",
+      "mandatory": true
+    },
+    {
+      "id": "NS60-TC02",
+      "initial": "Повтор применения P1",
+      "action": "Применить",
+      "expected": "Нет второй копии рейсов и назначений",
+      "mandatory": true
+    },
+    {
+      "id": "NS60-TC03",
+      "initial": "Solver недоступен",
+      "action": "Выполнить",
+      "expected": "Ошибка видима, ручной план не повреждён",
+      "mandatory": true
+    },
+    {
+      "id": "NS60-TC04",
+      "initial": "Ручной и автоматический план",
+      "action": "Сверить",
+      "expected": "Одинаковые обязательные ограничения",
+      "mandatory": true
+    },
+    {
+      "id": "NS60-TC05",
+      "initial": "Консолидация в плане",
+      "action": "Применить",
+      "expected": "Не увеличивает разрешённую вместимость",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

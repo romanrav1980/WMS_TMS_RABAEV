@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS37",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "O1=12/O2=8 FRESH; план в 18:00; приход 20 в 19:30 в EXP-IN; запуск после 20:00",
+  "scenarios": [
+    {
+      "id": "NS37-TC01",
+      "initial": "До 19:30",
+      "action": "Попытаться обеспечить",
+      "expected": "Физического резерва нет, ожидание прихода",
+      "mandatory": true
+    },
+    {
+      "id": "NS37-TC02",
+      "initial": "После приёмки 20",
+      "action": "Распределить",
+      "expected": "12/8, источник EXP-IN, стеллажное хранение не требуется",
+      "mandatory": true
+    },
+    {
+      "id": "NS37-TC03",
+      "initial": "Пришло 15 вместо 20",
+      "action": "Запустить полную исходную волну",
+      "expected": "Нет скрытого полного обеспечения, дефицит виден",
+      "mandatory": true
+    },
+    {
+      "id": "NS37-TC04",
+      "initial": "Повтор скана",
+      "action": "Подтвердить",
+      "expected": "Запас не выдан дважды",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

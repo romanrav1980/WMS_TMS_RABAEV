@@ -1,0 +1,9 @@
+declare v varchar2(20);begin select STATE into v from RRL_STOCK_RELEASE where RELEASE_ID=1;if v!='PREPARED' then raise_application_error(-20808,'REGISTRY_REQUIRES_PREPARED');end if;end;
+/
+
+update RRL_STOCK_WRITER_REGISTRY set STATE='RETIRED',SOURCE_HASH='096e0a271a6cbba9145cebaa25197b861d515d74e46387446861df08ec3086b0',ADAPTER_REFERENCE='db/migrations/2026-10-08_stock_posting_core/147_receipt_entrypoints.sql; wiki-raw/wms_admin_ui_reference/receiving.html',UPDATED_AT=systimestamp where WRITER_KEY='ORACLE:PROCEDURE:RRL_ACCEPT_ORDER2';
+update RRL_STOCK_WRITER_REGISTRY set STATE='RETIRED',SOURCE_HASH='311123033aa90a49b5bb086cf86d7988e2831a0cf12238fe294d02325740efca',ADAPTER_REFERENCE='db/migrations/2026-10-08_stock_posting_core/147_receipt_entrypoints.sql; wiki-raw/wms_admin_ui_reference/receiving.html',UPDATED_AT=systimestamp where WRITER_KEY='ORACLE:PROCEDURE:RRL_ACCEPT_ORDER2_2';
+update RRL_STOCK_WRITER_REGISTRY set STATE='RETIRED',SOURCE_HASH='c35e178fc6db44cc6dee1e628337fa0a0b23cf78b0fa29918c517a7783a0a5e8',ADAPTER_REFERENCE='db/migrations/2026-10-08_stock_posting_core/147_receipt_entrypoints.sql; wiki-raw/wms_admin_ui_reference/receiving.html',UPDATED_AT=systimestamp where WRITER_KEY='ORACLE:FUNCTION:RRL_ACCEPT_ORDER2_3';
+update RRL_STOCK_WRITER_REGISTRY set STATE='RETIRED',SOURCE_HASH='2b33323aa2ea62f9890fbe1b946d3943b4bf275fd3dcf21fb75e58b33c2c42c7',ADAPTER_REFERENCE='db/migrations/2026-10-08_stock_posting_core/147_receipt_entrypoints.sql; wiki-raw/wms_admin_ui_reference/receiving.html',UPDATED_AT=systimestamp where WRITER_KEY='ORACLE:PROCEDURE:RRL_ACCEPT_ORDER3';
+update RRL_STOCK_WRITER_REGISTRY set STATE='RETIRED',SOURCE_HASH='bca88147361e200f0638dac37766096889790d37c4e1d73059acf5b34a651c83',ADAPTER_REFERENCE='db/migrations/2026-10-08_stock_posting_core/147_receipt_entrypoints.sql; wiki-raw/wms_admin_ui_reference/receiving.html',UPDATED_AT=systimestamp where WRITER_KEY='ORACLE:PROCEDURE:RRL_OTKAT_ORDER2';
+commit;

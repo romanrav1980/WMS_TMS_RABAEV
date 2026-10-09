@@ -1,0 +1,47 @@
+{
+    "namespace":  "DS-NS21",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "D10=100; O1=40/O2=30/O3=30; shipFromStock=true; ни одной волны; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS21-TC01",
+                          "initial":  "Три заказа",
+                          "action":  "Рассчитать мягкий резерв",
+                          "expected":  "40+30+30=100, резерв не привязан к волне",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS21-TC02",
+                          "initial":  "Два параллельных расчёта",
+                          "action":  "Повторить",
+                          "expected":  "Совокупный резерв 100, а не 200",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS21-TC03",
+                          "initial":  "Отмена O2",
+                          "action":  "Освободить резерв",
+                          "expected":  "O1/O3 остаются 40/30, освобождены только 30",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS21-TC04",
+                          "initial":  "FRESH без флага и без прихода",
+                          "action":  "Планировать",
+                          "expected":  "Не создан физический мягкий резерв ожидаемого товара",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS21-TT01",
+                          "initial":  "12 единиц, две имеют обязательный HOLD маркировки",
+                          "action":  "Рассчитать доступную потребность",
+                          "expected":  "Без иных ограничений доступны 10; второй профиль и двойной ответ не увеличивают доступное количество",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

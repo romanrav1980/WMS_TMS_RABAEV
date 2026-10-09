@@ -1,24 +1,91 @@
-﻿# TMS Wiki Index
+# TMS Wiki Index
+- [database/nicora_stock_posting_cutover_20261009.md](database/nicora_stock_posting_cutover_20261009.md): актуальный статус — RABAEV ACTIVE, B0 сохранён, compatibility OFF, registry 25/6/0; реальные replay/concurrency/rollback cases прошли.
+- [database/nicora_stock_posting_case_shipment_20261009.md](database/nicora_stock_posting_case_shipment_20261009.md): 197–207, CASE → существующая СТ, whole-carrier shipment, защита packed stock и Decimal MES; APPLIED, registry 23/6/2, PREPARED.
+
+- [database/nicora_stock_posting_case_20261008.md](database/nicora_stock_posting_case_20261008.md): 159–169, физический CASE carrier/HARD, QR и durable ТСД, whole carrier move; PREPARED, полный переход открыт.
+
+- [database/nicora_stock_posting_revision_20261008.md](database/nicora_stock_posting_revision_20261008.md): 151–158, REVIZION EA/BOX и создание паллеты через ядро, atomic row projection, Decimal/durable WinForms; PREPARED, без cutover.
+
+- [database/nicora_stock_posting_receipt_inventory_20261008.md](database/nicora_stock_posting_receipt_inventory_20261008.md): компоненты 131–150; сторно, native inventory, metadata fences, замена автоматической приёмки существующим SAP экраном; 19 ADAPTED / 5 RETIRED / 7 UNCONVERTED, PREPARED.
+
+- [database/nicora_stock_posting_continuation_20261008.md](database/nicora_stock_posting_continuation_20261008.md): компоненты 121–130, импорт и пересчёт инвентаризации, outbox состава, повторы WinForms/sync/MES и исправление вызовов API; 47 pairs, 10 ADAPTED / 21 UNCONVERTED, PREPARED.
+
+- [database/nicora_dev_stock_reset_20261008.md](database/nicora_dev_stock_reset_20261008.md): owner-authorized reset; stock and journal 0, existing documents retained, PREPARED.
 
 This is the maintained knowledge map for the TMS repository.
 
-## NIKORA ? ???????????? ?????? ? cross-dock
 
-- [roadmap/nikora_agent_delivery_plan.md](roadmap/nikora_agent_delivery_plan.md): ?????????? ??????????? ? 10 ????????????? + 28 ?????????????? ????????, S0 ? ??? ??????; ??????, ?????, ??????, API/????????????? ? ????? ????????? ??? ???????????.
-- [??????? 41 ??????????????? ??](requirements/nikora_sprints/index.md), [????? ??????? ???????](requirements/nikora_sprint_contract.md), [?????? ???????](runbooks/nikora_agent_launch.md): bounded tickets, ??????????? ?????, ????????? ? stop rules.
-- [sources/nikora_agents_20260915.md](sources/nikora_agents_20260915.md): ????/??????????? ?????????, ??? ????????? ???????????? ?????? 2 ? 16 ??, ????????? ? ????????? ???????? ?????.
-- [requirements/nikora_ui_workplaces_tz.md](requirements/nikora_ui_workplaces_tz.md): ?? 15 ??????? ????; ????????????????? WMS/TMS, ?????????, ????? ? ???????.
-- [requirements/nikora_ui_quality_tz.md](requirements/nikora_ui_quality_tz.md): ??? ??????????? ???????, ??????, ??? ? ?????? ?? ?????? ???????.
-- [requirements/nikora_ui_reachtruck_tz.md](requirements/nikora_ui_reachtruck_tz.md): ??????? ???????????? ??? ???????? ????????.
-- [requirements/nikora_ui_reachtruck_dispatch_tz.md](requirements/nikora_ui_reachtruck_dispatch_tz.md): ????????? ?????????, ??????????? ?????, ??????? ? ?????????? ??????????????.
-- [roadmap/nikora_ui_subsprints.md](roadmap/nikora_ui_subsprints.md): 23 ??????????? ?????????????? ??????????; A1/A2/A2.Q/A3 ????????, ERP-?????????? ??????.
-- [??????? ? 25 ????????](../wiki-raw/nikora_ui_20260915/README.md): 15 ??????? ????, ???????? ?/?, offline QA; ?? ?????????? ??????.
-- [requirements/nikora_gap_analysis_20260915.md](requirements/nikora_gap_analysis_20260915.md): ?????? ??????????? ?? 1.3 / XML 1.1.0 ? ?????????? ????, GAP ? ???????????? ??????????.
-- [architecture/nikora_minimal_extension.md](architecture/nikora_minimal_extension.md): ??????????? ?????????? TMS/WMS ??? ?????? ????, ??????? ?? ????????? ? ???????????.
-- [roadmap/nikora_architecture_sprints.md](roadmap/nikora_architecture_sprints.md): ????????? ????????????? ?????????? A1/A2/A2.Q/A3 ? ???????? ???????.
-- [roadmap/nikora_functional_sprints.md](roadmap/nikora_functional_sprints.md): ?????????????? ????? F1?F7 ?? ??????? ?? 23 ??????????, AT-01?36 ? ?????.
-- F1 ??????????????? ????? ?????????? ? ???????????? XML API ERP?TMS: ??????/???????? ? OrderManifest ?? ?????; ??????? ??????, ????????????? ???????????, ???? ? ??????? ???????? ? ?? ??????.
-- [sources/nikora_20260915.md](sources/nikora_20260915.md): ????? ????????? Drive, ?????? ???????? ??????, ?????? offline-???????? ? ??????????? ?????????????.
+## Работа с документацией
+
+- [runbooks/markdown_preview.md](runbooks/markdown_preview.md): Markdown Preview Enhanced и текстовый редактор.
+
+## Общий стандарт розничной логистики
+
+- [Опросник WMS табачных хабов — редакция 2.0](requirements/tobacco_regional_hubs/supplier_questionnaire_v2/questionnaire.md): 18.09.2026, 100 вопросов; помарочный учёт, собственники, SAP и Track & Trace.
+- [requirements/tobacco_regional_hubs/README.md](requirements/tobacco_regional_hubs/README.md): отраслевой профиль региональных табачных хабов 17.09.2026, 52 требования и вопроса.
+- [requirements/retail_convenience_standard/README.md](requirements/retail_convenience_standard/README.md): стандарт магазинов у дома, 17.09.2026, WMS/TMS требования, опросники и GAP.
+
+- [incidents/oracle_apply_unhandled_exception_20261008.md](incidents/oracle_apply_unhandled_exception_20261008.md): OracleApply error handling repaired; fixed runtime DLL used by stock installer.
+
+- [database/nicora_stock_posting_handlers.md](database/nicora_stock_posting_handlers.md): Components through 130: native inventory, event bridge, native move/shipment and MES, exact UOM, receipt/putaway and wave HARD; 10 ADAPTED / 21 UNCONVERTED, PREPARED, no B0/cutover.
+
+- [database/nicora_stock_posting_extension_20261008.md](database/nicora_stock_posting_extension_20261008.md): native MES/picking/wave, inventory command, own shipment, JSON binds; 47 pairs VALID, PREPARED, no physical acceptance/cutover.
+- [incidents/oracle_stock_json_bindings_20261008.md](incidents/oracle_stock_json_bindings_20261008.md): ORA-40573 corrected; rollback-only attempt rejected dirty transaction; no physical acceptance claim.
+
+## NIKORA — межскладской подвоз и cross-dock
+
+- [Локальное администрирование ORCL](runbooks/nicora_oracle_local_admin.md): существующая OS-сессия, SYSDBA без сохранения пароля; три grants RABAEV выданы. [Инцидент VirtualBox](incidents/oracle_live_snapshot_20261008.md): live snapshot был избыточным для установки пакетов, дальнейшие обратимые изменения выполняются с source checkpoint/rollback.
+
+- [Реализация проводки 2.0](database/nicora_stock_posting_implementation.md): 08.10.2026, очистка dev выполнена, foundation и runtime 016 APPLIED; 9 package + 9 body VALID, grants выданы. Coordinator/planner/manual move/signed legs/outbox установлены. PREPARED, новых operations 0, 31 legacy writer UNCONVERTED. Обратимые следующие изменения — source checkpoint/rollback без VM snapshot; полного cutover ещё нет.
+
+- [ТЗ достоверных остатков и единой проводки](requirements/stock_posting_core_tz.md): 07.10.2026, редакция 2.0. Математика P/H, перенос резерва, однозначный stock key, полный порядок fences/anchors и матрица существующих таблиц, whole-operation rollback/replay; 42 сценария будущей приёмки. Карантин через недоступные ячейки. Один cutover, compatibility default OFF; реализация/мощность ещё не подтверждены.
+- [Целевой контракт базы для проводки](database/nicora_stock_posting_target.md): подтверждённые metadata ограничения текущей RABAEV и проектируемые изменения; новое ядро/DDL не установлены.
+
+- [runbooks/nicora_ni03_task_effect.md](runbooks/nicora_ni03_task_effect.md): NI03 начат — существующее warehouse completion/domain effect объединено транзакцией, WAVE movement через RRL_EVENTS, частичный резерв/residual и durable replay; 010 установлена в RABAEV. Остальной NI03 не закрыт.
+
+- [Текущий NI03 и история рекомендации по проводке](database/nicora_ni03_task_effect.md): явная PL/SQL-команда/журнал предложены ранее; последующее решение владельца — один cutover всей системы и compatibility OFF по умолчанию, см. новое ТЗ.
+
+- [components/nicora_global_reuse_analysis_20261007.md](components/nicora_global_reuse_analysis_20261007.md): глобальное сопоставление текущего WMS/TMS и предложений; все 15 процессов/21 справочник, аудит новых стыков и найденных dev-заглушек.
+- [components/nicora_capability_matrix_20261007.md](components/nicora_capability_matrix_20261007.md): 35 возможностей с исходниками и решением reuse/extend. Вложенные SSCC уже есть в CRPT-агрегации; складской жизненный цикл не завершён.
+
+- [components/nicora_order_trip_reuse.md](components/nicora_order_trip_reuse.md): SAP подключён к существующим ORDERS/SBORKA writers и PLANNED fulfillment; назначение через прежний TMS API/TRANSTASK_ID, migration 009 в RABAEV. Auto-split dev stub требует оригинального body.
+
+- [runbooks/nicora_ni01_sap_retail.md](runbooks/nicora_ni01_sap_retail.md): NI01 baseline implemented with gaps, 001–007 в RABAEV; общий допуск stock/прямой отбор/сквозной состав в NI03–NI05. Промышленная приёмка не проводилась.
+
+- [Основной план NICORA: NI01–NI08 revision 10](requirements/nikora_delivery_v55/implementation_plan.md): полностью пересмотрен после глобального анализа. Следующая функция NI03 — товарные эффекты действующих заданий; NI04 — вложенные SSCC/точный состав. TMS/VRP/Ганта/billing повторно не создаются; 68 NS и 363 сценария сохранены.
+- [components/nicora_approved_code_analysis.md](components/nicora_approved_code_analysis.md): анализ утверждённых исходников, карта существующих механизмов и необходимых стыков; 434 source hashes и 23 Oracle source definitions, без новых тестов.
+- [sources/nicora_code_baseline_proposal_20261007.md](sources/nicora_code_baseline_proposal_20261007.md): источники утверждены владельцем; текущие локальные файлы с незакоммиченными изменениями, корневой WindowsApplication2, RABAEV.
+- [components/nicora_existing_wms_reuse.md](components/nicora_existing_wms_reuse.md): первоначальный разбор старой WMS, затем сверенный по утверждённому baseline.
+- [components/nicora_source_structure.md](components/nicora_source_structure.md): фактическая структура и модульное развитие; минимум 80% ресурсов на функционал.
+- [requirements/nikora_delivery_v55/README.md](requirements/nikora_delivery_v55/README.md): план доработок редакции 57; основная очередь NI01–NI08, каталог NS00–NS67, старые оценки сняты.
+- [runbooks/nicora_ns00_environment.md](runbooks/nicora_ns00_environment.md): ядро NS00 реализовано в RABAEV, source review APPROVE_SOURCE; дополнительные прогоны/cold install остановлены, временная копия Oracle выключена.
+- [architecture/nikora_technology_stack_20261007.md](architecture/nikora_technology_stack_20261007.md): приняты FastAPI/Python, React/TypeScript и Oracle; мощность не объявлена подтверждённой.
+- [roadmap/nikora_requirements_to_production.md](roadmap/nikora_requirements_to_production.md): прежний порядок анализа/выпуска; текущая очередь — NI01–NI08.
+- [requirements/nikora_business_processes/restart_context.md](requirements/nikora_business_processes/restart_context.md): текущая редакция 57 и утверждённый baseline; [open_questions.md](requirements/nikora_business_processes/open_questions.md) — решения Q01–Q28.
+- [requirements/nikora_business_processes/README.md](requirements/nikora_business_processes/README.md): редакция 57, 15 процессов, 21 справочник; приёмка SAP, маркировка/данные RABAEV; [Word](requirements/nikora_business_processes/Nikora_business_processes_v57.docx), [проверка документа](requirements/nikora_business_processes/editorial_review_v57.md).
+- [requirements/nikora_retail_selection/README.md](requirements/nikora_retail_selection/README.md): retail RFP 16.09.2026.
+- [roadmap/nikora_crossdock_first.md](roadmap/nikora_crossdock_first.md): прежний cross-dock план, не заменяет текущий NI-план.
+- [requirements/nikora_crossdock_increments.md](requirements/nikora_crossdock_increments.md): исторические срезы CD00–CDP и критерии интеграции.
+- [roadmap/nikora_crossdock_agent_map.md](roadmap/nikora_crossdock_agent_map.md): исторические назначения CD.
+- [tools/nikora_orchestrator/README.md](../tools/nikora_orchestrator/README.md): локальный state-machine runner; автоматические прогоны не запускать вопреки текущему поручению.
+
+
+
+- [roadmap/nikora_agent_delivery_plan.md](roadmap/nikora_agent_delivery_plan.md): актуальная детализация — 10 архитектурных + 28 функциональных спринтов, S0 и два пилота; модели, сроки, токены, API/электричество и время владельца без амортизации.
+- [Каталог 41 индивидуального ТЗ](requirements/nikora_sprints/index.md), [общий договор приёмки](requirements/nikora_sprint_contract.md), [запуск агентов](runbooks/nikora_agent_launch.md): bounded tickets, независимые тесты, установка и stop rules.
+- [sources/nikora_agents_20260915.md](sources/nikora_agents_20260915.md): цены/официальные источники, уже купленный незапущенный сервер 2 × 16 ГБ, допущения и локальная проверка сметы.
+- [requirements/nikora_ui_workplaces_tz.md](requirements/nikora_ui_workplaces_tz.md): ТЗ 15 рабочих мест; переиспользование WMS/TMS, состояния, права и приёмка.
+- [requirements/nikora_ui_quality_tz.md](requirements/nikora_ui_quality_tz.md): два независимых прохода, осмотр, вес и допуск по версии состава.
+- [requirements/nikora_ui_reachtruck_tz.md](requirements/nikora_ui_reachtruck_tz.md): быстрый одноэкранный ТСД водителя ричтрака.
+- [requirements/nikora_ui_reachtruck_dispatch_tz.md](requirements/nikora_ui_reachtruck_dispatch_tz.md): диспетчер ричтраков, очередность задач, ресурсы и безопасное переназначение.
+- [roadmap/nikora_ui_subsprints.md](roadmap/nikora_ui_subsprints.md): 23 законченных функциональных подспринта; A1/A2/A2.Q/A3 отдельно, ERP-интеграция первой.
+- [Галерея и 25 рисунков](../wiki-raw/nikora_ui_20260915/README.md): 15 рабочих мест, варианты А/Б, offline QA; не внедрённые экраны.
+- [requirements/nikora_gap_analysis_20260915.md](requirements/nikora_gap_analysis_20260915.md): анализ актуального ТЗ 1.3 / XML 1.1.0 и локального кода, GAP и противоречия требований.
+- [architecture/nikora_minimal_extension.md](architecture/nikora_minimal_extension.md): минимальное расширение TMS/WMS без замены ядра, решение по сущностям и транзакциям.
+- [roadmap/nikora_architecture_sprints.md](roadmap/nikora_architecture_sprints.md): отдельные архитектурные инкременты A1/A2/A2.Q/A3 и критерии приёмки.
+- [roadmap/nikora_functional_sprints.md](roadmap/nikora_functional_sprints.md): функциональные этапы F1–F7 со ссылкой на 23 подспринта, AT-01…36 и пилот.
+- F1 функционального плана начинается с двустороннего XML API ERP↔TMS: адреса/артикулы и OrderManifest на входе; статусы сборки, межскладского перемещения, пути и приёмки магазина — на выходе.
+- [sources/nikora_20260915.md](sources/nikora_20260915.md): новые документы Drive, снимок рабочего дерева, свежие offline-проверки и ограничения доказательств.
 
 Start here for a fresh session:
 
@@ -44,16 +111,22 @@ Start here for a fresh session:
 
 ## Architecture
 
+- [architecture/nicora_modular_development_contract.md](architecture/nicora_modular_development_contract.md): договор модульности; действующий режим ресурсов/проверок определяется последним поручением владельца.
+
 - [architecture/tms2_system_map.md](architecture/tms2_system_map.md): architecture map for the active TMS-2 transport replacement, covering frontend, FastAPI, service layer, Oracle objects, blocks, API contracts, and verification paths
 - [architecture/wms_mes_traceability_edd.md](architecture/wms_mes_traceability_edd.md): engineering design document for the WMS+MES+Traceability target architecture with Mercury and Honest Sign separation
 - [architecture/wave_resource_execution_evidence_architecture.md](architecture/wave_resource_execution_evidence_architecture.md): accepted architecture decision that wave is the central operational object, people/equipment tasks use the resource model, TSD facts synchronize through warehouse-task sync or case-pick events, and every business process requires evidence-driven testing
 
 ## Database Mirror
 
+- [database/nicora_ns00_fixture.md](database/nicora_ns00_fixture.md): 22 owned строки NS00 в RABAEV, без DDL.
+- [database/nicora_track_trace_requirements.md](database/nicora_track_trace_requirements.md): договор данных маркировки редакции 57 в RABAEV.
+
 - [database/index.md](database/index.md): local wiki mirror of the Oracle `RABAEV` schema and change discipline
 - [database/oracle_change_protocol.md](database/oracle_change_protocol.md): required workflow for Oracle structure changes
 - [database/tms2_oracle_contract.md](database/tms2_oracle_contract.md): Oracle contract for TMS-2, including real legacy table columns, DML function call rules, schema drift notes, and migration status
 - [database/feed_factory_traceability_schema.md](database/feed_factory_traceability_schema.md): schema mirror for feed-factory traceability, Mercury/CRPT lifecycle, API audit/replay, wave stock movement ledger, regulatory journal migrations, warehouse topology 038/039, linear pick-route invariant migration 040, warehouse map canvas/slot migration 041, and Oracle publish invariant package 042
+- [../db/clean_install/README.md](../db/clean_install/README.md): from-zero Oracle install kit with separate structure, settings, fixtures, profiles, and verification scripts for isolated `RABAEV` installations
 
 ## Incidents
 
@@ -71,6 +144,8 @@ Start here for a fresh session:
 - [concepts/wiki_operating_model.md](concepts/wiki_operating_model.md): how this repository uses the Karpathy wiki pattern
 
 ## Runbooks
+
+- [runbooks/nicora_agent_tooling.md](runbooks/nicora_agent_tooling.md): проектные MCP и skills; новые подключения не требуются.
 
 - [../scripts/README.md](../scripts/README.md): local Windows launch scripts for WMS API, admin frontend/raw UI reference, and terminal Web/PWA app
 - [runbooks/tms2_local_verification.md](runbooks/tms2_local_verification.md): local verification runbook for TMS-2 ports, Oracle env, migrations, functional tests by block, skip interpretation, encoding checks, and frontend smoke
@@ -127,6 +202,7 @@ Start here for a fresh session:
 - [requirements/mes_production_completion_prompt.md](requirements/mes_production_completion_prompt.md): prompt for implementing MES production completion through a movement journal and controlled legacy WMS bridge
 - [requirements/mes_raw_shortage_replenishment_tz.md](requirements/mes_raw_shortage_replenishment_tz.md): Russian technical assignment for BOM raw-material shortage calculation and transfer tasks from raw warehouse to production
 - [requirements/modern_terminal_app_tz.md](requirements/modern_terminal_app_tz.md): Russian technical assignment for the modern Web/PWA terminal app replacing the legacy terminal OS client
+- [requirements/tms2_planner_explain_panel_tz.md](requirements/tms2_planner_explain_panel_tz.md): technical assignment for the TMS-2 MAP/VRP calculation explanation side drawer with metrics, solver parameters, calculation steps, vehicle utilization, warnings, backend explain contract, and acceptance tests
 - [requirements/tms2_acceptance_matrix.md](requirements/tms2_acceptance_matrix.md): strategic acceptance matrix for TMS-2 Sprint 1-95, mapping user flows to API, Oracle contracts, tests, infrastructure/NFR decisions, gaps, and release gates
 - [requirements/picking_planning_tz.md](requirements/picking_planning_tz.md): Russian technical assignment for customer-order picking planning, reservations, customer rules, route/dock context, and shipment-part splitting
 - [requirements/raw_material_admin_tz.md](requirements/raw_material_admin_tz.md): Russian technical assignment for the raw-material admin page: raw SKU settings, raw warehouses, and stock by selected warehouses
@@ -147,3 +223,10 @@ Start here for a fresh session:
 - [WIKI_SCHEMA.md](WIKI_SCHEMA.md): root wiki schema and maintenance rules
 - [log.md](log.md): append-only wiki maintenance log
 - [../AGENTS.md](../AGENTS.md): agent-facing onramp for future sessions
+
+- [Задания локальной Qwen по NI01](../задания%20на%20проведение%20тестов/NI01/README.md): восемь пакетов; подготовлены без запуска тестов.
+- [NI02 — импорт заказов магазинов SAP](runbooks/nicora_ni02_store_orders.md): in_progress, неизменный заказ/календарь/позднее ожидание; migration 008 в RABAEV.
+
+- [database/nicora_stock_posting_article_20261008.md](database/nicora_stock_posting_article_20261008.md): версия упаковки ARTICULS и прекращение автоматического движения при переназначении ячейки.
+
+- [database/nicora_stock_posting_native_quality_20261008.md](database/nicora_stock_posting_native_quality_20261008.md): 180–196: native QC/отгрузка, durable терминал, measured EA inventory, pending-short guard и FULL_PALLET bridge; PREPARED, cutover открыт.

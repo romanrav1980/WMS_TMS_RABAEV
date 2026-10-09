@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS04",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Реестр NS01, GAP NS02/03, принятый стек, Oracle закупает NICORA, профиль нагрузки ещё уточняется",
+  "scenarios": [
+    {
+      "id": "NS04-TC01",
+      "initial": "Строка GAP",
+      "action": "Связать с ТЗ и карточкой",
+      "expected": "Каждое отличие имеет функцию, источник, проверку, оценку и зависимость",
+      "mandatory": true
+    },
+    {
+      "id": "NS04-TC02",
+      "initial": "Готовая функция",
+      "action": "Проверить состав доработок",
+      "expected": "Нет повторной разработки принятой реализации",
+      "mandatory": true
+    },
+    {
+      "id": "NS04-TC03",
+      "initial": "Конфликт контрактов",
+      "action": "Сверить WMS/TMS/ERP",
+      "expected": "Один источник каждого факта и согласованная транзакционная граница",
+      "mandatory": true
+    },
+    {
+      "id": "NS04-TC04",
+      "initial": "Параметр нагрузки не утверждён",
+      "action": "Проверить договор",
+      "expected": "Помечен явно, способность миллионов операций не объявлена доказанной",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

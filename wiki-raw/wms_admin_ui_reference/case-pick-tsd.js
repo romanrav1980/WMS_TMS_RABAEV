@@ -66,7 +66,8 @@ async function cpTsdFetch(path, options = {}) {
   const body = text ? JSON.parse(text) : {};
   if (!response.ok) {
     const detail = body.detail?.message || body.detail || body.message || `HTTP ${response.status}`;
-    throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+    const error = new Error(typeof body.detail === "string" ? body.detail : JSON.stringify(body.detail || body));
+    error.detail = body.detail;error.status = response.status;throw error;
   }
   return body;
 }
@@ -184,7 +185,7 @@ async function cpTsdShortLine() {
   const task = cpTsd.task;
   const line = cpTsdCurrentLine();
   if (!task || !line) throw new Error("Нет строки отбора");
-  const picked = Number(cpTsdEl("cpTsdFactQty").value || 0);
+  const picked = cpTsdEl("cpTsdFactQty").value || "0";
   const payload = {
     picked_qty: picked,
     reason_text: "Нет товара в ячейке",

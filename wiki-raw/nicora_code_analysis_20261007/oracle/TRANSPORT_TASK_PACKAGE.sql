@@ -1,0 +1,21 @@
+package TRANSPORT_TASK is
+  function PRINT_PALLET_WEIGHT( PALLET_UID2 varchar2 ) return varchar2;
+  function can_print( tt_id int, user_id1 varchar2 ) return varchar2;
+  function pallet_count( tt_id int ) return number;
+  function tt_wares( tt_id int ) return varchar2;
+  function stoim_pall_sb( pall_uid1 varchar2 ) return number;
+  function stoim_tt( tt_id int ) return number;
+  function test1 return int;
+  function TT_UNREADY_COUNT( IDTT int ) return number;
+  function TT_READY_PERC( IDTT int ) return number;
+  function tt_unready_wares( tt_id int ) return varchar2;
+  function TT_VODITEL_TEL( VODITEL_ID1 int ) return varchar2;
+  function TT_REORDER_ADR( IDTT int ) return number;
+  function RRL_PALLETS_STR( ST_NUMBER1 varchar2 ) return varchar2;
+  function RRL_TT_PALLETS_STR( IDTT int ) return varchar2;
+  function TT_TIME_OF_OTG( IDTT int ) return date;
+  function SERVICE_LEVEL_OTG( IDTT int ) return number;
+  function VODITEL_GET_INN( VOD_ID int ) return varchar2;
+  function VODITEL_GET_TABEL_NUMB( VOD_ID int ) return varchar2;
+  function VODITEL_SET_TABEL_NUMB( vod_id int, tabel_numb1 varchar2, inn1 varchar2 ) return int;
+end TRANSPORT_TASK;

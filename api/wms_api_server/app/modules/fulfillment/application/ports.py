@@ -1,0 +1,16 @@
+from typing import Protocol
+
+
+class StoreOrderConflict(ValueError):
+    pass
+
+
+class StoreOrdersPort(Protocol):
+    def receive(self, raw: bytes, actor: str) -> dict: ...
+    def list(self, warehouse: int | None, limit: int) -> list[dict]: ...
+    def get(self, order_id: int) -> dict: ...
+    def configure(self, warehouse: int, store_code: str, body: dict, actor: str) -> dict: ...
+
+
+class PreparationPort(Protocol):
+    def prepare(self, order_id: int, payload: dict, actor: str) -> dict: ...

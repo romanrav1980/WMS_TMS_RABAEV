@@ -28,8 +28,9 @@ import {
   WarningOutlined
 } from "@ant-design/icons";
 import { getApiErrorMessage } from "./api/client";
+import { authenticateTerminal, clearTerminalAuth, hasTerminalAuth } from "./api/terminalAuth";
+import { postLotQuality, hasLotQualityIntent } from "./api/lotQualityIntent";
 import {
-  confirmLotCheck,
   confirmPlaceCheck,
   executeLegacyPayload,
   getDbPing,
@@ -54,7 +55,7 @@ const SESSION_KEY = "wms-terminal-session";
 function loadSession(): TerminalSession | null {
   try {
     const value = localStorage.getItem(SESSION_KEY);
-    return value ? (JSON.parse(value) as TerminalSession) : null;
+    return value && hasTerminalAuth() ? (JSON.parse(value) as TerminalSession) : null;
   } catch {
     return null;
   }
@@ -116,7 +117,7 @@ function App() {
   const handleSession = (nextSession: TerminalSession | null) => {
     setSession(nextSession);
     saveSession(nextSession);
-    if (!nextSession) setActiveFlow("home");
+    if (!nextSession) { clearTerminalAuth(); setActiveFlow("home"); }
   };
 
   const page = useMemo(() => {
@@ -139,6 +140,7 @@ function App() {
 
 function LoginPage({ onLogin }: { onLogin: (session: TerminalSession) => void }) {
   const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -148,9 +150,11 @@ function LoginPage({ onLogin }: { onLogin: (session: TerminalSession) => void })
     setLoading(true);
     setError("");
     try {
-      const blocks = await getTerminalUser(nextUserId);
-      const session = getUserSession(blocks, nextUserId);
-      if (!session) throw new Error("Пользователь не найден или не активен.");
+      const identity = await authenticateTerminal(nextUserId, password);
+      const blocks = await getTerminalUser(identity.username);
+      const session = getUserSession(blocks, identity.username);
+      if (!session) { clearTerminalAuth(); throw new Error("Пользователь не найден или не активен."); }
+      setPassword("");
       onLogin(session);
       message.success(`Вход выполнен: ${session.userName}`);
     } catch (error) {
@@ -166,7 +170,7 @@ function LoginPage({ onLogin }: { onLogin: (session: TerminalSession) => void })
         <Space direction="vertical" size="large" className="full-width">
           <div>
             <Typography.Title level={2}>WMS Terminal</Typography.Title>
-            <Typography.Text type="secondary">Вход оператора через WMS API / GET_RUSER</Typography.Text>
+            <Typography.Text type="secondary">Вход оператора WMS</Typography.Text>
           </div>
           {error && <Alert type="error" showIcon message={error} />}
           <Input
@@ -177,10 +181,12 @@ function LoginPage({ onLogin }: { onLogin: (session: TerminalSession) => void })
             placeholder="Код оператора"
             autoFocus
           />
+          <Input.Password size="large" value={password} onChange={event => setPassword(event.target.value)}
+            onPressEnter={() => login()} placeholder="Пароль" autoComplete="current-password" />
           <Button type="primary" size="large" block loading={loading} onClick={() => login()}>
             Войти
           </Button>
-          <ScannerInput placeholder="Или отсканируйте код оператора" disabled={loading} onScan={login} />
+          <ScannerInput placeholder="Или отсканируйте код оператора" disabled={loading} onScan={value => setUserId(value.trim())} />
         </Space>
       </Card>
     </div>
@@ -297,7 +303,7 @@ function LotCheck({ session, onJournal }: { session: TerminalSession; onJournal:
   const confirmOk = () => {
     Modal.confirm({
       title: "Подтвердить проверку паллеты без ошибок?",
-      content: `Будет выполнен POST /api/terminal/lots/${usscc}/check и запись в Oracle через совместимый Tserver-flow.`,
+      content: "Результат проверки будет сохранён системой.",
       okText: "Подтвердить",
       cancelText: "Отмена",
       onOk: async () => {
@@ -311,22 +317,13 @@ function LotCheck({ session, onJournal }: { session: TerminalSession; onJournal:
             .filter(Boolean)
             .map((uid) => ({ pallet_uid: usscc, uid, checked_at: legacyDateTime() }))
         };
-        const entry = createJournalEntry("lot-check", usscc, { palletIdentifier: usscc, ...payload });
         try {
-          entry.status = "sent";
-          await saveJournalEntry(entry);
-          await confirmLotCheck(usscc, payload);
-          entry.status = "accepted";
-          entry.message = "END_LOT_CHECK_PASSED";
+          await postLotQuality(usscc, session.userId, payload, false);
           message.success("Паллета подтверждена.");
         } catch (error) {
-          entry.status = "rejected";
-          entry.message = getApiErrorMessage(error);
-          message.error(entry.message);
+          message.error(getApiErrorMessage(error));
         } finally {
-          entry.updatedAt = new Date().toISOString();
-          await saveJournalEntry(entry);
-          onJournal();
+          await onJournal();
           setSending(false);
         }
       }
@@ -349,6 +346,15 @@ function LotCheck({ session, onJournal }: { session: TerminalSession; onJournal:
             <Button type="primary" size="large" icon={<SendOutlined />} disabled={!lotLines.length} onClick={confirmOk}>
               Подтвердить без ошибок
             </Button>
+            <Button size="large" disabled={sending || !hasLotQualityIntent(usscc, session.userId)}
+              onClick={async () => {
+                setSending(true);
+                try {
+                  await postLotQuality(usscc, session.userId, { user_id: session.userId, error_count: 0, errors: [], vp_lines: [] }, true);
+                  message.success("Сохранённая проверка подтверждена.");
+                } catch (error) { message.error(getApiErrorMessage(error)); }
+                finally { await onJournal(); setSending(false); }
+              }}>Повторить сохранённую проверку</Button>
             <LegacyBlocksTable blocks={response.blocks} />
           </>
         ) : (

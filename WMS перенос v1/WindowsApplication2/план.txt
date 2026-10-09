@@ -1,0 +1,79 @@
+1) Создать список адресов
+
+---------- Сделано  ------------------
+
+
+2) Создать несколько артикулов
+ С возможностью выбора группы товара  . Норма оборачиваемости по группам товара.
+Вводится роль CREATE_ARTICUL
+
+! Создать выбор группы товаров. (Не редактор, просто выбор) - Нужен при создании товара и фильтрации
+
+
+3) Ввод заказа вручную.
+	С удобным  указанием группы товаров и артикула ()
+
+
+
+3) СОздать Автомат-заказ на них
+	) Подгрузить потребление
+
+	) ПОдгрузить прогноз потребления
+	) Подгрузить остатки
+	) Создать автомат - заказ с учетом товара в пути, остатков , ЛТ , и прогноза потребления
+	
+
+4) контроллинг оборачиваемости при приемке заказа.
+оборачиваемость контролируется с учетом существущих заказов и  прогноза.
+если на товар нуулевой прогноз, и его пришло больше заказов - предуупреждение
+если товара пришло более чем на 1 мес - предупреждение.
+
+
+ ----------------------------------------------------------------
+
+Группа
+
+  ACTICUL               VARCHAR2(15 CHAR)       NOT NULL,
+  NAME                  VARCHAR2(255 CHAR),
+  BESTBEFOREDAYS        INTEGER                 DEFAULT 360,
+
+
+CREATE TABLE RABAEV.RRL_ARTICULS
+(
+
+  NORMA_UKLADKI         NUMBER                  NOT NULL,
+  CELL                  VARCHAR2(50 CHAR),
+
+  UNIT_TYPE             VARCHAR2(20 CHAR),
+  BARCODE_SHT           VARCHAR2(128 CHAR)      DEFAULT 777                   NOT NULL,
+  BARCODE_KOR           VARCHAR2(128 CHAR),
+  BARCODE_BL            VARCHAR2(128 CHAR),
+  WEIGHT_OF_KOR         NUMBER,
+  COUNT_IN_ROW          INTEGER,
+  ROWS_IN_PAL           INTEGER,
+  COUNT_SHT_IN_KOR      NUMBER,
+  COUNT_SHT_IN_BL       NUMBER                  DEFAULT 1,
+  PALLET_MULTIPLE       NUMBER                  DEFAULT 1,
+  CARTON_WEIGHT         NUMBER                  DEFAULT 0,
+  ETAJ_LIMIT            INTEGER                 DEFAULT 100,
+
+  SSP                   NUMBER                  DEFAULT 0,
+  ABC_GROUP             VARCHAR2(1 BYTE),
+  XYZ_GROUP             VARCHAR2(1 BYTE),
+  ORDER_OF_COMP         INTEGER                 DEFAULT 0,
+  RCECOMPLECT           INTEGER                 DEFAULT 0,
+  FLOATING_WEIGHT       INTEGER                 DEFAULT 0,
+  TYPE_W                INTEGER                 DEFAULT 0,
+  WEIGHT_OF_SHT         NUMBER                  DEFAULT 0,
+  ROUND_TO              INTEGER                 DEFAULT 2,
+  DEF_PERC              NUMBER                  DEFAULT 0,
+  LAST_MOD_ID           INTEGER,
+  AUTHOR_ID             VARCHAR2(50 BYTE),
+  FAKE_PARTION_UID      VARCHAR2(50 BYTE),
+  DIMKOR_X              NUMBER,
+  DIMKOR_Y              NUMBER,
+  DIMKOR_Z              NUMBER,
+  BRUTTO_WEIGHT_OF_KOR  NUMBER,
+  LAST_PRICE            NUMBER,
+  LAST_USER_ID          VARCHAR2(50 BYTE)
+)

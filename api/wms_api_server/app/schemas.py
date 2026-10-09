@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from decimal import Decimal
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -240,7 +241,7 @@ class CrptCodeStatusRequest(BaseModel):
 
 class TerminalErrorLine(BaseModel):
     uid: str
-    qty: float
+    qty: Decimal = Field(ge=0, max_digits=27, decimal_places=9)
     condition: str
     ean: str | None = None
     plan_qty: float | None = None
@@ -254,10 +255,11 @@ class TerminalVpLine(BaseModel):
 
 
 class LotCheckRequest(BaseModel):
+    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
     user_id: str
-    error_count: int = 0
-    errors: list[TerminalErrorLine] = Field(default_factory=list)
-    vp_lines: list[TerminalVpLine] = Field(default_factory=list)
+    error_count: int = Field(default=0, ge=0)
+    errors: list[TerminalErrorLine] = Field(default_factory=list, max_length=200)
+    vp_lines: list[TerminalVpLine] = Field(default_factory=list, max_length=200)
 
 
 class PlaceInventoryAuditLine(BaseModel):
@@ -279,6 +281,7 @@ class OrderCheckRequest(BaseModel):
 
 
 class CallSpfRequest(BaseModel):
+    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
     spf_name: str
     params: dict[str, Any] = Field(default_factory=dict)
 
@@ -411,7 +414,7 @@ class MesRawIssueRequest(BaseModel):
     uid_pallet: str | None = None
     raw_batch_id: int | None = None
     raw_articul: str | None = None
-    quantity: float
+    quantity: Decimal = Field(gt=0, max_digits=27, decimal_places=9, allow_inf_nan=False)
     unit_code: str | None = "KG"
     source_location: str | None = None
     production_location: str | None = "MES_PROD"
@@ -421,8 +424,8 @@ class MesRawIssueRequest(BaseModel):
 class MesCompletionPallet(BaseModel):
     uid_pallet: str
     pallet_no: int | None = None
-    quantity: float | None = None
-    pack_count: float | None = None
+    quantity: Decimal | None = Field(default=None, gt=0, max_digits=27, decimal_places=9, allow_inf_nan=False)
+    pack_count: Decimal | None = Field(default=None, ge=0, max_digits=27, decimal_places=9, allow_inf_nan=False)
     sscc: str | None = None
     target_ware_id: int | None = None
     target_cell: str | None = "FG_RECEIVE"
@@ -430,7 +433,7 @@ class MesCompletionPallet(BaseModel):
 
 class MesCompleteOrderRequest(BaseModel):
     prod_batch_no: str | None = None
-    fact_qty: float
+    fact_qty: Decimal = Field(gt=0, max_digits=27, decimal_places=9, allow_inf_nan=False)
     unit_code: str | None = "KG"
     pallets: list[MesCompletionPallet] = Field(default_factory=list)
     idempotency_key: str | None = None
@@ -439,6 +442,10 @@ class MesCompleteOrderRequest(BaseModel):
 
 class MesApplyWmsRequest(BaseModel):
     applied_by: str | None = None
+    operation_id: str | None = Field(default=None, max_length=100)
+    movement_ids: list[int] | None = Field(default=None, min_length=1, max_length=200)
+    units_by_movement: dict[str, list[str]] = Field(default_factory=dict)
+    birth_captures: dict[str, dict[str, Any]] = Field(default_factory=dict)
 
 
 class MesRetryMovementRequest(BaseModel):
@@ -824,17 +831,20 @@ class PickWaveAddPlanRequest(BaseModel):
 
 
 class PickWaveActionRequest(BaseModel):
+    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
     reason: str | None = None
     updated_by: str | None = None
 
 
 class PickTaskCompleteRequest(BaseModel):
-    fact_qty: float | None = Field(default=None, ge=0)
+    fact_qty: Decimal | None = Field(default=None, ge=0, allow_inf_nan=False)
     scanned_pallet: str | None = None
     scanned_from_cell: str | None = None
     scanned_to_cell: str | None = None
     adjust_pick_face_stock: bool = False
     completed_by: str | None = None
+
+    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
 
 
 class PickWaveStagingReleaseRequest(BaseModel):
@@ -850,8 +860,17 @@ class CasePickTaskActionRequest(BaseModel):
     reason: str | None = None
 
 
+class CasePickUnitScan(BaseModel):
+    system_code: str = Field(min_length=1, max_length=40)
+    profile_code: str = Field(min_length=1, max_length=60)
+    code: str = Field(min_length=1, max_length=4000)
+
+
 class CasePickLineConfirmRequest(BaseModel):
-    fact_qty: float | None = Field(default=None, ge=0)
+    fact_qty: Decimal | None = Field(default=None, ge=0, max_digits=27, decimal_places=9)
+    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
+    unit_keys: list[str] = Field(default_factory=list, max_length=10000)
+    unit_scans: list[CasePickUnitScan] = Field(default_factory=list, max_length=10000)
     scan_cell: str | None = None
     scan_product: str | None = None
     scan_box: str | None = None
@@ -864,8 +883,8 @@ class CasePickLineConfirmRequest(BaseModel):
 
 
 class CasePickLineShortRequest(BaseModel):
-    picked_qty: float | None = Field(default=None, ge=0)
-    short_qty: float | None = Field(default=None, ge=0)
+    picked_qty: Decimal | None = Field(default=None, ge=0, max_digits=27, decimal_places=9)
+    short_qty: Decimal | None = Field(default=None, ge=0, max_digits=27, decimal_places=9)
     reason_text: str | None = None
     offline_event_id: str | None = None
     resource_id: int | None = None
@@ -883,6 +902,7 @@ class CasePickTransferRequest(BaseModel):
 
 
 class CasePickShortDecisionRequest(BaseModel):
+    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
     reason_text: str | None = None
     actor: str | None = None
 
@@ -918,7 +938,7 @@ class StockReservationCreateRequest(BaseModel):
     pick_wave_id: int | None = None
     pick_wave_line_id: int | None = None
     articul: str
-    qty: float = Field(ge=0)
+    qty: Decimal = Field(ge=0)
     unit_code: str | None = None
     ware_id: int | None = None
     cell: str | None = None
@@ -930,6 +950,9 @@ class StockReservationCreateRequest(BaseModel):
     priority: float = 100
     created_by: str | None = None
 
+    operation_id: str | None = Field(default=None, max_length=100)
+    unit_keys: list[str] = Field(default_factory=list, max_length=10000)
+
 
 class StockReservationPromoteRequest(BaseModel):
     reservation_scope: str = "PALLET"
@@ -939,20 +962,28 @@ class StockReservationPromoteRequest(BaseModel):
     prod_batch_id: int | None = None
     uid_pallet: str | None = None
     sscc: str | None = None
-    qty: float | None = Field(default=None, ge=0)
+    qty: Decimal | None = Field(default=None, ge=0)
     updated_by: str | None = None
+
+    operation_id: str | None = Field(default=None, max_length=100)
+    unit_keys: list[str] = Field(default_factory=list, max_length=10000)
 
 
 class StockReservationStatusRequest(BaseModel):
     reason: str | None = None
     updated_by: str | None = None
 
+    operation_id: str | None = Field(default=None, max_length=100)
+    unit_keys: list[str] = Field(default_factory=list, max_length=10000)
+
 
 class MesRawSupplyCalculateRequest(BaseModel):
+    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
     calculated_by: str | None = None
 
 
 class MesReleaseToProductionRequest(BaseModel):
+    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
     to_ware_id: int | None = None
     to_cell: str = "MES_PROD"
     allow_partial: int = 0
@@ -960,25 +991,30 @@ class MesReleaseToProductionRequest(BaseModel):
 
 
 class MesRawTransferTaskConfirmRequest(BaseModel):
-    fact_qty: float | None = Field(default=None, ge=0)
+    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
+    fact_qty: Decimal | None = Field(default=None, gt=0, allow_inf_nan=False)
     confirmed_by: str | None = None
 
 
 class MesRawTransferTaskCancelRequest(BaseModel):
+    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
     reason: str | None = None
     cancelled_by: str | None = None
 
 
 class WarehouseTaskStatusRequest(BaseModel):
+    updated_by: str | None = None
     assigned_to: str | None = None
     resource_id: int | None = None
     resource_session_id: int | None = None
     equipment_id: int | None = None
-    fact_qty: float | None = Field(default=None, ge=0)
+    fact_qty: Decimal | None = Field(default=None, ge=0, allow_inf_nan=False)
     scanned_pallet: str | None = None
     scanned_from_cell: str | None = None
     scanned_to_cell: str | None = None
     reason: str | None = None
+    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
+    unit_keys: list[str] = Field(default_factory=list, max_length=10000)
 
 
 # ---------------------------------------------------------------------------
@@ -1333,6 +1369,12 @@ class VrpRouteStop(BaseModel):
     tw_from: int
     tw_to: int
     tw_strict: bool
+    arrival_min: int | None = None
+    departure_min: int | None = None
+    tw_violation_min: int = 0
+    distance_from_prev_km: float | None = None
+    duration_from_prev_min: int | None = None
+    constraint_notes: list[str] = Field(default_factory=list)
 
 
 class VrpRouteItem(BaseModel):
@@ -1346,6 +1388,12 @@ class VrpRouteItem(BaseModel):
     total_duration_min: int
     utilization_pct: float
     stops: list[VrpRouteStop]
+    capacity_status: str = "ok"
+    tw_violation_count: int = 0
+    strict_tw_count: int = 0
+    vehicle_constraints_ok: bool = True
+    hydro_board_required_count: int = 0
+    explain_notes: list[str] = Field(default_factory=list)
 
 
 class VrpPlanResponse(BaseModel):
@@ -1358,6 +1406,7 @@ class VrpPlanResponse(BaseModel):
     score: float
     solver_used: str
     solve_time_ms: int
+    explain: dict[str, Any] | None = None
 
 
 class VrpSolveRequest(BaseModel):

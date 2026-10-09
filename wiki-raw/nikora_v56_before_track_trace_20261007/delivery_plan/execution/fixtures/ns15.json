@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS15",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "T36=36 ролл-кейджей ROLL-A; T32=32; смешанная схема 20 ROLL-A+4 PAL-A; S1 заведен 07.10, первый заказ 15.10",
+  "scenarios": [
+    {
+      "id": "NS15-TC01",
+      "initial": "T32",
+      "action": "Запланировать 32 и 33 ROLL-A",
+      "expected": "32 допустимы, 33 отклонены",
+      "mandatory": true
+    },
+    {
+      "id": "NS15-TC02",
+      "initial": "Смешанная схема",
+      "action": "Сравнить 20+4 и 21+4",
+      "expected": "Первая допустима по справочнику, вторая без схемы не допускается",
+      "mandatory": true
+    },
+    {
+      "id": "NS15-TC03",
+      "initial": "S1",
+      "action": "Создать первый заказ 15.10",
+      "expected": "Недельный срок соблюдён",
+      "mandatory": true
+    },
+    {
+      "id": "NS15-TC04",
+      "initial": "Новый адрес за 2 дня",
+      "action": "Допустить заказ",
+      "expected": "Не допускается как готовый адрес",
+      "mandatory": true
+    },
+    {
+      "id": "NS15-TC05",
+      "initial": "Вложенные коробки",
+      "action": "Посчитать места",
+      "expected": "Считается один физический ролл-кейдж",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

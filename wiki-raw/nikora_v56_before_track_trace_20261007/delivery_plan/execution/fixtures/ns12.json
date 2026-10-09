@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS12",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "10 млн закрытых событий старше 90 дней, 100 открытых событий, 1 фото с SHA256",
+  "scenarios": [
+    {
+      "id": "NS12-TC01",
+      "initial": "Архивирование",
+      "action": "Обработать закрытые события",
+      "expected": "Количество и контрольные суммы сверены, открытые 100 остаются доступны",
+      "mandatory": true
+    },
+    {
+      "id": "NS12-TC02",
+      "initial": "Старый HU1",
+      "action": "Найти факт и фото",
+      "expected": "Связь и исходное фото доступны по контрольной сумме",
+      "mandatory": true
+    },
+    {
+      "id": "NS12-TC03",
+      "initial": "Текущая смена limit=25",
+      "action": "Запросить историю",
+      "expected": "Не более 25 строк, определённое продолжение страницы",
+      "mandatory": true
+    },
+    {
+      "id": "NS12-TC04",
+      "initial": "Авария переноса",
+      "action": "Повторить архивирование",
+      "expected": "Нет потери или дублирования фактов",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

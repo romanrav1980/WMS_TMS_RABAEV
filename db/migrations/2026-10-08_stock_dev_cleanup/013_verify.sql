@@ -1,0 +1,4 @@
+select CLEANUP_ID,ARCHIVED_ROWS,DELETED_ROWS,KEPT_ROWS from RRL_STOCK_CLEANUP_LOG where CLEANUP_ID='2026-10-08-013-stock-dev-cleanup';
+select count(*) INVALID_ROWS from RRL_REMAINS where CELL is null or UID_POLETA is null or REMAIN is null or REMAIN<0;
+select count(*) DUPLICATE_KEYS from(select CELL,UID_POLETA from RRL_REMAINS group by CELL,UID_POLETA having count(*)>1);
+select CONSTRAINT_NAME,STATUS,VALIDATED from user_constraints where TABLE_NAME='RRL_REMAINS' and CONSTRAINT_NAME in('RRL_REMAINS_STOCK_UK','RRL_REMAINS_QTY_CK');

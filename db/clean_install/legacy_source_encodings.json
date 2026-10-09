@@ -1,0 +1,18 @@
+{
+  "sourceRoot": "../..",
+  "files": {
+    "db/windowsapplication2_xp12_oracle/01_tables.sql": {
+      "encoding": "cp1251",
+      "sha256": "572c457b6bc367b05a3f7b416bd2cb138829bc50cbbb0d9ce0ee61e363b41059"
+    },
+    "db/windowsapplication2_xp12_oracle/03_functions.sql": {
+      "encoding": "cp1251",
+      "sha256": "ba40aa5bb9229132fc779a75ce6564690360befd3832af81d2dbf4e895638121"
+    },
+    "db/windowsapplication2_xp12_oracle/04_procedures.sql": {
+      "encoding": "cp1251",
+      "sha256": "f6a518843ccc13b06df539a72ed4e7c05b299adec22d66f4efefa7cbdfb0e0b7"
+    }
+  },
+  "reason": "Confirmed legacy Windows-1251 exports; mixed profile includes remain strict UTF-8 by default"
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Working gateway contract, not a real SAP export. Configure store calendar before import. -->
+<WarehouseCustomerOrder version="1">
+  <Sender>SAP_RETAIL</Sender><MessageId>STORE-EXAMPLE-0001</MessageId><OrderNumber>0000001234</OrderNumber>
+  <CustomerCode>NICORA</CustomerCode><StoreCode>STORE-001</StoreCode><WarehouseId>1</WarehouseId>
+  <OrderDate>2026-10-07</OrderDate><OperationalDate>2026-10-07</OperationalDate><DeliveryDate>2026-10-08</DeliveryDate>
+  <PickingStartAt>2026-10-07T20:00:00+04:00</PickingStartAt><PickingFinishAt>2026-10-08T01:00:00+04:00</PickingFinishAt><ShipmentAt>2026-10-08T02:00:00+04:00</ShipmentAt>
+  <Lines><Line><LineNumber>10</LineNumber><Material>000000000000001234</Material><Quantity unit="PCE">120</Quantity></Line></Lines>
+</WarehouseCustomerOrder>

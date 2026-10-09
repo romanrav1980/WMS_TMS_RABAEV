@@ -81,7 +81,7 @@ class PickingService:
               );
             end;
             """,
-            {"pick_wave_id": pick_wave_id, **request.model_dump()},
+            {"pick_wave_id": pick_wave_id, **request.model_dump(exclude={"operation_id"})},
         )
 
     def preview_wave(self, pick_wave_id: int, request: PickWaveActionRequest) -> None:
@@ -97,7 +97,34 @@ class PickingService:
             {"pick_wave_id": pick_wave_id, "updated_by": request.updated_by},
         )
 
+    def _post_wave_command(self, command: str, wave_id: int, request: PickWaveActionRequest) -> bool:
+        from ..modules.inventory.contracts_stock import StockCommand, StockPostingError
+        from ..modules.inventory.infrastructure.stock_posting_uow import StockPosting
+        state = self.gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
+        if state and state[0]["state"] == "PREPARED":
+            return False
+        if not request.operation_id:
+            raise HTTPException(422, detail={"code": "OPERATION_ID_REQUIRED"})
+        source = {"wave_id": wave_id} if command == "WAVE_LAUNCH" else {"document_type": "PICK_WAVE", "document_id": wave_id}
+        metadata = {} if command == "WAVE_LAUNCH" else {"reason": request.reason or "Wave reservations released", "only_cancelled_replenishment": 0, "reservation_kind": None}
+        try:
+            StockPosting().post(StockCommand(operation_id=request.operation_id, command_type=command,
+                actor=request.updated_by, lines=(), source=source, metadata=metadata))
+        except StockPostingError as exc:
+            raise HTTPException(409, detail={"code": exc.code, "operation_id": exc.operation_id,
+                "oracle_code": exc.oracle_code, "retry_same_operation_id": True}) from exc
+        return True
+
     def launch_wave(self, pick_wave_id: int, request: PickWaveActionRequest) -> None:
+        if self._post_wave_command("WAVE_LAUNCH", pick_wave_id, request):
+            self._enrich_replenishment_settings(pick_wave_id, request.updated_by)
+            self._refresh_replenishment_deficit(pick_wave_id, request.updated_by)
+            self._reserve_replenishment_sources(pick_wave_id, request.updated_by)
+            self._hold_replenishment_rows_without_pick_face_capacity(pick_wave_id, request.updated_by)
+            self._release_next_replenishment_queue(pick_wave_id, request.updated_by, include_minimax=False)
+            self._sync_replenishment_warehouse_tasks(pick_wave_id, request.updated_by)
+            CasePickService(self.gateway).ensure_wave_case_pick_tasks(pick_wave_id, request.updated_by)
+            return
         self.gateway.execute_plsql(
             """
             begin
@@ -137,6 +164,39 @@ class PickingService:
         request: PickTaskCompleteRequest,
     ) -> dict[str, str | int | float]:
         actor = request.completed_by or "API"
+        release = self.gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
+        if not release or release[0]["state"] != "PREPARED":
+            types = self.gateway.fetch_all(
+                "select t.TASK_TYPE,l.CASE_PICK_TASK_ID,l.CASE_PICK_LINE_ID "
+                "from RRL_PICK_TASK t left join RRL_CASE_PICK_LINE l on l.PICK_TASK_ID=t.PICK_TASK_ID "
+                "where t.PICK_TASK_ID=:id", {"id": pick_task_id})
+            if types and types[0]["task_type"] == "CASE_PICK":
+                raise HTTPException(409, detail={"code": "CASE_PICK_CONFIRM_REQUIRED",
+                    "case_pick_task_id": types[0].get("case_pick_task_id"),
+                    "case_pick_line_id": types[0].get("case_pick_line_id"),
+                    "message": "Confirm the existing CASE line in case-pick-tsd.html; physical stock stays reserved until shipment"})
+            if not types or types[0]["task_type"] != "FULL_PALLET":
+                raise HTTPException(409, detail={"code": "PHYSICAL_WAVE_TASK_REQUIRED"})
+            physical_tasks = self.gateway.fetch_all(
+                "select x.TASK_ID from RRL_WAREHOUSE_TASK x "
+                "join RRL_PICK_WAVE_TASK wt on wt.PICK_WAVE_TASK_ID=x.SOURCE_TASK_ID "
+                "where wt.PICK_WAVE_ID=:wave and wt.PICK_TASK_ID=:pick "
+                "and x.TASK_SOURCE='WAVE' and x.SOURCE_DOC_TYPE='PICK_WAVE' "
+                "and x.SOURCE_DOC_ID=:wave and x.TASK_TYPE='PICKING_MOVE' "
+                "and x.STATUS<>'CANCELLED' fetch first 2 rows only",
+                {"wave": pick_wave_id, "pick": pick_task_id})
+            if len(physical_tasks) != 1:
+                raise HTTPException(409, detail={"code": "WAVE_STAGING_TASK_REQUIRED",
+                    "message": "Release the existing full-pallet staging task before physical confirmation"})
+            from ..modules.inventory.infrastructure.task_completion import complete_existing_task
+            from ..schemas import WarehouseTaskStatusRequest
+            task_id = physical_tasks[0]["task_id"]
+            result = complete_existing_task(self.gateway, task_id, WarehouseTaskStatusRequest(
+                fact_qty=request.fact_qty, scanned_pallet=request.scanned_pallet,
+                scanned_from_cell=request.scanned_from_cell, scanned_to_cell=request.scanned_to_cell,
+                operation_id=request.operation_id), actor)
+            return {**result, "pick_wave_id": pick_wave_id, "pick_task_id": pick_task_id,
+                    "released_minimax_count": 0}
         rows = self.gateway.fetch_all(
             """
             select wt.PICK_WAVE_TASK_ID,
@@ -387,6 +447,9 @@ class PickingService:
                 raise HTTPException(status_code=409, detail="Scanned target cell does not match pick task.")
 
     def _apply_case_pick_stock_fact(self, task: dict[str, Any], fact_qty: float) -> None:
+        release = self.gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
+        if not release or release[0]["state"] != "PREPARED":
+            raise HTTPException(409, detail={"code": "CASE_PICK_CONFIRM_REQUIRED"})
         target_cell = task.get("target_cell_code")
         articul = task.get("articul")
         if not target_cell or not articul:
@@ -762,6 +825,9 @@ class PickingService:
         )
 
     def _reserve_replenishment_sources(self, pick_wave_id: int, updated_by: str) -> None:
+        from ..modules.inventory.public import reserve_existing_wave_sources
+        if reserve_existing_wave_sources(self.gateway, pick_wave_id, updated_by):
+            return
         self.gateway.execute(
             """
             declare
@@ -944,6 +1010,10 @@ class PickingService:
         )
 
     def _release_cancelled_replenishment_source_reservations(self, pick_wave_id: int, updated_by: str) -> None:
+        from ..modules.inventory.public import release_existing_document_reservations
+        if release_existing_document_reservations(self.gateway, "PICK_WAVE", pick_wave_id, updated_by,
+                "Cancelled replenishment source", only_cancelled=True):
+            return
         self.gateway.execute(
             """
             update RRL_STOCK_RESERVATION sr
@@ -1299,6 +1369,8 @@ class PickingService:
         return dynamic_released + minimax_count + immediate_count
 
     def cancel_wave(self, pick_wave_id: int, request: PickWaveActionRequest) -> None:
+        if self._post_wave_command("WAVE_CANCEL", pick_wave_id, request):
+            return
         self.gateway.execute_plsql(
             """
             begin
@@ -1309,11 +1381,13 @@ class PickingService:
               );
             end;
             """,
-            {"pick_wave_id": pick_wave_id, **request.model_dump()},
+            {"pick_wave_id": pick_wave_id, **request.model_dump(exclude={"operation_id"})},
         )
         self._cancel_replenishment_warehouse_tasks(pick_wave_id, request.updated_by or "API", request.reason)
 
     def release_wave_reservations(self, pick_wave_id: int, request: PickWaveActionRequest) -> None:
+        if self._post_wave_command("WAVE_RELEASE", pick_wave_id, request):
+            return
         self.gateway.execute_plsql(
             """
             begin
@@ -1343,10 +1417,10 @@ class PickingService:
                    rt.PICK_WAVE_REPLENISH_TASK_ID, 'PICK_WAVE',
                    rt.PICK_WAVE_ID, rt.ARTICUL, rt.PALLET_UID,
                    rt.SOURCE_CELL_CODE, rt.TARGET_CELL_CODE,
-                   rt.QTY, null,
+                   rt.QTY, (select sr.BASE_UOM from RRL_STOCK_RESERVATION sr where sr.RESERVATION_ID=rt.SOURCE_RESERVATION_ID),
                    case rt.REPLENISHMENT_QTY_MODE
                      when 'FULL_PALLET' then 'PALLET'
-                     else 'BOX'
+                     else 'BASE'
                    end,
                    100,
                    case rt.STATUS
@@ -1380,24 +1454,27 @@ class PickingService:
         cancelled_by: str,
         reason: str | None,
     ) -> None:
-        self.gateway.execute(
-            """
-            update RRL_STOCK_RESERVATION
-               set STATUS = 'RELEASED',
-                   RELEASED_AT = systimestamp,
-                   RELEASED_BY = substr(:cancelled_by, 1, 100),
-                   RELEASE_REASON = :reason
-             where RESERVATION_DOMAIN = 'WAVE'
-               and SOURCE_DOC_TYPE = 'PICK_WAVE'
-               and SOURCE_DOC_ID = :pick_wave_id
-               and STATUS in ('ACTIVE', 'ALLOCATED', 'PICKING')
-            """,
-            {
-                "pick_wave_id": pick_wave_id,
-                "cancelled_by": cancelled_by,
-                "reason": reason,
-            },
-        )
+        from ..modules.inventory.public import release_existing_document_reservations
+        if not release_existing_document_reservations(self.gateway, "PICK_WAVE", pick_wave_id, cancelled_by,
+                reason or "Wave reservations released"):
+            self.gateway.execute(
+                """
+                update RRL_STOCK_RESERVATION
+                   set STATUS = 'RELEASED',
+                       RELEASED_AT = systimestamp,
+                       RELEASED_BY = substr(:cancelled_by, 1, 100),
+                       RELEASE_REASON = :reason
+                 where RESERVATION_DOMAIN = 'WAVE'
+                   and SOURCE_DOC_TYPE = 'PICK_WAVE'
+                   and SOURCE_DOC_ID = :pick_wave_id
+                   and STATUS in ('ACTIVE', 'ALLOCATED', 'PICKING')
+                """,
+                {
+                    "pick_wave_id": pick_wave_id,
+                    "cancelled_by": cancelled_by,
+                    "reason": reason,
+                },
+            )
         self.gateway.execute(
             """
             update RRL_PICK_FACE_ASSIGNMENT

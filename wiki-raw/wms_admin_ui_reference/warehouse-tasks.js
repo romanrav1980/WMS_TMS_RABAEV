@@ -11,6 +11,7 @@ const warehouseTaskEl = (id) => document.getElementById(id);
 const TASK_TYPE_LABELS = {
   RAW_TO_PRODUCTION: "Сырье в производство",
   FG_TO_STORAGE: "Готовая продукция",
+  PUTAWAY: "Размещение приёмки",
   REPLENISHMENT: "Пополнение",
   PICKING_MOVE: "Комплектация",
   OTHER: "Другое",
@@ -19,6 +20,7 @@ const TASK_TYPE_LABELS = {
 const TASK_SOURCE_LABELS = {
   MES_RAW_SUPPLY: "Снабжение производства",
   MES_COMPLETION: "Выпуск",
+  SAP_RECEIPT: "Приёмка SAP",
   PICKING: "Комплектация",
   WAVE: "Волна",
   MANUAL: "Ручная",

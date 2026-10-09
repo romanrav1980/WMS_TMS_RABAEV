@@ -97,6 +97,17 @@
             </div>
           </article>
 
+          <article class="panel">
+            <header><h2>Маркировка и приёмка товара</h2></header>
+            <p id="fgReceiptStatus">Выберите SKU в существующей карточке товара.</p>
+            <label><input id="fgReceiptMarked" type="checkbox" /> Товар подлежит маркировке</label>
+            <p>Для немаркированного товара используются ШК штуки и коробки.</p>
+            <div><p>Применимые системы и профили</p>
+              <div id="fgReceiptProfiles"></div><datalist id="fgReceiptSystems"><option value="CRPT">Честный знак / табак</option><option value="EGAIS">ЕГАИС</option><option value="MERCURY">Меркурий</option></datalist>
+            </div>
+            <button id="fgReceiptAddProfile" type="button">Добавить систему маркировки</button><p>Для каждой применимой системы укажите профиль, его принятую версию и разрешённый способ приёмки.</p>
+            <button id="fgReceiptSave" type="button" disabled data-permission="finished_goods_edit">Сохранить настройки приёмки</button>
+          </article>
           <article class="panel fg-batches-panel">
             <header><h2>Партии выпуска</h2><button id="fgLoadBatches" type="button">Обновить</button></header>
             <div class="rights-toolbar">
@@ -141,6 +152,7 @@
     </div>
     <script src="admin-nav.js?v=20260517-navmodule"></script>
     <script src="admin-auth.js?v=20260517-cleanui"></script>
-    <script src="finished-goods.js?v=20260517-finishedgoods"></script>
+    <script src="finished-goods.js?v=20261007-ni01"></script>
+    <script src="sku-receiving-policy.js?v=20261007-ni01"></script>
   </body>
 </html>

@@ -19,6 +19,36 @@ class WarehouseTaskDomainSyncService:
     def __init__(self, gateway: OracleGateway | None = None) -> None:
         self.gateway = gateway or OracleGateway()
 
+    def _explicit_sync(self, task_id: int) -> dict[str, Any] | None:
+        state = self.gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
+        if state and state[0]["state"] == "PREPARED":
+            return None
+        if not state or state[0]["state"] != "ACTIVE":
+            raise HTTPException(503, detail={"code": "STOCK_RELEASE_NOT_ACTIVE"})
+        # The coordinator writes physical fact, domain state and SYNCED atomically.
+        # A retry reads that fact; it never applies the legacy effect a second time.
+        rows = self.gateway.fetch_all(
+            """
+            select s.*
+              from RRL_WAREHOUSE_TASK_SYNC s
+              join RRL_WAREHOUSE_TASK t on t.TASK_ID=s.TASK_ID
+             where s.TASK_ID=:id and s.SYNC_STATUS='SYNCED' and t.STATUS='DONE'
+               and exists (
+                 select 1 from RRL_WAREHOUSE_TASK_STOCK_MOVE m
+                 join RRL_STOCK_OPERATION o on o.OPERATION_ID=m.OPERATION_ID
+                 where m.TASK_ID=s.TASK_ID and o.STATE='APPLIED'
+                   and o.COMMAND_TYPE='TASK_COMPLETE'
+                   and m.QTY=t.FACT_QTY
+                   and m.UID_PALLET=nvl(t.UID_PALLET,t.SSCC)
+                   and m.FROM_CELL=t.FROM_CELL and m.TO_CELL=t.TO_CELL
+               )
+             order by s.SYNC_ID desc fetch first 1 rows only
+            """,
+            {"id": task_id},
+        )
+        if rows:
+            return rows[0]
+        raise HTTPException(409, detail={"code": "TASK_POSTING_REQUIRED", "task_id": task_id})
     def is_supported(self, task: dict[str, Any]) -> bool:
         return self._target_key(task) in SUPPORTED_SYNC_TARGETS
 
@@ -26,10 +56,16 @@ class WarehouseTaskDomainSyncService:
         task = self._get_task(task_id)
         if not self.is_supported(task):
             return None
+        explicit = self._explicit_sync(task_id)
+        if explicit is not None:
+            return explicit
         sync = self._ensure_sync_row(task, updated_by)
         return self._run_sync(sync["sync_id"], updated_by)
 
     def retry_task_sync(self, task_id: int, updated_by: str | None = None) -> dict[str, Any]:
+        explicit = self._explicit_sync(task_id)
+        if explicit is not None:
+            return explicit
         sync = self.get_task_sync(task_id)
         if not sync:
             task = self._get_task(task_id)
@@ -39,7 +75,6 @@ class WarehouseTaskDomainSyncService:
         if sync.get("sync_status") == "SYNCED":
             return sync
         return self._run_sync(int(sync["sync_id"]), updated_by)
-
     def get_task_sync(self, task_id: int) -> dict[str, Any] | None:
         rows = self.gateway.fetch_all(
             """
@@ -102,7 +137,37 @@ class WarehouseTaskDomainSyncService:
 
     def _run_sync(self, sync_id: int, updated_by: str | None) -> dict[str, Any]:
         sync = self._get_sync(sync_id)
+        explicit = self._explicit_sync(int(sync["task_id"]))
+        if explicit is not None:
+            return explicit
+        if getattr(self.gateway, "transaction_bound", False):
+            return self._run_sync_locked(sync_id, updated_by)
+        from ..transaction_gateway import TransactionGateway
+        from ..modules.inventory.public import lock_warehouse_task_domain
+        try:
+            with self.gateway.transaction("NI03 retry warehouse domain effect") as cursor:
+                bound = TransactionGateway(cursor)
+                service = WarehouseTaskDomainSyncService(bound)
+                sync = service._get_sync(sync_id)
+                task = service._get_task(int(sync["task_id"]))
+                lock_warehouse_task_domain(bound, task)
+                bound.fetch_all("select TASK_ID from RRL_WAREHOUSE_TASK where TASK_ID=:id for update", {"id": task["task_id"]})
+                return service._run_sync_locked(sync_id, updated_by)
+        except Exception as exc:
+            return self._mark_error(sync_id, str(exc), updated_by)
+
+    def _run_sync_locked(self, sync_id: int, updated_by: str | None) -> dict[str, Any]:
+        current = self._get_sync(sync_id)
+        explicit = self._explicit_sync(int(current["task_id"]))
+        if explicit is not None:
+            return explicit
+        self.gateway.fetch_all("select SYNC_ID from RRL_WAREHOUSE_TASK_SYNC where SYNC_ID=:id for update", {"id": sync_id})
+        sync = self._get_sync(sync_id)
         task = self._get_task(int(sync["task_id"]))
+        if task.get("status") != "DONE":
+            raise ValueError("Only completed warehouse facts can be synchronized.")
+        if sync.get("sync_status") == "SYNCED":
+            return sync
         if not self.is_supported(task):
             return self._mark_error(sync_id, "No domain sync handler for this warehouse task.", updated_by)
         self.gateway.execute(
@@ -117,20 +182,17 @@ class WarehouseTaskDomainSyncService:
             """,
             {"sync_id": sync_id, "updated_by": updated_by or "API"},
         )
-        try:
-            target = self._target_key(task)
-            if target == ("WAVE", "REPLENISHMENT", "PICK_WAVE"):
-                self._sync_wave_replenishment(task, updated_by)
-            elif target == ("WAVE", "PICKING_MOVE", "PICK_WAVE"):
-                self._sync_wave_picking_move(task, updated_by)
-            elif target == ("MES_RAW_SUPPLY", "RAW_TO_PRODUCTION", "PRODUCTION_ORDER"):
-                self._sync_mes_raw_supply(task, updated_by)
-            elif target == ("MES_COMPLETION", "FG_TO_STORAGE", "PRODUCTION_ORDER"):
-                self._sync_mes_completion_storage(task, updated_by)
-            else:
-                raise ValueError("No domain sync handler for this warehouse task.")
-        except Exception as exc:
-            return self._mark_error(sync_id, str(exc), updated_by)
+        target = self._target_key(task)
+        if target == ("WAVE", "REPLENISHMENT", "PICK_WAVE"):
+            self._sync_wave_replenishment(task, updated_by)
+        elif target == ("WAVE", "PICKING_MOVE", "PICK_WAVE"):
+            self._sync_wave_picking_move(task, updated_by)
+        elif target == ("MES_RAW_SUPPLY", "RAW_TO_PRODUCTION", "PRODUCTION_ORDER"):
+            self._sync_mes_raw_supply(task, updated_by)
+        elif target == ("MES_COMPLETION", "FG_TO_STORAGE", "PRODUCTION_ORDER"):
+            self._sync_mes_completion_storage(task, updated_by)
+        else:
+            raise ValueError("No domain sync handler for this warehouse task.")
         self.gateway.execute(
             """
             update RRL_WAREHOUSE_TASK_SYNC
@@ -163,23 +225,9 @@ class WarehouseTaskDomainSyncService:
         )
         active_count = int(rows[0].get("active_count") or 0) if rows else 0
         wave_status = "IN_PROGRESS" if active_count > 0 else "DONE"
-        self._apply_wave_replenishment_stock_move(task, updated_by)
-        if wave_status == "DONE":
-            self.gateway.execute(
-                """
-                update RRL_STOCK_RESERVATION
-                   set STATUS = 'CONSUMED',
-                       CONSUMED_AT = systimestamp,
-                       CONSUMED_BY = substr(:updated_by, 1, 100)
-                 where RESERVATION_ID = (
-                   select SOURCE_RESERVATION_ID
-                     from RRL_PICK_WAVE_REPLENISH_TASK
-                    where PICK_WAVE_REPLENISH_TASK_ID = :source_task_id
-                 )
-                   and STATUS in ('ACTIVE', 'ALLOCATED', 'PICKING')
-                """,
-                {"source_task_id": source_task_id, "updated_by": updated_by or "API"},
-            )
+        fresh_move = self._apply_wave_replenishment_stock_move(task, updated_by)
+        from ..modules.inventory.public import apply_warehouse_replenishment_reservation
+        apply_warehouse_replenishment_reservation(self.gateway, task, wave_status == "DONE", fresh_move, updated_by or "API")
         self.gateway.execute(
             """
             update RRL_PICK_WAVE_REPLENISH_TASK
@@ -212,102 +260,9 @@ class WarehouseTaskDomainSyncService:
                     PickWaveActionRequest(updated_by=updated_by or "API"),
                 )
 
-    def _apply_wave_replenishment_stock_move(self, task: dict[str, Any], updated_by: str | None) -> None:
-        task_id = int(task["task_id"])
-        rows = self.gateway.fetch_all(
-            """
-            select count(*) MOVE_COUNT
-              from RRL_WAREHOUSE_TASK_STOCK_MOVE
-             where TASK_ID = :task_id
-            """,
-            {"task_id": task_id},
-        )
-        if rows and int(rows[0].get("move_count") or 0) > 0:
-            return
-
-        uid_pallet = task.get("uid_pallet") or task.get("sscc")
-        from_cell = task.get("from_cell")
-        to_cell = task.get("to_cell")
-        qty = self._to_float(task.get("fact_qty") or task.get("qty"))
-        if not uid_pallet:
-            raise ValueError("Wave replenishment stock move is missing pallet identifier.")
-        if not from_cell or not to_cell:
-            raise ValueError("Wave replenishment stock move is missing source or target cell.")
-        if qty <= 0:
-            raise ValueError("Wave replenishment stock move quantity must be positive.")
-
-        rows = self.gateway.fetch_all(
-            """
-            select nvl(REMAIN, 0) REMAIN
-              from RRL_REMAINS
-             where UID_POLETA = :uid_pallet
-               and CELL = :from_cell
-            """,
-            {"uid_pallet": uid_pallet, "from_cell": from_cell},
-        )
-        source_qty = self._to_float(rows[0].get("remain")) if rows else 0.0
-        if source_qty + 0.000001 < qty:
-            raise ValueError(
-                "Wave replenishment stock move has insufficient source stock: "
-                f"{uid_pallet} at {from_cell}, available {source_qty}, required {qty}."
-            )
-
-        self.gateway.execute_many(
-            [
-                (
-                    """
-                    update RRL_REMAINS
-                       set REMAIN = REMAIN - :qty
-                     where UID_POLETA = :uid_pallet
-                       and CELL = :from_cell
-                    """,
-                    {"uid_pallet": uid_pallet, "from_cell": from_cell, "qty": qty},
-                ),
-                (
-                    """
-                    merge into RRL_REMAINS d
-                    using (
-                      select :uid_pallet UID_POLETA,
-                             :to_cell CELL,
-                             :qty REMAIN
-                        from dual
-                    ) s
-                    on (d.UID_POLETA = s.UID_POLETA and d.CELL = s.CELL)
-                    when matched then update set
-                      d.REMAIN = nvl(d.REMAIN, 0) + s.REMAIN
-                    when not matched then insert (UID_POLETA, CELL, REMAIN)
-                    values (s.UID_POLETA, s.CELL, s.REMAIN)
-                    """,
-                    {"uid_pallet": uid_pallet, "to_cell": to_cell, "qty": qty},
-                ),
-                (
-                    """
-                    insert into RRL_WAREHOUSE_TASK_STOCK_MOVE (
-                      STOCK_MOVE_ID, TASK_ID, TASK_SOURCE, TASK_TYPE, SOURCE_DOC_TYPE,
-                      SOURCE_DOC_ID, SOURCE_TASK_ID, UID_PALLET, FROM_CELL, TO_CELL,
-                      QTY, CREATED_AT, CREATED_BY
-                    ) values (
-                      RRL_WH_TASK_STOCK_MOVE_SQ.nextval, :task_id, :task_source, :task_type,
-                      :source_doc_type, :source_doc_id, :source_task_id, :uid_pallet,
-                      :from_cell, :to_cell, :qty, systimestamp, substr(:created_by, 1, 100)
-                    )
-                    """,
-                    {
-                        "task_id": task_id,
-                        "task_source": task.get("task_source"),
-                        "task_type": task.get("task_type"),
-                        "source_doc_type": task.get("source_doc_type"),
-                        "source_doc_id": task.get("source_doc_id"),
-                        "source_task_id": task.get("source_task_id"),
-                        "uid_pallet": uid_pallet,
-                        "from_cell": from_cell,
-                        "to_cell": to_cell,
-                        "qty": qty,
-                        "created_by": updated_by or task.get("assigned_to") or "API",
-                    },
-                ),
-            ]
-        )
+    def _apply_wave_replenishment_stock_move(self, task: dict[str, Any], updated_by: str | None) -> bool:
+        from ..modules.inventory.public import apply_warehouse_task_stock_move
+        return apply_warehouse_task_stock_move(self.gateway, task, updated_by or task.get("assigned_to") or "API")
 
     def _sync_wave_picking_move(self, task: dict[str, Any], updated_by: str | None) -> None:
         source_task_id = task.get("source_task_id")
@@ -329,6 +284,7 @@ class WarehouseTaskDomainSyncService:
         wave_task = rows[0]
         if wave_task.get("task_type") != "FULL_PALLET":
             raise ValueError("PICKING_MOVE is supported only for FULL_PALLET wave tasks.")
+        self._apply_wave_replenishment_stock_move(task, updated_by)
 
         rows = self.gateway.fetch_all(
             """
@@ -583,6 +539,7 @@ class WarehouseTaskDomainSyncService:
                    UPDATED_AT = systimestamp,
                    UPDATED_BY = substr(:updated_by, 1, 100)
              where SYNC_ID = :sync_id
+               and SYNC_STATUS <> 'SYNCED'
             """,
             {"sync_id": sync_id, "error_text": error_text, "updated_by": updated_by or "API"},
         )

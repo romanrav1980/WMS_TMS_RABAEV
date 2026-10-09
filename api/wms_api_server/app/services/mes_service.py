@@ -1,4 +1,5 @@
 import json
+from decimal import Decimal
 from typing import Any
 
 from fastapi import HTTPException
@@ -68,7 +69,7 @@ class MesService:
         )
 
     def complete_order(self, production_order_id: int, request: MesCompleteOrderRequest) -> int:
-        payload = [_model_dict(pallet) for pallet in request.pallets]
+        payload = [pallet.model_dump(mode='json') for pallet in request.pallets]
         completion_id = self.gateway.call_number_plsql(
             """
             begin
@@ -97,7 +98,11 @@ class MesService:
         self._ensure_completion_trace_links(production_order_id, request)
         return completion_id
 
-    def apply_wms(self, production_order_id: int, request: MesApplyWmsRequest) -> None:
+    def apply_wms(self, production_order_id: int, request: MesApplyWmsRequest, actor: str | None = None) -> dict | None:
+        from ..modules.inventory.infrastructure.mes_commands import apply_mes_movements
+        posted = apply_mes_movements(self.gateway, production_order_id, request, actor)
+        if posted is not None:
+            return posted
         self.gateway.execute_plsql(
             """
             begin
@@ -107,7 +112,7 @@ class MesService:
               );
             end;
             """,
-            {"production_order_id": production_order_id, **_model_dict(request)},
+            {"production_order_id": production_order_id, "applied_by": request.applied_by},
         )
 
     def retry_movement(self, movement_id: int, request: MesRetryMovementRequest) -> None:
@@ -233,6 +238,10 @@ class MesService:
         production_order_id: int,
         request: MesRawSupplyCalculateRequest,
     ) -> dict[str, Any]:
+        from ..modules.inventory.public import calculate_existing_mes_supply
+        posted = calculate_existing_mes_supply(self.gateway, production_order_id, request)
+        if posted is not None:
+            return posted
         order = self.get_order(production_order_id)
         if not order:
             raise HTTPException(status_code=404, detail="MES production order not found.")
@@ -385,12 +394,17 @@ class MesService:
         production_order_id: int,
         request: MesReleaseToProductionRequest,
     ) -> dict[str, Any]:
+        from ..modules.inventory.infrastructure.mes_release_commands import release_supply
+        posted = release_supply(self.gateway, production_order_id, request)
+        if posted is not None:
+            return posted
         order = self.get_order(production_order_id)
         if not order:
             raise HTTPException(status_code=404, detail="MES production order not found.")
         if order.get("status") in {"COMPLETED", "CANCELLED"}:
             raise HTTPException(status_code=409, detail="Completed/cancelled production order cannot be released.")
 
+        operation_id = request.operation_id or "MES.RELEASE:" + __import__("uuid").uuid4().hex
         task_count = self.gateway.call_number_plsql(
             """
             begin
@@ -399,7 +413,8 @@ class MesService:
                 p_to_ware_id => :to_ware_id,
                 p_to_cell => :to_cell,
                 p_allow_partial => :allow_partial,
-                p_created_by => :created_by
+                p_created_by => :created_by,
+                p_operation_id => :operation_id
               );
             end;
             """,
@@ -409,6 +424,7 @@ class MesService:
                 "to_cell": request.to_cell,
                 "allow_partial": int(request.allow_partial or 0),
                 "created_by": request.created_by or "API",
+                "operation_id": operation_id,
             },
         )
         shortages = self.gateway.fetch_all(
@@ -427,6 +443,8 @@ class MesService:
                 detail={
                     "message": "Raw material shortage. Use allow_partial=1 to create partial transfer tasks.",
                     "shortages": shortages,
+                    "operation_id": operation_id,
+                    "outcome_confirmed": True,
                 },
             )
         tasks = self.gateway.fetch_all(
@@ -537,10 +555,14 @@ class MesService:
         sync_warehouse_task: bool = True,
     ) -> int:
         task = self.get_raw_transfer_task_or_404(task_id)
+        from ..modules.inventory.public import post_existing_mes_task
+        posted = post_existing_mes_task(self.gateway, "CONFIRM", task, request)
+        if posted is not None:
+            return int(posted["movement_id"])
         if task.get("task_status") not in {"PLANNED", "IN_PROGRESS"}:
             raise HTTPException(status_code=409, detail="Only planned/in-progress transfer task can be confirmed.")
         fact_qty = request.fact_qty if request.fact_qty is not None else task.get("task_qty")
-        if fact_qty is None or float(fact_qty) <= 0:
+        if fact_qty is None or Decimal(str(fact_qty)) <= 0:
             raise HTTPException(status_code=400, detail="fact_qty must be positive.")
         movement_id = self.issue_raw(
             int(task["production_order_id"]),
@@ -548,7 +570,7 @@ class MesService:
                 uid_pallet=task.get("uid_pallet"),
                 raw_batch_id=task.get("raw_batch_id"),
                 raw_articul=task.get("raw_articul"),
-                quantity=float(fact_qty),
+                quantity=Decimal(str(fact_qty)),
                 unit_code=task.get("unit_code") or "KG",
                 source_location=task.get("from_cell"),
                 production_location=task.get("to_cell"),
@@ -590,6 +612,9 @@ class MesService:
         request: MesRawTransferTaskCancelRequest,
     ) -> None:
         task = self.get_raw_transfer_task_or_404(task_id)
+        from ..modules.inventory.public import post_existing_mes_task
+        if post_existing_mes_task(self.gateway, "CANCEL", task, request) is not None:
+            return
         if task.get("task_status") == "DONE":
             raise HTTPException(status_code=409, detail="Completed transfer task cannot be cancelled.")
         cancelled_by = request.cancelled_by or "API"
@@ -623,20 +648,23 @@ class MesService:
         self._sync_warehouse_task_from_raw_task(task_id, "CANCELLED", cancelled_by, None, request.reason)
 
     def _clear_raw_supply_calculation(self, production_order_id: int, updated_by: str) -> None:
-        self.gateway.execute(
-            """
-            update RRL_STOCK_RESERVATION
-               set STATUS = 'CANCELLED',
-                   RELEASED_AT = systimestamp,
-                   RELEASED_BY = :updated_by,
-                   RELEASE_REASON = 'MES raw supply recalculation'
-             where RESERVATION_DOMAIN = 'MES_RAW'
-               and PRODUCTION_ORDER_ID = :production_order_id
-               and RESERVATION_KIND = 'SOFT'
-               and STATUS = 'ACTIVE'
-            """,
-            {"production_order_id": production_order_id, "updated_by": updated_by},
-        )
+        from ..modules.inventory.public import release_existing_document_reservations
+        if not release_existing_document_reservations(self.gateway, "PRODUCTION_ORDER", production_order_id, updated_by,
+                "MES raw demand recalculation", reservation_kind="SOFT"):
+            self.gateway.execute(
+                """
+                update RRL_STOCK_RESERVATION
+                   set STATUS = 'CANCELLED',
+                       RELEASED_AT = systimestamp,
+                       RELEASED_BY = :updated_by,
+                       RELEASE_REASON = 'MES raw supply recalculation'
+                 where RESERVATION_DOMAIN = 'MES_RAW'
+                   and PRODUCTION_ORDER_ID = :production_order_id
+                   and RESERVATION_KIND = 'SOFT'
+                   and STATUS = 'ACTIVE'
+                """,
+                {"production_order_id": production_order_id, "updated_by": updated_by},
+            )
         for table_name in (
             "RRL_MES_RAW_SUPPLY_CANDIDATE",
             "RRL_MES_RAW_SHORTAGE",
@@ -668,6 +696,11 @@ class MesService:
         )
         return float(rows[0]["issued_qty"] or 0) if rows else 0.0
 
+    def _assert_legacy_reservation_builder(self) -> None:
+        rows = self.gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
+        if not rows or rows[0]["state"] != "PREPARED":
+            raise HTTPException(409, detail={"code": "MES_RESERVATION_POSTING_REQUIRED"})
+
     def _create_soft_raw_reservation(
         self,
         production_order_id: int,
@@ -677,6 +710,7 @@ class MesService:
         unit_code: str | None,
         created_by: str,
     ) -> int:
+        self._assert_legacy_reservation_builder()
         reservation_id = self._next_sequence_value("RRL_STOCK_RESERVATION_SQ", "RESERVATION_ID")
         self.gateway.execute(
             """
@@ -845,6 +879,7 @@ class MesService:
         candidate: dict[str, Any],
         created_by: str,
     ) -> int:
+        self._assert_legacy_reservation_builder()
         reservation_id = self._next_sequence_value("RRL_STOCK_RESERVATION_SQ", "RESERVATION_ID")
         suggested_qty = float(candidate.get("suggested_qty") or 0)
         physical_qty = float(candidate.get("physical_qty") or 0)

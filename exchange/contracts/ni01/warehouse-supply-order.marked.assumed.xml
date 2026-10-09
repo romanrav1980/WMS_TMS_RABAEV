@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<WarehouseSupplyOrder version="1">
+<Sender>SAP_RETAIL</Sender><MessageId>PO-4500000002-1</MessageId><OrderNumber>4500000002</OrderNumber><Revision>1</Revision>
+<WarehouseId>1</WarehouseId><ReceiveCell>RECEIVE-1</ReceiveCell><Supplier>SUPPLIER EXAMPLE</Supplier>
+<Lines><Line><LineNumber>10</LineNumber><Material>000000000000900001</Material><Quantity unit="PCE">2</Quantity></Line></Lines>
+<Aggregations><Aggregation><LineNumber>10</LineNumber><System>CRPT</System><Profile>TOBACCO</Profile><Level>BOX</Level><Code>BOX-CODE-EXAMPLE</Code>
+<Units><Unit><UnitId>1</UnitId><Code>UNIT-CODE-EXAMPLE-1</Code></Unit><Unit><UnitId>2</UnitId><Code>UNIT-CODE-EXAMPLE-2</Code></Unit></Units>
+</Aggregation></Aggregations>
+</WarehouseSupplyOrder>

@@ -1,0 +1,54 @@
+{
+    "namespace":  "DS-NS45",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "HU1 и HU2 одного S1; HU3 другого S2; лист консолидации HU1+HU2→HU-TARGET; режим TREE/SUM; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS45-TC01",
+                          "initial":  "TREE",
+                          "action":  "Объединить",
+                          "expected":  "Один физический HU-TARGET с исходными дочерними связями",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS45-TC02",
+                          "initial":  "SUM",
+                          "action":  "Объединить",
+                          "expected":  "Состав суммирован, история происхождения и доказанные веса коробок сохранены",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS45-TC03",
+                          "initial":  "HU3 другого адреса",
+                          "action":  "Добавить",
+                          "expected":  "Отказ",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS45-TC04",
+                          "initial":  "Повтор HU1",
+                          "action":  "Использовать вторично",
+                          "expected":  "Отказ двойного расходования",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS45-TC05",
+                          "initial":  "Новый состав",
+                          "action":  "Грузить по старому PASS",
+                          "expected":  "Нельзя, требуется применимый допуск итогового состава",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS45-TT01",
+                          "initial":  "Два места с 5 и 7 кодами",
+                          "action":  "Объединить в целевое место допустимым способом",
+                          "expected":  "Итог 12, точный текущий состав и исходная история; запрещённая профилем переагрегация не выполняется",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

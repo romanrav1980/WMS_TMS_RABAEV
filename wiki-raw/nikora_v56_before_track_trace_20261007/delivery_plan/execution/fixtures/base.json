@@ -1,0 +1,165 @@
+{
+  "dataset": "DS-BASE",
+  "synthetic": true,
+  "productionUse": false,
+  "clock": {
+    "start": "2026-10-07T15:59:00+03:00",
+    "timeZone": "Europe/Moscow"
+  },
+  "products": [
+    {
+      "sku": "D10",
+      "pickUnit": "BOX",
+      "piecesPerBox": 24,
+      "grossKg": "10.000",
+      "netKg": "9.800",
+      "boxTareKg": "0.200",
+      "dimensionsMm": [
+        400,
+        300,
+        200
+      ],
+      "volumeM3": "0.024",
+      "shipFromStock": true,
+      "lotMixPickface": false
+    },
+    {
+      "sku": "D02",
+      "pickUnit": "BOX",
+      "grossKg": "2.000",
+      "netKg": "1.800",
+      "boxTareKg": "0.200",
+      "shipFromStock": true,
+      "lotMixPickface": false
+    },
+    {
+      "sku": "D04",
+      "pickUnit": "BOX",
+      "grossKg": "4.000",
+      "netKg": "3.800",
+      "boxTareKg": "0.200"
+    },
+    {
+      "sku": "FRESH",
+      "pickUnit": "BOX",
+      "shipFromStock": false,
+      "weightTolerancePercent": "15.000"
+    },
+    {
+      "sku": "UNIT-SKU",
+      "pickUnit": "EA",
+      "piecesPerTestBox": 10
+    }
+  ],
+  "lots": [
+    {
+      "lot": "B1",
+      "expiry": "2026-10-31",
+      "eligible": true
+    },
+    {
+      "lot": "B2",
+      "expiry": "2026-11-05",
+      "eligible": true
+    }
+  ],
+  "orders": [
+    {
+      "id": "O1",
+      "sku": "D10",
+      "boxes": 40
+    },
+    {
+      "id": "O2",
+      "sku": "D10",
+      "boxes": 30
+    },
+    {
+      "id": "O3",
+      "sku": "D10",
+      "boxes": 30
+    }
+  ],
+  "locations": [
+    {
+      "id": "P1",
+      "capacityBoxes": 100,
+      "zone": "DRY"
+    },
+    {
+      "id": "RES1",
+      "capacityBoxes": 120,
+      "zone": "DRY",
+      "administrativelyAssigned": true
+    },
+    {
+      "id": "EXP-IN",
+      "virtual": true,
+      "availableAfterReceipt": true
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "T36",
+      "capacity": {
+        "ROLL-A": 36
+      }
+    },
+    {
+      "id": "T32",
+      "capacity": {
+        "ROLL-A": 32
+      }
+    }
+  ],
+  "mixedLoadScheme": {
+    "id": "MIX-20-4",
+    "maxRollA": 20,
+    "maxPalA": 4,
+    "notIndependentMaxima": true
+  },
+  "stores": [
+    {
+      "id": "S1",
+      "receiptMode": "BARCODE",
+      "createdAt": "2026-10-07",
+      "firstOrderAt": "2026-10-15"
+    },
+    {
+      "id": "S-WEIGHT",
+      "receiptMode": "WEIGHT",
+      "requiredPhotoCount": 3
+    }
+  ],
+  "hu": {
+    "id": "HU1",
+    "identifier": "PAL-LEGACY-1",
+    "boxes": [
+      {
+        "sku": "D10",
+        "count": 2,
+        "grossKgEach": "10.000"
+      },
+      {
+        "sku": "D02",
+        "count": 1,
+        "grossKgEach": "2.000"
+      }
+    ],
+    "carrierTareKg": "20.000",
+    "targetGrossKg": "42.000",
+    "minimumBoxGrossKg": "2.000",
+    "toleranceKg": "1.000",
+    "validTestSSCC": "046012345000000012"
+  },
+  "money": {
+    "unit": "TEST_UNIT",
+    "vehicleRate": "100.00",
+    "stopRate": "10.00",
+    "unloadRate": "15.00",
+    "difficultUnloadingExtra": "5.00",
+    "warehouseBoxRate": "0.50"
+  },
+  "isolation": "Existing RABAEV schema in dedicated ORCL dev database; separate synthetic row namespace; reset only through verified loader; preserve all rows outside the fixture",
+  "notice": "Values are synthetic expected data. Individual case explicitly overrides base; loader and API binding prepared on actual schema in NS00/NS04."
+}

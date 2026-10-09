@@ -1,0 +1,57 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]: W
+        - generic [ref=e8]:
+          - strong [ref=e9]: WMS TSD
+          - generic [ref=e10]: terminal web
+      - menu [ref=e11]:
+        - menuitem "home Главная" [ref=e12] [cursor=pointer]:
+          - img "home" [ref=e13]:
+            - img [ref=e14]
+          - generic [ref=e16]: Главная
+        - menuitem "barcode Товар" [ref=e17] [cursor=pointer]:
+          - img "barcode" [ref=e18]:
+            - img [ref=e19]
+          - generic [ref=e21]: Товар
+        - menuitem "inbox Паллета" [ref=e22] [cursor=pointer]:
+          - img "inbox" [ref=e23]:
+            - img [ref=e24]
+          - generic [ref=e26]: Паллета
+        - menuitem "environment Ячейка" [ref=e27] [cursor=pointer]:
+          - img "environment" [ref=e28]:
+            - img [ref=e29]
+          - generic [ref=e31]: Ячейка
+        - menuitem "appstore Производство" [ref=e32] [cursor=pointer]:
+          - img "appstore" [ref=e33]:
+            - img [ref=e34]
+          - generic [ref=e36]: Производство
+        - menuitem "tool Legacy" [ref=e37] [cursor=pointer]:
+          - img "tool" [ref=e38]:
+            - img [ref=e39]
+          - generic [ref=e41]: Legacy
+        - menuitem "database Диагностика" [ref=e42] [cursor=pointer]:
+          - img "database" [ref=e43]:
+            - img [ref=e44]
+          - generic [ref=e46]: Диагностика
+  - generic [ref=e47]:
+    - banner [ref=e48]:
+      - generic [ref=e49]:
+        - strong [ref=e51]: Оператор не выбран
+        - generic [ref=e53]: "API: http://127.0.0.1:8088"
+      - generic [ref=e56]: v0.1.0
+    - main [ref=e57]:
+      - generic [ref=e61]:
+        - generic [ref=e63]:
+          - heading "WMS Terminal" [level=2] [ref=e64]
+          - text: Вход оператора через WMS API / GET_RUSER
+        - textbox "Код оператора" [ref=e66]
+        - button "Войти" [ref=e68] [cursor=pointer]:
+          - generic [ref=e69]: Войти
+        - generic [ref=e71]:
+          - textbox "Или отсканируйте код оператора" [active] [ref=e72]
+          - button "scan Сканировать" [ref=e73] [cursor=pointer]:
+            - img "scan" [ref=e75]:
+              - img [ref=e76]
+            - generic [ref=e78]: Сканировать

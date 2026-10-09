@@ -1,0 +1,11 @@
+@@093_event_bridge_contracts.sql
+@@017_context.sql
+@@018_balances.sql
+@@019_operations.sql
+@@023_manual_move.sql
+@@089_event_bridge.sql
+@@091_compatibility_setting.sql
+@@024_posting.sql
+@@092_event_trigger.sql
+@@094_setting_guard.sql
+@@014b_recompile.sql

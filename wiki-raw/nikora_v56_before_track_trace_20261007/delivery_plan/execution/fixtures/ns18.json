@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS18",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Приход D10=100, партия B1, срок 31.10; фреш F1=20; спорный Q1=10",
+  "scenarios": [
+    {
+      "id": "NS18-TC01",
+      "initial": "D10 до приёмки",
+      "action": "Запросить запас",
+      "expected": "В доступном запасе 0",
+      "mandatory": true
+    },
+    {
+      "id": "NS18-TC02",
+      "initial": "D10 принят в экспедицию",
+      "action": "Запросить источник пополнения",
+      "expected": "100 доступны до хранения",
+      "mandatory": true
+    },
+    {
+      "id": "NS18-TC03",
+      "initial": "F1 в виртуальной EXP-IN",
+      "action": "Резервировать",
+      "expected": "20 доступны пикбайлайну",
+      "mandatory": true
+    },
+    {
+      "id": "NS18-TC04",
+      "initial": "Q1 заблокирован",
+      "action": "Резервировать",
+      "expected": "Недоступен",
+      "mandatory": true
+    },
+    {
+      "id": "NS18-TC05",
+      "initial": "Повтор прихода",
+      "action": "Сверить",
+      "expected": "100 не превращаются в 200",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

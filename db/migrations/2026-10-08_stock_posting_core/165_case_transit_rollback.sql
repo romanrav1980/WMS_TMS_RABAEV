@@ -1,0 +1,21 @@
+declare n number;begin select count(*) into n from RRL_STOCK_OPERATION;if n>0 then raise_application_error(-20808,'POSTED_OPERATIONS_PREVENT_TRANSIT_ROLLBACK');end if;RRL_STOCK_CONFIG_API.begin_change('admin','warehouse_settings_edit');
+delete from RRL_CELLS where CELL='CPT_1' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_1');
+delete from RRL_CELLS where CELL='CPT_2' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_2');
+delete from RRL_CELLS where CELL='CPT_3' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_3');
+delete from RRL_CELLS where CELL='CPT_4' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_4');
+delete from RRL_CELLS where CELL='CPT_5' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_5');
+delete from RRL_CELLS where CELL='CPT_6' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_6');
+delete from RRL_CELLS where CELL='CPT_7' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_7');
+delete from RRL_CELLS where CELL='CPT_8' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_8');
+delete from RRL_CELLS where CELL='CPT_10' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_10');
+delete from RRL_CELLS where CELL='CPT_12' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_12');
+delete from RRL_CELLS where CELL='CPT_9101' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_9101');
+delete from RRL_CELLS where CELL='CPT_9102' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_9102');
+delete from RRL_CELLS where CELL='CPT_9103' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_9103');
+delete from RRL_CELLS where CELL='CPT_9104' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_9104');
+delete from RRL_CELLS where CELL='CPT_9201' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_9201');
+delete from RRL_CELLS where CELL='CPT_9202' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_9202');
+delete from RRL_CELLS where CELL='CPT_9203' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_9203');
+delete from RRL_CELLS where CELL='CPT_9807' and not exists(select 1 from RRL_REMAINS s where s.CELL='CPT_9807');
+RRL_STOCK_CONFIG_API.end_change;commit;exception when others then rollback;RRL_STOCK_CONFIG_API.end_change;raise;end;
+/

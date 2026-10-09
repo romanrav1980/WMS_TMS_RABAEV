@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS24",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Доставка 08.10 07:30; путь 60 минут; погрузка 30 минут; ворота G1; T32; ожидаемый фреш 20 без прихода",
+  "scenarios": [
+    {
+      "id": "NS24-TC01",
+      "initial": "Обратный расчёт",
+      "action": "Создать транспортное задание",
+      "expected": "Отправка 06:30, готовность к погрузке 06:00, ворота G1",
+      "mandatory": true
+    },
+    {
+      "id": "NS24-TC02",
+      "initial": "33 ролл-кейджа",
+      "action": "Назначить T32",
+      "expected": "Не принимается как выполнимый план",
+      "mandatory": true
+    },
+    {
+      "id": "NS24-TC03",
+      "initial": "Фреш 20 ожидается",
+      "action": "Планировать",
+      "expected": "Учитывается планово, физический запас не создаётся",
+      "mandatory": true
+    },
+    {
+      "id": "NS24-TC04",
+      "initial": "Поздний новый заказ",
+      "action": "Добавить в неотгруженный маршрут",
+      "expected": "Связан с заданием и дальнейшим обеспечением",
+      "mandatory": true
+    },
+    {
+      "id": "NS24-TC05",
+      "initial": "Поздний заказ отклонён",
+      "action": "Передать ERP",
+      "expected": "Сообщён отказ сборки, складские задачи не созданы",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

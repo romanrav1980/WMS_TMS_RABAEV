@@ -1,0 +1,12 @@
+@@054_mes_binding_schema.sql
+@@056_mes_movements_contracts.sql
+@@018_balances.sql
+@@020_reservations.sql
+@@021_location.sql
+@@039_unit_core.sql
+@@052_effect_core.sql
+@@032_transfer_core.sql
+@@053_mes_movement_plan.sql
+@@055_mes_movement_core.sql
+@@024_posting.sql
+@@014b_recompile.sql

@@ -204,6 +204,7 @@ function renderFgRemains(rows) {
 
 function selectFgSku(sku) {
   fgState.selectedSku = sku;
+  window.fgReceivingPolicy?.load(sku.articul);
   fgEl("fgSkuDetail").textContent = `${sku.articul} / ${sku.name || ""}`;
   fgEl("fgBatchArticul").value = sku.articul || "";
   fgEl("fgRemainArticul").value = sku.articul || "";

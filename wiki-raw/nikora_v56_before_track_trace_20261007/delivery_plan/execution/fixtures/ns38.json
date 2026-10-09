@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS38",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Комплектовщик P1 обнаружил 0 при учётных 10; policySelfCount true/false; аудитор A2 свободен рядом",
+  "scenarios": [
+    {
+      "id": "NS38-TC01",
+      "initial": "SelfCount=true",
+      "action": "Подтвердить ноль",
+      "expected": "Ноль зафиксирован полномочным комплектовщиком и один инцидент",
+      "mandatory": true
+    },
+    {
+      "id": "NS38-TC02",
+      "initial": "SelfCount=false",
+      "action": "Сообщить отсутствие",
+      "expected": "Срочная инвентаризация назначена A2, прежний учёт не переписан без подтверждения",
+      "mandatory": true
+    },
+    {
+      "id": "NS38-TC03",
+      "initial": "Два сообщения",
+      "action": "Повторить",
+      "expected": "Не создаются два независимых расследования одного случая",
+      "mandatory": true
+    },
+    {
+      "id": "NS38-TC04",
+      "initial": "Монитор смены",
+      "action": "Открыть инцидент",
+      "expected": "Красное место, время, исполнитель и расследование по камере доступны",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

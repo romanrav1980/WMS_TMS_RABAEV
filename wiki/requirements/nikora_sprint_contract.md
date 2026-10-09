@@ -1,5 +1,7 @@
 # NIKORA: общий контракт реализации и приёмки спринта
 
+Уточнение 16.09.2026: ранний выпуск исполняется по [[roadmap/nikora_crossdock_first]] и [[requirements/nikora_crossdock_increments]]. Его явно перечисленные срезы используют собственные READY-зависимости. ACCEPTED_CD означает приёмку среза, PARTIAL_CD — неполный родитель; full ACCEPTED требует всех родительских критериев. Общие инварианты/права/версионность/quality/аудит остаются обязательными. Допуск из действующей WMS требует проверяемого evidence по составу HU, а не одного readyToShip.
+
 Дата: 15.09.2026. Применяется ко всем карточкам [каталога](nikora_sprints/index.md). План/стоимость: [[roadmap/nikora_agent_delivery_plan]]. Запуск: [[runbooks/nikora_agent_launch]].
 
 ## 1. Что означает «готов спринт»
@@ -82,4 +84,3 @@ Merge/deploy и применение миграций в live выполняет
 Базовые цели после реализации: pytest узкого модуля, соответствующий Playwright сценарий, Oracle verify SQL и encoder check. Test report должен содержать SHA, model ID/version/effort, реальные input/cache/output tokens, стоимость, команды/exit codes, test IDs, passed/failed/skipped, скриншоты и DB readback. Не записывать ключи/пароли и необезличенный XML в общий отчёт.
 
 Технические доказательства хранить в reports/nikora/<sprint>/<run>/; создание каталога/артефактов разрешено в рабочем дереве. Пока реализации нет, каталог не требуется. Реальный расход сравнивать с [[roadmap/nikora_agent_delivery_plan]], пересчитывать оставшийся backlog после S0 и первых двух доставленных сценариев.
-

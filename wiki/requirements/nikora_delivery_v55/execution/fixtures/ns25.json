@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS25",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Один рейс R1; части DRY и CHILL; завершение сборки 02:00; смена началась 07.10 20:00",
+  "scenarios": [
+    {
+      "id": "NS25-TC01",
+      "initial": "DRY и CHILL",
+      "action": "Формировать волны",
+      "expected": "Отдельные волны по подскладам со сроком 02:00",
+      "mandatory": true
+    },
+    {
+      "id": "NS25-TC02",
+      "initial": "Повтор расчёта",
+      "action": "Повторить",
+      "expected": "Вторая потребность не возникает",
+      "mandatory": true
+    },
+    {
+      "id": "NS25-TC03",
+      "initial": "Работа в 08.10 01:00 из начатой смены",
+      "action": "Учесть",
+      "expected": "Операционный день 07.10, фактическое время 08.10",
+      "mandatory": true
+    },
+    {
+      "id": "NS25-TC04",
+      "initial": "Новая самостоятельная работа 08.10 00:30",
+      "action": "Учесть",
+      "expected": "Операционный день 08.10",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

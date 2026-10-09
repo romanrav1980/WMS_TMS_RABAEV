@@ -2,6 +2,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Oracle.ManagedDataAccess.Client;
 
+try
+{
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 if (args.Length < 2)
@@ -80,11 +82,31 @@ var scriptEncoding = GetScriptEncoding(args);
 await using var connection = new OracleConnection(connectionString);
 await connection.OpenAsync();
 
-var runner = new SqlPlusLikeRunner(connection, stopOnError, scriptEncoding);
+var runner = new SqlPlusLikeRunner(connection, stopOnError, scriptEncoding, args.Contains("--allow-absent-cleanup", StringComparer.OrdinalIgnoreCase), args.FirstOrDefault(a => a.StartsWith("--source-encoding-manifest=", StringComparison.OrdinalIgnoreCase))?.Split('=', 2)[1]);
 await runner.RunFileAsync(scriptPath);
 
-Console.WriteLine($"Done. Statements={runner.StatementCount}; Errors={runner.ErrorCount}");
+Console.WriteLine($"Done. Statements={runner.StatementCount}; Errors={runner.ErrorCount}; AbsentCleanup={runner.AbsentCleanupCount}");
 return runner.ErrorCount == 0 ? 0 : 1;
+
+
+}
+catch (OracleException ex)
+{
+    Console.Error.WriteLine($"OracleApply stopped with ORA-{ex.Number:D5}: {ex.Message}");
+    Console.Error.WriteLine("No automatic retry. Completed Oracle DDL is retained; uncommitted DML is not a completed migration.");
+    return 1;
+}
+catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
+{
+    Console.Error.WriteLine($"OracleApply input error ({ex.GetType().Name}): {ex.Message}");
+    return 2;
+}
+catch (Exception ex)
+{
+    // Do not dump exception objects or connection configuration into terminal/crash output.
+    Console.Error.WriteLine($"OracleApply failed ({ex.GetType().Name}). No automatic retry.");
+    return 1;
+}
 
 static Encoding GetScriptEncoding(string[] args)
 {
@@ -108,16 +130,21 @@ internal sealed class SqlPlusLikeRunner
     private readonly Encoding scriptEncoding;
     private readonly HashSet<string> includeStack = new(StringComparer.OrdinalIgnoreCase);
     private bool stopOnError;
+    private readonly bool allowAbsentCleanup;
+    private readonly SqlSourceEncodingPolicy sourceEncodingPolicy;
 
-    public SqlPlusLikeRunner(OracleConnection connection, bool stopOnError, Encoding scriptEncoding)
+    public SqlPlusLikeRunner(OracleConnection connection, bool stopOnError, Encoding scriptEncoding, bool allowAbsentCleanup = false, string? sourceEncodingManifest = null)
     {
         this.connection = connection;
         this.stopOnError = stopOnError;
         this.scriptEncoding = scriptEncoding;
+        this.allowAbsentCleanup = allowAbsentCleanup;
+        this.sourceEncodingPolicy = new SqlSourceEncodingPolicy(sourceEncodingManifest);
     }
 
     public int StatementCount { get; private set; }
     public int ErrorCount { get; private set; }
+    public int AbsentCleanupCount { get; private set; }
 
     public async Task RunFileAsync(string path)
     {
@@ -137,7 +164,7 @@ internal sealed class SqlPlusLikeRunner
         var current = new StringBuilder();
         var currentStartLine = 0;
         var inPlSql = false;
-        var lines = await File.ReadAllLinesAsync(path, scriptEncoding);
+        var lines = await File.ReadAllLinesAsync(path, sourceEncodingPolicy.Resolve(path, scriptEncoding));
 
         for (var i = 0; i < lines.Length; i++)
         {
@@ -242,6 +269,12 @@ internal sealed class SqlPlusLikeRunner
         }
         catch (OracleException ex)
         {
+            if (allowAbsentCleanup && AbsentCleanupPolicy.Allows(sql, ex.Number))
+            {
+                AbsentCleanupCount++;
+                Console.WriteLine($"ABSENT_CLEANUP {Path.GetFileName(path)}:{lineNo}: ORA-{ex.Number}");
+                return;
+            }
             ErrorCount++;
             var firstLine = sql.Trim().Split('\n', '\r').FirstOrDefault(s => !string.IsNullOrWhiteSpace(s))?.Trim();
             Console.Error.WriteLine($"ERROR {Path.GetFileName(path)}:{lineNo}: ORA-{ex.Number}: {ex.Message}");

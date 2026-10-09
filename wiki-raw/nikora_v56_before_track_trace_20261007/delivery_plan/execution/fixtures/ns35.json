@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS35",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Весовая коробка: код содержит нетто 4.250 кг; тара 0.250; регистрационный код REG-TEST-1; партия F1",
+  "scenarios": [
+    {
+      "id": "NS35-TC01",
+      "initial": "Корректный код",
+      "action": "Отобрать коробку",
+      "expected": "Нетто 4.250 и брутто 4.500 сохранены, средний вес не подставлен",
+      "mandatory": true
+    },
+    {
+      "id": "NS35-TC02",
+      "initial": "Повтор коробки",
+      "action": "Сканировать",
+      "expected": "Один отбор",
+      "mandatory": true
+    },
+    {
+      "id": "NS35-TC03",
+      "initial": "Неверный весовой код",
+      "action": "Подтвердить",
+      "expected": "Отказ, недоказанный вес не принят",
+      "mandatory": true
+    },
+    {
+      "id": "NS35-TC04",
+      "initial": "Регистрационный код",
+      "action": "Проследить состав",
+      "expected": "Связан с коробкой и её фактической партией",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

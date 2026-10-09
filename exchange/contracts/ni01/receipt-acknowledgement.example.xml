@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Contract example only. Replace EventId/hash with an actually exported event. -->
+<WmsReceiptAcknowledgement version="1">
+  <Sender>SAP_RETAIL</Sender>
+  <MessageId>ACK-EXAMPLE-0001</MessageId>
+  <EventId>RECEIPT:replace-with-real-operation-id</EventId>
+  <PayloadHash>replace-with-sha256-of-exported-xml-bytes</PayloadHash>
+  <Status>ACCEPTED</Status>
+  <ExternalDocumentId>replace-with-SAP-document-number</ExternalDocumentId>
+</WmsReceiptAcknowledgement>

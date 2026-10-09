@@ -73,6 +73,15 @@
             <header><h2>Карточка заказа</h2></header>
             <div class="rights-summary"><span id="orderDetailStatus">Выберите заказ</span></div>
             <pre id="orderDetails"></pre>
+            <details data-permission="customer_order_import">
+              <summary>Подготовить СТ из заказа SAP</summary>
+              <p>Задайте укладку по паллетам. Общее количество должно совпадать с исходным заказом.</p>
+              <button id="sapLayoutLoad" type="button">Заполнить из строк заказа</button>
+              <table class="rights-table"><thead><tr><th>Артикул</th><th>Количество</th><th>Паллета №</th><th></th></tr></thead><tbody id="sapLayoutRows"></tbody></table>
+              <button id="sapPrepareSt" type="button">Подготовить СТ</button>
+              <div data-permission="transport_dispatch_edit"><label>Номер существующего рейса <input id="sapTripId" type="number" min="1" /></label><button id="sapAssignSt" type="button">Добавить СТ в рейс</button></div>
+              <p id="sapPreparationStatus" role="status"></p>
+            </details>
             <div class="rights-summary"><span>Строки заказа</span></div>
             <div class="rights-table-wrap compact-scroll">
               <table class="rights-table">

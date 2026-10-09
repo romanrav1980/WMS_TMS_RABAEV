@@ -1,0 +1,61 @@
+{
+    "namespace":  "DS-NS23",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "HU1 содержит C1=10 кг и C2=2 кг; HU2 содержит C3=4 кг; внутренний PAL-LEGACY-1 и валидный SSCC; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS23-TC01",
+                          "initial":  "HU1 как родитель",
+                          "action":  "Прочитать состав",
+                          "expected":  "C1/C2 доступны, физическое место одно",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS23-TC02",
+                          "initial":  "C2 уже в HU1",
+                          "action":  "Добавить в HU2",
+                          "expected":  "Двойной родитель не допускается",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS23-TC03",
+                          "initial":  "HU1 вложить в C1",
+                          "action":  "Подтвердить",
+                          "expected":  "Цикл отклонён",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS23-TC04",
+                          "initial":  "PAL-LEGACY-1",
+                          "action":  "Сканировать",
+                          "expected":  "Внутренний идентификатор допустим",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS23-TC05",
+                          "initial":  "Изменить состав",
+                          "action":  "Прочитать версию",
+                          "expected":  "Новая версия, исходные связи прослеживаются",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS23-TT01",
+                          "initial":  "Один короб с 12 единицами",
+                          "action":  "Разделить на 5 и 7 по разным SSCC",
+                          "expected":  "Текущий состав 5+7=12, каждый код принадлежит одному месту; исходная иерархия сохранена",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS23-TT02",
+                          "initial":  "Иерархия короб–паллета",
+                          "action":  "Включить родителя в потомка и одну единицу в два текущих места",
+                          "expected":  "Обе операции отклонены без частичного изменения; циклов и двойного владения нет",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

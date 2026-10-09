@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS65",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Паспорт расширения: FRESH, весовой товар, пикбайлайн, два источника и кросс-док; 10 рабочих дней",
+  "scenarios": [
+    {
+      "id": "NS65-TC01",
+      "initial": "Фреш пришёл 19:30",
+      "action": "Запустить после обеспечения",
+      "expected": "Физический резерв, фактический вес и состав доказаны",
+      "mandatory": true
+    },
+    {
+      "id": "NS65-TC02",
+      "initial": "Подвоз задержан",
+      "action": "Отправить целевой рейс",
+      "expected": "Решение диспетчера, непогруженные места под контролем",
+      "mandatory": true
+    },
+    {
+      "id": "NS65-TC03",
+      "initial": "Магазин с весом",
+      "action": "Принять",
+      "expected": "Обязательные показания и фото сохранены",
+      "mandatory": true
+    },
+    {
+      "id": "NS65-TC04",
+      "initial": "Новый подсклад",
+      "action": "Добавить",
+      "expected": "Принят только после его собственных сценариев",
+      "mandatory": true
+    },
+    {
+      "id": "NS65-TC05",
+      "initial": "Наблюдение",
+      "action": "Завершить",
+      "expected": "10 рабочих дней без открытого критического расхождения",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

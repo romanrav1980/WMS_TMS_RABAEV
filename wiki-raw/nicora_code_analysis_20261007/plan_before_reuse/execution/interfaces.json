@@ -1,0 +1,900 @@
+{
+    "status":  "target_contracts_before_DB_binding",
+    "contracts":  [
+                      {
+                          "id":  "NS00",
+                          "object":  "Паспорт стенда",
+                          "input":  "Версии, пути, схемы, способы запуска и проверки доступа",
+                          "output":  "Воспроизводимая среда, два интерфейса, изолированный seed/reset",
+                          "invariants":  "Неготовая среда не выдаётся за готовую, очистка RABAEV затрагивает только синтетический набор; остальные данные сохраняются"
+                      },
+                      {
+                          "id":  "NS01",
+                          "object":  "Реестр правил",
+                          "input":  "Исходные файлы и контрольные суммы, Q01–Q28",
+                          "output":  "requirementId, sourceRef, правило, критерий, связь со спринтом",
+                          "invariants":  "Уникальность ID, сохранение исходного текста, отсутствие потерянных решений",
+                          "traceability":  {
+                                               "scope":  "Реестр редакции 57 включает сквозную маркировку, настройки SKU и договор данных RABAEV",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS01-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS02",
+                          "object":  "Складской GAP",
+                          "input":  "requirementId, версия метода, вход и целевой критерий",
+                          "output":  "observedResult, evidence, gapStatus и отличие",
+                          "invariants":  "Не найдено и не проверено различаются, отказ целевого теста записан честно",
+                          "traceability":  {
+                                               "scope":  "GAP проверяет существующие CRPT-таблицы, SKU-профили и жизненный цикл кодов",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS02-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS03",
+                          "object":  "Транспортный GAP",
+                          "input":  "Рейс, груз, источник WMS, сообщения ERP, версия кода",
+                          "output":  "Фактическая цепочка, доказательства и недостающие состояния",
+                          "invariants":  "Mock и живой источник различаются, нет ложного закрытия доставки",
+                          "traceability":  {
+                                               "scope":  "GAP разделяет SAP, CRPT, ЕГАИС и другие применимые адаптеры",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS03-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS04",
+                          "object":  "Контракт разработки",
+                          "input":  "Реестр правил, GAP, версии среды, scope и нагрузка",
+                          "output":  "Команда, DTO, объект БД, права, транзакция, ошибки, тесты, dependencies",
+                          "invariants":  "Все выявленные отличия назначены, утверждённый стек и закупка Oracle NICORA сохранены",
+                          "traceability":  {
+                                               "scope":  "Контракт редакции 57 связывает SKU-политики, структуру RABAEV, адаптеры и приёмку",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS04-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS05",
+                          "object":  "Отчёт квалификации",
+                          "input":  "GPU, runtime, модель, контекст, taskId и ожидаемый результат",
+                          "output":  "VRAM, время, попытки, accepted, criticalError, contextClipped, qualified",
+                          "invariants":  "Допуск только после измерения, отрицательный результат включает облачный резерв"
+                      },
+                      {
+                          "id":  "NS06",
+                          "object":  "Пакет установки",
+                          "input":  "Закреплённые зависимости, конфигурация процессов и ролей",
+                          "output":  "Сборка, запуск, readiness и воспроизводимая установка",
+                          "invariants":  "Dev reload не используется, права не расширены незаметно"
+                      },
+                      {
+                          "id":  "NS07",
+                          "object":  "Бюджет соединений и аудит",
+                          "input":  "poolLimits, acquireTimeout, queryTimeout, общий бюджет и audit event",
+                          "output":  "Ограниченное ожидание и полный обязательный журнал",
+                          "invariants":  "Синхронный вызов не блокирует event loop, бюджет считается для всех процессов"
+                      },
+                      {
+                          "id":  "NS08",
+                          "object":  "Критическая команда",
+                          "input":  "operationKey, actor, expectedVersion, payload",
+                          "output":  "factId, новая версия, итоговый баланс, первоначальный результат повтора",
+                          "invariants":  "Факт, обязательный журнал и outbox атомарны; неверное право, версия или повтор с другим payload отклонены",
+                          "traceability":  {
+                                               "scope":  "Атомарность товарного эффекта, состава кодов, истории и обязательств каждой системы",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS08-TT01",
+                                                                          "NS08-TT02"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS09",
+                          "object":  "Интеграционное сообщение",
+                          "input":  "messageId, source, type, entityKey/version, payloadHash, rawPayload",
+                          "output":  "RECEIVED→VALIDATED→APPLIED либо REJECTED/RETRY, журнал причины",
+                          "invariants":  "Идемпотентность, устаревшая версия не меняет факт, исходный payload доступен",
+                          "traceability":  {
+                                               "scope":  "Обмен сохраняет систему, профиль, точные коды и независимые статусы квитанций",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS09-TT01",
+                                                                          "NS09-TT02"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS10",
+                          "object":  "Фоновое задание",
+                          "input":  "jobId, owner, leaseUntil, attempt, nextAttemptAt, idempotencyKey",
+                          "output":  "READY→CLAIMED→DONE либо RETRY/ERROR",
+                          "invariants":  "Истёкшее владение восстанавливается, повтор получателя безопасен",
+                          "traceability":  {
+                                               "scope":  "Фоновая отправка и проверка маркировки с lease, повтором и очередью ошибок",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS10-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS11",
+                          "object":  "Монитор технического состояния",
+                          "input":  "Окно времени, фильтр модуля, latency, очередь и пул",
+                          "output":  "Ограниченная выборка показателей и ссылки на requestId/SQL",
+                          "invariants":  "Снимок не подменяет бизнес-факт и не читает всю историю",
+                          "traceability":  {
+                                               "scope":  "Монитор показывает блокировки маркировки и возраст обязательств по каждой системе",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS11-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS12",
+                          "object":  "Архив",
+                          "input":  "Закрытые факты, срок хранения, ссылки, checksum",
+                          "output":  "Архив и поиск исходного факта/файла",
+                          "invariants":  "Открытые объекты сохранены, перенос повторяем без потери истории",
+                          "traceability":  {
+                                               "scope":  "Архив сохраняет поиск кодов, происхождение и история агрегаций",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS12-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS13",
+                          "object":  "Карточка товара",
+                          "input":  "sku, unit, pack, qtyPerPack, gross/net/tare, dimensions, volume, codes, flags",
+                          "output":  "Проверенная версия карточки и допустимые упаковки",
+                          "invariants":  "Неизвестное и непроверенное не допущено; измерения площадки не заменяются прогнозом модели",
+                          "traceability":  {
+                                               "scope":  "SKU MARKING_REQUIRED, несколько версионных профилей и общая основа единиц/кодов RABAEV",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS13-TT01",
+                                                                          "NS13-TT02",
+                                                                          "NS13-TT03",
+                                                                          "NS13-TT04"
+                                                                      ]
+                                           },
+                          "traceabilityFields":  [
+                                                     "MARKING_REQUIRED",
+                                                     "skuId",
+                                                     "systemId",
+                                                     "issuerScope",
+                                                     "profileId",
+                                                     "profileVersion",
+                                                     "jurisdiction",
+                                                     "productGroup",
+                                                     "accountingMode",
+                                                     "markedUnit",
+                                                     "unitConversion",
+                                                     "allowedScanLevels",
+                                                     "aggregationSource",
+                                                     "requiredValidation",
+                                                     "validFrom",
+                                                     "validUntil",
+                                                     "approvedBy"
+                                                 ]
+                      },
+                      {
+                          "id":  "NS14",
+                          "object":  "Топология",
+                          "input":  "warehouse, subwarehouse, cell, category, mass/volume/height, routeDirection, timeZone",
+                          "output":  "Пригодный адрес и допустимый маршрут",
+                          "invariants":  "Вместимость и направление обязательны, timezone не берётся из ОС сервера"
+                      },
+                      {
+                          "id":  "NS15",
+                          "object":  "Адрес и вместимость",
+                          "input":  "storeId, createdAt, firstOrderAt, receiptMode, sourceBook, vehicleId, containerFormat, mixedScheme",
+                          "output":  "Проверенный адрес и справочная схема загрузки",
+                          "invariants":  "Неделя до первого заказа, вместимость конкретной машины, не площадь основания"
+                      },
+                      {
+                          "id":  "NS16",
+                          "object":  "Сопоставление ERP",
+                          "input":  "sourceCode, internalCode, version, dictionaries, messageId",
+                          "output":  "Однозначный mapping и результат применения",
+                          "invariants":  "Дубликат не создаёт вторую карточку, неполнота не допускается в план",
+                          "traceability":  {
+                                               "scope":  "Обмен SKU-профилями и отдельные адаптеры CRPT, ЕГАИС и расширяемой Track \u0026 Trace",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS16-TT01",
+                                                                          "NS16-TT02",
+                                                                          "NS16-TT03"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS17",
+                          "object":  "Потребность ERP",
+                          "input":  "orderId, rows, qty/unit, plannedPickAt, plannedShipAt, receivedAt",
+                          "output":  "Принятый исходный заказ либо поздний новый в ожидании решения",
+                          "invariants":  "Изменения ранее переданного заказа запрещены, потребность и обеспечение различаются"
+                      },
+                      {
+                          "id":  "NS18",
+                          "object":  "Приёмка",
+                          "input":  "receiptId, palletId, sku, qty/unit, batch/expiry, qualityState, expCell, weight",
+                          "output":  "Факт прихода и доступность после экспедиции приёмки",
+                          "invariants":  "Спорное заблокировано, повтор не удваивает запас, приход не равен размещению в хранении",
+                          "traceability":  {
+                                               "scope":  "Приёмка SAP с поштучной маркировкой, разрешённой агрегацией, SSCC и фактическим составом",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS18-TT01",
+                                                                          "NS18-TT02",
+                                                                          "NS18-TT03",
+                                                                          "NS18-TT04",
+                                                                          "NS18-TT05"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS19",
+                          "object":  "Слотирование",
+                          "input":  "sku, ranges, categoryReserve, lotMixPickface, old/new version",
+                          "output":  "Административный диапазон и условия перехода",
+                          "invariants":  "Смешение только по SKU в отборе, хранение раздельно, активные задания не меняются",
+                          "traceability":  {
+                                               "scope":  "Правила партий и слотирования сохраняют фактическую прослеживаемость маркированных единиц",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS19-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS20",
+                          "object":  "Стратегия размещения",
+                          "input":  "Принятый запас хранения/экспедиции, FEFO/FIFO, размеры, приоритет и расстояние",
+                          "output":  "Источник и пригодная ячейка с объяснимым выбором",
+                          "invariants":  "Подходящая партия и ёмкость проверены с учётом назначенных подач",
+                          "traceability":  {
+                                               "scope":  "Размещение по минимальному времени пополнения с переносом точного состава кодов",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS20-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS21",
+                          "object":  "Мягкий резерв",
+                          "input":  "Пул открытых заказов, sku, availableStock, shipFromStock, qty/unit",
+                          "output":  "Обеспеченное количество и SOFT demand reservation без waveId",
+                          "invariants":  "Не более свободного остатка, нет физического резерва ожидаемого прихода",
+                          "traceability":  {
+                                               "scope":  "Мягкий резерв исключает обязательные блокировки маркировки",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS21-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS22",
+                          "object":  "Распределение дефицита",
+                          "input":  "Потребность, доступный остаток, pickMultiple, сроки волн",
+                          "output":  "Целые доли заказов и необеспечённый остаток спроса",
+                          "invariants":  "Сумма не выше запаса, кратность отбора не заменяется кратностью пополнения"
+                      },
+                      {
+                          "id":  "NS23",
+                          "object":  "Грузовое место",
+                          "input":  "huId, внешний SSCC/legacyId, store/order, boxContent, parent, contentVersion",
+                          "output":  "Физическое место, состав, дерево и история",
+                          "invariants":  "Один parent, нет циклов и двойного физического счёта, происхождение сохранено",
+                          "traceability":  {
+                                               "scope":  "Текущая и историческая агрегация по системам, разделение без двойного счёта",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS23-TT01",
+                                                                          "NS23-TT02"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS24",
+                          "object":  "Транспортное задание",
+                          "input":  "Заказы, прогноз массы/объёма/тары, vehicleCapacity, route, timeWindows, leadTimes, gate и складские ресурсы",
+                          "output":  "Рейс и задание на сборку с deadline, воротами, консолидацией и режимом",
+                          "invariants":  "Ожидаемый фреш не превращается в запас, поздний заказ только по решению логиста"
+                      },
+                      {
+                          "id":  "NS25",
+                          "object":  "Волна",
+                          "input":  "transportPlanId, subwarehouse, deadlinePickFinish, orderLines, operationStart и timezone",
+                          "output":  "Складские волны и операционный день начала",
+                          "invariants":  "Группировка по подскладу и окончанию сборки, не по самостоятельному температурному признаку"
+                      },
+                      {
+                          "id":  "NS26",
+                          "object":  "Жёсткий резерв",
+                          "input":  "waveId, обеспеченные строки, SOFT references, физические источники и qty",
+                          "output":  "HARD wave reservation и остаток SOFT без удвоения",
+                          "invariants":  "Чужой резерв не расходуется, фреш только после фактической доступности",
+                          "traceability":  {
+                                               "scope":  "Конкретные маркированные единицы не обеспечивают две волны одновременно",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS26-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS27",
+                          "object":  "Мини-макс",
+                          "input":  "sku, min/max, запас отбора, открытые подачи и источники",
+                          "output":  "Одно задание и резерв источника",
+                          "invariants":  "Учитываются уже назначенные количество и ёмкость, нет дублированной подачи"
+                      },
+                      {
+                          "id":  "NS28",
+                          "object":  "Подача под волну",
+                          "input":  "waveDemand, sourcePalletQty, pickRange, slots и открытый мини-макс",
+                          "output":  "Целая паллета в пригодный слот либо разрешённый резерв",
+                          "invariants":  "Нет повторного количества и переполнения, резерв не создаётся вне административных правил"
+                      },
+                      {
+                          "id":  "NS29",
+                          "object":  "Частичная подача B",
+                          "input":  "Дефицит волны, категория, занятая ячейка, свободная ёмкость, sourcePallet и batch",
+                          "output":  "Количество min свободной ёмкости и источника, остаток источника",
+                          "invariants":  "Правила смешения и категория соблюдены, остатки точны",
+                          "traceability":  {
+                                               "scope":  "Частичное пополнение переносит фактические коды и сохраняет остаток",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS29-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS30",
+                          "object":  "Ресурс смены",
+                          "input":  "employeeId, roles/rights, zones, equipment, shift, breaks, presence",
+                          "output":  "Один фонд времени, доступность и допущенное сочетание человека с техникой",
+                          "invariants":  "Ранняя основная и дежурная смены, совмещение не удваивает время"
+                      },
+                      {
+                          "id":  "NS31",
+                          "object":  "Назначение задания",
+                          "input":  "taskId, operation, priority, deadline, permittedResource, location, payload и версия",
+                          "output":  "ASSIGNED→STARTED→DONE либо WAIT/CANCEL с историей",
+                          "invariants":  "Не более одного независимого задания человеку, безопасная передача груза",
+                          "traceability":  {
+                                               "scope":  "ТСД выбирает режим по версии профиля SKU и подтверждает server-saved коды",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS31-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS32",
+                          "object":  "Разрешение волны",
+                          "input":  "waveId, полный набор строк, резервы, подача и её фактическое завершение",
+                          "output":  "WAITING либо RELEASED, блокирующие задачи и исполнители",
+                          "invariants":  "Ни одного скрытого дефицита, повтор запуска не создаёт второй отбор"
+                      },
+                      {
+                          "id":  "NS33",
+                          "object":  "Прогноз загрузки",
+                          "input":  "Объём задач, нормативы, смены, совмещённые роли и время рейсов",
+                          "output":  "График потребности/доступности и дефицита",
+                          "invariants":  "Логист со складом выравнивают нагрузку, прогноз не считает отсутствующего как фактический ресурс"
+                      },
+                      {
+                          "id":  "NS34",
+                          "object":  "Стеллажный отбор",
+                          "input":  "taskId, cellScan, sku/boxScan, qty, huId, batch и snapshot источника",
+                          "output":  "Факт отбора, версия состава, точный источник и партия либо правило учётного списания",
+                          "invariants":  "Односторонний путь, нет незаметной смены активного источника",
+                          "traceability":  {
+                                               "scope":  "Отбор сохраняет точные коды по коробке и единице с привязкой к магазину",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS34-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS35",
+                          "object":  "Весовая коробка",
+                          "input":  "boxBarcode, decodedWeight, packageTare, regulatoryCode, batch и huId",
+                          "output":  "Доказанные net/gross и прослеживаемая коробка",
+                          "invariants":  "Невалидный код и повтор отклонены, средний вес не подставлен",
+                          "traceability":  {
+                                               "scope":  "Маркированная весовая упаковка хранит уникальную идентичность и фактическую массу",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS35-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS36",
+                          "object":  "Комплектация на весах",
+                          "input":  "address, sku, scaleId, stableMeasurement, tare, targetWeight и SKU tolerance",
+                          "output":  "Точный вес и состав, штатный результат либо исключение последней коробки",
+                          "invariants":  "15 процентов касается заказа, не точности измерения; нет завершения без обязательного веса",
+                          "traceability":  {
+                                               "scope":  "Накидывание и весовая комплектация сохраняют индивидуальные коды и условия вскрытия",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS36-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS37",
+                          "object":  "Пикбайлайн",
+                          "input":  "Принятый товар EXP-IN, заказ/адрес, waveId, qty и остаток источника",
+                          "output":  "Распределение от прихода к адресу, фактический HARD reserve",
+                          "invariants":  "Не нужен фиктивный стеллажный приход, недопоставка видна",
+                          "traceability":  {
+                                               "scope":  "Пикбайлайн передаёт конкретные пригодные маркированные единицы из экспедиции",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS37-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS38",
+                          "object":  "Инцидент пустой ячейки",
+                          "input":  "cell, task, actor, reportedAt, selfCountPolicy, eligibleAuditor",
+                          "output":  "Подтверждение нуля либо срочная инвентаризация, один incidentId",
+                          "invariants":  "Неавторизованный ноль не меняет учёт, руководитель видит красное место"
+                      },
+                      {
+                          "id":  "NS39",
+                          "object":  "Срочное восстановление",
+                          "input":  "incidentId, confirmedZero, source/destination, availableReachtruck, firstPriority, timeout",
+                          "output":  "Подача и восстановление, общий таймер от reportedAt",
+                          "invariants":  "5 минут по умолчанию, передача не сбрасывает возраст, дежурный ресурс доступен"
+                      },
+                      {
+                          "id":  "NS40",
+                          "object":  "Малая коробка",
+                          "input":  "boxSSCC, pieceContent, measuredGross, tare, parentHu и evidence",
+                          "output":  "Доказанный итоговый вес каждой малой коробки",
+                          "invariants":  "Тара учтена один раз, исключение родителя не отменяет контроль",
+                          "traceability":  {
+                                               "scope":  "Новая малая тара не создаёт новые товарные марки",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS40-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS41",
+                          "object":  "Весовой допуск",
+                          "input":  "huId, contentVersion, expectedGross, minPhysicalBox, policy, measuredGross",
+                          "output":  "PASS либо HOLD/redTag и применимая этикетка",
+                          "invariants":  "Допуск minBox/2 включительно, неполная паллета не освобождена, старый PASS не применяется",
+                          "traceability":  {
+                                               "scope":  "Разрешение отгрузки требует применимых проверок маркировки независимо от веса",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS41-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS42",
+                          "object":  "Проверка состава",
+                          "input":  "incidentId, expectedBoxes, scansAllBoxes, controller и huVersion",
+                          "output":  "Фактический состав, конкретные missing/excess boxes",
+                          "invariants":  "Совпавший общий вес не скрывает пересорт, повтор скана не удваивает коробку"
+                      },
+                      {
+                          "id":  "NS43",
+                          "object":  "Исправление HU",
+                          "input":  "missing/excess, returnTask, completeTask, controller, newWeight/version",
+                          "output":  "Возврат, докомплектация и новый допуск",
+                          "invariants":  "Все товарные изменения отражены, старый контроль недействителен",
+                          "traceability":  {
+                                               "scope":  "Исправление состава меняет связи кодов и отменяет прежний допуск",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS43-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS44",
+                          "object":  "Выборочный аудит",
+                          "input":  "subwarehouseRate, huId, contentVersion, randomSelection и auditState",
+                          "output":  "Назначение полного перепикивания и результат",
+                          "invariants":  "100 процентов означает все места, повтор или снижение настройки не снимает назначение",
+                          "traceability":  {
+                                               "scope":  "Перепикивание сверяет уникальные единицы, а не только одинаковые EAN",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS44-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS45",
+                          "object":  "Консолидация",
+                          "input":  "PackingList, sourceHuIds, store, targetHuId, TREE/SUM, contentVersions",
+                          "output":  "Целевой состав и история, применимый допуск",
+                          "invariants":  "Один адрес, нет второго расходования, доказанные массы коробок не теряются",
+                          "traceability":  {
+                                               "scope":  "Консолидация сохраняет иерархии и запреты каждого профиля",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS45-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS46",
+                          "object":  "Перемещение экспедиции",
+                          "input":  "taskId, huId, source, targetGate, worker, takeScan и putScan",
+                          "output":  "Фактический этап и местоположение",
+                          "invariants":  "Взятие не означает установку, чужие ворота не подтверждают готовность"
+                      },
+                      {
+                          "id":  "NS47",
+                          "object":  "Погрузка",
+                          "input":  "finalPhysicalHu, tripId, vehicleId, gate, worker, qualityVersion и capacity",
+                          "output":  "LOADED в конкретный автомобиль с журналом",
+                          "invariants":  "Стандартный SSCC и внутренний ID допустимы, лишнее/чужое/красное не грузится",
+                          "traceability":  {
+                                               "scope":  "Погрузка и отпуск проверяют обязательный регуляторный документ и получателя",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS47-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS48",
+                          "object":  "Изменение рейса",
+                          "input":  "Trip version, expected/actual places, dispatcherDecision, targetTrip и unloadFact",
+                          "output":  "WAIT/DEPARTED или контролируемое переназначение с причиной",
+                          "invariants":  "Без всех мест рейс ждёт, погруженное сначала выгружено, зависшее место не теряется",
+                          "traceability":  {
+                                               "scope":  "Переназначение получателя сохраняет коды и перепроверяет документы",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS48-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS49",
+                          "object":  "Приёмка BARCODE",
+                          "input":  "Store receiptMode, finalHu, delivery, actor и camera-location",
+                          "output":  "Принятый окончательный состав и время",
+                          "invariants":  "Чужой адрес и дубликат отклонены, WEIGHT mode не обходится",
+                          "traceability":  {
+                                               "scope":  "Приёмка назначения сверяет коды либо разрешённый неизменённый агрегат",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS49-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS50",
+                          "object":  "Сквозная репетиция",
+                          "input":  "ERP order, транспортный план, все факты выбранного сухого цикла",
+                          "output":  "Связанный trace и товарный баланс",
+                          "invariants":  "Стендовая репетиция не называется живым пилотом, mock не закрывает физические факты",
+                          "traceability":  {
+                                               "scope":  "Сухой сквозной поток включает табачный, немаркированный и multi-profile товар",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS50-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS51",
+                          "object":  "Межскладской поток",
+                          "input":  "sourceParts, huId/version, shuttleLeg, targetTrip, arrival/unload/receive/move scans",
+                          "output":  "Отдельные плечи, приёмка cross-dock, целевые ворота, решение отклонения",
+                          "invariants":  "Кросс-док не закрывает магазин, потеря или задержка сохраняют груз и ответственность",
+                          "traceability":  {
+                                               "scope":  "Кросс-док и межскладское плечо передают те же единицы и системные обязательства",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS51-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS52",
+                          "object":  "Приёмка WEIGHT",
+                          "input":  "Store policy, finalHuVersion, shipmentWeight, taredMeasurement, multiSidePhotos и representativeAct",
+                          "output":  "Приёмка или акт расхождения, архив доказательства",
+                          "invariants":  "Нет автоматического обхода неисправных весов, основа сравнения и тара едины"
+                      },
+                      {
+                          "id":  "NS53",
+                          "object":  "Расследование потери",
+                          "input":  "Missing huId, expeditionTask, searchDeadline, security, shift/KRO decisions",
+                          "output":  "Поиск, повторная сборка либо утверждённая корректировка и претензия",
+                          "invariants":  "Срок решает диспетчер, повторную сборку старший, списание КРО",
+                          "traceability":  {
+                                               "scope":  "Потеря и расследование фиксируют конкретные маркированные единицы",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS53-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS54",
+                          "object":  "Возврат",
+                          "input":  "Supply Chain approval, sourceDelivery, boxCompleteness, quality, targetFlow и receipt",
+                          "output":  "Пригодный отбор либо поставщик/брак, факты ERP",
+                          "invariants":  "Неполное и брак не становятся пригодным запасом, место выявления определяет списание",
+                          "traceability":  {
+                                               "scope":  "Возврат кода работает по допустимому жизненному циклу и основаниям SAP",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS54-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS55",
+                          "object":  "Тара",
+                          "input":  "type, qty, from/to склад/машина/магазин, driver/warehouse confirmations и duePolicy",
+                          "output":  "Остатки по типам и просрочки",
+                          "invariants":  "Не обязательны постоянные номера, SSCC матрёшки не увеличивают физическую тару"
+                      },
+                      {
+                          "id":  "NS56",
+                          "object":  "Нормативные затраты",
+                          "input":  "factOperations, boxQty, actualTrip, vehicle/stops/unload, region и tariffVersion",
+                          "output":  "Ежедневные начисления с базой и версией ставки",
+                          "invariants":  "Рейс фактический, повтор не удваивает расходы, сложная выгрузка учтена"
+                      },
+                      {
+                          "id":  "NS57",
+                          "object":  "Допрасход и ставки",
+                          "input":  "expenseArticle, amount, TRIP/VEHICLE, allocationBase, approval, priorMonthTotals и controller",
+                          "output":  "Распределение рейса, нераспределённая машина, месячная ставка и история",
+                          "invariants":  "Общие работы не начислены второй раз, позднее подтверждение имеет решение"
+                      },
+                      {
+                          "id":  "NS58",
+                          "object":  "Закрытие дня",
+                          "input":  "Planned/loaded/delivered huIds, reasons, today/nextTrip, physicalZone, costs и ERP queue",
+                          "output":  "Сверка, остаток зоны и незакрытые расхождения",
+                          "invariants":  "Нет ложной пустой зоны и пропавшего места, товарные факты не стираются переносом",
+                          "traceability":  {
+                                               "scope":  "Закрытие смены сверяет баланс кодов и открытые обязательства каждой системы",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS58-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS59",
+                          "object":  "Рекомендация диапазона",
+                          "input":  "Статистика, stockout flags, forecast/order overlap, palletQty, existingCells и limits",
+                          "output":  "Кандидаты и сравнение затрат, решение начальника и переход",
+                          "invariants":  "Не двойной спрос, не автоматическая смена выданных задач, старый диапазон вымывается"
+                      },
+                      {
+                          "id":  "NS60",
+                          "object":  "Автоплан",
+                          "input":  "Orders, vehicleCapacityScheme, timeWindows, routeMatrix, source/gate resources и planId",
+                          "output":  "Выполнимый план и причины исключения, безопасный apply",
+                          "invariants":  "Один validator ручного и авто, повтор не дублирует рейсы, отказ solver безопасен"
+                      },
+                      {
+                          "id":  "NS61",
+                          "object":  "Восстановление",
+                          "input":  "BackupSet, факты, outbox, files/checksums, chosenFault и согласованные RPO/RTO",
+                          "output":  "Измеренный протокол восстановления по выбранному виду отказа",
+                          "invariants":  "API restart не доказывает потерю площадки, production-конфигурация отдельно квалифицирована",
+                          "traceability":  {
+                                               "scope":  "Backup/restore восстанавливает коды, иерархии и незавершённый обмен",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS61-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS62",
+                          "object":  "Нагрузочный прогон",
+                          "input":  "Утверждённый профиль, исторический объём, generatorCapacity, mix ролей и duration",
+                          "output":  "Throughput, latency, locks/queue, balances и SQL решения",
+                          "invariants":  "Профиль не считается доказанным без прогона, насыщенный генератор не даёт ложный PASS",
+                          "traceability":  {
+                                               "scope":  "Нагрузка включает миллионы кодов, поиск идентичности и пакетную агрегацию",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS62-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS63",
+                          "object":  "Приёмочная смена",
+                          "input":  "Все роли, источники, исключения, реальные приборы и ночной календарь",
+                          "output":  "Evidence обязательного покрытия расширенных процессов",
+                          "invariants":  "Полный состав, точные весы, тара и расходы, нет обхода аппаратных требований",
+                          "traceability":  {
+                                               "scope":  "Общая смена включает каждый применимый профиль маркировки",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS63-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS64",
+                          "object":  "Сухой пилот",
+                          "input":  "Scope, frozenVersion, PG-D, counters, incidents и 10 дней наблюдения",
+                          "output":  "Ограниченный принятый сухой поток и решение расширения",
+                          "invariants":  "До PG-D живых операций нет, миллионы операций не объявлены принятыми",
+                          "traceability":  {
+                                               "scope":  "Сухой пилот включает маркированный поток, если он входит в scope площадки",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS64-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS65",
+                          "object":  "Расширенный пилот",
+                          "input":  "NS63, принятый сухой пилот, новые потоки и 10 дней наблюдения",
+                          "output":  "Принятые фреш/вес/пикбайлайн/кросс-док по паспорту",
+                          "invariants":  "Непроверенная площадка не включена автоматически",
+                          "traceability":  {
+                                               "scope":  "Расширенный пилот подтверждает весовые и межскладские маркированные единицы",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS65-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS66",
+                          "object":  "Ввод и инструкции",
+                          "input":  "Role SOP, packageVersion, migrations, rollbackProcedure и trainingCases",
+                          "output":  "Самостоятельная работа персонала и управляемое переключение",
+                          "invariants":  "Откат кода не откатывает подтверждённый товар, пакет воспроизводим",
+                          "traceability":  {
+                                               "scope":  "Инструкции описывают режимы SKU, маркировку и регуляторные исключения",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS66-TT01"
+                                                                      ]
+                                           }
+                      },
+                      {
+                          "id":  "NS67",
+                          "object":  "Полная приёмка",
+                          "input":  "Requirement register, evidence, unresolved defects, workload и actualScope",
+                          "output":  "Решение владельца с доказанным охватом",
+                          "invariants":  "Открытые критические дефекты и непроверенные обязательные требования блокируют приёмку",
+                          "traceability":  {
+                                               "scope":  "Финальная приёмка включает модель данных и весь применимый жизненный цикл кодов",
+                                               "source":  "../../nikora_business_processes/marked_goods.md",
+                                               "databaseSource":  "../../../database/nicora_track_trace_requirements.md",
+                                               "mandatoryScenarios":  [
+                                                                          "NS67-TT01"
+                                                                      ]
+                                           }
+                      }
+                  ],
+    "requirementsBaseline":  57,
+    "traceabilityDataModel":  {
+                                  "ownerSchema":  "RABAEV",
+                                  "status":  "logical_requirements_not_DDL_applied",
+                                  "source":  "../../../database/nicora_track_trace_requirements.md",
+                                  "entities":  [
+                                                   "SKU_REGULATORY_PROFILE",
+                                                   "REGULATORY_SYSTEM",
+                                                   "REGULATORY_PROFILE",
+                                                   "REGULATORY_PARTY",
+                                                   "REGULATORY_SITE",
+                                                   "STOCK_UNIT",
+                                                   "REGULATORY_CODE",
+                                                   "PACKAGE",
+                                                   "AGGREGATION_EDGE",
+                                                   "PACKAGE_LOAD_UNIT",
+                                                   "RECEIPT_CODE_LINK",
+                                                   "MOVEMENT_UNIT_LINK",
+                                                   "ACTIVE_UNIT_ASSIGNMENT",
+                                                   "CODE_VALIDATION",
+                                                   "UNIT_SYSTEM_STATE",
+                                                   "HOLD",
+                                                   "TRACE_EVENT",
+                                                   "REGULATORY_DOCUMENT",
+                                                   "MESSAGE_INBOX_OUTBOX",
+                                                   "PROFILE_CHANGE_HISTORY"
+                                               ],
+                                  "reuseCandidates":  [
+                                                          "RRL_CRPT_CODES",
+                                                          "RRL_CRPT_AGGREGATION",
+                                                          "RRL_CRPT_AGGREGATION_ITEMS",
+                                                          "RRL_CRPT_CIRCULATION",
+                                                          "RRL_REGULATORY_OUTBOX",
+                                                          "RRL_REG_OPERATION_JOURNAL"
+                                                      ],
+                                  "invariants":  [
+                                                     "One physical stock balance regardless of profile count",
+                                                     "Identity uniqueness is system/issuer/scheme/full canonical identity, not warehouse or parser version",
+                                                     "One current physical assignment and no aggregation cycles",
+                                                     "No loss of significant characters or raw evidence",
+                                                     "Inventory effect, composition, event and outgoing obligations committed atomically",
+                                                     "Physical/quality/SAP/regulatory/transport states are distinct"
+                                                 ]
+                              }
+}

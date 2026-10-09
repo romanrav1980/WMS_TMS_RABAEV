@@ -1,0 +1,51 @@
+name: NICORA Architecture and Quality
+
+on:
+  pull_request:
+    paths:
+      - 'api/wms_api_server/**'
+      - 'admin/wms_admin_frontend/**'
+      - 'terminal/wms_terminal_web/**'
+      - 'tools/architecture/**'
+      - 'config/architecture/**'
+      - 'scripts/check_architecture.py'
+      - 'scripts/nicora_quality_gate.py'
+      - 'scripts/install_nicora_skills.py'
+      - 'scripts/test_mcp_servers.py'
+      - 'tools/skills/**'
+      - 'tests/architecture/**'
+      - 'tests/tooling/**'
+      - '.github/workflows/nicora-quality.yml'
+  workflow_dispatch:
+
+jobs:
+  quality:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Python dependencies
+        run: python -m pip install pytest -r api/wms_api_server/requirements.txt
+      - name: Admin frontend dependencies
+        working-directory: admin/wms_admin_frontend
+        run: npm ci --legacy-peer-deps
+      - name: Terminal dependencies
+        working-directory: terminal/wms_terminal_web
+        run: npm ci --legacy-peer-deps
+      - name: Architecture, regression fixtures and frontend types
+        run: python scripts/nicora_quality_gate.py
+      - name: Upload architecture evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: architecture-${{ matrix.os }}
+          path: tmp/nicora_quality/architecture.json

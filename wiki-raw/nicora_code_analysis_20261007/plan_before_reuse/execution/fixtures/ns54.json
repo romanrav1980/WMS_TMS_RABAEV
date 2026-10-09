@@ -1,0 +1,61 @@
+{
+    "namespace":  "DS-NS54",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "Supply Chain разрешил возврат: полная D10=1 коробка, неполная D02, брак D04; mixing=false/true; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS54-TC01",
+                          "initial":  "Полная D10",
+                          "action":  "Принять и разместить",
+                          "expected":  "Пригодный запас отбора после подтверждённого размещения",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS54-TC02",
+                          "initial":  "mixing=false",
+                          "action":  "Разместить иную партию",
+                          "expected":  "Отдельная ячейка отбора",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS54-TC03",
+                          "initial":  "mixing=true",
+                          "action":  "Разместить в подходящую занятую",
+                          "expected":  "Допустимо при свободной вместимости",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS54-TC04",
+                          "initial":  "Неполная коробка",
+                          "action":  "Вернуть в пригодный запас",
+                          "expected":  "Не допускается",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS54-TC05",
+                          "initial":  "Брак для утилизации",
+                          "action":  "Принять",
+                          "expected":  "Склад брака магазинов в ERP, списание по месту выявления",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS54-TC06",
+                          "initial":  "Возврат без разрешения",
+                          "action":  "Обработать",
+                          "expected":  "Не выполняется как утверждённый возврат",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS54-TT01",
+                          "initial":  "Код ранее отгружен по исходному заказу",
+                          "action":  "Принять разрешённый возврат, затем повторить событие",
+                          "expected":  "Повторный жизненный цикл разрешён по проверенной процедуре; один возврат и сохранённая история; внешнее восстановление статуса не выдумано",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

@@ -1,0 +1,434 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]: W
+    - button "⌂" [ref=e6] [cursor=pointer]
+    - button "↗" [ref=e7] [cursor=pointer]
+    - button "▦" [ref=e8] [cursor=pointer]
+    - button "▣" [ref=e9] [cursor=pointer]
+    - button "▤" [ref=e10] [cursor=pointer]
+    - button "▥" [ref=e11] [cursor=pointer]
+    - button "⌁" [ref=e12] [cursor=pointer]
+    - button "⌗" [ref=e13] [cursor=pointer]
+    - button "▦" [ref=e14] [cursor=pointer]
+    - button "⇧" [ref=e15] [cursor=pointer]
+    - button "⊕" [ref=e16] [cursor=pointer]
+    - button "▬" [ref=e17] [cursor=pointer]
+    - button "🚛" [ref=e18] [cursor=pointer]
+    - button "👥" [ref=e19] [cursor=pointer]
+    - button "📊" [ref=e20] [cursor=pointer]
+    - button "●" [ref=e21] [cursor=pointer]
+  - main [ref=e22]:
+    - generic [ref=e23]:
+      - generic [ref=e29]:
+        - heading "Цифровой двойник склада" [level=1] [ref=e30]
+        - paragraph [ref=e31]: Онлайн · React admin
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - text: Смена
+          - combobox "Смена" [ref=e35]:
+            - option "1 (08:00-20:00)" [selected]
+        - generic [ref=e36]:
+          - text: Волна
+          - combobox "Волна" [ref=e37]:
+            - option "Все волны" [selected]
+            - option "WAVE-SIM-01"
+            - option "WAVE-SIM-02"
+            - option "WAVE-SIM-03"
+            - option "WAVE-SIM-04"
+            - option "WAVE-SIM-05"
+            - option "WAVE-SIM-06"
+            - option "WAVE-SIM-07"
+            - option "WAVE-SIM-08"
+            - option "WAVE-SIM-09"
+            - option "WAVE-SIM-10"
+        - generic [ref=e38]:
+          - text: Зона
+          - combobox "Зона" [ref=e39]:
+            - option "Все зоны" [selected]
+        - generic [ref=e40]:
+          - generic [ref=e41]: Время
+          - generic [ref=e42]: 09:43
+        - button "⌕" [ref=e43] [cursor=pointer]
+        - button "4" [ref=e44] [cursor=pointer]
+        - generic [ref=e47]:
+          - text: admin
+          - generic [ref=e48]: operator
+    - generic [ref=e49]:
+      - generic [ref=e50]:
+        - article [ref=e51]:
+          - generic [ref=e52]: Производительность
+          - generic [ref=e53]: 57%
+          - emphasis [ref=e54]: к плану
+        - article [ref=e56]:
+          - generic [ref=e57]: Обработано единиц
+          - generic [ref=e58]: 1 349 / 9 447
+          - emphasis [ref=e59]: план смены
+        - article [ref=e61]:
+          - generic [ref=e62]: Активные комплектовщики
+          - generic [ref=e63]: 5 / 10
+          - emphasis [ref=e64]: в работе
+        - article [ref=e66]:
+          - generic [ref=e67]: SLA пополнения
+          - generic [ref=e68]: 100%
+          - emphasis [ref=e69]: цель 95%
+        - article [ref=e71]:
+          - generic [ref=e72]: Просроченные задачи
+          - generic [ref=e73]: "0"
+          - emphasis [ref=e74]: RTP очередь
+        - article [ref=e76]:
+          - generic [ref=e77]: Коллизии
+          - generic [ref=e78]: "4"
+          - emphasis [ref=e79]: критические
+          - generic [ref=e80]: "!"
+        - article [ref=e81]:
+          - generic [ref=e82]: Средняя скорость
+          - generic [ref=e83]: 1,18 м/с
+          - emphasis [ref=e84]: комплектовщики
+      - generic [ref=e86]:
+        - complementary [ref=e87]:
+          - generic [ref=e88]:
+            - generic [ref=e89]:
+              - heading "Задачи пополнения (RTP)" [level=2] [ref=e90]
+              - paragraph [ref=e91]: Очередь, причины просрочки и влияние на отбор
+            - button "›" [ref=e92] [cursor=pointer]
+          - generic [ref=e93]:
+            - button "Просроченные 0" [ref=e94] [cursor=pointer]
+            - button "Все 8" [ref=e95] [cursor=pointer]
+          - generic [ref=e96]:
+            - button "95 мин A12-S009-L1 Ячейка отбора пуста SKU-0009 · 12 / 96 шт Зона 12 · Стеллаж A12" [ref=e97] [cursor=pointer]:
+              - generic [ref=e98]:
+                - generic [ref=e99]: 95 мин
+                - generic [ref=e100]: A12-S009-L1
+              - generic [ref=e102]:
+                - generic [ref=e103]: Ячейка отбора пуста
+                - generic [ref=e104]: SKU-0009 · 12 / 96 шт
+                - text: Зона 12 · Стеллаж A12
+            - button "82 мин A25-S022-L1 Ячейка отбора пуста SKU-0022 · 12 / 96 шт Зона 25 · Стеллаж A25" [ref=e108] [cursor=pointer]:
+              - generic [ref=e109]:
+                - generic [ref=e110]: 82 мин
+                - generic [ref=e111]: A25-S022-L1
+              - generic [ref=e113]:
+                - generic [ref=e114]: Ячейка отбора пуста
+                - generic [ref=e115]: SKU-0022 · 12 / 96 шт
+                - text: Зона 25 · Стеллаж A25
+            - button "69 мин A13-S035-L1 Ячейка отбора пуста SKU-0035 · 12 / 96 шт Зона 13 · Стеллаж A13" [ref=e119] [cursor=pointer]:
+              - generic [ref=e120]:
+                - generic [ref=e121]: 69 мин
+                - generic [ref=e122]: A13-S035-L1
+              - generic [ref=e124]:
+                - generic [ref=e125]: Ячейка отбора пуста
+                - generic [ref=e126]: SKU-0035 · 12 / 96 шт
+                - text: Зона 13 · Стеллаж A13
+            - button "56 мин A01-S003-L1 Ячейка отбора пуста SKU-0048 · 12 / 96 шт Зона 1 · Стеллаж A01" [ref=e130] [cursor=pointer]:
+              - generic [ref=e131]:
+                - generic [ref=e132]: 56 мин
+                - generic [ref=e133]: A01-S003-L1
+              - generic [ref=e135]:
+                - generic [ref=e136]: Ячейка отбора пуста
+                - generic [ref=e137]: SKU-0048 · 12 / 96 шт
+                - text: Зона 1 · Стеллаж A01
+            - button "43 мин A14-S016-L1 Ячейка отбора пуста SKU-0061 · 12 / 96 шт Зона 14 · Стеллаж A14" [ref=e141] [cursor=pointer]:
+              - generic [ref=e142]:
+                - generic [ref=e143]: 43 мин
+                - generic [ref=e144]: A14-S016-L1
+              - generic [ref=e146]:
+                - generic [ref=e147]: Ячейка отбора пуста
+                - generic [ref=e148]: SKU-0061 · 12 / 96 шт
+                - text: Зона 14 · Стеллаж A14
+            - button "30 мин A02-S029-L1 Ячейка отбора пуста SKU-0074 · 12 / 96 шт Зона 2 · Стеллаж A02" [ref=e152] [cursor=pointer]:
+              - generic [ref=e153]:
+                - generic [ref=e154]: 30 мин
+                - generic [ref=e155]: A02-S029-L1
+              - generic [ref=e157]:
+                - generic [ref=e158]: Ячейка отбора пуста
+                - generic [ref=e159]: SKU-0074 · 12 / 96 шт
+                - text: Зона 2 · Стеллаж A02
+            - button "17 мин A15-S042-L1 Ячейка отбора пуста SKU-0087 · 12 / 96 шт Зона 15 · Стеллаж A15" [ref=e163] [cursor=pointer]:
+              - generic [ref=e164]:
+                - generic [ref=e165]: 17 мин
+                - generic [ref=e166]: A15-S042-L1
+              - generic [ref=e168]:
+                - generic [ref=e169]: Ячейка отбора пуста
+                - generic [ref=e170]: SKU-0087 · 12 / 96 шт
+                - text: Зона 15 · Стеллаж A15
+            - button "4 мин A03-S010-L1 Ячейка отбора пуста SKU-0100 · 12 / 96 шт Зона 3 · Стеллаж A03" [ref=e174] [cursor=pointer]:
+              - generic [ref=e175]:
+                - generic [ref=e176]: 4 мин
+                - generic [ref=e177]: A03-S010-L1
+              - generic [ref=e179]:
+                - generic [ref=e180]: Ячейка отбора пуста
+                - generic [ref=e181]: SKU-0100 · 12 / 96 шт
+                - text: Зона 3 · Стеллаж A03
+          - generic [ref=e185]:
+            - generic [ref=e186]: RT04 · RTD04
+            - generic [ref=e187]: "Загрузка: 14%"
+            - generic [ref=e188]: "Очередь: 1 задач"
+        - article [ref=e189]:
+          - generic [ref=e190]:
+            - generic [ref=e191]:
+              - text: demo-react
+              - generic [ref=e192]: 1500 ячеек · U-маршруты через фронт/пожарный/задний проход · 42 событий
+            - generic [ref=e193]:
+              - generic [ref=e194]:
+                - checkbox "Комплектовщики" [checked] [ref=e195]
+                - text: Комплектовщики
+              - generic [ref=e196]:
+                - checkbox "RTP" [checked] [ref=e197]
+                - text: RTP
+              - generic [ref=e198]:
+                - checkbox "Маршруты" [checked] [ref=e199]
+                - text: Маршруты
+              - generic [ref=e200]:
+                - checkbox "Коллизии" [checked] [ref=e201]
+                - text: Коллизии
+              - generic [ref=e202]:
+                - checkbox "Heatmap" [checked] [ref=e203]
+                - text: Heatmap
+          - generic [ref=e204]:
+            - generic "Навигация по карте склада" [ref=e206]:
+              - button "+" [ref=e207] [cursor=pointer]
+              - button "-" [ref=e208] [cursor=pointer]
+              - button "Сброс" [ref=e209] [cursor=pointer]
+            - generic:
+              - button "P07 132% отбор" [ref=e210] [cursor=pointer]:
+                - text: P07 132%
+                - generic [ref=e211]: отбор
+              - button "RT04" [ref=e212] [cursor=pointer]
+              - button "P05 102% отбор" [ref=e213] [cursor=pointer]:
+                - text: P05 102%
+                - generic [ref=e214]: отбор
+              - button "RT02" [ref=e215] [cursor=pointer]
+              - button "P03 60% замедлен" [ref=e216] [cursor=pointer]:
+                - text: P03 60%
+                - generic [ref=e217]: замедлен
+              - button "P01 72% замедлен" [ref=e218] [cursor=pointer]:
+                - text: P01 72%
+                - generic [ref=e219]: замедлен
+              - button "RT05" [ref=e220] [cursor=pointer]
+              - button "P09 123% отбор" [ref=e221] [cursor=pointer]:
+                - text: P09 123%
+                - generic [ref=e222]: отбор
+              - button "RT03" [ref=e223] [cursor=pointer]
+              - button "RT01" [ref=e224] [cursor=pointer]
+              - button "P02 0% ожид." [ref=e225] [cursor=pointer]:
+                - text: P02 0%
+                - generic [ref=e226]: ожид.
+              - button "P04 0% ожид." [ref=e227] [cursor=pointer]:
+                - text: P04 0%
+                - generic [ref=e228]: ожид.
+              - button "P06 0% ожид." [ref=e229] [cursor=pointer]:
+                - text: P06 0%
+                - generic [ref=e230]: ожид.
+              - button "P08 0% ожид." [ref=e231] [cursor=pointer]:
+                - text: P08 0%
+                - generic [ref=e232]: ожид.
+              - button "P10 0% ожид." [ref=e233] [cursor=pointer]:
+                - text: P10 0%
+                - generic [ref=e234]: ожид.
+              - button "Ячейка отбора пуста A18-S043-L1 · задержка 6 мин" [ref=e235] [cursor=pointer]:
+                - generic [ref=e236]: Ячейка отбора пуста
+                - generic [ref=e237]: A18-S043-L1 · задержка 6 мин
+              - button "Очередь к ячейке отбора A11-S005-L1 · задержка 7 мин" [ref=e238] [cursor=pointer]:
+                - generic [ref=e239]: Очередь к ячейке отбора
+                - generic [ref=e240]: A11-S005-L1 · задержка 7 мин
+              - button "Затор в проходе A04-S022-L1 · задержка 8 мин" [ref=e241] [cursor=pointer]:
+                - generic [ref=e242]: Затор в проходе
+                - generic [ref=e243]: A04-S022-L1 · задержка 8 мин
+              - button "Блокировка маршрута A22-S039-L1 · задержка 9 мин" [ref=e244] [cursor=pointer]:
+                - generic [ref=e245]: Блокировка маршрута
+                - generic [ref=e246]: A22-S039-L1 · задержка 9 мин
+          - generic [ref=e247]:
+            - generic [ref=e248]:
+              - generic [ref=e249]: Настройки модели
+              - generic [ref=e250]: forecast x1.00
+            - generic [ref=e251]:
+              - generic [ref=e252]:
+                - text: Комплектовщики
+                - generic [ref=e253]: 100%
+              - slider "Комплектовщики 100%" [ref=e254]: "100"
+            - generic [ref=e255]:
+              - generic [ref=e256]:
+                - text: RTP операции
+                - generic [ref=e257]: 100%
+              - slider "RTP операции 100%" [ref=e258]: "100"
+            - generic [ref=e259]:
+              - generic [ref=e260]:
+                - text: Коробочное пополнение
+                - generic [ref=e261]: 5/час
+              - slider "Коробочное пополнение 5/час" [ref=e262]: "5"
+            - generic [ref=e263]:
+              - generic [ref=e264]:
+                - text: Спуск паллеты
+                - generic [ref=e265]: 3мин
+              - slider "Спуск паллеты 3мин" [ref=e266]: "3"
+        - complementary [ref=e267]:
+          - generic [ref=e268]:
+            - generic [ref=e269]:
+              - heading "Коллизии и причины" [level=2] [ref=e270]
+              - paragraph [ref=e271]: Root cause, потери и затронутые маршруты
+            - combobox [ref=e272]:
+              - option "Все" [selected]
+          - generic [ref=e273]:
+            - 'button "! Блокировка маршрута 09:33 A22-S039-L1 Ричтрак выполняет опускание паллеты в зоне отбора Влияет: P04, RT04 · потеря ~162/час" [ref=e274] [cursor=pointer]':
+              - generic [ref=e275]: "!"
+              - generic [ref=e276]:
+                - generic [ref=e277]:
+                  - generic [ref=e278]: Блокировка маршрута
+                  - generic [ref=e279]: 09:33
+                - generic [ref=e280]: A22-S039-L1
+                - generic [ref=e281]: Ричтрак выполняет опускание паллеты в зоне отбора
+                - generic [ref=e282]: "Влияет: P04, RT04 · потеря ~162/час"
+            - 'button "! Затор в проходе 09:16 A04-S022-L1 Перегруз 10-метрового сегмента аллеи Влияет: P07, RT02 · потеря ~144/час" [ref=e283] [cursor=pointer]':
+              - generic [ref=e284]: "!"
+              - generic [ref=e285]:
+                - generic [ref=e286]:
+                  - generic [ref=e287]: Затор в проходе
+                  - generic [ref=e288]: 09:16
+                - generic [ref=e289]: A04-S022-L1
+                - generic [ref=e290]: Перегруз 10-метрового сегмента аллеи
+                - generic [ref=e291]: "Влияет: P07, RT02 · потеря ~144/час"
+            - 'button "! Очередь к ячейке отбора 08:59 A11-S005-L1 Несколько комплектовщиков пришли к одной ячейке отбора одновременно Влияет: P10, RT05 · потеря ~126/час" [ref=e292] [cursor=pointer]':
+              - generic [ref=e293]: "!"
+              - generic [ref=e294]:
+                - generic [ref=e295]:
+                  - generic [ref=e296]: Очередь к ячейке отбора
+                  - generic [ref=e297]: 08:59
+                - generic [ref=e298]: A11-S005-L1
+                - generic [ref=e299]: Несколько комплектовщиков пришли к одной ячейке отбора одновременно
+                - generic [ref=e300]: "Влияет: P10, RT05 · потеря ~126/час"
+            - 'button "! Ячейка отбора пуста 08:42 A18-S043-L1 Комплектовщик пришел к ячейке отбора, но доступного остатка уже не хватило Влияет: P03, RT03 · потеря ~108/час" [ref=e301] [cursor=pointer]':
+              - generic [ref=e302]: "!"
+              - generic [ref=e303]:
+                - generic [ref=e304]:
+                  - generic [ref=e305]: Ячейка отбора пуста
+                  - generic [ref=e306]: 08:42
+                - generic [ref=e307]: A18-S043-L1
+                - generic [ref=e308]: Комплектовщик пришел к ячейке отбора, но доступного остатка уже не хватило
+                - generic [ref=e309]: "Влияет: P03, RT03 · потеря ~108/час"
+      - generic [ref=e310]:
+        - generic [ref=e311]:
+          - button "IIPause" [ref=e312] [cursor=pointer]
+          - button "‹" [ref=e313] [cursor=pointer]
+          - button "›" [ref=e314] [cursor=pointer]
+          - combobox [ref=e315]:
+            - option "x1"
+            - option "x5" [selected]
+            - option "x10"
+            - option "x60"
+          - button "LIVE" [ref=e316] [cursor=pointer]
+        - generic [ref=e317]:
+          - generic [ref=e318]:
+            - generic [ref=e319]: 08:00
+            - generic [ref=e320]: 09:00
+            - generic [ref=e321]: 10:00
+            - generic [ref=e322]: 11:00
+            - generic [ref=e323]: 12:00
+            - generic [ref=e324]: 13:00
+            - generic [ref=e325]: 14:00
+            - generic [ref=e326]: 15:00
+            - generic [ref=e327]: 16:00
+            - generic [ref=e328]: 17:00
+            - generic [ref=e329]: 18:00
+            - generic [ref=e330]: 19:00
+            - generic [ref=e331]: 20:00
+          - generic [ref=e332]:
+            - 'generic "08:00-08:30: нет коллизий" [ref=e333]'
+            - 'generic "08:30-09:00 Ячейка отбора пуста: 1 Очередь к ячейке отбора: 1" [ref=e334]':
+              - generic [ref=e337]: "2"
+            - 'generic "09:00-09:30 Затор в проходе: 1" [ref=e338]':
+              - generic [ref=e340]: "1"
+            - 'generic "09:30-10:00 Блокировка маршрута: 1 Пересечение RT: 1" [ref=e341]':
+              - generic [ref=e344]: "2"
+            - 'generic "10:00-10:30 RT рядом с комплектовщиком: 1 Ячейка отбора пуста: 1 Маршрут опаздывает: 1" [ref=e345]':
+              - generic [ref=e349]: "3"
+            - 'generic "10:30-11:00 Очередь к ячейке отбора: 1 Подача к воротам опаздывает: 1 Затор в проходе: 1 Очередь на ворота: 1" [ref=e350]':
+              - generic [ref=e355]: "4"
+            - 'generic "11:00-11:30 Блокировка маршрута: 1 Очередь RTP: 1 Пересечение RT: 1" [ref=e356]':
+              - generic [ref=e360]: "3"
+            - 'generic "11:30-12:00 RT рядом с комплектовщиком: 1 Ячейка отбора пуста: 1 Маршрут опаздывает: 1" [ref=e361]':
+              - generic [ref=e365]: "3"
+            - 'generic "12:00-12:30 Очередь к ячейке отбора: 1 Подача к воротам опаздывает: 1 Затор в проходе: 1 Очередь на ворота: 1" [ref=e366]':
+              - generic [ref=e371]: "4"
+            - 'generic "12:30-13:00 Блокировка маршрута: 1 Очередь RTP: 1 Пересечение RT: 1" [ref=e372]':
+              - generic [ref=e376]: "3"
+            - 'generic "13:00-13:30 RT рядом с комплектовщиком: 1 Ячейка отбора пуста: 1 Маршрут опаздывает: 1" [ref=e377]':
+              - generic [ref=e381]: "3"
+            - 'generic "13:30-14:00 Очередь к ячейке отбора: 1 Подача к воротам опаздывает: 1 Затор в проходе: 1" [ref=e382]':
+              - generic [ref=e386]: "3"
+            - 'generic "14:00-14:30 Очередь на ворота: 1 Блокировка маршрута: 1 Очередь RTP: 1 Пересечение RT: 1" [ref=e387]':
+              - generic [ref=e392]: "4"
+            - 'generic "14:30-15:00 RT рядом с комплектовщиком: 1 Ячейка отбора пуста: 1 Маршрут опаздывает: 1" [ref=e393]':
+              - generic [ref=e397]: "3"
+            - 'generic "15:00-15:30 Очередь к ячейке отбора: 1 Подача к воротам опаздывает: 1 Затор в проходе: 1" [ref=e398]':
+              - generic [ref=e402]: "3"
+            - 'generic "15:30-16:00 Очередь на ворота: 1 Блокировка маршрута: 1 Очередь RTP: 1 Пересечение RT: 1" [ref=e403]':
+              - generic [ref=e408]: "4"
+            - 'generic "16:00-16:30 RT рядом с комплектовщиком: 1 Ячейка отбора пуста: 1 Маршрут опаздывает: 1" [ref=e409]':
+              - generic [ref=e413]: "3"
+            - 'generic "16:30-17:00 Очередь к ячейке отбора: 1 Подача к воротам опаздывает: 1 Затор в проходе: 1" [ref=e414]':
+              - generic [ref=e418]: "3"
+            - 'generic "17:00-17:30 Очередь на ворота: 1 Блокировка маршрута: 1 Очередь RTP: 1 Пересечение RT: 1" [ref=e419]':
+              - generic [ref=e424]: "4"
+            - 'generic "17:30-18:00 RT рядом с комплектовщиком: 1 Ячейка отбора пуста: 1 Маршрут опаздывает: 1" [ref=e425]':
+              - generic [ref=e429]: "3"
+            - 'generic "18:00-18:30 Очередь к ячейке отбора: 1 Подача к воротам опаздывает: 1 Затор в проходе: 1" [ref=e430]':
+              - generic [ref=e434]: "3"
+            - 'generic "18:30-19:00 Очередь на ворота: 1 Блокировка маршрута: 1 Очередь RTP: 1 Пересечение RT: 1" [ref=e435]':
+              - generic [ref=e440]: "4"
+            - 'generic "19:00-19:30 RT рядом с комплектовщиком: 1 Ячейка отбора пуста: 1" [ref=e441]':
+              - generic [ref=e444]: "2"
+            - 'generic "19:30-20:00 Маршрут опаздывает: 1" [ref=e445]':
+              - generic [ref=e447]: "1"
+          - slider [ref=e448]: "103"
+          - generic [ref=e449]: 09:43
+        - button "□" [ref=e450] [cursor=pointer]
+      - generic [ref=e451]:
+        - generic [ref=e452]:
+          - generic [ref=e453]:
+            - heading "Производительность ресурсов и коллизии" [level=2] [ref=e454]
+            - paragraph [ref=e455]: График показывает, где очередь RTP и потери минут начинают съедать сменную мощность.
+          - generic [ref=e456]:
+            - generic [ref=e457]:
+              - generic [ref=e458]: 60%
+              - text: комплектовщики
+            - generic [ref=e459]:
+              - generic [ref=e460]: 0%
+              - text: RTP
+            - generic [ref=e461]:
+              - generic [ref=e462]: "0"
+              - text: очередь RTP
+            - generic [ref=e463]:
+              - generic [ref=e464]: "0"
+              - text: потеряно мин
+        - generic [ref=e465]:
+          - generic "График производительности ресурсов" [ref=e466]:
+            - img [ref=e467]:
+              - generic [ref=e757]: 08:00
+              - generic [ref=e759]: 11:00
+              - generic [ref=e761]: 14:00
+              - generic [ref=e763]: 17:00
+              - generic [ref=e765]: 20:00
+            - generic [ref=e766]:
+              - generic [ref=e767]: Комплектовщики
+              - generic [ref=e769]: RTP занятость
+              - generic [ref=e771]: Очередь RTP
+              - generic [ref=e773]: Потери минут/мин
+          - generic [ref=e775]:
+            - generic [ref=e776]: Диагноз смены
+            - generic [ref=e777]: "Комплектовка: спрос x0.00"
+            - generic [ref=e778]: "RTP: спрос x0.00"
+            - generic [ref=e779]: "Выполнено отбора: 0 / 0 коробок"
+            - generic [ref=e780]: "Пополнения: 0 / 0 задач"
+            - generic [ref=e781]:
+              - generic [ref=e782]:
+                - generic [ref=e783]: Ячейка отбора пуста
+                - generic [ref=e784]: "8"
+              - generic [ref=e785]:
+                - generic [ref=e786]: Очередь к ячейке отбора
+                - generic [ref=e787]: "7"
+              - generic [ref=e788]:
+                - generic [ref=e789]: Затор в проходе
+                - generic [ref=e790]: "7"
+              - generic [ref=e791]:
+                - generic [ref=e792]: Блокировка маршрута
+                - generic [ref=e793]: "7"

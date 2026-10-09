@@ -1,0 +1,17 @@
+@@071_pallet_origin_schema.sql
+@@073_receipt_integrity_contracts.sql
+@@021_location.sql
+@@032_transfer_core.sql
+@@033_task_plan.sql
+@@034_task_core.sql
+@@055_mes_movement_core.sql
+@@065_internal_move.sql
+@@039_unit_core.sql
+@@043_receipt_plan.sql
+@@045_receipt_core.sql
+@@047_configuration.sql
+@@062_pallet_uom.sql
+@@072_configuration_uom.sql
+@@024_posting.sql
+@@014b_recompile.sql
+@@073_receipt_integrity_complete.sql

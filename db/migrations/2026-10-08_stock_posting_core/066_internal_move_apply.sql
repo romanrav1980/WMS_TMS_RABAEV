@@ -1,0 +1,9 @@
+@@066_internal_move_contracts.sql
+@@062_pallet_uom.sql
+@@032_transfer_core.sql
+@@065_internal_move.sql
+@@064_native_command_runner.sql
+@@024_posting.sql
+@@058_write_guards.sql
+@@014b_recompile.sql
+@@066_internal_move_complete.sql

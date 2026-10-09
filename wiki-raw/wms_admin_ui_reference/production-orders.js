@@ -490,16 +490,34 @@ async function completeMesOrder() {
 async function applyMesWms() {
   if (!mesState.selectedOrder) throw new Error("Выберите заказ");
   if (!mesCan("mes_wms_bridge_apply")) throw new Error("Нет права mes_wms_bridge_apply");
-  const response = await fetch(`${mesApiBase()}/api/mes/production-orders/${mesState.selectedOrder.production_order_id}/apply-wms`, {
-    method: "POST",
-    headers: mesHeaders({ "Content-Type": "application/json" }),
-    body: JSON.stringify({ applied_by: mesCurrentUser() }),
-  });
-  const result = await response.json();
-  if (!response.ok) throw new Error(result.detail || `Apply WMS HTTP ${response.status}`);
-  await loadMesOrder(mesState.selectedOrder.production_order_id);
+  const path = `/api/mes/production-orders/${mesState.selectedOrder.production_order_id}/apply-wms`;
+  const key = JSON.stringify(["nicora.mesApplyIntent", mesApiBase(), mesCurrentUser(), path]);
+  let intent = JSON.parse(localStorage.getItem(key) || "null");
+  if (!intent) {
+    intent = { operation_id: "MES.UI:" + crypto.randomUUID(), applied_by: mesCurrentUser() };
+    localStorage.setItem(key, JSON.stringify(intent));
+  }
+  try {
+    const response = await fetch(`${mesApiBase()}${path}`, {
+      method: "POST",
+      headers: mesHeaders({ "Content-Type": "application/json" }),
+      body: JSON.stringify(intent),
+    });
+    const result = await response.json();
+    if (!response.ok) {
+      if (result.detail?.outcome_confirmed === true || [400, 401, 403, 422].includes(response.status)) {
+        localStorage.removeItem(key);
+      }
+      const detail = result.detail || `Apply WMS HTTP ${response.status}`;
+      throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+    }
+    localStorage.removeItem(key);
+    await loadMesOrder(mesState.selectedOrder.production_order_id);
+  } catch (error) {
+    error.message += " Операция: " + intent.operation_id;
+    throw error;
+  }
 }
-
 function prefillMesCompletion() {
   if (!mesState.selectedOrder) throw new Error("Выберите заказ");
   const order = mesState.selectedOrder;

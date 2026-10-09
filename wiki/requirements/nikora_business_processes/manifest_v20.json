@@ -1,0 +1,140 @@
+{
+  "revision": 20,
+  "date": "2026-10-06",
+  "processes": 15,
+  "word_pages": 36,
+  "closed_questions": [
+    "Q01"
+  ],
+  "open_questions": [
+    "Q02",
+    "Q03",
+    "Q04",
+    "Q05",
+    "Q06",
+    "Q07",
+    "Q08",
+    "Q09",
+    "Q10",
+    "Q11",
+    "Q12",
+    "Q13",
+    "Q14",
+    "Q15",
+    "Q16",
+    "Q17",
+    "Q18",
+    "Q19",
+    "Q20",
+    "Q21",
+    "Q22",
+    "Q23",
+    "Q24",
+    "Q25",
+    "Q26",
+    "Q27",
+    "Q28"
+  ],
+  "files": [
+    {
+      "path": "01_master_data.md",
+      "size": 38085,
+      "sha256": "a68bcec31c49423c5baa0053ecd2f3034d33345d8f90a6e31a428f00188d437b"
+    },
+    {
+      "path": "02_store_orders.md",
+      "size": 4033,
+      "sha256": "c5205cb4b16bd5533162d8ddce71bb5ed19f351f9361d38d62e837737e392f84"
+    },
+    {
+      "path": "03_warehouse_receipt.md",
+      "size": 15619,
+      "sha256": "e58e956f174ce287e4a258713397c124a37663fb2a788753cb35eb79eef5933e"
+    },
+    {
+      "path": "04_storage_replenishment_picking.md",
+      "size": 17092,
+      "sha256": "fd810c5ea5391dcae699bc9eab0bcf711ba6b3676ecf96c328f6010adaec8064"
+    },
+    {
+      "path": "05_quality_release.md",
+      "size": 21921,
+      "sha256": "648fc0c80c30eafa698e398482dc27a376cf9fed9cedaa4d440ecb301faf50d2"
+    },
+    {
+      "path": "06_transport_planning.md",
+      "size": 16631,
+      "sha256": "b98f52d4d05b5ec557500daa9ae91d1229cd1ac955709e51f8fee3d99af4c714"
+    },
+    {
+      "path": "07_source_dispatch.md",
+      "size": 7411,
+      "sha256": "7718b3c55c05f5ba04ca70e363414eb5de9f0f3805c665870a7e026138f4d9a1"
+    },
+    {
+      "path": "08_crossdock_consolidation.md",
+      "size": 13433,
+      "sha256": "c0e9411fa8f858a478e3042f75eb4848dffd236c11bf0c93a774a790d143614d"
+    },
+    {
+      "path": "09_store_delivery.md",
+      "size": 3045,
+      "sha256": "88e4f74e794b41335339c1934cb8cc2c5548109cd90def50adb3597a39dc2ea5"
+    },
+    {
+      "path": "10_store_receipt.md",
+      "size": 9049,
+      "sha256": "1004af52d31f2541761ea036bccd5b3462d3424949c706bc848985ec4998b562"
+    },
+    {
+      "path": "11_returns_and_assets.md",
+      "size": 2291,
+      "sha256": "ce4acb5d467f423710e1540a9f58a07aa378619621ccf792e9b385ad6725ea3d"
+    },
+    {
+      "path": "12_reconciliation_and_settlement.md",
+      "size": 11642,
+      "sha256": "515878840ec7b52e68d3d7c643d8720f36a494c6f7f612e1d898b7809c5bac9a"
+    },
+    {
+      "path": "13_wave_planning.md",
+      "size": 3909,
+      "sha256": "6c166f5391e77f703c1d82aeac99de31e9023801b7e4b189fb301f122a03ca7f"
+    },
+    {
+      "path": "14_pickface_replenishment.md",
+      "size": 14333,
+      "sha256": "97c3264ee21816918f7e6dd0e616c0da9df5dc49c6ec69d35a9cc532696e26b0"
+    },
+    {
+      "path": "15_wave_release.md",
+      "size": 6740,
+      "sha256": "69422d691f0a8c7dfa19fa6067d67707f8462706363647fd615fd4d23626e2d5"
+    },
+    {
+      "path": "document_review_v19.md",
+      "size": 43482,
+      "sha256": "f6bade302c4fa431bd7722c6d6ba17849a798e152188adf64059b0430f6abc6b"
+    },
+    {
+      "path": "open_questions.md",
+      "size": 20307,
+      "sha256": "05b0e0daa0d0a8bf8a68dbb98ca7c5d79557663c00892eb8c4daf497d1319e17"
+    },
+    {
+      "path": "README.md",
+      "size": 22325,
+      "sha256": "f4620a4e5682caa7c6cb9954fd06548743c397601faf10066b7550dd18a0801b"
+    },
+    {
+      "path": "restart_context.md",
+      "size": 20306,
+      "sha256": "d6dde84eb1c5fdea8831b00830893788d84e1bf4547549f53845ec0779de0075"
+    },
+    {
+      "path": "Nikora_business_processes_v20.doc",
+      "size": 304128,
+      "sha256": "4e9513283740c12c0004224121c40344e41fd8e173f0a539c328fffe450fe771"
+    }
+  ]
+}

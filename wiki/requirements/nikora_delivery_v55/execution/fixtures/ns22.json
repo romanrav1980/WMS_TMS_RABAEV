@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS22",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "D10: спрос 60/40 коробок, запас 50; другой случай 5 заказов по 1 и запас 3; UNIT-SKU: спрос 6/4 штуки, запас 5",
+  "scenarios": [
+    {
+      "id": "NS22-TC01",
+      "initial": "60/40 и 50",
+      "action": "Распределить",
+      "expected": "30/20 коробок",
+      "mandatory": true
+    },
+    {
+      "id": "NS22-TC02",
+      "initial": "5 заказов и 3 коробки",
+      "action": "Распределить",
+      "expected": "Первые 3 по сроку отгрузки получают 1, остальные 0",
+      "mandatory": true
+    },
+    {
+      "id": "NS22-TC03",
+      "initial": "6/4 штуки и 5",
+      "action": "Распределить",
+      "expected": "3/2 штуки, дробной единицы нет",
+      "mandatory": true
+    },
+    {
+      "id": "NS22-TC04",
+      "initial": "Остаток 0",
+      "action": "Создать складские задания",
+      "expected": "Нет заданий на необеспечённый SKU, исходный спрос сохранён",
+      "mandatory": true
+    },
+    {
+      "id": "NS22-TC05",
+      "initial": "Жёсткий резерв чужой волны",
+      "action": "Распределить",
+      "expected": "Не перераспределяется",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

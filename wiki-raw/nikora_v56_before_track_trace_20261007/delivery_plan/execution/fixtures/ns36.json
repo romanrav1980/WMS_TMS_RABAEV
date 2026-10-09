@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS36",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Цель FRESH=10 кг; допуск 15 процентов; весы S-SMALL; измерение 9.600; последняя целая коробка даёт варианты 8 либо 12 кг",
+  "scenarios": [
+    {
+      "id": "NS36-TC01",
+      "initial": "Вес 9.600",
+      "action": "Подтвердить",
+      "expected": "Точная масса 9.600, допустимое отклонение заказа",
+      "mandatory": true
+    },
+    {
+      "id": "NS36-TC02",
+      "initial": "Скан без веса для поштучки",
+      "action": "Завершить",
+      "expected": "Операция не завершена",
+      "mandatory": true
+    },
+    {
+      "id": "NS36-TC03",
+      "initial": "Неустойчивое показание",
+      "action": "Зафиксировать",
+      "expected": "Не принято как доказанное измерение",
+      "mandatory": true
+    },
+    {
+      "id": "NS36-TC04",
+      "initial": "Последняя коробка: 8 или 12",
+      "action": "Завершить по исключению",
+      "expected": "Точный выбранный вес сохранён, исключение оформлено, точность весов и порог контроля не изменены",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

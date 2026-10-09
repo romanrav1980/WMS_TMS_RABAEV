@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS08",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "D10=10 коробок; команда отбора 3 коробок; ключ K1; версия объекта V1",
+  "scenarios": [
+    {
+      "id": "NS08-TC01",
+      "initial": "K1",
+      "action": "Выполнить дважды",
+      "expected": "Остаток 7, один факт отбора 3",
+      "mandatory": true
+    },
+    {
+      "id": "NS08-TC02",
+      "initial": "После commit потерян ответ",
+      "action": "Повторить K1",
+      "expected": "Возвращён первоначальный результат, остаток 7",
+      "mandatory": true
+    },
+    {
+      "id": "NS08-TC03",
+      "initial": "До commit авария",
+      "action": "Восстановить",
+      "expected": "Остаток 10, частичного факта нет",
+      "mandatory": true
+    },
+    {
+      "id": "NS08-TC04",
+      "initial": "V1 устарела",
+      "action": "Отправить изменение",
+      "expected": "Конфликт, новая версия и остаток не перезаписаны",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

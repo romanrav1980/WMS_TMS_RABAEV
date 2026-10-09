@@ -1,0 +1,52 @@
+{
+  "namespace": "DS-NS52",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "S1 режим WEIGHT; HU1 брутто 42, minBox=2, допуск 1; три фото; S-SCALE исправны/неисправны",
+  "scenarios": [
+    {
+      "id": "NS52-TC01",
+      "initial": "Фактический вес 43 и три фото",
+      "action": "Принять",
+      "expected": "Граница проходит, отгрузочный вес не переписан",
+      "mandatory": true
+    },
+    {
+      "id": "NS52-TC02",
+      "initial": "Вес 43.01",
+      "action": "Принять",
+      "expected": "Нужен представитель и акт с расхождением",
+      "mandatory": true
+    },
+    {
+      "id": "NS52-TC03",
+      "initial": "Весы неисправны",
+      "action": "Сканировать",
+      "expected": "Приёмка ожидает, режим не сменён автоматически",
+      "mandatory": true
+    },
+    {
+      "id": "NS52-TC04",
+      "initial": "Нет обязательного фото",
+      "action": "Завершить",
+      "expected": "Не закрывается",
+      "mandatory": true
+    },
+    {
+      "id": "NS52-TC05",
+      "initial": "Малая коробка 0.400 в другом HU",
+      "action": "Рассчитать допуск",
+      "expected": "Использована половина 0.400, а не вес единицы внутри",
+      "mandatory": true
+    },
+    {
+      "id": "NS52-TC06",
+      "initial": "Фото",
+      "action": "Восстановить архив",
+      "expected": "Файл и связь с фактом совпадают по контрольной сумме",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

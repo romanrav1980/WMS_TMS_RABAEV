@@ -1,0 +1,2 @@
+﻿select object_name,object_type,status from user_objects where object_name in ('RRL_RECEIPT_WARE_SETTINGS','RRL_RECEIPT_SKU_RULE','RRL_RECEIPT_CELL_RULE','RRL_RECEIPT_TRAVEL_TIME','RRL_RECEIPT_SLOT_CLAIM','RRL_RECEIPT_LABEL','RRL_SAP_RECEIPT_ACK','RRL_RECEIPT_SSCC_SQ','RRL_SAP_REC_OUT_QUEUE_IX');
+select migration_id,status from RRL_SCHEMA_MIGRATIONS where migration_id='2026-10-07-005-ni01-completion';

@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS32",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "W1 обеспечена на 100 кроме одной подачи T7=10; водитель R2; фактический статус T7 не DONE",
+  "scenarios": [
+    {
+      "id": "NS32-TC01",
+      "initial": "W1",
+      "action": "Запустить",
+      "expected": "Отказ запуска, волна ожидает",
+      "mandatory": true
+    },
+    {
+      "id": "NS32-TC02",
+      "initial": "Монитор",
+      "action": "Открыть W1",
+      "expected": "Видны T7, 10 коробок и R2",
+      "mandatory": true
+    },
+    {
+      "id": "NS32-TC03",
+      "initial": "T7 завершена фактом",
+      "action": "Повторить запуск",
+      "expected": "Волна разрешена при полном обеспечении",
+      "mandatory": true
+    },
+    {
+      "id": "NS32-TC04",
+      "initial": "Два запуска",
+      "action": "Одновременно выполнить",
+      "expected": "Один набор задач отбора",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

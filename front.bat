@@ -22,6 +22,7 @@ set "PORT=%FRONT_PORT%"
 
 set "REACT_FRONT_DIR=%~dp0admin\wms_admin_frontend"
 set "RAW_FRONT_DIR=%~dp0wiki-raw\wms_admin_ui_reference"
+if defined TMS_ADMIN_FRONTEND_DIR set "REACT_FRONT_DIR=%TMS_ADMIN_FRONTEND_DIR%"
 
 echo Checking port %FRONT_PORT%...
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\kill-port.ps1" -Port %FRONT_PORT% -CommandLineLike "*http.server %FRONT_PORT%*","*--port %FRONT_PORT%*" -WaitSeconds 2 -FailIfBusy
@@ -37,7 +38,7 @@ if exist "%REACT_FRONT_DIR%\package.json" (
   echo Starting WMS admin frontend...
   echo   VITE_API_BASE=%VITE_API_BASE%
   echo   PORT=%PORT%
-  npm.cmd run start
+  npm.cmd run start -- --port %FRONT_PORT% --strictPort
 ) else (
   cd /d "%RAW_FRONT_DIR%"
   echo React admin frontend is not created yet.

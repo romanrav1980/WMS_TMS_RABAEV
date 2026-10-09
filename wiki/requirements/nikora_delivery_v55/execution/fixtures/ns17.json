@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS17",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "O1 в 15:59 требует 40 D10, сборка 07.10 20:00, отгрузка 08.10 06:30; O-LATE в 16:01",
+  "scenarios": [
+    {
+      "id": "NS17-TC01",
+      "initial": "O1 и повтор",
+      "action": "Принять",
+      "expected": "Один заказ, времена и потребность сохранены",
+      "mandatory": true
+    },
+    {
+      "id": "NS17-TC02",
+      "initial": "O1 изменён на 50",
+      "action": "Повторный импорт изменения",
+      "expected": "Изменение отклонено, исходные 40 сохранены",
+      "mandatory": true
+    },
+    {
+      "id": "NS17-TC03",
+      "initial": "O-LATE",
+      "action": "Принять новый заказ",
+      "expected": "Статус решения логиста, автоматическая сборка не начата",
+      "mandatory": true
+    },
+    {
+      "id": "NS17-TC04",
+      "initial": "Дефицит по O1",
+      "action": "Сформировать задачи",
+      "expected": "В ERP-потребности остаётся 40, обеспеченное количество отдельно",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS01",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "17 исходных Markdown-файлов: 15 процессов и 2 блока; Q01–Q28; 21 группа справочников",
+  "scenarios": [
+    {
+      "id": "NS01-TC01",
+      "initial": "Исходная редакция 55",
+      "action": "Назначить номера правилам и сохранить связи",
+      "expected": "Все самостоятельные правила имеют уникальный ID и ссылку на текст",
+      "mandatory": true
+    },
+    {
+      "id": "NS01-TC02",
+      "initial": "Решения Q01–Q28",
+      "action": "Сверить с реестром",
+      "expected": "Все 28 решений связаны с правилами, нет противоречащего старого правила",
+      "mandatory": true
+    },
+    {
+      "id": "NS01-TC03",
+      "initial": "Одинаковое правило в двух местах",
+      "action": "Сверить ссылки",
+      "expected": "Один стабильный ID, обе ссылки сохранены",
+      "mandatory": true
+    },
+    {
+      "id": "NS01-TC04",
+      "initial": "Изменение текста",
+      "action": "Сравнить контрольные суммы",
+      "expected": "Изменение обнаружено, исходная редакция не переписана",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

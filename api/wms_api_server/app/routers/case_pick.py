@@ -58,7 +58,7 @@ def claim_case_pick_task(
     request: CasePickTaskActionRequest,
     user: AdminUser = Depends(require_permission(CASE_PICK_EXECUTE_PERMISSION)),
 ) -> dict[str, int | str]:
-    request.actor = request.actor or user.username
+    request.actor = user.username
     CasePickService().claim_task(case_pick_task_id, request)
     return {"case_pick_task_id": case_pick_task_id, "status": "ASSIGNED"}
 
@@ -69,7 +69,7 @@ def start_case_pick_task(
     request: CasePickTaskActionRequest,
     user: AdminUser = Depends(require_permission(CASE_PICK_EXECUTE_PERMISSION)),
 ) -> dict[str, int | str]:
-    request.actor = request.actor or user.username
+    request.actor = user.username
     CasePickService().start_task(case_pick_task_id, request)
     return {"case_pick_task_id": case_pick_task_id, "status": "IN_PROGRESS"}
 
@@ -80,9 +80,49 @@ def transfer_case_pick_task(
     request: CasePickTransferRequest,
     user: AdminUser = Depends(require_permission(CASE_PICK_MANAGE_PERMISSION)),
 ) -> dict[str, int | str]:
-    request.actor = request.actor or user.username
+    request.actor = user.username
     CasePickService().transfer_task(case_pick_task_id, request)
     return {"case_pick_task_id": case_pick_task_id, "status": "TRANSFERRED"}
+
+
+from pydantic import BaseModel, Field
+
+
+class CaseCarrierMoveRequest(BaseModel):
+    operation_id: str = Field(min_length=1, max_length=100)
+    scan_container: str = Field(min_length=1, max_length=150)
+    scanned_to_cell: str = Field(min_length=1, max_length=60)
+    expected_content_version: int = Field(ge=0, strict=True)
+
+
+@router.post("/tasks/{case_pick_task_id}/move-carrier")
+def move_case_carrier(case_pick_task_id: int, request: CaseCarrierMoveRequest,
+    user: AdminUser = Depends(require_permission(CASE_PICK_EXECUTE_PERMISSION))) -> dict:
+    from ..modules.inventory.public import build_case_carrier_move_service
+    from ..modules.inventory.contracts_stock import StockPostingError
+    try:
+        return build_case_carrier_move_service().execute(request.operation_id, user.username,
+            case_pick_task_id, request.scan_container, request.scanned_to_cell, request.expected_content_version)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    except StockPostingError as exc:
+        uncertain = exc.code in {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "CONNECTION_UNUSABLE", "LOCK_RETRY_EXHAUSTED", "STOCK_RELEASE_NOT_ACTIVE"}
+        raise HTTPException(503 if uncertain else 409, detail={"code": exc.code,
+            "operation_id": exc.operation_id, "oracle_code": exc.oracle_code,
+            "outcome_confirmed": not uncertain, "retry_same_operation_id": uncertain}) from exc
+
+
+@router.get("/tasks/{case_pick_task_id}/lines/{line_id}/marking-policy")
+def case_line_marking_policy(case_pick_task_id: int, line_id: int,
+    user: AdminUser = Depends(require_permission(CASE_PICK_EXECUTE_PERMISSION))) -> dict:
+    from ..modules.inventory.public import existing_case_pick_policy
+    from ..oracle_gateway import OracleGateway
+    try:
+        return existing_case_pick_policy(OracleGateway(), case_pick_task_id, line_id)
+    except LookupError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc
 
 
 @router.post("/tasks/{case_pick_task_id}/lines/{line_id}/confirm")
@@ -92,7 +132,7 @@ def confirm_case_pick_line(
     request: CasePickLineConfirmRequest,
     user: AdminUser = Depends(require_permission(CASE_PICK_EXECUTE_PERMISSION)),
 ) -> dict:
-    request.actor = request.actor or user.username
+    request.actor = user.username
     result = CasePickService().confirm_line(case_pick_task_id, line_id, request)
     return {"case_pick_task_id": case_pick_task_id, "case_pick_line_id": line_id, **result}
 
@@ -104,7 +144,7 @@ def create_case_pick_short(
     request: CasePickLineShortRequest,
     user: AdminUser = Depends(require_permission(CASE_PICK_EXECUTE_PERMISSION)),
 ) -> dict:
-    request.actor = request.actor or user.username
+    request.actor = user.username
     result = CasePickService().short_line(case_pick_task_id, line_id, request)
     return {"case_pick_task_id": case_pick_task_id, "case_pick_line_id": line_id, **result}
 
@@ -115,7 +155,7 @@ def close_case_pick_task(
     request: CasePickTaskActionRequest,
     user: AdminUser = Depends(require_permission(CASE_PICK_EXECUTE_PERMISSION)),
 ) -> dict:
-    request.actor = request.actor or user.username
+    request.actor = user.username
     result = CasePickService().close_task(case_pick_task_id, request)
     return {"case_pick_task_id": case_pick_task_id, **result}
 
@@ -135,7 +175,7 @@ def approve_case_pick_short(
     request: CasePickShortDecisionRequest,
     user: AdminUser = Depends(require_permission(CASE_PICK_SHORT_APPROVE_PERMISSION)),
 ) -> dict:
-    request.actor = request.actor or user.username
+    request.actor = user.username
     return {"case_pick_short_id": short_id, **CasePickService().approve_short(short_id, request)}
 
 
@@ -145,7 +185,7 @@ def reject_case_pick_short(
     request: CasePickShortDecisionRequest,
     user: AdminUser = Depends(require_permission(CASE_PICK_SHORT_APPROVE_PERMISSION)),
 ) -> dict:
-    request.actor = request.actor or user.username
+    request.actor = user.username
     return {"case_pick_short_id": short_id, **CasePickService().reject_short(short_id, request)}
 
 
@@ -165,3 +205,37 @@ def upsert_pallet_type(
     request.updated_by = request.updated_by or user.username
     pallet_type_id = CasePickService().upsert_pallet_type(request)
     return {"pallet_type_id": pallet_type_id}
+
+
+class CaseShipmentBindRequest(BaseModel):
+    pallet_identifier: str = Field(min_length=1, max_length=150)
+    scan_container: str = Field(min_length=1, max_length=150)
+    expected_content_version: int = Field(ge=0, strict=True)
+
+
+@router.post("/tasks/{case_pick_task_id}/bind-shipment")
+def bind_case_shipment(case_pick_task_id: int, request: CaseShipmentBindRequest,
+    user: AdminUser = Depends(require_permission(CASE_PICK_EXECUTE_PERMISSION))) -> dict:
+    from ..modules.inventory.public import bind_existing_case_shipment
+    from ..oracle_gateway import OracleGateway
+    try:
+        return bind_existing_case_shipment(OracleGateway(), case_pick_task_id,
+            request.pallet_identifier, request.scan_container, request.expected_content_version, user.username)
+    except LookupError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc
+
+
+class CaseCarrierReturnRequest(BaseModel):
+    operation_id: str = Field(min_length=1,max_length=100)
+    scan_container: str = Field(min_length=1,max_length=150)
+    expected_content_version: int = Field(ge=0,strict=True)
+    destinations: dict[str,str]
+
+
+@router.post("/tasks/{case_pick_task_id}/return-carrier")
+def return_case_carrier(case_pick_task_id:int,request:CaseCarrierReturnRequest,
+    user:AdminUser=Depends(require_permission(CASE_PICK_MANAGE_PERMISSION))) -> dict:
+    from ..modules.inventory.public import return_existing_case_carrier
+    return return_existing_case_carrier(case_pick_task_id,request,user.username)

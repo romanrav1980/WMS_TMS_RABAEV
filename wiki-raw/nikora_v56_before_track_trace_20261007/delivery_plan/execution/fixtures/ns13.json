@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS13",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "D10: короб 24 штуки, брутто 10 кг, 400×300×200 мм, объём 0.024 м³; D02: короб 2 кг",
+  "scenarios": [
+    {
+      "id": "NS13-TC01",
+      "initial": "D10",
+      "action": "Сохранить и прочитать упаковку",
+      "expected": "24 штуки, 10 кг и 0.024 м³ совпадают в карточке и расчёте",
+      "mandatory": true
+    },
+    {
+      "id": "NS13-TC02",
+      "initial": "SKU UNKNOWN",
+      "action": "Попытаться принять",
+      "expected": "Не допускается, приход отсутствует",
+      "mandatory": true
+    },
+    {
+      "id": "NS13-TC03",
+      "initial": "D10 с нулевой массой",
+      "action": "Допустить карточку к операциям",
+      "expected": "Отказ, причина указанa",
+      "mandatory": true
+    },
+    {
+      "id": "NS13-TC04",
+      "initial": "Две упаковки",
+      "action": "Пересчитать потребность",
+      "expected": "Кратности не смешаны, сохранены исходная единица и упаковка",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

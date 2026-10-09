@@ -1,0 +1,9 @@
+@@080_document_release_contracts.sql
+@@017_context.sql
+@@020_reservations.sql
+@@039_unit_core.sql
+@@040_reservation_commands.sql
+@@079_document_reservations.sql
+@@024_posting.sql
+@@014b_recompile.sql
+@@080_document_release_complete.sql

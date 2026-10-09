@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS30",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Рич R1 смена 18:00–02:00; комплектовщики 20:00–04:00; дежурный R2 20:00–04:00; один сотрудник совмещает роли",
+  "scenarios": [
+    {
+      "id": "NS30-TC01",
+      "initial": "Начало вечернего цикла",
+      "action": "Проверить график",
+      "expected": "Основной рич доступен на 2 часа раньше",
+      "mandatory": true
+    },
+    {
+      "id": "NS30-TC02",
+      "initial": "Время 03:00",
+      "action": "Назначить срочную подачу",
+      "expected": "R2 доступен, R1 вне смены",
+      "mandatory": true
+    },
+    {
+      "id": "NS30-TC03",
+      "initial": "Совмещённый сотрудник",
+      "action": "Считать доступность",
+      "expected": "Один фонд времени, не два",
+      "mandatory": true
+    },
+    {
+      "id": "NS30-TC04",
+      "initial": "Техника неисправна",
+      "action": "Назначить",
+      "expected": "Ресурс исключён",
+      "mandatory": true
+    },
+    {
+      "id": "NS30-TC05",
+      "initial": "За 2 часа до конца склада",
+      "action": "Проверить",
+      "expected": "Обеспеченность всех плановых волн и исключения видны руководителю",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

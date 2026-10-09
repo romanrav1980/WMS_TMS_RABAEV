@@ -47,5 +47,8 @@
     "titleBar.activeBackground": "#0B1E31",
     "titleBar.activeForeground": "#EAF3FF"
   },
-  "dotnet.preferCSharpExtension": true
+  "dotnet.preferCSharpExtension": true,
+  "workbench.editorAssociations": {
+    "*.md": "markdown-preview-enhanced"
+  }
 }

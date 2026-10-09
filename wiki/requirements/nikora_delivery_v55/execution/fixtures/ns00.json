@@ -1,0 +1,47 @@
+{
+  "namespace": "DS-NS00",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Контур ORCL/RABAEV, 2 интерфейса, набор DS-BASE, существующая схема RABAEV и очистка только синтетического набора",
+  "scenarios": [
+    {
+      "id": "NS00-TC01",
+      "initial": "Чистая среда",
+      "action": "Развернуть API и интерфейсы по паспорту",
+      "expected": "API и оба интерфейса отвечают, версии записаны, ручных скрытых шагов нет",
+      "mandatory": true
+    },
+    {
+      "id": "NS00-TC02",
+      "initial": "ORCL/RABAEV",
+      "action": "Выполнить сброс тестовых данных",
+      "expected": "Удалены только строки набора DS-BASE, рабочий запас не изменён",
+      "mandatory": true
+    },
+    {
+      "id": "NS00-TC03",
+      "initial": "Прерывание запуска",
+      "action": "Перезапустить процесс",
+      "expected": "Приложение готово, зафиксированный тестовый факт сохранён",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "core_subset_seed_reset_cleanup_executed_live_oracle",
+  "binding": "ORCL/orcl/RABAEV; verified 22-row core in nine existing tables; full business-profile mapping remains NS02-NS04 GAP",
+  "loader": "python -m tools.nicora_environment",
+  "materializedSubset": {
+    "warehouse": 9807,
+    "rows": 22,
+    "tables": 9,
+    "quantityPieces": 2400,
+    "declarativeRemainder": [
+      "vehicles",
+      "rates",
+      "mixedHU",
+      "storeModes",
+      "reservations",
+      "TrackAndTraceProfiles"
+    ]
+  },
+  "evidence": "runtime/test-evidence/nicora_ns00/report.json"
+}

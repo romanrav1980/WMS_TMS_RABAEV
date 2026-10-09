@@ -1,0 +1,52 @@
+{
+  "namespace": "DS-NS57",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Расход рейса 30; выбранная база товаров A:B=2:1; расход только машины 50; общая работа месяца 300 на 600 коробок",
+  "scenarios": [
+    {
+      "id": "NS57-TC01",
+      "initial": "Расход рейса",
+      "action": "Распределить",
+      "expected": "A=20/B=10, сумма 30",
+      "mandatory": true
+    },
+    {
+      "id": "NS57-TC02",
+      "initial": "Расход машины",
+      "action": "Распределить на товар",
+      "expected": "Не распределяется, остаётся 50 на машине",
+      "mandatory": true
+    },
+    {
+      "id": "NS57-TC03",
+      "initial": "Месячная общая работа",
+      "action": "Включить в ставку",
+      "expected": "0.5 на коробку по данной базе, не дополнительный второй сбор",
+      "mandatory": true
+    },
+    {
+      "id": "NS57-TC04",
+      "initial": "PICKER меняет ставку",
+      "action": "Обновить",
+      "expected": "Отказ",
+      "mandatory": true
+    },
+    {
+      "id": "NS57-TC05",
+      "initial": "Финансовый контролёр меняет",
+      "action": "Обновить",
+      "expected": "Основание, период и версия сохранены",
+      "mandatory": true
+    },
+    {
+      "id": "NS57-TC06",
+      "initial": "Поздний расход",
+      "action": "Подтвердить",
+      "expected": "Решение логиста/контроля расходов и история отражены",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS39",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Инцидент начат 20:00; ноль подтверждён 20:01; рич R2 свободен; предельное ожидание 5 минут; передача 20:03",
+  "scenarios": [
+    {
+      "id": "NS39-TC01",
+      "initial": "После нуля",
+      "action": "Назначить пополнение",
+      "expected": "Первый приоритет ближайшему свободному допущенному ричу",
+      "mandatory": true
+    },
+    {
+      "id": "NS39-TC02",
+      "initial": "Передача в 20:03",
+      "action": "Проверить таймер",
+      "expected": "Начало остаётся 20:00, не 20:03",
+      "mandatory": true
+    },
+    {
+      "id": "NS39-TC03",
+      "initial": "Время 20:05, подачи нет",
+      "action": "Проверить",
+      "expected": "Превышение/граница срока видна руководителю, ожидание не скрыто",
+      "mandatory": true
+    },
+    {
+      "id": "NS39-TC04",
+      "initial": "Последние 2 часа склада",
+      "action": "Выполнить",
+      "expected": "Назначение дежурному ричу, обычная очередь не блокирует срочную задачу",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

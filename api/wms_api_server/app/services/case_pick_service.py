@@ -341,8 +341,9 @@ class CasePickService:
                    t.WARE_ID,
                    t.TOTAL_LINES,
                    t.PICKED_LINES,
-                   t.PLANNED_QTY,
-                   t.PICKED_QTY,
+                   to_char(t.PLANNED_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PLANNED_QTY,
+                   to_char(t.PICKED_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PICKED_QTY,
+                   t.CURRENT_CELL,t.CONTENT_VERSION,t.LEGACY_SBORKA_PALLET_ID,t.SHIPPED_OPERATION,
                    t.CREATED_AT,
                    t.STARTED_AT,
                    t.CLOSED_AT
@@ -367,8 +368,8 @@ class CasePickService:
                    PRODUCT_NAME,
                    CELL_CODE,
                    PICK_SEQUENCE,
-                   PLANNED_QTY,
-                   PICKED_QTY,
+                   to_char(PLANNED_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PLANNED_QTY,
+                   to_char(PICKED_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PICKED_QTY,
                    STATUS,
                    LAST_OFFLINE_EVENT_ID,
                    STARTED_AT,
@@ -379,6 +380,14 @@ class CasePickService:
             """,
             {"case_pick_task_id": case_pick_task_id},
         )
+        task["physical_lots"] = self.gateway.fetch_all(
+            "select h.LOT_UID UID,h.CASE_PICK_LINE_ID,p.ARTICUL,s.CELL,s.BASE_UOM,"
+            "to_char(s.REMAIN,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PHYSICAL_QTY,"
+            "to_char(s.HARD_RESERVED_BASE,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') HARD_QTY "
+            "from RRL_CASE_CARRIER_LOT h join RRL_REMAINS s on s.UID_POLETA=h.LOT_UID "
+            "join RRL_PALLETS p on p.UID_PALLET=h.LOT_UID "
+            "where h.CASE_PICK_TASK_ID=:id and s.REMAIN>0 order by h.LOT_UID,s.CELL fetch first 201 rows only",
+            {"id": case_pick_task_id})
         return task
 
     def claim_task(self, case_pick_task_id: int, request: CasePickTaskActionRequest) -> None:
@@ -427,6 +436,19 @@ class CasePickService:
         self._event(case_pick_task_id, None, "STARTED", request, actor)
 
     def confirm_line(self, case_pick_task_id: int, line_id: int, request: CasePickLineConfirmRequest) -> dict[str, Any]:
+        from ..modules.inventory.public import post_existing_case_pick
+        from ..modules.inventory.contracts_stock import StockPostingError
+        try:
+            posted = post_existing_case_pick(self.gateway, case_pick_task_id, line_id, request)
+        except ValueError as exc:
+            raise HTTPException(422, detail={"code": "CASE_COMMAND_INVALID", "message": str(exc)}) from exc
+        except StockPostingError as exc:
+            uncertain = exc.code in {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "CONNECTION_UNUSABLE", "LOCK_RETRY_EXHAUSTED", "STOCK_RELEASE_NOT_ACTIVE"}
+            raise HTTPException(503 if uncertain else 409, detail={"code": exc.code,
+                "operation_id": exc.operation_id, "oracle_code": exc.oracle_code,
+                "outcome_confirmed": not uncertain, "retry_same_operation_id": uncertain}) from exc
+        if posted is not None:
+            return posted
         actor = request.actor or "TSD"
         line = self._line_for_update(case_pick_task_id, line_id)
         if request.offline_event_id and self._offline_event_exists(request.offline_event_id):
@@ -495,13 +517,41 @@ class CasePickService:
         return {"status": new_status, "fact_qty": fact_qty}
 
     def short_line(self, case_pick_task_id: int, line_id: int, request: CasePickLineShortRequest) -> dict[str, Any]:
+        from decimal import Decimal
+        from ..modules.inventory.public import warehouse_metadata_transaction
+        from ..transaction_gateway import TransactionGateway
+        state = self.gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
+        if state and state[0]["state"] == "PREPARED":
+            return self._short_line_locked(case_pick_task_id, line_id, request)
+        with warehouse_metadata_transaction(self.gateway, "CASE shortage metadata", request.actor, "case_pick_execute") as cursor:
+            bound = TransactionGateway(cursor)
+            bound.fetch_all("select CASE_PICK_TASK_ID from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:id for update",
+                {"id": case_pick_task_id})
+            rows = bound.fetch_all("select to_char(PICKED_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') POSTED_QTY from RRL_CASE_PICK_LINE where CASE_PICK_TASK_ID=:task and CASE_PICK_LINE_ID=:line for update",
+                {"task": case_pick_task_id, "line": line_id})
+            if not rows:
+                raise HTTPException(404, detail="Case line not found")
+            confirmed = Decimal(str(rows[0]["posted_qty"] or "0"))
+            if Decimal(str(request.picked_qty or 0)) != confirmed:
+                raise HTTPException(409, detail={"code": "CASE_SHORT_PICKED_FACT_MUST_BE_POSTED",
+                    "message": "Confirm actually picked quantity before reporting the remaining shortage"})
+            existing = bound.fetch_all("select OFFLINE_EVENT_ID from RRL_CASE_PICK_SHORT where CASE_PICK_LINE_ID=:id and STATUS in ('CREATED','PENDING_APPROVAL')", {"id": line_id})
+            if existing and (not request.offline_event_id or existing[0]["offline_event_id"] != request.offline_event_id):
+                raise HTTPException(409, detail="A shortage already awaits approval for this line")
+            return CasePickService(bound)._short_line_locked(case_pick_task_id, line_id, request, approval_pending=True)
+
+    def _short_line_locked(self, case_pick_task_id: int, line_id: int, request: CasePickLineShortRequest, approval_pending: bool = False) -> dict[str, Any]:
         actor = request.actor or "TSD"
         line = self._line_for_update(case_pick_task_id, line_id)
         if request.offline_event_id and self._offline_event_exists(request.offline_event_id):
             return {"status": line.get("status"), "idempotent": True}
-        planned_qty = float(line.get("planned_qty") or 0)
-        picked_qty = float(request.picked_qty or 0)
-        short_qty = float(request.short_qty if request.short_qty is not None else max(planned_qty - picked_qty, 0))
+        from decimal import Decimal
+        exact = self.gateway.fetch_all("select to_char(PLANNED_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') Q from RRL_CASE_PICK_LINE where CASE_PICK_LINE_ID=:id", {"id": line_id})
+        planned_qty = Decimal(str(exact[0]["q"] or "0"))
+        picked_qty = Decimal(str(request.picked_qty or 0))
+        short_qty = Decimal(str(request.short_qty)) if request.short_qty is not None else max(planned_qty - picked_qty, Decimal(0))
+        if picked_qty < 0 or short_qty <= 0 or picked_qty + short_qty > planned_qty:
+            raise HTTPException(422, detail="Invalid picked/short quantity")
         short_id = self.gateway.call_number_plsql(
             """
             declare
@@ -542,19 +592,34 @@ class CasePickService:
         self.gateway.execute(
             """
             update RRL_CASE_PICK_LINE
-               set STATUS = 'SHORT_PICKED',
+               set STATUS = :line_status,
                    PICKED_QTY = :picked_qty,
                    UPDATED_AT = systimestamp,
                    UPDATED_BY = substr(:actor, 1, 100)
              where CASE_PICK_LINE_ID = :line_id
             """,
-            {"line_id": line_id, "picked_qty": picked_qty, "actor": actor},
+            {"line_id": line_id, "picked_qty": picked_qty, "actor": actor,
+                "line_status": "PARTIAL" if approval_pending else "SHORT_PICKED"},
         )
         self._refresh_task_totals(case_pick_task_id, actor)
         self._event(case_pick_task_id, line_id, "SHORT_CREATED", request, actor)
         return {"case_pick_short_id": short_id, "status": "PENDING_APPROVAL", "short_qty": short_qty}
 
     def close_task(self, case_pick_task_id: int, request: CasePickTaskActionRequest) -> dict[str, Any]:
+        from ..modules.inventory.public import warehouse_metadata_transaction
+        from ..transaction_gateway import TransactionGateway
+        state = self.gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
+        if state and state[0]["state"] == "PREPARED":
+            return self._close_task_locked(case_pick_task_id, request)
+        with warehouse_metadata_transaction(self.gateway, "CASE carrier close", request.actor, "case_pick_execute") as cursor:
+            bound = TransactionGateway(cursor)
+            bound.fetch_all("select CASE_PICK_TASK_ID from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:id for update", {"id": case_pick_task_id})
+            pending = bound.fetch_all("select 1 from RRL_CASE_PICK_SHORT where CASE_PICK_TASK_ID=:id and STATUS in ('CREATED','PENDING_APPROVAL') and rownum=1", {"id": case_pick_task_id})
+            if pending:
+                raise HTTPException(409, detail="Approve or reject the pending shortage before closing the carrier")
+            return CasePickService(bound)._close_task_locked(case_pick_task_id, request)
+
+    def _close_task_locked(self, case_pick_task_id: int, request: CasePickTaskActionRequest) -> dict[str, Any]:
         actor = request.actor or "TSD"
         self._refresh_task_totals(case_pick_task_id, actor)
         task = self.get_task(case_pick_task_id)
@@ -653,6 +718,10 @@ class CasePickService:
         )
 
     def approve_short(self, short_id: int, request: CasePickShortDecisionRequest) -> dict[str, Any]:
+        from ..modules.inventory.public import post_existing_case_short_approval
+        posted = post_existing_case_short_approval(self.gateway, short_id, request)
+        if posted is not None:
+            return posted
         actor = request.actor or "SHIFT_LEAD"
         rows = self.gateway.fetch_all(
             """
@@ -689,6 +758,23 @@ class CasePickService:
         return {"status": "ACCEPTED", "inventory_task_id": inventory_task_id}
 
     def reject_short(self, short_id: int, request: CasePickShortDecisionRequest) -> dict[str, str]:
+        from ..modules.inventory.public import warehouse_metadata_transaction
+        from ..transaction_gateway import TransactionGateway
+        state = self.gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
+        if state and state[0]["state"] == "PREPARED":
+            return self._reject_short_locked(short_id, request)
+        with warehouse_metadata_transaction(self.gateway, "CASE shortage rejection", request.actor, "case_pick_short_approve") as cursor:
+            bound = TransactionGateway(cursor)
+            rows = bound.fetch_all("select STATUS from RRL_CASE_PICK_SHORT where CASE_PICK_SHORT_ID=:id for update", {"id": short_id})
+            if not rows:
+                raise HTTPException(404, detail="Shortage not found")
+            if rows[0]["status"] == "REJECTED":
+                return {"status": "REJECTED"}
+            if rows[0]["status"] not in ("CREATED", "PENDING_APPROVAL"):
+                raise HTTPException(409, detail="The shortage has already been accepted")
+            return CasePickService(bound)._reject_short_locked(short_id, request)
+
+    def _reject_short_locked(self, short_id: int, request: CasePickShortDecisionRequest) -> dict[str, str]:
         actor = request.actor or "SHIFT_LEAD"
         self.gateway.execute(
             """

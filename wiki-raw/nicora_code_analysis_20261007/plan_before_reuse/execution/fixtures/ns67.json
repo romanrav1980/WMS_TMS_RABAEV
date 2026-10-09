@@ -1,0 +1,54 @@
+{
+    "namespace":  "DS-NS67",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "Реестр NS01, evidence всех карточек, ограничения площадок, результаты NS62/64/65; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS67-TC01",
+                          "initial":  "Обязательное требование",
+                          "action":  "Проверить",
+                          "expected":  "Есть конкретное доказательство, не одна отметка автора",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS67-TC02",
+                          "initial":  "Открытый критический дефект",
+                          "action":  "Попытаться принять",
+                          "expected":  "Полный объём не принят",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS67-TC03",
+                          "initial":  "Непроверенная площадка",
+                          "action":  "Включить в итог",
+                          "expected":  "Не объявляется покрытой",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS67-TC04",
+                          "initial":  "Производительность",
+                          "action":  "Сверить",
+                          "expected":  "Профиль утверждён и доказан на указанном стенде",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS67-TC05",
+                          "initial":  "Итоговое решение",
+                          "action":  "Зафиксировать",
+                          "expected":  "Результат принят владельцем с перечислением реального охвата",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS67-TT01",
+                          "initial":  "Реестр редакции 57 и evidence всех применимых систем",
+                          "action":  "Сопоставить ТЗ, спринты, Oracle и результаты",
+                          "expected":  "Нет непокрытого обязательного профиля или этапа; декларативные данные, mock и незавершённые миграции не выдаются за реализацию",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

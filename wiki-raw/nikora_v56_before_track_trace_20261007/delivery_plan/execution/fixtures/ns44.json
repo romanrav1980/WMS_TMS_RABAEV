@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS44",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Подсклад DRY; 10 грузовых мест; частота 100 процентов, затем 20; фиксированный seed для воспроизводимого выбора",
+  "scenarios": [
+    {
+      "id": "NS44-TC01",
+      "initial": "Частота 100",
+      "action": "Рассчитать",
+      "expected": "Все 10 получают полную проверку состава",
+      "mandatory": true
+    },
+    {
+      "id": "NS44-TC02",
+      "initial": "Повтор предъявления",
+      "action": "Пересчитать",
+      "expected": "Назначенный аудит не исчезает",
+      "mandatory": true
+    },
+    {
+      "id": "NS44-TC03",
+      "initial": "Частота снижена",
+      "action": "Проверить уже выбранное место",
+      "expected": "Не освобождается от начатой обязательной проверки",
+      "mandatory": true
+    },
+    {
+      "id": "NS44-TC04",
+      "initial": "Частота 20 с фиксированным seed",
+      "action": "Сверить два одинаковых набора",
+      "expected": "Выбор воспроизводим в тесте, в эксплуатации используется установленный механизм случайности",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

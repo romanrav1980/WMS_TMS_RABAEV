@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS05",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "2 V100 16 ГБ; Qwen 14B Q4; 10 одинаковых задач: 3 формы, 3 преобразования, 2 теста, 2 исправления",
+  "scenarios": [
+    {
+      "id": "NS05-TC01",
+      "initial": "10 задач",
+      "action": "Выполнить и независимо проверить",
+      "expected": "Все 10 решений и ошибки зафиксированы; qualified=true только при минимум 8 принятых и отсутствии критического нарушения, иначе облачный резерв",
+      "mandatory": true
+    },
+    {
+      "id": "NS05-TC02",
+      "initial": "Контекст 8K/16K",
+      "action": "Замерить память и полный вход",
+      "expected": "VRAM, время и полный контекст записаны; OOM или обрезание запрещают соответствующую конфигурацию, а не скрываются",
+      "mandatory": true
+    },
+    {
+      "id": "NS05-TC03",
+      "initial": "Два исправления неуспешны",
+      "action": "Передать задачу облачной модели",
+      "expected": "Цикл остановлен, диагностика и исходное требование сохранены",
+      "mandatory": true
+    },
+    {
+      "id": "NS05-TC04",
+      "initial": "30B на двух GPU",
+      "action": "Пробный запуск при доступности",
+      "expected": "Фактическая память и скорость записаны, результат не заменяет квалификацию 14B",
+      "mandatory": false
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

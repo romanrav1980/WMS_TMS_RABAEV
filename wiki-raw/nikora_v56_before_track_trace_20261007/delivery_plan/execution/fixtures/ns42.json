@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS42",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "HU1 план: 2 D10 и 1 D02; факт: 1 D10, 1 D02 и лишняя D04",
+  "scenarios": [
+    {
+      "id": "NS42-TC01",
+      "initial": "Ошибка веса",
+      "action": "Выдать задание",
+      "expected": "Назначен контролёр, груз красный",
+      "mandatory": true
+    },
+    {
+      "id": "NS42-TC02",
+      "initial": "Каждая коробка",
+      "action": "Просканировать",
+      "expected": "Факт 1/1/1 сохранён, нужен 1 D10, лишний 1 D04",
+      "mandatory": true
+    },
+    {
+      "id": "NS42-TC03",
+      "initial": "Повтор D02",
+      "action": "Сканировать",
+      "expected": "Дубликат не увеличивает состав",
+      "mandatory": true
+    },
+    {
+      "id": "NS42-TC04",
+      "initial": "Общий вес случайно совпал",
+      "action": "Проверить состав",
+      "expected": "Излишек и недостача не скрыты совпадением массы",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

@@ -1,0 +1,47 @@
+{
+    "namespace":  "DS-NS66",
+    "synthetic":  true,
+    "base":  "base.json",
+    "data":  "Инструкции по ролям, чистая копия среды, пакет установки и обратного переключения; дополнительно fixtures/track_trace.json по применимым профилям",
+    "scenarios":  [
+                      {
+                          "id":  "NS66-TC01",
+                          "initial":  "Пользователь без разработчика",
+                          "action":  "Пройти инструкцию",
+                          "expected":  "Штатная операция выполнена по документу",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS66-TC02",
+                          "initial":  "Чистая среда",
+                          "action":  "Установить",
+                          "expected":  "Версии и миграции воспроизводимы",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS66-TC03",
+                          "initial":  "Обратное переключение кода",
+                          "action":  "Выполнить на стенде",
+                          "expected":  "Подтверждённые товарные факты не откатываются как файлы приложения",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS66-TC04",
+                          "initial":  "Потеря связи",
+                          "action":  "Использовать регламент",
+                          "expected":  "Действия и восстановление определены, двойного эффекта нет",
+                          "mandatory":  true
+                      },
+                      {
+                          "id":  "NS66-TT01",
+                          "initial":  "Приёмщик, комплектовщик и регуляторный владелец",
+                          "action":  "Выполнить учебные случаи EAN/марка, вскрытие, HOLD, сбой и возврат",
+                          "expected":  "Персонал правильно выбирает уровень, не отключает обязательность и знает владельца незавершённого документа",
+                          "mandatory":  true
+                      }
+                  ],
+    "seedStatus":  "declarative_plan_not_executed",
+    "binding":  "Resolve against actual ORCL/RABAEV contracts before execution",
+    "traceabilityFixture":  "track_trace.json",
+    "requirementsBaseline":  57
+}

@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS33",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "Сборка 400 коробок; норматив 100 коробок/ч; 2 сотрудника на 20:00–22:00; добавка 200",
+  "scenarios": [
+    {
+      "id": "NS33-TC01",
+      "initial": "400 коробок",
+      "action": "Прогнозировать",
+      "expected": "4 человеко-часа, доступность 4",
+      "mandatory": true
+    },
+    {
+      "id": "NS33-TC02",
+      "initial": "600 коробок",
+      "action": "Прогнозировать",
+      "expected": "Дефицит 2 человеко-часов виден логисту",
+      "mandatory": true
+    },
+    {
+      "id": "NS33-TC03",
+      "initial": "Перенести 200 на следующий интервал",
+      "action": "Пересчитать",
+      "expected": "Пиковый дефицит первого интервала устранён",
+      "mandatory": true
+    },
+    {
+      "id": "NS33-TC04",
+      "initial": "Вывести третьего сотрудника на 2 часа",
+      "action": "Пересчитать",
+      "expected": "Доступность 6",
+      "mandatory": true
+    },
+    {
+      "id": "NS33-TC05",
+      "initial": "Совмещение ролей",
+      "action": "Считать",
+      "expected": "Фонд одного человека не удвоен",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

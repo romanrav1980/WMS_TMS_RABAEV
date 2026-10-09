@@ -106,7 +106,11 @@ class StockReservationService:
         )
         return rows[0] if rows else None
 
-    def create_reservation(self, request: StockReservationCreateRequest) -> int:
+    def create_reservation(self, request: StockReservationCreateRequest, actor: str | None = None) -> int:
+        from ..modules.inventory.infrastructure.reservation_commands import post_reservation
+        posted = post_reservation(self.gateway, "CREATE", request, actor)
+        if posted is not None:
+            return int(posted["reservation_id"])
         data = _model_dict(request)
         self._validate_kind_scope_status(data)
         self._validate_physical_fields(data)
@@ -136,7 +140,11 @@ class StockReservationService:
         )
         return reservation_id
 
-    def promote_to_hard(self, reservation_id: int, request: StockReservationPromoteRequest) -> None:
+    def promote_to_hard(self, reservation_id: int, request: StockReservationPromoteRequest, actor: str | None = None) -> None:
+        from ..modules.inventory.infrastructure.reservation_commands import post_reservation
+        posted = post_reservation(self.gateway, "PROMOTE", request, actor, reservation_id)
+        if posted is not None:
+            return
         existing = self.get_reservation(reservation_id)
         if existing is None:
             raise LookupError(f"Reservation not found: {reservation_id}")
@@ -185,7 +193,11 @@ class StockReservationService:
             },
         )
 
-    def release_reservation(self, reservation_id: int, request: StockReservationStatusRequest) -> None:
+    def release_reservation(self, reservation_id: int, request: StockReservationStatusRequest, actor: str | None = None) -> None:
+        from ..modules.inventory.infrastructure.reservation_commands import post_reservation
+        posted = post_reservation(self.gateway, "RELEASE", request, actor, reservation_id)
+        if posted is not None:
+            return
         self._set_status(
             reservation_id=reservation_id,
             status="RELEASED",
@@ -195,7 +207,11 @@ class StockReservationService:
             actor_column="RELEASED_BY",
         )
 
-    def consume_reservation(self, reservation_id: int, request: StockReservationStatusRequest) -> None:
+    def consume_reservation(self, reservation_id: int, request: StockReservationStatusRequest, actor: str | None = None) -> None:
+        from ..modules.inventory.infrastructure.reservation_commands import post_reservation
+        posted = post_reservation(self.gateway, "CONSUME", request, actor, reservation_id)
+        if posted is not None:
+            return
         self._set_status(
             reservation_id=reservation_id,
             status="CONSUMED",
@@ -205,7 +221,11 @@ class StockReservationService:
             actor_column="CONSUMED_BY",
         )
 
-    def cancel_reservation(self, reservation_id: int, request: StockReservationStatusRequest) -> None:
+    def cancel_reservation(self, reservation_id: int, request: StockReservationStatusRequest, actor: str | None = None) -> None:
+        from ..modules.inventory.infrastructure.reservation_commands import post_reservation
+        posted = post_reservation(self.gateway, "CANCEL", request, actor, reservation_id)
+        if posted is not None:
+            return
         self._set_status(
             reservation_id=reservation_id,
             status="CANCELLED",

@@ -42,7 +42,7 @@ def create_picking_plan(
     request: PickingPlanCreateRequest,
     user: AdminUser = Depends(require_permission(PICK_PLAN_CREATE_PERMISSION)),
 ) -> dict[str, int]:
-    request.created_by = request.created_by or user.username
+    request.created_by = user.username
     pick_plan_id = PickingService().create_plan(request)
     return {"pick_plan_id": pick_plan_id}
 
@@ -143,7 +143,7 @@ def create_pick_wave(
     request: PickWaveCreateRequest,
     user: AdminUser = Depends(require_permission(PICK_WAVE_CREATE_PERMISSION)),
 ) -> dict[str, int]:
-    request.created_by = request.created_by or user.username
+    request.created_by = user.username
     pick_wave_id = PickingService().create_wave(request)
     return {"pick_wave_id": pick_wave_id}
 
@@ -196,7 +196,7 @@ def add_pick_wave_plan(
     request: PickWaveAddPlanRequest,
     user: AdminUser = Depends(require_permission(PICK_WAVE_CREATE_PERMISSION)),
 ) -> dict[str, str | int]:
-    request.created_by = request.created_by or user.username
+    request.created_by = user.username
     PickingService().add_wave_plan(pick_wave_id, request)
     return {"pick_wave_id": pick_wave_id, "pick_plan_id": request.pick_plan_id, "status": "ADDED"}
 
@@ -207,7 +207,7 @@ def calculate_pick_wave(
     request: PickWaveActionRequest,
     user: AdminUser = Depends(require_permission(PICK_WAVE_CALCULATE_PERMISSION)),
 ) -> dict[str, str | int]:
-    request.updated_by = request.updated_by or user.username
+    request.updated_by = user.username
     PickingService().preview_wave(pick_wave_id, request)
     return {"pick_wave_id": pick_wave_id, "status": "PREVIEW"}
 
@@ -218,7 +218,7 @@ def launch_pick_wave(
     request: PickWaveActionRequest,
     user: AdminUser = Depends(require_permission(PICK_WAVE_LAUNCH_PERMISSION)),
 ) -> dict[str, str | int]:
-    request.updated_by = request.updated_by or user.username
+    request.updated_by = user.username
     PickingService().launch_wave(pick_wave_id, request)
     return {"pick_wave_id": pick_wave_id, "status": "LAUNCHED"}
 
@@ -229,7 +229,7 @@ def cancel_pick_wave(
     request: PickWaveActionRequest,
     user: AdminUser = Depends(require_permission(PICK_WAVE_CANCEL_PERMISSION)),
 ) -> dict[str, str | int]:
-    request.updated_by = request.updated_by or user.username
+    request.updated_by = user.username
     PickingService().cancel_wave(pick_wave_id, request)
     return {"pick_wave_id": pick_wave_id, "status": "CANCELLED"}
 
@@ -240,7 +240,7 @@ def release_pick_wave_reservations(
     request: PickWaveActionRequest,
     user: AdminUser = Depends(require_permission(PICK_WAVE_RELEASE_RESERVES_PERMISSION)),
 ) -> dict[str, str | int]:
-    request.updated_by = request.updated_by or user.username
+    request.updated_by = user.username
     PickingService().release_wave_reservations(pick_wave_id, request)
     return {"pick_wave_id": pick_wave_id, "status": "PREVIEW"}
 
@@ -251,7 +251,7 @@ def release_pick_wave_minimax_replenishment(
     request: PickWaveActionRequest,
     user: AdminUser = Depends(require_permission(PICK_WAVE_LAUNCH_PERMISSION)),
 ) -> dict[str, str | int]:
-    request.updated_by = request.updated_by or user.username
+    request.updated_by = user.username
     released_count = PickingService().release_minimax_replenishment(pick_wave_id, request)
     return {"pick_wave_id": pick_wave_id, "status": "CHECKED", "released_count": released_count}
 
@@ -262,7 +262,7 @@ def release_pick_wave_staging(
     request: PickWaveStagingReleaseRequest,
     user: AdminUser = Depends(require_permission(PICK_WAVE_LAUNCH_PERMISSION)),
 ) -> dict[str, str | int]:
-    request.updated_by = request.updated_by or user.username
+    request.updated_by = user.username
     released_count = PickingService().release_wave_staging(pick_wave_id, request)
     return {"pick_wave_id": pick_wave_id, "status": "RELEASED", "released_count": released_count}
 
@@ -328,7 +328,7 @@ def upsert_pick_route(
     request: PickRouteUpsertRequest,
     user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_EDIT_PERMISSION)),
 ) -> dict[str, int]:
-    request.updated_by = request.updated_by or user.username
+    request.updated_by = user.username
     pick_route_id = PickingService().upsert_route(request)
     return {"pick_route_id": pick_route_id}
 
@@ -352,7 +352,7 @@ def upsert_pick_route_cell(
     request: PickRouteCellUpsertRequest,
     user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_EDIT_PERMISSION)),
 ) -> dict[str, int]:
-    request.updated_by = request.updated_by or user.username
+    request.updated_by = user.username
     pick_route_cell_id = PickingService().upsert_route_cell(request)
     return {"pick_route_cell_id": pick_route_cell_id}
 
@@ -376,7 +376,7 @@ def upsert_pick_face(
     request: PickFaceUpsertRequest,
     user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_EDIT_PERMISSION)),
 ) -> dict[str, int]:
-    request.updated_by = request.updated_by or user.username
+    request.updated_by = user.username
     pick_face_id = PickingService().upsert_pick_face(request)
     return {"pick_face_id": pick_face_id}
 
@@ -396,7 +396,7 @@ def assign_pick_face_articul(
     user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_EDIT_PERMISSION)),
 ) -> dict[str, int]:
     request.pick_face_id = pick_face_id
-    request.updated_by = request.updated_by or user.username
+    request.updated_by = user.username
     pick_face_articul_id = PickingService().assign_pick_face_articul(request)
     return {"pick_face_articul_id": pick_face_articul_id}
 
@@ -418,6 +418,6 @@ def upsert_articul_replenishment_rule(
     request: ArticulReplenishmentRuleUpsertRequest,
     user: AdminUser = Depends(require_permission(PICK_TOPOLOGY_EDIT_PERMISSION)),
 ) -> dict[str, int]:
-    request.updated_by = request.updated_by or user.username
+    request.updated_by = user.username
     articul_replenish_rule_id = PickingService().upsert_articul_replenishment_rule(request)
     return {"articul_replenish_rule_id": articul_replenish_rule_id}

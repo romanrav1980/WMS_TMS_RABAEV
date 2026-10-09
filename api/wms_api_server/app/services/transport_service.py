@@ -34,6 +34,7 @@ from typing import Any, Callable
 
 from fastapi import HTTPException
 
+from ..modules.transport.public import normalize_transport_type as _normalize_transtype
 from ..db import rows_as_dicts
 from ..oracle_gateway import OracleGateway
 from ..schemas import (
@@ -48,16 +49,6 @@ from ..schemas import (
 
 def _upper_keys(row: dict[str, Any]) -> dict[str, Any]:
     return {str(key).upper(): value for key, value in row.items()}
-
-
-def _normalize_transtype(value: str | None) -> str | None:
-    if value is None:
-        return None
-    normalized = value.strip()
-    aliases = {
-        "газель": "5",
-    }
-    return aliases.get(normalized.lower(), normalized)
 
 
 _AVAILABLE_STS_CACHE_TTL_SEC = 15.0
@@ -846,58 +837,14 @@ class TransportService:
         return rows
 
     def assign_sts(self, task_id: int, st_numbers: list[str], user_id: str) -> dict[str, Any]:
-        task = self.get_task(task_id)
-        if task and task.get("PAY_ORDER_ID"):
-            raise HTTPException(
-                status_code=409,
-                detail=f"Рейс включён в счёт №{task['PAY_ORDER_ID']} — добавление СТ запрещено",
-            )
-        warnings: list[str] = []
-
-        for st in st_numbers:
-            rows = self.gateway.fetch_all(
-                """
-                SELECT DISTINCT TRANSTASK_ID
-                  FROM RABAEV.RRL_SBORKA_PALLETS
-                 WHERE ST_NUMBER = :st
-                   AND TRANSTASK_ID IS NOT NULL
-                   AND TRANSTASK_ID <> :task_id
-                   AND CONDITION <> 2
-                   AND ROWNUM = 1
-                """,
-                {"st": st, "task_id": task_id},
-            )
-            if rows:
-                other_id = rows[0]["TRANSTASK_ID"]
-                warnings.append(f"СТ {st} уже назначено на рейс #{other_id}")
-
-        if warnings:
-            raise HTTPException(status_code=409, detail="; ".join(warnings))
-
-        for st in st_numbers:
-            self.gateway.call_varchar_function(
-                "RABAEV.RRL_TT_ADD_PALL",
-                {"TT_ID": task_id, "ST_NUMBER1": st},
-            )
-            self.gateway.execute(
-                """
-                UPDATE RABAEV.RRL_SBORKA_PALLETS
-                   SET TRANSTASK_ID = :task_id
-                 WHERE ST_NUMBER = :st
-                   AND CONDITION <> 2
-                   AND (TRANSTASK_ID IS NULL OR TRANSTASK_ID = :task_id)
-                """,
-                {"task_id": task_id, "st": st},
-            )
-
-        self.gateway.call_number_plsql(
-            "BEGIN :result := RABAEV.RRL_TT_REORDER_ADR(:task_id); END;",
-            {"task_id": task_id},
-        )
+        from ..modules.transport.public import assign_sts
+        try:
+            result = assign_sts(self.gateway, task_id, st_numbers)
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
         _clear_available_sts_cache()
         _clear_task_sts_cache(task_id)
-
-        return {"assigned": len(st_numbers), "warnings": warnings}
+        return result
 
     def unassign_st(self, task_id: int, st_number: str, user_id: str) -> None:
         task = self.get_task(task_id)
@@ -1349,6 +1296,13 @@ class TransportService:
         """Запускает VRP-решатель, сохраняет план и возвращает ответ."""
         from .vrp_solver import VrpOrder, VrpVehicle, solve as vrp_solve
         from .distance_matrix_service import DistanceMatrixService
+        from .routing import get_active_provider
+
+        started_at = time.perf_counter()
+        requested_solver = solver
+        explain_steps: list[dict[str, Any]] = []
+        explain_warnings: list[dict[str, Any]] = []
+        active_provider_name = get_active_provider().name
 
         # Load orders
         raw_orders = self.get_planner_orders(
@@ -1356,11 +1310,16 @@ class TransportService:
             ware_ids=ware_ids,
             transport_type=transport_type,
         )
+        orders_with_coords = sum(1 for o in raw_orders if o.get("LAT") and o.get("LON"))
+        fallback_tw_count = 0
         orders: list[VrpOrder] = []
         for o in raw_orders:
             if not o.get("LAT") or not o.get("LON"):
                 continue
             fallback_from, fallback_to = _fallback_time_window_from_ord(o.get("ORD"))
+            has_real_tw = o.get("TIME_FROM") is not None and o.get("TIME_TO") is not None
+            if not has_real_tw:
+                fallback_tw_count += 1
             orders.append(
                 VrpOrder(
                     st_number=o["ST_NUMBER"],
@@ -1377,6 +1336,27 @@ class TransportService:
                     unload_norm_min=int(o.get("UNLOAD_NORM_MIN") or 30),
                 )
             )
+        explain_steps.append({
+            "code": "orders_loaded",
+            "status": "done" if raw_orders else "warning",
+            "label": "Заявки загружены",
+            "message": f"Найдено {len(raw_orders)} СТ, {orders_with_coords} с координатами",
+            "elapsed_ms": int((time.perf_counter() - started_at) * 1000),
+        })
+        if len(raw_orders) != orders_with_coords:
+            explain_warnings.append({
+                "code": "orders_without_coords",
+                "severity": "warning",
+                "message": f"{len(raw_orders) - orders_with_coords} СТ не попали в расчет из-за отсутствия координат",
+                "action": "Проверить геокодирование адресов",
+            })
+        if fallback_tw_count:
+            explain_warnings.append({
+                "code": "time_window_fallback",
+                "severity": "warning",
+                "message": f"Для {fallback_tw_count} СТ временные окна рассчитаны fallback-правилом по ORD",
+                "action": "Проверить ZONE_TIME_PLAN_IN/OUT в Oracle",
+            })
 
         # Load vehicles
         raw_vehicles = self.list_vehicles(active_only=True)
@@ -1394,10 +1374,46 @@ class TransportService:
 
         if not vehicles:
             raise HTTPException(status_code=422, detail="Нет активных ТС")
+        explain_steps.append({
+            "code": "vehicles_loaded",
+            "status": "done",
+            "label": "Машины загружены",
+            "message": f"Доступно {len(vehicles)} активных ТС",
+            "elapsed_ms": int((time.perf_counter() - started_at) * 1000),
+        })
 
         # Load distance cache
         addr_list = [o.addr for o in orders if o.addr]
         dist_cache = DistanceMatrixService(self.gateway).get_matrix_as_dict(addr_list)
+        matrix_pairs = len(dist_cache or {})
+        used_provider_name = "matrix-cache" if matrix_pairs else "haversine"
+        if matrix_pairs and addr_list:
+            source_rows = self.gateway.fetch_all(
+                """
+                SELECT SOURCE
+                  FROM RABAEV.RRL_ADDR_DISTANCE_MATRIX
+                 WHERE FROM_ADDR = :addr
+                   AND SOURCE IS NOT NULL
+                   AND ROWNUM = 1
+                """,
+                {"addr": addr_list[0]},
+            )
+            if source_rows:
+                used_provider_name = str(source_rows[0].get("SOURCE") or used_provider_name)
+        explain_steps.append({
+            "code": "distance_matrix_loaded",
+            "status": "done" if matrix_pairs else "warning",
+            "label": "Матрица расстояний",
+            "message": f"Загружено {matrix_pairs} пар, расчетный provider: {used_provider_name}",
+            "elapsed_ms": int((time.perf_counter() - started_at) * 1000),
+        })
+        if source == "auto" and active_provider_name != used_provider_name and used_provider_name == "haversine":
+            explain_warnings.append({
+                "code": "routing_fallback",
+                "severity": "warning",
+                "message": "Для расчета использован Haversine fallback или пустая матрица расстояний",
+                "action": "Проверить OSRM/Valhalla и пересчитать матрицу",
+            })
 
         # Sprint 117 — Attention Model solver
         if solver == "attention_model":
@@ -1436,8 +1452,96 @@ class TransportService:
                 time_limit_s=time_limit_s,
                 solver=solver,
             )
+        explain_steps.append({
+            "code": "optimization_done",
+            "status": "done" if plan.routes else "warning",
+            "label": "Оптимизация завершена",
+            "message": f"Построено {len(plan.routes)} рейсов, без рейса {len(plan.unassigned)} СТ",
+            "elapsed_ms": int((time.perf_counter() - started_at) * 1000),
+        })
+        if plan.unassigned:
+            explain_warnings.append({
+                "code": "unassigned_sts",
+                "severity": "warning",
+                "message": f"{len(plan.unassigned)} СТ не назначены в рейсы",
+                "action": "Открыть список СТ без рейса и проверить ограничения",
+            })
+        if plan.tw_violations:
+            explain_warnings.append({
+                "code": "tw_violations",
+                "severity": "warning",
+                "message": f"Найдено нарушений временных окон: {plan.tw_violations}",
+                "action": "Раскрыть рейсы с нарушениями окон",
+            })
+
+        route_utils = [r.utilization_pct for r in plan.routes]
+        low_utilization_routes = sum(1 for value in route_utils if value < 60)
+        over_capacity_routes = sum(1 for value in route_utils if value > 100)
+        if low_utilization_routes:
+            explain_warnings.append({
+                "code": "low_utilization_routes",
+                "severity": "info",
+                "message": f"{low_utilization_routes} рейсов имеют загрузку ниже 60%",
+                "action": "Проверить возможность объединения или переноса",
+            })
+        if over_capacity_routes:
+            explain_warnings.append({
+                "code": "over_capacity_routes",
+                "severity": "error",
+                "message": f"{over_capacity_routes} рейсов превышают вместимость машины",
+                "action": "Не применять план без ручной корректировки",
+            })
 
         # Save plan to Oracle
+        explain = {
+            "input": {
+                "plan_date": str(plan_date),
+                "orders_total": len(raw_orders),
+                "orders_with_coords": orders_with_coords,
+                "orders_skipped_no_coords": max(0, len(raw_orders) - orders_with_coords),
+                "ware_ids": ware_ids or [],
+                "transport_type": transport_type,
+            },
+            "routing": {
+                "requested_source": source,
+                "active_provider": active_provider_name,
+                "used_provider": used_provider_name,
+                "fallback_used": bool(
+                    (source == "auto" and used_provider_name == "haversine" and active_provider_name != "haversine")
+                    or not matrix_pairs
+                ),
+                "matrix_pairs": matrix_pairs,
+                "matrix_age_min": None,
+            },
+            "solver": {
+                "requested_solver": requested_solver,
+                "used_solver": plan.solver_used,
+                "time_limit_s": time_limit_s,
+                "solve_time_ms": plan.solve_time_ms,
+            },
+            "constraints": {
+                "capacity_pallets": True,
+                "capacity_weight": True,
+                "time_windows": True,
+                "vehicle_type": True,
+                "hydro_board": True,
+                "fallback_time_windows": fallback_tw_count,
+            },
+            "fleet": {
+                "vehicles_total": len(vehicles),
+                "vehicles_used": len(plan.routes),
+                "target_routes_per_vehicle": 4,
+                "target_daily_routes": len(vehicles) * 4,
+                "planned_routes": len(plan.routes),
+                "avg_utilization_pct": round(sum(route_utils) / len(route_utils), 1) if route_utils else 0.0,
+                "min_utilization_pct": min(route_utils) if route_utils else 0.0,
+                "max_utilization_pct": max(route_utils) if route_utils else 0.0,
+                "low_utilization_routes": low_utilization_routes,
+                "over_capacity_routes": over_capacity_routes,
+            },
+            "steps": explain_steps,
+            "warnings": explain_warnings,
+        }
         plan_json = json.dumps(
             {
                 "solver": plan.solver_used,
@@ -1456,6 +1560,7 @@ class TransportService:
                 "fleet_utilization_pct": plan.fleet_utilization_pct,
                 "tw_violations": plan.tw_violations,
                 "score": plan.score,
+                "explain": explain,
             },
             ensure_ascii=False,
         )
@@ -1504,12 +1609,31 @@ class TransportService:
                         tw_from=s.tw_from,
                         tw_to=s.tw_to,
                         tw_strict=s.tw_strict,
+                        arrival_min=None,
+                        departure_min=None,
+                        tw_violation_min=0,
+                        distance_from_prev_km=None,
+                        duration_from_prev_min=None,
+                        constraint_notes=[],
                     )
                     for s in r.stops
                 ],
+                capacity_status="over" if r.utilization_pct > 100 else "low" if r.utilization_pct < 60 else "ok",
+                tw_violation_count=0,
+                strict_tw_count=sum(1 for s in r.stops if s.tw_strict),
+                vehicle_constraints_ok=r.utilization_pct <= 100,
+                hydro_board_required_count=0,
+                explain_notes=[],
             )
             for r in plan.routes
         ]
+        explain_steps.append({
+            "code": "plan_saved",
+            "status": "done" if plan_id is not None else "warning",
+            "label": "План сохранен",
+            "message": f"plan_id={plan_id}" if plan_id is not None else "План рассчитан без сохранения",
+            "elapsed_ms": int((time.perf_counter() - started_at) * 1000),
+        })
 
         return VrpPlanResponse(
             plan_id=plan_id,
@@ -1521,6 +1645,7 @@ class TransportService:
             score=plan.score,
             solver_used=plan.solver_used,
             solve_time_ms=plan.solve_time_ms,
+            explain=explain,
         )
 
     def apply_vrp_plan(
@@ -1613,6 +1738,7 @@ class TransportService:
                 "solver_used": "none",
                 "applied": False,
                 "plan_date": None,
+                "explain": None,
             }
 
         row = rows[0]
@@ -1627,6 +1753,7 @@ class TransportService:
             "solver_used": plan_data.get("solver", row.get("SOLVER") or "none"),
             "applied": row.get("APPLIED_AT") is not None,
             "plan_date": str(row["PLAN_DATE"])[:10] if row.get("PLAN_DATE") else None,
+            "explain": plan_data.get("explain"),
         }
 
     # ------------------------------------------------------------------

@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
+from ..auth import AdminUser, get_current_admin, serialize_admin_user
 
 from ..legacy_protocol import encode_legacy_blocks, fault
 from ..schemas import (
@@ -25,8 +26,8 @@ def _fault_response(exc: Exception) -> LegacyExecuteResponse:
 
 
 @router.post("/legacy/tserver/execute", response_model=LegacyExecuteResponse)
-def execute_legacy_tserver(request: LegacyExecuteRequest) -> LegacyExecuteResponse:
-    payload, blocks = TserverService().execute_legacy_payload(request.payload)
+def execute_legacy_tserver(request: LegacyExecuteRequest, user: AdminUser = Depends(get_current_admin)) -> LegacyExecuteResponse:
+    payload, blocks = TserverService().execute_legacy_payload(request.payload, user.username)
     return LegacyExecuteResponse(payload=payload, blocks=_to_models(blocks))
 
 
@@ -65,8 +66,13 @@ def get_place_items(place_id: str) -> LegacyExecuteResponse:
 
 
 @router.post("/terminal/lots/{usscc}/check")
-def confirm_lot_check(usscc: str, request: LotCheckRequest) -> dict[str, str]:
-    TserverService().confirm_lot_check(usscc, request)
+def confirm_lot_check(usscc: str, request: LotCheckRequest, user: AdminUser = Depends(get_current_admin)) -> dict[str, str]:
+    request.user_id = user.username
+    try:
+        TserverService().confirm_lot_check(usscc, request)
+    except ValueError as error:
+        raise HTTPException(422, detail={"code": "QUALITY_REQUEST_INVALID", "message": str(error),
+            "operation_id": request.operation_id, "outcome_confirmed": False}) from error
     return {"status": "ok", "legacy_func": "END_LOT_CHECK_PASSED"}
 
 
@@ -83,6 +89,11 @@ def confirm_order_check(request: OrderCheckRequest) -> dict[str, str]:
 
 
 @router.post("/terminal/call-spf")
-def call_spf(request: CallSpfRequest) -> dict[str, str]:
-    result = TserverService().call_spf(request)
+def call_spf(request: CallSpfRequest, user: AdminUser = Depends(get_current_admin)) -> dict[str, str]:
+    result = TserverService().call_spf(request, user.username)
     return {"ok": result}
+
+
+@router.get("/terminal/auth/me")
+def terminal_identity(user: AdminUser = Depends(get_current_admin)) -> dict:
+    return serialize_admin_user(user)

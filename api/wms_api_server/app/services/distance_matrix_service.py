@@ -41,11 +41,69 @@ class DistanceMatrixService:
             """
         )
 
-    def rebuild(self, source: str = "auto") -> dict[str, Any]:
+    def _count_fresh_pairs(self, source: str, max_age_hours: int | None) -> int:
+        freshness_clause = ""
+        params: dict[str, Any] = {"source": source}
+        if max_age_hours is not None and max_age_hours > 0:
+            freshness_clause = "AND M.UPDATED_AT >= SYSDATE - (:max_age_hours / 24)"
+            params["max_age_hours"] = max_age_hours
+        rows = self._fetch_all(
+            f"""
+            WITH A AS (
+                SELECT ADDR
+                  FROM RABAEV.RRL_ADDR
+                 WHERE SHIROTA IS NOT NULL AND SHIROTA <> 0
+                   AND DOLGOTA IS NOT NULL AND DOLGOTA <> 0
+            )
+            SELECT COUNT(*) AS CNT
+              FROM RABAEV.RRL_ADDR_DISTANCE_MATRIX M
+              JOIN A F ON F.ADDR = M.FROM_ADDR
+              JOIN A T ON T.ADDR = M.TO_ADDR
+             WHERE M.FROM_ADDR <> M.TO_ADDR
+               AND M.SOURCE = :source
+               {freshness_clause}
+            """,
+            params,
+        )
+        return int(rows[0]["CNT"]) if rows else 0
+
+    def _fetch_fresh_pair_keys(self, source: str, max_age_hours: int | None) -> set[tuple[str, str]]:
+        freshness_clause = ""
+        params: dict[str, Any] = {"source": source}
+        if max_age_hours is not None and max_age_hours > 0:
+            freshness_clause = "AND M.UPDATED_AT >= SYSDATE - (:max_age_hours / 24)"
+            params["max_age_hours"] = max_age_hours
+        rows = self._fetch_all(
+            f"""
+            WITH A AS (
+                SELECT ADDR
+                  FROM RABAEV.RRL_ADDR
+                 WHERE SHIROTA IS NOT NULL AND SHIROTA <> 0
+                   AND DOLGOTA IS NOT NULL AND DOLGOTA <> 0
+            )
+            SELECT M.FROM_ADDR, M.TO_ADDR
+              FROM RABAEV.RRL_ADDR_DISTANCE_MATRIX M
+              JOIN A F ON F.ADDR = M.FROM_ADDR
+              JOIN A T ON T.ADDR = M.TO_ADDR
+             WHERE M.FROM_ADDR <> M.TO_ADDR
+               AND M.SOURCE = :source
+               {freshness_clause}
+            """,
+            params,
+        )
+        return {(str(r["FROM_ADDR"]), str(r["TO_ADDR"])) for r in rows}
+
+    def rebuild(
+        self,
+        source: str = "auto",
+        *,
+        force: bool = False,
+        max_age_hours: int | None = 24 * 30,
+    ) -> dict[str, Any]:
         """Пересчитывает матрицу и сохраняет в Oracle.
 
         source: 'auto' | 'haversine' | 'osrm' | 'valhalla'
-        Возвращает: {"pairs": int, "source": str, "addresses": int}
+        Возвращает total pairs and how many pairs were actually recomputed.
         """
         is_auto = source == "auto"
         if is_auto:
@@ -64,9 +122,50 @@ class DistanceMatrixService:
 
         addrs = self.get_geocoded_addresses()
         if not addrs:
-            return {"pairs": 0, "source": provider.name, "addresses": 0}
+            return {
+                "pairs": 0,
+                "computed_pairs": 0,
+                "skipped_pairs": 0,
+                "source": provider.name,
+                "addresses": 0,
+                "cached": True,
+                "force": force,
+            }
 
         n = len(addrs)
+        expected_pairs = n * (n - 1) if n > 0 else 0
+        if not force:
+            fresh_pairs = self._count_fresh_pairs(provider.name, max_age_hours)
+            if fresh_pairs >= expected_pairs:
+                return {
+                    "pairs": expected_pairs,
+                    "computed_pairs": 0,
+                    "skipped_pairs": expected_pairs,
+                    "source": provider.name,
+                    "addresses": n,
+                    "cached": True,
+                    "force": False,
+                }
+            if is_auto:
+                for cached_source in ("osrm", "valhalla", "haversine"):
+                    if cached_source == provider.name:
+                        continue
+                    fresh_pairs = self._count_fresh_pairs(cached_source, max_age_hours)
+                    if fresh_pairs >= expected_pairs:
+                        return {
+                            "pairs": expected_pairs,
+                            "computed_pairs": 0,
+                            "skipped_pairs": expected_pairs,
+                            "source": cached_source,
+                            "addresses": n,
+                            "cached": True,
+                            "force": False,
+                        }
+
+            fresh_pair_keys = self._fetch_fresh_pair_keys(provider.name, max_age_hours)
+        else:
+            fresh_pair_keys = set()
+
         points = [(float(a["LAT"]), float(a["LON"])) for a in addrs]
         try:
             matrix = provider.build_matrix(points)
@@ -75,6 +174,19 @@ class DistanceMatrixService:
                 raise
             from .routing import HaversineProvider
             provider = HaversineProvider()
+            if not force:
+                fresh_pairs = self._count_fresh_pairs(provider.name, max_age_hours)
+                if fresh_pairs >= expected_pairs:
+                    return {
+                        "pairs": expected_pairs,
+                        "computed_pairs": 0,
+                        "skipped_pairs": expected_pairs,
+                        "source": provider.name,
+                        "addresses": n,
+                        "cached": True,
+                        "force": False,
+                    }
+                fresh_pair_keys = self._fetch_fresh_pair_keys(provider.name, max_age_hours)
             matrix = provider.build_matrix(points)
 
         merge_sql = """
@@ -91,10 +203,15 @@ class DistanceMatrixService:
                 VALUES (:from_addr, :to_addr, :dist_km, :dur, :source, SYSDATE)
         """
         statements: list[tuple[str, dict[str, Any]]] = []
-        pairs = 0
+        computed_pairs = 0
+        skipped_pairs = 0
         for i in range(n):
             for j in range(n):
                 if i == j:
+                    continue
+                pair_key = (str(addrs[i]["ADDR"]), str(addrs[j]["ADDR"]))
+                if pair_key in fresh_pair_keys:
+                    skipped_pairs += 1
                     continue
                 dist_km = matrix[i][j]
                 # avg speed 50 km/h for duration estimate
@@ -111,12 +228,20 @@ class DistanceMatrixService:
                         },
                     )
                 )
-                pairs += 1
+                computed_pairs += 1
 
         if statements:
             self.gateway.execute_many(statements)
 
-        return {"pairs": pairs, "source": provider.name, "addresses": n}
+        return {
+            "pairs": expected_pairs,
+            "computed_pairs": computed_pairs,
+            "skipped_pairs": skipped_pairs,
+            "source": provider.name,
+            "addresses": n,
+            "cached": computed_pairs == 0,
+            "force": force,
+        }
 
     def get_matrix_as_dict(
         self,

@@ -24,7 +24,7 @@ export type TerminalSession = {
 
 export type FlowKey = "home" | "product" | "lot" | "place" | "production" | "legacy" | "diagnostics";
 
-export type JournalStatus = "draft" | "sent" | "accepted" | "rejected";
+export type JournalStatus = "draft" | "sent" | "accepted" | "rejected" | "uncertain";
 
 export type JournalEntry = {
   id: string;
@@ -38,6 +38,7 @@ export type JournalEntry = {
 };
 
 export type LotCheckPayload = {
+  operation_id?: string;
   user_id: string;
   error_count: number;
   errors: Array<{

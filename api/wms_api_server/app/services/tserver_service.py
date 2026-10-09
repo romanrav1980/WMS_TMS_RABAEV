@@ -66,20 +66,20 @@ class TserverService:
     def __init__(self, gateway: OracleGateway | None = None) -> None:
         self.gateway = gateway or OracleGateway()
 
-    def execute_legacy_payload(self, payload: str) -> tuple[str, list[LegacyBlock]]:
+    def execute_legacy_payload(self, payload: str, actor: str | None = None) -> tuple[str, list[LegacyBlock]]:
         blocks = parse_legacy_payload(payload)
         if not blocks:
             response = [fault("Empty legacy payload.")]
             return encode_legacy_blocks(response), response
 
         try:
-            response = self._dispatch(blocks)
+            response = self._dispatch(blocks, actor)
         except Exception as exc:
             response = [fault(str(exc))]
 
         return encode_legacy_blocks(response), response
 
-    def _dispatch(self, blocks: list[LegacyBlock]) -> list[LegacyBlock]:
+    def _dispatch(self, blocks: list[LegacyBlock], actor: str | None = None) -> list[LegacyBlock]:
         head = blocks[0]
         name = head.function_name
 
@@ -93,6 +93,7 @@ class TserverService:
             return self.get_place_items(head.get("PLACEID"))
         if name == "LOT_CHECK_PASSED":
             request = self._lot_check_from_legacy(blocks)
+            if actor is not None: request.user_id = actor
             self.confirm_lot_check(head.get("USSCC"), request)
             return [LegacyBlock("END_LOT_CHECK_PASSED", {"USSCC": head.get("USSCC")})]
         if name == "PLACE_CHECK_PASSED":
@@ -104,7 +105,12 @@ class TserverService:
             self.confirm_order_check(request)
             return [LegacyBlock("END_ORDER_CHECK_PASSED", {"ORDER": request.order})]
         if name == "CALL_SPF":
-            result = self.call_spf(CallSpfRequest(spf_name=head.get("SPF_NAME"), params=head.values))
+            params = dict(head.values)
+            if actor is not None:
+                for key in params:
+                    if key.lower() in {"user_id", "user_id1", "user_id2", "iser_id1", "iser_id21", "user_id3", "kladovshik1", "p_actor", "p_created_by"}:
+                        params[key] = actor
+            result = self.call_spf(CallSpfRequest(spf_name=head.get("SPF_NAME"), params=params), actor)
             return [LegacyBlock("CALL_SP_INFO", {"ok": result})]
 
         return [zero()]
@@ -385,6 +391,9 @@ class TserverService:
 
     def confirm_lot_check(self, usscc: str, request: LotCheckRequest) -> None:
         usscc = normalize_pallet_identifier(usscc)
+        from ..modules.inventory.public import post_existing_terminal_quality
+        if post_existing_terminal_quality(self.gateway, usscc, request) is not None:
+            return
         statements: list[tuple[str, dict[str, Any]]] = [
             ("delete from LOT_AUDIT where SSCC = :usscc", {"usscc": usscc}),
             ("delete from LOT_AUDIT_ERROR_LINES where SSCC = :usscc", {"usscc": usscc}),
@@ -538,13 +547,21 @@ class TserverService:
         self.gateway.execute_many(statements)
         return {"oracle_status": "ok", "access_mdb_status": "not_implemented"}
 
-    def call_spf(self, request: CallSpfRequest) -> str:
+    def call_spf(self, request: CallSpfRequest, actor: str | None = None) -> str:
         name = request.spf_name.strip()
         name_upper = name.upper()
         if name_upper not in CALL_SPF_ALLOWLIST:
             raise ValueError(f"Stored procedure is not allowlisted: {name}")
 
         params = {key: value for key, value in request.params.items() if key != "SPF_NAME"}
+        if actor is not None:
+            for key in params:
+                if key.lower() in {"user_id", "user_id1", "user_id2", "user_id3", "user_id21", "iser_id1", "iser_id21", "kladovshik1", "p_actor", "p_created_by"}:
+                    params[key] = actor
+        if name_upper in {"RABAEV.RRL_INTERNAL_MOVE3", "RABAEV.RRL_INV_CREATE_LINE4", "RABAEV.RRL_REVIZION_CELL_KOR"}:
+            identity = request.operation_id or params.pop("OPERATION_ID", None)
+            if identity:
+                params["p_operation_id"] = identity
         return self.gateway.call_varchar_function(name_upper, params)
 
     def _lot_check_from_legacy(self, blocks: list[LegacyBlock]) -> LotCheckRequest:
@@ -557,7 +574,7 @@ class TserverService:
                     {
                         "usscc": block.get("USSCC"),
                         "uid": block.get(UID_KEY),
-                        "qty": float(block.get(QTY_KEY, "0") or 0),
+                        "qty": block.get(QTY_KEY, "0") or "0",
                         "plan_qty": float(block.get(PLAN_QTY_KEY, "0") or 0),
                         "condition": block.get(TYPE_KEY),
                         "ean": block.get(EAN_KEY),
@@ -572,6 +589,7 @@ class TserverService:
                     }
                 )
         return LotCheckRequest(
+            operation_id=head.get("OPERATION_ID") or None,
             user_id=head.get("USER_ID"),
             error_count=int(head.get("error_count", "0") or 0),
             errors=errors,

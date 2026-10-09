@@ -1,0 +1,38 @@
+{
+  "namespace": "DS-NS10",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "3 сообщения E1/E2/E3, исполнители A/B, срок владения 30 секунд, ERP недоступна",
+  "scenarios": [
+    {
+      "id": "NS10-TC01",
+      "initial": "A и B",
+      "action": "Одновременно забрать E1",
+      "expected": "Один владелец, нет параллельного исполнения E1",
+      "mandatory": true
+    },
+    {
+      "id": "NS10-TC02",
+      "initial": "A остановлен",
+      "action": "Перевести часы за срок владения",
+      "expected": "E1 вновь доступно, факт не дублирован",
+      "mandatory": true
+    },
+    {
+      "id": "NS10-TC03",
+      "initial": "ERP недоступна",
+      "action": "Выполнить складскую команду",
+      "expected": "Команда фиксируется, сообщение ожидает повтора",
+      "mandatory": true
+    },
+    {
+      "id": "NS10-TC04",
+      "initial": "Ответ ERP потерян",
+      "action": "Повторить отправку",
+      "expected": "Получатель применяет один эффект, журнал содержит повтор",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Пересчёт по паллетам — WMS</title><link rel="stylesheet" href="styles.css">
+<style>.count-fields{display:flex;gap:12px;flex-wrap:wrap}.count-fields label{display:flex;flex-direction:column;gap:4px}.count-fields input{padding:8px}.count-qty{width:130px;padding:8px}#countMessage{white-space:pre-wrap}dialog{max-width:540px}</style></head>
+<body class="auth-pending" data-required-permission="stock_inventory_count"><div class="app">
+<aside class="sidebar"><div class="brand"><div class="brand-mark">W</div><div class="brand-text">WMS PRO</div></div><nav class="nav" data-admin-nav data-active-nav="inventory-count"></nav></aside>
+<main class="workspace"><header class="topbar"><b>WMS / Пересчёт по паллетам</b><button id="adminLogout" title="Завершить сеанс администратора">Выйти</button></header>
+<section class="admin-page"><article class="panel"><header class="panel-header"><h2>Документ инвентаризации</h2><button id="countHelp" title="Как провести пересчёт и повторить команду после потери связи">?</button></header>
+<div class="count-fields"><label>Склад<input id="countWarehouse" inputmode="numeric" title="Склад нового документа инвентаризации"></label><button id="countCreate" title="Открыть документ инвентаризации для указанного склада">Создать документ</button>
+<label>Номер документа<input id="countRevision" inputmode="numeric" title="Открытый документ, на основании которого проводится пересчёт"></label>
+<label>Ячейка<input id="countCell" maxlength="60" autofocus title="Сканировать ячейку и загрузить её партии"></label><button id="countLoad" title="Загрузить паллеты и версии остатков указанной ячейки">Загрузить</button></div></article>
+<article class="panel"><header class="panel-header"><h2>Измеренное количество</h2></header>
+<div class="rights-table-wrap"><table class="rights-table"><thead><tr><th>Идентификатор паллеты</th><th>Артикул</th><th>Срок годности</th><th>Остаток</th><th>Резерв</th><th>Единица</th><th>Посчитано</th><th>Коды фактически найденных единиц</th></tr></thead><tbody id="countRows"></tbody></table></div>
+<label>Причина пересчёта<input id="countReason" maxlength="1000" title="Основание изменения остатка, сохраняемое в истории команды"></label>
+<button id="countPost" title="Провести изменённые строки одной командой с сохранением резерва">Провести пересчёт</button>
+<button id="countRetry" hidden title="Повторить сохранённую команду без изменения её параметров">Повторить незавершённую команду</button>
+<p id="countMessage" role="status" aria-live="polite"></p></article></section></main></div>
+<dialog id="countHelpDialog"><h3>Пересчёт конкретных партий</h3><p>Загрузите ячейку, введите фактически измеренное количество отдельно для каждой паллеты и укажите причину. Проводятся только изменённые строки.</p><p>Резерв сохраняется. При недостаче ниже резерва сначала согласуйте его снятие. Для маркированного товара отсканируйте коды всех фактически найденных единиц. Их количество должно совпасть с пересчётом. Увеличение без подтверждённого состава недоступно.</p><p>После потери связи повторяйте сохранённую команду. До ответа сервера пересчёт не подтверждён.</p><button id="countHelpClose" title="Закрыть справку и вернуться к пересчёту">Закрыть</button></dialog>
+<script src="admin-nav.js"></script><script src="admin-auth.js"></script><script src="inventory-count.js"></script></body></html>

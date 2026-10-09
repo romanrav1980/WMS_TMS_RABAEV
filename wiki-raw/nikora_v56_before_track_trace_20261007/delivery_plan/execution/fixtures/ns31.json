@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS31",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "R1 занят в 5 м; R2 свободен и допущен в 10 м; R3 свободен в 1 м без права; задачи T1/T2",
+  "scenarios": [
+    {
+      "id": "NS31-TC01",
+      "initial": "Срочная T1",
+      "action": "Назначить",
+      "expected": "R2, а не занятый или недопущенный",
+      "mandatory": true
+    },
+    {
+      "id": "NS31-TC02",
+      "initial": "Два диспетчера",
+      "action": "Одновременно назначить T1",
+      "expected": "Один исполнитель",
+      "mandatory": true
+    },
+    {
+      "id": "NS31-TC03",
+      "initial": "R2 выполняет T1",
+      "action": "Назначить независимую T2",
+      "expected": "Нет двойной занятости",
+      "mandatory": true
+    },
+    {
+      "id": "NS31-TC04",
+      "initial": "Груз взят",
+      "action": "Переназначить",
+      "expected": "Без подтверждённой передачи факт не переписан",
+      "mandatory": true
+    },
+    {
+      "id": "NS31-TC05",
+      "initial": "Передача завершена",
+      "action": "Проверить",
+      "expected": "Возраст и история T1 сохранены",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

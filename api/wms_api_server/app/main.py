@@ -1,8 +1,14 @@
+from pathlib import Path
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import get_settings
 from .middleware.api_audit import ApiAuditMiddleware
+from .modules.master_data import public as sku_receiving
+from .modules.integrations import public as sap_retail
+from .modules.inventory import public as inventory_receiving
+from .modules.fulfillment import public as sap_fulfillment
 from .routers import (
     admin_auth,
     admin_rights,
@@ -43,6 +49,31 @@ from .routers import maintenance
 settings = get_settings()
 
 app = FastAPI(title=settings.api_title, version=settings.api_version)
+inventory_receiving.install_stock_error_handlers(app)
+app.dependency_overrides[sap_fulfillment.store_order_service] = sap_fulfillment.build_store_order_service
+app.dependency_overrides[sap_fulfillment.preparation_service] = sap_fulfillment.build_preparation_service
+app.include_router(sap_fulfillment.router)
+app.dependency_overrides[sku_receiving.policy_service] = sku_receiving.build_policy_service
+app.dependency_overrides[sap_retail.artmas_service] = sap_retail.build_artmas_service
+app.include_router(sku_receiving.router)
+app.include_router(sap_retail.router)
+app.dependency_overrides[sap_retail.supply_service] = sap_retail.build_supply_service
+app.include_router(sap_retail.supply_router)
+app.dependency_overrides[sap_retail.acknowledgement_service] = sap_retail.build_acknowledgements
+app.include_router(sap_retail.receipt_event_router)
+app.dependency_overrides[inventory_receiving.receiving_service] = inventory_receiving.build_receiving_service
+app.include_router(inventory_receiving.router)
+app.include_router(inventory_receiving.stock_command_router)
+app.include_router(inventory_receiving.inventory_count_router)
+app.dependency_overrides[inventory_receiving.manual_stock_move_service] = inventory_receiving.build_manual_stock_move_service
+app.dependency_overrides[inventory_receiving.receipt_reverse_service] = inventory_receiving.build_receipt_reverse_service
+app.dependency_overrides[inventory_receiving.stock_queries_service] = inventory_receiving.build_stock_queries_service
+app.include_router(inventory_receiving.stock_router)
+app.dependency_overrides[inventory_receiving.label_service] = inventory_receiving.build_label_service
+app.dependency_overrides[inventory_receiving.configuration_service] = inventory_receiving.build_configuration_service
+app.dependency_overrides[inventory_receiving.reconciliation_service] = inventory_receiving.build_reconciliation_service
+app.dependency_overrides[inventory_receiving.query_service] = inventory_receiving.build_query_service
+app.mount("/wms-admin", StaticFiles(directory=Path(__file__).resolve().parents[3] / "wiki-raw" / "wms_admin_ui_reference", html=True), name="wms-admin")
 
 app.add_middleware(
     CORSMiddleware,

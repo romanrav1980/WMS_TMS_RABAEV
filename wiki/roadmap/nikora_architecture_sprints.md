@@ -1,5 +1,7 @@
 # NIKORA: план разработки архитектуры
 
+Поставка с 16.09.2026: [[roadmap/nikora_crossdock_first]]. До раннего пилота — безопасный XML, stable part/leaf HU, плечи, слоты, проверка quality evidence, validator/freeze/outbox. Aggregate/repack, собственные quality sessions и расширенная очередь техники доводятся следующими выпусками либо переносятся раньше при неподтверждённом reuse. Новое ядро для MVP не создаётся; полные требования ниже сохраняются.
+
 Дата: 15.09.2026. Предлагаемый backlog; работы не выполнены. Целевая модель: [[architecture/nikora_minimal_extension]]. Функциональные спринты отдельно: [[roadmap/nikora_functional_sprints]].
 
 ## Принцип разделения

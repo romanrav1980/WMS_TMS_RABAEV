@@ -1,0 +1,168 @@
+{
+  "user": "RABAEV",
+  "service": "orcl",
+  "source": "user_source read-only",
+  "objects": [
+    {
+      "name": "PRIHOD",
+      "type": "PACKAGE",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/PRIHOD_PACKAGE.sql",
+      "sha256": "1c50306ced46e16b8d4ee95dab5d7a4547e04a6ded8f1a8d90fa91754811ddf6",
+      "lines": 13
+    },
+    {
+      "name": "PRIHOD",
+      "type": "PACKAGE BODY",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/PRIHOD_PACKAGE_BODY.sql",
+      "sha256": "6f6fec9b3ebaec3782e4dba27676e3ca57da161371df8ba5779369e6358cd51f",
+      "lines": 142
+    },
+    {
+      "name": "CROSS_DOCKING",
+      "type": "PACKAGE",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/CROSS_DOCKING_PACKAGE.sql",
+      "sha256": "9c7e8eb4175647aded7b6d996fe0d1434a0501b5b4e13233e2251c33fe9bc4a4",
+      "lines": 6
+    },
+    {
+      "name": "CROSS_DOCKING",
+      "type": "PACKAGE BODY",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/CROSS_DOCKING_PACKAGE_BODY.sql",
+      "sha256": "c35b7b79e298894261c554f43faf1aa4f2570d86c58eab729b6cdd4032a2b6ba",
+      "lines": 48
+    },
+    {
+      "name": "RRL_PICKING_API",
+      "type": "PACKAGE",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_PICKING_API_PACKAGE.sql",
+      "sha256": "82b4354c5dea85955126347da2b2a0136ef2c5f742a0454cb94e5a68e0d339ab",
+      "lines": 12
+    },
+    {
+      "name": "RRL_PICKING_API",
+      "type": "PACKAGE BODY",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_PICKING_API_PACKAGE_BODY.sql",
+      "sha256": "d5fa90421b3a27839340cdcd0e0c1a04d2d38c9de8800f6300f668fed05e0900",
+      "lines": 343
+    },
+    {
+      "name": "RRL_PICK_WAVE_API",
+      "type": "PACKAGE",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_PICK_WAVE_API_PACKAGE.sql",
+      "sha256": "89a3f89aa3dbdb055643f324b5b3dad7dc724897e48fcc77cd3ecb96a030eba7",
+      "lines": 40
+    },
+    {
+      "name": "RRL_PICK_WAVE_API",
+      "type": "PACKAGE BODY",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_PICK_WAVE_API_PACKAGE_BODY.sql",
+      "sha256": "afb485f637e60cc3dff4affe3f682d20815442fcc58226a7965f50d98bb2940d",
+      "lines": 614
+    },
+    {
+      "name": "RRL_PICK_TOPOLOGY_API",
+      "type": "PACKAGE",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_PICK_TOPOLOGY_API_PACKAGE.sql",
+      "sha256": "0ae54b24d272f0a7725a0fed30b9844ef228ea652b4978fe0c7af589279a0ebf",
+      "lines": 67
+    },
+    {
+      "name": "RRL_PICK_TOPOLOGY_API",
+      "type": "PACKAGE BODY",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_PICK_TOPOLOGY_API_PACKAGE_BODY.sql",
+      "sha256": "7e57c6174138b96ccf1041ae74fc19b9089e852a3d0c6ab78875c1e15da1d91c",
+      "lines": 367
+    },
+    {
+      "name": "RRL_CUSTOMER_ORDER_API",
+      "type": "PACKAGE",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_CUSTOMER_ORDER_API_PACKAGE.sql",
+      "sha256": "f3c704ed735b5cb1c54c981cf25f97c8870d5fbb54883dc8f924f8e72f3d84e0",
+      "lines": 18
+    },
+    {
+      "name": "RRL_CUSTOMER_ORDER_API",
+      "type": "PACKAGE BODY",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_CUSTOMER_ORDER_API_PACKAGE_BODY.sql",
+      "sha256": "f5b8cb07b3af5ce93f7ab211063b518b6038e0c99389a9ac7db3fde9068338a3",
+      "lines": 224
+    },
+    {
+      "name": "RRL_PRODUCTION_API",
+      "type": "PACKAGE",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_PRODUCTION_API_PACKAGE.sql",
+      "sha256": "abda9356c496d07535fd8fb4ff377fb80beda50d5bf6c49b3b6d02a0297eed21",
+      "lines": 154
+    },
+    {
+      "name": "RRL_PRODUCTION_API",
+      "type": "PACKAGE BODY",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_PRODUCTION_API_PACKAGE_BODY.sql",
+      "sha256": "e7e83cf4a1b9a8179561386c599d65b76b71fcc37e445683a9f0a98ae289961a",
+      "lines": 560
+    },
+    {
+      "name": "RRL_REGULATORY_API",
+      "type": "PACKAGE",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_REGULATORY_API_PACKAGE.sql",
+      "sha256": "c67ef52e41e22729f26bd8d5e9e707b8cf988d7b0073bc25f77382a46c94687e",
+      "lines": 65
+    },
+    {
+      "name": "RRL_REGULATORY_API",
+      "type": "PACKAGE BODY",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_REGULATORY_API_PACKAGE_BODY.sql",
+      "sha256": "3752f7711d95dd7fa28336ac256ac5479851dd6f300b2b416e27510de7d85af2",
+      "lines": 266
+    },
+    {
+      "name": "TRANSPORT_TASK",
+      "type": "PACKAGE",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/TRANSPORT_TASK_PACKAGE.sql",
+      "sha256": "63419695b1490552cbd89b280ebf0ad53f629cc6991db61e1742886da08559d7",
+      "lines": 21
+    },
+    {
+      "name": "TRANSPORT_TASK",
+      "type": "PACKAGE BODY",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/TRANSPORT_TASK_PACKAGE_BODY.sql",
+      "sha256": "76d88d2cf05e242d95322aa7e15dbcca1a6716e1bbf594b3d0ab30cc93dcadf4",
+      "lines": 383
+    },
+    {
+      "name": "TRANSPORT_PLN",
+      "type": "PACKAGE",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/TRANSPORT_PLN_PACKAGE.sql",
+      "sha256": "f3fa0eb7d1e3a3e69b6f1d5b144b8225283bef592ccdaa41e2b5e84f82241ced",
+      "lines": 14
+    },
+    {
+      "name": "TRANSPORT_PLN",
+      "type": "PACKAGE BODY",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/TRANSPORT_PLN_PACKAGE_BODY.sql",
+      "sha256": "0fa7d4703ba612fd559b93c0bd7825b4ad77b2d6d7b2a716ce496f2afe25296e",
+      "lines": 116
+    },
+    {
+      "name": "REMAINS",
+      "type": "PACKAGE",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/REMAINS_PACKAGE.sql",
+      "sha256": "a8a174bdd8a1d0dda216b7c4a54a6cd69cabbe503338cf0b9fdaf0c050fde89e",
+      "lines": 23
+    },
+    {
+      "name": "REMAINS",
+      "type": "PACKAGE BODY",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/REMAINS_PACKAGE_BODY.sql",
+      "sha256": "9eff4105bcaff22dbafa6361f5d60ce08ddd7bac8e028d7703711c604a957914",
+      "lines": 296
+    },
+    {
+      "name": "RRL_ACCEPT_ORDER2_3",
+      "type": "FUNCTION",
+      "file": "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_ACCEPT_ORDER2_3_FUNCTION.sql",
+      "sha256": "333bd284ddedd7104b117d447f0af3a898db43c4748c248114996a03a205b0f5",
+      "lines": 127
+    }
+  ]
+}

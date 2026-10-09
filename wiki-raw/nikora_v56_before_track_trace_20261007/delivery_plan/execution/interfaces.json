@@ -1,0 +1,481 @@
+{
+  "status": "target_contracts_before_DB_binding",
+  "contracts": [
+    {
+      "id": "NS00",
+      "object": "Паспорт стенда",
+      "input": "Версии, пути, схемы, способы запуска и проверки доступа",
+      "output": "Воспроизводимая среда, два интерфейса, изолированный seed/reset",
+      "invariants": "Неготовая среда не выдаётся за готовую, очистка RABAEV затрагивает только синтетический набор; остальные данные сохраняются"
+    },
+    {
+      "id": "NS01",
+      "object": "Реестр правил",
+      "input": "Исходные файлы и контрольные суммы, Q01–Q28",
+      "output": "requirementId, sourceRef, правило, критерий, связь со спринтом",
+      "invariants": "Уникальность ID, сохранение исходного текста, отсутствие потерянных решений"
+    },
+    {
+      "id": "NS02",
+      "object": "Складской GAP",
+      "input": "requirementId, версия метода, вход и целевой критерий",
+      "output": "observedResult, evidence, gapStatus и отличие",
+      "invariants": "Не найдено и не проверено различаются, отказ целевого теста записан честно"
+    },
+    {
+      "id": "NS03",
+      "object": "Транспортный GAP",
+      "input": "Рейс, груз, источник WMS, сообщения ERP, версия кода",
+      "output": "Фактическая цепочка, доказательства и недостающие состояния",
+      "invariants": "Mock и живой источник различаются, нет ложного закрытия доставки"
+    },
+    {
+      "id": "NS04",
+      "object": "Контракт разработки",
+      "input": "Реестр правил, GAP, версии среды, scope и нагрузка",
+      "output": "Команда, DTO, объект БД, права, транзакция, ошибки, тесты, dependencies",
+      "invariants": "Все выявленные отличия назначены, утверждённый стек и закупка Oracle NICORA сохранены"
+    },
+    {
+      "id": "NS05",
+      "object": "Отчёт квалификации",
+      "input": "GPU, runtime, модель, контекст, taskId и ожидаемый результат",
+      "output": "VRAM, время, попытки, accepted, criticalError, contextClipped, qualified",
+      "invariants": "Допуск только после измерения, отрицательный результат включает облачный резерв"
+    },
+    {
+      "id": "NS06",
+      "object": "Пакет установки",
+      "input": "Закреплённые зависимости, конфигурация процессов и ролей",
+      "output": "Сборка, запуск, readiness и воспроизводимая установка",
+      "invariants": "Dev reload не используется, права не расширены незаметно"
+    },
+    {
+      "id": "NS07",
+      "object": "Бюджет соединений и аудит",
+      "input": "poolLimits, acquireTimeout, queryTimeout, общий бюджет и audit event",
+      "output": "Ограниченное ожидание и полный обязательный журнал",
+      "invariants": "Синхронный вызов не блокирует event loop, бюджет считается для всех процессов"
+    },
+    {
+      "id": "NS08",
+      "object": "Критическая команда",
+      "input": "operationKey, actor, expectedVersion, payload",
+      "output": "factId, новая версия, итоговый баланс, первоначальный результат повтора",
+      "invariants": "Факт, обязательный журнал и outbox атомарны; неверное право, версия или повтор с другим payload отклонены"
+    },
+    {
+      "id": "NS09",
+      "object": "Интеграционное сообщение",
+      "input": "messageId, source, type, entityKey/version, payloadHash, rawPayload",
+      "output": "RECEIVED→VALIDATED→APPLIED либо REJECTED/RETRY, журнал причины",
+      "invariants": "Идемпотентность, устаревшая версия не меняет факт, исходный payload доступен"
+    },
+    {
+      "id": "NS10",
+      "object": "Фоновое задание",
+      "input": "jobId, owner, leaseUntil, attempt, nextAttemptAt, idempotencyKey",
+      "output": "READY→CLAIMED→DONE либо RETRY/ERROR",
+      "invariants": "Истёкшее владение восстанавливается, повтор получателя безопасен"
+    },
+    {
+      "id": "NS11",
+      "object": "Монитор технического состояния",
+      "input": "Окно времени, фильтр модуля, latency, очередь и пул",
+      "output": "Ограниченная выборка показателей и ссылки на requestId/SQL",
+      "invariants": "Снимок не подменяет бизнес-факт и не читает всю историю"
+    },
+    {
+      "id": "NS12",
+      "object": "Архив",
+      "input": "Закрытые факты, срок хранения, ссылки, checksum",
+      "output": "Архив и поиск исходного факта/файла",
+      "invariants": "Открытые объекты сохранены, перенос повторяем без потери истории"
+    },
+    {
+      "id": "NS13",
+      "object": "Карточка товара",
+      "input": "sku, unit, pack, qtyPerPack, gross/net/tare, dimensions, volume, codes, flags",
+      "output": "Проверенная версия карточки и допустимые упаковки",
+      "invariants": "Неизвестное и непроверенное не допущено; измерения площадки не заменяются прогнозом модели"
+    },
+    {
+      "id": "NS14",
+      "object": "Топология",
+      "input": "warehouse, subwarehouse, cell, category, mass/volume/height, routeDirection, timeZone",
+      "output": "Пригодный адрес и допустимый маршрут",
+      "invariants": "Вместимость и направление обязательны, timezone не берётся из ОС сервера"
+    },
+    {
+      "id": "NS15",
+      "object": "Адрес и вместимость",
+      "input": "storeId, createdAt, firstOrderAt, receiptMode, sourceBook, vehicleId, containerFormat, mixedScheme",
+      "output": "Проверенный адрес и справочная схема загрузки",
+      "invariants": "Неделя до первого заказа, вместимость конкретной машины, не площадь основания"
+    },
+    {
+      "id": "NS16",
+      "object": "Сопоставление ERP",
+      "input": "sourceCode, internalCode, version, dictionaries, messageId",
+      "output": "Однозначный mapping и результат применения",
+      "invariants": "Дубликат не создаёт вторую карточку, неполнота не допускается в план"
+    },
+    {
+      "id": "NS17",
+      "object": "Потребность ERP",
+      "input": "orderId, rows, qty/unit, plannedPickAt, plannedShipAt, receivedAt",
+      "output": "Принятый исходный заказ либо поздний новый в ожидании решения",
+      "invariants": "Изменения ранее переданного заказа запрещены, потребность и обеспечение различаются"
+    },
+    {
+      "id": "NS18",
+      "object": "Приёмка",
+      "input": "receiptId, palletId, sku, qty/unit, batch/expiry, qualityState, expCell, weight",
+      "output": "Факт прихода и доступность после экспедиции приёмки",
+      "invariants": "Спорное заблокировано, повтор не удваивает запас, приход не равен размещению в хранении"
+    },
+    {
+      "id": "NS19",
+      "object": "Слотирование",
+      "input": "sku, ranges, categoryReserve, lotMixPickface, old/new version",
+      "output": "Административный диапазон и условия перехода",
+      "invariants": "Смешение только по SKU в отборе, хранение раздельно, активные задания не меняются"
+    },
+    {
+      "id": "NS20",
+      "object": "Стратегия размещения",
+      "input": "Принятый запас хранения/экспедиции, FEFO/FIFO, размеры, приоритет и расстояние",
+      "output": "Источник и пригодная ячейка с объяснимым выбором",
+      "invariants": "Подходящая партия и ёмкость проверены с учётом назначенных подач"
+    },
+    {
+      "id": "NS21",
+      "object": "Мягкий резерв",
+      "input": "Пул открытых заказов, sku, availableStock, shipFromStock, qty/unit",
+      "output": "Обеспеченное количество и SOFT demand reservation без waveId",
+      "invariants": "Не более свободного остатка, нет физического резерва ожидаемого прихода"
+    },
+    {
+      "id": "NS22",
+      "object": "Распределение дефицита",
+      "input": "Потребность, доступный остаток, pickMultiple, сроки волн",
+      "output": "Целые доли заказов и необеспечённый остаток спроса",
+      "invariants": "Сумма не выше запаса, кратность отбора не заменяется кратностью пополнения"
+    },
+    {
+      "id": "NS23",
+      "object": "Грузовое место",
+      "input": "huId, внешний SSCC/legacyId, store/order, boxContent, parent, contentVersion",
+      "output": "Физическое место, состав, дерево и история",
+      "invariants": "Один parent, нет циклов и двойного физического счёта, происхождение сохранено"
+    },
+    {
+      "id": "NS24",
+      "object": "Транспортное задание",
+      "input": "Заказы, прогноз массы/объёма/тары, vehicleCapacity, route, timeWindows, leadTimes, gate и складские ресурсы",
+      "output": "Рейс и задание на сборку с deadline, воротами, консолидацией и режимом",
+      "invariants": "Ожидаемый фреш не превращается в запас, поздний заказ только по решению логиста"
+    },
+    {
+      "id": "NS25",
+      "object": "Волна",
+      "input": "transportPlanId, subwarehouse, deadlinePickFinish, orderLines, operationStart и timezone",
+      "output": "Складские волны и операционный день начала",
+      "invariants": "Группировка по подскладу и окончанию сборки, не по самостоятельному температурному признаку"
+    },
+    {
+      "id": "NS26",
+      "object": "Жёсткий резерв",
+      "input": "waveId, обеспеченные строки, SOFT references, физические источники и qty",
+      "output": "HARD wave reservation и остаток SOFT без удвоения",
+      "invariants": "Чужой резерв не расходуется, фреш только после фактической доступности"
+    },
+    {
+      "id": "NS27",
+      "object": "Мини-макс",
+      "input": "sku, min/max, запас отбора, открытые подачи и источники",
+      "output": "Одно задание и резерв источника",
+      "invariants": "Учитываются уже назначенные количество и ёмкость, нет дублированной подачи"
+    },
+    {
+      "id": "NS28",
+      "object": "Подача под волну",
+      "input": "waveDemand, sourcePalletQty, pickRange, slots и открытый мини-макс",
+      "output": "Целая паллета в пригодный слот либо разрешённый резерв",
+      "invariants": "Нет повторного количества и переполнения, резерв не создаётся вне административных правил"
+    },
+    {
+      "id": "NS29",
+      "object": "Частичная подача B",
+      "input": "Дефицит волны, категория, занятая ячейка, свободная ёмкость, sourcePallet и batch",
+      "output": "Количество min свободной ёмкости и источника, остаток источника",
+      "invariants": "Правила смешения и категория соблюдены, остатки точны"
+    },
+    {
+      "id": "NS30",
+      "object": "Ресурс смены",
+      "input": "employeeId, roles/rights, zones, equipment, shift, breaks, presence",
+      "output": "Один фонд времени, доступность и допущенное сочетание человека с техникой",
+      "invariants": "Ранняя основная и дежурная смены, совмещение не удваивает время"
+    },
+    {
+      "id": "NS31",
+      "object": "Назначение задания",
+      "input": "taskId, operation, priority, deadline, permittedResource, location, payload и версия",
+      "output": "ASSIGNED→STARTED→DONE либо WAIT/CANCEL с историей",
+      "invariants": "Не более одного независимого задания человеку, безопасная передача груза"
+    },
+    {
+      "id": "NS32",
+      "object": "Разрешение волны",
+      "input": "waveId, полный набор строк, резервы, подача и её фактическое завершение",
+      "output": "WAITING либо RELEASED, блокирующие задачи и исполнители",
+      "invariants": "Ни одного скрытого дефицита, повтор запуска не создаёт второй отбор"
+    },
+    {
+      "id": "NS33",
+      "object": "Прогноз загрузки",
+      "input": "Объём задач, нормативы, смены, совмещённые роли и время рейсов",
+      "output": "График потребности/доступности и дефицита",
+      "invariants": "Логист со складом выравнивают нагрузку, прогноз не считает отсутствующего как фактический ресурс"
+    },
+    {
+      "id": "NS34",
+      "object": "Стеллажный отбор",
+      "input": "taskId, cellScan, sku/boxScan, qty, huId, batch и snapshot источника",
+      "output": "Факт отбора, версия состава, точный источник и партия либо правило учётного списания",
+      "invariants": "Односторонний путь, нет незаметной смены активного источника"
+    },
+    {
+      "id": "NS35",
+      "object": "Весовая коробка",
+      "input": "boxBarcode, decodedWeight, packageTare, regulatoryCode, batch и huId",
+      "output": "Доказанные net/gross и прослеживаемая коробка",
+      "invariants": "Невалидный код и повтор отклонены, средний вес не подставлен"
+    },
+    {
+      "id": "NS36",
+      "object": "Комплектация на весах",
+      "input": "address, sku, scaleId, stableMeasurement, tare, targetWeight и SKU tolerance",
+      "output": "Точный вес и состав, штатный результат либо исключение последней коробки",
+      "invariants": "15 процентов касается заказа, не точности измерения; нет завершения без обязательного веса"
+    },
+    {
+      "id": "NS37",
+      "object": "Пикбайлайн",
+      "input": "Принятый товар EXP-IN, заказ/адрес, waveId, qty и остаток источника",
+      "output": "Распределение от прихода к адресу, фактический HARD reserve",
+      "invariants": "Не нужен фиктивный стеллажный приход, недопоставка видна"
+    },
+    {
+      "id": "NS38",
+      "object": "Инцидент пустой ячейки",
+      "input": "cell, task, actor, reportedAt, selfCountPolicy, eligibleAuditor",
+      "output": "Подтверждение нуля либо срочная инвентаризация, один incidentId",
+      "invariants": "Неавторизованный ноль не меняет учёт, руководитель видит красное место"
+    },
+    {
+      "id": "NS39",
+      "object": "Срочное восстановление",
+      "input": "incidentId, confirmedZero, source/destination, availableReachtruck, firstPriority, timeout",
+      "output": "Подача и восстановление, общий таймер от reportedAt",
+      "invariants": "5 минут по умолчанию, передача не сбрасывает возраст, дежурный ресурс доступен"
+    },
+    {
+      "id": "NS40",
+      "object": "Малая коробка",
+      "input": "boxSSCC, pieceContent, measuredGross, tare, parentHu и evidence",
+      "output": "Доказанный итоговый вес каждой малой коробки",
+      "invariants": "Тара учтена один раз, исключение родителя не отменяет контроль"
+    },
+    {
+      "id": "NS41",
+      "object": "Весовой допуск",
+      "input": "huId, contentVersion, expectedGross, minPhysicalBox, policy, measuredGross",
+      "output": "PASS либо HOLD/redTag и применимая этикетка",
+      "invariants": "Допуск minBox/2 включительно, неполная паллета не освобождена, старый PASS не применяется"
+    },
+    {
+      "id": "NS42",
+      "object": "Проверка состава",
+      "input": "incidentId, expectedBoxes, scansAllBoxes, controller и huVersion",
+      "output": "Фактический состав, конкретные missing/excess boxes",
+      "invariants": "Совпавший общий вес не скрывает пересорт, повтор скана не удваивает коробку"
+    },
+    {
+      "id": "NS43",
+      "object": "Исправление HU",
+      "input": "missing/excess, returnTask, completeTask, controller, newWeight/version",
+      "output": "Возврат, докомплектация и новый допуск",
+      "invariants": "Все товарные изменения отражены, старый контроль недействителен"
+    },
+    {
+      "id": "NS44",
+      "object": "Выборочный аудит",
+      "input": "subwarehouseRate, huId, contentVersion, randomSelection и auditState",
+      "output": "Назначение полного перепикивания и результат",
+      "invariants": "100 процентов означает все места, повтор или снижение настройки не снимает назначение"
+    },
+    {
+      "id": "NS45",
+      "object": "Консолидация",
+      "input": "PackingList, sourceHuIds, store, targetHuId, TREE/SUM, contentVersions",
+      "output": "Целевой состав и история, применимый допуск",
+      "invariants": "Один адрес, нет второго расходования, доказанные массы коробок не теряются"
+    },
+    {
+      "id": "NS46",
+      "object": "Перемещение экспедиции",
+      "input": "taskId, huId, source, targetGate, worker, takeScan и putScan",
+      "output": "Фактический этап и местоположение",
+      "invariants": "Взятие не означает установку, чужие ворота не подтверждают готовность"
+    },
+    {
+      "id": "NS47",
+      "object": "Погрузка",
+      "input": "finalPhysicalHu, tripId, vehicleId, gate, worker, qualityVersion и capacity",
+      "output": "LOADED в конкретный автомобиль с журналом",
+      "invariants": "Стандартный SSCC и внутренний ID допустимы, лишнее/чужое/красное не грузится"
+    },
+    {
+      "id": "NS48",
+      "object": "Изменение рейса",
+      "input": "Trip version, expected/actual places, dispatcherDecision, targetTrip и unloadFact",
+      "output": "WAIT/DEPARTED или контролируемое переназначение с причиной",
+      "invariants": "Без всех мест рейс ждёт, погруженное сначала выгружено, зависшее место не теряется"
+    },
+    {
+      "id": "NS49",
+      "object": "Приёмка BARCODE",
+      "input": "Store receiptMode, finalHu, delivery, actor и camera-location",
+      "output": "Принятый окончательный состав и время",
+      "invariants": "Чужой адрес и дубликат отклонены, WEIGHT mode не обходится"
+    },
+    {
+      "id": "NS50",
+      "object": "Сквозная репетиция",
+      "input": "ERP order, транспортный план, все факты выбранного сухого цикла",
+      "output": "Связанный trace и товарный баланс",
+      "invariants": "Стендовая репетиция не называется живым пилотом, mock не закрывает физические факты"
+    },
+    {
+      "id": "NS51",
+      "object": "Межскладской поток",
+      "input": "sourceParts, huId/version, shuttleLeg, targetTrip, arrival/unload/receive/move scans",
+      "output": "Отдельные плечи, приёмка cross-dock, целевые ворота, решение отклонения",
+      "invariants": "Кросс-док не закрывает магазин, потеря или задержка сохраняют груз и ответственность"
+    },
+    {
+      "id": "NS52",
+      "object": "Приёмка WEIGHT",
+      "input": "Store policy, finalHuVersion, shipmentWeight, taredMeasurement, multiSidePhotos и representativeAct",
+      "output": "Приёмка или акт расхождения, архив доказательства",
+      "invariants": "Нет автоматического обхода неисправных весов, основа сравнения и тара едины"
+    },
+    {
+      "id": "NS53",
+      "object": "Расследование потери",
+      "input": "Missing huId, expeditionTask, searchDeadline, security, shift/KRO decisions",
+      "output": "Поиск, повторная сборка либо утверждённая корректировка и претензия",
+      "invariants": "Срок решает диспетчер, повторную сборку старший, списание КРО"
+    },
+    {
+      "id": "NS54",
+      "object": "Возврат",
+      "input": "Supply Chain approval, sourceDelivery, boxCompleteness, quality, targetFlow и receipt",
+      "output": "Пригодный отбор либо поставщик/брак, факты ERP",
+      "invariants": "Неполное и брак не становятся пригодным запасом, место выявления определяет списание"
+    },
+    {
+      "id": "NS55",
+      "object": "Тара",
+      "input": "type, qty, from/to склад/машина/магазин, driver/warehouse confirmations и duePolicy",
+      "output": "Остатки по типам и просрочки",
+      "invariants": "Не обязательны постоянные номера, SSCC матрёшки не увеличивают физическую тару"
+    },
+    {
+      "id": "NS56",
+      "object": "Нормативные затраты",
+      "input": "factOperations, boxQty, actualTrip, vehicle/stops/unload, region и tariffVersion",
+      "output": "Ежедневные начисления с базой и версией ставки",
+      "invariants": "Рейс фактический, повтор не удваивает расходы, сложная выгрузка учтена"
+    },
+    {
+      "id": "NS57",
+      "object": "Допрасход и ставки",
+      "input": "expenseArticle, amount, TRIP/VEHICLE, allocationBase, approval, priorMonthTotals и controller",
+      "output": "Распределение рейса, нераспределённая машина, месячная ставка и история",
+      "invariants": "Общие работы не начислены второй раз, позднее подтверждение имеет решение"
+    },
+    {
+      "id": "NS58",
+      "object": "Закрытие дня",
+      "input": "Planned/loaded/delivered huIds, reasons, today/nextTrip, physicalZone, costs и ERP queue",
+      "output": "Сверка, остаток зоны и незакрытые расхождения",
+      "invariants": "Нет ложной пустой зоны и пропавшего места, товарные факты не стираются переносом"
+    },
+    {
+      "id": "NS59",
+      "object": "Рекомендация диапазона",
+      "input": "Статистика, stockout flags, forecast/order overlap, palletQty, existingCells и limits",
+      "output": "Кандидаты и сравнение затрат, решение начальника и переход",
+      "invariants": "Не двойной спрос, не автоматическая смена выданных задач, старый диапазон вымывается"
+    },
+    {
+      "id": "NS60",
+      "object": "Автоплан",
+      "input": "Orders, vehicleCapacityScheme, timeWindows, routeMatrix, source/gate resources и planId",
+      "output": "Выполнимый план и причины исключения, безопасный apply",
+      "invariants": "Один validator ручного и авто, повтор не дублирует рейсы, отказ solver безопасен"
+    },
+    {
+      "id": "NS61",
+      "object": "Восстановление",
+      "input": "BackupSet, факты, outbox, files/checksums, chosenFault и согласованные RPO/RTO",
+      "output": "Измеренный протокол восстановления по выбранному виду отказа",
+      "invariants": "API restart не доказывает потерю площадки, production-конфигурация отдельно квалифицирована"
+    },
+    {
+      "id": "NS62",
+      "object": "Нагрузочный прогон",
+      "input": "Утверждённый профиль, исторический объём, generatorCapacity, mix ролей и duration",
+      "output": "Throughput, latency, locks/queue, balances и SQL решения",
+      "invariants": "Профиль не считается доказанным без прогона, насыщенный генератор не даёт ложный PASS"
+    },
+    {
+      "id": "NS63",
+      "object": "Приёмочная смена",
+      "input": "Все роли, источники, исключения, реальные приборы и ночной календарь",
+      "output": "Evidence обязательного покрытия расширенных процессов",
+      "invariants": "Полный состав, точные весы, тара и расходы, нет обхода аппаратных требований"
+    },
+    {
+      "id": "NS64",
+      "object": "Сухой пилот",
+      "input": "Scope, frozenVersion, PG-D, counters, incidents и 10 дней наблюдения",
+      "output": "Ограниченный принятый сухой поток и решение расширения",
+      "invariants": "До PG-D живых операций нет, миллионы операций не объявлены принятыми"
+    },
+    {
+      "id": "NS65",
+      "object": "Расширенный пилот",
+      "input": "NS63, принятый сухой пилот, новые потоки и 10 дней наблюдения",
+      "output": "Принятые фреш/вес/пикбайлайн/кросс-док по паспорту",
+      "invariants": "Непроверенная площадка не включена автоматически"
+    },
+    {
+      "id": "NS66",
+      "object": "Ввод и инструкции",
+      "input": "Role SOP, packageVersion, migrations, rollbackProcedure и trainingCases",
+      "output": "Самостоятельная работа персонала и управляемое переключение",
+      "invariants": "Откат кода не откатывает подтверждённый товар, пакет воспроизводим"
+    },
+    {
+      "id": "NS67",
+      "object": "Полная приёмка",
+      "input": "Requirement register, evidence, unresolved defects, workload и actualScope",
+      "output": "Решение владельца с доказанным охватом",
+      "invariants": "Открытые критические дефекты и непроверенные обязательные требования блокируют приёмку"
+    }
+  ]
+}

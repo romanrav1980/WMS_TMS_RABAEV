@@ -1,0 +1,2417 @@
+{
+  "approvedByOwner": true,
+  "approval": "2026-10-07 user approved local source proposal",
+  "head": "f786d2d34e881570f4fa9701d75cc57ef7adb3ff",
+  "branch": "feature/transport-dispatch-phase1",
+  "includesWorkingTreeChanges": true,
+  "files": [
+    {
+      "path": "api/wms_api_server/app/auth.py",
+      "bytes": 8839,
+      "sha256": "3755024caf674f4764381a532032bc8266d337ed6efd1e4511b900cfe73d1cce"
+    },
+    {
+      "path": "api/wms_api_server/app/config.py",
+      "bytes": 2645,
+      "sha256": "3a0ee145b4f04c9b389901c2a726f471cc20c2ed74f71ae2186cf86625aac40e"
+    },
+    {
+      "path": "api/wms_api_server/app/db.py",
+      "bytes": 2065,
+      "sha256": "324fb25b501aefaf38f1604f2585548de269e45ef557b18ad4e827216cd16661"
+    },
+    {
+      "path": "api/wms_api_server/app/legacy_protocol.py",
+      "bytes": 1795,
+      "sha256": "1c738608f10ac513fd1826c476b6a2d3343bc59116720a4a080a62a915ef0f98"
+    },
+    {
+      "path": "api/wms_api_server/app/main.py",
+      "bytes": 2775,
+      "sha256": "31c8ac5e120056f25f4f2336feefe56e1da3c83ef1984b71856e9f208a99e436"
+    },
+    {
+      "path": "api/wms_api_server/app/oracle_gateway.py",
+      "bytes": 15500,
+      "sha256": "e63917604867b806eb0d7eea867ad7c71ca5f8c43404279a10e4cdcd2ff82937"
+    },
+    {
+      "path": "api/wms_api_server/app/request_context.py",
+      "bytes": 1003,
+      "sha256": "002291acdb8b1f04883da8cca3ae078186f57f861205da22acf19333a2837517"
+    },
+    {
+      "path": "api/wms_api_server/app/schemas.py",
+      "bytes": 51311,
+      "sha256": "4fc51a3e50b2c00a59cc4293419ab5461c2de760c41697f187f75d318dd30510"
+    },
+    {
+      "path": "api/wms_api_server/app/__init__.py",
+      "bytes": 34,
+      "sha256": "569e0ed5fad8e0b1d707e9b3b7fe0f4f84c79d2c80057657305b86597ba328b9"
+    },
+    {
+      "path": "api/wms_api_server/app/middleware/api_audit.py",
+      "bytes": 8826,
+      "sha256": "0374d7192b7121f4febe743643502ac523efeddfc22594a12a4f147c625d0680"
+    },
+    {
+      "path": "api/wms_api_server/app/middleware/__init__.py",
+      "bytes": 34,
+      "sha256": "6fb1ed1adef5deec7511698d0f56c7d824ba1507f49da8f7db22923bf81c3302"
+    },
+    {
+      "path": "api/wms_api_server/app/modules/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/admin_auth.py",
+      "bytes": 500,
+      "sha256": "db979204bde3d0993aa9fb5a3cfc2b50ec8dfd03baf03e5566408575cb001d00"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/admin_rights.py",
+      "bytes": 7517,
+      "sha256": "d8a3780f30acef5cee0a7bebc6ce0f3e20356b8c2b11320a68ebb6ab0aca1fba"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/api_audit.py",
+      "bytes": 1940,
+      "sha256": "f24e2ba4a4d36c5456d6c32fa80ce4f9d8b999b31cfd2a5e48ec1d9b21479eba"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/bom.py",
+      "bytes": 5122,
+      "sha256": "76657b194e6bf43e3b390b846e568f8a431ddd4b2d3636b4c265ae41fe13a335"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/case_pick.py",
+      "bytes": 6098,
+      "sha256": "ad59734e34c715529157a6d8a2b89a1ba9a7fff4c93f2d24ee9387bde152b4ef"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/customer_orders.py",
+      "bytes": 4088,
+      "sha256": "093e6ed05d1c9f031bc5d1d0a0280bd635ce4e8c7a2ccd87befd6e90eff122be"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/customer_rules.py",
+      "bytes": 4072,
+      "sha256": "37ec47e3594c970f3a72f34ebacfbd89922ffc33e3b74787d29e7f684dec9f68"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/driver_mobile.py",
+      "bytes": 7729,
+      "sha256": "d8f5ad60eeffd7cf4bbccddd93970f3fec5fa4f715ef72813f5ca3cd22a2607c"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/export_1c.py",
+      "bytes": 4855,
+      "sha256": "50a4d96c087d977633f1a3f0c3ba216fd9f8e8f11bb22e4a125c3ca54c80f5db"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/finished_goods.py",
+      "bytes": 2815,
+      "sha256": "bb7a1d13cd08d8799da46a8bc19a9c4b816eeb5ab2149b577f1b783dcf8cb276"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/gps.py",
+      "bytes": 7224,
+      "sha256": "7d800349b91c2f6fae88d4560040a88722696554aa0ab6183f5e1cda5730171f"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/health.py",
+      "bytes": 357,
+      "sha256": "cf10c38be61fe31152c4df32f77c3764e3ee34e4718b6ca9164869c8d74ecfc4"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/maintenance.py",
+      "bytes": 3663,
+      "sha256": "7f4e55abd96a7a19f821c735c27b5cb3c2a3d5e03bb81bc6a023a70d5ba74f2e"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/mes.py",
+      "bytes": 6870,
+      "sha256": "ceb4352fd4446c26b13179eb5c4e1d23ad8dedc4089cb2297b1ee6e0f99d15ae"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/notifications.py",
+      "bytes": 9104,
+      "sha256": "77fd9b7141f808fe49b8766862d9cb6e9202ff6fb375981dddec31418ebaaeb6"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/picking.py",
+      "bytes": 14976,
+      "sha256": "291bb9d50b2a8afd8d5f77c80342c0d364ec44bc06f400c563bb698f7ea86183"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/production.py",
+      "bytes": 5596,
+      "sha256": "e275477594f9a1d64d392299f0cf068dbf46bc560f9133f478e4624ec8440168"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/products.py",
+      "bytes": 1257,
+      "sha256": "9378dffd48617d6042dee08a660a0f3d86705c5d0987dcb5032d9fb1f34107c2"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/raw_material.py",
+      "bytes": 2108,
+      "sha256": "feb85037355d5f7d115cc29cf03d704c8777b36a20538bb2f7ae7e2148506198"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/resource_management.py",
+      "bytes": 5611,
+      "sha256": "e3e2a00dfa570ff52e08e4a925cfb7fedd5ca549b7fbf990474ce5fb452470a4"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/slow_sql.py",
+      "bytes": 1731,
+      "sha256": "b98cd9b73ab1d85fde1ceffe8a8374d22a9464940b0a72e4e607cfbc2f298e57"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/stock_reservations.py",
+      "bytes": 4565,
+      "sha256": "ceea9610ec67c46b0fb9281ccc6ac111b70c95b21a72ba46b2a0307e60bcb0eb"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/traceability.py",
+      "bytes": 3892,
+      "sha256": "157ef83fc301082bde4ae61acfe1c7c62f9c4a8e0f9f8c7a053e1425b38c3ee9"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/transport.py",
+      "bytes": 41963,
+      "sha256": "5cfc4daa49dd4952c90ad79d41c0670c03fc74400dc8548c05a7fb2765af7669"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/transport_kpi.py",
+      "bytes": 9138,
+      "sha256": "ca94e727c186d4b6ad0e6dd830cb966f2d369f7d9e145f5e89086136ef463bd6"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/transport_tariffs.py",
+      "bytes": 3952,
+      "sha256": "98daefb5f5e1801f8b274457d78c3a6f28df15b0868a0af7bd61007124b57af2"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/tserver.py",
+      "bytes": 3291,
+      "sha256": "f0663fb953e3e0aa55d5a5a064966568ec1265f2dd3179e64df102c3e5359454"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/users.py",
+      "bytes": 9112,
+      "sha256": "f7d0b24870f7f10f9cdd4972775095fc9b61b9b4f72c095e70b313494613c436"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/warehouses.py",
+      "bytes": 1155,
+      "sha256": "744a9c4db78079be0f9381cce0ef8da23ecf3a2379eeac58b3f05ca4069b5b85"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/warehouse_map.py",
+      "bytes": 4165,
+      "sha256": "9642961a88aa042901d6855d568fc0a7af2ce5d5b75fee59cd89bf89cbc8e95b"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/warehouse_map_drafts.py",
+      "bytes": 8424,
+      "sha256": "ce04595d9345a1d95fe9a6463ba7600d65053f7ac4241f34c4e779918e29ff4a"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/warehouse_tasks.py",
+      "bytes": 3928,
+      "sha256": "8c65dd4c4194133c5621522a27e00f935dd56bfc7ffc4b1a4b2ba9d345ed224b"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/warehouse_topology.py",
+      "bytes": 5674,
+      "sha256": "5bb96d32b3cb4e5d4f54bc492859d288519a271aff15f0527c5c551655bd904b"
+    },
+    {
+      "path": "api/wms_api_server/app/routers/__init__.py",
+      "bytes": 23,
+      "sha256": "5323279183dcabc63413303be1dc76b4cb2d7dcc736a54c92cc8b4452e3e2ae9"
+    },
+    {
+      "path": "api/wms_api_server/app/services/am_solver.py",
+      "bytes": 3733,
+      "sha256": "aada229e5fcaaf10c333b3f85fd0111db1cef5e3f5819d1e0086748f2fd25a0c"
+    },
+    {
+      "path": "api/wms_api_server/app/services/api_audit_service.py",
+      "bytes": 15744,
+      "sha256": "5ac313c40ee2e224a0bfd58da1b7087d710369c4558e8bf04b82a7699056ce9d"
+    },
+    {
+      "path": "api/wms_api_server/app/services/bom_service.py",
+      "bytes": 16657,
+      "sha256": "86647d0182cbf6bfe8d7c5f81151dae57400397f6e63d8f0513bdc69514832a2"
+    },
+    {
+      "path": "api/wms_api_server/app/services/case_pick_service.py",
+      "bytes": 44448,
+      "sha256": "1f3696945d842d8de404a79ca04b557794d536503c6218ca2c41f61bf094543d"
+    },
+    {
+      "path": "api/wms_api_server/app/services/customer_order_service.py",
+      "bytes": 16216,
+      "sha256": "50770af1bdd04499c84b8c300081b5ecbf875ceb41e889040143b910942ebe2b"
+    },
+    {
+      "path": "api/wms_api_server/app/services/customer_rule_service.py",
+      "bytes": 13671,
+      "sha256": "c7b6c2dd97c51d5f75edc3abde7f09ea7f695d8debffb841eca6b8f20623435c"
+    },
+    {
+      "path": "api/wms_api_server/app/services/distance_matrix_service.py",
+      "bytes": 10421,
+      "sha256": "160a143a26ed4c1f31f90acfa5ee0d18e64c9aa8b9d262e890104865eb7535ab"
+    },
+    {
+      "path": "api/wms_api_server/app/services/finished_goods_service.py",
+      "bytes": 17928,
+      "sha256": "76c7640349a755cc732017370d149a24bad542761c950fe86892f7bd7e2c821e"
+    },
+    {
+      "path": "api/wms_api_server/app/services/geofencing.py",
+      "bytes": 5067,
+      "sha256": "4330f0d07257045b1b4b6009edd2994afee3a771a073dcbf60bd95776eb730b5"
+    },
+    {
+      "path": "api/wms_api_server/app/services/mes_service.py",
+      "bytes": 55718,
+      "sha256": "193a20d58fd62fb751c54e521247c17ba36801f272894c1f4af8fd6e60754ac9"
+    },
+    {
+      "path": "api/wms_api_server/app/services/outbox_service.py",
+      "bytes": 7201,
+      "sha256": "4f015a8c3fdb94bdd0a146b215c15277b8825a8376d0afed8db0ff729a66d87e"
+    },
+    {
+      "path": "api/wms_api_server/app/services/picking_service.py",
+      "bytes": 128501,
+      "sha256": "cfe15d827565c22f2d57a9a52100cb438716a62695aa7679e25d309476d6b312"
+    },
+    {
+      "path": "api/wms_api_server/app/services/production_exchange_service.py",
+      "bytes": 10637,
+      "sha256": "380bf3cf06b37bac9883fd7ec46d4e3b89e12a2b81db0e786de4c2ae3d43a7fd"
+    },
+    {
+      "path": "api/wms_api_server/app/services/production_service.py",
+      "bytes": 20080,
+      "sha256": "903be4d2fbee51067f02f44dd93a3d08d0b830332c809e8791009f0dc6de6136"
+    },
+    {
+      "path": "api/wms_api_server/app/services/product_service.py",
+      "bytes": 2184,
+      "sha256": "3b2211212058bf7bb2a77a8366f29875275871a849c49c0bea25aa279f842b2d"
+    },
+    {
+      "path": "api/wms_api_server/app/services/raw_material_service.py",
+      "bytes": 11532,
+      "sha256": "a9f087a8398f0a82cf93d24ef62c2bec288394f1b4d597d3a3e31525cd3a4aea"
+    },
+    {
+      "path": "api/wms_api_server/app/services/resource_management_service.py",
+      "bytes": 25748,
+      "sha256": "246b0acbea6c5be6a2efe709eb0045afa071821972e4f280e2c669a7fe0f84cb"
+    },
+    {
+      "path": "api/wms_api_server/app/services/routing.py",
+      "bytes": 6201,
+      "sha256": "a65d3678d8f255c2a24f7d767fb2412187115a1c07ca22b65a89ac5ed6984514"
+    },
+    {
+      "path": "api/wms_api_server/app/services/slow_sql_service.py",
+      "bytes": 5997,
+      "sha256": "0722993c725b97fa6fdebac9121ebb73baa886da92bee52b75304eb9213f2f96"
+    },
+    {
+      "path": "api/wms_api_server/app/services/stock_reservation_service.py",
+      "bytes": 13183,
+      "sha256": "156a34c827ae5dc250ab76e070e6765996a23b46a8716278a9d32564642c14ea"
+    },
+    {
+      "path": "api/wms_api_server/app/services/traceability_service.py",
+      "bytes": 10178,
+      "sha256": "58789a26d8d061373c75deafbf4362dcfd784a5dac962fdfbe976659a6a5c8de"
+    },
+    {
+      "path": "api/wms_api_server/app/services/transport_service.py",
+      "bytes": 146260,
+      "sha256": "2831c4821b579c6c6ed0e3e10098f657633d855ed6d89d8be70a5de691a351a3"
+    },
+    {
+      "path": "api/wms_api_server/app/services/tserver_service.py",
+      "bytes": 27119,
+      "sha256": "b467b950e3312eabd003e0d20ff27e2cbcdba3190bb93212e9edd26a430cf77b"
+    },
+    {
+      "path": "api/wms_api_server/app/services/vrp_job_store.py",
+      "bytes": 2995,
+      "sha256": "cd84ea0fb97ac4c0f58c1f42d2a7c46fe102b20148a843295f78c244c2159a51"
+    },
+    {
+      "path": "api/wms_api_server/app/services/vrp_solver.py",
+      "bytes": 18563,
+      "sha256": "ba16ad5a63cff22633ecf1c1934eb3fedfba78e9a3144650a416258b2d5448ca"
+    },
+    {
+      "path": "api/wms_api_server/app/services/warehouse_map_draft_service.py",
+      "bytes": 113433,
+      "sha256": "cf165cbaa0c10e23b8490653b405dd32167d9c9ed1d2712b47b34ee10a27429e"
+    },
+    {
+      "path": "api/wms_api_server/app/services/warehouse_map_service.py",
+      "bytes": 48613,
+      "sha256": "fc1f50bfd0464fd0889a5e40250151d617b66561223aec4466e2646248c0e834"
+    },
+    {
+      "path": "api/wms_api_server/app/services/warehouse_service.py",
+      "bytes": 3814,
+      "sha256": "54311360f3c80f2202fa9e36f03552caa8b2476c1a16b2acd44909c23f2dac9d"
+    },
+    {
+      "path": "api/wms_api_server/app/services/warehouse_task_domain_sync_service.py",
+      "bytes": 27582,
+      "sha256": "44e61c3a5d97f063376363270ca671a157632d80024e94adb856b0bfbf121bdb"
+    },
+    {
+      "path": "api/wms_api_server/app/services/warehouse_task_service.py",
+      "bytes": 20571,
+      "sha256": "60fd59f00cc67f32ed5f42fe731f5de1e403bd357d5723bcfd4c8c463b5b6fb9"
+    },
+    {
+      "path": "api/wms_api_server/app/services/warehouse_topology_service.py",
+      "bytes": 58817,
+      "sha256": "bc393ddaca04871f3d105d74911b4bd047bc2218c71a9add70da32c544ceb8f3"
+    },
+    {
+      "path": "api/wms_api_server/app/services/ws_manager.py",
+      "bytes": 2403,
+      "sha256": "e55e12cc2d772d7cbd40944e5d7989a5b502f26ea9ef2ce60fabc53830f4e8aa"
+    },
+    {
+      "path": "api/wms_api_server/app/services/__init__.py",
+      "bytes": 28,
+      "sha256": "5ee368b8b403ddb926e38792d6c660d7a6ec88ea5bd628ded82a91e52931d2f1"
+    },
+    {
+      "path": "api/wms_api_server/app/workers/outbox_worker.py",
+      "bytes": 1731,
+      "sha256": "58bfed688687100a61ae97311c502d598a45578ce664793c5c664638b5078a4d"
+    },
+    {
+      "path": "api/wms_api_server/app/workers/production_exchange_worker.py",
+      "bytes": 1883,
+      "sha256": "96781ceafa3e8940c277baca340951503fea4f4b5ebb2a164427a20ab1ebcfd5"
+    },
+    {
+      "path": "api/wms_api_server/app/workers/__init__.py",
+      "bytes": 37,
+      "sha256": "011ce7272f64a047a2d37445e914d742f2cbdd0c989d19fa883783706fec456d"
+    },
+    {
+      "path": "api/wms_api_server/app/services/adapters/mock.py",
+      "bytes": 1357,
+      "sha256": "095456c67605071b1957751d2948f4f4b61e554a0bd9b7e30f9f787f86f9ea0e"
+    },
+    {
+      "path": "api/wms_api_server/app/services/adapters/__init__.py",
+      "bytes": 58,
+      "sha256": "79fb63e3fdfab373fadc42eb2168f1b5ae5ccd032443d579299509760e64bd10"
+    },
+    {
+      "path": "api/wms_api_server/app/modules/transport/public.py",
+      "bytes": 186,
+      "sha256": "10408f84cad195fc0af17f165757d5bade20b57b403c2ef0233ae88a2d6f274f"
+    },
+    {
+      "path": "api/wms_api_server/app/modules/transport/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "api/wms_api_server/app/modules/transport/domain/transport_type.py",
+      "bytes": 298,
+      "sha256": "3b887fc4b50b0ac25567011bc0c64cc1ee774560fcf50f6153893be2f8d609e6"
+    },
+    {
+      "path": "api/wms_api_server/app/modules/transport/domain/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/api.ts",
+      "bytes": 921,
+      "sha256": "7f582fe1dbfdf12ce56e15cfa53d63643cf495823729a78a2df2a7b119339374"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/App.tsx",
+      "bytes": 16685,
+      "sha256": "ccb2cd49db48e563376acfd6b36fe5a5016256b601ca0087776494ffb5c4691d"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/demoData.ts",
+      "bytes": 4811,
+      "sha256": "b789f8b828abbffb90e2167df9a7f400fee1b5208b4e9588192c926cdf5b770a"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/main.tsx",
+      "bytes": 162,
+      "sha256": "3fdc7ffa2eb3cba71db24212b6ffc059c70f8963ce1982c9a8f8a94c38420b66"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/types.ts",
+      "bytes": 4262,
+      "sha256": "6e5a8ffaf18f03b7850c420bf19e18af8aafc4e668cd550330f2267afd7ce89c"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/vite-env.d.ts",
+      "bytes": 38,
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/assets/picker-4dir-sprite-sheet.json",
+      "bytes": 860,
+      "sha256": "cc65f9454b0012f74dbebbacf7177416705616791e29fe95305a92f71ab1fdc1"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/assets/reachtruck-4dir-sprite-sheet.json",
+      "bytes": 804,
+      "sha256": "10dfe4d087e2dd3142928797dd5940021037bb7c3f2023891772c051a01736c0"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/components/DriverMobilePage.tsx",
+      "bytes": 10848,
+      "sha256": "e53f1f83a4e72093a8427cf2d2121378b080a4d39e8d237077bbf1295ecb4f2f"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/components/FleetManagementPage.tsx",
+      "bytes": 15097,
+      "sha256": "711986197ad62bf80aaff2ee56f1de028dc6aea3c186f1838d0c5b68764c31c6"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/components/KpiDashboardPage.tsx",
+      "bytes": 10850,
+      "sha256": "5087b5d628f6667f6e497bc4bdb0738ea88a9abba7e5e3b17c2de8f82f03d1f6"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/components/LargeWarehouseMapPage.tsx",
+      "bytes": 307630,
+      "sha256": "e9b8d9955bbd4fc0eef6f8ab77af70161aac359e693f464c19aa11091201bd6d"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/components/Panels.tsx",
+      "bytes": 23909,
+      "sha256": "2d21abae0f5278152336778477bf3de42dc5d5d64767695ad91e3a65b553ad76"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/components/PlannerAnalyticsTab.tsx",
+      "bytes": 13623,
+      "sha256": "1459e11a518f20e4fd0acdcbf09af7684d06e5c127fc3b251eb5e7db3394c373"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/components/Timeline.tsx",
+      "bytes": 4996,
+      "sha256": "66a75224db7bb6e8b73f9e31be6c67b2e78fd80f67a5819efb30879c296e28f1"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/components/TopologyAdminPage.tsx",
+      "bytes": 99610,
+      "sha256": "05385a85eeebdcef963282a025cfae5d4214f9803e6744039e384641d06c331f"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/components/TransportDispatchPage.tsx",
+      "bytes": 196201,
+      "sha256": "a0cc03be834f9a3e697b57f74fe288f555fd4edec051001a9a2c2528dd756c3c"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/components/TransportGanttPage.tsx",
+      "bytes": 34842,
+      "sha256": "b9c6f85acce7ae043cef533e50881978771f76d83dec547922b774bef87919b2"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/components/TransportPlannerPage.tsx",
+      "bytes": 54561,
+      "sha256": "67d287d4e9aae41c2b9ea7653c7bb66bff949b2a899b79f5d790650be2c6cc46"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/components/UserManagementPage.tsx",
+      "bytes": 14731,
+      "sha256": "8f0b59374ef6dd54d770d38d949cfe167548d6646dfa8a6ff06135e025e32423"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/components/WarehouseScene.tsx",
+      "bytes": 32290,
+      "sha256": "a55c81ed4e7708a0b1c4680e68a649c278ecb33e00f546678bc31e547c563a21"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/data/loaders.ts",
+      "bytes": 4194,
+      "sha256": "0c4e1ec9b2d44a9833f59f585158880553ae706009814ca098ece5ff90d3790b"
+    },
+    {
+      "path": "admin/wms_admin_frontend/src/replay/reducer.ts",
+      "bytes": 15847,
+      "sha256": "6231e4d8b4f74cdc197bc2eb215e39437b5c2663ca78e1005b8568222cb15601"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/App.tsx",
+      "bytes": 21544,
+      "sha256": "413d7f548b38dbda84a7de15007459575dfe3bb4d9268babda3160821eb2258a"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/config.ts",
+      "bytes": 188,
+      "sha256": "721bcc517da8566bffc12aea157fa89f23c100b677ae4966fadeef88057400e7"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/main.tsx",
+      "bytes": 806,
+      "sha256": "411579b09e7ac17f24afd5534c149f2bf175a721aea66185258c7fc40e59991a"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/types.ts",
+      "bytes": 1373,
+      "sha256": "ea9509e6333b458234b600d977beb168dc8605c36a02590cf6bc4e6a10e52b04"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/vite-env.d.ts",
+      "bytes": 211,
+      "sha256": "80e8793ade46007699afa9881bfde54cbfc33bcfa064263e61f4c0a6c24ae540"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/api/client.ts",
+      "bytes": 595,
+      "sha256": "0570a0685815df9525051713bbb3ce186f26c711979e1a4954fa018e140f776d"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/api/wmsApi.ts",
+      "bytes": 2154,
+      "sha256": "46a46873a00d9e5b96affd9af844cad9ec678bd6755ffb6a53b04ff911ca3f13"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/components/LegacyBlocksTable.tsx",
+      "bytes": 960,
+      "sha256": "70f68430e11a1070143fede24200f09c0d88fffd2618735d16c552aa0ab7ffec"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/components/ScannerInput.tsx",
+      "bytes": 966,
+      "sha256": "82d5dd75bfa4fb61d9a8f98d3e58520a9a5871eb3e052426783bf10d4e2e57b8"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/components/StatusPill.tsx",
+      "bytes": 395,
+      "sha256": "9ef16b19e5a27d9cae890593a4ea605bec0bbe942a49c71ad3531ec97c039349"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/components/TerminalLayout.tsx",
+      "bytes": 3194,
+      "sha256": "e424d1f7eb51cec721f1b896bf22d8d162cb8344ecde35c61f3b1a1859d77307"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/scanner/identifiers.ts",
+      "bytes": 1106,
+      "sha256": "d5688cc42ae416fde94e0bf4f8edc846bf60aa43c1e495ad2a4a28e9d9aa84c7"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/scanner/useScanInput.ts",
+      "bytes": 862,
+      "sha256": "0d4fbee3ec76996f62f5bcf85a5372ec1e26082b85f76e9231177106f7ea0dca"
+    },
+    {
+      "path": "terminal/wms_terminal_web/src/store/localJournal.ts",
+      "bytes": 1936,
+      "sha256": "b14ba5684e068473c872807b3a94f65fcd9166be850287a360dff0a454598a03"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/BillingTransport.cs",
+      "bytes": 23392,
+      "sha256": "f9fdfea81a332a3a8c1edb79f23e4d376bcde25169dd20eeca089679f45b0b48"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/BillingTransport.Designer.cs",
+      "bytes": 31053,
+      "sha256": "c6b26fd9d21f2a5571cdbbb1fc6b9307b7c8d522ca3b610a82671af91a97a03a"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/BillTransport.cs",
+      "bytes": 360,
+      "sha256": "3c47ce8a750d5b769f65914c88588506af1736f93b57f7115b69375da23645f9"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/BillTransport.Designer.cs",
+      "bytes": 1192,
+      "sha256": "c55e527aecef28cd2a76599a617c989ad69113933f0be71c66148aa3245290ee"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Code128Content.cs",
+      "bytes": 8872,
+      "sha256": "6a7a7af20198e22e1eac6a0affce25cc35b154604c7ee9b97b7c52bb8b73041d"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Code128Rendering.cs",
+      "bytes": 19909,
+      "sha256": "caed2fdb7bb7595751082ce5fd1a69f969260f39cfb1950eba8d0210c0d8ac58"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Form1.cs",
+      "bytes": 1134440,
+      "sha256": "47004c8ee823a178ab96c991c28d83e1820f2e06337cd8cde8a9f53731a30fa9"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Form1.Designer.cs",
+      "bytes": 891655,
+      "sha256": "2aff7ee02aaf27c79b8578c95618b61c7cfffc5da494941e90cd57932cefd797"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Form2.cs",
+      "bytes": 9366,
+      "sha256": "7ad7152143cefeda7f68933911cfe8425ebf9ac0b0640659d6558844255bccc2"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Form2.Designer.cs",
+      "bytes": 5496,
+      "sha256": "30178f4ffa807e48e7a17222e2bca3d25bb307b23cd73b93e24c4336fdfcaffd"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/input.cs",
+      "bytes": 1170,
+      "sha256": "5745ce1275ae388432487fb98cbd9d740523f030da4055780c0f95ca6becea90"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/input.Designer.cs",
+      "bytes": 5237,
+      "sha256": "4876901c14eefd3be18739f0a416ce75cd226b8130786ec1d57d260947880953"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/PPage2.cs",
+      "bytes": 35703,
+      "sha256": "067157fb486e00afb665bff4f6c34f1c96c3562f393203dd04770c01d967f869"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Program.cs",
+      "bytes": 1099,
+      "sha256": "2a120efe5d5c94f9c54664c06746bbb5fb6c9611f86628382212dc3154f6decf"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/rrl_objects.cs",
+      "bytes": 3068,
+      "sha256": "6f4b54312a77d65de6c777f5b1d01b8af475d3202d7b965b1364737e3e7b37d3"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/rrl_objects.Designer.cs",
+      "bytes": 8986,
+      "sha256": "846df833ace7b75353740f22751d61c9ffd1e033b0b7763a2738a8523e5ab084"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Settings.cs",
+      "bytes": 1740,
+      "sha256": "f237675ce9f7580d223762b942c1895fd805aa648992614621ffd8aafc3130f8"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/TRANSPORT.cs",
+      "bytes": 9638,
+      "sha256": "9449e33c86da501e9d893f33d3e2d188f0b816d2e0f270a01f4a501d901fa6b6"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/TRANSPORT.Designer.cs",
+      "bytes": 16661,
+      "sha256": "fde5efca2f90a940be3b87e3498deca0e5025cc9446d59fcd192d352ee44a86b"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/VODITEL.cs",
+      "bytes": 13810,
+      "sha256": "996fb67717a412a20f7f53c3c30cb36e29945063bc583460122984db77caaff0"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/VODITEL.Designer.cs",
+      "bytes": 19232,
+      "sha256": "cae463c73ba8067b42c4fa2b8c6f752e86d7a427198825334ae353397197d0d7"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/WindowsApplication2.csproj",
+      "bytes": 15687,
+      "sha256": "2349deffe3dfe8a8862a28dfff248a6e105e89b8e28a9d1dee898895ebc07f21"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Безопасность.cs",
+      "bytes": 20085,
+      "sha256": "a3ef64982411c96deed010285658d3f34e979a306e9d24262fea707881eca403"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Безопасность.Designer.cs",
+      "bytes": 28078,
+      "sha256": "689021cb92e58a5a80d68dd5a191c9e9a2e59fec8b2535677455c34d616c9d17"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ВыбратьСтолбцы.cs",
+      "bytes": 12486,
+      "sha256": "b04264b606aecc5f982d8c02d96275803f0f6dd72ae47588bde65012672dcaba"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ВыбратьСтолбцы.Designer.cs",
+      "bytes": 13176,
+      "sha256": "b73ad4060b5850a72b72c11e270b3ff06e1c4b7d855aaba25ccc54446b1957b6"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ЗАПРОСЫ.cs",
+      "bytes": 31918,
+      "sha256": "9098e73a809cc60b238e03d40c83e45ee07b1f939427d3bc68c1aaec3d6c9c5e"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ЗАПРОСЫ.Designer.cs",
+      "bytes": 16259,
+      "sha256": "e5282d1c6a7fa14b15f4ce79fd8b2712c41d1f16ee15cc72390c25a58df489ad"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ИнтеграцияИКроссДокинг.cs",
+      "bytes": 4813,
+      "sha256": "34efc6c0f2e11e426d8d2c98f0ee967d1c5ed60c2bab032a2c194f1559036dd0"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ИнтеграцияИКроссДокинг.Designer.cs",
+      "bytes": 14784,
+      "sha256": "60a86968950e967f4bb1f44c866dcc2b889a282a01fa6cc4250ca25be2f5e81c"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ИсторияДвиженийТовара.cs",
+      "bytes": 516,
+      "sha256": "5b3bb7e1089125bc3a9897a312798a8d0240a2e9487e3669dfad6de2af027dbf"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ИсторияДвиженийТовара.Designer.cs",
+      "bytes": 12079,
+      "sha256": "f9126be9b2187d4063eb7cab89d99572b3e6d82799b658c34328bab60d038b69"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ОшибкиСборки.cs",
+      "bytes": 1475,
+      "sha256": "e4d0998eb87b6c2efdb55e7ec299a610eeacfad35b79b919b7cd56d3eac42a17"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ОшибкиСборки.Designer.cs",
+      "bytes": 7897,
+      "sha256": "2577bb9482aa60afe265c5802244d1b6c250cf18574e74f07b0f35075edfd75a"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Поставщики.cs",
+      "bytes": 383,
+      "sha256": "1822ed83d24feb816d0c2ecd9e494e4e8e810531549d92dcf647d82bafe23b44"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Поставщики.Designer.cs",
+      "bytes": 8552,
+      "sha256": "d02ed4d8e1f243714650e3f7773e3b1fb4ad9a09c850e4cc6925f302175eeb48"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ПРАЙСЫ.cs",
+      "bytes": 17143,
+      "sha256": "98467c81c3237e411daca9c8cddf664cd23852bcf29725a5643afa345f72934d"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ПРАЙСЫ.Designer.cs",
+      "bytes": 15163,
+      "sha256": "94c769d2419fd96518cdbbd59c99fdc1fe1b9d117465aa6fd0907ba108325711"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ПриемкаРейсаКроссДокинга.cs",
+      "bytes": 3569,
+      "sha256": "5f0396bdcc0d0225c5445ee2d89dfa942059014eb953aca5eabdf29a25852118"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/ПриемкаРейсаКроссДокинга.Designer.cs",
+      "bytes": 14193,
+      "sha256": "0e3625222756758022aba175f54d3059fc324903d027ed24db1cbe93d4caeaca"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Расстояния.cs",
+      "bytes": 14005,
+      "sha256": "22d6be074b8314a279ddf54a0ae50dd0347eeb2a11bf6afb99db7cd46ab187b9"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Расстояния.Designer.cs",
+      "bytes": 11099,
+      "sha256": "c11c36e439e673d438f70d1ee950a90ee505f3979ec1f532b2a1a2c5d1cf89ab"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Ревизии.cs",
+      "bytes": 28084,
+      "sha256": "eea32a97d5513a1663b36b9c375ee873f620667a87d3d15da7a25c9b004f163c"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Ревизии.Designer.cs",
+      "bytes": 56364,
+      "sha256": "912db563864438d0c00c5dc5f8cb7ad6fc41dd4a49d1ddb4e4f109f2d3203a00"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/СверкаЦен.cs",
+      "bytes": 9127,
+      "sha256": "8f1e091c9341c98ca1c418dbd3ddfc573ca0ba2b0186c8ebd2ac5f9a4d26c0e1"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/СверкаЦен.Designer.cs",
+      "bytes": 14322,
+      "sha256": "533ed6364134ad5292db0f22cba66bb5ad89aa1bbf978795085428b747bdbc48"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Список прайсов.cs",
+      "bytes": 3354,
+      "sha256": "a8885feef796512183d297d425c4d469185201ed5fbba2551b19dbab00f40c76"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Список прайсов.Designer.cs",
+      "bytes": 14261,
+      "sha256": "4731bb206c843b17eff0281c74ece8576820fd1e5dfb3be132c6c9cc253814f9"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/.vs/WindowsApplication2.csproj.dtbcache.json",
+      "bytes": 5552,
+      "sha256": "5e2673b72dbf940267887244346d82c07859e8339e1303e2ce9c0321bb12184f"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Properties/AssemblyInfo.cs",
+      "bytes": 1287,
+      "sha256": "d79e227516a2ce6be626477fb6fe7495b7603c39d76a97c3c45cbaa99acbeb26"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Properties/Resources.Designer.cs",
+      "bytes": 5220,
+      "sha256": "29ae2da7d14b267d9cacde2b12fdcb0f9f14bcc9c4116782393c4f80c8650810"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Properties/Settings.Designer.cs",
+      "bytes": 2481,
+      "sha256": "38dea15dda410bd98796687f053033c951e5ddd47f5824d87c283ae49d1cbf71"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Resources/UserControl1.cs",
+      "bytes": 377,
+      "sha256": "03d0d2d55a49b0eb367805fd9f01c19f3a198f515c7ae0eec0d9f9c93043dbf1"
+    },
+    {
+      "path": "WindowsApplication2/WindowsApplication2/Resources/UserControl1.Designer.cs",
+      "bytes": 1157,
+      "sha256": "5e6f716a1abbb680c225b8ef9a4e079b7597a48cba91acce7635c381743bb655"
+    },
+    {
+      "path": "MINI WMS/Tserver/Tserver/Program.cs",
+      "bytes": 107551,
+      "sha256": "61645d0700343b0b10ccc0f9c3e97049e4c253a056728c76b03bd466bcf8a05f"
+    },
+    {
+      "path": "MINI WMS/Tserver/Tserver/Tserver.csproj",
+      "bytes": 2142,
+      "sha256": "f646b7621e311247c8b983e5c3517a0b6deacff989381dcdd8fa9a01f956dd43"
+    },
+    {
+      "path": "MINI WMS/Tserver/Tserver/Properties/AssemblyInfo.cs",
+      "bytes": 1264,
+      "sha256": "1707e75dd4b9b81167bb2e42ed64cdd6e03b887c6b77f88f2e70172f53fe9406"
+    },
+    {
+      "path": "MINI WMS/CS_CATClient/AssemblyInfo.cs",
+      "bytes": 1274,
+      "sha256": "35664169ae3ce47009b9f61ada475726627c5698f1bebd75dbf760a09b97a21a"
+    },
+    {
+      "path": "MINI WMS/CS_CATClient/Communication.cs",
+      "bytes": 318,
+      "sha256": "c1722f8d48f0c74adee0d4ea70f742a96002fffd0cdc2dabcd833c1bb61a3fd5"
+    },
+    {
+      "path": "MINI WMS/CS_CATClient/CS_CATClient.csproj",
+      "bytes": 4919,
+      "sha256": "fc5423e28a0f73560030fed5d1ac336ddafb2b802143d9d851b906e9098a90e6"
+    },
+    {
+      "path": "MINI WMS/CS_CATClient/DBComponent.cs",
+      "bytes": 17335,
+      "sha256": "f7e565f625012bdb070038188e153116e2e031c4cdfae4371d3df2afadf2d0d5"
+    },
+    {
+      "path": "MINI WMS/CS_CATClient/DeviceSocket.cs",
+      "bytes": 8593,
+      "sha256": "8a088c43479380bd3b13297e4d0e3f3b8a76ab69e443a46c9b7a1c24e9fc729f"
+    },
+    {
+      "path": "MINI WMS/CS_CATClient/FormMain.cs",
+      "bytes": 114491,
+      "sha256": "baa8023fb858e67fe24dac5b7e94a337d35751318d272623ea8356514226195a"
+    },
+    {
+      "path": "MINI WMS/CS_CATClient/FormMain.Designer.cs",
+      "bytes": 64781,
+      "sha256": "bed6b5f8bc1eb1f67d5a6dfe9b065a8cca319fcc3b6b25c134fd07d786e323ad"
+    },
+    {
+      "path": "MINI WMS/CS_CATClient/Program.cs",
+      "bytes": 7161,
+      "sha256": "ac62f1427aabd46974e35877dce5c4ca29cce7e4bd86d5f3f7d6dccfc689d2bd"
+    },
+    {
+      "path": "MINI WMS/CS_CATClient/Resources.Designer.cs",
+      "bytes": 2487,
+      "sha256": "715716546dac0a1ef4ed93e1a2a34e913ae1a4d8c33383d5c8fa7867e7cb992f"
+    },
+    {
+      "path": "MINI WMS/DeviceApplication3/DeviceApplication3/DeviceApplication3.csproj",
+      "bytes": 4684,
+      "sha256": "096f776b20f6235af2fa3fe8b495992b7eb2ec2b964596169767e7e75eb13c50"
+    },
+    {
+      "path": "MINI WMS/DeviceApplication3/DeviceApplication3/Form1.cs",
+      "bytes": 848,
+      "sha256": "ee677d223a3020ce3313e99859d5ee037f6e84ce898e13ae8913ec3cbf516910"
+    },
+    {
+      "path": "MINI WMS/DeviceApplication3/DeviceApplication3/Form1.Designer.cs",
+      "bytes": 14629,
+      "sha256": "1fe8dd05a6f1e10c9a7e9eb8087064bc189199a0f8ea09cb6a5c75696c4edadb"
+    },
+    {
+      "path": "MINI WMS/DeviceApplication3/DeviceApplication3/Program.cs",
+      "bytes": 374,
+      "sha256": "a4bc7b716b23cb55fbba7d7ffb72b4df120ec9272dd9e6aa461bc5fb73493300"
+    },
+    {
+      "path": "MINI WMS/DeviceApplication3/DeviceApplication3/Properties/AssemblyInfo.cs",
+      "bytes": 1244,
+      "sha256": "150b7f7044f2099aaec31e3b4f15c73cf16d32f0092f82dc321fef262f2cfd60"
+    },
+    {
+      "path": "MINI WMS/DeviceApplication3/DeviceApplication3/Properties/Resources.Designer.cs",
+      "bytes": 2371,
+      "sha256": "cd1d7a62624c2f7d4d043a409b0d63a2afc4b3da8f1a97650d119fddf5c8f9ae"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/001_apply.sql",
+      "bytes": 14646,
+      "sha256": "42eb81c1762622e5353474f6e517e422c6a64a31d2ed29b57fa0afb5ea0d8835"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/001_rollback.sql",
+      "bytes": 3238,
+      "sha256": "28eaf108ca65b3f53d99c864cb18593ea615d930f660f42cf107e323457af273"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/001_verify.sql",
+      "bytes": 1457,
+      "sha256": "e0c3d2fb93e34f9938c9a204f6a4e1c1243c30b5f3785d042db5cd070669711d"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/002_apply.sql",
+      "bytes": 25107,
+      "sha256": "f7af5afec229051ece39a81839c1ed9d9ce53b8aca7c7be4ba727f3f6775c47f"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/002_rollback.sql",
+      "bytes": 507,
+      "sha256": "18f42871be96abcc772252e0caa065b78e33be65ef0973178ad87b596f60ba19"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/002_smoke_cleanup.sql",
+      "bytes": 5878,
+      "sha256": "cc08b6d4a5fe46912f555953897cd819fb5cea78da9380f01c3514bf80c6d288"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/002_verify.sql",
+      "bytes": 647,
+      "sha256": "d73a48f21719ccb770213a1e5baf7aef2fa8e79f2d0342209eb13b0248a825d8"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/003_apply.sql",
+      "bytes": 19899,
+      "sha256": "e4f18af6a040128056bf25d89c47dedb8eabcd5b0d34d0168cb6ff61d43f6cc0"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/003_rollback.sql",
+      "bytes": 790,
+      "sha256": "8a6c5228ec111a540764313efd856701eb8ea1bcc3f503fddfcb26bce677ed40"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/003_smoke_cleanup.sql",
+      "bytes": 4340,
+      "sha256": "7859eb54de79dbcdf939be8057adb3663c3cd4f845aaabaedd85d3ed741960fb"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/003_verify.sql",
+      "bytes": 1479,
+      "sha256": "5bf2c7fec33878d2b2df4abce4ff3fcd5f6f1a4a98529fb71a0e5ccf86c8ac88"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/004_apply.sql",
+      "bytes": 8675,
+      "sha256": "ad71a8ec82f56f8614edd24995136fe15fb3783dfd1b9e7aa01f89f29325c2a5"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/004_rollback.sql",
+      "bytes": 657,
+      "sha256": "3265021e568075cb5f2686bd08a694a92a7872e259f0e46ad204231f9c29f220"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/004_smoke_cleanup.sql",
+      "bytes": 1393,
+      "sha256": "f54c2b32548007450988957c8332fccd5547e1e9667acbd5227d533ff905415f"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/004_verify.sql",
+      "bytes": 1069,
+      "sha256": "9a4b4363c844fd8f5d5abfde9fb4979436de25c3b50cb13682c7ea3c40c7f493"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/005_apply.sql",
+      "bytes": 2135,
+      "sha256": "478e81ea3d212a25ae77008677007c1ebc3ff5ec51c04ab2e419b6d52143aa4d"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/005_rollback.sql",
+      "bytes": 269,
+      "sha256": "06e359535be1b5191b1cfe3208e0aea323d3ffb1c9eef6e77a4d2c036fc59a73"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/005_verify.sql",
+      "bytes": 751,
+      "sha256": "9aa21a72e4fdac00ae684de9b90306349364589ba8b050eb2641fcb53e6f096c"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/006_apply.sql",
+      "bytes": 958,
+      "sha256": "3ce3b7521445b624585fc0839ed68b9c062bed46c6e1b0310e2fffefda8c8dda"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/006_rollback.sql",
+      "bytes": 242,
+      "sha256": "5fdcc77cfd9028445ad52bd4180257073da3ea92f27a50dbed77659c31222f2a"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/006_verify.sql",
+      "bytes": 586,
+      "sha256": "74152a145381e1db43d68c5f18d2d94b79b92658029e49e4cf8dbcea55f42e51"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/007_apply.sql",
+      "bytes": 462,
+      "sha256": "9c9c07ae08480b61ab447de41a48d767a5fb37b084fef6ea2dc15f82dc8075a5"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/007_rollback.sql",
+      "bytes": 329,
+      "sha256": "7ecbd6b95ac6a5aecff615a22bcb8f596a08dc270c9492add1a4bba2caa0f1c7"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/007_verify.sql",
+      "bytes": 646,
+      "sha256": "e6870ed744f06b8a2d15dbfd3073e1c53e470a81d76ecffe2f8f0386f6689996"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/008_apply.sql",
+      "bytes": 21285,
+      "sha256": "fcf6fc420c10abdaed28bbb0698dd8d186cb9864fe2b20ac8f2101acba3938bc"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/008_rollback.sql",
+      "bytes": 793,
+      "sha256": "fa0132959c565e5f356f51c2c6b2a84d49f02bc1d6b3c3a9c46494b6f82523c3"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/008_smoke.sql",
+      "bytes": 1915,
+      "sha256": "c006a34ed098275900b4357898d2c12e2f8b6cc515bcdfaf622f83518ce07075"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/008_smoke_cleanup.sql",
+      "bytes": 1260,
+      "sha256": "0467211bc0cd239a966f6727c3b4517e242b43bde3cefb04762e83204444e525"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/008_verify.sql",
+      "bytes": 1481,
+      "sha256": "1922b65d970656765c9c9f442a70f7cf7597d9f92c608eaff9bde72083ec215b"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/009_apply.sql",
+      "bytes": 31760,
+      "sha256": "d1dabd79e132dc7cabf51fd63ceef1a5ced2b4b5c67a98de38efe838766f85c4"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/009_rollback.sql",
+      "bytes": 318,
+      "sha256": "6a40a943aff8fcb0d41a54ef7696df9e6eadae846ef8d762da199fac3075aefa"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/009_smoke.sql",
+      "bytes": 1784,
+      "sha256": "3b6a391cc305cc5c448d71080f759645c0af848c3ea1b17b4f762dd9ea4b7336"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/009_smoke_cleanup.sql",
+      "bytes": 650,
+      "sha256": "f2b288559c116103bef22804c2f150eb6977128a9ce585fdad74f6d51135fdb2"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/009_verify.sql",
+      "bytes": 1298,
+      "sha256": "14dc1f86612aedc1a34fd89d39f4919346edc267b8d4a66287bf75f5d645d81f"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/010_apply.sql",
+      "bytes": 3881,
+      "sha256": "807a950e1a908dc8e090f9242049025e48deb9eec0b837fea42586577b888dfe"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/010_rollback.sql",
+      "bytes": 731,
+      "sha256": "52182c96e5f412251f75a3a82a0aece98e74a640028c2758b5a80fef7810e4c2"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/010_verify.sql",
+      "bytes": 1649,
+      "sha256": "a5db7f52aa2aeb5be3d9d49c87146aae04c33c422e23ed76583ba657cdee0ff5"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/011_apply.sql",
+      "bytes": 33748,
+      "sha256": "bf3f6c28a624289cc5671e72b1b77ee88f76d5255164db03fe5014c231e0e67d"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/011_rollback.sql",
+      "bytes": 464,
+      "sha256": "50df5438493f50a8491e33438c854f4bcd28b7341b79f01d762c2ce8a0630508"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/011_smoke.sql",
+      "bytes": 2932,
+      "sha256": "ad8702a7277cba0312a2d8bb761915cde8b244cbb84e4bc92a98f384d9ce944e"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/011_smoke_cleanup.sql",
+      "bytes": 2094,
+      "sha256": "9c2603eebf7f475576bfb57a3a889260568e1dbdbab178ce25cc682e40199023"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/011_verify.sql",
+      "bytes": 1463,
+      "sha256": "496c3bfb3e597a3c1f7c14eb0a0a11460722fd3bec1132747136339ec8fc825b"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/012_apply.sql",
+      "bytes": 3112,
+      "sha256": "c64108e958e3d6f3f687b39b6ce8330abf26963fd795516fb1d5a3ec1c8f7744"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/012_rollback.sql",
+      "bytes": 352,
+      "sha256": "f3a815578ee8dc961b98e3b194a02040b14c300d093996cfd76d793b862710ee"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/012_seed_wms_mes_test_warehouses.sql",
+      "bytes": 10864,
+      "sha256": "920931799300297d62f915a0db46a2dd7308a2618378afb05745eb2e274b8d86"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/012_seed_wms_mes_test_warehouses_cleanup.sql",
+      "bytes": 620,
+      "sha256": "a95dfe23092196971ddcad4b5c92448ef5a4b9e61d5e12557200b0bf603b0589"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/012_seed_wms_mes_test_warehouses_verify.sql",
+      "bytes": 1002,
+      "sha256": "5d2a6c972bb28d6f0f324f10c425664df5cfa8ddfb32a335e5e7a31197d952f1"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/012_verify.sql",
+      "bytes": 1540,
+      "sha256": "a521d32c1cad6b3c71a924076dfea04c2fc4b1e6d12371e998822ef4159cc874"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/013_apply.sql",
+      "bytes": 7265,
+      "sha256": "5d16e1f601ce6a0863fbed2600fc2fae4e3ca945243f256fad2c7978f9fc3a18"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/013_rollback.sql",
+      "bytes": 740,
+      "sha256": "653d958573332bb69601356ef326fe9f83e2b760c464380458bb20a9feb10c16"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/013_smoke.sql",
+      "bytes": 2064,
+      "sha256": "c2539c9c9188cc0d0ffc0e444fabe4189bc984f2d45e057ea92c379f4b4988fc"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/013_smoke_cleanup.sql",
+      "bytes": 287,
+      "sha256": "6a417f5d33df5f86d1cda58c7cc8aeb5cf2a8976bd5d864562cc5753e578c878"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/013_verify.sql",
+      "bytes": 986,
+      "sha256": "4da4ef70508bb9f0409a207a32887b92d54e9b3354dcea83c74fba612db71cc1"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/014_apply.sql",
+      "bytes": 18488,
+      "sha256": "ddf7195d11fa0346812df44f349d8f4b1835a3e6c11a4c67ffaae66bb84cac56"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/014_rollback.sql",
+      "bytes": 488,
+      "sha256": "1cc69edf7113e32697196911a3031fe9de134e1d8e0b7dabba7f684ce2386a44"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/014_smoke.sql",
+      "bytes": 1088,
+      "sha256": "80a11c5df72e26cb80729be1fb6f0d523eb48e62ddba327a684344784c9b36a9"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/014_smoke_cleanup.sql",
+      "bytes": 1029,
+      "sha256": "0c4ad004c9637ae1301450b2911ef1dda10227e0a4f3fe917df8bc5076dd3afd"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/014_verify.sql",
+      "bytes": 1141,
+      "sha256": "e10210402c3e72d17811a3818e0677c94b8ee7d29c709d587ae10e9b87ca4617"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/015_apply.sql",
+      "bytes": 15301,
+      "sha256": "451d8861fe67f6d0a9ba4be2c8a94cedc48abeb22c6c3d8880ecb4f04478a157"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/015_rollback.sql",
+      "bytes": 518,
+      "sha256": "10d2c1ef4e6350890b7e56013f6c05e881bcb57393679ed1b9d2a2ba1ec9e328"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/015_smoke.sql",
+      "bytes": 2406,
+      "sha256": "beb95664c0d9bdd4d2f887142d47aea7f9baa7f3842d9fd59265c617d675c41c"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/015_smoke_cleanup.sql",
+      "bytes": 1312,
+      "sha256": "36e1c802de0ff281b5fd098250ebf750d54f7fd1fbe1012d6e8223c8c639fd0e"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/015_verify.sql",
+      "bytes": 946,
+      "sha256": "0905b930ddf4f079096aa54d3a8d8f2436115f3e015b143531d05cd944d4bb62"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/016_apply.sql",
+      "bytes": 23148,
+      "sha256": "4152f85fdca9f574b7322458e87d80f6702ea6260c520969ca2e9e3ea9a72514"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/016_rollback.sql",
+      "bytes": 516,
+      "sha256": "041dfb1b794c66b7e8f06930ffa9c57d416e9d54aac67d58975e0051baffec3d"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/016_smoke.sql",
+      "bytes": 3170,
+      "sha256": "73718f35f9e2feea374d74c62a31089d2bbcd26c35d69936d4dd68d0b53ad5e7"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/016_smoke_cleanup.sql",
+      "bytes": 1702,
+      "sha256": "4692e5c81f2945d1fa3881a6294f31a7ea1d53f73ef376f608df9093ba72e822"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/016_verify.sql",
+      "bytes": 832,
+      "sha256": "0ec185764b5d144aa40fc873aa5b3fb408bc56995650a937fd037fea1db01c34"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/017_apply.sql",
+      "bytes": 37519,
+      "sha256": "6d907af898c369b93af843dad84d5911ae4fc6f5c91cf93f83d3da089b28b323"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/017_rollback.sql",
+      "bytes": 411,
+      "sha256": "688c3a77bb40afb092086b80c74f26bf8f5c6863fb3c8c635aa129e8ac2e4ee0"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/017_smoke.sql",
+      "bytes": 6023,
+      "sha256": "397da8a32f25d37f39764c49759404fba7cbe1d018ce0c564cc7ad45bd588c4b"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/017_smoke_cleanup.sql",
+      "bytes": 2074,
+      "sha256": "efb41d0b746cd12dc846ad0678574c257c5eaf34627b1ffb93b31c0cef49a3b4"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/017_verify.sql",
+      "bytes": 877,
+      "sha256": "f625986fb3931f6061f4d4ff8cd6cbe2e3cf0b94064463741c36f81eabfa61bb"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/018_apply.sql",
+      "bytes": 36474,
+      "sha256": "dc463981cbcf871906bcd1ba41ff197f2f3bd80d72aca01e8897727afd26ba3b"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/018_rollback.sql",
+      "bytes": 388,
+      "sha256": "7b9fdaa6c05eea1838e5810a6c5f1576a60c10a3c75f5fec9dfdf12e5fad0c86"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/018_smoke.sql",
+      "bytes": 6048,
+      "sha256": "22323cc3ca57271ca20f068d06af2aaa21319a93f5ab824589763547ac9997d3"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/018_smoke_cleanup.sql",
+      "bytes": 2928,
+      "sha256": "577d6ae0ee97a8cb7a2e83c46c1f855e240b256448e6d527459b3b0356ed71c2"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/018_verify.sql",
+      "bytes": 1583,
+      "sha256": "08bdaf1cb319f351699425419af33c0c17899cf6c4a62a975ac6d262ce96a032"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/019_apply.sql",
+      "bytes": 16569,
+      "sha256": "18ba20aeb564589ec2dc4be3cdd546f4cb96781b9530f80127b9731c0010e25a"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/019_rollback.sql",
+      "bytes": 293,
+      "sha256": "a1c9727f934ff5037c5f70b7f5fd5b4674fc9f9fc6575890392f17e31a813b73"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/019_verify.sql",
+      "bytes": 843,
+      "sha256": "09ccf4b6a8bdbec661b948a2696447448fcd17fee28840598f67fe6fcce59e64"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/020_apply.sql",
+      "bytes": 4887,
+      "sha256": "76440570a9ab25393caaac73069c4e944ca091f80d3eaee818c7249e8e93542e"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/020_rollback.sql",
+      "bytes": 526,
+      "sha256": "07362fe375bb988a1bac6fe450fb9ed7da723143346cdea61448a25a33b3ddf2"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/020_verify.sql",
+      "bytes": 957,
+      "sha256": "b56ba1d594f8977c0dc6765fc79b67d89ad8748439a749952da8745e2e53f48c"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/021_apply.sql",
+      "bytes": 5389,
+      "sha256": "61cb96fc1e06c0915eac9a0cecc001a9ed18d95169c43390a5a219f7b4e9ccb3"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/021_rollback.sql",
+      "bytes": 574,
+      "sha256": "e37dc9e881b971c85165447c543e11ae90bc4bf7d2853aab3776146e0ddb5139"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/021_verify.sql",
+      "bytes": 1141,
+      "sha256": "3e577fa64b61a85d23727ad66d397c3b3e5fcd503da2b4fc290aad49f7bb1bb4"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/022_apply.sql",
+      "bytes": 3563,
+      "sha256": "5ddf16f88c77b7d71c8e3d5137bd3829cb2149f09c80a865fa539ef43a4d4751"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/022_grant_native_views_system.sql",
+      "bytes": 262,
+      "sha256": "2656f3d73f45350be2d1ee2cda8bebc62c52124c56807725e0e48107a131f6d2"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/022_rollback.sql",
+      "bytes": 414,
+      "sha256": "ceb1d65a8f7b518d6649fa3a2611ab95e8f65c710f00639a74e65e35709c8bae"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/022_verify.sql",
+      "bytes": 789,
+      "sha256": "b3b9322a751611e59d84b1bf2729363b2bad00cf6e93dab9ae9ffeab6cc56ca6"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/023_apply.sql",
+      "bytes": 6313,
+      "sha256": "ad2028d949169d331d3c949bd14c5e9589666ae44c890ed1db936ab297dc57ed"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/023_rollback.sql",
+      "bytes": 534,
+      "sha256": "c32d8fd4b49e9d636b4be3db1675c245e85c237c77127dca2f2ed8e6b103b192"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/023_verify.sql",
+      "bytes": 1566,
+      "sha256": "6a8f834f0d9760df53e4a7b6fcd92975176004c1a6cde01d63fc4dcc34e358d5"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/024_apply.sql",
+      "bytes": 8623,
+      "sha256": "1d7143523b34f3f8a6c5fce63ea33547cb47d864659beac4e60fe84d5f02a32a"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/024_rollback.sql",
+      "bytes": 673,
+      "sha256": "43d8ca2a29a320455a0ee4802dbc4593d23a170d4fbd988efc9d75c933c785d9"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/024_verify.sql",
+      "bytes": 1079,
+      "sha256": "92045f40779106564aa878785eb46954e4470b32179d90e1b030bbb05445a58a"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/025_apply.sql",
+      "bytes": 12554,
+      "sha256": "cd259572d1cbb30efc29a19c847bb9a3109a0fa70f469122dbbb5d413858fce6"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/025_rollback.sql",
+      "bytes": 465,
+      "sha256": "beb19b72f9aa5130c261997d91c258b554493fe72a4dde51734cb43ef7cba646"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/025_verify.sql",
+      "bytes": 489,
+      "sha256": "05e292c2e0f884910938e155cd3b1a096c918c7424f435820f29e2138a191aec"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/026_apply.sql",
+      "bytes": 4733,
+      "sha256": "7c14b4d6bb189a38cb57fae9cfa9ea18e546013482c534d6174114e92aa5e7f2"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/026_rollback.sql",
+      "bytes": 375,
+      "sha256": "0fb8b0b5ecf969f139106dea2f4f52dc22da703ac92e7237e5e8a73f9ae2c27b"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/026_verify.sql",
+      "bytes": 670,
+      "sha256": "9562af0b9aa583a69f12e1fa4be5b359815b6d7de5ab3cf0ccd88a1c66802219"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/027_apply.sql",
+      "bytes": 2493,
+      "sha256": "1c9eac982915003573dac47aa4100239bde199ff8b2204b29209c6d8eecfc2b4"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/027_rollback.sql",
+      "bytes": 313,
+      "sha256": "6231bf0249525a6ebc24b3dd125ae28d07d6e199f7ecd6e5abcaf31d90d39ac0"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/027_verify.sql",
+      "bytes": 745,
+      "sha256": "78eed42f704c4f06c2000d06c63f0e0f6f5f3866e1187b0aefefd8e3ed6858d1"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/028_apply.sql",
+      "bytes": 3077,
+      "sha256": "28e37a1af22900e2c6b7d912724a653d690281ae3f407866df6650c17f38d8dc"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/028_rollback.sql",
+      "bytes": 286,
+      "sha256": "3448381df88ebc7b1df0dc68b4ebcb98e517ad50d6a5d85c90781cfa5664d254"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/028_verify.sql",
+      "bytes": 662,
+      "sha256": "de61ac2b7fed92104fcdfc265e52b107d02005570af6800e95d754994def792b"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/029_apply.sql",
+      "bytes": 7224,
+      "sha256": "a6265c3705be933c906f4d8e074e65ec73f4c066fb522a767e1802d28a6231ea"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/029_rollback.sql",
+      "bytes": 354,
+      "sha256": "30bb9d2d442588acf71923b815fd4ea09e8c57bbdd9017687dd1249fb4c22e6b"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/029_verify.sql",
+      "bytes": 1735,
+      "sha256": "a609fb42519c32583431a68fba9a3295e8ed1a8534d24bfdbbdc83b727b2b294"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/030_apply.sql",
+      "bytes": 2794,
+      "sha256": "3dd1da7b55afc40c9380e3de1f86de7e0caeeb4c3d752fa8b8a815c4585850aa"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/030_rollback.sql",
+      "bytes": 339,
+      "sha256": "8cf7e634760b2394165143b8ce39bd04c7b02f958c88153828b26101f6159a77"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/030_verify.sql",
+      "bytes": 1021,
+      "sha256": "27e0e252e2781543e41f92d67074ade2b1f83162ad8046f78f6b98966d91734a"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/031_apply.sql",
+      "bytes": 1753,
+      "sha256": "db97d3d74790427c905fa8a5803b41372d06cc305ad4cb92139ad081ccfa1c0a"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/031_rollback.sql",
+      "bytes": 295,
+      "sha256": "47727dd3d509371e234f025bce8908d025ce91479ba325d58db3cabe7e081ec5"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/031_verify.sql",
+      "bytes": 737,
+      "sha256": "a91d6b2a5a2629121b127e9a3bb36748f7a0fe060ba3d95ccea85f2d8b526c15"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/032_apply.sql",
+      "bytes": 1704,
+      "sha256": "46eca0cb578f9923b0da8385c95d811af0c325745750439e142d8a171470c593"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/032_rollback.sql",
+      "bytes": 309,
+      "sha256": "2dae8b8a918641e958bcd661d3cbf9657ef2b820f57f6a293f2557c3b4220eed"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/032_verify.sql",
+      "bytes": 552,
+      "sha256": "1249dc39a2458a1270075fb13aef2134c9e4d7cb95a6807dca3cd466632863f4"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/033_apply.sql",
+      "bytes": 3355,
+      "sha256": "441e08f06e35b19af44bf4ef14612ba29752e8cc68fded3d1af83920fd0d079c"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/033_rollback.sql",
+      "bytes": 297,
+      "sha256": "d38f3b360e756e4911a7592c19eb538862cba9c3f4584331397d7856160657a1"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/033_verify.sql",
+      "bytes": 731,
+      "sha256": "34477cdd6a42a10b8cd9bf86baa52942d09b415872ca367ac1d92d02bf230fea"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/034_apply.sql",
+      "bytes": 15554,
+      "sha256": "c4f0c14195f801ab53e2dc28233511483eb848e38ecd182a78d61253d119b5b1"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/034_rollback.sql",
+      "bytes": 637,
+      "sha256": "d6a0503e9a03dcef1b965ec29218e409aaf7c7d39c7494a6b3ae82dea8bea982"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/034_verify.sql",
+      "bytes": 1761,
+      "sha256": "3eea3e0e3cd8cf5e1d3aed4a15e2e769e47a0972eb7ca0a9ae70db017948b67a"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/035_apply.sql",
+      "bytes": 19442,
+      "sha256": "f34902a2cd4ea6aafcefe4423553f722cd24846e58685ca0b4e69ab88690fbe3"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/035_rollback.sql",
+      "bytes": 296,
+      "sha256": "99d00dcb64ce11917825865908dfdeea5fe34ec00e0d656af68bbcdfa1c89e7f"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/035_verify.sql",
+      "bytes": 1577,
+      "sha256": "381a27dc3d661322a4dce30e495263b02f4e98cc2d5f02d40e7659ad48155d26"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/036_apply.sql",
+      "bytes": 3158,
+      "sha256": "be062747db5764a59361ede535b4049c8aa1261ae7ad19ec5e83efc5b1aee4c9"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/036_rollback.sql",
+      "bytes": 303,
+      "sha256": "cd6c8a7e0cc28e90b09346a1a11135c60d89235f8e040061329e0599543bde8a"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/036_verify.sql",
+      "bytes": 1003,
+      "sha256": "7abc5fa25bd306fe05c24493d593c192fcf8b38015691afc9805f70714c13ce8"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/037_apply.sql",
+      "bytes": 6155,
+      "sha256": "e55fba3f9c79817e31edb9406efe4e73f535df668ffd7ebffb5578b161cb55e1"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/037_rollback.sql",
+      "bytes": 332,
+      "sha256": "53d0d923233cdaadaa433dd5e51e385e08c3117a76e946d375a7c34ae42c7e26"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/037_verify.sql",
+      "bytes": 1095,
+      "sha256": "46939651ba77577e0203046be4f7f26af07bb06708409478dc35a2d8bbff87e6"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/038_apply.sql",
+      "bytes": 12557,
+      "sha256": "304c253d5ec96fcddd26441e8b5a49b77de59c68dc3fdf70f0de9f3620437e25"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/038_rollback.sql",
+      "bytes": 442,
+      "sha256": "bb5f2dfe1cf02f46b05dcf4442fd6e2b57ea07b58d57559a0f6d3af3dc77bf4c"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/038_verify.sql",
+      "bytes": 1743,
+      "sha256": "def3f5bdf64dfec1f13d725c9e54ae265fdd80ad9faf42c87a93c34e02894430"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/039_apply.sql",
+      "bytes": 5118,
+      "sha256": "6f1ca6c15329bd53f94bfda8a276a6426bd46e2c4601d62632f1132015fa76d7"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/039_rollback.sql",
+      "bytes": 450,
+      "sha256": "441d56dbe7428d57cb2e9739db08728935db0083d3ca2ee36a8c72271a369dc7"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/039_verify.sql",
+      "bytes": 761,
+      "sha256": "ba5af803ecd98de7f76da0eb0a5a020bbc627d50ddc4510163d439c4e2e243b5"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/040_apply.sql",
+      "bytes": 4265,
+      "sha256": "8acf83a4c8031770fa66651bfa39e92d8a0cbc4b9a9deadd4058af37a3d385d0"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/040_rollback.sql",
+      "bytes": 665,
+      "sha256": "c317077e6dcef58c943690d804737fe9f13b02e8374d9ade9af0415481641709"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/040_verify.sql",
+      "bytes": 1485,
+      "sha256": "a74dc2391c6e55f644a81761dbd330623e156c958bbb5e739bacfdc9fe88b08c"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/041_apply.sql",
+      "bytes": 19577,
+      "sha256": "4141698a6b25fa9dc59a65d10ce38bcf85fdd220e4635f7b1e850fc6a4ad29c1"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/041_rollback.sql",
+      "bytes": 442,
+      "sha256": "a7ead2f15eea2b386fc2ba1dea9385a8b4ba7a243630149dea2870d9ab51804d"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/041_smoke.sql",
+      "bytes": 7207,
+      "sha256": "2a15047a61e622d111dabd2f881ddd8a901720eabafc9e51bc2af990cf15fc7e"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/041_smoke_cleanup.sql",
+      "bytes": 1938,
+      "sha256": "edd75e163ddf265d98f5687cfac05919a2205bbbffc5fae96f44902eeb77f52c"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/041_verify.sql",
+      "bytes": 3763,
+      "sha256": "bb49ffe791de77b05dfaae977b9205faa0286cbf6fd26d3e37120ef6c0b034e5"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/042_apply.sql",
+      "bytes": 9118,
+      "sha256": "e55e83d89c0004fab52c048210b11243d6e31d7b81295ad23198f83677accf5c"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/042_rollback.sql",
+      "bytes": 596,
+      "sha256": "0a058b872ca8773201bc076227cc866bc41a5d0bf429637423942cfcbac139bd"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/042_smoke.sql",
+      "bytes": 6141,
+      "sha256": "7a7f7c491363cba84ccd5ded8302b3fc174a60f4c14655ade459adf9bf0f359e"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/042_smoke_cleanup.sql",
+      "bytes": 1389,
+      "sha256": "3f8081ec38f5fef8c71400ccf084b0b325c555718b6b3e5cb6034aa23bb6d0bb"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/042_verify.sql",
+      "bytes": 1420,
+      "sha256": "31a09320afd65e7d9f874425e83048b77d600015a9c268567df81275e1057712"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/043_apply.sql",
+      "bytes": 3331,
+      "sha256": "bfbc0beb5738db3c94650557420a6717141850ea1a021ac6c7fcb05728af231c"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/043_rollback.sql",
+      "bytes": 731,
+      "sha256": "4006899b012df1e1bb3d50a4ff388ca95738c22cea2ab67f09a506d41d922dd1"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/043_smoke.sql",
+      "bytes": 2300,
+      "sha256": "4806f62f45a77a36f2c4d8912c7f6d127a3a88522778a66c0b655c10cfc5cdc2"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/043_smoke_cleanup.sql",
+      "bytes": 632,
+      "sha256": "70ff08a74835693340b16707523e2bbc91a35cf9cb7f3a2cbd572480cc26723d"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/043_verify.sql",
+      "bytes": 1739,
+      "sha256": "502a71c47352e5435293d822ca1e40c7b263fa3f5daeae308f93d09b6fe7c826"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/044_apply.sql",
+      "bytes": 5981,
+      "sha256": "a4cd44e239b36794ed4db24e5eea039c17cf7d2d236e6e4522782ae1eb5f40b0"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/044_rollback.sql",
+      "bytes": 460,
+      "sha256": "2e3979867b7835d3a1182d3215416ad9e4857a71a810f14d2b902bb50b3a4859"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/044_smoke.sql",
+      "bytes": 1061,
+      "sha256": "e1d93d37cb8dc3ea2cf49d75a1d2625123d29933c98d33ca737717b7032e343e"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/044_smoke_cleanup.sql",
+      "bytes": 286,
+      "sha256": "32fccb5a1013caf5ccf8dea943bc7f601a8aade8049e9db4aedb7e65e38a1a42"
+    },
+    {
+      "path": "db/migrations/2026-05-17_feed_factory_traceability/044_verify.sql",
+      "bytes": 1468,
+      "sha256": "7cb90654ecec2fe7bf22551502f8a4195b3b16741c6b662ceaeab666ddead1e9"
+    },
+    {
+      "path": "db/migrations/2026-05-21_transport_dispatch_phase1/042_apply.sql",
+      "bytes": 3510,
+      "sha256": "e5d0ba692549608b5abec96fff48c826a33361cfd72e57f88beca94526df507f"
+    },
+    {
+      "path": "db/migrations/2026-05-21_transport_dispatch_phase1/042_rollback.sql",
+      "bytes": 448,
+      "sha256": "f052a8c8007ad1ea01625a545be40f7d233002124222c70cbf8acfa3a59b17ea"
+    },
+    {
+      "path": "db/migrations/2026-05-21_transport_dispatch_phase1/042_verify.sql",
+      "bytes": 630,
+      "sha256": "ad8e9a334ed412cdccad41c02347b3bc010571e9eef9672f307d7700b4d3eb87"
+    },
+    {
+      "path": "db/migrations/2026-05-22_transport_dispatch_improvements/043_apply.sql",
+      "bytes": 1930,
+      "sha256": "2bb1f4e9e0582af7c54892d7ea30456d6695bfa15a9322f435bbd88d8e3d484b"
+    },
+    {
+      "path": "db/migrations/2026-05-22_transport_dispatch_improvements/043_rollback.sql",
+      "bytes": 1244,
+      "sha256": "7ba257c66c44e79a3c12f103f39cc9fda05ca1c03b47cdd07c36b1c45116bce6"
+    },
+    {
+      "path": "db/migrations/2026-05-22_transport_dispatch_improvements/043_verify.sql",
+      "bytes": 372,
+      "sha256": "6686a00a3cc1436ace0730088b66f3f567c3ed0234c992b92a447b8bf2e1be35"
+    },
+    {
+      "path": "db/migrations/2026-05-23_dobrotseny_seed/046_apply.sql",
+      "bytes": 10735,
+      "sha256": "51535d519e597830cc8370c1db03ed752974898b4785427efc55e0dddc192ac4"
+    },
+    {
+      "path": "db/migrations/2026-05-23_dobrotseny_seed/046_rollback.sql",
+      "bytes": 491,
+      "sha256": "4820f3b17ac17036baefaa98585e6dab2962119d74d44c542e2612bf62fb16fb"
+    },
+    {
+      "path": "db/migrations/2026-05-23_dobrotseny_seed/047_apply.sql",
+      "bytes": 30820,
+      "sha256": "8a2260974ac83a43a0dfc2b778c26183ea726df53017e72ffe36a554e46d9fc4"
+    },
+    {
+      "path": "db/migrations/2026-05-23_dobrotseny_seed/047_rollback.sql",
+      "bytes": 570,
+      "sha256": "2b990346650310e3220ef7363562d9cbbe6ced1e726efa22a2dafe4afa952e5c"
+    },
+    {
+      "path": "db/migrations/2026-05-23_transport_sprint1/048_apply.sql",
+      "bytes": 2886,
+      "sha256": "c1101db5d5617fd7efd544d1f108e799d070283c0d0387aa0ef738b30be354e5"
+    },
+    {
+      "path": "db/migrations/2026-05-23_transport_sprint1/048_rollback.sql",
+      "bytes": 1609,
+      "sha256": "c4a2232928621d4e022b3f1634739f98f666333be0636e457100c40ab96d9563"
+    },
+    {
+      "path": "db/migrations/2026-05-26_transport_sprint4/049_apply.sql",
+      "bytes": 1222,
+      "sha256": "c01b30050772753db6106431527b8c130e84337744589e9221b34b897d85e1e9"
+    },
+    {
+      "path": "db/migrations/2026-05-26_transport_sprint4/049_rollback.sql",
+      "bytes": 360,
+      "sha256": "83a9d9649c10ee7ec81ad1006e49d0535ce137480e61469a3569957980b7ea81"
+    },
+    {
+      "path": "db/migrations/2026-05-26_transport_sprint6/050_apply.sql",
+      "bytes": 485,
+      "sha256": "d6eb4f8d78dc566c8b0dd17cb4616ae5eb587b525bd390b7732ee691cf8965f7"
+    },
+    {
+      "path": "db/migrations/2026-05-26_transport_sprint6/050_rollback.sql",
+      "bytes": 362,
+      "sha256": "be0ceb26b8a069840b231d00200d76daa39da16fe80d5e5eeb8c60ecd9dd6961"
+    },
+    {
+      "path": "db/migrations/2026-05-26_transport_sprint7/051_apply.sql",
+      "bytes": 7118,
+      "sha256": "858a657d71fe6dad9effbfbbb64c73d32c9558f1d1ecc9f8075b7be660c8cc34"
+    },
+    {
+      "path": "db/migrations/2026-05-26_transport_sprint7/051_rollback.sql",
+      "bytes": 1433,
+      "sha256": "c42aa324d2fe0c660ca87ed1d5d3ad82e40f3e9b317d1761d17cb1a89a2a4771"
+    },
+    {
+      "path": "db/migrations/2026-05-26_transport_sprint8/052_apply.sql",
+      "bytes": 1977,
+      "sha256": "09c54095c4f01c72fc0af8fc1c9b363423e610ad79297ab45c07d1eade1b8c9b"
+    },
+    {
+      "path": "db/migrations/2026-05-26_transport_sprint8/052_rollback.sql",
+      "bytes": 647,
+      "sha256": "243d5d4e848d950c1249b53395892b21c90099d3db195ad220da8181055b232c"
+    },
+    {
+      "path": "db/migrations/2026-05-27_transport_sprint11/053_apply.sql",
+      "bytes": 4488,
+      "sha256": "2c95296fbe4093de754a419d74373488afa672848ee02299a0787e457cc57e8c"
+    },
+    {
+      "path": "db/migrations/2026-05-27_transport_sprint11/053_rollback.sql",
+      "bytes": 330,
+      "sha256": "efc6117cb596b19ea617ee3e02331fc6b7699773ef630190ab2fdd7d5925f138"
+    },
+    {
+      "path": "db/migrations/2026-05-27_transport_sprint15/054_apply.sql",
+      "bytes": 1677,
+      "sha256": "593d878d0b73a1063629e059414613927cbfaeba3a47e47206567d3ea3d0873a"
+    },
+    {
+      "path": "db/migrations/2026-05-27_transport_sprint15/054_rollback.sql",
+      "bytes": 542,
+      "sha256": "e8b09bd7ef99088b504fa19f00bf56d72455a5172fe49e3fd8c93e848d38c894"
+    },
+    {
+      "path": "db/migrations/2026-05-29_fleet_crud/055_apply.sql",
+      "bytes": 2543,
+      "sha256": "30871cd16763268142721099d641c875556e0d5e3864366f8dcaaada112a8eea"
+    },
+    {
+      "path": "db/migrations/2026-05-29_fleet_crud/055_fix.sql",
+      "bytes": 2628,
+      "sha256": "eae633b8105cacbf7f63747cc662fd6d58f2b3cdcfcdb4ebdb4d642cd7f6c3a2"
+    },
+    {
+      "path": "db/migrations/2026-05-29_fleet_crud/055_rollback.sql",
+      "bytes": 305,
+      "sha256": "52c26c90e9c92d9ef6b0e9159113285cf70361c1e86d64ddb2cf0e717ba51083"
+    },
+    {
+      "path": "db/migrations/2026-05-29_fleet_crud/056_apply.sql",
+      "bytes": 2157,
+      "sha256": "febfdd2499fcddf922eedc44298271e8b0f516589fffb4708c3819929668ce1b"
+    },
+    {
+      "path": "db/migrations/2026-05-29_fleet_crud/056_rollback.sql",
+      "bytes": 247,
+      "sha256": "695c01582d172725f36b8932fe857a716f9b85e9e342a732eb9fb59fceb9ec5f"
+    },
+    {
+      "path": "db/migrations/2026-05-29_geofencing/062_apply.sql",
+      "bytes": 380,
+      "sha256": "482948b94d2bbb93bc016b595a087ca876cc11a2ca6088904b8804f46259cefb"
+    },
+    {
+      "path": "db/migrations/2026-05-29_gps/060_apply.sql",
+      "bytes": 1044,
+      "sha256": "6300e5f29ac32529c1342e216a43aa1f9d6c16562c3b14ddc6c1535af4f1b77d"
+    },
+    {
+      "path": "db/migrations/2026-05-29_notifications/058_apply.sql",
+      "bytes": 1220,
+      "sha256": "b3f82a916153ee26aa608341543b58e39cdebbb83e77a272539cf1b36210b925"
+    },
+    {
+      "path": "db/migrations/2026-05-29_tms2_planner_template_fixture/055_apply.sql",
+      "bytes": 2140,
+      "sha256": "fb2f6e06cd70761a234e211f1efbfa9c0ef6de4c9c74b32c57473c4e2dbc1512"
+    },
+    {
+      "path": "db/migrations/2026-05-29_tms2_planner_template_fixture/055_rollback.sql",
+      "bytes": 219,
+      "sha256": "4b72e5f5b33532bf93fd26d03f13124a5a489e8b02843d61fd73739d4a49f499"
+    },
+    {
+      "path": "db/migrations/2026-06-01_tms2_test_geocode/063_apply.sql",
+      "bytes": 15862,
+      "sha256": "6e7f855b4d3e8dfa141ef1a2bd9b2d76ebf29590d9214c58a40f94ebd7dbfb73"
+    },
+    {
+      "path": "db/migrations/2026-06-01_tms2_test_geocode/063_rollback.sql",
+      "bytes": 581,
+      "sha256": "e5b03c5302df194c7027901486a14903810198d2c2880454fac4741cceb8bc88"
+    },
+    {
+      "path": "db/migrations/2026-06-01_tms2_test_geocode/063_verify.sql",
+      "bytes": 750,
+      "sha256": "51118aa1d56153d142654a2415a78b42d9533e316819913b8b1d529e358007ff"
+    },
+    {
+      "path": "db/compatibility_fixes/2026-05-11/001_client_tserver_compat.sql",
+      "bytes": 21378,
+      "sha256": "0a9c08d7994ca613100298285f524f27976ca91140102a656e238dfe5deccc4f"
+    },
+    {
+      "path": "db/compatibility_fixes/2026-10-07_ns00_recompile/apply.sql",
+      "bytes": 3583,
+      "sha256": "f7796e3fd9ef00cf2edfd12817edfde6583c0861d75396ca881f3240735c25b6"
+    },
+    {
+      "path": "db/compatibility_fixes/2026-10-07_ns00_recompile/rollback.sql",
+      "bytes": 270,
+      "sha256": "94c92014c507e1bae3d404c04932a83d8145f49c1aa7a05df56e6e36e6085931"
+    },
+    {
+      "path": "db/compatibility_fixes/2026-10-07_ns00_recompile/verify.sql",
+      "bytes": 281,
+      "sha256": "418b1dd3967b9080e3bc4a2051a4b3c906b5e3876c12f07f3988d59c3cb73b54"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/01_tables.sql",
+      "bytes": 89908,
+      "sha256": "572c457b6bc367b05a3f7b416bd2cb138829bc50cbbb0d9ce0ee61e363b41059"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/02_sequences.sql",
+      "bytes": 3494,
+      "sha256": "300d0a8440c3be6685c0741429dfd9950e3fa37d4eeb40eb8a785eaf316b8280"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/03_functions.sql",
+      "bytes": 218822,
+      "sha256": "ba40aa5bb9229132fc779a75ce6564690360befd3832af81d2dbf4e895638121"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/04_procedures.sql",
+      "bytes": 11526,
+      "sha256": "f6a518843ccc13b06df539a72ed4e7c05b299adec22d66f4efefa7cbdfb0e0b7"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/05_gap_patch.sql",
+      "bytes": 57438,
+      "sha256": "9013a49c5c0033473c8454cb7b460f7ff16c261bcd20be1867905df7af1b4971"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/06_transport_task_missing_impl.sql",
+      "bytes": 12374,
+      "sha256": "f9d6852a158e60a69f0d2e1c9a2e5690fd3969662e79ded42af5ffd33d55ffb8"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/07_legacy_completion.sql",
+      "bytes": 10703,
+      "sha256": "88303fbaa7df168a150eaa716fbc65b96bd753d1189d4970bbbc83a2ca8a44ed"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/08_remains_compat.sql",
+      "bytes": 13305,
+      "sha256": "8c3b92b575b311f7e0ca0a71f4ae1e04157a72b045c36c0e9198a52baed13be1"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/09_schema_contract.sql",
+      "bytes": 6706,
+      "sha256": "00eb358f6e88dd6e93b848e149d04c5f74decab7ad83c6f0c4c5ee622a9ffafc"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/10_articuls_contract.sql",
+      "bytes": 4535,
+      "sha256": "0deb64c7089dbe6a182cda26d42c15aede94292dc41687ac4d89f4f2eb0dca3c"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/11_compl_contract.sql",
+      "bytes": 18571,
+      "sha256": "066eea06ac3581823e2582dbf5cd86605aa99d0357d7ba1057a72f346ca6a9bc"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/12_orders_contract.sql",
+      "bytes": 7607,
+      "sha256": "dc8d7bc3638ac23f54eb2083dff483651a5438f5d8a3ccd33a41c54eebaebc0b"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/13_cross_docking_contract.sql",
+      "bytes": 1769,
+      "sha256": "2762a2a89405814cbdceadf5318bcf15fbcbd10a2ea337e84dca396b0b35a612"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/14_transport_seed_contract.sql",
+      "bytes": 469,
+      "sha256": "0fb73dc8be6eb8ec22157d671a616a535e0ad0d47df33e1e21ada4c752678286"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/20_seed_master_data.sql",
+      "bytes": 6559,
+      "sha256": "0b75b923c1c384915c73167eeb0e64f8558a96f1a0cd0fc8c11212db76091c18"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/22_seed_runtime_tail.sql",
+      "bytes": 3959,
+      "sha256": "e76a6d5052ab26d05be3dcfc54b37ff65fc03d314e7021b7e0196c5631ff9cf4"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/create_schema.sql",
+      "bytes": 2168,
+      "sha256": "8231d433242a1fd4cce8f45ca9c63c72185d1449bbe3379768a97b045d4fa9f1"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/legacy_extracts/07_remains_package.sql",
+      "bytes": 1717,
+      "sha256": "3669094bd149a1b2f19b9d43f63f2a29c06a400f58cb2988344aac72b8466d39"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/legacy_extracts/07_remains_package_body.sql",
+      "bytes": 41952,
+      "sha256": "c35a7b179aae61976428f4f1663d6d068c94fb6d2a0db11fb300915c1ad69a37"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/master_seed/01_rights.sql",
+      "bytes": 8039,
+      "sha256": "5394367ff951a913e4234fefd629f88fcf68f72360e7f8fd0c44fb98b119f77c"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/master_seed/02_users.sql",
+      "bytes": 423332,
+      "sha256": "b9380e08ed5a61703695de22eae4eab8eea70766a39174f577050ed9b662f051"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/master_seed/03_addresses.sql",
+      "bytes": 105493,
+      "sha256": "b598cf8d2c8cd156053952357af8f39e47f4e0eb2c3ef4a01d97ff3b4d471b5c"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/master_seed/04_articuls.sql",
+      "bytes": 2855424,
+      "sha256": "58d4a99362623e2ec9b81aea2369d455c38cd9624ae68bc016cafedf89eb4046"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/master_seed/05_articul_mods.sql",
+      "bytes": 113334,
+      "sha256": "027e3ed0103fd42e5cabcb5312862420acc378125d303cae24df494ea0227ba0"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/master_seed/06_cells.sql",
+      "bytes": 12334922,
+      "sha256": "56ae2fd181a9562bae775caefb80458de5e8b8de24073ede73b80e50573f26d9"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/master_seed/07_transport_types.sql",
+      "bytes": 1254,
+      "sha256": "11b7889ab630d9356915899dde3e45cbd3492fd35d298154fdb36b0e89455239"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/master_seed/08_bill_company.sql",
+      "bytes": 3626,
+      "sha256": "8771282dd06c6d684da8ab8269c9e657e0e2aae5b8178ba714e456496b5add35"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/master_seed/09_docks.sql",
+      "bytes": 1916,
+      "sha256": "ac05a74114913733c61e228ea28f62a12efd1e0681c7187309994835cf693792"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/master_seed/10_tt_zones.sql",
+      "bytes": 88739,
+      "sha256": "9c746600333978bebcb87f9fc72375a9f3f073b9c687d0325b73bd44ce89db44"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/master_seed/11_vehicles.sql",
+      "bytes": 280084,
+      "sha256": "85da1bfeabb922fad37d7b3886671e4d3f7b0535112e1b65e4c93c8c737a4d0c"
+    },
+    {
+      "path": "db/windowsapplication2_xp12_oracle/master_seed/12_voditeli.sql",
+      "bytes": 582086,
+      "sha256": "7f3c8587b2ad1abbe9085815ebb250d4183ff1252dd4428a1907124603110f82"
+    }
+  ],
+  "dependentSourcesDiscovered": "raw WMS UI pages with API callers and demo/replay distinctions",
+  "supplementalFiles": [
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/admin-auth.js",
+      "bytes": 7078,
+      "sha256": "f362dd2149d9f2f54f6062b14f5811182691f5737a5769780a20052fcf074f0a"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/admin-nav.js",
+      "bytes": 4510,
+      "sha256": "ea8ae08b75bfad270803d9875ccdab7af503155cac7c5977714deeef7a2a7cf6"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/api-audit.html",
+      "bytes": 5864,
+      "sha256": "8c7248b2a090654b82cbf933c526387f9a8e93e4cd1a0230caf5e13a77fd58b3"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/api-audit.js",
+      "bytes": 11359,
+      "sha256": "13922f043f9135c5e2680a07717294e663fe22ed268f53431834b1af732768d7"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/bom.html",
+      "bytes": 7070,
+      "sha256": "09646c9d202f060e9ea0d41cddc0103ccd267670b5731642eb1e6a8431c3f21a"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/bom.js",
+      "bytes": 9602,
+      "sha256": "aff14a1ca70e5de56b715e6964ebca6bd61ea62a6d992afd23de4ca403d268d0"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/case-pick-management.html",
+      "bytes": 19253,
+      "sha256": "d96f72a41655ce193171be986bf48a71487447464c2e2271b49a3ba62d6a3b64"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/case-pick-management.js",
+      "bytes": 28301,
+      "sha256": "c1083178692b338d1359a799fd324ac8072b7259e41343f1fa75e71cc7576507"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/case-pick-tsd.html",
+      "bytes": 3896,
+      "sha256": "bc5ecad3db679fb761594ca44e1eae08b4d9e8a71094aac6a77c2c94cdc6eff2"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/case-pick-tsd.js",
+      "bytes": 10387,
+      "sha256": "7e48cc44d764f76d86e41fe84146e43a94500407c27fb3e776d597d027d362df"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/customer-orders.html",
+      "bytes": 5431,
+      "sha256": "fb467096940b35410ce95f74d577add0778c8a125e7144f1d4a55350df60f5f6"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/customer-orders.js",
+      "bytes": 5728,
+      "sha256": "709b8b38c90e24022da47ece581a9c1058876c9d14e791b1a6c9ae210c0077ad"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/customers.html",
+      "bytes": 8638,
+      "sha256": "78b32b36df92e8765dde2d1ce4b7ead78b1ff985fd8339cd648f9301dc76ffe8"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/customers.js",
+      "bytes": 10807,
+      "sha256": "4ed527266e79b6ffb0cde677cf83e83b1ea4dfad11bc178600b0eab3992ffc69"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/external-outbox.html",
+      "bytes": 5399,
+      "sha256": "b5211649fde5e3eaa76f64b02134db3cf8a0be0c35ad2853b1ffcc777edf002b"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/external-outbox.js",
+      "bytes": 7826,
+      "sha256": "2ea7f19ceefb9f7ceacbc6ac275b01a9e2b3a681d9f0d837157a52763438ef40"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/finished-goods.html",
+      "bytes": 8812,
+      "sha256": "fb219ba8454b98b12926a1fe7ec169b57d86e53b0c306d6ecd02db4866f62f5e"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/finished-goods.js",
+      "bytes": 12766,
+      "sha256": "183f5ef10d7bd87210b50761721d32040c7e27d11ef94c220025bbd5d60c64d0"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/index.html",
+      "bytes": 14848,
+      "sha256": "0510fc168a1aa3d76e2b2da9527b773361835b15aeb0007447d50214461f11cf"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/product-shipment-settings.html",
+      "bytes": 4248,
+      "sha256": "9e46100adeed4e2388fdb5eacd7dadfecc4686a905cf22f30e9c3d17a3e6626d"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/product-shipment-settings.js",
+      "bytes": 4818,
+      "sha256": "ca34be3179f1ef71b47aa63657490b9b2da22b71918bdf7c146e59f7ab3c8808"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/production-orders.html",
+      "bytes": 10512,
+      "sha256": "5a920d20ccb0fa9bc0f386447729b5f0e4a708d60e61d34de69ec8ff950d3f10"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/production-orders.js",
+      "bytes": 27543,
+      "sha256": "3a304656fa5ccd673f4e3e278520892f9e798ea93f58112b31f089bf25bc0816"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/raw-material.html",
+      "bytes": 7887,
+      "sha256": "10bbe4eaf86ce9e1d4c3e7d85c14018a64a944d746381216b190347ca21e5a0a"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/raw-material.js",
+      "bytes": 10536,
+      "sha256": "8c4ab3c8c14820a7277d9cb6b62da7d4d9ef3ec8635fd70574a6625453a2fad3"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/raw-supply.html",
+      "bytes": 9448,
+      "sha256": "8dc975d4713a670ed98a3e655ddb35fd843c58d343a157692307087e81425b19"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/raw-supply.js",
+      "bytes": 15003,
+      "sha256": "722b4a3c918af3c146219d2e7f5b4fbe3bc5430ae2f9765935e6272851d4f55f"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/reachtruck-tsd.html",
+      "bytes": 3918,
+      "sha256": "8bf797ce965398a577415c0360d0b57536f8eed9293ee1fd4a355ecc42cff19b"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/reachtruck-tsd.js",
+      "bytes": 12911,
+      "sha256": "bc6f8499fa78db1f97f4c6a7eae089a31dc7145543f50501b13eaadc80382274"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/resource-management.html",
+      "bytes": 7756,
+      "sha256": "9b406f0da7031ae14f2c5d43373507a689c9b3b06c58185adc7ce6d0e7bf129e"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/resource-management.js",
+      "bytes": 9136,
+      "sha256": "bfb29364573acf6e1d7ff62abe0836d36111ba0b82b6760b5d68966c503aa07e"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/rights-admin.html",
+      "bytes": 4722,
+      "sha256": "f2f572ce627a2eb1bbd853776d1cdb9d911593601318dc89a9f39a763a88ace9"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/rights-admin.js",
+      "bytes": 7613,
+      "sha256": "5fd9b728d3405ef1e3d3273a44d3b08a229fcee901f6a7aceb64ec226f264bd6"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/shift-supervisor-wave.html",
+      "bytes": 16286,
+      "sha256": "2c99a2f7d92f7099e9bde546a2d683d2a5e696050e701ec7f0ee3b0c34b0f20b"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/shift-supervisor-wave.js",
+      "bytes": 13248,
+      "sha256": "52b0658c9bd4ab73f2a45124b6555fb1baeba407c910dc56634597fdd8136a95"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/warehouse-simulation.html",
+      "bytes": 9811,
+      "sha256": "9d6c9c44a4b539f56997a84dc73de7680c3a6d970e5c2f5d456a98fb4e889e98"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/warehouse-simulation.js",
+      "bytes": 52688,
+      "sha256": "eab1866801778fde9ad1e072a65a237da85f14593ce562981ce2282174dcfefe"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/warehouse-task-domain-sync-presentation.html",
+      "bytes": 18626,
+      "sha256": "a70b21c45eb653f300a029548ed7c2c27368ac922e77c3c3b2118f8dac74c24e"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/warehouse-task-sync.html",
+      "bytes": 8789,
+      "sha256": "8f44211428820d0f7091a56bdc6b8f6b02cc0ab2db3f6d020b33e86da5568a2a"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/warehouse-task-sync.js",
+      "bytes": 16056,
+      "sha256": "34181163eb85de4d67f39a44f4d7ac26133992e8b474b0acab7a07044ab4dec4"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/warehouse-tasks.html",
+      "bytes": 8840,
+      "sha256": "238d6fce282eb62170d83b8068adf4c1e96bb981869a8efe7794ca50ca2d2cac"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/warehouse-tasks.js",
+      "bytes": 14369,
+      "sha256": "a94ba5ceae71ce24133d4b8f240368d946c1cbbfeee50d79e2b4cd4335ab44af"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/warehouses.html",
+      "bytes": 5092,
+      "sha256": "4bacfff596c54c07f4149476416943d77da56d130b76c56d6dfeb4aaf1d3a6d6"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/warehouses.js",
+      "bytes": 6263,
+      "sha256": "743b18ae0531bf9cbe5a2b3fac3ad3e3d15df5f9a007f1f35889550ae2a96214"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/wave-client-e2e-presentation.html",
+      "bytes": 16620,
+      "sha256": "3adca5001f800ec7926ed2b41eac30d42608c120964cbde4a0ef8706f70b8d98"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/wave-replenishment.html",
+      "bytes": 13641,
+      "sha256": "22c033414e458c55b7fadb67f5711a1b056ba8efc910fb49c69d9441ac8edd68"
+    },
+    {
+      "path": "wiki-raw/wms_admin_ui_reference/wave-replenishment.js",
+      "bytes": 26977,
+      "sha256": "c8c60bcca9789251e03f158826f0552d58cc85437df15b4ab6592a9655e76f6c"
+    }
+  ]
+}

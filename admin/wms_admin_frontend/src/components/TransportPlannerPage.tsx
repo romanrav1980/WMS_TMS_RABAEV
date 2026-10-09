@@ -53,6 +53,15 @@ type VrpRouteStop = {
   pallets: number;
   weight_kg: number;
   ware_id: number;
+  tw_from?: number;
+  tw_to?: number;
+  tw_strict?: boolean;
+  arrival_min?: number | null;
+  departure_min?: number | null;
+  tw_violation_min?: number;
+  distance_from_prev_km?: number | null;
+  duration_from_prev_min?: number | null;
+  constraint_notes?: string[];
 };
 
 type VrpRouteItem = {
@@ -66,6 +75,67 @@ type VrpRouteItem = {
   total_duration_min: number;
   utilization_pct: number;
   stops: VrpRouteStop[];
+  capacity_status?: "ok" | "low" | "over";
+  tw_violation_count?: number;
+  strict_tw_count?: number;
+  vehicle_constraints_ok?: boolean;
+  hydro_board_required_count?: number;
+  explain_notes?: string[];
+};
+
+type ExplainStep = {
+  code: string;
+  status: "pending" | "running" | "done" | "warning" | "error" | "skipped";
+  label: string;
+  message: string;
+  elapsed_ms?: number | null;
+};
+
+type ExplainWarning = {
+  code: string;
+  severity: "info" | "warning" | "error";
+  message: string;
+  action?: string | null;
+};
+
+type VrpExplain = {
+  input?: {
+    plan_date?: string;
+    orders_total?: number;
+    orders_with_coords?: number;
+    orders_skipped_no_coords?: number;
+    ware_ids?: number[];
+    transport_type?: string | null;
+  };
+  routing?: {
+    requested_source?: string;
+    active_provider?: string;
+    used_provider?: string;
+    fallback_used?: boolean;
+    matrix_pairs?: number;
+    matrix_age_min?: number | null;
+  };
+  solver?: {
+    requested_solver?: string;
+    used_solver?: string;
+    time_limit_s?: number;
+    solve_time_ms?: number;
+  };
+  constraints?: Record<string, boolean | number | string | null>;
+  fleet?: {
+    vehicles_total?: number;
+    vehicles_used?: number;
+    target_routes_per_vehicle?: number;
+    target_daily_routes?: number;
+    planned_routes?: number;
+    avg_utilization_pct?: number;
+    min_utilization_pct?: number;
+    max_utilization_pct?: number;
+    low_utilization_routes?: number;
+    over_capacity_routes?: number;
+  };
+  steps?: ExplainStep[];
+  warnings?: ExplainWarning[];
 };
 
 type VrpPlan = {
@@ -78,6 +148,7 @@ type VrpPlan = {
   score: number;
   solver_used: string;
   solve_time_ms: number;
+  explain?: VrpExplain | null;
 };
 
 type PlanTemplate = {
@@ -150,6 +221,104 @@ function fmtDuration(minutes: number): string {
   return h > 0 ? `${h}ч ${m}м` : `${m}м`;
 }
 
+function fmtPct(value: number | undefined | null): string {
+  return `${Number(value || 0).toFixed(1)}%`;
+}
+
+function explainStatusLabel(status: ExplainStep["status"]): string {
+  return ({
+    pending: "Ожидает",
+    running: "В работе",
+    done: "Готово",
+    warning: "Внимание",
+    error: "Ошибка",
+    skipped: "Пропущено",
+  })[status];
+}
+
+function buildFallbackExplain(
+  plan: VrpPlan | null,
+  orders: PlannerOrder[],
+  status: RoutingStatus | null,
+  filterDate: string,
+  solverMode: string,
+): VrpExplain | null {
+  if (!plan) return null;
+  const withCoords = orders.filter(o => o.LAT != null && o.LON != null).length;
+  const routeUtils = plan.routes.map(r => r.utilization_pct);
+  return {
+    input: {
+      plan_date: filterDate,
+      orders_total: orders.length,
+      orders_with_coords: withCoords,
+      orders_skipped_no_coords: Math.max(0, orders.length - withCoords),
+      transport_type: null,
+      ware_ids: [],
+    },
+    routing: {
+      requested_source: "auto",
+      active_provider: status?.provider,
+      used_provider: status?.provider,
+      fallback_used: false,
+      matrix_pairs: 0,
+      matrix_age_min: null,
+    },
+    solver: {
+      requested_solver: solverMode,
+      used_solver: plan.solver_used,
+      time_limit_s: 60,
+      solve_time_ms: plan.solve_time_ms,
+    },
+    constraints: {
+      capacity_pallets: true,
+      capacity_weight: true,
+      time_windows: true,
+      vehicle_type: true,
+      hydro_board: true,
+    },
+    fleet: {
+      vehicles_total: plan.routes.length,
+      vehicles_used: plan.routes.length,
+      target_routes_per_vehicle: 4,
+      target_daily_routes: plan.routes.length * 4,
+      planned_routes: plan.routes.length,
+      avg_utilization_pct: plan.fleet_utilization_pct,
+      min_utilization_pct: routeUtils.length ? Math.min(...routeUtils) : 0,
+      max_utilization_pct: routeUtils.length ? Math.max(...routeUtils) : 0,
+      low_utilization_routes: routeUtils.filter(v => v < 60).length,
+      over_capacity_routes: routeUtils.filter(v => v > 100).length,
+    },
+    steps: [
+      { code: "orders_loaded", status: "done", label: "Заявки загружены", message: `Найдено ${orders.length} СТ, ${withCoords} с координатами` },
+      { code: "optimization_done", status: "done", label: "Оптимизация завершена", message: `Построено ${plan.routes.length} рейсов, без рейса ${plan.unassigned_sts.length} СТ` },
+    ],
+    warnings: plan.unassigned_sts.length
+      ? [{ code: "unassigned_sts", severity: "warning", message: `${plan.unassigned_sts.length} СТ не назначены в рейсы`, action: "Проверить ограничения" }]
+      : [],
+  };
+}
+
+function buildExplainReport(plan: VrpPlan | null, explain: VrpExplain | null): string {
+  if (!plan || !explain) return "";
+  const lines = [
+    "Детали расчета MAP/VRP",
+    `Дата: ${explain.input?.plan_date || "—"}`,
+    `Заявок: ${explain.input?.orders_total ?? 0}, с координатами: ${explain.input?.orders_with_coords ?? 0}`,
+    `Рейсов: ${plan.routes.length}, без рейса: ${plan.unassigned_sts.length}`,
+    `Пробег: ${plan.total_km.toFixed(1)} км, загрузка: ${plan.fleet_utilization_pct.toFixed(1)}%`,
+    `Provider: ${explain.routing?.used_provider || "—"}, solver: ${plan.solver_used}`,
+    `Score: ${plan.score.toFixed(1)}, расчет: ${plan.solve_time_ms} мс`,
+    "",
+    "Ход расчета:",
+    ...(explain.steps || []).map(s => `- ${explainStatusLabel(s.status)}: ${s.label} — ${s.message}`),
+  ];
+  const warnings = explain.warnings || [];
+  if (warnings.length) {
+    lines.push("", "Предупреждения:", ...warnings.map(w => `- ${w.message}${w.action ? ` (${w.action})` : ""}`));
+  }
+  return lines.join("\n");
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -186,6 +355,165 @@ function MapBoundsAdjuster({ orders }: { orders: PlannerOrder[] }) {
   return null;
 }
 
+function TransportPlannerExplainDrawer({
+  open,
+  onClose,
+  plan,
+  explain,
+  solving,
+  solveError,
+  matrixMessage,
+  onCopy,
+}: {
+  open: boolean;
+  onClose: () => void;
+  plan: VrpPlan | null;
+  explain: VrpExplain | null;
+  solving: boolean;
+  solveError: string | null;
+  matrixMessage: string | null;
+  onCopy: () => void;
+}) {
+  if (!open) return null;
+  const warnings = explain?.warnings || [];
+  const steps = explain?.steps || [];
+  const fleet = explain?.fleet;
+  const routing = explain?.routing;
+  const solver = explain?.solver;
+  const input = explain?.input;
+  const statusLabel = solveError ? "Ошибка" : solving ? "Идет расчет" : plan ? "Готово" : "Нет плана";
+  const targetRoutes = fleet?.target_daily_routes || 0;
+  const plannedRoutes = fleet?.planned_routes || plan?.routes.length || 0;
+
+  return (
+    <aside className="planner-explain-drawer" aria-label="Детали расчета">
+      <div className="planner-explain-header">
+        <div>
+          <h2>Детали расчета</h2>
+          <span className={`planner-explain-status ${solveError ? "error" : solving ? "running" : "done"}`}>
+            {statusLabel}
+          </span>
+        </div>
+        <button className="planner-explain-close" onClick={onClose} title="Закрыть">×</button>
+      </div>
+
+      {solveError && (
+        <div className="planner-explain-alert error">
+          <b>Расчет остановлен</b>
+          <span>{solveError}</span>
+          {solveError.includes("Failed to fetch") && (
+            <small>Браузер мог скрыть backend 500 как Failed to fetch. Проверьте API 8088 и CORS.</small>
+          )}
+        </div>
+      )}
+
+      {matrixMessage && (
+        <div className="planner-explain-alert info">
+          <b>Матрица расстояний</b>
+          <span>{matrixMessage}</span>
+        </div>
+      )}
+
+      <section className="planner-explain-section">
+        <h3>Обзор</h3>
+        <div className="planner-explain-grid">
+          <span>Дата</span><b>{input?.plan_date || "—"}</b>
+          <span>Заявок</span><b>{input?.orders_total ?? "—"}</b>
+          <span>С координатами</span><b>{input?.orders_with_coords ?? "—"}</b>
+          <span>Рейсов</span><b>{plan?.routes.length ?? 0}</b>
+          <span>Без рейса</span><b className={(plan?.unassigned_sts.length || 0) > 0 ? "warn" : ""}>{plan?.unassigned_sts.length ?? 0}</b>
+          <span>Пробег</span><b>{plan ? `${plan.total_km.toFixed(0)} км` : "—"}</b>
+          <span>Загрузка</span><b>{plan ? fmtPct(plan.fleet_utilization_pct) : "—"}</b>
+          <span>Окна</span><b className={(plan?.tw_violations || 0) > 0 ? "warn" : ""}>{plan?.tw_violations ?? 0}</b>
+          <span>Score</span><b>{plan ? plan.score.toFixed(1) : "—"}</b>
+          <span>Расчет</span><b>{plan ? `${plan.solve_time_ms} мс` : "—"}</b>
+        </div>
+      </section>
+
+      <section className="planner-explain-section">
+        <h3>Параметры</h3>
+        <div className="planner-explain-grid">
+          <span>Provider</span><b>{routing?.used_provider || routing?.active_provider || "—"}</b>
+          <span>Запрошен</span><b>{routing?.requested_source || "—"}</b>
+          <span>Fallback</span><b className={routing?.fallback_used ? "warn" : ""}>{routing?.fallback_used ? "да" : "нет"}</b>
+          <span>Пар матрицы</span><b>{routing?.matrix_pairs ?? "—"}</b>
+          <span>Решатель</span><b>{solver?.used_solver || plan?.solver_used || "—"}</b>
+          <span>Режим</span><b>{solver?.requested_solver || "—"}</b>
+          <span>Лимит</span><b>{solver?.time_limit_s ? `${solver.time_limit_s} с` : "—"}</b>
+          <span>Окна</span><b>{explain?.constraints?.fallback_time_windows ? "часть fallback" : "Oracle/fallback"}</b>
+        </div>
+      </section>
+
+      <section className="planner-explain-section">
+        <h3>Ход расчета</h3>
+        <div className="planner-step-list">
+          {steps.length === 0 && <div className="planner-explain-empty">Расчет еще не запускался.</div>}
+          {steps.map(step => (
+            <div key={`${step.code}-${step.label}`} className={`planner-step ${step.status}`}>
+              <span>{explainStatusLabel(step.status)}</span>
+              <b>{step.label}</b>
+              <small>{step.message}</small>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="planner-explain-section">
+        <h3>Загрузка автомобилей</h3>
+        <div className="planner-explain-grid">
+          <span>Машин всего</span><b>{fleet?.vehicles_total ?? "—"}</b>
+          <span>Использовано</span><b>{fleet?.vehicles_used ?? "—"}</b>
+          <span>Цель 4 рейса/маш.</span><b>{targetRoutes || "—"}</b>
+          <span>План требует</span><b className={plannedRoutes > targetRoutes && targetRoutes > 0 ? "warn" : ""}>{plannedRoutes || "—"}</b>
+          <span>Средняя</span><b>{fmtPct(fleet?.avg_utilization_pct ?? plan?.fleet_utilization_pct)}</b>
+          <span>Минимум</span><b>{fmtPct(fleet?.min_utilization_pct)}</b>
+          <span>Максимум</span><b>{fmtPct(fleet?.max_utilization_pct)}</b>
+          <span>Низкая загрузка</span><b className={(fleet?.low_utilization_routes || 0) > 0 ? "warn" : ""}>{fleet?.low_utilization_routes ?? 0}</b>
+          <span>Перегруз</span><b className={(fleet?.over_capacity_routes || 0) > 0 ? "error" : ""}>{fleet?.over_capacity_routes ?? 0}</b>
+        </div>
+        <div className="planner-car-list">
+          {(plan?.routes || []).slice(0, 150).map(route => (
+            <div key={`${route.vehicle_id}-${route.vehicle_num}`} className="planner-car-row">
+              <div>
+                <b>{route.vehicle_num}</b>
+                <span>{route.vehicle_type || "тип не задан"} · {route.stops.length} адресов</span>
+              </div>
+              <div className="planner-car-load">
+                <span>{route.total_pallets}/{route.max_pallets} пал</span>
+                <i><em style={{ width: `${Math.min(100, route.utilization_pct)}%` }} /></i>
+                <strong className={route.utilization_pct > 100 ? "error" : route.utilization_pct < 60 ? "warn" : ""}>
+                  {route.utilization_pct.toFixed(0)}%
+                </strong>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="planner-explain-section">
+        <h3>Предупреждения</h3>
+        {warnings.length === 0 ? (
+          <div className="planner-explain-empty">Критичных предупреждений нет.</div>
+        ) : (
+          <div className="planner-warning-list">
+            {warnings.map(w => (
+              <div key={`${w.code}-${w.message}`} className={`planner-warning ${w.severity}`}>
+                <b>{w.message}</b>
+                {w.action && <span>{w.action}</span>}
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <div className="planner-explain-actions">
+        <button onClick={onCopy} disabled={!plan}>Скопировать отчет</button>
+        <button onClick={onClose}>Открыть план на карте</button>
+      </div>
+    </aside>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Main page
 // ---------------------------------------------------------------------------
@@ -215,6 +543,9 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
   const [solveError, setSolveError] = useState<string | null>(null);
   const [solveElapsed, setSolveElapsed] = useState(0);
   const solveTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [explainOpen, setExplainOpen] = useState(false);
+  const [matrixMessage, setMatrixMessage] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Apply plan state
   const [applying, setApplying] = useState(false);
@@ -271,6 +602,12 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
     apiFetch<TransportType[]>("/api/admin/transport/types")
       .then(setTransportTypes).catch(() => setTransportTypes([]));
   }, []);
+
+  useEffect(() => {
+    if (!toastMessage) return;
+    const timer = setTimeout(() => setToastMessage(null), 5000);
+    return () => clearTimeout(timer);
+  }, [toastMessage]);
 
   const loadTemplates = useCallback(async () => {
     setLoadingTemplates(true);
@@ -338,6 +675,8 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
 
   const handleSolve = useCallback(async () => {
     setSolving(true); setSolveError(null); setPlan(null); setApplyDone(null);
+    setMatrixMessage(null);
+    setExplainOpen(true);
     setSolveElapsed(0);
     solveTimerRef.current = setInterval(() => setSolveElapsed(s => s + 1), 1000);
     try {
@@ -392,6 +731,7 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
               setPlan(latest as unknown as VrpPlan);
               setLocalRoutes(JSON.parse(JSON.stringify((latest as unknown as VrpPlan).routes)));
               setExpandedRouteIdx(null);
+              setExplainOpen(true);
             }
           }
         } catch { /* best effort */ }
@@ -401,9 +741,11 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
         setPlan(result);
         setLocalRoutes(JSON.parse(JSON.stringify(result.routes)));
         setExpandedRouteIdx(null);
+        setExplainOpen(true);
       }
     } catch (e) {
       setSolveError(String(e));
+      setExplainOpen(true);
     } finally {
       setSolving(false);
       setActiveJobId(null);
@@ -431,14 +773,29 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
 
   const handleRebuildMatrix = useCallback(async () => {
     try {
-      const res = await apiFetch<{ pairs: number; source: string; addresses: number }>(
+      const res = await apiFetch<{
+        pairs: number;
+        computed_pairs?: number;
+        skipped_pairs?: number;
+        source: string;
+        addresses: number;
+        cached?: boolean;
+      }>(
         "/api/admin/transport/distance-matrix/rebuild?source=auto",
         { method: "POST" },
       );
-      alert(`Матрица пересчитана: ${res.pairs} пар, провайдер ${res.source}`);
+      const computed = res.computed_pairs ?? res.pairs;
+      const cachedText = res.cached ? "использован свежий кэш" : `обновлено ${computed} пар`;
+      const msg = `Матрица расстояний: ${cachedText}, всего ${res.pairs} пар, провайдер ${res.source}`;
+      setMatrixMessage(msg);
+      setToastMessage(msg);
+      setExplainOpen(true);
       apiFetch<RoutingStatus>("/api/admin/transport/routing/status").then(setStatus).catch(() => null);
     } catch (e) {
-      alert(`Ошибка: ${e}`);
+      const msg = `Ошибка пересчета матрицы: ${e}`;
+      setMatrixMessage(msg);
+      setSolveError(msg);
+      setExplainOpen(true);
     }
   }, []);
 
@@ -498,6 +855,18 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
   const routePolylines = displayRoutes.map(route =>
     route.stops.filter(s => s.lat && s.lon).map(s => [s.lat!, s.lon!] as [number, number])
   );
+  const currentExplain = plan?.explain || buildFallbackExplain(plan, orders, status, filterDate, solverMode);
+
+  const copyExplainReport = useCallback(async () => {
+    const report = buildExplainReport(plan, currentExplain);
+    if (!report) return;
+    try {
+      await navigator.clipboard.writeText(report);
+      setToastMessage("Отчет расчета скопирован");
+    } catch {
+      setToastMessage("Не удалось скопировать отчет");
+    }
+  }, [plan, currentExplain]);
 
   return (
     <div className="planner-shell">
@@ -608,6 +977,13 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
           >
             {solving ? "⏳ Решаем..." : "⚡ Авто-план"}
           </button>
+          <button
+            className="planner-explain-open-btn"
+            onClick={() => setExplainOpen(true)}
+            disabled={!plan && !solving && !matrixMessage && !solveError}
+          >
+            Детали расчета
+          </button>
 
           {plan && !applyDone && (
             <button
@@ -626,7 +1002,7 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
           <div className="dispatch-fp-sep" />
 
           {plan && (
-            <div className="planner-metrics-block">
+            <div className="planner-metrics-block" onClick={() => setExplainOpen(true)} title="Открыть детали расчета">
               <div className="dispatch-fp-label">Метрики плана</div>
               <div className="planner-stat-row"><span>Рейсов</span><b>{plan.routes.length}</b></div>
               <div className="planner-stat-row"><span>Пробег, км</span><b>{plan.total_km.toFixed(0)}</b></div>
@@ -914,6 +1290,21 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
             ))}
           </aside>
         ) : null}
+        <TransportPlannerExplainDrawer
+          open={explainOpen}
+          onClose={() => setExplainOpen(false)}
+          plan={plan}
+          explain={currentExplain}
+          solving={solving}
+          solveError={solveError}
+          matrixMessage={matrixMessage}
+          onCopy={copyExplainReport}
+        />
+        {toastMessage && (
+          <div className="planner-toast" onClick={() => setToastMessage(null)}>
+            {toastMessage}
+          </div>
+        )}
       </div>
     </div>
   );

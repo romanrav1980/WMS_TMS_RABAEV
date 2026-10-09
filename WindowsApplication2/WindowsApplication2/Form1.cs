@@ -762,23 +762,11 @@ namespace WindowsApplication2
                         #endregion
 
                         #region РАБОТА С ТАБ_ПЭЙДЖ
-                        try
+                        if (c is TabControl)
                         {
-                            if (((TabControl)c).TabCount > 0)
-                            {
-                                foreach (TabPage p2 in ((TabControl)c).TabPages)
-                                {
-                                    check_tab_page(p2);
-                                }
-                            }
-
+                            foreach (TabPage p2 in ((TabControl)c).TabPages)
+                                check_tab_page(p2);
                         }
-                        catch (Exception ex)
-                        {
-
-                        }
-
-
                         #endregion
                     }
                 }
@@ -810,7 +798,7 @@ namespace WindowsApplication2
             
 
 
-            List<object> objs = get_wms_sql_result_array("select WARE_MASK from  RABAEV.RRL_WARE_MASKS order by ORD_ID ");
+            List<object> objs = get_wms_sql_result_array("select CHR(39) || COALESCE(NULLIF(TRIM(NAME), ''), TO_CHAR(ID)) || CHR(39) from RABAEV.RRL_WARES order by ID ");
             Сборка_склады.Items.Clear();
             МаскаСкладов.Items.Clear();
             foreach( object o in objs )
@@ -1229,7 +1217,7 @@ namespace WindowsApplication2
         {
 
 
-            return "'" + dt.Day + "." + dt.Month + "." + dt.Year + "'";
+            return "TO_DATE('" + dt.Day.ToString("D2") + "." + dt.Month.ToString("D2") + "." + dt.Year + "', 'DD.MM.YYYY')";
 
         }
 
@@ -2063,8 +2051,37 @@ namespace WindowsApplication2
 
         }
 
+        // The modern workflow requires SAP authorization and pallet scan facts.
+        // No tokens or credentials are transferred to the browser.
+        private bool OpenExplicitReceiptWorkflow()
+        {
+            string state = obj2str(CachedQuerySingle(
+                "select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")).Trim();
+            if (state == "PREPARED") return false;
+            if (state != "ACTIVE")
+                throw new InvalidOperationException("Проводки временно остановлены: " + state);
+            if (dataGridView_prihod.CurrentRow == null)
+                throw new InvalidOperationException("Выберите накладную.");
+            int document = Convert.ToInt32(dataGridView_prihod.CurrentRow.Cells[6].Value);
+            string configured = Environment.GetEnvironmentVariable("WMS_RECEIVING_URL");
+            Uri address;
+            if (!Uri.TryCreate(String.IsNullOrEmpty(configured) ?
+                    "http://127.0.0.1:3000/receiving.html" : configured, UriKind.Absolute, out address)
+                || (address.Scheme != Uri.UriSchemeHttp && address.Scheme != Uri.UriSchemeHttps))
+                throw new InvalidOperationException("Неверный WMS_RECEIVING_URL.");
+            UriBuilder target = new UriBuilder(address);
+            target.Query = (String.IsNullOrEmpty(address.Query) ? "" : address.Query.Substring(1) + "&")
+                + "receipt_document_id=" + document.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(target.Uri.AbsoluteUri)
+                { UseShellExecute = true });
+            return true;
+        }
+
         private void Закрыть_Click(object sender, EventArgs e)
-        {  
+        {
+            try { if (OpenExplicitReceiptWorkflow()) return; }
+            catch (Exception ex) { MessageBox.Show(ex.Message); return; }
+            
             
             string veh = obj2str(dataGridView_prihod.CurrentRow.Cells[9].Value).Trim();
                 if (veh == "")
@@ -2123,6 +2140,15 @@ namespace WindowsApplication2
 
         private void Откатить_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (OpenExplicitReceiptWorkflow())
+                {
+                    MessageBox.Show("Удаление движений отменено. Для принятого товара используйте сторно с причиной; для размещения — отмену задания.");
+                    return;
+                }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); return; }
 
             OracleCommand ora_com;
             dataGridView_prihod.CurrentRow.Cells[5].Value = 0;
@@ -2148,6 +2174,7 @@ namespace WindowsApplication2
         {
             try
             {
+                if (OpenExplicitReceiptWorkflow()) return;
                 int order_id = Convert.ToInt32(dataGridView_prihod.CurrentRow.Cells[6].Value.ToString());
 
                 if (!ПриходнаяНакладная_проверка_на_корректность_модификаций(order_id))
@@ -2611,13 +2638,15 @@ namespace WindowsApplication2
                 ora_com.CommandType = CommandType.StoredProcedure;
                 ora_com.Parameters.Add("pallet_id", OracleType.VarChar).Value = dr3.Cells[0].Value.ToString();
                 ora_com.Parameters.Add("cell_to", OracleType.VarChar).Value = m_cell_to.Text;
-                ora_com.Parameters.Add("count1", OracleType.Number).Value = obj2double( dr3.Cells[2].Value );
+                ora_com.Parameters.Add("count1", OracleType.Number).Value = Convert.ToDecimal(dr3.Cells[2].Value);
                 ora_com.Parameters.Add("user_id1", OracleType.VarChar).Value = wms_user.user_id;
+                StockCommandIntent stockIntent = StockCommandIntent.Prepare(ora_com, wms_user.user_id, ora_com.Parameters["pallet_id"].Value.ToString());
                 ora_com.Parameters.Add("ok", OracleType.VarChar, 50).Direction =
                     ParameterDirection.ReturnValue;
                 ora_com.ExecuteNonQuery();
                 string ret = ora_com.Parameters["ok"].Value.ToString();
-                if (ret != "ok")
+                if (ret.StartsWith("ok", StringComparison.Ordinal)) stockIntent.Confirm();
+                if (!ret.StartsWith("ok", StringComparison.Ordinal))
                 {
                     MessageBox.Show("ошибка: " + ret);
                 }
@@ -3010,17 +3039,32 @@ namespace WindowsApplication2
                 string Filename = "C:\\g\\invent.xls";
 
 
+                string inventoryFileHash = StockCommandIntent.FileDigest(Filename);
+                int inventoryWarehouse = Convert.ToInt32(wms_user.ware_id);
+                int inventoryRevision = StockCommandIntent.InventoryRevision(
+                    get_wms_connection().DataSource, wms_user.user_id, inventoryWarehouse,
+                    inventoryFileHash, delegate {
+                        OracleCommand revisionCommand = new OracleCommand();
+                        revisionCommand.Connection = get_wms_connection();
+                        revisionCommand.CommandText = "RABAEV.REVIZION.create_revizion";
+                        revisionCommand.CommandType = CommandType.StoredProcedure;
+                        revisionCommand.Parameters.Add("ware_id1", OracleType.Int32).Value = inventoryWarehouse;
+                        revisionCommand.Parameters.Add("user_id1", OracleType.VarChar).Value = wms_user.user_id;
+                        revisionCommand.Parameters.Add("ret", OracleType.Int32).Direction = ParameterDirection.ReturnValue;
+                        revisionCommand.ExecuteNonQuery();
+                        return Convert.ToInt32(revisionCommand.Parameters["ret"].Value);
+                    });
                 oExcelApp.Workbooks.Open(Filename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
 
 
-                while (oExcelApp.Cells[pos, 1] != null)
+                while (((Excel.Range)oExcelApp.Cells[pos, 1]).Value2 != null)
                 {
 
                     string cell5 = ((Excel.Range)oExcelApp.Cells[pos, 1]).Value2.ToString();
                     string articul5 = ((Excel.Range)oExcelApp.Cells[pos, 2]).Value2.ToString();
-                    double count5 = Convert.ToDouble(((Excel.Range)oExcelApp.Cells[pos, 3]).Value2.ToString());
+                    decimal count5 = Convert.ToDecimal(((Excel.Range)oExcelApp.Cells[pos, 3]).Value2.ToString());
                     DateTime date5 = Convert.ToDateTime(((Excel.Range)oExcelApp.Cells[pos, 4]).Text.ToString());
-                    double PRICE5 = Convert.ToDouble(((Excel.Range)oExcelApp.Cells[pos, 5]).Value2.ToString());
+                    decimal PRICE5 = Convert.ToDecimal(((Excel.Range)oExcelApp.Cells[pos, 5]).Value2.ToString());
 
 
 
@@ -3038,8 +3082,9 @@ namespace WindowsApplication2
                     ora_com.Parameters.Add("COUNT15", OracleType.Number).Value = count5;
                     ora_com.Parameters.Add("date_of_expire5", OracleType.DateTime).Value = date5;
                     ora_com.Parameters.Add("PRICE5", OracleType.Number).Value = PRICE5;
-                    ora_com.Parameters.Add("inventory_id", OracleType.Int32).Value = 1;
+                    ora_com.Parameters.Add("inventory_id", OracleType.Int32).Value = inventoryRevision;
                     ora_com.Parameters.Add("iser_id5", OracleType.VarChar).Value = wms_user.user_id;
+                    StockCommandIntent stockIntent = StockCommandIntent.Prepare(ora_com, wms_user.user_id, "INVENTORY:" + inventoryRevision + ":" + articul5 + ":" + cell5);
 
 
 
@@ -3047,6 +3092,8 @@ namespace WindowsApplication2
                     ora_com.Parameters.Add("tmpVar", OracleType.VarChar, 25).Direction = ParameterDirection.ReturnValue;
                     int rowsAffected = ora_com.ExecuteNonQuery();
                     string tmpVar = ora_com.Parameters["tmpVar"].Value.ToString();
+                    if (!String.IsNullOrEmpty(tmpVar)) throw new InvalidOperationException(tmpVar);
+                    stockIntent.Confirm();
                     // ================================================================
                     pos++;
                 }
@@ -3201,9 +3248,12 @@ namespace WindowsApplication2
                 ora_com.CommandType = CommandType.StoredProcedure;
                 ora_com.Parameters.Add("naklad_num", OracleType.Int32).Value = order_id;
                 ora_com.Parameters.Add("iser_id21", OracleType.VarChar).Value = wms_user.user_id;
+                StockCommandIntent shipmentIntent = StockCommandIntent.Prepare(ora_com, wms_user.user_id, order_id.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 ora_com.Parameters.Add("ret", OracleType.VarChar, 50).Direction = ParameterDirection.ReturnValue;
                 int rowsAffected = ora_com.ExecuteNonQuery();
-                rrr = rrr + ora_com.Parameters["ret"].Value.ToString();
+                string shipmentResult = ora_com.Parameters["ret"].Value.ToString();
+                if (shipmentResult.StartsWith("ok", StringComparison.Ordinal)) shipmentIntent.Confirm();
+                rrr = rrr + shipmentResult;
 
 
             }
@@ -3299,17 +3349,28 @@ namespace WindowsApplication2
                 ora_com.Parameters.Add("pallet_id", OracleType.VarChar).Value = dr3.Cells[0].Value.ToString();
                 ora_com.Parameters.Add("cell_to", OracleType.VarChar).Value = ЯЧЕЙКА_КУДА.Text;
 
-                long iiii = 0;
-                try
+                decimal iiii;
+
+                if (!decimal.TryParse(СКОЛЬКО_ПЕРЕМЕЩАЕМ.Text.Trim().Replace(',', '.'),
+
+                    System.Globalization.NumberStyles.AllowDecimalPoint,
+
+                    System.Globalization.CultureInfo.InvariantCulture, out iiii) || iiii < 0)
+
                 {
-                    iiii = Convert.ToInt64(СКОЛЬКО_ПЕРЕМЕЩАЕМ.Text);
+
+                    MessageBox.Show("Укажите корректное количество; 0 — переместить всю паллету.");
+
+                    return;
+
                 }
-                catch { }
                 ora_com.Parameters.Add("count1", OracleType.Number).Value = iiii;
                 ora_com.Parameters.Add("user_id1", OracleType.VarChar).Value = wms_user.user_id;
+                StockCommandIntent stockIntent = StockCommandIntent.Prepare(ora_com, wms_user.user_id, ora_com.Parameters["pallet_id"].Value.ToString());
                 ora_com.Parameters.Add("ok", OracleType.VarChar, 50).Direction = ParameterDirection.ReturnValue;
                 ora_com.ExecuteNonQuery();
                 string ret = ora_com.Parameters["ok"].Value.ToString();
+                if (ret.StartsWith("ok", StringComparison.Ordinal)) stockIntent.Confirm();
                 if (ret.Substring(0, 2) != "ok")
                 {
                     MessageBox.Show("ошибка: " + ret);
@@ -5031,8 +5092,12 @@ namespace WindowsApplication2
                 }
 
 
+                StockCommandIntent moveIntent = null;
+                if (String.Equals(spf, "REMAINS.move_pall_2_picking_cell", StringComparison.OrdinalIgnoreCase))
+                    moveIntent = StockCommandIntent.Prepare(ora_com, wms_user.user_id, obj2str(values["pall_uid1"]));
                 int rowsAffected = ora_com.ExecuteNonQuery();
                 object ret1 = (ora_com.Parameters["ret"].Value);
+                if (moveIntent != null && obj2str(ret1).StartsWith("ok", StringComparison.Ordinal)) moveIntent.Confirm();
                 return ret1;
 
             }catch(Exception ex)
@@ -7276,7 +7341,7 @@ namespace WindowsApplication2
 
             string strSQL = " select  'false', RRL_SKLADNAME_BY_ID( WARE_ID )  , TRANSPORT_TASK.RRL_PALLETS_STR( ST_NUMBER ) , \"вес\" , \"объем\" , REGION , ADDR , ST_NUMBER ,   " +
                 " RRL_GET_TT_INFO(  TRANSTASK_ID ) TTINFO , STDATE , RRL_ST_VERYFY_PERC(ST_NUMBER ) , USER_ID , RAION , ORD , TRANSPORT_TYPE , "+
-                " sugar1 , jjj , STOL , \"ДатаЗагрузки\" ,  prim2  " +
+                " sugar1 , jjj , STOL , \"ДатаЗагрузки\" ,  PRIM1  " +
                 " from ( select " +
                 "  (P.WARE_ID) ,  " +
                 " count( DISTINCT P.PALLET_UID ) \"колвоПаллет\" , round( sum(R.ORDER_WEIGHT ) , 0 ) \"вес\"  , " +
@@ -7286,12 +7351,12 @@ namespace WindowsApplication2
                 " P.ST_NUMBER ,  " +
                 "   TRANSTASK_ID , STDATE   , P.USER_ID , " +
                 "  RRL_ADDR.RAION ,  RRL_ADDR.ORD , RRL_ADDR.TRANSPORT_TYPE , sum(RRL_SUGAR_HAS(  R.ARTICUL )) sugar1 " +
-                " , 0 jjj , rrl_addr.STOL , min(P.CREATE_DATE) \"ДатаЗагрузки\" , prim2 " +
+                " , 0 jjj , rrl_addr.STOL , min(P.CREATE_DATE) \"ДатаЗагрузки\" , RRL_ADDR.PRIM1 " +
                 " from RRL_SBORKA_PALLETS P  , RRL_SBORKA_PALLET_ROWS R , RRL_ADDR   where " +
                 " R.PALLET_UID=P.PALLET_UID  and  ( P.ADDR=RRL_ADDR.ADDR(+) )  " + add_sql1 + add_sql2 + add_sql3 + add_sql4 + add_sql5 + add_sql6 + add_sql7 + add_sql8 +add_sql_артикулы+
                 "group by    RRL_ADDR.TRANSPORT_TYPE ,  rrl_addr.ord ,  RRL_ADDR.REGION  ,  RRL_ADDR.RAION  , " +
                 "  P.WARE_ID , P.ADDR ,   P.STDATE , P.USER_ID , P.ST_NUMBER  , " +
-                " P.NAPR , TRANSTASK_ID ,  rrl_addr.STOL , prim2 " +
+                " P.NAPR , TRANSTASK_ID ,  rrl_addr.STOL , RRL_ADDR.PRIM1 " +
                 sql_having +
                 " order by   RRL_ADDR.ORD ) ";
 
@@ -7898,12 +7963,14 @@ namespace WindowsApplication2
                 ora_com.CommandText = "REMAINS.TRIAL_BY_WEIGHT";
                 ora_com.CommandType = CommandType.StoredProcedure;
                 ora_com.Parameters.Add("PALLET_UID1", OracleType.VarChar).Value = PUID;
-                ora_com.Parameters.Add("TRIAL_WEIGHT1", OracleType.Number).Value = Convert.ToDouble(m_trial_weight.Text);
-                ora_com.Parameters.Add("WOOD_WEIGHT1", OracleType.Number).Value = Convert.ToDouble(ВесДеревянногоПаллета.Text);
+                ora_com.Parameters.Add("TRIAL_WEIGHT1", OracleType.Number).Value = Decimal.Parse(m_trial_weight.Text);
+                ora_com.Parameters.Add("WOOD_WEIGHT1", OracleType.Number).Value = Decimal.Parse(ВесДеревянногоПаллета.Text);
                 ora_com.Parameters.Add("user_id1", OracleType.VarChar).Value = this.wms_user.user_id;
                 ora_com.Parameters.Add("ID1", OracleType.VarChar, 10).Direction = ParameterDirection.ReturnValue;
 
+                StockCommandIntent qualityIntent = StockCommandIntent.Prepare(ora_com, wms_user.user_id, PUID);
                 int rowsAffected = ora_com.ExecuteNonQuery();
+                qualityIntent.Confirm();
 
                 long ret2 = Convert.ToInt64(ora_com.Parameters["ID1"].Value.ToString());
 
@@ -13277,7 +13344,9 @@ option1 int  -- 1= дан вес товара  2=вест товара без к
 
             ora_com3.Parameters.Add("ID1", OracleType.VarChar, 10).Direction = ParameterDirection.ReturnValue;
 
+            StockCommandIntent scanIntent = StockCommandIntent.Prepare(ora_com3, wms_user.user_id, pallet_uid);
             int rowsAffected = ora_com3.ExecuteNonQuery();
+            scanIntent.Confirm();
 
         }
 
@@ -14116,17 +14185,28 @@ option1 int  -- 1= дан вес товара  2=вест товара без к
                             ora_com.Parameters.Add("pallet_id", OracleType.VarChar).Value = dr3.Cells[0].Value.ToString();
                             ora_com.Parameters.Add("cell_to", OracleType.VarChar).Value = ЯЧЕЙКА_КУДА.Text;
 
-                            long iiii = 0;
-                            try
+                            decimal iiii;
+
+                            if (!decimal.TryParse(СКОЛЬКО_ПЕРЕМЕЩАЕМ.Text.Trim().Replace(',', '.'),
+
+                                System.Globalization.NumberStyles.AllowDecimalPoint,
+
+                                System.Globalization.CultureInfo.InvariantCulture, out iiii) || iiii < 0)
+
                             {
-                                iiii = Convert.ToInt64(СКОЛЬКО_ПЕРЕМЕЩАЕМ.Text);
+
+                                MessageBox.Show("Укажите корректное количество; 0 — переместить всю паллету.");
+
+                                return;
+
                             }
-                            catch { }
                             ora_com.Parameters.Add("count1", OracleType.Number).Value = iiii;
                             ora_com.Parameters.Add("user_id1", OracleType.VarChar).Value = wms_user.user_id;
+                            StockCommandIntent stockIntent = StockCommandIntent.Prepare(ora_com, wms_user.user_id, ora_com.Parameters["pallet_id"].Value.ToString());
                             ora_com.Parameters.Add("ok", OracleType.VarChar, 50).Direction = ParameterDirection.ReturnValue;
                             ora_com.ExecuteNonQuery();
                             string ret = ora_com.Parameters["ok"].Value.ToString();
+                if (ret.StartsWith("ok", StringComparison.Ordinal)) stockIntent.Confirm();
                             if (ret.Substring(0, 2) != "ok")
                             {
                                 // MessageBox.Show("ошибка: " + ret);
@@ -14342,12 +14422,10 @@ option1 int  -- 1= дан вес товара  2=вест товара без к
                 values["Y"] = Y;
                 values["Z"] = Z;
                 values["BRT_KOR"] = BRT_KOR;
+                values["p_actor"] = this.wms_user.user_id;
 
                 object ret = wms_get_spfunction_value2("ARTICULS.UPDATE_MOD", values, OracleType.Int32, 0);
-                if (ID == 0)
-                {
-                    ID = obj2int(ret);
-                }
+                ID = obj2int(ret);
                 dataGridView25.CurrentRow.Cells[0].Value = ID;
 
                 /*
@@ -14585,7 +14663,7 @@ option1 int  -- 1= дан вес товара  2=вест товара без к
                     return;
                 }
 
-                dataGridView_prihod.CurrentRow.Cells[5].Value = 3;
+
 
                 // ===========================================================
 
@@ -14595,9 +14673,12 @@ option1 int  -- 1= дан вес товара  2=вест товара без к
                 ora_com.CommandText = "RRL_STORNO_ORDER3";
                 ora_com.CommandType = CommandType.StoredProcedure;
                 ora_com.Parameters.Add("order_id", OracleType.Int32).Value = order_id;
-                ora_com.Parameters.Add("user_id1", OracleType.VarChar).Value = "KLAD_RABAEV";
+                ora_com.Parameters.Add("user_id1", OracleType.VarChar).Value = wms_user.user_id;
+                StockCommandIntent stockIntent = StockCommandIntent.Prepare(ora_com, wms_user.user_id, order_id.ToString());
 
                 int rowsAffected = ora_com.ExecuteNonQuery();
+                stockIntent.Confirm();
+                dataGridView_prihod.CurrentRow.Cells[5].Value = 3;
 
             }
             catch (Exception ex)
@@ -16746,25 +16827,33 @@ option1 int  -- 1= дан вес товара  2=вест товара без к
 
         private void dataGrid_ПАЛЛЕТЫ_ОТКУДА_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-
-            if (dataGrid_ПАЛЛЕТЫ_ОТКУДА.CurrentRow == null)
+            if (dataGrid_ПАЛЛЕТЫ_ОТКУДА.CurrentRow == null) return;
+            string pallet = dataGrid_ПАЛЛЕТЫ_ОТКУДА.CurrentRow.Cells[0].Value.ToString();
+            string cell = ЯЧЕЙКА_ОТКУДА.Text;
+            try
             {
-                return;
+                using (OracleCommand command = new OracleCommand())
+                {
+                    command.Connection = get_wms_connection();
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = "select REMAIN from RRL_REMAINS where UID_POLETA=:p and CELL=:c";
+                    command.Parameters.Add("p", OracleType.VarChar).Value = pallet;
+                    command.Parameters.Add("c", OracleType.VarChar).Value = cell;
+                    dataGrid_ПАЛЛЕТЫ_ОТКУДА.CurrentRow.Cells[1].Value = command.ExecuteScalar();
+                }
+                string configured = Environment.GetEnvironmentVariable("WMS_INVENTORY_URL");
+                Uri address;
+                if (!Uri.TryCreate(String.IsNullOrEmpty(configured) ?
+                        "http://127.0.0.1:3000/inventory-count.html" : configured, UriKind.Absolute, out address)
+                    || (address.Scheme != Uri.UriSchemeHttp && address.Scheme != Uri.UriSchemeHttps))
+                    throw new InvalidOperationException("Неверный WMS_INVENTORY_URL.");
+                UriBuilder target = new UriBuilder(address);
+                target.Query = (String.IsNullOrEmpty(address.Query) ? "" : address.Query.Substring(1) + "&")
+                    + "cell=" + Uri.EscapeDataString(cell) + "&uid=" + Uri.EscapeDataString(pallet);
+                MessageBox.Show("Коррекция остатка выполняется по документу инвентаризации. Выберите или создайте документ и подтвердите измеренное количество.");
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(target.Uri.AbsoluteUri) { UseShellExecute = true });
             }
-
-            string pall1 = dataGrid_ПАЛЛЕТЫ_ОТКУДА.CurrentRow.Cells[0].Value.ToString();
-            string cell1 = ЯЧЕЙКА_ОТКУДА.Text;
-            string val1 = dataGrid_ПАЛЛЕТЫ_ОТКУДА.CurrentRow.Cells[1].Value.ToString();
-
-            string strSQL = " update RRL_REMAINS set REMAIN=" + val1 +
-                " where CELL = '" + cell1 + "' and UID_POLETA='" + pall1 + "'  ";
-
-            OracleCommand ora_com = new OracleCommand();
-            ora_com.Connection = get_wms_connection();
-            ora_com.CommandText = strSQL;
-            ora_com.CommandType = CommandType.Text;
-            ora_com.ExecuteNonQuery();
-
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void VERIFY_VYCHERK_IN_OTBOR_CheckedChanged(object sender, EventArgs e)

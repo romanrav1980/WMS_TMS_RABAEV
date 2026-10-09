@@ -3,3 +3,4 @@ sqlalchemy
 oracledb
 uvicorn
 openpyxl
+httpx

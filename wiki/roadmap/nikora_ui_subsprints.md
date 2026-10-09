@@ -1,5 +1,7 @@
 # NIKORA: подспринты интерфейсов и функциональных сценариев
 
+Приоритет 16.09.2026 — [[roadmap/nikora_crossdock_first]]: монитор обмена, матрица готовности, ручная волна/маршрут, cross-dock приёмка/линия, погрузка/выезд, исключения и магазинная приёмка. Остальные рабочие места сохраняются в backlog и не блокируют первый выпуск при проверенной действующей WMS.
+
 Дата: 15.09.2026. Уточняет [[roadmap/nikora_functional_sprints]] и [[roadmap/nikora_architecture_sprints]]. ТЗ: [[requirements/nikora_ui_workplaces_tz]], [[requirements/nikora_ui_quality_tz]], [[requirements/nikora_ui_reachtruck_tz]], [[requirements/nikora_ui_reachtruck_dispatch_tz]].
 
 ## 1. Единица планирования и порядок

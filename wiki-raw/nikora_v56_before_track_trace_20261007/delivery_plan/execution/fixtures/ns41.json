@@ -1,0 +1,45 @@
+{
+  "namespace": "DS-NS41",
+  "synthetic": true,
+  "base": "base.json",
+  "data": "HU1: две D10 по 10 кг и D02 2 кг, тара паллеты 20; целевое брутто 42, допуск 1 кг; контроль включён",
+  "scenarios": [
+    {
+      "id": "NS41-TC01",
+      "initial": "Вес 41 и 43",
+      "action": "Проверить",
+      "expected": "Обе границы включительно проходят",
+      "mandatory": true
+    },
+    {
+      "id": "NS41-TC02",
+      "initial": "Вес 40.99 или 43.01",
+      "action": "Проверить",
+      "expected": "Красный тег и запрет погрузки",
+      "mandatory": true
+    },
+    {
+      "id": "NS41-TC03",
+      "initial": "Целая неизменённая допустимая монопаллета",
+      "action": "Применить настройку",
+      "expected": "Весовой проход освобождён согласно policy",
+      "mandatory": true
+    },
+    {
+      "id": "NS41-TC04",
+      "initial": "Неполная паллета хранения",
+      "action": "Применить освобождение",
+      "expected": "Не освобождается при действующем контроле",
+      "mandatory": true
+    },
+    {
+      "id": "NS41-TC05",
+      "initial": "Состав изменён",
+      "action": "Использовать прежний PASS",
+      "expected": "Отказ по устаревшей версии",
+      "mandatory": true
+    }
+  ],
+  "seedStatus": "declarative_plan_not_executed",
+  "binding": "Resolve against actual ORCL/RABAEV contracts before execution"
+}

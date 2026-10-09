@@ -520,10 +520,16 @@ def get_routing_status(
 @router.post("/distance-matrix/rebuild")
 def rebuild_distance_matrix(
     source: str = Query(default="auto", description="auto|haversine|osrm|valhalla"),
+    force: bool = Query(default=False, description="Force full rewrite instead of incremental refresh"),
+    max_age_hours: int = Query(default=24 * 30, ge=1, le=24 * 365),
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
 ) -> dict:
     """Пересчитывает матрицу расстояний RRL_ADDR_DISTANCE_MATRIX."""
-    return DistanceMatrixService().rebuild(source=source)
+    return DistanceMatrixService().rebuild(
+        source=source,
+        force=force,
+        max_age_hours=max_age_hours,
+    )
 
 
 @router.post("/planner/solve")

@@ -36,7 +36,8 @@ def _oracle_pool() -> oracledb.ConnectionPool:
                 min=1,
                 max=12,
                 increment=1,
-                getmode=oracledb.POOL_GETMODE_WAIT,
+                getmode=oracledb.POOL_GETMODE_TIMEDWAIT,
+                wait_timeout=30000,
             )
         return _pool
 
