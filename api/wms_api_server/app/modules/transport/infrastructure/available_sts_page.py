@@ -17,8 +17,10 @@ def page_available_sts(sql: str, where_sql: str, has_having: bool, page: int | N
     headers=("select P.ST_NUMBER,P.ADDR,P.WARE_ID from RABAEV.RRL_SBORKA_PALLETS P "
              "left join RABAEV.RRL_ADDR A on A.ADDR=P.ADDR "+where_sql+
              " and exists(select 1 from RABAEV.RRL_SBORKA_PALLET_ROWS R where R.PALLET_UID=P.PALLET_UID) "
-             "group by P.ST_NUMBER,P.ADDR,P.WARE_ID "
-             "order by MIN(A.ORD) NULLS LAST,MIN(NVL(A.REGION,P.ADDR)),P.ST_NUMBER,P.WARE_ID,P.ADDR")
+             "group by P.ST_NUMBER,P.ADDR,P.WARE_ID")
+    headers=("select H.ST_NUMBER,H.ADDR,H.WARE_ID from ("+headers+") H "
+             "left join RABAEV.RRL_ADDR PAGE_ADDR on PAGE_ADDR.ADDR=H.ADDR "
+             "order by PAGE_ADDR.ORD NULLS LAST,NVL(PAGE_ADDR.REGION,H.ADDR),H.ST_NUMBER,H.WARE_ID,H.ADDR")
     # Bounded header view drives existing ST_NUMBER and PALLET_UID indexes.
     source="FROM RABAEV.RRL_SBORKA_PALLETS P"
     join=("FROM ("+_window(headers)+") K JOIN RABAEV.RRL_SBORKA_PALLETS P ON "

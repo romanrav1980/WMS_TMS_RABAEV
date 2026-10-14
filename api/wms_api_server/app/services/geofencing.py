@@ -11,7 +11,7 @@ from typing import Any
 
 log = logging.getLogger(__name__)
 
-_GEO_STATE: dict[str, set[int]] = {}  # vehicle_id → {addr_id} inside
+_GEO_STATE: dict[str, set[tuple[int, str]]] = {}  # vehicle_id → {(trip_id, address)} inside
 
 
 def haversine_m(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -32,98 +32,62 @@ def check_geofences(
     """
     Sprint 118: проверить геозоны активных рейсов для машины.
     Возвращает список событий: {event: 'enter'|'exit', addr_id, task_id, addr}.
-    Sprint 119: при enter/exit — автоматически выставляет fact операций UNLOAD.
+    GPS наблюдение не подтверждает выполнение UNLOAD без точной привязки к операции.
     """
     events: list[dict] = []
-    if not lat or not lon:
+    if not math.isfinite(lat) or not math.isfinite(lon) or not -90 <= lat <= 90 or not -180 <= lon <= 180:
         return events
 
     # Получаем активные рейсы машины с адресами и их координатами
     rows = gateway.fetch_all(
         """
-        SELECT TT.ID AS TASK_ID, A.ID AS ADDR_ID, A.ADDR,
-               A.LATITUDE, A.LONGITUDE,
+        SELECT TT.ID AS TASK_ID, A.ADDR AS ADDR_ID, A.ADDR,
+               A.SHIROTA AS LATITUDE, A.DOLGOTA AS LONGITUDE,
                NVL(A.GEO_FENCE_RADIUS_M, 200) AS RADIUS_M
           FROM RABAEV.RRL_TRANSPORT_TASK TT
-          JOIN RABAEV.RRL_SBORKA_PALLETS SP ON SP.TRANSTASK_ID = TT.ID AND NVL(SP.DELETED,0)=0
+          JOIN RABAEV.RRL_SBORKA_PALLETS SP ON SP.TRANSTASK_ID = TT.ID AND SP.CONDITION<>2
           JOIN RABAEV.RRL_ADDR A ON A.ADDR = SP.ADDR
          WHERE TT.TRANSPORT IN (
-           SELECT NUM_PLAT FROM RABAEV.RRL_TR_VEHICLE WHERE ID=:vid AND NVL(DELETED,0)=0
+           SELECT NUM FROM RABAEV.RRL_TR_VEHICLE WHERE ID=:vid AND NVL(DELETED,0)=0
          )
            AND TT.CONDITION NOT IN ('Отгружен','Отменён')
            AND NVL(TT.DELETED,0)=0
-           AND A.LATITUDE IS NOT NULL AND A.LONGITUDE IS NOT NULL
-         GROUP BY TT.ID, A.ID, A.ADDR, A.LATITUDE, A.LONGITUDE, A.GEO_FENCE_RADIUS_M
+           AND NVL(A.DELETED3,0)=0
+           AND A.SHIROTA BETWEEN -90 AND 90 AND A.DOLGOTA BETWEEN -180 AND 180
+         GROUP BY TT.ID, A.ADDR, A.SHIROTA, A.DOLGOTA, A.GEO_FENCE_RADIUS_M
         """,
         {"vid": vehicle_id},
     )
 
     state_key = str(vehicle_id)
     current_inside = _GEO_STATE.get(state_key, set())
-    new_inside: set[int] = set()
+    new_inside: set[tuple[int, str]] = set()
 
     for r in rows:
-        addr_id = int(r.get("addr_id") or 0)
-        addr_lat = float(r.get("latitude") or 0)
-        addr_lon = float(r.get("longitude") or 0)
+        addr_id = str(r["addr_id"])
+        addr_lat = float(r["latitude"])
+        addr_lon = float(r["longitude"])
         radius = float(r.get("radius_m") or 200)
         task_id = int(r.get("task_id") or 0)
 
+        identity = (task_id, addr_id)
         dist = haversine_m(lat, lon, addr_lat, addr_lon)
         inside = dist <= radius
 
         if inside:
-            new_inside.add(addr_id)
-            if addr_id not in current_inside:
+            new_inside.add(identity)
+            if identity not in current_inside:
                 # Entered geofence
                 events.append({"event": "enter", "addr_id": addr_id, "task_id": task_id, "addr": r.get("addr")})
-                _auto_mark_unload_start(gateway, task_id, addr_id)
+                events[-1].update(operational_fact_applied=False, reason="unambiguous_binding_required")
         else:
-            if addr_id in current_inside:
+            if identity in current_inside:
                 # Exited geofence
                 events.append({"event": "exit", "addr_id": addr_id, "task_id": task_id, "addr": r.get("addr")})
-                _auto_mark_unload_done(gateway, task_id, addr_id)
+                events[-1].update(operational_fact_applied=False, reason="unambiguous_binding_required")
 
     _GEO_STATE[state_key] = new_inside
     return events
 
 
-def _auto_mark_unload_start(gateway: Any, task_id: int, addr_id: int) -> None:
-    """Sprint 119: авто-отметка начала UNLOAD при входе в геозону."""
-    try:
-        gateway.execute(
-            """
-            UPDATE RABAEV.RRL_TT_OPERATIONS
-               SET FACT_START = NVL(FACT_START, SYSDATE),
-                   NOTE = NVL(NOTE, '') || ' [GPS-auto]'
-             WHERE TT_ID = :tid
-               AND OPERATION_CODE = 'UNLOAD'
-               AND FACT_START IS NULL
-               AND ROWNUM = 1
-            """,
-            {"tid": task_id},
-        )
-        log.debug("Auto-marked UNLOAD start for task %d addr_id %d", task_id, addr_id)
-    except Exception as exc:
-        log.warning("Auto mark UNLOAD start failed: %s", exc)
 
-
-def _auto_mark_unload_done(gateway: Any, task_id: int, addr_id: int) -> None:
-    """Sprint 119: авто-отметка завершения UNLOAD при выходе из геозоны."""
-    try:
-        gateway.execute(
-            """
-            UPDATE RABAEV.RRL_TT_OPERATIONS
-               SET FACT_END = NVL(FACT_END, SYSDATE),
-                   NOTE = NVL(NOTE, '') || ' [GPS-auto]'
-             WHERE TT_ID = :tid
-               AND OPERATION_CODE = 'UNLOAD'
-               AND FACT_START IS NOT NULL
-               AND FACT_END IS NULL
-               AND ROWNUM = 1
-            """,
-            {"tid": task_id},
-        )
-        log.debug("Auto-marked UNLOAD done for task %d addr_id %d", task_id, addr_id)
-    except Exception as exc:
-        log.warning("Auto mark UNLOAD done failed: %s", exc)

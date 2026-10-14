@@ -1,0 +1,446 @@
+[
+ {
+  "step": "read_initial",
+  "http": 200,
+  "ms": 321,
+  "result": {
+   "version": 1,
+   "configured": true,
+   "operation_id": null,
+   "windows": 0,
+   "mode": "UNCONFIGURED",
+   "tz": null
+  }
+ },
+ {
+  "step": "put_weekly",
+  "http": 200,
+  "ms": 153,
+  "result": {
+   "version": 2,
+   "configured": true,
+   "operation_id": "STORE.PROFILE:C0029:acf64622005f4c67bfcff22d819e3044",
+   "windows": 10,
+   "mode": "WEEKLY",
+   "tz": "Europe/Moscow"
+  }
+ },
+ {
+  "step": "read_after_weekly",
+  "http": 200,
+  "ms": 69,
+  "result": {
+   "version": 2,
+   "configured": true,
+   "operation_id": null,
+   "windows": 10,
+   "mode": "WEEKLY",
+   "tz": "Europe/Moscow"
+  }
+ },
+ {
+  "step": "replay_same_operation",
+  "http": 200,
+  "ms": 99,
+  "result": {
+   "version": 2,
+   "configured": true,
+   "operation_id": "STORE.PROFILE:C0029:acf64622005f4c67bfcff22d819e3044",
+   "windows": 10,
+   "mode": "WEEKLY",
+   "tz": "Europe/Moscow"
+  }
+ },
+ {
+  "step": "same_operation_other_body",
+  "http": 409,
+  "ms": 114,
+  "result": {
+   "code": "STORE_PROFILE_OPERATION_PAYLOAD_CONFLICT",
+   "message": "STORE_PROFILE_OPERATION_PAYLOAD_CONFLICT",
+   "operation_id": "STORE.PROFILE:C0029:acf64622005f4c67bfcff22d819e3044",
+   "outcome_confirmed": true
+  }
+ },
+ {
+  "step": "stale_version_new_operation",
+  "http": 409,
+  "ms": 94,
+  "result": {
+   "code": "STORE_PROFILE_VERSION_CHANGED",
+   "message": "STORE_PROFILE_VERSION_CHANGED",
+   "operation_id": "STORE.PROFILE:C0029:f73f9807eff741d59c97c91b4753a52f",
+   "outcome_confirmed": true
+  }
+ },
+ {
+  "step": "put_56_windows",
+  "http": 200,
+  "ms": 492,
+  "result": {
+   "version": 3,
+   "configured": true,
+   "operation_id": "STORE.PROFILE:C0029:e15f928b8e05495b99922bfe1e3f926f",
+   "windows": 56,
+   "mode": "WEEKLY",
+   "tz": "Europe/Moscow"
+  }
+ },
+ {
+  "step": "read_56_windows",
+  "http": 200,
+  "ms": 61,
+  "result": {
+   "version": 3,
+   "configured": true,
+   "operation_id": null,
+   "windows": 56,
+   "mode": "WEEKLY",
+   "tz": "Europe/Moscow"
+  }
+ },
+ {
+  "step": "put_57_windows_rejected",
+  "http": 422,
+  "ms": 52,
+  "result": [
+   {
+    "type": "too_long",
+    "loc": [
+     "body",
+     "windows"
+    ],
+    "msg": "List should have at most 56 items after validation, not 57",
+    "input": [
+     {
+      "weekday": 1,
+      "from_minute": 0,
+      "to_minute": 120
+     },
+     {
+      "weekday": 1,
+      "from_minute": 180,
+      "to_minute": 300
+     },
+     {
+      "weekday": 1,
+      "from_minute": 360,
+      "to_minute": 480
+     },
+     {
+      "weekday": 1,
+      "from_minute": 540,
+      "to_minute": 660
+     },
+     {
+      "weekday": 1,
+      "from_minute": 720,
+      "to_minute": 840
+     },
+     {
+      "weekday": 1,
+      "from_minute": 900,
+      "to_minute": 1020
+     },
+     {
+      "weekday": 1,
+      "from_minute": 1080,
+      "to_minute": 1200
+     },
+     {
+      "weekday": 1,
+      "from_minute": 1260,
+      "to_minute": 1380
+     },
+     {
+      "weekday": 2,
+      "from_minute": 0,
+      "to_minute": 120
+     },
+     {
+      "weekday": 2,
+      "from_minute": 180,
+      "to_minute": 300
+     },
+     {
+      "weekday": 2,
+      "from_minute": 360,
+      "to_minute": 480
+     },
+     {
+      "weekday": 2,
+      "from_minute": 540,
+      "to_minute": 660
+     },
+     {
+      "weekday": 2,
+      "from_minute": 720,
+      "to_minute": 840
+     },
+     {
+      "weekday": 2,
+      "from_minute": 900,
+      "to_minute": 1020
+     },
+     {
+      "weekday": 2,
+      "from_minute": 1080,
+      "to_minute": 1200
+     },
+     {
+      "weekday": 2,
+      "from_minute": 1260,
+      "to_minute": 1380
+     },
+     {
+      "weekday": 3,
+      "from_minute": 0,
+      "to_minute": 120
+     },
+     {
+      "weekday": 3,
+      "from_minute": 180,
+      "to_minute": 300
+     },
+     {
+      "weekday": 3,
+      "from_minute": 360,
+      "to_minute": 480
+     },
+     {
+      "weekday": 3,
+      "from_minute": 540,
+      "to_minute": 660
+     },
+     {
+      "weekday": 3,
+      "from_minute": 720,
+      "to_minute": 840
+     },
+     {
+      "weekday": 3,
+      "from_minute": 900,
+      "to_minute": 1020
+     },
+     {
+      "weekday": 3,
+      "from_minute": 1080,
+      "to_minute": 1200
+     },
+     {
+      "weekday": 3,
+      "from_minute": 1260,
+      "to_minute": 1380
+     },
+     {
+      "weekday": 4,
+      "from_minute": 0,
+      "to_minute": 120
+     },
+     {
+      "weekday": 4,
+      "from_minute": 180,
+      "to_minute": 300
+     },
+     {
+      "weekday": 4,
+      "from_minute": 360,
+      "to_minute": 480
+     },
+     {
+      "weekday": 4,
+      "from_minute": 540,
+      "to_minute": 660
+     },
+     {
+      "weekday": 4,
+      "from_minute": 720,
+      "to_minute": 840
+     },
+     {
+      "weekday": 4,
+      "from_minute": 900,
+      "to_minute": 1020
+     },
+     {
+      "weekday": 4,
+      "from_minute": 1080,
+      "to_minute": 1200
+     },
+     {
+      "weekday": 4,
+      "from_minute": 1260,
+      "to_minute": 1380
+     },
+     {
+      "weekday": 5,
+      "from_minute": 0,
+      "to_minute": 120
+     },
+     {
+      "weekday": 5,
+      "from_minute": 180,
+      "to_minute": 300
+     },
+     {
+      "weekday": 5,
+      "from_minute": 360,
+      "to_minute": 480
+     },
+     {
+      "weekday": 5,
+      "from_minute": 540,
+      "to_minute": 660
+     },
+     {
+      "weekday": 5,
+      "from_minute": 720,
+      "to_minute": 840
+     },
+     {
+      "weekday": 5,
+      "from_minute": 900,
+      "to_minute": 1020
+     },
+     {
+      "weekday": 5,
+      "from_minute": 1080,
+      "to_minute": 1200
+     },
+     {
+      "weekday": 5,
+      "from_minute": 1260,
+      "to_minute": 1380
+     },
+     {
+      "weekday": 6,
+      "from_minute": 0,
+      "to_minute": 120
+     },
+     {
+      "weekday": 6,
+      "from_minute": 180,
+      "to_minute": 300
+     },
+     {
+      "weekday": 6,
+      "from_minute": 360,
+      "to_minute": 480
+     },
+     {
+      "weekday": 6,
+      "from_minute": 540,
+      "to_minute": 660
+     },
+     {
+      "weekday": 6,
+      "from_minute": 720,
+      "to_minute": 840
+     },
+     {
+      "weekday": 6,
+      "from_minute": 900,
+      "to_minute": 1020
+     },
+     {
+      "weekday": 6,
+      "from_minute": 1080,
+      "to_minute": 1200
+     },
+     {
+      "weekday": 6,
+      "from_minute": 1260,
+      "to_minute": 1380
+     },
+     {
+      "weekday": 7,
+      "from_minute": 0,
+      "to_minute": 120
+     },
+     {
+      "weekday": 7,
+      "from_minute": 180,
+      "to_minute": 300
+     },
+     {
+      "weekday": 7,
+      "from_minute": 360,
+      "to_minute": 480
+     },
+     {
+      "weekday": 7,
+      "from_minute": 540,
+      "to_minute": 660
+     },
+     {
+      "weekday": 7,
+      "from_minute": 720,
+      "to_minute": 840
+     },
+     {
+      "weekday": 7,
+      "from_minute": 900,
+      "to_minute": 1020
+     },
+     {
+      "weekday": 7,
+      "from_minute": 1080,
+      "to_minute": 1200
+     },
+     {
+      "weekday": 7,
+      "from_minute": 1260,
+      "to_minute": 1380
+     },
+     {
+      "weekday": 1,
+      "from_minute": 1430,
+      "to_minute": 1440
+     }
+    ],
+    "ctx": {
+     "field_type": "List",
+     "max_length": 56,
+     "actual_length": 57
+    }
+   }
+  ]
+ },
+ {
+  "step": "bad_timezone_rejected",
+  "http": 422,
+  "ms": 112,
+  "result": {
+   "code": "STORE_PROFILE_TIMEZONE_UNKNOWN",
+   "message": "Часовой пояс отсутствует в каталоге Oracle",
+   "operation_id": "STORE.PROFILE:C0029:98061956b7c6467282e1c37f2558d571",
+   "outcome_confirmed": true
+  }
+ },
+ {
+  "step": "restore_initial",
+  "http": 200,
+  "ms": 107,
+  "result": {
+   "version": 4,
+   "configured": true,
+   "operation_id": "STORE.PROFILE:C0029:23963744e2bc4918abf428020523c8f4",
+   "windows": 0,
+   "mode": "UNCONFIGURED",
+   "tz": null
+  }
+ },
+ {
+  "step": "read_final",
+  "http": 200,
+  "ms": 76,
+  "result": {
+   "version": 4,
+   "configured": true,
+   "operation_id": null,
+   "windows": 0,
+   "mode": "UNCONFIGURED",
+   "tz": null
+  }
+ }
+]

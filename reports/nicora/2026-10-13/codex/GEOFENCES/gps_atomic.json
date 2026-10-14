@@ -1,0 +1,29 @@
+{
+  "fixture_vehicle": 10102,
+  "rollback": true,
+  "packets": 3,
+  "history": 3,
+  "last_timestamp": "2030-01-15T09:30:00",
+  "ms": 1069.29,
+  "sql": [
+    [
+      "gr0ntpgzds00p",
+      1,
+      3.584,
+      26
+    ],
+    [
+      "am9g7rdb9jbu8",
+      3,
+      338.394,
+      956
+    ],
+    [
+      "7ddtmt2f234kp",
+      3,
+      0.983,
+      21
+    ]
+  ],
+  "timestamp_validation": "PASS"
+}

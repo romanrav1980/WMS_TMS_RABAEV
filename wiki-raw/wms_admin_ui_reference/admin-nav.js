@@ -28,6 +28,7 @@ const WMS_ADMIN_NAV_ITEMS = [
   { key: "warehouse-hus", label: "Грузовые места", href: "warehouse-hus.html", icon: "warehouse-types", permission: "warehouse_task_view" },
   { key: "inventory-count", label: "Пересчёт", href: "inventory-count.html", icon: "orders", permission: "stock_inventory_count" },
   { key: "quality-policy", label: "Правила контроля отгрузки", href: "quality-policy.html", icon: "settings", permission: "warehouse_settings_view" },
+  { key: "store-directory", label: "Магазины", href: "store-directory.html", icon: "settings", permission: "warehouse_settings_view" },
   { key: "receiving", label: "Приёмка поставки SAP", href: "receiving.html", icon: "orders", permission: "sap_supply_view" },
   { key: "home", label: "Главная", href: "index.html", icon: "home" },
   { key: "shift-supervisor", label: "Панель смены", href: "shift-supervisor-wave.html", icon: "kpi", permission: "pick_wave_view" },

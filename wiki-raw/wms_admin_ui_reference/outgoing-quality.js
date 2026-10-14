@@ -132,7 +132,7 @@
    (data.sample_selected?" Выборочная полная проверка назначена и сохранена.":"")+
    (data.rescan_required?" После отклонения требуется полная сверка состава.":"")+
    (data.independent_controller_required?" Контролёр должен отличаться от фактического сборщика.":"")+
-   (data.expected_weight_kg?" Ожидаемый вес "+data.expected_weight_kg+" кг, допуск ±"+data.tolerance_kg+" кг.":data.required===false?"":" "+explain(data.weight_policy_reason));controls();
+   (data.expected_weight_kg?" Ожидаемый вес "+data.expected_weight_kg+" кг, допуск ±"+data.tolerance_kg+" кг.":data.required===false||data.weight_exemption?.eligible?"":" "+explain(data.weight_policy_reason));controls();
  }
  el("print-label").onclick=async()=>{
   const id=snapshot?.shipment_identifier,signature=snapshot?.composition_signature,scope=key(),stamp=generation;

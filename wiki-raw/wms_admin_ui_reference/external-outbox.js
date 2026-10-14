@@ -208,4 +208,5 @@ async function loadRegulatoryRuntime() {
   const result = await response.json();
   if (owner !== JSON.stringify([externalApiBase(), window.wmsAdminAuth?.state.user?.username])) return;
   outboxEl("regulatoryRuntimeStatus").textContent = response.ok ? result.message : "Не удалось подтвердить режим внешнего обмена.";
+  outboxEl("regulatoryRuntimeStatus").title = response.ok ? [result.reason_code,result.requested_mode].filter(Boolean).join(" · ") : "";
 }

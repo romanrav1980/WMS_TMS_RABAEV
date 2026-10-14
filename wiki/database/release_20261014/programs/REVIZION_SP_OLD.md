@@ -1,0 +1,109 @@
+# REVIZION_SP_OLD
+
+Тип: **PACKAGE**. Схема: `RABAEV`.
+
+Подсистема по имени: Legacy / общие справочники; бизнес-назначение требует уточнения по вызывающему коду.
+
+## Интерфейс
+
+| Подпрограмма | Аргумент (пустой = RETURN) | Позиция | Тип | Направление | Default | Overload |
+|---|---|---|---|---|---|---|
+| ADD_ROW_2_REVIZION |  |  | NUMBER | OUT | N |  |
+| ADD_ROW_2_REVIZION | CELL1 | 1 | VARCHAR2 | IN | N |  |
+| ADD_ROW_2_REVIZION | REVISION_ID1 | 2 | NUMBER | IN | N |  |
+| ADD_ROW_2_REVIZ_TYPE_ART |  |  | NUMBER | OUT | N |  |
+| ADD_ROW_2_REVIZ_TYPE_ART | CELL1 | 1 | VARCHAR2 | IN | N |  |
+| ADD_ROW_2_REVIZ_TYPE_ART | REVISION_ID1 | 2 | NUMBER | IN | N |  |
+| ADD_ROW_2_REVIZ_TYPE_ART2 |  |  | NUMBER | OUT | N |  |
+| ADD_ROW_2_REVIZ_TYPE_ART2 | CELL1 | 1 | VARCHAR2 | IN | N |  |
+| ADD_ROW_2_REVIZ_TYPE_ART2 | ARTICUL2 | 2 | VARCHAR2 | IN | N |  |
+| ADD_ROW_2_REVIZ_TYPE_ART2 | REVISION_ID1 | 3 | NUMBER | IN | N |  |
+| ARTICUL_NAME |  |  | VARCHAR2 | OUT | N |  |
+| ARTICUL_NAME | ART | 1 | VARCHAR2 | IN | N |  |
+| CLEAR_CELL |  |  | NUMBER | OUT | N |  |
+| CLEAR_CELL | CELL1 | 1 | VARCHAR2 | IN | N |  |
+| CLEAR_CELL | PUID | 2 | VARCHAR2 | IN | N |  |
+| CLEAR_CELL2 |  |  | NUMBER | OUT | N |  |
+| CLEAR_CELL2 | CELL1 | 1 | VARCHAR2 | IN | N |  |
+| CLOSE_REVISION |  |  | NUMBER | OUT | N |  |
+| CLOSE_REVISION | REV_ID | 1 | NUMBER | IN | N |  |
+| CREATENAKLAD_2_REVIZION |  |  | NUMBER | OUT | N |  |
+| CREATENAKLAD_2_REVIZION | REV_ID1 | 1 | NUMBER | IN | N |  |
+| CREATE_REVIZION |  |  | NUMBER | OUT | N |  |
+| CREATE_REVIZION | WARE_ID1 | 1 | NUMBER | IN | N |  |
+| CREATE_REVIZION | USER_ID1 | 2 | VARCHAR2 | IN | N |  |
+| REMAIN_AFTER |  |  | NUMBER | OUT | N |  |
+| REMAIN_AFTER | REV_ID | 1 | NUMBER | IN | N |  |
+| REMAIN_AFTER | ARTICUL1 | 2 | VARCHAR2 | IN | N |  |
+| REMAIN_AFTER | CELL1 | 3 | VARCHAR2 | IN | N |  |
+| REMAIN_BEFORE |  |  | NUMBER | OUT | N |  |
+| REMAIN_BEFORE | REV_ID | 1 | NUMBER | IN | N |  |
+| REMAIN_BEFORE | ARTICUL1 | 2 | VARCHAR2 | IN | N |  |
+| REMAIN_BEFORE | CELL1 | 3 | VARCHAR2 | IN | N |  |
+| REVISION_CELL_KOR |  |  | VARCHAR2 | OUT | N |  |
+| REVISION_CELL_KOR | CELL1 | 1 | VARCHAR2 | IN | N |  |
+| REVISION_CELL_KOR | REVISION_ID1 | 2 | NUMBER | IN | N |  |
+| REVISION_CELL_KOR | COUNT2 | 3 | NUMBER | IN | N |  |
+| REVISION_CELL_KOR | USER_ID3 | 4 | VARCHAR2 | IN | N |  |
+| REVISION_CELL_SHT_DELETED |  |  | VARCHAR2 | OUT | N |  |
+| REVISION_CELL_SHT_DELETED | CELL1 | 1 | VARCHAR2 | IN | N |  |
+| REVISION_CELL_SHT_DELETED | REVISION_ID1 | 2 | NUMBER | IN | N |  |
+| REVISION_CELL_SHT_DELETED | COUNT2 | 3 | NUMBER | IN | N |  |
+| REVISION_CELL_SHT_DELETED | USER_ID3 | 4 | VARCHAR2 | IN | N |  |
+| REVISION_COND |  |  | NUMBER | OUT | N |  |
+| REVISION_COND | REV_ID | 1 | NUMBER | IN | N |  |
+| REV_CREATE_SNAP_SHOT_AFTER |  |  | NUMBER | OUT | N |  |
+| REV_CREATE_SNAP_SHOT_AFTER | REV_ID | 1 | NUMBER | IN | N |  |
+| REV_CREATE_SNAP_SHOT_BEFORE |  |  | NUMBER | OUT | N |  |
+| REV_CREATE_SNAP_SHOT_BEFORE | REV_ID | 1 | NUMBER | IN | N |  |
+| RRL_INV_CREATE_LINE5 |  |  | VARCHAR2 | OUT | N |  |
+| RRL_INV_CREATE_LINE5 | CELL1 | 1 | VARCHAR2 | IN | N |  |
+| RRL_INV_CREATE_LINE5 | ARTICUL2 | 2 | VARCHAR2 | IN | N |  |
+| RRL_INV_CREATE_LINE5 | COUNT1 | 3 | NUMBER | IN | N |  |
+| RRL_INV_CREATE_LINE5 | EXPIURY_DATE | 4 | DATE | IN | N |  |
+| RRL_INV_CREATE_LINE5 | FASOVKA_ID1 | 5 | NUMBER | IN | N |  |
+| RRL_INV_CREATE_LINE5 | BRAK_PERC1 | 6 | NUMBER | IN | N |  |
+| RRL_INV_CREATE_LINE5 | PALL_WEIGHT1 | 7 | NUMBER | IN | N |  |
+| RRL_INV_CREATE_LINE5 | PALL_N | 8 | NUMBER | IN | N |  |
+| RRL_INV_CREATE_LINE5 | TN_WEIGHT1 | 9 | NUMBER | IN | N |  |
+| RRL_INV_CREATE_LINE5 | COUNT_KOR1 | 10 | NUMBER | IN | N |  |
+| RRL_INV_CREATE_LINE5 | USER_ID2 | 11 | VARCHAR2 | IN | N |  |
+| RRL_INV_CREATE_LINE5 | NAKLAD_ID | 12 | NUMBER | IN | N |  |
+| RRL_REVIZION_CELL_PALL |  |  | VARCHAR2 | OUT | N |  |
+| RRL_REVIZION_CELL_PALL | ARTICUL1 | 1 | VARCHAR2 | IN | N |  |
+| RRL_REVIZION_CELL_PALL | CELL1 | 2 | VARCHAR2 | IN | N |  |
+| RRL_REVIZION_CELL_PALL | COUNT_PAL | 3 | NUMBER | IN | N |  |
+| RRL_REVIZION_CELL_PALL | REVISION_ROW_ID1 | 4 | NUMBER | IN | N |  |
+| RRL_REVIZION_CELL_PALL | USER_ID1 | 5 | VARCHAR2 | IN | N |  |
+| RRL_REVIZION_CELL_SHT |  |  | VARCHAR2 | OUT | N |  |
+| RRL_REVIZION_CELL_SHT | ARTICUL1 | 1 | VARCHAR2 | IN | N |  |
+| RRL_REVIZION_CELL_SHT | CELL1 | 2 | VARCHAR2 | IN | N |  |
+| RRL_REVIZION_CELL_SHT | COUNT_SHT | 3 | NUMBER | IN | N |  |
+| RRL_REVIZION_CELL_SHT | REVISION_ROW_ID1 | 4 | NUMBER | IN | N |  |
+| RRL_REVIZION_CELL_SHT | USER_ID1 | 5 | VARCHAR2 | IN | N |  |
+| RRL_REVIZION_CLEAR_MINUS |  |  | NUMBER | OUT | N |  |
+| RRL_REVIZION_CLEAR_MINUS | REVISION_ID1 | 1 | NUMBER | IN | N |  |
+| RRL_REVIZION_CLEAR_MINUS | USER_ID1 | 2 | VARCHAR2 | IN | N |  |
+| UPDATE_REVISION_ROW |  |  | NUMBER | OUT | N |  |
+| UPDATE_REVISION_ROW | CELL1 | 1 | VARCHAR2 | IN | N |  |
+| UPDATE_REVISION_ROW | ARTICUL2 | 2 | VARCHAR2 | IN | N |  |
+| UPDATE_REVISION_ROW | REVISION_ROWID | 3 | NUMBER | IN | N |  |
+| UPDATE_REVISION_ROW | REV_ID2 | 4 | NUMBER | IN | N |  |
+
+## Потенциальные записи по тексту SQL
+
+[RRL_EVENTS](../tables/RRL_EVENTS.md), [RRL_REMAINS](../tables/RRL_REMAINS.md), [RRL_REVISION_ROW](../tables/RRL_REVISION_ROW.md), [RRL_REVIZION](../tables/RRL_REVIZION.md)
+
+Это статический указатель, а не гарантия выполнения записи при каждом вызове. Полная семантика и транзакционные условия — в теле программы.
+
+## Зависимости
+
+[ADD_RRL_PRIH_NAKLAD2](../programs/ADD_RRL_PRIH_NAKLAD2.md), [REMAINS](../programs/REMAINS.md), [REVIZION_SP_OLD](../programs/REVIZION_SP_OLD.md), [RRL_ARTICULS](../tables/RRL_ARTICULS.md), [RRL_EVENTS](../tables/RRL_EVENTS.md), `RRL_EVENT_ID_SQ`, [RRL_INTERNAL_MOVE2](../programs/RRL_INTERNAL_MOVE2.md), [RRL_PALLETS](../tables/RRL_PALLETS.md), [RRL_PRIHODPALLET_CHANGE](../programs/RRL_PRIHODPALLET_CHANGE.md), [RRL_PRIHOD_NAKLAD](../tables/RRL_PRIHOD_NAKLAD.md), [RRL_REMAINS](../tables/RRL_REMAINS.md), [RRL_REMAIN_SNAPSHOT_ROWS](../tables/RRL_REMAIN_SNAPSHOT_ROWS.md), [RRL_REVISION_ROW](../tables/RRL_REVISION_ROW.md), `RRL_REVISION_ROW_SQ`, `RRL_REVISION_SQ`, [RRL_REVIZION](../tables/RRL_REVIZION.md), [RRL_REVIZION_CELL](../programs/RRL_REVIZION_CELL.md), [RRL_REVIZION_CELL_KOR](../programs/RRL_REVIZION_CELL_KOR.md)
+
+## Кто использует
+
+[REVIZION](../programs/REVIZION.md), [REVIZION_SP_OLD](../programs/REVIZION_SP_OLD.md)
+
+## Исходный код
+
+[Полный SQL-снимок](../../../../db/releases/2026-10-14/README.md). Ищите точное имя `REVIZION_SP_OLD` в файле соответствующего типа.

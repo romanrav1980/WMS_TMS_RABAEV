@@ -1,0 +1,21 @@
+{
+  "invalid": [],
+  "ledger": [
+    [
+      "2026-10-14-1490-ni051-store-profile",
+      "APPLIED"
+    ],
+    [
+      "2026-10-14-ni022-store-access-dimensions",
+      "APPLIED"
+    ],
+    [
+      "2026-10-14-ni022-vehicle-outer-dimensions",
+      "APPLIED"
+    ],
+    [
+      "2026-10-14-ni081-store-weekly-windows",
+      "APPLIED"
+    ]
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "errors": [],
+  "matching_signature": true,
+  "stale_signature": false,
+  "wrong_document": false,
+  "cleaned_fixture_status": {
+    "shipment_identifier": "QCF1.ST:f9734885e0",
+    "document_id": 641516,
+    "required": true,
+    "control_mode": "ANY",
+    "independent_controller_required": false,
+    "ready": false,
+    "weight_exemption_recorded": false,
+    "reason": "ORA-20868: SHIPMENT_OWN_PICKED_RESERVATION_INSUFFICIENT"
+  },
+  "index": [
+    [
+      "RRL_QC_EXEMPT_DOCUMENT_IX",
+      "VALID"
+    ]
+  ],
+  "checkpoint_note": "Pre-apply checkpoint script failed import; rollback body reconstructed by removing exact additive status patch from current USER_SOURCE, not a fresh pre-apply export."
+}

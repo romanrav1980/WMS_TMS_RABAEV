@@ -1,6 +1,6 @@
 {
   "date": "2026-10-14",
-  "planRevision": 70,
+  "planRevision": 76,
   "requirementsRevision": 57,
   "sourceBaselineApproved": true,
   "sourceBaseline": "wiki/sources/nicora_code_baseline_proposal_20261007.md",
@@ -12,15 +12,15 @@
   "additionalTestRuns": "targeted_changed_behavior_only_no_broad_runs",
   "oracleSchema": "RABAEV",
   "deliveryMethod": "reuse_existing_wms_tms",
-  "currentSprint": "NI03.2",
-  "firstChange": "NI04.2 scale archive delivered report52; NI02.2 SQL page/index applied and HTTP verified report53. Claude C-0010 financial cycle delivered K-0015; NI07.2 navigation remains with Claude. Continue confirmed warehouse gaps, preserving existing owners.",
+  "currentSprint": null,
+  "firstChange": "NI05.1 scoped rules/storage proof/immutable exemption/label guard and NI08.1 native route/rest final approval delivered in RABAEV.",
   "sprints": [
     {
       "id": "NI01",
       "businessResult": "Правила приёмки и реальный файловый SAP-обмен",
-      "status": "implemented_baseline_with_remaining_deltas",
+      "status": "implemented_pending_full_acceptance",
       "reuse": "ARTMAS10, XML file gateway, supply order, pallet receipt/label/putaway/ACK",
-      "changeRequired": "Согласовать реальный XML SAP-основания с адресатом склад, изменения/отмену и ACK. Закрыть пробелы предложения паллет, правки укладки и размещения по времени пополнения на существующей приёмке.",
+      "changeRequired": "Неотправленный ввод и исправление сканов реализованы. Реальный обмен SAP/аппаратная приёмка отдельны.",
       "dependencies": "NI03.1",
       "priorCardIds": [
         "NS13",
@@ -55,7 +55,7 @@
         "005-007 migrations installed in existing RABAEV/orcl"
       ],
       "pendingSlices": [
-        "Согласовать реальный XML SAP-основания с адресатом склад, изменения/отмену и ACK. Закрыть пробелы предложения паллет, правки укладки и размещения по времени пополнения на существующей приёмке."
+        "Неотправленный ввод и исправление сканов реализованы. Реальный обмен SAP/аппаратная приёмка отдельны."
       ],
       "acceptanceStatus": "not_full_business_acceptance",
       "realSapExchangeExecuted": false,
@@ -66,9 +66,9 @@
     {
       "id": "NI02",
       "businessResult": "Оригинальная автоматическая подготовка СТ; Поздние заказы и транспортные ограничения",
-      "status": "implemented_baseline_with_remaining_deltas",
+      "status": "implemented_pending_full_acceptance",
       "reuse": "SAP→ORDERS/SBORKA manual bridge, RRL_TT_ADD_PALL/TRANSTASK_ID; Calendar/late hold, customer rules, подготовка СТ и транспортные экраны",
-      "changeRequired": "Довести UI планового типа адресата/явного переопределения при сборке и deadline сборки/ворота; сохранить существующее назначение и физические guards.",
+      "changeRequired": "Сохранить готовый расчёт и общий ORDERS/SBORKA writer; использовать его результат в сквозном сценарии.; Функции ограничений/типов/времени и страницы СТ реализованы; общий временной допуск NI08.1-R1 сдан. Широкая история имеет переменное время1.685–8.3с; постоянные<2с не доказаны, рабочий UI использует период/страницы. Не применять ухудшающий NL hint (6.631с).",
       "dependencies": "NI01.1",
       "priorCardIds": [
         "NS15",
@@ -91,8 +91,8 @@
         "1195/1196 same Root physical TOP normative type proof/load/depart/current scoped UI;1197 existing planner merges typed LOADED TOP"
       ],
       "pendingSlices": [
-        "Довести UI планового типа адресата/явного переопределения при сборке и deadline сборки/ворота; сохранить существующее назначение и физические guards.",
-        "Реальные нормы, внешний ERP обмен и промышленный пилот учитываются отдельно от готовности локального кода."
+        "Сохранить готовый расчёт и общий ORDERS/SBORKA writer; использовать его результат в сквозном сценарии.",
+        "Функции ограничений/типов/времени и страницы СТ реализованы; общий временной допуск NI08.1-R1 сдан. Широкая история имеет переменное время1.685–8.3с; постоянные<2с не доказаны, рабочий UI использует период/страницы. Не применять ухудшающий NL hint (6.631с)."
       ],
       "autoPalletSplit": "Owner authorised13Oct; current V2 whole-box/current-temperature automatic calculation and same legacy writer delivered1118/1148",
       "migration": "2026-10-07-009-ni02-legacy-st-adapter",
@@ -105,9 +105,9 @@
     {
       "id": "NI03",
       "businessResult": "Доступность товара для планировщиков; Исполнение и восстановление складских заданий; Фактическое исполнение заказа и волны",
-      "status": "implemented_baseline_with_remaining_deltas",
+      "status": "implemented_pending_full_acceptance",
       "reuse": "Ячейки/партии, placement/pick faces, P/H ядра и существующие planners; TASK_COMPLETE, FULL_PALLET→PICKING_MOVE/WAVE, CASE pick/short/return и ТСД; WAVE_LAUNCH, PLANNED fulfillment и CASE→existing ST binding",
-      "changeRequired": "Устранить расхождения допуска: склад, блокировки ячейки, срок/партия, приёмка/размещение, разрешённый прямой отбор и свободное P−H.; Довести отсутствующие составные переходы, остаток частичного исполнения, роли/назначение техники и продолжение после утверждённой недостачи.; Довести PLANNED→PICKED по факту, частичный заказ/отказ и причины незавершения в рабочем месте. Запуск волны заново не писать.",
+      "changeRequired": "Использовать проверенный общий допуск P−H, партии, сроки и доступность ячеек; карантин блокируется ячейками.; Цепочка, частичный остаток, назначения, пополнение и продолжение реализованы. Независимый полный маркированный/аппаратный маршрут отдельно.; Заказ/волна, факт/остаток, смешанное исполнение/возврат и продолжение реализованы. Независимый составной маршрут и внешние подтверждения отдельно.",
       "dependencies": "installed core and existing baseline",
       "priorCardIds": [
         "NS08",
@@ -135,8 +135,9 @@
         "NI03.1 shared Oracle eligibility installed; planner/UI and locked commands; targeted Oracle/HTTP cases passed"
       ],
       "pendingSlices": [
-        "Довести отсутствующие составные переходы, остаток частичного исполнения, роли/назначение техники и продолжение после утверждённой недостачи.",
-        "Довести PLANNED→PICKED по факту, частичный заказ/отказ и причины незавершения в рабочем месте. Запуск волны заново не писать."
+        "Использовать проверенный общий допуск P−H, партии, сроки и доступность ячеек; карантин блокируется ячейками.",
+        "Цепочка, частичный остаток, назначения, пополнение и продолжение реализованы. Независимый полный маркированный/аппаратный маршрут отдельно.",
+        "Заказ/волна, факт/остаток, смешанное исполнение/возврат и продолжение реализованы. Независимый составной маршрут и внешние подтверждения отдельно."
       ],
       "incrementIds": [
         "NI03.1",
@@ -152,9 +153,9 @@
     {
       "id": "NI04",
       "businessResult": "Складская матрёшка грузовых мест; Недостающие способы комплектации; Сквозная маркировка и внешние адаптеры",
-      "status": "implemented_baseline_with_remaining_deltas",
+      "status": "implemented_pending_full_acceptance",
       "reuse": "CRPT_AGGREGATION/ITEMS, physical CASE membership и CONTENT_VERSION; Case-pick/barcode resolver, mini-max, весовые функции и упаковки; WMS SKU policies, unit/code registry, birth_capture, SAP manifests, regulatory journal/outbox",
-      "changeRequired": "Завершить один активный родитель, отсутствие циклов, движение верхнего HU с составом, вскрытие/перепаковку и запрет отдельного движения вложения; до DDL разделить regulatory и warehouse composition.; Довести целую/весовую коробку, отбор на весах, поштучный и pick-by-line, категорию B/маршрут только по подтверждённым пробелам. Каждый способ — отдельный ticket.; Закрыть non-SAP aggregation manifest, версию профиля и помарочный inventory/MES UI. CRPT/табак, ЕГАИС и другие адаптеры — отдельные tickets по применимости SKU, с реальными квитанциями и повтором.",
+      "changeRequired": "Дерево HU, whole move, unpack/repack и physical slots реализованы. Независимые сочетания маркировки/нескольких мест и оборудование отдельно.; Все существующие методыотбора сохранены. UnpostedCASEdraft и durableSHORTretry добавленыreportsNI042/61. Аппаратная/независимаяприёмка отдельно; конкретные следующие кодовыепробелы подтверждать исходниками.; Taskscan actor/task/currentcontext/retry и архивповреждённогоintent реализованыNI043/report61. ГосударственныйACK/провайдер отдельно, не заменять локальнымподтверждением.",
       "dependencies": "NI03.2, NI03.3",
       "priorCardIds": [
         "NS13",
@@ -181,9 +182,9 @@
         "NI04.3"
       ],
       "pendingSlices": [
-        "Завершить один активный родитель, отсутствие циклов, движение верхнего HU с составом, вскрытие/перепаковку и запрет отдельного движения вложения; до DDL разделить regulatory и warehouse composition.",
-        "Довести целую/весовую коробку, отбор на весах, поштучный и pick-by-line, категорию B/маршрут только по подтверждённым пробелам. Каждый способ — отдельный ticket.",
-        "Закрыть non-SAP aggregation manifest, версию профиля и помарочный inventory/MES UI. CRPT/табак, ЕГАИС и другие адаптеры — отдельные tickets по применимости SKU, с реальными квитанциями и повтором."
+        "Дерево HU, whole move, unpack/repack и physical slots реализованы. Независимые сочетания маркировки/нескольких мест и оборудование отдельно.",
+        "Все существующие методыотбора сохранены. UnpostedCASEdraft и durableSHORTretry добавленыreportsNI042/61. Аппаратная/независимаяприёмка отдельно; конкретные следующие кодовыепробелы подтверждать исходниками.",
+        "Taskscan actor/task/currentcontext/retry и архивповреждённогоintent реализованыNI043/report61. ГосударственныйACK/провайдер отдельно, не заменять локальнымподтверждением."
       ],
       "acceptanceStatus": "not_full_business_acceptance",
       "implementedSlices": [
@@ -195,9 +196,9 @@
     {
       "id": "NI05",
       "businessResult": "Контроль и допуск версии состава; Экспедиция, погрузка и выезд; Приёмка магазина и расхождения",
-      "status": "implemented_baseline_with_remaining_deltas",
+      "status": "implemented_pending_full_acceptance",
       "reuse": "OUTGOING_PALLET_CHECK, native QC, LOT_CHECK/audit и weight functions; CASE→СТ, SHIP_PALLET, рейсы/ворота/места и DriverMobilePage; DriverMobilePage/GPS, transport_service и действующие заказы/рейсы",
-      "changeRequired": "Закрыть пробелы независимых ролей/выборки, версии допуска, исправления и повторного выпуска. Не создавать второй QC.; Довести staging/ворота, фактический HU в машине, ожидание/перенос и отдельный gate выезда; внешний marking gate из NI04.3 обязателен по применимости.; Довести HU/СТ, количества, применимые вес/фото, недостачу/излишек/отказ и сохранение кодов в действующей водительской платформе.",
+      "changeRequired": "Адресные правила, whole/storage proof, native QC audit/replay и запрет этикетки без записанного основания реализованы. Независимая полная приёмка и оборудование отдельно.; Native физическая цепочка reports44/46 готова; восстановление команды UI выполнено report63. Аппаратный пилот и независимая приёмка отдельно.; Актподтверждённойприёмки/различия/следующиешаги и сохранениеформыприconfirmedreject реализованыC0023Codex; обычнаяnativeприёмкаreport46существует. Конкретныеисключения внешнейприёмки отдельно.",
       "dependencies": "NI02.2, NI03.3, NI04.1, NI04.2",
       "priorCardIds": [
         "NS41",
@@ -219,9 +220,9 @@
         "NI05.3"
       ],
       "pendingSlices": [
-        "Закрыть пробелы независимых ролей/выборки, версии допуска, исправления и повторного выпуска. Не создавать второй QC.",
-        "Довести staging/ворота, фактический HU в машине, ожидание/перенос и отдельный gate выезда; внешний marking gate из NI04.3 обязателен по применимости.",
-        "Довести HU/СТ, количества, применимые вес/фото, недостачу/излишек/отказ и сохранение кодов в действующей водительской платформе."
+        "Адресные правила, whole/storage proof, native QC audit/replay и запрет этикетки без записанного основания реализованы. Независимая полная приёмка и оборудование отдельно.",
+        "Native физическая цепочка reports44/46 готова; восстановление команды UI выполнено report63. Аппаратный пилот и независимая приёмка отдельно.",
+        "Актподтверждённойприёмки/различия/следующиешаги и сохранениеформыприconfirmedreject реализованыC0023Codex; обычнаяnativeприёмкаreport46существует. Конкретныеисключения внешнейприёмки отдельно."
       ],
       "acceptanceStatus": "not_full_business_acceptance",
       "implementedSlices": [
@@ -237,9 +238,9 @@
     {
       "id": "NI06",
       "businessResult": "Межскладской поток двух плеч; Бизнес-возвраты и расследование потери; Баланс оборотной тары",
-      "status": "implemented_baseline_with_remaining_deltas",
+      "status": "implemented_pending_full_acceptance",
       "reuse": "CROSS_DOCKING, рейсы/места и складские задания; CASE_CARRIER_RETURN, supplier return/RETURNS и task/short/audit; PALLET_TYPE, водительские return operations и рейсы",
-      "changeRequired": "Связать обязательства плеч, ворота, консолидацию, фактическую выгрузку/приём целевого склада; legacy SYNC не считать полным процессом.; Довести SAP-основание, годное/брак/поставщик, поиск по партиям/кодам и regulatory lifecycle; настроить RETURNS. CASE отмена не заменяет возврат магазина.; Довести выдачу/возврат по типу/складу/машине/магазину, владельца и расхождения на существующей основе.",
+      "changeRequired": "Восстановление групповой команды/сканов выполнено. Сопоставить составные и частичные критерии с существующими результатами; нового маршрута не создавать.; Принятый возврат связан с точной очередью размещения; фильтр receipt_operation_id применяется до ограничения100. Повреждённые команды/сканы защищены. Внешние ACK и независимая приёмка отдельно.; LOSS WRITE_OFF уже реализован, повторная разработка не нужна. Приёмка физической передачи и независимая сверка держателей отдельно.",
       "dependencies": "NI05.2, NI05.3",
       "priorCardIds": [
         "NS51",
@@ -255,9 +256,9 @@
         "NI06.3"
       ],
       "pendingSlices": [
-        "Связать обязательства плеч, ворота, консолидацию, фактическую выгрузку/приём целевого склада; legacy SYNC не считать полным процессом.",
-        "Довести SAP-основание, годное/брак/поставщик, поиск по партиям/кодам и regulatory lifecycle; настроить RETURNS. CASE отмена не заменяет возврат магазина.",
-        "Довести выдачу/возврат по типу/складу/машине/магазину, владельца и расхождения на существующей основе."
+        "Восстановление групповой команды/сканов выполнено. Сопоставить составные и частичные критерии с существующими результатами; нового маршрута не создавать.",
+        "Принятый возврат связан с точной очередью размещения; фильтр receipt_operation_id применяется до ограничения100. Повреждённые команды/сканы защищены. Внешние ACK и независимая приёмка отдельно.",
+        "LOSS WRITE_OFF уже реализован, повторная разработка не нужна. Приёмка физической передачи и независимая сверка держателей отдельно."
       ],
       "acceptanceStatus": "not_full_business_acceptance",
       "implementedSlices": [
@@ -268,9 +269,9 @@
     {
       "id": "NI07",
       "businessResult": "Затраты NICORA поверх биллинга; Сверка фактов и закрытие дня",
-      "status": "in_progress_bounded_reuse",
+      "status": "implemented_pending_full_acceptance",
       "reuse": "Готовые счета/тарифы/пересчёт/BillingTransport; Stock journal, fulfillment/outbox/regulatory journal и закрытие дня TMS",
-      "changeRequired": "Добавить складские нормативные статьи, допрасходы/полномочия и распределение по фактическим операциям/рейсам/складам/поставщикам.; Связать ERP, доставку, P/H, марки, незавершённые места/обязательства и причины расхождения; pending ACK отдельно от физического факта.",
+      "changeRequired": "Периодные источники, нормативы, допрасходы, согласование, корректировки и счета реализованы. Нужны реальные финансовые mapping/ACK и коммерческие ставки; это отдельная внешняя приёмка.; Сверка/документы/ERP/regulatoryIDs/stockkeys и полныйkeysetregistry готовы. Внешняя сверка/независимое закрытие дня отдельно.",
       "dependencies": "NI05.3, NI06.2, NI06.3",
       "priorCardIds": [
         "NS56",
@@ -284,8 +285,8 @@
         "NI07.2"
       ],
       "pendingSlices": [
-        "Добавить складские нормативные статьи, допрасходы/полномочия и распределение по фактическим операциям/рейсам/складам/поставщикам.",
-        "Связать ERP, доставку, P/H, марки, незавершённые места/обязательства и причины расхождения; pending ACK отдельно от физического факта."
+        "Периодные источники, нормативы, допрасходы, согласование, корректировки и счета реализованы. Нужны реальные финансовые mapping/ACK и коммерческие ставки; это отдельная внешняя приёмка.",
+        "Сверка/документы/ERP/regulatoryIDs/stockkeys и полныйkeysetregistry готовы. Внешняя сверка/независимое закрытие дня отдельно."
       ],
       "acceptanceStatus": "not_full_business_acceptance",
       "implementedSlices": [
@@ -306,9 +307,9 @@
     {
       "id": "NI08",
       "businessResult": "Прогноз и рекомендации по исполнению",
-      "status": "in_progress_bounded_reuse",
+      "status": "implemented_pending_full_acceptance",
       "reuse": "Готовые VRP/матрица/Ганта/history/pick faces",
-      "changeRequired": "Перевести прогноз на исполненную историю, добавить утверждаемые рекомендации ресурсов/слотов и общий валидатор ручного/автоплана.",
+      "changeRequired": "NI08.1-R1 реализован: общий native маршрут с REST, свежая дорога/окна/дневная занятость и финальное утверждение. Внешние нормативы, дорожный провайдер, предшествующая занятость и независимая приёмка отдельно.",
       "dependencies": "NI07.2",
       "priorCardIds": [
         "NS33",
@@ -321,7 +322,7 @@
         "NI08.1"
       ],
       "pendingSlices": [
-        "Перевести прогноз на исполненную историю, добавить утверждаемые рекомендации ресурсов/слотов и общий валидатор ручного/автоплана."
+        "NI08.1-R1 реализован: общий native маршрут с REST, свежая дорога/окна/дневная занятость и финальное утверждение. Внешние нормативы, дорожный провайдер, предшествующая занятость и независимая приёмка отдельно."
       ],
       "acceptanceStatus": "not_full_business_acceptance",
       "implementedSlices": [
@@ -374,7 +375,7 @@
     "transport": "XML files through gateway",
     "markingSettingsOwner": "WMS"
   },
-  "currentSprintMeaning": "Root: NI05.2 loading recovery и конечные критерии. Ведомый Codex: NI06.2; NI01.1 form draft и NI06.1 group recovery сданы.",
+  "currentSprintMeaning": "Current agreed code scope completed; independent/external/pilot acceptance remains separate",
   "nestedSscc": "existing_nested_CRPT_aggregation_requires_warehouse_completion",
   "stockPostingDecision": {
     "specification": "wiki/requirements/stock_posting_core_tz.md",
@@ -420,7 +421,7 @@
     "baselineId": "B0-20261009-STOCK-V2"
   },
   "functionalStreamCount": 8,
-  "currentStream": "NI02",
+  "currentStream": null,
   "increments": [
     {
       "id": "NI03.1",
@@ -444,7 +445,7 @@
       "reuse": "Ячейки/партии, placement/pick faces, P/H ядра и существующие planners",
       "changeRequired": "Устранить расхождения допуска: склад, блокировки ячейки, срок/партия, приёмка/размещение, разрешённый прямой отбор и свободное P−H.",
       "businessResult": "Допустимые источники и конкретная причина отказа видны оператору; карантин не даёт резервировать/отбирать товар, P сохраняется.",
-      "status": "implemented_targeted_verified",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/placement.py",
         "api/wms_api_server/app/modules/inventory/infrastructure/case_pick_policy.py",
@@ -454,14 +455,14 @@
       "acceptanceStatus": "targeted_dev_cases_passed_independent_and_full_ui_acceptance_pending",
       "estimates": "not_measured",
       "evidence": "wiki/database/nicora_ni031_stock_eligibility_20261009.md",
-      "architectureGate": "global_preexisting_failure_no_new_debt_in_increment",
-      "deliveryCodeStatus": "targeted_dev_verified",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
       "remainingDeliveryWork": "Использовать проверенный общий допуск P−H, партии, сроки и доступность ячеек; карантин блокируется ячейками.",
       "deliveryBatch": "B01",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
-      "deliveryOwner": "Reuse verified foundation"
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released"
     },
     {
       "id": "NI03.2",
@@ -485,7 +486,7 @@
       "reuse": "TASK_COMPLETE, FULL_PALLET→PICKING_MOVE/WAVE, CASE pick/short/return и ТСД",
       "changeRequired": "Довести отсутствующие составные переходы, остаток частичного исполнения, роли/назначение техники и продолжение после утверждённой недостачи.",
       "businessResult": "Задание показывает остаток и следующее действие; DONE отражает подтверждённый факт; повтор/переназначение не дублирует движение.",
-      "status": "in_progress",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/task_completion.py",
         "api/wms_api_server/app/modules/inventory/infrastructure/case_short_commands.py",
@@ -527,14 +528,15 @@
       ],
       "evidence": "wiki/database/nicora_ni032_task_recovery_20261009.md",
       "remainingPlan174": "Applied existing native current demand + unlaunched SOFT; concurrent original4/shipped3→plan1/no partial DRAFT; source/history bounds, independent acceptance remains open",
-      "deliveryCodeStatus": "partially_implemented",
-      "remainingDeliveryWork": "Цепочка/остаток/следующее действие и назначение реализованы reports59–60. Продолжение READY→исходнаясборка добавленоreport61. Остаток уточнять по не закрытым physical/marked/concurrency критериям, не повторять готовыйtaskengine.",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
+      "remainingDeliveryWork": "Цепочка, частичный остаток, назначения, пополнение и продолжение реализованы. Независимый полный маркированный/аппаратный маршрут отдельно.",
       "deliveryBatch": "B01",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
-      "deliveryOwner": "Codex",
-      "latestDeliveryReport": "reports/nicora/2026-10-13/60-ni032-assignment-continuation.md"
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "latestDeliveryReport": "reports/nicora/2026-10-13/60-ni032-assignment-continuation.md",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     },
     {
       "id": "NI03.3",
@@ -555,7 +557,7 @@
       "reuse": "WAVE_LAUNCH, PLANNED fulfillment и CASE→existing ST binding",
       "changeRequired": "Довести PLANNED→PICKED по факту, частичный заказ/отказ и причины незавершения в рабочем месте. Запуск волны заново не писать.",
       "businessResult": "Видны собранные количества/места и дефицит; подготовленная СТ не означает PICKED.",
-      "status": "in_progress",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/wave_commands.py",
         "api/wms_api_server/app/modules/inventory/infrastructure/case_shipment_binding.py",
@@ -587,14 +589,15 @@
         "Complete CASE/control/shipping/approved-short/multi-place flow",
         "Independent terminal acceptance remains open"
       ],
-      "deliveryCodeStatus": "partially_implemented",
-      "remainingDeliveryWork": "Факт/остаток/причины/next links уже реализованы; wave560→CASE1134 подтверждён. Сопоставить оставшийся составной CASE→QC→shipping/approvedshort критерий с существующимиreports44–46, без повторногоengine.",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
+      "remainingDeliveryWork": "Заказ/волна, факт/остаток, смешанное исполнение/возврат и продолжение реализованы. Независимый составной маршрут и внешние подтверждения отдельно.",
       "deliveryBatch": "B01",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
-      "deliveryOwner": "Codex",
-      "latestDeliveryReport": "reports/nicora/2026-10-13/61-parallel-functional-blocks.md"
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "latestDeliveryReport": "reports/nicora/2026-10-13/61-parallel-functional-blocks.md",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     },
     {
       "id": "NI04.1",
@@ -613,7 +616,7 @@
       "reuse": "CRPT_AGGREGATION/ITEMS, physical CASE membership и CONTENT_VERSION",
       "changeRequired": "Завершить один активный родитель, отсутствие циклов, движение верхнего HU с составом, вскрытие/перепаковку и запрет отдельного движения вложения; до DDL разделить regulatory и warehouse composition.",
       "businessResult": "Паллета движется с коробками/единицами; листья, масса и машиноместа не считаются дважды.",
-      "status": "in_progress",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/case_pick_commands.py"
       ],
@@ -646,13 +649,14 @@
         "Independent concurrent/marked/CASE-QC-retention/nested historical departure/browser acceptance"
       ],
       "slottedLifecycle175_177": "Actual native CASE slot relocation, retained nested tare, two occupied slots packing with late rollback/concurrent receipt/unpack reversal; full independent/marked/equipment acceptance pending",
-      "deliveryCodeStatus": "partially_implemented",
-      "remainingDeliveryWork": "Дерево и отдельный физический скан реализованы report51; довести оставшиеся сценарии перепаковки и аппаратной работы без изменения готового ядра.",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
+      "remainingDeliveryWork": "Дерево HU, whole move, unpack/repack и physical slots реализованы. Независимые сочетания маркировки/нескольких мест и оборудование отдельно.",
       "deliveryBatch": "B01",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
-      "deliveryOwner": "Codex"
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     },
     {
       "id": "NI04.2",
@@ -678,7 +682,7 @@
       "reuse": "Case-pick/barcode resolver, mini-max, весовые функции и упаковки",
       "changeRequired": "Довести целую/весовую коробку, отбор на весах, поштучный и pick-by-line, категорию B/маршрут только по подтверждённым пробелам. Каждый способ — отдельный ticket.",
       "businessResult": "ТСД ведёт способ отбора; фактические партия, количество, масса и состав входят в ту же проводку.",
-      "status": "in_progress",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/case_pick_commands.py",
         "api/wms_api_server/app/modules/inventory/infrastructure/inventory_scan_codes.py"
@@ -703,15 +707,16 @@
         "211 exact marked small CASE7/two-profile codes14/own full QR+actual weight retained in upper HU load/departure; source5/codes10, no duplicate quantity or fabricated legal aggregation",
         "1292–1300 existing TSD all SKU profiles/NET archive/exact quantities/current-scope durable pick and close; actual1134 five units ten codes, committed-response-loss replay, WAIT_CONTROL; report45."
       ],
-      "deliveryCodeStatus": "partially_implemented",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
       "remainingDeliveryWork": "Все существующие методыотбора сохранены. UnpostedCASEdraft и durableSHORTretry добавленыreportsNI042/61. Аппаратная/независимаяприёмка отдельно; конкретные следующие кодовыепробелы подтверждать исходниками.",
       "deliveryBatch": "B02",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
       "latestDelivery": "report52: scoped scale archive refresh/exact lookup/current usage, actual HTTP/browser read; equipment acceptance separate",
-      "deliveryOwner": "Codex",
-      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/NI042/report.md"
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/NI042/report.md",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     },
     {
       "id": "NI04.3",
@@ -738,9 +743,9 @@
         "NS58"
       ],
       "reuse": "WMS SKU policies, unit/code registry, birth_capture, SAP manifests, regulatory journal/outbox",
-      "changeRequired": "Закрыть non-SAP aggregation manifest, версию профиля и помарочный inventory/MES UI. CRPT/табак, ЕГАИС и другие адаптеры — отдельные tickets по применимости SKU, с реальными квитанциями и повтором.",
+      "changeRequired": "Local marking implemented. Government gateway deferred by owner; no fake external ACK.",
       "businessResult": "Код сохраняет происхождение/позицию до возврата; несколько профилей не увеличивают P; локальный журнал не выдаётся за государственный ACK.",
-      "status": "in_progress_local_aggregation_lifecycle",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/birth_capture.py",
         "api/wms_api_server/app/modules/inventory/infrastructure/receiving_marks.py"
@@ -766,14 +771,15 @@
         "450–465 immutable local aggregate invalidation/ancestor closure/current-origin native scan guard/exact custody/concurrent replay/freshSAP3-6",
         "1292–1300 existing TSD all SKU profiles/NET archive/exact quantities/current-scope durable pick and close; actual1134 five units ten codes, committed-response-loss replay, WAIT_CONTROL; report45."
       ],
-      "deliveryCodeStatus": "partially_implemented",
-      "remainingDeliveryWork": "Taskscan actor/task/currentcontext/retry и архивповреждённогоintent реализованыNI043/report61. ГосударственныйACK/провайдер отдельно, не заменять локальнымподтверждением.",
+      "deliveryCodeStatus": "local_marking_implemented_gateway_deferred_by_owner",
+      "remainingDeliveryWork": "Локальные профили/QR/агрегаты/очередь/аудит и явная диагностика готовы. Реальный интеграционный шлюз разрабатывается отдельно позже по решению владельца; отсутствие кода шлюза не называть отсутствием сертификата.",
       "deliveryBatch": "B02",
       "externalAcceptanceStatus": "real_exchange_pending",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
-      "deliveryOwner": "Codex",
-      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/NI043/report.md"
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/NI043/report.md",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     },
     {
       "id": "NI01.1",
@@ -794,7 +800,7 @@
       "reuse": "ARTMAS10, XML file gateway, supply order, pallet receipt/label/putaway/ACK",
       "changeRequired": "Согласовать реальный XML SAP-основания с адресатом склад, изменения/отмену и ACK. Закрыть пробелы предложения паллет, правки укладки и размещения по времени пополнения на существующей приёмке.",
       "businessResult": "По SAP-заказу приняты фактические паллеты с идентификатором/количеством/партией/сроком; создано размещение и квитанция.",
-      "status": "in_progress_bounded_receipt_layout",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/receiving.py",
         "api/wms_api_server/app/modules/inventory/infrastructure/placement.py",
@@ -819,14 +825,15 @@
         "1034–1039 receiving explicitline/order alias/current source/selectionhighlight, closedreceipt+newlabeldisabled/closedbalance wording/internal confirmedRefresh. JS947/1036PASS; actualBrowser27–28 retained908 line2/CRPT+EGAIS sourceREVERSED/no stockbirth; manualclicknotobserved/notPASS. SQL1038policy15.28ms205.5buf preservekeys/master_data versioncache+plan backlog. Report22/fullNI01.1open.",
         "1261: actual SAP-basis receipt36EA + putaway1163/1164; placement weight aggregation; report43."
       ],
-      "deliveryCodeStatus": "partially_implemented",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
       "remainingDeliveryWork": "Неотправленный ввод и исправление сканов реализованы. Реальный обмен SAP/аппаратная приёмка отдельны.",
       "deliveryBatch": "B01",
       "externalAcceptanceStatus": "real_exchange_pending",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
-      "deliveryOwner": "Codex",
-      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/NI011-draft/report.md"
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/NI011-draft/report.md",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     },
     {
       "id": "NI02.1",
@@ -843,7 +850,7 @@
       "reuse": "SAP→ORDERS/SBORKA manual bridge, RRL_TT_ADD_PALL/TRANSTASK_ID",
       "changeRequired": "По решению владельца13Oct реализован собственный exact whole-box/group/mass/volume расчёт; прежний ORDERS/SBORKA writer и назначение. Явные пределы обязательны. Независимая полная приёмка отдельно.",
       "businessResult": "SAP-заказ получает прежнюю подготовку СТ; назначение рейса остаётся существующим.",
-      "status": "implemented_targeted_verified",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/case_shipment_binding.py",
         "api/wms_api_server/app/services/customer_order_service.py",
@@ -860,13 +867,14 @@
         "277 exactFraction shares retain integral packages/9scale exactmass in existing ST preparation; actual72->3x24/1box/10kg",
         "1113–1125 auto domain/scoped snapshot + limits signature/shared locked writer/request receipt + durable UI; actual2135 SAP_2135 two places exact18+18/race/rollback/replay, report30"
       ],
-      "deliveryCodeStatus": "targeted_dev_verified",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
       "remainingDeliveryWork": "Сохранить готовый расчёт и общий ORDERS/SBORKA writer; использовать его результат в сквозном сценарии.",
       "deliveryBatch": "B01",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
-      "deliveryOwner": "Reuse verified foundation"
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     },
     {
       "id": "NI02.2",
@@ -884,7 +892,7 @@
       "reuse": "Calendar/late hold, customer rules, подготовка СТ и транспортные экраны",
       "changeRequired": "Довести UI планового типа адресата/явного переопределения при сборке и deadline сборки/ворота; сохранить существующее назначение и физические guards.",
       "businessResult": "Диспетчер видит решение/ограничения заказа; использует готовое назначение рейса.",
-      "status": "in_progress_bounded_calendar",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/case_shipment_binding.py",
         "api/wms_api_server/app/services/customer_order_service.py",
@@ -908,16 +916,17 @@
         "1221–1227 reused trip picker ASSIGN/current source scope; actualSAP_2135→33571/2original places/exact repeated relation/no goods/current fulfillment→loading link",
         "B01 report44: existing ST row layout/physical bindings/36EA shipment/2-place departure/wave559 DONE; own dev full-pallet path, no full sprint acceptance."
       ],
-      "deliveryCodeStatus": "partially_implemented",
-      "remainingDeliveryWork": "C0018+C0021 сданы: страницы200/серверныйсклад/compositekey/очисткавыбора. /clusters остаётсябезстраниц; широкиеисторическиевыборки требуют отдельногорешения пофактическойнагрузке.",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
+      "remainingDeliveryWork": "Узкая группировка внедрена: HTTP200/1.038с широкая страница200, семантика четырёх случаев совпала. Промышленная нагрузочная приёмка отдельно.",
       "deliveryBatch": "B01",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
       "latestDelivery": "report53: Oracle bounded ST headers + covering index VALID; 200-row equivalence and HTTP3.911s; global <2s still open",
-      "latestDeliveryReport": "reports/nicora/2026-10-13/claude/C0018/report.md",
-      "deliveryOwner": "Claude Code",
-      "serverContractOwner": "Codex"
+      "latestDeliveryReport": "reports/nicora/2026-10-13/68-ni022-narrow-header-group.md",
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "serverContractOwner": "Codex",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     },
     {
       "id": "NI05.1",
@@ -935,9 +944,9 @@
         "NS44"
       ],
       "reuse": "OUTGOING_PALLET_CHECK, native QC, LOT_CHECK/audit и weight functions",
-      "changeRequired": "Закрыть пробелы независимых ролей/выборки, версии допуска, исправления и повторного выпуска. Не создавать второй QC.",
+      "changeRequired": "Scoped QC and real store profile API/UI implemented; 56 windows/replay/conflicts verified. Independent acceptance separate.",
       "businessResult": "Изменение состава отзывает допуск; подтверждается актуальная версия.",
-      "status": "in_progress",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/terminal_quality_commands.py"
       ],
@@ -954,18 +963,20 @@
         "680–682 existing QC current actor/status control label and red tag; native signature409/no-store/read-only/render escapes/current UI; HTTP blocked label/stale signature PASS, actual green/hardware/attachment lifecycle still open",
         "1126–1130 physicalCASE barcode/CASEID -> existing native QC current identifier in readonly snapshot; UI canonical request freeze/read/report31/screen42"
       ],
-      "pendingSlices": [
-        "Labels/correction approval lifecycle and independent acceptance",
-        "Aggregation/split marked QC and native QR terminal adapter; applicable regulatory circulation gate",
-        "Physical packaging/BOX identities and variable weight, monopal exemptions, store/subwarehouse policy and native weight display adapters"
-      ],
-      "deliveryCodeStatus": "partially_implemented",
-      "remainingDeliveryWork": "Довести контроль состава/веса, исправление и повторный допуск текущей версии через существующий QC.",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
+      "remainingDeliveryWork": "Native QC policy/exemption/audit/label guard and store/warehouse selectors implemented. C0029 real store profile/replay/56 windows passed. Independent marking/weight/equipment acceptance remains separate.",
       "deliveryBatch": "B01",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
-      "independentReviewStatus": "not_confirmed",
-      "deliveryOwner": "Codex"
+      "independentReviewStatus": "scoped_review_F1_fixed_and_root_integrated; full independent acceptance pending",
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript",
+      "latestDeliveryReport": "reports/nicora/2026-10-13/65-ni051-scoped-quality.md",
+      "historicalPendingSlices": [
+        "Labels/correction approval lifecycle and independent acceptance",
+        "Aggregation/split marked QC and native QR terminal adapter; applicable regulatory circulation gate",
+        "Physical packaging/BOX identities and variable weight, monopal exemptions, store/subwarehouse policy and native weight display adapters"
+      ]
     },
     {
       "id": "NI05.2",
@@ -986,7 +997,7 @@
       "reuse": "CASE→СТ, SHIP_PALLET, рейсы/ворота/места и DriverMobilePage",
       "changeRequired": "Довести staging/ворота, фактический HU в машине, ожидание/перенос и отдельный gate выезда; внешний marking gate из NI04.3 обязателен по применимости.",
       "businessResult": "Закрытие по погруженным местам; запас списывается существующей командой один раз, погрузка/выезд различимы.",
-      "status": "in_progress",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/case_shipment_binding.py",
         "api/wms_api_server/app/services/transport_service.py"
@@ -1019,14 +1030,15 @@
         "1168–1207 physical thermal/load/departure and normative TOP type through existing Root and scoped UI; no new stock writer; retained whole STOCK loading proof",
         "B01 report44: existing ST row layout/physical bindings/36EA shipment/2-place departure/wave559 DONE; own dev full-pallet path, no full sprint acceptance."
       ],
-      "deliveryCodeStatus": "partially_implemented",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
       "remainingDeliveryWork": "Native физическая цепочка reports44/46 готова; восстановление команды UI выполнено report63. Аппаратный пилот и независимая приёмка отдельно.",
       "deliveryBatch": "B01",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
-      "deliveryOwner": "Codex",
-      "latestDeliveryReport": "reports/nicora/2026-10-13/63-ni052-loading-recovery.md"
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "latestDeliveryReport": "reports/nicora/2026-10-13/63-ni052-loading-recovery.md",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     },
     {
       "id": "NI05.3",
@@ -1043,7 +1055,7 @@
       "reuse": "DriverMobilePage/GPS, transport_service и действующие заказы/рейсы",
       "changeRequired": "Довести HU/СТ, количества, применимые вес/фото, недостачу/излишек/отказ и сохранение кодов в действующей водительской платформе.",
       "businessResult": "Магазин подтверждает доставку и акт расхождения, история отгрузки/марок сохраняется.",
-      "status": "in_progress_bounded_dev",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/reconciliation.py",
         "api/wms_api_server/app/services/transport_service.py"
@@ -1072,15 +1084,16 @@
         "736 existing store place keyset pages/current native receiver/form next100/first-empty foreign cursor bounds PASS; multi-row-browser open",
         "1302–1326 authenticated existing driver/native facts/durable UI/mobile receipt; frozen stock-pallet proof; order2135 received36EA, replay/outbox unchanged/P0H0. report46; continuous START→confirm UI remains targeted follow-up."
       ],
-      "deliveryCodeStatus": "partially_implemented",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
       "remainingDeliveryWork": "Актподтверждённойприёмки/различия/следующиешаги и сохранениеформыприconfirmedreject реализованыC0023Codex; обычнаяnativeприёмкаreport46существует. Конкретныеисключения внешнейприёмки отдельно.",
       "deliveryBatch": "B03",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
-      "deliveryOwner": "Claude Code",
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
       "serverContractOwner": "Codex",
-      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/C0023/report.md"
+      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/C0023/report.md",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     },
     {
       "id": "NI06.1",
@@ -1096,7 +1109,7 @@
       "reuse": "CROSS_DOCKING, рейсы/места и складские задания",
       "changeRequired": "Связать обязательства плеч, ворота, консолидацию, фактическую выгрузку/приём целевого склада; legacy SYNC не считать полным процессом.",
       "businessResult": "Для места видны оба плеча и физическая ответственность.",
-      "status": "in_progress_grouped_two_leg_delivered",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/task_completion.py",
         "api/wms_api_server/app/services/transport_service.py"
@@ -1159,15 +1172,16 @@
         "1342–1346 existing interwarehouse workspace unified route/filter/stage/next-action/grouped-place links, scoped stale response guards; real read-only browser evidence report48. Physical commands reused."
       ],
       "pendingSlices": [],
-      "deliveryCodeStatus": "partially_implemented",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
       "remainingDeliveryWork": "Восстановление групповой команды/сканов выполнено. Сопоставить составные и частичные критерии с существующими результатами; нового маршрута не создавать.",
       "deliveryBatch": "B04",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
-      "deliveryOwner": "Claude Code",
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
       "serverContractOwner": "Codex",
-      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/NI061/report.md"
+      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/NI061/report.md",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     },
     {
       "id": "NI06.2",
@@ -1184,7 +1198,7 @@
       "reuse": "CASE_CARRIER_RETURN, supplier return/RETURNS и task/short/audit",
       "changeRequired": "Довести SAP-основание, годное/брак/поставщик, поиск по партиям/кодам и regulatory lifecycle; настроить RETURNS. CASE отмена не заменяет возврат магазина.",
       "businessResult": "Возврат — отдельная разрешённая проводка; поиск потери сохраняет историю.",
-      "status": "in_progress_exception_return_disposition_delivered",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/case_pick_commands.py",
         "api/wms_api_server/app/modules/inventory/infrastructure/receipt_commands.py"
@@ -1231,14 +1245,16 @@
         ],
         "evidence": "wiki/database/nicora_ni062_preserved_pallet_20261012.md"
       },
-      "deliveryCodeStatus": "partially_implemented",
-      "remainingDeliveryWork": "Сквозное досье и переходы реализованы report50. Довести оставшиеся исключения возврата/расследования по действующим сценариям; реальные SAP/государственные ACK и независимая приёмка отдельно.",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
+      "remainingDeliveryWork": "Принятый возврат связан с точной очередью размещения; фильтр receipt_operation_id применяется до ограничения100. Повреждённые команды/сканы защищены. Внешние ACK и независимая приёмка отдельно.",
       "deliveryBatch": "B03",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
-      "deliveryOwner": "Claude Code",
-      "serverContractOwner": "Codex"
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "serverContractOwner": "Codex",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript",
+      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/NI062/report.md"
     },
     {
       "id": "NI06.3",
@@ -1256,7 +1272,7 @@
       "reuse": "PALLET_TYPE, водительские return operations и рейсы",
       "changeRequired": "Довести выдачу/возврат по типу/складу/машине/магазину, владельца и расхождения на существующей основе.",
       "businessResult": "Отдельный баланс тары без смешения с товарным P и двойного машиноместа.",
-      "status": "in_progress_bounded_dev_tare",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/reconciliation.py",
         "api/wms_api_server/app/services/transport_service.py"
@@ -1272,15 +1288,16 @@
         "556–558 existing TarePanel provenance selector/current participant signatures/canceled-offer filtering/fail-closed cached intent; original panel reused, direct source read+TS passed, browser not claimed",
         "1347–1353 existing mobile tare history/signatures/directions/scoped balance/exact response, real6 issued/store6/return4/warehouse4, one lost-response replay, goods events0; report49."
       ],
-      "deliveryCodeStatus": "partially_implemented",
-      "remainingDeliveryWork": "Повреждение/возврат/независимоесписаниеC0015 и недостача→REJECT/replayC0020 готовы. WRITE_OFF именно поLOSS ещёнеподтверждён; не писатьдругойучёттары.",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
+      "remainingDeliveryWork": "LOSS WRITE_OFF уже реализован, повторная разработка не нужна. Приёмка физической передачи и независимая сверка держателей отдельно.",
       "deliveryBatch": "B05",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
-      "latestDeliveryReport": "reports/nicora/2026-10-13/claude/C0020/report.md",
-      "deliveryOwner": "Claude Code",
-      "serverContractOwner": "Codex"
+      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/FINAL_FOUR_SCOPE_20261014.md",
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "serverContractOwner": "Codex",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     },
     {
       "id": "NI07.1",
@@ -1297,7 +1314,7 @@
       "reuse": "Готовые счета/тарифы/пересчёт/BillingTransport",
       "changeRequired": "Добавить складские нормативные статьи, допрасходы/полномочия и распределение по фактическим операциям/рейсам/складам/поставщикам.",
       "businessResult": "В существующем счёте объяснимо рассчитаны новые статьи.",
-      "status": "in_progress_box_assembly_period_partition_delivered",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/reconciliation.py",
         "api/wms_api_server/app/services/transport_service.py"
@@ -1325,15 +1342,17 @@
       ],
       "evidence": "wiki/database/nicora_ni071_outbox_20261010.md; wiki/database/nicora_ni071_transport_recognition_20261012.md",
       "progressNote": "Normative recognition/correction and multiwarehouse invoice aggregation implemented; existing load invariant one departure warehouse preserved. Remaining actual mixed-date/real ERP/independent evidence and monthly source coverage.",
-      "deliveryCodeStatus": "partially_implemented",
-      "remainingDeliveryWork": "Довести периодные фактические источники и рабочий путь нормативов, допрасходов, согласования и счетов; готовый биллинг сохранить.",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
+      "remainingDeliveryWork": "Периодные источники, нормативы, допрасходы, согласование, корректировки и счета реализованы. Нужны реальные финансовые mapping/ACK и коммерческие ставки; это отдельная внешняя приёмка.",
       "deliveryBatch": "B06",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
       "latestDelivery": "Claude K-0015: actual independent users report/LOGIST/FINANCE/allocation/correction,12.34-2.10=10.24 GEL,one allocation on retry; full sprint acceptance separate",
-      "deliveryOwner": "Claude Code",
-      "serverContractOwner": "Codex"
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "serverContractOwner": "Codex",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript",
+      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/FINAL_FOUR_SCOPE_20261014.md"
     },
     {
       "id": "NI07.2",
@@ -1351,7 +1370,7 @@
       "reuse": "Stock journal, fulfillment/outbox/regulatory journal и закрытие дня TMS",
       "changeRequired": "Связать ERP, доставку, P/H, марки, незавершённые места/обязательства и причины расхождения; pending ACK отдельно от физического факта.",
       "businessResult": "Сверка объясняет незакрытые обязательства, без скрытого UPDATE запаса.",
-      "status": "in_progress_current_reconciliation",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/reconciliation.py"
       ],
@@ -1383,14 +1402,15 @@
         "Claude K-0002: day overview UI, stale response protection, explainers and mobile layout; report/claude/NI07.2; full sprint remains open."
       ],
       "evidence": "wiki/components/nicora_ni072_reconciliation_20261010.md",
-      "deliveryCodeStatus": "partially_implemented",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
       "remainingDeliveryWork": "Сверка/документы/ERP/regulatoryIDs/stockkeys и полныйkeysetregistry готовы. Внешняя сверка/независимое закрытие дня отдельно.",
       "deliveryBatch": "B06",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
       "latestDeliveryReport": "reports/nicora/2026-10-13/62-ni072-stock-conflict-registry.md",
-      "deliveryOwner": "Codex"
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     },
     {
       "id": "NI08.1",
@@ -1406,9 +1426,9 @@
         "NS60"
       ],
       "reuse": "Готовые VRP/матрица/Ганта/history/pick faces",
-      "changeRequired": "Перевести прогноз на исполненную историю, добавить утверждаемые рекомендации ресурсов/слотов и общий валидатор ручного/автоплана.",
+      "changeRequired": "Native store/fleet/weekly route and C0032 recovery/C0033 schedule/C0034 night Gantt implemented. Final common gate PASS. External/pilot acceptance separate.",
       "businessResult": "Рекомендации объяснимы и утверждаются; solver/карта/Ганта сохраняются.",
-      "status": "in_progress_actual_execution_forecast",
+      "status": "implemented_pending_full_acceptance",
       "sourceAnchors": [
         "api/wms_api_server/app/modules/inventory/infrastructure/stock_posting_queries.py",
         "wiki/components/nicora_global_reuse_analysis_20261007.md"
@@ -1453,15 +1473,16 @@
         "externalDutyVerified": false,
         "evidence": "wiki/components/nicora_ni081_cross_trip_continuity_20261012.md"
       },
-      "deliveryCodeStatus": "partially_implemented",
-      "remainingDeliveryWork": "Рекомендация→интервалвыхода исправлена; workload/wavetime durable recovery усилен. Настройки/scopedread ужеготовы. СохраняетсяграницаCASE/currentavailability; физический ресурс/оборудование не подменять оценкой.",
+      "deliveryCodeStatus": "implemented_scoped_delivery_independent_acceptance_pending",
+      "remainingDeliveryWork": "No assigned current-scope code gap remains. Real provider/legal/equipment and independent/pilot acceptance remain separate.",
       "deliveryBatch": "B07",
       "externalAcceptanceStatus": "applicable_external_equipment_acceptance_not_confirmed",
       "pilotStatus": "not_confirmed",
       "independentReviewStatus": "not_confirmed",
-      "latestDeliveryReport": "reports/nicora/2026-10-13/61-parallel-functional-blocks.md",
-      "deliveryOwner": "Claude Code",
-      "serverContractOwner": "Codex"
+      "latestDeliveryReport": "reports/nicora/2026-10-13/codex/NI081/REPORT.md",
+      "deliveryOwner": "root / subordinate Codex; assigned code blocks released",
+      "serverContractOwner": "Codex",
+      "architectureGate": "PASS_759_files_0_cycles_73_debt_24_tests_admin_terminal_typescript"
     }
   ],
   "stockCoreMilestone": {
@@ -1508,35 +1529,33 @@
     "fullChecks": "before_release",
     "externalAcceptanceBlocksFurtherCode": false
   },
-  "completedFunctionalSprintCount": 1,
-  "remainingFunctionalSprintCount": 17,
+  "completedFunctionalSprintCount": 18,
+  "remainingFunctionalSprintCount": 0,
   "completedIncrementIds": [
-    "NI03.1"
-  ],
-  "activeExecutionOrder": [
-    "NI01.1",
-    "NI02.1",
-    "NI02.2",
     "NI03.1",
     "NI03.2",
     "NI03.3",
     "NI04.1",
-    "NI05.1",
-    "NI05.2",
     "NI04.2",
     "NI04.3",
+    "NI01.1",
+    "NI02.1",
+    "NI02.2",
+    "NI05.1",
+    "NI05.2",
     "NI05.3",
-    "NI06.2",
     "NI06.1",
+    "NI06.2",
     "NI06.3",
     "NI07.1",
     "NI07.2",
     "NI08.1"
   ],
+  "activeExecutionOrder": [],
   "continuationStopConditions": {
-    "complete": "All sprint business results complete",
-    "source": "Owner14Oct: continue until all sprints complete or18:30 Moscow today",
-    "deadlineMoscow": "2026-10-14T18:45:00+03:00"
+    "complete": "All current-scope sprint code results complete; external acceptance tracked separately",
+    "source": "Owner 14Oct: continue until all sprints complete or 15Oct07:00 Europe/Moscow, keep Claude queue supplied",
+    "deadlineMoscow": "2026-10-15T07:00:00+03:00"
   },
   "ownerAutoPreparationDecision": {
     "date": "2026-10-13",
@@ -1649,9 +1668,9 @@
   },
   "historicalContinuationStopConditions": {
     "complete": "All functional sprint business results actually complete; external/independent evidence never fabricated",
-    "source": "Latest user instruction 13Oct: continue until all sprints complete or20:00 MSK today; full commit/GitHub after actual all completion",
+    "source": "Latest owner instruction 14Oct: continue until all sprints complete or 15Oct07:00 Europe/Moscow; maintain Claude work queue",
     "supersededDeadlineMoscow": "2026-10-12T06:00:00+03:00",
-    "deadlineMoscow": "2026-10-14T18:45:00+03:00"
+    "deadlineMoscow": "2026-10-15T07:00:00+03:00"
   },
   "sqlPerformancePolicy": {
     "boundedDatabaseReads": true,
@@ -1661,23 +1680,51 @@
   },
   "latestDelivery": {
     "reports": [
-      "54-ni081-workload-overview.md",
-      "55-ni051-case-next-step.md",
-      "56-ni072-documents-and-query-batching.md",
-      "57-ni081-scoped-configuration.md",
-      "58-ni072-external-document-links.md"
+      "71-store-fleet-route-integration.md",
+      "72-gantt-day-overlap.md",
+      "73-current-sprint-code-completion.md"
     ],
-    "claudeCompleted": "C0015/K0018",
-    "claudeNext": "coordination/nicora-claude/TASK_C0018.md",
+    "claudeCompleted": "C0029-C0034/K0040 RELEASE plus final reviewed corrections",
+    "claudeNext": null,
     "note": "Не закрывает полную независимую/внешнюю приёмку; выполненные функции повторно не реализовывать."
   },
   "jointExecutionPlan": "wiki/requirements/nicora_joint_execution_20261014.md",
   "parallelAssignment": {
     "lead": "root",
     "subordinate": "/root/codex_finance",
-    "subordinateActive": "NI06.2 receipt → exact putaway and recovery",
-    "externalClaude": "C0020 RELEASE; C0023 handed to Codex due usage pause",
+    "subordinateActive": "Fleet outer and native store access RELEASE; installed and native PASS",
+    "externalClaude": "C0029-C0034 RELEASE, final corrections accepted; queue complete",
     "channel": "coordination/nicora-codex and coordination/nicora-claude",
-    "noSharedFileWrites": true
+    "noSharedFileWrites": true,
+    "additionalSubordinate": "Weekly route native RELEASE; installed, preview/final/hash PASS"
+  },
+  "deliveryReadinessReport": "reports/nicora/2026-10-13/73-current-sprint-code-completion.md",
+  "allSprintsAccepted": false,
+  "deferredByOwner": [
+    {
+      "scope": "Государственные Track and trace подключения",
+      "decision": "Через интеграционный шлюз, реализовать отдельно позже",
+      "date": "2026-10-14",
+      "localQueueAndAudit": "retained",
+      "realAck": "not_available"
+    }
+  ],
+  "currentWork": {
+    "root": "Current scope code completed; final common gate PASS and report73 saved",
+    "claudeQueue": [],
+    "deferred": "Government Track and trace gateway per owner; external/equipment/independent/pilot acceptance separate"
+  },
+  "completionCountMeaning": "Implemented current-scope code results, not independent/external/production acceptance; deferred gateway excluded by owner decision",
+  "allCurrentScopeCodeImplemented": true,
+  "currentCodeCompletionEvidence": {
+    "gate": "reports/nicora/2026-10-13/final_gate1512.log",
+    "architectureFiles": 778,
+    "cycles": 0,
+    "legacyDebtItems": 73,
+    "testsPassed": 24,
+    "adminTypeScript": "PASS",
+    "terminalTypeScript": "PASS",
+    "industrialAcceptance": false,
+    "encoding": "PASS: reports/nicora/2026-10-13/final_encoding1514.log"
   }
 }

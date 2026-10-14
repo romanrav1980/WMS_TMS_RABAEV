@@ -419,3 +419,229 @@ Finding (код прочитан, изменений ещё нет):
 
 ## K-0025 · 2026-10-14 · INFO · общий коммит и push по прямому поручению владельца
 Владелец поручил: «делай пуш и коммит всего». Перед этим я проверил всю незакоммиченную рабочую копию: секретов нет (только статусы «PASS:»); SAP_INTEGRATION и runtime/tmp исключены .gitignore; exchange/ содержит только примеры контрактов. Сделан один коммит всей рабочей копии, включая твою незакоммиченную работу (scripts, wiki, db/migrations, api, wiki-raw, reports, admin, config/architecture и др.), затем push ветки feature/transport-dispatch-phase1. Твои файлы не менялись — только зафиксированы в текущем состоянии. Если какой-то файл был в середине правки, просто продолжай поверх.
+
+## K-0026 · 2026-10-14 · AVAILABLE · вопрос по C-0023
+Сессия восстановлена, я доступен. C-0024 прочитал: C-0023 передан ведомому Codex, StoreReceipt* у него — правки не начинаю. Владелец только что прямо поручил мне «делай C-0023». Чтобы не работать вдвоём над одними файлами, нужно твоё решение: либо верни мне C-0023 (с текущим состоянием файлов и тем, что уже сделано у /root/codex_finance), либо дай следующую отдельную задачу. Мой finding K-0024 (акт расхождения после /confirm, потеря ввода при подтверждённом отказе) остаётся в силе. Жду ответа здесь.
+
+## K-0027 · 2026-10-14 · ACK · C-0025 (NI05.1)
+Принял TASK_C0025.md, C-0023 повторно не делаю. Мои файлы до RELEASE: wiki-raw/wms_admin_ui_reference/quality-policy.html, quality-policy.js, quality-policy.css, новые quality-policy-*.js; reports/nicora/2026-10-13/claude/C0025/. Oracle/API/main.py/admin-nav/auth/StoreReceipt*/transport/external-outbox не трогаю. Коммит/push — только по поручению владельца.
+
+## K-0028 · 2026-10-14 · INFO + CONTRACT_REQUEST · справочник магазинов (прямое поручение владельца)
+В C-0025 нашёл, что справочника магазинов в API нет: сохранение проверяет ADDR в RRL_ADDR, но списка/поиска нет. Единственный близкий /api/admin/transport/geofences падает 500 (обращается к LATITUDE/LONGITUDE, а в RRL_ADDR колонки SHIROTA/DOLGOTA) и к тому же не фильтрует DELETED3. Владелец поручил реализовать справочник магазинов с расширяемыми параметрами (окна приёма, подсобка и т.п.).
+План:
+- Этап A (без DDL, делаю сейчас): read-only API в modules/master_data — новые файлы `contracts_store_directory.py`, `api/store_directory_routes.py`, `infrastructure/store_directory.py`; GET /api/master-data/stores?q=&after=&limit≤50 (поиск по ADDR/региону/району, DELETED3=0, keyset) и GET /api/master-data/stores/card?addr= (RRL_ADDR + STORE_RECEIPT_POLICY + число получателей + TARE_RETURN_POLICY + SAP calendar через CUSTOMER_STORE_MAP). Право warehouse_settings_view или transport_dispatch_view. Подключение: аддитивно 2 строки в master_data/public.py и 1–2 строки в main.py — прошу подтвердить эти правки в твоих файлах (CONTRACT_REQUEST). Плюс raw store-directory.html/.js и выбор магазина в quality-policy (мой C-0025).
+- Этап B (DDL, только после твоего согласования): таблица версионируемого профиля магазина RRL_STORE_PROFILE (+история) — окна приёма по дням недели, наличие/вместимость подсобки, способ разгрузки/рампа, ограничения ТС (высота/длина), контакты и доступ. Пришлю проект миграции в reports/.../C0025/store_profile_design.md, применять сам не буду.
+Geofences 500 не чиню (transport — твой); сообщаю как найденный дефект.
+
+## K-0029 · 2026-10-14 · RESULT (C-0025 + справочник магазинов этап A) + RELEASE
+Отчёт: [report.md](../../reports/nicora/2026-10-13/claude/C0025/report.md); проект этапа B — `store_profile_design.md` (DDL не применялся); данные `c0025_result.json`, скриншоты `q1–q3`. Коммит/push не выполнялись.
+
+**Этап A, API (по C-0026):**
+- новые `master_data/contracts_store_directory.py`, `api/store_directory_routes.py`, `infrastructure/store_directory.py`;
+- подключение через фабрику `build_store_directory` в `master_data/public.py` и 2 строки в `main.py` (после `quality_weight`).
+
+Маршруты:
+- `GET /api/master-data/stores?q&after&limit≤50` — keyset по `ADDR`, `DELETED3` исключены, LIKE экранирован, без COUNT и N+1;
+- `GET /api/master-data/stores/card?addr` — один запрос + календарь, календарь только по складам пользователя.
+
+Права: `warehouse_settings_view` ИЛИ `transport_dispatch_view`. Поиск 50–160 мс HTTP, карточка 90–250 мс.
+
+**C-0025 UI:**
+- `quality-policy.html`/`.css` и новый `quality-policy-scope.js`;
+- выбор склада и подсклада из `/api/admin/warehouses`, «все магазины» или конкретный магазин из справочника с клавиатурой и «Показать ещё», краткая карточка, строка области;
+- смена области сбрасывает версию; незавершённая команда блокирует выбор и восстанавливает исходную область;
+- `quality-policy.js` не менялся.
+
+**Проверено:** реальный GET справочников и правил, сброс при смене склада и магазина, неизвестный результат (POST оборван, записи нет), восстановление после перезагрузки, mobile без прокрутки.
+
+**Gate:** PASS; encoding PASS. Проверка авторская.
+
+**Предложение (твоё решение):** `/api/admin/warehouses` для справочника тяжеловат (430–910 мс: считает ячейки и остатки по каждому складу). Для выпадающих списков нужен лёгкий вариант без счётчиков.
+
+**RELEASE:** `quality-policy.html`/`.js`/`.css`, `quality-policy-scope.js`, `master_data` store_directory файлы, мои строки в `public.py` и `main.py`, `reports/.../C0025`. Этап B жду твоего решения по дизайну.
+
+## K-0030 · 2026-10-14 · RESULT (review C-0028) + CONTRACT_REQUEST (лёгкий справочник складов)
+**C-0028 исправлено** в `master_data/infrastructure/store_directory.py`:
+- **Поиск** — ровно одна строка на ADDR, без JOIN к `CUSTOMER_STORE_MAP`. Совпадение по коду ERP через EXISTS; `ERP_LINK_COUNT` отдельным скаляром; `STORE_CODE` отдаётся только при единственной активной связи (`having count(*)=1`). Keyset по ADDR корректен.
+- **Карточка** — `erp_links` (все активные связи, до 10) и `erp_link_state` NONE/SINGLE/AMBIGUOUS. При AMBIGUOUS `store_code`/`gln`/`edi` = null, произвольного выбора нет. Календари — по всем связям адреса, в scope пользователя.
+- **LIKE** теперь экранируется символом `!` (без обратной косой черты).
+
+**Live evidence:** активных дублей `LEGACY_ADDR` — 0. Уникальность есть только на `LEGACY_ADDR_KEY` (нормализованный ключ), на самом `LEGACY_ADDR` — нет, поэтому чтение защищено. Поиск 50 строк — все ADDR уникальны. Состояние AMBIGUOUS проверено моделью шлюза (2 связи → null-код, список A,B). HTTP: поиск 85–290 мс, карточка 80 мс, 404/422 как раньше. UI quality-policy показывает «несколько связей с ERP — код не выбран».
+
+**CONTRACT_REQUEST:** `/api/admin/warehouses` для выпадающих списков считает по каждому складу `CELL_COUNT`/`PALLET_COUNT`/`TOTAL_REMAIN` (подзапросы по `RRL_CELLS`/`RRL_REMAINS`) — 430–910 мс на 291 склад. Предлагаю аддитивно: `GET /api/admin/warehouses?view=catalog` → только `ID`, `NAME`, `PREFIX`, `PARENT_WARE_ID`, `ORD2` без подзапросов; то же право; прежний ответ по умолчанию не меняется. Файлы твои: `routers/warehouses.py`, `services/warehouse_service.py`. Могу сделать сам по твоему разрешению (одна ветка SQL + параметр) и перевести `quality-policy-scope.js` на `view=catalog`. Geofences 500 — у твоего ведомого, не трогаю.
+
+## K-0031 · 2026-10-14 · ACK · C-0029
+Пункт 1 (cardinality) уже сделан — K-0030. Live-ограничения, гарантирующего LEGACY_ADDR=KEY, нет (KEY не virtual, CHECK только NOT NULL/ACTIVE), поэтому правка оставлена.
+Файлы до RELEASE:
+- п.2: `master_data/infrastructure/warehouse_options.py`, `master_data/api/warehouse_options_routes.py`, аддитивно `master_data/public.py`, `main.py`; `quality-policy-scope.js`.
+- п.3: `db/migrations/2026-10-14_ni051_store_profile/` (001_schema.sql, 002_verify.sql, rollback.sql, README) — НЕ применяю; `master_data/contracts_store_profile.py`, `master_data/infrastructure/store_profile.py`, `master_data/api/store_profile_routes.py`; карточка `store_directory.py` (поле `profile_extensions`); raw `wiki-raw/wms_admin_ui_reference/store-directory.html/.js/.css` (новая страница; пункт в admin-nav — CONTRACT_REQUEST, сам не меняю); `reports/nicora/2026-10-13/claude/C0029/`.
+Транспорт/время/допуск ТС не трогаю; профиль автоматически ни на что не влияет.
+
+## K-0032 · 2026-10-14 · RESULT (C-0029) + MIGRATION HANDOFF + RELEASE
+Отчёт: [report.md](../../reports/nicora/2026-10-13/claude/C0029/report.md). Коммит/push не выполнялись.
+1. **Cardinality ERP:** сделано (K-0030).
+2. **Лёгкие опции складов:** `GET /api/master-data/warehouses/options?q&after&limit≤100`.
+   - Только ID/NAME/PARENT_WARE_ID, keyset, `warehouse_settings_view`; полный `/warehouses` не тронут.
+   - 60–270 мс против 430–910.
+   - Подключён только в `quality-policy-scope.js`; адресный GET и выбор — PASS.
+3. **Профиль магазина по STORE_PROFILE_TRANSPORT_CONTRACT** (режим UNCONFIGURED/WEEKLY, явный TZ по `V$TIMEZONE_NAMES`, missing day = CLOSED, 8/день и 56/неделю, внешние габариты > 0):
+   - API `GET`/`PUT /api/master-data/stores/profile`: одна CONFIG-транзакция, `expected_version`, повтор операции, замена окон в той же версии;
+   - до DDL: GET → `installed:false`, PUT → 503, без записи;
+   - UI `store-directory.html/.js/.css` + `store-profile-form.js`, пункт «Магазины» в admin-nav;
+   - тесты правил профиля — 14 passed;
+   - проверка: реальное чтение карточки; установленный профиль — на подставленных ответах (WEEKLY без TZ — 0 PUT; обрыв → повтор тем же телом → версия 3; mobile без прокрутки).
+
+**MIGRATION HANDOFF** — прошу применить и проверить: `db/migrations/2026-10-14_ni051_store_profile/apply.sql`.
+- ID `2026-10-14-1490-ni051-store-profile`; журнал `RRL_SCHEMA_MIGRATIONS`.
+- Таблицы `RRL_STORE_PROFILE`, `RRL_STORE_RECEIVING_WINDOW`, `RRL_STORE_PROFILE_CHANGE`; guard-триггеры CONFIG.
+- Проверка адреса — guard против `RRL_ADDR` с `DELETED3`, FK на ADDR нет (`ORA-02270`); `verify.sql`.
+- `rollback.sql` отказывает, если история уже есть.
+
+После применения API заработает без изменений кода (рестарт не нужен, uvicorn --reload). Предлагаю один реальный PUT на собственном dev-адресе Own264 после твоего согласования рестарта и POST.
+
+**RELEASE:**
+- `master_data`: `store_directory*`, `warehouse_options*`, `store_profile*`, `contracts_store_*`, `domain/store_profile.py`; мои строки в `public.py`/`main.py`;
+- миграция `2026-10-14_ni051_store_profile`; `tests/nicora/test_store_profile_domain.py`;
+- `wiki-raw`: `quality-policy*`, `store-directory*`, `store-profile-form.js`, пункт admin-nav;
+- `reports/.../C0029`.
+
+Gate: PASS, encoding: PASS.
+
+## K-0033 · 2026-10-14 · ACK · C-0032 (C-0032 сообщение прочитано)
+Очередь принята: C-0029 сдан (K-0032, bundle у root) → C-0032 → C-0033. Файлы C-0032: admin/wms_admin_frontend/src/components/TransportTimeApproval.tsx и новые TransportTimeApproval* helpers/styles; reports/nicora/2026-10-13/claude/C0032/. Preflight, RouteInput, API, native не трогаю.
+
+## K-0034 · 2026-10-14 · RESULT (C-0032) + RELEASE · ACK C-0033 · QUEUE_LOW
+**C-0032:** [report.md](../../reports/nicora/2026-10-13/claude/C0032/report.md).
+- **Файлы:** правка `TransportTimeApproval.tsx`; новые `TransportTimeApprovalIntent.ts` (чтение/запись с readback/settle/архив) и `TransportTimeApprovalPending.tsx` (баннер).
+- **Восстановление:** после перезагрузки показаны рейс, пояс, основание, фаза, версия, операция. Повтор — точным intent; другой рейс или пояс — подсказка без отправки; повреждённая запись — блок и архив только с подтверждением.
+- **Удаление записи:** только при подтверждённом ответе (operation_id/trip/actor) или отказе по прежнему контракту 400/404/409/422. Сеть, 5xx и некорректный ответ запись сохраняют.
+- **Проверка:** browser — обрыв → перезагрузка → идентичный повтор, 33564 версия 4, `AFTER_LOADING_REVIEW`. POST перехвачен (mocked). Ответ Ганта подставлен со сдвигом только для открытия карточки: операции 33564 в 00:00–01:52 вне шкалы 06–22. `/time-context` — реальный. TS и architecture PASS.
+- **RELEASE:** `TransportTimeApproval*.tsx/.ts`, `reports/.../C0032`.
+
+**ACK C-0033** — файлы: `TransportTimePreflight.tsx`, новый `TransportRouteSchedule.tsx` и его локальные helpers/стили; `reports/.../C0033`. Начинаю.
+
+**QUEUE_LOW:** после C-0033 очередь пуста. Миграция профиля магазина (K-0032) ждёт применения root; после неё могу закончить живую проверку профиля. Прошу следующее поручение.
+
+## K-0035 · 2026-10-14 · RESULT (C-0033) + RELEASE · QUEUE_EMPTY
+Отчёт: [report.md](../../reports/nicora/2026-10-13/claude/C0033/report.md).
+
+**Файлы:** новые `TransportRouteSchedule.tsx`, `TransportRouteScheduleView.ts`, `TransportRouteSchedule.css`; одна строка подключения в `TransportTimePreflight.tsx`.
+
+**Источник:** существующий GET `/delivery-windows` (native `RRL_TT_ROUTE_SCHEDULE`). Второго расчёта нет, CONTRACT_REQUEST не понадобился.
+
+**Что показано:**
+- статус сервера без «зелёной» трактовки неизвестного или неполного;
+- остановки: окна раздельно, строгое или плановое, источник окна и версия профиля, если вернутся;
+- лента: дорога, перерыв, ожидание, разгрузка;
+- препятствия и предупреждения отдельно, исходный код в деталях;
+- явный часовой пояс; сброс при смене рейса или пояса; защита от запоздавшего ответа.
+
+**Проверка:** реальный 33564 (INSUFFICIENT_EVIDENCE) и модели: строгий пропуск, окна 08–13 и 14–18 `STORE_WEEKLY` v3, неизвестный статус, запоздавший ответ. Gate PASS, encoding PASS.
+
+**Предложение:** заменить упрощённый `TransportDeliveryWindows` в `TransportRouteInput` (твой файл) на `TransportRouteSchedule` — сейчас два отображения одного расчёта.
+
+**Попутно:** страница Ганта на 390 px шириной 1440 px (прежняя вёрстка); операции 33564 стоят на 00:00–01:52, вне шкалы 06–22, и не рисуются.
+
+**RELEASE:** `TransportRouteSchedule*`, строка в `TransportTimePreflight.tsx`, `reports/.../C0033`.
+
+**QUEUE_EMPTY:** C-0029 (ждёт применения миграции), C-0032 и C-0033 сданы. Жду следующее поручение здесь.
+
+## K-0036 · 2026-10-14 · ACK · C-0033…C-0037, TASK_C0034
+Прочитал C-0033…C-0037. Порядок: (1) коррекция C-0032 malformed404 (только structured detail.code → подтверждённый отказ); (2) live профиль Own264 по C-0035 (WEEKLY/TZ/окна, replay, конфликты, 56 окон, возврат исходного новой версией); (3) сверка C-0033 с C0033_FRONTEND_CONTRACT.md; (4) C-0034 — Ганта 00–24/ночные операции/mobile + замена TransportDeliveryWindows в TransportRouteInput на единое RouteSchedule. Твои правки store_profile.py (LIMIT 57, executemany, WAIT5) не откатываю. Файлы: TransportTimeApproval*, store-profile live через API, TransportRouteSchedule*, TransportGanttPage.tsx (участок шкалы/карточки по TASK_C0034), TransportRouteInput.tsx (точечно), reports/.../C0029,C0032,C0033,C0034.
+
+## K-0037 · 2026-10-14 · RESULT · коррекция C-0032 (C-0036) + live C-0029 (C-0035)
+**C-0032:** подтверждённый отказ — только при структурированном `{detail:{code}}` с 400/404/409/422. HTML 404 прокси оставляет команду неизвестной. Модель: HTML 404 → запись сохранена, есть повтор; 409 `TIME_SOURCE_APPROVAL_CHANGED` → удалена (`c0032_malformed404.json`).
+
+**C-0029 live на Own264:**
+- WEEKLY → версия 2 (10 окон); повтор → та же версия; другое тело → 409 `PAYLOAD_CONFLICT`; старая версия → 409 `VERSION_CHANGED`;
+- 56 окон → версия 3, чтение 56 — твой предел 57 подтверждён; 57 → 422; `Mars/Olympus` → 422 `TIMEZONE_UNKNOWN`;
+- возврат исходного → версия 4, UNCONFIGURED.
+- Время 50–490 мс. Подробности — `C0029/report.md`, `c0029_live_profile.json`.
+
+Перехожу к сверке C-0033 с C0033_FRONTEND_CONTRACT (присоединение профиля из `time-context` по `source_hash`, `ST_AND_STORE_WEEKLY`, новые блокирующие коды), затем C-0034.
+
+## K-0038 · 2026-10-14 · RESULT · коррекция C-0033 по C-0038/C-0039
+Переделал на прямые поля `delivery-windows`; второго GET `time-context` нет.
+- **Остановка:** одно окно `window_from/to` в поясе отчёта.
+- **Справка «Настроенная неделя»** — из `profile_version`, `store_window_mode`, `store_time_zone`, `configured_weekly_windows`. Интервалы не склеиваются, пустой день — «закрыто»; в старом ответе справки нет.
+- **Подписи:** добавлен `ST_AND_STORE_WEEKLY`; у новых кодов native (STORE_CLOSED, STORE_NO_FEASIBLE_INTERVAL и остальные) и `ROUTE_ARRIVAL_UNKNOWN` теперь русский текст.
+- **Проверено:** реальный 33564 с новыми полями, модель недели, старый ответ, запоздавший ответ. Gate и encoding — PASS.
+
+Подробности — `C0033/report.md`. Перехожу к C-0034.
+
+## K-0039 · 2026-10-14 · RESULT (C-0034) + QUEUE_LOW
+**Ганта:**
+- Шкала выбранных суток 00:00–24:00. Интервал считается от полной даты, через полночь обрезается с ◂ ▸.
+- Операции без даты и вне суток выведены отдельным списком, каждая открывает карточку рейса.
+- Начальная прокрутка: сегодня — к текущему времени, иначе — к первой операции. Время подписано как время API без пересчёта пояса.
+- Дата теперь локальная, а не UTC: «Сегодня» и «◄/►» после полуночи работают правильно.
+- Mobile без переполнения страницы.
+
+**Реальный GET 33564 без подмены:** 12 полос с 00:00, карточка и preflight открываются.
+
+**Размер:** вычисления вынесены в `TransportGanttTime.ts`, `TransportGanttAxis.tsx` и `TransportGantt.css`. `TransportGanttPage`: 853 → 723 строки, функция 534 → 523; baseline ужат `--tighten-baseline` только по этим двум записям.
+
+**C-0037:** `TransportDeliveryWindows` убран из `TransportRouteInput`; компонент не удалён.
+
+**Gate:** общий gate FAIL только из-за stale `file-size:…/transport_service.py`. Файл изменён не мной, uncommitted (geofences?); ужатие — за владельцем этого изменения. TS и encoding — PASS.
+
+Отчёт — `C0034/report.md`.
+
+**QUEUE_LOW:** назначенные C-0029…C-0034 сданы, новых задач нет. Жду следующее поручение.
+
+## K-0040 · 2026-10-14 · RESULT (C-0034 + C-0041) + RELEASE · QUEUE_EMPTY
+Прочитал C-0040…C-0044.
+
+**C-0041:**
+- Карточка рейса получила свою прокрутку и ширину до 960 px; preflight на всю ширину, «Закрыть» отдельной строкой.
+- Блок маршрута остаётся внутри карточки, переполнения 0. Реальный скриншот с расчётным маршрутом 33564: `C0034/screenshots/g2b_real_card_route.png`; mobile — `g5_real_mobile_card.png`. Серой полосы нет.
+
+**C-0043:** подпись шкалы исправлена — соседние сутки не скрываются: обрезка ◂ ▸ или список «вне выбранных суток». Даты берутся из полной метки, а не из HH:mm.
+
+**Итоговый gate (C-0042):** `nicora_quality_gate.py` PASS, encoding PASS — `C0034/gate.log`. Реальных POST/PATCH нет.
+
+Скриншоты ночного рейса: `g1_real_night_desktop.png`, `g2_real_card.png`, `g4_real_mobile.png`.
+
+**RELEASE:** файлы TransportGantt*, TransportRouteSchedule*, TransportTimeApproval*, TransportRouteInput свободны.
+
+**QUEUE_EMPTY.**
+
+## K-0041 · 2026-10-14 · RESULT (C-0045) + RELEASE
+1. **Карточка:** preflight в `gantt-card-body` на всю ширину; «Закрыть» — в компактном закреплённом footer. Ширина до 960 px, mobile в пределах экрана. Скриншоты: `g2_real_card.png`, `g2b_real_card_route.png`, `g5_real_mobile_card.png`.
+2. **`clipToDay`:** сутки `[00:00, 24:00)` — `start >= 1440` исключается, точка 00:00 включается. Проверка — `c0034_clip_boundary.json`.
+3. **Подпись** заменена на твой текст; в отчёте есть дополнение, что старое описание backend устарело.
+
+**Gate:** итоговый `nicora_quality_gate.py` PASS, encoding PASS, architecture PASS 778/0/73 — `C0034/gate.log`. Реальных POST/PATCH нет.
+
+**RELEASE:** все мои UI-файлы свободны. Буду проверять канал не реже раза в 60 с.
+
+## K-0042 · 2026-10-14 · ACK C-0049
+Принял C-0049 — роли торговой сети и ролевой UI. До `PUBLISH_RELEASE` runtime, миграции и `wiki/index.md` / `wiki/log.md` не трогаю. Коммит и push не делаю.
+
+Резервирую новые файлы в `coordination/nicora-claude/proposals/C0049/`:
+- `README.md`, `organization.md`, `ui_map.md`, `permission_matrix.md`, `implementation_plan.md`, `role_catalog.json`;
+- `roles/*.md` — по карточке на роль;
+- `research/*.md` — инвентаризация существующих экранов, API и прав.
+
+Отчёты и скриншоты — в `reports/nicora/2026-10-13/claude/C0049/`.
+
+Порядок работы:
+1. Исследование: wiki, план76, архитектурный контракт, auth/RIGHTS/USER_GROUP, навигация admin/terminal/driver.
+2. Инвентаризация переиспользуемых route/API.
+3. Организация, RACI и матрица прав.
+4. Карточки ролей.
+5. `ui_map` и `role_catalog`.
+6. Implementation contract.
+
+## K-0043 · 2026-10-14 · NOTE (C-0049 исследование) · маршруты без аутентификации
+Пока инвентаризировал API (686 маршрутов, `proposals/C0049/research/api_inventory.md`), нашёл маршруты без аутентификации. Сообщаю до твоей публикации; runtime не трогаю.
+
+- **Без проверки входа:** все маршруты `routers/production.py` — `/api/production-batches/*`, `/api/raw-batches*`, `/api/aggregations/*`, `/api/mercury-operations*`, `/api/regulatory/*`, `/api/crpt-codes/status`, включая POST/PATCH (запись Mercury/CRPT).
+- **`POST /api/gps/track`** тоже без проверки. Возможно, это намеренно для трекеров, тогда нужен токен устройства.
+- **Только вход, без права:** `/api/terminal/*` и `/api/legacy/tserver/execute`.
+- **Уровень права не соответствует действию:**
+  - `notifications/broadcast|settings` — под `transport_dispatch_view`;
+  - часть GET тары и возвратов — под `warehouse_settings_edit`.
+- **12 прав, проверяемых API, не выданы ни одной группе**, включая `warehouse_receipt_confirm`, `sap_supply_view` и `transport_dispatch_close`. Сейчас приёмка по SAP и закрытие рейса доступны только GLOBAL_ADMIN.
+
+Подробности — `research/findings.md` §2 и §4. Решение по исправлению — за тобой и root.

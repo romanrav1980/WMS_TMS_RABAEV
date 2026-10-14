@@ -1,0 +1,16 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Магазины</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="store-directory.css"></head>
+<body class="auth-pending sd-page" data-required-permission="wms_admin_login"><div class="app"><aside class="sidebar"><div class="brand">WMS</div><nav class="nav" data-admin-nav data-active-nav="store-directory"></nav></aside><main class="workspace">
+<header class="sd-head"><p class="sd-eyebrow">СПРАВОЧНИКИ · АДРЕСАТЫ ДОСТАВКИ</p><h1>Магазины</h1>
+<p class="sd-note">Карточка собирает существующие данные адреса, приёмки, тары и ERP. Профиль хранит только параметры, которых нет в этих источниках. Профиль пока справочный: он не применяется к планированию рейсов и допуску машин до отдельной интеграции.</p></header>
+<div class="sd-layout">
+<section class="sd-panel sd-search" aria-labelledby="sdSearchTitle"><h2 id="sdSearchTitle">Поиск</h2>
+<label>Адрес, код ERP, регион или район<input id="sdQuery" type="search" autocomplete="off" placeholder="например, Пермь"></label>
+<p id="sdSearchNote" class="sd-note" role="status" aria-live="polite"></p>
+<ul id="sdList" class="sd-list" aria-label="Найденные магазины"></ul>
+<button id="sdMore" type="button" hidden>Показать ещё</button></section>
+<section class="sd-panel sd-card" aria-labelledby="sdCardTitle"><h2 id="sdCardTitle">Карточка магазина</h2>
+<p id="sdCardNote" class="sd-note" role="status" aria-live="polite">Выберите магазин в списке.</p>
+<div id="sdCard"></div>
+<div id="sdProfile" hidden></div></section>
+</div></main></div>
+<script src="admin-nav.js"></script><script src="admin-auth.js"></script><script src="wave-command-intent.js"></script><script src="store-profile-form.js"></script><script src="store-directory.js"></script></body></html>

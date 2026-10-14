@@ -1,0 +1,31 @@
+{
+  "trip_id": 33641,
+  "status": "NO_EARLIEST_WINDOW_VIOLATION",
+  "source_hash": "3368108aa2d7e7239ac50f3cb2e0132762f70d3be52593c20b568e60400220e6",
+  "stops": [
+    {
+      "address": "NI081.SHOP.0b960a9257",
+      "st_numbers": [
+        "NI081.ST.0b960a9257"
+      ],
+      "window_from": "2030-01-15T08:00:00.000000+04:00",
+      "window_to": "2030-01-15T20:00:00.000000+04:00",
+      "arrival_at": "2030-01-15T10:45:00.000000+04:00",
+      "service_start_at": "2030-01-15T10:45:00.000000+04:00",
+      "service_finish_at": "2030-01-15T11:15:00.000000+04:00",
+      "wait_min": "0",
+      "late_min": "0",
+      "unload_norm_min": "30",
+      "window_strict": 1,
+      "window_source": "ST_MATERIALIZED",
+      "issues": [],
+      "profile_version": 3,
+      "store_window_mode": "UNCONFIGURED",
+      "store_time_zone": null,
+      "configured_weekly_windows": []
+    }
+  ],
+  "seconds": 0.151,
+  "real_get": true,
+  "writes": 0
+}

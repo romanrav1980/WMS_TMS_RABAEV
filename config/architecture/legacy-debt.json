@@ -21,7 +21,7 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:admin/wms_admin_frontend/src/components/TransportGanttPage.tsx": {
-      "maximum": 853,
+      "maximum": 723,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -63,7 +63,7 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:api/wms_api_server/app/services/transport_service.py": {
-      "maximum": 2694,
+      "maximum": 2678,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -207,7 +207,7 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "function-size:admin/wms_admin_frontend/src/components/TransportGanttPage.tsx:TransportGanttPage": {
-      "maximum": 534,
+      "maximum": 523,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"

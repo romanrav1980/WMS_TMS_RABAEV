@@ -1,6 +1,5 @@
 import {useEffect, useRef, useState} from "react";
 import {TransportRoadLegs} from "./TransportRoadLegs";
-import {TransportDeliveryWindows} from "./TransportDeliveryWindows";
 type Context = {version: number; source_hash: string; route_status: string;
   last_input?: {drive_min: number; drive_back_min: number; source_reference: string; reason: string}};
 type Intent = {operation_id: string; trip_id: number; expected_version: number; source_hash: string;
@@ -92,7 +91,8 @@ export function TransportRouteInput({tripId, apiBase, headers, actor}: {
       <p>Оценка диспетчера. Дорожная обстановка, окна магазинов и допуск водителя отдельно не подтверждаются.
         После начала исполнения или погрузки пересчёт запрещён.</p>
     </div>}
-    <TransportDeliveryWindows tripId={tripId} apiBase={apiBase} headers={headers} actor={actor}/><TransportRoadLegs tripId={tripId} apiBase={apiBase} headers={headers} actor={actor} onChoose={value=>{
+    {/* Расчёт окон и прибытия показывает единый TransportRouteSchedule в preflight (C-0037). */}
+    <TransportRoadLegs tripId={tripId} apiBase={apiBase} headers={headers} actor={actor} onChoose={value=>{
       if(!context||context.source_hash!==value.source_hash){setMessage("Перечитайте текущий маршрут перед использованием матрицы.");return;}
       setDrive(String(value.drive_min));setBack(String(value.drive_back_min));
       setSource("Дорожная матрица, снимок "+value.road_snapshot_signature);

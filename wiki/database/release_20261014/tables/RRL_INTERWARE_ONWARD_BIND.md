@@ -1,0 +1,82 @@
+# RRL_INTERWARE_ONWARD_BIND
+
+Тип: **TABLE**. Схема: `RABAEV`.
+
+Подсистема по имени: Межскладское перемещение.
+
+Описание Oracle: Не задано; не следует выводить точное бизнес-назначение только из имени.
+
+## Поля
+
+| Поле | Тип | NULL | Комментарий |
+|---|---|---|---|
+| `OPERATION_ID` | VARCHAR2(100 bytes) | N |  |
+| `PAYLOAD_HASH` | RAW(32 bytes) | N |  |
+| `RECEIPT_OPERATION_ID` | VARCHAR2(100 bytes) | N |  |
+| `ST_ID` | NUMBER | N |  |
+| `ST_IDENTIFIER` | VARCHAR2(50 bytes) | N |  |
+| `SOURCE_ST_ID` | NUMBER | N |  |
+| `SOURCE_LOAD_OPERATION_ID` | VARCHAR2(100 bytes) | N |  |
+| `TARGET_TT_ID` | NUMBER | N |  |
+| `WARE_ID` | NUMBER | N |  |
+| `ROOT_UID` | VARCHAR2(200 bytes) | N |  |
+| `STOCK_VERSION` | NUMBER | N |  |
+| `SOURCE_CELL` | VARCHAR2(60 bytes) | N |  |
+| `FINAL_ADDRESS` | VARCHAR2(255 bytes) | N |  |
+| `ORIGINAL_FULFILLMENT_JSON` | CLOB | N |  |
+| `REASON_TEXT` | VARCHAR2(2000 bytes) | N |  |
+| `DECISION_REFERENCE` | VARCHAR2(255 bytes) | N |  |
+| `ACTOR` | NVARCHAR2(100 bytes) | N |  |
+| `CREATED_AT` | TIMESTAMP(6) WITH TIME ZONE | N |  |
+| `RESULT_JSON` | CLOB | N |  |
+| `FINAL_ADDRESS_SOURCE` | VARCHAR2(30 bytes) | N |  |
+
+## Ограничения и связи
+
+| Ограничение | Тип | Поля | Ссылка | Статус |
+|---|---|---|---|---|
+| SYS_C0017241 | C | PAYLOAD_HASH |  | ENABLED |
+| SYS_C0017242 | C | RECEIPT_OPERATION_ID |  | ENABLED |
+| SYS_C0017243 | C | ST_ID |  | ENABLED |
+| SYS_C0017244 | C | ST_IDENTIFIER |  | ENABLED |
+| SYS_C0017245 | C | SOURCE_ST_ID |  | ENABLED |
+| SYS_C0017246 | C | SOURCE_LOAD_OPERATION_ID |  | ENABLED |
+| SYS_C0017247 | C | TARGET_TT_ID |  | ENABLED |
+| SYS_C0017248 | C | WARE_ID |  | ENABLED |
+| SYS_C0017249 | C | ROOT_UID |  | ENABLED |
+| SYS_C0017250 | C | STOCK_VERSION |  | ENABLED |
+| SYS_C0017251 | C | SOURCE_CELL |  | ENABLED |
+| SYS_C0017252 | C | FINAL_ADDRESS |  | ENABLED |
+| SYS_C0017253 | C | ORIGINAL_FULFILLMENT_JSON |  | ENABLED |
+| SYS_C0017254 | C | REASON_TEXT |  | ENABLED |
+| SYS_C0017255 | C | DECISION_REFERENCE |  | ENABLED |
+| SYS_C0017256 | C | ACTOR |  | ENABLED |
+| SYS_C0017257 | C | CREATED_AT |  | ENABLED |
+| SYS_C0017258 | C | RESULT_JSON |  | ENABLED |
+| SYS_C0017259 | C | ORIGINAL_FULFILLMENT_JSON |  | ENABLED |
+| SYS_C0017260 | C | RESULT_JSON |  | ENABLED |
+| SYS_C0017261 | P | OPERATION_ID |  | ENABLED |
+| SYS_C0017262 | U | RECEIPT_OPERATION_ID |  | ENABLED |
+| SYS_C0017263 | U | ST_ID |  | ENABLED |
+| SYS_C0017264 | U | ST_IDENTIFIER |  | ENABLED |
+| SYS_C0017265 | R | RECEIPT_OPERATION_ID | RRL_INTERWARE_RECEIPT (OPERATION_ID) | ENABLED |
+| SYS_C0017266 | R | ST_ID | RRL_SBORKA_PALLETS (ID) | ENABLED |
+| SYS_C0017267 | R | SOURCE_ST_ID | RRL_SBORKA_PALLETS (ID) | ENABLED |
+| SYS_C0017268 | R | SOURCE_LOAD_OPERATION_ID | RRL_TT_HU_LOAD_FACT (LOAD_OPERATION_ID) | ENABLED |
+| SYS_C0017269 | R | TARGET_TT_ID | RRL_TRANSPORT_TASK (ID) | ENABLED |
+| SYS_C0017287 | C | FINAL_ADDRESS_SOURCE |  | ENABLED |
+| SYS_C0017288 | C | FINAL_ADDRESS_SOURCE |  | ENABLED |
+
+P — первичный ключ, U — уникальность, R — внешний ключ, C — CHECK/NOT NULL. Точные CHECK-выражения, defaults и индексы находятся в SQL-снимке.
+
+## Зависимости
+
+Нет зарегистрированных зависимостей.
+
+## Кто использует
+
+[RRL_INTERWARE_DEPART_GATE](../programs/RRL_INTERWARE_DEPART_GATE.md), [RRL_INTERWARE_ONWARD_BIND_GUARD](../programs/RRL_INTERWARE_ONWARD_BIND_GUARD.md), [RRL_INTERWARE_ONWARD_FACT_GUARD](../programs/RRL_INTERWARE_ONWARD_FACT_GUARD.md), [RRL_INTERWARE_ONWARD_ROW_GUARD](../programs/RRL_INTERWARE_ONWARD_ROW_GUARD.md), [RRL_INTERWARE_ONWARD_ST_GUARD](../programs/RRL_INTERWARE_ONWARD_ST_GUARD.md), [RRL_IW_REC_ST_INSERT_GUARD](../programs/RRL_IW_REC_ST_INSERT_GUARD.md), [RRL_STOCK_HU_SHIP_CMD](../programs/RRL_STOCK_HU_SHIP_CMD.md), [RRL_STOCK_INTERWARE_NEXT](../programs/RRL_STOCK_INTERWARE_NEXT.md), [RRL_ST_DEFER_PHYSICAL](../programs/RRL_ST_DEFER_PHYSICAL.md)
+
+## Исходный код
+
+[Полный SQL-снимок](../../../../db/releases/2026-10-14/README.md). Ищите точное имя `RRL_INTERWARE_ONWARD_BIND` в файле соответствующего типа.

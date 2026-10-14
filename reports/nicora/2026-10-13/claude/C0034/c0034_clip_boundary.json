@@ -1,0 +1,36 @@
+{
+ "point_2400": null,
+ "start_2400": null,
+ "point_0000": {
+  "start": 0,
+  "end": 0,
+  "before": false,
+  "after": false
+ },
+ "end_at_0000_from_prev": null,
+ "cross_start": {
+  "start": 0,
+  "end": 20,
+  "before": true,
+  "after": false
+ },
+ "cross_end": {
+  "start": 1410,
+  "end": 1440,
+  "before": false,
+  "after": true
+ },
+ "end_at_2400": {
+  "start": 1380,
+  "end": 1440,
+  "before": false,
+  "after": false
+ },
+ "last_minute": {
+  "start": 1439,
+  "end": 1439,
+  "before": false,
+  "after": false
+ },
+ "missing_span": null
+}

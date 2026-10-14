@@ -6,3 +6,5 @@
 update RRL_SCHEMA_MIGRATIONS set STATUS='ROLLED_BACK' where MIGRATION_ID='2026-10-14-1447-ni051-scoped-quality';
 commit;
 /
+
+-- RRL_QC_EXEMPT_DOCUMENT_IX is retained as an additive audit lookup index.

@@ -1,0 +1,60 @@
+# RRL_STORE_RECEIPT_FACT
+
+Тип: **TABLE**. Схема: `RABAEV`.
+
+Подсистема по имени: Доставка и приёмка магазина.
+
+Описание Oracle: Не задано; не следует выводить точное бизнес-назначение только из имени.
+
+## Поля
+
+| Поле | Тип | NULL | Комментарий |
+|---|---|---|---|
+| `OPERATION_ID` | VARCHAR2(100 bytes) | N |  |
+| `LOAD_OPERATION_ID` | VARCHAR2(100 bytes) | N |  |
+| `STORE_ADDR` | VARCHAR2(255 bytes) | N |  |
+| `ROOT_KEY` | VARCHAR2(200 bytes) | N |  |
+| `POLICY_VERSION` | NUMBER(19,0) | N |  |
+| `RECEIPT_STATE` | VARCHAR2(30 bytes) | N |  |
+| `CAMERA_CONFIRMED` | NUMBER(1,0) | N |  |
+| `COMPOSITION_SIGNATURE` | VARCHAR2(64 bytes) | N |  |
+| `COMPOSITION_JSON` | CLOB | N |  |
+| `RECEIVED_BY` | VARCHAR2(50 bytes) | N |  |
+| `RECEIVED_AT` | TIMESTAMP(6) WITH TIME ZONE | N |  |
+
+## Ограничения и связи
+
+| Ограничение | Тип | Поля | Ссылка | Статус |
+|---|---|---|---|---|
+| SYS_C0016360 | C | LOAD_OPERATION_ID |  | ENABLED |
+| SYS_C0016361 | C | STORE_ADDR |  | ENABLED |
+| SYS_C0016362 | C | ROOT_KEY |  | ENABLED |
+| SYS_C0016363 | C | POLICY_VERSION |  | ENABLED |
+| SYS_C0016364 | C | RECEIPT_STATE |  | ENABLED |
+| SYS_C0016365 | C | CAMERA_CONFIRMED |  | ENABLED |
+| SYS_C0016366 | C | COMPOSITION_SIGNATURE |  | ENABLED |
+| SYS_C0016367 | C | COMPOSITION_JSON |  | ENABLED |
+| SYS_C0016368 | C | RECEIVED_BY |  | ENABLED |
+| SYS_C0016369 | C | RECEIVED_AT |  | ENABLED |
+| SYS_C0016370 | C | RECEIPT_STATE |  | ENABLED |
+| SYS_C0016371 | C | CAMERA_CONFIRMED |  | ENABLED |
+| SYS_C0016372 | C | COMPOSITION_JSON |  | ENABLED |
+| SYS_C0016373 | P | OPERATION_ID |  | ENABLED |
+| SYS_C0016374 | U | LOAD_OPERATION_ID |  | ENABLED |
+| SYS_C0016375 | R | OPERATION_ID | RRL_STOCK_OPERATION (OPERATION_ID) | ENABLED |
+| SYS_C0016376 | R | LOAD_OPERATION_ID | RRL_TT_HU_LOAD_FACT (LOAD_OPERATION_ID) | ENABLED |
+| SYS_C0016377 | R | STORE_ADDR | RRL_STORE_RECEIPT_POLICY (STORE_ADDR) | ENABLED |
+
+P — первичный ключ, U — уникальность, R — внешний ключ, C — CHECK/NOT NULL. Точные CHECK-выражения, defaults и индексы находятся в SQL-снимке.
+
+## Зависимости
+
+Нет зарегистрированных зависимостей.
+
+## Кто использует
+
+[RRL_INTERWARE_PLAN_GUARD](../programs/RRL_INTERWARE_PLAN_GUARD.md), [RRL_IW_GROUP_ARCHIVE](../programs/RRL_IW_GROUP_ARCHIVE.md), [RRL_STOCK_CASE_CLOSE](../programs/RRL_STOCK_CASE_CLOSE.md), [RRL_STOCK_RETURN_DISPOSE](../programs/RRL_STOCK_RETURN_DISPOSE.md), [RRL_STOCK_STORE_CASE_CMD](../programs/RRL_STOCK_STORE_CASE_CMD.md), [RRL_STOCK_STORE_CUSTODY_CMD](../programs/RRL_STOCK_STORE_CUSTODY_CMD.md), [RRL_STOCK_STORE_RECEIPT_CMD](../programs/RRL_STOCK_STORE_RECEIPT_CMD.md), [RRL_STOCK_STORE_RECEIPT_READ](../programs/RRL_STOCK_STORE_RECEIPT_READ.md), [RRL_STOCK_STORE_RETURN_CMD](../programs/RRL_STOCK_STORE_RETURN_CMD.md), [RRL_STOCK_STORE_RETURN_TR_CMD](../programs/RRL_STOCK_STORE_RETURN_TR_CMD.md), [RRL_STORE_INTERWARE_LEG_GUARD](../programs/RRL_STORE_INTERWARE_LEG_GUARD.md), [RRL_STORE_LOAD_CUSTODY_GUARD](../programs/RRL_STORE_LOAD_CUSTODY_GUARD.md), [RRL_STORE_RECEIPT_FACT_GUARD](../programs/RRL_STORE_RECEIPT_FACT_GUARD.md), [RRL_STORE_RETURN_UNIT_CORE](../programs/RRL_STORE_RETURN_UNIT_CORE.md), [RRL_STORE_SUPPLIER_CARGO_GUARD](../programs/RRL_STORE_SUPPLIER_CARGO_GUARD.md), [RRL_STORE_UNLOAD_CORE](../programs/RRL_STORE_UNLOAD_CORE.md), [RRL_TARE_STORE_DEBT](../programs/RRL_TARE_STORE_DEBT.md), [RRL_TRANSPORT_COST_API](../programs/RRL_TRANSPORT_COST_API.md), [RRL_TT_HU_LOAD_FACT_GUARD](../programs/RRL_TT_HU_LOAD_FACT_GUARD.md)
+
+## Исходный код
+
+[Полный SQL-снимок](../../../../db/releases/2026-10-14/README.md). Ищите точное имя `RRL_STORE_RECEIPT_FACT` в файле соответствующего типа.

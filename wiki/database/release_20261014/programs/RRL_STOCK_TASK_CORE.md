@@ -1,0 +1,31 @@
+# RRL_STOCK_TASK_CORE
+
+Тип: **PACKAGE**. Схема: `RABAEV`.
+
+Подсистема по имени: Единое ядро остатков, резервов и проводок.
+
+## Интерфейс
+
+| Подпрограмма | Аргумент (пустой = RETURN) | Позиция | Тип | Направление | Default | Overload |
+|---|---|---|---|---|---|---|
+| EXECUTE_TASK | P_REQUEST | 1 | CLOB | IN | N |  |
+| EXECUTE_TASK | P_ACTOR | 2 | VARCHAR2 | IN | N |  |
+| EXECUTE_TASK | P_RESULT | 3 | CLOB | OUT | N |  |
+
+## Потенциальные записи по тексту SQL
+
+[RRL_PALLETS](../tables/RRL_PALLETS.md), [RRL_RESOURCE_FACT_EVENT](../tables/RRL_RESOURCE_FACT_EVENT.md), [RRL_RESOURCE_SESSION](../tables/RRL_RESOURCE_SESSION.md), [RRL_SAP_RECEIPT_OUTBOX](../tables/RRL_SAP_RECEIPT_OUTBOX.md), [RRL_WAREHOUSE_TASK](../tables/RRL_WAREHOUSE_TASK.md), [RRL_WAREHOUSE_TASK_STOCK_MOVE](../tables/RRL_WAREHOUSE_TASK_STOCK_MOVE.md), [RRL_WAREHOUSE_TASK_SYNC](../tables/RRL_WAREHOUSE_TASK_SYNC.md)
+
+Это статический указатель, а не гарантия выполнения записи при каждом вызове. Полная семантика и транзакционные условия — в теле программы.
+
+## Зависимости
+
+[RRL_HAS_WRIGHT](../programs/RRL_HAS_WRIGHT.md), [RRL_PALLETS](../tables/RRL_PALLETS.md), [RRL_PICK_WAVE](../tables/RRL_PICK_WAVE.md), [RRL_PRIHOD_NAKLAD](../tables/RRL_PRIHOD_NAKLAD.md), [RRL_PRODUCTION_ORDER](../tables/RRL_PRODUCTION_ORDER.md), [RRL_RECEIPT_SLOT_CLAIM](../tables/RRL_RECEIPT_SLOT_CLAIM.md), [RRL_REMAINS](../tables/RRL_REMAINS.md), [RRL_RESOURCE_FACT_EVENT](../tables/RRL_RESOURCE_FACT_EVENT.md), `RRL_RESOURCE_FACT_EVENT_SQ`, [RRL_RESOURCE_SESSION](../tables/RRL_RESOURCE_SESSION.md), [RRL_SAP_PALLET_RECEIPT](../tables/RRL_SAP_PALLET_RECEIPT.md), [RRL_SAP_RECEIPT_OUTBOX](../tables/RRL_SAP_RECEIPT_OUTBOX.md), [RRL_SAP_SUPPLY_ORDER](../tables/RRL_SAP_SUPPLY_ORDER.md), [RRL_STOCK_ELIGIBILITY](../programs/RRL_STOCK_ELIGIBILITY.md), [RRL_STOCK_INTERWARE_PUT](../programs/RRL_STOCK_INTERWARE_PUT.md), [RRL_STOCK_IW_RECOVERY_PUT](../programs/RRL_STOCK_IW_RECOVERY_PUT.md), [RRL_STOCK_LOCK_API](../programs/RRL_STOCK_LOCK_API.md), [RRL_STOCK_MATH](../programs/RRL_STOCK_MATH.md), [RRL_STOCK_OPERATION](../tables/RRL_STOCK_OPERATION.md), [RRL_STOCK_PALLET_UOM](../programs/RRL_STOCK_PALLET_UOM.md), [RRL_STOCK_PLAN_HELPER](../programs/RRL_STOCK_PLAN_HELPER.md), [RRL_STOCK_REPL_ADMISSION](../programs/RRL_STOCK_REPL_ADMISSION.md), [RRL_STOCK_REPL_BIND](../programs/RRL_STOCK_REPL_BIND.md), [RRL_STOCK_REPL_CAPACITY](../programs/RRL_STOCK_REPL_CAPACITY.md), [RRL_STOCK_REPL_CONTINUATION](../programs/RRL_STOCK_REPL_CONTINUATION.md), [RRL_STOCK_REPL_SHARED](../programs/RRL_STOCK_REPL_SHARED.md), [RRL_STOCK_RESERVATION](../tables/RRL_STOCK_RESERVATION.md), [RRL_STOCK_STORE_RETURN_PUT](../programs/RRL_STOCK_STORE_RETURN_PUT.md), [RRL_STOCK_TASK_CORE](../programs/RRL_STOCK_TASK_CORE.md), [RRL_STOCK_TASK_DOMAIN](../programs/RRL_STOCK_TASK_DOMAIN.md), [RRL_STOCK_TASK_PLAN](../programs/RRL_STOCK_TASK_PLAN.md), [RRL_STOCK_TASK_SCAN](../programs/RRL_STOCK_TASK_SCAN.md), [RRL_STOCK_TRANSFER_CORE](../programs/RRL_STOCK_TRANSFER_CORE.md), [RRL_ST_DEFER_WAIT_CORE](../programs/RRL_ST_DEFER_WAIT_CORE.md), [RRL_TASK_RESOURCE_POLICY](../programs/RRL_TASK_RESOURCE_POLICY.md), [RRL_TOPOLOGY_CELL_SLOT](../tables/RRL_TOPOLOGY_CELL_SLOT.md), [RRL_WAREHOUSE_TASK](../tables/RRL_WAREHOUSE_TASK.md), [RRL_WAREHOUSE_TASK_STOCK_MOVE](../tables/RRL_WAREHOUSE_TASK_STOCK_MOVE.md), [RRL_WAREHOUSE_TASK_SYNC](../tables/RRL_WAREHOUSE_TASK_SYNC.md), `RRL_WH_TASK_STOCK_MOVE_SQ`
+
+## Кто использует
+
+[RRL_STOCK_POSTING_API](../programs/RRL_STOCK_POSTING_API.md), [RRL_STOCK_TASK_CORE](../programs/RRL_STOCK_TASK_CORE.md)
+
+## Исходный код
+
+[Полный SQL-снимок](../../../../db/releases/2026-10-14/README.md). Ищите точное имя `RRL_STOCK_TASK_CORE` в файле соответствующего типа.

@@ -17,7 +17,7 @@ set "TMS_FRONTEND_PORT=%FRONT_PORT%"
 set "TMS_API_PORT=%API_PORT%"
 set "VITE_API_BASE=http://%LOCAL_HOST%:%API_PORT%"
 if not defined VITE_RAW_ADMIN_BASE set "VITE_RAW_ADMIN_BASE=%VITE_API_BASE%/wms-admin"
-set "VITE_ADMIN_BASIC_AUTH=admin:admin123"
+if not defined VITE_ADMIN_BASIC_AUTH set "VITE_ADMIN_BASIC_AUTH=admin:admin123"
 set "BROWSER=none"
 set "PORT=%FRONT_PORT%"
 

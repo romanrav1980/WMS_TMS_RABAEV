@@ -1,0 +1,40 @@
+{
+  "GET": {
+    "rows": 200,
+    "ms": 1619.31
+  },
+  "own_roundtrip": [
+    {
+      "addr_id": "NI081.SHOP.0b960a9257",
+      "addr_key": "NI081.SHOP.0b960a9257",
+      "addr": "NI081.SHOP.0b960a9257",
+      "lat": 41.0,
+      "lon": 44.0,
+      "radius_m": 213
+    }
+  ],
+  "invalid_radius": 422,
+  "slash_address_route": 404,
+  "gps_lookup": [],
+  "sql": [
+    [
+      "0q8sm8a3f3xqy",
+      1,
+      138.68,
+      383
+    ],
+    [
+      "2137sqhcqhf0w",
+      4,
+      3.296,
+      64
+    ],
+    [
+      "9pxkav7rha388",
+      4,
+      16.602,
+      60
+    ]
+  ],
+  "restored_radius": 200
+}

@@ -32,6 +32,8 @@ class VehicleProfileRequest(BaseModel):
     cargo_length_mm: int=Field(strict=True,ge=1,le=1000000)
     cargo_width_mm: int=Field(strict=True,ge=1,le=1000000)
     cargo_height_mm: int=Field(strict=True,ge=1,le=1000000)
+    outer_height_mm: int | None=Field(default=None,strict=True,ge=1,le=1000000)
+    outer_length_mm: int | None=Field(default=None,strict=True,ge=1,le=1000000)
     expected_version: int=Field(strict=True,ge=0)
     temp_min_c: str | None=Field(default=None,strict=True,pattern=r"^-?[0-9]{1,6}(\.[0-9]{1,3})?$")
     temp_max_c: str | None=Field(default=None,strict=True,pattern=r"^-?[0-9]{1,6}(\.[0-9]{1,3})?$")
@@ -66,7 +68,7 @@ def failure(exc: VehicleProfileError,operation: str|None=None)->HTTPException:
 @router.post("/vehicle-profiles")
 def configure(body: VehicleProfileRequest,user: AdminUser=Depends(require_permission("transport_fleet_edit")),
               service: VehicleProfilePort=Depends(vehicle_profile_service))->dict[str,Any]:
-    try:return service.configure(body.model_dump(mode="json",exclude_none=True),user.username)
+    try:return service.configure(body.model_dump(mode="json",exclude_unset=True),user.username)
     except VehicleProfileError as exc:raise failure(exc,body.operation_id)from exc
 
 @router.get("/vehicles/{vehicle_id}/profile")

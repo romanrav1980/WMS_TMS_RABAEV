@@ -1,0 +1,33 @@
+# RRL_INV_CREATE_LINE2_SP_OLD
+
+Тип: **FUNCTION**. Схема: `RABAEV`.
+
+Подсистема по имени: Legacy / общие справочники; бизнес-назначение требует уточнения по вызывающему коду.
+
+## Интерфейс
+
+| Подпрограмма | Аргумент (пустой = RETURN) | Позиция | Тип | Направление | Default | Overload |
+|---|---|---|---|---|---|---|
+| RRL_INV_CREATE_LINE2_SP_OLD |  |  | VARCHAR2 | OUT | N |  |
+| RRL_INV_CREATE_LINE2_SP_OLD | CELL1 | 1 | VARCHAR2 | IN | N |  |
+| RRL_INV_CREATE_LINE2_SP_OLD | SHK_ART | 2 | VARCHAR2 | IN | N |  |
+| RRL_INV_CREATE_LINE2_SP_OLD | ARTICUL_PART | 3 | VARCHAR2 | IN | N |  |
+| RRL_INV_CREATE_LINE2_SP_OLD | COUNT1 | 4 | NUMBER | IN | N |  |
+
+## Потенциальные записи по тексту SQL
+
+Нет зарегистрированных зависимостей.
+
+Это статический указатель, а не гарантия выполнения записи при каждом вызове. Полная семантика и транзакционные условия — в теле программы.
+
+## Зависимости
+
+[RRL_ARTICULS](../tables/RRL_ARTICULS.md), [RRL_CELLS](../tables/RRL_CELLS.md), [RRL_EVENTS](../tables/RRL_EVENTS.md), `RRL_EVENT_ID_SQ`, [RRL_GIVE_NEXT_CELL](../programs/RRL_GIVE_NEXT_CELL.md), [RRL_PALLETS](../tables/RRL_PALLETS.md)
+
+## Кто использует
+
+[RRL_INV_CREATE_LINE2](../programs/RRL_INV_CREATE_LINE2.md)
+
+## Исходный код
+
+[Полный SQL-снимок](../../../../db/releases/2026-10-14/README.md). Ищите точное имя `RRL_INV_CREATE_LINE2_SP_OLD` в файле соответствующего типа.

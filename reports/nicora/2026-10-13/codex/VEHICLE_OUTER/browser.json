@@ -1,0 +1,39 @@
+{
+  "fixture": true,
+  "native_migration_applied": false,
+  "requests": [
+    {
+      "operation_id": "VEHICLE.PROFILE:8a3378fe-f985-44c8-96c6-3860bc3cbe5b",
+      "vehicle_id": 999991,
+      "vehicle_size_class": "TRUCK",
+      "cargo_length_mm": 5000,
+      "cargo_width_mm": 2000,
+      "cargo_height_mm": 2200,
+      "outer_height_mm": 3500,
+      "outer_length_mm": 6500,
+      "expected_version": 0,
+      "expected_source_hash": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "reason": "UI fixture external dimensions",
+      "evidence_reference": "UI fixture"
+    },
+    {
+      "operation_id": "VEHICLE.PROFILE:8a3378fe-f985-44c8-96c6-3860bc3cbe5b",
+      "vehicle_id": 999991,
+      "vehicle_size_class": "TRUCK",
+      "cargo_length_mm": 5000,
+      "cargo_width_mm": 2000,
+      "cargo_height_mm": 2200,
+      "outer_height_mm": 3500,
+      "outer_length_mm": 6500,
+      "expected_version": 0,
+      "expected_source_hash": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "reason": "UI fixture external dimensions",
+      "evidence_reference": "UI fixture"
+    }
+  ],
+  "checks": [
+    "outer separate fromcargo",
+    "lost response preserves immutable outervalues",
+    "same operation exact replay"
+  ]
+}

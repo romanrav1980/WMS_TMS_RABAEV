@@ -84,3 +84,9 @@ def build_driver_workspace(gateway: Any) -> DriverWorkspacePort:
     return DriverWorkspace(gateway)
 
 from .infrastructure.available_sts_query import available_sts_query
+
+from .infrastructure.geofences import list_address_geofences, update_address_geofence
+
+from .infrastructure.gps_ingestion import ingest_gps, GpsVehicleMissing
+
+from .infrastructure.gantt_rows import gantt_rows, MAX_GANTT_ROWS

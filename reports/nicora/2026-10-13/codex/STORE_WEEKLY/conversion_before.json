@@ -1,0 +1,17 @@
+[
+  {
+    "stops": 1,
+    "conversions": 17,
+    "milliseconds": 92.34
+  },
+  {
+    "stops": 8,
+    "conversions": 136,
+    "milliseconds": 435.38
+  },
+  {
+    "stops": 200,
+    "conversions": 3400,
+    "milliseconds": 10072.72
+  }
+]

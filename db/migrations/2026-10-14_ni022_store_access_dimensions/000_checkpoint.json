@@ -1,0 +1,15 @@
+{
+  "migration_id": "2026-10-14-ni022-store-access-dimensions",
+  "target": [
+    "RABAEV",
+    "orcl"
+  ],
+  "captured_at": "2026-10-14T17:01:40.715520+00:00",
+  "files": {
+    "000_before_rules_package.sql": "b17a01f3e82f1cc6dd8a71d26dae7413d9bfd0882f4a3530e16c732488de2dd2",
+    "000_before_rules_package_body.sql": "6e0acf1067887661b8c00af02eb6b3d28e19fc94d1774133660f2ef46dc86e38"
+  },
+  "invalid_before": [],
+  "000_before_rrl_stock_hu_load_core.sql": "c3cac4cc240195816e566e1817acff88fb49978d36f9071df137fa8a13ef37c9",
+  "000_before_rrl_stock_trip_depart_cmd.sql": "1d7e3318234eacf70f86072352b8797c996947d1820af9bbb43920bf44fa471b"
+}

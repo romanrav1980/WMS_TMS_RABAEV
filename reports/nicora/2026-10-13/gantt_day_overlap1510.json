@@ -1,0 +1,16 @@
+{
+  "current_day_rows": 12,
+  "old_operation_count": 12,
+  "all_old_rows_preserved": true,
+  "elapsed_ms": 39.268,
+  "writes": 0,
+  "real_cross_midnight": "No existing candidate; no synthetic writes",
+  "sql": [
+    [
+      "4tf04m7hawaq7",
+      1,
+      34.752,
+      670
+    ]
+  ]
+}

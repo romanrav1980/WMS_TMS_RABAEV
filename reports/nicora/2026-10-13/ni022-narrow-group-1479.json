@@ -1,0 +1,55 @@
+[
+  {
+    "filters": {
+      "unassigned_only": false,
+      "page": 1,
+      "page_size": 200
+    },
+    "rows": 200,
+    "seconds": {
+      "old": 2.359,
+      "new": 0.944
+    },
+    "equal": true
+  },
+  {
+    "filters": {
+      "unassigned_only": false,
+      "page": 2,
+      "page_size": 200
+    },
+    "rows": 200,
+    "seconds": {
+      "old": 1.557,
+      "new": 1.575
+    },
+    "equal": true
+  },
+  {
+    "filters": {
+      "unassigned_only": false,
+      "ware_id": 9807,
+      "page_size": 2
+    },
+    "rows": 2,
+    "seconds": {
+      "old": 0.007,
+      "new": 0.054
+    },
+    "equal": true
+  },
+  {
+    "filters": {
+      "ware_id": 9807,
+      "not_assembled_only": true,
+      "max_weight_kg": 1000,
+      "page_size": 2
+    },
+    "rows": 1,
+    "seconds": {
+      "old": 0.003,
+      "new": 0.001
+    },
+    "equal": true
+  }
+]

@@ -1,7 +1,14 @@
-# Текущее поручение ведомому Codex — NI06.2
+﻿# Состояние ведомого Codex
 
-Ведущий /root, ведомый /root/codex_finance. Канал: сообщения агента и эта папка. Root ведёт общий план, index/log, Oracle и интеграцию. Ведомый не меняет общие файлы и не публикует GitHub.
+14.10.2026. Ведущий /root. Исполнитель /root/codex_finance.
 
-Сданы NI07.2 stock keys, NI04.3 task scans, NI01.1 scan correction/form draft, NI04.2 form draft, NI05.3 C0023 акт приёмки, NI06.1 group recovery. Отчёты reports/nicora/2026-10-13/codex/.
+RELEASE: внешние габариты ТС и единый native контроль подъезда завершены, применены root в RABAEV/orcl. Проверки версий/повторов/границ/неизвестных размеров, финальных вызовов погрузки/выезда и адресная оптимизация SQL завершены. История собственных тестовых metadata сохранена, тестовые ресурсы отключены штатными командами.
 
-Сейчас: возврат принят → конкретная существующая очередь размещения; проверка ответа операции, сохранение неизвестного результата/повреждённых сканов. Файлы store-return-receiving.js/html, store-return-putaway.js/html, return-receipt-result.js, return-mark-draft.js и узкий helper восстановления. Новые Oracle/API/stock writer не создавать. После блока передать конечный перечень критериев: отсутствующий код отдельно от внешней/независимой приёмки. Новой области без handoff не начинать.
+Отчёты:
+- reports/nicora/2026-10-13/codex/VEHICLE_OUTER/REPORT.md
+- reports/nicora/2026-10-13/codex/STORE_ACCESS/REPORT.md
+- reports/nicora/2026-10-13/codex/STORE_ACCESS/independent_review.md (другой исполнитель, ограниченное review)
+
+Ведомый store_schedule также RELEASE: native weekly окна и общий snapshot применены; preview/final/hash сценарий подтверждён. Отчёт codex/STORE_WEEKLY/REPORT.md.
+
+Активных file locks у ведомых Codex нет. Последний UI-блок NI08.1 у Claude по coordination/nicora-claude/TASK.md. Общая интеграция/план/gate у root. Новые задачи ведомым только для конкретного подтверждённого остатка, без повторной реализации завершённых функций.

@@ -20,6 +20,15 @@ def quality_label_html(snapshot: Mapping[str, Any], actor: str) -> str:
         ("Сформировал", actor),
         ("Сформировано, UTC", datetime.now(timezone.utc).isoformat(timespec="seconds")),
     ]
+    exemption = snapshot.get("weight_exemption")
+    if isinstance(exemption,Mapping) and exemption.get("eligible") is True:
+        fields.extend([
+            ("Освобождение от веса", "Подтверждённый исходный штрихкод хранения"
+             if exemption.get("exemption_basis")=="SCANNED_ORIGINAL_STORAGE_IDENTIFIER"
+             else "Целая неизменённая монопаллета"),
+            ("Исходная приёмка",exemption.get("receipt_operation_id","")),
+            ("Основание сохранено", "Да" if snapshot.get("weight_exemption_recorded") is True else "Нет"),
+        ])
     rows = "".join(f"<dt>{escape(name)}</dt><dd>{escape(str(value))}</dd>" for name, value in fields)
     note = "Этикетка действует только для указанного состава. Изменение состава отзывает допуск; перед погрузкой система проверяет актуальное разрешение."
     return f"""<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Контроль СТ</title>

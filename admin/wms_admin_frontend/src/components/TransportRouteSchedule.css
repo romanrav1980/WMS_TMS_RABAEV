@@ -1,0 +1,29 @@
+/* C-0033: расчётный маршрут сервера в preflight. */
+.trs{border-top:1px solid #e2e8f0;padding-top:8px;margin-top:8px;font-size:13px}
+.trs h4{margin:0 0 6px}
+.trs-muted{color:#64748b;font-size:12px}
+.trs-status{border-radius:8px;padding:6px 10px;margin:6px 0;font-weight:600}
+.trs-ok{background:#ecfdf5;color:#166534}.trs-warn{background:#fffbeb;color:#92400e}.trs-bad{background:#fef2f2;color:#991b1b}.trs-neutral{background:#f1f5f9;color:#334155}
+.trs-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:4px 12px;margin:6px 0}
+.trs-facts div{min-width:0}.trs-facts dt{font-size:11px;color:#64748b}.trs-facts dd{margin:0;overflow-wrap:anywhere}
+.trs-block{border-radius:8px;padding:6px 10px;margin:6px 0}.trs-bad-block{background:#fef2f2}.trs-warn-block{background:#fffbeb}
+.trs-block ul{margin:4px 0 0;padding-left:18px}
+.trs-issue{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:baseline;margin-right:8px}
+.trs-issue details{display:inline}.trs-issue summary{cursor:pointer;color:#64748b;font-size:11px}.trs-issue code{font-size:11px}
+.trs-table-wrap{overflow-x:auto}
+.trs-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.trs-table th,.trs-table td{border-bottom:1px solid #e2e8f0;padding:5px 6px;text-align:left;vertical-align:top}
+.trs-table th{background:#f8fafc;color:#475569;font-size:11.5px}
+.trs-table small{display:block;color:#64748b;font-size:11px;margin-top:2px}
+.trs-windows{margin:0;padding-left:14px}
+.trs-timeline{list-style:none;margin:6px 0;padding:0;display:flex;flex-direction:column;gap:3px}
+.trs-seg{display:grid;grid-template-columns:150px 1fr auto;gap:8px;border-left:3px solid #94a3b8;padding:2px 8px}
+.trs-seg-drive,.trs-seg-drive_back{border-color:#3b82f6}.trs-seg-rest{border-color:#a855f7}.trs-seg-wait{border-color:#f59e0b}.trs-seg-unload{border-color:#22c55e}
+.trs button:focus-visible,.trs summary:focus-visible{outline:2px solid #3b82f6;outline-offset:2px}
+@media(max-width:640px){
+ .trs-table thead{display:none}.trs-table,.trs-table tbody,.trs-table tr,.trs-table td{display:block;width:auto}
+ .trs-table tr{border-bottom:1px solid #e2e8f0;padding:4px 0}.trs-table td{border:0;padding:2px 4px}
+ .trs-table td::before{content:attr(data-label);display:block;font-size:10.5px;color:#64748b}
+ .trs-seg{grid-template-columns:1fr}
+}
+.trs-weekly{display:block;color:#475569;font-size:11px;margin-top:3px;overflow-wrap:anywhere}

@@ -21,5 +21,13 @@ def read_delivery_windows(cur: Any,trip: int,depot: str,max_age: int,zone: str,a
         raise TransportPlanError("ROUTE_APPROVAL_POLICY_REQUIRED","Используйте базу склада и действующий срок дорожных данных: 24 часа",422)
     wire=cur.var(oracledb.DB_TYPE_CLOB);wire.setvalue(0,json.dumps(context["source"],ensure_ascii=False))
     cur.callproc("RRL_TT_ROUTE_SCHEDULE.calculate",[wire,zone,out]);result=read_oracle_json(out.getvalue())
+    profiles = {p["address"]: p for p in context["source"].get("store_window_profiles", [])}
+    for stop in result.get("stops", []):
+        profile = profiles.get(stop.get("address"))
+        if profile is not None:
+            stop["profile_version"] = profile.get("profile_version")
+            stop["store_window_mode"] = profile.get("mode", "UNCONFIGURED")
+            stop["store_time_zone"] = profile.get("time_zone")
+            stop["configured_weekly_windows"] = profile.get("windows", [])
     result.update({"trip_id":trip,"source_hash":context["source_hash"],"consistent_snapshot":True})
     return result

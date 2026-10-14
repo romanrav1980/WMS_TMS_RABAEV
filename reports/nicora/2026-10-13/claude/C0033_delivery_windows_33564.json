@@ -1,0 +1,115 @@
+{
+ "segments": [
+  {
+   "code": "DOCK_ASSIGN",
+   "start_at": "2026-10-14T00:00:00.000000+03:00",
+   "finish_at": "2026-10-14T00:15:00.000000+03:00"
+  },
+  {
+   "code": "WAIT_LOAD",
+   "start_at": "2026-10-14T00:15:00.000000+03:00",
+   "finish_at": "2026-10-14T00:25:00.000000+03:00"
+  },
+  {
+   "code": "LOADING",
+   "start_at": "2026-10-14T00:25:00.000000+03:00",
+   "finish_at": "2026-10-14T00:31:00.000000+03:00"
+  },
+  {
+   "code": "CLOSE_GATE",
+   "start_at": "2026-10-14T00:31:00.000000+03:00",
+   "finish_at": "2026-10-14T00:41:00.000000+03:00"
+  },
+  {
+   "code": "DOCUMENTS",
+   "start_at": "2026-10-14T00:41:00.000000+03:00",
+   "finish_at": "2026-10-14T00:51:00.000000+03:00"
+  },
+  {
+   "code": "DEPART",
+   "start_at": "2026-10-14T00:51:00.000000+03:00",
+   "finish_at": "2026-10-14T00:51:00.000000+03:00"
+  },
+  {
+   "code": "DRIVE",
+   "start_at": "2026-10-14T00:51:00.000000+03:00",
+   "finish_at": "2026-10-14T00:51:00.000000+03:00"
+  },
+  {
+   "code": "DRIVE_BACK",
+   "start_at": "2026-10-14T01:12:00.000000+03:00",
+   "finish_at": "2026-10-14T01:12:00.000000+03:00"
+  },
+  {
+   "code": "RETURN_HANDOVER",
+   "start_at": "2026-10-14T01:12:00.000000+03:00",
+   "finish_at": "2026-10-14T01:32:00.000000+03:00"
+  },
+  {
+   "code": "CLEAN_RETURNS",
+   "start_at": "2026-10-14T01:32:00.000000+03:00",
+   "finish_at": "2026-10-14T01:52:00.000000+03:00"
+  }
+ ],
+ "stops": [
+  {
+   "address": "Own full-pallet ST",
+   "st_numbers": [
+    "M270:4edcbf41c6"
+   ],
+   "window_from": null,
+   "window_to": null,
+   "arrival_at": null,
+   "service_start_at": null,
+   "service_finish_at": null,
+   "wait_min": null,
+   "late_min": null,
+   "unload_norm_min": "30",
+   "window_strict": 0,
+   "issues": [
+    "DELIVERY_WINDOW_MISSING_OR_DISJOINT"
+   ]
+  }
+ ],
+ "return_at": null,
+ "departure_at": "2026-10-14T00:51:00.000000+03:00",
+ "issues": [
+  {
+   "code": "WAREHOUSE_DEPOT_NOT_CONFIGURED",
+   "address": null
+  },
+  {
+   "code": "ROUTE_ROAD_MISSING_STALE_OR_UNSUPPORTED",
+   "address": "Own full-pallet ST"
+  },
+  {
+   "code": "DELIVERY_WINDOW_MISSING_OR_DISJOINT",
+   "address": "Own full-pallet ST"
+  },
+  {
+   "code": "ROUTE_ROAD_MISSING_STALE_OR_UNSUPPORTED",
+   "address": null
+  },
+  {
+   "code": "ROUTE_RETURN_TIME_UNKNOWN",
+   "address": null
+  }
+ ],
+ "warnings": [],
+ "drive_min": "0",
+ "status": "INSUFFICIENT_EVIDENCE",
+ "policy_id": "REV55_ROUTE_V6_120_15_540_ROAD24H",
+ "time_zone": "Europe/Moscow",
+ "estimate_basis": "NATIVE_DRIVE_REST_WAIT_UNLOAD",
+ "driver_breaks_included": true,
+ "legal_compliance_verified": false,
+ "operational_admission": false,
+ "destination_time_zones_verified": false,
+ "depot_address": null,
+ "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+ "read_only": true,
+ "stock_changed": false,
+ "trip_id": 33564,
+ "source_hash": "9c725cee62bef44befaff85fe8b4485fc682d69882f9068d4df450958d25fb33",
+ "consistent_snapshot": true
+}

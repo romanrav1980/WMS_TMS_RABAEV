@@ -1,0 +1,2 @@
+﻿from pathlib import Path
+p=Path('api/wms_api_server/app/modules/inventory/domain/quality_label.py');s=p.read_text(encoding='utf-8');s=s.replace('("Освобождение от веса",exemption.get("exemption_basis","")),','("Освобождение от веса", "Подтверждённый исходный штрихкод хранения"\n             if exemption.get("exemption_basis")=="SCANNED_ORIGINAL_STORAGE_IDENTIFIER"\n             else "Целая неизменённая монопаллета"),');p.write_text(s,encoding='utf-8')

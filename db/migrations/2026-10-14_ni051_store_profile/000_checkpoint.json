@@ -1,0 +1,15 @@
+{
+  "captured_at": "2026-10-14T17:45:27.412277+00:00",
+  "target": [
+    "RABAEV",
+    "orcl"
+  ],
+  "existing_objects": [],
+  "invalid_before": [],
+  "files": {
+    "001_schema.sql": "4b98df555496386e2b3c504eb43de7be4dd005d3ac7061e17718a9c05655606d",
+    "apply.sql": "0e5718f5b8bbaf0f86900ae17e142d4bd7ffc66b4128c630714613660f619a00",
+    "rollback.sql": "598db073df76f406e926b60e1d89885d48a4908432a2cac023ec94aa61c323e9",
+    "verify.sql": "76aa727feb6e16d80f153ec05f9f8f44ce044a50de332e348941f5b2a2d9719d"
+  }
+}

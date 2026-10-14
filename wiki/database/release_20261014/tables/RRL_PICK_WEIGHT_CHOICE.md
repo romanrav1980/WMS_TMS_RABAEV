@@ -1,0 +1,95 @@
+# RRL_PICK_WEIGHT_CHOICE
+
+Тип: **TABLE**. Схема: `RABAEV`.
+
+Подсистема по имени: Отбор и волны.
+
+Описание Oracle: Не задано; не следует выводить точное бизнес-назначение только из имени.
+
+## Поля
+
+| Поле | Тип | NULL | Комментарий |
+|---|---|---|---|
+| `CHOICE_ID` | VARCHAR2(100 bytes) | N |  |
+| `CUSTOMER_ORDER_ROW_ID` | NUMBER | N |  |
+| `CUSTOMER_ORDER_ID` | NUMBER | N |  |
+| `WARE_ID` | NUMBER | N |  |
+| `ARTICLE` | VARCHAR2(160 bytes) | N |  |
+| `PHYSICAL_UNIT_KEY` | VARCHAR2(64 bytes) | N |  |
+| `SOURCE_UID` | VARCHAR2(150 bytes) | N |  |
+| `SOURCE_CELL` | VARCHAR2(60 bytes) | N |  |
+| `STOCK_VERSION` | NUMBER | N |  |
+| `NET_WEIGHT_KG` | NUMBER(27,9) | N |  |
+| `POLICY_VERSION` | NUMBER | N |  |
+| `TOLERANCE_PCT` | NUMBER(5,2) | N |  |
+| `ORIGINAL_ORDER_KG` | NUMBER(27,9) | N |  |
+| `ORIGINAL_REMAINING_KG` | NUMBER(27,9) | N |  |
+| `CHOICE_MODE` | VARCHAR2(24 bytes) | N |  |
+| `STATUS` | VARCHAR2(16 bytes) | N |  |
+| `APPROVED_BY` | VARCHAR2(50 bytes) | N |  |
+| `APPROVED_AT` | TIMESTAMP(6) WITH TIME ZONE | N |  |
+| `REASON_TEXT` | VARCHAR2(4000 bytes) | N |  |
+| `SOURCE_SIGNATURE` | VARCHAR2(64 bytes) | N |  |
+| `SOURCE_JSON` | CLOB | N |  |
+| `REQUEST_JSON` | CLOB | N |  |
+| `RESULT_JSON` | CLOB | N |  |
+| `PICK_PLAN_ID` | NUMBER | Y |  |
+| `PICK_PLAN_LINE_ID` | NUMBER | Y |  |
+| `USED_AT` | TIMESTAMP(6) WITH TIME ZONE | Y |  |
+| `CANCELLED_BY` | VARCHAR2(50 bytes) | Y |  |
+| `CANCELLED_AT` | TIMESTAMP(6) WITH TIME ZONE | Y |  |
+| `CANCEL_REASON` | VARCHAR2(4000 bytes) | Y |  |
+
+## Ограничения и связи
+
+| Ограничение | Тип | Поля | Ссылка | Статус |
+|---|---|---|---|---|
+| SYS_C0017635 | C | CUSTOMER_ORDER_ROW_ID |  | ENABLED |
+| SYS_C0017636 | C | CUSTOMER_ORDER_ID |  | ENABLED |
+| SYS_C0017637 | C | WARE_ID |  | ENABLED |
+| SYS_C0017638 | C | ARTICLE |  | ENABLED |
+| SYS_C0017639 | C | PHYSICAL_UNIT_KEY |  | ENABLED |
+| SYS_C0017640 | C | SOURCE_UID |  | ENABLED |
+| SYS_C0017641 | C | SOURCE_CELL |  | ENABLED |
+| SYS_C0017642 | C | STOCK_VERSION |  | ENABLED |
+| SYS_C0017643 | C | NET_WEIGHT_KG |  | ENABLED |
+| SYS_C0017644 | C | POLICY_VERSION |  | ENABLED |
+| SYS_C0017645 | C | TOLERANCE_PCT |  | ENABLED |
+| SYS_C0017646 | C | ORIGINAL_ORDER_KG |  | ENABLED |
+| SYS_C0017647 | C | ORIGINAL_REMAINING_KG |  | ENABLED |
+| SYS_C0017648 | C | CHOICE_MODE |  | ENABLED |
+| SYS_C0017649 | C | STATUS |  | ENABLED |
+| SYS_C0017650 | C | APPROVED_BY |  | ENABLED |
+| SYS_C0017651 | C | APPROVED_AT |  | ENABLED |
+| SYS_C0017652 | C | REASON_TEXT |  | ENABLED |
+| SYS_C0017653 | C | SOURCE_SIGNATURE |  | ENABLED |
+| SYS_C0017654 | C | SOURCE_JSON |  | ENABLED |
+| SYS_C0017655 | C | REQUEST_JSON |  | ENABLED |
+| SYS_C0017656 | C | RESULT_JSON |  | ENABLED |
+| SYS_C0017657 | C | NET_WEIGHT_KG |  | ENABLED |
+| SYS_C0017658 | C | TOLERANCE_PCT |  | ENABLED |
+| SYS_C0017659 | C | ORIGINAL_ORDER_KG |  | ENABLED |
+| SYS_C0017660 | C | ORIGINAL_REMAINING_KG |  | ENABLED |
+| SYS_C0017661 | C | CHOICE_MODE |  | ENABLED |
+| SYS_C0017662 | C | STATUS |  | ENABLED |
+| SYS_C0017663 | C | SOURCE_JSON |  | ENABLED |
+| SYS_C0017664 | C | REQUEST_JSON |  | ENABLED |
+| SYS_C0017665 | C | RESULT_JSON |  | ENABLED |
+| SYS_C0017666 | P | CHOICE_ID |  | ENABLED |
+| SYS_C0017667 | R | CUSTOMER_ORDER_ROW_ID | RRL_CUSTOMER_ORDER_ROW (CUSTOMER_ORDER_ROW_ID) | ENABLED |
+| SYS_C0017668 | R | PICK_PLAN_ID | RRL_PICK_PLAN (PICK_PLAN_ID) | ENABLED |
+| SYS_C0017669 | R | PICK_PLAN_LINE_ID | RRL_PICK_PLAN_LINE (PICK_PLAN_LINE_ID) | ENABLED |
+
+P — первичный ключ, U — уникальность, R — внешний ключ, C — CHECK/NOT NULL. Точные CHECK-выражения, defaults и индексы находятся в SQL-снимке.
+
+## Зависимости
+
+Нет зарегистрированных зависимостей.
+
+## Кто использует
+
+[RRL_WEIGHT_BOX_CHOICE_API](../programs/RRL_WEIGHT_BOX_CHOICE_API.md), [RRL_WEIGHT_CHOICE_DEMAND_READ](../programs/RRL_WEIGHT_CHOICE_DEMAND_READ.md), [RRL_WEIGHT_CHOICE_GUARD](../programs/RRL_WEIGHT_CHOICE_GUARD.md), [RRL_WEIGHT_CHOICE_UNIT_READ](../programs/RRL_WEIGHT_CHOICE_UNIT_READ.md), [RRL_WEIGHT_PLAN_BIND](../programs/RRL_WEIGHT_PLAN_BIND.md)
+
+## Исходный код
+
+[Полный SQL-снимок](../../../../db/releases/2026-10-14/README.md). Ищите точное имя `RRL_PICK_WEIGHT_CHOICE` в файле соответствующего типа.

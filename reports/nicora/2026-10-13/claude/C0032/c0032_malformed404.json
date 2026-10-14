@@ -1,0 +1,11 @@
+{
+ "html404": {
+  "message": "Результат не подтверждён (HTTP 404). Повторите сохранённое утверждение.",
+  "kept": true,
+  "retryVisible": true
+ },
+ "structured409": {
+  "message": "План изменился (TIME_SOURCE_APPROVAL_CHANGED). Отказ подтверждён — прочитайте актуальный план и исправьте ввод.",
+  "cleared": true
+ }
+}

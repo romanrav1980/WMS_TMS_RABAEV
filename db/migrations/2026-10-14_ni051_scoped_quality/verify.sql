@@ -3,5 +3,7 @@ declare n number;begin
  if n>0 then raise_application_error(-20808,'QUALITY_SCOPE_COMPILE_ERRORS');end if;
  select count(*) into n from USER_OBJECTS where OBJECT_NAME in('RRL_QC_SCOPE_READ','RRL_STOCK_QC_POLICY','RRL_STOCK_QC_GATE','RRL_STOCK_SHIPPING_CORE','RRL_STOCK_PALLET_QC_CMD','RRL_QC_SCOPE_RULE_GUARD','RRL_QC_SCOPE_CHANGE_GUARD','RRL_QC_EXEMPT_FACT_GUARD') and STATUS!='VALID';
  if n>0 then raise_application_error(-20808,'QUALITY_SCOPE_INVALID');end if;
+ select count(*) into n from USER_INDEXES where INDEX_NAME='RRL_QC_EXEMPT_DOCUMENT_IX' and STATUS='VALID';
+ if n!=1 then raise_application_error(-20808,'QUALITY_EXEMPT_LOOKUP_INDEX_MISSING');end if;
 end;
 /

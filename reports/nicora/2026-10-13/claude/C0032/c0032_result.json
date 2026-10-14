@@ -1,0 +1,40 @@
+{
+ "tripA": 33564,
+ "unknown": {
+  "message": "Сервер не ответил. Результат неизвестен — повторите сохранённое утверждение.",
+  "stored": "{\"operation_id\":\"TT.TIME.UI:0ca1d551-7cb4-4c49-826a-0203d3354c92\",\"trip_id\":33564,\"expected_version\":4,\"source_hash\":\"9c725cee62bef44befaff85fe8b4485fc682d69882f9068d4df450958d25fb33\",\"time_zone\":\"Europe/Moscow\",\"reason\":\"MOCK C0032 recovery reason\",\"approval_phase\":\"AFTER_LOADING_REVIEW\"}",
+  "posts": 1
+ },
+ "afterReload": {
+  "trip": 33564,
+  "banner": "Есть незавершённое утверждение маршрута и времени. Рейс #33564 Часовой пояс Europe/Moscow Основание MOCK C0032 recovery reason Фаза после полной подтверждённой погрузки Версия плана 4 Операция TT.TIME.UI:0ca1d551-7cb4-4c49-826a-0203d3354c92 Повторить сохранённое утверждение",
+  "retryVisible": true
+ },
+ "restoredFields": {
+  "reason": "MOCK C0032 recovery reason",
+  "loadedReview": true,
+  "approveDisabled": true,
+  "reasonDisabled": true
+ },
+ "otherZone": "I:0ca1d551-7cb4-4c49-826a-0203d3354c92 Выберите часовой пояс «Europe/Moscow» в поле выше — повтор возможен только с исходным часовым поясом.",
+ "otherTrip": {
+  "trip": 33571,
+  "text": "ана 4 Операция TT.TIME.UI:0ca1d551-7cb4-4c49-826a-0203d3354c92 Команда относится к рейсу #33564. Откройте этот рейс, чтобы повторить её; новое утверждение для рейса #33571 заблокировано до результата.",
+  "retryVisible": 0
+ },
+ "retry": {
+  "posts": 2,
+  "sameBody": true,
+  "cleared": true,
+  "body": {
+   "trip": 33564,
+   "zone": "Europe/Moscow",
+   "phase": "AFTER_LOADING_REVIEW",
+   "version": 4
+  }
+ },
+ "damaged": {
+  "text": "Сохранённая команда утверждения повреждена. Новое утверждение заблокировано: результат прежней команды неизвестен. Сверьте статус рейсов, затем сохраните запись",
+  "approveDisabled": true
+ }
+}

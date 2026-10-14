@@ -1,0 +1,23 @@
+{
+  "migration_id": "2026-10-14-1447-ni051-scoped-quality",
+  "state": "APPLIED",
+  "files": {
+    "001_schema.sql": "a5e384d072afd75d868c9f520e31ea5ca51ffceca796e11f80392b2fe593251b",
+    "002_reader.sql": "5c49463bdb063838fb3bf5e2eef429ed3bdd145013b2ddc8a0b0ad1462e4cfd5",
+    "003_policy.sql": "b0357c0ed799d5cbf9e1b6d86a4db141cfdb010da5963c527aa76bf7dbd9b89a",
+    "004_gate.sql": "1526b0af4d875b238e7429182a5fcc8f443dbe531e0b1a03cb6c0e85079a2039",
+    "005_shipping.sql": "c3d9f10c8584bf582d13bfded2ac72f2e56b304ff999eedb51f9959791c12e77",
+    "006_quality.sql": "a1188808386fc752d9ca709326d690b2d6d8e8d047d874bfa2c4c25fff8f6b82",
+    "007_exemption_lookup.sql": "10ec54e21fe17bf7c581082bb498a298753a5349de4a6986375e63a907f61728",
+    "apply.sql": "ddadefc00fa9f8126423c474721eee40e83a9d688006753a43247304a81417f9",
+    "rollback.sql": "40c88c6ba33c474385276ad07b2d1fed12055ed311356e8c8d6c850a84b07c70",
+    "verify.sql": "671833ccb4a2952b919363743c6d5f5435cf107662c4757c0307dfcc52928eb4",
+    "saved\\RRL_STOCK_PALLET_QC_CMD_PACKAGE_BODY.sql": "61c3f9d58783bd56a60db676be2cf2f3321c25c8fbe7643c369a1a3db61c7ada",
+    "saved\\RRL_STOCK_QC_GATE_PACKAGE_BODY.sql": "fb3a1bb3b3618b5d9f5693249409536986d01ccf9ea7067b56631eb059a18f60",
+    "saved\\RRL_STOCK_QC_POLICY_PACKAGE.sql": "87cc79d98efcc06962f2b61e4b91a82ab445085c35834fc09cf25801c0358f20",
+    "saved\\RRL_STOCK_QC_POLICY_PACKAGE_BODY.sql": "2b53879319c5eac20d571a01f1c47d5ec81aa12c2740f364ed469f74f7d614c7",
+    "saved\\RRL_STOCK_SHIPPING_CORE_PACKAGE_BODY.sql": "f38127238bc175fd5d3019fb8687a06d01bac880d00ff8cabe3e812a6877b63b"
+  },
+  "original_checkpoint": "checkpoint.json retained; final applied source hashes recorded here",
+  "gate_checkpoint_caveat": "codex/QC_F1/REPORT.md documents reconstructed interim gate; original migration saved sources retained"
+}

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { TransportTimeApproval } from "./TransportTimeApproval";
+import { TransportRouteSchedule } from "./TransportRouteSchedule";
 import { TransportCoordination } from "./TransportCoordination";
 import { TransportRouteInput } from "./TransportRouteInput";
 import { TransportDriverRest, type DriverRestResult } from "./TransportDriverRest";
@@ -93,6 +94,7 @@ export function TransportTimePreflight({tripId, apiBase, headers, actor}: {
       <p>Для допуска рейса ещё нужны подтверждённое расписание, проверка отдыха водителя
         и готовности склада. Эта проверка не изменяет рейс.</p>
     </div>}
+    <TransportRouteSchedule tripId={tripId} zone={zone} apiBase={apiBase} headers={headers}/>
     <TransportRouteInput tripId={tripId} apiBase={apiBase} headers={headers} actor={actor}/>
     <TransportTimeApproval tripId={tripId} zone={zone} apiBase={apiBase} headers={headers} actor={actor}/>
     <TransportCoordination tripId={tripId} apiBase={apiBase} headers={headers} actor={actor}/>

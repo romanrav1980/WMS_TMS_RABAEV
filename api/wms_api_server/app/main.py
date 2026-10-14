@@ -198,6 +198,12 @@ app.include_router(inventory_receiving.outgoing_quality_router)
 
 app.dependency_overrides[sku_receiving.quality_weight_service] = sku_receiving.build_quality_weight_policy
 app.include_router(sku_receiving.quality_weight_router)
+app.dependency_overrides[sku_receiving.store_directory_service] = sku_receiving.build_store_directory
+app.include_router(sku_receiving.store_directory_router)
+app.dependency_overrides[sku_receiving.warehouse_options_service] = sku_receiving.build_warehouse_options
+app.include_router(sku_receiving.warehouse_options_router)
+app.dependency_overrides[sku_receiving.store_profile_service] = sku_receiving.build_store_profile
+app.include_router(sku_receiving.store_profile_router)
 
 
 from .modules.transport.public import transport_loading_router, transport_unloading_router, transport_loading_service

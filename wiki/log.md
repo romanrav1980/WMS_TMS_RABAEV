@@ -4237,3 +4237,47 @@ NI04.2: существующий архив связан с терминалом
 - 2026-10-14: W1437–1441 QC→назначение рейса, report64, SQL4мс. NI06.2 сдан ведомым: exact receipt фильтр/возврат→размещение/recovery. Интеграция gate755/0/73,24tests/обаTS/encodingPASS. Далее конечное сопоставление критериев, без повторного движка.
 
 - 2026-10-14: live1443–1445 подтвердил отсутствие store/subwarehouse category overrides и освобождения whole unchanged STOCK в QC policy. Root NI05.1/1447 в реализации; ведомый NI08.1 route rest/final approval. Эти кодовые остатки не подменяются внешней приёмкой.
+
+- 2026-10-14: редакция71 устраняет устаревшие назначения. NI08.1-R1 сдан; scoped QC применён, F1 review требует отдельного storage proof/native release. UI recovery: одна history запись, правило отключеноv3, P3 сохранён, SQL1–13мс. Для широкого ST кандидат NL hint отвергнут:6.631с против1.685с существующего; постоянные<2с не заявляются.
+
+- 2026-10-14: report65 фиксирует applied scoped QC и незавершённый F1/native positive; интерфейс114 приведён к рабочему оформлению, основание освобождения видно QC-пользователю без transport-права. Общий gate759/0/73,24теста/обаTS/encodingPASS. report66 сохраняет отрицательное решение по NL hint без изменения runtime.
+
+- 2026-10-14: редакция72/report67: ведомый RELEASE NI05.1 F1/nativepositive/recorded status и NI08.1. Root интегрировал label guard409/200 и понятное основание, gate759/0/73,24теста/обаTS PASS. Ownfixture P/H0, audit1/replay. Все спринты полностью принятыми не объявлены; внешние/независимые условия и широкий ST performance сохраняются. Interim gate checkpoint реконструирован и явно отмечен; исходный migration rollback сохранён. GitHub не публиковался.
+
+- 2026-10-14: plan73/report68, root NI02.2 grouping rewrite (HTTP1.038с); Codex peer-review/NI04.3 truthful runtime diagnostics RELEASE. Владелец выбрал отдельный шлюз государственных систем с разработкой позже: это deferred code, не только внешние credentials. Claude ACK K0027/C0025, quality-policy UI файлы за ним.
+
+- 2026-10-14: report69 фиксирует прямое решение владельца отложить шлюз маркировки. Сводка67 уточнена: отсутствие sender — отложенный код. Claude K0028/C0026 approved read-only stores API/main/public; проект расширений магазина отдельно. Ведомый получил geofences GET/PATCH/GPS: реальные ADDR/SHIROTA/DOLGOTA/NUM, запрет произвольной первой UNLOAD.
+
+- 2026-10-14: geofences/GPS RELEASE ведомого; root review и дневной диапазон TS безTRUNC, report70. Claude C0029: cardinality ERP maps, лёгкий warehouse selector, подготовка расширенного профиля без дублирования источников; DDL apply остаётся у root.
+
+## 14.10.2026 — снято ожидание Claude, C0031
+Закреплены C0029 за Claude и внешний размер ТС за ведомым Codex, ACK получены. Полный контракт магазина передан до DDL; разрешён точечный пункт навигации. C0023 не дублируется. Добавлена components/nicora_store_fleet_coordination_20261014.md, обновлены index и TASK_CURRENT. Применения DDL и публикации в этом шаге нет.
+
+## 14.10.2026 — непрерывная очередь Claude
+По прямому поручению владельца TASK.md очищен от противоречащих исторических указателей. Созданы конкретные TASK_C0032.md и TASK_C0033.md, сообщение C0032 разрешает автоматический переход, работу на независимой части при блокере и ранний QUEUE_LOW. Файлы UI не пересекаются с native исполнителями. Wiki coordination/index обновлены; задачи не объявлены завершёнными до результатов.
+
+## 2026-10-14 — NI08.1 native weekly windows prepared (store_schedule)
+
+Fresh read-only checkpoint RABAEV/orcl; new migration `2026-10-14-ni081-store-weekly-windows` adds native interval resolver and V7 store/fleet source material. No DDL applied. Same arrival-local day bounded horizon; missing day CLOSED, no lunch-gap merging, complete ST precedence. Oracle read-only DST roundtrip probes and source preflight PASS. Root owns installation/native acceptance/slow SQL. See [database page](database/nicora_ni081_store_weekly_windows_20261014.md).
+
+## 14.10.2026 — профиль магазина, окна, габариты и deadline
+Установлены четыре согласованных миграции RABAEV/orcl (fleet outer, store profile, store weekly, store access); Errors0, native evidence в report71. Подтверждены одинаковый preview/final и инвалидирование hash, запреты до товарных эффектов. Root исправил чтение56окон/batching/WAIT5/UTC и same-snapshot UI metadata. Plan74 содержит deadline15.10 07:00МСК; Claude подтвердил C0034 и замечания, очередь не пуста. Обновлены database/store_profile, index и отчёт71; независимая/внешняя приёмка не подменена.
+
+## 14.10.2026 — остаток текущего кодового блока
+Plan74 уточнён по native/live результатам: NI05.1 реализован, текущий NI08.1 — C0033 same-snapshot отображение и C0034 ночная Ганта. Live profile K0037 PASS; четыре новые миграции APPLIED, INVALID0. Report71/database профиль обновлены. Полная независимая приёмка отдельно, allSprintsAccepted=false.
+
+## 14.10.2026 — план75 без устаревшей очереди
+Переписан implementation_plan.md как текущий план18 спринтов вместо накопленных взаимоисключающих next-указателей. JSON continuationStopConditions исправлен на15.10 07:00МСК (ранее обновлялось только historical поле). Счётчик17/1 теперь явно означает реализованный текущий кодовый объём, не промышленную/независимую приёмку. NI08.1 UI остаётся вработе; allSprintsAccepted=false. Evidence reports67–71 и журнал сохранены.
+
+## 14.10.2026 — уточнение текущих данных
+C0033 same-snapshot UI сдан K0038. Единственный назначенный кодовый остаток — C0034 ночная Ганта/mobile/overlay. Исторический pendingSlices NI05.1 сохранён как historicalPendingSlices, актуальное remainingDeliveryWork заменено подтверждёнными live результатами и отдельной приёмкой. Устранены противоречащие applied-result вводные в database/fleet/access. Итоговый общий gate поручен Claude после стабильного UI, root не дублирует без новых изменений.
+
+## 14.10.2026 — ночные операции: backend
+Root исправил подтверждённый backend gap Ганта: операции предыдущего рейса, пересекающие выбранный день, теперь включаются в existing endpoint. Сохранён контракт, SQL вынесен в owner, bound20000/error. Report72:12старыхопераций сохранены, SQL35мс; read-only Oracle модель5границ PASS, real crossing вdevнет. Wiki component/index обновлены; UI уClaudeC0034, общего gate ждём после RELEASE.
+
+## 14.10.2026 — текущий кодовый объём18/18, план76
+C0029–C0034 приняты после source/screenshot review, включая footer/overlay, границу1440 и подпись новой серверной выборки. Root общий gate на итоговом коде:778files/0cycles/73legacydebt,24tests,admin+terminalTS PASS, final_gate1512.log. План76 и report73 фиксируют18/18 реализации текущего согласованного объёма, очередь пуста, allSprintsAccepted=false: независимая/внешняя/промышленная приёмка отдельно. Госшлюз отложен владельцем. Условие завершения разработки достигнуто до15.10 07:00МСК. GitHub не публиковался в этом блоке.
+
+## 2026-10-14 — полный комплект публикации и документация
+
+По прямому поручению владельца: снимок текущей RABAEV (2818 объектов), минимальный установщик, каталог Oracle/методов/OpenAPI и описание функциональных блоков; report74 и database/nicora_release_20261014.md. Исходная БД не изменялась; live missing/INVALID=0, compatibility OFF; чистая установка на новом экземпляре не репетировалась. Claude получил C0049, подтвердил ACK и проектирует роли/UI в отдельной области. Публикация текущего релиза выполняется root.

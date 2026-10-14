@@ -1,0 +1,42 @@
+{
+  "measurements": [
+    {
+      "variant": "original",
+      "stops": 1,
+      "conversions": 17,
+      "milliseconds": 37.775
+    },
+    {
+      "variant": "original",
+      "stops": 8,
+      "conversions": 136,
+      "milliseconds": 134.244
+    },
+    {
+      "variant": "original",
+      "stops": 200,
+      "conversions": 3400,
+      "milliseconds": 3150.916
+    },
+    {
+      "variant": "cached",
+      "stops": 1,
+      "conversions": 17,
+      "milliseconds": 30.032
+    },
+    {
+      "variant": "cached",
+      "stops": 8,
+      "conversions": 136,
+      "milliseconds": 32.506
+    },
+    {
+      "variant": "cached",
+      "stops": 200,
+      "conversions": 3400,
+      "milliseconds": 795.04
+    }
+  ],
+  "dst_fold_gap_both_variants": "PASS",
+  "writes": false
+}

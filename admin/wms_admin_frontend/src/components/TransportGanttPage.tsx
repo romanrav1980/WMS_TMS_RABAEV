@@ -1,15 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TransportTimePreflight } from "./TransportTimePreflight";
+import { CHART_W, GanttOffAxis, GridLines, HEADER_H, minToPx, OpBlock, ROW_H, TimeAxisRow, useInitialGanttScroll } from "./TransportGanttAxis";
+import { localDayIso, planText, scrollTargetMin, spanOf, stampText, upcomingOps } from "./TransportGanttTime";
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
-const AXIS_START = 360;   // 06:00 in minutes from midnight
-const AXIS_END   = 1320;  // 22:00
-const PX_MIN     = 1.5;   // pixels per minute
-const ROW_H      = 52;    // vehicle row height px
-const HEADER_H   = 44;    // time axis header height px
-const LEFT_W     = 210;   // vehicle info column width px
-const CHART_W    = (AXIS_END - AXIS_START) * PX_MIN; // 1440px
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
 const API_BASIC_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
 
@@ -113,10 +108,6 @@ type PlanFactItem = {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-function todayIso() {
-  return new Date().toISOString().slice(0, 10);
-}
-
 function fmtDate(iso: string) {
   const d = new Date(iso + "T00:00:00");
   return d.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" });
@@ -125,33 +116,15 @@ function fmtDate(iso: string) {
 function addDays(iso: string, n: number) {
   const d = new Date(iso + "T00:00:00");
   d.setDate(d.getDate() + n);
-  return d.toISOString().slice(0, 10);
+  return localDayIso(d);
 }
 
-function parseMinFromStr(s: string | null): number | null {
-  if (!s) return null;
-  const parts = s.split(" ");
-  const timePart = parts.length > 1 ? parts[1] : parts[0];
-  const [h, m] = timePart.split(":").map(Number);
-  if (isNaN(h) || isNaN(m)) return null;
-  return h * 60 + m;
-}
-
-function fmtHHMM(min: number) {
-  const h = Math.floor(min / 60) % 24;
-  const m = min % 60;
-  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-}
-
-function minToPx(min: number) {
-  return (min - AXIS_START) * PX_MIN;
-}
-
+// Статус по абсолютному времени: операции считаются от 00:00 сегодняшней даты, а не по HH:mm выбранной.
 function getVehicleStatus(ops: Operation[], nowMin: number): string {
+  const today = localDayIso();
   for (const op of ops) {
-    const s = parseMinFromStr(op.plan_start);
-    const e = parseMinFromStr(op.plan_end);
-    if (s !== null && e !== null && nowMin >= s && nowMin <= e) {
+    const span = spanOf(op, today);
+    if (span && nowMin >= span.start && nowMin <= span.end) {
       return OP_STATUS[op.operation_code] || "В рейсе";
     }
   }
@@ -160,98 +133,6 @@ function getVehicleStatus(ops: Operation[], nowMin: number): string {
 
 function vehicleInitials(num: string): string {
   return num.slice(0, 2).toUpperCase();
-}
-
-// ---------------------------------------------------------------------------
-// SVG sub-components
-// ---------------------------------------------------------------------------
-
-function TimeAxisRow() {
-  const ticks: React.ReactNode[] = [];
-  for (let min = AXIS_START; min <= AXIS_END; min += 30) {
-    const x = minToPx(min);
-    const isHour = min % 60 === 0;
-    ticks.push(
-      <g key={min}>
-        <line x1={x} y1={isHour ? HEADER_H - 22 : HEADER_H - 10} x2={x} y2={HEADER_H} stroke="#cbd5e1" strokeWidth={isHour ? 1.5 : 1} />
-        {isHour && (
-          <text x={x} y={HEADER_H - 26} textAnchor="middle" fontSize={11} fill="#64748b" fontFamily="inherit">
-            {fmtHHMM(min)}
-          </text>
-        )}
-      </g>
-    );
-  }
-  return <>{ticks}</>;
-}
-
-function GridLines({ rowCount }: { rowCount: number }) {
-  const lines: React.ReactNode[] = [];
-  for (let min = AXIS_START; min <= AXIS_END; min += 60) {
-    const x = minToPx(min);
-    lines.push(
-      <line key={min} x1={x} y1={0} x2={x} y2={HEADER_H + rowCount * ROW_H}
-        stroke="#e2e8f0" strokeWidth={1} strokeDasharray={min % 120 === 0 ? "none" : "2,3"} />
-    );
-  }
-  for (let i = 0; i <= rowCount; i++) {
-    const y = HEADER_H + i * ROW_H;
-    lines.push(
-      <line key={`h${i}`} x1={0} y1={y} x2={CHART_W} y2={y} stroke="#f1f5f9" strokeWidth={1} />
-    );
-  }
-  return <>{lines}</>;
-}
-
-function OpBlock({
-  op, rowY, onHover, onLeave, onClick, onContextMenu,
-}: {
-  op: Operation; rowY: number;
-  onHover: (e: React.MouseEvent<SVGRectElement>, op: Operation) => void;
-  onLeave: () => void;
-  onClick: (op: Operation) => void;
-  onContextMenu: (e: React.MouseEvent, op: Operation) => void;
-}) {
-  const startMin = parseMinFromStr(op.plan_start);
-  const endMin   = parseMinFromStr(op.plan_end);
-  if (startMin === null || endMin === null) return null;
-
-  const clampedStart = Math.max(startMin, AXIS_START);
-  const clampedEnd   = Math.min(endMin,   AXIS_END);
-  if (clampedEnd <= clampedStart) return null;
-
-  const x = minToPx(clampedStart);
-  const w = Math.max((clampedEnd - clampedStart) * PX_MIN, 2);
-  const y = rowY + 6;
-  const h = ROW_H - 12;
-  const color = OP_COLOR[op.operation_code] || "#94a3b8";
-  const label = OP_LABEL[op.operation_code] || op.operation_code;
-  const hasFact = op.fact_start !== null;
-
-  return (
-    <g>
-      <rect
-        x={x} y={y} width={w} height={h} rx={3}
-        fill={color} opacity={hasFact ? 1 : 0.75}
-        stroke={hasFact ? "rgba(0,0,0,.25)" : "none"} strokeWidth={1}
-        style={{ cursor: "pointer" }}
-        onMouseEnter={(e) => onHover(e, op)}
-        onMouseLeave={onLeave}
-        onClick={() => onClick(op)}
-        onContextMenu={(e) => onContextMenu(e as unknown as React.MouseEvent, op)}
-      />
-      {w > 32 && (
-        <text
-          x={x + w / 2} y={y + h / 2 + 4}
-          textAnchor="middle" fontSize={10} fill="#fff"
-          fontWeight="600" fontFamily="inherit"
-          style={{ pointerEvents: "none", userSelect: "none" }}
-        >
-          {label}
-        </text>
-      )}
-    </g>
-  );
 }
 
 // ---------------------------------------------------------------------------
@@ -283,7 +164,7 @@ function FactMarkModal({
         <div className="gantt-card-title">Отметить факт · {label}</div>
         <div className="gantt-card-row">
           <span>План:</span>
-          <span>{op.plan_start?.slice(-5)} – {op.plan_end?.slice(-5)}</span>
+          <span>{planText(op, op.plan_start?.slice(0, 10) ?? "")}</span>
         </div>
         <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
           <label style={{ fontSize: 12, color: "#64748b" }}>
@@ -317,9 +198,9 @@ function FactMarkModal({
 // Main page component
 // ---------------------------------------------------------------------------
 export function TransportGanttPage({ onBack }: { onBack: () => void }) {
-  const [ganttDate, setGanttDate]         = useState(todayIso());
+  const [ganttDate, setGanttDate]         = useState(localDayIso());
   const [vehicles, setVehicles]           = useState<VehicleGantt[]>([]);
-  const [loading, setLoading]             = useState(false);
+  const [loading, setLoading]             = useState(false), [loadedFor, setLoadedFor] = useState(""); // loadedFor — дата данных vehicles
   const [error, setError]                 = useState<string | null>(null);
   const [nowMin, setNowMin]               = useState(() => {
     const n = new Date(); return n.getHours() * 60 + n.getMinutes();
@@ -352,7 +233,7 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
         { headers: apiHeaders() }
       );
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      setVehicles(await r.json());
+      setVehicles(await r.json()); setLoadedFor(date);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -442,23 +323,11 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
   // SVG height
   const svgH = HEADER_H + filtered.length * ROW_H + 2;
   const nowX = minToPx(nowMin);
-  const showNowLine = nowMin >= AXIS_START && nowMin <= AXIS_END;
+  const showNowLine = ganttDate === localDayIso();
+  useInitialGanttScroll(scrollRef, ganttDate, !loading && loadedFor === ganttDate, useCallback(() => scrollTargetMin(ganttDate, filtered.flatMap((v) => v.operations)), [ganttDate, filtered]));
 
-  // Upcoming trips (next 3 operations that haven't started yet)
-  const upcoming: Array<{ vehicle_num: string; op: Operation }> = [];
-  for (const v of filtered) {
-    for (const op of v.operations) {
-      const s = parseMinFromStr(op.plan_start);
-      if (s !== null && s > nowMin && upcoming.length < 5) {
-        upcoming.push({ vehicle_num: v.vehicle_num, op });
-      }
-    }
-  }
-  upcoming.sort((a, b) => {
-    const sa = parseMinFromStr(a.op.plan_start) ?? 0;
-    const sb = parseMinFromStr(b.op.plan_start) ?? 0;
-    return sa - sb;
-  });
+  // Upcoming trips (next 5 operations that haven't started yet)
+  const upcoming = upcomingOps(filtered, nowMin);
 
   // Actual deviations (operations with delta)
   const deviations: Array<{ vehicle_num: string; op: Operation }> = [];
@@ -486,7 +355,7 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
             onChange={e => setGanttDate(e.target.value)}
           />
           <button className="gantt-nav-btn" onClick={() => setGanttDate(d => addDays(d, 1))}>►</button>
-          <button className="gantt-today-btn" onClick={() => setGanttDate(todayIso())}>Сегодня</button>
+          <button className="gantt-today-btn" onClick={() => setGanttDate(localDayIso())}>Сегодня</button>
         </div>
 
         <span className="gantt-date-label">{fmtDate(ganttDate)}</span>
@@ -572,7 +441,7 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
                   {v.operations.map((op) => (
                     <OpBlock
                       key={op.op_id}
-                      op={op}
+                      op={op} day={ganttDate} color={OP_COLOR[op.operation_code] || "#94a3b8"} label={OP_LABEL[op.operation_code] || op.operation_code}
                       rowY={rowY}
                       onHover={handleOpHover}
                       onLeave={handleOpLeave}
@@ -601,6 +470,7 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
         </div>
       </div>
 
+      {activeTab === "gantt" && <GanttOffAxis rows={filtered} day={ganttDate} labelOf={(c) => OP_LABEL[c] || c} onOpen={handleOpClick} />}
       {/* ---- Legend (hidden on analytics) ---- */}
       <div className="gantt-legend" style={{ display: activeTab === "analytics" ? "none" : "flex" }}>
         {LEGEND_GROUPS.map((g) => (
@@ -640,7 +510,7 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
             : upcoming.slice(0, 5).map((u, i) => (
               <div key={i} className="gantt-panel-row">
                 <span className="gantt-panel-veh">{u.vehicle_num}</span>
-                <span className="gantt-panel-time">{u.op.plan_start?.slice(-5)}</span>
+                <span className="gantt-panel-time">{stampText(u.op.plan_start, ganttDate)}</span>
                 <span
                   className="gantt-panel-op"
                   style={{ color: OP_COLOR[u.op.operation_code] || "#64748b" }}
@@ -725,8 +595,8 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
                           {OP_LABEL[op.operation_code] || op.operation_code}
                         </td>
                         <td>{Math.round(op.duration_min)} мин</td>
-                        <td>{op.plan_start?.slice(-5)} – {op.plan_end?.slice(-5)}</td>
-                        <td>{op.fact_start ? `${op.fact_start.slice(-5)} – ${op.fact_end?.slice(-5) ?? "…"}` : "—"}</td>
+                        <td>{planText(op, ganttDate)}</td>
+                        <td>{op.fact_start ? `${stampText(op.fact_start, ganttDate)} – ${op.fact_end ? stampText(op.fact_end, ganttDate) : "…"}` : "—"}</td>
                         <td style={{ color: barColor, fontWeight: 600 }}>
                           {delta !== null ? `${delta > 0 ? "+" : ""}${delta}` : "—"}
                         </td>
@@ -793,11 +663,11 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
                     style={{ background: OP_COLOR[op.operation_code] || "#94a3b8" }} />
                   <span style={{ minWidth: 90, fontSize: 11 }}>{OP_LABEL[op.operation_code] || op.operation_code}</span>
                   <span style={{ color: "#64748b", fontSize: 11 }}>
-                    {op.plan_start?.slice(-5)} – {op.plan_end?.slice(-5)}
+                    {planText(op, ganttDate)}
                   </span>
                   {op.fact_start && (
                     <span style={{ color: "#16a34a", fontSize: 10, marginLeft: 4 }}>
-                      ✓ {op.fact_start.slice(-5)}
+                      ✓ {stampText(op.fact_start, ganttDate)}
                     </span>
                   )}
                   {op.delta_min !== null && (
@@ -811,7 +681,7 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
                 </div>
               ))}
             </div>
-            <div className="gantt-card-actions"><TransportTimePreflight key={taskCard.tt_id} tripId={taskCard.tt_id} apiBase={API_BASE} headers={apiHeaders()} actor={API_BASIC_AUTH.split(":")[0]} />
+            <div className="gantt-card-body"><TransportTimePreflight key={taskCard.tt_id} tripId={taskCard.tt_id} apiBase={API_BASE} headers={apiHeaders()} actor={API_BASIC_AUTH.split(":")[0]} /></div><div className="gantt-card-actions">
               <button className="gantt-card-close-btn" onClick={() => setTaskCard(null)}>Закрыть</button>
             </div>
           </div>
@@ -826,12 +696,12 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
           <div className="gantt-tt-title">{OP_LABEL[tooltip.op.operation_code] || tooltip.op.operation_code}</div>
           <div className="gantt-tt-row">
             <span>План:</span>
-            <span>{tooltip.op.plan_start?.slice(-5)} – {tooltip.op.plan_end?.slice(-5)}</span>
+            <span>{planText(tooltip.op, ganttDate)}</span>
           </div>
           {tooltip.op.fact_start && (
             <div className="gantt-tt-row">
               <span>Факт:</span>
-              <span>{tooltip.op.fact_start?.slice(-5)} – {tooltip.op.fact_end?.slice(-5) ?? "…"}</span>
+              <span>{stampText(tooltip.op.fact_start, ganttDate)} – {tooltip.op.fact_end ? stampText(tooltip.op.fact_end, ganttDate) : "…"}</span>
             </div>
           )}
           {tooltip.op.delta_min !== null && (

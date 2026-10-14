@@ -1,0 +1,45 @@
+{
+ "nav": 1,
+ "real": {
+  "card": "Адрес и логистика Адрес Own264 synthetic registered store 288ec8b68a Регион / район — Направление — Тип ТС 15 Макс. тоннаж, т 20 Стол-лифт нет Норма разгрузки, мин 30 Строгое окно (TW_STRICT) нет Отгрузка со склада до 00:00 Срок, дн. 0 Ворота по умолчанию — Координаты — Геозона, м 200 Приёмка и тара Режим приёмки BARCODE Версия политики 1 Получателей назначено 1 Возврат тары DAYS · 7 дн. · Europe/",
+  "profile": "Профиль ещё не установлен в базе: таблицы ожидают применения миграции. Поля показаны только для просмотра.",
+  "saveDisabled": true
+ },
+ "zoneRequired": {
+  "status": "Для недельного расписания укажите часовой пояс магазина явно (например, Europe/Moscow).",
+  "puts": 0
+ },
+ "unknown": {
+  "status": "Failed to fetch Результат не подтверждён: повторите ту же команду.",
+  "retryVisible": true,
+  "formLocked": true,
+  "puts": 1,
+  "body": {
+   "mode": "WEEKLY",
+   "tz": "Europe/Moscow",
+   "windows": [
+    {
+     "weekday": 1,
+     "from_minute": 480,
+     "to_minute": 780
+    },
+    {
+     "weekday": 1,
+     "from_minute": 840,
+     "to_minute": 1440
+    }
+   ],
+   "expected": 2,
+   "outer": 4000
+  }
+ },
+ "retry": {
+  "status": "Профиль сохранён: версия 3, операция STORE.PROFILE:d083e82a-456f-4ab7-8d88-2d2da377e275.",
+  "sameBody": true,
+  "puts": 2
+ },
+ "mobile": {
+  "overflow": 0,
+  "closedDays": 6
+ }
+}

@@ -2,17 +2,17 @@ import {useEffect,useRef,useState} from "react";
 import "./VehiclePhysicalProfile.css";
 import {VehicleTareVariants,type FloorVariant,type TareType} from "./VehicleTareVariants";
 import {apiFetch,apiOperationScope,ApiRequestError} from "../../api";
-type Fields={vehicle_size_class:string;cargo_length_mm:string;cargo_width_mm:string;cargo_height_mm:string;reason:string;evidence_reference:string;temp_min_c:string;temp_max_c:string};
-type Profile={vehicle_id:number;version:number;state:"READY"|"NOT_CONFIGURED"|"BASE_CHANGED";base_hash:string;base:{vehicle_number:string;vehicle_type:string;pallet_capacity:string;max_weight_kg:string};profile?:{vehicle_size_class:string;cargo_length_mm:number;cargo_width_mm:number;cargo_height_mm:number;version:number;actor:string;evidence_reference:string;temperature_capability?:{temp_min_c:string;temp_max_c:string;measurement_verified:false};floor_capacity?:{variants:FloorVariant[];basis:string;evidence_reference:string}}};
-type Body={operation_id:string;vehicle_id:number;vehicle_size_class:string;cargo_length_mm:number;cargo_width_mm:number;cargo_height_mm:number;expected_version:number;expected_source_hash:string;reason:string;evidence_reference:string;temp_min_c?:string;temp_max_c?:string;floor_variants?:FloorVariant[]};
+type Fields={vehicle_size_class:string;cargo_length_mm:string;cargo_width_mm:string;cargo_height_mm:string;outer_height_mm:string;outer_length_mm:string;reason:string;evidence_reference:string;temp_min_c:string;temp_max_c:string};
+type Profile={vehicle_id:number;version:number;state:"READY"|"NOT_CONFIGURED"|"BASE_CHANGED";base_hash:string;base:{vehicle_number:string;vehicle_type:string;pallet_capacity:string;max_weight_kg:string};profile?:{vehicle_size_class:string;cargo_length_mm:number;cargo_width_mm:number;cargo_height_mm:number;outer_height_mm?:number|null;outer_length_mm?:number|null;version:number;actor:string;evidence_reference:string;temperature_capability?:{temp_min_c:string;temp_max_c:string;measurement_verified:false};floor_capacity?:{variants:FloorVariant[];basis:string;evidence_reference:string}}};
+type Body={operation_id:string;vehicle_id:number;vehicle_size_class:string;cargo_length_mm:number;cargo_width_mm:number;cargo_height_mm:number;outer_height_mm?:number|null;outer_length_mm?:number|null;expected_version:number;expected_source_hash:string;reason:string;evidence_reference:string;temp_min_c?:string;temp_max_c?:string;floor_variants?:FloorVariant[]};
 type Pending={body:Body;rejected?:boolean};
-const labels:Record<keyof Fields,string>={vehicle_size_class:"Код класса машины",cargo_length_mm:"Длина отсека, мм",cargo_width_mm:"Ширина отсека, мм",cargo_height_mm:"Высота отсека, мм",reason:"Причина настройки",evidence_reference:"Основание габаритов и температурного диапазона",temp_min_c:"Минимум температуры машины, °C",temp_max_c:"Максимум температуры машины, °C"};
+const labels:Record<keyof Fields,string>={vehicle_size_class:"Код класса машины",cargo_length_mm:"Длина отсека, мм",cargo_width_mm:"Ширина отсека, мм",cargo_height_mm:"Высота отсека, мм",outer_height_mm:"Наружная высота автомобиля, мм",outer_length_mm:"Полная наружная длина автомобиля, мм",reason:"Причина настройки",evidence_reference:"Основание габаритов и температурного диапазона",temp_min_c:"Минимум температуры машины, °C",temp_max_c:"Максимум температуры машины, °C"};
 export function VehiclePhysicalProfile({vehicle,onClose}:{vehicle:number;onClose:()=>void}){
  const scope="vehicle-profile:"+apiOperationScope()+":"+vehicle;
  const current=useRef(scope);current.current=scope;const running=useRef(false);
  const [profile,setProfile]=useState<Profile|null>(null),[pending,setPending]=useState<Pending|null>(null),[busy,setBusy]=useState(false),[blocked,setBlocked]=useState(false),[message,setMessage]=useState("");
  const [variants,setVariants]=useState<FloorVariant[]>([]),[tareTypes,setTareTypes]=useState<TareType[]>([]);
- const [fields,setFields]=useState<Fields>({vehicle_size_class:"",cargo_length_mm:"",cargo_width_mm:"",cargo_height_mm:"",reason:"",evidence_reference:"",temp_min_c:"",temp_max_c:""});
+ const [fields,setFields]=useState<Fields>({vehicle_size_class:"",cargo_length_mm:"",cargo_width_mm:"",cargo_height_mm:"",outer_height_mm:"",outer_length_mm:"",reason:"",evidence_reference:"",temp_min_c:"",temp_max_c:""});
  useEffect(()=>{
   setProfile(null);setMessage("");setPending(null);setBlocked(false);setVariants([]);setTareTypes([]);
   try{const saved=JSON.parse(localStorage.getItem(scope)||"null")as Pending|null;
@@ -23,7 +23,7 @@ export function VehiclePhysicalProfile({vehicle,onClose}:{vehicle:number;onClose
  },[scope]);
  async function fetchProfile(){
   const [value,types]=await Promise.all([apiFetch<Profile>("/api/admin/transport/vehicles/"+vehicle+"/profile"),apiFetch<TareType[]>("/api/admin/transport/vehicle-profiles/tare-types")]);
-  if(current.current===scope){setProfile(value);setTareTypes(types);setVariants(value.profile?.floor_capacity?.variants??[]);setFields(v=>({...v,vehicle_size_class:value.profile?.vehicle_size_class||"",cargo_length_mm:value.profile?String(value.profile.cargo_length_mm):"",cargo_width_mm:value.profile?String(value.profile.cargo_width_mm):"",cargo_height_mm:value.profile?String(value.profile.cargo_height_mm):"",temp_min_c:value.profile?.temperature_capability?.temp_min_c??"",temp_max_c:value.profile?.temperature_capability?.temp_max_c??""}));}
+  if(current.current===scope){setProfile(value);setTareTypes(types);setVariants(value.profile?.floor_capacity?.variants??[]);setFields(v=>({...v,vehicle_size_class:value.profile?.vehicle_size_class||"",cargo_length_mm:value.profile?String(value.profile.cargo_length_mm):"",cargo_width_mm:value.profile?String(value.profile.cargo_width_mm):"",cargo_height_mm:value.profile?String(value.profile.cargo_height_mm):"",outer_height_mm:value.profile?.outer_height_mm==null?"":String(value.profile.outer_height_mm),outer_length_mm:value.profile?.outer_length_mm==null?"":String(value.profile.outer_length_mm),temp_min_c:value.profile?.temperature_capability?.temp_min_c??"",temp_max_c:value.profile?.temperature_capability?.temp_max_c??""}));}
   return value;
  }
  async function read(){
@@ -51,6 +51,9 @@ export function VehiclePhysicalProfile({vehicle,onClose}:{vehicle:number;onClose
   event.preventDefault();if(!profile||busy||running.current||pending||blocked)return;
   const dimensions=[fields.cargo_length_mm,fields.cargo_width_mm,fields.cargo_height_mm];
   if(dimensions.some(v=>! /^[0-9]{1,7}$/.test(v)||Number(v)<1||Number(v)>1000000)){setMessage("Укажите целые положительные габариты в миллиметрах.");return;}
+  const outer=[fields.outer_height_mm,fields.outer_length_mm];
+  if(outer.some(v=>v!==""&&(!/^[0-9]{1,7}$/.test(v)||Number(v)<1||Number(v)>1000000))){setMessage("Наружные габариты: целые миллиметры или пусто, если неизвестны.");return;}
+  if(fields.outer_height_mm!==""&&Number(fields.outer_height_mm)<Number(fields.cargo_height_mm)||fields.outer_length_mm!==""&&Number(fields.outer_length_mm)<Number(fields.cargo_length_mm)){setMessage("Наружные габариты не могут быть меньше грузового отсека.");return;}
   const hasTemperature=fields.temp_min_c!==""||fields.temp_max_c!=="";
   if(hasTemperature&&(!/^-?[0-9]{1,6}(\.[0-9]{1,3})?$/.test(fields.temp_min_c)||!/^-?[0-9]{1,6}(\.[0-9]{1,3})?$/.test(fields.temp_max_c)||Number(fields.temp_min_c)>Number(fields.temp_max_c))){
    setMessage("Укажите оба температурных предела в °C, до трёх знаков после точки.");return;
@@ -60,6 +63,7 @@ export function VehiclePhysicalProfile({vehicle,onClose}:{vehicle:number;onClose
   }
   const intent:Pending={body:{operation_id:"VEHICLE.PROFILE:"+crypto.randomUUID(),vehicle_id:vehicle,vehicle_size_class:fields.vehicle_size_class,
    cargo_length_mm:Number(fields.cargo_length_mm),cargo_width_mm:Number(fields.cargo_width_mm),cargo_height_mm:Number(fields.cargo_height_mm),
+   outer_height_mm:fields.outer_height_mm===""?null:Number(fields.outer_height_mm),outer_length_mm:fields.outer_length_mm===""?null:Number(fields.outer_length_mm),
    expected_version:profile.version,expected_source_hash:profile.base_hash,reason:fields.reason,evidence_reference:fields.evidence_reference,...(hasTemperature?{temp_min_c:fields.temp_min_c,temp_max_c:fields.temp_max_c}:{}),...(variants.length?{floor_variants:variants}:{})}};
   try{localStorage.setItem(scope,JSON.stringify(intent));setPending(intent);await send(intent);}catch(e){setMessage("Не удалось сохранить операцию до отправки: "+String(e));}
  }
@@ -69,17 +73,18 @@ export function VehiclePhysicalProfile({vehicle,onClose}:{vehicle:number;onClose
   catch(e){if(current.current===scope)setMessage(String(e));}
   finally{running.current=false;if(current.current===scope)setBusy(false);}
  }
- return <section className="vehicle-profile-card" aria-label="Физический класс автомобиля"><h3>Класс, грузовой отсек, температура и тара</h3>
+ return <section className="vehicle-profile-card" aria-label="Физический класс автомобиля"><h3>Габариты автомобиля, грузовой отсек, температура и тара</h3>
   <button type="button" title="Прочитать текущую карточку автомобиля и версию габаритов" disabled={busy} onClick={()=>void read()}>Показать текущую карточку</button>
   <button type="button" title="Закрыть карточку; неподтверждённая операция сохранится для точного повтора" disabled={busy} onClick={onClose}>Закрыть</button>
   {profile&&<p>{profile.base.vehicle_number} · тип {profile.base.vehicle_type} · {profile.base.pallet_capacity} паллет · {profile.base.max_weight_kg} кг. Версия {profile.version}. {profile.state==="READY"?"Профиль соответствует карточке.":profile.state==="BASE_CHANGED"?"Карточка изменилась; требуется подтверждение нового профиля.":"Габариты и класс ещё не настроены."}</p>}
   <form onSubmit={e=>void save(e)}><fieldset disabled={busy||!!pending||blocked||!profile}>
-   {(Object.keys(labels)as Array<keyof Fields>).map(k=><label key={k}>{labels[k]}<input title={labels[k]+" для подтверждённой версии профиля"} required={!k.startsWith("temp_")} value={fields[k]} maxLength={k==="reason"?500:k==="evidence_reference"?100:k==="vehicle_size_class"?40:k.startsWith("temp_")?11:7} inputMode={k.startsWith("cargo_")?"numeric":k.startsWith("temp_")?"decimal":"text"} onChange={e=>setFields(v=>({...v,[k]:e.target.value}))}/></label>)}
+   {(Object.keys(labels)as Array<keyof Fields>).map(k=><label key={k}>{labels[k]}<input title={labels[k]+" для подтверждённой версии профиля"} required={!k.startsWith("temp_")&&!k.startsWith("outer_")} value={fields[k]} maxLength={k==="reason"?500:k==="evidence_reference"?100:k==="vehicle_size_class"?40:k.startsWith("temp_")?11:7} inputMode={k.startsWith("cargo_")||k.startsWith("outer_")?"numeric":k.startsWith("temp_")?"decimal":"text"} onChange={e=>setFields(v=>({...v,[k]:e.target.value}))}/></label>)}
    <VehicleTareVariants value={variants} types={tareTypes} onChange={setVariants}/>
    <button type="submit" title="Сохранить новую версию класса и габаритов с проверкой текущей карточки автомобиля">Сохранить профиль</button>
   </fieldset></form>
   {pending&&<><p>Сохранённая операция: {pending.body.operation_id}.</p><button type="button" title="Повторить неизменённый запрос с прежним идентификатором" disabled={busy||blocked} onClick={()=>void send(pending)}>Повторить сохранённую операцию</button></>}
   {pending?.rejected&&<button type="button" title="Обновить карточку после подтверждённого отказа и разрешить новую редакцию" disabled={busy} onClick={()=>void reset()}>Исправить после отказа</button>}
+  <p>Наружные габариты относятся ко всему автомобилю, включая выступающие элементы. Они не вычисляются из размеров отсека. Пустое поле сохраняет размер как неизвестный; при заданном ограничении подъезда потребуется подтверждённый размер.</p>
   <p>Температурные пределы задаются парой по подтверждённым возможностям машины. Пустые поля означают отсутствие подтверждённого диапазона; измерением температуры они не являются.</p>
   <p>Профиль фиксируется в источнике нового выезда. История завершённых рейсов сохраняется.</p>
   {message&&<p className="vehicle-profile-status" role="status">{message}</p>}

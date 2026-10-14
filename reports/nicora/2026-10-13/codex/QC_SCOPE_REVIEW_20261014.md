@@ -19,3 +19,7 @@
 ## Предел
 
 Это scoped static review, не утверждение о положительной новой physical shipment, нагрузке или внешней независимой приёмке. После исправления F1 требуется короткое чтение конкретного predicate, без повторного общего аудита.
+
+## F1 resolved
+
+Applied existing native fullpal-binding proof and completed real SAP receipt → fullpal → QC PLAN/audit/replay. See [final evidence](QC_F1/REPORT.md). Status additionally exposes current-signature recorded exemption for the label release guard.

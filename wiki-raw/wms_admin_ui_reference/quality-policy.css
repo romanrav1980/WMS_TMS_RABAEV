@@ -1,0 +1,16 @@
+﻿.qs-page .workspace{margin:0 auto;padding:32px;max-width:1180px}
+.qs-page header{margin-bottom:24px}.qs-page header>p:first-child{font-size:12px;font-weight:700;letter-spacing:.12em;color:#2478f2}
+.qs-page h1{font-size:30px;margin:10px 0}.qs-page .panel{padding:24px;margin-bottom:20px;border:1px solid #dde6f1;border-radius:16px}
+.qs-page h2{font-size:18px;margin:0 0 20px}.qs-page h3{font-size:15px;margin-top:26px}
+.qs-page label:not(.qs-check){display:flex;flex-direction:column;gap:8px;font-weight:600;font-size:13px}
+.qs-page input:not([type=checkbox]),.qs-page select{min-height:42px;border:1px solid #bdcddd;border-radius:8px;padding:9px 12px;background:#fff;color:#0b1f3a;font:inherit}
+.qs-page input:focus,.qs-page select:focus{outline:3px solid #2478f226;border-color:#2478f2}.qs-page input[type=checkbox]{width:18px;height:18px;accent-color:#2478f2}
+.qs-page button{min-height:42px;padding:10px 18px;border:1px solid #c6d5e5;border-radius:8px;background:#fff;color:#16416e;font:inherit;font-weight:600;cursor:pointer}
+.qs-page #qsSave,.qs-page #qsRetry{background:#2478f2;color:#fff;border-color:#2478f2}.qs-page button:disabled{opacity:.5;cursor:default}
+.qs-page details{padding:14px 0;margin-bottom:16px;border-top:1px solid #eaf0f7}.qs-page summary{cursor:pointer;font-weight:600}.qs-page #qsStatus{line-height:1.6}
+.qs-page [hidden]{display:none!important}@media(max-width:760px){.qs-page .workspace{padding:16px}.qs-page .panel{padding:18px}.qs-page h1{font-size:25px}}
+
+.qs-scope{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.qs-box{border:1px solid #e2eaf4;border-radius:12px;padding:14px 16px;margin:0;min-width:0;display:flex;flex-direction:column;gap:10px}
+.qs-box legend{font-weight:700;color:#16416e;padding:0 6px}.qs-radio{display:flex;flex-wrap:wrap;gap:4px 16px}.qs-radio .qs-check{margin:4px 0}.qs-find{display:flex;gap:8px;align-items:flex-end}.qs-find label{flex:1}
+.qs-page #qsStoreList{width:100%;min-height:120px;padding:4px}.qs-scope-line{font-weight:600;color:#16416e;margin:14px 0 0;overflow-wrap:anywhere}.qs-page select:focus-visible,.qs-page button:focus-visible{outline:3px solid #2478f266;outline-offset:2px}
+@media(max-width:760px){.qs-scope{grid-template-columns:1fr}.qs-find{flex-direction:column;align-items:stretch}}

@@ -8,3 +8,7 @@ Existing TraceabilityService read projection marks legacy MOCK signature or MOCK
 Author scripts/ni043_regulatory_runtime_case.py: own native outbox2292/private targetQA131, defaultdisabled→PENDING/TRY0/adapterlog0; unsupportedREAL and missingallowMOCK staydisabled. Explicit MOCK processes this one synthetic queue event→SIMULATED_ACCEPTED/MOCK_NOT_SIGNED/MOCK document/API classifiedsimulation/verifiedfalse; stock of original130 remains3H0. No real remote provider called. Oracle schema unchanged, existing outbox/journal reused.
 Real provider API/UTM/integration gateway details and local config locations requested asynchronously from owner; secrets not requested in chat. While unavailable, realACK/adapters remain open rather than substituting simulation. This does not stop independent sprint implementation.
 SlowSQL last scoped actor/profile review5.417/.969/.855ms retained source/current-profile exact keys andbounded lists. integrations owner follows growing outbox request filter/event PK; no full load gate needed.
+
+
+## Решение владельца14.10.2026
+Подключение через интеграционный шлюз, который реализуем отдельно позже. [Отчёт69](../../reports/nicora/2026-10-13/69-ni043-gateway-deferred.md): real sender отсутствует как код, а не только конфигурация; local queue/audit готовы. REAL/unknown/MOCK denied теперь имеют явные reason/next_action, сообщения не теряются. Внешний ACK не заявлен.

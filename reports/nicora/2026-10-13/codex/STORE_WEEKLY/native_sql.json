@@ -1,0 +1,74 @@
+{
+  "material_ms": {
+    "1": 13.024,
+    "8": 8.096,
+    "200": 75.233
+  },
+  "top_sql": [
+    [
+      "5fa9zw1hbrjtr",
+      7,
+      2.305,
+      288,
+      "SELECT /*+ leading(p m) use_nl(m) index(m PK_DIST_MATRIX) */ P.POS,P.A,P.B,M.DURATION_MIN,M.DURATION_BASIS,M.SOURCE,M.UPDATED_AT, CASE WHEN M.UPDATED_AT>=SYSDATE-1 THEN 1 ELSE 0 END FRESH FROM JSON_TABLE(:B1 ,'$[*]'COLUMNS(POS FOR ORDINALITY,A VARCHAR2(200)PATH '$.from_address',B VARCHAR2(200)PATH '$.to_address'))P LEFT JOIN RRL_ADDR_DISTANCE_MATRIX M ON M.FROM_ADDR=P.A AND M.TO_ADDR=P.B ORDER BY P.POS"
+    ],
+    [
+      "gt601bxtk06y0",
+      3,
+      1.183,
+      10,
+      "SELECT RECEIVING_WINDOW_MODE FROM RRL_STORE_PROFILE WHERE STORE_ADDR=:B1"
+    ],
+    [
+      "4d87wbwampbd3",
+      13,
+      0.819,
+      95,
+      "SELECT /*+ leading(p m) use_nl(m) index(m PK_DIST_MATRIX) */ P.POS,P.A,P.B,M.DURATION_MIN,M.DURATION_BASIS,M.SOURCE,M.UPDATED_AT, CASE WHEN M.UPDATED_AT>=SYSDATE-1 THEN 1 ELSE 0 END FRESH FROM JSON_TABLE(:B1 ,'$[*]'COLUMNS(POS FOR ORDINALITY,A VARCHAR2(255)PATH '$.from_address',B VARCHAR2(255)PATH '$.to_address'))P LEFT JOIN RRL_ADDR_DISTANCE_MATRIX M ON M.FROM_ADDR=P.A AND M.TO_ADDR=P.B ORDER BY P.POS"
+    ],
+    [
+      "62cy31wpkb1rx",
+      3591,
+      0.155,
+      6,
+      "SELECT COUNT(DISTINCT CANDIDATE),MIN(CANDIDATE) FROM( SELECT :B2 -COLUMN_VALUE CANDIDATE FROM TABLE(:B1 )) WHERE CAST(FROM_TZ(CAST(CANDIDATE AS TIMESTAMP),'UTC')AT TIME ZONE(:B3 )AS DATE)=:B2 "
+    ],
+    [
+      "6h33nfcp512bd",
+      218,
+      0.081,
+      1536,
+      "SELECT WEEKDAY,FROM_MINUTE,TO_MINUTE FROM RRL_STORE_RECEIVING_WINDOW WHERE STORE_ADDR=:B1 ORDER BY WEEKDAY,FROM_MINUTE,TO_MINUTE"
+    ],
+    [
+      "a94snahbm5yb4",
+      218,
+      0.041,
+      238,
+      "SELECT PROFILE_VERSION,RECEIVING_WINDOW_MODE,TIMEZONE_REGION,MAX_VEHICLE_OUTER_HEIGHT_MM,MAX_VEHICLE_OUTER_LENGTH_MM FROM RRL_STORE_PROFILE WHERE STORE_ADDR=:B1 "
+    ]
+  ],
+  "slow_log_columns": [
+    "LOG_ID",
+    "CREATED_AT",
+    "MODULE",
+    "ACTION",
+    "API_CALL_ID",
+    "REQUEST_ID",
+    "API_METHOD",
+    "API_PATH",
+    "DB_USER",
+    "ELAPSED_MS",
+    "SQL_TEXT_HASH",
+    "SQL_TEXT",
+    "PARAMS_JSON",
+    "ROW_COUNT",
+    "ERROR_TEXT",
+    "CLIENT_IDENTIFIER",
+    "OPERATION_KIND"
+  ],
+  "changed_invalid": [],
+  "recent_matching_slow_log": [],
+  "api_audit": "Not generated: bounded case called native owners directly, not HTTP. V$SQL and RRL_SQL_SLOW_LOG used.",
+  "decision": "Retain indexed bounded material lookups: 200-address material measured75.233ms, profile query average0.041ms/window0.081ms; no evidence of dominant N+1 cost. Do not add speculative index. Revisit batchjoin at full200-stop route pilot if material dominates observedp95; ownertransport/root."
+}

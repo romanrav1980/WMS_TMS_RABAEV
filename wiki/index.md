@@ -1,3 +1,15 @@
+- [Комплект Oracle и установка с нуля](database/nicora_release_20261014.md): актуальный SQL-снимок, минимальное наполнение, [описание системы](subprojects/nicora_system_reference.md), [каталог объектов](database/release_20261014/README.md), [методы/API](components/api_reference_20261014/README.md). Новый ролевой UX поручен Claude [C0049](../coordination/nicora-claude/TASK_C0049.md).
+- [Текущий кодовый объём NICORA18/18 завершён — report73](../reports/nicora/2026-10-13/73-current-sprint-code-completion.md): план76, Oracle/API/UI и ночная Ганта интегрированы, gate778/0/73 +24tests +обаTS PASS. Внешняя/независимая/промышленная приёмка отдельно, госшлюз отложен владельцем.
+- [Ночные операции Ганта: сервер](components/nicora_gantt_day_overlap_20261014.md): пересечение суток вместо одной даты отгрузки, bounded20000/error, SQL35мс; UI C0034 у Claude.
+- [Актуальный план75](requirements/nikora_delivery_v55/implementation_plan.md): 17 из18 текущих кодовых объёмов реализованы; NI08.1 UI: C0033 сдан, C0034 ночная Ганта/mobile в работе. Приёмка/реальные внешние интеграции отдельно; deadline15.10 07:00МСК.
+- [Магазин → окна и допуск машины](database/nicora_store_profile_20261014.md): четыре миграции APPLIED/INVALID0, native и live профиль PASS, report71; текущий остаток NI08.1 — C0033/C0034. Срок продолжения:15.10.2026 07:00 МСК либо все спринты.
+- [Claude и Codex: карточки магазина и ТС](components/nicora_store_fleet_coordination_20261014.md): Claude: очередь C0029 → C0032 → C0033 без ожидания повторного разрешения; Codex: native интеграция; C0023 завершён.
+- [Геозоны и атомарный GPS](components/nicora_geofences_gps_20261014.md): report70, реальные поля/ADDR, история+позиция в одной транзакции, запоздалый пакет не откатывает позицию; наблюдение не меняет произвольную разгрузку.
+- [Шлюз маркировки отложен владельцем](../reports/nicora/2026-10-13/69-ni043-gateway-deferred.md): local queue/audit/diagnostics готовы; real sender отсутствует как код. Claude C0025 добавляет bounded каталог магазинов; ведомый исправляет реальные колонки и адресную безопасность GPS.
+- [Ускорение СТ, report68](../reports/nicora/2026-10-13/68-ni022-narrow-header-group.md): HTTP1.038с/200, узкая группировка, live unique index подтверждён. Claude C0025 выполняет выбор областиQC. Шлюз маркировки владелец отложил отдельно; локальная диагностика NI04.3 обновлена.
+- [Итог совместного исполнения —18 спринтов](../reports/nicora/2026-10-13/67-sprint-code-readiness.md): редакция72, назначенные кодовые блоки обоих исполнителей RELEASE; NI05.1 native audit/label guard и NI08.1 route/rest применены. Внешняя/независимая приёмка и performance NI02.2 отдельно.
+- [Адресный контроль, report65](../reports/nicora/2026-10-13/65-ni051-scoped-quality.md): Oracle/API/UI, exact replay и текущий экран114; F1 native positive в работе. [Решение по SQL СТ](../reports/nicora/2026-10-13/66-ni022-wide-page-decision.md): ухудшающий hint отвергнут. Gate759/0/73 PASS.
+- [Совместное исполнение, редакция71](requirements/nicora_joint_execution_20261014.md): NI08.1 native REST/final approval сдан; NI05.1 storage proof и положительный QC в работе. [Поручение ведомому](../coordination/nicora-codex/TASK_CURRENT.md).
 - [Адресные правила контроля NI05.1](database/nicora_ni051_scoped_policy_20261014.md): подтверждён обязательный кодовый остаток NS41; Oracle в работе. Ведомый реализует NI08.1 единый маршрут с перерывами. Все спринты ещё не завершены.
 - [Контроль → назначенный рейс](components/nicora_ni051_control_label_20261012.md): report64, same-snapshot assignment, SQL4мс. [Возврат → точное размещение](components/nicora_ni062_receipt_recovery_20261014.md): ведомый сдал, фильтр до limit100; gate755/0/73, encodingPASS.
 - [Погрузка: восстановление команды](components/nicora_ni052_loading_recovery_20261014.md): report63, исходный operation_id и повтор после reload.
@@ -907,3 +919,12 @@ Start here for a fresh session:
 - NICORA, 13.10.2026, 20:00 МСК: актуальное состояние и ограничения продолжения — [[runbooks/nicora_active_work]]; остановка по сроку, полный комплект спринтов ещё открыт.
 
 - [Выгрузка обычной паллеты1316](database/nicora_ni053_stock_pallet_unload_20261014.md): исходный frozen loading proof для ROOT_STOCK_TYPE; prepared.
+
+
+- [Prepared native weekly store windows](database/nicora_ni081_store_weekly_windows_20261014.md): complete ST precedence, same-day closed/interval semantics, DST refusal, source V7; root apply pending.
+
+
+
+
+
+

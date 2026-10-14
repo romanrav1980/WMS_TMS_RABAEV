@@ -1,0 +1,19 @@
+{
+ "initial": "Показано 100 первых — уточните поиск по номеру или названию.",
+ "afterSearch": [
+  "Выберите склад или подсклад (1)",
+  "9807 · DS-BASE NS00 synthetic"
+ ],
+ "ware": "9807",
+ "scope": "Область: 9807 · DS-BASE NS00 synthetic · все магазины · Все категории.",
+ "calls": [
+  {
+   "path": "/api/master-data/warehouses/options?limit=100",
+   "status": 200
+  },
+  {
+   "path": "/api/master-data/warehouses/options?limit=100&q=9807",
+   "status": 200
+  }
+ ]
+}

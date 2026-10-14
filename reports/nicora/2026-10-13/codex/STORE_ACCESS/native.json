@@ -1,0 +1,49 @@
+{
+  "fixture": "25dea69e1e",
+  "vehicle": 10105,
+  "store": "ACCESS.QA:25dea69e1e",
+  "st_id": 641517,
+  "st_number": "ACCESS.ST:25dea69e1e",
+  "stage": "PASS",
+  "checks": [
+    "empty draft no new restriction / NULL deleted flag active",
+    "unknown draft warning / final refusal",
+    "equality plan and final pass",
+    "known height exceeds draft/final refuse",
+    "known length exceeds plan/final refuse",
+    "stale fleet draft warning / final refusal",
+    "null limits have no new restriction"
+  ],
+  "elapsed_ms": 3050.63,
+  "cleanup": "Own planning ST condition2, own fleet soft-deleted, store limits cleared via profile owner; immutable histories retained; no stock/load/shipment",
+  "sql": [
+    [
+      "0vvgqd2xmcv0y",
+      6,
+      1.822,
+      26,
+      "SELECT DISTINCT P.ADDR FROM JSON_TABLE(:B1 ,'$[*]'COLUMNS(ID NUMBER PATH '$'))INPUTS JOIN RRL_SBORKA_PALLETS P ON P.ID=INPUTS.ID WHERE P.ADDR IS NOT NULL ORDER BY P.ADDR"
+    ],
+    [
+      "8z1wjhvprt3p7",
+      15,
+      18.383,
+      698,
+      "SELECT CFG.STORE_ADDR,CFG.PROFILE_VERSION,CFG.MAX_VEHICLE_OUTER_HEIGHT_MM HEIGHT_LIMIT, CFG.MAX_VEHICLE_OUTER_LENGTH_MM LENGTH_LIMIT,CASE WHEN A.ADDR IS NULL THEN 1 ELSE NVL(A.DELETED3,0)END DELETED F"
+    ],
+    [
+      "3u00sw0qctbxs",
+      6,
+      47.604,
+      6812,
+      "SELECT COUNT(*)FROM JSON_TABLE(:B1 ,'$[*]'COLUMNS(ID NUMBER PATH '$'))INPUTS LEFT JOIN RRL_SBORKA_PALLETS P ON P.ID=INPUTS.ID WHERE P.ID IS NULL"
+    ],
+    [
+      "7bk76xyqrjdsw",
+      8,
+      95.628,
+      42493,
+      "SELECT DISTINCT P.ADDR FROM JSON_TABLE(:B1 ,'$[*]'COLUMNS(ST_NUMBER VARCHAR2(100)PATH '$'))INPUTS JOIN RRL_SBORKA_PALLETS P ON P.ST_NUMBER=INPUTS.ST_NUMBER WHERE P.ADDR IS NOT NULL ORDER BY P.ADDR FET"
+    ]
+  ]
+}

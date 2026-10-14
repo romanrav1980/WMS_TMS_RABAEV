@@ -1,0 +1,44 @@
+{
+  "whole": {
+    "exemption_basis": "WHOLE_UNCHANGED_NATIVE_RECEIPT",
+    "eligible": true,
+    "reason": "WHOLE_NATIVE_RECEIPT_UNCHANGED",
+    "uid_pallet": "LEGACY.SAP.688:e0ef17c2c03b427b9c5fc58d852c71a3",
+    "supplier_batch": "PB688:e0ef17c2c03b427b9c5fc58d852c71a3",
+    "receipt_operation_id": "SAP688.BIRTH:e0ef17c2c03b427b9c5fc58d852c71a3",
+    "base_quantity": "3",
+    "base_uom": "EA",
+    "composition_epoch": 1,
+    "policy": {
+      "rule_warehouse_id": 6524567,
+      "store_addr": "*",
+      "place_category": "STOCK",
+      "rule_version": 3,
+      "policy_stamp": "3E7DBE3687752F53D96DFFF5D966B23E9B455D09776362B2945B8296CF4D04CA",
+      "warehouse_id": 6524567,
+      "mode": "WEIGHT",
+      "independent": 0,
+      "sample_percent": 0,
+      "exempt_whole": 1,
+      "exempt_storage": 0,
+      "scoped_rule": true
+    },
+    "read_ms": 40.0
+  },
+  "storage_no_binding": {
+    "eligible": false,
+    "reason": "STORAGE_IDENTIFIER_BINDING_REQUIRED",
+    "read_ms": 16.55
+  },
+  "forged_domain_binding": {
+    "eligible": false,
+    "reason": "STORAGE_IDENTIFIER_BINDING_NOT_PROVED",
+    "read_ms": 98.56
+  },
+  "rule_after_rollback": [
+    3,
+    0
+  ],
+  "audit_unchanged": true,
+  "scope": "Synthetic domain with actual receipt; temporary configuration rolled back; no stock writes"
+}

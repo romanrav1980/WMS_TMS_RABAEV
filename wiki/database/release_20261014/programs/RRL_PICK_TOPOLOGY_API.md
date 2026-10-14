@@ -1,0 +1,83 @@
+# RRL_PICK_TOPOLOGY_API
+
+Тип: **PACKAGE**. Схема: `RABAEV`.
+
+Подсистема по имени: Отбор и волны.
+
+## Интерфейс
+
+| Подпрограмма | Аргумент (пустой = RETURN) | Позиция | Тип | Направление | Default | Overload |
+|---|---|---|---|---|---|---|
+| ASSIGN_ARTICUL |  |  | NUMBER | OUT | N |  |
+| ASSIGN_ARTICUL | P_PICK_FACE_ARTICUL_ID | 1 | NUMBER | IN | Y |  |
+| ASSIGN_ARTICUL | P_PICK_FACE_ID | 2 | NUMBER | IN | N |  |
+| ASSIGN_ARTICUL | P_ARTICUL | 3 | VARCHAR2 | IN | N |  |
+| ASSIGN_ARTICUL | P_PRIORITY | 4 | NUMBER | IN | Y |  |
+| ASSIGN_ARTICUL | P_MIN_QTY | 5 | NUMBER | IN | Y |  |
+| ASSIGN_ARTICUL | P_MAX_QTY | 6 | NUMBER | IN | Y |  |
+| ASSIGN_ARTICUL | P_CASE_PICK_ENABLED | 7 | NUMBER | IN | Y |  |
+| ASSIGN_ARTICUL | P_ACTIVE | 8 | NUMBER | IN | Y |  |
+| ASSIGN_ARTICUL | P_VALID_FROM | 9 | DATE | IN | Y |  |
+| ASSIGN_ARTICUL | P_VALID_TO | 10 | DATE | IN | Y |  |
+| ASSIGN_ARTICUL | P_UPDATED_BY | 11 | VARCHAR2 | IN | Y |  |
+| RESOLVE_PICK_FACE | P_WARE_ID | 1 | NUMBER | IN | N |  |
+| RESOLVE_PICK_FACE | P_ARTICUL | 2 | VARCHAR2 | IN | N |  |
+| RESOLVE_PICK_FACE | P_TARGET_CELL | 3 | VARCHAR2 | OUT | N |  |
+| RESOLVE_PICK_FACE | P_PICK_SEQUENCE | 4 | NUMBER | OUT | N |  |
+| RESOLVE_PICK_FACE | P_PICK_FACE_ID | 5 | NUMBER | OUT | N |  |
+| RESOLVE_PICK_FACE | P_PICK_ROUTE_CELL_ID | 6 | NUMBER | OUT | N |  |
+| UPSERT_PICK_FACE |  |  | NUMBER | OUT | N |  |
+| UPSERT_PICK_FACE | P_PICK_FACE_ID | 1 | NUMBER | IN | Y |  |
+| UPSERT_PICK_FACE | P_WARE_ID | 2 | NUMBER | IN | N |  |
+| UPSERT_PICK_FACE | P_CELL_CODE | 3 | VARCHAR2 | IN | N |  |
+| UPSERT_PICK_FACE | P_PICK_FACE_CODE | 4 | VARCHAR2 | IN | Y |  |
+| UPSERT_PICK_FACE | P_PICK_FACE_TYPE | 5 | VARCHAR2 | IN | Y |  |
+| UPSERT_PICK_FACE | P_PICK_ROUTE_ID | 6 | NUMBER | IN | Y |  |
+| UPSERT_PICK_FACE | P_PICK_ROUTE_CELL_ID | 7 | NUMBER | IN | Y |  |
+| UPSERT_PICK_FACE | P_PICK_SEQUENCE | 8 | NUMBER | IN | Y |  |
+| UPSERT_PICK_FACE | P_MIN_CASE_QTY | 9 | NUMBER | IN | Y |  |
+| UPSERT_PICK_FACE | P_MAX_CASE_QTY | 10 | NUMBER | IN | Y |  |
+| UPSERT_PICK_FACE | P_REPLENISHMENT_TRIGGER_QTY | 11 | NUMBER | IN | Y |  |
+| UPSERT_PICK_FACE | P_MAX_WEIGHT | 12 | NUMBER | IN | Y |  |
+| UPSERT_PICK_FACE | P_MAX_VOLUME | 13 | NUMBER | IN | Y |  |
+| UPSERT_PICK_FACE | P_ALLOW_DYNAMIC_ASSIGNMENT | 14 | NUMBER | IN | Y |  |
+| UPSERT_PICK_FACE | P_ACTIVE | 15 | NUMBER | IN | Y |  |
+| UPSERT_PICK_FACE | P_COMMENT_TEXT | 16 | VARCHAR2 | IN | Y |  |
+| UPSERT_PICK_FACE | P_UPDATED_BY | 17 | VARCHAR2 | IN | Y |  |
+| UPSERT_ROUTE |  |  | NUMBER | OUT | N |  |
+| UPSERT_ROUTE | P_PICK_ROUTE_ID | 1 | NUMBER | IN | Y |  |
+| UPSERT_ROUTE | P_ROUTE_CODE | 2 | VARCHAR2 | IN | N |  |
+| UPSERT_ROUTE | P_ROUTE_NAME | 3 | VARCHAR2 | IN | Y |  |
+| UPSERT_ROUTE | P_WARE_ID | 4 | NUMBER | IN | N |  |
+| UPSERT_ROUTE | P_ROUTE_KIND | 5 | VARCHAR2 | IN | Y |  |
+| UPSERT_ROUTE | P_ACTIVE | 6 | NUMBER | IN | Y |  |
+| UPSERT_ROUTE | P_UPDATED_BY | 7 | VARCHAR2 | IN | Y |  |
+| UPSERT_ROUTE_CELL |  |  | NUMBER | OUT | N |  |
+| UPSERT_ROUTE_CELL | P_PICK_ROUTE_CELL_ID | 1 | NUMBER | IN | Y |  |
+| UPSERT_ROUTE_CELL | P_PICK_ROUTE_ID | 2 | NUMBER | IN | N |  |
+| UPSERT_ROUTE_CELL | P_CELL_CODE | 3 | VARCHAR2 | IN | N |  |
+| UPSERT_ROUTE_CELL | P_PICK_SEQUENCE | 4 | NUMBER | IN | N |  |
+| UPSERT_ROUTE_CELL | P_ZONE_CODE | 5 | VARCHAR2 | IN | Y |  |
+| UPSERT_ROUTE_CELL | P_AISLE_CODE | 6 | VARCHAR2 | IN | Y |  |
+| UPSERT_ROUTE_CELL | P_SIDE_CODE | 7 | VARCHAR2 | IN | Y |  |
+| UPSERT_ROUTE_CELL | P_LEVEL_NO | 8 | NUMBER | IN | Y |  |
+| UPSERT_ROUTE_CELL | P_ACTIVE | 9 | NUMBER | IN | Y |  |
+| UPSERT_ROUTE_CELL | P_UPDATED_BY | 10 | VARCHAR2 | IN | Y |  |
+
+## Потенциальные записи по тексту SQL
+
+[RRL_PICK_FACE](../tables/RRL_PICK_FACE.md), [RRL_PICK_FACE_ARTICUL](../tables/RRL_PICK_FACE_ARTICUL.md), [RRL_PICK_ROUTE](../tables/RRL_PICK_ROUTE.md), [RRL_PICK_ROUTE_CELL](../tables/RRL_PICK_ROUTE_CELL.md)
+
+Это статический указатель, а не гарантия выполнения записи при каждом вызове. Полная семантика и транзакционные условия — в теле программы.
+
+## Зависимости
+
+[RRL_PICK_FACE](../tables/RRL_PICK_FACE.md), [RRL_PICK_FACE_ARTICUL](../tables/RRL_PICK_FACE_ARTICUL.md), `RRL_PICK_FACE_ARTICUL_SQ`, `RRL_PICK_FACE_SQ`, [RRL_PICK_RANGE_POLICY](../programs/RRL_PICK_RANGE_POLICY.md), [RRL_PICK_ROUTE](../tables/RRL_PICK_ROUTE.md), [RRL_PICK_ROUTE_CELL](../tables/RRL_PICK_ROUTE_CELL.md), `RRL_PICK_ROUTE_CELL_SQ`, `RRL_PICK_ROUTE_SQ`, [RRL_PICK_TOPOLOGY_API](../programs/RRL_PICK_TOPOLOGY_API.md)
+
+## Кто использует
+
+[RRL_PICKING_API](../programs/RRL_PICKING_API.md), [RRL_PICK_RANGE_APPLY_CORE](../programs/RRL_PICK_RANGE_APPLY_CORE.md), [RRL_PICK_TOPOLOGY_API](../programs/RRL_PICK_TOPOLOGY_API.md)
+
+## Исходный код
+
+[Полный SQL-снимок](../../../../db/releases/2026-10-14/README.md). Ищите точное имя `RRL_PICK_TOPOLOGY_API` в файле соответствующего типа.

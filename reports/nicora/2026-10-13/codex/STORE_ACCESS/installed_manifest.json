@@ -1,0 +1,61 @@
+{
+  "source_files": {
+    "000_before_rrl_stock_hu_load_core.sql": "6cd2cc2fa2aebefc92124bdefbdb58a140a45d814dcc3341ba21f16bbb2dafe8",
+    "000_before_rrl_stock_trip_depart_cmd.sql": "620eb89913f54df0a56bc3c9b60f8bdeb692c6718351070e494a64d14c369c03",
+    "000_before_rules_package.sql": "b17a01f3e82f1cc6dd8a71d26dae7413d9bfd0882f4a3530e16c732488de2dd2",
+    "000_before_rules_package_body.sql": "6e0acf1067887661b8c00af02eb6b3d28e19fc94d1774133660f2ef46dc86e38",
+    "001_access_helper.sql": "5486bcfa3affd5ea84b51354f3c590d4641154463f8041c2d53d96d13c2987a0",
+    "002_plan_rules.sql": "4036e4fb6aad36ba436053f6ba9718b29bd01202db65130b54407d8873c02d40",
+    "003_load.sql": "c9577571b4121174969109afdb01d3e8cd1b2c881f1d5ccf6a30a0b09fb0da83",
+    "004_depart.sql": "22ebde443408d857ffd26999e8eaced574f0fde63bee9e98abc0403f6870d462",
+    "apply.sql": "f6ff48538c2e300219c86f5ae0d99b98c65f4fc94e8f83cc17e62a910b63d0c7",
+    "rollback.sql": "d4141663a1abfdaa9aa596a7a1e45692594b08da8dccefd84d662cb17b350217",
+    "verify.sql": "e3ca04c9ebcaf035e05d36fd102faff2511d784e9f8a3af0a7f3770019ce533b"
+  },
+  "installed_body_sha256": "d8a5c826cc42810463f166fcb47ac38cf1688d56f5e80fb3d8d53a7bf3e9d37a",
+  "lookup_hints": 2,
+  "errors": [],
+  "objects": [
+    [
+      "RRL_STOCK_HU_LOAD_CORE",
+      "PACKAGE",
+      "VALID"
+    ],
+    [
+      "RRL_STOCK_HU_LOAD_CORE",
+      "PACKAGE BODY",
+      "VALID"
+    ],
+    [
+      "RRL_STOCK_TRIP_DEPART_CMD",
+      "PACKAGE",
+      "VALID"
+    ],
+    [
+      "RRL_STOCK_TRIP_DEPART_CMD",
+      "PACKAGE BODY",
+      "VALID"
+    ],
+    [
+      "RRL_STORE_ACCESS_RULES",
+      "PACKAGE",
+      "VALID"
+    ],
+    [
+      "RRL_STORE_ACCESS_RULES",
+      "PACKAGE BODY",
+      "VALID"
+    ],
+    [
+      "RRL_TRANSPORT_PLAN_RULES",
+      "PACKAGE",
+      "VALID"
+    ],
+    [
+      "RRL_TRANSPORT_PLAN_RULES",
+      "PACKAGE BODY",
+      "VALID"
+    ]
+  ],
+  "readonly_after_cleanup": "PASS no restriction after own limits cleared"
+}

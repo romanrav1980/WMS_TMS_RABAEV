@@ -1,0 +1,92 @@
+# RRL_WH_SCALE_CAPTURE
+
+Тип: **TABLE**. Схема: `RABAEV`.
+
+Подсистема по имени: Legacy / общие справочники; бизнес-назначение требует уточнения по вызывающему коду.
+
+Описание Oracle: Не задано; не следует выводить точное бизнес-назначение только из имени.
+
+## Поля
+
+| Поле | Тип | NULL | Комментарий |
+|---|---|---|---|
+| `CAPTURE_KEY` | VARCHAR2(64 bytes) | N |  |
+| `DEVICE_ID` | VARCHAR2(100 bytes) | N |  |
+| `CAPTURE_ID` | VARCHAR2(100 bytes) | N |  |
+| `WARE_ID` | NUMBER | N |  |
+| `POST_CELL` | VARCHAR2(60 bytes) | N |  |
+| `CASE_PICK_TASK_ID` | NUMBER | N |  |
+| `CASE_PICK_LINE_ID` | NUMBER | Y |  |
+| `CASE_CONTENT_VERSION` | NUMBER | N |  |
+| `ARTICLE` | VARCHAR2(160 bytes) | Y |  |
+| `SOURCE_CELL` | VARCHAR2(60 bytes) | Y |  |
+| `CARRIER_IDENTIFIER` | VARCHAR2(150 bytes) | N |  |
+| `SCANNED_PRODUCT` | VARCHAR2(512 bytes) | Y |  |
+| `DEVICE_POLICY_VERSION` | NUMBER(10,0) | N |  |
+| `DEVICE_MODE` | VARCHAR2(10 bytes) | N |  |
+| `MEASUREMENT_BASIS` | VARCHAR2(5 bytes) | N |  |
+| `WEIGHT_KG` | NUMBER(27,9) | N |  |
+| `RESOLUTION_KG` | NUMBER(27,9) | N |  |
+| `CALIBRATION_REF` | VARCHAR2(100 bytes) | N |  |
+| `MEASURED_AT` | TIMESTAMP(6) WITH TIME ZONE | N |  |
+| `RECEIVED_AT` | TIMESTAMP(6) WITH TIME ZONE | N |  |
+| `RECORDED_BY` | VARCHAR2(50 bytes) | N |  |
+| `SOURCE_SHA256` | VARCHAR2(64 bytes) | N |  |
+| `SOURCE_JSON` | CLOB | N |  |
+| `RESULT_JSON` | CLOB | N |  |
+| `CAPTURE_PURPOSE` | VARCHAR2(12 bytes) | N |  |
+| `TARE_CAPTURE_KEY` | VARCHAR2(64 bytes) | Y |  |
+| `PALLET_TYPE_ID` | NUMBER | Y |  |
+| `TYPE_VERSION` | NUMBER | Y |  |
+| `COMPOSITION_SIGNATURE` | VARCHAR2(64 bytes) | Y |  |
+
+## Ограничения и связи
+
+| Ограничение | Тип | Поля | Ссылка | Статус |
+|---|---|---|---|---|
+| RRL_WH_SCALE_PURPOSE_C | C | CAPTURE_PURPOSE |  | ENABLED |
+| RRL_WH_SCALE_SOURCE_C | C | ARTICLE, SOURCE_CELL, SCANNED_PRODUCT, TARE_CAPTURE_KEY, CAPTURE_PURPOSE, CASE_PICK_LINE_ID, PALLET_TYPE_ID, TYPE_VERSION, COMPOSITION_SIGNATURE |  | ENABLED |
+| RRL_WH_SCALE_TARE_F | R | TARE_CAPTURE_KEY | RRL_WH_SCALE_CAPTURE (CAPTURE_KEY) | ENABLED |
+| RRL_WH_SCALE_TYPE_F | R | PALLET_TYPE_ID | RRL_PALLET_TYPE (PALLET_TYPE_ID) | ENABLED |
+| SYS_C0017591 | C | DEVICE_ID |  | ENABLED |
+| SYS_C0017592 | C | CAPTURE_ID |  | ENABLED |
+| SYS_C0017593 | C | WARE_ID |  | ENABLED |
+| SYS_C0017594 | C | POST_CELL |  | ENABLED |
+| SYS_C0017595 | C | CASE_PICK_TASK_ID |  | ENABLED |
+| SYS_C0017597 | C | CASE_CONTENT_VERSION |  | ENABLED |
+| SYS_C0017600 | C | CARRIER_IDENTIFIER |  | ENABLED |
+| SYS_C0017602 | C | DEVICE_POLICY_VERSION |  | ENABLED |
+| SYS_C0017603 | C | DEVICE_MODE |  | ENABLED |
+| SYS_C0017604 | C | MEASUREMENT_BASIS |  | ENABLED |
+| SYS_C0017605 | C | WEIGHT_KG |  | ENABLED |
+| SYS_C0017606 | C | RESOLUTION_KG |  | ENABLED |
+| SYS_C0017607 | C | CALIBRATION_REF |  | ENABLED |
+| SYS_C0017608 | C | MEASURED_AT |  | ENABLED |
+| SYS_C0017609 | C | RECEIVED_AT |  | ENABLED |
+| SYS_C0017610 | C | RECORDED_BY |  | ENABLED |
+| SYS_C0017611 | C | SOURCE_SHA256 |  | ENABLED |
+| SYS_C0017612 | C | SOURCE_JSON |  | ENABLED |
+| SYS_C0017613 | C | RESULT_JSON |  | ENABLED |
+| SYS_C0017614 | C | WEIGHT_KG |  | ENABLED |
+| SYS_C0017615 | C | SOURCE_JSON |  | ENABLED |
+| SYS_C0017616 | C | RESULT_JSON |  | ENABLED |
+| SYS_C0017617 | P | CAPTURE_KEY |  | ENABLED |
+| SYS_C0017618 | U | DEVICE_ID, CAPTURE_ID |  | ENABLED |
+| SYS_C0017619 | R | DEVICE_ID | RRL_WH_SCALE_DEVICE (DEVICE_ID) | ENABLED |
+| SYS_C0017620 | R | CASE_PICK_TASK_ID | RRL_CASE_PICK_TASK (CASE_PICK_TASK_ID) | ENABLED |
+| SYS_C0017621 | R | CASE_PICK_LINE_ID | RRL_CASE_PICK_LINE (CASE_PICK_LINE_ID) | ENABLED |
+| SYS_C0017730 | C | CAPTURE_PURPOSE |  | ENABLED |
+
+P — первичный ключ, U — уникальность, R — внешний ключ, C — CHECK/NOT NULL. Точные CHECK-выражения, defaults и индексы находятся в SQL-снимке.
+
+## Зависимости
+
+Нет зарегистрированных зависимостей.
+
+## Кто использует
+
+[RRL_CASE_SCALE_ADMISSION](../programs/RRL_CASE_SCALE_ADMISSION.md), [RRL_STOCK_PALLET_QC_CMD](../programs/RRL_STOCK_PALLET_QC_CMD.md), [RRL_WH_FINAL_SCALE_ADMISSION](../programs/RRL_WH_FINAL_SCALE_ADMISSION.md), [RRL_WH_SCALE_API](../programs/RRL_WH_SCALE_API.md), [RRL_WH_SCALE_CAPTURE_GUARD](../programs/RRL_WH_SCALE_CAPTURE_GUARD.md)
+
+## Исходный код
+
+[Полный SQL-снимок](../../../../db/releases/2026-10-14/README.md). Ищите точное имя `RRL_WH_SCALE_CAPTURE` в файле соответствующего типа.

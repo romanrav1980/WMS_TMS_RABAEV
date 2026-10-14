@@ -1,0 +1,9 @@
+{
+  "target": [
+    "RABAEV",
+    "orcl"
+  ],
+  "before_body_sha256": "3ffa8a2438b837df774bf239a5dcd9505bbc28d323cf83cd4e3f404589c99a2e",
+  "invalid": [],
+  "outer_columns": []
+}

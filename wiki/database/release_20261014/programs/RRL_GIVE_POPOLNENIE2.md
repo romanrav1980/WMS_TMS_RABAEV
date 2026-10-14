@@ -1,0 +1,31 @@
+# RRL_GIVE_POPOLNENIE2
+
+Тип: **FUNCTION**. Схема: `RABAEV`.
+
+Подсистема по имени: Legacy / общие справочники; бизнес-назначение требует уточнения по вызывающему коду.
+
+## Интерфейс
+
+| Подпрограмма | Аргумент (пустой = RETURN) | Позиция | Тип | Направление | Default | Overload |
+|---|---|---|---|---|---|---|
+| RRL_GIVE_POPOLNENIE2 |  |  | VARCHAR2 | OUT | N |  |
+| RRL_GIVE_POPOLNENIE2 | PIKING_CELL | 1 | VARCHAR2 | IN | N |  |
+| RRL_GIVE_POPOLNENIE2 | WARE_ID1 | 2 | NUMBER | IN | N |  |
+
+## Потенциальные записи по тексту SQL
+
+Нет зарегистрированных зависимостей.
+
+Это статический указатель, а не гарантия выполнения записи при каждом вызове. Полная семантика и транзакционные условия — в теле программы.
+
+## Зависимости
+
+[RRL_ARTICULS](../tables/RRL_ARTICULS.md), [RRL_CELLS](../tables/RRL_CELLS.md), [RRL_PALLETS](../tables/RRL_PALLETS.md), [RRL_REMAINS](../tables/RRL_REMAINS.md)
+
+## Кто использует
+
+Нет зарегистрированных зависимостей.
+
+## Исходный код
+
+[Полный SQL-снимок](../../../../db/releases/2026-10-14/README.md). Ищите точное имя `RRL_GIVE_POPOLNENIE2` в файле соответствующего типа.

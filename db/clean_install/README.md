@@ -1,3 +1,5 @@
+> Для текущей NICORA используйте [комплект 14.10.2026](../releases/2026-10-14/README.md). Профили ниже — историческая установка, без полного набора изменений NI01–NI08.
+
 # Clean Oracle Install Kit
 
 This folder is the from-zero install kit for a separate TMS/WMS Oracle

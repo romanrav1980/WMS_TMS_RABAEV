@@ -34,7 +34,7 @@ from typing import Any, Callable
 
 from fastapi import HTTPException
 
-from ..modules.transport.public import normalize_transport_type as _normalize_transtype, available_sts_query
+from ..modules.transport.public import normalize_transport_type as _normalize_transtype, available_sts_query, gantt_rows, MAX_GANTT_ROWS
 from ..db import rows_as_dicts
 from ..oracle_gateway import OracleGateway
 from ..schemas import (
@@ -1629,26 +1629,10 @@ class TransportService:
 
     def get_vehicles_gantt(self, gantt_date: date) -> list[dict]:
         """Данные Ганта для всех машин на день."""
-        rows = self.gateway.fetch_all(
-            """
-            SELECT TT.ID AS TT_ID, TT.TRANSPORT AS VEHICLE_NUM, TT.TRANSTYPE AS VEHICLE_TYPE,
-                   V.ID AS VEHICLE_ID,
-                   OPS.ID, OPS.OPERATION_CODE, OPS.ORD, OPS.DURATION_MIN,
-                   TO_CHAR(OPS.PLAN_START, 'YYYY-MM-DD HH24:MI') AS PLAN_START,
-                   TO_CHAR(OPS.PLAN_END,   'YYYY-MM-DD HH24:MI') AS PLAN_END,
-                   TO_CHAR(OPS.FACT_START, 'YYYY-MM-DD HH24:MI') AS FACT_START,
-                   TO_CHAR(OPS.FACT_END,   'YYYY-MM-DD HH24:MI') AS FACT_END,
-                   OPS.NOTE
-              FROM RABAEV.RRL_TRANSPORT_TASK TT
-              LEFT JOIN RABAEV.RRL_TR_VEHICLE V ON V.NUM = TT.TRANSPORT
-              JOIN RABAEV.RRL_TT_OPERATIONS OPS ON OPS.TT_ID = TT.ID
-             WHERE TT.SHIPMENT_DATE >= TO_DATE(:d, 'YYYY-MM-DD')
-               AND TT.SHIPMENT_DATE <  TO_DATE(:d, 'YYYY-MM-DD') + 1
-               AND NVL(TT.DELETED, 0) = 0
-             ORDER BY NVL(TT.TRANSPORT, ' '), TT.ID, OPS.ORD
-            """,
-            {"d": str(gantt_date)},
-        )
+        rows = gantt_rows(self.gateway, gantt_date)
+        if len(rows) > MAX_GANTT_ROWS:
+            raise HTTPException(422, detail={"code": "GANTT_DAY_ROW_BOUND_EXCEEDED",
+                                             "message": "Дневная диаграмма превышает предел 20000 операций; данные не обрезаны молча"})
 
         result = []
         by_vehicle: dict[str, dict[str, Any]] = {}

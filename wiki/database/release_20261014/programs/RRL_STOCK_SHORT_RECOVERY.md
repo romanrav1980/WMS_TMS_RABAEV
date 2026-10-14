@@ -1,0 +1,58 @@
+# RRL_STOCK_SHORT_RECOVERY
+
+Тип: **PACKAGE**. Схема: `RABAEV`.
+
+Подсистема по имени: Единое ядро остатков, резервов и проводок.
+
+## Интерфейс
+
+| Подпрограмма | Аргумент (пустой = RETURN) | Позиция | Тип | Направление | Default | Overload |
+|---|---|---|---|---|---|---|
+| EXECUTE_READY | P_REQUEST | 1 | CLOB | IN | N |  |
+| EXECUTE_READY | P_ACTOR | 2 | VARCHAR2 | IN | N |  |
+| EXECUTE_READY | P_RESULT | 3 | CLOB | OUT | N |  |
+| FINISH_INVENTORY | P_REQUEST | 1 | CLOB | IN | N |  |
+| FINISH_INVENTORY | P_ACTOR | 2 | VARCHAR2 | IN | N |  |
+| FINISH_INVENTORY | P_DOMAIN | 3 | OBJECT | IN | N |  |
+| FINISH_INVENTORY | P_FACTS | 4 | OBJECT | IN | N |  |
+| FINISH_INVENTORY | P_RESULT | 5 | OBJECT | IN/OUT | N |  |
+| FINISH_PICK | P_LINE | 1 | NUMBER | IN | N | 1 |
+| FINISH_PICK | P_ACTOR | 2 | VARCHAR2 | IN | N | 1 |
+| FINISH_PICK | P_LINE | 1 | NUMBER | IN | N | 2 |
+| FINISH_PICK | P_ACTOR | 2 | VARCHAR2 | IN | N | 2 |
+| FINISH_PICK | P_DOMAIN | 3 | OBJECT | IN | N | 2 |
+| FINISH_REPLENISHMENT | P_TASK | 1 | PL/SQL RECORD | IN | N |  |
+| FINISH_REPLENISHMENT | P_ACTOR | 2 | VARCHAR2 | IN | N |  |
+| PLAN_INVENTORY | P_REQUEST | 1 | CLOB | IN | N |  |
+| PLAN_INVENTORY | P_RESOURCES | 2 | OBJECT | IN/OUT | N |  |
+| PLAN_INVENTORY | P_POLICIES | 3 | OBJECT | IN/OUT | N |  |
+| PLAN_INVENTORY | P_DOMAIN | 4 | OBJECT | IN/OUT | N |  |
+| PLAN_PICK | P_LINE | 1 | NUMBER | IN | N | 1 |
+| PLAN_PICK | P_RESOURCES | 2 | OBJECT | IN/OUT | N | 1 |
+| PLAN_PICK | P_LINE | 1 | NUMBER | IN | N | 2 |
+| PLAN_PICK | P_RESOURCES | 2 | OBJECT | IN/OUT | N | 2 |
+| PLAN_PICK | P_DOMAIN | 3 | OBJECT | IN/OUT | N | 2 |
+| PLAN_READY | P_REQUEST | 1 | CLOB | IN | N |  |
+| PLAN_READY | P_POLICIES | 2 | OBJECT | IN/OUT | N |  |
+| PLAN_READY | P_RESOURCES | 3 | OBJECT | IN/OUT | N |  |
+| PLAN_READY | P_DOMAIN | 4 | OBJECT | IN/OUT | N |  |
+| PLAN_REPLENISHMENT | P_REPL | 1 | NUMBER | IN | N |  |
+| PLAN_REPLENISHMENT | P_RESOURCES | 2 | OBJECT | IN/OUT | N |  |
+
+## Потенциальные записи по тексту SQL
+
+[RRL_CASE_PICK_LINE](../tables/RRL_CASE_PICK_LINE.md), [RRL_CASE_PICK_SHORT](../tables/RRL_CASE_PICK_SHORT.md), [RRL_CASE_PICK_TASK](../tables/RRL_CASE_PICK_TASK.md), [RRL_INVENTORY_TASK](../tables/RRL_INVENTORY_TASK.md), [RRL_PICK_WAVE_REPLENISH_TASK](../tables/RRL_PICK_WAVE_REPLENISH_TASK.md), [RRL_RESOURCE_SESSION](../tables/RRL_RESOURCE_SESSION.md)
+
+Это статический указатель, а не гарантия выполнения записи при каждом вызове. Полная семантика и транзакционные условия — в теле программы.
+
+## Зависимости
+
+[RRL_CASE_CARRIER_LOT](../tables/RRL_CASE_CARRIER_LOT.md), [RRL_CASE_PICK_LINE](../tables/RRL_CASE_PICK_LINE.md), [RRL_CASE_PICK_SHORT](../tables/RRL_CASE_PICK_SHORT.md), [RRL_CASE_PICK_TASK](../tables/RRL_CASE_PICK_TASK.md), [RRL_HAS_WRIGHT](../programs/RRL_HAS_WRIGHT.md), [RRL_INVENTORY_TASK](../tables/RRL_INVENTORY_TASK.md), [RRL_PALLETS](../tables/RRL_PALLETS.md), [RRL_PICK_WAVE](../tables/RRL_PICK_WAVE.md), [RRL_PICK_WAVE_REPLENISH_TASK](../tables/RRL_PICK_WAVE_REPLENISH_TASK.md), `RRL_PICK_WAVE_REPL_SQ`, [RRL_REMAINS](../tables/RRL_REMAINS.md), [RRL_RESOURCE_SESSION](../tables/RRL_RESOURCE_SESSION.md), [RRL_RESOURCE_SHIFT](../tables/RRL_RESOURCE_SHIFT.md), [RRL_RESOURCE_TASK_QUAL](../tables/RRL_RESOURCE_TASK_QUAL.md), [RRL_REVIZION](../tables/RRL_REVIZION.md), [RRL_STOCK_ELIGIBILITY](../programs/RRL_STOCK_ELIGIBILITY.md), [RRL_STOCK_LOCK_API](../programs/RRL_STOCK_LOCK_API.md), [RRL_STOCK_MATH](../programs/RRL_STOCK_MATH.md), [RRL_STOCK_OPERATION](../tables/RRL_STOCK_OPERATION.md), [RRL_STOCK_PLAN_HELPER](../programs/RRL_STOCK_PLAN_HELPER.md), [RRL_STOCK_RESERVATION](../tables/RRL_STOCK_RESERVATION.md), `RRL_STOCK_RESERVATION_SQ`, [RRL_STOCK_RESERVE_CORE](../programs/RRL_STOCK_RESERVE_CORE.md), [RRL_STOCK_SHORT_RECOVERY](../programs/RRL_STOCK_SHORT_RECOVERY.md), [RRL_STOCK_UNIT_CORE](../programs/RRL_STOCK_UNIT_CORE.md), [RRL_STOCK_UOM_CONVERSION](../tables/RRL_STOCK_UOM_CONVERSION.md), [RRL_WAREHOUSE_TASK](../tables/RRL_WAREHOUSE_TASK.md)
+
+## Кто использует
+
+[RRL_STOCK_CASE_PICK_CMD](../programs/RRL_STOCK_CASE_PICK_CMD.md), [RRL_STOCK_CASE_SHORT_CMD](../programs/RRL_STOCK_CASE_SHORT_CMD.md), [RRL_STOCK_INVENTORY_CMD](../programs/RRL_STOCK_INVENTORY_CMD.md), [RRL_STOCK_SHORT_RECOVERY](../programs/RRL_STOCK_SHORT_RECOVERY.md), [RRL_STOCK_TASK_DOMAIN](../programs/RRL_STOCK_TASK_DOMAIN.md), [RRL_STOCK_TASK_PLAN](../programs/RRL_STOCK_TASK_PLAN.md)
+
+## Исходный код
+
+[Полный SQL-снимок](../../../../db/releases/2026-10-14/README.md). Ищите точное имя `RRL_STOCK_SHORT_RECOVERY` в файле соответствующего типа.

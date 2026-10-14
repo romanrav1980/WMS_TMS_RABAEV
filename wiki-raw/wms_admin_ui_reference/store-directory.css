@@ -1,0 +1,36 @@
+/* Справочник магазинов (C-0029). Стили ограничены body.sd-page. */
+body.sd-page{background:#f3f6fb;color:#24344b}
+@media(max-width:1279px){body.sd-page{min-width:0}}
+.sd-page .workspace{min-width:0;max-width:1440px;margin:0 auto;padding:28px 32px 56px;box-sizing:border-box}
+.sd-page .sd-eyebrow{font-size:11px;letter-spacing:1.6px;font-weight:750;color:#6680a7;margin:0}
+.sd-page h1{font-size:27px;margin:6px 0 8px;color:#172a47}
+.sd-page .sd-note{color:#6c7d96;font-size:12.5px;line-height:1.55;margin:6px 0}
+.sd-page .sd-layout{display:grid;grid-template-columns:minmax(260px,380px) minmax(0,1fr);gap:16px;align-items:start}
+.sd-page .sd-panel{background:#fff;border:1px solid #e4eaf3;border-radius:14px;padding:18px 20px;min-width:0;box-sizing:border-box}
+.sd-page h2{font-size:17px;margin:0 0 12px;color:#1c3152}.sd-page h3{font-size:14px;margin:16px 0 8px;color:#2d4469}
+.sd-page label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:650;color:#62738d;margin:0 0 10px;min-width:0}
+.sd-page input:not([type=radio]):not([type=checkbox]),.sd-page select,.sd-page textarea{box-sizing:border-box;width:100%;min-height:38px;border:1px solid #dce4ef;border-radius:8px;padding:7px 10px;font:14px "Segoe UI",Arial,sans-serif;color:#24344b;background:#fbfcfe}
+.sd-page input:focus,.sd-page select:focus,.sd-page textarea:focus{outline:none;border-color:#3e7ce8;box-shadow:0 0 0 3px #3e7ce82a}
+.sd-page button{border:1px solid #dae3f0;border-radius:8px;min-height:36px;padding:7px 13px;background:#fff;color:#456181;font:600 13px "Segoe UI",Arial,sans-serif;cursor:pointer}
+.sd-page button:hover:not(:disabled){background:#f0f5ff}.sd-page button:disabled{opacity:.5;cursor:default}
+.sd-page button:focus-visible,.sd-page .sd-item:focus-visible{outline:3px solid #8fb5f5;outline-offset:2px}
+.sd-page .sd-primary{background:#2867d4;border-color:#2867d4;color:#fff}
+.sd-page .sd-list{list-style:none;margin:6px 0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:70vh;overflow:auto}
+.sd-page .sd-item{width:100%;text-align:left;border:1px solid #e3e9f2;border-radius:10px;padding:9px 11px;background:#fcfdff}
+.sd-page .sd-item[aria-current=true]{border-color:#2867d4;background:#eef4ff}
+.sd-page .sd-item strong{display:block;color:#1c3152;overflow-wrap:anywhere}.sd-page .sd-item small{display:block;color:#7a8aa1;margin-top:2px}
+.sd-page .sd-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px 14px;margin:0 0 6px}
+.sd-page .sd-facts div{min-width:0}.sd-page .sd-facts dt{font-size:11px;color:#8193ab}.sd-page .sd-facts dd{margin:1px 0 0;font-size:13px;color:#2a3f60;overflow-wrap:anywhere}
+.sd-page .sd-warn{background:#fff8e8;border:1px solid #f2e2b8;color:#8a6516;border-radius:9px;padding:8px 11px;font-size:12.5px}
+.sd-page .sd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 14px}
+.sd-page .sd-radio{display:flex;flex-wrap:wrap;gap:6px 18px;margin:4px 0 10px}.sd-page .sd-radio label{flex-direction:row;align-items:center;gap:6px;margin:0;color:#3f5578}
+.sd-page .sd-week{display:flex;flex-direction:column;gap:6px}
+.sd-page .sd-day{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:8px;align-items:start;border-top:1px solid #eef2f7;padding-top:6px}
+.sd-page .sd-day b{padding-top:9px;color:#2d4469}.sd-page .sd-intervals{display:flex;flex-direction:column;gap:6px;min-width:0}
+.sd-page .sd-interval{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.sd-page .sd-interval input{width:auto;min-width:110px;flex:1}
+.sd-page .sd-closed{color:#8a6516;font-size:12.5px;padding-top:9px}
+.sd-page .sd-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.sd-page [role=status]:empty{display:none}
+.sd-page #sdProfileStatus:not(:empty){background:#f0f5ff;border:1px solid #e0eafb;color:#41628b;border-radius:9px;padding:9px 12px;font-size:12.5px;white-space:pre-wrap}
+@media(max-width:900px){.sd-page .sd-layout{grid-template-columns:1fr}.sd-page .sd-list{max-height:none}}
+@media(max-width:760px){.sd-page .app{display:block}.sd-page .sidebar{position:static;width:auto;height:auto}.sd-page .workspace{padding:16px}.sd-page .sd-panel{padding:14px}.sd-page h1{font-size:22px}.sd-page .sd-day{grid-template-columns:36px minmax(0,1fr)}.sd-page .sd-day>button{grid-column:2}}

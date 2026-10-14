@@ -9,10 +9,10 @@ Sprint 111: интеграция с картой (TransportPlannerPage) чере
            GET /vehicles/positions (уже в transport_kpi или здесь).
 """
 
-from datetime import date
+from datetime import date, datetime
 
-from fastapi import APIRouter, Depends, Query
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, Query, HTTPException, Path
+from pydantic import BaseModel, Field, field_validator
 
 from ..auth import AdminUser, TRANSPORT_DISPATCH_VIEW_PERMISSION, require_permission
 from ..oracle_gateway import OracleGateway
@@ -21,11 +21,23 @@ router = APIRouter(tags=["gps"])
 
 
 class GpsTrackRequest(BaseModel):
-    vehicle_id: int
-    lat: float
-    lon: float
-    speed_kmh: float = 0
-    ts: str | None = None  # ISO datetime; defaults to SYSDATE
+    vehicle_id: int = Field(gt=0)
+    lat: float = Field(ge=-90, le=90, allow_inf_nan=False)
+    lon: float = Field(ge=-180, le=180, allow_inf_nan=False)
+    speed_kmh: float = Field(default=0, ge=0, lt=99999.5, allow_inf_nan=False)
+    ts: datetime | None = None  # Oracle DATE: database-local wall time, seconds, no offset.
+
+    @field_validator("ts", mode="before")
+    @classmethod
+    def validate_timestamp(cls, value):
+        if value is None:
+            return None
+        if not isinstance(value, str):
+            raise ValueError("ts must be YYYY-MM-DDTHH:mm:ss in database-local time")
+        import re
+        if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}", value):
+            raise ValueError("ts requires whole seconds and no timezone offset; database-local time")
+        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%S")
 
 
 def _gw() -> OracleGateway:
@@ -43,51 +55,21 @@ def receive_gps_track(req: GpsTrackRequest) -> dict:
     Endpoint без admin-авторизации — защищён IP-whitelist через nginx на prod.
     """
     gw = _gw()
-    # Insert history
-    gw.execute(
-        """
-        INSERT INTO RABAEV.RRL_VEHICLE_GPS (ID, VEHICLE_ID, LAT, LON, SPEED_KMH, TS)
-        VALUES (RABAEV.SEQ_VEHICLE_GPS.NEXTVAL, :vid, :lat, :lon, :speed,
-                NVL(TO_DATE(:ts, 'YYYY-MM-DD"T"HH24:MI:SS'), SYSDATE))
-        """,
-        {
-            "vid": req.vehicle_id,
-            "lat": req.lat,
-            "lon": req.lon,
-            "speed": req.speed_kmh,
-            "ts": req.ts,
-        },
-    )
-    # Upsert last position
-    existing = gw.fetch_all(
-        "SELECT VEHICLE_ID FROM RABAEV.RRL_VEHICLE_GPS_LAST WHERE VEHICLE_ID=:vid",
-        {"vid": req.vehicle_id},
-    )
-    if existing:
-        gw.execute(
-            """
-            UPDATE RABAEV.RRL_VEHICLE_GPS_LAST
-               SET LAT=:lat, LON=:lon, SPEED_KMH=:speed, TS=SYSDATE, UPDATED_AT=SYSDATE
-             WHERE VEHICLE_ID=:vid
-            """,
-            {"lat": req.lat, "lon": req.lon, "speed": req.speed_kmh, "vid": req.vehicle_id},
-        )
-    else:
-        gw.execute(
-            """
-            INSERT INTO RABAEV.RRL_VEHICLE_GPS_LAST (VEHICLE_ID, LAT, LON, SPEED_KMH, TS)
-            VALUES (:vid, :lat, :lon, :speed, SYSDATE)
-            """,
-            {"vid": req.vehicle_id, "lat": req.lat, "lon": req.lon, "speed": req.speed_kmh},
-        )
-    # Sprint 118-119 — check geofences and auto-mark operations
+    from ..modules.transport.public import ingest_gps, GpsVehicleMissing
     try:
-        from ..services.geofencing import check_geofences
-        geo_events = check_geofences(req.vehicle_id, req.lat, req.lon, gw)
-    except Exception:
-        geo_events = []
-
-    return {"ok": True, "vehicle_id": req.vehicle_id, "geo_events": geo_events}
+        result = ingest_gps(gw, req.vehicle_id, req.lat, req.lon, req.speed_kmh, req.ts)
+    except GpsVehicleMissing as exc:
+        raise HTTPException(404, str(exc)) from exc
+    result["geo_events"] = []
+    if result["current_position_updated"]:
+        try:
+            from ..services.geofencing import check_geofences
+            result["geo_events"] = check_geofences(req.vehicle_id, req.lat, req.lon, gw)
+        except Exception:
+            result["geofence_status"] = "LOOKUP_UNAVAILABLE"
+    else:
+        result["geofence_status"] = "SKIPPED_STALE_OBSERVATION"
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -100,48 +82,27 @@ def list_geofences(
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
     """Sprint 118: список геозон адресов (радиус в метрах)."""
-    gw = _gw()
-    where = "WHERE LATITUDE IS NOT NULL"
-    params: dict = {}
-    if addr_mask:
-        where += " AND UPPER(ADDR) LIKE UPPER(:mask)"
-        params["mask"] = f"%{addr_mask}%"
-    rows = gw.fetch_all(
-        f"""
-        SELECT ID, ADDR, LATITUDE, LONGITUDE,
-               NVL(GEO_FENCE_RADIUS_M, 200) AS RADIUS_M
-          FROM RABAEV.RRL_ADDR
-          {where}
-         ORDER BY ADDR
-         FETCH FIRST 200 ROWS ONLY
-        """,
-        params,
-    )
-    return [
-        {
-            "addr_id": int(r.get("id") or 0),
-            "addr": str(r.get("addr") or ""),
-            "lat": float(r.get("latitude") or 0),
-            "lon": float(r.get("longitude") or 0),
-            "radius_m": int(r.get("radius_m") or 200),
-        }
-        for r in rows
-    ]
+    from ..modules.transport.public import list_address_geofences
+    return list_address_geofences(_gw(), addr_mask)
 
 
-@router.patch("/api/admin/transport/geofences/{addr_id}")
+
+class GeofenceRadiusUpdate(BaseModel):
+    radius_m: int = Field(strict=True, gt=0, le=2147483647)
+
+
+@router.patch("/api/admin/transport/geofences/{addr_id:path}")
 def update_geofence_radius(
-    addr_id: int,
-    body: dict,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+    body: GeofenceRadiusUpdate,
+    addr_id: str = Path(min_length=1, max_length=255),
+    _user: AdminUser = Depends(require_permission("warehouse_settings_edit")),
 ) -> dict:
-    """Sprint 118: обновить радиус геозоны адреса."""
-    radius = int(body.get("radius_m") or 200)
-    _gw().execute(
-        "UPDATE RABAEV.RRL_ADDR SET GEO_FENCE_RADIUS_M = :r WHERE ID = :aid",
-        {"r": radius, "aid": addr_id},
-    )
-    return {"addr_id": addr_id, "radius_m": radius}
+    """Update radius using the actual ADDR key, including embedded slashes."""
+    from ..modules.transport.public import update_address_geofence
+    result = update_address_geofence(_gw(), addr_id, body.radius_m, _user.username)
+    if result is None:
+        raise HTTPException(404, "Адрес геозоны не найден или удалён")
+    return result
 
 
 @router.get("/api/admin/transport/vehicles/positions")
@@ -186,14 +147,14 @@ def get_vehicle_track(
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
 ) -> list[dict]:
     """Трек машины за день — список координат по времени (Sprint 110)."""
-    from datetime import date as _date
+    from datetime import date, datetime as _date
     d = track_date or _date.today()
     rows = _gw().fetch_all(
         """
         SELECT LAT, LON, SPEED_KMH, TS
           FROM RABAEV.RRL_VEHICLE_GPS
          WHERE VEHICLE_ID = :vid
-           AND TRUNC(TS) = TRUNC(:d)
+           AND TS >= :d AND TS < :d + 1
          ORDER BY TS
         """,
         {"vid": vehicle_id, "d": d},

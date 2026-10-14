@@ -119,7 +119,7 @@ create or replace package body RRL_STOCK_QC_GATE as
  begin
   select p.ID,p.WARE_ID,nvl(w.BLOCK_IF_NO_PROOVE,0),p.SCAN_CONTENT_SIGNATURE,p.WEIGHT_CONTENT_SIGNATURE
    into v_id,v_ware,v_required,v_scan,v_weight from RRL_SBORKA_PALLETS p join RRL_WARES w on w.ID=p.WARE_ID where p.PALLET_UID=p_identifier;
-  j.put('shipment_identifier',p_identifier);j.put('document_id',v_id);RRL_STOCK_QC_POLICY.settings(v_ware,v_mode,v_independent);j.put('required',v_mode!='NONE');j.put('control_mode',v_mode);j.put('independent_controller_required',v_independent=1);j.put('ready',false);
+  j.put('shipment_identifier',p_identifier);j.put('document_id',v_id);RRL_STOCK_QC_POLICY.settings(v_ware,v_mode,v_independent);j.put('required',v_mode!='NONE');j.put('control_mode',v_mode);j.put('independent_controller_required',v_independent=1);j.put('ready',false);j.put('weight_exemption_recorded',false);
   d.put('command_type','SHIP_PALLET');s.put('pallet_identifier',p_identifier);d.put('source',s);
   begin
    RRL_STOCK_SHIPPING_CORE.compile_shipment(d.to_clob,'READ.QC:'||RRL_STOCK_PLAN_HELPER.decimal_text(v_id),policies,resources,domain,true);
@@ -148,6 +148,13 @@ create or replace package body RRL_STOCK_QC_GATE as
     join RRL_WMS_RECEIPT_UNIT u on u.CURRENT_UID=l.U and u.CURRENT_CELL=l.C and u.STOCK_STATUS='AVAILABLE';
    j.put('physical_unit_count',v_unit_count);
    v_signature:=signature_for_plan(domain);j.put('composition_signature',v_signature);
+   declare recorded_count number;begin
+    select count(*) into recorded_count from RRL_QC_EXEMPT_FACT f
+     where f.DOCUMENT_ID=v_id
+      and json_value(f.PAYLOAD_JSON,'$.composition_signature' returning varchar2(64))=v_signature
+      and rownum=1;
+    j.put('weight_exemption_recorded',recorded_count=1);
+   end;
    RRL_STOCK_QC_POLICY.sampling(domain,v_bucket,v_percent,v_selected,v_rescan);
    j.put('sample_percent',v_percent);j.put('sample_selected',v_selected=1);j.put('rescan_required',v_rescan=1);
    j.put('control_plan_required',v_bucket is null and v_percent>0);j.put('full_scan_required',v_mode in('SCAN','BOTH') or v_selected=1 or v_rescan=1);

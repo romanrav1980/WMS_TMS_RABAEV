@@ -60,6 +60,9 @@ def control_label(identifier: str = Path(min_length=1,max_length=150),
     snapshot=service.status(identifier,user.username)
     if expected_signature is not None and snapshot.get("composition_signature")!=expected_signature:
         raise HTTPException(409,"Состав изменился. Перечитайте результат контроля перед печатью.")
+    if (snapshot.get("weight_exemption",{}).get("eligible") is True
+            and snapshot.get("weight_exemption_recorded") is not True):
+        raise HTTPException(409,"Предъявите грузовое место к контролю, чтобы сохранить основание освобождения от веса.")
     return Response(quality_label_html(snapshot,user.username),media_type="text/html",
                     headers={"Cache-Control":"no-store","X-Content-Type-Options":"nosniff"})
 

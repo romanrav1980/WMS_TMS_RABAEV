@@ -1,0 +1,31 @@
+# RRL_GIVE_TERMINAL_TASK2
+
+Тип: **FUNCTION**. Схема: `RABAEV`.
+
+Подсистема по имени: Legacy / общие справочники; бизнес-назначение требует уточнения по вызывающему коду.
+
+## Интерфейс
+
+| Подпрограмма | Аргумент (пустой = RETURN) | Позиция | Тип | Направление | Default | Overload |
+|---|---|---|---|---|---|---|
+| RRL_GIVE_TERMINAL_TASK2 |  |  | VARCHAR2 | OUT | N |  |
+| RRL_GIVE_TERMINAL_TASK2 | USER_ID1 | 1 | VARCHAR2 | IN | N |  |
+| RRL_GIVE_TERMINAL_TASK2 | IP_ADDR1 | 2 | VARCHAR2 | IN | N |  |
+
+## Потенциальные записи по тексту SQL
+
+[RRL_SBORKA_PALLETS_HISTORY](../tables/RRL_SBORKA_PALLETS_HISTORY.md)
+
+Это статический указатель, а не гарантия выполнения записи при каждом вызове. Полная семантика и транзакционные условия — в теле программы.
+
+## Зависимости
+
+[RRL_SBORKA_PALLETS](../tables/RRL_SBORKA_PALLETS.md), [RRL_SBORKA_PALLETS_HISTORY](../tables/RRL_SBORKA_PALLETS_HISTORY.md)
+
+## Кто использует
+
+Нет зарегистрированных зависимостей.
+
+## Исходный код
+
+[Полный SQL-снимок](../../../../db/releases/2026-10-14/README.md). Ищите точное имя `RRL_GIVE_TERMINAL_TASK2` в файле соответствующего типа.

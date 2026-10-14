@@ -18,7 +18,9 @@ class OutboxService:
             return recovered
         if not self.adapter.configured:
             return {"status": "NOT_CONFIGURED", "target_system": target_system, "event_outbox_id": None,
-                    "real_external_ack": False, "pending_events_preserved": True}
+                    "real_external_ack": False, "pending_events_preserved": True,
+                    "reason_code": getattr(self.adapter,"reason_code","REGULATORY_CONNECTOR_NOT_CONFIGURED"),
+                    "next_action": getattr(self.adapter,"next_action","Проверьте конфигурацию регуляторного адаптера.")}
         self.journal.ready()
         claim = self.delivery.claim(worker_id, target_system.upper() if target_system else None)
         if claim is None:
