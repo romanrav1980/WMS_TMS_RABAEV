@@ -1,0 +1,74 @@
+/* NI07.1: расшифровка счёта. Только классы bc-*, общие стили не затрагиваются. */
+.bc-root{display:flex;flex-direction:column;gap:14px;margin:12px 0 16px;font-size:13px;color:#24344b}
+.bc-root-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.bc-root-head h3{margin:0;font-size:16px}
+.bc-root button{border:1px solid #d5deeb;background:#fff;border-radius:7px;padding:6px 12px;font:600 12px inherit;color:#3d5a85;cursor:pointer}
+.bc-root button:hover:not(:disabled){background:#f0f5ff}
+.bc-root button:disabled{opacity:.5;cursor:default}
+.bc-root button:focus-visible,.bc-root summary:focus-visible,.bc-table-wrap:focus-visible,.bc-root input:focus-visible{outline:3px solid #8fb5f5;outline-offset:2px}
+.bc-summary,.bc-block{border:1px solid #e3e9f2;border-radius:12px;background:#fff;padding:14px 16px}
+.bc-summary{background:#f8fbff}
+.bc-summary-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.bc-summary h3,.bc-block h4{margin:0 0 10px;font-size:14px;color:#1c3152;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.bc-table-wrap{overflow-x:auto;max-width:100%;border:1px solid #edf1f7;border-radius:9px}
+.bc-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.bc-table th,.bc-table td{padding:8px 10px;border-bottom:1px solid #eef2f7;text-align:left;vertical-align:top}
+.bc-table thead th{background:#f6f8fc;color:#6f8099;font-size:11px;font-weight:650;white-space:nowrap}
+.bc-table tbody tr:last-child td,.bc-table tbody tr:last-child th{border-bottom:0}
+.bc-table tbody th{font-weight:700;color:#22395c}
+.bc-num{text-align:right!important;white-space:nowrap}
+.bc-money{font-variant-numeric:tabular-nums;font-weight:650;color:#1d3557}
+.bc-money small{font-weight:500;color:#7a8aa1}
+.bc-sub{display:block;color:#8193ab;font-size:11px;margin-top:2px;line-height:1.35;white-space:normal}
+.bc-muted{color:#94a3b8}
+.bc-err-cell{color:#b13c3c;font-size:11px;cursor:help}
+.bc-note{color:#6c7f9b;font-size:12px;line-height:1.55;margin:8px 0 0}
+.bc-pair{display:inline-block;margin-right:14px}
+.bc-state{margin:4px 0;padding:10px 12px;border-radius:9px;font-size:12.5px}
+.bc-loading{background:#f2f6fc;color:#5c7396}
+.bc-empty{background:#fafcff;border:1px dashed #dce5f1;color:#6c7f9b}
+.bc-error{background:#fdf0f0;border:1px solid #f3d2d2;color:#a33a3a;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.bc-chip{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:650;white-space:nowrap}
+.bc-ok{background:#eaf7ef;color:#2b8555}.bc-warn{background:#fff5df;color:#a07a27}.bc-bad{background:#fdecec;color:#b13c3c}.bc-info{background:#edf3ff;color:#3d6ab3}.bc-idle{background:#f0f2f6;color:#6f7b8f}
+.bc-details{margin-top:10px}
+.bc-details>summary{cursor:pointer;color:#3d5a85;font-weight:650;margin-bottom:8px}
+.bc-filter{display:inline-flex;flex-direction:column;gap:4px;font-size:11px;font-weight:650;color:#62738d;margin:4px 0 8px}
+.bc-filter input{border:1px solid #dce4ef;border-radius:7px;padding:6px 9px;font:13px inherit;width:160px}
+.bc-card{border:1px solid #e8edf5;border-radius:10px;margin:8px 0;padding:0 12px 10px;background:#fcfdff}
+.bc-card>summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;padding:10px 0}
+.bc-card-title{font-weight:700;color:#22395c}
+.bc-card-sums{color:#4a6185}
+.bc-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px 14px;margin:0 0 10px}
+.bc-facts div{min-width:0}
+.bc-facts dt{font-size:11px;color:#8193ab}
+.bc-facts dd{margin:1px 0 0;color:#2a3f60;overflow-wrap:anywhere}
+.bc-seg{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.bc-seg button{border-radius:20px!important;padding:4px 10px!important}
+.bc-seg button em{font-style:normal;color:#8193ab;margin-left:2px}
+.bc-seg .bc-active{background:#2867d4!important;border-color:#2867d4!important;color:#fff!important}
+.bc-seg .bc-active em{color:#dbe7ff}
+@media(max-width:700px){.bc-summary,.bc-block{padding:12px}.bc-table{font-size:12px}.bc-facts{grid-template-columns:1fr}}
+
+/* Основания сумм */
+.bc-actions{display:flex;gap:6px;flex-wrap:wrap}
+.bc-basis-btn{padding:3px 9px!important;font-size:11px!important;white-space:nowrap}
+.bc-basis{border:2px solid #9cc0f5;border-radius:12px;background:#f5f9ff;padding:12px 14px}
+.bc-basis:focus{outline:none}
+.bc-basis-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.bc-basis-head h4{margin:0 0 8px;font-size:14px;color:#1c3152}
+.bc-basis h5{margin:12px 0 6px;font-size:12px;color:#3d5a85}
+.bc-basis-list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.bc-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* Узкая карточка счёта: строки таблиц превращаются в карточки с подписями полей */
+.bc-root{container-type:inline-size}
+@container (max-width:560px){
+ .bc-stack thead{display:none}
+ .bc-stack,.bc-stack tbody,.bc-stack tr,.bc-stack td,.bc-stack tbody th{display:block;width:auto}
+ .bc-stack tr{border-bottom:1px solid #e3e9f2;padding:6px 0}
+ .bc-stack td,.bc-stack tbody th{border:0!important;padding:3px 10px!important;text-align:left!important;white-space:normal}
+ .bc-stack td[data-label]:not([data-label=""])::before,.bc-stack tbody th[data-label]::before{content:attr(data-label);display:block;font-size:10.5px;font-weight:600;color:#8193ab}
+ .bc-table-wrap{border:0;overflow-x:visible}
+ .bc-root-head{flex-direction:column;align-items:flex-start}
+ .bc-summary,.bc-block,.bc-basis{padding:10px}
+ .bc-card{padding:0 8px 8px}
+}
