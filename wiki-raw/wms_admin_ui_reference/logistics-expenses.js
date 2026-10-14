@@ -2,21 +2,23 @@
 // сохранённая операция повторяется тем же operation_id/body, успех показывается после сверки идентичности ответа.
 (() => {
  const el=id=>document.getElementById(id),auth=()=>window.wmsAdminAuth,base=()=>auth().state.apiBase.replace(/\/$/,""),key=()=>"logistics-expenses:"+base()+":"+auth().state.user?.username;
- const M=window.LxModel,V=window.LxView,PATHS=["/articles","/report","/decide","/allocate"];
+ const M=window.LxModel,V=window.LxView;
  let pending=null,busy=false,identity="",serial=0,articles=null,expenses=[],normativeCosts=[],loadedWare=null;
  const filter={stage:"all",kind:"all",object:"",query:""};
  const say=(t,tone)=>{const n=el("exMessage");n.textContent=t;if(tone)n.dataset.tone=tone;else delete n.dataset.tone;};
  const positive=id=>{const n=Number(el(id).value);if(!Number.isSafeInteger(n)||n<1)throw Error("Укажите склад и ID объекта.");return n;};
- const store={get:k=>{try{return localStorage.getItem(k);}catch{return null;}},set:(k,v)=>{try{localStorage.setItem(k,v);}catch{}},del:k=>{try{localStorage.removeItem(k);}catch{}}};
+ const I=window.LxIntent;
  const ctx=()=>({has:p=>auth().hasPermission(p),user:auth().state.user?.username||""});
 
  function controls(){
   const locked=busy||!!pending;
   document.querySelectorAll("main input,main select,main button").forEach(n=>{if(n.hasAttribute("data-lx-free"))return;n.disabled=locked||n.dataset.lxBlocked==="1";});
   document.querySelectorAll("#lxStage button").forEach(n=>n.disabled=false);
-  el("exRetry").hidden=!pending||!!pending.damaged;el("exRetry").disabled=busy;
-  el("exRestart").hidden=!(pending?.confirmed||pending?.damaged);el("exRestart").disabled=busy;
-  el("exRestart").textContent=pending?.damaged?"Удалить повреждённую запись":"Исправить подтверждённый отказ";
+  const p=pending,open=p&&!p.damaged&&!p.confirmed&&!p.settled&&!p.established;
+  el("exRetry").hidden=!open;el("exRetry").disabled=busy;
+  el("lxVerify").hidden=!(open&&p.path!=="/articles"||p?.damaged&&p.ids.length&&!p.established);el("lxVerify").disabled=busy;
+  el("exRestart").hidden=!(p&&(p.confirmed||p.settled||p.established||p.damaged&&!p.ids.length));el("exRestart").disabled=busy;
+  el("exRestart").textContent=p?.established||p?.settled?"Закрыть запись: результат установлен":p?.damaged?"Удалить запись без ID (результат не установить)":"Исправить подтверждённый отказ";
   pendingBanner();
  }
  function describe(intent){
@@ -28,8 +30,10 @@
  }
  function pendingBanner(){
   const n=el("lxPending");n.hidden=!pending;if(!pending)return;
-  n.dataset.tone=pending.damaged||pending.confirmed?"error":"warn";
-  n.textContent=pending.damaged?"Сохранённая на этом устройстве операция повреждена и не может быть повторена. Новые команды заблокированы: проверьте в реестре, сохранилась ли она, затем удалите запись.":
+  n.dataset.tone=pending.established||pending.settled?"ok":pending.damaged||pending.confirmed?"error":"warn";
+  n.textContent=pending.established?"Результат установлен: "+pending.note+" Закройте запись, чтобы продолжить.":
+   pending.settled?"Операция подтверждена сервером, но запись на устройстве удалить не удалось. Новые команды заблокированы, пока запись не будет закрыта.":
+   pending.damaged?"Сохранённая на этом устройстве операция повреждена"+(pending.unreadable?" (хранилище браузера недоступно)":"")+" и не может быть повторена. Новые команды заблокированы. "+(pending.ids.length?"Проверьте на сервере по ID "+pending.ids.join(", ")+" — кнопка «Проверить по ID».":"ID операции в записи нет: сверьте реестр по документу, затем удалите запись."):
    pending.confirmed?"Сервер подтвердил отказ: "+describe(pending)+". Исправьте данные и создайте новую операцию.":
    "Результат не подтверждён: "+describe(pending)+". Повторите ту же операцию — сервер вернёт сохранённый результат, дубль не создастся.";
  }
@@ -56,8 +60,9 @@
   articleOptions();
   el("exExpense").replaceChildren(...rows.filter(r=>!r.finance_operation_id&&r.logist_outcome!=="REJECT").map(r=>new Option(r.article_name+" · "+r.amount+" "+r.currency+" · "+r.object_kind+" "+r.object_id+" · база "+(r.distribution_basis||"не выбрана")+" · логист "+(r.logist_actor||"не согласован"),r.operation_id)));
  }
+ // Чтение разрешено и при незавершённой команде: оно нужно, чтобы установить её результат.
  async function load(prefix){
-  if(busy||pending)return false;const scope=key(),seq=++serial;busy=true;controls();
+  if(busy)return false;const scope=key(),seq=++serial;busy=true;controls();
   try{
    const ware=positive("exWare"),search=el("exNormativeSearch").value.trim();
    const[rows,catalog,norms]=await Promise.all([request("/warehouses/"+ware),request("/articles"),request("/warehouses/"+ware+"/normative-costs"+(search?"?cost_operation_id="+encodeURIComponent(search):""))]);
@@ -76,7 +81,7 @@
   const w=el("lxWindow");w.hidden=loadedWare==null;
   if(loadedWare!=null){
    const full=expenses.length>=100;if(full)w.dataset.tone="warn";else delete w.dataset.tone;
-   w.textContent="Загружено "+expenses.length+" расходов склада "+loadedWare+". Сервер отдаёт не более 100 записей склада — первые по времени регистрации; фильтры и поиск работают только по загруженному окну, это не поиск по всей базе."+(full?" Окно заполнено: более поздние расходы сюда не попали.":"");
+   w.textContent="Загружено "+expenses.length+" расходов склада "+loadedWare+". Сервер отдаёт новейшие 100 записей склада по времени регистрации; фильтры работают только по загруженному окну. Старый расход ищите точным поиском по ID."+(full?" Окно заполнено: более ранние расходы сюда не попали.":"");
   }
   el("lxShown").textContent=loadedWare==null?"":"Показано "+shown.length+" из "+expenses.length+".";
   controls();
@@ -103,11 +108,14 @@
   try{
    r=await request(intent.path,intent.body);
    if(!verified(intent,r))throw Object.assign(Error("Ответ сервера не совпадает с отправленной операцией; результат не подтверждён. Повторите ту же операцию."),{confirmed:false});
-   ok=true;store.del(scope);
+   ok=true;
   }catch(e){
-   if(scope===key()&&pending===intent){pending.confirmed=e.confirmed===true;store.set(scope,JSON.stringify(pending));say(e.message,"error");}
+   if(scope===key()&&pending===intent){pending.confirmed=e.confirmed===true;let note="";try{I.save(scope,pending);}catch{note=" Состояние записи на устройстве не обновлено.";}say(e.message+note,"error");}
   }finally{busy=false;controls();}
-  if(ok&&scope===key()&&pending===intent){pending=null;controls();await load(successText(intent,r));}
+  if(!ok||scope!==key()||pending!==intent)return;
+  // Успех подтверждён; если запись не удалилась, новая команда не разрешается до её закрытия.
+  if(I.remove(scope))pending=null;else pending={...intent,settled:true};
+  controls();await load(successText(intent,r));
  }
  function expenseBody(){
   if(!articles)throw Error("Сначала обновите реестр.");
@@ -126,16 +134,10 @@
   try{
    const body=make();if(path!=="/articles")body.operation_id="EXPENSE:"+crypto.randomUUID();
    if(Object.values(body).some(v=>v===""||v==null))throw Error("Заполните поля документа.");
-   const intent={path,body};store.set(key(),JSON.stringify(intent));pending=intent;await send(key());
+   const intent={path,body};I.save(key(),intent);pending=intent;await send(key());
   }catch(e){say(e.message,"error");}
  }
- // Сохранённая операция принимается только целой; повреждённую запись нельзя обойти новой командой.
- function restore(scope){
-  const raw=store.get(scope);if(!raw)return null;
-  try{const p=JSON.parse(raw);if(p&&PATHS.includes(p.path)&&p.body&&typeof p.body==="object"&&(p.path==="/articles"||typeof p.body.operation_id==="string"))return p;}catch{}
-  return{damaged:true};
- }
- function clearData(){
+  function clearData(){
   ++serial;articles=null;expenses=[];normativeCosts=[];loadedWare=null;
   for(const id of ["exArticleSelect","exExpense","exAllocation","exCorrection","exNormativeCorrection"])el(id).replaceChildren();
   for(const id of ["lxReportPreview","lxDecisionHint","lxAllocHint"])el(id).textContent="";
@@ -145,16 +147,37 @@
   const scope=key(),fp=scope+":"+(auth().state.user?.permissions||[]).slice().sort().join(",");if(identity===fp)return;identity=fp;pending=null;
   for(const id of ["exWare","exNormativeSearch","exCode","exName","exObject","exAmount","exDay","exReference","exReason","exDecisionRef","exDecisionReason","exConfirmed","lxObject","lxQuery"])el(id).value="";
   Object.assign(filter,{stage:"all",kind:"all",object:"",query:""});el("lxKind").value="all";
-  clearData();pending=restore(scope);controls();
+  clearData();pending=I.read(scope);controls();
   if(pending?.damaged)say("Сохранённая операция повреждена — новые команды заблокированы до проверки.","error");
  }
  function discard(){
-  if(busy||!pending)return;
-  if(pending.damaged&&!window.confirm("Удалить повреждённую запись операции? Сначала проверьте в реестре, сохранилась ли операция на сервере."))return;
-  if(!pending.damaged&&!pending.confirmed)return;
-  store.del(key());pending=null;articles=null;controls();say("Обновите реестр перед новой операцией.");
+  const p=pending;if(busy||!p)return;
+  const allowed=p.confirmed||p.settled||p.established||p.damaged&&!p.ids.length;
+  if(!allowed)return;
+  if(p.damaged&&!p.established&&!window.confirm("В записи нет ID операции, результат установить нельзя. Удалить её после ручной сверки реестра по документу?"))return;
+  if(!I.remove(key())){say("Запись на устройстве удалить не удалось — новые команды остаются заблокированными. Проверьте хранилище браузера.","error");return;}
+  pending=null;controls();say("Запись закрыта. Обновите реестр перед новой операцией.");
  }
- window.LxPage={el,expenses:()=>expenses,ctx,say,positive,articleOptions,prepare,expenseBody,load,send,key,discard,filter,render,clearData,
+ const findExact=(ware,id)=>request("/warehouses/"+ware+"?operation_id="+encodeURIComponent(id));
+ async function verifyPending(){
+  const p=pending;if(busy||!p)return;busy=true;controls();
+  try{const r=await I.establish(p,findExact,loadedWare,expenses);if(pending===p&&r.established){p.established=true;p.note=r.text;}say(r.text,r.established?"ok":"warn");}
+  catch(e){say("Проверка не выполнена: "+e.message,"error");}
+  finally{busy=false;controls();}
+ }
+ // Точный поиск расхода по ID за пределами окна 100; найденная строка добавляется к загруженным с пометкой.
+ async function exactSearch(){
+  const id=el("lxExactId").value.trim();if(busy||!id)return;
+  if(loadedWare==null){say("Сначала укажите склад и обновите реестр.","error");return;}
+  const ware=loadedWare,seq=serial,inWindow=expenses.some(x=>x.operation_id===id);busy=true;controls();
+  try{const rows=await findExact(ware,id);if(seq!==serial||ware!==loadedWare)return;
+   if(!rows.length){say("Расход "+id+" на складе "+ware+" не найден.","warn");return;}
+   for(const r of rows)if(!expenses.some(x=>x.operation_id===r.operation_id))expenses.push({...r,exact_match:true});
+   filter.query=id;el("lxQuery").value=id;say("Расход "+id+" найден точным поиском"+(inWindow?" (он есть и в загруженном окне).":" — вне загруженного окна."),"ok");}
+  catch(e){say(e.message,"error");}
+  finally{busy=false;render();}
+ }
+ window.LxPage={el,expenses:()=>expenses,ctx,say,positive,articleOptions,prepare,expenseBody,load,send,key,discard,verifyPending,exactSearch,filter,render,clearData,
   normativeCosts:()=>normativeCosts,articles:()=>articles,isLocked:()=>busy||!!pending};
  window.addEventListener("wms-admin-auth-ready",changed);changed();
 })();

@@ -19,7 +19,7 @@
    !corr&&r.confirmed_total&&r.confirmed_total!==r.amount?h("small",{class:"lx-sub",text:"текущий итог с коррекциями "+r.confirmed_total+" "+r.currency}):null);
   const head=h("div",{class:"lx-card-head"},
    h("div",{class:"lx-card-title"},h("strong",{text:r.article_name}),h("span",{class:"lx-sub",text:(r.expense_date||"дата не указана")+" · "+object+" · "+r.operation_id})),
-   amount,chip(st.tone,st.label));
+   amount,chip(st.tone,st.label),r.exact_match?chip("info","найден точным поиском — вне окна","Строка получена точным поиском по ID и не входит в загруженное окно новейших 100"):null);
   const facts=h("dl",{class:"lx-facts"},
    fact("Документ",r.document_reference),fact("Статья",r.article_code),fact("Заявил",r.reporter),
    !corr?fact("Текущий итог",r.confirmed_total?r.confirmed_total+" "+r.currency:null,"Исходная сумма плюс поправки, подтверждённые финансовым контролем"):fact("Ожидаемый итог исходника",r.expected_confirmed_total?r.expected_confirmed_total+" "+r.currency:null,"Итог исходного документа после этой поправки; сверяется сервером при подтверждении"));

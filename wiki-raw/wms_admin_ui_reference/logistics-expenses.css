@@ -23,6 +23,8 @@ body.lx-page{background:#f3f6fb;color:#24344b}
 .lx-page .lx-primary:hover:not(:disabled){background:#1e55b7}
 .lx-page .lx-load{display:grid;grid-template-columns:minmax(120px,200px) minmax(200px,1fr) auto;gap:12px;align-items:end}
 .lx-page .lx-load label{margin:0}
+.lx-page .lx-exact{display:grid;grid-template-columns:minmax(220px,460px) auto;gap:12px;align-items:end;margin:4px 0 6px}
+.lx-page .lx-exact label{margin:0}
 .lx-page .lx-note{font-size:12px;color:#7a8aa1;line-height:1.55;margin:6px 0 10px}
 .lx-page [role=status]:not(:empty),.lx-page .lx-pending,.lx-page .lx-window{padding:10px 14px;border-radius:9px;background:#f0f5ff;border:1px solid #e0eafb;color:#41628b;font-size:12.5px;line-height:1.55;margin:10px 0}
 .lx-page [role=status]:empty{display:none}
@@ -76,7 +78,7 @@ body.lx-page{background:#f3f6fb;color:#24344b}
  .lx-page .app{grid-template-columns:1fr}
  .lx-page .sidebar{position:static;height:auto}
  .lx-page .workspace{padding:16px}
- .lx-page .lx-load,.lx-page .lx-filters{grid-template-columns:1fr}
+ .lx-page .lx-load,.lx-page .lx-filters,.lx-page .lx-exact{grid-template-columns:1fr}
  .lx-page .lx-card-head{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
  .lx-page .lx-amount{text-align:left}
  .lx-page .lx-chain{grid-template-columns:1fr 1fr}

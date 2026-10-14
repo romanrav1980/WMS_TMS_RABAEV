@@ -1,0 +1,23 @@
+from typing import Any
+
+# Реестр дополнительных расходов склада (C-0010). Окно — новейшие 100 по CREATED_AT desc, OPERATION_ID desc;
+# точный поиск по OPERATION_ID работает за пределами окна в том же складе. Решения стадий однозначны:
+# unique(EXPENSE_OPERATION_ID,PHASE). CONFIRMED_TOTAL — только для исходного расхода (как expense_correction.confirmed_total).
+_COLUMNS="""select e.OPERATION_ID,e.ARTICLE_CODE,e.ARTICLE_NAME,e.OBJECT_KIND,e.OBJECT_ID,
+to_char(e.AMOUNT*e.ADJUSTMENT_SIGN,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') AMOUNT,e.CURRENCY,to_char(e.EXPENSE_DATE,'YYYY-MM-DD') EXPENSE_DATE,
+e.DOCUMENT_REFERENCE,e.ACTOR REPORTER,e.CORRECTION_OF_OP,e.COST_CORRECTION_OF_OP,to_char(e.EXPECTED_CONFIRMED_TOTAL,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') EXPECTED_CONFIRMED_TOTAL,
+case when e.CORRECTION_OF_OP is null and e.COST_CORRECTION_OF_OP is null then to_char(e.AMOUNT+nvl((select sum(cx.AMOUNT*cx.ADJUSTMENT_SIGN)from RRL_LOGISTICS_EXPENSE cx
+ join RRL_LOGISTICS_EXP_DECISION cf on cf.EXPENSE_OPERATION_ID=cx.OPERATION_ID and cf.PHASE='FINANCE' and cf.OUTCOME='APPROVE'
+ where cx.CORRECTION_OF_OP=e.OPERATION_ID),0),'TM9','NLS_NUMERIC_CHARACTERS=''.,''') end CONFIRMED_TOTAL,
+l.OPERATION_ID LOGIST_OPERATION_ID,l.OUTCOME LOGIST_OUTCOME,l.DISTRIBUTION_BASIS,l.ACTOR LOGIST_ACTOR,l.DECISION_REFERENCE LOGIST_DECISION_REFERENCE,
+f.OPERATION_ID FINANCE_OPERATION_ID,f.OUTCOME FINANCE_OUTCOME,f.ACTOR FINANCE_ACTOR,f.DECISION_REFERENCE FINANCE_DECISION_REFERENCE,a.OPERATION_ID ALLOCATION_OPERATION_ID
+from RRL_LOGISTICS_EXPENSE e left join RRL_LOGISTICS_EXP_DECISION l on l.EXPENSE_OPERATION_ID=e.OPERATION_ID and l.PHASE='LOGIST'
+left join RRL_LOGISTICS_EXP_DECISION f on f.EXPENSE_OPERATION_ID=e.OPERATION_ID and f.PHASE='FINANCE'
+left join RRL_LOGISTICS_EXP_ALLOCATION a on a.EXPENSE_OPERATION_ID=e.OPERATION_ID
+where e.WARE_ID=:ware"""
+LATEST_SQL=_COLUMNS+" order by e.CREATED_AT desc,e.OPERATION_ID desc fetch first 100 rows only"
+EXACT_SQL=_COLUMNS+" and e.OPERATION_ID=:op"
+
+def warehouse_expenses(gateway: Any,ware: int,operation_id: str|None=None) -> list[dict[str,Any]]:
+    if operation_id is not None:return gateway.fetch_all(EXACT_SQL,{"ware":ware,"op":operation_id})
+    return gateway.fetch_all(LATEST_SQL,{"ware":ware})

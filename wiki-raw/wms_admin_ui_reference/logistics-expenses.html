@@ -7,8 +7,9 @@
 <section class="panel lx-panel" aria-labelledby="lxRegistryTitle"><h2 id="lxRegistryTitle">Реестр склада</h2>
 <div class="lx-load"><label>Склад<input id="exWare" data-lx-free inputmode="numeric" autocomplete="off" placeholder="ID склада"></label>
 <label>Поиск нормативного начисления по ID<input id="exNormativeSearch" maxlength="100" placeholder="для коррекции старого начисления"></label>
-<button id="exLoad" class="lx-primary">Обновить реестр и статьи</button></div>
+<button id="exLoad" data-lx-free class="lx-primary">Обновить реестр и статьи</button></div>
 <p class="lx-note">Без поиска для коррекции показаны последние 100 нормативных начислений склада. Для старого документа укажите точный ID.</p>
+<div class="lx-exact"><label>Найти расход по точному ID<input id="lxExactId" data-lx-free maxlength="100" autocomplete="off" placeholder="операция расхода, в том числе старше окна 100"></label><button id="lxExactFind" data-lx-free type="button">Найти на сервере</button></div>
 <p id="exMessage" role="status"></p>
 <div id="lxPending" class="lx-pending" hidden></div>
 <div class="lx-filters" aria-label="Фильтры по загруженным расходам">
@@ -66,6 +67,6 @@
 <p class="lx-note">Статья, работа которой уже включена в норматив, не может использоваться для дополнительного расхода. Изменение создаёт новую версию.</p>
 <button id="exArticle">Сохранить статью</button></section>
 </div>
-<div class="lx-recovery"><button id="exRetry" hidden>Повторить сохранённую операцию</button><button id="exRestart" hidden>Исправить подтверждённый отказ</button></div>
+<div class="lx-recovery"><button id="exRetry" hidden>Повторить сохранённую операцию</button><button id="lxVerify" hidden>Проверить по ID на сервере</button><button id="exRestart" hidden>Исправить подтверждённый отказ</button></div>
 </main></div>
-<script src="admin-nav.js"></script><script src="admin-auth.js"></script><script src="logistics-expenses-model.js"></script><script src="logistics-expenses-view.js"></script><script src="logistics-expenses.js"></script><script src="logistics-expenses-actions.js"></script></body></html>
+<script src="admin-nav.js"></script><script src="admin-auth.js"></script><script src="logistics-expenses-model.js"></script><script src="logistics-expenses-view.js"></script><script src="logistics-expenses-intent.js"></script><script src="logistics-expenses.js"></script><script src="logistics-expenses-actions.js"></script></body></html>

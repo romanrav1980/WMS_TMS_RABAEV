@@ -18,6 +18,7 @@
   if(!r)return"";
   const phase=el("exPhase").value,base="Документ "+(r.document_reference||"—")+" · "+money(r.amount,r.currency)+" · "+(r.object_kind==="TRIP"?"рейс ":"автомобиль ")+r.object_id+". ";
   if(phase==="FINANCE")return base+"Финконтроль: база логиста «"+(r.distribution_basis||"—")+"» сохраняется; решает не тот сотрудник, что логист ("+(r.logist_actor||"—")+"). Сохраните отдельной кнопкой «Сохранить решение».";
+  if(r.correction_of_op)return base+"Коррекция сохраняет согласованную базу исходного расхода "+r.correction_of_op+" («"+(find(r.correction_of_op)?.distribution_basis||"—")+"»). Сохраните отдельной кнопкой «Сохранить решение».";
   return base+(r.object_kind==="VEHICLE"?"Расход автомобиля: база «Без распределения».":"Расход рейса: при подтверждении нужна база распределения — проверьте выбор.")+" Сохраните отдельной кнопкой «Сохранить решение».";
  }
  function act(button){
@@ -26,6 +27,7 @@
    if(kind==="decide"){
     pick("exExpense",op);el("exPhase").value=button.dataset.lxPhase;el("exOutcome").value="APPROVE";
     if(button.dataset.lxPhase==="FINANCE")el("exBasis").value=r.distribution_basis||"NONE";
+    else if(r.correction_of_op&&find(r.correction_of_op)?.distribution_basis)el("exBasis").value=find(r.correction_of_op).distribution_basis;
     else if(r.object_kind==="VEHICLE")el("exBasis").value="NONE";
     else if(el("exBasis").value==="NONE")el("exBasis").value="WEIGHT";
     reveal("lxDecideForm","exDecisionRef","lxDecisionHint",decisionHint(r));
@@ -86,4 +88,7 @@
  el("exRows").addEventListener("click",e=>{const b=e.target.closest("button[data-lx-action]");if(b&&!b.disabled)act(b);});
  el("exRetry").addEventListener("click",()=>P.send(P.key()));
  el("exRestart").addEventListener("click",()=>P.discard());
+ el("lxVerify").addEventListener("click",()=>P.verifyPending());
+ el("lxExactFind").addEventListener("click",()=>P.exactSearch());
+ el("lxExactId").addEventListener("keydown",e=>{if(e.key==="Enter")P.exactSearch();});
 })();

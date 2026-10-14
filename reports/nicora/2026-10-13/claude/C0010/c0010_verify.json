@@ -1,0 +1,106 @@
+{
+ "outbox": [
+  {
+   "event_type": "EXTRA_EXPENSE_RECOGNIZED",
+   "operation_id": "EXPENSE:db40bae4-564f-46e6-ba8e-2cfa34c5c435",
+   "rows": 1
+  },
+  {
+   "event_type": "EXTRA_EXPENSE_RECOGNIZED",
+   "operation_id": "EXPENSE:9dfcd7d7-5d53-447f-aee8-47adb4f4f183",
+   "rows": 1
+  },
+  {
+   "event_type": "EXTRA_EXPENSE_ALLOCATED",
+   "operation_id": "EXPENSE:21f5c943-767f-4f84-86f5-cf14c7121ea6",
+   "rows": 1
+  },
+  {
+   "event_type": "EXTRA_EXPENSE_ALLOCATED",
+   "operation_id": "EXPENSE:300791a6-56c0-4cd3-a2b8-6f893769f9d0",
+   "rows": 1
+  }
+ ],
+ "allocations_total": 2,
+ "expenses_total": 2,
+ "allocation_lines": [
+  [
+   "TT.LOAD:5e037ff9-46be-4c11-8e88-f9d76ed3f3c6",
+   "QAUTOc0c2a00c0bB",
+   "18",
+   "1.05"
+  ],
+  [
+   "TT.LOAD:d00a9887-fee3-4c58-938b-5b18cadebfcb",
+   "QAUTOc0c2a00c0bA",
+   "18",
+   "1.05"
+  ],
+  [
+   "TT.LOAD:5e037ff9-46be-4c11-8e88-f9d76ed3f3c6",
+   "QAUTOc0c2a00c0bB",
+   "18",
+   "6.17"
+  ],
+  [
+   "TT.LOAD:d00a9887-fee3-4c58-938b-5b18cadebfcb",
+   "QAUTOc0c2a00c0bA",
+   "18",
+   "6.17"
+  ]
+ ],
+ "sql_timing": {
+  "latest_100_ware_9807": {
+   "rows": 2,
+   "ms": [
+    12.2,
+    5.1,
+    2.9,
+    2.9,
+    4.0
+   ]
+  },
+  "latest_100_ware_2378876": {
+   "rows": 6,
+   "ms": [
+    5.4,
+    6.2,
+    3.7,
+    4.3,
+    4.0
+   ]
+  },
+  "exact_ware_9807": {
+   "rows": 1,
+   "ms": [
+    2.9,
+    1.5,
+    1.7,
+    1.6,
+    1.5
+   ]
+  }
+ },
+ "expense_indexes": [
+  [
+   "RRL_LOG_EXP_CORRECTION_IDX",
+   "CORRECTION_OF_OP"
+  ],
+  [
+   "RRL_LOG_EXP_COST_CORR_IDX",
+   "COST_CORRECTION_OF_OP"
+  ],
+  [
+   "RRL_LOG_EXP_DOC_UQ",
+   "WARE_ID,ARTICLE_CODE,OBJECT_KIND,OBJECT_ID,CURRENCY,DOCUMENT_REFERENCE"
+  ],
+  [
+   "RRL_LOG_EXP_OBJECT_IDX",
+   "OBJECT_KIND,OBJECT_ID,WARE_ID,EXPENSE_DATE"
+  ],
+  [
+   "SYS_C0017076",
+   "OPERATION_ID"
+  ]
+ ]
+}

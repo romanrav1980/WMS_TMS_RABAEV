@@ -1,0 +1,127 @@
+{
+ "granted": {
+  "C0010_LOGIST": [
+   "CALC_TT_PRICE",
+   "EDIT_BILL_TT",
+   "TRANSPORT_DISPATCH_VIEW",
+   "WMS_ADMIN_LOGIN"
+  ],
+  "C0010_FINANCE": [
+   "CREATE_TT_PRICE",
+   "TRANSPORT_DISPATCH_VIEW",
+   "WMS_ADMIN_LOGIN"
+  ]
+ },
+ "before": {
+  "tag": "before",
+  "expenses": [],
+  "decisions": [],
+  "allocations": [],
+  "outbox": [],
+  "stock_operations_with_expense_ids": 0,
+  "trip_loads": [
+   {
+    "load_operation_id": "TT.LOAD:5e037ff9-46be-4c11-8e88-f9d76ed3f3c6",
+    "status": "DEPARTED"
+   },
+   {
+    "load_operation_id": "TT.LOAD:d00a9887-fee3-4c58-938b-5b18cadebfcb",
+    "status": "DEPARTED"
+   }
+  ]
+ },
+ "after": {
+  "tag": "after",
+  "expenses": [
+   {
+    "operation_id": "EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e",
+    "article_code": "DEV.C0010.PARKING",
+    "amount": "12.34",
+    "currency": "GEL",
+    "document_reference": "DEV.C0010.DOC-1",
+    "correction_of_op": null,
+    "actor": "C0010_LOGIST"
+   },
+   {
+    "operation_id": "EXPENSE:a1a748b2-7c33-4869-a111-a5cd1d8ce994",
+    "article_code": "DEV.C0010.PARKING",
+    "amount": "-2.1",
+    "currency": "GEL",
+    "document_reference": "DEV.C0010.CORR-1",
+    "correction_of_op": "EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e",
+    "actor": "C0010_LOGIST"
+   }
+  ],
+  "decisions": [
+   {
+    "expense_operation_id": "EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e",
+    "operation_id": "EXPENSE:652c5bde-852d-41eb-907a-95fe6f06cd11",
+    "phase": "LOGIST",
+    "outcome": "APPROVE",
+    "distribution_basis": "BASE_QUANTITY",
+    "decision_reference": "DEV.C0010.LOG-1",
+    "actor": "C0010_LOGIST"
+   },
+   {
+    "expense_operation_id": "EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e",
+    "operation_id": "EXPENSE:db40bae4-564f-46e6-ba8e-2cfa34c5c435",
+    "phase": "FINANCE",
+    "outcome": "APPROVE",
+    "distribution_basis": "BASE_QUANTITY",
+    "decision_reference": "DEV.C0010.FIN-1",
+    "actor": "C0010_FINANCE"
+   },
+   {
+    "expense_operation_id": "EXPENSE:a1a748b2-7c33-4869-a111-a5cd1d8ce994",
+    "operation_id": "EXPENSE:d9542561-fc3d-422c-8539-1567d289a3f8",
+    "phase": "LOGIST",
+    "outcome": "APPROVE",
+    "distribution_basis": "BASE_QUANTITY",
+    "decision_reference": "DEV.C0010.LOG-2",
+    "actor": "C0010_LOGIST"
+   },
+   {
+    "expense_operation_id": "EXPENSE:a1a748b2-7c33-4869-a111-a5cd1d8ce994",
+    "operation_id": "EXPENSE:9dfcd7d7-5d53-447f-aee8-47adb4f4f183",
+    "phase": "FINANCE",
+    "outcome": "APPROVE",
+    "distribution_basis": "BASE_QUANTITY",
+    "decision_reference": "DEV.C0010.FIN-2",
+    "actor": "C0010_FINANCE"
+   }
+  ],
+  "allocations": [
+   {
+    "expense_operation_id": "EXPENSE:a1a748b2-7c33-4869-a111-a5cd1d8ce994",
+    "operation_id": "EXPENSE:21f5c943-767f-4f84-86f5-cf14c7121ea6",
+    "distribution_basis": "BASE_QUANTITY",
+    "header_amount": "2.1",
+    "lines": "2",
+    "lines_sum": "2.1"
+   },
+   {
+    "expense_operation_id": "EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e",
+    "operation_id": "EXPENSE:300791a6-56c0-4cd3-a2b8-6f893769f9d0",
+    "distribution_basis": "BASE_QUANTITY",
+    "header_amount": "12.34",
+    "lines": "2",
+    "lines_sum": "12.34"
+   }
+  ],
+  "outbox": [],
+  "stock_operations_with_expense_ids": 0,
+  "trip_loads": [
+   {
+    "load_operation_id": "TT.LOAD:5e037ff9-46be-4c11-8e88-f9d76ed3f3c6",
+    "status": "DEPARTED"
+   },
+   {
+    "load_operation_id": "TT.LOAD:d00a9887-fee3-4c58-938b-5b18cadebfcb",
+    "status": "DEPARTED"
+   }
+  ]
+ },
+ "ui_exit": 0,
+ "ui_stdout_tail": "{\"name\":\"article\",\"message\":\"Статья DEV.C0010.PARKING сохранена, версия 1. Реестр склада 9807 и версии статей обновлены.\"}\n{\"name\":\"report\",\"preview\":\"Новый расход 12.34 GEL · рейс 33571 · документ DEV.C0010.DOC-1 от 2026-10-14. Дальше: решение логиста, затем финконтроль.\",\"message\":\"Расход EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e зарегистрирован: 12.34 GEL. Реестр склада 9807 и версии статей обновлены.\"}\n{\"name\":\"logist\",\"prefilled\":{\"expense\":\"EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e\",\"phase\":\"LOGIST\",\"basis\":\"WEIGHT\",\"hint\":\"Документ DEV.C0010.DOC-1 · 12.34 GEL · рейс 33571. Расход рейса: при подтверждении нужна база распределения — проверьте выбор. Сохраните отдельной кнопкой «Сохранить решение».\"},\"message\":\"Решение логиста EXPENSE:652c5bde-852d-41eb-907a-95fe6f06cd11 сохранено; дальше — финансовый контроль другим сотрудником. Реестр склада 9807 и версии статей обновлены.\"}\n{\"name\":\"after_logist_A\",\"finance_button\":{\"text\":\"Решение финконтроля\",\"disabled\":true,\"title\":\"Нужно право финансового контроля (create_tt_price)\"}}\n{\"name\":\"finance\",\"prefilled\":{\"expense\":\"EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e\",\"phase\":\"FINANCE\",\"basis\":\"BASE_QUANTITY\",\"hint\":\"Документ DEV.C0010.DOC-1 · 12.34 GEL · рейс 33571. Финконтроль: база логиста «BASE_QUANTITY» сохраняется; решает не тот сотрудник, что логист (C0010_LOGIST). Сохраните отдельной кнопкой «Сохранить решение».\"},\"message\":\"Расход рейса подтверждён (EXPENSE:db40bae4-564f-46e6-ba8e-2cfa34c5c435); требуется распределение. Реестр склада 9807 и версии статей обновлены.\"}\n{\"name\":\"allocate\",\"message\":\"Распределение EXPENSE:300791a6-56c0-4cd3-a2b8-6f893769f9d0: точно 12.34 GEL по фактическому товару. Реестр склада 9807 и версии статей обновлены.\"}\n{\"name\":\"allocate_replay_same_operation\",\"sent\":{\"expense_operation_id\":\"EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e\",\"operation_id\":\"EXPENSE:300791a6-56c0-4cd3-a2b8-6f893769f9d0\"},\"status\":200,\"operation_id\":\"EXPENSE:300791a6-56c0-4cd3-a2b8-6f893769f9d0\",\"result_status\":\"ALLOCATED\",\"amount\":\"12.34\",\"lines\":[\"6.17\",\"6.17\"],\"stock_changed\":false}\n{\"name\":\"correction_report\",\"preview\":\"Уменьшение -2.10 GEL к расходу EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e. Исходная запись не меняется; после подтверждения финконтролем итог: 12.34 GEL → 10.24 GEL.\",\"message\":\"Расход EXPENSE:a1a748b2-7c33-4869-a111-a5cd1d8ce994 зарегистрирован: -2.10 GEL. Реестр склада 9807 и версии статей обновлены.\"}\n{\"name\":\"correction_logist\",\"prefilled\":{\"expense\":\"EXPENSE:a1a748b2-7c33-4869-a111-a5cd1d8ce994\",\"phase\":\"LOGIST\",\"basis\":\"BASE_QUANTITY\",\"hint\":\"Документ DEV.C0010.CORR-1 · -2.1 GEL · рейс 33571. Коррекция сохраняет согласованную базу исходного расхода EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e («BASE_QUANTITY»). Сохраните отдельной кнопкой «Сохранить решение».\"},\"message\":\"Решение логиста EXPENSE:d9542561-fc3d-422c-8539-1567d289a3f8 сохранено; дальше — финансовый контроль другим сотрудником. Реестр склада 9807 и версии статей обновлены.\"}\n{\"name\":\"correction_finance\",\"prefilled\":{\"expense\":\"EXPENSE:a1a748b2-7c33-4869-a111-a5cd1d8ce994\",\"phase\":\"FINANCE\",\"basis\":\"BASE_QUANTITY\",\"hint\":\"Документ DEV.C0010.CORR-1 · -2.1 GEL · рейс 33571. Финконтроль: база логиста «BASE_QUANTITY» сохраняется; решает не тот сотрудник, что логист (C0010_LOGIST). Сохраните отдельной кнопкой «Сохранить решение».\"},\"message\":\"Расход рейса подтверждён (EXPENSE:9dfcd7d7-5d53-447f-aee8-47adb4f4f183); требуется распределение. Реестр склада 9807 и версии статей обновлены.\"}\n{\"name\":\"correction_allocate\",\"message\":\"Распределение EXPENSE:21f5c943-767f-4f84-86f5-cf14c7121ea6: точно -2.10 GEL по фактическому товару. Реестр склада 9807 и версии статей обновлены.\"}\n{\"name\":\"final\",\"original\":\"done\",\"correction\":\"done\",\"original_card\":\"DEV C0010 own trip parking expense 2026-10-14 · Рейс 33571 · EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e 12.34 GEL текущий итог с коррекциями 10.24 GEL Завершён Документ DEV.C0010.DOC-1 Статья DEV.C0010.PARKING Заявил C0010_LOGIST Текущий итог 10.24 GEL Зарегистрирован C0010_LOGIST · 2026-10-14 Логист утверждено · C0010_LOGIST · документ DEV.C0010.LOG-1 · EXPENSE:652c5bde-852d-41eb-907a-95fe6f06cd11 Финконтроль утверждено · C0010_FINANCE · документ DEV.C0010.FIN-1 · EXPENSE:db40bae4-564f-46e6-ba8e-2cfa34c5c435 Распределён EXPENSE:300791a6-56c0-4cd3-a2b8-6f893769f9d0 · база BASE_QUANTITY Распределён на фактически перевезённый товар. Скорректировать\",\"correction_card\":\"DEV C0010 own trip parking expense 2026-10-14 · Рейс 33571 · EXPENSE:a1a748b2-7c33-4869-a111-a5cd1d8ce994 -2.1 GEL уменьшение к расходу EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e Завершён Документ DEV.C0010.CORR-1 Статья DEV.C0010.PARKING Заявил C0010_LOGIST Ожидаемый итог исходника 12.34 GEL Зарегистрирован C0010_LOGIST · 2026-10-14 Логист утверждено · C0010_LOGIST · документ DEV.C0010.LOG-2 · EXPENSE:d9542561-fc3d-422c-8539-1567d289a3f8 Финконтроль утверждено · C0010_FINANCE · документ DEV.C0010.FIN-2 · EXPENSE:9dfcd7d7-5d53-447f-aee8-47adb4f4f183 Распределён EXPENSE:21f5c943-767f-4f84-86f5-cf14c7121ea6 · база BASE_QUANTITY Распределён на фактически перевезённый товар.\",\"totals\":\"Итоги загруженного окна по валютам (валюты не складываются, отклонённые не входят)ВалютаПодтверждено финконтролемНа согласованииGEL10.24 · 2 шт.—\"}\n{\"name\":\"exact_search\",\"message\":\"Расход EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e найден точным поиском (он есть и в загруженном окне).\"}\n{\"name\":\"mobile\",\"overflow\":0}\n{\"name\":\"storage_failure\",\"message\":\"Не удалось надёжно сохранить операцию на этом устройстве — команда не отправлена. Проверьте настройки браузера (хранилище сайта) и повторите.\",\"posts\":0,\"pendingShown\":false,\"reportEnabledAfter\":true}\n",
+ "ui_stderr_tail": ""
+}
