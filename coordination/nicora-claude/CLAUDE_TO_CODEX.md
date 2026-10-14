@@ -353,3 +353,57 @@ Dev-данные: ровно одна GOOD-единица собственног
 **Gate:** PASS (architecture PASS с уменьшенным долгом); check-encoding PASS. Проверка авторская.
 
 **RELEASE:** `TransportDispatchPage.tsx` (блок СТ), `features/transport/useAvailableStPages.ts`, `StPagesBar.tsx`, `StPages.css`, экспорты в `index.ts`, `reports/.../C0018`. Занятых файлов нет.
+
+## K-0021 · 2026-10-14 · RESULT (C-0021, правки C-0018) + RELEASE
+Локальный коммит `25abd854`, push не выполнялся. По C-0019: push коммитов C-0018 (`785cd846`, `f33ec173`) был сделан по прямому поручению владельца в этой сессии («делай порученную задачу, после чего коммит и пуш»). Для правок C-0021 нового поручения на push не было — они только локальные.
+1. **Ключ строки** `stRowKey = JSON.stringify([ST_NUMBER, ADDR, WARE_ID])` в `loadPages`/`loadMore` и в ключах строк таблицы (плоский список и районы).
+2. **Смена query** (`fresh`): строки сразу `[]`, выбор очищается (`useVisibleSelection`), назначение заблокировано флагом `switching` — кнопки и Ctrl+Enter (проверка внутри `handleAssign`). `reload` того же query строки сохраняет.
+
+**Адресно** (подставленные ответы только в тесте, без бизнес-прогона; `c0021_result.json`):
+- ST-DUP ×3 (разные адрес/склад) + ST-ONE → видны все 4;
+- выбор → смена фильтра с ответом через 4 с: «Загружаем СТ…», выбрано 0, панели назначения нет;
+- после ответа — 1 новая строка, выбор пуст.
+
+Существующая семантика сохранена: выбор и назначение работают по номеру СТ (`st_numbers`).
+
+**Gate:** PASS; check-encoding PASS. В рабочей копии твои правки в `TransportDispatchPage.tsx`/`index.ts` не тронуты, в коммит вошли только мои строки.
+
+**RELEASE:** `useAvailableStPages.ts`, `TransportDispatchPage.tsx` (блок СТ), `index.ts`, `reports/.../C0018`. SQL-решение (нового индекса не нужно, наблюдать >1 с) принял. C-0020 прочитал; ACK пришлю перед стартом.
+
+## K-0022 · 2026-10-14 · ACK · C-0020
+Владелец подтвердил: Codex — ведущий, я исполняю поручения без дополнительных вопросов. Принял TASK_C0020.md (недостача тары → независимый REJECT). Мои файлы до RELEASE: features/inventory/TareLossForm.tsx, TarePanel.tsx, useTare.ts, tareResult.ts, связанные новые helpers, аддитивные типы inventory/api.ts; wiki-raw/wms_admin_ui_reference/tare-loss.html/.js и небольшой helper link/intent; reports/nicora/2026-10-13/claude/C0020/. Dev: 1 GOOD-единица собственного магазина, OWN1348_STORE и C0015_TARE_APPROVER, минимальные недостающие права; документы DEV.C0020.*. Backend/Oracle/warehouse-tasks/finance не трогаю.
+
+## K-0023 · 2026-10-14 · RESULT (C-0020, NI06.3 недостача → REJECT) + CONTRACT_REQUEST + RELEASE
+Локальный коммит `6d99f3c4`, push не выполнялся (отдельного поручения владельца нет). Отчёт: [report.md](../../reports/nicora/2026-10-13/claude/C0020/report.md); данные — `c0020_result*.json`, `c0020_ui_facts*.json`, `c0020_checks.json`, `screenshots/l*`.
+
+**Файлы:**
+- raw: `tare-loss.html`, `tare-loss.js`, новый `tare-loss-cases.js`;
+- React: новый `TareLossCase.tsx`, правки `TarePanel.tsx`, `useTare.ts` (`lastConfirmed`), `tareResult.ts`;
+- `TareLossForm.tsx` и `api.ts` не менялись.
+
+**Эффект:**
+- реестр принимает ссылку `?warehouse_id=&claim_id=`: случай выбран и подсвечен, решение автоматически не проводится;
+- карточки случаев: исходный долг, заявитель, держатель, количество, решение или следующий шаг;
+- автор заблокирован в UI (сервер и так проверяет `TARE_INDEPENDENT_LOSS_DECISION_REQUIRED`);
+- намерение записывается с проверкой чтением; повреждённая запись блокирует команды; успех — после сверки `operation_id` и статуса; после успеха реестр перечитывается;
+- в React после заявления показывается карточка случая и переход в реестр.
+
+**Реальный цикл** (склад 9807, собственный магазин, тип 1):
+- заявление `DEV.C0020.LOSS-1` (OWN1348_STORE): `TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965`;
+- REJECT `DEV.C0020.REJECT-1` (C0015_TARE_APPROVER) по ссылке из реестра: `TARE.LOSS:71f03caf-39b5-4e6d-9f7e-7e850d999ea5`. Первый ответ потерян, повтор того же ID → тот же результат, outbox 5239; решений на заявление — 1;
+- итог: баланс склад 4 + магазин 1 = 5 без списания, долг магазина 1, `held_quantity` 0, открытых заявлений 0, `RRL_EVENTS` 0;
+- права добавлены минимально: `OWN1348_STORE` → `tare_loss_report`; `C0015_TAREAPPR` → `wms_admin_login` (вход в raw-реестр).
+
+**Своя ошибка, исправлена:** в первом прогоне UI не признал ответ на заявление — требовал `total_tare_changed=false`, а native отдаёт `null`. Повторного заявления не было; карточка React подтверждена на ответе той же формы без записи.
+
+**Адресно:** отказ хранилища (React и raw) — 0 POST; автор заблокирован; повреждённая запись блокирует команды; mobile 390 px без горизонтальной прокрутки.
+
+**SQL:** `loss-cases` — 10 мс, без новых индексов.
+
+**Не проверено:** WRITE_OFF по недостаче.
+
+**CONTRACT_REQUEST:** raw-страницы (`tare-loss.html` и др.) не отдаются рядом с React на :3000 (там SPA fallback). Ссылка из `TarePanel` в реестр включается переменной `VITE_RAW_ADMIN_BASE` (например `http://127.0.0.1:<порт raw>`); без неё UI показывает склад и ID. Нужен твой выбор: задать эту переменную в front.bat/окружении или раздавать raw-каталог тем же dev-сервером.
+
+**Gate:** PASS; check-encoding PASS. Проверка авторская.
+
+**RELEASE:** `TarePanel.tsx`, `useTare.ts`, `tareResult.ts`, `TareLossCase.tsx`, `tare-loss.html/.js`, `tare-loss-cases.js`, `reports/.../C0020`. Занятых файлов нет; жду следующее поручение.
