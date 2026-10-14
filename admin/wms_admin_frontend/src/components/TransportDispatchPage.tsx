@@ -1,4 +1,4 @@
-import { useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, StPagesBar } from "../features/transport";
+import { useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, stRowKey, StPagesBar } from "../features/transport";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual"; // Sprint 102
 
@@ -772,7 +772,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   }
 
   async function handleAssign() {
-    if (!selectedTask || selectedStNums.size === 0) return;
+    if (!selectedTask || selectedStNums.size === 0 || stPages.switching) return; // NI02.2: не по устаревшему набору
     setLoading(true);
     try {
       const result = await apiFetch<{ assigned: number; warnings: string[] }>(
@@ -1563,7 +1563,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               П={allP}&nbsp;·&nbsp;{allM.toFixed(0)}&nbsp;кг&nbsp;·&nbsp;{allV.toFixed(1)}&nbsp;м³
             </span>
             {selectedStNums.size > 0 && selectedTask && (
-              <button className="dispatch-add-btn" onClick={handleAssign} disabled={loading}
+              <button className="dispatch-add-btn" onClick={handleAssign} disabled={loading || stPages.switching}
                 title="Ctrl+Enter">
                 Добавить в рейс #{selectedTask.ID}
               </button>
@@ -1682,7 +1682,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                             const vi = (st as AvailableSt & { _vi?: { index: number } })._vi;
                             const idx = vi ? vi.index : 0;
                             return (
-                              <AvailableStRow key={st.ST_NUMBER} st={st} idx={idx}
+                              <AvailableStRow key={stRowKey(st)} st={st} idx={idx}
                                 checked={selectedStNums.has(st.ST_NUMBER)}
                                 onToggle={() => handleStToggle(st.ST_NUMBER, idx)}
                                 onShiftClick={handleShiftClick}
@@ -1737,7 +1737,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               <span className="dispatch-sel-bar-stat">V={selV.toFixed(2)} м³</span>
               <button className="dispatch-sel-bar-create" onClick={() => setCreateDialog(true)}>+ Создать маршрут</button>
               {selectedTask && (
-                <button className="dispatch-sel-bar-add" onClick={handleAssign} disabled={loading}
+                <button className="dispatch-sel-bar-add" onClick={handleAssign} disabled={loading || stPages.switching}
                   title="Ctrl+Enter">
                   Добавить в #{selectedTask.ID}
                 </button>
@@ -2858,7 +2858,7 @@ function ClusterGroup({
         </td>
       </tr>
       {expanded && cluster.STS.map(st => (
-        <AvailableStRow key={st.ST_NUMBER} st={st}
+        <AvailableStRow key={stRowKey(st)} st={st}
           checked={selectedNums.has(st.ST_NUMBER)}
           onToggle={() => onToggleSt(st.ST_NUMBER)}
           isChild />

@@ -5,7 +5,10 @@ import {apiFetch} from "../../api";
 // Сервер не отдаёт общего числа строк: полная страница означает лишь, что следующая страница возможна.
 // Новые параметры сбрасывают страницы; ответ на устаревший запрос отбрасывается и не перезаписывает текущий.
 export const ST_PAGE_SIZE=200;
-export type StPageState<T>={rows:T[];pages:number;hasMore:boolean;loading:boolean;error:string;loadedAt:Date|null};
+export type StPageState<T>={rows:T[];pages:number;hasMore:boolean;loading:boolean;switching:boolean;error:string;loadedAt:Date|null};
+type StKeyed={ST_NUMBER:string;ADDR?:string|null;WARE_ID?:number|null};
+// SQL группирует по ST_NUMBER+ADDR+WARE_ID: строки с одинаковым номером, но другим адресом/складом — разные.
+export const stRowKey=(r:StKeyed)=>JSON.stringify([r.ST_NUMBER,r.ADDR??null,r.WARE_ID??null]);
 
 // Статус ответа: поле status ошибки apiFetch или префикс «NNN:» в тексте — без зависимости от конкретного класса ошибки.
 export function httpStatus(e:unknown):number|null{
@@ -24,8 +27,8 @@ export function stPageError(e:unknown):string{
  return e instanceof Error&&e.name==="AbortError"?"":"Сервер транспорта недоступен. Проверьте соединение.";
 }
 
-export function useAvailableStPages<T extends {ST_NUMBER:string}>(query:string){
- const [state,setState]=useState<StPageState<T>>({rows:[],pages:0,hasMore:false,loading:false,error:"",loadedAt:null});
+export function useAvailableStPages<T extends StKeyed>(query:string){
+ const [state,setState]=useState<StPageState<T>>({rows:[],pages:0,hasMore:false,loading:false,switching:false,error:"",loadedAt:null});
  const serial=useRef(0),controller=useRef<AbortController|null>(null),current=useRef(state);current.current=state;
 
  const fetchPage=useCallback((page:number,signal:AbortSignal)=>{
@@ -33,21 +36,22 @@ export function useAvailableStPages<T extends {ST_NUMBER:string}>(query:string){
   return apiFetch<T[]>(`/api/admin/transport/available-sts?${params}`,{signal});
  },[query]);
 
- // Загружает страницы 1..count заново (смена фильтров — 1; обновление после мутации — уже загруженное число).
- const loadPages=useCallback(async(count:number)=>{
+ // Загружает страницы 1..count заново. Смена фильтров (fresh) сразу убирает прежние строки — выбор по ним
+ // очищается, действия блокируются до нового ответа; обновление того же запроса после мутации строки сохраняет.
+ const loadPages=useCallback(async(count:number,fresh:boolean)=>{
   controller.current?.abort();const ctrl=new AbortController();controller.current=ctrl;const mine=++serial.current;
-  setState(s=>({...s,loading:true,error:""}));
+  setState(s=>fresh?{rows:[],pages:0,hasMore:false,loading:true,switching:true,error:"",loadedAt:null}:{...s,loading:true,error:""});
   const rows:T[]=[];const seen=new Set<string>();let last=0;let pages=0;
   try{
    for(let page=1;page<=Math.max(1,count);page++){
     const data=await fetchPage(page,ctrl.signal);if(mine!==serial.current)return;
-    for(const r of data)if(!seen.has(r.ST_NUMBER)){seen.add(r.ST_NUMBER);rows.push(r);}
+    for(const r of data){const k=stRowKey(r);if(!seen.has(k)){seen.add(k);rows.push(r);}}
     pages=page;last=data.length;if(data.length<ST_PAGE_SIZE)break;
    }
-   setState({rows,pages,hasMore:last===ST_PAGE_SIZE,loading:false,error:"",loadedAt:new Date()});
+   setState({rows,pages,hasMore:last===ST_PAGE_SIZE,loading:false,switching:false,error:"",loadedAt:new Date()});
   }catch(e){
    if(mine!==serial.current)return;const text=stPageError(e);if(!text)return;
-   setState({rows:[],pages:0,hasMore:false,loading:false,error:text,loadedAt:null});
+   setState({rows:[],pages:0,hasMore:false,loading:false,switching:false,error:text,loadedAt:null});
   }
  },[fetchPage]);
 
@@ -57,15 +61,15 @@ export function useAvailableStPages<T extends {ST_NUMBER:string}>(query:string){
   setState(x=>({...x,loading:true,error:""}));
   try{
    const data=await fetchPage(page,ctrl.signal);if(mine!==serial.current)return;
-   setState(x=>{const seen=new Set(x.rows.map(r=>r.ST_NUMBER));return{rows:[...x.rows,...data.filter(r=>!seen.has(r.ST_NUMBER))],pages:page,hasMore:data.length===ST_PAGE_SIZE,loading:false,error:"",loadedAt:new Date()};});
+   setState(x=>{const seen=new Set(x.rows.map(stRowKey));return{rows:[...x.rows,...data.filter(r=>!seen.has(stRowKey(r)))],pages:page,hasMore:data.length===ST_PAGE_SIZE,loading:false,switching:false,error:"",loadedAt:new Date()};});
   }catch(e){
    if(mine!==serial.current)return;const text=stPageError(e);if(!text)return;
    setState(x=>({...x,loading:false,error:"Следующая страница не загружена: "+text}));
   }
  },[fetchPage]);
 
- useEffect(()=>{void loadPages(1);return()=>{controller.current?.abort();};},[loadPages]);
- const reload=useCallback(()=>loadPages(Math.max(1,current.current.pages)),[loadPages]);
+ useEffect(()=>{void loadPages(1,true);return()=>{controller.current?.abort();};},[loadPages]);
+ const reload=useCallback(()=>loadPages(Math.max(1,current.current.pages),false),[loadPages]);
  return{...state,loadMore,reload,retry:reload};
 }
 
