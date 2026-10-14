@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Прогноз складской нагрузки</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="warehouse-forecast.css?v=20261014-ni081"></head>
+<body class="auth-pending wf-page" data-required-permission="transport_dispatch_view"><div class="app">
+<aside class="sidebar"><div class="brand">WMS</div><nav class="nav" data-admin-nav data-active-nav="warehouse-forecast"></nav></aside>
+<main class="workspace">
+<header class="wf-heading"><div><div class="wf-eyebrow">NICORA · Планирование склада</div><h1>Прогноз складской нагрузки</h1><p>Количественный ориентир по фактически исполненной и выехавшей работе. Прогноз не назначает людей и технику, не меняет задания, рейсы и складской запас.</p></div><span class="wf-badge">Рекомендация · только чтение</span></header>
+
+<section class="wf-panel" aria-labelledby="wfFormTitle">
+<h2 id="wfFormTitle">Параметры расчёта</h2>
+<form id="wfForm" class="wf-form" novalidate onsubmit="return false">
+<label for="wfWare">Склад<input id="wfWare" type="number" min="1" step="1" inputmode="numeric" required aria-describedby="wfWareHelp wfWareError"><small id="wfWareHelp">WARE_ID склада отгрузки</small><span class="wf-error" id="wfWareError" role="alert"></span></label>
+<label for="wfScope">Вид работы<select id="wfScope" aria-describedby="wfScopeHelp"><option value="CASE_DISPATCH">Исходная сборка CASE</option><option value="FULLPAL_DISPATCH">Отгрузка целых товарных паллет</option><option value="OUTBOUND_WORKLOAD">Вся физическая обработка на выходе</option></select><small id="wfScopeHelp"></small></label>
+<label for="wfHistory">История, календарных дней<input id="wfHistory" type="number" min="1" max="90" step="1" value="28" required aria-describedby="wfHistoryHelp wfHistoryError"><small id="wfHistoryHelp">1–90 полных UTC-суток до сегодняшнего дня</small><span class="wf-error" id="wfHistoryError" role="alert"></span></label>
+<label for="wfHorizon">Горизонт, дней<input id="wfHorizon" type="number" min="1" max="31" step="1" value="7" required aria-describedby="wfHorizonHelp wfHorizonError"><small id="wfHorizonHelp">1–31 день вперёд</small><span class="wf-error" id="wfHorizonError" role="alert"></span></label>
+<label for="wfMinimum">Минимум активных дней<input id="wfMinimum" type="number" min="1" max="90" step="1" value="3" required aria-describedby="wfMinimumHelp wfMinimumError"><small id="wfMinimumHelp">1–90; дни с выездами, ниже — рекомендация блокируется</small><span class="wf-error" id="wfMinimumError" role="alert"></span></label>
+<label class="wf-check" for="wfCurrent"><input id="wfCurrent" type="checkbox"><span>Включить текущий неполный UTC-день<small>Результат будет меняться в течение дня</small></span></label>
+<div class="wf-actions"><button id="wfRead" type="button" class="wf-primary">Рассчитать прогноз</button></div>
+</form>
+<p id="wfMessage" role="status" aria-live="polite"></p>
+</section>
+
+<section class="wf-panel" id="wfResult" hidden aria-labelledby="wfResultTitle">
+<h2 id="wfResultTitle">Результат</h2>
+<div id="wfStatus" class="wf-status"></div>
+<div id="wfSummary" class="wf-summary"></div>
+<p id="wfMethod" class="wf-note"></p>
+<h3>Дни с исполненной работой</h3>
+<div id="wfDays" class="wf-days"></div>
+<h3>Товарные ряды</h3>
+<div class="wf-table-tools"><label for="wfSearch">Поиск по артикулу<input id="wfSearch" type="search" placeholder="Артикул или единица" aria-describedby="wfSearchNote"></label><p id="wfSearchNote" class="wf-note" aria-live="polite"></p></div>
+<div class="wf-table-wrap"><table class="wf-table"><thead><tr>
+<th scope="col"><button type="button" data-sort="article">Артикул</button></th>
+<th scope="col"><button type="button" data-sort="base_uom">Ед.</button></th>
+<th scope="col" class="num"><button type="button" data-sort="observed_quantity">Выполнено за окно</button></th>
+<th scope="col" class="num"><button type="button" data-sort="active_days">Активных дней</button></th>
+<th scope="col" class="num"><button type="button" data-sort="daily_rate">В среднем за сутки</button></th>
+<th scope="col" class="num"><button type="button" data-sort="estimated_quantity">Рекомендация на горизонт</button></th>
+<th scope="col"><button type="button" data-sort="status">Статус и основание</button></th>
+</tr></thead><tbody id="wfRows"></tbody></table></div>
+<p id="wfUnits" class="wf-note"></p>
+</section>
+
+<section class="wf-panel wf-resources" aria-labelledby="wfResTitle">
+<h2 id="wfResTitle">Потребность в людях, технике и слотах</h2>
+<p>Прогноз даёт количество товара, а не трудозатраты. Пересчёт в часы, людей, технику или слоты в этом контракте не выполняется: нужны нормативы производительности, сопоставленные с видом работы прогноза, и плановая явка. Значение здесь не выводится, чтобы не выдавать предположение за расчёт.</p>
+<p class="wf-note">Нормативы склада ведутся отдельно: <a href="resource-workload.html">Нагрузка и выход персонала</a>.</p>
+</section>
+
+<section class="wf-panel" id="wfProjectPanel" hidden aria-labelledby="wfProjectTitle">
+<h2 id="wfProjectTitle">Обновление исполненной истории</h2>
+<p>Переносит до 100 выехавших мест склада в историю прогноза. Меняет только проекцию истории, не запас и не рейсы. Выполняется только по этой кнопке, никогда — при открытии страницы или смене фильтра.</p>
+<button id="wfProject" type="button">Обновить исполненную историю склада</button>
+<p id="wfProjectMessage" role="status" aria-live="polite"></p>
+<div id="wfProjectErrors"></div>
+</section>
+</main></div>
+<script src="admin-nav.js"></script><script src="admin-auth.js"></script><script src="warehouse-forecast-explain.js?v=20261014-ni081"></script><script src="warehouse-forecast.js?v=20261014-ni081"></script></body></html>
