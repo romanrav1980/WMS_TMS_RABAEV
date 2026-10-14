@@ -318,3 +318,38 @@ Dev-данные: ровно одна GOOD-единица собственног
 **Для интеграции:** файлы `features/inventory/Tare*` раньше не отслеживались. Мой коммит включает твои исходные версии изменённых и новых файлов. `TareBalanceSummary.tsx`, `TareDamageForm.tsx`, `TareLossForm.tsx` и `api.ts` не менялись и в коммит не вошли — их закоммитишь ты.
 
 **RELEASE:** `features/inventory/Tare*.tsx`, `tareResult.ts`, `useTare.ts`, `TareWorkspace.css`, `reports/.../C0015`. Занятых файлов нет.
+
+## K-0019 · 2026-10-14T16:10+03:00 · ACK · C-0018 (C-0017 прочитан)
+Принял TASK_C0018.md: страницы по 200 доступных СТ в TransportDispatchPage. Мои файлы до RELEASE: admin/wms_admin_frontend/src/components/TransportDispatchPage.tsx (только блок доступных СТ), новые helpers/hook в src/features/transport (+ index при необходимости), связанный CSS; reports/nicora/2026-10-13/claude/C0018/. Backend/Oracle/DDL, inventory, finance, wiki не трогаю. По прямому поручению владельца после сдачи сделаю коммит и push только своих файлов.
+
+## K-0020 · 2026-10-14 · RESULT (C-0018, NI02.2) + RELEASE
+Коммит `785cd846`. По прямому поручению владельца сделан push ветки `feature/transport-dispatch-phase1`. Отчёт: [report.md](../../reports/nicora/2026-10-13/claude/C0018/report.md), `c0018_result.json`, `screenshots/s1–s3`.
+
+**Файлы:**
+- новые `features/transport/useAvailableStPages.ts` (страницы по 200, `availableStQuery`, `useVisibleSelection`, `useWarehouseCatalog`), `StPagesBar.tsx`, `StPages.css`;
+- `features/transport/index.ts` — добавлены 2 экспорта;
+- `TransportDispatchPage.tsx` — только блок доступных СТ;
+- `config/architecture/legacy-debt.json` — `--tighten-baseline`, только мои записи: файл 4176 → 4158, функция 2536 → 2516.
+
+**Эффект:**
+- запросы с `page`, `page_size=200` и периодом;
+- «Загружено N · страниц P · есть ещё / всё по фильтру» и «Загрузить ещё 200»; полной автозагрузки нет; общего числа не обещаем;
+- склад фильтруется на сервере по существующему `/api/admin/warehouses` (290 складов); без права на справочник — ввод номера, список не выдумывается;
+- смена фильтров отменяет прошлый запрос; выбор ограничен видимыми СТ (в режиме районов — и СТ из `/clusters`);
+- ошибка API → сообщение и «Повторить», демоданных нет;
+- после назначения, WS или автообновления перечитываются уже загруженные страницы того же запроса;
+- назначение, вместимость и действия не менялись.
+
+**Проверено на реальном API:** 200 → страница 2 = 273 «всё по фильтру»; `ware_id=9807` → 1 СТ и выделение снято; задержанный ответ 9807 отменён; 500 без демо и повтор. Только GET, без назначений.
+
+**Долгий GET для твоего SQL-решения:** `stdate=2025-01-01&date_to=2026-12-31&page=1&page_size=200`, без склада, `unassigned_only` по умолчанию — 526 мс в первом прогоне и 358 мс во втором; остальные запросы 70–370 мс. Индексов не трогал.
+
+**Важно для интеграции:**
+1. В `TransportDispatchPage.tsx`, `index.ts` и `legacy-debt.json` лежали твои незакоммиченные правки. В коммит вошли только мои изменения (наложены на HEAD); твои остались в рабочей копии нетронутыми: импорты `submitCluster`/`StoreCasesPanel`/`BillingWarehouseCosts`, `submitCluster` в `create-task`, панели, экспорты `clusterRetry`/`DriverLogin`/`useDriverWorkspace`, твои допуски.
+2. В HEAD уже есть закоммиченные мной файлы finance Billing* и inventory Tare*, которые импортируют ещё не закоммиченные твои `features/inventory/api.ts` и finance-модули. Изолированная сборка HEAD без твоих файлов падает на них, файлы C-0018 при этом чисты. Нужен твой коммит этих зависимостей.
+
+**Ограничения:** режим «По районам» (`/clusters`) — без страниц, вне задачи.
+
+**Gate:** PASS (architecture PASS с уменьшенным долгом); check-encoding PASS. Проверка авторская.
+
+**RELEASE:** `TransportDispatchPage.tsx` (блок СТ), `features/transport/useAvailableStPages.ts`, `StPagesBar.tsx`, `StPages.css`, экспорты в `index.ts`, `reports/.../C0018`. Занятых файлов нет.
