@@ -1,0 +1,54 @@
+{
+ "facts": [
+  {
+   "name": "loss_balances",
+   "options": [
+    {
+     "v": "",
+     "t": "Выберите баланс"
+    },
+    {
+     "v": "0",
+     "t": "STORE Own264 synthetic registered store 288ec8b68a · GOOD · 1"
+    }
+   ]
+  },
+  {
+   "name": "source_claims",
+   "options": [
+    {
+     "v": "TARE:a1545636-0994-4397-b4e5-62335e67faf0",
+     "t": "Own264 synthetic registered store 288ec8b68a · осталось 1 · TARE:a1545636-0994-4397-b4e5-62335e67faf0"
+    }
+   ]
+  },
+  {
+   "name": "/loss-report",
+   "status": 200,
+   "request": {
+    "owner_ware_id": 9807,
+    "pallet_type_id": 1,
+    "condition": "GOOD",
+    "custodian_kind": "STORE",
+    "custodian_id": "Own264 synthetic registered store 288ec8b68a",
+    "quantity": "1",
+    "expected_version": 3,
+    "reason": "Own C0020 dev: one pallet not found at store during count",
+    "decision_reference": "DEV.C0020.LOSS-1",
+    "source_claim_id": "TARE:a1545636-0994-4397-b4e5-62335e67faf0",
+    "operation_id": "TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965"
+   },
+   "result": {
+    "operation_id": "TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965",
+    "status": "REPORTED",
+    "quantity": "1",
+    "total_tare_changed": null,
+    "goods_stock_changed": false,
+    "outbox_id": 5238
+   }
+  }
+ ],
+ "errors": [
+  "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.tare-workspace').locator('p[role=status].tare-status').filter({ hasText: 'Недостача зарегистрирована' }) to be visible\u001b[22m\n\n    at C:\\projects\\TMS\\reports\\nicora\\2026-10-13\\claude\\C0020\\scripts\\c0020_ui_flow.cjs:44:105"
+ ]
+}

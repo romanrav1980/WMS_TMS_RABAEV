@@ -1,0 +1,327 @@
+{
+ "granted": {
+  "OWN1348_STORE": [
+   "STORE_RECEIPT_CONFIRM",
+   "TARE_ACCEPT",
+   "TARE_DAMAGE",
+   "TARE_LOSS_REPORT",
+   "TARE_OFFER",
+   "TARE_VIEW"
+  ],
+  "C0015_TAREAPPR": [
+   "TARE_VIEW",
+   "TARE_WRITEOFF",
+   "WMS_ADMIN_LOGIN"
+  ]
+ },
+ "before": {
+  "tag": "before",
+  "balance": [
+   {
+    "condition_code": "DAMAGED",
+    "custodian_kind": "STORE",
+    "custodian_id": "Own264 synthetic registered store 288ec8b68a",
+    "qty": "0",
+    "balance_version": "2"
+   },
+   {
+    "condition_code": "DAMAGED",
+    "custodian_kind": "VEHICLE",
+    "custodian_id": "10059",
+    "qty": "0",
+    "balance_version": "2"
+   },
+   {
+    "condition_code": "DAMAGED",
+    "custodian_kind": "WAREHOUSE",
+    "custodian_id": "9807",
+    "qty": "0",
+    "balance_version": "2"
+   },
+   {
+    "condition_code": "GOOD",
+    "custodian_kind": "STORE",
+    "custodian_id": "Own264 synthetic registered store 288ec8b68a",
+    "qty": "1",
+    "balance_version": "4"
+   },
+   {
+    "condition_code": "GOOD",
+    "custodian_kind": "VEHICLE",
+    "custodian_id": "10059",
+    "qty": "0",
+    "balance_version": "4"
+   },
+   {
+    "condition_code": "GOOD",
+    "custodian_kind": "WAREHOUSE",
+    "custodian_id": "9807",
+    "qty": "4",
+    "balance_version": "3"
+   }
+  ],
+  "store_debt": [
+   {
+    "claim_key": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "condition_code": "DAMAGED",
+    "outstanding": "0"
+   },
+   {
+    "claim_key": "TARE:a1545636-0994-4397-b4e5-62335e67faf0",
+    "condition_code": "GOOD",
+    "outstanding": "1"
+   }
+  ],
+  "resolutions": [
+   {
+    "operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "resolution_kind": "DAMAGE",
+    "custodian_kind": "STORE",
+    "custodian_id": "Own264 synthetic registered store 288ec8b68a",
+    "qty": "1",
+    "damage_operation_id": null,
+    "delivery_accept_operation_id": "TARE:a1545636-0994-4397-b4e5-62335e67faf0",
+    "decision_reference": "DEV.C0015.DAMAGE-1",
+    "actor": "OWN1348_STORE"
+   },
+   {
+    "operation_id": "TARE:f8fa5dcf-be39-4b41-b933-0d8455a0083f",
+    "resolution_kind": "WRITE_OFF",
+    "custodian_kind": "WAREHOUSE",
+    "custodian_id": "9807",
+    "qty": "1",
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "delivery_accept_operation_id": "TARE:a1545636-0994-4397-b4e5-62335e67faf0",
+    "decision_reference": "DEV.C0015.WRITEOFF-1",
+    "actor": "C0015_TARE_APPROVER"
+   }
+  ],
+  "damage_positions": [
+   {
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "custodian_kind": "STORE",
+    "custodian_id": "Own264 synthetic registered store 288ec8b68a",
+    "qty": "0"
+   },
+   {
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "custodian_kind": "VEHICLE",
+    "custodian_id": "10059",
+    "qty": "0"
+   },
+   {
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "custodian_kind": "WAREHOUSE",
+    "custodian_id": "9807",
+    "qty": "0"
+   }
+  ],
+  "loss_claims": [
+   {
+    "operation_id": "TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965",
+    "condition_code": "GOOD",
+    "qty": "1",
+    "source_claim_id": "TARE:a1545636-0994-4397-b4e5-62335e67faf0",
+    "decision_reference": "DEV.C0020.LOSS-1",
+    "actor": "OWN1348_STORE",
+    "custodian_kind": "STORE",
+    "custodian_id": "Own264 synthetic registered store 288ec8b68a",
+    "decision_operation_id": null,
+    "outcome": null,
+    "decided_by": null
+   }
+  ],
+  "loss_decision_rows_per_claim": [],
+  "availability": [
+   {
+    "physical": "4",
+    "available": "4",
+    "loss_pending": "0"
+   }
+  ],
+  "offers_damaged": [
+   {
+    "operation_id": "TARE:f138e802-ba3d-45e4-95af-573520dfa6f6",
+    "from_kind": "STORE",
+    "to_kind": "VEHICLE",
+    "qty": "1",
+    "offered_by": "OWN1348_STORE",
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "accept_operation_id": "TARE:7889cce5-3536-4aa7-94bd-a258d340efd2",
+    "accepted": "1",
+    "accepted_by": "OWN1306_DRIVER"
+   },
+   {
+    "operation_id": "TARE:a83ff5b8-20b7-41c1-ae39-2639aa4a2147",
+    "from_kind": "VEHICLE",
+    "to_kind": "WAREHOUSE",
+    "qty": "1",
+    "offered_by": "OWN1306_DRIVER",
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "accept_operation_id": "TARE:83ba2e59-e5eb-40da-b5ff-d093e42df3a9",
+    "accepted": "1",
+    "accepted_by": "admin"
+   }
+  ],
+  "goods_events_for_these_operations": 0
+ },
+ "after": {
+  "tag": "after",
+  "balance": [
+   {
+    "condition_code": "DAMAGED",
+    "custodian_kind": "STORE",
+    "custodian_id": "Own264 synthetic registered store 288ec8b68a",
+    "qty": "0",
+    "balance_version": "2"
+   },
+   {
+    "condition_code": "DAMAGED",
+    "custodian_kind": "VEHICLE",
+    "custodian_id": "10059",
+    "qty": "0",
+    "balance_version": "2"
+   },
+   {
+    "condition_code": "DAMAGED",
+    "custodian_kind": "WAREHOUSE",
+    "custodian_id": "9807",
+    "qty": "0",
+    "balance_version": "2"
+   },
+   {
+    "condition_code": "GOOD",
+    "custodian_kind": "STORE",
+    "custodian_id": "Own264 synthetic registered store 288ec8b68a",
+    "qty": "1",
+    "balance_version": "5"
+   },
+   {
+    "condition_code": "GOOD",
+    "custodian_kind": "VEHICLE",
+    "custodian_id": "10059",
+    "qty": "0",
+    "balance_version": "4"
+   },
+   {
+    "condition_code": "GOOD",
+    "custodian_kind": "WAREHOUSE",
+    "custodian_id": "9807",
+    "qty": "4",
+    "balance_version": "3"
+   }
+  ],
+  "store_debt": [
+   {
+    "claim_key": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "condition_code": "DAMAGED",
+    "outstanding": "0"
+   },
+   {
+    "claim_key": "TARE:a1545636-0994-4397-b4e5-62335e67faf0",
+    "condition_code": "GOOD",
+    "outstanding": "1"
+   }
+  ],
+  "resolutions": [
+   {
+    "operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "resolution_kind": "DAMAGE",
+    "custodian_kind": "STORE",
+    "custodian_id": "Own264 synthetic registered store 288ec8b68a",
+    "qty": "1",
+    "damage_operation_id": null,
+    "delivery_accept_operation_id": "TARE:a1545636-0994-4397-b4e5-62335e67faf0",
+    "decision_reference": "DEV.C0015.DAMAGE-1",
+    "actor": "OWN1348_STORE"
+   },
+   {
+    "operation_id": "TARE:f8fa5dcf-be39-4b41-b933-0d8455a0083f",
+    "resolution_kind": "WRITE_OFF",
+    "custodian_kind": "WAREHOUSE",
+    "custodian_id": "9807",
+    "qty": "1",
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "delivery_accept_operation_id": "TARE:a1545636-0994-4397-b4e5-62335e67faf0",
+    "decision_reference": "DEV.C0015.WRITEOFF-1",
+    "actor": "C0015_TARE_APPROVER"
+   }
+  ],
+  "damage_positions": [
+   {
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "custodian_kind": "STORE",
+    "custodian_id": "Own264 synthetic registered store 288ec8b68a",
+    "qty": "0"
+   },
+   {
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "custodian_kind": "VEHICLE",
+    "custodian_id": "10059",
+    "qty": "0"
+   },
+   {
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "custodian_kind": "WAREHOUSE",
+    "custodian_id": "9807",
+    "qty": "0"
+   }
+  ],
+  "loss_claims": [
+   {
+    "operation_id": "TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965",
+    "condition_code": "GOOD",
+    "qty": "1",
+    "source_claim_id": "TARE:a1545636-0994-4397-b4e5-62335e67faf0",
+    "decision_reference": "DEV.C0020.LOSS-1",
+    "actor": "OWN1348_STORE",
+    "custodian_kind": "STORE",
+    "custodian_id": "Own264 synthetic registered store 288ec8b68a",
+    "decision_operation_id": "TARE.LOSS:71f03caf-39b5-4e6d-9f7e-7e850d999ea5",
+    "outcome": "REJECT",
+    "decided_by": "C0015_TARE_APPROVER"
+   }
+  ],
+  "loss_decision_rows_per_claim": [
+   {
+    "claim_operation_id": "TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965",
+    "n": "1"
+   }
+  ],
+  "availability": [
+   {
+    "physical": "4",
+    "available": "4",
+    "loss_pending": "0"
+   }
+  ],
+  "offers_damaged": [
+   {
+    "operation_id": "TARE:f138e802-ba3d-45e4-95af-573520dfa6f6",
+    "from_kind": "STORE",
+    "to_kind": "VEHICLE",
+    "qty": "1",
+    "offered_by": "OWN1348_STORE",
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "accept_operation_id": "TARE:7889cce5-3536-4aa7-94bd-a258d340efd2",
+    "accepted": "1",
+    "accepted_by": "OWN1306_DRIVER"
+   },
+   {
+    "operation_id": "TARE:a83ff5b8-20b7-41c1-ae39-2639aa4a2147",
+    "from_kind": "VEHICLE",
+    "to_kind": "WAREHOUSE",
+    "qty": "1",
+    "offered_by": "OWN1306_DRIVER",
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "accept_operation_id": "TARE:83ba2e59-e5eb-40da-b5ff-d093e42df3a9",
+    "accepted": "1",
+    "accepted_by": "admin"
+   }
+  ],
+  "goods_events_for_these_operations": 0
+ },
+ "ui_exit": 0,
+ "ui_stdout": "{\"name\":\"loss_balances\",\"options\":[{\"v\":\"\",\"t\":\"Выберите баланс\"},{\"v\":\"0\",\"t\":\"STORE Own264 synthetic registered store 288ec8b68a · GOOD · 1\"}]}\n{\"name\":\"claim_used\",\"claimOp\":\"TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965\",\"reused\":true}\n{\"name\":\"author_view\",\"authPending\":true,\"message\":\"\",\"decideVisible\":false}\n{\"name\":\"approver_deeplink\",\"ware\":\"9807\",\"selected\":\"TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965\",\"card\":\"Акт DEV.C0020.LOSS-1 Ожидает независимого решения Тип и состояние Европоддон · пригодная Количество 1 Держатель Магазин Own264 synthetic registered store 288ec8b68a Заявил OWN1348_STORE Исходный долг / выдача TARE:a1545636-0994-4397-b4e5-62335e67faf0 Рейс — Решение нет Создано 14.10.2026, 09:57:53 Основание Принять решение\",\"focused\":true}\n{\"name\":\"decision_prefilled\",\"claim\":\"TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965\",\"hint\":\"Заявитель: OWN1348_STORE · 1 ед. · STORE Own264 synthetic registered store 288ec8b68a · исходный долг TARE:a1545636-0994-4397-b4e5-62335e67faf0. «Отклонить» освобождает тару и восстанавливает долг, «Списать» уменьшает баланс.\"}\n{\"name\":\"unknown_result\",\"message\":\"Баланс и заявления обновлены.\",\"decideDisabled\":true}\n{\"name\":\"decide_lost_response\",\"status\":200,\"request\":{\"claim_operation_id\":\"TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965\",\"outcome\":\"REJECT\",\"reason\":\"Own C0020 dev: pallet found at store backroom, shortage not confirmed\",\"decision_reference\":\"DEV.C0020.REJECT-1\",\"operation_id\":\"TARE.LOSS:71f03caf-39b5-4e6d-9f7e-7e850d999ea5\"},\"result\":{\"operation_id\":\"TARE.LOSS:71f03caf-39b5-4e6d-9f7e-7e850d999ea5\",\"status\":\"REJECT\",\"quantity\":\"1\",\"total_tare_changed\":false,\"goods_stock_changed\":false,\"outbox_id\":5239}}\n{\"name\":\"decide_retry\",\"status\":200,\"request\":{\"claim_operation_id\":\"TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965\",\"outcome\":\"REJECT\",\"reason\":\"Own C0020 dev: pallet found at store backroom, shortage not confirmed\",\"decision_reference\":\"DEV.C0020.REJECT-1\",\"operation_id\":\"TARE.LOSS:71f03caf-39b5-4e6d-9f7e-7e850d999ea5\"},\"result\":{\"operation_id\":\"TARE.LOSS:71f03caf-39b5-4e6d-9f7e-7e850d999ea5\",\"status\":\"REJECT\",\"quantity\":\"1\",\"total_tare_changed\":false,\"goods_stock_changed\":false,\"outbox_id\":5239}}\n{\"name\":\"final_case\",\"message\":\"Заявление отклонено (TARE.LOSS:71f03caf-39b5-4e6d-9f7e-7e850d999ea5); тара освобождена, долг восстановлен. Баланс и заявления обновлены.\",\"card\":\"Акт DEV.C0020.LOSS-1 Отклонено: тара освобождена Тип и состояние Европоддон · пригодная Количество 1 Держатель Магазин Own264 synthetic registered store 288ec8b68a Заявил OWN1348_STORE Исходный долг / выдача TARE:a1545636-0994-4397-b4e5-62335e67faf0 Рейс — Решение отклонение · C0015_TARE_APPROVER Создано 14.10.2026, 09:57:53 Основание\",\"availability\":\"CS361:268718d3e9 · свободно пересчёт не выполнен · заявлена недостача 0 Own202 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own203 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own204 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own204 final weighing small box · с\n{\"name\":\"errors\",\"errors\":[]}\n",
+ "ui_stderr": ""
+}

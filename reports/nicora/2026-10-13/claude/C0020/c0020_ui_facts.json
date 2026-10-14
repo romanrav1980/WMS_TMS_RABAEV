@@ -1,0 +1,94 @@
+{
+ "facts": [
+  {
+   "name": "loss_balances",
+   "options": [
+    {
+     "v": "",
+     "t": "Выберите баланс"
+    },
+    {
+     "v": "0",
+     "t": "STORE Own264 synthetic registered store 288ec8b68a · GOOD · 1"
+    }
+   ]
+  },
+  {
+   "name": "claim_used",
+   "claimOp": "TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965",
+   "reused": true
+  },
+  {
+   "name": "author_view",
+   "authPending": true,
+   "message": "",
+   "decideVisible": false
+  },
+  {
+   "name": "approver_deeplink",
+   "ware": "9807",
+   "selected": "TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965",
+   "card": "Акт DEV.C0020.LOSS-1 Ожидает независимого решения Тип и состояние Европоддон · пригодная Количество 1 Держатель Магазин Own264 synthetic registered store 288ec8b68a Заявил OWN1348_STORE Исходный долг / выдача TARE:a1545636-0994-4397-b4e5-62335e67faf0 Рейс — Решение нет Создано 14.10.2026, 09:57:53 Основание Принять решение",
+   "focused": true
+  },
+  {
+   "name": "decision_prefilled",
+   "claim": "TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965",
+   "hint": "Заявитель: OWN1348_STORE · 1 ед. · STORE Own264 synthetic registered store 288ec8b68a · исходный долг TARE:a1545636-0994-4397-b4e5-62335e67faf0. «Отклонить» освобождает тару и восстанавливает долг, «Списать» уменьшает баланс."
+  },
+  {
+   "name": "unknown_result",
+   "message": "Баланс и заявления обновлены.",
+   "decideDisabled": true
+  },
+  {
+   "name": "decide_lost_response",
+   "status": 200,
+   "request": {
+    "claim_operation_id": "TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965",
+    "outcome": "REJECT",
+    "reason": "Own C0020 dev: pallet found at store backroom, shortage not confirmed",
+    "decision_reference": "DEV.C0020.REJECT-1",
+    "operation_id": "TARE.LOSS:71f03caf-39b5-4e6d-9f7e-7e850d999ea5"
+   },
+   "result": {
+    "operation_id": "TARE.LOSS:71f03caf-39b5-4e6d-9f7e-7e850d999ea5",
+    "status": "REJECT",
+    "quantity": "1",
+    "total_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 5239
+   }
+  },
+  {
+   "name": "decide_retry",
+   "status": 200,
+   "request": {
+    "claim_operation_id": "TARE:4530d7c2-19ea-4281-9ed2-9a7fe499b965",
+    "outcome": "REJECT",
+    "reason": "Own C0020 dev: pallet found at store backroom, shortage not confirmed",
+    "decision_reference": "DEV.C0020.REJECT-1",
+    "operation_id": "TARE.LOSS:71f03caf-39b5-4e6d-9f7e-7e850d999ea5"
+   },
+   "result": {
+    "operation_id": "TARE.LOSS:71f03caf-39b5-4e6d-9f7e-7e850d999ea5",
+    "status": "REJECT",
+    "quantity": "1",
+    "total_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 5239
+   }
+  },
+  {
+   "name": "final_case",
+   "message": "Заявление отклонено (TARE.LOSS:71f03caf-39b5-4e6d-9f7e-7e850d999ea5); тара освобождена, долг восстановлен. Баланс и заявления обновлены.",
+   "card": "Акт DEV.C0020.LOSS-1 Отклонено: тара освобождена Тип и состояние Европоддон · пригодная Количество 1 Держатель Магазин Own264 synthetic registered store 288ec8b68a Заявил OWN1348_STORE Исходный долг / выдача TARE:a1545636-0994-4397-b4e5-62335e67faf0 Рейс — Решение отклонение · C0015_TARE_APPROVER Создано 14.10.2026, 09:57:53 Основание",
+   "availability": "CS361:268718d3e9 · свободно пересчёт не выполнен · заявлена недостача 0 Own202 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own203 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own204 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own204 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own205 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own205 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own206 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own206 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own207 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own207 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own207 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own211 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own211 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own211 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own211 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own212 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own213 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own214 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own214 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own215 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own216 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own376 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own499 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Own514 final weighing small box · свободно пересчёт не выполнен · заявлена недостача 0 Американский поддон · свободно пересчёт не выполнен · заявлена недостача 0 Европоддон · свободно 4 · заявлена недостача 0 Тележка · свободно пересчёт не выполнен · заявлена недостача 0"
+  },
+  {
+   "name": "errors",
+   "errors": []
+  }
+ ],
+ "errors": []
+}

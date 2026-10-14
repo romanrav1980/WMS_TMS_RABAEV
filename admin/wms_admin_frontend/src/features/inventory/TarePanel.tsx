@@ -7,6 +7,7 @@ import {TareLossForm} from "./TareLossForm";
 import {TareDamageForm} from "./TareDamageForm";
 import {TareDamageCases,type DamageCase,type DamagePick,type DamagePosition} from "./TareDamageCases";
 import {TareWriteoffForm} from "./TareWriteoffForm";
+import {TareLossCase} from "./TareLossCase";
 import {useTare} from "./useTare";
 import type {Holder,TareOffer} from "./api";
 
@@ -60,6 +61,7 @@ export function TarePanel({tripId,addresses}:{tripId:number;addresses:string[]})
  {flow.context?.permissions?.can_damage===1&&owner&&type&&<TareDamageForm key={username+":"+tripId+":"+owner+":"+type} tripId={tripId} owner={Number(owner)} type={Number(type)} context={flow.context} debts={flow.debts} disabled={disabled} confirm={body=>flow.confirm("/damage",body)} loadDebt={()=>flow.loadDebt(Number(owner))}/>}
  {flow.context&&owner&&(flow.context.permissions?.can_writeoff===1||writeoffPick)&&<TareWriteoffForm owner={Number(owner)} username={username} cases={cases} positions={positions} selected={writeoffPick} canWriteoff={flow.context.permissions?.can_writeoff===1} disabled={disabled} confirm={body=>flow.confirm("/writeoff",body)}/>}
  {flow.context?.permissions?.can_loss_report===1&&owner&&type&&<TareLossForm key={username+":"+tripId+":"+owner+":"+type} tripId={tripId} owner={Number(owner)} type={Number(type)} context={flow.context} credentials={{username,password}} disabled={disabled} confirm={body=>flow.confirm("/loss-report",body)}/>}
+ {flow.lastConfirmed?.intent.path==="/loss-report"&&<TareLossCase claim={{operation_id:flow.lastConfirmed.intent.body.operation_id,owner_ware_id:Number(flow.lastConfirmed.intent.body.owner_ware_id),quantity:String(flow.lastConfirmed.intent.body.quantity),decision_reference:String(flow.lastConfirmed.intent.body.decision_reference),custodian_kind:String(flow.lastConfirmed.intent.body.custodian_kind),custodian_id:String(flow.lastConfirmed.intent.body.custodian_id)}}/>}
  <button disabled={disabled||!owner} onClick={()=>void flow.loadDebt(Number(owner))}>Показать долг магазинов по таре</button>
  {flow.debts.filter(row=>row.owner_ware_id===Number(owner)).map((row,index)=><p key={row.store_addr+":"+index}>{row.store_addr} · {row.pallet_type_name} · осталось {row.outstanding_quantity} · {({UNCONFIGURED_LEGACY:"Срок исторической передачи не задан",WAITING_NEXT_DELIVERY:"До следующей подтверждённой поставки",OVERDUE:"Просрочено",OPEN:"Срок не наступил"} as Record<string,string>)[row.debt_state]||row.debt_state}{row.effective_due_at?" · до "+new Date(row.effective_due_at).toLocaleString("ru-RU",{timeZone:row.timezone_region||"UTC"}):""}</p>)}
  {flow.pending&&<button disabled={flow.busy} onClick={()=>void flow.retry()}>Повторить сохранённую операцию</button>}
