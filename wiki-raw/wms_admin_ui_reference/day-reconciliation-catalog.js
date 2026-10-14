@@ -3,7 +3,7 @@
 // (modules/finance/infrastructure/reconciliation_sources.py, day_reconciliation.py).
 // Ссылки ведут на существующие реестры: ответ API агрегатный, ID конкретных документов в нём нет.
 (() => {
-  const registry = (href, label) => ({ href, label, kind: "registry" });
+  const registry = (href, label, params) => ({ href, label, kind: "registry", params });
   const section = (href, label) => ({ href, label, kind: "section" });
 
   const processes = [

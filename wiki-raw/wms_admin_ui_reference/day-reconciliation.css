@@ -137,6 +137,8 @@ body.day-page{background:#f3f6fb;color:#24344b;font-family:"Segoe UI",Arial,sans
 .day-page .dr-overview .dr-next{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:12px;color:#4a6185}
 .day-page .dr-overview .dr-link{color:#2867d4;font-weight:650;text-decoration:none}
 .day-page .dr-overview .dr-link:hover{text-decoration:underline}
+.day-page .dr-overview .dr-link-wrap{display:inline-flex;flex-direction:column;gap:1px}
+.day-page .dr-overview .dr-link-hint{font-size:11px;color:#8a6516;font-weight:500}
 .day-page .dr-overview .dr-nolink{color:#9aa8bb;font-size:11px}
 .day-page .dr-overview .dr-zero-list summary{cursor:pointer;color:#5c7396;font-size:12px;font-weight:600;margin:6px 0 10px}
 .day-page .dr-overview .dr-zero-list summary:focus-visible{outline:3px solid #8fb5f5;outline-offset:2px}

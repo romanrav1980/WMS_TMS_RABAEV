@@ -91,4 +91,14 @@
  el("lxVerify").addEventListener("click",()=>P.verifyPending());
  el("lxExactFind").addEventListener("click",()=>P.exactSearch());
  el("lxExactId").addEventListener("keydown",e=>{if(e.key==="Enter")P.exactSearch();});
+ // Прямая ссылка из сверки дня: ?warehouse_id= открывает реестр склада, ?operation_id= — точный поиск расхода.
+ let deepDone=false;
+ async function deepLink(){
+  if(deepDone||!window.wmsAdminAuth?.state.user)return;deepDone=true;
+  const q=new URLSearchParams(location.search),ware=Number(q.get("warehouse_id")),op=(q.get("operation_id")||"").trim();
+  if(!Number.isSafeInteger(ware)||ware<1)return;
+  el("exWare").value=String(ware);
+  if(await P.load()&&op){el("lxExactId").value=op;await P.exactSearch();}
+ }
+ window.addEventListener("wms-admin-auth-ready",()=>setTimeout(deepLink,0));setTimeout(deepLink,0);
 })();

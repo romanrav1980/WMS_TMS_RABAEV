@@ -11,6 +11,7 @@
   let serial = 0;
   let controller = null;
   let loaded = null;
+  let deepApplied = false;
 
   const scope = () => base() + ":" + (auth().state.user?.username || "");
   const wareKey = () => "day-recon-ware:" + scope();
@@ -50,12 +51,18 @@
 
   const processTitle = key => (cat().processes.find(([k]) => k === key) || [key, key])[1];
 
+  // Переход в реестр переносит склад/дату/ID, если экран их читает; иначе подпись говорит, что указать вручную.
   function linkNode(link) {
     if (!link) return node("span", "dr-nolink", "Отдельного экрана нет");
+    const target = window.dayReconLinks ? window.dayReconLinks.build(link, loaded) : { href: link.href, carried: [], lost: [] };
     const a = node("a", "dr-link", link.label + (link.kind === "registry" ? " · реестр" : ""));
-    a.href = link.href;
-    if (link.kind === "registry") a.title = "Ответ сверки агрегатный: откроется общий реестр, а не конкретный документ";
-    return a;
+    a.href = target.href;
+    if (link.kind !== "registry") return a;
+    a.title = "Ответ сверки агрегатный: откроется реестр, а не конкретный документ." + (target.carried.length ? " Передаётся: " + target.carried.join(", ") + "." : "");
+    if (!target.lost.length) return a;
+    const wrap = node("span", "dr-link-wrap");
+    wrap.append(a, node("small", "dr-link-hint", "на экране укажите " + target.lost.join(" и ")));
+    return wrap;
   }
 
   // ── Блоки ───────────────────────────────────────────────────────────
@@ -344,6 +351,8 @@
         throw Error(base + (/[.!?]$/.test(base) ? "" : ".") + hint);
       }
       loaded = d;
+      deepApplied = true;
+      window.dayReconLinks?.write(ware, day);
       render(d);
       const open = d.open_items.reduce((n, x) => n + x.count, 0);
       setMessage("Сверка сформирована: открытых пунктов " + open + ". Обязательства и остатки — текущее состояние; факты — за выбранные сутки.", open ? "warn" : "ok");
@@ -375,11 +384,17 @@
     clear("");
     let saved = "";
     try { saved = localStorage.getItem(wareKey()) || ""; } catch {}
+    // Прямая ссылка ?warehouse_id=&day= применяется один раз и имеет приоритет над сохранённым складом.
+    const deep = !deepApplied && window.dayReconLinks ? window.dayReconLinks.read() : { ware: null, day: null };
+    if (deep.ware) saved = String(deep.ware);
     if (el("drWare").value !== saved) {
       el("drWare").value = saved;
       // Соседние блоки страницы слушают input на drWare и сбрасывают свои данные.
       el("drWare").dispatchEvent(new Event("input", { bubbles: true }));
     }
+    if (deep.day) { el("drDay").value = deep.day; el("drDay").dispatchEvent(new Event("input", { bubbles: true })); }
+    // Считается применённой только после успешного чтения: подтверждение восстановленной сессии отменяет начатое чтение.
+    if (deep.ware && deep.day && auth().state.user) load();
   }
 
   el("drLoad").addEventListener("click", load);

@@ -1,0 +1,98 @@
+{
+ "desktop": {
+  "message": "Сверка сформирована: открытых пунктов 10. Обязательства и остатки — текущее состояние; факты — за выбранные сутки.",
+  "ware": "9807",
+  "day": "2026-10-14",
+  "url": "day-reconciliation.html?warehouse_id=9807&day=2026-10-14",
+  "links": [
+   {
+    "text": "Грузовая зона на этой странице",
+    "href": "#shippingArea",
+    "hint": ""
+   },
+   {
+    "text": "Грузовая зона на этой странице",
+    "href": "#shippingArea",
+    "hint": ""
+   },
+   {
+    "text": "Затраты рейса · реестр",
+    "href": "logistics-costs.html",
+    "hint": "на экране укажите склад 9807 и дату 2026-10-14"
+   },
+   {
+    "text": "Журнал внешних сообщений · реестр",
+    "href": "external-outbox.html",
+    "hint": "на экране укажите склад 9807 и дату 2026-10-14"
+   }
+  ],
+  "errors": [],
+  "followed": {
+   "href": "logistics-costs.html",
+   "landed": "logistics-costs.html"
+  },
+  "back": {
+   "url": "day-reconciliation.html?warehouse_id=9807&day=2026-10-14",
+   "ware": "9807",
+   "day": "2026-10-14",
+   "message": "Сверка сформирована: открытых пунктов 10. Обязательства и остатки — текущее состояние; факты — за выбранные сутки."
+  },
+  "builtExpenses": {
+   "href": "logistics-expenses.html?warehouse_id=9807",
+   "carried": [
+    "warehouse_id"
+   ],
+   "lost": [
+    "дату 2026-10-14"
+   ]
+  },
+  "builtUnaware": {
+   "href": "tare-ledger.html",
+   "carried": [],
+   "lost": [
+    "склад 9807",
+    "дату 2026-10-14"
+   ]
+  },
+  "badDeepLink": {
+   "ware": null,
+   "day": null
+  }
+ },
+ "mobile": {
+  "message": "Сверка сформирована: открытых пунктов 10. Обязательства и остатки — текущее состояние; факты — за выбранные сутки.",
+  "ware": "9807",
+  "day": "2026-10-14",
+  "url": "day-reconciliation.html?warehouse_id=9807&day=2026-10-14",
+  "links": [
+   {
+    "text": "Грузовая зона на этой странице",
+    "href": "#shippingArea",
+    "hint": ""
+   },
+   {
+    "text": "Грузовая зона на этой странице",
+    "href": "#shippingArea",
+    "hint": ""
+   },
+   {
+    "text": "Затраты рейса · реестр",
+    "href": "logistics-costs.html",
+    "hint": "на экране укажите склад 9807 и дату 2026-10-14"
+   },
+   {
+    "text": "Журнал внешних сообщений · реестр",
+    "href": "external-outbox.html",
+    "hint": "на экране укажите склад 9807 и дату 2026-10-14"
+   }
+  ],
+  "errors": [],
+  "overflow": 0
+ },
+ "expensesDeepLink": {
+  "ware": "9807",
+  "message": "Расход EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e найден точным поиском (он есть и в загруженном окне).",
+  "shown": "Показано 2 из 2.",
+  "query": "EXPENSE:a32f1713-7518-4ebe-8cfe-b0252dd7b01e"
+ }
+}
