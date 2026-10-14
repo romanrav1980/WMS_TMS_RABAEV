@@ -1,0 +1,84 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Сверка исполнения</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="day-reconciliation.css"></head><body class="auth-pending day-page" data-required-permission="wms_admin_login"><div class="app"><aside class="sidebar"><div class="brand">WMS</div><nav class="nav" data-admin-nav data-active-nav="day-reconciliation"></nav></aside><main class="workspace"><header class="page-heading"><div><div class="eyebrow">NICORA · Управление складом</div><h1>Исполнение и отгрузка</h1><p class="page-description">Факты дня, перенос рейсов и контроль складских заданий</p></div><span class="page-badge">Рабочий интерфейс WMS</span></header>
+<nav class="page-tabs" aria-label="Разделы сверки"><a href="#dayOverview">Обзор дня</a><a href="#shippingArea">Грузовая зона</a><a href="#stTransfer">Перенос СТ</a><a href="#waitingArea">Ожидание товара</a></nav><section class="panel dr-overview" id="dayOverview" aria-labelledby="drTitle">
+<div class="dr-head"><div><h2 id="drTitle">Обзор сверки дня</h2><p class="dr-lead">Факты выбранных суток, текущие незавершённые обязательства, остатки и внешние подтверждения склада. Только чтение: отчёт не изменяет запас и не закрывает день.</p></div></div>
+<form class="dr-filters" id="drForm" onsubmit="return false">
+<label for="drWare">Склад<input id="drWare" inputmode="numeric" autocomplete="off" placeholder="Номер склада" aria-describedby="drWareHint"><small id="drWareHint">WARE_ID, доступный вашей учётной записи</small></label>
+<label for="drDay">Дата фактов<input id="drDay" type="date" aria-describedby="drDayHint"><small id="drDayHint">Операционные сутки склада</small></label>
+<label for="drZone">Часовой пояс<input id="drZone" value="Asia/Tbilisi" maxlength="64" list="drZoneList" aria-describedby="drZoneHint"><small id="drZoneHint">Границы суток считаются в этом поясе</small></label>
+<datalist id="drZoneList"><option value="Asia/Tbilisi"></option><option value="Europe/Moscow"></option><option value="Asia/Yekaterinburg"></option><option value="Asia/Novosibirsk"></option><option value="UTC"></option></datalist>
+<button id="drLoad" type="button">Сформировать сверку</button>
+</form>
+<p id="drMessage" role="status" aria-live="polite"></p>
+<div id="drResult" hidden>
+<div id="drContext" class="dr-context" aria-label="Контекст отчёта"></div>
+<div id="drSummary" class="dr-summary"></div>
+<div class="dr-search"><label for="drFilter">Фильтр по загруженным группам<input id="drFilter" type="search" placeholder="Например: возврат, тара, ERP, задания" disabled aria-describedby="drFilterNote"></label><p id="drFilterNote" class="dr-filter-note" aria-live="polite"></p></div>
+<section class="dr-block" aria-labelledby="drFactsTitle"><h2 id="drFactsTitle"><span class="dr-kind dr-kind-day">За сутки</span>Факты выбранного дня</h2><div id="drFacts"></div><p id="drTaskTimes" class="dr-note"></p></section>
+<section class="dr-block" aria-labelledby="drBacklogTitle"><h2 id="drBacklogTitle"><span class="dr-kind dr-kind-now">Сейчас</span>Текущие незавершённые обязательства</h2><p class="dr-note">Текущее состояние на момент чтения, включая обязательства прошлых дней. Число — агрегат: ссылка открывает общий реестр процесса.</p><div id="drBacklog"></div></section>
+<section class="dr-block" aria-labelledby="drStockTitle"><h2 id="drStockTitle"><span class="dr-kind dr-kind-now">Сейчас</span>Остатки и резервы</h2><div id="drStock"></div></section>
+<section class="dr-block" aria-labelledby="drErpTitle"><h2 id="drErpTitle"><span class="dr-kind dr-kind-ext">Внешнее</span>ERP: отправлено и подтверждено</h2><p class="dr-note">Выгруженный файл остаётся неподтверждённым до ответа ERP. Начисление суммы и распределение на товары — разные события.</p><div id="drErp"></div></section>
+<section class="dr-block" aria-labelledby="drRegulatoryTitle"><h2 id="drRegulatoryTitle"><span class="dr-kind dr-kind-ext">Внешнее</span>Государственные системы маркировки</h2><p class="dr-note">Отправка сообщения не подтверждает принятие государственной системой. Показаны сообщения с подтверждённой привязкой к исходному складу.</p><div id="drRegulatory"></div></section>
+<section class="dr-block dr-limits" id="drLimits" aria-label="Известная неполнота данных"></section>
+</div>
+</section><section class="panel"><a href="store-investigations.html">Расследования</a> · <a href="store-return-putaway.html">Размещение возвратов</a> · <a href="supplier-handover.html">Передача поставщику</a> · <a href="return-disposal.html">Утилизация</a> · <a href="tare-loss.html">Недостача тары</a> · <a href="logistics-expenses.html">Дополнительные расходы</a></section><section class="panel" data-permission="transport_dispatch_edit">
+<h2>Зафиксировать результат сверки</h2>
+<p>Запись сохраняет рассмотренные факты и открытые обязательства. Она не изменяет запас и не подтверждает отсутствующие ответы внешних систем.</p>
+<button id="drReviewRead">Прочитать сверку для фиксации</button>
+<label>Причина и вывод диспетчера<textarea id="drReviewReason" maxlength="500"></textarea></label>
+<button id="drReviewSave" disabled>Зафиксировать</button>
+<button id="drReviewRetry" disabled>Повторить сохранённую команду</button>
+<button id="drReviewResolve" disabled>Проверить исход команды</button>
+<p id="drReviewPending" role="status"></p><p id="drReviewMessage" role="status"></p></section>
+<section class="panel" data-permission="transport_dispatch_view"><h2>Журнал рассмотренных сверок</h2>
+<button id="drReviewHistoryLoad">С первой записи</button><button id="drReviewHistoryNext" disabled>Следующие записи</button>
+<table><thead><tr><th>Версия</th><th>Время рассмотренных фактов</th><th>Диспетчер</th><th>Вывод</th></tr></thead><tbody id="drReviewHistoryRows"></tbody></table>
+<p id="drReviewHistoryMessage" role="status"></p><div id="drReviewHistoryDetail"></div></section>
+<section class="panel" data-permission="transport_dispatch_view"><h2>Совместный осмотр грузовой зоны</h2>
+<p>Начальник склада и диспетчер подписывают результат осмотра разными учётными записями. Подписи относятся к сохранённому снимку сверки и не закрывают день или внешние обязательства.</p>
+<label>Операция сохранённой сверки<input id="diReview" maxlength="100"></label><button id="diRead">Прочитать подписи</button>
+<label>Роль<select id="diRole"><option value="WAREHOUSE_CHIEF">Начальник склада</option><option value="DISPATCHER">Диспетчер</option></select></label>
+<label>Результат физического осмотра<select id="diObserved"><option value="">Выберите результат</option><option value="EMPTY">Зона пуста</option><option value="NON_EMPTY">Зона не пуста</option></select></label>
+<label>Осмотренные ворота/линии и основание<textarea id="diNote" maxlength="500"></textarea></label>
+<button id="diSave" disabled>Подписать осмотр</button><button id="diRetry" disabled>Повторить сохранённую подпись</button><button id="diResolve" disabled>Проверить исход подписи</button>
+<button id="diRecover" disabled>Сохранить архив и перечитать подписи</button>
+<p id="diPending"></p><p id="diMessage" role="status"></p><div id="diRows"></div></section>
+<section class="panel" id="shippingArea" data-permission="transport_dispatch_view"><h2>СТ выбранной даты и занятость зарегистрированных ячеек</h2>
+<button id="srLoad">С первой строки</button><button id="srNext" disabled>Следующие строки</button>
+<table><thead><tr><th>СТ</th><th>Идентификатор паллеты</th><th>Рейс</th><th>Адрес</th><th>Фактическое состояние</th><th>Корневое место погрузки</th><th>Перенос</th></tr></thead><tbody id="srRows"></tbody></table>
+<h3>Зарегистрированные ячейки грузовой зоны</h3>
+<table><thead><tr><th>Ячейка</th><th>Строки положительного запаса</th><th>Неотгруженные контейнеры</th><th>Неотгруженные CASE</th><th>Занятость</th></tr></thead><tbody id="srCells"></tbody></table>
+<p id="srMessage" role="status"></p></section>
+<section class="panel" id="stTransfer" data-permission="transport_dispatch_view"><h2><span class="flow-step">1</span>Перенос СТ на другой рейс</h2><div id="sdOverview" class="summary-cards" hidden></div>
+<p>Переносятся все паллеты одной СТ на существующий спланированный рейс. Исходные даты и объём заказа сохраняются.</p>
+<div class="source-line"><label>Номер СТ<input id="sdSt" maxlength="100" placeholder="Введите номер СТ"></label><button id="sdRead">Прочитать СТ</button></div>
+<div class="form-grid"><label>Целевой рейс<div class="trip-choice"><input id="sdTarget" readonly inputmode="numeric" placeholder="Выберите рейс из списка"><button id="sdPickTrip" title="Открыть существующие рейсы ТМС и выбрать получателя СТ" type="button" disabled>Выбрать рейс</button></div><span id="sdSelectedTrip" class="selected-trip-note"></span></label>
+<label>Основание переноса<input id="sdReference" maxlength="500" placeholder="Документ или согласованное решение"></label>
+<label>Причина<textarea id="sdReason" maxlength="500" placeholder="Почему переносим отгрузку"></textarea></label></div>
+<button data-permission="transport_dispatch_edit" id="sdSave" disabled>Перенести всю СТ</button><button data-permission="transport_dispatch_edit" id="sdRetry" disabled>Повторить сохранённую команду</button>
+<button data-permission="transport_dispatch_edit" id="sdRecover" disabled title="Сохранить повреждённый исходник в архив и перечитать текущее состояние СТ">Восстановить повреждённый черновик</button>
+<p id="sdPending" role="status"></p><p id="sdMessage" role="status"></p>
+<button id="sdHistory">История переносов</button><button id="sdHistoryNext" disabled>Следующие записи</button>
+<table><thead><tr><th>Версия</th><th>Исходный рейс</th><th>Новый рейс</th><th>Исходная дата</th><th>Новая дата</th><th>Причина</th><th>Основание</th><th>Диспетчер</th><th>Ожидание</th></tr></thead><tbody id="sdHistoryRows"></tbody></table></section><section class="panel" id="waitingArea" data-permission="warehouse_task_view"><h2><span class="flow-step">2</span>Товар в ожидании следующего рейса</h2>
+<p>После переноса СТ на другой день создайте штатные задания на перемещение в настроенную ячейку ожидания. Количество и резерв под заказ сохраняются.</p>
+<div class="waiting-toolbar"><label>Решение о переносе СТ<input id="swDecision" maxlength="100" placeholder="Выберите решение из истории выше"></label>
+<label>Грузовое место<select id="swRoot"><option value="">По действующему составу СТ</option></select></label><button id="swRead">Обновить задания</button><button data-permission="warehouse_task_edit" id="swPlan">Создать план ожидания</button><button data-permission="warehouse_task_edit" id="swRetry" disabled>Повторить команду</button></div>
+<button data-permission="warehouse_task_edit" id="swRecover" disabled title="Сохранить повреждённую команду в архив и прочитать зарегистрированные задания">Архивировать черновик и прочитать задания</button>
+<p id="swRootHint" class="waiting-place-hint">Для нескольких контейнеров выберите верхнее место после обновления.</p><p id="swPending" role="status"></p><p id="swMessage" role="status"></p>
+<div id="swEmpty" class="waiting-empty">Выберите решение о переносе, чтобы увидеть задания и их текущий статус.</div>
+<table id="swTable" hidden><thead><tr><th>Задание</th><th>Идентификатор паллеты</th><th>Откуда</th><th>Куда</th><th>Количество</th><th>Статус</th></tr></thead><tbody id="swRows"></tbody></table>
+<div class="section-note"><span id="swCount"></span><div><button id="swNext" disabled>Следующие задания</button><a href="warehouse-tasks.html">Все складские задания →</a></div></div>
+</section>
+
+<dialog id="tpDialog" class="trip-picker" aria-labelledby="tpTitle">
+<header class="trip-picker-heading"><div><div class="eyebrow">ПЕРЕНОС СТ</div><h2 id="tpTitle">Выберите рейс</h2><p id="tpSubtitle"></p></div><button id="tpClose" title="Закрыть окно без переноса СТ" type="button" aria-label="Закрыть выбор рейса">×</button></header>
+<form id="tpFilters" class="trip-filters">
+<label>Дата с<input id="tpFrom" title="Начальная дата поиска допустимых рейсов" type="date"></label><label>Дата по<input id="tpTo" title="Конечная дата поиска; период до 31 календарного дня" type="date"></label>
+<label>Район<input id="tpDistrict" title="Фильтр по району магазина в составе рейса" maxlength="80" placeholder="Название или часть названия"></label>
+<label>Номер магазина<input id="tpStore" title="Точный код магазина; ведущие нули сохраняются" maxlength="80" placeholder="Например, 0042"></label>
+<button id="tpSearch" title="Прочитать подходящие рейсы из существующей ТМС" type="submit">Найти рейсы</button></form>
+<p id="tpMessage" class="trip-picker-message" role="status"></p>
+<div class="trip-list-wrap"><div id="tpEmpty" class="waiting-empty">Выберите период поиска.</div>
+<table id="tpTable" hidden><thead><tr><th>Рейс</th><th>Дата</th><th>Машина</th><th>Районы</th><th>Магазины</th><th>Паллет в плане</th><th></th></tr></thead><tbody id="tpRows"></tbody></table></div>
+<footer class="trip-picker-footer"><span id="tpCount"></span><button id="tpNext" type="button" disabled>Следующие рейсы</button></footer></dialog>
+</main></div><script src="admin-nav.js"></script><script src="admin-auth.js"></script><script src="day-reconciliation-catalog.js?v=20261014-ni072"></script><script src="day-reconciliation.js?v=20261014-ni072"></script><script src="day-review.js"></script><script src="day-review-history.js"></script><script src="day-inspection.js"></script><script src="shipping-register.js"></script><script src="st-deferral.js?v=20261013-1065"></script>
+<script src="st-waiting-tasks.js?v=20261013-1088"></script><script src="st-trip-picker.js?v=20261013-820"></script></body></html>
