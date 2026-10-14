@@ -1,0 +1,71 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Дополнительные расходы</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="logistics-expenses.css"></head>
+<body class="auth-pending lx-page" data-required-permission="wms_admin_login"><div class="app"><aside class="sidebar"><div class="brand">WMS</div><nav class="nav" data-admin-nav data-active-nav="logistics-expenses"></nav></aside>
+<main class="workspace">
+<header class="lx-heading"><div><div class="lx-eyebrow">Биллинг · рейсы и автомобили</div><h1>Дополнительные расходы</h1>
+<p>Исходный документ расхода, стадия, ответственный и следующее действие. Регистрация, решения логиста и финансового контроля и распределение — существующие операции сервера; каждое решение сохраняется только отдельной кнопкой формы.</p></div></header>
+
+<section class="panel lx-panel" aria-labelledby="lxRegistryTitle"><h2 id="lxRegistryTitle">Реестр склада</h2>
+<div class="lx-load"><label>Склад<input id="exWare" data-lx-free inputmode="numeric" autocomplete="off" placeholder="ID склада"></label>
+<label>Поиск нормативного начисления по ID<input id="exNormativeSearch" maxlength="100" placeholder="для коррекции старого начисления"></label>
+<button id="exLoad" class="lx-primary">Обновить реестр и статьи</button></div>
+<p class="lx-note">Без поиска для коррекции показаны последние 100 нормативных начислений склада. Для старого документа укажите точный ID.</p>
+<p id="exMessage" role="status"></p>
+<div id="lxPending" class="lx-pending" hidden></div>
+<div class="lx-filters" aria-label="Фильтры по загруженным расходам">
+<div id="lxStage" class="lx-seg" role="group" aria-label="Стадия"></div>
+<label>Объект<select id="lxKind" data-lx-free><option value="all">Рейсы и автомобили</option><option value="TRIP">Рейс</option><option value="VEHICLE">Автомобиль</option></select></label>
+<label>ID объекта<input id="lxObject" data-lx-free inputmode="numeric" autocomplete="off"></label>
+<label class="lx-query">Поиск в загруженном<input id="lxQuery" data-lx-free type="search" autocomplete="off" placeholder="документ, операция, статья, сотрудник"></label></div>
+<p id="lxWindow" class="lx-window" hidden></p>
+<div id="lxTotals"></div>
+<p id="lxShown" class="lx-note" role="status" aria-live="polite"></p>
+<div id="exRows" class="lx-rows"></div>
+</section>
+
+<div class="lx-forms">
+<section id="lxReportForm" class="panel lx-panel" data-permission="edit_bill_tt" aria-labelledby="lxReportTitle"><h2 id="lxReportTitle">Зарегистрировать расход</h2>
+<label>Исходный расход для коррекции<select id="exCorrection"><option value="">Новый расход</option></select></label>
+<label>Исходное нормативное начисление<select id="exNormativeCorrection"><option value="">Не корректировать норматив</option></select></label>
+<p class="lx-note">Выберите один исходник: дополнительный расход или нормативное начисление. Исходная сумма сохраняется, согласуется только поправка.</p>
+<label>Текущий подтверждённый итог<input id="exConfirmed" readonly></label>
+<p class="lx-note">Коррекция сохраняет исходный объект и валюту. Введите изменение суммы со знаком плюс или минус; исходная запись сохранится.</p>
+<label>Статья<select id="exArticleSelect"></select></label>
+<label>Объект<select id="exKind"><option value="TRIP">Рейс</option><option value="VEHICLE">Автомобиль</option></select></label>
+<label>ID рейса или автомобиля<input id="exObject" inputmode="numeric"></label>
+<label>Сумма<input id="exAmount" inputmode="decimal" placeholder="например 15.50 или -10.00 для коррекции"></label>
+<label>Валюта<input id="exCurrency" maxlength="3" value="GEL"></label>
+<label>Дата расхода<input id="exDay" type="date"></label>
+<label>Номер документа<input id="exReference" maxlength="60" placeholder="чек, акт, счёт поставщика"></label>
+<label>Причина<input id="exReason" maxlength="500"></label>
+<p id="lxReportPreview" class="lx-preview" aria-live="polite"></p>
+<button id="exReport" class="lx-primary">Зарегистрировать</button></section>
+
+<section id="lxDecideForm" class="panel lx-panel" aria-labelledby="lxDecideTitle"><h2 id="lxDecideTitle">Согласование</h2>
+<label>Расход<select id="exExpense"></select></label>
+<label>Стадия<select id="exPhase"><option value="LOGIST">Транспортный логист</option><option value="FINANCE">Финансовый контроль</option></select></label>
+<label>Результат<select id="exOutcome"><option value="APPROVE">Подтвердить</option><option value="REJECT">Отклонить</option></select></label>
+<label>База распределения<select id="exBasis"><option value="NONE">Без распределения, только автомобиль</option><option value="WEIGHT">Масса товара</option><option value="BASE_QUANTITY">Количество в согласованных базовых единицах</option></select></label>
+<label>Номер решения<input id="exDecisionRef" maxlength="60"></label>
+<label>Основание<input id="exDecisionReason" maxlength="500"></label>
+<p id="lxDecisionHint" class="lx-preview" aria-live="polite"></p>
+<button id="exDecide" class="lx-primary">Сохранить решение</button>
+<p class="lx-note">Финансовое подтверждение выполняет другой сотрудник. Он сохраняет базу, выбранную логистом. Расходы только автомобиля не распределяются на товар.</p></section>
+
+<section id="lxAllocForm" class="panel lx-panel" data-permission="calc_tt_price" aria-labelledby="lxAllocTitle"><h2 id="lxAllocTitle">Распределение на фактически перевезённый товар</h2>
+<label>Подтверждённый расход рейса<select id="exAllocation"></select></label>
+<p id="lxAllocHint" class="lx-preview" aria-live="polite"></p>
+<button id="exAllocate" class="lx-primary">Провести распределение</button>
+<p class="lx-note">Используется согласованная база и сохранённый состав фактической погрузки. Общая сумма сохраняется точно. Расход автомобиля сюда не входит.</p></section>
+
+<section id="lxArticleForm" class="panel lx-panel" data-permission="create_tt_price" aria-labelledby="lxArticleTitle"><h2 id="lxArticleTitle">Статья расходов</h2>
+<label>Код<input id="exCode" maxlength="40"></label>
+<label>Название<input id="exName" maxlength="120"></label>
+<label>Объект<select id="exScope"><option value="BOTH">Рейс или автомобиль</option><option value="TRIP">Рейс</option><option value="VEHICLE">Автомобиль</option></select></label>
+<label class="lx-check"><input id="exIncluded" type="checkbox">Работа уже включена в норматив</label>
+<label class="lx-check"><input id="exActive" type="checkbox" checked>Статья активна</label>
+<p class="lx-note">Статья, работа которой уже включена в норматив, не может использоваться для дополнительного расхода. Изменение создаёт новую версию.</p>
+<button id="exArticle">Сохранить статью</button></section>
+</div>
+<div class="lx-recovery"><button id="exRetry" hidden>Повторить сохранённую операцию</button><button id="exRestart" hidden>Исправить подтверждённый отказ</button></div>
+</main></div>
+<script src="admin-nav.js"></script><script src="admin-auth.js"></script><script src="logistics-expenses-model.js"></script><script src="logistics-expenses-view.js"></script><script src="logistics-expenses.js"></script><script src="logistics-expenses-actions.js"></script></body></html>
