@@ -15,7 +15,7 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:admin/wms_admin_frontend/src/components/TransportDispatchPage.tsx": {
-      "maximum": 4176,
+      "maximum": 4158,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -219,7 +219,7 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "function-size:admin/wms_admin_frontend/src/components/TransportDispatchPage.tsx:TransportDispatchPage": {
-      "maximum": 2536,
+      "maximum": 2516,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"

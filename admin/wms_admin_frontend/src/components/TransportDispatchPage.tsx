@@ -1,4 +1,5 @@
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, StPagesBar } from "../features/transport";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual"; // Sprint 102
 
 // ---------------------------------------------------------------------------
@@ -210,7 +211,6 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   const [tasks, setTasks] = useState<TransportTask[]>([]);
   const [selectedTask, setSelectedTask] = useState<TransportTask | null>(null);
   const [taskSts, setTaskSts] = useState<TaskSt[]>([]);
-  const [availableSts, setAvailableSts] = useState<AvailableSt[]>([]);
   const stSectionRef = useRef<HTMLDivElement | null>(null);
   const [stScrollTop, setStScrollTop] = useState(0);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -557,31 +557,20 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   // ------------------------------------------------------------------
   // Load available STs
   // ------------------------------------------------------------------
-  const loadAvailableSts = useCallback(async () => {
-    try {
-      const params = new URLSearchParams({ stdate: stDate });
-      if (!unassignedOnly) params.set("unassigned_only", "false");
-      if (dateTo) params.set("date_to", dateTo);
-      if (debouncedAddrMask) params.set("addr_mask", debouncedAddrMask);
-      if (debouncedStMask) {
-        params.set("st_mask", debouncedStMask);
-        if (stMaskExclude) params.set("st_mask_exclude", "true");
-      }
-      if (trTypeFilter) params.set("transport_type", trTypeFilter);
-      if (assembledOnly) params.set("assembled_only", "true");
-      if (notAssembledOnly) params.set("not_assembled_only", "true");
-      if (debouncedMaxWeight != null) params.set("max_weight_kg", String(debouncedMaxWeight));
-      if (debouncedMaxVol != null) params.set("max_volume_m3", String(debouncedMaxVol));
-      if (debouncedArticul) params.set("articul", debouncedArticul);
-      const data = await apiFetch<AvailableSt[]>(`/api/admin/transport/available-sts?${params}`);
-      setAvailableSts(data);
-    } catch {
-      setAvailableSts(demoAvailableSts(stDate));
-    }
-  }, [stDate, dateTo, debouncedAddrMask, debouncedStMask, stMaskExclude, trTypeFilter,
+  // NI02.2 (C-0018): фильтры и склад уходят на сервер; страницы по 200 загружает useAvailableStPages.
+  // При ошибке показывается ошибка и повтор — демоданные не подставляются.
+  const stQuery = useMemo(() => availableStQuery({ stDate, dateTo, wareId: wareIdFilter, unassignedOnly, addrMask: debouncedAddrMask, stMask: debouncedStMask, stMaskExclude,
+    trType: trTypeFilter, assembledOnly, notAssembledOnly, maxWeight: debouncedMaxWeight, maxVol: debouncedMaxVol, articul: debouncedArticul }),
+  [stDate, dateTo, wareIdFilter, debouncedAddrMask, debouncedStMask, stMaskExclude, trTypeFilter,
       assembledOnly, notAssembledOnly, unassignedOnly, debouncedMaxWeight, debouncedMaxVol, debouncedArticul]);
-
-  useEffect(() => { loadAvailableSts(); }, [loadAvailableSts]);
+  const stPages = useAvailableStPages<AvailableSt>(stQuery);
+  const availableSts = stPages.rows;
+  const wareCatalog = useWarehouseCatalog();
+  // Обновление после назначения/WS/автообновления перечитывает уже загруженные страницы того же запроса.
+  const reloadStPages = stPages.reload;
+  const loadAvailableSts = useCallback(async () => { await reloadStPages(); }, [reloadStPages]);
+  // Выбор живёт только среди видимых СТ (в режиме районов — и среди СТ ответа /clusters).
+  useVisibleSelection([...availableSts.map(s => s.ST_NUMBER), ...(viewMode === "clusters" ? clusters.flatMap(c => c.STS.map(s => s.ST_NUMBER)) : [])], setSelectedStNums);
   // Sprint 96 — держим актуальную ссылку на loadAvailableSts для WS-обработчика
   useEffect(() => { loadStsRef.current = loadAvailableSts; }, [loadAvailableSts]);
 
@@ -1221,11 +1210,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     }
   }
 
-  // Sprint 61 — warehouse quick-filter (client-side)
-  const wareOptions = [...new Set(availableSts.map(s => s.WARE_ID))].sort((a, b) => a - b);
-  const wareFilteredSts = wareIdFilter
-    ? availableSts.filter(s => String(s.WARE_ID) === wareIdFilter)
-    : availableSts;
+  // Sprint 61 → NI02.2: склад фильтруется на сервере, строки уже отфильтрованы запросом.
+  const wareFilteredSts = availableSts;
 
   const sortedSts = stSortField
     ? [...wareFilteredSts].sort((a, b) => {
@@ -1573,7 +1559,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   onClick={() => setExpandedRaions(new Set())}>⊟ Нет</button>
               </div>
             )}
-            <span className="dispatch-pmv dispatch-pmv-all" title="Итоги по всем видимым СТ">
+            <span className="dispatch-pmv dispatch-pmv-all" title="Итоги по загруженным СТ (не по всем СТ периода)">
               П={allP}&nbsp;·&nbsp;{allM.toFixed(0)}&nbsp;кг&nbsp;·&nbsp;{allV.toFixed(1)}&nbsp;м³
             </span>
             {selectedStNums.size > 0 && selectedTask && (
@@ -1593,29 +1579,32 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               Авто
             </label>
             {autoRefresh && lastRefreshAt && <span className="dispatch-last-refresh">{lastRefreshAt}</span>}
-            {/* Sprint 61 — warehouse quick-filter */}
-            {wareOptions.length > 1 && (
-              <select className="dispatch-ware-select"
-                value={wareIdFilter}
-                onChange={e => { setWareIdFilter(e.target.value); setSelectedStNums(new Set()); }}
-                title="Фильтр по складу">
-                <option value="">Все склады</option>
-                {wareOptions.map(w => (
-                  <option key={w} value={String(w)}>Скл. {w}</option>
-                ))}
-              </select>
-            )}
-            <span className="dispatch-tcount">
-              {wareIdFilter
-                ? `${wareFilteredSts.length} / ${availableSts.length} СТ`
-                : `${availableSts.length} СТ`}
-            </span>
+            {/* Sprint 61 → NI02.2 — серверный фильтр склада по справочнику складов */}
+            {wareCatalog.items
+              ? <select className="dispatch-ware-select" aria-label="Склад СТ"
+                  value={wareIdFilter}
+                  onChange={e => { setWareIdFilter(e.target.value); setSelectedStNums(new Set()); }}
+                  title="Фильтр по складу выполняется на сервере">
+                  <option value="">Все склады</option>
+                  {wareIdFilter && !wareCatalog.items.some(w => String(w.id) === wareIdFilter) && <option value={wareIdFilter}>Скл. {wareIdFilter}</option>}
+                  {wareCatalog.items.map(w => (
+                    <option key={w.id} value={String(w.id)}>Скл. {w.id}{w.name ? " · " + w.name : ""}</option>
+                  ))}
+                </select>
+              : <input className="dispatch-ware-select" aria-label="Номер склада СТ" inputMode="numeric" placeholder="Склад №"
+                  defaultValue={wareIdFilter} key={"ware-input-" + wareIdFilter}
+                  title={"Фильтр по складу на сервере; " + (wareCatalog.reason || "справочник загружается")}
+                  onKeyDown={e => { if (e.key === "Enter") { const v = e.currentTarget.value.trim(); if (v === "" || /^[1-9][0-9]{0,9}$/.test(v)) { setWareIdFilter(v); setSelectedStNums(new Set()); } } }}
+                  onBlur={e => { const v = e.currentTarget.value.trim(); if ((v === "" || /^[1-9][0-9]{0,9}$/.test(v)) && v !== wareIdFilter) { setWareIdFilter(v); setSelectedStNums(new Set()); } }} />}
+            <StPagesBar rows={availableSts.length} pages={stPages.pages} hasMore={stPages.hasMore} loading={stPages.loading} error={stPages.error}
+              period={dateTo && dateTo !== stDate ? stDate + " — " + dateTo : stDate}
+              onMore={() => { void stPages.loadMore(); }} onRetry={() => { void stPages.retry(); }} />
             {/* Sprint 63 — not-assembled badge; Sprint 64 — click to select */}
             {(() => {
               const notReadySts = wareFilteredSts.filter(s => s.VERIFY_PERC != null && s.VERIFY_PERC < 100);
               return notReadySts.length > 0
                 ? <button className="dispatch-notready-badge dispatch-notready-select-btn"
-                    title="Кликни, чтобы выделить все несобранные СТ"
+                    title="Выделить все несобранные среди загруженных СТ"
                     onClick={() => setSelectedStNums(prev => {
                       const next = new Set(prev);
                       notReadySts.forEach(s => next.add(s.ST_NUMBER));
@@ -1646,7 +1635,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                     {viewMode === "flat" && sortedSts.length > 0 && (
                       <input
                         type="checkbox"
-                        title="Выделить / снять все"
+                        title={`Выделить / снять все загруженные СТ (${sortedSts.length})`}
                         checked={sortedSts.length > 0 && sortedSts.every(s => selectedStNums.has(s.ST_NUMBER))}
                         onChange={() => {
                           const allSelected = sortedSts.every(s => selectedStNums.has(s.ST_NUMBER));
@@ -1680,7 +1669,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
               <tbody>
                 {viewMode === "flat" && (
                   sortedSts.length === 0
-                    ? <tr><td colSpan={17} className="dispatch-grid-empty">Нет свободных СТ по текущим фильтрам</td></tr>
+                    ? <tr><td colSpan={17} className="dispatch-grid-empty">{stPages.error ? "СТ не загружены: " + stPages.error : stPages.loading ? "Загружаем СТ…" : "Нет свободных СТ по текущим фильтрам"}</td></tr>
                     : (
                         <>
                           {stVirtualTopPad > 0 && (
@@ -1732,7 +1721,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           {/* Sprint 102 — пагинация заменена виртуализацией; показываем итог */}
           {viewMode === "flat" && sortedSts.length > 0 && (
             <div className="dispatch-st-pagination dispatch-st-virtual-info">
-              <span className="dispatch-page-info">Всего СТ: {sortedSts.length} · виртуализация активна</span>
+              <span className="dispatch-page-info">Загружено СТ: {sortedSts.length}{stPages.hasMore ? " · есть ещё на сервере" : ""} · виртуализация активна</span>
             </div>
           )}
 
@@ -1753,7 +1742,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
                   Добавить в #{selectedTask.ID}
                 </button>
               )}
-              <button className="dispatch-sel-bar-csv" onClick={() => exportSelectedStsCsv(selSts, stDate)} title="Скачать выделенные СТ в CSV">⬇ CSV</button>
+              <button className="dispatch-sel-bar-csv" onClick={() => exportSelectedStsCsv(selSts, stDate)} title={`Скачать в CSV выделенные загруженные СТ (${selSts.length})`}>⬇ CSV</button>
               <button className="dispatch-sel-bar-clear" onClick={() => setSelectedStNums(new Set())} title="Снять выделение">✕</button>
             </div>
           )}

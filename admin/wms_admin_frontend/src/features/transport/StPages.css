@@ -1,0 +1,9 @@
+/* NI02.2: строка загруженных страниц доступных СТ. */
+.st-pages{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:4px 8px;font-size:12px;color:#475569}
+.st-pages-count{font-weight:600}
+.st-pages-error{color:#b91c1c;font-weight:600}
+.st-pages-period{color:#64748b}
+.st-pages button{border:1px solid #cbd5e1;border-radius:6px;background:#fff;padding:3px 10px;font-size:12px;cursor:pointer}
+.st-pages button:disabled{opacity:.55;cursor:default}
+.st-pages button:focus-visible{outline:2px solid #3b82f6;outline-offset:2px}
+.st-pages-more{font-weight:600;color:#1d4ed8}
