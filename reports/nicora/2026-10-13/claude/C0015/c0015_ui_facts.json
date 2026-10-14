@@ -1,0 +1,236 @@
+{
+ "facts": [
+  {
+   "name": "/damage",
+   "status": 200,
+   "request": {
+    "owner_ware_id": 9807,
+    "pallet_type_id": 1,
+    "custodian_kind": "STORE",
+    "custodian_id": "Own264 synthetic registered store 288ec8b68a",
+    "quantity": "1",
+    "reason": "Own C0015 dev: broken deck board found at store",
+    "decision_reference": "DEV.C0015.DAMAGE-1",
+    "delivery_accept_operation_id": "TARE:a1545636-0994-4397-b4e5-62335e67faf0",
+    "operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228"
+   },
+   "result": {
+    "operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "quantity": "1",
+    "status": "POSTED",
+    "resolution_kind": "DAMAGE",
+    "total_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 5232
+   }
+  },
+  {
+   "name": "after_damage",
+   "step": "Вернуть водителю",
+   "card": "Акт DEV.C0015.DAMAGE-1 Вернуть водителю Тип тары Европоддон Повреждено 1 Списано 0 Осталось решить 1 Выявлено у Магазин Own264 synthetic registered store 288ec8b68a Сейчас у Магазин Own264 synthetic registered store 288ec8b68a: 1 Зафиксировал OWN1348_STORE Владелец склад 9807 Основание Магазин передаёт повреждённую тару водителю со ссылкой на этот акт; водитель подтверждает приёмку. Вернуть водителю"
+  },
+  {
+   "name": "prefilled_Вернуть водителю",
+   "prefilled": {
+    "Склад-владелец": "9807",
+    "Тип тары": "1",
+    "Состояние": "DAMAGED",
+    "Отправитель": "STORE",
+    "Магазин-отправитель": "Own264 synthetic registered store 288ec8b68a",
+    "Получатель": "VEHICLE",
+    "Акт повреждения": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228"
+   }
+  },
+  {
+   "name": "/offer",
+   "status": 200,
+   "request": {
+    "task_id": 33571,
+    "owner_ware_id": 9807,
+    "pallet_type_id": 1,
+    "condition": "DAMAGED",
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "from_kind": "STORE",
+    "from_id": "Own264 synthetic registered store 288ec8b68a",
+    "to_kind": "VEHICLE",
+    "to_id": "10059",
+    "quantity": "1",
+    "scan_vehicle": "QC241ede877f6d1",
+    "operation_id": "TARE:f138e802-ba3d-45e4-95af-573520dfa6f6"
+   },
+   "result": {
+    "status": "WAITING_OTHER_PARTICIPANT",
+    "tare_balance_changed": false,
+    "operation_id": "TARE:f138e802-ba3d-45e4-95af-573520dfa6f6",
+    "quantity": "1",
+    "owner_ware_id": 9807,
+    "pallet_type_id": 1,
+    "condition": "DAMAGED",
+    "goods_stock_changed": false,
+    "outbox_id": 5233
+   }
+  },
+  {
+   "name": "/accept",
+   "status": 200,
+   "request": {
+    "offer_operation_id": "TARE:f138e802-ba3d-45e4-95af-573520dfa6f6",
+    "accepted_quantity": "1",
+    "scan_vehicle": "QC241ede877f6d1",
+    "operation_id": "TARE:7889cce5-3536-4aa7-94bd-a258d340efd2"
+   },
+   "result": {
+    "status": "POSTED",
+    "tare_balance_changed": true,
+    "destination_quantity": "1",
+    "offer_operation_id": "TARE:f138e802-ba3d-45e4-95af-573520dfa6f6",
+    "short_quantity": "0",
+    "operation_id": "TARE:7889cce5-3536-4aa7-94bd-a258d340efd2",
+    "quantity": "1",
+    "owner_ware_id": 9807,
+    "pallet_type_id": 1,
+    "condition": "DAMAGED",
+    "goods_stock_changed": false,
+    "outbox_id": 5234
+   }
+  },
+  {
+   "name": "prefilled_Вернуть на склад",
+   "prefilled": {
+    "Склад-владелец": "9807",
+    "Тип тары": "1",
+    "Состояние": "DAMAGED",
+    "Отправитель": "VEHICLE",
+    "Получатель": "WAREHOUSE",
+    "Акт повреждения": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228"
+   }
+  },
+  {
+   "name": "/offer",
+   "status": 200,
+   "request": {
+    "task_id": 33571,
+    "owner_ware_id": 9807,
+    "pallet_type_id": 1,
+    "condition": "DAMAGED",
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "from_kind": "VEHICLE",
+    "from_id": "10059",
+    "to_kind": "WAREHOUSE",
+    "to_id": "9807",
+    "quantity": "1",
+    "scan_vehicle": "QC241ede877f6d1",
+    "operation_id": "TARE:a83ff5b8-20b7-41c1-ae39-2639aa4a2147"
+   },
+   "result": {
+    "status": "WAITING_OTHER_PARTICIPANT",
+    "tare_balance_changed": false,
+    "operation_id": "TARE:a83ff5b8-20b7-41c1-ae39-2639aa4a2147",
+    "quantity": "1",
+    "owner_ware_id": 9807,
+    "pallet_type_id": 1,
+    "condition": "DAMAGED",
+    "goods_stock_changed": false,
+    "outbox_id": 5235
+   }
+  },
+  {
+   "name": "/accept",
+   "status": 200,
+   "request": {
+    "offer_operation_id": "TARE:a83ff5b8-20b7-41c1-ae39-2639aa4a2147",
+    "accepted_quantity": "1",
+    "scan_vehicle": "QC241ede877f6d1",
+    "operation_id": "TARE:83ba2e59-e5eb-40da-b5ff-d093e42df3a9"
+   },
+   "result": {
+    "status": "POSTED",
+    "tare_balance_changed": true,
+    "destination_quantity": "1",
+    "offer_operation_id": "TARE:a83ff5b8-20b7-41c1-ae39-2639aa4a2147",
+    "short_quantity": "0",
+    "operation_id": "TARE:83ba2e59-e5eb-40da-b5ff-d093e42df3a9",
+    "quantity": "1",
+    "owner_ware_id": 9807,
+    "pallet_type_id": 1,
+    "condition": "DAMAGED",
+    "goods_stock_changed": false,
+    "outbox_id": 5236
+   }
+  },
+  {
+   "name": "before_writeoff",
+   "step": "Решение о списании",
+   "card": "Акт DEV.C0015.DAMAGE-1 Решение о списании Тип тары Европоддон Повреждено 1 Списано 0 Осталось решить 1 Выявлено у Магазин Own264 synthetic registered store 288ec8b68a Сейчас у Склад 9807: 1 Зафиксировал OWN1348_STORE Владелец склад 9807 Основание Повреждённая тара на складе-владельце. Списывает независимый сотрудник склада с правом списания. Решение о списании"
+  },
+  {
+   "name": "store_writeoff_visible",
+   "visible": 0
+  },
+  {
+   "name": "writeoff_prefilled",
+   "damage": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+   "hint": "Тара возвращена на склад-владелец 9807: списание со склада, решает сотрудник этого склада. Автор акта: OWN1348_STORE. Осталось решить: 1."
+  },
+  {
+   "name": "writeoff_lost_response",
+   "status": 200,
+   "request": {
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "quantity": "1",
+    "reason": "Own C0015 dev: deck board not repairable",
+    "decision_reference": "DEV.C0015.WRITEOFF-1",
+    "writeoff_warehouse_id": 9807,
+    "operation_id": "TARE:f8fa5dcf-be39-4b41-b933-0d8455a0083f"
+   },
+   "result": {
+    "operation_id": "TARE:f8fa5dcf-be39-4b41-b933-0d8455a0083f",
+    "quantity": "1",
+    "status": "POSTED",
+    "resolution_kind": "WRITE_OFF",
+    "total_tare_changed": true,
+    "goods_stock_changed": false,
+    "outbox_id": 5237
+   }
+  },
+  {
+   "name": "writeoff_retry",
+   "status": 200,
+   "request": {
+    "damage_operation_id": "TARE:5040b7ad-9750-4d90-b031-15d2c97cb228",
+    "quantity": "1",
+    "reason": "Own C0015 dev: deck board not repairable",
+    "decision_reference": "DEV.C0015.WRITEOFF-1",
+    "writeoff_warehouse_id": 9807,
+    "operation_id": "TARE:f8fa5dcf-be39-4b41-b933-0d8455a0083f"
+   },
+   "result": {
+    "operation_id": "TARE:f8fa5dcf-be39-4b41-b933-0d8455a0083f",
+    "quantity": "1",
+    "status": "POSTED",
+    "resolution_kind": "WRITE_OFF",
+    "total_tare_changed": true,
+    "goods_stock_changed": false,
+    "outbox_id": 5237
+   }
+  },
+  {
+   "name": "final_case",
+   "step": "Списано полностью",
+   "card": "Акт DEV.C0015.DAMAGE-1 Списано полностью Тип тары Европоддон Повреждено 1 Списано 1 Осталось решить 0 Выявлено у Магазин Own264 synthetic registered store 288ec8b68a Сейчас у — Зафиксировал OWN1348_STORE Владелец склад 9807 Основание Решение принято по всем повреждённым единицам акта."
+  },
+  {
+   "name": "final_balance_ui",
+   "text": "Баланс выбранного склада-владельца Обновить баланс тары Количество учтённой тары, до 200 доступных строк. Резервы сборки могут уменьшать доступность к выдаче; окончательную проверку выполняет сервер. Магазин Own264 synthetic registered store 288ec8b68a · Европоддон · повреждённая: 0 · версия 2 Магазин Own264 synthetic registered store 288ec8b68a · Европоддон · пригодная: 1 · версия 3 Автомобиль 10059 · Европоддон · повреждённая: 0 · версия 2 Автомобиль 10059 · Европоддон · пригодная: 0 · версия 4 Склад 9807 · Европоддон · повреждённая: 0 · версия 2 Склад 9807 · Европоддон · пригодная: 4 · версия 3"
+  },
+  {
+   "name": "mobile_overflow",
+   "overflow": 0
+  },
+  {
+   "name": "errors",
+   "errors": []
+  }
+ ],
+ "errors": []
+}
