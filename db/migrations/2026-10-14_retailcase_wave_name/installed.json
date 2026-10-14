@@ -1,0 +1,20 @@
+{
+  "wave_rows": [
+    [
+      230,
+      9809,
+      "DONE",
+      "RETAILCASE_MINIMAX"
+    ],
+    [
+      231,
+      9810,
+      "DONE",
+      "RETAILCASE_MINIMAX"
+    ]
+  ],
+  "invalid_objects": 0,
+  "id_scope_status_retained": true,
+  "lookup_ms": 8.882,
+  "stock_changes": "NONE"
+}

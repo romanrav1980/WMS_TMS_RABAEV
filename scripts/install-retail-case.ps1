@@ -14,6 +14,7 @@ $download = 'https://download.oracle.com/otn-pub/otn_software/db-express/OracleX
 $oracleHash = '939742c3305c466566a55f607638621b6aa7033a183175f6bcd6cffb48e6bc3f'
 
 if ($OracleDsn -notmatch '^[A-Za-z0-9.\-]+:\d{1,5}/orcl$') { throw 'OracleDsn must be host:port/orcl.' }
+if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { throw 'Oracle XE requires an Intel/AMD x64 computer.' }
 if (-not [Environment]::Is64BitOperatingSystem) { throw 'A 64-bit Windows installation is required.' }
 foreach ($required in @('scripts\install_oracle_release.py','db\releases\2026-10-14\manifest.json','admin\wms_admin_frontend\package-lock.json','terminal\wms_terminal_web\package-lock.json')) {
     if (-not (Test-Path -LiteralPath (Join-Path $root $required))) { throw "Incomplete archive: $required" }
@@ -46,7 +47,7 @@ if (Test-Path -LiteralPath $paths.State) {
         if (-not $NoStart) { & (Join-Path $PSScriptRoot 'start-retail-case.ps1') }
         exit 0
     }
-    if ($state.phase -eq 'prerequisites') {
+    if ($state.phase -in @('prerequisites','download')) {
         # No Oracle DDL has started in this phase. Remove only this known state file.
         Remove-Item -LiteralPath $paths.State
         Write-Host 'Retry prerequisite setup; no Oracle installation had started.'
@@ -122,7 +123,7 @@ try {
     $secrets | ConvertTo-Json | Set-Content -LiteralPath $paths.Secrets -Encoding UTF8
 
     if (-not $UseExistingOracle) {
-        $state.phase='oracle'; Save-InstallState $paths $state
+        $state.phase='download'; Save-InstallState $paths $state
         Write-Host '[3/7] Oracle XE 21c: official archive, about 2 GB'
         $cache = Join-Path $paths.Runtime 'downloads'
         New-Item -ItemType Directory -Force -Path $cache | Out-Null
@@ -152,14 +153,17 @@ try {
         $response | Set-Content -LiteralPath $responseFile -Encoding ASCII
         $oracleLog = Join-Path $paths.Private 'oracle-setup.log'
         $arguments = '/s /v"RSP_FILE=\"'+$responseFile+'\"" /v"/L*v \"'+$oracleLog+'\"" /v"/qn"'
+        $state.phase='oracle'; Save-InstallState $paths $state
         $process = Start-Process -FilePath $setup -ArgumentList $arguments -WorkingDirectory $extract -WindowStyle Hidden -PassThru
         $deadline = [DateTime]::UtcNow.AddMinutes(45)
         do {
             Start-Sleep -Seconds 5
+            Write-Progress -Activity 'Oracle XE installation' -Status 'Waiting for the database listener; database creation can take several minutes.'
             $ready = Test-LocalPort 1521
             if (-not $ready -and $process.HasExited -and $process.ExitCode -notin @(0,3010)) { throw "Oracle installer failed ($($process.ExitCode)). See protected oracle-setup.log." }
             if ([DateTime]::UtcNow -gt $deadline) { throw 'Oracle setup did not become ready within 45 minutes. See protected oracle-setup.log.' }
         } until ($ready)
+        Write-Progress -Activity 'Oracle XE installation' -Completed
         # Listener readiness is not PDB readiness; the next bounded probe checks SYS login.
     } else { Write-Host '[3/7] Use the specified Oracle; no database software installation' }
     $env:RETAIL_ORACLE_SYS_PASSWORD = $sysPlain

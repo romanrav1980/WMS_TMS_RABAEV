@@ -1,4 +1,4 @@
-﻿"""Wait for Oracle SYS login, without printing credentials or mutating a database."""
+"""Wait for Oracle SYS login, without printing credentials or mutating a database."""
 import argparse
 import os
 import time
@@ -8,6 +8,7 @@ import oracledb
 def wait(timeout):
     deadline = time.monotonic() + timeout
     last_code = None
+    next_status = time.monotonic()
     while time.monotonic() < deadline:
         try:
             with oracledb.connect(user='SYS', password=os.environ['RETAIL_ORACLE_SYS_PASSWORD'],
@@ -22,6 +23,9 @@ def wait(timeout):
             last_code = getattr(e.args[0], 'code', None)
             if last_code in (1017, 28000, 28001):
                 raise RuntimeError('Oracle credentials rejected (code '+str(last_code)+')') from None
+            if time.monotonic() >= next_status:
+                print('Waiting for Oracle PDB login; last error code', last_code, flush=True)
+                next_status = time.monotonic() + 30
             time.sleep(5)
     raise RuntimeError('Oracle login timeout; last error code '+str(last_code))
 
