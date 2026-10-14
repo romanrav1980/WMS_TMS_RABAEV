@@ -2,7 +2,7 @@ raise SystemExit("Retired authoring generator: use final219 SQL and fresh captur
 from pathlib import Path
 import json
 f=Path("db/migrations/2026-10-11_ni063_offer_cancel");out={}
-out["wiki/database/nicora_ni063_offer_cancel_design_20261011.md"]="""# NI06.3: отмена непринятой передачи
+out["wiki/database/retailcase_ni063_offer_cancel_design_20261011.md"]="""# NI06.3: отмена непринятой передачи
 219 original TARE_OFFER remains immutable; append-only cancellation unique by source offer and operation, original booked-place links retained. Only original sender with current holder/right or current GLOBAL_ADMIN may cancel; exact vehicle scan/reason, no acceptance/departed booked load. Root checks current scope before replay and after locks. Same ROW offer mutex as ACCEPT, plus original trip/vehicle/books/load rows; native fresh source recheck after locks. No balance or goods journal effect. Cancelled offer cannot accept or obstruct unload/new pending offer; accepted offer must follow actual reverse transfer/recovery. Readers exclude cancelled offers from pending forecasts/reconciliation but retain visible history. No new ledger/physical writer. Fresh capture219 and refusal rollback after history.
 """
 out[str(f/"001_schema.sql")]="""create table RRL_TARE_OFFER_CANCEL(

@@ -47,7 +47,7 @@ s=s.replace("  }catch(e){if(key===scope()){","  }catch(e){if(key===scope()&&loca
 # Keep fields after unknown outcome; clear only after same confirmed command.
 s=s.replace('pending=null;composition=null;window.wmsPhysicalBoxes.render(null);','pending=null;composition=null;el("loadTempObserved").value="";el("loadTempReference").value="";el("loadTempConfirm").checked=false;window.wmsPhysicalBoxes.render(null);',1)
 f[str(p)]=s
-p=Path("wiki/database/nicora_ni052_loading_temperature_design_20261014.md");f[str(p)]=p.read_text(encoding="utf-8")+"""
+p=Path("wiki/database/retailcase_ni052_loading_temperature_design_20261014.md");f[str(p)]=p.read_text(encoding="utf-8")+"""
 ## Подготовленная реализация1162–1163
 
 RRL_STOCK_LOAD_THERMAL вычисляет диапазоны member ST и текущую версию профиля, повторно проверяет frozen результат под CONFIG/vehicle/TT locks. RRL_TT_LOAD_THERMAL_FACT имеет FK к исходному физическому load и профилю; запись возможна только из общего load core с rootcontext/lock/privatewriting flag, UPDATE/DELETE запрещены. Факт создаётся после исходного loadfact в той же транзакции; ошибка отменяет оба и товарное движение.
@@ -58,7 +58,7 @@ Typed API поддерживает новый блок отдельно от с�
 
 Пакетная миграция подготовлена, ещё не применена. Capture/checkpoint + SQL/verify сохранены. Rollback намеренно отклоняет возврат к незащищённому старому core; использовать исправление вперёд, сохраняя температурную и товарную историю. Native runtime/физический случай и отдельная departure проверка ещё не выполнены.
 """
-p=Path("wiki/index.md");f[str(p)]="- [Prepared1162–1163: температура общей погрузки](database/nicora_ni052_loading_temperature_design_20261014.md): native pre-effect recheck/atomic immutable fact/scoped read/typed API/UI; apply pending.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");f[str(p)]="- [Prepared1162–1163: температура общей погрузки](database/retailcase_ni052_loading_temperature_design_20261014.md): native pre-effect recheck/atomic immutable fact/scoped read/typed API/UI; apply pending.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");f[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-14 /1162–1163: prepared sharedload thermalconfirmation, current declaredSKU/profile/version/CFG recheck beforegoods, immutable rootowned sameTX fact; typedHU/single/reconciliation API preserves absentblock canonical hash, readonly bounded thermalhistory/currentvehicleprofile andrawUI/currentstorageguards. Captured live originalcore used; not applied/nativephysical notverified/departure next. No hardwareproof or fullsprintclaim.\n"
 p=Path(root+"checkpoint.json");m=json.loads(p.read_text(encoding="utf-8"))
 m["prepared_sha256"]={str(p):hashlib.sha256((f.get(str(p)) or p.read_text(encoding="utf-8")).encode("utf-8")).hexdigest()for p in Path(root).glob("*.sql")}

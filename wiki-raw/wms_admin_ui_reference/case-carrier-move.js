@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   let busy=false;
-  const key=()=>JSON.stringify(["nicora.caseCarrierMove",cpTsdApiBase(),cpTsdUser()]);
+  const key=()=>JSON.stringify(["retailcase.caseCarrierMove",cpTsdApiBase(),cpTsdUser()]);
   const pending=()=>{cpTsdEl("cpTsdRetryCarrier").hidden=!localStorage.getItem(key());};
   async function move(retry) {
     if(busy||window.cpTsdStockBusy||window.wmsCaseType?.hasPending())return;busy=true;window.cpTsdStockBusy=true;cpTsdEl("cpTsdMoveCarrier").disabled=true;
@@ -9,8 +9,8 @@
     let attempted = false, priorUnknown = false;
     try {
       storageKey=key();
-      if(localStorage.getItem(JSON.stringify(['nicora.caseCarrierReturn',cpTsdApiBase(),cpTsdUser()])))throw new Error('Сначала повторите сохранённый возврат.');
-      if(localStorage.getItem(JSON.stringify(['nicora.casePickIntent',cpTsdApiBase(),cpTsdUser()])))throw new Error('Сначала повторите сохранённый отбор товара.');let intent=JSON.parse(localStorage.getItem(storageKey)||"null");
+      if(localStorage.getItem(JSON.stringify(['retailcase.caseCarrierReturn',cpTsdApiBase(),cpTsdUser()])))throw new Error('Сначала повторите сохранённый возврат.');
+      if(localStorage.getItem(JSON.stringify(['retailcase.casePickIntent',cpTsdApiBase(),cpTsdUser()])))throw new Error('Сначала повторите сохранённый отбор товара.');let intent=JSON.parse(localStorage.getItem(storageKey)||"null");
       if(retry&&!intent)throw new Error("Нет незавершённого перемещения.");
       if(!retry&&intent)throw new Error("Сначала повторите сохранённое перемещение.");
       if(!intent){

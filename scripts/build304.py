@@ -61,7 +61,7 @@ alter table RRL_INTERWARE_RECOVERY_UNIT add constraint RRL_IW_REC_SINGLE_UNIT_PK
 @@../2026-10-08_stock_posting_core/014b_recompile.sql
 """)
 put("verify.sql","select CONSTRAINT_NAME,TABLE_NAME,STATUS from USER_CONSTRAINTS where CONSTRAINT_NAME in('RRL_IW_LOSS_EVENT_UNIT_PK','RRL_IW_REC_EVENT_UNIT_PK');\nselect NAME,TYPE,LINE,TEXT from USER_ERRORS where NAME in('RRL_STOCK_INTERWARE_SHORT_CMD','RRL_IW_SHORT_UNIT_G');\n")
-out["wiki/database/nicora_ni061_recurrent_loss_20261011.md"]="""# NI06.1: повторные события недостачи — 304
+out["wiki/database/retailcase_ni061_recurrent_loss_20261011.md"]="""# NI06.1: повторные события недостачи — 304
 Вход: новый настоящий межскладской partialreceipt с теми же физическими единицами после полного предыдущего восстановления. Права/currentWARE/независимое подтверждение, SOURCE/UNIT versions и UOW принадлежат прежнему RRL_STOCK_INTERWARE_SHORT_CMD/RRL_STOCK_POSTING_API. Нет нового quantitywriter.
 
 Проблема: оба журнала 295/300 имели единственный PHYSICAL_UNIT_KEY PK и запрет любого старого lossbook. Это запрещало последующую настоящую недостачу после найденного товара.
@@ -71,6 +71,6 @@ INSERT lossguard теперь дополнительно проверяет то
 
 Бounded scope: журнал и допуск повторного события. Whole recovery пока сохранён; частичная находка — следующий отдельный ticket. Полный физический второй цикл на одной единице должен использовать настоящий возврат/новую отгрузку, а не ручную подмену текущего UID/status. Не выдавать изменение PK за независимую end-to-end приёмку.
 """
-p=Path("wiki/index.md");out[p.as_posix()]="- [Повторные события недостачи](database/nicora_ni061_recurrent_loss_20261011.md):304 event+unit journal keys/current active-loss admission; physical secondcycle pending.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");out[p.as_posix()]="- [Повторные события недостачи](database/retailcase_ni061_recurrent_loss_20261011.md):304 event+unit journal keys/current active-loss admission; physical secondcycle pending.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\n- 11.10.2026 304 design/checkpoint: actualloss/recovery2rows2qty each, PK externalFK0; event+physicalunit keys and active-loss guarded admission designed. Same native writer/UNITmutex, immutable old history; no physical secondcycle claimed.\n"
 print(json.dumps(out))

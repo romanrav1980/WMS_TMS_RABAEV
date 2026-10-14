@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 f=Path("db/migrations/2026-10-11_ni052_unload_slot");out={}
-out["wiki/database/nicora_ni052_unload_slot_design_20261011.md"]="""# NI05.2: выгрузка с фактически занятым слотом
+out["wiki/database/retailcase_ni052_unload_slot_design_20261011.md"]="""# NI05.2: выгрузка с фактически занятым слотом
 215 extends214/NS45 with existing RRL_STOCK_HU_SLOT.target_json and RRL_STOCK_HU_PLACEMENT_CORE.record_place; no duplicate capacity/placement logic. Optional target_slot_id/scanned_to_slot_code; slotted current original cell requires explicit scan. Original load canonical mass/dimensions archived unchanged, restored exact composition changes only monotonically increasing epochs/QC state. SLOT40 plus CELL_X fence/current topology/placement task-sync-claim ownership declared before all effects; former balance/reserve owners retained. Existing target_json rechecks capacity/occupied/reserved/planned arrival/current topology/temp/location at execution; late refusal rolls back unload completely. Native record_place creates actual DONE PUTAWAY/SYNCED/OCCUPIED measured owner fact, new HARD coverage same selected slot. API excludes null fields to preserve prior request/replay identity. Unload rights authorize scoped physical reversal/placement, no independent general move endpoint rights granted. Recovery forward repair with actual placement history.
 """
 for stem,sql in [("slot","001_slot.sql"),("placement","002_placement.sql")]:

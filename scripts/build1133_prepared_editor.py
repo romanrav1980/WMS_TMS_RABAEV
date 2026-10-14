@@ -18,7 +18,7 @@ p=Path("wiki-raw/wms_admin_ui_reference/sap-automatic-preparation.css");f[str(p)
 #sapAssignment #sapAssignSt{background:#2277ee;color:white;border-color:#2277ee}
 #sapPreparationStatus,#sapTripReviewMessage:not(:empty){line-height:1.6;color:#274d75;padding:10px;background:#eef4ff;border-radius:7px}
 """
-p=Path("wiki/runbooks/nicora_active_work.md");f[str(p)]="""# CHECKPOINT1133 — NI02.2 assignment bridge prepared/current read
+p=Path("wiki/runbooks/retailcase_active_work.md");f[str(p)]="""# CHECKPOINT1133 — NI02.2 assignment bridge prepared/current read
 
 Continueallowner no cutoff/noagents/noGithub. AfterNI02.1+QC alias deliveredreports30/31, addedactualUI auto savedresult→selectedorder2135#sapAssignment/currentGETreceipt→existing nativeassign endpoint, optional readonlyexistingpreflight button. No new writer/mapping/policy. Oldmanualeditor wronglydisplayed source18+18 asoneplace afteralreadyauto prepared;1133 hides editor/disablespreparation when savedreceipt exists, sameoldcurrent writer reused. Newmanualediting stillallowedforunpreparedsources throughexistingoldform; pending manualglobal safety gap remains priorlegacyinmemoryfunction (not newly claimed durable).
 

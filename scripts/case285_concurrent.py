@@ -23,4 +23,4 @@ try:service.apply(ctx["winner"],changed,"admin")
 except Exception as e:assert getattr(e,"status",None)==409
 else:raise AssertionError("Payload collision accepted")
 assert not service.context(9807,"admin")["configured"]
-print("PASS285 actual concurrent sameversion200/409, one immutable null-setting, replay/resolve recorded/bodycollision409; no guessed NICORA hub or stock writes")
+print("PASS285 actual concurrent sameversion200/409, one immutable null-setting, replay/resolve recorded/bodycollision409; no guessed RETAILCASE hub or stock writes")

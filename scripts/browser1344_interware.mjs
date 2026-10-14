@@ -9,7 +9,7 @@ try{
  await page.locator('#iwLoad').click();await page.locator('.iw-flow-card').first().waitFor();
  await page.locator('.iw-flow-card').first().click();
  const single=await page.locator('#iwFlowDetail').innerText();
- await page.locator('.iw-board').screenshot({path:'reports/nicora/2026-10-13/screenshots/88-b04-interwarehouse-route.png'});
+ await page.locator('.iw-board').screenshot({path:'reports/retailcase/2026-10-13/screenshots/88-b04-interwarehouse-route.png'});
  await page.getByRole('button',{name:'История / расхождения',exact:true}).click();
  if(!await page.locator('#iwDecisionHistory').isVisible())throw Error('Existing form not opened');
  await page.locator('#iwWare').fill('56524567');
@@ -18,7 +18,7 @@ try{
  await page.locator('#iwGroupLinks a').first().click();
  await page.waitForFunction(()=>document.querySelector('#ggState')?.textContent?.length>0);
  const group=await page.locator('#ggState').innerText(),lots=await page.locator('#ggLots').innerText();
- await page.locator('main > section').first().screenshot({path:'reports/nicora/2026-10-13/screenshots/89-b04-group-link.png'});
+ await page.locator('main > section').first().screenshot({path:'reports/retailcase/2026-10-13/screenshots/89-b04-group-link.png'});
  fs.writeFileSync('tmp/result1344.json',JSON.stringify({single,group,lots,errors,writes},null,2));
  console.log(JSON.stringify({single,group,errors,writes}));if(errors.length||writes.length)throw Error('Unexpected error or write');
 }finally{await browser.close();}

@@ -1,6 +1,6 @@
 # Qwen: общая подача, несколько ячеек и целевой запас
 
-Основание: wiki/database/nicora_ni032_shared_supply_20261009.md и nicora_ni032_target_supply_20261009.md. Только существующая RABAEV/orcl, собственные уникальные fixture. Не очищать общий склад. Все quantity effects через RRL_STOCK_POSTING_API.
+Основание: wiki/database/retailcase_ni032_shared_supply_20261009.md и retailcase_ni032_target_supply_20261009.md. Только существующая RABAEV/orcl, собственные уникальные fixture. Не очищать общий склад. Все quantity effects через RRL_STOCK_POSTING_API.
 
 1. Native create_plan12+8 на одном физическом PAL20: два CASE, одна целая подача20, отдельные владельцы HARD12/8, явный допуск и CASE факты. Второй владелец с другим адресом должен запретить whole movement без изменения P/H.
 2. Native два заказа6+6 на PAL10+10, основная face cap5, две dynamic face cap10: existing source groups10+2 распределяются по двум адресам, физические подачи10+10, HARD10+2/free8. Проверить CASE route/content version, demand split и исходные заказы.

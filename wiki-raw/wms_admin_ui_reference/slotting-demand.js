@@ -3,7 +3,7 @@
   const scope = () => JSON.stringify([auth().state.apiBase, auth().state.user?.username,
     ...["sdWare", "sdArticle", "sdFrom", "sdTo", "sdForecast", "sdUnit", "sdPalletWeight", "sdCosts", "sdCandidateRoute"].map(id => el(id).value)]);
   let sequence = 0, identity = "", lastPreview = null, busy = false;
-  const pendingKey = () => "nicora.slotting.draft:" + auth().state.apiBase + ":" + auth().state.user?.username;
+  const pendingKey = () => "retailcase.slotting.draft:" + auth().state.apiBase + ":" + auth().state.user?.username;
   const actorScope = () => auth().state.apiBase + "|" + auth().state.user?.username;
   const text = (value) => {const p = document.createElement("p"); p.textContent = value; el("sdResult").appendChild(p);};
   async function read() {

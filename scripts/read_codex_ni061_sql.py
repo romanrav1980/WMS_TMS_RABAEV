@@ -1,4 +1,4 @@
 exec(open("scripts/ni063_slow_queries.py",encoding="utf-8").read().split("with oracledb.connect",1)[0])
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute("select SQL_ID,EXECUTIONS,round(ELAPSED_TIME/nullif(EXECUTIONS,0)/1000,3),BUFFER_GETS,substr(SQL_TEXT,1,120) from V$SQL where PARSING_SCHEMA_NAME='RABAEV' and EXECUTIONS>0 and SQL_TEXT not like '%V$SQL%' and upper(SQL_TEXT) like '%RRL_IW_GROUP_PLAN%' and LAST_ACTIVE_TIME>sysdate-1/24 order by ELAPSED_TIME/nullif(EXECUTIONS,0)desc fetch first 8 rows only")
- result=q.fetchall();Path('reports/nicora/2026-10-13/codex/NI061/sql.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result))
+ result=q.fetchall();Path('reports/retailcase/2026-10-13/codex/NI061/sql.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result))

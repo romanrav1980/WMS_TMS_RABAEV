@@ -25,9 +25,9 @@ p=d+"apply.sql";files[p]=Path(p).read_text(encoding="utf-8")+"@@017_already_wait
 p=d+"checkpoint.json";v=json.loads(Path(p).read_text(encoding="utf-8"));v["state"]="APPLIED_VALID_ALREADY_WAITING_EXTENSION_PREPARED"
 v["extension"]="1070 all-CASE HU already waiting: metadata receipt/noWHT/stockwrite, fresh whole source/config/decision validation, exact cached result"
 v["sha256"].update({p:hashlib.sha256(t.encode()).hexdigest()for p,t in files.items()});files[p]=json.dumps(v,indent=2)
-p="wiki/database/nicora_ni072_nested_hu_wait_20261013.md";files[p]=Path(p).read_text(encoding="utf-8")+"\n1070 PREPARED already-waiting extension: current wholeHU snapshot/config/decision verified under existing metadata fence, record immutable WAIT_RUN with already_waiting root and emptytasks; noHUWHT/stock/core receipt fabricated. 1069 actualtwo-containerlevels move+bounded TT row contention passed on original20goods; report pending.\n"
+p="wiki/database/retailcase_ni072_nested_hu_wait_20261013.md";files[p]=Path(p).read_text(encoding="utf-8")+"\n1070 PREPARED already-waiting extension: current wholeHU snapshot/config/decision verified under existing metadata fence, record immutable WAIT_RUN with already_waiting root and emptytasks; noHUWHT/stock/core receipt fabricated. 1069 actualtwo-containerlevels move+bounded TT row contention passed on original20goods; report pending.\n"
 for p,note in [
-("wiki/index.md","- [Already waiting1070](database/nicora_ni072_nested_hu_wait_20261013.md): prepared no newHUtask/stock if alreadyatWAIT, deep1069 actualdone.\n"),
+("wiki/index.md","- [Already waiting1070](database/retailcase_ni072_nested_hu_wait_20261013.md): prepared no newHUtask/stock if alreadyatWAIT, deep1069 actualdone.\n"),
 ("wiki/log.md","\n- checkpoint1070 PREPARED: metadata no-move result for wholeHU alreadywaiting, source/config/decision frozenchecks maintained; captured extension017/018 beforelive. Deep1069 actualcontainer→container→twoCASE/P20H20/ROWbusy20840 passed.\n")]:
  t=Path(p).read_text(encoding="utf-8");files[p]=note+t if p.endswith("index.md")else t+note
 print(json.dumps(files,ensure_ascii=True))

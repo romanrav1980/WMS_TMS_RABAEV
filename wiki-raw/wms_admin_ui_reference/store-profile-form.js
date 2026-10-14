@@ -4,7 +4,7 @@
 (() => {
  const auth=()=>window.wmsAdminAuth,base=()=>auth().state.apiBase.replace(/\/$/,'');
  const DAYS=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],MAX_DAY=8,MAX_WEEK=56;
- const scope=()=>JSON.stringify(['nicora.storeProfile',base(),auth().state.user?.username]);
+ const scope=()=>JSON.stringify(['retailcase.storeProfile',base(),auth().state.user?.username]);
  const valid=v=>v&&typeof v.body?.store_addr==='string'&&/^[A-Za-z0-9_.:-]{1,100}$/.test(v.body?.operation_id||'')&&Number.isSafeInteger(v.body.expected_version);
  const store=window.wmsCommandIntent.create('',valid,{storageKey:scope,invalid:'Некорректная команда профиля.'});
  let state=null;

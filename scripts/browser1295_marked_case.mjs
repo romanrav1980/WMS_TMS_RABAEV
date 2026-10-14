@@ -15,7 +15,7 @@ try{
  await page.locator('#cpTsdConfirm').click();await page.waitForFunction(()=>document.querySelector('#cpTsdState').textContent.includes('ALCOHOL'));
  if(posts!==0)throw Error('Missing profile submitted');
  await page.locator('#cpTsdMarking textarea[data-system=EGAIS]').fill(ctx.scans.filter(x=>x.system_code==='EGAIS').map(x=>x.code).join('\n'));
- await page.locator('#cpTsdMarking').screenshot({path:'reports/nicora/2026-10-13/screenshots/82-b02-multiple-profiles.png'});
+ await page.locator('#cpTsdMarking').screenshot({path:'reports/retailcase/2026-10-13/screenshots/82-b02-multiple-profiles.png'});
  let original;
  await page.route('**'+url,async route=>{
   original=route.request().postDataJSON();
@@ -36,6 +36,6 @@ try{
  if(!r.ok()||!ctx.replay.same_request||body.operation_id!==original.operation_id)throw Error('Replay did not match');
  await page.waitForFunction(()=>document.querySelector('#cpTsdState').textContent.includes('Отбор проведён'));
  ctx.stage='B02_MARKED_PICKED';ctx.ui_errors=errors;fs.writeFileSync(path,JSON.stringify(ctx,null,2));
- await page.locator('.tsd-task-card').first().screenshot({path:'reports/nicora/2026-10-13/screenshots/83-b02-picked.png'});
+ await page.locator('.tsd-task-card').first().screenshot({path:'reports/retailcase/2026-10-13/screenshots/83-b02-picked.png'});
  console.log(JSON.stringify({stage:ctx.stage,case:ctx.case,operation:body.operation_id,profiles:2,codes:original.unit_scans.length,quantity:original.fact_qty,missing_profile_posted:false,replay_same:ctx.replay.same_request,errors}));
 }finally{await browser.close();}

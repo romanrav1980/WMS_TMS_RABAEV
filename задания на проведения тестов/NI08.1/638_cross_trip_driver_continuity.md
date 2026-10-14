@@ -1,6 +1,6 @@
 # NI08.1 / 638: непрерывное вождение нескольких рейсов
 
-Подготовлено для локальной Qwen, независимый прогон не выполнен. Source wiki/components/nicora_ni081_cross_trip_continuity_20261012.md.
+Подготовлено для локальной Qwen, независимый прогон не выполнен. Source wiki/components/retailcase_ni081_cross_trip_continuity_20261012.md.
 
 На одном действительном source-approved driver day проверить существующие time-preview/Gantt/common coordination. Два разных рейса90 и40 минут с разгрузкой10 между ними дают непрерывное130, конкретный blocker DRIVER_CONTINUOUS_DRIVE_LIMIT с operation/day. REST15 между ними снимает это нарушение; REST14 не снимает. Ни новый рейс, ни работа, ни полночь не считаются отдыхом.
 

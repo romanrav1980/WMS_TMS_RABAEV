@@ -18,7 +18,7 @@ try{
  await page.locator('#orderPickStatus').filter({hasText:'Сохранён план'}).waitFor();
  const actual=await page.evaluate(async id=>orderRequest('/api/picking/plans/'+id),result.pick_plan_id);
  ctx.plan.detail=actual;ctx.stage='PICK_PLAN_OBSERVED';fs.writeFileSync(path,JSON.stringify(ctx,null,2));
- await page.locator('#orderPickingPanel').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/67-b01-stocked-plan.png'});
- await page.setViewportSize({width:430,height:900});await page.locator('#orderPickingPanel').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/68-b01-stocked-plan-mobile.png'});
+ await page.locator('#orderPickingPanel').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/67-b01-stocked-plan.png'});
+ await page.setViewportSize({width:430,height:900});await page.locator('#orderPickingPanel').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/68-b01-stocked-plan-mobile.png'});
  console.log(JSON.stringify({stage:ctx.stage,plan:actual}));
 }finally{await browser.close();}

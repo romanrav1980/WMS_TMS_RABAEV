@@ -4,7 +4,7 @@ p=Path("wiki-raw/wms_admin_ui_reference/day-reconciliation.html");t=p.read_text(
 assert 'day-reconciliation.css' not in t
 t=t.replace('<link rel="stylesheet" href="styles.css">','<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="day-reconciliation.css">')
 t=t.replace('class="auth-pending"','class="auth-pending day-page"')
-t=t.replace('<h1>Сверка исполнения</h1>','''<header class="page-heading"><div><div class="eyebrow">NICORA · Управление складом</div><h1>Исполнение и отгрузка</h1><p class="page-description">Факты дня, перенос рейсов и контроль складских заданий</p></div><span class="page-badge">Рабочий интерфейс WMS</span></header>
+t=t.replace('<h1>Сверка исполнения</h1>','''<header class="page-heading"><div><div class="eyebrow">RETAILCASE · Управление складом</div><h1>Исполнение и отгрузка</h1><p class="page-description">Факты дня, перенос рейсов и контроль складских заданий</p></div><span class="page-badge">Рабочий интерфейс WMS</span></header>
 <nav class="page-tabs" aria-label="Разделы сверки"><a href="#dayOverview">Обзор дня</a><a href="#shippingArea">Грузовая зона</a><a href="#stTransfer">Перенос СТ</a><a href="#waitingArea">Ожидание товара</a></nav>''')
 t=t.replace('<section class="panel"><label>Склад','<section class="panel" id="dayOverview"><label>Склад',1)
 t=t.replace('<section class="panel" data-permission="transport_dispatch_view"><h2>СТ выбранной даты','<section class="panel" id="shippingArea" data-permission="transport_dispatch_view"><h2>СТ выбранной даты')

@@ -1,5 +1,5 @@
 # Qwen: NI05.3/087 — оборудование и архив показания
-Читать wiki/database/nicora_ni053_scale_capture_20261010.md. Это синтетический gateway contract; отдельное физическое испытание требуется после получения модели/протокола весов.
+Читать wiki/database/retailcase_ni053_scale_capture_20261010.md. Это синтетический gateway contract; отдельное физическое испытание требуется после получения модели/протокола весов.
 
 Создать только собственный sender RUSERS/группу через действующую rights admin, право store_scale_ingest. GLOBAL_ADMIN не может быть device sender. Настроить device/address/version/active/calibration/limit/resolution. Submit5–25 samples, период2–10с, последние10KG, min-max≤resolution, KG/GROSS/no preset tare/recent zero. Проверить immutable original canonical JSON/hash/first server time/actor/policy, last sample вместо среднего.
 

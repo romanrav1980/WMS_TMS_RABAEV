@@ -39,6 +39,6 @@ try{
  }
  ctx.stage='B01_LOADED';fs.writeFileSync(path,JSON.stringify(ctx,null,2));
  await page.locator('#tripSummary').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/77-b01-loaded.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/77-b01-loaded.png'});
  console.log(JSON.stringify({stage:ctx.stage,errors}));
 }finally{await browser.close();}

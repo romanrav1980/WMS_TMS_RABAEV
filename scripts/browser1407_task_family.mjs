@@ -8,9 +8,9 @@ try{
  const r=await wait,data=await r.json();if(r.status()!==200||data.confirmed_quantity!=='3'||data.remaining_quantity!=='0'||data.tasks.length!==2)throw Error('Unexpected actual chain '+JSON.stringify(data));
  await page.locator('#warehouseTaskFamily .wt-family-step').last().waitFor();
  if(await page.locator('#warehouseTaskFamily .wt-family-step').count()!==data.tasks.length)throw Error('Lost family row');
- await page.locator('#warehouseTaskFamily').screenshot({path:'reports/nicora/2026-10-13/screenshots/105-ni032-task-family.png'});
+ await page.locator('#warehouseTaskFamily').screenshot({path:'reports/retailcase/2026-10-13/screenshots/105-ni032-task-family.png'});
  const parent=page.locator('#warehouseTaskFamily a').filter({hasText:/^#633$/});const parentRead=page.waitForResponse(r=>r.url().endsWith('/warehouse-tasks/633/progress'));await parent.click();if((await parentRead).status()!==200)throw Error('Parent link failed');
- await page.setViewportSize({width:390,height:844});await page.locator('#warehouseTaskFamily').evaluate(n=>n.scrollIntoView({block:'start'}));await page.locator('#warehouseTaskFamily').screenshot({path:'reports/nicora/2026-10-13/screenshots/106-ni032-task-family-mobile.png'});
+ await page.setViewportSize({width:390,height:844});await page.locator('#warehouseTaskFamily').evaluate(n=>n.scrollIntoView({block:'start'}));await page.locator('#warehouseTaskFamily').screenshot({path:'reports/retailcase/2026-10-13/screenshots/106-ni032-task-family-mobile.png'});
  const box=await page.locator('#warehouseTaskFamily').boundingBox();if(!box||box.width>390)throw Error('Family panel too wide');
  await page.goto('http://127.0.0.1:8088/wms-admin/warehouse-tasks.html?task_id=564#warehouseTaskDetail');await page.locator('#warehouseTaskFamily').waitFor();
  const next=page.locator('#warehouseTaskFamily a').filter({hasText:'Открыть следующее задание #564'});if(await next.count()!==1)throw Error('Active next step missing');

@@ -22,5 +22,5 @@ s=s[:idx]+"""  const waveLink=warehouseTaskEl('warehouseTaskWaveLink');
   }
 """+s[idx:]
 files[p]=s
-p="reports/nicora/2026-10-13/08-partial-shared-report.md";files[p]=Path(p).read_text(encoding="utf-8")+"\n![Выполненная общая подача1097](screenshots/10-partial-shared-task.png)\n\nРеальный браузер: DONE, план/факт12 EA, остаток0, ссылка открывает карточку после загрузки.\n"
+p="reports/retailcase/2026-10-13/08-partial-shared-report.md";files[p]=Path(p).read_text(encoding="utf-8")+"\n![Выполненная общая подача1097](screenshots/10-partial-shared-task.png)\n\nРеальный браузер: DONE, план/факт12 EA, остаток0, ссылка открывает карточку после загрузки.\n"
 print(json.dumps(files,ensure_ascii=True))

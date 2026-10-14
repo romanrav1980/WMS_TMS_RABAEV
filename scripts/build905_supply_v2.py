@@ -151,7 +151,7 @@ update RRL_SCHEMA_MIGRATIONS set STATUS='ROLLED_BACK'where MIGRATION_ID='{mid}';
 """
 files[d+"verify.sql"]="select COLUMN_NAME,DATA_DEFAULT,NULLABLE from USER_TAB_COLUMNS where TABLE_NAME='RRL_SAP_SUPPLY_ORDER'and COLUMN_NAME='GATEWAY_CONTRACT_VERSION';\nselect INDEX_NAME,UNIQUENESS,STATUS from USER_INDEXES where TABLE_NAME='RRL_SAP_SUPPLY_LINE';\nselect NAME,TYPE,LINE,TEXT from USER_ERRORS where NAME not like 'BIN$%';\n"
 files[d+"checkpoint.json"]=json.dumps({"migration_id":mid,"state":"PREPARED","target":"RABAEV/orcl","before_table_sha256":hashlib.sha256(files[d+"000_before_table.sql"].encode()).hexdigest(),"after_files_sha256":{p:hashlib.sha256(t.encode()).hexdigest()for p,t in files.items()}},indent=2)
-files["wiki/database/nicora_ni011_supply_lines_20261013.md"]="""# NI01.1: отдельные строки заказа SAP
+files["wiki/database/retailcase_ni011_supply_lines_20261013.md"]="""# NI01.1: отдельные строки заказа SAP
 
 905 PREPARED: явный WarehouseSupplyOrder version=2, не стандартный SAP IDoc. ARTMAS10 не меняется. Версия1 сохраняет запрет повторного артикула; версия2 допускает несколько разных LineNumber для одного артикула. Source PK(ORDER_ID,LINE_NUMBER) сохраняется; прежние unique ROW_ID и ORDER_ID/ARTICUL заменяются неуникальными индексами. Зависимых FK на них нет (live904). Старые RRL_PRIHOD_NAKLAD_ROWS UNIQUE(ORDID,ARTICUL) сохраняются: одна строка COUNT1=sum exact base quantities всех source lines, несколько source lines ссылаются на неё. Receipt native CORE/PLAN уже используют order/line; новые пакеты/stock writers не создаются.
 
@@ -161,6 +161,6 @@ Capture904 DDL/SHA + [apply/rollback](../../db/migrations/2026-10-13_ni011_suppl
 
 Противоречие уточнено: case900 version1 отклонён422 до создания документа/остатка. В старом v1 фактического случая дублей SKU не было; нельзя заявлять найденное искажение текущих остатков. Новая возможность позволяет принимать разные позиции одного SKU, учитывая партии паллет как прежде.
 """
-files["wiki/index.md"]="- [NI01.1 строки SAP905](database/nicora_ni011_supply_lines_20261013.md): explicit v2/shared canonical legacy SKU row; prepared, live pending.\n"+read("wiki/index.md")
+files["wiki/index.md"]="- [NI01.1 строки SAP905](database/retailcase_ni011_supply_lines_20261013.md): explicit v2/shared canonical legacy SKU row; prepared, live pending.\n"+read("wiki/index.md")
 files["wiki/log.md"]=read("wiki/log.md")+"\n- 2026-10-13 prepared905 NI01.1 explicit supply v2 after live constraints904 capture/no referencing FK. Source PK unchanged, legacy document/SKU uniqueness retained, per-line posted receipt ledger, rollback refuses destructive reconciliation. Version1 negative900 correctly rejected before Oracle writes; not an observed inventory distortion. Apply/business proof pending.\n"
 print(json.dumps(files,ensure_ascii=True))

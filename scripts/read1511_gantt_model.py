@@ -16,5 +16,5 @@ ops="""(select 1 TT_ID,1 ID,'DRIVE' OPERATION_CODE,1 ORD,120 DURATION_MIN,
 sql=cap.sql.replace('RRL_TRANSPORT_TASK TT',tt+' TT').replace('RRL_TR_VEHICLE V',vehicle+' V').replace('RRL_TT_OPERATIONS OPS',ops+' OPS')
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn) as c:
  q=c.cursor();q.execute(sql,cap.params);names=[x[0] for x in q.description];rows=[dict(zip(names,r)) for r in q];assert {r['ID'] for r in rows}=={1,3,4}
-Path('reports/nicora/2026-10-13/gantt_overlap_model1511.json').write_text(json.dumps({'kind':'read-only Oracle derived-table model using unchanged actual query predicate','included':[r['ID'] for r in rows],'cases':['cross-midnight included','exact end boundary excluded','open fact included','zero-duration point included','tomorrow excluded'],'writes':0},indent=2),encoding='utf-8')
+Path('reports/retailcase/2026-10-13/gantt_overlap_model1511.json').write_text(json.dumps({'kind':'read-only Oracle derived-table model using unchanged actual query predicate','included':[r['ID'] for r in rows],'cases':['cross-midnight included','exact end boundary excluded','open fact included','zero-duration point included','tomorrow excluded'],'writes':0},indent=2),encoding='utf-8')
 print('PASS read-only Oracle model: cross-midnight, boundary, open fact, point, tomorrow')

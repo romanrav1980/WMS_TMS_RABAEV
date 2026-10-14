@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-out={};page="wiki/database/nicora_cutover_adapters_20261010.md"
+out={};page="wiki/database/retailcase_cutover_adapters_20261010.md"
 out[page]="""# Активное ядро обязательно для всех адаптеров,148
 
 Shared inventory require_active_release exact current release read raises StockPostingError STOCK_RELEASE_NOT_ACTIVE, installed API handler503. Ten adapters CASE/short/terminal quality/reservation/document release/wave/MES no longer return None/False in PREPARED to select old effect. Native commands/source permissions/transactions unchanged; compatibility OFF unchanged.
@@ -13,12 +13,12 @@ Architecture488files/0cycles/118debt remaining, FAIL; down from133, no baseline 
 
 SQL immutable operation lookup bounded PK retained; native completed proof review147 applies. All business document PREPARED statuses preserved, read-only reconciliation diagnostic not an effect bypass. Full sprint/independent acceptance still open.
 """
-out["wiki/index.updated.tmp"]="- [Общий запрет старых проводок PREPARED](database/nicora_cutover_adapters_20261010.md):148 ten adapters ACTIVE-only/native-first legacy tails removed/13 casesPASS/debt118/stock unchanged.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
+out["wiki/index.updated.tmp"]="- [Общий запрет старых проводок PREPARED](database/retailcase_cutover_adapters_20261010.md):148 ten adapters ACTIVE-only/native-first legacy tails removed/13 casesPASS/debt118/stock unchanged.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
 for p,line in [
 ("wiki/log.md","2026-10-10:148 shared ACTIVE-only release boundary in ten adapters/no PREPARED None-False legacy opt-out; obsolete CASE/MES/reservation/picking native-first tails removed; serialized CASE metadata all states; old direct helpers closed/public imports.13 boundary casesPASS. No original API CASE requested_confirmation fixture: positive not claimed; actual direct-native1030 conflict409/event unchanged. Original SAP replay exact/no journal. Architecture488files0cycles118debtFAIL, no allowance growth; independent full API case next."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","Ticket148 all ten stock adapters ACTIVE-only and legacy native-first tails removed; see database/nicora_cutover_adapters_20261010.md. Positive full API CASE acceptance remains explicit pending.")
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md","Ticket148 all ten stock adapters ACTIVE-only and legacy native-first tails removed; see database/retailcase_cutover_adapters_20261010.md. Positive full API CASE acceptance remains explicit pending.")
 ]:out[p]=Path(p).read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":row.setdefault("implementedSlices",[]).append("148 all stock adapters ACTIVE-only/native-first legacy physical branches removed")
 out[str(p)]=json.dumps(m,ensure_ascii=False,indent=2)+"\n"

@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 out={}
-out["wiki/database/nicora_ni081_range_apply_20261010.md"]="""# Утверждение диапазона и вымывание,158
+out["wiki/database/retailcase_ni081_range_apply_20261010.md"]="""# Утверждение диапазона и вымывание,158
 
 Original RRL_PICK_FACE_ARTICUL/assignment/native unitvolume and planning selector remain owners. RRL_PICK_RANGE_PROPOSAL_API delegates APPLY to accessible-only RRL_PICK_RANGE_APPLY_CORE; original immutable operation/result journal retained. Add approval/sourceproof, versioned ACTIVE/DRAINING/CLOSED mappingstatus, OLD/NEW membership, immutable oldrepl quantity envelope and closehistory. Deferred operationFK validates whole command at ownercommit. No second quantity/task writer, no copy of database.
 
@@ -21,10 +21,10 @@ Architecture513files0cycles79debtPASS/NodePASS; no browser/Qwen/industrial accep
 
 Remaining NI08.1 includes scoped candidate windows, actual resource recommendations/strict route-driver-time admission, calendar ownership, browser and external/independent acceptance. NS59 ordinarydev approval+drain functional slice implemented; no full18-sprint closureclaim.
 """
-p=Path("wiki/index.md");out[str(p)]="- [Утверждение диапазона и вымывание](database/nicora_ni081_range_apply_20261010.md):158 original assignment/native volume/current source/atomic publication/old commitments preserved/future refill stopped/empty closure.\n"+p.read_text(encoding="utf-8-sig")
+p=Path("wiki/index.md");out[str(p)]="- [Утверждение диапазона и вымывание](database/retailcase_ni081_range_apply_20261010.md):158 original assignment/native volume/current source/atomic publication/old commitments preserved/future refill stopped/empty closure.\n"+p.read_text(encoding="utf-8-sig")
 p=Path("wiki/log.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\n2026-10-10:158 nativeversioned rangeapproval/drain originalmapping assignment/capacity/selector, exactsource recompute underCONFIG/recheckreplay afterfence/oldrepl envelope/no stockwriter. Actual243f5283 rollback+concurrentsingle209/old207P20H20cases unchanged/stale+inspection+newrefill+expandedold12 denied; second210/empty209closed/replay/supersededHTTP. OwnQA norms24BASE/BOX1 and1920/21plannedday now10Oct, sourcefixtureadvanced old145statusobsolete. ReservedMODE/spacing/zeroquantityparser corrected/resumedown396/1502 notduplicate. Architecture513/0/79PASS/nodePASS/USER_ERRORSempty; SQLpolicy1.576/projection31.038ms boundedPK retain, scopedtopology backlogownerinventory. Fullsprint/realgeometry/externalacceptance stillopen.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\nTicket158 originalSKU-face approval/drain/versioned history, nativefuture refill/oldcommitment envelope/emptyclosure implemented; see database/nicora_ni081_range_apply_20261010.md. Original207 stock20H20/CASE untouched; ownempty209closed/new210active. Scoped candidates/resource recommendation/common strict time-driver validator remain.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\nTicket158 originalSKU-face approval/drain/versioned history, nativefuture refill/oldcommitment envelope/emptyclosure implemented; see database/retailcase_ni081_range_apply_20261010.md. Original207 stock20H20/CASE untouched; ownempty209closed/new210active. Scoped candidates/resource recommendation/common strict time-driver validator remain.\n"
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":row.setdefault("implementedSlices",[]).append("158 atomic originalrange approval/drain/grandfatheredrepl/history/emptyclosure")
 out[str(p)]=json.dumps(m,ensure_ascii=False,indent=2)+"\n"

@@ -105,7 +105,7 @@ One plan run registers only needed movements; cases already waiting are recorded
 
 No physical parent/residual is invented. Old single CASE plans/replays preserve their original body/shape. Rollback restores code but cannot erase registered multi-place history; unsupported older planner afterrollback needs explicit recovery planning. Need livecompile + private retained12/8 groupedST scenario; no fullsprint closure before actual.
 """
-files["wiki/database/nicora_ni072_multi_case_wait_20261013.md"]=page
-p="wiki/index.md";files[p]="- [NI07.2 multiCASE986](database/nicora_ni072_multi_case_wait_20261013.md): prepared per-place frozen source/one ST/allCASE/bounded200lots, live pending.\n"+read(p)
+files["wiki/database/retailcase_ni072_multi_case_wait_20261013.md"]=page
+p="wiki/index.md";files[p]="- [NI07.2 multiCASE986](database/retailcase_ni072_multi_case_wait_20261013.md): prepared per-place frozen source/one ST/allCASE/bounded200lots, live pending.\n"+read(p)
 p="wiki/log.md";files[p]=read(p)+"\n- 2026-10-13 checkpoint986 PREPARED multiple standaloneCASE sameST; exactpermember frozenplans/current globaldecision/trip/config/load and perCASE currentstock; single shape kept, captured985/SHA/pairedrollback, no parent or quantity sum; actualapply pending.\n"
 print(json.dumps(files,ensure_ascii=True))

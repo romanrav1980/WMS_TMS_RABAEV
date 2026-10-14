@@ -49,7 +49,7 @@ out[(d/"015_ledger.sql").as_posix()]="""merge into RRL_SCHEMA_MIGRATIONS d using
 when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
 values(s.MIGRATION_ID,'Found goods placement using existing TASK_COMPLETE',sysdate,user,'db/migrations/2026-10-11_ni061_recovery_placement/apply.sql','db/migrations/2026-10-11_ni061_recovery_placement/rollback.sql','APPLIED','Actual ordinary+marked recovered2 placed by existing task kernel; stock conserved, native rollback and exact replay; common target cell policy, original departed trip retained. No redelivery or new government ACK.');commit;
 """
-out["wiki/database/nicora_ni061_recovery_placement_20261011.md"]="""# NI06.1 — размещение найденного груза (301)
+out["wiki/database/retailcase_ni061_recovery_placement_20261011.md"]="""# NI06.1 — размещение найденного груза (301)
 11.10.2026. Migration 2026-10-11-301-recovery-placement, dev RABAEV/orcl, ACTIVE/compatOFF.
 
 Новая приёмка найденного груза (300) получает обычное задание PUTAWAY существующей таблицы RRL_WAREHOUSE_TASK. Источник MANUAL/RECOVERY ссылается на неизменяемые RRL_IW_RECOVERY_PUT_PLAN и RRL_IW_RECOVERY_PLACEMENT. Количество изменяет прежняя TASK_COMPLETE / TRANSFER_CORE. Планирование не проводит запас.
@@ -64,15 +64,15 @@ API POST /api/inventory/interwarehouse/recovery-placement. Прежняя стр
 
 Далее: отдельная повторная доставка оставшихся2 с исходной строкой заказа, суммирование независимых конечных приёмок1+2 без повторного FF.SHIPPED, частичные/повторные циклы недостачи. Реальные государственные ответы, оборудование и независимая приёмка не заявлены выполненными.
 """
-p=Path("wiki/index.md");s=p.read_text(encoding="utf-8").replace("current native298/app298","current native301/app301",1);out[p.as_posix()]="- [Размещение найденного груза](database/nicora_ni061_recovery_placement_20261011.md):301 existingTASK_COMPLETE/common cellpolicy/ordinary+marked2 conserved/no buyercredit.\n"+s
+p=Path("wiki/index.md");s=p.read_text(encoding="utf-8").replace("current native298/app298","current native301/app301",1);out[p.as_posix()]="- [Размещение найденного груза](database/retailcase_ni061_recovery_placement_20261011.md):301 existingTASK_COMPLETE/common cellpolicy/ordinary+marked2 conserved/no buyercredit.\n"+s
 p=Path("wiki/log.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\n- 11.10.2026 301: actual recovered ordinary+marked2 placement via existing TASK_COMPLETE; common target cell checks; native rollback/replay/20-20, allVALID. API/UI durable plan and placement status; corrective redelivery remains.\n"
-p=Path("wiki/runbooks/nicora_active_work.md");s=p.read_text(encoding="utf-8");a=s.index("Native manifest298:");b=s.index("\n\n## Последняя",a)
+p=Path("wiki/runbooks/retailcase_active_work.md");s=p.read_text(encoding="utf-8");a=s.index("Native manifest298:");b=s.index("\n\n## Последняя",a)
 s=s[:a]+"""Native manifest301: stockRoot/task handlers301; BALANCE/LOCATION/PART/UnitCore300 and recovery guards300; partial custody-NEXT-depart296; source-load index298. Bundle generateFILES only, never reapply ACTIVE.
 App301/native301; restart rootserv301 before current API. tmp/context300_291/_292 received lost2, context301_291/_292 now placed2 in original outbound buffers. Do not rerun initial300 rollbackcases or sourcebirth. Next corrective ST/redelivery and customer1+2 lineage; historical shortage2 preserved, recovered2/net0 not customer acceptance."""+s[b:];out[p.as_posix()]=s
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"));next(x for x in j["increments"]if x["id"]=="NI06.1").setdefault("implementedSlices",[]).append("301 recovered2 existingTASK_COMPLETE placement/common targetpolicy/sameoldunits/stockconserved; corrective redelivery next");out[p.as_posix()]=json.dumps(j,indent=2)+"\n"
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"));next(x for x in j["increments"]if x["id"]=="NI06.1").setdefault("implementedSlices",[]).append("301 recovered2 existingTASK_COMPLETE placement/common targetpolicy/sameoldunits/stockconserved; corrective redelivery next");out[p.as_posix()]=json.dumps(j,indent=2)+"\n"
 qroot=next(Path(".").glob("*/NI08.1/178_container_cell_index.md")).parent.parent
 out[(qroot/"NI06.1/301_recovery_placement.md").as_posix()]='''# Qwen301: recovered stock placement
-Read wiki/database/nicora_ni061_recovery_placement_20261011.md and tmp/context301_291/_292. Tasks already DONE/P2 outbound; do not rerun source/receipt births or initial rollback phase.
+Read wiki/database/retailcase_ni061_recovery_placement_20261011.md and tmp/context301_291/_292. Tasks already DONE/P2 outbound; do not rerun source/receipt births or initial rollback phase.
 Exact OPID/body -> same result/no move. Changed payload/current foreignWARE/revoked rights/unavailable cell/unitversion conflict denies. Own fresh case plan outerrollback no task; TASK_COMPLETE rollback restores receivingP and units/clears placement/outbox. Wrong scans/partial quantity/otherUID deny. Same race plan one active task; completion serialized. Original departedTT retained. No customer/Gov credit.
 Review common helper ordinary interware positive and capacity/thermal/slot denials. Analyze longest queries. Report independent execution separately from static review.
 '''

@@ -2,7 +2,7 @@ raise SystemExit("Retired authoring generator: use final224 native/API owners/fr
 from pathlib import Path
 import json
 f=Path("db/migrations/2026-10-11_ni052_single_load_scope");out={}
-out["wiki/database/nicora_ni052_single_scope_design_20261011.md"]="""# NI05.2: текущий склад самостоятельной погрузки
+out["wiki/database/retailcase_ni052_single_scope_design_20261011.md"]="""# NI05.2: текущий склад самостоятельной погрузки
 224 authoritative current active RUSERS/right/warehouse or GLOBAL_ADMIN checked against original legacy ST identifier. Existing loading read owner exposes assert_scope, used by Root LOAD_SHIPMENT before committed replay/after actual locks and by actor-aware preview. Authorization checks only original ST metadata, so old committed replay works after physical shipping; changed current warehouse/right denies saved replay. Same read-only Oracle transaction for authorized preview. Existing public port gains optional internal actor (public HTTP always authenticated actor), existing source/quantity/binding unchanged.
 """
 s=(f/"000_before_rrl_stock_loading_read.sql").read_text(encoding="utf-8")

@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 files={}
-report="reports/nicora/2026-10-13/50-ni062-return-route.md"
+report="reports/retailcase/2026-10-13/50-ni062-return-route.md"
 files[report]="""# NI06.2 — путь товарного возврата
 2026-10-14. Существующее согласование возврата получило сквозную карточку: SAP-документ → рейс вывоза → передача магазином → подпись водителя → складская приёмка → размещение → поставщик/утилизация/исправный возврат.
 
@@ -25,12 +25,12 @@ SQL7fgcz9ypbs00a: средние46.538–91.089мс по текущим child cu
 
 Это готовая операторская связка существующих механизмов; реальное новое SAP-сообщение, аппаратура, государственный ACK и независимая приёмка полного NI06.2 не подтверждены.
 """
-page="wiki/components/nicora_ni062_return_route_20261014.md"
+page="wiki/components/retailcase_ni062_return_route_20261014.md"
 files[page]="# NI06.2: сквозное досье возврата\n\n1354–1363. Аддитивный approvals[].progress в прежнем досье; bounded100/current permission+receivingWARE/same snapshot/read-only cross-owner model. UI показывает фактическую цепочку и открывает существующие формы с принимающим складом, не проводит по клику.\n\n[Отчёт50](../../"+report+"). Retained383 disposal/supplier и642 markedREUSE3/DONE1066 реально прочитаны; новые движения не создавались. Native-инварианты и внешняя приёмка не подменены отображением.\n"
-p=Path("wiki/components/nicora_ni062_return_receiving_queue_20261011.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n## Уточнение1363,14октября\nФраза выше об отсутствии positive markedREUSE evidence относится к моменту283. В текущем dev сохранился более поздний REUSE643.RECEIVE:dc1889623c/REUSE643.DONE:dc1889623c,3EA,ORIGINAL_SAP_VERIFIED,task1066DONE; он прочитан через новое досье report50. Этот проход чтения не является новым физическим испытанием или независимой приёмкой.\n"
-p=Path("wiki/index.md");files[str(p)]="- [NI06.2: путь возврата1363](components/nicora_ni062_return_route_20261014.md): единое досье SAP/вывоз/приёмка/размещение/поставщик/утилизация, report50, read-only.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/components/retailcase_ni062_return_receiving_queue_20261011.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n## Уточнение1363,14октября\nФраза выше об отсутствии positive markedREUSE evidence относится к моменту283. В текущем dev сохранился более поздний REUSE643.RECEIVE:dc1889623c/REUSE643.DONE:dc1889623c,3EA,ORIGINAL_SAP_VERIFIED,task1066DONE; он прочитан через новое досье report50. Этот проход чтения не является новым физическим испытанием или независимой приёмкой.\n"
+p=Path("wiki/index.md");files[str(p)]="- [NI06.2: путь возврата1363](components/retailcase_ni062_return_route_20261014.md): единое досье SAP/вывоз/приёмка/размещение/поставщик/утилизация, report50, read-only.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-14 ·1363: return progress currentWARE batch100/UI links, retained supplier/disposal/REUSE facts; report50. Уточнено устаревшее отсутствие markedREUSE evidence283. Tare gate1353 PASS738/0cycles/74debt/24tests/обаTS.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"));d["planRevision"]=64;d["currentSprint"]="NI04.1";d["firstChange"]="NI06.2 return route dossier delivered (report50); continue nested handling-unit operator composition. Claude C-0008 owns finance basis/expense workflow; ACK pending."
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"));d["planRevision"]=64;d["currentSprint"]="NI04.1";d["firstChange"]="NI06.2 return route dossier delivered (report50); continue nested handling-unit operator composition. Claude C-0008 owns finance basis/expense workflow; ACK pending."
 for item in d["increments"]:
  if item["id"]=="NI06.2":
   item.setdefault("implementedSlices",[]).append("1354–1363 existing return dossier + scoped same-snapshot progress/read-only UI links; actual retained supplier/disposal/markedREUSE paths, report50.")

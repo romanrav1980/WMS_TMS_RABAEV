@@ -23,4 +23,4 @@ with httpx.Client(base_url='http://127.0.0.1:8088',auth=('admin',secret),timeout
   if not entry.get('forced_empty_query'):assert entry['http_documents']==entry['documents']
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute("select SQL_ID,EXECUTIONS,round(ELAPSED_TIME/nullif(EXECUTIONS,0)/1000,3),BUFFER_GETS from V$SQL where PARSING_SCHEMA_NAME='RABAEV' and EXECUTIONS>0 and (SQL_TEXT like 'select ''stock_quantity_invariants'' METRIC,UID_PALLET%' or SQL_TEXT like 'select ''physical_unit_composition'' METRIC,UID_PALLET%') order by LAST_ACTIVE_TIME desc fetch first 5 rows only");result['sql']=q.fetchall()
-out=Path('reports/nicora/2026-10-13/codex/NI072');out.mkdir(parents=True,exist_ok=True);(out/'result_stock_keys.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result))
+out=Path('reports/retailcase/2026-10-13/codex/NI072');out.mkdir(parents=True,exist_ok=True);(out/'result_stock_keys.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result))

@@ -1,5 +1,5 @@
 -- MAINTENANCE_ID: 2026-10-07-NS00-RECOMPILE
--- Existing source compilation only. Captured source: db/restore_points/nicora_ns00_20261007/.
+-- Existing source compilation only. Captured source: db/restore_points/retailcase_ns00_20261007/.
 set define off
 begin if user <> 'RABAEV' or sys_context('USERENV','DB_NAME') <> 'ORCL' then raise_application_error(-20900,'Wrong dev target'); end if; end;
 /

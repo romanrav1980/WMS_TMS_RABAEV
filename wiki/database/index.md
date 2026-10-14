@@ -1,4 +1,4 @@
-> Актуальное продолжение 121–130: [[nicora_stock_posting_continuation_20261008]]. 47 package pairs; 10 ADAPTED / 21 UNCONVERTED; PREPARED, полного cutover нет.
+> Актуальное продолжение 121–130: [[retailcase_stock_posting_continuation_20261008]]. 47 package pairs; 10 ADAPTED / 21 UNCONVERTED; PREPARED, полного cutover нет.
 
 # Database Mirror: Oracle Schema
 
@@ -12,15 +12,15 @@ The live Oracle database remains the runtime authority. The wiki mirror is the m
 
 ## Active Oracle Context
 
-- 08.10.2026: [Реализация stock posting](nicora_stock_posting_implementation.md): разрешённая очистка dev, 013/014/015 APPLIED, unique/NOT NULL/P+H constraints и служебные metadata. Новая physical posting ещё выключена; direct SYS package grants отсутствуют. Не выдавать подготовку за целый cutover.
+- 08.10.2026: [Реализация stock posting](retailcase_stock_posting_implementation.md): разрешённая очистка dev, 013/014/015 APPLIED, unique/NOT NULL/P+H constraints и служебные metadata. Новая physical posting ещё выключена; direct SYS package grants отсутствуют. Не выдавать подготовку за целый cutover.
 
-- 07.10.2026: [Целевой stock contract](nicora_stock_posting_target.md) и [ТЗ 2.0](../requirements/stock_posting_core_tz.md): P/H, единый HARD, stock key/полный concurrency protocol, карантинные ячейки. Read-only metadata подтверждены; это проектируемое изменение, не применённое DDL/новое ядро.
+- 07.10.2026: [Целевой stock contract](retailcase_stock_posting_target.md) и [ТЗ 2.0](../requirements/stock_posting_core_tz.md): P/H, единый HARD, stock key/полный concurrency protocol, карантинные ячейки. Read-only metadata подтверждены; это проектируемое изменение, не применённое DDL/новое ядро.
 
-- 07.10.2026: [NI03 task effect, 010](nicora_ni03_task_effect.md): COMPLETION_HASH/JSON в существующей WAREHOUSE_TASK; installed/live metadata confirmed, один cursor для WAVE completion/stock/reservation. Новый inventory/task registry не создаётся.
+- 07.10.2026: [NI03 task effect, 010](retailcase_ni03_task_effect.md): COMPLETION_HASH/JSON в существующей WAREHOUSE_TASK; installed/live metadata confirmed, один cursor для WAVE completion/stock/reservation. Новый inventory/task registry не создаётся.
 
-- 07.10.2026: [NI02 SAP–СТ bridge](nicora_ni02_store_orders.md), migration 009 установлена в той же RABAEV: сохранённая подготовка и PLANNED fulfillment; существующее TRANSTASK_ID назначение сохранено. Вложенная SSCC агрегация в CRPT найдена, складской жизненный цикл требует доработки NI04 — [анализ](../components/nicora_global_reuse_analysis_20261007.md).
+- 07.10.2026: [NI02 SAP–СТ bridge](retailcase_ni02_store_orders.md), migration 009 установлена в той же RABAEV: сохранённая подготовка и PLANNED fulfillment; существующее TRANSTASK_ID назначение сохранено. Вложенная SSCC агрегация в CRPT найдена, складской жизненный цикл требует доработки NI04 — [анализ](../components/retailcase_global_reuse_analysis_20261007.md).
 
-- 07.10.2026: владелец подтвердил dev-изоляцию ORCL и поручил разработку/переработку структуры непосредственно в RABAEV. Новая схема не создаётся. [NS00 baseline](nicora_ns00_dev_baseline.md): 59 INVALID перекомпилированы до 0 без изменения исходников; активных ошибок вне BIN$ нет.
+- 07.10.2026: владелец подтвердил dev-изоляцию ORCL и поручил разработку/переработку структуры непосредственно в RABAEV. Новая схема не создаётся. [NS00 baseline](retailcase_ns00_dev_baseline.md): 59 INVALID перекомпилированы до 0 без изменения исходников; активных ошибок вне BIN$ нет.
 
 - Live development service: `127.0.0.1:1521/orcl`
 - Application schema: `RABAEV`
@@ -99,19 +99,19 @@ Clean install assumes a separate Oracle service/PDB/VM with owner `RABAEV`; the 
 - [Oracle recovery runbook](../runbooks/oracle_recovery_2026_05_11.md)
 
 
-## NICORA маркировка редакция 57
+## RETAILCASE маркировка редакция 57
 
-[nicora_track_trace_requirements.md](nicora_track_trace_requirements.md) — требования к общему поэкземплярному и регуляторному учёту, настройкам SKU и нескольким профилям (табак, CRPT/Честный знак, ЕГАИС, другие системы). Существующие CRPT-объекты — кандидаты переиспользования; фактическое отображение и миграции утверждаются после GAP. Все изменения относятся к RABAEV. На 07.10.2026 этим дополнением DDL не применялся; наличие документа не означает наличие универсальной реализации.
+[retailcase_track_trace_requirements.md](retailcase_track_trace_requirements.md) — требования к общему поэкземплярному и регуляторному учёту, настройкам SKU и нескольким профилям (табак, CRPT/Честный знак, ЕГАИС, другие системы). Существующие CRPT-объекты — кандидаты переиспользования; фактическое отображение и миграции утверждаются после GAP. Все изменения относятся к RABAEV. На 07.10.2026 этим дополнением DDL не применялся; наличие документа не означает наличие универсальной реализации.
 
 
 ## NS00 test fixture
 
-[nicora_ns00_fixture.md](nicora_ns00_fixture.md) — реализованное ядро DS-BASE в RABAEV: 22 owned строки, девять таблиц, exact-key/provenance reset, transactional rollback и сохранность внешнего запаса. Seed data only, без структурной миграции.
+[retailcase_ns00_fixture.md](retailcase_ns00_fixture.md) — реализованное ядро DS-BASE в RABAEV: 22 owned строки, девять таблиц, exact-key/provenance reset, transactional rollback и сохранность внешнего запаса. Seed data only, без структурной миграции.
 
 ## NI01: SAP Retail и настройки SKU
 
-[NI01 SAP, приёмка и размещение](nicora_ni01_sap_retail.md): 7 октября 2026 года, миграции 001–007 установлены в существующей RABAEV. Функциональная реализация завершена: article apply, приход/марки/весовые единицы, этикетки/слоты/сверка/ACK; metadata прочитана, промышленная приёмка не выполнялась.
+[NI01 SAP, приёмка и размещение](retailcase_ni01_sap_retail.md): 7 октября 2026 года, миграции 001–007 установлены в существующей RABAEV. Функциональная реализация завершена: article apply, приход/марки/весовые единицы, этикетки/слоты/сверка/ACK; metadata прочитана, промышленная приёмка не выполнялась.
 
 ## NI02 — заказы магазинов SAP
 
-[Неизменный заказ и календарь](nicora_ni02_store_orders.md): migration 2026-10-07-008-ni02-store-orders установлена 07.10.2026 в существующей RABAEV. Три добавочные таблицы и три guard trigger VALID; source checkpoint и apply logs runtime/ni02. Потребность сохраняется в действующих customer orders, stock не меняется. NI02 in_progress.
+[Неизменный заказ и календарь](retailcase_ni02_store_orders.md): migration 2026-10-07-008-ni02-store-orders установлена 07.10.2026 в существующей RABAEV. Три добавочные таблицы и три guard trigger VALID; source checkpoint и apply logs runtime/ni02. Потребность сохраняется в действующих customer orders, stock не меняется. NI02 in_progress.

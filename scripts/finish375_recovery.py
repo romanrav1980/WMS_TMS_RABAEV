@@ -9,7 +9,7 @@ for key,files in [("startup_scripts",["001_key.sql"]),("additional_scripts",["00
 out[p.as_posix()]=json.dumps(m,indent=2)+"\n"
 out[(d/"000_before_dispatch_guard.sql").as_posix()]=Path("db/migrations/2026-10-11_ni061_recovery_redelivery/004_dispatch_guard.sql").read_text().split("create or replace trigger RRL_IW_REC_ST_IMMUTABLE")[0]
 p=d/"rollback.sql";out[p.as_posix()]=p.read_text().replace("@@000_before_ship.sql","@@000_before_ship.sql\n@@000_before_dispatch_guard.sql")
-page="wiki/database/nicora_ni061_recovery_consolidation_20261012.md"
+page="wiki/database/retailcase_ni061_recovery_consolidation_20261012.md"
 out[page]="""# Найденный товар в общем физическом месте
 Миграция2026-10-12-367-recovery-consolidated-dispatch APPLIED RABAEV/orcl, all currentVALID. Переиспользованы recovery approval/receipt/placement, ST constructor/assignment, QC, HU_SHIP, departure и STORE receipt. Не добавлен второй shipment/fulfillment writer.
 
@@ -26,12 +26,12 @@ SQL374 dispatch INSERT5.995ms/271buf fourexec; sourcebindlookup.198ms/83exec; co
 Remaining: firstleg groupedmultiSKU receiving preservingtop/group contract; repeatedphysical shortagecycle; aggregation-only recipient modes; real regulationACK/independent Qwen. Recoveryconsolidation is now covered, wholeNI06.1 not complete.
 """
 for file,text in [
- ("wiki/index.md","- [Консолидация найденного товара](database/nicora_ni061_recovery_consolidation_20261012.md):367–374 original1+found1+1/3ST/oneTOP/6oldcodes/actualSTOREbuyer3/FF3once/rollback-replay.\n"),
+ ("wiki/index.md","- [Консолидация найденного товара](database/retailcase_ni061_recovery_consolidation_20261012.md):367–374 original1+found1+1/3ST/oneTOP/6oldcodes/actualSTOREbuyer3/FF3once/rollback-replay.\n"),
  ("wiki/log.md","\n- 12.10.2026 367–375 APPLIED/VALID: recoverydispatch compositeOP+ST/outboxperST/exactnativecapturedlineage; original/recovery wholeST consolidated inoneHU. Actual368 firstleg3 accepted1/lost2/found1+1; existingtasks/ST/QC/HUSHIP/DEPART/STORE buyer3/sourceFF3once/history2-found2-net0/protected20/20/old6codes. Trialfullrollback/replay; nativeLOAD/HUSHIP guards preserved. SQLdispatch5.995ms/source.198ms/bounded200/inventorybatch backlog. Finance read373 now frozenperioddate/mode/version in originalinvoice UI; adminTS final pending.\n"),
- ("wiki/runbooks/nicora_active_work.md","\nCurrent375: native367VALID; context372 fullydelivered oneTOP/original1+twofound1/3ST/source3683oldkeys6codes/order accepted3/FF3once/P0. Factories368/372/initial373 mustnotrepeat. Finance APIserv366 updatedpolicy andassembly source; read373 periodmetadata nextrestart; finalbundle/encoding/TS next. Remaining groupedfirstlegmultiSKU, recurrentphysical losscycle, NI08 operational admission and external evidence.\n"),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni06_1.md","\n367–374 actualoriginal1+found1+1 ->threecorrective/originalST inoneTOP/existingHUload/depart/STOREbuyer3/FF3once/old6QR/history2-found2-net0; composite recoverydispatch+perSToutbox+exactnative resolvedlineage; late rollback/replay. Recoveryconsolidation no longer gap. FirstleggroupedmultiSKU, recurrentphysical losscycle andexternalregulatoryacceptance remain.\n")]:
+ ("wiki/runbooks/retailcase_active_work.md","\nCurrent375: native367VALID; context372 fullydelivered oneTOP/original1+twofound1/3ST/source3683oldkeys6codes/order accepted3/FF3once/P0. Factories368/372/initial373 mustnotrepeat. Finance APIserv366 updatedpolicy andassembly source; read373 periodmetadata nextrestart; finalbundle/encoding/TS next. Remaining groupedfirstlegmultiSKU, recurrentphysical losscycle, NI08 operational admission and external evidence.\n"),
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni06_1.md","\n367–374 actualoriginal1+found1+1 ->threecorrective/originalST inoneTOP/existingHUload/depart/STOREbuyer3/FF3once/old6QR/history2-found2-net0; composite recoverydispatch+perSToutbox+exactnative resolvedlineage; late rollback/replay. Recoveryconsolidation no longer gap. FirstleggroupedmultiSKU, recurrentphysical losscycle andexternalregulatoryacceptance remain.\n")]:
  p=Path(file);old=p.read_text(encoding="utf-8");out[file]=text+old if file=="wiki/index.md"else old+text
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8"))
 for x in m["increments"]:
  if x["id"]=="NI06.1":
   x["status"]="in_progress_recovery_consolidation_delivered"

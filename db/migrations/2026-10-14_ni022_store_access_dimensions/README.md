@@ -10,6 +10,6 @@ Root apply: compare checkpoints with current owner bodies, then `python scripts/
 
 Native compilation/scenario/latency pending root apply; not claimed from source alone. No speculative index. After native case inspect helper SQL and retain/bound/index only on observed evidence. Common gate/index/log owned by root.
 
-Root initialapply8/errors0 and native functional case PASS. Two bounded lookup hints added after measured same-result reduction131→10ms and58→8ms; reapply001helper+verify coordinated with root. See reports/nicora/2026-10-13/codex/STORE_ACCESS.
+Root initialapply8/errors0 and native functional case PASS. Two bounded lookup hints added after measured same-result reduction131→10ms and58→8ms; reapply001helper+verify coordinated with root. See reports/retailcase/2026-10-13/codex/STORE_ACCESS.
 
-Final RELEASE: root reapplied helper with both measured lookup hints, Errors0/verify0. Installed source hash and all four changed package owners VALID confirmed; final readonly own fixture check PASS. Manifest: reports/nicora/2026-10-13/codex/STORE_ACCESS/installed_manifest.json. No pending code/apply in this block.
+Final RELEASE: root reapplied helper with both measured lookup hints, Errors0/verify0. Installed source hash and all four changed package owners VALID confirmed; final readonly own fixture check PASS. Manifest: reports/retailcase/2026-10-13/codex/STORE_ACCESS/installed_manifest.json. No pending code/apply in this block.

@@ -1,8 +1,8 @@
 from pathlib import Path
 import json
 out={}
-reader="wiki/database/nicora_ni043_composition_reader_20261010.md"
-forecast="wiki/database/nicora_ni081_forecast_20261010.md"
+reader="wiki/database/retailcase_ni043_composition_reader_20261010.md"
+forecast="wiki/database/retailcase_ni081_forecast_20261010.md"
 out[reader]="""# NI04.3 — состав и происхождение паллеты,132
 GET /api/receiving/pallets/{uid}/composition uses one READ ONLY Oracle snapshot. Existing traceability_view global auditor semantics retained. Current P/H/location/version/physical epoch, actual physical units and multiple applicable profile codes are read together. Source_births derives original CREATED_BY_STOCK_OP/canonical source and exact MES FG movement, optional sender manifest/hash/use; genuine SAP receipts remain separate. Non-SAP inventory/MES birth does not fabricate a SAP receipt.
 Quantity coverage compares current P with captured units. Exact decimal strings; bounded200 locations/receipts/source rows,10000 units,5000 code pairs per page, units100 default. Cursor continuation requires original composition_signature; missing/stale signature409. Signature covers current physical epoch and stock/location versions; pages cannot silently combine changed stock snapshots.
@@ -23,14 +23,14 @@ Resource norms, approved people/slot recommendations, slot draining, common manu
 for name,text in [(reader,out[reader]),(forecast,out[forecast])]:
  out[name]=text
 idx=Path("wiki/index.md").read_text(encoding="utf-8-sig")
-out["wiki/index.updated.tmp"]="- [Прогноз по исполненным грузам](database/nicora_ni081_forecast_20261010.md):133 immutable native projection/CASE20/top2/warehouse scope/UTC mean/no stock; resources and plan validator next.\n- [Состав и происхождение паллеты](database/nicora_ni043_composition_reader_20261010.md):132 same-snapshot P/H/physical units/multiple profiles/original inventory-MES-SAP source/signature-bound pages.\n- [Проект прогноза](database/nicora_ni081_forecast_design_20261010.md):133 derived history only, native root unchanged.\n"+idx
+out["wiki/index.updated.tmp"]="- [Прогноз по исполненным грузам](database/retailcase_ni081_forecast_20261010.md):133 immutable native projection/CASE20/top2/warehouse scope/UTC mean/no stock; resources and plan validator next.\n- [Состав и происхождение паллеты](database/retailcase_ni043_composition_reader_20261010.md):132 same-snapshot P/H/physical units/multiple profiles/original inventory-MES-SAP source/signature-bound pages.\n- [Проект прогноза](database/retailcase_ni081_forecast_design_20261010.md):133 derived history only, native root unchanged.\n"+idx
 for name,line in [
  ("wiki/log.md","2026-10-10:132 composition same-snapshot actual P/H/units/source/nativeJSON cursor signature delivered; existing three marked+ordinary+genuine SAP sources read, no writes.133 native forecast migrationAPPLIED/VALID, actualCASE12+8=20/top2/replay/foreign403/directguard/partialUTC mean blocked on gaps/history; separate FULLPAL4. Worker/raw UI added, current NI08.1 resources/slot/manual-auto validator next. SQL bounded source/day indices retained, no full sprint/independent acceptance claim."),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni04_3.md","Tickets130..132: tobacco currentGTIN comparison, no implicit regulatory mock, original-source/current-composition reader delivered. See database/nicora_ni043_regulatory_runtime_20261010.md and nicora_ni043_composition_reader_20261010.md. Actual gov providers/ACK/tree acceptance remain open."),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","Ticket133 delivered bounded native departed-history projection and quantity advisory; see database/nicora_ni081_forecast_20261010.md. Existing CASE20/top2/FULLPAL4, no stock/new TT. Next resource norms/approved recommendations/common validator; full sprint remains in progress."),
- ("wiki/requirements/nikora_delivery_v55/implementation_plan.md","10.10.2026:124..132 sender graph/UNIT-MIXED/current source warehouse/internalID/regulatory simulation boundaries/composition provenance delivered;133 NI08.1 started with actual execution forecast. Current resource/slot recommendations and common plan validator remain; all residual sprint acceptance tracked individually, not inferred from author slices.")]:
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni04_3.md","Tickets130..132: tobacco currentGTIN comparison, no implicit regulatory mock, original-source/current-composition reader delivered. See database/retailcase_ni043_regulatory_runtime_20261010.md and retailcase_ni043_composition_reader_20261010.md. Actual gov providers/ACK/tree acceptance remain open."),
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md","Ticket133 delivered bounded native departed-history projection and quantity advisory; see database/retailcase_ni081_forecast_20261010.md. Existing CASE20/top2/FULLPAL4, no stock/new TT. Next resource norms/approved recommendations/common validator; full sprint remains in progress."),
+ ("wiki/requirements/retailcase_delivery_v55/implementation_plan.md","10.10.2026:124..132 sender graph/UNIT-MIXED/current source warehouse/internalID/regulatory simulation boundaries/composition provenance delivered;133 NI08.1 started with actual execution forecast. Current resource/slot recommendations and common plan validator remain; all residual sprint acceptance tracked individually, not inferred from author slices.")]:
  p=Path(name);out[name]=p.read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 m["currentSprint"]="NI08.1";m["currentSprintMeaning"]="actual_execution_forecast_resource_slot_and_shared_plan_validation"
 for item in m["increments"]:
  if item["id"]=="NI04.3":
@@ -50,10 +50,10 @@ for file in ["001_schema.sql","004_guards.sql"]:
  if path not in m["additional_scripts"]:m["additional_scripts"].append(path)
 out[str(p)]=json.dumps(m,indent=2)+"\n"
 out["задания на проведения тестов/NI04.3/132_состав_и_происхождение.md"]="""# Qwen —132
-Read wiki/database/nicora_ni043_composition_reader_20261010.md and receiving queries/provenance/domain contract/UI. Existing fixtures only: inventory/MES/tobacco current3 each2 profiles, genuine SAP source current0. Verify same read snapshot, exact Decimal strings, native JSON decode, no invented SAP receipt. Bound200 sources/locations,10000 units,5000codes/page. Cursor requires original physical/version signature, stale/missing409, actor/API/pallet late responses discarded. UNIT operators navigation without import grant; server import rights retained. No legal ACK or full sprint claim.
+Read wiki/database/retailcase_ni043_composition_reader_20261010.md and receiving queries/provenance/domain contract/UI. Existing fixtures only: inventory/MES/tobacco current3 each2 profiles, genuine SAP source current0. Verify same read snapshot, exact Decimal strings, native JSON decode, no invented SAP receipt. Bound200 sources/locations,10000 units,5000codes/page. Cursor requires original physical/version signature, stale/missing409, actor/API/pallet late responses discarded. UNIT operators navigation without import grant; server import rights retained. No legal ACK or full sprint claim.
 """
 out["задания на проведения тестов/NI08.1/133_исполненная_история.md"]="""# Qwen —133
-Read wiki/database/nicora_ni081_forecast_20261010.md, SQL rules/projector/guards and typed forecast adapters/domain/UI/worker.
+Read wiki/database/retailcase_ni081_forecast_20261010.md, SQL rules/projector/guards and typed forecast adapters/domain/UI/worker.
 No fresh pallets needed. Existing CASE a6bc...1029+1030 actual20/top2 projected, warehouse9104 FULLPAL4. Same load/hash exact saved result/counters unchanged; two concurrent first source copies must single commit or rollback, no double daily/CASE origin. Direct DML denied/current actor foreign read/replay403. Never stock P/H or original demand changes. CASE origin dedup is not a new customer order; intermediate outbound work distinct.
 Aware UTC closed days/default no history, partial day explicit/exposure, zero/insufficient active days/missing BASE policy/missing projection suppress quantity. Exact Decimal rounding BASE scale. No invented productivity/weekday seasonal sales or people assignment. Page500/history90/batch100; worker bounded short transactions/waits. Real forecast calibration/resources/manual-auto validator not delivered by133.
 """

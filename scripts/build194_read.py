@@ -70,11 +70,11 @@ p=Path("api/wms_api_server/app/main.py");t=p.read_text(encoding="utf-8")
 a="app.include_router(inventory_receiving.weighted_case_router)";assert a in t
 t=t.replace(a,a+"\napp.include_router(inventory_receiving.weighted_plan_router)\napp.dependency_overrides[inventory_receiving.weighted_plan_service] = inventory_receiving.build_weighted_plan")
 out[str(p)]=t
-out["wiki/database/nicora_ni042_weight_box_planning_design_20261011.md"]="""# NI04.2: выбор последней целой весовой коробки
+out["wiki/database/retailcase_ni042_weight_box_planning_design_20261011.md"]="""# NI04.2: выбор последней целой весовой коробки
 194 read-only preview of actual available physical units for original order row, before existing planner. SKU serialized weighted KG/current profiles, real net/gross/volume/source ref/GS1 label, current warehouse/pallet identifier/cell/stock version, eligibility, current original whole orderSKU demand/picked/current remaining minus unlaunched SOFT, default15/frozen cardversion. Single final-box options within tolerance versus explicit exception, no sealed splitting/no stock or reservation effect. Bounds200 orderrows/200 source lots/100 boxes.
 Existing planner actor scope extracted into RRL_PICK_PLAN_ACCESS and reused before/after native planning locks; one current warehouse/right admission, not duplicate permissions policy. Native pure reader feeds typed API/customer-order UI;195 approved choice,196 existing plan/HARD exact physical selection,197 current fulfillment waiver next. No false claim of completed last-box execution.
 """
-for name,line in [("wiki/index.md","- [Выбор последней целой весовой коробки: разработка](database/nicora_ni042_weight_box_planning_design_20261011.md):194 actual candidates/current order source/native shared plan scope; admission/apply next."),
+for name,line in [("wiki/index.md","- [Выбор последней целой весовой коробки: разработка](database/retailcase_ni042_weight_box_planning_design_20261011.md):194 actual candidates/current order source/native shared plan scope; admission/apply next."),
 ("wiki/log.md","2026-10-11:194 begins from fresh live plan-admission source/checkpoint; actual sealed weighted-box options/current original order/pct/no stock; shared planner scope extraction before/after locks.")]:
  p=Path(name);out[str(p)]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
 print(json.dumps(out,ensure_ascii=True))

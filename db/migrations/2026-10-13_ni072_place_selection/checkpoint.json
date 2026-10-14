@@ -29,7 +29,7 @@
     "db/migrations/2026-10-13_ni072_place_selection/010_case_cohort.sql": "1539bab4d49c8f2dc1d899bdfc923777b94051d4c9294fdfbc3d579d20a24a4a"
   },
   "case_manifest": "capture1077, no openwaitingplans atbaseline; newCASE sourcecohortmanifest guardsSTmembership/cargo without siblingversions; old sources compatible",
-  "evidence": "reports/nicora/2026-10-13/27-mixed-place-wait-evidence.json",
+  "evidence": "reports/retailcase/2026-10-13/27-mixed-place-wait-evidence.json",
   "native_errors": [],
   "native_invalid": [],
   "independent_acceptance": "not_performed",

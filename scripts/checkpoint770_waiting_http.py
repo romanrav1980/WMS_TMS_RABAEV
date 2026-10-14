@@ -1,13 +1,13 @@
 from pathlib import Path
 import json
 out={}
-p=Path("wiki/database/nicora_ni072_waiting_cell_20261012.md")
+p=Path("wiki/database/retailcase_ni072_waiting_cell_20261012.md")
 out[str(p)]=p.read_text(encoding="utf-8")+"\n## Checkpoint770\n\nAPI перезапущен штатным serv.bat (767), startup завершён. Actual HTTP769: GET выбранной ячейки и PUT без optional поля сохраняет DEFER_WAIT_CELL. Browser UI/hardware не проверены.\n\nSQL guard: SQL_ID 65cv6415xmqp8, 4 выполнения, среднее 10.416 мс/188.3 buffers (768). Решение владельца transport/inventory: сохранить проверку одной ячейки и current published topology; перед массовым планированием профилировать lookup последней topology и индексы WARE_ID/CELL, не запускать эту конфигурационную проверку на каждую сканируемую единицу. Это проверка изменения настройки, не массовый stock writer.\n"
 p=Path("wiki/index.md")
 out[str(p)]=p.read_text(encoding="utf-8").replace("case762 P3/H3; typed перенос ещё открыт.","case762 P3/H3, HTTP769 optional сохранён, SQL768 решение; typed перенос ещё открыт.")
 p=Path("wiki/log.md")
 out[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-12 checkpoint770: HTTP769 current GET/PUT omission сохраняет ячейку ожидания; API767 startup complete. SQL guard10.416мс/188.3buf, сохранить one-cell config lookup, topology/index profile до массового планирования. Source bundle766 обновлён как source only; общий ACTIVE bundle не применялся.\n"
-p=Path("wiki/runbooks/nicora_active_work.md")
+p=Path("wiki/runbooks/retailcase_active_work.md")
 out[str(p)]="""## Current checkpoint770 — 12Oct2026
 - Waiting-cell761/763 native/API/raw form delivered; case762 rollback/guards/P3H3 and HTTP769 currentGET/PUT omitted optional preserve PASS. Quality763 PASS24/bothTS/architecture682-0-76; encoding764 PASS. Bundle766 refreshed source-only, never apply whole ACTIVE bundle.
 - API767 startup55976/55528 complete; no later backend edits. Native ERRORS=[] INVALID=[] after recompile QC/SSCC.

@@ -2,7 +2,7 @@
 (() => {
  const el=id=>document.getElementById('qs'+id),auth=()=>window.wmsAdminAuth;
  const base=()=>auth().state.apiBase.replace(/\/$/,'');
- const scope=()=>JSON.stringify(['nicora.qualityPolicy',base(),auth().state.user?.username]);
+ const scope=()=>JSON.stringify(['retailcase.qualityPolicy',base(),auth().state.user?.username]);
  const store=window.wmsCommandIntent.create('',v=>v&&Number.isSafeInteger(v.ware)&&v.ware>0&&v.body&&/^[A-Za-z0-9_.:-]{1,100}$/.test(v.body.operation_id)&&typeof v.body.store_addr==='string'&&['ANY','STOCK','CASE'].includes(v.body.place_category),{storageKey:scope});
  let record=null,snapshot=null,busy=false,generation=0,identity='';
  const selection=()=>JSON.stringify([el('Ware').value.trim(),el('Addr').value,el('Category').value]);

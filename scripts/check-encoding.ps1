@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
   [switch]$All
 )
@@ -83,6 +83,15 @@ $extraBad = @(
 )
 $badSamples = @($badSamples + $extraBad | Where-Object { $_ })
 
+# Only byte-exact archived evidence may retain known original encoding defects.
+$legacyEvidence = @{}
+$legacyEvidencePath = Join-Path $root "config/encoding-legacy-evidence.json"
+if (Test-Path -LiteralPath $legacyEvidencePath) {
+  foreach ($item in (Get-Content -Raw -Encoding UTF8 -LiteralPath $legacyEvidencePath | ConvertFrom-Json).files) {
+    $legacyEvidence[$item.path] = $item.sha256
+  }
+}
+
 $problems = New-Object System.Collections.Generic.List[string]
 if ($All) {
   $repoFiles = & git -C $root -c core.quotepath=false -c core.autocrlf=false -c core.safecrlf=false ls-files --cached --others --exclude-standard 2>$null
@@ -111,6 +120,14 @@ foreach ($relative in $repoFiles) {
   $extension = [System.IO.Path]::GetExtension($fullName).ToLowerInvariant()
   if ($textExtensions -notcontains $extension) {
     continue
+  }
+
+  if ($legacyEvidence.ContainsKey($relativeSlash)) {
+    $evidenceContent = (Get-Content -Raw -Encoding UTF8 -LiteralPath $fullName).Replace("`r", "")
+    $hasher = [Security.Cryptography.SHA256]::Create()
+    try { $actualHash = ([BitConverter]::ToString($hasher.ComputeHash([Text.Encoding]::UTF8.GetBytes($evidenceContent)))).Replace("-", "").ToLowerInvariant() }
+    finally { $hasher.Dispose() }
+    if ($actualHash -eq $legacyEvidence[$relativeSlash]) { continue }
   }
 
   $content = Get-Content -LiteralPath $fullName -Raw -Encoding UTF8

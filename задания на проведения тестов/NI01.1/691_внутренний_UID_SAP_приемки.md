@@ -1,7 +1,7 @@
 # NI01.1 — внутренний идентификатор SAP-приёмки
 Для локальной Qwen. Не запускать широкий regression/load и не пересоздавать источники669/670/671/672/688.
 
-Прочитать wiki/database/nicora_ni011_internal_receipt_identifier_20261012.md. Авторский actual688 выполнен: tmp/context688.json stageDONE, UID47, новая паллетаP3H0, три единицы/шесть кодов, PUTAWAY DONE. UID паллеты отличен от регуляторного SSCC.
+Прочитать wiki/database/retailcase_ni011_internal_receipt_identifier_20261012.md. Авторский actual688 выполнен: tmp/context688.json stageDONE, UID47, новая паллетаP3H0, три единицы/шесть кодов, PUTAWAY DONE. UID паллеты отличен от регуляторного SSCC.
 
 1. Read-only подтвердить точный UID/исходный SAP order/line и task из контекста. PALLETS.SSCC и TASK.SSCC=NULL; нет CRPT parent aggregation/PARENT_SSCC. Коды единиц присутствуют; это не внешний legal ACK.
 2. Только сохранённый birth operation_id/body можно повторить; должен вернуться прежний результат. Старый receipt669 уже отгружен и повторён689 без нового P/H; не восстанавливать его.

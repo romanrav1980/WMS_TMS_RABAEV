@@ -5,7 +5,7 @@ import type { JournalEntry, LotCheckPayload } from "../types";
 import { confirmLotCheck } from "./wmsApi";
 
 type Intent = { pallet: string; actor: string; payload: LotCheckPayload; journal: JournalEntry; uncertain: boolean };
-const key = (pallet: string, actor: string) => JSON.stringify(["nicora.lotQuality", API_BASE_URL, actor, pallet]);
+const key = (pallet: string, actor: string) => JSON.stringify(["retailcase.lotQuality", API_BASE_URL, actor, pallet]);
 
 export function hasLotQualityIntent(pallet: string, actor: string): boolean {
   return !!localStorage.getItem(key(pallet, actor));

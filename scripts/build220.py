@@ -2,7 +2,7 @@ raise SystemExit("Retired authoring generator: use final220 SQL/fresh owner chec
 from pathlib import Path
 import json
 f=Path("db/migrations/2026-10-11_ni063_hu_load_recovery");out={}
-out["wiki/database/nicora_ni063_hu_recovery_design_20261011.md"]="""# NI06.3: возврат тары исходного HU/FULLPAL
+out["wiki/database/retailcase_ni063_hu_recovery_design_20261011.md"]="""# NI06.3: возврат тары исходного HU/FULLPAL
 220 extends original216 recovery owner and existing TARE_BOOK, not a new balance. Accepted outbound original root book/transferred ->accepted exact vehicle return/current warehouse/type/GOOD ->one new HELD original place. CASE proof unchanged; additive nullable ROOT_UID/FK/XOR retains existing CASE history. Whole original archived ROOT_UID only. CONTAINER verifies original shipped epoch/owner/nullcell; STOCK verifies original zero physical/held across UID, original bound FF/actual DONE task/active wave and archived kind/UID/current article. Original scan SSCC or internal UID accepted according to archived root. Existing original goods unloader requires new HELD recovery and remains sole quantity writer. Current owner/replay/declared locks/unit history preserved; transferred record never rewritten.
 """
 out[str(f/"001_schema.sql")]="""alter table RRL_TARE_LOAD_RECOVERY modify(CASE_PICK_TASK_ID null);

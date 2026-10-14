@@ -1,7 +1,7 @@
 (() => {
   const e=id=>document.getElementById(id);
   const shortId=new URLSearchParams(location.search).get("short_id");
-  const pendingKey="nicora.investigation.pending:"+shortId;
+  const pendingKey="retailcase.investigation.pending:"+shortId;
   let incident=null, cameras=[], busy=false, serial=0;
   const message=text=>{e("investigationMessage").textContent=text;};
   const auth=()=>window.wmsAdminAuth;

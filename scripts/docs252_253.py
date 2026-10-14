@@ -16,7 +16,7 @@ Actual case253 asserts exactCyrillic DATA_DEFAULT, calls original legacyfunction
 ALTERTABLE default invalidated18 native packagebodies plus tareparticipantspec through %ROWTYPE dependencies. Targeted spec then threepasses ONLYcurrentlyinvalid packagebodies recompile; nativeerrors/invalid check after. RootAPI restartedafterDDL to discard pooledstate before business commands. No fullschema stats/recompile unrelatedobjects/new DBcopy.
 Migration2026-10-11-253-transport-planned-default; currentruntime startup mirrors correcteddefault and dependentrecompile. Original stocksinglewriter/root/sourceidentity unchanged. This is schema default correctness, not certification of driver/warehouse/route admission.
 """
-out["wiki/database/nicora_ni072_regulatory_scope_20261011.md"]=s252;out[str(a/"README.md")]=s252
+out["wiki/database/retailcase_ni072_regulatory_scope_20261011.md"]=s252;out[str(a/"README.md")]=s252
 out["wiki/database/transport_planned_default_20261011.md"]=s253;out[str(b/"README.md")]=s253
 for folder,ident,description,notes in[
 (a,"2026-10-11-252-regulatory-source-warehouse-index","Regulatory day board source warehouse and matching functional JSON index","Existing236-237 sourceWARE51365792 CRPT-EGAIS/currentAPPLIED/foreign403/no qty/ACK inference. Old query180.838ms3/new12.917ms2/explicit index after metadata check. Architecture5740cycles76/JS/protected20-20."),
@@ -30,7 +30,7 @@ commit;
  out[str(folder/"apply.sql")]=(folder/"apply.sql").read_text(encoding="utf-8")+("@002_recompile.sql\n"if folder==b else"")+"@003_ledger.sql\n"
 out[str(a/"verify.sql")]="select INDEX_NAME,STATUS from USER_INDEXES where INDEX_NAME='RRL_EVENT_OUTBOX_WARE_I';\n"
 out[str(b/"verify.sql")]="select DATA_DEFAULT from USER_TAB_COLUMNS where TABLE_NAME='RRL_TRANSPORT_TASK'and COLUMN_NAME='CONDITION';\nselect OBJECT_NAME,OBJECT_TYPE from USER_OBJECTS where STATUS='INVALID'and OBJECT_NAME not like 'BIN$%';\n"
-p=Path("wiki/database/nicora_ni081_trip_time_20261011.md");s=p.read_text(encoding="utf-8")
+p=Path("wiki/database/retailcase_ni081_trip_time_20261011.md");s=p.read_text(encoding="utf-8")
 s=s.replace("original legacy RRL_TRASPORT_TASK_ADD source stored status as11literal question marks","newly created original legacy row had status as11literal question marks;253 later proved the function omits CONDITION and the damaged literal was the table DEFAULT")
 out[str(p)]=s+"\n253 source correction: original legacy function did notwrite the badliteral; table CONDITION DEFAULT containedit. Default now corrected centrally for futurealloriginalcallers, oldrows unchanged; originalfunction directrollback verified.\n"
 p=Path("db/migrations/2026-10-08_stock_posting_core/current_runtime_manifest.json");m=json.loads(p.read_text(encoding="utf-8"))
@@ -39,13 +39,13 @@ m["startup_scripts"].extend(["../2026-10-11_ni072_regulatory_scope/001_index.sql
 m["additional_scripts"].append("../2026-10-11_transport_planned_default/002_recompile.sql")
 out[str(p)]=json.dumps(m,indent=2)+"\n"
 for path,line in[
-("wiki/index.md","- [Регуляторная очередь в сверке склада](database/nicora_ni072_regulatory_scope_20261011.md):252 sourcewarehouse/currentrootAPPLIED/messagecounts/notgovACK/functional index180→12.917ms."),
+("wiki/index.md","- [Регуляторная очередь в сверке склада](database/retailcase_ni072_regulatory_scope_20261011.md):252 sourcewarehouse/currentrootAPPLIED/messagecounts/notgovACK/functional index180→12.917ms."),
 ("wiki/index.md","- [DEFAULT нового рейса](database/transport_planned_default_20261011.md):253 correctUnicode plannedstatus/alloriginalcallers future/no oldmassrepair/directrollback; corrected earlier source attribution."),
 ("wiki/log.md","2026-10-11:252 same current DayReconciliation snapshot now source-scoped regulatoryqueue/profiles/system/status/currentrootproof/no rawcodes/noqty or governmentACK inferred. Existing236-237 ownWARE51365792/CRPT-EGAIS/foreign403/HTTP200/nofixtures/protected20-20. JSONWAREindex verifiedabsent/applied/180.838ms3→12.917ms2 boundedquery; architecture5740cycles76/JS. 253 corrected actual tableCONDITION DEFAULT '?'11 toUTF8planned forfuture originallegacy/nativeautoplan creation. Earlier248 blamedfunctionliteral incorrectly; livefunction omitscolumn, capturedsource kept. Originalfunctiondirectrollbackcorrect/noTTretained/oldrowsunchanged; rowtypeinvaliddependencies recompile andAPIrestart. Native manifests mirrors indexes/default/recompile."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni07_2.md","11.10.2026:252 originalwarehouse-linked regulatorqueue/currentrootproof/messagecounts/no govACK inference integrated same dayboard. Existingdisposal236/supplier237 CRPT-EGAIS/currentownview/foreign403/HTTP; field-index180→12.917ms. Actualprovider lifecycle/realACK/closure remain.")
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni07_2.md","11.10.2026:252 originalwarehouse-linked regulatorqueue/currentrootproof/messagecounts/no govACK inference integrated same dayboard. Existingdisposal236/supplier237 CRPT-EGAIS/currentownview/foreign403/HTTP; field-index180→12.917ms. Actualprovider lifecycle/realACK/closure remain.")
 ]:
  p=Path(path);out[path]=out.get(path,p.read_text(encoding="utf-8"))+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
 next(x for x in j["increments"]if x["id"]=="NI07.2").setdefault("implementedSlices",[]).append("252 source-warehouse regulatory queue/current APPLIED source proof/scoped messagecounts/no govACK inferred/functional JSONWARE index")
 next(x for x in j["increments"]if x["id"]=="NI02.2").setdefault("implementedSlices",[]).append("253 central original TT planned-status UTF8default corrected for future legacy/autoplan callers/no historical mass repair")
 out[str(p)]=json.dumps(j,ensure_ascii=True,indent=2)+"\n"

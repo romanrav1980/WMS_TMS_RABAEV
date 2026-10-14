@@ -42,11 +42,11 @@
   "wire_correction": "1060 native root strict requires contract_version2; trial failed before plans/stock, retained pack phase reused",
   "lock_correction": "1061 timeout trial/no committed plan: ST_NUMBER scalar shadowed column; rename scalar, NOWAIT exact source rows ->retryable20840; ancestry scalar also renamed",
   "replay_correction": "1063 same final APPLIED root result includes outbox_id; immutable WAIT_RUN remains pre-root projection; retained task1149/no duplicate plan",
-  "evidence": "reports/nicora/2026-10-13/25-nested-hu-wait-evidence.json",
+  "evidence": "reports/retailcase/2026-10-13/25-nested-hu-wait-evidence.json",
   "native_errors": [],
   "native_invalid": [],
   "rollback_warning": "unverified; preflight refuses open HU_WAIT tasks; completed history/caches retained; new helper dropped only after original callers restored",
   "extension": "1070 all-CASE HU already waiting: metadata receipt/noWHT/stockwrite, fresh whole source/config/decision validation, exact cached result",
   "operation_scope_guard": "1071 within metadata exclusive fence, do not reuse unrelated stock operation ID for no-move result",
-  "extensions_evidence": "reports/nicora/2026-10-13/26-deep-hu-wait-evidence.json"
+  "extensions_evidence": "reports/retailcase/2026-10-13/26-deep-hu-wait-evidence.json"
 }

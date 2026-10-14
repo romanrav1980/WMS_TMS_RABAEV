@@ -11,7 +11,7 @@ try {
  // Native QC source is retained. States below model navigation only; no goods commands.
  await p.evaluate(data=>window.wmsQualityNext.render(document.querySelector('#outgoingQuality'),{...data,ready:true,transport_assignment:{state:'ASSIGNED',transport_task_id:33571}},false),data);
  const link=p.getByRole('link',{name:'Открыть погрузку рейса 33571'});await link.waitFor();
- await p.locator('#outgoingQuality').screenshot({path:'reports/nicora/2026-10-13/screenshots/112-ni051-quality-next-synthetic.png'});
+ await p.locator('#outgoingQuality').screenshot({path:'reports/retailcase/2026-10-13/screenshots/112-ni051-quality-next-synthetic.png'});
  const next=p.waitForResponse(r=>r.url().endsWith('/33571/status'));await link.click();if((await next).status()!==200)throw Error('Trip link failed');
  await p.goBack();
  await p.evaluate(data=>window.wmsQualityNext.render(document.querySelector('#outgoingQuality'),{...data,ready:false,required:true},false),data);

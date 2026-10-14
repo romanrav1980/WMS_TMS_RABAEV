@@ -1,6 +1,6 @@
 # NI07.2 / 651: классификация грузовой зоны по опубликованной схеме
 
-Для локальной Qwen; запуск/независимая приёмка не заявлены. Source wiki/components/nicora_ni072_shipping_coverage_20261012.md.
+Для локальной Qwen; запуск/независимая приёмка не заявлены. Source wiki/components/retailcase_ni072_shipping_coverage_20261012.md.
 
 Проверить existing shipping-register/reconciliation на собственной временной topology и реальном остатке: каждую current WMS ячейку связывает ровно один active published recognised-role row. Полный каталог + пустые staging/gate/film-wrap/legacyexpedition => registered area empty at snapshot. Наличие stock/container/CASE => occupied и empty=false. Не объявлять весь физический склад обследованным.
 

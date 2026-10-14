@@ -3,7 +3,7 @@
  const valid=v=>Boolean(v&&Number.isSafeInteger(v.order)&&v.order>0&&v.body&&Number.isSafeInteger(v.body.row_id)&&v.body.row_id>0&&
   Number.isSafeInteger(v.body.target_shipment_id)&&v.body.target_shipment_id>0&&typeof v.body.reason==='string'&&v.body.reason.trim()&&v.body.reason.length<=500&&
   /^[A-F0-9]{64}$/.test(v.body.expected_signature)&&/^ST.LAYOUT:[A-Za-z0-9-]+$/.test(v.body.operation_id));
- const intent=window.wmsCommandIntent.create('nicora.preparedLayout:',valid);
+ const intent=window.wmsCommandIntent.create('retailcase.preparedLayout:',valid);
  let snapshot=null,rows=[],busy=false,epoch=0,record=null,order=null;
  const say=text=>el('plStatus').textContent=text;
  function scope(){return intent.scope();}

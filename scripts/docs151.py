@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-out={};page="wiki/database/nicora_ni081_attendance_history_20261010.md"
+out={};page="wiki/database/retailcase_ni081_attendance_history_20261010.md"
 out[page]="""# NI08.1 — история планового выхода,151
 
 Resources read model reuses immutable RRL_WORKLOAD_ATTENDANCE/OPERATION/CANCEL. Backward replacement edge is relational unique CANCEL_OPERATION_ID=newer PLAN_OPERATION_ID with newer action REPLACE_ATTENDANCE. Original person/site/resource/interval/reason/approver and cancellation actor/time retained. UTC formats only aware source columns, no legacy naive reinterpretation or actual presence claim.
@@ -13,12 +13,12 @@ Raw workload UI history button and previous-change continuation, original interv
 
 SQL history9.850/10.000ms per4 executions, first13.382ms; decision retain source/cancel PK/unique relational traversal and depth cap<=51, no new index or full-tree scan. No load benchmark. Full NS33 subwarehouse/approved recommendation and joint schedule integration remain open.
 """
-out["wiki/index.updated.tmp"]="- [История планового выхода](database/nicora_ni081_attendance_history_20261010.md):151 original aware records/approver/cancellation/relational chain/paginated depth bound/current warehouse/read-only.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
+out["wiki/index.updated.tmp"]="- [История планового выхода](database/retailcase_ni081_attendance_history_20261010.md):151 original aware records/approver/cancellation/relational chain/paginated depth bound/current warehouse/read-only.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
 for p,line in [
 ("wiki/log.md","2026-10-10:151 planned attendance history from immutable original rows/operation/cancellation, unique relational replacement edge/current warehouse/view rights/read-only snapshot perpage/depth<=limit+1/cycle or missing link refusal. Original150 cleaned chain2/limit1 continuation/old and new cancels/foreign plan404/count unchanged. Raw history+continuation/stale scope/nodePASS; architecture502files0cycles79debtPASS. SQL9.850/10.000/first13.382ms keyedbounded traversal retained. Planned not actual/frozen dailyreport, independent nonadmin and rendered acceptance open."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","Ticket151 operator-visible original attendance history/relational replacement/cancel chain/read-only current scope and bounded continuation; see database/nicora_ni081_attendance_history_20261010.md.")
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md","Ticket151 operator-visible original attendance history/relational replacement/cancel chain/read-only current scope and bounded continuation; see database/retailcase_ni081_attendance_history_20261010.md.")
 ]:out[p]=Path(p).read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":
   row.setdefault("implementedSlices",[]).append("151 original planned attendance history/aware actors-cancellation/source lineage/bounded operator view")

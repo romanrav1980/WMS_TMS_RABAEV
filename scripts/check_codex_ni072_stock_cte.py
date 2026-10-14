@@ -21,4 +21,4 @@ with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle
  for value in docs.values():
   assert len(value['stock_rows'])==20 and value['has_more'] and value['document_ids'][0]=='["1","CELL:A"]' and value['document_ids'][-1]=='["20","CELL:A"]'
   assert isinstance(value['stock_rows'][0]['physical_quantity'],str) and Decimal(value['stock_rows'][0]['physical_quantity'])==Decimal('0.3') and Decimal(value['stock_rows'][0]['hard_quantity'])==Decimal('0.4')
- result={'synthetic_read_only_cte':True,'counts':counts,'documents':docs};Path('reports/nicora/2026-10-13/codex/NI072/synthetic_stock_keys.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print('Oracle CTE PASS: 25 conflicts per type; bounded20, decimalstrings, stablekeys; no DML')
+ result={'synthetic_read_only_cte':True,'counts':counts,'documents':docs};Path('reports/retailcase/2026-10-13/codex/NI072/synthetic_stock_keys.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print('Oracle CTE PASS: 25 conflicts per type; bounded20, decimalstrings, stablekeys; no DML')

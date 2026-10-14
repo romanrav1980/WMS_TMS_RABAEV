@@ -6,7 +6,7 @@ from app.modules.transport.infrastructure.vehicle_profile import VehicleProfiles
 from app.oracle_gateway import OracleGateway
 from uuid import uuid4
 from time import perf_counter
-folder=Path('reports/nicora/2026-10-13/codex/STORE_ACCESS');folder.mkdir(exist_ok=True)
+folder=Path('reports/retailcase/2026-10-13/codex/STORE_ACCESS');folder.mkdir(exist_ok=True)
 tag=uuid4().hex[:10];address='ACCESS.QA:'+tag;st='ACCESS.ST:'+tag;checks=[];gateway=OracleGateway();stores=StoreProfile(gateway);fleet=VehicleProfiles(gateway)
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute("select count(*)from USER_OBJECTS where OBJECT_NAME='RRL_STORE_ACCESS_RULES'and OBJECT_TYPE='PACKAGE BODY'and STATUS='VALID'");assert q.fetchone()[0]==1,'Root must apply bundle first'

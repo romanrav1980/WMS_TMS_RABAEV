@@ -8,13 +8,13 @@ all_members_physically_loaded requires current active ST/load binding, LOADED or
 Actual scripts/case251_loading_read.py: original33558 both loaded/departedrootfacts/currenttwo members complete; existing33541 one actual loaded and pendingST =>false/nonempty pending. Existing activeWR23413508027ed/WARE51365792/transport_dispatch_view readown33543 including releasedcustody, foreign33558403. Admin realHTTP33558 original fieldshape +currentreadflags200. No goods/users/fixtures changed, protected20/20. First HTTP attempt hit startup-oldprocess race afterservrestart; once new workerready samecasepassed, not business failure.
 Architecture5730cycles76debt PASS, no frontend change. SQL selectedmember joinedproof3.332ms/9: retain TT membership/active load/stock operation keys and200 bounds, no index/cache. Owner transport reviews large membership source; no throughput acceptance claim. Warehouse ready/driver/calendar common admission still separate.
 """
-out["wiki/database/nicora_ni052_loading_read_20261011.md"]=summary
+out["wiki/database/retailcase_ni052_loading_read_20261011.md"]=summary
 for path,line in [
-("wiki/index.md","- [Снимок погрузки текущего склада](database/nicora_ni052_loading_read_20261011.md):251 real actor/current view-WARE/one READONLY/original load+journal proof/scoped history/no stock."),
+("wiki/index.md","- [Снимок погрузки текущего склада](database/retailcase_ni052_loading_read_20261011.md):251 real actor/current view-WARE/one READONLY/original load+journal proof/scoped history/no stock."),
 ("wiki/log.md","2026-10-11:251 original loading status gets authenticated actor and single READONLY snapshot/current activeview+Ware/emptyowner/all member and historical Ware scoped before output. Physically loaded requires active binding/sameTTvehicle/APPLIED originaljournal, not logicalstatealone. Existing33558complete2/33541pending/WR234own33543releasedcustody andforeign33558403/actualHTTP200/no fixtures/protected20-20. Architecture5730cycles76; SQL3.332ms9 bounded TTloadjournalkeys retain. No OracleDDL; native manifest250 unchanged."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni05_2.md","11.10.2026:251 current warehouse loadingstatus singleREADONLY/actual actor/currentscope/native stock proof/sameTTvehicle/source history; original33558complete2/current33541pending/ownreceiver33543/foreign403/API200/no stock. Shared operational admission still original departure.")
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni05_2.md","11.10.2026:251 current warehouse loadingstatus singleREADONLY/actual actor/currentscope/native stock proof/sameTTvehicle/source history; original33558complete2/current33541pending/ownreceiver33543/foreign403/API200/no stock. Shared operational admission still original departure.")
 ]:out[path]=Path(path).read_text(encoding="utf-8")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
 next(x for x in j["increments"]if x["id"]=="NI05.2").setdefault("implementedSlices",[]).append("251 original loading status/current actor-WARE/single readonly snapshot/exact sameTTvehicle APPLIED load proof/scoped current history/no stock")
 out[str(p)]=json.dumps(j,ensure_ascii=True,indent=2)+"\n"
 root=next(p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md"))

@@ -2,7 +2,7 @@
 from app.modules.platform.public import read_oracle_json
 from uuid import uuid4
 from time import perf_counter
-folder=Path('reports/nicora/2026-10-13/codex/VEHICLE_OUTER');folder.mkdir(exist_ok=True)
+folder=Path('reports/retailcase/2026-10-13/codex/VEHICLE_OUTER');folder.mkdir(exist_ok=True)
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute("select count(*)from USER_TAB_COLUMNS where TABLE_NAME='RRL_VEHICLE_PROFILE_HIST'and COLUMN_NAME in('OUTER_HEIGHT_MM','OUTER_LENGTH_MM')");assert q.fetchone()[0]==2,'Apply prepared migration first; no auto-apply'
  tag=uuid4().hex[:10];q.callproc('RRL_STOCK_CONFIG_API.begin_change',['admin','transport_fleet_edit'])

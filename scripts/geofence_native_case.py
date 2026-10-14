@@ -6,7 +6,7 @@ from app.oracle_gateway import OracleGateway
 from app.services.geofencing import check_geofences
 from time import perf_counter
 app=FastAPI();app.include_router(router)
-folder=Path('reports/nicora/2026-10-13/codex/GEOFENCES');folder.mkdir(exist_ok=True);results={}
+folder=Path('reports/retailcase/2026-10-13/codex/GEOFENCES');folder.mkdir(exist_ok=True);results={}
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute("select PASS from RUSERS where ID='admin'");password=q.fetchone()[0]
  address='NI081.SHOP.0b960a9257';q.execute('select GEO_FENCE_RADIUS_M from RRL_ADDR where ADDR=:a',a=address);original=q.fetchone()[0]

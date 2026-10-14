@@ -12,8 +12,8 @@ commit;
 out[str(f/"apply.sql")]=(f/"apply.sql").read_text(encoding="utf-8")+"@@002_ledger.sql\n"
 p=Path("db/migrations/2026-10-08_stock_posting_core/current_runtime_manifest.json");m=json.loads(p.read_text(encoding="utf-8"));m["components"].append("../2026-10-11_ni042_scale_net/001_admission.sql")
 out[str(p)]=json.dumps(m,indent=2)+"\n"
-out["wiki/database/nicora_ni042_scale_net_20261011.md"]="""# NI04.2: точный NET-отбор на весах
-189 APPLIED; transactional case190. [[nicora_ni042_scale_use_20261011]], [[nicora_ni042_warehouse_scale_20261011]].
+out["wiki/database/retailcase_ni042_scale_net_20261011.md"]="""# NI04.2: точный NET-отбор на весах
+189 APPLIED; transactional case190. [[retailcase_ni042_scale_use_20261011]], [[retailcase_ni042_warehouse_scale_20261011]].
 POST existing CASE /tasks/{task}/lines/{line}/weigh-line accepts only operation/capture/source-cell/carrier. READ ONLY current CASE scope derives cumulative fact previous+archived exact NET; saved canonical replay precedes current read. Existing CASE_PICK_CONFIRM performs stock/H/physical journal/domain/outbox/use atomically. Extra quantity is forbidden.
 Native current SKU weighted TYPE_W2/3/5/6/7 and exact KG->KG1:1 required for both scale modes; current serialized flag/card/CRPT/profiles prevent loose marked opening. Original archived product must equal command product. Current source/device/freshness/rank70 captured-use fence remains188.
 Raw TSD current policy distinguishes serialized box from unmarked loose KG; archive mode/basis/time choices exclude used captures. NET selection disables manual cumulative fact and stores original route/body durably; old intents retain fallback confirm. Read-only original archive retains historical stock_posted:false, separate use_by_capture reflects actual operation use (no rewriting original packet).
@@ -24,9 +24,9 @@ Quality PASS544files/0cycles/76debt/24tests/bothTS. RawJS syntax PASS. Pending r
 Slow SQL USE count86x0jmcyxt9c4 .506ms/7; INSERT9b4nq6cd89zg8 5.292ms/4 and PKread51mtxj734zrff2.638ms/4 retained indexed keys. New history joinbp28t2murqvqn209.991ms firstparse/dynamic sampling177.119ms: explicit decision bound51 captures before USE PK join; inventory owns statistics/plan check at pilot rather than extra speculative index. Cold samples are not throughput evidence.
 """
 for path,line in [
-("wiki/index.md","- [Точный NET-отбор на весах](database/nicora_ni042_scale_net_20261011.md):189 current unmarkedKG/native root/TSD,190 rollback+concurrent one winner; remaining demand preserved."),
+("wiki/index.md","- [Точный NET-отбор на весах](database/retailcase_ni042_scale_net_20261011.md):189 current unmarkedKG/native root/TSD,190 rollback+concurrent one winner; remaining demand preserved."),
 ("wiki/log.md","2026-10-11:189 APPLIED exact NET CASE route/native current KG/marking/source;190 rollback and two-ID concurrency passed CASE1064. Quality544/0/76/24/bothTS. History209.991ms cold→bound51 before PK join; inventory pilot stats/plan owner. Order tolerance remains separate."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni04_2.md","11.10.2026:189 exact unmarked NET9.6 route/TSD/native proof installed;190 outer rollback and concurrent capture one winner passed. Demand10 remains PARTIAL9.6/.4; ±15% and lastbox policy, real hardware/browser acceptance remain open.")]:
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni04_2.md","11.10.2026:189 exact unmarked NET9.6 route/TSD/native proof installed;190 outer rollback and concurrent capture one winner passed. Demand10 remains PARTIAL9.6/.4; ±15% and lastbox policy, real hardware/browser acceptance remain open.")]:
  p=Path(path);out[str(p)]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
 roots=[p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md")]
 if roots:out[str(roots[0]/"NI04.2"/"189_190_scale_net_tx.md")]="""# Qwen:189/190

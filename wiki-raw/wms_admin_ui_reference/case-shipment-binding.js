@@ -7,7 +7,7 @@
     cpTsdEl("cpTsdBindShipment").disabled = true;
     try {
       if (!cpTsd.task) throw new Error("Выберите паллету отбора.");
-      for (const kind of ["nicora.casePickIntent", "nicora.caseCarrierMove", "nicora.caseCarrierReturn", "nicora.partialShipmentLayout"]) {
+      for (const kind of ["retailcase.casePickIntent", "retailcase.caseCarrierMove", "retailcase.caseCarrierReturn", "retailcase.partialShipmentLayout"]) {
         if (localStorage.getItem(JSON.stringify([kind, cpTsdApiBase(), cpTsdUser()])))
           throw new Error("Сначала повторите незавершённую команду.");
       }

@@ -1,6 +1,6 @@
 (() => {
  "use strict";
- const key=()=>JSON.stringify(["nicora.caseCarrierReturn",cpTsdApiBase(),cpTsdUser()]);
+ const key=()=>JSON.stringify(["retailcase.caseCarrierReturn",cpTsdApiBase(),cpTsdUser()]);
  let busy=false;
  const originalRender=cpTsdRender;
  cpTsdRender=()=>{
@@ -22,7 +22,7 @@
   busy=true;window.cpTsdStockBusy=true;let storageKey,priorUnknown=false,attempted=false;
   try{
    storageKey=key();
-   for(const kind of ["nicora.casePickIntent","nicora.caseCarrierMove"]){
+   for(const kind of ["retailcase.casePickIntent","retailcase.caseCarrierMove"]){
     if(localStorage.getItem(JSON.stringify([kind,cpTsdApiBase(),cpTsdUser()])))throw new Error("Сначала повторите незавершённую команду.");
    }
    let intent=JSON.parse(localStorage.getItem(storageKey)||"null");

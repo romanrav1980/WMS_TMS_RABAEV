@@ -17,7 +17,7 @@ files[str(p)]=p.read_text(encoding="utf-8")+"""
 .warehouse-operations .warehouse-task-command-row button{min-width:120px;padding:8px 18px}
 @media(max-width:650px){.warehouse-operations .warehouse-task-execute{grid-template-columns:1fr}.warehouse-operations .warehouse-task-command-row button{flex:1}}
 """
-p=Path("wiki/components/nicora_warehouse_task_ui_20261013.md")
+p=Path("wiki/components/retailcase_warehouse_task_ui_20261013.md")
 files[str(p)]=p.read_text(encoding="utf-8")+"""
 ## Продолжение827–829
 
@@ -26,7 +26,7 @@ files[str(p)]=p.read_text(encoding="utf-8")+"""
 В браузере создана новая вкладка734: собственный dev admin, прямое чтение1080 DONE/3EA/remaining0. Preset снова не изменил список через CUA; причина открыта. Скриншот07 показывает действительную карточку, но обнаружил тесную сетку полей.829 разносит поля сканирования и ряд команд; visual after-change pending. SQL: актуальный LIST15.701мс/95buffers, retain bounded projection без нового индекса. До20:00 MSK13Oct либо полного завершения по новому поручению.
 """
 p=Path("wiki/index.md")
-files[str(p)]="- [Продолжение827–829: актуальная карточка заданий](components/nicora_warehouse_task_ui_20261013.md): fresh status/progress guard, JS828 PASS, scan layout; дедлайн20:00 MSK.\n"+p.read_text(encoding="utf-8")
+files[str(p)]="- [Продолжение827–829: актуальная карточка заданий](components/retailcase_warehouse_task_ui_20261013.md): fresh status/progress guard, JS828 PASS, scan layout; дедлайн20:00 MSK.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md")
 files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-13 continuation827–829: owner deadline20:00MSK persisted; current card fresh list status + progress epoch/identity, resource confirmed result after queue read; JS828/810PASS. Real browser7341080DONE/3EA0 screenshot07, preset remains unconfirmed. Scan grid829 fixes crowded labels; visual pending. LIST15.701ms95buf bounded retained.\n"
 print(json.dumps(files,ensure_ascii=True))

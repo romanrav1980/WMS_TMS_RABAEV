@@ -6,7 +6,7 @@ matches=[item for item in m["components"]if item=="../2026-10-10_ni042_compositi
 assert len(matches)==1,matches
 m["components"]=[ "../2026-10-10_ni043_mes_scope/001_core.sql" if item==matches[0] else item for item in m["components"]]
 out[str(p)]=json.dumps(m,indent=2)+"\n"
-page="wiki/database/nicora_ni043_mes_scope_20261010.md"
+page="wiki/database/retailcase_ni043_mes_scope_20261010.md"
 out[page]="""# NI04.3 — актуальный склад исполнителя MES,127
 Migration2026-10-10-127-mes-current-warehouse-scope APPLIED4/0. Existing RRL_STOCK_MES_MOVEMENT_CORE body validates current activeRUSERS: actorWARE=production orderWARE or legacyGLOBAL_ADMIN; API existing apply reader checks same current scope before resolving pending movements/replay. Existing rightmes_wms_bridge_apply mandatory. Sole Root transaction/native core/balance/event/outbox unchanged.
 Checkpoint442_before127_mes_movement_core.sql captured live source. New body/current manifest source represented, core/rootVALID verified. Migration adds no data table; removing this boundary refused rollback forward-only. Source snapshots/generated bundle must not be applied to ACTIVE.
@@ -14,8 +14,8 @@ Author scripts/ni043_mes_scope_case.py: own native BOM/order99/completion25/FGre
 Native guard source verified VALID; actual denial is API current-scope boundary. Do not claim a separately bypassed direct-core refusal case. No factory/raw consumption/regulatory real ACK evidence.
 Slow SQL decisions reuse126 exact order/movement PK/current actor/source bounds200/units10000; inventory owner watches scope lookup and plans after volume growth.
 """
-out["wiki/index.updated.tmp"]="- [Актуальный склад исполнителя MES](database/nicora_ni043_mes_scope_20261010.md):127 APPLIED/core+rootVALID/current nonadmin wrongWARE403/P0 then ownWARE native P3H0/replay; no new stock writer.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
-for name,line in [("wiki/log.md","2026-10-10:127 current warehouse scope enforced in existing MES API and native core, APPLIED4/0/sourcecheckpoint442/current manifest/core+rootVALID. Actual nonadmin order99/release123 wrongWARE403/P0→ownWARE/P3H0/units3/APPLIED/replay, actor retired. Full marked sprint/regulatory evidence remainsopen."),("wiki/requirements/nikora_delivery_v55/execution/active/ni04_3.md","Ticket127: [[database/nicora_ni043_mes_scope_20261010]] current MES actorWARE enforced API/native core; existing nonadmin99/123/foreign403→native3/replay. Next direct UNIT scanning operator form alongside aggregation evidence.")]:
+out["wiki/index.updated.tmp"]="- [Актуальный склад исполнителя MES](database/retailcase_ni043_mes_scope_20261010.md):127 APPLIED/core+rootVALID/current nonadmin wrongWARE403/P0 then ownWARE native P3H0/replay; no new stock writer.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
+for name,line in [("wiki/log.md","2026-10-10:127 current warehouse scope enforced in existing MES API and native core, APPLIED4/0/sourcecheckpoint442/current manifest/core+rootVALID. Actual nonadmin order99/release123 wrongWARE403/P0→ownWARE/P3H0/units3/APPLIED/replay, actor retired. Full marked sprint/regulatory evidence remainsopen."),("wiki/requirements/retailcase_delivery_v55/execution/active/ni04_3.md","Ticket127: [[database/retailcase_ni043_mes_scope_20261010]] current MES actorWARE enforced API/native core; existing nonadmin99/123/foreign403→native3/replay. Next direct UNIT scanning operator form alongside aggregation evidence.")]:
  p=Path(name);out[name]=p.read_text(encoding="utf-8-sig")+"\n"+line+"\n"
 out["задания на проведения тестов/NI04.3/127_склад_исполнителя_MES.md"]="""# Qwen — NI04.3,127
 Existing MES current right is necessary, and current activeRUSERS WARE must equal nativeproduction orderWARE (GLOBAL_ADMIN existingbypass). API validates before replay/resolving pending set, native core repeats under existing locked order. Scope migration body/sourcecheckpoint442/ledger/core+rootVALID/current source manifest.

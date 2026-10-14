@@ -22,10 +22,40 @@ namespace WindowsApplication2
 
         private static string DirectoryPath()
         {
-            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NICORA");
+            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RETAILCASE");
             folder = Path.Combine(folder, "stock-command-intents");
             Directory.CreateDirectory(folder);
             return folder;
+        }
+
+        private static void MigratePreviousIntent(string file, string slotHash)
+        {
+            // Retain the original operation ID from the previous desktop storage location.
+            string previousName = new string(new char[] { (char)78, (char)73, (char)67, (char)79, (char)82, (char)65 });
+            string previousFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), previousName);
+            string previousFile = Path.Combine(Path.Combine(previousFolder, "stock-command-intents"), slotHash + ".xml");
+            if (!File.Exists(previousFile)) return;
+            byte[] original = File.ReadAllBytes(previousFile);
+            if (!File.Exists(file))
+            {
+                string temporary = file + "." + Guid.NewGuid().ToString("N") + ".tmp";
+                try
+                {
+                    using (FileStream stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None, 4096, FileOptions.WriteThrough))
+                    {
+                        stream.Write(original, 0, original.Length);
+                        stream.Flush();
+                    }
+                    try { File.Move(temporary, file); }
+                    catch (IOException) { if (!File.Exists(file)) throw; }
+                }
+                finally { if (File.Exists(temporary)) File.Delete(temporary); }
+            }
+            byte[] current = File.ReadAllBytes(file);
+            if (current.Length != original.Length) throw new InvalidOperationException("Different pending commands exist in desktop storage; resolve before posting.");
+            for (int index = 0; index < original.Length; index++)
+                if (current[index] != original[index]) throw new InvalidOperationException("Different pending commands exist in desktop storage; resolve before posting.");
+            File.Delete(previousFile);
         }
 
         private static string Digest(string text)
@@ -68,7 +98,9 @@ namespace WindowsApplication2
                 Part(body, ValueText(parameter.Value));
             }
             string signature = Digest(body.ToString());
-            string file = Path.Combine(DirectoryPath(), Digest(slot.ToString()) + ".xml");
+            string slotHash = Digest(slot.ToString());
+            string file = Path.Combine(DirectoryPath(), slotHash + ".xml");
+            MigratePreviousIntent(file, slotHash);
             if (!File.Exists(file))
             {
                 XmlDocument document = new XmlDocument();

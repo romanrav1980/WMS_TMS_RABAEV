@@ -15,4 +15,4 @@ with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle
  order by ELAPSED_TIME/nullif(EXECUTIONS,0)desc fetch first 12 rows only""");report['top_sql']=q.fetchall()
  q.execute("select COLUMN_NAME from USER_TAB_COLUMNS where TABLE_NAME='RRL_SQL_SLOW_LOG' order by COLUMN_ID");report['slow_log_columns']=[r[0]for r in q]
  q.execute("select OBJECT_NAME,OBJECT_TYPE from USER_OBJECTS where OBJECT_NAME in('RRL_STORE_WINDOW_RULES','RRL_TT_ROUTE_SCHEDULE','RRL_TT_TIME_API')and STATUS!='VALID'");report['changed_invalid']=q.fetchall()
-Path('reports/nicora/2026-10-13/codex/STORE_WEEKLY/native_sql.json').write_text(json.dumps(report,indent=2,ensure_ascii=False),encoding='utf-8');print(json.dumps(report))
+Path('reports/retailcase/2026-10-13/codex/STORE_WEEKLY/native_sql.json').write_text(json.dumps(report,indent=2,ensure_ascii=False),encoding='utf-8');print(json.dumps(report))

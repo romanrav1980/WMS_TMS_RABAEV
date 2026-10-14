@@ -9,13 +9,13 @@ Gantt показывает фактический пояс расчёта/ист
 scripts/case249_cross_zone.py: parent33564 approved Tbilisi09, собственный emptypeer33566 existing samevehicle10059/driver1 created normally, original native generator. Peer UTC05 same real instant overlaps; callerUTC не меняетapproved parentTbilisi. Peer changed toUTC09 /beforeapproval native SOURCE_CHANGED conservative blocker; approvedv2UTC09 same wallhours differs4h/nopeer overlap. Peer cancelled/approval history retained/no goods/protected20-20. Native read scope/current403 covered248, no independent rendered UI acceptance.
 Architecture5720cycles76/adminTypeScript PASS. SQLsuperset lookup5.127–7.451ms3/2 executions: retain current resource/TT/OPS/approvalversion keys and bounded source snapshots; no cache or new index. Broader aware driver/warehouse/route admission remains NI08.1.
 """
-out["wiki/database/nicora_ni081_cross_zone_20261011.md"]=page
+out["wiki/database/retailcase_ni081_cross_zone_20261011.md"]=page
 for path,line in [
-("wiki/index.md","- [Рейсы в разных часовых поясах](database/nicora_ni081_cross_zone_20261011.md):249 native source-valid approval perTT/absolute overlap/safe candidate superset/changed approval blocked/no stock."),
+("wiki/index.md","- [Рейсы в разных часовых поясах](database/retailcase_ni081_cross_zone_20261011.md):249 native source-valid approval perTT/absolute overlap/safe candidate superset/changed approval blocked/no stock."),
 ("wiki/log.md","2026-10-11:249 time preview honors current approved region perTT, caller cannot override; same cursor native context validates sourcehash/scope. UTC0..4 candidate superset +exact aware overlaps, stale neighboring approval blocker. Own33564 Tbilisi09/33566UTC05 same instant conflict; UTC09 no false walltime conflict/sourcechangedblocked/reapproved/peer cancelled/no goods/protected20-20. Architecture5720cycles76/adminTS; SQL5.127–7.451ms bounded keys no index/cache. No operational/legal/warehouse admission."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","11.10.2026:249 perTT current approvedregion-aware occupancy/absolute overlap/stale region decision blockers/Gantt region source. Real samevehicle-driver parent33564Tbilisi09/peer33566UTC05 overlaps; UTC09 differs4h doesnot; peer cancelled/no stock. Driver/legal/warehouse release coordination remains.")
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md","11.10.2026:249 perTT current approvedregion-aware occupancy/absolute overlap/stale region decision blockers/Gantt region source. Real samevehicle-driver parent33564Tbilisi09/peer33566UTC05 overlaps; UTC09 differs4h doesnot; peer cancelled/no stock. Driver/legal/warehouse release coordination remains.")
 ]:out[path]=Path(path).read_text(encoding="utf-8")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
 next(x for x in j["increments"]if x["id"]=="NI08.1").setdefault("implementedSlices",[]).append("249 original ARM occupancy compares current approved region perTT with absolute instants/safe bounded superset/stale approval refused/no stock")
 out[str(p)]=json.dumps(j,ensure_ascii=True,indent=2)+"\n"
 root=next(p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md"))

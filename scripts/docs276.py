@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 out={}
-page="wiki/database/nicora_ni072_st_defer_20261011.md"
+page="wiki/database/retailcase_ni072_st_defer_20261011.md"
 text="""# Перенос всей неотобранной СТ на существующий рейс
 276 / NI07.2: RRL_ST_DEFER_API использует прежние RRL_TT_ADD_PALL и RRL_TRANSPORT_PLAN_API.assign_sts. Привязка остаётся в RRL_SBORKA_PALLETS.TRANSTASK_ID. Новая таблица RRL_ST_DEFER_DECISION — неизменяемый журнал решения, а не вторая таблица назначений.
 
@@ -17,20 +17,20 @@ SQL: новая bounded версия реестра cold55.042ms/117 buffers и5
 """
 out[page]=text
 for path,line in [
-("wiki/index.md","- [Атомарный перенос неотобранной СТ](database/nicora_ni072_st_defer_20261011.md):276 прежнее назначение/неизменяемая причина/версия/исходный SAP сохранён; фактические две паллеты и конкурентный победитель."),
+("wiki/index.md","- [Атомарный перенос неотобранной СТ](database/retailcase_ni072_st_defer_20261011.md):276 прежнее назначение/неизменяемая причина/версия/исходный SAP сохранён; фактические две паллеты и конкурентный победитель."),
 ("wiki/log.md","2026-10-11:276 NI07.2 native ST deferral reuses original unassign/assign, immutable reason/source/cargo hash/currentWARE/version; sorted vehicle/TT/ST underCONFIG6; no stock writer. ActualSAP_2046 2pallet48EA source33571 Nov3->targetNov4; outer rollback, concurrent200/409, exact replay/collision, history50/service403/daily snapshot2v1/P20H20. Raw durable command panel. Bounded SQL cold55/57ms117/168buf; retainexistingdateindex+STversion uniqueness. Independent late capacity failure/browser/fullNS58 remains."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni07_2.md","11.10.2026:276 Перенос всей неотобранной СТ на существующий рейс реализован через прежнее назначение, без второго реестра. Причина/основание/версия/история, исходные SAP даты и объём сохранены; фактический SAP_2046 две паллеты/48EA, rollback/конкурентный победитель/повтор/P20H20. Не разрешает перенос CASE/погруженного товара. Полный NS58/независимая приёмка остаются открыты."),
-("wiki/runbooks/nicora_active_work.md","Latest276 native RRL_ST_DEFER_API/schema VALID; app609/zero cycles76 baseline. tmp/context276.json: SAP_2046 2 planned pallets48EA source33571 Nov3 -> target recorded in context Nov4, onev1 decision, FACT0/P20H20 unchanged. Original unassign/assign atomic outer rollback/concurrent winner/exact replay. History and shipping snapshot version wired. UI durable command/reason/reference; no physical dispatch. CONFIG6 rare-plan serialisation. Full NS58 and independent latecapacity/browser pending. Native manifest/bundle276 generated locally, never fullbundle applied.")
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni07_2.md","11.10.2026:276 Перенос всей неотобранной СТ на существующий рейс реализован через прежнее назначение, без второго реестра. Причина/основание/версия/история, исходные SAP даты и объём сохранены; фактический SAP_2046 две паллеты/48EA, rollback/конкурентный победитель/повтор/P20H20. Не разрешает перенос CASE/погруженного товара. Полный NS58/независимая приёмка остаются открыты."),
+("wiki/runbooks/retailcase_active_work.md","Latest276 native RRL_ST_DEFER_API/schema VALID; app609/zero cycles76 baseline. tmp/context276.json: SAP_2046 2 planned pallets48EA source33571 Nov3 -> target recorded in context Nov4, onev1 decision, FACT0/P20H20 unchanged. Original unassign/assign atomic outer rollback/concurrent winner/exact replay. History and shipping snapshot version wired. UI durable command/reason/reference; no physical dispatch. CONFIG6 rare-plan serialisation. Full NS58 and independent latecapacity/browser pending. Native manifest/bundle276 generated locally, never fullbundle applied.")
 ]:
  out[path]=Path(path).read_text(encoding="utf-8")+"\n"+line+"\n"
 out["wiki/index.md"]=out["wiki/index.md"].replace("current native275/app275/","current native276/app276/")
-design="wiki/database/nicora_ni072_st_defer_design_20261011.md"
-out["wiki/index.md"]+="\n- [Граница переноса СТ](database/nicora_ni072_st_defer_design_20261011.md): первоначальный проект276; окончательная реализация и ограничения описаны в странице переноса.\n"
+design="wiki/database/retailcase_ni072_st_defer_design_20261011.md"
+out["wiki/index.md"]+="\n- [Граница переноса СТ](database/retailcase_ni072_st_defer_design_20261011.md): первоначальный проект276; окончательная реализация и ограничения описаны в странице переноса.\n"
 p=Path("db/migrations/2026-10-08_stock_posting_core/current_runtime_manifest.json");j=json.loads(p.read_text(encoding="utf-8"))
 j["startup_scripts"].append("../2026-10-11_ni072_st_defer/001_schema.sql")
 j["components"].append("../2026-10-11_ni072_st_defer/002_api.sql");j["packages"].append("RRL_ST_DEFER_API")
 out[str(p)]=json.dumps(j,indent=2)+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
 next(x for x in j["increments"]if x["id"]=="NI07.2").setdefault("implementedSlices",[]).append("276 original atomic unpicked-ST deferral/currentWARE/version/immutable reason/source/cargo preserved/actualSAP2pallets/noStock/durableUI/history/dayregister")
 out[str(p)]=json.dumps(j,indent=2)+"\n"
 root=next(p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md"))

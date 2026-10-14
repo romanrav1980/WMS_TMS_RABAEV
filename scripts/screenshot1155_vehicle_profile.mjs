@@ -13,9 +13,9 @@ try{
  const lower=card.getByRole('textbox',{name:'Минимум температуры машины, °C',exact:true});
  if(await lower.inputValue()!=='-20.125')throw Error('Real range not rendered');
  await card.scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/45-vehicle-temperature-profile.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/45-vehicle-temperature-profile.png'});
  await page.setViewportSize({width:390,height:844});
  await card.scrollIntoViewIfNeeded();
- await card.screenshot({path:'reports/nicora/2026-10-13/screenshots/46-vehicle-temperature-profile-mobile.png'});
+ await card.screenshot({path:'reports/retailcase/2026-10-13/screenshots/46-vehicle-temperature-profile-mobile.png'});
  console.log('PASS1155 real current fleet profile/Celsius fields/desktop and mobile screenshots; no UI writes');
 }finally{await browser.close();}

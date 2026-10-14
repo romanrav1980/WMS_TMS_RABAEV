@@ -2,7 +2,7 @@ import {useEffect,useRef,useState} from "react";
 import {apiFetch,ApiRequestError,apiOperationScope} from "../../api";
 type Command={operation_id:string;trip_id:number;warehouse_id:number;source_price_id:number;expected_norm_version:number;currency:string};
 export function TransportCostConduct({trip,warehouse,source,version,currency,onRefresh}:{trip:number;warehouse:number;source:number;version:number;currency:string;onRefresh:()=>Promise<void>}){
- const key="nicora.transport-cost:"+apiOperationScope()+":"+trip+":"+warehouse+":"+source;
+ const key="retailcase.transport-cost:"+apiOperationScope()+":"+trip+":"+warehouse+":"+source;
  const running=useRef(false),epoch=useRef(0);
  const [intent,setIntent]=useState<Command|null>(null),[blocked,setBlocked]=useState(false),[busy,setBusy]=useState(false),[message,setMessage]=useState("");
  useEffect(()=>{

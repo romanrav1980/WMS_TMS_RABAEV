@@ -50,7 +50,7 @@ def check_server(kind: str, timeout: float = 30) -> dict:
                             env=env, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                             stderr=subprocess.DEVNULL, text=True, encoding='utf-8')
     try:
-        init = rpc(proc, {'jsonrpc': '2.0', 'id': 1, 'method': 'initialize', 'params': {'protocolVersion': '2024-11-05', 'capabilities': {}, 'clientInfo': {'name': 'nicora-tooling-smoke', 'version': '1.0.0'}}}, timeout)
+        init = rpc(proc, {'jsonrpc': '2.0', 'id': 1, 'method': 'initialize', 'params': {'protocolVersion': '2024-11-05', 'capabilities': {}, 'clientInfo': {'name': 'retailcase-tooling-smoke', 'version': '1.0.0'}}}, timeout)
         if 'result' not in init:
             raise RuntimeError(f'initialize failed for {kind}')
         assert proc.stdin is not None
@@ -59,7 +59,7 @@ def check_server(kind: str, timeout: float = 30) -> dict:
         listing = rpc(proc, {'jsonrpc': '2.0', 'id': 2, 'method': 'tools/list', 'params': {}}, timeout)
         names = {item['name'] for item in listing.get('result', {}).get('tools', [])}
         tool, arguments = {
-            'wiki': ('wiki_read', {'path': 'wiki/requirements/nikora_delivery_v55/README.md', 'max_chars': 800}),
+            'wiki': ('wiki_read', {'path': 'wiki/requirements/retailcase_delivery_v55/README.md', 'max_chars': 800}),
             'repo': ('repo_files', {'pattern': 'TransportDispatchPage', 'limit': 5}),
             'oracle': ('oracle_readonly_query', {'sql': "SELECT USER AS SESSION_USER, SYS_CONTEXT('USERENV','DB_NAME') AS DB_NAME FROM DUAL", 'limit': 1}),
             'docker': ('routing_status', {}),

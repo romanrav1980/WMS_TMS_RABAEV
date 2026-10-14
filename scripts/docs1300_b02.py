@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 files={}
-report="reports/nicora/2026-10-13/45-b02-marked-picking-terminal.md"
+report="reports/retailcase/2026-10-13/45-b02-marked-picking-terminal.md"
 files[report]="""# B02: маркированный отбор через существующий ТСД
 14.10.2026, RABAEV/orcl. Собственная dev-фикстура, авторская адресная проверка.
 
@@ -25,11 +25,11 @@ UI реальный,0page errors. Проверка ручного ввода д�
 SQL resolver101nar4b5fyzn:216.927мс/389buffers за одно холодное исполнение; текущие резервные lookups24.401мс/76buffers и9.216мс/122buffers за3исполнения. Решение: сохранить batch500/existing indexed reservation scope; новую индексацию без повторного медленного плана не добавлять. Владелец inventory, повторный анализ при регулярном>500мс/пилоте.
 Нет реальных государственных ACK, промышленной проверки сканера/весов, независимой приёмки. Внешние статусы остаются отдельными. Общий NI04.2/NI04.3 остаётся открыт для остальных применимых сценариев.
 """
-page="wiki/components/nicora_b02_terminal_profiles_20261014.md"
+page="wiki/components/retailcase_b02_terminal_profiles_20261014.md"
 files[page]="# B02: ТСД для нескольких профилей маркировки\n\n1292–1300. Существующий case-pick-tsd использует поля каждого текущего профиля SKU, отдельные weighted-box/weigh-line пути, точные количества, сохранённый повтор и existing CASE close journal. Нового реестра/товарного исполнителя нет.\n\nActual CASE1134/order2139/wave560:12EA приняты,5EA/10кодов отобраны, потерянный ответ→точный replay, одна APPLIED операция; источник7/CASE5/P12H5. WAIT_CONTROL, дальнейшая отгрузка не выполнена. [Отчёт45](../../"+report+").\n\nВнешние ACK/весы/сканер/independent acceptance не подтверждены. Прочие методы NI04.2 и регуляторные сценарии остаются открытыми; существующие native владельцы сохраняются.\n"
-p=Path("wiki/index.md");files[str(p)]="- [B02: маркированный отбор1300](components/nicora_b02_terminal_profiles_20261014.md):CASE1134/5EA/10кодов/потеря ответа→replay/WAIT_CONTROL, отчёт45; NET ручной факт блокируется.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");files[str(p)]="- [B02: маркированный отбор1300](components/retailcase_b02_terminal_profiles_20261014.md):CASE1134/5EA/10кодов/потеря ответа→replay/WAIT_CONTROL, отчёт45; NET ручной факт блокируется.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-14 ·1300: B02 multi-profile TSD/NET policy/exact quantity/durable pick+close; actual1134/5EA10codes, P12H5, replay after response loss; report45/screens82–84. No external ACK/full-sprint claim.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"))
 for item in d["increments"]:
  if item["id"]in["NI04.2","NI04.3"]:item.setdefault("implementedSlices",[]).append("1292–1300 existing TSD all SKU profiles/NET archive/exact quantities/current-scope durable pick and close; actual1134 five units ten codes, committed-response-loss replay, WAIT_CONTROL; report45.")
 files[str(p)]=json.dumps(d,indent=2,ensure_ascii=False)+"\n"

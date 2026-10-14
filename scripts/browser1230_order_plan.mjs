@@ -19,7 +19,7 @@ try{
  const text=await page.locator('#orderPickStatus').innerText();
  if(answer.status>=500)throw Error('Unclassified server error: '+JSON.stringify(answer));
  await page.locator('#orderPickStatus').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/63-order-picking-workspace.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/63-order-picking-workspace.png'});
  fs.writeFileSync('tmp/browser1230.json',JSON.stringify({status:'OBSERVED1230',answer,text,writes:1},null,2));
  console.log(JSON.stringify({status:'OBSERVED1230',answer,message:text}));
 }finally{await browser.close();}

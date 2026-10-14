@@ -301,7 +301,7 @@
     el("wfProjectPanel").hidden = !auth().hasPermission?.("transport_dispatch_edit");
   }
 
-  el("wfRead").addEventListener("nicora-invalidate", invalidate);
+  el("wfRead").addEventListener("retailcase-invalidate", invalidate);
   el("wfRead").addEventListener("click", calculate);
   el("wfProject").addEventListener("click", project);
   for (const id of INPUTS) {

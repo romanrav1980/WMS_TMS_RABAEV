@@ -15,11 +15,11 @@ values(s.MIGRATION_ID,'Shared whole-pallet admission checks total per-owner sour
 """,d+"apply.sql":"@@001_shared.sql\n@@002_ledger.sql\n",d+"rollback.sql":f"@@000_before_shared.sql\nupdate RRL_SCHEMA_MIGRATIONS set STATUS='ROLLED_BACK'where MIGRATION_ID='{mid}';\n/\n",
 d+"verify.sql":"select NAME,TYPE,LINE,TEXT from USER_ERRORS where NAME='RRL_STOCK_REPL_SHARED';\nselect OBJECT_NAME,OBJECT_TYPE,STATUS from USER_OBJECTS where OBJECT_NAME='RRL_STOCK_REPL_SHARED';\n",
 d+"checkpoint.json":json.dumps({"migration_id":mid,"state":"PREPARED","before_sha256":hashlib.sha256(before.encode()).hexdigest(),"after_sha256":hashlib.sha256(after.encode()).hexdigest(),"target":"RABAEV/orcl"},indent=2)}
-p=Path("wiki/database/nicora_ni032_same_source_bindings_20261013.md")
+p=Path("wiki/database/retailcase_ni032_same_source_bindings_20261013.md")
 files[str(p)]=p.read_text(encoding="utf-8")+"""\n## Допуск869
 
 866 applied VALID; fresh867 остановился до physical issuance, finally owncleanup. Старый RRL_STOCK_REPL_SHARED.allowed также запрещал несколько source bindings одного CASE owner.869 prepared: count=1 заменён sum(BASE_QTY) per current UID/cell/wave/line against remaining minus existing target HARD. Каждый distinct reservation проходит прежний warehouse/target/CASE/status/customer check; исходный полный ordered transfer closure сохраняется. Не объединяет reservations, не списывает чужой товар. Captured868/SHA/paired rollback. Повторный свежий case и live verification ожидают.
 """
-p=Path("wiki/index.md");files[str(p)]="- [NI03.2 shared-binding869](database/nicora_ni032_same_source_bindings_20261013.md): prepared aggregate admission;866 VALID, failed867 before physical issuance/owncleanup.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");files[str(p)]="- [NI03.2 shared-binding869](database/retailcase_ni032_same_source_bindings_20261013.md): prepared aggregate admission;866 VALID, failed867 before physical issuance/owncleanup.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-13 prepared869: captured868 shared owner admission, per-source own sum rather than count1;866VALID but867 correctly refused old shared guard, no pass claim, owncleanup. Native apply/fresh retry pending.\n"
 print(json.dumps(files,ensure_ascii=True))

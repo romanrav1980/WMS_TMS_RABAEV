@@ -57,8 +57,8 @@ f[p]=""".qc-workspace{margin-bottom:22px;padding:0!important;overflow:hidden;bor
 p="wiki-raw/wms_admin_ui_reference/warehouse-tasks.html";t=Path(p).read_text(encoding="utf-8")
 t=t.replace('</head>','<link rel="stylesheet" href="outgoing-quality.css?v=20261013-1094"></head>',1).replace("outgoing-quality.js?v=20261013-1092","outgoing-quality.js?v=20261013-1094")
 f[p]=t
-p="wiki/components/nicora_ni051_control_label_20261012.md"
+p="wiki/components/retailcase_ni051_control_label_20261012.md"
 f[p]=Path(p).read_text(encoding="utf-8")+"\n1094: существующий QC ARM оформлен как отдельные сверка состава/вес, текущий допуск/версия/режим/независимость. qc_shipment link читает только GET status; не запускает PLAN автоматически. Старый pending/draft имеет приоритет. Response actor/API scope, exact operation/control identifier/signature andcross-tab raw compare защищают сохранённую команду перед очисткой. Авторская targetedproof/browser next, nativeQC rules unchanged.\n"
-f["wiki/index.md"]="- [QC workspace1094](components/nicora_ni051_control_label_20261012.md): linked readonly status, separate scan/weight stages and exact response/pending scope guards.\n"+Path("wiki/index.md").read_text(encoding="utf-8")
+f["wiki/index.md"]="- [QC workspace1094](components/retailcase_ni051_control_label_20261012.md): linked readonly status, separate scan/weight stages and exact response/pending scope guards.\n"+Path("wiki/index.md").read_text(encoding="utf-8")
 f["wiki/log.md"]=Path("wiki/log.md").read_text(encoding="utf-8")+"\n-1094: continued NI03.3→existingNI05.1 QC workflow; functional readable ARM/read-only link/currentversion, operation correlation+cross-tab+actor guard added without QC rule changes. Runtimepending.\n"
 print(json.dumps(f,ensure_ascii=True))

@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-files={};report="reports/nicora/2026-10-13/47-ni081-forecast-labour.md"
+files={};report="reports/retailcase/2026-10-13/47-ni081-forecast-labour.md"
 files[report]="""# NI08.1: прогноз трудозатрат по действующим нормам
 
 2026-10-14, dev RABAEV/orcl. Реализован K-0003; frontend Claude переиспользован, серверная математика не продублирована.
@@ -30,16 +30,16 @@ Qualitygate735files/0cycles/74debt,24tests+обаTS PASS; предупрежде
 SQLрешение: metadataDDL545.746мс однократно, неоперационный путь; configscope81.709мс/216buffers холодный, versioninsert31.709мс/635buffers за2. Сохраняем составнойPK/один batchnormread, новыеиндексы не нужны; resources владеет повторным анализом при регулярном>500мс.
 Внешний пилот/independent acceptance не подтверждены; полный NI08.1 остаётся открыт для других сценариев ресурсов/слотов.
 """
-page="wiki/components/nicora_ni081_forecast_labour_20261014.md"
+page="wiki/components/retailcase_ni081_forecast_labour_20261014.md"
 files[page]="# NI08.1: количественный прогноз → часы\n\n1328–1341. Явный versioned scope→SITE_CODE, прежние workload command/history/norms; публичное чтение resources в едином снимке transport forecast. Decimal hours, отсутствие нормы явно, partial не становится total.\n\nActual9807/B01:2источника, norms12/6, mapping2; реальная потеря ответа→тот же replay/одна версия, stale/payload conflict409. [Отчёт47](../../"+report+"). Неполный текущий день меняет оценку; это рекомендация, не назначение людей/смен.\n"
-p=Path("wiki/database/nicora_ni081_forecast_norm_scope_20261014.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n## Installed1341\n4/0, USER_ERRORS=[], INVALID=[]. API/UI и source/runtime mirror подключены. [Actual результат](../components/nicora_ni081_forecast_labour_20261014.md), report47; K-0003 реализован, независимая/промышленная приёмка отдельно.\n"
-p=Path("wiki/index.md");files[str(p)]="- [NI08.1 часы по нормам1341](components/nicora_ni081_forecast_labour_20261014.md): explicit mapping2/Decimal/currentnorm/full-vs-partial/UI/actual lost-response replay, report47.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/database/retailcase_ni081_forecast_norm_scope_20261014.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n## Installed1341\n4/0, USER_ERRORS=[], INVALID=[]. API/UI и source/runtime mirror подключены. [Actual результат](../components/retailcase_ni081_forecast_labour_20261014.md), report47; K-0003 реализован, независимая/промышленная приёмка отдельно.\n"
+p=Path("wiki/index.md");files[str(p)]="- [NI08.1 часы по нормам1341](components/retailcase_ni081_forecast_labour_20261014.md): explicit mapping2/Decimal/currentnorm/full-vs-partial/UI/actual lost-response replay, report47.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-14 ·1341: forecast resource-norm mapping installed, actualB01 projection/2norms/UIretry/one version/conflicts; report47/screen87. B03 continuous START→confirm UI-only1337(noDBwrites) passed after scope lifecycle fix; real receipts remain report46.\n"
-p=Path("reports/nicora/2026-10-13/46-b03-driver-store-delivery.md");files[str(p)]=p.read_text(encoding="utf-8")+"\nДополнение1327: адресный переход START→confirm прошёл в одном открытом экране после восстановления scope в useEffect. POST заменены синтетическими ответами, фактические чтения сохранены; новых операций в БД не было. Это UI lifecycle evidence, отдельно от двух реальных приёмок.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"))
+p=Path("reports/retailcase/2026-10-13/46-b03-driver-store-delivery.md");files[str(p)]=p.read_text(encoding="utf-8")+"\nДополнение1327: адресный переход START→confirm прошёл в одном открытом экране после восстановления scope в useEffect. POST заменены синтетическими ответами, фактические чтения сохранены; новых операций в БД не было. Это UI lifecycle evidence, отдельно от двух реальных приёмок.\n"
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"))
 d["planRevision"]=61;d["currentSprint"]="NI06.1";d["firstChange"]="B01→B03 order2135 received36EA; NI08.1 scope-to-norm hours delivered(report47). Continue B04 operator interwarehouse chain, then B05 tare/return handoff. Claude C-0005 owns finance basis."
 for item in d["increments"]:
  if item["id"]=="NI08.1":item.setdefault("implementedSlices",[]).append("1328–1341 explicit warehouse/workscope→normsite native versioned history, same-snapshot norm read, Decimal hours/current norm/partial-total distinction, real UI lost-response replay/version2, conflict409; report47. Workforce/equipment/slots not inferred.")
 files[str(p)]=json.dumps(d,indent=2,ensure_ascii=False)+"\n"
-p=Path("coordination/nicora-claude/CODEX_TO_CLAUDE.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n## C-0007 · 2026-10-14 · STATUS\nK-0003 реализован мной: explicit scope→SITE_CODE native mapping/history, labour_estimate в forecast view, partial/complete без выдуманной численности, UI в warehouse-forecast-labour.js; report47. Твои finance-файлы не трогаю, поручение C-0005/K-0007 на13:25 сохраняется. Продолжаю NI06.1 операторский interwarehouse UI.\n"
+p=Path("coordination/retailcase-claude/CODEX_TO_CLAUDE.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n## C-0007 · 2026-10-14 · STATUS\nK-0003 реализован мной: explicit scope→SITE_CODE native mapping/history, labour_estimate в forecast view, partial/complete без выдуманной численности, UI в warehouse-forecast-labour.js; report47. Твои finance-файлы не трогаю, поручение C-0005/K-0007 на13:25 сохраняется. Продолжаю NI06.1 операторский interwarehouse UI.\n"
 print(json.dumps(files,ensure_ascii=True))

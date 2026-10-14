@@ -6,9 +6,9 @@ await page.locator('#adminLoginForm button[type=submit]').click();
 await page.waitForFunction(()=>window.orderState?.selectedId===2135||typeof orderState!=='undefined'&&orderState.selectedId===2135);
 await page.waitForFunction(()=>document.querySelector('#orderDeliveryRows').children.length===2);
 await page.locator('#orderExecutionPanel').scrollIntoViewIfNeeded();
-await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/80-b01-order-summary.png'});
+await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/80-b01-order-summary.png'});
 console.log(JSON.stringify({execution:await page.locator('#orderExecutionStatus').innerText(),delivery:await page.locator('#orderDeliveryStatus').innerText(),errors}));
 await page.locator('#plRead').click();
 await page.waitForFunction(()=>document.querySelector('#plCurrentRows').children.length===2);
-await page.locator('#preparedLayoutPanel').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/81-b01-prepared-layout-current.png'});
+await page.locator('#preparedLayoutPanel').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/81-b01-prepared-layout-current.png'});
 }finally{await browser.close();}

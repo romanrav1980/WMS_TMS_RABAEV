@@ -44,7 +44,7 @@ async function rawSupplyFetch(path, options = {}) {
 
 // Preserve a command identity and its body across connection failures and page reloads.
 async function rawSupplyCommand(path, payload) {
-  const key = JSON.stringify(["nicora.rawSupplyIntent", rawSupplyApiBase(), rawSupplyUser(), path]);
+  const key = JSON.stringify(["retailcase.rawSupplyIntent", rawSupplyApiBase(), rawSupplyUser(), path]);
   const signature = JSON.stringify(payload);
   const existing = localStorage.getItem(key);
   let intent = existing ? JSON.parse(existing) : null;

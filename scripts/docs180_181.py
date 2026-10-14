@@ -12,7 +12,7 @@ commit;
 (folder/"002_ledger.sql").write_text(ledger,encoding="utf-8")
 p=folder/"apply.sql";p.write_text(p.read_text(encoding="utf-8")+"@@002_ledger.sql\n",encoding="utf-8")
 p=Path("db/migrations/2026-10-08_stock_posting_core/current_runtime_manifest.json");m=json.loads(p.read_text(encoding="utf-8"));m["additional_scripts"].append("../2026-10-11_ni042_sap_task_identity/001_index.sql");p.write_text(json.dumps(m,indent=2)+"\n",encoding="utf-8")
-p=Path("wiki/database/nicora_ni042_weight_box_sap_20261011.md");p.write_text("""# NI04.2: SAP capture180 и идентичность задания181
+p=Path("wiki/database/retailcase_ni042_weight_box_sap_20261011.md");p.write_text("""# NI04.2: SAP capture180 и идентичность задания181
 180 API сохраняет weighted-box capture в прежнем SAP_RECEIPT. Детерминированный physical key совпадает с inventory/MES; exact KG/одна коробка. Новые optional поля при None исключаются из canonical metadata, прежний immutable replay сохраняется. Маркировка определяется SKU profiles, product-weight label не government ACK.
 Живой scripts/ni042_weight_box_sap_case.py: ARTMAS10 KG -> WarehouseSupplyOrder XML/current recipient -> QW180BDDA2C42 / WEIGHT180.RECEIVE:bdda2c42 P9.8KG/H0/unit1/physical_boxes1/marking_units0/NOT_APPLICABLE/replay/PUTAWAY. Cleanup прежним Receiving.cancel + native INVENTORY_COUNT.
 Первый запрос500 выявил регрессию старого индекса RRL_WAREHOUSE_TASK_U2 из NI03.2 recovery: все SAP_RECEIPT имели null SOURCE_TASK_ID/SOURCE_MOVEMENT_ID/PARENT_TASK_ID и сталкивались с прежним task827. 181 APPLIED: последняя часть уникального ключа для SAP_RECEIPT — immutable UID_PALLET; остальные источники сохраняют тот же NVL parent identity. Новый UNIQUE индекс построен до удаления старого, переименован в прежнее имя, live VALID. Fresh DDL/checkpoint/guarded rollback; восстановление старого ключа запрещено при нескольких SAP putaway facts. Количество/движения не переписывались.
@@ -21,9 +21,9 @@ Slow SQL: placement candidate46b9rn96gzagm avg57.474ms/3 (малый холод�
 CASE weighted scanner, marked weighted full profiles, scales и last-box policy ещё не приняты. Полный спринт остаётся открытым.
 """,encoding="utf-8")
 for path,line in [
- ("wiki/index.md","- [SAP-приёмка весовой коробки и ключ задания](database/nicora_ni042_weight_box_sap_20261011.md):180 actual XML→P9.8/unit1/replay;181 fixes global SAP PUTAWAY collision, non-SAP uniqueness preserved."),
+ ("wiki/index.md","- [SAP-приёмка весовой коробки и ключ задания](database/retailcase_ni042_weight_box_sap_20261011.md):180 actual XML→P9.8/unit1/replay;181 fixes global SAP PUTAWAY collision, non-SAP uniqueness preserved."),
  ("wiki/log.md","2026-10-11:180 SAP weighted capture implemented/native end-to-end PASS;181 SAP putaway identity index APPLIED VALID. Existing JSON reader cancel/replan fixed; own fixtures native cleanup. Placement57.474ms/3 requires owner inventory batching/plan backlog."),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni04_2.md","11.10.2026:180 SAP weighted-box birth confirmed using actual ARTMAS10+gateway XML/native receipt/unit1/P9.8KG/replay;181 fixes existing SAP putaway unique index. CASE scanner/scale/last-box remaining; sprint in_progress.")]:
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni04_2.md","11.10.2026:180 SAP weighted-box birth confirmed using actual ARTMAS10+gateway XML/native receipt/unit1/P9.8KG/replay;181 fixes existing SAP putaway unique index. CASE scanner/scale/last-box remaining; sprint in_progress.")]:
  p=Path(path);p.write_text(p.read_text(encoding="utf-8")+"\n"+line+"\n",encoding="utf-8")
 roots=[p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md")]
 if roots:

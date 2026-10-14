@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-out={};page="wiki/database/nicora_ni081_cluster_retry_20261010.md"
+out={};page="wiki/database/retailcase_ni081_cluster_retry_20261010.md"
 out[page]="""# NI08.1 — устойчивый повтор создания кластера,139
 
 Исходный API /api/admin/transport/clusters/{raion}/create-task, поиск района и native TT/ST writers сохранены. ClusterCreateTaskRequest теперь требует operation_id (ASCII1..100). Существующий React caller создаёт ID до отправки, сохраняет body/район в localStorage по API+username без пароля; сетевой сбой/5xx/401/403 сохраняет исходную операцию. Изменённые параметры при неизвестном исходе отклоняются с исходными параметрами; подтверждённый бизнес/input отказ400/404/409/422 снимает pending для исправления. TypeScript typecheck PASS; интерактивное независимое UI acceptance остаётся открытым.
@@ -17,13 +17,13 @@ Oracle new package/spec/body/guard + stock root/transport136/137 liveVALID. Nati
 
 Дальше NI08.1: окна времени/текущий водитель/тара и согласованное изменение волны-рейса, затем NS59 динамические зоны с approval/drain. Этот срез не закрывает весь NI08.1 или внешние интеграции.
 """
-out["wiki/index.updated.tmp"]="- [Устойчивое создание кластера](database/nicora_ni081_cluster_retry_20261010.md):139 native operation/source snapshot/concurrent one TT33528/replay after cancellation/savepoint/React pending.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
+out["wiki/index.updated.tmp"]="- [Устойчивое создание кластера](database/retailcase_ni081_cluster_retry_20261010.md):139 native operation/source snapshot/concurrent one TT33528/replay after cancellation/savepoint/React pending.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
 for name,line in [
  ("wiki/log.md","2026-10-10:139 cluster operation mandatory/durable UI pending API+actor/native immutable result/private operation-TX guard. APPLIED8/0/liveVALID; original136 sources concurrent sameID→one33528/changed409/direct20863/retired metadata, actual HTTP empty-source saved replay/missingID422. Native savepoint outer caught failure+commit left no TT/proof. Post recompile pooled503→sameID200, no new operation. Native mean27.473ms/7 retain bounds/keyed indices; UI typecheck PASS, independent timing/capacity acceptance open."),
- ("wiki/requirements/nikora_delivery_v55/implementation_plan.md","NI08.1 author139: existing cluster one native UOW/current scope/immutable original TT/source/idempotent operation and client pending. Concurrent sameID creates one33528, changed request409, native caught error rollback; full timing/coordination/NS59/independent acceptance remain open.")
+ ("wiki/requirements/retailcase_delivery_v55/implementation_plan.md","NI08.1 author139: existing cluster one native UOW/current scope/immutable original TT/source/idempotent operation and client pending. Concurrent sameID creates one33528, changed request409, native caught error rollback; full timing/coordination/NS59/independent acceptance remain open.")
 ]:
  p=Path(name);out[name]=p.read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":
   row.setdefault("implementedSlices",[]).append("138/139 atomic original cluster/current warehouse/source snapshot/durable operation/replay/UI pending")
@@ -36,7 +36,7 @@ m["additional_scripts"].extend(["../2026-10-10_ni081_cluster_retry/001_schema.sq
 out[str(p)]=json.dumps(m,indent=2)+"\n"
 out["задания на проведения тестов/NI08.1/139_устойчивый_повтор_кластера.md"]="""# Qwen —139
 
-Читайте wiki/database/nicora_ni081_cluster_retry_20261010.md и design. Не создавать товар; собственный33528 уже отменён,136 машины retired. Авторские кейсы указаны в wiki; свежий case создаёт только TT-метаданные, предпочтительнее read/replay.
+Читайте wiki/database/retailcase_ni081_cluster_retry_20261010.md и design. Не создавать товар; собственный33528 уже отменён,136 машины retired. Авторские кейсы указаны в wiki; свежий case создаёт только TT-метаданные, предпочтительнее read/replay.
 
 Проверьте native операция→машины→новый TT→упорядоченные СТ, одна транзакция прежних writers, duplicate wait/recheck/current rights+scope. Состав только первого применения; replay даже после отмены сохраняет историю, другой body/actor запрещён. Пакет без commit, свой savepoint откатывает даже при outer catch+commit. Result guard private operation+TX, mutation denied, history rollback запрещён.
 

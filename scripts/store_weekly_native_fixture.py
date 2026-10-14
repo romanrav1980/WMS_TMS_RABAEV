@@ -4,7 +4,7 @@ from time import perf_counter
 from uuid import uuid4
 from app.modules.platform.public import read_oracle_json
 from app.modules.master_data.infrastructure.store_profile import StoreProfile,read_profile
-f=json.loads(Path('reports/nicora/2026-10-13/codex/NI081/fixture.json').read_text(encoding='utf-8'))
+f=json.loads(Path('reports/retailcase/2026-10-13/codex/NI081/fixture.json').read_text(encoding='utf-8'))
 assert f['trip_id']==33641 and f['st_id']==641515 and f['planning_only']
 report={'trip_id':f['trip_id'],'writes_scope':'own planning fixture only; profile restore new version; ST/road exact restore; final approval rollback','cases':{},'timings_ms':{}}
 tag='WEEKLY.'+uuid4().hex[:10]
@@ -68,6 +68,6 @@ with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle
   after=context();after_profile=read_profile(q,f['shop']);c.rollback()
   clean_before=dict(before['source']);clean_after=dict(after['source']);clean_before.pop('store_window_profiles',None);clean_after.pop('store_window_profiles',None)
   report['rollback']={'original_nonprofile_source_restored':clean_before==clean_after,'approval_version_restored':after['version']==before['version'],'profile_semantics_restored':after_profile['profile']==before_profile['profile']and after_profile['windows']==before_profile['windows'],'profile_new_restore_version':after_profile['version']}
-  Path('reports/nicora/2026-10-13/codex/STORE_WEEKLY/native_fixture.json').write_text(json.dumps(report,indent=2,ensure_ascii=False),encoding='utf-8')
+  Path('reports/retailcase/2026-10-13/codex/STORE_WEEKLY/native_fixture.json').write_text(json.dumps(report,indent=2,ensure_ascii=False),encoding='utf-8')
   assert all(report['rollback'].values()),report['rollback']
 print(json.dumps({'cases':list(report['cases']),'timings_ms':report['timings_ms'],'rollback':report['rollback']}))

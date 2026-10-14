@@ -31,6 +31,6 @@ try{
  }
  ctx.stage='STAGING_DONE';fs.writeFileSync(path,JSON.stringify(ctx,null,2));
  await page.locator('#warehouseTaskDetail').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/73-b01-staging-done.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/73-b01-staging-done.png'});
  console.log(JSON.stringify({stage:ctx.stage,actions:ctx.staging_execution}));
 }finally{await browser.close();}

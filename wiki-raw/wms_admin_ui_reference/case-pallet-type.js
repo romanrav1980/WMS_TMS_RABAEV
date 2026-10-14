@@ -38,7 +38,7 @@
   }catch(e){if(token===epoch){status(e.message);controls();}}
  }
  function otherPending(){
-  return ["nicora.casePickIntent","nicora.caseCarrierMove","nicora.caseCarrierReturn","nicora.partialShipmentLayout"].some(kind=>
+  return ["retailcase.casePickIntent","retailcase.caseCarrierMove","retailcase.caseCarrierReturn","retailcase.partialShipmentLayout"].some(kind=>
    localStorage.getItem(JSON.stringify([kind,cpTsdApiBase(),cpTsdUser()])));
  }
  async function send(saved){

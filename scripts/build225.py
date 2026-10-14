@@ -2,7 +2,7 @@ raise SystemExit("Retired authoring generator: use final225 SQL/fresh checkpoint
 from pathlib import Path
 import json
 f=Path("db/migrations/2026-10-11_ni061_marked_source");out={}
-out["wiki/database/nicora_ni061_marked_source_design_20261011.md"]="""# NI06.1: точный маркированный состав исходного плеча
+out["wiki/database/retailcase_ni061_marked_source_design_20261011.md"]="""# NI06.1: точный маркированный состав исходного плеча
 225 extends existing standalone STOCK/FULLPAL source plan. Source actually DEPARTED/existing original ST/one whole leaf, no current P/H/store receipt retained. Exact original native physical-before unit signature must match sorted current ISSUED/no-HARD units at archived source cell; quantity/UOM/root/physical count exact, max10000. Current SKU marking/profile/serialized applicability requires captured units. WMS physical units with multiple systems remain one quantity; immutable code identity retained. Existing plan stores original source composition, metadata-only/no stock birth. Current source warehouse/dispatcher checked before plan replay; separate receiving command still refuses marked until next225 receiving extension, no premature availability or legal ACK.
 """
 out[str(f/"001_unit_source.sql")]="""create or replace package RRL_INTERWARE_UNIT_SOURCE authid definer as

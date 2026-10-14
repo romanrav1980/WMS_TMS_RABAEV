@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 f=Path("db/migrations/2026-10-11_ni052_unload_hu");out={}
-out["wiki/database/nicora_ni052_unload_hu_design_20261011.md"]="""# NI05.2: выгрузка матрёшки целиком
+out["wiki/database/retailcase_ni052_unload_hu_design_20261011.md"]="""# NI05.2: выгрузка матрёшки целиком
 214 extends same native UNLOAD_SHIPMENT, CASE-only complete HU sub-scenario. Frozen original HU_SHIP tree/shipments and every original leaf required; no per-child partial unloading. Original links remain inactive shipped history, new native append-only links point to same containers/CASE. Current container epoch original+1/null cell/shipped original load; each CASE version original+1/shipped same load/wave LAUNCHED; no foreign active edges/claims/tasks or transferred tare. Original CASE HELD bookings retained under owner/balance row locks. Exact units restore213 applies each leaf. Original root cell/current warehouse/not quarantined. Slotted storage is explicitly refused until bounded existing placement-owner integration; this slice supports existing unslotted expedition/system cell, no fictitious slot claim. Whole P/H/units/new links/CASE/QC/FF/load/member/unload/outbox in root TX. New unload journal supports exclusive root CASE or real container UID; old facts stay valid. Monotonic epochs, no original link reactivation. Current wrong WARE before replay/after mutex.
 """
 out[str(f/"001_schema.sql")]="""alter table RRL_TT_UNLOAD_FACT modify(CASE_PICK_TASK_ID null);

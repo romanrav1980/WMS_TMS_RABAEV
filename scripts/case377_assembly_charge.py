@@ -4,7 +4,7 @@ from app.oracle_gateway import OracleGateway
 svc=LogisticsCosts(OracleGateway());source=json.loads(Path("tmp/context376.json").read_text());ware=source["warehouse"];trip=source["trip"];p=Path("tmp/context377.json");ctx=json.loads(p.read_text())if p.exists()else{}
 def save():p.write_text(json.dumps(ctx,indent=2),encoding="utf-8")
 if "policy"not in ctx:
- ctx["policy"]=svc.configure_period("POLICY377.CASE:"+str(ware),ware,"CASE_ASSEMBLY","Pacific/Kiritimati",0,"Own synthetic timezone boundary fixture, not NICORA warehouse geography","DEV377.CALENDAR","admin");save()
+ ctx["policy"]=svc.configure_period("POLICY377.CASE:"+str(ware),ware,"CASE_ASSEMBLY","Pacific/Kiritimati",0,"Own synthetic timezone boundary fixture, not RETAILCASE warehouse geography","DEV377.CALENDAR","admin");save()
 preview=svc.assembly_period(trip,ware,"Pacific/Kiritimati","admin");assert preview["complete"]and preview["single_period"]and len(preview["lines"])==1,preview
 day=preview["business_dates"][0]
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:

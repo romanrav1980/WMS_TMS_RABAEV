@@ -78,5 +78,5 @@
     "db\\migrations\\2026-10-14_ni052_loading_temperature\\verify.sql": "efde5ec23cb9ce9c60b37910fda268313e187bfbb58b56fef274dc37990bcebc"
   },
   "initial_apply": "OracleApply parsed bare multiline CREATE TABLE as one line, ORA-00922 before any completed statement. Fixed to existing repository PL/SQL execute immediate schema pattern.",
-  "evidence": "reports/nicora/2026-10-13/35-loading-departure-temperature-report.md"
+  "evidence": "reports/retailcase/2026-10-13/35-loading-departure-temperature-report.md"
 }

@@ -1,7 +1,7 @@
 (() => {
  "use strict";
  let panel, message, issue, retry, print, confirm, scan, busy=false, generation=0, current=null,tareNote,tareRefresh;
- const storageKey=()=>JSON.stringify(["nicora.caseSscc",cpTsdApiBase(),cpTsdUser()]);
+ const storageKey=()=>JSON.stringify(["retailcase.caseSscc",cpTsdApiBase(),cpTsdUser()]);
  const path=task=>"/api/case-pick/tasks/"+task+"/sscc-label";
  function node(tag,text){const e=document.createElement(tag);if(text)e.textContent=text;return e;}
  function mount(){

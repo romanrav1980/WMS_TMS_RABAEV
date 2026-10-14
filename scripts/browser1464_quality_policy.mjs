@@ -13,7 +13,7 @@ try{
  await p.locator('#qsReason').fill('Адресная проверка восстановления после потери ответа');await p.locator('#qsSave').click();await p.locator('#qsStatus').filter({hasText:'Результат не подтверждён'}).waitFor();
  await p.reload();await p.locator('#qsRetry').click();await p.locator('#qsStatus').filter({hasText:'Правило сохранено'}).waitFor();
  if(sent.length!==2||sent[0]!==sent[1])throw Error('Command changed on replay');
- await p.locator('main').screenshot({path:'reports/nicora/2026-10-13/screenshots/113-ni051-quality-policy.png'});
+ await p.locator('main').screenshot({path:'reports/retailcase/2026-10-13/screenshots/113-ni051-quality-policy.png'});
  const operation=JSON.parse(sent[0]).operation_id;
  await p.locator('#qsActive').uncheck();await p.locator('#qsReason').fill('Завершение частной проверки, возврат исходного режима склада');
  const disabled=p.waitForResponse(r=>r.request().method()==='POST'&&r.url().endsWith('/quality-policies/warehouses/6524567'));

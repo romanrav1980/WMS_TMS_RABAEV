@@ -59,7 +59,7 @@ try{
  await panel.getByLabel('Склад-владелец',{exact:true}).selectOption(String(ctx.warehouse));
  await panel.locator('.tare-balances summary').click();await panel.getByRole('button',{name:'Обновить баланс тары',exact:true}).click();
  await panel.locator('.tare-balances strong').first().waitFor();
- await panel.locator('.tare-balances').screenshot({path:'reports/nicora/2026-10-13/screenshots/90-b05-tare-balance.png'});
- await panel.locator('.tare-history').screenshot({path:'reports/nicora/2026-10-13/screenshots/91-b05-tare-history.png'});
+ await panel.locator('.tare-balances').screenshot({path:'reports/retailcase/2026-10-13/screenshots/90-b05-tare-balance.png'});
+ await panel.locator('.tare-history').screenshot({path:'reports/retailcase/2026-10-13/screenshots/91-b05-tare-history.png'});
  save();console.log(JSON.stringify({actions:facts.length,errors}));if(errors.length)throw Error('Browser errors');
 }finally{await browser.close();}

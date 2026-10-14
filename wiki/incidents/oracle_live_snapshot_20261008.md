@@ -18,4 +18,4 @@ VBox.log содержит SSM Successfully saved и затем ошибки VERR
 
 Не вызывать pause в ходе live snapshot этого стенда. Для следующего широкого cutover выбрать контрольную точку при заранее согласованной остановке или корректный offline snapshot; не повторять live эксперимент на функциональном шаге. Snapshot этой сессии сохранён, восстановление из него не тестировалось.
 
-[Checkpoint](../../runtime/stock_posting_20261008/admin-grants-and-snapshot.json) · [[../runbooks/nicora_oracle_local_admin]] · [[../database/nicora_stock_posting_implementation]]
+[Checkpoint](../../runtime/stock_posting_20261008/admin-grants-and-snapshot.json) · [[../runbooks/retailcase_oracle_local_admin]] · [[../database/retailcase_stock_posting_implementation]]

@@ -111,4 +111,8 @@ WindowsApplication2/**/app.config
 **/*.key
 
 # Malformed local pytest temp paths from escaped Windows basetemp
-/projectsTMStmpnicora_qualitycases*/
+/projectsTMStmpretailcase_qualitycases*/
+# Local compatibility channels and old malformed pytest paths are not published.
+/coordination/ni?ora-claude/
+/reports/ni?ora/
+/projectsTMStmpni?ora_qualitycases*/

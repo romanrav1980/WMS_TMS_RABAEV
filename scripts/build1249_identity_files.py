@@ -11,7 +11,7 @@ when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRI
 values(s.MIGRATION_ID,'Preserve exact canonical article in ACTIVE pick planning; exact source matching; no stock rewrite',sysdate,user,'apply.sql','rollback.sql','APPLIED');
 /
 """,
-"wiki/database/nicora_ni033_pick_article_identity_20261014.md":"""# NI03.3: точный артикул в плане отбора
+"wiki/database/retailcase_ni033_pick_article_identity_20261014.md":"""# NI03.3: точный артикул в плане отбора
 
 Миграция: 2026-10-14-1248-pick-article-identity. Подготовлена; результат применения будет добавлен после исполнения.
 
@@ -25,7 +25,7 @@ values(s.MIGRATION_ID,'Preserve exact canonical article in ACTIVE pick planning;
 """,
 }
 for file,addition in {
-"wiki/index.md":"- [Точный артикул в плане1248](database/nicora_ni033_pick_article_identity_20261014.md): подготовлена коррекция UPPER в существующем планировщике; волна558 остановлена до проведения.\n",
+"wiki/index.md":"- [Точный артикул в плане1248](database/retailcase_ni033_pick_article_identity_20261014.md): подготовлена коррекция UPPER в существующем планировщике; волна558 остановлена до проведения.\n",
 "wiki/log.md":"\n## 2026-10-14 · 1248 · идентификатор товара\nПодготовлена исправляющая миграция существующего RRL_PICKING_API: точный артикул в ACTIVE, без слияния карточек и прямого изменения остатков. Исходный пакет и INVALID checkpoint сохранены. Причина обнаружена на волне558/плане2190; применение и повтор исполнения ещё не подтверждены.\n",
 }.items():
  old=Path(file).read_text(encoding="utf-8")

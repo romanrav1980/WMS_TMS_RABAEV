@@ -51,7 +51,7 @@ orderEl('sapTripId').addEventListener('input',()=>{orderEl('sapTripReviewMessage
 '''
 f[str(p)]=s
 p=Path("wiki-raw/wms_admin_ui_reference/sap-automatic-preparation.css");f[str(p)]=p.read_text(encoding="utf-8")+"\n#sapAutoAssignment:not([hidden]){display:inline-block;margin:8px 14px 12px 0;color:#1765c3;font-weight:600}#sapAssignment{scroll-margin-top:110px}\n"
-p=Path("wiki/components/nicora_ni021_auto_preparation_20261013.md");f[str(p)]=p.read_text(encoding="utf-8")+"\n1131: prepared UI bridge savedauto→selected order/sapAssignment/current preparation receipt→existing assignendpoint. Explicit readonly preflight uses existing native capacity/type/source service; not operational/departure admission. Runtime pending; no second order/tripmapping.\n"
-p=Path("wiki/index.md");f[str(p)]="- [Auto→existing trip assignment1131](components/nicora_ni021_auto_preparation_20261013.md): current receipt link and explicit original TMS capacity review prepared; no second writer.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/components/retailcase_ni021_auto_preparation_20261013.md");f[str(p)]=p.read_text(encoding="utf-8")+"\n1131: prepared UI bridge savedauto→selected order/sapAssignment/current preparation receipt→existing assignendpoint. Explicit readonly preflight uses existing native capacity/type/source service; not operational/departure admission. Runtime pending; no second order/tripmapping.\n"
+p=Path("wiki/index.md");f[str(p)]="- [Auto→existing trip assignment1131](components/retailcase_ni021_auto_preparation_20261013.md): current receipt link and explicit original TMS capacity review prepared; no second writer.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");f[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-13 /1131: prepared UI auto result→existing order/assignment; saved receipt reread and existing readonly TMS preflight. NoDBwrite/newassignmentengine, native rules reused; runtime pending.\n"
 print(json.dumps(f,ensure_ascii=True))

@@ -1,5 +1,5 @@
 import {chromium} from '../admin/wms_admin_frontend/node_modules/playwright/index.mjs';import fs from 'node:fs';
-const native=JSON.parse(fs.readFileSync('tmp/codex_ni062_result.json','utf8')),out='reports/nicora/2026-10-13/codex/NI062/';fs.mkdirSync(out,{recursive:true});
+const native=JSON.parse(fs.readFileSync('tmp/codex_ni062_result.json','utf8')),out='reports/retailcase/2026-10-13/codex/NI062/';fs.mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({headless:true}),page=await browser.newPage({viewport:{width:1400,height:1000}}),errors=[],posts=[],checks=[];let wrong=true,modeledQueue=false,wrongTask=true;
 page.on('pageerror',e=>errors.push(e.message));
 await page.route('**/api/inventory/store-returns/receive',async route=>{posts.push(route.request().postDataJSON());return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({...native,operation_id:wrong?'OTHER.OP':native.operation_id})});});

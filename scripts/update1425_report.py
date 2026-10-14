@@ -1,5 +1,5 @@
 ﻿from pathlib import Path
-p=Path('reports/nicora/2026-10-13/61-parallel-functional-blocks.md');p.write_text('''# Параллельное исполнение: склад, приёмка, ресурсы и тара
+p=Path('reports/retailcase/2026-10-13/61-parallel-functional-blocks.md');p.write_text('''# Параллельное исполнение: склад, приёмка, ресурсы и тара
 
 14.10.2026. Ведущий root + ведомый /root/codex_finance; внешний Claude завершил C0020 и приостановился по лимиту. C0023 передан ведомому Codex без ожидания возобновления Claude. Это промежуточный отчёт, не закрытие всех спринтов.
 
@@ -17,13 +17,13 @@ p=Path('reports/nicora/2026-10-13/61-parallel-functional-blocks.md');p.write_tex
 
 Авторские адресные сценарии не являются независимой приёмкой. Смоделированные ответы не доказывают новое нативное проведение. Настоящие SAP/государственные ACK, физические сканеры/весы и промышленный пилот отмечаются отдельно. Новый инстанс/копия базы/схема не создавались, новые индексы для быстрых неизменённых чтений не вводились. GitHub ведущим не обновлялся. Общий gate и encoding фиксируются после завершения текущего блока C0023.
 ''',encoding='utf-8')
-p=Path('wiki/components/nicora_parallel_delivery_20261014.md');p.write_text('''# Параллельные функциональные блоки 14.10.2026
+p=Path('wiki/components/retailcase_parallel_delivery_20261014.md');p.write_text('''# Параллельные функциональные блоки 14.10.2026
 
-[Отчёт61](../../reports/nicora/2026-10-13/61-parallel-functional-blocks.md): NI03.3 wave→CASE/READY→сборка; NI08.1 рекомендация→план выхода и durable recovery; NI04.2 сообщение недостачи с прежним offline_event_id; NI04.3 архив повреждённого запроса; React→реестр тары по API/wms-admin.
+[Отчёт61](../../reports/retailcase/2026-10-13/61-parallel-functional-blocks.md): NI03.3 wave→CASE/READY→сборка; NI08.1 рекомендация→план выхода и durable recovery; NI04.2 сообщение недостачи с прежним offline_event_id; NI04.3 архив повреждённого запроса; React→реестр тары по API/wms-admin.
 
-Ведомый Codex сдал [[nicora_ni072_stock_keys_20261014]], [[nicora_ni043_scan_scope_20261014]], [[nicora_ni011_scan_correction_20261014]], [[nicora_ni042_input_draft_20261014]]. Root интегрирует и ведёт общий план. Claude C0020 сдан, C0023 передан Codex из-за лимита Claude (K0024, изменения до передачи отсутствовали).
+Ведомый Codex сдал [[retailcase_ni072_stock_keys_20261014]], [[retailcase_ni043_scan_scope_20261014]], [[retailcase_ni011_scan_correction_20261014]], [[retailcase_ni042_input_draft_20261014]]. Root интегрирует и ведёт общий план. Claude C0020 сдан, C0023 передан Codex из-за лимита Claude (K0024, изменения до передачи отсутствовали).
 
 Точные незавершённые функции сохраняются отдельно от внешней приёмки: ввод приёмки до команды; полный постраничный просмотр конфликтов сверх20; акт магазина/сохранение ввода после отказа (в работе). Переразбиение приёмочных паллет, история→задания и методы отбора уже реализованы; не назначать их повторную разработку. Таблица ведомого remaining-four-sprints.md предшествует root исправлениям shortretry/scanarchive, эти два пункта уже выполнены report61.
 ''',encoding='utf-8')
-p=Path('wiki/index.md');p.write_text('- [Параллельные функциональные блоки](components/nicora_parallel_delivery_20261014.md): report61; Codex четыре блока, ClaudeC0020 сдан; C0023 передан Codex по лимиту Claude.\n'+p.read_text(encoding='utf-8'),encoding='utf-8')
+p=Path('wiki/index.md');p.write_text('- [Параллельные функциональные блоки](components/retailcase_parallel_delivery_20261014.md): report61; Codex четыре блока, ClaudeC0020 сдан; C0023 передан Codex по лимиту Claude.\n'+p.read_text(encoding='utf-8'),encoding='utf-8')
 p=Path('wiki/log.md');p.open('a',encoding='utf-8').write('\n- 2026-10-14: report61 — W1412–1424: wave/CASE links, shortage retry, scan archive, workload recommendation/recovery, raw admin route. Ведомый NI072/NI043/NI011/NI042 сдал. ClaudeK0023 C0020nativeREJECT/replay сдан; K0024 pausedusage, C0023 передан ведомому Codex. Общий gate после текущего блока.\n')

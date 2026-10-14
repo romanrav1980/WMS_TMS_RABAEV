@@ -1,5 +1,5 @@
 import {chromium} from '../admin/wms_admin_frontend/node_modules/playwright/index.mjs';import fs from 'node:fs';
-const out='reports/nicora/2026-10-13/codex/NI061/';fs.mkdirSync(out,{recursive:true});
+const out='reports/retailcase/2026-10-13/codex/NI061/';fs.mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width:1400,height:1000}}),checks=[],errors=[],posts=[];let mode='lost';
 page.on('pageerror',e=>errors.push(e.message));
 await page.route('**/api/inventory/interwarehouse/*',async route=>{if(route.request().method()!=='POST')return route.continue();const body=route.request().postDataJSON();posts.push(body);if(mode==='lost')return route.abort('failed');return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({operation_id:mode==='wrong'?'OTHER.OP':body.operation_id})});});

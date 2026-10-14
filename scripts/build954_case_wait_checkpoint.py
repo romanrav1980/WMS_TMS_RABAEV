@@ -38,8 +38,8 @@ Task completion bridge выбирает существующую CASE_CARRIER_MO
 
 Capture948/949 + SHA manifest/checkpoint + paired rollback, без копииБД. Rollback отказывается при зарегистрированных CASE планах; не испытан. Сначала compile/current native scenario, затем actual own-fixture flow и slow SQL решение. ПолныйNI07.2 не объявляется завершённым.
 """
-files["wiki/database/nicora_ni072_case_wait_20261013.md"]=page
-p="wiki/index.md";files[p]="- [NI07.2 CASE ожидание953](database/nicora_ni072_case_wait_20261013.md): prepared additive CASE_TASK_ID/existing CASE_CARRIER_MOVE + WHT same TX, live pending.\n"+read(p)
+files["wiki/database/retailcase_ni072_case_wait_20261013.md"]=page
+p="wiki/index.md";files[p]="- [NI07.2 CASE ожидание953](database/retailcase_ni072_case_wait_20261013.md): prepared additive CASE_TASK_ID/existing CASE_CARRIER_MOVE + WHT same TX, live pending.\n"+read(p)
 p="wiki/log.md";files[p]=read(p)+"\n- 2026-10-13 checkpoint954 PREPARED CASEwaiting migration953/helper/nativeAPI/root/bridge; captured948949/proportional rollback/SHA, no DB copy. Current exact source and root resources, actual apply pending.\n"
 p=d+"checkpoint.json";v=json.loads(read(p));v["sha256"].update({p:hashlib.sha256(b.encode()).hexdigest()for p,b in files.items()});files[p]=json.dumps(v,indent=2)
 print(json.dumps(files,ensure_ascii=True))

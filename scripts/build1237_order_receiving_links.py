@@ -22,7 +22,7 @@ s=s.replace(needle,'''  const linkedWarehouse=sourceQuery.get('warehouse_id');
     el('receiptWarehouse').value=linkedWarehouse;
 '''+needle)
 out[str(p)]=s
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");plan=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");plan=json.loads(p.read_text(encoding="utf-8"))
 def deadline(obj):
  if isinstance(obj,dict):
   for k,v in obj.items():

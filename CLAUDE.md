@@ -1,4 +1,4 @@
-> **Текущее поручение владельца NICORA, 14.10.2026:** начни с [coordination/nicora-claude/TASK.md](coordination/nicora-claude/TASK.md). Назначены NI07.2 (обзор сверки) и NI08.1 (прогноз) в указанных границах. Прочитай C-0001 в CODEX_TO_CLAUDE.md, ответь ACK в CLAUDE_TO_CODEX.md и приступай. Порядок обмена — [README](coordination/nicora-claude/README.md). Старый Sprint 1 и описание стека ниже не являются актуальным назначением или паспортом окружения; для текущей работы используй wiki и живые исходники. CC-01…04 из предыдущего каталога пока не назначены.
+> **Текущее поручение владельца RETAILCASE, 14.10.2026:** начни с [coordination/retailcase-claude/TASK.md](coordination/retailcase-claude/TASK.md). Назначены NI07.2 (обзор сверки) и NI08.1 (прогноз) в указанных границах. Прочитай C-0001 в CODEX_TO_CLAUDE.md, ответь ACK в CLAUDE_TO_CODEX.md и приступай. Порядок обмена — [README](coordination/retailcase-claude/README.md). Старый Sprint 1 и описание стека ниже не являются актуальным назначением или паспортом окружения; для текущей работы используй wiki и живые исходники. CC-01…04 из предыдущего каталога пока не назначены.
 
 # TMS — Project Guide for Claude Code
 

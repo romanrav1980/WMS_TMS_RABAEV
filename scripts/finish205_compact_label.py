@@ -18,7 +18,7 @@ out[str(p)]=s
 p=Path("api/wms_api_server/app/modules/inventory/api/case_label_routes.py");s=p.read_text(encoding="utf-8").replace("dpi:int=Query(203,ge=203,le=600)","dpi:Literal[203,300,600]=203")
 s=s.replace("from fastapi import APIRouter,Depends,Query","from fastapi import APIRouter,Depends")
 out[str(p)]=s
-p=Path("wiki/database/nicora_ni042_final_qc_20261011.md");s=p.read_text(encoding="utf-8")
+p=Path("wiki/database/retailcase_ni042_final_qc_20261011.md");s=p.read_text(encoding="utf-8")
 s+="\nДля малой коробки исходный GS1-128 генератор использует компактный100×70мм профиль: один номер задания и SSCC, без технического CP на поверхности и без планового количества. Паллетная входящая этикетка сохраняетA6. CASE принтеры203/300/600dpi явно допустимы, произвольный DPI не масштабирует модуль ниже нормы. [GS1 Logistic Label Guideline](https://ref.gs1.org/guidelines/logistic-label/): X от0.495мм, высота штрихов от31.75мм, quietzone10X; новый SVG90мм/176modules даётX≈0.511мм и высоту≈33.24мм, ZPL35мм/4,6,12dots. Физическое качество печати/считываемость проверяется на выбранном принтере в пилоте.\n"
 out[str(p)]=s
 for path in Path(".").glob("*/NI04.2/20[234]_*.md"):

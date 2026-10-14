@@ -12,6 +12,6 @@ try{
  if(await page.locator('#tripId').inputValue()!=='33571')throw Error('Trip deep link lost');
  if(!await page.locator('#tripDepart').isDisabled())throw Error('Unloaded trip departure enabled');
  if(errors.length)throw Error(errors.join(';'));
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/62-order-to-current-loading.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/62-order-to-current-loading.png'});
  console.log('PASS1227 current order→actual assigned trip→loading; pending facts visible/departure disabled/no writes');
 }finally{await browser.close();}

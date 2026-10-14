@@ -142,6 +142,6 @@ drop package RRL_TT_TIME_API;
 drop table RRL_TT_TIME_APPROVAL;
 /
 """
-for path,line in [("wiki/index.md","- [Утверждение времени ARM: проект решения248](database/nicora_ni081_trip_time_design_20261011.md): original source hash/immutable version/current scope/CFG-TT; implementation in progress."),("wiki/log.md","2026-10-11:248 design for explicit approval of original ARM wall-time interpretation: immutable metadata version/source hash/current scope/bounded original TT/OPS, no calendar replacement/quantity or legal admission. Implementation in progress; no APPLIED claim.")]:
+for path,line in [("wiki/index.md","- [Утверждение времени ARM: проект решения248](database/retailcase_ni081_trip_time_design_20261011.md): original source hash/immutable version/current scope/CFG-TT; implementation in progress."),("wiki/log.md","2026-10-11:248 design for explicit approval of original ARM wall-time interpretation: immutable metadata version/source hash/current scope/bounded original TT/OPS, no calendar replacement/quantity or legal admission. Implementation in progress; no APPLIED claim.")]:
  out[path]=Path(path).read_text(encoding="utf-8")+"\n"+line+"\n"
 print(json.dumps(out,ensure_ascii=True))

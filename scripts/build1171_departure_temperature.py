@@ -90,7 +90,7 @@ assert point in s;s=s.replace(point,insert)
 s=s.replace('el("loadTempConfirm").checked=false;window.wmsPhysicalBoxes','el("loadTempConfirm").checked=false;el("departTempObserved").value="";el("departTempReference").value="";el("departTempConfirm").checked=false;window.wmsPhysicalBoxes',1)
 f[str(p)]=s
 f[root+"checkpoint.json"]=json.dumps({"migration_id":"2026-10-14-1170-departure-temperature","target":"RABAEV@127.0.0.1:1521/orcl","prepared_sha256":{k:hashlib.sha256(v.encode()).hexdigest()for k,v in f.items()if k.startswith(root)},"state":"PREPARED_NOT_APPLIED","scope":"Existing helper phase and root departure only. No new table/quantity engine. Captured immutable root plan/result stores separate manual confirmation with original departure instant."},indent=2)
-p=Path("wiki/database/nicora_ni052_departure_temperature_20261014.md");f[str(p)]="""# NI05.2 — температура перед выездом
+p=Path("wiki/database/retailcase_ni052_departure_temperature_20261014.md");f[str(p)]="""# NI05.2 — температура перед выездом
 Миграция2026-10-14-1170-departure-temperature подготовлена; ещё не применена.
 
 Общий thermal helper получает phase=MANUAL_AT_DEPARTURE; прежний load core использует defaultMANUAL_AT_LOADING. Температурный товар требует нового подтверждения непосредственно перед выездом с текущей версией профиля. Под CFG/vehicle/TT/ST locks повторяются текущие диапазоны и профиль до смены статуса рейса. Повтор загрузочного подтверждения с origin загрузки не разрешает выезд.
@@ -101,6 +101,6 @@ p=Path("wiki/database/nicora_ni052_departure_temperature_20261014.md");f[str(p)]
 
 API/интерфейс имеют отдельный ввод для выезда с разрешением transport_dispatch_close. Старые запросы без блока не приобретают null-поля в canonical metadata. Status читает сохранённое подтверждение через исходный departure operation/class-source PK в том же readonly scoped snapshot. Датчик/непрерывный контроль/придуманный TTL не заявлены. Source checkpoint/apply/verify/forward-only recovery сохранены. Native positive departure ещё ожидает.
 """
-p=Path("wiki/index.md");f[str(p)]="- [Prepared1170–1171: температура выезда](database/nicora_ni052_departure_temperature_20261014.md): separate current confirmation, original root journal/one departure clock/no repeat stock; apply pending.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");f[str(p)]="- [Prepared1170–1171: температура выезда](database/retailcase_ni052_departure_temperature_20261014.md): separate current confirmation, original root journal/one departure clock/no repeat stock; apply pending.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");f[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-14 /1168–1171: one new actualprivate thermal load: missing/20°C denied, outerrollback P3H3/no physicalthermalfacts, committed3.125°C/load+thermalfact/P0H0/replay, protected987P20H20. SetupPICK_CELL omission corrected by continuation1169 ofsame lot/trip, no factoryrerun. Nextphase originaldeparture helper/root/API/UI/scoped savedresultread checkpointed; notapplied yet.\n"
 print(json.dumps(f))

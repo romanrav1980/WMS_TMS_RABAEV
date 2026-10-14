@@ -96,11 +96,11 @@ def cancel_weighted_box(choice: str, body: WeightedChoiceCancelRequest,
     return service.cancel(choice, body.reason, user.username)
 '''
 out[str(p)]=t
-out["wiki/database/nicora_ni042_weight_box_choice_design_20261011.md"]="""# NI04.2: согласованный выбор последней коробки
+out["wiki/database/retailcase_ni042_weight_box_choice_design_20261011.md"]="""# NI04.2: согласованный выбор последней коробки
 195 additive immutable approved choice archive, existing CONFIG metadata transaction only/no P/H or stock writer. Scoped approval-only versus pick-plan creation roles separate via shared native reader permission; source signature/current physical unit/raw GS1 identity/net+gross+volume/current policy/stock/current order captured; WITHIN_TOLERANCE versus explicit LAST_WHOLE_BOX reason. Exact request+actor replay; unique active per original order row and physical box; cancellation retains original source/history. No real ACK/no marked split.
 196 existing native planner consumes approved choice inside old plan creation/SOFT transaction with current source/locks;197 exact physical HARD pin;198 actual fulfillment/cancellation-aware demand. Until then archive approval is not stock/plan fulfillment. No second allocator.
 """
-for name,line in [("wiki/index.md","- [Согласованный выбор последней коробки: разработка](database/nicora_ni042_weight_box_choice_design_20261011.md):195 immutable current selected box/role-separated approval/source replay/no stock; existing plan use next."),
+for name,line in [("wiki/index.md","- [Согласованный выбор последней коробки: разработка](database/retailcase_ni042_weight_box_choice_design_20261011.md):195 immutable current selected box/role-separated approval/source replay/no stock; existing plan use next."),
 ("wiki/log.md","2026-10-11:195 begins from fresh original194 pure reader/checkpoint; additive immutable choice/current source signature/GS1/exact box/metadata approval-only permission/unique active/cancel history; no quantity effect.")]:
  p=Path(name);out[str(p)]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
 print(json.dumps(out,ensure_ascii=True))

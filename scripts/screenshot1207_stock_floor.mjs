@@ -17,6 +17,6 @@ try{
  if(saved.version!==1||saved.pallet_type_id!==1)throw Error('Wrong retained type');
  if(errors.length)throw Error(errors.join(';'));
  await page.locator('#tripSummary').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/55-stock-pallet-loading.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/55-stock-pallet-loading.png'});
  console.log('PASS1207 live API read/current trip/type proof/UI no page errors; no writes');
 }finally{await browser.close();}

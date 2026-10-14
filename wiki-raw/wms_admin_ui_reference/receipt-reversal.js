@@ -9,7 +9,7 @@
     return { base: (auth.state.apiBase || "http://127.0.0.1:8088").replace(/\/$/, ""),
       actor: auth.state.user?.username || "" };
   };
-  const key = () => JSON.stringify(["nicora.receiptReverseIntent", context().base, context().actor]);
+  const key = () => JSON.stringify(["retailcase.receiptReverseIntent", context().base, context().actor]);
   window.addEventListener("wms-receipt-selected", event => {
     documentId = event.detail.naklad_id;
     status.textContent = "Сторно допускается для полного поступления, которое ещё находится в зоне приёмки без расхода и резерва.";

@@ -18,7 +18,7 @@ s=s[:start]+'''                return self.snapshot(cur,ware,article,start,end,f
 pos=s.index("    @staticmethod")
 s=s[:pos]+helper+s[pos:]
 out[str(p)]=s
-out["wiki/database/nicora_ni081_range_apply_design_20261010.md"]="""# Slice158 — утверждение original range и вымывание
+out["wiki/database/retailcase_ni081_range_apply_design_20261010.md"]="""# Slice158 — утверждение original range и вымывание
 
 Next deliver native apply core delegated from original RRL_PICK_RANGE_PROPOSAL_API, preserving immutable operation journal. Three additive relations: immutableapproval(sourceproposal/operation+frozenproof), drain(originalPFA mapping/fromapproval), drainallow(originalrepl/task IDs+maxoriginalquantity), drainclose(originalPFA/operation), approvednewmapping relation. Deferred FK tooperation permits sameTX core effects before outerimmutable operation insertion/result, all rollback toownsavepoint. No stockquantity/second task engine.
 

@@ -3,8 +3,8 @@ from pathlib import Path
 out={}
 p=Path("wiki-raw/wms_admin_ui_reference/slotting-demand.js");s=p.read_text(encoding="utf-8").replace("Черновик сохранён. Диапазон не применён.", "Сохранение записано. Откройте предложение для актуального состояния; диапазон не применён.")
 out[str(p)]=s
-p=Path("wiki/database/nicora_ni081_range_recommendation_20261010.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\n157 refinement: volume computation explicitly reuses publicnative RRL_STOCK_REPL_CAPACITY.unit_volume for originaltemplatecells; rawnorm/conversion fields retained as evidence, no secondvolume algorithm. Anytemplate refusal/ambiguity remainsunknown, keyednative evidence includedin signature. Extracted helper initially missed article parameter, immediatelycorrected and actual156/157scenario passed; no stockchange.\n"
-out["wiki/database/nicora_ni081_range_proposal_20261010.md"]="""# Сохранённое предложение диапазона,157
+p=Path("wiki/database/retailcase_ni081_range_recommendation_20261010.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\n157 refinement: volume computation explicitly reuses publicnative RRL_STOCK_REPL_CAPACITY.unit_volume for originaltemplatecells; rawnorm/conversion fields retained as evidence, no secondvolume algorithm. Anytemplate refusal/ambiguity remainsunknown, keyednative evidence includedin signature. Extracted helper initially missed article parameter, immediatelycorrected and actual156/157scenario passed; no stockchange.\n"
+out["wiki/database/retailcase_ni081_range_proposal_20261010.md"]="""# Сохранённое предложение диапазона,157
 
 Original scenario/recommendation becomes durable DRAFT, not active slotting. Native RRL_PICK_RANGE_PROPOSAL_API journals operation, currentwarehouse/article/actor/canonical request SHA256/result/awarecreation. Separate immutable originalsource+signature and cancellation records. Before newdraft save service recalculates original scenario and requires same signature; incomplete/missing cost/capacity recommendation cannot be saved as nominalcomplete. Draft may contain known undated-demand uncertainty, visibly archived; approval must independently resolve it, not treatdraft asphysicaladmission.
 
@@ -20,10 +20,10 @@ API POST /api/inventory/slotting/warehouses/{ware}/articles/{article}/recommenda
 
 Next actualapproval/versionedrange andgrandfathereddrain, perioduncertainty mustbe resolved before automaticadmission. Existing17 residuals not automaticallyclosed by DRAFT feature.
 """
-p=Path("wiki/index.md");out[str(p)]="- [Сохранённое предложение диапазона](database/nicora_ni081_range_proposal_20261010.md):157 immutable draft/source/actor/cancel/replay; sameID uniqueness without stock fence; approval/drain next.\n"+p.read_text(encoding="utf-8-sig")
+p=Path("wiki/index.md");out[str(p)]="- [Сохранённое предложение диапазона](database/retailcase_ni081_range_proposal_20261010.md):157 immutable draft/source/actor/cancel/replay; sameID uniqueness without stock fence; approval/drain next.\n"+p.read_text(encoding="utf-8-sig")
 p=Path("wiki/log.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\n2026-10-10:157 nativeimmutable rangedraft/source/cancel +typed API/UIpending. Actualoriginal508/P20H20, ownroute146emptyfaces518/519 retained; concurrentSAVE/SAVE2 once/replayaftercancel/currentview/differentbody+unknownactor denied/no assignment. GlobalCONFIG draftfence removed after121mswait evidence; PKuniqueness/cancel-onlysource lock/no physicalserialization. Nativevolume reused/refactorNameError corrected/resumedexistingfixture. 8stmt/exactnative+guardsVALID/currentmanifestgenerated/architecture511/0/79PASS/NodePASS. Approval/drain next; no fullsprint acceptance.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\nTicket157 immutable savedrangeproposal/source/currentactor/cancel and UIretry, noactive slotting. See database/nicora_ni081_range_proposal_20261010.md. Approval/drain remains next.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\nTicket157 immutable savedrangeproposal/source/currentactor/cancel and UIretry, noactive slotting. See database/retailcase_ni081_range_proposal_20261010.md. Approval/drain remains next.\n"
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":row.setdefault("implementedSlices",[]).append("157 immutable rangeproposal/source/currentactor/cancellation/replay/no stock fence for draft")
 out[str(p)]=json.dumps(m,ensure_ascii=False,indent=2)+"\n"

@@ -2,12 +2,12 @@
 
 This page catalogs raw sources that the root wiki compiles from.
 
-## NIKORA
+## RETAILCASE
 
-- [nikora_agents_20260915.md](nikora_agents_20260915.md): источники агентного плана, ограничения локальных GPU, API-тарифы, 41 ТЗ и воспроизводимая проверка бюджета без амортизации.
-- [nikora_ui_20260915.md](nikora_ui_20260915.md): требования 15 рабочих мест, быстрый ТСД/диспетчер ричтраков, источники переиспользования и 25 проверенных offline-рисунков.
-- [nikora_20260915.md](nikora_20260915.md): ТЗ 1.3, XML 1.1.0, IT guide, операционные материалы Drive и код TMS/WMS; результаты проверки 15.09.2026.
-- [Исходный комплект и probes](../../wiki-raw/nikora_analysis_20260915/): неизменённые исходники, ZIP и воспроизводимые изолированные проверки.
+- [retailcase_agents_20260915.md](retailcase_agents_20260915.md): источники агентного плана, ограничения локальных GPU, API-тарифы, 41 ТЗ и воспроизводимая проверка бюджета без амортизации.
+- [retailcase_ui_20260915.md](retailcase_ui_20260915.md): требования 15 рабочих мест, быстрый ТСД/диспетчер ричтраков, источники переиспользования и 25 проверенных offline-рисунков.
+- [retailcase_20260915.md](retailcase_20260915.md): ТЗ 1.3, XML 1.1.0, IT guide, операционные материалы Drive и код TMS/WMS; результаты проверки 15.09.2026.
+- [Исходный комплект и probes](../../wiki-raw/retailcase_analysis_20260915/): неизменённые исходники, ZIP и воспроизводимые изолированные проверки.
 
 ## Project Entry Points
 
@@ -50,10 +50,10 @@ This page catalogs raw sources that the root wiki compiles from.
 
 - SAP/SAP_INTEGRATION projects are intentionally not cataloged for GitHub publication.
 
-## NICORA приёмка и интеграция 7 октября 2026
+## RETAILCASE приёмка и интеграция 7 октября 2026
 
-[Редакция 56 общего ТЗ и проверка](../requirements/nikora_business_processes/editorial_review_v56.md) опирается на новое поручение владельца и разделы 7–9 Google Docs «Требования к интеграции ВМС Никоры с SAP ERP». [Текстовый снимок интеграции](../../wiki-raw/nikora_sap_integration_20261007/README.md); [исходный DOCX редакции 55](../../wiki-raw/nikora_business_processes_v55_20261007/Nikora_business_processes_v55.docx). Входящее основание — разрешённая поставка SAP, связанная с закупочным заказом. Синтез не подтверждает реализацию функций текущей WMS.
+[Редакция 56 общего ТЗ и проверка](../requirements/retailcase_business_processes/editorial_review_v56.md) опирается на новое поручение владельца и разделы 7–9 Google Docs «Требования к интеграции ВМС Никоры с SAP ERP». [Текстовый снимок интеграции](../../wiki-raw/retailcase_sap_integration_20261007/README.md); [исходный DOCX редакции 55](../../wiki-raw/retailcase_business_processes_v55_20261007/Retailcase_business_processes_v55.docx). Входящее основание — разрешённая поставка SAP, связанная с закупочным заказом. Синтез не подтверждает реализацию функций текущей WMS.
 
-- [NICORA сквозная маркировка 07.10.2026](nikora_track_trace_20261007.md): поручение владельца, официальные различия табачных кодов и документооборота ЕГАИС, исходный SQL CRPT; ТЗ 57, модель RABAEV и 43 спринта. Внешние адаптеры и миграции ещё не выполнены.
+- [RETAILCASE сквозная маркировка 07.10.2026](retailcase_track_trace_20261007.md): поручение владельца, официальные различия табачных кодов и документооборота ЕГАИС, исходный SQL CRPT; ТЗ 57, модель RABAEV и 43 спринта. Внешние адаптеры и миграции ещё не выполнены.
 
-- [nicora_ns00_environment_20261007.md](nicora_ns00_environment_20261007.md): NS00 — живой seed/reset/cleanup, rollback, fresh dependencies и restart evidence; пределы core fixture и незавершённые gates.
+- [retailcase_ns00_environment_20261007.md](retailcase_ns00_environment_20261007.md): NS00 — живой seed/reset/cleanup, rollback, fresh dependencies и restart evidence; пределы core fixture и незавершённые gates.

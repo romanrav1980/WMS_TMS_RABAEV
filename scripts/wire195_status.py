@@ -17,7 +17,7 @@ assert a in t;out[str(p)]=t.replace(a,b)
 p=Path("wiki-raw/wms_admin_ui_reference/customer-orders.js");t=p.read_text(encoding="utf-8").replace('row.unit_code === "KG" && orderCan("pick_plan_create")','row.unit_code === "KG" && (orderCan("pick_plan_create") || orderCan("case_pick_short_approve"))');out[str(p)]=t
 p=Path("wiki-raw/wms_admin_ui_reference/weighted-plan-choice.js");t=p.read_text(encoding="utf-8")
 t=t.replace(' + row + "/weighted-box-options"',' + row + (orderCan("case_pick_short_approve") ? "/weighted-box-approval-preview" : "/weighted-box-options")')
-t=t.replace('      window.orderWeightedChoice = {row, source: data, panel, body};','      window.orderWeightedChoice = {row, source: data, panel, body};\n      document.dispatchEvent(new CustomEvent("nicora-weighted-options", {detail: window.orderWeightedChoice}));')
+t=t.replace('      window.orderWeightedChoice = {row, source: data, panel, body};','      window.orderWeightedChoice = {row, source: data, panel, body};\n      document.dispatchEvent(new CustomEvent("retailcase-weighted-options", {detail: window.orderWeightedChoice}));')
 out[str(p)]=t
 p=Path("wiki-raw/wms_admin_ui_reference/customer-orders.html");t=p.read_text(encoding="utf-8");a='<script src="weighted-plan-choice.js"></script>';assert a in t
 out[str(p)]=t.replace(a,a+'<script src="weighted-plan-approval.js"></script>')

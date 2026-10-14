@@ -31,7 +31,7 @@ p=Path("wiki-raw/wms_admin_ui_reference/reachtruck-tsd.js");t=p.read_text(encodi
 t=t.replace('function rtTsdOperation(task) {','function rtTsdOperation(task) {\n  if (task.task_type === "PUTAWAY" && task.source_doc_type === "ST_DEFER") return "Переместить в ожидание";')
 t=t.replace('parts.push(task.source_doc_type);','parts.push(task.source_doc_type === "ST_DEFER" ? "Перенос СТ" : task.source_doc_type);')
 files[str(p)]=t
-p=Path("reports/nicora/2026-10-13/index.html");t=p.read_text(encoding="utf-8")
+p=Path("reports/retailcase/2026-10-13/index.html");t=p.read_text(encoding="utf-8")
 t=t.replace("</main>","<article><h2>02 · Выбор рейса</h2><p>Период дат, район и код магазина. Выбор использует существующие рейсы ТМС.</p><p><a href=\"02-trip-picker-report.md\">Отчёт</a></p><img src=\"screenshots/04-trip-picker.png\" alt=\"Реальное окно выбора рейса\"></article></main>")
 files[str(p)]=t
 print(json.dumps(files,ensure_ascii=True))

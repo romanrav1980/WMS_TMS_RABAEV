@@ -22,7 +22,7 @@ s=s[:a]+''' finally:
   after=context();after_profile=read_profile(q,f['shop']);c.rollback()
   clean_before=dict(before['source']);clean_after=dict(after['source']);clean_before.pop('store_window_profiles',None);clean_after.pop('store_window_profiles',None)
   report['rollback']={'original_nonprofile_source_restored':clean_before==clean_after,'approval_version_restored':after['version']==before['version'],'profile_semantics_restored':after_profile['profile']==before_profile['profile']and after_profile['windows']==before_profile['windows'],'profile_new_restore_version':after_profile['version']}
-  Path('reports/nicora/2026-10-13/codex/STORE_WEEKLY/native_fixture.json').write_text(json.dumps(report,indent=2,ensure_ascii=False),encoding='utf-8')
+  Path('reports/retailcase/2026-10-13/codex/STORE_WEEKLY/native_fixture.json').write_text(json.dumps(report,indent=2,ensure_ascii=False),encoding='utf-8')
   assert all(report['rollback'].values()),report['rollback']
 print(json.dumps({'cases':list(report['cases']),'timings_ms':report['timings_ms'],'rollback':report['rollback']}))
 '''

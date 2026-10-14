@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   let busy = false, policyGeneration = 0, currentPolicy = null;
-  const key = () => JSON.stringify(["nicora.casePickIntent", cpTsdApiBase(), cpTsdUser()]);
+  const key = () => JSON.stringify(["retailcase.casePickIntent", cpTsdApiBase(), cpTsdUser()]);
   const saved = () => {
     const value=JSON.parse(localStorage.getItem(key()) || "null");
     if(value&&(!Number.isSafeInteger(value.task)||value.task<1||!Number.isSafeInteger(value.line)||value.line<1||
@@ -50,8 +50,8 @@
     let attempted = false, priorUnknown = false, capturedRaw=null;
     try {
       storageKey = key();
-      if(localStorage.getItem(JSON.stringify(['nicora.caseCarrierReturn',cpTsdApiBase(),cpTsdUser()])))throw new Error('Сначала повторите сохранённый возврат.');
-      if(localStorage.getItem(JSON.stringify(['nicora.caseCarrierMove',cpTsdApiBase(),cpTsdUser()])))throw new Error('Сначала повторите сохранённое перемещение паллеты.');
+      if(localStorage.getItem(JSON.stringify(['retailcase.caseCarrierReturn',cpTsdApiBase(),cpTsdUser()])))throw new Error('Сначала повторите сохранённый возврат.');
+      if(localStorage.getItem(JSON.stringify(['retailcase.caseCarrierMove',cpTsdApiBase(),cpTsdUser()])))throw new Error('Сначала повторите сохранённое перемещение паллеты.');
       let intent = saved();
       if(retry && !intent)throw new Error("Нет незавершённой команды.");
       if(!retry && intent)throw new Error("Сначала повторите сохранённую команду.");

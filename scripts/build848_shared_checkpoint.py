@@ -19,7 +19,7 @@ HTTP task1087 200DONE; browser734 DOM8EA/fact8/remaining0/disabled. screenshot09
 
 Gate845 PASS24/bothTS/architecture688-0-76/encodingPASS; pytest-cache rights warning explicit. После846 architecturePASS и targeted847, fullgate не повторялся. SQL shared maintenance17.55мс/126buf и wave discovery26.163мс/84buf до846: retain bounded200/noindex, ownerinventory. SQL projection measurement still open (SQL_TEXT1000 prefix didnotmatch PALLET_RANK); do not claim measured. Partial shared consumer needing additional source/marked/independent races remain open.
 """
-files["wiki/components/nicora_ni032_shared_arrival_20261013.md"]=page
+files["wiki/components/retailcase_ni032_shared_arrival_20261013.md"]=page
 report="""# NI03.2: две подачи и общая паллета
 
 13 октября 2026. Исправлены два подтверждённых пробела: выдача двух заданий на одну целую паллету и лишнее ожидание уже прибывшего общего товара при расчёте вместимости. Используются прежние задания и единственное ядро остатков.
@@ -34,24 +34,24 @@ report="""# NI03.2: две подачи и общая паллета
 
 SQL maintenance17.55мс/126buffers, discovery26.163мс/84. Решение: сохранить bounded200, индекс сейчас не добавлять. Полный спринт/независимая маркированная конкуренция ещё открыты. Новых реестров/копий Oracle/государственныхACK нет.
 """
-files["reports/nicora/2026-10-13/07-two-arrivals-report.md"]=report
-files["reports/nicora/2026-10-13/07-two-arrivals-report.json"]=Path("tmp/context845.json").read_text(encoding="utf-8")
-p=Path("reports/nicora/2026-10-13/index.html")
+files["reports/retailcase/2026-10-13/07-two-arrivals-report.md"]=report
+files["reports/retailcase/2026-10-13/07-two-arrivals-report.json"]=Path("tmp/context845.json").read_text(encoding="utf-8")
+p=Path("reports/retailcase/2026-10-13/index.html")
 files[str(p)]=p.read_text(encoding="utf-8").replace("</main>","<article><h2>07 · Общая паллета и две подачи</h2><p>Задания1086/1087 DONE20/8EA, сохранены три владельца резерва. Лишняя физическая выдача устранена.</p><a href=\"07-two-arrivals-report.md\">Отчёт №7</a> · <a href=\"07-two-arrivals-report.json\">Факты JSON</a><img src=\"screenshots/09-second-arrival.png\" alt=\"Очередь с выбранным заданием1087\"></article></main>")
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json")
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json")
 plan=json.loads(p.read_text(encoding="utf-8"));inc=next(x for x in plan["increments"]if x["id"]=="NI03.2")
 inc["implementedSlices"].append("840-847 existing one physical shared full-pallet task/no stale-source issuance; inventory retires only fully covered unissued arrival placeholder before capacity/continuation; actual capacity refusal/two whole20+8 tasks/original12 other8 third10/replay/cleanup, native845VALID and HTTP/browser1087; total200/currentWARE ID-bound847")
 inc["pendingSlices"][0]="Other physical split modes, duplicate retained bindings on the same selected stock, partial shared consumer requiring further sources, marked/concurrent independent multi-continuation acceptance"
 files[str(p)]=json.dumps(plan,ensure_ascii=False,indent=2)+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/execution/active/ni03_2.md")
-files[str(p)]=p.read_text(encoding="utf-8")+"\n13.10.2026:840–847 actual capacity refusal unchanged and two original physical20/8 arrivals, one shared-pallet task; fully covered unissued placeholder cancellation (not fake DONE) before capacity/continuation, sum200/WARE bound. Native845VALID/browser1087DONE8EA, own cleanup, gatePASS. [Details](../../../../components/nicora_ni032_shared_arrival_20261013.md). Full/marked/independent partial shared consumer remain.\n"
+p=Path("wiki/requirements/retailcase_delivery_v55/execution/active/ni03_2.md")
+files[str(p)]=p.read_text(encoding="utf-8")+"\n13.10.2026:840–847 actual capacity refusal unchanged and two original physical20/8 arrivals, one shared-pallet task; fully covered unissued placeholder cancellation (not fake DONE) before capacity/continuation, sum200/WARE bound. Native845VALID/browser1087DONE8EA, own cleanup, gatePASS. [Details](../../../../components/retailcase_ni032_shared_arrival_20261013.md). Full/marked/independent partial shared consumer remain.\n"
 p=Path("задания на проведения тестов/NI03.2/2026-10-13_sequential_sources.md")
 files[str(p)]=p.read_text(encoding="utf-8")+"\nДополнение840–847: воспроизвести один physical FULL_PALLET для shared owners, отсутствие вторичного задания после ARRIVAL, CANCELLED только unissued/remaining0 placeholder, частично покрытый owner остаётся открытым. Проверить global total200 row IDs и currentWARE before UPDATE; positive live846 отдельно от author840. Failed historicalattempts not accepted.\n"
 p=Path("wiki/index.md")
-files[str(p)]="- [Checkpoint848: общая паллета и две подачи](components/nicora_ni032_shared_arrival_20261013.md): actual840/845 DONE20+8/owner12+8+10, owncleanup, report07/browser1087; sum200-bound847.\n"+p.read_text(encoding="utf-8")
+files[str(p)]="- [Checkpoint848: общая паллета и две подачи](components/retailcase_ni032_shared_arrival_20261013.md): actual840/845 DONE20+8/owner12+8+10, owncleanup, report07/browser1087; sum200-bound847.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md")
 files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-13 checkpoint848: resources sync one shared FULL_PALLET/currentsource/WARE; inventory cancels only fully covered unissued placeholder before capacity/discovery. Actual840/845 two tasks1086/1087DONE20/8, owners12/8/10/replay/cleanup/VALID; HTTP/browser1087. Gate845PASS24/bothTS/encoding; after846 arch688-0-76 +bound847PASS, actual narrowed-ID positive open. Report07/Qwen; no fake task DONE for shared other owner.\n"
-p=Path("wiki/runbooks/nicora_active_work.md")
+p=Path("wiki/runbooks/retailcase_active_work.md")
 files[str(p)]="""## Checkpoint848 — 13Oct2026
 
 Owner deadline20:00MSK13Oct17:00UTC OR all sprints actuallycomplete. Continue independent functionality, no final before then. Plan34/currentNI03.2, one dev implemented NI03.1/17 fullopen. No agents/goals/DBcopies; no GitHub until actual all complete/excludeSAP.

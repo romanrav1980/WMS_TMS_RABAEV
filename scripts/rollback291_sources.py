@@ -20,7 +20,7 @@ drop package RRL_STOCK_INTERWARE_PART;
 -- Nullable additive columns are retained for paired application readers.
 -- Native rollback explicitly refuses partial payloads; no silent full-mode reinterpretation.
 """
-p=Path("wiki/database/nicora_ni061_partial_receiving_20261011.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\nSQL rollback rejects retainedpartialhistory BEFORE any body change; restores oldcloneguard/PUT/custody/depart, oldreceivingbody explicitlyrejectspartialpayload, dropsprivatehelper. Nullablecolumns retainedforpairedcurrentreaders; no blindfulldata reinterpretation.\n"
+p=Path("wiki/database/retailcase_ni061_partial_receiving_20261011.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\nSQL rollback rejects retainedpartialhistory BEFORE any body change; restores oldcloneguard/PUT/custody/depart, oldreceivingbody explicitlyrejectspartialpayload, dropsprivatehelper. Nullablecolumns retainedforpairedcurrentreaders; no blindfulldata reinterpretation.\n"
 for path,line in [("wiki/index.md","291 rollback clarified: retainedhistory refuses beforechanges; oldnativepayloadguard/cloneguard restored, additivecolumns retained."),("wiki/log.md","2026-10-11:291 rollback completepairedSQL behavior: reject retainedpartialhistory first, restoreoldSAPcloneguard/nativePUT-custody-depart, oldreceiving refusespartialpayload insteadofignoringit; nullablecolumnsmirroredretainedforreaders. No rollback applied/currentactualP1history retained.")]:
  out[path]=Path(path).read_text(encoding="utf-8")+"\n"+line+"\n"
 print(json.dumps(out,ensure_ascii=True))

@@ -16,7 +16,7 @@ try{
   const expected=page.waitForResponse(r=>r.request().method()==='POST'&&r.url().endsWith(suffix));
   await page.locator('#'+button).click();const response=await expected;const text=await response.text();let body;try{body=JSON.parse(text);}catch{body={message:text};}
   ctx.wave_actions.push({button,status:response.status(),body});
-  ctx.wave_pending=await page.evaluate(()=>Object.fromEntries(Object.keys(localStorage).filter(k=>k.startsWith('nicora.orderWave:')).map(k=>[k,localStorage.getItem(k)])));
+  ctx.wave_pending=await page.evaluate(()=>Object.fromEntries(Object.keys(localStorage).filter(k=>k.startsWith('retailcase.orderWave:')).map(k=>[k,localStorage.getItem(k)])));
   fs.writeFileSync(path,JSON.stringify(ctx,null,2));if(!response.ok())throw Error(JSON.stringify(body));
   if(button==='opWaveCreate'){ctx.wave_id=body.pick_wave_id;fs.writeFileSync(path,JSON.stringify(ctx,null,2));await page.locator('#opWaveStatus').filter({hasText:'Волна создана'}).waitFor();}
   if(button==='opWaveAdd')await page.locator('#opWaveStatus').filter({hasText:'План включён'}).waitFor();
@@ -26,6 +26,6 @@ try{
  ctx.stage='WAVE_PREVIEW';ctx.wave_detail=await page.evaluate(id=>orderRequest('/api/picking/waves/'+id),ctx.wave_id);
  ctx.wave_readiness=await page.evaluate(id=>orderRequest('/api/picking/waves/'+id+'/readiness'),ctx.wave_id);
  fs.writeFileSync(path,JSON.stringify(ctx,null,2));
- await page.locator('#orderWavePlanning').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/69-b01-wave-planning.png'});
+ await page.locator('#orderWavePlanning').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/69-b01-wave-planning.png'});
  console.log(JSON.stringify({stage:ctx.stage,wave:ctx.wave_id,readiness:ctx.wave_readiness}));
 }finally{await browser.close();}

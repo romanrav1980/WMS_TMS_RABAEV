@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-out={};page="wiki/database/nicora_ni053_lineage_lookup_20261011.md"
+out={};page="wiki/database/retailcase_ni053_lineage_lookup_20261011.md"
 out[page]="""# Поиск окончательной приёмки по исходной погрузке
 298: у RRL_INTERWARE_ONWARD_DISPATCH отсутствовал SourceLoad-leading индекс. Current order delivery reader297 averaged70.349ms/6278buffers total3 executions. Added nonunique RRL_IW_DISPATCH_SOURCE_IX(SOURCE_LOAD_OPERATION_ID,OPERATION_ID), NativeVALID +only table stats. Scoped requested load CTE uses original SourceLoad and explicit nested loops; final receipt/line/partialreceipt/loss/operation/issue joins kept same snapshot/bounds200loads/2000lines.
 
@@ -9,11 +9,11 @@ New actual child7rgr40512bfwq avg20.529ms/146buffers total3 executions versus pr
 SQL db/migrations/2026-10-11_ni053_lineage_lookup/001_index.sql applied RABAEV/orcl. Bundle startup index only generatedFILES, full stock refresh not applied. Raw order-delivery pane now exists; source code guard catcheslate errors byrequestserial too. No new engine/warehouse registry.
 """
 for path,line in[
-("wiki/index.md","- [Поиск приёмки по исходной погрузке](database/nicora_ni053_lineage_lookup_20261011.md):298 missing source index/NL,70.349ms6278buf→20.529ms146buf total3, exactfull/partialprojection preserved."),
+("wiki/index.md","- [Поиск приёмки по исходной погрузке](database/retailcase_ni053_lineage_lookup_20261011.md):298 missing source index/NL,70.349ms6278buf→20.529ms146buf total3, exactfull/partialprojection preserved."),
 ("wiki/log.md","2026-10-11:298 fixed real nonindexed SourceLoad linkage in onwarddispatch; SourceLoad/OPID nonuniqueindexVALID+table stats/scoped requested-source NL and original currentjoins. Threeactual reads full229 andpartial291/292 preserve accepted3 versus1/confirmedloss2, average70.349→20.529ms/totalbuffers6278→146. No qty/history/source changes or industrial capacityclaim."),
-("wiki/runbooks/nicora_active_work.md","LatestApp298/native297+source index298/serv297 before finalreadhint/UI changes. NativeALLVALID/app6290cycles76/TransportCoordinationTS PASS/encodingPASS. SourceLoad lineage sparseindexVALID boundedNL; slow298 avg20.529ms146buf total3vsold70.349ms6278buf. Next confirmedlostgoods recovery/correction design+single-core functionality, no duplicate supplierReturn engine.")
+("wiki/runbooks/retailcase_active_work.md","LatestApp298/native297+source index298/serv297 before finalreadhint/UI changes. NativeALLVALID/app6290cycles76/TransportCoordinationTS PASS/encodingPASS. SourceLoad lineage sparseindexVALID boundedNL; slow298 avg20.529ms146buf total3vsold70.349ms6278buf. Next confirmedlostgoods recovery/correction design+single-core functionality, no duplicate supplierReturn engine.")
 ]:out[path]=Path(path).read_text(encoding="utf-8")+"\n"+line+"\n"
-p=Path("wiki/runbooks/nicora_active_work.md");s=out[p.as_posix()]
+p=Path("wiki/runbooks/retailcase_active_work.md");s=out[p.as_posix()]
 s=s.replace("Native manifest280: time materialV2/approval256, original route estimate259, regulatorywarehouseindex252, plannedDEFAULT253, awarefutureTaskFinish254.","Native manifest298: TIME sourceV5 (287), canonical stock root295/UnitCore295/unittrigger297, partial custody-NEXT-depart296, SourceLoad index298. Original route estimate259/regulatorywarehouseindex252/plannedDEFAULT253/awarefutureTaskFinish254 retained.")
 s=s.replace("App283/APIserv283,","App298/APIserv297 (restart for finalreaderhint),")
 out[p.as_posix()]=s

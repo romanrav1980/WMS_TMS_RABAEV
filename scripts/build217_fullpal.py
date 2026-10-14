@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 f=Path("db/migrations/2026-10-11_ni052_unload_fullpal");out={}
-out["wiki/database/nicora_ni052_unload_fullpal_design_20261011.md"]="""# NI05.2: исходная FULLPAL выгружается через прежнее исполнение
+out["wiki/database/retailcase_ni052_unload_fullpal_design_20261011.md"]="""# NI05.2: исходная FULLPAL выгружается через прежнее исполнение
 217 extends same UNLOAD_SHIPMENT with original bound FULLPAL member, standalone STOCK root or stock leaves in whole CASE/FULLPAL matryoshka. No new binding/allocator/task executor. Original archived bound UID/current shipped fulfillment/actual completed picking-move task/current original wave required; original whole UID P/H zero across all cells and current article/UOM unchanged. Original signed negative journal and exact units restored as before. Existing FF owner projects current PICKED stock version after restored balance while original task/DONE and shipment history remain. All FF/task/wave/ST/HU/stock/resources declared before effects. Fresh control required; existing reload/assignment reused. Original transferred FULLPAL tare remains explicitly unsupported until its own recovery extension. Forward repair with actual unload history; old original root fact retained.
 """
 s=(f/"000_before_fulfillment.sql").read_text(encoding="utf-8")

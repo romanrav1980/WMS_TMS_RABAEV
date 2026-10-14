@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 out={}
-out["wiki/database/nicora_ni022_erp_admission_20261011.md"]="""# Решение ERP по допуску исходного заказа
+out["wiki/database/retailcase_ni022_erp_admission_20261011.md"]="""# Решение ERP по допуску исходного заказа
 267 APPLIED RABAEV/orcl. RRL_SAP_STORE_DECISION — неизменяемый журнал; RRL_SAP_STORE_ADMISSION_API — единственный исполнитель изменения допуска. Предполагаемый WarehouseCustomerOrderDecision version1 содержит Sender/MessageId/DecisionId/OrderNumber/OriginalContentHash/ExpectedVersion/Decision/Reason/Reference. Это согласуемый XML шлюза, не объявленный стандартный IDoc SAP.
 
 ACCEPT разрешён только для PENDING_LATE/PENDING_CALENDAR, действующего открытого календаря с прежним смещением UTC и ещё не истёкшего срока окончания отбора. REJECT отменяет только источник до начала исполнения. Наличие подготовки СТ, действующего плана, исполнения или резерва запрещает изменение. Исходные количества, даты, raw XML и результат первого импорта сохраняются. Поэтому старый импорт может возвращать первоначальный PENDING_CALENDAR, а отдельное текущее состояние уже ACCEPTED. Повтор решения возвращает сохранённый результат; новое содержимое под прежним MessageId или повтор DecisionId с другим MessageId отвергается.
@@ -15,19 +15,19 @@ ACCEPT разрешён только для PENDING_LATE/PENDING_CALENDAR, де�
 Native все VALID. SQL decision PK lookup: 0.577/0.964/0.653ms; первая компиляция34.977ms. Решение owner fulfillment: сохранить уникальные source/message и source/version ключи, ограниченный detail; новый индекс или cache не нужен. Архитектура594 файлов/0 циклов/76 зарегистрированного долга. Canonical manifest267 и generated bundle отражают новые схемы/guards/roles; bundle целиком на ACTIVE не применять. Rollback запрещён при непустом журнале решений и не удаляет историю.
 """
 items=[
-("wiki/index.md","- [Решения ERP по исходным заказам](database/nicora_ni022_erp_admission_20261011.md):267 native atomic admission/rejection, immutable source demand, file gateway and current worklist."),
+("wiki/index.md","- [Решения ERP по исходным заказам](database/retailcase_ni022_erp_admission_20261011.md):267 native atomic admission/rejection, immutable source demand, file gateway and current worklist."),
 ("wiki/log.md","2026-10-11:267 ERP admission/rejection native journal/current actor-WARE/CONFIG6 then CO+source/current native calendar and deadline/planning-reservation freeze. Two original264 sources only:2044 ACCEPTED/v1,2045 REJECTED/v1,qty1 unchanged; concurrent202-409/rollback/exact service-file replay/native forged declaredhash denied/direct guards/P20H20. No realSAPACK/independent acceptance. NativeVALID/594files0cycles76debt/PK SQL<1ms steady, retain bounded keys ownerfulfillment."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni02_2.md","11.10.2026:267 explicit ERP ACCEPT/REJECT through immutable native journal/current calendar+deadline/version/sourcehash/planning freeze. Existing two264 sources used, initial import result preserved separately from current admission. Existing gateway kind store-decision and raw current source UI. No stock changes or realERP network ACK."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni02_1.md","11.10.2026:267 original ST preparation now uses same native current calendar as SAP source import/decision and preserves saved preparation replay. Admission source2044 now accepted but ST not prepared yet; actual logistics parameters and original writers remain required.")
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni02_2.md","11.10.2026:267 explicit ERP ACCEPT/REJECT through immutable native journal/current calendar+deadline/version/sourcehash/planning freeze. Existing two264 sources used, initial import result preserved separately from current admission. Existing gateway kind store-decision and raw current source UI. No stock changes or realERP network ACK."),
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni02_1.md","11.10.2026:267 original ST preparation now uses same native current calendar as SAP source import/decision and preserves saved preparation replay. Admission source2044 now accepted but ST not prepared yet; actual logistics parameters and original writers remain required.")
 ]
 for path,line in items:
  out[path]=Path(path).read_text(encoding="utf-8")+"\n"+line+"\n"
-p=Path("wiki/runbooks/nicora_active_work.md")
+p=Path("wiki/runbooks/retailcase_active_work.md")
 text=p.read_text(encoding="utf-8").replace("Native manifest259:","Native manifest267:").replace("App261/APIserv261,","App267/APIserv267b,")
 text+="\nLatest267 source2044 ACCEPTED/v1 and2045 REJECTED/v1, original qty1/times/import result retained; tmp/context267.json. No newsource/stock/ST. Service has5SAPsource rights, decisionworker and sourceworklist ready. NativeVALID/cache forged declaredhash protection passed. Do not rerun case267 initial state or duplicate source creation; next connect accepted source to original preparation with actual legacy logistics data.\n"
 out[str(p)]=text
 out["wiki/index.md"]=out["wiki/index.md"].replace("current native259/app261/","current native267/app267/")
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
 next(x for x in j["increments"] if x["id"]=="NI02.2").setdefault("implementedSlices",[]).append("267 native versioned ERP source ACCEPT/REJECT/current calendar and deadline/frozen planning/immutable original demand/existing gateway/current source UI")
 out[str(p)]=json.dumps(j,ensure_ascii=True,indent=2)+"\n"
 root=next(p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md"))

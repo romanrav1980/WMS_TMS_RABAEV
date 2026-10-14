@@ -5,23 +5,23 @@ entry="""\n550: transport norm publication/history UI now uses the existing nati
 Store unloading recovery retains malformed local raw intent in archive, authoritatively reads server preview before clearing damaged intent, then refreshes original receipt UI; recovery refusal keeps receipt blocked. Difficult rolling without loader cannot supply finish details. Optional unloading GET parameters are bounded100/255.
 Typecheck550 pending at documentation preparation; no browser/independent acceptance claim. Next finance monetary recognition and tare custody trace; all18 are not complete.
 """
-p=Path("wiki/database/nicora_ni071_transport_norms_20261012.md")
+p=Path("wiki/database/retailcase_ni071_transport_norms_20261012.md")
 out[str(p)]=p.read_text(encoding="utf-8")+entry
-p=Path("wiki/database/nicora_ni053_unloading_facts_20261012.md")
+p=Path("wiki/database/retailcase_ni053_unloading_facts_20261012.md")
 out[str(p)]=p.read_text(encoding="utf-8")+entry
-p=Path("wiki/runbooks/nicora_active_work.md")
+p=Path("wiki/runbooks/retailcase_active_work.md")
 out[str(p)]="Checkpoint550: norm publisher and paginated history in existing billing UI; malformed unloading intent recovery via archive/server preview; difficult rolling requires loader before receipt. Native quantities unchanged, no new migration. Final TS/encoding pending. All18 not complete; no GitHub publication yet.\n\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/index.md")
-out[str(p)]="- [Checkpoint550: формы транспортных норм и восстановление выгрузки](database/nicora_ni071_transport_norms_20261012.md): существующий native API, точный повтор операции, история30; malformed unload recovery сохраняет исходник и сверяется с сервером.\n"+p.read_text(encoding="utf-8")
+out[str(p)]="- [Checkpoint550: формы транспортных норм и восстановление выгрузки](database/retailcase_ni071_transport_norms_20261012.md): существующий native API, точный повтор операции, история30; malformed unload recovery сохраняет исходник и сверяется с сервером.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md")
 out[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-12 checkpoint550: existing billing norm publisher/history and structured error semantics; unloading corrupted local intent recovery and loader validation, GET bounds. No new quantity owner/DDL. TS/encoding pending; no full acceptance or publication.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json")
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json")
 m=json.loads(p.read_text(encoding="utf-8"));m["planRevision"]=20
 for item in m["increments"]:
  if item["id"]=="NI07.1":item["implementedSlices"].append("550 existing native norm publisher and history30 UI with durable exact intent/current source version/confirmed-refusal correction; not monetary recognition")
  if item["id"]=="NI05.3":item["implementedSlices"].append("550 corrupted local start recovery preserves raw archive and verifies server preview; difficult rolling without loader blocks details; bounded optional unload GET")
 out[str(p)]=json.dumps(m,ensure_ascii=False,indent=2)+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.md")
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.md")
 v=p.read_text(encoding="utf-8").replace("**Revision 19, 12 октября 2026 года.**","**Revision 20, 12 октября 2026 года.**")
 out[str(p)]=v+"\nCheckpoint550: добавлены публикация и история транспортных норм в действующем биллинге, сохранение точной операции и исправление после подтверждённого отказа; восстановление повреждённого локального начала выгрузки через сервер. Начисление транспортных расходов остаётся открытым.\n"
 root=next(Path(".").glob("*/NI08.1/178_container_cell_index.md")).parent.parent

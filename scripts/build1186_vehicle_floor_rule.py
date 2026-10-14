@@ -146,12 +146,12 @@ assert point in s;s=s.replace(point,insert+point,1)
 s=s.replace("+thermalNote+thermalPlanningNote+","+thermalNote+thermalPlanningNote+floorNote+",1)
 s=s.replace("PLAN_WEIGHT_CAPACITY_EXCEEDED:","PLAN_TARE_VARIANT_CAPACITY_EXCEEDED:'Состав мест превышает нормативные сочетания тары машины',PLAN_TARE_CURRENT_PLACE_TYPE_REQUIRED:'Нужны подтверждённые типы верхних мест и текущий профиль тары',PLAN_WEIGHT_CAPACITY_EXCEEDED:",1)
 f[str(p)]=s
-p=Path("wiki/database/nicora_ni022_vehicle_tare_20261014.md");f[str(p)]=p.read_text(encoding="utf-8")+"""
+p=Path("wiki/database/retailcase_ni022_vehicle_tare_20261014.md");f[str(p)]=p.read_text(encoding="utf-8")+"""
 ## Подключение1185–1186
 Подготовлен общий native check_floor_capacity: целые количества по типам, альтернатива вариантов, несовместимость и явная неизвестность. Его вызывает прежний RRL_TRANSPORT_PLAN_RULES.check_vehicle, следовательно прежний окончательный assign/apply получает то же правило. Для машины без матрицы сохраняется старое ограничение PALLETS; при заданной матрице вместимость берётся из норматива, масса/тип/гидроборт/адрес/временные окна сохраняются.
 
 Источник типов на этой стадии ограничен одним действующим CASE на подготовленное место с активным типом. Несколько CASE, отсутствие типа и физические уже загруженные TOP без отдельной типизации дают unconfirmed; complete=1 отказывает, preview возвращает предупреждение. Вложенные HU не считаются автоматически несколькими CASE; поддержка доказанного типа физического TOP — следующий блок. Это консервативное ограничение, не полный физический допуск. Запрос с200 bind ST /5000мест; без JSON_TABLE на большом join. Snapshot/read vs locked final recheck сохранены. SQL миграции и captured sources в2026-10-14_ni022_vehicle_floor_rule.
 """
-p=Path("wiki/index.md");f[str(p)]="- [Общий норматив тары1186](database/nicora_ni022_vehicle_tare_20261014.md): prepared shared native final planning check/preview; unknown top type refuses new configured profiles.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");f[str(p)]="- [Общий норматив тары1186](database/retailcase_ni022_vehicle_tare_20261014.md): prepared shared native final planning check/preview; unknown top type refuses new configured profiles.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");f[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-14 /1186: prepared native floor variants evaluator and existing final planner integration; explicit unknown/legacy fallback/no second allocator. Checkpoint1185 captured, application pending.\n"
 print(json.dumps(f))

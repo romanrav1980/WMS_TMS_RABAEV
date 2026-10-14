@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 out={}
-out["wiki/database/nicora_ni081_candidate_scope_20261010.md"]="""# Маршрут кандидатов и режим действующего диапазона,160
+out["wiki/database/retailcase_ni081_candidate_scope_20261010.md"]="""# Маршрут кандидатов и режим действующего диапазона,160
 
 Optional candidate_pick_route_id filters only newempty dynamicfaces to current activePUBLISHED route in samewarehouse. Demand/oldstock/oldrange remain wholeSKU/warehouse, explicit responsebasis/UI; no silent partialdemand fromroutefilter. Wrong/missing/foreign/nonpublishedroute404. Source/archive/recompute carries optionalroute, but omits None from oldcanonicaldraftrequest to preserve oldoperationreplay. Publishedoldhistory staysoriginal, changedsourcefacts requirefreshproposal.
 
@@ -13,10 +13,10 @@ SlowSQL initialscoped candidate112.326/131.195ms, layout31.991ms/3, routePK6.227
 
 CurrentFixture old145undated expectation obsoleteafter158explicitowned orderdates; don't reset. NS59 ordinarydev rangeworkflow now includesproposal/approval/drain/scoping; NI08.1 resource recommendations andjoint stricttransport-driver-time admission remain next.
 """
-p=Path("wiki/index.md");out[str(p)]="- [Маршрут кандидатов и режим диапазона](database/nicora_ni081_candidate_scope_20261010.md):160 scoped newfaces/wholeSKU demand/currentdrain mode/oldreplay retained; cell-prefix commitment indexes.\n"+p.read_text(encoding="utf-8-sig")
+p=Path("wiki/index.md");out[str(p)]="- [Маршрут кандидатов и режим диапазона](database/retailcase_ni081_candidate_scope_20261010.md):160 scoped newfaces/wholeSKU demand/currentdrain mode/oldreplay retained; cell-prefix commitment indexes.\n"+p.read_text(encoding="utf-8-sig")
 p=Path("wiki/log.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\n2026-10-10:160 candidatepublishedroute scope only/newlayoutmode/currentapproval, oldwarehouseSKUdemand unchanged. Actual146Scoped/unscoped same44-old20+24, wrongroute404, oldno-routeSAVEDRAFT replay retained/P20H20. Initialcandidate112/131ms prompted existingindexinspection and4cell-prefix commitmentindexes +fixedroutepredicate; actualcase unchanged/nativeindexesverified/currentmanifestgenerated. Architecture513/0/79PASS/nodePASS; industrialplan/cardinality backlogownerinventory.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\nTicket160 scopedpublishedroute candidate read/currentdrainmode/historyoldcanonicalreplay andcell commitment indexes; see database/nicora_ni081_candidate_scope_20261010.md. No subwarehousework or strictdriver/time admission claim.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\nTicket160 scopedpublishedroute candidate read/currentdrainmode/historyoldcanonicalreplay andcell commitment indexes; see database/retailcase_ni081_candidate_scope_20261010.md. No subwarehousework or strictdriver/time admission claim.\n"
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":row.setdefault("implementedSlices",[]).append("160 candidate-route scope/currentdrainmode/oldreplay/cell commitment indexes")
 out[str(p)]=json.dumps(m,ensure_ascii=False,indent=2)+"\n"

@@ -7,6 +7,6 @@
 3. Другой target/склад/завершённый CASE/чужой домен/суммарный source-owner резерв больше unmet need: refusal before effect. Guardsum не заменять отдельными comparisons каждой строки.
 4. Маркированные physical units с несколькими профилями: не удваивать quantity; сохранить unit keys/code lineage/reservation owner. Weighted capacity отдельно.
 5. Пара независимых соединений: source retry, physical task race и unrelated source параллельно. Один physical winner, exact replay, payload conflict, rollback; никаких fake DONE/ACK.
-6. Проверить current WARE/actor, bound200, idempotent recovery API/terminal. Снять скриншоты и SQL decision в reports/nicora/2026-10-13.
+6. Проверить current WARE/actor, bound200, idempotent recovery API/terminal. Снять скриншоты и SQL decision в reports/retailcase/2026-10-13.
 
 Авторская evidence: migrations866/869/872, reports10; её не переписывать и не считать собственной независимой проверкой.

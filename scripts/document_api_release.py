@@ -1,7 +1,7 @@
 ﻿from pathlib import Path
 import ast,json,urllib.request,collections
 root=Path.cwd();out=root/'wiki/components/api_reference_20261014';out.mkdir(parents=True,exist_ok=True)
-index=['# Справочник Python методов и HTTP API','','[Назначение блоков](../../subprojects/nicora_system_reference.md)','','Описания методов ниже берутся из docstring, а если его нет — это прямо отмечено. Сигнатура, исходник и вызываемые методы позволяют проследить реализацию без выдуманной семантики. Статические вызовы не доказывают выполнение ветки при каждом запросе.','']
+index=['# Справочник Python методов и HTTP API','','[Назначение блоков](../../subprojects/retailcase_system_reference.md)','','Описания методов ниже берутся из docstring, а если его нет — это прямо отмечено. Сигнатура, исходник и вызываемые методы позволяют проследить реализацию без выдуманной семантики. Статические вызовы не доказывают выполнение ветки при каждом запросе.','']
 base=root/'api/wms_api_server/app';groups=collections.defaultdict(list)
 for path in sorted(base.rglob('*.py')):
  if '__pycache__' in path.parts:continue

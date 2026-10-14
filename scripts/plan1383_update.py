@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-p=Path('wiki/requirements/nikora_delivery_v55/implementation_plan.json');data=json.loads(p.read_text(encoding='utf-8'))
+p=Path('wiki/requirements/retailcase_delivery_v55/implementation_plan.json');data=json.loads(p.read_text(encoding='utf-8'))
 data['planRevision']=66
 data['firstChange']='NI04.2 scale archive delivered report52; NI02.2 SQL page/index applied and HTTP verified report53. Claude C-0010 financial cycle delivered K-0015; NI07.2 navigation remains with Claude. Continue confirmed warehouse gaps, preserving existing owners.'
 data['sqlPerformancePolicy']={'boundedDatabaseReads':True,'indexRequiresPlanEvidence':True,'noPythonOnlyPagination':True,'ownerDecision':'2026-10-14'}

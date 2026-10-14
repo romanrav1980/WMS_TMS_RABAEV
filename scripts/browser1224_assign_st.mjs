@@ -24,6 +24,6 @@ try{
  if(errors.length)throw Error(errors.join(';'));
  ctx.state='ASSIGNED_REPEATED';ctx.repeat=repeat;fs.writeFileSync('tmp/context1224.json',JSON.stringify(ctx,null,2));
  await page.locator('#sapAssignment').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/61-auto-st-assigned-existing-trip.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/61-auto-st-assigned-existing-trip.png'});
  console.log('PASS1224 original UI/API assigned SAP_2135→33571 and repeated original request; native counts/stock verify next');
 }finally{await browser.close();}

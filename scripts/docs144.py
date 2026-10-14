@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-page="wiki/database/nicora_ni081_task_scope_20261010.md";out={}
+page="wiki/database/retailcase_ni081_task_scope_20261010.md";out={}
 out[page]="""# NI08.1 — текущий склад пользователя задания,144
 
 Resources owns assignment/execution policy; inventory owns root posting/UOW. Before edits selected existing RRL_TASK_RESOURCE_POLICY and task_completion as integration points; current policy preserved including released-wave fence and started-step shift completion. Native RRL_WAREHOUSE_TASK_ACCESS is sole active-user/warehouse rule: RUSERS.ID/DELETED/WARE_ID and GLOBAL_ADMIN, access to either actual FROM_WARE_ID or TO_WARE_ID. Unknown warehouse denied except active global administrator. No second resource registry.
@@ -15,13 +15,13 @@ SQL scope call mean1.035/5.674ms, one initial13.409ms cursor. Decision retain PK
 
 Full NI08.1 still has physical range/approval/drain, joint schedule validation and warehouse calendar/independent acceptance open.
 """
-out["wiki/index.updated.tmp"]="- [Склад пользователя складского задания](database/nicora_ni081_task_scope_20261010.md):144 current active actor/assignee WARE, root replay authorization, old829 replay exact/no new quantity.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
+out["wiki/index.updated.tmp"]="- [Склад пользователя складского задания](database/retailcase_ni081_task_scope_20261010.md):144 current active actor/assignee WARE, root replay authorization, old829 replay exact/no new quantity.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
 for p,line in [
 ("wiki/log.md","2026-10-10:144 native current task scope RUSERS active/WARE_ID/either endpoint/GLOBAL_ADMIN reused in original resource policy, assign/start/cancel and physical root before replay+after locks. Six statements/live VALID after WARE_ID compile correction. Existing135 actor/assignee foreign and inactive/current changed ware refusals; user changes rolled back; original DONE829 HTTP inner result exact/journal1 qty3 unchanged. Scope1.035/5.674ms/initial13.409 kept keyed reads; no load claim. Full sprint still open."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","Ticket144 current warehouse task actor/assignee scope and completion replay rights implemented; see database/nicora_ni081_task_scope_20261010.md. No new assignment engine.")
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md","Ticket144 current warehouse task actor/assignee scope and completion replay rights implemented; see database/retailcase_ni081_task_scope_20261010.md. No new assignment engine.")
 ]:
  out[p]=Path(p).read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":
   row.setdefault("implementedSlices",[]).append("144 current actor/assignee warehouse task scope and authorized immutable replay")

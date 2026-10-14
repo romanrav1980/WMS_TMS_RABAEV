@@ -42,25 +42,25 @@ Gate:717файлов,0циклов,75исключений legacy-debt;24тест
 
 Сценарий для продолжения: tmp/context1238.json, STAGING_DONE. Генераторы приёмки/заказа повторно не запускать.
 """
-files["reports/nicora/2026-10-13/43-b01-receiving-staging.md"]=report
-files["wiki/components/nicora_b01_receiving_staging_20261014.md"]="""# B01: приёмка — волна — грузовая зона
-14.10.2026, checkpoint1261. [Отчёт43](../../reports/nicora/2026-10-13/43-b01-receiving-staging.md).
+files["reports/retailcase/2026-10-13/43-b01-receiving-staging.md"]=report
+files["wiki/components/retailcase_b01_receiving_staging_20261014.md"]="""# B01: приёмка — волна — грузовая зона
+14.10.2026, checkpoint1261. [Отчёт43](../../reports/retailcase/2026-10-13/43-b01-receiving-staging.md).
 Заказ2135, SAP-поставка25240, склад9807; две паллеты18EA; размещение1163/1164 DONE; план2191 36/36/0; волна559 LAUNCHED, допуск подтверждён; перемещения1165/1166 DONE, физический остаток36 и резерв36 в грузовой зоне. Принтер/сканер/внешний SAP не приняты.
 
 Используются существующие планировщик, волна, задания, Root и журнал. Новый wave_staging переносит прежний SQL выпуска в одну транзакцию, проверяет warehouse и неизменность назначения уже выданного задания; не новый исполнитель запасов. Новый order-wave-planning управляет этими API с сохранением команд.
-[Точный артикул1248](../database/nicora_ni033_pick_article_identity_20261014.md) исправляет UPPER в ACTIVE. Ошибочные2190/558 отменены, сохранены в истории.
+[Точный артикул1248](../database/retailcase_ni033_pick_article_identity_20261014.md) исправляет UPPER в ACTIVE. Ошибочные2190/558 отменены, сохранены в истории.
 
 Выбор места: агрегация уникальных паллет по ячейке вместо коррелированного полного сканирования. Текущий read-only замер393,62мс; фактические приёмки/размещения прошли. SQL_ID/buffers недоступны, нагрузочная приёмка не заявлена.
 
 Открытый следующий разрыв: плановая укладка СТ A18+B6/B12, физический fullpal A18/B18. Нужна явная штатная корректировка укладки/согласование или пересборка. Подготовленные СТ и физическая история не подменяются автоматически. B01 и NI02.2 остаются открыты.
 """
-p=Path("wiki/database/nicora_ni033_pick_article_identity_20261014.md")
-files[str(p)]=p.read_text(encoding="utf-8")+"\n1261: миграция установлена в RABAEV/orcl, USER_ERRORS пуст, новых INVALID нет.2190/558 отменены штатными командами.2191 сохраняет исходные смешанные регистры артикулов;559 запущена, твёрдые резервы18+18,1165/1166 DONE. [Отчёт43](../../reports/nicora/2026-10-13/43-b01-receiving-staging.md).\n"
-for num,name in [("NI07.2","nicora_ni072_day_overview_20261014"),("NI08.1","nicora_ni081_forecast_screen_20261014")]:
- proposal=Path("reports/nicora/2026-10-13/claude/"+num+"/wiki-update-proposal.md").read_text(encoding="utf-8")
+p=Path("wiki/database/retailcase_ni033_pick_article_identity_20261014.md")
+files[str(p)]=p.read_text(encoding="utf-8")+"\n1261: миграция установлена в RABAEV/orcl, USER_ERRORS пуст, новых INVALID нет.2190/558 отменены штатными командами.2191 сохраняет исходные смешанные регистры артикулов;559 запущена, твёрдые резервы18+18,1165/1166 DONE. [Отчёт43](../../reports/retailcase/2026-10-13/43-b01-receiving-staging.md).\n"
+for num,name in [("NI07.2","retailcase_ni072_day_overview_20261014"),("NI08.1","retailcase_ni081_forecast_screen_20261014")]:
+ proposal=Path("reports/retailcase/2026-10-13/claude/"+num+"/wiki-update-proposal.md").read_text(encoding="utf-8")
  body=proposal.split("```markdown\n",1)[1].split("```",1)[0]
  files["wiki/components/"+name+".md"]=body+"\nИнтеграция Codex1261: переданная UI-часть принята; авторские результаты Claude не объявляются независимым ревью или закрытием полного спринта. Общий offline gate после передачи PASS.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");plan=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");plan=json.loads(p.read_text(encoding="utf-8"))
 plan["firstChange"]="B01 actual order2135/receipt25240/plan2191/wave559/tasks1165+1166 DONE: reconcile prepared mixed ST layout with whole physical pallets using existing owners, then QC/loading. No stock bypass."
 plan["currentSprint"]="NI02.2"
 for inc in plan["increments"]:
@@ -68,12 +68,12 @@ for inc in plan["increments"]:
  if ident in ["NI01.1","NI03.3","NI07.2","NI08.1"]:
   inc.setdefault("implementedSlices",[]).append({"NI01.1":"1261: actual SAP-basis receipt36EA + putaway1163/1164; placement weight aggregation; report43.","NI03.3":"1261: original wave559 launched/released; whole pallet tasks1165/1166 DONE; atomic staging and exact article migration1248; report43.","NI07.2":"Claude K-0002: day overview UI, stale response protection, explainers and mobile layout; report/claude/NI07.2; full sprint remains open.","NI08.1":"Claude K-0004: explainable forecast UI, explicit projection, no fabricated workforce demand; server norm mapping remains K-0003."}[ident])
 files[str(p)]=json.dumps(plan,ensure_ascii=False,indent=2)+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.md");s=p.read_text(encoding="utf-8")
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.md");s=p.read_text(encoding="utf-8")
 old="Текущий NI02.2: серверная проверка уже использует тип адресата, для CASE — фактический тип. Целая STOCK-паллета сохраняет физический тип через единое ядро без изменения количества. Следующий шаг — показать плановый тип в существующей сборке и дать явно переопределить фактический тип."
-new="Текущий B01/NI02.2: тип адресата и его явное переопределение в CASE реализованы. Заказ2135 прошёл приёмку36EA, размещение, план2191, запуск/допуск волны559 и перемещения1165/1166 в грузовую зону. Следующий шаг — согласовать плановую смешанную укладку СТ с фактическими целыми паллетами, затем контроль и погрузка. [Отчёт43](../../../reports/nicora/2026-10-13/43-b01-receiving-staging.md).\n\nClaude передал UI-части NI07.2 (обзор дня) и NI08.1 (объяснимый прогноз). Полные спринты остаются открыты: ресурсный расчёт NI08.1 требует явного серверного сопоставления нормативов. Текущее поручение продолжается до14.10.2026 18:45MSK или завершения всех спринтов."
+new="Текущий B01/NI02.2: тип адресата и его явное переопределение в CASE реализованы. Заказ2135 прошёл приёмку36EA, размещение, план2191, запуск/допуск волны559 и перемещения1165/1166 в грузовую зону. Следующий шаг — согласовать плановую смешанную укладку СТ с фактическими целыми паллетами, затем контроль и погрузка. [Отчёт43](../../../reports/retailcase/2026-10-13/43-b01-receiving-staging.md).\n\nClaude передал UI-части NI07.2 (обзор дня) и NI08.1 (объяснимый прогноз). Полные спринты остаются открыты: ресурсный расчёт NI08.1 требует явного серверного сопоставления нормативов. Текущее поручение продолжается до14.10.2026 18:45MSK или завершения всех спринтов."
 assert old in s;files[str(p)]=s.replace(old,new)
 p=Path("wiki/index.md");s=p.read_text(encoding="utf-8")
 s=re.sub(r"^- \[Действующее поручение Claude:.*\n","",s)
-files[str(p)]="- [B01: физическое исполнение1261](components/nicora_b01_receiving_staging_20261014.md):36EA приняты/размещены,559 запущена,1165/1166 DONE; отчёт43, укладка СТ — следующий разрыв.\n- [Claude: NI07.2 обзор](components/nicora_ni072_day_overview_20261014.md) и [NI08.1 прогноз](components/nicora_ni081_forecast_screen_20261014.md) переданы; [следующее поручение C-0004: NI07.1](../coordination/nicora-claude/CODEX_TO_CLAUDE.md), ACK ожидается.\n"+s
+files[str(p)]="- [B01: физическое исполнение1261](components/retailcase_b01_receiving_staging_20261014.md):36EA приняты/размещены,559 запущена,1165/1166 DONE; отчёт43, укладка СТ — следующий разрыв.\n- [Claude: NI07.2 обзор](components/retailcase_ni072_day_overview_20261014.md) и [NI08.1 прогноз](components/retailcase_ni081_forecast_screen_20261014.md) переданы; [следующее поручение C-0004: NI07.1](../coordination/retailcase-claude/CODEX_TO_CLAUDE.md), ACK ожидается.\n"+s
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n## 2026-10-14 ·1261 · B01 до грузовой зоны\nПриёмка25240/36EA, размещение1163/1164, точный артикул1248 installed,2191/559 и1165/1166 DONE. Новый scoped wave UI и атомарный выпуск существующих заданий; отчёт43/screens65–73. Gate717/0cycles/75debt/24tests/bothTS PASS. Интегрированы переданные UI Claude K-0002/K-0004; полные спринты не закрыты. Открыт реальный разрыв плановой и фактической укладки.\n"
 print(json.dumps(files,ensure_ascii=True))

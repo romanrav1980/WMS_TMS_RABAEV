@@ -100,10 +100,10 @@ s=s.replace(anchor,"""  if v_mode='DIRECT'and v_pending>0 and p_purpose in('PICK
 out[str(f/"004_eligibility.sql")]=s
 out[str(f/"apply.sql")]="@@001_direct.sql\n@@002_picking.sql\n@@003_launch.sql\n@@004_eligibility.sql\n"
 out[str(f/"rollback.sql")]="@@000_before_picking.sql\n@@000_before_launch.sql\n@@000_before_eligibility.sql\ndrop package RRL_DIRECT_RECEIVING_PICK;\n"
-out["wiki/database/nicora_ni042_direct_receiving_design_20261011.md"]="""# NI04.2: pick-by-line из SAP приёмки
+out["wiki/database/retailcase_ni042_direct_receiving_design_20261011.md"]="""# NI04.2: pick-by-line из SAP приёмки
 199 existing planner CASE source DIRECT/current admitted SAP receive pallet uses no rack target/no replenishment; existing source HARD/CASE roots remain. Native launch declares original putaway task ROW20 and reserved claim SLOT40 resources, freezes original task/status/QTY/claim, then atomically cancels only unstarted SAP placement and frees reserved target claim. Original task quantity/history plus canonical resolved plan retained, physical P unaffected. IN_PROGRESS placement blocks DIRECT planning/admission. No marking bypass/current warehouse/expiry/quarantine/codes preserved. Full-source FULL_PALLET path unchanged.200 explicit current residual putaway replan needs original admitted/current physical/source version and no other active direct commitments.
 """
-for p,line in[("wiki/index.md","- [Проект pick-by-line](database/nicora_ni042_direct_receiving_design_20261011.md):199 existing DIRECT source/existing plan/HARD/CASE/unstarted putaway ownership; residual200."),
+for p,line in[("wiki/index.md","- [Проект pick-by-line](database/retailcase_ni042_direct_receiving_design_20261011.md):199 existing DIRECT source/existing plan/HARD/CASE/unstarted putaway ownership; residual200."),
 ("wiki/log.md","2026-10-11:199 confirmed DIRECT planning gap (always rack target→unneeded replenishment). Planned existing source CASE, atomic unstarted SAP putaway cancellation/declared locks and source IN_PROGRESS refusal; current residual placement200 next.")]:
  path=Path(p);out[p]=path.read_text(encoding="utf-8")+"\n"+line+"\n"
 print(json.dumps(out,ensure_ascii=True))

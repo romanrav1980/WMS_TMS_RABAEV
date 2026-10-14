@@ -1,7 +1,7 @@
 exec(open('scripts/ni063_slow_queries.py',encoding='utf-8').read().split('with oracledb.connect',1)[0])
 from time import perf_counter
 import httpx
-folder=Path('reports/nicora/2026-10-13/codex/NI081');trip=json.loads((folder/'fixture.json').read_text(encoding='utf-8'))['trip_id'];evidence={}
+folder=Path('reports/retailcase/2026-10-13/codex/NI081');trip=json.loads((folder/'fixture.json').read_text(encoding='utf-8'))['trip_id'];evidence={}
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute("select PASS from RUSERS where ID='admin'");secret=q.fetchone()[0]
  with httpx.Client(auth=('admin',secret),timeout=20)as client:

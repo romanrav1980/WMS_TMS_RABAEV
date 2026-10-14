@@ -8,4 +8,4 @@ Column SOURCE_PICK_MODE belongs to existing warehouse SKU rule: AFTER_PUTAWAY de
 Current runtime manifest includes schema startup before contracts and the current policy/component source.
 
 Real dev case: scripts/ni031_eligibility_cases.py; uses tagged QA metadata and root commands. No production/SAP/state service calls.
-Details and limits: wiki/database/nicora_ni031_stock_eligibility_20261009.md.
+Details and limits: wiki/database/retailcase_ni031_stock_eligibility_20261009.md.

@@ -3,7 +3,7 @@ from datetime import datetime
 from uuid import uuid4
 from time import perf_counter
 from app.modules.platform.public import read_oracle_json
-outdir=Path('reports/nicora/2026-10-13/codex/NI081');file=outdir/'fixture.json'
+outdir=Path('reports/retailcase/2026-10-13/codex/NI081');file=outdir/'fixture.json'
 assert not file.exists(),'Fixture already allocated; resume explicitly'
 tag=uuid4().hex[:10];base='NI081.BASE.'+tag;shop='NI081.SHOP.'+tag;ware=9102
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:

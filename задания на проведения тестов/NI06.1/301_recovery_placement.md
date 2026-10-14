@@ -1,4 +1,4 @@
 # Qwen301: recovered stock placement
-Read wiki/database/nicora_ni061_recovery_placement_20261011.md and tmp/context301_291/_292. Tasks already DONE/P2 outbound; do not rerun source/receipt births or initial rollback phase.
+Read wiki/database/retailcase_ni061_recovery_placement_20261011.md and tmp/context301_291/_292. Tasks already DONE/P2 outbound; do not rerun source/receipt births or initial rollback phase.
 Exact OPID/body -> same result/no move. Changed payload/current foreignWARE/revoked rights/unavailable cell/unitversion conflict denies. Own fresh case plan outerrollback no task; TASK_COMPLETE rollback restores receivingP and units/clears placement/outbox. Wrong scans/partial quantity/otherUID deny. Same race plan one active task; completion serialized. Original departedTT retained. No customer/Gov credit.
 Review common helper ordinary interware positive and capacity/thermal/slot denials. Analyze longest queries. Report independent execution separately from static review.

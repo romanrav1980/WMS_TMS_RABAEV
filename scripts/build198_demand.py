@@ -86,10 +86,10 @@ s=s.replace("case when waived_qty>0 then","case when choice_pending>0 then 'UNAL
 out[str(f/"002_pool.sql")]=s
 out[str(f/"apply.sql")]="@@001_reader.sql\n@@002_pool.sql\n"
 out[str(f/"rollback.sql")]="@@000_before_pool.sql\ndrop package RRL_WEIGHT_CHOICE_DEMAND_READ;\n"
-out["wiki/database/nicora_ni042_weight_choice_demand_design_20261011.md"]="""# NI04.2: потребность после утверждённой целой коробки
+out["wiki/database/retailcase_ni042_weight_choice_demand_design_20261011.md"]="""# NI04.2: потребность после утверждённой целой коробки
 198 pure existing pool reader: current USED choice with original active PT and SOFT/HARD suppresses only unallocated demand as pending intent; exposes separate pending quantity, no physical fact/shipment. Completed exact selected CASE/PT mass under preserved approval may waive own remaining gap, original requested unchanged. Current full order SKU requested equals frozen approval, current picked total equals frozen previous actual+box net; original CASE notcancelled/physical key/net/line mass proof required. LAST_WHOLE_BOX explicit exception allows outsidepct; WITHIN must remaininside. Cancel/return PT invalidates pending+waiver, original demand reopens. No balances updated.
 """
-for p,line in[("wiki/index.md","- [Проект потребности после целой коробки](database/nicora_ni042_weight_choice_demand_design_20261011.md):198 pure pending vs fulfilled deviation/current original order/return reopening."),
+for p,line in[("wiki/index.md","- [Проект потребности после целой коробки](database/retailcase_ni042_weight_choice_demand_design_20261011.md):198 pure pending vs fulfilled deviation/current original order/return reopening."),
 ("wiki/log.md","2026-10-11:198 design original demand/pending approved box vs actual completed deviation; current task/source/order proof and return invalidation; no physical effect.")]:
  path=Path(p);out[p]=path.read_text(encoding="utf-8")+"\n"+line+"\n"
 print(json.dumps(out,ensure_ascii=True))

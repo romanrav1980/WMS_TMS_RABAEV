@@ -6,7 +6,7 @@ from app.modules.transport.public import ingest_gps
 from app.routers.gps import GpsTrackRequest
 from pydantic import ValidationError
 from time import perf_counter
-folder=Path('reports/nicora/2026-10-13/codex/GEOFENCES');result={}
+folder=Path('reports/retailcase/2026-10-13/codex/GEOFENCES');result={}
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.callproc('RRL_STOCK_CONFIG_API.begin_change',['admin','warehouse_settings_edit'])
  try:vid=int(q.callfunc('RRL_TR_VEHICLE_ADD',oracledb.DB_TYPE_NUMBER,['GPSQA'+uuid4().hex[:8],'20',10,2,1,None]))

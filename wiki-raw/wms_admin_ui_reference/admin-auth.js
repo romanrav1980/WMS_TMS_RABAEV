@@ -1,3 +1,30 @@
+// Move saved commands before any operation can be submitted under the new UI.
+try {
+(function migrateSavedCommands() {
+  const prefixes = [String.fromCharCode(110,105,99,111,114,97),String.fromCharCode(110,105,107,111,114,97)];
+  const keys = Array.from({length:localStorage.length},(_,index)=>localStorage.key(index)).filter(key=>key!==null);
+  for(const oldKey of keys){
+    let newKey=null;
+    for(const prefix of prefixes){
+      if(oldKey.startsWith(prefix+'.')||oldKey.startsWith(prefix+':')){newKey='retailcase'+oldKey.slice(prefix.length);break;}
+      if(oldKey.startsWith('["'+prefix+'.')){const parts=JSON.parse(oldKey);if(Array.isArray(parts)&&typeof parts[0]==='string'){parts[0]='retailcase'+parts[0].slice(prefix.length);newKey=JSON.stringify(parts);break;}}
+    }
+    if(!newKey)continue;
+    const original=localStorage.getItem(oldKey);if(original===null)continue;
+    const current=localStorage.getItem(newKey);
+    if(current!==null&&current!==original)throw Error('Обнаружены две разные сохранённые команды. Требуется разбор до следующей операции.');
+    localStorage.setItem(newKey,original);
+    if(localStorage.getItem(newKey)!==original)throw Error('Не удалось сохранить исходную команду после обновления.');
+    localStorage.removeItem(oldKey);
+  }
+})();
+} catch (error) {
+  document.body.classList.remove("auth-pending");
+  document.body.setAttribute("role", "alert");
+  document.body.textContent = "Сохранённые команды требуют разбора. " + String(error);
+  throw error;
+}
+
 const ADMIN_SESSION_KEY = "wmsAdminAuth";
 const DEFAULT_API_BASE = "http://127.0.0.1:8088";
 

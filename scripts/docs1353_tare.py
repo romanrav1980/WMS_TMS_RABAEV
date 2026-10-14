@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 files={}
-report="reports/nicora/2026-10-13/49-b05-tare-workspace.md"
+report="reports/retailcase/2026-10-13/49-b05-tare-workspace.md"
 files[report]="""# NI06.3 — выдача и двухсторонний возврат тары
 2026-10-14, dev RABAEV/orcl. Доработан существующий TarePanel, прежний Tare/useTare API и Oracle-журнал сохранены.
 
@@ -29,18 +29,18 @@ Browser errors=[]; tmp/result1349.json, tmp/verify1351.json. Скрипты1349/
 SQL: очередь cold93.295мс/595buffers, warm1.803мс/34; баланс47.241мс/31buffers; native accept3.359мс/4. Решение inventory: сохранить текущие ключи и bounded100/200; индексы не добавлять, пересмотреть при регулярном>500мс.
 Это авторский dev-проход обычной тары. Повреждения/списание, все варианты долгов и независимая/промышленная приёмка не объявлены завершёнными.
 """
-page="wiki/components/nicora_b05_tare_workspace_20261014.md"
+page="wiki/components/retailcase_b05_tare_workspace_20261014.md"
 files[page]="# NI06.3: водитель, магазин и возврат тары\n\n1347–1353. Существующий TarePanel: история/подписи/направления/баланс и строгий ответ сохранённой команды. Реальный dev-цикл6со склада→6магазину→4обратно, итог4/2/0, одна приёмка после потери ответа, товарных событий0.\n\n[Отчёт49](../../"+report+"). Собственный тестовый магазин получил политику возврата7дней после корректного отказа без политики; это не изменение промышленного правила. Остальные варианты/независимая приёмка открыты.\n"
-p=Path("wiki/index.md");files[str(p)]="- [B05: двухсторонняя тара1353](components/nicora_b05_tare_workspace_20261014.md): существующий мобильный UI/история/баланс, dev6→6→4→4, итог4+2+0, report49.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");files[str(p)]="- [B05: двухсторонняя тара1353](components/retailcase_b05_tare_workspace_20261014.md): существующий мобильный UI/история/баланс, dev6→6→4→4, итог4+2+0, report49.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-14 ·1353: B05 tare UI/report49, реальные раздельные подписи/потеря ответа/один журнал/товарных событий0. Межскладской UI gate1346 PASS735/0cycles/74debt/24tests/обаTS, encodingPASS.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"));d["planRevision"]=63;d["currentSprint"]="NI06.2";d["firstChange"]="B05 ordinary tare circulation delivered (report49). Continue return decision/custody/warehouse operator path; Claude C-0005 owns finance basis."
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"));d["planRevision"]=63;d["currentSprint"]="NI06.2";d["firstChange"]="B05 ordinary tare circulation delivered (report49). Continue return decision/custody/warehouse operator path; Claude C-0005 owns finance basis."
 for item in d["increments"]:
  if item["id"]=="NI06.3":
   item.setdefault("implementedSlices",[]).append("1347–1353 existing mobile tare history/signatures/directions/scoped balance/exact response, real6 issued/store6/return4/warehouse4, one lost-response replay, goods events0; report49.")
   item["remainingDeliveryWork"]="Довести операторский путь повреждений и независимого решения, полную видимость долгов; обычная выдача/двухсторонний возврат через мобильный UI подтверждены report49."
  if item["id"]=="NI06.1":item["remainingDeliveryWork"]="Общий маршрут и переходы к существующим формам реализованы report48; довести составные/частичные варианты и их операторские продолжения."
 files[str(p)]=json.dumps(d,indent=2,ensure_ascii=False)+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.md");s=p.read_text(encoding="utf-8").replace("Редакция 59","Редакция 63")
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.md");s=p.read_text(encoding="utf-8").replace("Редакция 59","Редакция 63")
 s=s.replace("Следующий блок B02/NI04.2–NI04.3: способы отбора и маркировка.","B02: маркированный CASE5EA/10кодов доведён до WAIT_CONTROL(report45); B03: магазин принял36EA(report46).")
 s=s.replace("Полные спринты остаются открыты: ресурсный расчёт NI08.1 требует явного серверного сопоставления нормативов.","NI08.1 получил явное серверное сопоставление нормативов и расчёт часов(report47). B04 получил единый маршрут межскладских операций(report48); B05 — мобильную выдачу/возврат тары с реальной цепочкой и балансом(report49). Текущий блок NI06.2 — операторский путь товарного возврата. Полные спринты остаются открыты для перечисленных остаточных вариантов и отдельной приёмки.")
 files[str(p)]=s

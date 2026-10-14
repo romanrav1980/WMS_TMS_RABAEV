@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 f=Path("db/migrations/2026-10-11_ni052_unload_units");out={}
-out["wiki/database/nicora_ni052_unload_units_design_20261011.md"]="""# NI05.2: возврат тех же единиц при выгрузке
+out["wiki/database/retailcase_ni052_unload_units_design_20261011.md"]="""# NI05.2: возврат тех же единиц при выгрузке
 Ticket213 extends212/NS45 source dispatch unload before vehicle reassignment. No new database family, transaction owner unchanged. Private existing UNIT owner receives restore_issued: same original frozen leaf set reconstructed from retained issued units at UID/cell. Canonical key/quantity/base-UOM hash must equal original physical_before signature and sum equal original journal quantity. Current issued status/null HARD/current unit versions captured; sorted UNIT60 locks declared before execution. Under locks recheck original fingerprint/current versions; restore AVAILABLE/new original-owner HARD, increment versions, keep identities and immutable codes. Missing original proof, changed composition, moved/reused unit, duplicate key/quantity mismatch refuses atomically. Ordinary empty set remains supported; marking now enabled requires original captured set. No government state reversal inferred: predeparture only/no accepted tare custody, original sender legal facts stay history and existing marking QC gates reapply. P/H/units/CASE/FF/load/outbox one native TX. Fresh checkpoints, inverse only without recovery history, otherwise forward repair.
 """
 s=(f/"000_before_unit.sql").read_text(encoding="utf-8")

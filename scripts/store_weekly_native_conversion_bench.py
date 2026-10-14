@@ -2,7 +2,7 @@ exec(open('scripts/ni063_slow_queries.py',encoding='utf-8').read().split('with o
 import time
 p=Path('db/migrations/2026-10-14_ni081_store_weekly_windows/001_window_rules.sql')
 src=p.read_text(encoding='utf-8');new=src[src.index(' type offsets_map'):src.index(' procedure material',src.index(' type offsets_map'))]
-old=Path('reports/nicora/2026-10-13/codex/STORE_WEEKLY/instant_before.sql').read_text()
+old=Path('reports/retailcase/2026-10-13/codex/STORE_WEEKLY/instant_before.sql').read_text()
 results=[]
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  c.call_timeout=120000;q=c.cursor()
@@ -17,4 +17,4 @@ with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle
    q.execute('declare v_result date;failed boolean:=false;'+code+''' begin
     begin v_result:=instant(to_date(:wall,'YYYY-MM-DD HH24:MI'),'Europe/Berlin');exception when others then if sqlcode=-20886 then failed:=true;else raise;end if;end;
     if not failed then raise_application_error(-20999,'DST_NOT_REJECTED');end if;end;''',wall=wall)
-print(json.dumps(results));Path('reports/nicora/2026-10-13/codex/STORE_WEEKLY/conversion_native.json').write_text(json.dumps({'measurements':results,'dst_fold_gap_both_variants':'PASS','writes':False},indent=2))
+print(json.dumps(results));Path('reports/retailcase/2026-10-13/codex/STORE_WEEKLY/conversion_native.json').write_text(json.dumps({'measurements':results,'dst_fold_gap_both_variants':'PASS','writes':False},indent=2))

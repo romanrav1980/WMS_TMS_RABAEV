@@ -16,8 +16,8 @@ m["additional_scripts"].append("../2026-10-11_ni042_stack_stage/002_capture.sql"
 m["required_columns"]["RRL_SKU_RECEIPT_POLICY"].append("STACK_STAGE")
 m["required_columns"].setdefault("RRL_CASE_PICK_LINE",[]).extend(["STACK_STAGE","STACK_POLICY_VERSION"])
 out[str(p)]=json.dumps(m,indent=2)+"\n"
-out["wiki/database/nicora_ni042_stack_stage_20261011.md"]="""# NI04.2: основание, середина, верх выданного места
-210 APPLIED; [[nicora_ni042_stack_stage_design_20261011]]; [[nicora_ni042_route_sequence_20261011]].
+out["wiki/database/retailcase_ni042_stack_stage_20261011.md"]="""# NI04.2: основание, середина, верх выданного места
+210 APPLIED; [[retailcase_ni042_stack_stage_design_20261011]]; [[retailcase_ni042_route_sequence_20261011]].
 Existing WMS SKU receiving-policy/card/version/audit extended STACK_STAGE BASE/MAIN/TOP, optional old-client input preserves current stage. Default MAIN preserves legacy behavior; no inference from ABC or weight threshold. Existing CASE line gets authoritative stage+source policy version at insert through metadata-only trigger, update immutable. Quantity triggers remain disabled; stock sole writer unchanged.
 Existing native route guard validates nondecreasing stages along issued physical rank before first pick and again under CASE mutex, lower stage first at same point. Conflicting TOP before BASE refuses409; never sorts weights into backward route. Current SKU changes do not alter issued stage/source/rank. UI SKU stage selection plus TSD next-point stage, CASE reader returns captured fields.
 
@@ -27,11 +27,11 @@ Negative QC210F4094872C8/WARE35993160/revision312/CASE1108/wave462: issued TOP t
 Six SKU-policy-dependent package bodies invalidated by additive DDL, explicitly recompiled (004_recompile.sql); final current INVALID/errors check required. Route layout groupedquery3a7dswf69g8xt .868ms/6 and nextstage4yd9v639cfy0t1.536ms/5: keep CASE-key index/200bound, fulfillment owner evaluate at load. Recovery preserves explicit configured/issued stages; rollback refuses with staged history, restore matching application source checkpoint before compatible SQL rollback.
 """
 for path,line in [
-("wiki/index.md","- [Этап укладки выданного CASE](database/nicora_ni042_stack_stage_20261011.md):210 versioned SKU BASE/MAIN/TOP frozen at issue; correct route picks, inverse route refused before stock; existing CASE owner."),
+("wiki/index.md","- [Этап укладки выданного CASE](database/retailcase_ni042_stack_stage_20261011.md):210 versioned SKU BASE/MAIN/TOP frozen at issue; correct route picks, inverse route refused before stock; existing CASE owner."),
 ("wiki/log.md","2026-10-11:210 WMS SKU stacking-stage card/version/audit and frozen CASE line metadata/native stage-route guard applied. Actual1107 BASE→TOP1+1/replay/future policy preserved;1108 TOP→BASE409/zero pick. Native cleanup correct emptyCASE-before-tare ordering/protected13520/20. Six dependencies recompiled; aggregate .868/1.536ms retain CASE index/200bound."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni04_2.md","11.10.2026:210 SKU stage BASE/MAIN/TOP and sourceversion frozen at CASE issue; original one-way route must fit foundation before uppergoods, conflict refused before stock instead of backwards route. Actual correct two-cell1+1/replay/issuedstage afterfuturechange and inverse409/cleanup. Master-data operator classifies physical foundation; engineering loadbearing/pilot not inferred.")]:
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni04_2.md","11.10.2026:210 SKU stage BASE/MAIN/TOP and sourceversion frozen at CASE issue; original one-way route must fit foundation before uppergoods, conflict refused before stock instead of backwards route. Actual correct two-cell1+1/replay/issuedstage afterfuturechange and inverse409/cleanup. Master-data operator classifies physical foundation; engineering loadbearing/pilot not inferred.")]:
  p=Path(path);out[path]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"));next(x for x in j["increments"]if x["id"]=="NI04.2").setdefault("implementedSlices",[]).append("210 versioned SKU BASE/MAIN/TOP setting and immutable issued CASE stage; native one-way stage compatibility/lower samepoint stage first; future settings do not rewrite issued cargo")
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"));next(x for x in j["increments"]if x["id"]=="NI04.2").setdefault("implementedSlices",[]).append("210 versioned SKU BASE/MAIN/TOP setting and immutable issued CASE stage; native one-way stage compatibility/lower samepoint stage first; future settings do not rewrite issued cargo")
 out[str(p)]=json.dumps(j,ensure_ascii=True,indent=2)+"\n"
 roots=[p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md")]
 if roots:out[str(roots[0]/"NI04.2"/"210_stacking_stage.md")]="""# Qwen:210

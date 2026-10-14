@@ -8,10 +8,10 @@ window.cpCaseDraft=(()=>{
  host.append(note,restore,archive);document.getElementById('cpTsdMarking').before(host);
  const ids=['cpTsdScanCell','cpTsdScanProduct','cpTsdScanBox','cpTsdScanContainer','cpTsdFactQty'];
  const identity=()=>JSON.stringify([cpTsdApiBase(),cpTsdUser()]);
- const storageKey=(task,line)=>JSON.stringify(['nicora.caseInputDraft',cpTsdApiBase(),cpTsdUser(),task,line]);
+ const storageKey=(task,line)=>JSON.stringify(['retailcase.caseInputDraft',cpTsdApiBase(),cpTsdUser(),task,line]);
  const canonical=value=>JSON.stringify(value,(_,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.keys(v).sort().map(k=>[k,v[k]])):v);
  const active=()=>current&&current.identity===identity()&&current.task===cpTsd.task?.case_pick_task_id&&current.line===cpTsdCurrentLine()?.case_pick_line_id;
- function pending(){return Boolean(localStorage.getItem(JSON.stringify(['nicora.casePickIntent',cpTsdApiBase(),cpTsdUser()])));}
+ function pending(){return Boolean(localStorage.getItem(JSON.stringify(['retailcase.casePickIntent',cpTsdApiBase(),cpTsdUser()])));}
  function fields(){
   const result=ids.map(id=>({key:id,element:document.getElementById(id)}));
   for(const root of ['cpTsdMarking','cpTsdWeightedBox'])for(const element of document.querySelectorAll('#'+root+' [data-system][data-profile]'))

@@ -2,7 +2,7 @@
   "use strict";
   let proposal = null, busy = false;
   const e = id => document.getElementById(id);
-  const key = () => JSON.stringify(["nicora.partialShipmentLayout", cpTsdApiBase(), cpTsdUser()]);
+  const key = () => JSON.stringify(["retailcase.partialShipmentLayout", cpTsdApiBase(), cpTsdUser()]);
   const saved = () => JSON.parse(localStorage.getItem(key()) || "null");
   function pendingState() {
     const pending = saved();

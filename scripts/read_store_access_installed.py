@@ -1,6 +1,6 @@
 ﻿exec(open('scripts/ni063_slow_queries.py',encoding='utf-8').read().split('with oracledb.connect',1)[0])
 import hashlib
-folder=Path('reports/nicora/2026-10-13/codex/STORE_ACCESS');bundle=Path('db/migrations/2026-10-14_ni022_store_access_dimensions');manifest={'source_files':{p.name:hashlib.sha256(p.read_bytes()).hexdigest()for p in bundle.glob('*.sql')}}
+folder=Path('reports/retailcase/2026-10-13/codex/STORE_ACCESS');bundle=Path('db/migrations/2026-10-14_ni022_store_access_dimensions');manifest={'source_files':{p.name:hashlib.sha256(p.read_bytes()).hexdigest()for p in bundle.glob('*.sql')}}
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute("select TEXT from USER_SOURCE where NAME='RRL_STORE_ACCESS_RULES'and TYPE='PACKAGE BODY'order by LINE");source=''.join(x[0]for x in q.fetchall());assert source.count('leading(inputs) use_nl(p) index(p)')==2;manifest['installed_body_sha256']=hashlib.sha256(source.encode()).hexdigest();manifest['lookup_hints']=2
  q.execute("select NAME,LINE,TEXT from USER_ERRORS where NAME in('RRL_STORE_ACCESS_RULES','RRL_TRANSPORT_PLAN_RULES','RRL_STOCK_HU_LOAD_CORE','RRL_STOCK_TRIP_DEPART_CMD')");manifest['errors']=q.fetchall();assert not manifest['errors']

@@ -22,7 +22,7 @@
     "db/migrations/2026-10-13_ni072_case_wait/verify.sql": "7796ee5b18f8477c1acc8a9afdf87ad5f38ac50f4ec3992c24dd14499f8301d3",
     "api/wms_api_server/app/modules/inventory/infrastructure/task_completion.py": "9c21bdfc2b3f90f7b2863ecc8be3c64c2937b390a511e7157857e112c6a28314",
     "db/migrations/2026-10-13_ni072_case_wait/009_ledger.sql": "d45ef722f9ce8740f7ab82bfde2258cf8d10a0831447af4c2d2ed563d89e2def",
-    "wiki/database/nicora_ni072_case_wait_20261013.md": "6cfc206a9116bcf3327a54511f51ac2d34694f8b4c483ac7b8c45e20afcaee51",
+    "wiki/database/retailcase_ni072_case_wait_20261013.md": "6cfc206a9116bcf3327a54511f51ac2d34694f8b4c483ac7b8c45e20afcaee51",
     "wiki/index.md": "1f0e296dcc98f2e1e07acd28bcd0ab2607d417db6c0ae667e214f0e43e6615b3",
     "wiki/log.md": "2b6ce5a65de4a488873a5088e593a566998619079910494846a80e6962cb6d1e",
     "db/migrations/2026-10-13_ni072_case_wait/fix961.sql": "44de618850d89c7b16a04a352fef91e3221e791b4376aba352c41a180288be9e",

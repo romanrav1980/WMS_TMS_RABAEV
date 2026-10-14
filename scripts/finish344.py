@@ -7,7 +7,7 @@ for dirname,names in [("2026-10-12_ni061_marked_consolidation",["001_units.sql",
   entry="../"+dirname+"/"+f
   if entry not in m["additional_scripts"]:m["additional_scripts"].append(entry)
 out[p.as_posix()]=json.dumps(m,indent=2)+"\n"
-page="wiki/database/nicora_ni061_marked_consolidation_20261012.md"
+page="wiki/database/retailcase_ni061_marked_consolidation_20261012.md"
 out[page]="""# Маркированные товары в одном межскладском верхнем месте
 333 и339 APPLIED/liveVALID. Тот же журнал327 OP+ST/отдельные исходящие события, прежние SHIPPING_CORE/QC/Root/HU_LOAD и STORE_RECEIPT. Несколько маркированных STOCK листьев в CONTAINER-only дереве сохраняют отдельный физический unit fingerprint каждого листа; исходный архив целиком сверяется с APPLIED HU_SHIP. Сумма unit количества равна количеству своего листа, общий physical_unit_count равен сумме всех листьев. Повторная birth отсутствует.
 
@@ -21,11 +21,11 @@ Actual340–344: первый SKU два профиля(3units/6codes), втор
 
 SQL решение: exact per-leaf source unit/profiles queries ограничены UID, system/profile и immutable birth; текущие JSON profile joins требуют warm измерения, owner inventory. Для большого дерева batch projection per-leaf profileproof — backlog, без заявления миллионных операций на dev.
 """
-p=Path("wiki/index.md");out[p.as_posix()]="- [Маркированная консолидация по карточкам SKU](database/nicora_ni061_marked_consolidation_20261012.md):333–344 twoST/oneTOP/6units, matrices2+1/9codes, perlotSTORE3each/staleversions denied.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");out[p.as_posix()]="- [Маркированная консолидация по карточкам SKU](database/retailcase_ni061_marked_consolidation_20261012.md):333–344 twoST/oneTOP/6units, matrices2+1/9codes, perlotSTORE3each/staleversions denied.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\n- 12.10.2026 333/339 nativeVALID actual338 homogeneous12codes and344 heterogeneous9codes/6units/twoSKU/oneTOP→STOREboth3. Per-leaf original fingerprints/full frozenarchive/current savedcodeversions/per-unit profiles/perlot disposition. LateLOAD+STORE rollback/exactrepeat/stalecard/incompleteprofile refusal; no rebirth/FFrepeat/GovACK. Mixedordinary/marked andmulti-recovery remain guarded.\n"
-p=Path("wiki/runbooks/nicora_active_work.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\nCurrent344 native333/339VALID, serv333. Context336 deliveredmarked6EA/12codes; context342 delivered6EA/9codes/perSKUmatrices2+1/2ordersaccepted3each/P0. Factories334335340341/initial337343344admission forbidden. Source341 print old6codes labelstale actual3codes; context exactsource authoritative. Nextmixedordinary/marked, multi-recovery, groupedfirstlegSKU contract.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/execution/active/ni06_1.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\n333–344: markedmulti onward/STOCK2 actualoneTOP→STOREbothorders3; sixunits/12codes homogeneous and6units/9codes differentSKUprofiles2+1. Current savedcodeversions/perunitmatrix/perlotquantities/rollback/replay proven. Mixedordinary/marked/multi-recovery/groupedfirstlegmultiSKU/independent remain.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/runbooks/retailcase_active_work.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\nCurrent344 native333/339VALID, serv333. Context336 deliveredmarked6EA/12codes; context342 delivered6EA/9codes/perSKUmatrices2+1/2ordersaccepted3each/P0. Factories334335340341/initial337343344admission forbidden. Source341 print old6codes labelstale actual3codes; context exactsource authoritative. Nextmixedordinary/marked, multi-recovery, groupedfirstlegSKU contract.\n"
+p=Path("wiki/requirements/retailcase_delivery_v55/execution/active/ni06_1.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\n333–344: markedmulti onward/STOCK2 actualoneTOP→STOREbothorders3; sixunits/12codes homogeneous and6units/9codes differentSKUprofiles2+1. Current savedcodeversions/perunitmatrix/perlotquantities/rollback/replay proven. Mixedordinary/marked/multi-recovery/groupedfirstlegmultiSKU/independent remain.\n"
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8"))
 for x in m["increments"]:
  if x["id"]=="NI06.1":
   x["implementedSlices"].append("333–344 actual markedmultiST STOCK2/oneTOP; homogeneous12 and perSKUprofile matrices2+1/9oldcodes/6units; individual orders STOREaccepted3each/current savedversions/late rollback/replay")

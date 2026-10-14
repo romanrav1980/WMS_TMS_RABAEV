@@ -32,6 +32,6 @@ try{
  if(errors.length)throw Error(errors.join(';'));
  ctx.stage='RECEIVED';fs.writeFileSync(path,JSON.stringify(ctx,null,2));
  await page.locator('#receiptMessage').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/65-b01-sap-received.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/65-b01-sap-received.png'});
  console.log(JSON.stringify({stage:ctx.stage,receipts:ctx.receipts}));
 }finally{await browser.close();}

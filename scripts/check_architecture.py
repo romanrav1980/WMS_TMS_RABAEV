@@ -1,4 +1,4 @@
-"""NICORA architecture gate: AST boundaries, cycles and non-growing legacy debt."""
+"""RETAILCASE architecture gate: AST boundaries, cycles and non-growing legacy debt."""
 from __future__ import annotations
 import argparse
 import ast
@@ -155,9 +155,9 @@ def collect(root: Path, policy: dict) -> tuple[Counter, dict, list[str]]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--policy', type=Path, default=ROOT / 'config/architecture/nicora-policy.json')
+    parser.add_argument('--policy', type=Path, default=ROOT / 'config/architecture/retailcase-policy.json')
     parser.add_argument('--baseline', type=Path, default=ROOT / 'config/architecture/legacy-debt.json')
-    parser.add_argument('--report', type=Path, default=ROOT / 'tmp/nicora_quality/architecture.json')
+    parser.add_argument('--report', type=Path, default=ROOT / 'tmp/retailcase_quality/architecture.json')
     action = parser.add_mutually_exclusive_group()
     action.add_argument('--capture-baseline', action='store_true', help='One-time initial snapshot; refuses to replace existing debt.')
     action.add_argument('--tighten-baseline', action='store_true', help='Only remove/reduce allowances; cannot authorize new debt.')

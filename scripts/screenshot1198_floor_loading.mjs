@@ -12,9 +12,9 @@ try{
  await page.locator('#departTempProfile').filter({hasText:'Норматив тары на выезде подтверждён'}).waitFor();
  if(!await page.locator('#tripDepart').isDisabled())throw Error('Completed departure enabled');
  await page.locator('#tripSummary').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/51-physical-top-tare-proof.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/51-physical-top-tare-proof.png'});
  await page.setViewportSize({width:390,height:844});
  await page.locator('#departTempProfile').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/52-physical-top-departure-mobile.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/52-physical-top-departure-mobile.png'});
  console.log('PASS1198 actual33637/typeEU/oneTOP/departure normative proof/read-only UI screenshots');
 }finally{await browser.close();}

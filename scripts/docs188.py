@@ -14,8 +14,8 @@ m["components"]=[x.replace("../2026-10-11_ni042_weight_box_case/002_case_contrac
 m["components"].append("../2026-10-11_ni042_scale_use/003_recompile.sql");m["packages"].append("RRL_CASE_SCALE_ADMISSION")
 m["additional_scripts"].append("../2026-10-11_ni042_scale_use/001_use.sql")
 out[str(p)]=json.dumps(m,indent=2)+"\n"
-out["wiki/database/nicora_ni042_scale_use_20261011.md"]="""# NI04.2: показание весов в проводке CASE
-188 APPLIED. [[nicora_ni042_warehouse_scale_20261011]].
+out["wiki/database/retailcase_ni042_scale_use_20261011.md"]="""# NI04.2: показание весов в проводке CASE
+188 APPLIED. [[retailcase_ni042_warehouse_scale_20261011]].
 Existing CASE_PICK_CONFIRM compile adds rank70 UNIQUE WH.SCALE.USE:capture and current source/device/freshness validation; execute revalidates then inserts append-only RRL_WH_SCALE_USE inside the existing operation transaction. Unique capture PK and stock-operation unique FK prevent reuse; root TX/current canonical CASE identity/current actor checked by guard. CONFIG SHARE existing CASE fence prevents device config change during posting.
 Current task/line/content version/article/source-cell/carrier must equal archived source. Active calibrated current version/device/sender current dedicated warehouse required; measurement within120seconds. For serialized box original GS1 label must equal captured product; exactly one original physical unit/current gross with reference required; measured gross within device resolution. Existing182 net label/current HARD/marks validation remains. No half-box QC tolerance used as scale accuracy.
 Optional request field preserves previous canonical weighted requests via exclude_none. Saved operation replay precedes freshness and uses old canonical proof, so original successful retry remains possible after expiry. TSD offers archive TEST/HARDWARE choices and durable original intent.
@@ -23,9 +23,9 @@ Own scripts/ni042_warehouse_scale_use_case.py QW1883C584FA1E1/WARE23954767/wave4
 Architecture544/0cycles/76debt PASS; JS syntax PASS. Remaining explicit NET route, current use status/read UI, rollback/concurrency/freshness acceptance, order quantity exceptions and real hardware commissioning. NI04.2 remains open.
 """
 for path,line in [
-("wiki/index.md","- [Показание весов в проводке CASE](database/nicora_ni042_scale_use_20261011.md):188 once-only GROSS proof/root transaction/NET9.8/exact replay; loose NET next."),
+("wiki/index.md","- [Показание весов в проводке CASE](database/retailcase_ni042_scale_use_20261011.md):188 once-only GROSS proof/root transaction/NET9.8/exact replay; loose NET next."),
 ("wiki/log.md","2026-10-11:188 current scale capture consumed once in existing CASE root, immutable USE/unique planned lock/current source/device/120s/GROSS precision. CASE1062 actual10.1->9.8/replay/refusals/native cleanup; architecture544/0/76. NET and extended transactional acceptance next."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni04_2.md","11.10.2026:188 original scale proof tied once to existing CASE movement, actual GROSS10.1/NET9.8/replay; NET route/rollback-concurrency and order exceptions still open.")]:
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni04_2.md","11.10.2026:188 original scale proof tied once to existing CASE movement, actual GROSS10.1/NET9.8/replay; NET route/rollback-concurrency and order exceptions still open.")]:
  p=Path(path);out[str(p)]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
 roots=[p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md")]
 if roots:out[str(roots[0]/"NI04.2"/"188_scale_use.md")]="""# Qwen:188

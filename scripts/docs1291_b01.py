@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-files={};report="reports/nicora/2026-10-13/44-b01-layout-loading-departure.md"
+files={};report="reports/retailcase/2026-10-13/44-b01-layout-loading-departure.md"
 text="""# B01: существующие СТ → физическая погрузка → выезд
 14.10.2026. RABAEV/orcl, отдельный dev-стенд. Авторская адресная проверка.
 
@@ -44,12 +44,12 @@ RRL_SQL_SLOW_LOG: запись2506 wave execution834мс; текущий пов�
 Следующий блок — B02: применимые способы отбора и маркировка, с переиспользованием существующих CASE/агрегаций. NI08.1 требует серверного сопоставления норм; Claude продолжает финансовые основания C-0005.
 """
 files[report]=text
-page="wiki/components/nicora_b01_departure_20261014.md"
-files[page]="# B01: от приёмки до выезда\n\n"+text.split("## Полученный результат")[1].split("## Факты операций")[0]+"\n[Полный отчёт44](../../"+report+") и [план59](../requirements/nikora_delivery_v55/implementation_plan.md).\n\nОдин dev-сценарий FULL_PALLET завершён. Все входящие спринты и внешняя приёмка не объявлены закрытыми. Следующий блок B02. Долгий available-sts62117строк — отдельный backlogCodex/transport с решением bounded pagination.\n"
-p=Path("wiki/database/nicora_ni022_prepared_row_move_20261014.md");s=p.read_text(encoding="utf-8")
+page="wiki/components/retailcase_b01_departure_20261014.md"
+files[page]="# B01: от приёмки до выезда\n\n"+text.split("## Полученный результат")[1].split("## Факты операций")[0]+"\n[Полный отчёт44](../../"+report+") и [план59](../requirements/retailcase_delivery_v55/implementation_plan.md).\n\nОдин dev-сценарий FULL_PALLET завершён. Все входящие спринты и внешняя приёмка не объявлены закрытыми. Следующий блок B02. Долгий available-sts62117строк — отдельный backlogCodex/transport с решением bounded pagination.\n"
+p=Path("wiki/database/retailcase_ni022_prepared_row_move_20261014.md");s=p.read_text(encoding="utf-8")
 s=s.replace("PREPARED, применение ещё не подтверждено.","INSTALLED; применение, реальные перенос/привязки/погрузка/выезд подтверждены отчётом44.")
 files[str(p)]=s+"\n## Итог1291\n006_fullpal_scope установлен: обе реальные привязки прошли текущую проверку задания; USER_ERRORS=[],INVALID=[].007_current_root — source mirror с актуальной спецификацией, не повторное применение. [Отчёт44](../../"+report+").\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"));d["planRevision"]=59;d["currentSprint"]="NI04.2"
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"));d["planRevision"]=59;d["currentSprint"]="NI04.2"
 d["firstChange"]="B01 retained order2135/wave559/trip33571 completed dev FULL_PALLET path:36EA shipped,2places departed,waveDONE. Continue B02 existing CASE/marking flows; NI08.1 explicit scope-to-norm mapping; Claude C-0005 finance basis."
 for item in d["deliveryBatches"]:
  if item["id"]=="B01":item["verifiedScenario"]="FULL_PALLET unmarked dev end-to-end order2135/trip33571, report44; other applicable variants remain open"
@@ -58,11 +58,11 @@ for item in d["increments"]:
  if item["id"] in ["NI02.2","NI03.3","NI05.2"]:
   item.setdefault("implementedSlices",[]).append("B01 report44: existing ST row layout/physical bindings/36EA shipment/2-place departure/wave559 DONE; own dev full-pallet path, no full sprint acceptance.")
 files[str(p)]=json.dumps(d,ensure_ascii=False,indent=2)+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.md");s=p.read_text(encoding="utf-8").replace("Редакция 58","Редакция 59")
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.md");s=p.read_text(encoding="utf-8").replace("Редакция 58","Редакция 59")
 start=s.index("Текущий B01/NI02.2:");end=s.index("\n\nClaude",start)
 s=s[:start]+"B01: заказ2135 прошёл полный dev-путь36EA от приёмки до выезда33571 и завершения волны559. Согласование существующей укладки, привязки паллет, погрузка и повтор выезда подтверждены. [Отчёт44](../../../"+report+"). Следующий блок B02/NI04.2–NI04.3: способы отбора и маркировка. Остальные применимые варианты B01 и внешняя приёмка остаются открыты."+s[end:]
 s=s.replace("Claude передал UI-части NI07.2","Claude передал UI-части NI07.1 (основания счёта), NI07.2")
 files[str(p)]=s
-p=Path("wiki/index.md");files[str(p)]="- [B01 завершённый dev-проход1291](components/nicora_b01_departure_20261014.md):36EA/2места/33571DEPARTED/559DONE/отчёт44; план59, далееB02. Это актуализирует промежуточные записи1266–1275 ниже.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");files[str(p)]="- [B01 завершённый dev-проход1291](components/retailcase_b01_departure_20261014.md):36EA/2места/33571DEPARTED/559DONE/отчёт44; план59, далееB02. Это актуализирует промежуточные записи1266–1275 ниже.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-14 ·1291: B01 полный dev-проход2135 до выезда33571/волны559DONE; отчёт44/screens77–81; миграции1265/006 и runtime mirror, current warehouse delivery scope, plan59/B02. Independent/external/full-sprint acceptance не заявлена; SQL available-sts backlogCodex.\n"
 print(json.dumps(files,ensure_ascii=True))

@@ -12,12 +12,12 @@ for group,name in [("components","002_command.sql"),("startup_scripts","001_sche
  if item not in m[group]:m[group].append(item)
 if "RRL_STOCK_RETURN_DISPOSE" not in m["packages"]:m["packages"].append("RRL_STOCK_RETURN_DISPOSE")
 out[str(p)]=json.dumps(m,indent=2)+"\n"
-p=Path("wiki/index.md");out["wiki/index.updated.tmp"]="- [Списание возвратного брака](database/nicora_ni062_disposal_20261010.md):110 APPLIED, separate act/independent Root/exact blocked1/P0H0/event1/loss original store/outbox1/replay.\n"+p.read_text(encoding="utf-8-sig")
+p=Path("wiki/index.md");out["wiki/index.updated.tmp"]="- [Списание возвратного брака](database/retailcase_ni062_disposal_20261010.md):110 APPLIED, separate act/independent Root/exact blocked1/P0H0/event1/loss original store/outbox1/replay.\n"+p.read_text(encoding="utf-8-sig")
 for name,line in [
  ("wiki/log.md","2026-10-10:110 ordinary DISPOSAL return consumes exact whole blocked source via existing effect core under explicit Root/current version/scans/independent SC decision. Original store is cost/loss destination; immutable act/fact and SAP pending atomic. Fresh approved SAP source1 from STORE.RECEIPT:04633c677f/current driver/receipt DISPOSAL.RECEIVE:b10092cbf0 then report/denials/dispose/replay/second409 actual PASS taga2c9f83b4f; P0H0/event1/fact1/outbox1. SQL27.200/16.126/1.028ms retain source unique/warehouse bounded100; NI06.2 owner checks grown source history plan. Marked and actual destruction evidence separate."),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni06_2.md","Ticket110: [утилизация возвратного брака](../../../../database/nicora_ni062_disposal_20261010.md), ordinary whole blocked source1, independent explicit core/P0H0/event1/SAP pending/loss original store/replay. Marked lifecycle and partial/multi-place remain open.")]:
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni06_2.md","Ticket110: [утилизация возвратного брака](../../../../database/retailcase_ni062_disposal_20261010.md), ordinary whole blocked source1, independent explicit core/P0H0/event1/SAP pending/loss original store/replay. Marked lifecycle and partial/multi-place remain open.")]:
  p=Path(name);out[name]=p.read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-out["wiki/database/nicora_ni062_disposal_20261010.md"]="""# NI06.2 — утилизация возвратного брака,110
+out["wiki/database/retailcase_ni062_disposal_20261010.md"]="""# NI06.2 — утилизация возвратного брака,110
 2026-10-10-110-return-disposal-original-loss-store APPLIED17/0 RABAEV/orcl. New private RRL_STOCK_RETURN_DISPOSE, existing Root/effect and guards VALID. Checkpoint426Root/427Effect; goods facts forward correction only.
 
 Warehouse-bound warehouse_return_dispatch reporter stores immutable disposal receipt/document archive reference/hash/reason. Different active warehouse-bound SC actor store_return_approve conducts entire approved DISPOSAL return with source pallet/cell scan/current stock version. Exact whole source/noHARD/sameWARE blockedcell/noHU/currentBASE policy. Current marked profile denies ordinary command; no silent omitted units.

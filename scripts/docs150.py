@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-out={};page="wiki/database/nicora_ni081_attendance_replace_20261010.md"
+out={};page="wiki/database/retailcase_ni081_attendance_replace_20261010.md"
 out[page]="""# NI08.1 / NS33 — план выхода заменяется атомарно,150
 
 Existing RRL_WORKLOAD_CONFIG_API REPLACE_ATTENDANCE, no second roster registry. Current scoped actor before and after shared metadata fence; existing store_attendance same resource/person/current qualification/aware positive<=24h/other-site-overlap rule. Same immutable source plan ID must still be active; new start future only/reason>=8. Source cancellation and new planned row/operation result one UOW. Result replaced_plan_operation_id plus plan_operation_id; no actual presence/shift/session/task/P/H created or changed.
@@ -15,12 +15,12 @@ Raw workload UI selects existing plan, operator inputs future interval/resource/
 
 SQL API32.643ms/7, caught-error9.694ms/1, other37.027ms/1. Decision retain current indexed source/cancellation identity and existing low-volume config fence; no load capacity claim or new global physical lock. Full NS33 subwarehouse workload/approved joint schedule and independent acceptance remain.
 """
-out["wiki/index.updated.tmp"]="- [Атомарное изменение планового выхода](database/nicora_ni081_attendance_replace_20261010.md):150 source cancellation+new plan one UOW/future only/late rollback and concurrent one winner/current lineage/no stock.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
+out["wiki/index.updated.tmp"]="- [Атомарное изменение планового выхода](database/retailcase_ni081_attendance_replace_20261010.md):150 source cancellation+new plan one UOW/future only/late rollback and concurrent one winner/current lineage/no stock.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
 for p,line in [
 ("wiki/log.md","2026-10-10:150 existing workload REPLACE_ATTENDANCE/current actor after fence/future interval/immutable source version, cancellation+new plan+result oneUOW. Own savepoint protects all config actions even outer caught+commit.6 statements/API+4guardsVALID/current manifestgenerated. Future metadata-only43 QA150 source tag646cf96a33 late404+SQLcaught no partial source/placeholder, concurrent200+409/same replay/changed409/lineage visible; own replacement cancelled/original134 roster and P20H20 unchanged. Raw UI source selection/local original pending/session migration/WebLocks when supported; node/architecturePASS. SQL32.643/9.694/37.027ms keep indexedlowvolumeCFG, no load or independent acceptance."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","Ticket150 atomic future attendance correction/source lineage/retry/late rollback delivered; see database/nicora_ni081_attendance_replace_20261010.md. Original134 roster retained, actual presence not changed.")
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md","Ticket150 atomic future attendance correction/source lineage/retry/late rollback delivered; see database/retailcase_ni081_attendance_replace_20261010.md. Original134 roster retained, actual presence not changed.")
 ]:out[p]=Path(p).read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":
   row.setdefault("implementedSlices",[]).append("150 atomic future planned attendance correction/source lineage/one winner/durable UI retry")

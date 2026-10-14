@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-out={};page='wiki/database/nicora_ni081_trip_edit_20261010.md'
+out={};page='wiki/database/retailcase_ni081_trip_edit_20261010.md'
 out[page]="""# NI08.1 — ручная смена машины и реквизитов,137
 TransportService.create_task/update_task now use public native adapters and one UnitOfWork each. Existing RRL_TRASPORT_TASK_ADD retained; draft actual USER_ID set to authenticated creator instead of ignored native parameter. RRL_TRANSPORT_EDIT_API takes old/new vehicle rows in numeric order before trip then selected source SP rows; rechecks original plate, active dispatcher/current source warehouse/empty-trip owner, validates prospective source against same136 rules. No separate vehicle capacity formula or assignment model.
 Metadata create/update only, no P/H/quantity command. Source limit200 actual SP rows. Native driver explicit ID must exist/not deleted; vehicleID not inferred. Empty/zero driver value clears logical assignment, not a new driver. Changed physical plan fields on billed/shipped/LOADED/DEPARTED trips refused, unchanged repeated values or note-only update permitted. Native physical authority/driver binding and actual qualification remain existing independent gates, this is not driver legal certification.
@@ -10,12 +10,12 @@ Author scripts/ni081_trip_edit_existing_case.py reused original136 SP/vehicles, 
 SQL actual shared assign42.199ms after keyed UNION versus previous cold1244.226ms; edit18.866/9.024ms/create16.288ms. Decision retain bounded201/source exact indices and shared lock order; these are author cold/warm observations, not capacity benchmark. General raw C#/direct unassigned planning edits are not all converted by137; loaded physical guard applies globally. Full manual/autoplan timing/tare/driver/resource validation remains open.
 Resource workload UI now clears scoped norm/person rows on actor/warehouse change, retains uncertain pending action after401/403 because access loss does not prove prior command rollback. No new action substituted for an unknown saved command.
 """
-out['wiki/index.updated.tmp']='- [Ручное изменение машины и плана рейса](database/nicora_ni081_trip_edit_20261010.md):137 shared prospective capacity/vehicle-before-TT/current actor; smaller vehicle409, departed date protected, no stock.\n'+Path('wiki/index.md').read_text(encoding='utf-8-sig')
+out['wiki/index.updated.tmp']='- [Ручное изменение машины и плана рейса](database/retailcase_ni081_trip_edit_20261010.md):137 shared prospective capacity/vehicle-before-TT/current actor; smaller vehicle409, departed date protected, no stock.\n'+Path('wiki/index.md').read_text(encoding='utf-8-sig')
 for name,line in [
  ('wiki/log.md','2026-10-10:137 same-TX native owned draft/create/edit, old/new vehicle locks beforeTT/source rows/current actor/WARE, same136 capacity rules. Extended existing loaded/departed guard to planned date/time/type; checkpoint446/APPLIED6/0/allVALID. Actual own33524 smaller vehicle409/oldplate retained/note saved and departed33521 directdate20886/unchanged, own metadata retired/no stock. Assign warmed42.199ms/edit18.866/create16.288ms retain keyed bounded reads; not load benchmark. Resourceboard stale scoped rows cleared/401-403 uncertain pending retained. Next stop timing/common remainder and cluster transaction.'),
- ('wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md','Ticket137 manual vehicle/driver/dock/date/time edit now one native UOW/shared136 capacity/current actor, loaded/departed planned times globally protected. See database/nicora_ni081_trip_edit_20261010.md. Full timing/cluster idempotency/resource-slot approval remains open.')]:
+ ('wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md','Ticket137 manual vehicle/driver/dock/date/time edit now one native UOW/shared136 capacity/current actor, loaded/departed planned times globally protected. See database/retailcase_ni081_trip_edit_20261010.md. Full timing/cluster idempotency/resource-slot approval remains open.')]:
  p=Path(name);out[name]=p.read_text(encoding='utf-8-sig')+'\n'+line+'\n'
-p=Path('wiki/requirements/nikora_delivery_v55/implementation_plan.json');m=json.loads(p.read_text(encoding='utf-8-sig'))
+p=Path('wiki/requirements/retailcase_delivery_v55/implementation_plan.json');m=json.loads(p.read_text(encoding='utf-8-sig'))
 for row in m['increments']:
  if row['id']=='NI08.1':
   row.setdefault('implementedSlices',[]).append('137 shared native manual vehicle/plan edit/current sourceWARE/loaded date-time-type protection')
@@ -25,7 +25,7 @@ p=Path('db/migrations/2026-10-08_stock_posting_core/current_runtime_manifest.jso
 m['packages'].append('RRL_TRANSPORT_EDIT_API');m['components'].append('../2026-10-10_ni081_transport_edit/001_api.sql');m['additional_scripts'].append('../2026-10-10_ni081_transport_edit/002_loaded_guard.sql')
 out[str(p)]=json.dumps(m,indent=2)+'\n'
 out['задания на проведения тестов/NI08.1/137_смена_машины_и_реквизитов.md']="""# Qwen —137
-Read wiki/database/nicora_ni081_trip_edit_20261010.md, native edit/extended existing loaded guard, public adapters/service. Original own33524 already cancelled;136 sources/vehicles reused/retired. No fresh goods needed.
+Read wiki/database/retailcase_ni081_trip_edit_20261010.md, native edit/extended existing loaded guard, public adapters/service. Original own33524 already cancelled;136 sources/vehicles reused/retired. No fresh goods needed.
 Old/new vehicle numeric order beforeTT then current source SP, recheck plate/active dispatcher/WARE/empty owner. Smaller vehicle capacity/weight/type/hydro denial atomic across all fields; driver current explicit ID separate from vehicle. Changed critical fields billed/shipped/loaded denied, same unchanged/note-only allowed; dates/time/type protection global existing physical guard preserves root-only departure/history. No commit in native, no partial commodity write.
 Current backend preserves old API URLs and errors422 for length/date input, old unknown plate note-only supported. General legacy raw unassigned edits not all converted. Resourceboard scoped old person/norm rows clear, auth401/403 keeps uncertain original operation rather than generatingnew command. Full timing/cluster/tare/resource/driver planned legality not implied.
 """

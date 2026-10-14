@@ -1,5 +1,5 @@
 import {chromium} from '../admin/wms_admin_frontend/node_modules/playwright/index.mjs';import fs from 'node:fs';
-const out='reports/nicora/2026-10-13/codex/NI081/',fixture=JSON.parse(fs.readFileSync(out+'fixture.json','utf8'));
+const out='reports/retailcase/2026-10-13/codex/NI081/',fixture=JSON.parse(fs.readFileSync(out+'fixture.json','utf8'));
 const browser=await chromium.launch({headless:true}),page=await browser.newPage({viewport:{width:1450,height:1100}}),errors=[],requests=[];
 page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(r.url().includes('/api/transport/preflight/'))requests.push({method:r.method(),url:r.url()});});
 try{

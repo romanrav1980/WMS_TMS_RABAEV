@@ -2,4 +2,4 @@ exec(open("scripts/ni063_slow_queries.py",encoding="utf-8").read().split("with o
 result={}
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute("select SQL_ID,EXECUTIONS,round(ELAPSED_TIME/nullif(EXECUTIONS,0)/1000,3),BUFFER_GETS,substr(SQL_TEXT,1,110) from V$SQL where PARSING_SCHEMA_NAME='RABAEV' and EXECUTIONS>0 and (SQL_TEXT like 'select r.OPERATION_ID,r.LINE_NUMBER,r.UID_PALLET PALLET_IDENTIFIER,%' or SQL_TEXT like '%from RRL_SKU_RECEIPT_POLICY%') and LAST_ACTIVE_TIME>sysdate-1/24 order by ELAPSED_TIME/nullif(EXECUTIONS,0)desc fetch first 8 rows only");result['sql']=q.fetchall()
-Path('reports/nicora/2026-10-13/codex/NI011-draft/sql.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result))
+Path('reports/retailcase/2026-10-13/codex/NI011-draft/sql.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result))

@@ -15,8 +15,8 @@ try{
  if(await code.inputValue()!=='MIXED')throw Error('Saved current variants missing');
  if(await variants.getByRole('combobox').count()!==3)throw Error('Expected 3 configured type rows');
  await variants.scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/49-vehicle-tare-variants.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/49-vehicle-tare-variants.png'});
  await page.setViewportSize({width:390,height:844});
- await variants.screenshot({path:'reports/nicora/2026-10-13/screenshots/50-vehicle-tare-variants-mobile.png'});
+ await variants.screenshot({path:'reports/retailcase/2026-10-13/screenshots/50-vehicle-tare-variants-mobile.png'});
  console.log('PASS1184 real current fleet profile version2/three tare limits; no UI writes');
 }finally{await browser.close();}

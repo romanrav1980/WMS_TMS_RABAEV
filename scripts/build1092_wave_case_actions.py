@@ -57,8 +57,8 @@ for p in("wiki-raw/wms_admin_ui_reference/wave-replenishment.html","wiki-raw/wms
  for asset in("wave-execution-view.js","wave-execution.css","outgoing-quality.js"):
   s=re.sub(re.escape(asset)+r'(?:\?v=[^"\']*)?',asset+"?v=20261013-1092",s)
  f[p]=s
-p="wiki/components/nicora_ni033_wave_workspace_20261013.md"
+p="wiki/components/retailcase_ni033_wave_workspace_20261013.md"
 f[p]=Path(p).read_text(encoding="utf-8")+"\n1092: bounded current wave read adds CASE currentcell/carrier/version and actual existing ST control identifier in same READONLY snapshot after scope. UI links to existing composition/QC, per-item picking history labelled separately from currentstock. No QC/stock/wave status writes; actual runtime/current source553 andbrowser next. Owner inventory, same existing Root finish command, no second quality module.\n"
-f["wiki/index.md"]="- [Wave next actions1092](components/nicora_ni033_wave_workspace_20261013.md): current CASE carrier/cell/version and existing QC/composition links; currentwave553 pendingcontrol, no status bypass.\n"+Path("wiki/index.md").read_text(encoding="utf-8")
+f["wiki/index.md"]="- [Wave next actions1092](components/retailcase_ni033_wave_workspace_20261013.md): current CASE carrier/cell/version and existing QC/composition links; currentwave553 pendingcontrol, no status bypass.\n"+Path("wiki/index.md").read_text(encoding="utf-8")
 f["wiki/log.md"]=Path("wiki/log.md").read_text(encoding="utf-8")+"\n-1092: NI03.3 remaining workflow functional next actions reuse existing QC andcomposition. Actualwave553blockedbycurrentWAIT_CONTROL/HARD, correctnotclosed. Native currentread1090/QC1091, no stock changed; bounded scoped reader/UI extension prepared.\n"
 print(json.dumps(f,ensure_ascii=True))

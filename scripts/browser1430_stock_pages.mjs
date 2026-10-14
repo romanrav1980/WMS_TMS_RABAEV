@@ -8,7 +8,7 @@ const b=await chromium.launch({headless:true});try{
  await p.locator('#stockConflicts [data-first]').click();await p.waitForFunction(()=>document.querySelectorAll('#stockConflicts tbody tr').length===50);
  await p.locator('#stockConflicts [data-next]').click();await p.waitForFunction(()=>document.querySelectorAll('#stockConflicts tbody tr').length===2);
  if(!await p.locator('#stockConflicts [data-next]').isDisabled())throw Error('End page still enabled');
- await p.locator('#stockConflicts').screenshot({path:'reports/nicora/2026-10-13/screenshots/110-ni072-stock-conflict-pages-synthetic.png'});
+ await p.locator('#stockConflicts').screenshot({path:'reports/retailcase/2026-10-13/screenshots/110-ni072-stock-conflict-pages-synthetic.png'});
  await p.locator('#drWare').fill('6667491');if(await p.locator('#stockConflicts tbody tr').count())throw Error('Old warehouse rows retained');
  if(writes.length||errors.length)throw Error(JSON.stringify({writes,errors}));fs.writeFileSync('tmp/result1430.json',JSON.stringify({realRead:200,syntheticUiPages:[50,2],filterReset:true,writes,errors},null,2));console.log(JSON.stringify({realRead:200,syntheticUiPages:[50,2],writes,errors}));
 }finally{await b.close();}

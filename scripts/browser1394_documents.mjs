@@ -8,7 +8,7 @@ try{
  const r=await response,data=await r.json();if(!data.current_backlog_documents)throw Error('New API not loaded');
  const a=page.locator('.dr-documents a').filter({hasText:/^564$/});await a.waitFor({state:'attached'});
  await a.locator('xpath=ancestor::details').evaluate(n=>n.open=true);
- await a.locator('xpath=ancestor::article').screenshot({path:'reports/nicora/2026-10-13/screenshots/101-ni072-backlog-documents.png'});
+ await a.locator('xpath=ancestor::article').screenshot({path:'reports/retailcase/2026-10-13/screenshots/101-ni072-backlog-documents.png'});
  const href=await a.getAttribute('href');if(href!=='warehouse-tasks.html?task_id=564')throw Error(href);
  await page.goto('http://127.0.0.1:8088/wms-admin/day-reconciliation.html?warehouse_id=38542432&day=2026-10-14');
  const doc=page.locator('.dr-documents a').filter({hasText:/^STORE383.RECEIPT:c09bc5c0$/});await doc.waitFor({state:'attached'});await doc.locator('xpath=ancestor::details').evaluate(n=>n.open=true);

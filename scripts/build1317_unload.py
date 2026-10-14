@@ -25,7 +25,7 @@ s=s.replace(old,new)
 s=s.replace("l.ROOT_UID=p_domain.get_string('root')","l.ROOT_UID=s.ROOT_KEY ")
 files={str(d/"001_body.sql"):s,str(d/"apply.sql"):"@@001_body.sql\n@@002_ledger.sql\n",str(d/"rollback.sql"):"@@000_before_body.sql\nupdate RRL_SCHEMA_MIGRATIONS set STATUS='ROLLED_BACK'where MIGRATION_ID='2026-10-14-1316-stock-pallet-unload';\n/\n",str(d/"verify.sql"):"select NAME,TYPE,LINE,TEXT from USER_ERRORS where NAME='RRL_STORE_UNLOAD_CORE';\nselect OBJECT_NAME,OBJECT_TYPE,STATUS from USER_OBJECTS where OBJECT_NAME='RRL_STORE_UNLOAD_CORE';\n"}
 files[str(d/"002_ledger.sql")]=Path("db/migrations/2026-10-14_ni053_driver_workspace/002_ledger.sql").read_text(encoding="utf-8").replace("2026-10-14-1302-driver-workspace","2026-10-14-1316-stock-pallet-unload").replace("Authenticated driver current binding and idempotent existing transport operation facts","Store pallet unloading accepts original frozen ROOT_STOCK_TYPE loading proof")
-files["wiki/database/nicora_ni053_stock_pallet_unload_20261014.md"]="""# NI05.3: выгрузка обычной WMS-паллеты
+files["wiki/database/retailcase_ni053_stock_pallet_unload_20261014.md"]="""# NI05.3: выгрузка обычной WMS-паллеты
 
 Миграция 2026-10-14-1316-stock-pallet-unload, PREPARED. На собственном рейсе33571 приёмка отказала UNLOAD_PALLET_SOURCE_REQUIRED: старый RRL_STORE_UNLOAD_CORE принимал метод PALLET только для CONTAINER/PALLET, хотя обычный ROOT_STOCK_TYPE уже подтверждён при физической погрузке.
 
@@ -33,6 +33,6 @@ files["wiki/database/nicora_ni053_stock_pallet_unload_20261014.md"]="""# NI05.3:
 
 Свежий LIVE checkpoint содержит package body и INVALID=[]; rollback только кода, журнал не удаляется. Actual/UI/SQL evidence после применения.
 """
-files["wiki/index.md"]=Path("wiki/index.md").read_text(encoding="utf-8")+"\n- [Выгрузка обычной паллеты1316](database/nicora_ni053_stock_pallet_unload_20261014.md): исходный frozen loading proof для ROOT_STOCK_TYPE; prepared.\n"
+files["wiki/index.md"]=Path("wiki/index.md").read_text(encoding="utf-8")+"\n- [Выгрузка обычной паллеты1316](database/retailcase_ni053_stock_pallet_unload_20261014.md): исходный frozen loading proof для ROOT_STOCK_TYPE; prepared.\n"
 files["wiki/log.md"]=Path("wiki/log.md").read_text(encoding="utf-8")+"\n- 2026-10-14:1316 prepared NI05.3 stock-pallet unloading, own B03 refusal reproduced; existing immutable floor proof reused, checkpoint/rollback saved.\n"
 print(json.dumps(files,ensure_ascii=True))

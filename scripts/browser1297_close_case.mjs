@@ -8,7 +8,7 @@ const browser=await chromium.launch({headless:true});try{
  await page.locator('#cpTsdClose').click();const r=await pending;ctx.close={status:r.status(),request:r.request().postDataJSON(),body:await r.json()};fs.writeFileSync(path,JSON.stringify(ctx,null,2));
  if(!r.ok())throw Error('Close rejected');await page.waitForFunction(()=>document.querySelector('#cpTsdState').textContent.includes('Сборка закрыта'));
  ctx.stage='B02_WAIT_CONTROL';fs.writeFileSync(path,JSON.stringify(ctx,null,2));console.log(JSON.stringify(ctx.close));
- await page.locator('.tsd-task-card').first().screenshot({path:'reports/nicora/2026-10-13/screenshots/84-b02-case-closed.png'});
+ await page.locator('.tsd-task-card').first().screenshot({path:'reports/retailcase/2026-10-13/screenshots/84-b02-case-closed.png'});
  await page.goto('http://127.0.0.1:8088/wms-admin/case-pick-tsd.html?case_task_id=1064');
  await page.waitForFunction(()=>document.querySelector('#cpTsdMethod').textContent.includes('Товар на развес'));
  if(!await page.locator('#cpTsdFactQty').isDisabled())throw Error('Loose weight manual quantity enabled');

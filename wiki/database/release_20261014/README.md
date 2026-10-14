@@ -2,7 +2,7 @@
 
 Источник: живой Oracle, USER_TAB_COLUMNS / USER_CONSTRAINTS / USER_ARGUMENTS / USER_DEPENDENCIES / USER_SOURCE. Это техническая справка; классификация по имени помечена отдельно от подтверждённого бизнес-описания. Динамический SQL не полностью отражается в USER_DEPENDENCIES.
 
-[Работа системы и назначение ключевых объектов](../../subprojects/nicora_system_reference.md) · [Установка](../../../db/releases/2026-10-14/README.md)
+[Работа системы и назначение ключевых объектов](../../subprojects/retailcase_system_reference.md) · [Установка](../../../db/releases/2026-10-14/README.md)
 
 | Тип | Объект | Подсистема (классификация по имени) |
 |---|---|---|

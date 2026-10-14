@@ -1,0 +1,9 @@
+{
+  "files": [
+    {
+      "path": "wiki-raw/retailcase_code_analysis_20261007/oracle/TRANSPORT_TASK_PACKAGE_BODY.sql",
+      "sha256": "0d9188f515577ef299def9664e655e59772cf0786ece98ffc21c91a798fabcfe",
+      "reason": "Archived Oracle source had corrupted comments before the product-name substitution. Hash covers normalized UTF-8 text; runtime source is in db/releases."
+    }
+  ]
+}

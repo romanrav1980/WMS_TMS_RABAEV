@@ -5,7 +5,7 @@ from docx.shared import Pt, Inches, RGBColor
 from docx.enum.table import WD_TABLE_ALIGNMENT, WD_CELL_VERTICAL_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-SRC=Path(r"C:\projects\TMS\wiki\requirements\nikora_retail_selection"); OUT=SRC/"docx"; OUT.mkdir(exist_ok=True)
+SRC=Path(r"C:\projects\TMS\wiki\requirements\retailcase_retail_selection"); OUT=SRC/"docx"; OUT.mkdir(exist_ok=True)
 def shade(c,f):
     p=c._tc.get_or_add_tcPr(); s=OxmlElement("w:shd"); s.set(qn("w:fill"),f); p.append(s)
 def borders(t):
@@ -44,7 +44,7 @@ def make(src):
         if re.match(r"^[-*]\s+",l): d.add_paragraph(clean(re.sub(r"^[-*]\s+","",l)),style="List Bullet"); i+=1; continue
         if re.match(r"^\d+\.\s+",l): d.add_paragraph(clean(re.sub(r"^\d+\.\s+","",l)),style="List Number"); i+=1; continue
         d.add_paragraph(clean(l)); i+=1
-    d.core_properties.title=clean(next((x[2:] for x in lines if x.startswith("# ")),src.stem)); d.core_properties.author="NIKORA requirements working group"; out=OUT/(src.stem+".docx"); d.save(out); return out
+    d.core_properties.title=clean(next((x[2:] for x in lines if x.startswith("# ")),src.stem)); d.core_properties.author="RETAILCASE requirements working group"; out=OUT/(src.stem+".docx"); d.save(out); return out
 if __name__=="__main__":
     for p in sorted(SRC.glob("*.md")):
         if p.name!="publication.md": print(make(p))

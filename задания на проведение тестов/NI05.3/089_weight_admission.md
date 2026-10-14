@@ -1,5 +1,5 @@
 # Qwen: NI05.3/089 — допуск веса/фото и акт
-Read wiki/database/nicora_ni053_weight_admission_20261010.md and process10_store_receipt. Keep synthetic API/Oracle, browser, physical equipment and regulatory confirmation as separate evidence.
+Read wiki/database/retailcase_ni053_weight_admission_20261010.md and process10_store_receipt. Keep synthetic API/Oracle, browser, physical equipment and regulatory confirmation as separate evidence.
 
 Own actual departed BOX source: frozen place gross10KG, lightest real box2KG, tolerance1KG; source/body/stock/history retained. Current087 device capture and minimum3 different archived views with different original hashes. Accept9 and11 inclusive on separate own places. 8.999999999/11.000000001 require representative act, never quantity inferred from weight delta.
 

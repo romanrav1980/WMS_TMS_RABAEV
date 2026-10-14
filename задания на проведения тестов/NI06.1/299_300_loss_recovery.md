@@ -1,5 +1,5 @@
 # Qwen299-300: найденный whole lost remainder
-Read wiki/database/nicora_ni061_loss_recovery_receiving_20261011.md, tmp/context299_291/_292 and context300_291/_292. ActualP2 alreadycommitted; NEVER rerun initial native rollbackcases/sourcebirth.
+Read wiki/database/retailcase_ni061_loss_recovery_receiving_20261011.md, tmp/context299_291/_292 and context300_291/_292. ActualP2 alreadycommitted; NEVER rerun initial native rollbackcases/sourcebirth.
 Exactactual recovery/approval repeats ->same onefact/P2; changedpayload409/new competingreceive409. MissingQR/profile/foreignSKU/UOM/sourcePAL/newPAL/cell/currentWARE rights/collision rejects no P. Ordinarynocodes permitted; marked two physicalunits require4profileQR.
 Own fresh fixture: report/independentapproval separatetop-levelTx, physicalnativeouterrollback removesPAL/P/units/recoverybook/event/outboxes. Corrective proof lets only recoveredkeys normalmovement; stilllostkeys blockedbyhelperanddirecttrigger.
 Actualrecovered2/sourceold0/buyeraccepted1 unchanged/sixcodehashes preserved/receivingcell rem+replenishblocked. UI actor/API/receipt change clearsdraft scope, pendingintent savedbeforeHTTP for exactretry. Current historical2 shortage and recovered2/net0 distinct from newcustomerreceipt.

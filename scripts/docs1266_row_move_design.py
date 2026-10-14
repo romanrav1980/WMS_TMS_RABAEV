@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-name="wiki/database/nicora_ni022_prepared_row_move_20261014.md"
+name="wiki/database/retailcase_ni022_prepared_row_move_20261014.md"
 files={name:"""# NI02.2: явное изменение укладки подготовленной СТ
 Миграция2026-10-14-1265-prepared-row-move, PREPARED, применение ещё не подтверждено.
 
@@ -14,6 +14,6 @@ Root: operation_id/body conflict/replay, общий CONFIG fence, полный �
 
 [SQL](../../db/migrations/2026-10-14_ni022_prepared_row_move/) содержит текущие исходники Root/legacy writer, INVALID baseline и apply/rollback/verify. До первого применения возможен возврат к checkpoint; после появления бизнес-истории — исправляющая миграция с её сохранением. Широкого изменения схемы и копии базы нет.
 """}
-p=Path("wiki/index.md");files[str(p)]="- [Согласование укладки1266](database/nicora_ni022_prepared_row_move_20261014.md): подготовлена обёртка существующего переноса строки СТ; точные суммы/Root/replay, без движения запаса.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");files[str(p)]="- [Согласование укладки1266](database/retailcase_ni022_prepared_row_move_20261014.md): подготовлена обёртка существующего переноса строки СТ; точные суммы/Root/replay, без движения запаса.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n## 2026-10-14 ·1266 · существующий перенос строки СТ\nПодготовлены scoped preview, ST_PREPARED_ROW_MOVE и ACTIVE-исправление RRL_UPDATE_SBORKA_PALLET_ROWS2. Самостоятельного нового ST writer/stock writer нет. Capture1265 сохранён; применение/API/UI далее.\n"
 print(json.dumps(files))

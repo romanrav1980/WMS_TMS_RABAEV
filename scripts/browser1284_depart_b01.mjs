@@ -17,5 +17,5 @@ try{
  await page.waitForFunction(()=>!window.wmsPhysicalLoadState.isBusy());
  ctx.stage='B01_DEPARTED';fs.writeFileSync(path,JSON.stringify(ctx,null,2));
  await page.locator('#tripSummary').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/78-b01-departed.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/78-b01-departed.png'});
 }finally{await browser.close();}

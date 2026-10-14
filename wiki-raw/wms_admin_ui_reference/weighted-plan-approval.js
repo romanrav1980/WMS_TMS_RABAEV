@@ -1,6 +1,6 @@
 (() => {
   let sending = false;
-  const prefix = () => JSON.stringify(["nicora.weightedBoxChoice",orderApiBase(),window.wmsAdminAuth?.state?.user?.username || ""]);
+  const prefix = () => JSON.stringify(["retailcase.weightedBoxChoice",orderApiBase(),window.wmsAdminAuth?.state?.user?.username || ""]);
   const key = row => prefix() + ":" + row;
   const retry = document.createElement("button");
   retry.type = "button"; retry.textContent = "Повторить сохранённый выбор коробки";
@@ -47,7 +47,7 @@
     } catch (error) { orderEl("orderStatusText").textContent = error.message; }
     finally { retry.disabled = false; }
   });
-  document.addEventListener("nicora-weighted-options", event => {
+  document.addEventListener("retailcase-weighted-options", event => {
     const {row,source,panel,body} = event.detail;
     if (!orderCan("case_pick_short_approve")) return;
     if (source.active_choice) {

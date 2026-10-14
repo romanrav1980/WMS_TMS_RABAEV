@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 files={}
-report="reports/nicora/2026-10-13/46-b03-driver-store-delivery.md"
+report="reports/retailcase/2026-10-13/46-b03-driver-store-delivery.md"
 files[report]="""# B03 / NI05.3: водитель → приёмка магазина
 
 2026-10-14. Изолированный dev RABAEV/orcl. Продолжение B01/order2135/trip33571, не промышленный пилот.
@@ -33,14 +33,14 @@ Native START/repeat/DONE/repeat и отказDONEбезSTART выполнены 
 SQL: immutableproof8.786мс/286buffers за4вызова; currentbinding0.259мс/437buffers за54; configmerge28.444мс. Read delivery329мс. Решение сохранить PKboundedlookups, новыеиндексы не нужны. Известный available-sts fullscan5–8сек остаётся отдельным transport backlog (Codex): серверное окно/пагинация и прекращение полной перезагрузки списка; не скрывать кэшем. Не является новым результатом этого кейса.
 Независимая/внешняя приёмка и полное закрытие NI05.3 не заявлены.
 """
-page="wiki/components/nicora_b03_driver_delivery_20261014.md"
+page="wiki/components/retailcase_b03_driver_delivery_20261014.md"
 files[page]="# B03: рабочее место водителя и приёмка магазина\n\n1302–1326: существующие RUSERS/driver binding/native operation journal, bounded API, memory-only login, durable UI intent, без фиктивного offlineуспеха. Мобильная форма использует прежний store receipt.\n\nB01/order2135/trip33571 доведён до приёмки36EA:2×18, RECEIVED_SHIPPED_VOLUME, P0/H0, точный replay без повторной проводки/outbox. Исправлен native PALLET для frozen ROOT_STOCK_TYPE. [Отчёт46](../../"+report+").\n\nMigration1302/1316VALID; внешние камеры/госсервисы и independent acceptance не подтверждены. Отдельно остаётся адресная проверка UI START→confirm без перезагрузки; все спринты не закрыты.\n"
-for name in ["nicora_ni053_driver_workspace_20261014.md","nicora_ni053_stock_pallet_unload_20261014.md"]:
+for name in ["retailcase_ni053_driver_workspace_20261014.md","retailcase_ni053_stock_pallet_unload_20261014.md"]:
  p=Path("wiki/database")/name
- files[str(p)]=p.read_text(encoding="utf-8")+"\n## Installed1326\nМиграция применена в RABAEV/orcl, USER_ERRORS=[], INVALID=[]. [B03 результат](../components/nicora_b03_driver_delivery_20261014.md), report46. Runtime mirror обновлён. Ранее указанный PREPARED — история подготовки, текущий статус INSTALLED / AUTHOR_DEV_CASE.\n"
-p=Path("wiki/index.md");files[str(p)]="- [B03: водитель→магазин1326](components/nicora_b03_driver_delivery_20261014.md):order2135/36EAприняты/replay/P0H0, мобильный UI, миграции1302/1316VALID; report46.\n"+p.read_text(encoding="utf-8")
+ files[str(p)]=p.read_text(encoding="utf-8")+"\n## Installed1326\nМиграция применена в RABAEV/orcl, USER_ERRORS=[], INVALID=[]. [B03 результат](../components/retailcase_b03_driver_delivery_20261014.md), report46. Runtime mirror обновлён. Ранее указанный PREPARED — история подготовки, текущий статус INSTALLED / AUTHOR_DEV_CASE.\n"
+p=Path("wiki/index.md");files[str(p)]="- [B03: водитель→магазин1326](components/retailcase_b03_driver_delivery_20261014.md):order2135/36EAприняты/replay/P0H0, мобильный UI, миграции1302/1316VALID; report46.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-14 ·1326: driver auth/native facts/offline correctness/mobile layout, stock-pallet unloading from frozen proof, actual B03 2×18EA/receipt5221+5222/replay/stock0. Report46; UI start→confirm continuous case remains explicit, no full-sprint acceptance.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"))
 d["planRevision"]=60;d["currentSprint"]="NI05.3";d["firstChange"]="B01 order2135 → B03 store receipt36EA complete on dev; NI05.3 remaining continuous UI handoff, then B04/B05 reuse gaps and NI08.1 explicit scope-to-norm mapping. Claude C-0005 owns finance basis."
 for item in d["increments"]:
  if item["id"]=="NI05.3":item.setdefault("implementedSlices",[]).append("1302–1326 authenticated existing driver/native facts/durable UI/mobile receipt; frozen stock-pallet proof; order2135 received36EA, replay/outbox unchanged/P0H0. report46; continuous START→confirm UI remains targeted follow-up.")

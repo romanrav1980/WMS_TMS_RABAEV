@@ -1,6 +1,6 @@
 ﻿exec(open('scripts/ni063_slow_queries.py',encoding='utf-8').read().split('with oracledb.connect',1)[0])
 from time import perf_counter
-folder=Path('reports/nicora/2026-10-13/codex/QC_F1');ctx=json.loads(Path('tmp/qc1461_config.json').read_text());uid=json.loads(Path('tmp/qc1457_candidates.json').read_text())[0][0];results={}
+folder=Path('reports/retailcase/2026-10-13/codex/QC_F1');ctx=json.loads(Path('tmp/qc1461_config.json').read_text());uid=json.loads(Path('tmp/qc1457_candidates.json').read_text())[0][0];results={}
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute("select NAME,TYPE,LINE,TEXT from USER_ERRORS where NAME='RRL_QC_SCOPE_READ'");assert not q.fetchall()
  q.execute('select p.ARTICUL,r.CELL,r.BASE_UOM,r.REMAIN,r.STOCK_VERSION from RRL_PALLETS p join RRL_REMAINS r on r.UID_POLETA=p.UID_PALLET where p.UID_PALLET=:p_uid and r.REMAIN>0',p_uid=uid);article,cell,uom,qty,version=q.fetchone()

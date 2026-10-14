@@ -10,7 +10,7 @@ new='''from ..domain.cost_summary import recognized_cost_summary
         except ValueError as exc:
             raise LogisticsCostError("COST_SUMMARY_SOURCE_INVALID",str(exc))from exc'''
 assert s.count(old)==1;s=s.replace(old,new);out[str(p)]=s
-p=Path("wiki/database/nicora_ni071_revision_summary_20261012.md");s=p.read_text(encoding="utf-8")
+p=Path("wiki/database/retailcase_ni071_revision_summary_20261012.md");s=p.read_text(encoding="utf-8")
 s+="""
 SQL506: fixed selector Python4.941ms/21 buffers; native2.179ms/6.7 buffers. Existing invoice/trip lines cold37.56–55.977ms with 76–145 buffers. Decision finance: preserve new dated-version index, 500-source bound and exact current WARE scope; one-query grouping in memory, no extra ORM N+1 or cross-currency aggregation. Owner finance: review invoice PAY_ORDER_ID / cost load join plans and batching if warm query remains over50ms or real invoice exceeds500 sources; no index added without plan evidence. Trip read now exposes same exact original-cost summary508.
 """

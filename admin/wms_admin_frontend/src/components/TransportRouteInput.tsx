@@ -15,7 +15,7 @@ export function TransportRouteInput({tripId, apiBase, headers, actor}: {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const generation = useRef(0);
-  const key = "nicora.trip.route.pending:" + JSON.stringify([apiBase, actor]);
+  const key = "retailcase.trip.route.pending:" + JSON.stringify([apiBase, actor]);
   useEffect(() => {
     generation.current++; setContext(null); setMessage(""); setBusy(false);
     setDrive(""); setBack(""); setSource(""); setReason("");

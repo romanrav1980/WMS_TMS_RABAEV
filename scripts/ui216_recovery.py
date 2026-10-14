@@ -6,7 +6,7 @@ out["wiki-raw/wms_admin_ui_reference/tare-load-recovery.js"]='''(() => {
  "use strict";
  const el = id => document.getElementById(id);
  const base = () => window.wmsAdminAuth.state.apiBase.replace(/\\/$/, "");
- const key = () => JSON.stringify(["nicora.tareLoadRecovery", base(), window.wmsAdminAuth.state.user?.username || ""]);
+ const key = () => JSON.stringify(["retailcase.tareLoadRecovery", base(), window.wmsAdminAuth.state.user?.username || ""]);
  let rows = [], pending = null, busy = false, generation = 0;
  const status = text => {el("recoveryStatus").textContent = text;};
  function controls() {

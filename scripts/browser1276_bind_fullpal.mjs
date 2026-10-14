@@ -22,7 +22,7 @@ try{
   await panel.locator('[role=status]').filter({hasText:'связана с местом СТ'}).waitFor();
  }
  ctx.stage='FULLPAL_BOUND';fs.writeFileSync(path,JSON.stringify(ctx,null,2));
- await page.locator('#fullpalShipment').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/76-b01-fullpal-bound.png'});
+ await page.locator('#fullpalShipment').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/76-b01-fullpal-bound.png'});
  console.log(JSON.stringify({stage:ctx.stage,bindings:ctx.fullpal_bind,errors}));
  if(errors.length)throw Error(errors.join(';'));
 }finally{await browser.close();}

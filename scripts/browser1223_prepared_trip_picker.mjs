@@ -13,7 +13,7 @@ try{
  await page.locator('#tpRows button').first().waitFor();
  await page.locator('#tpFrom').fill('2026-11-03');await page.locator('#tpTo').fill('2026-11-04');
  await page.locator('#tpSearch').click();await page.locator('#tpRows button').first().waitFor();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/60-prepared-st-trip-picker.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/60-prepared-st-trip-picker.png'});
  await page.locator('#tpRows').getByRole('button',{name:'Выбрать рейс '+data.rows[0].trip_id,exact:true}).click();
  if(await page.locator('#sapTripId').inputValue()!==String(data.rows[0].trip_id))throw Error('Trip selection not applied');
  await page.locator('#sapTripReview').click();

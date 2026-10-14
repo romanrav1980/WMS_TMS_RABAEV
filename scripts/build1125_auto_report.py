@@ -30,12 +30,12 @@ ActualV$SQL: readiness8.286ms/75.57buffers, sequence2.603ms/14.5buffers. Реш�
 
 [Итоговый экран](screenshots/41-auto-st-saved-result.png). Screenshot39 — первая навигация показала реестр, а не форму;40 — промежуточная форма;41 — текущая созданнаяСТ. Скриншоты не доказывают ручное нажатие/сканирование.
 """
-f["reports/nicora/2026-10-13/30-auto-st-report.md"]=report
+f["reports/retailcase/2026-10-13/30-auto-st-report.md"]=report
 case=json.loads(Path("tmp/context1118.json").read_text(encoding="utf-8"))
 http=json.loads(Path("tmp/http1121_auto.json").read_text(encoding="utf-8"))
-f["reports/nicora/2026-10-13/30-auto-st-evidence.json"]=json.dumps({"case":case,"http":http},ensure_ascii=False,indent=2)+"\n"
-p=Path("reports/nicora/2026-10-13/index.html");s=p.read_text(encoding="utf-8");s=s.replace("</main>","<article><h2>30 · Автоматическая подготовка СТ</h2><p>Целые коробки, смешанные хвосты одной группы, точные ограничения и прежний Oracle writer.</p><a href=\"30-auto-st-report.md\">Отчёт</a> · <a href=\"30-auto-st-evidence.json\">Данные</a><img src=\"screenshots/41-auto-st-saved-result.png\" alt=\"Созданная СТ: два места16kg и8kg\"></article></main>");f[str(p)]=s
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");x=json.loads(p.read_text(encoding="utf-8"));x["planRevision"]=52
+f["reports/retailcase/2026-10-13/30-auto-st-evidence.json"]=json.dumps({"case":case,"http":http},ensure_ascii=False,indent=2)+"\n"
+p=Path("reports/retailcase/2026-10-13/index.html");s=p.read_text(encoding="utf-8");s=s.replace("</main>","<article><h2>30 · Автоматическая подготовка СТ</h2><p>Целые коробки, смешанные хвосты одной группы, точные ограничения и прежний Oracle writer.</p><a href=\"30-auto-st-report.md\">Отчёт</a> · <a href=\"30-auto-st-evidence.json\">Данные</a><img src=\"screenshots/41-auto-st-saved-result.png\" alt=\"Созданная СТ: два места16kg и8kg\"></article></main>");f[str(p)]=s
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");x=json.loads(p.read_text(encoding="utf-8"));x["planRevision"]=52
 for i in x["increments"]:
  if i["id"]=="NI02.1":
   i["title"]="Автоматическая подготовка СТ через существующие writers"
@@ -48,18 +48,18 @@ x["currentSprint"]="NI03.3";x["currentSprintMeaning"]="Continue remaining functi
 x["ownerAutoPreparationDecision"]["status"]="implemented_targeted_verified"
 # Do not declare a full sprint or overall release accepted.
 f[str(p)]=json.dumps(x,ensure_ascii=False,indent=2)+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/execution/active/ni02_1.md");s=p.read_text(encoding="utf-8")
+p=Path("wiki/requirements/retailcase_delivery_v55/execution/active/ni02_1.md");s=p.read_text(encoding="utf-8")
 s=s.replace("# NI02.1. Оригинальная автоматическая подготовка СТ","# NI02.1. Автоматическая подготовка СТ через существующие writers")
 s=s.replace("Статус: planned_delta.","Статус: implemented_targeted_verified (dev; независимая приёмка отдельно).")
 s=s.replace("Найти и восстановить утверждённый оригинальный auto-split вместо dev stubs. Если исходник недоступен, оставить ручную подготовку и блокер; второй splitter без отдельного решения не писать.","По решению владельца13Oct реализован собственный bounded exact расчёт через существующий writer. Архив и stubs не используются как рабочий auto-split. Независимая приёмка полного процесса и throughput остаются отдельными.")
-s+="\n13.10.2026/1125: automatic_layout + AutomaticPreparation + preview/run/resolve + UI/current read/intent recovery реализованы. Own1118/order2135 SAP_2135:18A+6B/12B, точные36EA/6boxes/24kg, FF2PLANNED0/P20H20; rollback/stale/race/replay/conflict PASS. HTTP1121/JS1122/domain1116 PASS. [Контракт](../../../../components/nicora_ni021_auto_preparation_20261013.md), [отчёт30](../../../../../reports/nicora/2026-10-13/30-auto-st-report.md). Приёмка полного спринта независимым исполнителем не заявлена.\n"
+s+="\n13.10.2026/1125: automatic_layout + AutomaticPreparation + preview/run/resolve + UI/current read/intent recovery реализованы. Own1118/order2135 SAP_2135:18A+6B/12B, точные36EA/6boxes/24kg, FF2PLANNED0/P20H20; rollback/stale/race/replay/conflict PASS. HTTP1121/JS1122/domain1116 PASS. [Контракт](../../../../components/retailcase_ni021_auto_preparation_20261013.md), [отчёт30](../../../../../reports/retailcase/2026-10-13/30-auto-st-report.md). Приёмка полного спринта независимым исполнителем не заявлена.\n"
 f[str(p)]=s
-p=Path("wiki/components/nicora_ni021_auto_preparation_20261013.md");s=p.read_text(encoding="utf-8")
+p=Path("wiki/components/retailcase_ni021_auto_preparation_20261013.md");s=p.read_text(encoding="utf-8")
 s+="\n1125: actual isolated2135 SAP_2135/2places18A+6B/12B, exact18EA/3boxes/12kg perSKU, outerrollback/stale/race/replay/conflict/currentHTTP+UI PASS. ProtectedP20H20. Report30/screen41; source2047 remains unprepared/badnorm, oldfixturesunchanged. Preview signature now includes limits too; saved original1118 receipt is returned unchanged. Current read-only UI displays original receipt stats; new receipts additionally save explicit planned_pallets. NoDDL; older archive remains evidence. SQL8.286ms/75.57 and2.603ms/14.5 retainboundedreads/noindex, ownerfulfillment; globalmetadata fences versioning backlog.\n"
 f[str(p)]=s
-p=Path("wiki/index.md");f[str(p)]="- [NI02.1 dev delivered1125](components/nicora_ni021_auto_preparation_20261013.md): actual2135/mixed2places/exact36EA/race/rollback/replay/report30/screen41; plan52, allfullsprints remain open.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");f[str(p)]="- [NI02.1 dev delivered1125](components/retailcase_ni021_auto_preparation_20261013.md): actual2135/mixed2places/exact36EA/race/rollback/replay/report30/screen41; plan52, allfullsprints remain open.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");f[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-13 /1125: NI02.1 самостоятельная автоподготовка по решению владельца delivered targeted dev. Actual2135→existingSAP_2135/2places, точные36EA/24kg/6boxes; race/rollback/stale/replay/conflict; HTTP1121/JS1122/domain1116 PASS; report30/screen41/plan52. NoDDL/noGithub/allfullsprints notcomplete. SQLreadiness8.286ms/75.57buffers/sequence2.603ms/14.5 retainbounds, fences backlog ownerfulfillment.\n"
-p=Path("wiki/runbooks/nicora_active_work.md");f[str(p)]="""# CHECKPOINT1125 — NI02.1 automatic preparation delivered; continue all
+p=Path("wiki/runbooks/retailcase_active_work.md");f[str(p)]="""# CHECKPOINT1125 — NI02.1 automatic preparation delivered; continue all
 
 Owner no fresherSQL explicit make ourselves fulfilled via domain/automatic_layout + infrastructure/automatic_preparation shared LegacyPreparation._prepare_locked, current oldsource/config rights, stable sequence SHARE->SKU->ORDERS locks. Auto preview/run/resolve + separateUI/currentGET/shared durable intent/damaged archive. DIMKOR is current mm, notcm; corrected before live, /10^9 exact. Mandatory explicit goods mass/volume/max100, norms wholebox/group stable greedy, no3Dproof. Signature includes limits after1125; cached old1118 remains immutable. New receipt saves planned_pallets; old1118 onlystats so currentUI says composition in ordercard (not inventedSKU).
 

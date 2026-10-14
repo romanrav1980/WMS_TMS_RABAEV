@@ -13,4 +13,4 @@ with httpx.Client(base_url='http://127.0.0.1:8088',auth=('admin',secret),timeout
   r=client.get('/api/inventory/store-return-putaway/warehouses/14524201/pending',params={'receipt_operation_id':pending[1]});r.raise_for_status();assert pending[0]==14524201 or r.json()==[]
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute("select SQL_ID,EXECUTIONS,round(ELAPSED_TIME/nullif(EXECUTIONS,0)/1000,3),BUFFER_GETS,substr(SQL_TEXT,1,100) from V$SQL where PARSING_SCHEMA_NAME='RABAEV' and EXECUTIONS>0 and SQL_TEXT not like '%V$SQL%' and SQL_TEXT like '%select r.OPERATION_ID RECEIPT_OPERATION_ID%' and DBMS_LOB.INSTR(SQL_FULLTEXT,'r.OPERATION_ID=:receipt')>0 order by LAST_ACTIVE_TIME desc fetch first 4 rows only");result['sql']=q.fetchall()
-Path('reports/nicora/2026-10-13/codex/NI062/live_read.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result))
+Path('reports/retailcase/2026-10-13/codex/NI062/live_read.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result))

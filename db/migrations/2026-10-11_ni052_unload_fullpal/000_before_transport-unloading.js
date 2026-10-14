@@ -2,7 +2,7 @@
  "use strict";
  const el = id => document.getElementById(id);
  const base = () => window.wmsAdminAuth.state.apiBase.replace(/\/$/, "");
- const scope = () => JSON.stringify(["nicora.unloadIntent", base(), window.wmsAdminAuth.state.user?.username || ""]);
+ const scope = () => JSON.stringify(["retailcase.unloadIntent", base(), window.wmsAdminAuth.state.user?.username || ""]);
  let pending = null, busy = false, rows = [], tripId = null, slotGeneration = 0;
  const status = text => { el("unloadStatus").textContent = text; };
  function controls() {

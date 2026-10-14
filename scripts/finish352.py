@@ -6,7 +6,7 @@ for f in["001_store.sql","002_ship.sql","003_recompile.sql"]:
  entry="../2026-10-12_ni061_mixed_consolidation/"+f
  if entry not in m["additional_scripts"]:m["additional_scripts"].append(entry)
 out[p.as_posix()]=json.dumps(m,indent=2)+"\n"
-page="wiki/database/nicora_ni061_mixed_consolidation_20261012.md"
+page="wiki/database/retailcase_ni061_mixed_consolidation_20261012.md"
 out[page]="""# Смешанное маркированное и обычное верхнее место
 345 APPLIED в RABAEV/orcl. Прежний HU_SHIP/двеdispatch строки/STORE_RECEIPT сохраняют разные правила товара. Для маркированного SKU применяется exact current savedprofile-version и матрица каждой единицы. Для обычного SKU issued_manifest доказывает ноль trackedunits и отсутствие обязательного профиля; ordinary_lots содержит только UID такого исходного STOCK листа. Количественные строки по этим UID проверяет прежний immutable receipt compiler. QR для обычного товара не создаются и не требуются.
 
@@ -18,11 +18,11 @@ Actual346–350: marked3EA/3units6codes +ordinary3EA/no codes, две реаль
 
 Не объявлены выполненными hardware/независимая приёмка/GovACK, multi-recovery и atomic grouped first-leg multiSKU receipt. SQL inventory owner: perleaf profileproof bounded byUID/card/200tree; warm plan and batching on large tree remain explicit backlog.
 """
-p=Path("wiki/index.md");out[p.as_posix()]="- [Смешанная консолидация и интерфейс матриц](database/nicora_ni061_mixed_consolidation_20261012.md):345–351 marked3/6codes+ordinary3 inoneTOP→STOREeach3; perSKU/profile UI/adminTS/archPASS.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");out[p.as_posix()]="- [Смешанная консолидация и интерфейс матриц](database/retailcase_ni061_mixed_consolidation_20261012.md):345–351 marked3/6codes+ordinary3 inoneTOP→STOREeach3; perSKU/profile UI/adminTS/archPASS.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\n- 12.10.2026 345–351 mixedmarked/ordinary originalkernel actualsource346347→oneTOP→350STOREeachorder3/no duplicateFF/no ordinaryQR/P0/protected20/20. Guardedordinarylotset+permarkedunitmatrix. StoreMarkMatrix modularUI/versioned selectkeys/adminTypeScriptPASS/arch6350cycles76. Source348 actualcontextdelivered, factories/initial cases forbidden.\n"
-p=Path("wiki/runbooks/nicora_active_work.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\nCurrent351 native345VALID/serv333/currentAPIreadcode320. Context348 marked3+ordinary3 delivered350/P0/6oldcodes/no ordinarycodes. adminTS/arch635/0cycles76. StoreMarkMatrix newUI no browser/hardwareclaim. Next NI07.1 monthly common work included in same existing rate; no secondbilling engine.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/execution/active/ni06_1.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\n345–351 mixed marked3/6codes+ordinary3 actualsameTOP/2ST/LOAD/DEPART/STOREbothorders3; ordinarylot evidence/nofakeQR/currentcardversions. PerSKU Matrix UI/adminTS. Multi-recovery/groupedfirstleg/partialnested/industrialindependent remain.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/runbooks/retailcase_active_work.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\nCurrent351 native345VALID/serv333/currentAPIreadcode320. Context348 marked3+ordinary3 delivered350/P0/6oldcodes/no ordinarycodes. adminTS/arch635/0cycles76. StoreMarkMatrix newUI no browser/hardwareclaim. Next NI07.1 monthly common work included in same existing rate; no secondbilling engine.\n"
+p=Path("wiki/requirements/retailcase_delivery_v55/execution/active/ni06_1.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\n345–351 mixed marked3/6codes+ordinary3 actualsameTOP/2ST/LOAD/DEPART/STOREbothorders3; ordinarylot evidence/nofakeQR/currentcardversions. PerSKU Matrix UI/adminTS. Multi-recovery/groupedfirstleg/partialnested/industrialindependent remain.\n"
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8"))
 for x in m["increments"]:
  if x["id"]=="NI06.1":
   x["implementedSlices"].append("345–351 mixed marked3 and ordinary3 actual oneTOP/2ST/STOREbothorders3, current matrix and proved ordinarylot quantities; perSKU UI/adminTS")

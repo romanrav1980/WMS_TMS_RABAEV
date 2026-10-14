@@ -1,7 +1,7 @@
 /* Close uses the existing CASE metadata journal, with a durable command identity. */
 (()=>{
  const valid=v=>Boolean(v&&Number.isSafeInteger(v.task)&&v.task>0&&v.body&&/^CASE.CLOSE.UI:[A-Za-z0-9-]+$/.test(v.body.operation_id)&&Number.isSafeInteger(v.body.expected_content_version)&&v.body.expected_content_version>=0);
- const intent=window.wmsCommandIntent.create('nicora.caseClose:',valid);let busy=false;
+ const intent=window.wmsCommandIntent.create('retailcase.caseClose:',valid);let busy=false;
  const button=()=>cpTsdEl('cpTsdClose');
  const archive=document.createElement('button');archive.type='button';archive.textContent='Архив повреждённого закрытия';archive.title='Сохранить повреждённый локальный запрос; факт на сервере не меняется.';archive.hidden=true;button().after(archive);
  function record(){try{return intent.read();}catch{return null;}}
@@ -14,7 +14,7 @@
   if(r.damaged)throw Error('Запрос закрытия повреждён. Сохраните его для разбора; новая команда заблокирована.');
   if(!r.value){
    const t=cpTsd.task;if(!t)throw Error('Выберите сборку.');
-   if(localStorage.getItem(JSON.stringify(['nicora.casePickIntent',cpTsdApiBase(),cpTsdUser()])))throw Error('Сначала повторите сохранённый отбор.');
+   if(localStorage.getItem(JSON.stringify(['retailcase.casePickIntent',cpTsdApiBase(),cpTsdUser()])))throw Error('Сначала повторите сохранённый отбор.');
    if(window.wmsCaseType?.hasPending())throw Error('Сначала повторите изменение типа паллеты.');
    r=intent.save({task:t.case_pick_task_id,body:{operation_id:'CASE.CLOSE.UI:'+crypto.randomUUID(),expected_content_version:t.content_version}});
   }

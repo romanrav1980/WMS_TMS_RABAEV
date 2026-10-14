@@ -41,13 +41,13 @@ values(s.MIGRATION_ID,'Explicit consumer post-arrival closure accounts for all s
 """,d+"apply.sql":"@@001_bind.sql\n@@002_continuation.sql\n@@003_ledger.sql\n",d+"rollback.sql":f"@@000_before_bind.sql\n@@000_before_continuation.sql\nupdate RRL_SCHEMA_MIGRATIONS set STATUS='ROLLED_BACK'where MIGRATION_ID='{mid}';\n/\n",
 d+"verify.sql":"select NAME,TYPE,LINE,TEXT from USER_ERRORS where NAME in('RRL_STOCK_REPL_BIND','RRL_STOCK_REPL_CONTINUATION');\nselect OBJECT_NAME,OBJECT_TYPE,STATUS from USER_OBJECTS where OBJECT_NAME in('RRL_STOCK_REPL_BIND','RRL_STOCK_REPL_CONTINUATION');\n",
 d+"checkpoint.json":json.dumps({"migration_id":mid,"state":"PREPARED","target":"RABAEV/orcl","before_sha256":{"bind":hashlib.sha256(before_bind.encode()).hexdigest(),"continuation":hashlib.sha256(before_next.encode()).hexdigest()},"after_sha256":{"bind":hashlib.sha256(bind.encode()).hexdigest(),"continuation":hashlib.sha256(continuation.encode()).hexdigest()}},indent=2)}
-p=Path("wiki/database/nicora_ni032_same_source_bindings_20261013.md");files[str(p)]=read(p)+"""
+p=Path("wiki/database/retailcase_ni032_same_source_bindings_20261013.md");files[str(p)]=read(p)+"""
 ## План состава872
 
 869 applied VALID; fresh867 выдал одно физическое задание, но execute_bind отказал CLOSURE_CHANGED до commit; own finally cleanup. Причина: pre-arrival target coverage excludes representative only; whole arrival одновременно переносит остальные own source bindings, поэтому post-target coverage увеличивается.872 prepared captures exact expected_target_covered = prior target + other own incoming only for whole PALLET. Runtime сохраняет equality check и остальные status/quantity/fact/owner guards. Root whole transfer closure captures all reservation identities/versions; no guard bypass.
 
 Continuation whole PALLET subtracts sum of original own active HARD on same UID/fromcell, not only representative row. BASE unchanged. Потребность другого владельца не включается; нет fake continuation, если все own резервы прибыли. Captured870/871/SHA/paired rollback, live/fresh pending.
 """
-p=Path("wiki/index.md");files[str(p)]="- [NI03.2 binding closure872](database/nicora_ni032_same_source_bindings_20261013.md): prepared exact expected coverage/all own incoming;869VALID, old execution rightly rolled back.\n"+read(p)
+p=Path("wiki/index.md");files[str(p)]="- [NI03.2 binding closure872](database/retailcase_ni032_same_source_bindings_20261013.md): prepared exact expected coverage/all own incoming;869VALID, old execution rightly rolled back.\n"+read(p)
 p=Path("wiki/log.md");files[str(p)]=read(p)+"\n- 2026-10-13 prepared872: exact explicit post-arrival target coverage and whole own incoming continuation.869 appliedVALID; fresh867 failed closure before commit/owncleanup, not passed. No equality/owner guard removed. Capture870871/checkpoint.\n"
 print(json.dumps(files,ensure_ascii=True))

@@ -12,8 +12,8 @@ try{
  if(await page.locator('#cpTypeRestart').isVisible()||await page.locator('#cpTypeRetry').isVisible())throw Error('False recovery buttons');
  if(errors.length)throw Error(errors.join(';'));
  await page.locator('#cpTypePanel').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/58-case-type-styled-desktop.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/58-case-type-styled-desktop.png'});
  await page.setViewportSize({width:390,height:844});await page.locator('#cpTypePanel').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/59-case-type-styled-mobile.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/59-case-type-styled-mobile.png'});
  console.log('PASS1219 real current CASE/type/read-only/styled desktop+mobile/hidden recovery controls');
 }finally{await browser.close();}

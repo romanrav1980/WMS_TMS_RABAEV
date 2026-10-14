@@ -12,7 +12,7 @@ v=v.replace("price.PRICE_FOR_ADDR<0 or price.PRICE_NAME", """price.PRICE_FOR_ADD
    price.PRICE*1e9!=trunc(price.PRICE*1e9)or price.PRICE_FOR_HOURS*1e9!=trunc(price.PRICE_FOR_HOURS*1e9)or
    price.PRICE_FOR_ADDR*1e9!=trunc(price.PRICE_FOR_ADDR*1e9)or price.PRICE_NAME""")
 out={str(p):v}
-out["wiki/database/nicora_ni071_transport_norms_20261012.md"]='''# NI07.1: публикация норм из существующего тарифа
+out["wiki/database/retailcase_ni071_transport_norms_20261012.md"]='''# NI07.1: публикация норм из существующего тарифа
 Подготовлено529–530, применение ожидается.
 Finance owner; существующая RRL_TRANSPORT_PRICE сохраняется единственным источником автомобильной/часовой/адресной ставки. Публикация снимает точный snapshot конкретной строки ID; неоднозначный ID/нет ставки/неверный тип отказаны. Новая таблица цен не создаётся, legacy строки/PRICE рейса не изменяются.
 RRL_TRANSPORT_NORM_HEAD/HISTORY сохраняют склад, версию, исходную строку, operation, actor, действующую дату, явную валюту/часовой пояс/тип/класс машины и отдельные ставки rolling/manual unload/loader. Reason/reference обязательны. История immutable, native guarded writer. Публикация не есть начисление и не заменяет реальные факты выгрузки.
@@ -21,7 +21,7 @@ RRL_TRANSPORT_NORM_HEAD/HISTORY сохраняют склад, версию, и�
 Next: typed publish API and bounded current reads; isolated legacy row positive publication/concurrency/replay/rollback. Actual unload/loader evidence and money recognition remain next functional tickets.
 '''
 for name,entry in [
-("wiki/index.md","- [Публикация транспортных норм](database/nicora_ni071_transport_norms_20261012.md): checkpoint529–530, snapshot existing tariff/current version/period/currency/size/unload; apply pending.\n"),
+("wiki/index.md","- [Публикация транспортных норм](database/retailcase_ni071_transport_norms_20261012.md): checkpoint529–530, snapshot existing tariff/current version/period/currency/size/unload; apply pending.\n"),
 ("wiki/log.md","\n12Oct529–530 checkpoint: prepared additive immutable norm publication anchored to existing price row, no legacy tariff/TTPRICE/stock mutation. Same source row serialisation and saved-op recheck, collision savepoint rollback, future monetary/unload facts separate.\n")]:
  p=Path(name);v=p.read_text(encoding="utf-8");out[str(p)]=entry+v if name=="wiki/index.md"else v+entry
 print(json.dumps(out))

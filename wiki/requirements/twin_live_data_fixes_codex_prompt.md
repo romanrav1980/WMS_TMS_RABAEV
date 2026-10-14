@@ -12,8 +12,8 @@ FastAPI в api/wms_api_server, React admin, параллельно работа�
 
 ## Обязательный онбординг (до любых изменений)
 
-1. Прочитай AGENTS.md, wiki/index.md, wiki/architecture/nicora_modular_development_contract.md,
-   config/architecture/nicora-policy.json, wiki/database/oracle_change_protocol.md.
+1. Прочитай AGENTS.md, wiki/index.md, wiki/architecture/retailcase_modular_development_contract.md,
+   config/architecture/retailcase-policy.json, wiki/database/oracle_change_protocol.md.
 2. Прочитай wiki/subprojects/wms_twin_3d.md (раздел «Live-сопоставление» и «Находки по данным»)
    и код двойника twin/wms_twin_3d/src/adapters/tmsMapping.ts, tmsLive.ts.
 3. Правила, которые нельзя нарушать:
@@ -28,7 +28,7 @@ FastAPI в api/wms_api_server, React admin, параллельно работа�
    - Существующие контракты API сохраняются: новые поля/параметры только аддитивно, значения
      по умолчанию дают прежнее поведение.
    - После каждого значимого кейса — анализ долгих SQL (RRL_SQL_SLOW_LOG, /api/admin/slow-sql)
-     с явным решением. Перед сдачей: python scripts/nicora_quality_gate.py и
+     с явным решением. Перед сдачей: python scripts/retailcase_quality_gate.py и
      scripts/check-encoding.ps1. GitHub не публиковать.
    - Двойник (twin/wms_twin_3d) остаётся read-only: он не вызывает мутирующие API.
 
@@ -134,7 +134,7 @@ G. В twin/wms_twin_3d/src/adapters/tmsMapping.ts GATE_KIND 'BOTH' не расп
 - Обновлённые wiki/index.md и запись в wiki/log.md.
 - Отчёт: что сделано, что осталось, какие допущения приняты (особенно восстановленное название зоны
   и выбранная модель связи дока с воротами).
-- python scripts/nicora_quality_gate.py — PASS; scripts/check-encoding.ps1 — PASS.
+- python scripts/retailcase_quality_gate.py — PASS; scripts/check-encoding.ps1 — PASS.
 
 ## Вне рамок
 

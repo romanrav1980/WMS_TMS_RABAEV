@@ -20,10 +20,10 @@ class MinimaxService:
              then 1 else 0 end HAS_SOURCE,
 
             (select min(rt.MINIMAX_CYCLE_ID) from RRL_PICK_WAVE_REPLENISH_TASK rt join RRL_PICK_WAVE w on w.PICK_WAVE_ID=rt.PICK_WAVE_ID
-                where w.WAVE_NAME='NICORA_MINIMAX' and w.STATUS='LAUNCHED' and rt.ARTICUL=a.ARTICUL and rt.TARGET_CELL_CODE=pf.CELL_CODE
+                where w.WAVE_NAME='RETAILCASE_MINIMAX' and w.STATUS='LAUNCHED' and rt.ARTICUL=a.ARTICUL and rt.TARGET_CELL_CODE=pf.CELL_CODE
                  and rt.MINIMAX_FINISHED_AT is null and rt.MINIMAX_CYCLE_ID is not null) CYCLE_ID,
             to_char((select max(rt.MINIMAX_TARGET_BASE) from RRL_PICK_WAVE_REPLENISH_TASK rt join RRL_PICK_WAVE w on w.PICK_WAVE_ID=rt.PICK_WAVE_ID
-                where w.WAVE_NAME='NICORA_MINIMAX' and w.STATUS='LAUNCHED' and rt.ARTICUL=a.ARTICUL and rt.TARGET_CELL_CODE=pf.CELL_CODE
+                where w.WAVE_NAME='RETAILCASE_MINIMAX' and w.STATUS='LAUNCHED' and rt.ARTICUL=a.ARTICUL and rt.TARGET_CELL_CODE=pf.CELL_CODE
                  and rt.MINIMAX_FINISHED_AT is null),'TM9','NLS_NUMERIC_CHARACTERS=''.,''') CYCLE_TARGET,
 
             to_char(coalesce(case when a.USE_ARTICUL_REPLENISH_RULE=1 then ar.MIN_TRIGGER_BOX_QTY end,
@@ -89,7 +89,7 @@ class MinimaxService:
             try:
                 cursor.execute("begin RRL_STOCK_METADATA_TX.begin_change(:actor,'pick_wave_launch');end;",{"actor":actor});entered=True
                 rows=self._snapshot(cursor,warehouse)
-                cursor.execute("select PICK_WAVE_ID from RRL_PICK_WAVE where WARE_ID=:ware and WAVE_KIND='REPLENISHMENT' and WAVE_NAME='NICORA_MINIMAX' and STATUS='LAUNCHED' order by PICK_WAVE_ID for update",{"ware":warehouse})
+                cursor.execute("select PICK_WAVE_ID from RRL_PICK_WAVE where WARE_ID=:ware and WAVE_KIND='REPLENISHMENT' and WAVE_NAME='RETAILCASE_MINIMAX' and STATUS='LAUNCHED' order by PICK_WAVE_ID for update",{"ware":warehouse})
                 waves=cursor.fetchall()
                 if len(waves)>1:raise HTTPException(409,detail="MINIMAX_WAVE_AMBIGUOUS")
                 wave=int(waves[0][0]) if waves else None
@@ -97,7 +97,7 @@ class MinimaxService:
                 if wave is None and ready:
                     cursor.execute("select RRL_PICK_WAVE_SQ.nextval from dual");wave=int(cursor.fetchone()[0])
                     cursor.execute("""insert into RRL_PICK_WAVE(PICK_WAVE_ID,WAVE_CODE,WAVE_NAME,WARE_ID,WAVE_KIND,STATUS,CREATED_BY)
-                        values(:id,:code,'NICORA_MINIMAX',:ware,'REPLENISHMENT','LAUNCHED',:actor)""",
+                        values(:id,:code,'RETAILCASE_MINIMAX',:ware,'REPLENISHMENT','LAUNCHED',:actor)""",
                         {"id":wave,"code":f"MINIMAX:{warehouse}:{uuid4().hex[:12]}","ware":warehouse,"actor":actor})
                 if wave is not None:
                     cursor.execute("""select PICK_WAVE_REPLENISH_TASK_ID from RRL_PICK_WAVE_REPLENISH_TASK where PICK_WAVE_ID=:wave

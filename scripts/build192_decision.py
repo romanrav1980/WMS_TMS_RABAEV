@@ -84,11 +84,11 @@ t=t.replace(a,'''**({"decision": "RESTORE"} if request.decision == "RESTORE" els
              "expected_content_version": request.expected_content_version, "expected_order_weight_signature": request.expected_order_weight_signature}
             if request.decision == "WEIGHT_TOLERANCE" else {})''')
 out[str(p)]=t
-out["wiki/database/nicora_ni042_weight_decision_design_20261011.md"]="""# NI04.2: явное завершение по допуску массы
+out["wiki/database/retailcase_ni042_weight_decision_design_20261011.md"]="""# NI04.2: явное завершение по допуску массы
 192 extends existing CASE_SHORT_APPROVE with WEIGHT_TOLERANCE. Actual picked quantity remains immutable stock fact; same native owner releases only unused HARD, closes partial line, records exact original order-SKU mass/pct/version/current signed read snapshot and approval actor/reason. No false inventory discrepancy generated for ordinary weight deviation. Current CONFIG SHARE and declared original order/all SKU rows/all related PT/plan anchors protect concurrent calculation; source signed snapshot checked before/after planned locks. Original accepted metadata append-only guarded root TX/operation/canonical decision/source.
 No automatic order waiver until separate193 pool integration proves current cancellation/return-aware demand. No over-plan pick/last-box exemption in192. Hardware precision unchanged; no marked unit opening.
 """
-for name,line in [("wiki/index.md","- [Завершение по допуску массы: разработка](database/nicora_ni042_weight_decision_design_20261011.md):192 existing short approval/native snapshots/current planned order resources; current demand waiver next."),
+for name,line in [("wiki/index.md","- [Завершение по допуску массы: разработка](database/retailcase_ni042_weight_decision_design_20261011.md):192 existing short approval/native snapshots/current planned order resources; current demand waiver next."),
 ("wiki/log.md","2026-10-11:192 implementation begins from freshly captured live short/read/pool contracts; existing CASE_SHORT_APPROVE explicit weight decision, no second stock writer; paired history-protected rollback.")]:
  p=Path(name);out[str(p)]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
 print(json.dumps(out,ensure_ascii=True))

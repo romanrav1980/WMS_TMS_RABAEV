@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-out={};page="wiki/database/nicora_ni081_operation_plan_20261010.md"
+out={};page="wiki/database/retailcase_ni081_operation_plan_20261010.md"
 out[page]="""# NI08.1 — прежняя ARM-цепочка сохраняет факты,141
 
 Existing TransportService.plan_operations deleted every RRL_TT_OPERATIONS row before generation, including actual FACT_START/FACT_END and prior IDs. Replaced with public native adapter/RRL_TT_OPERATION_PLAN_API.generate, same old URL/list shape and configured12 stage chain, one UOW. Unstarted existing codes updated in place; missing rows inserted, no DELETE. Real actor forwarded from old authenticated router.
@@ -17,13 +17,13 @@ Returned configured estimate explicitly says planning_basis=CONFIGURED_NORMS_EST
 
 SQL generate36.334ms/3, fact11.058ms/2. Decision retain short TT/source201 bounded read and existing TT_ID operation lookup/norm-code keys; do not add a duplicate index from small author sample. Source membership uses existing global TT serialization guard; no new stock lock protocol. Full NI08.1 not closed and independent acceptance remains open.
 """
-out["wiki/index.updated.tmp"]="- [ARM-расчёт сохраняет фактические операции](database/nicora_ni081_operation_plan_20261010.md):141 native original12 stages/replay IDs/no DELETE/current fact scope/history guard/actual33530 no stock.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
+out["wiki/index.updated.tmp"]="- [ARM-расчёт сохраняет фактические операции](database/retailcase_ni081_operation_plan_20261010.md):141 native original12 stages/replay IDs/no DELETE/current fact scope/history guard/actual33530 no stock.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
 for name,line in [
  ("wiki/log.md","2026-10-10:141 original ARM generation removed destructive DELETE, native current scope/vehicle→TT→operations/shared capacity/snapshot norms/date+clock/no fake place, existing12 stages. Global actual delete-clear-key-plan guard; fact patch native current WARE/TT→operation/interval/savepoint. APPLIED6/0/liveVALID; actual own33530 original136 twoST generated/repeated identical IDs/LOADING6, fact saved/regeneration409/direct20886/negative409; cancelled metadata keeps fact/no goods. SQL36.334/11.058ms preserve bounded source/current keys. Legacy naive correction and configured zero-drive estimate not certified physical/time-window evidence; joint coordination/range recommendations next."),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","Ticket141 preserves original ARM fact history during operation recalculation, date+clock/native shared capacity and current warehouse fact updates. See database/nicora_ni081_operation_plan_20261010.md. Current norm-based estimate is not real routing/time-window admission or durable versioned plan replay.")
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md","Ticket141 preserves original ARM fact history during operation recalculation, date+clock/native shared capacity and current warehouse fact updates. See database/retailcase_ni081_operation_plan_20261010.md. Current norm-based estimate is not real routing/time-window admission or durable versioned plan replay.")
 ]:
  p=Path(name);out[name]=p.read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":
   row.setdefault("implementedSlices",[]).append("141 original ARM plan preserves execution/IDs/current source scopes/date+clock/native norm snapshot")

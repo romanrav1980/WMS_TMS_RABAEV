@@ -21,7 +21,7 @@ def transport_tariff_sources(trip_id: int,warehouse_id: int=Query(gt=0),
     except LogisticsCostError as exc:raise failure(exc)from exc
 '''
 out[str(p)]=v
-out["wiki/database/nicora_ni071_transport_tariff_sources_20261012.md"]='''# NI07.1: действующие транспортные тарифы
+out["wiki/database/retailcase_ni071_transport_tariff_sources_20261012.md"]='''# NI07.1: действующие транспортные тарифы
 523–526: live RRL_GET_TT_PRICE и RRL_UPDATE_PRICE — транспортная стоимость; RRL_GET_TT_PRICE_ID читает региональный ключ. RRL_GET_TT_PRICE меняет PAY_REGION/ADDR_PREMIO, затем RRL_UPDATE_PRICE меняет PRICE. Не вызывать их как readonly SELECT.
 **Противоречие прежнему ТЗ биллинга:** live TRANSPORT_TASK.stoim_tt суммирует stoim_pall_sb, то есть стоимость товаров по приходной/последней цене; это не сумма тарифа перевозки. Источник524 сохранён tmp/price524.json. Требуется исправить это описание; код valuation не заменять транспортными ставками.
 RRL_TRANSPORT_PRICE уже содержит автомобильную/часовую/адресную ставку, компанию, тип машины и региональный PRICE_NAME. Эта таблица пуста в dev525. RRL_TRANSPORT_NORMS содержит длительности, не денежные тарифы.
@@ -30,9 +30,9 @@ Actual receipt/address counts are labelled separately; they do not prove actual 
 Next implementation: publish immutable versions anchored in existing tariff rows; actual unloading facts behind existing store/driver command owners; once-only vehicle/point/unload recognition. No zero-price fallback or assumed currency/method.
 '''
 for name,text in [
-("wiki/index.md","- [Транспортный тариф: правильный источник](database/nicora_ni071_transport_tariff_sources_20261012.md): valuation stoim_tt differs from carrier tariff; existing PRICE catalog/readonly source candidates, no arbitrary fee.\n"),
+("wiki/index.md","- [Транспортный тариф: правильный источник](database/retailcase_ni071_transport_tariff_sources_20261012.md): valuation stoim_tt differs from carrier tariff; existing PRICE catalog/readonly source candidates, no arbitrary fee.\n"),
 ("wiki/log.md","\n12Oct523–526: inspected live transport tariff sources without mutation. Found billingTZ contradiction: stoim_tt is goods valuation; transport fee uses GET_TT_PRICE/UPDATE_PRICE with side effects/ambiguous rownum1. Reused existing PRICE catalog via bounded current-scope source API, exact amounts/hashes; no monetary charge or stock effect. Next immutable norm publication and actual unload fact.\n")]:
  p=Path(name);old=p.read_text(encoding="utf-8");out[str(p)]=text+old if name=="wiki/index.md"else old+text
 p=Path("wiki/requirements/transport_billing_tz.md");v=p.read_text(encoding="utf-8")
-v="> Уточнение по live Oracle, 12.10.2026: [[../database/nicora_ni071_transport_tariff_sources_20261012]]. TRANSPORT_TASK.stoim_tt — стоимость товаров; фактический пересчёт тарифной цены вызывает RRL_UPDATE_PRICE → RRL_GET_TT_PRICE. Раздел7 ниже — историческое описание, противоречие сохранено явно; не использовать goods valuation как перевозку.\n\n"+v;out[str(p)]=v
+v="> Уточнение по live Oracle, 12.10.2026: [[../database/retailcase_ni071_transport_tariff_sources_20261012]]. TRANSPORT_TASK.stoim_tt — стоимость товаров; фактический пересчёт тарифной цены вызывает RRL_UPDATE_PRICE → RRL_GET_TT_PRICE. Раздел7 ниже — историческое описание, противоречие сохранено явно; не использовать goods valuation как перевозку.\n\n"+v;out[str(p)]=v
 print(json.dumps(out))

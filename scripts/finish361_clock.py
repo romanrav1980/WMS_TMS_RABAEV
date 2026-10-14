@@ -9,7 +9,7 @@ cols=m["required_columns"].setdefault("RRL_CASE_PICK_TASK",[])
 for col in ["STARTED_AT_INSTANT","STARTED_SHIFT_TIME_ZONE"]:
  if col not in cols:cols.append(col)
 out[p.as_posix()]=json.dumps(m,indent=2)+"\n"
-page="wiki/database/nicora_ni033_case_start_instant_20261012.md"
+page="wiki/database/retailcase_ni033_case_start_instant_20261012.md"
 out[page]="""# Точный момент начала сборки CASE
 Миграция2026-10-12-361-case-actual-aware-start APPLIED dev RABAEV/orcl. Existing CaseActions.start_task записывает STARTED_AT_INSTANT TIMESTAMP WITH TIME ZONE вместе с прежним началом, назначением и STARTED event в той же metadata transaction/ordered CONFIG6. Повтор сохраняет первый момент и один event. Guard запрещает импорт выдуманного начала, изменение первого момента, backfill старого naive STARTED_AT и запись пояса без достоверного источника.
 
@@ -20,10 +20,10 @@ Actual361: собственное пустое CASE с отдельным тип
 Период существующего BOX cost пока loaded UTC. Новое поле подготавливает достоверный источник начала; NS56 этим не закрыт.
 """
 for file,text in [
- ("wiki/index.md","- [Точный момент начала CASE](database/nicora_ni033_case_start_instant_20261012.md):361 same start/event/TSTZ/immutable/rollback; legacy shift zone unknown.\n"),
+ ("wiki/index.md","- [Точный момент начала CASE](database/retailcase_ni033_case_start_instant_20261012.md):361 same start/event/TSTZ/immutable/rollback; legacy shift zone unknown.\n"),
  ("wiki/log.md","\n- 12.10.2026 361 nativeCASE actual aware start/immutableclock/currentactor/tarebook/one event/repeat/rollback PASS; own emptyfixture book released/count0/metadata retired; historical shift timestamps naive, zone explicitly unknown/no backfill. Native bundle includes columns/guard; financial period still pending.\n"),
- ("wiki/runbooks/nicora_active_work.md","\nCurrent361: CASE start native TSTZ and nullable unknown shift zone, positive old action under rollback/tare0/protected20. Source tmp/context361.json closed; initial factory forbidden. Next explicit warehouse operating time zone and safe assembly-period financial basis.\n"),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni03_3.md","\n361: existing CASE start stores immutable actual TSTZ, one event on repeat/rollback/currentactor/tare. Legacy naive starts cannot be guessed; assignedshift also naive so zone NULL. Explicit warehouse operating-day policy needed for finance.\n")]:
+ ("wiki/runbooks/retailcase_active_work.md","\nCurrent361: CASE start native TSTZ and nullable unknown shift zone, positive old action under rollback/tare0/protected20. Source tmp/context361.json closed; initial factory forbidden. Next explicit warehouse operating time zone and safe assembly-period financial basis.\n"),
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni03_3.md","\n361: existing CASE start stores immutable actual TSTZ, one event on repeat/rollback/currentactor/tare. Legacy naive starts cannot be guessed; assignedshift also naive so zone NULL. Explicit warehouse operating-day policy needed for finance.\n")]:
  p=Path(file);old=p.read_text(encoding="utf-8");out[file]=text+old if file=="wiki/index.md"else old+text
 root=next(Path(".").glob("*/NI08.1/178_container_cell_index.md")).parent.parent
 out[(root/"NI03.3/361_case_start_clock.md").as_posix()]="# Qwen361\nExisting CASE start with actual booked tare; first TSTZ immutable/repeat one event/rollback; old naive start no fabricated backfill. Assigned shift timestamps are naive, unknown zone must remain NULL. Own context361 retired/tare0/protected20; no initial factory rerun. Financial operating day still pending.\n"

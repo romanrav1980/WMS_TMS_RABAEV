@@ -91,7 +91,7 @@ Root declares ST/FF keys per CASE in parent/child snapshots, stores frozen mater
 
 Packing/detaching existing policy deliberately revokes ordinary CASE controls, measured small-box exception preserved. Moving intacttree preserves current admission by old policy; no blanket recontrol is invented. Current HU slot/target/scan/warehouse constraints retained. Captures990/992/SHA/pairedrollback/no DBcopy. Livecompile and ownretained987 twoCASE HU attach/move/detach scenario still pending; not fullNI04.1 closure.
 """
-files["wiki/database/nicora_ni041_hu_case_binding_20261013.md"]=page
-p="wiki/index.md";files[p]="- [NI04.1 HU CASE binding993](database/nicora_ni041_hu_case_binding_20261013.md): prepared originalmatryoshka/one activeFFversion owner/frozen tree bindings, live pending.\n"+read(p)
+files["wiki/database/retailcase_ni041_hu_case_binding_20261013.md"]=page
+p="wiki/index.md";files[p]="- [NI04.1 HU CASE binding993](database/retailcase_ni041_hu_case_binding_20261013.md): prepared originalmatryoshka/one activeFFversion owner/frozen tree bindings, live pending.\n"+read(p)
 p="wiki/log.md";files[p]=read(p)+"\n- 2026-10-13 checkpoint993 PREPARED original HU_CMD tree CASE versions with reused binding974; activePICKED only/closedhistoryunchanged, RootSTFF resources and frozenbindings, captures990992/SHA/pairedrollback, no stock writer/copy. Actualpending.\n"
 print(json.dumps(files,ensure_ascii=True))

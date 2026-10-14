@@ -1,1 +1,1 @@
-"""Existing SKU master data extensions for NICORA."""
+"""Existing SKU master data extensions for RETAILCASE."""

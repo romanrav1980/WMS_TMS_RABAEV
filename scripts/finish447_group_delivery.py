@@ -6,7 +6,7 @@ for directory in ['2026-10-12_ni061_group_promises','2026-10-12_ni061_group_cust
  value='../'+directory+'/apply.sql'
  if value not in m['additional_scripts']:m['additional_scripts'].append(value)
 out[p.as_posix()]=json.dumps(m,indent=2)+'\n'
-page='wiki/database/nicora_ni061_group_delivery_20261012.md'
+page='wiki/database/retailcase_ni061_group_delivery_20261012.md'
 out[page]='''# Полный многотоварный межскладской поток двух плеч
 428/429/433/442 APPLIED/VALID. Existing custody/shipping/HU/task/store owners retained; group helpers describe sources and immutable links, not another quantity writer.
 
@@ -26,16 +26,16 @@ SQL440 groupbind lookup.907ms/12, resolveddispatchproof3.762ms/4, dispatchINSERT
 
 Remaining: partial/aggregate-only groups, multi-day/temperature decisions and revisioned rerouting, detachedsingle loading, high-leaf batching, real ERP/Gov/hardware/independent acceptance.
 '''
-for filename,entry in [('wiki/index.md','- [Полная доставка многотоварного места](database/nicora_ni061_group_delivery_20261012.md):428–444 twoSKU3each/originalST→groupreceipt/1HUtask/custody/onward/LOAD/DEPART/STOREbothbuyer3; sourceFFonce/6oldkeys9codes/HTTP replay.\n'),('wiki/log.md','\n- 12.10.2026 428–447: closedboundedgroup two-legactualctx406/twoSKU3EA6keys9codes/originaltwoST/firstreceipt412/wholetask419/custody430/onward435/originalshipping436/depart437/STORE3each. Group promises block beforeload/readyafter, incoming2/2; delivery438 distinctlineage avoids doublecount. SourceFF3once each/protected20; fullloadrollback/replays and restartedHTTP444 exactoldcommands afterdelivery. CurrentperSKU temp assertions reuseoldthermalowner442/receipt index; groupdecisions/rerouting/partials/aggregate-only remain. SQLbind.907/dispatch8.999/phase20.403ms bounded/indexbatchowner decisions.\n'),('wiki/requirements/nikora_delivery_v55/execution/active/ni06_1.md','\n428–444: full positive twoSKU firstleggroup receipt→originalHU task→custody→existingnewST/assignment/QC→wholeHU secondLOAD/DEPART→STORE3each. Old6keys9codes/sourceFF3once/native rollback/replay/HTTP afterdelivery/currentthermalcellrules. Group departure promises and incoming2/2, originalorder delivery projection DISTINCT correct. Partial/aggregate-only/temperaturedecision-rerouting/highleaf/independentexternal remain.\n')]:
+for filename,entry in [('wiki/index.md','- [Полная доставка многотоварного места](database/retailcase_ni061_group_delivery_20261012.md):428–444 twoSKU3each/originalST→groupreceipt/1HUtask/custody/onward/LOAD/DEPART/STOREbothbuyer3; sourceFFonce/6oldkeys9codes/HTTP replay.\n'),('wiki/log.md','\n- 12.10.2026 428–447: closedboundedgroup two-legactualctx406/twoSKU3EA6keys9codes/originaltwoST/firstreceipt412/wholetask419/custody430/onward435/originalshipping436/depart437/STORE3each. Group promises block beforeload/readyafter, incoming2/2; delivery438 distinctlineage avoids doublecount. SourceFF3once each/protected20; fullloadrollback/replays and restartedHTTP444 exactoldcommands afterdelivery. CurrentperSKU temp assertions reuseoldthermalowner442/receipt index; groupdecisions/rerouting/partials/aggregate-only remain. SQLbind.907/dispatch8.999/phase20.403ms bounded/indexbatchowner decisions.\n'),('wiki/requirements/retailcase_delivery_v55/execution/active/ni06_1.md','\n428–444: full positive twoSKU firstleggroup receipt→originalHU task→custody→existingnewST/assignment/QC→wholeHU secondLOAD/DEPART→STORE3each. Old6keys9codes/sourceFF3once/native rollback/replay/HTTP afterdelivery/currentthermalcellrules. Group departure promises and incoming2/2, originalorder delivery projection DISTINCT correct. Partial/aggregate-only/temperaturedecision-rerouting/highleaf/independentexternal remain.\n')]:
  p=Path(filename);old=p.read_text(encoding='utf-8');out[filename]=entry+old if filename=='wiki/index.md'else old+entry
-p=Path('wiki/requirements/nikora_delivery_v55/implementation_plan.json');m=json.loads(p.read_text(encoding='utf-8'));m['date']='2026-10-12';m['planRevision']=14;m['currentSprint']='NI04.3'
+p=Path('wiki/requirements/retailcase_delivery_v55/implementation_plan.json');m=json.loads(p.read_text(encoding='utf-8'));m['date']='2026-10-12';m['planRevision']=14;m['currentSprint']='NI04.3'
 for x in m['increments']:
  if x['id']=='NI06.1':
   x['status']='in_progress_grouped_two_leg_delivered'
   x.setdefault('implementedSlices',[]).append('428–444 full grouped2SKU3each/old6keys9codes/custody/ST/wholeload/depart/STOREbuyer3each/sourceFFonce/groupdepartureincoming/typedUI/HTTP replay')
   x['remainingScope']=['partial/aggregate-only grouped receiving','group temperature decisions and revisioned rerouting/detached single loading','aggregation invalidation/repacking lifecycle','high-leaf source batching and independent acceptance/hardware/current real ERP and government ACK']
 out[p.as_posix()]=json.dumps(m,ensure_ascii=False,indent=2)+'\n'
-p=Path('wiki/runbooks/nicora_active_work.md');t=p.read_text(encoding='utf-8').replace('Current native417/app425','Current native442/app441, APIserv445')
+p=Path('wiki/runbooks/retailcase_active_work.md');t=p.read_text(encoding='utf-8').replace('Current native417/app425','Current native442/app441, APIserv445')
 t=t.replace('APIserv366 (latest invoice-period read373 pending restart)','latest group/billing period reads loaded')
 t='Latest447: ctx406 fullgroup two-leg delivered/STORE3each/sourceFF3once each/old6keys9codes/P0; nofactory404405 or receiving419 interimassertions. Native442/currentAPI445/HTTP444 replaypassed. Next NI04.3 aggregate invalidation/repacking lifecycle; grouppartials/thermalrerouting remain.\n\n'+t
 out[p.as_posix()]=t

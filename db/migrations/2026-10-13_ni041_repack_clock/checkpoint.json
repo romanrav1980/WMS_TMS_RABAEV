@@ -12,7 +12,7 @@
     "db/migrations/2026-10-13_ni041_repack_clock/rollback.sql": "43a0e88371e9b9a7041154fc00e8ecb247f247c93db5fa86d0252a932436a1b8",
     "db/migrations/2026-10-13_ni041_repack_clock/verify.sql": "f811a692d7df553bc1cb86d6b358fe8d8c9a420503f96050c56dc042e670e878"
   },
-  "evidence": "reports/nicora/2026-10-13/25-nested-hu-wait-evidence.json",
+  "evidence": "reports/retailcase/2026-10-13/25-nested-hu-wait-evidence.json",
   "native_errors": [],
   "native_invalid": []
 }

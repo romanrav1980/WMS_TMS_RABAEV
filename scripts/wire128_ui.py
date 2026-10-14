@@ -13,8 +13,8 @@ s=s.replace('<script src="trace-manifests.js">','<script src="trace-unit-capture
 out[p.as_posix()]=s
 p=Path("wiki-raw/wms_admin_ui_reference/trace-manifests.js");s=p.read_text(encoding="utf-8")
 needle='const aggregations=JSON.parse(el("tmScans").value);if(!Array.isArray(aggregations)||!aggregations.length)throw Error("Укажите сканы обязательных агрегаций.");const capture={manifest_operation_id:el("tmManifest").value,units:[],aggregations},uid=el("tmPallet").value;'
-replacement='const mode=el("tmCaptureMode").value;let capture=mode==="AGGREGATION"?{units:[],aggregations:[]}:window.nicoraUnitCapture.capture(mode==="UNIT");if(mode!=="UNIT"){const aggregations=JSON.parse(el("tmScans").value);if(!Array.isArray(aggregations)||!aggregations.length)throw Error("Укажите сканы обязательных агрегаций.");capture={...capture,manifest_operation_id:el("tmManifest").value,aggregations};}const uid=el("tmPallet").value;'
+replacement='const mode=el("tmCaptureMode").value;let capture=mode==="AGGREGATION"?{units:[],aggregations:[]}:window.retailcaseUnitCapture.capture(mode==="UNIT");if(mode!=="UNIT"){const aggregations=JSON.parse(el("tmScans").value);if(!Array.isArray(aggregations)||!aggregations.length)throw Error("Укажите сканы обязательных агрегаций.");capture={...capture,manifest_operation_id:el("tmManifest").value,aggregations};}const uid=el("tmPallet").value;'
 assert needle in s;s=s.replace(needle,replacement,1)
-s=s.replace('pending=null;el("tmResult").textContent=JSON.stringify(result,null,2);','pending=null;window.nicoraUnitCapture.reset();el("tmResult").textContent=JSON.stringify(result,null,2);')
+s=s.replace('pending=null;el("tmResult").textContent=JSON.stringify(result,null,2);','pending=null;window.retailcaseUnitCapture.reset();el("tmResult").textContent=JSON.stringify(result,null,2);')
 out[p.as_posix()]=s
 print(json.dumps(out,ensure_ascii=True))

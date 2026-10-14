@@ -16,12 +16,12 @@ if "RRL_STOCK_SUP_RETURN" not in m["packages"]:m["packages"].append("RRL_STOCK_S
 out[str(p)]=json.dumps(m,indent=2)+"\n"
 p=Path("scripts/build108.py");s=p.read_text(encoding="utf-8-sig");at=s.index("print(json.dumps(out,ensure_ascii=True))")
 s=s[:at]+'for name in ["001_schema.sql","002_helper.sql","003_shipping.sql","004_effect.sql","005_guards.sql","apply.sql","rollback.sql"]:\n out[str(f/name)]=(f/name).read_text(encoding="utf-8-sig")\n'+s[at:];out[str(p)]=s
-p=Path("wiki/index.md");out["wiki/index.updated.tmp"]="- [Поставщик: прежняя СТ и фактическая погрузка](database/nicora_ni062_supplier_dispatch_20261010.md):108 APPLIED, exact placed return1/native ST/load/P0H0/replay/departure; supplier receipt distinct.\n"+p.read_text(encoding="utf-8-sig")
+p=Path("wiki/index.md");out["wiki/index.updated.tmp"]="- [Поставщик: прежняя СТ и фактическая погрузка](database/retailcase_ni062_supplier_dispatch_20261010.md):108 APPLIED, exact placed return1/native ST/load/P0H0/replay/departure; supplier receipt distinct.\n"+p.read_text(encoding="utf-8-sig")
 for name,line in [
  ("wiki/log.md","2026-10-10:108 reused original PALL_SPLITTER ST preparation/rows and transport assignment/single physical loading. Immutable binding to original placed supplier receipt/UID; blocked source allowed only current exact LOAD_SHIPMENT/dispatch role. Actual1→0 H0/event1/outbox1/replay/departure no second stock PASS. Fixed new typed generic shipping base-UOM propagation; old fallback retained. SQL302.379/269.461/79.190/75.267ms: retain scoped100/PK, NI06.2 owner reviews repeated history plan."),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni06_2.md","Ticket108: [возврат поставщику существующей СТ](../../../../database/nicora_ni062_supplier_dispatch_20261010.md), actual original preparation/assignment/load1/P0H0/replay/departure; supplier receipt/SAP acknowledgement/disposal/marked remain open.")]:
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni06_2.md","Ticket108: [возврат поставщику существующей СТ](../../../../database/retailcase_ni062_supplier_dispatch_20261010.md), actual original preparation/assignment/load1/P0H0/replay/departure; supplier receipt/SAP acknowledgement/disposal/marked remain open.")]:
  p=Path(name);out[name]=p.read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-out["wiki/database/nicora_ni062_supplier_dispatch_20261010.md"]="""# NI06.2 — возврат поставщику через прежнюю СТ,108
+out["wiki/database/retailcase_ni062_supplier_dispatch_20261010.md"]="""# NI06.2 — возврат поставщику через прежнюю СТ,108
 Migration2026-10-10-108-supplier-return-existing-loading APPLIED RABAEV/orcl. Original apply17/0; guards refinement5/0; base-UOM shipping correction2/0. New private helper and existing shipping/effect packages VALID.
 Owner inventory; goods transaction owner existing RRL_STOCK_POSTING_API LOAD_SHIPMENT. Metadata prep uses existing outgoing_pallet_edit fence/PALL_SPLITTER.create_return_task/add_row_2sborka_pallets and canonical replay hash, never changes P/H. SC selects unique current supplier INN and explicit decision. Immutable receipt→ST/source binding prohibits rewriting source ST identity/quantity.
 

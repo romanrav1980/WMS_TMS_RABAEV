@@ -12,4 +12,4 @@ with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle
   start=time.perf_counter()
   for i in range(stops*17):q.execute(sql,wall='2026-10-14 09:00',zone='Europe/Moscow');assert q.fetchone()[0]==1
   results.append({'stops':stops,'conversions':stops*17,'milliseconds':round((time.perf_counter()-start)*1000,2)})
-print(json.dumps(results));Path('reports/nicora/2026-10-13/codex/STORE_WEEKLY/conversion_before.json').write_text(json.dumps(results,indent=2))
+print(json.dumps(results));Path('reports/retailcase/2026-10-13/codex/STORE_WEEKLY/conversion_before.json').write_text(json.dumps(results,indent=2))

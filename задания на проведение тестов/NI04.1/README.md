@@ -1,6 +1,6 @@
 # Qwen: складское дерево грузовых мест
 
-Основания wiki/database/nicora_ni041_hu_design_20261009.md, nicora_ni041_hu_tree_20261009.md, nicora_ni041_hu_move_20261009.md.050–051 APPLIED, полная приёмка открыта.
+Основания wiki/database/retailcase_ni041_hu_design_20261009.md, retailcase_ni041_hu_tree_20261009.md, retailcase_ni041_hu_move_20261009.md.050–051 APPLIED, полная приёмка открыта.
 
 Проверить существующие pallet identities, parent no stock, leaf counted once, optional standard SSCC/internal UID. API/UI warehouse-hus packing/unpack version/reason/scans и user/API durable replay. Root guards запрещают циклы, второго активного родителя, отдельный nested P и прямой metadata DML. Проверить concurrent opposite/competing attach с ordered ancestors и rollback whole operation; авторский single-session случай не доказывает конкуренцию.
 

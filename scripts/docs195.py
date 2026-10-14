@@ -28,8 +28,8 @@ for name,new in {
  for col in new:
   if col not in cols[name]:cols[name].append(col)
 out[str(p)]=json.dumps(m,indent=2)+"\n"
-out["wiki/database/nicora_ni042_weight_box_choice_20261011.md"]="""# NI04.2: согласование последней целой коробки
-195 APPLIED. [[nicora_ni042_weight_box_choice_design_20261011]], [[nicora_ni042_weight_box_planning_20261011]].
+out["wiki/database/retailcase_ni042_weight_box_choice_20261011.md"]="""# NI04.2: согласование последней целой коробки
+195 APPLIED. [[retailcase_ni042_weight_box_choice_design_20261011]], [[retailcase_ni042_weight_box_planning_20261011]].
 Additive immutable RRL_PICK_WEIGHT_CHOICE captures original order row/warehouse/SKU/physical key/UID/cell/stockversion/exact net/frozen original order+remaining/pct+version/mode/reason/actor/raw request/full signed original source/result. Unique active original-row and physical-box sparse indexes prevent double intent; no P/H/stock writer/plan yet.
 Native current approval-only rights and warehouse separated from pick-plan creation via restricted optional reader permission. Exact source signature/current AVAILABLE unit/measurements/rawGS1 decoded same identity and exact net required; WITHIN_TOLERANCE only inside default/current pct; LAST_WHOLE_BOX explicitly outside with reason, card default15 and scale precision unchanged. Existing CASE business metadata owner CONFIG X +WAREHOUSE.METADATA row anchor; no general warehouse-config permission granted. Trusted own TX/id/actor/phase context guard blocks arbitrary insert/edit/delete; cancellation retains original archive. Same choice+actor/request replay returns original receipt; changed content20873, active duplicate409. Current active_choice read separate from original saved receipt.
 Raw customer-order panel supports approval-only user, physical barcode/reason form, explicit exception caption, original durable choice body/retry per API/user/row/unknown-outcome marker; known first refusal may clear new draft, unresolved old outcome retains. Active choice/cancel display; source metadata safe textContent. No physical fulfillment implied by approved intent.
@@ -40,15 +40,15 @@ Current runtime required_columns now mirrors179..195 policy/physical/scale/use/d
 Next196 consume choice within existing native plan/SOFT transaction/current source;197 HARD pin exact physical key;198 fulfilled/cancelled demand and lastbox8/12 end-to-end. NI04.2 remains open.
 """
 for path,line in [
-("wiki/index.md","- [Согласование последней целой коробки](database/nicora_ni042_weight_box_choice_20261011.md):195 approval-only exact8-vs10/default15 unchanged/immutable source/replay/cancel/no P-H; existing plan use next."),
+("wiki/index.md","- [Согласование последней целой коробки](database/retailcase_ni042_weight_box_choice_20261011.md):195 approval-only exact8-vs10/default15 unchanged/immutable source/replay/cancel/no P-H; existing plan use next."),
 ("wiki/log.md","2026-10-11:195 APPLIED immutable final whole-box choice/current approval-only warehouse/source/GS1/default15/no split. Own2e694ba0de8-vs10/replay/refusals/active unique/immutable/cancel/current status/no P-H passed; correct business metadata owner reused without stock/config-right grants. Three failed own actors retired. Required columns179..195 mirrored; nativeVALID/architecture5480cycles76debt/JS. Approval15.904ms18 bounded rare fence; inventory plan owner."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni04_2.md","11.10.2026:195 current signed whole box8-vs10 explicit LAST_WHOLE_BOX approval archive/source/roles/active uniqueness/replay/cancel/UI delivered; no stock or plan effect.196 old native plan/SOFT consumption,197 exact HARD unit,198 fulfilled/returned demand next.")]:
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni04_2.md","11.10.2026:195 current signed whole box8-vs10 explicit LAST_WHOLE_BOX approval archive/source/roles/active uniqueness/replay/cancel/UI delivered; no stock or plan effect.196 old native plan/SOFT consumption,197 exact HARD unit,198 fulfilled/returned demand next.")]:
  p=Path(path);out[str(p)]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
 roots=[p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md")]
 if roots:out[str(roots[0]/"NI04.2"/"195_whole_box_choice.md")]="""# Qwen:195
 Run ni042_weight_box_choice_case.py dedicated dev. Approval-only actor distinct planner right/currentWARE; boxed8/12 original10/default15 unchanged/noSplit. Native source signature/version/physical label identity+net/measurements required, mode outsidewindow explicit reason. Idempotent exact request/actor, changed reuse conflict, unique active perrow andunit, metadata-only no P/H/plan. Direct insert/edit/delete refuse, cancel original archive/current active status, long1000-character Unicode reason. Browser durable unknown-body retry/auth peruser/source generation races/activecancel. Existing business metadata namespace+CONFIG X+metadata anchor (no stock context) must remain. Original receipt vs current status separated. Do not claim actual plan/HARD until196/197. Review indexed bounded native source/rare fence timings.
 """
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8"))
 for item in m.get("sprints",[]):
  if item.get("id",item.get("code"))=="NI04.2":
   slices=item.setdefault("implementedSlices",[])

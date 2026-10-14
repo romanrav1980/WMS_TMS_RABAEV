@@ -28,7 +28,7 @@ assert s.count(needle)==2
 s=s.replace(needle,"  assert_empty_tare(d.get_object('source').get_number('case_task_id'));\n"+needle,1)
 out[str(p)]=s
 out[str(f/"004_finish.sql")]="@@002_archive.sql\n@@003_admission.sql\n"
-p=Path("wiki/database/nicora_ni042_final_scale_design_20261011.md");s=p.read_text(encoding="utf-8")
+p=Path("wiki/database/retailcase_ni042_final_scale_design_20261011.md");s=p.read_text(encoding="utf-8")
 s=s.replace("Связь с исходным EMPTY_TARE проверяет коробку/тип/версию типа/устройство и актуальную калибровку.","Связь с исходным EMPTY_TARE проверяет коробку/тип/устройство/пост/склад/режим и измерение в пределах24ч. Калибровка проверена в момент архивирования каждого пакета; последующая смена названия типа или действующей калибровки не изменяет исторически измеренную физическую массу. Версия типа/политики остаётся в архиве. Новое брутто требует актуальной калибровки.")
 s+="\nNative CASE до первого отбора требует архив EMPTY_TARE того же SSCC/склада/типа/поста и режима. Это предотвращает наполнение коробки, чья тара ещё не измерена. Показание само не проводит товар.\n";out[str(p)]=s
 print(json.dumps(out,ensure_ascii=True))

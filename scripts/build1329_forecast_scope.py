@@ -56,7 +56,7 @@ files[str(d/"004_ledger.sql")]=Path("db/migrations/2026-10-14_ni053_driver_works
 files[str(d/"apply.sql")]="@@001_schema.sql\n@@002_api.sql\n@@003_guard.sql\n@@004_ledger.sql\n"
 files[str(d/"rollback.sql")]="@@000_before_body.sql\n-- Keep configuration history and guarded table; do not delete business decisions.\nupdate RRL_SCHEMA_MIGRATIONS set STATUS='ROLLED_BACK'where MIGRATION_ID='2026-10-14-1328-forecast-norm-scope';\n/\n"
 files[str(d/"verify.sql")]="select NAME,TYPE,LINE,TEXT from USER_ERRORS where NAME in('RRL_WORKLOAD_CONFIG_API','RRL_WORKLOAD_SCOPE_SITE_G');\nselect OBJECT_NAME,OBJECT_TYPE from USER_OBJECTS where STATUS='INVALID';\n"
-files["wiki/database/nicora_ni081_forecast_norm_scope_20261014.md"]="""# NI08.1: связь прогноза с нормативом участка
+files["wiki/database/retailcase_ni081_forecast_norm_scope_20261014.md"]="""# NI08.1: связь прогноза с нормативом участка
 
 Миграция2026-10-14-1328-forecast-norm-scope PREPARED. Владелец resources. Append-only RRL_WORKLOAD_SCOPE_SITE(warehouse, work_scope, version) связывает CASE_DISPATCH/FULLPAL_DISPATCH/OUTBOUND_WORKLOAD с явным SITE_CODE существующих норм RRL_WORKLOAD_NORM. Не угадываем соответствие названий, универсальную производительность или численность людей.
 
@@ -66,6 +66,6 @@ Read model получает mapping + актуальные нормы SKU/base_u
 
 LIVE исходник и INVALID=[] сохранены; rollback возвращает код без удаления истории. Применение/API/UI/evidence ожидаются.
 """
-p=Path("wiki/index.md");files[str(p)]="- [NI08.1 нормативы прогноза1328](database/nicora_ni081_forecast_norm_scope_20261014.md): prepared versioned scope→site, existing native config and norms, no guessed labour capacity.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");files[str(p)]="- [NI08.1 нормативы прогноза1328](database/retailcase_ni081_forecast_norm_scope_20261014.md): prepared versioned scope→site, existing native config and norms, no guessed labour capacity.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-14 ·1328–1329: prepared explicit forecast norm scope, LIVE workload API saved; reuse history/auth/version/native owner; no stock command.\n"
 print(json.dumps(files,ensure_ascii=True))

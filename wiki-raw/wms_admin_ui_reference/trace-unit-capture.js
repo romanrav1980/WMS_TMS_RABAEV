@@ -84,5 +84,5 @@
   for (const id of ["tmBirthKind", "tmRevision", "tmMovement", "tmPallet", "tmArticle", "tmCell"])
     el(id).addEventListener("change", reset);
   window.addEventListener("wms-admin-auth-ready", () => { if (!context || boundIdentity !== identity()) reset(); });
-  window.nicoraUnitCapture = {capture, reset};
+  window.retailcaseUnitCapture = {capture, reset};
 })();

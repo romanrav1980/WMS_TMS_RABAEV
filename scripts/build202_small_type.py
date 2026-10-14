@@ -94,10 +94,10 @@ drop context RRL_PALLET_TYPE_CTX;
 drop package RRL_PALLET_TYPE_API;
 alter table RRL_PALLET_TYPE drop column FINAL_WEIGHT_REQUIRED;
 """
-out["wiki/database/nicora_ni042_small_final_weight_design_20261011.md"]="""# NI04.2: обязательный финальный вес малой коробки
+out["wiki/database/retailcase_ni042_small_final_weight_design_20261011.md"]="""# NI04.2: обязательный финальный вес малой коробки
 202 additive FINAL_WEIGHT_REQUIRED default0 on existing pallet type. Existing CASE shipment QC policy upgrades NONE/ANY→WEIGHT, SCAN→BOTH only for the specific child type; parent warehouse exemption never grants child weight approval. Existing immutable root QC records/content signature/actual gross and wood values retained; DEFAULT_WEIGHT_KG remains a reference, never claimed as measured tare. New precise Decimal type DTO/current legacy endpoint delegates to inventory native metadata owner (case_pick_manage/configexclusive/trusted type context); omission preserves flag. No stock writer.203/204 addressed final scale archive and proof integration follow;202 alone is not physical scale acceptance.
 """
-for p,line in[("wiki/index.md","- [Проект финального веса малой коробки](database/nicora_ni042_small_final_weight_design_20261011.md):202 per-type mandatory child QC/current metadata owner; final scale archive next."),
+for p,line in[("wiki/index.md","- [Проект финального веса малой коробки](database/retailcase_ni042_small_final_weight_design_20261011.md):202 per-type mandatory child QC/current metadata owner; final scale archive next."),
 ("wiki/log.md","2026-10-11:202 small-box final-weight design: currentCASE type mandatory weight independent of parent/warehouse exemption; reference default weight not measuredtare; precise DTO/existing native QC reuse.203/204 addressed measurements next.")]:
  path=Path(p);out[p]=path.read_text(encoding="utf-8")+"\n"+line+"\n"
 print(json.dumps(out,ensure_ascii=True))

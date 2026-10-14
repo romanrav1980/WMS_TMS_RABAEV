@@ -18,6 +18,6 @@ try{
  ctx.staging_tasks=await page.evaluate(id=>waveRepFetch('/api/picking/waves/'+id+'/tasks?limit=500'),ctx.wave_id);
  ctx.stage='STAGING_RELEASED';fs.writeFileSync(path,JSON.stringify(ctx,null,2));
  await page.locator('#waveStagingTaskRows').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/72-b01-staging-issued.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/72-b01-staging-issued.png'});
  console.log(JSON.stringify({stage:ctx.stage,tasks:ctx.staging_tasks}));
 }finally{await browser.close();}

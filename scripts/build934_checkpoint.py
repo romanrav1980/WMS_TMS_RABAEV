@@ -16,23 +16,23 @@ Receiving930: cached success проверяет OP/line/pallet/exactquantity/sta
 
 Quality919 PASS24/bothTS/arch6910cycles76; cachepermissionswarning. Encoding21783PASS (до позднихrawUI/doc изменений). Node922930931 PASS. All18 notdone, NI03.3 fullmarked/terminal/independent residuals open, GitHub не публиковался. До20:00MSK продолжается функция.
 
-[SQL](../../db/migrations/2026-10-13_ni033_order_execution_scope/apply.sql) · [SAP source](nicora_ni011_supply_lines_20261013.md).
+[SQL](../../db/migrations/2026-10-13_ni033_order_execution_scope/apply.sql) · [SAP source](retailcase_ni011_supply_lines_20261013.md).
 """
-files["wiki/database/nicora_ni033_order_execution_20261013.md"]=page
-files["reports/nicora/2026-10-13/14-order-execution-report.md"]=page
-files["reports/nicora/2026-10-13/14-order-execution-evidence.json"]=json.dumps({"order923":json.loads(read("tmp/order923.json")),"retained929":json.loads(read("tmp/order929.json")),"http_sql926":json.loads(read("tmp/execution926.json")),"receipt932":json.loads(read("tmp/recovery932.json")),"receipt933":json.loads(read("tmp/recovery933.json")),"independent_acceptance":False,"browser_manual_passed":False},indent=2)
+files["wiki/database/retailcase_ni033_order_execution_20261013.md"]=page
+files["reports/retailcase/2026-10-13/14-order-execution-report.md"]=page
+files["reports/retailcase/2026-10-13/14-order-execution-evidence.json"]=json.dumps({"order923":json.loads(read("tmp/order923.json")),"retained929":json.loads(read("tmp/order929.json")),"http_sql926":json.loads(read("tmp/execution926.json")),"receipt932":json.loads(read("tmp/recovery932.json")),"receipt933":json.loads(read("tmp/recovery933.json")),"independent_acceptance":False,"browser_manual_passed":False},indent=2)
 p="db/migrations/2026-10-13_ni033_order_execution_scope/checkpoint.json";v=json.loads(read(p));v["state"]="APPLIED_DEV_VALID";v["evidence"]="923/929 readonly currentfacts,926 HTTP,928 JS; no stock changes";files[p]=json.dumps(v,indent=2)
-p="reports/nicora/2026-10-13/index.html";files[p]=read(p).replace("</main>",'<article><h2>14 · Фактическое исполнение заказа</h2><a href="14-order-execution-report.md">Отчёт №14</a><p>Один снимок Oracle, текущие права и защита поздних ответов.</p></article></main>')
-p="wiki/requirements/nikora_delivery_v55/implementation_plan.json";v=json.loads(read(p));v["planRevision"]=37
+p="reports/retailcase/2026-10-13/index.html";files[p]=read(p).replace("</main>",'<article><h2>14 · Фактическое исполнение заказа</h2><a href="14-order-execution-report.md">Отчёт №14</a><p>Один снимок Oracle, текущие права и защита поздних ответов.</p></article></main>')
+p="wiki/requirements/retailcase_delivery_v55/implementation_plan.json";v=json.loads(read(p));v["planRevision"]=37
 inc=next(x for x in v["increments"]if x["id"]=="NI03.3");inc["implementedSlices"].append("922-934 current native fulfillment read scope/single readonly header+physical facts, old173 order4 physicallypicked3/remain1; HTTP926/currentWARE/JS928 stale response; no new stock writer")
 inc=next(x for x in v["increments"]if x["id"]=="NI01.1");inc["implementedSlices"].append("930-933 exact receipt-response correlation/scoped durable settlement/originalsource retry refresh; actual cached908 and amended910 after reversal no stock rebirth; manual browser remains open")
 files[p]=json.dumps(v,ensure_ascii=False,indent=2)
-p="wiki/requirements/nikora_delivery_v55/implementation_plan.md";files[p]=read(p).replace("**Revision 36,","**Revision 37,")+"\nCheckpoint934: NI03.3 execution current scope/single snapshot и NI01.1 exact receipt recovery, report14; старые172/173 read-only3/remain0 и3/remain1, источникнепересоздавался. [[database/nicora_ni033_order_execution_20261013]].\n"
-p="wiki/requirements/nikora_delivery_v55/execution/active/ni03_3.md";files[p]=read(p)+"\n922–934 current order fulfillment snapshot/native scope/API/UI, actual923/929/HTTP926+JS928. Original173 order4 picked3/remain1 confirmedreadonly. [[database/nicora_ni033_order_execution_20261013]]. Fullmarked/independent lifecycle remains.\n"
-p="wiki/index.md";files[p]="- [Checkpoint934: исполнение заказа](database/nicora_ni033_order_execution_20261013.md):925 VALID/current snapshot, original3/0 и3/1/HTTP926, receipt930–933 recovery; report14/plan37, browser unavailable.\n"+read(p)
+p="wiki/requirements/retailcase_delivery_v55/implementation_plan.md";files[p]=read(p).replace("**Revision 36,","**Revision 37,")+"\nCheckpoint934: NI03.3 execution current scope/single snapshot и NI01.1 exact receipt recovery, report14; старые172/173 read-only3/remain0 и3/remain1, источникнепересоздавался. [[database/retailcase_ni033_order_execution_20261013]].\n"
+p="wiki/requirements/retailcase_delivery_v55/execution/active/ni03_3.md";files[p]=read(p)+"\n922–934 current order fulfillment snapshot/native scope/API/UI, actual923/929/HTTP926+JS928. Original173 order4 picked3/remain1 confirmedreadonly. [[database/retailcase_ni033_order_execution_20261013]]. Fullmarked/independent lifecycle remains.\n"
+p="wiki/index.md";files[p]="- [Checkpoint934: исполнение заказа](database/retailcase_ni033_order_execution_20261013.md):925 VALID/current snapshot, original3/0 и3/1/HTTP926, receipt930–933 recovery; report14/plan37, browser unavailable.\n"+read(p)
 p="wiki/log.md";files[p]=read(p)+"\n- 2026-10-13 checkpoint934:922/925 native fulfillment view whitelist/current scope/single readonly snapshot APPLIED/VALID; actual923 missingright denial (sameWARE, not foreignproof), retained929 orders1929picked3remain0/1931picked3remain1; HTTP926 currentafter927, JS928 staleguard. SQL69.478ms1078buf retainbounded2000; largeorderbatching ownedfulfillment backlog. Receiving930 correlateddurable/retrybusyrefresh; JS931/HTTP932933 cache afterreversal/amend no rebirth/versionsunchanged. Quality919PASS/encoding21783PASS earlier; browserextensionunavailable. Report14/plan37/all18notcomplete. Activeworkoldhistory archived tokeepcurrentpage small.\n"
-p="wiki/runbooks/nicora_active_work.md";files["wiki/runbooks/archive/nicora_active_work_before_934.md"]=read(p)
-files[p]="""# NICORA — текущая работа, checkpoint934
+p="wiki/runbooks/retailcase_active_work.md";files["wiki/runbooks/archive/retailcase_active_work_before_934.md"]=read(p)
+files[p]="""# RETAILCASE — текущая работа, checkpoint934
 
 13.10.2026, около15:25MSK. USER: непрерывно до20:00MSK (17:00UTC) либо фактического завершения всех18. Не завершатьturn/status-only раньше. Plan37/currentNI03.3, толькоNI03.1 devcomplete, остальные17 полных открыты. Fullcommit/GitHub поручены толькоПОСЛЕВСЕХ, SAP/SAP_INTEGRATION исключены. Пока публикации нет. No agents/goals/copies, >=80%functionality.
 
@@ -48,7 +48,7 @@ LocalAPI8088, rawUI /wms-admin/, React3000 (not8089). StatReloadcurrentlydoesNOT
 
 SQL914 receivingdetail3.678ms32buf/canonical2.236ms38/received.765ms18/header3.234ms17.75, retainbounded1000/existingorderlineindex. SQL926 oldphysicalprogress69.478ms1078buf3exec; retainbounded2000/orderkeys, ownerfulfillment largerordergroupedbatch/planbacklog; nofakeproductionload. Report14has926currentJSON copied. VSQLSQL_TEXTlimited1000: filterqueryprefix, notaliasesafter1000chars.
 
-Reports01–14/screenshots01–15 approved C:/projects/TMS/reports/nicora/2026-10-13. Screenshot14 realprotected688 currentprofile/auto-singleline/confirmdisabled;15two-line908 before915status. Browser manualrow/buttons gaveNOobservableeffect, notcertified; JS917 actualcontroller handlers work. CUAafterreset getTab/tabs.get/claimTab fail debuggerconnection; summarise as browsercontrol unavailable through extension. Alternate tms_playwrightnavigate hungterminated9012. No moreblindclicks/installations/networkinjections. CUA runtime has taskBrowser selectedChrome2/nameSession, taskCandidate current908 tab butNOtaskTab binding duefailedattach; browseruserown tabsunrelated ignored.
+Reports01–14/screenshots01–15 approved C:/projects/TMS/reports/retailcase/2026-10-13. Screenshot14 realprotected688 currentprofile/auto-singleline/confirmdisabled;15two-line908 before915status. Browser manualrow/buttons gaveNOobservableeffect, notcertified; JS917 actualcontroller handlers work. CUAafterreset getTab/tabs.get/claimTab fail debuggerconnection; summarise as browsercontrol unavailable through extension. Alternate tms_playwrightnavigate hungterminated9012. No moreblindclicks/installations/networkinjections. CUA runtime has taskBrowser selectedChrome2/nameSession, taskCandidate current908 tab butNOtaskTab binding duefailedattach; browseruserown tabsunrelated ignored.
 
 ## Prior critical deliveries/protected sources
 852sharedcapacity onephysicalincoming;866same-sourcebindings;869owneraggregate;872exacttarget/allownincoming;877currentpickscope before replay/afterlocks: APPLIEDVALID. Fresh867wave546/task1099DONE20 own12/other8 no next, owncleaned; related850wave547whole20+12 owners12/8/14cleaned.879wave551/task1104 existingCasePickServicehelper thenrelease/servicecache/foreignQA172scope/replaycleaned; don'tusefirstdirectnativebody OP againstservicebody. Reports10/11 JSON savedauthoritative.
@@ -62,7 +62,7 @@ Continue independentfunctionalremainingNI03.3/NI04/otherplans untildeadline; nof
 
 Use exactobserved paths via rg --files before reads; PS UTF8, Pythonread/write encodingutf8, JSONstdoutensure_asciiTrue (consolecp1251 can'tprintarrows). Storewriter in functions: eval("("+load("writeStockFiles")+")"). File-backedbuilders emitJSON; PS ErrorActionStop +LASTEXITCODEcheck before applying. Don'trerunoneshotbuilders; reapplysavedJSON ifwritefailed. OuterJSbacktick mustNOTcontain literalbacktick/$interpolation; nestedPythontriplequotes requirecare. Native SQLbind :p_uid (not:uid), reset_connectionaftercommit/rollback. tools.session_id→write_stdin, functions.cell_id→wait; no>60swaits. No agents bydeveloper.
 
-[Previous detailed context archive](archive/nicora_active_work_before_934.md) retains earlier source identities and history.
+[Previous detailed context archive](archive/retailcase_active_work_before_934.md) retains earlier source identities and history.
 """
 dirs=list(Path(".").glob("*/NI01.1"));assert len(dirs)==1
 files[str(dirs[0].parent/"NI03.3"/"934_order_execution_read.md")]="""# Qwen — current order execution

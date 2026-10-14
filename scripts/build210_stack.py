@@ -68,7 +68,7 @@ alter table RRL_SKU_RECEIPT_POLICY drop constraint RRL_SKU_STACK_STAGE_CK;
 alter table RRL_SKU_RECEIPT_POLICY drop column STACK_STAGE;
 """
 out[str(f/"verify.sql")]="select NAME,TYPE,LINE,TEXT from USER_ERRORS where NAME in('RRL_CASE_ROUTE_ADMISSION','RRL_CASE_STACK_STAGE_CAPTURE');\nselect OBJECT_NAME,OBJECT_TYPE from USER_OBJECTS where STATUS='INVALID'and OBJECT_NAME like 'RRL%';\n"
-out["wiki/database/nicora_ni042_stack_stage_design_20261011.md"]="""# NI04.2: этап укладки и выданный маршрут
+out["wiki/database/retailcase_ni042_stack_stage_design_20261011.md"]="""# NI04.2: этап укладки и выданный маршрут
 210 / NS34-TC01/TC02. Existing global WMS SKU policy/card/version/audit owns explicit BASE foundation, MAIN middle, TOP light/fragile upper goods. MAIN compatibility default; no invented weight threshold or ABC mapping. Existing CASE line captures exact stage+policyversion at birth; later SKU config affects future rows only. Guard immutable metadata, no stock movement by trigger. Native route helper checks stage monotonicity along original saved linear route, refuses incompatible layout before stock effect instead of reversing physical route. Same point requires lower stage first. Actual heavy goods classified by responsible warehouse master-data user; no claim inferred load-bearing engineering. Reuse existing versioned card API and root CASE lock; all legacy MAIN lines preserve behavior. Fresh sources/additive columns/paired rollback only without staged history, otherwise forward repair.
 """
 print(json.dumps(out,ensure_ascii=True))

@@ -1,5 +1,5 @@
 # Qwen302–303 corrective redelivery
-Read wiki/database/nicora_ni061_recovery_redelivery_20261011.md/context302 and303_291/_292. Bothrealshipments/finalreceipts alreadycommitted/P0; no sourcebirth or initial rollback scripts.
+Read wiki/database/retailcase_ni061_recovery_redelivery_20261011.md/context302 and303_291/_292. Bothrealshipments/finalreceipts alreadycommitted/P0; no sourcebirth or initial rollback scripts.
 ExactOP/body replays noquantity/FF/outboxrepeat; changedbody or new competingbind409. Foreign/current revokedWARE actor403 beforecache; currenttrip/cell/version/thermal/markings refuse. Native rollbackload restoresP2/units/clearsdispatch; Store rollbackno finalfact/customercredit.
 Customer projection originalshipped3 once; initial1+corrective2 accepted3/unreceived0; historicalloss2/recovered2/net0. Beforefinal2 warehousefound doesn'tcreditcustomer. Duplicate/excess/foreignloss/dispositionmismatch rejects. Shared partial leaf no proportionalownership. SixoriginalQR birthhashes unchanged/no governmentACK.
 UI no rawJSON; pendingOPID persisted beforeHTTP, actor/API/receipt fences; sourceindexes/bounded oneRO/read warm SQL. Separate executed tests fromstatic review/independent acceptance. Partial/recurrent loss intentionallynotaccepted yet.

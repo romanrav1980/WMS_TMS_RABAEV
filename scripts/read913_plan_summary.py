@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-p=json.loads(Path("wiki/requirements/nikora_delivery_v55/execution/execution_plan.json").read_text(encoding="utf-8-sig"))
+p=json.loads(Path("wiki/requirements/retailcase_delivery_v55/execution/execution_plan.json").read_text(encoding="utf-8-sig"))
 print("TOP",list(p)[:30])
 def walk(x):
  if isinstance(x,dict):

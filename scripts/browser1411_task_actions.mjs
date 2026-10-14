@@ -8,7 +8,7 @@ try {
  await page.locator('#adminLoginForm button[type=submit]').click();
  await page.locator('#warehouseTaskDetailStatus').filter({hasText:'PLANNED'}).waitFor();
  if(!await page.locator('#warehouseTaskAssign').isEnabled())throw Error('Planned assignment blocked');
- await page.locator('#warehouseTaskDetail').screenshot({path:'reports/nicora/2026-10-13/screenshots/107-ni032-task-actions.png'});
+ await page.locator('#warehouseTaskDetail').screenshot({path:'reports/retailcase/2026-10-13/screenshots/107-ni032-task-actions.png'});
  await page.locator('#warehouseTaskAssignee').fill('NO_MATCH_1411');
  // Only the POST reply is intercepted. No assignment or stock mutation reaches Oracle.
  await page.route('**/api/warehouse-tasks/564/assign',r=>r.fulfill({status:200,contentType:'application/json',body:'{}'}));

@@ -491,7 +491,7 @@ async function applyMesWms() {
   if (!mesState.selectedOrder) throw new Error("Выберите заказ");
   if (!mesCan("mes_wms_bridge_apply")) throw new Error("Нет права mes_wms_bridge_apply");
   const path = `/api/mes/production-orders/${mesState.selectedOrder.production_order_id}/apply-wms`;
-  const key = JSON.stringify(["nicora.mesApplyIntent", mesApiBase(), mesCurrentUser(), path]);
+  const key = JSON.stringify(["retailcase.mesApplyIntent", mesApiBase(), mesCurrentUser(), path]);
   let intent = JSON.parse(localStorage.getItem(key) || "null");
   if (!intent) {
     intent = { operation_id: "MES.UI:" + crypto.randomUUID(), applied_by: mesCurrentUser() };

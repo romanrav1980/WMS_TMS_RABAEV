@@ -74,7 +74,7 @@ window.wmsReceiptFormDraft={create(adapter){
   begin(){current=null;observed=null;editing=false;host.hidden=true;},
   mount(order,line,policy){
    current={scope:scope(),order:order.order_id,line:line.line_number,policy,
-    key:JSON.stringify(['nicora.receipt.form',scope(),order.ware_id,order.order_id,line.line_number]),
+    key:JSON.stringify(['retailcase.receipt.form',scope(),order.ware_id,order.order_id,line.line_number]),
     signature:canonical({warehouse:order.ware_id,order:order.order_id,revision:order.revision,receipt_state:order.receipt_state,receive_cell:order.receive_cell,line,policy})};
    editing=false;try{observed=localStorage.getItem(current.key);}catch(error){observed=null;note.textContent=error.message;}render();
   },save,archiveCurrent,

@@ -6,7 +6,7 @@
  const valid=v=>!!v&&['CREATE','ADD','CALCULATE','LAUNCH'].includes(v.action)&&positive(v.order)&&positive(v.warehouse)&&
    (v.action==='CREATE'?typeof v.body?.wave_code==='string'&&/^UI-[a-f0-9-]{36}$/.test(v.body.wave_code):positive(v.wave))&&
    (v.action!=='ADD'||positive(v.body?.pick_plan_id))&&(v.action!=='LAUNCH'||typeof v.body?.operation_id==='string');
- const intent=window.wmsCommandIntent.create('nicora.orderWave:',valid);
+ const intent=window.wmsCommandIntent.create('retailcase.orderWave:',valid);
  const message=text=>{el('opWaveStatus').textContent=text;};
  const scope=()=>JSON.stringify([orderScope(),context?.order]);
  function pending(){try{return intent.read();}catch{return {value:null,raw:null};}}

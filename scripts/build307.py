@@ -111,13 +111,13 @@ drop table RRL_IW_RECOVERY_CANCEL;
 @@../2026-10-08_stock_posting_core/014b_recompile.sql
 """)
 put("verify.sql","select NAME,TYPE,LINE,TEXT from USER_ERRORS where NAME in('RRL_STOCK_IW_RECOVERY_CANCEL','RRL_STOCK_IW_RECOVERY_PLAN','RRL_STOCK_IW_RECOVERY_REC','RRL_STOCK_POSTING_API');\n")
-out["wiki/database/nicora_ni061_recovery_cancel_20261011.md"]="""# NI06.1: отмена сообщения о находке до физической приёмки (307)
+out["wiki/database/retailcase_ni061_recovery_cancel_20261011.md"]="""# NI06.1: отмена сообщения о находке до физической приёмки (307)
 Вход: requestID/его exactqty/причина/основание. Controller store_return_approve/currenttargetWARE; отмена уже согласованного report — другой actor относительно reporter. Новая immutable RRL_IW_RECOVERY_CANCEL, одинcancel наrequest. Report/approval/source snapshots сохраняются. NativeRoot replay/currentauth beforecache/afterwait, LOSSROW+REQUESTROW+UNITmutex в общем порядке; Source recapture подlock. Quantitywriter не меняется, quantity effect0.
 
 Пока physicalreceipt не создан, report можноотменить и освободить его declaredquota/selectedkeys для нового report. После physicalreceipt отмена запрещена: требуется настоящий возврат/коррекция, не удаление истории. Конкурирующие receive/cancel делятLOSSROW: первыйзафиксированный физический receipt закрываетcancel, первыйcancel закрываетreceive/новуюapproval. Старые stored successfulcommand results остаются историческими; currentread отдельно показываетcancel.
 
 Report quota/claimedkey исключают только matching APPLIEDcancel/nativekind, bound1000 включает историю отмен. Ни lossfact, ни stock/UNIT state/QR, ни customeracceptance не меняются. Журнал ROOT/commonoutbox/отмена atomic. Selectedcase reader/UI должны отображатьcancel и избегатьphysical approval на отменённойзаявке. Реальный partialclaim recurrence case и negativepostreceipt следующаяпроверка, no fabricated stock.
 """
-p=Path("wiki/index.md");out[p.as_posix()]="- [Отмена сообщения о находке](database/nicora_ni061_recovery_cancel_20261011.md):307 immutablecancel/currentcontroller/zeroqty/receive competition; apply-case next.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");out[p.as_posix()]="- [Отмена сообщения о находке](database/retailcase_ni061_recovery_cancel_20261011.md):307 immutablecancel/currentcontroller/zeroqty/receive competition; apply-case next.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\n- 11.10.2026 307 design/checkpoint: immutable prephysical recoverycancellation, sameLOSSROW/UNITmutex/Root/scope; release logicalquota without inventoryeffect, full history retained. Physicalreceive and cancelledrequest deny rules prepared; current sources305/Root301 checkpoint.\n"
 print(json.dumps(out))

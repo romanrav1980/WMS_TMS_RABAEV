@@ -1,5 +1,5 @@
 import {chromium} from '../admin/wms_admin_frontend/node_modules/playwright/index.mjs';import fs from 'node:fs';
-const out='reports/nicora/2026-10-13/codex/NI043/';fs.mkdirSync(out,{recursive:true});
+const out='reports/retailcase/2026-10-13/codex/NI043/';fs.mkdirSync(out,{recursive:true});
 const source=fs.readFileSync('wiki-raw/wms_admin_ui_reference/warehouse-task-scans.js','utf8'),sig='A'.repeat(64),checks=[];
 const browser=await chromium.launch({headless:true});
 try{

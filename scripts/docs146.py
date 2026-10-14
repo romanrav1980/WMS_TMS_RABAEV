@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-out={};page="wiki/database/nicora_task_single_writer_cleanup_20261010.md"
+out={};page="wiki/database/retailcase_task_single_writer_cleanup_20261010.md"
 out[page]="""# Единственное завершение задания и SAP metadata scope,146
 
 Removed unused WarehouseTaskService._complete_task_locked PREPARED completion branch and exclusively-used Python scan/quantity/resource fallback. No other source caller found. Live complete_task still enters inventory public/native root; live assign/start/cancel sync preserved. Sole physical writer remains RRL_STOCK_POSTING_API. Three cutover-boundary cases PASS, old handlers never invoked in inactive release states.
@@ -13,12 +13,12 @@ Author ni081_receipt_scope_existing_case.py executes adapter actual admin/task82
 
 Architecture after removal489files/0cycles; remaining code debt not accepted/threshold not raised. Native144 keyed scope timing applies, no new Oracle SQL budget rule or migration. NS59 physical ranges/calendar/joint schedule validation remain open.
 """
-out["wiki/index.updated.tmp"]="- [Удалён старый путь завершения задания](database/nicora_task_single_writer_cleanup_20261010.md):146 native root only/SAP cancel-replan current scope/internal pallet ID;3 cutover cases PASS.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
+out["wiki/index.updated.tmp"]="- [Удалён старый путь завершения задания](database/retailcase_task_single_writer_cleanup_20261010.md):146 native root only/SAP cancel-replan current scope/internal pallet ID;3 cutover cases PASS.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
 for p,line in [
 ("wiki/log.md","2026-10-10:146 removed unreachable PREPARED Python task completion/scans/resource fallback; live native complete and metadata sync retained. Corrected144 coverage gap: SAP cancel bypasses ordinary wrapper, now native scope in original Receiving cancel/replan UOW before replay+after lock, PermissionError403. Internal saved replan ID150/exact-first; DTO42 unchanged. Actual scope helper foreign refusal/no writes;3 cutover casesPASS; no new SAP stock fixture/independent acceptance."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","Ticket146 removes obsolete PREPARED completion and extends144 scope to original SAP cancel/replan; original internal IDs retained. See database/nicora_task_single_writer_cleanup_20261010.md.")
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md","Ticket146 removes obsolete PREPARED completion and extends144 scope to original SAP cancel/replan; original internal IDs retained. See database/retailcase_task_single_writer_cleanup_20261010.md.")
 ]:out[p]=Path(p).read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":
   row.setdefault("implementedSlices",[]).append("146 obsolete physical completion removed/SAP metadata task scope/internal replan identifiers")

@@ -7,7 +7,7 @@ export type PendingState =
   | {kind:"valid";intent:TimeApprovalIntent;raw:string}
   | {kind:"damaged";raw:string};
 
-export const pendingKey=(apiBase:string,actor:string)=>"nicora.trip.time.pending:"+JSON.stringify([apiBase,actor]);
+export const pendingKey=(apiBase:string,actor:string)=>"retailcase.trip.time.pending:"+JSON.stringify([apiBase,actor]);
 
 function isIntent(v:unknown):v is TimeApprovalIntent {
   if(!v||typeof v!=="object"||Array.isArray(v))return false;

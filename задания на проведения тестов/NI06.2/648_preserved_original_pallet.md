@@ -1,6 +1,6 @@
 # NI06.2 / 648: возврат неизменённой исходной паллеты
 
-Для локальной Qwen, независимый прогон не выполнен. Source wiki/database/nicora_ni062_preserved_pallet_20261012.md, native639.
+Для локальной Qwen, независимый прогон не выполнен. Source wiki/database/retailcase_ni062_preserved_pallet_20261012.md, native639.
 
 На собственном новом исходнике3EA/3physicalkeys/6codes выполнить original SAP/ST/load/depart/store acceptance. Профили CRPT PALLET-only + EGAIS BOX-only. Возврат полной неизменённой исходной паллеты с её прежним UID проходит approval/SAP/plan/handover/отдельного driverpickup/receive/PUT; P3H0, прежние3keys6codes, старый birth документ не переписан, новый return document связан отдельным receipt. Exact retries не повторяют движение.
 

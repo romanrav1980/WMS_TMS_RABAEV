@@ -85,7 +85,7 @@ Migration ID: 2026-10-13-834-ni032-sequential-sources. Подготовлено 
 
 Сохранён текущий live source833, SHA checkpoint и paired rollback. [SQL](../../db/migrations/2026-10-13_ni032_sequential_sources/apply.sql). Проверить свежий частный dev источник: отказ вместимости, rebind2+6, сохранение второго владельца, физическое продолжение/outer rollback/replay и compile. Старые factory632/protected source773 и20/20 не запускать повторно. Полный NI03.2 не закрывается этим slice.
 """
-files["wiki/database/nicora_ni032_sequential_sources_20261013.md"]=page
-p=Path("wiki/index.md");files[str(p)]="- [NI03.2 sequential sources834](database/nicora_ni032_sequential_sources_20261013.md): prepared reuse original continuation; live apply и свежий случай ожидают.\n"+p.read_text(encoding="utf-8")
+files["wiki/database/retailcase_ni032_sequential_sources_20261013.md"]=page
+p=Path("wiki/index.md");files[str(p)]="- [NI03.2 sequential sources834](database/retailcase_ni032_sequential_sources_20261013.md): prepared reuse original continuation; live apply и свежий случай ожидают.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-13 prepared834: captured live833 RRL_STOCK_WAVE_CMD; multiple distinct retained sources use original sequential continuation, unchanged bindings/version preserved, zero releases skipped; migration/SHA/paired rollback and wiki checkpoint before apply. Not yet APPLIED or full acceptance.\n"
 print(json.dumps(files,ensure_ascii=True))

@@ -1,5 +1,5 @@
 import {chromium} from '../admin/wms_admin_frontend/node_modules/playwright/index.mjs';import fs from 'node:fs';
-const out='reports/nicora/2026-10-13/codex/C0023/';fs.mkdirSync(out,{recursive:true});const native=JSON.parse(fs.readFileSync('tmp/codex_c0023_receipt_result.json','utf8'));
+const out='reports/retailcase/2026-10-13/codex/C0023/';fs.mkdirSync(out,{recursive:true});const native=JSON.parse(fs.readFileSync('tmp/codex_c0023_receipt_result.json','utf8'));
 const browser=await chromium.launch({headless:true});
 try{
  const page=await browser.newPage({viewport:{width:1440,height:1100}}),errors=[],posts=[],checks=[];page.on('pageerror',e=>{errors.push(e.message);console.log('PAGEERROR '+e.message);});

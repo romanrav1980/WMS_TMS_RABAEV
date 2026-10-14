@@ -14,6 +14,6 @@ try{
  fs.writeFileSync('tmp/result1368.json',JSON.stringify({status:r.status(),result,writes},null,2));
  if(r.status()!==409||writes.length!==1||writes[0].scan_container!=='WRONG.SCAN.1368')throw Error('Unexpected scan result');
  await page.locator('#huContainerScan').fill('');await page.locator('#huLoad').click();await page.locator('.hu-tree-select').nth(2).waitFor();
- await page.locator('#huComposition').screenshot({path:'reports/nicora/2026-10-13/screenshots/96-ni041-explicit-scan.png'});
+ await page.locator('#huComposition').screenshot({path:'reports/retailcase/2026-10-13/screenshots/96-ni041-explicit-scan.png'});
  console.log(JSON.stringify({status:r.status(),result}));
 }finally{await browser.close();}

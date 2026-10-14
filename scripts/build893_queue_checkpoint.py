@@ -14,15 +14,15 @@ Actual889: header403 безorders, admin scoped warehouse20052672 returned8 matc
 
 SQL892: header18.61ms/273buf, filtered list22.792ms/37buf, actor/currentright41.049ms/27buf (2executions). Inventory decision retain existingkeys/bounded queue/noindex; sustained>500ms→plan/stats. Не нагрузочная приёмка.
 """
-files["wiki/components/nicora_ni033_wave_queue_20261013.md"]=page
-files["reports/nicora/2026-10-13/12-wave-queue-report.md"]=page
-p="reports/nicora/2026-10-13/index.html";files[p]=read(p).replace("</main>",'<article><h2>12 · Выбранная волна и её очередь</h2><p>Ссылка вне первых100 строк и защита текущего склада.</p><a href="12-wave-queue-report.md">Отчёт №12</a></article></main>')
-p="wiki/index.md";files[p]="- [Checkpoint893: очередь волны](components/nicora_ni033_wave_queue_20261013.md): lean header/current actor snapshot, actual889/browser888/JS891, report12/architecture reduced.\n"+read(p)
+files["wiki/components/retailcase_ni033_wave_queue_20261013.md"]=page
+files["reports/retailcase/2026-10-13/12-wave-queue-report.md"]=page
+p="reports/retailcase/2026-10-13/index.html";files[p]=read(p).replace("</main>",'<article><h2>12 · Выбранная волна и её очередь</h2><p>Ссылка вне первых100 строк и защита текущего склада.</p><a href="12-wave-queue-report.md">Отчёт №12</a></article></main>')
+p="wiki/index.md";files[p]="- [Checkpoint893: очередь волны](components/retailcase_ni033_wave_queue_20261013.md): lean header/current actor snapshot, actual889/browser888/JS891, report12/architecture reduced.\n"+read(p)
 p="wiki/log.md";files[p]=read(p)+"\n- 2026-10-13 checkpoint893:886-890 lean header/scoped existing reads/selected outside100/scope epoch/loading/saved wave; actual889 readonly/browser888/JS891; SQL892 retain bounded noindex; PickingService2320→2284 baseline tightened down. Latest890 browser/nonadmin ownWARE positive pending.\n"
-p="wiki/requirements/nikora_delivery_v55/implementation_plan.json";plan=json.loads(read(p));plan["planRevision"]=35;plan["currentSprint"]="NI03.3";plan["firstChange"]="Continue original CASE/control/shipping and warehouse-task deltas after866/869/872/877, until20:00MSK13Oct2026 or actual all completion. No false independent/external acceptance."
+p="wiki/requirements/retailcase_delivery_v55/implementation_plan.json";plan=json.loads(read(p));plan["planRevision"]=35;plan["currentSprint"]="NI03.3";plan["firstChange"]="Continue original CASE/control/shipping and warehouse-task deltas after866/869/872/877, until20:00MSK13Oct2026 or actual all completion. No false independent/external acceptance."
 inc=next(x for x in plan["increments"]if x["id"]=="NI03.3");inc["implementedSlices"].append("886-893 original lean wave header/current actor readonly queue/detail/tasks; selection outside100, stale/loading/pending wave guards; actual889/JS891/browser888; legacy reduced2320 to2284")
 files[p]=json.dumps(plan,ensure_ascii=False,indent=2)
-p="wiki/runbooks/nicora_active_work.md";files[p]="""## Checkpoint893 — 13Oct2026
+p="wiki/runbooks/retailcase_active_work.md";files[p]="""## Checkpoint893 — 13Oct2026
 
 Deadline20:00MSK today17:00UTC OR all sprints actuallycomplete. Do not final/stop earlier while independent functionality possible. Plan35/currentNI03.3; all18 not completed. Conditional fullcommit/GitHub onlyAFTERALLcomplete, excludeSAP. No agents/goals/copies. One RABAEV/orcl stockrootACTIVE/compatOFF.
 

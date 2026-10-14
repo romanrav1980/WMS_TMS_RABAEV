@@ -41,7 +41,7 @@ Small metadata helper RRL_STOCK_CASE_BIND_MOVE, accessible only to existing CASE
 
 Old QC facts remain historical; current admission uses current composition/version. No new stock writer, binding engine or shipment is created. Current role/WARE before replay remains existing CASE_TASK_ACCESS (+WHT access for waiting). Captured sources/SHA/paired rollback; no DB copy. Rollback not tested. Need live compile + actual forward movement of retained955/966, no source rebirth; no full sprint closure claimed.
 """
-files["wiki/database/nicora_ni033_case_bound_move_20261013.md"]=page
-p="wiki/index.md";files[p]="- [NI03.3 CASE binding974](database/nicora_ni033_case_bound_move_20261013.md): prepared sameTX original FF version on generic CASE movement; capturedcurrent973, live pending.\n"+read(p)
+files["wiki/database/retailcase_ni033_case_bound_move_20261013.md"]=page
+p="wiki/index.md";files[p]="- [NI03.3 CASE binding974](database/retailcase_ni033_case_bound_move_20261013.md): prepared sameTX original FF version on generic CASE movement; capturedcurrent973, live pending.\n"+read(p)
 p="wiki/log.md";files[p]=read(p)+"\n- 2026-10-13 checkpoint974 PREPARED smallboundCASE metadata helper/current CASE mover + one FF-version owner; captured973, additive package/SHA/rollback, no stock writer/copy. Liveapply and retainedforwardflow pending.\n"
 print(json.dumps(files,ensure_ascii=True))

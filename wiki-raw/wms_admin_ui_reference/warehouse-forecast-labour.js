@@ -4,7 +4,7 @@
  const labels={APPLIED:"Рассчитано",FORECAST_BLOCKED:"Прогноз количества заблокирован",NO_SCOPE_MAPPING:"Вид работы не связан с участком",SCOPE_MAPPING_INACTIVE:"Связь с участком отключена",NO_NORM:"Нет нормы для артикула и единицы",NORM_INACTIVE:"Последняя норма отключена",NORM_INVALID:"Некорректная норма"};
  const scope=()=>auth().state.apiBase+"|"+auth().state.user?.username+"|"+el("wfWare").value+"|"+el("wfScope").value;
  const valid=v=>Boolean(v&&v.body&&/^FORECAST.SCOPE:[A-Za-z0-9-]+$/.test(v.body.operation_id)&&Number.isSafeInteger(v.body.warehouse_id)&&v.body.warehouse_id>0&&["CASE_DISPATCH","FULLPAL_DISPATCH","OUTBOUND_WORKLOAD"].includes(v.body.work_scope)&&typeof v.body.site_code==="string"&&v.body.site_code.length>0&&v.body.site_code.length<=50&&Number.isSafeInteger(v.body.expected_version)&&v.body.expected_version>=0&&typeof v.body.active==="boolean"&&typeof v.body.reason==="string"&&v.body.reason.trim().length>=3);
- const intent=window.wmsCommandIntent.create("nicora.forecastScope:",valid,{invalid:"Некорректная связь вида работы с участком."});
+ const intent=window.wmsCommandIntent.create("retailcase.forecastScope:",valid,{invalid:"Некорректная связь вида работы с участком."});
  let config=null,configScope="",busy=false,sequence=0;
  const message=text=>{el("wfNormMessage").textContent=text;};
  const quantity=v=>String(v).replace(/(\.\d*?)0+$/,"$1").replace(/\.$/,"");
@@ -46,7 +46,7 @@
    if(intent.scope()!==record.storageKey||localStorage.getItem(record.storageKey)!==record.raw)return;
    if(r.operation_id!==b.operation_id||r.warehouse_id!==b.warehouse_id||r.work_scope!==b.work_scope||r.site_code!==b.site_code||r.action!=="FORECAST_SCOPE"||r.stock_changed!==false)throw Error("Ответ не подтверждает исходную настройку.");
    intent.settle(record);localStorage.removeItem(marker);
-   if(selected===scope()){config=null;configScope="";el("wfRead").dispatchEvent(new Event("nicora-invalidate"));el("wfLabourResult").replaceChildren();message("Связь сохранена. Перечитайте настройки и рассчитайте прогноз заново.");}
+   if(selected===scope()){config=null;configScope="";el("wfRead").dispatchEvent(new Event("retailcase-invalidate"));el("wfLabourResult").replaceChildren();message("Связь сохранена. Перечитайте настройки и рассчитайте прогноз заново.");}
   }catch(e){
    if(intent.scope()===record.storageKey){
     const known=e.status===409&&/WORKLOAD_SCOPE_(VERSION_CHANGED|FIELDS_REQUIRED|ACTIVE_SITE_NORM_REQUIRED)/.test(String(e));

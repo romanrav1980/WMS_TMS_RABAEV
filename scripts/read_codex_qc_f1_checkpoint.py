@@ -1,6 +1,6 @@
 ﻿exec(open('scripts/ni063_slow_queries.py',encoding='utf-8').read().split('with oracledb.connect',1)[0])
 import hashlib
-folder=Path('reports/nicora/2026-10-13/codex/QC_F1');folder.mkdir(exist_ok=True)
+folder=Path('reports/retailcase/2026-10-13/codex/QC_F1');folder.mkdir(exist_ok=True)
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute("select dbms_metadata.get_ddl('PACKAGE_BODY','RRL_QC_SCOPE_READ',user)from dual");raw=q.fetchone()[0].read().strip()+'\n/\n';(folder/'before_reader.sql').write_text(raw,encoding='utf-8')
  q.execute("""select ff.LEGACY_SBORKA_PALLET_ID,ff.PALLET_UID,ff.CUSTOMER_ORDER_ID,ff.PICKED_PALLET_UID,ff.PICKED_STOCK_VERSION,m.TO_CELL,m.BASE_QTY,m.BASE_UOM,rr.STOCK_VERSION,st.WARE_ID

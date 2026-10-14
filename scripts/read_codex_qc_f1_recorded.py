@@ -2,7 +2,7 @@
 sys.path.insert(0,'scripts')
 exec(open('scripts/ni063_slow_queries.py',encoding='utf-8').read().split('with oracledb.connect',1)[0])
 from app.modules.platform.public import read_oracle_json
-folder=Path('reports/nicora/2026-10-13/codex/QC_F1');v=json.loads((folder/'native_fixture.json').read_text(encoding='utf-8'))
+folder=Path('reports/retailcase/2026-10-13/codex/QC_F1');v=json.loads((folder/'native_fixture.json').read_text(encoding='utf-8'))
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute("select TEXT from USER_SOURCE where NAME='RRL_STOCK_QC_GATE' and TYPE='PACKAGE BODY' order by LINE");body=''.join(x[0]for x in q.fetchall()).replace(chr(13),'')
  block="   declare recorded_count number;begin\n    select count(*) into recorded_count from RRL_QC_EXEMPT_FACT f\n     where f.DOCUMENT_ID=v_id\n      and json_value(f.PAYLOAD_JSON,'$.composition_signature' returning varchar2(64))=v_signature\n      and rownum=1;\n    j.put('weight_exemption_recorded',recorded_count=1);\n   end;"

@@ -24,7 +24,7 @@ try{
  if(r.status()!==200||!Object.hasOwn(data,'used_operation_id'))throw Error('Missing live usage');
  if(data.used_operation_id&&selected)throw Error('Used capture selected');
  if(errors.length||writes.length)throw Error(JSON.stringify({errors,writes}));
- await panel.screenshot({path:'reports/nicora/2026-10-13/screenshots/97-ni042-scale-archive.png'});
+ await panel.screenshot({path:'reports/retailcase/2026-10-13/screenshots/97-ni042-scale-archive.png'});
  fs.writeFileSync('tmp/result1373.json',JSON.stringify({status:r.status(),data,selected,text,errors,writes},null,2));
  console.log(JSON.stringify({status:r.status(),used_operation_id:data.used_operation_id,selected,errors,writes}));
 }finally{await browser.close();}

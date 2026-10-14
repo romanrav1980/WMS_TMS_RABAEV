@@ -33,7 +33,7 @@ try{
  const view=page.waitForResponse(r=>r.url().endsWith('/9807/view'));await page.locator('#wfRead').click();const response=await view,data=await response.json();
  if(!response.ok()||data.labour_estimate?.status!=='COMPLETE_ESTIMATE')throw Error(JSON.stringify(data));
  await page.locator('#wfLabourResult').getByText(/Расчётные трудозатраты/).waitFor();
- await page.locator('#wfLabourResult').screenshot({path:'reports/nicora/2026-10-13/screenshots/87-ni081-forecast-hours.png'});
+ await page.locator('#wfLabourResult').screenshot({path:'reports/retailcase/2026-10-13/screenshots/87-ni081-forecast-hours.png'});
  fs.writeFileSync('tmp/result1334.json',JSON.stringify({before,submitted,committed,replay:replayBody,forecast:data,errors},null,2));
  console.log(JSON.stringify({mapping:replayBody,labour:data.labour_estimate,errors}));
 }finally{await browser.close();}

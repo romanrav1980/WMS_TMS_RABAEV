@@ -11,5 +11,5 @@
     "db/migrations/2026-10-14_ni052_loading_floor/000_rrl_transport_plan_rules_body.sql"
   ],
   "invalid_baseline": [],
-  "evidence": "reports/nicora/2026-10-13/37-physical-top-tare-report.md"
+  "evidence": "reports/retailcase/2026-10-13/37-physical-top-tare-report.md"
 }

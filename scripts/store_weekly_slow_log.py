@@ -1,5 +1,5 @@
 ﻿exec(open('scripts/ni063_slow_queries.py',encoding='utf-8').read().split('with oracledb.connect')[0])
-p=Path('reports/nicora/2026-10-13/codex/STORE_WEEKLY/native_sql.json');r=json.loads(p.read_text(encoding='utf-8'))
+p=Path('reports/retailcase/2026-10-13/codex/STORE_WEEKLY/native_sql.json');r=json.loads(p.read_text(encoding='utf-8'))
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute("""select LOG_ID,to_char(CREATED_AT,'YYYY-MM-DD HH24:MI:SS'),ELAPSED_MS,API_PATH,dbms_lob.substr(SQL_TEXT,300,1)
  from RRL_SQL_SLOW_LOG where CREATED_AT>=systimestamp-interval'1'hour and(upper(dbms_lob.substr(SQL_TEXT,1000,1))like'%RRL_STORE_%'or upper(dbms_lob.substr(SQL_TEXT,1000,1))like'%RRL_TT_ROUTE_SCHEDULE%')order by CREATED_AT desc fetch first 5 rows only""");r['recent_matching_slow_log']=q.fetchall()

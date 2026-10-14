@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 out={}
-for filename,other in (("case-pick-posting.js","nicora.caseCarrierMove"),("case-carrier-move.js","nicora.casePickIntent")):
+for filename,other in (("case-pick-posting.js","retailcase.caseCarrierMove"),("case-carrier-move.js","retailcase.casePickIntent")):
  p=Path("wiki-raw/wms_admin_ui_reference")/filename;s=p.read_text(encoding="utf-8")
  if filename=="case-pick-posting.js":
   s=s.replace("if (busy) return;","if (busy || window.cpTsdStockBusy) return;")

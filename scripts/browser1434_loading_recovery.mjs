@@ -23,7 +23,7 @@ try {
  await p.locator('#loadArchive').click();await p.locator('#loadStatus').filter({hasText:'Исходный текст сохранён'}).waitFor();
  const archived=await p.evaluate(key=>Object.keys(localStorage).some(k=>k.startsWith(key+':damaged:')&&localStorage.getItem(k)==='{damaged'),key);
  if(!archived)throw Error('Archive lost');
- await p.locator('main').screenshot({path:'reports/nicora/2026-10-13/screenshots/111-ni052-loading-recovery.png'});
+ await p.locator('main').screenshot({path:'reports/retailcase/2026-10-13/screenshots/111-ni052-loading-recovery.png'});
  if(errors.length)throw Error(JSON.stringify(errors));
  console.log(JSON.stringify({realStatus:200,modeledPosts:posts.length,realWrites:0,exactReplay:true,wrongResultRetained:true,damagedArchived:archived,errors}));
  fs.writeFileSync('tmp/result1434.json',JSON.stringify({realStatus:200,modeledPosts:posts.length,realWrites:0,exactReplay:true,damagedArchived:archived,errors},null,2));

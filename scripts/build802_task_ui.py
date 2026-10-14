@@ -7,7 +7,7 @@ t=t.replace('body class="auth-pending"','body class="auth-pending warehouse-oper
 t=t.replace('<button class="round alert">12</button>','').replace('<button class="round">?</button>','')
 t=t.replace('<kbd>Ctrl K</kbd>','')
 t=t.replace('Паллет, SSCC, ячейка, исполнитель...','Идентификатор паллеты, ячейка, исполнитель...')
-t=t.replace('<div class="footer-line"><span>Смена</span><b>1 смена</b></div>','<div class="footer-line"><span>NICORA</span><b>Складские задания</b></div>')
+t=t.replace('<div class="footer-line"><span>Смена</span><b>1 смена</b></div>','<div class="footer-line"><span>RETAILCASE</span><b>Складские задания</b></div>')
 t=t.replace('<div class="footer-line muted"><span>18.05.2026</span><span>10:24</span></div>','')
 t=t.replace('<div class="footer-line muted"><span>Версия</span><span>2.4.1</span></div>','')
 t=t.replace('<option value="PUTAWAY">Размещение приёмки</option>','<option value="PUTAWAY">Размещение / ожидание</option>')

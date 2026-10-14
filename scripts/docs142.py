@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-out={};page="wiki/database/nicora_ni081_pickface_config_20261010.md"
+out={};page="wiki/database/retailcase_ni081_pickface_config_20261010.md"
 out[page]="""# NI08.1 — настройка прежнего слотирования атомарна,142
 
 RRL_PICK_FACE_ARTICUL existing SKU master links and RRL_PICK_FACE_ASSIGNMENT temporary wave ownership retained. Old PickingService.assign_pick_face_articul committed native base fields before a separate extended-attribute UPDATE. Replaced with inventory public facade, one stock_configuration_transaction/CONFIG6 exclusive fence/cursor-bound native assign_articul + original extended UPDATE; no second mapping writer or quantity effect.
@@ -17,14 +17,14 @@ SQL config fence14.832ms/base3.478ms/extended1.631ms cursor averages. Decision r
 
 Calendar gap is separately recorded: native eligibility uses trunc(sysdate), whereas Oracle server date is at−04 and UI/operator plans use explicit region. Revision140 corrected planned times only. Actual near-expiry business-day correctness needs warehouse calendar policy, not silently replacing historical facts. Owner timezone question pending; do not infer real warehouse zone from environment Europe/Moscow or a forecast UTC bucket.
 """
-out["wiki/index.updated.tmp"]="- [Настройка прежнего слотирования атомарна](database/nicora_ni081_pickface_config_20261010.md):142 native assign+extended one CONFIG fence/current WARE/Decimal/occupied drain refusal/actual rollback/P20H20 unchanged.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
+out["wiki/index.updated.tmp"]="- [Настройка прежнего слотирования атомарна](database/retailcase_ni081_pickface_config_20261010.md):142 native assign+extended one CONFIG fence/current WARE/Decimal/occupied drain refusal/actual rollback/P20H20 unchanged.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
 for name,line in [
  ("wiki/log.md","2026-10-10:142 existing face-article master one CONFIG6 UOW/native assign+extended attrs/actual parent+current actorWARE/exact Decimal/old occupied mapping drain. Config whitelist pick_topology_edit/APPLIED5/0/checkpoint447/liveVALID. Actual private207 extended enum409 left full original row, exact100.0000000000000000001/sameID repeat/original restored, disable409/P20H20 unchanged. SQL14.832/3.478/1.631ms retain short keyed configuration; other topology callers/global guards still open. Gate0cycles/134debt still FAIL. Eligibility calendar SYSDate−04 vs business zone gap recorded/owner question pending; no inferred warehouse timezone."),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","Ticket142 existing SKU-face configuration atomic/exact/current scope and occupied withdrawal refused. NS59 range recommendation/approval/drain still next; other legacy topology config paths remain. Calendar policy gap also recorded, warehouse owner zone awaiting clarification."),
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md","Ticket142 existing SKU-face configuration atomic/exact/current scope and occupied withdrawal refused. NS59 range recommendation/approval/drain still next; other legacy topology config paths remain. Calendar policy gap also recorded, warehouse owner zone awaiting clarification."),
  ("wiki/incidents/oracle_naive_timestamps_20261010.md","Follow-up142: RRL_STOCK_ELIGIBILITY body37/39/42 uses trunc(sysdate) for expiry/minimum days/remaining-percent, body52 legacy face-validity uses sysdate. Server−04 differs from operator/business region. Plan140 timezone is not a warehouse calendar declaration. Warehouse business-day policy must be explicit; ask owner, preserve actual timestamps/history and do not assume calendar coverage from UTC forecast.")
 ]:
  p=Path(name);out[name]=p.read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":
   row.setdefault("implementedSlices",[]).append("142 atomic original SKU-face configuration/Decimal/current parentWARE/occupied withdrawal drain refusal")

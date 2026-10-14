@@ -27,10 +27,10 @@ try{
  if(replay.operation_id!==saved.operation_id||replay.version!==2||replay.pallet_type_id!==1)throw Error('Wrong replay');
  if(errors.length)throw Error(errors.join(';'));
  await page.locator('#cpTypePanel').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/56-case-pallet-type-desktop.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/56-case-pallet-type-desktop.png'});
  await page.setViewportSize({width:390,height:844});
  await page.locator('#cpTypePanel').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/57-case-pallet-type-mobile.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/57-case-pallet-type-mobile.png'});
  ctx.state='UI_TYPED_EMPTY';ctx.ui_request=saved;ctx.ui_receipt=replay;
  fs.writeFileSync('tmp/context1214.json',JSON.stringify(ctx,null,2));
  console.log('PASS1217 real terminal TYPE POST and exact replay/task'+ctx.task+'/version2/typeEU/no page errors/screens56-57');

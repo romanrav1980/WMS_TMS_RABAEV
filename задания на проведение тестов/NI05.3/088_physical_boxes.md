@@ -1,5 +1,5 @@
 # Qwen: NI05.3/088 — физическая коробка в погрузке
-Read wiki/database/nicora_ni053_load_boxes_20261010.md. Use own ordinary HU with actual BOX identities, current tree, stock and existing assigned ST/trip/dock. No guessed SKU carton norm.
+Read wiki/database/retailcase_ni053_load_boxes_20261010.md. Use own ordinary HU with actual BOX identities, current tree, stock and existing assigned ST/trip/dock. No guessed SKU carton norm.
 
 Configure destination WEIGHT_PHOTO. Root loading without physical_boxes refuses. Provide complete occupied innermost BOX list, actual scan/version/final gross KG/manual measurement reference. Successful API load freezes exact box rows alongside shipment/ST; replay same original API body creates none again; separate departure consumes no P/H. Reader returns half lightest actual gross box, including small incomplete box.
 

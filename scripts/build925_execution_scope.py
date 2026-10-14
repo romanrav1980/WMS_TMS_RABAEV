@@ -22,7 +22,7 @@ API передаёт authenticated username и mapping403. Source quantities/CAS
 
 [Migration](../../db/migrations/2026-10-13_ni033_order_execution_scope/apply.sql). Apply/livepositive/scope/slowSQL pending, root stockACTIVE unchanged. Не закрытие NI03.3/независимых терминалов.
 """
-files["wiki/database/nicora_ni033_order_execution_20261013.md"]=page
-files["wiki/index.md"]="- [NI03.3 execution925](database/nicora_ni033_order_execution_20261013.md): prepared current native order/warehouse/single readonly snapshot; quantity writer unchanged.\n"+read("wiki/index.md")
+files["wiki/database/retailcase_ni033_order_execution_20261013.md"]=page
+files["wiki/index.md"]="- [NI03.3 execution925](database/retailcase_ni033_order_execution_20261013.md): prepared current native order/warehouse/single readonly snapshot; quantity writer unchanged.\n"+read("wiki/index.md")
 files["wiki/log.md"]=read("wiki/log.md")+"\n- 2026-10-13 prepared925 orderexecution922 currentactor/single READONLY/header+physicalfacts. Old nativewhitelist refused923 admin; capture924 extends onlyread customer_fulfillment_view, writes untouched. SHA/pairedrollback, livepending.\n"
 print(json.dumps(files,ensure_ascii=True))

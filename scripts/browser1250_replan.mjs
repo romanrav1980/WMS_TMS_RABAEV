@@ -25,6 +25,6 @@ try{
  ctx.plan.detail=await page.evaluate(id=>orderRequest('/api/picking/plans/'+id),result.pick_plan_id);
  ctx.stage='PICK_PLAN_OBSERVED';fs.writeFileSync(path,JSON.stringify(ctx,null,2));
  await page.setViewportSize({width:430,height:900});await page.locator('#orderPickingPanel').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/71-b01-canonical-plan-mobile.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/71-b01-canonical-plan-mobile.png'});
  console.log(JSON.stringify({stage:ctx.stage,plan:ctx.plan.detail}));
 }finally{await browser.close();}

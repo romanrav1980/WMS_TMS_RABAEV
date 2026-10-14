@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-out={};page="wiki/database/nicora_ni081_wave_time_20261010.md"
+out={};page="wiki/database/retailcase_ni081_wave_time_20261010.md"
 out[page]="""# NI08.1 — утверждённое окно прежней волны,140
 
 NS33 existing RRL_PICK_WAVE is the plan owner. New immutable RRL_WAVE_TIME_PLAN stores only approved version/operation/actor/hash/current WARE-route-dock/aware window/explicit region/reason/legacy planned wall dates/result. Native RRL_WAVE_TIME_API.context/approve uses existing pick_wave_view/pick_wave_launch, active RUSERS/current WARE. No new wave, task assignment, stock or reservation writer. Migration2026-10-10-140-approved-existing-wave-time APPLIED7/0; package/body/guard/root liveVALID.
@@ -19,13 +19,13 @@ SQL Oracle cursor averages context9.368ms/approval39.296ms/approved-window read5
 
 General quality gate fails before typechecks:477files/0cycles/135 debt items; no baseline enlargement. Separate changed transport UI TypeScript typecheck passed139. Full timing/approved joint wave-TT change/NS59 range recommendations and independent/external acceptance remain open.
 """
-out["wiki/index.updated.tmp"]="- [Утверждённое окно прежней волны](database/nicora_ni081_wave_time_20261010.md):140 aware version/replay/stale refusal/monitor reads actual approval/shift effect/P20H20 unchanged.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
+out["wiki/index.updated.tmp"]="- [Утверждённое окно прежней волны](database/retailcase_ni081_wave_time_20261010.md):140 aware version/replay/stale refusal/monitor reads actual approval/shift effect/P20H20 unchanged.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
 for name,line in [
  ("wiki/log.md","2026-10-10:140 original wave time approval aware immutable version/private guard/current rightsWARE/CFG6→wave/source optimistic token/max24h/no started task transfer. APPLIED7/0/liveVALID; native savepoint after clean metadata acquisition; dynamic AT TIME ZONE (region) avoids runtime00905. Own wave395 native approvals/replay/stale409/naive422/shift first2→0/outside workload; legacy edit invalidated/reconfirmedv3, P20H20/tasksNEW unchanged. Current aware monitor+separate durable UI approval, node syntax PASS. SQL context9.368/approve39.296/read52.031ms bounded1001/latestPK keep; current population index/join backlog resources. General gate still FAIL/0cycles/135debt, no baseline enlargement. Next joint TT linkage/plan validator and dynamic ranges."),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","Tickets138/139/140 delivered atomic idempotent existing cluster and explicit aware existing-wave approval/current monitor reallocation. See database/nicora_ni081_cluster_retry_20261010.md and nicora_ni081_wave_time_20261010.md. Joint wave-TT/driver/time/tare validator and NS59 range approval/drain remain open.")
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md","Tickets138/139/140 delivered atomic idempotent existing cluster and explicit aware existing-wave approval/current monitor reallocation. See database/retailcase_ni081_cluster_retry_20261010.md and retailcase_ni081_wave_time_20261010.md. Joint wave-TT/driver/time/tare validator and NS59 range approval/drain remain open.")
 ]:
  p=Path(name);out[name]=p.read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":
   row.setdefault("implementedSlices",[]).append("140 approved aware original wave window/current workload/legacy drift/source version/replay")

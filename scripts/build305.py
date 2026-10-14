@@ -87,7 +87,7 @@ alter table RRL_INTERWARE_RECOVERY_RECEIPT add constraint RRL_IW_REC_REC_SINGLE_
 @@../2026-10-08_stock_posting_core/014b_recompile.sql
 """)
 put("verify.sql","select NAME,TYPE,LINE,TEXT from USER_ERRORS where NAME in('RRL_STOCK_IW_RECOVERY_PLAN','RRL_STOCK_IW_RECOVERY_REC');\n")
-out["wiki/database/nicora_ni061_partial_recovery_20261011.md"]="""# NI06.1 — частичная находка подтверждённой недостачи (305)
+out["wiki/database/retailcase_ni061_partial_recovery_20261011.md"]="""# NI06.1 — частичная находка подтверждённой недостачи (305)
 Одна недостача может восстанавливаться несколькими явными сообщениями/независимыми согласованиями/физическими приёмками. Старые документы immutable; UNIQUE lossID в REQUEST/RECEIPT заменяется sparse nonunique lossID+opID индексами, UNIQUE request→approval и approval→receipt сохраняются. Целое восстановление300 не меняет смысл.
 
 В report scalarqty<=не заявленная часть loss; сумма requestqty под общей ROW20LOSS не превышает confirmedloss. Для marked товаров выбрать точные frozen physicalunit keys, не выбирать SKUbarcode вместоQR. Ключи из другой недостачи/повторные/уже включённые в другой report запрещены. Native currentISSUED/oldUID/noH/qty/UOM/version и точный frozenbook обязательны. Approval фиксирует исходный selectedsubset, другойсогласующий/currentWARE, qtyexactrequest. До физической приёмки запас0; эта заявка не складской HARD.
@@ -96,6 +96,6 @@ out["wiki/database/nicora_ni061_partial_recovery_20261011.md"]="""# NI06.1 — �
 
 Границы: readmodel/UI должны показывать все reports и сумму found, netmissing отдельно. Cancellation заявленной, но не принятой находки нужен отдельный journal command следующим ticket. До его реализации не удалять requests ради повторного report. Max1000 recoveryreports на один loss; больше явно отклоняются.
 """
-p=Path("wiki/index.md");out[p.as_posix()]="- [Частичная находка недостачи](database/nicora_ni061_partial_recovery_20261011.md):305 separate selected-unit reports/approval/receipt and bounded total; read/UI/cancellation next.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");out[p.as_posix()]="- [Частичная находка недостачи](database/retailcase_ni061_partial_recovery_20261011.md):305 separate selected-unit reports/approval/receipt and bounded total; read/UI/cancellation next.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\n- 11.10.2026 305 design/checkpoint: current recovery PLAN/REC source captured; two LOSS singleUK FK0. Partial selected-units/report-total admission +existing292scan planned; no wholecase regression or partial runtime acceptance yet.\n"
 print(json.dumps(out))

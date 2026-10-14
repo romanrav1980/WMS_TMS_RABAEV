@@ -87,6 +87,6 @@ def auto_resolve(order_id: int, body: AutoPreparationRequest,
     return auto_call(service.auto_resolve, order_id, body.model_dump(mode="json"), user)
 '''
 files[str(p)]=s
-p=Path("wiki/index.md");files[str(p)]="- [NI02.1: новый автоматический расчёт](components/nicora_ni021_auto_preparation_20261013.md): разрешение владельца, единый legacy writer, явные пределы и точная whole-box укладка.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");files[str(p)]="- [NI02.1: новый автоматический расчёт](components/retailcase_ni021_auto_preparation_20261013.md): разрешение владельца, единый legacy writer, явные пределы и точная whole-box укладка.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-13 / NI02.1 / 1113: зарегистрирован контракт самостоятельного расчёта после разрешения владельца; новый domain algorithm и общий locked legacy writer в разработке. Read1112:2047 готов к ручной подготовке, но NORMA_UKLADKI=1 меньше коробки24; автоматический допуск не обходится.\n"
 print(json.dumps(files,ensure_ascii=True))

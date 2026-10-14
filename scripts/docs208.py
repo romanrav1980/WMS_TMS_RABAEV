@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 out={}
-out["wiki/database/nicora_ni053_small_weight_receipt_20261011.md"]="""# NI05.3: магазин принимает измеренный малый CASE
+out["wiki/database/retailcase_ni053_small_weight_receipt_20261011.md"]="""# NI05.3: магазин принимает измеренный малый CASE
 
 208: повторно использованы существующие приёмка магазина, архив оригинальных фото, шлюз весов и native STORE_RECEIPT. Новая функция UI StoreBoxMassPanel показывает сохранённый идентификатор, брутто, тару, нетто, источник и явный TEST. Показания не редактируются. Отдельной приёмки или движения запаса не создано.
 
@@ -10,12 +10,12 @@ Own load SMALL207.LOAD:5ab68dd7 / QPB2075AB68DD7 / CASE6EA / архивная к
 207 full quality PASS:24 tests, обе TypeScript-проверки, architecture554/0cycles/76debt. После208 проверен TypeScript admin. Slow SQL: frozen-box read8.616ms/1, bounded51 scales list7.423ms/1; retain PK/bounds, owner delivery при производственном объёме профилирует native receipt. Отдельная маркированная приёмка не заменяется этим ordinary сценарием.
 """
 for path,line in [
-("wiki/index.md","- [Приёмка малого измеренного CASE магазином](database/nicora_ni053_small_weight_receipt_20261011.md):208 existing weight/photo flow accepts6 at1.2/source1.4/tolerance.2 with three views/nonadmin/replay; UI frozen box mass."),
+("wiki/index.md","- [Приёмка малого измеренного CASE магазином](database/retailcase_ni053_small_weight_receipt_20261011.md):208 existing weight/photo flow accepts6 at1.2/source1.4/tolerance.2 with three views/nonadmin/replay; UI frozen box mass."),
 ("wiki/log.md","2026-10-11:208 existing STORE_RECEIPT accepts measured small CASE6 from207 under WEIGHT_PHOTO; nonadmin receiver/synthetic gateway/3 original views/epsilon refusal/inclusive1.2/replay/outbox1/no second stock. UI displays frozen box gross/tare/net/source/TEST. Independent equipment/pilot not claimed."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni05_3.md","11.10.2026:208 ordinary measured small CASE end-to-end from207 load to existing weight-photo store receipt. Actual synthetic1.2/source1.4/.2 inclusive, epsilon refusal, three original views, nonadmin6EA/replay/no second stock. UI shows archive box mass/source/TEST; marked recipient and physical pilot remain."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni04_2.md","11.10.2026:208 measuredsmall own control→HU→original departure→existing store WEIGHT_PHOTO accepted6EA with exact .2 tolerance/three views; [[nicora_ni053_small_weight_receipt_20261011]]. Marked small/route sequencing/physical equipment remain.")]:
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni05_3.md","11.10.2026:208 ordinary measured small CASE end-to-end from207 load to existing weight-photo store receipt. Actual synthetic1.2/source1.4/.2 inclusive, epsilon refusal, three original views, nonadmin6EA/replay/no second stock. UI shows archive box mass/source/TEST; marked recipient and physical pilot remain."),
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni04_2.md","11.10.2026:208 measuredsmall own control→HU→original departure→existing store WEIGHT_PHOTO accepted6EA with exact .2 tolerance/three views; [[retailcase_ni053_small_weight_receipt_20261011]]. Marked small/route sequencing/physical equipment remain.")]:
  p=Path(path);out[path]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
 next(x for x in j["increments"]if x["id"]=="NI05.3").setdefault("implementedSlices",[]).append("208 original weight/photo receipt of measured smallCASE6/source1.4/tolerance.2/nonadmin/photos3/exact replay and frozen box mass UI")
 out[str(p)]=json.dumps(j,ensure_ascii=True,indent=2)+"\n"
 roots=[p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md")]

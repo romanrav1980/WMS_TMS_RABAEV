@@ -42,7 +42,7 @@ def main():
         if a.install_empty_rabaev:
             q.execute("select count(*) from user_objects")
             require(q.fetchone()[0]==0,'REFUSED: RABAEV is not empty; no objects modified')
-            admin_password=os.environ.get('NICORA_INITIAL_ADMIN_PASSWORD') or getpass.getpass('Initial application admin password (12+ characters): ')
+            admin_password=os.environ.get('RETAILCASE_INITIAL_ADMIN_PASSWORD') or getpass.getpass('Initial application admin password (12+ characters): ')
             require(len(admin_password)>=12 and len(admin_password.encode('utf-8'))<=50,'Password must have 12+ characters and fit 50 UTF-8 bytes')
             for owner,obj,priv in manifest['required_direct_sys_grants']:
                 q.execute('select count(*) from user_tab_privs_recd where owner=:o and table_name=:n and privilege=:p',o=owner,n=obj,p=priv)

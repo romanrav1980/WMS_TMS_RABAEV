@@ -18,4 +18,4 @@ with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle
   try:
    q.execute("select OPERATION,OPTIONS,OBJECT_NAME,CARDINALITY from V$SQL_PLAN where SQL_ID=:id and CHILD_NUMBER=0 order by ID fetch first 30 rows only",id=result['sql'][0][0]);result['plan']=q.fetchall()
   except oracledb.DatabaseError:result['plan']='unavailable'
-Path('reports/nicora/2026-10-13/codex/NI062/direct_read.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result))
+Path('reports/retailcase/2026-10-13/codex/NI062/direct_read.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result))

@@ -48,7 +48,7 @@ New CASE waiting uses SOURCE_TASK_ID=TASK_ID, как прежняя flat waiting
 
 Capture980/SHA/paired code rollback; unused numeric gaps are normal retained allocation, not reversed. Need compile and retained977 planning/physical finish through current one FF-version writer974. FullNI07.2 still open. Previous QC signature expectation in975 harness was wrong: whole movement preserves goods composition hash; actual976 currentCASE3/FF3 with same signature is correct. Prior claims about automatic invalidation of every old QC approval on any relocation were unproven and are superseded by current-policy evidence; no oldapproval fixture was tested.
 """
-files["wiki/database/nicora_ni072_case_wait_identity_20261013.md"]=page
-p="wiki/index.md";files[p]="- [CASE повторное ожидание981](database/nicora_ni072_case_wait_identity_20261013.md): prepared original-index-compatible self-task identity/explicit CASE plan, retained history.\n"+read(p)
+files["wiki/database/retailcase_ni072_case_wait_identity_20261013.md"]=page
+p="wiki/index.md";files[p]="- [CASE повторное ожидание981](database/retailcase_ni072_case_wait_identity_20261013.md): prepared original-index-compatible self-task identity/explicit CASE plan, retained history.\n"+read(p)
 p="wiki/log.md";files[p]=read(p)+"\n- 2026-10-13 checkpoint981:974 applyVALID;975 actualCASE12 forwardRootrollback/commit/cache/CT3=FF3/oldfacts, final wrongcompositionhash expectation corrected976.977 nativeSTdecision advancedday/version but waiting insert00001 refused.979 currentindexkeys observed;981 self-tasksource/explicit CASEplan + boundedone-time seqcatchup1130, no parent/residual/historyrewrite/stockchange; checkpoint beforeapply.\n"
 print(json.dumps(files,ensure_ascii=True))

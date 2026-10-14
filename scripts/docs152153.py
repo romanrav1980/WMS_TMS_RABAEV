@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 out={}
-actor="wiki/database/nicora_stock_actor_admission_20261010.md"
+actor="wiki/database/retailcase_stock_actor_admission_20261010.md"
 out[actor]="""# Действующий пользователь ядра остатков,152
 
 Common root admission now requires current nondeleted RUSERS ID before immutable replay/source compilation and after original resource locks. PK reads only; no extra actor row lock or global physical mutex. Command-specific warehouse/rights rules remain current modules; this is not a full new permission registry. Native/Python command owners retain whole commit/rollback.
@@ -12,7 +12,7 @@ Migration2026-10-10_stock_actor_admission body-only1 statement/live spec+bodyVAL
 
 SQL current actor related keyed count first11.181ms and repeated observed cursor0.113ms/10508, not full workload benchmark. Decision retain PK lookup/no actor lock; do not infer million-operation capacity. Source/direct API permission and replay warehouse audits remain separate. No full sprint acceptance.
 """
-exchange="wiki/database/nicora_outbox_response_20261010.md"
+exchange="wiki/database/retailcase_outbox_response_20261010.md"
 out[exchange]="""# Ответ ERROR не завершает исходящее событие,153
 
 Integrations domain delivery decision is the sole classification: adapter DONE plus HTTP2xx or nonHTTP transport no HTTP code means transmission completed. ERROR/unknown state/failed HTTP requestERROR and native mark_outbox_error, not unconditional DONE. Original response body/IDs/external status/HTTP/error code retained. Legal acceptance separate: explicit boolean true from non-simulation adapter only; never inferred from2xx or truthy string. Default DISABLED no claim unchanged, MOCK remains mock/not signed.
@@ -23,13 +23,13 @@ Six response casesPASS including ERROR503/DONE500/STARTED200 refused, DONE202 tr
 
 ArchitecturePASS503files0cycles79debt; no OracleDDL. SQL add/update/error15.550/6.684/15.310ms, retain current keyed journal/update and native retry. Crash claim lease/current worker fencing and async status polling remain next concerns; this is not proof of production regulatory delivery.
 """
-out["wiki/index.updated.tmp"]="- [Ошибка адаптера остаётся в повторе](database/nicora_outbox_response_20261010.md):153 responseERROR/HTTP503→requestERROR/eventRETRY1/raw38digits preserved/no realACK.\n- [Действующий пользователь общего ядра](database/nicora_stock_actor_admission_20261010.md):152 active RUSERS before replay/after locks/body-onlyVALID/exact old receipt restored/no stock.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
+out["wiki/index.updated.tmp"]="- [Ошибка адаптера остаётся в повторе](database/retailcase_outbox_response_20261010.md):153 responseERROR/HTTP503→requestERROR/eventRETRY1/raw38digits preserved/no realACK.\n- [Действующий пользователь общего ядра](database/retailcase_stock_actor_admission_20261010.md):152 active RUSERS before replay/after locks/body-onlyVALID/exact old receipt restored/no stock.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
 p=Path("wiki/log.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"""
 2026-10-10:152 common native current actor before replay/after original locks, PK reads/no actor mutex/per-kind rights retained. Allactorsregistered; rollback-only admin deactivation oldSAPexact replay denied20882/unknown denied/restored exact/journalunchanged. Body-only1stmtVALID/currentmanifestgenerated. Keyedactor11.181ms first/observed repeated0.113ms retain/no load claim.
 2026-10-10:153 pure domain regulatory delivery classification/error status notDONE, raw CLOB payload retained, legalACK separate strictboolean/nonsimulated.6 responsecasesPASS; private mockfailure event2299/Q153_bc63be3019 requestERROR+body/IDs/503/eventRETRY1/exact38digit/no stock/owncleanupDEADLETTER. Live table/signature corrections beforecreate; no realqueues/network. Architecture503files0cycles79debtPASS; SQL15.550/6.684/15.310ms keyedledger retained. Crashlease/fencing and async status polling next.
 """
-p=Path("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\nCross-cutting152 active root actor admission and153 truthful outbox error delivery retained; see database/nicora_stock_actor_admission_20261010.md and nicora_outbox_response_20261010.md. No full permission/GOV acceptance claim.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\nCross-cutting152 active root actor admission and153 truthful outbox error delivery retained; see database/retailcase_stock_actor_admission_20261010.md and retailcase_outbox_response_20261010.md. No full permission/GOV acceptance claim.\n"
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":row.setdefault("implementedSlices",[]).append("152 common current root actor admission before replay/after lock")
  if row.get("id")in{"NI04.3","NI07.2"}:row.setdefault("implementedSlices",[]).append("153 responseERROR remains retry/original raw CLOB and diagnostics/no fake legalACK")

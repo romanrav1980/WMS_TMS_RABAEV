@@ -1,0 +1,67 @@
+[
+  {
+    "mode": "DISABLED",
+    "configured": false,
+    "simulation": false,
+    "real_external_ack": false,
+    "pending_events_preserved": true,
+    "requested_mode": "DISABLED",
+    "requested_mode_supported": true,
+    "implementation_available": true,
+    "reason_code": "REGULATORY_DISABLED",
+    "next_action": "Обмен отключён настройкой RETAILCASE_REGULATORY_MODE. Для реального обмена сначала требуется production connector.",
+    "message": "Обмен отключён настройкой RETAILCASE_REGULATORY_MODE. Для реального обмена сначала требуется production connector. Исходящие сообщения сохранены."
+  },
+  {
+    "mode": "DISABLED",
+    "configured": false,
+    "simulation": false,
+    "real_external_ack": false,
+    "pending_events_preserved": true,
+    "requested_mode": "REAL",
+    "requested_mode_supported": true,
+    "implementation_available": false,
+    "reason_code": "PRODUCTION_CONNECTOR_NOT_IMPLEMENTED",
+    "next_action": "Настроить интеграционный шлюз после его реализации. По решению владельца шлюз реализуется отдельно позже; одного URL или сертификата сейчас недостаточно.",
+    "message": "Настроить интеграционный шлюз после его реализации. По решению владельца шлюз реализуется отдельно позже; одного URL или сертификата сейчас недостаточно. Исходящие сообщения сохранены."
+  },
+  {
+    "mode": "DISABLED",
+    "configured": false,
+    "simulation": false,
+    "real_external_ack": false,
+    "pending_events_preserved": true,
+    "requested_mode": "MOCK",
+    "requested_mode_supported": true,
+    "implementation_available": true,
+    "reason_code": "MOCK_NOT_ALLOWED",
+    "next_action": "Имитация не разрешена. Только для тестового стенда требуются RETAILCASE_REGULATORY_MODE=MOCK и RETAILCASE_ALLOW_REGULATORY_MOCK=1.",
+    "message": "Имитация не разрешена. Только для тестового стенда требуются RETAILCASE_REGULATORY_MODE=MOCK и RETAILCASE_ALLOW_REGULATORY_MOCK=1. Исходящие сообщения сохранены."
+  },
+  {
+    "mode": "MOCK",
+    "configured": true,
+    "simulation": true,
+    "real_external_ack": false,
+    "pending_events_preserved": false,
+    "requested_mode": "MOCK",
+    "requested_mode_supported": true,
+    "implementation_available": true,
+    "reason_code": "SIMULATION_ONLY",
+    "next_action": "Имитация не подтверждает подключение к государственной системе.",
+    "message": "Имитация обмена; государственной квитанции нет."
+  },
+  {
+    "mode": "DISABLED",
+    "configured": false,
+    "simulation": false,
+    "real_external_ack": false,
+    "pending_events_preserved": true,
+    "requested_mode": "UNKNOWN",
+    "requested_mode_supported": false,
+    "implementation_available": false,
+    "reason_code": "UNSUPPORTED_MODE",
+    "next_action": "Исправьте RETAILCASE_REGULATORY_MODE: допустимы DISABLED, MOCK или REAL; production connector для REAL пока отсутствует.",
+    "message": "Исправьте RETAILCASE_REGULATORY_MODE: допустимы DISABLED, MOCK или REAL; production connector для REAL пока отсутствует. Исходящие сообщения сохранены."
+  }
+]

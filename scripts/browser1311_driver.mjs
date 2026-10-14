@@ -17,6 +17,6 @@ try{
  await receipt.getByLabel('Пароль',{exact:true}).fill(credentials.receiver.password);
  await receipt.getByRole('button',{name:'Показать доставленные места',exact:true}).click();
  await receipt.getByRole('button',{name:/B01.1238/}).first().waitFor();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/85-b03-driver-places.png',fullPage:true});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/85-b03-driver-places.png',fullPage:true});
  console.log(JSON.stringify({text:await receipt.innerText(),errors}));
 }finally{await browser.close();}

@@ -46,7 +46,7 @@
     if(busy||!current){message('Сначала прочитайте актуальную дату.');return;}
     const token=++epoch;busy=true;
     try{
-      const auth=scope(),key='nicora.store.calendar.pending:'+JSON.stringify(auth),raw=localStorage.getItem(key),f=fields();
+      const auth=scope(),key='retailcase.store.calendar.pending:'+JSON.stringify(auth),raw=localStorage.getItem(key),f=fields();
       if(JSON.stringify(f)!==JSON.stringify(current.fields))throw new Error('Выбор изменился. Перечитайте дату.');
       const body=raw?JSON.parse(raw):{operation_id:'STORE.CAL.UI:'+crypto.randomUUID(),...f,expected_version:current.version,
         day_state:el('storeCalState').value,source_reference:el('storeCalReference').value.trim(),reason:el('storeCalReason').value.trim()};
@@ -61,7 +61,7 @@
   }
   function recover(){
     try{
-      const body=JSON.parse(localStorage.getItem('nicora.store.calendar.pending:'+JSON.stringify(scope()))||'null');
+      const body=JSON.parse(localStorage.getItem('retailcase.store.calendar.pending:'+JSON.stringify(scope()))||'null');
       if(!body)throw new Error('Нет неподтверждённого запроса.');
       el('storeCalWare').value=body.warehouse_id;el('storeCalStore').value=body.store_code;el('storeCalDate').value=body.delivery_date;
       el('storeCalState').value=body.day_state;el('storeCalReference').value=body.source_reference;el('storeCalReason').value=body.reason;

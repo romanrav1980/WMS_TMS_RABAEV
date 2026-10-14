@@ -2,7 +2,7 @@ raise SystemExit("Retired authoring generator: use final223 owners/fresh checkpo
 from pathlib import Path
 import json
 f=Path("db/migrations/2026-10-11_ni052_single_load_slot_release");out={}
-out["wiki/database/nicora_ni052_single_slot_release_design_20261011.md"]="""# NI05.2: самостоятельная погрузка освобождает измеренный слот
+out["wiki/database/retailcase_ni052_single_slot_release_design_20261011.md"]="""# NI05.2: самостоятельная погрузка освобождает измеренный слот
 223 existing SINGLE_LOAD_CMD currently has no source claim handling for STOCK; whole HU shipping already releases its source claim and CASE shipping uses existing release_case. Extend same placement owner with exact frozen stock source occupancy declaration/release; private SINGLE caller only, same LOAD_SHIPMENT transaction. One current source OCCUPIED claim max (otherwise explicit conflict), current UID/cell/task/slot/measures/epochs/signature frozen; ROW claim/SLOT and source CELL X declared. Before shipping quantity writer, fresh source claim is rechecked and released; guard/current native op/root/locks enforced. Late rollback restores claim and P/H; old actual PUTAWAY task/history retained, no duplicate movement or new placement.
 """
 s=(f/"000_before_rrl_stock_hu_placement_core.sql").read_text(encoding="utf-8")

@@ -28,8 +28,8 @@ Representative source сохраняет собственную BASE_QTY/version
 
 Нет объединения строк резерва, DML остатков, изменения public signature/stock writer. Current captured865 / SHA / paired rollback; fresh same-source positive, replay/rollback/native compilation ещё ожидают. [SQL](../../db/migrations/2026-10-13_ni032_same_source_bindings/apply.sql).
 """
-files["wiki/database/nicora_ni032_same_source_bindings_20261013.md"]=page
-p=Path("wiki/index.md");files[str(p)]="- [NI03.2 same-source866](database/nicora_ni032_same_source_bindings_20261013.md): prepared existing full binding closure/one physical source; live proof pending.\n"+p.read_text(encoding="utf-8")
+files["wiki/database/retailcase_ni032_same_source_bindings_20261013.md"]=page
+p=Path("wiki/index.md");files[str(p)]="- [NI03.2 same-source866](database/retailcase_ni032_same_source_bindings_20261013.md): prepared existing full binding closure/one physical source; live proof pending.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-13 prepared866 same-source retained owner bindings: captured865/SHA/paired rollback, original full old_a checks retained, only unsupported count refusal removed. Native apply/case pending; no closure claim.\n"
 case=Path("scripts/case835_sequential_sources.py").read_text(encoding="utf-8").replace("835","867")
 case=case.replace("for source_uid in (lot,extra):","for source_uid in (lot,lot):")

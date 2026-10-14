@@ -28,7 +28,7 @@ with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle
   result=api(admin,p+"/decide",finance);assert api(admin,p+"/decide",finance)==result
   event="FIN:"+sha256(("EXTRA_EXPENSE_RECOGNIZED:"+finance["operation_id"]).encode()).hexdigest()
   q.execute("select STATUS,json_value(PAYLOAD_JSON,'$.posting_semantics'),json_value(PAYLOAD_JSON,'$.amount'),json_value(PAYLOAD_JSON,'$.decision_actor')from RRL_SAP_RECEIPT_OUTBOX where EVENT_ID=:id",id=event);assert q.fetchone()==("PENDING","MONETARY_RECOGNITION","2.01","admin")
-  directory=Path("tmp/nicora_finance115")/tag
+  directory=Path("tmp/retailcase_finance115")/tag
   exported=build_receipt_exporter().export(directory,1,(event,));assert len(exported)==1 and exported[0]["event_id"]==event
   assert build_receipt_exporter().export(directory,1,(event,))==[]
   document=ET.fromstring((directory/exported[0]["file"]).read_bytes())

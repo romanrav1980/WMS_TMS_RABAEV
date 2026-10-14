@@ -54,9 +54,9 @@ assert s.count(old)==1;out[str(f/"003_replenish.sql")]=s.replace(old,new)
 out[str(f/"004_index.sql")]="create index RRL_WEIGHT_CHOICE_PLAN_I on RRL_PICK_WEIGHT_CHOICE(PICK_PLAN_LINE_ID,STATUS);\n"
 out[str(f/"apply.sql")]="@@001_reader.sql\n@@002_launch.sql\n@@003_replenish.sql\n@@004_index.sql\n"
 out[str(f/"rollback.sql")]="@@000_before_launch.sql\n@@000_before_replenish.sql\ndrop package RRL_WEIGHT_CHOICE_UNIT_READ;\ndrop index RRL_WEIGHT_CHOICE_PLAN_I;\n"
-out["wiki/database/nicora_ni042_weight_unit_pin_design_20261011.md"]="""# NI04.2: физическая коробка утверждённого плана
+out["wiki/database/retailcase_ni042_weight_unit_pin_design_20261011.md"]="""# NI04.2: физическая коробка утверждённого плана
 197 planned exact selected physical key supplied to existing native WAVE_LAUNCH and replenishment HARD owners. Read-only accessible-by helper/current native TX/sourceUID50 locks checks linked USED choice/current SKU policy/current AVAILABLE unit and exact net. Ordinary nochoice returns null then old allocator. Full source supply may include all free boxes; partial substitution refuses. Existing UNIT_CORE.reserve_units and single posting root remain sole effect executor. Original frozen source identifiers retain history; current legal relocation identified by physical key.
 """
-p=Path("wiki/index.md");out[str(p)]=p.read_text(encoding="utf-8")+"\n- [Проект закрепления коробки](database/nicora_ni042_weight_unit_pin_design_20261011.md):197 existing native HARD owners/exact physical key/no new writer.\n"
+p=Path("wiki/index.md");out[str(p)]=p.read_text(encoding="utf-8")+"\n- [Проект закрепления коробки](database/retailcase_ni042_weight_unit_pin_design_20261011.md):197 existing native HARD owners/exact physical key/no new writer.\n"
 p=Path("wiki/log.md");out[str(p)]=p.read_text(encoding="utf-8")+"\n2026-10-11:197 design exact approved physical unit/current native HARD owner/current source lock; original all-free full source allowed, partial substitution refused.\n"
 print(json.dumps(out,ensure_ascii=True))

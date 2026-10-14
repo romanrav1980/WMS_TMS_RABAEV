@@ -1,6 +1,6 @@
 ﻿import {chromium} from '../admin/wms_admin_frontend/node_modules/playwright/index.mjs';
 import fs from 'node:fs';
-const out='reports/nicora/2026-10-13/codex/VEHICLE_OUTER/';fs.mkdirSync(out,{recursive:true});
+const out='reports/retailcase/2026-10-13/codex/VEHICLE_OUTER/';fs.mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({headless:true}),page=await browser.newPage({viewport:{width:1350,height:1100}});
 const profile={vehicle_id:999991,version:0,state:'NOT_CONFIGURED',base_hash:'A'.repeat(64),base:{vehicle_number:'UI FIXTURE — NOT LIVE',vehicle_type:'20',pallet_capacity:'10',max_weight_kg:'10000'},profile:{vehicle_size_class:'TRUCK',cargo_length_mm:5000,cargo_width_mm:2000,cargo_height_mm:2200,outer_height_mm:null,outer_length_mm:null}};
 const posts=[];let lose=true;

@@ -15,8 +15,8 @@ commit;
 """
 p=d/"apply.sql";out[p.as_posix()]=p.read_text(encoding="utf-8")+"@@005_binding_guard.sql\n@@006_stats.sql\n@@008_ledger.sql\n"
 p=d/"rollback.sql";s=p.read_text(encoding="utf-8").replace("drop trigger RRL_IW_REC_DISPATCH_GUARD;","drop trigger RRL_IW_REC_ST_INSERT_GUARD;\ndrop trigger RRL_IW_REC_DISPATCH_GUARD;");out[p.as_posix()]=s
-out["wiki/database/nicora_ni061_recovery_redelivery_20261011.md"]="""# NI06.1/NI05.3 — повторная доставка найденного остатка (302–303)
-Migration 2026-10-11-302-recovery-redelivery, dev RABAEV/orcl ACTIVE/compatOFF. Источник: [[nicora_ni061_recovery_placement_20261011]], затем прежний конструктор СТ, назначение, QC, LOAD_SHIPMENT, TRIP_DEPART, STORE_RECEIPT.
+out["wiki/database/retailcase_ni061_recovery_redelivery_20261011.md"]="""# NI06.1/NI05.3 — повторная доставка найденного остатка (302–303)
+Migration 2026-10-11-302-recovery-redelivery, dev RABAEV/orcl ACTIVE/compatOFF. Источник: [[retailcase_ni061_recovery_placement_20261011]], затем прежний конструктор СТ, назначение, QC, LOAD_SHIPMENT, TRIP_DEPART, STORE_RECEIPT.
 
 RRL_IW_RECOVERY_ST_BIND хранит отдельную неизменяемую связь найденной приёмки, новой СТ/планового рейса, исходной СТ/погрузки, склада/остатка/версии и замороженного адреса/владельцев исходной onward-связи. Новое исполнение customer fulfillment не создаётся. Подготовка под существующим CONFIG X до legacy row-locks; актуальные outgoing_pallet_edit+transport_dispatch_edit/currentWARE проверяются до replay. INSERT-guard требует metadata lock и точный сохранённый источник/владельцев. Уникальный recoveryID допускает одну СТ текущего целого восстановления. Новый рейс выбирает оператор; прошедшие рейсы неизменны.
 
@@ -34,20 +34,20 @@ SQL actual303 first broad joins147.101ms/4213buffers average7; scoped NL plan pl
 
 Оставшееся: частичное восстановление одного акта, повторная потеря той же physicalunit (сегодня ledgerPK блокирует новый цикл), вложенные/агрегированные грузовые места и совместная переупаковка. RealERP/government ACK, legalrules/realrouting, hardware и независимая acceptance требуют реальных входов; не имитировать их.
 """
-p=Path("wiki/database/nicora_ni061_recovery_placement_20261011.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\nПродолжение [[nicora_ni061_recovery_redelivery_20261011]]: 302–303 обе найденные2 уже повторно отгружены и приняты магазином, текущийP0. SQL301 решение: добавлен sparse RRL_IW_REC_PUT_RECEIPT_IX +stat только двух новых journals; lookupcold123.579→7.603ms, bounds2 preserved.\n"
-p=Path("wiki/index.md");s=p.read_text(encoding="utf-8").replace("current native301/app301","current native302/app303",1);out[p.as_posix()]="- [Повторная доставка найденного остатка](database/nicora_ni061_recovery_redelivery_20261011.md):302–303 originalST/QC/LOAD/DEPART/STORE reused; buyer1+2=3/originalFF3once/history2-found2-net0.\n"+s
+p=Path("wiki/database/retailcase_ni061_recovery_placement_20261011.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\nПродолжение [[retailcase_ni061_recovery_redelivery_20261011]]: 302–303 обе найденные2 уже повторно отгружены и приняты магазином, текущийP0. SQL301 решение: добавлен sparse RRL_IW_REC_PUT_RECEIPT_IX +stat только двух новых journals; lookupcold123.579→7.603ms, bounds2 preserved.\n"
+p=Path("wiki/index.md");s=p.read_text(encoding="utf-8").replace("current native301/app301","current native302/app303",1);out[p.as_posix()]="- [Повторная доставка найденного остатка](database/retailcase_ni061_recovery_redelivery_20261011.md):302–303 originalST/QC/LOAD/DEPART/STORE reused; buyer1+2=3/originalFF3once/history2-found2-net0.\n"+s
 p=Path("wiki/log.md");out[p.as_posix()]=p.read_text(encoding="utf-8")+"\n- 11.10.2026 302–303: actual recovered ordinary+marked2 correctiveST/newtrip/originalQC-load-depart-STORE; buyer1+2=3/sourceFF3one/historyloss2+found2. Native rollback/replay/code6/protected20-20/allVALID; arch632/0cycles76; current scope variable ambiguity fixed. ScopedNL/sourceindex/stats warm4.163ms. Manifest/wiki/Qwen updated; partial/recurrent recovery next.\n"
-p=Path("wiki/runbooks/nicora_active_work.md");s=p.read_text(encoding="utf-8");a=s.index("Native manifest301:");b=s.index("\n\n## Последняя",a)
+p=Path("wiki/runbooks/retailcase_active_work.md");s=p.read_text(encoding="utf-8");a=s.index("Native manifest301:");b=s.index("\n\n## Последняя",a)
 s=s[:a]+"""Native manifest302/app303: Root/task301/BALANCE-LOCATION-PART-UnitCore300; NEXT302 delegates recovery source to sameSHIPPING_CORE. Source indexes298+302, placementindex301. Actual recovery receipts300 + placement301 + newST/QC/load/depart302 + finalSTORE303 done both291/292. Buyer3=1+2, originalFFSHIPPED3 once, recoveredPALcurrentP0, historicalloss2/found2/net0. Do not rerun initial300/301 rollbackcases or sourcebirth. Context303 repeats/getters safe.
 Restartrootserv303 afterfinalread/UI patches. Arch632/0cycles76. Next wholeloss assumptions ->partial/recurrent scoped history; residual nestedpacking/routelegal/ERP/hardware requires honest inputs."""+s[b:];out[p.as_posix()]=s
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
 for inc in j["increments"]:
  if inc["id"]in["NI06.1","NI05.3"]:
   inc.setdefault("implementedSlices",[]).append("302-303 actualcorrectivefound2 existingST/QC/LOAD/DEPART/STORE; buyer1+2=3/originalFF3one/historyloss2-found2-net0/scopedNLwarm4.163ms")
 out[p.as_posix()]=json.dumps(j,indent=2)+"\n"
 qroot=next(Path(".").glob("*/NI08.1/178_container_cell_index.md")).parent.parent
 out[(qroot/"NI06.1/302_303_corrective_redelivery.md").as_posix()]="""# Qwen302–303 corrective redelivery
-Read wiki/database/nicora_ni061_recovery_redelivery_20261011.md/context302 and303_291/_292. Bothrealshipments/finalreceipts alreadycommitted/P0; no sourcebirth or initial rollback scripts.
+Read wiki/database/retailcase_ni061_recovery_redelivery_20261011.md/context302 and303_291/_292. Bothrealshipments/finalreceipts alreadycommitted/P0; no sourcebirth or initial rollback scripts.
 ExactOP/body replays noquantity/FF/outboxrepeat; changedbody or new competingbind409. Foreign/current revokedWARE actor403 beforecache; currenttrip/cell/version/thermal/markings refuse. Native rollbackload restoresP2/units/clearsdispatch; Store rollbackno finalfact/customercredit.
 Customer projection originalshipped3 once; initial1+corrective2 accepted3/unreceived0; historicalloss2/recovered2/net0. Beforefinal2 warehousefound doesn'tcreditcustomer. Duplicate/excess/foreignloss/dispositionmismatch rejects. Shared partial leaf no proportionalownership. SixoriginalQR birthhashes unchanged/no governmentACK.
 UI no rawJSON; pendingOPID persisted beforeHTTP, actor/API/receipt fences; sourceindexes/bounded oneRO/read warm SQL. Separate executed tests fromstatic review/independent acceptance. Partial/recurrent loss intentionallynotaccepted yet.

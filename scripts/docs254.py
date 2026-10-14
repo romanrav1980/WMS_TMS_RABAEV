@@ -10,7 +10,7 @@ Actual new own{data['tag']} through original source factory, native marked inven
 Dayboard sourceWARE returns awarestart1/finish1, actualHTTP200. Direct newclockclear andoldDONE953currentstamp denied20863/no changes. Protected P20H20 intact. Newsource fixture is controlled devbirth, no databasecopy or third quantitywriter; manual synthetic scans/start not actual hardware/government acceptance. Its targetWARE{data['target_ware']}/TT{data['target_trip']} awaiting samegoods for next warehouse-ready scenario.
 Architecture5750cycles76/rawJSsyntax PASS/nativeerrors[]invalid[]. SQLday counts2.313/4.691ms2 andwarequery2.671ms2: retain existing warehouse/state/task indexes, aware range filtering +same snapshot, no new index from smallsamewarecase. Ownerfinance narrows/indices wareclock if periodscan grows. Generic source helpers/source254/build/docs must notrerun completed fixture; context254 preserved, no duplicate births.
 """
-out["wiki/database/nicora_ni072_task_times_20261011.md"]=summary;out[str(f/"README.md")]=summary
+out["wiki/database/retailcase_ni072_task_times_20261011.md"]=summary;out[str(f/"README.md")]=summary
 out[str(f/"004_ledger.sql")]="""merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-254-warehouse-task-finish-instant'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
 when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
 values(s.MIGRATION_ID,'Future warehouse task completion clock and same-snapshot operational day counts',sysdate,user,
@@ -30,15 +30,15 @@ m["startup_scripts"].append("../2026-10-11_ni072_task_finish_time/001_schema.sql
 m["additional_scripts"].extend(["../2026-10-11_ni072_task_finish_time/002_clock_guard.sql","../2026-10-11_ni072_task_finish_time/003_recompile.sql"])
 out[str(p)]=json.dumps(m,indent=2)+"\n"
 for path,line in [
-("wiki/index.md","- [Дневные факты заданий](database/nicora_ni072_task_times_20261011.md):254 existingawarestart/newimmutableDONEclock/same row TX/rollback+repeat/task979/day1-1/oldtimestamps unclassified/no stockwriter."),
+("wiki/index.md","- [Дневные факты заданий](database/retailcase_ni072_task_times_20261011.md):254 existingawarestart/newimmutableDONEclock/same row TX/rollback+repeat/task979/day1-1/oldtimestamps unclassified/no stockwriter."),
 ("wiki/log.md","2026-10-11:254 actualschema finish timestamp wasnaive/no instant; addednullablefuture finishinstant/rowclockguard at acceptedDONE/sameTX/immutable/nobirthinjection oroldbackfill/existing statusauthority retained. Current dayaware start-finish counts/legacycoverage/UI. Own4ecffb36dd/979 originalrootbirth3/HARD3/start/complete3late rollback/clock+qty restored/sameIDrepeat stable/nativeQC6/loaddepart33569/current3units6codes/sourceP0/target33570pending/day1-1/old953no backfill20863/HTTP/protected20-20. NativeVALID/architecture5750cycles76JS/SQ L2.3134.6912.671ms retain warehouse/taskkeys; no indexduplication. RuntimeDDLguardrecompile mirrored; noqty secondwriter/closedday orrealhardware claim."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni07_2.md","11.10.2026:254 aware operational day taskstarted/finished counts usingoriginal start andfutureimmutabledoneclock, no olddate timezoneguess. Native979 complete3rootlate rollback/clockquantityrollback/samereplaythenexistingQC6/loaddepart/sourceP0/day1-1/API; actualdriver/hardware/outboundACK/dayclose notcertified.")
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni07_2.md","11.10.2026:254 aware operational day taskstarted/finished counts usingoriginal start andfutureimmutabledoneclock, no olddate timezoneguess. Native979 complete3rootlate rollback/clockquantityrollback/samereplaythenexistingQC6/loaddepart/sourceP0/day1-1/API; actualdriver/hardware/outboundACK/dayclose notcertified.")
 ]:out[path]=Path(path).read_text(encoding="utf-8")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
 next(x for x in j["increments"]if x["id"]=="NI07.2").setdefault("implementedSlices",[]).append("254 future immutable same-transaction warehouse task finishinstant/oldstartaware/day startfinish counts/unknownlegacytimes explicit/root rollback+repeat/no stockwriter")
 j["firstChange"]="Continue shared warehouse readiness/cutoff coordination on original interwarehouse source254 and approved transport times; external lifecycle/real ACK and full increments remain."
 out[str(p)]=json.dumps(j,ensure_ascii=True,indent=2)+"\n"
-p=Path("wiki/runbooks/nicora_active_work.md");s=p.read_text(encoding="utf-8")
+p=Path("wiki/runbooks/retailcase_active_work.md");s=p.read_text(encoding="utf-8")
 s=s.replace("Current native manifest250.","Current native manifest254 (time250 +regulatorywarehouseindex252 +transportplanneddefault253 +warehousefuturefinishclock254).")
 s=s.replace("Current app251","Current app254 day-aware taskfacts plus252regulatoryqueue; app251")
 s+="\nLatest actual own source254tag4ecffb36dd/WARE5265051/target55265051/task979/TT33569→33570/sourceP0/current3 originalunits6codesISSUED7. tmp/context254.json preserved. Original targetplan awaiting receive/placement for shared readiness next. APIserv254b. No rerun source factory/docs builders; duplicates wouldbe newbirths.\n"

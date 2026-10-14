@@ -2,7 +2,7 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 const fixture=JSON.parse(fs.readFileSync('tmp/context908.json','utf8')),snapshot=JSON.parse(fs.readFileSync('tmp/history936.json','utf8')).own_reversed;
 const values=new Map();let rejectArchive=false,changeOnArchive=false;
 const storage={get length(){return values.size;},key:i=>[...values.keys()][i],getItem:k=>values.get(k)??null,
- setItem(k,v){if(k.startsWith('nicora.receipt.archive:')){if(rejectArchive)throw new Error('QUOTA');if(changeOnArchive)values.set(originalKey,'CHANGED BY OTHER TAB');}values.set(k,v);},removeItem:k=>values.delete(k)};
+ setItem(k,v){if(k.startsWith('retailcase.receipt.archive:')){if(rejectArchive)throw new Error('QUOTA');if(changeOnArchive)values.set(originalKey,'CHANGED BY OTHER TAB');}values.set(k,v);},removeItem:k=>values.delete(k)};
 const window={wmsAdminAuth:{state:{apiBase:'local',user:{username:'a'}}},dispatchEvent(){}};
 const context={window,localStorage:storage,Date,crypto:{randomUUID:()=> 'archive940'},CustomEvent:class{constructor(type){this.type=type;}}};
 vm.createContext(context);vm.runInContext(fs.readFileSync('wiki-raw/wms_admin_ui_reference/receiving-intent.js','utf8'),context);

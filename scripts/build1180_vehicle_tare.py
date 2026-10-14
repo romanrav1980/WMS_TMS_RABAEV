@@ -134,7 +134,7 @@ s+='''
             return [dict(zip(("id","code","name"),row))for row in rows]
 '''
 f[str(p)]=s
-f["wiki/database/nicora_ni022_vehicle_tare_20261014.md"]="""# NI02.2: нормативные варианты загрузки машины
+f["wiki/database/retailcase_ni022_vehicle_tare_20261014.md"]="""# NI02.2: нормативные варианты загрузки машины
 14.10.2026 /1179–1180. Подготовлен additive профиль; применение и результат будут записаны ниже.
 
 Источник: процесс06 ТЗ57 — норматив вместимости конкретной машины по каждому типу тары и допустимым сочетаниям, без вывода из площади пола.
@@ -145,6 +145,6 @@ API и карточка используют прежний save/intent/retry. �
 
 Миграция2026-10-14-1179-vehicle-tare-variants: [apply](../../db/migrations/2026-10-14_ni022_vehicle_tare/apply.sql), captured live before-body/checkpoint, paired rollback на прежний защищённый температурный профиль. Старые сохранённые request/results не переписываются.
 """
-p=Path("wiki/index.md");f[str(p)]="- [Нормативные варианты тары1180](database/nicora_ni022_vehicle_tare_20261014.md): существующий versioned vehicle profile/catalog, подготовлены API и native validation; не новый allocator.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");f[str(p)]="- [Нормативные варианты тары1180](database/retailcase_ni022_vehicle_tare_20261014.md): существующий versioned vehicle profile/catalog, подготовлены API и native validation; не новый allocator.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");f[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-14 /1180: подготовлены нормативные варианты загрузки по существующим типам тары через единственный fleet profile owner; checkpoint1179 сохранён, no stock effects. User acceleration: functional slice, bounded verification, short report.\n"
 print(json.dumps(f))

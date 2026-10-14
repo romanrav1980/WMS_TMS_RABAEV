@@ -19,7 +19,7 @@ values(s.MIGRATION_ID,'Existing pick release checks active actor/current warehou
 """,d+"apply.sql":"@@001_access.sql\n@@002_root.sql\n@@003_ledger.sql\n",d+"rollback.sql":f"@@000_before_root.sql\n@@000_before_access.sql\nupdate RRL_SCHEMA_MIGRATIONS set STATUS='ROLLED_BACK'where MIGRATION_ID='{mid}';\n/\n",
 d+"verify.sql":"select NAME,TYPE,LINE,TEXT from USER_ERRORS where NAME in('RRL_STOCK_POSTING_API','RRL_WAVE_EXEC_ACCESS');\nselect OBJECT_NAME,OBJECT_TYPE,STATUS from USER_OBJECTS where OBJECT_NAME in('RRL_STOCK_POSTING_API','RRL_WAVE_EXEC_ACCESS');\n",
 d+"checkpoint.json":json.dumps({"migration_id":mid,"state":"PREPARED","target":"RABAEV/orcl","before_sha256":{"root":hashlib.sha256(root.encode()).hexdigest(),"access":hashlib.sha256(access.encode()).hexdigest()},"after_sha256":{"root":hashlib.sha256(newroot.encode()).hexdigest(),"access":hashlib.sha256(newaccess.encode()).hexdigest()}},indent=2)}
-files["wiki/database/nicora_ni033_pick_scope_20261013.md"]="""# NI03.3: текущий склад при допуске отбора
+files["wiki/database/retailcase_ni033_pick_scope_20261013.md"]="""# NI03.3: текущий склад при допуске отбора
 
 877 prepared, current Root/access captured876, SHA/paired rollback. Единственный stock writer ACTIVE unchanged; Root меняется только в двух existing access call predicates. До prepare/replay и после resource lock вызывается существующий RRL_WAVE_EXEC_ACCESS.assert_command также для WAVE_PICK_RELEASE. Helper проверяет active RUSERS/current WARE/GLOBAL_ADMIN/current pick_wave_launch. Для PICK не применяются disposition правила FINISH.
 
@@ -27,6 +27,6 @@ API pick-readiness теперь передаёт authenticated actor и чита
 
 Это access fix текущего допуска; не полное испытание гонки изменения RUSERS/rights admin. Native source/current actor positive/foreign denial/replay и compile ожидают. [SQL](../../db/migrations/2026-10-13_ni033_pick_scope/apply.sql).
 """
-p="wiki/index.md";files[p]="- [NI03.3 pick-scope877](database/nicora_ni033_pick_scope_20261013.md): prepared reuse current WAVE access/readonly preview; actual pending.\n"+read(p)
+p="wiki/index.md";files[p]="- [NI03.3 pick-scope877](database/retailcase_ni033_pick_scope_20261013.md): prepared reuse current WAVE access/readonly preview; actual pending.\n"+read(p)
 p="wiki/log.md";files[p]=read(p)+"\n- 2026-10-13 prepared877 current pick scope: API actor readonly native view guard, two Root existing assert predicates + existing access helper for pick release. Current capture876/SHA/paired rollback; no quantity logic/lock topology change. Live/case pending.\n"
 print(json.dumps(files,ensure_ascii=True))

@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-out={};page="wiki/architecture/nicora_typed_native_boundaries_20261010.md"
+out={};page="wiki/architecture/retailcase_typed_native_boundaries_20261010.md"
 out[page]="""# Типы, публичные границы и компактное проведение,149
 
 Existing concrete WarehouseTask/CASE/short/MES/reservation/LotCheck DTOs and OracleGateway|TransactionGateway now type missing public/infra signatures. Native JSON result dict explicitly returned, previous incorrect complete->None fixed. TaskActionHandler moved to owner contract and bound factory Callable specifies handler/gateway. No separate business rule.
@@ -17,12 +17,12 @@ Actual original SAP receipt replay exact/no new journal after staging extraction
 
 No Oracle migration; current native keyed writers retained. Native rule and warehouse calendar decisions unchanged. Main factual remaining NI08.1: approved physical ranges/drain/cost routes, joint exact schedule/driver validator, canonical warehouse calendar and independent acceptance.
 """
-out["wiki/index.updated.tmp"]="- [Типизированные границы native-команд](architecture/nicora_typed_native_boundaries_20261010.md):149 concrete DTO/public ports/same-cursor staging/old ARM URI/cache retained; full quality gatePASS499files0cycles79debt.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
+out["wiki/index.updated.tmp"]="- [Типизированные границы native-команд](architecture/retailcase_typed_native_boundaries_20261010.md):149 concrete DTO/public ports/same-cursor staging/old ARM URI/cache retained; full quality gatePASS499files0cycles79debt.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
 for p,line in [
 ("wiki/log.md","2026-10-10:149 concrete native DTOs/gateway/public result/factory types, shared passive CASE/weight/reservation/ARM DTO contracts; module/public reader construction, frontend delivery public export. Stock hints extracted samecursor; old terminal effect tail removed. Original ARM fact URI moved module/API/port/native/composition with original cache callback. Full qualityPASS499files0cycles79legacydebt; baseline tightened only/24 architecture-tooling/bothTS PASS.17 cutover boundary cases; actual SAP saved replay/task829 sync unchanged, existing33530 URI empty400/current cancelled409/facts unchanged. No Oracle/quantity writes or full independent acceptance."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","Ticket149 typed native/public contracts and old ARM endpoint extraction; full structural quality gate PASS. See architecture/nicora_typed_native_boundaries_20261010.md; remaining business acceptance not replaced by this gate.")
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md","Ticket149 typed native/public contracts and old ARM endpoint extraction; full structural quality gate PASS. See architecture/retailcase_typed_native_boundaries_20261010.md; remaining business acceptance not replaced by this gate.")
 ]:out[p]=Path(p).read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":
   row.setdefault("implementedSlices",[]).append("149 typed native/public DTO contracts/extracted same-cursor staging/ARM endpoint and original cache/quality gate PASS")

@@ -6,7 +6,7 @@ for directory in ['2026-10-12_ni061_group_source','2026-10-12_ni061_group_receiv
  value='../'+directory+'/apply.sql'
  if value not in m['additional_scripts']:m['additional_scripts'].append(value)
 out[p.as_posix()]=json.dumps(m,indent=2)+'\n'
-page='wiki/database/nicora_ni061_group_receipt_20261012.md'
+page='wiki/database/retailcase_ni061_group_receipt_20261012.md'
 out[page]='''# Единый план и атомарная приёмка многотоварного грузового места
 403 и409 APPLIED, compiled objects VALID. Inventory owns group header and perlot facts; original RRL_STOCK_INTERWARE_REC delegates validation/lock planning to RRL_IW_GROUP_REC and remains the quantity executor through the existing balance/unit cores. No second quantity writer.
 
@@ -24,15 +24,15 @@ SQL415: native grouped source34.548ms/5 calls; first groupplan INSERT419.928ms c
 
 Next: existing whole-HU placement task and group custody/onward linkage; operator UI; aggregate-only/partialgroup receipt; independent/hardware/currentERP/GovACK. Retained context406 has actual receipt412 and available blocked stock. Never rerun source404/405 factories or case407 initial source eligibility after receiving.
 '''
-for filename,entry in [('wiki/index.md','- [Приёмка многотоварного места](database/nicora_ni061_group_receipt_20261012.md):403–412 exacttwoST/twoSKU3each/6oldunits9codes/one rootreceipt/restoredTOP/rollback-replay; placement next.\n'),('wiki/log.md','\n- 12.10.2026 403–416: newgroup sourceplan exactdeparted archive/twooriginalST/twoSKU/matrices2+1/6units9codes; source-shared metadata source plan exclusion. Root409 unload/receipt owner remains existing INTERWARE_REC/balance/unit cores; bothstock3 restored/oldkeys/oneTOP two newlinks/quarantine/rollback/replay/P20H20. Singleunitproof extended by exact domain.lots proof; distincteventline numbers; structuralJSON revalidation. SQLsource34.548ms/coldplan419.928ms/line13.159ms: bounded/index retained, batchinventory backlog. Group placement/custody/onward/UI still open.\n'),('wiki/requirements/nikora_delivery_v55/execution/active/ni06_1.md','\n403–412 group first-leg receiving actualtwoSKU3each/sixoldunits/ninecodes/oneTOP/twooriginalST; native atomicstock+units+links+events/outbox/whole rollback/replay/noFFrepeat. Group placement/custody/onward/UI remain; see group_receipt page.\n')]:
+for filename,entry in [('wiki/index.md','- [Приёмка многотоварного места](database/retailcase_ni061_group_receipt_20261012.md):403–412 exacttwoST/twoSKU3each/6oldunits9codes/one rootreceipt/restoredTOP/rollback-replay; placement next.\n'),('wiki/log.md','\n- 12.10.2026 403–416: newgroup sourceplan exactdeparted archive/twooriginalST/twoSKU/matrices2+1/6units9codes; source-shared metadata source plan exclusion. Root409 unload/receipt owner remains existing INTERWARE_REC/balance/unit cores; bothstock3 restored/oldkeys/oneTOP two newlinks/quarantine/rollback/replay/P20H20. Singleunitproof extended by exact domain.lots proof; distincteventline numbers; structuralJSON revalidation. SQLsource34.548ms/coldplan419.928ms/line13.159ms: bounded/index retained, batchinventory backlog. Group placement/custody/onward/UI still open.\n'),('wiki/requirements/retailcase_delivery_v55/execution/active/ni06_1.md','\n403–412 group first-leg receiving actualtwoSKU3each/sixoldunits/ninecodes/oneTOP/twooriginalST; native atomicstock+units+links+events/outbox/whole rollback/replay/noFFrepeat. Group placement/custody/onward/UI remain; see group_receipt page.\n')]:
  p=Path(filename);old=p.read_text(encoding='utf-8');out[filename]=entry+old if filename=='wiki/index.md'else old+entry
-p=Path('wiki/requirements/nikora_delivery_v55/implementation_plan.json');m=json.loads(p.read_text(encoding='utf-8'))
+p=Path('wiki/requirements/retailcase_delivery_v55/implementation_plan.json');m=json.loads(p.read_text(encoding='utf-8'))
 for x in m['increments']:
  if x['id']=='NI06.1':
   x.setdefault('implementedSlices',[]).append('403–412 whole group firstleg2ST/2SKU3each/6oldunits9codes/atomic rootreceipt+restoredHU/rollback/replay')
   x['remainingScope']=['group receipt whole-HU placement/custody/onward and operator UI','partial/aggregate-only grouped receiving','aggregation invalidation/repacking lifecycle','independent acceptance/hardware/current real ERP and government ACK']
 out[p.as_posix()]=json.dumps(m,ensure_ascii=False,indent=2)+'\n'
-p=Path('wiki/runbooks/nicora_active_work.md');t=p.read_text(encoding='utf-8').replace('Current native388/app373','Current native409/app411')
+p=Path('wiki/runbooks/retailcase_active_work.md');t=p.read_text(encoding='utf-8').replace('Current native388/app373','Current native409/app411')
 t=t.replace('Next: groupedmultiSKU firstleg receiving;','Latest403–412: actual grouped twoSKU firstleg receipt/6originalunits9codes/oneTOP restored, ctx406 receiving blockedstock3each; factories404405 must not rerun. Whole-HU placement/custody/onward next.\n\nNext: group whole-HU placement/custody/onward/UI;')
 out[p.as_posix()]=t
 root=next(Path('.').glob('*/NI08.1/178_container_cell_index.md')).parent.parent

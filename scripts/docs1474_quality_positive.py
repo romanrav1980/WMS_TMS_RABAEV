@@ -1,5 +1,5 @@
 ﻿from pathlib import Path
-p=Path('reports/nicora/2026-10-13/65-ni051-scoped-quality.md')
+p=Path('reports/retailcase/2026-10-13/65-ni051-scoped-quality.md')
 with p.open('a',encoding='utf-8') as f:f.write('''
 
 ## Дополнение: реальный storage-only допуск

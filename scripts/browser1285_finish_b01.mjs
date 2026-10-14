@@ -20,5 +20,5 @@ try{
  }
  ctx.execution_read=await page.evaluate(async()=>{const r=await fetch(window.wmsAdminAuth.state.apiBase+'/api/customer-orders/2135/execution',{headers:window.wmsAdminAuth.headers()});return {status:r.status,body:await r.json()};});
  fs.writeFileSync(path,JSON.stringify(ctx,null,2));console.log(JSON.stringify(ctx.execution_read));
- await page.locator('#waveExecution').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/79-b01-wave-finished.png'});
+ await page.locator('#waveExecution').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/79-b01-wave-finished.png'});
 }finally{await browser.close();}

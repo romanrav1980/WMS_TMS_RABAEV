@@ -71,10 +71,10 @@ p=Path("wiki-raw/wms_admin_ui_reference/receiving.js");s=p.read_text(encoding="u
 old="message(`Задание ${v.task_id}: новый адрес ${v.placement.cell}.`)"
 new="message(`Задание ${v.task_id}: новый адрес ${v.placement.cell}. Количество к размещению: ${v.current_task_quantity ?? 'по заданию'}.`)"
 assert old in s;out[str(p)]=s.replace(old,new)
-out["wiki/database/nicora_ni042_direct_residual_design_20261011.md"]="""# NI04.2: размещение остатка после DIRECT
+out["wiki/database/retailcase_ni042_direct_residual_design_20261011.md"]="""# NI04.2: размещение остатка после DIRECT
 200 existing metadata replan may accept current original-source physical remainder only with original applied native WAVE_LAUNCH direct_putaway_holds proof/task UID/cell/current warehouse and scanned pallet/source. Original received base quantity preserved; physical P/H current stock version separate. No HARD or active direct task/projection allowed. Exact task base unit1:1; positive current quantity<=original admitted. Old unrelated changed-source refusal preserved. Existing cancelled putaway task becomes PLANNED with current qty and original source docs, old idempotent replan journal/outbox/slot placement reused. No stock effect until existing TASK_COMPLETE; actual outgoing placement quantity must be remainder. Metadata CONFIG X serializes against stock admission.
 """
-for path,line in[("wiki/index.md","- [Проект размещения DIRECT-остатка](database/nicora_ni042_direct_residual_design_20261011.md):200 existing replan/current exact remainder/native handoff proof/no active allocations."),
+for path,line in[("wiki/index.md","- [Проект размещения DIRECT-остатка](database/retailcase_ni042_direct_residual_design_20261011.md):200 existing replan/current exact remainder/native handoff proof/no active allocations."),
 ("wiki/log.md","2026-10-11:200 design existing SAP putaway replan accepts proven current DIRECT remainder only; original receipt retained/current P-H/version checked, no hard/pending allocations, same metadata owner/task/slot/outbox; no new stock engine.")]:
  p=Path(path);out[path]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
 print(json.dumps(out,ensure_ascii=True))

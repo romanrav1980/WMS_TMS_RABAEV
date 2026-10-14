@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 out={}
-page="wiki/database/nicora_ni081_delivery_windows_20261011.md"
+page="wiki/database/retailcase_ni081_delivery_windows_20261011.md"
 out[page]="""# Окна доставки прежних СТ
 287 NI08.1. Native TIME sourceV5 includes existing pallet ZONE_TIME_PLAN_IN/OUT and bounded destination_rules (unique activeRRL_ADDR count, UNLOAD_NORM_MIN, TW_STRICT, coordinates). Current changedwindow/norm invalidates time/route old approvals without rewriting history or physicalfacts. Route source intentionally excludes ARM operations, preventing own regenerate from invalidating its route input; do not restore operations there.
  
@@ -15,13 +15,13 @@ SQL287 scoped destination source4.093ms5exec/115totalbuffers, directedroad2.65ms
 """
 for path,line in [
 ("wiki/index.md",f"- [Окна доставки прежних СТ]({page.removeprefix('wiki/')}):287 sourceV5 existingwindows/norms/earliestcurrentroute/table, missingdataUNKNOWN; no admissionclaim."),
-("wiki/index.md","- [Проект окон доставки](database/nicora_ni081_delivery_windows_design_20261011.md):287 originalwindow boundaries/current source invalidation."),
+("wiki/index.md","- [Проект окон доставки](database/retailcase_ni081_delivery_windows_design_20261011.md):287 originalwindow boundaries/current source invalidation."),
 ("wiki/log.md","2026-10-11:287 nativeTIMEsourceV5 addsoriginalSTwindows+boundeduniquedestinationrules/norms/coords; routeoperationexclusionretained. Same-snapshot readonly deliveryestimate DRIVE+directedroad+windowintersection/wait/unload/return; hard-softlate/missingUNKNOWN. ExistingReactroutepanel table/explicitregion/generationfence. Actualown33564windowhashmutation outerrollback/P20H20 and HTTPmissingrealdataUNKNOWN; domainfit/late/missing authorpassed. SQL4.093ms5/115buf +2.65ms10/59buf keepexistingbounds/PK. NativeVALID/architecture627/TS pass. No driverbreak/legal/physical/independentclaim."),
-("wiki/runbooks/nicora_active_work.md","Latest287 Native TIME sourceV5 includes originalZONE_TIME_PLAN_IN/OUT/destinationrulescount/norm/strict/coords; RouteSource intentionally removesoperations toavoidself-invalidation. App287 currentwindowpreview/table/explicitregion/samecursorroad+originalops. serv286 reloaded currentHTTP200unknown. Own33564windowtemporarymutationrollbackexactrestore/P20H20. SQLbounded4.093/2.65ms keepexistingPK/bounds. Next shared driver-rest/warehouse timing admission, actualcountry/basegov config pending. Oldcases280version3/285version4 historical, don'trerunexpectoldversion."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","11.10.2026:287 SourceV5 включает исходные окна доставки СТ/норматив разгрузки/строгость/координаты. Есть текущая оценка прибытия/ожидания/разгрузки/возврата и таблица диспетчера, поздние окна отмечены; пропуски UNKNOWN. Authorownrollback/hash/HTTP/domainpassed. Режим водителя, реальная база/окна и независимый допуск остаются.")
+("wiki/runbooks/retailcase_active_work.md","Latest287 Native TIME sourceV5 includes originalZONE_TIME_PLAN_IN/OUT/destinationrulescount/norm/strict/coords; RouteSource intentionally removesoperations toavoidself-invalidation. App287 currentwindowpreview/table/explicitregion/samecursorroad+originalops. serv286 reloaded currentHTTP200unknown. Own33564windowtemporarymutationrollbackexactrestore/P20H20. SQLbounded4.093/2.65ms keepexistingPK/bounds. Next shared driver-rest/warehouse timing admission, actualcountry/basegov config pending. Oldcases280version3/285version4 historical, don'trerunexpectoldversion."),
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md","11.10.2026:287 SourceV5 включает исходные окна доставки СТ/норматив разгрузки/строгость/координаты. Есть текущая оценка прибытия/ожидания/разгрузки/возврата и таблица диспетчера, поздние окна отмечены; пропуски UNKNOWN. Authorownrollback/hash/HTTP/domainpassed. Режим водителя, реальная база/окна и независимый допуск остаются.")
 ]:out[path]=out.get(path,Path(path).read_text(encoding="utf-8"))+"\n"+line+"\n"
 out["wiki/index.md"]=out["wiki/index.md"].replace("current native285/app286/","current native287/app287/")
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"));next(x for x in j["increments"]if x["id"]=="NI08.1").setdefault("implementedSlices",[]).append("287 sourceV5 originalSTdeliverywindows/destinationnorms/strict/coords; same-snapshot earliestroad-wait-unload-return table, hard-softlate/missingUNKNOWN")
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"));next(x for x in j["increments"]if x["id"]=="NI08.1").setdefault("implementedSlices",[]).append("287 sourceV5 originalSTdeliverywindows/destinationnorms/strict/coords; same-snapshot earliestroad-wait-unload-return table, hard-softlate/missingUNKNOWN")
 out[p.as_posix()]=json.dumps(j,indent=2)+"\n"
 p=Path("db/migrations/2026-10-08_stock_posting_core/current_runtime_manifest.json");j=json.loads(p.read_text(encoding="utf-8"));j["additional_scripts"].append("../2026-10-11_ni081_delivery_windows/001_body.sql");out[p.as_posix()]=json.dumps(j,indent=2)+"\n"
 root=next(p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md"))

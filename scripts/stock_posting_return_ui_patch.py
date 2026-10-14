@@ -11,6 +11,6 @@ out[str(p)]=s
 for name in ("case-pick-posting.js","case-carrier-move.js"):
  p=d/name;s=p.read_text(encoding="utf-8");needle="      storageKey=key();" if name=="case-carrier-move.js" else "      storageKey = key();"
  assert s.count(needle)==1
- s=s.replace(needle,needle+"\n      if(localStorage.getItem(JSON.stringify(['nicora.caseCarrierReturn',cpTsdApiBase(),cpTsdUser()])))throw new Error('Сначала повторите сохранённый возврат.');",1);out[str(p)]=s
-p=d/"case-shipment-binding.js";s=p.read_text(encoding="utf-8").replace('["nicora.casePickIntent", "nicora.caseCarrierMove"]','["nicora.casePickIntent", "nicora.caseCarrierMove", "nicora.caseCarrierReturn"]',1);out[str(p)]=s
+ s=s.replace(needle,needle+"\n      if(localStorage.getItem(JSON.stringify(['retailcase.caseCarrierReturn',cpTsdApiBase(),cpTsdUser()])))throw new Error('Сначала повторите сохранённый возврат.');",1);out[str(p)]=s
+p=d/"case-shipment-binding.js";s=p.read_text(encoding="utf-8").replace('["retailcase.casePickIntent", "retailcase.caseCarrierMove"]','["retailcase.casePickIntent", "retailcase.caseCarrierMove", "retailcase.caseCarrierReturn"]',1);out[str(p)]=s
 print(json.dumps(out,ensure_ascii=True))

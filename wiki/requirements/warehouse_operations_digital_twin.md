@@ -1,4 +1,4 @@
-# Единое описание складских заданий и операций для цифрового двойника NICORA
+# Единое описание складских заданий и операций для цифрового двойника RETAILCASE
 
 Редакция 1.0 · 14 октября 2026 года · проект C:\projects\TMS.
 
@@ -411,10 +411,10 @@ API использует действующую авторизацию и пра
 - wiki/requirements/warehouse_tasks_reachtruck_tz.md — задания техники.
 - wiki/requirements/warehouse_task_domain_sync_tz.md — связь исполнения с бизнес-контуром.
 - wiki/requirements/stock_posting_core_tz.md — актуальная проводка и количественные инварианты.
-- wiki/requirements/nikora_business_processes/ — приёмка, волны, отбор, контроль, доставка и возвраты.
-- wiki/database/nicora_ni081_task_read_20261011.md — текущий scoped read/progress.
-- wiki/components/nicora_warehouse_task_ui_20261013.md — текущая очередь, карточка, family progress и ожидание.
-- wiki/database/nicora_ni022_case_type_20261014.md — тип адресата и явное переопределение пустого CASE.
+- wiki/requirements/retailcase_business_processes/ — приёмка, волны, отбор, контроль, доставка и возвраты.
+- wiki/database/retailcase_ni081_task_read_20261011.md — текущий scoped read/progress.
+- wiki/components/retailcase_warehouse_task_ui_20261013.md — текущая очередь, карточка, family progress и ожидание.
+- wiki/database/retailcase_ni022_case_type_20261014.md — тип адресата и явное переопределение пустого CASE.
 - wiki/subprojects/wms_twin_3d.md — состояние существующего двойника и live-ограничения.
 - wiki/concepts/warehouse_transport_digital_twin_principles.md — принципы двойника.
 - api/wms_api_server/app/routers/warehouse_tasks.py и modules/inventory/infrastructure/task_queue_read.py — очередь перемещений.

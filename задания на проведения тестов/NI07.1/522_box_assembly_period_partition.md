@@ -1,5 +1,5 @@
 # NI07.1 /512–520: независимое задание Qwen
-Read wiki/database/nicora_ni071_cost_periods_20261012.md and nicora_ni041_box_packing_clock_20261012.md first. Author cases are not independent acceptance.
+Read wiki/database/retailcase_ni071_cost_periods_20261012.md and retailcase_ni041_box_packing_clock_20261012.md first. Author cases are not independent acceptance.
 Existing dev RABAEV only; no initial factories517/519/514 and no stock deletion. Protected20/20 unchanged.
 1. Inspect native resolver and root-first BOX attachment: empty creation has no start; replay same operation retains clock; complete empty/repack starts new immutable cycle; partial changes preserve start.
 2. Read ctx515/519 saved results; exact replay, original charge amount2.75/2.25 and historical5 rows13.50 unchanged. Another operation on same source cannot charge a different date.

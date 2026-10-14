@@ -4,6 +4,8 @@ chcp 65001 > nul
 setlocal enableextensions enabledelayedexpansion
 
 set "TERMINAL_PORT=3010"
+set "TERMINAL_BIND_HOST=0.0.0.0"
+if defined TMS_TERMINAL_BIND_HOST set "TERMINAL_BIND_HOST=%TMS_TERMINAL_BIND_HOST%"
 set "TERMINAL_DIR=%~dp0terminal\wms_terminal_web"
 set "VITE_WMS_API_BASE_URL=http://127.0.0.1:8088"
 set "REACT_APP_API_BASE_URL=%VITE_WMS_API_BASE_URL%"
@@ -34,7 +36,7 @@ cd /d "%TERMINAL_DIR%"
 echo Starting WMS terminal web app...
 echo   VITE_WMS_API_BASE_URL=%VITE_WMS_API_BASE_URL%
 echo   URL=http://127.0.0.1:%TERMINAL_PORT%/
-npm.cmd run dev -- --port %TERMINAL_PORT% --strictPort
+npm.cmd run dev -- --host %TERMINAL_BIND_HOST% --port %TERMINAL_PORT% --strictPort
 
 color 82
 echo Terminal frontend exited. You can close this window.

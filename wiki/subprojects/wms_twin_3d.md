@@ -92,7 +92,7 @@
 - Двойник не пишет в Oracle и не вызывает мутирующие API.
 - Идентификаторы объектов совпадают с WMS/TMS.
 - Режим `SIM`/`LIVE` всегда виден в верхней панели.
-- Приложение не входит в `frontend_roots` архитектурного gate ([`../../config/architecture/nicora-policy.json`](../../config/architecture/nicora-policy.json)); при переносе в admin frontend или подключении к gate — оформить через `src/features/<area>/index.ts` и пройти `python scripts/nicora_quality_gate.py`.
+- Приложение не входит в `frontend_roots` архитектурного gate ([`../../config/architecture/retailcase-policy.json`](../../config/architecture/retailcase-policy.json)); при переносе в admin frontend или подключении к gate — оформить через `src/features/<area>/index.ts` и пройти `python scripts/retailcase_quality_gate.py`.
 
 ## Следующие шаги
 

@@ -10,7 +10,7 @@ commit;
 """
 p=f/"apply.sql";out[str(p)]=p.read_text(encoding="utf-8")+"@@003_ledger.sql\n"
 p=Path("db/migrations/2026-10-08_stock_posting_core/current_runtime_manifest.json");m=json.loads(p.read_text(encoding="utf-8"));m["components"]=[x.replace("../2026-10-10_ni081_range_apply/004_capacity_contract.sql","../2026-10-11_ni042_box_capacity/002_capacity_contract.sql")for x in m["components"]];m["components"].insert(0,"../2026-10-11_ni042_box_capacity/001_weighted.sql");m["packages"].append("RRL_WEIGHT_BOX_CAPACITY");out[str(p)]=json.dumps(m,indent=2)+"\n"
-out["wiki/database/nicora_ni042_box_capacity_20261011.md"]="""# NI04.2: вместимость весовых коробок без среднего BOX→KG
+out["wiki/database/retailcase_ni042_box_capacity_20261011.md"]="""# NI04.2: вместимость весовых коробок без среднего BOX→KG
 184 APPLIED. Original RRL_STOCK_REPL_CAPACITY signature/callers retained. Weighted SKU uses RRL_WEIGHT_BOX_CAPACITY pure read helper; no physical balance writer added.
 Занятый объём — сумма BOX_VOLUME_M3 фактических единиц текущей паллеты/ячейки с проверкой sum(BASE_QTY)=P. Pending own source reservation charges full physical reserved-box volume; partial other arrival conservatively charges the entire current source volume. No average-box mass, invented UOM BOX→KG, proportional box splitting or missing dimension fallback.
 Prospective KG budget = free volume / maximum actual volume-per-netKG among current physical boxes of the SKU in this warehouse. This is a conservative upper bound for the known eligible physical set, not an exact packing optimizer or a configured average mass. Sources/dimensions immutable per physical capture; execution keeps current cell/policy locks and revalidates the budget. Conservative booking may reserve more space than ultimately needed, never less for those known boxes.
@@ -21,11 +21,11 @@ SQL: weighted ratio6kvy612q11tca avg7.531ms/10; composition page f7t43p9rhyb0m6.
 Fresh capacity source/checkpoint/paired rollback, helpers/body compile0errors. Existing unweighted algorithms unchanged. Remaining NS36 scales/stability/tolerance/last-box and pick modes; full NI04.2 stays open.
 """
 for path,line in [
- ("wiki/index.md","- [Вместимость весовых коробок](database/nicora_ni042_box_capacity_20261011.md):184 actual physical volume/current bounded conservative KG budget, original replenishment19.6→CASE9.8 without BOX conversion; unknown dimensions refused."),
+ ("wiki/index.md","- [Вместимость весовых коробок](database/retailcase_ni042_box_capacity_20261011.md):184 actual physical volume/current bounded conservative KG budget, original replenishment19.6→CASE9.8 without BOX conversion; unknown dimensions refused."),
  ("wiki/log.md","2026-10-11:184 APPLIED: original capacity reads physical box volumes, conservative prospective budget, existing storage→replenishment→HARD→weightedCASE PASS; no BOX average. Error contract malformed409/manual422/foreign403. Slow ratio7.531ms/10 bounded lookup retained, inventory batching/plan backlog."),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni04_2.md","11.10.2026:184 weighted actual-volume budget/native original replenishment source19.6KG/.06m3→pick-face.2m3→CASE9.8 passed without fixed BOX→KG. Conservative prospective space bound; missing dimensions refused. Scales/stability/order tolerance/lastbox/pick modes remain open.")]:
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni04_2.md","11.10.2026:184 weighted actual-volume budget/native original replenishment source19.6KG/.06m3→pick-face.2m3→CASE9.8 passed without fixed BOX→KG. Conservative prospective space bound; missing dimensions refused. Scales/stability/order tolerance/lastbox/pick modes remain open.")]:
  p=Path(path);out[str(p)]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");plan=json.loads(p.read_text(encoding="utf-8"));plan["currentSprint"]="NI04.2";plan["currentStream"]="NI04"
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");plan=json.loads(p.read_text(encoding="utf-8"));plan["currentSprint"]="NI04.2";plan["currentStream"]="NI04"
 for inc in plan["increments"]:
  if inc["id"]=="NI04.2":
   inc.setdefault("implementedSlices",[]).extend([

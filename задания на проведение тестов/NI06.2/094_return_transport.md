@@ -1,5 +1,5 @@
 # Qwen ticket094
-Источники wiki/database/nicora_ni062_return_transport_20261010.md, scripts/ni062_return_transport_case.py. Уже привязанный approval не использовать повторно.
+Источники wiki/database/retailcase_ni062_return_transport_20261010.md, scripts/ni062_return_transport_case.py. Уже привязанный approval не использовать повторно.
 
 На собственном ordinary approved+SAP return проверить existing trip/store/driver/vehicle, recipient SAP warehouse, frozen plan data. Не создаётся СТ или новое назначение outbound order. Отказать noSAP/foreignstore/closedtrip/blockedvehicle/missingcapacity/oversize. Верхняя оценка = all outbound + all planned returns + new return, inclusive configured limits; nested boxes не отдельные машиноместа.
 

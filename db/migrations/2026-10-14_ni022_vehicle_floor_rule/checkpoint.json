@@ -8,5 +8,5 @@
     "db/migrations/2026-10-14_ni022_vehicle_floor_rule/000_rrl_transport_plan_rules_spec.sql",
     "db/migrations/2026-10-14_ni022_vehicle_floor_rule/000_rrl_transport_plan_rules_body.sql"
   ],
-  "evidence": "reports/nicora/2026-10-13/36-vehicle-tare-variants-report.md"
+  "evidence": "reports/retailcase/2026-10-13/36-vehicle-tare-variants-report.md"
 }

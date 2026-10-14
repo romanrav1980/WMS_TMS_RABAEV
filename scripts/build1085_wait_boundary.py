@@ -20,8 +20,8 @@ for n,k in(("rrl_stock_hu_cmd","package"),("rrl_stock_hu_task","package_body")):
 f[folder+"apply.sql"]=Path(folder+"apply.sql").read_text(encoding="utf-8")+"@@fix1085.sql\n"
 rollback=Path(folder+"rollback.sql").read_text(encoding="utf-8")
 f[folder+"rollback.sql"]="@@000_before_rrl_stock_hu_cmd_package.sql\n@@000_before_rrl_stock_hu_task_package_body.sql\n"+rollback
-p="wiki/database/nicora_ni072_shared_wait_target_20261013.md"
+p="wiki/database/retailcase_ni072_shared_wait_target_20261013.md"
 f[p]=Path(p).read_text(encoding="utf-8")+"\n1085: явный параметр только у доверенного HU_TASK compile(planning), либо существующий physical WAIT task. Generic HU_MOVE не получает разрешение общей зоны из произвольного metadata/defer ID. Caller ACL и обычное API неизменны. FreshHU spec/task capture перед применением; actual1080 уже DONE/P20H20, отрицательный generic-call ещё ожидает.\n"
-f["wiki/index.md"]="- [Planning boundary1085](database/nicora_ni072_shared_wait_target_20261013.md): native private planning flag or registered physical WAIT task, no generic metadata bypass.\n"+Path("wiki/index.md").read_text(encoding="utf-8")
+f["wiki/index.md"]="- [Planning boundary1085](database/retailcase_ni072_shared_wait_target_20261013.md): native private planning flag or registered physical WAIT task, no generic metadata bypass.\n"+Path("wiki/index.md").read_text(encoding="utf-8")
 f["wiki/log.md"]=Path("wiki/log.md").read_text(encoding="utf-8")+"\n-1085: shared target admission bound to native HU_TASK planning flag/actual WAIT task; generic metadata cannot request bypass. Original1080 actual mixed tasks DONE/P20H20.\n"
 print(json.dumps(f,ensure_ascii=True))

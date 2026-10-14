@@ -13,7 +13,7 @@ p=Path("wiki-raw/wms_admin_ui_reference/slotting-demand.html");s=p.read_text(enc
 <section class="panel" id="sdResult">''')
 out[str(p)]=s
 p=Path("wiki-raw/wms_admin_ui_reference/slotting-demand.js");s=p.read_text(encoding="utf-8")
-s=s.replace('  let sequence = 0, identity = "";','  let sequence = 0, identity = "", lastPreview = null, busy = false;\n  const pendingKey = () => "nicora.slotting.draft:" + auth().state.apiBase + ":" + auth().state.user?.username;\n  const actorScope = () => auth().state.apiBase + "|" + auth().state.user?.username;')
+s=s.replace('  let sequence = 0, identity = "";','  let sequence = 0, identity = "", lastPreview = null, busy = false;\n  const pendingKey = () => "retailcase.slotting.draft:" + auth().state.apiBase + ":" + auth().state.user?.username;\n  const actorScope = () => auth().state.apiBase + "|" + auth().state.user?.username;')
 s=s.replace('    const serial = ++sequence, selected = scope(); el("sdResult").replaceChildren();','    const serial = ++sequence, selected = scope(); el("sdResult").replaceChildren();\n    lastPreview = null; el("sdSaveDraft").disabled = true;')
 s=s.replace('      const q = result.scenario, unit = result.base_uom;','      lastPreview = {scope: selected, body, result, ware, article};\n      el("sdSaveDraft").disabled = result.range_recommendation?.status !== "NOMINAL_RECOMMENDATION";\n      const q = result.scenario, unit = result.base_uom;')
 s=s.replace('++sequence; el("sdResult").replaceChildren();','++sequence; lastPreview = null; el("sdSaveDraft").disabled = true; el("sdResult").replaceChildren();')

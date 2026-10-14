@@ -1,5 +1,5 @@
 <!-- Current status supersedes the historical runtime-016 description below. -->
-Current 2026-10-08: wiki/database/nicora_stock_posting_handlers.md.
+Current 2026-10-08: wiki/database/retailcase_stock_posting_handlers.md.
 Components through 099 installed in existing RABAEV/orcl. Event bridge prevents a second explicit stock effect;
 compatibility default OFF. MES calculation, supply, confirm/cancel use typed commands. Registry: 6 ADAPTED, 25 UNCONVERTED.
 PREPARED, B0 NULL, stock/events/operations 0. Do not set ACTIVE manually.

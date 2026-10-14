@@ -39,7 +39,7 @@
       if (!data.boxes.length) { const empty = document.createElement("p"); empty.textContent = "Доступных целых коробок нет."; panel.appendChild(empty); }
       if (data.has_more) { const more = document.createElement("p"); more.textContent = "Показаны первые 100 доступных коробок."; panel.appendChild(more); }
       window.orderWeightedChoice = {row, source: data, panel, body};
-      document.dispatchEvent(new CustomEvent("nicora-weighted-options", {detail: window.orderWeightedChoice}));
+      document.dispatchEvent(new CustomEvent("retailcase-weighted-options", {detail: window.orderWeightedChoice}));
     } catch (error) { if (generation === request) panel.textContent = error.message; }
   });
 })();

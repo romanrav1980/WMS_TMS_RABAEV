@@ -1,5 +1,5 @@
 # Qwen: NI05.3/090 — исходный заказ и принятое количество
-Read wiki/database/nicora_ni053_order_delivery_20261010.md. Existing customer order/fulfillment/ST/source root shipment required; no second order/ST setup.
+Read wiki/database/retailcase_ni053_order_delivery_20261010.md. Existing customer order/fulfillment/ST/source root shipment required; no second order/ST setup.
 
 Verify actual partial3 shipped /2 accepted /1 missing, full3, and full3 with weight case. GET /api/customer-orders/{id}/delivery requires customer_fulfillment_view; exact separate SKU/BASE quantities. Original ORDER_QTY and warehouse FF SHIPPED fact must stay unchanged. Pending unshipped fulfillment visible; status for shipped volume must not claim whole original demand completion.
 

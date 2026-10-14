@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-p=Path("wiki/database/nicora_ni062_return_aggregation_20261012.md")
+p=Path("wiki/database/retailcase_ni062_return_aggregation_20261012.md")
 v=p.read_text(encoding="utf-8")
 v += """
 ## Checkpoint629: реализован путь коробки, ограничение паллеты сохранено
@@ -16,7 +16,7 @@ v += """
 SQL627: lookup aggregation0.510ms/5.43buffers; count2.249ms/27.57buffers; insert2.656ms/29buffers. Решение: сохранить текущие indexed registered-origin queries и ограничения1000/10000/20000; отдельный индекс не оправдан этим dev случаем. Это не нагрузочное подтверждение миллионов операций. Native VALID и architecture676/0cycles/76debt; changed frontend typecheck PASS. Нет настоящего государственного ACK или независимой приёмки.
 """
 p.write_text(v,encoding="utf-8")
-p=Path("wiki/runbooks/nicora_active_work.md")
+p=Path("wiki/runbooks/retailcase_active_work.md")
 v=p.read_text(encoding="utf-8")
 p.write_text("""## Current checkpoint629 — 12Oct2026
 - Continue all18; commit/GitHub after all completion, exclude SAP. No agents/model review/broad qualification.
@@ -25,15 +25,15 @@ p.write_text("""## Current checkpoint629 — 12Oct2026
 - Existing return React + raw warehouse UI support BOX aggregation, durable scoped drafts, native exact composition; typecheck PASS, architecture676/0cycles/76debt. Encoding after docs still pending.
 - Bundle611 predates619; append final native sources without applying whole ACTIVE bundle. Keep earlier money586 original107.25/current0 and601 completed correction contexts untouched.
 - NI02.1 original auto-split source unavailable; owner question sent to authorize restoration from existing preparation, dependent work waits. Continue independent residuals meanwhile.
-- Details [[database/nicora_ni062_return_aggregation_20261012]]. All18 not complete, no external/hardware evidence fabricated.
+- Details [[database/retailcase_ni062_return_aggregation_20261012]]. All18 not complete, no external/hardware evidence fabricated.
 
 """+v,encoding="utf-8")
 p=Path("wiki/index.md");v=p.read_text(encoding="utf-8")
-p.write_text("- [Checkpoint629: возврат по агрегации коробки](database/nicora_ni062_return_aggregation_20261012.md): complete mixed-profile dev cycle, existing UI, PALLET identity limitation explicit.\n"+v,encoding="utf-8")
+p.write_text("- [Checkpoint629: возврат по агрегации коробки](database/retailcase_ni062_return_aggregation_20261012.md): complete mixed-profile dev cycle, existing UI, PALLET identity limitation explicit.\n"+v,encoding="utf-8")
 p=Path("wiki/log.md")
 with p.open("a",encoding="utf-8")as f:f.write("\n2026-10-12 checkpoint629: native619/626 VALID, existing API/UI return BOX path; retained624 P3H0/3keys6codes/no rebirth/actor retired;627 indexed slow SQL decision. PALLET limitation recorded, not full sprint closure; NI02.1 decision question pending.\n")
-p=Path("wiki/requirements/nikora_delivery_v55/execution/active/ni06_2.md")
-with p.open("a",encoding="utf-8")as f:f.write("\nCheckpoint629: registered BOX return implemented through shared resolver and existing custody/warehouse screens. Actual624 mixed CRPT UNIT/EGAIS BOX-only P3H0/3oldkeys6codes; native VALID. PALLET-only requires preserved physical identity/new aggregate registration and remains open. See [[database/nicora_ni062_return_aggregation_20261012]].\n")
+p=Path("wiki/requirements/retailcase_delivery_v55/execution/active/ni06_2.md")
+with p.open("a",encoding="utf-8")as f:f.write("\nCheckpoint629: registered BOX return implemented through shared resolver and existing custody/warehouse screens. Actual624 mixed CRPT UNIT/EGAIS BOX-only P3H0/3oldkeys6codes; native VALID. PALLET-only requires preserved physical identity/new aggregate registration and remains open. See [[database/retailcase_ni062_return_aggregation_20261012]].\n")
 d=Path("db/migrations/2026-10-08_stock_posting_core");p=d/"current_runtime_manifest.json";m=json.loads(p.read_text(encoding="utf-8"))
 for name in ("../2026-10-12_ni062_return_aggregation/001_shared_resolver_access.sql","../2026-10-12_ni062_return_aggregation/002_return_unit_core.sql"):
  if name not in m["additional_scripts"]:m["additional_scripts"].append(name)

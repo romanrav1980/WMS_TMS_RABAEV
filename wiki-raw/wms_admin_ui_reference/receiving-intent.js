@@ -1,5 +1,5 @@
 (() => {
-  const marker = 'nicora.receipt.pending:';
+  const marker = 'retailcase.receipt.pending:';
   const validPath = /^\/api\/receiving\/supply-orders\/[^/]+\/pallets$/;
   function scope() {
     const auth = window.wmsAdminAuth;
@@ -63,7 +63,7 @@
     const originalSource=sourceId(item.raw);
     if(originalSource&&originalSource!==source.order_id)
       throw new Error('Выберите исходное основание SAP '+originalSource+' перед архивированием.');
-    const key='nicora.receipt.archive:'+identity+':'+crypto.randomUUID();
+    const key='retailcase.receipt.archive:'+identity+':'+crypto.randomUUID();
     localStorage.setItem(key,JSON.stringify({raw:item.raw,original_key:item.storage_key,archived_at:new Date().toISOString(),
       scope:identity,source_order_id:source.order_id,source_revision:source.revision,warehouse_id:source.ware_id,
       source_state:source.receipt_state,source_lines:source.lines,

@@ -1,6 +1,6 @@
 # ORA-40573 в новой проводке
 
-08.10.2026, RABAEV/orcl. Родитель: [[../database/nicora_stock_posting_extension_20261008]].
+08.10.2026, RABAEV/orcl. Родитель: [[../database/retailcase_stock_posting_extension_20261008]].
 
 Oracle скомпилировал SELECT, использующий x.get_string(...) с PL/SQL JSON_OBJECT_T, но при выполнении compile_count вернул ORA-40573. Установка VALID не доказывала работоспособность команды.
 

@@ -7,14 +7,14 @@ try{
  await page.locator('#adminLoginForm button[type=submit]').click();await page.waitForFunction(()=>window.wmsAdminAuth?.state.user);
  await page.locator('#returnSource').fill('STORE383.RECEIPT:c09bc5c0');await page.locator('#returnLoad').click();await page.locator('.return-progress-card').nth(1).waitFor();
  const completed=await page.locator('#returnHistory').innerText();
- await page.locator('#returnHistory').screenshot({path:'reports/nicora/2026-10-13/screenshots/92-ni062-return-route.png'});
+ await page.locator('#returnHistory').screenshot({path:'reports/retailcase/2026-10-13/screenshots/92-ni062-return-route.png'});
  await page.getByRole('link',{name:'Возврат поставщику',exact:true}).click();
  await page.waitForFunction(()=>document.querySelector('#srRows')?.textContent.includes('EXRET'));
  const warehouse=await page.locator('#srWare').inputValue();
  await page.goto('http://127.0.0.1:8088/wms-admin/store-returns.html');await page.waitForFunction(()=>window.wmsAdminAuth?.state.user);
  await page.locator('#returnSource').fill('STORE642.RECEIPT:dc1889623c');await page.locator('#returnLoad').click();await page.locator('.return-progress-card').waitFor();
  const reuse=await page.locator('#returnHistory').innerText();
- await page.locator('#returnHistory').screenshot({path:'reports/nicora/2026-10-13/screenshots/93-ni062-marked-reuse-route.png'});
+ await page.locator('#returnHistory').screenshot({path:'reports/retailcase/2026-10-13/screenshots/93-ni062-marked-reuse-route.png'});
  await page.locator('#returnSource').fill('STORE.RECEIPT:da46b595-e71c-477b-b0ae-1f3292fdc0c1');
  if(await page.locator('.return-progress-card').count())throw Error('Stale return route');
  await page.locator('#returnLoad').click();await page.getByText('Согласованных возвратов этой приёмки пока нет.',{exact:true}).waitFor();

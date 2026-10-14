@@ -51,7 +51,7 @@ page="""# NI04.1 — исполнение CASE при смене физичес�
 
 Контейнер между слотами повышает только собственную версию; версии вложенных CASE не повышаются искусственно. Slotted unpack/repack уже вызывают HU_CMD и получают binder993 через прежнее проксирование. Captures/SHA/rollback сохранены, применение и адресный действующий bound CASE сценарий pending. ПолныйNI04.1 не закрыт.
 """
-files["wiki/database/nicora_ni041_case_slot_binding_20261013.md"]=page
-p="wiki/index.md";files[p]="- [CASE slot binding1001](database/nicora_ni041_case_slot_binding_20261013.md): prepared reuse binder/current actual-row order, live pending.\n"+read(p)
+files["wiki/database/retailcase_ni041_case_slot_binding_20261013.md"]=page
+p="wiki/index.md";files[p]="- [CASE slot binding1001](database/retailcase_ni041_case_slot_binding_20261013.md): prepared reuse binder/current actual-row order, live pending.\n"+read(p)
 p="wiki/log.md";files[p]=read(p)+"\n- 2026-10-13 checkpoint1001 PREPARED current1000 direct CASE relocation/version gap; reuse existingCaseBindMove/currentSTFF freeze/ST-before-CASE actual rows/sameRootplacement+HARD, no stock writer. Captures/rollback/SHA/wiki before apply; actualpending.\n"
 print(json.dumps(files,ensure_ascii=True))

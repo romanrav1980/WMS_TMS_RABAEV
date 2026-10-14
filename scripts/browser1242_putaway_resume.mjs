@@ -31,6 +31,6 @@ try{
  }
  ctx.stage='PUTAWAY_DONE';fs.writeFileSync(path,JSON.stringify(ctx,null,2));
  await page.locator('#warehouseTaskDetail').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/66-b01-putaway.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/66-b01-putaway.png'});
  console.log(JSON.stringify({stage:ctx.stage,actions:ctx.putaway}));
 }finally{await browser.close();}

@@ -24,7 +24,7 @@ m["prepared_sha256"]={str(p):hashlib.sha256((f.get(str(p)) or p.read_text(encodi
 m["scope"]="Replace captured profile body only; no table/column/trigger changes. Keep original immutable history/replay/config fence. Existing profile base hashes remain unchanged."
 m["recovery"]="Restore captured 000_before_body.sql; retained history JSON remains readable and immutable. No database copy or historical inference."
 f[root+"checkpoint.json"]=json.dumps(m,indent=2)
-p=Path("wiki/database/nicora_ni022_vehicle_temperature_20261014.md")
+p=Path("wiki/database/retailcase_ni022_vehicle_temperature_20261014.md")
 f[str(p)]="""# NI02.2 — температурные возможности автомобиля
 Миграция: 2026-10-14-1149-vehicle-temperature-profile. Подготовлена; применение ещё не подтверждено.
 
@@ -36,6 +36,6 @@ Preflight читает текущий профиль в том же READ ONLY с
 
 Снимок исходного тела/спецификации и baseline INVALID: [checkpoint](../../db/migrations/2026-10-14_ni022_vehicle_temperature/checkpoint.json). Apply/rollback/verify рядом. Пакетный откат сохраняет историю JSON, не изменяет остатки. Разрешение владельца: продолжать реализацию всех спринтов в выделенном dev RABAEV.
 """
-p=Path("wiki/index.md");f[str(p)]="- [NI02.2 температурный профиль1150–1151](database/nicora_ni022_vehicle_temperature_20261014.md): existing versioned fleet profile/API/UI, exact capability intersection; prepared, no physical admission.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");f[str(p)]="- [NI02.2 температурный профиль1150–1151](database/retailcase_ni022_vehicle_temperature_20261014.md): existing versioned fleet profile/API/UI, exact capability intersection; prepared, no physical admission.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");f[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-14 /1150–1151: saved live profile spec/body, prepared backward-compatible optional numeric temperature pair in original versioned API/history; fleet UI and bounded same-snapshot planning intersection. Migration mirrored/checkpointed/rollback captured; application and targeted native checks pending. No new tables or stock effect.\n"
 print(json.dumps(f))

@@ -15,14 +15,14 @@ SQL1127: alias query11.433ms/17buffers (другой cursor17.32ms/10). Реше
 
 [Скриншот42](screenshots/42-qc-physical-case-label.png).
 """
-f["reports/nicora/2026-10-13/31-qc-physical-label-report.md"]=report
-f["reports/nicora/2026-10-13/31-qc-physical-label-evidence.json"]=json.dumps({"native":json.loads(Path("tmp/read1127_qc_alias.json").read_text(encoding="utf-8")),"http":json.loads(Path("tmp/http1128_qc_alias.json").read_text(encoding="utf-8"))},ensure_ascii=False,indent=2)+"\n"
-p=Path("reports/nicora/2026-10-13/index.html");s=p.read_text(encoding="utf-8").replace("</main>","<article><h2>31 · Контроль по этикетке CASE</h2><p>Физический штрихкод открывает существующий QC; команды сохраняют постоянный источник.</p><a href=\"31-qc-physical-label-report.md\">Отчёт</a><img src=\"screenshots/42-qc-physical-case-label.png\" alt=\"Контроль текущегоCASE20 открыт по физической этикетке\"></article></main>");f[str(p)]=s
+f["reports/retailcase/2026-10-13/31-qc-physical-label-report.md"]=report
+f["reports/retailcase/2026-10-13/31-qc-physical-label-evidence.json"]=json.dumps({"native":json.loads(Path("tmp/read1127_qc_alias.json").read_text(encoding="utf-8")),"http":json.loads(Path("tmp/http1128_qc_alias.json").read_text(encoding="utf-8"))},ensure_ascii=False,indent=2)+"\n"
+p=Path("reports/retailcase/2026-10-13/index.html");s=p.read_text(encoding="utf-8").replace("</main>","<article><h2>31 · Контроль по этикетке CASE</h2><p>Физический штрихкод открывает существующий QC; команды сохраняют постоянный источник.</p><a href=\"31-qc-physical-label-report.md\">Отчёт</a><img src=\"screenshots/42-qc-physical-case-label.png\" alt=\"Контроль текущегоCASE20 открыт по физической этикетке\"></article></main>");f[str(p)]=s
 p=Path("wiki-raw/wms_admin_ui_reference/outgoing-quality.js");s=p.read_text(encoding="utf-8").replace("Идентификатор СТ <input data-id","Идентификатор паллеты / CASE / СТ <input data-id");f[str(p)]=s
 p=Path("wiki-raw/wms_admin_ui_reference/warehouse-tasks.html");f[str(p)]=p.read_text(encoding="utf-8").replace("outgoing-quality.js?v=20261013-1129","outgoing-quality.js?v=20261013-1130")
 f["задания на проведения тестов/NI02.1/2026-10-13-автоматическая-подготовка-СТ.md"]="""# Qwen · NI02.1 · Автоматическая подготовка СТ
 
-Ограниченная независимая приёмка реализованного инкремента. Не запускать глобальные прогоны, не очищать историю/остатки, не пересоздавать context1118 или fixtures2044–2048/987. Read wiki/index.md и components/nicora_ni021_auto_preparation_20261013.md. Отчёт сохранять в reports/nicora/2026-10-13, факты отличать от допущений.
+Ограниченная независимая приёмка реализованного инкремента. Не запускать глобальные прогоны, не очищать историю/остатки, не пересоздавать context1118 или fixtures2044–2048/987. Read wiki/index.md и components/retailcase_ni021_auto_preparation_20261013.md. Отчёт сохранять в reports/retailcase/2026-10-13, факты отличать от допущений.
 
 1. На сохранённом источнике2135/WARE9807 проверить существующую SAP_2135/ORDERS48470: два места; по18EA/3boxes/12kg SKUQAUTOc0c2a00c0bA/B. Получить repeat и resolve с исходным body из tmp/context1118.json; не генерировать новыйbody/ID. Повтор не создаёт новые ST/FF/запас.
 2. Source2047 только прочитать/preview с положительными пределами: норма1 меньше коробки24 должна отказать409. Не исправлять историческую карточкуQPOOL ради зелёного теста.
@@ -34,16 +34,16 @@ f["задания на проведения тестов/NI02.1/2026-10-13-ав�
 8. МаркированныеSKU остаются планомбезфиктивныхQR/внешнихACK; действующие laterpick/QC должны требовать текущие WMSprofiles и фактический состав. Несколькопрофилей не увеличивают количество.
 9. После собственного meaningfulcase снять slowSQL, явно выбрать bounds/index/rewrite/backlogowner; приложить реальныйскриншот. Результат independent PASS/FAIL/NOT_EXECUTED; не объявлять production или все18спринтов принятыми.
 """
-p=Path("wiki/components/nicora_ni051_control_label_20261012.md");f[str(p)]=p.read_text(encoding="utf-8")+"\n1130: read1127/HTTP1128 actualphysicalbarcode+CASE:1131+logical allcurrentCT20/readyfalse, unknownactor/source denied; UI1129 canonicalfreeze/retry/noautoPLAN PASS; screenshot42/report31. P20H20 unchanged/noDDL/noQCPOST. SQL11.433ms17buffers/17.32ms10 bounded3/UNIONexact retain/noindex ownerinventory. Full independent/weights/scanner acceptance not claimed.\n"
-p=Path("wiki/index.md");f[str(p)]="- [QC physical label delivered1130](components/nicora_ni051_control_label_20261012.md): actual CASE barcode/CASEID/current20/canonical freeze/report31/screen42/no stock effect.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/components/retailcase_ni051_control_label_20261012.md");f[str(p)]=p.read_text(encoding="utf-8")+"\n1130: read1127/HTTP1128 actualphysicalbarcode+CASE:1131+logical allcurrentCT20/readyfalse, unknownactor/source denied; UI1129 canonicalfreeze/retry/noautoPLAN PASS; screenshot42/report31. P20H20 unchanged/noDDL/noQCPOST. SQL11.433ms17buffers/17.32ms10 bounded3/UNIONexact retain/noindex ownerinventory. Full independent/weights/scanner acceptance not claimed.\n"
+p=Path("wiki/index.md");f[str(p)]="- [QC physical label delivered1130](components/retailcase_ni051_control_label_20261012.md): actual CASE barcode/CASEID/current20/canonical freeze/report31/screen42/no stock effect.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");f[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-13 /1130: physicalCASE→existingQC delivered readonly1127/HTTP1128/UI1129 canonical source frozen, current1131v20/readyfalse/P20H20. Report31/screens42, newQwen NI02.1 task prepared (not executed). SQLbounded3 equalityUNION retained/noindex ownerinventory. APIserv1127 current, allfullsprints remain open/noGitHub.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");x=json.loads(p.read_text(encoding="utf-8"));x["planRevision"]=53
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");x=json.loads(p.read_text(encoding="utf-8"));x["planRevision"]=53
 for i in x["increments"]:
  if i["id"]=="NI05.1":i["implementedSlices"].append("1126–1130 physicalCASE barcode/CASEID -> existing native QC current identifier in readonly snapshot; UI canonical request freeze/read/report31/screen42")
 x["currentSprint"]="NI02.2";x["currentSprintMeaning"]="Continue remaining current source/transport constraints via existing assignment after automatic preparation delivered"
 f[str(p)]=json.dumps(x,ensure_ascii=False,indent=2)+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.md");f[str(p)]=p.read_text(encoding="utf-8").replace("**Revision 52,","**Revision 53,")+"\nRevision53/1130: physicalCASE label→existingQC currentsource delivered/report31/screen42; noQCPOST/nativehandler unchanged. NextNI02.2 remaining transport-source constraints. Full independent/external acceptance not claimed.\n"
-p=Path("wiki/runbooks/nicora_active_work.md");f[str(p)]="""# CHECKPOINT1130 — continue all / NI02.2 next
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.md");f[str(p)]=p.read_text(encoding="utf-8").replace("**Revision 52,","**Revision 53,")+"\nRevision53/1130: physicalCASE label→existingQC currentsource delivered/report31/screen42; noQCPOST/nativehandler unchanged. NextNI02.2 remaining transport-source constraints. Full independent/external acceptance not claimed.\n"
+p=Path("wiki/runbooks/retailcase_active_work.md");f[str(p)]="""# CHECKPOINT1130 — continue all / NI02.2 next
 
 NI02.1 now implemented_targeted_verified: report30/screen41/Qwen task prepared notrun. Actualown1118 contextDONE/order2135 SAP_2135/2plannedplaces exact36EA/6boxes/24kg/FF2PLANNED0, race/rollback/stale/replay; source2047badnorm unchanged. No factories rerun. Auto signature includes limits after1125; cached1118receipt immutable. New receipts planned_pallets; actual1118oldreceipt onlystats, UI correctly says composition in card. APIserv1127 restarted latestPython1127 (includes auto limits/volume36/planned metadata/currentQC resolver). Encoding1125PASS before1126–1130; final latestencodingpending.
 

@@ -94,11 +94,11 @@ drop context RRL_WEIGHT_PLAN_CTX;
 drop package RRL_WEIGHT_PLAN_BIND;
 drop index RRL_WEIGHT_CHOICE_ORDER_I;
 """
-out["wiki/database/nicora_ni042_weight_choice_plan_design_20261011.md"]="""# NI04.2: выбранная коробка в существующем плане
+out["wiki/database/retailcase_ni042_weight_choice_plan_design_20261011.md"]="""# NI04.2: выбранная коробка в существующем плане
 196 extends existing RRL_PICKING_API.create_plan only. Original order/requested quantity retained, exact chosen net8or12 becomes actual planned task+existing SOFT from approved source UID/cell. Immutable195 choice bound to new original plan/line in same transaction; private accessible-by planner package/own TX namespace/declared original order+row+source stock locks protects binding. Original ordinary planner unchanged when no choice.
 Existing active bound plan replay returns its ID/same strategy; returned/cancelled choice must retire before replacement. Other active already-bound rows skipped while new approved row can plan. Under-target gap labelled approved deviation pending, not false free-stock shortage. Future197 pins exact physical HARD unit;198 current pending/fulfilled deviation accounting and used-choice cancellation.
 """
-for name,line in [("wiki/index.md","- [Выбранная коробка в существующем плане: разработка](database/nicora_ni042_weight_choice_plan_design_20261011.md):196 old plan/SOFT exact target/source/atomic private binding/original request retained."),
+for name,line in [("wiki/index.md","- [Выбранная коробка в существующем плане: разработка](database/retailcase_ni042_weight_choice_plan_design_20261011.md):196 old plan/SOFT exact target/source/atomic private binding/original request retained."),
 ("wiki/log.md","2026-10-11:196 starts from fresh live RRL_PICKING_API/choice/guard checkpoint; existing native planner consumes immutable whole-box choice, target differs original without changing original order; no second allocator or stock writer.")]:
  p=Path(name);out[str(p)]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
 print(json.dumps(out,ensure_ascii=True))

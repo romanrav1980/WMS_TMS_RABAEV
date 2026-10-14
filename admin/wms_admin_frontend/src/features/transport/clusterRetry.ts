@@ -9,7 +9,7 @@ export async function submitCluster(
   send: <T>(path: string, init: RequestInit) => Promise<T>,
   scope: { api: string; actor: string }, district: string, body: ClusterBody,
 ): Promise<Result> {
-  const key = "nicora.cluster.pending:" + JSON.stringify([scope.api, scope.actor]);
+  const key = "retailcase.cluster.pending:" + JSON.stringify([scope.api, scope.actor]);
   const raw = localStorage.getItem(key);
   const saved: Saved = raw ? JSON.parse(raw) : {
     district, body, operation_id: "CLUSTER.UI:" + crypto.randomUUID(),

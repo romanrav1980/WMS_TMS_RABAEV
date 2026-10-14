@@ -1,6 +1,6 @@
 from pathlib import Path
 import json
-page="wiki/database/nicora_ni081_range_capacity_20261010.md";out={}
+page="wiki/database/retailcase_ni081_range_capacity_20261010.md";out={}
 out[page]="""# NI08.1 / NS59 — действующий диапазон и препятствия вывода,145
 
 Same READ ONLY snapshot as143 extends existing scenario with original published cells and RRL_STOCK_REPL_CAPACITY.remaining_base_quantity. Native current capacity includes occupied volume/all article norms and existing assigned arrivals; no duplicated Python volume budget. Distinct cell counted once, duplicated active face refused as ambiguous, limit100; unknown norm/missing capacity is refusal/null, not certified zero.
@@ -13,12 +13,12 @@ SQL face reader58.914ms/1, native capacity13.775ms/1, another associated cursor3
 
 Architecture488files/0cycles/134 remaining violations, FAIL; no allowance expansion or independent acceptance. Full NS59 approval/drain/routing-cost remains open.
 """
-out["wiki/index.updated.tmp"]="- [Ёмкость действующего диапазона](database/nicora_ni081_range_capacity_20261010.md):145 original face/cell/native volume budget/withdrawal blockers; actual508 volume0/P20H20/no apply.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
+out["wiki/index.updated.tmp"]="- [Ёмкость действующего диапазона](database/retailcase_ni081_range_capacity_20261010.md):145 original face/cell/native volume budget/withdrawal blockers; actual508 volume0/P20H20/no apply.\n"+Path("wiki/index.md").read_text(encoding="utf-8-sig")
 for p,line in [
 ("wiki/log.md","2026-10-10:145 original published face/cell/route/native volume capacity added to143 same READ ONLY snapshot, shared cell once/unknown null/stock-HARD/active source-target tasks/unfinished CASE withdrawal blockers. Existing508 actual volume0/P20H20/no withdrawal or apply. SQL native13.775/face58.914ms bounded100 kept; large-range batch ownerinventory backlog. Architecture488files0cycles134debtFAIL no baseline growth; full NS59 open."),
-("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","Ticket145 existing range/canonical volume capacity/withdrawal blockers read model delivered; see database/nicora_ni081_range_capacity_20261010.md. Approval/drain/route-cost still next.")
+("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md","Ticket145 existing range/canonical volume capacity/withdrawal blockers read model delivered; see database/retailcase_ni081_range_capacity_20261010.md. Approval/drain/route-cost still next.")
 ]:out[p]=Path(p).read_text(encoding="utf-8-sig")+"\n"+line+"\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":
   row.setdefault("implementedSlices",[]).append("145 original range/native remaining volume budget/current withdrawal blockers")

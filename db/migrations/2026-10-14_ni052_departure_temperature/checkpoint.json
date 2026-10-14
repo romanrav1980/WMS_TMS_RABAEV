@@ -12,5 +12,5 @@
   },
   "state": "APPLIED_TARGETED_VERIFIED",
   "scope": "Existing helper phase and root departure only. No new table/quantity engine. Captured immutable root plan/result stores separate manual confirmation with original departure instant.",
-  "evidence": "reports/nicora/2026-10-13/35-loading-departure-temperature-report.md"
+  "evidence": "reports/retailcase/2026-10-13/35-loading-departure-temperature-report.md"
 }

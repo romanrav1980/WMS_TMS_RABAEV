@@ -8,7 +8,7 @@ MAX_GANTT_ROWS = 20000
 def gantt_rows(gateway: Any, gantt_date: date) -> list[dict[str, Any]]:
     start = datetime.combine(gantt_date, time.min)
     return gateway.fetch_all(
-        """SELECT /* NICORA_GANTT_DAY_OVERLAP */
+        """SELECT /* RETAILCASE_GANTT_DAY_OVERLAP */
                    TT.ID AS TT_ID, TT.TRANSPORT AS VEHICLE_NUM, TT.TRANSTYPE AS VEHICLE_TYPE,
                    V.ID AS VEHICLE_ID,
                    OPS.ID, OPS.OPERATION_CODE, OPS.ORD, OPS.DURATION_MIN,

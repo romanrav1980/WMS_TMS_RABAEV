@@ -10,8 +10,8 @@ commit;
 """
 p=f/"apply.sql";out[str(p)]=p.read_text(encoding="utf-8")+"@@004_ledger.sql\n"
 p=Path("db/migrations/2026-10-08_stock_posting_core/current_runtime_manifest.json");m=json.loads(p.read_text(encoding="utf-8"));m["components"].append("../2026-10-11_ni042_warehouse_scale/002_archive.sql");m["packages"].append("RRL_WH_SCALE_API");m["additional_scripts"].extend(["../2026-10-11_ni042_warehouse_scale/001_schema.sql","../2026-10-11_ni042_warehouse_scale/003_guards.sql"]);out[str(p)]=json.dumps(m,indent=2)+"\n"
-out["wiki/database/nicora_ni042_warehouse_scale_20261011.md"]="""# NI04.2: складской архив весового поста
-187 APPLIED. [[nicora_ni042_warehouse_scale_design_20261011]], [[nicora_ni042_scale_packet_20261011]].
+out["wiki/database/retailcase_ni042_warehouse_scale_20261011.md"]="""# NI04.2: складской архив весового поста
+187 APPLIED. [[retailcase_ni042_warehouse_scale_design_20261011]], [[retailcase_ni042_scale_packet_20261011]].
 Additive RRL_WH_SCALE_DEVICE/CAPTURE metadata; no second stock balance. Device tied WARE/post cell/dedicated nonGLOBAL sender current RUSERS warehouse, version/active(default0)/TEST or HARDWARE/GROSS or NET/capacity/resolution/calibration. Device writes only CONFIG X/warehouse_settings_edit/current actor+old/new warehouse; deactivation rather than deletion.
 Native RRL_WH_SCALE_API archives canonical raw/SHA/source task+line/content version/source-cell/carrier/product/current weighted SKU. Serialized box requires GROSS+original GS1 label; loose weight requires NET/product barcode and no applicable marks. Shared186 stable samples/freshUTC/zero/no preset/version/valid calibration. Device row serializes same capture identity; body conflict rejected. Replay retains original even if task changes, but current device sender warehouse and original WARE/post remain required.
 Capture has no P/H/effect/outbox stock. Append-only context guard bound to package/TX/capture key. Reader/current CASE permission READ ONLY, bounded50 history; raw device packet namespace audit bound32000/nonreplayable.
@@ -22,9 +22,9 @@ SQL capture d65x22b77pknn32.277ms/5 and initialinsert6mkpdqnrvnbx730.338ms/1; hi
 Next: same root CASE movement consumes capture once under planned unique/row locks, exact saved operation replay after expiry. Order15%/last-box exception distinct from device stability; no marked splitting allowed here.
 """
 for path,line in [
- ("wiki/index.md","- [Складской архив весового поста](database/nicora_ni042_warehouse_scale_20261011.md):187 addressed device/current dedicated sender/CASE version/stable10.1/immutable replay/no P-H; native consumption next."),
+ ("wiki/index.md","- [Складской архив весового поста](database/retailcase_ni042_warehouse_scale_20261011.md):187 addressed device/current dedicated sender/CASE version/stable10.1/immutable replay/no P-H; native consumption next."),
  ("wiki/log.md","2026-10-11:187 APPLIED warehouse scale archive API/current warehouse/config guards/shared186 sample rules. Own TEST stable10.1/source/replay/refusals/no P-H passed, quality544/0/76/24/bothTS. Capture32.277ms/5 cold bounded PK/history retained. Once-only stock use next."),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni04_2.md","11.10.2026:187 addressed warehouse scale/dedicated current sender/immutable current CASE source archive API passed; TEST clearly separate, no stock on capture. Same-root consumption/tolerance/lastbox next.")]:
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni04_2.md","11.10.2026:187 addressed warehouse scale/dedicated current sender/immutable current CASE source archive API passed; TEST clearly separate, no stock on capture. Same-root consumption/tolerance/lastbox next.")]:
  p=Path(path);out[str(p)]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
 roots=[p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md")]
 if roots:out[str(roots[0]/"NI04.2"/"187_warehouse_scale_archive.md")]="""# Qwen:187

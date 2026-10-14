@@ -12,7 +12,7 @@ end;
 @@000_before_core.sql
 @@002_recompile.sql
 """
-page="wiki/database/nicora_ni062_marked_reuse_20261012.md"
+page="wiki/database/retailcase_ni062_marked_reuse_20261012.md"
 out[page]="""# Полная маркированная коробка возвращается в доступный отбор
 388 APPLIED/VALID RABAEV/orcl. Stock remains written only by existing root receive/putaway owners. Reused originalapproval/SAPreturn/transport/physicalhandover/authdriverpickup/warehousebarcode/unitreceipt/task/eligibility.
 
@@ -30,12 +30,12 @@ SQL382 afterCASE: unitINSERT6.766ms/7exec/571buf, exactCASEarchive1.526ms/26exec
 Remaining: truephysical recurrentlosscycle now startsfreshsource390 BOX1; groupedfirstlegmultiSKU receipt, aggregate-only returns/recipient, realproviderACK/hardware/independent acceptance.
 """
 for file,text in [
- ("wiki/index.md","- [Маркированный REUSE и частичное CASE](database/nicora_ni062_marked_reuse_20261012.md):385–388 BOX3/original3keys6codes→return→P3H0/eligible;383CASE7 accepted3/missing2/refused1/damaged1/noP.\n"),
+ ("wiki/index.md","- [Маркированный REUSE и частичное CASE](database/retailcase_ni062_marked_reuse_20261012.md):385–388 BOX3/original3keys6codes→return→P3H0/eligible;383CASE7 accepted3/missing2/refused1/damaged1/noP.\n"),
  ("wiki/log.md","\n- 12.10.2026 383–389: oldshippedCASE1112 actual DISCREPANCY3accepted/2missing/1refused/1damaged/10QR of5present/nativefulltrialrollback/replay/sourceFF7once/noP/3photos/outbox1. FreshSAPBOX3/source385directaccepted3 ->existingmarkedREUSE387 approved/SAP/physicalhandover/driverpickup/blockedreceipt/task/pickingP3H0/3oldkeys6codes/no rebirth/currenteligible. Fixed388 returnowner UNITOR mode/perunit-lot-profile bridge/sharedresolver andsavedcodeversion checks; nativeVALID. Driverbindingrestored/actorretired; rolling bridgeback alone guarded. SQLCASE1.526/.981ms/unitINSERT6.766ms; boundedPK/batchCASEprojectionbacklog.\n"),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni06_2.md","\n385–388 full positive markedREUSE now actual: originalSAPBOX3 verifiedbatch/3keys6QR/approvedfullbox/ERPreturn/originaltransport/physicalcustody/bounddriver/exactwarehousebarcode+QR/blocked3 ->existingPUT/pickP3H0/eligible; no newunits. Returnowner bridges currentperunit-lot-profile resolver andUNIT_OR_AGGREGATION unitpath/strictsavedversions. Aggregate-only/hardware/realgovernment/independent remain.\n"),
- ("wiki/requirements/nikora_delivery_v55/execution/active/ni05_3.md","\n383 CASE-specific partial actual: oldCASE7 ->accepted3/missing2/refused1/damaged1;10scans forfivepresentunits/twoabsent deriveMISSING. Oneunit inconsistentprofiles refused; nativewholetrialrollback/replay/discrepancyorder3/sourceFF7once/threephotos/outbox1/noP. This closes CASEpartial positive gap, not physicalhardware/aggregate-only acceptance.\n")]:
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni06_2.md","\n385–388 full positive markedREUSE now actual: originalSAPBOX3 verifiedbatch/3keys6QR/approvedfullbox/ERPreturn/originaltransport/physicalcustody/bounddriver/exactwarehousebarcode+QR/blocked3 ->existingPUT/pickP3H0/eligible; no newunits. Returnowner bridges currentperunit-lot-profile resolver andUNIT_OR_AGGREGATION unitpath/strictsavedversions. Aggregate-only/hardware/realgovernment/independent remain.\n"),
+ ("wiki/requirements/retailcase_delivery_v55/execution/active/ni05_3.md","\n383 CASE-specific partial actual: oldCASE7 ->accepted3/missing2/refused1/damaged1;10scans forfivepresentunits/twoabsent deriveMISSING. Oneunit inconsistentprofiles refused; nativewholetrialrollback/replay/discrepancyorder3/sourceFF7once/threephotos/outbox1/noP. This closes CASEpartial positive gap, not physicalhardware/aggregate-only acceptance.\n")]:
  p=Path(file);old=p.read_text(encoding="utf-8");out[file]=text+old if file=="wiki/index.md"else old+text
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8"))
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8"))
 for x in m["increments"]:
  if x["id"]=="NI06.2":
   x["status"]="in_progress_marked_reuse_available"

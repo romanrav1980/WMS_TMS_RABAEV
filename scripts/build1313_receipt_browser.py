@@ -25,7 +25,7 @@ a=s.index(" await page.screenshot(");s=s[:a]+"""
   if(!r.ok())throw Error('Receipt failed: '+JSON.stringify(facts.at(-1)));
   await receipt.getByText('Это место уже принято.',{exact:true}).waitFor();
  }
- await receipt.screenshot({path:'reports/nicora/2026-10-13/screenshots/86-b03-store-received.png'});
+ await receipt.screenshot({path:'reports/retailcase/2026-10-13/screenshots/86-b03-store-received.png'});
  console.log(JSON.stringify({facts,errors}));
 }finally{await browser.close();}
 """

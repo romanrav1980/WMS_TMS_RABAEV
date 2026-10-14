@@ -1,7 +1,7 @@
 ﻿exec(open('scripts/ni063_slow_queries.py',encoding='utf-8').read().split('with oracledb.connect',1)[0])
 from copy import deepcopy
 from time import perf_counter
-outdir=Path('reports/nicora/2026-10-13/codex/NI081');outdir.mkdir(exist_ok=True)
+outdir=Path('reports/retailcase/2026-10-13/codex/NI081');outdir.mkdir(exist_ok=True)
 source={'members':[{'address':'SHOP','route_ordinal':1,'st_number':'SAP_2135','delivery_window_from':'2026-10-14 08:00:00','delivery_window_to':'2026-10-14 18:00:00'}],
  'destination_rules':[{'address':'SHOP','address_count':1,'unload_norm_min':30,'window_strict':1}],
  'operations':[{'code':'DRIVE','plan_start':'2026-10-14 08:00:00','plan_end':'2026-10-14 12:00:00'},{'code':'DRIVE_BACK','plan_start':'2026-10-14 12:30:00','plan_end':'2026-10-14 18:00:00'}],

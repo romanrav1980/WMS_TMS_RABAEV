@@ -13,9 +13,9 @@ try{
  if(!await page.locator('#tripRows').getByText('3.125 °C · вручную',{exact:true}).count())throw Error('Original loading confirmation not rendered');
  if(!await page.locator('#tripDepart').isDisabled())throw Error('Already departed trip offered another departure');
  await page.locator('#departTempProfile').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/47-loading-departure-temperature.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/47-loading-departure-temperature.png'});
  await page.setViewportSize({width:390,height:844});
  await page.locator('#departTempProfile').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/48-departure-temperature-mobile.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/48-departure-temperature-mobile.png'});
  console.log('PASS1177 actual read-only original33636: load3.125/depart3.75/profile1, departed button disabled; desktop/mobile screenshots');
 }finally{await browser.close();}

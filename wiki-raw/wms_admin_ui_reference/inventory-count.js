@@ -8,7 +8,7 @@
     return { base: (auth.state.apiBase || "http://127.0.0.1:8088").replace(/\/$/, ""),
       actor: auth.state.user?.username || "" };
   };
-  const intentKey = () => { const c = context(); return JSON.stringify(["nicora.inventoryIntent", c.base, c.actor]); };
+  const intentKey = () => { const c = context(); return JSON.stringify(["retailcase.inventoryIntent", c.base, c.actor]); };
   const readIntent = () => JSON.parse(localStorage.getItem(intentKey()) || "null");
   function pending() { el("countRetry").hidden = !readIntent(); }
   async function api(path, body) {

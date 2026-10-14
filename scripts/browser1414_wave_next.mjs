@@ -5,7 +5,7 @@ try{
  p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>{if(r.method()==='POST'&&r.url().includes('/api/'))writes.push(r.url());});
  await p.goto('http://127.0.0.1:8088/wms-admin/wave-replenishment.html?wave_id=560#waveExecution');await p.locator('#adminLoginForm button[type=submit]').click();
  const link=p.locator('#waveExecution a[href="case-pick-tsd.html?case_task_id=1134"]');await link.waitFor();
- await p.locator('#waveExecution').screenshot({path:'reports/nicora/2026-10-13/screenshots/108-ni033-wave-picking-next.png'});
+ await p.locator('#waveExecution').screenshot({path:'reports/retailcase/2026-10-13/screenshots/108-ni033-wave-picking-next.png'});
  const response=p.waitForResponse(r=>r.url().endsWith('/case-pick/tasks/1134'));await link.click();const task=await (await response).json();
  await p.locator('#cpTsdTaskId').filter({hasText:'1134'}).waitFor();
  if(task.case_pick_task_id!==1134)throw Error('Wrong case');

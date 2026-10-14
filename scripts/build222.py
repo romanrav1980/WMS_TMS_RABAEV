@@ -2,7 +2,7 @@ raise SystemExit("Retired authoring generator: use final222 SQL/fresh captured o
 from pathlib import Path
 import json
 f=Path("db/migrations/2026-10-11_ni052_unload_all_slots");out={}
-out["wiki/database/nicora_ni052_unload_all_slots_design_20261011.md"]="""# NI05.2: текущие места хранения для всех выгружаемых корней
+out["wiki/database/retailcase_ni052_unload_all_slots_design_20261011.md"]="""# NI05.2: текущие места хранения для всех выгружаемых корней
 222 same native unloader requires scanned physical slot for CASE, CONTAINER or STOCK when current latest PUBLISHED topology has storage slots. Historical topology never determines current admission. Limited legacy cell (weight/height) also requires a configured measured physical slot; otherwise explicit refusal instead of unmeasured restoration. Selected slot must belong to latest published topology/current warehouse/cell. Existing target_json/placement_core checks under CONFIG/CELL/SLOT locks after quantity/tree restoration; late refusal rolls back whole goods/reserve/units/FF/history/claim. Original measurements reused, current restored epoch captured; same HARD coverage projected to actual slot. No new placement/capacity or quantity engine.
 """
 s=(f/"000_before_rrl_stock_unload_cmd.sql").read_text(encoding="utf-8")

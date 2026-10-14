@@ -343,7 +343,7 @@ CASE helper допускает parent только при точной пров�
 
 Checkpoint/paired rollback saved before apply; live application/actual retainedsource proof pending. Rollback code не удаляет зарегистрированные планы/движения, поэтому после применения старого кода нужны recovery decisions для активныхHUWAIT. Не объявлять весь NI07.2 завершённым.
 """
-files["wiki/database/nicora_ni072_nested_hu_wait_20261013.md"]=page
-p="wiki/index.md";files[p]="- [Вложенный HU в ожидание1055](database/nicora_ni072_nested_hu_wait_20261013.md): PREPARED original HU_PLAN_MOVE/whole frozen source/no metadata bypass; live pending.\n"+read(p)
+files["wiki/database/retailcase_ni072_nested_hu_wait_20261013.md"]=page
+p="wiki/index.md";files[p]="- [Вложенный HU в ожидание1055](database/retailcase_ni072_nested_hu_wait_20261013.md): PREPARED original HU_PLAN_MOVE/whole frozen source/no metadata bypass; live pending.\n"+read(p)
 p="wiki/log.md";files[p]=read(p)+"\n- 13.10.2026 checkpoint1055 PREPARED nestedHU waiting: authoritative existing HU root planning/execution, fresh source captures/paired rollback/checksum, no dirty nested transaction/direct WHT insertion. Live pending.\n"
 print(json.dumps(files,ensure_ascii=True))

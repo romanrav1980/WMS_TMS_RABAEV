@@ -4,7 +4,7 @@
   let policy=null, selection=null, serial=0, busy=false;
   const msg=text=>{e("poolMessage").textContent=text;};
   const auth=()=>window.wmsAdminAuth;
-  const key="nicora.soft-pool.pending.v1";
+  const key="retailcase.soft-pool.pending.v1";
   function selected() {
     const warehouse=e("poolWarehouse").value.trim(), article=e("poolArticle").value.trim();
     if(!/^[1-9][0-9]*$/.test(warehouse)||!article)throw Error("Укажите склад и артикул.");

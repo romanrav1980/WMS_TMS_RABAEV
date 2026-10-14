@@ -12,12 +12,12 @@ try{
  ctx.stage='WAVE_LAUNCH_STARTED';fs.writeFileSync(path,JSON.stringify(ctx,null,2));
  const expected=page.waitForResponse(r=>r.request().method()==='POST'&&r.url().endsWith('/'+ctx.wave_id+'/launch'));
  await page.locator('#opWaveLaunch').click();const response=await expected;const text=await response.text();let body;try{body=JSON.parse(text);}catch{body={message:text};}
- ctx.launch={status:response.status(),body};ctx.wave_pending=await page.evaluate(()=>Object.fromEntries(Object.keys(localStorage).filter(k=>k.startsWith('nicora.orderWave:')).map(k=>[k,localStorage.getItem(k)])));fs.writeFileSync(path,JSON.stringify(ctx,null,2));
+ ctx.launch={status:response.status(),body};ctx.wave_pending=await page.evaluate(()=>Object.fromEntries(Object.keys(localStorage).filter(k=>k.startsWith('retailcase.orderWave:')).map(k=>[k,localStorage.getItem(k)])));fs.writeFileSync(path,JSON.stringify(ctx,null,2));
  if(!response.ok())throw Error(JSON.stringify(body));
  await page.locator('#opWaveStatus').filter({hasText:'Волна запущена'}).waitFor();
  ctx.stage='WAVE_LAUNCHED';ctx.wave_tasks=await page.evaluate(id=>orderRequest('/api/picking/waves/'+id+'/tasks'),ctx.wave_id);
  ctx.execution=await page.evaluate(id=>orderRequest('/api/picking/waves/'+id+'/execution'),ctx.wave_id);
  fs.writeFileSync(path,JSON.stringify(ctx,null,2));
- await page.locator('#orderWavePlanning').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/70-b01-wave-launched.png'});
+ await page.locator('#orderWavePlanning').scrollIntoViewIfNeeded();await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/70-b01-wave-launched.png'});
  console.log(JSON.stringify({stage:ctx.stage,wave:ctx.wave_id,tasks:ctx.wave_tasks,execution:ctx.execution}));
 }finally{await browser.close();}

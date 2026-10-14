@@ -1,7 +1,7 @@
 (() => {
  const el=id=>document.getElementById(id);
  let epoch=0,busy=false,plans=[],order=null;
- const key=()=>JSON.stringify(["nicora.orderPickCreate",orderApiBase(),window.wmsAdminAuth.state.user?.username]);
+ const key=()=>JSON.stringify(["retailcase.orderPickCreate",orderApiBase(),window.wmsAdminAuth.state.user?.username]);
  function saved(){const raw=localStorage.getItem(key());if(!raw)return null;try{return {...JSON.parse(raw),raw};}catch{return {damaged:true,raw};}}
  function say(text){el("orderPickStatus").textContent=text;}
  function controls(){el("orderPickReceiving").hidden=!order||!Number.isSafeInteger(order.ware_id);el("orderPickCreate").disabled=busy||!order||!!saved();el("orderPickRefresh").disabled=busy;el("orderPickRetry").disabled=busy||!order||!saved()?.request?.operation_id||saved()?.order_id!==order.customer_order_id;el("orderPickArchive").disabled=busy||!saved()?.confirmed_rejection;}

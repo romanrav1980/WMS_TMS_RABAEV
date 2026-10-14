@@ -1,6 +1,6 @@
 ﻿exec(open('scripts/ni063_slow_queries.py',encoding='utf-8').read().split('with oracledb.connect',1)[0])
 from time import perf_counter
-fixture=json.loads(Path('reports/nicora/2026-10-13/codex/STORE_ACCESS/native.json').read_text());results=[]
+fixture=json.loads(Path('reports/retailcase/2026-10-13/codex/STORE_ACCESS/native.json').read_text());results=[]
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor()
  for sqlid,bind in [('7bk76xyqrjdsw',json.dumps([fixture['st_number']])),('3u00sw0qctbxs',json.dumps([fixture['st_id']]))]:
@@ -11,4 +11,4 @@ with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle
    if previous is not None:assert data==previous
    previous=data
   results.append(row)
-Path('reports/nicora/2026-10-13/codex/STORE_ACCESS/lookup_comparison.json').write_text(json.dumps(results,indent=2),encoding='utf-8');print(results)
+Path('reports/retailcase/2026-10-13/codex/STORE_ACCESS/lookup_comparison.json').write_text(json.dumps(results,indent=2),encoding='utf-8');print(results)

@@ -24,6 +24,6 @@ with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle
  q.execute("select sum(r.REMAIN),sum(r.HARD_RESERVED_BASE)from RRL_REMAINS r join RRL_CELLS cell on cell.CELL=r.CELL where cell.WARE_ID=6667491");assert q.fetchone()==(20,20)
  for basis in ["REFUSED","DAMAGED"]:
   q.execute("select nvl(sum(REMAIN),0),nvl(sum(HARD_RESERVED_BASE),0)from RRL_REMAINS where UID_POLETA=:p_uid",p_uid=ctx[basis]["receipt"]["pallet_identifier"]);assert q.fetchone()==(0,0)
-plan=json.loads(Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json").read_text(encoding="utf-8"))
+plan=json.loads(Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json").read_text(encoding="utf-8"))
 print("PASS509 latest HTTP trip summary3GEL/saved warehouse receipts after supplier-disposal replay/buyer3/caps preserved/liveVALID/protected20")
 print(json.dumps({"revision":plan["planRevision"],"increments":[dict(id=x["id"],status=x["status"])for x in plan["increments"]]}))

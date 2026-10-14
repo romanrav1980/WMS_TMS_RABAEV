@@ -1030,7 +1030,7 @@ build_regulatory_adapter() -> RegulatoryAdapter
 
 Docstring отсутствует. Назначение уточняется по реализации и сценарию вызывающего блока.
 
-Вызывает: `DisabledRegulatoryAdapter`, `MockRegulatoryAdapter`, `os.environ.get`, `os.environ.get('NICORA_REGULATORY_MODE', 'DISABLED').strip`, `os.environ.get('NICORA_REGULATORY_MODE', 'DISABLED').strip().upper`
+Вызывает: `DisabledRegulatoryAdapter`, `MockRegulatoryAdapter`, `os.environ.get`, `os.environ.get('RETAILCASE_REGULATORY_MODE', 'DISABLED').strip`, `os.environ.get('RETAILCASE_REGULATORY_MODE', 'DISABLED').strip().upper`
 
 ### regulatory_runtime_status
 
@@ -1042,7 +1042,7 @@ regulatory_runtime_status() -> dict[str, Any]
 
 Docstring отсутствует. Назначение уточняется по реализации и сценарию вызывающего блока.
 
-Вызывает: `build_regulatory_adapter`, `getattr`, `os.environ.get`, `os.environ.get('NICORA_REGULATORY_MODE', 'DISABLED').strip`, `os.environ.get('NICORA_REGULATORY_MODE', 'DISABLED').strip().upper`
+Вызывает: `build_regulatory_adapter`, `getattr`, `os.environ.get`, `os.environ.get('RETAILCASE_REGULATORY_MODE', 'DISABLED').strip`, `os.environ.get('RETAILCASE_REGULATORY_MODE', 'DISABLED').strip().upper`
 
 ### __init__
 
@@ -1054,7 +1054,7 @@ __init__(self, requested_mode: str='DISABLED') -> None
 
 Docstring отсутствует. Назначение уточняется по реализации и сценарию вызывающего блока.
 
-Вызывает: `{'DISABLED': ('REGULATORY_DISABLED', 'Обмен отключён. Реальная отправка будет доступна после реализации интеграционного шлюза.'), 'REAL': ('PRODUCTION_CONNECTOR_NOT_IMPLEMENTED', 'Настроить интеграционный шлюз после его реализации. По решению владельца шлюз реализуется отдельно позже; одного URL или сертификата сейчас недостаточно.'), 'MOCK': ('MOCK_NOT_ALLOWED', 'Имитация не разрешена. Только для тестового стенда требуются NICORA_REGULATORY_MODE=MOCK и NICORA_ALLOW_REGULATORY_MOCK=1.')}.get`
+Вызывает: `{'DISABLED': ('REGULATORY_DISABLED', 'Обмен отключён. Реальная отправка будет доступна после реализации интеграционного шлюза.'), 'REAL': ('PRODUCTION_CONNECTOR_NOT_IMPLEMENTED', 'Настроить интеграционный шлюз после его реализации. По решению владельца шлюз реализуется отдельно позже; одного URL или сертификата сейчас недостаточно.'), 'MOCK': ('MOCK_NOT_ALLOWED', 'Имитация не разрешена. Только для тестового стенда требуются RETAILCASE_REGULATORY_MODE=MOCK и RETAILCASE_ALLOW_REGULATORY_MOCK=1.')}.get`
 
 ### send
 

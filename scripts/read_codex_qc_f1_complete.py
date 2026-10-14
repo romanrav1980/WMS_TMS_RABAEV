@@ -2,7 +2,7 @@
 from app.modules.platform.public import read_oracle_json
 from time import perf_counter
 import hashlib
-folder=Path('reports/nicora/2026-10-13/codex/QC_F1');file=folder/'native_fixture.json';v=json.loads(file.read_text(encoding='utf-8'));operation='QCF1.PLAN:'+v['tag']
+folder=Path('reports/retailcase/2026-10-13/codex/QC_F1');file=folder/'native_fixture.json';v=json.loads(file.read_text(encoding='utf-8'));operation='QCF1.PLAN:'+v['tag']
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
  q=c.cursor();q.execute('select RESULT_JSON,STATE from RRL_STOCK_OPERATION where OPERATION_ID=:op',op=operation);wire,state=q.fetchone();saved=read_oracle_json(wire);assert state=='APPLIED'and saved['control_status']['ready']
  q.execute('select PAYLOAD_JSON from RRL_QC_EXEMPT_FACT where OPERATION_ID=:op and DOCUMENT_ID=:doc',op=operation,doc=v['st_id']);audit=read_oracle_json(q.fetchone()[0]);assert audit['storage_pick_task_id']==v['task_id']and audit['base_quantity']=='3'and audit['exemption_basis']=='SCANNED_ORIGINAL_STORAGE_IDENTIFIER'

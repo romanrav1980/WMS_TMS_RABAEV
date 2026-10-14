@@ -22,4 +22,4 @@ def decisions(plan_id: str,after_revision: int=Query(default=0,ge=0,le=999999999
 p.write_text(s,encoding="utf-8")
 p=root/"infrastructure/interwarehouse_queue.sql";s=p.read_text(encoding="utf-8").replace("d.DECISION_REFERENCE LATEST_DECISION_REFERENCE,","d.DECISION_REFERENCE LATEST_DECISION_REFERENCE,incident.INCIDENT_KIND,incident.INCIDENT_DETAIL,incident.EVIDENCE_REFERENCE,incident.OPERATION_ID INCIDENT_OPERATION_ID,",1)
 s=s.replace("join RRL_TRANSPORT_TASK t","left join RRL_INTERWARE_DECISION incident on incident.PLAN_OPERATION_ID=p.OPERATION_ID and incident.REVISION_NO=(select max(z.REVISION_NO)from RRL_INTERWARE_DECISION z where z.PLAN_OPERATION_ID=p.OPERATION_ID and z.INCIDENT_KIND is not null)\njoin RRL_TRANSPORT_TASK t",1);p.write_text(s,encoding="utf-8")
-p=Path("wiki/database/nicora_ni061_incident_design_20261011.md");s=p.read_text(encoding="utf-8").replace(", повреждение","");p.write_text(s,encoding="utf-8")
+p=Path("wiki/database/retailcase_ni061_incident_design_20261011.md");s=p.read_text(encoding="utf-8").replace(", повреждение","");p.write_text(s,encoding="utf-8")

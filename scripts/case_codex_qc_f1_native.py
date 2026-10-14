@@ -14,7 +14,7 @@ from app.modules.fulfillment.infrastructure.execution_progress import OrderExecu
 import httpx,xml.etree.ElementTree as ET
 from app.modules.inventory.infrastructure.outgoing_quality import OutgoingQuality
 from app.modules.inventory.infrastructure.quality_scope import QualityScope
-folder=Path("reports/nicora/2026-10-13/codex/QC_F1");manifest=folder/"native_fixture.json"
+folder=Path("reports/retailcase/2026-10-13/codex/QC_F1");manifest=folder/"native_fixture.json"
 assert not manifest.exists(),"Resume existing fixture explicitly"
 cfg=get_settings();tag=uuid4().hex[:10];lot="FULL.QA:"+tag;other=lot+"O";src="QF"+tag;dst="QG"+tag;st_uid="QCF1.ST:"+tag;receive="QR"+tag;article="QCF1.SKU."+tag;address="QCF1.ADDR."+tag
 with oracledb.connect(user=cfg.oracle_user,password=cfg.oracle_password,dsn=cfg.oracle_dsn) as conn:

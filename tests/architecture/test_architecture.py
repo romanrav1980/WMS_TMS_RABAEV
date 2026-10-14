@@ -10,7 +10,7 @@ from scripts.check_architecture import ROOT, python_records
 from tools.architecture.rules import compare_debt, cycles, import_rules
 from api.wms_api_server.app.modules.transport.public import normalize_transport_type
 
-POLICY = json.loads((ROOT / 'config/architecture/nicora-policy.json').read_text(encoding='utf-8'))
+POLICY = json.loads((ROOT / 'config/architecture/retailcase-policy.json').read_text(encoding='utf-8'))
 BASE = 'api/wms_api_server/app/'
 
 

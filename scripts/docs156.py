@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 out={}
-out["wiki/database/nicora_ni081_range_recommendation_20261010.md"]="""# Рекомендация диапазона и сравнение затрат,156
+out["wiki/database/retailcase_ni081_range_recommendation_20261010.md"]="""# Рекомендация диапазона и сравнение затрат,156
 
 Existing same READ ONLY slotting scenario now includes range_recommendation. Existing source pool/order forecast consumption/old period stock/incoming/layout preserved. Same snapshot reads original SKU-face boxvolume+BOX→BASE, empty dynamic published-face candidates without active mapping/assignment/P/H/tasks/CASE. Active published sameWARE route and exactcell row required. Multiple native template unitvolumes or missing volume means unknown, never guessed. Active original range stays included and unchanged.
 
@@ -13,17 +13,17 @@ Author actual original508/SKU QNATIVED9A5C53B54/P20H20 and rollback-only three o
 
 Architecture507files0cycles79debtPASS. CandidateSQL16.238ms/8, template2.249ms/8; older firstparse72.607/15.583ms separatelyobserved. Retain bounded101rows/warehousefilters/currentindexes; no speculativeindex. Inventoryowner backlog add published route/subwarehouse scope and validate plan on realistic topology volume before industrial sizing. Approved replacement+drain remains next, not fullNS59 acceptance; no zero unavailable-sales demand inference, no businesscalendar assumption.
 """
-p=Path("wiki/index.md");out[str(p)]="- [Рекомендация диапазона и затрат](database/nicora_ni081_range_recommendation_20261010.md):156 same-snapshot whole-pallet candidates/explicit gross and cost assumptions/old range retained/no apply.\n"+p.read_text(encoding="utf-8-sig")
+p=Path("wiki/index.md");out[str(p)]="- [Рекомендация диапазона и затрат](database/retailcase_ni081_range_recommendation_20261010.md):156 same-snapshot whole-pallet candidates/explicit gross and cost assumptions/old range retained/no apply.\n"+p.read_text(encoding="utf-8-sig")
 p=Path("wiki/log.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\n2026-10-10:156 same-snapshot nominalrange recommendation/existing publishedfaces/wholepallet/explicitgross+pick/replcost comparison. Actual original508 plusrollbackmetadata150-old50+100→2faces/cost160beats200/refusals/P20H20. Independent advisorybounds preserve oldscenario afterinitial150pal exposed bound. NodePASS/architecture507/0/79PASS. SQLcandidate16.238/template2.249ms boundedfiltersretain/indexdeferredownerinventory; approveddrain next.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\nTicket156 same-snapshot whole-pallet nominal range/cost comparison with explicit gross and cost assumptions; see database/nicora_ni081_range_recommendation_20261010.md. Approval/drain/current-task preservation and route cost measurements remain; no full sprint acceptance.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
+p=Path("wiki/requirements/retailcase_delivery_v55/execution/active/ni08_1.md");out[str(p)]=p.read_text(encoding="utf-8-sig")+"\nTicket156 same-snapshot whole-pallet nominal range/cost comparison with explicit gross and cost assumptions; see database/retailcase_ni081_range_recommendation_20261010.md. Approval/drain/current-task preservation and route cost measurements remain; no full sprint acceptance.\n"
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");m=json.loads(p.read_text(encoding="utf-8-sig"))
 for row in m["sprints"]:
  if row.get("id")=="NI08.1":row.setdefault("implementedSlices",[]).append("156 whole-pallet range recommendation/explicit costs/current published candidates/oldrange retained")
 out[str(p)]=json.dumps(m,ensure_ascii=False,indent=2)+"\n"
 out["задания на проведения тестов/NI08.1/156_рекомендация_диапазона.md"]="""# Qwen —156
 SameREADONLYsnapshot sources/demand/layout/templates/candidates, no range apply.150/old50/multiple100→wholeadditional100/current1+new1=2; compare fullnominalpal pick/replen cost160vs200. No doubleorders/forecast credit; unknown cost of feasiblealternative preventsselection, unknownweight/volume/routes no nominalfit, old occupiedgrossunknownnoadditionalpallet. Reject small/occupied/activeASSIGN/task/CASE candidate; exactpublished sameWAREroute+cell required; sharedcells ambiguous. Markedprofiles do notmultiplyquantity. >100pals/candidates scopes advice only, do notbreak originalquantityscenario. Original508P20H20 retained; authorcreatedrollbackmetadata only. UI stale actor/scope clear and truthful costassumptions, no actualgeometry/route/approvalclaim. No broad load/Qwenacceptance claimed.
 """
-out["wiki/database/nicora_ni081_range_approval_design_20261010.md"]="""# Утверждение диапазона и вымывание — следующий slice157
+out["wiki/database/retailcase_ni081_range_approval_design_20261010.md"]="""# Утверждение диапазона и вымывание — следующий slice157
 
 Reuse original RRL_PICK_FACE_ARTICUL and native topologyassignment, commonCONFIG fence, native capacity and old CASE/replenishment tasks. Do not deactivate occupied old mapping to imitate draining. Approval durable operation/source proof/canonical request and current actor; exactrepeat savedresult/different request conflict. Recompute preview under exclusiveCONFIG before approval and require same source signature, so stale recommendation cannot silently change current selection. New mappings only on validated current published empty faces/copy explicit existing SKU template. No stock move/new independent warehouse task engine.
 

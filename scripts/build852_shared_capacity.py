@@ -59,9 +59,9 @@ Partial shared-owner850 выявил, что несколько logical replenis
 
 Проверить compile и свежий partial shared-owner: first whole arrival2+4, remaining6+4, requeue old unissued owner, one second physical12/shared third2, true capacity refusal and replay. Weighted FULL branch independent evidence remains open. Все собственные failed850 данные очищены finally; failed attempt не passed. [SQL](../../db/migrations/2026-10-13_ni032_shared_capacity/apply.sql).
 """
-files["wiki/database/nicora_ni032_shared_capacity_20261013.md"]=page
+files["wiki/database/retailcase_ni032_shared_capacity_20261013.md"]=page
 p=Path("wiki/index.md")
-files[str(p)]="- [NI03.2 shared capacity852](database/nicora_ni032_shared_capacity_20261013.md): prepared one physical incoming perFULL cohort; partial shared849 requeue/native actual pending.\n"+p.read_text(encoding="utf-8")
+files[str(p)]="- [NI03.2 shared capacity852](database/retailcase_ni032_shared_capacity_20261013.md): prepared one physical incoming perFULL cohort; partial shared849 requeue/native actual pending.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md")
 files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-13 prepared852: captured live capacity851; FULL physical cohort dedup/current location/exclude matching cohort, BASE unchanged/weighted existing physical_volume; SHA/paired rollback/wiki before apply. Partial shared849 requeue implemented, fresh850 still blocked by projected duplicate incoming, owncleanup; not passed.\n"
 print(json.dumps(files,ensure_ascii=True))

@@ -28,7 +28,7 @@
     "db/migrations/2026-10-13_ni072_shared_wait_target/fix1087.sql": "fd2e8dc4d7486ccfadb3fd3d49a2501e539628d2b26a53b222bf1e7b9ed230dc",
     "db/migrations/2026-10-13_ni072_shared_wait_target/rollback.sql": "54aebd8ccf46e64efd930d956644cb51b92da951bbd2078f0c831116e77c36c3"
   },
-  "evidence": "reports/nicora/2026-10-13/27-mixed-place-wait-evidence.json",
+  "evidence": "reports/retailcase/2026-10-13/27-mixed-place-wait-evidence.json",
   "native_errors": [],
   "native_invalid": [],
   "independent_acceptance": "not_performed",

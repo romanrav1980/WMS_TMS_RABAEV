@@ -8,7 +8,7 @@ t=t.replace('a.href=url;return a;','a.href=url;a.title="Открыть суще�
 t=t.replace('b.type="button";b.onclick=()=>prepare','b.type="button";b.title="Открыть форму; проведение потребует отдельного подтверждения и фактических сканов";b.onclick=()=>prepare')
 t=t.replace('b.type="button";b.dataset.plan=','b.type="button";b.title="Показать маршрут и доступные действия для этого места";b.dataset.plan=')
 files[str(p)]=t
-report="reports/nicora/2026-10-13/48-b04-interwarehouse-workspace.md"
+report="reports/retailcase/2026-10-13/48-b04-interwarehouse-workspace.md"
 files[report]="""# NI06.1 — единый межскладской маршрут
 2026-10-14. Доработан существующий interwarehouse.html: поиск по паллете/товару/рейсу, дата прибытия, этап; карточка обоих плеч, последовательность выгрузки/приёмки/размещения/ответственности/СТ. Отдельно показаны составные места принимающего склада с переходом к существующей форме и матрице маркировки.
 
@@ -23,11 +23,11 @@ SQL: bounded group queue, SQL_ID2yv9m25yumubg, среднее27.28мс/2,1011buf
 
 Полный NI06.1 и независимая/внешняя приёмка этим UI-проходом не закрыты. Существующие физические сценарии сохранены; этот блок соединяет их для оператора.
 """
-page="wiki/components/nicora_b04_interwarehouse_workspace_20261014.md"
+page="wiki/components/retailcase_b04_interwarehouse_workspace_20261014.md"
 files[page]="# NI06.1: операторский маршрут между складами\n\n1342–1346. Существующий interwarehouse.html получил карточки обоих рейсов, фильтры, этапы и переходы в прежние команды; составные места открываются по warehouse+plan. Сканирование остаётся ручным физическим фактом. Новых stock writers нет.\n\n[Отчёт48](../../"+report+") содержит реальное read-only browser evidence и SQL решение. Полная независимая приёмка спринта отдельно.\n"
-p=Path("wiki/index.md");files[str(p)]="- [B04: маршрут между складами1346](components/nicora_b04_interwarehouse_workspace_20261014.md): карточки/этапы/существующие формы/составные места, report48, screenshots88–89.\n"+p.read_text(encoding="utf-8")
+p=Path("wiki/index.md");files[str(p)]="- [B04: маршрут между складами1346](components/retailcase_b04_interwarehouse_workspace_20261014.md): карточки/этапы/существующие формы/составные места, report48, screenshots88–89.\n"+p.read_text(encoding="utf-8")
 p=Path("wiki/log.md");files[str(p)]=p.read_text(encoding="utf-8")+"\n- 2026-10-14 ·1346: NI06.1 interwarehouse workspace соединяет существующие операции, реальные read-only переходы PASS, bounded SQL27.28мс; report48. Далее B05/NI06.3.\n"
-p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"));d["planRevision"]=62;d["currentSprint"]="NI06.3";d["firstChange"]="B04 operator route workspace delivered (report48); continue B05 two-party tare driver/store UI. Claude owns C-0005 finance basis."
+p=Path("wiki/requirements/retailcase_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"));d["planRevision"]=62;d["currentSprint"]="NI06.3";d["firstChange"]="B04 operator route workspace delivered (report48); continue B05 two-party tare driver/store UI. Claude owns C-0005 finance basis."
 for item in d["increments"]:
  if item["id"]=="NI06.1":item.setdefault("implementedSlices",[]).append("1342–1346 existing interwarehouse workspace unified route/filter/stage/next-action/grouped-place links, scoped stale response guards; real read-only browser evidence report48. Physical commands reused.")
 files[str(p)]=json.dumps(d,indent=2,ensure_ascii=False)+"\n"

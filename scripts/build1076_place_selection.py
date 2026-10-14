@@ -271,9 +271,9 @@ RootHU waiting declare usesexactmember resources andlocks; currentrole/WARE/deci
 
 MixedFULLPAL/newinterWARErevision/slotcapacity awaiting remainoutsideincrement. Pythoncontract/UIselection and actualretained source test next; nofullsprint closure. Rollback untested, openwaitingtaskpreflight blocks restoring older selectors.
 """
-files["wiki/database/nicora_ni072_place_selection_20261013.md"]=page
+files["wiki/database/retailcase_ni072_place_selection_20261013.md"]=page
 for p,note in [
-("wiki/index.md","- [Place selection1076](database/nicora_ni072_place_selection_20261013.md): prepared sameST multiTOP/HU+CASE/atomicperplace/currentmanifest; capture1075/livepending.\n"),
+("wiki/index.md","- [Place selection1076](database/retailcase_ni072_place_selection_20261013.md): prepared sameST multiTOP/HU+CASE/atomicperplace/currentmanifest; capture1075/livepending.\n"),
 ("wiki/log.md","\n- checkpoint1076 PREPARED: native top-place selection, strictglobalproof/perRoot frozen source/currentSTmanifest, no dirty batchRoot; originalspecs/bodies/capture1075/checksum/rollback preflight. API/UI/actualapply pending.\n")]:
  t=read(p);files[p]=note+t if p.endswith("index.md")else t+note
 print(json.dumps(files,ensure_ascii=True))

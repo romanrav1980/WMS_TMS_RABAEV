@@ -1,6 +1,6 @@
 # Qwen: ticket092
 На собственной исходной обычной приёмке проверить Supply Chain approval, точные BASE qty и направления REUSE/SUPPLIER/DISPOSAL.
-Источник: wiki/database/nicora_ni062_return_approval_20261010.md.
+Источник: wiki/database/retailcase_ni062_return_approval_20261010.md.
 scripts/ni062_return_approval_case.py и concurrency_case.py уже использовали указанные исходники; не повторять их на исчерпанном лимите.
 
 Проверить отсутствие права, неполную коробку REUSE, missing/excess вместо accepted, несуществующую строку, маркированный состав, дробную недопустимую BASE quantity. Совокупные разрешения ≤ accepted. Конкурентные разрешения не превышают исходный лимит; проигравшая операция не оставляет outbox. Exact ID/body replay и conflict.

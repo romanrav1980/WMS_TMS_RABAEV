@@ -2,7 +2,7 @@ raise SystemExit("Retired authoring generator: use final221 owners and fresh che
 from pathlib import Path
 import json
 f=Path("db/migrations/2026-10-11_ni063_recovery_lineage");out={}
-out["wiki/database/nicora_ni063_recovery_lineage_design_20261011.md"]="""# NI06.3: повторный возврат на одной исходной погрузке
+out["wiki/database/retailcase_ni063_recovery_lineage_design_20261011.md"]="""# NI06.3: повторный возврат на одной исходной погрузке
 221 extends existing unloading admission from direct HELD replacement to source-unique recovery lineage, max16 links/max200 offer associations. Every edge belongs to same original current load/warehouse/type/physical place/balance; terminal must be HELD and original starting book TRANSFERRED, not merely a pending HELD offer. CANCELLED/missing/cyclic/foreign/overbound chains refuse. All source offer/proof/original book/return/accept/current hold locks already declared; no balance or goods writer added. Fresh source recheck after locks. New recovery uses same existing helper; additionally declares actual original FF/order rows read for FULLPAL proof.
 """
 s=(f/"000_before_rrl_stock_unload_cmd.sql").read_text(encoding="utf-8")

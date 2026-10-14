@@ -20,9 +20,9 @@ Actual1057 на сохранённом1002 грузе: HU_REPACK_SLOT→existing
 
 Малое исправление добавляет действующий HU_REPACK_SLOT к проверке CLOCK. Root context/transaction/IN_FLIGHT/actor/heldHU anchor сохраняются; clock создаётся только при первой фактической упаковке пустого BOX. Для ROLL_CAGE/CASE не создаётся фиктивный упаковочный цикл. Existing link/measure/root validation сохраняются. Live apply/continuation pending. Pair rollback saved.
 """
-files["wiki/database/nicora_ni041_repack_clock_20261013.md"]=page
+files["wiki/database/retailcase_ni041_repack_clock_20261013.md"]=page
 for p,note in [
-("wiki/index.md","- [Clock1059](database/nicora_ni041_repack_clock_20261013.md): actual slottedrepack refused by oldclock enum, prepared minimal correction, P20H20 retained.\n"),
+("wiki/index.md","- [Clock1059](database/retailcase_ni041_repack_clock_20261013.md): actual slottedrepack refused by oldclock enum, prepared minimal correction, P20H20 retained.\n"),
 ("wiki/log.md","\n- checkpoint1059: native HU1057.PACK failed BOX_PACKING_ATTACH_REQUIRED, no goods/versions committed. Actual oldclock captured1058; actualHU_REPACK_SLOT enum correction prepared with pairedrollback beforeapply.\n")]:
  t=Path(p).read_text(encoding="utf-8");files[p]=note+t if p.endswith("index.md") else t+note
 print(json.dumps(files,ensure_ascii=True))

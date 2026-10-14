@@ -1,6 +1,6 @@
 ﻿from pathlib import Path
 p=Path('db/migrations/2026-10-14_ni081_store_weekly_windows/001_window_rules.sql')
-s=p.read_text(encoding='utf-8-sig');Path('reports/nicora/2026-10-13/codex/STORE_WEEKLY/instant_before.sql').write_text(s[s.index(' function instant'):s.index(' procedure material',s.index(' function instant'))],encoding='utf-8')
+s=p.read_text(encoding='utf-8-sig');Path('reports/retailcase/2026-10-13/codex/STORE_WEEKLY/instant_before.sql').write_text(s[s.index(' function instant'):s.index(' procedure material',s.index(' function instant'))],encoding='utf-8')
 a=s.index(' -- Map a local');z=s.index(' procedure material',a)
 s=s[:a]+''' -- Session-local bounded cache of timezone offsets by explicit zone/local date.
  -- It caches timezone rules only, never editable store configuration or resolved windows.

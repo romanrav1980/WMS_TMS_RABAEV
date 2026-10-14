@@ -32,7 +32,7 @@ try{
  if(replayResponse.status()!==200||JSON.stringify(replay)!==JSON.stringify(original.body))throw Error('Replay mismatch');
  if(errors.length)throw Error(errors.join(';'));
  await page.locator('#orderPickStatus').scrollIntoViewIfNeeded();
- await page.screenshot({path:'reports/nicora/2026-10-13/screenshots/64-pick-plan-retry.png'});
+ await page.screenshot({path:'reports/retailcase/2026-10-13/screenshots/64-pick-plan-retry.png'});
  const result={stage:'PASS',original,replay,message:await page.locator('#orderPickStatus').innerText()};
  fs.writeFileSync('tmp/browser1234.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }finally{await browser.close();}

@@ -14,10 +14,10 @@ try{
  if(r.status()!==200||data.stock_changed||data.plan_applied)throw Error('Unexpected preview');
  const count=await page.locator('.rw-deficit').count();if(!count)throw Error('No actual deficit displayed');
  await page.getByLabel('Интервалы нагрузки').selectOption('deficit');
- await page.locator('.rw-overview').screenshot({path:'reports/nicora/2026-10-13/screenshots/98-ni081-workload-intervals.png'});
+ await page.locator('.rw-overview').screenshot({path:'reports/retailcase/2026-10-13/screenshots/98-ni081-workload-intervals.png'});
  await page.getByRole('button',{name:'Подставить интервал в план выхода',exact:true}).first().click();
  if(!await page.locator('#rwStart').inputValue())throw Error('Existing recommendation did not fill form');
- await page.setViewportSize({width:390,height:844});if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Mobile horizontal overflow');await page.locator('.rw-overview').screenshot({path:'reports/nicora/2026-10-13/screenshots/99-ni081-workload-mobile.png'});
+ await page.setViewportSize({width:390,height:844});if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Mobile horizontal overflow');await page.locator('.rw-overview').screenshot({path:'reports/retailcase/2026-10-13/screenshots/99-ni081-workload-mobile.png'});
  await page.locator('#rwViewFinish').fill('2026-10-14T19:00');if(await page.locator('.rw-overview').count())throw Error('Old result not cleared');
  if(writes.length||errors.length)throw Error(JSON.stringify({writes,errors}));
  fs.writeFileSync('tmp/result1385.json',JSON.stringify({data,count,writes,errors},null,2));console.log(JSON.stringify({status:r.status(),count,writes,errors}));
