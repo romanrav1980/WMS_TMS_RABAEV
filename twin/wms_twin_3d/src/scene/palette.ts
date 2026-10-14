@@ -1,0 +1,40 @@
+// Светлая «игрушечная» изометрия: белый/голубой, насыщенно-синие здания, жёлтая техника, крафтовые коробки.
+export const C = {
+  ground: "#e7ebf0",
+  lawn: "#cfe0b6",
+  road: "#7d8592",
+  roadLine: "#ffffff",
+  apron: "#d7dce4",
+  floor: "#f5f7fa",
+  floorZone: "#e9eef6",
+  wall: "#2f5bea",
+  wallTrim: "#ffffff",
+  glass: "#bcd3ff",
+  rackPost: "#5b7fe6",
+  rackBeam: "#f6a75a",
+  cargo: "#d8b48a",
+  cargoLow: "#f5c542",
+  cargoEmpty: "#ef4444",
+  pallet: "#b98b5a",
+  fleetCab: "#2f5bea",
+  inboundCab: "#e8ecf2",
+  trailer: "#f8f9fc",
+  stripe: "#2f5bea",
+  wheel: "#2b2f36",
+  machine: "#f5b800",
+  machineDark: "#3a3f47",
+  picker: "#ff8a3d",
+  ok: "#22c55e",
+  info: "#3b82f6",
+  warn: "#f59e0b",
+  crit: "#ef4444",
+  idle: "#94a3b8",
+  select: "#06b6d4",
+  treeA: "#6fae5a",
+  treeB: "#e0a03a",
+  treeC: "#d96b2b",
+  trunk: "#8a6a4a"
+} as const;
+
+export const toneColor = (tone: string) =>
+  ({ ok: C.ok, info: C.info, warn: C.warn, crit: C.crit, idle: C.idle } as Record<string, string>)[tone] ?? C.idle;
