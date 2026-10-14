@@ -11,6 +11,7 @@ from ..auth import (
 )
 from ..schemas import CustomerAddressCreateRequest, CustomerCreateRequest, CustomerUpdateRequest
 from ..services.customer_order_service import CustomerOrderService
+from ..modules.fulfillment.public import build_customer_order_read_service
 
 router = APIRouter(tags=["customer-orders"])
 
@@ -73,14 +74,18 @@ def list_customer_orders(
     order_no: str | None = None,
     legacy_order_id: int | None = None,
     limit: int = 200,
+    before_id: int | None = None,
     _user: AdminUser = Depends(require_permission(CUSTOMER_ORDER_VIEW_PERMISSION)),
 ) -> list[dict]:
-    return CustomerOrderService().list_customer_orders(
-        status=status,
-        order_no=order_no,
-        legacy_order_id=legacy_order_id,
-        limit=limit,
-    )
+    try:
+        return build_customer_order_read_service().list(
+            _user.username, status=status, order_no=order_no,
+            legacy_order_id=legacy_order_id, limit=limit, before_id=before_id,
+        )
+    except PermissionError as exc:
+        raise HTTPException(403, str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
 
 
 @router.get("/api/customer-orders/{customer_order_id}")
@@ -88,10 +93,14 @@ def get_customer_order(
     customer_order_id: int,
     _user: AdminUser = Depends(require_permission(CUSTOMER_ORDER_VIEW_PERMISSION)),
 ) -> dict:
-    order = CustomerOrderService().get_customer_order(customer_order_id)
-    if order is None:
-        raise HTTPException(status_code=404, detail="Customer order not found.")
-    return order
+    try:
+        return build_customer_order_read_service().get(customer_order_id, _user.username)
+    except PermissionError as exc:
+        raise HTTPException(403, str(exc)) from exc
+    except LookupError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc
 
 
 @router.post("/api/customer-orders/import-legacy/{legacy_order_id}")
@@ -111,6 +120,11 @@ def get_customer_order_fulfillment(
     customer_order_id: int,
     _user: AdminUser = Depends(require_permission(CUSTOMER_FULFILLMENT_VIEW_PERMISSION)),
 ) -> list[dict]:
-    if CustomerOrderService().get_customer_order(customer_order_id) is None:
-        raise HTTPException(status_code=404, detail="Customer order not found.")
-    return CustomerOrderService().get_fulfillment(customer_order_id)
+    try:
+        return CustomerOrderService().get_fulfillment(customer_order_id, _user.username)
+    except PermissionError as exc:
+        raise HTTPException(403, str(exc)) from exc
+    except LookupError as exc:
+        raise HTTPException(404, str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc

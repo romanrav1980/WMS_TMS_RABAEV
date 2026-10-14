@@ -1,0 +1,1 @@
+-- Forward correction only: original SAP contract and approved source remain immutable.

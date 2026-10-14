@@ -1,0 +1,15 @@
+{
+  "migration_id": "2026-10-11-206-small-case-hu-control",
+  "sha256": {
+    "db/migrations/2026-10-11_ni042_small_hu/000_before_gate.sql": "8837c5d2313ebe1ea765714d5bb5e52ecc28964bc6277a6f22995a41e09db39e",
+    "db/migrations/2026-10-11_ni042_small_hu/000_before_admission.sql": "50fbacac1b99df6a8e738532dc4460bbd2e1737b168587bde1148f9468201553",
+    "db/migrations/2026-10-11_ni042_small_hu/000_before_hu.sql": "e098d3ee4b626f32b083224749c3465434ac1c578f683aaf49d45f7020de9f90",
+    "db/migrations/2026-10-11_ni042_small_hu/000_before_read.sql": "d2f19bca5bd067638cfe08f560d1e99a87eff737768d6031f9be9240b2d045e9",
+    "db/migrations/2026-10-11_ni042_small_hu/000_before_load_boxes.sql": "2a515650ea55e75ad4118f671c832d44aa18d7725534e8b6aeb909f22843048a",
+    "db/migrations/2026-10-11_ni042_small_hu/000_before_manifest.json": "72acf2d11462ea9fa5866a0c405113ea10ebcc473f67eed7ce8348ca7c2b6fab",
+    "db\\migrations\\2026-10-11_ni042_small_hu\\000_before_qc.sql": "ad42925cd54a31288e9a9445f8c03c512b5c89271620bdf158972fb6054f92fa",
+    "db\\migrations\\2026-10-11_ni042_small_hu\\000_before_archive.sql": "e9275e1c43dda41b662b26732f28856f5c0441d78920db4c1be1989dc56cbb9e",
+    "db\\migrations\\2026-10-11_ni042_small_hu\\000_before_use_guard.sql": "eb713f616588ef9e78d728e0bf134e74335e85c40b35832579da69349d3ad134"
+  },
+  "recovery": "Fresh gate/admission/HU owner/read/loadbox sources, same existing archive and stock owner; source paired rollback only without v3 small proofs, otherwise preserve history/forward repair; no DB copy"
+}

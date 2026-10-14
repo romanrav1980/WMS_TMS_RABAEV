@@ -1,0 +1,9 @@
+from typing import Any,Protocol
+
+class TarePolicyPort(Protocol):
+    def read(self,scope_kind: str,scope_key: str) -> dict[str,Any]: ...
+    def configure(self,scope_kind: str,scope_key: str,metadata: dict[str,Any],actor: str) -> dict[str,Any]: ...
+    def debt(self,ware_id: int,actor: str) -> list[dict[str,Any]]: ...
+
+def tare_policy_service() -> TarePolicyPort:
+    raise RuntimeError("Tare return policies not wired")

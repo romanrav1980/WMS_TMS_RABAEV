@@ -1,6 +1,8 @@
 """NI01 working ARTMAS10 mapping, deliberately limited to warehouse master data."""
 from decimal import Decimal, InvalidOperation
 from fractions import Fraction
+from .article_logistics import box_logistics
+from .article_units import map_units
 
 
 def positive(value: str) -> Decimal:
@@ -36,23 +38,7 @@ def map_articles(envelope: dict) -> list[dict]:
                 changed = {k for k, v in data.items() if v == "X"}
             elif segment == "E1BPE1MAKTRT" and data.get("MATL_DESC"):
                 descriptions.append(data)
-            elif segment == "E1BPE1MARMRT":
-                if not data.get("ALT_UNIT"):
-                    raise ValueError("MARMRT requires ALT_UNIT")
-                if data.get("NUMERATOR") or data.get("DENOMINATR"):
-                    ratio = Fraction(positive(data.get("NUMERATOR", "1"))) / Fraction(positive(data.get("DENOMINATR", "1")))
-                else:
-                    ratio = Fraction(1)
-                if ratio.numerator > 10**9 or ratio.denominator > 10**9:
-                    raise ValueError("SAP conversion factors exceed Oracle stock contract")
-                scaled = ratio * 10**9
-                decimal_ratio = None
-                if scaled.denominator == 1:
-                    digits = str(scaled.numerator).zfill(10)
-                    decimal_ratio = str(Decimal(digits[:-9] + "." + digits[-9:]))
-                units.append({"uom": data["ALT_UNIT"], "ratio": decimal_ratio,
-                              "numerator": ratio.numerator, "denominator": ratio.denominator,
-                              "ean": data.get("EAN_UPC") or None})
+        units = map_units(records)
         descriptions.sort(key=lambda d: {"RU": 0, "R": 0, "EN": 1, "E": 1}.get(d.get("LANGU_ISO") or d.get("LANGU"), 2))
         base_uom = values.get("BASE_UOM") or values.get("BASE_UOM_ISO")
         source_base_uom = base_uom
@@ -70,7 +56,7 @@ def map_articles(envelope: dict) -> list[dict]:
                        "box_ean": boxes[0]["ean"] if boxes else None,
                        "box_qty": Decimal(boxes[0]["ratio"]) if boxes and boxes[0]["ratio"] is not None else None,
                        "pallet_qty": Decimal(pallets[0]["ratio"]) if pallets and pallets[0]["ratio"] is not None else None,
-                       "units": units, "active": (int(values["DEL_FLAG"] != "X")
+                       "units": units, "logistics": box_logistics(records), "active": (int(values["DEL_FLAG"] != "X")
                        if "DEL_FLAG" in values and (changed is None or "DEL_FLAG" in changed) else None)})
     if not result:
         raise ValueError("No article master records in ARTMAS10")

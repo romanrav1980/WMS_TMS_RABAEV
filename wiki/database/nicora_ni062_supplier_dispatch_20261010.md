@@ -1,0 +1,13 @@
+# NI06.2 — возврат поставщику через прежнюю СТ,108
+Migration2026-10-10-108-supplier-return-existing-loading APPLIED RABAEV/orcl. Original apply17/0; guards refinement5/0; base-UOM shipping correction2/0. New private helper and existing shipping/effect packages VALID.
+Owner inventory; goods transaction owner existing RRL_STOCK_POSTING_API LOAD_SHIPMENT. Metadata prep uses existing outgoing_pallet_edit fence/PALL_SPLITTER.create_return_task/add_row_2sborka_pallets and canonical replay hash, never changes P/H. SC selects unique current supplier INN and explicit decision. Immutable receipt→ST/source binding prohibits rewriting source ST identity/quantity.
+
+Physical current source must be exact whole placed SUPPLIER receipt, unreserved, same warehouse/unit/location/current quantity/version; applicable marking fails closed in this ordinary slice. Native existing loading pins UID, current QC/vehicle/dock/measurement checks retained. Segregated blocked cell is consumable only by exact authorised actual LOAD_SHIPMENT; direct logical SHIP denied. Existing consume/journal/units/balance remains sole goods engine. Original untyped RETURNS fallback retained.
+
+RRL_STORE_RETURN_SUP_BIND/RETURN_SUP_DISPATCH append-only, root lock closure and transaction gates. Dispatch/outbox retain original receipt/source/batch/supplier; does not assert supplier received/SAP ACK. Supplier cargo cannot enter store receipt. API typed port/warehouse-bound pending100/suppliers200; warehouse page supplier-return.html provides durable original operation retry and links workflow to existing transport workstation, no second trip editor.
+
+## Actual author evidence
+Original source RETURN.RECEIVE:f87a0fd042, INTERNAL.RETURN:6b388966d1, warehouse9104, DS-BASE-D10, EA1/H0, placed QRPSdab5c00141. Tag f877bb1524; preparation SUP.PREPARE:f877bb1524; identifier RTN.ST:02103e6d6446e4400d52be370d7dd43b2f936c9a. Native prep/replay/assignment/preview passed. Direct logical shipment denied without effect.
+[Original completion](../../scripts/ni062_supplier_dispatch_finish.py) PASS: SUP.LOAD:f877bb1524 current exact physical load→P0/H0, one goods event/immutable dispatch/SAP pending; exact replay and separate SUP.DEPART:f877bb1524 no second stock. Initial new branch missed base-UOM propagation and rolled back fully; fixed before same operation retry/current preview. Actual source quantity consumed intentionally; historical097 current-stock assertion must not be rerun.
+
+Slow SQL302.379/269.461/79.190/75.267ms, cold single calls. Decision: retain source PK/current-warehouse bounds, inspect repeated source-history execution plan at volume; owner NI06.2. No throughput claim. Independent review/marked/multi-place/supplier receipt/disposal remain open.

@@ -1,0 +1,2 @@
+# NI06.1: размещение исходного маркированного состава
+227 removes only old explicit marking refusal in original INTERWARE task owner. Exact frozen225 keys/quantity/UOM plus current whole AVAILABLE/no-HARD/sourcecell/versioned unit snapshot; existing original task/stock version/docks/capacity conserved. Existing transfer owner already moves units atomically with P/H, no duplicate mover. Current target scope before replay. Fresh affected-owner checkpoints, forward repair after marked placement.

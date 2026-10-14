@@ -1,0 +1,9 @@
+{
+  "migration_id": "2026-10-11-192-weight-tolerance-decision",
+  "before_sha256": {
+    "db/migrations/2026-10-11_ni042_weight_decision/000_before_short.sql": "3b354624b62715993e9bb0034348856e33f9b50e2209a6d4296f6bd1ea208f8f",
+    "db/migrations/2026-10-11_ni042_weight_decision/000_before_read.sql": "48eb91eddcbc5584a4988b4350874c82231bda4fd114874afdea5a80554d5966",
+    "db/migrations/2026-10-11_ni042_weight_decision/000_before_pool.sql": "b00886677996be70d98787e625f1ac28e75c6f7784e39794435dcea356ddef26"
+  },
+  "recovery": "Fresh original short/read/pool contracts; additive nullable decision metadata and existing native writer; history-protected rollback; no DB copy"
+}

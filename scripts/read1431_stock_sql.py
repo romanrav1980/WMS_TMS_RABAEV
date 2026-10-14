@@ -1,0 +1,3 @@
+﻿exec(open('scripts/ni063_slow_queries.py',encoding='utf-8').read().split('with oracledb.connect',1)[0])
+with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn) as c:
+ q=c.cursor();q.execute("select SQL_ID,EXECUTIONS,round(ELAPSED_TIME/nullif(EXECUTIONS,0)/1000,3),BUFFER_GETS from V$SQL where PARSING_SCHEMA_NAME='RABAEV' and EXECUTIONS>0 and SQL_TEXT like 'select r.UID_POLETA,r.CELL,r.BASE_UOM,%' and SQL_TEXT like '%:page_limit%' order by LAST_ACTIVE_TIME desc fetch first 6 rows only");r=q.fetchall();print(json.dumps(r));Path('tmp/result1431_sql.json').write_text(json.dumps(r,indent=2),encoding='utf-8')

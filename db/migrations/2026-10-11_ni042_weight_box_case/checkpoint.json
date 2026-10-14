@@ -1,0 +1,12 @@
+{
+  "migration_id": "2026-10-11-182-weighted-case-label",
+  "sha256": {
+    "db\\migrations\\2026-10-11_ni042_weight_box_case\\002_case_contract.sql": "8504de32b335dd54c48be161df1aab5a550e1e4bc18cdda98e3c6839a2919dcc",
+    "db\\migrations\\2026-10-11_ni042_weight_box_case\\002_case_body.sql": "89ad7da07b71410d252fb2a6103bbfd4f5c4413b2f20e6aae1ee20a8abe4031e",
+    "db\\migrations\\2026-10-11_ni042_weight_box_case\\apply.sql": "f80831c6a024db70f6fba2bef7f9094e64c7d6cb8cc3bb2af1593ad36f2c8e49",
+    "db\\migrations\\2026-10-11_ni042_weight_box_case\\rollback.sql": "4df9ff6b0839c8359c7c63ced9960eba781fc40f77db28ee94c3d26f434c54df",
+    "db\\migrations\\2026-10-11_ni042_weight_box_case\\verify.sql": "825457a46a70271498d81881c72f617a0a1346067cb46673a0d6dd5a97827f06"
+  },
+  "before_source_sha256": "568eaa731e20b5fb189ed8b5afb6c139951e6b6404a62d2f4afae46b8af57797",
+  "recovery": "Fresh case package and paired rollback; no database copy"
+}

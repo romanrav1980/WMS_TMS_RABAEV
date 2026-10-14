@@ -1,0 +1,151 @@
+{
+  "order923": {
+    "customer_order_id": 1930,
+    "order_no": "MIXED172:empty:00cdc0ef51",
+    "document_status": "IMPORTED",
+    "execution_status": "PENDING",
+    "lines": [
+      {
+        "customer_order_row_id": 3415,
+        "line_no": 1,
+        "articul": "QC16700CDC0EF51",
+        "unit_code": "EA",
+        "row_status": "OPEN",
+        "picked_quantity": "0",
+        "hard_quantity": "0",
+        "base_uom": "EA",
+        "status": "WAIT_STOCK",
+        "reason": "\u041d\u0435\u0442 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043d\u043d\u043e\u0433\u043e \u043e\u0442\u0431\u043e\u0440\u0430 \u0438 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u044e\u0449\u0435\u0433\u043e \u0436\u0451\u0441\u0442\u043a\u043e\u0433\u043e \u0440\u0435\u0437\u0435\u0440\u0432\u0430",
+        "requested_quantity": "1",
+        "remaining_quantity": "1"
+      }
+    ],
+    "warehouse_id": 20052672,
+    "consistent_snapshot": true
+  },
+  "retained929": {
+    "172": {
+      "fulfillment_status": "SHIPPED",
+      "physical_shipped": "3",
+      "execution": {
+        "customer_order_id": 1929,
+        "order_no": "MIXED172:full:00cdc0ef51",
+        "document_status": "IMPORTED",
+        "execution_status": "PICKED",
+        "lines": [
+          {
+            "customer_order_row_id": 3414,
+            "line_no": 1,
+            "articul": "QC16700CDC0EF51",
+            "unit_code": "EA",
+            "row_status": "OPEN",
+            "picked_quantity": "3",
+            "hard_quantity": "0",
+            "base_uom": "EA",
+            "status": "PICKED",
+            "reason": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u043e \u0444\u0438\u0437\u0438\u0447\u0435\u0441\u043a\u0438\u043c \u043e\u0442\u0431\u043e\u0440\u043e\u043c",
+            "requested_quantity": "3",
+            "remaining_quantity": "0"
+          }
+        ],
+        "warehouse_id": 20052672,
+        "consistent_snapshot": true
+      }
+    },
+    "173": {
+      "fulfillment_status": "SHIPPED",
+      "physical_shipped": "3",
+      "execution": {
+        "customer_order_id": 1931,
+        "order_no": "MIXED173:ONE:00cdc0ef51",
+        "document_status": "IMPORTED",
+        "execution_status": "PARTIAL",
+        "lines": [
+          {
+            "customer_order_row_id": 3416,
+            "line_no": 1,
+            "articul": "QC16700CDC0EF51",
+            "unit_code": "EA",
+            "row_status": "OPEN",
+            "picked_quantity": "3",
+            "hard_quantity": "0",
+            "base_uom": "EA",
+            "status": "PARTIAL",
+            "reason": "\u041e\u0436\u0438\u0434\u0430\u0435\u0442\u0441\u044f \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u0435 \u043e\u0441\u0442\u0430\u0432\u0448\u0435\u0433\u043e\u0441\u044f \u043e\u0442\u0431\u043e\u0440\u0430",
+            "requested_quantity": "4",
+            "remaining_quantity": "1"
+          }
+        ],
+        "warehouse_id": 20052672,
+        "consistent_snapshot": true
+      }
+    }
+  },
+  "http_sql926": {
+    "http_current": true,
+    "order": {
+      "customer_order_id": 1930,
+      "order_no": "MIXED172:empty:00cdc0ef51",
+      "document_status": "IMPORTED",
+      "execution_status": "PENDING",
+      "lines": [
+        {
+          "customer_order_row_id": 3415,
+          "line_no": 1,
+          "articul": "QC16700CDC0EF51",
+          "unit_code": "EA",
+          "row_status": "OPEN",
+          "picked_quantity": "0",
+          "hard_quantity": "0",
+          "base_uom": "EA",
+          "status": "WAIT_STOCK",
+          "reason": "\u041d\u0435\u0442 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043d\u043d\u043e\u0433\u043e \u043e\u0442\u0431\u043e\u0440\u0430 \u0438 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u044e\u0449\u0435\u0433\u043e \u0436\u0451\u0441\u0442\u043a\u043e\u0433\u043e \u0440\u0435\u0437\u0435\u0440\u0432\u0430",
+          "requested_quantity": "1",
+          "remaining_quantity": "1"
+        }
+      ],
+      "warehouse_id": 20052672,
+      "consistent_snapshot": true
+    },
+    "queries": [
+      [
+        "cw8xnzcrfrtu9",
+        3,
+        69.478,
+        1078,
+        "select r.CUSTOMER_ORDER_ROW_ID,r.LINE_NO,r.ARTICUL,r.UNIT_CODE,r.STATUS ROW_STATUS,             to_char(r.ORDER_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') ORDER_QUANTITY,          "
+      ]
+    ],
+    "decision": "Retain indexed order-bound physical provenance <=2000 lines; independent larger waves may require batching/plan check, not proved production scale."
+  },
+  "receipt932": {
+    "cached_receipt_unchanged": true,
+    "current_receipt_allowed": false,
+    "state": "REVERSED",
+    "stock_version_unchanged": true,
+    "stock": [
+      [
+        "QR67095b03c53f4",
+        0,
+        0,
+        2
+      ]
+    ]
+  },
+  "receipt933": {
+    "cached_receipt_unchanged": true,
+    "current_receipt_allowed": false,
+    "state": "REVERSED",
+    "stock_version_unchanged": true,
+    "stock": [
+      [
+        "QR67095b03c53f4",
+        0,
+        0,
+        2
+      ]
+    ]
+  },
+  "independent_acceptance": false,
+  "browser_manual_passed": false
+}

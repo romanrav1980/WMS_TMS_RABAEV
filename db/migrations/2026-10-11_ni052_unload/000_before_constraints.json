@@ -1,0 +1,22 @@
+[
+  [
+    "SYS_C0016321",
+    "STATUS in('LOADED','UNLOADED','DEPARTED')"
+  ],
+  [
+    "SYS_C0016322",
+    "GROSS_WEIGHT_KG>0"
+  ],
+  [
+    "SYS_C0016323",
+    "BOUNDING_VOLUME_M3>0"
+  ],
+  [
+    "SYS_C0016324",
+    "COMPOSITION_JSON is json"
+  ],
+  [
+    "RRL_TT_LOAD_OWNER_CK",
+    "(ROOT_UID is not null and ROOT_CASE_TASK_ID is null) or(ROOT_UID is null and ROOT_CASE_TASK_ID is not null)"
+  ]
+]

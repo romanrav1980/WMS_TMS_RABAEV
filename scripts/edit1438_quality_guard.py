@@ -1,0 +1,2 @@
+﻿from pathlib import Path
+p=Path('wiki-raw/wms_admin_ui_reference/outgoing-quality.js');s=p.read_text(encoding='utf-8').replace('  window.wmsQualityNext.render(panel,snapshot,busy||!!pending||damaged());\n  if(!window.wmsAdminAuth?.state?.user?.username)return;', '  if(!window.wmsAdminAuth?.state?.user?.username){window.wmsQualityNext.render(panel,null,true);return;}\n  window.wmsQualityNext.render(panel,snapshot,busy||!!pending||damaged());');p.write_text(s,encoding='utf-8')

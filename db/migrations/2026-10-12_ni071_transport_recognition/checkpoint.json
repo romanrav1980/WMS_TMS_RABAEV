@@ -1,0 +1,17 @@
+{
+  "migration_id": "2026-10-12-582-transport-q26-recognition",
+  "status": "CHECKPOINT",
+  "scope": "Existing monetary run header; additive Q26 details/once-only departure claim/shared native owner.",
+  "authorization": "Owner requests all sprints in dedicated dev RABAEV.",
+  "recovery": "Paired rollback refuses committed facts; forward repair after recognition.",
+  "source_sha256": {
+    "001_schema.sql": "18f69bc86d3016f956f1332802f7505cc29c3e2c6b3a3d6e3e2f1c45c215a95a",
+    "002_api.sql": "8baab3b4c59624f4c81cefe979a9d2a6258f322e3dc197f1f62a8befa3fd00c6",
+    "003_guards.sql": "c9a2f3f0d7684b557db9939126ccaa57fa9494e4a979caae07491d070afb98c9",
+    "004_ledger.sql": "a6ec3e0b97f0672df3996f0fa017009535b635c894b40cca26dbea09e729f5b9",
+    "apply.sql": "ca7cd937ec839cb42b5407f6c156609eeed5e2b9e5d978bbe154a1efae7c69ac",
+    "apply_compile_repair.sql": "30db2d8d38ac78fae24f5b3c864fd545259d42c041c74f460e8368815771bf6f",
+    "rollback.sql": "eaf9f323d5ae6a77a52eaa7e5a7d86a444a85325f2507659452843e235c162a5",
+    "verify.sql": "e4a6eec719b0ef3f5d6e0e9a8bbc05b72b832b14599531553579330be139b3db"
+  }
+}

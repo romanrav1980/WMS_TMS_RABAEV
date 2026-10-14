@@ -1,3 +1,4 @@
+import { PlannerPreflight, PlannerMapHint } from "./PlannerPreflight";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -45,43 +46,7 @@ type TransportType = {
   NAME: string | null;
 };
 
-type VrpRouteStop = {
-  st_number: string;
-  addr: string | null;
-  lat: number | null;
-  lon: number | null;
-  pallets: number;
-  weight_kg: number;
-  ware_id: number;
-  tw_from?: number;
-  tw_to?: number;
-  tw_strict?: boolean;
-  arrival_min?: number | null;
-  departure_min?: number | null;
-  tw_violation_min?: number;
-  distance_from_prev_km?: number | null;
-  duration_from_prev_min?: number | null;
-  constraint_notes?: string[];
-};
-
-type VrpRouteItem = {
-  vehicle_id: number;
-  vehicle_num: string;
-  vehicle_type: string;
-  max_pallets: number;
-  total_pallets: number;
-  total_kg: number;
-  total_km: number;
-  total_duration_min: number;
-  utilization_pct: number;
-  stops: VrpRouteStop[];
-  capacity_status?: "ok" | "low" | "over";
-  tw_violation_count?: number;
-  strict_tw_count?: number;
-  vehicle_constraints_ok?: boolean;
-  hydro_board_required_count?: number;
-  explain_notes?: string[];
-};
+import { PlannerSchedule, PlannerStopTime, transferPlannerStop, type VrpRouteItem } from "./PlannerSchedule";
 
 type ExplainStep = {
   code: string;
@@ -826,19 +791,7 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
     const src = dragSrc.current;
     if (!src || !localRoutes) return;
     if (src.routeIdx === targetRouteIdx) { dragSrc.current = null; return; }
-    const routes = localRoutes.map(r => ({ ...r, stops: [...r.stops] }));
-    const [moved] = routes[src.routeIdx].stops.splice(src.stopIdx, 1);
-    routes[targetRouteIdx].stops.push(moved);
-    // Recalculate metrics for both affected routes
-    for (const ri of [src.routeIdx, targetRouteIdx]) {
-      const r = routes[ri];
-      r.total_pallets = r.stops.reduce((s, stop) => s + stop.pallets, 0);
-      r.total_kg = r.stops.reduce((s, stop) => s + stop.weight_kg, 0);
-      r.utilization_pct = r.max_pallets > 0
-        ? Math.round((r.total_pallets / r.max_pallets) * 100)
-        : 0;
-    }
-    setLocalRoutes(routes);
+    setLocalRoutes(transferPlannerStop(localRoutes, src.routeIdx, src.stopIdx, targetRouteIdx));
     dragSrc.current = null;
   }
 
@@ -1029,6 +982,7 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
 
           <div className="dispatch-fp-sep" />
 
+          <PlannerPreflight planId={plan?.plan_id} request={apiFetch} />
           {/* Warehouse legend */}
           <div className="dispatch-fp-label">Легенда складов</div>
           {Object.entries(WARE_COLORS).map(([wareId, color]) => (
@@ -1043,10 +997,7 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
           </div>
 
           <div className="dispatch-fp-sep" />
-          <div className="planner-hint">
-            Полигон: нарисуйте зону — СТ внутри выделятся.<br />
-            Кластер: кликните на название района.
-          </div>
+          <PlannerMapHint />
 
           {status && (
             <div className="planner-provider-badge">
@@ -1241,6 +1192,7 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
                         />
                       </div>
                       <div className="planner-rp-util">{route.utilization_pct.toFixed(0)}%</div>
+                      <PlannerSchedule route={route} />
                       <div className="planner-rp-stops">{route.stops.length} адресов</div>
                       {expandedRouteIdx === idx && (
                         <div className="planner-rp-stop-list">
@@ -1252,6 +1204,7 @@ export function TransportPlannerPage({ onBack }: { onBack: () => void }) {
                               <span className="planner-rp-stop-dot" style={{ background: wareColor(stop.ware_id) }} />
                               <span className="planner-rp-stop-st">{stop.st_number}</span>
                               <span className="planner-rp-stop-addr">{stop.addr ?? "—"}</span>
+                              <PlannerStopTime stop={stop} />
                               <span className="planner-rp-stop-pal">{stop.pallets}пал</span>
                             </div>
                           ))}

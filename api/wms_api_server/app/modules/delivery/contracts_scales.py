@@ -1,0 +1,13 @@
+"""Authenticated equipment evidence is distinct from store receipt permission."""
+from typing import Any, Protocol
+
+
+class StoreScalesPort(Protocol):
+    def readings(self, load_operation_id: str, store_address: str, actor: str) -> dict[str,Any]: ...
+    def configure(self, device_id: str, body: dict[str,Any], actor: str) -> dict[str,Any]: ...
+    def capture(self, body: dict[str,Any], actor: str) -> dict[str,Any]: ...
+    def reading(self, key: str, actor: str) -> dict[str,Any]: ...
+
+
+def store_scales_service() -> StoreScalesPort:
+    raise RuntimeError("Store scales service not wired")

@@ -1,0 +1,6 @@
+# Поиск окончательной приёмки по исходной погрузке
+298: у RRL_INTERWARE_ONWARD_DISPATCH отсутствовал SourceLoad-leading индекс. Current order delivery reader297 averaged70.349ms/6278buffers total3 executions. Added nonunique RRL_IW_DISPATCH_SOURCE_IX(SOURCE_LOAD_OPERATION_ID,OPERATION_ID), NativeVALID +only table stats. Scoped requested load CTE uses original SourceLoad and explicit nested loops; final receipt/line/partialreceipt/loss/operation/issue joins kept same snapshot/bounds200loads/2000lines.
+
+New actual child7rgr40512bfwq avg20.529ms/146buffers total3 executions versus prior8g0v4nd7bd72b70.349ms/6278buffers. Full229customer2030 accepted3 and partial297customers accepted1/confirmedloss2 exactlysame; no records changed. Decision: keep source index/boundedNL, no full warehouse scan/cache/extra broad load test. Owner delivery monitors sparse source key lookup when archive grows; these dev figures do not establish million-operation capacity.
+
+SQL db/migrations/2026-10-11_ni053_lineage_lookup/001_index.sql applied RABAEV/orcl. Bundle startup index only generatedFILES, full stock refresh not applied. Raw order-delivery pane now exists; source code guard catcheslate errors byrequestserial too. No new engine/warehouse registry.

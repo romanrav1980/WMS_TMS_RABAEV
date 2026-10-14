@@ -1,0 +1,8 @@
+# NI06.2 — поиск недостачи и решение KRO
+Ticket091, starts from existing086 discrepancy/obligations and source original shipment/receipt; NS53 and process11. Existing CASE_CARRIER_RETURN is cancellation of warehouse CASE, not a store business return.
+
+Root STORE_CASE_WORK action ASSIGN: dispatcher store_case_manage assigns separate active expedition/security investigators, each with store_case_investigate, explicit future UTC search deadline; original reason/source immutable. FINDING: assigned role holder records append-only report, CASE_VERSION optimistic recheck. LOSS_CONFIRM: current store_loss_confirm (KRO), different from both investigators, requires both current assigned reports and an unresolved original MISSING_INVESTIGATION row. Full original missing quantity recognized; partial finding/reconciliation is separate.
+
+One short existing root transaction: case/version/workflow projection, immutable action/finding/loss recognition, required outbox. No hidden deadline timer, no automatic resend/stock birth. Missing after actual shipment already left warehouse P: business loss recognition must not subtract stock again. Root result explicitly preserves original stock/history; financial/SAP message carries original source/line/BASE cause, actual external acceptance separate. Marked loss requires exact unit/regulatory follow-up; no fake government ACK.
+
+Source table quantity/key immutable. No deleting cases/reports; correction later through explicit decision. Roles use existing RUSERS/USER_GROUP/RIGHTS/GLOBAL_ADMIN, no new users/grants outside own author fixture. Current assigned investigator equality and current role checked server-side. Stale version/repeated new loss command refuses; exact same original ID/body returns committed result.

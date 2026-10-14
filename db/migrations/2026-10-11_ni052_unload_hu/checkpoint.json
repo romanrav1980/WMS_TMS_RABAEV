@@ -1,0 +1,26 @@
+{
+  "migration_id": "2026-10-11-214-whole-case-hu-unload",
+  "sha256": {
+    "db/migrations/2026-10-11_ni052_unload_hu/000_before_unload.sql": "6dae29da2e80251dffedec97c0de9e3512dd67f4d06d3b667e3d6f00dbadaab4",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_before_fulfillment.sql": "2343911e75932c334470d83253e1fdae5f16a6640c0891bd4833748a93b5bb39",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_before_reserve.sql": "37f78ff014631e6b377881a2de38bd267c64e9e7e8ed1668fe2239d229ae33e9",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_before_hu_read.sql": "dcd873802dd23223534eb8dd8fe820473c17cc5819771754701507d786b21d28",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_before_unload_guard.sql": "fc331f81968021fb8d88c99e38c9e42587bd3513059ab61959c35b66d2240a51",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_before_load_guard.sql": "1c88b1a919b7b7e4d748d3586418b958530d4763065043071d3ab1bad6f88f87",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_before_member_guard.sql": "7415a3ced2d849d059e1c01844f40797ddfc013caa39fd4d0f17c72bee1f9456",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_before_sample_guard.sql": "6f96fdce4821cab0bdfb90af4635c6bae04f93368d8f434215dcc466ecece5f4",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_before_link_guard.sql": "7be3f92a0f8027a390a5ee5116577c3b1ec3cddb03a314702c1ea4548e76c8c1",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_before_tare_guard.sql": "2a7044c15441ae47ce3df8bfc705b26b22824a0ca0c71b5f4ba5a83dd74c484d",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_before_container_guard.sql": "d4862d6513c1781f661fc6072198dd5fdefaf9f14b2b61d16b627763bba64e0f",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_sample_departed_hu_domain.json": "d8b34146d8d30ee38f48957b66b4cbdcee233bdc13fd3a64b7367e00dfe5dad0",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_rrl_wms_hu_link_columns.json": "2ea7a44569aa2e5dee30b7871a581482ffc197d855d8817ff4a53f28e220431b",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_rrl_pallets_columns.json": "2658976f83bd48109e690d69c9e1b02a3a46d06b36862055e06b8348e09adaa7",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_rrl_storage_slots_columns.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "db/migrations/2026-10-11_ni052_unload_hu/000_before_manifest.json": "7b29862203b9756da066368bf596affb3105d4d4d861608785794b276dfdb1e8",
+    "db\\migrations\\2026-10-11_ni052_unload_hu\\000_before_departure_guard.sql": "9aab824b2460fc1e163ca45606c11c484f914ac39a25d0dc19a228b6929f0cc0",
+    "db\\migrations\\2026-10-11_ni052_unload_hu\\000_before_loading.py": "0eea59196b64b5b86ec39348323fa322f1b6d15a1e4b2436670c6176e149ea26",
+    "db\\migrations\\2026-10-11_ni052_unload_hu\\000_before_transport-unloading.js": "92468a98f282225820c33a8745fd029770c561b05f6171cf9e63269cc369c419",
+    "db\\migrations\\2026-10-11_ni052_unload_hu\\000_before_transport-loading.html": "337b828a49fdeb5834665285867c1199ecaa8e837a8411ff289701c596cc1a60"
+  },
+  "recovery": "Append fresh HU links; never reactivate/mutate original shipped link history. Native unloaded history retained, forward repair after any real recovery. Fresh owner/guard exact sources."
+}

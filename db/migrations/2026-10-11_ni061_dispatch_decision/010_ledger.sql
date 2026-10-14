@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-239-interwarehouse-dispatcher-delay-decision'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Immutable dispatcher WAIT-DEFER over original interwarehouse owners and expected cargo departure gate',sysdate,user,'db/migrations/2026-10-11_ni061_dispatch_decision/apply.sql','db/migrations/2026-10-11_ni061_dispatch_decision/rollback.sql','APPLIED','Own source09f6017c2a original33550 preserved/current33551/WAIT1-DEFER2/concurrent one winner/native rollback/current scope; receive3/PUTAWAY961/ST641375/QC6/physical loading/departure success. Original3 units/code6/protected20-20; allVALID/quality239. Partial dev scope, no external ACK.');
+commit;

@@ -38,3 +38,18 @@ def canonical_mark(system: str, profile: str, raw: str, expected_gtin: str | Non
     if not value or len(value.encode()) > 4000 or "\x00" in value:
         raise ValueError("Invalid unique marking code")
     return {"identity": value, "gtin": None, "serial": None}
+
+def normalize_unit_scan_codes(scans: list[dict[str, str]]) -> list[dict[str, str]]:
+    """One canonical identity/hash contract; optional physical recipient disposition."""
+    from hashlib import sha256
+    result=[]
+    for scan in scans:
+        action=scan.get("disposition","ACCEPTED")
+        if action not in ("ACCEPTED","REFUSED","DAMAGED"):
+            raise ValueError("Only a present physical unit can be scanned as accepted, refused or damaged")
+        item={"system_code":scan["system_code"],"profile_code":scan["profile_code"],
+              "code_hash":sha256(canonical_mark(scan["system_code"],scan["profile_code"],scan["code"])["identity"].encode("utf-8")).hexdigest()}
+        if action!="ACCEPTED":
+            item["disposition"]=action
+        result.append(item)
+    return result

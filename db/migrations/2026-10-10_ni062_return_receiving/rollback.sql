@@ -1,0 +1,1 @@
+-- Preserve physical receipt/journal: correct with explicit compensating operation, never DROP/DELETE stock history.

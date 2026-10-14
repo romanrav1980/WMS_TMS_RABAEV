@@ -1,0 +1,2 @@
+# Qwen:252 — очередь маркировки в сверке
+Currentwarehouse beforegroups/same READONLYsnapshot/exact payloadwarehouse source/currentAPPLIED Root whereapplicable. No rawcode leakage/profilemultiplier quantity/DONE governmentACK inference. Coverageincomplete for unattributedsource; countsseparatemessages. Existing236-237 CRPT-EGAIS ownWARE/foreign403/nofixtures/physical20-20. Functional JSONWARE index absentbefore/liveafter/180→12.917ms. IndependentDONE-delivered-but-notACK andotherconfiguredsystem/200overflow cases.

@@ -1,0 +1,14 @@
+{
+  "migration_id": "2026-10-11-239-interwarehouse-dispatcher-delay-decision",
+  "sha256": {
+    "db/migrations/2026-10-11_ni061_dispatch_decision/000_before_rrl_stock_trip_depart_cmd.sql": "a647bb366bcea4b84fe787bc8edbc43d51976221f2c9afeee22fb5e94b501d7e",
+    "db/migrations/2026-10-11_ni061_dispatch_decision/000_before_rrl_stock_interware_rec.sql": "db48842cfc11d37d671c66f6d366cbf9b6ac638c438a1947dbe1040e93e7563c",
+    "db/migrations/2026-10-11_ni061_dispatch_decision/000_before_rrl_stock_interware_put.sql": "08ba26953f55a2bf5ac23f7d244758a4f2e29f234ad90aba412923f26a33b90f",
+    "db/migrations/2026-10-11_ni061_dispatch_decision/000_before_rrl_stock_interware_next.sql": "3a55470d9c6e5955805392a6ec8b04d38d3fc7fd67a34f4a92ade50803fbad17",
+    "db/migrations/2026-10-11_ni061_dispatch_decision/000_before_rrl_stock_metadata_tx.sql": "d3736315124150a22844e27028997d3720218237708b0e37689792954bc808a3",
+    "db/migrations/2026-10-11_ni061_dispatch_decision/000_before_rrl_interware_plan_guard.sql": "e62f860c8ca3284c487225f99e4b1b423d668174f7e432bed52da84237bca486",
+    "db/migrations/2026-10-11_ni061_dispatch_decision/000_before_rrl_interware_hop_limit_guard.sql": "8f5731d10bff4c7639ed6bc071c801a2ed22f578ce130fe6f1523e523fa6ca66",
+    "db/migrations/2026-10-11_ni061_dispatch_decision/000_pending_plans.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "db/migrations/2026-10-11_ni061_dispatch_decision/000_manifest.json": "6414d153139069c74177587d2aaf3d9722ffa0165793e2a34791ca8cea17422b"
+  }
+}

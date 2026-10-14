@@ -1,3 +1,4 @@
+from ..modules.integrations.public import adapter_request_evidence
 from typing import Any
 
 from fastapi import HTTPException
@@ -101,6 +102,8 @@ class TraceabilityService:
                        NEXT_RETRY_AT,
                        LOCKED_BY,
                        LOCKED_AT,
+                       CLAIM_VERSION,
+                       to_char(LEASE_UNTIL at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.FF6TZH:TZM')LEASE_UNTIL,
                        LAST_ERROR,
                        CREATED_AT,
                        SENT_AT,
@@ -132,6 +135,8 @@ class TraceabilityService:
                    NEXT_RETRY_AT,
                    LOCKED_BY,
                    LOCKED_AT,
+                   CLAIM_VERSION,
+                   to_char(LEASE_UNTIL at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.FF6TZH:TZM')LEASE_UNTIL,
                    LAST_ERROR,
                    CREATED_AT,
                    SENT_AT,
@@ -153,11 +158,12 @@ class TraceabilityService:
         event_outbox_id: int,
         dry_run: bool = True,
         reason: str | None = None,
+        actor: str | None = None,
     ) -> dict[str, Any]:
         event = self.get_outbox_event(event_outbox_id)
         if not event:
             raise HTTPException(status_code=404, detail="Outbox event not found.")
-        if event.get("status") == "DONE":
+        if event.get("status") in {"DONE","EXPORTED","ACKNOWLEDGED"}:
             raise HTTPException(status_code=409, detail="DONE outbox events are not retried.")
         if dry_run:
             return {
@@ -167,26 +173,17 @@ class TraceabilityService:
                 "would_set_status": "PENDING",
             }
 
-        error_note = f"Manual retry requested: {reason}" if reason else None
-        updated = self.gateway.execute(
-            """
-            update RRL_EVENT_OUTBOX
-               set STATUS = 'PENDING',
-                   NEXT_RETRY_AT = null,
-                   LOCKED_BY = null,
-                   LOCKED_AT = null,
-                   LAST_ERROR = nvl(:error_note, LAST_ERROR)
-             where EVENT_OUTBOX_ID = :event_outbox_id
-               and STATUS <> 'DONE'
-            """,
-            {"event_outbox_id": event_outbox_id, "error_note": error_note},
-        )
-        return {
-            "dry_run": False,
-            "event_outbox_id": event_outbox_id,
-            "updated": updated,
-            "status": "PENDING" if updated else event.get("status"),
-        }
+        from ..modules.integrations.public import OutboxDelivery
+        if actor is None:
+            raise HTTPException(status_code=403, detail="Current retry actor required")
+        try:
+            OutboxDelivery(self.gateway).retry(event_outbox_id, actor, reason)
+        except Exception as exc:
+            code = getattr(exc.args[0], "code", 0) if exc.args else 0
+            if code in (20881,20882,20886):
+                raise HTTPException(status_code=403 if code==20882 else 409, detail=str(exc).split("\n",1)[0]) from exc
+            raise
+        return {"dry_run": False,"event_outbox_id": event_outbox_id,"updated": 1,"status": "PENDING"}
 
     def list_adapter_requests(
         self,
@@ -211,7 +208,7 @@ class TraceabilityService:
             conditions.append("BUSINESS_KEY = :business_key")
             params["business_key"] = business_key
         where_sql = " where " + " and ".join(conditions) if conditions else ""
-        return self.gateway.fetch_all(
+        return [adapter_request_evidence(row) for row in self.gateway.fetch_all(
             f"""
             select *
               from (
@@ -241,7 +238,7 @@ class TraceabilityService:
              where rownum <= :limit
             """,
             params,
-        )
+        )]
 
     def get_adapter_request(self, adapter_request_id: int) -> dict[str, Any]:
         rows = self.gateway.fetch_all(
@@ -272,7 +269,7 @@ class TraceabilityService:
             """,
             {"adapter_request_id": adapter_request_id},
         )
-        return rows[0] if rows else {}
+        return adapter_request_evidence(rows[0]) if rows else {}
 
 
 def normalize_entity_type(value: str) -> str:

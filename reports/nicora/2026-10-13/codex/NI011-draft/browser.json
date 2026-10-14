@@ -1,0 +1,13 @@
+{
+  "checks": [
+    "real source/profile GET; explicit restore preserves pallet/decimal quantity/batch/unit QR and GS; no printer confirmation",
+    "changed profile version blocks old form",
+    "modeled unknown POST: form retired only after existing durable intent; pending remains sole journal",
+    "unknown outcome blocks restoring form after reload",
+    "damaged form visible and retained"
+  ],
+  "errors": [],
+  "modeled_receipt_posts": 1,
+  "real_receipt_posts": 0,
+  "synthetic_open_source_and_policy_change": true
+}

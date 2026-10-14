@@ -1,0 +1,2 @@
+# Qwen390–399
+Read retained contexts and immutable facts only. Prove identical physicalkey2 belongs to two different confirmed loss events and recoveries, separated by actual STORE acceptance, REUSE receipt/putaway, new reservation/pick/load/depart. Originalbirth3/6codes unchanged; firstorderFF3once/newFF2once/customer2/history1-found1-net0. Do not rerun factories or intermediate availableP2 assertions. Exact command replay uses saved payload; actors restored/retired/protected20. No independent or hardware pass claimed.

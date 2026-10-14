@@ -1,12 +1,13 @@
 """Reuse physical mark capture for declared inventory and MES lot birth, without a SAP order."""
 from decimal import Decimal
+from typing import Any
 from hashlib import sha256
 import json
 from .receiving_marks import ReceivingMarks
 from ..domain.mark_identity import canonical_mark
 
 
-def plan_births(cursor, document):
+def plan_births(cursor: Any, document: dict[str,Any]) -> tuple[dict[str,Any],dict[str,Any]]:
     kind=document["command_type"];meta=document["metadata"]
     if kind=="INVENTORY_REGISTER_LOT":
         candidates=[(meta["uid"],meta["article"],meta["cell"],meta["quantity"],None,None)]
@@ -27,10 +28,12 @@ def plan_births(cursor, document):
                        "nvl((select CRPT_REQUIRED from RRL_FINISHED_GOODS_SKU where ARTICUL=:a),0),"
                        "case when exists(select 1 from RRL_SKU_RECEIPT_PROFILE where ARTICUL=:a) then 1 else 0 end) from dual",a=article)
         marked=cursor.fetchone()[0]
-        if not marked:
+        cursor.execute("select nvl(max(SERIALIZED_WEIGHT_BOXES),0) from RRL_SKU_RECEIPT_POLICY where ARTICUL=:p_article",p_article=article)
+        weighted=cursor.fetchone()[0]
+        if not marked and not weighted:
             if uid in provided:raise ValueError("Unmarked lot cannot contain marking capture")
             continue
-        if uid not in provided:raise ValueError("Unique unit capture is required for marked lot "+uid)
+        if uid not in provided:raise ValueError("Physical unit capture is required for this lot "+uid)
         cursor.execute("select BASE_UOM,NUMERATOR,DENOMINATOR,BASE_SCALE,POLICY_VERSION "
                        "from RRL_STOCK_UOM_CONVERSION where ARTICUL=:a and "
                        "((:u is not null and INPUT_UOM=:u) or (:u is null and INPUT_UOM=BASE_UOM and NUMERATOR=1 and DENOMINATOR=1)) "
@@ -41,7 +44,10 @@ def plan_births(cursor, document):
         from ..domain.stock_quantity import convert_exact
         qbase=convert_exact(str(quantity),int(num),int(den),int(scale))
         payload={**provided[uid],"units":provided[uid].get("units",[]),"aggregations":provided[uid].get("aggregations",[])}
-        marks=ReceivingMarks(cursor).resolve("STOCK.BIRTH",article,str(movement_id or ""),qbase,payload,base,lock_policy=False)
+        source_kind="INVENTORY" if kind=="INVENTORY_REGISTER_LOT" else "MES"
+        source_doc=document["source"]["revision_id"] if source_kind=="INVENTORY" else movement_id
+        context={"uid":uid,"article":article,"base":base,"cell":cell,"source_kind":source_kind,"source_doc":source_doc,"actor":document["actor"]}
+        marks=ReceivingMarks(cursor).resolve("STOCK.BIRTH",article,str(movement_id or ""),qbase,payload,base,lock_policy=False,birth_context=context)
         cursor.execute("select nvl(f.GTIN,a.BARCODE_SHT) from RRL_ARTICULS a left join "
                        "RRL_FINISHED_GOODS_SKU f on f.ARTICUL=a.ACTICUL where a.ACTICUL=:a",a=article)
         gtin=str(cursor.fetchone()[0]).zfill(14)
@@ -55,7 +61,8 @@ def plan_births(cursor, document):
                 if key in aliases and aliases[key]["unit_id"]!=unit_id:raise ValueError("One code identifies multiple physical units")
                 aliases[key]={"system":profile[0],"hash":digest,"unit_id":unit_id}
                 identities.append(profile[0]+":"+normalized["identity"])
-            bindings.append({"unit_id":unit_id,"key":sha256(min(identities).encode()).hexdigest(),
+            physical_identity=("GS1_WEIGHT_BOX:"+unit_id) if marks.get("weighted_boxes") else min(identities)
+            bindings.append({"unit_id":unit_id,"key":sha256(physical_identity.encode()).hexdigest(),
                              "quantity":format(marks["unit_quantities"][unit_id],"f")})
         if len({b["key"] for b in bindings})!=len(bindings):raise ValueError("Duplicate physical unit")
         births.append({"uid":uid,"article":article,"cell":cell,"quantity":format(qbase,"f"),"base":base,
@@ -66,12 +73,14 @@ def plan_births(cursor, document):
     return {"births":births},captures
 
 
-def stage_births(cursor,document,captures):
+def stage_births(cursor: Any,document: dict[str,Any],captures: dict[str,Any]) -> None:
     cursor.execute("select RESOLVED_PLAN_JSON from RRL_STOCK_OPERATION where OPERATION_ID=:id",id=document["operation_id"])
-    raw=cursor.fetchone()[0];plan=json.loads(raw.read() if hasattr(raw,"read") else raw)
+    raw=cursor.fetchone()[0];plan=raw if isinstance(raw,dict) else json.loads(raw.read() if hasattr(raw,"read") else raw)
     for birth in plan.get("births",[]):
         cursor.execute("begin RRL_STOCK_POSTING_API.stage_birth(:uid); end;",uid=birth["uid"])
         ReceivingMarks(cursor).persist(birth["uid"],captures[birth["uid"]],document["actor"],
             bindings=birth["unit_bindings"],base_uom=birth["base"],cell=birth["cell"],
             source_kind="INVENTORY_BIRTH" if document["command_type"]=="INVENTORY_REGISTER_LOT" else "PRODUCTION_RELEASE")
+        if captures[birth["uid"]].get("manifest_operation_id"):
+            cursor.execute("insert into RRL_TRACE_MANIFEST_USE(MANIFEST_OPERATION_ID,STOCK_OPERATION_ID,UID_PALLET,ACTOR)values(:manifest_id,:stock_op,:lot_id,:actor)",manifest_id=captures[birth["uid"]]["manifest_operation_id"],stock_op=document["operation_id"],lot_id=birth["uid"],actor=document["actor"])
         cursor.execute("begin RRL_STOCK_POSTING_API.finish_birth_capture; end;")

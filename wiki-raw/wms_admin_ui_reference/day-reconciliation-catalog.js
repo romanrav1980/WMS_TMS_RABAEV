@@ -1,7 +1,7 @@
 // Каталог показателей сверки дня (NI07.2): подпись, процесс, смысл, следующее действие и ссылка.
 // Ключи — ровно поля ответа GET /api/finance/day-reconciliation/warehouses/{ware_id}
 // (modules/finance/infrastructure/reconciliation_sources.py, day_reconciliation.py).
-// Ссылки ведут на существующие реестры: ответ API агрегатный, ID конкретных документов в нём нет.
+// Ссылки ведут на существующие реестры; bounded ID документов отображаются отдельным day-reconciliation-documents.js.
 (() => {
   const registry = (href, label, params) => ({ href, label, kind: "registry", params });
   const section = (href, label) => ({ href, label, kind: "section" });

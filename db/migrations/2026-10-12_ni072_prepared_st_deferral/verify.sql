@@ -1,0 +1,1 @@
+select *from USER_ERRORS where NAME in('RRL_ST_DEFER_API','RRL_ST_DEFER_PHYSICAL');

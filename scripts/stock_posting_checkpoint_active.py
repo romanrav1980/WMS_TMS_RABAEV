@@ -9,7 +9,7 @@ sys.path.insert(0,str(ROOT/"api/wms_api_server"))
 from app.config import get_settings
 s=get_settings()
 name=sys.argv[1]
-assert name.startswith("RRL_STOCK_") and name.replace("_","").isalnum()
+assert name.startswith(("RRL_STOCK_","RRL_TARE_")) and name.replace("_","").isalnum()
 with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn) as c:
  q=c.cursor()
  q.execute("select user,sys_context('USERENV','SERVICE_NAME') from dual")

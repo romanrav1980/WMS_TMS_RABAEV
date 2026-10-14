@@ -1,0 +1,12 @@
+{
+  "migration_id": "2026-10-11-233-original-marked-store-return-custody",
+  "sha256": {
+    "db/migrations/2026-10-11_ni062_marked_custody/000_before_rrl_store_return_unit_core.sql": "a5a69ab635132c110f6029be75421a3b14afcbddb7e3b63a43434999c9ba8144",
+    "db/migrations/2026-10-11_ni062_marked_custody/000_before_rrl_store_mark_core.sql": "98b00df697eb4d8ee2b3c98a6a504376bc6d5b8d455667334951af26aa8c4c8e",
+    "db/migrations/2026-10-11_ni062_marked_custody/000_before_rrl_stock_store_return_cust_cmd.sql": "68089adfaacd02307190bfb884eb3dbd78e83dd73172914262d2c031673f0ad2",
+    "db/migrations/2026-10-11_ni062_marked_custody/000_before_rrl_stock_posting_api.sql": "b6f704f4c02229be20b22081bf5e784bbbbe7e5eb9d854a8cdf9e9e7612262f4",
+    "db/migrations/2026-10-11_ni062_marked_custody/000_before_current_runtime_manifest.json": "5657d127a84e0ae225002d538e42aec55f0c9bd5b3f9f0fdc2c1d611488406b7",
+    "db/migrations/2026-10-11_ni062_marked_custody/000_before_return_custody_routes.py": "b80058f5cbffe84c9ac596973b17cc339c359121a009abedbc87d16e01eae601",
+    "db/migrations/2026-10-11_ni062_marked_custody/000_before_return_custody.py": "3b388d02f867f7af0f61413eb1dc69717b1d7e1c20c443b4ccea38cc8b1c6214"
+  }
+}

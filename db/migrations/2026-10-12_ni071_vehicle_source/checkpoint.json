@@ -1,0 +1,53 @@
+{
+  "migration_id": "2026-10-12-559-vehicle-source-at-departure",
+  "prepared": true,
+  "source_sha256": {
+    "db/migrations/2026-10-12_ni071_vehicle_source/000_before_depart.sql": "9fb022de66ca4801a6c5889f7fee34e4c64cd8ae558dfe8f0c8e2dc28c220521",
+    "db/migrations/2026-10-12_ni071_vehicle_source/000_rrl_tr_vehicle_columns.json": "399226bd1b6444d36962ffac45440d377ee1ebf71447f3c5fcd0acf406c4fbda",
+    "db/migrations/2026-10-12_ni071_vehicle_source/000_rrl_transport_task_columns.json": "d0a1195928034f95b839abcd67bf729af2432575037ce8d797f9801a3f9d2a87"
+  },
+  "recovery": "Additive vehicle physical profiles; immutable source on original departure; no old source inference or quantity writer. Restore captured native before live facts only, otherwise forward repair.",
+  "prepared_sha256": {
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\000_before_depart.sql": "9fb022de66ca4801a6c5889f7fee34e4c64cd8ae558dfe8f0c8e2dc28c220521",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\001_schema.sql": "9866d7516ab8d094fb3b9e45ea28227fa6967aa745fb41ff668389682ce60834",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\002_profile_api.sql": "4d02952716ae125a55585042ca28e6052c6971cfc4ebdee6a905f4cae489f9c4",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\003_depart_source.sql": "14673f5fafe1844ca0f6056b8ea1757a233c3e5757b5785e2fafb81f574fe4d9",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\004_depart_command.sql": "4dcdff7eede106001300aa49de6be4b4b558f9e9ae8f049c9e26ffcf67dc1e0c",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\005_guards.sql": "73330d8393d0bb4dfc1cd4d7a8825ce8660ff50318a8dbd05e88dc6693522356",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\006_ledger.sql": "63c1b9f160c491fa65e62188c5b1f8d70a448596353804ab2caf9426138c407e",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\apply.sql": "9d94d7e11b2a03be3bb8d78d905c08ac6f0743e63869c52226e3f5bc10521213",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\rollback.sql": "dda95c72911f480c420c741a222cf2ebe66e25714dc4b129faad6d14084435dc",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\verify.sql": "ebdc9f8f777451fdc1f0a5f13a2d951bed25a28f5c3b241b5a6b929444bc1e86"
+  },
+  "install_order": "schema/profile/source APIs and guards first, patch original DEPART last; no historical departure inference",
+  "applied": "55913/0/native VALID, no old trip inference",
+  "hash_patch_sha256": {
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\000_before_source_hash.sql": "d507e0fe5af01b85d41fe673a33e8bb30109cb71afa87f889df8e5d15e034014",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\008_source_hash.sql": "26abd8a39b80137908a6e61b3576330fe8d6cafd3c27171521070fa270b25ac6"
+  },
+  "config_fleet_before_sha256": "9748f3dc3b072dc76223ae3a7c7b1e7230672b2728e4b86df1c44b422d557c40",
+  "config_fleet_after_sha256": "6d70493d02b71086870227f3b6cb6c62e9248e170f71bf1c79f22ea5d13a6bd3",
+  "maintained_sha256": {
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\000_before_config_fleet.sql": "9748f3dc3b072dc76223ae3a7c7b1e7230672b2728e4b86df1c44b422d557c40",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\000_before_depart.sql": "9fb022de66ca4801a6c5889f7fee34e4c64cd8ae558dfe8f0c8e2dc28c220521",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\000_before_source_hash.sql": "d507e0fe5af01b85d41fe673a33e8bb30109cb71afa87f889df8e5d15e034014",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\001_schema.sql": "9866d7516ab8d094fb3b9e45ea28227fa6967aa745fb41ff668389682ce60834",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\002_profile_api.sql": "b8b628f5d2a84096f3507bbeffe32a3b4e12e0a0edc9d3f7d2b3f7a368d7f5c1",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\003_depart_source.sql": "14673f5fafe1844ca0f6056b8ea1757a233c3e5757b5785e2fafb81f574fe4d9",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\004_depart_command.sql": "4dcdff7eede106001300aa49de6be4b4b558f9e9ae8f049c9e26ffcf67dc1e0c",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\005_guards.sql": "73330d8393d0bb4dfc1cd4d7a8825ce8660ff50318a8dbd05e88dc6693522356",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\006_ledger.sql": "63c1b9f160c491fa65e62188c5b1f8d70a448596353804ab2caf9426138c407e",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\008_source_hash.sql": "26abd8a39b80137908a6e61b3576330fe8d6cafd3c27171521070fa270b25ac6",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\009_source_hash_ledger.sql": "73fe3c9b24a5223fa3176ddfdaf97a0d62dca02736ee1dbcd2fce67fb3469812",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\010_config_fleet.sql": "6d70493d02b71086870227f3b6cb6c62e9248e170f71bf1c79f22ea5d13a6bd3",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\011_config_fleet_ledger.sql": "b8f354294102c900883650975c3cb13bfff1b965c832fc4a97f542b45e4c65e9",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\apply.sql": "9d94d7e11b2a03be3bb8d78d905c08ac6f0743e63869c52226e3f5bc10521213",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\apply_config_fleet.sql": "dd1a8109ac380a81e4929db7d1e01667aa04062f29d502513899ae6d91046d47",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\apply_source_hash.sql": "08c973a6787c5068095c0c858f958c7e0b876ad9b84b2a41c85c1cd9e6b1170b",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\rollback.sql": "dda95c72911f480c420c741a222cf2ebe66e25714dc4b129faad6d14084435dc",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\rollback_config_fleet.sql": "41b0ea44be9dfcb00d22957cb04dc14b47508fadf342bf24d6ac452e98824a7c",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\rollback_source_hash.sql": "d69bff55e94aaeabec4b23cc4fa19a22efb3dfd3b0388af846fc173bd9343f71",
+    "db\\migrations\\2026-10-12_ni071_vehicle_source\\verify.sql": "ebdc9f8f777451fdc1f0a5f13a2d951bed25a28f5c3b241b5a6b929444bc1e86"
+  },
+  "profile_evidence": "563/564 same-op concurrent v1, base_changed/stale hash rejected, v2, native v3 rollback, no trip inference"
+}

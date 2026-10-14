@@ -1,0 +1,16 @@
+{
+  "migration_id": "2026-10-14-1170-departure-temperature",
+  "target": "RABAEV@127.0.0.1:1521/orcl",
+  "prepared_sha256": {
+    "db/migrations/2026-10-14_ni052_departure_temperature/001_thermal_phase.sql": "b53bd8d122c7c939f82ce3e605f4c2553ca9cde2da390457d2a60ca4358a0a42",
+    "db/migrations/2026-10-14_ni052_departure_temperature/002_depart_command.sql": "df89850570abe204ad4135e62a2ef544c9468682bb25fd1af9dc92160853df05",
+    "db/migrations/2026-10-14_ni052_departure_temperature/003_ledger.sql": "309e5330f5fb6947b81058ff9a9c000307d653f27de700dcada8198905cdfb8e",
+    "db/migrations/2026-10-14_ni052_departure_temperature/004_compile_dependents.sql": "ce186774017964bfb4431d2cc90c2b15430f34c88d1b6eb3832fb2097d1e17c0",
+    "db/migrations/2026-10-14_ni052_departure_temperature/apply.sql": "c054418620376bdf586504c6bca615c8bb4759094f515e38ae47311ed5bbff3d",
+    "db/migrations/2026-10-14_ni052_departure_temperature/rollback.sql": "d357cfbbcdca933a9d9012f0c189e9074b675ef98af6c9c7f23de0e636daccf3",
+    "db/migrations/2026-10-14_ni052_departure_temperature/verify.sql": "6f19e04019b97db1c1f9bbf60d23fcc2a25af72d71a55d1d236b0d6f7826c7b7"
+  },
+  "state": "APPLIED_TARGETED_VERIFIED",
+  "scope": "Existing helper phase and root departure only. No new table/quantity engine. Captured immutable root plan/result stores separate manual confirmation with original departure instant.",
+  "evidence": "reports/nicora/2026-10-13/35-loading-departure-temperature-report.md"
+}

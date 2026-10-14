@@ -1,0 +1,15 @@
+# NI01.1 — история приёмки и восстановление команды
+
+935–947: добавлен GET supply-orders/{id}/receipt-history. Текущий пользователь/склад и исходный заказ проверяются в одной READ ONLY транзакции; страницы до100, курсор принадлежит заказу. Исторически принятое количество отдельно от текущего остатка и HARD на этом складе, ссылка на исходное задание. Запись запаса не производится.
+
+Повреждённое локальное намерение блокирует новую приёмку. Восстановление перечитывает историю выбранного источника, сохраняет точный исходный текст и контекст в архив до удаления повреждённой записи. Изменение другой вкладки, ошибка квоты и смена пользователя сохраняют исходник. Корректная команда повторяется с прежним operation_id. Ответ OPERATION_CONFLICT не считается успешным проведением. Выбор товарной строки использует текущие ключи заказа/строки/артикула и делегированные события, поддерживает Enter/Space.
+
+Actual936: original908 исторически3, сейчас P0/H0, источникREVERSED; чужой курсор910 и отсутствующий пользователь отказали, protected688 не изменён. HTTP941 послеrestart939: тот же результат, limit101→422, неизвестный курсор→409. JS940 повреждённый intent/archive, JS947 текущий выбор/stale scope PASS. Это авторские проверки, не независимая приёмка.
+
+Реальные screenshots16/17 показывают REVERSED и историю3/current0/task1105 CANCELLED. Браузерный выбор строки автоматизацией не изменил состояние: ручной результат пока не подтверждён, вопрос пользователю открыт; PASS не заявляется. Screenshot fullPage завершился таймаутом и не сохранён.
+
+SQL941:20.856ms/145buffers (3exec), child25.43ms/36buffers (1exec). Решение integration owner: bounded100/keyset/существующие ключи order+line, без нового индекса на остатки; промышленная нагрузка не доказана. Architecture692/0cycles/76 PASS. Все18 спринтов не закрыты; следующая функция — CASE-ожидание через существующее ядро.
+
+## Checkpoint1039
+
+1034–1039 receiving explicitline/order alias/current source/selectionhighlight, closedreceipt+newlabeldisabled/closedbalance wording/internal confirmedRefresh. JS947/1036PASS; actualBrowser27–28 retained908 line2/CRPT+EGAIS sourceREVERSED/no stockbirth; manualclicknotobserved/notPASS. SQL1038policy15.28ms205.5buf preservekeys/master_data versioncache+plan backlog. Report22/fullNI01.1open.

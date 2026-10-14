@@ -1,0 +1,9 @@
+exec(open("scripts/ni063_slow_queries.py",encoding="utf-8").read().split("with oracledb.connect",1)[0])
+with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
+ q=c.cursor();r={};c.call_timeout=5000
+ q.execute("select OBJECT_NAME,OBJECT_TYPE from USER_OBJECTS where OBJECT_NAME like '%COMPL%' and OBJECT_TYPE in('TABLE','VIEW','SYNONYM')order by OBJECT_NAME");r["current_compl_objects"]=[list(x)for x in q]
+ for table in("RRL_COMPL_SEQ","RRL_COMPL_SEQ_GR","RRL_PALLET_TYPE"):
+  q.execute("select COLUMN_NAME,DATA_TYPE from USER_TAB_COLUMNS where TABLE_NAME=:t order by COLUMN_ID",t=table);r[table+"_columns"]=[list(x)for x in q]
+ q.execute("select c.CUSTOMER_ORDER_ID,c.WARE_ID,s.ADMISSION_STATUS,s.PREPARATION_HASH,s.PICKING_FINISH_AT from RRL_CUSTOMER_ORDER c join RRL_SAP_STORE_ORDER s on s.CUSTOMER_ORDER_ID=c.CUSTOMER_ORDER_ID where c.CUSTOMER_ORDER_ID between 2044 and 2049 order by c.CUSTOMER_ORDER_ID");r["known_sources"]=[list(x)for x in q]
+ Path("tmp/read1110_auto_metadata.json").write_text(json.dumps(r,indent=2,default=str),encoding="utf-8")
+ print(json.dumps(r,ensure_ascii=True,default=str))

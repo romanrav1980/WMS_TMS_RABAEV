@@ -1,0 +1,16 @@
+{
+  "checks": [
+    "wrong identity keeps pending and prevents placement link",
+    "exact repeat uses native historical result shape and shows exact quantity/document",
+    "real GET for historical already placed receipt gives no accidental other selection",
+    "modeled pending queue selects requested receipt, not first row; no automatic plan POST",
+    "putaway wrong identity retained; exact retry opens confirmed task only",
+    "damaged putaway intent blocked; archive with real fresh GET",
+    "damaged receipt intent blocked; archive with real fresh GET",
+    "modeled mark control: damaged scan blocks evidence; explicit archive; exact fresh scan retained"
+  ],
+  "errors": [],
+  "modeled_posts": 4,
+  "real_posts": 0,
+  "native_result_source": "REUSE643.RECEIVE:dc1889623c"
+}

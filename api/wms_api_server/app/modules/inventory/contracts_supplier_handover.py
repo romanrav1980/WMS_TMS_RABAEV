@@ -1,0 +1,9 @@
+from typing import Any,Protocol
+
+class SupplierHandoverPort(Protocol):
+    def record(self,operation_id: str,dispatch_id: str,reference: str,document_hash: str,receiver: str,actor: str) -> dict[str,Any]: ...
+    def confirm(self,operation_id: str,handover_id: str,reference: str,reason: str,actor: str) -> dict[str,Any]: ...
+    def pending(self,ware_id: int,actor: str) -> list[dict[str,Any]]: ...
+
+def supplier_handover_service() -> SupplierHandoverPort:
+    raise RuntimeError("Supplier documentary handover not wired")

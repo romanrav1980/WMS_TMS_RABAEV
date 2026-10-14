@@ -1,0 +1,19 @@
+{
+  "migration_id": "2026-10-11-219-unaccepted-tare-offer-cancel",
+  "sha256": {
+    "db/migrations/2026-10-11_ni063_offer_cancel/000_before_rrl_stock_posting_api.sql": "a4f687bb5e834d5020c0e6810fb59010bf4c84f960a37ead3218bcc642ad286f",
+    "db/migrations/2026-10-11_ni063_offer_cancel/000_before_rrl_stock_tare_cmd.sql": "81916989467d4c0a51ef63c729112047531291cb1d3ebf3393fe1f1202911da4",
+    "db/migrations/2026-10-11_ni063_offer_cancel/000_before_rrl_stock_tare_handover.sql": "8b9cade4c7b32591f7ea63f51f1924abb5d3e02e14b42f5fb9893b49ea61fd73",
+    "db/migrations/2026-10-11_ni063_offer_cancel/000_before_rrl_stock_tare_resolve.sql": "ffaeacae6b534b04549b8416f277a89e023ab42c436a7029baee47d6087cab92",
+    "db/migrations/2026-10-11_ni063_offer_cancel/000_before_rrl_tare_participant.sql": "231d6f2a7b56cdd0ca0633f7e506e3aa607c55d92d25a35cd239741c319f6b6d",
+    "db/migrations/2026-10-11_ni063_offer_cancel/000_before_rrl_stock_unload_cmd.sql": "c11620f45c5928fbeae19ae66c483c279400535d0636bf7bcb0aa7354f1081e4",
+    "db/migrations/2026-10-11_ni063_offer_cancel/000_before_rrl_tare_offer_guard.sql": "c1840087bdeaa88f5f8b86b9c14e3baac7a7436dc715deab8bc27a19a43ef68e",
+    "db/migrations/2026-10-11_ni063_offer_cancel/000_before_rrl_tare_offer_book_guard.sql": "8329fc8591f1bbfada7c890ad92d0487f21b2b9ac3c10748f6b44211075f5d73",
+    "db/migrations/2026-10-11_ni063_offer_cancel/000_before_current_runtime_manifest.json": "774eae7873d7aea34d3df4cc930b2200604a5650f254ad0ca855d90f64fdc6c1",
+    "db/migrations/2026-10-11_ni063_offer_cancel/000_before_contracts_stock.py": "4c4b9793afa361f82e48226874102e05f4b2c95688ee3f8bea5c70c2840fbbc5",
+    "db/migrations/2026-10-11_ni063_offer_cancel/000_before_tare_routes.py": "4f910b5dd778b19026cde5a299327abab657678c7ab5cf075b8d4134059b6d09",
+    "db/migrations/2026-10-11_ni063_offer_cancel/000_before_tare.py": "3cc1ed83f07382ec4cf76dda2aa4e19417a3532dc83115c62930c71737543669",
+    "db/migrations/2026-10-11_ni063_offer_cancel/000_before_tare_assembly.py": "0a4620a8d89ae769c7a6a0a1fc0e44c663be6608023d1f55031ad823de260444"
+  },
+  "recovery": "Fresh original command/participant/handover/unload owner and application sources. Additive cancellation fact; original offer and book associations never deleted. Forward repair after cancellation history."
+}

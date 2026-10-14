@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-243-interwarehouse-reported-incident-decision'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Reported interwarehouse incident and dispatcher route decision saved together',sysdate,user,'db/migrations/2026-10-11_ni061_incident/apply.sql','db/migrations/2026-10-11_ni061_incident/rollback.sql','APPLIED','Own1872b69bf4 original33562/current33563/WAIT1-DEFER2 missing-pallet report-WAIT3/native rollback/concurrent winner/replay/current history cursor/foreign403/no stock deduction. Later full receipt3/975/ST641390/QC6/load-depart/same3units6codes retained report+receipt link, no automatic closed investigation. AllVALID/quality243.');
+commit;

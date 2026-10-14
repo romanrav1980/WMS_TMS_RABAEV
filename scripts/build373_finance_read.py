@@ -1,0 +1,8 @@
+from pathlib import Path
+import json
+out={};p=Path("api/wms_api_server/app/modules/finance/infrastructure/logistics_costs.py");t=p.read_text(encoding="utf-8");t=t.replace("c.VERSION_NO,c.BASIS,h.COMPONENTS_JSON COMPONENTS","c.VERSION_NO,c.BASIS,h.COMPONENTS_JSON COMPONENTS,\n        to_char(c.RATE_DATE,'YYYY-MM-DD') RATE_DATE,c.PERIOD_MODE,c.PERIOD_TIME_ZONE,c.PERIOD_POLICY_VERSION");out[p.as_posix()]=t
+p=Path("admin/wms_admin_frontend/src/features/finance/BillingWarehouseCosts.tsx");t=p.read_text(encoding="utf-8");t=t.replace('basis:string;components?','basis:string;rate_date?:string|null;period_mode?:string|null;period_time_zone?:string|null;period_policy_version?:number|null;components?');t=t.replace('<th>Версия</th>','<th>Версия</th><th>Расчётный период</th>');t=t.replace('<td>{r.version_no}</td>','<td>{r.version_no}</td><td>{r.rate_date?<>{r.rate_date}<small> · {r.period_mode==="CASE_ASSEMBLY"?"начало CASE":"погрузка UTC"}{r.period_time_zone&&" · "+r.period_time_zone}</small></>:"Ранее проведённое начисление"}</td>');t=t.replace('Начисление привязано к фактической погрузке.','Источник расчётной даты сохраняется при начислении.');out[p.as_posix()]=t
+p=Path("wiki-raw/wms_admin_ui_reference/logistics-costs.js");t=p.read_text(encoding="utf-8");t=t.replace('identity=fp;++serial;','identity=fp;periodPolicy=null;el("lcPeriod").textContent="";el("lcAssembly").replaceChildren();++serial;')
+t=t.replace('()=>prepare("/warehouses/"+positive("lcWare")+"/period-policy",','()=>prepare("/warehouses/"+(periodPolicy?.warehouse_id||0)+"/period-policy",')
+out[p.as_posix()]=t
+print(json.dumps(out))

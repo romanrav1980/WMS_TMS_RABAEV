@@ -1,0 +1,8 @@
+{
+  "migration_id": "2026-10-11-235-original-marked-return-placement",
+  "sha256": {
+    "db/migrations/2026-10-11_ni062_marked_placement/000_before_rrl_stock_store_return_put.sql": "4c999b95972419d1b99d7a81aea683d3d10cebc851e1fed66c805810abbbbd02",
+    "db/migrations/2026-10-11_ni062_marked_placement/000_before_rrl_stock_posting_api.sql": "cc122aaab105b342fb0a6cc872e020fde0d80e134fb222a90895a14d87790bb8",
+    "db/migrations/2026-10-11_ni062_marked_placement/000_manifest.json": "9b6d003538c8a5d4825273eaf25877d422deb7abd2d420ed9aca3b73fb32f65b"
+  }
+}

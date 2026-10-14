@@ -1,0 +1,8 @@
+# NI05.2 — подтверждение погрузки ранее списанного HU
+10.10.2026. Scope ticket081, implementation not installed yet. Transport physical fact owner, inventory historical shipping/root owner. Reuses HU_SHIP immutable APPLIED snapshot and existing loading/departure engine.
+
+Input: original shipping operation, exact historical composition signature, real top-place/cell/vehicle/dock scans, current manually confirmed SI measurements, same assigned ST/trip. Permission stock_posting_shipping. For a prior HU_SHIP without physical load, all containers must still carry that original departure marker, original links remain deactivated by that operation, all CASE/fulfillment ownership must still be shipped by it and leaf quantities must remain zero. No stock quantity is added or consumed again.
+
+One root transaction records actual load plus immutable one-to-one reconciliation link to original shipping operation and normal outbox. Existing trip capacity/member/departure gate retained. Full exact replay returns saved result; altered request rejected. Reconciliation of an already physically loaded operation, changed/returned/reused composition or evidence-free old legacy shipment refuses. First bounded slice is whole HU only, standalone historical CASE/FULLPAL requires separate evidence route.
+
+Target author case: logical HU shipping P/H0 -> actual historical reconciliation -> existing departure, no quantity journal under reconciliation/departure; wrong scans, duplicate original operation and replay; own stock cleanup through root. Independent acceptance remains separate. No government ACK is simulated.

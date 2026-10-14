@@ -1,0 +1,15 @@
+{
+  "trip_id": 33640,
+  "st_id": 641514,
+  "warehouse_id": 9102,
+  "base": "NI081.BASE.113bdb28da",
+  "shop": "NI081.SHOP.113bdb28da",
+  "tag": "113bdb28da",
+  "operation_ids": [
+    10228,
+    10229
+  ],
+  "road_provider": "OWN.NI081.FIXTURE",
+  "planning_only": true,
+  "stock_rows_created": 0
+}

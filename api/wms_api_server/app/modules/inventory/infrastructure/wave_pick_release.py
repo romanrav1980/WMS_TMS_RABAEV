@@ -1,0 +1,31 @@
+from __future__ import annotations
+import json
+from ....oracle_gateway import OracleGateway
+from ....transaction_gateway import TransactionGateway
+from ..contracts_stock import StockCommand
+from .stock_posting_uow import StockPosting
+from .wave_execution_reader import assert_wave_view
+
+
+class WavePickRelease:
+    """Picking admission uses the original command and current warehouse access."""
+
+    def __init__(self, gateway: OracleGateway | TransactionGateway) -> None:
+        self.gateway = gateway
+
+    def preview(self, wave_id: int, actor: str) -> dict:
+        with self.gateway.transaction("Current wave pick readiness READ ONLY") as cursor:
+            if not getattr(self.gateway, "transaction_bound", False):
+                cursor.execute("set transaction read only")
+            assert_wave_view(cursor, wave_id, actor)
+            cursor.execute("select RRL_STOCK_WAVE_READY.snapshot_json(:wave) from dual",wave=wave_id)
+            raw=cursor.fetchone()[0]
+            return json.loads(raw.read() if hasattr(raw,"read") else raw)
+
+    def release(self, wave_id: int, operation_id: str, actor: str) -> dict:
+        result = StockPosting().post(StockCommand(
+            operation_id=operation_id, command_type="WAVE_PICK_RELEASE", actor=actor,
+            lines=(), source={"wave_id": wave_id}, metadata={},
+        ))
+
+        return {**result, "command_operation_id": operation_id}

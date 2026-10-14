@@ -4,7 +4,10 @@
  * Sprint 104: отметка факта операций (Начать / Готово)
  */
 
-import { useEffect, useState, useCallback } from "react";
+import { DriverLogin, useDriverWorkspace } from "../features/transport";
+import { TarePanel } from '../features/inventory';
+import { StoreReceiptPanel, ReturnCustodyPanel } from "../features/delivery";
+import { DriverDateSelector } from "./DriverDateSelector";
 
 // Sprint 105 — register service worker for offline support
 if ("serviceWorker" in navigator) {
@@ -12,46 +15,6 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/driver-sw.js").catch(() => {});
   });
 }
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-interface Trip {
-  task_id: number;
-  shipment_date: string;
-  num_plat: string;
-  transport_type: string;
-  condition: string;
-  note: string;
-  price: number;
-  st_count: number;
-  weight_kg: number;
-}
-
-interface TripSt {
-  st_number: string;
-  addr: string;
-  ord: number;
-  time_from: string;
-  time_to: string;
-  load_type: string;
-  pallet_count: number;
-}
-
-interface TripOp {
-  op_id: number;
-  operation_code: string;
-  ord: number;
-  plan_start: string;
-  plan_end: string;
-  fact_start: string;
-  fact_end: string;
-  note: string;
-  status: "pending" | "in_progress" | "done";
-}
-
-function todayIso() { return new Date().toISOString().slice(0, 10); }
 
 const OP_LABELS: Record<string, string> = {
   DOCK_ASSIGN: "Постановка на ворота",
@@ -74,92 +37,26 @@ const OP_LABELS: Record<string, string> = {
 // ---------------------------------------------------------------------------
 
 export function DriverMobilePage() {
-  const [driverId, setDriverId] = useState<number | null>(() => {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id") || params.get("driver_id");
-    return id ? parseInt(id) : null;
-  });
-  const [inputId, setInputId] = useState("");
-  const [tripDate, setTripDate] = useState(todayIso());
-  const [trips, setTrips] = useState<Trip[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
-  const [tripSts, setTripSts] = useState<TripSt[]>([]);
-  const [tripOps, setTripOps] = useState<TripOp[]>([]);
-  const [opLoading, setOpLoading] = useState(false);
-  const [activeView, setActiveView] = useState<"trips" | "sts" | "ops">("trips");
-
-  const fetchTrips = useCallback(async (id: number, dt: string) => {
-    setLoading(true); setError(null);
-    try {
-      const res = await fetch(`/api/driver/trips?driver_id=${id}&trip_date=${dt}`);
-      if (!res.ok) throw new Error(await res.text());
-      setTrips(await res.json());
-    } catch (e) { setError(String(e)); }
-    finally { setLoading(false); }
-  }, []);
-
-  useEffect(() => {
-    if (driverId) fetchTrips(driverId, tripDate);
-  }, [driverId, tripDate, fetchTrips]);
-
-  const selectTrip = async (trip: Trip) => {
-    setSelectedTrip(trip);
-    setActiveView("ops");
-    try {
-      const [stsRes, opsRes] = await Promise.all([
-        fetch(`/api/driver/trips/${trip.task_id}/sts?driver_id=${driverId}`),
-        fetch(`/api/driver/trips/${trip.task_id}/ops?driver_id=${driverId}`),
-      ]);
-      setTripSts(await stsRes.json());
-      setTripOps(await opsRes.json());
-    } catch (e) { setError(String(e)); }
-  };
-
-  const markOp = async (opId: number, action: "start" | "done") => {
-    setOpLoading(true);
-    try {
-      await fetch(`/api/driver/ops/${opId}/${action}?driver_id=${driverId}`, { method: "POST" });
-      if (selectedTrip) {
-        const opsRes = await fetch(`/api/driver/trips/${selectedTrip.task_id}/ops?driver_id=${driverId}`);
-        setTripOps(await opsRes.json());
-      }
-    } catch (e) { setError(String(e)); }
-    finally { setOpLoading(false); }
-  };
-
-  // Driver ID entry screen
-  if (!driverId) {
-    return (
-      <div className="driver-login">
-        <div className="driver-login-card">
-          <div className="driver-login-logo">🚛</div>
-          <h1>ТМС Водитель</h1>
-          <p>Введите ваш ID водителя</p>
-          <input
-            type="number"
-            value={inputId}
-            onChange={e => setInputId(e.target.value)}
-            placeholder="ID водителя"
-            onKeyDown={e => e.key === "Enter" && inputId && setDriverId(parseInt(inputId))}
-          />
-          <button onClick={() => inputId && setDriverId(parseInt(inputId))}>Войти</button>
-        </div>
-      </div>
-    );
-  }
+  const {driverId,tripDate,setTripDate,trips,loading,error,setError,selectedTrip,tripSts,tripOps,
+    opLoading,activeView,setActiveView,login,logout,selectTrip,markOp,pending,retry}=useDriverWorkspace();
+  if (!driverId) return <DriverLogin onLogin={login} busy={loading} error={error}/>;
 
   return (
     <div className="driver-shell">
       <header className="driver-header">
         <span className="driver-logo">🚛</span>
         <span className="driver-title">Водитель #{driverId}</span>
-        <button className="driver-logout" onClick={() => { setDriverId(null); setTrips([]); }}>✕</button>
+        <button className="driver-logout" onClick={logout} disabled={opLoading} aria-label="Выйти">✕</button>
       </header>
 
       {error && <div className="driver-error" onClick={() => setError(null)}>⚠ {error}</div>}
 
+      {pending && <div className="driver-pending" role="status">
+        <strong>Ожидает подтверждения: рейс #{pending.trip}</strong>
+        <p>Отметка сохранена на этом устройстве. Повтор не изменит первоначальное время.</p>
+        <button disabled={opLoading} onClick={()=>void retry()}>Повторить сохранённую отметку</button>
+      </div>}
+      {loading && activeView !== "trips" && <div className="driver-loading" role="status">Загрузка рейса…</div>}
       {/* Navigation tabs */}
       <div className="driver-tabs">
         <button
@@ -180,20 +77,13 @@ export function DriverMobilePage() {
         )}
       </div>
 
+      {selectedTrip && !loading && activeView === "sts" && <StoreReceiptPanel key={selectedTrip.task_id} tripId={selectedTrip.task_id} addresses={[...new Set(tripSts.map(st=>st.addr))]} />}
+      {selectedTrip && !loading && activeView === "sts" && <ReturnCustodyPanel key={"return:"+selectedTrip.task_id} tripId={selectedTrip.task_id} addresses={[...new Set(tripSts.map(st=>st.addr))]} />}
+      {selectedTrip && !loading && activeView === "sts" && <TarePanel key={"tare:"+selectedTrip.task_id} tripId={selectedTrip.task_id} addresses={[...new Set(tripSts.map(st=>st.addr))]} />}
+
       {/* Date selector */}
       {activeView === "trips" && (
-        <div className="driver-date-row">
-          <button onClick={() => {
-            const d = new Date(tripDate); d.setDate(d.getDate() - 1);
-            setTripDate(d.toISOString().slice(0, 10));
-          }}>◄</button>
-          <input type="date" value={tripDate} onChange={e => setTripDate(e.target.value)} />
-          <button onClick={() => {
-            const d = new Date(tripDate); d.setDate(d.getDate() + 1);
-            setTripDate(d.toISOString().slice(0, 10));
-          }}>►</button>
-          <button onClick={() => setTripDate(todayIso())} className="driver-today-btn">Сегодня</button>
-        </div>
+        <DriverDateSelector date={tripDate} onChange={setTripDate} />
       )}
 
       {/* Trips list */}
@@ -218,7 +108,7 @@ export function DriverMobilePage() {
               <div className="driver-trip-plate">{t.num_plat} · {t.transport_type}</div>
               <div className="driver-trip-stats">
                 <span>📦 {t.st_count} адресов</span>
-                <span>⚖ {t.weight_kg.toFixed(0)} кг</span>
+                <span>⚖ {t.loaded_weight_kg!==null? t.loaded_weight_kg+" кг · погружено":Number(t.weight_kg || 0)>0?t.weight_kg+" кг · план":"Масса не указана"}</span>
               </div>
               {t.note && <div className="driver-trip-note">{t.note}</div>}
             </div>
@@ -231,7 +121,7 @@ export function DriverMobilePage() {
         <div className="driver-list">
           <div className="driver-section-title">Рейс #{selectedTrip.task_id} · Адреса</div>
           {tripSts.map((st, i) => (
-            <div key={st.st_number} className="driver-st-card">
+            <div key={`${st.st_number}:${st.addr}:${i}`} className="driver-st-card">
               <div className="driver-st-ord">{st.ord || i + 1}</div>
               <div className="driver-st-info">
                 <div className="driver-st-addr">{st.addr}</div>
@@ -249,6 +139,7 @@ export function DriverMobilePage() {
       {activeView === "ops" && selectedTrip && (
         <div className="driver-list">
           <div className="driver-section-title">Рейс #{selectedTrip.task_id} · Операции</div>
+          {!loading && tripOps.length === 0 && <div className="driver-empty">Операции рейса ещё не запланированы диспетчером.</div>}
           {tripOps.map(op => (
             <div key={op.op_id} className={`driver-op-card driver-op-${op.status}`}>
               <div className="driver-op-info">
@@ -263,14 +154,14 @@ export function DriverMobilePage() {
                   <button
                     className="driver-op-btn driver-op-start"
                     onClick={() => markOp(op.op_id, "start")}
-                    disabled={opLoading}
+                    disabled={opLoading || !!pending}
                   >Начать</button>
                 )}
                 {op.status === "in_progress" && (
                   <button
                     className="driver-op-btn driver-op-done"
                     onClick={() => markOp(op.op_id, "done")}
-                    disabled={opLoading}
+                    disabled={opLoading || !!pending}
                   >Готово ✓</button>
                 )}
                 {op.status === "done" && <span className="driver-op-check">✓</span>}

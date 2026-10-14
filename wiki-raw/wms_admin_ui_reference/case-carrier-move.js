@@ -4,7 +4,7 @@
   const key=()=>JSON.stringify(["nicora.caseCarrierMove",cpTsdApiBase(),cpTsdUser()]);
   const pending=()=>{cpTsdEl("cpTsdRetryCarrier").hidden=!localStorage.getItem(key());};
   async function move(retry) {
-    if(busy||window.cpTsdStockBusy)return;busy=true;window.cpTsdStockBusy=true;cpTsdEl("cpTsdMoveCarrier").disabled=true;
+    if(busy||window.cpTsdStockBusy||window.wmsCaseType?.hasPending())return;busy=true;window.cpTsdStockBusy=true;cpTsdEl("cpTsdMoveCarrier").disabled=true;
     let storageKey;
     let attempted = false, priorUnknown = false;
     try {

@@ -1,0 +1,44 @@
+Plan hash value: 4102268947
+ 
+----------------------------------------------------------------------------------------------------------------------------
+| Id  | Operation                         | Name                           | Rows  | Bytes |TempSpc| Cost (%CPU)| Time     |
+----------------------------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                  |                                |     1 |   493 |       | 37943   (1)| 00:00:02 |
+|   1 |  SORT ORDER BY                    |                                |     1 |   493 |       | 37943   (1)| 00:00:02 |
+|   2 |   SORT GROUP BY                   |                                |     1 |   493 |       | 37943   (1)| 00:00:02 |
+|   3 |    NESTED LOOPS                   |                                |     1 |   493 |       | 37941   (1)| 00:00:02 |
+|   4 |     NESTED LOOPS                  |                                |     1 |   493 |       | 37941   (1)| 00:00:02 |
+|   5 |      NESTED LOOPS OUTER           |                                |     1 |   444 |       | 37938   (1)| 00:00:02 |
+|*  6 |       HASH JOIN                   |                                |     1 |   318 |       | 37937   (1)| 00:00:02 |
+|*  7 |        VIEW                       |                                |    10 |  1820 |       | 34081   (1)| 00:00:02 |
+|*  8 |         COUNT STOPKEY             |                                |       |       |       |            |          |
+|   9 |          VIEW                     |                                |   367K|    59M|       | 34081   (1)| 00:00:02 |
+|* 10 |           SORT ORDER BY STOPKEY   |                                |   367K|    64M|    70M| 34081   (1)| 00:00:02 |
+|  11 |            HASH GROUP BY          |                                |   367K|    64M|    70M| 34081   (1)| 00:00:02 |
+|* 12 |             HASH JOIN RIGHT OUTER |                                |   367K|    64M|       |  4480   (1)| 00:00:01 |
+|  13 |              TABLE ACCESS FULL    | RRL_ADDR                       |   373 | 26856 |       |     5   (0)| 00:00:01 |
+|* 14 |              HASH JOIN RIGHT SEMI |                                |   367K|    39M|    12M|  4474   (1)| 00:00:01 |
+|  15 |               INDEX FAST FULL SCAN| BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |   394K|  8480K|       |   634   (1)| 00:00:01 |
+|* 16 |               INDEX FAST FULL SCAN| RRL_ST_PAGE_KEYS_I             |   367K|    31M|       |  1427   (1)| 00:00:01 |
+|* 17 |        TABLE ACCESS FULL          | RRL_SBORKA_PALLETS             |   367K|    47M|       |  3855   (1)| 00:00:01 |
+|  18 |       TABLE ACCESS BY INDEX ROWID | RRL_ADDR                       |     1 |   126 |       |     1   (0)| 00:00:01 |
+|* 19 |        INDEX UNIQUE SCAN          | BIN$UX1xZvTFS6/gYw8CAAo/Yg==$0 |     1 |       |       |     0   (0)| 00:00:01 |
+|* 20 |      INDEX RANGE SCAN             | BIN$UX1xZvTYS6/gYw8CAAo/Yg==$0 |     1 |       |       |     2   (0)| 00:00:01 |
+|  21 |     TABLE ACCESS BY INDEX ROWID   | RRL_SBORKA_PALLET_ROWS         |     1 |    49 |       |     3   (0)| 00:00:01 |
+----------------------------------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   6 - access(SYS_OP_MAP_NONNULL("P"."ST_NUMBER")=SYS_OP_MAP_NONNULL("from$_subquery$_002"."ST_NUMBER") AND 
+              SYS_OP_MAP_NONNULL("P"."ADDR")=SYS_OP_MAP_NONNULL("from$_subquery$_002"."ADDR") AND 
+              SYS_OP_MAP_NONNULL("P"."WARE_ID")=SYS_OP_MAP_NONNULL("from$_subquery$_002"."WARE_ID"))
+   7 - filter("PAGE_ROW_NUMBER">:PAGE_OFFSET)
+   8 - filter(ROWNUM<=:PAGE_END)
+  10 - filter(ROWNUM<=:PAGE_END)
+  12 - access("A"."ADDR"(+)="P"."ADDR")
+  14 - access("R"."PALLET_UID"="P"."PALLET_UID")
+  16 - filter("P"."CONDITION"<>2)
+  17 - filter("P"."CONDITION"<>2)
+  19 - access("A"."ADDR"(+)="P"."ADDR")
+  20 - access("R"."PALLET_UID"="P"."PALLET_UID")

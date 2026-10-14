@@ -1,0 +1,2 @@
+alter table RRL_ADDR_DISTANCE_MATRIX drop constraint RRL_ADDR_DM_DUR_BASIS_C;
+alter table RRL_ADDR_DISTANCE_MATRIX drop column DURATION_BASIS;

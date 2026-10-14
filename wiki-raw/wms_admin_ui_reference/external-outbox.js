@@ -44,6 +44,7 @@ async function loadOutbox() {
   });
   if (!response.ok) throw new Error(`Outbox HTTP ${response.status}`);
   externalState.events = await response.json();
+  await loadRegulatoryRuntime();
   renderOutboxRows();
   outboxEl("externalStatusText").textContent = `Событий: ${externalState.events.length}`;
   await loadAdapters();
@@ -108,7 +109,7 @@ function renderAdapterRows() {
       <td>${escapeExternal(row.business_key ?? "")}</td>
       <td>${row.http_status ?? ""}</td>
       <td>${escapeExternal(row.status ?? "")}</td>
-      <td>${escapeExternal(row.external_status ?? "")}</td>
+      <td>${escapeExternal(row.simulation ? "Имитация; квитанции государства нет" : (row.external_status ?? "") + " · квитанция не проверена")}</td>
     `;
     tr.addEventListener("click", () => loadAdapterDetail(row.adapter_request_id));
     tbody.appendChild(tr);
@@ -184,7 +185,11 @@ function initExternalOutbox() {
     outboxEl(id).addEventListener("change", () => loadOutbox().catch(showExternalError));
   }
 
-  loadOutbox().catch(showExternalError);
+  const eventId = new URLSearchParams(location.search).get("event_id");
+  if (eventId && /^[1-9]\d{0,17}$/.test(eventId)) {
+    outboxEl("externalStatusText").textContent = "Открывается сообщение " + eventId;
+    loadOutboxDetail(eventId).then(() => loadRegulatoryRuntime()).catch(showExternalError);
+  } else loadOutbox().catch(showExternalError);
 }
 
 function showExternalError(error) {
@@ -195,4 +200,12 @@ if (window.wmsAdminAuth && window.wmsAdminAuth.state.user) {
   initExternalOutbox();
 } else {
   window.addEventListener("wms-admin-auth-ready", initExternalOutbox, { once: true });
+}
+
+async function loadRegulatoryRuntime() {
+  const owner = JSON.stringify([externalApiBase(), window.wmsAdminAuth?.state.user?.username]);
+  const response = await fetch(externalApiBase() + "/api/integrations/regulatory/runtime", {headers: externalHeaders()});
+  const result = await response.json();
+  if (owner !== JSON.stringify([externalApiBase(), window.wmsAdminAuth?.state.user?.username])) return;
+  outboxEl("regulatoryRuntimeStatus").textContent = response.ok ? result.message : "Не удалось подтвердить режим внешнего обмена.";
 }

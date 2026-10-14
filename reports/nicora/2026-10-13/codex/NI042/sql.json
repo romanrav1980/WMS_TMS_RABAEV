@@ -1,0 +1,9 @@
+[
+  [
+    "gzsmtms86f9x6",
+    6,
+    57.116,
+    1003,
+    "select l.ARTICUL,           case when exists(select 1 from RRL_ARTICULS a where a.ACTICUL=l.ARTICUL "
+  ]
+]

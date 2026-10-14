@@ -1,0 +1,16 @@
+{
+    "source_sha256":  {
+                          "apply.sql":  "38506EAD2D4668779596A8EDD180C6F993A75DF16E35EC9535727758BAFD56DB",
+                          "000_before_root.sql":  "18E1B320679741DE76190352FDA17DF2049054C8AF0EFD0DBC41055ACBCAED8F",
+                          "003_root_contract.sql":  "CB48350CA8F3DBFF41248550CA8D41973BAA71652B7CAAC2DC61EEE8686DAB9A",
+                          "rollback.sql":  "699D90C0194DD8FFA091D1A66E3588616C0B9DE29802F323D1B73F22826E8AFF",
+                          "000_before_finish.sql":  "5FF7FE87029781B84F9BB4F925476C8B8F4BC0CD4C365D6104A238964FCA54DD",
+                          "002_finish_body.sql":  "E0CBE4A4F69451C44B031E55B770D08A643C0B7197D8DD6005B2DAFA13538F08",
+                          "003_root_body.sql":  "96355355554703188F9D28007E5BD8028714EF883B5F10E4D8D6F9681C903EB7",
+                          "002_finish_contract.sql":  "E9406D1EEE1AE340E9CF6F2C69C5AD3F3DABEBE65E6EB83B776119EFACE2F2BE",
+                          "verify.sql":  "16587A5078F5353C8E05DE480D31B676ED5CC11235BD7BC62321D9587035ECAD",
+                          "001_access.sql":  "38DB044D3128F6DE2458529FF42999908363C2F8BD1F766DC19C89D6924ABBA5"
+                      },
+    "recovery":  "saved live package sources and paired rollback; no quantity/history deletion or database copy",
+    "migration_id":  "2026-10-10-169-wave-deferred-demand"
+}

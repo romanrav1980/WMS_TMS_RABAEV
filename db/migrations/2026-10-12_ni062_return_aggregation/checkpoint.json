@@ -1,0 +1,20 @@
+{
+  "migration_id": "2026-10-12-619-return-aggregation-custody",
+  "status": "PREPARED_NOT_APPLIED",
+  "source_sha256": {
+    "000_before_rrl_iw_agg_scan_package.sql": "6eade9de7a01435c434291db94c3c9c81ea90a63385de021a74b1d77069c00bd",
+    "000_before_rrl_iw_agg_scan_package_body.sql": "f7d226b312dc896018689c853955c21cdea787ea841b06de407f3ecf98d606c9",
+    "000_before_rrl_store_mark_core_package_body.sql": "8612feb2828a492474170a841f476a0fafda1506ad884adc2973df3835234517",
+    "000_before_rrl_store_return_unit_core_package.sql": "15cfdb41fe54902d02921c49c43b4e0e635157bd1e744807e521c4f806761331",
+    "000_before_rrl_store_return_unit_core_package_body.sql": "ceee8ec46e984a7a36a5253a06bc6a3906f75efd522790c0174e3fe0c10d4556",
+    "001_shared_resolver_access.sql": "8c15ee4245c678a37046d2c3894dc11043a342f2be69697049d150c0a931a974",
+    "002_return_unit_core.sql": "8d6cc56f986c0b7d45026119da65c8a989a81ad6378c574223bd39b9aa4b13bd",
+    "003_ledger.sql": "fd64dc7ee0ca0e9356a8b717aa932a98907fe415f664afb8017c172235a04661",
+    "apply.sql": "74790b6b006c08f2b8b922d58dfb8db009650cd41cd349fe8bf1a26ea21515c0",
+    "rollback.sql": "8922342b508294eef7929425afc00c8acc11b89a7fe0ad8fa3cdbb17f4df9a4d",
+    "verify.sql": "a2dc1cf6a75783cfd5c9a58420dd0eb2625eb08c0cc7736ce36d002064c056a9"
+  },
+  "scope": "Existing return custody/receive unit owner delegates registered aggregation expansion to shared resolver; no new units, stock writer or warehouse tree.",
+  "limits": "Original registered aggregate must retain current unit origin and allowed current profile/level/version/lifecycle. Moving to new return UID does not silently re-authorize old aggregation; future lifecycle/repacking separate.",
+  "recovery": "Fresh shared resolver spec and return core body captured; compatibility rollback restores prior code only before new aggregate custody facts."
+}

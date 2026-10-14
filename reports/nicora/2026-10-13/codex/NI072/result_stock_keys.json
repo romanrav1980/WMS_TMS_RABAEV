@@ -1,0 +1,38 @@
+{
+  "9807": {
+    "counts": {
+      "stock_quantity_invariants": 0,
+      "physical_unit_composition": 0
+    },
+    "documents": {
+      "stock_quantity_invariants": {
+        "available": true,
+        "document_kind": "STOCK_ROW",
+        "document_ids": [],
+        "stock_rows": [],
+        "limit": 20,
+        "has_more": false,
+        "scope": "CURRENT_STOCK_SNAPSHOT"
+      },
+      "physical_unit_composition": {
+        "available": true,
+        "document_kind": "STOCK_ROW",
+        "document_ids": [],
+        "stock_rows": [],
+        "limit": 20,
+        "has_more": false,
+        "scope": "CURRENT_STOCK_SNAPSHOT"
+      }
+    },
+    "forced_empty_query": true,
+    "http_documents": {}
+  },
+  "sql": [
+    [
+      "6dd5793ktn6nq",
+      1,
+      65.384,
+      1120
+    ]
+  ]
+}

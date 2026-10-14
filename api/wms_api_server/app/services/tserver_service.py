@@ -392,69 +392,7 @@ class TserverService:
     def confirm_lot_check(self, usscc: str, request: LotCheckRequest) -> None:
         usscc = normalize_pallet_identifier(usscc)
         from ..modules.inventory.public import post_existing_terminal_quality
-        if post_existing_terminal_quality(self.gateway, usscc, request) is not None:
-            return
-        statements: list[tuple[str, dict[str, Any]]] = [
-            ("delete from LOT_AUDIT where SSCC = :usscc", {"usscc": usscc}),
-            ("delete from LOT_AUDIT_ERROR_LINES where SSCC = :usscc", {"usscc": usscc}),
-        ]
-        condition = PICK_ZONE
-
-        if request.error_count == 0:
-            statements.append(
-                (
-                    """
-                    declare
-                      v_ret varchar2(50);
-                    begin
-                      v_ret := RABAEV.RRL_SET_SCAN_PROOVE2(
-                        PALLET_UID1 => :usscc,
-                        count_of_errors1 => :error_count,
-                        prim1 => '',
-                        SBORSHIK1 => :user_id,
-                        KLADOVSHIK1 => ''
-                      );
-                    end;
-                    """,
-                    {"usscc": usscc, "error_count": request.error_count, "user_id": request.user_id},
-                )
-            )
-
-        for item in request.errors:
-            if item.condition == SHORTAGE:
-                condition = ERROR_ZONE
-            statements.append(
-                (
-                    """
-                    update RABAEV.RRL_SBORKA_PALLET_ROWS
-                       set SOBRANO = :qty
-                     where PALLET_UID = :usscc
-                       and ARTICUL = :uid
-                    """,
-                    {"qty": item.qty, "usscc": item.usscc or usscc, "uid": item.uid},
-                )
-            )
-
-        for item in request.vp_lines:
-            statements.append(
-                (
-                    """
-                    update RABAEV.RRL_SBORKA_PALLET_ROWS
-                       set TIME_OF_CHECKING = to_date(:checked_at, 'dd.mm.yyyy HH24:MI:ss')
-                     where PALLET_UID = :pallet_uid
-                       and ARTICUL = :uid
-                    """,
-                    {"checked_at": str(item.checked_at), "pallet_uid": item.pallet_uid, "uid": item.uid},
-                )
-            )
-
-        statements.append(
-            (
-                "insert into LOT_AUDIT (SSCC, CONDITION) values (:usscc, :condition)",
-                {"usscc": usscc, "condition": condition},
-            )
-        )
-        self.gateway.execute_many(statements)
+        post_existing_terminal_quality(self.gateway, usscc, request)
 
     def confirm_place_check(self, request: PlaceCheckRequest) -> None:
         statements: list[tuple[str, dict[str, Any]]] = [

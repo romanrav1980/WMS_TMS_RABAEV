@@ -1,0 +1,48 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WMS — погрузка и выезд</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="transport-loading-temperature.css?v=20261014-1207"></head>
+<body class="auth-pending" data-required-permission="transport_dispatch_view"><div class="app"><aside class="sidebar"><div class="brand">WMS</div><nav class="nav" data-admin-nav data-active-nav="transport-loading"></nav></aside><main class="workspace">
+<header class="topbar"><h1>Фактическая погрузка и выезд</h1></header>
+<section class="panel"><label>Рейс<input id="tripId" inputmode="numeric"></label><button id="tripLoad">Показать назначение и факты</button><p id="loadStatus" role="status"></p><p id="tripSummary"></p><div class="table-wrap"><table><thead><tr><th>СТ</th><th>Физическое место</th><th>Статус погрузки</th><th>Машина</th><th>Ворота</th><th>Тип верхнего места</th><th>Температура при погрузке</th></tr></thead><tbody id="tripRows"></tbody></table></div></section>
+<section class="panel" data-permission="stock_posting_shipping"><h2>Подтвердить погрузку верхнего места</h2>
+<label>Поток<select id="loadMode"><option value="HU">Верхний HU</option><option value="SINGLE">Самостоятельный CASE / целая паллета по СТ</option><option value="RECONCILE">Ранее списанное целое HU: подтвердить погрузку</option></select></label><label>Идентификатор СТ для самостоятельного места<input id="loadShipment" autocomplete="off"></label><label>Исходная операция отгрузки для ранее списанного HU<input id="loadOriginalOperation" autocomplete="off"></label><label>Идентификатор паллеты / контейнера<input id="loadIdentifier" autocomplete="off"></label><button id="loadComposition">Показать актуальный состав</button><p id="loadCompositionSummary"></p>
+<label>Скан грузового места<input id="loadScan" autocomplete="off"></label><label>Скан ячейки погрузки<input id="loadCell" autocomplete="off"></label>
+<label>Скан машины<input id="loadVehicle" autocomplete="off"></label><label>Скан ворот<input id="loadDock" autocomplete="off"></label>
+<label>Брутто всего места, кг<input id="loadGross" inputmode="decimal"></label><label>Ширина, м<input id="loadWidth" inputmode="decimal"></label><label>Глубина, м<input id="loadDepth" inputmode="decimal"></label><label>Высота, м<input id="loadHeight" inputmode="decimal"></label>
+<fieldset id="palletFloorPanel" class="loading-temperature" hidden><legend>Тип целой паллеты</legend>
+<p id="palletFloorStatus" role="status"></p>
+<label>Фактический тип<select id="palletFloorSelect" title="Выберите тип целой паллеты для проверки вместимости автомобиля."></select></label>
+<label>Основание подтверждения<input id="palletFloorReference" maxlength="100" autocomplete="off" title="Укажите запись осмотра или другое основание определения типа паллеты."></label>
+<button id="palletFloorConfirm" title="Сохранить тип с текущими сканами грузового места и ячейки. Количество товара не меняется.">Сохранить тип паллеты</button>
+</fieldset>
+<fieldset class="loading-temperature"><legend>Температура непосредственно при погрузке</legend>
+<p id="loadTempProfile">Покажите назначение рейса, чтобы прочитать текущий профиль машины.</p>
+<label>Версия температурного профиля<input id="loadTempVersion" readonly></label>
+<label>Измеренная температура, °C<input id="loadTempObserved" inputmode="decimal" maxlength="11" placeholder="Например, 3.5"></label>
+<label>Основание измерения<input id="loadTempReference" maxlength="100" autocomplete="off" placeholder="Номер записи или прибора"></label>
+<label><input id="loadTempConfirm" type="checkbox">Подтверждаю измерение непосредственно при этой погрузке</label>
+<p>Обязательно для товара с заданными температурными ограничениями. Ручное подтверждение сохраняется с фактом погрузки; оно не заменяет непрерывный контроль датчиком.</p>
+</fieldset>
+<fieldset><legend>Отдельные измерения физических коробок</legend><label><input type="checkbox" id="loadBoxWeightsEnabled">Подтверждаю отдельно измеренную массу каждой коробки</label><p>Для магазина с весовой приёмкой требуется масса каждой фактической коробки, включая неполную. Норматив товара не заменяет измерение.</p><div id="loadBoxRows"></div></fieldset>
+<button id="loadConfirm">Подтвердить фактическую погрузку</button><p>Сканируется одно верхнее место вместе с вложениями. Подтверждение сохраняет факт загрузки. Для ранее списанного HU исходный товар повторно не списывается. Все СТ места должны быть назначены этому рейсу и иметь действующий допуск.</p></section>
+<section class="panel" data-permission="stock_posting_shipping"><h2>Выгрузить до выезда</h2>
+<button id="unloadRefresh" title="Обновить фактически погруженные места выбранного рейса.">Обновить погруженные места</button>
+<label>Исходная погрузка<select id="unloadSource" title="Выберите погруженное место целиком. Выгружаются все вложенные места. Переданная водителю тара требует отдельного решения."></select></label><p id="unloadOrigin"></p>
+<label>Идентификатор паллеты<input id="unloadScan" autocomplete="off" title="Отсканируйте идентификатор фактически выгруженного места."></label>
+<label>Исходная ячейка<input id="unloadCell" autocomplete="off" title="Подтвердите возврат места в его исходную ячейку склада."></label>
+<a id="unloadTareRecovery" href="tare-load-recovery.html" data-permission="tare_view">Возврат и закрепление тары</a>
+<button id="unloadLoadSlots" data-permission="warehouse_task_view" title="Показать места хранения в исходной ячейке.">Показать места хранения</button>
+<label>Место хранения<select id="unloadSlot" title="Выберите свободное место, если ячейка разделена на места хранения."><option value="">Без отдельного места</option></select></label>
+<label>Скан места хранения<input id="unloadSlotScan" autocomplete="off" title="Подтвердите адрес выбранного места хранения."></label>
+<label>Машина<input id="unloadVehicle" autocomplete="off" title="Отсканируйте машину, из которой выгружено место."></label>
+<label>Ворота<input id="unloadDock" autocomplete="off" title="Отсканируйте ворота исходной погрузки."></label>
+<label>Причина<input id="unloadReason" maxlength="1000" title="Укажите причину выгрузки для истории и дальнейшего назначения."></label>
+<button id="unloadConfirm" title="Подтвердить физическую выгрузку; сервер восстановит товар и резерв исходного заказа одной операцией.">Подтвердить выгрузку</button>
+<button id="unloadRetry" hidden title="Повторить сохранённую команду с исходным идентификатором операции и сканами.">Повторить сохранённую выгрузку</button>
+<button id="unloadRestart" hidden title="После подтверждённого отказа исправить ввод и начать новую операцию.">Исправить данные после отказа</button><p id="unloadStatus" role="status"></p><div id="unloadQualityLinks" aria-label="Контроль выгруженных СТ"></div>
+</section>
+<section class="panel" data-permission="transport_dispatch_close"><h2>Выезд</h2><fieldset class="loading-temperature"><legend>Новое измерение перед выездом</legend><p id="departTempProfile">Для температурного товара подтвердите новое измерение перед выездом.</p>
+<label>Температура перед выездом, °C<input id="departTempObserved" inputmode="decimal" maxlength="11"></label>
+<label>Основание измерения перед выездом<input id="departTempReference" maxlength="100" autocomplete="off"></label>
+<label><input id="departTempConfirm" type="checkbox">Подтверждаю измерение непосредственно перед этим выездом</label>
+</fieldset><button id="tripDepart">Разрешить выезд после погрузки всех СТ</button><p>План и контроль не заменяют погрузку. Разрешение выезда проверяет факты на сервере и не списывает товар повторно.</p></section>
+<button id="loadArchive" hidden title="Сохранить повреждённый текст в архиве и перечитать серверный статус рейса; выполненную операцию это не отменяет.">Архивировать повреждённый запрос</button><button id="loadRetry" hidden>Повторить сохранённую операцию</button><button id="loadRestart" hidden>Исправить данные после подтверждённого отказа</button></main></div><script src="admin-nav.js"></script><script src="admin-auth.js"></script><script src="load-box-weights.js"></script><script src="pallet-floor-type.js?v=20261014-1207"></script><script src="wave-command-intent.js"></script><script src="transport-loading-intent.js"></script><script src="transport-loading.js?v=20261014-1433"></script><script src="transport-unloading.js"></script></body></html>
+

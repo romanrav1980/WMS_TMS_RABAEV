@@ -1,0 +1,2 @@
+# Qwen321–323
+SAP Quantity optional: use exact persisted original physicalunit BASE_QTY, explicit mismatch denied, oldbirth/code/profileversion/orderline proof mandatory. Current Source322 P3 receiving with newPLANNED1HUtask context323: nofactories. Atomic cancel-replan latefailure rollsback both statuses/journals/outbox; two contenders onlyone oldtask replacement; wrongHUversion/source/started/assigned/resource/session denied. Execute newtask only, oldCANCELLED forbidden, fact1HU moves3EAwhole tree once. No realhardware/GovACK assumed.

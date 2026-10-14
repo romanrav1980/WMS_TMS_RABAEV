@@ -1,0 +1,60 @@
+{
+  "native": {
+    "CP553000000001131": {
+      "shipment_identifier": "CASE.QC.ST:4bb85f1f15:1131",
+      "case_content_version": 20,
+      "ready": false,
+      "requested_identifier": "CP553000000001131"
+    },
+    "CASE:1131": {
+      "shipment_identifier": "CASE.QC.ST:4bb85f1f15:1131",
+      "case_content_version": 20,
+      "ready": false,
+      "requested_identifier": "CASE:1131"
+    },
+    "CASE.QC.ST:4bb85f1f15:1131": {
+      "shipment_identifier": "CASE.QC.ST:4bb85f1f15:1131",
+      "case_content_version": 20,
+      "ready": false,
+      "requested_identifier": null
+    },
+    "slow_sql": [
+      [
+        "a9rymgq4m0ncu",
+        2,
+        11.433,
+        17
+      ],
+      [
+        "a9rymgq4m0ncu",
+        1,
+        17.32,
+        10
+      ]
+    ]
+  },
+  "http": {
+    "CP553000000001131": {
+      "status": 200,
+      "canonical": "CASE.QC.ST:4bb85f1f15:1131",
+      "version": 20,
+      "ready": false,
+      "requested_identifier": "CP553000000001131"
+    },
+    "CASE:1131": {
+      "status": 200,
+      "canonical": "CASE.QC.ST:4bb85f1f15:1131",
+      "version": 20,
+      "ready": false,
+      "requested_identifier": "CASE:1131"
+    },
+    "CASE.QC.ST:4bb85f1f15:1131": {
+      "status": 200,
+      "canonical": "CASE.QC.ST:4bb85f1f15:1131",
+      "version": 20,
+      "ready": false,
+      "requested_identifier": null
+    },
+    "unknown_source": 403
+  }
+}

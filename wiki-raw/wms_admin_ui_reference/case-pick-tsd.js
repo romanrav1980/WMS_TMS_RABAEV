@@ -73,6 +73,13 @@ async function cpTsdFetch(path, options = {}) {
 }
 
 async function cpTsdLoad() {
+  const selectedTaskId=Number(cpTsdQuery().get("case_task_id"));
+  if(Number.isSafeInteger(selectedTaskId)&&selectedTaskId>0){
+    const actor=cpTsdUser(),api=cpTsdApiBase();
+    const task=await cpTsdFetch("/api/case-pick/tasks/"+selectedTaskId);
+    if(actor!==cpTsdUser()||api!==cpTsdApiBase())return;
+    cpTsd.tasks=[task];cpTsd.task=task;cpTsd.lineIndex=0;cpTsdRender();return;
+  }
   if (!cpTsd.session?.session_id) {
     cpTsd.tasks = [];
     cpTsd.task = null;
@@ -107,6 +114,8 @@ function cpTsdRender() {
   cpTsdEl("cpTsdCounter").textContent = lines.length ? `${cpTsd.lineIndex + 1} / ${lines.length}` : "0 / 0";
   cpTsdEl("cpTsdTaskId").textContent = task ? `#${task.case_pick_task_id}` : "-";
   cpTsdEl("cpTsdStatus").textContent = task?.status || "-";
+  cpTsdEl("cpTsdTare").textContent = task ? (task.tare?.booking_operation_id ? "Пригодная тара закреплена за сборкой." : "Для начала сборки требуется закрепить пригодную тару. Свободно: " + (task.tare?.available_quantity ?? "не выполнен пересчёт")) : "";
+  cpTsdEl("cpTsdTarePlan").href = task ? "tare-assembly.html?place_kind=CASE&place_id="+task.case_pick_task_id+"&ware_id="+task.ware_id : "tare-assembly.html";
   cpTsdEl("cpTsdStatus").className = `task-badge ${cpTsdStatusClass(task?.status)}`;
   cpTsdEl("cpTsdOperation").textContent = task ? "Собрать клиентский поддон" : "Нет поддона";
   cpTsdEl("cpTsdCell").textContent = line?.cell_code || "-";
@@ -120,12 +129,12 @@ function cpTsdRender() {
   cpTsdEl("cpTsdScanBox").value = "";
   cpTsdEl("cpTsdFactQty").value = "";
   cpTsdEl("cpTsdFactQty").placeholder = line ? cpTsdNum(line.planned_qty) : "план";
-  cpTsdSetState(task ? `${task.status}: ${task.assigned_to || "свободно"}` : "Нет заданий");
+  cpTsdSetState(task && !task.wave_pick_released_at ? "Отбор ещё не разрешён диспетчером: ожидается пополнение и покрытие резерва волны." : (task ? task.status + ": " + (task.assigned_to || "свободно") : "Нет заданий"));
+  window.dispatchEvent(new CustomEvent('wms-case-render',{detail:{task}}));
 }
 
 function cpTsdNum(value) {
-  const num = Number(value || 0);
-  return Number.isInteger(num) ? String(num) : num.toFixed(3);
+  return window.caseQuantity.display(value);
 }
 
 function cpTsdStatusClass(status) {
@@ -136,8 +145,11 @@ function cpTsdStatusClass(status) {
 }
 
 async function cpTsdTaskAction(action) {
+  if(window.wmsCaseType?.hasPending())throw new Error("Сначала повторите сохранённое переопределение типа паллеты.");
   const task = cpTsd.task;
   if (!task) throw new Error("Нет выбранного поддона");
+  if (action==="start" && !task.started_at && !task.tare?.booking_operation_id) throw new Error("Закрепите пригодную тару перед началом сборки.");
+  if (["claim", "start"].includes(action) && !task.wave_pick_released_at) throw new Error("Отбор волны ещё не разрешён диспетчером.");
   const payload = {
     resource_id: cpTsd.session?.resource_id || null,
     resource_session_id: cpTsd.session?.session_id || null,

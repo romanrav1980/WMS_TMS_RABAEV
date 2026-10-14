@@ -1,0 +1,11 @@
+.store-receipt-act { border:1px solid #c7d8eb; border-radius:12px; padding:18px; background:#f8fbff; color:#18334e; }
+.store-receipt-act h3 { margin:0 0 12px; font-size:1.15rem; }
+.store-receipt-act p { line-height:1.5; overflow-wrap:anywhere; }
+.store-receipt-act table { width:100%; min-width:700px; border-collapse:collapse; background:white; }
+.store-receipt-act th, .store-receipt-act td { padding:10px 12px; border-bottom:1px solid #dbe5ef; text-align:left; vertical-align:top; }
+.store-receipt-act th { background:#edf3f9; font-size:.85rem; }
+.store-receipt-act td:not(:first-child) { white-space:nowrap; font-variant-numeric:tabular-nums; }
+.store-receipt-act td:first-child { max-width:330px; overflow-wrap:anywhere; }
+.store-receipt-act li { margin:8px 0; }
+.store-receipt-act a { color:#125caa; text-decoration:underline; }
+@media(max-width:600px) { .store-receipt-act { padding:12px; } }

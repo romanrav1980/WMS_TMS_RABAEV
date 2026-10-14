@@ -1,0 +1,35 @@
+from pathlib import Path
+import json
+read=lambda p:Path(p).read_text(encoding="utf-8");files={}
+page="""# NI01.1 — выбор позиции и закрытая приёмка
+
+1034–1037: прямая ссылка открывает supply_order_id либо его совместимый alias order_id и точный line_number. Конфликт разных оснований отклоняется, неизвестная позиция не выбирается молча. Номер позиции сравнивается как идентификатор без числового округления; строковое dataset и числовой ответ читаются согласованно. Выбранная строка выделена, добавлен отступ для навигации под закреплённой шапкой.
+
+Закрытая поставка показывает «Остаток по заказу», правила и историю. Подтверждение приёмки и выпуск новой этикетки отключены. issueLabel дополнительно проверяет открытое основание/позицию/правила/положительный остаток до запроса. Внутреннее обновление после уже подтверждённого ответа передаёт confirmedRefresh в выбор товара при заблокированном пользовательском вводе; обычный выбор во время операции не допускается. Доступность этикетки пересчитывается после завершения/повтора/сброса.
+
+Browser27–28: сохранённая поставка908/order3aa116e51983443e8b20d055195a22b8, строка2 выбрана по ссылке, загружены WMS-профили CRPT/TOBACCO и EGAIS/ALCOHOL. Основание REVERSED, новая приёмка и этикетка отключены. Это dev-карточка с двумя профилями, не подтверждение законного государственного ACK. История строки1 содержит исходную приёмку3EA и текущий0/резерв0; источник не пересоздавался.
+
+JS947 повторно прошёл на изменённом контроллере: delegated button/keyboard, текущая строка/политика, закрытый/нулевой остаток, stale policy послеauth. JS1036 подтвердил явный line_number/alias/числовойномер, закрытые приёмку/этикетку и отсутствие POST товара/этикетки. В реальном браузере автоматизированные нажатия «Выбрать» снова не дали наблюдаемого перехода; подтверждены адресная загрузка/выделение и текущие данные. Ручное нажатие и новая реальная приёмка после confirmedRefresh остаются независимыми случаями; не записаныPASS.
+
+SQL1038: SKU policy15.28ms/205.5buf(2executions). Решение master_data: сохранить текущий SKU-keyed запрос и существующие ключи policy/profile; измерить план/кэш по версии на большом справочнике отдельным ticket, без нового индекса и промышленной мощности. Backend запросы/проводки не изменялись.
+
+ПолныйNI01.1 остаётся открытым по согласованному реальному SAP-контракту и остальным бизнес/оборудование/независимым случаям. Скриншоты27–28 и задания Qwen сохранены.
+"""
+files["reports/nicora/2026-10-13/22-receiving-line-report.md"]=page
+files["reports/nicora/2026-10-13/22-receiving-line-evidence.json"]=json.dumps({"order_id":"3aa116e51983443e8b20d055195a22b8","line_number":"2","source_state":"REVERSED","addressed_selection_browser":True,"manual_button_browser_confirmed":False,"stock_write_performed":False,"sql1038":json.loads(read("tmp/sql1038_receipt_policy.json"))},indent=2)
+summary="1034–1039 receiving explicitline/order alias/current source/selectionhighlight, closedreceipt+newlabeldisabled/closedbalance wording/internal confirmedRefresh. JS947/1036PASS; actualBrowser27–28 retained908 line2/CRPT+EGAIS sourceREVERSED/no stockbirth; manualclicknotobserved/notPASS. SQL1038policy15.28ms205.5buf preservekeys/master_data versioncache+plan backlog. Report22/fullNI01.1open."
+p="wiki/components/nicora_receiving_history_20261013.md";files[p]=read(p)+"\n## Checkpoint1039\n\n"+summary+"\n"
+p="wiki/index.md";files[p]="- [Checkpoint1039: выбранная позиция приёмки](components/nicora_receiving_history_20261013.md):alias+line/currentprofiles/closedsource/labeldisabled/report22/screens27–28.\n"+read(p)
+p="wiki/log.md";files[p]=read(p)+"\n- 2026-10-13 checkpoint1039: "+summary+"\n"
+p="wiki/requirements/nikora_delivery_v55/implementation_plan.json";v=json.loads(read(p));v["planRevision"]=44
+next(x for x in v["increments"]if x["id"]=="NI01.1")["implementedSlices"].append(summary);files[p]=json.dumps(v,ensure_ascii=False,indent=2)
+p="wiki/requirements/nikora_delivery_v55/implementation_plan.md";files[p]=read(p).replace("**Revision 43,","**Revision 44,")+"\nCheckpoint1039: позиция поставки/alias/closedview/labelguard/confirmedRefresh, actual908 readonly/currentprofiles/Node9471036/report22/screens27–28. Полные сprints не закрывались без результата.\n"
+p="wiki/requirements/nikora_delivery_v55/execution/active/ni01_1.md";files[p]=read(p)+"\n1034–1039: прямое открытие позиции, closedview/этикетка/confirmedRefresh; [отчёт22](../../../../../reports/nicora/2026-10-13/22-receiving-line-report.md), actualreadonly908/currentprofiles/JS9471036. Manualclick/newreceiptrefresh/SAPactualcontract и весьспринт остаются открыты.\n"
+p="reports/nicora/2026-10-13/index.html";files[p]=read(p).replace("</main>",'<article><h2>22 · Позиция приёмки и закрытое основание</h2><a href="22-receiving-line-report.md">Отчёт №22</a><p>Строка2, правила маркировки, просмотр истории; новые операции закрыты.</p><a href="screenshots/28-receiving-closed-state.png">Скриншот формы</a></article></main>')
+p="wiki/runbooks/nicora_active_work.md";files[p]="# Актуальный checkpoint1039,13.10.2026 около19:54MSK\n\nДо20:00MSK=17:00UTC продолжать; all18неполностьюзавершены/условиеGithubнеисполнено. Plan44/currentNI03.3. Новые большие изменения передdeadline не начинать; finishencoding/evidence/hand-over. Ниже старые фазы исторические.\n\n"+read(p)+"\n## Checkpoint1039\n"+summary+"\nBrowser receiptLoaded/receiptLive newChrome2tab821857743 authoriseddevadmin; noreset. CurrentURLreceiving?order_id=3aa...&line_number2&v1037#receiptLines/screen28. ExistingcaseTarget821857740currentcustomer2133?v1028/screen26/reportFsavailable. Native source987 retainedP20H20 CASE1131ver10slot224QI; parentHU8/CASE1132ver6slot222. Source908/910own0/protected688P3H3unchanged. CurrentAPI1030/pid62076/newFactualReader scoped/typedfactory; latestJS1037noPythonrestartneeded. encoding31740PASS before1034–1039 late files; finalencodingpending. No agents/copies/broadgates/stockbirth/commit/push. Fullsprints1devcomplete/17fullremain; reports01–22/screens01–28 (21updatedinplace). At17UTC authorisedhardstop, honestfinalwithreportindex/plan and actualremaining, no falseallcomplete/Githubpublication.\n"
+qroot=list(Path(".").glob("*/NI01.1"))[0].parent
+files[str(qroot/"NI01.1"/"22-receiving-selection-closed-refresh.md")]="""# Qwen: позиция приёмки
+Report22. Source908 не пересоздавать/не принимать снова. Read-only: order3aa116e51983443e8b20d055195a22b8 line2/REVERSED, current WMS CRPT+EGAIS policy, historyline1received3/current0. Alias/orderline/conflictingIDs/unknownline/numericdataset/currentactor. Closed source disablesreceipt+newlabel, balance notreadyreceipt. Manualclick/browserkeyboard отдельноподтвердить; automationнеподтвердила.
+На собственной открытой поставке проверить подтверждённое received response→busyinternalrefresh selectsline/currentpolicy→controls restored. Внешний выбор во времяbusyblocked; uncertain response repeatsoriginalID/body. Не считатьNode callbackтестреальнойтоварнойприёмкой. Скриншоты/SQLрешение/сохранениеистории/никакихfakeGovACK.
+"""
+print(json.dumps(files,ensure_ascii=True))

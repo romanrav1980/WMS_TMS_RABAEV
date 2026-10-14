@@ -1,0 +1,43 @@
+from pathlib import Path
+import json,re
+out={};f=Path("db/migrations/2026-10-11_ni061_marked_receive")
+out[str(f/"006_ledger.sql")]="""merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-226-original-marked-interwarehouse-receive'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Same original marked physical units received through existing stock owner',sysdate,user,'db/migrations/2026-10-11_ni061_marked_receive/apply.sql','db/migrations/2026-10-11_ni061_marked_receive/rollback.sql','APPLIED','Actual original225 FULL.QA:13508027ed/sourceTT33542/target33543/targetWARE51365792: IW226.UNLOAD custody0; IW226.RECEIVE:13508027ed0 native+3/P3H0/physical3/codes6/same keys/version8. Exact frozen source and current UNIT profile QR matrix. Missing/duplicate denied, native full rollback, concurrent one winner/current wrongWARE403/replay/protected20/20. Restored missing original interware dispatch arms in current root. Native VALID/quality24/bothTS/557files0cycles76debt. No real regulatory ACK/aggregate or nested acceptance.');
+commit;
+"""
+out[str(f/"apply.sql")]="".join("@@"+x+"\n"for x in["001_mark_scan.sql","002_unit_core.sql","003_receiving.sql","004_root.sql","005_recompile.sql","006_ledger.sql"])
+p=Path("db/migrations/2026-10-08_stock_posting_core/current_runtime_manifest.json");m=json.loads(p.read_text(encoding="utf-8"))
+for package,sql in[("RRL_INTERWARE_MARK_SCAN","001_mark_scan.sql"),("RRL_STOCK_UNIT_CORE","002_unit_core.sql"),("RRL_STOCK_INTERWARE_REC","003_receiving.sql"),("RRL_STOCK_POSTING_API","004_root.sql")]:
+ matches=[x for x in m["components"]if re.search(r"create\s+or\s+replace\s+package(?:\s+body)?\s+"+package+r"\s",(p.parent/x).read_text(encoding="utf-8"),re.I)]
+ m["components"]=[x for x in m["components"]if x not in matches]+["../2026-10-11_ni061_marked_receive/"+sql]
+ if package not in m["packages"]:m["packages"].append(package)
+m["additional_scripts"].append("../2026-10-11_ni061_marked_receive/005_recompile.sql");out[str(p)]=json.dumps(m,indent=2)+"\n"
+out["wiki/database/nicora_ni061_marked_receive_20261011.md"]="""# NI06.1: приёмка исходных маркированных единиц
+226 APPLIED RABAEV/orcl. [[nicora_ni061_marked_source_20261011]]; [[nicora_ni061_marked_receive_design_20261011]].
+Existing receipt owner validates original DEPARTED/whole root/sourcezero/docks/receiving blocked cell/current actor. Exact frozen225 manifest matches original source fingerprint/current ISSUED/null-HARD/versioned units; sorted STOCK50/UNIT60 physical locks in existing root. Dedicated transit scan validator reuses existing canonical mark registry/current SKU mandatory profile matrix, UNIT modes only/max10000units/20000scans. Missing, duplicate or foreign tuple cannot receive. Codes in multiple systems remain one physical quantity. Existing UNIT owner moves exact original units to target AVAILABLE/version+1/no HARD, birth identity/codes unchanged; guard validates old source effect. Existing balance/event/immutable receipt/SAP outbox remain one transaction. No second writer or new unit birth.
+Current target actor checks before saved replay/after wait. Typed API optional scans preserve old ordinary request metadata; scoped native manifest/profile reader. Raw existing interwarehouse UI now reads source/profile, captures scanned units with bounded persisted draft and durable pending intent; authentication changes clear displayed scope. Aggregation/nested cargo not accepted by this UNIT slice; no government ACK.
+Actual original225 tag13508027ed/UIDFULL.QA:13508027ed/ST641362/sourceTT33542/target33543/targetWARE51365792 -> IW226.UNLOAD0 -> IW226.RECEIVE:13508027ed0 +3/P3H0/cellQI22613508027ed/3same units AVAILABLE/version8/6samecodes. Missing/duplicate409/native transaction rollback restores sourceISSUED7/P0/no receipt; concurrent different IDs one200/one409; exact replay/current wrongWARE403/source reader403 then own replay preserved. Protected13520/20. Target P3 intentionally retained for original putaway/onward, not raw-cleared.
+Current root had lost original119-121 interware dispatch arms during historical owner replacement; actual initial custody call returned COMMAND_HANDLER_NOT_INSTALLED without fact. Restored original REC/PUT/CUSTODY package routing in current root, keeping later functions/source. This contradiction requires broader dispatch coverage follow-up rather than accepting historical slice presence as current runtime proof.
+Native all VALID/no errors; quality24/bothTS/557files0cycles76debt. Actual receipt INSERT31gkxjd8911t2 10.118ms/2 and same-unit UPDATE2umab17msx4jh4.504ms/2: retain original unique source/code/unit indexes and bounds, no duplicate index/throughput claim.
+Next original marked putaway/onward/custody, current handler coverage, nested/packing/discrepancy and real external exchange remain open.
+"""
+for path,line in[
+("wiki/index.md","- [Приёмка прежних маркированных единиц](database/nicora_ni061_marked_receive_20261011.md):226 original225->native targetP3H0/units3 codes6/same identity/version8/current scope/rollback/concurrent one winner."),
+("wiki/log.md","2026-10-11:226 original marked interwarehouse receipt applied existing receipt/UNIT owners, exact frozen source/current UNIT-profile QR coverage/no new birth/no second stock writer. Same225 actual source->UNLOAD0->RECEIVE:13508027ed0 targetP3H0/3units6codes/version8/native rollback/concurrent/replay/wrongWARE403/protected20/20. Restored missing existing119-121 interware root dispatch; broader current coverage follow-up. NativeVALID/quality24/bothTS/557cycles0debt76. SQLreceipt10.118/unitupdate4.504ms retain indexed bounds. Qwen tasks stored; marked putaway/onward next."),
+("wiki/requirements/nikora_delivery_v55/execution/active/ni06_1.md","11.10.2026:226 original marked standalone receipt now native +P/same-unit availability/no HARD/current UNIT QR matrix. Actual225 source3/codes6 target P3H0/version8 with rollback/concurrent/replay/currentscope evidence. Existing119-121 dispatch restored; marked putaway/onward/nested/packing/external ACK still open.")]:
+ p=Path(path);out[path]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
+p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"));next(x for x in j["increments"]if x["id"]=="NI06.1").setdefault("implementedSlices",[]).append("226 same original marked standalone receipt/UNIT QR matrix/target P3H0/original3 units6 codes/currentscope/rollback/concurrent/replay/no government ACK; marked onward/nesting remain");out[str(p)]=json.dumps(j,ensure_ascii=True,indent=2)+"\n"
+root=next(p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md"));out[str(root/"NI06.1"/"226_marked_original_receipt.md")]="""# Qwen:226 — исходная маркированная межскладская приёмка
+Использовать НОВУЮ изолированную паллету/WARE/пользователей с исходным штатным pick/bind/QC/load/depart/plan и 225 manifest. Уже принятый13508027ed — неизменяемое доказательство, не повторять его фикстуру и не удалять историю.
+1. UNIT-профили WMS: один physical unit с CRPT+EGAIS синтетическими кодами. Количество3, кодов6. Не считать это реальной государственной применимостью/ACK.
+2. Старые обычные тела API без scans должны сохранять хэш/replay; отмеченный источник без exact frozen fingerprint/refused.
+3. Выгрузка custody0, правильные pallet/vehicle/dock/current receiver; отсутствие/чужой QR/дубликат/профиль/частичное количество/unsupported aggregate mode -> отказ без запасов/событий.
+4. Native outer rollback после execute: P и три исходных UNIT одновременно восстановлены; commit: source0/target3H0/same keys/codes/birth UID/version+1/no new unit inserts.
+5. Одновременные разные receive IDs -> один победитель; sameID replay -> тот же результат; другое содержимое -> conflict; current actor foreignWARE после commit ->403.
+6. Одна запись журнала + один immutable receipt + SAP INTERWAREHOUSE_RECEIVED pending; original first ship/customer fulfillment unchanged.
+7. UI: source/profile selection, Enter scanner, duplicatedraft, authswitch, saved intent retry, quota failure before pending, no QR from other plan. Reader scoped.
+8. Проверить CURRENT ROOT original INTERWARE_UNLOAD/RECEIVE/PUTAWAY_PLAN/CUSTODY_RELEASE installed, not only package existence. Далее marked original putaway/onward отдельно.
+9. Длинные SQL: оригинальные PK/кодовый индекс, max10000units/20000scans; записать явное решение. Не устраивать массовую нагрузку общих данных.
+"""
+print(json.dumps(out,ensure_ascii=True))

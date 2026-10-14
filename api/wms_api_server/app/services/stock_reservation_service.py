@@ -107,133 +107,29 @@ class StockReservationService:
         return rows[0] if rows else None
 
     def create_reservation(self, request: StockReservationCreateRequest, actor: str | None = None) -> int:
-        from ..modules.inventory.infrastructure.reservation_commands import post_reservation
+        from ..modules.inventory.public import post_existing_reservation as post_reservation
         posted = post_reservation(self.gateway, "CREATE", request, actor)
-        if posted is not None:
-            return int(posted["reservation_id"])
-        data = _model_dict(request)
-        self._validate_kind_scope_status(data)
-        self._validate_physical_fields(data)
-        reservation_id = self._next_id()
-        self.gateway.execute(
-            """
-            insert into RRL_STOCK_RESERVATION (
-              RESERVATION_ID, RESERVATION_KIND, RESERVATION_SCOPE, RESERVATION_DOMAIN,
-              SOURCE_DOC_TYPE, SOURCE_DOC_ID, SOURCE_LINE_ID, TASK_ID,
-              CUSTOMER_ID, CUSTOMER_ORDER_ID, PRODUCTION_ORDER_ID,
-              PICK_PLAN_ID, PICK_PLAN_LINE_ID, PICK_WAVE_ID, PICK_WAVE_LINE_ID,
-              ARTICUL, QTY, UNIT_CODE, WARE_ID, CELL, BATCH_ID, PROD_BATCH_ID,
-              UID_PALLET, SSCC, STATUS, PRIORITY, CREATED_BY
-            ) values (
-              :reservation_id, :reservation_kind, :reservation_scope, :reservation_domain,
-              :source_doc_type, :source_doc_id, :source_line_id, :task_id,
-              :customer_id, :customer_order_id, :production_order_id,
-              :pick_plan_id, :pick_plan_line_id, :pick_wave_id, :pick_wave_line_id,
-              :articul, :qty, :unit_code, :ware_id, :cell, :batch_id, :prod_batch_id,
-              :uid_pallet, :sscc, :status, :priority, :created_by
-            )
-            """,
-            {
-                **self._normalized_params(data),
-                "reservation_id": reservation_id,
-            },
-        )
-        return reservation_id
+        return int(posted["reservation_id"])
 
     def promote_to_hard(self, reservation_id: int, request: StockReservationPromoteRequest, actor: str | None = None) -> None:
-        from ..modules.inventory.infrastructure.reservation_commands import post_reservation
+        from ..modules.inventory.public import post_existing_reservation as post_reservation
         posted = post_reservation(self.gateway, "PROMOTE", request, actor, reservation_id)
-        if posted is not None:
-            return
-        existing = self.get_reservation(reservation_id)
-        if existing is None:
-            raise LookupError(f"Reservation not found: {reservation_id}")
-        data = _model_dict(request)
-        merged = {
-            "reservation_kind": "HARD",
-            "reservation_scope": data.get("reservation_scope") or "PALLET",
-            "ware_id": data.get("ware_id"),
-            "cell": data.get("cell"),
-            "batch_id": data.get("batch_id"),
-            "prod_batch_id": data.get("prod_batch_id"),
-            "uid_pallet": data.get("uid_pallet"),
-            "sscc": data.get("sscc"),
-            "qty": data.get("qty") if data.get("qty") is not None else existing.get("qty"),
-        }
-        self._validate_kind_scope_status({"reservation_kind": "HARD", "reservation_scope": merged["reservation_scope"], "status": "ACTIVE"})
-        self._validate_physical_fields(merged)
-        self.gateway.execute(
-            """
-            update RRL_STOCK_RESERVATION
-               set RESERVATION_KIND = 'HARD',
-                   RESERVATION_SCOPE = :reservation_scope,
-                   WARE_ID = :ware_id,
-                   CELL = :cell,
-                   BATCH_ID = :batch_id,
-                   PROD_BATCH_ID = :prod_batch_id,
-                   UID_PALLET = :uid_pallet,
-                   SSCC = :sscc,
-                   QTY = nvl(:qty, QTY),
-                   STATUS = 'ACTIVE',
-                   LOCK_OWNER = null,
-                   LOCKED_AT = null,
-                   LAST_ERROR = null
-             where RESERVATION_ID = :reservation_id
-            """,
-            {
-                "reservation_id": reservation_id,
-                "reservation_scope": str(merged["reservation_scope"]).upper(),
-                "ware_id": merged["ware_id"],
-                "cell": _upper_or_none(merged["cell"]),
-                "batch_id": _upper_or_none(merged["batch_id"]),
-                "prod_batch_id": merged["prod_batch_id"],
-                "uid_pallet": _upper_or_none(merged["uid_pallet"]),
-                "sscc": _upper_or_none(merged["sscc"]),
-                "qty": merged["qty"],
-            },
-        )
+        return
 
     def release_reservation(self, reservation_id: int, request: StockReservationStatusRequest, actor: str | None = None) -> None:
-        from ..modules.inventory.infrastructure.reservation_commands import post_reservation
+        from ..modules.inventory.public import post_existing_reservation as post_reservation
         posted = post_reservation(self.gateway, "RELEASE", request, actor, reservation_id)
-        if posted is not None:
-            return
-        self._set_status(
-            reservation_id=reservation_id,
-            status="RELEASED",
-            actor=request.updated_by,
-            reason=request.reason,
-            timestamp_column="RELEASED_AT",
-            actor_column="RELEASED_BY",
-        )
+        return
 
     def consume_reservation(self, reservation_id: int, request: StockReservationStatusRequest, actor: str | None = None) -> None:
-        from ..modules.inventory.infrastructure.reservation_commands import post_reservation
+        from ..modules.inventory.public import post_existing_reservation as post_reservation
         posted = post_reservation(self.gateway, "CONSUME", request, actor, reservation_id)
-        if posted is not None:
-            return
-        self._set_status(
-            reservation_id=reservation_id,
-            status="CONSUMED",
-            actor=request.updated_by,
-            reason=request.reason,
-            timestamp_column="CONSUMED_AT",
-            actor_column="CONSUMED_BY",
-        )
+        return
 
     def cancel_reservation(self, reservation_id: int, request: StockReservationStatusRequest, actor: str | None = None) -> None:
-        from ..modules.inventory.infrastructure.reservation_commands import post_reservation
+        from ..modules.inventory.public import post_existing_reservation as post_reservation
         posted = post_reservation(self.gateway, "CANCEL", request, actor, reservation_id)
-        if posted is not None:
-            return
-        self._set_status(
-            reservation_id=reservation_id,
-            status="CANCELLED",
-            actor=request.updated_by,
-            reason=request.reason,
-            timestamp_column="RELEASED_AT",
-            actor_column="RELEASED_BY",
-        )
+        return
 
     def _set_status(
         self,

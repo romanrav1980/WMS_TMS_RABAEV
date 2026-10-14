@@ -1,0 +1,5 @@
+#176: тара внутри матрёшки
+Миграция db/migrations/2026-10-11_ni063_nested_tare. HU_ATTACH direct CASE requires retained_tare_booking_operation_id. Existing BOOK/BALANCE/P remain unchanged; no implicit physical tare return. Default omission continues to refuse booked child.
+Проверить целый CASE с HELD tare, два simultaneous attach/cancel, actual locks/rollback, same operation replay, different proof conflict, current actor/WARE. One top cargo ≠ one tare asset.
+Hand-over uses immutable RRL_TT_HU_LOAD_FACT.COMPOSITION_JSON CASE node and exactly one load for original trip/vehicle/WARE; archive lookup compiled, positive nested hand-over still pending. Do not insert fake load/shipment facts; construct native QC/load/driver flow. Existing source nested link removed after cleanup does not remove historical load proof.
+Авторский own409 retained books1048/1049 remained through attach/unpack/slot movement until root carrier return, then explicit cancel. HU read admin200/foreign403 passed in one read-only snapshot. Qwen not run.

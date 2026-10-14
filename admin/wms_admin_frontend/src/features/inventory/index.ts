@@ -1,0 +1,1 @@
+export {TarePanel} from "./TarePanel";

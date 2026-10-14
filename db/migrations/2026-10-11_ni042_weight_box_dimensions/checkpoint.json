@@ -1,0 +1,10 @@
+{
+  "migration_id": "2026-10-11-183-physical-box-dimensions",
+  "sha256": {
+    "001_schema.sql": "a162371f11e9aa198a1c14b5329e5f79ad1e988cf7bf319b7e9bfbc285b4123f",
+    "apply.sql": "6bdf4e1c8a733a665facd46fb007ac0191bf95284579a35ae9d06a39bee29333",
+    "rollback.sql": "3c6a1351ff83ec78be2e6741df075d57fe61e5a27497760045f1fbc02fd041a5",
+    "verify.sql": "b14d43eb3644bd45fcefd9adf20c39dfb1d92acb3c890635f85ed267af349796"
+  },
+  "recovery": "Four additive nullable metadata columns; guarded paired rollback refuses history removal; no database copy"
+}

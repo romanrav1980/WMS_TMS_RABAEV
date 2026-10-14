@@ -1,0 +1,13 @@
+# NI03.2: частичная замена нескольких собственных резервов
+
+Migration 2026-10-12-631-multi-binding-partial-target, prepared631. Source630 captured read-only from live RRL_STOCK_WAVE_CMD. Paired before-body/rollback and versioned apply/verify form the dev checkpoint; no database copy. Oracle RABAEV/orcl, existing core transaction/ordered resource closure remains authoritative.
+
+Previous partial-target branch requires old_a.size=1 although full replacement already supports200 own bindings. Bounded extension: target stock covers every earlier binding and a positive part of the final binding in stable RESERVATION_ID order. All preceding reservations are released; one reduced final source remains for existing whole-pallet RT. Physical source quantity must fit remaining face capacity. If coverage would leave multiple sources or an unchanged final source, the branch leaves the old plan untouched with a concrete reason. No half-pallet physical split or extra task engine.
+
+Shared stock-version prediction includes all releases on the same UID/cell. Source reservation version changes once. Existing owner/customer/warehouse/UOM/quantity/version/issued-task checks, exact unit release/reserve, canonical wait and recheck remain. Physical P is unchanged by rebind, HARD is conserved per owner; subsequent normal replenishment performs the actual movement.
+
+Target case: one owner20 reserved12+8, existing target14 => old source12/H0 + source8/H6 + target14/H14. One existing whole-source movement8 gives target22/H20/free2. This is a planned specific case, not yet claimed as a live result. Native application/positive case pending.
+
+## Actual632–635
+631 applied2statements/0errors; USER_ERRORS/INVALID empty. Own actual owner12 split6+6 -> target8H8 + remaining source8H4; first storage20 retains only other owner'sH8. P unchanged, exact operation replay returned saved outcome. Functional rebind passed. Fixture cleanup builder initially selected the wrong finally block and failed after the successful effect; corrected builder uses last cleanup block, separate633 cleaned retained own P/H through core without recreating source. Context632 is REBIND_PASS_OWN_CLEANED; do not rerun initial factory. Physical continuation movement is not claimed by this specific case.
+SQL634 target5.322ms/17.67buffers, ordinary source21.05ms/45, existing own-source query58.816ms/355. Decision: retain bounded200/201/indexed owner sources; inventory owner backlog to inspect owner-query predicate/plan before larger waves, no global index based on one small dev case. Qwen635 task prepared, no inference. Native/source-only release and exact journal replay remain compatible with paired rollback.

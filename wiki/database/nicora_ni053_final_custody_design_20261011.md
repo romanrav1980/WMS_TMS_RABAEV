@@ -1,0 +1,2 @@
+# NI05.3: физическая ответственность рейса после полной приёмки
+232 retains DEPARTED/load/ST/history and releases only full ACCEPTED physical store receipt custody. Append-only source receipt proof/same transaction, no stock/unit/tare/government/accounting mutation. Automatic for new complete receipts; explicit scoped dispatcher command for existing immutable full receipts, no old result rewrite. Discrepancy keeps custody/capacity. Existing return plan/handover capacity excludes only proven custody-released cargo. Fresh owner/load guard snapshots/forward repair after facts.

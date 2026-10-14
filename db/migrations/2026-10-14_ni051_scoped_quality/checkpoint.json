@@ -1,0 +1,19 @@
+{
+  "migration_id": "2026-10-14-1447-ni051-scoped-quality",
+  "files": {
+    "001_schema.sql": "1ee98c6a6d813920d035d2feb99003b40c28d0c0073a2b289b99b282c23455bf",
+    "002_reader.sql": "5df1f679b9a83b55a3414bf04b273e350000a32f110fd9248d0ced920e053384",
+    "003_policy.sql": "b0357c0ed799d5cbf9e1b6d86a4db141cfdb010da5963c527aa76bf7dbd9b89a",
+    "004_gate.sql": "e091de5e0148658e2c1bbe08d5d3f72f5ecb4ba3d37a4e8b47f6331e760f3fc1",
+    "005_shipping.sql": "c3d9f10c8584bf582d13bfded2ac72f2e56b304ff999eedb51f9959791c12e77",
+    "006_quality.sql": "a1188808386fc752d9ca709326d690b2d6d8e8d047d874bfa2c4c25fff8f6b82",
+    "apply.sql": "9e40cf20aa779e775ad4389854eb3872f5677e75b58d9d28c5a9b9df5b9b271f",
+    "rollback.sql": "15cfa37bbd930a6ac1c1296c87ca0ba86d267c88d67aba3c4b7fb53c6acfdad6",
+    "verify.sql": "696a9028342a81e109be5c1578c7e130a654f5394d1758bf749eafb40b3d08a5",
+    "saved\\RRL_STOCK_PALLET_QC_CMD_PACKAGE_BODY.sql": "61c3f9d58783bd56a60db676be2cf2f3321c25c8fbe7643c369a1a3db61c7ada",
+    "saved\\RRL_STOCK_QC_GATE_PACKAGE_BODY.sql": "fb3a1bb3b3618b5d9f5693249409536986d01ccf9ea7067b56631eb059a18f60",
+    "saved\\RRL_STOCK_QC_POLICY_PACKAGE.sql": "87cc79d98efcc06962f2b61e4b91a82ab445085c35834fc09cf25801c0358f20",
+    "saved\\RRL_STOCK_QC_POLICY_PACKAGE_BODY.sql": "2b53879319c5eac20d571a01f1c47d5ec81aa12c2740f364ed469f74f7d614c7",
+    "saved\\RRL_STOCK_SHIPPING_CORE_PACKAGE_BODY.sql": "f38127238bc175fd5d3019fb8687a06d01bac880d00ff8cabe3e812a6877b63b"
+  }
+}

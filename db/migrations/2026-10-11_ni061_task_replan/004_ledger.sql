@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-242-atomic-unstarted-interwarehouse-task-replan'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Existing root command atomically replaces unstarted interwarehouse task',sysdate,user,'db/migrations/2026-10-11_ni061_task_replan/apply.sql','db/migrations/2026-10-11_ni061_task_replan/rollback.sql','APPLIED','Own3cd9e9e9a8/old970mode2-4/new972mode2.5-3.5/current receiver-edit-before-cached/revoked403/native outerrollback/concurrent one active plan/old incompatible cell denial/P3H0/no movement. Existing972/ST641387/QC6/load-depart33560/same3units6codes/protected20-20. AllVALID/quality242; started tasks/new trip/nested/independent remain.');
+commit;

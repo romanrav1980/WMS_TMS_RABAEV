@@ -1,0 +1,4 @@
+@@000_before_rrl_stock_posting_api.sql
+@@000_before_rrl_stock_store_return_cust_cmd.sql
+@@000_before_rrl_store_return_unit_core.sql
+@@000_before_rrl_store_mark_core.sql

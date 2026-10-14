@@ -1,0 +1,484 @@
+{
+  "domain1017": {
+    "unknown_uom": {
+      "customer_order_row_id": 1,
+      "line_no": 1,
+      "articul": "OWN",
+      "unit_code": "BOX",
+      "row_status": "OPEN",
+      "picked_quantity": "2",
+      "hard_quantity": "0",
+      "base_uom": "EA",
+      "requested_uom": "BOX",
+      "status": "REQUIRES_UOM",
+      "reason": "\u041d\u0435\u0442 \u043e\u0434\u043d\u043e\u0437\u043d\u0430\u0447\u043d\u043e\u0433\u043e \u043f\u0435\u0440\u0435\u0432\u043e\u0434\u0430 \u0435\u0434\u0438\u043d\u0438\u0446\u044b \u0437\u0430\u043a\u0430\u0437\u0430 \u0432 \u0431\u0430\u0437\u043e\u0432\u0443\u044e",
+      "requested_quantity": "3",
+      "remaining_quantity": null
+    },
+    "excess": {
+      "customer_order_row_id": 1,
+      "line_no": 1,
+      "articul": "OWN",
+      "unit_code": "EA",
+      "row_status": "OPEN",
+      "picked_quantity": "6",
+      "hard_quantity": "0",
+      "base_uom": "EA",
+      "requested_uom": "EA",
+      "status": "OVER_PICKED",
+      "reason": "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043d\u043d\u044b\u0439 \u043e\u0442\u0431\u043e\u0440 \u043f\u0440\u0435\u0432\u044b\u0448\u0430\u0435\u0442 \u0441\u0442\u0440\u043e\u043a\u0443 \u0437\u0430\u043a\u0430\u0437\u0430",
+      "requested_quantity": "5",
+      "remaining_quantity": "0"
+    },
+    "cancelled": {
+      "customer_order_row_id": 1,
+      "line_no": 1,
+      "articul": "OWN",
+      "unit_code": "EA",
+      "row_status": "CANCELLED",
+      "picked_quantity": "2",
+      "hard_quantity": "0",
+      "base_uom": "EA",
+      "requested_uom": "EA",
+      "status": "CANCELLED",
+      "reason": "\u0421\u0442\u0440\u043e\u043a\u0430 \u0437\u0430\u043a\u0430\u0437\u0430 \u043e\u0442\u043c\u0435\u043d\u0435\u043d\u0430; \u0444\u0438\u0437\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u0444\u0430\u043a\u0442 \u043f\u043e\u043a\u0430\u0437\u0430\u043d \u043e\u0442\u0434\u0435\u043b\u044c\u043d\u043e",
+      "requested_quantity": "5",
+      "remaining_quantity": "3"
+    },
+    "closed_short": {
+      "customer_order_row_id": 1,
+      "line_no": 1,
+      "articul": "OWN",
+      "unit_code": "EA",
+      "row_status": "OPEN",
+      "picked_quantity": "2",
+      "hard_quantity": "0",
+      "base_uom": "EA",
+      "requested_uom": "EA",
+      "status": "PARTIAL_REFUSED",
+      "reason": "Own shortage",
+      "requested_quantity": "5",
+      "remaining_quantity": "3"
+    },
+    "reserved": {
+      "customer_order_row_id": 1,
+      "line_no": 1,
+      "articul": "OWN",
+      "unit_code": "EA",
+      "row_status": "OPEN",
+      "picked_quantity": "0",
+      "hard_quantity": "5",
+      "base_uom": "EA",
+      "requested_uom": "EA",
+      "status": "RESERVED",
+      "reason": "\u0417\u0430\u043f\u0430\u0441 \u0437\u0430\u043a\u0440\u0435\u043f\u043b\u0451\u043d, \u0444\u0438\u0437\u0438\u0447\u0435\u0441\u043a\u0438\u0439 \u043e\u0442\u0431\u043e\u0440 \u0435\u0449\u0451 \u043d\u0435 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043d",
+      "requested_quantity": "5",
+      "remaining_quantity": "5"
+    },
+    "meaningful_anomaly_status_checks": true
+  },
+  "native1018": {
+    "original_order": {
+      "customer_order_id": 1931,
+      "order_no": "MIXED173:ONE:00cdc0ef51",
+      "document_status": "IMPORTED",
+      "execution_status": "PARTIAL",
+      "line_count": 1,
+      "active_line_count": 1,
+      "cancelled_line_count": 0,
+      "lines": [
+        {
+          "customer_order_row_id": 3416,
+          "line_no": 1,
+          "articul": "QC16700CDC0EF51",
+          "unit_code": "EA",
+          "row_status": "OPEN",
+          "picked_quantity": "3",
+          "hard_quantity": "0",
+          "base_uom": "EA",
+          "requested_uom": "EA",
+          "status": "PARTIAL",
+          "reason": "\u041e\u0436\u0438\u0434\u0430\u0435\u0442\u0441\u044f \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u0435 \u043e\u0441\u0442\u0430\u0432\u0448\u0435\u0433\u043e\u0441\u044f \u043e\u0442\u0431\u043e\u0440\u0430",
+          "requested_quantity": "4",
+          "remaining_quantity": "1"
+        }
+      ],
+      "warehouse_id": 20052672,
+      "consistent_snapshot": true
+    },
+    "canonical_case_read": {
+      "root": "CASE:1131",
+      "case_task_id": 1131,
+      "warehouse": 5062399,
+      "cell": "QI4bb85f1f15",
+      "nodes": [
+        {
+          "uid": "CASE:1131",
+          "case_task_id": 1131,
+          "kind": "CASE",
+          "type": "CASE",
+          "sscc": "CP553000000001131",
+          "version": 10,
+          "status": "WAIT_CONTROL",
+          "wave_id": 553,
+          "cell": "QI4bb85f1f15",
+          "depth": 0,
+          "open_task_count": 0,
+          "tare_weight_kg": null
+        },
+        {
+          "uid": "CASELOT:C5622546955335244142496C5D188F090F2D85:1",
+          "kind": "STOCK",
+          "type": null,
+          "version": 2,
+          "sscc": null,
+          "tare_weight_kg": "0",
+          "case_task_id": 1131,
+          "article": "QNATIVE4BB85F1F15",
+          "quantity": "12",
+          "hard_quantity": "12",
+          "base_uom": "EA",
+          "stock_version": 1,
+          "weight_kg": null,
+          "open_task_count": 0,
+          "cell": "QI4bb85f1f15",
+          "depth": 1
+        }
+      ],
+      "links": [
+        {
+          "parent": "CASE:1131",
+          "child": "CASELOT:C5622546955335244142496C5D188F090F2D85:1",
+          "membership": "CASE_CARRIER_LOT"
+        }
+      ],
+      "ancestors": [],
+      "physical_unit_count": 0,
+      "leaf_count": 1,
+      "top_place_count": 1,
+      "quantities": [
+        {
+          "article": "QNATIVE4BB85F1F15",
+          "base_uom": "EA",
+          "quantity": "12"
+        }
+      ],
+      "gross_weight_kg": null,
+      "unknown_weight_leaves": 1,
+      "unknown_tare_containers": 1,
+      "placement": {
+        "task_id": 1143,
+        "slot_id": 224,
+        "slot_code": "CASE1002:4bb85f1f15:2",
+        "content_version": 10,
+        "version_matches": true,
+        "gross_weight_kg": "15",
+        "bounding_volume_m3": ".75",
+        "slot_active": true,
+        "task_status": "DONE",
+        "synced": true,
+        "measurement_source": "RECORDED_PLACEMENT"
+      },
+      "tare_booking": {
+        "operation_id": "TARE987.BOOK:4bb85f1f15:1131",
+        "pallet_type_id": 1,
+        "warehouse": 5062399,
+        "nested_asset_preserved": true
+      }
+    }
+  },
+  "http1020": {
+    "order": {
+      "customer_order_id": 1931,
+      "order_no": "MIXED173:ONE:00cdc0ef51",
+      "document_status": "IMPORTED",
+      "execution_status": "PARTIAL",
+      "line_count": 1,
+      "active_line_count": 1,
+      "cancelled_line_count": 0,
+      "lines": [
+        {
+          "customer_order_row_id": 3416,
+          "line_no": 1,
+          "articul": "QC16700CDC0EF51",
+          "unit_code": "EA",
+          "row_status": "OPEN",
+          "picked_quantity": "3",
+          "hard_quantity": "0",
+          "base_uom": "EA",
+          "requested_uom": "EA",
+          "status": "PARTIAL",
+          "reason": "\u041e\u0436\u0438\u0434\u0430\u0435\u0442\u0441\u044f \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u0435 \u043e\u0441\u0442\u0430\u0432\u0448\u0435\u0433\u043e\u0441\u044f \u043e\u0442\u0431\u043e\u0440\u0430",
+          "requested_quantity": "4",
+          "remaining_quantity": "1"
+        }
+      ],
+      "warehouse_id": 20052672,
+      "consistent_snapshot": true
+    },
+    "canonical_case": {
+      "root": "CASE:1131",
+      "case_task_id": 1131,
+      "warehouse": 5062399,
+      "cell": "QI4bb85f1f15",
+      "nodes": [
+        {
+          "uid": "CASE:1131",
+          "case_task_id": 1131,
+          "kind": "CASE",
+          "type": "CASE",
+          "sscc": "CP553000000001131",
+          "version": 10,
+          "status": "WAIT_CONTROL",
+          "wave_id": 553,
+          "cell": "QI4bb85f1f15",
+          "depth": 0,
+          "open_task_count": 0,
+          "tare_weight_kg": null
+        },
+        {
+          "uid": "CASELOT:C5622546955335244142496C5D188F090F2D85:1",
+          "kind": "STOCK",
+          "type": null,
+          "version": 2,
+          "sscc": null,
+          "tare_weight_kg": "0",
+          "case_task_id": 1131,
+          "article": "QNATIVE4BB85F1F15",
+          "quantity": "12",
+          "hard_quantity": "12",
+          "base_uom": "EA",
+          "stock_version": 1,
+          "weight_kg": null,
+          "open_task_count": 0,
+          "cell": "QI4bb85f1f15",
+          "depth": 1
+        }
+      ],
+      "links": [
+        {
+          "parent": "CASE:1131",
+          "child": "CASELOT:C5622546955335244142496C5D188F090F2D85:1",
+          "membership": "CASE_CARRIER_LOT"
+        }
+      ],
+      "ancestors": [],
+      "physical_unit_count": 0,
+      "leaf_count": 1,
+      "top_place_count": 1,
+      "quantities": [
+        {
+          "article": "QNATIVE4BB85F1F15",
+          "base_uom": "EA",
+          "quantity": "12"
+        }
+      ],
+      "gross_weight_kg": null,
+      "unknown_weight_leaves": 1,
+      "unknown_tare_containers": 1,
+      "placement": {
+        "task_id": 1143,
+        "slot_id": 224,
+        "slot_code": "CASE1002:4bb85f1f15:2",
+        "content_version": 10,
+        "version_matches": true,
+        "gross_weight_kg": "15",
+        "bounding_volume_m3": ".75",
+        "slot_active": true,
+        "task_status": "DONE",
+        "synced": true,
+        "measurement_source": "RECORDED_PLACEMENT"
+      },
+      "tare_booking": {
+        "operation_id": "TARE987.BOOK:4bb85f1f15:1131",
+        "pallet_type_id": 1,
+        "warehouse": 5062399,
+        "nested_asset_preserved": true
+      }
+    }
+  },
+  "native1027": {
+    "historical": [
+      {
+        "fulfillment_id": 83,
+        "customer_order_id": 1931,
+        "legacy_sborka_pallet_id": 641322,
+        "pallet_uid": "MIXED173.ST:00cdc0ef51",
+        "address_text": null,
+        "status": "SHIPPED",
+        "fact_qty": 3,
+        "fact_qty_exact": "3",
+        "fact_weight": null,
+        "fact_weight_exact": null,
+        "picked_warehouse_task_id": 840,
+        "picked_operation_id": "MIXED173.FULL_PICK",
+        "picked_pallet_uid": "MIXED173.FULL:00cdc0ef51",
+        "picked_stock_version": 1,
+        "shipped_operation_id": "MIXED173.SHIP",
+        "shipped_at": "2026-10-10 17:39:02.782743",
+        "fact_uom": "EA",
+        "picked_case_task_id": null,
+        "picked_content_version": null,
+        "picked_at": "2026-10-10 17:39:02.396425",
+        "picked_by": "admin",
+        "source_system": "LEGACY_WMS",
+        "created_at": "2026-10-10 17:38:35",
+        "case_identifier": null,
+        "case_current_cell": null,
+        "case_current_version": null,
+        "case_current_status": null,
+        "physical_composition": [
+          {
+            "article": "QC16700CDC0EF51",
+            "base_uom": "EA",
+            "quantity": "3"
+          }
+        ],
+        "case_binding_version_matches": false,
+        "case_place_current": false
+      }
+    ],
+    "current_order": 2133,
+    "current": [
+      {
+        "fulfillment_id": 177,
+        "customer_order_id": 2133,
+        "legacy_sborka_pallet_id": 641501,
+        "pallet_uid": "CASE.QC.ST:4bb85f1f15:1131",
+        "address_text": null,
+        "status": "PICKED",
+        "fact_qty": 12,
+        "fact_qty_exact": "12",
+        "fact_weight": null,
+        "fact_weight_exact": null,
+        "picked_warehouse_task_id": null,
+        "picked_operation_id": null,
+        "picked_pallet_uid": null,
+        "picked_stock_version": null,
+        "shipped_operation_id": null,
+        "shipped_at": null,
+        "fact_uom": "EA",
+        "picked_case_task_id": 1131,
+        "picked_content_version": 10,
+        "picked_at": "2026-10-13 10:51:19.574760",
+        "picked_by": "admin",
+        "source_system": "LEGACY_WMS",
+        "created_at": "2026-10-13 10:51:19",
+        "case_identifier": "CP553000000001131",
+        "case_current_cell": "QI4bb85f1f15",
+        "case_current_version": 10,
+        "case_current_status": "WAIT_CONTROL",
+        "physical_composition": [
+          {
+            "article": "QNATIVE4BB85F1F15",
+            "base_uom": "EA",
+            "quantity": "12"
+          }
+        ],
+        "case_binding_version_matches": true,
+        "case_place_current": true
+      }
+    ],
+    "denied_existing_actor": true
+  },
+  "http1031": {
+    "current": [
+      {
+        "fulfillment_id": 177,
+        "customer_order_id": 2133,
+        "legacy_sborka_pallet_id": 641501,
+        "pallet_uid": "CASE.QC.ST:4bb85f1f15:1131",
+        "address_text": null,
+        "status": "PICKED",
+        "fact_qty": 12,
+        "fact_qty_exact": "12",
+        "fact_weight": null,
+        "fact_weight_exact": null,
+        "picked_warehouse_task_id": null,
+        "picked_operation_id": null,
+        "picked_pallet_uid": null,
+        "picked_stock_version": null,
+        "shipped_operation_id": null,
+        "shipped_at": null,
+        "fact_uom": "EA",
+        "picked_case_task_id": 1131,
+        "picked_content_version": 10,
+        "picked_at": "2026-10-13T10:51:19.574760",
+        "picked_by": "admin",
+        "source_system": "LEGACY_WMS",
+        "created_at": "2026-10-13T10:51:19",
+        "case_identifier": "CP553000000001131",
+        "case_current_cell": "QI4bb85f1f15",
+        "case_current_version": 10,
+        "case_current_status": "WAIT_CONTROL",
+        "physical_composition": [
+          {
+            "article": "QNATIVE4BB85F1F15",
+            "base_uom": "EA",
+            "quantity": "12"
+          }
+        ],
+        "case_binding_version_matches": true,
+        "case_place_current": true
+      }
+    ],
+    "historical": [
+      {
+        "fulfillment_id": 83,
+        "customer_order_id": 1931,
+        "legacy_sborka_pallet_id": 641322,
+        "pallet_uid": "MIXED173.ST:00cdc0ef51",
+        "address_text": null,
+        "status": "SHIPPED",
+        "fact_qty": 3,
+        "fact_qty_exact": "3",
+        "fact_weight": null,
+        "fact_weight_exact": null,
+        "picked_warehouse_task_id": 840,
+        "picked_operation_id": "MIXED173.FULL_PICK",
+        "picked_pallet_uid": "MIXED173.FULL:00cdc0ef51",
+        "picked_stock_version": 1,
+        "shipped_operation_id": "MIXED173.SHIP",
+        "shipped_at": "2026-10-10T17:39:02.782743",
+        "fact_uom": "EA",
+        "picked_case_task_id": null,
+        "picked_content_version": null,
+        "picked_at": "2026-10-10T17:39:02.396425",
+        "picked_by": "admin",
+        "source_system": "LEGACY_WMS",
+        "created_at": "2026-10-10T17:38:35",
+        "case_identifier": null,
+        "case_current_cell": null,
+        "case_current_version": null,
+        "case_current_status": null,
+        "physical_composition": [
+          {
+            "article": "QC16700CDC0EF51",
+            "base_uom": "EA",
+            "quantity": "3"
+          }
+        ],
+        "case_binding_version_matches": false,
+        "case_place_current": false
+      }
+    ],
+    "missing404": true,
+    "current_order": 2133
+  },
+  "sql1032": [
+    [
+      "cw8xnzcrfrtu9",
+      5,
+      41.469,
+      689.4,
+      "select r.CUSTOMER_ORDER_ROW_ID,r.LINE_NO,r.ARTICUL,r.UNIT_CODE,r.STATUS ROW_STATUS,             to_char(r.ORDER_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') ORDER"
+    ],
+    [
+      "9xgupuvjyrysy",
+      2,
+      9.508,
+      43,
+      "select f.*,ct.SSCC CASE_IDENTIFIER,ct.CURRENT_CELL CASE_CURRENT_CELL,ct.CONTENT_VERSION CASE_CURRENT_VERSION,ct.STATUS CASE_CURRENT_STATUS from (select FULFILLM"
+    ]
+  ]
+}

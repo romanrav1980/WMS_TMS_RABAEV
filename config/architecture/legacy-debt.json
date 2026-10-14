@@ -27,7 +27,7 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:admin/wms_admin_frontend/src/components/TransportPlannerPage.tsx": {
-      "maximum": 1312,
+      "maximum": 1265,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -39,43 +39,31 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:api/wms_api_server/app/routers/transport.py": {
-      "maximum": 975,
+      "maximum": 966,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:api/wms_api_server/app/schemas.py": {
-      "maximum": 1497,
-      "owner": "NICORA architecture owner",
-      "reason": "Existing legacy structure captured before incremental NICORA changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
-    "file-size:api/wms_api_server/app/services/case_pick_service.py": {
-      "maximum": 942,
+      "maximum": 1404,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:api/wms_api_server/app/services/mes_service.py": {
-      "maximum": 1336,
+      "maximum": 1109,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:api/wms_api_server/app/services/picking_service.py": {
-      "maximum": 2864,
+      "maximum": 2154,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:api/wms_api_server/app/services/transport_service.py": {
-      "maximum": 3255,
-      "owner": "NICORA architecture owner",
-      "reason": "Existing legacy structure captured before incremental NICORA changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
-    "file-size:api/wms_api_server/app/services/tserver_service.py": {
-      "maximum": 621,
+      "maximum": 2694,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -88,12 +76,6 @@
     },
     "file-size:api/wms_api_server/app/services/warehouse_map_service.py": {
       "maximum": 1178,
-      "owner": "NICORA architecture owner",
-      "reason": "Existing legacy structure captured before incremental NICORA changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
-    "file-size:api/wms_api_server/app/services/warehouse_task_domain_sync_service.py": {
-      "maximum": 646,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -111,7 +93,7 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "function-size:admin/wms_admin_frontend/src/components/DriverMobilePage.tsx:DriverMobilePage": {
-      "maximum": 209,
+      "maximum": 137,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -123,7 +105,7 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "function-size:admin/wms_admin_frontend/src/components/FleetManagementPage.tsx:VehiclesTab": {
-      "maximum": 158,
+      "maximum": 155,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -237,7 +219,7 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "function-size:admin/wms_admin_frontend/src/components/TransportPlannerPage.tsx:TransportPlannerPage": {
-      "maximum": 791,
+      "maximum": 779,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -261,25 +243,19 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "function-size:api/wms_api_server/app/middleware/api_audit.py:ApiAuditMiddleware.dispatch": {
-      "maximum": 156,
+      "maximum": 146,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "function-size:api/wms_api_server/app/services/case_pick_service.py:CasePickService.ensure_wave_case_pick_tasks": {
-      "maximum": 148,
-      "owner": "NICORA architecture owner",
-      "reason": "Existing legacy structure captured before incremental NICORA changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
-    "function-size:api/wms_api_server/app/services/case_pick_service.py:CasePickService.list_tasks": {
-      "maximum": 143,
+      "maximum": 133,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "function-size:api/wms_api_server/app/services/distance_matrix_service.py:DistanceMatrixService.rebuild": {
-      "maximum": 149,
+      "maximum": 111,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -296,12 +272,6 @@
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
-    "function-size:api/wms_api_server/app/services/mes_service.py:MesService.calculate_raw_supply": {
-      "maximum": 105,
-      "owner": "NICORA architecture owner",
-      "reason": "Existing legacy structure captured before incremental NICORA changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
     "function-size:api/wms_api_server/app/services/picking_service.py:PickingService._enrich_replenishment_settings": {
       "maximum": 129,
       "owner": "NICORA architecture owner",
@@ -309,25 +279,13 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "function-size:api/wms_api_server/app/services/picking_service.py:PickingService._refresh_replenishment_deficit": {
-      "maximum": 215,
+      "maximum": 199,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "function-size:api/wms_api_server/app/services/picking_service.py:PickingService._release_next_replenishment_queue": {
-      "maximum": 257,
-      "owner": "NICORA architecture owner",
-      "reason": "Existing legacy structure captured before incremental NICORA changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
-    "function-size:api/wms_api_server/app/services/picking_service.py:PickingService._reserve_replenishment_sources": {
-      "maximum": 181,
-      "owner": "NICORA architecture owner",
-      "reason": "Existing legacy structure captured before incremental NICORA changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
-    "function-size:api/wms_api_server/app/services/picking_service.py:PickingService.complete_wave_pick_task": {
-      "maximum": 135,
+      "maximum": 143,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -344,12 +302,6 @@
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
-    "function-size:api/wms_api_server/app/services/picking_service.py:PickingService.release_wave_staging": {
-      "maximum": 107,
-      "owner": "NICORA architecture owner",
-      "reason": "Existing legacy structure captured before incremental NICORA changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
     "function-size:api/wms_api_server/app/services/transport_service.py:TransportService._export_billing_registry_xlsx_zip": {
       "maximum": 102,
       "owner": "NICORA architecture owner",
@@ -362,26 +314,14 @@
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
-    "function-size:api/wms_api_server/app/services/transport_service.py:TransportService.list_available_sts": {
-      "maximum": 176,
-      "owner": "NICORA architecture owner",
-      "reason": "Existing legacy structure captured before incremental NICORA changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
     "function-size:api/wms_api_server/app/services/transport_service.py:TransportService.list_tasks": {
       "maximum": 111,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
-    "function-size:api/wms_api_server/app/services/transport_service.py:TransportService.plan_operations": {
-      "maximum": 111,
-      "owner": "NICORA architecture owner",
-      "reason": "Existing legacy structure captured before incremental NICORA changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
     "function-size:api/wms_api_server/app/services/transport_service.py:TransportService.solve_vrp": {
-      "maximum": 364,
+      "maximum": 293,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -393,12 +333,6 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "function-size:api/wms_api_server/app/services/vrp_solver.py:_solve_clarke_wright": {
-      "maximum": 104,
-      "owner": "NICORA architecture owner",
-      "reason": "Existing legacy structure captured before incremental NICORA changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
-    "function-size:api/wms_api_server/app/services/vrp_solver.py:_solve_with_ortools": {
       "maximum": 104,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
@@ -418,12 +352,6 @@
     },
     "function-size:api/wms_api_server/app/services/warehouse_map_draft_service.py:WarehouseMapDraftService.save_route_to_db": {
       "maximum": 127,
-      "owner": "NICORA architecture owner",
-      "reason": "Existing legacy structure captured before incremental NICORA changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
-    "function-size:api/wms_api_server/app/services/warehouse_task_service.py:WarehouseTaskService.complete_task": {
-      "maximum": 125,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -459,12 +387,6 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "router-direct-database-import:api/wms_api_server/app/routers/admin_rights.py -> api/wms_api_server/app/oracle_gateway.py": {
-      "maximum": 1,
-      "owner": "NICORA architecture owner",
-      "reason": "Existing legacy structure captured before incremental NICORA changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
-    "router-direct-database-import:api/wms_api_server/app/routers/driver_mobile.py -> api/wms_api_server/app/oracle_gateway.py": {
       "maximum": 1,
       "owner": "NICORA architecture owner",
       "reason": "Existing legacy structure captured before incremental NICORA changes",

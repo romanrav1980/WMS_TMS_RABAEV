@@ -1,0 +1,19 @@
+#orderExecution{scroll-margin-top:90px;font-size:18px}
+#orderDetails{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;padding:18px;background:#f5f8fd;border:1px solid #e2eaf3;border-radius:10px;margin:14px 0}
+#orderDetails .order-metadata-field{display:grid;gap:6px}#orderDetails small{font-size:12px;color:#758399}#orderDetails strong{font-size:14px;color:#183655;overflow-wrap:anywhere}
+#orderExecutionRows td:nth-child(n+3):nth-child(-n+6){white-space:nowrap;font-variant-numeric:tabular-nums}
+#orderExecutionRows tr[data-execution-status="OVER_PICKED"],#orderExecutionRows tr[data-execution-status="REQUIRES_UOM"]{background:#fff1ef}
+#orderExecutionRows tr[data-execution-status="REFUSED"],#orderExecutionRows tr[data-execution-status="PARTIAL_REFUSED"]{background:#fff8e8}
+#orderExecutionRows tr[data-execution-status="CANCELLED"]{background:#f5f6f8;color:#7a8595}
+#orderExecutionRows tr[data-execution-status="PICKED"] td:nth-child(7){color:#18845d;font-weight:600}
+#orderExecutionRows tr[data-execution-status="RESERVED"] td:nth-child(7){color:#2365ae;font-weight:600}
+
+#orderExecutionPanel{margin:20px 24px;padding:20px}#orderExecutionPanel header{display:block;padding:0 0 12px}#orderExecutionPanel h2{margin:0 0 10px}#orderExecutionStatus{font-size:14px;line-height:1.6;color:#52667f}#orderExecutionPanel .rights-table{width:100%}#orderExecutionPanel .rights-table th{white-space:normal}#orderExecutionRows td:last-child{white-space:normal;min-width:220px;max-width:420px}#orderExecutionPanel .rights-table-wrap{border:1px solid #e1eaf4;border-radius:10px}
+
+.order-case-location{display:block;font-size:11px;color:#63758e;margin-top:5px}.order-case-warning{display:block;color:#aa6330;font-size:11px;margin-top:5px}
+
+.order-pagination{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:14px 0;color:#63758e;font-size:13px}.order-pagination>div{display:flex;gap:8px}.order-pagination button{padding:8px 12px;border:1px solid #dce6f3;border-radius:8px;background:#fff;color:#2459a0;cursor:pointer}.order-pagination button:disabled{opacity:.45;cursor:default}
+
+#orderDeliveryPanel{display:block;overflow-x:auto;border-left:4px solid #2377eb}
+#orderDeliveryStatus{padding:12px;background:#eff6ff;border-radius:10px;line-height:1.5}
+#orderDeliveryPanel .rights-table{min-width:1100px}

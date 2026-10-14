@@ -1,0 +1,5 @@
+# Qwen: extend original TarePanel556–558
+Prepared only. Do not run model qualification or repeat source553/554.
+Review original TarePanel/useTare/api and new TareDamageSource, Tare participant read. Use actual current signatures: GLOBAL_ADMIN grants warehouse rights, not driver/store identity. Current assigned driver or bound store sees own source; foreign holder/canceled/accepted incoming offers hidden. Source selector matches owner/type/holder and keeps same DAMAGE in OFFER; ACCEPT uses persisted native source.
+No password persisted. Pending exact operation must survive reload; JSON false/0/array/invalid path/OP/wrong task must block new commands. Confirmation409 is required for restart. Switch actor/trip/type/holder while read pending: stale data ignored. Unknown successful response: no new OP/resend changed payload.
+New original553 actors are retired, original binding restored. Do not reactivate them or recreate trip519. Read557 and TS passed; browser/scanner/independent acceptance open.

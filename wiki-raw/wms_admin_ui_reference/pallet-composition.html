@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Состав и происхождение паллеты</title><link rel="stylesheet" href="styles.css"></head>
+<body class="auth-pending" data-required-permission="traceability_view"><div class="app">
+<aside class="sidebar"><div class="brand">WMS</div><nav class="nav" data-admin-nav data-active-nav="pallet-composition"></nav></aside>
+<main class="workspace"><h1>Состав и происхождение паллеты</h1><section class="panel">
+<label>Идентификатор паллеты, скан<input id="pcPallet" maxlength="200" autocomplete="off"></label>
+<button id="pcLoad">Открыть актуальный состав</button><p id="pcMessage" role="status"></p>
+<div id="pcSummary"></div></section><section class="panel"><h2>Происхождение</h2><div id="pcSources"></div></section>
+<section class="panel"><h2>Текущие ячейки</h2><div id="pcLocations"></div></section>
+<section class="panel"><h2>Физические единицы и коды</h2><div id="pcUnits"></div><button id="pcNext" hidden>Следующие единицы</button></section>
+<section class="panel"><h2>Жизненный цикл агрегаций маркировки</h2>
+<label>Склад<input id="agWare" type="number" min="1"></label>
+<label>Исходный идентификатор паллеты<input id="agOrigin" maxlength="200" autocomplete="off"></label>
+<button id="agRead">Открыть агрегации исходного состава</button>
+<label>Причина<select id="agReason"><option value="OPENED">Упаковка вскрыта</option><option value="REPACKED">Переупаковка</option><option value="DAMAGED">Упаковка повреждена</option><option value="COMPOSITION_CHANGED">Состав изменён</option></select></label>
+<label>Документ или основание<input id="agReference" maxlength="200"></label>
+<p>Отмена запрещает использовать старый код и родительские агрегации. Остаток и уникальные коды единиц сохраняются. Государственное подтверждение оформляется отдельно.</p>
+<table><thead><tr><th>Система / профиль</th><th>Уровень</th><th>Отпечаток кода</th><th>Состояние</th><th>Операция отмены</th><th>Действие</th></tr></thead><tbody id="agRows"></tbody></table>
+<p id="agMessage" role="status"></p><pre id="agPending"></pre><button id="agRetry" hidden>Повторить сохранённую операцию</button></section>
+<p>Состояние остатков и происхождение читаются совместно. Физический приём и запись кода не подтверждают государственную квитанцию.</p></main></div>
+<script src="admin-nav.js"></script><script src="admin-auth.js"></script><script src="pallet-composition.js"></script><script src="aggregate-lifecycle.js"></script></body></html>

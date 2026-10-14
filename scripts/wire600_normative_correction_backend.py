@@ -1,0 +1,32 @@
+from pathlib import Path
+p=Path("api/wms_api_server/app/modules/finance/infrastructure/expense_reports.py");v=p.read_text(encoding="utf-8")
+assert "cost_correction"not in v
+v=v.replace("expected: str|None=None)","expected: str|None=None,cost_correction: str|None=None)")
+v=v.replace("signed_amount(value,correction is not None)","signed_amount(value,correction is not None or cost_correction is not None)")
+v=v.replace('    if (correction is not None)!=(expected is not None):','    if correction is not None and cost_correction is not None:raise LogisticsCostError("ONE_FINANCIAL_CORRECTION_SOURCE_REQUIRED","Укажите один исходник коррекции",422)\n    if (correction is not None or cost_correction is not None)!=(expected is not None):')
+v=v.replace("    digest=sha256(", '    if cost_correction is not None:source_values.extend(["NORMATIVE_COST",cost_correction,format(expected_value,".2f")])\n    digest=sha256(',1)
+v=v.replace("        if correction:\n",'        if cost_correction:\n            from .normative_correction import validate_report\n            validate_report(cur,cost_correction,ware,kind,object_id,currency,amount,expected_value)\n        if correction:\n',1)
+v=v.replace('        if correction:result.update(', '        if cost_correction:result.update(cost_correction_of_operation_id=cost_correction,expected_confirmed_total=format(expected_value,".2f"))\n        if correction:result.update(',1)
+v=v.replace("EXPECTED_CONFIRMED_TOTAL)values(","EXPECTED_CONFIRMED_TOTAL,COST_CORRECTION_OF_OP)values(")
+v=v.replace(":sign,:correction,:expected)",":sign,:correction,:expected,:cost_correction)")
+v=v.replace('"expected":expected_value}', '"expected":expected_value,"cost_correction":cost_correction}')
+p.write_text(v,encoding="utf-8")
+for name in("infrastructure/logistics_expenses.py","contracts_expenses.py"):
+ p=Path("api/wms_api_server/app/modules/finance")/name;v=p.read_text(encoding="utf-8")
+ v=v.replace("expected: str|None=None)","expected: str|None=None,cost_correction: str|None=None)")
+ if name.startswith("infrastructure"):
+  v=v.replace("actor,correction,expected)","actor,correction,expected,cost_correction)")
+ p.write_text(v,encoding="utf-8")
+p=Path("api/wms_api_server/app/modules/finance/api/logistics_expense_routes.py");v=p.read_text(encoding="utf-8")
+a="class Report(Operation):";assert a in v
+v=v.replace(a,a+'\n    cost_correction_of_operation_id: str|None=Field(default=None,strict=True,min_length=1,max_length=100)')
+v=v.replace("body.expected_confirmed_total)","body.expected_confirmed_total,body.cost_correction_of_operation_id)")
+p.write_text(v,encoding="utf-8")
+p=Path("api/wms_api_server/app/modules/finance/infrastructure/expense_decisions.py");v=p.read_text(encoding="utf-8")
+v=v.replace("        root=lock_correction_root(cur,expense)","        from .normative_correction import lock_root\n        cost_root=lock_root(cur,expense)\n        root=lock_correction_root(cur,expense)if cost_root is None else None")
+p.write_text(v,encoding="utf-8")
+p=Path("api/wms_api_server/app/modules/finance/infrastructure/finance_outbox.py");v=p.read_text(encoding="utf-8")
+v=v.replace("DOCUMENT_REFERENCE,CORRECTION_OF_OP,ACTOR","DOCUMENT_REFERENCE,CORRECTION_OF_OP,ACTOR,COST_CORRECTION_OF_OP")
+v=v.replace('"correction_of_operation_id","reported_by"]','"correction_of_operation_id","reported_by","cost_correction_of_operation_id"]')
+p.write_text(v,encoding="utf-8")
+print("600 signed normative delta reuses original report/dual decision/outbox; old digest when no new field preserved.")

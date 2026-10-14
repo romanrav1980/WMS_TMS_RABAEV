@@ -1,0 +1,2 @@
+# Qwen367–374
+Use retained fully deliveredcontext372/source368. Actualoriginal1+found1+1 oldkeys6codes ->threeST/oneTOP, two recoverydispatch keyedOP+ST andoneordinary; full native late rollback/replay; finalbuyer3/sourceFF3once/history2-found2-net0. Each recoveredbinding/receipt/placement/nativecapturedHUlineage/WARE/currentactor/trip mustmatch; foreign or duplicate recovery denied. OutboxperST distinct. No initial factories. NativeguardsVALID; realgovernmentACK/hardware/independentreview stillpending.

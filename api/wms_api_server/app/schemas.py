@@ -1,3 +1,5 @@
+from .modules.transport.contracts import OperationFactUpdate
+from .modules.inventory.contracts import (StockReservationCreateRequest, StockReservationPromoteRequest, StockReservationStatusRequest)
 from datetime import date, datetime
 from decimal import Decimal
 from typing import Any
@@ -109,6 +111,7 @@ class ResourceSessionStatusRequest(BaseModel):
 
 
 class ResourceTsdLoginRequest(BaseModel):
+    shift_id: int | None = Field(default=None,gt=0)
     driver_code: str | None = None
     password: str | None = None
     barcode: str | None = None
@@ -629,10 +632,7 @@ class CustomerAddressCreateRequest(BaseModel):
     created_by: str | None = None
 
 
-class PickingPlanCreateRequest(BaseModel):
-    customer_order_id: int
-    plan_strategy: str = "FEFO"
-    created_by: str | None = None
+from .schemas_pick_plan import PickingPlanCreateRequest
 
 
 class PickingPlanCancelRequest(BaseModel):
@@ -768,22 +768,22 @@ class PickFaceArticulUpsertRequest(BaseModel):
     pick_face_articul_id: int | None = None
     pick_face_id: int | None = None
     articul: str
-    priority: float = 100
-    min_qty: float | None = None
-    max_qty: float | None = None
+    priority: Decimal = 100
+    min_qty: Decimal | None = None
+    max_qty: Decimal | None = None
     case_pick_enabled: int = 1
     use_articul_replenish_rule: int = 1
     replenishment_method: str = "IMMEDIATE"
     replenishment_release_policy: str = "LAYER_TRIGGER"
     replenishment_qty_mode: str = "FILL_TO_VOLUME"
-    min_trigger_box_qty: float | None = None
-    min_trigger_layer_qty: float | None = None
-    safety_layer_qty: float | None = None
-    boxes_per_layer: float | None = None
-    boxes_per_pallet: float | None = None
-    box_volume_m3: float | None = None
+    min_trigger_box_qty: Decimal | None = None
+    min_trigger_layer_qty: Decimal | None = None
+    safety_layer_qty: Decimal | None = None
+    boxes_per_layer: Decimal | None = None
+    boxes_per_pallet: Decimal | None = None
+    box_volume_m3: Decimal | None = None
     allow_partial_pallet: int = 1
-    predictive_buffer_min: float | None = None
+    predictive_buffer_min: Decimal | None = None
     pick_rate_source: str = "MIXED"
     recheck_on_pick_event: int = 1
     active: int = 1
@@ -885,8 +885,8 @@ class CasePickLineConfirmRequest(BaseModel):
 class CasePickLineShortRequest(BaseModel):
     picked_qty: Decimal | None = Field(default=None, ge=0, max_digits=27, decimal_places=9)
     short_qty: Decimal | None = Field(default=None, ge=0, max_digits=27, decimal_places=9)
-    reason_text: str | None = None
-    offline_event_id: str | None = None
+    reason_text: str | None = Field(default=None,max_length=1000)
+    offline_event_id: str | None = Field(default=None,min_length=1,max_length=100)
     resource_id: int | None = None
     resource_session_id: int | None = None
     equipment_id: int | None = None
@@ -894,87 +894,24 @@ class CasePickLineShortRequest(BaseModel):
 
 
 class CasePickTransferRequest(BaseModel):
-    to_resource_id: int
-    to_resource_session_id: int | None = None
-    to_equipment_id: int | None = None
-    reason: str | None = None
-    actor: str | None = None
+    to_resource_id: int = Field(ge=1)
+    to_resource_session_id: int | None = Field(default=None,ge=1)
+    to_equipment_id: int | None = Field(default=None,ge=1)
+    reason: str | None = Field(default=None,max_length=1000)
+    actor: str | None = Field(default=None,max_length=100)
+    offline_event_id: str | None = Field(default=None,min_length=1,max_length=100)
+    scan_container: str | None = Field(default=None,min_length=1,max_length=150)
+    expected_content_version: int | None = Field(default=None,ge=0,strict=True)
+    expected_assigned_to: str | None = Field(default=None,min_length=1,max_length=100)
+    expected_from_session_id: int | None = Field(default=None,ge=1,strict=True)
 
 
-class CasePickShortDecisionRequest(BaseModel):
-    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
-    reason_text: str | None = None
-    actor: str | None = None
+from typing import Literal
+
+from .modules.inventory.contracts import CasePickShortDecisionRequest
 
 
-class PalletTypeUpsertRequest(BaseModel):
-    pallet_type_id: int | None = None
-    pallet_type_code: str
-    pallet_type_name: str
-    load_unit_class: str = "PALLET"
-    default_volume_m3: float | None = Field(default=None, ge=0)
-    default_weight_kg: float | None = Field(default=None, ge=0)
-    length_mm: float | None = Field(default=None, ge=0)
-    width_mm: float | None = Field(default=None, ge=0)
-    height_mm: float | None = Field(default=None, ge=0)
-    default_max_client_pallets: int = Field(default=1, ge=1, le=3)
-    active: int = 1
-    updated_by: str | None = None
-
-
-class StockReservationCreateRequest(BaseModel):
-    reservation_kind: str = "SOFT"
-    reservation_scope: str = "QTY"
-    reservation_domain: str
-    source_doc_type: str
-    source_doc_id: int
-    source_line_id: int | None = None
-    task_id: int | None = None
-    customer_id: int | None = None
-    customer_order_id: int | None = None
-    production_order_id: int | None = None
-    pick_plan_id: int | None = None
-    pick_plan_line_id: int | None = None
-    pick_wave_id: int | None = None
-    pick_wave_line_id: int | None = None
-    articul: str
-    qty: Decimal = Field(ge=0)
-    unit_code: str | None = None
-    ware_id: int | None = None
-    cell: str | None = None
-    batch_id: str | None = None
-    prod_batch_id: int | None = None
-    uid_pallet: str | None = None
-    sscc: str | None = None
-    status: str = "ACTIVE"
-    priority: float = 100
-    created_by: str | None = None
-
-    operation_id: str | None = Field(default=None, max_length=100)
-    unit_keys: list[str] = Field(default_factory=list, max_length=10000)
-
-
-class StockReservationPromoteRequest(BaseModel):
-    reservation_scope: str = "PALLET"
-    ware_id: int
-    cell: str
-    batch_id: str | None = None
-    prod_batch_id: int | None = None
-    uid_pallet: str | None = None
-    sscc: str | None = None
-    qty: Decimal | None = Field(default=None, ge=0)
-    updated_by: str | None = None
-
-    operation_id: str | None = Field(default=None, max_length=100)
-    unit_keys: list[str] = Field(default_factory=list, max_length=10000)
-
-
-class StockReservationStatusRequest(BaseModel):
-    reason: str | None = None
-    updated_by: str | None = None
-
-    operation_id: str | None = Field(default=None, max_length=100)
-    unit_keys: list[str] = Field(default_factory=list, max_length=10000)
+from .modules.inventory.contracts import PalletTypeUpsertRequest
 
 
 class MesRawSupplyCalculateRequest(BaseModel):
@@ -1003,6 +940,7 @@ class MesRawTransferTaskCancelRequest(BaseModel):
 
 
 class WarehouseTaskStatusRequest(BaseModel):
+    scan_draft_id: str | None = Field(default=None,min_length=1,max_length=100)
     updated_by: str | None = None
     assigned_to: str | None = None
     resource_id: int | None = None
@@ -1013,6 +951,7 @@ class WarehouseTaskStatusRequest(BaseModel):
     scanned_from_cell: str | None = None
     scanned_to_cell: str | None = None
     reason: str | None = None
+    scanned_to_slot_code: str | None = Field(default=None, min_length=1, max_length=100)
     operation_id: str | None = Field(default=None, min_length=1, max_length=100)
     unit_keys: list[str] = Field(default_factory=list, max_length=10000)
 
@@ -1357,72 +1296,7 @@ class TransportStOrderRequest(BaseModel):
 # VRP / Planner (Sprint 8)
 # ---------------------------------------------------------------------------
 
-class VrpRouteStop(BaseModel):
-    st_number: str
-    addr: str | None
-    lat: float | None
-    lon: float | None
-    pallets: int
-    weight_kg: float
-    ware_id: int
-    unload_norm_min: int
-    tw_from: int
-    tw_to: int
-    tw_strict: bool
-    arrival_min: int | None = None
-    departure_min: int | None = None
-    tw_violation_min: int = 0
-    distance_from_prev_km: float | None = None
-    duration_from_prev_min: int | None = None
-    constraint_notes: list[str] = Field(default_factory=list)
-
-
-class VrpRouteItem(BaseModel):
-    vehicle_id: int
-    vehicle_num: str
-    vehicle_type: str
-    max_pallets: int
-    total_pallets: int
-    total_kg: float
-    total_km: float
-    total_duration_min: int
-    utilization_pct: float
-    stops: list[VrpRouteStop]
-    capacity_status: str = "ok"
-    tw_violation_count: int = 0
-    strict_tw_count: int = 0
-    vehicle_constraints_ok: bool = True
-    hydro_board_required_count: int = 0
-    explain_notes: list[str] = Field(default_factory=list)
-
-
-class VrpPlanResponse(BaseModel):
-    plan_id: int | None = None
-    routes: list[VrpRouteItem]
-    unassigned_sts: list[str]
-    total_km: float
-    fleet_utilization_pct: float
-    tw_violations: int
-    score: float
-    solver_used: str
-    solve_time_ms: int
-    explain: dict[str, Any] | None = None
-
-
-class VrpSolveRequest(BaseModel):
-    plan_date: date = Field(..., description="Дата СТ для планирования")
-    ware_ids: list[int] | None = None
-    transport_type: str | None = None
-    time_limit_s: int = Field(default=30, ge=5, le=120)
-    source: str = Field(default="auto", description="Провайдер матрицы: auto|haversine|osrm|valhalla")
-    solver: str = Field(default="auto", description="Решатель: auto|ortools|cluster|savings")
-
-
-class VrpApplyRequest(BaseModel):
-    plan_id: int = Field(..., description="ID плана из RRL_PLANNER_PLANS для применения")
-    shipment_date: date = Field(..., description="Дата отгрузки создаваемых рейсов")
-    dock: str | None = None
-
+from .modules.transport.contracts import VrpRouteStop, VrpRouteItem, VrpPlanResponse, VrpSolveRequest, VrpApplyRequest
 
 # ---------------------------------------------------------------------------
 # Sprint 11 — ARM: модель операций и нормативы
@@ -1442,10 +1316,6 @@ class OperationPlan(BaseModel):
     note: str | None = None
 
 
-class OperationFactUpdate(BaseModel):
-    fact_start: str | None = Field(None, description="ISO datetime YYYY-MM-DD HH:MM")
-    fact_end: str | None = Field(None, description="ISO datetime YYYY-MM-DD HH:MM")
-    note: str | None = None
 
 
 class VehicleGanttDay(BaseModel):
@@ -1461,12 +1331,13 @@ class VehicleGanttDay(BaseModel):
 
 class ClusterCreateTaskRequest(BaseModel):
     """Создать рейс из кластера (Sprint 29, Phase 2 полуавто)."""
+    operation_id: str = Field(min_length=1,max_length=100,pattern=r"^[A-Za-z0-9_.:-]+$")
     stdate: date = Field(..., description="Дата отгрузки")
     transtype: str = Field(default="10", description="Тип транспорта")
-    vehicle: str | None = None
-    driver_id: int | None = None
-    dock: str | None = None
-    ware_ids: list[int] | None = None
+    vehicle: str | None = Field(default=None,max_length=50)
+    driver_id: int | None = Field(default=None,ge=0)
+    dock: str | None = Field(default=None,max_length=50)
+    ware_ids: list[int] | None = Field(default=None,max_length=100)
 
 
 class BillingOrderCreate(BaseModel):

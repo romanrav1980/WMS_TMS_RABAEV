@@ -1,0 +1,11 @@
+{
+  "migration_id": "2026-10-11-205-final-scale-qc-use",
+  "sha256": {
+    "db/migrations/2026-10-11_ni042_final_qc/000_before_qc.sql": "c3eb6770d39950a7a76499ca7575f2ef703a53809f0ea4f18c99c1750e81fcfd",
+    "db/migrations/2026-10-11_ni042_final_qc/000_before_gate.sql": "43180d762703125596b3d63648068cdf2bdac888a5453d33fb29acab9d4537ee",
+    "db/migrations/2026-10-11_ni042_final_qc/000_before_archive.sql": "47a24ed3edf2e341dfba36607bb41dfb0f94a48b6ff5fd68a4ed97ac2be06044",
+    "db/migrations/2026-10-11_ni042_final_qc/000_before_manifest.json": "1a44325ee49f5b1b6e3e9f7ec58b7c715e81a12d2909a0dbb24f95516142461a",
+    "db\\migrations\\2026-10-11_ni042_final_qc\\000_before_root.sql": "f97a17d0ee60cac86e8fefb04d007141f7c802b13c146d237975bfd7a1c4939e"
+  },
+  "recovery": "Fresh QC/gate/archive captured, one append-only use table/current existing root only, no P/H changes in QC; paired rollback blocked after proof history, forward repair, no DB copy"
+}

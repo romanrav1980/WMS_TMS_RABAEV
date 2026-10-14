@@ -1,0 +1,7 @@
+﻿from pathlib import Path
+p=Path('wiki-raw/wms_admin_ui_reference/admin-nav.js');s=p.read_text(encoding='utf-8');anchor='  { key: "receiving",';assert anchor in s;s=s.replace(anchor,'  { key: "quality-policy", label: "Правила контроля отгрузки", href: "quality-policy.html", icon: "settings", permission: "warehouse_settings_view" },\n'+anchor);p.write_text(s,encoding='utf-8')
+p=Path('wiki-raw/wms_admin_ui_reference/quality-policy.js');s=p.read_text(encoding='utf-8-sig').replace('if(!data.configured)return;',"if(!data.configured)data={active:true,control_mode:'BOTH',independent:false,sample_percent:'0',exempt_whole:false,exempt_storage:false};")
+s=s.replace("el('Category').value=record.value.body.place_category;status(","el('Category').value=record.value.body.place_category;fill({...record.value.body,configured:true});el('Reason').value=record.value.body.reason;status(")
+p.write_text(s,encoding='utf-8')
+p=Path('wiki-raw/wms_admin_ui_reference/outgoing-quality-next.js');s=p.read_text(encoding='utf-8');s=s.replace("  const note=document.createElement('span');", "  const note=document.createElement('span');\n  if(snapshot.weight_exemption?.eligible){const proof=document.createElement('span');proof.textContent='Освобождение от веса: целая неизменённая паллета. Проверки маркировки и состава сохраняются.';proof.title='Основание: '+snapshot.weight_exemption.reason+'; исходная приёмка '+snapshot.weight_exemption.receipt_operation_id;panel.append(proof);}")
+p.write_text(s,encoding='utf-8')

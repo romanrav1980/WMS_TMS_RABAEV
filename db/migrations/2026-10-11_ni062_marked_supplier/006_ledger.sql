@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-237-original-marked-supplier-return'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Original marked supplier return and shared canonical notifications behind Regulatory API',sysdate,user,'db/migrations/2026-10-11_ni062_marked_supplier/apply.sql','db/migrations/2026-10-11_ni062_marked_supplier/rollback.sql','APPLIED','Actual original return1/2QR/receipt/PUTAWAY958/old supplier ST641370/new ownTT33547/load-depart/P0H0/ISSUED13/same birthcodes6/native rollback including Gov queues/replay/documentary independent confirm. CRPT-EGAIS PENDING/no external ACK. Private shared helper behind RRL_REGULATORY_API preserves236 event keys. NativeVALID/reused236 quality.');
+commit;

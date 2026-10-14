@@ -1,0 +1,10 @@
+# NI05.3 — допуск вес/фото и акт
+Ticket089. Existing STORE_RECEIPT root/receiver/frozen source,087 immutable scale capture,085 original photos and088 frozen actual BOX masses reused. No second receipt/posting writer.
+
+WEIGHT_PHOTO admission requires source gross and half lightest actual measured physical BOX, exact source-bound current calibrated/active device capture no older5min (first timestamp never refreshed on replay), at least3 distinct archived views from the same load/store, normal place scan/camera confirmation. Gross compared to gross exactly, tare not subtracted again. Boundary inclusive. Store cannot type a weight into this command: only capture key.
+
+Within tolerance: receipt and ordinary quantity disposition. Outside: explicit weight_act_confirmed, current receiver additionally store_weight_act, nonempty case reason and explicit complete per-original-leaf quantities. Full accepted quantities may be declared after representative investigation; weight delta alone must not infer quantity loss. Force DISCREPANCY case and store act/weight/photo references; original load, boxes, captured input/photos/quantity stock remain unchanged.
+
+One root transaction receipt + disposition/case + immutable RRL_STORE_RECEIPT_WEIGHT and source-photo associations + same mandatory outbox; required rowkeys declared before locking. Short transaction references original BLOBs and scale captures instead of uploading/reading external devices. At execute recompute current source/gates and compare frozen proof, reject expired or changed configuration. No global equipment lock acquired late; current CONFIG policy fence already governs settings.
+
+Omitted new fields do not change canonical old barcode bodies/replay. Marked source still refuses until exact recipient/required real regulatory ACK; mandatory gates never fall back to barcode. Synthetic gateway and operator-declared box weights can demonstrate local software behavior in dev; independent physical calibration/cameras still separate.

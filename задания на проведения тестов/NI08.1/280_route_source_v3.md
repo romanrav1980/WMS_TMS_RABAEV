@@ -1,0 +1,2 @@
+# Qwen280
+Native sourceV3 includes ADDR/STDATE/ORD, neither guessedrouting norphysicalexecutionstatus. Changeoriginalplannedaddress/order -> oldroute/time SOURCE_CHANGED; rollback restoreshash. Original route259/time259 remainimmutableV2, noautoapproval/no physicalundo. Afterloading review rerereads actualnative proof; olddeparted history retained. CurrentWARE rights/bounds200/source hash actualcargo retained. Own33564M2702pallet mutation authorpassed underCONFIGrollback, independenttime approval+browser pending.

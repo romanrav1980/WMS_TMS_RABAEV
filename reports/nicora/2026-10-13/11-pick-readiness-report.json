@@ -1,0 +1,15 @@
+{
+  "wave": 551,
+  "rt": 1623,
+  "task": 1104,
+  "next_rt": null,
+  "article": "QNATIVE31FFB549E2",
+  "ware": 3376725,
+  "target": "QG31ffb549e2",
+  "source": "QF31ffb549e2",
+  "first_uid": "FULL.QA:31ffb549e2",
+  "second_uid": "FULL.QA:31ffb549e2B",
+  "target_uid": "FULL.QA:31ffb549e2O",
+  "stage": "CURRENT_TARGET_OWNER12_OTHER8",
+  "stock_changed_only_by_original_TASK_COMPLETE": true
+}

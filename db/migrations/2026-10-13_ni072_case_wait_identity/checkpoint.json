@@ -1,0 +1,19 @@
+{
+  "migration_id": "2026-10-13-006-ni072-case-wait-identity",
+  "state": "APPLIED_DEV_VALID",
+  "target": "RABAEV/orcl",
+  "recovery": "affected sources980 + paired rollback; retain task sequence gaps/history",
+  "sha256": {
+    "db/migrations/2026-10-13_ni072_case_wait_identity/000_before_rrl_st_defer_case_wait.sql": "59ad2ba7d4649082ba7515e04733c0a09083906c01c06b092a568bb6a700753a",
+    "db/migrations/2026-10-13_ni072_case_wait_identity/000_before_rrl_st_defer_wait_api.sql": "8673a4bc81c72a38d6da007460f8c529246da6d56202d242f0c3bb431d2437c0",
+    "db/migrations/2026-10-13_ni072_case_wait_identity/001_scope.sql": "99eec067f3f708411cf7389731187ee15a48779bb08d061e0f38071c58893ec8",
+    "db/migrations/2026-10-13_ni072_case_wait_identity/002_planner.sql": "6b220fcbfc12142bf316a6b4ef05b6075b513b63c897e00ccd23397441ed6ae9",
+    "db/migrations/2026-10-13_ni072_case_wait_identity/003_sequence.sql": "a838cddef660a563236806f4efe905bda381404d75b57920c13fefd1c673ebc5",
+    "db/migrations/2026-10-13_ni072_case_wait_identity/004_compile.sql": "a9333b89c7ecd9ac892069870731f3216c670a926abd40eb365eb1fded3fc966",
+    "db/migrations/2026-10-13_ni072_case_wait_identity/005_ledger.sql": "f96446094efd64e940ad531c865f280e30bcc5ef9d9ca2e4a5923373fa027d1b",
+    "db/migrations/2026-10-13_ni072_case_wait_identity/apply.sql": "9b076a9c1f79e5d1472ade0bdcdab8682305bf94dfc95a5c06830d7870a61ce3",
+    "db/migrations/2026-10-13_ni072_case_wait_identity/rollback.sql": "ae5fd07fdcb03120e5d88e519a573ea841ac1794e0bf2b244e5c9a939e02f4cc",
+    "db/migrations/2026-10-13_ni072_case_wait_identity/verify.sql": "9f15cfd507f1ab85c76ec4055a7a86064140e4104c6a49f50c90e3535add5051"
+  },
+  "evidence": "975/976 currentphysical12/CTFF3;982 repeated sameCASE task1132/selfsource/CTFF4/oldfacts/exactreplay;983 SQL"
+}

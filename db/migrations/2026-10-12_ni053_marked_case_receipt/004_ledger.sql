@@ -1,0 +1,2 @@
+merge into RRL_SCHEMA_MIGRATIONS t using(select '2026-10-12-379-marked-CASE-recipient' MIGRATION_ID from dual)s on(t.MIGRATION_ID=s.MIGRATION_ID)when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS)values(s.MIGRATION_ID,'Existing unit disposition receipt accepts exact frozen shipped CASE/carrier lots and source fingerprints, no duplicate stock',sysdate,user,'apply.sql','rollback.sql','APPLIED');
+commit;

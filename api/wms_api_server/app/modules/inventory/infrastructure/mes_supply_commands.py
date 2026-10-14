@@ -1,14 +1,18 @@
+from __future__ import annotations
+from ....oracle_gateway import OracleGateway
+from ....transaction_gateway import TransactionGateway
+from typing import Any
+from ....schemas import MesRawSupplyCalculateRequest
 """Calculate existing MES demand/candidates atomically without making a physical reservation."""
 from uuid import uuid4
 from fastapi import HTTPException
 from ..contracts_stock import StockCommand, StockPostingError
 from .stock_posting_uow import StockPosting
+from .release_boundary import require_active_release
 
 
-def calculate_supply(gateway, order_id: int, request):
-    rows = gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
-    if rows and rows[0]["state"] == "PREPARED":
-        return None
+def calculate_supply(gateway: OracleGateway | TransactionGateway, order_id: int, request: MesRawSupplyCalculateRequest) -> dict[str, Any]:
+    require_active_release(gateway,request.operation_id)
     try:
         result = StockPosting().post(StockCommand(
             operation_id=request.operation_id or "MES.CALCULATE:" + uuid4().hex,

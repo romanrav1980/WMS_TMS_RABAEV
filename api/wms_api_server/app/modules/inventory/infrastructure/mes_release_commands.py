@@ -1,13 +1,17 @@
+from __future__ import annotations
+from ....oracle_gateway import OracleGateway
+from ....transaction_gateway import TransactionGateway
+from typing import Any
+from ....schemas import MesReleaseToProductionRequest
 """Enter the stock coordinator before reading mutable MES document state."""
 from fastapi import HTTPException
 from ..contracts_stock import StockCommand, StockPostingError
 from .stock_posting_uow import StockPosting
+from .release_boundary import require_active_release
 
 
-def release_supply(gateway, order_id: int, request):
-    rows = gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
-    if rows and rows[0]["state"] == "PREPARED":
-        return None
+def release_supply(gateway: OracleGateway | TransactionGateway, order_id: int, request: MesReleaseToProductionRequest) -> dict[str, Any]:
+    require_active_release(gateway,request.operation_id)
     if not request.operation_id:
         raise HTTPException(422, detail={"code": "OPERATION_ID_REQUIRED"})
     try:

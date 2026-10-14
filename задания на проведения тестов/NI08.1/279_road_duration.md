@@ -1,0 +1,2 @@
+# Qwen279
+OSRM seconds/metres both annotations;601s=>10.02min, directionalreturn1201s=>20.02. Null/error/fallbackspeed/nonfinite/ragged nozero route. Valhalla actualtime/never null->0. Explicitprovider failure raises; autoHaversine basisSPEED50. Oldcachedsource=osrm stillSPEED50 until explicitrebuild, notrealprofiletime. ExistingOraclecache pairPK/MERGE basis/rollback/noqty. Provider n<=200; independentrealprovider/traffic andduration-window solver binding pending. Author mocks+Oracle temporarypairrollback only; localprovidersfalse.

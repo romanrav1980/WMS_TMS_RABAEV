@@ -1,0 +1,1 @@
+create context RRL_PALLET_TYPE_CTX using RRL_PALLET_TYPE_API;

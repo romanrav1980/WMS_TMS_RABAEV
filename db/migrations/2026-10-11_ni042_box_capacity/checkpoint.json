@@ -1,0 +1,12 @@
+{
+  "migration_id": "2026-10-11-184-weight-box-volume-budget",
+  "sha256": {
+    "db\\migrations\\2026-10-11_ni042_box_capacity\\002_capacity_contract.sql": "5e7904648c57d0309c86d369517a37d43e7d87c8d8efcedea337632de1a1f448",
+    "db\\migrations\\2026-10-11_ni042_box_capacity\\002_capacity_body.sql": "93d68f21903de0aa3a6d5a128bb2d8a85547693d9e584bd6c035c92087e29c53",
+    "db\\migrations\\2026-10-11_ni042_box_capacity\\apply.sql": "e52ae2fa5f25b2308ba3f6c6b936698fd3c8d29074f88c3865d8a015054023d4",
+    "db\\migrations\\2026-10-11_ni042_box_capacity\\rollback.sql": "b3a0d8d7d4a6c7323fab9e1fc1ca434981de43768ff50b66891cb17a4777d8fc",
+    "db\\migrations\\2026-10-11_ni042_box_capacity\\verify.sql": "6d4a1be7fb05abf8444727468e719c853a0c793ccb2304f32d21ac3d7ad80fbb"
+  },
+  "before_sha256": "11a68f6be0f2b3a633bd706756d7cbd37210a90fb1960a8b77eb52f7520b9ef7",
+  "recovery": "fresh same-signature capacity package rollback; additive read-only helper; no DB copy"
+}

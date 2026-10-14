@@ -1,0 +1,4 @@
+# NI06.1 — итоговая приёмка и исходный заказ,123
+Использовать прежний STORE_RECEIPT второго рейса/авторизованный адрес/ШК/режим политики/неизменяемый состав. Первое межскладское плечо не является окончательной доставкой.
+Read-only OrderDelivery: оригинальные legs/owner/demand/shipped остаются единственным количеством. Для source loads, помеченных INTERWARE_PLAN, фактическую магазинную приёмку искать по RRL_INTERWARE_ONWARD_DISPATCH второго плеча. Кредит принятого объёма один раз по тому жеUID/точномуколичеству; передача второму складу без магазина ничего клиенту не засчитывает.
+Bounded Oracle READ ONLY snapshot, original-to-final receipt_lineage in response, no new writer/projection/copied fulfillment. Direct deliveries unchanged. Initial scope two shoulders/full ordinary single place; multi-hop/split/excess/shared partial requires explicit ownership. External ERP acceptance not inferred from internal receipt.

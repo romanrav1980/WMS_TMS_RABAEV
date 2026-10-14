@@ -1,0 +1,2 @@
+begin raise_application_error(-20899,'TRANSPORT_EDIT137_FORWARD_ONLY_LOADED_HISTORY_PROTECTION');end;
+/

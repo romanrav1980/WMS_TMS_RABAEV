@@ -6,6 +6,7 @@
 
 import { useEffect, useState } from "react";
 import { apiFetch } from "../api";
+import {VehiclePhysicalProfile,VehicleFleetActions} from "../features/finance";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -72,6 +73,7 @@ const emptyDriverForm = (): DriverForm => ({
 // ---------------------------------------------------------------------------
 
 export function FleetManagementPage({ onBack }: { onBack: () => void }) {
+  const [physicalVehicle,setPhysicalVehicle]=useState<number|null>(null);
   const [activeTab, setActiveTab] = useState<"vehicles" | "drivers">("vehicles");
 
   return (
@@ -84,6 +86,7 @@ export function FleetManagementPage({ onBack }: { onBack: () => void }) {
         </div>
       </header>
 
+      {physicalVehicle!==null&&<VehiclePhysicalProfile key={physicalVehicle} vehicle={physicalVehicle} onClose={()=>setPhysicalVehicle(null)}/>}
       <div className="fleet-tabs">
         <button
           className={`fleet-tab-btn${activeTab === "vehicles" ? " fleet-tab-active" : ""}`}
@@ -100,7 +103,7 @@ export function FleetManagementPage({ onBack }: { onBack: () => void }) {
       </div>
 
       <div className="fleet-content">
-        {activeTab === "vehicles" ? <VehiclesTab /> : <DriversTab />}
+        {activeTab === "vehicles" ? <VehiclesTab onPhysicalProfile={setPhysicalVehicle}/> : <DriversTab />}
       </div>
     </div>
   );
@@ -110,7 +113,7 @@ export function FleetManagementPage({ onBack }: { onBack: () => void }) {
 // Vehicles Tab — Sprint 97
 // ---------------------------------------------------------------------------
 
-function VehiclesTab() {
+function VehiclesTab({onPhysicalProfile}:{onPhysicalProfile:(vehicle:number)=>void}) {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [types, setTypes] = useState<TransportType[]>([]);
   const [loading, setLoading] = useState(false);
@@ -214,10 +217,7 @@ function VehiclesTab() {
                   {v.SOBSTVENNYY === 1 ? "Свой" : "Наёмный"}
                 </span>
               </td>
-              <td className="fleet-actions">
-                <button className="fleet-edit-btn" onClick={() => openEdit(v)}>✏</button>
-                <button className="fleet-del-btn" onClick={() => handleDelete(v.ID, v.NUM_PLAT)}>✕</button>
-              </td>
+              <td className="fleet-actions"><VehicleFleetActions onEdit={()=>openEdit(v)} onDelete={()=>handleDelete(v.ID,v.NUM_PLAT)} onProfile={()=>onPhysicalProfile(v.ID)}/></td>
             </tr>
           ))}
           {!loading && vehicles.length === 0 && (

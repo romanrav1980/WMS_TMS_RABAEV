@@ -1,0 +1,2 @@
+# Qwen377
+Retainedcontext377 actualnewCASE awarestart ->syntheticexplicitPacific/Kiritimati12Oct versusloadedUTC11Oct. CurrentwarehousepolicyCASE ->rate3(v2) ratherthan2(v1), original1BOX3.00 once/frozenbilldate/replay/noP. Native JSON_TABLE UID alias fixed to UID_VALUE; legacytime stillblocked. Do not claim real NICORAtimezone or rerun376 factory. OrdinaryBOX linkage/multidaydimensions remain.

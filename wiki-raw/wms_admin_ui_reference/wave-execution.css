@@ -1,0 +1,21 @@
+.wave-execution-panel{scroll-margin-top:90px;margin-bottom:24px}
+.wave-execution-panel header{display:flex;justify-content:space-between;gap:20px;align-items:center}
+.wave-execution-panel header p{color:#718198;margin:6px 0 0}
+.wave-execution-toolbar,.wave-execution-decisions{display:flex;gap:14px;align-items:end;flex-wrap:wrap;padding:18px}
+.wave-execution-panel label{display:flex;flex-direction:column;gap:6px;color:#62738c;font-size:13px}
+.wave-execution-panel input{border:1px solid #dfe6ef;border-radius:8px;padding:10px;background:white}
+.wave-execution-toolbar input[type=number]{width:140px}
+.wave-execution-toolbar .wave-execution-filter{flex-direction:row;align-items:center;align-self:center}
+.wave-execution-panel [role=status]{margin:0 18px 16px;padding:14px;border-radius:10px;background:#edf4ff;color:#345f96}
+.wave-execution-panel .rights-table-wrap{max-height:450px;margin:0 18px;border:1px solid #e4eaf1;border-radius:10px}
+.wave-execution-panel .wave-execution-blocker{background:#fff8ed}
+.wave-execution-panel .wave-execution-demand{padding:12px 16px;border-top:1px solid #e4eaf1;color:#63728a}
+.wave-execution-decisions label{flex:1;min-width:220px}
+.wave-execution-decisions button{max-width:250px;white-space:normal}
+@media(max-width:700px){.wave-execution-toolbar,.wave-execution-decisions{display:grid;grid-template-columns:1fr}.wave-execution-decisions button{max-width:none}}
+
+.wave-execution-panel button{border:1px solid #c9d9f4;border-radius:8px;background:#eaf2ff;color:#235da8;padding:10px 14px;font:600 13px "Segoe UI",sans-serif;cursor:pointer}.wave-execution-panel button:hover:not(:disabled){background:#dceaff}.wave-execution-panel button:disabled{opacity:.5;cursor:default}.wave-execution-panel [data-release]{background:#2874db;color:white;border-color:#2874db}.wave-execution-panel>h2{margin:18px}.wave-execution-panel>label,.wave-execution-panel>button{margin:8px 18px}
+.wave-execution-place{display:block;margin-top:7px;max-width:310px;color:#61748d;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.wave-execution-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.wave-execution-action{display:inline-flex;align-items:center;padding:7px 10px;border:1px solid #cbdbf1;border-radius:7px;background:#fff;color:#2561a8;font:600 12px "Segoe UI",sans-serif;text-decoration:none;white-space:nowrap}
+.wave-execution-action.primary{background:#eaf2ff;border-color:#acc9f0}.wave-execution-action:hover{background:#dceaff}

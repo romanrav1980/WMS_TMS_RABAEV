@@ -1,0 +1,10 @@
+{
+  "migration_id": "2026-10-11-237-original-marked-supplier-return",
+  "sha256": {
+    "db/migrations/2026-10-11_ni062_marked_supplier/000_before_rrl_stock_sup_return.sql": "5cc4747c656f717cef4f0674abf694c564375cc82380c9112f09b91f76c235c1",
+    "db/migrations/2026-10-11_ni062_marked_supplier/000_before_rrl_stock_return_dispose.sql": "9333715f3c8a60aac6cc01dd4df923282f5c8574c276babe4ad9ac26e7da5ecd",
+    "db/migrations/2026-10-11_ni062_marked_supplier/000_before_rrl_regulatory_api.sql": "e6954b899fb27ef0a23811878e26420416201b3fa902e9a1aa8a4be252c571a6",
+    "db/migrations/2026-10-11_ni062_marked_supplier/000_before_rrl_stock_posting_api.sql": "a0bf61ef4703109839ad395c908df99502112bc797f553ee906fede8c470dfd0",
+    "db/migrations/2026-10-11_ni062_marked_supplier/000_manifest.json": "d8ae974bbdaba87ad8608adbaeffe165f80411f08d7d7e8da3681970f5beb658"
+  }
+}

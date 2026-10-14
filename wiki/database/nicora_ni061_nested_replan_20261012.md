@@ -1,0 +1,8 @@
+# Перепланирование целого принятого HU
+323 APPLIED в RABAEV/orcl. Прежний INTERWARE_PUTAWAY_PLAN отменяет старое PLANNED/неначатое/неназначенное задание и создаёт новое в одной Root транзакции. Для WAREHOUSE_HU проверяются точный верхний UID, current HU version, исходная ячейка, QTY1/UNIT HU и receipt lineage; старый INTERWARE commodity layout сохранён. Ресурсы старого/нового task, receipt, plan, stockleaf и всех HU/link объявляются до упорядоченного захвата. После блокировок исходное описание проверяется вновь. Старое задание/plan не удаляются. Начатое, исполненное или закреплённое за ресурсом задание не заменяется этим механизмом.
+
+Actual source322: исходная SAP агрегация не содержит Quantity участников. Миграция321 использует точное уже сохранённое BASE_QTY исходной физической единицы при отсутствии этого поля; explicit Quantity должен совпасть. Applied birth/order-line/profile/raw code/unitID proof сохранён. Это не повторное вычисление или новая проводка. Источники исходного и текущего UID не подменяются.
+
+Source322 прошёл прежние SAP receipt, pick/ST, вложенную погрузку/выезд и межскладскую whole receipt3. case323 создал старое 1HU задание, проверил поздний rollback отмены/нового plan, затем actual atomic cancel-replan и exact repeat. P3/H0 в receiving quarantine, две активные ссылки, товар не перемещён. tmp/context323.json содержит актуальное новое task_id. Фабрику322 и исходный case322 повторно не запускать.
+
+Следом требуется исполнить именно новое задание, затем прежние custody/onward/delivery. Независимая Qwen/оборудование/реальные ERP-government ACK остаются отдельными открытыми работами. Rollback не ослабляет guards при retained HU task history; forward recovery.

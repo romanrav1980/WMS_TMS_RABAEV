@@ -1,0 +1,33 @@
+{
+  "task_id": 564,
+  "reads": [
+    {
+      "suffix": "scan-context",
+      "status": 200,
+      "seconds": 0.159,
+      "task_id": 564,
+      "draft_exists": null
+    },
+    {
+      "suffix": "scan-draft",
+      "status": 200,
+      "seconds": 0.075,
+      "task_id": null,
+      "draft_exists": false
+    }
+  ],
+  "sql": [
+    [
+      "7bmvdq826s9g8",
+      1,
+      77.184,
+      434
+    ],
+    [
+      "3zj1pz25wp905",
+      1,
+      17.235,
+      267
+    ]
+  ]
+}

@@ -1,0 +1,352 @@
+{
+  "forward975": {
+    "case": 1129,
+    "st": "CASE.QC.ST:ba1b305227:1129",
+    "tag": "ba1b305227",
+    "stage": "MOVED",
+    "before_qc": {
+      "shipment_identifier": "CASE.QC.ST:ba1b305227:1129",
+      "document_id": 641499,
+      "ready": false,
+      "case_content_version": 2,
+      "composition_signature_version": 2,
+      "final_scale_required": false,
+      "required": true,
+      "control_mode": "BOTH",
+      "independent_controller_required": true,
+      "unique_mark_control_required": false,
+      "mark_profiles": [],
+      "case_task_id": 1129,
+      "case_status": "WAIT_CONTROL",
+      "physical_unit_count": 0,
+      "composition_signature": "405B882F25E54A9D7B14C7900FA1F0171C87EC8C8FC7C70C305607C4DDAAE3D5",
+      "sample_percent": 0,
+      "sample_selected": false,
+      "rescan_required": false,
+      "control_plan_required": false,
+      "full_scan_required": true,
+      "scan_matches": null,
+      "weight_matches": null,
+      "weight_policy_reason": "ORA-20887: QUALITY_SI_WEIGHT_POLICY_REQUIRED:QNATIVEBA1B305227",
+      "reason": "ORA-20886: SHIPMENT_FULL_COMPOSITION_SCAN_REQUIRED"
+    },
+    "target": "QXba1b305227",
+    "origin": "QWba1b305227",
+    "before_version": 2,
+    "before_fulfillment": [
+      175,
+      2,
+      "2026-10-13 09:59:51.896042",
+      "admin",
+      12,
+      "EA",
+      "[{\"article\":\"QNATIVEBA1B305227\",\"base_uom\":\"EA\",\"quantity\":\"12\"}]"
+    ],
+    "result": {
+      "operation_id": "MOVE975:ba1b305227",
+      "case_pick_task_id": 1129,
+      "carrier_identifier": "CP552000000001129",
+      "from_cell": "QWba1b305227",
+      "cell": "QXba1b305227",
+      "content_version": 3,
+      "status": "MOVED",
+      "lots": [
+        {
+          "uid": "CASELOT:4459DE1A51BEF22F1554D03F7B885535C2376E:1",
+          "cell": "QWba1b305227",
+          "quantity": "12",
+          "version": 1,
+          "base": "EA",
+          "article": "QNATIVEBA1B305227",
+          "case_line": 1133
+        }
+      ],
+      "outbox_id": 5099
+    },
+    "after_fulfillment": [
+      175,
+      3,
+      "2026-10-13 09:59:51.896042",
+      "admin",
+      12,
+      "EA",
+      "[{\"article\":\"QNATIVEBA1B305227\",\"base_uom\":\"EA\",\"quantity\":\"12\"}]"
+    ],
+    "positive_rollback": true,
+    "exact_replay": true,
+    "pick_facts_preserved": true,
+    "goods": "12",
+    "hard": "12",
+    "after_qc": {
+      "shipment_identifier": "CASE.QC.ST:ba1b305227:1129",
+      "document_id": 641499,
+      "ready": false,
+      "case_content_version": 3,
+      "composition_signature_version": 2,
+      "final_scale_required": false,
+      "required": true,
+      "control_mode": "BOTH",
+      "independent_controller_required": true,
+      "unique_mark_control_required": false,
+      "mark_profiles": [],
+      "case_task_id": 1129,
+      "case_status": "WAIT_CONTROL",
+      "physical_unit_count": 0,
+      "composition_signature": "405B882F25E54A9D7B14C7900FA1F0171C87EC8C8FC7C70C305607C4DDAAE3D5",
+      "sample_percent": 0,
+      "sample_selected": false,
+      "rescan_required": false,
+      "control_plan_required": false,
+      "full_scan_required": true,
+      "scan_matches": null,
+      "weight_matches": null,
+      "weight_policy_reason": "ORA-20887: QUALITY_SI_WEIGHT_POLICY_REQUIRED:QNATIVEBA1B305227",
+      "reason": "ORA-20886: SHIPMENT_FULL_COMPOSITION_SCAN_REQUIRED"
+    },
+    "qc_interpretation": "Same goods composition hash is correct for whole-place relocation; case physical version advances. No pre-existing QC approval invalidation was tested.",
+    "final_harness_correction": "975 final expected changed quantity hash was incorrect; stock/CT/FF/rollback/replay/facts assertions passed before it"
+  },
+  "repeat977_982": {
+    "case": 1129,
+    "st": "CASE.QC.ST:ba1b305227:1129",
+    "stage": "DONE",
+    "trip": 33633,
+    "decision": "DEC977:ba1b305227",
+    "decision_result": {
+      "operation_id": "DEC977:ba1b305227",
+      "st_number": "CASE.QC.ST:ba1b305227:1129",
+      "version": 2,
+      "warehouse_id": 12296656,
+      "source_trip_id": 33632,
+      "target_trip_id": 33633,
+      "source_hash": "29f1687c273352a09d82aaf040657431c62ff57427704aeb30fb1fad2e493cc2",
+      "source": {
+        "cargo": [
+          {
+            "id": 16727980,
+            "pallet_identifier": "CASE.QC.ST:ba1b305227:1129",
+            "articul": "QNATIVEBA1B305227",
+            "unit_code": "EA",
+            "quantity": "12",
+            "pack_count": null,
+            "weight": null,
+            "pack_weight": null,
+            "pack_size": null
+          }
+        ],
+        "st_number": "CASE.QC.ST:ba1b305227:1129",
+        "warehouse_id": 12296656,
+        "source_trip_id": 33632,
+        "members": [
+          {
+            "id": 641499,
+            "pallet_identifier": "CASE.QC.ST:ba1b305227:1129",
+            "warehouse_id": 12296656,
+            "trip_id": 33632,
+            "condition": 0,
+            "address": "Own existing CASE QC ST",
+            "st_date": null
+          }
+        ],
+        "source_trip": {
+          "id": 33632,
+          "condition": "\u0421\u043f\u043b\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d",
+          "vehicle": "QWba1b305227",
+          "shipment_date": "2026-10-15",
+          "shipment_time": null,
+          "deleted": 0,
+          "pay_order_id": 0
+        },
+        "physical_preparation": {
+          "state": "PREPARED_CASE",
+          "case_task_id": 1129,
+          "st_member_id": 641499,
+          "fulfillment_id": 175,
+          "pallet_identifier": "CP552000000001129",
+          "cell": "QXba1b305227",
+          "content_version": 3,
+          "stocks": [
+            {
+              "uid": "CASELOT:4459DE1A51BEF22F1554D03F7B885535C2376E:1",
+              "cell": "QXba1b305227",
+              "quantity": "12",
+              "version": 1,
+              "base": "EA",
+              "article": "QNATIVEBA1B305227",
+              "case_line": 1133
+            }
+          ],
+          "physical_move_required": true,
+          "stock_changed": false
+        }
+      },
+      "original_shipping_date": "2026-10-15",
+      "target_shipping_date": "2026-10-16",
+      "reason": "Existing controlled-zone CASE rescheduled to next planned day",
+      "reference": "WAIT977:ba1b305227",
+      "actor": "admin",
+      "physical_preparation": {
+        "state": "PREPARED_CASE",
+        "case_task_id": 1129,
+        "st_member_id": 641499,
+        "fulfillment_id": 175,
+        "pallet_identifier": "CP552000000001129",
+        "cell": "QXba1b305227",
+        "content_version": 3,
+        "stocks": [
+          {
+            "uid": "CASELOT:4459DE1A51BEF22F1554D03F7B885535C2376E:1",
+            "cell": "QXba1b305227",
+            "quantity": "12",
+            "version": 1,
+            "base": "EA",
+            "article": "QNATIVEBA1B305227",
+            "case_line": 1133
+          }
+        ],
+        "physical_move_required": true,
+        "stock_changed": false
+      },
+      "assignment": {
+        "validation_status": "DRAFT_INCOMPLETE",
+        "frozen_loaded_places": 0,
+        "frozen_loaded_weight_kg": "0",
+        "declared_places": 1,
+        "declared_weight_kg": "0",
+        "warnings": [
+          "\u041f\u043b\u0430\u043d\u043e\u0432\u0430\u044f \u043c\u0430\u0441\u0441\u0430 \u0447\u0430\u0441\u0442\u0438 \u0442\u043e\u0432\u0430\u0440\u0430 \u043e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442; \u043e\u043a\u043e\u043d\u0447\u0430\u0442\u0435\u043b\u044c\u043d\u0430\u044f \u0433\u043e\u0442\u043e\u0432\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0430"
+        ],
+        "physical_stock_changed": false,
+        "physical_load_admission": false,
+        "retained_loaded_sts": 0,
+        "written_sts": 1,
+        "assigned": 1
+      },
+      "stock_changed": false,
+      "original_demand_changed": false,
+      "operational_admission": false
+    },
+    "task": 1132,
+    "plan": {
+      "operation_id": "PLAN977:ba1b305227",
+      "decision_operation_id": "DEC977:ba1b305227",
+      "st_number": "CASE.QC.ST:ba1b305227:1129",
+      "warehouse_id": 12296656,
+      "waiting_cell": "QWba1b305227",
+      "tasks": [
+        {
+          "task_id": 1132,
+          "pallet_identifier": "CP552000000001129",
+          "case_pick_task_id": 1129
+        }
+      ],
+      "already_waiting": [],
+      "stock_changed": false,
+      "physical_move_completed": false
+    },
+    "move_request": {
+      "scan_draft_id": null,
+      "updated_by": "admin",
+      "assigned_to": null,
+      "resource_id": null,
+      "resource_session_id": null,
+      "equipment_id": null,
+      "fact_qty": "1",
+      "scanned_pallet": "CP552000000001129",
+      "scanned_from_cell": "QXba1b305227",
+      "scanned_to_cell": "QWba1b305227",
+      "reason": null,
+      "scanned_to_slot_code": null,
+      "operation_id": "MOVE977:ba1b305227",
+      "unit_keys": []
+    },
+    "result": {
+      "operation_id": "MOVE977:ba1b305227",
+      "case_pick_task_id": 1129,
+      "carrier_identifier": "CP552000000001129",
+      "from_cell": "QXba1b305227",
+      "cell": "QWba1b305227",
+      "content_version": 4,
+      "lots": [
+        {
+          "uid": "CASELOT:4459DE1A51BEF22F1554D03F7B885535C2376E:1",
+          "cell": "QXba1b305227",
+          "quantity": "12",
+          "version": 1,
+          "base": "EA",
+          "article": "QNATIVEBA1B305227",
+          "case_line": 1133
+        }
+      ],
+      "task_id": 1132,
+      "status": "DONE",
+      "quantity": "1",
+      "base_uom": "CASE",
+      "pallet_identifier": "CP552000000001129",
+      "remaining_quantity": "0",
+      "outbox_id": 5100
+    },
+    "evidence": {
+      "case_version": 4,
+      "fulfillment_version": 4,
+      "place_quantity": "1",
+      "goods": "12",
+      "hard": "12",
+      "old_pick_facts_preserved": true,
+      "sync": "SYNCED",
+      "journal": "12 EA",
+      "exact_replay": true
+    }
+  },
+  "sql983": [
+    [
+      "2322vhmsy0rbu",
+      31,
+      0.51,
+      4.7
+    ],
+    [
+      "d0zvvarfhmmt2",
+      2,
+      7.11,
+      93.5
+    ],
+    [
+      "d0zvvarfhmmt2",
+      1,
+      17.399,
+      145
+    ],
+    [
+      "53gva2vanac1x",
+      31,
+      0.268,
+      1.6
+    ],
+    [
+      "fyayng33kjrph",
+      21,
+      0.65,
+      21.9
+    ],
+    [
+      "5stc2rtfb0gkv",
+      3,
+      1.252,
+      2
+    ],
+    [
+      "b45u9aw4bxdgd",
+      3,
+      0.998,
+      5
+    ],
+    [
+      "1p3qvbbym5yfd",
+      3,
+      1.241,
+      3.7
+    ]
+  ],
+  "independent_acceptance": false
+}

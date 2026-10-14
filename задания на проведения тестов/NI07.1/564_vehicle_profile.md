@@ -1,0 +1,6 @@
+# Qwen vehicle class/source559–564
+Prepared only; no additional model qualification or source563 recreation.
+Read native current profile API/guards, original DEPART before/current and wiki mirror. One configuration tx, current actor/right/version/base hash; cache historical result before base freshness check; native savepoint rollback on failure; rare metadata fence allowed fleet_edit only. Check changed base/dimensions/null/byte lengths, separate profile actors, unknown commit exact retry.
+Original DEPART must use one actual instant for all loads and immutable source carrier/type/region/profile. Missing/base-changed profile explicit, no historical inferred dimensions or stock effect again. Original driver current/active and common source resource locking; money source never current mutable master alone.
+Profile metadata author563/564 passed; ctx563 private vehicle/head2 remains, do not recreate. Actual fresh physical departure proof pending; use isolated stock source through original Root if separately needed, not old departed519/514 or blocked33541.
+Fleet existing page public facade/actions; unknown persisted intent, stale response after vehicle change ignored; no password. Local TS passed, browser not claimed.

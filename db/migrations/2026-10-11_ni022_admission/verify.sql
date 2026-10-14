@@ -1,0 +1,2 @@
+select object_name,object_type,status from user_objects where object_name in('RRL_STORE_CALENDAR_API','RRL_SAP_STORE_ADMISSION_API','RRL_SAP_STORE_ADM_GUARD','RRL_SAP_STORE_DEC_GUARD','RRL_SAP_STORE_PICK_GUARD');
+select name,type,line,text from user_errors where name in('RRL_STORE_CALENDAR_API','RRL_SAP_STORE_ADMISSION_API','RRL_SAP_STORE_ADM_GUARD','RRL_SAP_STORE_DEC_GUARD','RRL_SAP_STORE_PICK_GUARD');

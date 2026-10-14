@@ -1,0 +1,26 @@
+[
+  [
+    "OPERATION_ID",
+    "VARCHAR2"
+  ],
+  [
+    "OFFER_OPERATION_ID",
+    "VARCHAR2"
+  ],
+  [
+    "ACCEPTED_QTY",
+    "NUMBER"
+  ],
+  [
+    "SHORT_QTY",
+    "NUMBER"
+  ],
+  [
+    "ACCEPTED_BY",
+    "NVARCHAR2"
+  ],
+  [
+    "ACCEPTED_AT",
+    "TIMESTAMP(6) WITH TIME ZONE"
+  ]
+]

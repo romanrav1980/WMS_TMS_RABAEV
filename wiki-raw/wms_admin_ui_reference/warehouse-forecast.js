@@ -194,11 +194,13 @@
     renderSummary(r);
     renderDays(r);
     renderRows();
+    window.warehouseForecastLabour?.render(r);
     el("wfResult").hidden = false;
   }
 
   function clearResult(text) {
     result = null;
+    window.warehouseForecastLabour?.clear();
     el("wfResult").hidden = true;
     el("wfRows").replaceChildren();
     el("wfSearch").value = "";
@@ -299,6 +301,7 @@
     el("wfProjectPanel").hidden = !auth().hasPermission?.("transport_dispatch_edit");
   }
 
+  el("wfRead").addEventListener("nicora-invalidate", invalidate);
   el("wfRead").addEventListener("click", calculate);
   el("wfProject").addEventListener("click", project);
   for (const id of INPUTS) {

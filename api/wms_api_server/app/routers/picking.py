@@ -33,6 +33,7 @@ from ..schemas import (
     PickingPlanCreateRequest,
 )
 from ..services.picking_service import PickingService
+from ..modules.inventory.public import build_wave_queue_reads, WavePlanningError
 
 router = APIRouter(prefix="/api/picking", tags=["picking"])
 
@@ -41,10 +42,10 @@ router = APIRouter(prefix="/api/picking", tags=["picking"])
 def create_picking_plan(
     request: PickingPlanCreateRequest,
     user: AdminUser = Depends(require_permission(PICK_PLAN_CREATE_PERMISSION)),
-) -> dict[str, int]:
+) -> dict[str, int | str]:
     request.created_by = user.username
     pick_plan_id = PickingService().create_plan(request)
-    return {"pick_plan_id": pick_plan_id}
+    return {"pick_plan_id": pick_plan_id, **({"operation_id": request.operation_id} if request.operation_id else {})}
 
 
 @router.get("/plans")
@@ -128,14 +129,14 @@ def list_pick_waves(
     ware_id: int | None = None,
     customer_id: int | None = None,
     limit: int = 100,
-    _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+    user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
 ) -> list[dict]:
-    return PickingService().list_waves(
+    return build_wave_queue_reads().waves(user.username,ware_id,lambda gateway,warehouse:PickingService(gateway).list_waves(
         status=status,
-        ware_id=ware_id,
+        ware_id=warehouse,
         customer_id=customer_id,
         limit=limit,
-    )
+    ))
 
 
 @router.post("/waves")
@@ -144,7 +145,10 @@ def create_pick_wave(
     user: AdminUser = Depends(require_permission(PICK_WAVE_CREATE_PERMISSION)),
 ) -> dict[str, int]:
     request.created_by = user.username
-    pick_wave_id = PickingService().create_wave(request)
+    try:
+        pick_wave_id = PickingService().create_wave(request)
+    except WavePlanningError as exc:
+        raise HTTPException(exc.status, detail=exc.code) from exc
     return {"pick_wave_id": pick_wave_id}
 
 
@@ -168,27 +172,34 @@ def list_pick_wave_candidates(
     )
 
 
+@router.get("/waves/{pick_wave_id}/header")
+def get_pick_wave_header(
+    pick_wave_id: int,
+    user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+) -> dict:
+    return build_wave_queue_reads().wave(
+        pick_wave_id,user.username,lambda gateway:PickingService(gateway).get_wave_header(pick_wave_id))
+
+
 @router.get("/waves/{pick_wave_id}")
 def get_pick_wave(
     pick_wave_id: int,
-    _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+    user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
 ) -> dict:
-    wave = PickingService().get_wave(pick_wave_id)
+    wave = build_wave_queue_reads().wave(pick_wave_id,user.username,lambda gateway:PickingService(gateway).get_wave(pick_wave_id))
     if wave is None:
         raise HTTPException(status_code=404, detail="Pick wave not found.")
     return wave
 
-
 @router.get("/waves/{pick_wave_id}/readiness")
 def get_pick_wave_readiness(
     pick_wave_id: int,
-    _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+    user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
 ) -> dict:
-    readiness = PickingService().get_wave_readiness(pick_wave_id)
+    readiness = build_wave_queue_reads().wave(pick_wave_id,user.username,lambda gateway:PickingService(gateway).get_wave_readiness(pick_wave_id))
     if readiness is None:
         raise HTTPException(status_code=404, detail="Pick wave not found.")
     return readiness
-
 
 @router.post("/waves/{pick_wave_id}/plans")
 def add_pick_wave_plan(
@@ -197,7 +208,10 @@ def add_pick_wave_plan(
     user: AdminUser = Depends(require_permission(PICK_WAVE_CREATE_PERMISSION)),
 ) -> dict[str, str | int]:
     request.created_by = user.username
-    PickingService().add_wave_plan(pick_wave_id, request)
+    try:
+        PickingService().add_wave_plan(pick_wave_id, request)
+    except WavePlanningError as exc:
+        raise HTTPException(exc.status, detail=exc.code) from exc
     return {"pick_wave_id": pick_wave_id, "pick_plan_id": request.pick_plan_id, "status": "ADDED"}
 
 
@@ -263,7 +277,10 @@ def release_pick_wave_staging(
     user: AdminUser = Depends(require_permission(PICK_WAVE_LAUNCH_PERMISSION)),
 ) -> dict[str, str | int]:
     request.updated_by = user.username
-    released_count = PickingService().release_wave_staging(pick_wave_id, request)
+    try:
+        released_count = PickingService().release_wave_staging(pick_wave_id, request)
+    except WavePlanningError as exc:
+        raise HTTPException(exc.status, detail={"code": exc.code}) from exc
     return {"pick_wave_id": pick_wave_id, "status": "RELEASED", "released_count": released_count}
 
 
@@ -271,28 +288,25 @@ def release_pick_wave_staging(
 def list_pick_wave_reservations(
     pick_wave_id: int,
     limit: int = 200,
-    _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+    user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
 ) -> list[dict]:
-    return PickingService().list_wave_reservations(pick_wave_id, limit=limit)
-
+    return build_wave_queue_reads().wave(pick_wave_id,user.username,lambda gateway:PickingService(gateway).list_wave_reservations(pick_wave_id, limit=limit))
 
 @router.get("/waves/{pick_wave_id}/replenishment-tasks")
 def list_pick_wave_replenishment_tasks(
     pick_wave_id: int,
     limit: int = 200,
-    _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+    user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
 ) -> list[dict]:
-    return PickingService().list_wave_replenishment_tasks(pick_wave_id, limit=limit)
-
+    return build_wave_queue_reads().wave(pick_wave_id,user.username,lambda gateway:PickingService(gateway).list_wave_replenishment_tasks(pick_wave_id, limit=limit))
 
 @router.get("/waves/{pick_wave_id}/tasks")
 def list_pick_wave_tasks(
     pick_wave_id: int,
     limit: int = 200,
-    _user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+    user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
 ) -> list[dict]:
-    return PickingService().list_wave_tasks(pick_wave_id, limit=limit)
-
+    return build_wave_queue_reads().wave(pick_wave_id,user.username,lambda gateway:PickingService(gateway).list_wave_tasks(pick_wave_id, limit=limit))
 
 @router.post("/waves/{pick_wave_id}/tasks/{pick_task_id}/complete")
 def complete_pick_wave_task(

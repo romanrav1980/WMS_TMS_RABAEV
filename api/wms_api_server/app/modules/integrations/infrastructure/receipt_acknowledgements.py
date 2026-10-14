@@ -1,3 +1,4 @@
+from typing import Any
 import json
 from hashlib import sha256
 import xml.etree.ElementTree as ET
@@ -75,5 +76,5 @@ class ReceiptAcknowledgements:
         return {'event_id': event_id, 'status': 'PENDING'}
 
     @staticmethod
-    def _text(value) -> str:
+    def _text(value: Any) -> str:
         return value.read() if hasattr(value, 'read') else value

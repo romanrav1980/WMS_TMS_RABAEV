@@ -1,5 +1,5 @@
 create or replace package RRL_STOCK_TRANSFER_CORE authid definer
- accessible by(package RRL_STOCK_CASE_RETURN_CMD,package RRL_STOCK_CASE_MOVE_CMD,package RRL_STOCK_CASE_PICK_CMD,package RRL_STOCK_INTERNAL_CMD,package RRL_STOCK_POSTING_API,package RRL_STOCK_TASK_CORE,
+ accessible by(package RRL_STOCK_HU_CMD,package RRL_STOCK_CASE_RETURN_CMD,package RRL_STOCK_CASE_MOVE_CMD,package RRL_STOCK_CASE_PICK_CMD,package RRL_STOCK_INTERNAL_CMD,package RRL_STOCK_POSTING_API,package RRL_STOCK_TASK_CORE,
  package RRL_STOCK_MES_MOVEMENT_CORE,package RRL_STOCK_RECEIPT_CORE,package RRL_STOCK_MOVE_CORE,package RRL_STOCK_MES_CORE) as
  procedure move(p_uid varchar2,p_target_uid varchar2,p_from varchar2,p_to varchar2,p_qty number,
   p_uom varchar2,p_uom_version number,p_warehouse number,p_actor varchar2,p_line number,

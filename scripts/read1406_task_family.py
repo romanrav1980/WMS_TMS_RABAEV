@@ -1,0 +1,3 @@
+exec(open("scripts/ni063_slow_queries.py",encoding="utf-8").read().split("with oracledb.connect",1)[0])
+with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
+ q=c.cursor();q.execute("select t.TASK_ID,t.PARENT_TASK_ID,t.STATUS,t.QTY,t.FACT_QTY,p.STATUS,p.QTY,p.FACT_QTY from RRL_WAREHOUSE_TASK t join RRL_WAREHOUSE_TASK p on p.TASK_ID=t.PARENT_TASK_ID where t.PARENT_TASK_ID is not null order by case when t.STATUS not in('DONE','CANCELLED')and p.STATUS='DONE' then 0 else 1 end,t.TASK_ID desc fetch first 8 rows only");print(json.dumps(q.fetchall(),default=str))

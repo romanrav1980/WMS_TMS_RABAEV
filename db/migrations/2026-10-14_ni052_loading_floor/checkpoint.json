@@ -1,0 +1,15 @@
+{
+  "migration_id": "2026-10-14-1191-loading-floor",
+  "target": "RABAEV/orcl",
+  "state": "APPLIED_TARGETED_VERIFIED",
+  "captured_sources": [
+    "db/migrations/2026-10-14_ni052_loading_floor/000_rrl_stock_hu_load_core_spec.sql",
+    "db/migrations/2026-10-14_ni052_loading_floor/000_rrl_stock_hu_load_core_body.sql",
+    "db/migrations/2026-10-14_ni052_loading_floor/000_rrl_stock_trip_depart_cmd_spec.sql",
+    "db/migrations/2026-10-14_ni052_loading_floor/000_rrl_stock_trip_depart_cmd_body.sql",
+    "db/migrations/2026-10-14_ni052_loading_floor/000_rrl_transport_plan_rules_spec.sql",
+    "db/migrations/2026-10-14_ni052_loading_floor/000_rrl_transport_plan_rules_body.sql"
+  ],
+  "invalid_baseline": [],
+  "evidence": "reports/nicora/2026-10-13/37-physical-top-tare-report.md"
+}

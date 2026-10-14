@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "real group GET; lost response reload exact retry; wrong operation response retains intent",
+    "matching response retires only original command",
+    "damaged intent blocks commands; explicit archive and real current warehouse GET",
+    "damaged scan draft blocks receipt/add; explicit archive preserves raw before rescanning",
+    "failed journal write readback prevents POST"
+  ],
+  "errors": [],
+  "modeled_posts": 3,
+  "real_posts": 0
+}

@@ -1,0 +1,58 @@
+from pathlib import Path
+import json
+def append(name,text):
+ p=Path(name);p.write_text(p.read_text(encoding="utf-8")+"\n"+text+"\n",encoding="utf-8")
+p=Path("wiki/database/nicora_ni071_transport_recognition_20261012.md");v=p.read_text(encoding="utf-8")
+v=v.replace("Применение/компиляция/адресный случай ещё предстоят.","582 applied,584 expected norm version required,589 native ERRORS[]/INVALID[]. Первый apply выявил дубли деклараций в авторском генераторе, затем Oracle GROUP BY bind-expression; исправлены до денежных фактов, canonical checkpoint writer больше не переписывает SQL. Native VALID подтверждён.")
+v+="""\n583: один native build обслуживает preview/conduct; внешняя пробная транзакция107.25, exact replay, payload conflict, header/claim/3 detail/outbox1; outer rollback удаляет все пробные факты.
+586: на сохранённом исходнике565/575 опубликована отдельная явно синтетическая dev-норма (не коммерческий договор). Два разных OP конкурируют за один выезд: один winner107.25, другой отказ source claim; устаревшая версия отказана, exact replay/current read совпадают. Прежний TT.PRICE не изменился. ctx586 retained/done; не создавать fixture повторно, не удалять финансовую историю.
+585–587 API и существующий billing UI: durable точный intent до POST, неизвестный исход повторяется исходным OP/body, подтверждённый409 исправляется только после успешного обновления; текущий GET сначала показывает сохранённое начисление. Счёт отображает нормативные статьи отдельно от перевозочной цены, валюты раздельно, без вторичного прибавления.
+588: существующая сверка дня отдельно считает warehouse1/transport1; unrecognized new departure0. Generic file exporter переиспользован, конкретный event экспортирован один раз107.25, повтор не создаёт файл; EXPORTED/ACK=null и ERP pending остаются.589 actual HTTP current admin read + exact monetary replay PASS.
+SQL589: direct header trip-read145.555ms/67buffers и dynamic-sampling65.596ms.590 переписан на TT-sourcePK → departure-claimPK → runPK, exact result сохранён; первое новое чтение11.683ms/27buffers. Это отдельные холодные вызовы, не нагрузочный benchmark. V$SQL_PLAN недоступен (SELECT privilege отсутствует), права не расширялись. Оставшиеся query10.802ms/36,6.243ms/15,14.867ms/109: удержать текущие ограничения и индексы, owner finance — перед ростом проверить планы COUNT/source/filter и invoice slice; новый индекс без измеренного роста не создавался.
+Архитектура587 PASS672/0cycles/76debt, TS587 PASS; независимая приёмка и hardware/SAP ACK не заявляются. Остаток NI07.1: многоскладовое признание/распределение, финансовая коррекция нормативного исходника, actual mixed-date scenarios и реальные ERP договоры.\n"""
+p.write_text(v,encoding="utf-8")
+append("wiki/database/nicora_ni071_transport_cost_preview_20261012.md","Актуально591: Python preview теперь только вызывает общий native RRL_TRANSPORT_COST_API.build; Python-формула удалена. Реализовано проведение/чтение/immutable money claim/outbox и existing billing action, см. [[database/nicora_ni071_transport_recognition_20261012]]. Первая реализация single-WARE, native HALF_UP2 per charge-unit; многоскладовой вариант и corrections остаются.")
+append("wiki/requirements/nikora_delivery_v55/execution/active/ni07_1.md","582–591: shared native Q26 preview/conduct, existing cost-run header, immutable details/once-only departure claim/same-TX outbox, required expected norm version. Actual distinctOP race586 one107.25 winner, source refusal, stale version refused, carrier PRICE unchanged; late outer rollback583, API replay589, existing scoped XML export588 no ACK. Existing billing shows separate recognised normative expenses. Remaining: multiwarehouse/financial correction/full mixed-day/real ERP and independent acceptance.")
+append("wiki/requirements/nikora_delivery_v55/execution/active/ni07_2.md","588 prerequisite: общий day board отличает warehouse_cost_runs от transport_cost_runs и unrecognised archived departures; actual private source warehouse1/transport1/pending-cost0. Generic financial XML EXPORTED still contributes to external ACK pending. No forced closure or stock writes.")
+p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");d=json.loads(p.read_text(encoding="utf-8"))
+d["planRevision"]=24;d["firstChange"]="Continue remaining single-source financial correction/multiwarehouse deltas after actual Q26 monetary recognition582–591; current day-board integrated. No full18/independent/external acceptance."
+for collection,identifier in (("sprints","NI07"),("increments","NI07.1")):
+ item=next(x for x in d[collection]if x["id"]==identifier)
+ item.setdefault("implementedSlices",[]).append("582–591 shared native Q26 vehicle/points/unload/loader recognition; existing cost-run + unique departure claim + same-TX outbox; actual107.25 concurrent winner/rollback/replay/source rejection; existing billing/HTTP/scoped XML/day board.")
+ item["progressNote"]="Single-WARE monetary recognition implemented with bounded dev evidence; multiWARE/financial corrections/real ERP/independent acceptance remain."
+ if collection=="increments":item["evidence"]+="; wiki/database/nicora_ni071_transport_recognition_20261012.md"
+p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.md");v=p.read_text(encoding="utf-8").replace("**Revision 23,","**Revision 24,")
+v=v.replace("Transport monetary recognition, physical mixed-day rehearsal, remaining vehicle/unload grounds and real financial ERP","Multiwarehouse normative recognition/corrections, physical mixed-day rehearsal and real financial ERP")
+v+="\nRevision24 /582–591: shared native Q26 monetary recognition/current rights/version/departure claim; actual107.25 race winner and atomic rollback, old carrier PRICE unchanged, original generic finance export without external ACK; existing billing and same day-board extended. Multiwarehouse/correction/real financial ERP and independent acceptance remain. All18 not declared complete.\n";p.write_text(v,encoding="utf-8")
+p=Path("wiki/index.md");p.write_text("- [Checkpoint591: нормативные расходы проведены](database/nicora_ni071_transport_recognition_20261012.md): actual race one107.25, same-TX outbox, exact HTTP replay, existing billing/day board; planrevision24, remaining deltas open.\n"+p.read_text(encoding="utf-8"),encoding="utf-8")
+append("wiki/log.md","2026-10-12 checkpoint591: native582 applied/compile corrections before financial facts/584 expected-version guard;583 atomic trial rollback,586 distinctOP source race winner107.25, old carrier PRICE unchanged,588 same existing exporter/scoped XML once/EXPORTED no ACK and day warehouse1 vs transport1,589 HTTP read/exact replay. Existing billing API/UI and invoice recognised sources added; TS587 PASS, architecture587672/0/76, native589 VALID. SQL590 direct header scan/sort rewritten to source->claim->run PK, first read11.683ms27buffers; V$SQL_PLAN unavailable, no privilege expansion. Planrevision24 no false sprint closure. GitHub only after all completion.")
+p=Path("wiki/runbooks/nicora_active_work.md");p.write_text("""## Current checkpoint591 — 12Oct2026
+- Continue all18; full commit/push only after completion, exclude SAP. No agents/no broad tests.
+- Current functional NI07.1. Planrevision24. Single-WARE normative Q26 money recognition implemented582–591; remaining multiWARE/financial correction/actual mixed-date/real ERP/independent acceptance. Do not claim all18.
+- Native RRL_TRANSPORT_COST_API shared preview/conduct now owns formula; Python preview delegates. Common cost-run header, additive detail and global unique DEPART claim, same-TX mandatory outbox. expected_norm_version required, TT->norm head row locks, exact replay after current rights.
+- 582 applied; first compile duplicate declarations and GROUP BY binds fixed before money facts. inspect589 ERRORS[]/INVALID[].
+- ctx586.json done: source565/575 retained, own synthetic DEFAULT regional norm (not commercial), two distinctOP one107.25 winner/other claim refusal;3 detail/outbox1; legacyTT.PRICE unchanged. DO NOT rerun case586. Winner exact replay safe; no rootfactory565/575 repeats.
+- 583 rollback-only norm/money case removes all trial facts; maintained script now sixfield version-protected command. Case578 delegates native after removal of duplicated Python formula; old576 assertion needs generic native rejection adaptation.
+- 588 event FIN:uppercase SHA exported once through existing exporter; stateEXPORTED/ACKnull, ERP pending remains. DO NOT rerun initial-export checker; original XML retained tmp/transport588_export. Day board warehouse_cost_runs excludes transport; transport_runs1/new source pending0.
+- API589 actually startupcomplete & HTTP current read/exactwinner replayPASS; later read590 change may trigger stuck reloader, restart rootserv only if needed.
+- UI billing conduct durable scope/intent/unknown exact retry/current norm version, shown saved recognition on reload; invoice separate normative summary. TS587 PASS (session51893 completed), architecture587672/0cycles/76debt.
+- SQL590 sourcePK->claimPK->runPK replaces cold headerread145.555ms; firstnew11.683ms27buffers. Plan privilege V$SQL_PLAN absent, no grants. Remaining SQL documented owner finance.
+- Bundle579 currently contains vehicle559/hash561/config564/norm572; MUST append recognition582 once maintained, never apply whole ACTIVE bundle.
+- Skills oracle/delivery/API/UI applied. No external ACK/certificate/hardware/legal/independent review fabricated.
+- Next: ensure invoice source discovery doesn't depend only on prior BOX money lines; normative correction integration; multiWARE source allocation through existing finance owners. Final UTF8 after latest docs still pending.
+
+"""+p.read_text(encoding="utf-8"),encoding="utf-8")
+root=next(Path(".").glob("*/NI08.1/178_container_cell_index.md")).parent.parent
+(root/"NI07.1"/"591_transport_money_recognition.md").write_text("""# NI07.1 — задания независимого ревью Qwen, checkpoint591
+Подготовлено, модель не запускалась. Не пересоздавать существующие fixtures565/575/586 и не удалять историю. Данные/секреты tmp не публиковать.
+
+1. Общий native build preview/conduct: Q26, архивный класс/тип/перевозчик/регион/clock, effective date/version, POINT/PLACE, mixed POINT refusal, difficult rolling+loader once.
+2. Деньги: current rights+bound warehouse, expected_norm_version, sameOP same payload exact replay, changed content refusal, twoOP one departure winner, same-TX header/claim/details/outbox, outer rollback before caller commit. Native direct DML guards and immutable histories.
+3. Проведённый586107.25 — только software synthetic norm. Проверить exact retained read/replay, original carrier PRICE untouched; экспорт588 EXPORTED not SAP ACK, второй исходный exporter test не запускать.
+4. UI intent сохранён доPOST без password, unknown retry exact, confirmed409 resets only after successful refresh, corrupt storage fails closed, old recognised cost shown independently of currentnorm. Проверить смену actor/API/trip/warehouse.
+5. Existing invoice shows normative sources/currency totals separately from carrier invoice; no second fee addition. Day warehouse vs transport counts separate; foreignWARE no data leak.
+6. SQL: source->claim->run PK path, receipt source bounds200, invoices201 refusal; no full qualification. V$SQL_PLAN rights absent, не расширять.
+Остатки явно открыты: multiWARE/financial corrections/actual mixed-day/real ERP/independent acceptance. Авторские cases не являются независимым принятием.
+""",encoding="utf-8")
+print("591 wiki/plan24/runbook/log and Qwen tasks checkpointed.")

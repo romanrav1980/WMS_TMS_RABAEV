@@ -4,6 +4,14 @@
 (() => {
   // Экран → какие параметры он читает из адреса.
   const ACCEPTS = {
+    "store-investigations.html": ["case_id"],
+    "interwarehouse.html": ["warehouse_id"],
+    "supplier-handover.html": ["warehouse_id"],
+    "logistics-costs.html": ["warehouse_id"],
+    "store-return-receiving.html": ["warehouse_id"],
+    "store-return-putaway.html": ["warehouse_id"],
+    "supplier-return.html": ["warehouse_id"],
+    "return-disposal.html": ["warehouse_id"],
     "interwarehouse-groups.html": ["warehouse_id"],          // interwarehouse-groups.js: query.get("warehouse_id")
     "logistics-expenses.html": ["warehouse_id", "operation_id"], // logistics-expenses-actions.js: deep link
     "warehouse-tasks.html": ["preset", "task_id"],            // warehouse-tasks.js: preset, task_id (склад — из учётной записи)

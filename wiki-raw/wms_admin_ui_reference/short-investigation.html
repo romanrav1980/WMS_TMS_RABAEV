@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Расследование недостачи — WMS</title><link rel="stylesheet" href="styles.css"></head>
+<body class="auth-pending" data-required-permission="inventory_task_view"><div class="app">
+<aside class="sidebar"><nav class="nav" data-admin-nav data-active-nav="case-pick"></nav></aside>
+<main class="workspace"><header class="topbar"><b>Расследование недостачи</b><button id="adminLogout">Выйти</button></header>
+<article class="panel"><h1 id="investigationTitle">Загрузка инцидента</h1><p id="investigationContext"></p>
+<button id="investigationReload">Обновить</button><div id="investigationCameras"></div><p id="investigationMessage" role="status"></p></article>
+<article class="panel" data-permission="case_pick_short_approve"><h2>Результат просмотра</h2>
+<label>Состояние расследования<select id="investigationStatus"><option value="REVIEWING">Расследуется</option><option value="CLOSED">Расследование завершено</option></select></label>
+<label>Вывод и действия<textarea id="investigationNote" maxlength="1000"></textarea></label>
+<label>Ссылка на найденный фрагмент<input id="investigationVideo" maxlength="1500"></label>
+<button id="investigationSave">Сохранить результат</button>
+<p>Вывод расследования записывается отдельно от подтверждения количества и восстановления отбора.</p>
+<div id="investigationHistory"></div></article>
+<article class="panel" data-permission="warehouse_settings_edit"><h2>Камера для этой ячейки</h2>
+<select id="cameraExisting"><option value="">Новая точка обзора</option></select>
+<label>Код точки обзора<input id="cameraCode" maxlength="80"></label>
+<label>Ссылка архива с {viewpoint}, {cell}, {from_iso}, {to_iso}<input id="cameraTemplate" maxlength="2000"></label>
+<label>Смещение часового пояса сохранённого времени Oracle<input id="cameraOffset" value="+03:00" pattern="[+-][0-1][0-9]:[0-5][0-9]"></label>
+<label>Секунд до события<input id="cameraBefore" type="number" value="120" min="0" max="3600"></label>
+<label>Секунд после события<input id="cameraAfter" type="number" value="120" min="0" max="3600"></label>
+<label><input id="cameraActive" type="checkbox" checked>Активна</label><button id="cameraSave">Сохранить привязку</button>
+<p>Укажите адрес существующего видеоархива. Просмотр и доступ к записи выполняются в вашей системе видеонаблюдения.</p></article>
+</main></div><script src="admin-nav.js"></script><script src="admin-auth.js"></script><script src="short-investigation.js"></script></body></html>

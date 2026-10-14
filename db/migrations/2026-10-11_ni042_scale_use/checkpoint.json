@@ -1,0 +1,5 @@
+{
+  "migration_id": "2026-10-11-188-case-scale-consumption",
+  "before_sha256": "8504de32b335dd54c48be161df1aab5a550e1e4bc18cdda98e3c6839a2919dcc",
+  "recovery": "Fresh original CASE contract; additive empty use table rollback; retained use history forward repair; no DB copy"
+}

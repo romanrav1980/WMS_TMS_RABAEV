@@ -1,0 +1,20 @@
+{
+  "migration_id": "2026-10-13-008-ni041-hu-case-binding",
+  "state": "APPLIED_DEV_VALID",
+  "target": "RABAEV/orcl",
+  "recovery": "current990HU/current992binding captures+pairedrollback; no quantity history rewrite/copy",
+  "sha256": {
+    "db/migrations/2026-10-13_ni041_hu_case_binding/000_before_binding_spec.sql": "42f8b2f27ce12b8e27598dbf9b69337d735d9e6bb3136514e563f4a315fbfc38",
+    "db/migrations/2026-10-13_ni041_hu_case_binding/001_spec.sql": "4218c0e79902bd86f5480210c5328738c0a94ab0ae095a5fd53fcfe38d984c32",
+    "db/migrations/2026-10-13_ni041_hu_case_binding/000_before_binding_body.sql": "7bba240169df149d75242bb4351e3b2694d07e9a94ceb53ffb210ced86e88b26",
+    "db/migrations/2026-10-13_ni041_hu_case_binding/002_binding.sql": "b7716e19ac26894d38f1df1dbee054a20514c305482d8d44969f8dc612294e0d",
+    "db/migrations/2026-10-13_ni041_hu_case_binding/000_before_hu_cmd.sql": "ab0f5bdb1134973a9573fa5a287a83c2476579b19115c1e0e42aab41a308ee43",
+    "db/migrations/2026-10-13_ni041_hu_case_binding/003_hu_cmd.sql": "f238cbb189f2a65ffca6a810464458f11c78584047d38d1d7e42b36a8501234d",
+    "db/migrations/2026-10-13_ni041_hu_case_binding/004_compile.sql": "a9333b89c7ecd9ac892069870731f3216c670a926abd40eb365eb1fded3fc966",
+    "db/migrations/2026-10-13_ni041_hu_case_binding/005_ledger.sql": "397ecc73e8c0d78688b80a513a89b4a8d8ff8cbf40988cdcdcd6db162f25c6d6",
+    "db/migrations/2026-10-13_ni041_hu_case_binding/apply.sql": "c1e1ec44064af76c31a734b607cfdd22e6b52aa7c2ee5224b1f7bd0d0fc6be0f",
+    "db/migrations/2026-10-13_ni041_hu_case_binding/rollback.sql": "246cded72c433ac2fa8a32b5e378643e9b736cf1263d91cf0ba7a4a75e07a0ea",
+    "db/migrations/2026-10-13_ni041_hu_case_binding/verify.sql": "c57d18e8efdd977534bc246a9e983a5a0c85189fa96de59fbb4211a8196e07af"
+  },
+  "evidence": "994/995 attach+existingWHT1138 DONE1HU/20EA/CTFF5/rollback/replay;996 detachCTFF6/H20/P20/tareHELD"
+}

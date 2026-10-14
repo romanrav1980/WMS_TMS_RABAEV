@@ -1,0 +1,17 @@
+# NI03.3: смешанная отгрузка и возврат потребности
+
+Ticket172, в реализации. Расширяется прежняя WAVE_EXECUTION_FINISH disposition PARTIAL_SHIPPED_RETURNED; normal и полностью returned режимы сохраняются. Нужны текущий склад/active actor, pick_wave_launch + pick_wave_cancel, явная причина.
+
+Нормальный native snapshot проверяет все DONE/PT факт/approved-short/реальную SHIPPED provenance/CASE и HARD. Новый режим разрешает только cancelled-demand и cancelledCASE blockers после отдельного подтверждения отмены/пустого состава. Незаконченная физика/непокрытый факт/неотгруженный DONE не обходятся. Должны существовать и DONE, и CANCELLED PT; для cancelled source сохраняется текущий исходный заказ и line snapshot прежнего pool.
+
+Итог MIXED_SHIPPED_AND_RETURNED не изменяет fulfillment/запас и не называется полным исполнением заказа. Per-line current_planning.quantity — незакреплённый BASE snapshot, не количество отгрузки. Текущие чужие факты/отгрузки не стираются. История завершения в прежнем OP журнале.
+
+Миграция2026-10-11-172-mixed-wave-decision/saved source access+finish/paired rollback/no copy. Apply/evidence ещё не подтверждены.
+
+Реализовано Oracle/API/rawUI, APPLIED/VALID/USER_ERRORS empty. Wave403 author source prepared synthetically in ownWARE20052672 (LAUNCHED metadata precondition, not native auto-launch claim); then real native TASK_COMPLETE839 full3 → bindST641321/FF82 PICKED → independent QA172_KRO itemscans3 + weight12kg on explicit own4kgEA policy → SHIP by dispatcheradmin → emptyCASE1038 cancel1 → mixed finish late rollback + fresh concurrent one decision. FF82 remains SHIPPED3/MIXED172.SHIP, current native demand rows3414=0 and3415=1; first all-returned attempt409; original135 P20H20 unchanged. Own remainingCASE-source2 cleaned native inventorycount only afterDONE. Real hardware/SAP/Gov/driver or full auto-launch acceptance not claimed.
+
+Авторские setup errors recorded: sequence FUL_SQ typo corrected to existingFULF_SQ/resumed prior metadata; bind lacked required OP corrected without repeating fact; ownSKU receipt rule absent, configured through existing sku_rule; signature-only SCAN correctly returned existing coverage refusal, preserved failed receipt and supplied three real-shaped synthetic barcode scans under newOP; old stock_ship_pallet right not current shipping right, dispatcheradmin executed shipping after independent KRO control. No guards disabled and no fake DONE/SHIPPED DML. Existing business logic was reused.
+
+Outcome MIXED_SHIPPED_AND_RETURNED/order_fulfillment_changed=false/physical_stock_changed=false. Native helper171 current_planning is per-line UNALLOCATED_BASE_NOT_SHIPPED_PROOF; it is not a delivery receipt. Normal snapshot reason/proof checks remain authoritative, only explicitly cancelledPT/CASE blockers are resolved. RawUI adds separate action/reason/pendingOP and per-line planning figures. Unknown write scope nowHTTP403 when Oracle20882.
+
+SQL: cancelled-demand query3.943ms/9, demandcount2.465ms/9, native resource enumeration1.879ms/4, targeted line1.704ms/10. Decision retain current wave/line keys and200/1200bounds; no speculative index. Fullpool set-based aggregation remains owned backlog, not load acceptance. Architecture535/0cycles/76debt and JSsyntaxPASS; full gate last170PASS, no repeated broad gate required by rawUI/SQL-only increment. Same-original-line partial and marked/nested/multipleUOM cases remain addressable residuals; independent Qwen notrun.

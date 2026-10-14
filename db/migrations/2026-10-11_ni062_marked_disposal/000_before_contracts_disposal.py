@@ -1,0 +1,9 @@
+from typing import Any,Protocol
+
+class ReturnDisposalPort(Protocol):
+    def report(self,operation_id: str,receipt_id: str,reference: str,document_hash: str,reason: str,actor: str) -> dict[str,Any]: ...
+    def dispose(self,operation_id: str,request_id: str,version: int,pallet: str,cell: str,reference: str,actor: str) -> dict[str,Any]: ...
+    def pending(self,ware_id: int,actor: str) -> list[dict[str,Any]]: ...
+
+def return_disposal_service() -> ReturnDisposalPort:
+    raise RuntimeError("Return disposal not wired")

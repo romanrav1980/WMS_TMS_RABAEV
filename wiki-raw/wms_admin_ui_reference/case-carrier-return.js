@@ -14,9 +14,11 @@
    label.append(input);host.append(label);
   }
   cpTsdEl("cpTsdRetryReturn").hidden=!localStorage.getItem(key());
+  cpTsdEl("cpTsdCancelEmpty").disabled=!cpTsd.task||!!(cpTsd.task.physical_lots||[]).length||
+    !/^0(?:\.0+)?$/.test(String(cpTsd.task.picked_qty??"0"))||["CANCELLED","SHIPPED","FAILED"].includes(cpTsd.task.status);
  };
- async function submit(retry){
-  if(busy||window.cpTsdStockBusy)return;
+ async function submit(retry,empty=false){
+  if(busy||window.cpTsdStockBusy||window.wmsCaseType?.hasPending())return;
   busy=true;window.cpTsdStockBusy=true;let storageKey,priorUnknown=false,attempted=false;
   try{
    storageKey=key();
@@ -33,18 +35,22 @@
      destinations[input.dataset.returnUid]=input.value.trim();
     }
     const scan=cpTsdEl("cpTsdScanContainer").value.trim();
-    if(!scan||!Object.keys(destinations).length)throw new Error("Отсканируйте идентификатор паллеты.");
+    if(!scan||(!empty&&!Object.keys(destinations).length))throw new Error("Отсканируйте идентификатор паллеты.");
+    const reason=cpTsdEl("cpTsdEmptyCancelReason").value.trim();
+    if(empty&&(Object.keys(destinations).length||!reason))throw new Error("Требуются пустое место и причина отмены.");
     intent={task:cpTsd.task.case_pick_task_id,body:{operation_id:"CASE.RETURN.UI:"+crypto.randomUUID(),
-     scan_container:scan,expected_content_version:cpTsd.task.content_version,destinations}};
+     scan_container:scan,expected_content_version:cpTsd.task.content_version,destinations,...(empty?{allow_empty:true,reason}:{})}};
     localStorage.setItem(storageKey,JSON.stringify(intent));
    }
    priorUnknown=!!localStorage.getItem(storageKey+":delivery");
    localStorage.setItem(storageKey+":delivery","unknown");attempted=true;
-   await cpTsdFetch("/api/case-pick/tasks/"+intent.task+"/return-carrier",
+   const result=await cpTsdFetch("/api/case-pick/tasks/"+intent.task+"/return-carrier",
     {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(intent.body)});
    localStorage.removeItem(storageKey+":delivery");localStorage.removeItem(storageKey);
    cpTsd.task=await cpTsdFetch("/api/case-pick/tasks/"+intent.task);cpTsdRender();
-   cpTsdSetState("Товар возвращён в исходные ячейки. Резерв снят, паллета отбора отменена.");
+   cpTsdSetState(result.status==="CANCELLED_EMPTY"?
+    "Пустое место отменено, резерв снят. Если закреплена тара, освободите её бронь; затем примите решение по волне. Потребность заказа сохраняется.":
+    "Товар возвращён в исходные ячейки. Резерв снят, паллета отбора отменена.");
   }catch(error){
    if(attempted&&!priorUnknown&&error.detail?.outcome_confirmed===true){
     localStorage.removeItem(storageKey+":delivery");localStorage.removeItem(storageKey);
@@ -58,5 +64,6 @@
  window.addEventListener("DOMContentLoaded",()=>{
   cpTsdEl("cpTsdReturnCarrier").addEventListener("click",()=>submit(false));
   cpTsdEl("cpTsdRetryReturn").addEventListener("click",()=>submit(true));
+  cpTsdEl("cpTsdCancelEmpty").addEventListener("click",()=>submit(false,true));
  });
 })();

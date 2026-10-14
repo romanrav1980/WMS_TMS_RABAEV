@@ -1,0 +1,5 @@
+# NI07.1 — дополнительные расходы,112
+Finance owns immutable expense/decisions and catalog. Reuse existing TT/vehicle and billing membership; no stock effect/new invoice.
+Catalog explicit code/name/scope TRIP|VEHICLE|BOTH/included-in-rate, current version. Report current warehouse-bound edit_bill_tt actor, exact decimal currency/date/document, freezes catalogversion/name/object/amount. Rate-included work forbidden; WAREHOUSE_PICKING cannot be reintroduced as extra article.
+Two phases: LOGIST calc_tt_price determines TRIP distribution basis BASE_QUANTITY|WEIGHT (VEHICLE alwaysNONE), FINANCE create_tt_price other actor thanLOGIST confirms/rejects. Existing expense row FORUPDATE first serializes sameexpense; unique expense+phase and operation hash preserve replay. Only approved FINANCE becomes liability; TRIP pending goods allocation next113, VEHICLE never goods allocation.
+All expenses/decisions append-only, correction links original in later bounded ticket. Current catalog update preserves optimistic version and old immutable expense snapshot; no fake public ACK.

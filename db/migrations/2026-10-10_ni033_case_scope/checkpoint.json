@@ -1,0 +1,15 @@
+{
+  "migration_id": "2026-10-10-165-case-current-warehouse",
+  "files": {
+    "000_before_policy.sql": "694cb23455e7125d32b87fe25d60b77ac2c62a867678e772e6c2441cc79e2d21",
+    "000_before_root.sql": "12c9504fb057a638310c15c3f39b0e8f1684cadc90f78fe0393dc93bf05c4c3e",
+    "001_access.sql": "ed2b9d4e46daba565f58d5eeb732842ee3d6766dd59ca27061c0bf487a08f473",
+    "002_policy_body.sql": "05a7bed905c2c893f5ada585c65028caea2723c7200fd09e61e62c288df08039",
+    "002_policy_contract.sql": "3e74e2cac109ecb589a694566bfe85b8bf87481374df45990960a800f1e02454",
+    "003_root_body.sql": "99c26c008bccc66237de0fb2732b66a575b171113b01b4ecc46b18c8620e35fc",
+    "003_root_contract.sql": "d4ce58e59cf3a2c419ab1968ee0096e01ce27a5925a687efbc9cf042408e5ab7",
+    "apply.sql": "5efc0f582c93411f0b233bcc9f53d360985f02d980a7131d42bcdcf7cc2b1178",
+    "rollback.sql": "0aa8544b4fd9a2eec88960f8367e1f2fcf13c257fe3c33f6c2929345b30834f0"
+  },
+  "scope": "reversible packages/dev RABAEV; saved live sources, no database copy"
+}

@@ -1,0 +1,20 @@
+{
+  "trip_id": 33641,
+  "checks": [
+    "actual React components with real GET/native calculation",
+    "explicit REST visible",
+    "string ST preserved",
+    "unapproved fixture shown, no POST"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/transport/preflight/trips/33641/delivery-windows?time_zone=Asia%2FTbilisi"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8088/api/transport/preflight/trips/33641/time-context"
+    }
+  ],
+  "errors": []
+}

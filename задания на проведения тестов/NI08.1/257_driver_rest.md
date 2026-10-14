@@ -1,0 +1,2 @@
+# Qwen:257 — перерывы
+Test originaltimepreview rights/snapshot/explicitzone, continuous120 thenUNLOAD30 thenDRIVE1 violation, REST15 reset/REST14 refused, missinggap andzeroDrive unknown, DRIVER_CHANGE no guessednewdriver. Projectparameters120/15/540 are notlegislationproof. Morethanone trip/day/prior duty unverified. UI generation/noautoREST/noQty; original33530 no rerun sourcefactory. SQLsameindexedTT200bound.

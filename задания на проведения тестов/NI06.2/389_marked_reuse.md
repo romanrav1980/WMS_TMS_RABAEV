@@ -1,0 +1,2 @@
+# Qwen385–388
+Context387 actual available3/H0/same3birthkeys6codes/originalSAPbatch/fullBOX3/explicitboxbarcode/approvedboundERP/source/trip/storehandover/driverpickup/exactwarehouse6QR/nativePUT/currentpickfaceeligible. Verify returnedstock stillavailable; do notzero orrerunfactory385. Originaldriverbinding restored/QAactorretired. SharedReturnproof perunit lot/profiles/version matrix andcurrent CODE.PROFILES versions; UNITOR acceptsunit path whileBOX/PAL-only denied. RealGovACK/ERP/hardware notpassed. Source390 recurrentcycle separate.

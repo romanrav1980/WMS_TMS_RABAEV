@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>WMS PRO Пополнение волны</title>
     <link rel="stylesheet" href="styles.css?v=20260519-wave-replenishment-queue" />
-  </head>
+  <link rel="stylesheet" href="wave-execution.css?v=20261013-1092"></head>
   <body class="auth-pending" data-required-permission="pick_wave_view">
     <div class="app">
       <aside class="sidebar">
@@ -199,11 +199,17 @@
               <button id="waveRuleSave" type="button">Сохранить</button>
             </div>
           </article>
-        </section>
-      </main>
+        <article id="waveSourceAvailability" class="panel" hidden><h2>Доступность источников</h2><p data-source-status></p><div class="table-wrap"><table><thead><tr><th>Идентификатор паллеты</th><th>Ячейка</th><th>Остаток</th><th>Резерв</th><th>Свободно</th><th>Ед.</th><th>Допуск</th></tr></thead><tbody></tbody></table></div><button data-source-next type="button" hidden>Следующие источники</button></article></section>
+      <article class="panel" data-permission="pick_wave_view"><h2>Непрерывное мини-макс пополнение</h2>
+<label>Склад <input id="minimaxWarehouse" inputmode="numeric"></label>
+<button id="minimaxPreview">Проверить нормы и потребность</button>
+<button id="minimaxReconcile" data-permission="pick_wave_launch">Выдать непокрытое пополнение</button>
+<p>Используются действующие нормы ячеек. Открытая подача исключает дублирование; запас меняется только после физического подтверждения задания.</p>
+<pre id="minimaxMessage" role="status"></pre></article></main>
     </div>
     <script src="admin-nav.js"></script>
     <script src="admin-auth.js"></script>
-    <script src="wave-replenishment.js"></script>
-  </body>
+    <script src="wave-replenishment.js?v=20261013-890"></script><script src="wave-source-availability.js?v=20261013-890"></script>
+  <script src="replenishment-progress.js?v=20261013-890"></script>
+<script src="minimax-lifecycle.js"></script><script src="wave-command-intent.js?v=20261013-890"></script><script src="wave-pick-intent.js?v=20261013-890"></script><script src="wave-pick-release.js?v=20261013-890"></script><script src="wave-execution-intent.js?v=20261013-890"></script><script src="wave-execution-view.js?v=20261013-1092"></script><script src="wave-execution.js?v=20261013-890"></script></body>
 </html>

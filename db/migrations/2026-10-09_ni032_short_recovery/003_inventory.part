@@ -1,0 +1,83 @@
+create or replace package body RRL_STOCK_SHORT_RECOVERY as
+ procedure add_case_rows(s RRL_CASE_PICK_SHORT%rowtype,p_resources in out nocopy json_array_t) is l RRL_CASE_PICK_LINE%rowtype;
+ begin
+  select * into l from RRL_CASE_PICK_LINE where CASE_PICK_LINE_ID=s.CASE_PICK_LINE_ID;
+  RRL_STOCK_PLAN_HELPER.row_key(p_resources,'RRL_CASE_PICK_SHORT',RRL_STOCK_PLAN_HELPER.decimal_text(s.CASE_PICK_SHORT_ID));
+  RRL_STOCK_PLAN_HELPER.row_key(p_resources,'RRL_PICK_WAVE',RRL_STOCK_PLAN_HELPER.decimal_text(s.PICK_WAVE_ID));
+  RRL_STOCK_PLAN_HELPER.row_key(p_resources,'RRL_CASE_PICK_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(s.CASE_PICK_TASK_ID));
+  RRL_STOCK_PLAN_HELPER.row_key(p_resources,'RRL_CASE_PICK_LINE',RRL_STOCK_PLAN_HELPER.decimal_text(s.CASE_PICK_LINE_ID));
+  RRL_STOCK_PLAN_HELPER.row_key(p_resources,'RRL_PICK_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(l.PICK_TASK_ID));
+  RRL_STOCK_PLAN_HELPER.row_key(p_resources,'RRL_PICK_WAVE_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(l.PICK_WAVE_TASK_ID));
+ end;
+ procedure plan_inventory(p_request clob,p_resources in out nocopy json_array_t,p_policies in out nocopy json_array_t,p_domain in out nocopy json_object_t) is
+  d json_object_t:=json_object_t.parse(p_request);m json_object_t;counts json_array_t;x json_object_t;
+  it RRL_INVENTORY_TASK%rowtype;s RRL_CASE_PICK_SHORT%rowtype;doc number;ware number;new_repl number;n number;id number;found boolean;
+ begin
+  m:=d.get_object('metadata');m.on_error(0);
+  if not m.has('inventory_task_id') or m.get('inventory_task_id').is_null then return;end if;
+  id:=m.get_number('inventory_task_id');doc:=d.get_object('source').get_number('revision_id');
+  if id is null or id<=0 or id!=trunc(id) then raise_application_error(-20881,'INVENTORY_TASK_ID_REQUIRED');end if;
+  select * into it from RRL_INVENTORY_TASK where INVENTORY_TASK_ID=id;
+  select * into s from RRL_CASE_PICK_SHORT where CASE_PICK_SHORT_ID=it.SOURCE_DOC_ID;
+  select WARE_ID into ware from RRL_REVIZION where ID=doc;
+  if it.SOURCE_DOC_TYPE!='CASE_PICK_SHORT' or it.TASK_SOURCE!='CASE_PICK_SHORT'
+    or it.INVENTORY_TASK_ID!=s.INVENTORY_TASK_ID or it.STATUS not in('NEW','ASSIGNED','IN_PROGRESS')
+    or s.STATUS!='ACCEPTED' or s.RECOVERY_STATE is null or s.RECOVERY_STATE!='WAIT_INVENTORY'
+    or it.WARE_ID!=ware or it.CELL_CODE!=s.CELL_CODE or it.ARTICUL!=s.ARTICUL then
+   raise_application_error(-20886,'SHORT_INVENTORY_TASK_STATE_CONFLICT');end if;
+  counts:=m.get_array('counts');
+  for i in 0..counts.get_size-1 loop
+   x:=treat(counts.get(i) as json_object_t);
+   if x.get_string('cell')!=it.CELL_CODE or x.get_string('article')!=it.ARTICUL then
+    raise_application_error(-20887,'SHORT_INVENTORY_SCOPE_CONFLICT');end if;
+  end loop;
+  for lot in(select r.UID_POLETA from RRL_REMAINS r join RRL_PALLETS p on p.UID_PALLET=r.UID_POLETA
+   where r.CELL=it.CELL_CODE and p.ARTICUL=it.ARTICUL and r.REMAIN>0 fetch first 201 rows only) loop
+   found:=false;
+   for i in 0..counts.get_size-1 loop
+    x:=treat(counts.get(i) as json_object_t);
+    if x.get_string('uid')=lot.UID_POLETA then found:=true;exit;end if;
+   end loop;
+   if not found then raise_application_error(-20887,'SHORT_INVENTORY_SCOPE_INCOMPLETE: refresh all lots');end if;
+  end loop;
+  RRL_STOCK_PLAN_HELPER.fence(p_policies,'CELL',it.CELL_CODE,6);
+  RRL_STOCK_PLAN_HELPER.row_key(p_resources,'RRL_INVENTORY_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(id));
+  add_case_rows(s,p_resources);
+  select RRL_PICK_WAVE_REPL_SQ.nextval into new_repl from dual;
+  RRL_STOCK_PLAN_HELPER.row_key(p_resources,'RRL_PICK_WAVE_REPLENISH_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(new_repl));
+  p_domain.put('inventory_task_id',id);p_domain.put('short_id',s.CASE_PICK_SHORT_ID);p_domain.put('new_repl_id',new_repl);
+ end;
+ procedure finish_inventory(p_request clob,p_actor varchar2,p_domain json_object_t,p_facts json_array_t,p_result in out nocopy json_object_t) is
+  d json_object_t:=json_object_t.parse(p_request);id number;it RRL_INVENTORY_TASK%rowtype;s RRL_CASE_PICK_SHORT%rowtype;l RRL_CASE_PICK_LINE%rowtype;
+  qty number:=0;need number;new_repl number;op varchar2(100);x json_object_t;found boolean;min_days number;min_percent number;
+ begin
+  if not p_domain.has('inventory_task_id') then return;end if;
+  if RRL_HAS_WRIGHT(p_actor,'inventory_task_execute')!=1 then raise_application_error(-20882,'SHORT_INVENTORY_EXECUTE_FORBIDDEN');end if;
+  id:=p_domain.get_number('inventory_task_id');new_repl:=p_domain.get_number('new_repl_id');op:=d.get_string('operation_id');
+  RRL_STOCK_LOCK_API.assert_held(20,RRL_STOCK_LOCK_API.resource_key('ROW','RRL_INVENTORY_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(id)));
+  select * into it from RRL_INVENTORY_TASK where INVENTORY_TASK_ID=id for update;
+  select * into s from RRL_CASE_PICK_SHORT where CASE_PICK_SHORT_ID=it.SOURCE_DOC_ID for update;
+  select * into l from RRL_CASE_PICK_LINE where CASE_PICK_LINE_ID=s.CASE_PICK_LINE_ID for update;
+  if s.CASE_PICK_SHORT_ID!=p_domain.get_number('short_id') or s.RECOVERY_STATE!='WAIT_INVENTORY'
+    or it.STATUS not in('NEW','ASSIGNED','IN_PROGRESS') or (it.ASSIGNED_TO is not null and it.ASSIGNED_TO!=p_actor) then
+   raise_application_error(-20886,'SHORT_INVENTORY_EXECUTOR_OR_STATE_CONFLICT');end if;
+  for i in 0..p_facts.get_size-1 loop x:=treat(p_facts.get(i) as json_object_t);if not regexp_like(x.get_string('after'),'^0([.]0{1,9})?$') then qty:=qty+RRL_STOCK_MATH.quantity(x.get_string('after'));end if;end loop;
+  -- CELL X prevents an unobserved concurrent arrival. A new unlisted lot requires refresh.
+  for lot in(select r.UID_POLETA from RRL_REMAINS r join RRL_PALLETS p on p.UID_PALLET=r.UID_POLETA
+    where r.CELL=it.CELL_CODE and p.ARTICUL=it.ARTICUL and r.REMAIN>0) loop
+   found:=false;
+   for i in 0..p_facts.get_size-1 loop x:=treat(p_facts.get(i) as json_object_t);if x.get_string('uid')=lot.UID_POLETA then found:=true;exit;end if;end loop;
+   if not found then raise_application_error(-20890,'CLOSURE_CHANGED: short inventory lot set');end if;
+  end loop;
+  need:=l.PLANNED_QTY-l.PICKED_QTY;
+  if need<=0 or need!=s.SHORT_QTY or l.STATUS!='WAIT_REPLENISHMENT' then raise_application_error(-20886,'SHORT_RECOVERY_REMAINDER_CHANGED');end if;
+  select max(MIN_SHELF_LIFE_DAYS),max(MIN_SHELF_LIFE_PERCENT) into min_days,min_percent from RRL_PICK_WAVE_REPLENISH_TASK where PICK_TASK_ID=l.PICK_TASK_ID;
+  insert into RRL_PICK_WAVE_REPLENISH_TASK(PICK_WAVE_REPLENISH_TASK_ID,PICK_WAVE_ID,PICK_TASK_ID,STATUS,ARTICUL,
+   TARGET_CELL_CODE,QTY,PICK_SEQUENCE,CREATED_BY,REPLENISHMENT_METHOD,REPLENISHMENT_QTY_MODE,RELEASED_AT,RELEASED_BY,MIN_SHELF_LIFE_DAYS,MIN_SHELF_LIFE_PERCENT)
+   values(new_repl,l.PICK_WAVE_ID,l.PICK_TASK_ID,'RELEASED',l.ARTICUL,l.CELL_CODE,need,l.PICK_SEQUENCE,p_actor,'IMMEDIATE','FILL_TO_VOLUME',sysdate,p_actor,min_days,min_percent);
+  update RRL_INVENTORY_TASK set STATUS='DONE',FACT_QTY=qty,DONE_AT=systimestamp,UPDATED_AT=systimestamp,UPDATED_BY=p_actor,
+   ASSIGNED_TO=nvl(ASSIGNED_TO,p_actor),REVISION_ID=p_domain.get_number('document'),COUNT_OPERATION_ID=op where INVENTORY_TASK_ID=id;
+  update RRL_CASE_PICK_SHORT set RECOVERY_STATE='WAIT_REPLENISHMENT',REPLENISH_TASK_ID=new_repl,RECOVERY_LAST_ERROR=null,RECOVERY_WORKER=null,RECOVERY_LEASE_UNTIL=null where CASE_PICK_SHORT_ID=s.CASE_PICK_SHORT_ID;
+  p_result.put('inventory_task_id',id);p_result.put('short_id',s.CASE_PICK_SHORT_ID);p_result.put('replenish_task_id',new_repl);
+  p_result.put('observed_quantity',RRL_STOCK_PLAN_HELPER.decimal_text(qty));p_result.put('recovery_state','WAIT_REPLENISHMENT');
+ end;

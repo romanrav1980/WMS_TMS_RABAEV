@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-240-interwarehouse-administrative-temperature'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Manual temperature decision and original warehouse task range',sysdate,user,'db/migrations/2026-10-11_ni061_thermal/apply.sql','db/migrations/2026-10-11_ni061_thermal/rollback.sql','APPLIED','Own sourcea1a55297ac/SKU2-4/manual8.125/HOLD-PROCEED revisions1-4/receipt3 blocked/963 mode2-4/HOLD native move refusal/same-range original task release/ST641378/QC6/load-depart33553/same3 units6codes. Native rollback/replay/incompatible range denial/allVALID/quality240. Administrative evidence not sensor or externalACK.');
+commit;

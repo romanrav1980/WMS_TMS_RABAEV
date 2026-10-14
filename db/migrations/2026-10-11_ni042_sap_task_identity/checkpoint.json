@@ -1,0 +1,11 @@
+{
+  "migration_id": "2026-10-11-181-sap-putaway-identity",
+  "source_sha256": {
+    "db/migrations/2026-10-11_ni042_sap_task_identity/000_before_index.sql": "b044f91d5077e17186fe7c1658d198010efd4e6444fa2a3aec84093370d62a81",
+    "db/migrations/2026-10-11_ni042_sap_task_identity/001_index.sql": "6b57512bb516a4c2a409213948c2e5409908089f104e39b69cd0a5fbbc0fada3",
+    "db/migrations/2026-10-11_ni042_sap_task_identity/apply.sql": "e02bccc04b3424227ce7163f73f42271c8ff454e71aceb2526e7c196a064a71a",
+    "db/migrations/2026-10-11_ni042_sap_task_identity/rollback.sql": "a0fce874a91227cda5facef93721b655a2e0c42e62dd5e6a47f43eb5a3d5ccb3",
+    "db/migrations/2026-10-11_ni042_sap_task_identity/verify.sql": "754c42a68acf6f04f363c5b1c1fb65d3835c618bf897f2716e526a0abdf4752d"
+  },
+  "recovery": "fresh index DDL, replacement built before removal, guarded rollback; no database copy"
+}

@@ -1,0 +1,35 @@
+﻿from pathlib import Path
+import json
+report=Path('reports/nicora/2026-10-13/61-parallel-functional-blocks.md');report.open('a',encoding='utf-8').write('\n## Интеграционная проверка\n\nОбщий gate после C0023 PASS:753files/0cycles/73debt,24tests,admin+terminalTypeScript. EncodingPASS. C0023: акт/сохранениевводаприотказе — [отчёт](codex/C0023/report.md). Последующий NI07.2 keyset registry описан отдельнымreport62, его итоговаяпроверка будетследующимблоком.\n')
+p=Path('reports/nicora/2026-10-13/62-ni072-stock-conflict-registry.md');p.write_text('''# NI07.2 — постраничный реестр конфликтов остатка
+
+14.10.2026, W1426–1431. Существующие два предиката сверки переиспользованы. Новый GET /api/finance/day-reconciliation/warehouses/{ware_id}/stock-conflicts читает только текущий разрешённый склад, в READ ONLY транзакции. Метрика из enum; до100строк+1, UI50. Курсор связан со складом/метрикой, продолжение по UID+CELL; COUNT не выполняется. Каждая страница — новый снимок, единый исторический снимок между страницами не обещается.
+
+Живая схема: UID_POLETA VARCHAR2(200), CELL VARCHAR2(60), оба NOT NULL. Поэтому курсор строковый, без Number; ограничение прежнего sample исправлено160→200. SQL-bound параметров сохраняется. SQL/DDLсхемы не менялись.
+
+Проверено: read-only Oracle CTE52 конфликтов с UID173символа, обе метрики:20+20+12,52 уникальныепарыбезпропусков. Текущий реальный склад9807 конфликтовнеимеет,GET200; malformedcursor422; неизвестныйсклад403. CTEнесоздаёт ошибочныйзапас втаблицах. BrowserреальныйGET200 + modeled50→2, сменаскладаочищаетстроки,0POST/errors. Screenshot110 явно synthetic. scripts/check1429_stock_pages.py, browser1430_stock_pages.mjs.
+
+SQL80zb0rpa6crta:7.006мс/2executions,54buffers. Решение: новый индексне нужен; при>500мс на реальном объёме finance проверяетплан конкретнойветви ииндексыreceipt-unit. Полныйproductionобъём/межстраничная конкурентнаястабильность этимdev-сценариемне доказаны. Реестрничегонеисправляет автоматически.
+''',encoding='utf-8')
+p=Path('wiki/components/nicora_ni072_stock_keys_20261014.md');p.open('a',encoding='utf-8').write('\n## Продолжение W1426–1431\n\n[Report62](../../reports/nicora/2026-10-13/62-ni072-stock-conflict-registry.md): доступен полный keyset drill-down по текущему складу/виду конфликта. APIдо100,UI50, текущийснимоккаждойстраницы; UIDVARCHAR200/CELL60сохраняются строками.52CTE→20+20+12, live200/422/403,SQL7мс. Прежнее ограничение только sample20 устранено; записиостатка не меняются.\n')
+p=Path('wiki/index.md');p.write_text('- [Реестр конфликтов остатков](components/nicora_ni072_stock_keys_20261014.md): report62, keyset UID+CELL, полная навигация по50, SQL7мс; ошибочный запас не создавался.\n'+p.read_text(encoding='utf-8'),encoding='utf-8')
+p=Path('wiki/log.md');p.open('a',encoding='utf-8').write('\n- 2026-10-14: W1426–1431 NI07.2: bounded keysetregistry по прежнимpredicates, строковыеUIDдо200, currentwarehouse rights; CTE52/noDML иliveGET/SQL7мс. Report62. Предыдущий общийgate753/0/73/24PASS,encodingPASS.\n')
+p=Path('wiki/requirements/nikora_delivery_v55/implementation_plan.json');d=json.loads(p.read_text(encoding='utf-8'));d['planRevision']=69;d['currentSprintMeaning']='Ведущий root интегрирует блоки; ведомый Codex завершил NI072/NI043/NI011/NI042/C0023, выполняет formdraft приёмки. Claude C0020 сдан, paused usage; C0023 передан Codex.'
+updates={
+'NI03.2':('reports/nicora/2026-10-13/60-ni032-assignment-continuation.md','Цепочка/остаток/следующее действие и назначение реализованы reports59–60. Продолжение READY→исходнаясборка добавленоreport61. Остаток уточнять по не закрытым physical/marked/concurrency критериям, не повторять готовыйtaskengine.'),
+'NI03.3':('reports/nicora/2026-10-13/61-parallel-functional-blocks.md','Факт/остаток/причины/next links уже реализованы; wave560→CASE1134 подтверждён. Сопоставить оставшийся составной CASE→QC→shipping/approvedshort критерий с существующимиreports44–46, без повторногоengine.'),
+'NI04.2':('reports/nicora/2026-10-13/codex/NI042/report.md','Все существующие методыотбора сохранены. UnpostedCASEdraft и durableSHORTretry добавленыreportsNI042/61. Аппаратная/независимаяприёмка отдельно; конкретные следующие кодовыепробелы подтверждать исходниками.'),
+'NI04.3':('reports/nicora/2026-10-13/codex/NI043/report.md','Taskscan actor/task/currentcontext/retry и архивповреждённогоintent реализованыNI043/report61. ГосударственныйACK/провайдер отдельно, не заменять локальнымподтверждением.'),
+'NI01.1':('reports/nicora/2026-10-13/codex/NI011/report.md','XMLоснование/планпаллет/переразбиение/история→размещение ужеесть; per-scan correction готов. СейчасCodex:неотправленныйformdraftприёмки.'),
+'NI02.2':('reports/nicora/2026-10-13/claude/C0018/report.md','C0018+C0021 сданы: страницы200/серверныйсклад/compositekey/очисткавыбора. /clusters остаётсябезстраниц; широкиеисторическиевыборки требуют отдельногорешения пофактическойнагрузке.'),
+'NI05.3':('reports/nicora/2026-10-13/codex/C0023/report.md','Актподтверждённойприёмки/различия/следующиешаги и сохранениеформыприconfirmedreject реализованыC0023Codex; обычнаяnativeприёмкаreport46существует. Конкретныеисключения внешнейприёмки отдельно.'),
+'NI06.3':('reports/nicora/2026-10-13/claude/C0020/report.md','Повреждение/возврат/независимоесписаниеC0015 и недостача→REJECT/replayC0020 готовы. WRITE_OFF именно поLOSS ещёнеподтверждён; не писатьдругойучёттары.'),
+'NI07.2':('reports/nicora/2026-10-13/62-ni072-stock-conflict-registry.md','Сверка/документы/ERP/regulatoryIDs/stockkeys и полныйkeysetregistry готовы. Внешняя сверка/независимое закрытие дня отдельно.'),
+'NI08.1':('reports/nicora/2026-10-13/61-parallel-functional-blocks.md','Рекомендация→интервалвыхода исправлена; workload/wavetime durable recovery усилен. Настройки/scopedread ужеготовы. СохраняетсяграницаCASE/currentavailability; физический ресурс/оборудование не подменять оценкой.')}
+for item in d['increments']:
+ if item['id'] in updates:item['latestDeliveryReport'],item['remainingDeliveryWork']=updates[item['id']]
+d['parallelAssignment']={'lead':'root','subordinate':'/root/codex_finance','subordinateActive':'NI01.1 unposted receiving form draft','externalClaude':'C0020 RELEASE; C0023 handed to Codex due usage pause','channel':'coordination/nicora-codex and coordination/nicora-claude','noSharedFileWrites':True}
+p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+p=Path('wiki/requirements/nikora_delivery_v55/implementation_plan.md');s=p.read_text(encoding='utf-8').replace('Редакция 68 ·','Редакция 69 ·');s='''> Исполнение14.10, редакция69: [report61](../../../reports/nicora/2026-10-13/61-parallel-functional-blocks.md), [report62](../../../reports/nicora/2026-10-13/62-ni072-stock-conflict-registry.md). Root ведёт; /root/codex_finance — ведомый. ClaudeC0020сдал, C0023выполненCodexпослеhandoff. Актуальные конкретныеостатки — remainingDeliveryWork вJSON; исторические pendingSlices не являются автоматическимпоручением повторнойреализации.
+
+'''+s;p.write_text(s,encoding='utf-8')

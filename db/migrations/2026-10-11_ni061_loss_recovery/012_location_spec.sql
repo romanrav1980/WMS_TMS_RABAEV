@@ -1,0 +1,8 @@
+create or replace package RRL_STOCK_LOCATION_CORE authid definer 
+ accessible by(package RRL_STOCK_IW_RECOVERY_REC,package RRL_STOCK_INTERWARE_REC,package RRL_STOCK_STORE_RETURN_REC_CMD,package RRL_STOCK_RECEIPT_REVERSE,package RRL_STOCK_INVENTORY_BIRTH,package RRL_STOCK_WAVE_LAUNCH_CMD,package RRL_STOCK_INVENTORY_CMD,package RRL_STOCK_MES_SUPPLY_CMD,package RRL_STOCK_MES_MOVEMENT_CORE,package RRL_STOCK_RECEIPT_CORE,package RRL_STOCK_RESERVATION_CMD,package RRL_STOCK_POSTING_API,package RRL_STOCK_MOVE_CORE, 
+  package RRL_STOCK_RESERVE_CORE,package RRL_STOCK_RECEIPT_CORE,package RRL_STOCK_TRANSFER_CORE,package RRL_STOCK_EFFECT_CORE) as 
+ procedure assert_receiving(p_cell varchar2,p_expected_warehouse number); 
+ procedure assert_quarantine(p_cell varchar2,p_expected_warehouse number); 
+ procedure assert_ordinary(p_cell varchar2,p_expected_warehouse number,p_role varchar2); 
+end;
+/

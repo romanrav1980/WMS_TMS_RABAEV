@@ -1,0 +1,2 @@
+# Qwen:191
+Run ni042_order_weight_policy_case.py dedicated dev. Inspect exact0/15/100/2.01 bounds, extra decimals rejected, stale versions/history, old client omission preserves current value, current WARE/cancelled rows/other SKU/case returns/previous picks included in original order preview. Confirm requested_base_quantity used (pool quantity after HARD may0), no auto order close or waived shortage, no DEF_PERC change. UI SKU save/TSD preview/current generation races. Native dependents VALID after ALTER. Review ≤200 rows/pool planline SQL batching before pilot.

@@ -1,0 +1,9 @@
+# NI05.3 — фотоархив приёмки, ticket085
+Design10.10.2026, not installed yet. Source NS52/NS12/process10_store_receipt. Delivery owns immutable photo association to actual departed load/store/receiver/view/time. Original bytes archived by SHA256, no warehouse quantity effect and no automatic weight admission.
+
+Selected first bounded implementation: deduplicated Oracle BLOB asset with immutable SHA/size/MIME/decoded dimensions, plus immutable place/store/view/actor association. Photos upload outside the quantity/receipt transaction; final receipt will reference already committed immutable IDs. This gives actual byte recovery/checksum with existing database persistence and avoids unconfigured external object storage. Explicit cost: BLOBs consume database storage; production photo-volume/capacity/object-store migration belongs NI08/operations and is not claimed proven.
+
+JPEG/PNG decoded by pinned Pillow12.3.0, original bytes unchanged, cap4MiB/12M pixels and one still frame. RAW image body stream bounded before decoding, no multipart dependency. Source authorization uses real RUSERS/store binding and immutable frozen destination. Same source/view/file retry returns same association; borrowed load/store IDs or image headers refuse. Read archive with receiver authorization and checksum verification. Register is pure metadata through guarded package, separate from stock root; receipt quantity transaction contains IDs only.
+
+Target author case: upload JPEG/PNG for three sides of own existing departed place, retry same source/file, retrieve exact bytes/hash, foreign address/invalid image/declared MIME mismatch deny; warehouse P/H unchanged. This does not itself implement weight/photo mandatory receipt, discrepancy or government ACK.
+Source for decoder behavior: [Pillow Image API](https://pillow.readthedocs.io/en/stable/reference/Image.html). open is lazy; verify and bounded load are both needed.

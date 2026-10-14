@@ -1,0 +1,5 @@
+# Qwen NI05.3 /539–548
+Read wiki/database/nicora_ni053_unloading_facts_20261012.md and original receiver UI/native receipt owner. Author543 actual delivered customer3/manual/no-loader; source519 must not be recreated; ctx543 saved exact bodies are replayable.
+Review clean plan-before-savepoint, same original load locks, new system capture/one start per load, current receiver/role scope, wrong root scan/signature/rolling mode/difficulty-without-loader denial. Verify finish shares receipt/custody/line/outbox transaction, no stock consumption twice.
+Fresh isolated scenario: difficult rolling cage with loader, late receipt rollback must restore no finish/no receipt/no outbox while already committed start remains; exact retry. UI reload/disconnect keeps exact op/body, no passwords in pending storage, changed actor/endpoint not mixed. Invalid local storage should be recoverable from server state.
+Day crossing midnight belongs start day, open starts block closure; actual source543 source1/done1/open0. Hardware/camera/reference is receiver attestation until real proof; do not invent external ACK.

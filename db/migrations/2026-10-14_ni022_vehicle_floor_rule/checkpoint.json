@@ -1,0 +1,12 @@
+{
+  "migration_id": "2026-10-14-1185-vehicle-floor-rule",
+  "target": "RABAEV/orcl",
+  "state": "APPLIED_TARGETED_VERIFIED",
+  "captured_sources": [
+    "db/migrations/2026-10-14_ni022_vehicle_floor_rule/000_rrl_vehicle_profile_api_spec.sql",
+    "db/migrations/2026-10-14_ni022_vehicle_floor_rule/000_rrl_vehicle_profile_api_body.sql",
+    "db/migrations/2026-10-14_ni022_vehicle_floor_rule/000_rrl_transport_plan_rules_spec.sql",
+    "db/migrations/2026-10-14_ni022_vehicle_floor_rule/000_rrl_transport_plan_rules_body.sql"
+  ],
+  "evidence": "reports/nicora/2026-10-13/36-vehicle-tare-variants-report.md"
+}

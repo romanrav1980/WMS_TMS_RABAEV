@@ -40,6 +40,12 @@ create or replace package body RRL_STOCK_POSTING_API as
   else
    begin
    if g_kind in('MANUAL_MOVE','COMPAT_MANUAL_MOVE') then RRL_STOCK_COMMAND_PLAN.compile_move(p_request,g_operation,v_policies,v_resources);
+   elsif g_kind='RESERVATION_ALLOCATE_POOL' then RRL_STOCK_POOL_CMD.compile_command(p_request,g_operation,p_hints,v_policies,v_resources,v_domain);
+   elsif g_kind='PICK_PALLET_BIND_SHIPMENT' then RRL_STOCK_FULLPAL_BIND_CMD.compile_command(p_request,g_operation,v_policies,v_resources,v_domain);
+  elsif g_kind in('HU_PLAN_MOVE','HU_TASK_COMPLETE') then RRL_STOCK_HU_TASK.compile_command(p_request,g_operation,v_policies,v_resources,v_domain);
+  elsif g_kind in('HU_CREATE','HU_ATTACH','HU_DETACH','HU_MOVE') then RRL_STOCK_HU_CMD.compile_command(p_request,g_operation,v_policies,v_resources,v_domain);
+  elsif g_kind='WAVE_EXECUTION_FINISH' then RRL_STOCK_WAVE_FINISH_CMD.compile_command(p_request,g_operation,v_policies,v_resources,v_domain);
+  elsif g_kind='WAVE_PICK_RELEASE' then RRL_STOCK_WAVE_PICK_CMD.compile_command(p_request,g_operation,v_policies,v_resources,v_domain);
    elsif g_kind='WAVE_LAUNCH' then RRL_STOCK_WAVE_LAUNCH_CMD.compile_command(p_request,g_operation,v_policies,v_resources,v_domain);
    elsif g_kind='OUTGOING_PALLET_CHECK' then RRL_STOCK_PALLET_QC_CMD.compile_command(p_request,g_operation,v_policies,v_resources,v_domain);
    elsif g_kind='CASE_SHORT_APPROVE' then RRL_STOCK_CASE_SHORT_CMD.compile_command(p_request,g_operation,v_policies,v_resources,v_domain);
@@ -173,6 +179,11 @@ create or replace package body RRL_STOCK_POSTING_API as
    or g_tx!=dbms_transaction.local_transaction_id(false) then raise_application_error(-20850,'WRITE_PLAN_VIOLATION'); end if;
   if g_kind='SAP_RECEIPT' then RRL_STOCK_CTX_API.end_effect;end if;
   if g_kind in('MANUAL_MOVE','COMPAT_MANUAL_MOVE') then RRL_STOCK_MOVE_CORE.manual_whole(g_request,g_actor,p_result);
+  elsif g_kind='PICK_PALLET_BIND_SHIPMENT' then RRL_STOCK_FULLPAL_BIND_CMD.execute_command(g_request,g_actor,p_result);
+  elsif g_kind in('HU_PLAN_MOVE','HU_TASK_COMPLETE') then RRL_STOCK_HU_TASK.execute_command(g_request,g_actor,p_result);
+  elsif g_kind in('HU_CREATE','HU_ATTACH','HU_DETACH','HU_MOVE') then RRL_STOCK_HU_CMD.execute_command(g_request,g_actor,p_result);
+  elsif g_kind='WAVE_EXECUTION_FINISH' then RRL_STOCK_WAVE_FINISH_CMD.execute_command(g_request,g_actor,p_result);
+  elsif g_kind='WAVE_PICK_RELEASE' then RRL_STOCK_WAVE_PICK_CMD.execute_command(g_request,g_actor,p_result);
   elsif g_kind='WAVE_LAUNCH' then RRL_STOCK_WAVE_LAUNCH_CMD.execute_command(g_request,g_actor,p_result);
    elsif g_kind='OUTGOING_PALLET_CHECK' then RRL_STOCK_PALLET_QC_CMD.execute_command(g_request,g_actor,p_result);
    elsif g_kind='CASE_SHORT_APPROVE' then RRL_STOCK_CASE_SHORT_CMD.execute_command(g_request,g_actor,p_result);
@@ -185,6 +196,7 @@ create or replace package body RRL_STOCK_POSTING_API as
    elsif g_kind='MES_RAW_TASK_CANCEL' then RRL_STOCK_MES_CANCEL_CMD.execute_command(g_request,g_actor,p_result);
    elsif g_kind in('MES_RELEASE_TO_PRODUCTION','MES_CALCULATE_SUPPLY') then RRL_STOCK_MES_SUPPLY_CMD.execute_command(g_request,g_actor,p_result);
    elsif g_kind in('DOCUMENT_RELEASE_RESERVATIONS','WAVE_CANCEL','WAVE_RELEASE','PICK_PLAN_CANCEL') then RRL_STOCK_DOC_RESERVE_CMD.execute_release(g_request,g_actor,p_result);
+  elsif g_kind='RESERVATION_ALLOCATE_POOL' then RRL_STOCK_POOL_CMD.execute_command(g_request,g_actor,p_result);
   elsif g_kind='WAVE_RESERVE_SOURCES' then RRL_STOCK_WAVE_CMD.execute_reserve(g_request,g_actor,p_result);
   elsif g_kind in('SHIP_DOCUMENT','SHIP_PALLET') then RRL_STOCK_SHIPPING_CORE.execute_shipment(g_request,g_actor,p_result);
   elsif g_kind in('INTERNAL_MOVE','MOVE_QUARANTINE') then RRL_STOCK_INTERNAL_CMD.execute_move(g_request,g_actor,p_result);

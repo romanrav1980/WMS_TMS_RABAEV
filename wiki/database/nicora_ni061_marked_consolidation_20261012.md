@@ -1,0 +1,12 @@
+# Маркированные товары в одном межскладском верхнем месте
+333 и339 APPLIED/liveVALID. Тот же журнал327 OP+ST/отдельные исходящие события, прежние SHIPPING_CORE/QC/Root/HU_LOAD и STORE_RECEIPT. Несколько маркированных STOCK листьев в CONTAINER-only дереве сохраняют отдельный физический unit fingerprint каждого листа; исходный архив целиком сверяется с APPLIED HU_SHIP. Сумма unit количества равна количеству своего листа, общий physical_unit_count равен сумме всех листьев. Повторная birth отсутствует.
+
+333 actual334–338: два SKU с одинаковыми двумя профилями, шесть единиц/12 исходных кодов, отдельные receipt/task/custody/ST/QC →oneTOP→LOAD/DEPART/STORE. Оба исходных заказа accepted3/FF3once/P0. Native late LOAD rollback/replay сохранил оба запаса и все lineage.
+
+339 расширяет матрицу на карточку каждого SKU. Каждая единица несёт свой набор текущих system/profile/version/mode; expected tuples строятся именно для неё. Верхний profiles — ограниченный union для UI, а expected_scan_count — сумма собственных профилей всех единиц. На каждой товарной паллете проверяется соответствие сохранённых code PROFILES_JSON текущим версиям карточки; новая версия карточки не разрешает принять старые непроверенные коды. Quantity disposition сверяется отдельно по lot_uid каждой исходной строки, лишняя/дублированная/пропущенная строка отказана. Пределы10000units/20000scans/50unionprofiles/200tree nodes сохраняются.
+
+Actual340–344: первый SKU два профиля(3units/6codes), второй толькоCRPT(3units/3codes). OneTOP/sixEA, expected9сканов. Source341 не имеет EGAIS профиля или его кодов. LateSTORE rollback удалил оба факта и все6 unit dispositions; неполный профиль и текущая карточка с неподходящей savedcode version отказаны. Actual344 STORE обоих исходных заказовaccepted3, protected20/20. tmp/context342.json полностью доставлен; source340341 factories и initial343/344admission не повторять.
+
+Пока смешанное маркированное/обычное место и multi-recovery блокируются явно. Первая межскладская приёмка многотоварного HU требует отдельного атомарного группового контракта; scalar receipt не объявляется групповым. Внешних государственных ACK нет, hardware/Qwen independent не выполнены.
+
+SQL решение: exact per-leaf source unit/profiles queries ограничены UID, system/profile и immutable birth; текущие JSON profile joins требуют warm измерения, owner inventory. Для большого дерева batch projection per-leaf profileproof — backlog, без заявления миллионных операций на dev.

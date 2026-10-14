@@ -74,7 +74,7 @@ def read_order(raw: bytes) -> dict:
     return data
 
 
-def calendar(data: dict, offset_minutes: int, weekdays: str, same_day: bool, received: datetime) -> dict:
+def calendar(data: dict, offset_minutes: int, weekdays: str, same_day: bool, received: datetime, delivery_exception: bool | None = None) -> dict:
     from datetime import timezone, timedelta, time
     zone = timezone(timedelta(minutes=offset_minutes))
     start, finish, shipment = [datetime.fromisoformat(data[n]).astimezone(zone) for n in ('PickingStartAt','PickingFinishAt','ShipmentAt')]
@@ -85,9 +85,9 @@ def calendar(data: dict, offset_minutes: int, weekdays: str, same_day: bool, rec
         raise ValueError('OrderDate cannot follow operational start day')
     if shipment.date()!=operational+timedelta(days=1) and not (same_day and shipment.date()==operational):
         raise ValueError('Same-day shipment requires configured source book')
-    if str(delivery.isoweekday()) not in weekdays.split(','):
-        raise ValueError('Delivery date is outside store calendar')
+    calendar_allowed = delivery_exception if delivery_exception is not None else str(delivery.isoweekday()) in weekdays.split(',')
     late = received.astimezone(zone) > datetime.combine(operational,time(16),zone)
     return {'operational_date': operational, 'delivery_date': delivery, 'picking_start': start.replace(tzinfo=None),
             'picking_finish': finish.replace(tzinfo=None), 'shipment': shipment.replace(tzinfo=None),
-            'late': late, 'offset_minutes': offset_minutes}
+            'late': late, 'offset_minutes': offset_minutes, 'calendar_allowed': calendar_allowed,
+            'calendar_basis': 'DATE_EXCEPTION' if delivery_exception is not None else 'WEEKLY_SOURCE_BOOK'}

@@ -1,0 +1,2 @@
+-- Do not revert after non-ACCEPTED approvals are committed: dependent physical flows require preserved source basis.
+-- Forward repair preferred; original native sources saved as000_before*.sql.

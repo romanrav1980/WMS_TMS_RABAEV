@@ -4,11 +4,13 @@ from dataclasses import dataclass
 from time import monotonic
 from typing import Any
 import json
+import re
 import logging
 import random
 import oracledb
 from ....db import _oracle_pool
 from ..contracts_stock import StockCommand, StockPostingError
+from .stock_staging_inputs import prepare_staging_inputs
 
 RETRY_CODES = {54, 60, 20840, 20846, 20890, 30006}
 REQUEST_BUDGET = 30.0
@@ -54,32 +56,7 @@ def _attempt(lease: _Lease, payload: str, actor: str, operation_id: str,
         if state is None or state[0] != "ACTIVE":
             raise StockPostingError("STOCK_RELEASE_NOT_ACTIVE", operation_id)
         command_document = json.loads(payload)
-        birth_captures = {}
-        receipt_marks = None
-        resolution = None
-        if command_document["command_type"] == "SAP_RECEIPT":
-            cursor.execute("select OPERATION_ID from RRL_STOCK_OPERATION where OPERATION_ID=:i", i=operation_id)
-            if cursor.fetchone() is None:
-                from .receipt_commands import plan_receipt
-                try:
-                    hints, receipt_marks = plan_receipt(cursor, command_document)
-                    resolution = json.dumps(hints, ensure_ascii=True, separators=(",", ":"), allow_nan=False)
-                except Exception:
-                    # Pure preview can fail after another identical receipt has committed.
-                    # Defer immutable actor/body comparison to the core replay path.
-                    cursor.execute("select OPERATION_ID from RRL_STOCK_OPERATION where OPERATION_ID=:i", i=operation_id)
-                    if cursor.fetchone() is None:
-                        raise
-        if command_document["command_type"] in {"INVENTORY_REGISTER_LOT","MES_MOVEMENTS"}:
-            cursor.execute("select OPERATION_ID from RRL_STOCK_OPERATION where OPERATION_ID=:i",i=operation_id)
-            if cursor.fetchone() is None:
-                from .birth_capture import plan_births
-                try:
-                    hints,birth_captures=plan_births(cursor,command_document)
-                    resolution=json.dumps(hints,ensure_ascii=True,separators=(",",":"),allow_nan=False)
-                except Exception:
-                    cursor.execute("select OPERATION_ID from RRL_STOCK_OPERATION where OPERATION_ID=:i",i=operation_id)
-                    if cursor.fetchone() is None:raise
+        resolution,birth_captures,receipt_marks=prepare_staging_inputs(cursor,command_document,operation_id)
         posting_started = True
         result = cursor.var(oracledb.DB_TYPE_CLOB)
         payload_bind = cursor.var(oracledb.DB_TYPE_CLOB)
@@ -100,8 +77,8 @@ def _attempt(lease: _Lease, payload: str, actor: str, operation_id: str,
                 from .receipt_commands import stage_receipt
                 stage_receipt(cursor, command_document, receipt_marks)
             if birth_captures:
-                from .birth_capture import stage_births
-                stage_births(cursor,command_document,birth_captures)
+                from .birth_capture_commands import stage_checked_births
+                stage_checked_births(cursor,command_document,birth_captures)
             cursor.execute("begin RRL_STOCK_POSTING_API.execute_prepared(:result); end;", {"result": result})
             value = result.getvalue()
         text = value.read() if hasattr(value, "read") else value
@@ -156,12 +133,18 @@ class StockPosting:
                     code = _oracle_code(exc)
                     if lease.discard:
                         raise StockPostingError("CONNECTION_UNUSABLE", command.operation_id, code) from exc
+                    if code == 1 and "RRL_RECEIPT_UNIT_PHYSICAL_UK" in str(exc):
+                        raise StockPostingError("PHYSICAL_UNIT_ALREADY_RECEIVED", command.operation_id, 20886) from exc
                     if code in {1403, 1422}:
                         raise StockPostingError("RESOURCE_NOT_FOUND" if code == 1403 else "DATA_AMBIGUOUS",
                                                 command.operation_id, code) from exc
                     if code not in RETRY_CODES:
                         if code is not None and 20800 <= code <= 20899:
-                            raise StockPostingError("STOCK_RULE_REJECTED", command.operation_id, code) from exc
+                            detail = exc.args[0] if exc.args else exc
+                            message = str(getattr(detail, "message", exc))
+                            match = re.search(r"ORA-\d{5}:\s*([A-Z][A-Z0-9_]+)(?::\s*([A-Z][A-Z0-9_]+))?", message)
+                            reason = ": ".join(x for x in match.groups() if x) if match else None
+                            raise StockPostingError("STOCK_RULE_REJECTED", command.operation_id, code, reason) from exc
                         raise
                     if attempt == 2:
                         raise StockPostingError("LOCK_RETRY_EXHAUSTED", command.operation_id, code) from exc

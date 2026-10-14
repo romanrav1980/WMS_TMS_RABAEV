@@ -1,0 +1,133 @@
+{
+  "state": "DONE",
+  "cases": {
+    "mixed": {
+      "basis": "EXPLICIT_FLOOR_VARIANTS",
+      "operational_admission": false,
+      "profile_version": 2,
+      "counts": [
+        {
+          "pallet_type_id": 1,
+          "places": 8
+        },
+        {
+          "pallet_type_id": 3,
+          "places": 4
+        }
+      ],
+      "unconfirmed_places": 0,
+      "matching_variants": [
+        "MIXED"
+      ],
+      "status": "COMPATIBLE"
+    },
+    "trolleys": {
+      "basis": "EXPLICIT_FLOOR_VARIANTS",
+      "operational_admission": false,
+      "profile_version": 2,
+      "counts": [
+        {
+          "pallet_type_id": 3,
+          "places": 20
+        }
+      ],
+      "unconfirmed_places": 0,
+      "matching_variants": [
+        "TROLLEYS"
+      ],
+      "status": "COMPATIBLE"
+    },
+    "over": {
+      "basis": "EXPLICIT_FLOOR_VARIANTS",
+      "operational_admission": false,
+      "profile_version": 2,
+      "counts": [
+        {
+          "pallet_type_id": 1,
+          "places": 9
+        },
+        {
+          "pallet_type_id": 3,
+          "places": 1
+        }
+      ],
+      "unconfirmed_places": 0,
+      "matching_variants": [],
+      "status": "INCOMPATIBLE"
+    },
+    "no_cross_variant_sum": {
+      "basis": "EXPLICIT_FLOOR_VARIANTS",
+      "operational_admission": false,
+      "profile_version": 2,
+      "counts": [
+        {
+          "pallet_type_id": 1,
+          "places": 1
+        },
+        {
+          "pallet_type_id": 3,
+          "places": 5
+        }
+      ],
+      "unconfirmed_places": 0,
+      "matching_variants": [],
+      "status": "INCOMPATIBLE"
+    },
+    "unsupported": {
+      "basis": "EXPLICIT_FLOOR_VARIANTS",
+      "operational_admission": false,
+      "profile_version": 2,
+      "counts": [
+        {
+          "pallet_type_id": 2,
+          "places": 1
+        }
+      ],
+      "unconfirmed_places": 0,
+      "matching_variants": [],
+      "status": "INCOMPATIBLE"
+    },
+    "unknown": {
+      "basis": "EXPLICIT_FLOOR_VARIANTS",
+      "operational_admission": false,
+      "profile_version": 2,
+      "counts": [],
+      "unconfirmed_places": 1,
+      "status": "TARE_TYPE_UNCONFIRMED"
+    }
+  },
+  "preview": {
+    "floor_capacity": {
+      "basis": "EXPLICIT_FLOOR_VARIANTS",
+      "operational_admission": false,
+      "profile_version": 2,
+      "counts": [],
+      "unconfirmed_places": 2,
+      "status": "TARE_TYPE_UNCONFIRMED"
+    },
+    "validation_status": "DRAFT_INCOMPLETE",
+    "frozen_loaded_places": 0,
+    "frozen_loaded_weight_kg": "0",
+    "declared_places": 2,
+    "declared_weight_kg": "24",
+    "warnings": [
+      "\u0422\u0438\u043f\u044b \u0432\u0435\u0440\u0445\u043d\u0438\u0445 \u043c\u0435\u0441\u0442 \u0438\u043b\u0438 \u043d\u043e\u0440\u043c\u0430\u0442\u0438\u0432\u043d\u044b\u0439 \u043f\u0440\u043e\u0444\u0438\u043b\u044c \u0442\u0430\u0440\u044b \u0442\u0440\u0435\u0431\u0443\u044e\u0442 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u044f"
+    ],
+    "physical_stock_changed": false,
+    "physical_load_admission": false
+  },
+  "unknown_final_refused": true,
+  "protected_stock": [
+    20,
+    20
+  ],
+  "slow_sql": [
+    [
+      "f7ph0kwvwsu8d",
+      3,
+      5.472,
+      31.33
+    ]
+  ],
+  "scope": "read-only shared rule; no physical TOP acceptance"
+}

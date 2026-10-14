@@ -1,0 +1,10 @@
+{
+  "migration_id": "2026-10-11-222-current-slots-all-unload-roots",
+  "sha256": {
+    "db/migrations/2026-10-11_ni052_unload_all_slots/000_before_rrl_stock_unload_cmd.sql": "bfb015c8c3f4428a0403d3d451f9a36a0cc02ec81be1fbcf50cc2f87d1812555",
+    "db/migrations/2026-10-11_ni052_unload_all_slots/000_before_rrl_stock_hu_placement_core.sql": "119d5eb9b33c4dbd220d734e7640dff1da8a81c71ebf866fe49d083cb10a6301",
+    "db/migrations/2026-10-11_ni052_unload_all_slots/000_before_rrl_stock_hu_slot.sql": "9e4df1408091d87d3fa0192863d5dc1feaa8b42498df1617fd4f5dc9a281b462",
+    "db/migrations/2026-10-11_ni052_unload_all_slots/000_before_manifest.json": "0dffe88076efc29c5809398ea76f2344cec64e89d871a6f0a82a18fa256da386"
+  },
+  "recovery": "Fresh unloaded admission owner and existing native slot/placement implementation. No quantity migration. Forward repair after new stock-root slot placement history."
+}

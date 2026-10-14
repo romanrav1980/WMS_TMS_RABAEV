@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-13",
+  "timezone": "Europe/Moscow",
+  "sprint": "NI07.2",
+  "all_sprints_complete": false,
+  "environment": "RABAEV@127.0.0.1:1521/orcl",
+  "task_id": 1080,
+  "physical_quantity": "3",
+  "hard_reserved_quantity": "3",
+  "physical_unit_count": 3,
+  "code_count": 6,
+  "task_status": "DONE",
+  "sync_status": "SYNCED",
+  "evidence": [
+    "scripts/case773_waiting_task.py",
+    "scripts/check774_waiting_done.py",
+    "scripts/check785_waiting_http.py"
+  ],
+  "screenshots": [
+    "screenshots/01-st-waiting-state.png",
+    "screenshots/02-st-transfer-redesign.png",
+    "screenshots/03-waiting-task-completed.png"
+  ],
+  "publication_done": false
+}

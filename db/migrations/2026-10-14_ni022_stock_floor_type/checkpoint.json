@@ -1,0 +1,17 @@
+{
+  "migration_id": "2026-10-14-1201-stock-floor-type",
+  "target": "RABAEV/orcl",
+  "state": "PREPARED_NOT_APPLIED",
+  "captured_sources": [
+    "db/migrations/2026-10-14_ni022_stock_floor_type/000_rrl_stock_posting_api_spec.sql",
+    "db/migrations/2026-10-14_ni022_stock_floor_type/000_rrl_stock_posting_api_body.sql",
+    "db/migrations/2026-10-14_ni022_stock_floor_type/000_rrl_stock_load_floor_spec.sql",
+    "db/migrations/2026-10-14_ni022_stock_floor_type/000_rrl_stock_load_floor_body.sql"
+  ],
+  "invalid_baseline": [
+    [
+      "RRL_LOAD_FLOOR_FACT_GUARD",
+      "TRIGGER"
+    ]
+  ]
+}

@@ -1,0 +1,337 @@
+{
+  "case": {
+    "tag": "c0c2a00c0b",
+    "phase": "DONE",
+    "doc": "1791922503603307",
+    "articles": [
+      "QAUTOc0c2a00c0bA",
+      "QAUTOc0c2a00c0bB"
+    ],
+    "source_xml": "<WarehouseCustomerOrder version=\"1\"><Sender>OWN.QA.SAP</Sender><MessageId>AUTO1118.MSG:c0c2a00c0b</MessageId><OrderNumber>AUTO1118.ORDER:c0c2a00c0b</OrderNumber><CustomerCode>MAGNIT-DC-01</CustomerCode><StoreCode>QCAL264288ec8b68a</StoreCode><WarehouseId>9807</WarehouseId><OrderDate>2026-10-11</OrderDate><OperationalDate>2026-11-02</OperationalDate><DeliveryDate>2026-11-03</DeliveryDate><PickingStartAt>2026-11-02T08:00:00+04:00</PickingStartAt><PickingFinishAt>2026-11-02T18:00:00+04:00</PickingFinishAt><ShipmentAt>2026-11-03T06:00:00+04:00</ShipmentAt><Lines><Line><LineNumber>1</LineNumber><Material>QAUTOc0c2a00c0bA</Material><Quantity unit=\"EA\">18</Quantity></Line><Line><LineNumber>2</LineNumber><Material>QAUTOc0c2a00c0bB</Material><Quantity unit=\"EA\">18</Quantity></Line></Lines></WarehouseCustomerOrder>",
+    "source": {
+      "customer_order_id": 2135,
+      "order_number": "AUTO1118.ORDER:c0c2a00c0b",
+      "admission_status": "ACCEPTED",
+      "operational_date": "2026-11-02",
+      "picking_start_at": "2026-11-02T08:00:00",
+      "picking_finish_at": "2026-11-02T18:00:00",
+      "shipment_at": "2026-11-03T06:00:00",
+      "delivery_date": "2026-11-03",
+      "utc_offset_minutes": 240,
+      "idempotent": false,
+      "calendar_basis": "WEEKLY_SOURCE_BOOK",
+      "calendar_exception": null,
+      "late": false,
+      "calendar_allowed": true
+    },
+    "preview": {
+      "strategy": "LEGACY_GROUP_WHOLE_BOX_V1",
+      "pallets": [
+        {
+          "lines": [
+            {
+              "articul": "QAUTOc0c2a00c0bA",
+              "quantity": "18.000000"
+            },
+            {
+              "articul": "QAUTOc0c2a00c0bB",
+              "quantity": "6.000000"
+            }
+          ]
+        },
+        {
+          "lines": [
+            {
+              "articul": "QAUTOc0c2a00c0bB",
+              "quantity": "12.000000"
+            }
+          ]
+        }
+      ],
+      "pallet_statistics": [
+        {
+          "pallet": 1,
+          "assembly_group": 1118,
+          "goods_weight_kg": "16.000000000",
+          "goods_volume_m3": "0.096000000000000000",
+          "norm_share": {
+            "numerator": 1,
+            "denominator": 1
+          }
+        },
+        {
+          "pallet": 2,
+          "assembly_group": 1118,
+          "goods_weight_kg": "8.000000000",
+          "goods_volume_m3": "0.048000000000000000",
+          "norm_share": {
+            "numerator": 1,
+            "denominator": 2
+          }
+        }
+      ],
+      "physical_capacity_verified": false,
+      "stock_changed": false,
+      "customer_order_id": 2135,
+      "warehouse_id": 9807,
+      "source_signature": "7e5a56fa7b0fefd430eb43835aac78bfdd5bb671714349f5f358e131583626fd",
+      "limits": {
+        "max_goods_weight_kg": "16",
+        "max_goods_volume_m3": "0.096",
+        "max_pallets": 100
+      },
+      "st_created": false,
+      "consistent_snapshot": true
+    },
+    "body": {
+      "operation_id": "AUTO1118.PREP:c0c2a00c0b",
+      "source_signature": "7e5a56fa7b0fefd430eb43835aac78bfdd5bb671714349f5f358e131583626fd",
+      "limits": {
+        "max_goods_weight_kg": "16",
+        "max_goods_volume_m3": "0.096",
+        "max_pallets": 100
+      }
+    },
+    "race": [
+      {
+        "result": {
+          "customer_order_id": 2135,
+          "legacy_order_id": 48470,
+          "st_number": "SAP_2135",
+          "pallet_identifiers": [
+            "OP_SAP_2135_1",
+            "OP_SAP_2135_2"
+          ],
+          "operation_id": "AUTO1118.PREP:c0c2a00c0b",
+          "status": "ST_PREPARED",
+          "layout_source": "LEGACY_GROUP_WHOLE_BOX_V1",
+          "prepared_by": "admin",
+          "idempotent": false,
+          "auto_request_hash": "9b4300641b9ffbb2ade3b9f437537de2c2fd687acdc14700f440ec4a6acdbfe3",
+          "auto_request": {
+            "operation_id": "AUTO1118.PREP:c0c2a00c0b",
+            "source_signature": "7e5a56fa7b0fefd430eb43835aac78bfdd5bb671714349f5f358e131583626fd",
+            "limits": {
+              "max_goods_weight_kg": "16",
+              "max_goods_volume_m3": "0.096",
+              "max_pallets": 100
+            }
+          },
+          "pallet_statistics": [
+            {
+              "pallet": 1,
+              "assembly_group": 1118,
+              "goods_weight_kg": "16.000000000",
+              "goods_volume_m3": "0.096000000000000000",
+              "norm_share": {
+                "numerator": 1,
+                "denominator": 1
+              }
+            },
+            {
+              "pallet": 2,
+              "assembly_group": 1118,
+              "goods_weight_kg": "8.000000000",
+              "goods_volume_m3": "0.048000000000000000",
+              "norm_share": {
+                "numerator": 1,
+                "denominator": 2
+              }
+            }
+          ],
+          "stock_changed": false
+        }
+      },
+      {
+        "conflict": "Source was prepared by a different saved command; inspect its existing ST"
+      }
+    ],
+    "result": {
+      "customer_order_id": 2135,
+      "legacy_order_id": 48470,
+      "st_number": "SAP_2135",
+      "pallet_identifiers": [
+        "OP_SAP_2135_1",
+        "OP_SAP_2135_2"
+      ],
+      "operation_id": "AUTO1118.PREP:c0c2a00c0b",
+      "status": "ST_PREPARED",
+      "layout_source": "LEGACY_GROUP_WHOLE_BOX_V1",
+      "prepared_by": "admin",
+      "idempotent": false,
+      "auto_request_hash": "9b4300641b9ffbb2ade3b9f437537de2c2fd687acdc14700f440ec4a6acdbfe3",
+      "auto_request": {
+        "operation_id": "AUTO1118.PREP:c0c2a00c0b",
+        "source_signature": "7e5a56fa7b0fefd430eb43835aac78bfdd5bb671714349f5f358e131583626fd",
+        "limits": {
+          "max_goods_weight_kg": "16",
+          "max_goods_volume_m3": "0.096",
+          "max_pallets": 100
+        }
+      },
+      "pallet_statistics": [
+        {
+          "pallet": 1,
+          "assembly_group": 1118,
+          "goods_weight_kg": "16.000000000",
+          "goods_volume_m3": "0.096000000000000000",
+          "norm_share": {
+            "numerator": 1,
+            "denominator": 1
+          }
+        },
+        {
+          "pallet": 2,
+          "assembly_group": 1118,
+          "goods_weight_kg": "8.000000000",
+          "goods_volume_m3": "0.048000000000000000",
+          "norm_share": {
+            "numerator": 1,
+            "denominator": 2
+          }
+        }
+      ],
+      "stock_changed": false
+    },
+    "actual_rows": [
+      [
+        "QAUTOc0c2a00c0bA",
+        18,
+        3,
+        12
+      ],
+      [
+        "QAUTOc0c2a00c0bB",
+        18,
+        3,
+        12
+      ]
+    ],
+    "slow_sql": [
+      [
+        "daz7kpyhvs2d1",
+        7,
+        8.286,
+        75.57,
+        "with demand as (select ARTICUL,sum(ORDER_QTY)ORDER_QTY,min(UNIT_CODE)UNIT_CODE,count(distinct UNIT_CODE)UNIT_COUNT             from RRL_CUSTOMER_ORDER_ROW where"
+      ],
+      [
+        "02rsc4cttffv9",
+        6,
+        2.603,
+        14.5,
+        "select ARTICUL,SEQ_GROUP,SEQ from RRL_COMPL_SEQ             where WARE_ID=:w and ARTICUL in             (select ARTICUL from RRL_CUSTOMER_ORDER_ROW where CUSTOM"
+      ]
+    ]
+  },
+  "http": {
+    "repeat": {
+      "customer_order_id": 2135,
+      "legacy_order_id": 48470,
+      "st_number": "SAP_2135",
+      "pallet_identifiers": [
+        "OP_SAP_2135_1",
+        "OP_SAP_2135_2"
+      ],
+      "operation_id": "AUTO1118.PREP:c0c2a00c0b",
+      "status": "ST_PREPARED",
+      "layout_source": "LEGACY_GROUP_WHOLE_BOX_V1",
+      "prepared_by": "admin",
+      "idempotent": true,
+      "auto_request_hash": "9b4300641b9ffbb2ade3b9f437537de2c2fd687acdc14700f440ec4a6acdbfe3",
+      "auto_request": {
+        "operation_id": "AUTO1118.PREP:c0c2a00c0b",
+        "source_signature": "7e5a56fa7b0fefd430eb43835aac78bfdd5bb671714349f5f358e131583626fd",
+        "limits": {
+          "max_goods_weight_kg": "16",
+          "max_goods_volume_m3": "0.096",
+          "max_pallets": 100
+        }
+      },
+      "pallet_statistics": [
+        {
+          "pallet": 1,
+          "assembly_group": 1118,
+          "goods_weight_kg": "16.000000000",
+          "goods_volume_m3": "0.096000000000000000",
+          "norm_share": {
+            "numerator": 1,
+            "denominator": 1
+          }
+        },
+        {
+          "pallet": 2,
+          "assembly_group": 1118,
+          "goods_weight_kg": "8.000000000",
+          "goods_volume_m3": "0.048000000000000000",
+          "norm_share": {
+            "numerator": 1,
+            "denominator": 2
+          }
+        }
+      ],
+      "stock_changed": false
+    },
+    "repeat/resolve": {
+      "state": "ST_PREPARED",
+      "customer_order_id": 2135,
+      "operation_id": "AUTO1118.PREP:c0c2a00c0b",
+      "result": {
+        "customer_order_id": 2135,
+        "legacy_order_id": 48470,
+        "st_number": "SAP_2135",
+        "pallet_identifiers": [
+          "OP_SAP_2135_1",
+          "OP_SAP_2135_2"
+        ],
+        "operation_id": "AUTO1118.PREP:c0c2a00c0b",
+        "status": "ST_PREPARED",
+        "layout_source": "LEGACY_GROUP_WHOLE_BOX_V1",
+        "prepared_by": "admin",
+        "idempotent": true,
+        "auto_request_hash": "9b4300641b9ffbb2ade3b9f437537de2c2fd687acdc14700f440ec4a6acdbfe3",
+        "auto_request": {
+          "operation_id": "AUTO1118.PREP:c0c2a00c0b",
+          "source_signature": "7e5a56fa7b0fefd430eb43835aac78bfdd5bb671714349f5f358e131583626fd",
+          "limits": {
+            "max_goods_weight_kg": "16",
+            "max_goods_volume_m3": "0.096",
+            "max_pallets": 100
+          }
+        },
+        "pallet_statistics": [
+          {
+            "pallet": 1,
+            "assembly_group": 1118,
+            "goods_weight_kg": "16.000000000",
+            "goods_volume_m3": "0.096000000000000000",
+            "norm_share": {
+              "numerator": 1,
+              "denominator": 1
+            }
+          },
+          {
+            "pallet": 2,
+            "assembly_group": 1118,
+            "goods_weight_kg": "8.000000000",
+            "goods_volume_m3": "0.048000000000000000",
+            "norm_share": {
+              "numerator": 1,
+              "denominator": 2
+            }
+          }
+        ],
+        "stock_changed": false
+      },
+      "stock_changed": false
+    },
+    "invalid_existing_source": {
+      "status": 409,
+      "detail": {
+        "detail": "AUTO_LAYOUT_NORM_SMALLER_THAN_BOX: QPOOL2e9b6614d9"
+      }
+    },
+    "strict_contract": 422,
+    "anonymous_denied": 401
+  }
+}

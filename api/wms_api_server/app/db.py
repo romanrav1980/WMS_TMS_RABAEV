@@ -2,6 +2,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 import os
 import threading
+import logging
 from typing import Any
 
 import oracledb
@@ -17,6 +18,8 @@ if os.environ.get("WMS_ORACLE_THICK_MODE", "0") == "1":
         oracledb.init_oracle_client()
     except Exception:
         pass  # already initialised or client not found — stay in thin mode
+
+_LOG=logging.getLogger(__name__)
 
 _pool_lock = threading.Lock()
 _pool: oracledb.ConnectionPool | None = None
@@ -45,11 +48,29 @@ def _oracle_pool() -> oracledb.ConnectionPool:
 @contextmanager
 def oracle_connection() -> Iterator[oracledb.Connection]:
     pool = _oracle_pool()
+    call_timeout = max(1000, min(120000, int(os.environ.get("WMS_ORACLE_CALL_TIMEOUT_MS", "30000"))))
     connection = pool.acquire()
+    connection.call_timeout = call_timeout
     try:
         yield connection
     finally:
-        pool.release(connection)
+        # Oracle package/context state survives SQL rollback and pool release.
+        # A failed policy admission must not poison the next independent lease.
+        try:
+            connection.call_timeout = 3000
+            connection.rollback()
+            with connection.cursor() as cursor:
+                cursor.callproc("RRL_STOCK_POSTING_API.reset_connection")
+            pool.release(connection)
+        except Exception as exc:
+            _LOG.warning("Oracle lease discarded after cleanup failure (%s)",type(exc).__name__)
+            try:
+                pool.drop(connection)
+            except Exception:
+                try:
+                    connection.close()
+                except Exception:
+                    pass
 
 
 def scalar_to_text(value: Any) -> str:

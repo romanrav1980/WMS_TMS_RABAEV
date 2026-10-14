@@ -15,7 +15,7 @@ create or replace package body RRL_STOCK_WAVE_LAUNCH_CMD as
  end;
  procedure compile_command(p_request clob,p_operation varchar2,p_policies out clob,p_resources out clob,p_domain out clob) is
   d json_object_t:=json_object_t.parse(p_request);v_wave number;v_ware number;v_id number;v_uom varchar2(20);v_ver number;
-  f json_array_t:=json_array_t();r json_array_t:=json_array_t();a json_array_t:=json_array_t();v json_object_t:=json_object_t();x json_object_t;
+  f json_array_t:=json_array_t();r json_array_t:=json_array_t();a json_array_t:=json_array_t();pools json_array_t;v json_object_t:=json_object_t();x json_object_t;
  begin
   v_wave:=d.get_object('source').get_number('wave_id');select WARE_ID into v_ware from RRL_PICK_WAVE where PICK_WAVE_ID=v_wave;
   RRL_STOCK_PLAN_HELPER.fence(f,'RELEASE','STOCK');RRL_STOCK_PLAN_HELPER.fence(f,'CONFIG','WAREHOUSE');
@@ -44,6 +44,7 @@ create or replace package body RRL_STOCK_WAVE_LAUNCH_CMD as
    x.put('uom',v_uom);x.put('version',v_ver);a.append(x);
   end loop;
   if a.get_size=0 then raise_application_error(-20886,'WAVE_NO_SOFT_RESERVATIONS');end if;
+  RRL_STOCK_POOL_CMD.compile_wave_pool(v_ware,v_wave,r,pools);v.put('pools',pools);
   v.put('wave',v_wave);v.put('warehouse',v_ware);v.put('reservations',a);p_domain:=v.to_clob;p_policies:=f.to_clob;p_resources:=r.to_clob;
  end;
  procedure execute_command(p_request clob,p_actor varchar2,p_result out clob) is
@@ -77,6 +78,7 @@ select * into pr from RRL_PICK_RESERVATION where PICK_RESERVATION_ID=v_json_sql_
 end;
    if signature(pr)!=x.get_string('signature') then raise_application_error(-20890,'CLOSURE_CHANGED: wave reservation');end if;
    RRL_STOCK_LOCATION_CORE.assert_ordinary(pr.SOURCE_CELL_CODE,ware,'SOURCE');
+   RRL_STOCK_ELIGIBILITY.assert_source(pr.PALLET_UID,pr.SOURCE_CELL_CODE,ware,pr.RESERVED_QTY,null,null,'ALLOCATE',null,pr.ARTICUL);
    select nvl(br.IS_SHIPMENT_ALLOWED,1) into ready from RRL_PALLETS pp left join RRL_PROD_BATCH_READY_V br on br.PROD_BATCH_ID=pp.PROD_BATCH_ID where pp.UID_PALLET=pr.PALLET_UID;
    if ready!=1 then raise_application_error(-20886,'WAVE_SOURCE_REGULATORY_NOT_READY');end if;
    units:=RRL_STOCK_UNIT_CORE.automatic_units(pr.PALLET_UID,pr.SOURCE_CELL_CODE,pr.RESERVED_QTY);
@@ -87,6 +89,7 @@ end;
     'PICK_WAVE',v.get_number('wave'),pr.PICK_TASK_ID,'PICKING',p_actor,details.to_clob);
    RRL_STOCK_UNIT_CORE.reserve_units(pr.PALLET_UID,pr.SOURCE_CELL_CODE,x.get_number('reservation_id'),pr.RESERVED_QTY,units);
   end loop;
+  RRL_STOCK_POOL_CMD.consume_wave_pool(v.get_array('pools'),p_actor);
   RRL_PICK_WAVE_META.launch_wave(v.get_number('wave'),p_actor);
   j.put('operation_id',d.get_string('operation_id'));j.put('wave_id',v.get_number('wave'));j.put('reserved_count',a.get_size);j.put('status','LAUNCHED');p_result:=j.to_clob;
  end;

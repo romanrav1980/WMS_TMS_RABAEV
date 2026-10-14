@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-227-original-marked-interwarehouse-placement'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Original warehouse task places exact marked interwarehouse units',sysdate,user,'db/migrations/2026-10-11_ni061_marked_placement/apply.sql','db/migrations/2026-10-11_ni061_marked_placement/rollback.sql','APPLIED','Actual225->226->227 original UID FULL.QA:13508027ed/PUTAWAY953 DONE/SYNCED/receiving0/outbound3H0/3same units6codes/version9. Native rollback/concurrent one winner/replay/foreign current plan403/protected20/20. Existing resource44/session40/equipment14 PUTAWAY qualification and assignment; session requirement preserved. Native VALID/previous226 API quality24/bothTS/557files0cycles76debt; no new API change.');
+commit;

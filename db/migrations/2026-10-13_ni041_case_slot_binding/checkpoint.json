@@ -1,0 +1,20 @@
+{
+  "migration_id": "2026-10-13-009-ni041-case-slot-binding",
+  "state": "APPLIED_DEV_VALID",
+  "target": "RABAEV/orcl",
+  "recovery": "current1000 captures/pairedrollback; committed history must not be discarded",
+  "sha256": {
+    "db/migrations/2026-10-13_ni041_case_slot_binding/000_before_rrl_stock_case_bind_move_package.sql": "992a264be29a37f031986c042e8b1023d46db5d109321b686d8d88d79c357310",
+    "db/migrations/2026-10-13_ni041_case_slot_binding/001_binding_spec.sql": "dec85d950edad3e1ad1d723b7da4eb13564e265e8503bdf3ea0bdabe553dc8ef",
+    "db/migrations/2026-10-13_ni041_case_slot_binding/000_before_rrl_stock_case_bind_move_package_body.sql": "c4b81b15c58463d8e87b220ad866bd29d8914513b81425e8df7dab2b8788da46",
+    "db/migrations/2026-10-13_ni041_case_slot_binding/000_before_rrl_stock_hu_slot_move_cmd_package.sql": "196ccfa370d7d27c454b7f21afbb4641ed54e3dc181de26de2c68970bb8a1745",
+    "db/migrations/2026-10-13_ni041_case_slot_binding/000_before_rrl_stock_hu_slot_move_cmd_package_body.sql": "f1f1a5a3dc7f28490c3789577024547e10d82cf56c87284f4146f33e59373c3b",
+    "db/migrations/2026-10-13_ni041_case_slot_binding/002_slot_move_body.sql": "c1e494a25ed08728cfdbcf58e04a9bf8229af5c722d0d994b4b2bffc7ab303ab",
+    "db/migrations/2026-10-13_ni041_case_slot_binding/003_compile.sql": "a9333b89c7ecd9ac892069870731f3216c670a926abd40eb365eb1fded3fc966",
+    "db/migrations/2026-10-13_ni041_case_slot_binding/004_ledger.sql": "0f7d115eef296d38828a3a2728a3b74856b84345070b0ffc836969b7c519625b",
+    "db/migrations/2026-10-13_ni041_case_slot_binding/apply.sql": "c9243602680d1bd5cb8f5f33d70f8221533c72ec21f499c3f7f43f56b4586624",
+    "db/migrations/2026-10-13_ni041_case_slot_binding/rollback.sql": "d224de989ebf0381f8c3174fedc00398b65ebc931a3c554a362b5193c763ca03",
+    "db/migrations/2026-10-13_ni041_case_slot_binding/verify.sql": "a3e667720d7272e2224169cec4756baca13de05de49133e8e75c03a963811374"
+  },
+  "evidence": "1002 retained987 slottedHU1139/unpack/directCASE1131relocateCTFF10/claim224/WHT1143DONE_SYNC/P20H20/rollback/replay;HTTP1006;SQL1013"
+}

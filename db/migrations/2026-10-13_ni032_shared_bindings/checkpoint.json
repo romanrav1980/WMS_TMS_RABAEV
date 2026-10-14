@@ -1,0 +1,9 @@
+{
+  "migration_id": "2026-10-13-869-ni032-shared-bindings",
+  "state": "APPLIED",
+  "before_sha256": "8c43c821fbc8d2911ece3b427c74438563eb13e21dd4004b4e1f3cfa9e650d95",
+  "after_sha256": "cf17919b3acc6874a812c7d425e1724911b3e75b4c179bdee45bea319d537ef6",
+  "target": "RABAEV/orcl",
+  "native_validation": "USER_ERRORS empty; USER_OBJECTS current INVALID empty",
+  "developer_evidence": "case867 wave546/task1099; related case850 wave547/two arrivals; own P/H cleaned"
+}

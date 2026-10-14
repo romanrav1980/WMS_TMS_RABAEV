@@ -1,11 +1,11 @@
+import {RAW_ADMIN_BASE} from "../../api";
 // C-0020 (NI06.3): подтверждённое заявление о недостаче и переход к этому случаю в существующем реестре
 // недостач (raw tare-loss.html) с тем же складом и ID. Решение принимается только там, другим сотрудником.
-// Адрес raw-интерфейса задаётся VITE_RAW_ADMIN_BASE; без него показываются точные склад и ID для поиска.
+// По умолчанию raw-интерфейс отдаёт тот же API на /wms-admin; VITE_RAW_ADMIN_BASE переопределяет адрес.
 export type LossConfirmed={operation_id:string;owner_ware_id:number;quantity:string;decision_reference:string;custodian_kind:string;custodian_id:string};
 
 export function lossRegistryUrl(c:LossConfirmed):string|null{
- const base=String(import.meta.env.VITE_RAW_ADMIN_BASE||"").replace(/\/$/,"");
- if(!base)return null;
+ const base=RAW_ADMIN_BASE;
  return base+"/tare-loss.html?"+new URLSearchParams({warehouse_id:String(c.owner_ware_id),claim_id:c.operation_id});
 }
 

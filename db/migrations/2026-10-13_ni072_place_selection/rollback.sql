@@ -1,0 +1,13 @@
+@@009_rollback_preflight.sql
+@@000_before_rrl_st_defer_hu_wait_package.sql
+@@000_before_rrl_st_defer_hu_wait_package_body.sql
+@@000_before_rrl_st_defer_wait_api_package.sql
+@@000_before_rrl_st_defer_wait_api_package_body.sql
+@@000_before_rrl_st_defer_physical_package.sql
+@@000_before_rrl_st_defer_physical_package_body.sql
+@@000_before_rrl_st_defer_api_package.sql
+@@000_before_rrl_st_defer_api_package_body.sql
+@@000_before_case_cohort.sql
+drop package RRL_ST_DEFER_PLACE_READ;
+/
+@@007_compile.sql

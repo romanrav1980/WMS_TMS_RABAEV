@@ -1,0 +1,11 @@
+# Активное ядро обязательно для всех адаптеров,148
+
+Shared inventory require_active_release exact current release read raises StockPostingError STOCK_RELEASE_NOT_ACTIVE, installed API handler503. Ten adapters CASE/short/terminal quality/reservation/document release/wave/MES no longer return None/False in PREPARED to select old effect. Native commands/source permissions/transactions unchanged; compatibility OFF unchanged.
+
+Removed native-first legacy tails from CasePickService confirm/approve; MesService apply/calculate/release/confirm/cancel; StockReservationService create/promote/release/consume/cancel; PickingService physical full-pallet confirmation and reservation source builder. Original native branch return shapes retained. Existing CASE metadata shortcuts PREPARED removed, now ordinary serialized metadata path. Private old direct balance and MES reservation builders permanently refuse, cannot reactivate by PREPARED. Native-first MES/reservation/picking imports now inventory public contracts. No schema migration/history deleted.
+
+Thirteen meaningful boundary cases PASS: three inactive shared states and ten adapter no opt-out paths. Actual current direct-native CASE history has no requested_confirmation API snapshot; attempted author positive replay therefore had no matching fixture. Corrected case to verify facade cannot relabel original native operation with another API body:409 OPERATION_CONTENT_CONFLICT and unchanged event snapshot on NATIVE.CASE:a6bcf2cbe3:1030. Positive API CASE confirmation/replay still independent functional case, not claimed. Existing original SAP receipt native replay exact/journal unchanged. No fresh goods or changes to retained135 P20H20.
+
+Architecture488files/0cycles/118debt remaining, FAIL; down from133, no baseline expansion. File-size remnants and typed/public boundaries next. Original public endpoints retained, rollback should be forward native behavior rather than restored PREPARED executor.
+
+SQL immutable operation lookup bounded PK retained; native completed proof review147 applies. All business document PREPARED statuses preserved, read-only reconciliation diagnostic not an effect bypass. Full sprint/independent acceptance still open.

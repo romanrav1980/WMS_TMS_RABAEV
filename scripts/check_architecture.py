@@ -13,6 +13,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from tools.architecture.rules import compare_debt, cycles, feature, import_rules
+from tools.architecture.python_calls import application_receivers,typed_command_execute
 
 
 def write_json(path: Path, value: dict) -> None:
@@ -57,13 +58,13 @@ def python_records(root: Path, policy: dict) -> list[dict]:
                 record['errors'].append('Unresolved local import: ' + name)
             elif owner and owner[2] == 'domain' and name.split('.')[0] not in sys.stdlib_module_names:
                 record['violations'].append('domain-external-dependency:' + name)
-        def walk(node: ast.AST, scope: tuple[str, ...] = (), type_only: bool = False) -> None:
+        def walk(node: ast.AST, scope: tuple[str, ...] = (), type_only: bool = False, receivers: frozenset[str] = frozenset()) -> None:
             if isinstance(node, ast.If) and (isinstance(node.test, ast.Name) and node.test.id == 'TYPE_CHECKING' or
                     isinstance(node.test, ast.Attribute) and node.test.attr == 'TYPE_CHECKING'):
                 for child in node.body:
-                    walk(child, scope, True)
+                    walk(child, scope, True,receivers)
                 for child in node.orelse:
-                    walk(child, scope, type_only)
+                    walk(child, scope, type_only,receivers)
                 return
             if isinstance(node, ast.Import):
                 for alias in node.names:
@@ -79,6 +80,7 @@ def python_records(root: Path, policy: dict) -> list[dict]:
                 for alias in node.names:
                     resolve(name + '.' + alias.name, node, type_only)
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                receivers=application_receivers(tree,node,package,names)
                 qualified = '.'.join(scope + (node.name,))
                 record['functions'].append({'name': qualified, 'lines': node.end_lineno - node.lineno + 1})
                 if owner:
@@ -102,10 +104,10 @@ def python_records(root: Path, policy: dict) -> list[dict]:
                 function = node.func
                 if isinstance(function, ast.Attribute) and function.attr in ('commit', 'rollback') and owner[2] in ('api', 'application', 'domain'):
                     record['violations'].append('transaction-outside-unit-of-work:' + '.'.join(scope))
-                if isinstance(function, ast.Attribute) and function.attr in ('execute', 'executemany', 'callproc', 'callfunc') and owner[2] in ('api', 'application', 'domain'):
+                if isinstance(function, ast.Attribute) and function.attr in ('execute', 'executemany', 'callproc', 'callfunc') and owner[2] in ('api', 'application', 'domain') and not typed_command_execute(node,receivers):
                     record['violations'].append('database-call-outside-infrastructure:' + '.'.join(scope))
             for child in ast.iter_child_nodes(node):
-                walk(child, scope, type_only)
+                walk(child, scope, type_only,receivers)
         walk(tree)
     return records
 

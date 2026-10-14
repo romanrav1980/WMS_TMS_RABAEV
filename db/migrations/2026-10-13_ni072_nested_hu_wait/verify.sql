@@ -1,0 +1,2 @@
+select NAME,TYPE,LINE,TEXT from USER_ERRORS where NAME not like 'BIN$%';
+select OBJECT_NAME,OBJECT_TYPE from USER_OBJECTS where STATUS='INVALID'and OBJECT_NAME not like 'BIN$%';

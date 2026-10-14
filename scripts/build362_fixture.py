@@ -1,0 +1,27 @@
+from pathlib import Path
+import json
+p=Path("scripts/case361_start_instant.py");text=p.read_text(encoding="utf-8")
+text=text.replace('from uuid import uuid4','from uuid import uuid4\nimport httpx')
+text=text.replace('  task=q.var(oracledb.DB_TYPE_NUMBER)','  tag="CS361:"+uuid4().hex[:10]\n  task=q.var(oracledb.DB_TYPE_NUMBER)\n  type_out=q.var(oracledb.DB_TYPE_NUMBER)')
+text=text.replace('wave_id number;task_id number;begin','wave_id number;task_id number;tare RRL_PALLET_TYPE%rowtype;type_id number;begin\n   select *into tare from RRL_PALLET_TYPE where PALLET_TYPE_ID=21;select RRL_PALLET_TYPE_SQ.nextval into type_id from dual;tare.PALLET_TYPE_ID:=type_id;tare.PALLET_TYPE_CODE:=:tag;tare.PALLET_TYPE_NAME:=:tag;insert into RRL_PALLET_TYPE values tare;:type_out:=type_id;')
+text=text.replace('sample.CASE_PICK_TASK_ID:=task_id;','sample.CASE_PICK_TASK_ID:=task_id;sample.PALLET_TYPE_ID:=type_id;')
+text=text.replace('tag="CS361:"+uuid4().hex[:10],task_out=task)','tag=tag,task_out=task,type_out=type_out)')
+text=text.replace('  tid=int(task.getvalue());bound=', '''  tid=int(task.getvalue());tare_type=int(type_out.getvalue());c.commit();q.callproc("RRL_STOCK_METADATA_TX.end_change")
+  client=httpx.Client(auth=("admin","admin123"),timeout=40)
+  def post(path,body):
+   r=client.post("http://127.0.0.1:8088/api"+path,json=body);assert r.status_code==200,(r.status_code,r.text[:1500]);return r.json()
+  q.execute("select WARE_ID,SSCC,CONTENT_VERSION from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:id",id=tid);ware,carrier,version=q.fetchone()
+  Path("tmp/context361.json").write_text(json.dumps({"task":tid,"type":tare_type,"ware":ware,"tag":tag,"carrier":carrier,"version":int(version)}),encoding="utf-8")
+  post("/inventory/tare/count",{"operation_id":tag+":COUNT","owner_ware_id":int(ware),"pallet_type_id":tare_type,"condition":"GOOD","observed_quantity":"1","expected_version":0,"reason":"Own empty CASE clock fixture","decision_reference":tag})
+  post("/inventory/tare/book",{"operation_id":tag+":BOOK","place_kind":"CASE","place_id":str(tid)})
+  q.callproc("RRL_STOCK_METADATA_TX.begin_change",["admin","case_pick_manage"])
+  bound=''')
+text=text.replace('  q.execute("select count(*)from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:id",id=tid);assert q.fetchone()[0]==0','''  q.execute("select STARTED_AT_INSTANT from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:id",id=tid);assert q.fetchone()[0]is None
+  q.callproc("RRL_STOCK_METADATA_TX.end_change")
+  post(f"/case-pick/tasks/{tid}/return-carrier",{"operation_id":tag+":RETURN","scan_container":carrier,"expected_content_version":int(version),"destinations":{},"allow_empty":True,"reason":"Finish owned empty clock fixture after rollback"})
+  post("/inventory/tare/book-cancel",{"operation_id":tag+":CANCEL","booking_operation_id":tag+":BOOK"})
+  q.execute("select BALANCE_VERSION from RRL_TARE_BALANCE where OWNER_WARE_ID=:w and PALLET_TYPE_ID=:t and CONDITION_CODE='GOOD'and CUSTODIAN_KIND='WAREHOUSE'",w=ware,t=tare_type)
+  bv=int(q.fetchone()[0])
+  post("/inventory/tare/count",{"operation_id":tag+":ZERO","owner_ware_id":int(ware),"pallet_type_id":tare_type,"condition":"GOOD","observed_quantity":"0","expected_version":bv,"reason":"Retire own empty CASE clock fixture","decision_reference":tag})
+  q.execute("select sum(r.REMAIN),sum(r.HARD_RESERVED_BASE)from RRL_REMAINS r join RRL_CELLS x on x.CELL=r.CELL where x.WARE_ID=6667491");assert q.fetchone()==(20,20)''')
+print(json.dumps({"scripts/case361_start_instant.py":text}))

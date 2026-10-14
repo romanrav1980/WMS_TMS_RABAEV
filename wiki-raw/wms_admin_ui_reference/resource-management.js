@@ -1,4 +1,5 @@
-const resourceRows = [
+const resourceDemo = new URLSearchParams(location.search).get("demo")==="1";
+let resourceRows = resourceDemo ? [
   { code: "RT-01", type: "REACHTRUCK", typeLabel: "Ричтрак", equipment: "RTH-01 (BT Reflex)", operator: "Иванов И.И.", shift: "Дневная (08:00 - 20:00)", zone: "A1, A2, A3", status: "В работе", current: "REPL-2026-05-19-0456", currentKind: "Пополнение", next: "STAGE-2026-05-19-0781", nextKind: "Стаджинг", progress: 65 },
   { code: "RT-02", type: "REACHTRUCK", typeLabel: "Ричтрак", equipment: "RTH-02 (Jungheinrich)", operator: "Петров П.П.", shift: "Дневная (08:00 - 20:00)", zone: "A1, A2", status: "В работе", current: "PUTAWAY-2026-05-19-0342", currentKind: "Размещение", next: "REPL-2026-05-19-0460", nextKind: "Пополнение", progress: 40 },
   { code: "RT-03", type: "REACHTRUCK", typeLabel: "Ричтрак", equipment: "RTH-03 (Crown)", operator: "Сидоров С.С.", shift: "Дневная (08:00 - 20:00)", zone: "B1, B2", status: "В простое", current: "-", currentKind: "Перерыв", next: "REPL-2026-05-19-0488", nextKind: "Пополнение", progress: 15 },
@@ -10,9 +11,9 @@ const resourceRows = [
   { code: "COOK-01", type: "COOKING", typeLabel: "Варка", equipment: "Котел 1", operator: "Оператор варки", shift: "Дневная (08:00 - 20:00)", zone: "Производство", status: "В работе", current: "PO-44-COOK", currentKind: "Варка", next: "PO-45-COOK", nextKind: "Варка", progress: 62 },
   { code: "PACK-01", type: "PACKING", typeLabel: "Фасовка", equipment: "Линия фасовки 1", operator: "Оператор фасовки", shift: "Дневная (08:00 - 20:00)", zone: "Производство", status: "Доступен", current: "-", currentKind: "Ожидание выпуска", next: "PO-44-PACK", nextKind: "Фасовка", progress: 12 },
   { code: "RT-04", type: "REACHTRUCK", typeLabel: "Ричтрак", equipment: "RTH-04 (BT Reflex)", operator: "-", shift: "-", zone: "-", status: "Недоступен", current: "-", currentKind: "Нет сессии", next: "-", nextKind: "-", progress: 0 }
-];
+] : [];
 
-const ganttRows = [
+const ganttRows = resourceDemo ? [
   { code: "RT-01", person: "Иванов И.И.", tasks: 7, bars: [{ label: "REPL-0456", start: 8, end: 11.2, cls: "fact" }, { label: "STAGE-0781", start: 11.2, end: 12.7, cls: "fact" }, { label: "", start: 12.7, end: 18.6, cls: "plan" }] },
   { code: "RT-02", person: "Петров П.П.", tasks: 6, bars: [{ label: "PUTAWAY-0342", start: 8, end: 11, cls: "plan" }, { label: "REPL-0460", start: 11, end: 12, cls: "fact" }, { label: "", start: 12, end: 18.6, cls: "plan" }] },
   { code: "RT-03", person: "Сидоров С.С.", tasks: 3, bars: [{ label: "Перерыв", start: 8, end: 9.3, cls: "idle" }, { label: "", start: 9.4, end: 14.5, cls: "future" }] },
@@ -20,7 +21,7 @@ const ganttRows = [
   { code: "CP-01", person: "Орлова Н.Н.", tasks: 12, bars: [{ label: "CASE-0601", start: 8.2, end: 12.4, cls: "fact" }, { label: "CASE-0602", start: 12.4, end: 17.2, cls: "late" }] },
   { code: "COOK-01", person: "Варка", tasks: 2, bars: [{ label: "PO-44", start: 8, end: 12, cls: "fact" }, { label: "PO-45", start: 13, end: 17, cls: "plan" }] },
   { code: "PACK-01", person: "Фасовка", tasks: 2, bars: [{ label: "PO-44", start: 12.5, end: 16, cls: "future" }] }
-];
+] : [];
 
 let activeTab = "all";
 
@@ -52,7 +53,7 @@ function renderResources() {
       <td><span class="tag ${statusClass(row.status)}">${escapeHtml(row.status)}</span></td>
       <td><b>${escapeHtml(row.current)}</b><small>${escapeHtml(row.currentKind)}</small></td>
       <td><b>${escapeHtml(row.next)}</b><small>${escapeHtml(row.nextKind)}</small></td>
-      <td><span class="resource-progress"><i style="width:${row.progress}%"></i></span><em>${row.progress}%</em></td>
+      <td><span class="resource-progress"><i style="width:${row.progress ?? 0}%"></i></span><em>${row.progress === null ? "—" : row.progress+"%"}</em></td>
       <td class="resource-menu">...</td>
     </tr>
   `).join("");
@@ -60,6 +61,7 @@ function renderResources() {
 }
 
 function renderGantt() {
+  if (!resourceDemo) { document.getElementById("resourceGantt").textContent="График смены ещё не подключён. Текущие задания показаны в таблице ресурсов."; return; }
   const hours = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"];
   const head = `<div class="resource-gantt-head"><span>Ресурс</span><span>Задач</span>${hours.map((hour) => `<b>${hour}</b>`).join("")}</div>`;
   const rows = ganttRows.map((row) => `

@@ -1,0 +1,6 @@
+# Oracle metadata pool state после отказа admission
+10.10.2026.03:24UTC worker10496 reported policy fence LOCK_TIMEOUT; following rounds repeatedly failed DIRTY_TRANSACTION. RRL_STOCK_LOCK_API.begin_plan rejects either a live transaction or retained g_phase. Failed metadata begin left package plan state; SQL rollback and pool release alone do not reset package globals. No quantity mismatch was demonstrated.
+
+db.oracle_connection now rolls back any pending work and calls existing RRL_STOCK_POSTING_API.reset_connection before release. Cleanup failure discards the connection; successful committed business result is preserved, original exception is not masked. Quantity posting UoW uses its existing dedicated direct pool/reset/drop protocol and is unchanged. One cleanup roundtrip per gateway lease is explicit cost; NI08 owner reviews realistic API volume before optimizing.
+
+scripts/oracle_metadata_lease_recovery_case.py passed controlled failed plan followed by metadata admission on the same actual Oracle SID; no stock/domain writes. Graceful mini-max stop/start only, old10496 ->54004, first03:33:32UTC round OK/continued0/created0. API reload takes updated db cleanup; no Oracle/VM restart or database copy. Worker startup stdout redirected hidden through root script. See [[runbooks/nicora_short_recovery_worker]] for existing worker principles.

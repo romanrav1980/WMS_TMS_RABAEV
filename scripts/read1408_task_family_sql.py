@@ -1,0 +1,5 @@
+exec(open("scripts/ni063_slow_queries.py",encoding="utf-8").read().split("with oracledb.connect",1)[0])
+with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
+ q=c.cursor();q.execute("select SQL_ID,EXECUTIONS,round(ELAPSED_TIME/nullif(EXECUTIONS,0)/1000,3),BUFFER_GETS from V$SQL where PARSING_SCHEMA_NAME='RABAEV' and EXECUTIONS>0 and SQL_TEXT not like '%V$SQL%' and SQL_TEXT like '%CONNECT_BY_ISCYCLE IS_CYCLE%' and SQL_TEXT like '%RRL_WAREHOUSE_TASK%' order by LAST_ACTIVE_TIME desc fetch first 6 rows only");result={'sql':q.fetchall()}
+ q.execute("select INDEX_NAME,COLUMN_POSITION from USER_IND_COLUMNS where TABLE_NAME='RRL_WAREHOUSE_TASK' and COLUMN_NAME='PARENT_TASK_ID'");result['parent_indexes']=q.fetchall()
+ print(json.dumps(result));Path('tmp/result1408.json').write_text(json.dumps(result,indent=2),encoding='utf-8')

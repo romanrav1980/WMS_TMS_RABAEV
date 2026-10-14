@@ -6,6 +6,8 @@ from collections.abc import Awaitable, Callable
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import JSONResponse
+from .audit_body import capture_request,capture_response
 
 from ..config import get_settings
 from ..request_context import RequestContext, reset_request_context, set_request_context, update_request_context
@@ -49,11 +51,9 @@ class ApiAuditMiddleware(BaseHTTPMiddleware):
 
         audit = ApiAuditService(settings=settings)
         started = time.perf_counter()
-        request_body_bytes = await request.body()
-        request_body, request_truncated = decode_limited(
-            request_body_bytes,
-            settings.audit_max_body_chars,
-        )
+        captured_request=await capture_request(request,settings.audit_max_body_chars)
+        request_body_bytes=captured_request.contents
+        request_body,request_truncated=captured_request.log_body,captured_request.truncated
         headers = redact_headers(dict(request.headers))
         replay_of = _int_header(request.headers.get("x-wms-replay-of"))
         replay_run_id = request.headers.get("x-wms-replay-run-id")
@@ -106,18 +106,10 @@ class ApiAuditMiddleware(BaseHTTPMiddleware):
         request._receive = receive  # noqa: SLF001 - FastAPI body replay pattern.
 
         try:
-            response = await call_next(request)
-            response_body_bytes = b""
-            async for chunk in response.body_iterator:
-                response_body_bytes += chunk
-
-            if settings.audit_capture_response_body:
-                response_body, response_truncated = decode_limited(
-                    response_body_bytes,
-                    settings.audit_max_body_chars,
-                )
-            else:
-                response_body, response_truncated = "", 0
+            response = (JSONResponse({"detail":captured_request.size_error},status_code=413)
+                        if captured_request.too_large else await call_next(request))
+            response_body_bytes,response_body,response_truncated=await capture_response(
+                response,settings.audit_max_body_chars,settings.audit_capture_response_body)
 
             duration_ms = int((time.perf_counter() - started) * 1000)
             finish_entry = {
@@ -179,6 +171,8 @@ class ApiAuditMiddleware(BaseHTTPMiddleware):
 
 def is_replayable(request: Request) -> bool:
     path = request.url.path
+    if path.startswith(("/api/delivery/store-photos/","/api/delivery/store-scales/", "/api/inventory/warehouse-scales/")):
+        return False
     if path in {"/health", "/docs", "/redoc", "/openapi.json", "/favicon.ico"}:
         return False
     if path.startswith("/api/admin/api-calls") or path.startswith("/api/admin/auth"):

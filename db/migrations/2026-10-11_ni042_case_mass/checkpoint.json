@@ -1,0 +1,17 @@
+{
+  "migration_id": "2026-10-11-207-case-measured-mass-manifest",
+  "sha256": {
+    "db/migrations/2026-10-11_ni042_case_mass/000_before_read.sql": "d2f19bca5bd067638cfe08f560d1e99a87eff737768d6031f9be9240b2d045e9",
+    "db/migrations/2026-10-11_ni042_case_mass/000_before_admission.sql": "ddcc18058e76373513e6877117e6d83423c929b5cff0506889e7a1d3f6c8058b",
+    "db/migrations/2026-10-11_ni042_case_mass/000_before_boxes.sql": "2a515650ea55e75ad4118f671c832d44aa18d7725534e8b6aeb909f22843048a",
+    "db/migrations/2026-10-11_ni042_case_mass/000_before_load.sql": "774add1c6d3dc192640597b025cc6f610fd91480528d5d8dd5c7dfa50976c537",
+    "db/migrations/2026-10-11_ni042_case_mass/000_before_store.sql": "ae088db7833653c5c91f9d902043308f399b5d3236875b567db49487ee395cc3",
+    "db/migrations/2026-10-11_ni042_case_mass/000_before_guard.sql": "95a177bf4e213d45f4cab72b18c03b5aa9e39011e6e56f736dfd8274397300ad",
+    "db/migrations/2026-10-11_ni042_case_mass/000_before_columns.json": "e1374ab870b4d1ba0b78c5b6c0f9e42da8eda4eff28585659bfecc2b0a37468d",
+    "db/migrations/2026-10-11_ni042_case_mass/000_before_constraints.json": "c26a4879649a801b7cc5ef26bdaa0e863988be1fad23772528b38c3d59a7a65d",
+    "db/migrations/2026-10-11_ni042_case_mass/000_before_warehouse_hu.py": "9260ca94e3dab4c76dc41ed9ee6ca8bf937312e28831ee7fbffbd49d8cd1faed",
+    "db/migrations/2026-10-11_ni042_case_mass/000_before_current_runtime_manifest.json": "9610b09b5c29fe279b03d72215a2f11b5680ab9c47f94b0bebc0d1caea4ae9e3",
+    "db\\migrations\\2026-10-11_ni042_case_mass\\000_before_store_weight.sql": "f2f79b722be3aecbb6351de617bfbf0afb78a602d68e85bbef95a4dd4e2a9fc4"
+  },
+  "recovery": "Fresh existing HU/read/load/box/store/guard and exact constraints. Existing ordinary box identities retained, new CASE FK plus virtual ordinary FK, no historical fact rewrite/no second physical box; paired rollback before CASE load records, otherwise forward repair. No DB copy."
+}

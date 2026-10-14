@@ -1,0 +1,12 @@
+{
+  "migration_id": "2026-10-11-187-warehouse-scale-archive",
+  "sha256": {
+    "001_schema.sql": "5a4fcddef39598f0c18f397ef0f6a92cc52bd5259ee92f97a30e9b6d430e9f75",
+    "002_archive.sql": "3a0b82815b8a38abccbdd73398ae2e712cbe238d0639b49d81a408f792e13967",
+    "003_guards.sql": "e50181b62713b033a233542c6dcc18bc5f4abc88e46f05476d485e5e5588b9e7",
+    "apply.sql": "4f978bf445910e9d690dd71175d40f242d8d8c36dfc7fd36c059dc39e5283b8c",
+    "rollback.sql": "f358cfbca7f9accb3aa9dde61cffcd080ba642c3a21a5dd5fb699ffc4f4bb5d9",
+    "verify.sql": "351f4bcd74affb36f6b11a291cbdc7258f7fabe692d5eb2edca59e13b7818d48"
+  },
+  "recovery": "Additive empty warehouse scale metadata only; history-protected rollback; no DB copy"
+}

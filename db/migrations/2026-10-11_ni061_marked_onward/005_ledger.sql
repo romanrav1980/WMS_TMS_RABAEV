@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-228-original-marked-interwarehouse-onward'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Original second leg issues same marked units without second customer fulfillment',sysdate,user,'db/migrations/2026-10-11_ni061_marked_onward/apply.sql','db/migrations/2026-10-11_ni061_marked_onward/rollback.sql','APPLIED','Actual225->226->227->228 custody0/old ST641364 constructor/existing assign/currentQC6/native LOAD-3/same3 units6codes ISSUED10/oldFF SHIPPED3/no secondFF/native targetTT33543 DEPARTED/vehicle10050 compatibletype15/protected20/20. Existing type conflict denied before native correction of own empty target trip. Final marked recipient remains next229. NativeVALID/226 API gates reused.');
+commit;

@@ -1,0 +1,6 @@
+{
+  "migration_id": "2026-10-12-572-explicit-unload-cost-basis",
+  "before_sha256": "335726aa42e866035b6d1e9b2d5b6de34839963eb3ea40c01404da2798a9ffb0",
+  "after_sha256": "adc3fd25246839cddc2687b99fc6b5c68b9874a298ef8b2aed66761525cb8aea",
+  "recovery": "Original norm source saved. Legacy14-field exact replay retained; new versions require POINT/PLACE and explicit pallet rate. Existing history never rewritten."
+}

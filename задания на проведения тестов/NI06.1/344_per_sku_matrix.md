@@ -1,0 +1,2 @@
+# Qwen333/339–344
+PerSKU profiles2+1, sixunits/ninecodes, each unit expects only own profiles. Explicit rawCode profileVersion must match currentcard; stale/currentwrongprofile/missingduplicateforeign codes denied. Perlot accepted/missing/refused/damaged quantities exact; line duplication/omission denied. Late STORE rollback bothfacts/6unitdispositions/outbox/custody; two Root contenders one winner; oldbirth/FF3once. Context342 alreadySTOREtwoorders3: nofactories/initial343344admission. Mixedordinary/recovery/groupedfirstleg unsupported.

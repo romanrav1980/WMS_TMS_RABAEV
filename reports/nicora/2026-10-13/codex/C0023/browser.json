@@ -1,0 +1,13 @@
+{
+  "mocked_api": true,
+  "native_result_fixture": "STORE383.RECEIPT:c09bc5c0",
+  "checks": [
+    "confirmed rejection fresh preview preserves quantities, note, photos, scale and QR",
+    "mismatched response preserves pending",
+    "same request retry displays native result quantities and next steps",
+    "actor change clears prior receipt"
+  ],
+  "post_count": 3,
+  "real_posts": 0,
+  "errors": []
+}

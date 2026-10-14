@@ -1,0 +1,2 @@
+# Qwen:246 — сохранение погруженной СТ в preflight
+Проверить совпадение native241 conditions/current manual trip/ровно один ACTIVE LOADED APPLIED unreleased custody proof/current vehicle/planned unbilled TT. New plan, foreign/departed, zero/duplicate proof refuse. Same READ ONLY snapshot, current actor/Ware before response; native capacity and operational_admission=false preserved. Existing33541 positive/completed33558 negative; no writes/protected20-20. Bounded SQL/batch decision documented.

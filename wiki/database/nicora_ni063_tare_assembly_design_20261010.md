@@ -1,0 +1,7 @@
+# NI06.3 ticket101 — пригодная тара для существующей сборки
+Источник процесс11/NS15/NS55; существующие CASE_PICK_TASK/RRL_PALLETS HU, types, resource start остаются. Root TARE_BOOK закрепляет одну физическую тару за существующим standalone CASE или верхним HU в текущем складе. Будущие возвраты не создают доступность. Active claim уменьшает свободную пригодную тару, не товарный P/H и не физическое количество.
+Подготовка CASE требует exact PALLET_TYPE_ID существующего задания, HU — явного типа и matching PALLET/TROLLEY class. Вложенный код не создаёт второй claim; parent/child с уже закреплённой тарой нельзя молча свести в одну физическую тару. Для repack нужен отдельный доказанный процесс.
+Root TARE_BOOK_CANCEL только после физически пустого CASE/HU, без погрузки/отправки, сохраняет историю. Изменение claim увеличивает версию соответствующего tare balance без изменения количества; counted availability физqty-minusHELD.
+Новый CASE START допускается только с собственным или допустимым верхним HU claim. Исторические уже начатые задания не объявляются заново начатыми. Existing metadata CONFIG exclusive fence согласуется с Root share, изменения claim защищены тем же counter mutex.
+COUNT/DAMAGE/warehouse→vehicle ACCEPT не могут расходовать тару active assembly. Передача cargo-связанного claim водителю — отдельный следующий стык102 с действительным load/source manifest, а не автоматическое снятие hold при планировании.
+Owner inventory/Root; resources/legacy callers получают guard/visible availability, второго планировщика не возникает.

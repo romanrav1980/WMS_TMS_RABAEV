@@ -40,7 +40,10 @@ window.fgReceivingPolicy = (() => {
       if (requestId !== loadId) return;
       if (!response.ok) throw new Error(data.detail || `HTTP ${response.status}`);
       version = data.version;
+      el("fgStackStage").value = data.stack_stage || "MAIN";
       el("fgReceiptMarked").checked = data.marking_required;
+      el("fgReceiptWeightedBoxes").checked = Boolean(data.serialized_weight_boxes);
+      el("fgOrderWeightTolerance").value = data.order_weight_tolerance_pct ?? "15";
       data.profiles.forEach(addProfile);
       if (data.configured) {
         el("fgEditCrpt").value = String(Number(data.profiles.some(p => p.system_code === "CRPT")));
@@ -61,7 +64,7 @@ window.fgReceivingPolicy = (() => {
     try {
       const response = await fetch(`${fgApiBase()}/api/finished-goods/skus/${encodeURIComponent(selected)}/receiving-policy`, {
         method: "PUT", headers: fgHeaders({ "Content-Type": "application/json" }),
-        body: JSON.stringify({ expected_version: version, marking_required: marked, profiles }),
+        body: JSON.stringify({ expected_version: version, marking_required: marked, stack_stage: el("fgStackStage").value, serialized_weight_boxes: el("fgReceiptWeightedBoxes").checked, order_weight_tolerance_pct: el("fgOrderWeightTolerance").value, profiles }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail));

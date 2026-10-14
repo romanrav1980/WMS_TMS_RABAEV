@@ -1,0 +1,23 @@
+from typing import Any,Protocol
+
+
+class StoreReturnReceiveError(RuntimeError):
+    def __init__(self,code: str,message: str,status: int=409,operation_id: str="") -> None:
+        self.code=code
+        self.status=status
+        self.operation_id=operation_id
+        super().__init__(message)
+
+
+class StoreReturnReceivePort(Protocol):
+    def page(self,ware_id: int,after: str,limit: int,actor: str) -> dict: ...
+    def source(self,ware_id: int,pickup_id: str,actor: str) -> dict: ...
+    def configure(self,ware_id: int,supplier_cell: str,disposal_cell: str,expected_version: int,actor: str) -> dict[str,Any]: ...
+    def configure_reuse(self,ware_id: int,receive_cell: str,expected_version: int,actor: str) -> dict[str,Any]: ...
+    def policy(self,ware_id: int,actor: str) -> dict[str,Any]: ...
+    def pending(self,ware_id: int,actor: str) -> list[dict[str,Any]]: ...
+    def confirm(self,operation_id: str,pickup_id: str,metadata: dict[str,Any],actor: str) -> dict[str,Any]: ...
+
+
+def store_return_receive_service() -> StoreReturnReceivePort:
+    raise RuntimeError("Store return warehouse receiving not wired")

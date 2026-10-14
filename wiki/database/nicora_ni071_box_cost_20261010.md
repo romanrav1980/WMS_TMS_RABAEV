@@ -1,0 +1,15 @@
+# NI07.1 — складская стоимость физической коробки,111
+2026-10-10-111-actual-box-warehouse-cost APPLIED10/0 + guards3/0/head1/0 RABAEV/orcl. RRL_LOGISTICS_RATE_HEAD/HISTORY/COST_RUN/COST_LINE and guards valid. Legacy RRL_WARES lacks unique/PK: new warehouse identity validated by exact count, no fictitious FK/schema retrofit. Original failed FK DDL created no table.
+
+Finance module owns pure Decimal rates/cent rounding, typed API port, infrastructure transactions. create_tt_price current warehouse-bound actor sets optimistic norm version/history, monotonically later effective date; original exact norm request can replay version+1 after future head changed, different content refuses. Common work included in BOX picking rate; no second common surcharge in this slice. Rates evaluated on UTC date of actual loading; assembly-start operating-day/monthly recalculation remain future scope.
+
+calc_tt_price current bound actor conducts actual departed loads1..200, requires all container BOX nodes exactly backed by original RRL_TT_LOAD_BOX_WEIGHT proof count, no inferred box conversion. Immutable rates selected latest applicable, TT row locked first, no stock resources; immutable run/lines same short transaction, unique actual load+costcode+currency prevents second charge. Native goods journal unchanged. Frozen original rate/basis/quantity/version/amount retained. Initial COST_CODE WAREHOUSE_PICKING/basis BOX only; currencies separated and original untyped carrier PRICE not overwritten.
+
+logistics-costs.html gives version/rate/actual calculation/durable retry. New finance/BillingWarehouseCosts public feature appears in existing invoice detail, using original TT.PAY_ORDER_ID. Read lines restricted to user warehouse orGLOBAL. No second invoice editor or invented carrier invoice total. Actual invoice source membership shown when existing billing links trip; author did not create/pay invoice.
+
+## Actual author evidence
+[Case](../../scripts/ni071_box_cost_case.py) PASS tag09a34d7dec: original departed FULL.HU.SHIP:22c5dc5ec4/trip33514/warehouse2378876 actual BOX1, norm2.50GEL/v1 from2026-01-01, cost2.50, exact retry/conflict/second denied; future9.00/v2 from2027 retained original charge. Original PRICE/PAY_ORDER_ID and goods events unchanged.
+[Original continuation](../../scripts/ni071_box_cost_existing_case.py): original norm retry returnsv1 despite currentv2, changed content409, current bound finance user sees own rates/charge and foreign warehouse403. Own user retired.
+SQL41.677/15.339/28.269ms: retain load/BOX PK, scoped200loads/500detail, finance owner checks repeated occupied history plan at growth. TypeScript admin PASS. Architecture398files/223debt/1cycle remains FAIL on prior debt; new finance domain→contracts dependency fixed, no threshold/baseline increase. No full finance or independent acceptance claim.
+
+Extra cost articles/approval/distribution, operating-day calculation, monthly norms, currency policy/conversion, financial correcting entries remain open.

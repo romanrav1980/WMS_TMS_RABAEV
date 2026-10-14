@@ -1,0 +1,2 @@
+# Qwen 317–320
+Проверь существующее wholeHU задание 1HU и товарный факт3EA; поздний rollback всех остатков/ссылок/ячеек/журналов. Quarantine ORDINARY отказ, только точный PUTAWAY native proof. Ответственность верхнего места, stockleaf отдельно. Source316 уже доставлен: factories и первоначальныеP3assertions запрещены; context319 exact repeat безопасен. Очереди показывают физический TOP, артикул и qty3 из STOCK, dispatchqty3. MultiST/partial/multihop/HUreplan не поддержаны. Независимое выполнение заданий ещё не проведено.

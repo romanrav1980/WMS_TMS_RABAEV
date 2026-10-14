@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-220-hu-fullpal-tare-recovery'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Original HU/FULLPAL transferred tare return and new original-place booking',sysdate,user,'db/migrations/2026-10-11_ni063_hu_load_recovery/apply.sql','db/migrations/2026-10-11_ni063_hu_load_recovery/rollback.sql','APPLIED','Actual same219 tag6ac14257b5/WARE7096290/wave474/TT33541/driver1859: original transferred FULLPAL book retained, actual driver offer/warehouse acceptance1/new HELD recovery1/late rollback/concurrent winner/replay/currentWARE403/wrong scan/pending refusal. Original goods unload FULL220.UNLOAD:6ac14257b5 native+3/P3H3/same FF/task/UID, no goods effect in tare. Own primary3/3 and new HELD1 retained for repeated physical cycle; protected13520/20.');
+commit;

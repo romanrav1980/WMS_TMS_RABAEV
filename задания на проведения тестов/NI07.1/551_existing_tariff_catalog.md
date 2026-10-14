@@ -1,0 +1,3 @@
+# Qwen: original carrier tariff catalog551
+Prepared only. Review app/routers/transport_tariffs.py against actual Oracle column mirror and native existing source. GET only, existing transport_dispatch_view. Verify vehicle/hour/point exact decimal strings, null retained, exact PRICE_NAME key and type prefix filters, limit500, missing/error does not masquerade as a tariff row. No goods valuation, mutating price function, guessed per-km or pallet rate.
+Own original ctx532 PRICE120/head3 must be retained, no fixture recreation/publication. Targeted actual direct read551 already performed; no full repeated regression or automatic additional model qualification.

@@ -1,0 +1,17 @@
+{
+    "source_sha256":  {
+                          "001_schema.sql":  "01C4BA518617BB233A23CC11EFC75B66464AADC710320DB9EA7D3EFC39591254",
+                          "apply.sql":  "48E387A9DCFAD240BCE3FBB25D712AFA447C0777EF46C53541DE02E323C69151",
+                          "000_before_root.sql":  "8C803D7DDA596BF736DD4B4426D0D8E571D26255DB505C6ED424C5E0388A6FD3",
+                          "004_unit_contract.sql":  "F5A9ED0D9DC004A30260A15B4829DA9091A793C745E02D7DCFBFC3A29286069B",
+                          "verify.sql":  "39939890CC9E85FA9A7B1F53B4E54624BD3F4AA02123645EE14D98F26928935B",
+                          "rollback.sql":  "929742670D910125AEEA5F58AA868BC061E9ADBE94D285BF5B4F6D5E97B5A434",
+                          "000_before_unit.sql":  "D9CD17D29CD8CF7331E3C92920FF3CEC02D5783F24FAD6354A4B3267EF0631FF",
+                          "003_root_body.sql":  "709D5E0788DC47292645FB47C1C4F77B0B7B3099A65E47AA4FE2812BC5E742D2",
+                          "002_decoder.sql":  "B704667B89189D4DA0099D7316FF246ECE781A946FC1B810134E34004E1D815C",
+                          "004_unit_body.sql":  "62A770E1B6E6B573837349D7A0A40691BE249EF04740C5CDCC34AF317D57EF7A",
+                          "003_root_contract.sql":  "F97A17D0EE60CAC86E8FEFB04D007141F7C802B13C146D237975BFD7A1C4939E"
+                      },
+    "recovery":  "fresh sources and guarded rollback, additive default0 policy flag; no DB copy",
+    "migration_id":  "2026-10-11-179-weight-box-physical-capture"
+}

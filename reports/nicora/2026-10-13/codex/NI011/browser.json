@@ -1,0 +1,13 @@
+{
+  "real_get_source": "a8a0274563684e82a22f2b85da9f2989",
+  "local_codes_synthetic": true,
+  "pending_check_simulated": true,
+  "checks": [
+    "one bad profile removed; other unit/profile codes and unit quantity retained",
+    "last profile removal removes only its physical unit",
+    "pallet quantity untouched; textContent protects raw QR",
+    "pending immutable: remove/all-clear/add blocked"
+  ],
+  "writes": [],
+  "errors": []
+}

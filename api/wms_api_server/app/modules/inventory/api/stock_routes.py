@@ -1,7 +1,7 @@
 """Authorized read-only visibility; physical writes stay behind business commands."""
 from typing import Any
 from fastapi import APIRouter, Depends, Path
-from ....auth import AdminUser, require_permission, STOCK_RESERVATION_VIEW_PERMISSION
+from ...platform.public import AdminUser, require_permission, STOCK_RESERVATION_VIEW_PERMISSION
 from ..application.stock_ports import StockQueriesPort
 
 router = APIRouter(prefix="/api/inventory/stock-posting", tags=["stock-posting"])

@@ -101,6 +101,10 @@
             <header><h2>Маркировка и приёмка товара</h2></header>
             <p id="fgReceiptStatus">Выберите SKU в существующей карточке товара.</p>
             <label><input id="fgReceiptMarked" type="checkbox" /> Товар подлежит маркировке</label>
+            <label>Этап укладки <select id="fgStackStage" title="Этап попадёт в новые задания отбора: основание, середина или верхний слой. Выданный маршрут не переписывается."><option value="BASE">Основание</option><option value="MAIN">Основная часть</option><option value="TOP">Верхний слой</option></select></label>
+            <label><input id="fgReceiptWeightedBoxes" type="checkbox" /> Серийные весовые коробки (KG, GS1)</label>
+            <label>Допуск массы заказа, % <input id="fgOrderWeightTolerance" type="number" min="0" max="100" step="0.01" value="15" /></label>
+            <p class="muted">Масса нетто и серийный номер считываются с этикетки коробки. Требование государственной маркировки настраивается отдельно.</p>
             <p>Для немаркированного товара используются ШК штуки и коробки.</p>
             <div><p>Применимые системы и профили</p>
               <div id="fgReceiptProfiles"></div><datalist id="fgReceiptSystems"><option value="CRPT">Честный знак / табак</option><option value="EGAIS">ЕГАИС</option><option value="MERCURY">Меркурий</option></datalist>
@@ -153,6 +157,6 @@
     <script src="admin-nav.js?v=20260517-navmodule"></script>
     <script src="admin-auth.js?v=20260517-cleanui"></script>
     <script src="finished-goods.js?v=20261007-ni01"></script>
-    <script src="sku-receiving-policy.js?v=20261007-ni01"></script>
+    <script src="sku-receiving-policy.js?v=20261011-weighted-boxes"></script>
   </body>
 </html>

@@ -1,0 +1,43 @@
+ procedure set_ready(s RRL_CASE_PICK_SHORT%rowtype,p_actor varchar2) is
+ begin
+  update RRL_CASE_PICK_SHORT set RECOVERY_STATE='READY',RECOVERY_LAST_ERROR=null,RECOVERY_WORKER=null,RECOVERY_LEASE_UNTIL=null
+   where CASE_PICK_SHORT_ID=s.CASE_PICK_SHORT_ID;
+  update RRL_CASE_PICK_LINE set STATUS='ACTIVE',UPDATED_AT=systimestamp,UPDATED_BY=p_actor where CASE_PICK_LINE_ID=s.CASE_PICK_LINE_ID;
+  update RRL_CASE_PICK_TASK set STATUS=case when exists(select 1 from RRL_CASE_PICK_LINE l
+    where l.CASE_PICK_TASK_ID=s.CASE_PICK_TASK_ID and l.STATUS='WAIT_REPLENISHMENT') then 'WAIT_REPLENISHMENT' else 'IN_PROGRESS' end,
+   CONTENT_VERSION=CONTENT_VERSION+1,UPDATED_AT=systimestamp,UPDATED_BY=p_actor where CASE_PICK_TASK_ID=s.CASE_PICK_TASK_ID;
+ end;
+ procedure plan_replenishment(p_repl number,p_resources in out nocopy json_array_t) is
+ begin
+  for s in(select * from RRL_CASE_PICK_SHORT where REPLENISH_TASK_ID=p_repl and RECOVERY_STATE='WAIT_REPLENISHMENT') loop add_case_rows(s,p_resources);end loop;
+ end;
+ procedure finish_replenishment(p_task RRL_WAREHOUSE_TASK%rowtype,p_actor varchar2) is
+  qty number;need number;status varchar2(30);
+ begin
+  for s in(select * from RRL_CASE_PICK_SHORT where REPLENISH_TASK_ID=p_task.SOURCE_TASK_ID and RECOVERY_STATE='WAIT_REPLENISHMENT') loop
+   RRL_STOCK_LOCK_API.assert_held(20,RRL_STOCK_LOCK_API.resource_key('ROW','RRL_CASE_PICK_SHORT',RRL_STOCK_PLAN_HELPER.decimal_text(s.CASE_PICK_SHORT_ID)));
+   select STATUS into status from RRL_PICK_WAVE_REPLENISH_TASK where PICK_WAVE_REPLENISH_TASK_ID=s.REPLENISH_TASK_ID;
+   select PLANNED_QTY-PICKED_QTY into need from RRL_CASE_PICK_LINE where CASE_PICK_LINE_ID=s.CASE_PICK_LINE_ID;
+   select nvl(sum(sr.BASE_QTY),0) into qty from RRL_STOCK_RESERVATION sr join RRL_CASE_PICK_LINE l on l.CASE_PICK_LINE_ID=s.CASE_PICK_LINE_ID
+    where sr.SOURCE_DOC_TYPE='PICK_WAVE' and sr.SOURCE_DOC_ID=s.PICK_WAVE_ID and sr.SOURCE_LINE_ID=l.PICK_TASK_ID
+     and sr.CELL=s.CELL_CODE and sr.RESERVATION_KIND='HARD' and sr.STATUS in('ACTIVE','ALLOCATED','PICKING')
+     and not exists(select 1 from RRL_CASE_CARRIER_LOT h where h.LOT_UID=sr.UID_PALLET);
+   if status='DONE' and need>0 and qty>=need then set_ready(s,p_actor);end if;
+  end loop;
+ end;
+ procedure plan_pick(p_line number,p_resources in out nocopy json_array_t) is
+ begin
+  for s in(select * from RRL_CASE_PICK_SHORT where CASE_PICK_LINE_ID=p_line and RECOVERY_STATE in('WAIT_INVENTORY','WAIT_REPLENISHMENT','READY')) loop
+   if s.RECOVERY_STATE!='READY' then raise_application_error(-20886,'SHORT_RECOVERY_NOT_READY');end if;
+   RRL_STOCK_PLAN_HELPER.row_key(p_resources,'RRL_CASE_PICK_SHORT',RRL_STOCK_PLAN_HELPER.decimal_text(s.CASE_PICK_SHORT_ID));
+  end loop;
+ end;
+ procedure finish_pick(p_line number,p_actor varchar2) is
+ begin
+  for s in(select * from RRL_CASE_PICK_SHORT where CASE_PICK_LINE_ID=p_line and RECOVERY_STATE in('WAIT_INVENTORY','WAIT_REPLENISHMENT','READY')) loop
+   RRL_STOCK_LOCK_API.assert_held(20,RRL_STOCK_LOCK_API.resource_key('ROW','RRL_CASE_PICK_SHORT',RRL_STOCK_PLAN_HELPER.decimal_text(s.CASE_PICK_SHORT_ID)));
+   if s.RECOVERY_STATE!='READY' then raise_application_error(-20886,'SHORT_RECOVERY_NOT_READY');end if;
+   update RRL_CASE_PICK_SHORT set RECOVERY_STATE='RESUMED',RESTORED_AT=systimestamp,RECOVERY_WORKER=null,RECOVERY_LEASE_UNTIL=null
+    where CASE_PICK_SHORT_ID=s.CASE_PICK_SHORT_ID;
+  end loop;
+ end;

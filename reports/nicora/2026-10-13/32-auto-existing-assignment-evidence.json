@@ -1,0 +1,198 @@
+{
+  "preflight": {
+    "existing_constraint_columns": [
+      [
+        "RRL_CUSTOMER_ORDER",
+        "DOCK_ID",
+        "NUMBER"
+      ],
+      [
+        "RRL_TRANSPORT_TASK",
+        "DOCK",
+        "VARCHAR2"
+      ],
+      [
+        "RRL_TRANSPORT_TASK",
+        "TEMP_REGION",
+        "VARCHAR2"
+      ],
+      [
+        "RRL_TRANSPORT_TASK",
+        "TEMP_WEIGHT",
+        "NUMBER"
+      ],
+      [
+        "RRL_TRANSPORT_TASK",
+        "DOCK_REZERV_TIME_FROM",
+        "TIMESTAMP(0)"
+      ],
+      [
+        "RRL_TRANSPORT_TASK",
+        "DOCK_REZERV_TIME_TO",
+        "TIMESTAMP(0)"
+      ]
+    ],
+    "retained_own_trip": [
+      33571,
+      "QC241ede877f6d1",
+      "Спланирован",
+      0,
+      0
+    ],
+    "preflight_status": 200,
+    "preflight": {
+      "trip_id": 33571,
+      "routes": [
+        {
+          "vehicle_id": 10059,
+          "current_vehicle_num": "QC241ede877f6d1",
+          "st_numbers": [
+            "SAP_2135"
+          ],
+          "current_sources": [
+            {
+              "id": 641507,
+              "st_number": "SAP_2135",
+              "warehouse_id": 9807,
+              "trip_id": null,
+              "condition": 0,
+              "retained_load_proofs": 0
+            },
+            {
+              "id": 641508,
+              "st_number": "SAP_2135",
+              "warehouse_id": 9807,
+              "trip_id": null,
+              "condition": 0,
+              "retained_load_proofs": 0
+            }
+          ],
+          "source_blockers": [],
+          "capacity_and_type": {
+            "status": "CHECKED_CURRENT_NATIVE_RULES",
+            "result": {
+              "validation_status": "CAPACITY_TYPE_CHECKED",
+              "frozen_loaded_places": 0,
+              "frozen_loaded_weight_kg": "0",
+              "declared_places": 2,
+              "declared_weight_kg": "24",
+              "warnings": [],
+              "physical_stock_changed": false,
+              "physical_load_admission": false
+            }
+          },
+          "current_native_application": {
+            "status": "CHECKED_CURRENT_NATIVE_RULES",
+            "result": {
+              "validation_status": "CAPACITY_TYPE_CHECKED",
+              "frozen_loaded_places": 0,
+              "frozen_loaded_weight_kg": "0",
+              "declared_places": 2,
+              "declared_weight_kg": "24",
+              "warnings": [],
+              "physical_stock_changed": false,
+              "physical_load_admission": false
+            }
+          },
+          "status": "CURRENT_NATIVE_RULES_CHECKED",
+          "schedule_status": "UNAVAILABLE",
+          "operational_admission": false,
+          "unverified_constraints": [
+            "AWARE_TIME_SCHEDULE",
+            "DRIVER_AND_BREAKS",
+            "WAREHOUSE_RELEASE_AND_LOADING"
+          ]
+        }
+      ],
+      "status": "CURRENT_NATIVE_RULES_CHECKED",
+      "read_only": true,
+      "apply_requires_current_locked_recheck": true,
+      "operational_admission": false
+    }
+  },
+  "metadata_sql": {
+    "existing_temperature_columns": [
+      [
+        "RRL_INTERWARE_PUT_PLAN",
+        "TASK_TEMP_MIN",
+        "NUMBER"
+      ],
+      [
+        "RRL_INTERWARE_PUT_PLAN",
+        "TASK_TEMP_MAX",
+        "NUMBER"
+      ],
+      [
+        "RRL_INTERWARE_THERMAL_FACT",
+        "TASK_TEMP_MIN",
+        "NUMBER"
+      ],
+      [
+        "RRL_INTERWARE_THERMAL_FACT",
+        "TASK_TEMP_MAX",
+        "NUMBER"
+      ],
+      [
+        "RRL_INTERWARE_THERMAL_FACT",
+        "SKU_TEMP_MIN",
+        "NUMBER"
+      ],
+      [
+        "RRL_INTERWARE_THERMAL_FACT",
+        "SKU_TEMP_MAX",
+        "NUMBER"
+      ],
+      [
+        "RRL_IW_RECOVERY_PUT_PLAN",
+        "TASK_TEMP_MIN",
+        "NUMBER"
+      ],
+      [
+        "RRL_IW_RECOVERY_PUT_PLAN",
+        "TASK_TEMP_MAX",
+        "NUMBER"
+      ],
+      [
+        "RRL_RECEIPT_CELL_RULE",
+        "TEMP_MIN",
+        "NUMBER"
+      ],
+      [
+        "RRL_RECEIPT_CELL_RULE",
+        "TEMP_MAX",
+        "NUMBER"
+      ],
+      [
+        "RRL_RECEIPT_SKU_RULE",
+        "TEMP_MIN",
+        "NUMBER"
+      ],
+      [
+        "RRL_RECEIPT_SKU_RULE",
+        "TEMP_MAX",
+        "NUMBER"
+      ],
+      [
+        "RRL_TOPOLOGY_ZONE",
+        "TEMPERATURE_CLASS",
+        "VARCHAR2"
+      ]
+    ],
+    "preflight_slow_sql": [
+      [
+        "0ymzaykj2s7ra",
+        2,
+        49.219,
+        394,
+        "begin RRL_TRANSPORT_PLAN_RULES.check_vehicle(:1,:2,:3,:4); end;"
+      ],
+      [
+        "8r2wkv8qc0y73",
+        1,
+        52.287,
+        856,
+        "select p.ID,p.ST_NUMBER,p.WARE_ID,p.TRANSTASK_ID,p.CONDITION,               (select count(*) from RRL_TT_HU_LOAD_ST m                join RR"
+      ]
+    ]
+  }
+}

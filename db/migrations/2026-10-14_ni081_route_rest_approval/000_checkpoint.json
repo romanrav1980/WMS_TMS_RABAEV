@@ -1,0 +1,50 @@
+{
+  "000_before_rrl_tt_time_api_package.sql": "c66d7ad01ca6b43923c3ffd232f766df18af7648426b60504da32b90fa0f8a34",
+  "000_before_rrl_tt_time_api_package_body.sql": "f762ee7f3078eaeb52eb81e0ad42b62562c989189016e17e974c2d6ff74f262d",
+  "000_before_rrl_tt_route_api_package.sql": "7583a03e82a9a4d2be96bf85d7b06c3d15c1f7a749053d79e6a9c246dc5e0041",
+  "000_before_rrl_tt_route_api_package_body.sql": "05af3ff0238b3ba7507901debb9d5a6620a53c5ac1d1e6f2ba5ebe096e24f884",
+  "invalid_before": [],
+  "approval_columns": [
+    [
+      "TT_ID",
+      "NUMBER"
+    ],
+    [
+      "VERSION_NO",
+      "NUMBER"
+    ],
+    [
+      "OPERATION_ID",
+      "VARCHAR2"
+    ],
+    [
+      "ACTOR",
+      "VARCHAR2"
+    ],
+    [
+      "REQUEST_HASH",
+      "VARCHAR2"
+    ],
+    [
+      "SOURCE_HASH",
+      "VARCHAR2"
+    ],
+    [
+      "TIME_ZONE",
+      "VARCHAR2"
+    ],
+    [
+      "REASON",
+      "NVARCHAR2"
+    ],
+    [
+      "RESULT_JSON",
+      "CLOB"
+    ],
+    [
+      "CREATED_AT",
+      "TIMESTAMP(6) WITH TIME ZONE"
+    ]
+  ],
+  "road_triggers": []
+}

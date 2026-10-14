@@ -1,0 +1,11 @@
+{
+  "schema": "RABAEV",
+  "service": "127.0.0.1:1521/orcl",
+  "before_mark_sha256": "7b79e2c99761d75292f546d4ebe6c447ccb834470f10363ed9b026803da28cde",
+  "after_mark_sha256": "cd00a8ddfcbaacd0b6f3549a3cac550965d5286724d3bb8c90bebcf81abb51dc",
+  "before_group_sha256": "94e30b7cd056b52895304cf5198c31e5f4f32e3cebafaf859239a98effa5681a",
+  "after_group_sha256": "2b3b99fceaa3fd8a315e05b751a20845ed29798936cf7f59e3dec3d48d81abf7",
+  "recovery": "paired source rollback; no new data/stock writer",
+  "status": "APPLIED_VALID",
+  "evidence": "actual673/675 mixed whole group6 original units9codes/two SKU3ea/rollback/replay/direct-fallback denial; no real external ACK"
+}

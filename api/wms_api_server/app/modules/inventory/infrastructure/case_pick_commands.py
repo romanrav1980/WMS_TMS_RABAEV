@@ -1,13 +1,15 @@
 """Bridge existing CASE confirmation to the Oracle posting command."""
 import json
+from typing import Any,Sequence
 from hashlib import sha256
 from .stock_posting_uow import StockPosting
+from .release_boundary import require_active_release
 from ..contracts_stock import StockCommand, StockPostingError
 from ..domain.stock_quantity import quantity_text
 from ..domain.mark_identity import canonical_mark
 
 
-def resolve_case_codes(gateway, task_id: int, line_id: int, scans) -> tuple[str, ...]:
+def resolve_case_codes(gateway: Any, task_id: int, line_id: int, scans: Sequence[Any]) -> tuple[str, ...]:
     if not scans:
         return ()
     batch = []
@@ -53,10 +55,8 @@ def resolve_case_codes(gateway, task_id: int, line_id: int, scans) -> tuple[str,
     return tuple(sorted(set(result.values())))
 
 
-def post_case_pick(gateway, task_id: int, line_id: int, request):
-    state = gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
-    if state and state[0]["state"] == "PREPARED":
-        return None
+def post_case_pick(gateway: Any, task_id: int, line_id: int, request: Any) -> dict[str,Any]|None:
+    require_active_release(gateway,request.operation_id)
     operation = request.operation_id
     if not operation and request.offline_event_id:
         operation = "CASE.PICK:" + sha256(request.offline_event_id.encode()).hexdigest()
@@ -72,7 +72,7 @@ def post_case_pick(gateway, task_id: int, line_id: int, request):
     saved = gateway.fetch_all("select CANONICAL_REQUEST from RRL_STOCK_OPERATION where OPERATION_ID=:o", {"o": operation})
     if saved:
         wire = saved[0]["canonical_request"]
-        old = json.loads(wire.read() if hasattr(wire, "read") else wire)
+        old = wire if isinstance(wire,dict) else json.loads(wire.read() if hasattr(wire, "read") else wire)
         if (old["actor"] != request.actor or old["command_type"] != "CASE_PICK_CONFIRM"
                 or old["source"] != source or old["metadata"].get("requested_confirmation") != submitted):
             raise StockPostingError("OPERATION_CONTENT_CONFLICT", operation)

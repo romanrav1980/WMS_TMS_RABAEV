@@ -1,0 +1,29 @@
+#sapAutoPreparation.panel{display:block;grid-column:1/-1;scroll-margin-top:110px;border-top:4px solid #2277ee}
+#sapAutoPreparation .inline-form{display:grid;grid-template-columns:repeat(4,minmax(180px,1fr));gap:16px;margin:20px 0}
+#sapAutoPreparation label{display:flex;flex-direction:column;gap:8px;font-weight:600}
+#sapAutoPreparation input{min-height:42px;border-radius:8px}
+#sapAutoPreparation table{width:100%;margin:18px 0}
+#sapAutoPreparation button{margin:4px 8px 4px 0;min-height:40px}
+#sapAutoPreparation p{line-height:1.6;max-width:1050px}
+#sapAutoPending:not(:empty){padding:12px;background:#fff6df;border-radius:8px}
+@media(max-width:1050px){#sapAutoPreparation .inline-form{grid-template-columns:repeat(2,minmax(180px,1fr))}}
+@media(max-width:600px){#sapAutoPreparation .inline-form{grid-template-columns:1fr}#sapAutoPreparation{overflow-x:auto}}
+
+#sapAutoPreparation.panel{padding:24px;margin:20px 0;background:white;border-radius:12px;box-shadow:0 3px 14px #172c5010}
+#sapAutoPreparation h2{font-size:22px;margin:0 0 12px;color:#183450}
+#sapAutoPreparation input{padding:10px 12px;border:1px solid #cdd6e2;background:#fafcff;font-size:15px}
+#sapAutoPreparation button{padding:10px 16px;border:1px solid #cdd6e2;border-radius:8px;background:#f3f7fd;color:#254d79;cursor:pointer}
+#sapAutoPreparation #sapAutoRead,#sapAutoPreparation #sapAutoSave{background:#2277ee;color:white;border-color:#2277ee}
+#sapAutoPreparation button:disabled{opacity:.45;cursor:default}
+#sapAutoPreparation table th{background:#f4f7fc;color:#58718e;padding:12px;text-align:left}
+#sapAutoPreparation table td{padding:12px;border-bottom:1px solid #edf0f4}
+#sapAutoMessage:not(:empty){padding:14px;background:#eef5ff;color:#183f6f;border-radius:8px}
+
+#sapAutoAssignment:not([hidden]){display:inline-block;margin:8px 14px 12px 0;color:#1765c3;font-weight:600}#sapAssignment{scroll-margin-top:110px}
+
+#sapAssignment{padding:16px;background:#f6f9fe;border:1px solid #e1e9f4;border-radius:10px;margin:14px}
+#sapAssignment summary{font-weight:600;color:#25486d;cursor:pointer;margin-bottom:12px}
+#sapAssignment input{padding:9px;border:1px solid #cdd6e2;border-radius:7px;max-width:200px}
+#sapAssignment button{padding:9px 13px;border:1px solid #cdd6e2;border-radius:7px;background:white;cursor:pointer;margin:4px}
+#sapAssignment #sapAssignSt{background:#2277ee;color:white;border-color:#2277ee}
+#sapPreparationStatus,#sapTripReviewMessage:not(:empty){line-height:1.6;color:#274d75;padding:10px;background:#eef4ff;border-radius:7px}

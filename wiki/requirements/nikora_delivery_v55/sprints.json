@@ -1,7 +1,7 @@
 {
-  "date": "2026-10-07",
+  "date": "2026-10-09",
   "baseline": 57,
-  "status": "existing_code_reuse_plan",
+  "status": "post_cutover_reuse_delta_catalog",
   "count": 68,
   "roles": {
     "O": "OpenAI Codex",
@@ -45,7 +45,7 @@
       "deliveryPolicy": {
         "functionalResourceShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner",
-        "nextStep": "NS01"
+        "nextStep": "NI03.2"
       },
       "originalTitle": "Стенд и паспорт текущей версии",
       "originalScope": "Существующая RABAEV в выделенном dev-экземпляре ORCL, воспроизводимый набор данных, запуск API и двух интерфейсов, паспорт среды",
@@ -64,7 +64,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS01",
@@ -109,7 +112,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS02",
@@ -162,7 +168,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS03",
@@ -214,7 +223,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS04",
@@ -260,7 +272,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS05",
@@ -300,7 +315,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS06",
@@ -345,7 +363,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS07",
@@ -390,13 +411,16 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS08",
       "number": 8,
       "title": "Атомарная команда и защита от повторов",
-      "scope": "Использовать gateway.transaction с общим cursor для составной команды; убрать отдельные commit и защитить повтор адресно.",
+      "scope": "Ядро 2.0/single cutover выполнены. Использовать RRL_STOCK_POSTING_API; довести только оставшиеся доменные стыки, без второго исполнителя и повторного перевода.",
       "tests": [
         "Два одинаковых запроса дают один товарный эффект",
         "авария между шагами не оставляет частичного результата",
@@ -428,7 +452,7 @@
         3,
         5
       ],
-      "changeRequired": "Использовать gateway.transaction с общим cursor для составной команды; убрать отдельные commit и защитить повтор адресно.",
+      "changeRequired": "Ядро 2.0/single cutover выполнены. Использовать RRL_STOCK_POSTING_API; довести только оставшиеся доменные стыки, без второго исполнителя и повторного перевода.",
       "existingImplementation": [
         "api/wms_api_server/app/db.py",
         "api/wms_api_server/app/oracle_gateway.py",
@@ -436,7 +460,7 @@
       ],
       "sourceEvidence": "source_analysis_or_symbol_inventory_not_runtime_acceptance",
       "deliveryStage": "first_flow",
-      "status": "planned_delta",
+      "status": "foundation_implemented_domain_deltas_remaining",
       "resourcePolicy": {
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
@@ -444,13 +468,26 @@
       "activeIncrementIds": [
         "NI03"
       ],
-      "catalogApplicability": "cross_cutting_at_changed_command_or_message"
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "scopeBeforeRevision11": "Использовать gateway.transaction с общим cursor для составной команды; убрать отдельные commit и защитить повтор адресно.",
+      "postCutoverEvidence": "wiki/database/nicora_stock_posting_cutover_20261009.md",
+      "implementedScope": [
+        "Explicit posting: P/H/units/domain/journal/outbox one transaction",
+        "RABAEV/orcl ACTIVE; B0-20261009-STOCK-V2; compatibility=0",
+        "31 known writers: 25 ADAPTED, 6 RETIRED, 0 UNCONVERTED",
+        "Exact UOM/Decimal, replay and guarded direct writes",
+        "Installed TASK_COMPLETE/WAVE_LAUNCH/CASE pick/short/move/return, QC and ST shipment adapters",
+        "Marked inventory/MES birth capture installed; external ACK not claimed"
+      ],
+      "acceptanceScope": "bounded_core_cases_only"
     },
     {
       "id": "NS09",
       "number": 9,
       "title": "Приём и отправка интеграционных сообщений",
-      "scope": "Расширить существующий журнал/inbox-outbox сообщениями SAP retail; production JSON не равен SAP контракту.",
+      "scope": "File SAP inbox/ACK и stock outbox реализованы. Довести фактический ERP-контракт и применимые внешние Track & Trace квитанции/повторы.",
       "tests": [
         "Повтор не создаёт второй заказ",
         "неверная версия не меняет данные",
@@ -483,7 +520,7 @@
         2,
         4
       ],
-      "changeRequired": "Расширить существующий журнал/inbox-outbox сообщениями SAP retail; production JSON не равен SAP контракту.",
+      "changeRequired": "File SAP inbox/ACK и stock outbox реализованы. Довести фактический ERP-контракт и применимые внешние Track & Trace квитанции/повторы.",
       "existingImplementation": [
         "api/wms_api_server/app/services/production_exchange_service.py",
         "api/wms_api_server/app/services/outbox_service.py",
@@ -491,13 +528,23 @@
       ],
       "sourceEvidence": "source_analysis_or_symbol_inventory_not_runtime_acceptance",
       "deliveryStage": "first_flow",
-      "status": "planned_delta",
+      "status": "implemented_slices_remaining_delta",
       "resourcePolicy": {
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": [],
-      "catalogApplicability": "cross_cutting_at_changed_command_or_message"
+      "activeIncrementIds": [
+        "NI01",
+        "NI04"
+      ],
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "activeSprintIds": [
+        "NI04.3",
+        "NI01.1"
+      ],
+      "currentPlanRevision": 11,
+      "scopeBeforeRevision11": "Расширить существующий журнал/inbox-outbox сообщениями SAP retail; production JSON не равен SAP контракту.",
+      "postCutoverEvidence": "wiki/database/nicora_stock_posting_cutover_20261009.md"
     },
     {
       "id": "NS10",
@@ -547,7 +594,14 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [
+        "NI04"
+      ],
+      "activeSprintIds": [
+        "NI04.3"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS11",
@@ -599,7 +653,14 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [
+        "NI04"
+      ],
+      "activeSprintIds": [
+        "NI04.3"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS12",
@@ -650,13 +711,20 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [
+        "NI04"
+      ],
+      "activeSprintIds": [
+        "NI04.3"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS13",
       "number": 13,
       "title": "Доработка: Карточка SKU и проверка упаковки",
-      "scope": "Расширить существующие SKU settings несколькими применимыми профилями табака/CRPT/ЕГАИС/других систем; сохранить GTIN и упаковки.",
+      "scope": "WMS MARKING_REQUIRED/профили и physical identity уже есть; закрыть только пробелы применимости и сквозной версии профиля.",
       "tests": [
         "Неизвестный SKU отклонён",
         "короб и штука пересчитываются точно",
@@ -695,7 +763,7 @@
         2,
         4
       ],
-      "changeRequired": "Расширить существующие SKU settings несколькими применимыми профилями табака/CRPT/ЕГАИС/других систем; сохранить GTIN и упаковки.",
+      "changeRequired": "WMS MARKING_REQUIRED/профили и physical identity уже есть; закрыть только пробелы применимости и сквозной версии профиля.",
       "existingImplementation": [
         "api/wms_api_server/app/services/finished_goods_service.py",
         "api/wms_api_server/app/services/raw_material_service.py",
@@ -703,7 +771,7 @@
       ],
       "sourceEvidence": "source_analysis_or_symbol_inventory_not_runtime_acceptance",
       "deliveryStage": "first_flow",
-      "status": "in_progress",
+      "status": "implemented_slices_remaining_delta",
       "resourcePolicy": {
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
@@ -712,7 +780,15 @@
         "NI01",
         "NI04"
       ],
-      "implementedScope": "SKU policy API/UI"
+      "implementedScope": "SKU policy API/UI",
+      "activeSprintIds": [
+        "NI04.3",
+        "NI01.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "scopeBeforeRevision11": "Расширить существующие SKU settings несколькими применимыми профилями табака/CRPT/ЕГАИС/других систем; сохранить GTIN и упаковки.",
+      "postCutoverEvidence": "wiki/database/nicora_stock_posting_cutover_20261009.md"
     },
     {
       "id": "NS14",
@@ -759,7 +835,15 @@
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
-        "NI01"
+        "NI03"
+      ],
+      "activeSprintIds": [
+        "NI03.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "implementedScope": [
+        "NI03.1 shared source eligibility; explicit DIRECT; P-H preview/recheck; wiki/database/nicora_ni031_stock_eligibility_20261009.md"
       ]
     },
     {
@@ -807,8 +891,15 @@
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
-        "NI02"
-      ]
+        "NI02",
+        "NI06"
+      ],
+      "activeSprintIds": [
+        "NI02.2",
+        "NI06.3"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS16",
@@ -869,9 +960,16 @@
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
-        "NI01"
+        "NI01",
+        "NI04"
       ],
-      "implementedScope": "ARTMAS10 durable XML inbox/file worker; article application pending"
+      "implementedScope": "ARTMAS10 durable XML inbox/file worker; article application pending",
+      "activeSprintIds": [
+        "NI04.3",
+        "NI01.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS17",
@@ -919,13 +1017,19 @@
       },
       "activeIncrementIds": [
         "NI02"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI02.1",
+        "NI02.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS18",
       "number": 18,
       "title": "Доработка: Приёмка и доступность в экспедиции",
-      "scope": "Добавить современную приёмку на существующих приходах/паллетах: основание SAP, партия/срок/SSCC, фактическая укладка, марки либо разрешённые агрегации.",
+      "scope": "SAP pallet receipt/labels/unit capture/putaway установлены; остаток: реальные XML/ACK и пробелы бизнес-правил. Допуск NI03.1, состав NI04.",
       "tests": [
         "До приёмки запаса нет",
         "принятый пригодный запас доступен до размещения в хранении",
@@ -971,7 +1075,7 @@
         2,
         4
       ],
-      "changeRequired": "Добавить современную приёмку на существующих приходах/паллетах: основание SAP, партия/срок/SSCC, фактическая укладка, марки либо разрешённые агрегации.",
+      "changeRequired": "SAP pallet receipt/labels/unit capture/putaway установлены; остаток: реальные XML/ACK и пробелы бизнес-правил. Допуск NI03.1, состав NI04.",
       "existingImplementation": [
         "WindowsApplication2/WindowsApplication2/Form1.cs",
         "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_ACCEPT_ORDER2_3_FUNCTION.sql",
@@ -979,14 +1083,23 @@
       ],
       "sourceEvidence": "source_analysis_or_symbol_inventory_not_runtime_acceptance",
       "deliveryStage": "first_flow",
-      "status": "planned_delta",
+      "status": "implemented_slices_remaining_delta",
       "resourcePolicy": {
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
-        "NI01"
-      ]
+        "NI01",
+        "NI04"
+      ],
+      "activeSprintIds": [
+        "NI04.3",
+        "NI01.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "scopeBeforeRevision11": "Добавить современную приёмку на существующих приходах/паллетах: основание SAP, партия/срок/SSCC, фактическая укладка, марки либо разрешённые агрегации.",
+      "postCutoverEvidence": "wiki/database/nicora_stock_posting_cutover_20261009.md"
     },
     {
       "id": "NS19",
@@ -1042,14 +1155,24 @@
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
-        "NI01"
+        "NI01",
+        "NI03"
+      ],
+      "activeSprintIds": [
+        "NI03.1",
+        "NI01.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "implementedScope": [
+        "NI03.1 shared source eligibility; explicit DIRECT; P-H preview/recheck; wiki/database/nicora_ni031_stock_eligibility_20261009.md"
       ]
     },
     {
       "id": "NS20",
       "number": 20,
       "title": "Доработка: Размещение и выбор источника пополнения",
-      "scope": "Добавить receipt putaway handler в существующие задания: пригодный адрес по времени пополнения до отбора, проводка остатка и марок при завершении.",
+      "scope": "Placement/putaway и metric времени/расстояния реализованы. Завершить единый допуск источников и подтверждённые различия стратегии.",
       "tests": [
         "Ранняя подходящая партия с приёмки выбрана раньше хранения",
         "произвольное совпадение срока не меняет стратегию",
@@ -1083,7 +1206,7 @@
         2,
         4
       ],
-      "changeRequired": "Добавить receipt putaway handler в существующие задания: пригодный адрес по времени пополнения до отбора, проводка остатка и марок при завершении.",
+      "changeRequired": "Placement/putaway и metric времени/расстояния реализованы. Завершить единый допуск источников и подтверждённые различия стратегии.",
       "existingImplementation": [
         "api/wms_api_server/app/services/warehouse_task_service.py",
         "api/wms_api_server/app/services/warehouse_task_domain_sync_service.py",
@@ -1091,13 +1214,25 @@
       ],
       "sourceEvidence": "source_analysis_or_symbol_inventory_not_runtime_acceptance",
       "deliveryStage": "first_flow",
-      "status": "planned_delta",
+      "status": "implemented_slices_remaining_delta",
       "resourcePolicy": {
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
-        "NI01"
+        "NI01",
+        "NI03"
+      ],
+      "activeSprintIds": [
+        "NI03.1",
+        "NI01.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "scopeBeforeRevision11": "Добавить receipt putaway handler в существующие задания: пригодный адрес по времени пополнения до отбора, проводка остатка и марок при завершении.",
+      "postCutoverEvidence": "wiki/database/nicora_stock_posting_cutover_20261009.md",
+      "implementedScope": [
+        "NI03.1 shared source eligibility; explicit DIRECT; P-H preview/recheck; wiki/database/nicora_ni031_stock_eligibility_20261009.md"
       ]
     },
     {
@@ -1155,6 +1290,15 @@
       },
       "activeIncrementIds": [
         "NI03"
+      ],
+      "activeSprintIds": [
+        "NI03.1",
+        "NI03.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "implementedScope": [
+        "NI03.1 shared source eligibility; explicit DIRECT; P-H preview/recheck; wiki/database/nicora_ni031_stock_eligibility_20261009.md"
       ]
     },
     {
@@ -1202,13 +1346,22 @@
       },
       "activeIncrementIds": [
         "NI03"
+      ],
+      "activeSprintIds": [
+        "NI03.1",
+        "NI03.3"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "implementedScope": [
+        "NI03.1 shared source eligibility; explicit DIRECT; P-H preview/recheck; wiki/database/nicora_ni031_stock_eligibility_20261009.md"
       ]
     },
     {
       "id": "NS23",
       "number": 23,
       "title": "Доработка: Грузовое место и вложенные идентификаторы",
-      "scope": "Расширить паллеты/агрегации составом HU/заказов и версиями по системам; физическое количество считать один раз.",
+      "scope": "CRPT-вложенность/CASE существуют; довести складской lifecycle HU, один родитель, вскрытие/перепаковку и отсутствие двойного количества.",
       "tests": [
         "Нет двойного родителя и циклов",
         "вложенная коробка не считается отдельным местом в машине",
@@ -1246,7 +1399,7 @@
         3,
         5
       ],
-      "changeRequired": "Расширить паллеты/агрегации составом HU/заказов и версиями по системам; физическое количество считать один раз.",
+      "changeRequired": "CRPT-вложенность/CASE существуют; довести складской lifecycle HU, один родитель, вскрытие/перепаковку и отсутствие двойного количества.",
       "existingImplementation": [
         "api/wms_api_server/app/services/production_service.py",
         "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_PRODUCTION_API_PACKAGE_BODY.sql",
@@ -1254,15 +1407,22 @@
       ],
       "sourceEvidence": "source_analysis_or_symbol_inventory_not_runtime_acceptance",
       "deliveryStage": "first_flow",
-      "status": "planned_delta",
+      "status": "implemented_slices_remaining_delta",
       "resourcePolicy": {
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
-        "NI01",
         "NI04"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI04.1",
+        "NI04.3"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "scopeBeforeRevision11": "Расширить паллеты/агрегации составом HU/заказов и версиями по системам; физическое количество считать один раз.",
+      "postCutoverEvidence": "wiki/database/nicora_stock_posting_cutover_20261009.md"
     },
     {
       "id": "NS24",
@@ -1315,8 +1475,16 @@
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
-        "NI02"
-      ]
+        "NI02",
+        "NI03"
+      ],
+      "activeSprintIds": [
+        "NI03.3",
+        "NI02.1",
+        "NI02.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS25",
@@ -1365,13 +1533,23 @@
       "activeIncrementIds": [
         "NI03",
         "NI04"
+      ],
+      "activeSprintIds": [
+        "NI03.1",
+        "NI03.3",
+        "NI04.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "implementedScope": [
+        "NI03.1 shared source eligibility; explicit DIRECT; P-H preview/recheck; wiki/database/nicora_ni031_stock_eligibility_20261009.md"
       ]
     },
     {
       "id": "NS26",
       "number": 26,
       "title": "Доработка: Жёсткий резерв волны",
-      "scope": "Сохранить SOFT→HARD в RRL_PICK_WAVE_API; уточнить общий баланс, фактический фреш и исключительность маркированных единиц.",
+      "scope": "Канонический HARD/P и перенос покрытия реализованы. Довести остаточные связи потребности и общий допуск планировщика.",
       "tests": [
         "Мягкий и жёсткий резерв не суммируются дважды",
         "параллельные волны не резервируют один запас",
@@ -1406,7 +1584,7 @@
         3,
         5
       ],
-      "changeRequired": "Сохранить SOFT→HARD в RRL_PICK_WAVE_API; уточнить общий баланс, фактический фреш и исключительность маркированных единиц.",
+      "changeRequired": "Канонический HARD/P и перенос покрытия реализованы. Довести остаточные связи потребности и общий допуск планировщика.",
       "existingImplementation": [
         "api/wms_api_server/app/services/stock_reservation_service.py",
         "api/wms_api_server/app/services/picking_service.py",
@@ -1414,14 +1592,24 @@
       ],
       "sourceEvidence": "source_analysis_or_symbol_inventory_not_runtime_acceptance",
       "deliveryStage": "wave",
-      "status": "planned_delta",
+      "status": "implemented_slices_remaining_delta",
       "resourcePolicy": {
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
-        "NI03",
-        "NI04"
+        "NI03"
+      ],
+      "activeSprintIds": [
+        "NI03.1",
+        "NI03.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "scopeBeforeRevision11": "Сохранить SOFT→HARD в RRL_PICK_WAVE_API; уточнить общий баланс, фактический фреш и исключительность маркированных единиц.",
+      "postCutoverEvidence": "wiki/database/nicora_stock_posting_cutover_20261009.md",
+      "implementedScope": [
+        "NI03.1 shared source eligibility; explicit DIRECT; P-H preview/recheck; wiki/database/nicora_ni031_stock_eligibility_20261009.md"
       ]
     },
     {
@@ -1472,13 +1660,23 @@
       "activeIncrementIds": [
         "NI03",
         "NI04"
+      ],
+      "activeSprintIds": [
+        "NI03.1",
+        "NI03.2",
+        "NI04.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "implementedScope": [
+        "NI03.1 shared source eligibility; explicit DIRECT; P-H preview/recheck; wiki/database/nicora_ni031_stock_eligibility_20261009.md"
       ]
     },
     {
       "id": "NS28",
       "number": 28,
       "title": "Доработка: Пополнение под волну целым поддоном",
-      "scope": "Расширить текущую подачу под волну: целая паллета, свободные слоты/резервный отбор и баланс с mini-max.",
+      "scope": "FULL_PALLET в ACTIVE использует PICKING_MOVE/WAVE TASK_COMPLETE. Довести недостающие переходы/действия и доступность.",
       "tests": [
         "Волна и мини-макс не подают одно количество дважды",
         "целая паллета не переполняет адрес",
@@ -1506,7 +1704,7 @@
         3,
         5
       ],
-      "changeRequired": "Расширить текущую подачу под волну: целая паллета, свободные слоты/резервный отбор и баланс с mini-max.",
+      "changeRequired": "FULL_PALLET в ACTIVE использует PICKING_MOVE/WAVE TASK_COMPLETE. Довести недостающие переходы/действия и доступность.",
       "existingImplementation": [
         "api/wms_api_server/app/services/picking_service.py",
         "api/wms_api_server/app/services/case_pick_service.py",
@@ -1514,7 +1712,7 @@
       ],
       "sourceEvidence": "source_analysis_or_symbol_inventory_not_runtime_acceptance",
       "deliveryStage": "wave",
-      "status": "planned_delta",
+      "status": "implemented_slices_remaining_delta",
       "resourcePolicy": {
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
@@ -1522,6 +1720,18 @@
       "activeIncrementIds": [
         "NI03",
         "NI04"
+      ],
+      "activeSprintIds": [
+        "NI03.1",
+        "NI03.2",
+        "NI04.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "scopeBeforeRevision11": "Расширить текущую подачу под волну: целая паллета, свободные слоты/резервный отбор и баланс с mini-max.",
+      "postCutoverEvidence": "wiki/database/nicora_stock_posting_cutover_20261009.md",
+      "implementedScope": [
+        "NI03.1 shared source eligibility; explicit DIRECT; P-H preview/recheck; wiki/database/nicora_ni031_stock_eligibility_20261009.md"
       ]
     },
     {
@@ -1575,7 +1785,13 @@
       "activeIncrementIds": [
         "NI03",
         "NI04"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI03.2",
+        "NI04.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS30",
@@ -1622,10 +1838,13 @@
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
-        "NI01",
-        "NI03",
-        "NI04"
-      ]
+        "NI03"
+      ],
+      "activeSprintIds": [
+        "NI03.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS31",
@@ -1680,10 +1899,13 @@
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
-        "NI01",
-        "NI03",
-        "NI04"
-      ]
+        "NI03"
+      ],
+      "activeSprintIds": [
+        "NI03.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS32",
@@ -1733,7 +1955,18 @@
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
+        "NI03",
         "NI04"
+      ],
+      "activeSprintIds": [
+        "NI03.1",
+        "NI03.3",
+        "NI04.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "implementedScope": [
+        "NI03.1 shared source eligibility; explicit DIRECT; P-H preview/recheck; wiki/database/nicora_ni031_stock_eligibility_20261009.md"
       ]
     },
     {
@@ -1785,13 +2018,18 @@
       },
       "activeIncrementIds": [
         "NI08"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI08.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS34",
       "number": 34,
       "title": "Доработка: Стеллажная комплектация и состав места",
-      "scope": "Доработать confirm_line и клиентскую паллету: односторонний маршрут, партии, марки и план укладки.",
+      "scope": "CASE pick/short/replay/move/return и binding→ST реализованы; остаток — способы отбора и складская вложенность.",
       "tests": [
         "Нет возврата назад",
         "ошибка ячейки отклонена",
@@ -1828,7 +2066,7 @@
         3,
         5
       ],
-      "changeRequired": "Доработать confirm_line и клиентскую паллету: односторонний маршрут, партии, марки и план укладки.",
+      "changeRequired": "CASE pick/short/replay/move/return и binding→ST реализованы; остаток — способы отбора и складская вложенность.",
       "existingImplementation": [
         "api/wms_api_server/app/services/case_pick_service.py",
         "api/wms_api_server/app/services/tserver_service.py",
@@ -1836,14 +2074,25 @@
       ],
       "sourceEvidence": "source_analysis_or_symbol_inventory_not_runtime_acceptance",
       "deliveryStage": "picking_quality",
-      "status": "planned_delta",
+      "status": "implemented_slices_remaining_delta",
       "resourcePolicy": {
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
+        "NI03",
         "NI04"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI03.3",
+        "NI04.1",
+        "NI04.2",
+        "NI04.3"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "scopeBeforeRevision11": "Доработать confirm_line и клиентскую паллету: односторонний маршрут, партии, марки и план укладки.",
+      "postCutoverEvidence": "wiki/database/nicora_stock_posting_cutover_20261009.md"
     },
     {
       "id": "NS35",
@@ -1895,7 +2144,12 @@
       },
       "activeIncrementIds": [
         "NI04"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI04.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS36",
@@ -1947,7 +2201,12 @@
       },
       "activeIncrementIds": [
         "NI04"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI04.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS37",
@@ -2004,7 +2263,17 @@
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
+        "NI03",
         "NI04"
+      ],
+      "activeSprintIds": [
+        "NI03.1",
+        "NI04.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "implementedScope": [
+        "NI03.1 shared source eligibility; explicit DIRECT; P-H preview/recheck; wiki/database/nicora_ni031_stock_eligibility_20261009.md"
       ]
     },
     {
@@ -2055,7 +2324,12 @@
       },
       "activeIncrementIds": [
         "NI03"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI03.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS39",
@@ -2107,7 +2381,13 @@
       },
       "activeIncrementIds": [
         "NI03"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI03.2",
+        "NI03.3"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS40",
@@ -2162,13 +2442,19 @@
       },
       "activeIncrementIds": [
         "NI04"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI04.1",
+        "NI04.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS41",
       "number": 41,
       "title": "Доработка: Весовой контроль и разрешение отгрузки",
-      "scope": "Расширить весовой контроль: тара, допуски, версия состава и блокировки выпуска по маркировке.",
+      "scope": "Native QC/OUTGOING_PALLET_CHECK/LOT_CHECK подключены; остаток — независимые роли, версия допуска и подтверждённые пробелы контроля.",
       "tests": [
         "Граница допуска включительно проходит",
         "неполная паллета хранения не освобождена",
@@ -2201,7 +2487,7 @@
         3,
         5
       ],
-      "changeRequired": "Расширить весовой контроль: тара, допуски, версия состава и блокировки выпуска по маркировке.",
+      "changeRequired": "Native QC/OUTGOING_PALLET_CHECK/LOT_CHECK подключены; остаток — независимые роли, версия допуска и подтверждённые пробелы контроля.",
       "existingImplementation": [
         "api/wms_api_server/app/services/tserver_service.py",
         "wiki-raw/nicora_code_analysis_20261007/oracle/REMAINS_PACKAGE_BODY.sql",
@@ -2209,14 +2495,23 @@
       ],
       "sourceEvidence": "source_analysis_or_symbol_inventory_not_runtime_acceptance",
       "deliveryStage": "picking_quality",
-      "status": "planned_delta",
+      "status": "implemented_slices_remaining_delta",
       "resourcePolicy": {
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
+        "NI04",
         "NI05"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI04.3",
+        "NI05.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "scopeBeforeRevision11": "Расширить весовой контроль: тара, допуски, версия состава и блокировки выпуска по маркировке.",
+      "postCutoverEvidence": "wiki/database/nicora_stock_posting_cutover_20261009.md"
     },
     {
       "id": "NS42",
@@ -2265,13 +2560,18 @@
       },
       "activeIncrementIds": [
         "NI05"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI05.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS43",
       "number": 43,
       "title": "Доработка: Исправление и повторный выпуск",
-      "scope": "Добавить версию исправленного состава и повторный выпуск в текущий аудит, отменив прежнее разрешение.",
+      "scope": "Правка уже сбрасывает контроль, CASE return установлен; довести бизнес-исправление состава/согласования/повторный выпуск.",
       "tests": [
         "Возврат отражён в запасе",
         "добавленное количество связано с заказом",
@@ -2304,7 +2604,7 @@
         2,
         4
       ],
-      "changeRequired": "Добавить версию исправленного состава и повторный выпуск в текущий аудит, отменив прежнее разрешение.",
+      "changeRequired": "Правка уже сбрасывает контроль, CASE return установлен; довести бизнес-исправление состава/согласования/повторный выпуск.",
       "existingImplementation": [
         "api/wms_api_server/app/services/tserver_service.py",
         "wiki-raw/nicora_code_analysis_20261007/oracle/REMAINS_PACKAGE_BODY.sql",
@@ -2312,14 +2612,21 @@
       ],
       "sourceEvidence": "source_analysis_or_symbol_inventory_not_runtime_acceptance",
       "deliveryStage": "picking_quality",
-      "status": "planned_delta",
+      "status": "implemented_slices_remaining_delta",
       "resourcePolicy": {
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
         "NI05"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI05.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "scopeBeforeRevision11": "Добавить версию исправленного состава и повторный выпуск в текущий аудит, отменив прежнее разрешение.",
+      "postCutoverEvidence": "wiki/database/nicora_stock_posting_cutover_20261009.md"
     },
     {
       "id": "NS44",
@@ -2371,13 +2678,18 @@
       },
       "activeIncrementIds": [
         "NI05"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI05.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS45",
       "number": 45,
       "title": "Доработка: Консолидация по упаковочному листу",
-      "scope": "Связать упаковочный лист с HU/aggregation составом; добавить комплектность и переупаковку.",
+      "scope": "Physical CASE и ST binding уже есть; довести вложенные места/консолидацию и факт экспедиции.",
       "tests": [
         "Разные адреса не объединяются",
         "один исходный SSCC не использован дважды",
@@ -2413,7 +2725,7 @@
         3,
         5
       ],
-      "changeRequired": "Связать упаковочный лист с HU/aggregation составом; добавить комплектность и переупаковку.",
+      "changeRequired": "Physical CASE и ST binding уже есть; довести вложенные места/консолидацию и факт экспедиции.",
       "existingImplementation": [
         "api/wms_api_server/app/services/production_service.py",
         "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_PRODUCTION_API_PACKAGE_BODY.sql",
@@ -2421,14 +2733,23 @@
       ],
       "sourceEvidence": "source_analysis_or_symbol_inventory_not_runtime_acceptance",
       "deliveryStage": "dispatch",
-      "status": "planned_delta",
+      "status": "implemented_slices_remaining_delta",
       "resourcePolicy": {
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
+        "NI04",
         "NI05"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI04.1",
+        "NI05.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "scopeBeforeRevision11": "Связать упаковочный лист с HU/aggregation составом; добавить комплектность и переупаковку.",
+      "postCutoverEvidence": "wiki/database/nicora_stock_posting_cutover_20261009.md"
     },
     {
       "id": "NS46",
@@ -2478,7 +2799,12 @@
       },
       "activeIncrementIds": [
         "NI05"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI05.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS47",
@@ -2534,7 +2860,12 @@
       },
       "activeIncrementIds": [
         "NI05"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI05.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS48",
@@ -2592,7 +2923,12 @@
       },
       "activeIncrementIds": [
         "NI05"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI05.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS49",
@@ -2647,8 +2983,15 @@
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
+        "NI04",
         "NI05"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI04.3",
+        "NI05.3"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS50",
@@ -2709,7 +3052,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS51",
@@ -2767,7 +3113,12 @@
       },
       "activeIncrementIds": [
         "NI06"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI06.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS52",
@@ -2820,7 +3171,12 @@
       },
       "activeIncrementIds": [
         "NI05"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI05.3"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS53",
@@ -2876,13 +3232,18 @@
       },
       "activeIncrementIds": [
         "NI06"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI06.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS54",
       "number": 54,
       "title": "Доработка: Возврат товара и склада брака",
-      "scope": "Добавить SAP возврат на существующий приход/остаток: разрешение, исправная коробка/брак/поставщик и жизненный цикл марки.",
+      "scope": "CASE return и supplier-return adapter уже есть; довести SAP-бизнес-возврат, направления/регуляторный lifecycle, настроить RETURNS.",
       "tests": [
         "Неполная коробка не становится пригодным запасом",
         "смешение допускается только по флагу SKU",
@@ -2919,7 +3280,7 @@
         3,
         5
       ],
-      "changeRequired": "Добавить SAP возврат на существующий приход/остаток: разрешение, исправная коробка/брак/поставщик и жизненный цикл марки.",
+      "changeRequired": "CASE return и supplier-return adapter уже есть; довести SAP-бизнес-возврат, направления/регуляторный lifecycle, настроить RETURNS.",
       "existingImplementation": [
         "WindowsApplication2/WindowsApplication2/Form1.cs",
         "wiki-raw/nicora_code_analysis_20261007/oracle/RRL_ACCEPT_ORDER2_3_FUNCTION.sql",
@@ -2927,14 +3288,23 @@
       ],
       "sourceEvidence": "source_analysis_or_symbol_inventory_not_runtime_acceptance",
       "deliveryStage": "crossdock_returns",
-      "status": "planned_delta",
+      "status": "implemented_slices_remaining_delta",
       "resourcePolicy": {
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
+        "NI04",
         "NI06"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI04.3",
+        "NI06.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint",
+      "scopeBeforeRevision11": "Добавить SAP возврат на существующий приход/остаток: разрешение, исправная коробка/брак/поставщик и жизненный цикл марки.",
+      "postCutoverEvidence": "wiki/database/nicora_stock_posting_cutover_20261009.md"
     },
     {
       "id": "NS55",
@@ -2987,7 +3357,12 @@
       },
       "activeIncrementIds": [
         "NI06"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI06.3"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS56",
@@ -3038,7 +3413,12 @@
       },
       "activeIncrementIds": [
         "NI07"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI07.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS57",
@@ -3085,7 +3465,12 @@
       },
       "activeIncrementIds": [
         "NI07"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI07.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS58",
@@ -3144,8 +3529,15 @@
         "additionalTestRuns": "stopped_by_owner"
       },
       "activeIncrementIds": [
+        "NI04",
         "NI07"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI04.3",
+        "NI07.2"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS59",
@@ -3198,7 +3590,12 @@
       },
       "activeIncrementIds": [
         "NI08"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI08.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS60",
@@ -3251,7 +3648,12 @@
       },
       "activeIncrementIds": [
         "NI08"
-      ]
+      ],
+      "activeSprintIds": [
+        "NI08.1"
+      ],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS61",
@@ -3305,7 +3707,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS62",
@@ -3360,7 +3765,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS63",
@@ -3419,7 +3827,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS64",
@@ -3471,7 +3882,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS65",
@@ -3528,7 +3942,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS66",
@@ -3577,7 +3994,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     },
     {
       "id": "NS67",
@@ -3625,7 +4045,10 @@
         "functionalShareMinimum": 0.8,
         "additionalTestRuns": "stopped_by_owner"
       },
-      "activeIncrementIds": []
+      "activeIncrementIds": [],
+      "activeSprintIds": [],
+      "currentPlanRevision": 11,
+      "catalogApplicability": "requirements_catalog_not_execution_sprint"
     }
   ],
   "scheduleStatus": "see_active_implementation_plan_no_measured_deadlines",
@@ -3639,13 +4062,13 @@
   "requirementsSource": "../nikora_business_processes/Nikora_business_processes_v57.docx",
   "estimatesScopeBaseline": 55,
   "estimatesRequireRecalculation": true,
-  "dependencySource": "execution/execution_plan.json",
-  "planRevision": 10,
+  "dependencySource": "wiki/requirements/nikora_delivery_v55/implementation_plan.json#increments",
+  "planRevision": 11,
   "sourceBaseline": "wiki/sources/nicora_code_baseline_proposal_20261007.md",
   "codeAnalysis": "wiki/components/nicora_global_reuse_analysis_20261007.md",
   "deliveryPolicy": {
     "functionalShareMinimum": 0.8,
-    "additionalTestRuns": "stopped_by_owner",
+    "additionalTestRuns": "targeted_changed_behavior_only_no_broad_runs",
     "schema": "RABAEV",
     "preparatoryCards": "inline_with_function",
     "modelQualification": "optional"
@@ -3655,14 +4078,23 @@
     304
   ],
   "functionalQueue": [
-    "NI01",
-    "NI02",
-    "NI03",
-    "NI04",
-    "NI05",
-    "NI06",
-    "NI07",
-    "NI08"
+    "NI03.2",
+    "NI03.3",
+    "NI04.1",
+    "NI04.2",
+    "NI04.3",
+    "NI01.1",
+    "NI02.1",
+    "NI02.2",
+    "NI05.1",
+    "NI05.2",
+    "NI05.3",
+    "NI06.1",
+    "NI06.2",
+    "NI06.3",
+    "NI07.1",
+    "NI07.2",
+    "NI08.1"
   ],
   "historicalPlanning": {
     "accelerationScenario": {
@@ -3680,7 +4112,7 @@
   },
   "activeExecutionPlan": "wiki/requirements/nikora_delivery_v55/implementation_plan.md",
   "catalogPurpose": "requirement_and_delta_catalog_not_68_active_sprints",
-  "activeFunctionalSprintCount": 8,
+  "activeFunctionalSprintCount": 17,
   "scheduleUseAllowed": false,
   "sapRetailContract": {
     "system": "SAP S/4HANA 2020",
@@ -3688,5 +4120,29 @@
     "basicType": "ARTMAS10",
     "transport": "gateway XML file",
     "markingSettingsOwner": "WMS"
-  }
+  },
+  "activeFunctionalStreamCount": 8,
+  "currentSprint": "NI04.3",
+  "stockCoreMilestone": {
+    "id": "STOCK-CORE-V2",
+    "status": "completed_dev_cutover",
+    "evidence": "wiki/database/nicora_stock_posting_cutover_20261009.md",
+    "implementedSlices": [
+      "Explicit posting: P/H/units/domain/journal/outbox one transaction",
+      "RABAEV/orcl ACTIVE; B0-20261009-STOCK-V2; compatibility=0",
+      "31 known writers: 25 ADAPTED, 6 RETIRED, 0 UNCONVERTED",
+      "Exact UOM/Decimal, replay and guarded direct writes",
+      "Installed TASK_COMPLETE/WAVE_LAUNCH/CASE pick/short/move/return, QC and ST shipment adapters",
+      "Marked inventory/MES birth capture installed; external ACK not claimed"
+    ],
+    "sourceCommit": "320cefba9da656f65b822225ac2d2dc8652fe202",
+    "acceptanceScope": "bounded_core_cases_not_all_363_scenarios"
+  },
+  "activeSprintDefinitions": "wiki/requirements/nikora_delivery_v55/implementation_plan.json#increments",
+  "historicalDependencySource": "execution/execution_plan.json",
+  "completedFunctionalSprintCount": 1,
+  "remainingFunctionalSprintCount": 17,
+  "completedIncrementIds": [
+    "NI03.1"
+  ]
 }

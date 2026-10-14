@@ -1,0 +1,362 @@
+{
+  "908": {
+    "tag": "427a7bbea0674bad95776f70dfbf98c5",
+    "warehouse": 6524567,
+    "article": "QIW6696207F7B382",
+    "uid": "LEGACY.SAP.908:427a7bbea0674bad95776f70dfbf98c5",
+    "stage": "PER_LINE_PASS_OWN_REVERSED",
+    "body": {
+      "operation_id": "SAP908.BIRTH:427a7bbea0674bad95776f70dfbf98c5",
+      "line_number": "1",
+      "pallet_identifier": "LEGACY.SAP.908:427a7bbea0674bad95776f70dfbf98c5",
+      "quantity": "3",
+      "supplier_batch": "PB908:427a7bbea0674bad95776f70dfbf98c5",
+      "expiry_date": "2030-01-01",
+      "gross_weight": "3",
+      "units": [
+        {
+          "unit_id": "1",
+          "quantity": "1",
+          "codes": [
+            {
+              "system_code": "CRPT",
+              "profile_code": "TOBACCO",
+              "code": "04610404688665427a701"
+            }
+          ]
+        },
+        {
+          "unit_id": "2",
+          "quantity": "1",
+          "codes": [
+            {
+              "system_code": "CRPT",
+              "profile_code": "TOBACCO",
+              "code": "04610404688665427a702"
+            }
+          ]
+        },
+        {
+          "unit_id": "3",
+          "quantity": "1",
+          "codes": [
+            {
+              "system_code": "CRPT",
+              "profile_code": "TOBACCO",
+              "code": "04610404688665427a703"
+            }
+          ]
+        }
+      ],
+      "aggregations": [
+        {
+          "system_code": "EGAIS",
+          "profile_code": "ALCOHOL",
+          "level": "BOX",
+          "code": "EGAIS.B908:427a7bbea0674bad95776f70dfbf98c5"
+        }
+      ]
+    },
+    "order_id": "3aa116e51983443e8b20d055195a22b8",
+    "document_id": 25238,
+    "receipt": {
+      "status": "RECEIVED",
+      "operation_id": "SAP908.BIRTH:427a7bbea0674bad95776f70dfbf98c5",
+      "pallet_identifier": "LEGACY.SAP.908:427a7bbea0674bad95776f70dfbf98c5",
+      "sscc": null,
+      "quantity": "3",
+      "base_quantity": "3",
+      "base_uom": "EA",
+      "sap_order_number": "SAP908:427a7bbea0",
+      "sap_sender": "OWN.QA.SAP",
+      "order_revision": 1,
+      "line_number": "1",
+      "material": "QIW6696207F7B382",
+      "unit": "EA",
+      "supplier_batch": "PB908:427a7bbea0674bad95776f70dfbf98c5",
+      "expiry_date": "2030-01-01",
+      "produced_date": null,
+      "warehouse_id": 6524567,
+      "physical_measurements": {
+        "gross_weight": "3",
+        "pallet_height": null,
+        "pallet_height_m": null,
+        "volume_m3": null
+      },
+      "receive_cell": "QR67095b03c53f4",
+      "putaway_cell": "QF6207f7b382",
+      "placement": {
+        "cell": "QF6207f7b382",
+        "slot_id": null,
+        "score": "0.0",
+        "basis": "COORDINATE_DISTANCE",
+        "metric": "DISTANCE"
+      },
+      "marking_units": 3,
+      "marking_policy_version": 1,
+      "regulatory_validation": "NOT_PERFORMED",
+      "idempotent": false,
+      "task_id": 1105,
+      "outbox_id": 5079
+    },
+    "line1_accepted": "3",
+    "line2_accepted": "0",
+    "line2_remaining": "3",
+    "proposal": {
+      "order_id": "3aa116e51983443e8b20d055195a22b8",
+      "revision": 1,
+      "warehouse_id": 6524567,
+      "line_number": "2",
+      "source_signature": "2354fc41a5d724f4546b13466434501011a70b08d149cae43ae3860065144fb1",
+      "remaining_quantity": "3",
+      "consistent_snapshot": true,
+      "read_only": true,
+      "pallet_count": 1,
+      "quantities": [
+        "3"
+      ],
+      "planned_quantity": "3",
+      "unplanned_quantity": "0",
+      "quantity_step": "1",
+      "base_uom": "EA",
+      "above_norm_pallets": [
+        1
+      ],
+      "physical_receipt_confirmed": false,
+      "stock_changed": false,
+      "placement_capacity_verified": false,
+      "reservation_created": false
+    },
+    "cleanup": {
+      "operation_id": "SAP908.CLEANUP:427a7bbea0674bad95776f70dfbf98c5",
+      "receipt_document_id": 25238,
+      "sap_order_id": "3aa116e51983443e8b20d055195a22b8",
+      "status": "REVERSED",
+      "facts": [
+        {
+          "uid": "LEGACY.SAP.908:427a7bbea0674bad95776f70dfbf98c5",
+          "article": "QIW6696207F7B382",
+          "quantity": "3",
+          "unit": "EA",
+          "event_id": 6446463
+        }
+      ],
+      "sap_sender": "OWN.QA.SAP",
+      "sap_order_number": "SAP908:427a7bbea0",
+      "reason": "End own duplicate-line receiving fixture",
+      "outbox_id": 5080
+    }
+  },
+  "910_911": {
+    "tag": "8192c78d8e94457782243591b310877e",
+    "warehouse": 6524567,
+    "article": "QIW6696207F7B382",
+    "uid": "LEGACY.SAP.910:8192c78d8e94457782243591b310877e",
+    "stage": "AMENDMENTS_PASS_OWN_REVERSED",
+    "body": {
+      "operation_id": "SAP910.BIRTH:8192c78d8e94457782243591b310877e",
+      "line_number": "1",
+      "pallet_identifier": "LEGACY.SAP.910:8192c78d8e94457782243591b310877e",
+      "quantity": "3",
+      "supplier_batch": "PB910:8192c78d8e94457782243591b310877e",
+      "expiry_date": "2030-01-01",
+      "gross_weight": "3",
+      "units": [
+        {
+          "unit_id": "1",
+          "quantity": "1",
+          "codes": [
+            {
+              "system_code": "CRPT",
+              "profile_code": "TOBACCO",
+              "code": "046104046886658192c01"
+            }
+          ]
+        },
+        {
+          "unit_id": "2",
+          "quantity": "1",
+          "codes": [
+            {
+              "system_code": "CRPT",
+              "profile_code": "TOBACCO",
+              "code": "046104046886658192c02"
+            }
+          ]
+        },
+        {
+          "unit_id": "3",
+          "quantity": "1",
+          "codes": [
+            {
+              "system_code": "CRPT",
+              "profile_code": "TOBACCO",
+              "code": "046104046886658192c03"
+            }
+          ]
+        }
+      ],
+      "aggregations": [
+        {
+          "system_code": "EGAIS",
+          "profile_code": "ALCOHOL",
+          "level": "BOX",
+          "code": "EGAIS.B910:8192c78d8e94457782243591b310877e"
+        }
+      ]
+    },
+    "order_id": "77f3c3628e9b4bd1bca7c7c1958e619b",
+    "document_id": 25239,
+    "receipt": {
+      "status": "RECEIVED",
+      "operation_id": "SAP910.BIRTH:8192c78d8e94457782243591b310877e",
+      "pallet_identifier": "LEGACY.SAP.910:8192c78d8e94457782243591b310877e",
+      "sscc": null,
+      "quantity": "3",
+      "base_quantity": "3",
+      "base_uom": "EA",
+      "sap_order_number": "SAP910:8192c78d8e",
+      "sap_sender": "OWN.QA.SAP",
+      "order_revision": 1,
+      "line_number": "1",
+      "material": "QIW6696207F7B382",
+      "unit": "EA",
+      "supplier_batch": "PB910:8192c78d8e94457782243591b310877e",
+      "expiry_date": "2030-01-01",
+      "produced_date": null,
+      "warehouse_id": 6524567,
+      "physical_measurements": {
+        "gross_weight": "3",
+        "pallet_height": null,
+        "pallet_height_m": null,
+        "volume_m3": null
+      },
+      "receive_cell": "QR67095b03c53f4",
+      "putaway_cell": "QF6207f7b382",
+      "placement": {
+        "cell": "QF6207f7b382",
+        "slot_id": null,
+        "score": "0.0",
+        "basis": "COORDINATE_DISTANCE",
+        "metric": "DISTANCE"
+      },
+      "marking_units": 3,
+      "marking_policy_version": 1,
+      "regulatory_validation": "NOT_PERFORMED",
+      "idempotent": false,
+      "task_id": 1106,
+      "outbox_id": 5081
+    },
+    "line1_accepted": "3",
+    "line2_accepted": "0",
+    "line2_remaining": "3",
+    "proposal": {
+      "order_id": "77f3c3628e9b4bd1bca7c7c1958e619b",
+      "revision": 1,
+      "warehouse_id": 6524567,
+      "line_number": "2",
+      "source_signature": "009983c2a04d78c0b6317aa589b29c5c71796a9afb11427c19d04d2001d8e043",
+      "remaining_quantity": "3",
+      "consistent_snapshot": true,
+      "read_only": true,
+      "pallet_count": 1,
+      "quantities": [
+        "3"
+      ],
+      "planned_quantity": "3",
+      "unplanned_quantity": "0",
+      "quantity_step": "1",
+      "base_uom": "EA",
+      "above_norm_pallets": [
+        1
+      ],
+      "physical_receipt_confirmed": false,
+      "stock_changed": false,
+      "placement_capacity_verified": false,
+      "reservation_created": false
+    },
+    "amendments911": {
+      "revision": 3,
+      "canonical_quantity": "3",
+      "accepted_shrink_denied": true,
+      "v1_duplicates_denied": true,
+      "shared_unreceived_line_deleted": true
+    },
+    "cleanup": {
+      "operation_id": "SAP911.CLEANUP:8192c78d8e94457782243591b310877e",
+      "receipt_document_id": 25239,
+      "sap_order_id": "77f3c3628e9b4bd1bca7c7c1958e619b",
+      "status": "REVERSED",
+      "facts": [
+        {
+          "uid": "LEGACY.SAP.910:8192c78d8e94457782243591b310877e",
+          "article": "QIW6696207F7B382",
+          "quantity": "3",
+          "unit": "EA",
+          "event_id": 6446467
+        }
+      ],
+      "sap_sender": "OWN.QA.SAP",
+      "sap_order_number": "SAP910:8192c78d8e",
+      "reason": "End own source910 fixture",
+      "outbox_id": 5082
+    }
+  },
+  "slow914": {
+    "queries": [
+      {
+        "sql_id": "93cmp15dm59vh",
+        "executions": 8,
+        "avg_ms": 3.678,
+        "avg_buffers": 32,
+        "sql_text": "select l.LINE_NUMBER,l.ROW_ID,l.ARTICUL,a.NAME,             to_char(l.PLANNED_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PLANNED_QTY,l.BASE_UOM,             to_char(a.NORMA_UKLADKI,'TM9','NL"
+      },
+      {
+        "sql_id": "2q20zz3nfhdd3",
+        "executions": 4,
+        "avg_ms": 2.236,
+        "avg_buffers": 38,
+        "sql_text": "select ID from RRL_PRIHOD_NAKLAD_ROWS where ORDID=:d and ARTICUL=:a"
+      },
+      {
+        "sql_id": "0agk0q8pvq7dj",
+        "executions": 8,
+        "avg_ms": 0.765,
+        "avg_buffers": 18.13,
+        "sql_text": "select to_char(nvl(sum(POSTED_BASE_QTY),0),'TM9','NLS_NUMERIC_CHARACTERS=''.,'''),           count(case when POSTED_BASE_QTY is null or STOCK_BASE_UOM is null or STOCK_BASE_UOM!=:u then 1 en"
+      },
+      {
+        "sql_id": "19qgtsq9mabsj",
+        "executions": 4,
+        "avg_ms": 3.234,
+        "avg_buffers": 17.75,
+        "sql_text": "select count(*)from RRL_SAP_SUPPLY_LINE l where l.ORDER_ID=:i and           (l.PLANNED_QTY>(select nvl(sum(r.POSTED_BASE_QTY),0)from RRL_SAP_PALLET_RECEIPT r              where r.ORDER_ID=l."
+      }
+    ],
+    "receipt_indexes": [
+      [
+        "RRL_SAP_PREC_PAL_UK",
+        "UID_PALLET",
+        1
+      ],
+      [
+        "RRL_SAP_PREC_PK",
+        "OPERATION_ID",
+        1
+      ],
+      [
+        "RRL_SAP_RECEIPT_LINE_IX",
+        "ORDER_ID",
+        1
+      ],
+      [
+        "RRL_SAP_RECEIPT_LINE_IX",
+        "LINE_NUMBER",
+        2
+      ]
+    ],
+    "decision": "Keep bounded source<=1000 lines, indexed order/line receipt lookup and canonical legacy unique row; no new stock write/index needed. Author fixtures not production load proof."
+  },
+  "independent_acceptance": false,
+  "manual_browser_selection_passed": false
+}

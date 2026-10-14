@@ -1,0 +1,32 @@
+{
+  "sample": [
+    9104,
+    "RETURN.BAR.RECEIVE:bf76071c4f"
+  ],
+  "reads": [
+    {
+      "receipt": "REUSE643.RECEIVE:dc1889623c",
+      "count": 0,
+      "ms": 8.034
+    },
+    {
+      "receipt": "MISSING.LOCAL.RECEIPT",
+      "count": 0,
+      "ms": 4.061
+    },
+    {
+      "receipt": "RETURN.BAR.RECEIVE:bf76071c4f",
+      "count": 1,
+      "ms": 4.045
+    }
+  ],
+  "sql": [
+    [
+      "2rbsv71aszfp3",
+      7,
+      5.762,
+      103
+    ]
+  ],
+  "plan": "unavailable"
+}

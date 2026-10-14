@@ -1,0 +1,6 @@
+# NI06.2 ticket092 — разрешение возврата из магазина
+Источник: процесс11, NS54; существующий supplier return/RETURNS предназначен для передачи поставщику со склада. Новое разрешение сохраняет исходную STORE_RECEIPT_LINE и её фактическое принятое количество. Это решение Supply Chain, ещё не перевозка, не приёмка склада и не SAP ACK.
+
+Authoritative implementation Oracle RRL_STOCK_STORE_RETURN_CMD, transaction owner RRL_STOCK_POSTING_API, delivery module API через внедрённый inventory public poster. Право store_return_approve. Одна неизменяемая строка разрешения на исходную строку, BASE quantity, причина, направление REUSE/SUPPLIER/DISPOSAL, ссылка на решение и заявленную полную исправную коробку для REUSE. Цumulative разрешения не превышают accepted quantity; missing/excess не разрешаются как фактически принятый товар. Маркированный состав до exact unit allocation отклоняется.
+
+Root заранее объявляет исходную строку и новую строку разрешения; under-lock recheck cumulative amount исключает двойное разрешение конкурентных операций. Outbox вместе с разрешением, никакого P/H/quantity event. Идентичный ID/body replay возвращает исходный результат. SAP-return binding и физическая приёмка отдельные действия; здесь status WAITING_SAP_AND_LOGISTICS и sap_verified=false.

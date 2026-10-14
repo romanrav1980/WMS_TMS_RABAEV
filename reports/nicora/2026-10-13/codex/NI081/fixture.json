@@ -1,0 +1,226 @@
+{
+  "trip_id": 33641,
+  "st_id": 641515,
+  "warehouse_id": 9102,
+  "base": "NI081.BASE.0b960a9257",
+  "shop": "NI081.SHOP.0b960a9257",
+  "tag": "0b960a9257",
+  "operation_ids": [
+    10230,
+    10231
+  ],
+  "road_provider": "NI081TEST",
+  "planning_only": true,
+  "stock_rows_created": 0,
+  "approval_ms": 238.17,
+  "result": {
+    "trip_id": 33641,
+    "version": 1,
+    "operation_id": "NI081.APPROVE:0b960a9257",
+    "source_hash": "bcecf05b99bb3067d3085bbca19f2ca428b791e4288d5c97221a25ec53fe06ed",
+    "time_zone": "Asia/Tbilisi",
+    "reason": "Own NI081 native route-rest approval, outer rollback",
+    "actor": "admin",
+    "approval_phase": "BEFORE_LOADING",
+    "source_contract_version": 6,
+    "plan_source": {
+      "trip_id": 33641,
+      "vehicle_num": "QC241ede877f6d1",
+      "driver_id": 1,
+      "dock": null,
+      "source_contract_version": 6,
+      "transport_type": null,
+      "shipment_date": "2030-01-15 00:00:00",
+      "shipment_time": "2030-01-15 08:00:00",
+      "members": [
+        {
+          "id": 641515,
+          "st_number": "NI081.ST.0b960a9257",
+          "warehouse_id": 9102,
+          "pallet_identifier": "NI081.P.0b960a9257",
+          "address": "NI081.SHOP.0b960a9257",
+          "st_date": "2030-01-15 00:00:00",
+          "route_ordinal": 1,
+          "delivery_window_from": "2030-01-15 08:00:00",
+          "delivery_window_to": "2030-01-15 20:00:00"
+        }
+      ],
+      "warehouse_origins": [
+        {
+          "warehouse_id": 9102,
+          "version": 1,
+          "depot_address": "NI081.BASE.0b960a9257",
+          "latitude": 41,
+          "longitude": 44,
+          "configured": true,
+          "status": "CONFIGURED_REFERENCE",
+          "physical_site_verified": false
+        }
+      ],
+      "destination_rules": [
+        {
+          "address": "NI081.SHOP.0b960a9257",
+          "address_count": 1,
+          "unload_norm_min": 30,
+          "window_strict": 1,
+          "latitude": 41,
+          "longitude": 44
+        }
+      ],
+      "source_lines": [],
+      "operations": [
+        {
+          "operation_id": 10230,
+          "code": "DRIVE",
+          "ordinal": 1,
+          "duration_min": 240,
+          "plan_start": "2030-01-15 08:00:00",
+          "plan_end": "2030-01-15 12:00:00"
+        },
+        {
+          "operation_id": 10231,
+          "code": "DRIVE_BACK",
+          "ordinal": 2,
+          "duration_min": 360,
+          "plan_start": "2030-01-15 12:00:00",
+          "plan_end": "2030-01-15 18:00:00"
+        }
+      ],
+      "route_material": {
+        "policy_id": "REV55_ROUTE_V6_120_15_540_ROAD24H",
+        "continuous_limit_min": 120,
+        "minimum_break_min": 15,
+        "drive_limit_min": 540,
+        "maximum_cache_age_hours": 24,
+        "depot_address": "NI081.BASE.0b960a9257",
+        "stops": [
+          "NI081.SHOP.0b960a9257"
+        ],
+        "legs": [
+          {
+            "from_address": "NI081.BASE.0b960a9257",
+            "to_address": "NI081.SHOP.0b960a9257",
+            "duration_min": 150,
+            "duration_basis": "ROAD_PROFILE_ESTIMATE",
+            "provider": "NI081TEST",
+            "updated_at": "2026-10-14 11:15:28",
+            "fresh": true
+          },
+          {
+            "from_address": "NI081.SHOP.0b960a9257",
+            "to_address": "NI081.BASE.0b960a9257",
+            "duration_min": 90,
+            "duration_basis": "ROAD_PROFILE_ESTIMATE",
+            "provider": "NI081TEST",
+            "updated_at": "2026-10-14 11:15:28",
+            "fresh": true
+          }
+        ],
+        "order_valid": true
+      }
+    },
+    "operations": [
+      {
+        "operation_id": 10230,
+        "code": "DRIVE",
+        "ordinal": 1,
+        "start_at": "2030-01-15T08:00:00.000000+04:00",
+        "finish_at": "2030-01-15T12:00:00.000000+04:00"
+      },
+      {
+        "operation_id": 10231,
+        "code": "DRIVE_BACK",
+        "ordinal": 2,
+        "start_at": "2030-01-15T12:00:00.000000+04:00",
+        "finish_at": "2030-01-15T18:00:00.000000+04:00"
+      }
+    ],
+    "approval_basis": "NATIVE_ROUTE_REST_V6_WITHIN_ORIGINAL_RESOURCE_ENVELOPE",
+    "route_schedule": {
+      "segments": [
+        {
+          "code": "DRIVE",
+          "start_at": "2030-01-15T08:00:00.000000+04:00",
+          "finish_at": "2030-01-15T10:00:00.000000+04:00",
+          "duration_min": "120",
+          "address": "NI081.SHOP.0b960a9257"
+        },
+        {
+          "code": "REST",
+          "start_at": "2030-01-15T10:00:00.000000+04:00",
+          "finish_at": "2030-01-15T10:15:00.000000+04:00",
+          "duration_min": "15",
+          "address": "NI081.SHOP.0b960a9257"
+        },
+        {
+          "code": "DRIVE",
+          "start_at": "2030-01-15T10:15:00.000000+04:00",
+          "finish_at": "2030-01-15T10:45:00.000000+04:00",
+          "duration_min": "30",
+          "address": "NI081.SHOP.0b960a9257"
+        },
+        {
+          "code": "UNLOAD",
+          "start_at": "2030-01-15T10:45:00.000000+04:00",
+          "finish_at": "2030-01-15T11:15:00.000000+04:00",
+          "duration_min": "30",
+          "address": "NI081.SHOP.0b960a9257"
+        },
+        {
+          "code": "DRIVE",
+          "start_at": "2030-01-15T11:15:00.000000+04:00",
+          "finish_at": "2030-01-15T12:45:00.000000+04:00",
+          "duration_min": "90",
+          "address": "NI081.BASE.0b960a9257"
+        },
+        {
+          "code": "WAIT",
+          "start_at": "2030-01-15T12:45:00.000000+04:00",
+          "finish_at": "2030-01-15T18:00:00.000000+04:00",
+          "duration_min": "315",
+          "address": "NI081.BASE.0b960a9257"
+        }
+      ],
+      "stops": [
+        {
+          "address": "NI081.SHOP.0b960a9257",
+          "st_numbers": [
+            "NI081.ST.0b960a9257"
+          ],
+          "window_from": "2030-01-15T08:00:00.000000+04:00",
+          "window_to": "2030-01-15T20:00:00.000000+04:00",
+          "arrival_at": "2030-01-15T10:45:00.000000+04:00",
+          "service_start_at": "2030-01-15T10:45:00.000000+04:00",
+          "service_finish_at": "2030-01-15T11:15:00.000000+04:00",
+          "wait_min": "0",
+          "late_min": "0",
+          "unload_norm_min": "30",
+          "window_strict": 1,
+          "issues": []
+        }
+      ],
+      "return_at": "2030-01-15T12:45:00.000000+04:00",
+      "departure_at": "2030-01-15T08:00:00.000000+04:00",
+      "issues": [],
+      "warnings": [],
+      "drive_min": "240",
+      "status": "NO_EARLIEST_WINDOW_VIOLATION",
+      "policy_id": "REV55_ROUTE_V6_120_15_540_ROAD24H",
+      "time_zone": "Asia/Tbilisi",
+      "estimate_basis": "NATIVE_DRIVE_REST_WAIT_UNLOAD",
+      "driver_breaks_included": true,
+      "legal_compliance_verified": false,
+      "operational_admission": false,
+      "destination_time_zones_verified": false,
+      "depot_address": "NI081.BASE.0b960a9257",
+      "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+      "read_only": true,
+      "stock_changed": false
+    },
+    "operational_admission": false,
+    "stock_changed": false
+  },
+  "approval_rollback_verified": true,
+  "changed_source_rejected": true,
+  "approval_status": "NO_APPROVAL"
+}

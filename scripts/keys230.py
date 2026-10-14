@@ -1,0 +1,4 @@
+exec(open("scripts/inspect226.py",encoding="utf-8").read().split('with oracledb.connect',1)[0])
+with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
+ q=c.cursor();q.execute("select c.TABLE_NAME,c.CONSTRAINT_NAME,c.CONSTRAINT_TYPE,listagg(k.COLUMN_NAME,',')within group(order by k.POSITION)from USER_CONSTRAINTS c join USER_CONS_COLUMNS k on k.CONSTRAINT_NAME=c.CONSTRAINT_NAME where c.TABLE_NAME in('RRL_STORE_RECEIPT_FACT','RRL_TT_HU_LOAD_FACT','RRL_WMS_RECEIPT_UNIT')and c.CONSTRAINT_TYPE in('P','U')group by c.TABLE_NAME,c.CONSTRAINT_NAME,c.CONSTRAINT_TYPE");print(q.fetchall())
+ q.execute("select i.TABLE_NAME,i.INDEX_NAME,i.UNIQUENESS,k.COLUMN_NAME from USER_INDEXES i join USER_IND_COLUMNS k on k.INDEX_NAME=i.INDEX_NAME where i.TABLE_NAME='RRL_WMS_RECEIPT_UNIT'");print(q.fetchall())

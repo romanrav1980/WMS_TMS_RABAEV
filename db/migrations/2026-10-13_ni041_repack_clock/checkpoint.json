@@ -1,0 +1,18 @@
+{
+  "migration_id": "2026-10-13-011-ni041-repack-clock",
+  "state": "APPLIED_DEV_VALID",
+  "target": "RABAEV/orcl",
+  "source_capture": 1058,
+  "recovery": "single package body paired rollback/no data or database copy",
+  "sha256": {
+    "db/migrations/2026-10-13_ni041_repack_clock/000_before.sql": "a26d118ad046590afe303d61f5374f45cb08ec1c3c1eb976590fb348565667d5",
+    "db/migrations/2026-10-13_ni041_repack_clock/001_clock.sql": "5145db36f967821eee367b49a717907f022db86919d1ac3f25fcdb03d13283a3",
+    "db/migrations/2026-10-13_ni041_repack_clock/002_ledger.sql": "2d8b605c9c212cf6e2dd82c36f4a3700c9e60d7429f8f3b1919bdd45f55f0c41",
+    "db/migrations/2026-10-13_ni041_repack_clock/apply.sql": "ac8f11a795118ec67202a7b22bf950fc68747786c5144e40f7d33b57481e5a0c",
+    "db/migrations/2026-10-13_ni041_repack_clock/rollback.sql": "43a0e88371e9b9a7041154fc00e8ecb247f247c93db5fa86d0252a932436a1b8",
+    "db/migrations/2026-10-13_ni041_repack_clock/verify.sql": "f811a692d7df553bc1cb86d6b358fe8d8c9a420503f96050c56dc042e670e878"
+  },
+  "evidence": "reports/nicora/2026-10-13/25-nested-hu-wait-evidence.json",
+  "native_errors": [],
+  "native_invalid": []
+}

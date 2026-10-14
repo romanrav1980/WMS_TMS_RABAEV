@@ -1,0 +1,10 @@
+{
+  "migration_id": "2026-10-13-834-ni032-sequential-sources",
+  "before_sha256": "ccb0155a662114cdf8dccdcb490c77ebae281adb925c53914e9dd75b82310ddd",
+  "after_sha256": "39d812a6fe0f634609b3882c8568e29962d60d90191a9a00c0300892f4f94dbb",
+  "target": "RABAEV/orcl",
+  "state": "APPLIED_VALID_TARGETED835_PASS_OWN_CLEANED837",
+  "new_stock_writer": false,
+  "evidence": "tmp/context837.json",
+  "full_sprint_accepted": false
+}

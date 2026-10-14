@@ -1,0 +1,23 @@
+{
+  "migration_id": "2026-10-14-1149-vehicle-temperature-profile",
+  "target": [
+    "RABAEV",
+    "ORCL"
+  ],
+  "captured_sources": [
+    "000_before_spec.sql",
+    "000_before_body.sql"
+  ],
+  "invalid_baseline": [],
+  "prepared_sha256": {
+    "db\\migrations\\2026-10-14_ni022_vehicle_temperature\\000_before_body.sql": "1a51dd1f9961423beb9ee44ddbbcf618b9d1e46d9d6728de61e6d85efc6f9c75",
+    "db\\migrations\\2026-10-14_ni022_vehicle_temperature\\000_before_spec.sql": "8e25d5cb88aac01dc401fcbfa46b586c4aae4a9cce4051aa13b6c8f30edbeba4",
+    "db\\migrations\\2026-10-14_ni022_vehicle_temperature\\001_profile_temperature.sql": "a7651998d76a26d6a3e350b5d532bc7dfcab890871709a2440deb205979e214e",
+    "db\\migrations\\2026-10-14_ni022_vehicle_temperature\\002_ledger.sql": "df8f60a3f9635a4bb52afac6207daed16b7693d6913f185ce4b75996c44918e9",
+    "db\\migrations\\2026-10-14_ni022_vehicle_temperature\\apply.sql": "3a3a1f749ff7e34d756e2911460a52f717e84630014c0d1f7c4c423d63cb0d55",
+    "db\\migrations\\2026-10-14_ni022_vehicle_temperature\\rollback.sql": "993e1a5a6ef823ac9cd1674c9701799c356a9008d0be97e180a849601736cc3f",
+    "db\\migrations\\2026-10-14_ni022_vehicle_temperature\\verify.sql": "7d485d4a9f3888ad251ea5ee97b1045776ad7970a1cc327836f476c77021a23a"
+  },
+  "scope": "Replace captured profile body only; no table/column/trigger changes. Keep original immutable history/replay/config fence. Existing profile base hashes remain unchanged.",
+  "recovery": "Restore captured 000_before_body.sql; retained history JSON remains readable and immutable. No database copy or historical inference."
+}

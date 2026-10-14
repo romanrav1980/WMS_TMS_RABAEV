@@ -1,0 +1,6 @@
+{
+  "schema": "RABAEV",
+  "before_sha256": "30cfd950e6345b3a019e0062bd6515c91543c0027c6ed8298263c6b3a73c9538",
+  "authoritative_rule": "RRL_IW_GROUP_NEXT exact original units/stock and QC/load; receipt capture mode is not unit control mode",
+  "recovery": "restore captured body; no stock rewrite"
+}

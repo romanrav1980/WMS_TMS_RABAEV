@@ -53,3 +53,5 @@ RRL_WAREHOUSE_TASK_CHK1/CHK2 расширены значениями PUTAWAY/SAP
 Откаты не выполнялись. Порядок при явном поручении — 007 → 006 → 005 → 004 → 003 → 002 → 001; guards препятствуют потере накопленных данных. DDL имеет implicit commit.
 
 SUPPLY_ORDER дополнен CLOSED_AT/RECONCILIATION_JSON. Изменения плана сохраняют факты/строки; закрытие с недостачей и запрос повторного открытия — отдельные исторические outbox события. Source aggregation — дополнение шлюза, не стандартное поле SAP. CRPT запись выполняется существующим RRL_PRODUCTION_API, регуляторный журнал — RRL_REGULATORY_API; прямого изменения внешних подтверждённых статусов нет. [Запуск и границы](../runbooks/nicora_ni01_sap_retail.md), [XML](../../exchange/contracts/ni01/README.md).
+
+11.10.2026 correction: the 7Oct enabledlegacytrigger description above is historical source state; full8Oct stockcutover supersedes it. Current RRL_STOCK_POSTING_API ACTIVE/compatibilityOFF is sole quantity writer. 260/261 scoped same-snapshot originalSAP reads and inventory-owned exact layout proposal, see [[../components/nicora_ni011_receipt_layout_20261011]].

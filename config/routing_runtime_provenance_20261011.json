@@ -1,0 +1,68 @@
+{
+  "captured_at_utc": "2026-10-11T16:40:56.688679+00:00",
+  "osrm": {
+    "version": "5.26.0",
+    "image": "osrm/osrm-backend@sha256:af5d4a83fb90086a43b1ae2ca22872e6768766ad5fcbb07a29ff90ec644ee409",
+    "port": 5000,
+    "prepared_graph": "osrm-data/russia-latest.osrm"
+  },
+  "valhalla": {
+    "version": "3.5.1",
+    "image": "ghcr.io/gis-ops/docker-valhalla/valhalla@sha256:060da5b92e6024a67f65135c236d918b021d63e73d1808a0d55b7e7cbd17240c",
+    "port": 8002,
+    "prepared_graph": "valhalla-data/valhalla_tiles.tar"
+  },
+  "map_scope": "Previously approved regional Ural extract; not global geography or live traffic",
+  "oracle": "Existing RABAEV/orcl unchanged",
+  "observed_directional_costs": {
+    "osrm": {
+      "distance_km": [
+        [
+          0.0,
+          3.65
+        ],
+        [
+          2.73,
+          0.0
+        ]
+      ],
+      "duration_min": [
+        [
+          0.0,
+          5.98
+        ],
+        [
+          4.4,
+          0.0
+        ]
+      ],
+      "duration_basis": "ROAD_PROFILE_ESTIMATE",
+      "traffic_verified": false
+    },
+    "valhalla": {
+      "distance_km": [
+        [
+          0.0,
+          3.959
+        ],
+        [
+          2.742,
+          0.0
+        ]
+      ],
+      "duration_min": [
+        [
+          0.0,
+          6.67
+        ],
+        [
+          4.27,
+          0.0
+        ]
+      ],
+      "duration_basis": "ROAD_PROFILE_ESTIMATE",
+      "traffic_verified": false
+    }
+  },
+  "maximum_road_snap_metres": 1000
+}

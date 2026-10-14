@@ -1,0 +1,5 @@
+{
+  "increment": "200-direct-residual-putaway",
+  "before_receiving_sha256": "e5fe1b1ee92b56261b6e8e4b6c599352f9ee12389c116b38d8a229149ef4a190",
+  "recovery": "Scoped existing metadata replan behavior; original before source preserved; no physical data rewrite"
+}

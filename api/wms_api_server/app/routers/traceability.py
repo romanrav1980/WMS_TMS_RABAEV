@@ -93,6 +93,7 @@ def retry_event_outbox(
         event_outbox_id=event_outbox_id,
         dry_run=request.dry_run,
         reason=request.reason,
+        actor=user.username,
     )
 
 

@@ -1,14 +1,18 @@
+from __future__ import annotations
+from ....oracle_gateway import OracleGateway
+from ....transaction_gateway import TransactionGateway
+from typing import Any
+from ....schemas import LotCheckRequest
 """Terminal quality/audit facts enter posting before legacy metadata DML."""
 from datetime import datetime
 from ..contracts_stock import StockCommand
 from ..domain.stock_quantity import quantity_text
 from .stock_posting_uow import StockPosting
+from .release_boundary import require_active_release
 
 
-def post_terminal_quality(gateway, pallet: str, request):
-    state = gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
-    if state and state[0]["state"] == "PREPARED":
-        return None
+def post_terminal_quality(gateway: OracleGateway | TransactionGateway, pallet: str, request: LotCheckRequest) -> dict[str, Any]:
+    require_active_release(gateway,request.operation_id)
     if not request.operation_id or not request.user_id:
         raise ValueError("Authenticated actor and persistent operation_id required")
     errors, checked = [], []

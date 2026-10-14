@@ -1,0 +1,8 @@
+{
+  "migration_id": "2026-10-13-925-ni033-order-execution-scope",
+  "target": "RABAEV/orcl",
+  "state": "APPLIED_DEV_VALID",
+  "before_sha256": "dd9253d01dbb9ac21a19b71c505f7565ef37cb78a584d17006455a54d6432d3b",
+  "after_sha256": "09ab03a662ab183746a9de1750df950a697c929288bb94a5c82e50b27f737fc0",
+  "evidence": "923/929 readonly currentfacts,926 HTTP,928 JS; no stock changes"
+}

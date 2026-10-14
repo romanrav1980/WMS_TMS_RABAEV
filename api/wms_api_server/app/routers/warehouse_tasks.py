@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 from ..auth import (
     AdminUser,
@@ -10,7 +10,20 @@ from ..schemas import WarehouseTaskStatusRequest
 from ..services.warehouse_task_domain_sync_service import WarehouseTaskDomainSyncService
 from ..services.warehouse_task_service import WarehouseTaskService
 
+from collections.abc import Callable
+from typing import TypeVar, Literal
+from ..transaction_gateway import TransactionGateway
+from ..modules.inventory.public import TaskReadError,TaskViewScope,read_task_snapshot,read_task_progress_snapshot
+
 router = APIRouter(prefix="/api/warehouse-tasks", tags=["warehouse-tasks"])
+ReadResult=TypeVar("ReadResult")
+
+def _read(user: AdminUser,loader: Callable[[TransactionGateway,TaskViewScope],ReadResult],task_id: int | None=None) -> ReadResult:
+    try:
+        return read_task_snapshot(WarehouseTaskService().gateway,user.username,loader,task_id)
+    except TaskReadError as exc:
+        raise HTTPException(exc.status,detail=exc.code) from exc
+
 
 
 @router.get("")
@@ -22,10 +35,11 @@ def list_warehouse_tasks(
     production_order_id: int | None = None,
     source_doc_type: str | None = None,
     source_doc_id: int | None = None,
-    limit: int = 100,
+    limit: int = Query(default=100, ge=1, le=500),
+    queue_group: Literal["SHIPPING","DEFER_WAITING"] | None = None,
     _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_VIEW_PERMISSION)),
 ) -> list[dict]:
-    return WarehouseTaskService().list_tasks(
+    return _read(_user,lambda gateway,scope: WarehouseTaskService(gateway).list_tasks(
         status=status,
         task_type=task_type,
         task_source=task_source,
@@ -33,8 +47,8 @@ def list_warehouse_tasks(
         production_order_id=production_order_id,
         source_doc_type=source_doc_type,
         source_doc_id=source_doc_id,
-        limit=limit,
-    )
+        limit=limit,scope_warehouse_id=scope.warehouse_id,scope_global=scope.global_admin,queue_group=queue_group,
+    ))
 
 
 @router.get("/domain-sync")
@@ -46,13 +60,13 @@ def list_warehouse_task_sync(
     limit: int = 100,
     _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_VIEW_PERMISSION)),
 ) -> list[dict]:
-    return WarehouseTaskDomainSyncService().list_sync(
+    return _read(_user,lambda gateway,scope: WarehouseTaskDomainSyncService(gateway).list_sync(
         status=status,
         task_source=task_source,
         source_doc_type=source_doc_type,
         source_doc_id=source_doc_id,
-        limit=limit,
-    )
+        limit=limit,scope_warehouse_id=scope.warehouse_id,scope_global=scope.global_admin,
+    ))
 
 
 @router.get("/{task_id}")
@@ -60,7 +74,18 @@ def get_warehouse_task(
     task_id: int,
     _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_VIEW_PERMISSION)),
 ) -> dict:
-    return WarehouseTaskService().get_task_or_404(task_id)
+    return _read(_user,lambda gateway,scope: WarehouseTaskService(gateway).get_task_or_404(task_id),task_id)
+
+
+@router.get("/{task_id}/progress")
+def get_warehouse_task_progress(
+    task_id: int,
+    _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_VIEW_PERMISSION)),
+) -> dict:
+    try:
+        return read_task_progress_snapshot(WarehouseTaskService().gateway,task_id,_user.username)
+    except TaskReadError as exc:
+        raise HTTPException(exc.status,detail=exc.code) from exc
 
 
 @router.get("/{task_id}/sync")
@@ -68,7 +93,7 @@ def get_warehouse_task_sync(
     task_id: int,
     _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_VIEW_PERMISSION)),
 ) -> dict:
-    sync = WarehouseTaskDomainSyncService().get_task_sync(task_id)
+    sync = _read(_user,lambda gateway,scope: WarehouseTaskDomainSyncService(gateway).get_task_sync(task_id),task_id)
     return sync or {"task_id": task_id, "sync_status": "NOT_CREATED"}
 
 
@@ -119,7 +144,7 @@ def retry_warehouse_task_sync(
 def cancel_warehouse_task(
     task_id: int,
     request: WarehouseTaskStatusRequest,
-    _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_EXECUTE_PERMISSION)),
+    _user: AdminUser = Depends(require_permission("warehouse_task_edit")),
 ) -> dict[str, str]:
     request.updated_by = _user.username
     WarehouseTaskService().cancel_task(task_id, request)

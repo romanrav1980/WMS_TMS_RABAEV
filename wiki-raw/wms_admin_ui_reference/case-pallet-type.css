@@ -1,0 +1,12 @@
+#cpTypePanel{display:grid;gap:12px;}
+#cpTypePanel[hidden],#cpTypePanel [hidden]{display:none!important;}
+#cpTypePanel h2{margin:0;font-size:21px;}
+#cpTypePanel>div{display:grid;gap:12px;}
+#cpTypePanel label{display:grid;gap:6px;font-weight:600;color:#345475;}
+#cpTypePanel input,#cpTypePanel select{box-sizing:border-box;width:100%;min-height:44px;border:1px solid #bfd2ee;border-radius:8px;padding:10px 12px;background:#fff;font:inherit;color:#153558;}
+#cpTypePanel button{box-sizing:border-box;width:100%;min-height:44px;border:1px solid #bfd2ee;border-radius:8px;padding:10px 12px;background:#edf4ff;color:#17467e;font:inherit;font-weight:600;cursor:pointer;}
+#cpTypePanel #cpTypeSave{background:#2676ed;color:#fff;border-color:#2676ed;}
+#cpTypePanel button:disabled{opacity:.55;cursor:default;}
+#cpTypePanel p{margin:0;padding:10px 12px;border-radius:8px;background:#f0f5fc;color:#345475;line-height:1.5;}
+#cpTypePanel a{font-size:14px;color:#1a5bc2;}
+@media(min-width:700px){#cpTypePanel>div{grid-template-columns:1fr 1fr;}#cpTypePanel button{grid-column:1/-1;}}

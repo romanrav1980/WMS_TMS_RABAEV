@@ -1,0 +1,6 @@
+create or replace package RRL_STOCK_IW_RECOVERY_REC authid definer accessible by(package RRL_STOCK_POSTING_API)as 
+ procedure assert_scope(p_approval varchar2,p_actor varchar2); 
+ procedure compile_command(p_request clob,p_operation varchar2,p_policies out clob,p_resources out clob,p_domain out clob); 
+ procedure execute_command(p_request clob,p_actor varchar2,p_result out clob); 
+end;
+/

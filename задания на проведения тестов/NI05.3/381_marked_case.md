@@ -1,0 +1,2 @@
+# Qwen379–380
+Retainedcontext380 actual accepted7/14QR CASE1122/threephotos/nonadmin/.225inclusive/epsilonrefusal/profilecoverage409/outbox1/noquantityevents/replay before retiredactor. Exact frozenCASE SHIPPEDop/WARE/SSCC/version+1/carrierstocklot/fingerprint/currentprofile required. Originalsource376 andreceipt380 factories forbidden. CASEspecific partial/aggregate-only/physicaldevice/GovACK stillpending. Do not reinterpret naiveCASE time.

@@ -1,3 +1,4 @@
+from decimal import Decimal
 from .configuration_uow import configuration_transaction
 from ....oracle_gateway import OracleGateway
 
@@ -8,7 +9,7 @@ class ReceiptConfiguration:
 
     def get(self, warehouse: int) -> dict:
         rows = self.gateway.fetch_all('select * from RRL_RECEIPT_WARE_SETTINGS where WARE_ID=:w', {'w': warehouse})
-        return rows[0] if rows else {'ware_id': warehouse, 'company_prefix': None, 'extension_digit': 0, 'coordinate_unit_m': 1, 'reachtruck_mps': 1, 'lift_mps': 0.5, 'placement_metric': 'DISTANCE'}
+        return rows[0] if rows else {'ware_id': warehouse, 'company_prefix': None, 'extension_digit': 0, 'coordinate_unit_m': 1, 'reachtruck_mps': 1, 'lift_mps': 0.5, 'placement_metric': 'DISTANCE','outgoing_qc_mode':None,'outgoing_qc_independent':0,'outgoing_qc_sample_percent':0}
 
     def read_rule(self, warehouse: int, key: str, kind: str) -> dict:
         if kind == "sku":
@@ -22,7 +23,15 @@ class ReceiptConfiguration:
             cur.execute('select count(*) from RRL_WARES where ID=:w', {'w': warehouse})
             if cur.fetchone()[0] != 1:
                 raise LookupError('Warehouse not found')
-            cur.execute('merge into RRL_RECEIPT_WARE_SETTINGS d using(select :w WARE_ID from dual)s on(d.WARE_ID=s.WARE_ID) when matched then update set COMPANY_PREFIX=:prefix,EXTENSION_DIGIT=:ext,COORDINATE_UNIT_M=:unit,REACHTRUCK_MPS=:speed,LIFT_MPS=:lift,PLACEMENT_METRIC=:metric,UPDATED_BY=:actor,UPDATED_AT=systimestamp when not matched then insert(WARE_ID,COMPANY_PREFIX,EXTENSION_DIGIT,COORDINATE_UNIT_M,REACHTRUCK_MPS,LIFT_MPS,PLACEMENT_METRIC,UPDATED_BY) values(:w,:prefix,:ext,:unit,:speed,:lift,:metric,:actor)', {'w': warehouse, 'prefix': body['company_prefix'], 'ext': body['extension_digit'], 'unit': body['coordinate_unit_m'], 'speed': body['reachtruck_mps'], 'lift': body['lift_mps'], 'metric': body['placement_metric'], 'actor': actor})
+            cur.execute('merge into RRL_RECEIPT_WARE_SETTINGS d using(select :w WARE_ID from dual)s on(d.WARE_ID=s.WARE_ID) when matched then update set COMPANY_PREFIX=:prefix,EXTENSION_DIGIT=:ext,COORDINATE_UNIT_M=:unit,REACHTRUCK_MPS=:speed,LIFT_MPS=:lift,PLACEMENT_METRIC=:metric,HU_CELL_HEIGHT_UNIT=case when :hu_set=1 then :hu_unit else d.HU_CELL_HEIGHT_UNIT end,UPDATED_BY=:actor,UPDATED_AT=systimestamp when not matched then insert(WARE_ID,COMPANY_PREFIX,EXTENSION_DIGIT,COORDINATE_UNIT_M,REACHTRUCK_MPS,LIFT_MPS,PLACEMENT_METRIC,HU_CELL_HEIGHT_UNIT,UPDATED_BY) values(:w,:prefix,:ext,:unit,:speed,:lift,:metric,:hu_unit,:actor)', {'w': warehouse, 'prefix': body['company_prefix'], 'ext': body['extension_digit'], 'unit': body['coordinate_unit_m'], 'speed': body['reachtruck_mps'], 'lift': body['lift_mps'], 'metric': body['placement_metric'], 'hu_set': int('hu_cell_height_unit' in body), 'hu_unit': body.get('hu_cell_height_unit'), 'actor': actor})
+            if "defer_wait_cell" in body:
+                cur.execute("update RRL_RECEIPT_WARE_SETTINGS set DEFER_WAIT_CELL=:cell where WARE_ID=:w", {"cell": body["defer_wait_cell"], "w": warehouse})
+            if "outgoing_qc_mode" in body:
+                cur.execute("update RRL_RECEIPT_WARE_SETTINGS set OUTGOING_QC_MODE=:p_qc_mode where WARE_ID=:w",{"p_qc_mode":body["outgoing_qc_mode"],"w":warehouse})
+            if "outgoing_qc_independent" in body:
+                cur.execute("update RRL_RECEIPT_WARE_SETTINGS set OUTGOING_QC_INDEPENDENT=:p_independent where WARE_ID=:w",{"p_independent":int(bool(body["outgoing_qc_independent"])),"w":warehouse})
+            if "outgoing_qc_sample_percent" in body:
+                cur.execute("update RRL_RECEIPT_WARE_SETTINGS set OUTGOING_QC_SAMPLE_PERCENT=:p_percent where WARE_ID=:w",{"p_percent":Decimal(str(body["outgoing_qc_sample_percent"] or 0)),"w":warehouse})
         return self.get(warehouse)
 
     def sku_rule(self, warehouse: int, articul: str, body: dict, actor: str = "API") -> dict:
@@ -33,7 +42,7 @@ class ReceiptConfiguration:
             cur.execute('select count(*) from RRL_CELLS where WARE_ID=:w and CELL=:c and OTBOR=1', {'w': warehouse, 'c': body['pick_cell']})
             if cur.fetchone()[0] != 1:
                 raise ValueError('Configure an existing picking cell of this warehouse')
-            cur.execute('merge into RRL_RECEIPT_SKU_RULE d using(select :w WARE_ID,:a ARTICUL from dual)s on(d.WARE_ID=s.WARE_ID and d.ARTICUL=s.ARTICUL) when matched then update set PICK_CELL=:c,TEMP_MIN=:lo,TEMP_MAX=:hi,MIN_SHELF_DAYS=:days when not matched then insert(WARE_ID,ARTICUL,PICK_CELL,TEMP_MIN,TEMP_MAX,MIN_SHELF_DAYS) values(:w,:a,:c,:lo,:hi,:days)', {'w': warehouse, 'a': articul, 'c': body['pick_cell'], 'lo': body['temp_min'], 'hi': body['temp_max'], 'days': body['min_shelf_days']})
+            cur.execute('merge into RRL_RECEIPT_SKU_RULE d using(select :w WARE_ID,:a ARTICUL from dual)s on(d.WARE_ID=s.WARE_ID and d.ARTICUL=s.ARTICUL) when matched then update set PICK_CELL=:c,TEMP_MIN=:lo,TEMP_MAX=:hi,MIN_SHELF_DAYS=:days,SOURCE_PICK_MODE=:source_mode,ALLOW_PICK_BATCH_MIX=nvl(:mix,d.ALLOW_PICK_BATCH_MIX) when not matched then insert(WARE_ID,ARTICUL,PICK_CELL,TEMP_MIN,TEMP_MAX,MIN_SHELF_DAYS,SOURCE_PICK_MODE,ALLOW_PICK_BATCH_MIX) values(:w,:a,:c,:lo,:hi,:days,:source_mode,nvl(:mix,0))', {'w': warehouse, 'a': articul, 'c': body['pick_cell'], 'lo': body['temp_min'], 'hi': body['temp_max'], 'days': body['min_shelf_days'], 'source_mode': body.get('source_pick_mode', 'AFTER_PUTAWAY'), 'mix': None if body.get('allow_pick_batch_mix') is None else int(body['allow_pick_batch_mix'])})
         return {'warehouse_id': warehouse, 'articul': articul, **body}
 
     def cell_rule(self, warehouse: int, cell: str, body: dict, actor: str) -> dict:

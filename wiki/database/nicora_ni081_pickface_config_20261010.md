@@ -1,0 +1,15 @@
+# NI08.1 — настройка прежнего слотирования атомарна,142
+
+RRL_PICK_FACE_ARTICUL existing SKU master links and RRL_PICK_FACE_ASSIGNMENT temporary wave ownership retained. Old PickingService.assign_pick_face_articul committed native base fields before a separate extended-attribute UPDATE. Replaced with inventory public facade, one stock_configuration_transaction/CONFIG6 exclusive fence/cursor-bound native assign_articul + original extended UPDATE; no second mapping writer or quantity effect.
+
+Native RRL_PICK_TOPOLOGY_API existing body has no commit/autonomous clause. Existing RRL_STOCK_CONFIG_API whitelist extended with pick_topology_edit, matching original authenticated endpoint; no requirement for an unrelated extra permission. Current active RUSERS/WARE checked against locked actual face. Explicit row ID must belong to requested face/article; ambiguous natural mapping refused. Former row movement between parent face/article not silently accepted through nested endpoint. Qty/norm DTO fields use Decimal, Oracle receives exact values.
+
+Before disabling active CASE mapping or shifting validity out of the current legacy day, existing old SKU stock/HARD, incoming warehouse tasks and remaining CASE tasks must drain. No existing task rewritten and no P/H changed. This wrapper is not complete NS59 recommendation/approval/drain lifecycle; other old topology/configuration writers are not all converted and new global guards on every topology CRUD were not introduced142.
+
+Migration2026-10-10-142-atomic-existing-pickface-config APPLIED5/0. Checkpoint447 previous exact config source retained; current manifest replaces047 component with new142 full package source. Config/context/root packages liveVALID, default quantity compatibility OFF unchanged.
+
+scripts/ni081_pickface_config_existing_case.py reused only135 private face508/mapping207/SKU QNATIVED9A5C53B54. Invalid extended method after changed base priority409 rolled back the entire original row, including timestamps/base fields. Valid exact priority100.0000000000000000001 stored exactly in Oracle/same207 repeat, then original configuration restored through the same API. Disabling occupied mapping rejected409 OLD_STOCK_REQUIRES_DRAIN, P20H20 unchanged; no new goods or task fixture.
+
+SQL config fence14.832ms/base3.478ms/extended1.631ms cursor averages. Decision retain short configuration UOW, actual parent PK/current stock cell+UID keys and bounded mapping identity; no broad load or duplicate index. General architecture remains FAIL/481files/0cycles/134debt, no baseline enlargement.
+
+Calendar gap is separately recorded: native eligibility uses trunc(sysdate), whereas Oracle server date is at−04 and UI/operator plans use explicit region. Revision140 corrected planned times only. Actual near-expiry business-day correctness needs warehouse calendar policy, not silently replacing historical facts. Owner timezone question pending; do not infer real warehouse zone from environment Europe/Moscow or a forecast UTC bucket.

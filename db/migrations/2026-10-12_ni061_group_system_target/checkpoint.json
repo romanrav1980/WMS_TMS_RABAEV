@@ -1,0 +1,7 @@
+{
+  "schema": "RABAEV",
+  "service": "orcl",
+  "before_sha256": "65f190c13ca2ab9ff3fdb135e471c7c7356089902265c495dfef8d1e4de1702f",
+  "recovery": "restore captured package; no data rebuild",
+  "authorization": "owner full NICORA implementation in isolated dev"
+}

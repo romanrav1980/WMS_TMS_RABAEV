@@ -1,0 +1,7 @@
+{
+  "migration_id": "2026-10-12-594-transport-article-rounding",
+  "before_sha256": "e646282b278b5f8bc4e8e1bdd00056df7aab37681197533ed0874173c3e841e4",
+  "after_sha256": "f057271692c7b5b8a691ac933f0836c5481282d8ef271b5d79d35c152919f73c",
+  "before_constraint": "SYS_C0018737",
+  "recovery": "Package source captured; old-rule constraint rollback validates retained facts and refuses incompatible new amounts, no history changes."
+}

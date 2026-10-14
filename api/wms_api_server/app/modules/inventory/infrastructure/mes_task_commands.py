@@ -1,16 +1,20 @@
+from __future__ import annotations
+from ....oracle_gateway import OracleGateway
+from ....transaction_gateway import TransactionGateway
+from typing import Any
+from ....schemas import MesRawTransferTaskConfirmRequest, MesRawTransferTaskCancelRequest
 """MES operator facts reuse warehouse task posting; cancellation releases H in that same command."""
 import json
 from decimal import Decimal
 from fastapi import HTTPException
 from ..contracts_stock import StockCommand, StockPostingError
 from .stock_posting_uow import StockPosting
+from .release_boundary import require_active_release
 from ....schemas import WarehouseTaskStatusRequest
 
 
-def post_mes_task(gateway, action: str, task: dict, request):
-    rows = gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
-    if rows and rows[0]["state"] == "PREPARED":
-        return None
+def post_mes_task(gateway: OracleGateway | TransactionGateway, action: str, task: dict, request: MesRawTransferTaskConfirmRequest | MesRawTransferTaskCancelRequest) -> dict[str, Any]:
+    require_active_release(gateway,request.operation_id)
     identity = int(task["task_id"])
     actor = request.confirmed_by if action == "CONFIRM" else request.cancelled_by
     if not actor:

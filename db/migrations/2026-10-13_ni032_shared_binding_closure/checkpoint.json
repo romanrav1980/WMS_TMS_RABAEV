@@ -1,0 +1,15 @@
+{
+  "migration_id": "2026-10-13-872-ni032-shared-binding-closure",
+  "state": "APPLIED",
+  "target": "RABAEV/orcl",
+  "before_sha256": {
+    "bind": "022b05156b41481777ba281c1c1cca4791bc6b8f8bd270a9b5f540ce7466bb9d",
+    "continuation": "6720170ed37ff7c69209213613336613c58a82a9cb9c135dd05540021bc69c46"
+  },
+  "after_sha256": {
+    "bind": "7c569b2833036fb9380d65de64a6bc5085692116011a6d444631cbdf702b6da9",
+    "continuation": "6e7430a4047cbe4808893183e79af54563acb557c073707b21bc456cd0e2c279"
+  },
+  "native_validation": "USER_ERRORS empty; USER_OBJECTS current INVALID empty",
+  "developer_evidence": "case867 wave546/task1099; related case850 wave547/two arrivals; own P/H cleaned"
+}

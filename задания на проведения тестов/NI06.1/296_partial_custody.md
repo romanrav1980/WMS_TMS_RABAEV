@@ -1,0 +1,4 @@
+# Qwen296: принятую часть дальше, недостачу отдельно
+Read wiki/database/nicora_ni061_partial_custody_20261011.md and tmp/context296_291/_292. Already departed; do NOT rerun source/initial custody/onward-load readiness cases.
+Replay actualcustody/onward/depart ->same result/no duplicateFF/P/units. Exact source_qty3 accepted1 confirmedshort2; fullreceiptfalse. Own fresh partial fixture without confirmedloss mustdenyrelease/depart; foreign/mismatchedloss/qty/UID deny. Markedsubset usesonly accepted1/two profiles QC, missing2book preserved. SourceLoadarchive and originalorderSHIPPED3 retained; no fakefullcustomer delivery. Current postDEPART incoming phase isn't LOADED ready, correct.
+Browser shows fullreceived/placed separately from acceptedfragment+resolved; durable currentactor/API intent; address type guard preserved. Next finalSTORE ack1/missing commercial2 and correction of recoveredlostunits; no GovACK/hardware/legal claim.

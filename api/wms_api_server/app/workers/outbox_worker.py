@@ -20,6 +20,12 @@ def process_batch(
     processed = 0
     while True:
         result = service.process_next(worker_id=worker_id, target_system=target_system)
+        if result is not None and result.get("status")=="NOT_CONFIGURED":
+            print_status(result)
+            if not loop:
+                return
+            time.sleep(sleep_seconds)
+            continue
         if result is None:
             print_status({"status": "idle", "worker_id": worker_id})
             if not loop:

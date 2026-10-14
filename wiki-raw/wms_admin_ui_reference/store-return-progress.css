@@ -1,0 +1,12 @@
+.return-progress-card{border:1px solid #d7e3f2;border-radius:14px;padding:20px;margin:16px 0;background:#f8fbff;color:#123461}
+.return-progress-status{display:inline-block;background:#e8f1ff;border-radius:20px;padding:7px 12px;font-weight:650;color:#0758a8}
+.return-progress-card h3{font-size:20px;margin:14px 0}
+.return-progress-card p{overflow-wrap:anywhere;line-height:1.5}
+.return-progress-steps{padding:0;list-style:none;display:flex;gap:12px;flex-wrap:wrap;color:#71829b}
+.return-progress-steps .done{color:#087b69}
+.return-progress-actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+.return-progress-link{display:inline-flex;align-items:center;min-height:44px;padding:8px 14px;border:1px solid #bad2f2;border-radius:8px;background:#edf5ff}
+.return-progress-card details{border-top:1px solid #d7e3f2;padding-top:12px}
+.return-progress-card summary{cursor:pointer;min-height:32px}
+.return-progress-note{color:#64748b;font-size:13px}
+@media(max-width:850px){body:has(.return-progress-card){min-width:0}.return-progress-card{padding:14px}.return-progress-steps{display:block}.return-progress-steps li{padding:5px 0}}

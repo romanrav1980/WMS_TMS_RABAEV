@@ -1,0 +1,11 @@
+{
+  "migration_id": "2026-10-11-231-exact-marked-store-return-approval",
+  "sha256": {
+    "db/migrations/2026-10-11_ni062_marked_approval/000_before_rrl_stock_store_return_cmd.sql": "0e99e329185e670c7dcd696f06d78c9031f7f1fbddff0882c6e1f400018a32e3",
+    "db/migrations/2026-10-11_ni062_marked_approval/000_before_rrl_stock_posting_api.sql": "2feb24a4a8fa9cdd0bb6a1c9f8f4f1edb4154b33bc8bcc78da4231b3b03802b5",
+    "db/migrations/2026-10-11_ni062_marked_approval/000_before_current_runtime_manifest.json": "c407aaba5ca0098bf96bdc6c93b29366dd0a89a01584a83341347485d12c36fc",
+    "db/migrations/2026-10-11_ni062_marked_approval/000_before_store_return_routes.py": "a893e6f46e68921f2efdd1683c2e97798bdbbd0575e4b3810bd8afa6cbe553f0",
+    "db/migrations/2026-10-11_ni062_marked_approval/000_before_store_returns.py": "496f1e10ac85da155c910de3025642095e7bc3f557686d5cdec69bc5fd1cbc4b",
+    "db/migrations/2026-10-11_ni062_marked_approval/000_before_store-returns.js": "71aea487ed429c5e09a05364bd1ce21e0324fbcdcc6d238622f79dc3db0c6b3a"
+  }
+}

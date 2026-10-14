@@ -1,0 +1,22 @@
+{
+  "migration_id": "2026-10-13-007-ni072-multi-case-wait",
+  "state": "APPLIED_DEV_VALID",
+  "target": "RABAEV/orcl",
+  "recovery": "captured current985 package spec/bodies + paired rollback; no stock history changes/copy",
+  "sha256": {
+    "db/migrations/2026-10-13_ni072_multi_case_wait/000_before_rrl_st_defer_case_wait_package.sql": "5eeab23d59a0dedb05820331ab26ba9fafd92739d74ef005cbf4fab01e6adb6a",
+    "db/migrations/2026-10-13_ni072_multi_case_wait/001_spec.sql": "559b98ec93f22f106384df1bbbd4204a8c4b7b05c310260e961561f70709c37a",
+    "db/migrations/2026-10-13_ni072_multi_case_wait/000_before_rrl_st_defer_case_wait_package_body.sql": "1cc4024aa37af4384bafb2e81b7c034df25efe0730d24389da45aff883dc32c4",
+    "db/migrations/2026-10-13_ni072_multi_case_wait/002_scope.sql": "bd9e6f0f9119b67f46ef8d842163c5ff5c7c4aa6500c9009675722359a597f02",
+    "db/migrations/2026-10-13_ni072_multi_case_wait/000_before_rrl_st_defer_api_package_body.sql": "aa1ab65c813796f8678e22a3de0e52882986e708f2624a576957af5bb99fb306",
+    "db/migrations/2026-10-13_ni072_multi_case_wait/003_deferral.sql": "7a0d1239cc3b117de3edcf2d5c688de9aaa5c5f78a5fde3059164529da11ffeb",
+    "db/migrations/2026-10-13_ni072_multi_case_wait/000_before_rrl_st_defer_wait_api_package_body.sql": "8954f95abf2553e644e23b367537400507310130eed012a78731ae6744138286",
+    "db/migrations/2026-10-13_ni072_multi_case_wait/004_planner.sql": "abfc2c41766648c3d1f20c598f9dad56c776d3de8cbb91f375fd7e9e8147f1a1",
+    "db/migrations/2026-10-13_ni072_multi_case_wait/005_compile.sql": "a9333b89c7ecd9ac892069870731f3216c670a926abd40eb365eb1fded3fc966",
+    "db/migrations/2026-10-13_ni072_multi_case_wait/006_ledger.sql": "51a8cf30c6908ef35b0262b7bb978c02af55ffbf7d4d07534b74dfd3dadba698",
+    "db/migrations/2026-10-13_ni072_multi_case_wait/apply.sql": "541fa3d034e149e9e2cb9b62a306697c3fb57b2cd93d195fa6df56fad7eb4a47",
+    "db/migrations/2026-10-13_ni072_multi_case_wait/rollback.sql": "e4cb48d5811f51111bf0d6324bf247f963090ddd77a0dc314163042ea4d3e927",
+    "db/migrations/2026-10-13_ni072_multi_case_wait/verify.sql": "2c658b6122e0181dd41bd0dcae345850e68a66ec9e9c6717dd5b75ac413e4f65"
+  },
+  "evidence": "987 owned twoCASE sameST/1136+1137/12+8/P20H20/CTFF3/siblingsource/replays/rollback;988SQL"
+}

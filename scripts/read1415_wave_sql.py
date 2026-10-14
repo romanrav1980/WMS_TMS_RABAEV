@@ -1,0 +1,3 @@
+﻿exec(open('scripts/ni063_slow_queries.py',encoding='utf-8').read().split('with oracledb.connect',1)[0])
+with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn) as c:
+ q=c.cursor();q.execute("""select SQL_ID,EXECUTIONS,round(ELAPSED_TIME/nullif(EXECUTIONS,0)/1000,3),BUFFER_GETS from V$SQL where PARSING_SCHEMA_NAME='RABAEV' and EXECUTIONS>0 and SQL_TEXT not like '%V$SQL%' and (SQL_TEXT like '%RRL_STOCK_WAVE_FINISH_CMD.snapshot_json%' or SQL_TEXT like '%where t.CASE_PICK_TASK_ID = :case_pick_task_id%') order by LAST_ACTIVE_TIME desc fetch first 8 rows only""");r=q.fetchall();print(json.dumps(r));Path('tmp/result1415_sql.json').write_text(json.dumps(r,indent=2),encoding='utf-8')

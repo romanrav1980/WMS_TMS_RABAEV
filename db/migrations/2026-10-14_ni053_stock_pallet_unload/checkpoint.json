@@ -1,0 +1,21 @@
+{
+  "migration_id": "2026-10-14-1316-stock-pallet-unload",
+  "target": "RABAEV/orcl",
+  "invalid_before": [],
+  "own_load_proof": [
+    "ROOT_STOCK_TYPE",
+    "TT.TYPE:0df0dc4f-3cd0-4ba1-978d-69eda726b4c6",
+    {
+      "vehicle_id": 10059,
+      "profile_version": 1,
+      "profile_base_hash": "7EB908BD341FE54CF3702109710A6A6601B641094E28DE0CFCDEDF2960C8E574",
+      "pallet_type_id": 1,
+      "type_origin": "ROOT_STOCK_TYPE",
+      "source_reference": "TT.TYPE:0df0dc4f-3cd0-4ba1-978d-69eda726b4c6",
+      "type_version": 1,
+      "root": "B01.1238:c0c2a00c0b:1",
+      "warehouse": 9807,
+      "top_place_count": 1
+    }
+  ]
+}

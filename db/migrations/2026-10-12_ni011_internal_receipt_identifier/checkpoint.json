@@ -1,0 +1,9 @@
+{
+  "schema": "RABAEV",
+  "service": "127.0.0.1:1521/orcl",
+  "before_sha256": "6b357ecd19b8647401b622c3b26eae3568a9f552aba2a1513d8058e174f9ff15",
+  "after_sha256": "68f9c3507411c7ce89bcd26241cfb7f46c42fb823a6e656e5698b890a2217f77",
+  "recovery": "paired package body rollback; no table/old data/quantity writer changes",
+  "status": "APPLIED_VALID",
+  "evidence": "actual688 internal47 SAP receipt+PUT P3H0/3units6codes/SSCC NULL/replay; old669 exact receipt replay689"
+}

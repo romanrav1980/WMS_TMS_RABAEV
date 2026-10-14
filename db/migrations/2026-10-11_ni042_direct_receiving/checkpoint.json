@@ -1,0 +1,10 @@
+{
+    "migration_id":  "2026-10-11-199-direct-receiving-pick-plan",
+    "sha256":  {
+                   "db/migrations/2026-10-11_ni042_direct_receiving/000_before_picking.sql":  "f3cdc333ccdcb21a08786828901c8cf934ff20de91a4170b135953a002b78917",
+                   "db/migrations/2026-10-11_ni042_direct_receiving/000_before_launch.sql":  "84501a56cb8875c7f4fb488b601226e1517178a5eb2763e3880c4c012f66d172",
+                   "db/migrations/2026-10-11_ni042_direct_receiving/000_before_eligibility.sql":  "c775ad37c173952153fcb3bce4cfdd8a3d80ce97c5ee1031547614e462287795",
+                   "000_before_sap_guard.sql":  "0EC6EC516CDC1A6A91067673FE7A5DA51DEFDEC3E20159CC6378585E426B9554"
+               },
+    "recovery":  "Fresh existing native planner/launch/eligibility saved; no database copy; original metadata history retained"
+}

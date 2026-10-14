@@ -1,0 +1,12 @@
+{
+  "migration_id": "2026-10-11-224-single-loading-current-warehouse",
+  "sha256": {
+    "db/migrations/2026-10-11_ni052_single_load_scope/000_before_rrl_stock_posting_api.sql": "e953627e8f761d37eab9abb6bde12a04543dc70634762a4176d871d876d7c0f3",
+    "db/migrations/2026-10-11_ni052_single_load_scope/000_before_rrl_stock_loading_read.sql": "26e89d3be9d171e01df4fa1f62b91550923f42a69cbf69907099196a9ec7d292",
+    "db/migrations/2026-10-11_ni052_single_load_scope/000_before_contracts.py": "74325d80568a6e4f40de37238400d0a5bfadff2190cf62759f5bf322e189246a",
+    "db/migrations/2026-10-11_ni052_single_load_scope/000_before_loading_routes.py": "4cfedc8e226c9dd0bc932f920b8316dd31e54eaebac59dc5c6292b2642e920dd",
+    "db/migrations/2026-10-11_ni052_single_load_scope/000_before_loading.py": "f53f2131b9a59f37dba48126c2bc5c9dd874be1fbe8b8f2f6df8852e47822ca3",
+    "db/migrations/2026-10-11_ni052_single_load_scope/000_before_current_runtime_manifest.json": "cc62377a16623bdec0361724215af426c06e4fcc128071817318a531c2ffb18a"
+  },
+  "recovery": "Fresh root/loading read and exact API/public port/adapter. Read/authorization-only; no quantity/schema migration. Current warehouse before committed replay and after actual waits; native selected source rules unchanged."
+}

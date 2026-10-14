@@ -1,0 +1,7 @@
+{
+  "migration_id": "2026-10-11-198-weight-choice-demand",
+  "sha256": {
+    "db/migrations/2026-10-11_ni042_weight_choice_demand/000_before_pool.sql": "fcb51f39873e75a88bd0922c2f335634994ae5d0c7a5fa16bf0b7d951fc4ff52"
+  },
+  "recovery": "Pure pool reader only, fresh before source retained, no physical facts rewritten"
+}

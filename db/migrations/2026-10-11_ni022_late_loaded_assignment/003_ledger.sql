@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-241-preserve-loaded-st-late-assignment'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Original additive ST assignment preserves actual loaded cargo and frozen capacity',sysdate,user,'db/migrations/2026-10-11_ni022_late_loaded_assignment/apply.sql','db/migrations/2026-10-11_ni022_late_loaded_assignment/rollback.sql','APPLIED','Two original sources to33558/WARE65691543; first966-ST641383 LOADED/second967-ST641384 assigned without first rewrite; readiness2-1 blocks depart/2-2 old depart2roots20kg/current200kg2places unchanged. Each3 original units6codes/FF3/protected20-20. Native completed trip/foreign reader/existing219 overcapacity refused; allVALID/quality241. Nested/split/independent acceptance pending.');
+commit;

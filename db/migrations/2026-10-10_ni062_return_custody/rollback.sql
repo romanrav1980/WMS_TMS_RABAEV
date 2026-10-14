@@ -1,0 +1,1 @@
+-- Forward correction only, deactivate binding; preserve actual handover and vehicle custody.

@@ -1,0 +1,35 @@
+{
+  "sample_pending": [
+    9104,
+    "RETURN.BAR.RECEIVE:bf76071c4f"
+  ],
+  "reads": [
+    {
+      "ware": 14524201,
+      "receipt": "REUSE643.RECEIVE:dc1889623c",
+      "count": 0,
+      "ms": 349.69
+    },
+    {
+      "ware": 14524201,
+      "receipt": "MISSING.LOCAL.RECEIPT",
+      "count": 0,
+      "ms": 731.48
+    },
+    {
+      "ware": 9104,
+      "receipt": "RETURN.BAR.RECEIVE:bf76071c4f",
+      "count": 1,
+      "ms": 438.06
+    }
+  ],
+  "sql": [
+    [
+      "2rbsv71aszfp3",
+      11,
+      3.803,
+      126,
+      "select r.OPERATION_ID RECEIPT_OPERATION_ID,r.UID_PALLET,r.ARTICLE,r.BASE_UOM,r.RECEIVE_CELL,r.DISPOS"
+    ]
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "migration_id": "2026-10-11-194-weight-box-planning-read",
+  "before_sha256": "839eaf25b6201c81c20512838cbde65d606c79d79904c3f99eaaa7dd93b51c12",
+  "recovery": "Fresh original planning admission; additive pure read helpers/scope extraction; no P/H/data rewrite/no DB copy"
+}

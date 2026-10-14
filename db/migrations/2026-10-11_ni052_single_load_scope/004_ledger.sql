@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-224-single-loading-current-warehouse'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Current original warehouse before standalone load replay and read-only preview',sysdate,user,'db/migrations/2026-10-11_ni052_single_load_scope/apply.sql','db/migrations/2026-10-11_ni052_single_load_scope/rollback.sql','APPLIED','Actual original219 nonadmin TC2196ac14257b5/WARE7096290/ST FULL.ST:6ac14257b5: own current preview/QC/LOAD FULL224.LOAD native-3/replay; current foreignWARE read/new post/saved replay403, denied operation absent, own restored scope saved replay exact/P0H0/source slot free/protected13520/20. Native VALID; quality24/bothTS/557files0cycles76debt. Auth-only native source rules preserved.');
+commit;

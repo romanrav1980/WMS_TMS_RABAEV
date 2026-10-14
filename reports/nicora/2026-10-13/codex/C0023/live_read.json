@@ -1,0 +1,65 @@
+{
+  "case_id": "STORE383.RECEIPT:c09bc5c0",
+  "status": 200,
+  "seconds": 0.359,
+  "lines": [
+    {
+      "line_no": 1,
+      "lot_uid": "CASELOT:0BB941099353D5155FC13A8BA8D83BFFF5095F:1",
+      "article": "QPB2118258E0AB",
+      "base_uom": "EA",
+      "shipped_base_qty": "7",
+      "accepted_base_qty": "3",
+      "missing_base_qty": "2",
+      "refused_base_qty": "1",
+      "damaged_base_qty": "1",
+      "reported_extra_base_qty": "0"
+    }
+  ],
+  "obligations": [
+    {
+      "line_no": 1,
+      "kind": "DAMAGED_RETURN_DECISION",
+      "base_qty": "1",
+      "base_uom": "EA",
+      "status": "OPEN"
+    },
+    {
+      "line_no": 1,
+      "kind": "MISSING_INVESTIGATION",
+      "base_qty": "2",
+      "base_uom": "EA",
+      "status": "OPEN"
+    },
+    {
+      "line_no": 1,
+      "kind": "REFUSED_RETURN_DECISION",
+      "base_qty": "1",
+      "base_uom": "EA",
+      "status": "OPEN"
+    }
+  ],
+  "sql": [
+    [
+      "458201rb8c0yu",
+      1,
+      38.282,
+      319,
+      "select LINE_NO,LOT_UID,ARTICLE,BASE_UOM,                    to_char(SHIPPED_BASE_QTY,'TM9'"
+    ],
+    [
+      "avk0btvz31bag",
+      1,
+      19.307,
+      251,
+      "select CASE_ID,LOAD_OPERATION_ID,STORE_ADDR,STATUS,REASON_TEXT,REPORTED_BY,               "
+    ],
+    [
+      "g9xggn85gk5xw",
+      1,
+      13.741,
+      186,
+      "select LINE_NO,KIND,to_char(BASE_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') BASE_QTY,BASE_"
+    ]
+  ]
+}

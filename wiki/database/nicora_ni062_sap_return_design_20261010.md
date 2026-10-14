@@ -1,0 +1,6 @@
+# NI06.2 ticket093 — SAP-основание возврата
+Файловый шлюз существующий; вводится явный предполагаемый gateway WarehouseStoreReturn version1, не стандартный IDoc и не ARTMAS. Один документ/сообщение связывает одно утверждённое разрешение092 с исходной приёмкой/строкой, lot/SKU/BASE quantity/disposition, адресатом склад и разрешённой зоной приёмки. Не создаёт закупочную накладную.
+
+XML сохраняется оригинальными UTF-8 байтами (base64+SHA256); общий Root STORE_RETURN_SAP_BIND проверяет текущую роль sap_return_import, исходный approval и фактический warehouse receiving config; один binding на approval и SAP sender/document. Exact message identity/body retry сохраняет исходный result, другой XML с тем же MessageId конфликтует. SAP_VERIFIED означает принятый WMS контракт шлюза, не внешнюю квитанцию SAP и не подпись государства.
+
+Stock P/H не меняется. Binding+outbox одной Root transaction, direct history write forbidden. Integrations owner XML parsing, delivery owner approval, inventory Root poster injected composition. Физическая приёмка и обратный рейс отдельные последующие действия. Файловый worker использует явно настроенного активного RUSERS service actor; без роли не запускает импорт.

@@ -1,0 +1,8 @@
+from pathlib import Path
+import json
+files={};p=Path('wiki-raw/wms_admin_ui_reference/warehouse-tasks.html');t=p.read_text(encoding='utf-8')
+t=t.replace('<script src="outgoing-quality.js"></script>','<script src="outgoing-quality.js"></script>\n<script src="warehouse-task-layout.js?v=20261013-811"></script>')
+t=t.replace('warehouse-tasks.css?v=20261013','warehouse-tasks.css?v=20261013-811')
+files[str(p)]=t
+p=Path('wiki-raw/wms_admin_ui_reference/warehouse-tasks.css');files[str(p)]=p.read_text(encoding='utf-8')+'\n.warehouse-operations .warehouse-task-tools{margin:0 24px 24px;border:1px solid #e3eaf4;background:white;border-radius:16px}.warehouse-operations .warehouse-task-tools>summary{padding:20px 24px;font-weight:650;color:#304e74;cursor:pointer}.warehouse-operations .warehouse-task-tools-content{display:grid;gap:16px;padding:0 20px 20px}.warehouse-operations .warehouse-task-tools .panel{padding:22px;display:flex;flex-wrap:wrap;align-items:end;gap:12px}.warehouse-operations .warehouse-task-tools h2,.warehouse-operations .warehouse-task-tools p,.warehouse-operations .warehouse-task-tools pre{flex-basis:100%;margin:4px 0}.warehouse-operations .warehouse-task-tools label{display:flex;flex-direction:column;gap:6px;min-width:150px}.warehouse-operations .warehouse-task-tools pre{max-height:220px;overflow:auto}.warehouse-operations .warehouse-task-tools button{border:1px solid #d5e2f3;color:#2358a2;background:#f5f9ff;padding:8px 14px}@media(max-width:650px){.warehouse-operations .warehouse-task-tools{margin:0 12px 12px}.warehouse-operations .warehouse-task-tools .panel{padding:14px}}\n'
+print(json.dumps(files,ensure_ascii=True))

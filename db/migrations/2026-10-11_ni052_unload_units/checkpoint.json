@@ -1,0 +1,9 @@
+{
+  "migration_id": "2026-10-11-213-unload-original-units",
+  "sha256": {
+    "db/migrations/2026-10-11_ni052_unload_units/000_before_unload.sql": "650f6862101921849a99972c38ae7712287e2b7d037ebdca539fef92737ee15e",
+    "db/migrations/2026-10-11_ni052_unload_units/000_before_unit.sql": "f5a9ed0d9dc004a30260a15b4829da9091a793c745e02d7dcfbfc3a29286069b",
+    "db/migrations/2026-10-11_ni052_unload_units/000_before_manifest.json": "380327506a90362ee582ddf907e3aa80792bbb9a308893981b05f81c7ed87fef"
+  },
+  "recovery": "Fresh native owner snapshot. Restore only without actual marked unload history; otherwise forward repair preserving original issued and recovery journal."
+}

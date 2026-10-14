@@ -1,9 +1,13 @@
+from collections.abc import Iterator
+import oracledb
+from ....oracle_gateway import OracleGateway
+from ....transaction_gateway import TransactionGateway
 """Placement metadata serializes with posting before taking legacy row locks."""
 from contextlib import contextmanager
 
 
 @contextmanager
-def receipt_task_metadata(gateway, purpose: str, actor: str, permission: str):
+def receipt_task_metadata(gateway: OracleGateway | TransactionGateway, purpose: str, actor: str, permission: str) -> Iterator[oracledb.Cursor]:
     with gateway.transaction(purpose) as cursor:
         try:
             cursor.execute(

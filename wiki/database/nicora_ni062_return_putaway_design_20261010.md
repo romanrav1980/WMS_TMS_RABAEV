@@ -1,0 +1,8 @@
+# NI06.2 ticket097 — существующее задание размещения возврата
+Ordinary SUPPLIER/DISPOSAL received096. Configure distinct blocked supplier/disposal target zones, same warehouse and accept0/remains1/replenishment1. Root STORE_RETURN_PUTAWAY_PLAN creates existing MANUAL/PUTAWAY task with SOURCE_DOC_TYPE STORE_RETURN and actual typed incoming NAKLAD_ID. No second task engine; assignment/start/completion remain existing API/terminal.
+
+Private return putaway helper extends existing RRL_STOCK_TASK_PLAN/CORE/DOMAIN through a small typed hook: original received pallet/whole BASE quantity/source/target/current warehouse policy, actor warehouse role and current physical capacity. Existing TransferCore QUARANTINE mode keeps both cells unavailable, requires existing QUARANTINE_MOVE plus warehouse_task_execute/warehouse_return_place. Declared receipt/header/task/placement row keys and source/target stock closure before locks; quantity sum unchanged.
+
+Completion updates existing WT/DONE/movement/SYNCED and appends immutable return placement + required ERP business event in the same Root transaction. Header alone is not placement proof. No SAP external ACK. Cancellation preserves history; another plan only when prior tasks cancelled and full stock remains at receiving. Good REUSE/full-box/picking/marks remain a separate flow.
+
+Target capacity: sum current and planned unique pallets, known gross KG; unknown height/topology slot proof must refuse when required, no silent bypass. First slice unlimited logical blocked system zones without physical slot declarations; physical-slot/multi-place remaining explicit.

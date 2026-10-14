@@ -1,0 +1,13 @@
+{
+    "recovery":  "saved current picking source and paired rollback; no DB copy or data deletion",
+    "migration_id":  "2026-10-11-174-remaining-pick-plan",
+    "sha256":  {
+                   "apply.sql":  "7E380324063E32461815E391BC7FEDCEB21D4DE6F53C9C6A68AFB280F958471E",
+                   "rollback.sql":  "B631A8AC42F577ABC84C1AB94FD60E6CC4F9718256AF3700F43079572F317439",
+                   "000_before_picking.sql":  "DB902893E2E1D9BB027A7EB6B6264650AA8CB9AC2E96CF46AA86EDB537784C2C",
+                   "002_picking_body.sql":  "DF6B9EC188754378A6E720AD58A6922E305E4A5BE0974C72CD2A93C6EE897302",
+                   "002_picking_contract.sql":  "E4BE458E57C6A6B4C0D0C1E00D7B5E89763E827CBFC106AB0737481CD41B9213",
+                   "001_admission.sql":  "D9407B026C9285FEDFDA12689BF00C454AABB6CF1836F4E7499B1118D1DB5D87",
+                   "verify.sql":  "6E911A634865649F06EA50A763FF0ACBCBB3C5DBFE5508C7FC72CCD02A481634"
+               }
+}

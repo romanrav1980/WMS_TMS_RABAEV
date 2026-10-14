@@ -1,0 +1,9 @@
+# Ответ ERROR не завершает исходящее событие,153
+
+Integrations domain delivery decision is the sole classification: adapter DONE plus HTTP2xx or nonHTTP transport no HTTP code means transmission completed. ERROR/unknown state/failed HTTP requestERROR and native mark_outbox_error, not unconditional DONE. Original response body/IDs/external status/HTTP/error code retained. Legal acceptance separate: explicit boolean true from non-simulation adapter only; never inferred from2xx or truthy string. Default DISABLED no claim unchanged, MOCK remains mock/not signed.
+
+RegulatoryResponse dataclass moved to pure domain with contract alias retained, avoiding domain outward dependency. Existing OutboxService uses public rule; current native event/request ledger/retry/MAX remain. Event read to_clob(PAYLOAD_JSON) preserves original bytes/numeric text and avoids native JSON dict CLOB bind failure. No provider credentials/network connector/new acknowledgment claimed.
+
+Six response casesPASS including ERROR503/DONE500/STARTED200 refused, DONE202 transmission only/no legal implication, nonHTTP DONE permitted, boolean HTTP invalid. Actual private target Q153_bc63be3019/event2299, simulated failing adapter: requestERROR/HTTP503/SIMULATED_RETRYABLE_ERROR/error metadata and response preserved, eventRETRY1. Exact raw38digit numeric payload retained, stock event count unchanged. Own private failure later markedDEAD_LETTER for cleanup. Initial table name/signature in author script corrected from live evidence before successful creation; no affected real queue.
+
+ArchitecturePASS503files0cycles79debt; no OracleDDL. SQL add/update/error15.550/6.684/15.310ms, retain current keyed journal/update and native retry. Crash claim lease/current worker fencing and async status polling remain next concerns; this is not proof of production regulatory delivery.

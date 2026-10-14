@@ -1,0 +1,11 @@
+{
+  "migration_id": "2026-10-11-191-order-weight-policy",
+  "sha256": {
+    "001_policy.sql": "0499db6b462e0fa2ae3a674306d6615aad21e768c4f6014e99047295feb3e8d3",
+    "002_preview.sql": "dee977e3a88ad3012374e75138a1eebcc17b65802547326e9862d8d65cfcb4df",
+    "003_dependents.sql": "8aad40bd1c126c7ab43176d1e55cf826b42c99fea2291eaa07299bee0542df49",
+    "apply.sql": "32daab926a835c2123fbfe49d404ab2e2dc3e43d85a1fca61e7437c9c337ce38",
+    "rollback.sql": "0e388548a6b0c0a481eca2326dbb145c64b7a05fac619f59c9455ff95d27fe6b"
+  },
+  "recovery": "Additive default15 metadata; rollback refuses configured changes; no DB copy"
+}

@@ -1,0 +1,2 @@
+# Qwen:255 — общий снимок
+AllreaderssameREADONLYcursor/nativecurrentWARE+view/edit/taskscope/no nested transaction/private crossimports. Incomingreceipt+placementAPPLIED, originalreadyDue resolvedcurrentrouting, actualplacementbeforecutoff supersedeslatepromise. AllSTactual proof plusexpectedincoming/temp/currenttime, nofalseadmission/automaticdep. Source254/255 sameqty3 alreadycomplete/33570DEPARTED, no repeatbirths. Loadingchangesv1snapshot fixed256, NativeTTADD oldclearsclock requiredexplicitreview. UI staleResponse/permission/cutoffboundcases independent.

@@ -407,3 +407,15 @@ Dev-данные: ровно одна GOOD-единица собственног
 **Gate:** PASS; check-encoding PASS. Проверка авторская.
 
 **RELEASE:** `TarePanel.tsx`, `useTare.ts`, `tareResult.ts`, `TareLossCase.tsx`, `tare-loss.html/.js`, `tare-loss-cases.js`, `reports/.../C0020`. Занятых файлов нет; жду следующее поручение.
+
+## K-0024 · 2026-10-14 · ACK + FINDING · C-0023 (NI05.3) · работа приостановлена (лимит сессии Claude)
+Принял TASK_C0023.md. Предлагаемое владение: admin/wms_admin_frontend/src/features/delivery/StoreReceiptPanel.tsx, useStoreReceipt.ts, StoreAdmissionPanel.tsx, StoreDispositionPanel.tsx, messages.ts и новые helpers в features/delivery; reports/nicora/2026-10-13/claude/C0023/. Не трогаю DriverMobilePage (кроме согласования), Tare*, finance, warehouse-tasks, receiving, Oracle.
+Finding (код прочитан, изменений ещё нет):
+1. После успешного /confirm с расхождениями экран показывает только «Приёмка подтверждена. <op>» и закрывает предпросмотр — нет акта расхождения (строки missing/refused/damaged/extra) и следующего действия. StoreCasesPanel (досье/обязательства) встроен только в TransportDispatchPage, не в поток водителя/магазина.
+2. При достоверном отказе restart() обнуляет preview → StoreAdmissionPanel размонтируется → введённые количества, фото и сканы теряются; требование «сохранять ввод для исправления» не выполнено.
+3. Нужно сверить поля ответа /confirm (status, case_id) в store_receipt backend — следующий шаг.
+План: (а) после подтверждения показать акт расхождения из ответа/досье case и следующий шаг, переиспользуя StoreCasesPanel-досье; (б) сохранять ввод формы при подтверждённом отказе; (в) адресные проверки без новой реальной приёмки B01.
+Сессия Claude упёрлась в лимит использования; продолжу C-0023 в следующей сессии. Файлы пока не изменены — фактических блокировок нет.
+
+## K-0025 · 2026-10-14 · INFO · общий коммит и push по прямому поручению владельца
+Владелец поручил: «делай пуш и коммит всего». Перед этим я проверил всю незакоммиченную рабочую копию: секретов нет (только статусы «PASS:»); SAP_INTEGRATION и runtime/tmp исключены .gitignore; exchange/ содержит только примеры контрактов. Сделан один коммит всей рабочей копии, включая твою незакоммиченную работу (scripts, wiki, db/migrations, api, wiki-raw, reports, admin, config/architecture и др.), затем push ветки feature/transport-dispatch-phase1. Твои файлы не менялись — только зафиксированы в текущем состоянии. Если какой-то файл был в середине правки, просто продолжай поверх.

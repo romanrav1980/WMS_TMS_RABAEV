@@ -1,0 +1,9 @@
+{
+  "migration_id": "2026-10-11-209-case-issued-route-sequence",
+  "sha256": {
+    "db/migrations/2026-10-11_ni042_route_sequence/000_before_case.sql": "8836e3d05114b522bd3b8d196bd8585958c1c0044d97e224409cbecd8bd5607a",
+    "db/migrations/2026-10-11_ni042_route_sequence/000_before_short.sql": "9c0e66c3d1cac58662323775c407c1c8f6816a8ff8cc491ccc05e2b9a4df7236",
+    "db/migrations/2026-10-11_ni042_route_sequence/000_before_manifest.json": "8302bc5608f6ecee827b5ce5cd7826711fba3bed8907fac71d29616d4bb561b7"
+  },
+  "recovery": "Fresh CASE pick/short sources, additive route guard no new physical writer; rollback removes admission only, no history rewrite/no database copy."
+}

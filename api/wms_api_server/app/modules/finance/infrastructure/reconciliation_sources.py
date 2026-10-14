@@ -1,0 +1,38 @@
+DAILY=[
+ ("store_unloads_started","select count(*)from RRL_STORE_UNLOAD_START s join RRL_TT_HU_LOAD_FACT l on l.LOAD_OPERATION_ID=s.LOAD_OPERATION_ID where l.WARE_ID=:ware and s.STARTED_AT_INSTANT>=:day_from and s.STARTED_AT_INSTANT<:day_to"),
+ ("store_unloads_completed_by_start_day","select count(*)from RRL_STORE_UNLOAD_START s join RRL_TT_HU_LOAD_FACT l on l.LOAD_OPERATION_ID=s.LOAD_OPERATION_ID join RRL_STORE_UNLOAD_FACT f on f.START_OPERATION_ID=s.OPERATION_ID where l.WARE_ID=:ware and s.STARTED_AT_INSTANT>=:day_from and s.STARTED_AT_INSTANT<:day_to"),
+
+ ("warehouse_tasks_started","select count(*)from RRL_WAREHOUSE_TASK where(FROM_WARE_ID=:ware or TO_WARE_ID=:ware)and STARTED_AT_INSTANT>=:day_from and STARTED_AT_INSTANT<:day_to"),
+ ("warehouse_tasks_finished","select count(*)from RRL_WAREHOUSE_TASK where(FROM_WARE_ID=:ware or TO_WARE_ID=:ware)and STATUS='DONE'and FINISHED_AT_INSTANT>=:day_from and FINISHED_AT_INSTANT<:day_to"),
+ ("interwarehouse_unloads","select count(*)from RRL_INTERWARE_UNLOAD where WARE_ID=:ware and CREATED_AT>=:day_from and CREATED_AT<:day_to"),
+ ("interwarehouse_receipts","select count(*)from RRL_INTERWARE_RECEIPT where WARE_ID=:ware and CREATED_AT>=:day_from and CREATED_AT<:day_to"),
+ ("delivery_cases_closed","select count(*)from RRL_STORE_CASE_CLOSURE where WARE_ID=:ware and CREATED_AT>=:day_from and CREATED_AT<:day_to"),
+ ("physical_places_loaded","select count(*)from RRL_TT_HU_LOAD_FACT where WARE_ID=:ware and LOADED_AT>=:day_from and LOADED_AT<:day_to"),
+ ("physical_places_departed","select count(*)from RRL_TT_HU_LOAD_FACT where WARE_ID=:ware and DEPARTED_AT>=:day_from and DEPARTED_AT<:day_to"),
+ ("trips_departed","select count(distinct TT_ID)from RRL_TT_HU_LOAD_FACT where WARE_ID=:ware and DEPARTED_AT>=:day_from and DEPARTED_AT<:day_to"),
+ ("store_receipts","select count(*)from RRL_STORE_RECEIPT_FACT r join RRL_TT_HU_LOAD_FACT l on l.LOAD_OPERATION_ID=r.LOAD_OPERATION_ID where l.WARE_ID=:ware and r.RECEIVED_AT>=:day_from and r.RECEIVED_AT<:day_to"),
+ ("return_receipts","select count(*)from RRL_STORE_RETURN_RECEIPT where WARE_ID=:ware and RECEIVED_AT>=:day_from and RECEIVED_AT<:day_to"),
+ ("warehouse_cost_runs","select count(*)from RRL_LOGISTICS_COST_RUN r where r.WARE_ID=:ware and r.CREATED_AT>=:day_from and r.CREATED_AT<:day_to and not exists(select 1 from RRL_TRANSPORT_COST_CLAIM c where c.OPERATION_ID=r.OPERATION_ID)"),
+ ("transport_cost_runs","select count(*)from RRL_LOGISTICS_COST_RUN r join RRL_TRANSPORT_COST_CLAIM c on c.OPERATION_ID=r.OPERATION_ID where r.WARE_ID=:ware and r.CREATED_AT>=:day_from and r.CREATED_AT<:day_to"),
+ ("expense_reports","select count(*)from RRL_LOGISTICS_EXPENSE where WARE_ID=:ware and CREATED_AT>=:day_from and CREATED_AT<:day_to"),
+ ("tare_operations","select count(*)from RRL_TARE_JOURNAL j join RRL_TARE_BALANCE b on b.BALANCE_KEY=j.TO_BALANCE_KEY where b.OWNER_WARE_ID=:ware and j.CREATED_AT>=:day_from and j.CREATED_AT<:day_to"),
+]
+BACKLOG=[
+ ("transport_cost_unrecognized","select count(*)from RRL_TT_VEHICLE_SOURCE s where exists(select 1 from RRL_TT_HU_LOAD_FACT l where l.TT_ID=s.TT_ID and l.DEPARTURE_OPERATION_ID=s.DEPARTURE_OPERATION_ID and l.WARE_ID=:ware)and not exists(select 1 from RRL_TRANSPORT_COST_CLAIM c where c.DEPARTURE_OPERATION_ID=s.DEPARTURE_OPERATION_ID)"),
+ ("store_unloads_open","select count(*)from RRL_STORE_UNLOAD_START s join RRL_TT_HU_LOAD_FACT l on l.LOAD_OPERATION_ID=s.LOAD_OPERATION_ID where l.WARE_ID=:ware and not exists(select 1 from RRL_STORE_UNLOAD_FACT f where f.START_OPERATION_ID=s.OPERATION_ID)"),
+
+ ("interwarehouse_onward_pending","select count(*)from RRL_INTERWARE_PLACEMENT p join RRL_INTERWARE_RECEIPT r on r.OPERATION_ID=p.RECEIPT_OPERATION_ID where r.WARE_ID=:ware and not exists(select 1 from RRL_INTERWARE_ONWARD_DISPATCH d where d.RECEIPT_OPERATION_ID=r.OPERATION_ID)"),
+ ("interwarehouse_custody_pending","select count(*)from RRL_INTERWARE_RECEIPT r where r.WARE_ID=:ware and not exists(select 1 from RRL_INTERWARE_CUSTODY_PROOF p where p.RECEIPT_OPERATION_ID=r.OPERATION_ID)"),
+ ("interwarehouse_placement_pending","select count(*)from RRL_INTERWARE_RECEIPT r where r.WARE_ID=:ware and not exists(select 1 from RRL_INTERWARE_PLACEMENT p where p.RECEIPT_OPERATION_ID=r.OPERATION_ID)"),
+ ("interwarehouse_unload_pending","select count(*)from RRL_INTERWARE_PLAN p where p.TARGET_WARE_ID=:ware and not exists(select 1 from RRL_INTERWARE_UNLOAD u where u.PLAN_OPERATION_ID=p.OPERATION_ID)"),
+ ("interwarehouse_receipt_pending","select count(*)from RRL_INTERWARE_UNLOAD u where u.WARE_ID=:ware and not exists(select 1 from RRL_INTERWARE_RECEIPT r where r.PLAN_OPERATION_ID=u.PLAN_OPERATION_ID)"),
+ ("open_warehouse_tasks","select count(*)from RRL_WAREHOUSE_TASK where(FROM_WARE_ID=:ware or TO_WARE_ID=:ware)and STATUS not in('DONE','CANCELLED')"),
+ ("return_placement_pending","select count(*)from RRL_STORE_RETURN_RECEIPT r where r.WARE_ID=:ware and not exists(select 1 from RRL_STORE_RETURN_PLACEMENT p where p.RECEIPT_OPERATION_ID=r.OPERATION_ID)and not exists(select 1 from RRL_RETURN_DISPOSAL_FACT d where d.RECEIPT_OPERATION_ID=r.OPERATION_ID)"),
+ ("supplier_handover_pending","select count(*)from RRL_STORE_RETURN_SUP_DISPATCH d join RRL_STORE_RETURN_RECEIPT r on r.OPERATION_ID=d.RECEIPT_OPERATION_ID where r.WARE_ID=:ware and not exists(select 1 from RRL_SUP_RETURN_HANDOVER h join RRL_SUP_RETURN_CONFIRM c on c.HANDOVER_OPERATION_ID=h.OPERATION_ID where h.DISPATCH_OPERATION_ID=d.OPERATION_ID)"),
+ ("disposal_pending","select count(*)from RRL_STORE_RETURN_RECEIPT r where r.WARE_ID=:ware and r.DISPOSITION='DISPOSAL' and not exists(select 1 from RRL_RETURN_DISPOSAL_FACT d where d.RECEIPT_OPERATION_ID=r.OPERATION_ID)"),
+ ("delivery_discrepancies","select count(*)from RRL_STORE_DISCREPANCY_CASE c join RRL_TT_HU_LOAD_FACT l on l.LOAD_OPERATION_ID=c.LOAD_OPERATION_ID where l.WARE_ID=:ware and c.STATUS!='CLOSED'"),
+ ("tare_offers_unaccepted","select count(*)from RRL_TARE_OFFER o where o.OWNER_WARE_ID=:ware and not exists(select 1 from RRL_TARE_ACCEPT a where a.OFFER_OPERATION_ID=o.OPERATION_ID) and not exists(select 1 from RRL_TARE_OFFER_CANCEL c where c.OFFER_OPERATION_ID=o.OPERATION_ID)"),
+ ("tare_loss_unresolved","select count(*)from RRL_TARE_LOSS_CLAIM c where c.OWNER_WARE_ID=:ware and not exists(select 1 from RRL_TARE_LOSS_DECISION d where d.CLAIM_OPERATION_ID=c.OPERATION_ID)"),
+ ("expense_approval_pending","select count(*)from RRL_LOGISTICS_EXPENSE e where e.WARE_ID=:ware and not exists(select 1 from RRL_LOGISTICS_EXP_DECISION d where d.EXPENSE_OPERATION_ID=e.OPERATION_ID and(d.PHASE='FINANCE' or d.OUTCOME='REJECT'))"),
+ ("expense_allocation_pending","select count(*)from RRL_LOGISTICS_EXPENSE e join RRL_LOGISTICS_EXP_DECISION f on f.EXPENSE_OPERATION_ID=e.OPERATION_ID and f.PHASE='FINANCE' and f.OUTCOME='APPROVE' where e.WARE_ID=:ware and e.OBJECT_KIND='TRIP' and not exists(select 1 from RRL_LOGISTICS_EXP_ALLOCATION a where a.EXPENSE_OPERATION_ID=e.OPERATION_ID)"),
+]

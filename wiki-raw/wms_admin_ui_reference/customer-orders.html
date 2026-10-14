@@ -4,9 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>WMS PRO Заказы клиентов</title>
-    <link rel="stylesheet" href="styles.css?v=20260517-cleanui" />
-  </head>
-  <body class="auth-pending" data-required-permission="customer_order_view">
+    <link rel="stylesheet" href="styles.css?v=20260517-cleanui" /><link rel="stylesheet" href="order-execution.css?v=20261013-1028" />
+  <link rel="stylesheet" href="sap-automatic-preparation.css?v=20261013-1123">
+<link rel="stylesheet" href="trip-picker.css?v=20261014-1221"><link rel="stylesheet" href="order-picking-workspace.css"></head>
+  <body class="auth-pending order-workspace-page" data-required-permission="customer_order_view">
     <div class="app">
       <aside class="sidebar">
         <div class="brand">
@@ -60,7 +61,7 @@
               <label>Legacy order ID<input id="legacyImportId" type="number" min="1" /></label>
               <button id="legacyImport" type="button">Импортировать</button>
             </div>
-            <div class="rights-summary"><span id="orderStatusText">Ожидание данных</span></div>
+            <div class="order-pagination"><span id="orderStatusText">Ожидание данных</span><div><button id="orderPagePrevious" type="button" disabled>← Новее</button><button id="orderPageNext" type="button" disabled>Старее →</button></div></div>
             <div class="rights-table-wrap">
               <table class="rights-table">
                 <thead><tr><th>ID</th><th>Заказ</th><th>Legacy</th><th>Клиент</th><th>Статус</th><th>Отгрузка</th><th>Строк</th><th>Количество</th></tr></thead>
@@ -72,14 +73,14 @@
           <article class="panel rights-groups">
             <header><h2>Карточка заказа</h2></header>
             <div class="rights-summary"><span id="orderDetailStatus">Выберите заказ</span></div>
-            <pre id="orderDetails"></pre>
-            <details data-permission="customer_order_import">
-              <summary>Подготовить СТ из заказа SAP</summary>
-              <p>Задайте укладку по паллетам. Общее количество должно совпадать с исходным заказом.</p>
+            <div id="orderDetails"></div>
+            <details data-permission="customer_order_import" id="sapAssignment">
+              <summary>Подготовка СТ и назначение в существующий рейс</summary>
+              <div id="sapManualEditor"><p>Задайте укладку по паллетам. Общее количество должно совпадать с исходным заказом.</p>
               <button id="sapLayoutLoad" type="button">Заполнить из строк заказа</button>
               <table class="rights-table"><thead><tr><th>Артикул</th><th>Количество</th><th>Паллета №</th><th></th></tr></thead><tbody id="sapLayoutRows"></tbody></table>
-              <button id="sapPrepareSt" type="button">Подготовить СТ</button>
-              <div data-permission="transport_dispatch_edit"><label>Номер существующего рейса <input id="sapTripId" type="number" min="1" /></label><button id="sapAssignSt" type="button">Добавить СТ в рейс</button></div>
+              <button id="sapPrepareSt" type="button">Подготовить СТ</button></div>
+              <div data-permission="transport_dispatch_edit"><label>Номер существующего рейса <input id="sapTripId" type="number" min="1" /></label><button id="sapTripChoose" type="button" title="Открыть существующий выбор рейса с фильтрами даты, района и магазина.">Выбрать рейс</button><input id="sapTripPickerSource" type="hidden"><button id="sapTripReview" type="button">Показать ограничения рейса</button><button id="sapAssignSt" type="button">Добавить СТ в рейс</button><p id="sapTripReviewMessage" role="status"></p></div>
               <p id="sapPreparationStatus" role="status"></p>
             </details>
             <div class="rights-summary"><span>Строки заказа</span></div>
@@ -89,19 +90,140 @@
                 <tbody id="orderLineRows"></tbody>
               </table>
             </div>
-            <div class="rights-summary"><span>Факт комплектации / отгрузки</span></div>
+            <div class="rights-summary"><span>Подтверждённый отбор и отгрузка. Для текущего состава используйте ссылку на CASE.</span></div>
             <div class="rights-table-wrap compact-scroll">
               <table class="rights-table">
-                <thead><tr><th>ID</th><th>Паллет</th><th>Адрес</th><th>Факт</th><th>Вес</th><th>Статус</th></tr></thead>
+                <thead><tr><th>ID</th><th>Место / СТ</th><th>Адрес</th><th>Факт</th><th>Вес</th><th>Статус</th></tr></thead>
                 <tbody id="orderFulfillmentRows"></tbody>
               </table>
             </div>
           </article>
         </section>
-      </main>
+<article id="orderExecutionPanel" class="panel" data-permission="customer_fulfillment_view">
+              <header><h2 id="orderExecution">Фактический отбор заказа</h2><p id="orderExecutionStatus" role="status">Выберите заказ</p></header>
+              <div class="rights-table-wrap"><table class="rights-table"><thead><tr><th>Строка</th><th>Товар</th><th>Заказ</th><th>Отобрано</th><th>Действующий резерв</th><th>Осталось отобрать</th><th>Состояние</th><th>Причина</th></tr></thead><tbody id="orderExecutionRows"></tbody></table></div>
+</article>
+      <article class="panel" data-permission="stock_reservation_view"><h2>Общий пул обеспечения заказов</h2>
+<p>Потребность SAP сохраняется. Мягкий резерв распределяется между открытыми заказами; паллеты закрепляются при запуске волны.</p>
+<div class="rights-editor"><label>Склад <input id="poolWarehouse" inputmode="numeric"></label><label>Артикул <input id="poolArticle" maxlength="160"></label>
+<label>Группа хранения <select id="poolClass"><option value="OTHER">Другая</option><option value="DRY_RACK">Сухой стеллажный</option><option value="FRESH">Фреш</option></select></label>
+<label>Обеспечение из наличия <select id="poolFlag"><option value="">По группе хранения</option><option value="true">Разрешено</option><option value="false">Плановое обеспечение</option></select></label>
+<label>Кратность отбора, базовая единица <input id="poolStep" inputmode="decimal" value="1"></label></div>
+<button id="poolLoad">Загрузить</button><button id="poolSave" data-permission="warehouse_settings_edit">Сохранить настройку</button>
+<button id="poolAllocate" data-permission="stock_reservation_edit">Рассчитать мягкий резерв</button>
+<a href="receiving.html">Настройка ячейки отбора товара</a><p id="poolAvailable"></p>
+<table class="rights-table"><thead><tr><th>Заказ</th><th>Строка</th><th>Потребность</th><th>Предлагаемый резерв</th></tr></thead><tbody id="poolRows"></tbody></table>
+<p id="poolMessage" role="status" aria-live="polite"></p></article>
+<article class="panel" data-permission="customer_rule_edit">
+<h2>Календарь магазина и исключения дат</h2>
+<label>Склад <input id="storeCalWare" type="number" min="1"></label>
+<label>Код магазина SAP/WMS <input id="storeCalStore" maxlength="100"></label>
+<label>Дата доставки <input id="storeCalDate" type="date"></label>
+<button id="storeCalRead">Прочитать дату</button>
+<p>Недельный календарь применяется к новым заказам. Для конкретной даты можно записать открытие или закрытие.</p>
+<label>Смещение от UTC, мин <input id="storeCalOffset" type="number" min="-720" max="840"></label>
+<label>Дни доставки (1–7, через запятую) <input id="storeCalDays"></label>
+<label><input id="storeCalSameDay" type="checkbox"> Разрешена отгрузка день в день</label>
+<button id="storeCalConfigure">Сохранить недельный календарь</button>
+<label>Исключение даты <select id="storeCalState"><option value="CLOSED">Закрыто</option><option value="OPEN">Открыто</option></select></label>
+<input id="storeCalReference" maxlength="500" placeholder="Источник решения" aria-label="Источник решения календаря">
+<input id="storeCalReason" maxlength="500" placeholder="Причина исключения" aria-label="Причина исключения даты">
+<button id="storeCalPublish">Сохранить исключение даты</button>
+<button id="storeCalRecover">Восстановить неподтверждённый запрос</button>
+<p id="storeCalMessage" role="status"></p>
+<p>Заказ на закрытую дату сохраняется в ожидании решения. Изменение календаря не допускает автоматически уже отложенные заказы.</p>
+</article>
+<article class="panel" data-permission="customer_order_view">
+<h2>Исходные заказы SAP и решения ERP</h2>
+<label>Склад <input id="sapAdmissionWare" type="number" min="1" placeholder="Текущий доступный склад"></label>
+<button id="sapAdmissionRefresh">Обновить источники</button>
+<table><thead><tr><th>Заказ</th><th>Склад</th><th>Магазин</th><th>Доставка</th><th>Допуск</th><th>Состояние исполнения</th></tr></thead><tbody id="sapAdmissionRows"></tbody></table>
+<p id="sapPreparationReadiness" role="status"></p><p id="sapAdmissionDetail" role="status">Выберите источник SAP.</p>
+<label>Хэш исходного содержания <input id="sapAdmissionHash" readonly style="width:100%"></label>
+<h3>Исходная потребность SAP</h3><table><thead><tr><th>Артикул</th><th>Количество</th><th>Исходная единица</th></tr></thead><tbody id="sapAdmissionDemand"></tbody></table>
+<p>Допуск и исполнение показываются отдельно от сохранённого результата первого импорта. Исходные количества и даты сохраняются.</p>
+</article>
+<article class="panel" data-permission="sap_store_decision_import">
+<h2>Импорт XML-решения ERP</h2><input id="sapAdmissionXml" type="file" accept=".xml,application/xml">
+<button id="sapAdmissionImport">Обработать исходное решение</button><p id="sapAdmissionImportMessage" role="status"></p>
+<p>Файл содержит исходный Sender, MessageId, DecisionId, номер заказа, хэш, версию и решение. При потере ответа повторяется тот же файл.</p>
+</article>
+<section class="panel" data-permission="customer_order_import" id="sapAutoPreparation">
+<h2>Автоматическая подготовка СТ</h2>
+<p>Состав рассчитывается по целым коробкам, нормам товара и порядку комплектования. Остатки меняются при исполнении складских заданий.</p>
+<div class="inline-form">
+<label>Исходный заказ SAP <input id="sapAutoOrder" inputmode="numeric"></label>
+<label>Масса товара на место, кг <input id="sapAutoMass" inputmode="decimal" placeholder="Укажите предел"></label>
+<label>Объём товара на место, м³ <input id="sapAutoVolume" inputmode="decimal" placeholder="Укажите предел"></label>
+<label>Максимум мест <input id="sapAutoCount" inputmode="numeric" value="100"></label>
+</div>
+<p>Пределы относятся к товару. Учитывайте грузоподъёмность тары при их выборе. Расчёт объёма не подтверждает геометрию укладки.</p>
+<a id="sapAutoAssignment" hidden>Открыть карточку СТ и назначение рейса</a>
+<button id="sapAutoCurrent">Прочитать текущую СТ</button>
+<button id="sapAutoRead">Рассчитать состав</button>
+<table class="rights-table"><thead><tr><th>Место</th><th>Группа</th><th>Товар</th><th>Базовое количество</th><th>Масса места, кг</th><th>Объём места, м³</th><th>Температурные требования</th></tr></thead><tbody id="sapAutoRows"></tbody></table>
+<button id="sapAutoSave" disabled>Подготовить СТ по предложению</button>
+<button id="sapAutoRetry" disabled>Повторить сохранённый запрос</button>
+<button id="sapAutoResolve" disabled>Проверить исход запроса</button>
+<button id="sapAutoRecover" hidden>Прочитать заказ и архивировать повреждённый запрос</button>
+<p id="sapAutoPending" role="status"></p><p id="sapAutoMessage" role="status"></p>
+</section>
+<section class="panel" data-permission="customer_order_import"><h2>Укладка исходного заказа SAP в прежнюю СТ</h2>
+<label>Номер исходного заказа<input id="splOrder" inputmode="numeric"></label><button id="splRead">Предложить по норме товара</button>
+<table><thead><tr><th>Товар</th><th>Норма на паллету</th><th>Вложенность коробки</th><th>Число паллет</th></tr></thead><tbody id="splArticleRows"></tbody></table>
+<button id="splRecalculate">Пересчитать с выбранным числом паллет</button>
+<table><thead><tr><th>Паллета</th><th>Товар</th><th>Количество в базовых единицах</th></tr></thead><tbody id="splPalletRows"></tbody></table>
+<button id="splSave" disabled>Подготовить прежнюю СТ</button><button id="splRetry" disabled>Повторить сохранённую команду</button>
+<button id="splResolve" disabled>Проверить исход сохранённой команды</button><p id="splPending" role="status"></p><p id="splMessage" role="status"></p></section><section id="orderDeliveryPanel" class="panel" data-permission="customer_fulfillment_view"><h2>Отгрузка и приёмка заказа</h2><p id="orderDeliveryStatus">Выберите заказ</p><table class="rights-table"><thead><tr><th>Товар</th><th>Ед.</th><th>Отгружено</th><th>Принято магазином</th><th>Недостача магазина</th><th>Отказ</th><th>Повреждено</th><th>Не получено из исходной отгрузки</th><th>Не распределено по владельцам</th><th>Остаётся потерянным в транспорте</th><th>История транспортной недостачи</th><th>Найдено на складе</th></tr></thead><tbody id="orderDeliveryRows"></tbody></table><p>Неполученное количество уменьшается только фактической приёмкой покупателя. История недостачи и найденный на складе товар показаны отдельно; находка не означает приёмку покупателем.</p><p id="orderDeliveryCases"></p><p id="orderDeliveryOwners"></p><div id="orderDeliveryLineage"></div></section><section class="panel order-picking-panel" id="orderPickingPanel" data-permission="pick_plan_view"><h2>Складское обеспечение выбранного заказа</h2>
+<button id="orderPickRefresh" title="Прочитать существующие планы выбранного заказа; новый план не создаётся.">Показать планы и обеспечение</button>
+<div data-permission="pick_plan_create"><label>Стратегия<select id="orderPickStrategy" title="Использовать существующий FEFO или FIFO планировщик."><option value="FEFO">FEFO — ближайший срок годности</option><option value="FIFO">FIFO — первая поступившая партия</option></select></label><button id="orderPickCreate" disabled title="Создать план прежним складским планировщиком, если у заказа нет действующего плана.">Подготовить складское исполнение</button></div>
+<p id="orderPickStatus" role="status">Выберите заказ и прочитайте его планы.</p>
+<div class="rights-table-wrap"><table class="rights-table"><thead><tr><th>План</th><th>Статус</th><th>Потребность</th><th>Обеспечено</th><th>Недостача</th><th>Заданий</th><th>Резервов</th><th>Следующее действие</th></tr></thead><tbody id="orderPickRows"></tbody></table></div>
+<a id="orderPickReceiving" hidden data-permission="sap_supply_view" title="Открыть основания SAP для приёмки на склад этого заказа. Сам заказ клиента не является основанием приёмки.">Открыть приёмку склада →</a>
+<a id="orderPickWaves" href="wave-replenishment.html" data-permission="pick_wave_view" title="Открыть существующее рабочее место волн выбранного склада.">Перейти к волнам и складским заданиям →</a>
+<button id="orderPickRetry" disabled title="Отправить сохранённую команду с прежним идентификатором; повтор вернёт прежний план.">Повторить сохранённую команду</button>
+<button id="orderPickArchive" title="После чтения текущих планов сохранить исходный запрос в архив. Не повторяет создание плана.">Перечитать и архивировать сохранённое создание</button></section><article id="preparedLayoutPanel" class="panel order-picking-panel">
+ <h2>Укладка подготовленной СТ</h2><p>Перенос целой строки между местами одной СТ. Уже связанные с фактическим товаром места изменяются в процессе пересборки.</p>
+ <button id="plRead" type="button">Показать текущую укладку</button>
+ <div class="rights-table-wrap"><table class="rights-table"><thead><tr><th>Место СТ</th><th>Товар</th><th>Количество</th><th>Ед.</th><th>Коробки</th><th>Масса</th></tr></thead><tbody id="plCurrentRows"></tbody></table></div>
+ <div class="rights-toolbar"><label>Строка для переноса<select id="plRow"></select></label><label>В место СТ<select id="plTarget"></select></label><button id="plPreview" type="button">Сравнить укладку</button></div>
+ <div id="plComparison" hidden><section><h3>До изменения</h3><div class="rights-table-wrap"><table class="rights-table"><thead><tr><th>Место СТ</th><th>Товар</th><th>Количество</th><th>Ед.</th><th>Коробки</th><th>Масса</th></tr></thead><tbody id="plBeforeRows"></tbody></table></div>
+ </section><section><h3>После изменения</h3><div class="rights-table-wrap"><table class="rights-table"><thead><tr><th>Место СТ</th><th>Товар</th><th>Количество</th><th>Ед.</th><th>Коробки</th><th>Масса</th></tr></thead><tbody id="plAfterRows"></tbody></table></div></section></div>
+ <label>Причина изменения<input id="plReason" maxlength="500" placeholder="Например, согласование с отбором целых паллет"></label>
+ <button id="plMove" type="button" disabled>Подтвердить перенос строки</button><button id="plArchive" type="button" hidden>Сохранить отказ в архив и перечитать</button>
+ <p id="plStatus" role="status" aria-live="polite">Выберите заказ и покажите укладку.</p>
+</article>
+<section class="panel order-picking-panel" id="orderWavePlanning" data-permission="pick_wave_view">
+<h2>Волна складского исполнения</h2>
+<p>Включите обеспеченный план в волну, рассчитайте её и проверьте задания перед запуском.</p>
+<label>План заказа<select id="opWavePlan" title="Выбрать существующий обеспеченный план этого заказа"></select></label>
+<label>Волна склада<select id="opWaveSelect" title="Выбрать существующую волну склада заказа"></select></label>
+<button id="opWaveRead" title="Прочитать последние100 волн выбранного склада">Показать волны</button>
+<label>Название новой волны<input id="opWaveName" maxlength="255" title="Название для создания новой волны на складе заказа"></label>
+<button id="opWaveCreate" data-permission="pick_wave_create" title="Создать волну без автоматического выпуска заданий">Создать волну</button>
+<button id="opWaveAdd" data-permission="pick_wave_create" title="Включить план в выбранную волну прежним механизмом WMS">Включить план</button>
+<button id="opWaveCalculate" data-permission="pick_wave_calculate" title="Рассчитать задания и готовность выбранной волны">Рассчитать волну</button>
+<button id="opWaveLaunch" data-permission="pick_wave_launch" title="Запустить рассчитанную волну через действующее ядро">Запустить волну</button>
+<button id="opWaveRetry" title="Проверить исход создания либо продолжить сохранённое действие">Продолжить сохранённое действие</button>
+<p id="opWaveStatus" role="status"></p>
+<a id="opWaveOpen" hidden title="Открыть состав, готовность, задания и исполнение выбранной волны">Открыть складское исполнение →</a>
+</section></main>
     </div>
+
+<dialog id="tpDialog" class="trip-picker" aria-labelledby="tpTitle">
+<header class="trip-picker-heading"><div><div class="eyebrow">НАЗНАЧЕНИЕ СТ</div><h2 id="tpTitle">Выберите рейс</h2><p id="tpSubtitle"></p></div><button id="tpClose" title="Закрыть окно без назначения СТ" type="button" aria-label="Закрыть выбор рейса">×</button></header>
+<form id="tpFilters" class="trip-filters">
+<label>Дата с<input id="tpFrom" title="Начальная дата поиска допустимых рейсов" type="date"></label><label>Дата по<input id="tpTo" title="Конечная дата поиска; период до 31 календарного дня" type="date"></label>
+<label>Район<input id="tpDistrict" title="Фильтр по району магазина в составе рейса" maxlength="80" placeholder="Название или часть названия"></label>
+<label>Номер магазина<input id="tpStore" title="Точный код магазина; ведущие нули сохраняются" maxlength="80" placeholder="Например, 0042"></label>
+<button id="tpSearch" title="Прочитать подходящие рейсы из существующей ТМС" type="submit">Найти рейсы</button></form>
+<p id="tpMessage" class="trip-picker-message" role="status"></p>
+<div class="trip-list-wrap"><div id="tpEmpty" class="waiting-empty">Выберите период поиска.</div>
+<table id="tpTable" hidden><thead><tr><th>Рейс</th><th>Дата</th><th>Машина</th><th>Районы</th><th>Магазины</th><th>Паллет в плане</th><th></th></tr></thead><tbody id="tpRows"></tbody></table></div>
+<footer class="trip-picker-footer"><span id="tpCount"></span><button id="tpNext" type="button" disabled>Следующие рейсы</button></footer></dialog>
     <script src="admin-nav.js?v=20260517-navmodule"></script>
     <script src="admin-auth.js?v=20260517-cleanui"></script>
-    <script src="customer-orders.js?v=20260517-cleanui"></script>
-  </body>
+    <script src="customer-orders.js?v=20261014-1154"></script>
+    <script src="sap-store-admission.js"></script><script src="store-calendar.js"></script><script src="order-delivery.js?v=20261014-1287"></script><script src="order-execution.js?v=20261013-1023"></script>
+  <script src="stock-pool.js"></script><script src="weighted-plan-choice.js"></script><script src="weighted-plan-approval.js"></script><script src="wave-command-intent.js?v=20261013-890"></script><script src="sap-preparation-layout.js?v=20261013-1115"></script><script src="sap-automatic-preparation.js?v=20261014-1148"></script><script src="st-trip-picker.js?v=20261014-1221"></script><script src="sap-trip-picker.js?v=20261014-1221"></script><script src="order-picking-workspace.js?v=20261014-1229"></script><script src="order-wave-planning.js"></script><script src="order-prepared-layout.js"></script></body>
 </html>

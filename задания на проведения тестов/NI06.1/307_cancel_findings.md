@@ -1,0 +1,5 @@
+# Qwen307 cancellation of prephysical finding
+Read wiki/database/nicora_ni061_recovery_cancel_20261011.md/context307_cancel. Initialsource3/partial1/loss2/approvedclaim1alreadycancelled andsamekeyreplacement1pending; sourcefactory notrerun.
+ExactcancelID/body returns1savedresult; changedqty/reason/collisiondenied. CurrentforeignWARE/revokedcontroller denied. Approvedfinding reporter can'tcancelown approval; propercontroller. Nativeouterrollback no cancel/outbox/quotaeffects. Stock/UNIT/QR/loss/customer notchanged bycancel; history notdeleted.
+Oldcancelled approval cannotphysicalreceive/newapproval; physicalreceived case cannotcancel. Actualrace cancel-vs-receive sameLOSSROW: one terminal outcome; no both APPLIED/no duplicate P/UNIT. Ifreceive wins canceldenied, ifcancelwins receiveNoP. Rolledcancel doesn'tmasklosshistory; newreport exactsamekey allowed once underactivequotaselection. Bound1000includescancelled history.
+SourceNative303/306buyer3 preserved, pendingERP/Gov notACK. API andrawUI durableOP/selectedcase/currentactor clearQR; historyshowscancel distinctly. Report independentexecution separately fromauthor evidence.

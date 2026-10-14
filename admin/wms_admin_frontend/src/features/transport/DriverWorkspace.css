@@ -1,0 +1,27 @@
+body:has(.driver-shell),body:has(.driver-login) {min-width:0;}
+body:has(.driver-shell) #root,body:has(.driver-login) #root {min-width:0;}
+.driver-shell {width:100%;max-width:760px;margin:auto;}
+.driver-shell section.driver-st-card {display:block;margin:12px;}
+.driver-shell section.driver-st-card h2 {font-size:20px;margin:0 0 8px;}
+.driver-shell section.driver-st-card p {line-height:1.5;overflow-wrap:anywhere;}
+.driver-shell section.driver-st-card fieldset {min-width:0;border:1px solid #475569;border-radius:10px;padding:12px;margin:12px 0;}
+.driver-shell section.driver-st-card label {display:block;font-size:14px;line-height:1.5;margin:12px 0;}
+.driver-shell section.driver-st-card input:not([type=checkbox]),.driver-shell section.driver-st-card select,.driver-shell section.driver-st-card textarea {
+ display:block;width:100%;box-sizing:border-box;min-height:46px;border:1px solid #64748b;border-radius:8px;background:#0f172a;color:#f8fafc;padding:10px;font:inherit;margin-top:6px;
+}
+.driver-shell section.driver-st-card input[type=checkbox] {width:20px;height:20px;vertical-align:middle;margin-right:8px;}
+.driver-shell section.driver-st-card button {min-height:46px;max-width:100%;white-space:normal;overflow-wrap:anywhere;padding:10px 14px;background:#2563eb;color:white;border:0;border-radius:8px;font:inherit;}
+.driver-shell section.driver-st-card button:disabled {background:#475569;opacity:.7;cursor:default;}
+.driver-shell .driver-tabs {position:sticky;top:0;z-index:2;background:#1e293b;}
+.driver-shell .driver-tab {min-height:48px;}
+.driver-shell .driver-st-addr {overflow-wrap:anywhere;}
+.driver-login-card {width:min(360px,calc(100vw - 48px));}
+.driver-login-card fieldset {border:0;padding:0;margin:0;}
+.driver-login-card label {display:block;text-align:left;color:#cbd5e1;font-size:14px;margin-top:12px;}
+.driver-login-card input {margin-top:6px;min-height:48px;text-align:left;}
+.driver-login-card button {min-height:48px;margin-top:12px;}
+.driver-login-card [role=alert] {color:#fca5a5;margin:16px 0 0;overflow-wrap:anywhere;}
+.driver-pending {margin:12px;padding:16px;border:1px solid #f59e0b;background:#fffbeb;border-radius:12px;color:#78350f;}
+.driver-pending p {font-size:14px;line-height:1.5;}
+.driver-pending button {min-height:48px;border:0;border-radius:8px;background:#92400e;color:white;padding:10px 16px;font-weight:600;}
+.driver-shell button:disabled,.driver-login button:disabled {opacity:.5;cursor:wait;}

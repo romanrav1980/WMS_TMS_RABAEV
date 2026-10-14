@@ -1,0 +1,10 @@
+{
+  "migration_id": "2026-10-11-202-small-box-final-weight",
+  "sha256": {
+    "db/migrations/2026-10-11_ni042_small_final_weight/000_before_policy.sql": "e81390a6cb64d2fb5d60e56be89510da32044af57478dcc31bcfdffd7e317cb2",
+    "db/migrations/2026-10-11_ni042_small_final_weight/000_before_gate.sql": "e5f4286a31d994fb97f06023972e554be5e86610f5a704dc03441c40fb40f108",
+    "db/migrations/2026-10-11_ni042_small_final_weight/000_before_schemas.py": "c2bc476c70fa4c0fbb898fec537e3c3176fd564587004d4b523ca253736d0209",
+    "db/migrations/2026-10-11_ni042_small_final_weight/000_before_service.py": "bf04d783de6cbd34da56f0ecaf2222d8fbdfc79fbb2ee16531ec3ec32111ddfc"
+  },
+  "recovery": "Fresh current QC contracts and legacy DTO/service preserved; additive defaultoff type flag, forward repair if history depends on it; no DB copy"
+}

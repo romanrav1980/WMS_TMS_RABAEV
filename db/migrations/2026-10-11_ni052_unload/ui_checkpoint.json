@@ -1,0 +1,7 @@
+{
+  "sha256": {
+    "db\\migrations\\2026-10-11_ni052_unload\\000_before_transport-loading.js": "74f824652e916ea794ec17c4a8902dda5c2f55cf0bc24f4c70de164942035d80",
+    "db\\migrations\\2026-10-11_ni052_unload\\000_before_transport-loading.html": "ff74dcd0b997e0c1a7b2483357edf03aa31fcd42ab59e51cccff0eb5fe7d520a"
+  },
+  "note": "Fresh UI source before unloading extension. Initial212 checkpoint covers actual root/guards/core contracts and transport contracts/routes/repository. Main/public/composition glue undo reconstructed from recorded narrow edits, not claimed byte-exact original capture."
+}

@@ -1,0 +1,22 @@
+{
+  "migration_id": "2026-10-11-212-standalone-case-unload",
+  "sha256": {
+    "db/migrations/2026-10-11_ni052_unload/000_before_root.sql": "8b07dea2ce8d46102caedf8e4720481f7212a2ed7e5364b177552075cb2a3e59",
+    "db/migrations/2026-10-11_ni052_unload/000_before_balance.sql": "74aac785ac673aa4d9e5d21a48379c495c74945afcde136fe214a4861f18b436",
+    "db/migrations/2026-10-11_ni052_unload/000_before_reserve.sql": "43bb106d78043a3bf17e82d8bba84a1cad2fc96123e40fb2d2bd12e65c9ceb78",
+    "db/migrations/2026-10-11_ni052_unload/000_before_fulfillment.sql": "cfef11bc0405a5a4afa516a11a3f8f879ac0fdacf462440360cc16602878bf45",
+    "db/migrations/2026-10-11_ni052_unload/000_before_load_guard.sql": "a4b093772d31f9f49878fe57b1d6b137b7498788a350e7f61e00ed7360a31456",
+    "db/migrations/2026-10-11_ni052_unload/000_before_member_guard.sql": "e20e39326485346ae2170a281c45de8e4fd8821288dc7c1759b095305154ca98",
+    "db/migrations/2026-10-11_ni052_unload/000_before_qc_guard.sql": "d2229e25a883783eeb657d9d56305ecacd8bea9b1d90fe8467d806d4a7778121",
+    "db/migrations/2026-10-11_ni052_unload/000_before_sample_guard.sql": "b26fb13a6a66e0faef85c54601e30b659035819c475729a8d51a20815f8bd2e8",
+    "db/migrations/2026-10-11_ni052_unload/000_before_st_guard.sql": "7c9e8c7c8d624a5446da1a6d058397c6a4700b65b7f7230f6e687b3b1d5565d4",
+    "db/migrations/2026-10-11_ni052_unload/000_before_constraints.json": "56f88623866427ffc776e4eca48cb7e533f8991783bc45c9af8256517638fed4",
+    "db/migrations/2026-10-11_ni052_unload/000_before_fulfillment_columns.json": "94d5e26966e7ee7e08b14245f1bfe9dddc87dd9fd9a32b06d37d5e2dddb3481c",
+    "db/migrations/2026-10-11_ni052_unload/000_before_contracts_stock.py": "c504d9358ac1e7ad69e2ccde7b8904aa74a016423d6575e392667e53280c4879",
+    "db/migrations/2026-10-11_ni052_unload/000_before_loading_routes.py": "4cfedc8e226c9dd0bc932f920b8316dd31e54eaebac59dc5c6292b2642e920dd",
+    "db/migrations/2026-10-11_ni052_unload/000_before_loading.py": "f16401bd531fe4dc0de05f1bf3efed7e940264d77bf9e28a6961c16548294c06",
+    "db/migrations/2026-10-11_ni052_unload/000_before_contracts.py": "af694af4573dffcb7f589d68dab7f5908edae3cfeb665380a6253d5aafdb2527",
+    "db/migrations/2026-10-11_ni052_unload/000_before_current_runtime_manifest.json": "23fc7ee4f6bda2f21379e7e1af4b2d7ad09767cdfbff722ab8081084957fa2da"
+  },
+  "recovery": "Fresh exact root/stock owner/specACL/load/member/QC guards/application contract; additive immutable unloading journal and source status. Rollback only without unload history; after actual goods restoration use forward repair or explicit later physical load, no deleting movements/database copy."
+}

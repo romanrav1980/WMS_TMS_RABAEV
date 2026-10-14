@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const el = id => document.getElementById(id);
-  let lots = [], busy = false, loadedRevision = null, loadedCell = null;
+  let lots = [], busy = false, loadedRevision = null, loadedCell = null, loadedArticle = null;
   const message = text => { el("countMessage").textContent = text; };
   const context = () => {
     const auth = window.wmsAdminAuth;
@@ -25,8 +25,10 @@
     try {
       const revision = el("countRevision").value.trim(), cell = el("countCell").value.trim();
       if (!/^[1-9][0-9]*$/.test(revision) || !cell) throw new Error("Укажите документ и ячейку.");
-      const data = await api("/api/inventory/stock-posting/inventory/" + revision + "/lots?cell=" + encodeURIComponent(cell));
-      lots = data.lots; loadedRevision = revision; loadedCell = cell;
+      const article = el("countArticle").value.trim();
+      const data = await api("/api/inventory/stock-posting/inventory/" + revision + "/lots?cell=" + encodeURIComponent(cell) + (article ? "&article=" + encodeURIComponent(article) : ""));
+      lots = article ? data.lots.filter(lot => lot.article === article) : data.lots;
+      loadedRevision = revision; loadedCell = cell; loadedArticle = article;
       const rows = lots.map((lot, index) => {
         const tr = document.createElement("tr");
         for (const value of [lot.uid, lot.article, lot.expiry_date, lot.physical_qty, lot.hard_qty, lot.unit]) {
@@ -63,13 +65,15 @@
       if (!retry && body) throw new Error("Сначала повторите сохранённую команду: " + body.operation_id);
       if (!body) {
         if (retry) throw new Error("Сохранённой команды нет.");
-        if (loadedRevision !== el("countRevision").value.trim() || loadedCell !== el("countCell").value.trim()) throw new Error("Загрузите выбранный документ и ячейку повторно перед проводкой.");
+        if (loadedRevision !== el("countRevision").value.trim() || loadedCell !== el("countCell").value.trim() || loadedArticle !== el("countArticle").value.trim()) throw new Error("Загрузите выбранный документ и ячейку повторно перед проводкой.");
         const reason = el("countReason").value.trim(); if (!reason) throw new Error("Укажите причину пересчёта.");
+        const taskId = el("countInventoryTask").value.trim();
+        if (taskId && (!/^[1-9][0-9]*$/.test(taskId) || !loadedArticle)) throw new Error("Укажите корректное задание и его артикул.");
         const counts = [];
         for (const [index, lot] of lots.entries()) {
           const quantity = document.querySelector('[data-count="' + index + '"]').value.trim();
           if (!/^[0-9]{1,18}(\.[0-9]{1,9})?$/.test(quantity)) throw new Error("Количество должно быть неотрицательным числом с точкой.");
-          if (quantity !== String(lot.physical_qty)) {
+          if (quantity !== String(lot.physical_qty) || taskId) {
             const rawCodes = document.querySelector('[data-units="' + index + '"]').value.split(/\r?\n/).filter(code => code.length > 0);
             const profile = document.querySelector('[data-profile="' + index + '"]').value;
             const scans = rawCodes.map(code => ({ ...JSON.parse(profile), code }));
@@ -77,9 +81,9 @@
               expected_stock_version: lot.stock_version, scans });
           }
         }
-        if (!counts.length) throw new Error("Нет изменённых строк.");
+        if (!counts.length && !taskId) throw new Error("Нет изменённых строк.");
         body = { operation_id: "INVENTORY.UI:" + crypto.randomUUID(),
-          revision_id: Number(el("countRevision").value), reason, counts };
+          revision_id: Number(el("countRevision").value), reason, counts, ...(taskId ? {inventory_task_id: Number(taskId)} : {}) };
         localStorage.setItem(key, JSON.stringify(body)); pending();
       }
       priorUnknown = !!localStorage.getItem(key + ":delivery");
@@ -119,6 +123,8 @@
   window.addEventListener("storage", pending);
   const source = new URLSearchParams(location.search);
   if (/^[1-9][0-9]*$/.test(source.get("revision_id") || "")) el("countRevision").value = source.get("revision_id");
+  if (/^[1-9][0-9]*$/.test(source.get("inventory_task_id") || "")) el("countInventoryTask").value = source.get("inventory_task_id");
+  if (source.get("article")) el("countArticle").value = source.get("article");
   if (source.get("cell")) el("countCell").value = source.get("cell");
   function onAuthenticated() { pending(); if(el("countRevision").value && el("countCell").value)load(); }
   window.addEventListener("wms-admin-auth-ready", onAuthenticated);

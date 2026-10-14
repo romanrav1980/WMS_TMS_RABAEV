@@ -1,0 +1,2 @@
+# Qwen:197
+Run ni042_weight_unit_pin_case.py TAG 8 and TAG 12. Original10 remains; existing native planner picks approved unit, source20/full replenishment actual volume. HARD key equals approved registry key, wrong otherbox refused, current SKU/source/version/ownership and quantity match. Native CASE actual8or12/replay/no split/no second writer. Return cancels task but retains FACT; do not bypass whole-plan cancellation refusal after historical picks. Current pool underweight demand is198 next. Inspect native read bounded indexed task/line/key/current policy.

@@ -1,0 +1,9 @@
+{
+  "migration_id": "2026-10-11-196-weight-choice-native-plan",
+  "sha256": {
+    "db/migrations/2026-10-11_ni042_weight_choice_plan/000_before_picking.sql": "e4be458e57c6a6b4c0d0c1e00d7b5e89763e827cbfc106ab0737481cd41b9213",
+    "db/migrations/2026-10-11_ni042_weight_choice_plan/000_before_choice.sql": "b1849a76c50c9ab114c4776337aacf1f9517f94ae13dab1b7da4debc1eca0e43",
+    "db/migrations/2026-10-11_ni042_weight_choice_plan/000_before_guard.sql": "296fca72ebe56c9c4c58a8e239a5e48522d509fd99f69339858182f9f170cf21"
+  },
+  "recovery": "Fresh existing planner/choice source and guard saved; pure/private metadata binder with native old plan/SOFT transaction; forward repair once USED history exists; no DB copy"
+}

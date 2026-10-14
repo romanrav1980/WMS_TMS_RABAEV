@@ -81,10 +81,15 @@
             </div>
           </article>
         </section>
-      </main>
+      <section class="panel" data-permission="warehouse_settings_edit"><h2>Адрес отправления транспорта со склада</h2>
+<label>Склад<input id="wdWare" inputmode="numeric"></label><button id="wdRead">Прочитать настройки адреса</button>
+<label>Код существующего адреса<input id="wdAddress" maxlength="200"></label><p>Адрес должен иметь координаты в справочнике. Пустое значение отменяет настройку, сохраняя историю.</p>
+<label>Основание изменения<textarea id="wdReason" maxlength="500"></textarea></label>
+<button id="wdSave" disabled>Сохранить адрес отправления</button><button id="wdRetry" disabled>Повторить сохранённую команду</button>
+<button id="wdResolve" disabled>Проверить исход</button><p id="wdPending" role="status"></p><p id="wdMessage" role="status"></p></section></main>
     </div>
     <script src="admin-nav.js?v=20260517-navmodule"></script>
     <script src="admin-auth.js?v=20260517-cleanui"></script>
     <script src="warehouses.js?v=20260517-cleanui"></script>
-  </body>
+  <script src="warehouse-depot.js"></script></body>
 </html>

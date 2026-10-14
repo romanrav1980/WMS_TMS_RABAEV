@@ -1,0 +1,2 @@
+# Qwen403–412
+Retainedctx406 contains source404405(twoSKU/differentprofiles), original2ST/groupHU shipment, immutablegroupplan407 and actualrootreceipt412. Verify source3each/target3each blocked/same6keys9codes/oneTOP twoactive newlinks/oldclosedlinks/nativeevents distinctline numbers/rootoutbox/idempotency/current actor and profileversions/noFFrepeat/protected20. Do notrerun factories/sourceproof after actualreceiving. Independent/industrial/hardware/GovACK notclaimed. Group placement and onward remain.

@@ -1,0 +1,4 @@
+# Qwen: исполнение заказа
+Не запускать старые фабрики. Report21: read-only1931 picked3/remain1 и2133 CASE1131 12EA/version10/FF10/QI/slot224. Отгруженныйфактнеобъявлятьтекущимзапасом.
+Свой domain/Oraclecase: превышение→OVER_PICKED, закрытаяshort→SHORT_CLOSED, short+незавершённые→PARTIAL_REFUSED, резервбезфакта→RESERVED, canceled строки неpending, canceledexcess не скрывать. Несогласованнаяконверсия сохраняет единицыпотребности и фактараздельно; никакогосуммированияразныхSKU/UOM.
+get_fulfillment требуетactor; currentRUSERS/WARE/rights/scopedread/200facts/200compositions/2000executionlines. Проверить actualforeignWARE отдельно от no-rights; missing404/currentCASEversionstalewarning/SHIPPEDhistory. Race oldorder/oldactor/API/duplicatebindings/deeplink/keyboard. Скриншоты/SQLрешение; непроверенное неPASS.

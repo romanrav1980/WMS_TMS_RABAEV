@@ -1,0 +1,11 @@
+{
+  "migration_id": "2026-10-11-217-fullpal-original-unload",
+  "sha256": {
+    "db/migrations/2026-10-11_ni052_unload_fullpal/000_before_unload.sql": "cfbde1e66052f6336a691c77dca161e96de56201e827781d2399940389d62747",
+    "db/migrations/2026-10-11_ni052_unload_fullpal/000_before_fulfillment.sql": "2343911e75932c334470d83253e1fdae5f16a6640c0891bd4833748a93b5bb39",
+    "db/migrations/2026-10-11_ni052_unload_fullpal/000_before_loading.py": "f53f2131b9a59f37dba48126c2bc5c9dd874be1fbe8b8f2f6df8852e47822ca3",
+    "db/migrations/2026-10-11_ni052_unload_fullpal/000_before_transport-unloading.js": "688b8d7293ad13d419c30be26431ac693adbfec3d71a80065f06eb358993f6c2",
+    "db/migrations/2026-10-11_ni052_unload_fullpal/000_before_current_runtime_manifest.json": "01f5e1c9af6ae438a5ca8e4a785ec239bfc085613da10a02a1e036ccd8a58daf"
+  },
+  "recovery": "Fresh owner/checkpoint. Restore original positive P/H/units through same root; old full-pallet task and shipping history retained; current picked physical stock version refreshed in fulfillment. Forward repair after actual stock reversal."
+}

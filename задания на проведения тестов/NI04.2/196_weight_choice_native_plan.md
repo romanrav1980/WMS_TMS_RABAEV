@@ -1,0 +1,2 @@
+# Qwen:196
+Run ni042_weight_choice_plan_case.py dev. Assert original10/planned8 and12/only approved source SOFT, outer rollback removes binding and plan, concurrent one active plan/current actor scope, changed strategy409, canceled PT required before choice cancellation, immutable history. Old ordinary planner remains. Inspect original demand gap pending, not shipment. Test pooled call timeout/cleanup discard and canonical <=16KB VARCHAR-to-CLOB binding with 1000-character Unicode reason; unknown outcome same ID.197 HARD key pin remains pending.

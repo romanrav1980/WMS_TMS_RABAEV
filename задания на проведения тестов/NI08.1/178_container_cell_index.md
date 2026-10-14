@@ -1,0 +1,4 @@
+#178: узкий доступ к контейнерам ячейки
+Миграция db/migrations/2026-10-11_ni081_container_cell. RRL_PALLETS_HUCELL_I1 expression CASE WHEN HU_KIND='CONTAINER' THEN HU_CURRENT_CELL END. Только ненулевые контейнерные места, без виртуальной колонки и без индекса по изменяемому P/H.
+Scripts ni081_container_cell_existing_case.py compares old/new current data in same read-only snapshot;7 cells equal, VALID index84rows; measured client126.991→3.541ms. Native empty HU.CASE:61016ccdb0 move toQI.../backQCL... root no quantity journal. New native count V$SQL0.825ms/4, not throughput acceptance.
+Проверить matching expression, empty/NULL cells, two roots/parent exclusion, named index existing shape and current actor; do not reset DONE or create millions fake facts. No broad load/Qwen execution claimed.

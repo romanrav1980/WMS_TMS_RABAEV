@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-from ....auth import AdminUser, require_permission
+from ...platform.public import AdminUser, require_permission
 from ..contracts import ReceiptPolicyUpdate
 from ..application.policy import PolicyConflict, ReceiptPolicyService
 
@@ -32,3 +32,5 @@ def save_receiving_policy(articul: str, request: ReceiptPolicyUpdate,
         raise HTTPException(409, str(exc)) from exc
     except LookupError as exc:
         raise HTTPException(404, str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc

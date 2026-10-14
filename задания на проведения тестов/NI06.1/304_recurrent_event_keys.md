@@ -1,0 +1,5 @@
+# Qwen304 recurrent loss event keys
+Read wiki/database/nicora_ni061_recurrent_loss_20261011.md. Same physicalkey may have multiple immutable event rows; never delete oldbook.
+Own actual secondcycle requires legitimate return/newshipment/newpartialreceipt, not forged UID/status or sourcebirth replay. New native shortage confirmation after old APPLIED sameLOSS recovery permitted; unresolved old/new loss rejects source command and ordinary unit movement. Concurrent sameunit capture/confirm mustnot create2unresolved facts; existing UNIT60 and underlockrecapture authoritative.
+Capturedmissing key/qty/UOM/version/currentoriginalUID/ISSUED/noH requiredbytrigger; arbitrarydirectINSERT20863, update/deleteimmutable. Composite duplicate sameevent/key fails. Newevent doesnotduplicate stock. Foreignware/revokedrights/replay/collision preserveoldjournals.
+Rollback singlekey conversion refuses existing recurrentkeys. Report actualsecondphysicalcycle evidence separately; currently schema/history/currentactive0 only verified.

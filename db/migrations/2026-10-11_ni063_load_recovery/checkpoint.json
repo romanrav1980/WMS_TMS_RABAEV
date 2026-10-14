@@ -1,0 +1,18 @@
+{
+  "migration_id": "2026-10-11-216-load-tare-return-recovery",
+  "sha256": {
+    "db/migrations/2026-10-11_ni063_load_recovery/000_before_root.sql": "6929d6c3f9556afb2b7104329730e7959a1054cff3fac4fc3a4a45e9989aec14",
+    "db/migrations/2026-10-11_ni063_load_recovery/000_before_book.sql": "1728cffd90bf28962f9c2eea8c61c4bcb8d1503b9e50ca35ec6d06c96f39cc66",
+    "db/migrations/2026-10-11_ni063_load_recovery/000_before_unload.sql": "f9798fc4a771407e8a2740236cb4972a54a52a307e15cf03519b2acb1bbb14f7",
+    "db/migrations/2026-10-11_ni063_load_recovery/000_tare_assert_write.sql": "e6c3071f10832091d090c74fc33446d71423835c75e5d521af15eb95b3177f97",
+    "db/migrations/2026-10-11_ni063_load_recovery/000_accept_columns.json": "6be23c5c0e6904d0ea82d19f51512fffa5d8b6e1ea4c226e45c8c2d62e1930ab",
+    "db/migrations/2026-10-11_ni063_load_recovery/000_before_tare_assembly_routes.py": "2ec0f7684e743049a1b911e082cae23154998c260ba957ddb26162e47ecd9b24",
+    "db/migrations/2026-10-11_ni063_load_recovery/000_before_current_runtime_manifest.json": "bdaca39ad7a10e9f56d64495b7aac779025fa4bec7c621dc98d8d9cf7635c919",
+    "db\\migrations\\2026-10-11_ni063_load_recovery\\000_before_tare_assembly.py": "038545bf7959fcef720d2bcb0329bf3cb7a914e498b72cceba8eeb331b095091",
+    "db\\migrations\\2026-10-11_ni063_load_recovery\\000_before_contracts_tare_assembly.py": "eb19ae2e1bc2f88909485912a497686bba52df03d5ea439c3d9197ef76952608",
+    "db\\migrations\\2026-10-11_ni063_load_recovery\\000_before_admin-nav.js": "3af8cf110447a8ab47c408bb6a3509fa14cd0e8a04e12c278b1dcba829ced13c",
+    "db\\migrations\\2026-10-11_ni063_load_recovery\\000_before_transport-unloading.js": "878f271fb0c9e3d246e55cbb760af768fe2e95f0c63fac54706c03331f100498",
+    "db\\migrations\\2026-10-11_ni063_load_recovery\\000_before_transport-loading.html": "f16034223693a1fb9638dc8ce78ca2304f0cc1478e29d8c497fd986d823f4f21"
+  },
+  "recovery": "Fresh existing native tare booking/stock root/unload paired source. Native existing physical two-participant vehicle return stays history; append recovery proof and new HELD book. Forward repair after actual recovery, no old transferred book reactivation."
+}

@@ -1,0 +1,226 @@
+{
+  "vehicle_id": 10100,
+  "body": {
+    "operation_id": "VEH.TEMP1152:f4d61d93",
+    "vehicle_id": 10100,
+    "vehicle_size_class": "DEV.TEMP1152",
+    "cargo_length_mm": 6000,
+    "cargo_width_mm": 2400,
+    "cargo_height_mm": 2600,
+    "expected_version": 0,
+    "expected_source_hash": "A922EF79DC3EB7EEC3236815CBFBDF5FA756BF3131AE13453C02FF95F4EE7945",
+    "reason": "Private1152 capability metadata case, not physical measurement",
+    "evidence_reference": "DEV1152:f4d61d93",
+    "temp_min_c": "-20.125",
+    "temp_max_c": "6.250"
+  },
+  "result": {
+    "operation_id": "VEH.TEMP1152:f4d61d93",
+    "vehicle_id": 10100,
+    "version": 1,
+    "vehicle_size_class": "DEV.TEMP1152",
+    "cargo_length_mm": 6000,
+    "cargo_width_mm": 2400,
+    "cargo_height_mm": 2600,
+    "source": {
+      "vehicle_id": 10100,
+      "vehicle_number": "VT1152f4d61d93",
+      "vehicle_type": "10",
+      "pallet_capacity": "20",
+      "max_weight_kg": "10000"
+    },
+    "actor": "admin",
+    "evidence_reference": "DEV1152:f4d61d93",
+    "temperature_capability": {
+      "temp_min_c": "-20.125",
+      "temp_max_c": "6.25",
+      "basis": "FLEET_DECLARED_CAPABILITY",
+      "evidence_reference": "DEV1152:f4d61d93",
+      "measurement_verified": false
+    },
+    "status": "CONFIGURED",
+    "stock_changed": false
+  },
+  "profile": {
+    "base_hash": "A922EF79DC3EB7EEC3236815CBFBDF5FA756BF3131AE13453C02FF95F4EE7945",
+    "vehicle_id": 10100,
+    "base": {
+      "vehicle_id": 10100,
+      "vehicle_number": "VT1152f4d61d93",
+      "vehicle_type": "10",
+      "pallet_capacity": "20",
+      "max_weight_kg": "10000"
+    },
+    "profile": {
+      "operation_id": "VEH.TEMP1152:f4d61d93",
+      "vehicle_id": 10100,
+      "version": 1,
+      "vehicle_size_class": "DEV.TEMP1152",
+      "cargo_length_mm": 6000,
+      "cargo_width_mm": 2400,
+      "cargo_height_mm": 2600,
+      "source": {
+        "vehicle_id": 10100,
+        "vehicle_number": "VT1152f4d61d93",
+        "vehicle_type": "10",
+        "pallet_capacity": "20",
+        "max_weight_kg": "10000"
+      },
+      "actor": "admin",
+      "evidence_reference": "DEV1152:f4d61d93",
+      "temperature_capability": {
+        "temp_min_c": "-20.125",
+        "temp_max_c": "6.25",
+        "basis": "FLEET_DECLARED_CAPABILITY",
+        "evidence_reference": "DEV1152:f4d61d93",
+        "measurement_verified": false
+      },
+      "status": "CONFIGURED",
+      "stock_changed": false
+    },
+    "version": 1,
+    "state": "READY"
+  },
+  "planning": {
+    "basis": "SINGLE_SHARED_TEMPERATURE_ENVIRONMENT",
+    "profile_version": 1,
+    "vehicle_capability_verified": true,
+    "planning_temperature_verified": true,
+    "measurement_verified": false,
+    "operational_admission": false,
+    "feasible_min_c": "2",
+    "feasible_max_c": "6.25",
+    "vehicle_min_c": "-20.125",
+    "vehicle_max_c": "6.25",
+    "status": "DECLARED_CAPABILITY_COMPATIBLE"
+  },
+  "incompatible": {
+    "basis": "SINGLE_SHARED_TEMPERATURE_ENVIRONMENT",
+    "profile_version": 1,
+    "vehicle_capability_verified": true,
+    "planning_temperature_verified": false,
+    "measurement_verified": false,
+    "operational_admission": false,
+    "feasible_min_c": null,
+    "feasible_max_c": null,
+    "vehicle_min_c": "-20.125",
+    "vehicle_max_c": "6.25",
+    "status": "VEHICLE_RANGE_INCOMPATIBLE"
+  },
+  "ledger": [
+    "2026-10-14-1149-vehicle-temperature-profile",
+    "APPLIED"
+  ],
+  "slow_sql": [
+    [
+      "8gjzjvbh5wd2f",
+      4,
+      1.097,
+      4.5
+    ],
+    [
+      "1jh4scra48gj3",
+      2,
+      4.825,
+      62.5
+    ],
+    [
+      "abp7ffdxjqbfy",
+      1,
+      2.659,
+      13
+    ]
+  ],
+  "protected_stock": [
+    20,
+    20
+  ],
+  "state": "DONE",
+  "http": {
+    "profile": {
+      "base_hash": "A922EF79DC3EB7EEC3236815CBFBDF5FA756BF3131AE13453C02FF95F4EE7945",
+      "vehicle_id": 10100,
+      "base": {
+        "vehicle_id": 10100,
+        "vehicle_number": "VT1152f4d61d93",
+        "vehicle_type": "10",
+        "pallet_capacity": "20",
+        "max_weight_kg": "10000"
+      },
+      "profile": {
+        "operation_id": "VEH.TEMP1152:f4d61d93",
+        "vehicle_id": 10100,
+        "version": 1,
+        "vehicle_size_class": "DEV.TEMP1152",
+        "cargo_length_mm": 6000,
+        "cargo_width_mm": 2400,
+        "cargo_height_mm": 2600,
+        "source": {
+          "vehicle_id": 10100,
+          "vehicle_number": "VT1152f4d61d93",
+          "vehicle_type": "10",
+          "pallet_capacity": "20",
+          "max_weight_kg": "10000"
+        },
+        "actor": "admin",
+        "evidence_reference": "DEV1152:f4d61d93",
+        "temperature_capability": {
+          "temp_min_c": "-20.125",
+          "temp_max_c": "6.25",
+          "basis": "FLEET_DECLARED_CAPABILITY",
+          "evidence_reference": "DEV1152:f4d61d93",
+          "measurement_verified": false
+        },
+        "status": "CONFIGURED",
+        "stock_changed": false
+      },
+      "version": 1,
+      "state": "READY"
+    },
+    "same_operation_original_result": true,
+    "trip_temperature": {
+      "basis": "CURRENT_WAREHOUSE_SKU_RULE",
+      "items": [
+        {
+          "warehouse_id": 9807,
+          "articul": "QAUTOc0c2a00c0bA",
+          "temp_min_c": null,
+          "temp_max_c": null,
+          "status": "RULE_NOT_CONFIGURED"
+        },
+        {
+          "warehouse_id": 9807,
+          "articul": "QAUTOc0c2a00c0bB",
+          "temp_min_c": null,
+          "temp_max_c": null,
+          "status": "RULE_NOT_CONFIGURED"
+        }
+      ],
+      "common_min_c": null,
+      "common_max_c": null,
+      "ranges_conflict": false,
+      "all_ranges_configured": false,
+      "vehicle_temperature_verified": false,
+      "sensor_temperature_verified": false,
+      "operational_admission": false,
+      "planning": {
+        "basis": "SINGLE_SHARED_TEMPERATURE_ENVIRONMENT",
+        "profile_version": null,
+        "vehicle_capability_verified": false,
+        "planning_temperature_verified": false,
+        "measurement_verified": false,
+        "operational_admission": false,
+        "feasible_min_c": null,
+        "feasible_max_c": null,
+        "status": "SKU_REQUIREMENTS_UNCONFIRMED"
+      },
+      "vehicle_legacy_mode": "���"
+    }
+  },
+  "screenshots": [
+    "screenshots/45-vehicle-temperature-profile.png",
+    "screenshots/46-vehicle-temperature-profile-mobile.png"
+  ],
+  "date": "2026-10-14",
+  "sql_decision": "Keep existing PK(vehicle,version), unique operation and current one-row profile lookup under original CONFIG fence. Measurements 1.097ms/4.5buffers,4.825ms/62.5buffers,2.659ms/13buffers; no new index. Owner transport/inventory."
+}

@@ -21,6 +21,7 @@
           <label>Водитель / ШК<input id="rtTsdDriver" autocomplete="off" /></label>
           <label>Пароль<input id="rtTsdPassword" type="password" autocomplete="off" /></label>
           <label>Техника<input id="rtTsdEquipment" autocomplete="off" placeholder="RT-01" /></label>
+          <label>Смена ричтраков, ID<input id="rtTsdShiftId" inputmode="numeric" placeholder="Основная или дежурная" /></label>
           <label>Режим
             <select id="rtTsdScope">
               <option value="mine">Мои + свободные</option>
@@ -54,7 +55,7 @@
           <label>Паллет<input id="rtTsdScanPallet" autocomplete="off" inputmode="text" /></label>
           <label>Откуда<input id="rtTsdScanFrom" autocomplete="off" inputmode="text" /></label>
           <label>Куда<input id="rtTsdScanTo" autocomplete="off" inputmode="text" /></label>
-          <label>Коробки факт<input id="rtTsdFactQty" type="number" min="0" step="0.001" inputmode="decimal" placeholder="пусто = план" /></label>
+          <label>Коробки факт<input id="rtTsdFactQty" type="number" min="0" step="any" inputmode="decimal" placeholder="пусто = план" /></label>
         </section>
 
         <section class="tsd-actions" data-permission="warehouse_task_execute">
@@ -75,6 +76,7 @@
       </section>
     </main>
     <script src="admin-auth.js"></script>
-    <script src="reachtruck-tsd.js"></script>
-  </body>
+    <script src="warehouse-task-recovery.js"></script><script src="reachtruck-tsd.js?v=20261013-821"></script>
+  <script src="warehouse-task-scans.js"></script>
+</body>
 </html>

@@ -1,0 +1,18 @@
+{
+  "migration_id": "2026-10-11-226-original-marked-interwarehouse-receive",
+  "sha256": {
+    "db/migrations/2026-10-11_ni061_marked_receive/000_before_rrl_stock_posting_api.sql": "96004763d9c5d8d4d09aad4fde81d51d468a986bea2003a52b98720e31917d61",
+    "db/migrations/2026-10-11_ni061_marked_receive/000_before_rrl_stock_unit_core.sql": "aaf03782240051b7f1b187c1b7f6789a9705427007af92724d625584e5b5635b",
+    "db/migrations/2026-10-11_ni061_marked_receive/000_before_rrl_stock_interware_rec.sql": "11b7fae85419840281de69cf42d19826d55df877db97e5f234855ad3dde83490",
+    "db/migrations/2026-10-11_ni061_marked_receive/000_before_rrl_interware_unit_source.sql": "fcf8f84dc17f9e393ba78e4fefb69c9cfcba79f776e85501561bd8578bc49e01",
+    "db/migrations/2026-10-11_ni061_marked_receive/000_before_rrl_stock_qc_mark.sql": "94a3db499be4f68d9874c41ab3bcd4137f4910fc07d822e4779c77d193b14a64",
+    "db/migrations/2026-10-11_ni061_marked_receive/000_before_rrl_stock_unit_guard.sql": "8d9c62aaffe1379bb6a92421aced578b67d5353245dcbceb800272d643f53a8f",
+    "db/migrations/2026-10-11_ni061_marked_receive/000_unit_dependents.json": "62af4fe4ef8568a061f1523d4b76a931fce7eaabbb0fdc5957a1b63ea1dd27e7",
+    "db/migrations/2026-10-11_ni061_marked_receive/000_before_interwarehouse_routes.py": "92eba9089ae8c6d11ec38d93d0cbec7551c696625e73ed6a0ec4c6bdbd75b24b",
+    "db/migrations/2026-10-11_ni061_marked_receive/000_before_contracts_interwarehouse.py": "afe51a9f479ebbcb6a0f4d994a929b1f0160ce592b4ddfec4979f9951283c93f",
+    "db/migrations/2026-10-11_ni061_marked_receive/000_before_interwarehouse.py": "2e704290d71b3e48a05d5c1a2249e93b96339176009c1644e28552e89d90927a",
+    "db/migrations/2026-10-11_ni061_marked_receive/000_before_interwarehouse.js": "b482d17e8b46cfd787dc50bcca752f9d8992fdd11626f3b91bcd197c0e43028b",
+    "db/migrations/2026-10-11_ni061_marked_receive/000_before_current_runtime_manifest.json": "1f6a829d6f406ca1d1bd15d1e54a03cba6effaa2cb4e30eaeae174bc341cb59b"
+  },
+  "recovery": "Fresh current UNIT/receipt/root/source proof owner and unit guards. Same original physical-unit identities restored at target receiving cell/no new codes/HARD; original ship/journal retained. Forward repair after actual marked receiving."
+}

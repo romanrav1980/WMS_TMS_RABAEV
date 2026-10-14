@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-
+import { TransportTimePreflight } from "./TransportTimePreflight";
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
@@ -811,7 +811,7 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
                 </div>
               ))}
             </div>
-            <div className="gantt-card-actions">
+            <div className="gantt-card-actions"><TransportTimePreflight key={taskCard.tt_id} tripId={taskCard.tt_id} apiBase={API_BASE} headers={apiHeaders()} actor={API_BASIC_AUTH.split(":")[0]} />
               <button className="gantt-card-close-btn" onClick={() => setTaskCard(null)}>Закрыть</button>
             </div>
           </div>

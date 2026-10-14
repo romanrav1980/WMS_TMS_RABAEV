@@ -1,0 +1,15 @@
+# NI08.1 — устойчивый повтор создания кластера,139
+
+Исходный API /api/admin/transport/clusters/{raion}/create-task, поиск района и native TT/ST writers сохранены. ClusterCreateTaskRequest теперь требует operation_id (ASCII1..100). Существующий React caller создаёт ID до отправки, сохраняет body/район в localStorage по API+username без пароля; сетевой сбой/5xx/401/403 сохраняет исходную операцию. Изменённые параметры при неизвестном исходе отклоняются с исходными параметрами; подтверждённый бизнес/input отказ400/404/409/422 снимает pending для исправления. TypeScript typecheck PASS; интерактивное независимое UI acceptance остаётся открытым.
+
+Migration2026-10-10-139-idempotent-existing-cluster APPLIED8/0: RRL_CLUSTER_CREATE_RESULT(request hash/body/actor/original TT FK/result/TZ created), guarded native RRL_CLUSTER_CREATE_API. Уникальный ключ операции сериализует одинаковый повтор; one UOW включает прежнее создание, изменение, общую capacity-проверку и назначение. Права активного RUSERS+transport_dispatch_edit и warehouse scope проверяются перед эффектом/при повторе. Записанный состав СТ и warehouse_ids отражает фактическое назначение после заблокированных проверок, не новый список доступности при retry.
+
+Native SAVEPOINT RRL_CLUSTER139 откатывает все собственные изменения при ошибке, даже если внешний PL/SQL-код перехватывает её и фиксирует остальную транзакцию. Сам пакет не commit, не проводит P/H и не вызывает второй алгоритм распределения. До200 СТ/65536chars sourceJSON/2000chars request; API request bytes<=4000. Результат immutable; прямой update/delete не разрешён. Rollback migration после истории запрещён, исправления forward.
+
+scripts/ni081_cluster_retry_existing_case.py переиспользовал только прежние136 частные источники: ошибка10kg машины не оставила TT/operation; два concurrent запроса CLUSTER139:b40b0303ee3b вернули один33528, точный source snapshot2; changed body409, прямой proof update20863. Свой33528 отменён, машины снова неактивны. Повтор с пустым найденным списком возвращает сохранённый отменённый TT как историю, не создаёт новый.
+scripts/ni081_cluster_http_replay_case.py: настоящий прежний HTTP endpoint после отмены вернул точный saved33528, missing operation422. После перекомпиляции native package первый pooled lease дал503; исходный повтор того жеID дал сохранённый200 без нового TT.
+scripts/ni081_cluster_caught_error_case.py: внешний PL/SQL поймал ошибку неактивной машины и сделал commit; own savepoint оставил0 новых TT и0 proof. Независимая приёмка не объявлена.
+
+Oracle new package/spec/body/guard + stock root/transport136/137 liveVALID. Native cluster cursor mean27.473ms/7 executions; сохранить ограниченные исходные выборки/ключевые индексы, не объявлять throughput. Inventory receiving metadata extraction138 replay preserved original result/events; архитектурные циклы0, прочий общий debt остаётся FAIL.
+
+Дальше NI08.1: окна времени/текущий водитель/тара и согласованное изменение волны-рейса, затем NS59 динамические зоны с approval/drain. Этот срез не закрывает весь NI08.1 или внешние интеграции.

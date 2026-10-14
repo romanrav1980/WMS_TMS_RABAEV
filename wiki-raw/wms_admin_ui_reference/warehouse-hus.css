@@ -1,0 +1,27 @@
+.hu-page{padding:24px;display:grid;gap:20px;max-width:1500px;margin:auto}
+.hu-page .panel{padding:22px}.hu-page h2{margin:0 0 16px;font-size:20px}
+.hu-page label{display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:600;color:#44546b}
+.hu-page input,.hu-page select{padding:11px 12px;border:1px solid #d9e1ec;border-radius:9px;font:inherit;min-width:0;background:white;color:#17304e;width:100%;box-sizing:border-box}
+.hu-page input:focus,.hu-page select:focus{outline:2px solid #a7ccff;border-color:#438cf4}
+.hu-page button{padding:11px 17px;border:1px solid #d7e4f4;background:#eef5ff;color:#205dad;border-radius:9px;font:inherit;font-weight:600;cursor:pointer}
+.hu-page button:hover{background:#dcecff}.hu-page button:disabled{opacity:.5;cursor:default}
+.hu-page .hu-primary{background:#247bed;border-color:#247bed;color:white}.hu-page .hu-primary:hover{background:#176ad5}
+.hu-page .hu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.hu-page .hu-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.hu-page .hu-query{display:flex;align-items:end;gap:12px}.hu-page .hu-query label{flex:1}
+.hu-page .hu-helper{font-size:13px;line-height:1.6;color:#66788e}
+.hu-page #huStatus{padding:10px 14px;background:#f2f7ff;border-radius:8px;white-space:pre-wrap}
+.hu-page #huSummary{font-weight:600;color:#204c7d;margin:14px 0}
+.hu-page .table-wrap{overflow:auto;border:1px solid #e3eaf3;border-radius:10px}
+.hu-page table{width:100%;border-collapse:collapse}.hu-page th{background:#f5f8fd;text-align:left;padding:12px}
+.hu-page td{padding:12px;border-top:1px solid #e9eef5;font-size:13px}.hu-page td:nth-child(2){overflow-wrap:anywhere;max-width:420px}
+.hu-page details{border:1px solid #e2e9f3;border-radius:10px;padding:16px;margin-top:20px}
+.hu-page summary{cursor:pointer;font-weight:600;color:#234467}.hu-page details[open] summary{margin-bottom:16px}
+.hu-page .hu-danger{color:#a23c3c;background:#fff5f3;border-color:#f2d6d1}
+.hu-page .hu-divider{border-top:1px solid #e5edf5;padding-top:20px;margin-top:20px}
+.hu-page #huRetry{border-color:#e7b457;background:#fff8e8;color:#805500}
+@media(max-width:700px){.hu-page{padding:12px}.hu-page .panel{padding:16px}.hu-page .hu-query{display:grid}.hu-page .hu-grid{grid-template-columns:1fr}.hu-page .hu-actions button{width:100%}}
+
+.hu-page #huPlacement:not([hidden]){display:grid;gap:8px;padding:14px 16px;border-left:4px solid #5596eb;background:#f2f7ff;border-radius:8px;margin-bottom:16px}.hu-page #huPlacement span{font-size:13px;color:#66788e;line-height:1.5}.hu-page #huPlacement a{font-size:13px;font-weight:600}
+
+.hu-workspace>.topbar button{padding:9px 14px;border:1px solid #d9e1ec;border-radius:9px;background:white;color:#44546b;cursor:pointer}

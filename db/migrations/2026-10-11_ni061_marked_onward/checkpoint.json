@@ -1,0 +1,13 @@
+{
+  "migration_id": "2026-10-11-228-original-marked-interwarehouse-onward",
+  "sha256": {
+    "db/migrations/2026-10-11_ni061_marked_onward/000_before_rrl_stock_posting_api.sql": "930e0f1826a1c91729a22cd27069084d8088f0e49c0a9770585f772b31ad6685",
+    "db/migrations/2026-10-11_ni061_marked_onward/000_before_rrl_stock_interware_next.sql": "c79a027c18e8ba7fc5969c00f9f54c86b8d85ebbc2527843c7672436d5a6f560",
+    "db/migrations/2026-10-11_ni061_marked_onward/000_before_rrl_stock_shipping_core.sql": "6cdea2532d63afac1769be167cf9465490f00d3d417eb9a8603a76b0bb3ebfbf",
+    "db/migrations/2026-10-11_ni061_marked_onward/000_before_rrl_stock_single_load_cmd.sql": "e8086b6f582f9312067089c34aa2d5e3e7152e94e384331aab39ea1ccf09f0a3",
+    "db/migrations/2026-10-11_ni061_marked_onward/000_before_rrl_stock_loading_read.sql": "a6963e4e424e0ec7ea7775725a2607c79885778e571cf018b42a04176420bd5a",
+    "db/migrations/2026-10-11_ni061_marked_onward/000_before_rrl_stock_interware_custody.sql": "dd459a9f3b0f4a6dc831329b0b9e9cc12cdce30b402c3e9f6c6a4bc4a23aa721",
+    "db/migrations/2026-10-11_ni061_marked_onward/000_before_current_runtime_manifest.json": "a17098a3e3f03070d6ac14a27267f47a2bc830e9b35a56dc3731dc40f8283a1d",
+    "db/migrations/2026-10-11_ni061_marked_onward/000_before_interwarehouse_onward.py": "bf47ca1afb7d9a46df472c68d468ca58831b724ff737cb193fa3bd4d75906914"
+  }
+}

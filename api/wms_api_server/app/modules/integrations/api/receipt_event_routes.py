@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from starlette.concurrency import run_in_threadpool
-from ....auth import AdminUser, require_permission
+from ...platform.public import AdminUser, require_permission
 from ..application.ingestion import IdocConflict
 from ..domain.artmas import MAX_IDOC_BYTES
 from ..application.receipt_ports import AcknowledgementPort as ReceiptAcknowledgements

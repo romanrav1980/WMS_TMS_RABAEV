@@ -33,6 +33,9 @@ class RoutingProvider(ABC):
     def is_available(self) -> bool:
         ...
 
+    def build_cost_matrix(self,points: list[tuple[float,float]]) -> tuple[list[list[float]],list[list[float]] | None]:
+        return self.build_matrix(points),None
+
     @abstractmethod
     def build_matrix(
         self,
@@ -120,18 +123,17 @@ class OsrmProvider(RoutingProvider):
     def is_available(self) -> bool:
         return _cached_availability(self.name, lambda: _tcp_url_available(OSRM_URL))
 
-    def build_matrix(self, points: list[tuple[float, float]]) -> list[list[float]]:
-        coords_str = ";".join(f"{lon},{lat}" for lat, lon in points)
-        url = f"{OSRM_URL}/table/v1/driving/{coords_str}?annotations=distance"
-        r = httpx.get(url, timeout=_OSRM_TIMEOUT)
-        r.raise_for_status()
-        data = r.json()
-        distances = data["distances"]  # in metres
-        n = len(points)
-        return [
-            [round(distances[i][j] / 1000.0, 2) for j in range(n)]
-            for i in range(n)
-        ]
+    def build_matrix(self,points: list[tuple[float,float]]) -> list[list[float]]:
+        return self.build_cost_matrix(points)[0]
+
+    def build_cost_matrix(self,points: list[tuple[float,float]]) -> tuple[list[list[float]],list[list[float]]]:
+        from ..modules.transport.public import osrm_costs,validate_points
+        validate_points(points)
+        coords_str=";".join(f"{lon},{lat}"for lat,lon in points)
+        radii=";".join("1000"for _ in points)
+        url=f"{OSRM_URL}/table/v1/driving/{coords_str}?annotations=distance,duration&radiuses={radii}"
+        response=httpx.get(url,timeout=_OSRM_TIMEOUT);response.raise_for_status()
+        return osrm_costs(response.json(),len(points))
 
 
 # ---------------------------------------------------------------------------
@@ -148,25 +150,15 @@ class ValhallaProvider(RoutingProvider):
     def is_available(self) -> bool:
         return _cached_availability(self.name, lambda: _tcp_url_available(VALHALLA_URL))
 
-    def build_matrix(self, points: list[tuple[float, float]]) -> list[list[float]]:
-        locations = [{"lat": lat, "lon": lon} for lat, lon in points]
-        payload: dict[str, Any] = {
-            "sources": locations,
-            "targets": locations,
-            "costing": "truck",
-        }
-        r = httpx.post(
-            f"{VALHALLA_URL}/sources_to_targets",
-            json=payload,
-            timeout=_VALHALLA_TIMEOUT,
-        )
-        r.raise_for_status()
-        data = r.json()
-        n = len(points)
-        return [
-            [round((data["sources_to_targets"][i][j]["distance"] or 0.0), 2) for j in range(n)]
-            for i in range(n)
-        ]
+    def build_matrix(self,points: list[tuple[float,float]]) -> list[list[float]]:
+        return self.build_cost_matrix(points)[0]
+
+    def build_cost_matrix(self,points: list[tuple[float,float]]) -> tuple[list[list[float]],list[list[float]]]:
+        from ..modules.transport.public import valhalla_costs,validate_points
+        validate_points(points)
+        locations=[{"lat":lat,"lon":lon,"radius":1000,"search_cutoff":1000}for lat,lon in points]
+        response=httpx.post(f"{VALHALLA_URL}/sources_to_targets",json={"sources":locations,"targets":locations,"costing":"truck","units":"kilometers"},timeout=_VALHALLA_TIMEOUT)
+        response.raise_for_status();return valhalla_costs(response.json(),len(points))
 
 
 # ---------------------------------------------------------------------------

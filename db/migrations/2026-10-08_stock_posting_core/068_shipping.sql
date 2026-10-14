@@ -22,6 +22,7 @@ create or replace package body RRL_STOCK_SHIPPING_CORE as
   l json_object_t;v_kind varchar2(80);v_id number;v_uid varchar2(200);v_ware number;v_cell varchar2(60);v_return_supplier varchar2(255);
   v_article varchar2(160);v_qty number;v_take number;v_base varchar2(20);v_version number;v_row_json clob;v_available number;v_customer_order number;v_order_count number;v_num number;v_den number;v_scale number;v_input varchar2(20);
   v_customer_status varchar2(30);v_closed_fulfillment number;
+  v_bound_uid varchar2(150);v_bound_version number;v_bound_count number;v_bound_pick number;v_bound_wh number;v_bound_physical number;v_bound_selected number;
   v_case_task number;v_case_version number;v_case_cell varchar2(60);v_case_status varchar2(40);v_carrier clob;v_carrier_rows json_array_t;v_carrier_row json_object_t;
   type quantity_map is table of number index by varchar2(2000);used quantity_map;reserved_used quantity_map;k varchar2(2000);sk varchar2(2000);
  begin
@@ -66,6 +67,18 @@ create or replace package body RRL_STOCK_SHIPPING_CORE as
     end loop;
    end if;
   end if;
+  if v_customer_order is not null and v_case_task is null then
+   select count(*),max(PICKED_PALLET_UID),max(PICKED_STOCK_VERSION),max(PICKED_WAREHOUSE_TASK_ID) into v_bound_count,v_bound_uid,v_bound_version,v_bound_wh
+    from RRL_CUSTOMER_ORDER_FULFILLMENT where LEGACY_SBORKA_PALLET_ID=v_id and PALLET_UID=v_uid
+     and CUSTOMER_ORDER_ID=v_customer_order and STATUS='PICKED' and PICKED_WAREHOUSE_TASK_ID is not null;
+   if v_bound_count!=1 or v_bound_uid is null or v_bound_version is null then raise_application_error(-20886,'FULLPAL_PHYSICAL_SHIPMENT_BIND_REQUIRED');end if;
+   select wt.PICK_TASK_ID into v_bound_pick from RRL_WAREHOUSE_TASK wh join RRL_PICK_WAVE_TASK wt
+    on wt.PICK_WAVE_TASK_ID=wh.SOURCE_TASK_ID and wt.PICK_WAVE_ID=wh.SOURCE_DOC_ID
+    where wh.TASK_ID=v_bound_wh and wh.TASK_SOURCE='WAVE' and wh.TASK_TYPE='PICKING_MOVE' and wh.STATUS='DONE';
+   RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_WAREHOUSE_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(v_bound_wh));
+   RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_PICK_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(v_bound_pick));
+
+  end if;
   RRL_STOCK_PLAN_HELPER.fence(f,'RELEASE','STOCK');RRL_STOCK_PLAN_HELPER.fence(f,'CONFIG','WAREHOUSE');
   RRL_STOCK_PLAN_HELPER.anchor(r,10,'OP',p_operation);
   RRL_STOCK_PLAN_HELPER.anchor(r,70,'UNIQUE','STOCK.OUTBOX:'||rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p_operation,'AL32UTF8'),sys.dbms_crypto.hash_sh256)));
@@ -86,7 +99,8 @@ create or replace package body RRL_STOCK_SHIPPING_CORE as
      left join RRL_PROD_BATCH_READY_V br on br.PROD_BATCH_ID=pp.PROD_BATCH_ID
      where sr.CUSTOMER_ORDER_ID=v_customer_order and sr.ARTICUL=v_article and sr.RESERVATION_KIND='HARD'
       and sr.RESERVATION_DOMAIN='PICKING' and sr.STATUS in('ACTIVE','ALLOCATED','PICKING') and sr.BASE_QTY>0
-      and sr.BASE_UOM=v_base and cc.WARE_ID=v_ware and nvl(cc.BLOCKED_FOR_REMAINS,0)=0 and nvl(cc.BLOCKED_FOR_POPOLNENIE,0)=0
+      and sr.BASE_UOM=v_base and cc.WARE_ID=v_ware
+      and (v_bound_uid is null or (sr.UID_PALLET=v_bound_uid and rr.STOCK_VERSION=v_bound_version and sr.SOURCE_LINE_ID=v_bound_pick)) and nvl(cc.BLOCKED_FOR_REMAINS,0)=0 and nvl(cc.BLOCKED_FOR_POPOLNENIE,0)=0
       and nvl(br.IS_SHIPMENT_ALLOWED,1)=1
       and ((v_case_task is null and not exists(select 1 from RRL_CASE_CARRIER_LOT h where h.LOT_UID=sr.UID_PALLET))
        or (v_case_task is not null and sr.CELL=v_case_cell and exists(select 1 from RRL_CASE_CARRIER_LOT h where h.LOT_UID=sr.UID_PALLET and h.CASE_PICK_TASK_ID=v_case_task)))
@@ -154,6 +168,16 @@ create or replace package body RRL_STOCK_SHIPPING_CORE as
    if v_qty>0 then raise_application_error(-20868,'SHIPMENT_AVAILABLE_STOCK_INSUFFICIENT');end if;
    end if;
   end loop;
+  if v_bound_uid is not null then
+   select nvl(sum(REMAIN),0) into v_bound_physical from RRL_REMAINS
+    where UID_POLETA=v_bound_uid and STOCK_VERSION=v_bound_version and REMAIN>0;
+   v_bound_selected:=0;
+   for z in 0..legs.get_size-1 loop
+    v_carrier_row:=treat(legs.get(z) as json_object_t);
+    v_bound_selected:=v_bound_selected+RRL_STOCK_MATH.quantity(v_carrier_row.get_string('quantity'));
+   end loop;
+   if v_bound_physical<=0 or v_bound_selected!=v_bound_physical then raise_application_error(-20886,'FULLPAL_BOUND_WHOLE_COMPOSITION_REQUIRED');end if;
+  end if;
   if v_case_task is not null then
    for z in 0..v_carrier_rows.get_size-1 loop
     v_carrier_row:=treat(v_carrier_rows.get(z) as json_object_t);
@@ -162,6 +186,7 @@ create or replace package body RRL_STOCK_SHIPPING_CORE as
     if used(k)!=RRL_STOCK_MATH.quantity(v_carrier_row.get_string('quantity')) then raise_application_error(-20886,'CASE_SHIPMENT_CONTENT_MISMATCH');end if;
    end loop;
   end if;
+  v.put('bound_physical_uid',v_bound_uid);v.put('bound_stock_version',v_bound_version);
   v.put('case_task',v_case_task);v.put('case_version',v_case_version);v.put('case_carrier',v_carrier_rows);
   v.put('return_supplier_id',v_return_supplier);v.put('customer_order_id',v_customer_order);v.put('document_id',v_id);v.put('pallet_identifier',v_uid);v.put('warehouse',v_ware);
   v.put('rows_signature',rawtohex(sys.dbms_crypto.hash(v_row_json,sys.dbms_crypto.hash_sh256)));v.put('legs',legs);
@@ -200,6 +225,15 @@ end;
     select count(*) into v_closed from RRL_CUSTOMER_ORDER_FULFILLMENT
      where LEGACY_SBORKA_PALLET_ID=v_id and PALLET_UID=v_uid and STATUS in('CANCELLED','SHIPPED');
     if v_state='CANCELLED' or v_closed>0 then raise_application_error(-20886,'SHIPMENT_CUSTOMER_FULFILLMENT_CLOSED');end if;
+   end;
+  end if;
+  if v.get_string('bound_physical_uid') is not null then
+   declare bound_uid varchar2(150):=v.get_string('bound_physical_uid');bound_version number:=v.get_number('bound_stock_version');n number;begin
+    select count(*) into n from RRL_CUSTOMER_ORDER_FULFILLMENT where LEGACY_SBORKA_PALLET_ID=v_id and PALLET_UID=v_uid
+     and STATUS='PICKED' and PICKED_PALLET_UID=bound_uid and PICKED_STOCK_VERSION=bound_version;
+    if n!=1 then raise_application_error(-20890,'CLOSURE_CHANGED: full pallet shipment binding');end if;
+    select count(*) into n from RRL_REMAINS where UID_POLETA=bound_uid and STOCK_VERSION=bound_version and REMAIN>0;
+    if n!=1 then raise_application_error(-20890,'CLOSURE_CHANGED: bound physical pallet');end if;
    end;
   end if;
   if v.get_number('case_task') is not null then
@@ -265,12 +299,7 @@ end;
   if v_kind='SHIP_DOCUMENT' then update RRL_OTHOD_NAKLAD set CONDITION=2 where ID=v_id;
   else update RRL_SBORKA_PALLETS set CONDITION=2 where ID=v_id;end if;
   if v.get_number('customer_order_id') is not null then
-   declare
- v_json_sql_7_1 number:=v.get_number('customer_order_id');
-begin
-update RRL_CUSTOMER_ORDER_FULFILLMENT set STATUS='SHIPPED',FACT_QTY=(select sum(QUANTITY) from RRL_SBORKA_PALLET_ROWS where PALLET_UID=v_uid),UPDATED_AT=sysdate,UPDATED_BY=p_actor
-    where LEGACY_SBORKA_PALLET_ID=v_id and PALLET_UID=v_uid and CUSTOMER_ORDER_ID=v_json_sql_7_1;
-end;
+   RRL_STOCK_FULFILLMENT_FACT.project_ship(v_id,v_uid,v.get_number('customer_order_id'),d.get_string('operation_id'),facts.to_clob,p_actor);
   end if;
   if v.get_number('case_task') is not null then
    declare v_task number:=v.get_number('case_task');v_operation varchar2(100):=d.get_string('operation_id');begin

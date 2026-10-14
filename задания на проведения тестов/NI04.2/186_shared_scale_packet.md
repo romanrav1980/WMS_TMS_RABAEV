@@ -1,0 +1,2 @@
+# Qwen:186
+Run existing scripts/ni053_scale_capture_case.py after extraction. Confirm stable10KG/original archive/hash/replay/conflict/zero/stale/unstable/capacity/current sender/calibration/deactivation/recovery; no P/H or receipt. Pure packet reader also supports explicitly configured NET samples named weight_kg; must not average/round. Invalid UTC date/calendar and missing/zero packet evidence refused. Warehouse archive/effects not accepted by186; no physical hardware claim.

@@ -1,0 +1,9 @@
+{
+  "migration_id": "2026-10-13-852-ni032-shared-capacity",
+  "state": "APPLIED",
+  "before_sha256": "4c3b74ed372d093afe23d15aa054902133988c1c3d6fbd7780734b87f1f3fa51",
+  "after_sha256": "50e7585f2cf0d65acc36d6880bef308f502f1e43ec6cd9e78fd98a05c0244dd6",
+  "target": "RABAEV/orcl",
+  "native_validation": "USER_ERRORS empty; USER_OBJECTS current INVALID empty",
+  "developer_evidence": "case867 wave546/task1099; related case850 wave547/two arrivals; own P/H cleaned"
+}

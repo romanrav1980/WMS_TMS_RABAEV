@@ -1,0 +1,5 @@
+{
+  "migration_id": "2026-10-11-189-case-scale-net",
+  "before_sha256": "529f75105550627fbe0e5285ab3abcb5a0dc84a9b9aac7daff8eb7ee4f80d95d",
+  "recovery": "Fresh prior188 native admission only; existing shared CASE root; no data rewrite/no DB copy"
+}

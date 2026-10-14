@@ -5,7 +5,7 @@ end;
 /
 create or replace package body RRL_STOCK_TASK_DOMAIN as
  procedure sync_fact(p_task RRL_WAREHOUSE_TASK%rowtype,p_qty number,p_target_uid varchar2,p_residual number,p_actor varchar2) is
-  v_n number;v_status varchar2(40);v_pick number;
+  v_total number;v_n number;v_status varchar2(40);v_pick number;
  begin
   if p_task.TASK_SOURCE='WAVE' then
    select count(*) into v_n from RRL_WAREHOUSE_TASK where TASK_SOURCE='WAVE' and TASK_TYPE=p_task.TASK_TYPE
@@ -14,14 +14,18 @@ create or replace package body RRL_STOCK_TASK_DOMAIN as
    if p_task.TASK_TYPE='REPLENISHMENT' then
     update RRL_PICK_WAVE_REPLENISH_TASK set STATUS=v_status,UPDATED_AT=sysdate,UPDATED_BY=p_actor
      where PICK_WAVE_REPLENISH_TASK_ID=p_task.SOURCE_TASK_ID;
+    RRL_STOCK_SHORT_RECOVERY.finish_replenishment(p_task,p_actor);
     -- HARD coverage is now at the target. Do not mark it CONSUMED by placement.
    elsif p_task.TASK_TYPE='PICKING_MOVE' then
     select PICK_TASK_ID into v_pick from RRL_PICK_WAVE_TASK where PICK_WAVE_TASK_ID=p_task.SOURCE_TASK_ID;
-    update RRL_PICK_WAVE_TASK set STATUS=v_status,FACT_QTY=p_qty,
+    select nvl(sum(m.BASE_QTY),0) into v_total from RRL_WAREHOUSE_TASK t
+     join RRL_WAREHOUSE_TASK_STOCK_MOVE m on m.TASK_ID=t.TASK_ID
+     where t.TASK_SOURCE='WAVE' and t.TASK_TYPE='PICKING_MOVE' and t.SOURCE_TASK_ID=p_task.SOURCE_TASK_ID;
+    update RRL_PICK_WAVE_TASK set STATUS=v_status,FACT_QTY=v_total,
      DONE_AT=case when v_status='DONE' then sysdate else DONE_AT end,
      DONE_BY=case when v_status='DONE' then p_actor else DONE_BY end,
      TARGET_CELL_CODE=p_task.TO_CELL,UPDATED_AT=sysdate,UPDATED_BY=p_actor where PICK_WAVE_TASK_ID=p_task.SOURCE_TASK_ID;
-    update RRL_PICK_TASK set STATUS=v_status,FACT_QTY=p_qty,
+    update RRL_PICK_TASK set STATUS=v_status,FACT_QTY=v_total,
      DONE_AT=case when v_status='DONE' then sysdate else DONE_AT end,
      DONE_BY=case when v_status='DONE' then p_actor else DONE_BY end,
      TARGET_CELL_CODE=p_task.TO_CELL,UPDATED_AT=sysdate,UPDATED_BY=p_actor where PICK_TASK_ID=v_pick;

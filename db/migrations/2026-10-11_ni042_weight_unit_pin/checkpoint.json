@@ -1,0 +1,8 @@
+{
+  "migration_id": "2026-10-11-197-weight-choice-physical-pin",
+  "sha256": {
+    "db/migrations/2026-10-11_ni042_weight_unit_pin/000_before_launch.sql": "502db199bc82acb6e0f4390bc066615d3b02e1ee739d8358d9361aae9c432417",
+    "db/migrations/2026-10-11_ni042_weight_unit_pin/000_before_replenish.sql": "236ce0418850cc9a329dc502e010050bbcefab6a975439f294712f7199a3dfef"
+  },
+  "recovery": "Fresh native launch/replenishment preserved; exact selected physical key only; one existing physical writer; no DB copy"
+}

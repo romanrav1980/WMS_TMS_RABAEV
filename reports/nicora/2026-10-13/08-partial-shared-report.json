@@ -1,0 +1,18 @@
+{
+  "wave": 542,
+  "rt": 1602,
+  "task": 1096,
+  "next_rt": 1604,
+  "article": "QNATIVE092B8A7BA7",
+  "ware": 700970,
+  "target": "QG092b8a7ba7",
+  "source": "QF092b8a7ba7",
+  "first_uid": "FULL.QA:092b8a7ba7",
+  "second_uid": "FULL.QA:092b8a7ba7B",
+  "target_uid": "FULL.QA:092b8a7ba7O",
+  "second_task": 1097,
+  "third_wave": 543,
+  "partial_shared_rt": 1603,
+  "stage": "PARTIAL_SHARED_RESUMED_OWNER12_OTHER8_THIRD14",
+  "stock_changed_only_by_original_TASK_COMPLETE": true
+}

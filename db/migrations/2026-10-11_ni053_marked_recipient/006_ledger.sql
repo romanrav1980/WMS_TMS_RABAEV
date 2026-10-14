@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-229-original-marked-store-recipient'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Exact mandatory unique unit QR confirmation in original store receipt',sysdate,user,'db/migrations/2026-10-11_ni053_marked_recipient/apply.sql','db/migrations/2026-10-11_ni053_marked_recipient/rollback.sql','APPLIED','Actual225->226->953->228->STORE229.RECEIVE:13508027ed0/order2030/physical3 codes6/current UNIT profiles/accepted3 unreceived0/original-to-final lineage/no goods effect/no unit birth/no fakeGovACK. Missing duplicate partial denied/native rollback/concurrent winner/replay/current receiver binding403/protected20/20. NativeVALID/quality24/bothTS/558files0cycles76debt. Marked partial/nested/aggregate remain explicit next scope.');
+commit;

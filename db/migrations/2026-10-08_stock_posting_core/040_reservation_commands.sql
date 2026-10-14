@@ -131,6 +131,9 @@ end;
      where ARTICUL=v_article and INPUT_UOM=v_base and BASE_UOM=v_base
        and NUMERATOR=1 and DENOMINATOR=1;
     if v_version is null then raise_application_error(-20868,'BASE_IDENTITY_POLICY_REQUIRED');end if;
+    if v_type in('PICK_WAVE','PICK_PLAN') then
+     RRL_STOCK_ELIGIBILITY.assert_source(v_uid,v_cell,v_ware,v_qty,null,null,'ALLOCATE',null,v_article);
+    end if;
     if v_kind='RESERVATION_PROMOTE' then
      if old.RESERVATION_KIND!='SOFT' or old.STATUS not in('ACTIVE','ALLOCATED') then raise_application_error(-20869,'SOFT_PROMOTION_CONFLICT');end if;
      RRL_STOCK_BALANCE_CORE.apply_delta(v_uid,v_cell,0,v_qty,v_base,v_version);

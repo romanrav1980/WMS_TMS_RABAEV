@@ -1,0 +1,5 @@
+exec(open("scripts/ni063_slow_queries.py",encoding="utf-8").read().split("with oracledb.connect",1)[0])
+with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
+ c.call_timeout=10000;q=c.cursor()
+ for name,sql in [('indexes',"select i.TABLE_NAME,i.INDEX_NAME,i.UNIQUENESS,i.STATUS,c.COLUMN_NAME,c.COLUMN_POSITION from USER_INDEXES i join USER_IND_COLUMNS c on c.INDEX_NAME=i.INDEX_NAME where i.TABLE_NAME in('RRL_SBORKA_PALLETS','RRL_SBORKA_PALLET_ROWS','RRL_ADDR') order by i.TABLE_NAME,i.INDEX_NAME,c.COLUMN_POSITION"),('stats',"select TABLE_NAME,NUM_ROWS,BLOCKS,LAST_ANALYZED from USER_TABLES where TABLE_NAME in('RRL_SBORKA_PALLETS','RRL_SBORKA_PALLET_ROWS','RRL_ADDR')"),('plan',"select PLAN_TABLE_OUTPUT from table(DBMS_XPLAN.DISPLAY_CURSOR('9jcspxw3ux1uj',null,'TYPICAL'))")]:
+  q.execute(sql);print(name);print(json.dumps(q.fetchall(),default=str))

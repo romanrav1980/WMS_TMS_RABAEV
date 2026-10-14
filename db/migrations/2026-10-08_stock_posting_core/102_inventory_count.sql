@@ -15,7 +15,7 @@ create or replace package body RRL_STOCK_INVENTORY_CMD as
  begin
   doc:=d.get_object('source').get_number('revision_id');select WARE_ID into ware from RRL_REVIZION where ID=doc;
   a:=d.get_object('metadata').get_array('counts');
-  if a is null or a.get_size<1 or a.get_size>200 then raise_application_error(-20881,'INVENTORY_COUNT_BATCH_BOUND');end if;
+  if a is null or a.get_size>200 or (a.get_size<1 and not d.get_object('metadata').has('inventory_task_id')) then raise_application_error(-20881,'INVENTORY_COUNT_BATCH_BOUND');end if;
   RRL_STOCK_PLAN_HELPER.fence(f,'RELEASE','STOCK');RRL_STOCK_PLAN_HELPER.fence(f,'CONFIG','WAREHOUSE');RRL_STOCK_PLAN_HELPER.anchor(r,10,'OP',p_operation);
   RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_REVIZION',RRL_STOCK_PLAN_HELPER.decimal_text(doc));
   RRL_STOCK_PLAN_HELPER.anchor(r,70,'UNIQUE','STOCK.OUTBOX:'||rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p_operation,'AL32UTF8'),sys.dbms_crypto.hash_sh256)));
@@ -53,7 +53,7 @@ end;
    y.put('base',base);y.put('quantity',RRL_STOCK_PLAN_HELPER.decimal_text(qty));y.put('p',RRL_STOCK_PLAN_HELPER.decimal_text(p));
    y.put('h',RRL_STOCK_PLAN_HELPER.decimal_text(h));y.put('version',stockver);y.put('uom_version',ver);y.put('signature',signature);b.append(y);
   end loop;
-  v.put('document',doc);v.put('warehouse',ware);v.put('counts',b);p_domain:=v.to_clob;p_policies:=f.to_clob;p_resources:=r.to_clob;
+  v.put('document',doc);v.put('warehouse',ware);v.put('counts',b);RRL_STOCK_SHORT_RECOVERY.plan_inventory(p_request,r,f,v);p_domain:=v.to_clob;p_policies:=f.to_clob;p_resources:=r.to_clob;
  end;
  procedure execute_count(p_request clob,p_actor varchar2,p_result out clob) is
   d json_object_t:=json_object_t.parse(p_request);v json_object_t;x json_object_t;sourcex json_object_t;fact json_object_t;result json_object_t:=json_object_t();
@@ -134,7 +134,7 @@ end;
     REMARK1=substr(nvl(REMARK1,'')||' POSTED:'||v_row_op,1,255)
     where ID=revision_row;end;
   end if;
-  result.put('operation_id',d.get_string('operation_id'));result.put('revision_id',doc);result.put('counts',facts);p_result:=result.to_clob;
+  result.put('operation_id',d.get_string('operation_id'));result.put('revision_id',doc);result.put('counts',facts);RRL_STOCK_SHORT_RECOVERY.finish_inventory(p_request,p_actor,v,facts,result);p_result:=result.to_clob;
  end;
 end;
 /

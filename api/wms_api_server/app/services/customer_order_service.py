@@ -1,3 +1,5 @@
+import json
+from fastapi import HTTPException
 from typing import Any
 
 from ..oracle_gateway import OracleGateway
@@ -261,120 +263,17 @@ class CustomerOrderService:
         return customer
 
     def list_customer_orders(
-        self,
-        status: str | None = None,
-        order_no: str | None = None,
-        legacy_order_id: int | None = None,
-        limit: int = 200,
+        self, status: str | None = None, order_no: str | None = None,
+        legacy_order_id: int | None = None, limit: int = 200,
     ) -> list[dict[str, Any]]:
-        conditions: list[str] = []
-        params: dict[str, Any] = {"limit": min(max(limit, 1), 500)}
-        if status:
-            conditions.append("upper(co.STATUS) = :status")
-            params["status"] = status.upper()
-        if order_no:
-            conditions.append("upper(co.ORDER_NO) like :order_no")
-            params["order_no"] = f"%{order_no.upper()}%"
-        if legacy_order_id is not None:
-            conditions.append("co.LEGACY_ORDER_ID = :legacy_order_id")
-            params["legacy_order_id"] = legacy_order_id
-        where_sql = " where " + " and ".join(conditions) if conditions else ""
-        return self.gateway.fetch_all(
-            f"""
-            select *
-              from (
-                select co.CUSTOMER_ORDER_ID,
-                       co.LEGACY_ORDER_ID,
-                       co.ORDER_NO,
-                       co.STATUS,
-                       co.WARE_ID,
-                       co.ORDER_DATE,
-                       co.SHIPMENT_DATE,
-                       c.CUSTOMER_ID,
-                       c.CUSTOMER_NAME,
-                       m.LEGACY_ADDR,
-                       count(r.CUSTOMER_ORDER_ROW_ID) ROW_COUNT,
-                       nvl(sum(r.ORDER_QTY), 0) TOTAL_ORDER_QTY,
-                       nvl(sum(r.PACK_COUNT), 0) TOTAL_PACK_COUNT,
-                       co.CREATED_AT
-                  from RRL_CUSTOMER_ORDER co
-                  join RRL_CUSTOMER c
-                    on c.CUSTOMER_ID = co.CUSTOMER_ID
-                  left join RRL_CUSTOMER_STORE_MAP m
-                    on m.CUSTOMER_STORE_MAP_ID = co.CUSTOMER_STORE_MAP_ID
-                  left join RRL_CUSTOMER_ORDER_ROW r
-                    on r.CUSTOMER_ORDER_ID = co.CUSTOMER_ORDER_ID
-                  {where_sql}
-                 group by co.CUSTOMER_ORDER_ID,
-                          co.LEGACY_ORDER_ID,
-                          co.ORDER_NO,
-                          co.STATUS,
-                          co.WARE_ID,
-                          co.ORDER_DATE,
-                          co.SHIPMENT_DATE,
-                          c.CUSTOMER_ID,
-                          c.CUSTOMER_NAME,
-                          m.LEGACY_ADDR,
-                          co.CREATED_AT
-                 order by co.CUSTOMER_ORDER_ID desc
-              )
-             where rownum <= :limit
-            """,
-            params,
-        )
+        # Trusted legacy in-process reader; HTTP uses actor-scoped public service.
+        from ..modules.fulfillment.public import build_customer_order_read_service
+        return build_customer_order_read_service(self.gateway).list_rows(status, order_no, legacy_order_id, limit)
 
     def get_customer_order(self, customer_order_id: int) -> dict[str, Any] | None:
-        rows = self.gateway.fetch_all(
-            """
-            select co.CUSTOMER_ORDER_ID,
-                   co.LEGACY_ORDER_ID,
-                   co.ORDER_NO,
-                   co.STATUS,
-                   co.WARE_ID,
-                   co.ORDER_DATE,
-                   co.SHIPMENT_DATE,
-                   co.ROUTE_ID,
-                   co.DOCK_ID,
-                   c.CUSTOMER_ID,
-                   c.CUSTOMER_NAME,
-                   m.CUSTOMER_STORE_MAP_ID,
-                   m.LEGACY_ADDR,
-                   m.ADDRESS_TEXT,
-                   co.CREATED_AT,
-                   co.UPDATED_AT
-              from RRL_CUSTOMER_ORDER co
-              join RRL_CUSTOMER c
-                on c.CUSTOMER_ID = co.CUSTOMER_ID
-              left join RRL_CUSTOMER_STORE_MAP m
-                on m.CUSTOMER_STORE_MAP_ID = co.CUSTOMER_STORE_MAP_ID
-             where co.CUSTOMER_ORDER_ID = :customer_order_id
-            """,
-            {"customer_order_id": customer_order_id},
-        )
-        if not rows:
-            return None
-        order = rows[0]
-        order["rows"] = self.gateway.fetch_all(
-            """
-            select CUSTOMER_ORDER_ROW_ID,
-                   LEGACY_ORDER_ROW_ID,
-                   LINE_NO,
-                   ARTICUL,
-                   PRODUCT_NAME,
-                   UNIT_CODE,
-                   ORDER_QTY,
-                   ORDER_WEIGHT,
-                   PACK_COUNT,
-                   WARE_ID,
-                   MOD_ID,
-                   STATUS
-              from RRL_CUSTOMER_ORDER_ROW
-             where CUSTOMER_ORDER_ID = :customer_order_id
-             order by LINE_NO, CUSTOMER_ORDER_ROW_ID
-            """,
-            {"customer_order_id": customer_order_id},
-        )
-        return order
+        # Trusted legacy in-process reader; HTTP uses actor-scoped public service.
+        from ..modules.fulfillment.public import build_customer_order_read_service
+        return build_customer_order_read_service(self.gateway).detail_rows(customer_order_id)
 
     def import_legacy_order(self, legacy_order_id: int, created_by: str | None = None) -> int:
         return self.gateway.call_number_plsql(
@@ -389,22 +288,6 @@ class CustomerOrderService:
             {"legacy_order_id": legacy_order_id, "created_by": created_by},
         )
 
-    def get_fulfillment(self, customer_order_id: int) -> list[dict[str, Any]]:
-        return self.gateway.fetch_all(
-            """
-            select FULFILLMENT_ID,
-                   CUSTOMER_ORDER_ID,
-                   LEGACY_SBORKA_PALLET_ID,
-                   PALLET_UID,
-                   ADDRESS_TEXT,
-                   STATUS,
-                   FACT_QTY,
-                   FACT_WEIGHT,
-                   SOURCE_SYSTEM,
-                   CREATED_AT
-              from RRL_CUSTOMER_ORDER_FULFILLMENT
-             where CUSTOMER_ORDER_ID = :customer_order_id
-             order by FULFILLMENT_ID
-            """,
-            {"customer_order_id": customer_order_id},
-        )
+    def get_fulfillment(self, customer_order_id: int, actor: str) -> list[dict[str, Any]]:
+        from ..modules.fulfillment.public import build_fulfillment_read_service
+        return build_fulfillment_read_service(self.gateway).get(customer_order_id, actor)

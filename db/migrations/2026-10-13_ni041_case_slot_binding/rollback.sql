@@ -1,0 +1,5 @@
+@@000_before_rrl_stock_case_bind_move_package.sql
+@@000_before_rrl_stock_case_bind_move_package_body.sql
+@@000_before_rrl_stock_hu_slot_move_cmd_package.sql
+@@000_before_rrl_stock_hu_slot_move_cmd_package_body.sql
+@@003_compile.sql

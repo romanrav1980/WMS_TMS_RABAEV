@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ТСД комплектовщика</title>
     <link rel="stylesheet" href="styles.css?v=20260519-case-pick-tsd" />
-  </head>
+  <link rel="stylesheet" href="case-pick-guide.css?v=20261014-1292" /><link rel="stylesheet" href="case-pallet-type.css?v=20261014-1219" /></head>
   <body class="auth-pending tsd-terminal-body" data-required-permission="case_pick_view">
     <main class="app tsd-app">
       <section class="workspace tsd-workspace">
@@ -50,26 +50,36 @@
           </dl>
         </section>
 
-        <section class="tsd-scans" data-permission="case_pick_execute">
+        <section id="cpTypePanel" class="tsd-task-card" hidden><h2>Тип паллеты при сборке</h2>
+          <dl class="tsd-facts"><div><dt>По настройкам адресата</dt><dd id="cpTypePlanned">Загрузка</dd></div><div><dt>Фактический тип</dt><dd id="cpTypeActual">Загрузка</dd></div></dl>
+          <div data-permission="case_pick_execute"><label>Переопределить тип<select id="cpTypeSelect" title="Выберите фактическую тару пустого места до начала сборки."></select></label>
+          <label>Причина переопределения<input id="cpTypeReason" maxlength="500" title="Укажите причину использования другого типа паллеты."></label>
+          <button id="cpTypeSave" title="Подтвердить тип текущим сканом паллеты. Товарное количество не меняется.">Сохранить фактический тип</button>
+          <button id="cpTypeRetry" hidden>Повторить сохранённое переопределение</button><button id="cpTypeRestart" hidden>Перечитать и исправить после отказа</button></div>
+          <p id="cpTypeStatus" role="status"></p><a id="cpTypeTare" href="tare-assembly.html" title="Открыть существующее закрепление и освобождение пустой тары.">Закрепление и освобождение тары</a>
+        </section>
+        <p id="cpTsdMethod" role="status">Выберите строку для определения способа отбора.</p><section class="tsd-scans" data-permission="case_pick_execute">
           <label>Ячейка<input id="cpTsdScanCell" autocomplete="off" inputmode="text" /></label>
           <label>Идентификатор паллеты отбора<input id="cpTsdScanContainer" autocomplete="off" /></label>
           <label>Товар / ШК<input id="cpTsdScanProduct" autocomplete="off" inputmode="text" /></label>
           <label>Коробка<input id="cpTsdScanBox" autocomplete="off" inputmode="text" /></label>
-          <label>Факт<input id="cpTsdFactQty" type="number" min="0" step="0.001" inputmode="decimal" placeholder="план" /></label>
+          <div id="cpTsdWeightedBox" hidden></div>
+          <label>Накопленный факт в базовой единице<input id="cpTsdFactQty" type="number" min="0" step="0.001" inputmode="decimal" placeholder="план" /><small id="cpTsdFactHelp">Общее отобранное количество по строке, включая предыдущие подтверждения.</small></label>
         </section>
 
-        <section id="cpTsdMarking" hidden><label>Профиль маркировки<select id="cpTsdMarkProfile"></select></label><label>Уникальные коды фактически взятых единиц, по одному на строку<textarea id="cpTsdUnitCodes" rows="4" autocomplete="off"></textarea></label></section>
+        <section id="cpTsdMarking" hidden></section>
         <section><label>Скан места контроля или отгрузки<input id="cpTsdCarrierDestination" autocomplete="off" /></label><button id="cpTsdMoveCarrier" data-permission="case_pick_execute">Переместить паллету отбора</button><button id="cpTsdRetryCarrier" data-permission="case_pick_execute" hidden>Повторить перемещение</button></section>
         <section data-permission="case_pick_execute"><label>Идентификатор подготовленной паллеты СТ<input id="cpTsdShipmentIdentifier" autocomplete="off" /></label><button id="cpTsdBindShipment" type="button">Связать с отгрузкой СТ</button></section>
-        <section data-permission="case_pick_manage"><div id="cpTsdReturnDestinations"></div><button id="cpTsdReturnCarrier" type="button">Вернуть весь состав в исходные ячейки</button><button id="cpTsdRetryReturn" type="button" hidden>Повторить возврат</button></section>
+        <section data-permission="case_pick_short_approve"><h3>Частичная СТ после утверждённой недостачи</h3><button id="cpTsdPartialPreview" type="button">Загрузить фактический состав</button><div id="cpTsdPartialComposition"></div><label>Причина частичной отгрузки<input id="cpTsdPartialReason" maxlength="1000"></label><button id="cpTsdPartialPrepare" type="button" disabled>Утвердить укладку СТ</button><button id="cpTsdRetryPartialLayout" type="button" hidden>Повторить сохранение укладки</button></section>
+        <section data-permission="case_pick_manage"><div id="cpTsdReturnDestinations"></div><button id="cpTsdReturnCarrier" type="button">Вернуть весь состав в исходные ячейки</button><label>Причина отмены пустого места<input id="cpTsdEmptyCancelReason" maxlength="1000"></label><button id="cpTsdCancelEmpty" type="button">Отменить пустое место</button><button id="cpTsdRetryReturn" type="button" hidden>Повторить возврат</button></section>
         <section class="tsd-actions" data-permission="case_pick_execute">
           <button id="cpTsdPrev" type="button">Назад</button>
           <button id="cpTsdNext" type="button">Дальше</button>
           <button id="cpTsdClaim" type="button">Взять</button>
-          <button id="cpTsdStart" type="button">Старт</button>
+          <p id="cpTsdTare"></p><a id="cpTsdTarePlan" href="tare-assembly.html">Закрепить пригодную тару</a><button id="cpTsdStart" type="button">Старт</button>
           <button id="cpTsdConfirm" class="primary" type="button">Собрано</button>
           <button id="cpTsdRetryPosting" type="button" hidden>Повторить незавершённую команду</button>
-          <button id="cpTsdShort" class="danger" type="button">Нет товара</button>
+          <button id="cpTsdArchivePosting" type="button" hidden title="Сохранить повреждённую команду в локальном архиве. Это не отменяет операцию на сервере.">Архивировать повреждённую команду</button><button id="cpTsdShort" class="danger" type="button">Нет товара</button>
           <button id="cpTsdClose" class="primary" type="button">Закрыть</button>
         </section>
 
@@ -81,10 +91,14 @@
       </section>
     </main>
     <script src="admin-auth.js"></script>
-    <script src="case-pick-tsd.js"></script>
-    <script src="case-pick-posting.js"></script>
+    <script src="case-quantity.js"></script><script src="case-pick-tsd.js?v=20261014-1296"></script><script src="wave-command-intent.js"></script><script src="case-pallet-type.js?v=20261014-1216"></script>
+    <script src="case-scale-archive.js"></script><script src="case-weighted-box.js?v=20261011"></script>
+    <script src="case-marking-input.js?v=20261014-1292"></script><script src="case-pick-draft.js?v=20261014"></script><script src="case-short-intent.js"></script><script src="case-pick-posting.js?v=20261014-draft"></script>
     <script src="case-carrier-move.js"></script>
     <script src="case-shipment-binding.js"></script>
+    <script src="partial-shipment-layout.js"></script>
     <script src="case-carrier-return.js"></script>
+    <script src="case-sscc-label.js"></script>
+    <script src="case-issued-route.js"></script><script src="case-close-intent.js?v=20261014-1296"></script><script src="case-next-step.js"></script>
   </body>
 </html>

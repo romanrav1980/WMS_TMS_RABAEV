@@ -1,0 +1,10 @@
+{
+  "schema": "RABAEV",
+  "service": "127.0.0.1:1521/orcl",
+  "migration": "2026-10-12-667-group-aggregation-receiving",
+  "before_sha256": "f3941e97acc2be5c5e12d18e68693eab071f6a67db5c05f30c6313f7fb310ba0",
+  "after_sha256": "94e30b7cd056b52895304cf5198c31e5f4f32e3cebafaf859239a98effa5681a",
+  "recovery": "paired native package source rollback; no table or stock changes",
+  "status": "APPLIED_VALID",
+  "evidence": "actual673/675 mixed whole group6 original units9codes/two SKU3ea/rollback/replay/direct-fallback denial; no real external ACK"
+}

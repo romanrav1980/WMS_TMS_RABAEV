@@ -1,0 +1,30 @@
+import {chromium} from '../admin/wms_admin_frontend/node_modules/playwright/index.mjs';
+import fs from 'node:fs';
+const browser=await chromium.launch({headless:true});
+try{
+ const page=await browser.newPage({viewport:{width:1100,height:1000}}),errors=[],writes=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ page.on('request',r=>{if(r.method()==='POST'&&r.url().includes('/api/'))writes.push(r.url());});
+ await page.goto('http://127.0.0.1:8088/wms-admin/case-pick-tsd.html?case_task_id=1077');
+ await page.locator('#adminLoginForm button[type=submit]').click();
+ const panel=page.locator('#cpTsdWeightedBox');
+ await panel.getByRole('button',{name:'Обновить показания'}).waitFor();
+ await page.waitForFunction(()=>document.querySelector('#cpTsdWeightedBox [role=status]')?.textContent.includes('Показаний:'));
+ await page.locator('#cpTsdScanCell').fill('KEEP.SCAN.1373');
+ await panel.getByRole('button',{name:'Обновить показания'}).click();
+ await page.waitForFunction(()=>!document.querySelector('#cpTsdWeightedBox .cp-scale-tools button').disabled);
+ if(await page.locator('#cpTsdScanCell').inputValue()!=='KEEP.SCAN.1373')throw Error('Refresh lost scan');
+ await panel.locator('summary').click();
+ await panel.getByLabel('ID архивного показания').fill('FDBB07B26B039B418D9B17C6E20117B65F6DA464BFAA08F2B0B32808D7139A77');
+ const response=page.waitForResponse(r=>r.url().includes('/warehouse-scales/captures/FDBB'));
+ await panel.getByRole('button',{name:'Найти показание',exact:true}).click();
+ const r=await response,data=await r.json();
+ await page.waitForFunction(()=>!document.querySelector('#cpTsdWeightedBox .cp-scale-tools button').disabled);
+ const selected=await panel.locator('select').inputValue(),text=await panel.innerText();
+ if(r.status()!==200||!Object.hasOwn(data,'used_operation_id'))throw Error('Missing live usage');
+ if(data.used_operation_id&&selected)throw Error('Used capture selected');
+ if(errors.length||writes.length)throw Error(JSON.stringify({errors,writes}));
+ await panel.screenshot({path:'reports/nicora/2026-10-13/screenshots/97-ni042-scale-archive.png'});
+ fs.writeFileSync('tmp/result1373.json',JSON.stringify({status:r.status(),data,selected,text,errors,writes},null,2));
+ console.log(JSON.stringify({status:r.status(),used_operation_id:data.used_operation_id,selected,errors,writes}));
+}finally{await browser.close();}

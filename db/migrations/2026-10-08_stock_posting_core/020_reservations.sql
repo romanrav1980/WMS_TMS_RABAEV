@@ -1,5 +1,5 @@
 create or replace package RRL_STOCK_RESERVE_CORE authid definer
- accessible by(package RRL_STOCK_CASE_RETURN_CMD,package RRL_STOCK_CASE_SHORT_CMD,package RRL_STOCK_WAVE_LAUNCH_CMD,package RRL_STOCK_MES_CANCEL_CMD,package RRL_STOCK_MES_SUPPLY_CMD,package RRL_STOCK_DOC_RESERVE_CMD,package RRL_STOCK_WAVE_CMD,package RRL_STOCK_EFFECT_CORE,package RRL_STOCK_RESERVATION_CMD,package RRL_STOCK_POSTING_API,package RRL_STOCK_MOVE_CORE,package RRL_STOCK_TRANSFER_CORE) as
+ accessible by(package RRL_STOCK_REPL_BIND,package RRL_STOCK_SHORT_RECOVERY,package RRL_STOCK_CASE_RETURN_CMD,package RRL_STOCK_CASE_SHORT_CMD,package RRL_STOCK_WAVE_LAUNCH_CMD,package RRL_STOCK_MES_CANCEL_CMD,package RRL_STOCK_MES_SUPPLY_CMD,package RRL_STOCK_DOC_RESERVE_CMD,package RRL_STOCK_WAVE_CMD,package RRL_STOCK_EFFECT_CORE,package RRL_STOCK_RESERVATION_CMD,package RRL_STOCK_POSTING_API,package RRL_STOCK_MOVE_CORE,package RRL_STOCK_TRANSFER_CORE) as
  procedure create_hard(p_id number,p_uid varchar2,p_cell varchar2,p_qty number,p_uom varchar2,p_uom_version number,
    p_doc_type varchar2,p_doc_id number,p_line_id number,p_domain varchar2,p_actor varchar2,p_details clob default null);
  procedure release_hard(p_id number,p_qty number,p_uom_version number,p_doc_type varchar2,p_doc_id number,p_actor varchar2);
@@ -51,6 +51,9 @@ create or replace package body RRL_STOCK_RESERVE_CORE as
   select ARTICUL into v_article from RRL_PALLETS where UID_PALLET=p_uid;
   select WARE_ID into v_ware from RRL_CELLS where CELL=p_cell;
   if p_qty is null or p_qty<=0 or p_doc_id is null or p_doc_type is null or p_domain is null then raise_application_error(-20869,'RESERVATION_CONFLICT'); end if;
+  if p_domain in('PICKING','WAVE') or p_doc_type in('PICK_WAVE','PICK_PLAN') then
+   RRL_STOCK_ELIGIBILITY.assert_source(p_uid,p_cell,v_ware,p_qty,null,null,'ALLOCATE',null,v_article);
+  end if;
   RRL_STOCK_BALANCE_CORE.apply_delta(p_uid,p_cell,0,p_qty,p_uom,p_uom_version);
   RRL_STOCK_CTX_API.begin_effect('RESERVATION',p_uid,p_cell,p_id);
   insert into RRL_STOCK_RESERVATION(RESERVATION_ID,RESERVATION_KIND,RESERVATION_SCOPE,RESERVATION_DOMAIN,

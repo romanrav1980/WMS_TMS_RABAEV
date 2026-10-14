@@ -1,0 +1,3 @@
+exec(open("scripts/ni063_slow_queries.py",encoding="utf-8").read().split("with oracledb.connect",1)[0])
+with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
+ q=c.cursor();q.execute("select json_value(e.PAYLOAD_JSON,'$.warehouse_id' returning number null on error), e.EVENT_OUTBOX_ID from RRL_EVENT_OUTBOX e where json_value(e.PAYLOAD_JSON,'$.warehouse_id' returning number null on error)>0 and(e.TARGET_SYSTEM in('CRPT','EGAIS','MERCURY') or e.EVENT_TYPE in('MARKED_GOODS_DISPOSED','MARKED_SUPPLIER_RETURN_DISPATCHED') or exists(select 1 from RRL_SKU_RECEIPT_PROFILE p where p.SYSTEM_CODE=e.TARGET_SYSTEM))order by e.EVENT_OUTBOX_ID desc fetch first 3 rows only");print(json.dumps(q.fetchall()))

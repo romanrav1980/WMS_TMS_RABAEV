@@ -77,3 +77,7 @@ body.wf-page{background:#f3f6fb;color:#24344b;font-family:"Segoe UI",Arial,sans-
 .wf-page [hidden]{display:none!important}
 @media(max-width:1100px){.wf-page .wf-form{grid-template-columns:repeat(2,minmax(0,1fr))}.wf-page .wf-check{grid-column:1/-1}.wf-page .wf-actions{grid-column:1/-1;justify-content:stretch}.wf-page .wf-actions button{width:100%}}
 @media(max-width:700px){.wf-page .app{display:block}.wf-page .sidebar{position:relative;height:auto;max-height:190px}.wf-page .workspace{padding:18px 12px}.wf-page .wf-panel{padding:16px}.wf-page .wf-heading{flex-direction:column}.wf-page .wf-form{grid-template-columns:1fr}.wf-page h1{font-size:23px}}
+
+.wf-page #wfLabourResult>p:first-child{font-size:24px;font-weight:700;color:#173a67;margin:12px 0}
+.wf-page #wfLabourResult details{border:1px solid #dce6f3;border-radius:10px;padding:14px;margin:10px 0;background:#f8fbff}
+.wf-page #wfLabourResult summary{font-weight:600;cursor:pointer;min-height:28px}

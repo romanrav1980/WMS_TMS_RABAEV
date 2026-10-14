@@ -1,0 +1,13 @@
+{
+  "migration_id": "2026-10-11-220-hu-fullpal-tare-recovery",
+  "sha256": {
+    "db/migrations/2026-10-11_ni063_hu_load_recovery/000_before_rrl_tare_load_recovery_api.sql": "d9c30468d074e9d659402aba5c155dd7fe07112c061c1b952fd919015f4c749c",
+    "db/migrations/2026-10-11_ni063_hu_load_recovery/000_before_rrl_stock_tare_book_cmd.sql": "eec410f98e79175220a84233e8e9fac6e77083b1664f825244c9c104218de03e",
+    "db/migrations/2026-10-11_ni063_hu_load_recovery/000_before_guard.sql": "248fc83c1b90783ac1cbf118b8d3fbfd6e8fc6f47ef38998912a8cd57ac44f2c",
+    "db/migrations/2026-10-11_ni063_hu_load_recovery/000_before_columns.json": "b53ceb79a4d170e6b8799ec51cdd03d4587618dc63dc9ef668c2d18e3aa63b5b",
+    "db/migrations/2026-10-11_ni063_hu_load_recovery/000_before_tare_load_recovery.py": "71c221954095f10150f1d44314275fe50f6d3a6cb0bdc999e30ee459f2c12fe9",
+    "db/migrations/2026-10-11_ni063_hu_load_recovery/000_before_tare-load-recovery.js": "a188ed660338e130c02d0e0c5905e12a30733d3016e94c9f5e71536eef02f85f",
+    "db/migrations/2026-10-11_ni063_hu_load_recovery/000_before_current_runtime_manifest.json": "fe0182acdd202ba8bfec46fe9f28fd7f5be53d17cb5a314c81e5111d83205e7c"
+  },
+  "recovery": "Fresh native owners and existing recovery guard. Add nullable ROOT_UID with exclusive CASE/HU key; existing historical CASE proofs remain intact. Refuse rollback after any HU recovery."
+}

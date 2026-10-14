@@ -1,0 +1,35 @@
+{
+  "same_source": {
+    "wave": 546,
+    "rt": 1612,
+    "task": 1099,
+    "next_rt": null,
+    "article": "QNATIVE7A968C0F29",
+    "ware": 8133932,
+    "target": "QG7a968c0f29",
+    "source": "QF7a968c0f29",
+    "first_uid": "FULL.QA:7a968c0f29",
+    "second_uid": "FULL.QA:7a968c0f29B",
+    "target_uid": "FULL.QA:7a968c0f29O",
+    "stage": "CURRENT_TARGET_OWNER12_OTHER8",
+    "stock_changed_only_by_original_TASK_COMPLETE": true
+  },
+  "related_two_arrivals": {
+    "wave": 547,
+    "rt": 1614,
+    "task": 1100,
+    "next_rt": 1616,
+    "article": "QNATIVED46FB85C90",
+    "ware": 14022232,
+    "target": "QGd46fb85c90",
+    "source": "QFd46fb85c90",
+    "first_uid": "FULL.QA:d46fb85c90",
+    "second_uid": "FULL.QA:d46fb85c90B",
+    "target_uid": "FULL.QA:d46fb85c90O",
+    "second_task": 1101,
+    "third_wave": 548,
+    "partial_shared_rt": 1615,
+    "stage": "PARTIAL_SHARED_RESUMED_OWNER12_OTHER8_THIRD14",
+    "stock_changed_only_by_original_TASK_COMPLETE": true
+  }
+}

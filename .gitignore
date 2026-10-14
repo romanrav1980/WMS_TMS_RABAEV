@@ -109,3 +109,6 @@ WindowsApplication2/**/app.config
 **/*.pfx
 **/*.pem
 **/*.key
+
+# Malformed local pytest temp paths from escaped Windows basetemp
+/projectsTMStmpnicora_qualitycases*/

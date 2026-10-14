@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-222-current-slots-all-unload-roots'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Current storage-slot unloading admission for CASE/HU/FULLPAL roots',sysdate,user,'db/migrations/2026-10-11_ni052_unload_all_slots/apply.sql','db/migrations/2026-10-11_ni052_unload_all_slots/rollback.sql','APPLIED','Actual same219 UID FULL.QA:6ac14257b5/WARE7096290/TT33541; existing freshQC/reload FULL222.LOAD, obsolete active topology slot refusal/current slot required/late capacity rollback/native outer rollback/concurrent one winner/replay. FULL222.UNLOAD native+3/P3H3/measured OCCUPIED10kg1.5m3/current slot221/PUTAWAY949 DONE-SYNCED/same HARD coverage221/protected13520/20. Own physical pallet retained for next existing load/slot release.');
+commit;

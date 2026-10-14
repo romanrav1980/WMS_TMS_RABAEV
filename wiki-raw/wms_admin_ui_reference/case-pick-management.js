@@ -38,26 +38,26 @@ async function caseFetch(path, options = {}) {
   const body = text ? JSON.parse(text) : {};
   if (!response.ok) {
     const detail = body.detail?.message || body.detail || body.message || `HTTP ${response.status}`;
-    throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+    const error=new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+    error.status=response.status;throw error;
   }
   return body;
 }
 
 async function loadCaseData() {
-  try {
+  const demo = new URLSearchParams(location.search).get("demo") === "1";
+  caseState.demo = demo;
+  if (demo) {
+    caseState.tasks = demoTasks; caseState.shorts = demoShorts;
+  } else {
     const [tasks, shorts] = await Promise.all([
       caseFetch("/api/case-pick/tasks?scope=all&limit=200"),
       caseFetch("/api/case-pick/shorts?limit=100"),
     ]);
-    caseState.demo = tasks.length === 0;
-    caseState.tasks = tasks.length ? tasks.map(normalizeApiTask) : demoTasks;
-    caseState.shorts = tasks.length ? shorts : demoShorts;
-  } catch (error) {
-    caseState.demo = true;
-    caseState.tasks = demoTasks;
-    caseState.shorts = demoShorts;
+    caseState.tasks = tasks.map(normalizeApiTask); caseState.shorts = shorts;
   }
-  caseState.selectedId = caseState.selectedId || caseState.tasks[0]?.case_pick_task_id || null;
+  if (!caseState.tasks.some(task => task.case_pick_task_id === caseState.selectedId))
+    caseState.selectedId = caseState.tasks[0]?.case_pick_task_id || null;
   renderAll();
 }
 
@@ -80,9 +80,9 @@ function normalizeApiTask(task) {
     pallet_count_text: routePallets ? `${routeDone} из ${routePallets}` : "1 из 1",
     total_lines: Number(task.total_lines || planned || 0),
     picked_lines: Number(task.picked_lines || picked || 0),
-    planned_qty: planned,
-    picked_qty: picked,
-    efficiency: planned ? Math.round((picked / planned) * 100) : 0,
+    planned_qty: String(task.planned_qty ?? task.total_lines ?? "0"),
+    picked_qty: String(task.picked_qty ?? task.picked_lines ?? "0"),
+    efficiency: null,
     problem: task.problem || "",
     last_action: task.last_action || (task.closed_at ? "Поддон закрыт" : task.started_at ? "Идет сбор" : "Задание получено"),
   };
@@ -131,9 +131,9 @@ function renderKpis() {
   const notStarted = tasks.filter((task) => ["NEW", "WAITING"].includes(task.status)).length;
   const kpis = [
     ["Комплектовщиков", activePickers, `активных из ${new Set(tasks.map((task) => task.assigned_to)).size}`, "blue", "К"],
-    ["Рейсов сегодня", waves, "активных", "violet", "Р"],
-    ["Собрано сегодня", Math.round(picked), `${Math.round((picked / planned) * 100)}% плана`, "green", "С"],
-    ["Производительность", `${Math.round(avg(tasks, "efficiency"))}%`, "к плану", "green", "%"],
+    ["Волн в списке", waves, "активных", "violet", "Р"],
+    ["Собрано в списке", window.caseQuantity.sum(tasks,"picked_qty"), `${Math.round((picked / planned) * 100)}% плана`, "green", "С"],
+    ["Производительность", caseState.demo ? `${Math.round(avg(tasks, "efficiency"))}%` : "—", caseState.demo ? "к плану" : "Нет расчёта по времени", "green", "%"],
     ["Проблемы сейчас", problems, "требуют внимания", "orange", "!"],
     ["Не начали", notStarted, "комплектовщик", "red", "Н"],
   ];
@@ -159,8 +159,8 @@ function renderRows() {
         <td><b>${escapeHtml(task.wave_code || "-")}</b><small>${escapeHtml(task.route || "")}</small></td>
         <td><b>${escapeHtml(task.sscc || "-")}</b><small>Поддон</small></td>
         <td><span class="${progress < 60 ? "case-problem" : "case-strong"}">${escapeHtml(task.pallet_count_text || "1 из 1")}</span></td>
-        <td><span class="case-progress"><span><b>${Math.round(task.picked_qty || task.picked_lines || 0)} / ${Math.round(task.planned_qty || task.total_lines || 0)}</b><i class="case-bar ${progressClass}"><i style="width:${progress}%"></i></i></span><em>${progress}%</em></span></td>
-        <td><b class="${task.efficiency < 80 ? "case-problem" : "case-strong"}">${Math.round(task.efficiency || progress)}%</b><small>${task.efficiency >= 100 ? "+ к плану" : "- к плану"}</small></td>
+        <td><span class="case-progress"><span><b>${window.caseQuantity.display(task.picked_qty ?? task.picked_lines ?? "0")} / ${window.caseQuantity.display(task.planned_qty ?? task.total_lines ?? "0")}</b><i class="case-bar ${progressClass}"><i style="width:${progress}%"></i></i></span><em>${progress}%</em></span></td>
+        <td><b class="${task.efficiency < 80 ? "case-problem" : "case-strong"}">${caseState.demo ? Math.round(task.efficiency || progress)+"%" : "—"}</b><small>${caseState.demo ? (task.efficiency >= 100 ? "+ к плану" : "- к плану") : "Нет расчёта по времени"}</small></td>
         <td>${statusBadge(task.status)}<small>${statusText(task.status)}</small></td>
         <td>${task.problem ? `<span class="case-problem">${escapeHtml(formatProblem(task.problem)).replaceAll("\n", "<br>")}</span>` : '<span class="case-muted">-</span>'}</td>
         <td>${escapeHtml(formatLastAction(task.last_action) || "-").replaceAll("\n", "<br>")}</td>
@@ -190,7 +190,7 @@ function renderDetail() {
       <button type="button" aria-label="Закрыть">x</button>
     </div>
     <div class="case-detail-progress">
-      <span>${Math.round(task.picked_qty || task.picked_lines || 0)} / ${Math.round(task.planned_qty || task.total_lines || 0)} позиций</span>
+      <span>${window.caseQuantity.display(task.picked_qty ?? task.picked_lines ?? "0")} / ${window.caseQuantity.display(task.planned_qty ?? task.total_lines ?? "0")} позиций</span>
       <strong>${pct(task)}%</strong>
       <i class="case-bar"><i style="width:${pct(task)}%"></i></i>
     </div>
@@ -215,13 +215,15 @@ function renderDetail() {
     <div class="case-actions">
       <button id="caseTransfer" type="button">Передать</button>
       <button id="caseOpenTsd" type="button">Открыть ТСД</button>
-      <button id="caseApproveShort" type="button">Подтвердить вычерк</button>
+      <button id="caseApproveShort" type="button">Восстановить отбор</button><button id="caseAcceptShort" type="button">Принять недобор</button><button id="caseAcceptWeight" type="button">Завершить по допуску массы</button>
       <button id="caseRejectShort" class="danger" type="button">Отклонить</button>
     </div>
   `;
   document.getElementById("caseTransfer")?.addEventListener("click", () => caseSafe(() => transferSelected(task)));
   document.getElementById("caseOpenTsd")?.addEventListener("click", () => window.location.href = "case-pick-tsd.html");
-  document.getElementById("caseApproveShort")?.addEventListener("click", () => caseSafe(() => approveSelectedShort(task)));
+  document.getElementById("caseApproveShort")?.addEventListener("click", () => caseSafe(() => approveSelectedShort(task, "RESTORE")));
+  document.getElementById("caseAcceptShort")?.addEventListener("click", () => caseSafe(() => approveSelectedShort(task, "ACCEPT_SHORT")));
+  document.getElementById("caseAcceptWeight")?.addEventListener("click", () => caseSafe(() => approveSelectedShort(task, "WEIGHT_TOLERANCE")));
   document.getElementById("caseRejectShort")?.addEventListener("click", () => caseSafe(() => rejectSelectedShort(task)));
 }
 
@@ -245,7 +247,7 @@ function renderRouteSummary() {
           <span>Завершено: <b>${doneCount} из ${rows.length}</b></span>
           <span>В работе: <b>${activeCount}</b></span>
           <span>Осталось: <b>${remaining}%</b></span>
-          <span>Позиций: <b>${Math.round(sum(rows, "picked_qty"))}/${Math.round(sum(rows, "planned_qty"))}</b></span>
+          <span>Позиций: <b>${window.caseQuantity.sum(rows, "picked_qty")}/${window.caseQuantity.sum(rows, "planned_qty")}</b></span>
         </div>
         <div class="case-route-pallets">
           ${rows.slice(0, 4).map((row) => `
@@ -289,30 +291,51 @@ function renderAnalytics() {
   document.getElementById("casePickerStatuses").innerHTML = Object.entries(statuses).map(([status, rows]) => `<tr><td>${statusBadge(status)}</td><td>${rows.length}</td></tr>`).join("");
   const pendingShorts = caseState.shorts.filter((s) => s.status === "PENDING_APPROVAL");
   document.getElementById("caseProblems").innerHTML = [
-    ["Нехватка товара", pendingShorts.length || 2],
+    ["Нехватка товара", pendingShorts.length],
     ["Не начали работу", tasks.filter((t) => t.status === "NEW").length],
     ["Оффлайн", tasks.filter((t) => t.status === "OFFLINE").length],
     ["Ошибки сканирования", 0],
   ].map(([name, count], i) => `<tr><td>${i + 1}. ${escapeHtml(name)}</td><td>${count}</td></tr>`).join("");
-  document.getElementById("caseLastProblems").innerHTML = pendingShorts.slice(0, 4).map((short) => `<tr><td><span class="case-problem">${escapeHtml(short.reason_text || "Вычерк")}</span><span class="case-muted">Ячейка ${escapeHtml(short.cell_code || "-")}, арт. ${escapeHtml(short.articul || "-")}</span></td><td>8 мин назад</td></tr>`).join("") || '<tr><td>Нет открытых проблем</td><td></td></tr>';
+  document.getElementById("caseLastProblems").innerHTML = pendingShorts.slice(0, 4).map((short) => `<tr><td><span class="case-problem">${escapeHtml(short.reason_text || "Вычерк")}</span><span class="case-muted">Ячейка ${escapeHtml(short.cell_code || "-")}, арт. ${escapeHtml(short.articul || "-")}</span></td><td>${escapeHtml(short.created_at || "-")}</td></tr>`).join("") || '<tr><td>Нет открытых проблем</td><td></td></tr>';
 }
 
 async function transferSelected(task) {
-  if (caseState.demo) {
-    alert("Демо-режим: transfer будет доступен на API-данных.");
-    return;
-  }
-  const toResourceId = Number(prompt("ID ресурса нового комплектовщика"));
-  if (!toResourceId) return;
-  await caseFetch(`/api/case-pick/tasks/${task.case_pick_task_id}/transfer`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ to_resource_id: toResourceId, reason: "Передача из ARM комплектации" }),
-  });
+  if (caseState.demo) { alert("Демо-режим: передача доступна на API-данных."); return; }
+  await window.caseHandoff.send(task);
   await loadCaseData();
 }
 
-async function approveSelectedShort(task) {
+function shortDecisionPrefix() {
+  return "case.short.decision:" + caseApiBase() + ":" +
+    (window.wmsAdminAuth?.state?.user?.username || "") + ":";
+}
+
+async function retrySavedShortDecisions() {
+  if (!window.wmsAdminAuth?.hasPermission("case_pick_short_approve")) return;
+  const prefix = shortDecisionPrefix();
+  const keys = Object.keys(localStorage).filter(key => key.startsWith(prefix));
+  for (const key of keys) {
+    const id = key.slice(prefix.length);
+    if (!/^[1-9][0-9]*$/.test(id)) continue;
+    const body = JSON.parse(localStorage.getItem(key));
+    await caseFetch("/api/case-pick/shorts/" + id + "/approve", {method: "POST",
+      headers: {"Content-Type":"application/json"}, body: JSON.stringify(body)});
+    localStorage.removeItem(key);
+  }
+  await loadCaseData();
+}
+
+const shortRetryButton = document.createElement("button");
+shortRetryButton.type = "button";
+shortRetryButton.textContent = "Повторить сохранённые решения по недостачам";
+shortRetryButton.addEventListener("click", async () => {
+  shortRetryButton.disabled = true;
+  try { await retrySavedShortDecisions(); } catch (error) { alert(error.message); }
+  finally { shortRetryButton.disabled = false; }
+});
+(document.querySelector("main") || document.body).prepend(shortRetryButton);
+
+async function approveSelectedShort(task, decision) {
   const short = caseState.shorts.find((item) => item.case_pick_task_id === task.case_pick_task_id && item.status === "PENDING_APPROVAL");
   if (!short) {
     alert("Нет вычерка на подтверждение.");
@@ -323,11 +346,31 @@ async function approveSelectedShort(task) {
     renderAll();
     return;
   }
+  const key = "case.short.decision:" + caseApiBase() + ":" +
+    (window.wmsAdminAuth?.state?.user?.username || "") + ":" + short.case_pick_short_id;
+  const saved = localStorage.getItem(key);
+  const body = saved ? JSON.parse(saved) : {decision, reason_text: "Решение начальника смены из ARM комплектации",
+    operation_id: "SHORT.UI:" + crypto.randomUUID()};
+  if (body.decision !== decision) throw new Error("Сначала повторите сохранённое решение: " + body.decision);
+  if (!saved && decision === "WEIGHT_TOLERANCE") {
+    const preview = await caseFetch("/api/case-pick/shorts/" + short.case_pick_short_id + "/weight-preview");
+    if (!preview.within_tolerance) throw new Error("Масса заказа вне допуска: " + preview.picked_quantity + " из " + preview.requested_quantity + " KG.");
+    const reason = prompt("Заказ: " + preview.requested_quantity + " KG; факт: " + preview.picked_quantity +
+      " KG; допуск: " + preview.tolerance_pct + "%. Основание завершения:");
+    if (reason === null) return;
+    if (reason.trim().length < 3) throw new Error("Укажите основание завершения.");
+    body.reason_text = reason.trim();
+    body.expected_weight_policy_version = preview.policy_version;
+    body.expected_content_version = preview.content_version;
+    body.expected_order_weight_signature = preview.order_weight_signature;
+  }
+
+  localStorage.setItem(key, JSON.stringify(body));
   await caseFetch(`/api/case-pick/shorts/${short.case_pick_short_id}/approve`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ reason_text: "Подтверждено из ARM комплектации" }),
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
   });
+  localStorage.removeItem(key);
   await loadCaseData();
 }
 
@@ -374,6 +417,7 @@ function statusBadge(status) {
   const map = {
     IN_PROGRESS: ["В работе", "green"],
     PARTIAL: ["Остановлен", "orange"],
+    WAIT_REPLENISHMENT: ["Ожидает пополнение", "red"],
     WAIT_CONTROL: ["Контроль", "blue"],
     PICKED: ["Собран", "green"],
     READY_TO_SHIP: ["Готов", "green"],
@@ -477,4 +521,5 @@ async function caseSafe(fn) {
 document.getElementById("caseRefresh").addEventListener("click", () => caseSafe(loadCaseData));
 document.getElementById("caseConfigure").addEventListener("click", () => alert("Настройка вида будет сохранена в профиле диспетчера."));
 
-loadCaseData();
+window.addEventListener("wms-admin-auth-ready", () => caseSafe(loadCaseData));
+if (window.wmsAdminAuth?.state?.user || new URLSearchParams(location.search).get("demo")==="1") caseSafe(loadCaseData);

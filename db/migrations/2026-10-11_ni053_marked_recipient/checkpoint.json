@@ -1,0 +1,14 @@
+{
+  "migration_id": "2026-10-11-229-original-marked-store-recipient",
+  "sha256": {
+    "db/migrations/2026-10-11_ni053_marked_recipient/000_before_rrl_stock_posting_api.sql": "45cba7dfc7f138515bc44585e9d4def0d15ccd4f34dfdbb1fd1e614c622c5257",
+    "db/migrations/2026-10-11_ni053_marked_recipient/000_before_rrl_stock_store_receipt_cmd.sql": "8477a783108f1125391f279934c7f2d3ec5db32fa0c4c5050bd06c747023c95e",
+    "db/migrations/2026-10-11_ni053_marked_recipient/000_before_rrl_stock_store_receipt_read.sql": "a72bbc0148787e21ff457fea37d23a63ca261d1fd8d58d8610abc48b93a0d8e9",
+    "db/migrations/2026-10-11_ni053_marked_recipient/000_before_rrl_stock_store_disposition.sql": "0875ecc5963dcf269736cf6e7783fd8537b73779be987e4212c2cb9b408009a9",
+    "db/migrations/2026-10-11_ni053_marked_recipient/000_before_rrl_stock_store_weight_core.sql": "c7d44a327e00d3d98b54008358bcb187b190ba62dfc7bddf1ddb6a9089da0620",
+    "db/migrations/2026-10-11_ni053_marked_recipient/000_receipt_columns.json": "d06bc8a0af633fe734f09a64c726552fc8bff22b8660205333c9575485f61138",
+    "db/migrations/2026-10-11_ni053_marked_recipient/000_before_current_runtime_manifest.json": "dbe2de3217d76bd2e643a7cde0968a0de86751b2cc4c02fadccd7652c579aec0",
+    "db/migrations/2026-10-11_ni053_marked_recipient/000_before_store_receipt_routes.py": "a859abe15447e30cf344b480917cacd7bec00b53668a3fca00c1e2fd56191130",
+    "db/migrations/2026-10-11_ni053_marked_recipient/000_before_store_receipt.py": "5d06b4971b5fd43a71b312ebc85fde086f3fec50d4480a056e4d937e70ea3c8e"
+  }
+}

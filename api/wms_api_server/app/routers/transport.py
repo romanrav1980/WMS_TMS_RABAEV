@@ -55,6 +55,7 @@ transport.py — FastAPI роутер диспетчера отгрузки.
 
 from datetime import date
 from typing import Annotated
+from ..modules.transport.public import TransportLoadingPort, transport_loading_service
 
 import threading
 
@@ -80,7 +81,6 @@ from ..schemas import (
     ClusterCreateTaskRequest,
     DriverCreateRequest,
     DriverUpdateRequest,
-    OperationFactUpdate,
     PriceUpdateRequest,
     TransportStAssignRequest,
     TransportStLoadTypeRequest,
@@ -265,12 +265,9 @@ def list_available_sts(
         max_volume_m3=max_volume_m3,
         articul=articul,
         raion=raion,
+        page=page,
+        page_size=page_size,
     )
-    if page is not None or page_size is not None:
-        effective_page = page or 1
-        effective_size = page_size or 100
-        offset = (effective_page - 1) * effective_size
-        return rows[offset:offset + effective_size]
     return rows
 
 
@@ -397,8 +394,9 @@ def update_task(
 def close_task(
     task_id: int,
     user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_CLOSE_PERMISSION)),
+    loading: TransportLoadingPort = Depends(transport_loading_service),
 ) -> dict:
-    TransportService().close_task(task_id, user.username)
+    TransportService(departure=lambda trip,actor: loading.depart("TRIP.DEPART:"+str(trip),trip,actor)).close_task(task_id,user.username)
     ws_manager.broadcast_sync({"type": "task_closed", "payload": {"task_id": task_id}})
     return {"task_id": task_id, "condition": "Отгружен"}
 
@@ -642,6 +640,7 @@ def apply_vrp_plan(
         plan_id=body.plan_id,
         shipment_date=body.shipment_date,
         dock=body.dock,
+        user_id=_user.username,
     )
 
 
@@ -702,7 +701,7 @@ def plan_operations(
     _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
 ) -> list[dict]:
     """Рассчитывает и сохраняет цепочку плановых операций рейса по нормативам."""
-    return TransportService().plan_operations(task_id)
+    return TransportService().plan_operations(task_id, _user.username)
 
 
 @router.get("/tasks/{task_id}/operations")
@@ -714,14 +713,6 @@ def get_operations(
     return TransportService().get_operations(task_id)
 
 
-@router.patch("/operations/{op_id}/fact")
-def update_operation_fact(
-    op_id: int,
-    data: OperationFactUpdate,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
-) -> dict:
-    """Фиксирует fact_start / fact_end операции (ввод диспетчера или мобильного водителя)."""
-    return TransportService().update_operation_fact(op_id, data)
 
 
 @router.get("/vehicles/gantt")

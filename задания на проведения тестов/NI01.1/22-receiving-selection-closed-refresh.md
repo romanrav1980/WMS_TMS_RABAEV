@@ -1,0 +1,3 @@
+# Qwen: позиция приёмки
+Report22. Source908 не пересоздавать/не принимать снова. Read-only: order3aa116e51983443e8b20d055195a22b8 line2/REVERSED, current WMS CRPT+EGAIS policy, historyline1received3/current0. Alias/orderline/conflictingIDs/unknownline/numericdataset/currentactor. Closed source disablesreceipt+newlabel, balance notreadyreceipt. Manualclick/browserkeyboard отдельноподтвердить; automationнеподтвердила.
+На собственной открытой поставке проверить подтверждённое received response→busyinternalrefresh selectsline/currentpolicy→controls restored. Внешний выбор во времяbusyblocked; uncertain response repeatsoriginalID/body. Не считатьNode callbackтестреальнойтоварнойприёмкой. Скриншоты/SQLрешение/сохранениеистории/никакихfakeGovACK.

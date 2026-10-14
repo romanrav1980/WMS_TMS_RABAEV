@@ -1,0 +1,13 @@
+{
+  "migration_id": "2026-10-11-234-original-marked-store-return-receiving",
+  "sha256": {
+    "db/migrations/2026-10-11_ni062_marked_receiving/000_before_rrl_stock_unit_core.sql": "75d8ce1f3416a24f55df0664327ab80ffa4c00955971e5e4c4c59efd674c58aa",
+    "db/migrations/2026-10-11_ni062_marked_receiving/000_before_rrl_stock_store_return_rec_cmd.sql": "54fe06349c20bf01a3f6c4714b7fa0ee9c435777a822d8566c4a6d2d65c2ff2d",
+    "db/migrations/2026-10-11_ni062_marked_receiving/000_before_rrl_stock_posting_api.sql": "d9ec6cadc7bb024ee128e079c57f88d3b0360c876ab9a822f0f4aeea73139426",
+    "db/migrations/2026-10-11_ni062_marked_receiving/000_before_rrl_stock_unit_guard.sql": "f889abe68ab50bda50b9404c3e0d1415d7831789db2e636e098dfe3bc415d469",
+    "db/migrations/2026-10-11_ni062_marked_receiving/000_before_current_runtime_manifest.json": "394b9ff463f57d27020e38b97f027f956e0902e3830239d14f09972902fc9018",
+    "db/migrations/2026-10-11_ni062_marked_receiving/000_before_store_return_receiving_routes.py": "fece80c291d297ded8bd6c1867c5d24170dc43871c072dcb01ffd9d85e913285",
+    "db/migrations/2026-10-11_ni062_marked_receiving/000_before_store_return_receiving.py": "f9a5e105dbecff2ae8db3257346e706312d5bca447157b71cd16b5db7e2cef84",
+    "db/migrations/2026-10-11_ni062_marked_receiving/000_before_store-return-receiving.js": "0d902088db98d5b7ada6fa6083ad976d24696c3a03f0f923f8efa3ac2a31fd80"
+  }
+}

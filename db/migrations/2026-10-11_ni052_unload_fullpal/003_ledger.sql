@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-217-fullpal-original-unload'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Original bound FULLPAL unload via same native fulfillment and stock owner',sysdate,user,'db/migrations/2026-10-11_ni052_unload_fullpal/apply.sql','db/migrations/2026-10-11_ni052_unload_fullpal/rollback.sql','APPLIED','Actual WARE5747578/wave473/FULL.ST:562cdaa306/original SINGLE.FULL.LOAD:562cdaa306/new FULL217.UNLOAD:562cdaa306:OTHER; original-3/new+3/P3H3/late rollback/concurrent one winner/exact replay/currentWARE403; same original DONE task/UID retained and PICKED current stock version. Own spare native zero; primary3/3 retained for fresh QC/reload. Protected13520/20.');
+commit;

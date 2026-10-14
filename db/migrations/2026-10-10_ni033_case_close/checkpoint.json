@@ -1,0 +1,13 @@
+{
+    "source_sha256":  {
+                          "db/migrations/2026-10-10_ni033_case_close/rollback.sql":  "f9d65a9819afa4f6ad5c9e0a6a7ecbc9a9e22ed532bbf8edaed8acb6c26af5ca",
+                          "db/migrations/2026-10-10_ni033_case_close/verify.sql":  "f785eabfcfe7275e003252ea7298cb736d12f94d5b55fa3aad0ec7d0ca22ef7b",
+                          "api/wms_api_server/app/modules/inventory/infrastructure/case_carrier_close.py":  "ef7724197b874a6bda1b8dd0f8e7e2ab8161c5562b773e44e690382fb70b0094",
+                          "db/migrations/2026-10-10_ni033_case_close/apply.sql":  "aa82da7cdd5fa754dc9a41a9d326f153f32471639378b9bba0debf5407c3845d",
+                          "db/migrations/2026-10-10_ni033_case_close/001_journal_guard.sql":  "b86b8c2fcfe9cbdebecbca793059282c49cb8a4eda469dcbe94f50d066be9bd2",
+                          "api/wms_api_server/app/modules/inventory/infrastructure/case_close_journal.py":  "cd18a54d37464d43cfb1515872cc6664e339cc4b829793c364c2ab648652cc29"
+                      },
+    "recovery":  "Drop additive guard only; keep original journal; no database copy",
+    "migration_id":  "2026-10-10-167-case-carrier-close",
+    "note":  "SQL and rollback prepared before apply; Python checkpoint write denied, hashes recorded after additive trigger apply"
+}

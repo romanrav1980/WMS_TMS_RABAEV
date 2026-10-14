@@ -1,0 +1,13 @@
+const fs=require("fs"),vm=require("vm"),assert=require("assert");
+const ts=require("../admin/wms_admin_frontend/node_modules/typescript");
+const file="admin/wms_admin_frontend/src/features/delivery/custodyIntentValidation.ts";
+const code=ts.transpileModule(fs.readFileSync(file,"utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText;
+const context={exports:{},TextEncoder};vm.runInNewContext(code,context);
+const parse=context.exports.parseCustodyIntent;
+const body={operation_id:"RETURN.CUSTODY:test",transport_operation_id:"source",pallet_identifier:"legacy-uid",quantity:"3",base_uom:"EA",gross_weight_kg:"0.3",physical_places:1};
+const intent={path:"/handover",body};assert.deepStrictEqual(JSON.parse(JSON.stringify(parse(JSON.stringify(intent)))),intent);
+assert.equal(parse(null),null);
+for(const value of ["{","null",JSON.stringify({path:"/other",body}),JSON.stringify({...intent,body:{...body,quantity:3}}),JSON.stringify({...intent,body:{...body,physical_places:0}}),JSON.stringify({...intent,body:{...body,aggregation_scans:[{system_code:"CRPT",profile_code:"x".repeat(81),code:"box",level:"BOX"}]}})])assert.throws(()=>parse(value));
+const pickup={path:"/pickup",body:{operation_id:"RETURN.CUSTODY:pickup",handover_operation_id:"handover",scan_vehicle:"vehicle",scan_pallet:"legacy-uid",aggregation_scans:[{system_code:"CRPT",profile_code:"я".repeat(40),code:"original-pallet",level:"PALLET"}]}};
+assert.equal(parse(JSON.stringify(pickup)).body.scan_pallet,"legacy-uid");
+console.log("660 custody intent: valid original payload retained; malformed/type/quantity/profile boundary rejected. No HTTP or goods writes.");

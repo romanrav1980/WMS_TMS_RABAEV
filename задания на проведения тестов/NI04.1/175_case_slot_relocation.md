@@ -1,0 +1,3 @@
+#175: отдельное CASE между слотами
+Source db/migrations/2026-10-11_ni041_case_relocation. Actual own409/CASE1048/1049, OP CASE.RELOCATE175:cea0ff2dc1. Скрипт ni041_case_relocation_existing_case.py создаёт новый собственный поток, native tare book/pick/close/attach/placement/unpack/relocate; rollback и concurrent HTTP одного OP, badscan/changed409, P20H20/два claims30kg/no quantity journal.
+Нельзя переписывать terminal metadata для повторения. Cleanup выполняет root return, tare book release, deferred wave finish и count0; сохраняет историю. Проверить HARD identity/slot, source claim release и CTRL version invalidation. Дополнительные mixed marked/UOM/large trees — отдельные новые источники. Полная независимая приёмка пока не выполнена.

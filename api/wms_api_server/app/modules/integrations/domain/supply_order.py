@@ -1,5 +1,6 @@
-"""Assumed gateway contract v1. This is not a claimed SAP standard IDoc type."""
+"""Versioned warehouse gateway contract; not a claimed SAP standard IDoc type."""
 from decimal import Decimal, InvalidOperation
+from typing import Any,Callable
 import base64
 from hashlib import sha256
 import xml.etree.ElementTree as ET
@@ -14,8 +15,8 @@ def read_supply_order(raw: bytes) -> dict:
     if "<!DOCTYPE" in xml.upper() or "<!ENTITY" in xml.upper():
         raise ValueError("DTD and entities are forbidden")
     root = ET.fromstring(xml)
-    if local_name(root.tag) != "WarehouseSupplyOrder" or root.get("version") != "1":
-        raise ValueError("Expected WarehouseSupplyOrder version=1")
+    if local_name(root.tag) != "WarehouseSupplyOrder" or root.get("version") not in {"1","2"}:
+        raise ValueError("Expected WarehouseSupplyOrder version=1 or version=2")
     allowed = {"Sender", "MessageId", "OrderNumber", "Revision", "WarehouseId", "ReceiveCell", "Supplier", "Lines", "Aggregations"}
     if any(local_name(node.tag) not in allowed for node in root):
         raise ValueError("Unmapped supply order field: update gateway contract explicitly")
@@ -56,11 +57,21 @@ def read_supply_order(raw: bytes) -> dict:
             raise ValueError("Quantity must be positive with at most 6 decimal places")
         if not unit or len(unit) > 20 or number in numbers:
             raise ValueError("Missing unit or duplicate line number")
-        if material in materials:
+        if root.get("version")=="1" and material in materials:
             raise ValueError("Working v1 contract requires one line per material")
         numbers.add(number)
         materials.add(material)
         lines.append({"line_number": number, "material": material, "quantity": str(qty), "unit": unit})
+    aggregations = read_supply_aggregations(root,numbers,value)
+    return {"gateway_contract_version": int(root.get("version")), "sender": sender, "message_id": message_id, "order_number": order_number,
+            "revision": int(revision), "warehouse_id": int(warehouse),
+            "receive_cell": value(root, "ReceiveCell", 60), "supplier": value(root, "Supplier", 200),
+            "lines": lines, "aggregations": aggregations,
+            "payload_hash": sha256(raw).hexdigest(), "raw_xml": raw.decode("utf-8")}
+
+
+
+def read_supply_aggregations(root: ET.Element,numbers: set[str],value: Callable[[ET.Element,str,int],str]) -> list[dict[str,Any]]:
     aggregations = []
     manifests = [n for n in root if local_name(n.tag) == "Aggregations"]
     if len(manifests) > 1:
@@ -119,8 +130,4 @@ def read_supply_order(raw: bytes) -> dict:
                 members.append(item)
             aggregations.append({"line_number": line, "system": system, "profile": profile,
                                  "level": level, "code": aggregate_code, "units": members})
-    return {"sender": sender, "message_id": message_id, "order_number": order_number,
-            "revision": int(revision), "warehouse_id": int(warehouse),
-            "receive_cell": value(root, "ReceiveCell", 60), "supplier": value(root, "Supplier", 200),
-            "lines": lines, "aggregations": aggregations,
-            "payload_hash": sha256(raw).hexdigest(), "raw_xml": raw.decode("utf-8")}
+    return aggregations

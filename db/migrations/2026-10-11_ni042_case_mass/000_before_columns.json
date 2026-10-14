@@ -1,0 +1,47 @@
+[
+  [
+    "LOAD_OPERATION_ID",
+    "VARCHAR2",
+    "N"
+  ],
+  [
+    "BOX_UID",
+    "VARCHAR2",
+    "N"
+  ],
+  [
+    "BOX_CONTENT_VERSION",
+    "NUMBER",
+    "N"
+  ],
+  [
+    "GROSS_WEIGHT_KG",
+    "NUMBER",
+    "N"
+  ],
+  [
+    "MEASUREMENT_ORIGIN",
+    "VARCHAR2",
+    "N"
+  ],
+  [
+    "MEASUREMENT_REF",
+    "VARCHAR2",
+    "N"
+  ],
+  [
+    "SCAN_IDENTIFIER",
+    "VARCHAR2",
+    "N"
+  ],
+  [
+    "RECORDED_BY",
+    "VARCHAR2",
+    "N"
+  ],
+  [
+    "RECORDED_AT",
+    "TIMESTAMP(6) WITH TIME ZONE",
+    "N"
+  ]
+]

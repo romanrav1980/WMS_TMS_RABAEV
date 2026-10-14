@@ -1,9 +1,12 @@
+from datetime import date
+from typing import Literal
+from pydantic import ConfigDict
 import xml.etree.ElementTree as ET
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from pydantic import BaseModel, Field
 from starlette.concurrency import run_in_threadpool
-from ....auth import AdminUser, require_permission
+from ...platform.public import AdminUser, require_permission
 from ..application.ports import StoreOrdersPort, StoreOrderConflict, PreparationPort
 from decimal import Decimal
 
@@ -39,6 +42,8 @@ def prepare_st(order_id: int,body: PreparationRequest,user: AdminUser=Depends(re
         raise HTTPException(422,'At most 10000 planned rows')
     try:
         return service.prepare(order_id,body.model_dump(mode='json'),user.username)
+    except PermissionError as exc:
+        raise HTTPException(403,str(exc)) from exc
     except LookupError as exc:
         raise HTTPException(404,str(exc)) from exc
     except StoreOrderConflict as exc:
@@ -65,6 +70,8 @@ async def receive_order(request: Request,user: AdminUser=Depends(require_permiss
         return await run_in_threadpool(service.receive,bytes(raw),user.username)
     except StoreOrderConflict as exc:
         raise HTTPException(409,str(exc)) from exc
+    except PermissionError as exc:
+        raise HTTPException(403,str(exc)) from exc
     except (ValueError,ET.ParseError,UnicodeDecodeError) as exc:
         raise HTTPException(422,str(exc)) from exc
 
@@ -73,7 +80,10 @@ async def receive_order(request: Request,user: AdminUser=Depends(require_permiss
 def list_orders(warehouse_id: int | None=None,limit: int=Query(100,ge=1,le=200),
                 user: AdminUser=Depends(require_permission('customer_order_view')),
                 service: StoreOrdersPort=Depends(store_order_service)) -> list[dict]:
-    return service.list(warehouse_id,limit)
+    try:
+        return service.list(warehouse_id,limit,user.username)
+    except PermissionError as exc:
+        raise HTTPException(403,str(exc)) from exc
 
 
 @router.put('/warehouses/{warehouse}/stores/{store_code}/calendar')
@@ -82,6 +92,8 @@ def configure_calendar(warehouse: int,store_code: str,body: StoreCalendar,
                        service: StoreOrdersPort=Depends(store_order_service)) -> dict:
     try:
         return service.configure(warehouse,store_code,body.model_dump(),user.username)
+    except PermissionError as exc:
+        raise HTTPException(403,str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(422,str(exc)) from exc
 
@@ -90,6 +102,51 @@ def configure_calendar(warehouse: int,store_code: str,body: StoreCalendar,
 def get_order(order_id: int,user: AdminUser=Depends(require_permission('customer_order_view')),
               service: StoreOrdersPort=Depends(store_order_service)) -> dict:
     try:
-        return service.get(order_id)
+        return service.get(order_id,user.username)
+    except PermissionError as exc:
+        raise HTTPException(403,str(exc)) from exc
     except LookupError as exc:
         raise HTTPException(404,str(exc)) from exc
+
+class CalendarException(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    operation_id: str = Field(min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_.:-]+$")
+    warehouse_id: int = Field(strict=True, gt=0)
+    store_code: str = Field(min_length=1, max_length=100)
+    delivery_date: date
+    expected_version: int = Field(strict=True, ge=0)
+    day_state: Literal["OPEN", "CLOSED"]
+    source_reference: str = Field(min_length=8, max_length=500)
+    reason: str = Field(min_length=8, max_length=500)
+
+
+@router.get('/warehouses/{warehouse}/stores/{store_code}/calendar-context')
+def calendar_context(warehouse: int, store_code: str, delivery_date: date,
+                     user: AdminUser=Depends(require_permission('customer_rule_edit')),
+                     service: StoreOrdersPort=Depends(store_order_service)) -> dict:
+    try:
+        return service.calendar_context(warehouse,store_code,delivery_date.isoformat(),user.username)
+    except PermissionError as exc:
+        raise HTTPException(403,str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(409,str(exc)) from exc
+
+
+@router.post('/calendar-exceptions')
+def calendar_exception(body: CalendarException, user: AdminUser=Depends(require_permission('customer_rule_edit')),
+                       service: StoreOrdersPort=Depends(store_order_service)) -> dict:
+    try:
+        return service.set_calendar_exception(body.operation_id,body.model_dump(mode="json",exclude={"operation_id"}),user.username)
+    except PermissionError as exc:
+        raise HTTPException(403,str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(409,str(exc)) from exc
+
+@router.post('/{order_id}/prepare-st/resolve')
+def resolve_preparation(order_id: int,body: PreparationRequest,user: AdminUser=Depends(require_permission('customer_order_import')),
+                        service: PreparationPort=Depends(preparation_service)) -> dict:
+    if sum(len(p.lines)for p in body.pallets)>10000:raise HTTPException(422,'At most 10000 planned rows')
+    try:return service.resolve(order_id,body.model_dump(mode='json'),user.username)
+    except PermissionError as exc:raise HTTPException(403,str(exc))from exc
+    except LookupError as exc:raise HTTPException(404,str(exc))from exc
+    except StoreOrderConflict as exc:raise HTTPException(409,str(exc))from exc

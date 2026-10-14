@@ -1,0 +1,51 @@
+{
+  "wave": 532,
+  "rt": 1577,
+  "task": 1086,
+  "next_rt": 1579,
+  "article": "QNATIVEC7BFE6AC2D",
+  "ware": 13190790,
+  "target": "QGc7bfe6ac2d",
+  "source": "QFc7bfe6ac2d",
+  "first_uid": "FULL.QA:c7bfe6ac2d",
+  "second_uid": "FULL.QA:c7bfe6ac2dB",
+  "target_uid": "FULL.QA:c7bfe6ac2dO",
+  "second_task": 1087,
+  "third_wave": 533,
+  "stage": "TWO_ARRIVALS_PASS_OWN_CLEANED",
+  "stock_changed_only_by_original_TASK_COMPLETE": true,
+  "facts": [
+    [
+      1086,
+      "DONE",
+      20
+    ],
+    [
+      1087,
+      "DONE",
+      8
+    ]
+  ],
+  "clean": [
+    0,
+    0
+  ],
+  "errors": [],
+  "invalid": [],
+  "sql": [
+    [
+      "c0a6xqdg1c011",
+      5,
+      17.55,
+      126.4,
+      "update RRL_PICK_WAVE_REPLENISH_TASK rt            set STATUS='CANCELLED',DEMAND_BASE_QTY=0,                WAIT_REASON='Own target"
+    ],
+    [
+      "0ufmsv96693jb",
+      1,
+      26.163,
+      84,
+      "select distinct rt.PICK_WAVE_ID from RRL_PICK_WAVE_REPLENISH_TASK rt         join RRL_PICK_WAVE w on w.PICK_WAVE_ID=rt.PICK_WAVE_I"
+    ]
+  ]
+}

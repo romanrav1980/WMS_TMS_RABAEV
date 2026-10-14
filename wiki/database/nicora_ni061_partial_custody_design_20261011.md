@@ -1,0 +1,8 @@
+# Ответственность и следующее плечо после подтверждённой недостачи
+296 расширяет существующий INTERWARE_CUSTODY_RELEASE, не создаёт второго исполнителя. Partial receipt допускается только с APPLIED независимым295 confirm: immutable declared=actualaccepted+confirmedshort, originalload/root/warehouse/request and missing-unit book match. Физическая приёмка не называется полной. Завершение ответственности первого плеча происходит отдельной командой не ранее подтверждения недостачи. Исходные departure/load/receipt/loss сохраняются; zero-stock effect.
+
+Дальше прежний конструктор СТ и оригинальный LOAD_SHIPMENT используют только принятый новыйUID/actualQty. Для marked проверяется subset из APPLIED partial receipt, а не весь manifest3. Native gate требует actual acceptedQty loaded and confirmedShort accounted, currentThermal release; не пропускает unresolvedShort или fake fullreceipt. Read readiness различает полную приёмку и разрешённое расхождение, expected3/received1/confirmedloss2/toLoad1.
+
+Original order/fulfillment shipped3 не переписываются и не повторяются. Для final STORE receipt надо сохранить originalcustomer lineage and actual onwardQty; remaining demand/loss distinction явное. Late recovered confirmedlost units нельзя restoreобычнымкодом; отдельный correction остаётся следующим срезом. Zero losses/common fullflow behavior unchanged. Native all sorted resources/shared fences/currentactor beforecache/afterwait; exact replay and rollback preserveP/H/unitcodes.
+
+Dev: existing291ordinary/292marked only; native release rollback then one actualrelease per receipt, oldconstructor one STqty1/noP, markedsubset QC/actualLOAD/DEPART planning target, currentpromise proof; incomplete/mismatchedloss denied. Independent/hardware/Gov/legal unverified.

@@ -1,0 +1,3 @@
+from pathlib import Path
+import json
+p=Path("db/migrations/2026-10-08_stock_posting_core/current_runtime_manifest.json");j=json.loads(p.read_text(encoding="utf-8"));j["packages"].append("RRL_STORE_ORDER_SCOPE");j["components"].append("../2026-10-11_ni022_source_scope/001_api.sql");print(json.dumps({str(p):json.dumps(j,ensure_ascii=True,indent=2)+"\n"},ensure_ascii=True))

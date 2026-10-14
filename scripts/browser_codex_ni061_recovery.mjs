@@ -1,0 +1,27 @@
+import {chromium} from '../admin/wms_admin_frontend/node_modules/playwright/index.mjs';import fs from 'node:fs';
+const out='reports/nicora/2026-10-13/codex/NI061/';fs.mkdirSync(out,{recursive:true});
+const browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width:1400,height:1000}}),checks=[],errors=[],posts=[];let mode='lost';
+page.on('pageerror',e=>errors.push(e.message));
+await page.route('**/api/inventory/interwarehouse/*',async route=>{if(route.request().method()!=='POST')return route.continue();const body=route.request().postDataJSON();posts.push(body);if(mode==='lost')return route.abort('failed');return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({operation_id:mode==='wrong'?'OTHER.OP':body.operation_id})});});
+try{
+ await page.goto('http://127.0.0.1:8088/wms-admin/interwarehouse-groups.html?warehouse_id=56524567&plan_id=GROUP672.PLAN%3A6207f7b382');await page.locator('#adminLoginForm button[type=submit]').click();await page.waitForFunction(()=>document.querySelectorAll('#ggLots section').length===2);
+ await page.locator('#ggPallet').fill('LOCAL.RECOVERY.PALLET');await page.locator('#ggVehicle').fill('LOCAL.VEHICLE');await page.locator('#ggUnloadDock').fill('LOCAL.DOCK');await page.locator('#ggUnload').click();await page.waitForFunction(()=>!document.querySelector('#ggRetry').hidden&&!document.querySelector('#ggRetry').disabled);
+ const key=await page.evaluate(()=>Object.keys(localStorage).find(k=>k.startsWith('interwarehouse-groups:')&&!k.includes(':scans:'))),first=JSON.stringify(posts[0]);
+ await page.reload();await page.waitForFunction(()=>!document.querySelector('#ggRetry').hidden);mode='wrong';await page.locator('#ggRetry').click();await page.waitForFunction(()=>document.querySelector('#ggStatus').textContent.includes('не соответствует'));
+ if(!await page.evaluate(key=>localStorage.getItem(key)!==null,key)||JSON.stringify(posts[1])!==first)throw Error('Wrong response lost original intent');checks.push('real group GET; lost response reload exact retry; wrong operation response retains intent');
+ mode='ok';await page.locator('#ggRetry').click();await page.waitForFunction(()=>document.querySelector('#ggRetry').hidden);if(JSON.stringify(posts[2])!==first||await page.evaluate(key=>localStorage.getItem(key)!==null,key))throw Error('Exact retry not retired');checks.push('matching response retires only original command');
+ await page.evaluate(key=>localStorage.setItem(key,'{damaged'),key);await page.reload();await page.waitForFunction(()=>!document.querySelector('#ggRecover').hidden);
+ if(!await page.locator('#ggUnload').isDisabled()||!await page.locator('#ggRetry').isHidden())throw Error('Damaged allowed POST');await page.locator('#ggWare').fill('56524567');await page.locator('#ggRecover').click();await page.waitForFunction(()=>document.querySelector('#ggRecover').hidden);
+ if(!await page.evaluate(key=>Object.keys(localStorage).some(k=>k.startsWith(key+':archive:')&&localStorage.getItem(k)==='{damaged')&&localStorage.getItem(key)===null,key))throw Error('Archive missing');checks.push('damaged intent blocks commands; explicit archive and real current warehouse GET');
+ await page.waitForFunction(()=>document.querySelector('#ggStatus').textContent.includes('Исходник сохранён в архив'));await page.locator('#ggStatus').screenshot({path:out+'recovery.png'});
+ await page.locator('#ggPlan').selectOption('GROUP672.PLAN:6207f7b382');await page.locator('#ggDetail').click();await page.waitForFunction(()=>document.querySelectorAll('#ggLots section').length===2);
+ const scanKey=key+':scans:GROUP672.PLAN:6207f7b382';await page.evaluate(k=>localStorage.setItem(k,'{broken-scans'),scanKey);await page.locator('#ggDetail').click();await page.waitForFunction(()=>document.querySelector('#ggStatus').textContent.includes('черновик сканов повреждён'));
+ if(!await page.locator('#ggReceive').isDisabled()||!await page.locator('#ggScan').isDisabled())throw Error('Damaged scans accepted');await page.locator('#ggClearScans').click();
+ if(!await page.evaluate(k=>Object.keys(localStorage).some(x=>x.startsWith(k+':archive:')&&localStorage.getItem(x)==='{broken-scans'),scanKey))throw Error('Damaged scans overwritten');
+ await page.locator('#ggCode').fill('LOCAL.QR\u001dEXACT'.replace('\\u001d','\u001d'));await page.locator('#ggScan').click();
+ if(!await page.evaluate(k=>JSON.parse(localStorage.getItem(k)).length===1,scanKey))throw Error('Scan not saved');checks.push('damaged scan draft blocks receipt/add; explicit archive preserves raw before rescanning');
+ await page.evaluate(key=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k!==key)return original.call(this,k,v);};},key);
+ await page.locator('#ggPallet').fill('LOCAL.TEST');await page.locator('#ggVehicle').fill('LOCAL.TEST');await page.locator('#ggUnloadDock').fill('LOCAL.TEST');await page.locator('#ggUnload').click();await page.waitForFunction(()=>document.querySelector('#ggStatus').textContent.includes('подтвердить запись'));
+ if(posts.length!==3)throw Error('POST without durable readback');checks.push('failed journal write readback prevents POST');
+ if(errors.length)throw Error(JSON.stringify(errors));fs.writeFileSync(out+'browser.json',JSON.stringify({checks,errors,modeled_posts:posts.length,real_posts:0},null,2));console.log(JSON.stringify({checks,errors}));
+}finally{await browser.close();}

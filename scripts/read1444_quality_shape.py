@@ -1,0 +1,5 @@
+﻿exec(open('scripts/ni063_slow_queries.py',encoding='utf-8').read().split('with oracledb.connect',1)[0])
+with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn) as c:
+ q=c.cursor();q.execute("select TABLE_NAME,COLUMN_NAME,DATA_TYPE from USER_TAB_COLUMNS where TABLE_NAME in ('RRL_WMS_RECEIPT','RRL_WMS_RECEIPT_PALLET','RRL_PALLETS','RRL_STOCK_OPERATION','RRL_CUSTOMER_ADDR') order by TABLE_NAME,COLUMN_ID");rows=q.fetchall();Path('tmp/qc1443/detail_columns.json').write_text(json.dumps(rows,indent=2),encoding='utf-8');print(json.dumps([r for r in rows if r[0]!='RRL_PALLETS' or any(x in r[1] for x in ['UNIT','ORIGIN','COMPOSITION','ARTIC','BOX'])]))
+ q.execute("select TABLE_NAME from USER_TABLES where TABLE_NAME like '%RECEIPT%' and TABLE_NAME not like '%UNIT%' and TABLE_NAME not like '%CODE%' order by TABLE_NAME");print(json.dumps(q.fetchall()))
+ q.execute("select TEXT from USER_SOURCE where NAME='RRL_STOCK_CONFIG_API' and TYPE='PACKAGE' order by LINE");print(''.join(r[0] for r in q.fetchall()))

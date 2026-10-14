@@ -1,0 +1,10 @@
+@@001_schema.sql
+@@002_put_cell.sql
+@@003_original_put_body.sql
+@@004_recovery_put.sql
+@@005_task_plan.sql
+@@006_task_core.sql
+@@007_task_domain.sql
+@@008_root_body.sql
+@@009_guards.sql
+@@../2026-10-08_stock_posting_core/014b_recompile.sql

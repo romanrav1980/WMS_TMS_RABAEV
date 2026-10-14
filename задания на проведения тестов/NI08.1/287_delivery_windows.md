@@ -1,0 +1,2 @@
+# Qwen287
+NativecurrentSourceV5 originalallmemberwindows/addressnormpolicy/coordinate provenance. Hashchangeswindow/norm preservehistory. RouteSource removesoperationsintentionally. Samecursor originalops/read source/road; windowsintersect, directedtime/wait/unload/late+return, missingfieldsUNKNOWN/null. DRIVERbreaks/returnsprocessing/stopzonesnotverified -> no admission. Domainfit09:30/return10:10:00.6, late15, missingUNKNOWN authorpassed; ownwindowmutationouterrollback restoreshash/P20H20 and actualHTTPunknownpassed. Browser/realallvalidroute/independentacceptance pending.

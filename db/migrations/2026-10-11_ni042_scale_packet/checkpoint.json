@@ -1,0 +1,12 @@
+{
+  "migration_id": "2026-10-11-186-shared-scale-packet",
+  "sha256": {
+    "db\\migrations\\2026-10-11_ni042_scale_packet\\002_store_contract.sql": "2da202a50eb3e04e5088b306caef2ea688275932fed4f5e2eea9ad0cabde4ec0",
+    "db\\migrations\\2026-10-11_ni042_scale_packet\\002_store_body.sql": "87f734b75b9eb7eb15e28038d51e8f5764d0a3c145c5004e26e3e8e50ee7c57c",
+    "db\\migrations\\2026-10-11_ni042_scale_packet\\apply.sql": "4907a1396001cbd353d4fa62540118d9c7e41eddaf9cd2c14fdf7b1abd69c5e8",
+    "db\\migrations\\2026-10-11_ni042_scale_packet\\rollback.sql": "539ba7e540e07729943b8c1ccf3acd9e1bbfc51ed1c1bfbb78a88a654bdd79c4",
+    "db\\migrations\\2026-10-11_ni042_scale_packet\\verify.sql": "2ac8f0baf1e2e894f58950f4f6ab62c0d8506b17c1ab631989f4f2e6b84a5ac6"
+  },
+  "before_sha256": "1731ee16b6626eac3aa2016b13401f0d197c636485659b35ad2ce71462caaa64",
+  "recovery": "fresh original store scale capture and paired rollback; additive pure decoder; no DB copy"
+}

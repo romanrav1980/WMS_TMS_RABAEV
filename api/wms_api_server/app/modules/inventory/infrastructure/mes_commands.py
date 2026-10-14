@@ -4,9 +4,12 @@ import json
 from fastapi import HTTPException
 from ..contracts_stock import StockCommand, StockPostingError
 from .stock_posting_uow import StockPosting
+from .release_boundary import require_active_release
+from ...platform.public import read_oracle_json
+from typing import Any
 
 
-def _post(command):
+def _post(command: StockCommand) -> dict[str,Any]:
     try:
         return StockPosting().post(command)
     except StockPostingError as exc:
@@ -18,12 +21,13 @@ def _post(command):
         }) from exc
 
 
-def apply_mes_movements(gateway, production_order_id: int, request, actor: str | None):
-    state = gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
-    if state and state[0]["state"] == "PREPARED":
-        return None
+def apply_mes_movements(gateway: Any, production_order_id: int, request: Any, actor: str | None) -> dict[str,Any]|None:
+    require_active_release(gateway,request.operation_id)
     if not actor:
         raise ValueError("Authenticated MES actor required")
+    scope=gateway.fetch_all("select 1 ALLOWED from RRL_PRODUCTION_ORDER p where p.PRODUCTION_ORDER_ID=:order_id and exists(select 1 from RUSERS u where u.ID=:actor and nvl(u.DELETED,0)=0 and(u.WARE_ID=p.WARE_ID or upper(trim(u.USER_GROUP))='GLOBAL_ADMIN'))",{"order_id":production_order_id,"actor":actor})
+    if len(scope)!=1:
+        raise HTTPException(403,detail={"code":"MES_CURRENT_WAREHOUSE_ACTOR_REQUIRED","operation_id":request.operation_id,"outcome_confirmed":True})
     if sum(len(values) for values in request.units_by_movement.values()) > 10000:
         raise HTTPException(422, detail="At most 10000 physical units per command")
     ids = request.movement_ids
@@ -38,7 +42,7 @@ def apply_mes_movements(gateway, production_order_id: int, request, actor: str |
         )
         if saved:
             value = saved[0]["canonical_request"]
-            original = json.loads(value.read() if hasattr(value, "read") else value)
+            original = read_oracle_json(value)
             source = original.get("source", {})
             metadata = original.get("metadata", {})
             if (original.get("command_type") != "MES_MOVEMENTS"

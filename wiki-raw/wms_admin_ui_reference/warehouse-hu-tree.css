@@ -1,0 +1,16 @@
+.hu-tree-workspace{margin:20px 0;color:#17304e}
+.hu-tree-heading h3{font-size:20px;margin:0 0 8px}.hu-tree-heading p{font-size:13px;color:#63768f;line-height:1.5}
+.hu-tree-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(250px,.8fr);gap:18px;margin:18px 0}
+.hu-tree-branches{min-width:0}.hu-tree-node{margin:9px 0}
+.hu-page .hu-tree-select{display:grid;gap:6px;width:100%;text-align:left;background:white;color:#17304e;padding:13px;border-color:#d6e3f3;font-weight:400}
+.hu-page .hu-tree-select[aria-pressed=true]{background:#eaf3ff;border-color:#3b82f6;box-shadow:inset 3px 0 #3b82f6}
+.hu-tree-select strong{overflow-wrap:anywhere;font-size:14px}.hu-tree-select small{color:#5c708b}
+.hu-tree-kind{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#3674b8}
+.hu-page .hu-tree-node details{padding:0 0 0 16px;border:0;border-left:2px solid #d7e4f4;border-radius:0;margin:10px 0 0 12px}
+.hu-page .hu-tree-node summary{font-size:12px;min-height:28px;margin-bottom:0}
+.hu-tree-detail{align-self:start;position:sticky;top:80px;border:1px solid #dce6f4;border-radius:12px;padding:18px;background:#f8fbff}
+.hu-tree-detail h3{overflow-wrap:anywhere;font-size:18px}.hu-tree-detail p{font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+.hu-tree-detail a{display:block;padding:10px 0;color:#1466bb;font-weight:600;font-size:13px}
+.hu-tree-ancestors{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;padding:12px;background:#f3f7fc;border-radius:8px}
+.hu-tree-ancestors a,.hu-tree-ancestors strong{overflow-wrap:anywhere}
+@media(max-width:850px){body:has(.hu-page){min-width:0}.hu-tree-layout{grid-template-columns:1fr}.hu-tree-detail{position:static}.hu-page{padding:12px}}

@@ -1,0 +1,9 @@
+{
+  "schema": "RABAEV",
+  "source_hashes": {
+    "mark": "9a5e80cc0fc3421dffe9f850e31af3e1498799fa231cce020d4fe4589333fac5",
+    "resolver": "6a42f4a029c2867402c7dd1a516eb2f3343fb495bfd10873db8f0abab2baa14e"
+  },
+  "recovery": "restore captured bodies/spec; receipts remain immutable; no quantity birth",
+  "quantity_owner": "RRL_STOCK_POSTING_API"
+}

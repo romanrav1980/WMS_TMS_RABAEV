@@ -1,0 +1,119 @@
+{
+  "native": {
+    "first_ids": [
+      2134,
+      2133,
+      2132
+    ],
+    "second_ids": [
+      2131,
+      2130,
+      2129
+    ],
+    "filtered_first": [
+      {
+        "customer_order_id": 2134,
+        "legacy_order_id": null,
+        "order_no": "FULL.QA:4bb85f1f158",
+        "status": "IMPORTED",
+        "ware_id": 5062399,
+        "order_date": null,
+        "shipment_date": null,
+        "customer_id": -980702,
+        "customer_name": "DS-BASE synthetic S-WEIGHT",
+        "legacy_addr": null,
+        "row_count": 1,
+        "total_order_qty": 8,
+        "total_order_qty_exact": "8",
+        "order_uom_count": 1,
+        "order_uom": "EA",
+        "unknown_uom_rows": 0,
+        "total_pack_count": 0,
+        "created_at": "2026-10-13 10:51:15"
+      }
+    ],
+    "filtered_second": [
+      {
+        "customer_order_id": 2133,
+        "legacy_order_id": null,
+        "order_no": "FULL.QA:4bb85f1f1512",
+        "status": "IMPORTED",
+        "ware_id": 5062399,
+        "order_date": null,
+        "shipment_date": null,
+        "customer_id": -980702,
+        "customer_name": "DS-BASE synthetic S-WEIGHT",
+        "legacy_addr": null,
+        "row_count": 1,
+        "total_order_qty": 12,
+        "total_order_qty_exact": "12",
+        "order_uom_count": 1,
+        "order_uom": "EA",
+        "unknown_uom_rows": 0,
+        "total_pack_count": 0,
+        "created_at": "2026-10-13 10:51:13"
+      }
+    ],
+    "empty_tail": true,
+    "invalid_rejected": true,
+    "sql": [
+      [
+        "fc8tpqdz7sx9s",
+        5,
+        11.06,
+        42,
+        "select co.CUSTOMER_ORDER_ID,                        co.LEGACY_ORDER_ID,                        co.ORDER_NO,                        co.STATUS,                        co.WARE_ID,                        co.ORDER_DATE,                        co"
+      ],
+      [
+        "cv7dst8rpun2b",
+        3,
+        12.344,
+        28,
+        "select co.CUSTOMER_ORDER_ID,                        co.LEGACY_ORDER_ID,                        co.ORDER_NO,                        co.STATUS,                        co.WARE_ID,                        co.ORDER_DATE,                        co"
+      ],
+      [
+        "80rn3q557uk72",
+        2,
+        19.133,
+        43.5,
+        "select co.CUSTOMER_ORDER_ID,                        co.LEGACY_ORDER_ID,                        co.ORDER_NO,                        co.STATUS,                        co.WARE_ID,                        co.ORDER_DATE,                        co"
+      ],
+      [
+        "85ajzt9jhx9fd",
+        3,
+        11.214,
+        43,
+        "select co.CUSTOMER_ORDER_ID,                        co.LEGACY_ORDER_ID,                        co.ORDER_NO,                        co.STATUS,                        co.WARE_ID,                        co.ORDER_DATE,                        co"
+      ],
+      [
+        "85ajzt9jhx9fd",
+        2,
+        19.28,
+        45.5,
+        "select co.CUSTOMER_ORDER_ID,                        co.LEGACY_ORDER_ID,                        co.ORDER_NO,                        co.STATUS,                        co.WARE_ID,                        co.ORDER_DATE,                        co"
+      ],
+      [
+        "3nrtcj619rjt4",
+        3,
+        16.421,
+        50.7,
+        "select *               from (                 select co.CUSTOMER_ORDER_ID,                        co.LEGACY_ORDER_ID,                        co.ORDER_NO,                        co.STATUS,                        co.WARE_ID,                  "
+      ]
+    ]
+  },
+  "http": {
+    "first": [
+      2134,
+      2133,
+      2132
+    ],
+    "second": [
+      2131,
+      2130,
+      2129
+    ],
+    "negative_legacy_id": -980711,
+    "legacy200": true,
+    "invalid422": true
+  }
+}

@@ -1,0 +1,8 @@
+# NI04.2: общий разбор устойчивого пакета весов
+186 APPLIED: pure RRL_SCALE_PACKET_READ reused by original RRL_STORE_SCALE_API; no second sample/stability algorithm. Existing device/authentication/archive/replay/actual-load/current-store source rules remain in the existing store adapter.
+Validator: explicit capacity/resolution, KG/matching configured GROSS or NET basis/no preset tare, recent awareUTC/zero proof,5–25 samples sorted offset0..10000ms/window>=2s/spread<=resolution/positive resolution-multiple/capacity. Final weight is last sample, never average/rounded. Original store uses GROSS/gross_weight_kg; warehouse may use explicitly configured NET/weight_kg. Invalid UTC calendar date gives explicit20886 rather than unexplained Oracle date failure.
+Source/value parsing is pure, archival/effects distinct. It does not connect hardware or claim calibration validity independently of configured adapter.
+Fresh native store source/checkpoint/rollback; apply7 statements0errors/USER_ERRORS empty. Existing scripts/ni053_scale_capture_case.py fully PASS on actual API/Oracle: stable10KG/original SHA/exact replay/conflict/unstable/zero/stale/capacity/version/inactive/foreign sender/current recovery/append-only; no receipt/P/H. Synthetic calibration and samples are not hardware acceptance.
+Next: warehouse address/device/dedicated sender/current CASE source immutable archive, then existing CASE effect consuming exact capture once. Order deviation/last-box distinct from stability/measurement accuracy.
+
+SQL decision: existing device/capture unique keys and bounded25 samples/50 archive history retained; common helper adds no table scans. No hardware or industrial throughput claim. Inventory/delivery owners retain indexed bounded archive lookup.

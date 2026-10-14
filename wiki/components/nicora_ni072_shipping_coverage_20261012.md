@@ -1,0 +1,11 @@
+# NI07.2: полнота классификации зарегистрированной грузовой зоны
+
+649–651 replaces permanent UNKNOWN with evidence from the current WMS catalog and existing published topology. No second zone registry or Oracle DDL. Master-data owns published_cell_coverage; finance consumes its public read contract in the same Oracle snapshot.
+
+Every current RRL_CELLS row of the warehouse must map to exactly one ACTIVE row of the latest PUBLISHED topology with an explicit recognised existing role. EMPTY/arbitrary roles, missing mappings and duplicate aliases remain incomplete; a valid row plus an invalid duplicate is not silently treated as complete. At most20 diagnostic cell names are returned. New cells or a changed publication invalidate coverage automatically on the next read.
+
+Shipping occupancy uses staging/gate/film-wrap cells and explicit legacy EXPEDITION_GROUP, with the previous500-cell bound and existing stock/container/CASE queries. Complete classification plus no occupancy can confirm the registered shipping area empty at the captured snapshot. Scope is CURRENT_WMS_CELL_CATALOG; unregistered physical areas are not certified. Absence of shipping cells cannot confirm an empty area. Report still does not close the day.
+
+Existing shipping-register UI shows complete/occupied status or specific missing/ambiguous counts and example addresses. Day reconciliation adds shipping_zone_classification_incomplete as an open item; immutable old review results stay preserved by existing exact-op lookup before fresh report capture.
+
+650 actual own warehouse641 under one temporary metadata transaction: complete catalog/empty shipping area true, positive retained return P3 in staging blocks empty, EMPTY role yields unclassified1, valid+invalid duplicate alias yields ambiguous1. Entire temporary topology rolled back; source coverage restored and original returned pallet P3H0 unchanged. This is software source classification evidence, not a real physical warehouse survey. SQL aggregate5.860/2.621ms17/8.5buffers and diagnostic4.544ms9.5buffers: retain warehouse/topology-scoped grouping and20 sample, no speculative index; higher-cardinality warehouse owner master_data checks plan if needed. Architecture677/0cycles/76debt and rawJS syntax PASS.

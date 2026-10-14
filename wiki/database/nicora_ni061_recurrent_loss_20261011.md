@@ -1,0 +1,11 @@
+# NI06.1: повторные события недостачи — 304
+Вход: новый настоящий межскладской partialreceipt с теми же физическими единицами после полного предыдущего восстановления. Права/currentWARE/независимое подтверждение, SOURCE/UNIT versions и UOW принадлежат прежнему RRL_STOCK_INTERWARE_SHORT_CMD/RRL_STOCK_POSTING_API. Нет нового quantitywriter.
+
+Проблема: оба журнала 295/300 имели единственный PHYSICAL_UNIT_KEY PK и запрет любого старого lossbook. Это запрещало последующую настоящую недостачу после найденного товара.
+Изменение: PK (PHYSICAL_UNIT_KEY, FACT_OPERATION_ID) для loss и (PHYSICAL_UNIT_KEY, RECOVERY_OPERATION_ID) для recovery. Все прежние факты сохраняются; индекс сохраняет hot prefix physicalkey. Новый уникальный индекс создаётся до удаления прежнего PK; реальные FK dependencies проверены (0), ничего не удаляется из журналов. Новый акт разрешён только когда для каждого прежнего loss существует точная APPLIED recovery samekey+sameLOSS; актуальная нетронутая недостача по-прежнему блокирует. Native UNIT locks серийно защищают проверку и INSERT нового факта, afterwait execute повторно описывает источник.
+
+INSERT lossguard теперь дополнительно проверяет точный key/qty/UOM/version исходного missing_units frozen domain и currentISSUED/currentoriginalUID/unreserved. Прямой INSERT без текущего native command/unitmutex запрещён. История immutable. Guard ordinaryunit уже считает каждую не восстановленную pair key+loss, поэтому позже появившийся акт не маскируется старой APPLIED recovery.
+
+Бounded scope: журнал и допуск повторного события. Whole recovery пока сохранён; частичная находка — следующий отдельный ticket. Полный физический второй цикл на одной единице должен использовать настоящий возврат/новую отгрузку, а не ручную подмену текущего UID/status. Не выдавать изменение PK за независимую end-to-end приёмку.
+
+Применено вdev: оба составныхPK ENABLED, прежние loss2/recovery2rows иqty2/2 сохранены; unresolved0, direct journal INSERT denied20863; все nativeVALID/protected20-20. scripts/verify304.py. Старый customer1+2 case сохранён, второй физический цикл ещё не выполнен. SQL: текущий доступ по physicalkey/LOSS/OP PK сохраняется; root recapture bounded10000, долгие lookup при росте истории — inventory owner, измерить на настоящем втором цикле вместо глобального сканирования.

@@ -30,6 +30,7 @@ create or replace package body RRL_STOCK_CASE_PICK_CMD as
   select * into l from RRL_CASE_PICK_LINE where CASE_PICK_LINE_ID=line_id and CASE_PICK_TASK_ID=task_id;
   select * into pt from RRL_PICK_TASK where PICK_TASK_ID=l.PICK_TASK_ID;
   if ct.WARE_ID is null or ct.WARE_ID<1 or ct.SSCC is null or l.CELL_CODE is null or l.ARTICUL is null or l.PICK_TASK_ID is null or l.PICK_WAVE_TASK_ID is null or l.CUSTOMER_ORDER_ID is null then raise_application_error(-20887,'CASE_TASK_IDENTITY_REQUIRED');end if;
+  RRL_STOCK_SHORT_RECOVERY.plan_pick(line_id,r,v);
   fact:=RRL_STOCK_MATH.quantity(m.get_string('fact_qty'));remaining:=fact-nvl(l.PICKED_QTY,0);v_cell:=l.CELL_CODE;target_cell:='CPT_'||RRL_STOCK_PLAN_HELPER.decimal_text(ct.WARE_ID);
   if remaining<=0 or fact>l.PLANNED_QTY then raise_application_error(-20886,'CASE_PICK_FACT_NOT_INCREASING_OR_EXCEEDS_PLAN');end if;
   RRL_STOCK_PLAN_HELPER.fence(f,'RELEASE','STOCK');RRL_STOCK_PLAN_HELPER.fence(f,'CONFIG','WAREHOUSE');
@@ -46,6 +47,13 @@ create or replace package body RRL_STOCK_CASE_PICK_CMD as
    x:=treat(a.get(i) as json_object_t);
    RRL_STOCK_PLAN_HELPER.stock_closure(f,r,x.get_string('uid'),x.get_string('article'),x.get_string('cell'),target_cell);
   end loop;
+  declare ctx json_object_t:=json_object_t.parse(RRL_CASE_RESOURCE_POLICY.context_json(task_id,'COMPLETE',d.get_string('actor')));begin
+   v.put('case_resource_context',ctx);
+   if not ctx.get('resource_session_id').is_null then
+    RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_RESOURCE_SESSION',RRL_STOCK_PLAN_HELPER.decimal_text(ctx.get_number('resource_session_id')));
+    RRL_STOCK_PLAN_HELPER.row_key(r,'RUSERS',ctx.get_string('assigned_to'));
+   end if;
+  end;
   selected_wire:=d.get_array('units').to_clob;
   for sr in(select sr.RESERVATION_ID,sr.UID_PALLET,sr.CELL,sr.BASE_QTY,sr.BASE_UOM,s.REMAIN,s.STOCK_VERSION,p.EXPIRY_DATE
    from RRL_STOCK_RESERVATION sr join RRL_REMAINS s on s.UID_POLETA=sr.UID_PALLET and s.CELL=sr.CELL
@@ -53,6 +61,7 @@ create or replace package body RRL_STOCK_CASE_PICK_CMD as
    where sr.SOURCE_DOC_TYPE='PICK_WAVE' and sr.SOURCE_DOC_ID=l.PICK_WAVE_ID and sr.SOURCE_LINE_ID=l.PICK_TASK_ID
     and sr.RESERVATION_KIND='HARD' and sr.STATUS in('ACTIVE','ALLOCATED','PICKING') and sr.CELL=v_cell
     and p.ARTICUL=l.ARTICUL and not exists(select 1 from RRL_CASE_CARRIER_LOT h where h.LOT_UID=sr.UID_PALLET)
+    and RRL_STOCK_ELIGIBILITY.reason(sr.UID_PALLET,sr.CELL,ct.WARE_ID,least(remaining,sr.BASE_QTY),null,null,'PICK',sr.RESERVATION_ID,l.ARTICUL) is null
    order by p.EXPIRY_DATE nulls last,sr.UID_PALLET,sr.RESERVATION_ID fetch first 201 rows only) loop
    exit when remaining=0;n:=n+1;
    if n>200 or sr.BASE_QTY is null or sr.BASE_QTY<=0 then raise_application_error(-20881,'CASE_SOURCE_RESERVATION_BOUND_OR_INVALID');end if;
@@ -66,7 +75,7 @@ create or replace package body RRL_STOCK_CASE_PICK_CMD as
    remaining:=remaining-q;
    select max(POLICY_VERSION) into basever from RRL_STOCK_UOM_CONVERSION where ARTICUL=l.ARTICUL and INPUT_UOM=sr.BASE_UOM and BASE_UOM=sr.BASE_UOM and NUMERATOR=1 and DENOMINATOR=1;
    if basever is null then raise_application_error(-20868,'CASE_BASE_POLICY_REQUIRED');end if;
-   target:='CASELOT:'||rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p_operation,'AL32UTF8'),sys.dbms_crypto.hash_sh256))||':'||RRL_STOCK_PLAN_HELPER.decimal_text(n);
+   target:='CASELOT:'||substr(rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p_operation,'AL32UTF8'),sys.dbms_crypto.hash_sh256)),1,38)||':'||RRL_STOCK_PLAN_HELPER.decimal_text(n);
    select RRL_STOCK_RESERVATION_SQ.nextval into newres from dual;
    RRL_STOCK_PLAN_HELPER.stock_closure(f,r,sr.UID_PALLET,l.ARTICUL,v_cell,target_cell);
    RRL_STOCK_PLAN_HELPER.anchor(r,30,'HU',target);RRL_STOCK_PLAN_HELPER.anchor(r,50,'STOCK',target);
@@ -102,7 +111,8 @@ create or replace package body RRL_STOCK_CASE_PICK_CMD as
 begin
 select STATUS into wave_status from RRL_PICK_WAVE where PICK_WAVE_ID=v_json_sql_1_1 for update;
 end;
-  if wave_status in('CANCELLED','CLOSED','DRAFT','PREVIEW') or wave_status is null then raise_application_error(-20886,'CASE_WAVE_STATE_CONFLICT');end if;
+  RRL_STOCK_WAVE_READY.assert_released(v.get_number('wave_id'));
+  if wave_status is null or wave_status!='LAUNCHED' then raise_application_error(-20886,'CASE_WAVE_STATE_CONFLICT');end if;
   select * into ct from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=task_id for update;
   select * into l from RRL_CASE_PICK_LINE where CASE_PICK_LINE_ID=line_id for update;
   select * into pt from RRL_PICK_TASK where PICK_TASK_ID=l.PICK_TASK_ID for update;
@@ -118,6 +128,13 @@ end;
   select count(*) into n from RRL_CASE_PICK_SHORT where CASE_PICK_LINE_ID=line_id
    and STATUS in('CREATED','PENDING_APPROVAL');
   if n>0 then raise_application_error(-20886,'CASE_SHORT_DECISION_PENDING');end if;
+  declare ctx json_object_t;before_ctx clob;after_ctx clob;sid number;begin
+   sid:=v.get_object('case_resource_context').get_number('resource_session_id');
+   if sid is not null then select SESSION_ID into sid from RRL_RESOURCE_SESSION where SESSION_ID=sid for update;end if;
+   ctx:=json_object_t.parse(RRL_CASE_RESOURCE_POLICY.context_json(task_id,'COMPLETE',p_actor));
+   before_ctx:=v.get_object('case_resource_context').to_clob;after_ctx:=ctx.to_clob;
+   if dbms_lob.compare(before_ctx,after_ctx)!=0 then raise_application_error(-20890,'CLOSURE_CHANGED: CASE resource');end if;
+  end;
   if ct.ASSIGNED_TO is not null and ct.ASSIGNED_TO!=p_actor and RRL_HAS_WRIGHT(p_actor,'case_pick_manage')!=1 then raise_application_error(-20882,'CASE_TASK_ACTOR_CONFLICT');end if;
   if m.get_string('scan_cell') is null or upper(m.get_string('scan_cell'))!=upper(v_cell)
    or m.get_string('scan_container') is null or m.get_string('scan_container')!=ct.SSCC then raise_application_error(-20886,'CASE_CELL_CARRIER_SCAN_REQUIRED');end if;
@@ -160,6 +177,7 @@ end;
     and SOURCE_DOC_TYPE='PICK_WAVE' and SOURCE_DOC_ID=l.PICK_WAVE_ID and SOURCE_LINE_ID=l.PICK_TASK_ID
     and RESERVATION_KIND='HARD' and STATUS in('ACTIVE','ALLOCATED','PICKING');
    if owned<qty then raise_application_error(-20869,'CASE_OWN_HARD_INSUFFICIENT');end if;
+   RRL_STOCK_ELIGIBILITY.assert_source(uid,v_cell,ware,qty,null,null,'PICK',sid,article);
    select max(POLICY_VERSION) into ver from RRL_STOCK_UOM_CONVERSION where ARTICUL=article and INPUT_UOM=base and BASE_UOM=base and NUMERATOR=1 and DENOMINATOR=1;
    if ver is null or ver!=x.get_number('policy') then raise_application_error(-20890,'CLOSURE_CHANGED: case UOM policy');end if;
    selected:=json_array_t();
@@ -201,8 +219,10 @@ end;
   select RRL_CASE_PICK_EVENT_SQ.nextval into eventid from dual;
   insert into RRL_CASE_PICK_EVENT(CASE_PICK_EVENT_ID,CASE_PICK_TASK_ID,CASE_PICK_LINE_ID,EVENT_TYPE,OFFLINE_EVENT_ID,PAYLOAD_JSON,CREATED_BY)
    values(eventid,task_id,line_id,'LINE_CONFIRMED',offline,p_request,p_actor);
+  RRL_STOCK_SHORT_RECOVERY.finish_pick(line_id,p_actor,v);
+  select STATUS into newstatus from RRL_CASE_PICK_LINE where CASE_PICK_LINE_ID=line_id;
   v:=json_object_t();v.put('operation_id',op);v.put('case_pick_task_id',task_id);v.put('case_pick_line_id',line_id);v.put('status',newstatus);
-  v.put('fact_qty',RRL_STOCK_PLAN_HELPER.decimal_text(fact));v.put('carrier_identifier',ct.SSCC);v.put('cell',target_cell);v.put('picked_from_cell',v_cell);v.put('lots',facts);p_result:=v.to_clob;
+  v.put('remaining_quantity',RRL_STOCK_PLAN_HELPER.decimal_text(l.PLANNED_QTY-fact));v.put('fact_qty',RRL_STOCK_PLAN_HELPER.decimal_text(fact));v.put('carrier_identifier',ct.SSCC);v.put('cell',target_cell);v.put('picked_from_cell',v_cell);v.put('lots',facts);p_result:=v.to_clob;
  end;
 end;
 /

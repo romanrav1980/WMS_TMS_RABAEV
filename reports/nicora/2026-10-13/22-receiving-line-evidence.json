@@ -1,0 +1,17 @@
+{
+  "order_id": "3aa116e51983443e8b20d055195a22b8",
+  "line_number": "2",
+  "source_state": "REVERSED",
+  "addressed_selection_browser": true,
+  "manual_button_browser_confirmed": false,
+  "stock_write_performed": false,
+  "sql1038": [
+    [
+      "7kmwxy9gmpjbc",
+      2,
+      15.28,
+      205.5,
+      "select a.ROWID LEGACY_ROW_ID, a.ACTICUL, p.POLICY_VERSION, p.MARKING_REQUIRED, p.SERIALIZED_WEIGHT_BOXES,p.ORDER_WEIGHT_TOLERANCE_PCT,p.STACK_STAGE,                      "
+    ]
+  ]
+}

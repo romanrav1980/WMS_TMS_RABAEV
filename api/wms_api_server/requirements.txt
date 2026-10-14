@@ -4,3 +4,7 @@ oracledb
 uvicorn
 openpyxl
 httpx
+Pillow==12.3.0
+
+# Existing CVRPTW planner runtime (162)
+ortools==9.15.6755

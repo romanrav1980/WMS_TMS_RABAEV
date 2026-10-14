@@ -1,5 +1,5 @@
 create or replace package RRL_STOCK_TASK_PLAN authid definer
- accessible by(package RRL_STOCK_POSTING_API,package RRL_STOCK_TASK_CORE) as
+ accessible by(package RRL_STOCK_HU_TASK,package RRL_STOCK_POSTING_API,package RRL_STOCK_TASK_CORE) as
  procedure compile_task(p_request clob,p_operation varchar2,p_policies out clob,p_resources out clob,p_domain out clob);
  function signature(p_task RRL_WAREHOUSE_TASK%rowtype) return varchar2;
 end;
@@ -14,12 +14,15 @@ create or replace package body RRL_STOCK_TASK_PLAN as
   v.put('source_task',p_task.SOURCE_TASK_ID);v.put('movement',p_task.SOURCE_MOVEMENT_ID);
   v.put('quantity',RRL_STOCK_PLAN_HELPER.decimal_text(p_task.QTY));v.put('unit',p_task.UNIT_CODE);
   v.put('raw_article',p_task.RAW_ARTICUL);v.put('target_article',p_task.TARGET_ARTICUL);
+  v.put('status',p_task.STATUS);v.put('assigned_to',p_task.ASSIGNED_TO);v.put('resource_id',p_task.RESOURCE_ID);
+  v.put('resource_session_id',p_task.RESOURCE_SESSION_ID);v.put('equipment_id',p_task.EQUIPMENT_ID);
+  v.put('started_instant',to_char(p_task.STARTED_AT_INSTANT,'YYYY-MM-DD"T"HH24:MI:SS.FF6TZH:TZM'));v.put('started_zone',p_task.STARTED_SHIFT_TIME_ZONE);
   v.put('mode',p_task.QTY_MODE);v.put('production',p_task.PRODUCTION_ORDER_ID);
   return rawtohex(sys.dbms_crypto.hash(v.to_clob,sys.dbms_crypto.hash_sh256));
  end;
  procedure compile_task(p_request clob,p_operation varchar2,p_policies out clob,p_resources out clob,p_domain out clob) is
   v_doc json_object_t:=json_object_t.parse(p_request);v_source json_object_t;v_meta json_object_t;
-  v_task RRL_WAREHOUSE_TASK%rowtype;v_uid varchar2(200);v_article varchar2(160);v_target varchar2(200);
+  v_bind json_object_t;v_context json_object_t;v_task RRL_WAREHOUSE_TASK%rowtype;v_uid varchar2(200);v_article varchar2(160);v_target varchar2(200);
   v_p json_array_t:=json_array_t();v_r json_array_t:=json_array_t();v_domain json_object_t:=json_object_t();
   v_task_id number;v_residual number;v_reservation number;v_new_reservation number;v_fact number;v_pick_task number;v_movement_id number;v_sync_id number;v_sync_key varchar2(400);v_from_ware number;v_to_ware number;v_source_p number;v_base varchar2(20);v_input varchar2(20);v_sap_order varchar2(100);v_sap_line varchar2(40);v_qbase number;v_num number;v_den number;v_scale number;v_uom_version number;v_uom_signature varchar2(64);
  begin
@@ -28,6 +31,10 @@ create or replace package body RRL_STOCK_TASK_PLAN as
   if v_task_id is null or v_task_id<1 or v_task_id!=trunc(v_task_id) then raise_application_error(-20881,'TASK_ID_REQUIRED');end if;
   select * into v_task from RRL_WAREHOUSE_TASK where TASK_ID=v_task_id;
   v_uid:=nvl(v_task.UID_PALLET,v_task.SSCC);
+  RRL_STOCK_TASK_SCAN.assert_draft(p_request,v_task_id,v_uid,v_task.FROM_CELL,v_doc.get_string('actor'));
+  v_meta.on_error(0);
+  if v_meta.has('scan_draft_id') and not v_meta.get('scan_draft_id').is_null then
+   RRL_STOCK_PLAN_HELPER.row_key(v_r,'RRL_TASK_SCAN_DRAFT',v_meta.get_string('scan_draft_id'));end if;
   v_sync_key:='WT:'||RRL_STOCK_PLAN_HELPER.decimal_text(v_task_id)||':'||v_task.TASK_SOURCE||':'||v_task.TASK_TYPE||':'||RRL_STOCK_PLAN_HELPER.decimal_text(v_task.SOURCE_TASK_ID)||':'||RRL_STOCK_PLAN_HELPER.decimal_text(v_task.SOURCE_MOVEMENT_ID);
   begin select SYNC_ID into v_sync_id from RRL_WAREHOUSE_TASK_SYNC where SYNC_KEY=v_sync_key;
   exception when no_data_found then select RRL_WH_TASK_SYNC_SQ.nextval into v_sync_id from dual;end;
@@ -47,7 +54,7 @@ create or replace package body RRL_STOCK_TASK_PLAN as
   v_target:=v_uid;
   if v_fact<v_task.QTY then select RRL_WAREHOUSE_TASK_SQ.nextval into v_residual from dual;end if;
   if v_qbase<v_source_p then
-   v_target:='PART:'||substr(rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p_operation,'AL32UTF8'),sys.dbms_crypto.hash_sh256)),1,64);
+   v_target:='PART:'||substr(rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p_operation,'AL32UTF8'),sys.dbms_crypto.hash_sh256)),1,45); -- PART prefix + 45 hex characters fits legacy UID_PALLET(50 CHAR).
    select RRL_STOCK_RESERVATION_SQ.nextval into v_new_reservation from dual;
   end if;
   RRL_STOCK_PLAN_HELPER.fence(v_p,'RELEASE','STOCK');
@@ -63,11 +70,20 @@ create or replace package body RRL_STOCK_TASK_PLAN as
    RRL_STOCK_PLAN_HELPER.row_key(v_r,'RRL_PICK_WAVE',RRL_STOCK_PLAN_HELPER.decimal_text(v_task.SOURCE_DOC_ID));
    if v_task.TASK_TYPE='REPLENISHMENT' then
     RRL_STOCK_PLAN_HELPER.row_key(v_r,'RRL_PICK_WAVE_REPLENISH_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(v_task.SOURCE_TASK_ID));
+    RRL_STOCK_SHORT_RECOVERY.plan_replenishment(v_task.SOURCE_TASK_ID,v_r);
     select SOURCE_RESERVATION_ID into v_reservation from RRL_PICK_WAVE_REPLENISH_TASK where PICK_WAVE_REPLENISH_TASK_ID=v_task.SOURCE_TASK_ID;
    elsif v_task.TASK_TYPE='PICKING_MOVE' then
     RRL_STOCK_PLAN_HELPER.row_key(v_r,'RRL_PICK_WAVE_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(v_task.SOURCE_TASK_ID));
     select PICK_TASK_ID into v_pick_task from RRL_PICK_WAVE_TASK where PICK_WAVE_TASK_ID=v_task.SOURCE_TASK_ID;
     RRL_STOCK_PLAN_HELPER.row_key(v_r,'RRL_PICK_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(v_pick_task));
+    begin
+     select RESERVATION_ID into v_reservation from (
+      select RESERVATION_ID from RRL_STOCK_RESERVATION where UID_PALLET=v_uid and CELL=v_task.FROM_CELL
+       and SOURCE_DOC_TYPE='PICK_WAVE' and SOURCE_DOC_ID=v_task.SOURCE_DOC_ID and SOURCE_LINE_ID=v_pick_task
+       and RESERVATION_DOMAIN='PICKING' and RESERVATION_KIND='HARD' and STATUS in('ACTIVE','ALLOCATED','PICKING')
+       and BASE_QTY>0 order by BASE_QTY desc,RESERVATION_ID) where rownum=1;
+    exception when no_data_found then raise_application_error(-20869,'FULLPAL_OWN_SOURCE_RESERVATION_REQUIRED');end;
+
    end if;
   elsif v_task.TASK_SOURCE='SAP_RECEIPT' then
    select ORDER_ID,LINE_NUMBER into v_sap_order,v_sap_line from RRL_SAP_PALLET_RECEIPT where UID_PALLET=v_uid;
@@ -90,12 +106,22 @@ create or replace package body RRL_STOCK_TASK_PLAN as
    select RRL_MES_MOVEMENT_SQ.nextval into v_movement_id from dual;
    RRL_STOCK_PLAN_HELPER.row_key(v_r,'RRL_MES_MOVEMENT',RRL_STOCK_PLAN_HELPER.decimal_text(v_movement_id));
   end if;
-  if v_meta.has('resource_session_id') and not v_meta.get('resource_session_id').is_null then
-   RRL_STOCK_PLAN_HELPER.row_key(v_r,'RRL_RESOURCE_SESSION',RRL_STOCK_PLAN_HELPER.decimal_text(v_meta.get_number('resource_session_id')));
+  v_context:=json_object_t.parse(RRL_TASK_RESOURCE_POLICY.context_json(v_task_id,case when v_meta.get_number('document_confirmation')=1 then 'COMPLETE_DOCUMENT' else 'COMPLETE' end,v_doc.get_string('actor'),v_doc.get_string('actor'),
+   v_meta.get_number('resource_id'),v_meta.get_number('resource_session_id'),v_meta.get_number('equipment_id')));
+  if not v_context.get('resource_session_id').is_null then
+   RRL_STOCK_PLAN_HELPER.row_key(v_r,'RRL_RESOURCE_SESSION',RRL_STOCK_PLAN_HELPER.decimal_text(v_context.get_number('resource_session_id')));
+   RRL_STOCK_PLAN_HELPER.row_key(v_r,'RUSERS',v_doc.get_string('actor'));
   end if;
+  if v_task.RESOURCE_SESSION_ID is not null then
+   RRL_STOCK_PLAN_HELPER.row_key(v_r,'RRL_RESOURCE_SESSION',RRL_STOCK_PLAN_HELPER.decimal_text(v_task.RESOURCE_SESSION_ID));
+  end if;
+  v_domain.put('resource_context',v_context);
   if v_task.FROM_CELL_SLOT_ID is not null then RRL_STOCK_PLAN_HELPER.anchor(v_r,40,'SLOT',RRL_STOCK_PLAN_HELPER.decimal_text(v_task.FROM_CELL_SLOT_ID));end if;
   if v_task.TO_CELL_SLOT_ID is not null then RRL_STOCK_PLAN_HELPER.anchor(v_r,40,'SLOT',RRL_STOCK_PLAN_HELPER.decimal_text(v_task.TO_CELL_SLOT_ID));end if;
   RRL_STOCK_PLAN_HELPER.stock_closure(v_p,v_r,v_uid,v_article,v_task.FROM_CELL,v_task.TO_CELL);
+  if v_task.TASK_SOURCE='WAVE' and v_task.TASK_TYPE='REPLENISHMENT' then
+   RRL_STOCK_PLAN_HELPER.fence(v_p,'CELL',v_task.TO_CELL,6);
+  end if;
   if v_target!=v_uid then
    RRL_STOCK_PLAN_HELPER.anchor(v_r,30,'HU',v_target);RRL_STOCK_PLAN_HELPER.anchor(v_r,50,'STOCK',v_target);
    RRL_STOCK_PLAN_HELPER.anchor(v_r,70,'UNIQUE','PALLET:'||v_target);
@@ -107,6 +133,8 @@ create or replace package body RRL_STOCK_TASK_PLAN as
   v_domain.put('residual_task_id',v_residual);v_domain.put('source_reservation_id',v_reservation);
   v_domain.put('new_movement_id',v_movement_id);
   v_domain.put('new_reservation_id',v_new_reservation);v_domain.put('pick_task_id',v_pick_task);
+  RRL_STOCK_REPL_CONTINUATION.plan_next(v_task,v_qbase,v_residual,v_r,v_domain);
+  RRL_STOCK_REPL_BIND.plan_bind(v_task,v_qbase,v_r,v_bind);v_domain.put('consumer_bindings',v_bind);
   p_policies:=v_p.to_clob;p_resources:=v_r.to_clob;p_domain:=v_domain.to_clob;
  end;
 end;

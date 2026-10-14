@@ -1,0 +1,6 @@
+# NI04.2: складской весовой пост
+Использовать186 общий packet validator, существующие RUSERS/rights/warehouse cells/CASE line/current SKU/root single writer.
+Устройство явно связано со складом и адресом поста, отдельным gateway sender, активной версией calibration/capacity/resolution и GROSS или NET режимом. TEST/HARDWARE отдельно; default device disabled. Без реального протокола аппаратное подключение не заявляется.
+Пакет содержит фактические CASE task/line/version, сканы source-cell/container/product, mode-specific samples and fresh zero/calibration. Архив immutable raw/hash/first received/result outside stock transaction; одинаковый device/capture body replay, иной отказ. API audit bounds32000/nonreplayable namespace.
+NET для немаркированного loose KG; sealed marked/serialized box requires exact existing unit/QR and GROSS consistency, never permits forbidden splitting. Сток-команда читает archived capture, rechecks current scope/version/config/freshness, own HARD, and consumes it once in same root transaction with movement/reservation/CASE/outbox. One unique capture use, exact operation replay remains valid after capture ages. SQL locks stay within original sorted plan; hardware waiting stays outside it.
+Order15%/last-box exception is separate approved business decision; never loosens scale stability/calibration nor invents net from average.

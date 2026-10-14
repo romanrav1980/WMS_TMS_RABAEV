@@ -1,0 +1,86 @@
+[
+  [
+    "SYS_C0016497",
+    "R",
+    null,
+    "SYS_C0016325"
+  ],
+  [
+    "SYS_C0016498",
+    "R",
+    null,
+    "RRL_PALLETS_UID_UK"
+  ],
+  [
+    "SYS_C0016485",
+    "C",
+    "\"LOAD_OPERATION_ID\" IS NOT NULL",
+    null
+  ],
+  [
+    "SYS_C0016486",
+    "C",
+    "\"BOX_UID\" IS NOT NULL",
+    null
+  ],
+  [
+    "SYS_C0016487",
+    "C",
+    "\"BOX_CONTENT_VERSION\" IS NOT NULL",
+    null
+  ],
+  [
+    "SYS_C0016488",
+    "C",
+    "\"GROSS_WEIGHT_KG\" IS NOT NULL",
+    null
+  ],
+  [
+    "SYS_C0016489",
+    "C",
+    "\"MEASUREMENT_ORIGIN\" IS NOT NULL",
+    null
+  ],
+  [
+    "SYS_C0016490",
+    "C",
+    "\"MEASUREMENT_REF\" IS NOT NULL",
+    null
+  ],
+  [
+    "SYS_C0016491",
+    "C",
+    "\"SCAN_IDENTIFIER\" IS NOT NULL",
+    null
+  ],
+  [
+    "SYS_C0016492",
+    "C",
+    "\"RECORDED_BY\" IS NOT NULL",
+    null
+  ],
+  [
+    "SYS_C0016493",
+    "C",
+    "\"RECORDED_AT\" IS NOT NULL",
+    null
+  ],
+  [
+    "SYS_C0016494",
+    "C",
+    "GROSS_WEIGHT_KG>0",
+    null
+  ],
+  [
+    "SYS_C0016495",
+    "C",
+    "MEASUREMENT_ORIGIN='MANUAL_CONFIRMED'",
+    null
+  ],
+  [
+    "SYS_C0016496",
+    "P",
+    null,
+    null
+  ]
+]

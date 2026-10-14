@@ -1,0 +1,30 @@
+[
+  [
+    "2yv9m25yumubg",
+    8,
+    6.448,
+    317,
+    "select p.OPERATION_ID,p.ROOT_UID,p.SOURCE_WARE_ID,p.TARGET_WARE_ID,p.SOURCE_TT_ID,                 p.TARGET_TT_ID,to_cha"
+  ],
+  [
+    "9mqn737zkwtww",
+    10,
+    1.681,
+    313,
+    "select TARGET_WARE_ID from RRL_IW_GROUP_PLAN where OPERATION_ID=:plan_id"
+  ],
+  [
+    "g4ahs05cb954g",
+    10,
+    0.793,
+    95,
+    "select p.HU_CONTENT_VERSION,p.HU_CURRENT_CELL from RRL_PALLETS p                 join RRL_IW_GROUP_PLAN g on g.ROOT_UID="
+  ],
+  [
+    "0ukxjq4fnrftq",
+    10,
+    0.503,
+    59,
+    "select RESULT_JSON,SOURCE_JSON from RRL_IW_GROUP_PLAN where OPERATION_ID=:plan_id"
+  ]
+]

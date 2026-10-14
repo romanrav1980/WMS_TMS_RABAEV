@@ -1,0 +1,8 @@
+{
+  "migration_id": "2026-10-11-203-case-logistic-sscc",
+  "sha256": {
+    "db/migrations/2026-10-11_ni042_case_sscc/000_before_case.sql": "6281102ef2197ef5ee5f6716198ce11aa83b8fa5e03c8e291a1a7e6837989f48",
+    "db/migrations/2026-10-11_ni042_case_sscc/000_before_labels.py": "a1720783f02d9185525aad6774149725d19c081dfc5ae3a4c86773cb505e3098"
+  },
+  "recovery": "Fresh root CASE and receipt label source preserved; defaultoff old carriers unaffected; immutable label history prevents destructive rollback; no DB copy"
+}

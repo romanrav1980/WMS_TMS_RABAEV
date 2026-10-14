@@ -116,7 +116,11 @@ async function rtTsdFetch(path, options = {}) {
   const body = text ? JSON.parse(text) : {};
   if (!response.ok) {
     const detail = body.detail?.message || body.detail || body.message || `HTTP ${response.status}`;
-    throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+    const error = new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+    error.status = response.status;
+    error.code = body.detail?.code;
+    error.oracleCode = body.detail?.oracle_code;
+    throw error;
   }
   return body;
 }
@@ -195,13 +199,13 @@ function rtTsdRender() {
   rtTsdEl("rtTsdTo").textContent = task?.to_cell || "-";
   rtTsdEl("rtTsdPallet").textContent = task ? (task.uid_pallet || task.sscc || "-") : "-";
   rtTsdEl("rtTsdMode").textContent = task ? rtTsdModeText(task) : "-";
-  rtTsdEl("rtTsdQty").textContent = task ? rtTsdQty(task.qty, task.unit_code) : "-";
+  rtTsdEl("rtTsdQty").textContent = task ? rtTsdQty(task.qty_exact ?? task.qty, task.unit_code) : "-";
   rtTsdEl("rtTsdDoc").textContent = task ? rtTsdDoc(task) : "-";
-  rtTsdEl("rtTsdScanPallet").value = task ? (task.uid_pallet || task.sscc || "") : "";
-  rtTsdEl("rtTsdScanFrom").value = task?.from_cell || "";
-  rtTsdEl("rtTsdScanTo").value = task?.to_cell || "";
+  rtTsdEl("rtTsdScanPallet").value = task && rtTsdDemoMode() ? (task.uid_pallet || task.sscc || "") : "";
+  rtTsdEl("rtTsdScanFrom").value = rtTsdDemoMode() ? (task?.from_cell || "") : "";
+  rtTsdEl("rtTsdScanTo").value = rtTsdDemoMode() ? (task?.to_cell || "") : "";
   rtTsdEl("rtTsdFactQty").value = "";
-  rtTsdEl("rtTsdFactQty").placeholder = task ? `пусто = ${rtTsdQty(task.qty, task.unit_code)}` : "пусто = план";
+  rtTsdEl("rtTsdFactQty").placeholder = task ? `пусто = ${rtTsdQty(task.qty_exact ?? task.qty, task.unit_code)}` : "пусто = план";
   rtTsdEl("rtTsdFactQty").disabled = task?.qty_mode === "PALLET";
   rtTsdEl("rtTsdCompleteBoxes").disabled = task?.qty_mode === "PALLET";
   rtTsdSetState(task ? `${task.status}: ${task.assigned_to || "свободно"}` : "Нет активных заданий");
@@ -222,7 +226,7 @@ async function rtTsdAction(action, options = {}) {
   };
   if (action === "complete") {
     const factQty = rtTsdEl("rtTsdFactQty").value;
-    if (options.mode === "boxes" && factQty) payload.fact_qty = Number(factQty);
+    if (options.mode === "boxes" && factQty) payload.fact_qty = factQty;
     payload.scanned_pallet = rtTsdEl("rtTsdScanPallet").value.trim() || null;
     payload.scanned_from_cell = rtTsdEl("rtTsdScanFrom").value.trim() || null;
     payload.scanned_to_cell = rtTsdEl("rtTsdScanTo").value.trim() || null;
@@ -231,9 +235,14 @@ async function rtTsdAction(action, options = {}) {
     payload.reason = "Отмена с ТСД ричтрака";
   }
   rtTsdSetState("Отправка...");
+  if (action === "complete") {
+    const scanDraft=window.warehouseTaskScans?.draftId(task.task_id);
+    if(scanDraft) payload.scan_draft_id=scanDraft;
+    await window.warehouseTaskRecovery.complete(task.task_id, payload);
+    return;
+  }
   await rtTsdFetch(`/api/warehouse-tasks/${task.task_id}/${action}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
   await rtTsdLoad();
@@ -246,6 +255,7 @@ function rtTsdMove(delta) {
 }
 
 function rtTsdOperation(task) {
+  if (task.task_type === "PUTAWAY" && task.source_doc_type === "ST_DEFER") return "Переместить в ожидание";
   if (task.task_type === "REPLENISHMENT" && task.task_source === "WAVE") return "Пополнение волны";
   if (task.task_type === "RAW_TO_PRODUCTION") return "В производство";
   if (task.task_type === "FG_TO_STORAGE") return "Разместить выпуск";
@@ -255,15 +265,14 @@ function rtTsdOperation(task) {
 
 function rtTsdDoc(task) {
   const parts = [];
-  if (task.source_doc_type) parts.push(task.source_doc_type);
+  if (task.source_doc_type) parts.push(task.source_doc_type === "ST_DEFER" ? "Перенос СТ" : task.source_doc_type);
   if (task.source_doc_id) parts.push(`#${task.source_doc_id}`);
   if (task.production_order_id) parts.push(`PO ${task.production_order_id}`);
   return parts.join(" ") || "-";
 }
 
 function rtTsdQty(qty, unitCode) {
-  const value = Number(qty || 0);
-  return `${Number.isInteger(value) ? value : value.toFixed(3)} ${unitCode || ""}`.trim();
+  return `${String(qty ?? "0")} ${unitCode || ""}`.trim();
 }
 
 function rtTsdModeText(task) {
@@ -291,6 +300,7 @@ async function rtTsdShiftLogin() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      shift_id: rtTsdEl("rtTsdShiftId").value.trim() ? Number(rtTsdEl("rtTsdShiftId").value) : null,
       driver_code: driver,
       barcode: driver,
       password: password || null,
@@ -332,10 +342,41 @@ function rtTsdShowError(error) {
 }
 
 function rtTsdInit() {
+  if (rtTsd.initialized) return;
+  rtTsd.initialized = true;
+  window.warehouseTaskRecovery.init(rtTsdFetch);
+  window.addEventListener("warehouse-task-confirmed", async event => {
+    const result = event.detail.result;
+    const message = result.residual_task_id
+      ? `Подтверждено ${result.quantity}; осталось ${result.remaining_quantity}; продолжите задание #${result.residual_task_id}`
+      : `Задание #${event.detail.task_id}: факт подтверждён`;
+    rtTsdSetState(message);
+    try {
+      await rtTsdLoad();
+      const next = rtTsd.tasks.findIndex(task => task.task_id === result.residual_task_id);
+      if (next >= 0) { rtTsd.index = next; rtTsdRender(); }
+    } catch (error) { rtTsdShowError(error); }
+    rtTsdSetState(message);
+  });
   rtTsdLoadStoredSession();
   rtTsdEl("rtTsdDriver").value = rtTsdUser();
   if (rtTsd.session?.operator_user_id) rtTsdEl("rtTsdDriver").value = rtTsd.session.operator_user_id;
   if (rtTsd.session?.equipment_code) rtTsdEl("rtTsdEquipment").value = rtTsd.session.equipment_code;
+  const positionButton = document.createElement("button");
+  positionButton.type = "button"; positionButton.textContent = "Подтвердить текущую ячейку";
+  positionButton.addEventListener("click",async () => {
+    if (!rtTsd.session?.session_id || rtTsdDemoMode()) return;
+    const cell=rtTsdEl("rtTsdScanFrom").value.trim();
+    if(!cell) {rtTsdSetState("Отсканируйте текущую ячейку.");return;}
+    positionButton.disabled=true;
+    try {
+      await rtTsdFetch("/api/resources/sessions/"+rtTsd.session.session_id+"/position",{
+        method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({cell})});
+      rtTsdSetState("Позиция подтверждена: "+cell);
+    } catch(error){rtTsdShowError(error);}
+    finally {positionButton.disabled=false;}
+  });
+  rtTsdEl("rtTsdRefresh").parentElement.append(positionButton);
   rtTsdEl("rtTsdRefresh").addEventListener("click", () => rtTsdLoad().catch(rtTsdShowError));
   rtTsdEl("rtTsdShiftLogin").addEventListener("click", () => rtTsdShiftLogin().catch(rtTsdShowError));
   rtTsdEl("rtTsdShiftLogout").addEventListener("click", () => rtTsdShiftLogout().catch(rtTsdShowError));

@@ -51,7 +51,7 @@
 
   const processTitle = key => (cat().processes.find(([k]) => k === key) || [key, key])[1];
 
-  // Переход в реестр переносит склад/дату/ID, если экран их читает; иначе подпись говорит, что указать вручную.
+  // Переход в реестр переносит склад/дату/ID, если экран их читает; иначе подпись сообщает, какой контекст не перенесён.
   function linkNode(link) {
     if (!link) return node("span", "dr-nolink", "Отдельного экрана нет");
     const target = window.dayReconLinks ? window.dayReconLinks.build(link, loaded) : { href: link.href, carried: [], lost: [] };
@@ -61,7 +61,7 @@
     a.title = "Ответ сверки агрегатный: откроется реестр, а не конкретный документ." + (target.carried.length ? " Передаётся: " + target.carried.join(", ") + "." : "");
     if (!target.lost.length) return a;
     const wrap = node("span", "dr-link-wrap");
-    wrap.append(a, node("small", "dr-link-hint", "на экране укажите " + target.lost.join(" и ")));
+    wrap.append(a, node("small", "dr-link-hint", "Ссылка не передаёт " + target.lost.join(" и ") + ". Проверьте область открытого реестра."));
     return wrap;
   }
 
@@ -139,13 +139,13 @@
     const out = [];
     for (const [key, count] of Object.entries(d.current_backlog)) {
       const info = cat().backlog[key] || { title: key, process: "warehouse", meaning: "Показатель без описания в интерфейсе", action: "Уточнить у владельца процесса", link: null };
-      out.push({ key, count, ...info });
+      out.push({ key, count, ...info, documents:d.current_backlog_documents?.[key] });
     }
     const known = new Set(Object.keys(d.current_backlog));
     for (const item of d.open_items) {
       if (known.has(item.code)) continue;
       const info = cat().derived[item.code] || { title: item.code, process: "warehouse", meaning: "Открытый пункт без описания в интерфейсе", action: "Уточнить у владельца процесса", link: null };
-      out.push({ key: item.code, count: item.count, ...info });
+      out.push({ key: item.code, count: item.count, ...info,documents:item.documents });
     }
     return out;
   }
@@ -168,7 +168,7 @@
         const why = node("p", "dr-item-meaning", r.meaning);
         const next = node("div", "dr-next");
         next.append(node("span", "", "Дальше: " + r.action), linkNode(r.link));
-        card.append(head, why, next);
+        card.append(head, why, next); window.dayReconDocuments.append(card,r.documents,r.count,d.warehouse_id);
         group.append(card);
       }
       parts.push(group);

@@ -1,0 +1,45 @@
+ procedure plan_pick(p_line number,p_resources in out nocopy json_array_t,p_domain in out nocopy json_object_t) is
+  a json_array_t:=json_array_t();x json_object_t;rt RRL_PICK_WAVE_REPLENISH_TASK%rowtype;new_id number;
+ begin
+  plan_pick(p_line,p_resources);
+  for s in(select * from RRL_CASE_PICK_SHORT where CASE_PICK_LINE_ID=p_line and RECOVERY_STATE='READY') loop
+   select * into rt from RRL_PICK_WAVE_REPLENISH_TASK where PICK_WAVE_REPLENISH_TASK_ID=s.REPLENISH_TASK_ID;
+   RRL_STOCK_PLAN_HELPER.row_key(p_resources,'RRL_PICK_WAVE_REPLENISH_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(s.REPLENISH_TASK_ID));
+   select RRL_PICK_WAVE_REPL_SQ.nextval into new_id from dual;
+   RRL_STOCK_PLAN_HELPER.row_key(p_resources,'RRL_PICK_WAVE_REPLENISH_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(new_id));
+   x:=json_object_t();x.put('short_id',s.CASE_PICK_SHORT_ID);x.put('old_repl',s.REPLENISH_TASK_ID);x.put('new_repl',new_id);
+   x.put('old_status',rt.STATUS);x.put('source_reservation',rt.SOURCE_RESERVATION_ID);x.put('quantity',RRL_STOCK_PLAN_HELPER.decimal_text(rt.QTY));a.append(x);
+  end loop;
+  p_domain.put('recovery_continuations',a);
+ end;
+ procedure finish_pick(p_line number,p_actor varchar2,p_domain json_object_t) is
+  a json_array_t:=p_domain.get_array('recovery_continuations');x json_object_t;s RRL_CASE_PICK_SHORT%rowtype;l RRL_CASE_PICK_LINE%rowtype;
+  rt RRL_PICK_WAVE_REPLENISH_TASK%rowtype;id number;old_id number;new_id number;need number;
+ begin
+  for i in 0..a.get_size-1 loop
+   x:=treat(a.get(i) as json_object_t);id:=x.get_number('short_id');old_id:=x.get_number('old_repl');new_id:=x.get_number('new_repl');
+   select * into s from RRL_CASE_PICK_SHORT where CASE_PICK_SHORT_ID=id for update;
+   select * into l from RRL_CASE_PICK_LINE where CASE_PICK_LINE_ID=p_line;
+   select * into rt from RRL_PICK_WAVE_REPLENISH_TASK where PICK_WAVE_REPLENISH_TASK_ID=old_id for update;
+   if s.CASE_PICK_LINE_ID!=p_line or s.RECOVERY_STATE!='READY' or s.REPLENISH_TASK_ID!=old_id
+    or rt.STATUS!=x.get_string('old_status') or nvl(rt.SOURCE_RESERVATION_ID,-1)!=nvl(x.get_number('source_reservation'),-1)
+    or RRL_STOCK_PLAN_HELPER.decimal_text(rt.QTY)!=x.get_string('quantity') then raise_application_error(-20890,'CLOSURE_CHANGED: recovery continuation');end if;
+   need:=l.PLANNED_QTY-l.PICKED_QTY;
+   if need=0 then
+    update RRL_CASE_PICK_SHORT set RECOVERY_STATE='RESUMED',RESTORED_AT=systimestamp,RECOVERY_WORKER=null,RECOVERY_LEASE_UNTIL=null,RECOVERY_LAST_ERROR=null
+     where CASE_PICK_SHORT_ID=id;
+   else
+    if need<0 then raise_application_error(-20886,'SHORT_CONTINUATION_FACT_EXCEEDS_PLAN');end if;
+    if rt.STATUS in('DONE','CANCELLED','FAILED') then
+     RRL_STOCK_LOCK_API.assert_held(20,RRL_STOCK_LOCK_API.resource_key('ROW','RRL_PICK_WAVE_REPLENISH_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(new_id)));
+     insert into RRL_PICK_WAVE_REPLENISH_TASK(PICK_WAVE_REPLENISH_TASK_ID,PICK_WAVE_ID,PICK_TASK_ID,STATUS,ARTICUL,
+      TARGET_CELL_CODE,QTY,DEMAND_BASE_QTY,PICK_SEQUENCE,CREATED_BY,REPLENISHMENT_METHOD,REPLENISHMENT_QTY_MODE,RELEASED_AT,RELEASED_BY,MIN_SHELF_LIFE_DAYS,MIN_SHELF_LIFE_PERCENT)
+      values(new_id,l.PICK_WAVE_ID,l.PICK_TASK_ID,'RELEASED',l.ARTICUL,l.CELL_CODE,need,need,l.PICK_SEQUENCE,p_actor,'IMMEDIATE','FILL_TO_VOLUME',sysdate,p_actor,rt.MIN_SHELF_LIFE_DAYS,rt.MIN_SHELF_LIFE_PERCENT);
+    else new_id:=old_id;end if;
+    update RRL_CASE_PICK_SHORT set RECOVERY_STATE='WAIT_REPLENISHMENT',REPLENISH_TASK_ID=new_id,RECOVERY_SOURCE_REQUEST=null,
+     RECOVERY_WORKER=null,RECOVERY_LEASE_UNTIL=null,RECOVERY_LAST_ERROR=null where CASE_PICK_SHORT_ID=id;
+    update RRL_CASE_PICK_LINE set STATUS='WAIT_REPLENISHMENT' where CASE_PICK_LINE_ID=p_line;
+    update RRL_CASE_PICK_TASK set STATUS='WAIT_REPLENISHMENT' where CASE_PICK_TASK_ID=s.CASE_PICK_TASK_ID;
+   end if;
+  end loop;
+ end;

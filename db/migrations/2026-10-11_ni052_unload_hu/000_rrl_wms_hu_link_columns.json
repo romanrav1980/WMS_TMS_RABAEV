@@ -1,0 +1,50 @@
+[
+  [
+    "HU_LINK_ID",
+    "NUMBER"
+  ],
+  [
+    "PARENT_UID",
+    "VARCHAR2"
+  ],
+  [
+    "CHILD_PALLET_UID",
+    "VARCHAR2"
+  ],
+  [
+    "CHILD_CASE_TASK_ID",
+    "NUMBER"
+  ],
+  [
+    "ACTIVE_FLAG",
+    "NUMBER"
+  ],
+  [
+    "LINK_VERSION",
+    "NUMBER"
+  ],
+  [
+    "LINKED_OPERATION_ID",
+    "VARCHAR2"
+  ],
+  [
+    "LINKED_AT",
+    "TIMESTAMP(6) WITH TIME ZONE"
+  ],
+  [
+    "LINKED_BY",
+    "VARCHAR2"
+  ],
+  [
+    "UNLINKED_OPERATION_ID",
+    "VARCHAR2"
+  ],
+  [
+    "UNLINKED_AT",
+    "TIMESTAMP(6) WITH TIME ZONE"
+  ],
+  [
+    "UNLINKED_BY",
+    "VARCHAR2"
+  ]
+]

@@ -1,0 +1,2 @@
+# Qwen:185
+Run scripts/ni051_physical_box_mass_case.py with own tag. Verify actual unit net9.8/gross10.1 gives QC expected10.1/tolerance5.05 without normative KG weight; partial9.7 denied. Existing close/bind/current independent controller/WEIGHT2 verified1 and exact replay; readyfalse until SCAN. Native cleanup/original13520/20. Unknown gross/ref/label or mixed/nonKG composition must fail. Ordinary SKU uses original SI policy. This does not confirm real scales, government signature or order15%/last-box exception. Review SQL actual-mass bound/index, no broad stock reset.

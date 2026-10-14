@@ -43,6 +43,7 @@ create or replace package body RRL_STOCK_BALANCE_CORE as
   v_p number;v_h number;v_ver number;v_uom varchar2(20);v_article varchar2(160);v_scale number;v_exists boolean:=true;
  begin
   assert_context;
+  if p_delta_p!=0 then RRL_STOCK_HU_READ.assert_quantity_write(p_uid);end if;
   RRL_STOCK_LOCK_API.assert_held(50,RRL_STOCK_LOCK_API.resource_key('STOCK',p_uid));
   if p_cell is null or p_base_uom is null or p_delta_p is null or p_delta_h is null then
    raise_application_error(-20864,'STOCK_IDENTITY_OR_DELTA_MISSING');

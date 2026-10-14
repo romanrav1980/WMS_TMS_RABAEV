@@ -1,7 +1,8 @@
-import { useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, stRowKey, StPagesBar } from "../features/transport";
+import { submitCluster, useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, stRowKey, StPagesBar } from "../features/transport";
+import { StoreCasesPanel } from "../features/delivery";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual"; // Sprint 102
-
+import { BillingWarehouseCosts } from "../features/finance";
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -889,20 +890,11 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
   }) {
     setClusterCreateLoading(true);
     try {
-      const res = await apiFetch<{ task_id: number; st_count: number; warnings: string[] }>(
-        `/api/admin/transport/clusters/${encodeURIComponent(params.raion)}/create-task`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            stdate: stDate,
-            transtype: params.transtype,
-            vehicle: params.vehicle || null,
-            driver_id: params.driver_id,
-            dock: params.dock || null,
-            ware_ids: null,
-          }),
-        }
-      );
+      const res = await submitCluster(apiFetch,
+        {api: API_BASE, actor: API_BASIC_AUTH.split(":", 1)[0]},params.raion,{
+          stdate: stDate, transtype: params.transtype, vehicle: params.vehicle || null,
+          driver_id: params.driver_id, dock: params.dock || null, ware_ids: null,
+        });
       if (res.warnings.length > 0) setError(res.warnings.join("; "));
       setClusterCreateRaion(null);
       await Promise.all([loadTasks(), loadClusters(), loadAvailableSts()]);
@@ -1489,6 +1481,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
           </span>
         )}
       </header>
+      <StoreCasesPanel request={apiFetch}/>
 
       {/* Sprint 42 — toast notification */}
       {toastMsg && (
@@ -3987,7 +3980,7 @@ function BillingOrderDetailPanel({
         <span>{order.date_from} – {order.date_to}</span>
         {order.num_plat && <span>№ плат.: {order.num_plat}</span>}
       </div>
-
+      <BillingWarehouseCosts invoiceId={order.order_id} />
       {loading ? (
         <div className="billing-detail-loading">Загрузка…</div>
       ) : tasks.length === 0 ? (

@@ -1,0 +1,12 @@
+{
+  "migration_id": "2026-10-11-227-original-marked-interwarehouse-placement",
+  "sha256": {
+    "db/migrations/2026-10-11_ni061_marked_placement/000_before_rrl_stock_posting_api.sql": "81ee8e4cea931d45704a789bd1c11ea7c6352721bcf1318aa0ca54b0bf5ccfd2",
+    "db/migrations/2026-10-11_ni061_marked_placement/000_before_rrl_stock_interware_put.sql": "44477769cbbd8b40fa91b43f020ac2f32600156f72eb7a4acc3f3532f48ac7b7",
+    "db/migrations/2026-10-11_ni061_marked_placement/000_before_rrl_stock_task_plan.sql": "74bd0b92ff2ea366769f2208ace10ef7ad61a5a9121b3646dd72899ae7917bc5",
+    "db/migrations/2026-10-11_ni061_marked_placement/000_before_rrl_stock_task_core.sql": "79835a72ac9e20820bf2dc588f48c71801b354da2f952926e222b282653f98b6",
+    "db/migrations/2026-10-11_ni061_marked_placement/000_before_rrl_stock_task_domain.sql": "e8e8c082072e55ec84b11c4d244e6edfebac01a81dee09c5a1754f01858e48aa",
+    "db/migrations/2026-10-11_ni061_marked_placement/000_before_rrl_stock_transfer_core.sql": "40577aba81a595c2a2e68d0e55f98b67cde72398efc391c498ac58d276ba031c",
+    "db/migrations/2026-10-11_ni061_marked_placement/000_before_manifest.json": "84c2f57df0bb7634cb9fb08ab6baf7a63376f648fb5e7e04e36a44648b4ce20e"
+  }
+}

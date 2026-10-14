@@ -1,0 +1,19 @@
+.trip-picker{width:min(1100px,94vw);max-height:90vh;padding:0;border:1px solid #dce5f2;border-radius:18px;box-shadow:0 28px 80px #16284840;color:#24344b;background:#fff}
+.trip-picker::backdrop{background:#142a4655;backdrop-filter:blur(3px)}
+.trip-picker-heading{display:flex;align-items:flex-start;justify-content:space-between;padding:25px 28px 18px;border-bottom:1px solid #eaf0f7}
+.trip-picker-heading h2{font-size:23px;margin:6px 0}
+.trip-picker-heading p{margin:0;color:#8090a8;font-size:12px}
+#tpClose{margin:0;border:0;background:#f3f6fb;font-size:24px;padding:2px 13px;min-height:36px;color:#6c7f9b}
+.trip-filters{display:grid;grid-template-columns:1fr 1fr 1.4fr 1fr auto;gap:13px;padding:22px 28px;background:#f8faff;align-items:end}
+.trip-filters label{display:flex;margin:0;min-width:0}
+.trip-filters input{min-width:0;width:100%;background:#fff}
+#tpSearch{margin:0;min-height:42px;background:#2867d4;color:#fff;border-color:#2867d4}
+.trip-picker-message{margin:0;padding:14px 28px;font-size:12px;color:#7186a4}
+.trip-list-wrap{padding:0 28px;max-height:46vh;overflow:auto}
+.trip-list-wrap table{margin:0;width:100%;display:table}
+.trip-list-wrap th,.trip-list-wrap td{padding:13px 10px}
+.pick-trip-button{color:#2867d4;border-color:#c9dbf7}
+.trip-picker-footer{display:flex;justify-content:space-between;align-items:center;padding:13px 28px;border-top:1px solid #eaf0f7;font-size:12px;color:#8595ac}
+.trip-picker-footer button{margin:0}
+@media(max-width:850px){.trip-filters{grid-template-columns:1fr 1fr}.trip-list-wrap{overflow:auto}.trip-picker-heading,.trip-filters{padding:18px}.trip-choice{flex-wrap:wrap}}
+.trip-picker [hidden]{display:none!important;} .trip-picker input{box-sizing:border-box;min-height:42px;border:1px solid #cbd8ee;border-radius:8px;padding:8px 10px;} .trip-picker button{min-height:40px;border:1px solid #cbd8ee;border-radius:8px;padding:8px 14px;color:#1f5096;background:#eef4ff;cursor:pointer;} .trip-picker td,.trip-picker th{padding:12px;border-bottom:1px solid #e8edf7;text-align:left;} .trip-picker .trip-list-wrap{padding:0 24px;} .trip-picker .trip-filters label{flex-direction:column;gap:6px;}

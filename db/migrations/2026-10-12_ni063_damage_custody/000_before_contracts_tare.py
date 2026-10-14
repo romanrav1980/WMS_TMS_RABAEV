@@ -1,0 +1,16 @@
+from typing import Any,Protocol
+
+class TareError(Exception):
+    def __init__(self,code: str,message: str,status: int=409,operation_id: str|None=None) -> None:
+        super().__init__(message)
+        self.code,self.status,self.operation_id=code,status,operation_id
+
+class TarePort(Protocol):
+    def post(self,kind: str,operation_id: str,source: dict[str,Any],metadata: dict[str,Any],actor: str) -> dict[str,Any]: ...
+    def balances(self,owner_ware_id: int,actor: str) -> list[dict[str,Any]]: ...
+    def damage_cases(self,ware_id: int,actor: str) -> list[dict[str,Any]]: ...
+    def context(self,task_id: int,actor: str) -> dict[str,Any]: ...
+    def offers(self,task_id: int,actor: str) -> list[dict[str,Any]]: ...
+
+def tare_service() -> TarePort:
+    raise RuntimeError("Tare service not wired")

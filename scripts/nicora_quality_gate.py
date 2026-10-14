@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 import subprocess
 import sys
+from uuid import uuid4
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -19,7 +20,8 @@ def main() -> int:
     args = parser.parse_args()
     run([sys.executable, 'scripts/check_architecture.py'])
     run([sys.executable, '-m', 'pytest', 'tests/architecture', 'tests/tooling', '-q',
-         '-o', 'cache_dir=tmp/nicora_quality/pytest-cache'])
+         '-o', 'cache_dir=tmp/nicora_quality/pytest-cache', '--basetemp',
+         str(ROOT / 'tmp/nicora_quality' / ('pytest-' + uuid4().hex))])
     if args.skip_typecheck:
         print('PARTIAL: frontend type checks explicitly skipped.')
     else:

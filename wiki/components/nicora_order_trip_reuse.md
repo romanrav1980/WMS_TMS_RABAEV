@@ -31,3 +31,5 @@ SAP identity сопоставлена через существующий custom
 - Уже вычисляемые плановые масса/объём/паллеты переиспользовать. Сначала сравнить конкретные правила NICORA по таре/температуре/смешанной загрузке с существующим валидатором, затем дополнять только найденные пробелы.
 
 Slow SQL измерений нет: runtime cases не выполнялись. Документ не присваивает системе PASS и не назначает общий аудит/нагрузку. [План NI02](../runbooks/nicora_ni02_store_orders.md).
+
+241 durable correction: RRL_TRANSPORT_PLAN_API.assign_sts is additive (UNION current/requested STs), not replacement. It previously rejected all current CONDITION2; latest native owner preserves only current same-trip/vehicle ACTIVE LOADED/APPLIED cargo and skips rewrites. Frozen loaded capacity added once; new ST uses original writer. See [[database/nicora_ni022_late_loaded_assignment_20261011]].

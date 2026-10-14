@@ -15,7 +15,6 @@ OR-Tools документация: https://developers.google.com/optimization/ro
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
 from typing import Any
 
 
@@ -23,59 +22,7 @@ from typing import Any
 # Data classes
 # ---------------------------------------------------------------------------
 
-@dataclass
-class VrpOrder:
-    st_number: str
-    addr: str
-    lat: float
-    lon: float
-    pallets: int
-    weight_kg: float
-    ware_id: int
-    transport_type: str | None
-    tw_from: int = 0       # minutes from shift start (06:00)
-    tw_to:   int = 1080    # minutes from shift start (06:00+18h=24:00)
-    tw_strict: bool = False
-    unload_norm_min: int = 30
-    verify_perc: float | None = None
-
-
-@dataclass
-class VrpVehicle:
-    id: int
-    num: str          # гос. номер
-    tr_type: str      # тип ТС
-    max_pallets: int
-    max_tons: float
-    gidrobort: bool = False
-
-
-@dataclass
-class VrpRoute:
-    vehicle: VrpVehicle
-    stops: list[VrpOrder] = field(default_factory=list)
-    total_km: float = 0.0
-    total_pallets: int = 0
-    total_kg: float = 0.0
-    total_duration_min: int = 0
-
-    @property
-    def utilization_pct(self) -> float:
-        if self.vehicle.max_pallets == 0:
-            return 0.0
-        return round(self.total_pallets / self.vehicle.max_pallets * 100, 1)
-
-
-@dataclass
-class VrpPlan:
-    routes: list[VrpRoute] = field(default_factory=list)
-    unassigned: list[VrpOrder] = field(default_factory=list)
-    total_km: float = 0.0
-    fleet_utilization_pct: float = 0.0
-    tw_violations: int = 0
-    score: float = 0.0
-    solver_used: str = "none"
-    solve_time_ms: int = 0
+from ..modules.transport.contracts import VrpOrder, VrpVehicle, VrpRoute, VrpPlan, extract_solver_routes
 
 
 # ---------------------------------------------------------------------------
@@ -108,11 +55,13 @@ def _solve_ortools(
     dist_matrix: list[list[int]],  # in metres (int)
     depot_idx: int,
     time_limit_s: int,
+    time_matrix: list[list[int]] | None = None,
 ) -> "Any":
     """Returns (manager, routing, solution) or raises ImportError."""
     from ortools.constraint_solver import pywrapcp, routing_enums_pb2  # type: ignore
 
-    n_nodes = len(orders) + 1  # +1 for depot
+    n_orders = len(orders)
+    n_nodes = n_orders + 1  # +1 for depot
     n_vehicles = len(vehicles)
 
     manager = pywrapcp.RoutingIndexManager(n_nodes, n_vehicles, depot_idx)
@@ -150,8 +99,8 @@ def _solve_ortools(
         fi = manager.IndexToNode(from_idx)
         ti = manager.IndexToNode(to_idx)
         dist_km = dist_matrix[fi][ti] / 1000.0
-        travel = int(dist_km / SPEED_KM_MIN)
-        service = orders[ti].unload_norm_min if ti != depot_idx else 0
+        travel = time_matrix[fi][ti]if time_matrix is not None else math.ceil(dist_km / SPEED_KM_MIN)
+        service = orders[fi].unload_norm_min if fi != depot_idx else 0
         return travel + service
 
     time_cb_idx = routing.RegisterTransitCallback(time_cb)
@@ -383,6 +332,8 @@ def solve(
     dist_cache: dict[tuple[str, str], float] | None = None,
     time_limit_s: int = 30,
     solver: str = "auto",
+    duration_cache: dict[tuple[str,str],float] | None = None,
+    origin: dict | None = None,
 ) -> VrpPlan:
     """
     Запускает решатель.
@@ -408,12 +359,12 @@ def solve(
     elif solver == "ortools":
         try:
             import time as _t
-            return _solve_with_ortools(valid, vehicles, dist_cache, time_limit_s, _t.time())
+            return _solve_with_ortools(valid, vehicles, dist_cache, time_limit_s, _t.time(),duration_cache,origin)
         except ImportError:
             return _solve_clarke_wright(valid, vehicles)
     else:  # auto
         try:
-            return _solve_with_ortools(valid, vehicles, dist_cache, time_limit_s, t0)
+            return _solve_with_ortools(valid, vehicles, dist_cache, time_limit_s, t0,duration_cache,origin)
         except ImportError:
             return _solve_clarke_wright(valid, vehicles)
 
@@ -424,6 +375,8 @@ def _solve_with_ortools(
     dist_cache: dict[tuple[str, str], float] | None,
     time_limit_s: int,
     t0: float,
+    duration_cache: dict[tuple[str,str],float] | None = None,
+    origin: dict | None = None,
 ) -> VrpPlan:
     import time
 
@@ -431,78 +384,19 @@ def _solve_with_ortools(
     n_nodes  = n_orders + 1  # last index = depot
     depot_idx = n_nodes - 1
 
-    # Build integer distance matrix in metres
-    def _km(i: int, j: int) -> float:
-        if i == depot_idx and j == depot_idx:
-            return 0.0
-        if i == depot_idx or j == depot_idx:
-            # depot at centre of gravity
-            if i == depot_idx:
-                depot_lat = sum(o.lat for o in orders) / len(orders)
-                depot_lon = sum(o.lon for o in orders) / len(orders)
-                return _hav_km(depot_lat, depot_lon, orders[j].lat, orders[j].lon)
-            else:
-                depot_lat = sum(o.lat for o in orders) / len(orders)
-                depot_lon = sum(o.lon for o in orders) / len(orders)
-                return _hav_km(orders[i].lat, orders[i].lon, depot_lat, depot_lon)
-        if dist_cache:
-            cached = dist_cache.get((orders[i].addr, orders[j].addr))
-            if cached is not None:
-                return cached
-        return _hav_km(orders[i].lat, orders[i].lon, orders[j].lat, orders[j].lon)
-
-    dist_matrix = [
-        [int(_km(i, j) * 1000) for j in range(n_nodes)]
-        for i in range(n_nodes)
-    ]
-
-    manager, routing, solution = _solve_ortools(orders, vehicles, dist_matrix, depot_idx, time_limit_s)
+    from ..modules.transport.public import distance_costs,travel_times
+    dist_matrix,depot_address=distance_costs(orders,dist_cache,origin,_hav_km)
+    time_matrix,time_basis=travel_times([order.addr for order in orders],dist_matrix,depot_idx,duration_cache,depot_address)
+    manager, routing, solution = _solve_ortools(orders, vehicles, dist_matrix, depot_idx, time_limit_s,time_matrix)
 
     if not solution:
         return _solve_clarke_wright(orders, vehicles)
 
-    # Extract routes
-    routes: list[VrpRoute] = []
-    unassigned_nodes: set[int] = set(range(n_orders))
-    tw_violations = 0
-    time_dim = routing.GetDimensionOrDie("Time")
+    routes, unassigned, tw_violations = extract_solver_routes(
+        orders, vehicles, dist_matrix, depot_idx, manager, routing, solution,time_matrix,time_basis,
+    )
 
-    for v_idx, vehicle in enumerate(vehicles):
-        idx = routing.Start(v_idx)
-        route_stops: list[VrpOrder] = []
-        total_km = 0.0
-        prev_idx = idx
-
-        while not routing.IsEnd(idx):
-            node = manager.IndexToNode(idx)
-            if node != depot_idx:
-                route_stops.append(orders[node])
-                unassigned_nodes.discard(node)
-                # Check TW violation
-                order = orders[node]
-                t_val = solution.Value(time_dim.CumulVar(idx))
-                if t_val > order.tw_to:
-                    tw_violations += 1
-
-            prev_idx = idx
-            idx = solution.Value(routing.NextVar(idx))
-            if not routing.IsEnd(idx):
-                fi = manager.IndexToNode(prev_idx)
-                ti = manager.IndexToNode(idx)
-                total_km += dist_matrix[fi][ti] / 1000.0
-
-        if route_stops:
-            r = VrpRoute(vehicle=vehicle, stops=route_stops)
-            r.total_km      = round(total_km, 1)
-            r.total_pallets = sum(o.pallets for o in route_stops)
-            r.total_kg      = sum(o.weight_kg for o in route_stops)
-            r.total_duration_min = int(
-                sum(o.unload_norm_min for o in route_stops) + total_km / (50.0 / 60.0)
-            )
-            routes.append(r)
-
-    unassigned = [orders[i] for i in sorted(unassigned_nodes)]
-
+    for route in routes:route.depot_basis='CONFIGURED_WAREHOUSE_REFERENCE'if depot_address else 'VIRTUAL_CENTROID'
     total_km_all = sum(r.total_km for r in routes)
     active = [r for r in routes if r.stops]
     fleet_util = (

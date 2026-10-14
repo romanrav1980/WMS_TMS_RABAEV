@@ -133,6 +133,7 @@ def login_session(
     request: ResourceSessionLoginRequest,
     _user: AdminUser = Depends(require_permission(RESOURCE_SESSION_MANAGE_PERMISSION)),
 ) -> IdResponse:
+    request.created_by=_user.username
     return IdResponse(id=ResourceManagementService().login_session(request))
 
 
@@ -179,5 +180,6 @@ def logout_session(
     request: ResourceSessionStatusRequest,
     _user: AdminUser = Depends(require_permission(RESOURCE_SESSION_MANAGE_PERMISSION)),
 ) -> dict[str, str]:
+    request.updated_by=_user.username
     ResourceManagementService().logout_session(session_id, request)
     return {"status": "ok"}

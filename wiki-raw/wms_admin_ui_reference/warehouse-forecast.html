@@ -41,9 +41,23 @@
 </section>
 
 <section class="wf-panel wf-resources" aria-labelledby="wfResTitle">
-<h2 id="wfResTitle">Потребность в людях, технике и слотах</h2>
-<p>Прогноз даёт количество товара, а не трудозатраты. Пересчёт в часы, людей, технику или слоты в этом контракте не выполняется: нужны нормативы производительности, сопоставленные с видом работы прогноза, и плановая явка. Значение здесь не выводится, чтобы не выдавать предположение за расчёт.</p>
-<p class="wf-note">Нормативы склада ведутся отдельно: <a href="resource-workload.html">Нагрузка и выход персонала</a>.</p>
+<h2 id="wfResTitle">Трудозатраты по нормам участка</h2>
+<div id="wfLabourResult" aria-live="polite"><p>Рассчитайте прогноз, чтобы увидеть часы и основания.</p></div>
+<p class="wf-note">Расчёт рекомендательный: количество / действующая норма. Часы по строке округляются вверх до 9 десятичных знаков. Численность людей, техника и слоты требуют доступных смен, перерывов и квалификации; здесь не назначаются.</p>
+<details><summary>Настроить связь вида работы с участком</summary>
+<p>Связь относится к выбранным выше складу и виду работы. Нормы SKU и базовых единиц ведутся в <a href="resource-workload.html">нагрузке и выходе персонала</a>.</p>
+<button id="wfNormLoad" type="button">Прочитать настройки участка</button>
+<p id="wfNormCurrent">Настройки ещё не прочитаны.</p>
+<div class="wf-form">
+<label for="wfNormSites">Участок норм<select id="wfNormSites"></select></label>
+<label class="wf-check"><input type="checkbox" id="wfNormActive" checked><span>Связь действует</span></label>
+<label for="wfNormReason">Основание изменения<input id="wfNormReason" maxlength="500" minlength="3" placeholder="Почему выбран этот участок"></label>
+</div>
+<button id="wfNormSave" type="button" disabled>Сохранить связь с участком</button>
+<button id="wfNormRetry" type="button" hidden>Повторить сохранённую настройку</button>
+<button id="wfNormArchive" type="button" hidden>Архивировать повреждённый запрос</button>
+<p id="wfNormMessage" role="status"></p>
+</details>
 </section>
 
 <section class="wf-panel" id="wfProjectPanel" hidden aria-labelledby="wfProjectTitle">
@@ -54,4 +68,4 @@
 <div id="wfProjectErrors"></div>
 </section>
 </main></div>
-<script src="admin-nav.js"></script><script src="admin-auth.js"></script><script src="warehouse-forecast-explain.js?v=20261014-ni081"></script><script src="warehouse-forecast.js?v=20261014-ni081"></script></body></html>
+<script src="admin-nav.js"></script><script src="admin-auth.js"></script><script src="wave-command-intent.js"></script><script src="warehouse-forecast-labour.js?v=20261014-1331"></script><script src="warehouse-forecast-explain.js?v=20261014-ni081"></script><script src="warehouse-forecast.js?v=20261014-ni081"></script></body></html>

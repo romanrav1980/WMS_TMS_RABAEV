@@ -1,0 +1,25 @@
+exec(open("scripts/ni063_slow_queries.py",encoding="utf-8").read().split('with oracledb.connect',1)[0])
+ctx=json.loads(Path("tmp/context744.json").read_text(encoding="utf-8"))
+probe=json.loads(Path("tmp/context753.json").read_text(encoding="utf-8"))
+with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
+ q=c.cursor()
+ q.execute("select DEFER_WAIT_CELL from RRL_RECEIPT_WARE_SETTINGS where WARE_ID=:w",w=ctx["ware"]);old=q.fetchone()[0]
+ q.callproc("RRL_STOCK_CONFIG_API.begin_change",["admin","warehouse_settings_edit"])
+ try:
+  q.execute("update RRL_RECEIPT_WARE_SETTINGS set DEFER_WAIT_CELL=:cell where WARE_ID=:w",cell=probe["cell"],w=ctx["ware"])
+  q.execute("select DEFER_WAIT_CELL from RRL_RECEIPT_WARE_SETTINGS where WARE_ID=:w",w=ctx["ware"]);assert q.fetchone()==(probe["cell"],)
+  c.rollback()
+  q.execute("select DEFER_WAIT_CELL from RRL_RECEIPT_WARE_SETTINGS where WARE_ID=:w",w=ctx["ware"]);assert q.fetchone()==(old,)
+  q.execute("select CELL from RRL_CELLS where WARE_ID=:w and OTBOR=1 fetch first 1 rows only",w=ctx["ware"]);pick=q.fetchone()
+  if pick:
+   try:q.execute("update RRL_RECEIPT_WARE_SETTINGS set DEFER_WAIT_CELL=:cell where WARE_ID=:w",cell=pick[0],w=ctx["ware"])
+   except oracledb.DatabaseError as e:assert "DEFER_WAIT_CELL_SAME_WARE" in str(e)
+   else:raise AssertionError("picking cell admitted")
+  try:q.execute("update RRL_RECEIPT_WARE_SETTINGS set DEFER_WAIT_CELL='NO_SUCH_762' where WARE_ID=:w",w=ctx["ware"])
+  except oracledb.DatabaseError as e:assert "DEFER_WAIT_CELL_SAME_WARE" in str(e)
+  else:raise AssertionError("unknown cell admitted")
+  q.execute("update RRL_RECEIPT_WARE_SETTINGS set DEFER_WAIT_CELL=:cell where WARE_ID=:w",cell=probe["cell"],w=ctx["ware"])
+ finally:q.callproc("RRL_STOCK_CONFIG_API.end_change")
+ c.commit()
+ q.execute("select REMAIN,HARD_RESERVED_BASE from RRL_REMAINS where UID_POLETA=:p_uid and CELL=:cell",p_uid=ctx["lot"],cell=ctx["dst"]);assert q.fetchone()==(3,3)
+ print("762 PASS waiting metadata rollback/unknown/picking guard; designated dev cell committed; source P3/H3 unchanged")

@@ -1,9 +1,10 @@
 """Match a complete physical carrier to an existing ST in exact base units."""
 from fractions import Fraction
+from typing import Any,Sequence
 from .stock_quantity import convert_exact, quantity_text
 
 
-def assert_matching_composition(physical_rows, document_rows):
+def assert_matching_composition(physical_rows: Sequence[tuple[Any,...]],document_rows: Sequence[tuple[Any,...]]) -> None:
     if not 1 <= len(physical_rows) <= 200 or not 1 <= len(document_rows) <= 200:
         raise ValueError("Carrier/ST composition is empty or exceeds the supported bound")
     physical, planned = {}, {}

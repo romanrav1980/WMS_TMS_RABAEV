@@ -1,0 +1,30 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Потребность для диапазона</title><link rel="stylesheet" href="styles.css"></head>
+<body class="auth-pending" data-required-permission="pick_topology_view"><div class="app"><aside class="sidebar"><div class="brand">WMS</div><nav class="nav" data-admin-nav data-active-nav="slotting-demand"></nav></aside><main class="workspace">
+<h1>Потребность для диапазона</h1><section class="panel"><p>Сценарный расчёт по открытым заказам, пригодному старому запасу и назначенным подачам. Сам расчёт не меняет размещение и задания.</p>
+<label>Склад<input id="sdWare" type="number" min="1"></label><label>Артикул<input id="sdArticle" maxlength="40"></label>
+<label>Начало периода<input id="sdFrom" type="date"></label><label>Конец периода, не включается<input id="sdTo" type="date"></label>
+<label>Заявленный общий прогноз периода, необязательно<input id="sdForecast" inputmode="decimal"></label><label>Базовая единица прогноза<input id="sdUnit" maxlength="20"></label>
+<p>Заказы этого периода заменяют соответствующую часть общего прогноза. При отсутствии прогноза отображается только известный минимум. Заказы без даты показываются отдельно.</p>
+<label>Опубликованный маршрут кандидатов, необязательно<input id="sdCandidateRoute" type="number" min="1"></label>
+<p>Маршрут ограничивает новые ячейки-кандидаты. Спрос, старый запас и прежний диапазон учитываются по всему артикулу на складе.</p>
+<label>Заявленная масса целой паллеты, брутто кг<input id="sdPalletWeight" inputmode="decimal"></label>
+<label>Нормативы сравнения ячеек, по строке: ID; секунд отбора на базовую единицу; секунд пополнения на паллету; основание<textarea id="sdCosts" rows="5" placeholder="510; 0.8; 45; Замер маршрута смены"></textarea></label>
+<p>Рекомендация использует не более одной дополнительной целой паллеты на ячейку. Нормативы — ваши допущения для сравнения; геометрия и утверждение проверяются отдельно.</p>
+<button id="sdRead">Рассчитать сценарий</button><p id="sdMessage" role="status"></p></section>
+<section class="panel"><h2>Предложение диапазона</h2>
+<p>Сохранение создаёт черновик с исходными данными и автором. Слотирование и действующие задания пока не изменяются.</p>
+<label>Основание сохранения или отмены<input id="sdDraftReason" maxlength="2000"></label>
+<button id="sdSaveDraft" disabled>Сохранить рассчитанное предложение</button>
+<button id="sdRetryDraft">Повторить неподтверждённую команду</button>
+<label>Идентификатор предложения<input id="sdProposal" maxlength="100"></label>
+<button id="sdReadDraft">Открыть предложение</button><button id="sdCancelDraft">Отменить черновик</button>
+<label><input id="sdGeometryChecked" type="checkbox">Геометрия целой паллеты и ячейки проверена</label>
+<label><input id="sdCompatibilityChecked" type="checkbox">Совместимость товара с диапазоном проверена</label>
+<button id="sdApproveDraft">Утвердить диапазон</button>
+<p>Утверждение активирует новый диапазон. Старый остаётся для завершения прежних заданий и вымывания запаса; новые пополнения туда не назначаются.</p>
+<label>Идентификатор назначения артикула для завершения вымывания<input id="sdDrainMapping" type="number" min="1"></label>
+<button id="sdCloseDrain">Завершить вымывание пустого назначения</button>
+<button id="sdClearDraftPending">Очистить локальный повтор после проверки результата</button>
+<p id="sdDraftMessage" role="status"></p><pre id="sdDraftResult"></pre></section>
+<section class="panel" id="sdResult"></section>
+</main></div><script src="admin-nav.js"></script><script src="admin-auth.js"></script><script src="slotting-demand.js"></script></body></html>

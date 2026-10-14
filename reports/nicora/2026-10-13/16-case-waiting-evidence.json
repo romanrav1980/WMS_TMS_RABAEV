@@ -1,0 +1,194 @@
+{
+  "native967": {
+    "first": {
+      "task": 1110,
+      "case": 1129,
+      "task_status": "DONE",
+      "task_places": "1",
+      "cell": "QWba1b305227",
+      "goods": "12",
+      "hard": "12",
+      "journal": [],
+      "outbox": 1
+    },
+    "second": {
+      "task": 1111,
+      "case": 1130,
+      "task_status": "DONE",
+      "task_places": "1",
+      "cell": "QWba1b305227",
+      "goods": "8",
+      "hard": "8",
+      "journal": [
+        [
+          8,
+          "EA",
+          "MOVE966:ba1b305227"
+        ]
+      ],
+      "outbox": 1
+    },
+    "sql": [
+      [
+        "6ss7wy0ykhbhz",
+        18,
+        1.237,
+        49.6
+      ],
+      [
+        "gvsk5hj6zdhkw",
+        13,
+        1.565,
+        47.2
+      ],
+      [
+        "60pnuw4g8tg32",
+        23,
+        1.193,
+        19.8
+      ],
+      [
+        "28qsm27dhp2a7",
+        10,
+        3.957,
+        46.8
+      ],
+      [
+        "c9z2fvw4h0fs9",
+        18,
+        0.29,
+        1.7
+      ]
+    ],
+    "second_bridge_replay": true,
+    "changed_same_operation_refused": true,
+    "foreign_current_actor_refused": true
+  },
+  "http971": {
+    "family_count": 3,
+    "case_tasks": [
+      {
+        "task_id": 1110,
+        "task_type": "PUTAWAY",
+        "task_source": "MANUAL",
+        "source_task_id": 1129,
+        "source_movement_id": null,
+        "source_doc_type": "ST_DEFER_CASE",
+        "source_doc_id": 1,
+        "production_order_id": null,
+        "prod_batch_id": null,
+        "raw_articul": null,
+        "target_articul": null,
+        "uid_pallet": "CP552000000001129",
+        "sscc": null,
+        "from_ware_id": 12296656,
+        "from_cell": "CPT_12296656",
+        "to_ware_id": 12296656,
+        "to_cell": "QWba1b305227",
+        "qty": 1,
+        "unit_code": "CASE",
+        "qty_mode": "PALLET",
+        "fact_qty": 1,
+        "parent_task_id": null,
+        "qty_exact": "1",
+        "fact_qty_exact": "1",
+        "to_cell_slot_id": null,
+        "hu_content_version": null,
+        "to_slot_code": null,
+        "priority": 100,
+        "status": "DONE",
+        "assigned_to": "admin",
+        "resource_id": null,
+        "resource_session_id": null,
+        "equipment_id": null,
+        "planned_start_at": null,
+        "planned_finish_at": null,
+        "dispatch_priority": null,
+        "created_at": "2026-10-13T10:01:38.437122",
+        "created_by": "admin",
+        "started_at": null,
+        "finished_at": "2026-10-13T10:02:55.430212",
+        "cancelled_at": null,
+        "cancelled_by": null,
+        "last_error": null
+      },
+      {
+        "task_id": 1111,
+        "task_type": "PUTAWAY",
+        "task_source": "MANUAL",
+        "source_task_id": 1130,
+        "source_movement_id": null,
+        "source_doc_type": "ST_DEFER_CASE",
+        "source_doc_id": 1,
+        "production_order_id": null,
+        "prod_batch_id": null,
+        "raw_articul": null,
+        "target_articul": null,
+        "uid_pallet": "CP552000000001130",
+        "sscc": null,
+        "from_ware_id": 12296656,
+        "from_cell": "CPT_12296656",
+        "to_ware_id": 12296656,
+        "to_cell": "QWba1b305227",
+        "qty": 1,
+        "unit_code": "CASE",
+        "qty_mode": "PALLET",
+        "fact_qty": 1,
+        "parent_task_id": null,
+        "qty_exact": "1",
+        "fact_qty_exact": "1",
+        "to_cell_slot_id": null,
+        "hu_content_version": null,
+        "to_slot_code": null,
+        "priority": 100,
+        "status": "DONE",
+        "assigned_to": "admin",
+        "resource_id": null,
+        "resource_session_id": null,
+        "equipment_id": null,
+        "planned_start_at": null,
+        "planned_finish_at": null,
+        "dispatch_priority": null,
+        "created_at": "2026-10-13T10:06:03.955879",
+        "created_by": "admin",
+        "started_at": null,
+        "finished_at": "2026-10-13T10:06:04.130402",
+        "cancelled_at": null,
+        "cancelled_by": null,
+        "last_error": null
+      }
+    ],
+    "exact_legacy_filter_preserved": true,
+    "replay_http": {
+      "status": "ok",
+      "result": {
+        "operation_id": "MOVE966:ba1b305227",
+        "case_pick_task_id": 1130,
+        "carrier_identifier": "CP552000000001130",
+        "from_cell": "CPT_12296656",
+        "cell": "QWba1b305227",
+        "content_version": 2,
+        "lots": [
+          {
+            "uid": "CASELOT:DE2F7D912A322B83003C36475976AC927E9503:1",
+            "cell": "CPT_12296656",
+            "quantity": "8",
+            "version": 1,
+            "base": "EA",
+            "article": "QNATIVEBA1B305227",
+            "case_line": 1134
+          }
+        ],
+        "task_id": 1111,
+        "status": "DONE",
+        "quantity": "1",
+        "base_uom": "CASE",
+        "pallet_identifier": "CP552000000001130",
+        "remaining_quantity": "0",
+        "outbox_id": 5097
+      }
+    }
+  },
+  "independent_acceptance": false,
+  "sources_retained_for_continuation": true
+}

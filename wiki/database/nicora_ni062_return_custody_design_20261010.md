@@ -1,0 +1,6 @@
+# NI06.2 ticket095 — магазин передал, водитель принял
+Legacy driver_id query не является удостоверением личности. Transport owner получает явную versioned связь driver ID → действующий dedicated RUSERS user с правом driver_return_accept. Настройка через warehouse_settings_edit и существующий CONFIG fence; driver table без PK, поэтому нет фиктивного FK: проверяется ровно одна активная legacy строка. Прямые writes запрещены, отключение сохраняет историю.
+
+Публикуется существующая require_receiver в RRL_STOCK_STORE_RECEIPT_READ; магазин использует те же права и адресную связь. Root STORE_RETURN_HANDOVER: current original plan/approval/SAP, фактический идентификатор паллеты (SSCC или внутренний), всё разрешённое BASE quantity, actual gross KG ≤ planned gross и exact physical places. Это подпись магазина, не pickup. Root STORE_RETURN_PICKUP: отдельный authenticated bound current trip driver, current vehicle scan, другая личность, тот же immutable handover. Две atomic actions/outboxes; P/H не меняется.
+
+Current TT/vehicle/deleted/active/driver and conservative capacity rechecked under common declared locks, independent concurrent actions serialized. No partial pickup/reassign/hardware or marked acceptance assumed. Until warehouse receives, return custody is vehicle. Actual warehouse stock birth/placement follows separately through Root only.

@@ -34,7 +34,7 @@ from typing import Any, Callable
 
 from fastapi import HTTPException
 
-from ..modules.transport.public import normalize_transport_type as _normalize_transtype
+from ..modules.transport.public import normalize_transport_type as _normalize_transtype, available_sts_query
 from ..db import rows_as_dicts
 from ..oracle_gateway import OracleGateway
 from ..schemas import (
@@ -192,8 +192,9 @@ class _TransportGateway:
 
 
 class TransportService:
-    def __init__(self, gateway: OracleGateway | None = None) -> None:
+    def __init__(self, gateway: OracleGateway | None = None, departure: Callable[[int, str], dict[str, Any]] | None = None) -> None:
         self.gateway = _TransportGateway(gateway or OracleGateway())
+        self._departure = departure
 
     # ------------------------------------------------------------------
     # Справочники
@@ -242,12 +243,8 @@ class TransportService:
     ) -> dict[str, Any]:
         """Создаёт рейс из всех свободных СТ района одним запросом (Sprint 29, Phase 2).
 
-        Последовательность:
-          1. list_available_sts → фильтр по raion
-          2. RRL_TRASPORT_TASK_ADD  — создать рейс
-          3. UPDATE TRANSPORT/VODITEL/DOCK (если переданы)
-          4. RRL_TT_ADD_PALL × N   — назначить все СТ
-          5. RRL_TT_REORDER_ADR    — оптимизировать порядок
+        Существующий поиск СТ района; создание, реквизиты и назначение
+        исполняются в одной транзакции с общим native capacity validator.
         """
         # 1. Собрать свободные СТ района — server-side raion filter (Sprint 35)
         sts = self.list_available_sts(
@@ -256,45 +253,24 @@ class TransportService:
             ware_ids=req.ware_ids,
             raion=raion,
         )
-        if not sts:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Нет свободных СТ в районе «{raion}» на {req.stdate}",
-            )
-
-        # 2. Создать рейс
-        from ..schemas import TransportTaskCreateRequest as _TtCreate, TransportTaskUpdateRequest as _TtUpd
-        task_id = self.create_task(
-            _TtCreate(transtype=req.transtype, shipment_date=req.stdate),
-            user_id,
-        )
-
-        # 3. Назначить машину/водителя/докст. (если переданы)
-        if req.vehicle or req.driver_id or req.dock:
-            self.update_task(
-                task_id,
-                _TtUpd(transport=req.vehicle, voditel_id=req.driver_id, dock=req.dock),
-                user_id,
-            )
-
-        # 4–5. Назначить СТ + оптимизировать порядок
-        st_numbers = [str(s["ST_NUMBER"]) for s in sts]
-        result = self.assign_sts(task_id, st_numbers, user_id)
-
-        return {
-            "task_id": task_id,
-            "raion": raion,
-            "st_count": len(st_numbers),
-            "warnings": result.get("warnings", []),
-        }
+        from ..modules.transport.public import create_existing_cluster, TransportPlanError
+        fields={key:value for key,value in {
+            "transport":req.vehicle,"voditel_id":req.driver_id,"dock":req.dock,
+        }.items() if value is not None}
+        try:
+            return create_existing_cluster(self.gateway,raion,req.stdate,
+                _normalize_transtype(req.transtype),fields,
+                [str(row["ST_NUMBER"]) for row in sts],user_id,req.operation_id,req.ware_ids)
+        except TransportPlanError as exc:
+            raise HTTPException(exc.status,detail={"code":exc.code,"message":str(exc)}) from exc
 
     def list_vehicles(self, active_only: bool = True) -> list[dict[str, Any]]:
         def load() -> list[dict[str, Any]]:
-            where = "WHERE BLOCKED = 0" if active_only else ""
+            where = "WHERE NVL(BLOCKED,0)=0 AND NVL(DELETED,0)=0" if active_only else ""
             return self.gateway.fetch_all(
                 f"""
                 SELECT ID, NUM, TR_TYPE, MARKA, REF_REJIM,
-                       PALLETS, GIDROBORT, BLOCKED
+                       PALLETS, GIDROBORT, BLOCKED, MAX_WEIGHT_KG, DELETED
                   FROM RABAEV.RRL_TR_VEHICLE
                   {where}
                  ORDER BY TR_TYPE, NUM
@@ -647,145 +623,37 @@ class TransportService:
         return _normalize_task_row(dict(rows[0]))
 
     def create_task(self, req: TransportTaskCreateRequest, user_id: str) -> int:
-        task_id = self.gateway.call_number_plsql(
-            """
-            BEGIN
-              :result := RABAEV.RRL_TRASPORT_TASK_ADD(
-                :transtype,
-                TO_DATE(:shipment_date, 'YYYY-MM-DD'),
-                :user_id
-              );
-            END;
-            """,
-            {
-                "transtype":     _normalize_transtype(req.transtype),
-                "shipment_date": str(req.shipment_date),
-                "user_id":       user_id,
-            },
-        )
-        return task_id
+        from ..modules.transport.public import create_existing_trip,TransportPlanError
+        try:return create_existing_trip(self.gateway,_normalize_transtype(req.transtype),req.shipment_date,user_id)
+        except TransportPlanError as exc:raise HTTPException(exc.status,detail={"code":exc.code,"message":str(exc)}) from exc
 
     def update_task(self, task_id: int, req: TransportTaskUpdateRequest, user_id: str) -> None:
-        sets: list[str] = []
-        params: dict[str, Any] = {"task_id": task_id}
-
-        if req.transport is not None:
-            # Вызвать комментарий о спецтехнике (лопата/гидроборт) перед обновлением
-            try:
-                self.gateway.call_varchar_function(
-                    "RABAEV.RRL_TT_SET_TRANSCOMMENT",
-                    {"TRANS": req.transport, "TTID1": task_id},
-                )
-            except Exception:
-                pass  # некритично — обновление рейса продолжается
-            sets.append("TRANSPORT = :transport")
-            params["transport"] = req.transport
-        if req.voditel_id is not None:
-            sets.append("VODITEL_ID = :voditel_id")
-            params["voditel_id"] = req.voditel_id
-        if req.dock is not None:
-            sets.append("DOCK = :dock")
-            params["dock"] = req.dock
-        if req.primechanie is not None:
-            sets.append("PRIMECHANIE = :primechanie")
-            params["primechanie"] = req.primechanie
-        if req.shipment_time is not None:
-            sets.append("SHIPMENT_TIME = TO_DATE(:shipment_time, 'HH24:MI')")
-            params["shipment_time"] = req.shipment_time
-        if req.shipment_date is not None:
-            sets.append("SHIPMENT_DATE = TO_DATE(:shipment_date, 'YYYY-MM-DD')")
-            params["shipment_date"] = str(req.shipment_date)
-        if req.transtype is not None:
-            sets.append("TRANSTYPE = :transtype")
-            params["transtype"] = _normalize_transtype(req.transtype)
-
-        if not sets:
-            return
-
-        affected = self.gateway.execute(
-            f"UPDATE RABAEV.RRL_TRANSPORT_TASK SET {', '.join(sets)} WHERE ID = :task_id",
-            params,
-        )
-        if affected == 0:
-            raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
+        from ..modules.transport.public import update_existing_trip,TransportPlanError
+        fields=req.model_dump(exclude_none=True,mode="json")
+        if "transtype"in fields:fields["transtype"]=_normalize_transtype(fields["transtype"])
+        if not fields:return
+        try:update_existing_trip(self.gateway,task_id,fields,user_id)
+        except TransportPlanError as exc:raise HTTPException(exc.status,detail={"code":exc.code,"message":str(exc)}) from exc
 
     def close_task(self, task_id: int, user_id: str) -> None:
-        rows = self.gateway.fetch_all(
-            """
-            SELECT COUNT(*) AS ST_COUNT
-              FROM RABAEV.RRL_SBORKA_PALLETS
-             WHERE TRANSTASK_ID = :task_id
-               AND CONDITION <> 2
-            """,
-            {"task_id": task_id},
-        )
-        if not rows or int(rows[0]["ST_COUNT"] or 0) == 0:
-            raise HTTPException(status_code=422, detail="Нельзя закрыть рейс без назначенных СТ")
-
-        # Проверить минимальную загрузку через Oracle
+        """Existing close action delegates the physical departure gate."""
+        from ..modules.transport.public import TransportLoadingError
+        if self._departure is None:
+            raise HTTPException(503,detail={"code":"PHYSICAL_DEPARTURE_NOT_WIRED"})
         try:
-            result = self.gateway.call_varchar_function(
-                "TRANSPORT_TASK.can_print",
-                {"tt_id": task_id, "user_id1": user_id},
-            )
-            if result and result.lower() != "ok":
-                raise HTTPException(status_code=422, detail=result)
-        except HTTPException:
-            raise
-        except Exception:
-            pass  # если функция недоступна — не блокируем закрытие
-
-        affected = self.gateway.execute(
-            """
-            UPDATE RABAEV.RRL_TRANSPORT_TASK
-               SET CONDITION = 'Отгружен',
-                   USER_ID   = :user_id
-             WHERE ID = :task_id
-               AND (DELETED IS NULL OR DELETED = 0)
-            """,
-            {"task_id": task_id, "user_id": user_id},
-        )
-        if affected == 0:
-            raise HTTPException(status_code=404, detail=f"Task {task_id} not found or already closed")
+            self._departure(task_id,user_id)
+        except TransportLoadingError as exc:
+            raise HTTPException(exc.status,detail={"code":exc.code,"message":str(exc),
+                "operation_id":exc.operation_id}) from exc
+        _clear_vehicle_availability_cache()
+        _clear_task_sts_cache(task_id)
 
     def cancel_task(self, task_id: int, user_id: str) -> None:
-        with self.gateway.transaction("cancel transport task") as cursor:
-            cursor.execute(
-                """
-                SELECT PAY_ORDER_ID
-                  FROM RABAEV.RRL_TRANSPORT_TASK
-                 WHERE ID = :task_id
-                   AND NVL(DELETED, 0) = 0
-                """,
-                {"task_id": task_id},
-            )
-            row = cursor.fetchone()
-            if not row:
-                raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
-            pay_order_id = row[0]
-            if pay_order_id:
-                raise HTTPException(
-                    status_code=409,
-                    detail=f"Рейс включён в счёт №{pay_order_id} — расформирование запрещено",
-                )
-            cursor.execute(
-                """
-                UPDATE RABAEV.RRL_SBORKA_PALLETS
-                   SET TRANSTASK_ID = NULL
-                 WHERE TRANSTASK_ID = :task_id
-                   AND CONDITION <> 2
-                """,
-                {"task_id": task_id},
-            )
-            cursor.execute(
-                """
-                UPDATE RABAEV.RRL_TRANSPORT_TASK
-                   SET DELETED = 1,
-                       USER_ID = :user_id
-                 WHERE ID = :task_id
-                """,
-                {"task_id": task_id, "user_id": user_id},
-            )
+        from ..modules.transport.public import cancel_trip
+        try:
+            cancel_trip(self.gateway,task_id,user_id)
+        except ValueError as exc:
+            raise HTTPException(409,detail=str(exc)) from exc
         _clear_available_sts_cache()
         _clear_task_sts_cache(task_id)
 
@@ -826,7 +694,9 @@ class TransportService:
               JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = SP.PALLET_UID
               LEFT JOIN RABAEV.RRL_ADDR A ON A.ADDR = SP.ADDR
              WHERE SP.TRANSTASK_ID = :task_id
-               AND SP.CONDITION <> 2
+               AND (SP.CONDITION <> 2 OR EXISTS(select 1 from RRL_TT_HU_LOAD_ST ls
+                   join RRL_TT_HU_LOAD_FACT lf on lf.LOAD_OPERATION_ID=ls.LOAD_OPERATION_ID
+                  where ls.SBORKA_PALLET_ID=SP.ID and ls.ACTIVE_FLAG=1 and lf.TT_ID=SP.TRANSTASK_ID))
              GROUP BY SP.ST_NUMBER, SP.ADDR, A.REGION, A.RAION, SP.ORD
              ORDER BY SP.ORD NULLS LAST, SP.ST_NUMBER
             """,
@@ -837,9 +707,11 @@ class TransportService:
         return rows
 
     def assign_sts(self, task_id: int, st_numbers: list[str], user_id: str) -> dict[str, Any]:
-        from ..modules.transport.public import assign_sts
+        from ..modules.transport.public import assign_sts,TransportPlanError
         try:
-            result = assign_sts(self.gateway, task_id, st_numbers)
+            result = assign_sts(self.gateway, task_id, st_numbers,user_id)
+        except TransportPlanError as exc:
+            raise HTTPException(exc.status,detail={"code":exc.code,"message":str(exc)}) from exc
         except ValueError as exc:
             raise HTTPException(status_code=409, detail=str(exc)) from exc
         _clear_available_sts_cache()
@@ -847,34 +719,11 @@ class TransportService:
         return result
 
     def unassign_st(self, task_id: int, st_number: str, user_id: str) -> None:
-        task = self.get_task(task_id)
-        if task and task.get("CONDITION") == "Отгружен":
-            raise HTTPException(status_code=409, detail="Нельзя снять СТ с отгруженного рейса")
-        if task and task.get("PAY_ORDER_ID"):
-            raise HTTPException(
-                status_code=409,
-                detail=f"Рейс включён в счёт №{task['PAY_ORDER_ID']} — снятие СТ запрещено",
-            )
-        rows = self.gateway.fetch_all(
-            """
-            SELECT COUNT(*) AS CNT
-              FROM RABAEV.RRL_SBORKA_PALLETS
-             WHERE TRANSTASK_ID = :task_id
-               AND ST_NUMBER = :st_number
-               AND CONDITION <> 2
-            """,
-            {"task_id": task_id, "st_number": st_number},
-        )
-        if not rows or int(rows[0].get("CNT") or 0) == 0:
-            raise HTTPException(
-                status_code=404,
-                detail=f"СТ {st_number} не найдено в рейсе #{task_id}",
-            )
-        # TT_ID = 0 → снять СТ с любого рейса
-        self.gateway.call_varchar_function(
-            "RABAEV.RRL_TT_ADD_PALL",
-            {"TT_ID": 0, "ST_NUMBER1": st_number},
-        )
+        from ..modules.transport.public import unassign_st
+        try:
+            unassign_st(self.gateway, task_id, st_number)
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
         _clear_available_sts_cache()
         _clear_task_sts_cache(task_id)
 
@@ -931,164 +780,37 @@ class TransportService:
         max_volume_m3: float | None = None,
         articul: str | None = None,
         raion: str | None = None,
+        page: int | None = None,
+        page_size: int | None = None,
     ) -> list[dict[str, Any]]:
-        cache_key = (
-            stdate,
-            date_to,
-            unassigned_only,
-            ware_id,
-            tuple(ware_ids or ()),
-            addr_mask,
-            st_mask,
-            st_mask_exclude,
-            transport_type,
-            assembled_only,
-            not_assembled_only,
-            max_weight_kg,
-            max_volume_m3,
-            articul,
-            raion,
-        )
-        now = time.monotonic()
-        with _AVAILABLE_STS_CACHE_LOCK:
-            cached = _AVAILABLE_STS_CACHE.get(cache_key)
-            if cached and now - cached[0] <= _AVAILABLE_STS_CACHE_TTL_SEC:
-                return [dict(row) for row in cached[1]]
-
-        conditions: list[str] = ["P.CONDITION <> 2"]
-        having: list[str] = []
-        params: dict[str, Any] = {}
-
-        if unassigned_only:
-            conditions.append("P.TRANSTASK_ID IS NULL")
-
-        # Дата СТ: точное равенство или диапазон
-        if stdate is not None and date_to is None:
-            conditions.append("P.STDATE >= :stdate AND P.STDATE < :stdate_next")
-            params["stdate"] = stdate
-            params["stdate_next"] = stdate + timedelta(days=1)
-        elif stdate is not None and date_to is not None:
-            conditions.append("P.STDATE >= :stdate AND P.STDATE < :date_to_next")
-            params["stdate"] = stdate
-            params["date_to_next"] = date_to + timedelta(days=1)
-        elif date_to is not None:
-            conditions.append("P.STDATE < :date_to_next")
-            params["date_to_next"] = date_to + timedelta(days=1)
-
-        if (stdate is not None or date_to is not None) and not self._has_sborka_rows_for_period(
+        filters = dict(
             stdate=stdate,
             date_to=date_to,
             unassigned_only=unassigned_only,
-        ):
-            _AVAILABLE_STS_CACHE[cache_key] = (now, [])
-            return []
-
-        # Фильтр по складам: ware_ids приоритетнее одиночного ware_id
-        effective_ware_ids = ware_ids or ([ware_id] if ware_id is not None else None)
-        if effective_ware_ids:
-            placeholders = ", ".join(f":wid{i}" for i in range(len(effective_ware_ids)))
-            conditions.append(f"P.WARE_ID IN ({placeholders})")
-            for i, wid in enumerate(effective_ware_ids):
-                params[f"wid{i}"] = wid
-
-        if addr_mask:
-            conditions.append(
-                "(P.ADDR LIKE :addr_mask OR A.REGION LIKE :addr_mask OR A.RAION LIKE :addr_mask)"
-            )
-            params["addr_mask"] = f"%{addr_mask}%"
-
-        if st_mask:
-            op = "NOT LIKE" if st_mask_exclude else "LIKE"
-            conditions.append(f"UPPER(P.ST_NUMBER) {op} UPPER(:st_mask)")
-            params["st_mask"] = f"%{st_mask}%"
-
-        if transport_type:
-            conditions.append("NVL(A.TRANSPORT_TYPE, '0') = :transport_type")
-            params["transport_type"] = transport_type
-
-        if articul:
-            conditions.append(
-                """EXISTS (
-                    SELECT 1
-                      FROM RABAEV.RRL_SBORKA_PALLETS SP2
-                      JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R2 ON R2.PALLET_UID = SP2.PALLET_UID
-                     WHERE SP2.ST_NUMBER = P.ST_NUMBER
-                       AND UPPER(R2.ARTICUL) LIKE UPPER(:articul)
-                )"""
-            )
-            params["articul"] = f"%{articul}%"
-
-        verify_expr = (
-            "ROUND(COUNT(DISTINCT CASE WHEN NVL(P.PROOVED,0) = 1 OR NVL(P.PROOVED_BY_SCAN,0) = 1 "
-            "THEN P.ID END) * 100 / NULLIF(COUNT(DISTINCT P.ID), 0), 0)"
+            ware_id=ware_id,
+            ware_ids=ware_ids,
+            addr_mask=addr_mask,
+            st_mask=st_mask,
+            st_mask_exclude=st_mask_exclude,
+            transport_type=transport_type,
+            assembled_only=assembled_only,
+            not_assembled_only=not_assembled_only,
+            max_weight_kg=max_weight_kg,
+            max_volume_m3=max_volume_m3,
+            articul=articul,
+            raion=raion,
         )
-        weight_expr = "ROUND(SUM(NVL(R.ORDER_WEIGHT, 0)), 0)"
-        volume_expr = "ROUND(SUM(NVL(R.TARESIZE, 0) * NVL(R.PACK_COUNT, 0)) / 1000000, 2)"
-
-        if assembled_only:
-            having.append(f"{verify_expr} > 0")
-        elif not_assembled_only:
-            having.append(f"NVL({verify_expr}, 0) = 0")
-
-        if max_weight_kg is not None:
-            having.append(f"{weight_expr} < :max_weight_kg")
-            params["max_weight_kg"] = max_weight_kg
-
-        if max_volume_m3 is not None:
-            having.append(f"{volume_expr} < :max_volume_m3")
-            params["max_volume_m3"] = max_volume_m3
-
-        if raion:
-            if raion == "(без района)":
-                conditions.append("A.RAION IS NULL")
-            else:
-                conditions.append("A.RAION = :raion")
-                params["raion"] = raion
-
-        where_sql = "WHERE " + " AND ".join(conditions) if conditions else ""
-        having_sql = "HAVING " + " AND ".join(having) if having else ""
-
+        cache_key = tuple(tuple(v) if isinstance(v,list) else v for v in filters.values())+(page,page_size)
         with _AVAILABLE_STS_CACHE_LOCK:
             cached = _AVAILABLE_STS_CACHE.get(cache_key)
-            if cached and time.monotonic() - cached[0] <= _AVAILABLE_STS_CACHE_TTL_SEC:
+            if cached and time.monotonic()-cached[0] <= _AVAILABLE_STS_CACHE_TTL_SEC:
                 return [dict(row) for row in cached[1]]
-            rows = self.gateway.fetch_all(
-                f"""
-                SELECT P.ST_NUMBER,
-                       P.ADDR,
-                       NVL(A.REGION, P.ADDR) AS REGION,
-                       A.RAION,
-                       A.ORD,
-                       NVL(A.TRANSPORT_TYPE, '0') AS TRANSPORT_TYPE,
-                       NVL(A.STOL, 0) AS NEEDS_HYDRO_BOARD,
-                       NVL(A.STOL, 0) AS STOL,
-                       A.PRIM1,
-                       P.WARE_ID,
-                       MAX(P.NAPR) AS NAPR,
-                       COUNT(DISTINCT P.PALLET_UID) AS PALLETS_COUNT,
-                       {weight_expr} AS WEIGHT_KG,
-                       {volume_expr} AS VOLUME_M3,
-                       MIN(P.STDATE) AS STDATE,
-                       MIN(P.STDATE) AS DATE_LOAD,
-                       MAX(P.TRANSTASK_ID) AS TRANSTASK_ID,
-                       MAX(P.ZONE) AS ZONE,
-                       MIN(P.ZONE_TIME_PLAN_IN) AS TIME_FROM,
-                       MAX(P.ZONE_TIME_PLAN_OUT) AS TIME_TO,
-                       NVL({verify_expr}, 0) AS VERIFY_PERC,
-                       MAX(CASE WHEN R.ARTICUL IN ('Т0000008795', 'Т0000127793', 'Т0000127794') THEN 1 ELSE 0 END) AS SUGAR
-                  FROM RABAEV.RRL_SBORKA_PALLETS P
-                  JOIN RABAEV.RRL_SBORKA_PALLET_ROWS R ON R.PALLET_UID = P.PALLET_UID
-                  LEFT JOIN RABAEV.RRL_ADDR A ON A.ADDR = P.ADDR
-                  {where_sql}
-                 GROUP BY P.ST_NUMBER, P.ADDR, A.REGION, A.RAION, A.ORD,
-                          A.TRANSPORT_TYPE, A.STOL, A.PRIM1, P.WARE_ID
-                  {having_sql}
-                 ORDER BY A.ORD NULLS LAST, NVL(A.REGION, P.ADDR), P.ST_NUMBER
-                """,
-                params,
-            )
-            normalized = [_fill_visible_time_window(dict(row)) for row in rows]
-            _AVAILABLE_STS_CACHE[cache_key] = (time.monotonic(), [dict(row) for row in normalized])
+            sql, params = available_sts_query(**filters,page=page,page_size=page_size)
+            rows=self.gateway.fetch_all(sql,params)
+            for row in rows:
+                row.pop("PAGE_ROW_NUMBER",None)
+            normalized=[_fill_visible_time_window(dict(row)) for row in rows]
+            _AVAILABLE_STS_CACHE[cache_key]=(time.monotonic(),[dict(row) for row in normalized])
             return normalized
 
     def _has_sborka_rows_for_period(
@@ -1295,7 +1017,6 @@ class TransportService:
     ) -> VrpPlanResponse:
         """Запускает VRP-решатель, сохраняет план и возвращает ответ."""
         from .vrp_solver import VrpOrder, VrpVehicle, solve as vrp_solve
-        from .distance_matrix_service import DistanceMatrixService
         from .routing import get_active_provider
 
         started_at = time.perf_counter()
@@ -1330,8 +1051,8 @@ class TransportService:
                     weight_kg=float(o.get("WEIGHT_KG") or 0),
                     ware_id=int(o.get("WARE_ID") or 0),
                     transport_type=o.get("TRANSPORT_TYPE"),
-                    tw_from=int(_minutes_from_shift_start(o.get("TIME_FROM"), default=fallback_from) or fallback_from),
-                    tw_to=int(_minutes_from_shift_start(o.get("TIME_TO"), default=fallback_to) or fallback_to),
+                    tw_from=int(_minutes_from_shift_start(o.get("TIME_FROM"), default=fallback_from)),
+                    tw_to=int(_minutes_from_shift_start(o.get("TIME_TO"), default=fallback_to)),
                     tw_strict=bool(o.get("TW_STRICT")),
                     unload_norm_min=int(o.get("UNLOAD_NORM_MIN") or 30),
                 )
@@ -1365,15 +1086,15 @@ class TransportService:
                 id=int(v["ID"]),
                 num=str(v["NUM"] or ""),
                 tr_type=str(v.get("TR_TYPE") or ""),
-                max_pallets=int(v.get("PALLETS") or 20),
-                max_tons=float(v.get("MAX_TONS") or v.get("MAX_VEHICLE_TONS") or 20),
+                max_pallets=int(v.get("PALLETS") or 0),
+                max_tons=float(v.get("MAX_WEIGHT_KG") or 0)/1000,
                 gidrobort=bool(v.get("GIDROBORT")),
             )
-            for v in raw_vehicles
+            for v in raw_vehicles if float(v.get("PALLETS")or 0)>0 and float(v.get("MAX_WEIGHT_KG")or 0)>0
         ]
 
         if not vehicles:
-            raise HTTPException(status_code=422, detail="Нет активных ТС")
+            raise HTTPException(status_code=422, detail="Нет действующих ТС с заданной паллетной и весовой вместимостью")
         explain_steps.append({
             "code": "vehicles_loaded",
             "status": "done",
@@ -1383,28 +1104,14 @@ class TransportService:
         })
 
         # Load distance cache
-        addr_list = [o.addr for o in orders if o.addr]
-        dist_cache = DistanceMatrixService(self.gateway).get_matrix_as_dict(addr_list)
-        matrix_pairs = len(dist_cache or {})
-        used_provider_name = "matrix-cache" if matrix_pairs else "haversine"
-        if matrix_pairs and addr_list:
-            source_rows = self.gateway.fetch_all(
-                """
-                SELECT SOURCE
-                  FROM RABAEV.RRL_ADDR_DISTANCE_MATRIX
-                 WHERE FROM_ADDR = :addr
-                   AND SOURCE IS NOT NULL
-                   AND ROWNUM = 1
-                """,
-                {"addr": addr_list[0]},
-            )
-            if source_rows:
-                used_provider_name = str(source_rows[0].get("SOURCE") or used_provider_name)
+        from ..modules.transport.public import planner_inputs
+        dist_cache,duration_cache,used_provider_name,origin=planner_inputs(self.gateway,orders)
+        matrix_pairs=len(dist_cache)
         explain_steps.append({
             "code": "distance_matrix_loaded",
             "status": "done" if matrix_pairs else "warning",
             "label": "Матрица расстояний",
-            "message": f"Загружено {matrix_pairs} пар, расчетный provider: {used_provider_name}",
+            "message": f"Загружено {matrix_pairs} пар, provider: {used_provider_name}; адрес отправления: "+("настроен"if origin else "виртуальное депо"),
             "elapsed_ms": int((time.perf_counter() - started_at) * 1000),
         })
         if source == "auto" and active_provider_name != used_provider_name and used_provider_name == "haversine":
@@ -1426,7 +1133,7 @@ class TransportService:
                 if am_route is not None:
                     # Reorder orders by AM result and wrap in a single-vehicle plan
                     ordered_orders = [orders[i] for i in am_route if i < len(orders)]
-                    from .vrp_solver import VrpPlan as _VrpPlanInner, VrpRouteItem as _VrpRouteInner
+                    from .vrp_solver import VrpPlan as _VrpPlanInner, VrpRoute as _VrpRouteInner
                     plan = _VrpPlanInner(
                         solver_used="attention_model",
                         routes=[_VrpRouteInner(
@@ -1448,7 +1155,7 @@ class TransportService:
             plan = vrp_solve(
                 orders=orders,
                 vehicles=vehicles,
-                dist_cache=dist_cache or None,
+                dist_cache=dist_cache or None,duration_cache=duration_cache or None,origin=origin,
                 time_limit_s=time_limit_s,
                 solver=solver,
             )
@@ -1492,6 +1199,7 @@ class TransportService:
                 "action": "Не применять план без ручной корректировки",
             })
 
+        from ..modules.transport.contracts import route_payload, route_response, planner_constraint_evidence
         # Save plan to Oracle
         explain = {
             "input": {
@@ -1519,14 +1227,7 @@ class TransportService:
                 "time_limit_s": time_limit_s,
                 "solve_time_ms": plan.solve_time_ms,
             },
-            "constraints": {
-                "capacity_pallets": True,
-                "capacity_weight": True,
-                "time_windows": True,
-                "vehicle_type": True,
-                "hydro_board": True,
-                "fallback_time_windows": fallback_tw_count,
-            },
+            "constraints": planner_constraint_evidence(plan.routes, fallback_tw_count),
             "fleet": {
                 "vehicles_total": len(vehicles),
                 "vehicles_used": len(plan.routes),
@@ -1545,16 +1246,7 @@ class TransportService:
         plan_json = json.dumps(
             {
                 "solver": plan.solver_used,
-                "routes": [
-                    {
-                        "vehicle_id": r.vehicle.id,
-                        "vehicle_num": r.vehicle.num,
-                        "stops": [s.st_number for s in r.stops],
-                        "total_km": r.total_km,
-                        "total_pallets": r.total_pallets,
-                    }
-                    for r in plan.routes
-                ],
+                "routes": [route_payload(r) for r in plan.routes],
                 "unassigned": [o.st_number for o in plan.unassigned],
                 "total_km": plan.total_km,
                 "fleet_utilization_pct": plan.fleet_utilization_pct,
@@ -1585,48 +1277,7 @@ class TransportService:
             )
 
         # Build response
-        route_items = [
-            VrpRouteItem(
-                vehicle_id=r.vehicle.id,
-                vehicle_num=r.vehicle.num,
-                vehicle_type=r.vehicle.tr_type,
-                max_pallets=r.vehicle.max_pallets,
-                total_pallets=r.total_pallets,
-                total_kg=r.total_kg,
-                total_km=r.total_km,
-                total_duration_min=r.total_duration_min,
-                utilization_pct=r.utilization_pct,
-                stops=[
-                    VrpRouteStop(
-                        st_number=s.st_number,
-                        addr=s.addr,
-                        lat=s.lat,
-                        lon=s.lon,
-                        pallets=s.pallets,
-                        weight_kg=s.weight_kg,
-                        ware_id=s.ware_id,
-                        unload_norm_min=s.unload_norm_min,
-                        tw_from=s.tw_from,
-                        tw_to=s.tw_to,
-                        tw_strict=s.tw_strict,
-                        arrival_min=None,
-                        departure_min=None,
-                        tw_violation_min=0,
-                        distance_from_prev_km=None,
-                        duration_from_prev_min=None,
-                        constraint_notes=[],
-                    )
-                    for s in r.stops
-                ],
-                capacity_status="over" if r.utilization_pct > 100 else "low" if r.utilization_pct < 60 else "ok",
-                tw_violation_count=0,
-                strict_tw_count=sum(1 for s in r.stops if s.tw_strict),
-                vehicle_constraints_ok=r.utilization_pct <= 100,
-                hydro_board_required_count=0,
-                explain_notes=[],
-            )
-            for r in plan.routes
-        ]
+        route_items = [VrpRouteItem(**route_response(r)) for r in plan.routes]
         explain_steps.append({
             "code": "plan_saved",
             "status": "done" if plan_id is not None else "warning",
@@ -1648,63 +1299,15 @@ class TransportService:
             explain=explain,
         )
 
-    def apply_vrp_plan(
-        self,
-        plan_id: int,
-        shipment_date: date,
-        dock: str | None = None,
-    ) -> dict[str, Any]:
-        """Создаёт рейсы по сохранённому плану через Oracle-функции."""
-        rows = self.gateway.fetch_all(
-            "SELECT PAYLOAD AS PLAN_JSON, SOLVER FROM RABAEV.RRL_PLANNER_PLANS WHERE ID = :plan_id",
-            {"plan_id": plan_id},
-        )
-        if not rows:
-            raise HTTPException(status_code=404, detail=f"Plan {plan_id} not found")
-
-        plan_data = json.loads(rows[0]["PLAN_JSON"])
-        tasks_created = 0
-        created_task_ids: list[int] = []
-        user_id = "vrp_auto"
-
-        for route in plan_data.get("routes", []):
-            vehicle_num = route.get("vehicle_num", "")
-            vehicle_id  = route.get("vehicle_id")
-            stop_sts: list[str] = route.get("stops", [])
-            if not stop_sts:
-                continue
-
-            # Create task via Oracle function (transtype default 20)
-            req = TransportTaskCreateRequest(transtype="20", shipment_date=shipment_date)
-            tt_id = self.create_task(req, user_id=user_id)
-
-            # Set vehicle, driver, dock
-            upd = TransportTaskUpdateRequest(
-                transport=vehicle_num or None,
-                voditel_id=vehicle_id,
-                dock=dock,
-            )
-            try:
-                self.update_task(tt_id, upd, user_id=user_id)
-                self.assign_sts(tt_id, stop_sts, user_id=user_id)
-            except HTTPException:
-                raise
-            except Exception as exc:
-                raise HTTPException(
-                    status_code=500,
-                    detail=f"Не удалось применить маршрут VRP для рейса {tt_id}: {exc}",
-                ) from exc
-
-            tasks_created += 1
-            created_task_ids.append(tt_id)
-
-        # Mark plan as applied
-        self.gateway.execute(
-            "UPDATE RABAEV.RRL_PLANNER_PLANS SET APPLIED_AT = SYSDATE WHERE ID = :plan_id",
-            {"plan_id": plan_id},
-        )
-
-        return {"tasks_created": tasks_created, "created_task_ids": created_task_ids, "plan_id": plan_id}
+    def apply_vrp_plan(self, plan_id: int, shipment_date: date, dock: str | None, user_id: str) -> dict[str, Any]:
+        from ..modules.transport.public import apply_existing_plan,TransportPlanError
+        try:
+            result=apply_existing_plan(self.gateway,plan_id,shipment_date,dock,user_id)
+        except TransportPlanError as exc:
+            raise HTTPException(exc.status,detail={"code":exc.code,"message":str(exc)}) from exc
+        _clear_available_sts_cache()
+        for trip in result["created_task_ids"]:_clear_task_sts_cache(trip)
+        return result
 
     def get_plan_metrics(self, plan_id: int | None = None) -> dict[str, Any]:
         """Возвращает метрики плана. plan_id=None → последний план."""
@@ -1962,117 +1565,14 @@ class TransportService:
             for r in rows
         }
 
-    def plan_operations(self, task_id: int) -> list[dict]:
-        """Рассчитывает и сохраняет цепочку плановых операций рейса.
-
-        Цепочка: DOCK_ASSIGN → WAIT_LOAD → LOADING → CLOSE_GATE → DOCUMENTS →
-                 DEPART → DRIVE → UNLOAD → LOAD_RETURNS → DRIVE_BACK →
-                 RETURN_HANDOVER → CLEAN_RETURNS
-        Начальная точка отсчёта — SHIPMENT_TIME рейса (или 06:00 если не задано).
-        """
-        from datetime import datetime, timedelta
-
-        # Загрузить рейс
-        task = self.get_task(task_id)
-
-        # Определить начальное время
-        raw_time = task.get("SHIPMENT_TIME")
-        if raw_time:
-            # SHIPMENT_TIME может прийти как datetime или строка
-            if isinstance(raw_time, datetime):
-                start_dt = raw_time
-            else:
-                try:
-                    start_dt = datetime.strptime(str(raw_time)[:16], "%Y-%m-%d %H:%M")
-                except ValueError:
-                    plan_date = task.get("SHIPMENT_DATE") or datetime.today()
-                    if not isinstance(plan_date, datetime):
-                        plan_date = datetime.combine(plan_date, datetime.min.time())
-                    start_dt = plan_date.replace(hour=6, minute=0, second=0, microsecond=0)
-        else:
-            plan_date = task.get("SHIPMENT_DATE")
-            if plan_date:
-                if isinstance(plan_date, datetime):
-                    start_dt = plan_date.replace(hour=6, minute=0, second=0, microsecond=0)
-                else:
-                    from datetime import date as date_cls
-                    if isinstance(plan_date, date_cls):
-                        start_dt = datetime.combine(plan_date, datetime.min.time()).replace(hour=6)
-                    else:
-                        start_dt = datetime.today().replace(hour=6, minute=0, second=0, microsecond=0)
-            else:
-                start_dt = datetime.today().replace(hour=6, minute=0, second=0, microsecond=0)
-
-        # Суммарные паллеты рейса
-        sts = self.get_task_sts(task_id)
-        total_pallets = sum(int(s.get("PALLETS_COUNT") or 0) for s in sts)
-        if total_pallets <= 0:
-            total_pallets = 1  # минимум 1, чтобы LOADING/UNLOAD не были 0
-
-        norms = self._load_norms()
-
-        # Порядок операций в цепочке
-        CHAIN = [
-            "DOCK_ASSIGN", "WAIT_LOAD", "LOADING", "CLOSE_GATE", "DOCUMENTS",
-            "DEPART", "DRIVE", "UNLOAD", "LOAD_RETURNS", "DRIVE_BACK",
-            "RETURN_HANDOVER", "CLEAN_RETURNS",
-        ]
-
-        insert_rows = []
-        current_dt = start_dt
-        for ord_num, code in enumerate(CHAIN, start=1):
-            norm = norms.get(code, {"duration_min": 0.0, "per_unit": 0})
-            dur = norm["duration_min"]
-            if norm["per_unit"]:
-                dur = dur * total_pallets
-
-            plan_start = current_dt
-            plan_end = current_dt + timedelta(minutes=dur)
-            insert_rows.append(
-                {
-                    "tt_id": task_id,
-                    "code": code,
-                    "ord": ord_num,
-                    "dur": round(dur, 2),
-                    "ps": plan_start.strftime("%Y-%m-%d %H:%M"),
-                    "pe": plan_end.strftime("%Y-%m-%d %H:%M"),
-                }
-            )
-            current_dt = plan_end
-
-        with self.gateway.transaction("plan_operations") as cursor:
-            cursor.execute(
-                "DELETE FROM RABAEV.RRL_TT_OPERATIONS WHERE TT_ID = :tt_id",
-                {"tt_id": task_id},
-            )
-            cursor.executemany(
-                """
-                INSERT INTO RABAEV.RRL_TT_OPERATIONS
-                  (ID, TT_ID, OPERATION_CODE, ORD, DURATION_MIN, PLAN_START, PLAN_END)
-                VALUES
-                  (RABAEV.SEQ_TT_OPERATIONS.NEXTVAL, :tt_id, :code, :ord, :dur,
-                   TO_DATE(:ps, 'YYYY-MM-DD HH24:MI'), TO_DATE(:pe, 'YYYY-MM-DD HH24:MI'))
-                """,
-                insert_rows,
-            )
-            cursor.execute(
-                """
-                SELECT ID, TT_ID, OPERATION_CODE, ORD, DURATION_MIN,
-                       TO_CHAR(PLAN_START, 'YYYY-MM-DD HH24:MI') AS PLAN_START,
-                       TO_CHAR(PLAN_END,   'YYYY-MM-DD HH24:MI') AS PLAN_END,
-                       TO_CHAR(FACT_START, 'YYYY-MM-DD HH24:MI') AS FACT_START,
-                       TO_CHAR(FACT_END,   'YYYY-MM-DD HH24:MI') AS FACT_END,
-                       NOTE
-                  FROM RABAEV.RRL_TT_OPERATIONS
-                 WHERE TT_ID = :tt_id
-                 ORDER BY ORD
-                """,
-                {"tt_id": task_id},
-            )
-            rows = [_upper_keys(row) for row in rows_as_dicts(cursor)]
-
+    def plan_operations(self, task_id: int, user_id: str) -> list[dict[str,Any]]:
+        from ..modules.transport.public import generate_existing_operations,TransportPlanError
+        try:
+            result=generate_existing_operations(self.gateway,task_id,user_id)
+        except TransportPlanError as exc:
+            raise HTTPException(exc.status,detail={"code":exc.code,"message":str(exc)}) from exc
         _clear_vehicle_availability_cache()
-        return [self._operation_row_to_dict(row) for row in rows]
+        return result
 
     def get_operations(self, task_id: int) -> list[dict]:
         """Список операций рейса с расчётом отклонения."""
@@ -2116,33 +1616,16 @@ class TransportService:
             "note": r.get("NOTE"),
         }
 
-    def update_operation_fact(self, op_id: int, data: OperationFactUpdate) -> dict:
-        """Обновляет fact_start / fact_end операции."""
-        sets = []
-        params: dict[str, Any] = {"op_id": op_id}
-
-        if data.fact_start is not None:
-            sets.append("FACT_START = TO_DATE(:fact_start, 'YYYY-MM-DD HH24:MI')")
-            params["fact_start"] = data.fact_start
-        if data.fact_end is not None:
-            sets.append("FACT_END = TO_DATE(:fact_end, 'YYYY-MM-DD HH24:MI')")
-            params["fact_end"] = data.fact_end
-        if data.note is not None:
-            sets.append("NOTE = :note")
-            params["note"] = data.note
-
-        if not sets:
-            raise HTTPException(status_code=400, detail="Нет полей для обновления")
-
-        rows_updated = self.gateway.execute(
-            f"UPDATE RABAEV.RRL_TT_OPERATIONS SET {', '.join(sets)} WHERE ID = :op_id",
-            params,
-        )
-        if not rows_updated:
-            raise HTTPException(status_code=404, detail=f"Operation {op_id} not found")
-
+    def update_operation_fact(self, op_id: int, data: OperationFactUpdate, user_id: str) -> dict[str,Any]:
+        from ..modules.transport.public import update_existing_operation_fact,TransportPlanError
+        fields=data.model_dump(exclude_none=True,mode="json")
+        if not fields:raise HTTPException(status_code=400,detail="Нет полей для обновления")
+        try:
+            result=update_existing_operation_fact(self.gateway,op_id,fields,user_id)
+        except TransportPlanError as exc:
+            raise HTTPException(exc.status,detail={"code":exc.code,"message":str(exc)}) from exc
         _clear_vehicle_availability_cache()
-        return {"op_id": op_id, "updated": True}
+        return result
 
     def get_vehicles_gantt(self, gantt_date: date) -> list[dict]:
         """Данные Ганта для всех машин на день."""

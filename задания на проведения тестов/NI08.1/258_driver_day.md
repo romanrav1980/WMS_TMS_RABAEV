@@ -1,0 +1,2 @@
+# Qwen:258 — планы за сутки
+Use same originalcursor nativecurrent sourceapproval/currentware on everycandidate; pertrip approvedzone neverglobalfallback for unapproved. Sourceheaderday includesmissingOPS inunresolved; 200 trips/day2000ops7day boundfail no truncation. Midnight+04 23:30->01:30 gives30/90 onadjacentdays; combinedtwo300 exceeds540; zeroDrive unknown. Originalsource25433570DEPARTED/sourceV2/currenthash/protected20-20 readonly; source33569 lacksapprovedOPS unresolved. No legal/daycomplete/outsideWMS certification, UI stalegeneration.

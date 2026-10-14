@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 from fastapi import APIRouter, Depends, HTTPException, Request
 from starlette.concurrency import run_in_threadpool
 
-from ....auth import AdminUser, require_permission
+from ...platform.public import AdminUser, require_permission
 from ..application.ingestion import ArtmasIngestion, IdocConflict
 from ..domain.artmas import MAX_IDOC_BYTES
 

@@ -1,0 +1,18 @@
+from pathlib import Path
+import json
+out={}
+out["wiki/components/nicora_ni081_driver_rest_20261011.md"]="""# NI08.1: перерывы в существующей цепочке рейса
+257 transport/domain/driver_rest is the single planning diagnostic for the new time-preview route. Existing original OPS/timezone/currentactor snapshot reused, no new table or stock/calendar writer. Revision55 planning parameters120min continuous/15min explicitREST/540min trip driving are identified as project parameters, not verified legislation. DRIVE/DRIVE_TO_CLIENT/DRIVE_BACK count exact elapsed Decimal minutes. Work/unloading/unknown gaps do not reset; explicit REST>=15 resets; shortREST violation; DRIVER_CHANGE binding remains unproved. Missing/negative/zero drive duration and timeline gaps unknown. Single trip cannot establish complete driver day/prior duties/legal compliance; operational_admission false.
+Gantt original preview separately displays driving/minutes/violations/missing evidence. No auto REST insert or re-timing original plan; actual driver acknowledgement and cross-trip daily controls remain.
+Author case257 continuity120+UNLOAD30+DRIVE1 violation, REST15 correct, REST14 denied, total600 violation, zero route unknown; actual original33530 twelveOPS current scope read, protected20/20 unchanged. Architecture579files0cycles76debt/adminTS PASS. Existing SQL originalOPS0.499ms/28executions; same bounded200 indexedTT_ID query retained/transport owner checks growing history, no addedSQL/cache/index needed. No independent or sprint completion claim.
+256 ledger prior application failed due unescaped apostrophe in descriptive NOTES; fixed source and applied two statements zeroerrors, committed APPLIED. Native implementation itself and original business case had already succeeded; no rerun physical scenario.
+"""
+for path,line in [
+("wiki/index.md","- [Перерывы в цепочке рейса](components/nicora_ni081_driver_rest_20261011.md):257 explicitREST/continuousdrive/missingroute/typedGantt/singletrip parameters only."),
+("wiki/log.md","2026-10-11:257 originalpreview domain continuity/rest diagnostic and Gantt; explicitREST only, work/gaps not rest, zeroRoute unknown,120/15/540 projectparameters notlegalclaim; original33530 read/protected20-20/5790cycles76/adminTS; SQL0.499ms28 existingboundedquery retain. 256 ledger descriptive apostrophe corrected/APPLIED; no physicalrerun. Complete driverday/realroutes remain."),
+("wiki/requirements/nikora_delivery_v55/execution/active/ni08_1.md","11.10.2026:257 existing originalOPS preview shows continuous driving and explicitREST againstproject120/15/540 parameters, unknown duration/gaps/driverchange retained; work doesn'treset. Singletrip only/nolegaladmission; cross-trip driverday next."),
+("wiki/runbooks/nicora_active_work.md","Latest app257 originaltimepreview planned drivercontinuity/explicitREST and typedGantt. Native256 ledger nowAPPLIED after NOTESapostrophe fix, generatedbundle updatedONLY. Source33530 readonly/no newbirth; cross-trip day and realroutes next.")]:
+ p=Path(path);out[path]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
+root=next(p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md"))
+out[str(root/"NI08.1"/"257_driver_rest.md")]="# Qwen:257 — перерывы\nTest originaltimepreview rights/snapshot/explicitzone, continuous120 thenUNLOAD30 thenDRIVE1 violation, REST15 reset/REST14 refused, missinggap andzeroDrive unknown, DRIVER_CHANGE no guessednewdriver. Projectparameters120/15/540 are notlegislationproof. Morethanone trip/day/prior duty unverified. UI generation/noautoREST/noQty; original33530 no rerun sourcefactory. SQLsameindexedTT200bound.\n"
+print(json.dumps(out,ensure_ascii=True))

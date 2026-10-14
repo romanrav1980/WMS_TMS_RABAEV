@@ -1,0 +1,13 @@
+{
+  "migration_id": "2026-10-11-232-final-store-custody-release",
+  "sha256": {
+    "db/migrations/2026-10-11_ni053_final_custody/000_before_rrl_stock_store_receipt_cmd.sql": "388c8e12d8cf3b389b68e5d89c26d2d2bddd3798dc7a7fa2a313b96c6aa8976c",
+    "db/migrations/2026-10-11_ni053_final_custody/000_before_rrl_stock_interware_custody.sql": "df7132f9679bd19504e5c4a0cfb6fd930bb3bf80b72b8bc2941393542a7effc8",
+    "db/migrations/2026-10-11_ni053_final_custody/000_before_rrl_stock_store_return_tr_cmd.sql": "bd7d6ef7783350d8ff19d47547bbbd90b7acd7b3266b718c93d5f23c2bc6e529",
+    "db/migrations/2026-10-11_ni053_final_custody/000_before_rrl_stock_store_return_cust_cmd.sql": "47d1be3efbd4b14bedfc47785c91aad194c8f2856fdb6081ef8bbb0a7b58c8ba",
+    "db/migrations/2026-10-11_ni053_final_custody/000_before_rrl_stock_posting_api.sql": "4ed36bd274065dce19b109cc213680207504cc9428f9274557d4b72253880e38",
+    "db/migrations/2026-10-11_ni053_final_custody/000_before_rrl_tt_hu_load_fact_guard.sql": "b6c27b87c665c6fbc358c4d21c378f0dfdc0f3d64b49262ba3e4062d38431d15",
+    "db/migrations/2026-10-11_ni053_final_custody/000_load_columns.json": "e935f00319a2e3a7a4e4b31ada93613ee7ef648c6d2f9db7969772b1f437d35f",
+    "db/migrations/2026-10-11_ni053_final_custody/000_manifest.json": "2dd2d816e67230976bcd187989b3cdfdea06cfb32f6688a110788a931402fd2d"
+  }
+}

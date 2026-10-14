@@ -1,0 +1,62 @@
+{
+  "http": {
+    "status": 200,
+    "ms": 105.0,
+    "issues": [],
+    "policy_id": "REV55_ROUTE_V6_120_15_540_ROAD24H"
+  },
+  "road_indexes": [
+    [
+      "IDX_RLADM_FROM",
+      "FROM_ADDR",
+      1
+    ],
+    [
+      "PK_DIST_MATRIX",
+      "FROM_ADDR",
+      1
+    ],
+    [
+      "PK_DIST_MATRIX",
+      "TO_ADDR",
+      2
+    ]
+  ],
+  "sql": [
+    [
+      "654nj9xg7gdzv",
+      16,
+      1.108,
+      2,
+      "SELECT ADDRESS,MIN(ROUTE_ORD)ORD,COUNT(*)CNT,COUNT(ROUTE_ORD)ORD_COUNT,MIN(ROUTE_ORD)LO,MAX(ROUTE_ORD)HI FROM JSON_TABLE(:B1 ,'$.members[*]'COLUMNS(ADDRESS VARCHAR2(200)PATH '$.address',ROUTE_ORD NUMBER PATH '$.route_ordinal')) GROUP BY ADDRESS ORDER BY MIN(ROUTE_ORD),ADDRESS"
+    ],
+    [
+      "5fa9zw1hbrjtr",
+      1,
+      6.882,
+      15,
+      "SELECT /*+ leading(p m) use_nl(m) index(m PK_DIST_MATRIX) */ P.POS,P.A,P.B,M.DURATION_MIN,M.DURATION_BASIS,M.SOURCE,M.UPDATED_AT, CASE WHEN M.UPDATED_AT>=SYSDATE-1 THEN 1 ELSE 0 END FRESH FROM JSON_TABLE(:B1 ,'$[*]'COLUMNS(POS FOR ORDINALITY,A VARCHAR2(200)PATH '$.from_address',B VARCHAR2(200)PATH '$.to_address'))P LEFT JOIN RRL_ADDR_DISTANCE_MATRIX M ON M.FROM_ADDR=P.A AND M.TO_ADDR=P.B ORDER BY P.POS"
+    ],
+    [
+      "07nh9d628r00r",
+      15,
+      39.197,
+      34224,
+      "SELECT P.POS,P.A,P.B,M.DURATION_MIN,M.DURATION_BASIS,M.SOURCE,M.UPDATED_AT, CASE WHEN M.UPDATED_AT>=SYSDATE-1 THEN 1 ELSE 0 END FRESH FROM JSON_TABLE(:B1 ,'$[*]'COLUMNS(POS FOR ORDINALITY,A VARCHAR2(200)PATH '$.from_address',B VARCHAR2(200)PATH '$.to_address'))P LEFT JOIN RRL_ADDR_DISTANCE_MATRIX M ON M.FROM_ADDR=P.A AND M.TO_ADDR=P.B ORDER BY P.POS"
+    ],
+    [
+      "1xrcdd8cnu3zv",
+      1,
+      24.082,
+      73,
+      "SELECT T.ID,T.VODITEL_ID,A.SOURCE_HASH,A.RESULT_JSON FROM RRL_TRANSPORT_TASK T JOIN RRL_TT_TIME_APPROVAL A ON A.TT_ID=T.ID WHERE T.ID!=:B3 AND NVL(T.DELETED,0)=0 AND T.CONDITION='Спланирован'AND NVL(T.PAY_ORDER_ID,0)=0 AND(T.TRANSPORT=:B2 OR T.VODITEL_ID=:B1 ) AND A.VERSION_NO=(SELECT MAX(LATEST.VERSION_NO)FROM RRL_TT_TIME_APPROVAL LATEST WHERE LATEST.TT_ID=T.ID) ORDER BY T.ID FETCH FIRST 201 ROWS ONLY"
+    ]
+  ],
+  "invalid": [],
+  "ledger": [
+    [
+      "2026-10-14-ni081-route-rest-approval",
+      "APPLIED"
+    ]
+  ]
+}

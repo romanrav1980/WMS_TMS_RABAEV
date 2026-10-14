@@ -1,0 +1,11 @@
+exec(open("scripts/ni063_slow_queries.py",encoding="utf-8").read().split("with oracledb.connect",1)[0])
+with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
+ q=c.cursor()
+ q.execute("select dbms_metadata.get_ddl('TABLE','RRL_SAP_SUPPLY_LINE')from dual")
+ ddl=q.fetchone()[0].read();Path("tmp/904_supply_line_before.sql").write_text(ddl,encoding="utf-8")
+ q.execute("select CONSTRAINT_NAME,TABLE_NAME,R_CONSTRAINT_NAME from USER_CONSTRAINTS where R_CONSTRAINT_NAME in('RRL_SAP_SUP_ROW_UK','RRL_SAP_SUP_ART_UK')")
+ print("REFERENCING_CONSTRAINTS",q.fetchall())
+ q.execute("select CONSTRAINT_NAME,CONSTRAINT_TYPE,STATUS from USER_CONSTRAINTS where TABLE_NAME='RRL_SAP_SUPPLY_LINE'")
+ print("CONSTRAINTS",q.fetchall())
+ q.execute("select NAME,TYPE,LINE,TEXT from USER_SOURCE where upper(TEXT)like'%RRL_SAP_SUPPLY_LINE%' order by NAME,TYPE,LINE")
+ print("NATIVE_CALLERS",q.fetchall())

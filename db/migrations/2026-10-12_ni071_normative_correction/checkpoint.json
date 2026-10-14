@@ -1,0 +1,117 @@
+{
+  "migration_id": "2026-10-12-598-normative-cost-correction",
+  "status": "APPLIED_VALID",
+  "scope": "Extend existing expense reporting/independent LOGIST+FINANCE approval to corrections linked to original normative cost-run; no duplicate base expense or second approval subsystem.",
+  "sources_sha256": {
+    "RRL_LOG_EXPENSE_GUARD": "f7f826fa25aeb2dca43cf69db6dbeb55b7a2c187921770d4b6f44b281c8b3ff5",
+    "RRL_LOG_EXP_DECISION_GUARD": "711a2cf972524369fd2112b30db0d980c68f8040dc21d29b2f9cbbc367ad1534"
+  },
+  "constraints": [
+    [
+      "SYS_C0017127",
+      "\"ADJUSTMENT_SIGN\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017128",
+      "ADJUSTMENT_SIGN in(-1,1)"
+    ],
+    [
+      "SYS_C0017057",
+      "\"PAYLOAD_HASH\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017058",
+      "\"ARTICLE_CODE\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017059",
+      "\"ARTICLE_VERSION\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017060",
+      "\"ARTICLE_NAME\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017061",
+      "\"WARE_ID\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017062",
+      "\"OBJECT_KIND\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017063",
+      "\"OBJECT_ID\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017064",
+      "\"AMOUNT\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017065",
+      "\"CURRENCY\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017066",
+      "\"EXPENSE_DATE\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017067",
+      "\"DOCUMENT_REFERENCE\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017068",
+      "\"REASON_TEXT\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017069",
+      "\"ACTOR\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017070",
+      "\"CREATED_AT\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017071",
+      "\"RESULT_JSON\" IS NOT NULL"
+    ],
+    [
+      "SYS_C0017072",
+      "OBJECT_KIND in('TRIP','VEHICLE')"
+    ],
+    [
+      "SYS_C0017073",
+      "AMOUNT>0"
+    ],
+    [
+      "SYS_C0017074",
+      "regexp_like(CURRENCY,'^[A-Z]{3}$')"
+    ],
+    [
+      "SYS_C0017075",
+      "RESULT_JSON is json"
+    ]
+  ],
+  "prepared_sha256": {
+    "001_schema.sql": "cb82ca433ad606efac4910dc2380a2686809b49ae010351556503c21d325504d",
+    "002_source_api.sql": "f07ac24ab1786b331eb92766815bc018890b85449d3184346785ebbc9ee14aff",
+    "003_report_guard.sql": "800844e38738c8c762e3d90c339e38570d4d2c2dd02f893b4e67e066f39c345c",
+    "004_decision_guard.sql": "b04804f081d77d21d6696c6cec8e222602d55d40128dc0716cc15ae2738f301c",
+    "005_ledger.sql": "35e505351c18c77a3e4f75c1d8cbcc5ce99a64d3048590dca4f62717735882bd",
+    "apply.sql": "500f26cd72c7a27b920a681cc2648a68ec4e06b6b576c52a0f2051a7c4d5d87d",
+    "rollback.sql": "1a25c67c1213c9e563199fd386e251f2d926b3b45d9fb1c4ad41efdae2669fba",
+    "verify.sql": "49bc302e09dac52ffe1dc242ea165c43d5c809fe298edddb642fc0a5e1e75193"
+  },
+  "current_sha256": {
+    "001_schema.sql": "cb82ca433ad606efac4910dc2380a2686809b49ae010351556503c21d325504d",
+    "002_source_api.sql": "f07ac24ab1786b331eb92766815bc018890b85449d3184346785ebbc9ee14aff",
+    "003_report_guard.sql": "1159a9661820977a180091a608a4d7940dd791c4ff01488e9359bbc873347044",
+    "004_decision_guard.sql": "b04804f081d77d21d6696c6cec8e222602d55d40128dc0716cc15ae2738f301c",
+    "005_ledger.sql": "35e505351c18c77a3e4f75c1d8cbcc5ce99a64d3048590dca4f62717735882bd",
+    "apply.sql": "500f26cd72c7a27b920a681cc2648a68ec4e06b6b576c52a0f2051a7c4d5d87d",
+    "apply_legacy_root_guard.sql": "fbbea889d1ae8d8b37d3c673efe3ea96c0560ed9ea9af14464448a7c22885850",
+    "rollback.sql": "1a25c67c1213c9e563199fd386e251f2d926b3b45d9fb1c4ad41efdae2669fba",
+    "verify.sql": "49bc302e09dac52ffe1dc242ea165c43d5c809fe298edddb642fc0a5e1e75193"
+  },
+  "evidence": "603 independent concurrent credit approval one winner/one stale refusal;609/610 existing signed allocation and stale FINANCE rejection; original107.25 immutable/current0."
+}

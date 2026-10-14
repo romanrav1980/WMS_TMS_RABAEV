@@ -1,0 +1,9 @@
+# NI04.1: отдельное CASE между слотами
+Миграция 2026-10-11-175-case-slot-relocation APPLIED в dev RABAEV/orcl; все изменённые объекты VALID, USER_ERRORS пуст. Расширяется существующая HU_RELOCATE_SLOT, без новой проводки/товарной паллеты для CASE.
+Требуются текущий closed physical CASE, отсутствие родителя, occupied claim, та же ячейка/другой published STORAGE_SLOT, версия/измерения/сканы обоих мест и причина. Используются старые declare_tree, target_json, record_place и move_coverage; идентичность HARD/P/H/состав сохраняется.
+CASE CONTENT_VERSION повышается, статус WAIT_CONTROL отзывает допуск предыдущей версии; занятость старого места удаляется и новое фактическое PUTAWAY/SYNCED/claim создаётся в одной root transaction. Native current actor/WARE/right проверяются перед replay и после locks. Общий расчёт нагрузки исключает заменяемое CASE, не считает его дважды.
+Свежие исходники move/slot/root сохранены; rollback пары, без копии БД. Нужно адресное native/API подтверждение и решение по SQL. Это не полная приёмка NI04.1.
+
+Авторский actual409/CASE1048 qty12 +1049 qty8: parent placement/unpack→CASE1048 slot1→slot2. Native rollback восстановил old claim/version/no operation; concurrent HTTP сохранил один CASE.RELOCATE175:cea0ff2dc1, badscan409 и changedbody409. P20/H20/two claims30kg/zero quantity journal. Native move освободил отдельный слот; cleanup native return/tare release/deferred wave DONE/count0, без fake DONE. Первые подготовительные случаи405–408 не являются положительным подтверждением: old fixture не бронировал тару, booked child нуждался в новом176 proof; forward SQL JSON bind fix выполнен до положительного409.
+
+SQL: held-book lookup5.104мс/1, other claims3.914/3, CASE claim deletion3.788/1. Решение: сохранить PK/CASE unique и cell bounds; большой HU/cell window batching/plan review — backlog inventory, промышленная мощность не заявлена.

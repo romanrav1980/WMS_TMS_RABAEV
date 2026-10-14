@@ -63,6 +63,7 @@ function renderWarehouses() {
 }
 
 function selectWarehouse(warehouse) {
+  window.dispatchEvent(new CustomEvent('warehouse-depot-selected',{detail:{warehouse_id:warehouse.id}}));
   warehouseState.selected = warehouse;
   whEl("warehouseDetailStatus").textContent = `${warehouse.id} / ${warehouse.name}`;
   whEl("warehouseDetails").textContent = JSON.stringify(warehouse, null, 2);

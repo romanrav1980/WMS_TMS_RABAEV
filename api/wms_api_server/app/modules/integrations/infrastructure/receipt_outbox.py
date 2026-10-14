@@ -13,7 +13,10 @@ class ReceiptOutbox:
     def __init__(self, gateway: OracleGateway) -> None:
         self.gateway = gateway
 
-    def export(self, directory: Path, limit: int = 20) -> list[dict]:
+    def export(self, directory: Path, limit: int = 20, event_ids: tuple[str,...]|None=None) -> list[dict]:
+        if event_ids is not None and (not event_ids or len(event_ids)>200 or any(not value or len(value)>100 for value in event_ids)):raise ValueError("Outbox source selection requires 1..200 event IDs")
+        selected={f"event_{index}":value for index,value in enumerate(event_ids or ())}
+        predicate=" and EVENT_ID in ("+",".join(":"+key for key in selected)+")" if selected else ""
         directory = directory.resolve()
         directory.mkdir(parents=True, exist_ok=True)
         exported = []
@@ -22,7 +25,7 @@ class ReceiptOutbox:
                 cur.arraysize = 1
                 cur.prefetchrows = 0
                 # Lock an oldest pending row; competing workers skip claimed rows.
-                cur.execute("select EVENT_ID,EVENT_TYPE,PAYLOAD_JSON from RRL_SAP_RECEIPT_OUTBOX where STATUS='PENDING' order by CREATED_AT for update skip locked")
+                cur.execute("select EVENT_ID,EVENT_TYPE,PAYLOAD_JSON from RRL_SAP_RECEIPT_OUTBOX where STATUS='PENDING'"+predicate+" order by CREATED_AT for update skip locked",selected)
                 row = cur.fetchone()
                 if not row:
                     break
@@ -30,7 +33,7 @@ class ReceiptOutbox:
                 event = ET.Element("WmsReceiptEvent", {"version": "1"})
                 ET.SubElement(event, "EventId").text = row[0]
                 ET.SubElement(event, "EventType").text = row[1]
-                for key, value in json.loads(raw).items():
+                for key, value in (raw if isinstance(raw, dict) else json.loads(raw)).items():
                     if value is not None:
                         tag = "".join(part.capitalize() for part in key.split("_"))
                         child = ET.SubElement(event, tag)

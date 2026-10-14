@@ -1,0 +1,2 @@
+# Qwen417–425
+Retainedctx406 task1HU/DONE withtwo exact3EA commoditymove facts/nativegroupreceipt-plan-task-placement. Old6keys9codes/P20H20; fulltrialrollback restoredreceiving/taskPLANNED. Current targetM/3m/100kg/7kg manualdimensions1x1x1.5; missingheightunit/measurement refusals notbypassed. Verify typedAPI/currentWARE/rawUI savedop/draft/profilematrix independently afterserverrestart. Do notrerun factory/source412 receiving assertions after419 placement. Groupcustody/onward remains.

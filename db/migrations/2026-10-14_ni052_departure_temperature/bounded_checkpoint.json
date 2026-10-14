@@ -1,0 +1,7 @@
+{
+  "migration_id": "2026-10-14-1173-thermal-bounded-query",
+  "target": "RABAEV/orcl",
+  "source": "001_thermal_phase.sql",
+  "prepared_sha256": "12ef57ea3cb36e1aa946bf02ea13b7677786e1a4fa23c21e9827216a81ea921e",
+  "reason": "Actual1172 JSON_TABLE/hint query675.298ms/13575buffers; replace with bounded200 positional IN binds, at most200 SQL shapes, no literal ID SQL/cursor proliferation/index."
+}

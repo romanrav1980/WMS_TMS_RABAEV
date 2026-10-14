@@ -1,0 +1,2 @@
+# NI06.2: сканирование точных согласованных единиц при возврате
+233 preserves original handover/pickup owners/two actors/current driver binding/trip/capacity. Native exact approved issued keys/source/version/current UNIT profiles validated by existing store marked scanner (no new parser/quantity writer). Frozen proof rechecked under UNIT60 locks and CONFIG fence. Current scope before cached result/after wait. No stock/code birth at pickup. Warehouse receipt separately next.

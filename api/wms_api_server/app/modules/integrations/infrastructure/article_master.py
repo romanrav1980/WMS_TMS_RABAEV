@@ -4,7 +4,9 @@ from datetime import datetime
 import oracledb
 
 from ....oracle_gateway import OracleGateway
+from ...platform.public import read_oracle_json
 from ..domain.article_mapping import map_articles
+from ..domain.article_units import merge_units
 from fractions import Fraction
 from decimal import Decimal
 
@@ -29,8 +31,8 @@ class ArticleMasterApply:
             if not row:
                 raise LookupError("IDoc not found")
             if row[0] == "APPLIED":
-                return json.loads(row[2].read() if hasattr(row[2], "read") else row[2])
-            envelope = json.loads(row[1].read() if hasattr(row[1], "read") else row[1])
+                return read_oracle_json(row[2])
+            envelope = read_oracle_json(row[1])
             articles = map_articles(envelope)
             # Serialize new material identity creation, absent legacy unique key.
             cur.execute("lock table RRL_SAP_ARTICLE_META in share row exclusive mode")
@@ -41,7 +43,7 @@ class ArticleMasterApply:
             datetime.strptime(stamp, "%Y%m%d%H%M%S")
             applied, older = [], []
             for item in articles:
-                cur.execute("select SOURCE_STAMP,SOURCE_DOCNUM,BASE_UOM,SENDER from RRL_SAP_ARTICLE_META where ARTICUL=:a", {"a": item["material"]})
+                cur.execute("select SOURCE_STAMP,SOURCE_DOCNUM,BASE_UOM,SENDER,UNITS_JSON from RRL_SAP_ARTICLE_META where ARTICUL=:a", {"a": item["material"]})
                 previous = cur.fetchone()
                 if previous and previous[3] != envelope["sender"]:
                     raise ValueError("Article is owned by a different SAP sender")
@@ -70,8 +72,12 @@ class ArticleMasterApply:
                 raise ValueError("New article requires description, base UoM and item EAN")
             cur.execute("insert into RRL_ARTICULS (ACTICUL,NAME,UNIT_TYPE,BARCODE_SHT,NORMA_UKLADKI) values (:a,:n,:u,:e,0)",
                         {"a": key, "n": item["name"], "u": item["base_uom"], "e": item["ean"]})
+        unit = item["base_uom"] or (previous[2] if previous else None)
+        if not unit:
+            raise ValueError("Base UoM missing for new SAP mapping")
+        merged = merge_units(read_oracle_json(previous[4]) if previous else [], item["units"], unit)
         columns = {"NAME": item["name"], "BARCODE_SHT": item["ean"], "BARCODE_KOR": item["box_ean"],
-                   "COUNT_SHT_IN_KOR": item["box_qty"], "NORMA_UKLADKI": item["pallet_qty"]}
+                   "COUNT_SHT_IN_KOR": item["box_qty"], "NORMA_UKLADKI": item["pallet_qty"], **item.get("logistics", {})}
         changes = {k: v for k, v in columns.items() if v is not None}
         if changes:
             assignments = ",".join(f"{k}=:{k}" for k in changes)
@@ -88,14 +94,14 @@ class ArticleMasterApply:
           when not matched then insert(ARTICUL,BASE_UOM,SENDER,SOURCE_STAMP,SOURCE_DOCNUM,UNITS_JSON)
             values(:a,:u,:sender,:stamp,:doc,:units)""",
                     {"a": key, "u": unit, "sender": envelope["sender"], "stamp": stamp,
-                     "doc": envelope["docnum"], "units": json.dumps(item["units"]), "has_units": int(bool(item["units"]))})
+                     "doc": envelope["docnum"], "units": json.dumps(merged), "has_units": int(bool(item["units"]))})
 
         # Publish exact factors under the configuration X fence before any stock command.
         canonical_base = "EA" if unit.upper() in {"EA", "PCS", "ST", "\u0428\u0422"} else unit.upper()
         scale = 0 if canonical_base == "EA" else (3 if canonical_base == "KG" else 9)
         provenance = "SAP_ARTMAS:" + envelope["docnum"]
         conversion_units = [{"uom": canonical_base, "numerator": 1, "denominator": 1},
-                            {"uom": unit, "numerator": 1, "denominator": 1}, *item["units"]]
+                            {"uom": unit, "numerator": 1, "denominator": 1}, *merged]
         for conversion in conversion_units:
             if "numerator" in conversion:
                 ratio = Fraction(int(conversion["numerator"]), int(conversion["denominator"]))

@@ -1,0 +1,33 @@
+.warehouse-operations .workspace{background:#f4f7fc}.warehouse-operations .topbar{background:#fff;border-bottom:1px solid #e4eaf3;padding:20px 28px}.warehouse-operations .warehouse-task-page{padding:24px;gap:20px;grid-template-columns:minmax(0,1fr) 360px;align-items:start}.warehouse-operations .panel{border:1px solid #e3eaf4;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px #183d6506}.warehouse-operations .panel>header{padding:22px;background:white;border-bottom:1px solid #e9eef5}.warehouse-operations .panel h2{font-size:20px;color:#23364d}.warehouse-operations .warehouse-task-toolbar{display:grid;grid-template-columns:repeat(3,minmax(130px,1fr));gap:14px;padding:20px;background:#fbfcfe}.warehouse-operations input,.warehouse-operations select{min-height:40px;border-radius:8px;border:1px solid #dbe3ee;background:#fff;padding:8px 10px}.warehouse-operations label{font-size:12px;color:#64758a}.warehouse-operations button{border-radius:8px;min-height:36px;cursor:pointer}.warehouse-operations button:disabled{cursor:default;opacity:.5}.warehouse-operations .warehouse-task-tabs{padding:16px 20px}.warehouse-operations .warehouse-task-tabs button.active{background:#edf4ff;color:#2362ca;border-color:#cbdcf7}.warehouse-operations .warehouse-task-scroll{max-height:650px}.warehouse-operations .warehouse-task-table{min-width:1000px}.warehouse-operations .warehouse-task-table td{padding:14px 12px;vertical-align:top}.warehouse-operations .warehouse-task-table tr.selected{background:#edf5ff}.warehouse-operations .warehouse-task-detail-list{padding:18px;overflow-wrap:anywhere}.warehouse-operations .warehouse-task-kind-grid{padding:16px;gap:8px}.warehouse-operations .warehouse-task-execute{padding:18px;gap:12px}.warehouse-operations :focus-visible{outline:3px solid #91b7ee;outline-offset:2px}@media(max-width:1250px){.warehouse-operations .warehouse-task-page{grid-template-columns:1fr}.warehouse-operations .warehouse-task-detail-panel{max-width:none}}@media(max-width:650px){.warehouse-operations .warehouse-task-page{padding:12px}.warehouse-operations .warehouse-task-toolbar{grid-template-columns:1fr 1fr}.warehouse-operations .topbar{flex-wrap:wrap;padding:14px}.warehouse-operations .search{max-width:100%}}
+.warehouse-operations .warehouse-task-tools{margin:0 24px 24px;border:1px solid #e3eaf4;background:white;border-radius:16px}.warehouse-operations .warehouse-task-tools>summary{padding:20px 24px;font-weight:650;color:#304e74;cursor:pointer}.warehouse-operations .warehouse-task-tools-content{display:grid;gap:16px;padding:0 20px 20px}.warehouse-operations .warehouse-task-tools .panel{padding:22px;display:flex;flex-wrap:wrap;align-items:end;gap:12px}.warehouse-operations .warehouse-task-tools h2,.warehouse-operations .warehouse-task-tools p,.warehouse-operations .warehouse-task-tools pre{flex-basis:100%;margin:4px 0}.warehouse-operations .warehouse-task-tools label{display:flex;flex-direction:column;gap:6px;min-width:150px}.warehouse-operations .warehouse-task-tools pre{max-height:220px;overflow:auto}.warehouse-operations .warehouse-task-tools button{border:1px solid #d5e2f3;color:#2358a2;background:#f5f9ff;padding:8px 14px}@media(max-width:650px){.warehouse-operations .warehouse-task-tools{margin:0 12px 12px}.warehouse-operations .warehouse-task-tools .panel{padding:14px}}
+
+.warehouse-operations .warehouse-task-execute{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));align-items:end}
+.warehouse-operations .warehouse-task-execute label{min-width:0;display:flex;flex-direction:column;gap:6px;white-space:normal}
+.warehouse-operations .warehouse-task-execute input{width:100%;min-width:0;box-sizing:border-box}
+.warehouse-operations .warehouse-task-command-row{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px;padding-top:6px}
+.warehouse-operations .warehouse-task-command-row button{min-width:120px;padding:8px 18px}
+@media(max-width:650px){.warehouse-operations .warehouse-task-execute{grid-template-columns:1fr}.warehouse-operations .warehouse-task-command-row button{flex:1}}
+
+.warehouse-operations .warehouse-task-tabs a{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border:1px solid #dbe3ee;border-radius:8px;color:#52677f;background:white;text-decoration:none;font-size:12px;box-sizing:border-box}
+.warehouse-operations .warehouse-task-tabs a.active{background:#edf4ff;color:#2362ca;border-color:#cbdcf7}
+.warehouse-operations .warehouse-task-tabs a:hover{background:#f3f7fe}
+
+.warehouse-operations .nearest-resource-results{flex-basis:100%;overflow:auto}
+.warehouse-operations .nearest-resource-table{width:100%;border-collapse:collapse;font-size:13px}
+.warehouse-operations .nearest-resource-table th{background:#f4f7fc;color:#64758a;text-align:left;font-weight:600}
+.warehouse-operations .nearest-resource-table th,.warehouse-operations .nearest-resource-table td{padding:12px;border-bottom:1px solid #e3eaf4;white-space:nowrap}
+
+#warehouseTaskDetail {scroll-margin-top:90px;}
+
+.fullpal-shipment-panel{padding:24px;margin:20px 0;border-radius:16px}
+.fullpal-shipment-panel p{line-height:1.6}
+.fullpal-shipment-panel .fullpal-fields{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,2fr) minmax(0,2fr);gap:12px;align-items:end;margin:16px 0}
+.fullpal-shipment-panel label{display:grid;gap:8px;color:#475569;font-size:13px}
+.fullpal-shipment-panel input,.fullpal-shipment-panel button,.fullpal-shipment-panel .fullpal-actions a{min-height:44px;border-radius:9px;padding:10px 14px;box-sizing:border-box;border:1px solid #cad6e5}
+.fullpal-shipment-panel input{width:100%;min-width:0}
+.fullpal-shipment-panel [data-bind]{background:#2377eb;color:white}
+.fullpal-shipment-panel .fullpal-actions{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}
+.fullpal-shipment-panel [role=status],.fullpal-shipment-panel [data-fact]{background:#eff6ff;padding:12px;border-radius:10px}
+.fullpal-shipment-panel [hidden]{display:none!important}
+.fullpal-shipment-panel button:disabled{opacity:.5}
+@media(max-width:800px){.fullpal-shipment-panel .fullpal-fields{grid-template-columns:minmax(0,1fr)}}

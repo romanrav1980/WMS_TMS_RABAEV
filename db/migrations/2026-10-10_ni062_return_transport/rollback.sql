@@ -1,0 +1,1 @@
+-- Forward correction preserves planned history; use an explicit future cancellation/replan command.

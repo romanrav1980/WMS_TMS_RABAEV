@@ -1,0 +1,478 @@
+[
+  {
+    "case": "150+90 split with REST, string ST",
+    "ms": 17.2,
+    "result": {
+      "segments": [
+        {
+          "code": "DRIVE",
+          "start_at": "2026-10-14T08:00:00.000000+04:00",
+          "finish_at": "2026-10-14T10:00:00.000000+04:00",
+          "duration_min": "120",
+          "address": "SHOP"
+        },
+        {
+          "code": "REST",
+          "start_at": "2026-10-14T10:00:00.000000+04:00",
+          "finish_at": "2026-10-14T10:15:00.000000+04:00",
+          "duration_min": "15",
+          "address": "SHOP"
+        },
+        {
+          "code": "DRIVE",
+          "start_at": "2026-10-14T10:15:00.000000+04:00",
+          "finish_at": "2026-10-14T10:45:00.000000+04:00",
+          "duration_min": "30",
+          "address": "SHOP"
+        },
+        {
+          "code": "UNLOAD",
+          "start_at": "2026-10-14T10:45:00.000000+04:00",
+          "finish_at": "2026-10-14T11:15:00.000000+04:00",
+          "duration_min": "30",
+          "address": "SHOP"
+        },
+        {
+          "code": "DRIVE",
+          "start_at": "2026-10-14T11:15:00.000000+04:00",
+          "finish_at": "2026-10-14T12:45:00.000000+04:00",
+          "duration_min": "90",
+          "address": "BASE"
+        },
+        {
+          "code": "WAIT",
+          "start_at": "2026-10-14T12:45:00.000000+04:00",
+          "finish_at": "2026-10-14T18:00:00.000000+04:00",
+          "duration_min": "315",
+          "address": "BASE"
+        }
+      ],
+      "stops": [
+        {
+          "address": "SHOP",
+          "st_numbers": [
+            "SAP_2135"
+          ],
+          "window_from": "2026-10-14T08:00:00.000000+04:00",
+          "window_to": "2026-10-14T18:00:00.000000+04:00",
+          "arrival_at": "2026-10-14T10:45:00.000000+04:00",
+          "service_start_at": "2026-10-14T10:45:00.000000+04:00",
+          "service_finish_at": "2026-10-14T11:15:00.000000+04:00",
+          "wait_min": "0",
+          "late_min": "0",
+          "unload_norm_min": "30",
+          "window_strict": 1,
+          "issues": []
+        }
+      ],
+      "return_at": "2026-10-14T12:45:00.000000+04:00",
+      "departure_at": "2026-10-14T08:00:00.000000+04:00",
+      "issues": [],
+      "warnings": [],
+      "drive_min": "240",
+      "status": "NO_EARLIEST_WINDOW_VIOLATION",
+      "policy_id": "REV55_ROUTE_V6_120_15_540_ROAD24H",
+      "time_zone": "Asia/Tbilisi",
+      "estimate_basis": "NATIVE_DRIVE_REST_WAIT_UNLOAD",
+      "driver_breaks_included": true,
+      "legal_compliance_verified": false,
+      "operational_admission": false,
+      "destination_time_zones_verified": false,
+      "depot_address": "BASE",
+      "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+      "read_only": true,
+      "stock_changed": false
+    }
+  },
+  {
+    "case": "stale road",
+    "ms": 9.04,
+    "result": {
+      "segments": [],
+      "stops": [
+        {
+          "address": "SHOP",
+          "st_numbers": [
+            "SAP_2135"
+          ],
+          "window_from": "2026-10-14T08:00:00.000000+04:00",
+          "window_to": "2026-10-14T18:00:00.000000+04:00",
+          "arrival_at": null,
+          "service_start_at": null,
+          "service_finish_at": null,
+          "wait_min": null,
+          "late_min": null,
+          "unload_norm_min": "30",
+          "window_strict": 1,
+          "issues": []
+        }
+      ],
+      "return_at": null,
+      "departure_at": "2026-10-14T08:00:00.000000+04:00",
+      "issues": [
+        {
+          "code": "ROUTE_ROAD_MISSING_STALE_OR_UNSUPPORTED",
+          "address": "SHOP"
+        },
+        {
+          "code": "ROUTE_RETURN_TIME_UNKNOWN",
+          "address": "BASE"
+        }
+      ],
+      "warnings": [],
+      "drive_min": "90",
+      "status": "INSUFFICIENT_EVIDENCE",
+      "policy_id": "REV55_ROUTE_V6_120_15_540_ROAD24H",
+      "time_zone": "Asia/Tbilisi",
+      "estimate_basis": "NATIVE_DRIVE_REST_WAIT_UNLOAD",
+      "driver_breaks_included": true,
+      "legal_compliance_verified": false,
+      "operational_admission": false,
+      "destination_time_zones_verified": false,
+      "depot_address": "BASE",
+      "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+      "read_only": true,
+      "stock_changed": false
+    }
+  },
+  {
+    "case": "hard late",
+    "ms": 9.38,
+    "result": {
+      "segments": [
+        {
+          "code": "DRIVE",
+          "start_at": "2026-10-14T08:00:00.000000+04:00",
+          "finish_at": "2026-10-14T10:00:00.000000+04:00",
+          "duration_min": "120",
+          "address": "SHOP"
+        },
+        {
+          "code": "REST",
+          "start_at": "2026-10-14T10:00:00.000000+04:00",
+          "finish_at": "2026-10-14T10:15:00.000000+04:00",
+          "duration_min": "15",
+          "address": "SHOP"
+        },
+        {
+          "code": "DRIVE",
+          "start_at": "2026-10-14T10:15:00.000000+04:00",
+          "finish_at": "2026-10-14T10:45:00.000000+04:00",
+          "duration_min": "30",
+          "address": "SHOP"
+        },
+        {
+          "code": "UNLOAD",
+          "start_at": "2026-10-14T10:45:00.000000+04:00",
+          "finish_at": "2026-10-14T11:15:00.000000+04:00",
+          "duration_min": "30",
+          "address": "SHOP"
+        },
+        {
+          "code": "DRIVE",
+          "start_at": "2026-10-14T11:15:00.000000+04:00",
+          "finish_at": "2026-10-14T12:45:00.000000+04:00",
+          "duration_min": "90",
+          "address": "BASE"
+        },
+        {
+          "code": "WAIT",
+          "start_at": "2026-10-14T12:45:00.000000+04:00",
+          "finish_at": "2026-10-14T18:00:00.000000+04:00",
+          "duration_min": "315",
+          "address": "BASE"
+        }
+      ],
+      "stops": [
+        {
+          "address": "SHOP",
+          "st_numbers": [
+            "SAP_2135"
+          ],
+          "window_from": "2026-10-14T08:00:00.000000+04:00",
+          "window_to": "2026-10-14T09:00:00.000000+04:00",
+          "arrival_at": "2026-10-14T10:45:00.000000+04:00",
+          "service_start_at": "2026-10-14T10:45:00.000000+04:00",
+          "service_finish_at": "2026-10-14T11:15:00.000000+04:00",
+          "wait_min": "0",
+          "late_min": "135",
+          "unload_norm_min": "30",
+          "window_strict": 1,
+          "issues": [
+            "DELIVERY_HARD_WINDOW_MISSED"
+          ]
+        }
+      ],
+      "return_at": "2026-10-14T12:45:00.000000+04:00",
+      "departure_at": "2026-10-14T08:00:00.000000+04:00",
+      "issues": [
+        {
+          "code": "DELIVERY_HARD_WINDOW_MISSED",
+          "address": "SHOP"
+        }
+      ],
+      "warnings": [],
+      "drive_min": "240",
+      "status": "INSUFFICIENT_EVIDENCE",
+      "policy_id": "REV55_ROUTE_V6_120_15_540_ROAD24H",
+      "time_zone": "Asia/Tbilisi",
+      "estimate_basis": "NATIVE_DRIVE_REST_WAIT_UNLOAD",
+      "driver_breaks_included": true,
+      "legal_compliance_verified": false,
+      "operational_admission": false,
+      "destination_time_zones_verified": false,
+      "depot_address": "BASE",
+      "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+      "read_only": true,
+      "stock_changed": false
+    }
+  },
+  {
+    "case": "soft late warning",
+    "ms": 9.68,
+    "result": {
+      "segments": [
+        {
+          "code": "DRIVE",
+          "start_at": "2026-10-14T08:00:00.000000+04:00",
+          "finish_at": "2026-10-14T10:00:00.000000+04:00",
+          "duration_min": "120",
+          "address": "SHOP"
+        },
+        {
+          "code": "REST",
+          "start_at": "2026-10-14T10:00:00.000000+04:00",
+          "finish_at": "2026-10-14T10:15:00.000000+04:00",
+          "duration_min": "15",
+          "address": "SHOP"
+        },
+        {
+          "code": "DRIVE",
+          "start_at": "2026-10-14T10:15:00.000000+04:00",
+          "finish_at": "2026-10-14T10:45:00.000000+04:00",
+          "duration_min": "30",
+          "address": "SHOP"
+        },
+        {
+          "code": "UNLOAD",
+          "start_at": "2026-10-14T10:45:00.000000+04:00",
+          "finish_at": "2026-10-14T11:15:00.000000+04:00",
+          "duration_min": "30",
+          "address": "SHOP"
+        },
+        {
+          "code": "DRIVE",
+          "start_at": "2026-10-14T11:15:00.000000+04:00",
+          "finish_at": "2026-10-14T12:45:00.000000+04:00",
+          "duration_min": "90",
+          "address": "BASE"
+        },
+        {
+          "code": "WAIT",
+          "start_at": "2026-10-14T12:45:00.000000+04:00",
+          "finish_at": "2026-10-14T18:00:00.000000+04:00",
+          "duration_min": "315",
+          "address": "BASE"
+        }
+      ],
+      "stops": [
+        {
+          "address": "SHOP",
+          "st_numbers": [
+            "SAP_2135"
+          ],
+          "window_from": "2026-10-14T08:00:00.000000+04:00",
+          "window_to": "2026-10-14T09:00:00.000000+04:00",
+          "arrival_at": "2026-10-14T10:45:00.000000+04:00",
+          "service_start_at": "2026-10-14T10:45:00.000000+04:00",
+          "service_finish_at": "2026-10-14T11:15:00.000000+04:00",
+          "wait_min": "0",
+          "late_min": "135",
+          "unload_norm_min": "30",
+          "window_strict": 0,
+          "issues": [
+            "DELIVERY_SOFT_WINDOW_MISSED"
+          ]
+        }
+      ],
+      "return_at": "2026-10-14T12:45:00.000000+04:00",
+      "departure_at": "2026-10-14T08:00:00.000000+04:00",
+      "issues": [],
+      "warnings": [
+        {
+          "code": "DELIVERY_SOFT_WINDOW_MISSED",
+          "address": "SHOP"
+        }
+      ],
+      "drive_min": "240",
+      "status": "NO_EARLIEST_WINDOW_VIOLATION",
+      "policy_id": "REV55_ROUTE_V6_120_15_540_ROAD24H",
+      "time_zone": "Asia/Tbilisi",
+      "estimate_basis": "NATIVE_DRIVE_REST_WAIT_UNLOAD",
+      "driver_breaks_included": true,
+      "legal_compliance_verified": false,
+      "operational_admission": false,
+      "destination_time_zones_verified": false,
+      "depot_address": "BASE",
+      "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+      "read_only": true,
+      "stock_changed": false
+    }
+  },
+  {
+    "case": "short resource envelope",
+    "ms": 9.06,
+    "result": {
+      "segments": [
+        {
+          "code": "DRIVE",
+          "start_at": "2026-10-14T08:00:00.000000+04:00",
+          "finish_at": "2026-10-14T10:00:00.000000+04:00",
+          "duration_min": "120",
+          "address": "SHOP"
+        },
+        {
+          "code": "REST",
+          "start_at": "2026-10-14T10:00:00.000000+04:00",
+          "finish_at": "2026-10-14T10:15:00.000000+04:00",
+          "duration_min": "15",
+          "address": "SHOP"
+        },
+        {
+          "code": "DRIVE",
+          "start_at": "2026-10-14T10:15:00.000000+04:00",
+          "finish_at": "2026-10-14T10:45:00.000000+04:00",
+          "duration_min": "30",
+          "address": "SHOP"
+        },
+        {
+          "code": "UNLOAD",
+          "start_at": "2026-10-14T10:45:00.000000+04:00",
+          "finish_at": "2026-10-14T11:15:00.000000+04:00",
+          "duration_min": "30",
+          "address": "SHOP"
+        },
+        {
+          "code": "DRIVE",
+          "start_at": "2026-10-14T11:15:00.000000+04:00",
+          "finish_at": "2026-10-14T12:45:00.000000+04:00",
+          "duration_min": "90",
+          "address": "BASE"
+        },
+        {
+          "code": "DRIVE_BACK",
+          "start_at": "2026-10-14T12:30:00.000000+04:00",
+          "finish_at": "2026-10-14T10:00:00.000000+04:00"
+        }
+      ],
+      "stops": [
+        {
+          "address": "SHOP",
+          "st_numbers": [
+            "SAP_2135"
+          ],
+          "window_from": "2026-10-14T08:00:00.000000+04:00",
+          "window_to": "2026-10-14T18:00:00.000000+04:00",
+          "arrival_at": "2026-10-14T10:45:00.000000+04:00",
+          "service_start_at": "2026-10-14T10:45:00.000000+04:00",
+          "service_finish_at": "2026-10-14T11:15:00.000000+04:00",
+          "wait_min": "0",
+          "late_min": "0",
+          "unload_norm_min": "30",
+          "window_strict": 1,
+          "issues": []
+        }
+      ],
+      "return_at": "2026-10-14T12:45:00.000000+04:00",
+      "departure_at": "2026-10-14T08:00:00.000000+04:00",
+      "issues": [
+        {
+          "code": "ROUTE_EXCEEDS_PLANNED_RESOURCE_ENVELOPE",
+          "address": "BASE"
+        }
+      ],
+      "warnings": [],
+      "drive_min": "240",
+      "status": "INSUFFICIENT_EVIDENCE",
+      "policy_id": "REV55_ROUTE_V6_120_15_540_ROAD24H",
+      "time_zone": "Asia/Tbilisi",
+      "estimate_basis": "NATIVE_DRIVE_REST_WAIT_UNLOAD",
+      "driver_breaks_included": true,
+      "legal_compliance_verified": false,
+      "operational_admission": false,
+      "destination_time_zones_verified": false,
+      "depot_address": "BASE",
+      "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+      "read_only": true,
+      "stock_changed": false
+    }
+  },
+  {
+    "case": "drive >540",
+    "ms": 6.66,
+    "result": {
+      "segments": [],
+      "stops": [
+        {
+          "address": "SHOP",
+          "st_numbers": [
+            "SAP_2135"
+          ],
+          "window_from": "2026-10-14T08:00:00.000000+04:00",
+          "window_to": "2026-10-14T18:00:00.000000+04:00",
+          "arrival_at": null,
+          "service_start_at": null,
+          "service_finish_at": null,
+          "wait_min": null,
+          "late_min": null,
+          "unload_norm_min": "30",
+          "window_strict": 1,
+          "issues": []
+        }
+      ],
+      "return_at": null,
+      "departure_at": "2026-10-14T08:00:00.000000+04:00",
+      "issues": [
+        {
+          "code": "DRIVER_TRIP_DRIVE_LIMIT",
+          "address": "SHOP"
+        },
+        {
+          "code": "DRIVER_TRIP_DRIVE_LIMIT",
+          "address": "BASE"
+        },
+        {
+          "code": "ROUTE_RETURN_TIME_UNKNOWN",
+          "address": "BASE"
+        }
+      ],
+      "warnings": [],
+      "drive_min": "640",
+      "status": "INSUFFICIENT_EVIDENCE",
+      "policy_id": "REV55_ROUTE_V6_120_15_540_ROAD24H",
+      "time_zone": "Asia/Tbilisi",
+      "estimate_basis": "NATIVE_DRIVE_REST_WAIT_UNLOAD",
+      "driver_breaks_included": true,
+      "legal_compliance_verified": false,
+      "operational_admission": false,
+      "destination_time_zones_verified": false,
+      "depot_address": "BASE",
+      "depot_basis": "CONFIGURED_WAREHOUSE_REFERENCE",
+      "read_only": true,
+      "stock_changed": false
+    }
+  },
+  {
+    "case": "native combined chain valid",
+    "pass": true
+  },
+  {
+    "case": "WAIT does not reset continuous across trips",
+    "pass": true
+  },
+  {
+    "case": "real TT33564 current V6 GET",
+    "status": "SOURCE_CHANGED",
+    "source_hash": "9c725cee62bef44befaff85fe8b4485fc682d69882f9068d4df450958d25fb33"
+  }
+]

@@ -1,0 +1,26 @@
+from pathlib import Path
+p=Path("api/wms_api_server/app/modules/finance/infrastructure/transport_cost_read.py");v=p.read_text(encoding="utf-8")
+v=v.replace("def normative_cost_sources(gateway: Any,ware: int,actor: str)","def normative_cost_sources(gateway: Any,ware: int,actor: str,cost_operation_id: str|None=None)")
+v=v.replace("where r.WARE_ID=:ware order by r.CREATED_AT desc,r.OPERATION_ID desc fetch first 101 rows only",
+"where r.WARE_ID=:ware and(:cost_operation_id is null or r.OPERATION_ID=:cost_operation_id)order by r.CREATED_AT desc,r.OPERATION_ID desc fetch first 100 rows only")
+v=v.replace('""",ware=ware)\n        rows=cursor.fetchall()\n        if len(rows)>100:raise LogisticsCostError("NORMATIVE_CORRECTION_SOURCE_BOUND","Не более 100 исходных начислений; нужна ограниченная выборка")',
+'""",ware=ware,cost_operation_id=cost_operation_id)\n        rows=cursor.fetchall()')
+p.write_text(v,encoding="utf-8")
+for name in("infrastructure/logistics_expenses.py","contracts_expenses.py"):
+ p=Path("api/wms_api_server/app/modules/finance")/name;v=p.read_text(encoding="utf-8")
+ v=v.replace("def normative_cost_sources(self,ware: int,actor: str)","def normative_cost_sources(self,ware: int,actor: str,cost_operation_id: str|None=None)")
+ if name.startswith("infrastructure"):v=v.replace("normative_cost_sources(self.gateway,ware,actor)","normative_cost_sources(self.gateway,ware,actor,cost_operation_id)")
+ p.write_text(v,encoding="utf-8")
+p=Path("api/wms_api_server/app/modules/finance/api/logistics_expense_routes.py");v=p.read_text(encoding="utf-8")
+v=v.replace("APIRouter,Depends,HTTPException","APIRouter,Depends,HTTPException,Query")
+v=v.replace("def normative_cost_sources(ware_id: int,user:",'def normative_cost_sources(ware_id: int,cost_operation_id: str|None=Query(default=None,min_length=1,max_length=100),user:')
+v=v.replace("service.normative_cost_sources(ware_id,user.username)","service.normative_cost_sources(ware_id,user.username,cost_operation_id)")
+p.write_text(v,encoding="utf-8")
+p=Path("wiki-raw/wms_admin_ui_reference/logistics-expenses.html");v=p.read_text(encoding="utf-8")
+v=v.replace('<button id="exLoad">','<label>Поиск нормативного начисления по ID<input id="exNormativeSearch" maxlength="100"></label><p>Без поиска показаны последние 100 начислений склада. Для старого документа укажите точный ID.</p><button id="exLoad">')
+p.write_text(v,encoding="utf-8")
+p=Path("wiki-raw/wms_admin_ui_reference/logistics-expenses.js");v=p.read_text(encoding="utf-8")
+v=v.replace('request("/warehouses/"+ware+"/normative-costs")','request("/warehouses/"+ware+"/normative-costs"+(el("exNormativeSearch").value.trim()?"?cost_operation_id="+encodeURIComponent(el("exNormativeSearch").value.trim()):""))')
+v=v.replace('["exWare","exCode"','["exWare","exNormativeSearch","exCode"')
+p.write_text(v,encoding="utf-8")
+print("607 normative source view: explicit latest100 + exact old operation search/current warehouse scope, no lifetime-101 dead end.")

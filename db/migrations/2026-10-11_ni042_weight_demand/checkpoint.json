@@ -1,0 +1,5 @@
+{
+  "migration_id": "2026-10-11-193-weight-deviation-demand",
+  "before_sha256": "b00886677996be70d98787e625f1ac28e75c6f7784e39794435dcea356ddef26",
+  "recovery": "Fresh original pure pool reader; additive pure waiver reader only; preserve immutable approvals; no stock/data rewrite/no DB copy"
+}

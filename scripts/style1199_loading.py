@@ -1,0 +1,22 @@
+from pathlib import Path
+import json
+f={}
+p=Path("wiki-raw/wms_admin_ui_reference/transport-loading-temperature.css")
+f[str(p)]=p.read_text(encoding="utf-8")+"""
+body{min-width:0}.workspace{min-width:0;padding:24px;background:#f5f8fc}
+.workspace .topbar{margin-bottom:20px}.workspace h1{font-size:26px;line-height:1.3}.workspace h2{font-size:19px;margin:0 0 16px}
+.workspace .panel{padding:22px;margin:0 0 20px;border:1px solid #dbe5f0;border-radius:14px;background:#fff;box-shadow:0 5px 18px #17345108}
+.workspace .panel>label{display:inline-flex;flex-direction:column;vertical-align:bottom;gap:7px;margin:8px 12px 12px 0;min-width:175px;max-width:100%;color:#405570;font-size:13px;font-weight:600}
+.workspace .panel input:not([type=checkbox]),.workspace .panel select{min-height:42px;max-width:100%;padding:9px 12px;border:1px solid #c9d6e6;border-radius:8px;background:#fff;color:#172b45;font:inherit}
+.workspace .panel button{min-height:40px;padding:10px 15px;margin:6px 6px 6px 0;border:1px solid #bdd1ed;border-radius:8px;background:#edf4ff;color:#24558f;font:inherit;font-weight:600;cursor:pointer}
+.workspace #loadConfirm,.workspace #tripDepart{background:#2367c9;color:white;border-color:#2367c9}
+.workspace .panel button:disabled{opacity:.5;cursor:default}.workspace .panel input:focus-visible,.workspace .panel select:focus-visible,.workspace .panel button:focus-visible{outline:3px solid #bed8ff}
+.workspace .panel p{line-height:1.65;color:#52647a}.workspace #tripSummary{padding:12px 16px;border-radius:9px;background:#edf4ff;color:#214f8d}
+.workspace .table-wrap{overflow-x:auto}.workspace table{width:100%;border-collapse:collapse;font-size:13px}.workspace th{padding:12px;text-align:left;background:#f3f7fc;color:#52647a;border-bottom:1px solid #dbe5f0}.workspace td{padding:14px 12px;border-bottom:1px solid #e5edf6;overflow-wrap:anywhere}
+.workspace .panel>fieldset{margin:16px 0;padding:16px;border:1px solid #dbe5f0;border-radius:12px}.workspace .panel>fieldset legend{padding:0 8px;color:#244c80;font-weight:600}
+@media(max-width:700px){.app{grid-template-columns:1fr}.sidebar{display:none}.workspace{padding:12px}.workspace .panel{padding:16px}.workspace .panel>label{display:flex;min-width:0;margin-right:0}.workspace .panel>button{max-width:100%}.workspace h1{font-size:22px}.workspace table{min-width:720px}}
+"""
+p=Path("wiki-raw/wms_admin_ui_reference/transport-loading.html");f[str(p)]=p.read_text(encoding="utf-8").replace("20261014-1196","20261014-1199")
+p=Path("scripts/screenshot1198_floor_loading.mjs");s=p.read_text(encoding="utf-8").replace("51-physical-top-tare-proof.png","53-physical-top-loading-workspace.png").replace("52-physical-top-departure-mobile.png","54-physical-top-loading-mobile.png")
+f["scripts/screenshot1199_loading_workspace.mjs"]=s
+print(json.dumps(f))

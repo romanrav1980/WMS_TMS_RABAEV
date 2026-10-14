@@ -99,21 +99,9 @@ class MesService:
         return completion_id
 
     def apply_wms(self, production_order_id: int, request: MesApplyWmsRequest, actor: str | None = None) -> dict | None:
-        from ..modules.inventory.infrastructure.mes_commands import apply_mes_movements
+        from ..modules.inventory.public import apply_existing_mes_movements as apply_mes_movements
         posted = apply_mes_movements(self.gateway, production_order_id, request, actor)
-        if posted is not None:
-            return posted
-        self.gateway.execute_plsql(
-            """
-            begin
-              RRL_MES_PRODUCTION_API.apply_mes_movements_to_wms(
-                p_production_order_id => :production_order_id,
-                p_applied_by => :applied_by
-              );
-            end;
-            """,
-            {"production_order_id": production_order_id, "applied_by": request.applied_by},
-        )
+        return posted
 
     def retry_movement(self, movement_id: int, request: MesRetryMovementRequest) -> None:
         self.gateway.execute_plsql(
@@ -240,108 +228,7 @@ class MesService:
     ) -> dict[str, Any]:
         from ..modules.inventory.public import calculate_existing_mes_supply
         posted = calculate_existing_mes_supply(self.gateway, production_order_id, request)
-        if posted is not None:
-            return posted
-        order = self.get_order(production_order_id)
-        if not order:
-            raise HTTPException(status_code=404, detail="MES production order not found.")
-        if order.get("status") in {"COMPLETED", "CANCELLED"}:
-            raise HTTPException(status_code=409, detail="Raw supply cannot be recalculated for completed/cancelled order.")
-
-        calculated_by = request.calculated_by or "API"
-        self._clear_raw_supply_calculation(production_order_id, calculated_by)
-
-        demand_count = 0
-        candidate_count = 0
-        shortage_count = 0
-        for line in self.list_order_lines(production_order_id):
-            raw_articul = str(line.get("component_articul") or "").upper()
-            if not raw_articul:
-                continue
-            required_qty = float(line.get("planned_qty") or 0)
-            issued_qty = self._issued_raw_qty(production_order_id, line)
-            open_qty = max(required_qty - issued_qty, 0)
-            if open_qty <= 0:
-                status = "COVERED"
-                soft_reservation_id = None
-            else:
-                status = "OPEN"
-                soft_reservation_id = self._create_soft_raw_reservation(
-                    production_order_id=production_order_id,
-                    line=line,
-                    raw_articul=raw_articul,
-                    qty=open_qty,
-                    unit_code=line.get("unit_code") or order.get("unit_code"),
-                    created_by=calculated_by,
-                )
-            demand_id = self._next_sequence_value("RRL_MES_RAW_DEMAND_SQ", "DEMAND_ID")
-            self.gateway.execute(
-                """
-                insert into RRL_MES_RAW_DEMAND (
-                  DEMAND_ID, PRODUCTION_ORDER_ID, ORDER_LINE_ID, BOM_ID, BOM_LINE_ID,
-                  RAW_ARTICUL, REQUIRED_QTY, ISSUED_QTY, OPEN_QTY, UNIT_CODE,
-                  SOFT_RESERVATION_ID, STATUS, CALCULATED_BY
-                ) values (
-                  :demand_id, :production_order_id, :order_line_id, :bom_id, :bom_line_id,
-                  :raw_articul, :required_qty, :issued_qty, :open_qty, :unit_code,
-                  :soft_reservation_id, :status, :calculated_by
-                )
-                """,
-                {
-                    "demand_id": demand_id,
-                    "production_order_id": production_order_id,
-                    "order_line_id": line.get("order_line_id"),
-                    "bom_id": line.get("bom_id"),
-                    "bom_line_id": line.get("bom_line_id"),
-                    "raw_articul": raw_articul,
-                    "required_qty": required_qty,
-                    "issued_qty": issued_qty,
-                    "open_qty": open_qty,
-                    "unit_code": line.get("unit_code") or order.get("unit_code"),
-                    "soft_reservation_id": soft_reservation_id,
-                    "status": status,
-                    "calculated_by": calculated_by,
-                },
-            )
-            demand_count += 1
-            if open_qty <= 0:
-                continue
-
-            remaining_to_suggest = open_qty
-            available_total = 0.0
-            sort_order = 0
-            for candidate in self._find_raw_candidates(raw_articul, limit=200):
-                available_qty = float(candidate.get("available_qty") or 0)
-                if available_qty <= 0:
-                    continue
-                sort_order += 1
-                suggested_qty = min(remaining_to_suggest, available_qty) if remaining_to_suggest > 0 else 0
-                available_total += available_qty
-                if suggested_qty > 0:
-                    remaining_to_suggest = max(remaining_to_suggest - suggested_qty, 0)
-                self._insert_raw_candidate(demand_id, production_order_id, raw_articul, candidate, suggested_qty, sort_order)
-                candidate_count += 1
-
-            if available_total < open_qty:
-                self._insert_raw_shortage(
-                    production_order_id=production_order_id,
-                    demand_id=demand_id,
-                    raw_articul=raw_articul,
-                    required_qty=required_qty,
-                    issued_qty=issued_qty,
-                    available_qty=available_total,
-                    shortage_qty=max(open_qty - available_total, 0),
-                    unit_code=line.get("unit_code") or order.get("unit_code"),
-                )
-                shortage_count += 1
-
-        return {
-            "status": "ok",
-            "production_order_id": production_order_id,
-            "demand_count": demand_count,
-            "candidate_count": candidate_count,
-            "shortage_count": shortage_count,
-        }
+        return posted
 
     def get_raw_supply(self, production_order_id: int) -> dict[str, Any]:
         order = self.get_order(production_order_id)
@@ -394,78 +281,9 @@ class MesService:
         production_order_id: int,
         request: MesReleaseToProductionRequest,
     ) -> dict[str, Any]:
-        from ..modules.inventory.infrastructure.mes_release_commands import release_supply
+        from ..modules.inventory.public import release_existing_mes_supply as release_supply
         posted = release_supply(self.gateway, production_order_id, request)
-        if posted is not None:
-            return posted
-        order = self.get_order(production_order_id)
-        if not order:
-            raise HTTPException(status_code=404, detail="MES production order not found.")
-        if order.get("status") in {"COMPLETED", "CANCELLED"}:
-            raise HTTPException(status_code=409, detail="Completed/cancelled production order cannot be released.")
-
-        operation_id = request.operation_id or "MES.RELEASE:" + __import__("uuid").uuid4().hex
-        task_count = self.gateway.call_number_plsql(
-            """
-            begin
-              :result := RRL_MES_RAW_SUPPLY_API.release_to_production(
-                p_production_order_id => :production_order_id,
-                p_to_ware_id => :to_ware_id,
-                p_to_cell => :to_cell,
-                p_allow_partial => :allow_partial,
-                p_created_by => :created_by,
-                p_operation_id => :operation_id
-              );
-            end;
-            """,
-            {
-                "production_order_id": production_order_id,
-                "to_ware_id": request.to_ware_id,
-                "to_cell": request.to_cell,
-                "allow_partial": int(request.allow_partial or 0),
-                "created_by": request.created_by or "API",
-                "operation_id": operation_id,
-            },
-        )
-        shortages = self.gateway.fetch_all(
-            """
-            select *
-              from RRL_MES_RAW_SHORTAGE
-             where PRODUCTION_ORDER_ID = :production_order_id
-               and STATUS = 'OPEN'
-               and SHORTAGE_QTY > 0
-            """,
-            {"production_order_id": production_order_id},
-        )
-        if shortages and int(request.allow_partial or 0) != 1:
-            raise HTTPException(
-                status_code=409,
-                detail={
-                    "message": "Raw material shortage. Use allow_partial=1 to create partial transfer tasks.",
-                    "shortages": shortages,
-                    "operation_id": operation_id,
-                    "outcome_confirmed": True,
-                },
-            )
-        tasks = self.gateway.fetch_all(
-            """
-            select TASK_ID
-              from RRL_MES_RAW_TRANSFER_TASK
-             where PRODUCTION_ORDER_ID = :production_order_id
-               and TASK_STATUS in ('PLANNED', 'IN_PROGRESS')
-             order by TASK_ID
-            """,
-            {"production_order_id": production_order_id},
-        )
-        task_ids = [int(row["task_id"]) for row in tasks]
-        self._create_raw_warehouse_tasks(production_order_id)
-        return {
-            "status": "ok",
-            "production_order_id": production_order_id,
-            "created_task_count": task_count,
-            "task_ids": task_ids,
-            "shortage_count": len(shortages),
-        }
+        return posted
 
     def list_raw_transfer_tasks(
         self,
@@ -557,54 +375,7 @@ class MesService:
         task = self.get_raw_transfer_task_or_404(task_id)
         from ..modules.inventory.public import post_existing_mes_task
         posted = post_existing_mes_task(self.gateway, "CONFIRM", task, request)
-        if posted is not None:
-            return int(posted["movement_id"])
-        if task.get("task_status") not in {"PLANNED", "IN_PROGRESS"}:
-            raise HTTPException(status_code=409, detail="Only planned/in-progress transfer task can be confirmed.")
-        fact_qty = request.fact_qty if request.fact_qty is not None else task.get("task_qty")
-        if fact_qty is None or Decimal(str(fact_qty)) <= 0:
-            raise HTTPException(status_code=400, detail="fact_qty must be positive.")
-        movement_id = self.issue_raw(
-            int(task["production_order_id"]),
-            MesRawIssueRequest(
-                uid_pallet=task.get("uid_pallet"),
-                raw_batch_id=task.get("raw_batch_id"),
-                raw_articul=task.get("raw_articul"),
-                quantity=Decimal(str(fact_qty)),
-                unit_code=task.get("unit_code") or "KG",
-                source_location=task.get("from_cell"),
-                production_location=task.get("to_cell"),
-                created_by=request.confirmed_by or "API",
-            ),
-        )
-        self.gateway.execute(
-            """
-            update RRL_MES_RAW_TRANSFER_TASK
-               set TASK_STATUS = 'DONE',
-                   FACT_QTY = :fact_qty,
-                   FINISHED_AT = systimestamp,
-                   LAST_ERROR = null
-             where TASK_ID = :task_id
-            """,
-            {"task_id": task_id, "fact_qty": fact_qty},
-        )
-        if task.get("reservation_id") is not None:
-            self.gateway.execute(
-                """
-                update RRL_STOCK_RESERVATION
-                   set STATUS = 'CONSUMED',
-                       CONSUMED_AT = systimestamp,
-                       CONSUMED_BY = :consumed_by
-                 where RESERVATION_ID = :reservation_id
-                """,
-                {
-                    "reservation_id": task.get("reservation_id"),
-                    "consumed_by": request.confirmed_by or "API",
-                },
-            )
-        if sync_warehouse_task:
-            self._sync_warehouse_task_from_raw_task(task_id, "DONE", request.confirmed_by or "API", fact_qty)
-        return movement_id
+        return int(posted["movement_id"])
 
     def cancel_raw_transfer_task(
         self,
@@ -613,39 +384,8 @@ class MesService:
     ) -> None:
         task = self.get_raw_transfer_task_or_404(task_id)
         from ..modules.inventory.public import post_existing_mes_task
-        if post_existing_mes_task(self.gateway, "CANCEL", task, request) is not None:
-            return
-        if task.get("task_status") == "DONE":
-            raise HTTPException(status_code=409, detail="Completed transfer task cannot be cancelled.")
-        cancelled_by = request.cancelled_by or "API"
-        self.gateway.execute(
-            """
-            update RRL_MES_RAW_TRANSFER_TASK
-               set TASK_STATUS = 'CANCELLED',
-                   CANCELLED_AT = systimestamp,
-                   CANCELLED_BY = :cancelled_by,
-                   LAST_ERROR = :reason
-             where TASK_ID = :task_id
-            """,
-            {"task_id": task_id, "cancelled_by": cancelled_by, "reason": request.reason},
-        )
-        if task.get("reservation_id") is not None:
-            self.gateway.execute(
-                """
-                update RRL_STOCK_RESERVATION
-                   set STATUS = 'CANCELLED',
-                       RELEASED_AT = systimestamp,
-                       RELEASED_BY = :released_by,
-                       RELEASE_REASON = :reason
-                 where RESERVATION_ID = :reservation_id
-                """,
-                {
-                    "reservation_id": task.get("reservation_id"),
-                    "released_by": cancelled_by,
-                    "reason": request.reason,
-                },
-            )
-        self._sync_warehouse_task_from_raw_task(task_id, "CANCELLED", cancelled_by, None, request.reason)
+        post_existing_mes_task(self.gateway, 'CANCEL', task, request)
+        return
 
     def _clear_raw_supply_calculation(self, production_order_id: int, updated_by: str) -> None:
         from ..modules.inventory.public import release_existing_document_reservations
@@ -697,9 +437,7 @@ class MesService:
         return float(rows[0]["issued_qty"] or 0) if rows else 0.0
 
     def _assert_legacy_reservation_builder(self) -> None:
-        rows = self.gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
-        if not rows or rows[0]["state"] != "PREPARED":
-            raise HTTPException(409, detail={"code": "MES_RESERVATION_POSTING_REQUIRED"})
+        raise HTTPException(409, detail={"code": "MES_RESERVATION_POSTING_REQUIRED"})
 
     def _create_soft_raw_reservation(
         self,

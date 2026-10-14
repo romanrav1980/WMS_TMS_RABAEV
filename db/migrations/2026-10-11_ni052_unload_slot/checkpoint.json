@@ -1,0 +1,20 @@
+{
+  "migration_id": "2026-10-11-215-unload-current-storage-slot",
+  "sha256": {
+    "db/migrations/2026-10-11_ni052_unload_slot/000_before_unload.sql": "5091eba33997b0fccf14e086addab72480ec6b64ce02566fdbcbcf8abac8e22e",
+    "db/migrations/2026-10-11_ni052_unload_slot/000_before_slot.sql": "5021f64bf1c59dba82b20f4cfa3575f4c17b34c23c9d839d68d7fce6f6fa669f",
+    "db/migrations/2026-10-11_ni052_unload_slot/000_before_placement.sql": "ab9104162f895153b48537ef73ac48c6bbfbf51d4266646bdde7f79762e0ca91",
+    "db/migrations/2026-10-11_ni052_unload_slot/000_trigger_inventory.json": "668b8fa32f4c05a1725301ba94ecfc72594d36e06787c478d73b58c725496316",
+    "db/migrations/2026-10-11_ni052_unload_slot/000_before_rrl_hu_claim_identity_guard.sql": "d2195aa2dc31112ca3a9ee1b51b3fe7c19d790298d68cf79545980da24245f84",
+    "db/migrations/2026-10-11_ni052_unload_slot/000_before_rrl_hu_claim_measure_guard.sql": "a49f6cf1dd9e1da5481091b8709b42d23c7e0ca1c737a3565a9b21d17c7cc83f",
+    "db/migrations/2026-10-11_ni052_unload_slot/000_before_rrl_hu_task_plan_guard.sql": "e614b490774f21c795b2086a5a3435cf9e7a3dc9449e63cdebaa717eef8e0510",
+    "db/migrations/2026-10-11_ni052_unload_slot/000_before_rrl_interware_task_id_guard.sql": "b7e627d4378fe44a4658d67a441aecabdab54df1ac06b3fd15d34fc26f430cda",
+    "db/migrations/2026-10-11_ni052_unload_slot/000_before_rrl_store_return_task_id_guard.sql": "46eb74ed3f7b34c5e4e5c3918513c882bdd4f0fc4f010d5f9f51e8b351a2ad35",
+    "db/migrations/2026-10-11_ni052_unload_slot/000_before_unloading_routes.py": "421d6c46d6f53d075ce034b64e38ae82024fb93a3caea10ed96aa3cdba35204a",
+    "db/migrations/2026-10-11_ni052_unload_slot/000_before_transport-unloading.js": "96e4b39676b384e881bd3593c7d8f254d96fccf3282ff8e4c7b6ae3831e75cf8",
+    "db/migrations/2026-10-11_ni052_unload_slot/000_before_transport-loading.html": "7d12dbeae151a40d53fd0198cb9621a7d2dda936583adf30f829161bed211b8d",
+    "db/migrations/2026-10-11_ni052_unload_slot/000_before_current_runtime_manifest.json": "c74fe4b45b8489735c8341b9cae586bb39e1df406158c1aae1b1c574f32c0e5c",
+    "db\\migrations\\2026-10-11_ni052_unload_slot\\000_before_loading.py": "7f128e26ce949f1112dac710298b513960c0aaeb3e3775cac3f0e598b7d977ba"
+  },
+  "recovery": "Exact owner/guards/API/UI checkpoint; reuse native target_json/record_place with CELL_X and SLOT locks; forward repair after actual placed unload history."
+}

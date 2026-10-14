@@ -1,0 +1,2 @@
+# Qwen:235 — прежнее размещение маркированного возврата
+Независимо проверить native current scope до cached plan/после wait, original task/transfer/unit owner. Собственный marked receipt: original PUTAWAY, native late rollback, concurrent same source and replay. P total conserved, H0, same original code/key; version increments at actual placement only. Blocked target remains ineligible for ALLOCATE. Проверить nonadmin qualified terminal assignment/session отдельно: автор957 завершён admin native, это не такая приёмка. Slow SQL/explicit decision. No SAP/Gov ACK.

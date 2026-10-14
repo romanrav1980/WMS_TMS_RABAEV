@@ -1,0 +1,15 @@
+{
+  "migration_id": "2026-10-11-204-final-scale-archive",
+  "sha256": {
+    "db/migrations/2026-10-11_ni042_final_scale/000_before_archive.sql": "f64de1ccd70bc3532331760dc8121292dc15662b707baaea290970e0bbada720",
+    "db/migrations/2026-10-11_ni042_final_scale/000_before_admission.sql": "61d673043f5ce99a2f8ee876dd3d0e1210c111bacca8df29d9dda1350122780e",
+    "db/migrations/2026-10-11_ni042_final_scale/000_before_qc.sql": "c3eb6770d39950a7a76499ca7575f2ef703a53809f0ea4f18c99c1750e81fcfd",
+    "db/migrations/2026-10-11_ni042_final_scale/000_before_rrl_wh_scale_capture.json": "7b6cdbe6576cf02e6f6124a64b30809f24f5cb0f1e394655be7b4ae18d4f4419",
+    "db/migrations/2026-10-11_ni042_final_scale/000_before_rrl_wh_scale_device.json": "b76af59d06753a29cf1c577d5b43e9423e359e57303baf0235cef6405e523ee8",
+    "db/migrations/2026-10-11_ni042_final_scale/000_before_contracts_warehouse_scale.py": "db7860c52730256776aed0d5a9a0b329a7f422bf4036a80be83bc6d39ff52c42",
+    "db/migrations/2026-10-11_ni042_final_scale/000_before_warehouse_scales.py": "85322f9ef5df65666f1c8a7f3523666ee1a3b41e884c7c9a853913588ac09de3",
+    "db/migrations/2026-10-11_ni042_final_scale/000_before_warehouse_scale_routes.py": "a94cdccaf7f6f4aa9149ebef3b1e290a39aaeb223d3f244d9ede1e811002fccb",
+    "db/migrations/2026-10-11_ni042_final_scale/000_before_current_runtime_manifest.json": "bc3b78b0be75e42ef11652b54ad1e9281a4255e583013736f2cbaada79b6ef1e"
+  },
+  "recovery": "Fresh addressed archive/admission/QC and schema captured; same existing archive/device/validator extended by explicit purpose; paired rollback only while no final captures, otherwise forward repair; no DB copy"
+}

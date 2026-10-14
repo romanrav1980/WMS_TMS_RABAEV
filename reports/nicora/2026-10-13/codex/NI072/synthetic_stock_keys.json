@@ -1,0 +1,391 @@
+{
+  "synthetic_read_only_cte": true,
+  "counts": {
+    "stock_quantity_invariants": 25,
+    "physical_unit_composition": 25
+  },
+  "documents": {
+    "stock_quantity_invariants": {
+      "available": true,
+      "document_kind": "STOCK_ROW",
+      "document_ids": [
+        "[\"1\",\"CELL:A\"]",
+        "[\"2\",\"CELL:A\"]",
+        "[\"3\",\"CELL:A\"]",
+        "[\"4\",\"CELL:A\"]",
+        "[\"5\",\"CELL:A\"]",
+        "[\"6\",\"CELL:A\"]",
+        "[\"7\",\"CELL:A\"]",
+        "[\"8\",\"CELL:A\"]",
+        "[\"9\",\"CELL:A\"]",
+        "[\"10\",\"CELL:A\"]",
+        "[\"11\",\"CELL:A\"]",
+        "[\"12\",\"CELL:A\"]",
+        "[\"13\",\"CELL:A\"]",
+        "[\"14\",\"CELL:A\"]",
+        "[\"15\",\"CELL:A\"]",
+        "[\"16\",\"CELL:A\"]",
+        "[\"17\",\"CELL:A\"]",
+        "[\"18\",\"CELL:A\"]",
+        "[\"19\",\"CELL:A\"]",
+        "[\"20\",\"CELL:A\"]"
+      ],
+      "stock_rows": [
+        {
+          "document_id": "[\"1\",\"CELL:A\"]",
+          "uid_pallet": "1",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"2\",\"CELL:A\"]",
+          "uid_pallet": "2",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"3\",\"CELL:A\"]",
+          "uid_pallet": "3",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"4\",\"CELL:A\"]",
+          "uid_pallet": "4",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"5\",\"CELL:A\"]",
+          "uid_pallet": "5",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"6\",\"CELL:A\"]",
+          "uid_pallet": "6",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"7\",\"CELL:A\"]",
+          "uid_pallet": "7",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"8\",\"CELL:A\"]",
+          "uid_pallet": "8",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"9\",\"CELL:A\"]",
+          "uid_pallet": "9",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"10\",\"CELL:A\"]",
+          "uid_pallet": "10",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"11\",\"CELL:A\"]",
+          "uid_pallet": "11",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"12\",\"CELL:A\"]",
+          "uid_pallet": "12",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"13\",\"CELL:A\"]",
+          "uid_pallet": "13",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"14\",\"CELL:A\"]",
+          "uid_pallet": "14",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"15\",\"CELL:A\"]",
+          "uid_pallet": "15",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"16\",\"CELL:A\"]",
+          "uid_pallet": "16",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"17\",\"CELL:A\"]",
+          "uid_pallet": "17",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"18\",\"CELL:A\"]",
+          "uid_pallet": "18",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"19\",\"CELL:A\"]",
+          "uid_pallet": "19",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"20\",\"CELL:A\"]",
+          "uid_pallet": "20",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        }
+      ],
+      "limit": 20,
+      "has_more": true,
+      "scope": "CURRENT_STOCK_SNAPSHOT"
+    },
+    "physical_unit_composition": {
+      "available": true,
+      "document_kind": "STOCK_ROW",
+      "document_ids": [
+        "[\"1\",\"CELL:A\"]",
+        "[\"2\",\"CELL:A\"]",
+        "[\"3\",\"CELL:A\"]",
+        "[\"4\",\"CELL:A\"]",
+        "[\"5\",\"CELL:A\"]",
+        "[\"6\",\"CELL:A\"]",
+        "[\"7\",\"CELL:A\"]",
+        "[\"8\",\"CELL:A\"]",
+        "[\"9\",\"CELL:A\"]",
+        "[\"10\",\"CELL:A\"]",
+        "[\"11\",\"CELL:A\"]",
+        "[\"12\",\"CELL:A\"]",
+        "[\"13\",\"CELL:A\"]",
+        "[\"14\",\"CELL:A\"]",
+        "[\"15\",\"CELL:A\"]",
+        "[\"16\",\"CELL:A\"]",
+        "[\"17\",\"CELL:A\"]",
+        "[\"18\",\"CELL:A\"]",
+        "[\"19\",\"CELL:A\"]",
+        "[\"20\",\"CELL:A\"]"
+      ],
+      "stock_rows": [
+        {
+          "document_id": "[\"1\",\"CELL:A\"]",
+          "uid_pallet": "1",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"2\",\"CELL:A\"]",
+          "uid_pallet": "2",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"3\",\"CELL:A\"]",
+          "uid_pallet": "3",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"4\",\"CELL:A\"]",
+          "uid_pallet": "4",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"5\",\"CELL:A\"]",
+          "uid_pallet": "5",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"6\",\"CELL:A\"]",
+          "uid_pallet": "6",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"7\",\"CELL:A\"]",
+          "uid_pallet": "7",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"8\",\"CELL:A\"]",
+          "uid_pallet": "8",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"9\",\"CELL:A\"]",
+          "uid_pallet": "9",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"10\",\"CELL:A\"]",
+          "uid_pallet": "10",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"11\",\"CELL:A\"]",
+          "uid_pallet": "11",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"12\",\"CELL:A\"]",
+          "uid_pallet": "12",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"13\",\"CELL:A\"]",
+          "uid_pallet": "13",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"14\",\"CELL:A\"]",
+          "uid_pallet": "14",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"15\",\"CELL:A\"]",
+          "uid_pallet": "15",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"16\",\"CELL:A\"]",
+          "uid_pallet": "16",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"17\",\"CELL:A\"]",
+          "uid_pallet": "17",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"18\",\"CELL:A\"]",
+          "uid_pallet": "18",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"19\",\"CELL:A\"]",
+          "uid_pallet": "19",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        },
+        {
+          "document_id": "[\"20\",\"CELL:A\"]",
+          "uid_pallet": "20",
+          "cell": "CELL:A",
+          "base_uom": "EA",
+          "physical_quantity": ".3",
+          "hard_quantity": ".4"
+        }
+      ],
+      "limit": 20,
+      "has_more": true,
+      "scope": "CURRENT_STOCK_SNAPSHOT"
+    }
+  }
+}

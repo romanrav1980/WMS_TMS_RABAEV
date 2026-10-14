@@ -1,0 +1,237 @@
+{
+  "native936": {
+    "own_reversed": {
+      "source": {
+        "order_id": "3aa116e51983443e8b20d055195a22b8",
+        "sender": "OWN.QA.SAP",
+        "order_number": "SAP908:427a7bbea0",
+        "naklad_id": 25238,
+        "revision": 1,
+        "payload_hash": "59ff084d82dd24887e3697cc2e409caf7ec31ae8ffd4533d32b55ae460a1cb9b",
+        "ware_id": 6524567,
+        "receive_cell": "QR67095b03c53f4",
+        "updated_at": "2026-10-13 07:48:17.374086",
+        "closed_at": null,
+        "reconciliation_json": null,
+        "gateway_contract_version": 2,
+        "incoming_condition": 3,
+        "receipt_allowed": false,
+        "receipt_state": "REVERSED",
+        "lines": [
+          {
+            "line_number": "1",
+            "row_id": 560493,
+            "articul": "QIW6696207F7B382",
+            "name": "Own669 SAP aggregation",
+            "planned_qty": "3",
+            "base_uom": "EA",
+            "norma_ukladki": "1",
+            "policy_version": 1,
+            "marking_required": 1,
+            "accepted_qty": "3",
+            "remaining_qty": "0",
+            "suggested_pallet_count": 0,
+            "suggested_pallet_quantity": "0",
+            "last_pallet_quantity": "0"
+          },
+          {
+            "line_number": "2",
+            "row_id": 560493,
+            "articul": "QIW6696207F7B382",
+            "name": "Own669 SAP aggregation",
+            "planned_qty": "3",
+            "base_uom": "EA",
+            "norma_ukladki": "1",
+            "policy_version": 1,
+            "marking_required": 1,
+            "accepted_qty": "0",
+            "remaining_qty": "3",
+            "suggested_pallet_count": 3,
+            "suggested_pallet_quantity": "1",
+            "last_pallet_quantity": "1"
+          }
+        ],
+        "consistent_snapshot": true
+      },
+      "receipts": [
+        {
+          "operation_id": "SAP908.BIRTH:427a7bbea0674bad95776f70dfbf98c5",
+          "line_number": "1",
+          "pallet_identifier": "LEGACY.SAP.908:427a7bbea0674bad95776f70dfbf98c5",
+          "accepted_quantity": "3",
+          "base_uom": "EA",
+          "supplier_batch": "PB908:427a7bbea0674bad95776f70dfbf98c5",
+          "received_at": "2026-10-13 07:48:18.720275",
+          "received_by": "admin",
+          "task_id": 1105,
+          "task_status": "CANCELLED",
+          "current_warehouse_quantity": "0",
+          "current_warehouse_hard": "0"
+        }
+      ],
+      "has_more": false,
+      "next_cursor": null,
+      "consistent_snapshot": true,
+      "warehouse_id": 6524567,
+      "quantity_semantics": "ORIGINAL_RECEIPT_AND_CURRENT_SOURCE_WAREHOUSE"
+    },
+    "after_original": [],
+    "foreign_cursor_refused": true,
+    "missing_viewer_refused": true,
+    "protected_source_read_only": {
+      "source": {
+        "order_id": "169c64651c824498ba60d06e15bcc255",
+        "sender": "OWN.QA.SAP",
+        "order_number": "SAP688:e0ef17c2c0",
+        "naklad_id": 25237,
+        "revision": 1,
+        "payload_hash": "171f560d8160ee29758733b5c8999d23a036566fec7434fd3768851cbb54c1e1",
+        "ware_id": 6524567,
+        "receive_cell": "QR67095b03c53f4",
+        "updated_at": "2026-10-12 11:01:13.901273",
+        "closed_at": null,
+        "reconciliation_json": null,
+        "gateway_contract_version": 1,
+        "incoming_condition": 2,
+        "receipt_allowed": false,
+        "receipt_state": "LEGACY_CLOSED",
+        "lines": [
+          {
+            "line_number": "1",
+            "row_id": 560492,
+            "articul": "QIW6696207F7B382",
+            "name": "Own669 SAP aggregation",
+            "planned_qty": "3",
+            "base_uom": "EA",
+            "norma_ukladki": "1",
+            "policy_version": 1,
+            "marking_required": 1,
+            "accepted_qty": "3",
+            "remaining_qty": "0",
+            "suggested_pallet_count": 0,
+            "suggested_pallet_quantity": "0",
+            "last_pallet_quantity": "0"
+          }
+        ],
+        "consistent_snapshot": true
+      },
+      "receipts": [
+        {
+          "operation_id": "SAP688.BIRTH:e0ef17c2c03b427b9c5fc58d852c71a3",
+          "line_number": "1",
+          "pallet_identifier": "LEGACY.SAP.688:e0ef17c2c03b427b9c5fc58d852c71a3",
+          "accepted_quantity": "3",
+          "base_uom": "EA",
+          "supplier_batch": "PB688:e0ef17c2c03b427b9c5fc58d852c71a3",
+          "received_at": "2026-10-12 11:01:14.547695",
+          "received_by": "admin",
+          "task_id": 1071,
+          "task_status": "DONE",
+          "current_warehouse_quantity": "3",
+          "current_warehouse_hard": "3"
+        }
+      ],
+      "has_more": false,
+      "next_cursor": null,
+      "consistent_snapshot": true,
+      "warehouse_id": 6524567,
+      "quantity_semantics": "ORIGINAL_RECEIPT_AND_CURRENT_SOURCE_WAREHOUSE"
+    }
+  },
+  "http_sql941": {
+    "http": {
+      "source": {
+        "order_id": "3aa116e51983443e8b20d055195a22b8",
+        "sender": "OWN.QA.SAP",
+        "order_number": "SAP908:427a7bbea0",
+        "naklad_id": 25238,
+        "revision": 1,
+        "payload_hash": "59ff084d82dd24887e3697cc2e409caf7ec31ae8ffd4533d32b55ae460a1cb9b",
+        "ware_id": 6524567,
+        "receive_cell": "QR67095b03c53f4",
+        "updated_at": "2026-10-13T07:48:17.374086",
+        "closed_at": null,
+        "reconciliation_json": null,
+        "gateway_contract_version": 2,
+        "incoming_condition": 3,
+        "receipt_allowed": false,
+        "receipt_state": "REVERSED",
+        "lines": [
+          {
+            "line_number": "1",
+            "row_id": 560493,
+            "articul": "QIW6696207F7B382",
+            "name": "Own669 SAP aggregation",
+            "planned_qty": "3",
+            "base_uom": "EA",
+            "norma_ukladki": "1",
+            "policy_version": 1,
+            "marking_required": 1,
+            "accepted_qty": "3",
+            "remaining_qty": "0",
+            "suggested_pallet_count": 0,
+            "suggested_pallet_quantity": "0",
+            "last_pallet_quantity": "0"
+          },
+          {
+            "line_number": "2",
+            "row_id": 560493,
+            "articul": "QIW6696207F7B382",
+            "name": "Own669 SAP aggregation",
+            "planned_qty": "3",
+            "base_uom": "EA",
+            "norma_ukladki": "1",
+            "policy_version": 1,
+            "marking_required": 1,
+            "accepted_qty": "0",
+            "remaining_qty": "3",
+            "suggested_pallet_count": 3,
+            "suggested_pallet_quantity": "1",
+            "last_pallet_quantity": "1"
+          }
+        ],
+        "consistent_snapshot": true
+      },
+      "receipts": [
+        {
+          "operation_id": "SAP908.BIRTH:427a7bbea0674bad95776f70dfbf98c5",
+          "line_number": "1",
+          "pallet_identifier": "LEGACY.SAP.908:427a7bbea0674bad95776f70dfbf98c5",
+          "accepted_quantity": "3",
+          "base_uom": "EA",
+          "supplier_batch": "PB908:427a7bbea0674bad95776f70dfbf98c5",
+          "received_at": "2026-10-13T07:48:18.720275",
+          "received_by": "admin",
+          "task_id": 1105,
+          "task_status": "CANCELLED",
+          "current_warehouse_quantity": "0",
+          "current_warehouse_hard": "0"
+        }
+      ],
+      "has_more": false,
+      "next_cursor": null,
+      "consistent_snapshot": true,
+      "warehouse_id": 6524567,
+      "quantity_semantics": "ORIGINAL_RECEIPT_AND_CURRENT_SOURCE_WAREHOUSE"
+    },
+    "limit101_rejected": true,
+    "foreign_cursor_rejected": true,
+    "queries": [
+      [
+        "d06zm1461c2pk",
+        3,
+        20.856,
+        145,
+        "select r.OPERATION_ID,r.LINE_NUMBER,r.UID_PALLET PALLET_IDENTIFIER,           to_char(r.POSTED_BASE_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''')ACCEPTED_QUANTITY,r.STOCK_BASE_UOM BAS"
+      ],
+      [
+        "d06zm1461c2pk",
+        1,
+        25.43,
+        36,
+        "select r.OPERATION_ID,r.LINE_NUMBER,r.UID_PALLET PALLET_IDENTIFIER,           to_char(r.POSTED_BASE_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''')ACCEPTED_QUANTITY,r.STOCK_BASE_UOM BAS"
+      ]
+    ],
+    "decision": "Retain order/line receipt index and bounded100 keyset; per-pallet stock read restricted to source warehouse, no global stock inference or new stock index."
+  }
+}

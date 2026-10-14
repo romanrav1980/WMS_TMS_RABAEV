@@ -1,0 +1,13 @@
+{
+  "synthetic_api": true,
+  "checks": [
+    "late GET ignored after task change",
+    "lost POST response retained exact ID; retry reconciled current GET",
+    "same task different actor has no draft",
+    "empty retry sends no request",
+    "wrong response ID keeps pending and blocks confirmed draft",
+    "late save after actor change ignored; old pending retained"
+  ],
+  "post_count": 5,
+  "errors": []
+}

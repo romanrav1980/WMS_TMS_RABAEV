@@ -15,7 +15,12 @@ create or replace package body RRL_STOCK_CASE_RETURN_CMD as
   RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_CASE_PICK_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(tid));
   RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_PICK_WAVE',RRL_STOCK_PLAN_HELPER.decimal_text(ct.PICK_WAVE_ID));
   RRL_STOCK_PLAN_HELPER.anchor(r,30,'HU','CASE:'||RRL_STOCK_PLAN_HELPER.decimal_text(tid));
-  if ct.LEGACY_SBORKA_PALLET_ID is not null then RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_SBORKA_PALLETS',RRL_STOCK_PLAN_HELPER.decimal_text(ct.LEGACY_SBORKA_PALLET_ID));end if;
+  if ct.LEGACY_SBORKA_PALLET_ID is not null then
+   RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_SBORKA_PALLETS',RRL_STOCK_PLAN_HELPER.decimal_text(ct.LEGACY_SBORKA_PALLET_ID));
+   for ff in(select FULFILLMENT_ID from RRL_CUSTOMER_ORDER_FULFILLMENT where LEGACY_SBORKA_PALLET_ID=ct.LEGACY_SBORKA_PALLET_ID order by FULFILLMENT_ID) loop
+    RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_CUSTOMER_ORDER_FULFILLMENT',RRL_STOCK_PLAN_HELPER.decimal_text(ff.FULFILLMENT_ID));
+   end loop;
+  end if;
   a:=json_array_t.parse(RRL_STOCK_CASE_PICK_CMD.carrier_rows(tid));
   if a.get_size=0 then raise_application_error(-20886,'CASE_RETURN_EMPTY_CARRIER');end if;
   if m.get_object('destinations').get_size!=a.get_size then raise_application_error(-20871,'CASE_RETURN_ALL_LOTS_REQUIRED');end if;
@@ -34,7 +39,7 @@ create or replace package body RRL_STOCK_CASE_RETURN_CMD as
     and STATUS in('ACTIVE','ALLOCATED','PICKING') and BASE_QTY>0 order by RESERVATION_ID) loop
     ids.append(h.RESERVATION_ID);RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_STOCK_RESERVATION',RRL_STOCK_PLAN_HELPER.decimal_text(h.RESERVATION_ID));
    end loop;
-   x.put('reservations',ids);a.put(i,x);
+   x.put('reservations',ids);a.put(i,x,true);
   end loop;
   for l in(select CASE_PICK_LINE_ID,PICK_TASK_ID,PICK_WAVE_TASK_ID from RRL_CASE_PICK_LINE where CASE_PICK_TASK_ID=tid order by CASE_PICK_LINE_ID) loop
    RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_CASE_PICK_LINE',RRL_STOCK_PLAN_HELPER.decimal_text(l.CASE_PICK_LINE_ID));
@@ -95,7 +100,7 @@ create or replace package body RRL_STOCK_CASE_RETURN_CMD as
    for z in 0..ids.get_size-1 loop
     sid:=ids.get_number(z);select * into sr from RRL_STOCK_RESERVATION where RESERVATION_ID=sid for update;
     if sr.SOURCE_DOC_TYPE!='PICK_WAVE' or sr.SOURCE_DOC_ID!=wave or sr.SOURCE_LINE_ID!=pt or sr.UID_PALLET!=uid or sr.CELL!=cell
-     or sr.STATUS not in('ACTIVE','ALLOCATED','PICKING') then raise_application_error(-20869,'CASE_RETURN_FOREIGN_RESERVE');end if;
+     or sr.STATUS not in('ACTIVE','ALLOCATED','PICKING') then raise_application_error(-20869,'CASE_RETURN_FOREIGN_RESERVE:'||sr.SOURCE_DOC_ID||'/'||wave||':'||sr.SOURCE_LINE_ID||'/'||pt||':'||sr.UID_PALLET||'/'||uid||':'||sr.CELL||'/'||cell||':'||sr.STATUS);end if;
     RRL_STOCK_UNIT_CORE.release_units(sid,sr.BASE_QTY,null,0);
     RRL_STOCK_RESERVE_CORE.release_hard(sid,sr.BASE_QTY,version,'PICK_WAVE',wave,p_actor);
    end loop;
@@ -122,6 +127,11 @@ create or replace package body RRL_STOCK_CASE_RETURN_CMD as
    update RRL_PICK_TASK set STATUS='CANCELLED',UPDATED_AT=sysdate,UPDATED_BY=p_actor where PICK_TASK_ID=l.PICK_TASK_ID;
    update RRL_PICK_WAVE_TASK set STATUS='CANCELLED',UPDATED_AT=sysdate,UPDATED_BY=p_actor where PICK_WAVE_TASK_ID=l.PICK_WAVE_TASK_ID;
   end loop;
+  if ct.LEGACY_SBORKA_PALLET_ID is not null then
+   update RRL_CUSTOMER_ORDER_FULFILLMENT set STATUS='PLANNED',FACT_QTY=0,FACT_UOM=null,FACT_COMPOSITION_JSON=null,
+    PICKED_CASE_TASK_ID=null,PICKED_CONTENT_VERSION=null,PICKED_AT=null,PICKED_BY=null,UPDATED_AT=sysdate,UPDATED_BY=p_actor
+    where LEGACY_SBORKA_PALLET_ID=ct.LEGACY_SBORKA_PALLET_ID and PICKED_CASE_TASK_ID=tid and STATUS='PICKED';
+  end if;
   update RRL_CASE_PICK_TASK set STATUS='CANCELLED',LEGACY_SBORKA_PALLET_ID=null,CURRENT_CELL=null,
    CONTENT_VERSION=CONTENT_VERSION+1,UPDATED_AT=systimestamp,UPDATED_BY=p_actor where CASE_PICK_TASK_ID=tid;
   v.put('operation_id',op);v.put('status','RETURNED');p_result:=v.to_clob;

@@ -1,0 +1,23 @@
+{
+  "migration_id": "2026-10-13-905-ni011-supply-line-v2",
+  "state": "APPLIED_DEV_VALID",
+  "target": "RABAEV/orcl",
+  "before_table_sha256": "9c196e093ebe98164e49a87870c8f08d8906e61924dd02b23645e82966ed6ff6",
+  "after_files_sha256": {
+    "api/wms_api_server/app/modules/integrations/domain/supply_order.py": "81d900776276575ff2e2ea3df4e666fdec823304cde3361e4becfb5ccec68ff7",
+    "api/wms_api_server/app/modules/integrations/infrastructure/supply_orders.py": "9e30b0ff63a49c28475a5ee6dd7bc378da911ec5073923481241e63fd29fb978",
+    "api/wms_api_server/app/modules/integrations/infrastructure/supply_line_writer.py": "44c66563b0749beefa8c750c29f5d8d82ca51e4c202b5f4d959ee8da41709586",
+    "api/wms_api_server/app/modules/integrations/infrastructure/supply_amendments.py": "67a182c62e8dcf5e92a3e430eca352865428b362579a4d0cf30311f7e2cef257",
+    "db/migrations/2026-10-13_ni011_supply_line_v2/000_before_table.sql": "9c196e093ebe98164e49a87870c8f08d8906e61924dd02b23645e82966ed6ff6",
+    "db/migrations/2026-10-13_ni011_supply_line_v2/001_lines.sql": "f9a5c53997fee965bf8386fa50df26206ecf429159357752767a2a65261386bc",
+    "db/migrations/2026-10-13_ni011_supply_line_v2/apply.sql": "c97653300a0c4fc56dabaa0f721de1a83baed14125922c13d800fb6f4ebde51d",
+    "db/migrations/2026-10-13_ni011_supply_line_v2/002_ledger.sql": "86bb145212db716f7cd7cd9e01f83aedad27a2c76e9e8f547ca24328e719c71e",
+    "db/migrations/2026-10-13_ni011_supply_line_v2/rollback.sql": "4faee48d58868ca384d6e8e5c40d9d04c9893ea024a35e79b5cd6896fa700242",
+    "db/migrations/2026-10-13_ni011_supply_line_v2/verify.sql": "566f14d27f54213f0f3770a8fc5b1fd4b45b8533bb916e06fa84123a2112abb5"
+  },
+  "evidence": "908/910/resume911;907 errors[]/invalid[]",
+  "current_control_sha256": {
+    "db/migrations/2026-10-13_ni011_supply_line_v2/apply.sql": "8c7c2a52c9aee9afe13d155094d87283a3af7b15f7b7f9d7fdd1af6bb3bf0359",
+    "db/migrations/2026-10-13_ni011_supply_line_v2/rollback.sql": "344ff07385562aa2f7f7b3dd0dbe2cc5a7ff7dbc4bcdf41c533fd999c40f3dd1"
+  }
+}

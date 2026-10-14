@@ -19,11 +19,23 @@ class ReceiptPlacement:
             raise ValueError('Insufficient remaining shelf life for warehouse SKU rule')
         cur.execute('select PLACEMENT_METRIC,COORDINATE_UNIT_M,REACHTRUCK_MPS,LIFT_MPS from RRL_RECEIPT_WARE_SETTINGS where WARE_ID=:w', {'w': warehouse})
         settings = cur.fetchone() or ('DISTANCE', 1, 1, .5)
-        cur.execute("""select c.CELL,s.CELL_SLOT_ID,
+        cur.execute("""with cell_pallets as (
+          select r.CELL,r.UID_POLETA UID_PALLET from RRL_REMAINS r
+            join RRL_CELLS rc on rc.CELL=r.CELL where rc.WARE_ID=:w and r.REMAIN>0
+          union
+          select wt.TO_CELL,wt.UID_PALLET from RRL_WAREHOUSE_TASK wt
+            join RRL_CELLS tc on tc.CELL=wt.TO_CELL where tc.WARE_ID=:w and wt.STATUS not in('DONE','CANCELLED')
+        ), cell_load as (
+          select cp.CELL,sum(p.WEIGHT_BRUTTO) WEIGHT_KG,
+            sum(case when p.WEIGHT_BRUTTO is null then 1 else 0 end) UNKNOWN_WEIGHTS
+          from cell_pallets cp join RRL_PALLETS p on p.UID_PALLET=cp.UID_PALLET group by cp.CELL
+        )
+        select c.CELL,s.CELL_SLOT_ID,
           case when :metric='TIME' then nvl(t.TRAVEL_SEC,((abs(c.X-:x)+abs(c.Y-:y))*:scale/:speed+abs(c.Z-:z)*:scale/:lift))
             else abs(c.X-:x)+abs(c.Y-:y)+abs(c.Z-:z) end SCORE,
           case when :metric='TIME' then nvl(t.BASIS,'NORMATIVE') else 'COORDINATE_DISTANCE' end BASIS
-          from RRL_CELLS c left join RRL_RECEIPT_CELL_RULE cr on cr.WARE_ID=c.WARE_ID and cr.CELL=c.CELL
+          from RRL_CELLS c left join cell_load cload on cload.CELL=c.CELL
+          left join RRL_RECEIPT_CELL_RULE cr on cr.WARE_ID=c.WARE_ID and cr.CELL=c.CELL
           left join RRL_RECEIPT_TRAVEL_TIME t on t.WARE_ID=c.WARE_ID and t.CELL=c.CELL and t.PICK_CELL=:pick
           left join RRL_TOPOLOGY_CELL tc on tc.LEGACY_CELL_CODE=c.CELL and tc.ACTIVE=1
             and tc.TOPOLOGY_ID=(select max(TOPOLOGY_ID) from RRL_WAREHOUSE_TOPOLOGY where WARE_ID=:w and STATUS='PUBLISHED')
@@ -32,10 +44,8 @@ class ReceiptPlacement:
             and nvl(c.BLOCKED_FOR_REMAINS,0)=0 and nvl(c.BLOCKED_FOR_POPOLNENIE,0)=0 and nvl(c.BLOCKED_FOR_ACCEPT,0)=0
             and c.X<>10000 and c.Y<>10000 and c.Z<>10000
             and (nvl(c.LIMIT_WEIGHT,0)=0 or (:weight is not null
-              and not exists(select 1 from RRL_REMAINS r join RRL_PALLETS p on p.UID_PALLET=r.UID_POLETA where r.CELL=c.CELL and r.REMAIN>0 and p.WEIGHT_BRUTTO is null)
-              and not exists(select 1 from RRL_WAREHOUSE_TASK wt join RRL_PALLETS p on p.UID_PALLET=wt.UID_PALLET where wt.TO_CELL=c.CELL and wt.STATUS not in('DONE','CANCELLED') and p.WEIGHT_BRUTTO is null)
-              and :weight+nvl((select sum(p.WEIGHT_BRUTTO) from RRL_PALLETS p where exists(select 1 from RRL_REMAINS r where r.UID_POLETA=p.UID_PALLET and r.CELL=c.CELL and r.REMAIN>0)
-                or exists(select 1 from RRL_WAREHOUSE_TASK wt where wt.UID_PALLET=p.UID_PALLET and wt.TO_CELL=c.CELL and wt.STATUS not in('DONE','CANCELLED'))),0)<=c.LIMIT_WEIGHT))
+              and nvl(cload.UNKNOWN_WEIGHTS,0)=0
+              and :weight+nvl(cload.WEIGHT_KG,0)<=c.LIMIT_WEIGHT))
             and (nvl(c.LIMIT_HEIGHT,0)=0 or :height<=c.LIMIT_HEIGHT)
             and (nvl(s.CAPACITY_WEIGHT_KG,0)=0 or :weight<=s.CAPACITY_WEIGHT_KG)
             and (nvl(s.HEIGHT_M,0)=0 or :height_m<=s.HEIGHT_M)
@@ -70,8 +80,12 @@ class ReceiptPlacement:
         self._limit(measures.get('gross_weight'), row[0], 'weight')
         if row[0]:
             cur.execute("""select nvl(sum(p.WEIGHT_BRUTTO),0),nvl(sum(case when p.WEIGHT_BRUTTO is null then 1 else 0 end),0)
-              from RRL_PALLETS p where p.UID_PALLET<>:p and (exists(select 1 from RRL_REMAINS r where r.UID_POLETA=p.UID_PALLET and r.CELL=:c and r.REMAIN>0)
-                or exists(select 1 from RRL_WAREHOUSE_TASK wt where wt.UID_PALLET=p.UID_PALLET and wt.TO_CELL=:c and wt.STATUS not in('DONE','CANCELLED')))""", {'p': receipt['pallet_identifier'], 'c': cell})
+              from (
+                select r.UID_POLETA UID_PALLET from RRL_REMAINS r where r.CELL=:c and r.REMAIN>0
+                union
+                select wt.UID_PALLET from RRL_WAREHOUSE_TASK wt where wt.TO_CELL=:c and wt.STATUS not in('DONE','CANCELLED')
+              ) current_pallets join RRL_PALLETS p on p.UID_PALLET=current_pallets.UID_PALLET
+              where p.UID_PALLET<>:p""", {'p': receipt['pallet_identifier'], 'c': cell})
             load, unknown = cur.fetchone()
             if unknown or Decimal(str(load))+Decimal(str(measures['gross_weight']))>Decimal(str(row[0])):
                 raise ValueError('Total cell weight including reserved pallets exceeds capacity; replan putaway')
@@ -89,6 +103,6 @@ class ReceiptPlacement:
                 self._limit(measures.get(field), limit, title)
 
     @staticmethod
-    def _limit(value, maximum, title: str) -> None:
+    def _limit(value: Decimal | str | float | int | None, maximum: Decimal | float | int | None, title: str) -> None:
         if maximum and (value is None or Decimal(str(value))>Decimal(str(maximum))):
             raise ValueError('Pallet no longer satisfies ' + title + '; replan putaway')

@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "real CASE1134 GET; explicit reload restoration preserves exact quantity and GS separator",
+    "changed snapshot blocks restoration",
+    "pending command blocks draft writes",
+    "successful old receipt cannot delete newer tab draft",
+    "damaged record visible and retained"
+  ],
+  "writes": [],
+  "errors": [],
+  "local_form_only": true
+}

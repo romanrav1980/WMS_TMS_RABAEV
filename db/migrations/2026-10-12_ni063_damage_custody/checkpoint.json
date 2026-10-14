@@ -1,0 +1,48 @@
+{
+  "migration_id": "2026-10-12-552-tare-damage-custody",
+  "target": [
+    "RABAEV",
+    "orcl"
+  ],
+  "source_sha256": {
+    "db/migrations/2026-10-12_ni063_damage_custody/000_before_tare.sql": "07d79792895d2bf9225ac69556fae35069b28afeab194049733b5d6dcc10bd79",
+    "db/migrations/2026-10-12_ni063_damage_custody/000_before_resolve.sql": "ffaeacae6b534b04549b8416f277a89e023ab42c436a7029baee47d6087cab92",
+    "db/migrations/2026-10-12_ni063_damage_custody/000_before_loss.sql": "f89f1056a8c4049b8f2453da4dd2cc03dbe13c6c59231bb24752b2fe75b9b7a5",
+    "db/migrations/2026-10-12_ni063_damage_custody/000_rrl_tare_assert_write.sql": "b87e2c75104dfcd7c1ad4c1a1a70799b314e140022944eb275550babc9e09361"
+  },
+  "recovery": "Additive provenance only for new DAMAGE; current native source saved. Rollback only before origin/move/writeoff facts; after use forward repair, do not delete stock history.",
+  "prepared_sha256": {
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\000_before_loss.sql": "f89f1056a8c4049b8f2453da4dd2cc03dbe13c6c59231bb24752b2fe75b9b7a5",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\000_before_resolve.sql": "ffaeacae6b534b04549b8416f277a89e023ab42c436a7029baee47d6087cab92",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\000_before_tare.sql": "07d79792895d2bf9225ac69556fae35069b28afeab194049733b5d6dcc10bd79",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\000_rrl_tare_assert_write.sql": "b87e2c75104dfcd7c1ad4c1a1a70799b314e140022944eb275550babc9e09361",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\001_schema.sql": "e30a41d01397a38cfe11e76c41bdb10be74682317107d90859a37dea3933997d",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\002_trace_api.sql": "62ba74fc406e1ce3ff41d69af1ab4e7e7f2e7a4ad5212f39d2c0d9c503b43448",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\003_tare_command.sql": "55ebda0e318d660b31414b44657db6e806989283116397da0d3b542004b6f52d",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\004_resolution_command.sql": "7fa019e2a609bd6495155af6e41abe8f9701298b9c642ab2de8c8ea39a8d0924",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\005_loss_command.sql": "8bc2f4a2bc131e467ea05ed0cac0d464f5346c0e622bdcfbeb8264118f026545",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\006_guards.sql": "b7f8475989488c3e460107a33343c549d3e3c9c93f515a3bc5af9da42a28eb08",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\007_ledger.sql": "bfcb526a0a078843fe897e3b2b5c388cc8b3810081fa4ae9b816c12126b53273",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\apply.sql": "2cc9aa19e92d278e6131efcfe5ace8e5644bee4967c74196b95bf5d20eb8df34",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\rollback.sql": "2fe1cf805ed0f7995194b2854a89fba8a81bd473b6395fa944eb87564b203564",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\verify.sql": "e398932825aae35ecaf7eddbb3924d7ef8cd4e0f764035de3a670597924f1765"
+  },
+  "install_order": "guards first, LOSS/TARE before RESOLVE creates first new origins; no reconstruction of existing balances",
+  "maintained_sha256": {
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\000_before_loss.sql": "f89f1056a8c4049b8f2453da4dd2cc03dbe13c6c59231bb24752b2fe75b9b7a5",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\000_before_resolve.sql": "ffaeacae6b534b04549b8416f277a89e023ab42c436a7029baee47d6087cab92",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\000_before_tare.sql": "07d79792895d2bf9225ac69556fae35069b28afeab194049733b5d6dcc10bd79",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\000_rrl_tare_assert_write.sql": "b87e2c75104dfcd7c1ad4c1a1a70799b314e140022944eb275550babc9e09361",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\001_schema.sql": "1bc49248fe01119f2536de91e04e2f945bdeff08341c22cf5484cf7e4b65ae19",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\002_trace_api.sql": "62ba74fc406e1ce3ff41d69af1ab4e7e7f2e7a4ad5212f39d2c0d9c503b43448",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\003_tare_command.sql": "55ebda0e318d660b31414b44657db6e806989283116397da0d3b542004b6f52d",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\004_resolution_command.sql": "7fa019e2a609bd6495155af6e41abe8f9701298b9c642ab2de8c8ea39a8d0924",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\005_loss_command.sql": "8bc2f4a2bc131e467ea05ed0cac0d464f5346c0e622bdcfbeb8264118f026545",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\006_guards.sql": "b7f8475989488c3e460107a33343c549d3e3c9c93f515a3bc5af9da42a28eb08",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\007_ledger.sql": "bfcb526a0a078843fe897e3b2b5c388cc8b3810081fa4ae9b816c12126b53273",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\apply.sql": "2cc9aa19e92d278e6131efcfe5ace8e5644bee4967c74196b95bf5d20eb8df34",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\rollback.sql": "2fe1cf805ed0f7995194b2854a89fba8a81bd473b6395fa944eb87564b203564",
+    "db\\migrations\\2026-10-12_ni063_damage_custody\\verify.sql": "e398932825aae35ecaf7eddbb3924d7ef8cd4e0f764035de3a670597924f1765"
+  },
+  "applied_author_evidence": "55219/0/VALID;553 real API concurrency+replay,554 native outer rollback; retained origins require forward repair"
+}

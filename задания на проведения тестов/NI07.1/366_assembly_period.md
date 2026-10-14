@@ -1,0 +1,2 @@
+# Qwen362–365
+Readonly actualclock/Oraclezone/legacyCASE1112INCOMPLETE. VersionedWAREfinancepolicy/headanchor/currentactor afterwait/sameop concurrent recheck. CASE mode missingtimestamp nocharge; differentdays reject; sourceBOXwithoutCASEreject. Actual oldCASE1105loadedUTCcost2.50 frozen v2; policyv3 concurrent one winner/one409; native date+1 trial refused/rollback. Cachedoldcost unchanged. Newly assembled CASE happy path and mixed-dayline extension are still pending, not passed. Contexts362/364/365; do not rerun initial fixtures.

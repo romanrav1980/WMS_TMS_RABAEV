@@ -1,0 +1,15 @@
+{
+  "target": "RABAEV@127.0.0.1:1521/orcl",
+  "migration": "2026-10-13-772-st-defer-wait-task",
+  "sha256": {
+    "db\\migrations\\2026-10-13_ni072_waiting_tasks\\000_before_rrl_stock_task_plan_package.sql": "42b41f1951b131bdf69d2bc60d3312926a8e82ce2edda86430deda7376a3f5ac",
+    "db\\migrations\\2026-10-13_ni072_waiting_tasks\\000_before_rrl_stock_task_plan_package_body.sql": "b736f5e7b58be90de6a834df90671a8f97be9067f62eec0dbd54e227aa06738b",
+    "db\\migrations\\2026-10-13_ni072_waiting_tasks\\000_before_rrl_stock_task_core_package.sql": "1f7d058145c8ff64a7d0a3ec70e8c8510d6cdbb19574d43e9f0bb5aa3a4880d1",
+    "db\\migrations\\2026-10-13_ni072_waiting_tasks\\000_before_rrl_stock_task_core_package_body.sql": "71a58c1e52c16f54c8ed8d4e161d8ecd6849030d6fb8028b560a118191f46876",
+    "db\\migrations\\2026-10-13_ni072_waiting_tasks\\000_before_rrl_stock_task_domain_package.sql": "384f5a8e416e766a2c67a79d9f621ed1c22b250109265c8113b447b25621e3f9",
+    "db\\migrations\\2026-10-13_ni072_waiting_tasks\\000_before_rrl_stock_task_domain_package_body.sql": "eb76cd3d86e54ccfff79a59e92c3c639e083ac6ddf6964c4f9d3a706b045a19b",
+    "db\\migrations\\2026-10-13_ni072_waiting_tasks\\000_before_rrl_st_defer_physical_package.sql": "aaa99cfe8954e01ac19b1bd5b5b844b613977377f798c6a24f458c0a9e37c82f",
+    "db\\migrations\\2026-10-13_ni072_waiting_tasks\\000_before_rrl_st_defer_physical_package_body.sql": "b02ace6d7906b563d13f5a49ae070c5159c1b1ff7b206bf30a5db42d056e67e9",
+    "db\\migrations\\2026-10-13_ni072_waiting_tasks\\000_before_cell_guard.sql": "f1f3941815738634147d606035d0642402d334aac1fbbce2fe5ea1434128c456"
+  }
+}

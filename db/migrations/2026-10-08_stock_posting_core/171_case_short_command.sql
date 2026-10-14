@@ -23,8 +23,14 @@ create or replace package body RRL_STOCK_CASE_SHORT_CMD as
  procedure compile_command(p_request clob,p_operation varchar2,p_policies out clob,p_resources out clob,p_domain out clob) is
   d json_object_t:=json_object_t.parse(p_request);v json_object_t:=json_object_t();x json_object_t;
   f json_array_t:=json_array_t();r json_array_t:=json_array_t();a json_array_t;carrier json_array_t;
-  sh RRL_CASE_PICK_SHORT%rowtype;l RRL_CASE_PICK_LINE%rowtype;ct RRL_CASE_PICK_TASK%rowtype;inventory_id number;
+  sh RRL_CASE_PICK_SHORT%rowtype;l RRL_CASE_PICK_LINE%rowtype;ct RRL_CASE_PICK_TASK%rowtype;inventory_id number;decision varchar2(20);
  begin
+  decision:=nvl(d.get_object('metadata').get_string('decision'),'ACCEPT_SHORT');
+  if decision='READY' then
+   RRL_STOCK_SHORT_RECOVERY.plan_ready(p_request,f,r,v);p_policies:=f.to_clob;p_resources:=r.to_clob;p_domain:=v.to_clob;return;
+  end if;
+  if decision not in('ACCEPT_SHORT','RESTORE') then raise_application_error(-20881,'SHORT_DECISION_INVALID');end if;
+  v.put('decision',decision);
   declare
  v_json_sql_1_1 number:=d.get_object('source').get_number('short_id');
 begin
@@ -67,9 +73,11 @@ end;
   a json_array_t;carrier json_array_t;sh RRL_CASE_PICK_SHORT%rowtype;l RRL_CASE_PICK_LINE%rowtype;ct RRL_CASE_PICK_TASK%rowtype;
   sr RRL_STOCK_RESERVATION%rowtype;plan clob;op varchar2(100);short_id number;line_id number;task_id number;wave_id number;
   inv_id number;pt_id number;wt_id number;ware number;ver number;sid number;auto_inv number:=1;resource_type varchar2(100):='INVENTORY';
-  wave_status varchar2(40);pt_status varchar2(40);wt_status varchar2(40);total number:=0;held number:=0;qty number;article varchar2(160);v_cell varchar2(60);reason varchar2(1000);
+  decision varchar2(20);confirm_mode varchar2(20):='AUDITOR';sla_seconds number:=300;assignee varchar2(100);wave_status varchar2(40);pt_status varchar2(40);wt_status varchar2(40);total number:=0;held number:=0;qty number;article varchar2(160);v_cell varchar2(60);reason varchar2(1000);
  begin
   if RRL_HAS_WRIGHT(p_actor,'case_pick_short_approve')!=1 then raise_application_error(-20882,'CASE_SHORT_APPROVE_FORBIDDEN');end if;
+  decision:=nvl(d.get_object('metadata').get_string('decision'),'ACCEPT_SHORT');
+  if decision='READY' then RRL_STOCK_SHORT_RECOVERY.execute_ready(p_request,p_actor,p_result);return;end if;
   op:=d.get_string('operation_id');select RESOLVED_PLAN_JSON into plan from RRL_STOCK_OPERATION where OPERATION_ID=op;v:=json_object_t.parse(plan).get_object('domain');
   short_id:=v.get_number('short_id');line_id:=v.get_number('line_id');task_id:=v.get_number('task_id');wave_id:=v.get_number('wave');
   pt_id:=v.get_number('pick_task');wt_id:=v.get_number('wave_task');ware:=v.get_number('warehouse');article:=v.get_string('article');v_cell:=v.get_string('cell');
@@ -113,25 +121,37 @@ end;
    RRL_STOCK_RESERVE_CORE.release_hard(sid,sr.BASE_QTY,ver,'PICK_WAVE',wave_id,p_actor);
   end loop;
   begin
-   select AUTO_INVENTORY_ON_SHORT,INVENTORY_RESOURCE_TYPE into auto_inv,resource_type from RRL_CASE_PICK_SETTING where WARE_ID=ware and ACTIVE=1;
+   select AUTO_INVENTORY_ON_SHORT,INVENTORY_RESOURCE_TYPE,SHORT_CONFIRM_MODE,SHORT_RECOVERY_SLA_SECONDS into auto_inv,resource_type,confirm_mode,sla_seconds from RRL_CASE_PICK_SETTING where WARE_ID=ware and ACTIVE=1;
   exception when no_data_found then null;end;
-  if nvl(auto_inv,1)!=0 then
+  if decision='RESTORE' and confirm_mode='SELF' and RRL_HAS_WRIGHT(sh.CREATED_BY,'stock_inventory_count')=1
+   and RRL_HAS_WRIGHT(sh.CREATED_BY,'inventory_task_execute')=1 then assignee:=sh.CREATED_BY;end if;
+  if decision='RESTORE' or nvl(auto_inv,1)!=0 then
    inv_id:=v.get_number('inventory_id');
-   insert into RRL_INVENTORY_TASK(INVENTORY_TASK_ID,TASK_TYPE,TASK_SOURCE,SOURCE_DOC_TYPE,SOURCE_DOC_ID,STATUS,WARE_ID,CELL_CODE,ARTICUL,PLANNED_QTY,ASSIGNED_RESOURCE_TYPE,CREATED_AT,CREATED_BY)
-    values(inv_id,'INVENTORY_CHECK','CASE_PICK_SHORT','CASE_PICK_SHORT',short_id,'NEW',ware,v_cell,article,l.PLANNED_QTY,nvl(resource_type,'INVENTORY'),systimestamp,p_actor);
+   insert into RRL_INVENTORY_TASK(INVENTORY_TASK_ID,TASK_TYPE,TASK_SOURCE,SOURCE_DOC_TYPE,SOURCE_DOC_ID,STATUS,WARE_ID,CELL_CODE,ARTICUL,PLANNED_QTY,ASSIGNED_RESOURCE_TYPE,CREATED_AT,CREATED_BY,ASSIGNED_TO,PRIORITY)
+    values(inv_id,'INVENTORY_CHECK','CASE_PICK_SHORT','CASE_PICK_SHORT',short_id,case when assignee is not null then 'ASSIGNED' else 'NEW' end,ware,v_cell,article,l.PLANNED_QTY,nvl(resource_type,'INVENTORY'),systimestamp,p_actor,assignee,case when decision='RESTORE' then 0 else 100 end);
   end if;
   reason:=d.get_object('metadata').get_string('reason');
   update RRL_CASE_PICK_SHORT set STATUS='ACCEPTED',INVENTORY_TASK_ID=inv_id,APPROVED_AT=systimestamp,APPROVED_BY=p_actor,
-   REASON_TEXT=substr(nvl(reason,REASON_TEXT),1,1000) where CASE_PICK_SHORT_ID=short_id;
+   REASON_TEXT=substr(nvl(reason,REASON_TEXT),1,1000),
+   RECOVERY_STATE=case when decision='RESTORE' then 'WAIT_INVENTORY' else null end,
+   RECOVERY_DEADLINE_AT=case when decision='RESTORE' then nvl(RECOVERY_DEADLINE_AT,CREATED_AT+numtodsinterval(sla_seconds,'SECOND')) else RECOVERY_DEADLINE_AT end
+   where CASE_PICK_SHORT_ID=short_id;
+  if decision='RESTORE' then
+   update RRL_CASE_PICK_LINE set STATUS='WAIT_REPLENISHMENT',UPDATED_AT=systimestamp,UPDATED_BY=p_actor where CASE_PICK_LINE_ID=line_id;
+   update RRL_PICK_TASK set STATUS='IN_PROGRESS',FACT_QTY=l.PICKED_QTY,UPDATED_AT=sysdate,UPDATED_BY=p_actor where PICK_TASK_ID=pt_id;
+   update RRL_PICK_WAVE_TASK set STATUS='IN_PROGRESS',FACT_QTY=l.PICKED_QTY,UPDATED_AT=sysdate,UPDATED_BY=p_actor where PICK_WAVE_TASK_ID=wt_id;
+   update RRL_CASE_PICK_TASK set STATUS='WAIT_REPLENISHMENT' where CASE_PICK_TASK_ID=task_id;
+  else
   update RRL_CASE_PICK_LINE set STATUS='SHORT_PICKED',DONE_AT=systimestamp,UPDATED_AT=systimestamp,UPDATED_BY=p_actor where CASE_PICK_LINE_ID=line_id;
   update RRL_PICK_TASK set FACT_QTY=l.PICKED_QTY,STATUS='DONE',DONE_AT=sysdate,DONE_BY=p_actor,UPDATED_AT=sysdate,UPDATED_BY=p_actor where PICK_TASK_ID=pt_id;
   update RRL_PICK_WAVE_TASK set FACT_QTY=l.PICKED_QTY,STATUS='DONE',DONE_AT=sysdate,DONE_BY=p_actor,UPDATED_AT=sysdate,UPDATED_BY=p_actor where PICK_WAVE_TASK_ID=wt_id;
+  end if;
   update RRL_CASE_PICK_TASK set CONTENT_VERSION=CONTENT_VERSION+1,
    PICKED_LINES=(select count(*) from RRL_CASE_PICK_LINE where CASE_PICK_TASK_ID=task_id and STATUS in('PICKED','SHORT_PICKED','CANCELLED')),
    UPDATED_AT=systimestamp,UPDATED_BY=p_actor where CASE_PICK_TASK_ID=task_id;
   insert into RRL_CASE_PICK_EVENT(CASE_PICK_EVENT_ID,CASE_PICK_TASK_ID,CASE_PICK_LINE_ID,EVENT_TYPE,PAYLOAD_JSON,CREATED_BY)
-   values(RRL_CASE_PICK_EVENT_SQ.nextval,task_id,line_id,'SHORT_ACCEPTED',p_request,p_actor);
-  j.put('status','ACCEPTED');j.put('inventory_task_id',inv_id);j.put('released_reservations',a.get_size);j.put('operation_id',op);p_result:=j.to_clob;
+   values(RRL_CASE_PICK_EVENT_SQ.nextval,task_id,line_id,case when decision='RESTORE' then 'RECOVERY_STARTED' else 'SHORT_ACCEPTED' end,p_request,p_actor);
+  j.put('recovery_state',case when decision='RESTORE' then 'WAIT_INVENTORY' else null end);j.put('status','ACCEPTED');j.put('inventory_task_id',inv_id);j.put('released_reservations',a.get_size);j.put('operation_id',op);p_result:=j.to_clob;
  end;
 end;
 /

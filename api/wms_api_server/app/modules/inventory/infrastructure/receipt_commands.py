@@ -1,28 +1,28 @@
 """Registered receipt adapter: pure planning, then metadata capture under the Oracle plan."""
 from datetime import date
+from typing import Any
+import oracledb
 from decimal import Decimal
 from hashlib import sha256
 import json
 from .placement import ReceiptPlacement
+from ...platform.public import read_oracle_json
 from .receiving_marks import ReceivingMarks
 from ..domain.mark_identity import canonical_mark
-from ..contracts_stock import StockCommand, StockPostingError
-from .stock_posting_uow import StockPosting
+from ..domain.pallet_identifiers import normalize_receipt_identifier
+from ..domain.regulatory_pallet import sscc_value
 
 
-def _text(value):
+def _text(value: Any) -> str:
     return value.read() if hasattr(value, "read") else value
 
 
-def plan_receipt(cursor, document: dict) -> tuple[dict, dict]:
+def plan_receipt(cursor: oracledb.Cursor, document: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
     source, payload = document["source"], document["metadata"]
     order_id = source["order_id"]
     sscc = payload["sscc"]
-    if not isinstance(sscc, str) or len(sscc) != 18 or not sscc.isascii() or not sscc.isdigit():
-        raise ValueError("Receipt SSCC must contain 18 digits")
-    digit = (10 - sum(int(n) * (3 if i % 2 == 0 else 1) for i, n in enumerate(reversed(sscc[:17]))) % 10) % 10
-    if digit != int(sscc[-1]):
-        raise ValueError("Invalid SSCC check digit")
+    if normalize_receipt_identifier(sscc)!=sscc:
+        raise ValueError("Use the canonical pallet identifier after scanner-prefix normalization")
     cursor.execute("select NAKLAD_ID,WARE_ID,RECEIVE_CELL,ORDER_NUMBER,SENDER,REVISION from RRL_SAP_SUPPLY_ORDER where ORDER_ID=:i", i=order_id)
     order = cursor.fetchone()
     if not order:
@@ -58,12 +58,13 @@ def plan_receipt(cursor, document: dict) -> tuple[dict, dict]:
                 raise ValueError("One unique code identifies multiple physical units")
             aliases[alias_key] = {"system": profile[0], "hash": digest, "unit_id": unit_id}
             identities.append(profile[0] + ":" + normalized["identity"])
-        unit_key = sha256(min(identities).encode()).hexdigest()
+        physical_identity = ("GS1_WEIGHT_BOX:" + unit_id) if marks.get("weighted_boxes") else min(identities)
+        unit_key = sha256(physical_identity.encode()).hexdigest()
         bindings.append({"unit_id": unit_id, "key": unit_key, "quantity": format(marks["unit_quantities"][unit_id], "f")})
     if len({b["key"] for b in bindings}) != len(bindings):
         raise ValueError("Duplicate physical unit")
     result = {"status": "RECEIVED", "operation_id": document["operation_id"],
-              "pallet_identifier": payload["sscc"], "sscc": payload["sscc"], "quantity": payload["quantity"],
+              "pallet_identifier": payload["sscc"], "sscc": sscc_value(payload["sscc"]), "quantity": payload["quantity"],
               "base_quantity": format(qbase, "f"), "base_uom": base,
               "sap_order_number": order[3], "sap_sender": order[4], "order_revision": order[5],
               "line_number": payload["line_number"], "material": article, "unit": input_uom,
@@ -73,6 +74,10 @@ def plan_receipt(cursor, document: dict) -> tuple[dict, dict]:
               "receive_cell": order[2], "putaway_cell": placement["cell"], "placement": placement,
               "marking_units": len(bindings), "marking_policy_version": marks["policy_version"],
               "regulatory_validation": "NOT_PERFORMED" if bindings else "NOT_APPLICABLE", "idempotent": False}
+    if marks.get("weighted_boxes"):
+        result.update(physical_boxes=len(bindings), weight_source="GS1_LABEL_NET_KG",
+                      marking_units=len(bindings) if marks["marking_required"] else 0,
+                      regulatory_validation="NOT_PERFORMED" if marks["marking_required"] else "NOT_APPLICABLE")
     hints = {"article": article, "input_uom": input_uom, "base_uom": base, "base_quantity": format(qbase, "f"),
              "uom_version": int(version), "order_revision": order[5], "naklad_id": order[0],
              "marking_policy_version": marks["policy_version"], "placement": placement,
@@ -81,10 +86,10 @@ def plan_receipt(cursor, document: dict) -> tuple[dict, dict]:
     return hints, marks
 
 
-def stage_receipt(cursor, document: dict, marks: dict) -> None:
-    from .receiving import Receiving
+def stage_receipt(cursor: oracledb.Cursor, document: dict[str, Any], marks: dict[str, Any]) -> None:
+    from .receipt_booking import ReceiptBooking
     cursor.execute("select RESOLVED_PLAN_JSON from RRL_STOCK_OPERATION where OPERATION_ID=:i", i=document["operation_id"])
-    domain = json.loads(_text(cursor.fetchone()[0]))["domain"]
+    domain = read_oracle_json(cursor.fetchone()[0])["domain"]
     result = domain["result"]
     payload = document["metadata"]
     expiry = date.fromisoformat(payload["expiry_date"])
@@ -107,21 +112,9 @@ def stage_receipt(cursor, document: dict, marks: dict) -> None:
     order = (domain["naklad_id"], domain["warehouse_id"], domain["receive_cell"],
              result["sap_order_number"], result["sap_sender"], domain["order_revision"])
     line = (domain["article"], None, domain["input_uom"])
-    Receiving(None)._book_pallet(cursor, order, line, payload, marks, domain["placement"], document["actor"],
+    ReceiptBooking()._book_pallet(cursor, order, line, payload, marks, domain["placement"], document["actor"],
                                  task_id=domain["task_id"], stock_quantity=Decimal(domain["base_quantity"]),
-                                 emit_event=False, bindings=domain["unit_bindings"], stock_base=domain["base_uom"],
+                                 bindings=domain["unit_bindings"], stock_base=domain["base_uom"],
                                  receive_cell=domain["receive_cell"])
 
 
-def receive_command(gateway, order_id: str, payload: dict, actor: str):
-    rows = gateway.fetch_all("select STATE from RRL_STOCK_RELEASE where RELEASE_ID=1")
-    if rows and rows[0]["state"] == "PREPARED":
-        return None
-    metadata = {k: v for k, v in payload.items() if k != "operation_id"}
-    metadata["quantity"] = format(Decimal(str(payload["quantity"])), "f")
-    # Decimal fields must reach JSON as exact strings.
-    for name in ("gross_weight", "pallet_height", "pallet_height_m", "volume_m3"):
-        if isinstance(metadata.get(name), Decimal):
-            metadata[name] = format(metadata[name], "f")
-    return StockPosting().post(StockCommand(operation_id=payload["operation_id"], command_type="SAP_RECEIPT",
-        actor=actor, lines=(), source={"type": "SAP_SUPPLY_ORDER", "order_id": order_id}, metadata=metadata))

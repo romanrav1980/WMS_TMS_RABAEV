@@ -69,25 +69,45 @@ function applyPermissions() {
 async function verifyStoredSession() {
   const raw = sessionStorage.getItem(ADMIN_SESSION_KEY);
   if (!raw) return false;
+  let saved;
+  try { saved = JSON.parse(raw); }
+  catch { sessionStorage.removeItem(ADMIN_SESSION_KEY); return false; }
+  if (!saved || typeof saved.basic !== "string" || !saved.basic) {
+    sessionStorage.removeItem(ADMIN_SESSION_KEY); return false;
+  }
+  authState.apiBase = saved.apiBase || DEFAULT_API_BASE;
+  authState.basic = saved.basic;
   try {
-    const saved = JSON.parse(raw);
-    authState.apiBase = saved.apiBase || DEFAULT_API_BASE;
-    authState.basic = saved.basic || null;
-    if (!authState.basic) return false;
     const user = await fetchCurrentUser();
     completeLogin(user);
     return true;
-  } catch {
-    sessionStorage.removeItem(ADMIN_SESSION_KEY);
+  } catch (error) {
+    authState.user = null;
+    if (error.status === 401 || error.status === 403) {
+      sessionStorage.removeItem(ADMIN_SESSION_KEY); authState.basic = null;
+      const retry=authEl("adminRetrySession"); if(retry)retry.hidden=true;
+    } else {
+      const message=authEl("loginError");
+      if(message){
+        message.textContent="Сервер не подтвердил вход. Сохранённая сессия не удалена; повторите проверку соединения.";
+        let retry=authEl("adminRetrySession");
+        if(!retry){
+          retry=document.createElement("button");retry.id="adminRetrySession";retry.type="button";
+          retry.textContent="Повторить проверку входа";retry.title="Проверить сохранённую сессию на сервере; доступ откроется только после подтверждения";
+          retry.onclick=async()=>{retry.disabled=true;try{await verifyStoredSession();}finally{retry.disabled=false;}};
+          message.after(retry);
+        }
+        retry.hidden=false;
+      }
+    }
     return false;
   }
 }
-
 async function fetchCurrentUser() {
   const response = await fetch(`${authState.apiBase}/api/admin/auth/me`, {
     headers: authHeaders(),
   });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  if (!response.ok) throw Object.assign(new Error(`HTTP ${response.status}`), {status: response.status});
   return response.json();
 }
 

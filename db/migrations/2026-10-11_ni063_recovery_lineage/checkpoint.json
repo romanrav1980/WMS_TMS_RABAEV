@@ -1,0 +1,9 @@
+{
+  "migration_id": "2026-10-11-221-bounded-tare-recovery-lineage",
+  "sha256": {
+    "db/migrations/2026-10-11_ni063_recovery_lineage/000_before_rrl_stock_unload_cmd.sql": "2cbe34ef5e36932e933a2aa00d7a6a4070c87bb7bb89b03a6e464cc3c874ce90",
+    "db/migrations/2026-10-11_ni063_recovery_lineage/000_before_rrl_tare_load_recovery_api.sql": "b6102757830f955cf8ad6a1ceff054399c152079568a78a5beba9e647da05b8c",
+    "db/migrations/2026-10-11_ni063_recovery_lineage/000_before_manifest.json": "ce6833eea9a8733bc16a03817957184d42ba03e5fdcd18ce0be85778a9219c2d"
+  },
+  "recovery": "Fresh unload and recovery owners. No schema or quantity migration. Restore old strict direct-child rule only if no newly supported applied unload history, otherwise forward repair."
+}

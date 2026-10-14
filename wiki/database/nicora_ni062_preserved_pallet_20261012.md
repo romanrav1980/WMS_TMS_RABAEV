@@ -1,0 +1,16 @@
+# NI06.2: неизменённая исходная паллета возврата
+
+Prepared639/640. Migration2026-10-12-639-preserved-return-pallet. Existing receipt requires fresh UID; safe PALLET-only branch instead preserves the original whole physical pallet. It never treats an old pallet code as a new return pallet.
+
+Authoritative read-only RRL_RETURN_PALLET_IDENTITY is called by existing custody proof and receipt description. Identifier must equal original approval LOT_UID; article and original UNIT_COUNT equal full approved quantity. All original birth units must be included and remain ISSUED/current UID=original/no HARD; no physical warehouse stock/reserve, active HU link, CASE repacking history or open physical task is allowed. Original registered aggregation resolver still validates actual code, lifecycle, current profile/version and exact full unit matrix. Restricted direct unchanged-pallet scenario; no nested unpack, split, reaggregation or legal ACK invented.
+
+Existing native compile/execute repeats the description under the same ordered UID/stock/unit closure. Existing balance.apply_delta, unit.receive_return, journal and mandatory outbox remain the only transactional writer. Original pallet/birth document/expiry/price are preserved; new return receipt links its original UID to the separate return document. Old fresh-UID path remains unchanged. 640 live receive_return supports same old/new UID, exact IN_FLIGHT plan and versioned units; both source/target composition are checked after move.
+
+Before bodies captured in000 files, rollback restores receipt/unit bodies and drops helper. No DB copy. Apply/verify versioned; native application/positive full PALLET case pending. No full sprint completion or real external certification claimed.
+
+## Actual639–648
+Native639 applied5statements/0errors; all current objects VALID. Fresh own641 SAP3/sixcodes/originalST/load/depart,642 customeraccepted3.643 full registered CRPT PALLET + EGAIS BOX-only return preserves exact original UID: approval/SAP/plan/handover/independent driver pickup/warehouse fullBOX3/PUT to pickface/P3H0. Different pallet identifier and direct UNIT fallback refused; full-box quantity conflict refused; receive/PUT exact replays returned saved results.646 read-only retains one handover,3original units/6codes, retired driver actor and no rebirth. Do not recreate641/642/643 factories; context643 retained original available pallet, binding restored.
+
+645 existing React/raw return UI accepts actual configured PALLET/BOX level; original identifier/full-composition instruction and durable scoped drafts retained. Native original identity helper is authoritative, not UI counts. TypeScript/JS/architecture PASS. Previous blanket PALLET block629 is superseded only for this explicit full unchanged original-pallet scenario.
+
+647 verifies original receipt UNIT UID PK, CASE LOT_UID PK and HU parent/active index. CASE exclusion0.077ms/1buffer, active-HU check0.651ms/4.4buffers; aggregate646 lookup0.261ms/3.71buffers/count0.616ms/6.57. Decision: retain exact UID lookups/registered composition bounds; no speculative additional index. Not throughput certification. New gov aggregation/repacking/physical hardware/external ACK/full acceptance remain unclaimed.

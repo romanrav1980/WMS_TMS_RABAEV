@@ -1,0 +1,11 @@
+{
+    "recovery":  "saved live pool source+paired rollback; readonly refactor/no copy",
+    "migration_id":  "2026-10-11-171-existing-line-demand",
+    "sha256":  {
+                   "rollback.sql":  "7C52337A4691E296970E08694F1A877BBE05CAE5B1A2CD7A44047F110880DAE0",
+                   "001_pool.sql":  "B00886677996BE70D98787E625F1AC28E75C6F7784E39794435DCEA356DDEF26",
+                   "000_before_pool.sql":  "603339403F601CC0B8D24DEAE09578621870403460DF23438D61350F6213EE5B",
+                   "verify.sql":  "D0354BB236DE26FD2ED2319CA28162A9B09E0E7705F082802AD793053D4DE502",
+                   "apply.sql":  "0B42CCC391F54802F5A2981AA54B6BCE1BBE5154A2AAFE76819C0CF82F2ABF9A"
+               }
+}

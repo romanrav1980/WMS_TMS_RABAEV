@@ -1,0 +1,36 @@
+{
+  "migration_id": "2026-10-13-013-ni072-shared-wait-target",
+  "state": "APPLIED_DEV_VALID",
+  "retained_tasks": [
+    1154,
+    1155
+  ],
+  "rollback": "Paired source restoration only, untested; no stock/history deletion.",
+  "files": {
+    "db/migrations/2026-10-13_ni072_shared_wait_target/000_before_rrl_stock_hu_cmd_package.sql": "e109edc4c32b3c96f3f3c7a157c641adac4a495c3bbfea18460f3fd610b2898e",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/000_before_rrl_stock_hu_cmd_package_body.sql": "e865b8c0c33cd110de8a82407ec2d9d126dc5c4ad2bd1dc19e2bc903c761774b",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/000_before_rrl_stock_hu_task_package_body.sql": "82ca71fdb8d38a2cd669a09092183821f3680e8c3c0b34ce78566460be424c77",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/000_before_rrl_st_defer_hu_wait_package.sql": "01b75b029123d1f165c34d10e1994f522fbd5ad46dbd641f58b0d730cdb0ab96",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/000_before_rrl_st_defer_hu_wait_package_body.sql": "1efe605757f2a689c256d45e83f47a1d3a8a6055853da362c62343594a5bf369",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/000_before_rrl_st_defer_place_read_package_body.sql": "8cc47aa4259f877915a58872cb0396c7c6da9069db73e8a82061ff2733e431dd",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/001_wait_spec.sql": "1dc6942ed801c72a66eb30e868d37a78b769f26bd10d9d652b0342da57c54123",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/002_wait_body.sql": "9ac0ea4a311b96f893545c7c58c51a50ea86ac8d66c597305829df9d3cc9ccb5",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/003_hu_command.sql": "fef8973734d0bd85f66673ede210666b7e7f384c92d23f03cf714667e0495ab1",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/004_place_display.sql": "badce6ec5aff579588e3c2b92c573af9c26e7408d02c3bf3346119a96ab4757a",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/005_compile.sql": "304fd0ee634f6306c553cc564c5afa78f3cd37b70959c46f9b623a5ee6860062",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/006_hu_spec.sql": "ccd2a749d6dfd0551c1150036c6d611c3681eb14027d92fdb89721f8b7626425",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/007_hu_boundary.sql": "1ce9fdd33deeb1e9e30f346cf9cf10138e63ae3d49809d7f9f14827d66ab2eef",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/008_hu_task.sql": "3e550cef49ae501f8f3b29e762113f359f7110488dfb934b60d5a65e578a94d7",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/009_hu_execution.sql": "03ec02528cfcd2e127e356f7e8de155dee29983cfcf3a0579937168ade7de624",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/010_ledger.sql": "b4cd595b8b76df09cbbf98b564c636eea213cf30ee09c1196c4f4b8dc27a6ecb",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/apply.sql": "b53e7a489eea71748cf16e86c75e58bde5b5b7e352604ef2f6ab84664f4afa1f",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/fix1085.sql": "c3baaad62f42af7c3e79b0cb9d4e6728b6ee9fa95d44bf203a05b0600fbec5fd",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/fix1087.sql": "fd2e8dc4d7486ccfadb3fd3d49a2501e539628d2b26a53b222bf1e7b9ed230dc",
+    "db/migrations/2026-10-13_ni072_shared_wait_target/rollback.sql": "54aebd8ccf46e64efd930d956644cb51b92da951bbd2078f0c831116e77c36c3"
+  },
+  "evidence": "reports/nicora/2026-10-13/27-mixed-place-wait-evidence.json",
+  "native_errors": [],
+  "native_invalid": [],
+  "independent_acceptance": "not_performed",
+  "ledger_applied": true
+}

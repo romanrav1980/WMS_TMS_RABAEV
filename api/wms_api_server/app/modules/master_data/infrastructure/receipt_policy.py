@@ -1,5 +1,6 @@
-from ...inventory.infrastructure.configuration_uow import configuration_transaction
+from ...platform.public import stock_configuration_transaction as configuration_transaction
 import json
+from decimal import Decimal
 import oracledb
 
 from ....oracle_gateway import OracleGateway
@@ -13,7 +14,7 @@ class ReceiptPolicyRepository:
 
     def get(self, articul: str) -> dict:
         rows = self.gateway.fetch_all(
-            """select a.ROWID LEGACY_ROW_ID, a.ACTICUL, p.POLICY_VERSION, p.MARKING_REQUIRED,
+            """select a.ROWID LEGACY_ROW_ID, a.ACTICUL, p.POLICY_VERSION, p.MARKING_REQUIRED, p.SERIALIZED_WEIGHT_BOXES,p.ORDER_WEIGHT_TOLERANCE_PCT,p.STACK_STAGE,
                       nvl(s.CRPT_REQUIRED,0) LEGACY_CRPT_REQUIRED,
                       r.SYSTEM_CODE,r.PROFILE_CODE,r.PROFILE_VERSION,r.SCAN_MODE
                  from RRL_ARTICULS a
@@ -31,8 +32,11 @@ class ReceiptPolicyRepository:
         expected_crpt = int(any(p["system_code"] == "CRPT" for p in profiles))
         return {"articul": articul, "version": int(row["policy_version"] or 0),
                 "configured": configured,
+                "stack_stage": row["stack_stage"] if configured else "MAIN",
                 "marking_required": bool(row["marking_required"] if configured else row["legacy_crpt_required"]),
                 "profiles": profiles,
+                "order_weight_tolerance_pct": format(Decimal(str(row["order_weight_tolerance_pct"] if configured else 15)), "f"),
+                "serialized_weight_boxes": bool(row["serialized_weight_boxes"] or 0),
                 "legacy_mismatch": configured and expected_crpt != int(row["legacy_crpt_required"]),
                 "unmarked_scan_modes": ["ITEM_BARCODE", "BOX_BARCODE"]}
 
@@ -41,19 +45,24 @@ class ReceiptPolicyRepository:
             cursor.execute("select ACTICUL from RRL_ARTICULS where ACTICUL=:a for update", {"a": articul})
             if len(cursor.fetchall()) != 1:
                 raise LookupError("SKU not found or legacy key is ambiguous.")
-            cursor.execute("select POLICY_VERSION from RRL_SKU_RECEIPT_POLICY where ARTICUL=:a", {"a": articul})
+            cursor.execute("select POLICY_VERSION,SERIALIZED_WEIGHT_BOXES,ORDER_WEIGHT_TOLERANCE_PCT,STACK_STAGE from RRL_SKU_RECEIPT_POLICY where ARTICUL=:a", {"a": articul})
             old = cursor.fetchone()
             version = int(old[0]) if old else 0
             if version != request.expected_version:
                 raise PolicyConflict("SKU policy changed. Reload before saving.")
-            params = {"a": articul, "v": version + 1, "m": int(request.marking_required), "actor": actor}
+            weighted = bool(old[1]) if request.serialized_weight_boxes is None and old else bool(request.serialized_weight_boxes)
+            tolerance = Decimal(str(old[2] if old else 15)) if request.order_weight_tolerance_pct is None else request.order_weight_tolerance_pct
+            stage = request.stack_stage or (old[3] if old else "MAIN")
+            if weighted:
+                assert_weighted_sku(cursor, articul)
+            params = {"stage": stage, "pct": tolerance, "w": int(weighted), "a": articul, "v": version + 1, "m": int(request.marking_required), "actor": actor}
             cursor.execute(
                 """merge into RRL_SKU_RECEIPT_POLICY d using (select :a ARTICUL from dual) s
                     on (d.ARTICUL=s.ARTICUL)
-                    when matched then update set POLICY_VERSION=:v, MARKING_REQUIRED=:m,
+                    when matched then update set POLICY_VERSION=:v, MARKING_REQUIRED=:m,SERIALIZED_WEIGHT_BOXES=:w,ORDER_WEIGHT_TOLERANCE_PCT=:pct,STACK_STAGE=:stage,
                          UPDATED_AT=systimestamp, UPDATED_BY=:actor
-                    when not matched then insert (ARTICUL,POLICY_VERSION,MARKING_REQUIRED,UPDATED_AT,UPDATED_BY)
-                         values (:a,:v,:m,systimestamp,:actor)""", params)
+                    when not matched then insert (ARTICUL,POLICY_VERSION,MARKING_REQUIRED,SERIALIZED_WEIGHT_BOXES,ORDER_WEIGHT_TOLERANCE_PCT,STACK_STAGE,UPDATED_AT,UPDATED_BY)
+                         values (:a,:v,:m,:w,:pct,:stage,systimestamp,:actor)""", params)
             cursor.execute("delete from RRL_SKU_RECEIPT_PROFILE where ARTICUL=:a", {"a": articul})
             for profile in request.profiles:
                 cursor.execute(
@@ -71,7 +80,7 @@ class ReceiptPolicyRepository:
                     when not matched then insert (ARTICUL,CRPT_REQUIRED,AGGREGATION_REQUIRED,CREATED_BY)
                          values (:a,:c,:g,:actor)""",
                 {"a": articul, "c": crpt, "g": aggregation, "actor": actor})
-            payload = {"marking_required": request.marking_required,
+            payload = {"stack_stage": stage, "marking_required": request.marking_required,"serialized_weight_boxes": weighted,"order_weight_tolerance_pct": format(tolerance,"f"),
                        "profiles": [p.model_dump() for p in request.profiles]}
             cursor.setinputsizes(payload=oracledb.DB_TYPE_CLOB)
             cursor.execute(
@@ -81,6 +90,15 @@ class ReceiptPolicyRepository:
                 {"a": articul, "v": version + 1,
                  "payload": json.dumps(payload, ensure_ascii=False), "actor": actor})
         return {"articul": articul, "version": version + 1, "configured": True,
-                "marking_required": request.marking_required,
+                "marking_required": request.marking_required,"serialized_weight_boxes": weighted,"order_weight_tolerance_pct": format(tolerance,"f"),"stack_stage": stage,
                 "profiles": [p.model_dump() for p in request.profiles], "legacy_mismatch": False,
                 "unmarked_scan_modes": ["ITEM_BARCODE", "BOX_BARCODE"]}
+
+
+def assert_weighted_sku(cursor: oracledb.Cursor, article: str) -> None:
+    try:
+        cursor.callproc("RRL_WEIGHT_BOX_READ.assert_sku", [article, None])
+    except oracledb.DatabaseError as exc:
+        if exc.args[0].code == 20886:
+            raise ValueError("Serialized weight boxes require a weighted SKU and a KG base policy.") from exc
+        raise

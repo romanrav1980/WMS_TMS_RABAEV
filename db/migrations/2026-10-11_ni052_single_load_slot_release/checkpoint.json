@@ -1,0 +1,11 @@
+{
+  "migration_id": "2026-10-11-223-single-fullpal-load-slot-release",
+  "sha256": {
+    "db/migrations/2026-10-11_ni052_single_load_slot_release/000_before_rrl_stock_single_load_cmd.sql": "f93f9994a281ade649097e5815aeca870a329f82499726e0ef40e843fa6b0eed",
+    "db/migrations/2026-10-11_ni052_single_load_slot_release/000_before_rrl_stock_hu_placement_core.sql": "119d5eb9b33c4dbd220d734e7640dff1da8a81c71ebf866fe49d083cb10a6301",
+    "db/migrations/2026-10-11_ni052_single_load_slot_release/000_before_rrl_stock_hu_ship_cmd.sql": "788dabb2c2d2caf0b300e265925082068b28d479149bb549a0c8a343cec4717b",
+    "db/migrations/2026-10-11_ni052_single_load_slot_release/000_before_guard.sql": "d2195aa2dc31112ca3a9ee1b51b3fe7c19d790298d68cf79545980da24245f84",
+    "db/migrations/2026-10-11_ni052_single_load_slot_release/000_before_manifest.json": "6ff7e6d21dabe0c6cf4d7e47e467a390f8a70855e2a0f0ec89eef2dfb93206b8"
+  },
+  "recovery": "Fresh existing SINGLE loading, native placement owner and current identity guard; no schema migration. Release existing source occupancy through same quantity transaction; forward repair after newly supported completed load."
+}

@@ -1,0 +1,6 @@
+{
+  "migration_id": "2026-10-14-1265-prepared-row-move",
+  "target": "RABAEV/orcl",
+  "invalid_before": [],
+  "state": "PREPARED"
+}

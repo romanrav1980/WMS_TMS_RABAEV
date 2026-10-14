@@ -1,0 +1,8 @@
+# Oracle naive timestamps and day reconciliation
+Observed10Oct2026: SESSIONTIMEZONE+03:00, DBTIMEZONE+00:00, SYSTIMESTAMP−04:00. Actual UTC clocks agree; this is timezone representation difference. TIMESTAMP columns populated fromSYSTIMESTAMP retain local wall time without zone. They cannot be silently treated as API session timezone.
+
+RRL_STOCK_OPERATION.CREATED_AT/APPLIED_AT and legacy warehouse task CREATED_AT/STARTED_AT/FINISHED_AT are naive. New warehouse STARTED_AT_INSTANT and modern physical load/store/returns/tare/finance facts are timezone-aware.116 daily report only uses proven timezone-aware facts; stock/tasks/current backlog remains current snapshot, no guessed historical conversion. Native Oracle TZR handles regional day boundaries and invalid region422.
+
+Do not backfill ambiguous historical naive rows with current timestamp/offset. Future owner inventory/resources/integrations should introduce verified source instants and business warehouse timezone policy; historical rows without source remain explicitly unresolved. Existing legacy SYSDATE expiry/day calculations require separate warehouse timezone review before operational-day closure. No clock/VM/schema reset was performed.
+
+Follow-up142: RRL_STOCK_ELIGIBILITY body37/39/42 uses trunc(sysdate) for expiry/minimum days/remaining-percent, body52 legacy face-validity uses sysdate. Server−04 differs from operator/business region. Plan140 timezone is not a warehouse calendar declaration. Warehouse business-day policy must be explicit; ask owner, preserve actual timestamps/history and do not assume calendar coverage from UTC forecast.

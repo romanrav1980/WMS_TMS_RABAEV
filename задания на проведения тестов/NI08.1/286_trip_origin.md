@@ -1,0 +1,2 @@
+# Qwen286
+Emptydepot selects single current sourceV4 configuredwarehouseorigin; missing/multiWARE returns UNKNOWN/null, neverzero/centroidrealhub. Explicitoverride honest. Samecursor origin/currentSource/matrix/currentWARE; configurebase mutationstales native approvals. Positiveown33564 underouterrollback, directionalcosts12/23km18/31min and HTTPdefault200UNKNOWN authorpassed. Realhub/driverlaw/windows/currentcoverage external notpassed.

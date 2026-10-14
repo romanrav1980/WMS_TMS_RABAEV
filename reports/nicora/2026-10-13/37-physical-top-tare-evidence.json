@@ -1,0 +1,74 @@
+{
+  "trip": 33637,
+  "load_operation": "FLOOR1194.LOAD:f49901f5d2",
+  "departure_operation": "FLOOR1196.DEPART:f49901f5d2",
+  "departure_floor": {
+    "basis": "EXPLICIT_FLOOR_VARIANTS",
+    "operational_admission": false,
+    "profile_version": 2,
+    "counts": [
+      {
+        "pallet_type_id": 1,
+        "places": 1
+      }
+    ],
+    "unconfirmed_places": 0,
+    "matching_variants": [
+      "MIXED"
+    ],
+    "status": "COMPATIBLE",
+    "loaded_top_places": 1,
+    "prospective_top_places": 1,
+    "profile_base_hash": "A922EF79DC3EB7EEC3236815CBFBDF5FA756BF3131AE13453C02FF95F4EE7945"
+  },
+  "protected_stock": [
+    20,
+    20
+  ],
+  "slow_sql": [
+    [
+      "7dr3qv37zwuat",
+      2,
+      7.014,
+      26,
+      "select /* PLAN_LOADED_TOP_BOUND1197 */ l.LOAD_OPERATION_ID,f.PALLET_TYPE_ID,l.VEHICLE_ID,f.VEHICLE_ID from RRL_TT_HU_LOAD_FACT l left join RRL_TT_LOAD_FLOOR_FACT f on f.LOAD_OPERATION_ID=l.LOAD_OPERAT"
+    ],
+    [
+      "7stzaa8ybagjb",
+      7,
+      2.988,
+      12.57,
+      "SELECT L.LOAD_OPERATION_ID,L.VEHICLE_ID,L.VEHICLE_NUMBER,F.PALLET_TYPE_ID,F.VEHICLE_ID FLOOR_VEHICLE,O.STATE FROM RRL_TT_HU_LOAD_FACT L LEFT JOIN RRL_TT_LOAD_FLOOR_FACT F ON F.LOAD_OPERATION_ID=L.LOAD"
+    ],
+    [
+      "atyhqspbx8wfq",
+      6,
+      1.022,
+      20.67,
+      "SELECT COUNT(*),MIN(PALLET_TYPE_ID),MIN(OPERATION_ID)FROM RRL_TARE_BOOK WHERE PLACE_KIND='HU'AND PLACE_ID=:B2 AND OWNER_WARE_ID=:B1 AND STATUS='HELD'"
+    ],
+    [
+      "9pnf6jw559kx3",
+      3,
+      1.837,
+      26.67,
+      "SELECT COUNT(*),MIN(OWNER_WARE_ID) FROM RRL_TARE_BOOK WHERE PLACE_KIND='HU' AND PLACE_ID=:B1 AND STATUS='HELD'"
+    ],
+    [
+      "9j5pgk6wq1ysy",
+      1,
+      6.727,
+      45,
+      "SELECT COUNT(*)FROM RRL_TARE_BOOK WHERE STATUS='HELD'AND((PLACE_KIND='HU'AND PLACE_ID=:B1 )OR(PLACE_KIND='CASE'AND PLACE_ID=TO_CHAR(:B2 ,'TM9')))"
+    ],
+    [
+      "0khqdg2jh2ftu",
+      2,
+      14.893,
+      148,
+      "SELECT COUNT(*) FROM RRL_TARE_BOOK B WHERE B.STATUS='HELD' AND( (B.PLACE_KIND='HU' AND B.PLACE_ID IN(SELECT CHILD_PALLET_UID FROM RRL_WMS_HU_LINK WHERE ACTIVE_FLAG=1 START WITH PARENT_UID=:B1 CONNECT "
+    ]
+  ],
+  "native_errors": [],
+  "scope": "one TOP/two nodes/unmarked dev; no fresh positive late assignment after mapper"
+}

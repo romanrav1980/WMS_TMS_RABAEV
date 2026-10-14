@@ -1,0 +1,15 @@
+@@001_schema.sql
+@@002_command.sql
+@@003_balance_acl.sql
+@@004_location_acl.sql
+@@005_root.sql
+@@006_guards.sql
+alter package RRL_STOCK_INTERWARE_REC compile body;
+alter package RRL_STOCK_POSTING_API compile body;
+declare n number;begin select count(*)into n from user_objects where OBJECT_NAME in('RRL_STOCK_INTERWARE_REC','RRL_STOCK_POSTING_API','RRL_STOCK_BALANCE_CORE','RRL_STOCK_LOCATION_CORE','RRL_INTERWARE_UNLOAD_GUARD','RRL_INTERWARE_RECEIPT_GUARD')and STATUS!='VALID';if n!=0 then raise_application_error(-20899,'INTERWARE119_INVALID_OBJECTS');end if;end;
+/
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-10-119-native-interwarehouse-unload-receipt' MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS)
+values(s.MIGRATION_ID,'Original departed ordinary cargo unload and same-UID target receipt through sole stock core; no duplicate customer fulfillment',sysdate,user,'apply.sql','rollback.sql','APPLIED');
+commit;
+/

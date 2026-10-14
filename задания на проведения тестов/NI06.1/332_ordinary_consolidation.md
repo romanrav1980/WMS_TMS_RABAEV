@@ -1,0 +1,2 @@
+# Qwen327–332
+Два исходных немаркированных3EA заказа/receipt/старыхtask/custody/ST/QC →oneTOP6EA. OP+ST PK и прежние bind/receiptuniques; twooutbox IDs; позднийfailsecondleg rollback обеP/журналы/load/links/outbox. BareHUship/foreignTT/missingQC/неполныйphysicalbinding/markedmulti/recovery denied. Actualcontext330 alreadySTOREaccepted3each: factories328329/initial331 forbidden. Existing delivery receipts не суммировать дважды в обоих заказах. Plannedfixturevehicle2logicalplaces vsactualTOP1 — нетclaim о физической экономии плановой capacity.

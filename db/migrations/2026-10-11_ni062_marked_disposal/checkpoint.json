@@ -1,0 +1,15 @@
+{
+  "migration_id": "2026-10-11-236-original-marked-return-disposal",
+  "sha256": {
+    "db/migrations/2026-10-11_ni062_marked_disposal/000_before_rrl_stock_return_dispose.sql": "1ab901117f6d7923922a19fe38caf0302dd6f1b5858cde842b0944a5e4f63999",
+    "db/migrations/2026-10-11_ni062_marked_disposal/000_before_rrl_stock_posting_api.sql": "04b897423a19f51a12ea16a4493853ffc7cb0c9f12e43b501e72593f333b2f7c",
+    "db/migrations/2026-10-11_ni062_marked_disposal/000_before_rrl_stock_qc_mark.sql": "892ef838faca569c633d7df69cd483e32dc28ec81ef34308d17d0ef7c2f1cefd",
+    "db/migrations/2026-10-11_ni062_marked_disposal/000_before_rrl_traceability_api.sql": "e56ea9f699a5ef3615f950ea28600d194137ffab71e0ac8ff16a5638167a3762",
+    "db/migrations/2026-10-11_ni062_marked_disposal/000_before_current_runtime_manifest.json": "dba9e3ebe6856c9203721c8b85b0f7fdad41844c80f748bc660a80630edf6637",
+    "db/migrations/2026-10-11_ni062_marked_disposal/000_before_return_disposal_routes.py": "a943b3d22f1bfb71de2685accd75d7686fe6668e587e395aedc127c7cc57fa34",
+    "db/migrations/2026-10-11_ni062_marked_disposal/000_before_return_disposal.py": "ca95263e7e037081b88da19b6f6ca696ea45910f3c5fbd18635b8ce5ef15da60",
+    "db/migrations/2026-10-11_ni062_marked_disposal/000_before_contracts_disposal.py": "05aa6a5eab12db9162f165c45dcffddeb1c191246fc8b183d617a2581379dc99",
+    "db/migrations/2026-10-11_ni062_marked_disposal/000_before_return-disposal.js": "dab30695771658b6364e97f7b26f1c6def757439af0bad2be083446cd27a7d48",
+    "db/migrations/2026-10-11_ni062_marked_disposal/000_before_return-disposal.html": "c407d70efd627139032f76b013152beb2e27f3d8711116b109e5830278645cd3"
+  }
+}

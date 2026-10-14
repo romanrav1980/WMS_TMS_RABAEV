@@ -1,0 +1,62 @@
+{
+  "wave": 525,
+  "rt": 1560,
+  "task": 1081,
+  "next_rt": 1562,
+  "article": "QNATIVECF00B8B3F4",
+  "ware": 13666136,
+  "target": "QGcf00b8b3f4",
+  "source": "QFcf00b8b3f4",
+  "first_uid": "FULL.QA:cf00b8b3f4",
+  "second_uid": "FULL.QA:cf00b8b3f4B",
+  "target_uid": "FULL.QA:cf00b8b3f4O",
+  "stage": "PASS_OWN_CLEANED",
+  "stock_changed_only_by_original_TASK_COMPLETE": true,
+  "clean_stock": [
+    0,
+    0
+  ],
+  "task_status": "DONE",
+  "task_fact": "20",
+  "next_status": "CANCELLED",
+  "native_errors": [],
+  "native_invalid": [],
+  "sql_decision": "Retain bounded owner/target201 and ordered stock closure; no index without measured plan regression",
+  "slow_sql": [
+    [
+      "36msdx26umtn8",
+      1,
+      40.719,
+      213,
+      "update RRL_PICK_FACE_ASSIGNMENT a set STATUS='RELEASED',RELEASED_AT=sysdate,             RELEASED_BY=:actor,RELEASE_REASON='Physical slot empty; wave demand completed or "
+    ],
+    [
+      "42zy020cnua0t",
+      5,
+      34.274,
+      268.2,
+      "SELECT SR.RESERVATION_ID,SR.BASE_QTY,SR.UID_PALLET,SR.CELL,SR.BASE_UOM,RR.REMAIN FROM RRL_STOCK_RESERVATION SR JOIN RRL_REMAINS RR ON RR.UID_POLETA=SR.UID_PALLET AND RR.C"
+    ],
+    [
+      "dcgdm1n0835f0",
+      4,
+      32.93,
+      502,
+      "SELECT R.ROWID REMAIN_ROWID, R.CELL, R.UID_POLETA, R.REMAIN, P.EXPIRY_DATE, P.CREATION_DATE, P.PROD_BATCH_ID, P.SSCC, P.UNIT_COUNT, NVL(BR.IS_SHIPMENT_ALLOWED, 1) IS_SHIP"
+    ],
+    [
+      "cttx7c3q88qdg",
+      1,
+      15.7,
+      2473,
+      "select nvl(sum(r.REMAIN),0),nvl(sum(r.HARD_RESERVED_BASE),0) from RRL_REMAINS r join RRL_PALLETS p on p.UID_PALLET=r.UID_POLETA where p.ARTICUL=:a"
+    ],
+    [
+      "80359p3p906k6",
+      4,
+      11.722,
+      166,
+      "SELECT NVL(SUM(SR.BASE_QTY),0) FROM RRL_STOCK_RESERVATION SR JOIN RRL_PICK_PLAN_LINE PL ON PL.PICK_PLAN_LINE_ID=SR.PICK_PLAN_LINE_ID LEFT JOIN RRL_PICK_TASK PT ON PT.PICK"
+    ]
+  ]
+}

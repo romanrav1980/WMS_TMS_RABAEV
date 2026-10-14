@@ -1,0 +1,3 @@
+exec(open("scripts/ni063_slow_queries.py",encoding="utf-8").read().split("with oracledb.connect",1)[0])
+with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
+ q=c.cursor();q.execute("""select ct.CASE_PICK_TASK_ID,ct.STATUS,ct.WARE_ID,l.CASE_PICK_LINE_ID,l.ARTICUL,l.PICKED_QTY,l.PLANNED_QTY,p.MARKING_REQUIRED,p.SERIALIZED_WEIGHT_BOXES,ct.SSCC from RRL_CASE_PICK_TASK ct join RRL_CASE_PICK_LINE l on l.CASE_PICK_TASK_ID=ct.CASE_PICK_TASK_ID join RRL_SKU_RECEIPT_POLICY p on p.ARTICUL=l.ARTICUL where p.MARKING_REQUIRED=1 order by ct.CASE_PICK_TASK_ID desc fetch first 8 rows only""");print(json.dumps(q.fetchall(),default=str))

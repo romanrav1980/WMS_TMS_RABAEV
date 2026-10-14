@@ -1,0 +1,12 @@
+{
+  "migration_id": "2026-10-11-185-actual-box-quality-mass",
+  "sha256": {
+    "db\\migrations\\2026-10-11_ni051_physical_box_mass\\001_weight_contract.sql": "ad9877f4db7db61b9b956ba18cfeefb355f10ca431038e9f0f783c6b783bd828",
+    "db\\migrations\\2026-10-11_ni051_physical_box_mass\\001_weight_body.sql": "c26c2ca42b89ce50786bd8f1e39ddbccf6812d3e4558484cfd69401f02129303",
+    "db\\migrations\\2026-10-11_ni051_physical_box_mass\\apply.sql": "19062d91a0af788d7d46459968ca2066366850a062fd28995bb9634a3d08e19e",
+    "db\\migrations\\2026-10-11_ni051_physical_box_mass\\rollback.sql": "86c951e1a4a98b7dd9ca4d22fa2a3a7284831bb2aba35afc8d7f5005d2854a17",
+    "db\\migrations\\2026-10-11_ni051_physical_box_mass\\verify.sql": "d41eaddec1f3459320ecd3bfb153a61ef3b4b6e9c69c94905669d34ca58be761"
+  },
+  "before_sha256": "87245b55d85838b184d83a8abd7e6e467510f0e2149f9327833b469ca143f549",
+  "recovery": "fresh native weight calculator and paired rollback; no DB copy"
+}

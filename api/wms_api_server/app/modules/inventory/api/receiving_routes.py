@@ -3,11 +3,12 @@ from datetime import date
 from decimal import Decimal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import AliasChoices, BaseModel, Field, field_validator, model_validator
 
-from ....auth import AdminUser, require_permission
+from ...platform.public import AdminUser, require_permission
 from ..application.ports import ReceivingPort as Receiving
-from ..domain.pallet_identifiers import normalize_incoming_sscc
+from ..domain.pallet_identifiers import normalize_incoming_sscc, normalize_receipt_identifier
+from ..contracts_composition import CompositionViewError
 from ..application.ports import LabelPort as ReceiptLabels
 from ..application.ports import ConfigurationPort as ReceiptConfiguration
 from ..application.ports import ReconciliationPort as ReceiptReconciliation
@@ -20,9 +21,12 @@ router = APIRouter(prefix="/api/receiving", tags=["warehouse-receiving"])
 class PalletReceipt(BaseModel):
     operation_id: str = Field(min_length=1, max_length=100)
     line_number: str = Field(min_length=1, max_length=20)
-    sscc: str = Field(pattern=r"^[0-9]{18}$")
+    sscc: str = Field(strict=True,min_length=1,max_length=50,validation_alias=AliasChoices("pallet_identifier","sscc"))
     quantity: Decimal = Field(gt=0, le=999999999999, decimal_places=6)
     product_barcode: str | None = Field(default=None, min_length=1, max_length=128)
+    capture_mode: Literal["WEIGHTED_BOXES"] | None = None
+    policy_version: int | None = Field(default=None, ge=1)
+    weighted_boxes: list[dict] | None = Field(default=None, min_length=1, max_length=10000)
     supplier_batch: str = Field(min_length=1, max_length=100)
     expiry_date: date
     produced_date: date | None = None
@@ -36,7 +40,16 @@ class PalletReceipt(BaseModel):
     @field_validator("sscc", mode="before")
     @classmethod
     def normalize_sscc(cls, value: object) -> object:
-        return normalize_incoming_sscc(value)
+        return normalize_receipt_identifier(value)
+
+
+    @model_validator(mode="before")
+    @classmethod
+    def same_identifier(cls, value: object) -> object:
+        if isinstance(value,dict) and "pallet_identifier" in value and "sscc" in value:
+            if normalize_receipt_identifier(value["pallet_identifier"])!=normalize_receipt_identifier(value["sscc"]):
+                raise ValueError("Conflicting pallet identifiers")
+        return value
 
 
 class PutawayConfirmation(BaseModel):
@@ -66,13 +79,16 @@ def query_service() -> ReceivingQueries:
 
 
 @router.get("/pallets/{pallet}/composition")
-def pallet_composition(pallet: str, after: str = "", limit: int = Query(50, ge=1, le=100),
+def pallet_composition(pallet: str, after: str = Query("",max_length=64), limit: int = Query(50, ge=1, le=100),
+                        expected_signature: str | None = Query(None,min_length=64,max_length=64),
                         user: AdminUser = Depends(require_permission("traceability_view")),
                         service: ReceivingQueries = Depends(query_service)) -> dict:
     try:
-        return service.composition(pallet, after, limit)
+        return service.composition(pallet, after, limit,expected_signature)
     except LookupError as exc:
         raise HTTPException(404, str(exc)) from exc
+    except CompositionViewError as exc:
+        raise HTTPException(exc.status,{"code":exc.code}) from exc
 
 
 class LabelIssue(BaseModel):
@@ -88,11 +104,16 @@ class LabelScan(BaseModel):
 
 
 class WarehouseReceiptSettings(BaseModel):
+    defer_wait_cell: str | None = Field(default=None, min_length=1, max_length=50)
+    hu_cell_height_unit: Literal["M", "CM", "MM"] | None = None
+    outgoing_qc_mode: Literal["NONE","ANY","SCAN","WEIGHT","BOTH"] | None = None
+    outgoing_qc_independent: bool | None = None
+    outgoing_qc_sample_percent: Decimal | None = Field(default=None,ge=0,le=100,decimal_places=2)
     company_prefix: str | None = Field(default=None, pattern=r"^[0-9]{6,12}$")
     extension_digit: int = Field(default=0, ge=0, le=9)
-    coordinate_unit_m: Decimal = Field(default=1, gt=0)
-    reachtruck_mps: Decimal = Field(default=1, gt=0)
-    lift_mps: Decimal = Field(default="0.5", gt=0)
+    coordinate_unit_m: Decimal = Field(default=Decimal("1"), gt=0)
+    reachtruck_mps: Decimal = Field(default=Decimal("1"), gt=0)
+    lift_mps: Decimal = Field(default=Decimal("0.5"), gt=0)
     placement_metric: Literal["DISTANCE", "TIME"] = "DISTANCE"
 
 
@@ -108,8 +129,10 @@ class TemperatureRule(BaseModel):
 
 
 class SkuPlacementRule(TemperatureRule):
+    allow_pick_batch_mix: bool | None = None
     pick_cell: str = Field(min_length=1, max_length=60)
     min_shelf_days: int = Field(default=0, ge=0)
+    source_pick_mode: Literal["AFTER_PUTAWAY", "DIRECT"] = "AFTER_PUTAWAY"
 
 
 class CellPlacementRule(TemperatureRule):
@@ -125,7 +148,7 @@ class CloseSupply(BaseModel):
 
 class ReplanPutaway(BaseModel):
     operation_id: str = Field(min_length=1, max_length=60, pattern=r"^[A-Za-z0-9._:-]+$")
-    scanned_pallet: str = Field(min_length=1, max_length=25)
+    scanned_pallet: str = Field(min_length=1, max_length=150)
     scanned_from_cell: str = Field(min_length=1, max_length=60)
     reason: str = Field(min_length=3, max_length=500)
 
@@ -135,6 +158,8 @@ def replan_putaway(task_id: int, body: ReplanPutaway, user: AdminUser = Depends(
                     service: Receiving = Depends(receiving_service)) -> dict:
     try:
         return service.replan(task_id, body.model_dump(), user.username)
+    except PermissionError as exc:
+        raise HTTPException(403,str(exc)) from exc
     except (LookupError, ValueError) as exc:
         raise HTTPException(409, str(exc)) from exc
 
@@ -144,6 +169,8 @@ def issue_label(order_id: str, body: LabelIssue, user: AdminUser = Depends(requi
                 service: ReceiptLabels = Depends(label_service)) -> dict:
     try:
         return service.issue(order_id, body.model_dump(mode="json"), user.username)
+    except PermissionError as exc:
+        raise HTTPException(403,str(exc)) from exc
     except (LookupError, ValueError) as exc:
         raise HTTPException(409, str(exc)) from exc
 
@@ -152,8 +179,10 @@ def issue_label(order_id: str, body: LabelIssue, user: AdminUser = Depends(requi
 def read_label(label_id: str, format: Literal["html", "zpl"] = "html", dpi: int = Query(203, ge=203, le=600), user: AdminUser = Depends(require_permission("warehouse_receipt_confirm")),
                service: ReceiptLabels = Depends(label_service)) -> Response:
     try:
-        return Response(service.document(label_id, format, dpi), media_type="text/html" if format == "html" else "text/plain",
+        return Response(service.document(label_id, format, user.username, dpi), media_type="text/html" if format == "html" else "text/plain",
                         headers={"Content-Disposition": f'inline; filename="label-{label_id}.{format}"'})
+    except PermissionError as exc:
+        raise HTTPException(403,str(exc)) from exc
     except LookupError as exc:
         raise HTTPException(404, str(exc)) from exc
 
@@ -163,6 +192,8 @@ def confirm_label(label_id: str, body: LabelScan, user: AdminUser = Depends(requ
                   service: ReceiptLabels = Depends(label_service)) -> dict:
     try:
         return service.confirm(label_id, body.scanned_sscc, user.username)
+    except PermissionError as exc:
+        raise HTTPException(403,str(exc)) from exc
     except (LookupError, ValueError) as exc:
         raise HTTPException(409, str(exc)) from exc
 
@@ -177,7 +208,11 @@ def get_settings(warehouse: int, user: AdminUser = Depends(require_permission("w
 def save_settings(warehouse: int, body: WarehouseReceiptSettings, user: AdminUser = Depends(require_permission("warehouse_settings_edit")),
                    service: ReceiptConfiguration = Depends(configuration_service)) -> dict:
     try:
-        return service.save(warehouse, body.model_dump(), user.username)
+        metadata=body.model_dump()
+        for optional in ("defer_wait_cell","hu_cell_height_unit","outgoing_qc_mode","outgoing_qc_independent","outgoing_qc_sample_percent"):
+            if optional not in body.model_fields_set:
+                metadata.pop(optional,None)
+        return service.save(warehouse, metadata, user.username)
     except (ValueError, LookupError) as exc:
         raise HTTPException(409, str(exc)) from exc
 

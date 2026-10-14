@@ -1,0 +1,4 @@
+exec(open("scripts/ni063_slow_queries.py",encoding="utf-8").read().split("with oracledb.connect",1)[0])
+with oracledb.connect(user=s.oracle_user,password=s.oracle_password,dsn=s.oracle_dsn)as c:
+ q=c.cursor();q.execute("""select SQL_ID,EXECUTIONS,round(ELAPSED_TIME/nullif(EXECUTIONS,0)/1000,3),BUFFER_GETS from V$SQL where PARSING_SCHEMA_NAME='RABAEV'and EXECUTIONS>0 and SQL_TEXT not like '%V$SQL%'and (SQL_TEXT like 'select CASE_PICK_TASK_ID,RESULT_JSON,CAPTURE_PURPOSE%' or SQL_TEXT like 'select STOCK_OPERATION_ID from RRL_WH_SCALE_USE%') order by ELAPSED_TIME/nullif(EXECUTIONS,0)desc fetch first 5 rows only""")
+ print(json.dumps(q.fetchall(),default=str))

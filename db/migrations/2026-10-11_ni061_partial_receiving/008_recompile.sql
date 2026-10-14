@@ -1,0 +1,12 @@
+alter package RRL_STOCK_INTERWARE_REC compile body;
+alter package RRL_STOCK_INTERWARE_PUT compile body;
+alter package RRL_STOCK_INTERWARE_CUSTODY compile body;
+alter package RRL_INTERWARE_DEPART_GATE compile body;
+alter trigger RRL_INTERWARE_RECEIPT_GUARD compile;
+alter trigger RRL_INTERWARE_PUT_GUARD compile;
+alter trigger RRL_INTERWARE_PLACEMENT_GUARD compile;
+alter trigger RRL_INTERWARE_ONWARD_BIND_GUARD compile;
+alter package RRL_STOCK_INTERWARE_NEXT compile body;
+alter package RRL_INTERWARE_ROUTING compile body;
+alter package RRL_INTERWARE_UNIT_SOURCE compile body;
+alter trigger RRL_TT_HU_LOAD_FACT_GUARD compile;

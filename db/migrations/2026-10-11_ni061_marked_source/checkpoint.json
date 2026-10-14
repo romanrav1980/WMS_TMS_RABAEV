@@ -1,0 +1,12 @@
+{
+  "migration_id": "2026-10-11-225-marked-original-interwarehouse-source",
+  "sha256": {
+    "db/migrations/2026-10-11_ni061_marked_source/000_before_rrl_interware_plan_guard.sql": "c5bce83b1f2e29780fcb2e98a2f05917e34aefc6b80ceab695b3240d314f6f3f",
+    "db/migrations/2026-10-11_ni061_marked_source/000_before_rrl_interware_hop_limit_guard.sql": "c972f35f07b69ca500abfd8d275b70c5a7653b87264f19612f10710809c4e2c3",
+    "db/migrations/2026-10-11_ni061_marked_source/000_before_rrl_stock_interware_rec.sql": "11b7fae85419840281de69cf42d19826d55df877db97e5f234855ad3dde83490",
+    "db/migrations/2026-10-11_ni061_marked_source/000_before_rrl_stock_unit_core.sql": "aaf03782240051b7f1b187c1b7f6789a9705427007af92724d625584e5b5635b",
+    "db/migrations/2026-10-11_ni061_marked_source/000_before_interwarehouse.py": "0b6cc0fc471a1202361a40220c75e0fd0a310c33ef90c2140883ee8981d55ca1",
+    "db/migrations/2026-10-11_ni061_marked_source/000_before_current_runtime_manifest.json": "1f265363292a877b6311a91847a4d6c6c92cbff2799f208b7b5576b8db259ab4"
+  },
+  "recovery": "Fresh original source plan/hop guard/unit and receipt owners. Metadata-only source plan extension; no goods birth until separate receiving command. Original exact physical unit fingerprint, current ISSUED set and multiple marking profiles retained; no government ACK fabricated."
+}

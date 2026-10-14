@@ -1,0 +1,31 @@
+from pathlib import Path
+import json
+out={}
+out["wiki/database/nicora_ni052_unload_20261011.md"]="""# NI05.2: выгрузка самостоятельного места до выезда
+212 APPLIED in RABAEV/orcl. [[nicora_ni052_unload_design_20261011]].
+Transport owns API/read model/UI; inventory owns native goods effects. Existing RRL_STOCK_POSTING_API delegates UNLOAD_SHIPMENT to private RRL_STOCK_UNLOAD_CMD. Existing BALANCE/RESERVE/FULFILLMENT owners are reused. No second quantity writer; compatibility triggers stay off.
+
+Original active LOAD_SHIPMENT/standalone CASE must match current undeparte­d trip, vehicle, dock, original cell, exact frozen content version/identifier, active original wave/fulfillment and empty original stock leaves. Quarantined cell blocks use through BLOCKED_FOR_REMAINS. Quantity comes exclusively from original frozen legs and negative journal. An accepted tare handover, nested root, captured/marked/serialized units or special supplier/onward custody needs its own subsequent extension, currently refused.
+
+Sorted logical closure includes OP10, owners20, HU30, stock50, original/new reserves, source-unload/outbox UNIQUE70; no remote call inside transaction. Existing balance restores P; narrow restore_consumed restores same old reservation owner HARD with native effect context. Old consumed reserve, journal, load composition/mass and control evidence remain history. Immutable RRL_TT_UNLOAD_FACT is unique per source load. Current CASE becomes WAIT_CONTROL, current fulfillment PICKED, ST proof revoked, load UNLOADED/member inactive. A fresh physical/control cycle is required before reloading.
+
+Actual CASE1113/wave467/QPB2121E544268/WARE31987650/load SMALL212.LOAD:1e544268: original -6 retained, new +6 and P6H6. Late outer rollback restores original shipped state with no unload fact; concurrent distinct operations yield 200/409; exact replay preserved; current nonadmin foreign WARE gives403 even after APPLIED. Author fixture resumed after precise initial guard fixes (virtual CASE-to-stock links, legacy PAY_ORDER_ID=0, original reserve INSERT effect tag); rules not bypassed. Native cleanup returns original leaves, releases HARD/tare, defers wave and counts own stock to0. Original135 P20H20 unchanged. Author evidence is not independent acceptance.
+
+POST /api/transport/loading/unload is strict/no client quantity, same stock_posting_shipping right/current scope. Existing loading page displays original loads/cell and saves body+operation ID by API/user for uncertain outcome retry. Main load/depart and unload intents exclude one another. Server refuses unsupported physical kinds rather than partial unloading.
+
+Fresh SQL/app/UI checkpoints under migration folder. Apply includes sample guard and explicit dependent recompile, then ledger. Rollback refuses if actual unload history exists; forward repair is mandatory then. Current bundle is generation-only on ACTIVE; manifest updated to212 native owners/guards/schema. Intermediate draft generators retired to prevent overwrite of verified sources.
+Quality gate212 PASS24/both TS/556 files/0cycles/76debt; final INVALID0. Native proof join0mzfa3bdwp2893.768ms, reserve insert54amxxquvm1wd2.092ms, proof join4ttf7su73gy7v2.543ms. Decision: retain source-load unique index, owner PKs and200-leg bound; inventory owner revisit larger composed unload closure separately.
+"""
+for path,line in [
+("wiki/index.md","- [Выгрузка самостоятельного места до выезда](database/nicora_ni052_unload_20261011.md):212 same native root/original -6/new +6/P6H6, restored HARD and fresh QC; history retained, matryoshka/marked extension next."),
+("wiki/log.md","2026-10-11:212 standalone CASE unload delivered in original native root with immutable unique load reversal, exact old journal/reservation ownership and no client quantity. Actual1113 rollback/concurrent one winner/replay/currentWARE403/P6H6/native cleanup0/protected13520/20. UI durable retry, manifest/apply/rollback corrected; quality24/bothTS/556cycles0debt76. SQL3.768/2.092/2.543ms retain PK/unique/200 bound. No full sprint/independent acceptance claim."),
+("wiki/requirements/nikora_delivery_v55/execution/active/ni05_2.md","11.10.2026:212 native predeparture standalone CASE unload restores original P/H in same transaction, immutable original negative journal/load and positive reversal; current ST/fulfillment/QC reset. Actual1113 6/6/rollback/concurrent/replay/currentWARE403/native cleanup passed; UI saves uncertain command. Remaining extension: whole nested HU/FULLPAL, captured/marked units and existing transferred tare reverse custody; no partial unsupported reversal.")]:
+ p=Path(path);out[path]=p.read_text(encoding="utf-8")+"\n"+line+"\n"
+p=Path("wiki/requirements/nikora_delivery_v55/implementation_plan.json");j=json.loads(p.read_text(encoding="utf-8"))
+next(x for x in j["increments"]if x["id"]=="NI05.2").setdefault("implementedSlices",[]).append("212 native standalone CASE predeparture unload restores original P/H/fulfillment and revokes QC atomically, unique original load reversal/history/replay/current scope/UI durable intent; nested and marked extension pending")
+out[str(p)]=json.dumps(j,ensure_ascii=True,indent=2)+"\n"
+roots=[p.parent.parent for p in Path(".").glob("*/NI08.1/178_container_cell_index.md")]
+if roots:out[str(roots[0]/"NI05.2"/"212_standalone_unload.md")]="""# Qwen:212
+Dedicated RABAEV dev only. Use scripts/ni052_standalone_case_unload_case.py for fresh fixture; historical CASE1113 was native-cleaned, do not resume it. Before depart, scanned original standalone CASE/cell/vehicle/dock and source version restore only original journal quantity/HARD owner. Late rollback no fact/effect; distinct operation concurrency one winner; exact replay/current foreign WARE403; changed body same ID refused. Old negative history unchanged, new positive journal once/outbox once; current WAIT_CONTROL/PICKED/member inactive, new control before reload. Wrong scans/blocked cell/departed/marked or nested/accepted tare refused without partial effects. Native return each original leaf, release tare then finish/defer/count own0; protected13520/20. Inspect durable browser intent across network loss/user change; do not replace uncertain command ID. Independent result/evidence required.
+"""
+print(json.dumps(out,ensure_ascii=True))

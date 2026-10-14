@@ -1,0 +1,10 @@
+{
+  "migration_id": "2026-10-11-210-case-stacking-stage",
+  "sha256": {
+    "db/migrations/2026-10-11_ni042_stack_stage/000_before_route.sql": "f73510a4ffc3cf9811d023c5858eb12fde430e09bce6b211489f0bc8d2664b4c",
+    "db/migrations/2026-10-11_ni042_stack_stage/000_before_contracts.py": "9f04bff908394ac3ef74ee11337cf6435ef04fce787aa99500e8290dd89c83bf",
+    "db/migrations/2026-10-11_ni042_stack_stage/000_before_receipt_policy.py": "070046c70df21ced13390a18906084b9b15191a6108579a9814b18237e1ab50c",
+    "db/migrations/2026-10-11_ni042_stack_stage/000_before_current_runtime_manifest.json": "411464e6d0e010802aac856b549a5159ce28326025687a29989deee910f9ec59"
+  },
+  "recovery": "Additive stage columns and small metadata guard; fresh route/contracts/repository sources. Rollback only without explicit staged policies/issued rows; otherwise forward repair, no stock delete or database copy."
+}

@@ -162,3 +162,4 @@ body.day-page{background:#f3f6fb;color:#24344b;font-family:"Segoe UI",Arial,sans
 /* Общий styles.css задаёт body{min-width:1280px}; на этой странице уже есть мобильные правила (@media 1050/700px),
    поэтому минимальная ширина снимается только для body.day-page — иначе мобильная компоновка не срабатывает. */
 @media(max-width:1279px){body.day-page{min-width:0}}
+.dr-documents{margin-top:12px;padding:10px;border:1px solid #dae4ee;border-radius:8px;background:#f8fafc}.dr-documents summary{cursor:pointer;font-weight:600}.dr-documents p{font-size:12px;color:#586c80}.dr-documents ul{padding-left:20px}.dr-documents li{padding:5px 0;overflow-wrap:anywhere}.dr-documents code,.dr-documents a{font-size:13px;white-space:normal}.dr-documents a:focus-visible{outline:3px solid #6398cf}

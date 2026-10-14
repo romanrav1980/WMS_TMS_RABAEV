@@ -3,10 +3,12 @@ from hashlib import sha256
 from decimal import Decimal
 import json
 import oracledb
+from typing import Any, Sequence
+from ..contracts_observations import CountObservation
 from ..domain.mark_identity import canonical_mark
 
 
-def resolve_count_codes(gateway, lines) -> list[list[str]]:
+def resolve_count_codes(gateway: Any, lines: Sequence[CountObservation]) -> list[list[str]]:
     keys = [list(line.unit_keys) for line in lines]
     scans = []
     for index, line in enumerate(lines):

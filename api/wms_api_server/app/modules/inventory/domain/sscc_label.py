@@ -25,17 +25,19 @@ def barcode_svg(sscc: str) -> str:
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {x+10} 82" width="100%" role="img" aria-label="SSCC {sscc}">' + ''.join(bars) + f'<text x="{(x+10)/2}" y="78" text-anchor="middle" font-size="8">(00){sscc}</text></svg>'
 
 
-def label_html(data: dict) -> str:
+def label_html(data: dict, compact: bool = False) -> str:
     fields = ''.join('<p><b>' + escape(FIELD_LABELS.get(k, str(k))) + ':</b> ' + escape(str(v)) + '</p>' for k, v in data.items() if k != 'sscc')
-    return '<!doctype html><html><meta charset="utf-8"><title>SSCC ' + escape(data['sscc']) + '</title><style>@page{size:105mm 148mm;margin:5mm}body{font:14px sans-serif;width:95mm}p{margin:5px}svg{margin-top:12px}@media print{button{display:none}}</style><body>' + fields + barcode_svg(data['sscc']) + '<button onclick="window.print()">Печать</button></body></html>'
+    html = '<!doctype html><html><meta charset="utf-8"><title>SSCC ' + escape(data['sscc']) + '</title><style>@page{size:105mm 148mm;margin:5mm}body{font:14px sans-serif;width:95mm}p{margin:5px}svg{margin-top:12px}@media print{button{display:none}}</style><body>' + fields + barcode_svg(data['sscc']) + '<button onclick="window.print()">Печать</button></body></html>'
+
+    return html.replace("size:105mm 148mm","size:100mm 70mm").replace("width:95mm","width:90mm") if compact else html
 
 
-def label_zpl(data: dict, dpi: int = 203) -> str:
+def label_zpl(data: dict, dpi: int = 203, compact: bool = False) -> str:
     px = lambda mm: round(mm * dpi / 25.4)
-    commands = [f'^XA^CI28^PW{px(105)}^LL{px(148)}']
+    commands = [f'^XA^CI28^PW{px(100 if compact else 105)}^LL{px(70 if compact else 148)}']
     for i, (key, value) in enumerate((pair for pair in data.items() if pair[0] != 'sscc')):
         text = f'{FIELD_LABELS.get(key, key)}: {value}'
         encoded = ''.join(f'_{b:02X}' for b in text.encode('utf-8'))
         commands.append(f'^FO{px(5)},{px(5+i*6)}^A0N,{px(4)},{px(4)}^FH_^FD{encoded}^FS')
-    commands.append(f"^FO{px(5)},{px(95)}^BY{px(.5)}^BCN,{px(35)},Y,N,N^FD>;>800{data['sscc']}^FS^XZ")
+    commands.append(f"^FO{px(5)},{px(18 if compact else 95)}^BY{px(.5)}^BCN,{px(35)},Y,N,N^FD>;>800{data['sscc']}^FS^XZ")
     return '\n'.join(commands)

@@ -1,0 +1,14 @@
+# NI05.3 — принятое исполнение исходного заказа
+090 implemented locally, schema unchanged. [[nicora_ni053_order_delivery_design_20261010]], [[nicora_ni053_weight_admission_20261010]].
+
+Existing RRL_CUSTOMER_ORDER_FULFILLMENT/SHIPPED_OPERATION_ID and immutable original shipping RESOLVED_PLAN_JSON reused. Four bounded reads in one Oracle READ ONLY snapshot (header, fulfillment/physical history, batched original legs, receipt lines); no second preparation/ST assignment/stock writer. Original frozen customer_order_id/document/UID/SKU/BASE legs determine credit. All historical physical links matching the original shipment are retained, even inactive: future unloading does not erase accepted history.
+
+API /api/customer-orders/{id}/delivery uses existing customer_fulfillment_view, typed delivery port/composition. Shipped3/accepted2/missing1 reported as PARTIALLY_ACCEPTED; source demand3 and warehouse SHIPPED3 stay unchanged. Accepted3 with only weight investigation is ACCEPTED_WITH_OPEN_CASE, without inventing quantity loss. Received shipped volume is distinct from closing unshipped original demand; pending fulfillment count and scope SHIPPED_VOLUME are explicit.
+
+Shared partial leaf with multiple frozen owners returns NEEDS_OWNER_ALLOCATION, accepted credit unresolved; full accepted leaf credits each original owner's exact amount. No proportional allocation or mixing SKU/BASE into one total. Missing/inconsistent original owner/source rejects rather than crediting current mutable labels. Source routing uses the existing fulfillment references; future authorized legacy metadata repairs must reconcile those references from original history, not silently move credit.
+
+Raw customer-orders page now shows delivery table alongside existing warehouse execution: shipped/accepted/missing/refused/damaged/unreceived/unattributed, open case IDs and unresolved owner reason. UI strings escaped through textContent, exact quantities retained. Source/selection changes suppress late response.
+
+Author scripts/ni053_order_delivery_case.py actual HTTP/Oracle existing own orders passed: partial2+missing1, full3, full3 with weight case; original ORDER_QTY/status and FF SHIPPED3 unchanged. scripts/ni053_shared_owner_domain_case.py is a pure synthetic partition case (not live shared stock shipment): partial two-owner leaf uncredited; full leaf preserves owner1 share. UI syntax passed, independent browser not claimed.
+
+Slow SQL receipt cgypj95wu9vf3 avg15.202ms, batched original JSON leg query6w75x9gqnc6kz12.49ms, existing fulfillment/history4sa17kg8wt7kb7.206ms. Decision: keep PK/source lookup, max200 fulfillments/2000 original+receipt legs, same read-only snapshot; large orders require explicit bounded continuation/filter before capacity claim. No broad history scan or speculative new index.

@@ -1,0 +1,8 @@
+# Перенос непогруженной СТ с причиной
+276: доработать существующее назначение, не создавать второй реестр order-trip. Источник связи — RRL_SBORKA_PALLETS.TRANSTASK_ID. Новый append-only журнал хранит решение, прежний/новый рейс, исходный snapshot/hash, actor/reason/reference и operation/version.
+
+Первый ограниченный контракт — только плановая СТ без физической погрузки и привязанного PICKED/CASE carrier. Перенос погруженной СТ требует прежней фактической выгрузки; матрёшка/физические носители остаются отдельным расширением. Все паллеты одного номера передаются вместе, без изменения source quantity/date/fulfillment fact. Новый рейс существует, плановый/неоплаченный, дата не раньше прежнего обещания. Нарушенное обещание видно как задержка, не переписывается в ERP-заказе.
+
+Native currentactive dispatch edit/WARE перед cached replay и после ожидания. CONFIG metadata fence прежде business locks; обе машины поID, оба рейса поID, выбранные и действующие целевые ST rows поID. Recheck sourcehash/version/membership/physicalfreeze. Прежний RRL_TT_ADD_PALL(0,ST) + RRL_TRANSPORT_PLAN_API.assign_sts(target,[ST]) и journal в одной транзакции без commit. Capacity/destination restrictions действующего владельца сохранены; ошибка второй части откатывает снятие исходного назначения. Stock posting отсутствует.
+
+Операция повторяется исходным ID/body; новая причина/рейс под старым ID конфликтует. Readonly context/history даёт исходный период/причину и фактическое текущее назначение. UI durable intent/currentauth fence; после изменения планового состава текущие time/route approvals требуют обычного рассмотрения, не утверждаются автоматически.

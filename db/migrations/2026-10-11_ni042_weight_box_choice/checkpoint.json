@@ -1,0 +1,15 @@
+{
+  "migration_id": "2026-10-11-195-approved-weight-box-choice",
+  "before_reader_sha256": "ce08f52ecd8e3695e4d98dc6fb595a20e2790a94acede3a0a47bc3813f2c5e44",
+  "current_sql_sha256": {
+    "000_before_reader.sql": "ce08f52ecd8e3695e4d98dc6fb595a20e2790a94acede3a0a47bc3813f2c5e44",
+    "001_schema.sql": "0159ae83d8e5805d6f72ec6529333e532fcb99ca55f745553dbdde4aebb9718a",
+    "002_api.sql": "bf34da2b034ee87163afc0c5c315a91734e1ae4434e98c21f9f5e11ca4947733",
+    "003_reader.sql": "7d31f68cf825abf266a326e4b099f84e1cb2e9ae2582559cf72e0451f2c2f2e6",
+    "004_guard.sql": "296fca72ebe56c9c4c58a8e239a5e48522d509fd99f69339858182f9f170cf21",
+    "005_recompile_api.sql": "fbaf7c6c2890375a32b05b3cb6de03dcb1d29b37d2188c04fdfcb366c406b925",
+    "apply.sql": "35cf76ffaeff0f707ce482b85e2d7679b8c53a0c63146444359461278b6379de",
+    "rollback.sql": "3311a136d8ea17b93df57178f1292e3846c3b4709c12452e617aa60d23a68a32"
+  },
+  "recovery": "Affected original reader saved; immutable choice archive rollback blocked when history exists; forward repair/no database copy"
+}

@@ -1,0 +1,7 @@
+{
+  "schema": "RABAEV",
+  "service": "orcl",
+  "before_sha256": "c9cf306eddab8592d3bc70cfee1f339a543da3c3f0a25ed90578201c25b21ac3",
+  "scope": "metadata only; fully picked flat warehouse-task sources; CASE/nested/onward not admitted",
+  "recovery": "restore existing API body and drop additive helper; immutable histories preserved"
+}

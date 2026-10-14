@@ -1,0 +1,34 @@
+{
+  "schema": "RABAEV",
+  "service": "127.0.0.1:1521/orcl",
+  "before_objects": [],
+  "prior_global_permission_rows": 0,
+  "recovery": "empty additive metadata rollback; nonempty history blocks rollback",
+  "sha256": {
+    "001_schema.sql": "adfb1d4ad797ea1e596656136808954733a0ced80f54ae6f8dc8909046bb9830",
+    "002_api.sql": "96cfa0002e71bc865839b9c0a424c100339cdbcf282d3081c2ca9a790c6eb5bf",
+    "003_ledger.sql": "07b77e2727b17ab4a0317d685ca6d07357e80245fe73ab4d9b0e653bcd5bdb19",
+    "004_permission.sql": "1406240389f6712d87f858bda99b3ecebad1ebf90c97c8a9b8fb479e01c5ed01",
+    "apply.sql": "0dec4e0d6ed1b397d6f53e1b11aa054657a2f77cd11ecc6509a8b5c58160d1be",
+    "apply_clock699.sql": "30db2d8d38ac78fae24f5b3c864fd545259d42c041c74f460e8368815771bf6f",
+    "apply_resolve696.sql": "939667238837d92f6c938cff3dcfb5b29ec7511d07285e07f3f6a9d926c24a58",
+    "apply_resume695.sql": "2da7991e8aa7b6500a098158e3704fa0881d3db1dc28c753d65c3870bdb0eec0",
+    "rollback.sql": "194dad1705321478cdc5882bc9c26afeaa32217ee36b37e09d9aebfb9401c613",
+    "verify.sql": "729b1b2f0b9d812d18d591e4ab27eba766ba97453be46a72280c02215a534212"
+  },
+  "partial_apply": "table created; initial permission name exceeded legacy RIGHT1(30); no rows/API written",
+  "permission": "warehouse_day_inspect",
+  "current_sha256": {
+    "001_schema.sql": "adfb1d4ad797ea1e596656136808954733a0ced80f54ae6f8dc8909046bb9830",
+    "002_api.sql": "5178f6557ea28bf879139992f5841fae418f867a4715aa9e3b52a47a7082f944",
+    "003_ledger.sql": "07b77e2727b17ab4a0317d685ca6d07357e80245fe73ab4d9b0e653bcd5bdb19",
+    "apply.sql": "0dec4e0d6ed1b397d6f53e1b11aa054657a2f77cd11ecc6509a8b5c58160d1be",
+    "rollback.sql": "194dad1705321478cdc5882bc9c26afeaa32217ee36b37e09d9aebfb9401c613",
+    "verify.sql": "729b1b2f0b9d812d18d591e4ab27eba766ba97453be46a72280c02215a534212",
+    "004_permission.sql": "1406240389f6712d87f858bda99b3ecebad1ebf90c97c8a9b8fb479e01c5ed01",
+    "apply_resume695.sql": "2da7991e8aa7b6500a098158e3704fa0881d3db1dc28c753d65c3870bdb0eec0"
+  },
+  "applied_checkpoint": 700,
+  "live_validation": "USER_ERRORS=[]; INVALID=[]",
+  "case698": "Independent pair, replay, resolve, conflicts, self-sign rejection, immutable history; P20H20 unchanged"
+}

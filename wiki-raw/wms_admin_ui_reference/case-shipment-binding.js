@@ -2,12 +2,12 @@
   "use strict";
   let busy = false;
   async function bind() {
-    if (busy || window.cpTsdStockBusy) return;
+    if (busy || window.cpTsdStockBusy || window.wmsCaseType?.hasPending()) return;
     busy = true; window.cpTsdStockBusy = true;
     cpTsdEl("cpTsdBindShipment").disabled = true;
     try {
       if (!cpTsd.task) throw new Error("Выберите паллету отбора.");
-      for (const kind of ["nicora.casePickIntent", "nicora.caseCarrierMove", "nicora.caseCarrierReturn"]) {
+      for (const kind of ["nicora.casePickIntent", "nicora.caseCarrierMove", "nicora.caseCarrierReturn", "nicora.partialShipmentLayout"]) {
         if (localStorage.getItem(JSON.stringify([kind, cpTsdApiBase(), cpTsdUser()])))
           throw new Error("Сначала повторите незавершённую команду.");
       }

@@ -146,7 +146,9 @@ class ResourceManagementService:
                        s.OPERATOR_USER_ID ACTIVE_OPERATOR_USER_ID,
                        s.LOGIN_AT ACTIVE_LOGIN_AT,
                        s.LAST_HEARTBEAT_AT ACTIVE_HEARTBEAT_AT,
-                       s.CURRENT_TASK_ID ACTIVE_TASK_ID
+                       s.CURRENT_TASK_ID ACTIVE_TASK_ID,
+                       s.CURRENT_INVENTORY_TASK_ID ACTIVE_INVENTORY_TASK_ID,
+                       s.STATUS ACTIVE_SESSION_STATUS,s.LAST_CELL,s.LAST_POSITION_AT
                   from RRL_RESOURCE r
                   join RRL_RESOURCE_TYPE rt on rt.RESOURCE_TYPE = r.RESOURCE_TYPE
                   left join RRL_RESOURCE_EQUIPMENT e on e.EQUIPMENT_ID = r.EQUIPMENT_ID
@@ -303,6 +305,10 @@ class ResourceManagementService:
         )
 
     def login_session(self, request: ResourceSessionLoginRequest) -> int:
+        if not getattr(self.gateway,"transaction_bound",False):
+            from ..modules.resources.public import open_existing_resource_session
+            return open_existing_resource_session(self.gateway,request,
+                lambda gateway,body: ResourceManagementService(gateway).login_session(body))
         resource = self._get_resource(request.resource_id)
         equipment_id = request.equipment_id if request.equipment_id is not None else resource.get("equipment_id")
         return self.gateway.call_number_plsql(
@@ -341,7 +347,7 @@ class ResourceManagementService:
 
         resource = self._resolve_tsd_resource(driver_code=driver_code, barcode=barcode)
         equipment = self._resolve_equipment(request.equipment_code, resource.get("equipment_id"))
-        shift = self._resolve_active_shift(request.ware_id or resource.get("ware_id"))
+        shift = self._resolve_active_shift(request.ware_id or resource.get("ware_id"),request.shift_id)
         operator_user_id = str(resource.get("user_id") or driver_code or barcode)
         existing = self._find_active_session(
             resource_id=int(resource["resource_id"]),
@@ -349,6 +355,8 @@ class ResourceManagementService:
             operator_user_id=operator_user_id,
         )
         if existing:
+            if request.shift_id is not None and int(existing["shift_id"])!=request.shift_id:
+                raise HTTPException(409,detail="Finish or hand over the previous shift before selecting another")
             same_resource = int(existing.get("resource_id") or -1) == int(resource["resource_id"])
             same_operator = str(existing.get("operator_user_id") or "").upper() == operator_user_id.upper()
             if not (same_resource or same_operator):
@@ -413,19 +421,8 @@ class ResourceManagementService:
         self._set_session_status(session_id, "ACTIVE", request.updated_by)
 
     def logout_session(self, session_id: int, request: ResourceSessionStatusRequest) -> None:
-        updated = self.gateway.execute(
-            """
-            update RRL_RESOURCE_SESSION
-               set STATUS = 'CLOSED',
-                   LOGOUT_AT = systimestamp,
-                   CLOSED_BY = :closed_by
-             where SESSION_ID = :session_id
-               and STATUS in ('ACTIVE', 'PAUSED', 'ERROR')
-            """,
-            {"session_id": session_id, "closed_by": request.updated_by},
-        )
-        if updated == 0:
-            raise HTTPException(status_code=404, detail="Open resource session not found.")
+        from ..modules.resources.public import close_existing_resource_session
+        close_existing_resource_session(self.gateway,session_id,request.updated_by or "API")
 
     def _set_session_status(self, session_id: int, status: str, updated_by: str | None) -> None:
         updated = self.gateway.execute(
@@ -527,26 +524,29 @@ class ResourceManagementService:
             raise HTTPException(status_code=409, detail="Equipment is not available.")
         return row
 
-    def _resolve_active_shift(self, ware_id: Any | None) -> dict[str, Any]:
-        params: dict[str, Any] = {"ware_id": ware_id}
+    def _resolve_active_shift(self, ware_id: Any | None, shift_id: int | None = None) -> dict[str, Any]:
+        params: dict[str, Any] = {"ware_id": ware_id,"shift_id":shift_id}
         return_rows = self.gateway.fetch_all(
             """
             select *
               from (
-                select SHIFT_ID, SHIFT_CODE, SHIFT_DATE, WARE_ID, START_AT, FINISH_AT, STATUS
+                select SHIFT_ID, SHIFT_CODE, SHIFT_DATE, WARE_ID, START_AT, FINISH_AT, STATUS,REACH_SHIFT_ROLE
                   from RRL_RESOURCE_SHIFT
-                 where STATUS in ('PLANNED', 'OPEN')
+                 where STATUS='OPEN'
+                   and (:shift_id is null or SHIFT_ID=:shift_id)
                    and systimestamp between START_AT and FINISH_AT
                    and (:ware_id is null or WARE_ID = :ware_id or WARE_ID is null)
                  order by case when WARE_ID = :ware_id then 1 else 2 end,
                           START_AT desc
               )
-             where rownum = 1
+             where rownum <= 2
             """,
             params,
         )
         if not return_rows:
             raise HTTPException(status_code=404, detail="Active resource shift not found.")
+        if shift_id is None and len(return_rows)>1 and any(r["reach_shift_role"] in {"MAIN","DUTY"} for r in return_rows):
+            raise HTTPException(409,detail="Select the main or duty shift identifier")
         return return_rows[0]
 
     def _find_active_session(

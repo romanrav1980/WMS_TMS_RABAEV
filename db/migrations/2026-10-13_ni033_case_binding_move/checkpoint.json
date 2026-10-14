@@ -1,0 +1,19 @@
+{
+  "migration_id": "2026-10-13-005-ni033-case-bound-move",
+  "state": "APPLIED_DEV_VALID",
+  "target": "RABAEV/orcl",
+  "recovery": "captured current973 CASE mover/wait finisher and paired rollback, additive package; no DB copy",
+  "sha256": {
+    "db/migrations/2026-10-13_ni033_case_binding_move/000_before_rrl_stock_case_move_cmd.sql": "0ae10a963583a372ea93a0c1c15d3c6e60a54b4b2c6cc1ace557d3e6c6fb74b1",
+    "db/migrations/2026-10-13_ni033_case_binding_move/000_before_rrl_st_defer_case_wait.sql": "3c6d155e65e336d604ddf5ea915af75b29a25e105ec012c46b8280fec98dd9a9",
+    "db/migrations/2026-10-13_ni033_case_binding_move/002_case_move.sql": "8d3c4233ff2207fe56609ac868f146eac3c0ff470d16cd840169e8280e6b463f",
+    "db/migrations/2026-10-13_ni033_case_binding_move/003_wait_finish.sql": "7cbecc7cef8aba868ed55b22fc7e276d321b59fa43e795da8f4a25f2d3df0371",
+    "db/migrations/2026-10-13_ni033_case_binding_move/apply.sql": "fa4d7cbba779fffa367a679b18418d9fa2c8d21222deb8dabdf835082456c0f7",
+    "db/migrations/2026-10-13_ni033_case_binding_move/004_compile.sql": "a9333b89c7ecd9ac892069870731f3216c670a926abd40eb365eb1fded3fc966",
+    "db/migrations/2026-10-13_ni033_case_binding_move/rollback.sql": "2fb6d7cdaa26e77e688acbb5e9b9c8507425fc5850d5c49e4552c8f99fb8e14c",
+    "db/migrations/2026-10-13_ni033_case_binding_move/verify.sql": "812f8abf330244cc00a41e8fedd73448781332d4f2955d955d371af2be2808c3",
+    "db/migrations/2026-10-13_ni033_case_binding_move/005_ledger.sql": "f141dee64f078c956f9ad68828d431681981391ad4acef5ece2ea7d887fbcd33",
+    "db/migrations/2026-10-13_ni033_case_binding_move/001_binding.sql": "c69727779874f4acdf2090ba67a52ff877ed2df5bd671e459370770bd58b61d6"
+  },
+  "evidence": "975/976 currentphysical12/CTFF3;982 repeated sameCASE task1132/selfsource/CTFF4/oldfacts/exactreplay;983 SQL"
+}

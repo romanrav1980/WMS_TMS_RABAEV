@@ -1,0 +1,2 @@
+# Qwen:253 — default планового рейса
+Live DATA_DEFAULT exactUnicodeplanned; originalfunction omitsCONDITION. New native/manual/auto-plan/cluster/legacy callers mustgetplanned status; no historicmassupdate. Directoldfunctionrollbackcase leavesnoTT/stock. 248 priorfunctionliteralblame correctedinwiki; capturedrawsourceuntouched. TableDDL rowtypeinvalidrecompile onlyaffected/PooledAPIrestart/nativeVALID. Existingwrapperexplicitstatus preserves creator. ManifestmirrorsDefault/index startup.

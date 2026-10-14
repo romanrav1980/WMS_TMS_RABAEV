@@ -1,0 +1,4 @@
+﻿from pathlib import Path
+p=Path('wiki-raw/wms_admin_ui_reference/resource-workload.js');s=p.read_text(encoding='utf-8');start=s.index('  function renderRecommendations');end=s.index('  async function preview',start);s=s[:start]+s[start:end].replace('Date.parse(row.finish_at) > Date.now()', 'Date.parse(row.to_utc) > Date.now()')+s[end:];p.write_text(s,encoding='utf-8')
+p=Path('wiki-raw/wms_admin_ui_reference/wave-command-intent.js');s=p.read_text(encoding='utf-8').replace("      return prefix+auth.state.apiBase+':'+auth.state.user.username;", "      return options.storageKey ? options.storageKey() : prefix+auth.state.apiBase+':'+auth.state.user.username;")
+s=s.replace('      localStorage.removeItem(record.storageKey);','      localStorage.removeItem(record.storageKey);\n      if(localStorage.getItem(record.storageKey)!==null)throw new Error(\'Не удалось очистить сохранённое решение. Повторите исходный запрос.\');');p.write_text(s,encoding='utf-8')

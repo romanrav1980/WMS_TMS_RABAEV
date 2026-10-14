@@ -1,26 +1,30 @@
-# NICORA: каталог доработок существующей WMS/TMS
+# NICORA: каталог требований и остаточных доработок
 
-Минимум 80% ресурсов на создание функционала. Дополнительные тестовые прогоны остановлены поручением владельца. Существующие WMS/TMS и схема RABAEV — основа доработок. Старые сценарии сохранены как требования к результату, не поручение запускать проверки.
+09.10.2026, revision 11. **68 NS-карточек — каталог; очередь — 18 спринтов / 8 направлений**.
+[Основной план](implementation_plan.md), [следующий NI03.1](execution/active/ni03_1.md).
 
-[Глобальный анализ текущего продукта](../../components/nicora_global_reuse_analysis_20261007.md). Основной план — [NI01–NI08 revision 10](implementation_plan.md); прежние назначения NI04–NI06 заменены. NI01 — baseline with gaps; NI02 manual SAP–ST bridge установлен; следующая функция NI03 — товарные эффекты заданий. NI04 завершает существующую вложенность SSCC. 68 ID сохранены как каталог объёма; NS01–NS04 ведутся с функцией, NS05 не блокирует работу.
+RABAEV ACTIVE, B0 сохранён, compatibility OFF, registry 25/6/0. [Факт и границы](../../database/nicora_stock_posting_cutover_20261009.md).
+NS08 не требует повторной разработки ядра. CASE/QC/shipment/marked birth переиспользуются; недостаточное подтверждение не означает отсутствия кода.
+
+Минимум 80% на функционал. Большие load/recovery/пилоты после рабочего функционала. Матрица ниже — требуемое поведение; актуальный остаток/реализованные срезы уточнены в карточках и metadata.
 
 ## Рабочий входящий поток SAP → паллеты → хранение
 
 | Карточка | Существующая основа | Доработка |
 |---|---|---|
-| [NS08: Атомарная команда и защита от повторов](sprints/ns08.md) | db.py, oracle_gateway.py, api_audit.py | Использовать gateway.transaction с общим cursor для составной команды; убрать отдельные commit и защитить повтор адресно. |
-| [NS09: Приём и отправка интеграционных сообщений](sprints/ns09.md) | production_exchange_service.py, outbox_service.py, traceability_service.py | Расширить существующий журнал/inbox-outbox сообщениями SAP retail; production JSON не равен SAP контракту. |
-| [NS13: Доработка: Карточка SKU и проверка упаковки](sprints/ns13.md) | finished_goods_service.py, raw_material_service.py, tserver_service.py | Расширить существующие SKU settings несколькими применимыми профилями табака/CRPT/ЕГАИС/других систем; сохранить GTIN и упаковки. |
+| [NS08: Атомарная команда и защита от повторов](sprints/ns08.md) | db.py, oracle_gateway.py, api_audit.py | Ядро 2.0/single cutover выполнены. Использовать RRL_STOCK_POSTING_API; довести только оставшиеся доменные стыки, без второго исполнителя и повторного перевода. |
+| [NS09: Приём и отправка интеграционных сообщений](sprints/ns09.md) | production_exchange_service.py, outbox_service.py, traceability_service.py | File SAP inbox/ACK и stock outbox реализованы. Довести фактический ERP-контракт и применимые внешние Track & Trace квитанции/повторы. |
+| [NS13: Доработка: Карточка SKU и проверка упаковки](sprints/ns13.md) | finished_goods_service.py, raw_material_service.py, tserver_service.py | WMS MARKING_REQUIRED/профили и physical identity уже есть; закрыть только пробелы применимости и сквозной версии профиля. |
 | [NS14: Доработка: Подсклады, ячейки и правила обращения](sprints/ns14.md) | warehouse_topology_service.py, warehouse_map_service.py, picking_service.py | Настроить существующие подсклады/ячейки/pick faces; добавить ёмкость, условия и направление маршрута NICORA. |
 | [NS15: Доработка: Магазины, тара и вместимость автомобилей](sprints/ns15.md) | customer_order_service.py, customer_rule_service.py, transport_service.py | Доработать существующие магазины/адреса/машины: календарь, типы тары, вместимость и температурные ограничения. |
 | [NS16: Доработка: Обмен справочниками ERP](sprints/ns16.md) | production_exchange_service.py, outbox_service.py, traceability_service.py | Подключить SAP источник к существующим справочникам/журналам; регуляторные адаптеры добавлять по применимому профилю. |
 | [NS17: Доработка: Приём заказов ERP](sprints/ns17.md) | customer_order_service.py, customer_rule_service.py, transport_service.py | Доработать customer order import для SAP: неизменность заказа, календарь, поздний заказ и дедупликация. |
-| [NS18: Доработка: Приёмка и доступность в экспедиции](sprints/ns18.md) | Form1.cs, RRL_ACCEPT_ORDER2_3_FUNCTION.sql, finished_goods_service.py | Добавить современную приёмку на существующих приходах/паллетах: основание SAP, партия/срок/SSCC, фактическая укладка, марки либо разрешённые агрегации. |
+| [NS18: Доработка: Приёмка и доступность в экспедиции](sprints/ns18.md) | Form1.cs, RRL_ACCEPT_ORDER2_3_FUNCTION.sql, finished_goods_service.py | SAP pallet receipt/labels/unit capture/putaway установлены; остаток: реальные XML/ACK и пробелы бизнес-правил. Допуск NI03.1, состав NI04. |
 | [NS19: Доработка: Слотирование и правила партий](sprints/ns19.md) | warehouse_topology_service.py, warehouse_map_service.py, picking_service.py | Доработать pick face/SKU mapping: партии, смешение только отбора, резерв диапазона и переход на новый диапазон. |
-| [NS23: Доработка: Грузовое место и вложенные идентификаторы](sprints/ns23.md) | production_service.py, RRL_PRODUCTION_API_PACKAGE_BODY.sql, RRL_REGULATORY_API_PACKAGE_BODY.sql | Расширить паллеты/агрегации составом HU/заказов и версиями по системам; физическое количество считать один раз. |
+| [NS23: Доработка: Грузовое место и вложенные идентификаторы](sprints/ns23.md) | production_service.py, RRL_PRODUCTION_API_PACKAGE_BODY.sql, RRL_REGULATORY_API_PACKAGE_BODY.sql | CRPT-вложенность/CASE существуют; довести складской lifecycle HU, один родитель, вскрытие/перепаковку и отсутствие двойного количества. |
 | [NS30: Доработка: Сотрудники, техника и смены](sprints/ns30.md) | resource_management_service.py, warehouse_tasks.py | Настроить существующие resource/session/shift/equipment под роли NICORA и ранние смены. |
 | [NS31: Доработка: Назначение задания и терминал исполнителя](sprints/ns31.md) | warehouse_task_service.py, warehouse_task_domain_sync_service.py, reachtruck-tsd.js | Доработать очередь и reachtruck TSD: квалификация, приоритет, сканы, безопасная передача и server-saved марки. |
-| [NS20: Доработка: Размещение и выбор источника пополнения](sprints/ns20.md) | warehouse_task_service.py, warehouse_task_domain_sync_service.py, reachtruck-tsd.js | Добавить receipt putaway handler в существующие задания: пригодный адрес по времени пополнения до отбора, проводка остатка и марок при завершении. |
+| [NS20: Доработка: Размещение и выбор источника пополнения](sprints/ns20.md) | warehouse_task_service.py, warehouse_task_domain_sync_service.py, reachtruck-tsd.js | Placement/putaway и metric времени/расстояния реализованы. Завершить единый допуск источников и подтверждённые различия стратегии. |
 
 ## Задание TMS → волна → резерв → пополнение
 
@@ -30,9 +34,9 @@
 | [NS22: Доработка: Распределение дефицита](sprints/ns22.md) | stock_reservation_service.py, picking_service.py, RRL_PICK_WAVE_API_PACKAGE_BODY.sql | Добавить алгоритм дефицита по кратностям, округлению и очередности отгрузки в существующее распределение. |
 | [NS24: Доработка: Транспортный план и задание на сборку](sprints/ns24.md) | transport_service.py, TransportDispatchPage.tsx, transport.py | Доработать существующий рейс/СТ: плановые масса, объём, тара, температура и задание на сборку, связь с HU. |
 | [NS25: Доработка: Волны по подскладам и срокам](sprints/ns25.md) | picking_service.py, case_pick_service.py, wave-replenishment.js | Создавать действующие waves из задания TMS по подскладу/сроку; добавить операционный день ночной смены. |
-| [NS26: Доработка: Жёсткий резерв волны](sprints/ns26.md) | stock_reservation_service.py, picking_service.py, RRL_PICK_WAVE_API_PACKAGE_BODY.sql | Сохранить SOFT→HARD в RRL_PICK_WAVE_API; уточнить общий баланс, фактический фреш и исключительность маркированных единиц. |
+| [NS26: Доработка: Жёсткий резерв волны](sprints/ns26.md) | stock_reservation_service.py, picking_service.py, RRL_PICK_WAVE_API_PACKAGE_BODY.sql | Канонический HARD/P и перенос покрытия реализованы. Довести остаточные связи потребности и общий допуск планировщика. |
 | [NS27: Доработка: Пополнение мини-макс](sprints/ns27.md) | picking_service.py, case_pick_service.py, wave-replenishment.js | Доработать действующую mini-max очередь по ёмкости и открытым подачам; один источник/warehouse task. |
-| [NS28: Доработка: Пополнение под волну целым поддоном](sprints/ns28.md) | picking_service.py, case_pick_service.py, wave-replenishment.js | Расширить текущую подачу под волну: целая паллета, свободные слоты/резервный отбор и баланс с mini-max. |
+| [NS28: Доработка: Пополнение под волну целым поддоном](sprints/ns28.md) | picking_service.py, case_pick_service.py, wave-replenishment.js | FULL_PALLET в ACTIVE использует PICKING_MOVE/WAVE TASK_COMPLETE. Довести недостающие переходы/действия и доступность. |
 | [NS29: Доработка: Частичное пополнение категории B](sprints/ns29.md) | picking_service.py, case_pick_service.py, wave-replenishment.js | Добавить категорию B к partial movement: свободная ёмкость, остаток паллеты и перенесённые марки. |
 | [NS32: Доработка: Разрешение волны и монитор препятствий](sprints/ns32.md) | picking_service.py, case_pick_service.py, wave-replenishment.js | Доработать get_wave_readiness/launch: полная обеспеченность, завершение пополнения и причины препятствий. |
 | [NS33: Доработка: Прогноз загрузки склада](sprints/ns33.md) | resource_management_service.py, warehouse_tasks.py | Подключить реальные waves/tasks/resources к прогнозу нагрузки вместо replay; перенос сроков через действующие планы. |
@@ -41,23 +45,23 @@
 
 | Карточка | Существующая основа | Доработка |
 |---|---|---|
-| [NS34: Доработка: Стеллажная комплектация и состав места](sprints/ns34.md) | case_pick_service.py, tserver_service.py, useScanInput.ts | Доработать confirm_line и клиентскую паллету: односторонний маршрут, партии, марки и план укладки. |
+| [NS34: Доработка: Стеллажная комплектация и состав места](sprints/ns34.md) | case_pick_service.py, tserver_service.py, useScanInput.ts | CASE pick/short/replay/move/return и binding→ST реализованы; остаток — способы отбора и складская вложенность. |
 | [NS35: Доработка: Весовая коробка по штрихкоду](sprints/ns35.md) | case_pick_service.py, tserver_service.py, useScanInput.ts | Добавить весовой ШК к существующему scanner/product lookup и фактическую массу идентифицированной упаковки. |
 | [NS36: Доработка: Комплектация на весах и накидывание](sprints/ns36.md) | case_pick_service.py, tserver_service.py, useScanInput.ts | Дополнить текущий отбор весовым постом и накидыванием, допуском заказа и точным составом марок. |
 | [NS37: Доработка: Пикбайлайн из экспедиции приёмки](sprints/ns37.md) | case_pick_service.py, tserver_service.py, useScanInput.ts | Добавить pick-by-line к действующему отбору: источник приёмки, распределение магазинам и состав. |
 | [NS38: Доработка: Срочная инвентаризация пустой ячейки](sprints/ns38.md) | warehouse_task_service.py, warehouse_task_domain_sync_service.py, reachtruck-tsd.js | Добавить срочную инвентаризацию пустого pick face как вид действующего задания с решением КРО. |
 | [NS39: Доработка: Срочное восстановление отбора](sprints/ns39.md) | warehouse_task_service.py, warehouse_task_domain_sync_service.py, reachtruck-tsd.js | Связать shorts, пополнение и задания восстановления в срочную цепочку с одним товарным эффектом. |
 | [NS40: Доработка: Малая тара поштучного отбора](sprints/ns40.md) | case_pick_service.py, tserver_service.py, useScanInput.ts | Расширить pallet types/состав заказа малой тарой и связью с родительским HU без двойного учёта. |
-| [NS41: Доработка: Весовой контроль и разрешение отгрузки](sprints/ns41.md) | tserver_service.py, REMAINS_PACKAGE_BODY.sql, App.tsx | Расширить весовой контроль: тара, допуски, версия состава и блокировки выпуска по маркировке. |
+| [NS41: Доработка: Весовой контроль и разрешение отгрузки](sprints/ns41.md) | tserver_service.py, REMAINS_PACKAGE_BODY.sql, App.tsx | Native QC/OUTGOING_PALLET_CHECK/LOT_CHECK подключены; остаток — независимые роли, версия допуска и подтверждённые пробелы контроля. |
 | [NS42: Доработка: Проверка состава после ошибки веса](sprints/ns42.md) | tserver_service.py, REMAINS_PACKAGE_BODY.sql, App.tsx | Доработать lot/place audit: отдельный проход после ошибки веса, роли и точные марки. |
-| [NS43: Доработка: Исправление и повторный выпуск](sprints/ns43.md) | tserver_service.py, REMAINS_PACKAGE_BODY.sql, App.tsx | Добавить версию исправленного состава и повторный выпуск в текущий аудит, отменив прежнее разрешение. |
+| [NS43: Доработка: Исправление и повторный выпуск](sprints/ns43.md) | tserver_service.py, REMAINS_PACKAGE_BODY.sql, App.tsx | Правка уже сбрасывает контроль, CASE return установлен; довести бизнес-исправление состава/согласования/повторный выпуск. |
 | [NS44: Доработка: Выборочная проверка перепикиванием](sprints/ns44.md) | tserver_service.py, REMAINS_PACKAGE_BODY.sql, App.tsx | Расширить существующее перепикивание правилами выборки и профилем SKU. |
 
 ## Консолидация → погрузка → выезд → магазин
 
 | Карточка | Существующая основа | Доработка |
 |---|---|---|
-| [NS45: Доработка: Консолидация по упаковочному листу](sprints/ns45.md) | production_service.py, RRL_PRODUCTION_API_PACKAGE_BODY.sql, RRL_REGULATORY_API_PACKAGE_BODY.sql | Связать упаковочный лист с HU/aggregation составом; добавить комплектность и переупаковку. |
+| [NS45: Доработка: Консолидация по упаковочному листу](sprints/ns45.md) | production_service.py, RRL_PRODUCTION_API_PACKAGE_BODY.sql, RRL_REGULATORY_API_PACKAGE_BODY.sql | Physical CASE и ST binding уже есть; довести вложенные места/консолидацию и факт экспедиции. |
 | [NS46: Доработка: Экспедиция и развозка к воротам](sprints/ns46.md) | warehouse_task_service.py, warehouse_task_domain_sync_service.py, reachtruck-tsd.js | Расширить warehouse tasks перемещением экспедиции к воротам и рейсу; план отделить от факта. |
 | [NS47: Доработка: Подтверждение погрузки в автомобиль](sprints/ns47.md) | transport_service.py, TransportDispatchPage.tsx, transport.py | Добавить факт погрузки HU в машину; не обходить обязательный контроль при ошибке can_print. |
 | [NS48: Доработка: Ожидание рейса и перенос грузов](sprints/ns48.md) | transport_service.py, TransportDispatchPage.tsx, transport.py | Разделить готов/погружен/выехал и закрытие рейса; перенос груза после подтверждённой выгрузки. |
@@ -70,7 +74,7 @@
 | [NS51: Доработка: Межскладские плечи и кросс-док](sprints/ns51.md) | CROSS_DOCKING_PACKAGE_BODY.sql, transport_service.py | Добавить два плеча/консолидацию поверх TMS/HU; legacy SYNC_* не считать готовым процессом. |
 | [NS52: Доработка: Приёмка магазина по весу и фото](sprints/ns52.md) | driver_mobile.py, DriverMobilePage.tsx, transport_service.py | Добавить вес/несколько фото/акт к приёмке магазина; готовность всего сценария не установлена. |
 | [NS53: Доработка: Поиск потери и расследование](sprints/ns53.md) | warehouse_task_service.py, warehouse_task_domain_sync_service.py, reachtruck-tsd.js | Связать task/short/audit в расследование потери с ролями, сроками и конкретными марками. |
-| [NS54: Доработка: Возврат товара и склада брака](sprints/ns54.md) | Form1.cs, RRL_ACCEPT_ORDER2_3_FUNCTION.sql, finished_goods_service.py | Добавить SAP возврат на существующий приход/остаток: разрешение, исправная коробка/брак/поставщик и жизненный цикл марки. |
+| [NS54: Доработка: Возврат товара и склада брака](sprints/ns54.md) | Form1.cs, RRL_ACCEPT_ORDER2_3_FUNCTION.sql, finished_goods_service.py | CASE return и supplier-return adapter уже есть; довести SAP-бизнес-возврат, направления/регуляторный lifecycle, настроить RETURNS. |
 | [NS55: Доработка: Оборотная тара по типам](sprints/ns55.md) | driver_mobile.py, DriverMobilePage.tsx, transport_service.py | Расширить return operations балансом тары по типу/машине/магазину; полноценный реестр пока не установлен. |
 
 ## Затраты, закрытие дня и оптимизация

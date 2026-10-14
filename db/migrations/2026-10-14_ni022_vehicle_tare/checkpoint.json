@@ -1,0 +1,10 @@
+{
+  "migration_id": "2026-10-14-1179-vehicle-tare-variants",
+  "target": [
+    "RABAEV",
+    "ORCL"
+  ],
+  "invalid_baseline": [],
+  "state": "APPLIED_TARGETED_VERIFIED",
+  "evidence": "reports/nicora/2026-10-13/36-vehicle-tare-variants-report.md"
+}

@@ -168,7 +168,7 @@ class DistanceMatrixService:
 
         points = [(float(a["LAT"]), float(a["LON"])) for a in addrs]
         try:
-            matrix = provider.build_matrix(points)
+            matrix,durations = provider.build_cost_matrix(points)
         except Exception:
             if not is_auto:
                 raise
@@ -187,48 +187,10 @@ class DistanceMatrixService:
                         "force": False,
                     }
                 fresh_pair_keys = self._fetch_fresh_pair_keys(provider.name, max_age_hours)
-            matrix = provider.build_matrix(points)
+            matrix,durations = provider.build_cost_matrix(points)
 
-        merge_sql = """
-            MERGE INTO RABAEV.RRL_ADDR_DISTANCE_MATRIX T
-            USING (SELECT :from_addr AS FROM_ADDR, :to_addr AS TO_ADDR FROM DUAL) S
-            ON (T.FROM_ADDR = S.FROM_ADDR AND T.TO_ADDR = S.TO_ADDR)
-            WHEN MATCHED THEN
-                UPDATE SET DISTANCE_KM = :dist_km,
-                           DURATION_MIN = :dur,
-                           SOURCE = :source,
-                           UPDATED_AT = SYSDATE
-            WHEN NOT MATCHED THEN
-                INSERT (FROM_ADDR, TO_ADDR, DISTANCE_KM, DURATION_MIN, SOURCE, UPDATED_AT)
-                VALUES (:from_addr, :to_addr, :dist_km, :dur, :source, SYSDATE)
-        """
-        statements: list[tuple[str, dict[str, Any]]] = []
-        computed_pairs = 0
-        skipped_pairs = 0
-        for i in range(n):
-            for j in range(n):
-                if i == j:
-                    continue
-                pair_key = (str(addrs[i]["ADDR"]), str(addrs[j]["ADDR"]))
-                if pair_key in fresh_pair_keys:
-                    skipped_pairs += 1
-                    continue
-                dist_km = matrix[i][j]
-                # avg speed 50 km/h for duration estimate
-                duration_min = round(dist_km / 50.0 * 60, 0)
-                statements.append(
-                    (
-                        merge_sql,
-                        {
-                        "from_addr": addrs[i]["ADDR"],
-                        "to_addr":   addrs[j]["ADDR"],
-                        "dist_km":   dist_km,
-                        "dur":       duration_min,
-                        "source":    provider.name,
-                        },
-                    )
-                )
-                computed_pairs += 1
+        from ..modules.transport.public import matrix_merge_statements
+        statements,computed_pairs,skipped_pairs=matrix_merge_statements(addrs,matrix,durations,fresh_pair_keys,provider.name)
 
         if statements:
             self.gateway.execute_many(statements)

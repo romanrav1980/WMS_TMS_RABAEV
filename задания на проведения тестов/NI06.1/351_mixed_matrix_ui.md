@@ -1,0 +1,2 @@
+# Qwen345–351
+Mixed marked3EA/6codes+ordinary3EA/nocodes, exact ordinarylots header and perSKU marked matrix. Under newmarkedcard with missingunits refusal; ordinaryscanqty doesn'tcreateQR. Correct perlot totals no groupdoublecount. UI cards display current profiles separately/markedunitcount only/versioned keys; durablependingpayload/actor/load/address/signature preserved. Actualcontext348 alreadySTORE both3, no factories/initial349. Hardware andindependent acceptance absent.

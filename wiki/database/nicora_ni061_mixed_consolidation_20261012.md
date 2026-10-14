@@ -1,0 +1,10 @@
+# Смешанное маркированное и обычное верхнее место
+345 APPLIED в RABAEV/orcl. Прежний HU_SHIP/двеdispatch строки/STORE_RECEIPT сохраняют разные правила товара. Для маркированного SKU применяется exact current savedprofile-version и матрица каждой единицы. Для обычного SKU issued_manifest доказывает ноль trackedunits и отсутствие обязательного профиля; ordinary_lots содержит только UID такого исходного STOCK листа. Количественные строки по этим UID проверяет прежний immutable receipt compiler. QR для обычного товара не создаются и не требуются.
+
+STORE_MARK_CORE сверяет marked disposition отдельно по каждой lot_uid, а обычные строки допускает только по заранее доказанным ordinary_lots. Дубликат/чужая/пропущенная строка отклоняется. Полный union профилей/число QR относится только к маркированным единицам. Количество товара не выводится из числа сканов. Смена карточки на маркированную при отсутствии tracked units отклоняется native issued_manifest; serialized units без профилей блокируются.
+
+Actual346–350: marked3EA/3units6codes +ordinary3EA/no codes, две реальные приёмки/старые задания/передача ответственности/СТ/QC →oneTOP →actualLOAD/DEPART/STOREbothordersaccepted3once/P0. LateLOAD rollback/exactrepeat/protected20/20. tmp/context348.json полностью доставлен, source346347/initial349 forbidden.
+
+351 UI: типизированный StoreMarkMatrix отдельно показывает артикул, товарную паллету, число единиц и обязательные профили каждого товара; ordinary_lots показывает обычную количественную сверку. Select ключ включает version/mode, предотвращая совпадение React keys для одного профиля разных версий. Существующие durable drafts/operation retries/серверная финальная проверка сохранены. TypeScript admin PASS, architecture635/0cycles/76debt. Отдельный модуль не раздувает основной экран.
+
+Не объявлены выполненными hardware/независимая приёмка/GovACK, multi-recovery и atomic grouped first-leg multiSKU receipt. SQL inventory owner: perleaf profileproof bounded byUID/card/200tree; warm plan and batching on large tree remain explicit backlog.

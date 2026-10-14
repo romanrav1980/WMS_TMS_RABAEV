@@ -6,12 +6,16 @@ const waveReplenishmentState = {
   articuls: [],
   articulRules: [],
   selectedWave: null,
+  listEpoch: 0,
+  selectionEpoch: 0,
+  initialWaveId: null,
   selectedPickFace: null,
   selectedArticul: null,
   selectedArticulRule: null,
 };
 
 const waveRepEl = (id) => document.getElementById(id);
+const waveRepIdentity=()=>JSON.stringify([waveRepApiBase(),window.wmsAdminAuth?.state?.user?.username]);
 
 function waveRepApiBase() {
   return (window.wmsAdminAuth?.state?.apiBase || "http://127.0.0.1:8088").replace(/\/$/, "");
@@ -55,22 +59,26 @@ function waveRepWaveParams() {
 }
 
 async function loadWaveReplenishmentWaves() {
-  waveRepEl("waveReplenishmentStatusText").textContent = "Загрузка...";
-  waveReplenishmentState.waves = await waveRepFetch(`/api/picking/waves?${waveRepWaveParams().toString()}`);
-  const query = waveRepEl("waveReplenishmentSearch").value.trim().toLowerCase();
-  const waves = query
-    ? waveReplenishmentState.waves.filter((wave) => [wave.pick_wave_id, wave.wave_code, wave.wave_name, wave.status].some((value) => String(value || "").toLowerCase().includes(query)))
-    : waveReplenishmentState.waves;
-  renderWaveRows(waves);
-  waveRepEl("waveReplenishmentStatusText").textContent = `Волн: ${waves.length}`;
-  const requestedWaveId = Number(new URLSearchParams(window.location.search).get("wave_id") || 0);
-  if (requestedWaveId && waveReplenishmentState.selectedWave?.pick_wave_id !== requestedWaveId) {
-    const requestedWave = waveReplenishmentState.waves.find((wave) => Number(wave.pick_wave_id) === requestedWaveId);
-    if (requestedWave) await selectWave(requestedWaveId);
+  waveRepEl("waveReplenishmentStatusText").textContent="Загрузка...";
+  const epoch=++waveReplenishmentState.listEpoch,identity=waveRepIdentity(),params=waveRepWaveParams().toString();
+  const rows=await waveRepFetch('/api/picking/waves?'+params);
+  if(epoch!==waveReplenishmentState.listEpoch||identity!==waveRepIdentity()||params!==waveRepWaveParams().toString())return;
+  waveReplenishmentState.waves=rows;
+  const query=waveRepEl("waveReplenishmentSearch").value.trim().toLowerCase();
+  const waves=query?rows.filter(wave=>[wave.pick_wave_id,wave.wave_code,wave.wave_name,wave.status]
+    .some(value=>String(value||'').toLowerCase().includes(query))):rows;
+  renderWaveRows(waves);waveRepEl("waveReplenishmentStatusText").textContent='Волн: '+waves.length;
+  if(waveReplenishmentState.initialWaveId){
+    const id=waveReplenishmentState.initialWaveId;waveReplenishmentState.initialWaveId=null;
+    await selectWave(id);
   }
 }
 
 function renderWaveRows(waves) {
+  const active=waveReplenishmentState.selectedWave;
+  const pinned=active&&!waves.some(wave=>Number(wave.pick_wave_id)===Number(active.pick_wave_id));
+  if(pinned){waves=[active,...waves];waveRepEl("waveReplenishmentSelectionText").textContent="Волна #"+active.pick_wave_id+" · "+(active.wave_code||"")+" · закреплена вне текущей выборки";}
+
   waveRepEl("waveReplenishmentWaveRows").innerHTML = waves.map((wave) => {
     const selected = waveReplenishmentState.selectedWave?.pick_wave_id === wave.pick_wave_id ? " class=\"selected\"" : "";
     return `<tr${selected} data-wave-id="${escapeWaveRepAttr(wave.pick_wave_id)}">`
@@ -88,19 +96,39 @@ function renderWaveRows(waves) {
 }
 
 async function selectWave(waveId) {
-  waveReplenishmentState.selectedWave = waveReplenishmentState.waves.find((wave) => Number(wave.pick_wave_id) === waveId) || null;
-  waveRepEl("waveReplenishmentSelectionText").textContent = waveReplenishmentState.selectedWave ? `Волна #${waveId}` : "Волна не выбрана";
-  await loadWaveReplenishmentTasks();
-  await loadWaveStagingTasks();
-  renderWaveRows(waveReplenishmentState.waves);
+  if(!Number.isSafeInteger(waveId)||waveId<1)return;
+  for(const holder of [window.wmsWaveExecutionIntent,window.wmsWavePickIntent]){
+    const saved=holder?.read().value;
+    if(saved&&saved.wave!==waveId){waveRepEl('waveReplenishmentStatusText').textContent='Сначала повторите сохранённое решение волны '+saved.wave;return;}
+  }
+  window.dispatchEvent(new CustomEvent('wms-wave-selection-loading',{detail:{wave_id:waveId}}));
+  const epoch=++waveReplenishmentState.selectionEpoch,identity=waveRepIdentity();
+  waveReplenishmentState.selectedWave=null;waveReplenishmentState.tasks=[];waveReplenishmentState.stagingTasks=[];
+  renderReplenishmentTasks();renderStagingTasks();
+  waveRepEl("waveReplenishmentSelectionText").textContent='Читаю волну #'+waveId;
+  try{
+    const wave=waveReplenishmentState.waves.find(item=>Number(item.pick_wave_id)===waveId)||
+      await waveRepFetch('/api/picking/waves/'+waveId+'/header');
+    if(epoch!==waveReplenishmentState.selectionEpoch||identity!==waveRepIdentity())return;
+    if(Number(wave?.pick_wave_id)!==waveId)throw new Error('Ответ не соответствует выбранной волне.');
+    waveReplenishmentState.selectedWave=wave;
+    waveRepEl("waveReplenishmentSelectionText").textContent='Волна #'+waveId+' · '+(wave.wave_code||'');
+    window.dispatchEvent(new CustomEvent('wms-wave-selected',{detail:{wave_id:waveId}}));
+    const results=await Promise.allSettled([loadWaveReplenishmentTasks(),loadWaveStagingTasks()]);
+    if(epoch!==waveReplenishmentState.selectionEpoch||identity!==waveRepIdentity())return;
+    const failed=results.find(result=>result.status==='rejected');if(failed)throw failed.reason;
+    renderWaveRows(waveReplenishmentState.waves);
+  }catch(error){if(epoch===waveReplenishmentState.selectionEpoch&&identity===waveRepIdentity())showWaveRepError(error);}
 }
 
 async function loadWaveReplenishmentTasks() {
-  const wave = waveReplenishmentState.selectedWave;
-  if (!wave) return;
-  waveRepEl("waveReplenishmentDetailStatus").textContent = "Загрузка пополнений...";
-  waveReplenishmentState.tasks = await waveRepFetch(`/api/picking/waves/${wave.pick_wave_id}/replenishment-tasks?limit=500`);
-  renderReplenishmentTasks();
+  const wave=waveReplenishmentState.selectedWave;if(!wave)return;
+  const epoch=waveReplenishmentState.selectionEpoch,identity=waveRepIdentity();
+  waveRepEl("waveReplenishmentDetailStatus").textContent="Загрузка пополнений...";
+  const rows=await waveRepFetch('/api/picking/waves/'+wave.pick_wave_id+'/replenishment-tasks?limit=500');
+  if(epoch!==waveReplenishmentState.selectionEpoch||identity!==waveRepIdentity()||
+    waveReplenishmentState.selectedWave?.pick_wave_id!==wave.pick_wave_id)return;
+  waveReplenishmentState.tasks=rows;renderReplenishmentTasks();
 }
 
 function renderReplenishmentTasks() {
@@ -125,7 +153,7 @@ function renderReplenishmentTasks() {
       + `<td>${escapeWaveRepHtml(task.pick_wave_replenish_task_id)}</td>`
       + `<td><span class="task-badge ${waveStatusClass(task.status)}">${escapeWaveRepHtml(task.status)}</span><small>${escapeWaveRepHtml(state)}</small></td>`
       + `<td><b>${escapeWaveRepHtml(task.articul)}</b><small>${escapeWaveRepHtml(task.replenishment_method || "-")} / ${escapeWaveRepHtml(task.replenishment_qty_mode || "-")}</small></td>`
-      + `<td><b>${escapeWaveRepHtml(task.pallet_uid || "-")}</b><small>${escapeWaveRepHtml(task.source_cell_code || "-")}</small></td>`
+      + `<td><b>${escapeWaveRepHtml(task.pallet_uid || "-")}</b><small>${escapeWaveRepHtml(task.source_cell_code || "-")}</small><button type="button" data-source-task="${escapeWaveRepHtml(task.pick_wave_replenish_task_id)}">Источники</button></td>`
       + `<td>${escapeWaveRepHtml(task.target_cell_code || "-")}</td>`
       + `<td>${escapeWaveRepHtml(formatWaveRepQty(task.qty))}</td>`
       + `<td>${escapeWaveRepHtml(sourceReservation)}</td>`
@@ -164,11 +192,12 @@ function replenishmentReasonFallback(task) {
 }
 
 async function loadWaveStagingTasks() {
-  const wave = waveReplenishmentState.selectedWave;
-  if (!wave) return;
-  const rows = await waveRepFetch(`/api/picking/waves/${wave.pick_wave_id}/tasks?limit=500`);
-  waveReplenishmentState.stagingTasks = rows.filter((row) => row.task_type === "FULL_PALLET");
-  renderStagingTasks();
+  const wave=waveReplenishmentState.selectedWave;if(!wave)return;
+  const epoch=waveReplenishmentState.selectionEpoch,identity=waveRepIdentity();
+  const rows=await waveRepFetch('/api/picking/waves/'+wave.pick_wave_id+'/tasks?limit=500');
+  if(epoch!==waveReplenishmentState.selectionEpoch||identity!==waveRepIdentity()||
+    waveReplenishmentState.selectedWave?.pick_wave_id!==wave.pick_wave_id)return;
+  waveReplenishmentState.stagingTasks=rows.filter(row=>row.task_type==='FULL_PALLET');renderStagingTasks();
 }
 
 function renderStagingTasks() {
@@ -182,10 +211,10 @@ function renderStagingTasks() {
       + `<td><b>${escapeWaveRepHtml(task.pallet_uid || "-")}</b><small>${escapeWaveRepHtml(formatWaveRepQty(task.qty))}</small></td>`
       + `<td>${escapeWaveRepHtml(task.source_cell_code || "-")}</td>`
       + `<td>${escapeWaveRepHtml(task.target_cell_code || "-")}</td>`
-      + `<td><span class="task-badge ${waveStatusClass(warehouseStatus)}">${escapeWaveRepHtml(warehouseStatus)}</span><small>${escapeWaveRepHtml(task.warehouse_task_id || "")}</small></td>`
+      + `<td><span class="task-badge ${waveStatusClass(warehouseStatus)}">${escapeWaveRepHtml(warehouseStatus)}</span>${Number.isSafeInteger(task.warehouse_task_id)&&task.warehouse_task_id>0 ? `<a class="wave-execution-action" href="warehouse-tasks.html?task_id=${task.warehouse_task_id}#warehouseTaskDetail">Выполнить задание #${task.warehouse_task_id}</a>` : ""}</td>`
       + `<td>${escapeWaveRepHtml(task.warehouse_assigned_to || "-")}</td>`
       + "</tr>";
-  }).join("") || "<tr><td colspan=\"8\">Нет full-pallet строк для грузовой зоны</td></tr>";
+  }).join("") || "<tr><td colspan=\"8\">Нет заданий целых паллет для грузовой зоны</td></tr>";
 }
 
 async function runMinimaxCheck() {
@@ -198,24 +227,31 @@ async function runMinimaxCheck() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ updated_by: waveRepUser() }),
   });
+  window.dispatchEvent(new CustomEvent("wms-wave-selected",{detail:{wave_id:wave.pick_wave_id}}));
   await loadWaveReplenishmentTasks();
   waveRepEl("waveReplenishmentDetailStatus").textContent = `Minimax проверен, выпущено: ${result.released_count || 0}`;
 }
 
 async function runStagingRelease() {
-  const wave = waveReplenishmentState.selectedWave;
-  if (!wave) throw new Error("Выберите волну");
-  if (!waveRepCan("pick_wave_launch")) throw new Error("Нет права pick_wave_launch");
-  const toCell = waveRepEl("waveStagingToCell").value.trim();
-  if (!toCell) throw new Error("Укажите грузовую зону");
-  waveRepEl("waveReplenishmentDetailStatus").textContent = "Выпуск задач в грузовую зону...";
-  const result = await waveRepFetch(`/api/picking/waves/${wave.pick_wave_id}/staging/release`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ to_cell: toCell, updated_by: waveRepUser() }),
-  });
-  await loadWaveStagingTasks();
-  waveRepEl("waveReplenishmentDetailStatus").textContent = `В грузовую зону выпущено: ${result.released_count || 0}`;
+  const wave=waveReplenishmentState.selectedWave,button=waveRepEl("waveStagingRelease");
+  if(!wave||button.disabled)throw new Error("Выберите волну и дождитесь завершения запроса");
+  if(!waveRepCan("pick_wave_launch"))throw new Error("Нет права pick_wave_launch");
+  const toCell=waveRepEl("waveStagingToCell").value.trim();
+  if(!toCell)throw new Error("Укажите грузовую зону");
+  const identity=waveRepIdentity(),epoch=waveReplenishmentState.selectionEpoch;
+  const current=()=>identity===waveRepIdentity()&&epoch===waveReplenishmentState.selectionEpoch&&waveReplenishmentState.selectedWave?.pick_wave_id===wave.pick_wave_id;
+  button.disabled=true;
+  waveRepEl("waveReplenishmentDetailStatus").textContent="Выпуск задач в грузовую зону…";
+  try{
+    const result=await waveRepFetch('/api/picking/waves/'+wave.pick_wave_id+'/staging/release',{
+      method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({to_cell:toCell})});
+    if(!current())return;
+    if(result.pick_wave_id!==wave.pick_wave_id||result.status!=="RELEASED")throw new Error("Ответ не подтверждает выбранную волну");
+    await loadWaveStagingTasks();
+    if(current())waveRepEl("waveReplenishmentDetailStatus").textContent="В грузовую зону выпущено: "+(result.released_count||0)+". Откройте задания ниже; повтор с тем же адресом не создаёт дубли.";
+  }catch(error){
+    if(current())waveRepEl("waveReplenishmentDetailStatus").textContent=error.message+". Перечитайте задания перед повтором; сохраняйте прежний адрес назначения.";
+  }finally{button.disabled=!waveRepCan("pick_wave_launch");}
 }
 
 async function loadPickFaces() {
@@ -462,6 +498,9 @@ function showWaveRepError(error) {
 }
 
 function initWaveReplenishmentPage() {
+  const linkedWare=Number(new URLSearchParams(location.search).get("ware_id"));
+  if(Number.isSafeInteger(linkedWare)&&linkedWare>0)waveRepEl("waveReplenishmentWareId").value=String(linkedWare);
+  waveReplenishmentState.initialWaveId=Number(new URLSearchParams(location.search).get('wave_id'))||null;
   waveRepEl("waveReplenishmentLoad").addEventListener("click", () => loadWaveReplenishmentWaves().catch(showWaveRepError));
   waveRepEl("waveReplenishmentRefresh").addEventListener("click", () => loadWaveReplenishmentWaves().catch(showWaveRepError));
   waveRepEl("waveReplenishmentSearch").addEventListener("input", () => loadWaveReplenishmentWaves().catch(showWaveRepError));
@@ -476,4 +515,15 @@ function initWaveReplenishmentPage() {
   loadArticulRules().catch(showWaveRepError);
 }
 
-window.addEventListener("wms-admin-auth-ready", initWaveReplenishmentPage, { once: true });
+let waveQueueInitialized=false;
+window.addEventListener('wms-admin-auth-ready',()=>{
+  if(!waveQueueInitialized){waveQueueInitialized=true;initWaveReplenishmentPage();return;}
+  waveReplenishmentState.listEpoch++;waveReplenishmentState.selectionEpoch++;
+  waveReplenishmentState.waves=[];waveReplenishmentState.selectedWave=null;
+  waveReplenishmentState.tasks=[];waveReplenishmentState.stagingTasks=[];
+  renderWaveRows([]);renderReplenishmentTasks();renderStagingTasks();
+  waveRepEl('waveReplenishmentSelectionText').textContent='Выберите волну в текущем контексте';
+  loadWaveReplenishmentWaves().catch(showWaveRepError);
+});
+
+window.addEventListener('wms-wave-requested',event=>{const wave=Number(event.detail?.wave_id);if(Number.isSafeInteger(wave)&&wave>0)void selectWave(wave);else window.dispatchEvent(new CustomEvent('wms-wave-selection-loading',{detail:{wave_id:null}}));});

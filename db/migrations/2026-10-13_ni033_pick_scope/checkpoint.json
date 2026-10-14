@@ -1,0 +1,15 @@
+{
+  "migration_id": "2026-10-13-877-ni033-pick-current-scope",
+  "state": "APPLIED",
+  "target": "RABAEV/orcl",
+  "before_sha256": {
+    "root": "571a0e90a0d551bac40e734dff586a5aff95687cdc6d2aa7ccbf1b181d892007",
+    "access": "ef8946397970ee21ee9834f97331983a76d3059a5c7dcaa1102fe6cdfa613359"
+  },
+  "after_sha256": {
+    "root": "0c4f59a4e49e3259e77433deae25c64c97ca1ae836583dbaae7198966050127c",
+    "access": "c99fa2fd978d9ec929d3e2b7ac9b3d1592758b0a180aae1e485ca2580258108a"
+  },
+  "native_validation": "USER_ERRORS/INVALID empty",
+  "developer_evidence": "case879 wave551/task1104 original service admission and replay, foreign read/native before replay denied;881 exact replay"
+}

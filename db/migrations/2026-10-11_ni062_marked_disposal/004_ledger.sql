@@ -1,0 +1,4 @@
+merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-11-236-original-marked-return-disposal'MIGRATION_ID from dual)s on(d.MIGRATION_ID=s.MIGRATION_ID)
+when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS,NOTES)
+values(s.MIGRATION_ID,'Original marked return disposal exact units and durable per-system canonical notifications',sysdate,user,'db/migrations/2026-10-11_ni062_marked_disposal/apply.sql','db/migrations/2026-10-11_ni062_marked_disposal/rollback.sql','APPLIED','Actual RET236.DISPOSE:13508027ed0/1key2QR/P0H0/unitISSUED13/birth codes6/one stock event/rollback including Gov2 queues/concurrent winner/replay/protected20-20. CRPT/EGAIS PENDING notifications/SAP pending/no real ACK. NativeVALID quality24/bothTS558cycles0debt76.');
+commit;

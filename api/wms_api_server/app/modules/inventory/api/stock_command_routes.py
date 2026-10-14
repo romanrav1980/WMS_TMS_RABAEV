@@ -2,9 +2,10 @@
 from typing import Annotated, Any
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
-from ....auth import AdminUser, require_permission
+from ...platform.public import AdminUser, require_permission
 from ..application.stock_commands import ManualStockMove, ReceiptReverse
 from ..contracts_stock import StockLine, StockPostingError
+from ..contracts_stock_settings import StockCompatibilityPort,StockSettingError,stock_compatibility_service
 
 router = APIRouter(prefix="/api/inventory/stock-posting", tags=["stock-posting"])
 Identifier = Annotated[str, Field(strict=True, min_length=1, max_length=200, pattern=r"^[^\x00]+$")]
@@ -70,14 +71,11 @@ class CompatibilitySettingRequest(BaseModel):
 def set_compatibility(
     request: CompatibilitySettingRequest,
     user: AdminUser = Depends(require_permission("stock_compatibility_admin")),
+    service: StockCompatibilityPort = Depends(stock_compatibility_service),
 ) -> dict[str, Any]:
-    from ....oracle_gateway import OracleGateway
-    gateway = OracleGateway()
-    gateway.execute(
-        "begin RRL_STOCK_SETTING_API.set_compatibility(:value,:reason,:actor); end;",
-        {"value": "1" if request.enabled else "0", "reason": request.reason, "actor": user.username},
-    )
-    return {"enabled": request.enabled, "scope": "DATABASE"}
+    try:return service.set_compatibility(request.enabled,request.reason,user.username)
+    except StockSettingError as exc:raise HTTPException(exc.status,detail=str(exc)) from exc
+
 
 
 @router.post("/compatibility/manual-moves")
