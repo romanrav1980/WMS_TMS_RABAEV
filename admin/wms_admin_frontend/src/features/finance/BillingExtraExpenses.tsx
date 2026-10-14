@@ -7,12 +7,17 @@ import type {BasisTarget} from "./BillingCostsBasis";
 // Дополнительные расходы рейсов счёта: состояние согласования и распределения, коррекции,
 // следующий шаг. Ввод и согласование выполняются на существующем экране расходов.
 const STATE={
- pending:{tone:"info",label:"Согласование ожидается",next:"Финансовое согласование или отказ"},
+ pending:{tone:"info",label:"Согласование ожидается",next:"Решение логиста, затем финансового контроля"},
  approved:{tone:"warn",label:"Подтверждено, не распределено",next:"Распределить расход по рейсу"},
  allocated:{tone:"ok",label:"Подтверждено и распределено",next:"Действий не требуется"},
  rejected:{tone:"bad",label:"Отклонено",next:"Не входит в итоги; при необходимости — новый расход"}
 } as const;
 type Filter="all"|keyof typeof STATE;
+// Следующий шаг по фактической стадии (K-0007): какое из двух независимых решений ещё не принято.
+function nextStep(r:Expense,state:keyof typeof STATE):string{
+ if(state!=="pending"||r.logist_outcome===undefined)return STATE[state].next;
+ return r.logist_outcome?"Решение финансового контроля (другим сотрудником)":"Решение логиста";
+}
 
 export function BillingExtraExpenses({part,reload,onBasis}:{part:Part<Expense[]>;reload:()=>void;onBasis:(t:BasisTarget)=>void}){
  const [filter,setFilter]=useState<Filter>("all");
@@ -29,13 +34,13 @@ export function BillingExtraExpenses({part,reload,onBasis}:{part:Part<Expense[]>
    <TableWrap label="Дополнительные расходы"><table className="bc-table bc-stack"><thead><tr><th scope="col">Рейс</th><th scope="col">Статья и документ</th><th scope="col" className="bc-num">Сумма</th><th scope="col">Состояние</th><th scope="col">Дальше</th><th scope="col"><span className="bc-sr">Основание</span></th></tr></thead>
     <tbody>{shown.map(r=>{const s=STATE[expenseState(r)];return <tr key={r.operation_id}>
      <td data-label="Рейс">{r.tt_id}</td>
-     <td data-label="Статья и документ">{r.article_name}<small className="bc-sub">документ {r.document_reference||"—"} · операция {r.operation_id}</small>
+     <td data-label="Статья и документ">{r.article_name}<small className="bc-sub">документ {r.document_reference||"—"}{r.expense_date?" от "+r.expense_date:""} · операция {r.operation_id}{r.ware_id?" · склад "+r.ware_id:""}</small>
       {r.cost_correction_of_op&&<small className="bc-sub">коррекция нормативного начисления {r.cost_correction_of_op}</small>}
       {r.correction_of_op&&<small className="bc-sub">коррекция расхода {r.correction_of_op}</small>}
       {r.allocation_operation_id&&<small className="bc-sub">распределено: {r.distribution_basis||"—"}, строк товара {r.goods_lines}</small>}</td>
      <td data-label="Сумма" className="bc-num"><Money amount={r.amount} currency={r.currency}/>{r.amount.startsWith("-")&&<small className="bc-sub">уменьшающая корректировка</small>}</td>
      <td data-label="Состояние"><Chip tone={s.tone}>{s.label}</Chip></td>
-     <td data-label="Дальше"><small>{s.next}</small></td>
+     <td data-label="Дальше"><small>{nextStep(r,expenseState(r))}</small></td>
      <td data-label=""><button type="button" className="bc-basis-btn" onClick={()=>onBasis({kind:"expense",expense:r})}>Основание</button></td>
     </tr>;})}</tbody></table></TableWrap>
    {filter!=="all"&&<p className="bc-note">Показано {shown.length} из {rows.length} — фильтр по загруженным расходам.</p>}

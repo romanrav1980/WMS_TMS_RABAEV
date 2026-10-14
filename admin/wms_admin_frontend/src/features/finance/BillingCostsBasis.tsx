@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState,type ReactNode} from "react";
 import {apiFetch} from "../../api";
 import {Chip,Money,readError} from "./BillingCostsCommon";
-import type {CostLine,Expense,TransportItem,TransportResult,WarehouseSummary} from "./BillingCostsInvoice";
+import {hasDirectBasis,type CostLine,type Expense,type TransportItem,type TransportResult,type WarehouseSummary} from "./BillingCostsInvoice";
 
 // Основание любой суммы счёта (NI07.1): документ или исходное начисление, из которого она получена.
 // Используются только существующие GET: история ставок склада, факты транспортного начисления,
@@ -18,7 +18,7 @@ type ExpenseRow={operation_id:string;article_code:string;expense_date:string|nul
 
 export type Loaded={warehouse:WarehouseSummary|null;transport:TransportResult|null;expenses:Expense[]|null};
 
-// Склад рейса по уже прочитанным начислениям того же счёта (в строке расхода API склад не возвращает).
+// Старый сервер без K-0007: склад рейса по уже прочитанным начислениям того же счёта.
 function wareOfTrip(trip:number,loaded:Loaded):number|undefined{
  return loaded.warehouse?.lines.find(l=>l.tt_id===trip)?.ware_id??loaded.transport?.items.find(i=>i.trip_id===trip)?.warehouse_id;
 }
@@ -73,24 +73,44 @@ function TransportBasis({item}:{item:TransportItem}){
  </>;
 }
 
-function ExpenseBasis({expense,loaded,onOpen}:{expense:Expense;loaded:Loaded;onOpen:(t:BasisTarget)=>void}){
- const ware=wareOfTrip(expense.tt_id,loaded);
+const decision=(outcome:string|null|undefined,actor:string|null|undefined,ref:string|null|undefined,op:string|null|undefined)=>
+ outcome?(outcome==="APPROVE"?"утверждено":"отклонено")+" · "+(actor||"—")+" · документ "+(ref||"—")+" · операция "+op:"решения нет";
+
+// Решения и итог: прямо из строки счёта (K-0007). Для старого сервера без этих полей — прежний поиск
+// по реестру склада (последние 100) с явной пометкой, что основание неполное.
+function ExpenseDecisions({expense,loaded}:{expense:Expense;loaded:Loaded}){
+ const direct=hasDirectBasis(expense);
+ const ware=direct?undefined:wareOfTrip(expense.tt_id,loaded);
  const list=useLazy<ExpenseRow[]>(ware?expense.operation_id+":"+ware:null,()=>apiFetch(`/api/finance/logistics-expenses/warehouses/${ware}`));
+ if(direct){const e=expense;const isCorrection=!!(e.correction_of_op||e.cost_correction_of_op);
+  return <dl className="bc-facts"><Row k="Склад" v={e.ware_id}/><Row k="Дата расхода" v={e.expense_date}/><Row k="Статья" v={e.article_code+" · "+e.article_name}/><Row k="Заявил" v={e.reporter}/>
+   <Row k="Логист" v={decision(e.logist_outcome,e.logist_actor,e.logist_decision_reference,e.logist_operation_id)}/>
+   <Row k="Финансовый контроль" v={decision(e.finance_outcome,e.finance_actor,e.finance_decision_reference,e.finance_operation_id)}/>
+   {isCorrection?<Row k="Ожидаемый итог исходника после коррекции" v={e.expected_confirmed_total?<Money amount={e.expected_confirmed_total} currency={e.currency}/>:null}/>:
+    <Row k="Итог с подтверждёнными коррекциями" v={e.confirmed_total?<Money amount={e.confirmed_total} currency={e.currency}/>:null}/>}</dl>;}
  const row=list.data?.find(r=>r.operation_id===expense.operation_id);
+ return <>
+  <p className="bc-state bc-empty">Сервер не вернул склад и решения в строке счёта (версия API до K-0007); решения ищутся в реестре склада, если склад известен по начислениям рейса.</p>
+  {!ware?<p className="bc-state bc-empty">Склад расхода не определяется по начислениям этого рейса. Решения доступны на экране «Дополнительные расходы».</p>:
+   list.loading?<p className="bc-state bc-loading">Читаем реестр расходов склада {ware}…</p>:list.error?<p className="bc-state bc-error">{list.error}</p>:
+   !row?<p className="bc-state bc-empty">Расход не найден среди последних 100 записей склада {ware}.</p>:
+   <dl className="bc-facts"><Row k="Дата расхода" v={row.expense_date}/><Row k="Заявил" v={row.reporter}/><Row k="Логист" v={decision(row.logist_outcome,row.logist_actor,null,row.logist_operation_id)}/><Row k="Финансы" v={decision(row.finance_outcome,null,null,row.finance_operation_id)}/><Row k="Итог с коррекциями" v={row.confirmed_total}/></dl>}
+ </>;
+}
+
+function ExpenseBasis({expense,loaded,onOpen}:{expense:Expense;loaded:Loaded;onOpen:(t:BasisTarget)=>void}){
  const correctedCost=expense.cost_correction_of_op?loaded.transport?.items.find(i=>i.operation_id===expense.cost_correction_of_op):undefined;
  const correctedExpense=expense.correction_of_op?loaded.expenses?.find(e=>e.operation_id===expense.correction_of_op):undefined;
+ const ware=hasDirectBasis(expense)?expense.ware_id:wareOfTrip(expense.tt_id,loaded);
  return <>
-  <dl className="bc-facts"><Row k="Документ-основание" v={expense.document_reference||"не указан"}/><Row k="Операция расхода" v={expense.operation_id}/><Row k="Рейс" v={expense.tt_id}/><Row k="Сумма" v={<Money amount={expense.amount} currency={expense.currency}/>}/>
+  <dl className="bc-facts"><Row k="Документ-основание" v={expense.document_reference||"не указан"}/><Row k="Операция расхода" v={expense.operation_id}/><Row k="Рейс" v={expense.tt_id}/><Row k="Сумма строки" v={<Money amount={expense.amount} currency={expense.currency}/>}/>
    {expense.allocation_operation_id&&<Row k="Распределение" v={expense.allocation_operation_id+" · "+(expense.distribution_basis||"—")+" · строк "+expense.goods_lines}/>}</dl>
   {(expense.cost_correction_of_op||expense.correction_of_op)&&<><h5>Исходное начисление, которое корректируется</h5>
    {correctedCost?<button type="button" onClick={()=>onOpen({kind:"transport",item:correctedCost})}>Открыть основание начисления {correctedCost.operation_id} (рейс {correctedCost.trip_id})</button>:
     correctedExpense?<button type="button" onClick={()=>onOpen({kind:"expense",expense:correctedExpense})}>Открыть исходный расход {correctedExpense.operation_id}</button>:
-    <p className="bc-note">Исходная операция {expense.cost_correction_of_op||expense.correction_of_op} не входит в этот счёт; её основание — в реестре затрат склада.</p>}</>}
+    <p className="bc-note">Исходная операция {expense.cost_correction_of_op||expense.correction_of_op} не входит в этот счёт{ware?<>; её основание — в реестре {expense.cost_correction_of_op?"нормативных начислений":"расходов"} склада {ware}</>:null}.</p>}</>}
   <h5>Решения по расходу</h5>
-  {!ware?<p className="bc-state bc-empty">Склад расхода не возвращён API счёта и не определяется по начислениям этого рейса. Решения доступны на экране «Дополнительные расходы»; запрошено расширение ответа (K-0007).</p>:
-   list.loading?<p className="bc-state bc-loading">Читаем реестр расходов склада {ware}…</p>:list.error?<p className="bc-state bc-error">{list.error}</p>:
-   !row?<p className="bc-state bc-empty">Расход не найден среди последних 100 записей склада {ware}.</p>:
-   <dl className="bc-facts"><Row k="Дата расхода" v={row.expense_date}/><Row k="Заявил" v={row.reporter}/><Row k="Логист" v={row.logist_outcome?row.logist_outcome+" · "+(row.logist_actor||"")+" · "+row.logist_operation_id:"решения нет"}/><Row k="Финансы" v={row.finance_outcome?row.finance_outcome+" · "+row.finance_operation_id:"решения нет"}/><Row k="Итог с коррекциями" v={row.confirmed_total}/></dl>}
+  <ExpenseDecisions expense={expense} loaded={loaded}/>
  </>;
 }
 
@@ -110,7 +130,10 @@ export function basisCsv(invoiceId:number,loaded:Loaded):string{
  const rows:string[][]=[["Категория","Рейс","Склад","Операция","Основание","Версия/норма","Количество","Ставка","Сумма","Валюта"]];
  for(const l of loaded.warehouse?.lines||[])rows.push(["Складское",String(l.tt_id),String(l.ware_id),l.operation_id,"погрузка "+l.load_operation_id,"ставка v"+l.version_no,String(l.quantity),l.rate_value,l.amount,l.currency]);
  for(const i of loaded.transport?.items||[])for(const line of i.lines)rows.push(["Транспорт: "+line.cost_code,String(i.trip_id),String(i.warehouse_id),i.operation_id,"выезд "+(i.departure?.departure_operation_id||"—"),"норма v"+i.norm?.version,String(line.quantity),line.rate,line.amount,i.currency]);
- for(const e of loaded.expenses||[])rows.push(["Допрасход: "+e.article_name,String(e.tt_id),"",e.operation_id,"документ "+(e.document_reference||"—")+(e.cost_correction_of_op?" · коррекция "+e.cost_correction_of_op:e.correction_of_op?" · коррекция "+e.correction_of_op:""),e.finance_outcome||"на согласовании","","",e.amount,e.currency]);
+ for(const e of loaded.expenses||[]){const d=hasDirectBasis(e)?e:undefined;
+  const basis=["документ "+(e.document_reference||"—"),d?.expense_date&&"от "+d.expense_date,e.cost_correction_of_op?"коррекция "+e.cost_correction_of_op:e.correction_of_op?"коррекция "+e.correction_of_op:"",
+   d?.logist_operation_id&&"логист "+d.logist_outcome+" "+(d.logist_decision_reference||"")+" ("+d.logist_operation_id+")",d?.finance_operation_id&&"финконтроль "+d.finance_outcome+" "+(d.finance_decision_reference||"")+" ("+d.finance_operation_id+")"].filter(Boolean).join(" · ");
+  rows.push(["Допрасход: "+e.article_name,String(e.tt_id),d?String(d.ware_id):"",e.operation_id,basis,e.finance_outcome||"на согласовании","","",e.amount,e.currency]);}
  const esc=(v:string)=>/[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;
  return "﻿"+`Основания счёта ${invoiceId}\n`+rows.map(r=>r.map(esc).join(";")).join("\n");
 }

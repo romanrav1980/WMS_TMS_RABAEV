@@ -15,7 +15,12 @@ export type TransportItem={operation_id:string;trip_id:number;warehouse_id:numbe
  missing?:unknown[];complete?:boolean;amount_rounding?:string;load_count?:number;destination_count?:number};
 export type TransportResult={invoice_id:number;sources:Array<{trip:number;warehouse:number}>;items:TransportItem[];currency_totals:Array<{currency:string;amount:string;confirmed_amount:string}>};
 
-export type Expense={operation_id:string;article_name:string;tt_id:number;amount:string;currency:string;document_reference:string;finance_outcome:"APPROVE"|"REJECT"|null;allocation_operation_id:string|null;distribution_basis:string|null;goods_lines:number;cost_correction_of_op:string|null;correction_of_op:string|null};
+export type Expense={operation_id:string;article_name:string;tt_id:number;amount:string;currency:string;document_reference:string;finance_outcome:"APPROVE"|"REJECT"|null;allocation_operation_id:string|null;distribution_basis:string|null;goods_lines:number;cost_correction_of_op:string|null;correction_of_op:string|null}&Partial<ExpenseBasisFields>;
+// K-0007: прямое основание строки расхода. Поля необязательны: старый сервер их не возвращает, это обрабатывается явно.
+export type ExpenseBasisFields={ware_id:number;expense_date:string|null;reporter:string|null;article_code:string;expected_confirmed_total:string|null;confirmed_total:string|null;
+ logist_operation_id:string|null;logist_outcome:"APPROVE"|"REJECT"|null;logist_actor:string|null;logist_decision_reference:string|null;
+ finance_operation_id:string|null;finance_actor:string|null;finance_decision_reference:string|null};
+export const hasDirectBasis=(e:Expense):e is Expense&ExpenseBasisFields=>typeof e.ware_id==="number";
 
 export type Part<T>={data:T|null;error:string;loading:boolean};
 const idle=<T,>():Part<T>=>({data:null,error:"",loading:true});

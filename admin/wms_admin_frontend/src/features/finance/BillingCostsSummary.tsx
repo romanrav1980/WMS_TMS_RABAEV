@@ -3,7 +3,7 @@ import type {Expense,Part,TransportResult,WarehouseSummary} from "./BillingCosts
 
 // Сводка счёта по валютам: каждая категория — своя колонка; строки и колонки между собой не складываются.
 export function expenseState(e:Expense):"rejected"|"allocated"|"approved"|"pending"{
- if(e.finance_outcome==="REJECT")return "rejected";
+ if(e.finance_outcome==="REJECT"||e.logist_outcome==="REJECT")return "rejected";
  if(e.allocation_operation_id)return "allocated";
  if(e.finance_outcome==="APPROVE")return "approved";
  return "pending";
