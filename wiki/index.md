@@ -1,3 +1,9 @@
+- [Требования к WMS/TMS как источнику двойника](requirements/twin_source_system_requirements.md): опубликованная топология с полным покрытием RRL_CELLS через LEGACY_CELL_CODE, позиции по сканам, журнал фактов заданий, лента изменений, остатки по ячейкам, факты двора.
+- [3D-двойник: live-операции склада](subprojects/wms_twin_3d.md): задания техники и CASE-сборка по спецификации складских заданий, правило WMS выбора топологии, состояние связи.
+- [Промпт Codex: данные для live-двойника](requirements/twin_live_data_fixes_codex_prompt.md): связь RRL_TT_DOCK↔ворота топологии, склад рейса, read-only состояние двора, порча zone_name, серверная пагинация available-sts, карта без distances, доработка двойника.
+- [3D-двойник: live-сопоставление ТМС](subprojects/wms_twin_3d.md): рейсы/ворота/СТ/топология сверены с живым API, read-only адаптер, находки по данным (DOCK, CONDITION, WARE_ID) и решение по долгому available-sts.
+- [3D-двойник склада и транспорта](subprojects/wms_twin_3d.md): новое Vite-приложение twin/wms_twin_3d (R3F, единый TwinState, tick 10 Гц, мок-симуляция WMS/TMS, каркас live-адаптера ТМС).
+- [Принципы цифрового двойника склада + транспорта](concepts/warehouse_transport_digital_twin_principles.md): 14 принципов — проекция без записи, событийная модель EPCIS, сквозные ID, ворота как стык склада и рейса.
 # TMS Wiki Index
 - [database/nicora_stock_posting_cutover_20261009.md](database/nicora_stock_posting_cutover_20261009.md): актуальный статус — RABAEV ACTIVE, B0 сохранён, compatibility OFF, registry 25/6/0; реальные replay/concurrency/rollback cases прошли.
 - [database/nicora_stock_posting_case_shipment_20261009.md](database/nicora_stock_posting_case_shipment_20261009.md): 197–207, CASE → существующая СТ, whole-carrier shipment, защита packed stock и Decimal MES; APPLIED, registry 23/6/2, PREPARED.
