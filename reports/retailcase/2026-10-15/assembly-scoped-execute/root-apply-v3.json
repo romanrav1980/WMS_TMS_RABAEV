@@ -1,0 +1,13 @@
+{
+  "status": "APPLIED_PENDING_READBACK",
+  "at_utc": "2026-10-15T21:04:48.680223+00:00",
+  "manifest_sha256": "02875126bc2a25e98f6a4b031a1c1f8e4d8a5f58c9fd946e71deac149b7b4bfe",
+  "code_checkpoint": {
+    "api\\wms_api_server\\app\\modules\\inventory\\infrastructure\\assembly_close.py": "ee0d0df4aefe367a3c42e58f63f12e8ad9d2f5e8a1397869dde89010b8d75020",
+    "api\\wms_api_server\\app\\modules\\inventory\\infrastructure\\case_current_close.py": "471e5b4690bc45cc5faab6fb912093f037dfeec13060d8735a494e5e79f8e780",
+    "tests\\retailcase\\test_assembly_close_binding.py": "72423a4e3b875ba4aa4df924fcacbfcb90a47ee8020b96b46733ba5c9d71408f"
+  },
+  "review": "Author/root source review only; independent and native business acceptance pending",
+  "quantity_writes": false,
+  "returncode": 0
+}

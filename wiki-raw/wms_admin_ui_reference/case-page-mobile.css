@@ -1,0 +1,39 @@
+/* Компоновка страницы «Управление комплектацией» на узком экране (C0122). Только эта страница (body.case-mgmt):
+   глобальный styles.css (body min-width 1280px, сетка .app) не меняется. Таблицы прокручиваются внутри своей рамки. */
+.case-short-retry { margin: 0 0 12px; min-height: 40px; padding: 0 14px; border: 1px solid var(--amber); border-radius: 8px; background: #fffbeb; font: inherit; cursor: pointer; }
+.case-short-retry[hidden] { display: none; }
+
+@media (max-width: 900px) {
+  body.case-mgmt { min-width: 0; }
+  .case-mgmt .app { display: block; min-width: 0; }
+  .case-mgmt .sidebar { position: static; width: auto; min-width: 0; height: auto; flex-direction: row; align-items: center; gap: 8px; padding: 8px 12px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .case-mgmt .brand { padding: 0; }
+  .case-mgmt .nav { display: flex; flex: 1; min-width: 0; gap: 4px; overflow-x: auto; overscroll-behavior-x: contain; }
+  .case-mgmt .nav .nav-link { flex: none; white-space: nowrap; }
+  .case-mgmt .sidebar-footer { display: none; }
+  .case-mgmt .workspace { min-width: 0; }
+  .case-mgmt .topbar { position: static; height: auto; flex-wrap: wrap; gap: 8px; padding: 10px 12px; }
+  .case-mgmt .case-title { min-width: 0; }
+  .case-mgmt .case-title h1 { font-size: 22px; }
+  .case-mgmt .top-actions { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; min-width: 0; }
+  .case-mgmt .top-actions > * { max-width: 100%; }
+  .case-mgmt .resource-top-select { flex: 1 1 100%; min-width: 0; }
+  .case-mgmt .profile { flex-wrap: wrap; min-width: 0; }
+  .case-mgmt .case-page { padding: 12px; min-width: 0; }
+  .case-mgmt .case-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .case-mgmt .case-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .case-mgmt .case-filters > * { min-width: 0; width: 100%; }
+  .case-mgmt .case-filters input { grid-column: 1 / -1; }
+  .case-mgmt .case-main-grid, .case-mgmt .case-wide-grid, .case-mgmt .case-bottom-grid, .case-mgmt .case-route-board { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .case-mgmt .case-panel, .case-mgmt .case-detail { min-width: 0; }
+  .case-mgmt .case-table-wrap { max-width: 100%; overflow-x: auto; }
+  .case-mgmt .case-page select, .case-mgmt .case-page input { max-width: 100%; }
+  .case-mgmt .case-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .case-mgmt .case-actions button { min-height: 44px; }
+  .case-mgmt .case-access-banner { margin: 8px 12px 0; }
+}
+
+@media (max-width: 420px) {
+  .case-mgmt .case-kpis { grid-template-columns: minmax(0, 1fr); }
+  .case-mgmt .case-filters { grid-template-columns: minmax(0, 1fr); }
+}

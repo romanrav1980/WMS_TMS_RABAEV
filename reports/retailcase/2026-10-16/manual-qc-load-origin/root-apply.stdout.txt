@@ -1,0 +1,12 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_qc_load_origin\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_qc_load_origin\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_qc_load_origin\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_qc_load_origin\before_constraint.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_qc_load_origin\constraint.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_qc_load_origin\rrl_stock_load_box_core_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_qc_load_origin\rrl_tt_load_box_weight_guard_trigger.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_qc_load_origin\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_qc_load_origin\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_qc_load_origin\after_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_qc_load_origin\after_constraint.sql
+Done. Statements=12; Errors=0; AbsentCleanup=0

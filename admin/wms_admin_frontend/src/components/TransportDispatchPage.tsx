@@ -1,4 +1,5 @@
-import { submitCluster, useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, stRowKey, StPagesBar } from "../features/transport";
+import { adminAuthorization, adminBasicAuth, currentSessionCredentials } from "../api";
+import { useTripDeepLink, submitCluster, useAvailableStPages, useWarehouseCatalog, useVisibleSelection, availableStQuery, stRowKey, StPagesBar } from "../features/transport";
 import { StoreCasesPanel } from "../features/delivery";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual"; // Sprint 102
@@ -153,7 +154,6 @@ type BillingOrderTask = {
 // ---------------------------------------------------------------------------
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
-const API_BASIC_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
 const ST_PAGE_SIZE = 100;
 const ST_VIRTUAL_THRESHOLD = 60;
 const ST_VIRTUAL_OVERSCAN = 8;
@@ -162,7 +162,7 @@ const ST_ROW_HEIGHT = 27;
 const ST_ROW_HEIGHT_DENSE = 22;
 
 function apiHeaders(): HeadersInit {
-  return { Authorization: `Basic ${btoa(API_BASIC_AUTH)}`, "Content-Type": "application/json" };
+  return { Authorization: adminAuthorization(), "Content-Type": "application/json" };
 }
 
 async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
@@ -177,7 +177,7 @@ async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
 
 async function downloadBlob(path: string, filename: string): Promise<void> {
   const res = await fetch(`${API_BASE}${path}`, {
-    headers: { Authorization: `Basic ${btoa(API_BASIC_AUTH)}` },
+    headers: { Authorization: adminAuthorization() },
   });
   if (!res.ok) throw new Error(`${res.status}: ${res.statusText}`);
   const blob = await res.blob();
@@ -356,7 +356,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     setWsStatus("connecting");
     const apiUrl = new URL(API_BASE);
     const proto = apiUrl.protocol === "https:" ? "wss" : "ws";
-    const [u, p = ""] = API_BASIC_AUTH.split(":");
+    const {username: u, password: p} = currentSessionCredentials();
     const url = `${proto}://${apiUrl.host}/api/admin/transport/ws/dispatch?u=${encodeURIComponent(u)}&p=${encodeURIComponent(p)}`;
     let ws: WebSocket;
     try { ws = new WebSocket(url); } catch { return; }
@@ -430,21 +430,9 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       apiFetch<Driver[]>("/api/admin/transport/drivers"),
       apiFetch<TransportType[]>("/api/admin/transport/types"),
     ]).then(([v, d, t]) => { setVehicles(v); setDrivers(d); setTransportTypes(t); })
-      .catch(() => {
-        setVehicles([
-          { ID: 61, NUM: "Т368ХН", TR_TYPE: "10", MARKA: "MAN", PALLETS: 11, GIDROBORT: 0 },
-          { ID: 62, NUM: "Е152НХ", TR_TYPE: "10", MARKA: "КАМАЗ", PALLETS: 12, GIDROBORT: 0 },
-          { ID: 66, NUM: "Р234УХ", TR_TYPE: "15", MARKA: "КАМАЗ", PALLETS: 11, GIDROBORT: 1 },
-        ]);
-        setDrivers([
-          { ID: 6, FULL_NAME: "Сташков Иван Викторович", TEL: "8-952-74-109-09", SOBSTVENNYY: 1, DOVERENNOST_OT: null },
-          { ID: 7, FULL_NAME: "Петров Алексей", TEL: "", SOBSTVENNYY: 0, DOVERENNOST_OT: "ООО Транс-Авто" },
-        ]);
-        setTransportTypes([
-          { TRANSPORTTYPE: "10", NAME: "Тент 10т" },
-          { TRANSPORTTYPE: "15", NAME: "Тент 15т" },
-          { TRANSPORTTYPE: "20реф", NAME: "Рефрижератор 20т" },
-        ]);
+      .catch(reason => {
+        setVehicles([]); setDrivers([]); setTransportTypes([]);
+        setError(`Справочники ресурсов не загружены: ${String(reason)}`);
       });
   }, []);
 
@@ -471,7 +459,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       setTasks(data);
     } catch (e) {
       setError(String(e));
-      setTasks(demoTasks(filterDate));
+      setTasks([]);
     } finally { setLoading(false); }
   }, [activeTab, filterDate, routeShipDate, debouncedRouteTaskId, debouncedRouteCarMask,
       debouncedRouteCompany, routeDateTo, routeNoPayments]);
@@ -491,7 +479,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       setTasks(data);
     } catch (e) {
       setError(String(e));
-      setTasks(demoTasks(nextDate));
+      setTasks([]);
     } finally { setLoading(false); }
   }, []);
 
@@ -510,7 +498,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       setTasks(data);
     } catch (e) {
       setError(String(e));
-      setTasks(demoTasks(nextDate));
+      setTasks([]);
     } finally { setLoading(false); }
   }, [debouncedRouteTaskId, debouncedRouteCarMask, debouncedRouteCompany, routeDateTo, routeNoPayments]);
 
@@ -583,8 +571,8 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       const params = new URLSearchParams({ stdate: stDate });
       const data = await apiFetch<TransportCluster[]>(`/api/admin/transport/clusters?${params}`);
       setClusters(data);
-    } catch {
-      setClusters(demoClusters(stDate));
+    } catch (reason) {
+      setClusters([]); setError(`Кластеры не загружены: ${String(reason)}`);
     }
   }, [stDate]);
 
@@ -891,7 +879,7 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
     setClusterCreateLoading(true);
     try {
       const res = await submitCluster(apiFetch,
-        {api: API_BASE, actor: API_BASIC_AUTH.split(":", 1)[0]},params.raion,{
+        {api: API_BASE, actor: adminBasicAuth().split(":", 1)[0]},params.raion,{
           stdate: stDate, transtype: params.transtype, vehicle: params.vehicle || null,
           driver_id: params.driver_id, dock: params.dock || null, ware_ids: null,
         });
@@ -1168,6 +1156,12 @@ export function TransportDispatchPage({ onBack }: { onBack: () => void }) {
       setBillingOrder(updated);
     } catch (e) { setError(String(e)); } finally { setBillingActionLoading(false); }
   }
+
+  useTripDeepLink<TransportTask>(task => {
+    setActiveTab("routes"); setRouteTaskId(String(task.ID));
+    if (task.SHIPMENT_DATE) setRouteShipDate(task.SHIPMENT_DATE.slice(0, 10));
+    void selectTask(task);
+  }, reason => setError(reason));
 
   // Sprint 45 — jump from assigned ST to its trip in the routes tab
   async function handleGotoTrip(taskId: number) {
@@ -4085,73 +4079,4 @@ function condClass(cond: string | null): string {
   if (cond === "Отгружен") return "closed";
   if (cond === "Отменён") return "cancelled";
   return "planned";
-}
-
-// ---------------------------------------------------------------------------
-// Demo data
-// ---------------------------------------------------------------------------
-
-function demoTasks(date: string): TransportTask[] {
-  return [
-    {
-      ID: 1247, TRANSPORT: "Т368ХН", TRANSTYPE: "10", CONDITION: "Спланирован",
-      SHIPMENT_DATE: date, VODITEL_ID: 6, VODITEL_NAME: "Сташков Иван Викторович",
-      VODITEL_TEL: "8-952-74-109-09", TK_NAME: null, IS_OWN_DRIVER: 1,
-      PRIMECHANIE: null, DOCK: "Д1", SHIPMENT_TIME: null,
-      TEMP_REGION: "Москва, Химки, Лобня", REGIONS: "Москва, Химки, Лобня",
-      TEMP_WEIGHT: 1800, PRICE: null, VOLUME_M3: 14.5, LOGIST: "ivanov",
-      PAY_ORDER_ID: null, PALLET_COUNT: 12, ST_COUNT: 3, DELETED: 0,
-      READY_PERC: 67, UNREADY_COUNT: 4,
-    },
-    {
-      ID: 1248, TRANSPORT: "В703РО", TRANSTYPE: "15", CONDITION: "Спланирован",
-      SHIPMENT_DATE: date, VODITEL_ID: 7, VODITEL_NAME: "Петров Алексей",
-      VODITEL_TEL: null, TK_NAME: "ООО Транс-Авто", IS_OWN_DRIVER: 0,
-      PRIMECHANIE: null, DOCK: "Д2", SHIPMENT_TIME: null,
-      TEMP_REGION: "Красногорск", REGIONS: "Красногорск",
-      TEMP_WEIGHT: 950, PRICE: null, VOLUME_M3: 7.2, LOGIST: "petrov",
-      PAY_ORDER_ID: null, PALLET_COUNT: 8, ST_COUNT: 2, DELETED: 0,
-      READY_PERC: 100, UNREADY_COUNT: 0,
-    },
-    {
-      ID: 1249, TRANSPORT: null, TRANSTYPE: "10", CONDITION: "Спланирован",
-      SHIPMENT_DATE: date, VODITEL_ID: null, VODITEL_NAME: null,
-      VODITEL_TEL: null, TK_NAME: null, IS_OWN_DRIVER: null,
-      PRIMECHANIE: null, DOCK: null, SHIPMENT_TIME: null,
-      TEMP_REGION: null, REGIONS: null, TEMP_WEIGHT: null,
-      PRICE: null, VOLUME_M3: null, LOGIST: null,
-      PAY_ORDER_ID: null, PALLET_COUNT: 0, ST_COUNT: 0, DELETED: 0,
-      READY_PERC: 0, UNREADY_COUNT: 0,
-    },
-  ];
-}
-
-function demoClusters(date: string): TransportCluster[] {
-  const sts = demoAvailableSts(date);
-  return [
-    { RAION: "ЦАО", ST_COUNT: 1, PALLET_COUNT: 3, WEIGHT_KG: 450, VOLUME_M3: 2.1, STS: [sts[0]] },
-    { RAION: "Химки", ST_COUNT: 1, PALLET_COUNT: 6, WEIGHT_KG: 890, VOLUME_M3: 4.2, STS: [sts[2]] },
-    { RAION: "(без района)", ST_COUNT: 2, PALLET_COUNT: 9, WEIGHT_KG: 1400, VOLUME_M3: 6.8, STS: [sts[1], sts[3]] },
-  ];
-}
-
-function demoAvailableSts(date: string): AvailableSt[] {
-  return [
-    { ST_NUMBER: "0441", ADDR: "Москва, ул. Ленина 5", REGION: "Москва", RAION: "ЦАО",
-      PALLETS_COUNT: 3, WEIGHT_KG: 450, VOLUME_M3: 2.1, STDATE: date, DATE_LOAD: date,
-      TRANSTASK_ID: null, TRANSPORT_TYPE: "10", NEEDS_HYDRO_BOARD: 0, STOL: 0, PRIM1: null,
-      NAPR: null, WARE_ID: 5, VERIFY_PERC: 100, SUGAR: 0 },
-    { ST_NUMBER: "0442", ADDR: "Красногорск, пр. Мира 12", REGION: "Красногорск", RAION: null,
-      PALLETS_COUNT: 5, WEIGHT_KG: 780, VOLUME_M3: 3.8, STDATE: date, DATE_LOAD: date,
-      TRANSTASK_ID: null, TRANSPORT_TYPE: "10", NEEDS_HYDRO_BOARD: 0, STOL: 0, PRIM1: null,
-      NAPR: null, WARE_ID: 5, VERIFY_PERC: 75, SUGAR: 0 },
-    { ST_NUMBER: "0443", ADDR: "Химки, ул. Победы 3", REGION: "Химки", RAION: null,
-      PALLETS_COUNT: 6, WEIGHT_KG: 890, VOLUME_M3: 4.2, STDATE: date, DATE_LOAD: date,
-      TRANSTASK_ID: null, TRANSPORT_TYPE: "15", NEEDS_HYDRO_BOARD: 1, STOL: 1, PRIM1: "Гидроборт",
-      NAPR: null, WARE_ID: 6, VERIFY_PERC: 0, SUGAR: 1 },
-    { ST_NUMBER: "0445", ADDR: "Лобня, ул. Свободы 8", REGION: "Лобня", RAION: null,
-      PALLETS_COUNT: 4, WEIGHT_KG: 620, VOLUME_M3: 3.0, STDATE: date, DATE_LOAD: date,
-      TRANSTASK_ID: null, TRANSPORT_TYPE: "10", NEEDS_HYDRO_BOARD: 0, STOL: 0, PRIM1: null,
-      NAPR: null, WARE_ID: 7, VERIFY_PERC: 50, SUGAR: 0 },
-  ];
 }

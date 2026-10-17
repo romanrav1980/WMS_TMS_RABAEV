@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "normal_full_readonly_service": {
+    "task_id": 1138,
+    "warehouse_id": 13583852,
+    "current_actor": "CRES15.OP",
+    "action": "START",
+    "items": [
+      {
+        "resource_session_id": 55,
+        "resource_id": 59,
+        "equipment_id": null,
+        "resource_code": "CRES15.CASE",
+        "ready": true,
+        "reason": null
+      }
+    ],
+    "command_revalidates": true
+  },
+  "hardware_verified": false,
+  "quantity_commands": 0,
+  "paused_caller_tx_projection": {
+    "own_active_projection": [],
+    "current_authorization": true
+  },
+  "qualification_caller_tx_policy": {
+    "own_session_preserved": 55,
+    "native_ready": false,
+    "native_code": "CASE_RESOURCE_QUALIFICATION_REQUIRED"
+  },
+  "foreign_gateway_full_readonly_service_denied": 403,
+  "role_revoke_native_caller_tx": {
+    "native_owner_revoke_receipt": {
+      "operation_id": "CRES15.CHOICES.REVOKE.ROLLBACK",
+      "command_type": "ROLE_SAVE",
+      "object_id": "CRES15.CASE.EXEC",
+      "version": 4,
+      "replayed": false
+    },
+    "current_context_denied": 403,
+    "session_rows_read": false,
+    "caller_rollback": true
+  },
+  "guards_rolled_back": true,
+  "source_case_events_receipts_unchanged": true,
+  "limitation": "Uncommitted CFG mutations cannot be observed by separate READONLY service TX. PAUSED/qualification probes execute own-session projection and authoritative native policy in caller CFG TX; no suppression of production READONLY. Revoked-role probe invokes native task_context before any session query. Fullservice normal/foreign denial run real READONLY TX."
+}

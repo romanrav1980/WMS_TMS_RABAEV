@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "checks": [
+    "native_workspace_navigation_scope_not_job_title",
+    "timeline_right_does_not_grant_other_source_rights",
+    "native_assignment_other_warehouse_denied",
+    "scoped_registry_real_picker_unknown_availability",
+    "naive_or_unbounded_window_rejected",
+    "revoke_immediate_native_denial",
+    "admin_live_source_contract_aware_and_legacy_separated"
+  ],
+  "stock_effect": "NONE",
+  "fixture_cleaned": true
+}

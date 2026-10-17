@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "source_matches": true,
+  "sha256": "87b6a8c12c28d21c638a7b857da0aac1ad9a6fb48e6e301f497a0fc3fafc776f",
+  "user_errors": [],
+  "invalid_count": 0,
+  "ledger": [
+    {
+      "migration_id": "2026-10-15-transport-empty-draft-floor",
+      "status": "APPLIED"
+    }
+  ],
+  "recent_slow": [],
+  "top_sql": [],
+  "decision": "Keep exact empty-draft branch and existing 200-source/5000-place bounds; no index added. V$SQL aggregates are historic, not isolated test latency. Reprofile repeated interactive queries >1000ms with execution plan before indexing; owner transport/Codex. Native-only acceptance generated no HTTP API audit."
+}

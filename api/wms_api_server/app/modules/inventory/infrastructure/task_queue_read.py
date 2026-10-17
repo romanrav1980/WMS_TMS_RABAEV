@@ -61,9 +61,14 @@ class TaskQueueRead:
         scope_warehouse_id: int | None = None,
         scope_global: bool = True,
         queue_group: str | None = None,
+        view_actor: str | None = None,
     ) -> list[dict[str, Any]]:
         conditions: list[str] = []
         params: dict[str, Any] = {"limit": min(max(limit,1),500)}
+        if view_actor is not None:
+            from .task_view_predicate import task_view_predicate
+            conditions.append("(" + task_view_predicate() + ")")
+            params["view_actor"] = view_actor
         if not scope_global:
             conditions.append("(FROM_WARE_ID=:scope_ware or TO_WARE_ID=:scope_ware)")
             params["scope_ware"]=scope_warehouse_id
@@ -113,4 +118,3 @@ class TaskQueueRead:
             {"task_id": task_id},
         )
         return rows[0] if rows else None
-

@@ -1,0 +1,5 @@
+Current owner-authorized single UI task: C0116.
+Read and execute coordination/retailcase-claude/PROMPT_CLAUDE_C0116_MANUAL_WEIGHT.txt.
+The scoped installed contracts are in API_READY_SINGLE_CLAUDE.md.
+Do not wait for deferred hardware SHIPPING_GROSS or invent unready KPI APIs.
+The previous broader prompt is retained in PROMPT_CLAUDE_SINGLE_FINISH_BEFORE_C0116.txt as history.

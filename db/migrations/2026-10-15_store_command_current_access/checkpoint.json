@@ -1,0 +1,13 @@
+{
+  "migration_id": "2026-10-15-store-command-current-access",
+  "git_head": "41c913cf44441cf3656a66b0939e40cb9a83c365",
+  "invalid_before": 0,
+  "sha256": {
+    "apply.sql": "9c7c0f6a3340fcb65af7c0a7d73a001aebdd844f31377b3f665d67e711a50be7",
+    "before_body.sql": "90ad15febd828e7fc21b23c022cff8af2d95744c88571dedb8af09ef927fed69",
+    "body.sql": "36f552df1d9f6be86da78b35c800bc958b196133711fb7801fce86d083de6e97",
+    "rollback.sql": "bf619561526ec7278958da1aba5d6d20a82827d456218b41c50a39a4a61682ac",
+    "verify.sql": "121711b5eac9be87c79c68ae98313fcaca87377a3b080b4cb10dabec67ce7fd2"
+  },
+  "state": "PREPARED"
+}

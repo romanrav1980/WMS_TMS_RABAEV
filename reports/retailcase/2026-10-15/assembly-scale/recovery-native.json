@@ -1,0 +1,155 @@
+{
+  "before": {
+    "stock": [
+      {
+        "cell": "QFd9a5c53b54",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 4
+      },
+      {
+        "cell": "QGd9a5c53b54",
+        "remain": 20,
+        "hard_reserved_base": 20,
+        "stock_version": 1
+      }
+    ],
+    "task": [
+      {
+        "content_version": 2,
+        "picked_qty": 0,
+        "status": "IN_PROGRESS",
+        "assigned_to": "ASM15.OP1032"
+      }
+    ],
+    "line": [
+      {
+        "picked_qty": 0,
+        "status": "NEW"
+      }
+    ]
+  },
+  "request": {
+    "operation_id": "ASM15.RECON1032",
+    "step_id": "ASM15.T1032",
+    "expected_content_version": 2,
+    "reason": "TEST_FIXTURE_NOT_HARDWARE hold before removing unaccepted goods"
+  },
+  "physical_verified": false,
+  "stock_posting_called": false,
+  "requested": {
+    "case_task_id": 1032,
+    "reconciliation_id": "ASM15.RECON1032",
+    "session_id": "ASM15.S1032",
+    "step_id": "ASM15.T1032",
+    "state": "REQUESTED",
+    "requester_id": "ASM15.OP1032",
+    "controller_id": null,
+    "expected_content_version": 2,
+    "expected_weight_kg": "0.5",
+    "reason": "TEST_FIXTURE_NOT_HARDWARE hold before removing unaccepted goods",
+    "requested_at": "2026-10-15T11:33:55.428779+00:00"
+  },
+  "self_approval": "ASSEMBLY_RECOVERY_DISTINCT_CONTROLLER_REQUIRED",
+  "authorized": {
+    "case_task_id": 1032,
+    "reconciliation_id": "ASM15.RECON1032",
+    "session_id": "ASM15.S1032",
+    "step_id": "ASM15.T1032",
+    "state": "AUTHORIZED",
+    "requester_id": "ASM15.OP1032",
+    "controller_id": "admin",
+    "expected_content_version": 2,
+    "expected_weight_kg": "0.5",
+    "reason": "TEST_FIXTURE_NOT_HARDWARE hold before removing unaccepted goods",
+    "requested_at": "2026-10-15T11:33:55.428779+00:00"
+  },
+  "authorization": {
+    "operation_id": "ASM15.RECON.AUTH1032",
+    "reason": "TEST_FIXTURE_NOT_HARDWARE distinct controller after HOLD",
+    "unaccepted_goods_removed": true
+  },
+  "queue": {
+    "session_id": "ASM15.S1032",
+    "step_id": "ASM15.T1032",
+    "operation_id": "ASM15.RECON1032",
+    "reconciliation_id": "ASM15.RECON1032",
+    "case_task_id": 1032,
+    "scan_container": "090000000000007017",
+    "capture_id": "ASM.RECON.1E73C4C13DFB7D32236ABB389C879849747DBF0591E5C90D04B6382D8C4C1EE3",
+    "phase": "RECONCILE",
+    "device_id": "ASM15.CASE1032",
+    "device_policy_version": 1,
+    "calibration_ref": "TEST_FIXTURE_NOT_HARDWARE:ASM15",
+    "confirmation_mode": "AUTO",
+    "expected_before_kg": "0.5",
+    "min_delta_kg": "0.01",
+    "expected_content_version": 2,
+    "tare_capture_key": "7DE7BD34C4733E06DA605D3975B95B2428249706A6C42C91D91C6C7D53B14FEA",
+    "expires_at": "2026-10-15T19:12:12.173957+00:00"
+  },
+  "status": "NATIVE_AND_ENCRYPTED_OPC_HTTP_RECOVERY_PASS_ALL_QA_RETIRED",
+  "native_matching_rollback": {
+    "archive": {
+      "capture_key": "4CBFBFE619F558B0E50AE223E7EF9197913EFBED450CD3023496F43051C45127",
+      "status": "ARCHIVED",
+      "case_task_id": 1032,
+      "state": "COMPLETED",
+      "phase": "RECONCILE",
+      "reconciliation_id": "ASM15.RECON1032",
+      "session_id": "ASM15.S1032",
+      "step_id": "ASM15.T1032",
+      "device_id": "ASM15.CASE1032",
+      "capture_id": "ASM.RECON.1E73C4C13DFB7D32236ABB389C879849747DBF0591E5C90D04B6382D8C4C1EE3",
+      "source_sha256": "1B7AB678536BF690E743EA67F1027227B125A4215F8C56978B2A57E42B9778C3",
+      "weight_kg": "0.5",
+      "measured_at": "2026-10-15T11:35:08.811463+00:00",
+      "device_policy_version": 1,
+      "calibration_ref": "TEST_FIXTURE_NOT_HARDWARE:ASM15",
+      "stock_posted": false
+    },
+    "step": "CANCELLED",
+    "session": "OPEN",
+    "last_weight": "0.5",
+    "content_version": 2,
+    "append_only_and_trusted_hook_guards": [
+      "ASSEMBLY_RECONCILIATION_CAPTURE_APPEND_ONLY",
+      "ASSEMBLY_RECONCILIATION_CAPTURE_APPEND_ONLY",
+      "ASSEMBLY_RECOVERY_TRUSTED_APPLY_REQUIRED"
+    ],
+    "all_metadata_effects_rolled_back_no_goods_or_operation": true
+  },
+  "mismatch_rollback": {
+    "archive_state": "DISCREPANCY",
+    "session": "BLOCKED",
+    "step_uncancelled": true
+  },
+  "negative_guards": [
+    "ASSEMBLY_RECOVERY_REQUEST_CONFLICT",
+    "ASSEMBLY_RECOVERY_ACTIVE_INTENT_CONFLICT",
+    "ASSEMBLY_RECOVERY_DEDICATED_SENDER_REQUIRED",
+    "ASSEMBLY_RECOVERY_CURRENT_PERMISSION_REQUIRED",
+    "ASSEMBLY_RECONCILIATION_OWNER_REQUIRED",
+    "ASSEMBLY_RECONCILIATION_OWNER_REQUIRED",
+    "ASSEMBLY_RECONCILIATION_OWNER_REQUIRED"
+  ],
+  "sql_review": {
+    "recent_slow": [],
+    "decision": "Retain PK session/step/reconciliation and unique pending-session index; queue max1/history50 unchanged. Native caller-owned acceptance generates no HTTP audit. No attributable >1000ms evidence; no speculative index. Inventory owner profiles full-size sessions before physical pilot."
+  },
+  "next_step_rollback": {
+    "state": "WAITING_BEFORE",
+    "sequence": 2,
+    "rollback_removed_next_step": true
+  },
+  "old_after_actual_http_replay": {
+    "status": 200,
+    "step": "CANCELLED",
+    "posting": null,
+    "source_task_line_unchanged": true
+  },
+  "actual_recovery_http_report": "reports/retailcase/2026-10-15/assembly-scale/opc-reconciliation-http-report.json",
+  "final_cleanup_report": "reports/retailcase/2026-10-15/assembly-scale/final-cleanup-verification.json",
+  "type_restore_actual": "Both nativeownerrefused CASE_TYPE_USE_PHYSICAL_REPACK; type32/v2 retained, NEW/unassigned/qty0, realTESTstartinstants andnewSSCC retained; earlier message type1/v3 was incorrect",
+  "qa_retired": true
+}

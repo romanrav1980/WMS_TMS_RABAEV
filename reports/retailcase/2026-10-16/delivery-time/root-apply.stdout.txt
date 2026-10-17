@@ -1,0 +1,12 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_delivery_time\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_delivery_time\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_delivery_time\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_delivery_time\rrl_delivery_time_api_package.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_delivery_time\context.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_delivery_time\schema.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_delivery_time\rrl_delivery_time_api_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_delivery_time\rrl_deliv_window_guard.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_delivery_time\rrl_deliv_arrival_guard.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_delivery_time\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_delivery_time\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_delivery_time\after_sources.sql

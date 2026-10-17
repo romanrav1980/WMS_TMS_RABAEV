@@ -1,0 +1,13 @@
+{
+  "status": "APPLY_COMPLETED_REQUIRES_INDEPENDENT_READBACK",
+  "at_utc": "2026-10-15T16:55:37.283556+00:00",
+  "identity": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "frozen_manifest_sha256": "4f12af11e4fd524f28f0cd6ecf846a10679121e415045a2cabeb984ecd7945b3",
+  "independent_review": "Root native/code review and separate store_navigation read-only PASS",
+  "quantity_writes": false,
+  "finish_manifest_sha256": "b61b71370aa54e8997f55bdc03d388459a9f4f5b7a34dc56c9989007e87fd123",
+  "returncode": 0
+}

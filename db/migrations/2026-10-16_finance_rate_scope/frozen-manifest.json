@@ -1,0 +1,27 @@
+{
+  "migration_id": "2026-10-16-finance-rate-scope",
+  "status": "PREPARED_NOT_APPLIED",
+  "before_sources": {
+    "RRL_LOG_RATE_HISTORY_GUARD|TRIGGER": "F5162031EA4DD41262FA63996B08633005F54E80E449243A40A323169CCBD92A"
+  },
+  "after_sources": {
+    "RRL_LOG_RATE_HISTORY_GUARD|TRIGGER": "6BDF990CF60684868B8EF5903FD510DD2DA87B9D1DDA4CE7E74C81A537344BFE"
+  },
+  "files": {
+    "history_trigger.sql": "662b44fed089427d533c82ac7a34b002cd414f4be82616f1d9dfe7daf75d9026",
+    "restore_history_trigger.sql": "3a6bb4ed871aa3fad595f47353ea0238f8827eec7a72755b14620568914bc9c3",
+    "before.sql": "239bdd3db3d1f34a9f02151b532b9070be1b5faa19fc45436b48980e6068a517",
+    "verify.sql": "9dac9c1ca151a5497682461086bd712587dc7166879ba36fc85150c20a4c9c9a",
+    "apply.sql": "164dd2a64d4857454f699fb42f06952c3e1ee9265befefa8019d966298e21256",
+    "rollback.sql": "3fb424a9435f8ead95a730652d55b8ba5d289f008259abf76531726cd9fa8ab4",
+    "README.md": "a489e7d42b24c471f871b45eb9c509de830ccc43a01add237202f0777bdd8d09"
+  },
+  "code_checkpoint": {
+    "api/wms_api_server/app/modules/finance/infrastructure/box_rates.py": "d819f58a609c7d53a8685a2fdaccae8a488f488e5617000622a4e05697d6a9a9",
+    "api/wms_api_server/app/modules/finance/api/logistics_cost_routes.py": "38c3674011ba62e4a127e09d14acdbb3a7de97110bcbdf0862b2d5d77d6d5ba3",
+    "api/wms_api_server/app/modules/finance/infrastructure/billing_export_access.py": "92c9e1eeb0ccaaf25cff6b89d942323c6f6fffb1d21fb40c506cb0173e8902b6",
+    "api/wms_api_server/app/modules/finance/infrastructure/billing_export_reads.py": "647b66377569892ebc2b8a8a0828b890d74b4e289a2a734c52c8a295d08b730e",
+    "api/wms_api_server/app/routers/transport.py": "306d2d3693581283fada5f2fa875d4211628b06cb100e024f3be9723ad37f20f",
+    "api/wms_api_server/app/services/transport_service.py": "57148240489ec49796187ee593cde6c8d00eb6416c79d417ecbfadbe267f9800"
+  }
+}

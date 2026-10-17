@@ -1,0 +1,116 @@
+{
+  "logs": [
+    {
+      "log_id": 4492,
+      "elapsed_ms": 589,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4493,
+      "elapsed_ms": 336,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": "{'request_id': 'WEIGH.REQUEST:7f48a7aa88', 'device_id': 'WEIGH.ROLLBACK:7f48a7aa88', 'load_operation_id': 'FLOOR1194.LOA"
+    },
+    {
+      "log_id": 4498,
+      "elapsed_ms": 309,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4494,
+      "elapsed_ms": 276,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4495,
+      "elapsed_ms": 225,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4497,
+      "elapsed_ms": 16,
+      "api_path": "/api/delivery/store-scales/gateway/requests",
+      "operation_kind": "TRANSACTION",
+      "error_hint": "ORA-20882: WEIGH_DEDICATED_DEVICE_SENDER_REQUIRED\nORA-06512: at \"RABAEV.RRL_STORE_WEIGH_API\", line 141\nORA-06512: at lin"
+    },
+    {
+      "log_id": 4496,
+      "elapsed_ms": 10,
+      "api_path": "/api/delivery/store-scales/requests/UNKNOWN.WEIGH.1015",
+      "operation_kind": "TRANSACTION",
+      "error_hint": "ORA-20884: WEIGH_REQUEST_NOT_FOUND\nORA-06512: at \"RABAEV.RRL_STORE_WEIGH_API\", line 109\nORA-06512: at line 1"
+    }
+  ],
+  "top_sql": [
+    {
+      "sql_id": "2ngv11wnxudw3",
+      "executions": 1,
+      "avg_ms": 50.403,
+      "sql_hint": "select OBJECT_NAME,OBJECT_TYPE,STATUS from USER_OBJECTS where OBJECT_NAME in('RRL_STORE_WEIGH_REQUEST','RRL_STORE_WEIGH_API','RRL_STORE_WEIGH_GUARD','RRL_STORE_WEIGH_DEVICE_IDX')"
+    },
+    {
+      "sql_id": "4bruhqz3d2gs3",
+      "executions": 6,
+      "avg_ms": 7.709,
+      "sql_hint": "INSERT INTO RRL_STORE_WEIGH_REQUEST VALUES (:B1 ,:B2 ,:B3 ,:B4 ,:B5 ,:B6 ,:B7 ,:B8 ,:B9 ,:B10 ,:B11 ,:B12 ) "
+    },
+    {
+      "sql_id": "5xmbtzbfh9jmc",
+      "executions": 1,
+      "avg_ms": 35.662,
+      "sql_hint": "SELECT COUNT(*) FROM USER_OBJECTS WHERE OBJECT_NAME IN('RRL_STORE_WEIGH_REQUEST','RRL_STORE_WEIGH_DEVICE_IDX','RRL_STORE_WEIGH_API','RRL_STORE_WEIGH_GUARD')"
+    },
+    {
+      "sql_id": "9pgghm5xf8z6y",
+      "executions": 1,
+      "avg_ms": 20.383,
+      "sql_hint": "select SQL_ID,EXECUTIONS,round(ELAPSED_TIME/greatest(EXECUTIONS,1)/1000,3) AVG_MS,substr(SQL_TEXT,1,180) SQL_HINT from V$SQL where PARSING_SCHEMA_NAME=user and COMMAND_TYPE in(2,3)"
+    },
+    {
+      "sql_id": "c5bb6hsr8nwum",
+      "executions": 10,
+      "avg_ms": 1.66,
+      "sql_hint": "SELECT * FROM RRL_STORE_WEIGH_REQUEST WHERE DEVICE_ID=:B2 AND EXPIRES_AT>:B1 ORDER BY CREATED_AT DESC FETCH FIRST 21 ROWS ONLY"
+    },
+    {
+      "sql_id": "8yx103mas7dj0",
+      "executions": 8,
+      "avg_ms": 1.477,
+      "sql_hint": "SELECT * FROM RRL_STORE_WEIGH_REQUEST WHERE DEVICE_ID=:B1 AND EXPIRES_AT>SYSTIMESTAMP ORDER BY CREATED_AT FETCH FIRST 20 ROWS ONLY"
+    },
+    {
+      "sql_id": "3cq3t7t3cf25q",
+      "executions": 15,
+      "avg_ms": 0.544,
+      "sql_hint": "SELECT * FROM RRL_STORE_WEIGH_REQUEST WHERE REQUEST_ID=:B1 "
+    },
+    {
+      "sql_id": "5y04akzmtjvkw",
+      "executions": 2,
+      "avg_ms": 3.504,
+      "sql_hint": "SELECT /* OPT_DYN_SAMP */ /*+ ALL_ROWS  RESULT_CACHE(SNAPSHOT=3600) opt_param('parallel_execution_enabled', 'false') NO_PARALLEL(SAMPLESUB) NO_PARALLEL_INDEX(SAMPLESUB) NO_SQL_TUNE"
+    },
+    {
+      "sql_id": "btbuys68vg9ff",
+      "executions": 4,
+      "avg_ms": 1.46,
+      "sql_hint": "select count(*) N from RRL_STORE_WEIGH_REQUEST where REQUEST_ID=:id"
+    },
+    {
+      "sql_id": "3cq3t7t3cf25q",
+      "executions": 10,
+      "avg_ms": 0.503,
+      "sql_hint": "SELECT * FROM RRL_STORE_WEIGH_REQUEST WHERE REQUEST_ID=:B1 "
+    }
+  ],
+  "decision": "Keep primary request ID and device/expiry index with bounded20/21/50 queries; configuration row serialization. No measured slow operational SQL justifies new indexes. Explicit two-session load test remains backlog."
+}

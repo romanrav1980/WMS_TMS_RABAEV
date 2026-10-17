@@ -2,7 +2,7 @@ from ...inventory.public import AggregationCodeScan
 from typing import Any
 from fastapi import APIRouter,Depends,Query
 from pydantic import BaseModel,ConfigDict,Field
-from ...platform.public import AdminUser,require_permission
+from ...platform.public import AdminUser,require_permission,get_current_user
 from ..contracts import StoreReceiptError
 from ..contracts_return_custody import ReturnCustodyPort,return_custody_service
 from .store_receipt_routes import failure, StoreUnitScan
@@ -42,7 +42,7 @@ def handover(body: Handover,user: AdminUser=Depends(require_permission("store_re
 
 
 @router.post("/pickup")
-def pickup(body: Pickup,user: AdminUser=Depends(require_permission("driver_return_accept")),
+def pickup(body: Pickup,user: AdminUser=Depends(get_current_user),
            service: ReturnCustodyPort=Depends(return_custody_service)) -> dict[str,Any]:
     try:
         return service.pickup(body.operation_id,body.handover_operation_id,body.model_dump(exclude_defaults=True,exclude={"operation_id","handover_operation_id"}),user.username)
@@ -60,6 +60,9 @@ def store(store_address: str=Query(min_length=1,max_length=255),task_id: int | N
 
 
 @router.get("/driver")
-def driver(task_id: int | None=Query(default=None,ge=1),user: AdminUser=Depends(require_permission("driver_return_accept")),
+def driver(task_id: int | None=Query(default=None,ge=1),user: AdminUser=Depends(get_current_user),
            service: ReturnCustodyPort=Depends(return_custody_service)) -> list[dict[str,Any]]:
-    return service.driver_pending(user.username,task_id)
+    try:
+        return service.driver_pending(user.username,task_id)
+    except StoreReceiptError as exc:
+        raise failure(exc) from exc

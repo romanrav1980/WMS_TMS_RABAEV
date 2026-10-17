@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "checks": [
+    "exact_intent_replay",
+    "same_id_payload_conflict",
+    "other_receiver_owner_denied",
+    "second_outstanding_intent_busy",
+    "dedicated_gateway_only",
+    "configured_not_connected_device_status",
+    "gateway_ack_validator_matches_native_identity_and_source_hash",
+    "existing_native_capture_completes_intent_without_receipt",
+    "changed_composition_rejected",
+    "pre_request_measurement_not_accepted",
+    "current_receiver_revocation_hides_status_and_gateway_work"
+  ],
+  "transaction_rollback_verified": true,
+  "physical_hardware": false,
+  "stock_effect": "NONE"
+}

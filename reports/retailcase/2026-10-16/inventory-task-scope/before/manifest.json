@@ -1,0 +1,64 @@
+{
+  "captured_at_utc": "2026-10-15T21:35:22.407642+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_STOCK_INVENTORY_CMD",
+      "type": "PACKAGE",
+      "file": "rrl_stock_inventory_cmd_package.sql",
+      "errors": [],
+      "user_source_sha256": "893422677344c468a954ceaa002b4478e3804285f5a2becf7e3ee2b91bd9d925",
+      "normalized_source_sha256": "82c7a42a38d72c28391c94e084e457baccc2b29b26e89f52e3ef9a842630c30d",
+      "artifact_sha256": "f90705ddad39ac935e78c729e44a2d20f3b9244cb5f0eb139009beafb14839fa"
+    },
+    {
+      "name": "RRL_STOCK_INVENTORY_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_inventory_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "587ed375f46c4aa38ab6aa39db8ac6ef9216ade3144b7b6f8d2cc38ead39ca1d",
+      "normalized_source_sha256": "7183bb356163bcf03087a471f7c00ee1c72b21928098a1ae9d310c61afef3d6d",
+      "artifact_sha256": "6e0b9fab0cc059f7999104cdc96c28ff05e14b017af3b90e94f412e6f245c3c3"
+    },
+    {
+      "name": "RRL_STOCK_POSTING_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_posting_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "b661b4c72f3bb4aefe4bbcd3928c317ed84a5cb9c3f17bc0cacbf642804f395a",
+      "normalized_source_sha256": "52af65674b75a4c5365f1cf91f26d7ffc47f67775af3d8b15fa7ca3230e673f0",
+      "artifact_sha256": "cd4b6c9bac20ed57470f7ca3658a65cd2405998cf4bf821588e1bfffbfc05dd1"
+    },
+    {
+      "name": "RRL_STOCK_LOCK_API",
+      "type": "PACKAGE",
+      "file": "rrl_stock_lock_api_package.sql",
+      "errors": [],
+      "user_source_sha256": "c82fdd123b634c92f380efdbf1ddc43a02630b2aed1fc5d1a192c615d2362a55",
+      "normalized_source_sha256": "a2a901d6ea732405798062603eb483dd294cf9e67dbcfe8bd36501300fb53c30",
+      "artifact_sha256": "b9c5f25a445c8b2473775a9076a8240b673a915bc71aa2796dc9777589f160d4"
+    },
+    {
+      "name": "RRL_STOCK_LOCK_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_lock_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "4a77f13397bbb69f79ab9168d0fd942de833f28b04b13ecd0504fe3dc25554d2",
+      "normalized_source_sha256": "7e18653d8cad1f59d67baa92e5dc761e1c4c6708d92b0f5d31befae663b84f81",
+      "artifact_sha256": "62db77835b5eec8b7d2598da647f19ed9d2641f28c03c828f952f073240bbe9e"
+    },
+    {
+      "name": "RRL_STOCK_SHORT_RECOVERY",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_short_recovery_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "0ab35ef847ea2b49e774c7a2fa4320a3707b3a9a24fd885d452a89c974bc02be",
+      "normalized_source_sha256": "e57e7d5a5da080e3a37de4b662a3241af2f88a36b781c753cd2d850cb27b8017",
+      "artifact_sha256": "3ba1dbd36f697683050838a2ffb8c88ecf5ae6d4d5345a4ece6760099c771aa7"
+    }
+  ]
+}

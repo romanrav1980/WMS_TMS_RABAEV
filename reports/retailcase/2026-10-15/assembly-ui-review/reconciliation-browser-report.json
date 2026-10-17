@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "checks": [
+    "operator_hold_ack_before_removal_lost_response_reload_exact_retry_no_flag",
+    "requester_cannot_self_authorize_or_get_admin_password_prompt",
+    "controller_exact_auth_reload_404_keeps_original_snapshot_and_body",
+    "wrong_authorization_operation_ack_never_clears_intent",
+    "foreign_reconciliation_read_cannot_enable_authorization",
+    "controller_current_scope_denial_blocks_new_actions",
+    "controller_recovery_responsive_360_390_1440_no_horizontal_overflow"
+  ],
+  "evidence": "RENDERED_CHROMIUM_MOCKED_HTTP",
+  "native_mutations": false,
+  "physical_hardware": false
+}

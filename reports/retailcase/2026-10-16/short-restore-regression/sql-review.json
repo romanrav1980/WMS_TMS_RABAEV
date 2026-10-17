@@ -1,0 +1,77 @@
+{
+  "read_only": true,
+  "native_api_pairs": false,
+  "native_cumulative": [
+    {
+      "sql_id": "1031nnpkrfzdc",
+      "executions": 66809,
+      "avg_ms": 0.186,
+      "avg_buffers": 2.17,
+      "sql_sample": "select CASE_PICK_SHORT_ID,PICK_WAVE_ID,REPLENISH_TASK_ID,                    RECOVERY_SOURCE_REQUEST,RECOVERY_STATE                 from RRL_CASE_PICK_SHORT where RECOVERY_STATE in('WAIT_INVENTORY','WAIT_REPLENISHMENT')                  and exists(select 1 from RRL_PICK_WAVE w where w.PICK_WAVE_ID=RRL_CASE_PICK_SHORT.PICK_WAVE_ID and w.STATUS='LAUNCHED')                  and (RECOVERY_STATE!='WAIT_INVENTORY' or exists(select 1 from RRL_INVENTORY_TASK it                      where it.INVENTORY_TASK_ID=RRL_CASE_PICK_SHORT.INVENTORY_TASK_ID and it.ASSIGNED_TO is null and it.STATUS='NEW'))                  and (RECOVERY_LEASE_UNTIL is null or RECOVERY_LEASE_UNTIL<cast(systimestamp as timestamp))                  order by RECOVERY_DEADLINE_AT,CASE_PICK_SHORT_ID for update skip locked"
+    },
+    {
+      "sql_id": "25j9h2zyupra5",
+      "executions": 1801,
+      "avg_ms": 0.757,
+      "avg_buffers": 8.12,
+      "sql_sample": "select pf.PICK_FACE_ID,pf.CELL_CODE,a.ARTICUL,             case when exists(select 1 from RRL_REMAINS sr join RRL_PALLETS sp on sp.UID_PALLET=sr.UID_POLETA              join RRL_CELLS sc on sc.CELL=sr.CELL where sp.ARTICUL=a.ARTICUL and sc.WARE_ID=pf.WARE_ID               and sr.CELL!=pf.CELL_CODE and sr.REMAIN>sr.HARD_RESERVED_BASE               and RRL_STOCK_ELIGIBILITY.reason(sr.UID_POLETA,sr.CELL,pf.WARE_ID,0,null,null,'REPLENISH',null,a.ARTICUL) is null)              then 1 else 0 end HAS_SOURCE,              (select min(rt.MINIMAX_CYCLE_ID) from RRL_PICK_WAVE_REPLENISH_TASK rt join RRL_PICK_WAVE w on w.PICK_WAVE_ID=rt.PICK_WAVE_ID                 where w.WAVE_NAME='NICORA_MINIMAX' and w.STATUS='LAUNCHED' and rt.ARTICUL=a.ARTICUL and rt.TARGET_CELL_CODE=pf.CELL_CODE                  and rt.MINIMAX_FINISHED_AT is null and rt.MINIMAX_CYCLE_ID is not null) CYCLE_ID,             to_char"
+    },
+    {
+      "sql_id": "5zdz0auz7ycv6",
+      "executions": 814,
+      "avg_ms": 1.219,
+      "avg_buffers": 37.46,
+      "sql_sample": "select rt.PICK_WAVE_REPLENISH_TASK_ID,rt.PICK_WAVE_ID,rt.STATUS,rt.RESERVE_OPERATION_ID                     from RRL_PICK_WAVE_REPLENISH_TASK rt join RRL_PICK_WAVE w on w.PICK_WAVE_ID=rt.PICK_WAVE_ID                     where w.WARE_ID=:ware and w.STATUS='LAUNCHED' and (rt.PARENT_REPLENISH_TASK_ID is not null or rt.PICK_TASK_ID is not null)                       and rt.SOURCE_RESERVATION_ID is null and rt.STATUS in('RELEASED','QUEUED','WAIT_FREE_CELL','FAILED')                       and not exists(select 1 from RRL_WAREHOUSE_TASK wh where wh.TASK_SOURCE='WAVE'                         and wh.SOURCE_DOC_ID=rt.PICK_WAVE_ID and wh.SOURCE_TASK_ID=rt.PICK_WAVE_REPLENISH_TASK_ID                         and wh.TASK_TYPE='REPLENISHMENT' and wh.STATUS not in('DONE','CANCELLED'))                       and ((rt.PICK_TASK_ID is not null and RRL_STOCK_REPL_NEED.remaining_for_task(rt.PICK_TASK_ID,rt.TA"
+    },
+    {
+      "sql_id": "8w4ad409rb9yx",
+      "executions": 2,
+      "avg_ms": 110.831,
+      "avg_buffers": 36,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_INVENTORY_TASK_ACCESS'AND TYPE='PACKAGE BODY'ORDER BY LINE"
+    },
+    {
+      "sql_id": "1drbuc6zd1juh",
+      "executions": 66,
+      "avg_ms": 3.298,
+      "avg_buffers": 37.44,
+      "sql_sample": "update RRL_PICK_WAVE_REPLENISH_TASK rt                set (                  REPLENISHMENT_METHOD,                  REPLENISHMENT_RELEASE_POLICY,                  REPLENISHMENT_QTY_MODE,                  RELEASE_TRIGGER_QTY,                  BOXES_PER_LAYER,                  BOXES_PER_PALLET,                  BOX_VOLUME_M3,                  PICK_FACE_MAX_VOLUME,                  SAFETY_LAYER_QTY,                  PREDICTIVE_BUFFER_MIN,                  PICK_RATE_SOURCE,                  RECHECK_ON_PICK_EVENT,                  QTY,                  STATUS,                  WAIT_REASON,                  UPDATED_AT,                  UPDATED_BY                ) = (                  select cfg.REPLENISHMENT_METHOD,                         cfg.REPLENISHMENT_RELEASE_POLICY,                         cfg.REPLENISHMENT_QTY_MODE,                         cfg.RELEASE_TRIGGER_QTY,                      "
+    },
+    {
+      "sql_id": "gwj4f6cdpzk3n",
+      "executions": 3,
+      "avg_ms": 47.584,
+      "avg_buffers": 1163,
+      "sql_sample": "begin RRL_INVENTORY_TASK_ACCESS.claim_task(:1,:2); end;"
+    },
+    {
+      "sql_id": "dy7y4rdynuzfx",
+      "executions": 1,
+      "avg_ms": 96.866,
+      "avg_buffers": 152,
+      "sql_sample": "update RRL_PICK_WAVE_REPLENISH_TASK rt            set STATUS='CANCELLED',DEMAND_BASE_QTY=0,                WAIT_REASON='Own target coverage delivered with shared whole-pallet arrival; no additional physical task',                UPDATED_AT=sysdate,UPDATED_BY=:actor          where rt.PICK_WAVE_REPLENISH_TASK_ID in (           select pending.PICK_WAVE_REPLENISH_TASK_ID             from RRL_PICK_WAVE_REPLENISH_TASK pending             join RRL_STOCK_RESERVATION sr on sr.RESERVATION_ID=pending.SOURCE_RESERVATION_ID            where pending.PICK_WAVE_ID=:wave and pending.STATUS in('RELEASED','QUEUED')              and (:selection is null or pending.PICK_WAVE_REPLENISH_TASK_ID in                 (select id from json_table(:selection,'$[*]'columns(id number path '$'))))              and pending.REPLENISHMENT_QTY_MODE='FULL_PALLET' and pending.PICK_TASK_ID is not null              and sr.SOURCE_"
+    },
+    {
+      "sql_id": "cn6p35f2zt50d",
+      "executions": 2,
+      "avg_ms": 46.523,
+      "avg_buffers": 77.5,
+      "sql_sample": "SELECT * FROM RRL_STOCK_RESERVATION WHERE ((SOURCE_DOC_TYPE=:B1 AND SOURCE_DOC_ID=:B4 ) OR (:B1 ='PICK_PLAN' AND (PICK_PLAN_ID=:B4 OR (RESERVATION_DOMAIN='WAVE' AND EXISTS(SELECT 1 FROM RRL_PICK_WAVE_REPLENISH_TASK RT JOIN RRL_PICK_TASK PT ON PT.PICK_TASK_ID=RT.PICK_TASK_ID WHERE RT.PICK_WAVE_REPLENISH_TASK_ID=SOURCE_LINE_ID AND PT.PICK_PLAN_ID=:B4 ))))) AND STATUS IN('ACTIVE','ALLOCATED','PICKING') AND (:B3 IS NULL OR RESERVATION_KIND=:B3 ) AND (:B2 =0 OR (:B1 ='PICK_WAVE' AND RESERVATION_DOMAIN='WAVE' AND EXISTS( SELECT 1 FROM RRL_PICK_WAVE_REPLENISH_TASK RT WHERE RT.PICK_WAVE_ID=:B4 AND RT.PICK_WAVE_REPLENISH_TASK_ID=SOURCE_LINE_ID AND RT.STATUS IN('CANCELLED','FAILED')))) ORDER BY RESERVATION_ID"
+    },
+    {
+      "sql_id": "9vun98rkyuwjc",
+      "executions": 1,
+      "avg_ms": 89.219,
+      "avg_buffers": 115,
+      "sql_sample": "update RRL_PICK_WAVE_REPLENISH_TASK rt set          QTY=RRL_STOCK_REPL_NEED.remaining_for_task(rt.PICK_TASK_ID,rt.TARGET_CELL_CODE),          DEMAND_BASE_QTY=RRL_STOCK_REPL_NEED.remaining_for_task(rt.PICK_TASK_ID,rt.TARGET_CELL_CODE),          SOURCE_RESERVATION_ID=null,PALLET_UID=null,SOURCE_CELL_CODE=null,          SOURCE_AVAILABLE_QTY=null,SOURCE_PRODUCED_DATE=null,SOURCE_EXPIRY_DATE=null,          WAIT_REASON='Shared whole-pallet arrival confirmed; remaining own demand queued through original source selection',          UPDATED_AT=sysdate,UPDATED_BY=:actor         where rt.PICK_WAVE_REPLENISH_TASK_ID in(          select pending.PICK_WAVE_REPLENISH_TASK_ID from RRL_PICK_WAVE_REPLENISH_TASK pending          join RRL_STOCK_RESERVATION sr on sr.RESERVATION_ID=pending.SOURCE_RESERVATION_ID          where pending.PICK_WAVE_ID=:wave and pending.STATUS in('RELEASED','QUEUED')           and p"
+    },
+    {
+      "sql_id": "5u58kybayd5td",
+      "executions": 3,
+      "avg_ms": 19.995,
+      "avg_buffers": 102,
+      "sql_sample": "SELECT *FROM( SELECT RT.ARTICUL,RT.QTY,RT.SOURCE_RESERVATION_ID,RT.PALLET_UID,RT.SOURCE_CELL_CODE, RT.REPLENISHMENT_QTY_MODE,REM.REMAIN WHOLE_SOURCE_QTY,RT.PICK_WAVE_REPLENISH_TASK_ID, NVL((SELECT SUM(M.BASE_QTY)FROM RRL_WAREHOUSE_TASK T JOIN RRL_WAREHOUSE_TASK_STOCK_MOVE M ON M.TASK_ID=T.TASK_ID WHERE T.TASK_SOURCE='WAVE'AND T.TASK_TYPE='REPLENISHMENT'AND T.SOURCE_TASK_ID=RT.PICK_WAVE_REPLENISH_TASK_ID),0)ARRIVED, ROW_NUMBER()OVER(PARTITION BY RT.REPLENISHMENT_QTY_MODE, CASE WHEN RT.REPLENISHMENT_QTY_MODE='FULL_PALLET'THEN RT.PALLET_UID ELSE TO_CHAR(RT.PICK_WAVE_REPLENISH_TASK_ID)END, RT.SOURCE_CELL_CODE ORDER BY RT.PICK_WAVE_REPLENISH_TASK_ID)PHYSICAL_RANK FROM RRL_PICK_WAVE_REPLENISH_TASK RT LEFT JOIN RRL_STOCK_RESERVATION SR ON SR.RESERVATION_ID=RT.SOURCE_RESERVATION_ID LEFT JOIN RRL_REMAINS REM ON REM.UID_POLETA=RT.PALLET_UID AND REM.CELL=RT.SOURCE_CELL_CODE WHERE RT.TARGET_CELL_COD"
+    }
+  ],
+  "decision": "Preserve exact task/source binding, complete cell/SKU count, bounded reservation list and existing CELL X/rights REV fences. No speculative index/cache. Inventory owner measures task/replenishment anti-join plans on pilot volume. Native-only regression has no invented HTTP/API pairs; cumulative cursor averages are not scenario p95."
+}

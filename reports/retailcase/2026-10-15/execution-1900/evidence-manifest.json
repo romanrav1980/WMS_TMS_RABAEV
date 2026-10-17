@@ -1,0 +1,144 @@
+{
+  "recorded_at_utc": "2026-10-15T15:58:18.514162+00:00",
+  "status": "VERIFIED_INCREMENTS_FULL_PROGRAM_STILL_OPEN",
+  "agreed_stop": "2026-10-15T19:00:00+03:00",
+  "all_eight_sprints_complete": false,
+  "kpi_owner_decision": "Both rows/hour and boxes/hour: actual picking excluding explicitly recorded pauses; actual shift retaining pauses.",
+  "latest_source_checks": {
+    "architecture": "PASS:1059files/0cycles/debt72",
+    "tooling_tests": "24PASS",
+    "admin_typescript": "PASS",
+    "terminal_typescript": "PASS",
+    "production_build": "PASS; existing935KB terminal bundle warning retained",
+    "encoding": "PASS after final functional changes"
+  },
+  "focused_pure_tests": 48,
+  "final_store_browser": {
+    "checks": 8,
+    "production_origin": "http://127.0.0.1:8088/store/",
+    "api_writes": "INTERCEPTED_ONLY",
+    "damaged_archive_reload": "PASS; original raw remains; no POST/PUT/DELETE attempted"
+  },
+  "actual_claude": {
+    "session": "654a1dc6-3cca-4cab-b73f-7d82cf22ef18",
+    "C0113": "review and JournalPanel fix integrated",
+    "C0114": "static review and button fix saved before provider quota",
+    "provider_reset": "23:00 Europe/Moscow",
+    "handoff_C0114_written": false,
+    "root_followup_unloading_fix": "Separate root change, independently reviewed; not attributed to Claude"
+  },
+  "retirement": "Consistent18:47MSK read: CASE1136/1138 CANCELLED, sessions54/55/58 CLOSED, all CRES assignments revoked, role inactivev4/userdeleted, private groups inactive, physical24/hard0, lineage preserved, INVALID0",
+  "remaining": [
+    "Mixed HU F1-F6 end-to-end",
+    "SHIPPING_GROSS outer pallet",
+    "CASE-aware interWARE",
+    "GROUP-only actual quantity proof with measured fresh empty tare",
+    "Scoped ASM/close/bind",
+    "Owner-bound resolution/abandon for unknown metadata intents including unloading",
+    "Runtime aware WORK/PAUSE/SHIFT and KPI numerators",
+    "Open line attribution and delivery event owner rules",
+    "Load/slow timeline attribution and physical equipment/phone pilot"
+  ],
+  "drive_upload": "Blocked by automatic approval review: destination account/folder not confirmed; no Drive link claimed",
+  "github_publication": false,
+  "artifacts": [
+    {
+      "path": "case-work-ui/root-rendered-mocked.json",
+      "sha256": "97a38e041580e6acefd7bb84c56409a420ac75e32d8e4fc2c9352a81d39047c0",
+      "status": "PASS",
+      "bytes": 3499
+    },
+    {
+      "path": "case-work-ui/production-native-read.json",
+      "sha256": "3a82d5513277fc6c4fbe833892f7e76c947832f1ccead4ff72c2346d5596c91d",
+      "status": "PASS",
+      "bytes": 2607
+    },
+    {
+      "path": "case-work-ui/claude-review.json",
+      "sha256": "9daf90d4c55d1282fc33c76b2bb4fc8b95b488fbf23229b5d535e0539e4fdb6b",
+      "status": "STATIC_REVIEW_INTEGRATED_ROOT_REGRESSION_PASS",
+      "bytes": 1223
+    },
+    {
+      "path": "case-work-ui/sql-review.json",
+      "sha256": "79b1ea86cc558917b4eea9faba9b280887694d852403a66fb1f77d147ba1cf59",
+      "status": "PASS",
+      "bytes": 5977
+    },
+    {
+      "path": "store-ui-claude-review/review.json",
+      "sha256": "237bffd5b383e55f9a2982c4d01bc13226216090141d56fdece54900af211fe2",
+      "status": "STATIC_REVIEW_AND_BUTTON_FIX_INTEGRATED_ROOT_VALIDATION_PASS_PROVIDER_LIMIT",
+      "bytes": 859
+    },
+    {
+      "path": "store-ui-claude-review/ux-final-help-recovery.json",
+      "sha256": "b6e5ad51e2f92d32e39c6cbbeb558c0252f2d1e92af6736a006fcf6706cf04ed",
+      "status": "PASS",
+      "bytes": 695
+    },
+    {
+      "path": "store-ui-claude-review/pwa-final.json",
+      "sha256": "c39a5ff8292c112fd58cf16140ed4015bf4cca8c855f519046c2797878d49bb4",
+      "status": "PASS",
+      "bytes": 283
+    },
+    {
+      "path": "assembly-final-build/pwa-final.json",
+      "sha256": "a94b647168eda14ca49074aed54a279a1290b37d7516b1852b9b0be41a0789ac",
+      "status": "PASS",
+      "bytes": 286
+    },
+    {
+      "path": "case-resource-commands/final-retired-verification.json",
+      "sha256": "dd411a861a16d1870a6214aad5498eca57e445021a69def111ec597471da7c7e",
+      "status": "PASS_RETIRED_NO_ACTIVE_TEST_RESERVE",
+      "bytes": 1948
+    },
+    {
+      "path": "case-resource-commands/remaining-grants-retirement.json",
+      "sha256": "9fd5f51f3929287dd62dbe10955120b350c3bcd719ea605476abbbf2e7d8f3b1",
+      "status": "ALL_CRES_ASSIGNMENTS_REVOKED_HISTORY_RETAINED",
+      "bytes": 1568
+    },
+    {
+      "path": "case-resource-commands/final-sql-review.json",
+      "sha256": "9ec9a1b2caa480681326aef614a6a39ca237ed875b4787fcb715bbf2416beec6",
+      "status": "READ_ONLY_REVIEW",
+      "bytes": 3672
+    },
+    {
+      "path": "case-resource-commands/group-quantity-runtime-result.json",
+      "sha256": "78724b622977949969c6a86911c5a2d111ef133f1d83d32821d8eac12b1b245f",
+      "status": "PHYSICAL_TARE_REQUIREMENT_BLOCKED_QUANTITY_PROOF_ACL_RESTORED",
+      "bytes": 1892
+    },
+    {
+      "path": "execution-1900/end-state-readonly.json",
+      "sha256": "2cc1716db6d0a8eb6abae121aa26cd54173f5b83aee44c2803d1bcc0b9971850",
+      "status": "PASS_CONSISTENT_READ_ONLY_SNAPSHOT",
+      "bytes": 2105
+    },
+    {
+      "path": "execution-1900/independent-synthesis-review.json",
+      "sha256": "511cb85193653f2083f87cbb97ab9e6cdbc99545c17526c907c8fc5f0f497543",
+      "status": "PASS_READ_ONLY_INDEPENDENT_SYNTHESIS_REVIEW",
+      "bytes": 1755
+    },
+    {
+      "path": "execution-1900/control-help-audit.json",
+      "sha256": "67c44d3936c8106387867c2e80d728e3de6890548b9498cffff8618a95f3378e",
+      "status": "PASS_ELIGIBLE_NATIVE_CONTROLS",
+      "bytes": 31480
+    },
+    {
+      "path": "task-assignment/final-verification.json",
+      "sha256": "ee74a339d11df36ad02cc5d33088c1596ca3ca003a65b6d92632a8a5f2fd8297",
+      "status": "PASS",
+      "bytes": 2161
+    }
+  ],
+  "closed_at_utc": "2026-10-15T16:00:15.036520+00:00",
+  "stop_reason": "Agreed19:00MSK boundary reached; full program remains open"
+}

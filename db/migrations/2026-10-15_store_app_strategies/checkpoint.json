@@ -1,0 +1,23 @@
+{
+  "migration_id": "2026-10-15-store-app-strategies",
+  "git_head": "41c913cf44441cf3656a66b0939e40cb9a83c365",
+  "target": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "invalid_before": 0,
+  "sha256": {
+    "apply.sql": "d1188d592cc93085f96b4bdc01599e72357c32b10af3ba0dc78f64690dffcdd1",
+    "before_rrl_stock_store_receipt_cmd.sql": "eb7c16933493b279aa40d3d37bf9cd5ab75e4710415987a3bac01060e8020556",
+    "before_rrl_stock_store_receipt_read.sql": "7669aeb727dd3b6e32bd01792e160b7bd6da817baaad008a9e93b20abea2b809",
+    "before_rrl_stock_store_weight_core.sql": "74daa8557f678b6a1482cbb10e1f8d9202bdf0cfcf9010db0c35ba69d25bc5ad",
+    "mode_constraint.sql": "c2d5c99ad260eb0c632156d6e27e9471a5066c3887b1b5232c0bad7108ba42a9",
+    "rollback.sql": "77398130367b97ad4d45870ae1b917083a3b4a13ee8675beab5f37c0ada684fa",
+    "rrl_stock_store_receipt_cmd.sql": "4753b1cf4987e07cf3790d601d91f9ec56ad46dc732b9deae95c592ffe3ce1c7",
+    "rrl_stock_store_receipt_read.sql": "b2ce0356c9d27c08c0bc3dd048b013dcd990df06b11fddcb65492813af000328",
+    "rrl_stock_store_weight_core.sql": "63f95ecab1feabbafad4db8398077ed5f76e907b786582e4319aa70e44f7395c",
+    "verify.sql": "ed3b8bf7bf4052f8f5b75ef8ff179e43250a562ffb0f4f8b9866f197ceecf6e4"
+  },
+  "authorization": "Owner explicitly requires independent store app and three receiving strategies; no stock writes or mass reassignment",
+  "state": "PREPARED"
+}

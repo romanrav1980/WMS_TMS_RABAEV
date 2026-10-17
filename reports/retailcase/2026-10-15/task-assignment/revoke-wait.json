@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "checks": [
+    "actual_revision_SHARE_wait_observed",
+    "canonical_revoke_commit_before_waiter_continues",
+    "current_authority_rechecked_before_original_receipt",
+    "HTTP_receipt_and_replay_denied_while_revoked",
+    "new_canonical_SELF_grant_restores_exact_original_replay",
+    "task_receipt_events_versions_stock_unchanged"
+  ],
+  "observed_wait": {
+    "sid": 248,
+    "event": "enq: TM - contention",
+    "blocking_session": 58,
+    "p2": 86939
+  },
+  "metadata_revoke_commit": true,
+  "access_history_retained": true,
+  "goods_commit": false
+}

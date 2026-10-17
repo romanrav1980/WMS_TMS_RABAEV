@@ -1,0 +1,11 @@
+export { KnowledgePanel } from "./help/KnowledgePanel";
+export { HelpButton } from "./help/HelpButton";
+export { helpActions } from "./help/catalog";
+export { SessionGate } from "./session/SessionGate";
+export { AccessAdminPage } from "./access-admin";
+export { HelpHint } from "./help/HelpHint";
+export { openHelpArticle } from "./help/catalog";
+export type { HelpEntry } from "./help/catalog";
+export { PlatformEntry } from "./entry/PlatformEntry";
+export { KnowledgeEditorPage } from "./knowledge-editor";
+export { WorkplaceHome } from "./workspaces";

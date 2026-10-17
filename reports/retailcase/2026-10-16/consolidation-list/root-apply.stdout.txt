@@ -1,0 +1,9 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_consolidation_list\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_consolidation_list\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_consolidation_list\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_consolidation_list\rrl_hu_consol_list_package.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_consolidation_list\rrl_hu_consol_list_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_consolidation_list\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_consolidation_list\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_consolidation_list\after_sources.sql
+Done. Statements=9; Errors=0; AbsentCleanup=0

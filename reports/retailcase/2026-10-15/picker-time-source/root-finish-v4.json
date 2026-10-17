@@ -1,0 +1,37 @@
+{
+  "status": "APPLIED_REQUIRES_READBACK",
+  "at_utc": "2026-10-15T17:39:55.567409+00:00",
+  "identity": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "manifest_sha256": "2404bf877103180fffbea1a9e7761391c1bb012500269eb2f1f9710e36158714",
+  "files": [
+    {
+      "candidate": "tmp/picker_actual_time_v4_installed_guard.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_verify_fix/installed_guard.sql",
+      "sha256": "9e65aeca1a68ffbc831c08f53f3750917747bacf37c917a960ed3017968ef32b",
+      "bytes": 30949
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v4_verify.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_verify_fix/verify.sql",
+      "sha256": "e5d1409bbd703db8eedf243154e7060084630fb47794fec531f3b8754ef092ff",
+      "bytes": 1447
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v4_rollback.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_verify_fix/rollback.sql",
+      "sha256": "fbf4febaa2dd90889177c233225d6494ea745adadb012bf9eed4a30ebfe5fca7",
+      "bytes": 1635
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v4_finish.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_verify_fix/finish.sql",
+      "sha256": "c40f1af4f2ca7ac6e540b41f75fa91b960aa2d1b9919a30b57a1d81217abdb32",
+      "bytes": 744
+    }
+  ],
+  "quantity_writes": false,
+  "returncode": 0
+}

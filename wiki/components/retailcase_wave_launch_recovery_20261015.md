@@ -1,0 +1,11 @@
+﻿# Запуск волны: потерянный ответ и незавершённое продолжение
+
+15.10.2026. Scoped launch и durable continuation APPLIED и приняты на bounded DEV fixture. [[database/retailcase_wave_launch_continuation_20261015]] содержит текущий контракт, native guards, SQL/rollback и evidence. Ранняя версия этого документа описывала только разделение ошибки launch/continuation и считала сквозной native replay открытым; этот остаток закрыт новым progress journal, а не простым повторением всех metadata helpers.
+
+Оригинальный StockPosting WAVE_LAUNCH остаётся одной canonical командой с explicit operation_id. Потерянный ответ допускает повтор неизменного тела с тем же ключом. Unknown commit остаётся503/outcome_confirmed=false/read_before_retry; current permission denial403 и OPERATION_CONFLICT не подтверждают новый исход и не разрешают скрытый новый ключ.
+
+После APPLIED launch семь metadata шагов имеют durable PENDING/FAILED/DONE receipts. Action+DONE атомарны, completed prefix не исполняется повторно. Source intents фиксируются до отдельной canonical stock TX и больше не заменяются; их exact retry не создаёт второй reserve UUID. Current actual warehouse permission проверяется на launch, continuation и source replay под revision fence после strict begin_plan. Отзыв права немедленно блокирует следующий вход.
+
+Минимальный GET `/api/picking/waves/{wave}/launch-receipts/{operation}` проверяет original author/admin и current WARE. Он различает historical launchAPPLIED, current wave_status и continuation state/steps. NOT_VISIBLE не является rollback. HTTP replay completed launch у уже отменённой wave565 вернул CANCELLED/launchAPPLIED/continuationCOMPLETE и не изменил остатки/резервы.
+
+9 grouped durable native +8 native/actual HTTP replay +3 minimal receipt compatibility checks PASS;21 unit tests отдельно. Два конкурентных повтора после ошибок завершили remaining steps без второго launch/source/CASE/warehouse task. Штатные canonical cancel+plan-cancel восстановили P24/H0; V9 и полная история сохранены. Physical starts/scans/moves0. [[database/retailcase_wave_launch_scope_20261015]] описывает исходный scope increment; hardware и warehouse-scale load остаются отдельной приёмкой. [[roadmap/retailcase_access_knowledge_plan]].

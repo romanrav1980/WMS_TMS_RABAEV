@@ -1,0 +1,14 @@
+{
+  "authorization": "Explicit owner: delete duplicates",
+  "target": "RABAEV/orcl",
+  "survivor": "KLAD_UZENALIEV",
+  "delete_only": "KLAD_Uzenaliev; DELETED=1",
+  "users_before": 1169,
+  "linked_assignments": 0,
+  "backup": "RRL_RUSERS_DEDUP_BAK; original full row retained only in Oracle, not printed/exported",
+  "sha256": {
+    "apply.sql": "0661a062f60bdbcade80f9b0ef9d2760636d1870d9bdf2abb51547a38e0d0bc8",
+    "rollback.sql": "e310eb0438219a25681834ba0108b105858842c97eb7c46bc135f5a39d26743f",
+    "verify.sql": "0928610190c59eddf96e07de1baf0d3f813247c958b584c94634754382518d97"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "captured_at_utc": "2026-10-16T12:59:05.108218+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_IW_CASE_BRIDGE",
+      "type": "PACKAGE BODY",
+      "file": "rrl_iw_case_bridge_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "04d1c949bd4688c9a15ce777560d00b50a21698a088b87dd8beb4aeac615fbf7",
+      "normalized_source_sha256": "3188c9a17d7a6a3d296d3e1ab7b0707fc441a169def5ce539e19e3777f1d1161",
+      "artifact_sha256": "687cb49ed0684d95ec580a43dc8a37aee92fc324bad125a65aa1e64468555bc5"
+    }
+  ]
+}

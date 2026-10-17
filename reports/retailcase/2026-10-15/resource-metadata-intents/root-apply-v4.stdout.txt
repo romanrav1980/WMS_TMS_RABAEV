@@ -1,0 +1,12 @@
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\apply_reviewed_v2.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\before_current_v2.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\schema.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\spec.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\case_spec.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\task_spec.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\case_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\task_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\guards.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\verify_current_v2.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\after_source_guard.sql

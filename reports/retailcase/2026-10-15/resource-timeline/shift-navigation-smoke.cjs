@@ -1,0 +1,47 @@
+const {chromium}=require('../../../../admin/wms_admin_frontend/node_modules/playwright');
+const fs=require('fs'),path=require('path'),assert=require('assert');
+(async()=>{const basic=fs.readFileSync('front.bat','utf8').match(/VITE_ADMIN_BASIC_AUTH=([^"\r\n]+)/)[1];
+ const browser=await chromium.launch({headless:true});
+ try {const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[],writes=[];let fixtureWave=null;
+ page.on('pageerror',e=>errors.push(String(e)));
+ page.on('request',r=>{if(r.url().includes('/api/')&&r.method()!=='GET'&&!r.url().includes('/picking/shift-overview'))writes.push(r.method()+' '+r.url());});
+ await page.route('**/api/resources/timeline?**',async route=>{
+  const original=await route.fetch(),raw=await original.json();
+  if(raw.warehouse_id!==6558233)return route.fulfill({response:original});
+  const wave=[...(raw.events||[]),...(raw.unscheduled||[])].find(e=>e.wave_id!=null)?.wave_id;
+  assert(wave,'Native timeline fixture needs an actual wave identity');fixtureWave=wave;
+  const start=raw.start_at,finish=raw.finish_at;
+  const resource=(n)=>({resource_id:'EQUIPMENT:UI'+n,kind:'REACHTRUCK',label:'UI-TEST-RT-'+n,warehouse_id:6558233,source_state:'ACTIVE',availability:'UNKNOWN',zone_code:null,qualifications:[],last_signal:null});
+  const event=(n,w,timed)=>({event_id:'CASE_PICK_TASK:UI'+n,kind:'CASE_PICK_TASK',label:'UI-TEST-ASSEMBLY-'+n,source:'case_tasks',source_id:990000+n,wave_id:w,status:'IN_PROGRESS',
+   plan_start_at:timed?start:null,plan_finish_at:timed?finish:null,fact_start_at:null,fact_finish_at:null,time_status:timed?'AWARE_PLAN':'UNRESOLVED_SERVER_LOCAL',total_lines:1,picked_lines:0});
+  raw.resources=[resource(1),resource(2)];raw.events=[event(1,wave,true),event(2,wave+10000,true)];raw.unscheduled=[event(3,wave,false),event(4,wave+10000,false)];
+  raw.assignments=[{event_id:'CASE_PICK_TASK:UI1',resource_id:'EQUIPMENT:UI1'},{event_id:'CASE_PICK_TASK:UI2',resource_id:'EQUIPMENT:UI2'}];
+  raw.overlap_candidates=[];raw.warehouse_time_zone='UTC';
+  await route.fulfill({response:original,json:raw});
+ });
+ await page.goto('http://127.0.0.1:3000/?page=workspace&workspace=shift');let sep=basic.indexOf(':');
+ await page.locator('input[autocomplete="username"]').fill(basic.slice(0,sep));await page.locator('input[type="password"]').fill(basic.slice(sep+1));await page.locator('.session-login button[type="submit"]').click();
+ await page.locator('[role="tab"][aria-selected="true"]').waitFor();await page.locator('input[list="rg-wh-waves"]').fill('6558233');
+ await page.locator('[data-help-id="shift.scene.wave"]').first().waitFor({timeout:40000});
+ await page.locator('.rg-summary').waitFor({timeout:30000});assert(fixtureWave);
+ await page.locator('[data-help-id="shift.scene.wave"]').first().click();
+ await page.getByRole('button',{name:'Ресурсы волны в Ганте',exact:true}).click();
+ await page.getByRole('button',{name:'Снять фильтр волны',exact:true}).waitFor();
+ assert(await page.getByText('UI-TEST-RT-1',{exact:true}).isVisible());
+ assert.equal(await page.getByText('UI-TEST-RT-2',{exact:true}).count(),0);
+ assert(await page.getByText('UI-TEST-ASSEMBLY-3',{exact:true}).isVisible());
+ assert.equal(await page.getByText('UI-TEST-ASSEMBLY-4',{exact:true}).count(),0);
+ await page.locator('[data-help-id="resource-gantt.bar.plan"]').first().click();
+ await page.locator('[data-help-id="resource-gantt.open.wave"]').click();
+ assert(await page.getByRole('button',{name:'Ресурсы волны в Ганте',exact:true}).isVisible());
+ await page.getByRole('button',{name:'Снять фильтр волны',exact:true}).click();
+ assert(await page.getByText('UI-TEST-RT-2',{exact:true}).isVisible());assert(await page.getByText('UI-TEST-ASSEMBLY-4',{exact:true}).isVisible());
+ await page.setViewportSize({width:390,height:844});await page.locator('[data-help-id="shift.scene.wave"]').first().click();
+ await page.getByRole('button',{name:'Ресурсы волны в Ганте',exact:true}).click();
+ await page.screenshot({path:path.join(__dirname,'shift-navigation-mobile.png')});
+ const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
+ assert(!overflow);assert.equal(errors.length,0);assert.equal(writes.length,0);
+ const result={status:'PASS',source:'UI_TEST_PROJECTION_INTERCEPTED',nativeWaveIdentity:fixtureWave,exactWaveResourceFilter:true,exactWaveQueueFilter:true,clearRestores:true,eventToWaveReturn:true,mobileOverflow:overflow,pageErrors:errors,unexpectedWrites:writes};
+ fs.writeFileSync(path.join(__dirname,'shift-navigation-ui.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result));
+ } finally {await browser.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;});

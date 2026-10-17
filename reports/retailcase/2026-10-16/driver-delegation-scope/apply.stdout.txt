@@ -1,0 +1,13 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_driver_self_scope\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_driver_self_scope\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_driver_self_scope\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_driver_self_scope\rrl_driver_scope_package.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_driver_self_scope\rrl_driver_scope_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_driver_self_scope\rrl_tt_operation_plan_api_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_driver_self_scope\rrl_transport_driver_user_guard_trigger.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_driver_self_scope\rrl_stock_store_return_cust_cmd_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_driver_self_scope\rrl_stock_posting_api_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_driver_self_scope\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_driver_self_scope\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_driver_self_scope\after_sources.sql
+Done. Statements=13; Errors=0; AbsentCleanup=0

@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "trip_id": 33564,
+      "status": "SOURCE_CHANGED",
+      "projected_operations": 0
+    },
+    {
+      "trip_id": 33570,
+      "status": "SOURCE_CHANGED",
+      "projected_operations": 0
+    }
+  ],
+  "business_rows": "READ_ONLY",
+  "stock_effect": "NONE",
+  "positive_current_approval_fixture": "SEPARATE_CALLER_ROLLBACK_SMOKE: scripts/timeline_clock_positive_smoke.py"
+}

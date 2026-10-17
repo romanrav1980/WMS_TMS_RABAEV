@@ -1,0 +1,29 @@
+{
+  "state": "PASS_TWO_CONNECTION_RIGHTS_FENCE_AND_CLEANUP",
+  "grant": {
+    "assignment_id": "AS16.35cea92c27.LOCK.SELF",
+    "username": "AS16O35cea92c27",
+    "role_id": "AS16R35cea92c27",
+    "scope_kind": "SELF",
+    "scope_id": null,
+    "valid_from": "2026-10-15T21:32:16.166992+00:00",
+    "valid_until": "2026-10-15T21:52:26.166992+00:00",
+    "expected_version": 0,
+    "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+  },
+  "quantity_effect": false,
+  "hardware_verified": false,
+  "blocked": {
+    "oracle_code": 54,
+    "elapsed_ms": 2019
+  },
+  "after_release_replay": "FINALIZED",
+  "contexts_clean": true,
+  "revoke": {
+    "operation_id": "AS16.35cea92c27.LOCK.REVOKE",
+    "command_type": "REVOKE",
+    "object_id": "AS16.35cea92c27.LOCK.SELF",
+    "version": 2,
+    "replayed": false
+  }
+}

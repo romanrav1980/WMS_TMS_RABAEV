@@ -1,0 +1,16 @@
+{
+  "block": "AK01/KH01",
+  "status": "FOUNDATION_IMPLEMENTED",
+  "targeted_tests": 17,
+  "ui": "PASS",
+  "oracle_migrated": false,
+  "users_reassigned": false,
+  "independent_acceptance": false,
+  "slow_sql_marker": 3975,
+  "performance_backlog": "AK05-PERF01",
+  "remaining": [
+    "Oracle assignments and authority",
+    "knowledge editor and publishing",
+    "legacy screen help coverage"
+  ]
+}

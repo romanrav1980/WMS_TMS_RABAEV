@@ -1,0 +1,16 @@
+{
+ "articles": {
+  "workspaces": 200,
+  "receiving-lead": 200,
+  "resource-gantt": 200,
+  "storage-lead": 200,
+  "shift-supervisor": 200
+ },
+ "mock": {
+  "total": 38,
+  "bars": 10,
+  "missing": [
+   "checkbox"
+  ]
+ }
+}

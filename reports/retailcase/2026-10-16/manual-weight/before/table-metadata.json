@@ -1,0 +1,157 @@
+{
+  "columns": [
+    {
+      "column_name": "OPERATION_ID",
+      "nullable": "N",
+      "data_type": "VARCHAR2",
+      "data_length": 100
+    },
+    {
+      "column_name": "CAPTURE_KEY",
+      "nullable": "N",
+      "data_type": "VARCHAR2",
+      "data_length": 64
+    },
+    {
+      "column_name": "SHIPPING_GROSS_KG",
+      "nullable": "N",
+      "data_type": "NUMBER",
+      "data_length": 22
+    },
+    {
+      "column_name": "OBSERVED_GROSS_KG",
+      "nullable": "N",
+      "data_type": "NUMBER",
+      "data_length": 22
+    },
+    {
+      "column_name": "TOLERANCE_KG",
+      "nullable": "N",
+      "data_type": "NUMBER",
+      "data_length": 22
+    },
+    {
+      "column_name": "DELTA_KG",
+      "nullable": "N",
+      "data_type": "NUMBER",
+      "data_length": 22
+    },
+    {
+      "column_name": "IN_TOLERANCE",
+      "nullable": "N",
+      "data_type": "NUMBER",
+      "data_length": 22
+    },
+    {
+      "column_name": "ACT_CONFIRMED",
+      "nullable": "N",
+      "data_type": "NUMBER",
+      "data_length": 22
+    },
+    {
+      "column_name": "PHOTOS_JSON",
+      "nullable": "N",
+      "data_type": "CLOB",
+      "data_length": 4000
+    },
+    {
+      "column_name": "RECORDED_BY",
+      "nullable": "N",
+      "data_type": "VARCHAR2",
+      "data_length": 50
+    },
+    {
+      "column_name": "RECORDED_AT",
+      "nullable": "N",
+      "data_type": "TIMESTAMP(6) WITH TIME ZONE",
+      "data_length": 13
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_name": "SYS_C0016514",
+      "constraint_type": "R",
+      "search_condition_vc": null
+    },
+    {
+      "constraint_name": "SYS_C0016515",
+      "constraint_type": "R",
+      "search_condition_vc": null
+    },
+    {
+      "constraint_name": "SYS_C0016512",
+      "constraint_type": "C",
+      "search_condition_vc": "PHOTOS_JSON is json"
+    },
+    {
+      "constraint_name": "SYS_C0016499",
+      "constraint_type": "C",
+      "search_condition_vc": "\"CAPTURE_KEY\" IS NOT NULL"
+    },
+    {
+      "constraint_name": "SYS_C0016500",
+      "constraint_type": "C",
+      "search_condition_vc": "\"SHIPPING_GROSS_KG\" IS NOT NULL"
+    },
+    {
+      "constraint_name": "SYS_C0016501",
+      "constraint_type": "C",
+      "search_condition_vc": "\"OBSERVED_GROSS_KG\" IS NOT NULL"
+    },
+    {
+      "constraint_name": "SYS_C0016502",
+      "constraint_type": "C",
+      "search_condition_vc": "\"TOLERANCE_KG\" IS NOT NULL"
+    },
+    {
+      "constraint_name": "SYS_C0016503",
+      "constraint_type": "C",
+      "search_condition_vc": "\"DELTA_KG\" IS NOT NULL"
+    },
+    {
+      "constraint_name": "SYS_C0016504",
+      "constraint_type": "C",
+      "search_condition_vc": "\"IN_TOLERANCE\" IS NOT NULL"
+    },
+    {
+      "constraint_name": "SYS_C0016505",
+      "constraint_type": "C",
+      "search_condition_vc": "\"ACT_CONFIRMED\" IS NOT NULL"
+    },
+    {
+      "constraint_name": "SYS_C0016506",
+      "constraint_type": "C",
+      "search_condition_vc": "\"PHOTOS_JSON\" IS NOT NULL"
+    },
+    {
+      "constraint_name": "SYS_C0016507",
+      "constraint_type": "C",
+      "search_condition_vc": "\"RECORDED_BY\" IS NOT NULL"
+    },
+    {
+      "constraint_name": "SYS_C0016508",
+      "constraint_type": "C",
+      "search_condition_vc": "\"RECORDED_AT\" IS NOT NULL"
+    },
+    {
+      "constraint_name": "SYS_C0016509",
+      "constraint_type": "C",
+      "search_condition_vc": "TOLERANCE_KG>0"
+    },
+    {
+      "constraint_name": "SYS_C0016510",
+      "constraint_type": "C",
+      "search_condition_vc": "IN_TOLERANCE in(0,1)"
+    },
+    {
+      "constraint_name": "SYS_C0016511",
+      "constraint_type": "C",
+      "search_condition_vc": "ACT_CONFIRMED in(0,1)"
+    },
+    {
+      "constraint_name": "SYS_C0016513",
+      "constraint_type": "P",
+      "search_condition_vc": null
+    }
+  ]
+}

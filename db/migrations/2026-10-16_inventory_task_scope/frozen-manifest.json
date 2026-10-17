@@ -1,0 +1,50 @@
+{
+  "migration_id": "2026-10-16-inventory-task-scope",
+  "status": "PREPARED_NOT_APPLIED",
+  "before_sources": {
+    "RRL_STOCK_INVENTORY_CMD|PACKAGE": "82C7A42A38D72C28391C94E084E457BACCC2B29B26E89F52E3EF9A842630C30D",
+    "RRL_STOCK_INVENTORY_CMD|PACKAGE BODY": "7183BB356163BCF03087A471F7C00EE1C72B21928098A1AE9D310C61AFEF3D6D",
+    "RRL_STOCK_POSTING_API|PACKAGE BODY": "52AF65674B75A4C5365F1CF91F26D7FFC47F67775AF3D8B15FA7CA3230E673F0",
+    "RRL_STOCK_LOCK_API|PACKAGE": "A2A901D6EA732405798062603EB483DD294CF9E67DBCFE8BD36501300FB53C30",
+    "RRL_STOCK_LOCK_API|PACKAGE BODY": "7E18653D8CAD1F59D67BAA92E5DC761E1C4C6708D92B0F5D31BEFAE663B84F81",
+    "RRL_STOCK_SHORT_RECOVERY|PACKAGE BODY": "E57E7D5A5DA080E3A37DE4B662A3241AF2F88A36B781C753CD2D850CB27B8017"
+  },
+  "after_sources": {
+    "RRL_STOCK_INVENTORY_CMD|PACKAGE": "82C7A42A38D72C28391C94E084E457BACCC2B29B26E89F52E3EF9A842630C30D",
+    "RRL_STOCK_INVENTORY_CMD|PACKAGE BODY": "84982C5FB169AF20A35537AD1FCA41665139F35E449CD0BEA7545F534AD8A94A",
+    "RRL_STOCK_POSTING_API|PACKAGE BODY": "AE731B15DF41BB6895279D8AB7DAD5324EC771218B089C70CDBC1A8B2F085754",
+    "RRL_STOCK_LOCK_API|PACKAGE": "A2A901D6EA732405798062603EB483DD294CF9E67DBCFE8BD36501300FB53C30",
+    "RRL_STOCK_LOCK_API|PACKAGE BODY": "7E18653D8CAD1F59D67BAA92E5DC761E1C4C6708D92B0F5D31BEFAE663B84F81",
+    "RRL_STOCK_SHORT_RECOVERY|PACKAGE BODY": "910587DC4B95C88D07B9DA8E846E3EE65EACB7FD0D60676F98D31CF55CC0F4CF",
+    "RRL_INVENTORY_TASK_ACCESS|PACKAGE": "2275684AC231DDEC115AFFA5ECB641B3778853876F623A55D22E779F475DA261",
+    "RRL_INVENTORY_TASK_ACCESS|PACKAGE BODY": "DE7E033A992C3B02F1EFBAF31142B93C97838706E954AF435DB95388684D3E19"
+  },
+  "code_checkpoint": {
+    "api/wms_api_server/app/main.py": "ecf55cf1503f996e63734d8a7c3848a7dce0cf3cbbf395c642d8305cc7fd4260",
+    "api/wms_api_server/app/modules/inventory/infrastructure/recovery_tasks.py": "6278a3dacab32467e412b7e1d584404a1b5f04386e899e37570a9193744011e0",
+    "api/wms_api_server/app/modules/inventory/infrastructure/inventory_scope.py": "f676c6fd3779f650e5f00bc5e02dd17828a558747ae7b599000ce219a4255bb5",
+    "api/wms_api_server/app/modules/inventory/infrastructure/inventory_lot_reads.py": "9b97d66d90a4e29cf947fc610d547db45d24f18c6fd23ef928edcfdcdc7258e4",
+    "api/wms_api_server/app/modules/inventory/infrastructure/inventory_observations.py": "dcc4601a4089e5a489fb801688e22e7987152692761d558a94362270cef37ed1",
+    "api/wms_api_server/app/modules/inventory/api/inventory_count_routes.py": "d5d58748004ca20973631e02812b641b3454de499ee286d10a2a93e901522a35",
+    "api/wms_api_server/app/modules/inventory/api/recovery_routes.py": "032f352651fa78c27454ddd636e8b17ac462055ab95d049b79d8c7b43e61c27d",
+    "api/wms_api_server/app/modules/inventory/contracts_observations.py": "8f5dcfc37ad3c23d916146223b6ec21388410f9ef02c3e25e87d2a52bfcabb46",
+    "tests/retailcase/test_inventory_task_scoped_boundary.py": "0a86e8d58d50213601c79945309b742d134d21b37dd84efee8670da3ee84a69a"
+  },
+  "files": {
+    "after_sources.sql": "ddad29ae53814f6c0e04d3b058d6243b86481abf4640ace780231333cb2a3708",
+    "apply.sql": "31f20c3fa368d4037c70663e13e1bb333a1cb0e409e30e9fcbb9ee3f2236b701",
+    "before.sql": "b200f7f8550a0fc00e0e4eb0e9ec16f4d11f31510e12a5dc5bb9d405c705a3c1",
+    "before_sources.sql": "29159c0c6c3e622a718f409eca1aceaa2f057160f4e87c09aff4a1f2d7025ede",
+    "README.md": "1845d2eec2adbbbed1a63678df35542093e7ecb49a9936f4c49462feeac521c6",
+    "restore_rrl_stock_inventory_cmd_package_body.sql": "a754386b423fac67aa5b738854ebcb16f7a8fa2ce6bc0d677391af54430930d6",
+    "restore_rrl_stock_posting_api_package_body.sql": "e61c52e9a087bbe82dbc44eda5262819ba787e426f06fcaf511f389a09f270ad",
+    "restore_rrl_stock_short_recovery_package_body.sql": "3ca0f4703e77881522a67aa9c1ae72993bf8331136ce0ac7dd906f50eaec748f",
+    "rollback.sql": "31d3cd01f8e96e31d98f8117079c451fd05a69d72cd2c903dfd5312dad5fe9ff",
+    "rrl_inventory_task_access_package.sql": "607a84f121e237db28601612bcdae59b8b31edf1590d5e23eb241ef7d0bd9e70",
+    "rrl_inventory_task_access_package_body.sql": "2da0432c0d76d4bceee672102154c0d25fc0525839e948bcdbf680d59f68400d",
+    "rrl_stock_inventory_cmd_package_body.sql": "fd8de7f25de0a91c0f6c20940b9f9c5bae552b62ba87e088f08f12e7ab14ebee",
+    "rrl_stock_posting_api_package_body.sql": "1fc1b295eec9232188e53cc63476f6160e6ae88ee62972596340ca1ae05e5798",
+    "rrl_stock_short_recovery_package_body.sql": "66b876a41d3d46ea3fce83e80f473074e15c6b5750d1c8d19d013edb48ae46cc",
+    "verify.sql": "b3afbc7076ac108d87220bd70f1260c7278cf1571579c549358011af944679da"
+  }
+}

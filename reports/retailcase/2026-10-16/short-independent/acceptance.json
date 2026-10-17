@@ -1,0 +1,183 @@
+{
+  "state": "PASS_INDEPENDENT_SCOPED_APPROVAL_REPLAY_REV_LOCK",
+  "http": [
+    {
+      "label": "source_author_with_flat_permission",
+      "path": "/api/case-pick/shorts/24/approve",
+      "status": 409,
+      "api_call_id": "69398",
+      "request_id": "4869bc98-dc58-4dce-9b24-a84cbac222a5",
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "operation_id": "SQ16.bc4f60f03a.SELF",
+        "oracle_code": 20851,
+        "reason": "INDEPENDENT_DECISION_REQUIRED",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false
+      }
+    },
+    {
+      "label": "source_author_with_flat_permission",
+      "path": "/api/case-pick/shorts/24/approve",
+      "status": 409,
+      "api_call_id": "69399",
+      "request_id": "4210124f-9696-4d15-b5ef-1b0f3cd475d0",
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "operation_id": "SQ16.bc4f60f03a.SELF",
+        "oracle_code": 20851,
+        "reason": "INDEPENDENT_DECISION_REQUIRED",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false
+      }
+    },
+    {
+      "label": "foreign_no_permission",
+      "path": "/api/case-pick/shorts/24/approve",
+      "status": 403,
+      "api_call_id": "69400",
+      "request_id": "7ffb6003-cd18-432c-bbe2-949528b8e34c",
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "operation_id": "SQ16.bc4f60f03a.APPROVE",
+        "oracle_code": 20882,
+        "reason": "CASE_USER_WAREHOUSE_FORBIDDEN",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false
+      }
+    },
+    {
+      "label": "wrong_warehouse_role",
+      "path": "/api/case-pick/shorts/24/approve",
+      "status": 403,
+      "api_call_id": "69401",
+      "request_id": "5ea91459-1bc4-424b-badb-f070d83cfda1",
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "operation_id": "SQ16.bc4f60f03a.APPROVE",
+        "oracle_code": 20882,
+        "reason": "CASE_USER_WAREHOUSE_FORBIDDEN",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false
+      }
+    },
+    {
+      "label": "current_ware_role_approval",
+      "path": "/api/case-pick/shorts/24/approve",
+      "status": 200,
+      "api_call_id": "69402",
+      "request_id": "aeda8f27-45f2-4eef-9333-d4c7225e311d",
+      "detail": null
+    },
+    {
+      "label": "same_operation_replay",
+      "path": "/api/case-pick/shorts/24/approve",
+      "status": 200,
+      "api_call_id": "69403",
+      "request_id": "467a8909-d01d-4f0f-9a8a-5561f5c4bead",
+      "detail": null
+    },
+    {
+      "label": "changed_operation_body",
+      "path": "/api/case-pick/shorts/24/approve",
+      "status": 409,
+      "api_call_id": "69404",
+      "request_id": "24c820a2-82c4-4ef2-96ec-8f3366d2a6d1",
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "operation_id": "SQ16.bc4f60f03a.APPROVE",
+        "oracle_code": 20872,
+        "reason": "OPERATION_CONFLICT",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false
+      }
+    },
+    {
+      "label": "revoked_replay",
+      "path": "/api/case-pick/shorts/24/approve",
+      "status": 403,
+      "api_call_id": "69405",
+      "request_id": "c539ad77-783e-4898-9c65-0e86f922f16e",
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "operation_id": "SQ16.bc4f60f03a.APPROVE",
+        "oracle_code": 20882,
+        "reason": "CASE_USER_WAREHOUSE_FORBIDDEN",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false
+      }
+    },
+    {
+      "label": "group_current_replay",
+      "path": "/api/case-pick/shorts/24/approve",
+      "status": 200,
+      "api_call_id": "69406",
+      "request_id": "0d4e46c1-be06-4b0c-9484-86fbf72b85ee",
+      "detail": null
+    },
+    {
+      "label": "group_member_removed_replay",
+      "path": "/api/case-pick/shorts/24/approve",
+      "status": 403,
+      "api_call_id": "69407",
+      "request_id": "d2cc7b1d-a2eb-4a08-a006-6b6ea51cee69",
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "operation_id": "SQ16.bc4f60f03a.APPROVE",
+        "oracle_code": 20882,
+        "reason": "CASE_USER_WAREHOUSE_FORBIDDEN",
+        "outcome_confirmed": true,
+        "retry_same_operation_id": false
+      }
+    }
+  ],
+  "checks": [
+    "Positive decision + reserve release + inventory creation rollback exact",
+    "Two-connection REV wait/refusal leaves original decision untouched"
+  ],
+  "hardware_verified": false,
+  "before": {
+    "short": [
+      {
+        "status": "PENDING_APPROVAL",
+        "approved_by": null,
+        "inventory_task_id": null
+      }
+    ],
+    "stock": [
+      {
+        "cell": "AS16C35cea92c27",
+        "remain": 1,
+        "hard_reserved_base": 1,
+        "stock_version": 2
+      }
+    ]
+  },
+  "protected_before": "c2f3c946a9bfd4a9c475dbf8443288479b8698a954334f89c66b073da52606e9",
+  "rollback_result": {
+    "recovery_state": null,
+    "status": "ACCEPTED",
+    "inventory_task_id": 30,
+    "released_reservations": 1,
+    "operation_id": "SQ16.bc4f60f03a.APPROVE",
+    "outbox_id": 5474
+  },
+  "lock_ms": 5043.58,
+  "after": {
+    "short": [
+      {
+        "status": "ACCEPTED",
+        "approved_by": "SQ16Ibc4f60f03a",
+        "inventory_task_id": 32
+      }
+    ],
+    "stock": [
+      {
+        "cell": "AS16C35cea92c27",
+        "remain": 1,
+        "hard_reserved_base": 0,
+        "stock_version": 3
+      }
+    ]
+  }
+}

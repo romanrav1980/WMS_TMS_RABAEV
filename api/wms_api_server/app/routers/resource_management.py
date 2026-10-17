@@ -8,7 +8,7 @@ from ..auth import (
     RESOURCE_SESSION_VIEW_PERMISSION,
     RESOURCE_SHIFT_EDIT_PERMISSION,
     RESOURCE_SHIFT_VIEW_PERMISSION,
-    require_permission,
+    require_permission,get_current_admin,
 )
 from ..schemas import (
     IdResponse,
@@ -20,6 +20,8 @@ from ..schemas import (
     ResourceTsdLoginRequest,
 )
 from ..services.resource_management_service import ResourceManagementService
+from ..modules.resources.public import ResourceReadError
+from fastapi import HTTPException
 
 router = APIRouter(prefix="/api/resources", tags=["resources"])
 
@@ -116,16 +118,13 @@ def list_sessions(
     shift_id: int | None = None,
     resource_id: int | None = None,
     status: str | None = None,
-    limit: int = 100,
-    _user: AdminUser = Depends(require_permission(RESOURCE_SESSION_VIEW_PERMISSION)),
+    limit: int = 100, ware_id: int | None = None,
+    _user: AdminUser = Depends(get_current_admin),
 ) -> list[dict]:
-    return ResourceManagementService().list_sessions(
-        session_id=session_id,
-        shift_id=shift_id,
-        resource_id=resource_id,
-        status=status,
-        limit=limit,
-    )
+    try:
+        return ResourceManagementService().list_sessions(session_id,shift_id,resource_id,status,limit,ware_id,_user.username)
+    except ResourceReadError as error:
+        raise HTTPException(error.status,detail={"code":error.code}) from error
 
 
 @router.post("/sessions/login")

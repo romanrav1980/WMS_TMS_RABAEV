@@ -11,9 +11,15 @@
 
  (document.querySelector("main")||document.body).prepend(panel);
  const finalPanel=document.createElement("div");
- finalPanel.innerHTML='<h3>Финальное показание коробки</h3><p>Брутто и измеренная тара берутся из архива весового поста. Ручной ввод для этой коробки не применяется.</p><select data-final-capture aria-label="Финальное показание весов"></select><button data-final-refresh>Обновить показания</button>';
+ finalPanel.innerHTML='<h3>Электронное показание коробки</h3><p>Брутто и измеренная тара берутся из архива весового поста.</p><select data-final-capture aria-label="Финальное показание весов"></select><button data-final-refresh>Обновить показания</button>';
  panel.insertBefore(finalPanel,panel.querySelector("[role=status]"));finalPanel.hidden=true;
+ const weightSource=document.createElement("label");
+ weightSource.innerHTML='Источник веса <select data-weight-source title="Ввести массу вручную или выбрать архивное показание электронных весов для коробки" data-help-id="qc.weight.source"><option value="MANUAL">Ввод пользователя</option><option value="SCALE">Электронные весы коробки</option></select> <a href="/help/manual-weight.html#warehouse-qc" target="_blank" rel="noopener" title="Как подтвердить вес при складском контроле; откроется в новой вкладке" data-help-id="qc.weight.help">Справка</a>';
+ const weightStage=panel.querySelector('[data-gross]').closest('.qc-stage');
+ weightStage.insertBefore(weightSource,weightStage.querySelector('.qc-entry'));
+ weightStage.insertBefore(finalPanel,weightStage.querySelector('.qc-entry'));
  const el=k=>panel.querySelector("[data-"+k+"]"),message=panel.querySelector("[role=status]");
+ const integrated=()=>el("weight-source").value==="SCALE";
  let snapshot=null,pending=null,draft=null,busy=false,generation=0,identity="",finalGeneration=0,pendingRecord=null,draftRaw=null;
  const base=()=>window.wmsAdminAuth.state.apiBase.replace(/\/$/,"");
  const key=()=> "wms-outgoing-quality:"+base()+":"+(window.wmsAdminAuth.state.user?.username||"");
@@ -55,6 +61,9 @@
   if(!window.wmsAdminAuth?.state?.user?.username){window.wmsQualityNext.render(panel,null,true);return;}
   window.wmsQualityNext.render(panel,snapshot,busy||!!pending||damaged());
   const broken=Boolean(damaged());
+  el("weight-source").disabled=busy||broken||!!pending;
+  for(const name of ["gross","tare","kind"])el(name).disabled=busy||broken||!!pending||integrated();
+  el("weight-source").querySelector('[value="SCALE"]').disabled=!snapshot?.final_scale_required;
   for(const name of ["load","scan","weight","add-item","add-mark","last","clear","print-label","final-refresh"])el(name).disabled=busy||broken;
   for(const name of ["add-item","add-mark","last","clear"])el(name).disabled=busy||broken||!!pending;
   for(const name of ["scan","weight"])el(name).disabled=busy||broken||(!pending&&!snapshot?.composition_signature);
@@ -105,8 +114,8 @@
  }
  async function finalReadings(){
   const id=snapshot?.shipment_identifier,signature=snapshot?.composition_signature,gen=++finalGeneration;
-  finalPanel.hidden=!snapshot?.final_scale_required;
-  el("gross").disabled=Boolean(snapshot?.final_scale_required);el("tare").disabled=Boolean(snapshot?.final_scale_required);el("kind").disabled=Boolean(snapshot?.final_scale_required);
+  finalPanel.hidden=!snapshot?.final_scale_required||!integrated();
+  for(const name of ["gross","tare","kind"])el(name).disabled=busy||!!pending||integrated();
   el("final-capture").replaceChildren(new Option("Выберите актуальное показание",""));
   if(finalPanel.hidden||!id)return;
   try{
@@ -221,13 +230,14 @@
   if(kind==="scan"){
    const errors=Number(el("errors").value);if(!Number.isSafeInteger(errors)||errors<0){message.textContent="Укажите целое неотрицательное число ошибок.";return;}
    body.error_count=errors;body.scans=draft.entries.filter(x=>x.kind==="mark").map(x=>x.value);body.item_scans=draft.entries.filter(x=>x.kind==="item").map(x=>x.value);
-  }else if(snapshot.final_scale_required){
+  }else if(integrated()){
+   if(!snapshot.final_scale_required){message.textContent="Для этого места электронное показание коробки недоступно.";return;}
    if(!el("final-capture").value){message.textContent="Выберите актуальное архивное показание весового поста.";return;}
    kind="final-weight";body.capture_key=el("final-capture").value;
   }else{
    const gross=el("gross").value.trim(),tare=el("tare").value.trim(),decimal=/^(0|[1-9][0-9]*)(\.[0-9]{1,9})?$/;
    if(!decimal.test(gross)||Number(gross)<=0||!decimal.test(tare)){message.textContent="Введите точный вес через точку.";return;}
-   body.gross_weight=gross;body.wood_weight=tare;body.quality_kind=el("kind").value;
+   body.gross_weight=gross;body.wood_weight=tare;body.quality_kind=el("kind").value;body.measurement_origin="MANUAL_CONFIRMED";
   }
   try{freeze(snapshot.shipment_identifier,kind,body);await transmit();}catch(e){message.textContent="Результат не сохранён: "+e.message;}
  }
@@ -250,6 +260,7 @@
   }
  }
  el("final-refresh").onclick=finalReadings;
+ el("weight-source").onchange=()=>{if(busy||pending)return;el("gross").value="";el("tare").value="";finalReadings();controls();};
  el("read").onclick=readOnly;el("recover").onclick=recover;
  el("id").addEventListener("input",()=>{generation++;finalGeneration++;snapshot=null;finalPanel.hidden=true;controls();});el("load").onclick=load;el("scan").onclick=()=>check("scan");el("weight").onclick=()=>check("weight");
  window.addEventListener("storage",event=>{if(event.key===key()||event.key===draftKey())controls();});

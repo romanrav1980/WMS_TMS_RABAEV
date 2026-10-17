@@ -1,0 +1,48 @@
+Продолжаем TMS/RETAILCASE в C:\projects\TMS по прежнему файловому каналу.
+Сначала прочитай wiki/index.md, wiki/roadmap/retailcase_execution_2300_20261015.md
+и TASK.md. Не перечитывай весь исторический журнал. Подтверди C0115 в своём
+CLAUDE_TO_CODEX.md и перечисли занятые файлы в CLAUDE_STATUS.md.
+
+Последняя граница владельца: 15.10.2026 23:00 МСК. После неё реализацию
+возобновлять только по новому поручению владельца; quota reset не продлевает
+срок. Текущий режим экономии — один исполнитель и адресное критическое ревью.
+Не запускай параллельные ветки и не повторяй общие проверки без изменения кода.
+
+Root завершил GS1-128 exact-first lookup магазина, привязку scan_place к текущему
+preview и понятные сообщения ошибок без путей API. Frozen retries неизменны.
+20 GS1 checks +13 API/message checks, camera/mock exact retry,5 live GET вариантов,
+production build и gate1095/0/debt72+24tooling+обаTS PASS. Доказательства в
+wiki/components/retailcase_operator_ui_evidence_20261015.md. Не переписывай эти
+файлы без согласования границы с root.
+
+Следующая серверная задача root: inventory recovery-shorts сейчас legacy read
+без actor/warehouse в read port. Shift desk читает его без ware_id. Нужны native
+допуск текущего склада и фильтр доlimit, затем отрицательные API и2WARE проверки.
+Клиентский фильтр не исправляет допуск. Пока backend не READY, не выдавай источник
+за доказанный scoped обзор. Не расширяй legacy/grants ради рабочего экрана.
+
+Твоя следующая UI-задача после нового разрешённого окна и READY контракта:
+передать выбранный склад в recovery source, проверить переключение складов,
+отказ/revoke и отсутствие устаревшего ответа; tooltip/help и понятный статус
+неизвестного источника. Сначала CONTRACT_REQUEST с точными файлами, затем ACK.
+
+Живой production shift UI390 уже проверен,11 HTTP200, overflow0, бизнес-команд0.
+Однако реальные данные покрывают только DOCK, не все4семейства. Для полного
+пилота нужен отдельный согласованный TEST набор, без выдуманных назначений.
+Первый browser attempt завершился teardown failure и явно НЕ принят;
+accepted evidence: reports/retailcase/2026-10-15/shift-native-production-final/.
+
+Performance: повторный desk run max823ms, первый до1469ms; CASE transaction1021,
+recovery SELECT750, overview775ms. Владельцы и решения записаны в joint SQL wiki.
+Не объявляй p95 или исправление производительности по этим двум прогонам.
+
+SHIPPING_GROSS SQL кандидат НЕ УСТАНОВЛЕН/NOT INSTALLABLE. CLAIM uniqueness
+подтверждена; полная transitive purity, ранние границы compiler work, rollback/
+release kit, native capture/use/QC/loading остаются впереди. v5/v6 sort из tmp
+не выпускать. DDL/apply — только root после свежих guards/manifest/native review.
+Mixed ASM/rack tree, CASE-aware interWARE, thermal compatibility, subtree store
+handover, KPI numerator/атрибуция и физическое оборудование ещё не приняты.
+
+Публикация GitHub не поручена. Не запускать исторические cleanup/journals CASE1139.
+Сохраняй реальные RESULT/RELEASE и ограничения. Не приписывай внутренние Codex
+проверки работе реального Claude Code.

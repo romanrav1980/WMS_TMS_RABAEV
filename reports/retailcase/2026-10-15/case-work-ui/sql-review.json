@@ -1,0 +1,241 @@
+{
+  "status": "PASS",
+  "scope": "bounded most recent100 audit IDs; own CASE1138 context/session and case-work help GET only",
+  "audit": [
+    {
+      "api_call_id": 68838,
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1138/resource-context",
+      "response_status": 200,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 68839,
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1138/resource-sessions",
+      "response_status": 200,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 68840,
+      "method": "GET",
+      "path": "/api/help/articles/case-work",
+      "response_status": 200,
+      "duration_ms": 104
+    },
+    {
+      "api_call_id": 68849,
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1138/resource-context",
+      "response_status": 200,
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 68850,
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1138/resource-sessions",
+      "response_status": 200,
+      "duration_ms": 87
+    },
+    {
+      "api_call_id": 68851,
+      "method": "GET",
+      "path": "/api/help/articles/case-work",
+      "response_status": 200,
+      "duration_ms": 106
+    },
+    {
+      "api_call_id": 68852,
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1138/resource-context",
+      "response_status": 200,
+      "duration_ms": 69
+    },
+    {
+      "api_call_id": 68895,
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1138/resource-context",
+      "response_status": 200,
+      "duration_ms": 63
+    },
+    {
+      "api_call_id": 68904,
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1138/resource-context",
+      "response_status": 200,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 68905,
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1138/resource-sessions",
+      "response_status": 200,
+      "duration_ms": 108
+    },
+    {
+      "api_call_id": 68906,
+      "method": "GET",
+      "path": "/api/help/articles/case-work",
+      "response_status": 200,
+      "duration_ms": 113
+    },
+    {
+      "api_call_id": 68915,
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1138/resource-context",
+      "response_status": 200,
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 68916,
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1138/resource-sessions",
+      "response_status": 200,
+      "duration_ms": 88
+    },
+    {
+      "api_call_id": 68917,
+      "method": "GET",
+      "path": "/api/help/articles/case-work",
+      "response_status": 200,
+      "duration_ms": 106
+    },
+    {
+      "api_call_id": 68926,
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1138/resource-context",
+      "response_status": 200,
+      "duration_ms": 91
+    },
+    {
+      "api_call_id": 68927,
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1138/resource-sessions",
+      "response_status": 200,
+      "duration_ms": 63
+    },
+    {
+      "api_call_id": 68928,
+      "method": "GET",
+      "path": "/api/help/articles/case-work",
+      "response_status": 200,
+      "duration_ms": 122
+    },
+    {
+      "api_call_id": 68929,
+      "method": "GET",
+      "path": "/api/case-pick/tasks/1138/resource-context",
+      "response_status": 200,
+      "duration_ms": 53
+    }
+  ],
+  "local_pairs": [
+    {
+      "api_call_id": 68838,
+      "response_status": 200,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 68839,
+      "response_status": 200,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 68840,
+      "response_status": 200,
+      "duration_ms": 104
+    },
+    {
+      "api_call_id": 68849,
+      "response_status": 200,
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 68850,
+      "response_status": 200,
+      "duration_ms": 87
+    },
+    {
+      "api_call_id": 68851,
+      "response_status": 200,
+      "duration_ms": 106
+    },
+    {
+      "api_call_id": 68852,
+      "response_status": 200,
+      "duration_ms": 69
+    },
+    {
+      "api_call_id": 68895,
+      "response_status": 200,
+      "duration_ms": 63
+    },
+    {
+      "api_call_id": 68904,
+      "response_status": 200,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 68905,
+      "response_status": 200,
+      "duration_ms": 108
+    },
+    {
+      "api_call_id": 68906,
+      "response_status": 200,
+      "duration_ms": 113
+    },
+    {
+      "api_call_id": 68915,
+      "response_status": 200,
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 68916,
+      "response_status": 200,
+      "duration_ms": 88
+    },
+    {
+      "api_call_id": 68917,
+      "response_status": 200,
+      "duration_ms": 106
+    },
+    {
+      "api_call_id": 68926,
+      "response_status": 200,
+      "duration_ms": 91
+    },
+    {
+      "api_call_id": 68927,
+      "response_status": 200,
+      "duration_ms": 63
+    },
+    {
+      "api_call_id": 68928,
+      "response_status": 200,
+      "duration_ms": 122
+    },
+    {
+      "api_call_id": 68929,
+      "response_status": 200,
+      "duration_ms": 53
+    }
+  ],
+  "slow_rows": [],
+  "other_window_slow_count": 0,
+  "slow_api_status": 200,
+  "slow_api_rows": 0,
+  "oracle_top_sql_cumulative": [
+    {
+      "sql_id": "3f9qrbyrzx8j7",
+      "executions": 46,
+      "avg_ms": 5.013,
+      "buffer_gets": 3194,
+      "disk_reads": 7,
+      "sql_text": "begin RRL_CASE_ASSIGNMENT_API.task_context(:1,:2,:3); end;"
+    }
+  ],
+  "max_api_ms": 122,
+  "decision": "Keep existing CASE PK, current-actor/session indexes and read bound20. No new index justified by this small UI read case. Before resource/Gantt pilot load, resources/platform inspect actor-history/current-work plans; no throughput percentile or hardware acceptance claimed.",
+  "headers_or_bodies_exported": false
+}

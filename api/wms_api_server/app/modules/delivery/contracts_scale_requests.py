@@ -1,0 +1,13 @@
+"""Mass-free weighing intent; only the equipment capture archive supplies a weight."""
+from typing import Any, Protocol
+
+
+class StoreScaleRequestsPort(Protocol):
+    def request(self, body: dict[str, Any], actor: str) -> dict[str, Any]: ...
+    def status(self, request_id: str, actor: str) -> dict[str, Any]: ...
+    def devices(self, load_operation_id: str, store_address: str, actor: str) -> dict[str, Any]: ...
+    def pending(self, device_id: str, actor: str) -> dict[str, Any]: ...
+
+
+def store_scale_requests_service() -> StoreScaleRequestsPort:
+    raise RuntimeError("Store scale requests service not wired")

@@ -1,0 +1,111 @@
+{
+  "native_relevant_top_sql": [
+    {
+      "sql_id": "3uyg2m3xddx30",
+      "command_type": 47,
+      "executions": 1,
+      "avg_ms": 6422.591,
+      "sql_sample": "declare n number;begin\r  if user!='RABAEV'then raise_application_error(-20886,'PICKER_TIME_SCHEMA_MISMATCH');end if;\r  select count(*)into n from USER_CONSTRAINTS c where c.TABLE_NAME='RRL_WARES'and c.CONSTRAINT_TYPE in('P','U')and c.STATUS='ENABLED'and c.VALIDATED='VALIDATED'\r   and(select count(*)from USER_CONS_COLUMNS x where x.CONSTRAINT_NAME=c.CONSTRAINT_NAME)=1\r   and exists(select 1 from US"
+    },
+    {
+      "sql_id": "c34bz6bfjcqq2",
+      "command_type": 3,
+      "executions": 1,
+      "avg_ms": 5904.856,
+      "sql_sample": "select CONSTRAINT_NAME,CONSTRAINT_TYPE,STATUS,VALIDATED,R_CONSTRAINT_NAME from USER_CONSTRAINTS where TABLE_NAME in('RRL_PICKER_TIME_STREAM','RRL_PICKER_TIME_EVENT','RRL_PICKER_TIME_SPAN','RRL_PICKER_TIME_COMMAND') order by CONSTRAINT_NAME"
+    },
+    {
+      "sql_id": "dbdmrqvp2wc0f",
+      "command_type": 3,
+      "executions": 1,
+      "avg_ms": 4056.915,
+      "sql_sample": "SELECT COUNT(*)FROM USER_CONSTRAINTS WHERE TABLE_NAME IN('RRL_PICKER_TIME_STREAM','RRL_PICKER_TIME_EVENT','RRL_PICKER_TIME_SPAN','RRL_PICKER_TIME_COMMAND')"
+    },
+    {
+      "sql_id": "g6yyc8x2ygy41",
+      "command_type": 47,
+      "executions": 1,
+      "avg_ms": 3407.572,
+      "sql_sample": "declare n number;begin\r  select count(*)into n from USER_OBJECTS where STATUS='INVALID'and OBJECT_NAME not like 'BIN$%';\r  if n!=0 then raise_application_error(-20886,'PICKER_TIME_GLOBAL_INVALID_AFTER');end if;\r  select count(*)into n from USER_ERRORS where NAME in('RRL_PICKER_TIME_API','RRL_PICKER_TIME_AUTH','RRL_PICKER_TIME_READ','RRL_PICKER_TIME_WRITE',\r   'RRL_PICKER_TIME_STREAM_G','RRL_PICKER"
+    },
+    {
+      "sql_id": "0tjb0agnm7qn0",
+      "command_type": 3,
+      "executions": 1,
+      "avg_ms": 3209.143,
+      "sql_sample": "SELECT COUNT(*)FROM USER_CONSTRAINTS WHERE TABLE_NAME IN('RRL_PICKER_TIME_STREAM','RRL_PICKER_TIME_EVENT','RRL_PICKER_TIME_SPAN','RRL_PICKER_TIME_COMMAND')AND(STATUS!='ENABLED'OR VALIDATED!='VALIDATED')"
+    },
+    {
+      "sql_id": "59zfb91n7zypm",
+      "command_type": 3,
+      "executions": 1,
+      "avg_ms": 475.32,
+      "sql_sample": "SELECT COUNT(*)FROM USER_TAB_COLUMNS WHERE TABLE_NAME='RRL_PICKER_TIME_EVENT'AND COLUMN_NAME='OPERATOR_ID'AND DATA_TYPE='VARCHAR2'AND NULLABLE='N'AND CHAR_LENGTH=100"
+    },
+    {
+      "sql_id": "c9p5bjhd4xgna",
+      "command_type": 3,
+      "executions": 1,
+      "avg_ms": 438.964,
+      "sql_sample": "select TABLE_NAME,COLUMN_NAME,DATA_TYPE,HIDDEN_COLUMN,VIRTUAL_COLUMN from USER_TAB_COLS where TABLE_NAME in('RRL_PICKER_TIME_STREAM','RRL_PICKER_TIME_EVENT','RRL_PICKER_TIME_SPAN','RRL_PICKER_TIME_COMMAND')and HIDDEN_COLUMN='YES' order by TABLE_NAME,COLUMN_NAME"
+    },
+    {
+      "sql_id": "gpya6p7n40qvj",
+      "command_type": 3,
+      "executions": 1,
+      "avg_ms": 303.225,
+      "sql_sample": "SELECT COUNT(*)FROM USER_TAB_COLUMNS WHERE TABLE_NAME='RRL_PICKER_TIME_STREAM'AND COLUMN_NAME='WORK_START_OP'AND DATA_TYPE='VARCHAR2'AND NULLABLE='Y'AND CHAR_LENGTH=100"
+    },
+    {
+      "sql_id": "dtnjru1snf2vu",
+      "command_type": 3,
+      "executions": 1,
+      "avg_ms": 300.739,
+      "sql_sample": "SELECT COUNT(*)FROM USER_TAB_COLUMNS WHERE TABLE_NAME='RRL_PICKER_TIME_COMMAND'AND COLUMN_NAME='AFTER_VERSION'AND DATA_TYPE='NUMBER'AND NULLABLE='N'"
+    },
+    {
+      "sql_id": "5bkudv3zd7au8",
+      "command_type": 3,
+      "executions": 1,
+      "avg_ms": 296.221,
+      "sql_sample": "SELECT COUNT(*)FROM USER_TAB_COLUMNS WHERE TABLE_NAME='RRL_PICKER_TIME_EVENT'AND COLUMN_NAME='ACTOR_ID'AND DATA_TYPE='VARCHAR2'AND NULLABLE='N'AND CHAR_LENGTH=100"
+    }
+  ],
+  "recent_slow": [
+    {
+      "log_id": 4862,
+      "elapsed_ms": 5911,
+      "api_path": null,
+      "sql_sample": "select CONSTRAINT_NAME,CONSTRAINT_TYPE,STATUS,VALIDATED,R_CONSTRAINT_NAME from USER_CONSTRAINTS where TABLE_NAME in('RRL_PICKER_TIME_STREAM','RRL_PICKER_TIME_EVENT','RRL_PICKER_TIME_SPAN','RRL_PICKER_TIME_COMMAND') order by CONSTRAINT_NAME"
+    }
+  ],
+  "decision": "BACKLOG operations/schema verification owner: investigate USER_CONSTRAINTS TABLE_NAME-IN catalog plan/dictionary statistics (5.9s observed read,6.4s before-gate); prefer exact named-constraint lookup/batched metadata before broad rollout. These are migration/catalog diagnostics, not runtime picking SQL. No stock/schema index change justified from this evidence.",
+  "scope": "Native partial manual lifecycle/read-parser failure diagnostics only; no actual HTTP/load/hardware claim; sourceWHERE server-wall filter avoids session timezone false window.",
+  "clock_api_top_sql": [
+    {
+      "sql_id": "fdf4uc65para8",
+      "executions": 16,
+      "avg_ms": 54.785,
+      "sql_sample": "begin RRL_PICKER_TIME_API.execute_command(:1,:2,:3); end;"
+    },
+    {
+      "sql_id": "brppfqa5mg1xn",
+      "executions": 4,
+      "avg_ms": 10.515,
+      "sql_sample": "begin RRL_PICKER_TIME_API.current_state(:1,:2); end;"
+    },
+    {
+      "sql_id": "8cum95zsrjvwz",
+      "executions": 6,
+      "avg_ms": 7.675,
+      "sql_sample": "begin RRL_PICKER_TIME_API.receipt(:1,:2,:3); end;"
+    },
+    {
+      "sql_id": "ahskdqa59yrfb",
+      "executions": 1,
+      "avg_ms": 5.821,
+      "sql_sample": "begin RRL_PICKER_TIME_API.read_window(:1,:2,:3,:4); end;"
+    }
+  ],
+  "runtime_decision": "Retain operator/31day/5000span bounds and UTC-expression indexes; clock command shared-cursor latency recorded separately, no load/capacity claim."
+}

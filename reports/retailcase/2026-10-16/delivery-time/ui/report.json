@@ -1,0 +1,13 @@
+{
+  "state": "PASS_ARRIVAL_UNLOADING_RECOVERY_UI_FIXTURES",
+  "fixture": true,
+  "nativeWrites": 0,
+  "arrivalExactRetry": true,
+  "arrivalOriginalTime": true,
+  "controlExactRetry": true,
+  "lateOriginalRetryDisabled": true,
+  "archiveBeforeClear": true,
+  "corruptRetained": true,
+  "width390": true,
+  "errors": []
+}

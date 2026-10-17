@@ -1,0 +1,532 @@
+{
+  "read_only": true,
+  "hardware_verified": false,
+  "http": [
+    {
+      "api_call_id": 69370,
+      "request_id": "1cd828c4-a7a7-40c9-ba9c-ae9b7c467ab3",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 200,
+      "duration_ms": 258
+    },
+    {
+      "api_call_id": 69371,
+      "request_id": "594d9c90-5084-4524-9d27-e9d21b8ab66e",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 200,
+      "duration_ms": 166
+    },
+    {
+      "api_call_id": 69372,
+      "request_id": "94541336-a6d9-4a77-981d-370dd3820034",
+      "method": "POST",
+      "path": "/api/inventory/tasks/27/claim",
+      "response_status": 403,
+      "duration_ms": 77
+    },
+    {
+      "api_call_id": 69373,
+      "request_id": "c477d4ac-3e55-48cc-ab61-b75188ca0935",
+      "method": "POST",
+      "path": "/api/inventory/tasks/27/claim",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 69374,
+      "request_id": "e92c4521-4054-408d-8edf-13a6b93cefda",
+      "method": "POST",
+      "path": "/api/inventory/tasks/27/claim",
+      "response_status": 200,
+      "duration_ms": 110
+    },
+    {
+      "api_call_id": 69375,
+      "request_id": "66fe4935-f87b-49b0-b13c-40915fd369a2",
+      "method": "POST",
+      "path": "/api/inventory/tasks/27/claim",
+      "response_status": 200,
+      "duration_ms": 84
+    },
+    {
+      "api_call_id": 69376,
+      "request_id": "a1e7257f-c8ca-4b4a-9b30-6552a7888ffd",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/402/lots",
+      "response_status": 200,
+      "duration_ms": 207
+    },
+    {
+      "api_call_id": 69377,
+      "request_id": "bb6fdd16-9ca8-4831-bc06-4a099ebe7c84",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "response_status": 403,
+      "duration_ms": 102
+    },
+    {
+      "api_call_id": 69378,
+      "request_id": "e268e9a3-85a1-43e7-b3a5-527a93c9bfaf",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/402/lots",
+      "response_status": 403,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 69379,
+      "request_id": "96dbb7ce-ab0d-4c4b-9e7a-fd03ad8a0570",
+      "method": "POST",
+      "path": "/api/inventory/tasks/27/claim",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 69380,
+      "request_id": "595a3c6f-24a1-4d2b-a9fb-3dd432b0bea8",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "response_status": 200,
+      "duration_ms": 255
+    },
+    {
+      "api_call_id": 69381,
+      "request_id": "ea86ac57-83fa-4348-9667-b9d2326fcb86",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "response_status": 200,
+      "duration_ms": 90
+    },
+    {
+      "api_call_id": 69382,
+      "request_id": "8dfbd23e-13a8-4ebe-a8e4-8ac5678e90f7",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "response_status": 409,
+      "duration_ms": 58
+    },
+    {
+      "api_call_id": 69383,
+      "request_id": "686097c7-3e36-4ccc-89d1-a4e9e1414f46",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 69384,
+      "request_id": "488c64bc-5c64-4070-9e3f-20bf8d8e6fc3",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/402/lots",
+      "response_status": 403,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 69385,
+      "request_id": "d2423341-3f65-49cc-be70-a6a6bc4964c9",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/402/lots",
+      "response_status": 200,
+      "duration_ms": 50
+    },
+    {
+      "api_call_id": 69386,
+      "request_id": "01aa8fed-16a6-4598-841a-8a92c4e20e5c",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "response_status": 200,
+      "duration_ms": 124
+    },
+    {
+      "api_call_id": 69387,
+      "request_id": "2e5378c6-1967-45c5-a258-cca92940d1e1",
+      "method": "GET",
+      "path": "/api/inventory/stock-posting/inventory/402/lots",
+      "response_status": 200,
+      "duration_ms": 55
+    },
+    {
+      "api_call_id": 69388,
+      "request_id": "579d8d48-82c4-4f05-954e-97d2a16a472c",
+      "method": "POST",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "response_status": 200,
+      "duration_ms": 108
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 4932,
+      "api_call_id": 69384,
+      "elapsed_ms": 11,
+      "module": "WMS_API:69384",
+      "action": "GET /api/inventory/stock-posting",
+      "sql_sample": "Current scoped inventory lots"
+    },
+    {
+      "log_id": 4931,
+      "api_call_id": 69383,
+      "elapsed_ms": 7,
+      "module": "WMS_API:69383",
+      "action": "POST /api/inventory/stock-postin",
+      "sql_sample": "Current native inventory scope"
+    },
+    {
+      "log_id": 4930,
+      "api_call_id": 69379,
+      "elapsed_ms": 8,
+      "module": "WMS_API:69379",
+      "action": "POST /api/inventory/tasks/27/cla",
+      "sql_sample": "Claim existing inventory task"
+    },
+    {
+      "log_id": 4929,
+      "api_call_id": 69378,
+      "elapsed_ms": 9,
+      "module": "WMS_API:69378",
+      "action": "GET /api/inventory/stock-posting",
+      "sql_sample": "Current scoped inventory lots"
+    },
+    {
+      "log_id": 4928,
+      "api_call_id": 69373,
+      "elapsed_ms": 7,
+      "module": "WMS_API:69373",
+      "action": "POST /api/inventory/tasks/27/cla",
+      "sql_sample": "Claim existing inventory task"
+    },
+    {
+      "log_id": 4927,
+      "api_call_id": 69372,
+      "elapsed_ms": 24,
+      "module": "WMS_API:69372",
+      "action": "POST /api/inventory/tasks/27/cla",
+      "sql_sample": "Claim existing inventory task"
+    }
+  ],
+  "native_cumulative": [
+    {
+      "sql_id": "1031nnpkrfzdc",
+      "executions": 63932,
+      "avg_ms": 0.185,
+      "avg_buffers": 2.03,
+      "sql_sample": "select CASE_PICK_SHORT_ID,PICK_WAVE_ID,REPLENISH_TASK_ID,                    RECOVERY_SOURCE_REQUEST,RECOVERY_STATE                 from RRL_CASE_PICK_SHORT where RECOVERY_STATE in('WAIT_INVENTORY','WAIT_REPLENISHMENT')                  and exists(select 1 from RRL_PICK_WAVE w where w.PICK_WAVE_ID=RRL_CASE_PICK_SHORT.PICK_WAVE_ID and w.STATUS='LAUNCHED')                  and (RECOVERY_STATE!='WAIT_INVENTORY' or exists(select 1 from RRL_INVENTORY_TASK it                      where it.INVENTORY_TASK_ID=RRL_CASE_PICK_SHORT.INVENTORY_TASK_ID and it.ASSIGNED_TO is null and it.STATUS='NEW'))                  and (RECOVERY_LEASE_UNTIL is null or RECOVERY_LEASE_UNTIL<cast(systimestamp as timestamp))                  order by RECOVERY_DEADLINE_AT,CASE_PICK_SHORT_ID for update skip locked"
+    },
+    {
+      "sql_id": "gwj4f6cdpzk3n",
+      "executions": 5,
+      "avg_ms": 20.403,
+      "avg_buffers": 523,
+      "sql_sample": "begin RRL_INVENTORY_TASK_ACCESS.claim_task(:1,:2); end;"
+    },
+    {
+      "sql_id": "85dy26pbhz4bd",
+      "executions": 13,
+      "avg_ms": 3.176,
+      "avg_buffers": 65.54,
+      "sql_sample": "begin RRL_INVENTORY_TASK_ACCESS.assert_read(:1,:2,:3,:4,:5,:6); end;"
+    },
+    {
+      "sql_id": "8jm3qs9mv24ra",
+      "executions": 60,
+      "avg_ms": 0.544,
+      "avg_buffers": 20.43,
+      "sql_sample": "update RRL_PICK_WAVE_REPLENISH_TASK set                     REPLENISHMENT_METHOD='IMMEDIATE',REPLENISHMENT_QTY_MODE='FILL_TO_VOLUME',                     QTY=(select l.PLANNED_QTY-l.PICKED_QTY from RRL_CASE_PICK_SHORT sh join RRL_CASE_PICK_LINE l on l.CASE_PICK_LINE_ID=sh.CASE_PICK_LINE_ID where sh.REPLENISH_TASK_ID=RRL_PICK_WAVE_REPLENISH_TASK.PICK_WAVE_REPLENISH_TASK_ID),                     STATUS=case when STATUS in('FAILED','WAIT_FREE_CELL','WAIT_MINIMAX','QUEUED') and SOURCE_RESERVATION_ID is null then 'RELEASED' else STATUS end                     where PICK_WAVE_REPLENISH_TASK_ID=:repl_id"
+    },
+    {
+      "sql_id": "2z0p5am2vquca",
+      "executions": 60,
+      "avg_ms": 0.39,
+      "avg_buffers": 5.27,
+      "sql_sample": "select wt.TASK_ID,wt.STATUS,wt.ASSIGNED_TO         from RRL_CASE_PICK_SHORT sh join RRL_WAREHOUSE_TASK wt          on wt.TASK_SOURCE='WAVE' and wt.TASK_TYPE='REPLENISHMENT'           and wt.SOURCE_TASK_ID=sh.REPLENISH_TASK_ID         where sh.CASE_PICK_SHORT_ID=:short_id and sh.RECOVERY_STATE='WAIT_REPLENISHMENT'          and wt.PRIORITY=0 and wt.STATUS in('PLANNED','ASSIGNED','IN_PROGRESS')         order by wt.TASK_ID fetch first 1 row only"
+    },
+    {
+      "sql_id": "85dy26pbhz4bd",
+      "executions": 1,
+      "avg_ms": 16.498,
+      "avg_buffers": 143,
+      "sql_sample": "begin RRL_INVENTORY_TASK_ACCESS.assert_read(:1,:2,:3,:4,:5,:6); end;"
+    },
+    {
+      "sql_id": "14z6511j1ugqs",
+      "executions": 74,
+      "avg_ms": 0.108,
+      "avg_buffers": 3.07,
+      "sql_sample": "SELECT *FROM RRL_INVENTORY_TASK WHERE INVENTORY_TASK_ID=:B1 "
+    },
+    {
+      "sql_id": "cwvd0f293h2f2",
+      "executions": 1,
+      "avg_ms": 7.804,
+      "avg_buffers": 4,
+      "sql_sample": "select STATUS from RRL_INVENTORY_TASK where INVENTORY_TASK_ID=:t"
+    },
+    {
+      "sql_id": "9r6kxzwt6aujg",
+      "executions": 2,
+      "avg_ms": 3.145,
+      "avg_buffers": 6,
+      "sql_sample": "select it.INVENTORY_TASK_ID,it.STATUS,it.WARE_ID WAREHOUSE_ID,it.CELL_CODE CELL,     it.ARTICUL ARTICLE,it.ASSIGNED_TO,it.PRIORITY,it.REVISION_ID,it.COUNT_OPERATION_ID,     sh.CASE_PICK_SHORT_ID SHORT_ID,sh.RECOVERY_STATE,sh.RECOVERY_DEADLINE_AT,     to_char(it.FACT_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') FACT_QUANTITY     from RRL_INVENTORY_TASK it left join RRL_CASE_PICK_SHORT sh on sh.CASE_PICK_SHORT_ID=it.SOURCE_DOC_ID     and it.SOURCE_DOC_TYPE='CASE_PICK_SHORT' where it.INVENTORY_TASK_ID=:task_id"
+    },
+    {
+      "sql_id": "14z6511j1ugqs",
+      "executions": 20,
+      "avg_ms": 0.23,
+      "avg_buffers": 2.2,
+      "sql_sample": "SELECT *FROM RRL_INVENTORY_TASK WHERE INVENTORY_TASK_ID=:B1 "
+    }
+  ],
+  "local_pairs": [
+    {
+      "api_call_id": 69370,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "1cd828c4-a7a7-40c9-ba9c-ae9b7c467ab3",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T21:56:03.906375+00:00",
+        "api_call_id": 69370,
+        "response_status": 200,
+        "duration_ms": 258
+      }
+    },
+    {
+      "api_call_id": 69371,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "594d9c90-5084-4524-9d27-e9d21b8ab66e",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T21:56:04.100488+00:00",
+        "api_call_id": 69371,
+        "response_status": 200,
+        "duration_ms": 166
+      }
+    },
+    {
+      "api_call_id": 69372,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "94541336-a6d9-4a77-981d-370dd3820034",
+        "method": "POST",
+        "path": "/api/inventory/tasks/27/claim",
+        "logged_at": "2026-10-15T21:56:04.198189+00:00",
+        "api_call_id": 69372,
+        "response_status": 403,
+        "duration_ms": 77
+      }
+    },
+    {
+      "api_call_id": 69373,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "c477d4ac-3e55-48cc-ab61-b75188ca0935",
+        "method": "POST",
+        "path": "/api/inventory/tasks/27/claim",
+        "logged_at": "2026-10-15T21:56:04.350619+00:00",
+        "api_call_id": 69373,
+        "response_status": 403,
+        "duration_ms": 59
+      }
+    },
+    {
+      "api_call_id": 69374,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "e92c4521-4054-408d-8edf-13a6b93cefda",
+        "method": "POST",
+        "path": "/api/inventory/tasks/27/claim",
+        "logged_at": "2026-10-15T21:56:04.565297+00:00",
+        "api_call_id": 69374,
+        "response_status": 200,
+        "duration_ms": 110
+      }
+    },
+    {
+      "api_call_id": 69375,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "66fe4935-f87b-49b0-b13c-40915fd369a2",
+        "method": "POST",
+        "path": "/api/inventory/tasks/27/claim",
+        "logged_at": "2026-10-15T21:56:04.681691+00:00",
+        "api_call_id": 69375,
+        "response_status": 200,
+        "duration_ms": 84
+      }
+    },
+    {
+      "api_call_id": 69376,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "a1e7257f-c8ca-4b4a-9b30-6552a7888ffd",
+        "method": "GET",
+        "path": "/api/inventory/stock-posting/inventory/402/lots",
+        "logged_at": "2026-10-15T21:56:04.928216+00:00",
+        "api_call_id": 69376,
+        "response_status": 200,
+        "duration_ms": 207
+      }
+    },
+    {
+      "api_call_id": 69377,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "bb6fdd16-9ca8-4831-bc06-4a099ebe7c84",
+        "method": "POST",
+        "path": "/api/inventory/stock-posting/inventory/counts",
+        "logged_at": "2026-10-15T21:56:05.052539+00:00",
+        "api_call_id": 69377,
+        "response_status": 403,
+        "duration_ms": 102
+      }
+    },
+    {
+      "api_call_id": 69378,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "e268e9a3-85a1-43e7-b3a5-527a93c9bfaf",
+        "method": "GET",
+        "path": "/api/inventory/stock-posting/inventory/402/lots",
+        "logged_at": "2026-10-15T21:56:05.148919+00:00",
+        "api_call_id": 69378,
+        "response_status": 403,
+        "duration_ms": 56
+      }
+    },
+    {
+      "api_call_id": 69379,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "96dbb7ce-ab0d-4c4b-9e7a-fd03ad8a0570",
+        "method": "POST",
+        "path": "/api/inventory/tasks/27/claim",
+        "logged_at": "2026-10-15T21:56:05.230019+00:00",
+        "api_call_id": 69379,
+        "response_status": 403,
+        "duration_ms": 59
+      }
+    },
+    {
+      "api_call_id": 69380,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "595a3c6f-24a1-4d2b-a9fb-3dd432b0bea8",
+        "method": "POST",
+        "path": "/api/inventory/stock-posting/inventory/counts",
+        "logged_at": "2026-10-15T21:56:06.020238+00:00",
+        "api_call_id": 69380,
+        "response_status": 200,
+        "duration_ms": 255
+      }
+    },
+    {
+      "api_call_id": 69381,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "ea86ac57-83fa-4348-9667-b9d2326fcb86",
+        "method": "POST",
+        "path": "/api/inventory/stock-posting/inventory/counts",
+        "logged_at": "2026-10-15T21:56:06.135077+00:00",
+        "api_call_id": 69381,
+        "response_status": 200,
+        "duration_ms": 90
+      }
+    },
+    {
+      "api_call_id": 69382,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "8dfbd23e-13a8-4ebe-a8e4-8ac5678e90f7",
+        "method": "POST",
+        "path": "/api/inventory/stock-posting/inventory/counts",
+        "logged_at": "2026-10-15T21:56:06.215770+00:00",
+        "api_call_id": 69382,
+        "response_status": 409,
+        "duration_ms": 58
+      }
+    },
+    {
+      "api_call_id": 69383,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "686097c7-3e36-4ccc-89d1-a4e9e1414f46",
+        "method": "POST",
+        "path": "/api/inventory/stock-posting/inventory/counts",
+        "logged_at": "2026-10-15T21:56:06.315134+00:00",
+        "api_call_id": 69383,
+        "response_status": 403,
+        "duration_ms": 60
+      }
+    },
+    {
+      "api_call_id": 69384,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "488c64bc-5c64-4070-9e3f-20bf8d8e6fc3",
+        "method": "GET",
+        "path": "/api/inventory/stock-posting/inventory/402/lots",
+        "logged_at": "2026-10-15T21:56:06.400601+00:00",
+        "api_call_id": 69384,
+        "response_status": 403,
+        "duration_ms": 62
+      }
+    },
+    {
+      "api_call_id": 69385,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "d2423341-3f65-49cc-be70-a6a6bc4964c9",
+        "method": "GET",
+        "path": "/api/inventory/stock-posting/inventory/402/lots",
+        "logged_at": "2026-10-15T21:57:46.543964+00:00",
+        "api_call_id": 69385,
+        "response_status": 200,
+        "duration_ms": 50
+      }
+    },
+    {
+      "api_call_id": 69386,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "01aa8fed-16a6-4598-841a-8a92c4e20e5c",
+        "method": "POST",
+        "path": "/api/inventory/stock-posting/inventory/counts",
+        "logged_at": "2026-10-15T21:57:46.687960+00:00",
+        "api_call_id": 69386,
+        "response_status": 200,
+        "duration_ms": 124
+      }
+    },
+    {
+      "api_call_id": 69387,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "2e5378c6-1967-45c5-a258-cca92940d1e1",
+        "method": "GET",
+        "path": "/api/inventory/stock-posting/inventory/402/lots",
+        "logged_at": "2026-10-15T21:58:38.512106+00:00",
+        "api_call_id": 69387,
+        "response_status": 200,
+        "duration_ms": 55
+      }
+    },
+    {
+      "api_call_id": 69388,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "579d8d48-82c4-4f05-954e-97d2a16a472c",
+        "method": "POST",
+        "path": "/api/inventory/stock-posting/inventory/counts",
+        "logged_at": "2026-10-15T21:58:38.645518+00:00",
+        "api_call_id": 69388,
+        "response_status": 200,
+        "duration_ms": 108
+      }
+    }
+  ],
+  "max_http_ms": 258,
+  "decision": "Keep native current-task/revision/cell/article fences, 200-lot/100-queue bounds and same READ ONLY scope/projection snapshot. No new index/cache from this small case. Owner inventory: measure positive recovery and per-WARE access plans at pilot scale; optimize repeated membership evaluation or add targeted index only with measured plan evidence. Intentional exclusive REV wait5034ms is a concurrency refusal, not an unbounded SELECT.",
+  "limits": "At most latest101 API rows and latest501 slow records,10 cumulative cursors; native/raw trials have no HTTP audit entry. Cumulative cursor means are not scenario p95; functional TEST is not load/hardware acceptance."
+}

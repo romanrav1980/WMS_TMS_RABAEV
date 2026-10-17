@@ -1,0 +1,648 @@
+{
+  "state": "PASS_CASE_RETURN_25EA_ROLLBACK_REV_WARE_GROUP_REPLAY_REVOKE_FOREIGN_RETIRED",
+  "prefix": "MR16.e283f1e621",
+  "actor": "MR16Oe283f1e621",
+  "role": "MR16Re283f1e621",
+  "group": "MR16Ge283f1e621",
+  "case": 1149,
+  "warehouse": 20382575,
+  "commands": {
+    "ROLE": {
+      "wire": {
+        "operation_id": "MR16.e283f1e621.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "MR16Re283f1e621",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_manage"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MR16.e283f1e621.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "MR16Re283f1e621",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "WARE.ASSIGN": {
+      "wire": {
+        "operation_id": "MR16.e283f1e621.WARE.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "MR16.e283f1e621.WARE",
+          "username": "MR16Oe283f1e621",
+          "role_id": "MR16Re283f1e621",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20382575",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T16:50:18.929367+00:00",
+          "valid_until": "2026-10-16T17:51:18.929367+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MR16.e283f1e621.WARE.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "MR16.e283f1e621.WARE",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "WARE.REVOKE": {
+      "wire": {
+        "operation_id": "MR16.e283f1e621.WARE.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "MR16.e283f1e621.WARE",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MR16.e283f1e621.WARE.REVOKE",
+        "command_type": "REVOKE",
+        "object_id": "MR16.e283f1e621.WARE",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP": {
+      "wire": {
+        "operation_id": "MR16.e283f1e621.GROUP",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "group_id": "MR16Ge283f1e621",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20382575"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MR16.e283f1e621.GROUP",
+        "command_type": "GROUP_SAVE",
+        "object_id": "MR16Ge283f1e621",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.ASSIGN": {
+      "wire": {
+        "operation_id": "MR16.e283f1e621.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "MR16.e283f1e621.GROUP",
+          "username": "MR16Oe283f1e621",
+          "role_id": "MR16Re283f1e621",
+          "scope_kind": "GROUP",
+          "scope_id": "MR16Ge283f1e621",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T16:50:18.929367+00:00",
+          "valid_until": "2026-10-16T17:51:18.929367+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MR16.e283f1e621.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "MR16.e283f1e621.GROUP",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.REMOVE": {
+      "wire": {
+        "operation_id": "MR16.e283f1e621.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "group_id": "MR16Ge283f1e621",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MR16.e283f1e621.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "MR16Ge283f1e621",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP.RESTORE": {
+      "wire": {
+        "operation_id": "MR16.e283f1e621.GROUP.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 2,
+          "group_id": "MR16Ge283f1e621",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20382575"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MR16.e283f1e621.GROUP.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "MR16Ge283f1e621",
+        "version": 3,
+        "replayed": false
+      }
+    },
+    "GROUP.REVOKE": {
+      "wire": {
+        "operation_id": "MR16.e283f1e621.GROUP.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "MR16.e283f1e621.GROUP",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MR16.e283f1e621.GROUP.REVOKE",
+        "command_type": "REVOKE",
+        "object_id": "MR16.e283f1e621.GROUP",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "ROLE.RETIRE": {
+      "wire": {
+        "operation_id": "MR16.e283f1e621.ROLE.RETIRE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "MR16Re283f1e621",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_manage"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MR16.e283f1e621.ROLE.RETIRE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "MR16Re283f1e621",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP.RETIRE": {
+      "wire": {
+        "operation_id": "MR16.e283f1e621.GROUP.RETIRE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 3,
+          "group_id": "MR16Ge283f1e621",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20382575"
+            }
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MR16.e283f1e621.GROUP.RETIRE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "MR16Ge283f1e621",
+        "version": 4,
+        "replayed": false
+      }
+    }
+  },
+  "http": [
+    {
+      "label": "before_grant",
+      "status": 403,
+      "api_call_id": "70227",
+      "request_id": "9d33524d-0d79-4371-ad41-ecd854e7ad7e"
+    },
+    {
+      "label": "foreign_case",
+      "status": 403,
+      "api_call_id": "70228",
+      "request_id": "fb55b2ec-9688-4be5-a99f-8b322fd8c3f0"
+    },
+    {
+      "label": "executor_cannot_manage",
+      "status": 403,
+      "api_call_id": "70229",
+      "request_id": "911a86cf-05d9-47ee-9461-bb7ad608ef85"
+    },
+    {
+      "label": "ware_return",
+      "status": 200,
+      "api_call_id": "70230",
+      "request_id": "8646f884-5aae-4fd9-bfac-08de1222e960"
+    },
+    {
+      "label": "replay",
+      "status": 200,
+      "api_call_id": "70231",
+      "request_id": "3f54d062-3459-47de-9923-7c06c07c1918"
+    },
+    {
+      "label": "changed_body",
+      "status": 409,
+      "api_call_id": "70232",
+      "request_id": "20af94fd-0bc9-47b3-b919-12084b1cdd2a"
+    },
+    {
+      "label": "revoked_replay",
+      "status": 403,
+      "api_call_id": "70233",
+      "request_id": "2cfb49ec-db7f-4a34-b7cc-be1ec28559a0"
+    },
+    {
+      "label": "group_replay",
+      "status": 200,
+      "api_call_id": "70234",
+      "request_id": "08e5b4fe-a57a-45bd-b4c6-701b1bfbf9a7"
+    },
+    {
+      "label": "removed_group_replay",
+      "status": 403,
+      "api_call_id": "70235",
+      "request_id": "e0efa027-eb93-45e4-b99c-c7a814daa476"
+    },
+    {
+      "label": "restored_replay",
+      "status": 200,
+      "api_call_id": "70236",
+      "request_id": "d09af4c3-4ed2-4d17-a5b5-d3dc557aa717"
+    }
+  ],
+  "hardware_verified": false,
+  "frozen_body": {
+    "operation_id": "MR16.e283f1e621.RETURN",
+    "scan_container": "090000000000018013",
+    "expected_content_version": 4,
+    "destinations": {
+      "CASELOT:AB105B3CCB456C4C7EF509E900EBB606EA5E40:1": "AS16C5d66f0691f",
+      "CASELOT:1394DAB65CA84F55154917D62D00CCE913EBEB:1": "AS16C5d66f0691f"
+    }
+  },
+  "before": {
+    "content_version": 4,
+    "sscc": "090000000000018013",
+    "status": "WAIT_CONTROL",
+    "current_cell": "CPT_20382575"
+  },
+  "carrier_before": [
+    {
+      "uid": "CASELOT:AB105B3CCB456C4C7EF509E900EBB606EA5E40:1",
+      "quantity": 1
+    },
+    {
+      "uid": "CASELOT:1394DAB65CA84F55154917D62D00CCE913EBEB:1",
+      "quantity": 24
+    }
+  ],
+  "before_grant": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "MR16.e283f1e621.RETURN",
+      "reason": "CASE_USER_WAREHOUSE_FORBIDDEN",
+      "oracle_code": 20882,
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false
+    }
+  },
+  "foreign_case": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "MR16.e283f1e621.RETURN",
+      "reason": "CASE_USER_WAREHOUSE_FORBIDDEN",
+      "oracle_code": 20882,
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false
+    }
+  },
+  "executor_cannot_manage": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "MR16.e283f1e621.RETURN",
+      "reason": "CASE_USER_WAREHOUSE_FORBIDDEN",
+      "oracle_code": 20882,
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false
+    }
+  },
+  "rollback_wire": "{\"actor\":\"MR16Oe283f1e621\",\"command_type\":\"CASE_CARRIER_RETURN\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"destinations\":{\"CASELOT:1394DAB65CA84F55154917D62D00CCE913EBEB:1\":\"AS16C5d66f0691f\",\"CASELOT:AB105B3CCB456C4C7EF509E900EBB606EA5E40:1\":\"AS16C5d66f0691f\"},\"expected_content_version\":4,\"scan_container\":\"090000000000018013\"},\"operation_id\":\"MR16.e283f1e621.ROLLBACK\",\"source\":{\"case_task_id\":1149},\"units\":[]}",
+  "caller_rollback_REV": "PASS",
+  "ware_return": {
+    "task": 1149,
+    "version": 4,
+    "carrier": "090000000000018013",
+    "warehouse": 20382575,
+    "stocks": [
+      {
+        "uid": "CASELOT:1394DAB65CA84F55154917D62D00CCE913EBEB:1",
+        "cell": "CPT_20382575",
+        "quantity": "24",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151,
+        "target": "AS16C5d66f0691f",
+        "reservations": [
+          1900
+        ]
+      },
+      {
+        "uid": "CASELOT:AB105B3CCB456C4C7EF509E900EBB606EA5E40:1",
+        "cell": "CPT_20382575",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151,
+        "target": "AS16C5d66f0691f",
+        "reservations": [
+          1899
+        ]
+      }
+    ],
+    "before": [
+      {
+        "uid": "CASELOT:1394DAB65CA84F55154917D62D00CCE913EBEB:1",
+        "cell": "CPT_20382575",
+        "quantity": "24",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151
+      },
+      {
+        "uid": "CASELOT:AB105B3CCB456C4C7EF509E900EBB606EA5E40:1",
+        "cell": "CPT_20382575",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151
+      }
+    ],
+    "unused": [],
+    "operation_id": "MR16.e283f1e621.RETURN",
+    "status": "RETURNED",
+    "outbox_id": 5634
+  },
+  "replay": {
+    "task": 1149,
+    "version": 4,
+    "carrier": "090000000000018013",
+    "warehouse": 20382575,
+    "stocks": [
+      {
+        "uid": "CASELOT:1394DAB65CA84F55154917D62D00CCE913EBEB:1",
+        "cell": "CPT_20382575",
+        "quantity": "24",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151,
+        "target": "AS16C5d66f0691f",
+        "reservations": [
+          1900
+        ]
+      },
+      {
+        "uid": "CASELOT:AB105B3CCB456C4C7EF509E900EBB606EA5E40:1",
+        "cell": "CPT_20382575",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151,
+        "target": "AS16C5d66f0691f",
+        "reservations": [
+          1899
+        ]
+      }
+    ],
+    "before": [
+      {
+        "uid": "CASELOT:1394DAB65CA84F55154917D62D00CCE913EBEB:1",
+        "cell": "CPT_20382575",
+        "quantity": "24",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151
+      },
+      {
+        "uid": "CASELOT:AB105B3CCB456C4C7EF509E900EBB606EA5E40:1",
+        "cell": "CPT_20382575",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151
+      }
+    ],
+    "unused": [],
+    "operation_id": "MR16.e283f1e621.RETURN",
+    "status": "RETURNED",
+    "outbox_id": 5634
+  },
+  "changed_body": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "MR16.e283f1e621.RETURN",
+      "reason": "OPERATION_CONFLICT",
+      "oracle_code": 20872,
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false
+    }
+  },
+  "revoked_replay": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "MR16.e283f1e621.RETURN",
+      "reason": "CASE_USER_WAREHOUSE_FORBIDDEN",
+      "oracle_code": 20882,
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false
+    }
+  },
+  "group_replay": {
+    "task": 1149,
+    "version": 4,
+    "carrier": "090000000000018013",
+    "warehouse": 20382575,
+    "stocks": [
+      {
+        "uid": "CASELOT:1394DAB65CA84F55154917D62D00CCE913EBEB:1",
+        "cell": "CPT_20382575",
+        "quantity": "24",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151,
+        "target": "AS16C5d66f0691f",
+        "reservations": [
+          1900
+        ]
+      },
+      {
+        "uid": "CASELOT:AB105B3CCB456C4C7EF509E900EBB606EA5E40:1",
+        "cell": "CPT_20382575",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151,
+        "target": "AS16C5d66f0691f",
+        "reservations": [
+          1899
+        ]
+      }
+    ],
+    "before": [
+      {
+        "uid": "CASELOT:1394DAB65CA84F55154917D62D00CCE913EBEB:1",
+        "cell": "CPT_20382575",
+        "quantity": "24",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151
+      },
+      {
+        "uid": "CASELOT:AB105B3CCB456C4C7EF509E900EBB606EA5E40:1",
+        "cell": "CPT_20382575",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151
+      }
+    ],
+    "unused": [],
+    "operation_id": "MR16.e283f1e621.RETURN",
+    "status": "RETURNED",
+    "outbox_id": 5634
+  },
+  "removed_group_replay": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "MR16.e283f1e621.RETURN",
+      "reason": "CASE_USER_WAREHOUSE_FORBIDDEN",
+      "oracle_code": 20882,
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false
+    }
+  },
+  "restored_replay": {
+    "task": 1149,
+    "version": 4,
+    "carrier": "090000000000018013",
+    "warehouse": 20382575,
+    "stocks": [
+      {
+        "uid": "CASELOT:1394DAB65CA84F55154917D62D00CCE913EBEB:1",
+        "cell": "CPT_20382575",
+        "quantity": "24",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151,
+        "target": "AS16C5d66f0691f",
+        "reservations": [
+          1900
+        ]
+      },
+      {
+        "uid": "CASELOT:AB105B3CCB456C4C7EF509E900EBB606EA5E40:1",
+        "cell": "CPT_20382575",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151,
+        "target": "AS16C5d66f0691f",
+        "reservations": [
+          1899
+        ]
+      }
+    ],
+    "before": [
+      {
+        "uid": "CASELOT:1394DAB65CA84F55154917D62D00CCE913EBEB:1",
+        "cell": "CPT_20382575",
+        "quantity": "24",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151
+      },
+      {
+        "uid": "CASELOT:AB105B3CCB456C4C7EF509E900EBB606EA5E40:1",
+        "cell": "CPT_20382575",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A5D66F0691F",
+        "case_line": 1151
+      }
+    ],
+    "unused": [],
+    "operation_id": "MR16.e283f1e621.RETURN",
+    "status": "RETURNED",
+    "outbox_id": 5634
+  },
+  "physical": [
+    {
+      "uid_poleta": "CASELOT:1394DAB65CA84F55154917D62D00CCE913EBEB:1",
+      "cell": "AS16C5d66f0691f",
+      "remain": 24,
+      "hard_reserved_base": 0
+    },
+    {
+      "uid_poleta": "CASELOT:AB105B3CCB456C4C7EF509E900EBB606EA5E40:1",
+      "cell": "AS16C5d66f0691f",
+      "remain": 1,
+      "hard_reserved_base": 0
+    }
+  ]
+}

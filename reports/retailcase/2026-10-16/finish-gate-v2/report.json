@@ -1,0 +1,140 @@
+{
+  "status": "WORKING_DEV_CONTOUR_F1_UI_COMPLETE_F3_DECISIONS_PILOT_PENDING",
+  "created_at_utc": "2026-10-16T20:02:13.937076+00:00",
+  "target": "2026-10-17T08:00:00+03:00",
+  "hard_stop": "2026-10-17T11:00:00+03:00",
+  "publication": "LOCAL_ONLY_NO_GITHUB_PUSH",
+  "entrypoints": {
+    "workspaces": "http://127.0.0.1:3000/?page=workspace",
+    "kpi": "http://127.0.0.1:3000/?page=workspace&workspace=kpi",
+    "store": "http://127.0.0.1:3010/store/",
+    "loading": "http://127.0.0.1:8088/wms-admin/transport-loading.html"
+  },
+  "completed": [
+    "Current WARE/GROUP CASE transfer with physical session/resource handoff, immutable original-actor receipt and assignment-version CAS; exact legacy replay preserved",
+    "Whole HU shipping and departure; unload before departure with scoped native admission and shared REV",
+    "Driver SELF and binding revocation/expiry; bounded delegation and all-WARE composite documents",
+    "Finance rate/monthly writes and bounded invoice/task exports; native independent finance decisions rollback-only",
+    "C0121/C0122 integrated, actual scoped UI login/nav/recovery/mobile checked, CREATE HU/UNLOAD capability gates completed",
+    "Own TEST fixtures retired canonically; physical stock and business/audit journals retained"
+  ],
+  "cancelled_by_owner": [
+    "Multi-store partial/subtree handover from one loaded pallet; do not implement"
+  ],
+  "preserved_baseline": [
+    "Nested mixed ASM and rack BOX/EA assembly tree for one recipient",
+    "Manual weighing flows; existing electronic scale API retained",
+    "Four observed picker rates and aware delivery-window arrival/full-store-confirmation KPI",
+    "Durable unresolved-command recovery and ordinary static help URLs"
+  ],
+  "validation": {
+    "focused_tests": 163,
+    "tooling_tests": 24,
+    "quality_gate": "PASS;1146files/0cycles/72existing debt; baseline only tightened; both TypeScript checks PASS",
+    "production_builds": "PASS; React/terminal sources unchanged since recorded builds in previous checkpoint",
+    "oracle": {
+      "current_sources": 50,
+      "frozen_migrations": 15,
+      "errors": 0,
+      "invalid": 0,
+      "evidence": "oracle-current-final.json"
+    },
+    "http_audit": {
+      "total_cases": 375,
+      "exact_response_local_oracle_pairs": 364,
+      "intentional_lightweight_xlsx_reads": 11,
+      "slow_rows": 87,
+      "top_sql": 12,
+      "max_http_ms": 1742,
+      "all_slow_queries_have_owner_and_decision": true,
+      "evidence": "sql-review-release.json"
+    },
+    "ui": {
+      "scoped_c0122": "PASS11; native GET/login; mutation/recovery responses are UI fixtures, not native acceptance",
+      "legacy_gates": "PASS loading2/HU4",
+      "raw_js": "PASS7",
+      "encoding": "PASS"
+    },
+    "bounded_read": {
+      "state": "PASS_120_GET_FOUR_WORKERS_NO_STOCK_CHANGE",
+      "requests": 120,
+      "workers": 4,
+      "latency_ms": {
+        "p50": 245.37,
+        "p95": 578.352,
+        "p99": 685.548,
+        "max": 707.488
+      },
+      "requests_per_second": 11.733599190576562,
+      "stock_unchanged": true,
+      "evidence": "bounded-read-valid.json",
+      "limitations": [
+        "GET only, privileged QA reader, two own TEST documents, not simultaneous warehouse mutations",
+        "Warm isolated document reads; no inference of production shift capacity, hardware or RPO/RTO"
+      ]
+    }
+  },
+  "retirement": {
+    "users": 16,
+    "assignments": 17,
+    "roles": 15,
+    "groups": 4,
+    "resources": 3,
+    "devices": 2,
+    "unload_case": 1152,
+    "retained_unreserved_stock_ea": 25,
+    "shipped_case": 1151,
+    "history_retained": true,
+    "evidence": [
+      "retirement.json",
+      "transport-retirement.json",
+      "../unload-shipping-scope/physical-retirement.json"
+    ]
+  },
+  "claude": {
+    "completed": [
+      "C0121 RELEASE K-0072",
+      "C0122 RELEASE K-0074"
+    ],
+    "third_request_required": false,
+    "file_channel": "coordination/retailcase-claude/TASK.md"
+  },
+  "remaining": [
+    {
+      "id": "F3_RULES",
+      "owner": "Business owner; Codex implements approved rule",
+      "items": [
+        "Partial BOX: only whole physical boxes vs fractional conversion of piece picks",
+        "Line closed with approved shortage: finisher credit rule",
+        "Cancelled/returned picks: preserve work with separate quality vs subtract"
+      ]
+    },
+    {
+      "id": "F3_COVERAGE",
+      "owner": "Resources and operations",
+      "items": [
+        "Certify all operational WORK coverage; observed V1/manual intervals do not establish payroll-certified history"
+      ]
+    },
+    {
+      "id": "PILOT",
+      "owner": "Operations and business owner",
+      "items": [
+        "Actual warehouse/store and selected equipment pilot, approved production load and backup restoration RPO/RTO",
+        "Controlled legacy cutover; no production rollout performed"
+      ]
+    }
+  ],
+  "preserved_failed_evidence": [
+    {
+      "path": "bounded-read.json",
+      "reason": "Test construction mistakenly expected admin200 for receipt owned by another actor.40original-actor403 +80successful GET, no stock effect. Source and failed result preserved; corrected120GET/4workers run separate."
+    }
+  ],
+  "source_freeze": {
+    "path": "reports/retailcase/2026-10-16/finish-gate-v2/source-freeze.json",
+    "sha256": "e24d2f9e94e2b705c77ff963c1fe8f2beb3c6fad162f5f5fd2c9e3e58d75a915",
+    "files": 65
+  },
+  "evidence_root": "reports/retailcase/2026-10-16/finish-gate-v2"
+}

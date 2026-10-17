@@ -1,0 +1,367 @@
+{
+  "state": "PASS_ROLE_ONLY_REPORT_SHORT1_FINISHER24EA_FOUR_RATES_ROLLBACK_REV_REPLAY_REVOKE",
+  "http": [
+    {
+      "label": "no_executor_role",
+      "path": "/api/case-pick/tasks/1153/lines/1155/short",
+      "status": 403,
+      "api_call_id": "72575",
+      "request_id": "8f77d0df-56b0-42f9-8c62-cf11fdc787b6"
+    },
+    {
+      "label": "role_only_report",
+      "path": "/api/case-pick/tasks/1153/lines/1155/short",
+      "status": 200,
+      "api_call_id": "72576",
+      "request_id": "b20ea6cd-40d4-4ddb-bb1c-72e3a5db6710"
+    },
+    {
+      "label": "same_report",
+      "path": "/api/case-pick/tasks/1153/lines/1155/short",
+      "status": 200,
+      "api_call_id": "72577",
+      "request_id": "54ec515a-b165-440f-937f-57b4f1472167"
+    },
+    {
+      "label": "changed_report",
+      "path": "/api/case-pick/tasks/1153/lines/1155/short",
+      "status": 409,
+      "api_call_id": "72578",
+      "request_id": "0dd16196-0ef0-47fd-964e-2003c816b28b"
+    },
+    {
+      "label": "revoked_replay",
+      "path": "/api/case-pick/tasks/1153/lines/1155/short",
+      "status": 403,
+      "api_call_id": "72579",
+      "request_id": "930b5e99-0c6a-47be-83f9-add054fe35d1"
+    },
+    {
+      "label": "independent_approval",
+      "path": "/api/case-pick/shorts/27/approve",
+      "status": 200,
+      "api_call_id": "72580",
+      "request_id": "4837742d-475b-4a64-8a76-31a01aa0537e"
+    },
+    {
+      "label": "approval_repeat",
+      "path": "/api/case-pick/shorts/27/approve",
+      "status": 200,
+      "api_call_id": "72581",
+      "request_id": "02d08bea-c02a-4cea-8426-96a2e3ed88e7"
+    },
+    {
+      "label": "kpi_self",
+      "path": "/api/resources/picker-kpis?warehouse_id=20033496&start_at=2026-10-17T04%3A51%3A27.795585%2B00%3A00&finish_at=2026-10-17T04%3A59%3A52.341208%2B00%3A00",
+      "status": 200,
+      "api_call_id": "72582",
+      "request_id": "1391eea9-f5b0-4499-b087-426797c9b598"
+    },
+    {
+      "label": "foreign_person_kpi",
+      "path": "/api/resources/picker-kpis?warehouse_id=20033496&start_at=2026-10-17T04%3A51%3A27.795585%2B00%3A00&finish_at=2026-10-17T04%3A59%3A52.341208%2B00%3A00&operator_id=admin",
+      "status": 403,
+      "api_call_id": "72583",
+      "request_id": "a094c8ad-06c3-4658-9594-54a13168c6c9"
+    },
+    {
+      "label": "foreign_warehouse_kpi",
+      "path": "/api/resources/picker-kpis?warehouse_id=20266481&start_at=2026-10-17T04%3A51%3A27.795585%2B00%3A00&finish_at=2026-10-17T04%3A59%3A52.341208%2B00%3A00",
+      "status": 403,
+      "api_call_id": "72584",
+      "request_id": "2aeed575-b0ce-4d6e-a2f4-82adac24cb84"
+    }
+  ],
+  "commands": {
+    "ROLE.UI": {
+      "wire": {
+        "operation_id": "OC16.d21d129674.V2.ROLE.UI",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "OC16Rd21d129674",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_execute",
+            "wms_admin_login"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.d21d129674.V2.ROLE.UI",
+        "command_type": "ROLE_SAVE",
+        "object_id": "OC16Rd21d129674",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "LOGIN": {
+      "wire": {
+        "operation_id": "OC16.d21d129674.V2.LOGIN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "OC16.d21d129674.UI.LOGIN",
+          "username": "OC16Pd21d129674",
+          "role_id": "OC16Rd21d129674",
+          "scope_kind": "PLATFORM",
+          "scope_id": null,
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-17T04:58:47.963330+00:00",
+          "valid_until": "2026-10-17T08:59:47.963330+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.d21d129674.V2.LOGIN",
+        "command_type": "ASSIGN",
+        "object_id": "OC16.d21d129674.UI.LOGIN",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "REVOKE.EXEC": {
+      "wire": {
+        "operation_id": "OC16.d21d129674.V2.REVOKE.EXEC",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "OC16Ad21d129674",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.d21d129674.V2.REVOKE.EXEC",
+        "command_type": "REVOKE",
+        "object_id": "OC16Ad21d129674",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "RESTORE.EXEC": {
+      "wire": {
+        "operation_id": "OC16.d21d129674.V2.RESTORE.EXEC",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "OC16.d21d129674.RESTORE.EXEC",
+          "username": "OC16Pd21d129674",
+          "role_id": "OC16Rd21d129674",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20033496",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-17T04:58:47.963330+00:00",
+          "valid_until": "2026-10-17T08:59:47.963330+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.d21d129674.V2.RESTORE.EXEC",
+        "command_type": "ASSIGN",
+        "object_id": "OC16.d21d129674.RESTORE.EXEC",
+        "version": 1,
+        "replayed": false
+      }
+    }
+  },
+  "hardware_verified": false,
+  "physical_quantity": "24EA picked of25; own TEST stock only",
+  "flat_removed": {
+    "user_group": "OC16Pd21d129674",
+    "right1": "CASE_PICK_EXECUTE",
+    "deleted": 1
+  },
+  "body": {
+    "picked_qty": "24",
+    "short_qty": "1",
+    "reason_text": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+    "offline_event_id": "OC16.d21d129674.SHORT",
+    "resource_id": 79,
+    "resource_session_id": 75
+  },
+  "caller_rollback_REV": "PASS",
+  "no_executor_role": {
+    "detail": {
+      "code": "CASE_SHORT_REPORT_REJECTED",
+      "message": "ORA-20882: CASE_CURRENT_ACTION_FORBIDDEN"
+    }
+  },
+  "role_only_report": {
+    "case_pick_task_id": 1153,
+    "case_pick_line_id": 1155,
+    "offline_event_id": "OC16.d21d129674.SHORT",
+    "case_pick_short_id": 27,
+    "status": "PENDING_APPROVAL",
+    "short_qty": "1"
+  },
+  "short_id": 27,
+  "same_report": {
+    "case_pick_task_id": 1153,
+    "case_pick_line_id": 1155,
+    "offline_event_id": "OC16.d21d129674.SHORT",
+    "case_pick_short_id": 27,
+    "status": "PENDING_APPROVAL",
+    "short_qty": "1",
+    "recovery_state": null,
+    "idempotent": true
+  },
+  "changed_report": {
+    "detail": {
+      "code": "SHORT_REPORT_CONTENT_CONFLICT"
+    }
+  },
+  "revoked_replay": {
+    "detail": {
+      "code": "CASE_SHORT_REPORT_REJECTED",
+      "message": "ORA-20882: CASE_USER_WAREHOUSE_FORBIDDEN"
+    }
+  },
+  "restored_assignment": "OC16.d21d129674.RESTORE.EXEC",
+  "independent_approval": {
+    "case_pick_short_id": 27,
+    "recovery_state": null,
+    "status": "ACCEPTED",
+    "inventory_task_id": 34,
+    "released_reservations": 1,
+    "operation_id": "OC16.d21d129674.SHORT.APPROVE",
+    "outbox_id": 5704
+  },
+  "inventory_task_id": 34,
+  "approval_repeat": {
+    "case_pick_short_id": 27,
+    "recovery_state": null,
+    "status": "ACCEPTED",
+    "inventory_task_id": 34,
+    "released_reservations": 1,
+    "operation_id": "OC16.d21d129674.SHORT.APPROVE",
+    "outbox_id": 5704
+  },
+  "params": {
+    "warehouse_id": 20033496,
+    "start_at": "2026-10-17T04:51:27.795585+00:00",
+    "finish_at": "2026-10-17T04:59:52.341208+00:00"
+  },
+  "kpi_path": "/api/resources/picker-kpis?warehouse_id=20033496&start_at=2026-10-17T04%3A51%3A27.795585%2B00%3A00&finish_at=2026-10-17T04%3A59%3A52.341208%2B00%3A00",
+  "kpi_self": {
+    "warehouse_id": 20033496,
+    "start_at": "2026-10-17T04:51:27.795585+00:00",
+    "finish_at": "2026-10-17T04:59:52.341208+00:00",
+    "as_of": "2026-10-17T04:59:51.695875+00:00",
+    "formula_version": "PICKER_KPI_V2",
+    "operators": [
+      {
+        "operator_id": "OC16Pd21d129674",
+        "completed_lines": 1,
+        "boxes": "1",
+        "pieces": "0",
+        "box_reasons": [],
+        "operation_ids": [
+          "OC16.d21d129674.BOX24"
+        ],
+        "quantities": [
+          {
+            "article": "AS16A082D87DBD8",
+            "base_uom": "EA",
+            "quantity": "24"
+          }
+        ],
+        "shortage_completed_lines": 1,
+        "shortage_quantities": [
+          {
+            "article": "AS16A082D87DBD8",
+            "base_uom": "EA",
+            "quantity": "1"
+          }
+        ],
+        "line_completions": [
+          {
+            "operation_id": "OC16.d21d129674.SHORT.APPROVE",
+            "task_id": 1153,
+            "line_id": 1155,
+            "actor": "OC16Pd21d129674",
+            "at": "2026-10-17T04:51:28.628890+00:00",
+            "approved_at": "2026-10-17T04:59:51.485444+00:00",
+            "kind": "ACCEPTED_SHORT",
+            "quantity": "24",
+            "shortage_quantity": "1"
+          }
+        ],
+        "return_events": 0,
+        "returned_quantities": [],
+        "registered_assembly_hours": "0.000270143333333333333333333333333333333333333333333333333333333",
+        "registered_shift_hours": "0.000333240833333333333333333333333333333333333333333333333333334",
+        "rates": {
+          "lines_per_assembly_hour": "3701.739",
+          "boxes_per_assembly_hour": "3701.739",
+          "lines_per_shift_hour": "3000.833",
+          "boxes_per_shift_hour": "3000.833"
+        },
+        "time_basis": "REGISTERED_CONFIRMED_INTERVALS",
+        "work_coverage_certified": false,
+        "uncovered_work_operations": [],
+        "uncovered_shift_operations": [],
+        "observed_pick_coverage": {
+          "total": 1,
+          "covered_work": 1,
+          "covered_shift": 1,
+          "complete_for_observed_picks": true
+        },
+        "time_reasons": {
+          "assembly": [],
+          "shift": []
+        },
+        "facts": [
+          {
+            "operation_id": "OC16.d21d129674.BOX24",
+            "actor": "OC16Pd21d129674",
+            "at": "2026-10-17T04:51:28.628890+00:00",
+            "task_id": 1153,
+            "line_id": 1155,
+            "article": "AS16A082D87DBD8",
+            "base_uom": "EA",
+            "previous": "0",
+            "cumulative": "24",
+            "planned": "25",
+            "boxes": "1",
+            "packaging_reason": null,
+            "box_size_base": "24",
+            "input_kind": "BOX_SCAN",
+            "delta": "24",
+            "pieces": "0"
+          }
+        ]
+      }
+    ],
+    "scope": "REGISTERED_OBSERVATIONS",
+    "work_coverage_certified": false,
+    "source_limitations": [
+      "REGISTERED_TIME_IS_NOT_CERTIFIED_ALL_WORK",
+      "NATIVE_APPLIED_CLOCK_NOT_PHYSICAL_PICK_TIME",
+      "HISTORICAL_PACKAGING_NOT_BACKFILLED",
+      "HISTORICAL_QUALITY_WITHOUT_AWARE_CLOCK_NOT_BACKFILLED",
+      "OPEN_INTERVALS_PROJECTED_TO_AS_OF",
+      "WHOLE_BOXES_AND_LOOSE_PIECES_SEPARATE",
+      "APPROVED_SHORT_CREDIT_AT_LAST_PHYSICAL_PICK",
+      "RETURNS_RETAIN_WORK_LINE_QUALITY_SEPARATE",
+      "QUALITY_IS_NOT_EMPLOYEE_FAULT_ATTRIBUTION"
+    ],
+    "stock_changed": false
+  },
+  "foreign_person_kpi": {
+    "detail": {
+      "code": "KPI_WAREHOUSE_FORBIDDEN"
+    }
+  },
+  "foreign_warehouse_kpi": {
+    "detail": {
+      "code": "KPI_WAREHOUSE_FORBIDDEN"
+    }
+  }
+}

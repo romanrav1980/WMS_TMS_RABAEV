@@ -1,0 +1,23 @@
+{
+  "tag": "ce9c011b16",
+  "prefix": "AS16.ce9c011b16",
+  "actor": "AS16Oce9c011b16",
+  "sender": "AS16Gce9c011b16",
+  "article": "AS16ACE9C011B16",
+  "source": "AS16.LOT:ce9c011b16",
+  "warehouse_id": 20846272,
+  "cell": "AS16Cce9c011b16",
+  "role": "AS16Rce9c011b16",
+  "assignment": "AS16Xce9c011b16",
+  "device": "AS16Dce9c011b16",
+  "hardware_verified": false,
+  "quantity": "1",
+  "state": "PREPARED",
+  "stock_birth": "1 EA simulated inventory",
+  "recovery": [
+    "Never rerun after uncertain effect: inspect exact operation receipt",
+    "Canonical CASE_CARRIER_RETURN if picked; WAVE_CANCEL and PICK_PLAN_CANCEL release own reservations",
+    "Retain stock/scale/access journals; retire own actors/role/device/resource/session after mixed-HU follow-up",
+    "Never delete histories or touch prior QA stock; positive TEST stock remains isolated under fresh warehouse"
+  ]
+}

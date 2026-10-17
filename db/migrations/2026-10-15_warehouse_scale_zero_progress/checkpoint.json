@@ -1,0 +1,61 @@
+{
+  "migration_id": "2026-10-15-warehouse-scale-zero-progress",
+  "status": "APPLIED",
+  "applied": true,
+  "sources": [
+    {
+      "name": "RRL_WH_WEIGH_REQUEST_API",
+      "type": "PACKAGE",
+      "file": "before_spec.sql",
+      "sha256": "6cbae75b943eb8be58d8eea6e3e682edbe28a5655cdd4225292f0853c35ade89"
+    },
+    {
+      "name": "RRL_WH_WEIGH_REQUEST_API",
+      "type": "PACKAGE BODY",
+      "file": "before_body.sql",
+      "sha256": "1d64ec22fa49a7fb7c39e10ffec9cb5b9c0d24ae54e1e329b43a0fb9f3a7d368"
+    }
+  ],
+  "baseline_invalid": 0,
+  "root_review_required": false,
+  "stock_effect": "NONE",
+  "profile_trust": "GATEWAY_REPORTED_NOT_HARDWARE_ATTESTATION",
+  "prior_forward": "2026-10-15-assembly-final-snapshot",
+  "new_table": "RRL_WH_WEIGH_ZERO",
+  "native_readonly_validator_probe": "PASS; pure JSON compilation/string-zero conversion, no rows/no hardware",
+  "source_guard_lf_crlf": "PASS",
+  "verify_before_ledger": true,
+  "rollback_requires_exact_after_sources": true,
+  "unchanged_sources": [
+    {
+      "name": "RRL_WH_SCALE_API",
+      "type": "PACKAGE BODY",
+      "file": "before_wh_scale_body.sql",
+      "sha256": "aacba7ef3c676c11664ce1cb9a394052b91ee0b7d487baeed1780c1d969a7269"
+    },
+    {
+      "name": "RRL_ASSEMBLY_SCALE_API",
+      "type": "PACKAGE BODY",
+      "file": "before_assembly_body.sql",
+      "sha256": "3959831fe6663eca0049caed70ed6fe0c00570b61732a491cd0ba55a03774159"
+    }
+  ],
+  "expected_body_sha256": "a384012e3557c3a87047b787d1812c939fe17fa80d1b386eaf49fbe2e2e66d6d",
+  "review_correction": "When original ZERO exists require packet zero_check_kg numeric0 and exactzero_check_at; legacy nozero row unchanged",
+  "native_negative_planned": "Same timestamp but zero_check_kg=.001 rejected",
+  "statements": 15,
+  "errors": 0,
+  "global_invalid": 0,
+  "readback": "EXACT5_SOURCES_PLUS_CONSTRAINTS_INDEXES",
+  "native_checks": 15,
+  "http_calls": 6,
+  "unit_api_durable_tests": 47,
+  "encrypted_local_opc_http_mock_tests": 6,
+  "physical_hardware": false,
+  "capture_rows": 0,
+  "zero_event_rows_rollback_verified": true,
+  "fixture_cleanup": "canonical WAVE568 CANCELLED; synthetic CASE1137/order2147 CANCELLED; deviceinactive; labels/request/claim/operation historyretained",
+  "rollback": "FORWARD_RECOVERY_REQUIRED_AFTER_RETAINED_FLAGGED_REQUEST",
+  "legacy_main_frozen_request": "EXACT_DTO_WIRE_AND_ACTUAL_HTTP_REPLAY_PASS_MAIN_CASE_UNCHANGED",
+  "latest_full_gate": "architecture1040/cycles0/debt72+24tooling+adminTSC PASS; parallelterminal AssemblyStage contextprop mismatch FAIL; UIowner notified"
+}

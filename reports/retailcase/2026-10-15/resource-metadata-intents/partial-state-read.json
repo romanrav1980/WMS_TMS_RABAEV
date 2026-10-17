@@ -1,0 +1,70 @@
+{
+  "after_sources": [
+    {
+      "name": "RRL_RESOURCE_INTENT_API",
+      "type": "PACKAGE",
+      "hash": "fd0d00a6a92c0e3c95b2897e3c9ef098901cce864aa2c6142583eee433553027",
+      "expected_hash": "fd0d00a6a92c0e3c95b2897e3c9ef098901cce864aa2c6142583eee433553027",
+      "normalized_equal": false,
+      "actual_len": 606,
+      "expected_len": 677
+    },
+    {
+      "name": "RRL_RESOURCE_INTENT_API",
+      "type": "PACKAGE BODY",
+      "hash": "8c7e02857a46ad53541e3a3e8ed5515772e2c30dc9e19616919e251666ba4c8f",
+      "expected_hash": "8c7e02857a46ad53541e3a3e8ed5515772e2c30dc9e19616919e251666ba4c8f",
+      "normalized_equal": true,
+      "actual_len": 15482,
+      "expected_len": 15481
+    },
+    {
+      "name": "RRL_RESOURCE_INTENT_GUARD",
+      "type": "TRIGGER",
+      "hash": "8b8f6744c8fd5bdf1369ed3acdc4d92366205552c7e0072c56a621b1df378613",
+      "expected_hash": "8b8f6744c8fd5bdf1369ed3acdc4d92366205552c7e0072c56a621b1df378613",
+      "normalized_equal": true,
+      "actual_len": 335,
+      "expected_len": 334
+    },
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE",
+      "hash": "94fcdb300ba0a20eb7d9292a22971deeb4abc2d3411889b1449713b107f695a8",
+      "expected_hash": "94fcdb300ba0a20eb7d9292a22971deeb4abc2d3411889b1449713b107f695a8",
+      "normalized_equal": true,
+      "actual_len": 559,
+      "expected_len": 558
+    },
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE BODY",
+      "hash": "17a13dc2439099f91cc0bf9207171609f5c15d76d704c8c3465a34018b48545b",
+      "expected_hash": "17a13dc2439099f91cc0bf9207171609f5c15d76d704c8c3465a34018b48545b",
+      "normalized_equal": true,
+      "actual_len": 14320,
+      "expected_len": 14319
+    },
+    {
+      "name": "RRL_WTASK_ASSIGN_API",
+      "type": "PACKAGE",
+      "hash": "23bd19364fa343539d391aa9757b4d4abe57b387960c7ef587948c29e78a1d2e",
+      "expected_hash": "23bd19364fa343539d391aa9757b4d4abe57b387960c7ef587948c29e78a1d2e",
+      "normalized_equal": true,
+      "actual_len": 616,
+      "expected_len": 615
+    },
+    {
+      "name": "RRL_WTASK_ASSIGN_API",
+      "type": "PACKAGE BODY",
+      "hash": "cc331abbe38b775069ff9355b5a5e8063196ef0409cec017b4d2c84e9ee24d7d",
+      "expected_hash": "cc331abbe38b775069ff9355b5a5e8063196ef0409cec017b4d2c84e9ee24d7d",
+      "normalized_equal": true,
+      "actual_len": 14403,
+      "expected_len": 14402
+    }
+  ],
+  "errors": [],
+  "invalid": [],
+  "tombstones": 0
+}

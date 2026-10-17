@@ -1,0 +1,332 @@
+{
+  "status": "PASS",
+  "task_id": 1138,
+  "source_before": [
+    {
+      "cell": "QIPcdbf4c0962",
+      "remain": 23,
+      "hard_reserved_base": 1,
+      "stock_version": 12
+    },
+    {
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "checks": [
+    "ordinary_scoped_context_HTTP200",
+    "browser_actor_422",
+    "committed_UTF8_REJECTED_SHA_HTTP409",
+    "REJECTED_exact_GET_and_POST",
+    "concurrent_distinct_intents_one_transition_one_stale_receipt",
+    "native_ONLY_scoped_START_actual_server_instant_unknown_zone_NULL",
+    "START_replay_noop_no_new_instant",
+    "late_original_REJECTED_never_creates_after_correction",
+    "same_operation_changed_body_not_definitive_receipt",
+    "actual_Oracle_wait_revoke_denies_APPLIED_and_REJECTED_restore_v3"
+  ],
+  "hardware_verified": false,
+  "goods_commands": 0,
+  "claim_race": [
+    {
+      "operation": "CRES15.HTTP.CLAIM.A",
+      "http": 200,
+      "ack": {
+        "task_id": 1138,
+        "warehouse_id": 13583852,
+        "status": "ASSIGNED",
+        "assignment_version": 1,
+        "content_version": 2,
+        "assigned_to": "CRES15.OP",
+        "resource_id": 59,
+        "resource_session_id": 55,
+        "equipment_id": null,
+        "started_at_instant": null,
+        "started_shift_time_zone": null,
+        "outcome": "APPLIED",
+        "request_sha256": "5AB77878F48A26202F901AF0FE0DCBB61C6696E093BE9AE27EECFCA549DC83EE",
+        "outcome_confirmed": true,
+        "may_create_corrected_operation": false,
+        "error_code": null,
+        "operation_id": "CRES15.HTTP.CLAIM.A",
+        "action": "CLAIM",
+        "actor": "CRES15.OP",
+        "changed": true,
+        "stock_posted": false
+      }
+    },
+    {
+      "operation": "CRES15.HTTP.CLAIM.B",
+      "http": 409,
+      "ack": {
+        "task_id": 1138,
+        "warehouse_id": 13583852,
+        "status": "ASSIGNED",
+        "assignment_version": 1,
+        "content_version": 2,
+        "assigned_to": "CRES15.OP",
+        "resource_id": 59,
+        "resource_session_id": 55,
+        "equipment_id": null,
+        "started_at_instant": null,
+        "started_shift_time_zone": null,
+        "outcome": "REJECTED",
+        "request_sha256": "7D8E26D18EB6DF00CCFA8FF3FB8455108F7E4763CF980C5A8485F8CEC1477ABB",
+        "outcome_confirmed": true,
+        "may_create_corrected_operation": true,
+        "error_code": "CASE_RESOURCE_ASSIGNMENT_VERSION_CHANGED",
+        "operation_id": "CRES15.HTTP.CLAIM.B",
+        "action": "CLAIM",
+        "actor": "CRES15.OP",
+        "changed": false,
+        "stock_posted": false
+      }
+    }
+  ],
+  "revoke_concurrency": {
+    "actual_oracle_wait": [
+      [
+        "enq: TM - contention",
+        "Application",
+        441,
+        197
+      ]
+    ],
+    "revoked": {
+      "operation_id": "CRES15.ROLE.REVOKE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "CRES15.CASE.EXEC",
+      "version": 2,
+      "replayed": false
+    },
+    "revoked_original_applied_and_rejected_receipt_denied": true,
+    "restored": {
+      "operation_id": "CRES15.ROLE.RESTORE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "CRES15.CASE.EXEC",
+      "version": 3,
+      "replayed": false
+    }
+  },
+  "receipts": [
+    {
+      "request": {
+        "operation_id": "CRES15.HTTP.WRONG.VERSION",
+        "action": "CLAIM",
+        "expected_assignment_version": 999,
+        "resource_session_id": 55,
+        "resource_id": 59,
+        "equipment_id": null,
+        "reason": "TEST \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 UTF8 metadata only; no physical pick"
+      },
+      "ack": {
+        "task_id": 1138,
+        "warehouse_id": 13583852,
+        "status": "NEW",
+        "assignment_version": 0,
+        "content_version": 2,
+        "assigned_to": null,
+        "resource_id": null,
+        "resource_session_id": null,
+        "equipment_id": null,
+        "started_at_instant": null,
+        "started_shift_time_zone": null,
+        "outcome": "REJECTED",
+        "request_sha256": "BE649BBD82580203E7DD720021E0B9529C4784FC1622A7307AE616141D012BAE",
+        "outcome_confirmed": true,
+        "may_create_corrected_operation": true,
+        "error_code": "CASE_RESOURCE_ASSIGNMENT_VERSION_CHANGED",
+        "operation_id": "CRES15.HTTP.WRONG.VERSION",
+        "action": "CLAIM",
+        "actor": "CRES15.OP",
+        "changed": false,
+        "stock_posted": false
+      }
+    },
+    {
+      "request": {
+        "operation_id": "CRES15.HTTP.CLAIM.A",
+        "action": "CLAIM",
+        "expected_assignment_version": 0,
+        "resource_session_id": 55,
+        "resource_id": 59,
+        "equipment_id": null,
+        "reason": "TEST \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 UTF8 metadata only; no physical pick"
+      },
+      "ack": {
+        "task_id": 1138,
+        "warehouse_id": 13583852,
+        "status": "ASSIGNED",
+        "assignment_version": 1,
+        "content_version": 2,
+        "assigned_to": "CRES15.OP",
+        "resource_id": 59,
+        "resource_session_id": 55,
+        "equipment_id": null,
+        "started_at_instant": null,
+        "started_shift_time_zone": null,
+        "outcome": "APPLIED",
+        "request_sha256": "5AB77878F48A26202F901AF0FE0DCBB61C6696E093BE9AE27EECFCA549DC83EE",
+        "outcome_confirmed": true,
+        "may_create_corrected_operation": false,
+        "error_code": null,
+        "operation_id": "CRES15.HTTP.CLAIM.A",
+        "action": "CLAIM",
+        "actor": "CRES15.OP",
+        "changed": true,
+        "stock_posted": false
+      }
+    },
+    {
+      "request": {
+        "operation_id": "CRES15.HTTP.CLAIM.B",
+        "action": "CLAIM",
+        "expected_assignment_version": 0,
+        "resource_session_id": 55,
+        "resource_id": 59,
+        "equipment_id": null,
+        "reason": "TEST \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 UTF8 metadata only; no physical pick"
+      },
+      "ack": {
+        "task_id": 1138,
+        "warehouse_id": 13583852,
+        "status": "ASSIGNED",
+        "assignment_version": 1,
+        "content_version": 2,
+        "assigned_to": "CRES15.OP",
+        "resource_id": 59,
+        "resource_session_id": 55,
+        "equipment_id": null,
+        "started_at_instant": null,
+        "started_shift_time_zone": null,
+        "outcome": "REJECTED",
+        "request_sha256": "7D8E26D18EB6DF00CCFA8FF3FB8455108F7E4763CF980C5A8485F8CEC1477ABB",
+        "outcome_confirmed": true,
+        "may_create_corrected_operation": true,
+        "error_code": "CASE_RESOURCE_ASSIGNMENT_VERSION_CHANGED",
+        "operation_id": "CRES15.HTTP.CLAIM.B",
+        "action": "CLAIM",
+        "actor": "CRES15.OP",
+        "changed": false,
+        "stock_posted": false
+      }
+    },
+    {
+      "request": {
+        "operation_id": "CRES15.HTTP.START",
+        "action": "START",
+        "expected_assignment_version": 1,
+        "resource_session_id": 55,
+        "resource_id": 59,
+        "equipment_id": null,
+        "reason": "TEST \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 UTF8 metadata only; no physical pick"
+      },
+      "ack": {
+        "task_id": 1138,
+        "warehouse_id": 13583852,
+        "status": "IN_PROGRESS",
+        "assignment_version": 2,
+        "content_version": 2,
+        "assigned_to": "CRES15.OP",
+        "resource_id": 59,
+        "resource_session_id": 55,
+        "equipment_id": null,
+        "started_at_instant": "2026-10-15T13:31:51.198164+00:00",
+        "started_shift_time_zone": null,
+        "outcome": "APPLIED",
+        "request_sha256": "87462E3E5036A7C60C702FE11E9EAAAA24E8A957069F265AC0B52E425F860E39",
+        "outcome_confirmed": true,
+        "may_create_corrected_operation": false,
+        "error_code": null,
+        "operation_id": "CRES15.HTTP.START",
+        "action": "START",
+        "actor": "CRES15.OP",
+        "changed": true,
+        "stock_posted": false
+      }
+    },
+    {
+      "request": {
+        "operation_id": "CRES15.HTTP.START.NOOP",
+        "action": "START",
+        "expected_assignment_version": 2,
+        "resource_session_id": 55,
+        "resource_id": 59,
+        "equipment_id": null,
+        "reason": "TEST \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0430 UTF8 metadata only; no physical pick"
+      },
+      "ack": {
+        "task_id": 1138,
+        "warehouse_id": 13583852,
+        "status": "IN_PROGRESS",
+        "assignment_version": 2,
+        "content_version": 2,
+        "assigned_to": "CRES15.OP",
+        "resource_id": 59,
+        "resource_session_id": 55,
+        "equipment_id": null,
+        "started_at_instant": "2026-10-15T13:31:51.198164+00:00",
+        "started_shift_time_zone": null,
+        "outcome": "APPLIED",
+        "request_sha256": "05A784E5F05532501BACBB7B6F4AB5D8A792EA5A03C6A8B34ACE717AF121186D",
+        "outcome_confirmed": true,
+        "may_create_corrected_operation": false,
+        "error_code": null,
+        "operation_id": "CRES15.HTTP.START.NOOP",
+        "action": "START",
+        "actor": "CRES15.OP",
+        "changed": false,
+        "stock_posted": false
+      }
+    }
+  ],
+  "after": {
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "assigned_to": "CRES15.OP",
+        "assigned_resource_id": 59,
+        "resource_session_id": 55,
+        "equipment_id": null,
+        "assignment_version": 2,
+        "content_version": 2,
+        "picked_qty": 0,
+        "started_at_instant": "2026-10-15 09:31:51.198164"
+      }
+    ],
+    "stock": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 12
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "events": [
+      {
+        "n": 2
+      }
+    ],
+    "receipts": [
+      {
+        "n": 5
+      }
+    ]
+  },
+  "metadata_transitions": 2,
+  "goods_stock_unchanged": true,
+  "role_versions": [
+    1,
+    2,
+    3
+  ],
+  "limitations": "No physical picker/scanner/hardware claim; WARE/SELF native paths proven, GROUP/NETWORK inherited scope engine not separately exercised here"
+}

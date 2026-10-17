@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "StoreScaleGatewayRequestV1",
+  "type": "object",
+  "required": [
+    "request_id",
+    "device_id",
+    "load_operation_id",
+    "store_address",
+    "expected_composition_signature",
+    "device_policy_version",
+    "calibration_ref",
+    "expires_at",
+    "state"
+  ],
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "device_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "load_operation_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "store_address": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "expected_composition_signature": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "calibration_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "device_policy_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "state": {
+      "const": "REQUESTED"
+    }
+  }
+}

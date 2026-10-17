@@ -1,7 +1,7 @@
 from typing import Protocol, Literal
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field, ConfigDict, model_validator
-from ...platform.public import AdminUser, require_permission
+from ...platform.public import AdminUser, require_permission, get_current_user
 from ..contracts_stock import StockPostingError
 
 
@@ -32,7 +32,7 @@ class FinishRequest(BaseModel):
 
 
 @router.get("/{wave_id}/execution")
-def preview(wave_id: int, user: AdminUser = Depends(require_permission("pick_wave_view")),
+def preview(wave_id: int, user: AdminUser = Depends(get_current_user),
             service: WaveExecutionPort = Depends(wave_execution_service)) -> dict:
     if wave_id < 1:
         raise HTTPException(422, "Positive wave ID required")

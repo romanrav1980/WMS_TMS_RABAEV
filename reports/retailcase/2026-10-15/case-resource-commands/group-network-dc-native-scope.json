@@ -1,0 +1,239 @@
+{
+  "status": "PASS",
+  "groups": 10,
+  "checks": [
+    {
+      "case": "original WARE and SELF revoked inside caller TX",
+      "allowed": false,
+      "native_scope": 0
+    },
+    {
+      "case": "CURRENT warehouse group actual CASE warehouse",
+      "allowed": true,
+      "native_scope": 1
+    },
+    {
+      "case": "CURRENT member removal immediately denies",
+      "allowed": false,
+      "native_scope": 0
+    },
+    {
+      "case": "inactive warehouse group denies",
+      "allowed": false,
+      "native_scope": 0
+    },
+    {
+      "case": "foreign warehouse group denies",
+      "allowed": false,
+      "native_scope": 0
+    },
+    {
+      "case": "NETWORK current grant allows actual warehouse",
+      "allowed": true,
+      "native_scope": 1
+    },
+    {
+      "case": "NETWORK revoke immediately denies",
+      "allowed": false,
+      "native_scope": 0
+    },
+    {
+      "case": "expired NETWORK grant denies",
+      "allowed": false,
+      "native_scope": 0
+    },
+    {
+      "case": "CURRENT DC group includes descendant actual warehouse",
+      "allowed": true,
+      "native_scope": 1
+    },
+    {
+      "case": "warehouse removed from DC branch immediately denies",
+      "allowed": false,
+      "native_scope": 0
+    }
+  ],
+  "owner_receipts_inside_rolledback_tx": [
+    {
+      "operation": "CRES15.SCOPE.1",
+      "kind": "REVOKE",
+      "result": {
+        "operation_id": "CRES15.SCOPE.1",
+        "command_type": "REVOKE",
+        "object_id": "CRES15.SELF",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.2",
+      "kind": "REVOKE",
+      "result": {
+        "operation_id": "CRES15.SCOPE.2",
+        "command_type": "REVOKE",
+        "object_id": "CRES15.WARE",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.3",
+      "kind": "GROUP_SAVE",
+      "result": {
+        "operation_id": "CRES15.SCOPE.3",
+        "command_type": "GROUP_SAVE",
+        "object_id": "CRES15.QA.WAREGROUP",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.4",
+      "kind": "ASSIGN",
+      "result": {
+        "operation_id": "CRES15.SCOPE.4",
+        "command_type": "ASSIGN",
+        "object_id": "CRES15.QA.GROUP.ASSIGN",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.5",
+      "kind": "GROUP_SAVE",
+      "result": {
+        "operation_id": "CRES15.SCOPE.5",
+        "command_type": "GROUP_SAVE",
+        "object_id": "CRES15.QA.WAREGROUP",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.6",
+      "kind": "GROUP_SAVE",
+      "result": {
+        "operation_id": "CRES15.SCOPE.6",
+        "command_type": "GROUP_SAVE",
+        "object_id": "CRES15.QA.WAREGROUP",
+        "version": 3,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.7",
+      "kind": "GROUP_SAVE",
+      "result": {
+        "operation_id": "CRES15.SCOPE.7",
+        "command_type": "GROUP_SAVE",
+        "object_id": "CRES15.QA.WAREGROUP",
+        "version": 4,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.8",
+      "kind": "ASSIGN",
+      "result": {
+        "operation_id": "CRES15.SCOPE.8",
+        "command_type": "ASSIGN",
+        "object_id": "CRES15.QA.NETWORK.ASSIGN",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.9",
+      "kind": "REVOKE",
+      "result": {
+        "operation_id": "CRES15.SCOPE.9",
+        "command_type": "REVOKE",
+        "object_id": "CRES15.QA.NETWORK.ASSIGN",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.10",
+      "kind": "ASSIGN",
+      "result": {
+        "operation_id": "CRES15.SCOPE.10",
+        "command_type": "ASSIGN",
+        "object_id": "CRES15.QA.EXPIRED.ASSIGN",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.11",
+      "kind": "OBJECT_SAVE",
+      "result": {
+        "operation_id": "CRES15.SCOPE.11",
+        "command_type": "OBJECT_SAVE",
+        "object_id": "CRES15.QA.DC",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.12",
+      "kind": "OBJECT_SAVE",
+      "result": {
+        "operation_id": "CRES15.SCOPE.12",
+        "command_type": "OBJECT_SAVE",
+        "object_id": "13583852",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.13",
+      "kind": "GROUP_SAVE",
+      "result": {
+        "operation_id": "CRES15.SCOPE.13",
+        "command_type": "GROUP_SAVE",
+        "object_id": "CRES15.QA.DCGROUP",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.14",
+      "kind": "ASSIGN",
+      "result": {
+        "operation_id": "CRES15.SCOPE.14",
+        "command_type": "ASSIGN",
+        "object_id": "CRES15.QA.DCGROUP.ASSIGN",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    {
+      "operation": "CRES15.SCOPE.15",
+      "kind": "OBJECT_SAVE",
+      "result": {
+        "operation_id": "CRES15.SCOPE.15",
+        "command_type": "OBJECT_SAVE",
+        "object_id": "13583852",
+        "version": 3,
+        "replayed": false
+      }
+    }
+  ],
+  "duration_seconds": 0.285,
+  "all_rollback": true,
+  "case_stock_events_receipts_exact": true,
+  "access_revision_assignments_objects_groups_members_command_audit_exact": true,
+  "original_warehouse_object": {
+    "kind": "WAREHOUSE",
+    "object_id": "13583852",
+    "title": "Own FULLPAL HU cdbf4c0962",
+    "parent_kind": null,
+    "parent_id": null,
+    "active": 1,
+    "version_no": 1
+  },
+  "quantity_commands": 0,
+  "metadata_commits": 0,
+  "limitations": "Pure-read CASE task_context/current scoped authorization only. No CLAIM/START/Stock command after dirty ACCESS transaction. Existing10 actual HTTP CLAIM/START cases remain WARE+SELF; GROUP/NETWORK/DC command execution/hardware not claimed."
+}

@@ -3,9 +3,9 @@ from datetime import date
 from decimal import Decimal
 """Lot-specific inventory observations; the Oracle command owns all stock writes."""
 from typing import Annotated, Any
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field
-from ...platform.public import AdminUser, require_permission
+from ...platform.public import AdminUser, get_current_user, require_permission
 from ..contracts_stock import StockPostingError
 
 from ..contracts_observations import (CountSubmission, InventoryObservationsPort, InventoryObservationError, inventory_observations_service)
@@ -39,16 +39,18 @@ class CountRequest(BaseModel):
     counts: list[CountLine] = Field(min_length=0, max_length=200)
 
 @router.get("/inventory/{revision_id}/lots")
-def inventory_lots(revision_id: int, cell: str, article: str | None = None, user: AdminUser = Depends(require_permission("stock_inventory_count")), service: InventoryObservationsPort = Depends(inventory_observations_service)) -> dict[str, Any]:
+def inventory_lots(revision_id: int, cell: str, article: str | None = None, inventory_task_id: Annotated[int | None, Query(gt=0)] = None, user: AdminUser = Depends(get_current_user), service: InventoryObservationsPort = Depends(inventory_observations_service)) -> dict[str, Any]:
     if revision_id < 1 or not cell or len(cell) > 60 or (article is not None and (not article or len(article)>160)):
         raise HTTPException(422, detail="Invalid revision or cell")
     try:
+        if inventory_task_id is not None:
+            return service.lots(revision_id,cell,article,user.username,task_id=inventory_task_id)
         return service.lots(revision_id,cell,article,user.username)
     except InventoryObservationError as exc:
         raise HTTPException(exc.status,detail={"code":exc.code}) from exc
 
 @router.post("/inventory/counts")
-def inventory_count(request: CountRequest, user: AdminUser = Depends(require_permission("stock_inventory_count")), service: InventoryObservationsPort = Depends(inventory_observations_service)) -> dict[str, Any]:
+def inventory_count(request: CountRequest, user: AdminUser = Depends(get_current_user), service: InventoryObservationsPort = Depends(inventory_observations_service)) -> dict[str, Any]:
     if not request.counts and request.inventory_task_id is None:
         raise HTTPException(422, detail={"code": "INVENTORY_COUNT_BATCH_REQUIRED"})
     counts = [line.model_dump(exclude={"scans"}) for line in request.counts]
@@ -69,7 +71,7 @@ def inventory_count(request: CountRequest, user: AdminUser = Depends(require_per
     except ValueError as exc:
         raise HTTPException(422, detail={"code": "COMMAND_INVALID", "message": str(exc)}) from exc
     except StockPostingError as exc:
-        status = 503 if exc.code in {"STOCK_RELEASE_NOT_ACTIVE", "REQUEST_DEADLINE", "LOCK_RETRY_EXHAUSTED", "CONNECTION_UNUSABLE", "RESULT_UNCERTAIN"} else 409
+        status = 403 if exc.oracle_code == 20882 else 503 if exc.code in {"STOCK_RELEASE_NOT_ACTIVE", "REQUEST_DEADLINE", "LOCK_RETRY_EXHAUSTED", "CONNECTION_UNUSABLE", "RESULT_UNCERTAIN"} else 409
         raise HTTPException(status, detail={"code": exc.code, "operation_id": exc.operation_id,
             "oracle_code": exc.oracle_code, "retry_same_operation_id": True,
             "outcome_confirmed": exc.code != "RESULT_UNCERTAIN"}) from exc

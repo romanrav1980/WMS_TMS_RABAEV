@@ -1,0 +1,66 @@
+{
+  "status": "PASS",
+  "checks": [
+    "native_applied_one_clock_actor_kind_source_utc_in_db_time_window",
+    "clock_direct_update_and_delete_rejected",
+    "caller_rollback_restores_operation_clock_and_physical_hard_version",
+    "original_committed_canonical_receipt_replayed_by_current_native_role",
+    "original_operation_changed_body_conflicts",
+    "current_revoke_denies_original_committed_replay",
+    "original_committed_replay_does_not_backfill_clock",
+    "temporary_metadata_absent_original_identity_restored_global_counts_unchanged"
+  ],
+  "before": {
+    "RRL_STOCK_OPERATION": 5021,
+    "RRL_STOCK_OP_CLOCK": 0
+  },
+  "after": {
+    "RRL_STOCK_OPERATION": 5021,
+    "RRL_STOCK_OP_CLOCK": 0
+  },
+  "checkpoint": {
+    "trigger_source_sha256": {
+      "RRL_STOCK_CLOCK_GUARD": "4ccd41b727932aeea9aa8a4a51127b0caf6fddcfc23046944c02a75a5c75c7e1",
+      "RRL_STOCK_APPLIED_CLOCK": "e958f6bd32b13fcf4face0c1c807be049cea8692f7a8e0da111745705f19bbbc"
+    },
+    "invalid_count": 0,
+    "migration_status": "APPLIED"
+  },
+  "checkpoint_after": {
+    "trigger_source_sha256": {
+      "RRL_STOCK_CLOCK_GUARD": "4ccd41b727932aeea9aa8a4a51127b0caf6fddcfc23046944c02a75a5c75c7e1",
+      "RRL_STOCK_APPLIED_CLOCK": "e958f6bd32b13fcf4face0c1c807be049cea8692f7a8e0da111745705f19bbbc"
+    },
+    "invalid_count": 0,
+    "migration_status": "APPLIED"
+  },
+  "elapsed_seconds": 1.396,
+  "trial_operation_id": "CLOCK.QA:3d295abf41f1494f8153440c0db7c0de",
+  "metadata_fixture_committed_temporarily": true,
+  "metadata_fixture_cleaned": true,
+  "native_access_audit_retained": true,
+  "stock_execute": "CALLER_ROLLBACK_ONLY",
+  "physical_hardware": false,
+  "slow_sql": [
+    {
+      "log_id": 4629,
+      "elapsed_ms": 267,
+      "sql_text": "Independent clock positive and append-only caller rollback"
+    },
+    {
+      "log_id": 4631,
+      "elapsed_ms": 81,
+      "sql_text": "Scoped task negative native rollback"
+    },
+    {
+      "log_id": 4630,
+      "elapsed_ms": 73,
+      "sql_text": "Exact committed original native-only replay rollback"
+    },
+    {
+      "log_id": 4632,
+      "elapsed_ms": 11,
+      "sql_text": "Revoked receiver cannot obtain old task receipt"
+    }
+  ]
+}

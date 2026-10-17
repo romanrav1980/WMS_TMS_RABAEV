@@ -1,0 +1,202 @@
+{
+  "status": "WORKING_DEV_CONTOUR_NOT_ALL_SPRINTS_COMPLETE",
+  "created_at_utc": "2026-10-16T17:48:11.040304+00:00",
+  "target": "2026-10-16T21:00:00+03:00",
+  "publication": "LOCAL_ONLY_NO_GITHUB_PUSH",
+  "entrypoints": {
+    "workspaces": "http://127.0.0.1:3000/?page=workspace",
+    "kpi": "http://127.0.0.1:3000/?page=workspace&workspace=kpi",
+    "store": "http://127.0.0.1:3010/store/",
+    "loading": "http://127.0.0.1:8088/wms-admin/transport-loading.html"
+  },
+  "completed": [
+    "C0118 navigation/help integration",
+    "Observed picker KPI API and UI with four registered-time rates and final full-line attribution",
+    "Frozen aware delivery window, actual arrival and confirmed-store fullness",
+    "Unknown unloading START durable resolution and fresh original/control race",
+    "Nested measured BOX manifest without double weight counting; fresh CASE1148 store25EA",
+    "Native HU plan/task/slot/repack/unpack scopes and REV/replay",
+    "Scoped manager CASE RETURN25EA with rollback/replay/REV",
+    "Scoped single physical LOAD25EA through departure and full store receipt",
+    "Loading status and finance three warehouse reads by WARE/GROUP/two RC",
+    "Financial composite all-warehouse preflight before any detail/summary; no partial monetary result",
+    "Raw loading role-only access, stale-context and manual-measurement clearing; durable retry preserved"
+  ],
+  "validation": {
+    "oracle_current_sources": 37,
+    "oracle_frozen_kits": 10,
+    "oracle_errors": 0,
+    "oracle_invalid": 0,
+    "focused_tests": 38,
+    "billing_export_tests": 7,
+    "quality_gate": "PASS",
+    "architecture_files": 1141,
+    "architecture_cycle_components": 0,
+    "architecture_debt_items": 72,
+    "tooling_tests": 24,
+    "admin_typescript": "PASS",
+    "terminal_typescript": "PASS",
+    "admin_production_build": "PASS",
+    "terminal_production_build": "PASS",
+    "encoding": "PASS",
+    "raw_javascript_syntax": "PASS",
+    "explicit_http_audit_pairs": 100,
+    "max_observed_http_ms": 730,
+    "performance_is_not_load_or_p95": true,
+    "mobile_viewport": "390x844",
+    "kpi_four_rates_bottom_px": 766
+  },
+  "build_notes": [
+    "Existing leaflet-draw default-export warning and large bundle warnings remain non-blocking; builds exited0."
+  ],
+  "evidence": [
+    {
+      "path": "reports/retailcase/2026-10-16/finish-gate/oracle-current.json",
+      "state": "PASS_CURRENT_SOURCE_CHAIN_FROZEN_ARTIFACTS_LEDGER_ERROR0_INVALID0",
+      "sha256": "a7e0c65c69e8ab76efb72b34502b850cc1bf7896c92490c7c1bae4bcf968ccbc"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/finish-gate/sql-review-final.json",
+      "state": "PASS_EXPLICIT_HTTP_PAIRS_FINAL_BOUNDED_SQL_REVIEW",
+      "sha256": "69488b444921c84d4e1c8ccdd3ccd6258d0c9e0e503bd42b95354e0ec12106e2"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/kpi-ui/report.json",
+      "state": "PASS_KPI_UI_FIXTURES",
+      "sha256": "9034f89be7fb32916124e276260bf1ae8c435691a2a7ab4eb8bb66468733e7af"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/kpi-ui-full/report.json",
+      "state": "PASS_REAL_FRONTEND_LOGIN_WORKSPACE_KPI",
+      "sha256": "922c5bc9e609a33c851d4c5981ff63e4c1fb9091ad32de7f89bac3135c0e4a7d"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/kpi-ui-live/report.json",
+      "state": "PASS_LIVE_KPI_UI_ADMIN",
+      "sha256": "80e760d4d069d4f2757588a11a70856965496ccd00edbacc803fecb9a29d6d0c"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/loading-scoped-read/ui/report.json",
+      "state": "PASS_WINDOW_AND_LOADING_SCOPE_CLEAR_UI_FIXTURES",
+      "sha256": "ce1e26687107866cdf14484d744687d6af1d1e035c4f604f2db12ddca58a4aef"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/loading-scoped-read/ui-live/report.json",
+      "state": "PASS_LIVE_ROLE_ONLY_LOADING_PAGE",
+      "sha256": "cc31ae418505df66d78e10d6d1bbd79546bd679cb4e54f35ca37c0a48f863992"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/finance-scoped-read/acceptance.json",
+      "state": "PASS_FINANCE_THREE_READS_WARE_GROUP_TWO_RC_REVOKE_RETIRED",
+      "sha256": "2a534b5f4f971092c8de30440e2a78933d651ecd76c8070a2d5b725ecf2251d1"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/finance-scoped-read/composite.json",
+      "state": "PASS_FINANCE_COMPOSITE_ALL_WARE_REVOKE_GROUP_INVOICE_COMPATIBILITY_RETIRED",
+      "sha256": "95ee4e70aebb70f35a909acf5883166fa88ef7607808a17b5d955aa3f7cfb9df"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/case-manager-scopes/return-acceptance.json",
+      "state": "PASS_CASE_RETURN_25EA_ROLLBACK_REV_WARE_GROUP_REPLAY_REVOKE_FOREIGN_RETIRED",
+      "sha256": "9f7828f0b77ee5e15c5be5b9057692827531daeb51395812652b0de82778a97e"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/case-manager-scopes/retirement/wave-cancel.json",
+      "state": "PASS_OWN_RETURNED_CASE_WAVE_CANCELLED_HISTORY_RETAINED",
+      "sha256": "0db9ee9d2b2deb7a485f2d6e09adef7189938189abb9ade7f4f28072e2b3d43b"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/case-manager-scopes/retirement/tare-release.json",
+      "state": "PASS_CANCELLED_CASE_EMPTY_TARE_HOLD_RELEASED_PHYSICAL2_HISTORY_RETAINED",
+      "sha256": "7eada883950e35d9ea57b1b89380592a80c10d1867900f086294b60e6a55b819"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/shipping-scopes/acceptance.json",
+      "state": "PASS_SCOPED_SINGLE_LOAD25EA_WARE_GROUP_REVOKE_ROLLBACK_REV_DEPART_STORE_FULL",
+      "sha256": "16afa86a96964fe31c7cd71044d2d33288174c0d1d94b726c3f17d6735567734"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/shipping-scopes/retirement/retirement.json",
+      "state": "PASS_SINGLE_LOAD_IDENTITIES_RETIRED_WAVE_DONE_HISTORY_RETAINED",
+      "sha256": "ac1a9596cb67d56105006c7156998be75c726d8495e5ad1b51a4fc914827a88c"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/hu-slot-scopes/http-matrix.json",
+      "state": "PASS_SLOT_HTTP_REPLAY_CONFLICT_FOREIGN_GROUP_REVOKE_ROLLBACK_REV",
+      "sha256": "00af674f51d846354fd15d4823f261dec5bbe72d2082e86e39ce1590c0e0511f"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/remaining-command-scopes/flow/http-matrix-v2.json",
+      "state": "PASS_NATIVE_HTTP_WARE_GROUP_PLAN_ASSIGN_START_COMPLETE_ROLLBACK_REV_REVOKE",
+      "sha256": "e7f7a5e074c4c066a0086fefb6fa07d20ef2bd3502fce95c86ffbce5f85d424f"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/route-subtree/ordinary-flow/store-race.json",
+      "state": "PASS_FRESH_NESTED25EA_STORE_NO_SECOND_CONSUMPTION_AND_CONCURRENT_START_CONTROL",
+      "sha256": "5d0c8bb307038a3f51e8f7187142354023e31a00e31e84b4ab13914dcf7b517e"
+    },
+    {
+      "path": "reports/retailcase/2026-10-16/delivery-time/ui/report.json",
+      "state": "PASS_ARRIVAL_UNLOADING_RECOVERY_UI_FIXTURES",
+      "sha256": "15c3b222935b71c43e0ea3476aaec057d4a706c2244afa0470c3adb770579e6c"
+    }
+  ],
+  "claude": {
+    "integrated": "C0118 RELEASE K-0070",
+    "cli": "One OAuth failure before model,0tokens/cost; no retry",
+    "kpi_implementation": "Codex",
+    "final_review": "C0120 READY_READ_ONLY_NO_ACK",
+    "prompt": "coordination/retailcase-claude/TASK_C0120_REVIEW.md"
+  },
+  "remaining": [
+    {
+      "id": "F1",
+      "owner": "Codex",
+      "items": [
+        "Manager CASE TRANSFER with physical resource/session handoff",
+        "Scoped whole HU_SHIP and DEPART",
+        "Complete driver SELF/delegation matrix",
+        "Remaining finance write/export scope matrix"
+      ]
+    },
+    {
+      "id": "F2",
+      "owner": "Codex inventory/delivery",
+      "items": [
+        "Native multi-store subtree handover, partial receipts and remaining custody"
+      ],
+      "contract": "wiki/concepts/retailcase_multi_store_handover_contract_20261016.md"
+    },
+    {
+      "id": "F3",
+      "owner": "Codex and business owner",
+      "items": [
+        "Certification of all WORK coverage",
+        "SHORT-completed line credit: user question pending; current V1 counts full planned quantity",
+        "Compensation and partial-box business rules"
+      ]
+    },
+    {
+      "id": "REVIEW",
+      "owner": "Existing Claude session",
+      "items": [
+        "C0120 review not received"
+      ]
+    },
+    {
+      "id": "PILOT",
+      "owner": "Operations and business owner",
+      "items": [
+        "Independent warehouse/store pilot, load and recovery acceptance",
+        "Selected electronic scale/hardware acceptance and controlled cutover"
+      ]
+    }
+  ],
+  "migration_note": "Original CASE return compile failure was preserved and repaired by a separate source-guarded completion. Current sources and both ledgers verified; do not rerun uncertain/frozen original DDL.",
+  "retirement": "Own fixture grants/users/devices/resources/sessions retired; waves580/582/586 DONE,584 CANCELLED; original stock/history retained. Returned CASE tare hold released, physical TEST tare not zeroed.",
+  "source_freeze": {
+    "path": "reports/retailcase/2026-10-16/finish-gate/source-freeze.json",
+    "sha256": "a8dd92540f85e97a261e9ae8c9fc9dc889b5bf3ab1b69a307a52d10bedf423bd",
+    "files": 32
+  }
+}

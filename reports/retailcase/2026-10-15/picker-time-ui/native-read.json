@@ -1,0 +1,34 @@
+{
+  "status": "PASS_REAL_READ_ONLY",
+  "checks": [
+    {
+      "width": 360,
+      "status": "PASS",
+      "current_stream": 8,
+      "closed": true,
+      "help_revision": 3,
+      "api_writes": 0,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "status": "PASS",
+      "current_stream": 8,
+      "closed": true,
+      "help_revision": 3,
+      "api_writes": 0,
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "status": "PASS",
+      "current_stream": 8,
+      "closed": true,
+      "help_revision": 3,
+      "api_writes": 0,
+      "errors": []
+    }
+  ],
+  "hardware": false,
+  "actual_api_mutations": 0
+}

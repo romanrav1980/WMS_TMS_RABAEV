@@ -1,0 +1,1844 @@
+{
+  "state": "PASS_EXPLICIT_HTTP_PAIRS_FINAL_BOUNDED_SQL_REVIEW",
+  "read_only": true,
+  "files": [
+    "finance-scoped-read/composite.json",
+    "loading-scoped-read/acceptance.json",
+    "finance-scoped-read/acceptance.json",
+    "case-manager-scopes/return-acceptance.json",
+    "shipping-scopes/acceptance.json",
+    "case-manager-scopes/retirement/wave-cancel.json",
+    "shipping-scopes/retirement/retirement.json"
+  ],
+  "expected": {
+    "70351": "7d6f15e2-1b5b-4f80-af94-95f5deef2ccd",
+    "70352": "1f2810e5-d039-48b8-b14c-5787c053c55d",
+    "70353": "c646af0b-f8bf-44d8-b14b-12cebcb55bf4",
+    "70354": "42704a88-f457-49b6-9383-b35038024ae3",
+    "70355": "f349c5be-7634-4a34-916c-181a6353d435",
+    "70356": "04890d46-3f7e-4f77-910e-70f60636c314",
+    "70357": "d538c700-4084-4901-a3b3-9b88afb3bcee",
+    "70358": "f8826b6b-11a7-498c-9f59-484fbb20f255",
+    "70359": "108730ac-e1b3-4ea5-b0ba-e74cd36b52b7",
+    "70360": "5729d966-9bd9-4bd1-9837-0620a1b875d9",
+    "70361": "feb5479f-7938-4c9f-9fe2-2e91939b9464",
+    "70362": "0b8815ee-3c52-487a-9a5e-da7ee0993541",
+    "70363": "7f943970-c033-4f63-82c7-7c68de2e383b",
+    "70364": "090ca91f-26c1-4f91-ada2-bc9b264670f3",
+    "70216": "e575c188-a515-408c-b8fc-26b9dac462f3",
+    "70217": "f81862c2-ec74-495f-a50f-e52f65b49407",
+    "70218": "a8edc911-b655-4f5e-8171-ae009ea104d7",
+    "70219": "63e999d2-d21c-4dd7-97ae-a2a23468ce89",
+    "70220": "04307365-7917-479a-b58d-87dfd87d0427",
+    "70221": "c82ad49f-7066-4e3a-af09-6a3da3b875bf",
+    "70222": "34712b52-a79c-49df-ae43-6b6eecfed33e",
+    "70223": "6d999a23-3897-466a-bb1d-241abc98ae9a",
+    "70224": "586a460c-927a-4a9c-aea0-b67e36be7174",
+    "70225": "79f4a733-3ed8-4ed0-b87d-f1c955f4839c",
+    "70226": "a5b4984f-9be2-4094-9b0f-9e3937ea9f73",
+    "70239": "e499240f-29b4-401c-934e-9299b8c6e320",
+    "70240": "74fd143f-57f0-4dad-b644-34bdec56c251",
+    "70241": "693c4675-3392-4997-8096-3a714defa1d9",
+    "70242": "7f3a11e0-7e25-42dc-ac9a-0436c5b03cda",
+    "70243": "eb66e591-228a-4e60-88ce-2c5d3b0ccba9",
+    "70244": "fcd34648-c7b3-4db1-8746-01fa111ebd82",
+    "70245": "8c6a85f7-cfea-4704-ac1d-415e68848f48",
+    "70246": "c2f37297-1734-461c-bff1-cb277fbbfcd2",
+    "70247": "8d716c4c-6978-4db8-83e0-e9334805a085",
+    "70248": "0d61fbb0-7349-49fd-92c5-4832b68202ef",
+    "70249": "d2349c78-43cf-40ee-b5bc-2fce594e189e",
+    "70250": "78766076-4c54-4d37-b736-9407eb4e7321",
+    "70251": "ca4d04fb-d5b4-427d-bd80-799bd69ce5ff",
+    "70252": "4499d309-80eb-4a79-ad12-7f0e01c5834c",
+    "70253": "eef5a52f-689e-43fc-9a9b-bc8181467aab",
+    "70254": "40e49c0b-d625-486d-b9e5-6a7e04dbfff0",
+    "70255": "f3f6adde-f8d9-4c54-b755-88c21f831316",
+    "70256": "0918016f-f6ff-4c1c-969c-cbbdf49e20bf",
+    "70257": "d5e6c06a-d35e-4cd0-bf62-897a011fce7d",
+    "70258": "3add76e4-72dc-458c-aa3b-3130d19adbca",
+    "70259": "67d0d335-f189-405e-870d-b9121c414742",
+    "70260": "53850975-4ce6-45b3-88e7-a0e27096fd6e",
+    "70261": "0dc32bc3-5b0e-46bc-b3bf-d424003ac19c",
+    "70262": "6a56d63b-f180-428f-bf4f-861cbcd45c04",
+    "70263": "d212de9c-9af0-458d-91af-15099ab57ff9",
+    "70264": "8eccb892-c2b0-4e5d-83a4-04881a185b13",
+    "70265": "b6303793-1c7f-4395-8fb7-c388f591c4b8",
+    "70266": "a20d6ac1-3077-4895-9b43-2f51a19fa9c8",
+    "70267": "ae549ca6-0cd4-4abe-ac4b-59e9cc64a837",
+    "70268": "b4ffc9ed-d55b-48bf-ad0a-a2b358920a31",
+    "70269": "d2a946a1-2f34-432b-b698-02ee2257e6fa",
+    "70270": "93237139-0fdb-4aa5-8a9f-1140bedea0e7",
+    "70271": "5b3a6806-b0de-4a0f-829b-86b9b260325c",
+    "70227": "9d33524d-0d79-4371-ad41-ecd854e7ad7e",
+    "70228": "fb55b2ec-9688-4be5-a99f-8b322fd8c3f0",
+    "70229": "911a86cf-05d9-47ee-9461-bb7ad608ef85",
+    "70230": "8646f884-5aae-4fd9-bfac-08de1222e960",
+    "70231": "3f54d062-3459-47de-9923-7c06c07c1918",
+    "70232": "20af94fd-0bc9-47b3-b919-12084b1cdd2a",
+    "70233": "2cfb49ec-db7f-4a34-b7cc-be1ec28559a0",
+    "70234": "08e5b4fe-a57a-45bd-b4c6-701b1bfbf9a7",
+    "70235": "e0efa027-eb93-45e4-b99c-c7a814daa476",
+    "70236": "d09af4c3-4ed2-4d17-a5b5-d3dc557aa717",
+    "70295": "8dfc45a1-a890-42f2-b825-0a96a3044747",
+    "70296": "ba6def4c-6223-44a3-bd18-587eb882f3a0",
+    "70297": "88cd5f20-96aa-4520-a036-b92ea391ef12",
+    "70298": "7eddf27e-1773-47b9-ae5b-42024629d8ef",
+    "70299": "9c6ad97d-c13c-4ea7-839b-b091de7f150d",
+    "70300": "4296f8bb-ce58-4c9d-ba74-cf6d52784681",
+    "70301": "541dc84d-a502-4950-ae5f-2c2ecd1de49c",
+    "70302": "4e514ea2-1aec-4115-bb6a-76ee16f2a720",
+    "70303": "d6c2d532-f5bb-4884-8585-c2b23f7c2a6b",
+    "70304": "bc150058-0689-45c0-8cfb-11a7daab83c9",
+    "70305": "93474a47-c2ec-4f5a-89e6-74864ee0fe10",
+    "70306": "cb070f48-8bc4-496d-ab94-f486e3f98664",
+    "70307": "2718ce6d-4240-42c2-8838-40963cab8dd0",
+    "70308": "08360a93-a60e-4f1a-8213-c9ebcfd18f02",
+    "70309": "60c84aa2-5975-4a90-9834-777f5b79247f",
+    "70310": "ec7a4208-17fb-425b-814b-ebe6f841777d",
+    "70311": "ce5674d1-474b-4643-837b-d52eeaedb385",
+    "70312": "662b9bb8-e8fe-4c32-964d-81e303999500",
+    "70313": "a0c9afdf-c612-4758-a68a-d71cb01724c6",
+    "70314": "dd37d082-d743-470b-b16b-db4bd79a6ea7",
+    "70315": "b6805629-17ca-4071-884c-04d00a3d0338",
+    "70316": "d48af551-0a26-4c83-929c-f437f1a7d3b6",
+    "70317": "32eb31ff-006c-4641-9dbe-c97d2930783b",
+    "70318": "b6f1206c-8639-42de-94e9-fc4429ac08bd",
+    "70319": "3130ac07-4ea2-4e91-b25c-ea4dd2656ac8",
+    "70320": "305121eb-a81f-4dfd-acfd-a24eacd6dfbb",
+    "70321": "2bd5b9cb-3e5b-469f-8d3d-b9934df2952e",
+    "70322": "cf585273-7c42-4899-abdc-ece59ba39d53",
+    "70323": "9838c275-b444-4bcd-bc81-903078644119",
+    "70324": "9e0effce-4fa1-4bd5-aa0d-76d62bb59208",
+    "70238": "762228c3-2ecf-474a-a0c5-c6f81cb0bf71",
+    "70325": "96b7da89-ce52-471e-b4d4-ff4920f328d4"
+  },
+  "local_pairs": [
+    {
+      "api_call_id": 70351,
+      "request_id": "7d6f15e2-1b5b-4f80-af94-95f5deef2ccd",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "duration_ms": 244
+    },
+    {
+      "api_call_id": 70352,
+      "request_id": "1f2810e5-d039-48b8-b14c-5787c053c55d",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "duration_ms": 84
+    },
+    {
+      "api_call_id": 70353,
+      "request_id": "c646af0b-f8bf-44d8-b14b-12cebcb55bf4",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "duration_ms": 95
+    },
+    {
+      "api_call_id": 70354,
+      "request_id": "42704a88-f457-49b6-9383-b35038024ae3",
+      "path": "/api/finance/logistics-costs/trips/33641",
+      "duration_ms": 72
+    },
+    {
+      "api_call_id": 70355,
+      "request_id": "f349c5be-7634-4a34-916c-181a6353d435",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 70356,
+      "request_id": "04890d46-3f7e-4f77-910e-70f60636c314",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "duration_ms": 77
+    },
+    {
+      "api_call_id": 70357,
+      "request_id": "d538c700-4084-4901-a3b3-9b88afb3bcee",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "duration_ms": 112
+    },
+    {
+      "api_call_id": 70358,
+      "request_id": "f8826b6b-11a7-498c-9f59-484fbb20f255",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 70359,
+      "request_id": "108730ac-e1b3-4ea5-b0ba-e74cd36b52b7",
+      "path": "/api/finance/logistics-costs/billing-orders/1",
+      "duration_ms": 94
+    },
+    {
+      "api_call_id": 70360,
+      "request_id": "5729d966-9bd9-4bd1-9837-0620a1b875d9",
+      "path": "/api/finance/logistics-costs/billing-orders/1",
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 70361,
+      "request_id": "feb5479f-7938-4c9f-9fe2-2e91939b9464",
+      "path": "/api/finance/logistics-costs/billing-orders/1/summary",
+      "duration_ms": 44
+    },
+    {
+      "api_call_id": 70362,
+      "request_id": "0b8815ee-3c52-487a-9a5e-da7ee0993541",
+      "path": "/api/finance/logistics-costs/billing-orders/1/summary",
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70363,
+      "request_id": "7f943970-c033-4f63-82c7-7c68de2e383b",
+      "path": "/api/finance/logistics-costs/billing-orders/1/transport-costs",
+      "duration_ms": 92
+    },
+    {
+      "api_call_id": 70364,
+      "request_id": "090ca91f-26c1-4f91-ada2-bc9b264670f3",
+      "path": "/api/finance/logistics-costs/billing-orders/1/transport-costs",
+      "duration_ms": 78
+    },
+    {
+      "api_call_id": 70216,
+      "request_id": "e575c188-a515-408c-b8fc-26b9dac462f3",
+      "path": "/api/transport/loading/33653/status",
+      "duration_ms": 256
+    },
+    {
+      "api_call_id": 70217,
+      "request_id": "f81862c2-ec74-495f-a50f-e52f65b49407",
+      "path": "/api/transport/loading/33653/status",
+      "duration_ms": 245
+    },
+    {
+      "api_call_id": 70218,
+      "request_id": "a8edc911-b655-4f5e-8171-ae009ea104d7",
+      "path": "/api/transport/loading/33654/status",
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70219,
+      "request_id": "63e999d2-d21c-4dd7-97ae-a2a23468ce89",
+      "path": "/api/transport/loading/33653/status",
+      "duration_ms": 61
+    },
+    {
+      "api_call_id": 70220,
+      "request_id": "04307365-7917-479a-b58d-87dfd87d0427",
+      "path": "/api/transport/loading/33653/status",
+      "duration_ms": 67
+    },
+    {
+      "api_call_id": 70221,
+      "request_id": "c82ad49f-7066-4e3a-af09-6a3da3b875bf",
+      "path": "/api/transport/loading/33654/status",
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 70222,
+      "request_id": "34712b52-a79c-49df-ae43-6b6eecfed33e",
+      "path": "/api/transport/loading/33653/status",
+      "duration_ms": 64
+    },
+    {
+      "api_call_id": 70223,
+      "request_id": "6d999a23-3897-466a-bb1d-241abc98ae9a",
+      "path": "/api/transport/loading/33654/status",
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 70224,
+      "request_id": "586a460c-927a-4a9c-aea0-b67e36be7174",
+      "path": "/api/transport/loading/33653/status",
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 70225,
+      "request_id": "79f4a733-3ed8-4ed0-b87d-f1c955f4839c",
+      "path": "/api/transport/loading/33654/status",
+      "duration_ms": 92
+    },
+    {
+      "api_call_id": 70226,
+      "request_id": "a5b4984f-9be2-4094-9b0f-9e3937ea9f73",
+      "path": "/api/transport/loading/33654/status",
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70239,
+      "request_id": "e499240f-29b4-401c-934e-9299b8c6e320",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "duration_ms": 204
+    },
+    {
+      "api_call_id": 70240,
+      "request_id": "74fd143f-57f0-4dad-b644-34bdec56c251",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history",
+      "duration_ms": 55
+    },
+    {
+      "api_call_id": 70241,
+      "request_id": "693c4675-3392-4997-8096-3a714defa1d9",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "duration_ms": 52
+    },
+    {
+      "api_call_id": 70242,
+      "request_id": "7f3a11e0-7e25-42dc-ac9a-0436c5b03cda",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "duration_ms": 81
+    },
+    {
+      "api_call_id": 70243,
+      "request_id": "eb66e591-228a-4e60-88ce-2c5d3b0ccba9",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history",
+      "duration_ms": 65
+    },
+    {
+      "api_call_id": 70244,
+      "request_id": "fcd34648-c7b3-4db1-8746-01fa111ebd82",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "duration_ms": 97
+    },
+    {
+      "api_call_id": 70245,
+      "request_id": "8c6a85f7-cfea-4704-ac1d-415e68848f48",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70246,
+      "request_id": "c2f37297-1734-461c-bff1-cb277fbbfcd2",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history",
+      "duration_ms": 69
+    },
+    {
+      "api_call_id": 70247,
+      "request_id": "8d716c4c-6978-4db8-83e0-e9334805a085",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 70248,
+      "request_id": "0d61fbb0-7349-49fd-92c5-4832b68202ef",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 70249,
+      "request_id": "d2349c78-43cf-40ee-b5bc-2fce594e189e",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history",
+      "duration_ms": 49
+    },
+    {
+      "api_call_id": 70250,
+      "request_id": "78766076-4c54-4d37-b736-9407eb4e7321",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70251,
+      "request_id": "ca4d04fb-d5b4-427d-bd80-799bd69ce5ff",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "duration_ms": 47
+    },
+    {
+      "api_call_id": 70252,
+      "request_id": "4499d309-80eb-4a79-ad12-7f0e01c5834c",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history",
+      "duration_ms": 48
+    },
+    {
+      "api_call_id": 70253,
+      "request_id": "eef5a52f-689e-43fc-9a9b-bc8181467aab",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "duration_ms": 45
+    },
+    {
+      "api_call_id": 70254,
+      "request_id": "40e49c0b-d625-486d-b9e5-6a7e04dbfff0",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "duration_ms": 63
+    },
+    {
+      "api_call_id": 70255,
+      "request_id": "f3f6adde-f8d9-4c54-b755-88c21f831316",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history",
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70256,
+      "request_id": "0918016f-f6ff-4c1c-969c-cbbdf49e20bf",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70257,
+      "request_id": "d5e6c06a-d35e-4cd0-bf62-897a011fce7d",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "duration_ms": 53
+    },
+    {
+      "api_call_id": 70258,
+      "request_id": "3add76e4-72dc-458c-aa3b-3130d19adbca",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history",
+      "duration_ms": 50
+    },
+    {
+      "api_call_id": 70259,
+      "request_id": "67d0d335-f189-405e-870d-b9121c414742",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 70260,
+      "request_id": "53850975-4ce6-45b3-88e7-a0e27096fd6e",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "duration_ms": 44
+    },
+    {
+      "api_call_id": 70261,
+      "request_id": "0dc32bc3-5b0e-46bc-b3bf-d424003ac19c",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history",
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 70262,
+      "request_id": "6a56d63b-f180-428f-bf4f-861cbcd45c04",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "duration_ms": 45
+    },
+    {
+      "api_call_id": 70263,
+      "request_id": "d212de9c-9af0-458d-91af-15099ab57ff9",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "duration_ms": 48
+    },
+    {
+      "api_call_id": 70264,
+      "request_id": "8eccb892-c2b0-4e5d-83a4-04881a185b13",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history",
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 70265,
+      "request_id": "b6303793-1c7f-4395-8fb7-c388f591c4b8",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "duration_ms": 50
+    },
+    {
+      "api_call_id": 70266,
+      "request_id": "a20d6ac1-3077-4895-9b43-2f51a19fa9c8",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "duration_ms": 48
+    },
+    {
+      "api_call_id": 70267,
+      "request_id": "ae549ca6-0cd4-4abe-ac4b-59e9cc64a837",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history",
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 70268,
+      "request_id": "b4ffc9ed-d55b-48bf-ad0a-a2b358920a31",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "duration_ms": 66
+    },
+    {
+      "api_call_id": 70269,
+      "request_id": "d2a946a1-2f34-432b-b698-02ee2257e6fa",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "duration_ms": 91
+    },
+    {
+      "api_call_id": 70270,
+      "request_id": "93237139-0fdb-4aa5-8a9f-1140bedea0e7",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history",
+      "duration_ms": 90
+    },
+    {
+      "api_call_id": 70271,
+      "request_id": "5b3a6806-b0de-4a0f-829b-86b9b260325c",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "duration_ms": 67
+    },
+    {
+      "api_call_id": 70227,
+      "request_id": "9d33524d-0d79-4371-ad41-ecd854e7ad7e",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "duration_ms": 231
+    },
+    {
+      "api_call_id": 70228,
+      "request_id": "fb55b2ec-9688-4be5-a99f-8b322fd8c3f0",
+      "path": "/api/case-pick/tasks/1148/return-carrier",
+      "duration_ms": 80
+    },
+    {
+      "api_call_id": 70229,
+      "request_id": "911a86cf-05d9-47ee-9461-bb7ad608ef85",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "duration_ms": 55
+    },
+    {
+      "api_call_id": 70230,
+      "request_id": "8646f884-5aae-4fd9-bfac-08de1222e960",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "duration_ms": 285
+    },
+    {
+      "api_call_id": 70231,
+      "request_id": "3f54d062-3459-47de-9923-7c06c07c1918",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "duration_ms": 90
+    },
+    {
+      "api_call_id": 70232,
+      "request_id": "20af94fd-0bc9-47b3-b919-12084b1cdd2a",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 70233,
+      "request_id": "2cfb49ec-db7f-4a34-b7cc-be1ec28559a0",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 70234,
+      "request_id": "08e5b4fe-a57a-45bd-b4c6-701b1bfbf9a7",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "duration_ms": 101
+    },
+    {
+      "api_call_id": 70235,
+      "request_id": "e0efa027-eb93-45e4-b99c-c7a814daa476",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "duration_ms": 55
+    },
+    {
+      "api_call_id": 70236,
+      "request_id": "d09af4c3-4ed2-4d17-a5b5-d3dc557aa717",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "duration_ms": 109
+    },
+    {
+      "api_call_id": 70295,
+      "request_id": "8dfc45a1-a890-42f2-b825-0a96a3044747",
+      "path": "/api/sku-quality-weight/20854558/AS16AD0A1E6CE56",
+      "duration_ms": 200
+    },
+    {
+      "api_call_id": 70296,
+      "request_id": "ba6def4c-6223-44a3-bd18-587eb882f3a0",
+      "path": "/api/outgoing-quality/OC16.9f34aa2614.SHIP.ST",
+      "duration_ms": 730
+    },
+    {
+      "api_call_id": 70297,
+      "request_id": "88cd5f20-96aa-4520-a036-b92ea391ef12",
+      "path": "/api/outgoing-quality/OC16.9f34aa2614.SHIP.ST/weight",
+      "duration_ms": 326
+    },
+    {
+      "api_call_id": 70298,
+      "request_id": "7eddf27e-1773-47b9-ae5b-42024629d8ef",
+      "path": "/api/transport/loading/single-preview",
+      "duration_ms": 368
+    },
+    {
+      "api_call_id": 70299,
+      "request_id": "9c6ad97d-c13c-4ea7-839b-b091de7f150d",
+      "path": "/api/transport/loading/single-preview",
+      "duration_ms": 229
+    },
+    {
+      "api_call_id": 70300,
+      "request_id": "4296f8bb-ce58-4c9d-ba74-cf6d52784681",
+      "path": "/api/transport/loading/single-preview",
+      "duration_ms": 81
+    },
+    {
+      "api_call_id": 70301,
+      "request_id": "541dc84d-a502-4950-ae5f-2c2ecd1de49c",
+      "path": "/api/transport/loading/confirm-single",
+      "duration_ms": 568
+    },
+    {
+      "api_call_id": 70302,
+      "request_id": "4e514ea2-1aec-4115-bb6a-76ee16f2a720",
+      "path": "/api/transport/loading/confirm-single",
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 70303,
+      "request_id": "d6c2d532-f5bb-4884-8585-c2b23f7c2a6b",
+      "path": "/api/transport/loading/confirm-single",
+      "duration_ms": 75
+    },
+    {
+      "api_call_id": 70304,
+      "request_id": "bc150058-0689-45c0-8cfb-11a7daab83c9",
+      "path": "/api/transport/loading/confirm-single",
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 70305,
+      "request_id": "93474a47-c2ec-4f5a-89e6-74864ee0fe10",
+      "path": "/api/transport/loading/confirm-single",
+      "duration_ms": 81
+    },
+    {
+      "api_call_id": 70306,
+      "request_id": "cb070f48-8bc4-496d-ab94-f486e3f98664",
+      "path": "/api/transport/loading/confirm-single",
+      "duration_ms": 50
+    },
+    {
+      "api_call_id": 70307,
+      "request_id": "2718ce6d-4240-42c2-8838-40963cab8dd0",
+      "path": "/api/transport/loading/confirm-single",
+      "duration_ms": 117
+    },
+    {
+      "api_call_id": 70308,
+      "request_id": "08360a93-a60e-4f1a-8213-c9ebcfd18f02",
+      "path": "/api/delivery/timing/window",
+      "duration_ms": 180
+    },
+    {
+      "api_call_id": 70309,
+      "request_id": "60c84aa2-5975-4a90-9834-777f5b79247f",
+      "path": "/api/delivery/timing/window",
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70310,
+      "request_id": "ec7a4208-17fb-425b-814b-ebe6f841777d",
+      "path": "/api/delivery/timing/window",
+      "duration_ms": 66
+    },
+    {
+      "api_call_id": 70311,
+      "request_id": "ce5674d1-474b-4643-837b-d52eeaedb385",
+      "path": "/api/delivery/timing/window",
+      "duration_ms": 83
+    },
+    {
+      "api_call_id": 70312,
+      "request_id": "662b9bb8-e8fe-4c32-964d-81e303999500",
+      "path": "/api/transport/loading/33655/depart",
+      "duration_ms": 266
+    },
+    {
+      "api_call_id": 70313,
+      "request_id": "a0c9afdf-c612-4758-a68a-d71cb01724c6",
+      "path": "/api/delivery/timing/window",
+      "duration_ms": 127
+    },
+    {
+      "api_call_id": 70314,
+      "request_id": "dd37d082-d743-470b-b16b-db4bd79a6ea7",
+      "path": "/api/delivery/timing/arrival",
+      "duration_ms": 184
+    },
+    {
+      "api_call_id": 70315,
+      "request_id": "b6805629-17ca-4071-884c-04d00a3d0338",
+      "path": "/api/delivery/timing/arrival",
+      "duration_ms": 75
+    },
+    {
+      "api_call_id": 70316,
+      "request_id": "d48af551-0a26-4c83-929c-f437f1a7d3b6",
+      "path": "/api/delivery/timing/arrival",
+      "duration_ms": 71
+    },
+    {
+      "api_call_id": 70317,
+      "request_id": "32eb31ff-006c-4641-9dbe-c97d2930783b",
+      "path": "/api/delivery/timing/arrival",
+      "duration_ms": 106
+    },
+    {
+      "api_call_id": 70318,
+      "request_id": "b6f1206c-8639-42de-94e9-fc4429ac08bd",
+      "path": "/api/delivery/store-receipts/policy",
+      "duration_ms": 93
+    },
+    {
+      "api_call_id": 70319,
+      "request_id": "3130ac07-4ea2-4e91-b25c-ea4dd2656ac8",
+      "path": "/api/delivery/store-receipts/preview",
+      "duration_ms": 136
+    },
+    {
+      "api_call_id": 70320,
+      "request_id": "305121eb-a81f-4dfd-acfd-a24eacd6dfbb",
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "duration_ms": 164
+    },
+    {
+      "api_call_id": 70321,
+      "request_id": "2bd5b9cb-3e5b-469f-8d3d-b9934df2952e",
+      "path": "/api/delivery/store-receipts/confirm",
+      "duration_ms": 379
+    },
+    {
+      "api_call_id": 70322,
+      "request_id": "cf585273-7c42-4899-abdc-ece59ba39d53",
+      "path": "/api/delivery/store-receipts/confirm",
+      "duration_ms": 76
+    },
+    {
+      "api_call_id": 70323,
+      "request_id": "9838c275-b444-4bcd-bc81-903078644119",
+      "path": "/api/delivery/timing/kpis",
+      "duration_ms": 45
+    },
+    {
+      "api_call_id": 70324,
+      "request_id": "9e0effce-4fa1-4bd5-aa0d-76d62bb59208",
+      "path": "/api/delivery/timing/kpis",
+      "duration_ms": 65
+    },
+    {
+      "api_call_id": 70238,
+      "request_id": "762228c3-2ecf-474a-a0c5-c6f81cb0bf71",
+      "path": "/api/picking/waves/584/cancel",
+      "duration_ms": 367
+    },
+    {
+      "api_call_id": 70325,
+      "request_id": "96b7da89-ce52-471e-b4d4-ff4920f328d4",
+      "path": "/api/picking/waves/586/finish-execution",
+      "duration_ms": 195
+    }
+  ],
+  "native_direct_calls_not_http_paired": true,
+  "api": [
+    {
+      "api_call_id": 70216,
+      "request_id": "e575c188-a515-408c-b8fc-26b9dac462f3",
+      "path": "/api/transport/loading/33653/status",
+      "response_status": 403,
+      "duration_ms": 256
+    },
+    {
+      "api_call_id": 70217,
+      "request_id": "f81862c2-ec74-495f-a50f-e52f65b49407",
+      "path": "/api/transport/loading/33653/status",
+      "response_status": 200,
+      "duration_ms": 245
+    },
+    {
+      "api_call_id": 70218,
+      "request_id": "a8edc911-b655-4f5e-8171-ae009ea104d7",
+      "path": "/api/transport/loading/33654/status",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70219,
+      "request_id": "63e999d2-d21c-4dd7-97ae-a2a23468ce89",
+      "path": "/api/transport/loading/33653/status",
+      "response_status": 403,
+      "duration_ms": 61
+    },
+    {
+      "api_call_id": 70220,
+      "request_id": "04307365-7917-479a-b58d-87dfd87d0427",
+      "path": "/api/transport/loading/33653/status",
+      "response_status": 200,
+      "duration_ms": 67
+    },
+    {
+      "api_call_id": 70221,
+      "request_id": "c82ad49f-7066-4e3a-af09-6a3da3b875bf",
+      "path": "/api/transport/loading/33654/status",
+      "response_status": 403,
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 70222,
+      "request_id": "34712b52-a79c-49df-ae43-6b6eecfed33e",
+      "path": "/api/transport/loading/33653/status",
+      "response_status": 200,
+      "duration_ms": 64
+    },
+    {
+      "api_call_id": 70223,
+      "request_id": "6d999a23-3897-466a-bb1d-241abc98ae9a",
+      "path": "/api/transport/loading/33654/status",
+      "response_status": 200,
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 70224,
+      "request_id": "586a460c-927a-4a9c-aea0-b67e36be7174",
+      "path": "/api/transport/loading/33653/status",
+      "response_status": 403,
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 70225,
+      "request_id": "79f4a733-3ed8-4ed0-b87d-f1c955f4839c",
+      "path": "/api/transport/loading/33654/status",
+      "response_status": 200,
+      "duration_ms": 92
+    },
+    {
+      "api_call_id": 70226,
+      "request_id": "a5b4984f-9be2-4094-9b0f-9e3937ea9f73",
+      "path": "/api/transport/loading/33654/status",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70227,
+      "request_id": "9d33524d-0d79-4371-ad41-ecd854e7ad7e",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "response_status": 403,
+      "duration_ms": 231
+    },
+    {
+      "api_call_id": 70228,
+      "request_id": "fb55b2ec-9688-4be5-a99f-8b322fd8c3f0",
+      "path": "/api/case-pick/tasks/1148/return-carrier",
+      "response_status": 403,
+      "duration_ms": 80
+    },
+    {
+      "api_call_id": 70229,
+      "request_id": "911a86cf-05d9-47ee-9461-bb7ad608ef85",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "response_status": 403,
+      "duration_ms": 55
+    },
+    {
+      "api_call_id": 70230,
+      "request_id": "8646f884-5aae-4fd9-bfac-08de1222e960",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "response_status": 200,
+      "duration_ms": 285
+    },
+    {
+      "api_call_id": 70231,
+      "request_id": "3f54d062-3459-47de-9923-7c06c07c1918",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "response_status": 200,
+      "duration_ms": 90
+    },
+    {
+      "api_call_id": 70232,
+      "request_id": "20af94fd-0bc9-47b3-b919-12084b1cdd2a",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "response_status": 409,
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 70233,
+      "request_id": "2cfb49ec-db7f-4a34-b7cc-be1ec28559a0",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "response_status": 403,
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 70234,
+      "request_id": "08e5b4fe-a57a-45bd-b4c6-701b1bfbf9a7",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "response_status": 200,
+      "duration_ms": 101
+    },
+    {
+      "api_call_id": 70235,
+      "request_id": "e0efa027-eb93-45e4-b99c-c7a814daa476",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "response_status": 403,
+      "duration_ms": 55
+    },
+    {
+      "api_call_id": 70236,
+      "request_id": "d09af4c3-4ed2-4d17-a5b5-d3dc557aa717",
+      "path": "/api/case-pick/tasks/1149/return-carrier",
+      "response_status": 200,
+      "duration_ms": 109
+    },
+    {
+      "api_call_id": 70238,
+      "request_id": "762228c3-2ecf-474a-a0c5-c6f81cb0bf71",
+      "path": "/api/picking/waves/584/cancel",
+      "response_status": 200,
+      "duration_ms": 367
+    },
+    {
+      "api_call_id": 70239,
+      "request_id": "e499240f-29b4-401c-934e-9299b8c6e320",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "response_status": 403,
+      "duration_ms": 204
+    },
+    {
+      "api_call_id": 70240,
+      "request_id": "74fd143f-57f0-4dad-b644-34bdec56c251",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history",
+      "response_status": 403,
+      "duration_ms": 55
+    },
+    {
+      "api_call_id": 70241,
+      "request_id": "693c4675-3392-4997-8096-3a714defa1d9",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "response_status": 403,
+      "duration_ms": 52
+    },
+    {
+      "api_call_id": 70242,
+      "request_id": "7f3a11e0-7e25-42dc-ac9a-0436c5b03cda",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "response_status": 200,
+      "duration_ms": 81
+    },
+    {
+      "api_call_id": 70243,
+      "request_id": "eb66e591-228a-4e60-88ce-2c5d3b0ccba9",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history",
+      "response_status": 200,
+      "duration_ms": 65
+    },
+    {
+      "api_call_id": 70244,
+      "request_id": "fcd34648-c7b3-4db1-8746-01fa111ebd82",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "response_status": 200,
+      "duration_ms": 97
+    },
+    {
+      "api_call_id": 70245,
+      "request_id": "8c6a85f7-cfea-4704-ac1d-415e68848f48",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70246,
+      "request_id": "c2f37297-1734-461c-bff1-cb277fbbfcd2",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history",
+      "response_status": 403,
+      "duration_ms": 69
+    },
+    {
+      "api_call_id": 70247,
+      "request_id": "8d716c4c-6978-4db8-83e0-e9334805a085",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "response_status": 403,
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 70248,
+      "request_id": "0d61fbb0-7349-49fd-92c5-4832b68202ef",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "response_status": 403,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 70249,
+      "request_id": "d2349c78-43cf-40ee-b5bc-2fce594e189e",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history",
+      "response_status": 403,
+      "duration_ms": 49
+    },
+    {
+      "api_call_id": 70250,
+      "request_id": "78766076-4c54-4d37-b736-9407eb4e7321",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70251,
+      "request_id": "ca4d04fb-d5b4-427d-bd80-799bd69ce5ff",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "response_status": 200,
+      "duration_ms": 47
+    },
+    {
+      "api_call_id": 70252,
+      "request_id": "4499d309-80eb-4a79-ad12-7f0e01c5834c",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history",
+      "response_status": 200,
+      "duration_ms": 48
+    },
+    {
+      "api_call_id": 70253,
+      "request_id": "eef5a52f-689e-43fc-9a9b-bc8181467aab",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "response_status": 200,
+      "duration_ms": 45
+    },
+    {
+      "api_call_id": 70254,
+      "request_id": "40e49c0b-d625-486d-b9e5-6a7e04dbfff0",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "response_status": 403,
+      "duration_ms": 63
+    },
+    {
+      "api_call_id": 70255,
+      "request_id": "f3f6adde-f8d9-4c54-b755-88c21f831316",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70256,
+      "request_id": "0918016f-f6ff-4c1c-969c-cbbdf49e20bf",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70257,
+      "request_id": "d5e6c06a-d35e-4cd0-bf62-897a011fce7d",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "response_status": 200,
+      "duration_ms": 53
+    },
+    {
+      "api_call_id": 70258,
+      "request_id": "3add76e4-72dc-458c-aa3b-3130d19adbca",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history",
+      "response_status": 200,
+      "duration_ms": 50
+    },
+    {
+      "api_call_id": 70259,
+      "request_id": "67d0d335-f189-405e-870d-b9121c414742",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "response_status": 200,
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 70260,
+      "request_id": "53850975-4ce6-45b3-88e7-a0e27096fd6e",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "response_status": 200,
+      "duration_ms": 44
+    },
+    {
+      "api_call_id": 70261,
+      "request_id": "0dc32bc3-5b0e-46bc-b3bf-d424003ac19c",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history",
+      "response_status": 200,
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 70262,
+      "request_id": "6a56d63b-f180-428f-bf4f-861cbcd45c04",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "response_status": 200,
+      "duration_ms": 45
+    },
+    {
+      "api_call_id": 70263,
+      "request_id": "d212de9c-9af0-458d-91af-15099ab57ff9",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "response_status": 403,
+      "duration_ms": 48
+    },
+    {
+      "api_call_id": 70264,
+      "request_id": "8eccb892-c2b0-4e5d-83a4-04881a185b13",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history",
+      "response_status": 403,
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 70265,
+      "request_id": "b6303793-1c7f-4395-8fb7-c388f591c4b8",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "response_status": 403,
+      "duration_ms": 50
+    },
+    {
+      "api_call_id": 70266,
+      "request_id": "a20d6ac1-3077-4895-9b43-2f51a19fa9c8",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "response_status": 200,
+      "duration_ms": 48
+    },
+    {
+      "api_call_id": 70267,
+      "request_id": "ae549ca6-0cd4-4abe-ac4b-59e9cc64a837",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history",
+      "response_status": 200,
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 70268,
+      "request_id": "b4ffc9ed-d55b-48bf-ad0a-a2b358920a31",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "response_status": 200,
+      "duration_ms": 66
+    },
+    {
+      "api_call_id": 70269,
+      "request_id": "d2a946a1-2f34-432b-b698-02ee2257e6fa",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "response_status": 403,
+      "duration_ms": 91
+    },
+    {
+      "api_call_id": 70270,
+      "request_id": "93237139-0fdb-4aa5-8a9f-1140bedea0e7",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history",
+      "response_status": 403,
+      "duration_ms": 90
+    },
+    {
+      "api_call_id": 70271,
+      "request_id": "5b3a6806-b0de-4a0f-829b-86b9b260325c",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "response_status": 403,
+      "duration_ms": 67
+    },
+    {
+      "api_call_id": 70295,
+      "request_id": "8dfc45a1-a890-42f2-b825-0a96a3044747",
+      "path": "/api/sku-quality-weight/20854558/AS16AD0A1E6CE56",
+      "response_status": 200,
+      "duration_ms": 200
+    },
+    {
+      "api_call_id": 70296,
+      "request_id": "ba6def4c-6223-44a3-bd18-587eb882f3a0",
+      "path": "/api/outgoing-quality/OC16.9f34aa2614.SHIP.ST",
+      "response_status": 200,
+      "duration_ms": 730
+    },
+    {
+      "api_call_id": 70297,
+      "request_id": "88cd5f20-96aa-4520-a036-b92ea391ef12",
+      "path": "/api/outgoing-quality/OC16.9f34aa2614.SHIP.ST/weight",
+      "response_status": 200,
+      "duration_ms": 326
+    },
+    {
+      "api_call_id": 70298,
+      "request_id": "7eddf27e-1773-47b9-ae5b-42024629d8ef",
+      "path": "/api/transport/loading/single-preview",
+      "response_status": 403,
+      "duration_ms": 368
+    },
+    {
+      "api_call_id": 70299,
+      "request_id": "9c6ad97d-c13c-4ea7-839b-b091de7f150d",
+      "path": "/api/transport/loading/single-preview",
+      "response_status": 200,
+      "duration_ms": 229
+    },
+    {
+      "api_call_id": 70300,
+      "request_id": "4296f8bb-ce58-4c9d-ba74-cf6d52784681",
+      "path": "/api/transport/loading/single-preview",
+      "response_status": 403,
+      "duration_ms": 81
+    },
+    {
+      "api_call_id": 70301,
+      "request_id": "541dc84d-a502-4950-ae5f-2c2ecd1de49c",
+      "path": "/api/transport/loading/confirm-single",
+      "response_status": 200,
+      "duration_ms": 568
+    },
+    {
+      "api_call_id": 70302,
+      "request_id": "4e514ea2-1aec-4115-bb6a-76ee16f2a720",
+      "path": "/api/transport/loading/confirm-single",
+      "response_status": 200,
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 70303,
+      "request_id": "d6c2d532-f5bb-4884-8585-c2b23f7c2a6b",
+      "path": "/api/transport/loading/confirm-single",
+      "response_status": 409,
+      "duration_ms": 75
+    },
+    {
+      "api_call_id": 70304,
+      "request_id": "bc150058-0689-45c0-8cfb-11a7daab83c9",
+      "path": "/api/transport/loading/confirm-single",
+      "response_status": 403,
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 70305,
+      "request_id": "93474a47-c2ec-4f5a-89e6-74864ee0fe10",
+      "path": "/api/transport/loading/confirm-single",
+      "response_status": 200,
+      "duration_ms": 81
+    },
+    {
+      "api_call_id": 70306,
+      "request_id": "cb070f48-8bc4-496d-ab94-f486e3f98664",
+      "path": "/api/transport/loading/confirm-single",
+      "response_status": 403,
+      "duration_ms": 50
+    },
+    {
+      "api_call_id": 70307,
+      "request_id": "2718ce6d-4240-42c2-8838-40963cab8dd0",
+      "path": "/api/transport/loading/confirm-single",
+      "response_status": 200,
+      "duration_ms": 117
+    },
+    {
+      "api_call_id": 70308,
+      "request_id": "08360a93-a60e-4f1a-8213-c9ebcfd18f02",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 180
+    },
+    {
+      "api_call_id": 70309,
+      "request_id": "60c84aa2-5975-4a90-9834-777f5b79247f",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70310,
+      "request_id": "ec7a4208-17fb-425b-814b-ebe6f841777d",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 66
+    },
+    {
+      "api_call_id": 70311,
+      "request_id": "ce5674d1-474b-4643-837b-d52eeaedb385",
+      "path": "/api/delivery/timing/window",
+      "response_status": 403,
+      "duration_ms": 83
+    },
+    {
+      "api_call_id": 70312,
+      "request_id": "662b9bb8-e8fe-4c32-964d-81e303999500",
+      "path": "/api/transport/loading/33655/depart",
+      "response_status": 200,
+      "duration_ms": 266
+    },
+    {
+      "api_call_id": 70313,
+      "request_id": "a0c9afdf-c612-4758-a68a-d71cb01724c6",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 127
+    },
+    {
+      "api_call_id": 70314,
+      "request_id": "dd37d082-d743-470b-b16b-db4bd79a6ea7",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 184
+    },
+    {
+      "api_call_id": 70315,
+      "request_id": "b6805629-17ca-4071-884c-04d00a3d0338",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 75
+    },
+    {
+      "api_call_id": 70316,
+      "request_id": "d48af551-0a26-4c83-929c-f437f1a7d3b6",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 409,
+      "duration_ms": 71
+    },
+    {
+      "api_call_id": 70317,
+      "request_id": "32eb31ff-006c-4641-9dbe-c97d2930783b",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 403,
+      "duration_ms": 106
+    },
+    {
+      "api_call_id": 70318,
+      "request_id": "b6f1206c-8639-42de-94e9-fc4429ac08bd",
+      "path": "/api/delivery/store-receipts/policy",
+      "response_status": 200,
+      "duration_ms": 93
+    },
+    {
+      "api_call_id": 70319,
+      "request_id": "3130ac07-4ea2-4e91-b25c-ea4dd2656ac8",
+      "path": "/api/delivery/store-receipts/preview",
+      "response_status": 200,
+      "duration_ms": 136
+    },
+    {
+      "api_call_id": 70320,
+      "request_id": "305121eb-a81f-4dfd-acfd-a24eacd6dfbb",
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "response_status": 200,
+      "duration_ms": 164
+    },
+    {
+      "api_call_id": 70321,
+      "request_id": "2bd5b9cb-3e5b-469f-8d3d-b9934df2952e",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 379
+    },
+    {
+      "api_call_id": 70322,
+      "request_id": "cf585273-7c42-4899-abdc-ece59ba39d53",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 76
+    },
+    {
+      "api_call_id": 70323,
+      "request_id": "9838c275-b444-4bcd-bc81-903078644119",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 200,
+      "duration_ms": 45
+    },
+    {
+      "api_call_id": 70324,
+      "request_id": "9e0effce-4fa1-4bd5-aa0d-76d62bb59208",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 403,
+      "duration_ms": 65
+    },
+    {
+      "api_call_id": 70325,
+      "request_id": "96b7da89-ce52-471e-b4d4-ff4920f328d4",
+      "path": "/api/picking/waves/586/finish-execution",
+      "response_status": 200,
+      "duration_ms": 195
+    },
+    {
+      "api_call_id": 70351,
+      "request_id": "7d6f15e2-1b5b-4f80-af94-95f5deef2ccd",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "response_status": 403,
+      "duration_ms": 244
+    },
+    {
+      "api_call_id": 70352,
+      "request_id": "1f2810e5-d039-48b8-b14c-5787c053c55d",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "response_status": 403,
+      "duration_ms": 84
+    },
+    {
+      "api_call_id": 70353,
+      "request_id": "c646af0b-f8bf-44d8-b14b-12cebcb55bf4",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "response_status": 200,
+      "duration_ms": 95
+    },
+    {
+      "api_call_id": 70354,
+      "request_id": "42704a88-f457-49b6-9383-b35038024ae3",
+      "path": "/api/finance/logistics-costs/trips/33641",
+      "response_status": 403,
+      "duration_ms": 72
+    },
+    {
+      "api_call_id": 70355,
+      "request_id": "f349c5be-7634-4a34-916c-181a6353d435",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "response_status": 403,
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 70356,
+      "request_id": "04890d46-3f7e-4f77-910e-70f60636c314",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "response_status": 200,
+      "duration_ms": 77
+    },
+    {
+      "api_call_id": 70357,
+      "request_id": "d538c700-4084-4901-a3b3-9b88afb3bcee",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "response_status": 403,
+      "duration_ms": 112
+    },
+    {
+      "api_call_id": 70358,
+      "request_id": "f8826b6b-11a7-498c-9f59-484fbb20f255",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "response_status": 200,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 70359,
+      "request_id": "108730ac-e1b3-4ea5-b0ba-e74cd36b52b7",
+      "path": "/api/finance/logistics-costs/billing-orders/1",
+      "response_status": 200,
+      "duration_ms": 94
+    },
+    {
+      "api_call_id": 70360,
+      "request_id": "5729d966-9bd9-4bd1-9837-0620a1b875d9",
+      "path": "/api/finance/logistics-costs/billing-orders/1",
+      "response_status": 403,
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 70361,
+      "request_id": "feb5479f-7938-4c9f-9fe2-2e91939b9464",
+      "path": "/api/finance/logistics-costs/billing-orders/1/summary",
+      "response_status": 200,
+      "duration_ms": 44
+    },
+    {
+      "api_call_id": 70362,
+      "request_id": "0b8815ee-3c52-487a-9a5e-da7ee0993541",
+      "path": "/api/finance/logistics-costs/billing-orders/1/summary",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70363,
+      "request_id": "7f943970-c033-4f63-82c7-7c68de2e383b",
+      "path": "/api/finance/logistics-costs/billing-orders/1/transport-costs",
+      "response_status": 200,
+      "duration_ms": 92
+    },
+    {
+      "api_call_id": 70364,
+      "request_id": "090ca91f-26c1-4f91-ada2-bc9b264670f3",
+      "path": "/api/finance/logistics-costs/billing-orders/1/transport-costs",
+      "response_status": 403,
+      "duration_ms": 78
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 5041,
+      "api_call_id": 70216,
+      "elapsed_ms": 59,
+      "module": "WMS_API:70216",
+      "action": "GET /api/transport/loading/33653",
+      "sql_sample": "Current physical trip loading READ ONLY snapshot"
+    },
+    {
+      "log_id": 5042,
+      "api_call_id": 70218,
+      "elapsed_ms": 13,
+      "module": "WMS_API:70218",
+      "action": "GET /api/transport/loading/33654",
+      "sql_sample": "Current physical trip loading READ ONLY snapshot"
+    },
+    {
+      "log_id": 5043,
+      "api_call_id": 70219,
+      "elapsed_ms": 9,
+      "module": "WMS_API:70219",
+      "action": "GET /api/transport/loading/33653",
+      "sql_sample": "Current physical trip loading READ ONLY snapshot"
+    },
+    {
+      "log_id": 5044,
+      "api_call_id": 70221,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70221",
+      "action": "GET /api/transport/loading/33654",
+      "sql_sample": "Current physical trip loading READ ONLY snapshot"
+    },
+    {
+      "log_id": 5045,
+      "api_call_id": 70224,
+      "elapsed_ms": 13,
+      "module": "WMS_API:70224",
+      "action": "GET /api/transport/loading/33653",
+      "sql_sample": "Current physical trip loading READ ONLY snapshot"
+    },
+    {
+      "log_id": 5046,
+      "api_call_id": 70226,
+      "elapsed_ms": 9,
+      "module": "WMS_API:70226",
+      "action": "GET /api/transport/loading/33654",
+      "sql_sample": "Current physical trip loading READ ONLY snapshot"
+    },
+    {
+      "log_id": 5050,
+      "api_call_id": 70239,
+      "elapsed_ms": 10,
+      "module": "WMS_API:70239",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Read current warehouse cost rate"
+    },
+    {
+      "log_id": 5051,
+      "api_call_id": 70240,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70240",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Current warehouse immutable norm history"
+    },
+    {
+      "log_id": 5052,
+      "api_call_id": 70241,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70241",
+      "action": "GET /api/finance/logistics-expen",
+      "sql_sample": "Read own warehouse expenses"
+    },
+    {
+      "log_id": 5053,
+      "api_call_id": 70245,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70245",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Read current warehouse cost rate"
+    },
+    {
+      "log_id": 5054,
+      "api_call_id": 70246,
+      "elapsed_ms": 13,
+      "module": "WMS_API:70246",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Current warehouse immutable norm history"
+    },
+    {
+      "log_id": 5055,
+      "api_call_id": 70247,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70247",
+      "action": "GET /api/finance/logistics-expen",
+      "sql_sample": "Read own warehouse expenses"
+    },
+    {
+      "log_id": 5056,
+      "api_call_id": 70248,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70248",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Read current warehouse cost rate"
+    },
+    {
+      "log_id": 5057,
+      "api_call_id": 70249,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70249",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Current warehouse immutable norm history"
+    },
+    {
+      "log_id": 5058,
+      "api_call_id": 70250,
+      "elapsed_ms": 6,
+      "module": "WMS_API:70250",
+      "action": "GET /api/finance/logistics-expen",
+      "sql_sample": "Read own warehouse expenses"
+    },
+    {
+      "log_id": 5059,
+      "api_call_id": 70254,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70254",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Read current warehouse cost rate"
+    },
+    {
+      "log_id": 5060,
+      "api_call_id": 70255,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70255",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Current warehouse immutable norm history"
+    },
+    {
+      "log_id": 5061,
+      "api_call_id": 70256,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70256",
+      "action": "GET /api/finance/logistics-expen",
+      "sql_sample": "Read own warehouse expenses"
+    },
+    {
+      "log_id": 5062,
+      "api_call_id": 70263,
+      "elapsed_ms": 6,
+      "module": "WMS_API:70263",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Read current warehouse cost rate"
+    },
+    {
+      "log_id": 5063,
+      "api_call_id": 70264,
+      "elapsed_ms": 20,
+      "module": "WMS_API:70264",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Current warehouse immutable norm history"
+    },
+    {
+      "log_id": 5064,
+      "api_call_id": 70265,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70265",
+      "action": "GET /api/finance/logistics-expen",
+      "sql_sample": "Read own warehouse expenses"
+    },
+    {
+      "log_id": 5065,
+      "api_call_id": 70269,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70269",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Read current warehouse cost rate"
+    },
+    {
+      "log_id": 5066,
+      "api_call_id": 70270,
+      "elapsed_ms": 17,
+      "module": "WMS_API:70270",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Current warehouse immutable norm history"
+    },
+    {
+      "log_id": 5067,
+      "api_call_id": 70271,
+      "elapsed_ms": 10,
+      "module": "WMS_API:70271",
+      "action": "GET /api/finance/logistics-expen",
+      "sql_sample": "Read own warehouse expenses"
+    },
+    {
+      "log_id": 5068,
+      "api_call_id": 70296,
+      "elapsed_ms": 679,
+      "module": "WMS_API:70296",
+      "action": "GET /api/outgoing-quality/OC16.9",
+      "sql_sample": "Current warehouse QC status access"
+    },
+    {
+      "log_id": 5069,
+      "api_call_id": 70298,
+      "elapsed_ms": 39,
+      "module": "WMS_API:70298",
+      "action": "GET /api/transport/loading/singl",
+      "sql_sample": "Current warehouse standalone loading preview"
+    },
+    {
+      "log_id": 5070,
+      "api_call_id": 70300,
+      "elapsed_ms": 31,
+      "module": "WMS_API:70300",
+      "action": "GET /api/transport/loading/singl",
+      "sql_sample": "Current warehouse standalone loading preview"
+    },
+    {
+      "log_id": 5071,
+      "api_call_id": 70310,
+      "elapsed_ms": 26,
+      "module": "WMS_API:70310",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5072,
+      "api_call_id": 70311,
+      "elapsed_ms": 33,
+      "module": "WMS_API:70311",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5073,
+      "api_call_id": 70313,
+      "elapsed_ms": 39,
+      "module": "WMS_API:70313",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5074,
+      "api_call_id": 70316,
+      "elapsed_ms": 20,
+      "module": "WMS_API:70316",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5075,
+      "api_call_id": 70317,
+      "elapsed_ms": 53,
+      "module": "WMS_API:70317",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5076,
+      "api_call_id": 70324,
+      "elapsed_ms": 14,
+      "module": "WMS_API:70324",
+      "action": "GET /api/delivery/timing/kpis",
+      "sql_sample": "Scoped delivery KPI window cohort"
+    },
+    {
+      "log_id": 5078,
+      "api_call_id": 70351,
+      "elapsed_ms": 45,
+      "module": "WMS_API:70351",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "All warehouse cost detail READ ONLY"
+    },
+    {
+      "log_id": 5079,
+      "api_call_id": 70352,
+      "elapsed_ms": 36,
+      "module": "WMS_API:70352",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "All warehouse cost detail READ ONLY"
+    },
+    {
+      "log_id": 5080,
+      "api_call_id": 70354,
+      "elapsed_ms": 14,
+      "module": "WMS_API:70354",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "All warehouse cost detail READ ONLY"
+    },
+    {
+      "log_id": 5081,
+      "api_call_id": 70355,
+      "elapsed_ms": 12,
+      "module": "WMS_API:70355",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "All warehouse cost detail READ ONLY"
+    },
+    {
+      "log_id": 5082,
+      "api_call_id": 70357,
+      "elapsed_ms": 37,
+      "module": "WMS_API:70357",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "All warehouse cost detail READ ONLY"
+    },
+    {
+      "log_id": 5083,
+      "api_call_id": 70360,
+      "elapsed_ms": 11,
+      "module": "WMS_API:70360",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "All warehouse cost detail READ ONLY"
+    },
+    {
+      "log_id": 5084,
+      "api_call_id": 70362,
+      "elapsed_ms": 12,
+      "module": "WMS_API:70362",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "All warehouse cost detail READ ONLY"
+    },
+    {
+      "log_id": 5085,
+      "api_call_id": 70364,
+      "elapsed_ms": 18,
+      "module": "WMS_API:70364",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Read invoice transport costs in current visible warehouse scope"
+    }
+  ],
+  "top_sql": [
+    {
+      "sql_id": "admdtyprqxjhm",
+      "executions": 269,
+      "avg_ms": 100.018,
+      "avg_buffers": 1368.92,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.execute_prepared(:result); end;"
+    },
+    {
+      "sql_id": "d2cxjsmp7whsx",
+      "executions": 3,
+      "avg_ms": 122.701,
+      "avg_buffers": 817,
+      "sql_sample": "with latest_window as(         select w.*,row_number()over(partition by LOAD_OPERATION_ID,STORE_ADDR order by VERSION_NO desc) RN from RRL_DELIVERY_WINDOW w where WARE_ID=:warehouse),         selected_keys as(         select LOAD_OPERATION_ID,STORE_ADDR from latest_window where RN=1 and WINDOW_START>=to_timestamp_tz(:start_at,'YYYY-MM-DD\"T\"HH24:MI:SS.FF6TZH:TZM')and WINDOW_START<to_timestamp_tz(:finish_at,'YYYY-MM-DD\"T\"HH24:MI:SS.FF6TZH:TZM')         union select s.LOAD_OPERATION_ID,s.STORE_ADDR from RRL_STORE_RECEIPT_FACT s join RRL_TT_HU_LOAD_FACT f on f.LOAD_OPERATION_ID=s.LOAD_OPERATION_ID         where f.WARE_ID=:warehouse and s.RECEIVED_AT>=to_timestamp_tz(:start_at,'YYYY-MM-DD\"T\"HH24:"
+    },
+    {
+      "sql_id": "g0xwzbtxgsfv1",
+      "executions": 12,
+      "avg_ms": 22.998,
+      "avg_buffers": 55.17,
+      "sql_sample": "SELECT SR.RESERVATION_ID,SR.SOURCE_LINE_ID,SR.SOURCE_DOC_TYPE,SR.SOURCE_DOC_ID,SR.RESERVATION_VERSION,SR.BASE_QTY,SR.BASE_UOM,RR.UID_POLETA,RR.CELL,RR.REMAIN FROM RRL_STOCK_RESERVATION SR JOIN RRL_REMAINS RR ON RR.UID_POLETA=SR.UID_PALLET AND RR.CELL=SR.CELL JOIN RRL_PALLETS PP ON PP.UID_PALLET=SR.UID_PALLET JOIN RRL_CELLS CC ON CC.CELL=SR.CELL LEFT JOIN RRL_PROD_BATCH_READY_V BR ON BR.PROD_BATCH_ID=PP.PROD_BATCH_ID WHERE SR.CUSTOMER_ORDER_ID=:B8 AND SR.ARTICUL=:B7 AND SR.RESERVATION_KIND='HARD' AND SR.RESERVATION_DOMAIN='PICKING' AND SR.STATUS IN('ACTIVE','ALLOCATED','PICKING') AND SR.BASE_QTY>0 AND SR.BASE_UOM=:B6 AND CC.WARE_ID=:B5 AND (:B4 IS NULL OR (SR.UID_PALLET=:B4 AND SR.SOURCE_LINE"
+    },
+    {
+      "sql_id": "6pjd6mhpv0ppf",
+      "executions": 2,
+      "avg_ms": 42.072,
+      "avg_buffers": 1716.5,
+      "sql_sample": "INSERT INTO RRL_TT_HU_LOAD_FACT(LOAD_OPERATION_ID,TT_ID,ROOT_UID,VEHICLE_ID,VEHICLE_NUMBER,DOCK,WARE_ID,STATUS,GROSS_WEIGHT_KG,BOUNDING_VOLUME_M3,CONTENT_VERSION,COMPOSITION_JSON,LOADED_BY,ROOT_CASE_TASK_ID) VALUES(:B13 ,:B12 ,:B11 ,:B10 ,:B9 ,:B8 ,:B7 ,'LOADED',:B6 ,:B5 ,:B4 ,:B3 ,:B2 ,:B1 )"
+    },
+    {
+      "sql_id": "19afp9hrn852n",
+      "executions": 6,
+      "avg_ms": 10.865,
+      "avg_buffers": 774.17,
+      "sql_sample": "select WARE_ID from (         select s.WARE_ID from RRL_SBORKA_PALLETS s join RRL_TRANSPORT_TASK t on t.ID=s.TRANSTASK_ID where t.PAY_ORDER_ID=:id         union select l.WARE_ID from RRL_TT_HU_LOAD_FACT l join RRL_TRANSPORT_TASK t on t.ID=l.TT_ID where t.PAY_ORDER_ID=:id         union select r.WARE_ID from RRL_LOGISTICS_COST_RUN r join RRL_TRANSPORT_TASK t on t.ID=r.TT_ID where t.PAY_ORDER_ID=:id) fetch first 201 rows only"
+    },
+    {
+      "sql_id": "60pnuw4g8tg32",
+      "executions": 85,
+      "avg_ms": 0.675,
+      "avg_buffers": 17.04,
+      "sql_sample": "SELECT HU_LINK_ID,PARENT_UID,LEVEL DEPTH,CONNECT_BY_ISCYCLE CYCLIC FROM RRL_WMS_HU_LINK START WITH ACTIVE_FLAG=1 AND (CHILD_PALLET_UID=:B1 OR CHILD_CASE_TASK_ID IN (SELECT CASE_PICK_TASK_ID FROM RRL_CASE_CARRIER_LOT WHERE LOT_UID=:B1 )) CONNECT BY NOCYCLE PRIOR PARENT_UID=CHILD_PALLET_UID AND ACTIVE_FLAG=1"
+    },
+    {
+      "sql_id": "9nsd2jjq1h9v1",
+      "executions": 13,
+      "avg_ms": 4.182,
+      "avg_buffers": 69.23,
+      "sql_sample": "SELECT ID FROM RRL_SBORKA_PALLETS WHERE NVL(CONDITION,0)<2 AND ID IN( SELECT LEGACY_SBORKA_PALLET_ID FROM RRL_CASE_PICK_TASK WHERE CASE_PICK_TASK_ID IN( SELECT CASE_PICK_TASK_ID FROM RRL_CASE_CARRIER_LOT WHERE LOT_UID IN(SELECT U FROM JSON_TABLE(:B1 ,'$[*]' COLUMNS(U VARCHAR2(200) PATH '$')))) UNION SELECT LEGACY_SBORKA_PALLET_ID FROM RRL_CUSTOMER_ORDER_FULFILLMENT WHERE PICKED_PALLET_UID IN(SELECT U FROM JSON_TABLE(:B1 ,'$[*]' COLUMNS(U VARCHAR2(200) PATH '$')))) ORDER BY ID"
+    },
+    {
+      "sql_id": "abq43xmsct2th",
+      "executions": 2,
+      "avg_ms": 25.153,
+      "avg_buffers": 135.5,
+      "sql_sample": "SELECT SR.RESERVATION_ID,SR.UID_PALLET,SR.CELL,SR.BASE_QTY,SR.BASE_UOM,S.REMAIN,S.STOCK_VERSION,P.EXPIRY_DATE FROM RRL_STOCK_RESERVATION SR JOIN RRL_REMAINS S ON S.UID_POLETA=SR.UID_PALLET AND S.CELL=SR.CELL JOIN RRL_PALLETS P ON P.UID_PALLET=SR.UID_PALLET WHERE SR.SOURCE_DOC_TYPE='PICK_WAVE' AND SR.SOURCE_DOC_ID=:B7 AND SR.SOURCE_LINE_ID=:B6 AND SR.CUSTOMER_ORDER_ID=:B5 AND SR.RESERVATION_KIND='HARD' AND SR.STATUS IN('ACTIVE','ALLOCATED','PICKING') AND SR.CELL=:B4 AND P.ARTICUL=:B1 AND NOT EXISTS(SELECT 1 FROM RRL_CASE_CARRIER_LOT H WHERE H.LOT_UID=SR.UID_PALLET) AND RRL_STOCK_ELIGIBILITY.REASON(SR.UID_PALLET,SR.CELL,:B3 ,LEAST(:B2 ,SR.BASE_QTY),NULL,NULL,'PICK',SR.RESERVATION_ID,:B1 ) IS N"
+    },
+    {
+      "sql_id": "68sg3tgk30ayk",
+      "executions": 3,
+      "avg_ms": 12.187,
+      "avg_buffers": 214,
+      "sql_sample": "select r.OPERATION_ID,l.TT_ID,l.WARE_ID,c.LOAD_OPERATION_ID,c.COST_CODE,c.CURRENCY,         c.QUANTITY,to_char(c.RATE_VALUE,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') RATE_VALUE,to_char(c.AMOUNT,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') AMOUNT,c.VERSION_NO,c.BASIS,h.COMPONENTS_JSON COMPONENTS,         to_char(c.RATE_DATE,'YYYY-MM-DD') RATE_DATE,c.PERIOD_MODE,c.PERIOD_TIME_ZONE,c.PERIOD_POLICY_VERSION         from RRL_LOGISTICS_COST_RUN r join RRL_LOGISTICS_COST_LINE c on c.OPERATION_ID=r.OPERATION_ID         join RRL_LOGISTICS_RATE_HISTORY h on h.RATE_KEY=c.RATE_KEY and h.VERSION_NO=c.VERSION_NO         join RRL_TT_HU_LOAD_FACT l on l.LOAD_OPERATION_ID=c.LOAD_OPERATION_ID join RRL_TRANSPORT_TASK t "
+    },
+    {
+      "sql_id": "2tx1yyfvks9xb",
+      "executions": 10,
+      "avg_ms": 2.411,
+      "avg_buffers": 3.5,
+      "sql_sample": "SELECT WARE_ID,TT_ID,STATUS FROM RRL_TT_HU_LOAD_FACT WHERE LOAD_OPERATION_ID=:B1 "
+    },
+    {
+      "sql_id": "52brxa9vfgap6",
+      "executions": 13,
+      "avg_ms": 1.703,
+      "avg_buffers": 22.62,
+      "sql_sample": "SELECT CASE_PICK_TASK_ID,STATUS FROM RRL_CASE_PICK_TASK WHERE STATUS IN('WAIT_CONTROL','CONTROL_IN_PROGRESS','CONTROLLED','READY_TO_SHIP') AND CASE_PICK_TASK_ID IN( SELECT CASE_PICK_TASK_ID FROM RRL_CASE_CARRIER_LOT WHERE LOT_UID IN(SELECT U FROM JSON_TABLE(:B1 ,'$[*]' COLUMNS(U VARCHAR2(200) PATH '$')))) ORDER BY CASE_PICK_TASK_ID"
+    },
+    {
+      "sql_id": "3u3sgjj3kn0wg",
+      "executions": 8,
+      "avg_ms": 2.731,
+      "avg_buffers": 36.75,
+      "sql_sample": "select WARE_ID from (         select s.WARE_ID from RRL_SBORKA_PALLETS s join RRL_TRANSPORT_TASK t on t.ID=s.TRANSTASK_ID where t.ID=:id         union select l.WARE_ID from RRL_TT_HU_LOAD_FACT l join RRL_TRANSPORT_TASK t on t.ID=l.TT_ID where t.ID=:id         union select r.WARE_ID from RRL_LOGISTICS_COST_RUN r join RRL_TRANSPORT_TASK t on t.ID=r.TT_ID where t.ID=:id) fetch first 201 rows only"
+    }
+  ],
+  "invalid": 0,
+  "max_http_ms": 730,
+  "decisions": [
+    "Transport owner keeps current all-warehouse admission before rich loading reads and200row bounds; inspect union/access predicate plan and buffers at multi-RC pilot volume before indexing.",
+    "Inventory owner keeps current Root REV and source/config/physical locks. Profile load prepare/execute and QC admission at pilot volume; no lock weakening or speculative cache/index from small TEST data.",
+    "Finance owner keeps warehouse predicates and100expense/100history/50rate bounds; admission and expense rows share one READ ONLY snapshot. Inspect expense correction subquery and join plans at pilot volume.",
+    "Cumulative shared V$SQL averages are not per-case p95. Direct native rollback/concurrency calls have no invented HTTP pairing."
+  ]
+}

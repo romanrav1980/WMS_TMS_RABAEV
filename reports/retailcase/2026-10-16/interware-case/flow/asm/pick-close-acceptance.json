@@ -1,0 +1,153 @@
+{
+  "state": "PASS_NATIVE_SCOPED_ASM_PICK_CLOSE_REPLAY",
+  "hardware_verified": false,
+  "body": {
+    "contract_version": 2,
+    "command_type": "CASE_PICK_CONFIRM",
+    "lines": [],
+    "units": [],
+    "operation_id": "AS16.ce9c011b16.PICK",
+    "actor": "AS16Oce9c011b16",
+    "source": {
+      "case_task_id": 1145,
+      "case_line_id": 1147
+    },
+    "metadata": {
+      "fact_qty": "1",
+      "scan_cell": "AS16Cce9c011b16",
+      "scan_product": "AS16ACE9C011B16",
+      "scan_container": "090000000000014015",
+      "offline_event_id": null,
+      "assembly_step_id": "AS16.ce9c011b16.STEP",
+      "assembly_consent_id": "AS16.ce9c011b16.STEP",
+      "automation_origin": "ASSEMBLY_GATEWAY_AUTO",
+      "automation_sender": "AS16Gce9c011b16"
+    }
+  },
+  "checks": [],
+  "before": {
+    "stock": [
+      {
+        "uid_poleta": "AS16.LOT:ce9c011b16",
+        "cell": "AS16Cce9c011b16",
+        "remain": 1,
+        "hard_reserved_base": 1,
+        "stock_version": 2
+      }
+    ],
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "content_version": 2,
+        "picked_qty": 0
+      }
+    ],
+    "step": [
+      {
+        "state": "READY"
+      }
+    ],
+    "uses": [
+      {
+        "n": 0
+      }
+    ]
+  },
+  "pick": {
+    "operation_id": "AS16.ce9c011b16.PICK",
+    "case_pick_task_id": 1145,
+    "case_pick_line_id": 1147,
+    "status": "PICKED",
+    "remaining_quantity": "0",
+    "fact_qty": "1",
+    "carrier_identifier": "090000000000014015",
+    "cell": "CPT_20846272",
+    "picked_from_cell": "AS16Cce9c011b16",
+    "lots": [
+      {
+        "uid": "CASELOT:2D291ED5C2E4D6C95AF8338EF65BA5B4389B6C:1",
+        "source_uid": "AS16.LOT:ce9c011b16",
+        "quantity": "1",
+        "unit": "EA"
+      }
+    ],
+    "outbox_id": 5522
+  },
+  "replay": {
+    "operation_id": "AS16.ce9c011b16.PICK",
+    "case_pick_task_id": 1145,
+    "case_pick_line_id": 1147,
+    "status": "PICKED",
+    "remaining_quantity": "0",
+    "fact_qty": "1",
+    "carrier_identifier": "090000000000014015",
+    "cell": "CPT_20846272",
+    "picked_from_cell": "AS16Cce9c011b16",
+    "lots": [
+      {
+        "uid": "CASELOT:2D291ED5C2E4D6C95AF8338EF65BA5B4389B6C:1",
+        "source_uid": "AS16.LOT:ce9c011b16",
+        "quantity": "1",
+        "unit": "EA"
+      }
+    ],
+    "outbox_id": 5522
+  },
+  "after_pick": {
+    "stock": [
+      {
+        "uid_poleta": "AS16.LOT:ce9c011b16",
+        "cell": "AS16Cce9c011b16",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3
+      },
+      {
+        "uid_poleta": "CASELOT:2D291ED5C2E4D6C95AF8338EF65BA5B4389B6C:1",
+        "cell": "CPT_20846272",
+        "remain": 1,
+        "hard_reserved_base": 1,
+        "stock_version": 1
+      }
+    ],
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "content_version": 3,
+        "picked_qty": 1
+      }
+    ],
+    "step": [
+      {
+        "state": "APPLIED"
+      }
+    ],
+    "uses": [
+      {
+        "n": 1
+      }
+    ]
+  },
+  "close_request": {
+    "operation_id": "AS16.ce9c011b16.CLOSE",
+    "expected_content_version": 3
+  },
+  "close": {
+    "session_id": "AS16.ce9c011b16.SESSION",
+    "operation_id": "AS16.ce9c011b16.CLOSE",
+    "case_pick_task_id": 1145,
+    "status": "WAIT_CONTROL",
+    "content_version": 3,
+    "already_closed": false,
+    "physical_stock_changed": false
+  },
+  "close_replay": {
+    "session_id": "AS16.ce9c011b16.SESSION",
+    "operation_id": "AS16.ce9c011b16.CLOSE",
+    "case_pick_task_id": 1145,
+    "already_closed": false,
+    "content_version": 3,
+    "physical_stock_changed": false,
+    "status": "WAIT_CONTROL"
+  }
+}

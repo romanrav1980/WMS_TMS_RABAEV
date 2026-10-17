@@ -1,0 +1,7 @@
+{
+  "status": "FAILED_STRESS_CALL_TIMEOUT",
+  "error": "DPY-4024 call timeout5000ms",
+  "effect": "No schema/business writes; direct owned session closed",
+  "scope": "Combined999+1000 sort and large-item probe firstNLSvariant",
+  "prior_v5_helper_probe": "17pairs+2NLS passed before stress extension; prior v5 JSON was removed by mistake, v4 evidence remains; do not reconstruct it as original"
+}

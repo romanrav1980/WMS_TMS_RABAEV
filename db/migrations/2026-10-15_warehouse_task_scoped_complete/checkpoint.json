@@ -1,0 +1,72 @@
+{
+  "migration_id": "2026-10-15-warehouse-task-scoped-complete",
+  "state": "APPLIED",
+  "target": {
+    "user_name": "RABAEV",
+    "service_name": "orcl",
+    "db_name": "ORCL"
+  },
+  "invalid_before": 0,
+  "git_head": "41c913cf44441cf3656a66b0939e40cb9a83c365",
+  "sha256": {
+    "access_body.sql": "ae827f30d7e03e2a6d86a7c61749d79bdd77ad839bd998c1c7493bc88f8981e9",
+    "access_spec.sql": "cdd47236b10b5dd6a20d2d5036d293c9bf5553d7fa21cfea3ccd9c0e3b489dcf",
+    "apply.sql": "03344abc623bd311b8f8d5ba2e9b352322894f92893a8ceb5ae1c90e17571793",
+    "before_access_body.sql": "430f7e44035faeb625dc65b781850c6d6706e37c3f093f752a59118cc13269bf",
+    "before_access_spec.sql": "8e4f32e7c700906993441679f64ed5845bdfa9c6b2385f1a0aa0d6a2c0e34697",
+    "before_posting.sql": "36f552df1d9f6be86da78b35c800bc958b196133711fb7801fce86d083de6e97",
+    "before_resource_policy.sql": "01da4a699458edf9482f9978d5c8653185bd768a0dfd7d43431e62306d8977c5",
+    "before_task_core.sql": "451b809dc8a35f04bb057e331b7d7564504d69e30a2b0dd0c03b032ec145e070",
+    "before_task_plan.sql": "6e2a76b1f1e6d79edc2d09ab628f009a2cfe9bca6ef80dc4fb7c81d6c3a8c69b",
+    "before_task_plan_spec.sql": "7370420ad71821ac8b685c4e0a5f848be8368884611cca85146445e33814ff92",
+    "posting.sql": "8f77026a97053dd4e08535508efe5415c0b664b1b1fb368b3bbf9e6f400c1166",
+    "resource_policy.sql": "b72c5010df34160e436657569bdd9b9dcb8a550d9da40287028f68beefc99357",
+    "rollback.sql": "323c42cee4026de584da9224a5dd5228643c348a9f72986850e5114764708e12",
+    "task_core.sql": "ed585ffaa728414a2a0a0439f2f017f232f08c0bd28925dfaee37cc7f799ab18",
+    "task_plan.sql": "8ff38c4ccd40390cd3c3f9184b579beb54beb3d9dbb37fb288af11d7f89a747b",
+    "task_plan_spec.sql": "afaeb810ec1fd17a5aa4f6bfc8655a99db9b89656aa3461a791f8de854b80f6e",
+    "verify.sql": "b41662d6625432e1309da23f8130d9ea4d879a4c9ed676a13dc1f449e45e8517"
+  },
+  "authorization": "Owner authorized scoped roles implementation; root requested narrow PREPARED TASK_COMPLETE migration for review, no apply by author.",
+  "compile_correction": "Narrow ACCESSIBLE BY PACKAGE RRL_WAREHOUSE_TASK_ACCESS in TASK_PLAN spec permits canonical signature delegation; no grants or duplicate signature algorithm.",
+  "invalid_after_restoration": 0,
+  "before_sources_restored": 7,
+  "ledger": [
+    {
+      "status": "APPLIED"
+    }
+  ],
+  "restorative_compile": [
+    "RRL_TASK_RESOURCE_POLICY BODY",
+    "RRL_ST_DEFER_CASE_WAIT BODY"
+  ],
+  "history": [
+    "Initial root apply stopped before ledger with compile guard ORA-20886; ACCESS body PLS-00904 canonical TASK_PLAN.signature caller absent from ACCESSIBLE BY.",
+    "Root executed paired rollback, 8 statements / 0 errors; original functional sources restored.",
+    "Two dependent bodies invalidated by spec replacement: RRL_TASK_RESOURCE_POLICY and RRL_ST_DEFER_CASE_WAIT.",
+    "Author executed only root-approved restorative ALTER PACKAGE ... COMPILE BODY for those two. USER_ERRORS=0, global INVALID=0, all seven live sources match original before snapshots.",
+    "Corrected kit adds narrow trusted ACCESS caller to TASK_PLAN spec; remains PREPARED, not applied. No fixture DML or canonical stock commands executed.",
+    "Resumed 15.10: fresh seven before sources match / global INVALID0. Apply now recompiles HU_TASK and ST_DEFER_CASE_WAIT dependencies and checks global INVALID before ledger; rollback explicitly recompiles all affected dependent bodies.",
+    "Root corrected apply:12statements/0errors. Author readback all7sources exactmatch, USER_ERRORS0/globalINVALID0, ledgerAPPLIED; acceptance next.",
+    "Acceptance:20native+actualHTTP total,13unitPASS. Positive physical canonical completion only caller-owned rollback, original committedCLOB replay/revoke and metadata cleanup verified. No stockcommit. Shared admin typecheck remained in-progress UI integration."
+  ],
+  "invalid_before_recheck": 0,
+  "before_sources_match_recheck": 7,
+  "live_source_matches": 7,
+  "invalid_after": 0,
+  "acceptance": {
+    "native_and_actual_http_checks_total": 20,
+    "unit_tests": 13,
+    "metadata_fixture_committed_temporarily": true,
+    "metadata_fixture_cleaned": true,
+    "access_audit_retained": true,
+    "stock_execute": "CALLER_ROLLBACK_ONLY",
+    "physical_hardware": false
+  },
+  "quality": {
+    "architecture": "962 files / 0 cycles / 72 debt PASS",
+    "architecture_tooling_tests": 24,
+    "encoding": "PASS",
+    "full_gate": "Blocked by concurrent Claude admin UI types; root integration gate pending"
+  }
+}

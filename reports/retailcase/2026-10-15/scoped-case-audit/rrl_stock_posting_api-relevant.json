@@ -1,0 +1,194 @@
+[
+  {
+    "line": 15,
+    "text": "if RRL_HAS_WRIGHT(p_actor,'warehouse_task_execute')!=1 then raise_application_error(-20882,'CASE_SLOT_EXECUTION_FORBIDDEN');end if;"
+  },
+  {
+    "line": 16,
+    "text": "RRL_CASE_TASK_ACCESS.assert_scope(v_case,p_actor,'case_move');"
+  },
+  {
+    "line": 25,
+    "text": "if RRL_HAS_WRIGHT(p_actor,'warehouse_task_execute')!=1 or(nvl(upper(trim(grp)),'-')!='GLOBAL_ADMIN'and(user_ware is null or user_ware!=ware))then raise_application_error(-20882,'HU_REPACK_CURRENT_WARE_EXECUTOR_REQUIRED');end if;"
+  },
+  {
+    "line": 50,
+    "text": "if g_kind='STORE_RETURN_DISPOSE'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_RETURN_DISPOSE.assert_scope(doc.get_object('source').get_string('request_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 51,
+    "text": "if g_kind='STORE_RETURN_PUTAWAY_PLAN'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_STORE_RETURN_PUT.assert_scope(doc.get_object('source').get_string('receipt_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 52,
+    "text": "if g_kind='STORE_RETURN_RECEIVE'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_STORE_RETURN_REC_CMD.assert_scope(doc.get_object('source').get_string('pickup_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 53,
+    "text": "if g_kind in('STORE_RETURN_HANDOVER','STORE_RETURN_PICKUP')then RRL_STOCK_STORE_RETURN_CUST_CMD.assert_scope(p_request,p_actor);end if;"
+  },
+  {
+    "line": 54,
+    "text": "if g_kind='STORE_CUSTODY_RELEASE'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_STORE_CUSTODY_CMD.assert_scope(doc.get_object('source').get_string('receipt_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 57,
+    "text": "if g_kind='INTERWARE_RECOVERY_CANCEL'then declare req json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_IW_RECOVERY_CANCEL.assert_scope(req.get_object('source').get_string('request_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 58,
+    "text": "if g_kind='INTERWARE_RECOVERY_PUTAWAY_PLAN'then declare req json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_IW_RECOVERY_PUT.assert_scope(req.get_object('source').get_string('recovery_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 59,
+    "text": "if g_kind='INTERWARE_SHORTAGE_RECOVER'then declare req json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_IW_RECOVERY_REC.assert_scope(req.get_object('source').get_string('approval_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 60,
+    "text": "if g_kind in('INTERWARE_RECOVERY_REPORT','INTERWARE_RECOVERY_APPROVE')then RRL_STOCK_IW_RECOVERY_PLAN.assert_scope(p_request,p_actor);end if;"
+  },
+  {
+    "line": 61,
+    "text": "if g_kind in('INTERWARE_SHORTAGE_REPORT','INTERWARE_SHORTAGE_CONFIRM')then RRL_STOCK_INTERWARE_SHORT_CMD.assert_scope(p_request,p_actor);end if;"
+  },
+  {
+    "line": 62,
+    "text": "if g_kind='INTERWARE_CUSTODY_RELEASE'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_INTERWARE_CUSTODY.assert_scope(doc.get_object('source').get_string('receipt_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 63,
+    "text": "if g_kind='INTERWARE_PUTAWAY_PLAN'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_INTERWARE_PUT.assert_scope(doc.get_object('source').get_string('receipt_operation_id'),p_actor,doc.get_object('metadata').get_number('superseded_task_id'));end;end if;"
+  },
+  {
+    "line": 64,
+    "text": "if g_kind in('INTERWARE_UNLOAD','INTERWARE_RECEIVE')then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_INTERWARE_REC.assert_scope(doc.get_object('source').get_string('plan_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 65,
+    "text": "if g_kind='LOAD_SHIPMENT'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_LOADING_READ.assert_scope(doc.get_object('source').get_string('pallet_identifier'),p_actor);end;end if;"
+  },
+  {
+    "line": 66,
+    "text": "if g_kind='TARE_OFFER_CANCEL'then RRL_STOCK_TARE_CANCEL_CMD.assert_scope(p_request,p_actor);end if;"
+  },
+  {
+    "line": 67,
+    "text": "if g_kind='TARE_BOOK'then RRL_TARE_LOAD_RECOVERY_API.assert_scope(p_request,p_actor);end if;assert_case_slot_actor(p_request,p_actor);assert_repack_actor(p_request,p_actor);"
+  },
+  {
+    "line": 68,
+    "text": "if g_kind='UNLOAD_SHIPMENT'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_UNLOAD_CMD.assert_scope(doc.get_object('source').get_string('load_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 71,
+    "text": "if g_kind in('CASE_PICK_CONFIRM','CASE_CARRIER_MOVE','CASE_CARRIER_RETURN','CASE_SHORT_APPROVE')then RRL_CASE_TASK_ACCESS.assert_command(p_request,p_actor);end if;"
+  },
+  {
+    "line": 72,
+    "text": "if g_kind='CASE_CARRIER_MOVE'then RRL_ST_DEFER_CASE_WAIT.assert_command(p_request,p_actor);end if;"
+  },
+  {
+    "line": 73,
+    "text": "if g_kind in('WAVE_LAUNCH','WAVE_RESERVE_SOURCES','WAVE_EXECUTION_FINISH','WAVE_PICK_RELEASE')then RRL_WAVE_EXEC_ACCESS.assert_command(p_request,p_actor);end if;"
+  },
+  {
+    "line": 74,
+    "text": "if g_kind='CASE_PALLET_TYPE_CHANGE'then RRL_CASE_TASK_ACCESS.assert_scope(v_doc.get_object('source').get_number('case_task_id'),p_actor,'case_pick_execute');end if;"
+  },
+  {
+    "line": 132,
+    "text": "elsif g_kind='CASE_PICK_CONFIRM' then RRL_STOCK_CASE_PICK_CMD.compile_command(p_request,g_operation,v_policies,v_resources,v_domain);"
+  },
+  {
+    "line": 213,
+    "text": "if g_kind in('WAVE_LAUNCH','WAVE_RESERVE_SOURCES','STORE_RECEIPT','TASK_COMPLETE','CASE_PICK_CONFIRM')then lock table RRL_ACCESS_REV in share mode wait 5;end if;"
+  },
+  {
+    "line": 218,
+    "text": "if g_kind='STORE_RETURN_DISPOSE'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_RETURN_DISPOSE.assert_scope(doc.get_object('source').get_string('request_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 219,
+    "text": "if g_kind='STORE_RETURN_PUTAWAY_PLAN'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_STORE_RETURN_PUT.assert_scope(doc.get_object('source').get_string('receipt_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 220,
+    "text": "if g_kind='STORE_RETURN_RECEIVE'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_STORE_RETURN_REC_CMD.assert_scope(doc.get_object('source').get_string('pickup_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 221,
+    "text": "if g_kind in('STORE_RETURN_HANDOVER','STORE_RETURN_PICKUP')then RRL_STOCK_STORE_RETURN_CUST_CMD.assert_scope(p_request,p_actor);end if;"
+  },
+  {
+    "line": 222,
+    "text": "if g_kind='STORE_CUSTODY_RELEASE'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_STORE_CUSTODY_CMD.assert_scope(doc.get_object('source').get_string('receipt_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 225,
+    "text": "if g_kind='INTERWARE_RECOVERY_CANCEL'then declare req json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_IW_RECOVERY_CANCEL.assert_scope(req.get_object('source').get_string('request_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 226,
+    "text": "if g_kind='INTERWARE_RECOVERY_PUTAWAY_PLAN'then declare req json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_IW_RECOVERY_PUT.assert_scope(req.get_object('source').get_string('recovery_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 227,
+    "text": "if g_kind='INTERWARE_SHORTAGE_RECOVER'then declare req json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_IW_RECOVERY_REC.assert_scope(req.get_object('source').get_string('approval_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 228,
+    "text": "if g_kind in('INTERWARE_RECOVERY_REPORT','INTERWARE_RECOVERY_APPROVE')then RRL_STOCK_IW_RECOVERY_PLAN.assert_scope(p_request,p_actor);end if;"
+  },
+  {
+    "line": 229,
+    "text": "if g_kind in('INTERWARE_SHORTAGE_REPORT','INTERWARE_SHORTAGE_CONFIRM')then RRL_STOCK_INTERWARE_SHORT_CMD.assert_scope(p_request,p_actor);end if;"
+  },
+  {
+    "line": 230,
+    "text": "if g_kind='INTERWARE_CUSTODY_RELEASE'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_INTERWARE_CUSTODY.assert_scope(doc.get_object('source').get_string('receipt_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 231,
+    "text": "if g_kind='INTERWARE_PUTAWAY_PLAN'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_INTERWARE_PUT.assert_scope(doc.get_object('source').get_string('receipt_operation_id'),p_actor,doc.get_object('metadata').get_number('superseded_task_id'));end;end if;"
+  },
+  {
+    "line": 232,
+    "text": "if g_kind in('INTERWARE_UNLOAD','INTERWARE_RECEIVE')then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_INTERWARE_REC.assert_scope(doc.get_object('source').get_string('plan_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 233,
+    "text": "if g_kind='LOAD_SHIPMENT'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_LOADING_READ.assert_scope(doc.get_object('source').get_string('pallet_identifier'),p_actor);end;end if;"
+  },
+  {
+    "line": 234,
+    "text": "if g_kind='TARE_OFFER_CANCEL'then RRL_STOCK_TARE_CANCEL_CMD.assert_scope(p_request,p_actor);end if;"
+  },
+  {
+    "line": 235,
+    "text": "if g_kind='TARE_BOOK'then RRL_TARE_LOAD_RECOVERY_API.assert_scope(p_request,p_actor);end if;assert_case_slot_actor(p_request,p_actor);assert_repack_actor(p_request,p_actor);"
+  },
+  {
+    "line": 236,
+    "text": "if g_kind='UNLOAD_SHIPMENT'then declare doc json_object_t:=json_object_t.parse(p_request);begin RRL_STOCK_UNLOAD_CMD.assert_scope(doc.get_object('source').get_string('load_operation_id'),p_actor);end;end if;"
+  },
+  {
+    "line": 246,
+    "text": "if g_kind in('CASE_PICK_CONFIRM','CASE_CARRIER_MOVE','CASE_CARRIER_RETURN','CASE_SHORT_APPROVE')then RRL_CASE_TASK_ACCESS.assert_command(p_request,p_actor);end if;"
+  },
+  {
+    "line": 247,
+    "text": "if g_kind='CASE_CARRIER_MOVE'then RRL_ST_DEFER_CASE_WAIT.assert_command(p_request,p_actor);end if;"
+  },
+  {
+    "line": 248,
+    "text": "if g_kind in('WAVE_LAUNCH','WAVE_RESERVE_SOURCES','WAVE_EXECUTION_FINISH','WAVE_PICK_RELEASE')then RRL_WAVE_EXEC_ACCESS.assert_command(p_request,p_actor);end if;"
+  },
+  {
+    "line": 262,
+    "text": "if RRL_HAS_WRIGHT(g_actor,case when g_kind='INVENTORY_REGISTER_LOT' then 'stock_inventory_count' else 'mes_wms_bridge_apply' end)!=1"
+  },
+  {
+    "line": 346,
+    "text": "elsif g_kind='CASE_PICK_CONFIRM' then RRL_STOCK_CASE_PICK_CMD.execute_command(g_request,g_actor,p_result);"
+  }
+]

@@ -1,0 +1,85 @@
+{
+ "checks": [
+  "warehouse_kept_across_all_workplaces",
+  "shift_links_control_store_consolidation_help",
+  "wave_to_gantt_filter_clear_back_to_wave",
+  "foreign_warehouse_error_no_gantt",
+  "four_families_mock_plus_live_three",
+  "mobile_390_compact_help_no_overflow"
+ ],
+ "writes": [],
+ "errors": [],
+ "roles": {
+  "Хранение и ричтраки": [
+   "6558233"
+  ],
+  "Приёмка": [
+   "6558233"
+  ],
+  "Консолидация": [
+   "6558233"
+  ],
+  "Директор РЦ": [
+   "6558233"
+  ],
+  "Диспетчер": [
+   "6558233"
+  ],
+  "Старший смены": [
+   "6558233"
+  ]
+ },
+ "links": [
+  {
+   "id": "shift.open.consolidation",
+   "title": true,
+   "text": "Ожидаемый состав"
+  },
+  {
+   "id": "shift.open.control",
+   "title": true,
+   "text": "Грузовые места"
+  },
+  {
+   "id": "shift.open.store",
+   "title": true,
+   "text": "Приложение магазина"
+  },
+  {
+   "id": "shift.navigation.help",
+   "title": true,
+   "text": "Справка"
+  }
+ ],
+ "waveFilter": "Волна FULL.QA:628b79593a×",
+ "waveFilterAfterClear": 0,
+ "waveCardStillOpen": true,
+ "foreign": "Склад не найден. (WAREHOUSE_NOT_FOUND)",
+ "liveGroups51365792": [
+  "Ричтраки 1",
+  "Ворота 3"
+ ],
+ "liveGroups20220394": [
+  "Комплектовщики 2"
+ ],
+ "mockGroups": [
+  "Ричтраки 3",
+  "Комплектовщики 2",
+  "Ворота 2",
+  "Машины 1"
+ ],
+ "launch": {
+  "w": 89,
+  "h": 44
+ },
+ "launchName": "? Справка",
+ "launchPosition": "static",
+ "covered": [
+  null,
+  null,
+  null
+ ],
+ "mobileOverflow": 0,
+ "status": "PASS",
+ "fixtures": "live read-only; VEHICLE family only in MOCK preview (UI fixture), none live in window"
+}

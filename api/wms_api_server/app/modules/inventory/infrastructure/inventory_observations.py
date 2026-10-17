@@ -6,6 +6,7 @@ from ..contracts_stock import StockCommand
 from .inventory_scan_codes import resolve_count_codes
 from .stock_posting_uow import StockPosting
 from .inventory_scope import assert_inventory_scope
+from .inventory_lot_reads import inventory_lots
 
 
 class InventoryObservations:
@@ -13,32 +14,11 @@ class InventoryObservations:
         self.gateway = gateway
         self.posting = posting
 
-    def lots(self, revision_id: int, cell: str, article: str | None, actor: str) -> dict[str, Any]:
-        assert_inventory_scope(self.gateway,actor,revision=revision_id)
-        gateway = self.gateway
-        rows = gateway.fetch_all("""
-            select r.UID_POLETA LOT_UID,p.ARTICUL ARTICLE,r.CELL,to_char(r.REMAIN,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PHYSICAL_QTY,
-                   to_char(r.HARD_RESERVED_BASE,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') HARD_QTY,r.STOCK_VERSION,p.EXPIRY_DATE,
-                   r.BASE_UOM UNIT
-              from RRL_REMAINS r join RRL_PALLETS p on p.UID_PALLET=r.UID_POLETA
-             where r.CELL=:cell and (:article is null or p.ARTICUL=:article) and exists(
-               select 1 from RRL_REVIZION d join RRL_CELLS c on c.CELL=r.CELL
-                where d.ID=:revision and d.WARE_ID=c.WARE_ID and d.CONDITION in (0,1))
-             order by p.ARTICUL,p.EXPIRY_DATE,r.UID_POLETA fetch first 201 rows only
-        """, {"cell": cell, "revision": revision_id,"article":article})
-        if len(rows) > 200:
-            raise InventoryObservationError("INVENTORY_CELL_BATCH_BOUND")
-        for row in rows: row["uid"]=row.pop("lot_uid")
-        articles = sorted({row["article"] for row in rows})
-        if articles:
-            params = {"article" + str(index): article for index, article in enumerate(articles)}
-            profiles = gateway.fetch_all("select ARTICUL,SYSTEM_CODE,PROFILE_CODE from RRL_SKU_RECEIPT_PROFILE where ARTICUL in (" + ",".join(":" + key for key in params) + ") order by ARTICUL,SYSTEM_CODE,PROFILE_CODE", params)
-            for row in rows:
-                row["marking_profiles"] = [{"system_code": profile["system_code"], "profile_code": profile["profile_code"]} for profile in profiles if profile["articul"] == row["article"]]
-        return {"revision_id": revision_id, "cell": cell, "lots": rows}
+    def lots(self, revision_id: int, cell: str, article: str | None, actor: str, *, task_id: int | None = None) -> dict[str, Any]:
+        return inventory_lots(self.gateway, revision_id, cell, article, actor, task_id)
 
     def count(self, request: CountSubmission, actor: str) -> dict[str, Any]:
-        assert_inventory_scope(self.gateway,actor,revision=request.revision_id)
+        assert_inventory_scope(self.gateway,actor,revision=request.revision_id,task=request.inventory_task_id)
         counts = [line.wire(False) for line in request.counts]
         requested = [line.wire() for line in request.counts]
         gateway = self.gateway
@@ -62,8 +42,8 @@ class InventoryObservations:
             metadata=metadata,
         ))
 
-    def create_revision(self, warehouse_id: int, actor: str) -> dict[str, Any]:
-        assert_inventory_scope(self.gateway,actor,warehouse=warehouse_id)
+    def create_revision(self, warehouse_id: int, actor: str, *, task_id: int | None = None) -> dict[str, Any]:
+        assert_inventory_scope(self.gateway,actor,warehouse=warehouse_id,task=task_id)
         gateway = self.gateway
         cells = gateway.fetch_all("select 1 PRESENT from RRL_CELLS where WARE_ID=:ware fetch first 1 row only", {"ware": warehouse_id})
         if not cells:

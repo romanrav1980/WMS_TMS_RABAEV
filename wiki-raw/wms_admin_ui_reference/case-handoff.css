@@ -1,0 +1,40 @@
+/* Форма передачи CASE (C0121). Модальное окно в верхнем слое: на 390 px помещается в экран без перекрытий. */
+.ch-dialog { width: min(600px, calc(100vw - 16px)); max-height: calc(100dvh - 16px); padding: 0; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface); color: var(--text); box-shadow: 0 18px 48px rgba(15, 23, 42, .22); overflow: auto; }
+.ch-dialog::backdrop { background: rgba(11, 31, 58, .38); }
+.ch-head { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--surface); border-bottom: 1px solid var(--soft-line); }
+.ch-head h2 { margin: 0; flex: 1; font-size: 17px; }
+.ch-head a { color: var(--blue); font-size: 14px; }
+.ch-x { min-width: 44px; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font-size: 20px; cursor: pointer; }
+.ch-body { padding: 12px 16px; display: grid; gap: 12px; }
+.ch-now { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px 12px; margin: 0; padding: 10px 12px; background: var(--bg); border-radius: 8px; }
+.ch-now div { min-width: 0; }
+.ch-now dt { color: var(--muted); font-size: 12px; }
+.ch-now dd { margin: 0; font-weight: 650; overflow-wrap: anywhere; }
+.ch-form { display: grid; gap: 12px; }
+.ch-form fieldset { display: grid; gap: 10px; margin: 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; }
+.ch-form legend { padding: 0 4px; font-weight: 650; }
+.ch-dialog label { display: grid; gap: 4px; font-size: 14px; }
+.ch-dialog input:not([type=checkbox]) { min-height: 44px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; }
+.ch-dialog input[aria-invalid=true] { border-color: var(--red); outline: 2px solid rgba(240, 68, 56, .25); }
+.ch-dialog .ch-check { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.ch-dialog .ch-check input { width: 22px; height: 22px; flex: none; }
+.ch-note { margin: 0; color: var(--muted); font-size: 13px; }
+.ch-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.ch-actions button { min-height: 44px; padding: 0 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font: inherit; cursor: pointer; }
+.ch-actions button:first-child { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 650; }
+.ch-dialog button:focus-visible, .ch-dialog input:focus-visible, .ch-dialog summary:focus-visible, .ch-dialog a:focus-visible { outline: 3px solid rgba(36, 120, 242, .45); outline-offset: 2px; }
+.ch-dialog button:disabled { opacity: .55; cursor: default; }
+.ch-pending { display: grid; gap: 10px; padding: 10px 12px; border: 1px solid var(--amber); border-radius: 8px; background: #fffbeb; }
+.ch-pending p { margin: 0; }
+.ch-pending.ch-bad { border-color: var(--red); background: #fef3f2; }
+.ch-status { margin: 0; padding: 0 16px 14px; min-height: 1.4em; }
+.ch-status.bad { color: #b42318; font-weight: 600; }
+.ch-status.warn { color: #b54708; font-weight: 600; }
+.case-access-banner { margin: 0 0 12px; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); }
+.case-access-banner.bad { border-color: var(--red); background: #fef3f2; color: #b42318; }
+.case-access-banner button { margin-left: 8px; min-height: 36px; }
+@media (max-width: 600px) {
+  .ch-now { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ch-actions button { flex: 1 1 140px; }
+}

@@ -1,0 +1,15 @@
+alter package RRL_ASM_FINAL_SNAPSHOT compile body;
+alter package RRL_ASM_INTENT_API compile body;
+alter package RRL_ASSEMBLY_RECOVERY_API compile body;
+alter package RRL_ASSEMBLY_SCALE_API compile body;
+alter package RRL_CASE_ASSIGNMENT_API compile body;
+alter package RRL_CASE_LIFECYCLE_API compile body;
+alter package RRL_CASE_PALLET_TYPE_READ compile body;
+alter package RRL_CASE_RESOURCE_POLICY compile body;
+alter package RRL_CASE_SSCC_API compile body;
+alter package RRL_CASE_TASK_ACCESS compile body;
+alter package RRL_ORDER_WEIGHT_READ compile body;
+alter package RRL_STOCK_CASE_PICK_CMD compile body;
+alter package RRL_STOCK_CASE_TYPE_CMD compile body;
+alter package RRL_STOCK_POSTING_API compile body;
+alter package RRL_WH_WEIGH_REQUEST_API compile body;

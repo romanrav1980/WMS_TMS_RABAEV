@@ -1,0 +1,89 @@
+{
+  "status": "APPLIED_REQUIRES_READBACK",
+  "at_utc": "2026-10-15T17:15:18.602203+00:00",
+  "identity": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "files": [
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\after_source_guard.sql",
+      "sha256": "31fecdf83e9afdb466f44fa469b057e32982b8e38dd03d6d8450bfc9b36a5067"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\apply.sql",
+      "sha256": "701f2fceb16a66371f35d14099d318d83e2a89985624088a9eb8b0d931176b90"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\apply_v2.sql",
+      "sha256": "2d5daa18cfa53c6f7ba60aeac99eb26ff9c6a0bae7d4018102fb527efddb39a8"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\before.sql",
+      "sha256": "f78814144188459b15866121869342fefe3ff2e59b747eba277960848c50fe27"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\before_v2.sql",
+      "sha256": "c14edeb09bc88ddbe388bf2b3ab3fd35a7a0a05901677cc80296789d36c7f901"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\body.sql",
+      "sha256": "1152869c2de0c52678eec08e9df836a1ccaeb6711b0b2ffb87e972d204b19f0a"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\checkpoint.json",
+      "sha256": "385a5e86ffccf65a9a46b89d31ae9cdc9b27bffacfabf250890a9fe07d140cc0"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\checkpoint_v2.json",
+      "sha256": "f657d81eb1f369567eb0932c57cc947b3bb0f5b251cd2858f3c984bf49ecad6e"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\journal_baseline_guard.sql",
+      "sha256": "044f9a070dfa193bb838d63f63fc0787d5091cee77c299f0336a1b58d52cd004"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\known_sources_guard.sql",
+      "sha256": "c2ad57bd40a154fb458f2f7feb3aa7c9ac148c39bd9d64eb3fd9838d962c77fe"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\known_sources_guard_raw.sql",
+      "sha256": "a86670f522170aec65e55ca3932e369869fcd9bd25a321af7389c226a87ad3cd"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\reviewed-v2-manifest.json",
+      "sha256": "be19639779e6a9a3f2c6a2164d8a09c4b1679c5dfa67d3b076c1ec1b662614bf"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\rollback.sql",
+      "sha256": "e560b7b530888d612371466fa83bf5f40d95922423a910514d571f9cd927a78e"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\rollback_v2.sql",
+      "sha256": "f4cd571cfcda4305b18a6e74aa1f824cd6f0d6d90023b8b3d9f808ec07210f01"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\rollback_verify.sql",
+      "sha256": "c4cf1c3d9e7bd83c4a1c48c11e1767e1e147c190d12989eb69030a1bfdb1d9df"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\rollback_verify_v2.sql",
+      "sha256": "629ac8763024148c42ef4253e5b1c299c2c93002f53d9cb2d5ef8e6031f55959"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\spec.sql",
+      "sha256": "a5f8645650fbbd6405f43c18cf131504e5863fda1011fd085659255b8f65761c"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\verify.sql",
+      "sha256": "48931e6d925169bc3a788a0a11df3068d8fa576f6e4c93d80195979b988fa95c"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\verify_v2.sql",
+      "sha256": "b75870acf87ab54d12e4f188144ed5518c4155e6c40bf787831c26aa41650453"
+    }
+  ],
+  "independent_review": "scale_protocol PASS; root native review PASS",
+  "quantity_writes": false,
+  "returncode": 0
+}

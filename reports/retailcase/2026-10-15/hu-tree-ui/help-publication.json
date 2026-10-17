@@ -1,0 +1,81 @@
+{
+  "status": "PUBLISHED",
+  "preview": {
+    "source_id": "warehouse-hu-tree",
+    "article_id": "warehouse-hu-tree",
+    "space_id": "general",
+    "title": "Консолидация: дерево грузового места",
+    "summary": "Как просмотреть вложенные паллеты, коробки и сборки и различить основания массы.",
+    "status": "APPROVED",
+    "owner": "inventory",
+    "body": "Введите или отсканируйте **Идентификатор паллеты / места**, нажмите «Показать состав». Поддерживаются SSCC и внутренние идентификаторы. Сканер с клавиатурным вводом завершает чтение Enter; настоящий сканер отдельно не проверен.\r\n\r\nКнопки «+» и «−» раскрывают ветви. Выберите узел, чтобы увидеть состояние, количество, собственную тару и основание массы. Родитель открывается отдельным чтением с повторной проверкой доступа.\r\n\r\nПодтверждённый контроль веса дочернего места, учётный вес товара и масса из записи размещения имеют разные основания. Они не становятся общим измеренным весом внешней паллеты. Автоматического суммирования нет. Неизвестный способ сборки или масса остаются неизвестными. Исторический состав отгрузки отмечен отдельно и не доказывает текущее положение товара.\n\r\nВ карточке показаны номера связанных заданий сборки, волн и складских заданий. Здесь они справочные. Просмотр дерева не объединяет, не перемещает и не отгружает товар.",
+    "source_revision": "bacf7dbeb509e821419fd45a6f91e779d545870fed4f6b69cb4b4180ffb0ee00",
+    "sources": [
+      "wiki/runbooks/retailcase_hu_tree_workspace.md"
+    ],
+    "related": [],
+    "required_permissions": []
+  },
+  "commands": {
+    "IMPORT": {
+      "operation_id": "HU19.HELP.IMPORT",
+      "source_id": "warehouse-hu-tree",
+      "source_revision": "bacf7dbeb509e821419fd45a6f91e779d545870fed4f6b69cb4b4180ffb0ee00",
+      "expected_version": 0,
+      "reason": "Publish approved local operating guide for HU tree read-only workspace"
+    },
+    "LINKS": {
+      "operation_id": "HU19.HELP.LINKS",
+      "command_type": "ARTICLE_SAVE",
+      "payload": {
+        "expected_version": 1,
+        "article_id": "warehouse-hu-tree",
+        "space_id": "general",
+        "title": "Консолидация: дерево грузового места",
+        "summary": "Как просмотреть вложенные паллеты, коробки и сборки и различить основания массы.",
+        "body": "Введите или отсканируйте **Идентификатор паллеты / места**, нажмите «Показать состав». Поддерживаются SSCC и внутренние идентификаторы. Сканер с клавиатурным вводом завершает чтение Enter; настоящий сканер отдельно не проверен.\r\n\r\nКнопки «+» и «−» раскрывают ветви. Выберите узел, чтобы увидеть состояние, количество, собственную тару и основание массы. Родитель открывается отдельным чтением с повторной проверкой доступа.\r\n\r\nПодтверждённый контроль веса дочернего места, учётный вес товара и масса из записи размещения имеют разные основания. Они не становятся общим измеренным весом внешней паллеты. Автоматического суммирования нет. Неизвестный способ сборки или масса остаются неизвестными. Исторический состав отгрузки отмечен отдельно и не доказывает текущее положение товара.\n\r\nВ карточке показаны номера связанных заданий сборки, волн и складских заданий. Здесь они справочные. Просмотр дерева не объединяет, не перемещает и не отгружает товар.",
+        "related": [
+          "assembly-scale",
+          "workspaces"
+        ],
+        "sources": [
+          "wiki/runbooks/retailcase_hu_tree_workspace.md"
+        ],
+        "required_permissions": [],
+        "reason": "Connect local assembly and workspace operating guides"
+      }
+    },
+    "PUBLISH": {
+      "operation_id": "HU19.HELP.PUBLISH",
+      "command_type": "PUBLISH",
+      "payload": {
+        "expected_version": 2,
+        "article_id": "warehouse-hu-tree",
+        "reason": "Approved local operating guide; no hardware readiness claim"
+      }
+    }
+  },
+  "IMPORT": {
+    "operation_id": "HU19.HELP.IMPORT",
+    "command_type": "ARTICLE_SAVE",
+    "object_id": "warehouse-hu-tree",
+    "version": 1,
+    "replayed": false
+  },
+  "LINKS": {
+    "operation_id": "HU19.HELP.LINKS",
+    "command_type": "ARTICLE_SAVE",
+    "object_id": "warehouse-hu-tree",
+    "version": 2,
+    "replayed": false
+  },
+  "PUBLISH": {
+    "operation_id": "HU19.HELP.PUBLISH",
+    "command_type": "PUBLISH",
+    "object_id": "warehouse-hu-tree",
+    "version": 3,
+    "replayed": false
+  },
+  "published_revision": 3,
+  "source_revision": "bacf7dbeb509e821419fd45a6f91e779d545870fed4f6b69cb4b4180ffb0ee00"
+}

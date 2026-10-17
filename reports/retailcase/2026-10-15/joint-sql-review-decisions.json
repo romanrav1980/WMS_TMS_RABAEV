@@ -1,0 +1,51 @@
+{
+  "status": "REVIEWED_BOUNDED_ACCEPTANCE",
+  "source_sha256": "EEA770FE4907342710CAABD7D1F55C6882BB16A6CE17238A3D7EC4BF16B36F13",
+  "positive_journal_sha256": "A4F27502219EE33F897945B505F3898E8AAD961F545F1F93A923C9F29D0CE793",
+  "scope": {
+    "api_ids": [
+      69200,
+      69262
+    ],
+    "api_count": 63,
+    "local_http_count": 51,
+    "slow_rows": 501,
+    "native_cumulative_rows": 40
+  },
+  "decisions": [
+    {
+      "owner": "warehouse integration / CASE UI",
+      "evidence": "HTTP API69200..69262",
+      "decision": "Retain existing bounded/scoped reads and request flow: max observed HTTP335ms (capture69259), no observed HTTP above500ms. Slow-log explicit API join only zero-refusal58ms; its409 was instrument timestamp correctness, not latency. No index/cache change justified."
+    },
+    {
+      "owner": "inventory native posting",
+      "evidence": "V$SQL ak2m9radfzhnp /5jfvwwtgzb031",
+      "decision": "Observed cumulative prepare362.834ms/8025.5buffers and execute324.761ms/3848.5buffers (2executions each). Retain single native posting and existing bounded windows; these are cumulative cursor averages, not per-PICK measurements or worst latency. Reprofile with execution deltas under pilot concurrency if repeated>500ms or any>1000ms; no index/DDL justified from this sample."
+    },
+    {
+      "owner": "inventory replenishment continuation",
+      "evidence": "RRL_SQL_SLOW_LOG4867",
+      "decision": "Unpaired BACKGROUND transaction label845ms Resume existing replenishment remainder. Source uses warehouse/status scope and bound200; retain bounded query. Backlog: instrument nested statement/lock timings and compare plan under realistic WARE demand before pilot; trigger repeated>500ms or any>1000ms. Do not attribute this unpaired transaction to GROUP/PICK/HTTP or invent native/API correlation."
+    },
+    {
+      "owner": "operations/schema verification",
+      "evidence": "RRL_SQL_SLOW_LOG4862=5911ms,4861=1254ms; existing partial-native-sql-review.json",
+      "decision": "Continue existing catalog backlog: exact named-constraint/batched dictionary reads and dictionary plan/statistics investigation before broad deployment. These are schema diagnostics, not shipping/picking latency. Do not add stock indexes or weaken exact migration verification."
+    },
+    {
+      "owner": "CASE lifecycle",
+      "evidence": "RRL_SQL_SLOW_LOG4868",
+      "decision": "Direct native/Python metadata CLOSE logged BACKGROUND50ms, API_CALL_ID NULL. Preserve this classification; successful direct CLOSE is proven by positive journal, not fabricated HTTP coverage. Exact HTTP replay coverage must have separate actual API evidence."
+    }
+  ],
+  "limits": [
+    "Direct native calls have no invented API request pairing.",
+    "V$SQL totals are cumulative shared-cursor observations, not per-scenario latency or execution deltas.",
+    "Oracle legacy STARTED_AT/CREATED_AT wall timestamps are recorded as-is, not labelled verified UTC.",
+    "Bounded samples can omit older rows; zero fresh slow rows is not proof every native nested statement was instrumented.",
+    "API and Oracle legacy timestamp fields visibly differ from local UTC; no timezone inference or wall-time join was performed.",
+    "Positive lifecycle quantities/cleanup are established by its journal, not by this performance collector.",
+    "This is bounded diagnostic acceptance, not load/p95 or physical equipment evidence."
+  ]
+}

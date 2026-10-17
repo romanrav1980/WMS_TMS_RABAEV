@@ -1,0 +1,186 @@
+{
+  "state": "PASS_OWN_TEST_ACCESS_RETIRED_HISTORY_RETAINED",
+  "commands": {
+    "FINAL17.PRODUCT.0": {
+      "wire": {
+        "operation_id": "FINAL17.PRODUCT.0",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "OC16.4f58710060.DLV.STORE.ACCESS",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL17.PRODUCT.0",
+        "command_type": "REVOKE",
+        "object_id": "OC16.4f58710060.DLV.STORE.ACCESS",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL17.PRODUCT.1": {
+      "wire": {
+        "operation_id": "FINAL17.PRODUCT.1",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "OC16.d21d129674.UI.LOGIN",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL17.PRODUCT.1",
+        "command_type": "REVOKE",
+        "object_id": "OC16.d21d129674.UI.LOGIN",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL17.PRODUCT.2": {
+      "wire": {
+        "operation_id": "FINAL17.PRODUCT.2",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "OC16.d21d129674.RESTORE.EXEC",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL17.PRODUCT.2",
+        "command_type": "REVOKE",
+        "object_id": "OC16.d21d129674.RESTORE.EXEC",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL17.PRODUCT.3": {
+      "wire": {
+        "operation_id": "FINAL17.PRODUCT.3",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "OC16.4f58710060.DLV.STORE.ROLE",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "store_receipt_confirm"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL17.PRODUCT.3",
+        "command_type": "ROLE_SAVE",
+        "object_id": "OC16.4f58710060.DLV.STORE.ROLE",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL17.PRODUCT.4": {
+      "wire": {
+        "operation_id": "FINAL17.PRODUCT.4",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 2,
+          "role_id": "OC16R4f58710060",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_execute",
+            "warehouse_task_execute"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL17.PRODUCT.4",
+        "command_type": "ROLE_SAVE",
+        "object_id": "OC16R4f58710060",
+        "version": 3,
+        "replayed": false
+      }
+    },
+    "FINAL17.PRODUCT.5": {
+      "wire": {
+        "operation_id": "FINAL17.PRODUCT.5",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 2,
+          "role_id": "OC16Rd21d129674",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_execute",
+            "wms_admin_login"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL17.PRODUCT.5",
+        "command_type": "ROLE_SAVE",
+        "object_id": "OC16Rd21d129674",
+        "version": 3,
+        "replayed": false
+      }
+    }
+  },
+  "steps": [
+    {
+      "label": "logout:76",
+      "result": null
+    },
+    {
+      "label": "logout:75",
+      "result": null
+    },
+    {
+      "label": "qualification:80:CASE_PICK",
+      "result": {
+        "resource_id": 80,
+        "task_type": "CASE_PICK",
+        "active": false
+      }
+    },
+    {
+      "label": "qualification:79:CASE_PICK",
+      "result": {
+        "resource_id": 79,
+        "task_type": "CASE_PICK",
+        "active": false
+      }
+    },
+    {
+      "label": "device:AS16D082d87dbd8",
+      "result": {
+        "device_id": "AS16D082d87dbd8",
+        "device_policy_version": 2,
+        "active": false,
+        "device_mode": "TEST",
+        "basis": "GROSS"
+      }
+    },
+    {
+      "label": "device:AS16D21740f343f",
+      "result": {
+        "device_id": "AS16D21740f343f",
+        "device_policy_version": 2,
+        "active": false,
+        "device_mode": "TEST",
+        "basis": "GROSS"
+      }
+    }
+  ],
+  "http": [],
+  "identities_inactive": true,
+  "users": 6,
+  "roles": 3,
+  "assignments": 3,
+  "resources": 2,
+  "devices": 2
+}

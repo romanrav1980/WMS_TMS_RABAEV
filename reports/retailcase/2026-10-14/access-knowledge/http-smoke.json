@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "checks": [
+    "admin_read_contracts",
+    "timezone_aware_assignment_timestamps",
+    "http_command_receipt_and_conflict",
+    "ordinary_user_denials_and_public_help"
+  ],
+  "fixture_cleaned": true,
+  "stock_effect": "NONE"
+}

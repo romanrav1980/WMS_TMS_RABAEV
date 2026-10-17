@@ -1,0 +1,46 @@
+{
+  "captured_at_utc": "2026-10-16T05:29:08.545225+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_STOCK_STORE_WEIGHT_CORE",
+      "type": "PACKAGE",
+      "file": "rrl_stock_store_weight_core_package.sql",
+      "errors": [],
+      "user_source_sha256": "768663a4bc69c93658bee2d08f669d94675a1697fe3e9ab1efcd5d7e2c5962e2",
+      "normalized_source_sha256": "caa68e826c229da4d9c18c91773174b0351459e816e1a12710a53f77dc22d2a3",
+      "artifact_sha256": "a05ddf643326a3e946639cc16ed349d901177f9d604ab8a6dd3d1b7317a7b929"
+    },
+    {
+      "name": "RRL_STOCK_STORE_WEIGHT_CORE",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_store_weight_core_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "7bf04fe05557c412dd10f8794e1915bffe99772387de06e457a4499a151f5ccf",
+      "normalized_source_sha256": "d26a5f3256a6f5160cc2e3225db4bbb46b1d308d16cfac7130b3ebee4652e0c1",
+      "artifact_sha256": "46810ea1b45979d7a8393cae256d31b89c761cb3d6fadb6c52d72f1e6a82df17"
+    },
+    {
+      "name": "RRL_STOCK_STORE_RECEIPT_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_store_receipt_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "ca93bd1d6667bb4e63dbc7c084238fe15451b9067d650f301ba5f82a7ccb08ed",
+      "normalized_source_sha256": "3146f3d93ecef559350c97bc4dd79c301091005920544320fb16fd1a572b384d",
+      "artifact_sha256": "4ee6bd4e2f5b022539b58b4f3e4c255aad2e215aba63ed45d9e71743eae34b75"
+    },
+    {
+      "name": "RRL_STOCK_STORE_RECEIPT_READ",
+      "type": "PACKAGE",
+      "file": "rrl_stock_store_receipt_read_package.sql",
+      "errors": [],
+      "user_source_sha256": "123dbdfd92e25ebbb23cf1b689f158056cc23c63a1dd90840b980f015af783a2",
+      "normalized_source_sha256": "59b5df7502fc4572809a4e93de95f85900c33f812dc8835ec8cd06b95726425b",
+      "artifact_sha256": "d67eef23ad506eddc958c6dab0ccfe6cd97557704160d68a4556a1cb81d49bf3"
+    }
+  ]
+}

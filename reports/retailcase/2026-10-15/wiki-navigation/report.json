@@ -1,0 +1,12 @@
+{
+  "status": "PASS_ROUTER_REBASED_WITH_ORIGINAL_PRESERVED",
+  "before_lines": 1017,
+  "after_lines": 66,
+  "before_bytes": 195418,
+  "after_bytes": 4948,
+  "before_sha256": "b080d046b261f44cfe13834d0a796a32387f66f617abec964511400ccb0c8e08",
+  "archive": "wiki\\sources\\wiki_index_catalog_20261015.md",
+  "markdown_targets_preserved": 798,
+  "new_router_missing_files": [],
+  "limitation": "Reduced index bytes are not measured token/cost savings. Historical catalog pages were not reconciled."
+}

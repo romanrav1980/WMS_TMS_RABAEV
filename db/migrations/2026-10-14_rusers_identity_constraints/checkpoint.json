@@ -1,0 +1,16 @@
+{
+  "target": "RABAEV/orcl",
+  "authorization": "Explicit owner request to enforce RUSERS.ID uniqueness if logical",
+  "rows": 1169,
+  "exact_ids": 1169,
+  "null_ids": 0,
+  "active_login_duplicates": 0,
+  "historical_case_collision": "one active, one deleted; both retained",
+  "previous_id_index": "BIN$UX1xZvToS6/gYw8CAAo/Yg==$0",
+  "invalid_before": 0,
+  "sha256": {
+    "apply.sql": "d17ae88e80c14643f70703ca3fe267059d7011f0e42ac182f836a2e1ba182b13",
+    "rollback.sql": "8cfeb670bd5f672065facb1cd6b2c7dcb9d9fa26e2f2fd39df8c54d7283015b1",
+    "verify.sql": "c9b671d57fe0a19f0a1aa7f63f070da24920ed0c23d82441519913dcda4d29f4"
+  }
+}

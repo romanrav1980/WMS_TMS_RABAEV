@@ -51,3 +51,25 @@ from .domain.regulatory_delivery import regulatory_delivery_decision
 from .infrastructure.outbox_delivery import OutboxDelivery
 
 from .infrastructure.outbox_response_journal import OutboxResponseJournal
+
+from .domain.scale_sma import SmaObservation, parse_sma_gross_kg
+from .infrastructure.scale_outbox import SqliteScaleOutbox
+from .infrastructure.scale_http import HttpScaleGateway
+from .application.scale_gateway import ScaleGatewayWorker
+from .contracts_scales import ScaleGatewayError
+
+from .contracts_warehouse_gateway import WarehouseGatewayProfile
+
+from .infrastructure.warehouse_scale_http import HttpWarehouseScaleGateway
+
+from .application.warehouse_scale_gateway import WarehouseScaleGatewayWorker
+
+from .application.warehouse_scale_ack import validate_warehouse_ack
+
+from .contracts_scale_evidence import ScaleEvidence, scale_evidence_service
+from .api.scale_evidence_routes import router as scale_evidence_router
+from .infrastructure.scale_evidence import ScaleEvidenceArchive
+
+
+def build_scale_evidence() -> ScaleEvidenceArchive:
+    return ScaleEvidenceArchive(OracleGateway())

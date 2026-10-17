@@ -1,0 +1,160 @@
+{
+  "started_at": "2026-10-15T23:08:31.060308+00:00",
+  "http": [
+    {
+      "api_call_id": 69395,
+      "request_id": "a9d24acc-e1f1-45a8-839b-b156e15a0b52",
+      "path": "/api/case-pick/tasks/1142/close-current",
+      "response_status": 200,
+      "duration_ms": 333
+    },
+    {
+      "api_call_id": 69396,
+      "request_id": "c880250c-988c-4857-8348-86f82eebf382",
+      "path": "/api/case-pick/tasks/1142/close-current",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 69397,
+      "request_id": "4a59936c-1459-426b-a9e7-02f90f7e4381",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 136
+    }
+  ],
+  "hardware_verified": false,
+  "quantity_effect": false,
+  "revocation": {
+    "operation_id": "OC16.217454ca1e.MIXED.REVOKE",
+    "command_type": "REVOKE",
+    "object_id": "OC16A217454ca1e",
+    "version": 2,
+    "replayed": false
+  },
+  "thermal_admission": {
+    "domain": "HU_THERMAL_ADMISSION",
+    "version": 1,
+    "warehouse_id": 20220394,
+    "cell": "MH16Gd076c19e82",
+    "status": "ADMISSIBLE",
+    "allowed": true,
+    "code": "HU_THERMAL_POLICY_ADMISSIBLE",
+    "policy_only": true,
+    "observed_temperature_c": null,
+    "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+    "known_sku_count": 1,
+    "unknown_sku_count": 0,
+    "sku_count": 1,
+    "common_min_c": 0,
+    "common_max_c": 8,
+    "cell_min_c": 2,
+    "cell_max_c": 6,
+    "rules": [
+      {
+        "article": "AS16A35CEA92C27",
+        "min_c": 0,
+        "max_c": 8
+      }
+    ]
+  },
+  "slow": [
+    {
+      "log_id": 4942,
+      "api_call_id": 69396,
+      "elapsed_ms": 10,
+      "module": "WMS_API:69396",
+      "action": "POST /api/case-pick/tasks/1142/c",
+      "sql_sample": "Existing CASE carrier close"
+    }
+  ],
+  "native_cumulative": [
+    {
+      "sql_id": "g0xwzbtxgsfv1",
+      "executions": 4,
+      "avg_ms": 73.483,
+      "avg_buffers": 119.5,
+      "sql_sample": "SELECT SR.RESERVATION_ID,SR.SOURCE_LINE_ID,SR.SOURCE_DOC_TYPE,SR.SOURCE_DOC_ID,SR.RESERVATION_VERSION,SR.BASE_QTY,SR.BASE_UOM,RR.UID_POLETA,RR.CELL,RR.REMAIN FROM RRL_STOCK_RESERVATION SR JOIN RRL_REMAINS RR ON RR.UID_POLETA=SR.UID_PALLET AND RR.CELL=SR.CELL JOIN RRL_PALLETS PP ON PP.UID_PALLET=SR.UID_PALLET JOIN RRL_CELLS CC ON CC.CELL=SR.CELL LEFT JOIN RRL_PROD_BATCH_READY_V BR ON BR.PROD_BATCH_ID=PP.PROD_BATCH_ID WHERE SR.CUSTOMER_ORDER_ID=:B8 AND SR.ARTICUL=:B7 AND SR.RESERVATION_KIND='HARD' AND SR.RESERVATION_DOMAIN='PICKING' AND SR.STATUS IN('ACTIVE','ALLOCATED','PICKING') AND SR.BASE_QTY>0 AND SR.BASE_UOM=:B6 AND CC.WARE_ID=:B5 AND (:B4 IS NULL OR (SR.UID_PALLET=:B4 AND SR.SOURCE_LINE_ID=:B3 )) AND NVL(CC.BLOCKED_FOR_REMAINS,0)=0 AND NVL(CC.BLOCKED_FOR_POPOLNENIE,0)=0 AND NVL(BR.IS_SHIPMENT_ALLOWED,1)=1 AND ((:B2 IS NULL AND NOT EXISTS(SELECT 1 FROM RRL_CASE_CARRIER_LOT H WHERE H."
+    },
+    {
+      "sql_id": "abq43xmsct2th",
+      "executions": 2,
+      "avg_ms": 70.35,
+      "avg_buffers": 1103.5,
+      "sql_sample": "SELECT SR.RESERVATION_ID,SR.UID_PALLET,SR.CELL,SR.BASE_QTY,SR.BASE_UOM,S.REMAIN,S.STOCK_VERSION,P.EXPIRY_DATE FROM RRL_STOCK_RESERVATION SR JOIN RRL_REMAINS S ON S.UID_POLETA=SR.UID_PALLET AND S.CELL=SR.CELL JOIN RRL_PALLETS P ON P.UID_PALLET=SR.UID_PALLET WHERE SR.SOURCE_DOC_TYPE='PICK_WAVE' AND SR.SOURCE_DOC_ID=:B7 AND SR.SOURCE_LINE_ID=:B6 AND SR.CUSTOMER_ORDER_ID=:B5 AND SR.RESERVATION_KIND='HARD' AND SR.STATUS IN('ACTIVE','ALLOCATED','PICKING') AND SR.CELL=:B4 AND P.ARTICUL=:B1 AND NOT EXISTS(SELECT 1 FROM RRL_CASE_CARRIER_LOT H WHERE H.LOT_UID=SR.UID_PALLET) AND RRL_STOCK_ELIGIBILITY.REASON(SR.UID_PALLET,SR.CELL,:B3 ,LEAST(:B2 ,SR.BASE_QTY),NULL,NULL,'PICK',SR.RESERVATION_ID,:B1 ) IS NULL ORDER BY P.EXPIRY_DATE NULLS LAST,SR.UID_PALLET,SR.RESERVATION_ID FETCH FIRST 201 ROWS ONLY"
+    },
+    {
+      "sql_id": "axs7jh20mnz4v",
+      "executions": 11,
+      "avg_ms": 3.308,
+      "avg_buffers": 40.64,
+      "sql_sample": "SELECT C.WARE_ID,S.REMAIN,S.HARD_RESERVED_BASE,S.BASE_UOM,P.ARTICUL,P.EXPIRY_DATE,P.PRODUCED_DATE, GREATEST(NVL(C.BLOCKED_FOR_REMAINS,0),NVL(C.BLOCKED_FOR_POPOLNENIE,0)),NVL(C.IS_SYSTEM,0), NVL(RULE.SOURCE_PICK_MODE,'AFTER_PUTAWAY'),NVL(RULE.MIN_SHELF_DAYS,0),NVL(BR.IS_SHIPMENT_ALLOWED,1) FROM RRL_REMAINS S JOIN RRL_PALLETS P ON P.UID_PALLET=S.UID_POLETA JOIN RRL_CELLS C ON C.CELL=S.CELL LEFT JOIN RRL_RECEIPT_SKU_RULE RULE ON RULE.WARE_ID=C.WARE_ID AND RULE.ARTICUL=P.ARTICUL LEFT JOIN RRL_PROD_BATCH_READY_V BR ON BR.PROD_BATCH_ID=P.PROD_BATCH_ID WHERE S.UID_POLETA=:B2 AND S.CELL=:B1 "
+    },
+    {
+      "sql_id": "gvsk5hj6zdhkw",
+      "executions": 12,
+      "avg_ms": 2.646,
+      "avg_buffers": 100.42,
+      "sql_sample": "SELECT H.LOT_UID,S.CELL,S.REMAIN,S.STOCK_VERSION,S.BASE_UOM,P.ARTICUL,H.CASE_PICK_LINE_ID FROM RRL_CASE_CARRIER_LOT H JOIN RRL_REMAINS S ON S.UID_POLETA=H.LOT_UID JOIN RRL_PALLETS P ON P.UID_PALLET=H.LOT_UID WHERE H.CASE_PICK_TASK_ID=:B1 AND S.REMAIN>0 ORDER BY H.LOT_UID,S.CELL FETCH FIRST 201 ROWS ONLY"
+    },
+    {
+      "sql_id": "d7af4hwmp0byb",
+      "executions": 2,
+      "avg_ms": 13.491,
+      "avg_buffers": 213.5,
+      "sql_sample": "INSERT INTO RRL_WMS_HU_LINK(HU_LINK_ID,PARENT_UID,CHILD_PALLET_UID,CHILD_CASE_TASK_ID,ACTIVE_FLAG,LINK_VERSION,LINKED_OPERATION_ID,LINKED_BY) VALUES(:B6 ,:B5 ,:B4 ,:B3 ,1,0,:B2 ,:B1 )"
+    },
+    {
+      "sql_id": "ffbwu9gr2npfs",
+      "executions": 1,
+      "avg_ms": 21.544,
+      "avg_buffers": 61,
+      "sql_sample": "select count(*)from RRL_CASE_PICK_LINE l         left join(select h.CASE_PICK_LINE_ID,sum(s.REMAIN) QTY from RRL_CASE_CARRIER_LOT h           join RRL_REMAINS s on s.UID_POLETA=h.LOT_UID where h.CASE_PICK_TASK_ID=:id           group by h.CASE_PICK_LINE_ID)p on p.CASE_PICK_LINE_ID=l.CASE_PICK_LINE_ID         where l.CASE_PICK_TASK_ID=:id and nvl(p.QTY,0)!=nvl(l.PICKED_QTY,0)"
+    },
+    {
+      "sql_id": "87ch11p9uuvu2",
+      "executions": 15,
+      "avg_ms": 1.322,
+      "avg_buffers": 10.67,
+      "sql_sample": "SELECT COUNT(*) FROM RRL_WMS_HU_LINK WHERE ACTIVE_FLAG=1 AND (CHILD_PALLET_UID=:B1 OR CHILD_CASE_TASK_ID IN(SELECT CASE_PICK_TASK_ID FROM RRL_CASE_CARRIER_LOT WHERE LOT_UID=:B1 ))"
+    },
+    {
+      "sql_id": "7j6n6qrnmrca9",
+      "executions": 4,
+      "avg_ms": 4.515,
+      "avg_buffers": 70.5,
+      "sql_sample": "SELECT COUNT(*) FROM RRL_RECEIPT_SKU_RULE R LEFT JOIN RRL_RECEIPT_CELL_RULE CR ON CR.CELL=:B2 AND CR.WARE_ID=:B1 WHERE R.WARE_ID=:B1 AND R.ARTICUL=:B3 AND ((R.TEMP_MIN IS NOT NULL AND(CR.TEMP_MIN IS NULL OR CR.TEMP_MIN<R.TEMP_MIN)) OR(R.TEMP_MAX IS NOT NULL AND(CR.TEMP_MAX IS NULL OR CR.TEMP_MAX>R.TEMP_MAX)))"
+    },
+    {
+      "sql_id": "9nsd2jjq1h9v1",
+      "executions": 2,
+      "avg_ms": 8.579,
+      "avg_buffers": 162.5,
+      "sql_sample": "SELECT ID FROM RRL_SBORKA_PALLETS WHERE NVL(CONDITION,0)<2 AND ID IN( SELECT LEGACY_SBORKA_PALLET_ID FROM RRL_CASE_PICK_TASK WHERE CASE_PICK_TASK_ID IN( SELECT CASE_PICK_TASK_ID FROM RRL_CASE_CARRIER_LOT WHERE LOT_UID IN(SELECT U FROM JSON_TABLE(:B1 ,'$[*]' COLUMNS(U VARCHAR2(200) PATH '$')))) UNION SELECT LEGACY_SBORKA_PALLET_ID FROM RRL_CUSTOMER_ORDER_FULFILLMENT WHERE PICKED_PALLET_UID IN(SELECT U FROM JSON_TABLE(:B1 ,'$[*]' COLUMNS(U VARCHAR2(200) PATH '$')))) ORDER BY ID"
+    },
+    {
+      "sql_id": "3wjvc3pfmkxtw",
+      "executions": 32,
+      "avg_ms": 0.501,
+      "avg_buffers": 6.5,
+      "sql_sample": "SELECT PARENT_UID,LEVEL DEPTH,CONNECT_BY_ISCYCLE CYCLIC FROM RRL_WMS_HU_LINK START WITH (CHILD_PALLET_UID=:B2 OR CHILD_CASE_TASK_ID=:B1 ) AND ACTIVE_FLAG=1 CONNECT BY NOCYCLE PRIOR PARENT_UID=CHILD_PALLET_UID AND ACTIVE_FLAG=1"
+    },
+    {
+      "sql_id": "60pnuw4g8tg32",
+      "executions": 11,
+      "avg_ms": 1.369,
+      "avg_buffers": 17.55,
+      "sql_sample": "SELECT HU_LINK_ID,PARENT_UID,LEVEL DEPTH,CONNECT_BY_ISCYCLE CYCLIC FROM RRL_WMS_HU_LINK START WITH ACTIVE_FLAG=1 AND (CHILD_PALLET_UID=:B1 OR CHILD_CASE_TASK_ID IN (SELECT CASE_PICK_TASK_ID FROM RRL_CASE_CARRIER_LOT WHERE LOT_UID=:B1 )) CONNECT BY NOCYCLE PRIOR PARENT_UID=CHILD_PALLET_UID AND ACTIVE_FLAG=1"
+    },
+    {
+      "sql_id": "bxrb7yd0xxyd2",
+      "executions": 97,
+      "avg_ms": 0.154,
+      "avg_buffers": 3.59,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_WMS_HU_LINK WHERE CHILD_CASE_TASK_ID=:B1 AND ACTIVE_FLAG=1"
+    }
+  ],
+  "max_http_ms": 333,
+  "decision": "Keep PK-scoped cell/SKU lookups, distinct article bound200 and existing CONFIG fences; no speculative cache/index. Mixed subtree owner measures tree/ST join plans on pilot-volume data. Cumulative V$SQL means are shared history, not scenario p95. Current tests include manual TEST placement measurements, not hardware or SHIPPING_GROSS proof.",
+  "state": "PASS_HTTP_REVOKE_PREVIEW_SQL_REVIEW"
+}

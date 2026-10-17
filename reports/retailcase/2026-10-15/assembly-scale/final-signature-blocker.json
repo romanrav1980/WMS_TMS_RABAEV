@@ -1,0 +1,48 @@
+{
+  "state": "BLOCKED_BEFORE_FINAL_CAPTURE",
+  "qc": {
+    "shipment_identifier": "TEST.WHREQ15.PREPARED",
+    "document_id": 641520,
+    "required": false,
+    "control_mode": "NONE",
+    "independent_controller_required": false,
+    "ready": false,
+    "weight_exemption_recorded": false,
+    "reason": "ORA-20868: SHIPMENT_OWN_PICKED_RESERVATION_INSUFFICIENT"
+  },
+  "case": [
+    {
+      "content_version": 3,
+      "status": "WAIT_CONTROL",
+      "legacy_sborka_pallet_id": 641520,
+      "current_cell": "CPT_13583852",
+      "picked_qty": 1
+    }
+  ],
+  "stock": [
+    {
+      "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+      "cell": "CPT_13583852",
+      "remain": 1,
+      "hard_reserved_base": 1,
+      "stock_version": 1
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QIPcdbf4c0962",
+      "remain": 23,
+      "hard_reserved_base": 0,
+      "stock_version": 11
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "decision": "Separate ASM final content identity v3 from shipping eligibility v2; preserve system CELL block flags; no direct state/stock repair",
+  "stock_pick_committed": "WHREQ15.ASM.PICK1136 exactly1EA, compensation plan saved",
+  "final_capture_sent": false
+}

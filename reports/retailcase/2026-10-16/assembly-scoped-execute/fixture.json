@@ -1,0 +1,240 @@
+{
+  "tag": "35cea92c27",
+  "prefix": "AS16.35cea92c27",
+  "actor": "AS16O35cea92c27",
+  "sender": "AS16G35cea92c27",
+  "article": "AS16A35CEA92C27",
+  "source": "AS16.LOT:35cea92c27",
+  "warehouse_id": 20220394,
+  "cell": "AS16C35cea92c27",
+  "role": "AS16R35cea92c27",
+  "assignment": "AS16X35cea92c27",
+  "device": "AS16D35cea92c27",
+  "hardware_verified": false,
+  "quantity": "1",
+  "state": "SCOPED_ASM_FINALIZED_TEST",
+  "stock_birth": "1 EA simulated inventory",
+  "recovery": [
+    "Never rerun after uncertain effect: inspect exact operation receipt",
+    "Canonical CASE_CARRIER_RETURN if picked; WAVE_CANCEL and PICK_PLAN_CANCEL release own reservations",
+    "Retain stock/scale/access journals; retire own actors/role/device/resource/session after mixed-HU follow-up",
+    "Never delete histories or touch prior QA stock; positive TEST stock remains isolated under fresh warehouse"
+  ],
+  "order": 2150,
+  "order_row": 3637,
+  "plan": 2202,
+  "line": 2211,
+  "task": 2140,
+  "reservation": 2008,
+  "wave": 571,
+  "wave_order": 1972,
+  "face": 607,
+  "face_article": 298,
+  "revision": 402,
+  "receipts": {
+    "BIRTH": {
+      "operation_id": "AS16.35cea92c27.BIRTH",
+      "revision_id": 402,
+      "uid": "AS16.LOT:35cea92c27",
+      "cell": "AS16C35cea92c27",
+      "article": "AS16A35CEA92C27",
+      "quantity": "1",
+      "unit": "EA",
+      "event_id": 6446717,
+      "lot_source": "INVENTORY",
+      "outbox_id": 5359
+    },
+    "RELEASE": {
+      "wave_id": 571,
+      "warehouse": 20220394,
+      "status": "LAUNCHED",
+      "released_at": "2026-10-15T17:11:51.354183-04:00",
+      "released_by": "admin",
+      "release_operation_id": "AS16.35cea92c27.RELEASE",
+      "ready": true,
+      "tasks": [
+        {
+          "pick_task_id": 2140,
+          "wave_task_id": 2063,
+          "article": "AS16A35CEA92C27",
+          "task_type": "CASE_PICK",
+          "status": "ASSIGNED",
+          "cell": "AS16C35cea92c27",
+          "required_base": "1",
+          "covered_base": "1",
+          "missing_base": "0",
+          "base_uom": "EA",
+          "reservations": [
+            {
+              "reservation_id": 1876,
+              "uid": "AS16.LOT:35cea92c27",
+              "cell": "AS16C35cea92c27",
+              "article": "AS16A35CEA92C27",
+              "quantity": "1",
+              "base_uom": "EA",
+              "stock_version": 2,
+              "physical": "1",
+              "hard": "1",
+              "reason": null
+            }
+          ]
+        }
+      ],
+      "open_replenishments": [],
+      "outbox_id": 5362
+    },
+    "TYPE": {
+      "operation_id": "AS16.35cea92c27.TYPE",
+      "command_type": "CASE_PALLET_TYPE_CHANGE",
+      "case_task_id": 1140,
+      "pallet_type_id": 32,
+      "previous_pallet_type_id": 1,
+      "planned_pallet_type_id": null,
+      "version": 1,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "stock_changed": false,
+      "status": "APPLIED",
+      "outbox_id": 5363
+    },
+    "TARE.COUNT": {
+      "status": "POSTED",
+      "tare_balance_changed": true,
+      "destination_quantity": "1",
+      "operation_id": "AS16.35cea92c27.TARE.COUNT",
+      "quantity": "1",
+      "owner_ware_id": 20220394,
+      "pallet_type_id": 32,
+      "condition": "GOOD",
+      "goods_stock_changed": false,
+      "outbox_id": 5364
+    },
+    "TARE.BOOK": {
+      "operation_id": "AS16.35cea92c27.TARE.BOOK",
+      "status": "HELD",
+      "place_kind": "CASE",
+      "place_id": "1140",
+      "pallet_type_id": 32,
+      "warehouse_id": 20220394,
+      "available_quantity": "0",
+      "quantity": "1",
+      "physical_tare_changed": false,
+      "goods_stock_changed": false,
+      "outbox_id": 5365
+    }
+  },
+  "launch": {
+    "operation_id": "AS16.35cea92c27.LAUNCH",
+    "launch_outcome": "APPLIED",
+    "continuation_state": "COMPLETE",
+    "wave_status": "LAUNCHED"
+  },
+  "task_id": 1140,
+  "case_before": {
+    "case_pick_task_id": 1140,
+    "content_version": 0,
+    "sscc": "CP571000000001140"
+  },
+  "case_line_id": 1142,
+  "resource_id": 64,
+  "shift_id": 69,
+  "resource_session_id": 60,
+  "acl_receipts": {
+    "ROLE": {
+      "operation_id": "AS16.35cea92c27.ROLE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "AS16R35cea92c27",
+      "version": 1,
+      "replayed": false
+    },
+    "WARE.OBJECT": {
+      "operation_id": "AS16.35cea92c27.WARE.OBJECT",
+      "command_type": "OBJECT_SAVE",
+      "object_id": "20220394",
+      "version": 1,
+      "replayed": false
+    },
+    "ASSIGN.AFTER.OBJECT": {
+      "operation_id": "AS16.35cea92c27.ASSIGN.AFTER.OBJECT",
+      "command_type": "ASSIGN",
+      "object_id": "AS16X35cea92c27",
+      "version": 1,
+      "replayed": false
+    },
+    "HTTP.WARE.REVOKE": {
+      "operation_id": "AS16.35cea92c27.HTTP.WARE.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "AS16X35cea92c27",
+      "version": 2,
+      "replayed": false
+    },
+    "HTTP.SELF.ASSIGN": {
+      "operation_id": "AS16.35cea92c27.HTTP.SELF.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "AS16.35cea92c27.SELF",
+      "version": 1,
+      "replayed": false
+    },
+    "HTTP.SELF.REVOKE": {
+      "operation_id": "AS16.35cea92c27.HTTP.SELF.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "AS16.35cea92c27.SELF",
+      "version": 2,
+      "replayed": false
+    },
+    "HTTP.GROUP.CREATE": {
+      "operation_id": "AS16.35cea92c27.HTTP.GROUP.CREATE",
+      "command_type": "GROUP_SAVE",
+      "object_id": "AS16.35cea92c27.GROUP",
+      "version": 1,
+      "replayed": false
+    },
+    "HTTP.GROUP.ASSIGN": {
+      "operation_id": "AS16.35cea92c27.HTTP.GROUP.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "AS16.35cea92c27.GROUP.ASSIGN",
+      "version": 1,
+      "replayed": false
+    },
+    "HTTP.GROUP.REMOVE": {
+      "operation_id": "AS16.35cea92c27.HTTP.GROUP.REMOVE",
+      "command_type": "GROUP_SAVE",
+      "object_id": "AS16.35cea92c27.GROUP",
+      "version": 2,
+      "replayed": false
+    },
+    "HTTP.GROUP.REVOKE": {
+      "operation_id": "AS16.35cea92c27.HTTP.GROUP.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "AS16.35cea92c27.GROUP.ASSIGN",
+      "version": 2,
+      "replayed": false
+    },
+    "LOCK.ASSIGN": {
+      "operation_id": "AS16.35cea92c27.LOCK.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "AS16.35cea92c27.LOCK.SELF",
+      "version": 1,
+      "replayed": false
+    },
+    "LOCK.REVOKE": {
+      "operation_id": "AS16.35cea92c27.LOCK.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "AS16.35cea92c27.LOCK.SELF",
+      "version": 2,
+      "replayed": false
+    }
+  },
+  "label": {
+    "case_pick_task_id": 1140,
+    "sscc": "090000000000011014",
+    "original_carrier": "CP571000000001140",
+    "content_version": 2,
+    "operation_id": "AS16.35cea92c27.LABEL",
+    "confirmed": false
+  },
+  "assembly_session": "AS16.35cea92c27.SESSION",
+  "step": "AS16.35cea92c27.STEP",
+  "pick_operation": "AS16.35cea92c27.PICK",
+  "st": 641521,
+  "st_identifier": "AS16.35cea92c27.ST"
+}

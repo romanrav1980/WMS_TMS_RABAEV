@@ -1,0 +1,61 @@
+{
+  "task_id": 1136,
+  "actor": "WHREQ15.OP",
+  "warehouse_id": 13583852,
+  "physical_verified": false,
+  "temporary_flat": {
+    "user_group": "WHREQ15.OP",
+    "right1": "CASE_PICK_EXECUTE",
+    "descr": "TEST_FIXTURE_NOT_HARDWARE shared scoped CASE proof; metadata only"
+  },
+  "resource_id": 58,
+  "qualification": {
+    "resource_id": 58,
+    "task_type": "CASE_PICK",
+    "active": true
+  },
+  "shift_time_zone": "Europe/Moscow",
+  "shift_explicit_start": "2026-10-15T15:05:22.159089+03:00",
+  "shift_explicit_finish": "2026-10-15T19:06:22.159089+03:00",
+  "shift_id": 63,
+  "session_id": 54,
+  "claimed": true,
+  "started": true,
+  "role": {
+    "operation_id": "WHREQ15.CASE.ROLE",
+    "command_type": "ROLE_SAVE",
+    "object_id": "WHREQ15.CASE.EXEC",
+    "version": 1,
+    "replayed": false
+  },
+  "assignment_payload": {
+    "assignment_id": "WHREQ15.CASE.SELF",
+    "username": "WHREQ15.OP",
+    "role_id": "WHREQ15.CASE.EXEC",
+    "scope_kind": "SELF",
+    "scope_id": null,
+    "valid_from": "2026-10-15T12:17:31.177440+00:00",
+    "valid_until": "2026-10-15T16:18:31.177440+00:00",
+    "expected_version": 0,
+    "reason": "TEST_FIXTURE_NOT_HARDWARE shared scoped CASE proof; metadata only"
+  },
+  "assignment": {
+    "operation_id": "WHREQ15.CASE.ASSIGN",
+    "command_type": "ASSIGN",
+    "object_id": "WHREQ15.CASE.SELF",
+    "version": 1,
+    "replayed": false
+  },
+  "flat_revocation": {
+    "user_group": "WHREQ15.OP",
+    "right1": "CASE_PICK_EXECUTE",
+    "deleted": 1
+  },
+  "native_only": false,
+  "flat_restored_for_root_approved_next_phase": {
+    "user_group": "WHREQ15.OP",
+    "right1": "CASE_PICK_EXECUTE",
+    "descr": "TEST_FIXTURE_NOT_HARDWARE shared scoped CASE proof; metadata only"
+  },
+  "role_version_after_revoke_test": 3
+}

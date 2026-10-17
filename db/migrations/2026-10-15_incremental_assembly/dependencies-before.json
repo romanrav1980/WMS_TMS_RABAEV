@@ -1,0 +1,42 @@
+[
+  {
+    "name": "RRL_CASE_SCALE_ADMISSION",
+    "type": "PACKAGE BODY"
+  },
+  {
+    "name": "RRL_SCALE_PACKET_READ",
+    "type": "PACKAGE BODY"
+  },
+  {
+    "name": "RRL_STOCK_CASE_MOVE_CMD",
+    "type": "PACKAGE BODY"
+  },
+  {
+    "name": "RRL_STOCK_CASE_PICK_CMD",
+    "type": "PACKAGE BODY"
+  },
+  {
+    "name": "RRL_STOCK_CASE_RETURN_CMD",
+    "type": "PACKAGE BODY"
+  },
+  {
+    "name": "RRL_STOCK_CASE_SHORT_CMD",
+    "type": "PACKAGE BODY"
+  },
+  {
+    "name": "RRL_STOCK_POSTING_API",
+    "type": "PACKAGE BODY"
+  },
+  {
+    "name": "RRL_STOCK_SHIPPING_CORE",
+    "type": "PACKAGE BODY"
+  },
+  {
+    "name": "RRL_STORE_SCALE_API",
+    "type": "PACKAGE BODY"
+  },
+  {
+    "name": "RRL_WH_SCALE_API",
+    "type": "PACKAGE BODY"
+  }
+]

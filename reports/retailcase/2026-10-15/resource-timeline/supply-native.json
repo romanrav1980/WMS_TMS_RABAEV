@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "checks": [
+    "native_only_supply_view_warehouse_before_limit",
+    "native_detail_and_foreign_warehouse_denial",
+    "explicit_calendar_basis_bounds_and_unknown_not_invented",
+    "supply_native_revoke_immediate"
+  ],
+  "fixture_cleaned": true,
+  "business_data": "READ_ONLY",
+  "stock_effect": "NONE"
+}

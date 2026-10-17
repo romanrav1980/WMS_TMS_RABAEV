@@ -1,0 +1,29 @@
+{
+  "migration_id": "2026-10-15-opc-scale-evidence",
+  "state": "APPLIED",
+  "target": [
+    "RABAEV",
+    "orcl",
+    "ORCL"
+  ],
+  "invalid_before": 0,
+  "objects_before": [],
+  "authorization": "Owner directly requested implementation of all scoped/equipment sprints until 19:00 MSK 15 October 2026",
+  "recovery": "Additive empty metadata, paired rollback preserves any nonempty history",
+  "sha256": {
+    "apply.sql": "55bb7408f6c581ed4e58d4114ad99185aa33a066072835f906e7e24ae75f1675",
+    "body.sql": "9edc36399816a54d1a446e7a75dcce3c2afa6ec66361c41b6489d59e9d08bc61",
+    "rollback.sql": "aea9b7900c367892572db0f7e9c6fcfce9ad2aa7592cc41e0e2f8793ef6057c4",
+    "schema.sql": "07cdc8412b6b25e91cb38c68ffe5bed47782e7ec44a5cf957dcaaf45c553897a",
+    "verify.sql": "9a0b7358ef47d26e143b00a532ada6f0263446e5b9356c54237e163b01c2c63d"
+  },
+  "verification": {
+    "source_exact_objects": 3,
+    "user_errors": 0,
+    "invalid_count": 0,
+    "native_capture_kinds": 3,
+    "api_tests": 11,
+    "evidence_fixture_rolled_back": true,
+    "original_sender_negative_rolled_back": true
+  }
+}

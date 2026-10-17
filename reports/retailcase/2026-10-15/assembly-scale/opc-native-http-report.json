@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "results": [
+    {
+      "phase": "BEFORE",
+      "weight_kg": "0.5",
+      "capture_id": "ASM.915A0A28ECB7F7588FAE098AAEF27227C4AE72DB850ADD85AD2DA4132056DF4A",
+      "capture_body_sha256": "1D74CE54D8EF66432E3E6A44C1E74ECDF0707F1F961B38E83D46E7D659999878",
+      "raw_body_sha256": "6D21CB293A37CE86D6F4D0F8F3D7607B81F0DCD9F553704DC4D700E9F1E76A67",
+      "capture": {
+        "status": "CAPTURE_ARCHIVED",
+        "step_state": "ARMED",
+        "stock_outcome": "READ_STEP"
+      },
+      "evidence": {
+        "status": "EVIDENCE_ARCHIVED",
+        "binding": "MATCHED"
+      }
+    },
+    {
+      "phase": "AFTER",
+      "weight_kg": "3.5",
+      "capture_id": "ASM.3CB2E38B37F214A38642C8ABBCF7C375485DED706F6FCB6B0B1BE20A1770DE62",
+      "capture_body_sha256": "931872F1635FE78F31F181D1A6F20F5D7007EFCF0E3E6133F608ED0AF1980BB1",
+      "raw_body_sha256": "1AD823EA41A0300FD1E6AE595835AAB1755C64A730C5B284E68B3A89B93F0A2F",
+      "capture": {
+        "status": "CAPTURE_ARCHIVED",
+        "step_state": "DISCREPANCY",
+        "stock_outcome": "READ_STEP"
+      },
+      "evidence": {
+        "status": "EVIDENCE_ARCHIVED",
+        "binding": "MATCHED"
+      }
+    }
+  ],
+  "stock_unchanged": true,
+  "stock_operation_created": false,
+  "step_use_created": false,
+  "session_state": "BLOCKED",
+  "step_state": "DISCREPANCY",
+  "native_mutations": "TEST_CAPTURE_AND_RAW_ARCHIVES_ONLY",
+  "physical_hardware": false,
+  "local_encrypted_opc": true,
+  "immutable_test_history_retained": true,
+  "slow_sql": []
+}

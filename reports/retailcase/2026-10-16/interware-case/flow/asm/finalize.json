@@ -1,0 +1,539 @@
+{
+  "state": "PASS_NATIVE_SCOPED_ASM_FINALIZED_TEST",
+  "hardware_verified": false,
+  "device_mode": "TEST",
+  "shipping_qc": false,
+  "binding": {
+    "case_pick_task_id": 1145,
+    "pallet_identifier": "AS16.ce9c011b16.ST",
+    "status": "BOUND",
+    "fulfillment_status": "PICKED",
+    "physical_composition": [
+      {
+        "article": "AS16ACE9C011B16",
+        "base_uom": "EA",
+        "quantity": "1"
+      }
+    ],
+    "idempotent": false
+  },
+  "snapshot": {
+    "composition_signature": "B5C7E0DBBFEDB194A69A85616F7CDE6AF34B3D3ED5229BC09D29B0C8B6889F04"
+  },
+  "request_body": {
+    "request_id": "AS16.ce9c011b16.FINAL.REQUEST2",
+    "device_id": "AS16Dce9c011b16",
+    "purpose": "FINAL_GROSS",
+    "case_task_id": 1145,
+    "expected_content_version": 3,
+    "scan_container": "090000000000014015",
+    "tare_capture_key": "7CCA9D5BC01F8E26383707FD8FE03DE8D4C9269B297EAB12AAEE2DB5D9764871",
+    "expected_composition_signature": "B5C7E0DBBFEDB194A69A85616F7CDE6AF34B3D3ED5229BC09D29B0C8B6889F04"
+  },
+  "request": {
+    "request_id": "AS16.ce9c011b16.FINAL.REQUEST2",
+    "device_id": "AS16Dce9c011b16",
+    "case_task_id": 1145,
+    "purpose": "FINAL_GROSS",
+    "state": "REQUESTED",
+    "current_context": "CURRENT",
+    "admissible": false,
+    "reason": null,
+    "capture_key": null,
+    "claim_id": null,
+    "created_at": "2026-10-16T12:25:02.985913+00:00",
+    "expires_at": "2026-10-16T12:27:02.985913+00:00",
+    "stock_posted": false,
+    "zero_progress_required": false,
+    "zero_confirmed_at": null,
+    "zero_source_sha256": null,
+    "claim_expires_at": null,
+    "server_now": "2026-10-16T12:25:03.008369+00:00",
+    "measurement_stage": "WAITING_ZERO",
+    "load_allowed": false
+  },
+  "claim_body": {
+    "claim_id": "AS16.ce9c011b16.FINAL.CLAIM3",
+    "device_id": "AS16Dce9c011b16"
+  },
+  "claim": {
+    "request_id": "AS16.ce9c011b16.FINAL.REQUEST2",
+    "device_id": "AS16Dce9c011b16",
+    "case_task_id": 1145,
+    "purpose": "FINAL_GROSS",
+    "state": "CLAIMED",
+    "current_context": "CURRENT",
+    "admissible": false,
+    "reason": null,
+    "capture_key": null,
+    "created_at": "2026-10-16T12:25:02.985913+00:00",
+    "expires_at": "2026-10-16T12:27:02.985913+00:00",
+    "stock_posted": false,
+    "zero_progress_required": false,
+    "zero_confirmed_at": null,
+    "zero_source_sha256": null,
+    "server_now": "2026-10-16T12:25:03.093966+00:00",
+    "claim_created_at": "2026-10-16T12:25:03.072301+00:00",
+    "measurement_stage": "WAITING_ZERO",
+    "load_allowed": false,
+    "capture_context": {
+      "case_task_id": 1145,
+      "device_id": "AS16Dce9c011b16",
+      "expected_content_version": 3,
+      "scan_container": "090000000000014015",
+      "tare_capture_key": "7CCA9D5BC01F8E26383707FD8FE03DE8D4C9269B297EAB12AAEE2DB5D9764871",
+      "purpose": "FINAL_GROSS",
+      "post_cell": "AS16Cce9c011b16",
+      "device_policy_version": 1,
+      "calibration_ref": "AS16.ce9c011b16.TEST",
+      "unit": "KG",
+      "basis": "GROSS",
+      "preset_tare_kg": "0",
+      "capture_id": "AS16.ce9c011b16.FINAL.CLAIM3"
+    },
+    "claim_id": "AS16.ce9c011b16.FINAL.CLAIM3",
+    "claim_expires_at": "2026-10-16T12:25:33.072301+00:00",
+    "claim_active": true
+  },
+  "packet": {
+    "case_task_id": 1145,
+    "device_id": "AS16Dce9c011b16",
+    "expected_content_version": 3,
+    "scan_container": "090000000000014015",
+    "tare_capture_key": "7CCA9D5BC01F8E26383707FD8FE03DE8D4C9269B297EAB12AAEE2DB5D9764871",
+    "purpose": "FINAL_GROSS",
+    "post_cell": "AS16Cce9c011b16",
+    "device_policy_version": 1,
+    "calibration_ref": "AS16.ce9c011b16.TEST",
+    "unit": "KG",
+    "basis": "GROSS",
+    "preset_tare_kg": "0",
+    "capture_id": "AS16.ce9c011b16.FINAL.CLAIM3",
+    "zero_confirmed": true,
+    "zero_check_kg": "0",
+    "zero_check_at": "2026-10-16T12:24:56.173907+00:00",
+    "measured_at": "2026-10-16T12:25:06.173907+00:00",
+    "samples": [
+      {
+        "offset_ms": 0,
+        "weight_kg": "1.5"
+      },
+      {
+        "offset_ms": 500,
+        "weight_kg": "1.5"
+      },
+      {
+        "offset_ms": 1000,
+        "weight_kg": "1.5"
+      },
+      {
+        "offset_ms": 1500,
+        "weight_kg": "1.5"
+      },
+      {
+        "offset_ms": 2000,
+        "weight_kg": "1.5"
+      }
+    ]
+  },
+  "rejected_pre_claim_window_packet": {
+    "case_task_id": 1145,
+    "device_id": "AS16Dce9c011b16",
+    "expected_content_version": 3,
+    "scan_container": "090000000000014015",
+    "tare_capture_key": "7CCA9D5BC01F8E26383707FD8FE03DE8D4C9269B297EAB12AAEE2DB5D9764871",
+    "purpose": "FINAL_GROSS",
+    "post_cell": "AS16Cce9c011b16",
+    "device_policy_version": 1,
+    "calibration_ref": "AS16.ce9c011b16.TEST",
+    "unit": "KG",
+    "basis": "GROSS",
+    "preset_tare_kg": "0",
+    "capture_id": "AS16.ce9c011b16.FINAL.CLAIM",
+    "zero_confirmed": true,
+    "zero_check_kg": "0",
+    "zero_check_at": "2026-10-16T12:21:49.411794+00:00",
+    "measured_at": "2026-10-16T12:21:59.411794+00:00",
+    "samples": [
+      {
+        "offset_ms": 0,
+        "weight_kg": "1.5"
+      },
+      {
+        "offset_ms": 500,
+        "weight_kg": "1.5"
+      },
+      {
+        "offset_ms": 1000,
+        "weight_kg": "1.5"
+      },
+      {
+        "offset_ms": 1500,
+        "weight_kg": "1.5"
+      },
+      {
+        "offset_ms": 2000,
+        "weight_kg": "1.5"
+      }
+    ]
+  },
+  "expired_attempt": {
+    "request": {
+      "request_id": "AS16.ce9c011b16.FINAL.REQUEST",
+      "device_id": "AS16Dce9c011b16",
+      "case_task_id": 1145,
+      "purpose": "FINAL_GROSS",
+      "state": "REQUESTED",
+      "current_context": "CURRENT",
+      "admissible": false,
+      "reason": null,
+      "capture_key": null,
+      "claim_id": null,
+      "created_at": "2026-10-16T12:21:59.247168+00:00",
+      "expires_at": "2026-10-16T12:23:59.247168+00:00",
+      "stock_posted": false,
+      "zero_progress_required": false,
+      "zero_confirmed_at": null,
+      "zero_source_sha256": null,
+      "claim_expires_at": null,
+      "server_now": "2026-10-16T12:21:59.310097+00:00",
+      "measurement_stage": "WAITING_ZERO",
+      "load_allowed": false
+    },
+    "claim": {
+      "request_id": "AS16.ce9c011b16.FINAL.REQUEST",
+      "device_id": "AS16Dce9c011b16",
+      "case_task_id": 1145,
+      "purpose": "FINAL_GROSS",
+      "state": "CLAIMED",
+      "current_context": "CURRENT",
+      "admissible": false,
+      "reason": null,
+      "capture_key": null,
+      "created_at": "2026-10-16T12:21:59.247168+00:00",
+      "expires_at": "2026-10-16T12:23:59.247168+00:00",
+      "stock_posted": false,
+      "zero_progress_required": false,
+      "zero_confirmed_at": null,
+      "zero_source_sha256": null,
+      "server_now": "2026-10-16T12:21:59.425517+00:00",
+      "claim_created_at": "2026-10-16T12:21:59.398924+00:00",
+      "measurement_stage": "WAITING_ZERO",
+      "load_allowed": false,
+      "capture_context": {
+        "case_task_id": 1145,
+        "device_id": "AS16Dce9c011b16",
+        "expected_content_version": 3,
+        "scan_container": "090000000000014015",
+        "tare_capture_key": "7CCA9D5BC01F8E26383707FD8FE03DE8D4C9269B297EAB12AAEE2DB5D9764871",
+        "purpose": "FINAL_GROSS",
+        "post_cell": "AS16Cce9c011b16",
+        "device_policy_version": 1,
+        "calibration_ref": "AS16.ce9c011b16.TEST",
+        "unit": "KG",
+        "basis": "GROSS",
+        "preset_tare_kg": "0",
+        "capture_id": "AS16.ce9c011b16.FINAL.CLAIM"
+      },
+      "claim_id": "AS16.ce9c011b16.FINAL.CLAIM",
+      "claim_expires_at": "2026-10-16T12:22:29.398924+00:00",
+      "claim_active": true
+    },
+    "packet": {
+      "case_task_id": 1145,
+      "device_id": "AS16Dce9c011b16",
+      "expected_content_version": 3,
+      "scan_container": "090000000000014015",
+      "tare_capture_key": "7CCA9D5BC01F8E26383707FD8FE03DE8D4C9269B297EAB12AAEE2DB5D9764871",
+      "purpose": "FINAL_GROSS",
+      "post_cell": "AS16Cce9c011b16",
+      "device_policy_version": 1,
+      "calibration_ref": "AS16.ce9c011b16.TEST",
+      "unit": "KG",
+      "basis": "GROSS",
+      "preset_tare_kg": "0",
+      "capture_id": "AS16.ce9c011b16.FINAL.CLAIM",
+      "zero_confirmed": true,
+      "zero_check_kg": "0",
+      "zero_check_at": "2026-10-16T12:21:49.411794+00:00",
+      "measured_at": "2026-10-16T12:21:59.411794+00:00",
+      "samples": [
+        {
+          "offset_ms": 0,
+          "weight_kg": "1.5"
+        },
+        {
+          "offset_ms": 500,
+          "weight_kg": "1.5"
+        },
+        {
+          "offset_ms": 1000,
+          "weight_kg": "1.5"
+        },
+        {
+          "offset_ms": 1500,
+          "weight_kg": "1.5"
+        },
+        {
+          "offset_ms": 2000,
+          "weight_kg": "1.5"
+        }
+      ]
+    },
+    "status": {
+      "request_id": "AS16.ce9c011b16.FINAL.REQUEST",
+      "device_id": "AS16Dce9c011b16",
+      "case_task_id": 1145,
+      "purpose": "FINAL_GROSS",
+      "state": "EXPIRED",
+      "current_context": "CURRENT",
+      "admissible": false,
+      "reason": "REQUEST_WINDOW_ELAPSED",
+      "capture_key": null,
+      "claim_id": null,
+      "created_at": "2026-10-16T12:21:59.247168+00:00",
+      "expires_at": "2026-10-16T12:23:59.247168+00:00",
+      "stock_posted": false,
+      "zero_progress_required": false,
+      "zero_confirmed_at": null,
+      "zero_source_sha256": null,
+      "claim_expires_at": null,
+      "server_now": "2026-10-16T12:25:02.939952+00:00",
+      "measurement_stage": "INACTIVE",
+      "load_allowed": false
+    }
+  },
+  "prior_claims": [
+    {
+      "claim": {
+        "request_id": "AS16.ce9c011b16.FINAL.REQUEST",
+        "device_id": "AS16Dce9c011b16",
+        "case_task_id": 1145,
+        "purpose": "FINAL_GROSS",
+        "state": "CLAIMED",
+        "current_context": "CURRENT",
+        "admissible": false,
+        "reason": null,
+        "capture_key": null,
+        "created_at": "2026-10-16T12:21:59.247168+00:00",
+        "expires_at": "2026-10-16T12:23:59.247168+00:00",
+        "stock_posted": false,
+        "zero_progress_required": false,
+        "zero_confirmed_at": null,
+        "zero_source_sha256": null,
+        "server_now": "2026-10-16T12:21:59.425517+00:00",
+        "claim_created_at": "2026-10-16T12:21:59.398924+00:00",
+        "measurement_stage": "WAITING_ZERO",
+        "load_allowed": false,
+        "capture_context": {
+          "case_task_id": 1145,
+          "device_id": "AS16Dce9c011b16",
+          "expected_content_version": 3,
+          "scan_container": "090000000000014015",
+          "tare_capture_key": "7CCA9D5BC01F8E26383707FD8FE03DE8D4C9269B297EAB12AAEE2DB5D9764871",
+          "purpose": "FINAL_GROSS",
+          "post_cell": "AS16Cce9c011b16",
+          "device_policy_version": 1,
+          "calibration_ref": "AS16.ce9c011b16.TEST",
+          "unit": "KG",
+          "basis": "GROSS",
+          "preset_tare_kg": "0",
+          "capture_id": "AS16.ce9c011b16.FINAL.CLAIM"
+        },
+        "claim_id": "AS16.ce9c011b16.FINAL.CLAIM",
+        "claim_expires_at": "2026-10-16T12:22:29.398924+00:00",
+        "claim_active": true
+      },
+      "packet": {
+        "case_task_id": 1145,
+        "device_id": "AS16Dce9c011b16",
+        "expected_content_version": 3,
+        "scan_container": "090000000000014015",
+        "tare_capture_key": "7CCA9D5BC01F8E26383707FD8FE03DE8D4C9269B297EAB12AAEE2DB5D9764871",
+        "purpose": "FINAL_GROSS",
+        "post_cell": "AS16Cce9c011b16",
+        "device_policy_version": 1,
+        "calibration_ref": "AS16.ce9c011b16.TEST",
+        "unit": "KG",
+        "basis": "GROSS",
+        "preset_tare_kg": "0",
+        "capture_id": "AS16.ce9c011b16.FINAL.CLAIM",
+        "zero_confirmed": true,
+        "zero_check_kg": "0",
+        "zero_check_at": "2026-10-16T12:21:49.411794+00:00",
+        "measured_at": "2026-10-16T12:21:59.411794+00:00",
+        "samples": [
+          {
+            "offset_ms": 0,
+            "weight_kg": "1.5"
+          },
+          {
+            "offset_ms": 500,
+            "weight_kg": "1.5"
+          },
+          {
+            "offset_ms": 1000,
+            "weight_kg": "1.5"
+          },
+          {
+            "offset_ms": 1500,
+            "weight_kg": "1.5"
+          },
+          {
+            "offset_ms": 2000,
+            "weight_kg": "1.5"
+          }
+        ]
+      }
+    }
+  ],
+  "capture": {
+    "signature_domain": "ASM_FINAL",
+    "tare_capture_key": "7CCA9D5BC01F8E26383707FD8FE03DE8D4C9269B297EAB12AAEE2DB5D9764871",
+    "tare_weight_kg": "0.5",
+    "net_weight_kg": "1",
+    "composition_signature": "B5C7E0DBBFEDB194A69A85616F7CDE6AF34B3D3ED5229BC09D29B0C8B6889F04",
+    "composition_signature_version": 3,
+    "capture_key": "B910FF31A05AE68CF5E344E7A9A4F6DD0D18C8522BDC166F4472B81D56542CD0",
+    "device_id": "AS16Dce9c011b16",
+    "capture_id": "AS16.ce9c011b16.FINAL.CLAIM3",
+    "warehouse_id": 20846272,
+    "post_cell": "AS16Cce9c011b16",
+    "device_mode": "TEST",
+    "purpose": "FINAL_GROSS",
+    "case_task_id": 1145,
+    "case_content_version": 3,
+    "scan_container": "090000000000014015",
+    "pallet_type_id": 32,
+    "type_version": 2,
+    "basis": "GROSS",
+    "weight_kg": "1.5",
+    "device_policy_version": 1,
+    "calibration_ref": "AS16.ce9c011b16.TEST",
+    "resolution_kg": "0.001",
+    "source_sha256": "11D5F64879B2ACD6FD81089102F9E4ADF45D5E9A10AC5A73D1A46445CE751D40",
+    "measured_at": "2026-10-16T12:25:06.173907+00:00",
+    "sample_count": 5,
+    "span_ms": 2000,
+    "status": "ARCHIVED",
+    "stock_posted": false
+  },
+  "finish_request": {
+    "final_capture_key": "B910FF31A05AE68CF5E344E7A9A4F6DD0D18C8522BDC166F4472B81D56542CD0"
+  },
+  "finish": {
+    "session_id": "AS16.ce9c011b16.SESSION",
+    "task_id": 1145,
+    "device_id": "AS16Dce9c011b16",
+    "post_cell": "AS16Cce9c011b16",
+    "operator_id": "AS16Oce9c011b16",
+    "warehouse_id": 20846272,
+    "scan_container": "090000000000014015",
+    "cumulative_tolerance_kg": "0.002",
+    "state": "FINALIZED",
+    "confirmation_mode": "AUTO",
+    "content_version": 3,
+    "tare_capture_key": "7CCA9D5BC01F8E26383707FD8FE03DE8D4C9269B297EAB12AAEE2DB5D9764871",
+    "tare_weight_kg": "0.5",
+    "last_weight_kg": "1.5",
+    "expires_at": "2026-10-16T18:21:52.133060+00:00",
+    "block_reason": null,
+    "steps": [
+      {
+        "step_id": "AS16.ce9c011b16.STEP",
+        "session_id": "AS16.ce9c011b16.SESSION",
+        "operation_id": "AS16.ce9c011b16.PICK",
+        "sequence": 1,
+        "case_line_id": 1147,
+        "article": "AS16ACE9C011B16",
+        "quantity": "1",
+        "state": "APPLIED",
+        "confirmation_mode": "AUTO",
+        "content_version": 2,
+        "before_capture_id": "ASM.891E28D7F27692843F2A8D698D82C2C761245FB544C38160B8ED7B4F2D8C1C56",
+        "after_capture_id": "ASM.DA0097A53CD1F80A86FB7CDE16A5E626F5F931A820A07CD5CD344BD315FCB7FD",
+        "before_weight_kg": "0.5",
+        "after_weight_kg": "1.5",
+        "delta_kg": "1",
+        "min_delta_kg": "0.01",
+        "expected_delta_min_kg": "0.99",
+        "expected_delta_max_kg": "1.01",
+        "button_intent": false,
+        "consent_to_auto": true,
+        "block_reason": null,
+        "stock_posted": true
+      }
+    ],
+    "has_older": false,
+    "reconciliation": null
+  },
+  "finish_replay": {
+    "session_id": "AS16.ce9c011b16.SESSION",
+    "task_id": 1145,
+    "device_id": "AS16Dce9c011b16",
+    "post_cell": "AS16Cce9c011b16",
+    "operator_id": "AS16Oce9c011b16",
+    "warehouse_id": 20846272,
+    "scan_container": "090000000000014015",
+    "cumulative_tolerance_kg": "0.002",
+    "state": "FINALIZED",
+    "confirmation_mode": "AUTO",
+    "content_version": 3,
+    "tare_capture_key": "7CCA9D5BC01F8E26383707FD8FE03DE8D4C9269B297EAB12AAEE2DB5D9764871",
+    "tare_weight_kg": "0.5",
+    "last_weight_kg": "1.5",
+    "expires_at": "2026-10-16T18:21:52.133060+00:00",
+    "block_reason": null,
+    "steps": [
+      {
+        "step_id": "AS16.ce9c011b16.STEP",
+        "session_id": "AS16.ce9c011b16.SESSION",
+        "operation_id": "AS16.ce9c011b16.PICK",
+        "sequence": 1,
+        "case_line_id": 1147,
+        "article": "AS16ACE9C011B16",
+        "quantity": "1",
+        "state": "APPLIED",
+        "confirmation_mode": "AUTO",
+        "content_version": 2,
+        "before_capture_id": "ASM.891E28D7F27692843F2A8D698D82C2C761245FB544C38160B8ED7B4F2D8C1C56",
+        "after_capture_id": "ASM.DA0097A53CD1F80A86FB7CDE16A5E626F5F931A820A07CD5CD344BD315FCB7FD",
+        "before_weight_kg": "0.5",
+        "after_weight_kg": "1.5",
+        "delta_kg": "1",
+        "min_delta_kg": "0.01",
+        "expected_delta_min_kg": "0.99",
+        "expected_delta_max_kg": "1.01",
+        "button_intent": false,
+        "consent_to_auto": true,
+        "block_reason": null,
+        "stock_posted": true
+      }
+    ],
+    "has_older": false,
+    "reconciliation": null
+  },
+  "request_status": {
+    "request_id": "AS16.ce9c011b16.FINAL.REQUEST2",
+    "device_id": "AS16Dce9c011b16",
+    "case_task_id": 1145,
+    "purpose": "FINAL_GROSS",
+    "state": "CAPTURED",
+    "current_context": "STALE",
+    "admissible": false,
+    "reason": "CURRENT_SOURCE_ASSIGNMENT_OR_POLICY_CHANGED",
+    "capture_key": "B910FF31A05AE68CF5E344E7A9A4F6DD0D18C8522BDC166F4472B81D56542CD0",
+    "claim_id": "AS16.ce9c011b16.FINAL.CLAIM3",
+    "created_at": "2026-10-16T12:25:02.985913+00:00",
+    "expires_at": "2026-10-16T12:27:02.985913+00:00",
+    "stock_posted": false,
+    "zero_progress_required": false,
+    "zero_confirmed_at": null,
+    "zero_source_sha256": null,
+    "server_now": "2026-10-16T12:25:06.550962+00:00",
+    "claim_created_at": "2026-10-16T12:25:03.072301+00:00",
+    "claim_expires_at": "2026-10-16T12:25:33.072301+00:00",
+    "measurement_stage": "CAPTURED",
+    "load_allowed": false
+  }
+}

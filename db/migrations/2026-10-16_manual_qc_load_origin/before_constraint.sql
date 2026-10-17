@@ -1,0 +1,2 @@
+declare v varchar2(4000);begin select SEARCH_CONDITION_VC into v from USER_CONSTRAINTS where CONSTRAINT_NAME='RRL_LOAD_BOX_ORIGIN_C'and STATUS='ENABLED'and VALIDATED='VALIDATED';if rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(regexp_replace(v,'[[:space:]]',''),'AL32UTF8'),sys.dbms_crypto.hash_sh256))!='B2E5118054A4C621279F7B760A0E909991926702896DD86908C864DC7E599F10'then raise_application_error(-20886,'LOAD_BOX_CONSTRAINT_SOURCE_CHANGED');end if;end;
+/

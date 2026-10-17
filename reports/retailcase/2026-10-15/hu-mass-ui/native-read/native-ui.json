@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "width": 390,
+      "status": "PASS",
+      "nodes": 3,
+      "collapse_expand": true,
+      "selected_leaf": "CASELOT:C5622546955335244142496C5D188F090F2D85:1",
+      "help": "published3/two related",
+      "writes": 0,
+      "errors": []
+    }
+  ],
+  "api": "REAL_READ_ONLY",
+  "native_mutations": false,
+  "mixed_consolidation_or_hardware": false
+}

@@ -1,0 +1,215 @@
+{
+  "state": "PASS_UI_AUDIT_PAIRS_SQL_DECISIONS",
+  "source_cases": [
+    "offline-knowledge/ui-report.json"
+  ],
+  "total_http_cases": 5,
+  "lightweight_transport_reads": [],
+  "local_tail_cap_bytes": 33554432,
+  "local_line_cap": 60000,
+  "http": [
+    {
+      "api_call_id": 72180,
+      "request_id": "8ea7f1f4-9a90-4c0a-a67c-91a3119fa263",
+      "path": "/api/access/me",
+      "response_status": 200,
+      "duration_ms": 53
+    },
+    {
+      "api_call_id": 72181,
+      "request_id": "a60f10cd-4f06-4368-b9c0-2c84ff4eca5e",
+      "path": "/api/access/workspaces",
+      "response_status": 200,
+      "duration_ms": 311
+    },
+    {
+      "api_call_id": 72182,
+      "request_id": "9b60fc6d-8180-4ce2-9139-72b8741e82c5",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 200,
+      "duration_ms": 350
+    },
+    {
+      "api_call_id": 72183,
+      "request_id": "4558d3ce-55bb-4c9d-8ca4-2fe18d0c0550",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 200,
+      "duration_ms": 300
+    },
+    {
+      "api_call_id": 72184,
+      "request_id": "4c7fdda7-b16f-4e0c-b6d6-b1803ab04f98",
+      "path": "/api/access/navigation",
+      "response_status": 200,
+      "duration_ms": 155
+    }
+  ],
+  "slow": [],
+  "top_sql": [
+    {
+      "sql_id": "d7qxrbmc1n97d",
+      "executions": 506,
+      "avg_ms": 95.535,
+      "avg_buffers": 1682.11,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.prepare_command(:payload,:actor,:result,:resolution); end;"
+    },
+    {
+      "sql_id": "4a4445buyma1k",
+      "executions": 55,
+      "avg_ms": 102.98,
+      "avg_buffers": 1632.33,
+      "sql_sample": "with selected_tasks as (               select CASE_PICK_TASK_ID,PICK_WAVE_ID from (                 select t.CASE_PICK_TASK_ID,t.PICK_WAVE_ID                   from RRL_CASE_PICK_TASK t                   join RRL_PICK_WAVE w on w.PICK_WAVE_ID=t.PICK_WAVE_ID                   join RRL_CUSTOMER_ORDER co on co.CUSTOMER_ORDER_ID=t.CUSTOMER_ORDER_ID                  where 1 = 1 and RRL_ACCESS_API.allowed(:view_actor,'case_pick_view','WAREHOUSE',to_char(t.WARE_ID),t.ASSIGNED_TO)=1 and t.STATUS not in ('READY_TO_SHIP', 'CANCELLED')                  order by t.STATUS,t.CREATED_AT,t.CASE_PICK_TASK_ID  "
+    },
+    {
+      "sql_id": "9n2qv3txpfwjz",
+      "executions": 371,
+      "avg_ms": 1.464,
+      "avg_buffers": 47.26,
+      "sql_sample": "select count(*) from RUSERS u where u.ID=:actor and nvl(u.DELETED,0)=0         and exists(select 1 from RRL_WARES w where (:ware is null or w.ID=:ware)         and RRL_ACCESS_API.allowed(:actor,'case_pick_view','WAREHOUSE',to_char(w.ID),:actor)=1)"
+    },
+    {
+      "sql_id": "b9cwt8gjjs3z0",
+      "executions": 3,
+      "avg_ms": 128.368,
+      "avg_buffers": 2077.67,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.prepare_command(:1,:2,:3,:4); end;"
+    },
+    {
+      "sql_id": "24qrqv1zagxm5",
+      "executions": 100,
+      "avg_ms": 2.293,
+      "avg_buffers": 7.27,
+      "sql_sample": "select count(*),nvl(max(RRL_ACCESS_API.allowed(:actor,             'transport_dispatch_view','WAREHOUSE',RRL_STOCK_PLAN_HELPER.decimal_text(ID))),0)             from RRL_WARES where ID=:ware_id"
+    },
+    {
+      "sql_id": "9n2qv3txpfwjz",
+      "executions": 100,
+      "avg_ms": 1.746,
+      "avg_buffers": 13.96,
+      "sql_sample": "select count(*) from RUSERS u where u.ID=:actor and nvl(u.DELETED,0)=0         and exists(select 1 from RRL_WARES w where (:ware is null or w.ID=:ware)         and RRL_ACCESS_API.allowed(:actor,'case_pick_view','WAREHOUSE',to_char(w.ID),:actor)=1)"
+    },
+    {
+      "sql_id": "6z6bfsn4rm4w3",
+      "executions": 100,
+      "avg_ms": 1.55,
+      "avg_buffers": 8.08,
+      "sql_sample": "select count(*) from RRL_CASE_PICK_TASK t where t.CASE_PICK_TASK_ID=:task and RRL_ACCESS_API.allowed(:view_actor,'case_pick_view','WAREHOUSE',to_char(t.WARE_ID),t.ASSIGNED_TO)=1"
+    },
+    {
+      "sql_id": "6z6bfsn4rm4w3",
+      "executions": 249,
+      "avg_ms": 0.506,
+      "avg_buffers": 8.38,
+      "sql_sample": "select count(*) from RRL_CASE_PICK_TASK t where t.CASE_PICK_TASK_ID=:task and RRL_ACCESS_API.allowed(:view_actor,'case_pick_view','WAREHOUSE',to_char(t.WARE_ID),t.ASSIGNED_TO)=1"
+    },
+    {
+      "sql_id": "b9cwt8gjjs3z0",
+      "executions": 1,
+      "avg_ms": 79.711,
+      "avg_buffers": 1154,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.prepare_command(:1,:2,:3,:4); end;"
+    },
+    {
+      "sql_id": "4czduxvryva3w",
+      "executions": 27,
+      "avg_ms": 2.38,
+      "avg_buffers": 57.33,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_TT_HU_LOAD_FACT LF JOIN RUSERS U ON U.ID=:B1 WHERE LF.LOAD_OPERATION_ID=:B2 AND LF.WARE_ID>0 AND EXISTS(SELECT 1 FROM RRL_WARES W WHERE W.ID=LF.WARE_ID)AND NVL(U.DELETED,0)=0 AND( (RRL_HAS_WRIGHT(U.ID,'stock_posting_shipping')=1 AND(UPPER(TRIM(U.USER_GROUP))='GLOBAL_ADMIN'OR U.WARE_ID=LF.WARE_ID)) OR RRL_ACCESS_API.ALLOWED(U.ID,'stock_posting_shipping','WAREHOUSE',RRL_STOCK_PLAN_HELPER.DECIMAL_TEXT(LF.WARE_ID))=1)"
+    },
+    {
+      "sql_id": "0vgmbp3ytdnb9",
+      "executions": 4,
+      "avg_ms": 16.008,
+      "avg_buffers": 49.75,
+      "sql_sample": "select count(*) from RRL_WARES where ID=:w and             RRL_ACCESS_API.allowed(:a,'case_pick_view','WAREHOUSE',:ware)=1"
+    },
+    {
+      "sql_id": "dzyq4q8unyyz8",
+      "executions": 8,
+      "avg_ms": 6.336,
+      "avg_buffers": 49.5,
+      "sql_sample": "select REVISION ACCESS_REVISION,          RRL_ACCESS_API.allowed(:actor,'access_admin_view','PLATFORM',null) ACCESS_ADMIN,          RRL_ACCESS_API.allowed(:actor,'knowledge_edit','PLATFORM',null) KNOWLEDGE_EDITOR,          RRL_ACCESS_API.allowed(:actor,'knowledge_publish','PLATFORM',null) KNOWLEDGE_PUBLISH,          RRL_ACCESS_API.allowed(:actor,'access_role_manage','PLATFORM',null) MANAGE_ROLES,          RRL_ACCESS_API.is_admin(:actor) MANAGE_OBJECTS,          RRL_ACCESS_API.allowed(:actor,'access_group_manage','PLATFORM',null) MANAGE_GROUPS,          RRL_ACCESS_API.allowed(:actor,'access_ass"
+    }
+  ],
+  "decisions": [
+    {
+      "source": "top_sql",
+      "id": "d7qxrbmc1n97d",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "4a4445buyma1k",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "9n2qv3txpfwjz",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "b9cwt8gjjs3z0",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "24qrqv1zagxm5",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "9n2qv3txpfwjz",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "6z6bfsn4rm4w3",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "6z6bfsn4rm4w3",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "b9cwt8gjjs3z0",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "4czduxvryva3w",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "0vgmbp3ytdnb9",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "dzyq4q8unyyz8",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    }
+  ],
+  "native_direct_cases_not_http_paired": true,
+  "invalid": 0,
+  "errors": 0,
+  "local_pairs_observed": 5,
+  "local_missing_ids": [],
+  "max_http_ms": 350,
+  "performance_not_load_or_p95": true
+}

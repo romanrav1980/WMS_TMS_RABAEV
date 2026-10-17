@@ -1,8 +1,8 @@
 """Gateway packets only; no browser-supplied weight can confirm a receipt."""
 from typing import Any, Literal
-from fastapi import APIRouter,Depends,HTTPException
+from fastapi import APIRouter,Depends,HTTPException,Header
 from pydantic import BaseModel,ConfigDict,Field
-from ...platform.public import AdminUser,require_permission
+from ...platform.public import AdminUser,require_permission,get_current_user
 from ..contracts import StoreReceiptError
 from ..contracts_scales import StoreScalesPort,store_scales_service
 from .store_receipt_routes import failure
@@ -62,6 +62,7 @@ def configure(device_id: str,body: ScaleConfiguration,
 
 @router.post("/captures")
 def capture(body: ScalePacket,
+            protocol_version: Literal["1.0"]=Header(default="1.0",alias="X-Scale-Protocol-Version"),
             user: AdminUser=Depends(require_permission("store_scale_ingest")),
             service: StoreScalesPort=Depends(store_scales_service)) -> dict[str,Any]:
     try:
@@ -74,7 +75,7 @@ def capture(body: ScalePacket,
 
 @router.get("/captures/{capture_key}")
 def reading(capture_key: str,
-            user: AdminUser=Depends(require_permission("store_receipt_confirm")),
+            user: AdminUser=Depends(get_current_user),
             service: StoreScalesPort=Depends(store_scales_service)) -> dict[str,Any]:
     if len(capture_key)!=64 or any(char not in "0123456789ABCDEF" for char in capture_key):
         raise HTTPException(422,"Укажите ключ измерения")
@@ -86,7 +87,7 @@ def reading(capture_key: str,
 
 @router.get("/captures")
 def readings(load_operation_id: str,store_address: str,
-             user: AdminUser=Depends(require_permission("store_receipt_confirm")),
+             user: AdminUser=Depends(get_current_user),
              service: StoreScalesPort=Depends(store_scales_service)) -> dict[str,Any]:
     if not 1<=len(load_operation_id)<=100 or not 1<=len(store_address)<=255:
         raise HTTPException(422,"Укажите погрузку и адрес магазина")

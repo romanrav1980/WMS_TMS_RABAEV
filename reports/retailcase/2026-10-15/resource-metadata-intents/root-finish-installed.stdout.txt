@@ -1,0 +1,4 @@
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\apply_after_installed.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\verify_installed_indexes.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_resource_metadata_intents\after_source_guard.sql
+Done. Statements=4; Errors=0; AbsentCleanup=0

@@ -1,0 +1,37 @@
+{
+  "captured_at_utc": "2026-10-16T06:07:31.099253+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_STOCK_STORE_WEIGHT_CORE",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_store_weight_core_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "ea8cdc5a240a0406ca3ee458b3ad6079991f830eae23d5773c8417a7793a0b26",
+      "normalized_source_sha256": "b9ae1599a922edccb9b9aaa722954546cc6251852a72cadd4cc0676956c0ebc7",
+      "artifact_sha256": "279da9f4aac16b419125b93caf83cf863d774e9ab64cb044044a8a232299a20c"
+    },
+    {
+      "name": "RRL_STOCK_STORE_RECEIPT_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_store_receipt_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "ca93bd1d6667bb4e63dbc7c084238fe15451b9067d650f301ba5f82a7ccb08ed",
+      "normalized_source_sha256": "3146f3d93ecef559350c97bc4dd79c301091005920544320fb16fd1a572b384d",
+      "artifact_sha256": "4ee6bd4e2f5b022539b58b4f3e4c255aad2e215aba63ed45d9e71743eae34b75"
+    },
+    {
+      "name": "RRL_STORE_RECEIPT_WEIGHT_GUARD",
+      "type": "TRIGGER",
+      "file": "rrl_store_receipt_weight_guard_trigger.sql",
+      "errors": [],
+      "user_source_sha256": "e22da4f988de24b213871c0921c487733e39c90ece34a97256a96c991b66dfbb",
+      "normalized_source_sha256": "b14036827bebdf35124fdad34d37e75ffec0d44013c646963c3bc9e3bf1a38fa",
+      "artifact_sha256": "92ad0770626c7167fd9f79defaeffb93a5e69f4e83771a5571cd1a35c0c7564e"
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "scope": "ZERO15 native checks/actual HTTP + late first ZERO; no captures",
+  "audit": [
+    {
+      "api_call_id": 68662,
+      "method": "POST",
+      "path": "/api/inventory/warehouse-scales/gateway/requests/WHZERO15.AK06.REQUEST/zero-confirmed",
+      "response_status": 409,
+      "duration_ms": 81
+    },
+    {
+      "api_call_id": 68661,
+      "method": "GET",
+      "path": "/api/inventory/warehouse-scales/requests/WHZERO15.AK06.REQUEST",
+      "response_status": 200,
+      "duration_ms": 61
+    },
+    {
+      "api_call_id": 68660,
+      "method": "GET",
+      "path": "/api/inventory/warehouse-scales/requests/WHZERO15.AK06.REQUEST",
+      "response_status": 200,
+      "duration_ms": 49
+    },
+    {
+      "api_call_id": 68659,
+      "method": "POST",
+      "path": "/api/inventory/warehouse-scales/gateway/requests/WHZERO15.AK06.REQUEST/claim",
+      "response_status": 200,
+      "duration_ms": 142
+    },
+    {
+      "api_call_id": 68658,
+      "method": "POST",
+      "path": "/api/inventory/warehouse-scales/requests",
+      "response_status": 200,
+      "duration_ms": 241
+    }
+  ],
+  "slow_latest700": [
+    {
+      "log_id": 4767,
+      "api_call_id": 68662,
+      "elapsed_ms": 21,
+      "api_path": "/api/inventory/warehouse-scales/gateway/requests/WHZERO15.AK06.REQUEST/zero-confirmed",
+      "error_text": "ORA-20886: WH_ZERO_CURRENT_ACTIVE_CLAIM_REQUIRED\nORA-06512: at \"RABAEV.RRL_WH_WEIGH_REQUEST_API\", li"
+    }
+  ],
+  "oracle_top": [
+    {
+      "sql_id": "1vdjj54jt54nh",
+      "executions": 11,
+      "elapsed_ms": 303.136,
+      "avg_ms": 27.558
+    }
+  ],
+  "local_jsonl_finished": [
+    {
+      "api_call_id": 68658,
+      "duration_ms": 241,
+      "response_status": 200
+    },
+    {
+      "api_call_id": 68659,
+      "duration_ms": 142,
+      "response_status": 200
+    },
+    {
+      "api_call_id": 68660,
+      "duration_ms": 49,
+      "response_status": 200
+    },
+    {
+      "api_call_id": 68661,
+      "duration_ms": 61,
+      "response_status": 200
+    },
+    {
+      "api_call_id": 68662,
+      "duration_ms": 81,
+      "response_status": 409
+    }
+  ],
+  "decision": "PK CLAIM_ID lookup and 7 fixed OPC DataValues bounded; no new index. Existing device-history supersession COUNT backlog remains inventory/platform before scale pilot; this fixture does not prove long-history capacity.",
+  "headers_or_bodies_exported": false,
+  "http_calls": 5
+}

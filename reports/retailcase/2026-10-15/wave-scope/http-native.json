@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "checks": [
+    "native_only_wave_header_detail_readiness_pick_execution",
+    "native_only_approved_time_read_context",
+    "single_snapshot_bundle_all_sources_no_foreign_or_unbounded_batch",
+    "replenishment_progress_actual_wave_scope",
+    "foreign_wave_all_direct_reads_denied",
+    "single_granted_warehouse_queue_default",
+    "multiple_grants_require_explicit_warehouse",
+    "revoked_wave_read_denied"
+  ],
+  "fixture_cleaned": true,
+  "wave_effect": "READ_ONLY",
+  "stock_effect": "NONE"
+}

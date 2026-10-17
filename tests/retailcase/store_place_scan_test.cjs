@@ -1,0 +1,13 @@
+const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('node:vm');
+const ts=require('../../terminal/wms_terminal_web/node_modules/typescript');
+const file='terminal/wms_terminal_web/src/features/delivery/placeScan.ts';
+const js=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText;
+const context={exports:{}};vm.runInNewContext(js,context);const match=context.exports.matchedPlaceScan;
+const sscc='090000000000010017';
+for(const code of [sscc,'00'+sscc,'(00)'+sscc,']C100'+sscc,']C1(00)'+sscc])assert.equal(match(code,[sscc]),sscc);
+assert.equal(match('00'+sscc,['00'+sscc,sscc]),'00'+sscc,'Exact internal ID must win');
+assert.equal(match('PALLET-1',['PALLET-1']),'PALLET-1');
+assert.equal(match('00'+sscc,['OTHER']),null,'A scan cannot borrow another current place');
+assert.equal(match('00PALLET-1',['PALLET-1']),null,'No generic prefix stripping');
+assert.equal(match(' '+sscc,[sscc]),null,'Do not trim physical input silently');
+console.log('10 store place binding checks PASS');

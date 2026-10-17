@@ -1,0 +1,84 @@
+{
+  "state": "RETIRED_HISTORY_RETAINED",
+  "quantity_effect": false,
+  "inventory_journal_retained": true,
+  "empty_return": {
+    "empty_cancel": true,
+    "task": 1141,
+    "version": 2,
+    "carrier": "CP572000000001141",
+    "warehouse": 20220394,
+    "stocks": [],
+    "before": [],
+    "unused": [],
+    "operation_id": "IQ16.26c2f13302.RETIRE.EMPTY",
+    "status": "CANCELLED_EMPTY",
+    "physical_quantity_changed": false,
+    "next_action": "RELEASE_HELD_TARE_BOOK_THEN_WAVE_DECISION",
+    "outbox_id": 5438
+  },
+  "WAVE": {
+    "operation_id": "IQ16.26c2f13302.RETIRE.WAVE",
+    "document_type": "PICK_WAVE",
+    "document_id": 572,
+    "released_count": 0,
+    "outbox_id": 5439
+  },
+  "PLAN": {
+    "operation_id": "IQ16.26c2f13302.RETIRE.PLAN",
+    "document_type": "PICK_PLAN",
+    "document_id": 2203,
+    "released_count": 0,
+    "outbox_id": 5440
+  },
+  "tare_cancel": {
+    "operation_id": "IQ16.26c2f13302.RETIRE.BOOK",
+    "status": "CANCELLED",
+    "place_kind": "CASE",
+    "place_id": "1141",
+    "pallet_type_id": 32,
+    "warehouse_id": 20220394,
+    "available_quantity": "1",
+    "quantity": "1",
+    "physical_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 5441
+  },
+  "tare_count": {
+    "status": "POSTED",
+    "tare_balance_changed": true,
+    "destination_quantity": "1",
+    "operation_id": "IQ16.26c2f13302.RETIRE.COUNT",
+    "quantity": "1",
+    "owner_ware_id": 20220394,
+    "pallet_type_id": 32,
+    "condition": "GOOD",
+    "goods_stock_changed": false,
+    "outbox_id": 5442
+  },
+  "session_closed": true,
+  "qualification": {
+    "resource_id": 65,
+    "task_type": "CASE_PICK",
+    "active": false
+  },
+  "picker_flat_revoked": {
+    "user_group": "IQ16P26c2f13302",
+    "right1": "CASE_PICK_EXECUTE",
+    "deleted": 1
+  },
+  "role": {
+    "operation_id": "IQ16.26c2f13302.RETIRE.ROLE",
+    "command_type": "ROLE_SAVE",
+    "object_id": "IQ16R26c2f13302",
+    "version": 3,
+    "replayed": false
+  },
+  "group": {
+    "operation_id": "IQ16.26c2f13302.RETIRE.GROUP",
+    "command_type": "GROUP_SAVE",
+    "object_id": "IQ16.26c2f13302.GROUP",
+    "version": 4,
+    "replayed": false
+  }
+}

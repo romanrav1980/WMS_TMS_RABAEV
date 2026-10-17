@@ -1,0 +1,6 @@
+[
+  {
+    "line": 11,
+    "text": "or RRL_HAS_WRIGHT(p_actor,p_permission)!=1 then raise_application_error(-20882,'TASK_METADATA_FORBIDDEN');end if;"
+  }
+]

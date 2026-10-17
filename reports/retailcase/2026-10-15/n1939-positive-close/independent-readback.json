@@ -1,0 +1,278 @@
+{
+  "status": "PASS",
+  "journal_sha256": "a4f27502219ee33f897945b505f3898e8aad961f545f1f93a923c9f29d0ce793",
+  "actual": {
+    "active_hard": [],
+    "carrier": [],
+    "clock": [
+      {
+        "shift_state": "OFF",
+        "stream_version": 8,
+        "work_state": "IDLE"
+      }
+    ],
+    "events": [
+      {
+        "case_pick_event_id": 3752,
+        "created_by": "N1939.OP",
+        "event_type": "CLAIMED",
+        "offline_event_id": null
+      },
+      {
+        "case_pick_event_id": 3753,
+        "created_by": "N1939.OP",
+        "event_type": "STARTED",
+        "offline_event_id": null
+      },
+      {
+        "case_pick_event_id": 3756,
+        "created_by": "N1939.OP",
+        "event_type": "LINE_CONFIRMED",
+        "offline_event_id": null
+      },
+      {
+        "case_pick_event_id": 3757,
+        "created_by": "N1939.OP",
+        "event_type": "CLOSED",
+        "offline_event_id": "N1939.GQC.CLOSE"
+      }
+    ],
+    "legacy_plan": [],
+    "legacy_wave": [],
+    "line": [
+      {
+        "articul": "REUSE.QA:cdbf4c0962",
+        "case_pick_line_id": 1141,
+        "cell_code": "QIPcdbf4c0962",
+        "picked_qty": 1,
+        "planned_qty": 1,
+        "status": "CANCELLED"
+      }
+    ],
+    "plan": [
+      {
+        "status": "CANCELLED"
+      }
+    ],
+    "session": [
+      {
+        "current_task_id": null,
+        "operator_user_id": "N1939.OP",
+        "resource_id": 63,
+        "status": "CLOSED"
+      }
+    ],
+    "stock": [
+      {
+        "cell": "CPT_13583852",
+        "created_by_stock_op": "N1939.GQC.PICK",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 3,
+        "uid_poleta": "CASELOT:CA4DD2FD07A84F9E6D4769A62F3B9D5F55AD2F:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "N1939.GQC.PICK",
+        "hard_reserved_base": 0,
+        "remain": 1,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 1,
+        "uid_poleta": "CASELOT:CA4DD2FD07A84F9E6D4769A62F3B9D5F55AD2F:1"
+      },
+      {
+        "cell": "CPT_13583852",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 3,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 1,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 1,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 0,
+        "remain": 22,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 15,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 2,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      }
+    ],
+    "tare": [
+      {
+        "assembly_qty": 0,
+        "available_qty": 0,
+        "balance_version": 12,
+        "physical_qty": 0
+      }
+    ],
+    "task": [
+      {
+        "assigned_resource_id": 63,
+        "assigned_to": "N1939.OP",
+        "assignment_version": 4,
+        "content_version": 4,
+        "legacy_sborka_pallet_id": null,
+        "picked_qty": 1,
+        "resource_session_id": 59,
+        "sscc": "090000000000010017",
+        "started_at_instant": "2026-10-15 13:19:15.519832",
+        "status": "CANCELLED"
+      }
+    ],
+    "wave": [
+      {
+        "status": "CANCELLED"
+      }
+    ]
+  },
+  "receipts": [
+    {
+      "operation_id": "N1939.GQC.BOOK_CANCEL",
+      "actor": "admin",
+      "command_type": "TARE_BOOK_CANCEL",
+      "state": "APPLIED",
+      "request_hash": "9CF224E125B54B6BB5B72295E6AACB09E2EF3B0083DB0A95B4DA4A8B5335FED3"
+    },
+    {
+      "operation_id": "N1939.GQC.PICK",
+      "actor": "N1939.OP",
+      "command_type": "CASE_PICK_CONFIRM",
+      "state": "APPLIED",
+      "request_hash": "9D148ACE5BB10D1AF1F5A590E0FE817BF9BB8F9512B5F8052598E1390E3F0BB6"
+    },
+    {
+      "operation_id": "N1939.GQC.PLAN_CANCEL",
+      "actor": "admin",
+      "command_type": "PICK_PLAN_CANCEL",
+      "state": "APPLIED",
+      "request_hash": "2F242ABB9D3218865CCBB355114FA0A4C2E8F48894D14C3D0BA2DDACDC916F23"
+    },
+    {
+      "operation_id": "N1939.GQC.RETURN",
+      "actor": "admin",
+      "command_type": "CASE_CARRIER_RETURN",
+      "state": "APPLIED",
+      "request_hash": "41DFA37C8CF875C83DAD8BD3942DACF6FB5E89691738A36C4BEC668BAEA69016"
+    },
+    {
+      "operation_id": "N1939.GQC.TARE_COUNT0",
+      "actor": "admin",
+      "command_type": "TARE_COUNT",
+      "state": "APPLIED",
+      "request_hash": "055AE01410786E4BDD8718B393FC3A074CC987B0B6EE70CEECEE41F5D1C8E03E"
+    },
+    {
+      "operation_id": "N1939.GQC.WAVE_CANCEL",
+      "actor": "admin",
+      "command_type": "WAVE_CANCEL",
+      "state": "APPLIED",
+      "request_hash": "9AEC84A9D02465B9557C70377A6CA0CA676D7FBC8D8B983027CBCD978EBAAE46"
+    }
+  ],
+  "close_event": [
+    {
+      "event_type": "CLOSED",
+      "offline_event_id": "N1939.GQC.CLOSE",
+      "created_by": "N1939.OP"
+    }
+  ],
+  "grants": [
+    {
+      "assignment_id": "N1939.GQP.ASSIGN",
+      "version_no": 2,
+      "revoked_at": "2026-10-15 14:04:16.531274"
+    },
+    {
+      "assignment_id": "N1939.GQP.RESTORE.SELF",
+      "version_no": 2,
+      "revoked_at": "2026-10-15 14:20:50.314917"
+    },
+    {
+      "assignment_id": "N1939.GQP.RESTORE.WARE",
+      "version_no": 2,
+      "revoked_at": "2026-10-15 14:20:50.340482"
+    },
+    {
+      "assignment_id": "N1939.SELF",
+      "version_no": 2,
+      "revoked_at": "2026-10-15 14:04:14.245126"
+    },
+    {
+      "assignment_id": "N1939.WARE",
+      "version_no": 2,
+      "revoked_at": "2026-10-15 14:04:14.270051"
+    }
+  ],
+  "retained_role": [
+    {
+      "role_id": "N1939.CASE.EXEC",
+      "version_no": 3,
+      "active": 1
+    }
+  ],
+  "invalid": [],
+  "errors": [],
+  "readback_elapsed_seconds": 0.5497360000154004,
+  "sql_top": [
+    {
+      "sql_id": "b8pwv691hur1x",
+      "executions": 522,
+      "elapsed_time": 54289,
+      "buffer_gets": 1297,
+      "sql_text": "SELECT *FROM RRL_CASE_PICK_TASK WHERE CASE_PICK_TASK_ID=:B1 "
+    },
+    {
+      "sql_id": "cg8d10q8vg0dz",
+      "executions": 4,
+      "elapsed_time": 30684,
+      "buffer_gets": 608,
+      "sql_text": "SELECT CASE_PICK_TASK_ID FROM RRL_CASE_PICK_TASK WHERE CASE_PICK_TASK_ID=:B1 FOR UPDATE WAIT 2"
+    },
+    {
+      "sql_id": "0a7q1smq80by9",
+      "executions": 39,
+      "elapsed_time": 24679,
+      "buffer_gets": 103,
+      "sql_text": "SELECT *FROM RRL_CASE_PICK_TASK WHERE CASE_PICK_TASK_ID=JSON_VALUE(:B1 ,'$.case_task_id' RETURNING NUMBER)"
+    },
+    {
+      "sql_id": "9nsd2jjq1h9v1",
+      "executions": 2,
+      "elapsed_time": 21300,
+      "buffer_gets": 242,
+      "sql_text": "SELECT ID FROM RRL_SBORKA_PALLETS WHERE NVL(CONDITION,0)<2 AND ID IN( SELECT LEGACY_SBORKA_PALLET_ID FROM RRL_CASE_PICK_TASK WHERE CASE_PICK_TASK_ID IN( SELECT CASE_PICK_TASK_ID FROM RRL_CASE_CARRIER_LOT WHERE LOT_UID IN(SELECT U FROM JSON_TABLE(:B1 ,'$[*]' COLUMNS(U VARCHAR2(200) PATH '$')))) UNION SELECT LEGACY_SBORKA_PALLET_ID FROM RRL_CUSTOMER_ORDER_FULFILLMENT WHERE PICKED_PALLET_UID IN(SELECT U FROM JSON_TABLE(:B1 ,'$[*]' COLUMNS(U VARCHAR2(200) PATH '$')))) ORDER BY ID"
+    },
+    {
+      "sql_id": "b8pwv691hur1x",
+      "executions": 1,
+      "elapsed_time": 17785,
+      "buffer_gets": 285,
+      "sql_text": "SELECT *FROM RRL_CASE_PICK_TASK WHERE CASE_PICK_TASK_ID=:B1 "
+    }
+  ],
+  "sql_decision": "Retain bounded exact CASE/operation/UID readbacks; shared historical cursor totals are not isolated case latency. Resources owner tracks catalog/query plan backlog from picker-time review; no new stock index justified by this isolated readback.",
+  "writes_executed": false,
+  "physical_hardware": false,
+  "limitations": "Ordinary 1EA WARE+SELF positive CLOSE; GROUP quantity separately caller-rollback proven. TEST software input, no physical scanner/scale/label proof. Identity/resource retirement remains separate."
+}

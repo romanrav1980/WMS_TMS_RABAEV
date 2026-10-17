@@ -1,0 +1,347 @@
+{
+  "status": "CANONICAL_COMPENSATED_TEST_HISTORY_RETAINED",
+  "before": {
+    "case": [
+      {
+        "case_pick_task_id": 1136,
+        "status": "WAIT_CONTROL",
+        "content_version": 3,
+        "assignment_version": 0,
+        "picked_qty": 1,
+        "sscc": "090000000000008014",
+        "legacy_sborka_pallet_id": 641520,
+        "resource_session_id": 54
+      }
+    ],
+    "stock": [
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "remain": 1,
+        "hard_reserved_base": 1,
+        "stock_version": 1,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136"
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 0,
+        "stock_version": 11,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd"
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd"
+      }
+    ],
+    "carrier": [
+      {
+        "lot_uid": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      }
+    ],
+    "fulfillment": [
+      {
+        "fulfillment_id": 190,
+        "status": "PICKED",
+        "fact_qty": 1,
+        "picked_case_task_id": 1136,
+        "picked_content_version": 3
+      }
+    ],
+    "assembly": [
+      {
+        "session_id": "WHREQ15.ASM.S1136",
+        "state": "FINALIZED",
+        "final_capture_key": "163BD3827534486732C4139D5990AFD91139530C2DE4E862F44EACA8BD14F9D0"
+      }
+    ],
+    "tare": [
+      {
+        "physical_qty": 1,
+        "assembly_qty": 1,
+        "available_qty": 0,
+        "balance_version": 2
+      }
+    ],
+    "session": [
+      {
+        "session_id": 54,
+        "status": "ACTIVE"
+      }
+    ],
+    "events": [
+      {
+        "n": 6
+      }
+    ]
+  },
+  "hardware_verified": false,
+  "commands": {
+    "return": {
+      "canonical_request": "{\"actor\":\"admin\",\"command_type\":\"CASE_CARRIER_RETURN\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"destinations\":{\"CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1\":\"QIPcdbf4c0962\"},\"expected_content_version\":3,\"reason\":\"SIMULATED_TEST_NOT_HARDWARE; root-reviewed canonical compensation; preserve UID lineage/history\",\"scan_container\":\"090000000000008014\"},\"operation_id\":\"WHREQ15.COMPENSATE1136.RETURN\",\"source\":{\"case_task_id\":1136},\"units\":[]}",
+      "sha256": "4e03a8e63710ea00d2de810d9097d3816e55fec910d69fffb93ab33053ba49b1"
+    },
+    "wave_cancel": {
+      "canonical_request": "{\"actor\":\"admin\",\"command_type\":\"WAVE_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"only_cancelled_replenishment\":0,\"reason\":\"SIMULATED_TEST_NOT_HARDWARE; root-reviewed canonical compensation; preserve UID lineage/history\",\"reservation_kind\":null},\"operation_id\":\"WHREQ15.COMPENSATE1136.WAVE_CANCEL\",\"source\":{\"document_id\":567,\"document_type\":\"PICK_WAVE\"},\"units\":[]}",
+      "sha256": "6628db151be8533fb94d909956b0d4a87db25fc9e821b52b0370775d7270a6a8"
+    },
+    "plan_cancel": {
+      "canonical_request": "{\"actor\":\"admin\",\"command_type\":\"PICK_PLAN_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"only_cancelled_replenishment\":0,\"reason\":\"SIMULATED_TEST_NOT_HARDWARE; root-reviewed canonical compensation; preserve UID lineage/history\",\"reservation_kind\":null},\"operation_id\":\"WHREQ15.COMPENSATE1136.PLAN_CANCEL\",\"source\":{\"document_id\":2199,\"document_type\":\"PICK_PLAN\"},\"units\":[]}",
+      "sha256": "2f5d4d51ab3965234361af64190531e881002c1ad4c3ccbcae3697f2b647740b"
+    },
+    "book_cancel": {
+      "canonical_request": "{\"actor\":\"admin\",\"command_type\":\"TARE_BOOK_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{},\"operation_id\":\"WHREQ15.COMPENSATE1136.BOOK_CANCEL\",\"source\":{\"booking_operation_id\":\"WHREQ15.AK06.TARE.BOOK\"},\"units\":[]}",
+      "sha256": "c5161d69f87f349ac64850100e21a73b8e1550c4fc952ff8aa37b75ede2ea86e"
+    },
+    "tare_count": {
+      "canonical_request": "{\"actor\":\"admin\",\"command_type\":\"TARE_COUNT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"condition\":\"GOOD\",\"decision_reference\":\"TEST_WHREQ15_COMPENSATION\",\"expected_version\":3,\"observed_quantity\":\"0\",\"owner_ware_id\":13583852,\"pallet_type_id\":32,\"reason\":\"SIMULATED_TEST_NOT_HARDWARE; root-reviewed canonical compensation; preserve UID lineage/history\"},\"operation_id\":\"WHREQ15.COMPENSATE1136.TARE.COUNT0\",\"source\":{},\"units\":[]}",
+      "sha256": "b9fbc0001e65ca587d17c2afcfa590c5a349668c4db1be9ce390ac08669d7c51"
+    }
+  },
+  "flat_revoke": {
+    "user_group": "WHREQ15.OP",
+    "right1": "CASE_PICK_EXECUTE",
+    "deleted": 1
+  },
+  "flat_restore": {
+    "user_group": "WHREQ15.OP",
+    "right1": "CASE_PICK_EXECUTE",
+    "descr": "SIMULATED_TEST_NOT_HARDWARE; root-reviewed canonical compensation; preserve UID lineage/history"
+  },
+  "scoped_original_replay": {
+    "status": "PASS",
+    "original_operation": "WHREQ15.ASM.PICK1136",
+    "canonical_sha256": "e639a0e18972fdd2d0218a432358b2f12cb6ef3c487efb44de447588ed89e76c",
+    "ordinary_scoped_helper": 1,
+    "helper_scope": "Ordinary type eligibility only, not full new-command authorization; canonical WAIT_CONTROL/status guards preserved; no new command attempted",
+    "current_scope": {
+      "f": 0,
+      "r": 1,
+      "e": 1
+    },
+    "caller_rollback": true,
+    "quantity_effects": 0
+  },
+  "return_caller_rollback_result": {
+    "task": 1136,
+    "version": 3,
+    "carrier": "090000000000008014",
+    "warehouse": 13583852,
+    "stocks": [
+      {
+        "uid": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "REUSE.QA:cdbf4c0962",
+        "case_line": 1139,
+        "target": "QIPcdbf4c0962",
+        "reservations": [
+          1863
+        ]
+      }
+    ],
+    "before": [
+      {
+        "uid": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "REUSE.QA:cdbf4c0962",
+        "case_line": 1139
+      }
+    ],
+    "unused": [],
+    "operation_id": "WHREQ15.COMPENSATE1136.RETURN",
+    "status": "RETURNED",
+    "outbox_id": 5322
+  },
+  "return_caller_rollback": "PASS exact scoped source/CASE/fulfillment/tare/session/events restored; stock operation/clock/outbox absent",
+  "return": {
+    "task": 1136,
+    "version": 3,
+    "carrier": "090000000000008014",
+    "warehouse": 13583852,
+    "stocks": [
+      {
+        "uid": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "REUSE.QA:cdbf4c0962",
+        "case_line": 1139,
+        "target": "QIPcdbf4c0962",
+        "reservations": [
+          1863
+        ]
+      }
+    ],
+    "before": [
+      {
+        "uid": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "REUSE.QA:cdbf4c0962",
+        "case_line": 1139
+      }
+    ],
+    "unused": [],
+    "operation_id": "WHREQ15.COMPENSATE1136.RETURN",
+    "status": "RETURNED",
+    "outbox_id": 5323
+  },
+  "wave_cancel": {
+    "operation_id": "WHREQ15.COMPENSATE1136.WAVE_CANCEL",
+    "document_type": "PICK_WAVE",
+    "document_id": 567,
+    "released_count": 0,
+    "outbox_id": 5324
+  },
+  "plan_cancel": {
+    "operation_id": "WHREQ15.COMPENSATE1136.PLAN_CANCEL",
+    "document_type": "PICK_PLAN",
+    "document_id": 2199,
+    "released_count": 0,
+    "outbox_id": 5325
+  },
+  "book_cancel": {
+    "operation_id": "WHREQ15.COMPENSATE1136.BOOK_CANCEL",
+    "status": "CANCELLED",
+    "place_kind": "CASE",
+    "place_id": "1136",
+    "pallet_type_id": 32,
+    "warehouse_id": 13583852,
+    "available_quantity": "1",
+    "quantity": "1",
+    "physical_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 5326
+  },
+  "tare_count": {
+    "status": "POSTED",
+    "tare_balance_changed": true,
+    "destination_quantity": "0",
+    "operation_id": "WHREQ15.COMPENSATE1136.TARE.COUNT0",
+    "quantity": "0",
+    "owner_ware_id": 13583852,
+    "pallet_type_id": 32,
+    "condition": "GOOD",
+    "goods_stock_changed": false,
+    "outbox_id": 5327
+  },
+  "after": {
+    "case": [
+      {
+        "case_pick_task_id": 1136,
+        "status": "CANCELLED",
+        "content_version": 4,
+        "assignment_version": 1,
+        "picked_qty": 1,
+        "sscc": "090000000000008014",
+        "legacy_sborka_pallet_id": null,
+        "resource_session_id": 54
+      }
+    ],
+    "stock": [
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136"
+      },
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "QIPcdbf4c0962",
+        "remain": 1,
+        "hard_reserved_base": 0,
+        "stock_version": 1,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136"
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 0,
+        "stock_version": 11,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd"
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd"
+      }
+    ],
+    "carrier": [],
+    "fulfillment": [
+      {
+        "fulfillment_id": 190,
+        "status": "PLANNED",
+        "fact_qty": 0,
+        "picked_case_task_id": null,
+        "picked_content_version": null
+      }
+    ],
+    "assembly": [
+      {
+        "session_id": "WHREQ15.ASM.S1136",
+        "state": "FINALIZED",
+        "final_capture_key": "163BD3827534486732C4139D5990AFD91139530C2DE4E862F44EACA8BD14F9D0"
+      }
+    ],
+    "tare": [
+      {
+        "physical_qty": 0,
+        "assembly_qty": 0,
+        "available_qty": 0,
+        "balance_version": 4
+      }
+    ],
+    "session": [
+      {
+        "session_id": 54,
+        "status": "CLOSED"
+      }
+    ],
+    "wave": [
+      {
+        "status": "CANCELLED"
+      }
+    ],
+    "plan": [
+      {
+        "status": "CANCELLED"
+      }
+    ],
+    "active_stock_hard": [],
+    "active_legacy_plan": [],
+    "active_legacy_wave": [],
+    "events": [
+      {
+        "n": 6
+      }
+    ]
+  },
+  "retained": "ST641520/row16727999/fulfillment190, TYPE32/SSCC/start/version/captures/ASM_FINALIZED/events; no known metadata cancellation owner, no direct DML"
+}

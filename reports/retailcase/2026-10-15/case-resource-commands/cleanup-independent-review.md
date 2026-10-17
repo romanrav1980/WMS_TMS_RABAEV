@@ -1,0 +1,13 @@
+﻿# Independent review: case_resource_commands_cleanup.py
+
+Read-only; cleanup was not executed and SQL was not edited. CASE1138/session55 remains under coordinator UI HOLD until explicit RELEASE.
+
+Canonical cleanup sequence and root/ZERO release flags are appropriate. Caller-rollback trial uses a fresh Oracle connection, prepare/execute_prepared, rollback and reset_connection, then compares parent task/source/event/receipt snapshot and checks no operation/UTCclock/outbox persists. Exact frozen Stock operation IDs enable retry across partially completed cleanup; closed session is read before logout. Metadata and business history are retained.
+
+Fix before execution: frozen() verifies a stored command is self-canonical but not that it matches this fixture's expected operation_id/command_type/admin/source. A stale or corrupt journal can therefore retarget a valid canonical command. Validate those identity fields against the expected bounded cleanup command, additionally constrain immutable metadata for each kind while retaining the original expected versions/body on retry. Never regenerate a changed-body command under an existing operation ID.
+
+Fix before reporting lineage restoration: current snapshot includes only source parent UID, but final report sets source_parent23_child1_lineage_unchanged=True. Add actual returned child UID/cell/quantity/reservation/origin/lineage read before and after cleanup, proving child1/H0 unchanged and parent23/H0, total24/H0 in the original source area. Parent-only sum is not child lineage evidence. Legitimate parent stock versions may advance as HARD is canonically released; do not require an invented unchanged parent version.
+
+Qualification/resource/user retirement repeats are logically safe but may refresh metadata timestamps; this is not strict immutable metadata receipt replay and should not be claimed as such. No additional quantities or physical hardware proof was performed by this review.
+
+Re-review after root correction: strict frozen command equality now verifies kind/operation/admin/source/all immutable metadata, retaining only the original explicit nonnegative integer server versions on retry. lineage() reads parent and returned child; verify_lineage enforces unchanged child row/P1H0/cell/origin/original pick op and physical parent rows, total24H0. The two findings are resolved in source. Independent pure tests test_case_resource_cleanup_journal.py:17 PASS (no Oracle connections/mutations). Cleanup was not run; coordinator UI HOLD remains. Native actual cancellation/compensation acceptance is root-owned and still separate.

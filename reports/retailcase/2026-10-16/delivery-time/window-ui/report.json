@@ -1,0 +1,11 @@
+{
+  "state": "PASS_OPERATOR_WINDOW_UI_FIXTURES",
+  "fixture": true,
+  "nativeWrites": 0,
+  "explicitMoscowOffset": true,
+  "exactRetryAfterReload": true,
+  "unknownBlocksDeparture": true,
+  "versionConflictArchiveReread": true,
+  "damagedPreserved": true,
+  "errors": []
+}

@@ -1,0 +1,110 @@
+{
+  "state": "PASS_OLD_RECEIPT_BYTES_AND_NEW_STALE_ASSIGNMENT_GUARD",
+  "http": [
+    {
+      "label": "card_with_assignment_version",
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "api_call_id": "71878",
+      "request_id": "9e887ed3-992c-45ff-916f-5e6b7494649f"
+    },
+    {
+      "label": "legacy_unchanged_replay",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "status": 200,
+      "api_call_id": "71879",
+      "request_id": "202b4a42-77e4-46b7-836e-13b65a92508b"
+    },
+    {
+      "label": "new_field_changes_original_body",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "status": 409,
+      "api_call_id": "71880",
+      "request_id": "48ef127e-bb8e-4bda-80d9-a328e488a459"
+    },
+    {
+      "label": "stale_assignment_denied",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "status": 409,
+      "api_call_id": "71881",
+      "request_id": "6e60ace6-7c64-4f11-b414-49d39bf11059"
+    }
+  ],
+  "card_with_assignment_version": {
+    "case_pick_task_id": 1151,
+    "pick_wave_id": 588,
+    "wave_code": "OC16.1a524b2458",
+    "wave_pick_released_at": "2026-10-16T14:12:49.515271",
+    "wave_pick_released_by": "admin",
+    "pick_plan_id": 2219,
+    "customer_order_id": 2168,
+    "order_no": "OC16.1a524b2458",
+    "customer_id": -980701,
+    "customer_name": "DS-BASE synthetic S1",
+    "sscc": "090000000000020016",
+    "pallet_type_code": "SMALL514.AF32399B",
+    "pallet_type_name": "Own514 final weighing small box",
+    "status": "SHIPPED",
+    "assigned_resource_id": 77,
+    "resource_session_id": 73,
+    "equipment_id": null,
+    "assigned_to": "MT16T926cdde30a",
+    "ware_id": 20902283,
+    "total_lines": 1,
+    "picked_lines": 1,
+    "planned_qty": "25",
+    "picked_qty": "25",
+    "current_cell": "FSdc48b9c2aa",
+    "content_version": 7,
+    "assignment_version": 6,
+    "legacy_sborka_pallet_id": 641533,
+    "shipped_operation": "OC16.1a524b2458.FULL.LOAD",
+    "created_at": "2026-10-16T14:12:49.177722",
+    "started_at": "2026-10-16T14:12:50.780626",
+    "started_at_instant": "2026-10-16T14:12:50.780626-04:00",
+    "started_shift_time_zone": null,
+    "closed_at": "2026-10-16T14:26:01.808406",
+    "lines": [
+      {
+        "case_pick_line_id": 1153,
+        "pick_wave_task_id": 2075,
+        "pick_task_id": 2157,
+        "articul": "AS16ADC48B9C2AA",
+        "product_name": null,
+        "cell_code": "AS16Cdc48b9c2aa",
+        "pick_sequence": null,
+        "stack_stage": "MAIN",
+        "stack_policy_version": 0,
+        "planned_qty": "25",
+        "picked_qty": "25",
+        "status": "PICKED",
+        "last_offline_event_id": null,
+        "started_at": "2026-10-16T14:16:28.218631",
+        "done_at": "2026-10-16T14:26:01.560395"
+      }
+    ],
+    "physical_lots": [],
+    "tare": {
+      "ware_id": 20902283,
+      "pallet_type_id": 32,
+      "pallet_type_name": "Own514 final weighing small box",
+      "available_quantity": "1",
+      "booking_operation_id": "OC16.1a524b2458.TARE.BOOK",
+      "count_state": "OBSERVED"
+    }
+  },
+  "legacy_unchanged_replay": {
+    "case_pick_task_id": 1151,
+    "status": "TRANSFERRED"
+  },
+  "new_field_changes_original_body": {
+    "detail": {
+      "code": "CASE_HANDOFF_CONTENT_CONFLICT"
+    }
+  },
+  "stale_assignment_denied": {
+    "detail": {
+      "code": "CASE_HANDOFF_STALE_ASSIGNMENT_VERSION"
+    }
+  }
+}

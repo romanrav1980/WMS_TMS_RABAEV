@@ -1,0 +1,36 @@
+declare a clob;begin
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_INTERWARE_THERMAL'and TYPE='PACKAGE'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='B2E01E3B1E98B1C8CD3F1BCA5C3C39B7D28245F0393F7F5D4248EE611207E1A7'then raise_application_error(-20886,'SOURCE_GUARD_RRL_INTERWARE_THERMAL');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_INTERWARE_THERMAL'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='7006907B26ABC50C2AC4557B85C63326B6388574313B652C5E4695D9531B5101'then raise_application_error(-20886,'SOURCE_GUARD_RRL_INTERWARE_THERMAL');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_IW_GROUP_THERMAL'and TYPE='PACKAGE'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='F335129CB4B80E4EC2CBAAD469C246978E8869A48A44A5FE0FAA9DDBF208C868'then raise_application_error(-20886,'SOURCE_GUARD_RRL_IW_GROUP_THERMAL');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_IW_GROUP_THERMAL'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='333D6BE627DE03CB6B5740C5D312E3DBC9D6CFA27CD0294FBDA5C224D6119ED8'then raise_application_error(-20886,'SOURCE_GUARD_RRL_IW_GROUP_THERMAL');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_CASE_MOVE_CMD'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='562440379C690E4EFB345080B465515B777F7B7C67653DE2F4BD57AAD3F5BDA1'then raise_application_error(-20886,'SOURCE_GUARD_RRL_STOCK_CASE_MOVE_CMD');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_HU_CMD'and TYPE='PACKAGE'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='4F13570DAC1AD8C98E0F8115BB27C2312350461CA871F6C751BD523B3AE234D5'then raise_application_error(-20886,'SOURCE_GUARD_RRL_STOCK_HU_CMD');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_HU_CMD'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='8EB5B0AEB045B4FCE41240CEA241B9AD65583B1115B2E50F4A7A41191973085A'then raise_application_error(-20886,'SOURCE_GUARD_RRL_STOCK_HU_CMD');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_HU_READ'and TYPE='PACKAGE'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='8344C651B5CDA4CBE5B8A7D49ECC2B267F211F80BF170ABD3CBE17D95B934F48'then raise_application_error(-20886,'SOURCE_GUARD_RRL_STOCK_HU_READ');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_HU_READ'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='803C68EB33CC63B6A6B78E51639E6E0F528F2923F8BFD7D2E8E8E0B4BA67EC0D'then raise_application_error(-20886,'SOURCE_GUARD_RRL_STOCK_HU_READ');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_HU_SHIP_CMD'and TYPE='PACKAGE'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='9BFDD25B23EE98476DB952EB4FA4E2992EC19D6F46C4C1FCFB7C3369D714AA9B'then raise_application_error(-20886,'SOURCE_GUARD_RRL_STOCK_HU_SHIP_CMD');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_HU_SHIP_CMD'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='3A6D1BAF9D408C1C061326A650B09D47DF2B0F3FB44ECCB8BF9E42C70F695812'then raise_application_error(-20886,'SOURCE_GUARD_RRL_STOCK_HU_SHIP_CMD');end if;dbms_lob.freetemporary(a);
+end;
+/

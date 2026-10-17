@@ -1,0 +1,84 @@
+{
+  "status": "KIT_READY_PREPARED_ONLY_REVIEW_FIX",
+  "kit_sha256": "93343f230c33a44358fc909e890ad5045f5acb3c7885476b4a4e1173cdb1922e",
+  "files": [
+    {
+      "candidate": "tmp/picker_actual_time_v2_before.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v2_source/before.sql",
+      "sha256": "b04e9a372dfcac8e867a6ff5b594b610101c056fe5c60d81b45b7e9580abce75",
+      "bytes": 1682
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v2_schema.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v2_source/schema.sql",
+      "sha256": "461d6d1a1bbf8c6adb583378f86c6656536b2cb61f8eb533929969495838ec2c",
+      "bytes": 7107
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v2_api_spec.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v2_source/api_spec.sql",
+      "sha256": "13b65c67516f0a17125e384e4ebbe40e07ed7144e8575f98721e10cfc15e8c99",
+      "bytes": 532
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v2_auth.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v2_source/auth.sql",
+      "sha256": "144860efc2415f052718893d331aa5c364dd266402451438dfa9b96f07af6dd0",
+      "bytes": 4638
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v2_read.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v2_source/read.sql",
+      "sha256": "73085a973c3ddb21d97c89dff850e84389bff35112186131d3f4a4bc45263ac8",
+      "bytes": 4974
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v2_write.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v2_source/write.sql",
+      "sha256": "6ee60022538a27b74ef2e32bfbc5e41c00d1f2e4292347467aad8c1209b0e056",
+      "bytes": 5335
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v2_api_body.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v2_source/api_body.sql",
+      "sha256": "9e67272a7601840ffb919f57953197cb4ddde607a37413cd54af39d1341ba743",
+      "bytes": 11153
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v2_guards.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v2_source/guards.sql",
+      "sha256": "2f9ee989bfc51fb3419a24aa2cd3083055efb0233a84bfa0a9192857da7f233f",
+      "bytes": 1599
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v2_installed_guard.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v2_source/installed_guard.sql",
+      "sha256": "90a9ff723827ba060ef5245f12b1811b849f5be8ddceddc32f441d0bdfa48d67",
+      "bytes": 30183
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v2_verify.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v2_source/verify.sql",
+      "sha256": "e5d1409bbd703db8eedf243154e7060084630fb47794fec531f3b8754ef092ff",
+      "bytes": 1447
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v2_apply.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v2_source/apply.sql",
+      "sha256": "a960319949a83691337f91f88ff20a4936fdaf8414d4bf57da9ab67dc0e24da3",
+      "bytes": 605
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v2_rollback.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v2_source/rollback.sql",
+      "sha256": "fbf4febaa2dd90889177c233225d6494ea745adadb012bf9eed4a30ebfe5fca7",
+      "bytes": 1635
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v2_checkpoint.json",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v2_source/checkpoint.json",
+      "sha256": "3bc94813a248956399ce97dc1354c97fbbb026dc5c6d2fa1355fc48df1696f1f",
+      "bytes": 4691
+    }
+  ]
+}

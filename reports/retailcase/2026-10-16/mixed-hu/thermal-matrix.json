@@ -1,0 +1,96 @@
+{
+  "started_at": "2026-10-15T22:57:36.579155+00:00",
+  "hardware_verified": false,
+  "quantity_effect": false,
+  "checks": [
+    {
+      "name": "empty",
+      "status": "EMPTY",
+      "allowed": true,
+      "ms": 31.34
+    },
+    {
+      "name": "legacy_all_unknown",
+      "status": "UNSPECIFIED",
+      "allowed": true,
+      "ms": 48.69
+    },
+    {
+      "name": "strict_unknown_rejected",
+      "error": "HU_THERMAL_KNOWN_POLICY_REQUIRED"
+    },
+    {
+      "name": "known_plus_unknown",
+      "status": "INCOMPLETE_POLICY",
+      "allowed": false,
+      "ms": 12.1
+    },
+    {
+      "name": "intersection_compatible",
+      "status": "ADMISSIBLE",
+      "allowed": true,
+      "ms": 21.34
+    },
+    {
+      "name": "hot_target",
+      "status": "TARGET_INCOMPATIBLE",
+      "allowed": false,
+      "ms": 7.24
+    },
+    {
+      "name": "partly_outside_intersection",
+      "status": "TARGET_INCOMPATIBLE",
+      "allowed": false,
+      "ms": 7.08
+    },
+    {
+      "name": "missing_cell_policy",
+      "status": "TARGET_POLICY_MISSING",
+      "allowed": false,
+      "ms": 7.59
+    },
+    {
+      "name": "disjoint_product_ranges",
+      "status": "DISJOINT",
+      "allowed": false,
+      "ms": 7.76
+    },
+    {
+      "name": "partial_product_policy",
+      "status": "INVALID_POLICY",
+      "allowed": false,
+      "ms": 6.4
+    },
+    {
+      "name": "foreign_warehouse",
+      "status": "INVALID_LOCATION",
+      "allowed": false,
+      "ms": 7.99
+    },
+    {
+      "name": "stock_article_missing",
+      "status": "INVALID_SOURCE",
+      "allowed": false,
+      "ms": 8.08
+    },
+    {
+      "name": "over_node_bound",
+      "error": "HU_THERMAL_NODE_BOUND_200",
+      "ms": 6.33
+    },
+    {
+      "name": "changed_policy_frozen_proof_rejected",
+      "error": "CLOSURE_CHANGED"
+    }
+  ],
+  "before": {
+    "sku": [],
+    "cell": []
+  },
+  "after": {
+    "sku": [],
+    "cell": []
+  },
+  "state": "PASS_MATRIX_ROLLED_BACK",
+  "decision": "Keep bounded distinct-SKU policy reads and CONFIG fences. No cache or speculative index: per-call timings retained; complete mixed-HU writer/HTTP scenario still needs separate SQL review."
+}

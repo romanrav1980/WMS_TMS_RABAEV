@@ -1,0 +1,47 @@
+{
+ "checks": [
+  "plan_full_members_in_root",
+  "plan_to_physical_tree_identifier",
+  "cancelled_plan_read_only",
+  "lost_response_reload_exact_retry_ack",
+  "confirmed_refusal_clears_pending",
+  "stale_warehouse_response_ignored",
+  "mobile_390_no_overflow"
+ ],
+ "realWrites": [],
+ "puts": [
+  {
+   "method": "PUT",
+   "url": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+   "body": "{\"operation_id\":\"CP.0821e8fb-4111-45dc-b23a-39b5603080a2\",\"expected_version\":2,\"reason\":\"C0116 UI fixture: проверка повтора\",\"root_identifier\":\"MH16.TOP:d076c19e82\",\"warehouse_id\":20220394,\"cell\":\"MH16Gd076c19e82\",\"fulfillment_ids\":[191,192]}"
+  },
+  {
+   "method": "PUT",
+   "url": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+   "body": "{\"operation_id\":\"CP.0821e8fb-4111-45dc-b23a-39b5603080a2\",\"expected_version\":2,\"reason\":\"C0116 UI fixture: проверка повтора\",\"root_identifier\":\"MH16.TOP:d076c19e82\",\"warehouse_id\":20220394,\"cell\":\"MH16Gd076c19e82\",\"fulfillment_ids\":[191,192]}"
+  },
+  {
+   "method": "PUT",
+   "url": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+   "body": "{\"operation_id\":\"CP.9dece575-e249-49a7-a9b6-b6a5386f0b1f\",\"expected_version\":2,\"reason\":\"C0116 UI fixture: отказ версии\",\"root_identifier\":\"MH16.TOP:d076c19e82\",\"warehouse_id\":20220394,\"cell\":\"MH16Gd076c19e82\",\"fulfillment_ids\":[191,192]}"
+  }
+ ],
+ "errors": [],
+ "listActive": [
+  "MH16.TOP:d076c19e82 ожидается 2 · MH16Gd076c19e82 · 16.10 04:54 Открыть"
+ ],
+ "listAll": 2,
+ "planFull": "▣ ОЖИДАЕМЫЙ СОСТАВ · план v2 MH16.TOP:d076c19e82 ячейка MH16Gd076c19e82 · склад 20220394 Состав полон Ожидается 2 Нет в составе 0 Лишние 0 Изменены 0 Неизвестные листья 0 Место в ячейке плана «Состав полон» не разрешает отгрузку: качество, вес и погрузку подтверждают их владельцы (выпуск качества не подтверждён). AS16.35cea92c27.ST СТ 641521 · сборка 191 в составе OC16.217454ca1e.ST СТ 641522 · сб",
+ "treeIdentifier": "MH16.TOP:d076c19e82",
+ "planCancelled": "▣ ОЖИДАЕМЫЙ СОСТАВ · план v2 · отменён CM16.FUTURE:4c03ea49b7 ячейка MH16Gd076c19e82 · склад 20220394 План отменён Ожидается 1 Нет в составе 1 Лишние 0 Изменены 0 Неизвестные листья 0 Место не подтверждено CM16.4c03ea49b7.ST СТ 641523 · сборка 193 не собрана Физическое дерево корня Изменить план Обн",
+ "pendingText": "Команда плана ожидает подтверждения · сохранение плана CM16.4c03ea49b7.PLAN. Новые изменения заблокированы. Повторить ту же команду Перечитать план Справка",
+ "ackNote": "Сохранено: план CM16.4c03ea49b7.PLAN, версия 3.",
+ "refusedNote": "План уже изменён другим пользователем. Обновите план и внесите правку заново. Изменение не применено.",
+ "staleWarehouse": {
+  "items": 0,
+  "text": "Планы загружено 0 · время UTC Планов нет."
+ },
+ "mobileOverflow": 0,
+ "status": "PASS",
+ "fixtures": "GET live read-only; PUT/cancel intercepted UI fixtures (not sent to server)"
+}

@@ -1,0 +1,118 @@
+{
+  "captured_at_utc": "2026-10-15T17:37:22.045587+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_PICKER_TIME_API",
+      "type": "PACKAGE",
+      "file": "rrl_picker_time_api_package.sql",
+      "errors": [],
+      "user_source_sha256": "18a603ec723c497d28ef0e62f58df4efea3eb0f1680b7eb7e5d98fbc22d2d9d9",
+      "normalized_source_sha256": "3763d4449e7d462e8485b5b65d20cbfab84cae3ec1730dd9484b1dbcaa0b3a5e",
+      "artifact_sha256": "8e49b25fb23ea465dbfd85643d0d1f9bf5f85c0134b9f307d26fa77d686e0e01"
+    },
+    {
+      "name": "RRL_PICKER_TIME_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_picker_time_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "0833174f07e6a938fae773e7e83d78906143b07cd5287976768c0e54d515ee08",
+      "normalized_source_sha256": "2dc0ad4f4fc718592408638aca59774bee4e5d7e35ca428f812e8884ec24a059",
+      "artifact_sha256": "8d5c74bf4541d1dca67babf32a6de4aa20a7d147dfbc43f996af761baec8797e"
+    },
+    {
+      "name": "RRL_PICKER_TIME_AUTH",
+      "type": "PACKAGE",
+      "file": "rrl_picker_time_auth_package.sql",
+      "errors": [],
+      "user_source_sha256": "825b1ede06f69e75470953a220379b917f18dfe5a6cf00f0e2354c2367d68136",
+      "normalized_source_sha256": "5bb65b8d89a0d601cfbae7fc3871be41a84c553f7788487decc466f676deba00",
+      "artifact_sha256": "1219b058f2b541b862bfd2598e3bb5d90319ddda0573c0722b37c113e0558815"
+    },
+    {
+      "name": "RRL_PICKER_TIME_AUTH",
+      "type": "PACKAGE BODY",
+      "file": "rrl_picker_time_auth_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "25210b201ba3cdfb786c539ea9e1f9a356f449d6cffa3d698437ec79bc537a9b",
+      "normalized_source_sha256": "5b1ba3f54444c8dcac5822d6ee4e1a3a11922002f81e1d1b6e2ef81ce47525e8",
+      "artifact_sha256": "755a28ebbd867fb2a50fb6193d392e4bbda01a4135bc73cb6128b8dbbb9d2a47"
+    },
+    {
+      "name": "RRL_PICKER_TIME_READ",
+      "type": "PACKAGE",
+      "file": "rrl_picker_time_read_package.sql",
+      "errors": [],
+      "user_source_sha256": "5ce23918c16a3ab6fdc8d4b1f13f5c7aed060749ce70a94dcaffb8528aa122e8",
+      "normalized_source_sha256": "f538a83783a601db16d5a3d840797cd775acb7a99ea73fac300a81bba8db1bb5",
+      "artifact_sha256": "c508676dad7b7d40ef5d2bc59bec6f1d5f5e56b16dd9b8743207b74c7bc1f0ca"
+    },
+    {
+      "name": "RRL_PICKER_TIME_READ",
+      "type": "PACKAGE BODY",
+      "file": "rrl_picker_time_read_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "6c3cc6c6f0d20e393ade477ec0268c35f26a1ed75aca49ce67d13f2734510e2b",
+      "normalized_source_sha256": "f306322333fb5f81654c32b0f92830fae3623674121d853cffe2d5d3d0848487",
+      "artifact_sha256": "8bd96e66864e31832b8ed11dcf0eb26e508a8f67d6dffa5245e631f9d68be3a1"
+    },
+    {
+      "name": "RRL_PICKER_TIME_WRITE",
+      "type": "PACKAGE",
+      "file": "rrl_picker_time_write_package.sql",
+      "errors": [],
+      "user_source_sha256": "7bb5dfb65d067097cfbceb97c26451b1f32c5f6d77be74b664acc473b58fbe3a",
+      "normalized_source_sha256": "c324ffcc0a7547839174142c6d4f5263d867575130136bd959e8fbae7fd6a5c2",
+      "artifact_sha256": "085854b942182bca2aa865035e23e9d7fd5495aefdc4f0112d9109c6fda4bc82"
+    },
+    {
+      "name": "RRL_PICKER_TIME_WRITE",
+      "type": "PACKAGE BODY",
+      "file": "rrl_picker_time_write_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "b3b7756263ed282f91f1575ea6e88610bcc3263818434b4d7cd9f850393d5503",
+      "normalized_source_sha256": "62849b85c3e8c3ab2c92faf938c3a8cea759fe1c6a560427c63453a6e70d49cf",
+      "artifact_sha256": "1c9f1e70fe8fbc5683f9302fa56177860dab5e15cfefe585edd24cc58bddf4b2"
+    },
+    {
+      "name": "RRL_PICKER_TIME_STREAM_G",
+      "type": "TRIGGER",
+      "file": "rrl_picker_time_stream_g_trigger.sql",
+      "errors": [],
+      "user_source_sha256": "37aa48369e41a6cf99fa8a9cd8d097dd9a1b44a2a313c2460354d32a4111e491",
+      "normalized_source_sha256": "4c3f675cec016178dd4df5368dc1ae0573c440b38b4c72b087a0a8628c0ae63d",
+      "artifact_sha256": "87c4b1ce5f3fd35a7e844e1b43bbffbe75bf694b1ad997b1b8ea2e6a8a05e6c8"
+    },
+    {
+      "name": "RRL_PICKER_TIME_EVENT_G",
+      "type": "TRIGGER",
+      "file": "rrl_picker_time_event_g_trigger.sql",
+      "errors": [],
+      "user_source_sha256": "e24772fbe4d63baccbffee259722853e5cdc9a3d08cb1af388f2d25d9f619bb5",
+      "normalized_source_sha256": "d6e8669cec225eef16e4ca13f50532031d13f90ce46245dce23dc09a0acab1b6",
+      "artifact_sha256": "199470b4c10877719ada3b4abb0dd2add2aa7244fbeeee258464f7a885e1ee82"
+    },
+    {
+      "name": "RRL_PICKER_TIME_SPAN_G",
+      "type": "TRIGGER",
+      "file": "rrl_picker_time_span_g_trigger.sql",
+      "errors": [],
+      "user_source_sha256": "58e604e9aa077e6d801616bfd520f4beba60081703a121d24298b3d97ec2e5bc",
+      "normalized_source_sha256": "6aa56a1ad3b1a514f5a6a54050d5a8bb8b0954d46fb5c8700c40247665ba2f22",
+      "artifact_sha256": "e0117c5a623e464035c536f5673fe07b301cece9122c38f1cdeec48995893b81"
+    },
+    {
+      "name": "RRL_PICKER_TIME_COMMAND_G",
+      "type": "TRIGGER",
+      "file": "rrl_picker_time_command_g_trigger.sql",
+      "errors": [],
+      "user_source_sha256": "c43237cb73c248604b4cf4cf7f5cb06cf9ec1934ac0aa05964a980af2fd66129",
+      "normalized_source_sha256": "0d1edf2f914ede4696437b55f2794c6bb56e0d45d760f6bf3215c8af38ee674e",
+      "artifact_sha256": "d2fa1fca4a7084f716e7c54e20b1a5202b80f012f8b4822364369c3c4f5adc4e"
+    }
+  ]
+}

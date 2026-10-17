@@ -15,7 +15,7 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:admin/wms_admin_frontend/src/components/TransportDispatchPage.tsx": {
-      "maximum": 4158,
+      "maximum": 4083,
       "owner": "RETAILCASE architecture owner",
       "reason": "Existing legacy structure captured before incremental RETAILCASE changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -39,13 +39,13 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:api/wms_api_server/app/routers/transport.py": {
-      "maximum": 966,
+      "maximum": 958,
       "owner": "RETAILCASE architecture owner",
       "reason": "Existing legacy structure captured before incremental RETAILCASE changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:api/wms_api_server/app/schemas.py": {
-      "maximum": 1404,
+      "maximum": 1380,
       "owner": "RETAILCASE architecture owner",
       "reason": "Existing legacy structure captured before incremental RETAILCASE changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -57,13 +57,13 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:api/wms_api_server/app/services/picking_service.py": {
-      "maximum": 2154,
+      "maximum": 2133,
       "owner": "RETAILCASE architecture owner",
       "reason": "Existing legacy structure captured before incremental RETAILCASE changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "file-size:api/wms_api_server/app/services/transport_service.py": {
-      "maximum": 2678,
+      "maximum": 2654,
       "owner": "RETAILCASE architecture owner",
       "reason": "Existing legacy structure captured before incremental RETAILCASE changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -201,7 +201,7 @@
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
     },
     "function-size:admin/wms_admin_frontend/src/components/TransportDispatchPage.tsx:TransportDispatchPage": {
-      "maximum": 2516,
+      "maximum": 2510,
       "owner": "RETAILCASE architecture owner",
       "reason": "Existing legacy structure captured before incremental RETAILCASE changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
@@ -310,12 +310,6 @@
     },
     "function-size:api/wms_api_server/app/services/transport_service.py:TransportService.get_vehicles_available": {
       "maximum": 108,
-      "owner": "RETAILCASE architecture owner",
-      "reason": "Existing legacy structure captured before incremental RETAILCASE changes",
-      "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"
-    },
-    "function-size:api/wms_api_server/app/services/transport_service.py:TransportService.list_tasks": {
-      "maximum": 111,
       "owner": "RETAILCASE architecture owner",
       "reason": "Existing legacy structure captured before incremental RETAILCASE changes",
       "remediation": "Extract responsibility when this file or scenario is changed; NS02/NS03 classify scope, NS04 sets delivery owner"

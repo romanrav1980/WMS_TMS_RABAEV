@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "articles": [
+    {
+      "article_id": "store-receiving-app",
+      "version": 13,
+      "source_revision": "a2f02386252ab2578ef5b4ef99e3825e28a6908d7a655cfa1052a38dd8aa4cea",
+      "related": 5
+    },
+    {
+      "article_id": "store-receiving-barcode",
+      "version": 12,
+      "source_revision": "a2f02386252ab2578ef5b4ef99e3825e28a6908d7a655cfa1052a38dd8aa4cea",
+      "related": 5
+    },
+    {
+      "article_id": "store-receiving-weight-photo",
+      "version": 12,
+      "source_revision": "a2f02386252ab2578ef5b4ef99e3825e28a6908d7a655cfa1052a38dd8aa4cea",
+      "related": 5
+    },
+    {
+      "article_id": "store-receiving-paper-count",
+      "version": 12,
+      "source_revision": "a2f02386252ab2578ef5b4ef99e3825e28a6908d7a655cfa1052a38dd8aa4cea",
+      "related": 5
+    },
+    {
+      "article_id": "store-receiving-recovery",
+      "version": 12,
+      "source_revision": "a2f02386252ab2578ef5b4ef99e3825e28a6908d7a655cfa1052a38dd8aa4cea",
+      "related": 5
+    },
+    {
+      "article_id": "store-scale-gateway",
+      "version": 3,
+      "source_revision": "752eaa8153e9c2c5e6e58f80932e0bd5a16f6de8c45dcfe9bd6ee984c1217b09",
+      "related": 5
+    }
+  ],
+  "stock_effect": "NONE"
+}

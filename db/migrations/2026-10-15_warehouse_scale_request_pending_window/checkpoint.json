@@ -1,0 +1,19 @@
+﻿{
+    "native_intents_before":  21,
+    "native_intents_after":  21,
+    "fake_captures":  0,
+    "original_case_and_source_unchanged":  true,
+    "source_sha256":  "3642aabe97e8a6ba6ff03bd31b897557a6e0015c91356365444bb485abd4f1c7",
+    "global_invalid":  0,
+    "before":  "reports/retailcase/2026-10-15/warehouse-weigh-request/pending-before.json",
+    "status":  "APPLIED",
+    "caller_rollback_verified":  true,
+    "source":  "EXACT",
+    "errors":  0,
+    "statements":  5,
+    "tables_changed":  false,
+    "after":  "reports/retailcase/2026-10-15/warehouse-weigh-request/pending-after.json",
+    "migration_id":  "2026-10-15-warehouse-scale-request-pending-window",
+    "stock_effect":  "NONE",
+    "applied_by":  "root"
+}

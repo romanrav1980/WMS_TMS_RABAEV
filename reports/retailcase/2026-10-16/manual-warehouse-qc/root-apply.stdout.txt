@@ -1,0 +1,9 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_warehouse_qc\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_warehouse_qc\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_warehouse_qc\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_warehouse_qc\rrl_wh_final_scale_admission_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_warehouse_qc\rrl_stock_pallet_qc_cmd_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_warehouse_qc\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_warehouse_qc\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_warehouse_qc\after_sources.sql
+Done. Statements=8; Errors=0; AbsentCleanup=0

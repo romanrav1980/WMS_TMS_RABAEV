@@ -1,3 +1,4 @@
+import { adminAuthorization } from "../api";
 import { PointerEvent, useEffect, useMemo, useRef, useState } from "react";
 
 type CellRole = "EMPTY" | "PICK_FACE" | "STORAGE" | "TRANSPORT_STAGING" | "FILM_WRAP" | "GATE" | "AISLE" | "BLOCKED" | "FRACTIONAL_PICK_FACE" | "FRACTIONAL_STORAGE";
@@ -451,7 +452,6 @@ const GRID_OFFSET_Y = 28;
 const LOCAL_DRAFT_KEY = "wms.largeWarehouseMapDraft.v1";
 const LOCAL_DRAFT_ID_KEY = "wms.largeWarehouseMapDraftId.v1";
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
-const API_BASIC_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
 
 const ROLE_ORDER: CellRole[] = ["PICK_FACE", "STORAGE", "TRANSPORT_STAGING", "FILM_WRAP", "GATE", "AISLE", "BLOCKED", "EMPTY", "FRACTIONAL_PICK_FACE", "FRACTIONAL_STORAGE"];
 
@@ -5676,7 +5676,7 @@ async function apiFetchJson<T>(input: RequestInfo | URL, init: RequestInit = {})
   const response = await fetch(input, {
     ...init,
     headers: {
-      Authorization: `Basic ${btoa(API_BASIC_AUTH)}`,
+      Authorization: adminAuthorization(),
       "Content-Type": "application/json",
       ...init.headers
     }

@@ -1,0 +1,19 @@
+{
+  "captured_at_utc": "2026-10-15T22:19:04.215973+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_STOCK_INVENTORY_BIRTH",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_inventory_birth_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "353d1480cf5986e3898cdb1323c3a52d464f3926897c1491e05871bdafc8de84",
+      "normalized_source_sha256": "5bdc8d1b4ff4071d46fcd6c78dddde72f038c80da95ea8f300500b073f8eb97f",
+      "artifact_sha256": "41355ab274ada30ef5e8a1bdac6a8dd508064ef38b0b1658e37adcd5d87c3f80"
+    }
+  ]
+}

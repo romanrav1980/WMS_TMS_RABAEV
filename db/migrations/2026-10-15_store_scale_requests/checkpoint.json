@@ -1,0 +1,23 @@
+{
+  "migration_id": "2026-10-15-store-scale-requests",
+  "state": "APPLIED",
+  "target": {
+    "user_name": "RABAEV",
+    "service_name": "orcl",
+    "db_name": "ORCL"
+  },
+  "invalid_before": 0,
+  "existing_objects": [],
+  "git_head": "41c913cf44441cf3656a66b0939e40cb9a83c365",
+  "sha256": {
+    "apply.sql": "cfbdf63e42c1a26c9cd2a4ed5d9da6c5aa077f1b7f88c0e473cf0b0ed06879ca",
+    "before.sql": "8e2ddb2c212e04e8a8be8625958ec4145ac5dd1d8d33c7fe1216ede415a2e3dc",
+    "body.sql": "f7b914399248ab4cc5a124adc04a68a5cbd84f725eeef8278e208fec42b7187d",
+    "rollback.sql": "b685d8b50b2d9c5e07c33a47b5b2404d438700a410813381dd6371a321189ac3",
+    "schema.sql": "2616133377194593daa781116e1f11fc97e72cc99dac74210964c261068fabc9",
+    "verify.sql": "1ab7bad3dd2ff2ab84c053fc4fd356ff5d086112807bce447e6ef8d8b6a16599"
+  },
+  "authorization": "Owner requires API-only external scale exchange; root reviews and applies. Additive request intent, no stock or original scale writer changes.",
+  "invalid_after": 0,
+  "native_source_match": true
+}

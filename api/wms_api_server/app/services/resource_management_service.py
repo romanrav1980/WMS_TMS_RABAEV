@@ -261,48 +261,12 @@ class ResourceManagementService:
         )
 
     def list_sessions(
-        self,
-        session_id: int | None = None,
-        shift_id: int | None = None,
-        resource_id: int | None = None,
-        status: str | None = None,
-        limit: int = 100,
+        self, session_id: int | None = None, shift_id: int | None = None,
+        resource_id: int | None = None, status: str | None = None, limit: int = 100,
+        ware_id: int | None = None, actor: str | None = None,
     ) -> list[dict[str, Any]]:
-        conditions = []
-        params: dict[str, Any] = {"limit": clamp_limit(limit)}
-        if session_id is not None:
-            conditions.append("s.SESSION_ID = :session_id")
-            params["session_id"] = session_id
-        if shift_id is not None:
-            conditions.append("s.SHIFT_ID = :shift_id")
-            params["shift_id"] = shift_id
-        if resource_id is not None:
-            conditions.append("s.RESOURCE_ID = :resource_id")
-            params["resource_id"] = resource_id
-        if status:
-            conditions.append("s.STATUS = :status")
-            params["status"] = status.upper()
-        where_sql = " where " + " and ".join(conditions) if conditions else ""
-        return self.gateway.fetch_all(
-            f"""
-            select *
-              from (
-                select s.SESSION_ID, s.SHIFT_ID, s.RESOURCE_ID,
-                       r.RESOURCE_CODE, r.RESOURCE_NAME, r.RESOURCE_TYPE,
-                       s.EQUIPMENT_ID, e.EQUIPMENT_CODE, s.OPERATOR_USER_ID,
-                       s.LOGIN_AT, s.LOGOUT_AT, s.STATUS, s.CURRENT_TASK_ID,
-                       s.LAST_HEARTBEAT_AT, s.TERMINAL_ID, s.ZONE_CODE,
-                       s.CREATED_BY, s.CLOSED_BY
-                  from RRL_RESOURCE_SESSION s
-                  join RRL_RESOURCE r on r.RESOURCE_ID = s.RESOURCE_ID
-                  left join RRL_RESOURCE_EQUIPMENT e on e.EQUIPMENT_ID = s.EQUIPMENT_ID
-                  {where_sql}
-                 order by s.LOGIN_AT desc, s.SESSION_ID desc
-              )
-             where rownum <= :limit
-            """,
-            params,
-        )
+        from ..modules.resources.public import list_session_rows
+        return list_session_rows(self.gateway,session_id,shift_id,resource_id,status,limit,ware_id,actor)
 
     def login_session(self, request: ResourceSessionLoginRequest) -> int:
         if not getattr(self.gateway,"transaction_bound",False):

@@ -1,0 +1,988 @@
+{
+  "state": "PASS_DRIVER_BINDING_SELF_DELEGATION_BOUNDS_EXPIRY_REVOKE_COMPOSITE_SCOPES",
+  "prefix": "DD16.a7bc0b7073",
+  "driver_actor": "DD16Da7bc0b7073",
+  "delegate": "DD16Ma7bc0b7073",
+  "child": "DD16Ca7bc0b7073",
+  "outsider": "DD16Xa7bc0b7073",
+  "view_role": "DD16Va7bc0b7073",
+  "manager_role": "DD16Aa7bc0b7073",
+  "commands": {
+    "DRIVER.ROLE": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.DRIVER.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "DD16.a7bc0b7073.DRIVER",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "driver_return_accept"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.DRIVER.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "DD16.a7bc0b7073.DRIVER",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "DRIVER.SELF": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.DRIVER.SELF",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "DD16.a7bc0b7073.DRIVER.SELF",
+          "username": "DD16Da7bc0b7073",
+          "role_id": "DD16.a7bc0b7073.DRIVER",
+          "scope_kind": "SELF",
+          "scope_id": null,
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T19:02:07.885429+00:00",
+          "valid_until": "2026-10-16T22:03:07.885429+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.DRIVER.SELF",
+        "command_type": "ASSIGN",
+        "object_id": "DD16.a7bc0b7073.DRIVER.SELF",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "DRIVER.SELF.REVOKE": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.DRIVER.SELF.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "DD16.a7bc0b7073.DRIVER.SELF",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.DRIVER.SELF.REVOKE",
+        "command_type": "REVOKE",
+        "object_id": "DD16.a7bc0b7073.DRIVER.SELF",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "DRIVER.EXPIRED": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.DRIVER.EXPIRED",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "DD16.a7bc0b7073.DRIVER.EXPIRED",
+          "username": "DD16Da7bc0b7073",
+          "role_id": "DD16.a7bc0b7073.DRIVER",
+          "scope_kind": "SELF",
+          "scope_id": null,
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T18:53:07.885429+00:00",
+          "valid_until": "2026-10-16T19:02:07.885429+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.DRIVER.EXPIRED",
+        "command_type": "ASSIGN",
+        "object_id": "DD16.a7bc0b7073.DRIVER.EXPIRED",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "DRIVER.RESTORED": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.DRIVER.RESTORED",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "DD16.a7bc0b7073.DRIVER.RESTORED",
+          "username": "DD16Da7bc0b7073",
+          "role_id": "DD16.a7bc0b7073.DRIVER",
+          "scope_kind": "SELF",
+          "scope_id": null,
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T19:02:07.885429+00:00",
+          "valid_until": "2026-10-16T22:03:07.885429+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.DRIVER.RESTORED",
+        "command_type": "ASSIGN",
+        "object_id": "DD16.a7bc0b7073.DRIVER.RESTORED",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "SHIP.BOTH": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.SHIP.BOTH",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 5,
+          "group_id": "FH16G1886d6a9a7",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20902283"
+            },
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20061923"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.SHIP.BOTH",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FH16G1886d6a9a7",
+        "version": 6,
+        "replayed": false
+      }
+    },
+    "SHIP.RESTORE": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.SHIP.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 6,
+          "group_id": "FH16G1886d6a9a7",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20902283"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.SHIP.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FH16G1886d6a9a7",
+        "version": 7,
+        "replayed": false
+      }
+    },
+    "FINANCE.BOTH": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.FINANCE.BOTH",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 3,
+          "group_id": "FW16Gfc9538d7c6",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20902283"
+            },
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20061923"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.FINANCE.BOTH",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FW16Gfc9538d7c6",
+        "version": 4,
+        "replayed": false
+      }
+    },
+    "FINANCE.RESTORE": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.FINANCE.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 4,
+          "group_id": "FW16Gfc9538d7c6",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20902283"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.FINANCE.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FW16Gfc9538d7c6",
+        "version": 5,
+        "replayed": false
+      }
+    },
+    "VIEW.ROLE": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.VIEW.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "DD16Va7bc0b7073",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "transport_dispatch_view"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.VIEW.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "DD16Va7bc0b7073",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "ASSIGNER.ROLE": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.ASSIGNER.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "DD16Aa7bc0b7073",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "access_assign_manage"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.ASSIGNER.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "DD16Aa7bc0b7073",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "MANAGE": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.MANAGE",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "DD16.a7bc0b7073.MANAGE",
+          "username": "DD16Ma7bc0b7073",
+          "role_id": "DD16Aa7bc0b7073",
+          "scope_kind": "PLATFORM",
+          "scope_id": null,
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T19:02:14.869271+00:00",
+          "valid_until": "2026-10-16T19:18:14.869271+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.MANAGE",
+        "command_type": "ASSIGN",
+        "object_id": "DD16.a7bc0b7073.MANAGE",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "MANDATE": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.MANDATE",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "DD16.a7bc0b7073.MANDATE",
+          "username": "DD16Ma7bc0b7073",
+          "role_id": "DD16Va7bc0b7073",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20902283",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T19:02:14.869271+00:00",
+          "valid_until": "2026-10-16T19:18:14.869271+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.MANDATE",
+        "command_type": "ASSIGN",
+        "object_id": "DD16.a7bc0b7073.MANDATE",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "EXPIRED": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.EXPIRED",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "DD16.a7bc0b7073.EXPIRED",
+          "username": "DD16Xa7bc0b7073",
+          "role_id": "DD16Va7bc0b7073",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20902283",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T18:53:14.869271+00:00",
+          "valid_until": "2026-10-16T19:02:14.869271+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.EXPIRED",
+        "command_type": "ASSIGN",
+        "object_id": "DD16.a7bc0b7073.EXPIRED",
+        "version": 1,
+        "replayed": false
+      }
+    }
+  },
+  "http": [
+    {
+      "label": "driver_before_binding",
+      "path": "/api/driver/trips?driver_id=10019",
+      "status": 403,
+      "api_call_id": "70659",
+      "request_id": "933c7ebc-344e-4210-b837-4cee486517fc"
+    },
+    {
+      "label": "bind_driver",
+      "path": "/api/transport/driver-bindings/10019",
+      "status": 403,
+      "api_call_id": "70660",
+      "request_id": "fe5da98c-bc83-474d-a74a-8b22e28cbcf4"
+    },
+    {
+      "label": "bind_driver",
+      "path": "/api/transport/driver-bindings/10019",
+      "status": 200,
+      "api_call_id": "70665",
+      "request_id": "90694496-1588-4266-991b-7ce38497eda0"
+    },
+    {
+      "label": "driver_own_trips",
+      "path": "/api/driver/trips?driver_id=10019",
+      "status": 200,
+      "api_call_id": "70666",
+      "request_id": "171d1516-1b34-4412-ba0e-eceb655d739e"
+    },
+    {
+      "label": "stranger_cannot_use_driver_id",
+      "path": "/api/driver/trips?driver_id=10019",
+      "status": 403,
+      "api_call_id": "70667",
+      "request_id": "990e5675-1530-4597-b32f-25e8279572a4"
+    },
+    {
+      "label": "own_ops",
+      "path": "/api/driver/trips/33657/ops?driver_id=10019",
+      "status": 200,
+      "api_call_id": "70668",
+      "request_id": "dfa63c52-e9ad-4f48-820a-bb538dcd3d46"
+    },
+    {
+      "label": "foreign_trip",
+      "path": "/api/driver/trips/33656/ops?driver_id=10019",
+      "status": 403,
+      "api_call_id": "70669",
+      "request_id": "65a42c6d-40f9-459c-b768-fc5deef8d95a"
+    },
+    {
+      "label": "done_requires_start",
+      "path": "/api/driver/ops/10244/done?driver_id=10019",
+      "status": 409,
+      "api_call_id": "70670",
+      "request_id": "a02192c0-5dc9-484c-893c-591249158d8a"
+    },
+    {
+      "label": "self_driver_returns",
+      "path": "/api/delivery/store-return-custody/driver",
+      "status": 200,
+      "api_call_id": "70671",
+      "request_id": "06e5c751-8cfc-4029-9576-471390b4d04e"
+    },
+    {
+      "label": "driver_start",
+      "path": "/api/driver/ops/10244/start?driver_id=10019",
+      "status": 200,
+      "api_call_id": "70672",
+      "request_id": "fe67b699-7cf0-4623-a4d6-6a9be94e27c8"
+    },
+    {
+      "label": "driver_start_repeat",
+      "path": "/api/driver/ops/10244/start?driver_id=10019",
+      "status": 200,
+      "api_call_id": "70673",
+      "request_id": "ac35c485-86aa-4f6e-b30c-2d887413894e"
+    },
+    {
+      "label": "driver_done",
+      "path": "/api/driver/ops/10244/done?driver_id=10019",
+      "status": 200,
+      "api_call_id": "70674",
+      "request_id": "8e156b44-9608-4854-9ae3-801e29be70c7"
+    },
+    {
+      "label": "driver_done_repeat",
+      "path": "/api/driver/ops/10244/done?driver_id=10019",
+      "status": 200,
+      "api_call_id": "70675",
+      "request_id": "ee9fb6a1-8639-420c-a7f9-f595ae3440c9"
+    },
+    {
+      "label": "revoked_self_read",
+      "path": "/api/driver/trips?driver_id=10019",
+      "status": 403,
+      "api_call_id": "70676",
+      "request_id": "9ad5a320-7261-48ac-929c-3e53c5c7ad5f"
+    },
+    {
+      "label": "revoked_self_write",
+      "path": "/api/driver/ops/10244/done?driver_id=10019",
+      "status": 403,
+      "api_call_id": "70677",
+      "request_id": "43125cc1-3840-4dbe-ab10-1a6de023d4af"
+    },
+    {
+      "label": "revoked_self_returns",
+      "path": "/api/delivery/store-return-custody/driver",
+      "status": 403,
+      "api_call_id": "70678",
+      "request_id": "2382292f-d367-444f-8d69-886b6f50e46f"
+    },
+    {
+      "label": "expired_self_read",
+      "path": "/api/driver/trips?driver_id=10019",
+      "status": 403,
+      "api_call_id": "70679",
+      "request_id": "9030c05c-b5d8-474c-a528-d30fe958d3bf"
+    },
+    {
+      "label": "restored_self_read",
+      "path": "/api/driver/trips?driver_id=10019",
+      "status": 200,
+      "api_call_id": "70680",
+      "request_id": "fd72c958-de7b-4545-8a8a-2caad95f1dd6"
+    },
+    {
+      "label": "unbind_driver",
+      "path": "/api/transport/driver-bindings/10019",
+      "status": 200,
+      "api_call_id": "70681",
+      "request_id": "7a5bad83-fb5c-4e6a-9408-5add2942fd69"
+    },
+    {
+      "label": "revoked_binding_read",
+      "path": "/api/driver/trips?driver_id=10019",
+      "status": 403,
+      "api_call_id": "70682",
+      "request_id": "8e873bb6-5bc4-4033-b75d-5270b918a895"
+    },
+    {
+      "label": "revoked_binding_write",
+      "path": "/api/driver/ops/10244/done?driver_id=10019",
+      "status": 403,
+      "api_call_id": "70683",
+      "request_id": "60475650-7a7d-41df-8912-ef75620ec655"
+    },
+    {
+      "label": "partial_trip_scope",
+      "path": "/api/transport/loading/33657/depart",
+      "status": 403,
+      "api_call_id": "70684",
+      "request_id": "48a9f56b-905e-48b2-8178-79e9c3424303"
+    },
+    {
+      "label": "all_trip_scopes_reach_physical_guard",
+      "path": "/api/transport/loading/33657/depart",
+      "status": 409,
+      "api_call_id": "70685",
+      "request_id": "728d8c5a-f82c-487b-918a-3d111de484dc"
+    },
+    {
+      "label": "partial_invoice_scope",
+      "path": "/api/admin/transport/billing/orders/531/export.xlsx",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "0ce2a50e-5de9-4ea1-83b2-0368271b7e8d"
+    },
+    {
+      "label": "partial_registry_scope",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=DD16.a7bc0b7073",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "92a6f156-faa2-4099-9ce4-4bc94f92ceef"
+    },
+    {
+      "label": "all_invoice_scopes",
+      "path": "/api/admin/transport/billing/orders/531/export.xlsx",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "0bd076d9-61b1-41a1-a153-958742abd40e"
+    },
+    {
+      "label": "all_registry_scopes",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=DD16.a7bc0b7073",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "11a20057-f733-4961-9c14-003d323c394a"
+    },
+    {
+      "label": "removed_invoice_scope",
+      "path": "/api/admin/transport/billing/orders/531/export.xlsx",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "ac750597-4286-4039-bf44-8c7f164f50f7"
+    },
+    {
+      "label": "delegate_own_warehouse",
+      "path": "/api/access/commands",
+      "status": 200,
+      "api_call_id": "70686",
+      "request_id": "c5a713db-47b6-4657-9709-0ac29c771c7a"
+    },
+    {
+      "label": "delegated_access",
+      "path": "/api/finance/logistics-costs/warehouses/20902283/rates",
+      "status": 200,
+      "api_call_id": "70687",
+      "request_id": "f26d1dc6-5c8d-4ae8-9d6b-67827d7d3996"
+    },
+    {
+      "label": "cannot_delegate_foreign_warehouse",
+      "path": "/api/access/commands",
+      "status": 403,
+      "api_call_id": "70688",
+      "request_id": "19f601c7-e968-43df-9733-a74c2e011473"
+    },
+    {
+      "label": "cannot_extend_mandate_time",
+      "path": "/api/access/commands",
+      "status": 403,
+      "api_call_id": "70689",
+      "request_id": "94493246-a7a3-4a4c-bf15-904b4b5917bc"
+    },
+    {
+      "label": "cannot_delegate_rate_right",
+      "path": "/api/access/commands",
+      "status": 403,
+      "api_call_id": "70690",
+      "request_id": "47baf83e-41dc-4803-a185-d40dceb36509"
+    },
+    {
+      "label": "cannot_edit_role",
+      "path": "/api/access/commands",
+      "status": 403,
+      "api_call_id": "70691",
+      "request_id": "86d0c890-6b7a-4d7c-b5da-14a9c9807356"
+    },
+    {
+      "label": "cannot_revoke_admin_grant",
+      "path": "/api/access/commands",
+      "status": 403,
+      "api_call_id": "70692",
+      "request_id": "974ff30f-dee7-4ac1-a5e0-7cae1518d452"
+    },
+    {
+      "label": "revoke_own_delegation",
+      "path": "/api/access/commands",
+      "status": 200,
+      "api_call_id": "70693",
+      "request_id": "6a9683e6-424b-4726-b628-fbb2dc4bf36f"
+    },
+    {
+      "label": "revoked_delegated_access",
+      "path": "/api/finance/logistics-costs/warehouses/20902283/rates",
+      "status": 403,
+      "api_call_id": "70694",
+      "request_id": "e14c9a21-7fa9-4dba-b652-4926bd440848"
+    },
+    {
+      "label": "delegate_own_warehouse",
+      "path": "/api/access/commands",
+      "status": 200,
+      "api_call_id": "70695",
+      "request_id": "37fb3660-aa96-43f0-ba67-6c8b3b4225f6"
+    },
+    {
+      "label": "replayed_grant_does_not_revive",
+      "path": "/api/finance/logistics-costs/warehouses/20902283/rates",
+      "status": 403,
+      "api_call_id": "70696",
+      "request_id": "3082d036-17b9-4c11-accb-0245be2d20fc"
+    },
+    {
+      "label": "expired_assignment",
+      "path": "/api/finance/logistics-costs/warehouses/20902283/rates",
+      "status": 403,
+      "api_call_id": "70697",
+      "request_id": "917e3eed-faae-4de5-9c8f-23b9d5123724"
+    }
+  ],
+  "ware": 20902283,
+  "foreign_ware": 20061923,
+  "stock_effect": false,
+  "driver": 10019,
+  "trip": 33657,
+  "sts": [
+    641534,
+    641535
+  ],
+  "operation": 10244,
+  "driver_before_binding": {
+    "detail": {
+      "code": "TRANSPORT_EDIT_REJECTED",
+      "message": "ORA-20882: DRIVER_CURRENT_ACCOUNT_BINDING_REQUIRED"
+    }
+  },
+  "bind_driver": {
+    "driver_id": 10019,
+    "user_id": "DD16Da7bc0b7073",
+    "active": true,
+    "binding_version": 1
+  },
+  "driver_role": "DD16.a7bc0b7073.DRIVER",
+  "self_assignments": [
+    "DD16.a7bc0b7073.DRIVER.SELF",
+    "DD16.a7bc0b7073.DRIVER.EXPIRED",
+    "DD16.a7bc0b7073.DRIVER.RESTORED"
+  ],
+  "flat_binding_barrier_before_fix": {
+    "detail": {
+      "code": "DRIVER_BINDING_REJECTED",
+      "message": "ORA-20882: DRIVER_DEDICATED_ACTIVE_USER_REQUIRED"
+    }
+  },
+  "driver_own_trips": [
+    {
+      "task_id": 33657,
+      "shipment_date": "2026-10-16 00:00:00",
+      "num_plat": "FVdc48b9c2aa",
+      "transport_type": "10",
+      "condition": "\u0421\u043f\u043b\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d",
+      "note": null,
+      "price": 0,
+      "st_count": 1,
+      "weight_kg": 0,
+      "loaded_weight_kg": null
+    }
+  ],
+  "stranger_cannot_use_driver_id": {
+    "detail": {
+      "code": "TRANSPORT_EDIT_REJECTED",
+      "message": "ORA-20882: DRIVER_CURRENT_ACCOUNT_BINDING_REQUIRED"
+    }
+  },
+  "own_ops": [
+    {
+      "op_id": 10244,
+      "operation_code": "DRIVE",
+      "ord": 1,
+      "plan_start": "2026-10-16 14:56:11",
+      "plan_end": "2026-10-16 14:57:11",
+      "fact_start": null,
+      "fact_end": null,
+      "note": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "status": "pending"
+    }
+  ],
+  "foreign_trip": {
+    "detail": {
+      "code": "DRIVER_TRIP_ASSIGNMENT_REQUIRED",
+      "message": "\u0420\u0435\u0439\u0441 \u043d\u0435 \u043d\u0430\u0437\u043d\u0430\u0447\u0435\u043d \u044d\u0442\u043e\u043c\u0443 \u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044e."
+    }
+  },
+  "done_requires_start": {
+    "detail": {
+      "code": "TRANSPORT_EDIT_REJECTED",
+      "message": "ORA-20886: DRIVER_FACT_START_REQUIRED"
+    }
+  },
+  "self_driver_returns": [],
+  "driver_caller_rollback_REV": "PASS",
+  "driver_classifier": [
+    {
+      "legacy": 0,
+      "current_scope": 1
+    }
+  ],
+  "driver_start": {
+    "op_id": 10244,
+    "trip_id": 33657,
+    "driver_id": 10019,
+    "status": "in_progress",
+    "fact_start": "2026-10-16 15:03:11",
+    "fact_end": null,
+    "changed": true,
+    "clock_basis": "EXISTING_DATABASE_LOCAL_DATE",
+    "stock_changed": false
+  },
+  "driver_start_repeat": {
+    "op_id": 10244,
+    "trip_id": 33657,
+    "driver_id": 10019,
+    "status": "in_progress",
+    "fact_start": "2026-10-16 15:03:11",
+    "fact_end": null,
+    "changed": false,
+    "clock_basis": "EXISTING_DATABASE_LOCAL_DATE",
+    "stock_changed": false
+  },
+  "driver_done": {
+    "op_id": 10244,
+    "trip_id": 33657,
+    "driver_id": 10019,
+    "status": "done",
+    "fact_start": "2026-10-16 15:03:11",
+    "fact_end": "2026-10-16 15:03:11",
+    "changed": true,
+    "clock_basis": "EXISTING_DATABASE_LOCAL_DATE",
+    "stock_changed": false
+  },
+  "driver_done_repeat": {
+    "op_id": 10244,
+    "trip_id": 33657,
+    "driver_id": 10019,
+    "status": "done",
+    "fact_start": "2026-10-16 15:03:11",
+    "fact_end": "2026-10-16 15:03:11",
+    "changed": false,
+    "clock_basis": "EXISTING_DATABASE_LOCAL_DATE",
+    "stock_changed": false
+  },
+  "revoked_self_read": {
+    "detail": {
+      "code": "TRANSPORT_EDIT_REJECTED",
+      "message": "ORA-20882: DRIVER_CURRENT_ACCOUNT_BINDING_REQUIRED"
+    }
+  },
+  "revoked_self_write": {
+    "detail": {
+      "code": "TRANSPORT_EDIT_REJECTED",
+      "message": "ORA-20882: DRIVER_CURRENT_ACCOUNT_BINDING_REQUIRED"
+    }
+  },
+  "revoked_self_returns": {
+    "detail": {
+      "code": "RETURN_CURRENT_BOUND_DRIVER_REQUIRED",
+      "message": "\u041d\u0435\u0442 \u0442\u0435\u043a\u0443\u0449\u0435\u0433\u043e \u0434\u043e\u043f\u0443\u0441\u043a\u0430 \u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044f",
+      "operation_id": "",
+      "retry_same_operation_id": false,
+      "outcome_confirmed": false
+    }
+  },
+  "expired_self_read": {
+    "detail": {
+      "code": "TRANSPORT_EDIT_REJECTED",
+      "message": "ORA-20882: DRIVER_CURRENT_ACCOUNT_BINDING_REQUIRED"
+    }
+  },
+  "restored_self_read": [
+    {
+      "task_id": 33657,
+      "shipment_date": "2026-10-16 00:00:00",
+      "num_plat": "FVdc48b9c2aa",
+      "transport_type": "10",
+      "condition": "\u0421\u043f\u043b\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d",
+      "note": null,
+      "price": 0,
+      "st_count": 1,
+      "weight_kg": 0,
+      "loaded_weight_kg": null
+    }
+  ],
+  "unbind_driver": {
+    "driver_id": 10019,
+    "user_id": "DD16Da7bc0b7073",
+    "active": false,
+    "binding_version": 2
+  },
+  "revoked_binding_read": {
+    "detail": {
+      "code": "TRANSPORT_EDIT_REJECTED",
+      "message": "ORA-20882: DRIVER_CURRENT_ACCOUNT_BINDING_REQUIRED"
+    }
+  },
+  "revoked_binding_write": {
+    "detail": {
+      "code": "TRANSPORT_EDIT_REJECTED",
+      "message": "ORA-20882: DRIVER_CURRENT_ACCOUNT_BINDING_REQUIRED"
+    }
+  },
+  "partial_trip_scope": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "message": "SHIPPING_CURRENT_WARE_FORBIDDEN",
+      "operation_id": "DD16.a7bc0b7073.DEPART.PROBE",
+      "retry_same_operation_id": true,
+      "outcome_confirmed": true
+    }
+  },
+  "all_trip_scopes_reach_physical_guard": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "message": "DEPART_PHYSICAL_LOAD_REQUIRED",
+      "operation_id": "DD16.a7bc0b7073.DEPART.PROBE",
+      "retry_same_operation_id": true,
+      "outcome_confirmed": true
+    }
+  },
+  "invoice": 531,
+  "partial_invoice_scope": {
+    "detail": {
+      "code": "COST_WAREHOUSE_FORBIDDEN",
+      "message": "\u041d\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u043c\u043e\u0447\u0438\u0439 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0441\u043a\u043b\u0430\u0434"
+    }
+  },
+  "partial_registry_scope": {
+    "detail": {
+      "code": "COST_WAREHOUSE_FORBIDDEN",
+      "message": "\u041d\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u043c\u043e\u0447\u0438\u0439 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0441\u043a\u043b\u0430\u0434"
+    }
+  },
+  "all_invoice_scopes": {
+    "bytes": 5411,
+    "sha256": "1b392b83ba9ebd015b2addce04aa362b6b726c4c90c71ddd1a8e27da4bbaabcd"
+  },
+  "all_registry_scopes": {
+    "bytes": 5465,
+    "sha256": "b896de8f3fc5b65384c7145ce0b365116597d782688472360052db8d8ff9dc13"
+  },
+  "removed_invoice_scope": {
+    "detail": {
+      "code": "COST_WAREHOUSE_FORBIDDEN",
+      "message": "\u041d\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u043c\u043e\u0447\u0438\u0439 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0441\u043a\u043b\u0430\u0434"
+    }
+  },
+  "delegate_own_warehouse": {
+    "operation_id": "DD16.a7bc0b7073.delegate_own_warehouse",
+    "command_type": "ASSIGN",
+    "object_id": "DD16.a7bc0b7073.CHILD",
+    "version": 1,
+    "replayed": true
+  },
+  "delegated_access": [
+    {
+      "currency": "RUB",
+      "version_no": 2,
+      "rate_value": "6.25",
+      "effective_from": "2026-10-01",
+      "basis": "BOX",
+      "reason_text": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "decision_reference": "FW16.fc9538d7c6.MONTH",
+      "components": {
+        "basis_boxes": "10",
+        "basis_provenance": "DECLARED_MONTHLY_BOX_BASE",
+        "combined_rate": "6.25",
+        "common_work_amount": "50",
+        "common_work_rate": "5",
+        "month": "2026-10",
+        "picking_rate": "1.25"
+      }
+    }
+  ],
+  "cannot_delegate_foreign_warehouse": {
+    "detail": {
+      "code": "DELEGATION_OUTSIDE_MANDATE",
+      "message": "DELEGATION_OUTSIDE_MANDATE",
+      "outcome_confirmed": true
+    }
+  },
+  "cannot_extend_mandate_time": {
+    "detail": {
+      "code": "DELEGATION_OUTSIDE_MANDATE",
+      "message": "DELEGATION_OUTSIDE_MANDATE",
+      "outcome_confirmed": true
+    }
+  },
+  "cannot_delegate_rate_right": {
+    "detail": {
+      "code": "DELEGATION_OUTSIDE_MANDATE",
+      "message": "DELEGATION_OUTSIDE_MANDATE",
+      "outcome_confirmed": true
+    }
+  },
+  "cannot_edit_role": {
+    "detail": {
+      "code": "ACCESS_DENIED",
+      "message": "ACCESS_DENIED",
+      "outcome_confirmed": true
+    }
+  },
+  "cannot_revoke_admin_grant": {
+    "detail": {
+      "code": "REVOKE_OUTSIDE_MANDATE",
+      "message": "REVOKE_OUTSIDE_MANDATE",
+      "outcome_confirmed": true
+    }
+  },
+  "revoke_own_delegation": {
+    "operation_id": "DD16.a7bc0b7073.revoke_own_delegation",
+    "command_type": "REVOKE",
+    "object_id": "DD16.a7bc0b7073.CHILD",
+    "version": 2,
+    "replayed": false
+  },
+  "revoked_delegated_access": {
+    "detail": {
+      "code": "COST_WAREHOUSE_FORBIDDEN",
+      "message": "\u041d\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u043c\u043e\u0447\u0438\u0439 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0441\u043a\u043b\u0430\u0434",
+      "operation_id": null,
+      "outcome_confirmed": false
+    }
+  },
+  "replayed_grant_does_not_revive": {
+    "detail": {
+      "code": "COST_WAREHOUSE_FORBIDDEN",
+      "message": "\u041d\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u043c\u043e\u0447\u0438\u0439 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0441\u043a\u043b\u0430\u0434",
+      "operation_id": null,
+      "outcome_confirmed": false
+    }
+  },
+  "expired_assignment": {
+    "detail": {
+      "code": "COST_WAREHOUSE_FORBIDDEN",
+      "message": "\u041d\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u043c\u043e\u0447\u0438\u0439 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0441\u043a\u043b\u0430\u0434",
+      "operation_id": null,
+      "outcome_confirmed": false
+    }
+  }
+}

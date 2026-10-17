@@ -1,0 +1,42 @@
+{
+ "posts": [
+  "POST /api/access/commands",
+  "POST /api/access/groups/preview",
+  "POST /api/access/commands",
+  "POST /api/access/commands",
+  "POST /api/access/commands",
+  "POST /api/access/explain",
+  "POST /api/access/commands"
+ ],
+ "meta": "Вы: admin · группа GLOBAL_ADMIN · ваших назначений 1 · ревизия 152 · данные 15.10.2026, 00:21",
+ "tabAfterArrow": "aa-tab-groups",
+ "tooltipVisible": [
+  "Создать черновик новой роли в форме. На сервер ничего не отправляется до «Сохранить роль»."
+ ],
+ "helpIds": 16,
+ "hintOpen": 1,
+ "hintAfterEscape": 0,
+ "focusAfterEscape": "help-hint-trigger",
+ "helpPanel": "Справка не загружена: Error: 404: Статья недоступна или не опубликована Повторить",
+ "saveBlockedTitle": "Недоступно: код роли: латиница, цифры, _.:- до 80 символов. Сохранить роль на сервере (ROLE_SAVE) с проверкой версии. В этой редакции — только глобальный администратор.",
+ "roleSaved": "Роль UI.C0056.ROLE.mv8m72zu: сохранено, версия 1.",
+ "saveBeforeImpact": "Недоступно: сначала посмотрите влияние текущего состава. Сохранить состав группы (GROUP_SAVE). Назначения с актуальным составом сразу увидят изменение — проверьте список затронутых.",
+ "impact": "Добавится объектов: 1 · уберётся: 0 · затронуто назначений: 0 Назначения со снимком сохраняют прежний состав; смена активности действует и на них.",
+ "groupSaved": "Группа UI.C0056.GRP.mv8m72zu: сохранено, версия 1.",
+ "pendingBanner": "Незавершённая команда: Назначение UI.C0056.ROLE.mv8m72zu → admin Тип ASSIGN · operation_id UI.ACCESS.ASSIGN:18dbfdf5-b83d-4fd3-b5cc-27c78281b2a6 · создана 15.10.2026, 00:21:20 Пока исход не подтверждён, новые изменения заблокированы, чтобы не создать противоре",
+ "newWhilePending": "true",
+ "afterReceipt": "Назначение UI.C0056.ROLE.mv8m72zu → admin: сохранено, версия 1.",
+ "assignmentRow": "admin UI.C0056.ROLE.mv8m72zu GROUP:UI.C0056.GRP.mv8m72zu 2026-10-15 00:21 (без пояса) 2026-10-15 01:21 (без пояса) действует · v1 Проверка UI C0056: роль без прав, будет отозвано (admin) Отозвать",
+ "revoked": "Отзыв UI.C0056.ROLE.mv8m72zu у admin: сохранено, версия 2.",
+ "assignmentAfterRevoke": "admin UI.C0056.ROLE.mv8m72zu GROUP:UI.C0056.GRP.mv8m72zu 2026-10-15 00:21 (без пояса) 2026-10-15 01:21 (без пояса) отозвано 2026-10-14 17:21 (без пояса) · v2 Проверка UI C0056 завершена (admin) ",
+ "explain": "Разрешено · ревизия доступа 156 source: GLOBAL_ADMIN",
+ "roleFinal": "Роль UI.C0056.ROLE.mv8m72zu: сохранено, версия 2.",
+ "mobile": {
+  "overflow": 0,
+  "hintPosition": "fixed"
+ },
+ "testObjects": {
+  "role": "UI.C0056.ROLE.mv8m72zu",
+  "group": "UI.C0056.GRP.mv8m72zu"
+ }
+}

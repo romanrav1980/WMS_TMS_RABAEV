@@ -1,0 +1,19 @@
+{
+  "captured_at_utc": "2026-10-16T05:34:09.535843+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_STORE_RECEIPT_WEIGHT_GUARD",
+      "type": "TRIGGER",
+      "file": "rrl_store_receipt_weight_guard_trigger.sql",
+      "errors": [],
+      "user_source_sha256": "e22da4f988de24b213871c0921c487733e39c90ece34a97256a96c991b66dfbb",
+      "normalized_source_sha256": "b14036827bebdf35124fdad34d37e75ffec0d44013c646963c3bc9e3bf1a38fa",
+      "artifact_sha256": "92ad0770626c7167fd9f79defaeffb93a5e69f4e83771a5571cd1a35c0c7564e"
+    }
+  ]
+}

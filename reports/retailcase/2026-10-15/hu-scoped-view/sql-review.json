@@ -1,0 +1,447 @@
+{
+  "collected_at": "2026-10-15T18:38:00.506510+00:00",
+  "read_only": true,
+  "http": [
+    {
+      "api_call_id": 69290,
+      "request_id": "99b710cd-aa12-433c-84d4-eaf361114f77",
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 50
+    },
+    {
+      "api_call_id": 69289,
+      "request_id": "0ff6827a-6a36-4a59-a005-29d75626f8c1",
+      "method": "OPTIONS",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 26
+    },
+    {
+      "api_call_id": 69284,
+      "request_id": "50da8242-660a-47f8-93cc-e6e223fad9a4",
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 45
+    },
+    {
+      "api_call_id": 69283,
+      "request_id": "9932526a-19dc-46bb-bdf8-3676c3c77256",
+      "method": "OPTIONS",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 15
+    },
+    {
+      "api_call_id": 69277,
+      "request_id": "18013c80-804a-4890-b386-3f0c0209d604",
+      "method": "GET",
+      "path": "/api/warehouse-hus/target-slots",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 69276,
+      "request_id": "30c31482-ca53-4640-a45e-2544e006cf34",
+      "method": "GET",
+      "path": "/api/warehouse-hus/target-slots",
+      "response_status": 403,
+      "duration_ms": 198
+    },
+    {
+      "api_call_id": 69275,
+      "request_id": "bf9bd76b-f1f1-4f96-8b6c-7c8eaeabce70",
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 403,
+      "duration_ms": 89
+    },
+    {
+      "api_call_id": 69273,
+      "request_id": "d15ffb1b-6fef-4947-be05-9ae6c87b0fb8",
+      "method": "GET",
+      "path": "/api/warehouse-hus/target-slots",
+      "response_status": 403,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 69272,
+      "request_id": "268a2d86-ae62-49ea-8e44-480d1a4ce29f",
+      "method": "GET",
+      "path": "/api/warehouse-hus/target-slots",
+      "response_status": 200,
+      "duration_ms": 52
+    },
+    {
+      "api_call_id": 69271,
+      "request_id": "a8085e0c-324c-4df1-a30f-63f16dde278b",
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 68
+    },
+    {
+      "api_call_id": 69269,
+      "request_id": "38e16a61-de31-4974-90c2-fd99191a4d3e",
+      "method": "GET",
+      "path": "/api/warehouse-hus/target-slots",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 69268,
+      "request_id": "09865a89-0135-4ce4-a80d-9eafda27e108",
+      "method": "GET",
+      "path": "/api/warehouse-hus/target-slots",
+      "response_status": 403,
+      "duration_ms": 63
+    },
+    {
+      "api_call_id": 69267,
+      "request_id": "72bd451b-a514-4425-a398-82b33f0047f3",
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 403,
+      "duration_ms": 87
+    },
+    {
+      "api_call_id": 69265,
+      "request_id": "d19e3edc-d9b3-4626-a5b6-3319faade787",
+      "method": "GET",
+      "path": "/api/warehouse-hus/target-slots",
+      "response_status": 403,
+      "duration_ms": 78
+    },
+    {
+      "api_call_id": 69264,
+      "request_id": "f57f0e88-f4ef-4b6d-aeca-13cb9fa458e1",
+      "method": "GET",
+      "path": "/api/warehouse-hus/target-slots",
+      "response_status": 200,
+      "duration_ms": 137
+    },
+    {
+      "api_call_id": 69263,
+      "request_id": "ba6c2a59-be08-4e60-a883-3d8303f7f746",
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 260
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 4879,
+      "api_call_id": 69277,
+      "elapsed_ms": 7,
+      "module": "WMS_API:69277",
+      "action": "GET /api/warehouse-hus/target-sl"
+    },
+    {
+      "log_id": 4878,
+      "api_call_id": 69276,
+      "elapsed_ms": 23,
+      "module": "WMS_API:69276",
+      "action": "GET /api/warehouse-hus/target-sl"
+    },
+    {
+      "log_id": 4877,
+      "api_call_id": 69275,
+      "elapsed_ms": 22,
+      "module": "WMS_API:69275",
+      "action": "GET /api/warehouse-hus/compositi"
+    },
+    {
+      "log_id": 4876,
+      "api_call_id": 69273,
+      "elapsed_ms": 6,
+      "module": "WMS_API:69273",
+      "action": "GET /api/warehouse-hus/target-sl"
+    },
+    {
+      "log_id": 4875,
+      "api_call_id": 69269,
+      "elapsed_ms": 6,
+      "module": "WMS_API:69269",
+      "action": "GET /api/warehouse-hus/target-sl"
+    },
+    {
+      "log_id": 4874,
+      "api_call_id": 69268,
+      "elapsed_ms": 6,
+      "module": "WMS_API:69268",
+      "action": "GET /api/warehouse-hus/target-sl"
+    },
+    {
+      "log_id": 4873,
+      "api_call_id": 69267,
+      "elapsed_ms": 14,
+      "module": "WMS_API:69267",
+      "action": "GET /api/warehouse-hus/compositi"
+    },
+    {
+      "log_id": 4872,
+      "api_call_id": 69265,
+      "elapsed_ms": 16,
+      "module": "WMS_API:69265",
+      "action": "GET /api/warehouse-hus/target-sl"
+    }
+  ],
+  "native_cumulative": [
+    {
+      "sql_id": "0w1m750nc3a9r",
+      "executions": 7,
+      "avg_ms": 15.85,
+      "sql_sample": "select RRL_STOCK_HU_READ.snapshot_json(:p_uid) SNAPSHOT from dual"
+    },
+    {
+      "sql_id": "f2h91vq9vnxdm",
+      "executions": 18,
+      "avg_ms": 3.791,
+      "sql_sample": "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual"
+    },
+    {
+      "sql_id": "dzyq4q8unyyz8",
+      "executions": 4,
+      "avg_ms": 7.551,
+      "sql_sample": "select REVISION ACCESS_REVISION,          RRL_ACCESS_API.allowed(:actor,'access_admin_view','PLATFORM',null) ACCESS_ADMIN,          RRL_ACCESS_API.allowed(:actor,'knowledge_edit','PLATFORM',null) KNOWLEDGE_EDITOR,          RRL_ACCESS_API.allowed(:actor,'knowledge_publish','PLATFORM',null) KNOWLEDGE_PUBLISH,          RRL_ACCESS_API.allowed(:actor,'access_role_manage','PLATFORM',null) MANAGE_ROLES,          RRL_ACCESS_API.is_admin(:actor) MANAGE_OBJECTS,          RRL_ACCESS_API.allowed(:actor,'access_group_manage','PLATFORM',null) MANAGE_GROUPS,          RRL_ACCESS_API.allowed(:actor,'access_assign_manage','PLATFORM',null) MANAGE_ASSIGNMENTS          from RRL_ACCESS_REV where ID=1"
+    },
+    {
+      "sql_id": "f2h91vq9vnxdm",
+      "executions": 6,
+      "avg_ms": 1.841,
+      "sql_sample": "select RRL_ACCESS_API.allowed(:p_actor,'warehouse_task_view','WAREHOUSE',:p_warehouse) from dual"
+    }
+  ],
+  "local_pairs": [
+    {
+      "api_call_id": 69290,
+      "request_id": "99b710cd-aa12-433c-84d4-eaf361114f77",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "99b710cd-aa12-433c-84d4-eaf361114f77",
+        "method": "GET",
+        "path": "/api/warehouse-hus/composition",
+        "logged_at": "2026-10-15T18:37:10.128489+00:00",
+        "api_call_id": 69290,
+        "response_status": 200,
+        "duration_ms": 50
+      }
+    },
+    {
+      "api_call_id": 69289,
+      "request_id": "0ff6827a-6a36-4a59-a005-29d75626f8c1",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "0ff6827a-6a36-4a59-a005-29d75626f8c1",
+        "method": "OPTIONS",
+        "path": "/api/warehouse-hus/composition",
+        "logged_at": "2026-10-15T18:37:10.061475+00:00",
+        "api_call_id": 69289,
+        "response_status": 200,
+        "duration_ms": 26
+      }
+    },
+    {
+      "api_call_id": 69284,
+      "request_id": "50da8242-660a-47f8-93cc-e6e223fad9a4",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "50da8242-660a-47f8-93cc-e6e223fad9a4",
+        "method": "GET",
+        "path": "/api/warehouse-hus/composition",
+        "logged_at": "2026-10-15T18:36:30.331422+00:00",
+        "api_call_id": 69284,
+        "response_status": 200,
+        "duration_ms": 45
+      }
+    },
+    {
+      "api_call_id": 69283,
+      "request_id": "9932526a-19dc-46bb-bdf8-3676c3c77256",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "9932526a-19dc-46bb-bdf8-3676c3c77256",
+        "method": "OPTIONS",
+        "path": "/api/warehouse-hus/composition",
+        "logged_at": "2026-10-15T18:36:30.269984+00:00",
+        "api_call_id": 69283,
+        "response_status": 200,
+        "duration_ms": 15
+      }
+    },
+    {
+      "api_call_id": 69277,
+      "request_id": "18013c80-804a-4890-b386-3f0c0209d604",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "18013c80-804a-4890-b386-3f0c0209d604",
+        "method": "GET",
+        "path": "/api/warehouse-hus/target-slots",
+        "logged_at": "2026-10-15T18:35:44.027016+00:00",
+        "api_call_id": 69277,
+        "response_status": 403,
+        "duration_ms": 59
+      }
+    },
+    {
+      "api_call_id": 69276,
+      "request_id": "30c31482-ca53-4640-a45e-2544e006cf34",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "30c31482-ca53-4640-a45e-2544e006cf34",
+        "method": "GET",
+        "path": "/api/warehouse-hus/target-slots",
+        "logged_at": "2026-10-15T18:35:43.951254+00:00",
+        "api_call_id": 69276,
+        "response_status": 403,
+        "duration_ms": 198
+      }
+    },
+    {
+      "api_call_id": 69275,
+      "request_id": "bf9bd76b-f1f1-4f96-8b6c-7c8eaeabce70",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "bf9bd76b-f1f1-4f96-8b6c-7c8eaeabce70",
+        "method": "GET",
+        "path": "/api/warehouse-hus/composition",
+        "logged_at": "2026-10-15T18:35:43.707706+00:00",
+        "api_call_id": 69275,
+        "response_status": 403,
+        "duration_ms": 89
+      }
+    },
+    {
+      "api_call_id": 69273,
+      "request_id": "d15ffb1b-6fef-4947-be05-9ae6c87b0fb8",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "d15ffb1b-6fef-4947-be05-9ae6c87b0fb8",
+        "method": "GET",
+        "path": "/api/warehouse-hus/target-slots",
+        "logged_at": "2026-10-15T18:35:43.480088+00:00",
+        "api_call_id": 69273,
+        "response_status": 403,
+        "duration_ms": 56
+      }
+    },
+    {
+      "api_call_id": 69272,
+      "request_id": "268a2d86-ae62-49ea-8e44-480d1a4ce29f",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "268a2d86-ae62-49ea-8e44-480d1a4ce29f",
+        "method": "GET",
+        "path": "/api/warehouse-hus/target-slots",
+        "logged_at": "2026-10-15T18:35:43.405921+00:00",
+        "api_call_id": 69272,
+        "response_status": 200,
+        "duration_ms": 52
+      }
+    },
+    {
+      "api_call_id": 69271,
+      "request_id": "a8085e0c-324c-4df1-a30f-63f16dde278b",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "a8085e0c-324c-4df1-a30f-63f16dde278b",
+        "method": "GET",
+        "path": "/api/warehouse-hus/composition",
+        "logged_at": "2026-10-15T18:35:43.335778+00:00",
+        "api_call_id": 69271,
+        "response_status": 200,
+        "duration_ms": 68
+      }
+    },
+    {
+      "api_call_id": 69269,
+      "request_id": "38e16a61-de31-4974-90c2-fd99191a4d3e",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "38e16a61-de31-4974-90c2-fd99191a4d3e",
+        "method": "GET",
+        "path": "/api/warehouse-hus/target-slots",
+        "logged_at": "2026-10-15T18:35:43.109399+00:00",
+        "api_call_id": 69269,
+        "response_status": 403,
+        "duration_ms": 60
+      }
+    },
+    {
+      "api_call_id": 69268,
+      "request_id": "09865a89-0135-4ce4-a80d-9eafda27e108",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "09865a89-0135-4ce4-a80d-9eafda27e108",
+        "method": "GET",
+        "path": "/api/warehouse-hus/target-slots",
+        "logged_at": "2026-10-15T18:35:43.030430+00:00",
+        "api_call_id": 69268,
+        "response_status": 403,
+        "duration_ms": 63
+      }
+    },
+    {
+      "api_call_id": 69267,
+      "request_id": "72bd451b-a514-4425-a398-82b33f0047f3",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "72bd451b-a514-4425-a398-82b33f0047f3",
+        "method": "GET",
+        "path": "/api/warehouse-hus/composition",
+        "logged_at": "2026-10-15T18:35:42.949970+00:00",
+        "api_call_id": 69267,
+        "response_status": 403,
+        "duration_ms": 87
+      }
+    },
+    {
+      "api_call_id": 69265,
+      "request_id": "d19e3edc-d9b3-4626-a5b6-3319faade787",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "d19e3edc-d9b3-4626-a5b6-3319faade787",
+        "method": "GET",
+        "path": "/api/warehouse-hus/target-slots",
+        "logged_at": "2026-10-15T18:35:42.596033+00:00",
+        "api_call_id": 69265,
+        "response_status": 403,
+        "duration_ms": 78
+      }
+    },
+    {
+      "api_call_id": 69264,
+      "request_id": "f57f0e88-f4ef-4b6d-aeca-13cb9fa458e1",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "f57f0e88-f4ef-4b6d-aeca-13cb9fa458e1",
+        "method": "GET",
+        "path": "/api/warehouse-hus/target-slots",
+        "logged_at": "2026-10-15T18:35:42.494732+00:00",
+        "api_call_id": 69264,
+        "response_status": 200,
+        "duration_ms": 137
+      }
+    },
+    {
+      "api_call_id": 69263,
+      "request_id": "ba6c2a59-be08-4e60-a883-3d8303f7f746",
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "ba6c2a59-be08-4e60-a883-3d8303f7f746",
+        "method": "GET",
+        "path": "/api/warehouse-hus/composition",
+        "logged_at": "2026-10-15T18:35:42.338301+00:00",
+        "api_call_id": 69263,
+        "response_status": 200,
+        "duration_ms": 260
+      }
+    }
+  ],
+  "max_http_ms": 260,
+  "decision": "Retain exact UID/CASE/WARE lookups, existing indexes and native tree200/depth16/units10000 plus slots200. No new index/cache without repeated500ms or1000ms evidence; inventory/platform owns pilot execution deltas and plans. Shared V$SQL average is NOT this test latency or p95. Existing catalog backlog remains operations/schema-verification-owned.",
+  "limits": "API latest100 exact paths since fixed ID; slow latest501; local8MiB/12000lines; native15 cumulative cursors. OPTIONS kept distinct; no native-to-HTTP inference."
+}

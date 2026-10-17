@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "native_source_match": true,
+  "invalid_count": 0,
+  "compile_errors": [],
+  "http_checks": [
+    "current_receiver_device_list",
+    "unsupported_protocol_422",
+    "missing_request_404",
+    "unknown_sender_device_403",
+    "browser_mass_422",
+    "bad_identity_401"
+  ],
+  "stock_effect": "NONE"
+}

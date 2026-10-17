@@ -1,0 +1,18 @@
+[
+  {
+    "line": 49,
+    "text": "declare ctx json_object_t:=json_object_t.parse(RRL_CASE_RESOURCE_POLICY.context_json(task_id,'COMPLETE',d.get_string('actor')));begin"
+  },
+  {
+    "line": 106,
+    "text": "if RRL_HAS_WRIGHT(p_actor,'case_pick_execute')!=1 then raise_application_error(-20882,'CASE_PICK_FORBIDDEN');end if;"
+  },
+  {
+    "line": 136,
+    "text": "ctx:=json_object_t.parse(RRL_CASE_RESOURCE_POLICY.context_json(task_id,'COMPLETE',p_actor));"
+  },
+  {
+    "line": 140,
+    "text": "if ct.ASSIGNED_TO is not null and ct.ASSIGNED_TO!=p_actor and RRL_HAS_WRIGHT(p_actor,'case_pick_manage')!=1 then raise_application_error(-20882,'CASE_TASK_ACTOR_CONFLICT');end if;"
+  }
+]

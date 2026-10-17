@@ -1,0 +1,132 @@
+[
+  {
+    "table_name": "RRL_CASE_PICK_EVENT",
+    "column_name": "CREATED_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_CASE_PICK_TASK",
+    "column_name": "CREATED_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_CASE_PICK_TASK",
+    "column_name": "STARTED_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_CASE_PICK_TASK",
+    "column_name": "CLOSED_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_CASE_PICK_TASK",
+    "column_name": "DONE_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_CASE_PICK_TASK",
+    "column_name": "UPDATED_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_CASE_PICK_TASK",
+    "column_name": "TRANSFERRED_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_CASE_PICK_TASK",
+    "column_name": "STARTED_AT_INSTANT",
+    "data_type": "TIMESTAMP(6) WITH TIME ZONE"
+  },
+  {
+    "table_name": "RRL_RESOURCE_FACT_EVENT",
+    "column_name": "EVENT_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_RESOURCE_SESSION",
+    "column_name": "LOGIN_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_RESOURCE_SESSION",
+    "column_name": "LOGOUT_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_RESOURCE_SESSION",
+    "column_name": "LAST_HEARTBEAT_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_RESOURCE_SESSION",
+    "column_name": "LAST_POSITION_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_RESOURCE_SHIFT",
+    "column_name": "SHIFT_DATE",
+    "data_type": "DATE"
+  },
+  {
+    "table_name": "RRL_RESOURCE_SHIFT",
+    "column_name": "START_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_RESOURCE_SHIFT",
+    "column_name": "FINISH_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_RESOURCE_SHIFT",
+    "column_name": "CREATED_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_RESOURCE_SHIFT",
+    "column_name": "UPDATED_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_WAREHOUSE_TASK",
+    "column_name": "CREATED_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_WAREHOUSE_TASK",
+    "column_name": "STARTED_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_WAREHOUSE_TASK",
+    "column_name": "FINISHED_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_WAREHOUSE_TASK",
+    "column_name": "CANCELLED_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_WAREHOUSE_TASK",
+    "column_name": "PLANNED_START_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_WAREHOUSE_TASK",
+    "column_name": "PLANNED_FINISH_AT",
+    "data_type": "TIMESTAMP(6)"
+  },
+  {
+    "table_name": "RRL_WAREHOUSE_TASK",
+    "column_name": "STARTED_AT_INSTANT",
+    "data_type": "TIMESTAMP(6) WITH TIME ZONE"
+  },
+  {
+    "table_name": "RRL_WAREHOUSE_TASK",
+    "column_name": "FINISHED_AT_INSTANT",
+    "data_type": "TIMESTAMP(6) WITH TIME ZONE"
+  }
+]

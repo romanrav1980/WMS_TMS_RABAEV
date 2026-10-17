@@ -1,0 +1,33 @@
+{
+  "warehouse": 1,
+  "iteration": 1,
+  "total_ms": 163.27,
+  "events": 3,
+  "unscheduled": 23,
+  "slowest": [
+    {
+      "ms": 7.57,
+      "sql": "select o.ID OP_ID,o.TT_ID,o.OPERATION_CODE,t.TRANSPORT,t.DOCK, (select max(a.VERSION_NO) from RRL_TT_TIME_APPROVAL a where a.TT_ID=t.ID) APPROVAL_VERSION, to_char(o.PLAN_START,'YYYY-MM-DD\"T\"HH24:MI:SS') PLAN_LO"
+    },
+    {
+      "ms": 4.28,
+      "sql": "select t.TASK_ID,t.TASK_TYPE,t.STATUS,t.RESOURCE_ID,t.EQUIPMENT_ID,t.ASSIGNED_TO, t.SOURCE_DOC_TYPE,t.SOURCE_DOC_ID,t.TASK_SOURCE,t.SOURCE_TASK_ID, to_char(t.PLANNED_START_AT,'YYYY-MM-DD\"T\"HH24:MI:SS') PLAN_LOC"
+    },
+    {
+      "ms": 2.05,
+      "sql": "select RRL_ACCESS_API.allowed(:actor,'resource_gantt_view','WAREHOUSE',:ware) from dual"
+    },
+    {
+      "ms": 1.95,
+      "sql": "select RESOURCE_ID,RESOURCE_NAME,RESOURCE_CODE,RESOURCE_TYPE, RESOURCE_CLASS,EQUIPMENT_ID,USER_ID,STATUS,ZONE_CODE from RRL_RESOURCE where WARE_ID=:ware and ACTIVE=1 order by RESOURCE_ID fetch first 501 rows on"
+    },
+    {
+      "ms": 1.8,
+      "sql": "select RRL_ACCESS_API.allowed(:actor,:permission,'WAREHOUSE',:ware) from dual"
+    },
+    {
+      "ms": 1.69,
+      "sql": "select t.CASE_PICK_TASK_ID,t.PICK_WAVE_ID,t.STATUS, t.ASSIGNED_RESOURCE_ID RESOURCE_ID,t.EQUIPMENT_ID,t.ASSIGNED_TO,t.TOTAL_LINES,t.PICKED_LINES, to_char(t.STARTED_AT_INSTANT at time zone 'UTC','YYYY-MM-DD\"T\"HH"
+    }
+  ]
+}

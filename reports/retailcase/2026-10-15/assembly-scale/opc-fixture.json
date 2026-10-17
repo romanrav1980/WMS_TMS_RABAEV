@@ -1,0 +1,335 @@
+{
+  "status": "NATIVE_AND_OPC_RECOVERY_PASS_ALL_QA_RETIRED",
+  "fixture": {
+    "task": 1032,
+    "line": 1036,
+    "ware": 6667491,
+    "operator": "ASM15.OP1032",
+    "sender": "ASM15.GW1032",
+    "device": "ASM15.CASE1032"
+  },
+  "original": {
+    "stock": [
+      {
+        "cell": "QFd9a5c53b54",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 4
+      },
+      {
+        "cell": "QGd9a5c53b54",
+        "remain": 20,
+        "hard_reserved_base": 20,
+        "stock_version": 1
+      }
+    ],
+    "task": [
+      {
+        "case_pick_task_id": 1032,
+        "picked_qty": 0,
+        "status": "NEW",
+        "assigned_to": null,
+        "content_version": 0,
+        "pallet_type_id": 1,
+        "sscc": "CP395000000001032",
+        "assigned_resource_id": null,
+        "resource_session_id": null,
+        "equipment_id": null,
+        "started_at": null,
+        "started_at_instant": null,
+        "started_shift_time_zone": null
+      }
+    ],
+    "line": [
+      {
+        "picked_qty": 0,
+        "status": "NEW"
+      }
+    ]
+  },
+  "fixture_note": "SIMULATED_TEST_LABEL_NOT_PHYSICAL; TEST_FIXTURE_NOT_HARDWARE",
+  "business_stock_committed": false,
+  "physical_verified": false,
+  "actors_staged": true,
+  "type_change": {
+    "operation_id": "ASM15.TYPE1032",
+    "command_type": "CASE_PALLET_TYPE_CHANGE",
+    "case_task_id": 1032,
+    "pallet_type_id": 32,
+    "previous_pallet_type_id": 1,
+    "planned_pallet_type_id": null,
+    "version": 1,
+    "reason": "SIMULATED_TEST_LABEL_NOT_PHYSICAL; TEST_FIXTURE_NOT_HARDWARE",
+    "stock_changed": false,
+    "status": "APPLIED",
+    "outbox_id": 5301
+  },
+  "warehouse_settings_before": {
+    "ware_id": 6667491,
+    "company_prefix": null,
+    "extension_digit": 0,
+    "coordinate_unit_m": 1,
+    "reachtruck_mps": 1,
+    "lift_mps": 0.5,
+    "placement_metric": "DISTANCE",
+    "updated_by": "admin",
+    "updated_at": "2026-10-15 07:07:33.567840",
+    "hu_cell_height_unit": null,
+    "outgoing_qc_mode": "BOTH",
+    "outgoing_qc_independent": 1,
+    "outgoing_qc_sample_percent": 0,
+    "defer_wait_cell": null
+  },
+  "label": {
+    "case_pick_task_id": 1032,
+    "sscc": "090000000000007017",
+    "original_carrier": "CP395000000001032",
+    "content_version": 2,
+    "operation_id": "ASM15.LABEL1032",
+    "confirmed": false
+  },
+  "simulated_label_confirmation": {
+    "case_pick_task_id": 1032,
+    "sscc": "090000000000007017",
+    "confirmed": true
+  },
+  "tare_count_authorization": "Root explicit second TEST type32 count1->2 for isolated1032 OPC discrepancy; no goods or hardware claim",
+  "simulated_tare_count": {
+    "status": "POSTED",
+    "tare_balance_changed": true,
+    "destination_quantity": "2",
+    "operation_id": "ASM15.TARECOUNT1032",
+    "quantity": "2",
+    "owner_ware_id": 6667491,
+    "pallet_type_id": 32,
+    "condition": "GOOD",
+    "goods_stock_changed": false,
+    "outbox_id": 5302
+  },
+  "tare_booking": {
+    "operation_id": "ASM15.TAREBOOK1032",
+    "status": "HELD",
+    "place_kind": "CASE",
+    "place_id": "1032",
+    "pallet_type_id": 32,
+    "warehouse_id": 6667491,
+    "available_quantity": "0",
+    "quantity": "1",
+    "physical_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 5303
+  },
+  "device": {
+    "device_id": "ASM15.CASE1032",
+    "device_policy_version": 1,
+    "active": true,
+    "device_mode": "TEST",
+    "basis": "GROSS"
+  },
+  "station": {
+    "version": 1,
+    "policy_kind": "STATION",
+    "operation_id": "ASM15.STATION1032"
+  },
+  "sku_policy": {
+    "reused_current_version": 1,
+    "no_policy_mutation": true
+  },
+  "tare": {
+    "capture_key": "7DE7BD34C4733E06DA605D3975B95B2428249706A6C42C91D91C6C7D53B14FEA",
+    "device_id": "ASM15.CASE1032",
+    "capture_id": "ASM15.TARE1032",
+    "warehouse_id": 6667491,
+    "post_cell": "QGd9a5c53b54",
+    "device_mode": "TEST",
+    "purpose": "EMPTY_TARE",
+    "case_task_id": 1032,
+    "case_content_version": 2,
+    "scan_container": "090000000000007017",
+    "pallet_type_id": 32,
+    "type_version": 2,
+    "basis": "GROSS",
+    "weight_kg": "0.5",
+    "device_policy_version": 1,
+    "calibration_ref": "TEST_FIXTURE_NOT_HARDWARE:ASM15",
+    "resolution_kg": "0.001",
+    "source_sha256": "C45CCC207757DAEBF2845AD0F81CAECA49BA0A855433332BE56BE1E7D0FFB3B6",
+    "measured_at": "2026-10-15T11:12:12.094311+00:00",
+    "sample_count": 5,
+    "span_ms": 2000,
+    "status": "ARCHIVED",
+    "stock_posted": false
+  },
+  "session": {
+    "session_id": "ASM15.S1032",
+    "task_id": 1032,
+    "device_id": "ASM15.CASE1032",
+    "post_cell": "QGd9a5c53b54",
+    "operator_id": "ASM15.OP1032",
+    "warehouse_id": 6667491,
+    "scan_container": "090000000000007017",
+    "cumulative_tolerance_kg": "0.002",
+    "state": "OPEN",
+    "confirmation_mode": "AUTO",
+    "content_version": 2,
+    "tare_capture_key": "7DE7BD34C4733E06DA605D3975B95B2428249706A6C42C91D91C6C7D53B14FEA",
+    "tare_weight_kg": "0.5",
+    "last_weight_kg": "0.5",
+    "expires_at": "2026-10-15T19:12:12.173957+00:00",
+    "block_reason": null,
+    "steps": [],
+    "has_older": false
+  },
+  "step": {
+    "step_id": "ASM15.T1032",
+    "session_id": "ASM15.S1032",
+    "operation_id": "ASM15.PICK1032",
+    "sequence": 1,
+    "case_line_id": 1036,
+    "article": "QNATIVED9A5C53B54",
+    "quantity": "1",
+    "state": "WAITING_BEFORE",
+    "confirmation_mode": "AUTO",
+    "content_version": 2,
+    "before_capture_id": "ASM.915A0A28ECB7F7588FAE098AAEF27227C4AE72DB850ADD85AD2DA4132056DF4A",
+    "after_capture_id": "ASM.3CB2E38B37F214A38642C8ABBCF7C375485DED706F6FCB6B0B1BE20A1770DE62",
+    "before_weight_kg": null,
+    "after_weight_kg": null,
+    "delta_kg": null,
+    "min_delta_kg": "0.01",
+    "expected_delta_min_kg": "0.99",
+    "expected_delta_max_kg": "1.01",
+    "button_intent": false,
+    "consent_to_auto": true,
+    "block_reason": null,
+    "stock_posted": false
+  },
+  "staged_state": {
+    "step_id": "ASM15.T1032",
+    "session_id": "ASM15.S1032",
+    "operation_id": "ASM15.PICK1032",
+    "sequence": 1,
+    "case_line_id": 1036,
+    "article": "QNATIVED9A5C53B54",
+    "quantity": "1",
+    "state": "WAITING_BEFORE",
+    "confirmation_mode": "AUTO",
+    "content_version": 2,
+    "before_capture_id": "ASM.915A0A28ECB7F7588FAE098AAEF27227C4AE72DB850ADD85AD2DA4132056DF4A",
+    "after_capture_id": "ASM.3CB2E38B37F214A38642C8ABBCF7C375485DED706F6FCB6B0B1BE20A1770DE62",
+    "before_weight_kg": null,
+    "after_weight_kg": null,
+    "delta_kg": null,
+    "min_delta_kg": "0.01",
+    "expected_delta_min_kg": "0.99",
+    "expected_delta_max_kg": "1.01",
+    "button_intent": false,
+    "consent_to_auto": true,
+    "block_reason": null,
+    "stock_posted": false
+  },
+  "gateway_request": {
+    "session_id": "ASM15.S1032",
+    "step_id": "ASM15.T1032",
+    "operation_id": "ASM15.PICK1032",
+    "case_task_id": 1032,
+    "scan_container": "090000000000007017",
+    "capture_id": "ASM.915A0A28ECB7F7588FAE098AAEF27227C4AE72DB850ADD85AD2DA4132056DF4A",
+    "phase": "BEFORE",
+    "device_id": "ASM15.CASE1032",
+    "device_policy_version": 1,
+    "calibration_ref": "TEST_FIXTURE_NOT_HARDWARE:ASM15",
+    "confirmation_mode": "AUTO",
+    "expected_before_kg": "0.5",
+    "min_delta_kg": "0.01",
+    "expected_content_version": 2,
+    "tare_capture_key": "7DE7BD34C4733E06DA605D3975B95B2428249706A6C42C91D91C6C7D53B14FEA",
+    "expires_at": "2026-10-15T19:12:12.173957+00:00"
+  },
+  "book_cancel": {
+    "operation_id": "ASM15.TARECANCEL1032",
+    "status": "CANCELLED",
+    "place_kind": "CASE",
+    "place_id": "1032",
+    "pallet_type_id": 32,
+    "warehouse_id": 6667491,
+    "available_quantity": "2",
+    "quantity": "1",
+    "physical_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 5306
+  },
+  "type_restore": {
+    "native_refusal": "ORA-20886: CASE_TYPE_USE_PHYSICAL_REPACK\nORA-06512: at \"RABAEV.RRL_STOCK_POSTING_API\", line 151\nORA-06512: at \"RABAEV.RRL_STOCK_CASE_TYPE_CMD\", line 25\nORA-06512: at \"RABAEV.RRL_STOCK_CASE_TYPE_CMD\", line 39\nORA-06512: at \"RABAEV.RRL_STOCK_POSTING_API\", line 87\nORA-06512: at line 1",
+    "no_bypass": true
+  },
+  "device_retire": {
+    "device_id": "ASM15.CASE1032",
+    "device_policy_version": 2,
+    "active": false,
+    "device_mode": "TEST",
+    "basis": "GROSS"
+  },
+  "cleanup1032": {
+    "current": {
+      "stock": [
+        {
+          "cell": "QFd9a5c53b54",
+          "remain": 0,
+          "hard_reserved_base": 0,
+          "stock_version": 4
+        },
+        {
+          "cell": "QGd9a5c53b54",
+          "remain": 20,
+          "hard_reserved_base": 20,
+          "stock_version": 1
+        }
+      ],
+      "task": [
+        {
+          "case_pick_task_id": 1032,
+          "picked_qty": 0,
+          "status": "NEW",
+          "assigned_to": null,
+          "content_version": 2,
+          "pallet_type_id": 32,
+          "sscc": "090000000000007017",
+          "assigned_resource_id": null,
+          "resource_session_id": null,
+          "equipment_id": null,
+          "started_at": "2026-10-15 07:12:11.844807",
+          "started_at_instant": "2026-10-15 07:12:11.844807",
+          "started_shift_time_zone": null
+        }
+      ],
+      "line": [
+        {
+          "picked_qty": 0,
+          "status": "NEW"
+        }
+      ]
+    },
+    "stock_and_line_exact_original": true,
+    "new_sscc_retained": true,
+    "operator_and_sender_retired": true,
+    "assembly_history_preserved": "Existing step/session and evidence unchanged; inactive device+retired actors/current version change forbid posting",
+    "shared_tare_count_zero": "DEFERRED until1032 booking released",
+    "shared_test_tare_count_zero": "RESTORED through canonical owner; balance/journal/version history retained"
+  },
+  "final_test_tare_count0": {
+    "status": "POSTED",
+    "tare_balance_changed": true,
+    "destination_quantity": "0",
+    "operation_id": "ASM15.TARECOUNT.RESTORE0",
+    "quantity": "0",
+    "owner_ware_id": 6667491,
+    "pallet_type_id": 32,
+    "condition": "GOOD",
+    "goods_stock_changed": false,
+    "outbox_id": 5307
+  },
+  "final_cleanup_report": "reports/retailcase/2026-10-15/assembly-scale/final-cleanup-verification.json",
+  "type_restore_actual": "Both nativeownerrefused CASE_TYPE_USE_PHYSICAL_REPACK; type32/v2 retained, NEW/unassigned/qty0, realTESTstartinstants andnewSSCC retained; earlier message type1/v3 was incorrect",
+  "qa_retired": true
+}

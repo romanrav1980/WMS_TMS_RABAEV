@@ -1,0 +1,71 @@
+{
+  "state": "PASS_KPI_UI_FIXTURES",
+  "nativeWrites": 0,
+  "desktop": true,
+  "width390": true,
+  "explicitTimeZoneAgainstNewYork": true,
+  "serverRates": true,
+  "deniedClears": true,
+  "failedMarksStale": true,
+  "nullNotZero": true,
+  "changedWarehouseHides": true,
+  "staticHelp": true,
+  "errors": [],
+  "requests": [
+    {
+      "path": "/api/access/workspaces",
+      "method": "GET",
+      "warehouse": null
+    },
+    {
+      "path": "/api/resources/picker-kpis",
+      "method": "GET",
+      "warehouse": "20790457"
+    },
+    {
+      "path": "/api/delivery/timing/kpis",
+      "method": "GET",
+      "warehouse": "20790457"
+    },
+    {
+      "path": "/api/resources/picker-kpis",
+      "method": "GET",
+      "warehouse": "20790457"
+    },
+    {
+      "path": "/api/delivery/timing/kpis",
+      "method": "GET",
+      "warehouse": "20790457"
+    },
+    {
+      "path": "/api/resources/picker-kpis",
+      "method": "GET",
+      "warehouse": "20790457"
+    },
+    {
+      "path": "/api/delivery/timing/kpis",
+      "method": "GET",
+      "warehouse": "20790457"
+    },
+    {
+      "path": "/api/resources/picker-kpis",
+      "method": "GET",
+      "warehouse": "20790457"
+    },
+    {
+      "path": "/api/delivery/timing/kpis",
+      "method": "GET",
+      "warehouse": "20790457"
+    },
+    {
+      "path": "/api/resources/picker-kpis",
+      "method": "GET",
+      "warehouse": "999999999"
+    },
+    {
+      "path": "/api/delivery/timing/kpis",
+      "method": "GET",
+      "warehouse": "999999999"
+    }
+  ]
+}

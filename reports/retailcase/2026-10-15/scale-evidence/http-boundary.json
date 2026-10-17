@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "case": "unauthenticated",
+      "status": 401
+    },
+    {
+      "case": "admin_is_not_device_sender",
+      "status": 403
+    },
+    {
+      "case": "unknown_protocol",
+      "status": 422
+    }
+  ],
+  "business_writes": "NONE"
+}

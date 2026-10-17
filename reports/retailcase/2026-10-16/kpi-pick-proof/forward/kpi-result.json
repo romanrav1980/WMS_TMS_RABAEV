@@ -1,0 +1,83 @@
+{
+  "warehouse_id": 20790457,
+  "start_at": "2026-10-16T14:37:23.298851+00:00",
+  "finish_at": "2026-10-16T14:38:56.566142+00:00",
+  "as_of": "2026-10-16T14:38:56.853317+00:00",
+  "formula_version": "PICKER_KPI_V1",
+  "operators": [
+    {
+      "operator_id": "OC16P5e071e9f41",
+      "completed_lines": 1,
+      "boxes": "1",
+      "box_reasons": [],
+      "operation_ids": [
+        "OC16.5e071e9f41.BOX24",
+        "OC16.5e071e9f41.EA1"
+      ],
+      "quantities": [
+        {
+          "article": "AS16AC0FB95573E",
+          "base_uom": "EA",
+          "quantity": "25"
+        }
+      ],
+      "registered_assembly_hours": "0.0258314375000000000000000000000000000000000000000000000000000",
+      "registered_shift_hours": "0.0259075805555555555555555555555555555555555555555555555555555",
+      "rates": {
+        "lines_per_assembly_hour": "38.713",
+        "boxes_per_assembly_hour": "38.713",
+        "lines_per_shift_hour": "38.599",
+        "boxes_per_shift_hour": "38.599"
+      },
+      "time_basis": "REGISTERED_CONFIRMED_INTERVALS",
+      "work_coverage_certified": false,
+      "uncovered_work_operations": [],
+      "uncovered_shift_operations": [],
+      "time_reasons": {
+        "assembly": [],
+        "shift": []
+      },
+      "facts": [
+        {
+          "operation_id": "OC16.5e071e9f41.BOX24",
+          "actor": "OC16P5e071e9f41",
+          "at": "2026-10-16T14:38:55.696496+00:00",
+          "task_id": 1147,
+          "line_id": 1149,
+          "article": "AS16AC0FB95573E",
+          "base_uom": "EA",
+          "previous": "0",
+          "cumulative": "24",
+          "planned": "25",
+          "boxes": "1",
+          "packaging_reason": null,
+          "delta": "24"
+        },
+        {
+          "operation_id": "OC16.5e071e9f41.EA1",
+          "actor": "OC16P5e071e9f41",
+          "at": "2026-10-16T14:38:56.299262+00:00",
+          "task_id": 1147,
+          "line_id": 1149,
+          "article": "AS16AC0FB95573E",
+          "base_uom": "EA",
+          "previous": "24",
+          "cumulative": "25",
+          "planned": "25",
+          "boxes": "0",
+          "packaging_reason": null,
+          "delta": "1"
+        }
+      ]
+    }
+  ],
+  "scope": "REGISTERED_OBSERVATIONS",
+  "work_coverage_certified": false,
+  "source_limitations": [
+    "REGISTERED_TIME_IS_NOT_CERTIFIED_ALL_WORK",
+    "NATIVE_APPLIED_CLOCK_NOT_PHYSICAL_PICK_TIME",
+    "HISTORICAL_PACKAGING_NOT_BACKFILLED",
+    "OPEN_INTERVALS_PROJECTED_TO_AS_OF"
+  ],
+  "stock_changed": false
+}

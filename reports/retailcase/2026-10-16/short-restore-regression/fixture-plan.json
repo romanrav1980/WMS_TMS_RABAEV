@@ -1,0 +1,24 @@
+{
+  "prefix": "SR16.b4dbdade7c",
+  "tag": "b4dbdade7c",
+  "actor": "SR16Ib4dbdade7c",
+  "picker": "SR16Pb4dbdade7c",
+  "other": "SR16Xb4dbdade7c",
+  "source": "SR16.LOT:b4dbdade7c",
+  "warehouse_id": 20220394,
+  "article": "AS16A35CEA92C27",
+  "cell": "AS16C35cea92c27",
+  "face": 607,
+  "revision": 402,
+  "role": "SR16Rb4dbdade7c",
+  "assignment": "SR16Ab4dbdade7c",
+  "hardware_verified": false,
+  "state": "PREPARED",
+  "quantity": "1",
+  "recovery": [
+    "Never rerun stage after an uncertain result; inspect original operation receipt",
+    "Only own new lot is counted; original ASM CASE1140/lot/ST are protected",
+    "Canonical WAVE_CANCEL/PICK_PLAN_CANCEL release own remaining reservations; keep inventory loss/shortage/access journals",
+    "Retire new actors/roles/resources/session after final acceptance; no history deletion"
+  ]
+}

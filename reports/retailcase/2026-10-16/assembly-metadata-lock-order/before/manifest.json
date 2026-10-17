@@ -1,0 +1,28 @@
+{
+  "captured_at_utc": "2026-10-15T21:16:17.563175+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_ASM_META_SCOPE",
+      "type": "PACKAGE BODY",
+      "file": "rrl_asm_meta_scope_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "60789aeae47285a9c31825b3fa74b13dedb88ff428c3773530e9bd2efca910b0",
+      "normalized_source_sha256": "8782128e226b5a0be5daf0d193267255d64bfba224dc595832285b06a65b2b94",
+      "artifact_sha256": "25058edbb18f5d7906a4e4774f9677977d8e2e90f69b6b3dfcd525ff8a60a10f"
+    },
+    {
+      "name": "RRL_ASSEMBLY_SCALE_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_assembly_scale_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "f683545644c4ca80d2d6100cb8a996b4251b814cb58fa56ed7e1cc5b0715b90a",
+      "normalized_source_sha256": "4e2e23dcc4a764e8d4a04b971655e5b9c30db6306f692b083cc32df9830f7368",
+      "artifact_sha256": "c05bbd587f306006bded4964108a5e4777dbb6a0157b7d186fe239869594a331"
+    }
+  ]
+}

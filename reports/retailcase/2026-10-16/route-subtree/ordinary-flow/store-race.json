@@ -1,0 +1,517 @@
+{
+  "state": "PASS_FRESH_NESTED25EA_STORE_NO_SECOND_CONSUMPTION_AND_CONCURRENT_START_CONTROL",
+  "http": [
+    {
+      "label": "policy",
+      "path": "/api/delivery/store-receipts/policy",
+      "status": 200,
+      "api_call_id": "70179",
+      "request_id": "3679e4f1-f0ea-44ea-a2c6-69bf1256008f"
+    },
+    {
+      "label": "preview",
+      "path": "/api/delivery/store-receipts/preview?load_operation_id=OC16.3151980d02.NEST.LOAD&store_address=OC16.3151980d02.NEST.STORE",
+      "status": 200,
+      "api_call_id": "70180",
+      "request_id": "a8acfa40-65c8-437b-9c90-6e30167d796a"
+    },
+    {
+      "label": "control_replay",
+      "path": "/api/delivery/store-receipts/unloading/abandon-start",
+      "status": 200,
+      "api_call_id": "70181",
+      "request_id": "50d60211-7671-417d-b71a-93f00fce3c87"
+    },
+    {
+      "label": "start_or_replay",
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "status": 200,
+      "api_call_id": "70182",
+      "request_id": "f78b9b88-5230-4eba-98d6-631a57457647"
+    },
+    {
+      "label": "arrival_no_plan",
+      "path": "/api/delivery/timing/arrival",
+      "status": 200,
+      "api_call_id": "70183",
+      "request_id": "628ae7f5-bbe8-4bc2-ab72-9e9a60d356c1"
+    },
+    {
+      "label": "receipt",
+      "path": "/api/delivery/store-receipts/confirm",
+      "status": 200,
+      "api_call_id": "70184",
+      "request_id": "d6bae5c9-e9f4-4866-9645-6c2a1fd2d924"
+    },
+    {
+      "label": "receipt_replay",
+      "path": "/api/delivery/store-receipts/confirm",
+      "status": 200,
+      "api_call_id": "70185",
+      "request_id": "427bb53e-d2e4-49d5-9b7e-3be3352a4434"
+    }
+  ],
+  "hardware_verified": false,
+  "warehouse": 20061923,
+  "policy": {
+    "store_address": "OC16.3151980d02.NEST.STORE",
+    "mode": "PAPER_COUNT",
+    "policy_version": 1
+  },
+  "preview": {
+    "requires_marked_recipient_flow": false,
+    "load_operation_id": "OC16.3151980d02.NEST.LOAD",
+    "trip_id": 33654,
+    "store_address": "OC16.3151980d02.NEST.STORE",
+    "root": "OC16.3151980d02.NEST.TOP",
+    "root_scan_identifier": "OC16.3151980d02.NEST.TOP",
+    "root_sscc": null,
+    "policy_version": 1,
+    "mode": "PAPER_COUNT",
+    "snapshot": {
+      "root": "OC16.3151980d02.NEST.TOP",
+      "warehouse": 20061923,
+      "cell": "NS0f1e381d78",
+      "nodes": [
+        {
+          "uid": "OC16.3151980d02.NEST.TOP",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 1,
+          "sscc": null,
+          "tare_weight_kg": "0.3",
+          "open_task_count": 0,
+          "cell": "NS0f1e381d78",
+          "depth": 0
+        },
+        {
+          "uid": "OC16.3151980d02.NEST.BOX",
+          "kind": "CONTAINER",
+          "type": "BOX",
+          "version": 2,
+          "sscc": null,
+          "tare_weight_kg": "0.2",
+          "packing_start": {
+            "operation_id": "OC16.3151980d02.NEST.ATTACH.CASE",
+            "content_version": 1,
+            "warehouse": 20061923,
+            "instant": "2026-10-16T11:49:28.731647-04:00"
+          },
+          "open_task_count": 0,
+          "cell": "NS0f1e381d78",
+          "depth": 1
+        },
+        {
+          "uid": "CASE:1148",
+          "case_task_id": 1148,
+          "kind": "CASE",
+          "type": "CASE",
+          "sscc": "090000000000017016",
+          "version": 6,
+          "status": "CONTROLLED",
+          "wave_id": 582,
+          "cell": "NS0f1e381d78",
+          "depth": 2,
+          "open_task_count": 0,
+          "scale_qc": {
+            "case_task_id": 1148,
+            "case_content_version": 6,
+            "measured_content_version": 6,
+            "sscc": "090000000000017016",
+            "capture_key": null,
+            "device_mode": null,
+            "qc_operation_id": "OC16.3151980d02.NEST.QC",
+            "gross_weight_kg": "25.5",
+            "tare_weight_kg": "0.5",
+            "net_weight_kg": "25",
+            "origin": "MANUAL_CONFIRMED",
+            "recorded_by": "admin",
+            "measurement_ref": "MANUAL.QC:OC16.3151980d02.NEST.QC",
+            "composition_signature": "100CD01188533FF57F352439F543D22B3D2D0568061E59C1E72C974B8D2A6756",
+            "signature_version": 3,
+            "assembly_origin": []
+          },
+          "gross_weight_kg": "25.5",
+          "tare_weight_kg": "0.5",
+          "net_weight_kg": "25"
+        },
+        {
+          "uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+          "kind": "STOCK",
+          "type": null,
+          "version": 0,
+          "sscc": null,
+          "tare_weight_kg": "0",
+          "case_task_id": 1148,
+          "article": "AS16A0F1E381D78",
+          "quantity": "1",
+          "hard_quantity": "1",
+          "base_uom": "EA",
+          "stock_version": 1,
+          "weight_kg": null,
+          "open_task_count": 0,
+          "cell": "NS0f1e381d78",
+          "depth": 3
+        },
+        {
+          "uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+          "kind": "STOCK",
+          "type": null,
+          "version": 0,
+          "sscc": null,
+          "tare_weight_kg": "0",
+          "case_task_id": 1148,
+          "article": "AS16A0F1E381D78",
+          "quantity": "24",
+          "hard_quantity": "24",
+          "base_uom": "EA",
+          "stock_version": 1,
+          "weight_kg": null,
+          "open_task_count": 0,
+          "cell": "NS0f1e381d78",
+          "depth": 3
+        }
+      ],
+      "links": [
+        {
+          "id": 624,
+          "parent": "OC16.3151980d02.NEST.TOP",
+          "child": "OC16.3151980d02.NEST.BOX",
+          "version": 0
+        },
+        {
+          "id": 623,
+          "parent": "OC16.3151980d02.NEST.BOX",
+          "child": "CASE:1148",
+          "version": 0
+        },
+        {
+          "parent": "CASE:1148",
+          "child": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+          "membership": "CASE_CARRIER_LOT"
+        },
+        {
+          "parent": "CASE:1148",
+          "child": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+          "membership": "CASE_CARRIER_LOT"
+        }
+      ],
+      "ancestors": [],
+      "physical_unit_count": 0,
+      "leaf_count": 2,
+      "top_place_count": 1
+    },
+    "composition_signature": "59EAF3A978865A9CF9E532FD15A8BD37AF621449DEA1BABE51574C5DABCA980B",
+    "shipping_gross_weight_kg": "26",
+    "already_received": false,
+    "st_ids": [
+      641531
+    ],
+    "physical_boxes": [
+      {
+        "box_uid": "CASE:1148",
+        "content_version": 6,
+        "gross_weight_kg": "25.5",
+        "origin": "MANUAL_CONFIRMED",
+        "measurement_ref": "MANUAL.QC:OC16.3151980d02.NEST.QC",
+        "recorded_by": "admin",
+        "scan_identifier": "090000000000017016",
+        "coverage_complete": true,
+        "case_task_id": 1148,
+        "sscc": "090000000000017016",
+        "final_scale_capture": null,
+        "warehouse_qc_operation": "OC16.3151980d02.NEST.QC",
+        "tare_weight_kg": "0.5",
+        "net_weight_kg": "25",
+        "device_mode": null,
+        "composition_signature": "100CD01188533FF57F352439F543D22B3D2D0568061E59C1E72C974B8D2A6756",
+        "signature_version": 3,
+        "measured_content_version": 6
+      },
+      {
+        "box_uid": "OC16.3151980d02.NEST.BOX",
+        "content_version": 2,
+        "gross_weight_kg": "25.7",
+        "origin": "MANUAL_CONFIRMED",
+        "measurement_ref": "OC16.3151980d02.NEST.TEST.WRAPPER",
+        "recorded_by": "admin",
+        "scan_identifier": "OC16.3151980d02.NEST.BOX",
+        "coverage_complete": true
+      }
+    ],
+    "shipping_weight_tolerance_kg": "12.75",
+    "unloading": null,
+    "receipt": null
+  },
+  "original": {
+    "operation_id": "OC16.3151980d02.NEST.RACE.START",
+    "load_operation_id": "OC16.3151980d02.NEST.LOAD",
+    "store_address": "OC16.3151980d02.NEST.STORE",
+    "expected_composition_signature": "59EAF3A978865A9CF9E532FD15A8BD37AF621449DEA1BABE51574C5DABCA980B",
+    "scan_place": "OC16.3151980d02.NEST.TOP",
+    "before_cameras": true
+  },
+  "control": {
+    "operation_id": "OC16.3151980d02.NEST.RACE.CONTROL",
+    "original": {
+      "operation_id": "OC16.3151980d02.NEST.RACE.START",
+      "load_operation_id": "OC16.3151980d02.NEST.LOAD",
+      "store_address": "OC16.3151980d02.NEST.STORE",
+      "expected_composition_signature": "59EAF3A978865A9CF9E532FD15A8BD37AF621449DEA1BABE51574C5DABCA980B",
+      "scan_place": "OC16.3151980d02.NEST.TOP",
+      "before_cameras": true
+    },
+    "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+  },
+  "race": [
+    {
+      "kind": "start_unloading",
+      "result": {
+        "operation_id": "OC16.3151980d02.NEST.RACE.START",
+        "load_operation_id": "OC16.3151980d02.NEST.LOAD",
+        "store_address": "OC16.3151980d02.NEST.STORE",
+        "root": "OC16.3151980d02.NEST.TOP",
+        "trip_id": 33654,
+        "started_at_instant": "2026-10-16T11:51:02.381767-04:00",
+        "time_source": "SYSTEM_CAPTURED",
+        "status": "STARTED",
+        "stock_changed": false,
+        "cost_posted": false
+      }
+    },
+    {
+      "kind": "abandon_start",
+      "result": {
+        "operation_id": "OC16.3151980d02.NEST.RACE.CONTROL",
+        "original_operation_id": "OC16.3151980d02.NEST.RACE.START",
+        "load_operation_id": "OC16.3151980d02.NEST.LOAD",
+        "store_address": "OC16.3151980d02.NEST.STORE",
+        "status": "RECORDED",
+        "recorded_by": "admin",
+        "stock_changed": false,
+        "cost_posted": false,
+        "original_receipt": {
+          "operation_id": "OC16.3151980d02.NEST.RACE.START",
+          "load_operation_id": "OC16.3151980d02.NEST.LOAD",
+          "store_address": "OC16.3151980d02.NEST.STORE",
+          "root": "OC16.3151980d02.NEST.TOP",
+          "trip_id": 33654,
+          "started_at_instant": "2026-10-16T11:51:02.381767-04:00",
+          "time_source": "SYSTEM_CAPTURED",
+          "status": "STARTED",
+          "stock_changed": false,
+          "cost_posted": false
+        }
+      }
+    }
+  ],
+  "control_replay": {
+    "operation_id": "OC16.3151980d02.NEST.RACE.CONTROL",
+    "original_operation_id": "OC16.3151980d02.NEST.RACE.START",
+    "load_operation_id": "OC16.3151980d02.NEST.LOAD",
+    "store_address": "OC16.3151980d02.NEST.STORE",
+    "status": "RECORDED",
+    "recorded_by": "admin",
+    "stock_changed": false,
+    "cost_posted": false,
+    "original_receipt": {
+      "operation_id": "OC16.3151980d02.NEST.RACE.START",
+      "load_operation_id": "OC16.3151980d02.NEST.LOAD",
+      "store_address": "OC16.3151980d02.NEST.STORE",
+      "root": "OC16.3151980d02.NEST.TOP",
+      "trip_id": 33654,
+      "started_at_instant": "2026-10-16T11:51:02.381767-04:00",
+      "time_source": "SYSTEM_CAPTURED",
+      "status": "STARTED",
+      "stock_changed": false,
+      "cost_posted": false
+    }
+  },
+  "start_or_replay": {
+    "operation_id": "OC16.3151980d02.NEST.RACE.START",
+    "load_operation_id": "OC16.3151980d02.NEST.LOAD",
+    "store_address": "OC16.3151980d02.NEST.STORE",
+    "root": "OC16.3151980d02.NEST.TOP",
+    "trip_id": 33654,
+    "started_at_instant": "2026-10-16T11:51:02.381767-04:00",
+    "time_source": "SYSTEM_CAPTURED",
+    "status": "STARTED",
+    "stock_changed": false,
+    "cost_posted": false
+  },
+  "arrival_no_plan": {
+    "operation_id": "OC16.3151980d02.NEST.ARRIVAL",
+    "load_operation_id": "OC16.3151980d02.NEST.LOAD",
+    "store_address": "OC16.3151980d02.NEST.STORE",
+    "warehouse_id": 20061923,
+    "trip_id": 33654,
+    "arrived_at": "2026-10-16T15:51:02.689799+00:00",
+    "recorded_at": "2026-10-16T15:51:02.689799+00:00",
+    "recorded_by": "admin",
+    "origin": "MANUAL_CONFIRMED",
+    "window_operation_id": null,
+    "on_time_state": "NO_PLAN",
+    "stock_changed": false
+  },
+  "receipt": {
+    "load_custody_released": true,
+    "unloading": {
+      "evidence_reference": "OC16.3151980d02.NEST.TEST.UNLOAD",
+      "loader_present": true,
+      "method": "MANUAL",
+      "rolling_difficult": false,
+      "start_operation_id": "OC16.3151980d02.NEST.RACE.START"
+    },
+    "receipt_mode": "PAPER_COUNT",
+    "policy_version": 1,
+    "paper_reference": "OC16.3151980d02.NEST.TEST.COUNT",
+    "operation_id": "OC16.3151980d02.NEST.STORE.RECEIPT",
+    "load_operation_id": "OC16.3151980d02.NEST.LOAD",
+    "store_address": "OC16.3151980d02.NEST.STORE",
+    "root": "OC16.3151980d02.NEST.TOP",
+    "status": "ACCEPTED",
+    "accepted_lines": [
+      {
+        "line_no": 1,
+        "lot_uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "article": "AS16A0F1E381D78",
+        "base_uom": "EA",
+        "shipped": "1",
+        "accepted": "1",
+        "missing": "0",
+        "refused": "0",
+        "damaged": "0",
+        "extra": "0",
+        "accepted_quantity": "1"
+      },
+      {
+        "line_no": 2,
+        "lot_uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "article": "AS16A0F1E381D78",
+        "base_uom": "EA",
+        "shipped": "24",
+        "accepted": "24",
+        "missing": "0",
+        "refused": "0",
+        "damaged": "0",
+        "extra": "0",
+        "accepted_quantity": "24"
+      }
+    ],
+    "warehouse_stock_consumed_again": false,
+    "government_ack_created": false,
+    "outbox_id": 5609
+  },
+  "receipt_replay": {
+    "load_custody_released": true,
+    "unloading": {
+      "evidence_reference": "OC16.3151980d02.NEST.TEST.UNLOAD",
+      "loader_present": true,
+      "method": "MANUAL",
+      "rolling_difficult": false,
+      "start_operation_id": "OC16.3151980d02.NEST.RACE.START"
+    },
+    "receipt_mode": "PAPER_COUNT",
+    "policy_version": 1,
+    "paper_reference": "OC16.3151980d02.NEST.TEST.COUNT",
+    "operation_id": "OC16.3151980d02.NEST.STORE.RECEIPT",
+    "load_operation_id": "OC16.3151980d02.NEST.LOAD",
+    "store_address": "OC16.3151980d02.NEST.STORE",
+    "root": "OC16.3151980d02.NEST.TOP",
+    "status": "ACCEPTED",
+    "accepted_lines": [
+      {
+        "line_no": 1,
+        "lot_uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "article": "AS16A0F1E381D78",
+        "base_uom": "EA",
+        "shipped": "1",
+        "accepted": "1",
+        "missing": "0",
+        "refused": "0",
+        "damaged": "0",
+        "extra": "0",
+        "accepted_quantity": "1"
+      },
+      {
+        "line_no": 2,
+        "lot_uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "article": "AS16A0F1E381D78",
+        "base_uom": "EA",
+        "shipped": "24",
+        "accepted": "24",
+        "missing": "0",
+        "refused": "0",
+        "damaged": "0",
+        "extra": "0",
+        "accepted_quantity": "24"
+      }
+    ],
+    "warehouse_stock_consumed_again": false,
+    "government_ack_created": false,
+    "outbox_id": 5609
+  },
+  "quantities": [
+    {
+      "q": 25,
+      "n": 2
+    }
+  ],
+  "custody": [
+    {
+      "custody_released_at": "2026-10-16 11:51:03.000206",
+      "custody_release_operation_id": "OC16.3151980d02.NEST.STORE.RECEIPT"
+    }
+  ],
+  "order": {
+    "customer_order_id": 2162,
+    "delivery_status": "RECEIVED_SHIPPED_VOLUME",
+    "unshipped_fulfillments": 0,
+    "delivery_scope": "SHIPPED_VOLUME",
+    "physical_place_count": 1,
+    "open_case_ids": [],
+    "needs_owner_allocation": [],
+    "quantities": [
+      {
+        "article": "AS16A0F1E381D78",
+        "base_uom": "EA",
+        "shipped": "25",
+        "accepted": "25",
+        "missing": "0",
+        "refused": "0",
+        "damaged": "0",
+        "unreceived": "0",
+        "unattributed": "0",
+        "confirmed_transport_shortage": "0",
+        "historical_transport_shortage": "0",
+        "recovered_transport_quantity": "0"
+      }
+    ],
+    "order_no": "OC16.3151980d02",
+    "original_document_status": "OPEN",
+    "receipt_lineage": [
+      {
+        "original_load_operation_id": "OC16.3151980d02.NEST.LOAD",
+        "actual_final_load_operation_id": "OC16.3151980d02.NEST.LOAD",
+        "receipt_operation_id": "OC16.3151980d02.NEST.STORE.RECEIPT",
+        "lot_uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "original_lot_uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "transport_shortage_operation_id": null,
+        "historical_transport_shortage": "0",
+        "recovered_transport_quantity": "0",
+        "is_corrective_receipt": false
+      },
+      {
+        "original_load_operation_id": "OC16.3151980d02.NEST.LOAD",
+        "actual_final_load_operation_id": "OC16.3151980d02.NEST.LOAD",
+        "receipt_operation_id": "OC16.3151980d02.NEST.STORE.RECEIPT",
+        "lot_uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "original_lot_uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "transport_shortage_operation_id": null,
+        "historical_transport_shortage": "0",
+        "recovered_transport_quantity": "0",
+        "is_corrective_receipt": false
+      }
+    ]
+  }
+}

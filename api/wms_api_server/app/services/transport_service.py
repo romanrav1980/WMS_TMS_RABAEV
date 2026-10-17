@@ -25,6 +25,8 @@ Sprint 8 (VRP):
   RRL_TT_ADD_PALL        — назначить / снять СТ (tt_id=0 → снять)
   RRL_TT_REORDER_ADR     — пересортировать СТ в рейсе по ORD адреса
 """
+from ..modules.finance.public import billing_order_export_rows, billing_registry_export_rows
+from ..modules.transport.public import TripListFilter, trip_list_filters, guarded_trip_read, scoped_dispatch_rows, DispatchReadError
 
 import json
 import time
@@ -489,42 +491,10 @@ class TransportService:
         date_from: date | None = None,
         date_to: date | None = None,
         no_payments_only: bool = False,
+        actor: str | None = None,
     ) -> list[dict[str, Any]]:
-        conditions: list[str] = []
-        params: dict[str, Any] = {}
-
-        if not include_deleted:
-            conditions.append("(TT.DELETED IS NULL OR TT.DELETED = 0)")
-        if shipment_date is not None:
-            conditions.append("TT.SHIPMENT_DATE >= :shipment_date AND TT.SHIPMENT_DATE < :shipment_date_next")
-            params["shipment_date"] = shipment_date
-            params["shipment_date_next"] = shipment_date + timedelta(days=1)
-        else:
-            if date_from is None and date_to is None:
-                date_to = date.today()
-                date_from = date_to - timedelta(days=31)
-            if date_from is not None:
-                conditions.append("TT.SHIPMENT_DATE >= :date_from")
-                params["date_from"] = date_from
-        if date_to is not None:
-            conditions.append("TT.SHIPMENT_DATE < :date_to_next")
-            params["date_to_next"] = date_to + timedelta(days=1)
-        if condition:
-            conditions.append("TT.CONDITION = :condition")
-            params["condition"] = condition
-        if task_id is not None:
-            conditions.append("TT.ID = :task_id_f")
-            params["task_id_f"] = task_id
-        if transport_mask:
-            conditions.append("UPPER(TT.TRANSPORT) LIKE UPPER(:transport_mask)")
-            params["transport_mask"] = f"%{transport_mask}%"
-        if company_mask:
-            conditions.append("UPPER(NVL(V.DOVERENNOST_OT,'')) LIKE UPPER(:company_mask)")
-            params["company_mask"] = f"%{company_mask}%"
-        if no_payments_only:
-            conditions.append("(TT.PAY_ORDER_ID IS NULL OR TT.PAY_ORDER_ID = 0)")
-
-        where_sql = "WHERE " + " AND ".join(conditions) if conditions else ""
+        where_sql, params = trip_list_filters(TripListFilter(shipment_date,condition,include_deleted,task_id,
+            transport_mask,company_mask,date_from,date_to,no_payments_only),actor)
 
         readiness_cols = ""
         if include_readiness:
@@ -541,7 +511,7 @@ class TransportService:
                      THEN SP.ID
                    END) AS UNREADY_COUNT"""
 
-        rows = self.gateway.fetch_all(
+        rows = scoped_dispatch_rows(self.gateway,
             f"""
             SELECT TT.ID,
                    TT.CREATEDATE,
@@ -584,12 +554,16 @@ class TransportService:
                       TT.TEMP_REGION, TT.TEMP_WEIGHT, TT.PRICE, TT.DELETED,
                       TT.USER_ID, TT.PAY_ORDER_ID
              ORDER BY TT.SHIPMENT_DATE DESC, TT.ID DESC
+             FETCH FIRST 2001 ROWS ONLY
             """,
-            params,
+            params, actor,
         )
+        if len(rows)>2000: raise DispatchReadError("TRANSPORT_READ_BOUND_2000_NARROW_FILTER",409)
         return [_normalize_task_row(dict(row)) for row in rows]
 
-    def get_task(self, task_id: int) -> dict[str, Any]:
+    def get_task(self, task_id: int, actor: str | None = None) -> dict[str, Any]:
+        if actor is not None:
+            return guarded_trip_read(self.gateway,task_id,actor,lambda bound: TransportService(bound).get_task(task_id))
         rows = self.gateway.fetch_all(
             """
             SELECT TT.ID,
@@ -661,7 +635,9 @@ class TransportService:
     # Состав рейса — СТ
     # ------------------------------------------------------------------
 
-    def get_task_sts(self, task_id: int) -> list[dict[str, Any]]:
+    def get_task_sts(self, task_id: int, actor: str | None = None) -> list[dict[str, Any]]:
+        if actor is not None:
+            return guarded_trip_read(self.gateway,task_id,actor,lambda bound: TransportService(bound).get_task_sts(task_id))
         now = time.monotonic()
         with _TASK_STS_CACHE_LOCK:
             cached = _TASK_STS_CACHE.get(task_id)
@@ -1574,7 +1550,9 @@ class TransportService:
         _clear_vehicle_availability_cache()
         return result
 
-    def get_operations(self, task_id: int) -> list[dict]:
+    def get_operations(self, task_id: int, actor: str | None = None) -> list[dict]:
+        if actor is not None:
+            return guarded_trip_read(self.gateway,task_id,actor,lambda bound: TransportService(bound).get_operations(task_id))
         """Список операций рейса с расчётом отклонения."""
         rows = self.gateway.fetch_all(
             """
@@ -1627,9 +1605,9 @@ class TransportService:
         _clear_vehicle_availability_cache()
         return result
 
-    def get_vehicles_gantt(self, gantt_date: date) -> list[dict]:
+    def get_vehicles_gantt(self, gantt_date: date, actor: str | None = None) -> list[dict]:
         """Данные Ганта для всех машин на день."""
-        rows = gantt_rows(self.gateway, gantt_date)
+        rows = gantt_rows(self.gateway, gantt_date, actor)
         if len(rows) > MAX_GANTT_ROWS:
             raise HTTPException(422, detail={"code": "GANTT_DAY_ROW_BOUND_EXCEEDED",
                                              "message": "Дневная диаграмма превышает предел 20000 операций; данные не обрезаны молча"})
@@ -2065,13 +2043,11 @@ class TransportService:
         )
         return {"task_id": task_id, "price": price}
 
-    def export_billing_order_xlsx(self, order_id: int) -> bytes:
+    def export_billing_order_xlsx(self, order_id: int, actor: str) -> bytes:
         """Генерирует XLSX-файл с составом биллинг-заказа (Sprint 26, DoD §12 #7)."""
-        order = self.get_billing_order(order_id)
-        if not order:
-            raise HTTPException(status_code=404, detail=f"Billing order {order_id} not found")
-
-        tasks = self.get_billing_order_tasks(order_id)
+        order, tasks = billing_order_export_rows(self.gateway, order_id, actor)
+        for task in tasks:
+            task["status"] = _normalize_task_condition(task["status"])
 
         try:
             import io
@@ -2238,10 +2214,10 @@ class TransportService:
         date_from: date | None = None,
         date_to: date | None = None,
         closed: int | None = None,
-        payed: int | None = None,
+        payed: int | None = None, actor: str | None = None,
     ) -> bytes:
         """Генерирует XLSX-реестр всех счетов по фильтру (Sprint 27)."""
-        orders = self.list_billing_orders(company, date_from, date_to, closed, payed)
+        orders = billing_registry_export_rows(self.gateway, company, date_from, date_to, closed, payed, actor)
 
         try:
             import io
@@ -2447,10 +2423,10 @@ class TransportService:
         company_mask: str | None = None,
         date_from: date | None = None,
         date_to: date | None = None,
-        no_payments_only: bool = False,
+        no_payments_only: bool = False, actor: str | None = None,
     ) -> bytes:
         """Генерирует XLSX-список рейсов (Sprint 28, ТЗ §3 «В Excel»)."""
-        tasks = self.list_tasks(
+        tasks = self.list_tasks(actor=actor,
             shipment_date=shipment_date,
             condition=condition,
             task_id=task_id,

@@ -1,0 +1,3 @@
+select name,line,text from user_errors where name in('RRL_STOCK_STORE_RECEIPT_READ','RRL_STOCK_STORE_RECEIPT_CMD','RRL_STOCK_STORE_WEIGHT_CORE');
+select count(*) INVALID_COUNT from user_objects where status='INVALID';
+select CONSTRAINT_NAME,STATUS,SEARCH_CONDITION_VC from USER_CONSTRAINTS where CONSTRAINT_NAME='RRL_STORE_RECEIPT_MODE_CK';

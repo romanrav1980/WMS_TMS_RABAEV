@@ -1,0 +1,37 @@
+{
+  "captured_at_utc": "2026-10-16T12:48:31.611185+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_STOCK_LOAD_BOX_CORE",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_load_box_core_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "f9df741efaef956aef0a168272cec5f2196ed458296a5f698ebd58fb6ab6b63c",
+      "normalized_source_sha256": "35f1f62ca5df979753eabf446de73ad5ae84b466bd25270e00680be2bd382849",
+      "artifact_sha256": "e4d555c0e7570d1ef7fdb92a4bca883d979cb6c587ed05fe7264c6856d7f48b7"
+    },
+    {
+      "name": "RRL_TT_LOAD_BOX_WEIGHT_GUARD",
+      "type": "TRIGGER",
+      "file": "rrl_tt_load_box_weight_guard_trigger.sql",
+      "errors": [],
+      "user_source_sha256": "2e715696b1fc74c700cc8bbe43ead3817980ff56a435d4ce059a1608a85a9d67",
+      "normalized_source_sha256": "d0ca66f6fb74e9f2e954c1b0a967cac6a85c14e61cfa64fe3b76ba41e129a3ed",
+      "artifact_sha256": "68e72c549de24c3b5e6e7446146b96d691ad064ecdb55fae2bcee1d5f54050ca"
+    },
+    {
+      "name": "RRL_WH_FINAL_SCALE_ADMISSION",
+      "type": "PACKAGE BODY",
+      "file": "rrl_wh_final_scale_admission_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "905c4a08bdc4de6fa7a5975207b701f24fdce5dc7f816f3dd87a91f233c58646",
+      "normalized_source_sha256": "93e841f273784e5a4ef90a42c6a498c9a0278299c4dd0a05a8cfb2931a99bed2",
+      "artifact_sha256": "9ca6c045ac87460d9478daef77c92331d321cae75c0d3647d838b657f34cab89"
+    }
+  ]
+}

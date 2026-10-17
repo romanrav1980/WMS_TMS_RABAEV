@@ -1,0 +1,140 @@
+{
+  "ROLE.MIN": {
+    "kind": "ROLE_SAVE",
+    "payload": {
+      "role_id": "IQ16R26c2f13302",
+      "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "permissions": [
+        "inventory_task_view",
+        "case_pick_view",
+        "inventory_task_execute"
+      ],
+      "active": true,
+      "expected_version": 0
+    }
+  },
+  "WARE.ASSIGN": {
+    "kind": "ASSIGN",
+    "payload": {
+      "assignment_id": "IQ16A26c2f13302",
+      "username": "IQ16I26c2f13302",
+      "role_id": "IQ16R26c2f13302",
+      "scope_kind": "WAREHOUSE",
+      "scope_id": "20220394",
+      "valid_from": "2026-10-15T21:55:51.740968+00:00",
+      "valid_until": "2026-10-15T23:56:01.740968+00:00",
+      "expected_version": 0,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+    }
+  },
+  "ROLE.FULL": {
+    "kind": "ROLE_SAVE",
+    "payload": {
+      "role_id": "IQ16R26c2f13302",
+      "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "permissions": [
+        "inventory_task_view",
+        "case_pick_view",
+        "inventory_task_execute",
+        "stock_inventory_count"
+      ],
+      "active": true,
+      "expected_version": 1
+    }
+  },
+  "WARE.REVOKE": {
+    "kind": "REVOKE",
+    "payload": {
+      "assignment_id": "IQ16A26c2f13302",
+      "expected_version": 1,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+    }
+  },
+  "SELF.ASSIGN": {
+    "kind": "ASSIGN",
+    "payload": {
+      "assignment_id": "IQ16.26c2f13302.SELF",
+      "username": "IQ16I26c2f13302",
+      "role_id": "IQ16R26c2f13302",
+      "scope_kind": "SELF",
+      "scope_id": null,
+      "valid_from": "2026-10-15T21:55:51.740968+00:00",
+      "valid_until": "2026-10-15T23:56:01.740968+00:00",
+      "expected_version": 0,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+    }
+  },
+  "SELF.REVOKE": {
+    "kind": "REVOKE",
+    "payload": {
+      "assignment_id": "IQ16.26c2f13302.SELF",
+      "expected_version": 1,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+    }
+  },
+  "GROUP.CREATE": {
+    "kind": "GROUP_SAVE",
+    "payload": {
+      "group_id": "IQ16.26c2f13302.GROUP",
+      "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "member_kind": "WAREHOUSE",
+      "members": [
+        {
+          "kind": "WAREHOUSE",
+          "object_id": "20220394"
+        }
+      ],
+      "active": true,
+      "expected_version": 0
+    }
+  },
+  "GROUP.ASSIGN": {
+    "kind": "ASSIGN",
+    "payload": {
+      "assignment_id": "IQ16.26c2f13302.GROUP.ASSIGN",
+      "username": "IQ16I26c2f13302",
+      "role_id": "IQ16R26c2f13302",
+      "scope_kind": "GROUP",
+      "scope_id": "IQ16.26c2f13302.GROUP",
+      "valid_from": "2026-10-15T21:55:51.740968+00:00",
+      "valid_until": "2026-10-15T23:56:01.740968+00:00",
+      "expected_version": 0,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+    }
+  },
+  "GROUP.REMOVE": {
+    "kind": "GROUP_SAVE",
+    "payload": {
+      "group_id": "IQ16.26c2f13302.GROUP",
+      "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "member_kind": "WAREHOUSE",
+      "members": [],
+      "active": true,
+      "expected_version": 1
+    }
+  },
+  "GROUP.RESTORE": {
+    "kind": "GROUP_SAVE",
+    "payload": {
+      "group_id": "IQ16.26c2f13302.GROUP",
+      "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "member_kind": "WAREHOUSE",
+      "members": [
+        {
+          "kind": "WAREHOUSE",
+          "object_id": "20220394"
+        }
+      ],
+      "active": true,
+      "expected_version": 2
+    }
+  },
+  "GROUP.REVOKE": {
+    "kind": "REVOKE",
+    "payload": {
+      "assignment_id": "IQ16.26c2f13302.GROUP.ASSIGN",
+      "expected_version": 1,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+    }
+  }
+}

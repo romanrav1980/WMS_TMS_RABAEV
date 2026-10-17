@@ -1,0 +1,127 @@
+{
+  "state": "PASS_RETIRED_GRANTS_USER_GROUP_ROLE_STOCK3EA_RETAINED",
+  "commands": {
+    "RETIRE.GROUP.GRANT": {
+      "wire": {
+        "operation_id": "HS16.3c390ab3a0.RETIRE.GROUP.GRANT",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "HS16B3c390ab3a0",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "HS16.3c390ab3a0.RETIRE.GROUP.GRANT",
+        "command_type": "REVOKE",
+        "object_id": "HS16B3c390ab3a0",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "RETIRE.ROLE": {
+      "wire": {
+        "operation_id": "HS16.3c390ab3a0.RETIRE.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "HS16R3c390ab3a0",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "warehouse_task_execute",
+            "warehouse_task_view"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "HS16.3c390ab3a0.RETIRE.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "HS16R3c390ab3a0",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "RETIRE.GROUP": {
+      "wire": {
+        "operation_id": "HS16.3c390ab3a0.RETIRE.GROUP",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 3,
+          "group_id": "HS16G3c390ab3a0",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "40246672"
+            }
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "HS16.3c390ab3a0.RETIRE.GROUP",
+        "command_type": "GROUP_SAVE",
+        "object_id": "HS16G3c390ab3a0",
+        "version": 4,
+        "replayed": false
+      }
+    }
+  },
+  "http": [
+    {
+      "label": "legacy_global_create",
+      "status": 200,
+      "api_call_id": "69866",
+      "request_id": "568ffe59-a268-4b46-8f07-cc87bd94a470"
+    }
+  ],
+  "quantity_effect": false,
+  "legacy_body": {
+    "operation_id": "HS16.3c390ab3a0.LEGACY.CREATE",
+    "identifier": "HS16.3c390ab3a0.LEGACY",
+    "cell": "HS16S3c390ab3a0",
+    "warehouse": 40246672,
+    "container_type": "PALLET",
+    "tare_weight_kg": "0",
+    "scan_container": "HS16.3c390ab3a0.LEGACY",
+    "scan_cell": "HS16S3c390ab3a0"
+  },
+  "legacy": {
+    "root": "HS16.3c390ab3a0.LEGACY",
+    "warehouse": 40246672,
+    "cell": "HS16S3c390ab3a0",
+    "nodes": [
+      {
+        "uid": "HS16.3c390ab3a0.LEGACY",
+        "kind": "CONTAINER",
+        "type": "PALLET",
+        "version": 0,
+        "sscc": null,
+        "tare_weight_kg": "0",
+        "open_task_count": 0,
+        "cell": "HS16S3c390ab3a0",
+        "depth": 0
+      }
+    ],
+    "links": [],
+    "ancestors": [],
+    "physical_unit_count": 0,
+    "leaf_count": 0,
+    "top_place_count": 1,
+    "operation_id": "HS16.3c390ab3a0.LEGACY.CREATE",
+    "command": "HU_CREATE",
+    "outbox_id": 5565
+  },
+  "physical": [
+    {
+      "cell": "HS16T3c390ab3a0",
+      "remain": 3,
+      "hard_reserved_base": 0
+    }
+  ]
+}

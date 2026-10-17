@@ -1,0 +1,99 @@
+{
+  "status": "PREPARED_NOT_APPLIED",
+  "migration_id": "2026-10-15-picker-actual-time-source",
+  "owner": "sprint_empty_trip",
+  "kit_sha256": "ee90f144d0ba85f5258ebd42bec2170de667d7bed2df29bf977d00688f441de5",
+  "sql_files": [
+    {
+      "candidate": "tmp/picker_actual_time_before.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_source/before.sql",
+      "sha256": "b04e9a372dfcac8e867a6ff5b594b610101c056fe5c60d81b45b7e9580abce75",
+      "bytes": 1682
+    },
+    {
+      "candidate": "tmp/picker_actual_time_schema.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_source/schema.sql",
+      "sha256": "a088ece663abce9d68c5b3f2ea033a21bcaa1015dc197fa8c5248a32e7d5a648",
+      "bytes": 7031
+    },
+    {
+      "candidate": "tmp/picker_actual_time_api_spec.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_source/api_spec.sql",
+      "sha256": "13b65c67516f0a17125e384e4ebbe40e07ed7144e8575f98721e10cfc15e8c99",
+      "bytes": 532
+    },
+    {
+      "candidate": "tmp/picker_actual_time_auth.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_source/auth.sql",
+      "sha256": "c9f4db38f954d0d4e08e11840140c02c7dfe994af3687f1a310338ca96a48508",
+      "bytes": 4446
+    },
+    {
+      "candidate": "tmp/picker_actual_time_read.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_source/read.sql",
+      "sha256": "ae8441e8a57342860880c1c0531802f1937286187689b9698ca6e0ddf0a3ad83",
+      "bytes": 4742
+    },
+    {
+      "candidate": "tmp/picker_actual_time_write.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_source/write.sql",
+      "sha256": "6ee60022538a27b74ef2e32bfbc5e41c00d1f2e4292347467aad8c1209b0e056",
+      "bytes": 5335
+    },
+    {
+      "candidate": "tmp/picker_actual_time_api_body.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_source/api_body.sql",
+      "sha256": "9e67272a7601840ffb919f57953197cb4ddde607a37413cd54af39d1341ba743",
+      "bytes": 11153
+    },
+    {
+      "candidate": "tmp/picker_actual_time_guards.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_source/guards.sql",
+      "sha256": "2f9ee989bfc51fb3419a24aa2cd3083055efb0233a84bfa0a9192857da7f233f",
+      "bytes": 1599
+    },
+    {
+      "candidate": "tmp/picker_actual_time_installed_guard.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_source/installed_guard.sql",
+      "sha256": "5182876328ff148a9f42cc6adae83a86e687a995284f8072c62074a6fb32cb1e",
+      "bytes": 30083
+    },
+    {
+      "candidate": "tmp/picker_actual_time_verify.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_source/verify.sql",
+      "sha256": "e5d1409bbd703db8eedf243154e7060084630fb47794fec531f3b8754ef092ff",
+      "bytes": 1447
+    },
+    {
+      "candidate": "tmp/picker_actual_time_apply.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_source/apply.sql",
+      "sha256": "a960319949a83691337f91f88ff20a4936fdaf8414d4bf57da9ab67dc0e24da3",
+      "bytes": 605
+    },
+    {
+      "candidate": "tmp/picker_actual_time_rollback.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_source/rollback.sql",
+      "sha256": "fbf4febaa2dd90889177c233225d6494ea745adadb012bf9eed4a30ebfe5fca7",
+      "bytes": 1635
+    }
+  ],
+  "first_increment": "MANUAL_CONFIRMED shadow clock; WORK coverage always uncertified; only closed actual-shift windows yield presence coverage",
+  "existing_owner_changes": false,
+  "quantity_writes": false,
+  "offline_tests": "59 PASS (34 source boundary +25 kernel/independent)",
+  "quality_gate": "PASS architecture1072/cycles0/debt72,24 gate tests,bothTS",
+  "encoding": "PASS",
+  "before": {
+    "global_invalid": [],
+    "new_objects": [],
+    "ledger": []
+  },
+  "required_acceptance": [
+    "root independent SQL/source review and apply",
+    "native source/errors/constraints/ledger verification",
+    "isolated metadata lifecycle/replay/conflict/revoke/rollback/concurrency",
+    "actual API acceptance",
+    "slow SQL decision"
+  ],
+  "rollback": "Only exact installed12sources/80namedconstraints/9indexes/4enabledguards/columns, all-four-tables empty and functional trusted context; otherwise forward repair"
+}

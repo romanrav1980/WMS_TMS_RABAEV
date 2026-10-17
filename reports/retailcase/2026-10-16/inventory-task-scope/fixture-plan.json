@@ -1,0 +1,24 @@
+{
+  "prefix": "IQ16.26c2f13302",
+  "tag": "26c2f13302",
+  "actor": "IQ16I26c2f13302",
+  "picker": "IQ16P26c2f13302",
+  "other": "IQ16X26c2f13302",
+  "source": "IQ16.LOT:26c2f13302",
+  "warehouse_id": 20220394,
+  "article": "AS16A35CEA92C27",
+  "cell": "AS16C35cea92c27",
+  "face": 607,
+  "revision": 402,
+  "role": "IQ16R26c2f13302",
+  "assignment": "IQ16A26c2f13302",
+  "hardware_verified": false,
+  "state": "PREPARED",
+  "quantity": "1",
+  "recovery": [
+    "Never rerun stage after an uncertain result; inspect original operation receipt",
+    "Only own new lot is counted; original ASM CASE1140/lot/ST are protected",
+    "Canonical WAVE_CANCEL/PICK_PLAN_CANCEL release own remaining reservations; keep inventory loss/shortage/access journals",
+    "Retire new actors/roles/resources/session after final acceptance; no history deletion"
+  ]
+}

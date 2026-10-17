@@ -1,0 +1,4 @@
+-- running C:\projects\TMS\db\migrations\2026-10-15_wares_identity_keys\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_wares_identity_keys\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_wares_identity_keys\verify.sql
+Done. Statements=7; Errors=0; AbsentCleanup=0

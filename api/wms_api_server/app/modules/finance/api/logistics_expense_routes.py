@@ -2,7 +2,7 @@ from datetime import date
 from typing import Any,Literal
 from fastapi import APIRouter,Depends,HTTPException,Query
 from pydantic import BaseModel,ConfigDict,Field
-from ...platform.public import AdminUser,require_permission
+from ...platform.public import AdminUser,require_permission,get_current_user
 from ..contracts import LogisticsCostError
 from ..contracts_expenses import LogisticsExpensePort,logistics_expense_service
 router=APIRouter(prefix="/api/finance/logistics-expenses",tags=["existing-billing-extra-expenses"])
@@ -55,17 +55,17 @@ def article(body: Article,user: AdminUser=Depends(require_permission("create_tt_
     except LogisticsCostError as exc:raise failure(exc) from exc
 
 @router.post("/report")
-def report(body: Report,user: AdminUser=Depends(require_permission("edit_bill_tt")),service: LogisticsExpensePort=Depends(logistics_expense_service)) -> dict[str,Any]:
+def report(body: Report,user: AdminUser=Depends(get_current_user),service: LogisticsExpensePort=Depends(logistics_expense_service)) -> dict[str,Any]:
     try:return service.report(body.operation_id,body.warehouse_id,body.article_code,body.object_kind,body.object_id,body.amount,body.currency,body.expense_date.isoformat(),body.document_reference,body.reason,user.username,body.correction_of_operation_id,body.expected_confirmed_total,body.cost_correction_of_operation_id)
     except LogisticsCostError as exc:raise failure(exc,body.operation_id) from exc
 
 @router.post("/decide")
-def decide(body: Decision,user: AdminUser=Depends(require_permission("transport_dispatch_view")),service: LogisticsExpensePort=Depends(logistics_expense_service)) -> dict[str,Any]:
+def decide(body: Decision,user: AdminUser=Depends(get_current_user),service: LogisticsExpensePort=Depends(logistics_expense_service)) -> dict[str,Any]:
     try:return service.decide(body.operation_id,body.expense_operation_id,body.phase,body.outcome,body.distribution_basis,body.decision_reference,body.reason,user.username)
     except LogisticsCostError as exc:raise failure(exc,body.operation_id) from exc
 
 @router.get("/warehouses/{ware_id}")
-def pending(ware_id: int,operation_id: str|None=Query(default=None,min_length=1,max_length=100),user: AdminUser=Depends(require_permission("transport_dispatch_view")),service: LogisticsExpensePort=Depends(logistics_expense_service)) -> list[dict[str,Any]]:
+def pending(ware_id: int,operation_id: str|None=Query(default=None,min_length=1,max_length=100),user: AdminUser=Depends(get_current_user),service: LogisticsExpensePort=Depends(logistics_expense_service)) -> list[dict[str,Any]]:
     try:return service.pending(ware_id,user.username,operation_id)
     except LogisticsCostError as exc:raise failure(exc) from exc
 

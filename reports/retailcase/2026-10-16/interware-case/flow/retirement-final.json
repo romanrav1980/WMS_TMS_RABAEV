@@ -1,0 +1,187 @@
+{
+  "state": "PASS_TEST_IDENTITIES_RETIRED_WAVES_DONE_HISTORY_RETAINED",
+  "commands": {
+    "AS16.ce9c011b16.RETIRE.GRANT.0": {
+      "wire": {
+        "operation_id": "AS16.ce9c011b16.RETIRE.GRANT.0",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "AS16Xce9c011b16",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "AS16.ce9c011b16.RETIRE.GRANT.0",
+        "command_type": "REVOKE",
+        "object_id": "AS16Xce9c011b16",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "AS16.ce9c011b16.RETIRE.ROLE": {
+      "wire": {
+        "operation_id": "AS16.ce9c011b16.RETIRE.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "AS16Rce9c011b16",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_execute"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "AS16.ce9c011b16.RETIRE.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "AS16Rce9c011b16",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "OC16.eed8111226.RETIRE.GRANT.0": {
+      "wire": {
+        "operation_id": "OC16.eed8111226.RETIRE.GRANT.0",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "OC16Aeed8111226",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.eed8111226.RETIRE.GRANT.0",
+        "command_type": "REVOKE",
+        "object_id": "OC16Aeed8111226",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "OC16.eed8111226.RETIRE.ROLE": {
+      "wire": {
+        "operation_id": "OC16.eed8111226.RETIRE.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "OC16Reed8111226",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_execute"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.eed8111226.RETIRE.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "OC16Reed8111226",
+        "version": 2,
+        "replayed": false
+      }
+    }
+  },
+  "http": [
+    {
+      "wave": 577,
+      "status": 200,
+      "api_call_id": "69849",
+      "request_id": "d114ecee-8a65-4929-956e-c4693eac1d0d"
+    },
+    {
+      "wave": 578,
+      "status": 200,
+      "api_call_id": "69850",
+      "request_id": "bd94544e-5ba7-4fc6-8c90-3c103b0e4450"
+    }
+  ],
+  "stock_effect": false,
+  "retained": "All CASE/ASM/scale/stock/fulfillment/receipt/HU histories and two source HELD tare books; no automatic transfer of tare ownership",
+  "device_disabled": {
+    "device_id": "AS16Dce9c011b16",
+    "device_policy_version": 2,
+    "active": false,
+    "device_mode": "TEST",
+    "basis": "GROSS"
+  },
+  "identities_inactive": true,
+  "wave_577": {
+    "wave_id": 577,
+    "kind": "CUSTOMER_ORDER",
+    "items": [
+      {
+        "kind": "PICK_TASK",
+        "id": "2146",
+        "status": "DONE",
+        "actor": null,
+        "reason": null,
+        "quantity": "1"
+      },
+      {
+        "kind": "REPLENISHMENT",
+        "id": "1649",
+        "status": "CANCELLED",
+        "actor": null,
+        "reason": null,
+        "quantity": null
+      },
+      {
+        "kind": "CASE",
+        "id": "1145",
+        "status": "SHIPPED",
+        "actor": "AS16Oce9c011b16",
+        "reason": null,
+        "quantity": "1"
+      }
+    ],
+    "blocking_count": 0,
+    "completion_outcome": "PHYSICAL_EXECUTION_COMPLETE",
+    "operation_id": "AS16.ce9c011b16.FINISH",
+    "status": "DONE",
+    "completed": true,
+    "ready": false,
+    "outbox_id": 5555
+  },
+  "wave_578": {
+    "wave_id": 578,
+    "kind": "CUSTOMER_ORDER",
+    "items": [
+      {
+        "kind": "PICK_TASK",
+        "id": "2147",
+        "status": "DONE",
+        "actor": null,
+        "reason": null,
+        "quantity": "25"
+      },
+      {
+        "kind": "REPLENISHMENT",
+        "id": "1650",
+        "status": "CANCELLED",
+        "actor": null,
+        "reason": null,
+        "quantity": null
+      },
+      {
+        "kind": "CASE",
+        "id": "1146",
+        "status": "SHIPPED",
+        "actor": "OC16Peed8111226",
+        "reason": null,
+        "quantity": "25"
+      }
+    ],
+    "blocking_count": 0,
+    "completion_outcome": "PHYSICAL_EXECUTION_COMPLETE",
+    "operation_id": "OC16.eed8111226.FINISH",
+    "status": "DONE",
+    "completed": true,
+    "ready": false,
+    "outbox_id": 5556
+  }
+}

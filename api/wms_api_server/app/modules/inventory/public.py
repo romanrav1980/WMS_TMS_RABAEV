@@ -1,4 +1,5 @@
 from __future__ import annotations
+from .domain.pallet_identifiers import normalize_incoming_sscc as normalize_pallet_scan_identifier
 from typing import Any
 from contextlib import AbstractContextManager
 import oracledb
@@ -46,7 +47,7 @@ def run_existing_warehouse_task_action(gateway: OracleGateway | TransactionGatew
 __all__ = ['router', 'receiving_service', 'build_receiving_service', 'build_label_service',
            'build_configuration_service', 'build_reconciliation_service', 'build_query_service',
            'label_service', 'configuration_service', 'reconciliation_service', 'query_service',
-           'pallet_composition']
+           'pallet_composition', 'normalize_pallet_scan_identifier']
 
 # Stock posting v2 boundary; installation and activation are separate.
 from .contracts_stock import StockCommand, StockLine, StockPostingError
@@ -402,6 +403,7 @@ __all__.append("normalize_unit_scan_codes")
 
 from .contracts_task_read import TaskReadError,TaskViewScope
 from .infrastructure.task_read_scope import read_task_snapshot,read_task_progress_snapshot
+from .infrastructure.task_scoped_view import scoped_task_queue,scoped_task_detail
 __all__ += ["TaskReadError","TaskViewScope","read_task_snapshot","read_task_progress_snapshot"]
 
 from .infrastructure.interwarehouse_incoming import read_incoming_snapshot as read_interwarehouse_incoming_snapshot
@@ -425,6 +427,14 @@ def waiting_task_service() -> WaitingTaskPort:
 from .infrastructure.shared_arrival_reconciliation import reconcile_arrived_sources as reconcile_existing_shared_arrival
 
 from .infrastructure.wave_queue_reads import WaveQueueReads
+
+from .contracts_shift_overview import ShiftOverviewPort, shift_overview_service
+from .api.shift_overview_routes import router as shift_overview_router
+from .infrastructure.shift_overview import ShiftOverview, SectionReader
+
+
+def build_shift_overview(gateway: Any, readers: dict[str, SectionReader]) -> ShiftOverviewPort:
+    return ShiftOverview(gateway, readers)
 
 def build_wave_queue_reads() -> WaveQueueReads:
     return WaveQueueReads(OracleGateway())
@@ -462,8 +472,60 @@ from .contracts_wave_planning import WavePlanningError
 from .infrastructure.wave_staging import release_staging as release_existing_wave_staging
 
 from .contracts_quality_scope import QualityScopePort,quality_scope_service
+from .contracts_wave_launch import WaveLaunchContinuationError
+from .application.wave_launch import continue_launched_wave
+from .infrastructure.metadata_transactions import begin_wave_metadata
 from .api.quality_scope_routes import router as quality_scope_router
 from .infrastructure.quality_scope import QualityScope
 
 def build_quality_scope(gateway: Any) -> QualityScopePort:
     return QualityScope(gateway)
+
+from .contracts_warehouse_scale import WarehouseScalePacket, WarehouseFinalScalePacket
+from .contracts_task_completion import TaskCompletionAccessError
+from .infrastructure.task_completion_scope import authorize_task_completion
+
+from .contracts_assembly_scale import AssemblyScalePort, assembly_scale_service
+from .api.assembly_scale_routes import router as assembly_scale_router
+from .infrastructure.assembly_scale import AssemblyScales
+
+
+def build_assembly_scale(gateway: OracleGateway) -> AssemblyScalePort:
+    return AssemblyScales(gateway, StockPosting().post)
+
+from .contracts_assembly_close import AssemblyClosePort, assembly_close_service
+from .infrastructure.assembly_close import AssemblyClose
+from .api.assembly_close_routes import router as assembly_close_router
+
+from .api.assembly_recovery_routes import router as assembly_recovery_router
+
+from .contracts_warehouse_scale_requests import WarehouseWeighRequestsPort, warehouse_weigh_requests_service
+from .api.warehouse_scale_request_routes import router as warehouse_weigh_requests_router
+from .infrastructure.warehouse_scale_requests import WarehouseWeighRequests
+
+
+def build_warehouse_weigh_requests(gateway: OracleGateway) -> WarehouseWeighRequestsPort:
+    return WarehouseWeighRequests(gateway)
+
+from .infrastructure.case_confirmation_scope import authorize_existing_case_confirmation
+from .contracts_case_confirmation import CaseConfirmationAccessError
+
+from .contracts_assembly_intents import AssemblyIntentPort, assembly_intent_service
+from .infrastructure.assembly_intents import AssemblyIntents
+from .api.assembly_intent_routes import router as assembly_intent_router
+
+from .contracts_case_current_close import CaseCurrentClosePort, case_current_close_service
+from .infrastructure.case_current_close import CaseCurrentClose
+from .api.case_current_close_routes import router as case_current_close_router
+
+
+def build_case_current_close() -> CaseCurrentClosePort:
+    return CaseCurrentClose(OracleGateway())
+
+from .contracts_case_empty import CaseEmptyPort, case_empty_service
+from .api.case_empty_routes import router as case_empty_router
+from .infrastructure.case_empty import CaseEmpty
+
+
+def build_case_empty() -> CaseEmptyPort:
+    return CaseEmpty()

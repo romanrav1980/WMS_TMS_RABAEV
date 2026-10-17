@@ -1,0 +1,94 @@
+{
+  "receipt": {
+    "operation_id": "AS16.35cea92c27.LAUNCH",
+    "wave_id": 571,
+    "state": "APPLIED",
+    "wave_status": "LAUNCHED",
+    "launch_outcome_confirmed": true,
+    "continuation_state": "FAILED",
+    "continuation_steps": [
+      {
+        "step": "SETTINGS",
+        "state": "DONE",
+        "error_code": null,
+        "completed_at": "2026-10-15T17:09:26.416872"
+      },
+      {
+        "step": "DEFICIT",
+        "state": "DONE",
+        "error_code": null,
+        "completed_at": "2026-10-15T17:09:26.659473"
+      },
+      {
+        "step": "RESERVE_SOURCES",
+        "state": "FAILED",
+        "error_code": "STOCK_RULE_REJECTED",
+        "completed_at": null
+      },
+      {
+        "step": "PICK_FACE_CAPACITY",
+        "state": "PENDING",
+        "error_code": null,
+        "completed_at": null
+      },
+      {
+        "step": "RELEASE_QUEUE",
+        "state": "PENDING",
+        "error_code": null,
+        "completed_at": null
+      },
+      {
+        "step": "WAREHOUSE_TASKS",
+        "state": "PENDING",
+        "error_code": null,
+        "completed_at": null
+      },
+      {
+        "step": "CASE_TASKS",
+        "state": "PENDING",
+        "error_code": null,
+        "completed_at": null
+      }
+    ],
+    "commands_executed": false
+  },
+  "stock": [
+    {
+      "cell": "AS16C35cea92c27",
+      "remain": 1,
+      "hard_reserved_base": 1,
+      "base_uom": "EA",
+      "stock_version": 2
+    }
+  ],
+  "operations": [
+    {
+      "operation_id": "WAVE.LAUNCH.SOURCE:844e2c7321f13b4a20cbfea22cbacd8f:1639",
+      "contract_version": 2,
+      "command_type": "WAVE_RESERVE_SOURCES",
+      "actor": "admin",
+      "request_hash": "FB4EE78CC2E96D13F313090F46219285C216303DE144ECAC30D1F5CDC7EA3D7A",
+      "canonical_request": "{\"actor\":\"admin\",\"command_type\":\"WAVE_RESERVE_SOURCES\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"allow_unissued_source_rebind\":true,\"launch_operation_id\":\"N1939.AK06.LAUNCH\",\"requested_row_ids\":[1639]},\"operation_id\":\"WAVE.LAUNCH.SOURCE:844e2c7321f13b4a20cbfea22cbacd8f:1639\",\"source\":{\"type\":\"PICK_WAVE\",\"wave_id\":570},\"units\":[]}",
+      "result_json": "{\"operation_id\":\"WAVE.LAUNCH.SOURCE:844e2c7321f13b4a20cbfea22cbacd8f:1639\",\"wave_id\":570,\"reserved_count\":0,\"outbox_id\":5345}",
+      "state": "APPLIED",
+      "created_at": "2026-10-15 13:11:42.128608",
+      "applied_at": "2026-10-15 13:11:42.172631",
+      "baseline_id": "B0-20261009-STOCK-V2",
+      "resolved_plan_json": "{\"domain\":{\"wave_id\":570,\"warehouse\":13583852,\"tasks\":[{\"needed_base\":\"0\",\"already_covered\":1,\"resolved_mode\":\"FULL_PALLET\",\"policy_signature\":\"7D81A60F546117029A8B811503B4E1F9341A6BCAA004061FB316B00A0624B837\",\"capacity_wait\":0,\"own_reservation_id\":null,\"own_qty\":null,\"source_reservation_before\":null,\"task_id\":1639,\"signature\":\"5BA8323D0743D124539A9ACAC1E73F4F41995B21EB1E79E4A05F38C9D412B84C\",\"uid\":null,\"target_supply_decision\":{\"needed\":0,\"mode\":\"FULL_PALLET\",\"capacity\":23976}}]},\"stock_before\":[],\"physical_before\":[],\"resources\":[{\"rank\":10,\"key_hex\":\"313A32323A4F5035363A574156452E4C41554E43482E534F555243453A38343465326337333231663133623461323063626665613232636261636438663A31363339\"},{\"rank\":70,\"key_hex\":\"313A32363A554E4951554537373A53544F434B2E4F5554424F583A30453332343842353632373230383642444535394431423932344637353739463042444436463434464532373436393734413934343531413441323942423530\"},{\"rank\":20,\"key_hex\":\"313A32333A524F5731333A52524C5F5049434B5F57415645333A353730\"},{\"rank\":20,\"key_hex\":\"313A32333A524F5732383A52524C5F5049434B5F574156455F5245504C454E4953485F5441534B343A31363339\"},{\"rank\":20,\"key_hex\":\"313A32333A524F5731333A52524C5F5049434B5F5441534B343A32313339\"}],\"policies\":[{\"key_hex\":\"313A32373A52454C45415345353A53544F434B\",\"mode\":4},{\"key_hex\":\"313A32363A434F4E464947393A57415245484F555345\",\"mode\":4},{\"key_hex\":\"313A32333A534B5531393A52455553452E51413A63646266346330393632\",\"mode\":4},{\"key_hex\":\"313A32343A43454C4C31333A51495063646266346330393632\",\"mode\":6}]}"
+    },
+    {
+      "operation_id": "WAVE.LAUNCH.SOURCE:a2fba6b653c3c065d132f7673b1e760c:1638",
+      "contract_version": 2,
+      "command_type": "WAVE_RESERVE_SOURCES",
+      "actor": "admin",
+      "request_hash": "80651873B1A5D01C5B6FCF846F4285555C17F298DD2D1916E2746C3FAC5A916F",
+      "canonical_request": "{\"actor\":\"admin\",\"command_type\":\"WAVE_RESERVE_SOURCES\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"allow_unissued_source_rebind\":true,\"launch_operation_id\":\"CRES15.AK06.LAUNCH\",\"requested_row_ids\":[1638]},\"operation_id\":\"WAVE.LAUNCH.SOURCE:a2fba6b653c3c065d132f7673b1e760c:1638\",\"source\":{\"type\":\"PICK_WAVE\",\"wave_id\":569},\"units\":[]}",
+      "result_json": "{\"operation_id\":\"WAVE.LAUNCH.SOURCE:a2fba6b653c3c065d132f7673b1e760c:1638\",\"wave_id\":569,\"reserved_count\":0,\"outbox_id\":5330}",
+      "state": "APPLIED",
+      "created_at": "2026-10-15 09:26:50.296358",
+      "applied_at": "2026-10-15 09:26:50.331771",
+      "baseline_id": "B0-20261009-STOCK-V2",
+      "resolved_plan_json": "{\"domain\":{\"wave_id\":569,\"warehouse\":13583852,\"tasks\":[{\"needed_base\":\"0\",\"already_covered\":1,\"resolved_mode\":\"FULL_PALLET\",\"policy_signature\":\"7D81A60F546117029A8B811503B4E1F9341A6BCAA004061FB316B00A0624B837\",\"capacity_wait\":0,\"own_reservation_id\":null,\"own_qty\":null,\"source_reservation_before\":null,\"task_id\":1638,\"signature\":\"F09BD099891E9E092F7351E994DF62EB27D43F3BB4DDA0F4E12B944187E5AB6A\",\"uid\":null,\"target_supply_decision\":{\"needed\":0,\"mode\":\"FULL_PALLET\",\"capacity\":23976}}]},\"stock_before\":[],\"physical_before\":[],\"resources\":[{\"rank\":10,\"key_hex\":\"313A32323A4F5035363A574156452E4C41554E43482E534F555243453A61326662613662363533633363303635643133326637363733623165373630633A31363338\"},{\"rank\":70,\"key_hex\":\"313A32363A554E4951554537373A53544F434B2E4F5554424F583A30383635394543454432344543344541433435393736423546343939383537333236363734353333443436384545343946353939333531394331464532333236\"},{\"rank\":20,\"key_hex\":\"313A32333A524F5731333A52524C5F5049434B5F57415645333A353639\"},{\"rank\":20,\"key_hex\":\"313A32333A524F5732383A52524C5F5049434B5F574156455F5245504C454E4953485F5441534B343A31363338\"},{\"rank\":20,\"key_hex\":\"313A32333A524F5731333A52524C5F5049434B5F5441534B343A32313338\"}],\"policies\":[{\"key_hex\":\"313A32373A52454C45415345353A53544F434B\",\"mode\":4},{\"key_hex\":\"313A32363A434F4E464947393A57415245484F555345\",\"mode\":4},{\"key_hex\":\"313A32333A534B5531393A52455553452E51413A63646266346330393632\",\"mode\":4},{\"key_hex\":\"313A32343A43454C4C31333A51495063646266346330393632\",\"mode\":6}]}"
+    }
+  ]
+}

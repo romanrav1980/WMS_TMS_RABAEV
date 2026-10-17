@@ -1,0 +1,361 @@
+{
+  "read_only": true,
+  "case": "PASS_HANDOFF_FINISH_NESTED_HU25EA_SCOPED_LOAD_DEPART_STORE_FULL",
+  "http": [
+    {
+      "api_call_id": 70454,
+      "request_id": "bf2c8042-6618-46ab-80a6-c31b3a06f9fd",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 352
+    },
+    {
+      "api_call_id": 70455,
+      "request_id": "a72bd227-1c39-4539-a51c-fd5879673b81",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 131
+    },
+    {
+      "api_call_id": 70456,
+      "request_id": "a91f4e41-a155-42b3-854d-1b9d90f32771",
+      "path": "/api/warehouse-hus/attach-case",
+      "response_status": 200,
+      "duration_ms": 1742
+    },
+    {
+      "api_call_id": 70457,
+      "request_id": "ea6bfc23-f6d8-4e3d-a815-389e753954ce",
+      "path": "/api/warehouse-hus/attach",
+      "response_status": 200,
+      "duration_ms": 246
+    },
+    {
+      "api_call_id": 70458,
+      "request_id": "80a92e0f-ee2c-4ae3-92b5-da05b54b6db0",
+      "path": "/api/sku-quality-weight/20902283/AS16ADC48B9C2AA",
+      "response_status": 200,
+      "duration_ms": 127
+    },
+    {
+      "api_call_id": 70459,
+      "request_id": "56375f3f-1197-43f9-942e-89c9308ac989",
+      "path": "/api/outgoing-quality/OC16.1a524b2458.FULL.ST",
+      "response_status": 200,
+      "duration_ms": 159
+    },
+    {
+      "api_call_id": 70460,
+      "request_id": "3418cb62-f252-4b04-84ce-3ae03baf3255",
+      "path": "/api/outgoing-quality/OC16.1a524b2458.FULL.ST/weight",
+      "response_status": 200,
+      "duration_ms": 268
+    },
+    {
+      "api_call_id": 70461,
+      "request_id": "8ff6198c-2b35-4410-8f41-774ed14d5163",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 403,
+      "duration_ms": 303
+    },
+    {
+      "api_call_id": 70462,
+      "request_id": "1d654760-e173-4f1b-8e48-41b9fda68aee",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 403,
+      "duration_ms": 67
+    },
+    {
+      "api_call_id": 70463,
+      "request_id": "0f555499-97ac-46c8-9816-68d3e62868ff",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 409,
+      "duration_ms": 566
+    },
+    {
+      "api_call_id": 70468,
+      "request_id": "33e02fbc-2bbb-48e2-9892-4da38bce5414",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 663
+    },
+    {
+      "api_call_id": 70509,
+      "request_id": "3c6e140b-29a6-47a5-b945-6a71f4633c45",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 332
+    },
+    {
+      "api_call_id": 70511,
+      "request_id": "04f0ddf6-5efa-41d2-a906-38c7f3def488",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 409,
+      "duration_ms": 90
+    },
+    {
+      "api_call_id": 70512,
+      "request_id": "c127c28a-6412-40f2-8bd4-5131a4b8d94c",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 403,
+      "duration_ms": 110
+    },
+    {
+      "api_call_id": 70515,
+      "request_id": "7da6ac57-e24a-4258-97bf-97a8f6db7456",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 120
+    },
+    {
+      "api_call_id": 70519,
+      "request_id": "c9472f9c-b33a-4b9d-9c85-ae4a29dd623a",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 403,
+      "duration_ms": 110
+    },
+    {
+      "api_call_id": 70521,
+      "request_id": "a8b8acf2-7236-4eae-b1b7-698b101661d9",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 210
+    },
+    {
+      "api_call_id": 70527,
+      "request_id": "26662b0b-6221-4187-af00-1126c3170b27",
+      "path": "/api/transport/loading/33654/depart",
+      "response_status": 403,
+      "duration_ms": 75
+    },
+    {
+      "api_call_id": 70529,
+      "request_id": "12c0245b-69a0-4375-9042-1d8f21ae79d1",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 140
+    },
+    {
+      "api_call_id": 70530,
+      "request_id": "007c4e58-fce6-4d3d-89e7-b5d7cff8a224",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 64
+    },
+    {
+      "api_call_id": 70531,
+      "request_id": "a3c7f2a3-7ebb-4ae4-8977-1167339b5532",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 121
+    },
+    {
+      "api_call_id": 70533,
+      "request_id": "ec717f03-1300-4254-ae04-ce52725c4fad",
+      "path": "/api/delivery/timing/window",
+      "response_status": 403,
+      "duration_ms": 333
+    },
+    {
+      "api_call_id": 70537,
+      "request_id": "21d6d6bc-e9c6-46ce-ae31-cf8fd54cd880",
+      "path": "/api/transport/loading/33656/depart",
+      "response_status": 200,
+      "duration_ms": 204
+    },
+    {
+      "api_call_id": 70538,
+      "request_id": "df179eff-ce4f-4eaa-9383-50e3c4245128",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 61
+    },
+    {
+      "api_call_id": 70539,
+      "request_id": "6e181938-e30d-4c75-8352-e912af7b8df0",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 70540,
+      "request_id": "388efc80-c9d6-48f0-badc-c9cce4c26268",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 70541,
+      "request_id": "055368a1-c091-4b39-b9b9-448120e07864",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 409,
+      "duration_ms": 63
+    },
+    {
+      "api_call_id": 70543,
+      "request_id": "2d5ae0e5-ccea-41b9-8e7d-4c104c7de2a3",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 403,
+      "duration_ms": 372
+    },
+    {
+      "api_call_id": 70545,
+      "request_id": "405b0e44-9bb0-498b-9940-bc66531f3f59",
+      "path": "/api/delivery/store-receipts/policy",
+      "response_status": 200,
+      "duration_ms": 145
+    },
+    {
+      "api_call_id": 70549,
+      "request_id": "451ca5d4-e890-4193-a11b-e0698fd8180f",
+      "path": "/api/delivery/store-receipts/preview",
+      "response_status": 200,
+      "duration_ms": 239
+    },
+    {
+      "api_call_id": 70550,
+      "request_id": "fe60ec28-3437-4665-ba0b-2525cc133e36",
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "response_status": 200,
+      "duration_ms": 103
+    },
+    {
+      "api_call_id": 70552,
+      "request_id": "47e380bd-71e4-4733-85ef-b37da8afba78",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 507
+    },
+    {
+      "api_call_id": 70555,
+      "request_id": "7386e299-917b-4335-9c00-79a749ffd2aa",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 112
+    },
+    {
+      "api_call_id": 70559,
+      "request_id": "73537b2e-52d1-4f1f-8c03-e7908caa6fd0",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 200,
+      "duration_ms": 181
+    },
+    {
+      "api_call_id": 70560,
+      "request_id": "1617dcad-d941-415e-8029-6fe262258b40",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 70561,
+      "request_id": "01bcb68e-8db0-401e-a7f6-442307dc7409",
+      "path": "/api/transport/loading/33656/depart",
+      "response_status": 200,
+      "duration_ms": 236
+    },
+    {
+      "api_call_id": 70565,
+      "request_id": "3f95e0fa-e855-4566-a3c1-d2e40f900e8b",
+      "path": "/api/transport/loading/33656/depart",
+      "response_status": 403,
+      "duration_ms": 88
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 5098,
+      "api_call_id": 70531,
+      "elapsed_ms": 36,
+      "module": "WMS_API:70531",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5099,
+      "api_call_id": 70533,
+      "elapsed_ms": 115,
+      "module": "WMS_API:70533",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5100,
+      "api_call_id": 70538,
+      "elapsed_ms": 16,
+      "module": "WMS_API:70538",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5101,
+      "api_call_id": 70541,
+      "elapsed_ms": 17,
+      "module": "WMS_API:70541",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5102,
+      "api_call_id": 70543,
+      "elapsed_ms": 200,
+      "module": "WMS_API:70543",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5103,
+      "api_call_id": 70560,
+      "elapsed_ms": 12,
+      "module": "WMS_API:70560",
+      "action": "GET /api/delivery/timing/kpis",
+      "sql_sample": "Scoped delivery KPI window cohort"
+    }
+  ],
+  "decisions": [
+    {
+      "log_id": 5098,
+      "decision": "Retain bounded exact task/event lookup; inspect plan at pilot concurrency before new index/cache. Do not weaken REV/release fences.",
+      "owner": "resources/Codex"
+    },
+    {
+      "log_id": 5099,
+      "decision": "Retain bounded exact task/event lookup; inspect plan at pilot concurrency before new index/cache. Do not weaken REV/release fences.",
+      "owner": "resources/Codex"
+    },
+    {
+      "log_id": 5100,
+      "decision": "Retain bounded exact task/event lookup; inspect plan at pilot concurrency before new index/cache. Do not weaken REV/release fences.",
+      "owner": "resources/Codex"
+    },
+    {
+      "log_id": 5101,
+      "decision": "Retain bounded exact task/event lookup; inspect plan at pilot concurrency before new index/cache. Do not weaken REV/release fences.",
+      "owner": "resources/Codex"
+    },
+    {
+      "log_id": 5102,
+      "decision": "Retain bounded exact task/event lookup; inspect plan at pilot concurrency before new index/cache. Do not weaken REV/release fences.",
+      "owner": "resources/Codex"
+    },
+    {
+      "log_id": 5103,
+      "decision": "Retain bounded exact task/event lookup; inspect plan at pilot concurrency before new index/cache. Do not weaken REV/release fences.",
+      "owner": "resources/Codex"
+    },
+    {
+      "decision": "Task/session/event lookups remain exact and bounded. V$SQL is cumulative, not endpoint p95; concurrency volume deferred to explicit pilot gate.",
+      "owner": "resources/Codex"
+    }
+  ],
+  "top_sql": [
+    {
+      "sql_id": "fr9pah43twpwd",
+      "executions": 1,
+      "avg_ms": 2.696,
+      "sql_sample": "insert into RRL_CASE_PICK_EVENT(CASE_PICK_EVENT_ID,CASE_PICK_TASK_ID,EVENT_TYPE,OFFLINE_EVENT_ID,PAYLOAD_JSON,CREATED_BY) values(RRL_CASE_PICK_EVENT_SQ.nextval,:task_id,'SHIPMENT_BOUND',:event_id,:event_json,:actor)"
+    }
+  ],
+  "state": "PASS_EXACT_37_HTTP_SQL_REVIEW",
+  "max_http_ms": 1742
+}

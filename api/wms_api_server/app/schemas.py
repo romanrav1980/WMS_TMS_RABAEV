@@ -1,5 +1,5 @@
 from .modules.transport.contracts import OperationFactUpdate
-from .modules.inventory.contracts import (StockReservationCreateRequest, StockReservationPromoteRequest, StockReservationStatusRequest)
+from .modules.inventory.contracts import (StockReservationCreateRequest, StockReservationPromoteRequest, StockReservationStatusRequest, WarehouseTaskStatusRequest)
 from datetime import date, datetime
 from decimal import Decimal
 from typing import Any
@@ -893,17 +893,7 @@ class CasePickLineShortRequest(BaseModel):
     actor: str | None = None
 
 
-class CasePickTransferRequest(BaseModel):
-    to_resource_id: int = Field(ge=1)
-    to_resource_session_id: int | None = Field(default=None,ge=1)
-    to_equipment_id: int | None = Field(default=None,ge=1)
-    reason: str | None = Field(default=None,max_length=1000)
-    actor: str | None = Field(default=None,max_length=100)
-    offline_event_id: str | None = Field(default=None,min_length=1,max_length=100)
-    scan_container: str | None = Field(default=None,min_length=1,max_length=150)
-    expected_content_version: int | None = Field(default=None,ge=0,strict=True)
-    expected_assigned_to: str | None = Field(default=None,min_length=1,max_length=100)
-    expected_from_session_id: int | None = Field(default=None,ge=1,strict=True)
+from .modules.resources.contracts import CasePickTransferRequest
 
 
 from typing import Literal
@@ -939,21 +929,7 @@ class MesRawTransferTaskCancelRequest(BaseModel):
     cancelled_by: str | None = None
 
 
-class WarehouseTaskStatusRequest(BaseModel):
-    scan_draft_id: str | None = Field(default=None,min_length=1,max_length=100)
-    updated_by: str | None = None
-    assigned_to: str | None = None
-    resource_id: int | None = None
-    resource_session_id: int | None = None
-    equipment_id: int | None = None
-    fact_qty: Decimal | None = Field(default=None, ge=0, allow_inf_nan=False)
-    scanned_pallet: str | None = None
-    scanned_from_cell: str | None = None
-    scanned_to_cell: str | None = None
-    reason: str | None = None
-    scanned_to_slot_code: str | None = Field(default=None, min_length=1, max_length=100)
-    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
-    unit_keys: list[str] = Field(default_factory=list, max_length=10000)
+
 
 
 # ---------------------------------------------------------------------------

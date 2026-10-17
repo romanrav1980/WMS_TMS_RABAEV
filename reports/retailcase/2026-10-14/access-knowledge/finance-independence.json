@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "checks": [
+    "author_cannot_approve_own_expense",
+    "separate_approver_with_narrow_scoped_permission",
+    "saved_receipt_replay",
+    "logist_cannot_finance_same_expense",
+    "author_cannot_finance",
+    "no_rate_edit_or_foreign_warehouse_grant"
+  ],
+  "fixture_cleaned": true,
+  "stock_effect": "NONE",
+  "finance_recognition": "NOT_EXECUTED"
+}

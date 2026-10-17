@@ -1,0 +1,33 @@
+{
+  "status": "AFTER_PASS",
+  "native_created_intents": 21,
+  "fabricated_captures": 0,
+  "newest_state": "REQUESTED",
+  "pending_result": {
+    "device_id": "WH.PENDING.ROLLBACK:444ef391fc",
+    "items": [
+      {
+        "request_id": "WH.PENDING:444ef391fc.21",
+        "device_id": "WH.PENDING.ROLLBACK:444ef391fc",
+        "case_task_id": 1136,
+        "purpose": "EMPTY_TARE",
+        "state": "REQUESTED",
+        "current_context": "CURRENT",
+        "admissible": false,
+        "reason": null,
+        "capture_key": null,
+        "claim_id": null,
+        "created_at": "2026-10-15T12:34:32.276621+00:00",
+        "expires_at": "2026-10-15T12:36:32.276621+00:00",
+        "stock_posted": false
+      }
+    ],
+    "limit": 20,
+    "connectivity": "UNKNOWN"
+  },
+  "transaction_rollback_verified": true,
+  "original_case_unchanged": true,
+  "source_P_H_V_unchanged": true,
+  "physical_hardware": false,
+  "sequence_values_consumed_not_reused": false
+}

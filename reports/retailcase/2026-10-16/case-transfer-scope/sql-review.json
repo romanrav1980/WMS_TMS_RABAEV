@@ -1,0 +1,234 @@
+{
+  "read_only": true,
+  "case": "PASS_HANDOFF_24EA_WARE_GROUP_REPLAY_REVOKE_ROLLBACK_REV_RETAINED",
+  "http": [
+    {
+      "api_call_id": 70443,
+      "request_id": "7fe5f447-6e00-4231-aadd-9d02c7e9e7da",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 403,
+      "duration_ms": 246
+    },
+    {
+      "api_call_id": 70444,
+      "request_id": "9fb3e9db-5e24-4758-958e-ddab1ea3a687",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 403,
+      "duration_ms": 156
+    },
+    {
+      "api_call_id": 70445,
+      "request_id": "9e1c6825-480d-4a52-bd65-943e7a9d636b",
+      "path": "/api/case-pick/tasks/1148/transfer",
+      "response_status": 403,
+      "duration_ms": 76
+    },
+    {
+      "api_call_id": 70446,
+      "request_id": "50078323-457d-432a-8134-f2743cefbd18",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 409,
+      "duration_ms": 92
+    },
+    {
+      "api_call_id": 70447,
+      "request_id": "14710296-b603-425a-84a0-593b3c101c8f",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 200,
+      "duration_ms": 97
+    },
+    {
+      "api_call_id": 70448,
+      "request_id": "7272c073-cbea-400b-9304-31a4d2e0658c",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 200,
+      "duration_ms": 89
+    },
+    {
+      "api_call_id": 70449,
+      "request_id": "8607b3d6-6309-4dc5-a141-83a1a1133085",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 409,
+      "duration_ms": 104
+    },
+    {
+      "api_call_id": 70450,
+      "request_id": "5a8ad38f-0f4e-48f0-91cf-140b6ddd2dc7",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70451,
+      "request_id": "be023e2e-06c2-4805-a315-29214043a3b4",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 200,
+      "duration_ms": 110
+    },
+    {
+      "api_call_id": 70452,
+      "request_id": "5facebd7-a926-45d4-86b6-0623c0806173",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 403,
+      "duration_ms": 151
+    },
+    {
+      "api_call_id": 70453,
+      "request_id": "40ea4b7c-ba80-481a-9cfb-0deefe3944b2",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 200,
+      "duration_ms": 78
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 5088,
+      "api_call_id": 70443,
+      "elapsed_ms": 25,
+      "module": "WMS_API:70443",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5089,
+      "api_call_id": 70444,
+      "elapsed_ms": 109,
+      "module": "WMS_API:70444",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5090,
+      "api_call_id": 70445,
+      "elapsed_ms": 21,
+      "module": "WMS_API:70445",
+      "action": "POST /api/case-pick/tasks/1148/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5091,
+      "api_call_id": 70446,
+      "elapsed_ms": 41,
+      "module": "WMS_API:70446",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5092,
+      "api_call_id": 70449,
+      "elapsed_ms": 50,
+      "module": "WMS_API:70449",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5093,
+      "api_call_id": 70450,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70450",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5094,
+      "api_call_id": 70452,
+      "elapsed_ms": 24,
+      "module": "WMS_API:70452",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    }
+  ],
+  "decisions": [
+    {
+      "log_id": 5088,
+      "decision": "Retain bounded exact task/event lookup; inspect plan at pilot concurrency before new index/cache. Do not weaken REV/release fences.",
+      "owner": "resources/Codex"
+    },
+    {
+      "log_id": 5089,
+      "decision": "Retain bounded exact task/event lookup; inspect plan at pilot concurrency before new index/cache. Do not weaken REV/release fences.",
+      "owner": "resources/Codex"
+    },
+    {
+      "log_id": 5090,
+      "decision": "Retain bounded exact task/event lookup; inspect plan at pilot concurrency before new index/cache. Do not weaken REV/release fences.",
+      "owner": "resources/Codex"
+    },
+    {
+      "log_id": 5091,
+      "decision": "Retain bounded exact task/event lookup; inspect plan at pilot concurrency before new index/cache. Do not weaken REV/release fences.",
+      "owner": "resources/Codex"
+    },
+    {
+      "log_id": 5092,
+      "decision": "Retain bounded exact task/event lookup; inspect plan at pilot concurrency before new index/cache. Do not weaken REV/release fences.",
+      "owner": "resources/Codex"
+    },
+    {
+      "log_id": 5093,
+      "decision": "Retain bounded exact task/event lookup; inspect plan at pilot concurrency before new index/cache. Do not weaken REV/release fences.",
+      "owner": "resources/Codex"
+    },
+    {
+      "log_id": 5094,
+      "decision": "Retain bounded exact task/event lookup; inspect plan at pilot concurrency before new index/cache. Do not weaken REV/release fences.",
+      "owner": "resources/Codex"
+    },
+    {
+      "decision": "Task/session/event lookups remain exact and bounded. V$SQL is cumulative, not endpoint p95; concurrency volume deferred to explicit pilot gate.",
+      "owner": "resources/Codex"
+    }
+  ],
+  "top_sql": [
+    {
+      "sql_id": "1pdg3cft5dzkw",
+      "executions": 11,
+      "avg_ms": 19.99,
+      "sql_sample": "begin RRL_CASE_TRANSFER_SCOPE.begin_change(:task,:actor);end;"
+    },
+    {
+      "sql_id": "gp9zxz45xjm6u",
+      "executions": 1,
+      "avg_ms": 26.729,
+      "sql_sample": "begin RRL_CASE_TRANSFER_SCOPE.begin_change(:1,:2); end;"
+    },
+    {
+      "sql_id": "3aa987j481171",
+      "executions": 7,
+      "avg_ms": 3.238,
+      "sql_sample": "select CASE_PICK_TASK_ID,EVENT_TYPE,PAYLOAD_JSON,CREATED_BY         from RRL_CASE_PICK_EVENT where OFFLINE_EVENT_ID=:event_id fetch first 2 rows only"
+    },
+    {
+      "sql_id": "8u0x4mcwt4yh3",
+      "executions": 7,
+      "avg_ms": 1.719,
+      "sql_sample": "begin RRL_CASE_TRANSFER_SCOPE.assert_manager(:task,:actor);end;"
+    },
+    {
+      "sql_id": "f0jqa0g86mn0p",
+      "executions": 2,
+      "avg_ms": 4.12,
+      "sql_sample": "begin           insert into RRL_CASE_PICK_EVENT (             CASE_PICK_EVENT_ID, CASE_PICK_TASK_ID, CASE_PICK_LINE_ID, EVENT_TYPE,             OFFLINE_EVENT_ID, RESOURCE_ID, RESOURCE_SESSION_ID, EQUIPMENT_ID,             MESSAGE_TEXT, PAYLOAD_JSON, CREATED_AT, CREATED_BY           ) values (             RRL_CASE_PICK_EVENT_SQ.nextval, :case_pick_task_id, :case_pick_line_id, :event_type,             substr(:offline_event_id, 1, 100), :resource_id, :resource_session_id, :equipment_id,            "
+    },
+    {
+      "sql_id": "56ppduzdcn09d",
+      "executions": 1,
+      "avg_ms": 6.422,
+      "sql_sample": "select OFFLINE_EVENT_ID from RRL_CASE_PICK_EVENT where OFFLINE_EVENT_ID=:e"
+    },
+    {
+      "sql_id": "0wtq3cjs23184",
+      "executions": 2,
+      "avg_ms": 2.56,
+      "sql_sample": "INSERT INTO RRL_CASE_PICK_EVENT ( CASE_PICK_EVENT_ID, CASE_PICK_TASK_ID, CASE_PICK_LINE_ID, EVENT_TYPE, OFFLINE_EVENT_ID, RESOURCE_ID, RESOURCE_SESSION_ID, EQUIPMENT_ID, MESSAGE_TEXT, PAYLOAD_JSON, CREATED_AT, CREATED_BY ) VALUES ( RRL_CASE_PICK_EVENT_SQ.NEXTVAL, :B1 , :B2 , :B3 , SUBSTR(:B4 , 1, 100), :B5 , :B6 , :B7 , SUBSTR(:B8 , 1, 1000), :B9 , SYSTIMESTAMP, SUBSTR(:B10 , 1, 100) )"
+    },
+    {
+      "sql_id": "czn92u5sbcpg0",
+      "executions": 1,
+      "avg_ms": 4.454,
+      "sql_sample": "INSERT INTO RRL_CASE_PICK_EVENT(CASE_PICK_EVENT_ID,CASE_PICK_TASK_ID,CASE_PICK_LINE_ID,EVENT_TYPE,OFFLINE_EVENT_ID,PAYLOAD_JSON,CREATED_BY) VALUES(:B6 ,:B5 ,:B4 ,'LINE_CONFIRMED',:B3 ,:B2 ,:B1 )"
+    }
+  ],
+  "state": "PASS_EXACT_11_HTTP_SQL_REVIEW",
+  "max_http_ms": 246
+}

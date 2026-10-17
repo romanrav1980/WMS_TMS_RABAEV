@@ -1,0 +1,23 @@
+{
+  "migration_id": "2026-10-15-assembly-reconciliation-evidence",
+  "status": "APPLIED",
+  "identity": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "before_exact": true,
+  "invalid_before": 0,
+  "independent_review": "scale_protocol read-only no blockers",
+  "sha256": {
+    "apply.sql": "9c58b4113d07bfd47f14a8266e04dcad17bc7dd0f0d71e8ffa7baa608ce2bece",
+    "before_body.sql": "60b5fb1dabdaecd57c93f4c87bc7a2911d21ab09957405494af4b0d08a4ff6cc",
+    "body.sql": "f72f9d15bf707d9488bb67b05c775c550aacf1818a529672831ea626e5b5fdcc",
+    "rollback.sql": "d9e91aa37b1edae7de35003a14a3bd9b1a7c7f3cc0b381d40b0c024e7c06544b",
+    "verify.sql": "8c2e08e18b39d45ec8754ad5b3c8e0760fd3fa657082d5cf348f528f661c3cbc"
+  },
+  "statements": 6,
+  "errors": 0,
+  "source_exact": 3,
+  "invalid_after": 0,
+  "actual_opc_http": "COMPLETED/CANCELLED/OPEN; raw1.2MATCHED; goods P/H/version unchanged"
+}

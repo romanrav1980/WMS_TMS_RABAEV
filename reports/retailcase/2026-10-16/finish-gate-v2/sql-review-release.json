@@ -1,0 +1,4056 @@
+{
+  "state": "PASS_EXACT_AUDIT_PAIRS_11_LIGHTWEIGHT_READS_AND_SQL_DECISIONS",
+  "source_cases": [
+    "case-transfer-scope/acceptance.json",
+    "case-transfer-scope/receipt-acceptance.json",
+    "full-shipping-scope/acceptance.json",
+    "finance-write-export-scope/acceptance.json",
+    "driver-delegation-scope/acceptance.json",
+    "case-transfer-scope/assignment-version-live.json",
+    "unload-shipping-scope/acceptance.json",
+    "finish-gate-v2/retirement.json",
+    "finish-gate-v2/bounded-read.json",
+    "finish-gate-v2/bounded-read-valid.json"
+  ],
+  "total_http_cases": 375,
+  "lightweight_transport_reads": [
+    {
+      "label": "ware_invoice_export",
+      "path": "/api/admin/transport/billing/orders/530/export.xlsx",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "495764cd-d242-4351-94c3-1b48edb2a247",
+      "case": "finance-write-export-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "ware_registry_export",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=FW16.fc9538d7c6",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "fb8f3242-777c-4994-b4d5-bc84c9474e8d",
+      "case": "finance-write-export-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "foreign_invoice_export",
+      "path": "/api/admin/transport/billing/orders/1/export.xlsx",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "75df0b36-04d4-4522-9ce5-da61276f6a41",
+      "case": "finance-write-export-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "revoked_invoice_export",
+      "path": "/api/admin/transport/billing/orders/530/export.xlsx",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "3f74d9f8-a0dc-45b5-a336-e897fcedaa7f",
+      "case": "finance-write-export-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "group_registry_export",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=FW16.fc9538d7c6",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "fcf5b2a7-d472-4f5d-a6c4-ac4398faa638",
+      "case": "finance-write-export-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "removed_group_registry",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=FW16.fc9538d7c6",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "16ca4d39-e1c6-42a2-b188-dcef6ec435db",
+      "case": "finance-write-export-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "partial_invoice_scope",
+      "path": "/api/admin/transport/billing/orders/531/export.xlsx",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "0ce2a50e-5de9-4ea1-83b2-0368271b7e8d",
+      "case": "driver-delegation-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "partial_registry_scope",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=DD16.a7bc0b7073",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "92a6f156-faa2-4099-9ce4-4bc94f92ceef",
+      "case": "driver-delegation-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "all_invoice_scopes",
+      "path": "/api/admin/transport/billing/orders/531/export.xlsx",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "0bd076d9-61b1-41a1-a153-958742abd40e",
+      "case": "driver-delegation-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "all_registry_scopes",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=DD16.a7bc0b7073",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "11a20057-f733-4961-9c14-003d323c394a",
+      "case": "driver-delegation-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "removed_invoice_scope",
+      "path": "/api/admin/transport/billing/orders/531/export.xlsx",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "ac750597-4286-4039-bf44-8c7f164f50f7",
+      "case": "driver-delegation-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    }
+  ],
+  "local_tail_cap_bytes": 33554432,
+  "local_line_cap": 60000,
+  "http": [
+    {
+      "api_call_id": 70443,
+      "request_id": "7fe5f447-6e00-4231-aadd-9d02c7e9e7da",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 403,
+      "duration_ms": 246
+    },
+    {
+      "api_call_id": 70444,
+      "request_id": "9fb3e9db-5e24-4758-958e-ddab1ea3a687",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 403,
+      "duration_ms": 156
+    },
+    {
+      "api_call_id": 70445,
+      "request_id": "9e1c6825-480d-4a52-bd65-943e7a9d636b",
+      "path": "/api/case-pick/tasks/1148/transfer",
+      "response_status": 403,
+      "duration_ms": 76
+    },
+    {
+      "api_call_id": 70446,
+      "request_id": "50078323-457d-432a-8134-f2743cefbd18",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 409,
+      "duration_ms": 92
+    },
+    {
+      "api_call_id": 70447,
+      "request_id": "14710296-b603-425a-84a0-593b3c101c8f",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 200,
+      "duration_ms": 97
+    },
+    {
+      "api_call_id": 70448,
+      "request_id": "7272c073-cbea-400b-9304-31a4d2e0658c",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 200,
+      "duration_ms": 89
+    },
+    {
+      "api_call_id": 70449,
+      "request_id": "8607b3d6-6309-4dc5-a141-83a1a1133085",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 409,
+      "duration_ms": 104
+    },
+    {
+      "api_call_id": 70450,
+      "request_id": "5a8ad38f-0f4e-48f0-91cf-140b6ddd2dc7",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70451,
+      "request_id": "be023e2e-06c2-4805-a315-29214043a3b4",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 200,
+      "duration_ms": 110
+    },
+    {
+      "api_call_id": 70452,
+      "request_id": "5facebd7-a926-45d4-86b6-0623c0806173",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 403,
+      "duration_ms": 151
+    },
+    {
+      "api_call_id": 70453,
+      "request_id": "40ea4b7c-ba80-481a-9cfb-0deefe3944b2",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 200,
+      "duration_ms": 78
+    },
+    {
+      "api_call_id": 70454,
+      "request_id": "bf2c8042-6618-46ab-80a6-c31b3a06f9fd",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 352
+    },
+    {
+      "api_call_id": 70455,
+      "request_id": "a72bd227-1c39-4539-a51c-fd5879673b81",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 131
+    },
+    {
+      "api_call_id": 70456,
+      "request_id": "a91f4e41-a155-42b3-854d-1b9d90f32771",
+      "path": "/api/warehouse-hus/attach-case",
+      "response_status": 200,
+      "duration_ms": 1742
+    },
+    {
+      "api_call_id": 70457,
+      "request_id": "ea6bfc23-f6d8-4e3d-a815-389e753954ce",
+      "path": "/api/warehouse-hus/attach",
+      "response_status": 200,
+      "duration_ms": 246
+    },
+    {
+      "api_call_id": 70458,
+      "request_id": "80a92e0f-ee2c-4ae3-92b5-da05b54b6db0",
+      "path": "/api/sku-quality-weight/20902283/AS16ADC48B9C2AA",
+      "response_status": 200,
+      "duration_ms": 127
+    },
+    {
+      "api_call_id": 70459,
+      "request_id": "56375f3f-1197-43f9-942e-89c9308ac989",
+      "path": "/api/outgoing-quality/OC16.1a524b2458.FULL.ST",
+      "response_status": 200,
+      "duration_ms": 159
+    },
+    {
+      "api_call_id": 70460,
+      "request_id": "3418cb62-f252-4b04-84ce-3ae03baf3255",
+      "path": "/api/outgoing-quality/OC16.1a524b2458.FULL.ST/weight",
+      "response_status": 200,
+      "duration_ms": 268
+    },
+    {
+      "api_call_id": 70461,
+      "request_id": "8ff6198c-2b35-4410-8f41-774ed14d5163",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 403,
+      "duration_ms": 303
+    },
+    {
+      "api_call_id": 70462,
+      "request_id": "1d654760-e173-4f1b-8e48-41b9fda68aee",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 403,
+      "duration_ms": 67
+    },
+    {
+      "api_call_id": 70463,
+      "request_id": "0f555499-97ac-46c8-9816-68d3e62868ff",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 409,
+      "duration_ms": 566
+    },
+    {
+      "api_call_id": 70468,
+      "request_id": "33e02fbc-2bbb-48e2-9892-4da38bce5414",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 663
+    },
+    {
+      "api_call_id": 70509,
+      "request_id": "3c6e140b-29a6-47a5-b945-6a71f4633c45",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 332
+    },
+    {
+      "api_call_id": 70511,
+      "request_id": "04f0ddf6-5efa-41d2-a906-38c7f3def488",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 409,
+      "duration_ms": 90
+    },
+    {
+      "api_call_id": 70512,
+      "request_id": "c127c28a-6412-40f2-8bd4-5131a4b8d94c",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 403,
+      "duration_ms": 110
+    },
+    {
+      "api_call_id": 70515,
+      "request_id": "7da6ac57-e24a-4258-97bf-97a8f6db7456",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 120
+    },
+    {
+      "api_call_id": 70519,
+      "request_id": "c9472f9c-b33a-4b9d-9c85-ae4a29dd623a",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 403,
+      "duration_ms": 110
+    },
+    {
+      "api_call_id": 70521,
+      "request_id": "a8b8acf2-7236-4eae-b1b7-698b101661d9",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 210
+    },
+    {
+      "api_call_id": 70527,
+      "request_id": "26662b0b-6221-4187-af00-1126c3170b27",
+      "path": "/api/transport/loading/33654/depart",
+      "response_status": 403,
+      "duration_ms": 75
+    },
+    {
+      "api_call_id": 70529,
+      "request_id": "12c0245b-69a0-4375-9042-1d8f21ae79d1",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 140
+    },
+    {
+      "api_call_id": 70530,
+      "request_id": "007c4e58-fce6-4d3d-89e7-b5d7cff8a224",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 64
+    },
+    {
+      "api_call_id": 70531,
+      "request_id": "a3c7f2a3-7ebb-4ae4-8977-1167339b5532",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 121
+    },
+    {
+      "api_call_id": 70533,
+      "request_id": "ec717f03-1300-4254-ae04-ce52725c4fad",
+      "path": "/api/delivery/timing/window",
+      "response_status": 403,
+      "duration_ms": 333
+    },
+    {
+      "api_call_id": 70537,
+      "request_id": "21d6d6bc-e9c6-46ce-ae31-cf8fd54cd880",
+      "path": "/api/transport/loading/33656/depart",
+      "response_status": 200,
+      "duration_ms": 204
+    },
+    {
+      "api_call_id": 70538,
+      "request_id": "df179eff-ce4f-4eaa-9383-50e3c4245128",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 61
+    },
+    {
+      "api_call_id": 70539,
+      "request_id": "6e181938-e30d-4c75-8352-e912af7b8df0",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 70540,
+      "request_id": "388efc80-c9d6-48f0-badc-c9cce4c26268",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 70541,
+      "request_id": "055368a1-c091-4b39-b9b9-448120e07864",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 409,
+      "duration_ms": 63
+    },
+    {
+      "api_call_id": 70543,
+      "request_id": "2d5ae0e5-ccea-41b9-8e7d-4c104c7de2a3",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 403,
+      "duration_ms": 372
+    },
+    {
+      "api_call_id": 70545,
+      "request_id": "405b0e44-9bb0-498b-9940-bc66531f3f59",
+      "path": "/api/delivery/store-receipts/policy",
+      "response_status": 200,
+      "duration_ms": 145
+    },
+    {
+      "api_call_id": 70549,
+      "request_id": "451ca5d4-e890-4193-a11b-e0698fd8180f",
+      "path": "/api/delivery/store-receipts/preview",
+      "response_status": 200,
+      "duration_ms": 239
+    },
+    {
+      "api_call_id": 70550,
+      "request_id": "fe60ec28-3437-4665-ba0b-2525cc133e36",
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "response_status": 200,
+      "duration_ms": 103
+    },
+    {
+      "api_call_id": 70552,
+      "request_id": "47e380bd-71e4-4733-85ef-b37da8afba78",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 507
+    },
+    {
+      "api_call_id": 70555,
+      "request_id": "7386e299-917b-4335-9c00-79a749ffd2aa",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 112
+    },
+    {
+      "api_call_id": 70559,
+      "request_id": "73537b2e-52d1-4f1f-8c03-e7908caa6fd0",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 200,
+      "duration_ms": 181
+    },
+    {
+      "api_call_id": 70560,
+      "request_id": "1617dcad-d941-415e-8029-6fe262258b40",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 70561,
+      "request_id": "01bcb68e-8db0-401e-a7f6-442307dc7409",
+      "path": "/api/transport/loading/33656/depart",
+      "response_status": 200,
+      "duration_ms": 236
+    },
+    {
+      "api_call_id": 70565,
+      "request_id": "3f95e0fa-e855-4566-a3c1-d2e40f900e8b",
+      "path": "/api/transport/loading/33656/depart",
+      "response_status": 403,
+      "duration_ms": 88
+    },
+    {
+      "api_call_id": 70637,
+      "request_id": "ac59cc59-6e06-4d9c-979a-a8f9aedd50cc",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 403,
+      "duration_ms": 201
+    },
+    {
+      "api_call_id": 70638,
+      "request_id": "0acd673a-9164-438e-a928-8da3d3df9763",
+      "path": "/api/admin/auth/login",
+      "response_status": 403,
+      "duration_ms": 106
+    },
+    {
+      "api_call_id": 70639,
+      "request_id": "05ea1e01-9a8e-4d3b-bf87-35a1b0239b69",
+      "path": "/api/admin/auth/login",
+      "response_status": 200,
+      "duration_ms": 44
+    },
+    {
+      "api_call_id": 70640,
+      "request_id": "a6af5424-9061-4498-959c-72a713d12bb0",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70641,
+      "request_id": "e6891d69-b89f-452d-95e2-074ccb073ba3",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 200,
+      "duration_ms": 120
+    },
+    {
+      "api_call_id": 70642,
+      "request_id": "c08f80a6-e138-4499-a33f-ee9f9d18034c",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 200,
+      "duration_ms": 66
+    },
+    {
+      "api_call_id": 70643,
+      "request_id": "f504465e-6e87-4417-ba1b-2e4b0a23f936",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 409,
+      "duration_ms": 63
+    },
+    {
+      "api_call_id": 70644,
+      "request_id": "8ded4919-71b3-478e-b64e-701086ad4dac",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70645,
+      "request_id": "c0086506-937b-4d21-87ea-ee75220d52a3",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 403,
+      "duration_ms": 55
+    },
+    {
+      "api_call_id": 70646,
+      "request_id": "0906eaec-fedc-4971-8ac7-6712156855d0",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 200,
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 70647,
+      "request_id": "f2cc72c4-4240-4027-86f1-0bc87f664509",
+      "path": "/api/finance/logistics-costs/rates/monthly",
+      "response_status": 200,
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 70648,
+      "request_id": "da521b66-d1fa-4fc4-85fc-5e146bb9bb3b",
+      "path": "/api/finance/logistics-costs/rates/monthly",
+      "response_status": 200,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 70649,
+      "request_id": "a1b4a7e4-b585-4dd4-9972-9186b1749f69",
+      "path": "/api/finance/logistics-costs/rates/monthly",
+      "response_status": 403,
+      "duration_ms": 61
+    },
+    {
+      "api_call_id": 70650,
+      "request_id": "ecc509b4-6e9d-40f5-828f-8ff3fab5f1ee",
+      "path": "/api/admin/auth/me",
+      "response_status": 403,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 70651,
+      "request_id": "ce996a82-2eb6-40a4-8a83-730c4c96b046",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 200,
+      "duration_ms": 96
+    },
+    {
+      "api_call_id": 70652,
+      "request_id": "2ccd2bad-b03d-4262-a3bd-c843f81e9433",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 404,
+      "duration_ms": 58
+    },
+    {
+      "api_call_id": 70653,
+      "request_id": "25cb5f71-9c23-40ab-b982-dccc0901847e",
+      "path": "/api/case-pick/tasks/1148/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 70654,
+      "request_id": "1b3df029-cbac-43da-9b91-7c0bbc6451a0",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 69
+    },
+    {
+      "api_call_id": 70655,
+      "request_id": "280d5220-2794-4e10-b9d2-530533a750cb",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 200,
+      "duration_ms": 70
+    },
+    {
+      "api_call_id": 70656,
+      "request_id": "c12c3685-24c5-4721-8a25-99aa7e3f2aa9",
+      "path": "/api/admin/auth/login",
+      "response_status": 200,
+      "duration_ms": 47
+    },
+    {
+      "api_call_id": 70657,
+      "request_id": "d4208d3e-6f48-45ff-9518-abdc016a7382",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 225
+    },
+    {
+      "api_call_id": 70658,
+      "request_id": "04cf0085-15bd-4e2c-bc6c-f80d90c23b8b",
+      "path": "/api/access/workspaces",
+      "response_status": 200,
+      "duration_ms": 529
+    },
+    {
+      "api_call_id": 70659,
+      "request_id": "933c7ebc-344e-4210-b837-4cee486517fc",
+      "path": "/api/driver/trips",
+      "response_status": 403,
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 70660,
+      "request_id": "fe5da98c-bc83-474d-a74a-8b22e28cbcf4",
+      "path": "/api/transport/driver-bindings/10019",
+      "response_status": 403,
+      "duration_ms": 106
+    },
+    {
+      "api_call_id": 70665,
+      "request_id": "90694496-1588-4266-991b-7ce38497eda0",
+      "path": "/api/transport/driver-bindings/10019",
+      "response_status": 200,
+      "duration_ms": 267
+    },
+    {
+      "api_call_id": 70666,
+      "request_id": "171d1516-1b34-4412-ba0e-eceb655d739e",
+      "path": "/api/driver/trips",
+      "response_status": 200,
+      "duration_ms": 183
+    },
+    {
+      "api_call_id": 70667,
+      "request_id": "990e5675-1530-4597-b32f-25e8279572a4",
+      "path": "/api/driver/trips",
+      "response_status": 403,
+      "duration_ms": 53
+    },
+    {
+      "api_call_id": 70668,
+      "request_id": "dfa63c52-e9ad-4f48-820a-bb538dcd3d46",
+      "path": "/api/driver/trips/33657/ops",
+      "response_status": 200,
+      "duration_ms": 61
+    },
+    {
+      "api_call_id": 70669,
+      "request_id": "65a42c6d-40f9-459c-b768-fc5deef8d95a",
+      "path": "/api/driver/trips/33656/ops",
+      "response_status": 403,
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 70670,
+      "request_id": "a02192c0-5dc9-484c-893c-591249158d8a",
+      "path": "/api/driver/ops/10244/done",
+      "response_status": 409,
+      "duration_ms": 87
+    },
+    {
+      "api_call_id": 70671,
+      "request_id": "06e5c751-8cfc-4029-9576-471390b4d04e",
+      "path": "/api/delivery/store-return-custody/driver",
+      "response_status": 200,
+      "duration_ms": 113
+    },
+    {
+      "api_call_id": 70672,
+      "request_id": "fe67b699-7cf0-4623-a4d6-6a9be94e27c8",
+      "path": "/api/driver/ops/10244/start",
+      "response_status": 200,
+      "duration_ms": 104
+    },
+    {
+      "api_call_id": 70673,
+      "request_id": "ac35c485-86aa-4f6e-b30c-2d887413894e",
+      "path": "/api/driver/ops/10244/start",
+      "response_status": 200,
+      "duration_ms": 109
+    },
+    {
+      "api_call_id": 70674,
+      "request_id": "8e156b44-9608-4854-9ae3-801e29be70c7",
+      "path": "/api/driver/ops/10244/done",
+      "response_status": 200,
+      "duration_ms": 50
+    },
+    {
+      "api_call_id": 70675,
+      "request_id": "ee9fb6a1-8639-420c-a7f9-f595ae3440c9",
+      "path": "/api/driver/ops/10244/done",
+      "response_status": 200,
+      "duration_ms": 52
+    },
+    {
+      "api_call_id": 70676,
+      "request_id": "9ad5a320-7261-48ac-929c-3e53c5c7ad5f",
+      "path": "/api/driver/trips",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 70677,
+      "request_id": "43125cc1-3840-4dbe-ab10-1a6de023d4af",
+      "path": "/api/driver/ops/10244/done",
+      "response_status": 403,
+      "duration_ms": 53
+    },
+    {
+      "api_call_id": 70678,
+      "request_id": "2382292f-d367-444f-8d69-886b6f50e46f",
+      "path": "/api/delivery/store-return-custody/driver",
+      "response_status": 403,
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 70679,
+      "request_id": "9030c05c-b5d8-474c-a528-d30fe958d3bf",
+      "path": "/api/driver/trips",
+      "response_status": 403,
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 70680,
+      "request_id": "fd72c958-de7b-4545-8a8a-2caad95f1dd6",
+      "path": "/api/driver/trips",
+      "response_status": 200,
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 70681,
+      "request_id": "7a5bad83-fb5c-4e6a-9408-5add2942fd69",
+      "path": "/api/transport/driver-bindings/10019",
+      "response_status": 200,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70682,
+      "request_id": "8e873bb6-5bc4-4033-b75d-5270b918a895",
+      "path": "/api/driver/trips",
+      "response_status": 403,
+      "duration_ms": 113
+    },
+    {
+      "api_call_id": 70683,
+      "request_id": "60475650-7a7d-41df-8912-ef75620ec655",
+      "path": "/api/driver/ops/10244/done",
+      "response_status": 403,
+      "duration_ms": 136
+    },
+    {
+      "api_call_id": 70684,
+      "request_id": "48a9f56b-905e-48b2-8178-79e9c3424303",
+      "path": "/api/transport/loading/33657/depart",
+      "response_status": 403,
+      "duration_ms": 92
+    },
+    {
+      "api_call_id": 70685,
+      "request_id": "728d8c5a-f82c-487b-918a-3d111de484dc",
+      "path": "/api/transport/loading/33657/depart",
+      "response_status": 409,
+      "duration_ms": 75
+    },
+    {
+      "api_call_id": 70686,
+      "request_id": "c5a713db-47b6-4657-9709-0ac29c771c7a",
+      "path": "/api/access/commands",
+      "response_status": 200,
+      "duration_ms": 150
+    },
+    {
+      "api_call_id": 70687,
+      "request_id": "f26d1dc6-5c8d-4ae8-9d6b-67827d7d3996",
+      "path": "/api/finance/logistics-costs/warehouses/20902283/rates",
+      "response_status": 200,
+      "duration_ms": 71
+    },
+    {
+      "api_call_id": 70688,
+      "request_id": "19f601c7-e968-43df-9733-a74c2e011473",
+      "path": "/api/access/commands",
+      "response_status": 403,
+      "duration_ms": 58
+    },
+    {
+      "api_call_id": 70689,
+      "request_id": "94493246-a7a3-4a4c-bf15-904b4b5917bc",
+      "path": "/api/access/commands",
+      "response_status": 403,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 70690,
+      "request_id": "47baf83e-41dc-4803-a185-d40dceb36509",
+      "path": "/api/access/commands",
+      "response_status": 403,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 70691,
+      "request_id": "86d0c890-6b7a-4d7c-b5da-14a9c9807356",
+      "path": "/api/access/commands",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70692,
+      "request_id": "974ff30f-dee7-4ac1-a5e0-7cae1518d452",
+      "path": "/api/access/commands",
+      "response_status": 403,
+      "duration_ms": 86
+    },
+    {
+      "api_call_id": 70693,
+      "request_id": "6a9683e6-424b-4726-b628-fbb2dc4bf36f",
+      "path": "/api/access/commands",
+      "response_status": 200,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 70694,
+      "request_id": "e14c9a21-7fa9-4dba-b652-4926bd440848",
+      "path": "/api/finance/logistics-costs/warehouses/20902283/rates",
+      "response_status": 403,
+      "duration_ms": 137
+    },
+    {
+      "api_call_id": 70695,
+      "request_id": "37fb3660-aa96-43f0-ba67-6c8b3b4225f6",
+      "path": "/api/access/commands",
+      "response_status": 200,
+      "duration_ms": 98
+    },
+    {
+      "api_call_id": 70696,
+      "request_id": "3082d036-17b9-4c11-accb-0245be2d20fc",
+      "path": "/api/finance/logistics-costs/warehouses/20902283/rates",
+      "response_status": 403,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 70697,
+      "request_id": "917e3eed-faae-4de5-9c8f-23b9d5123724",
+      "path": "/api/finance/logistics-costs/warehouses/20902283/rates",
+      "response_status": 403,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 71878,
+      "request_id": "9e887ed3-992c-45ff-916f-5e6b7494649f",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 220
+    },
+    {
+      "api_call_id": 71879,
+      "request_id": "202b4a42-77e4-46b7-836e-13b65a92508b",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 200,
+      "duration_ms": 115
+    },
+    {
+      "api_call_id": 71880,
+      "request_id": "48ef127e-bb8e-4bda-80d9-a328e488a459",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 409,
+      "duration_ms": 86
+    },
+    {
+      "api_call_id": 71881,
+      "request_id": "6e60ace6-7c64-4f11-b414-49d39bf11059",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 409,
+      "duration_ms": 88
+    },
+    {
+      "api_call_id": 71882,
+      "request_id": "7da67511-ede9-4b55-90c1-30e91e5faa9b",
+      "path": "/api/sku-quality-weight/20266481/AS16A410F14B915",
+      "response_status": 200,
+      "duration_ms": 298
+    },
+    {
+      "api_call_id": 71883,
+      "request_id": "b2d53eb3-bb6c-48d5-b871-d076e5a2e331",
+      "path": "/api/outgoing-quality/OC16.2c449407d2.SHIP.ST",
+      "response_status": 200,
+      "duration_ms": 667
+    },
+    {
+      "api_call_id": 71884,
+      "request_id": "be9e7583-2869-4f2f-bcda-143c81b1b3df",
+      "path": "/api/outgoing-quality/OC16.2c449407d2.SHIP.ST/weight",
+      "response_status": 200,
+      "duration_ms": 368
+    },
+    {
+      "api_call_id": 71885,
+      "request_id": "87af02f1-e608-4c3a-9eec-cc0e69643da6",
+      "path": "/api/transport/loading/single-preview",
+      "response_status": 200,
+      "duration_ms": 359
+    },
+    {
+      "api_call_id": 71886,
+      "request_id": "7d93aa25-8d28-40c7-b233-8cc28d9ce13b",
+      "path": "/api/transport/loading/confirm-single",
+      "response_status": 200,
+      "duration_ms": 992
+    },
+    {
+      "api_call_id": 71887,
+      "request_id": "66738aa7-dad9-4bad-b36a-c1786b4890e9",
+      "path": "/api/transport/loading/unload",
+      "response_status": 403,
+      "duration_ms": 107
+    },
+    {
+      "api_call_id": 71888,
+      "request_id": "6dbb4529-be90-4a4d-b88b-62a5eab2b2e2",
+      "path": "/api/transport/loading/unload",
+      "response_status": 409,
+      "duration_ms": 103
+    },
+    {
+      "api_call_id": 71889,
+      "request_id": "531f7db5-2ea7-482e-b8b0-a5531ae8eb3a",
+      "path": "/api/transport/loading/unload",
+      "response_status": 200,
+      "duration_ms": 286
+    },
+    {
+      "api_call_id": 71890,
+      "request_id": "5fee4d80-c1e6-4f5b-87e2-8a67a82d50c2",
+      "path": "/api/transport/loading/unload",
+      "response_status": 200,
+      "duration_ms": 71
+    },
+    {
+      "api_call_id": 71891,
+      "request_id": "43522cf7-c20a-4612-874d-935baac34eec",
+      "path": "/api/transport/loading/unload",
+      "response_status": 409,
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 71892,
+      "request_id": "21ec33c6-c5c1-45a4-9567-47f3e6622824",
+      "path": "/api/transport/loading/unload",
+      "response_status": 403,
+      "duration_ms": 55
+    },
+    {
+      "api_call_id": 71893,
+      "request_id": "1d407ca6-f1e5-4285-b162-a5fff60bc253",
+      "path": "/api/transport/loading/unload",
+      "response_status": 200,
+      "duration_ms": 84
+    },
+    {
+      "api_call_id": 71894,
+      "request_id": "74240f12-8dce-4ebf-be59-a6ab1b31778a",
+      "path": "/api/transport/loading/unload",
+      "response_status": 403,
+      "duration_ms": 109
+    },
+    {
+      "api_call_id": 71895,
+      "request_id": "e2ea0355-3848-4fd7-948d-e7b8afd1adc6",
+      "path": "/api/transport/loading/confirm-single",
+      "response_status": 200,
+      "duration_ms": 99
+    },
+    {
+      "api_call_id": 71896,
+      "request_id": "b413fe8d-ae38-475d-ac01-d96e7b6c8c7d",
+      "path": "/api/picking/waves/588/finish-execution",
+      "response_status": 200,
+      "duration_ms": 250
+    },
+    {
+      "api_call_id": 71897,
+      "request_id": "79b07a8b-67a4-4007-baf4-78cbc442198b",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 862
+    },
+    {
+      "api_call_id": 71898,
+      "request_id": "562293a9-eb4c-43f9-bd28-0cb29753153d",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 920
+    },
+    {
+      "api_call_id": 71899,
+      "request_id": "3423dcf1-f8d7-4a35-9e18-39053a13fbf9",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 1064
+    },
+    {
+      "api_call_id": 71900,
+      "request_id": "b36cc800-4992-49b9-858c-95bd3ad8cfd1",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 692
+    },
+    {
+      "api_call_id": 71901,
+      "request_id": "ec9b1b01-75a9-449e-8851-3cff0703240b",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 295
+    },
+    {
+      "api_call_id": 71902,
+      "request_id": "20b9ff76-c147-417a-9631-88c29a3651d1",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 179
+    },
+    {
+      "api_call_id": 71903,
+      "request_id": "cb87fe77-e59f-47b4-af99-828359986dd4",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 67
+    },
+    {
+      "api_call_id": 71904,
+      "request_id": "b42f530c-7eee-4889-9ad7-008afbc8d7dc",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 556
+    },
+    {
+      "api_call_id": 71905,
+      "request_id": "a2a87cdd-1afa-4eba-8de0-77f7be62cf6d",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 537
+    },
+    {
+      "api_call_id": 71906,
+      "request_id": "dbe29e47-7cbb-4d57-86f0-2c1f1e69ce27",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 485
+    },
+    {
+      "api_call_id": 71907,
+      "request_id": "9e3e3ff6-1ab6-48e6-bad2-965ad04882d2",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 420
+    },
+    {
+      "api_call_id": 71908,
+      "request_id": "d7f4f261-071a-4ce3-bb09-185358d6a600",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 180
+    },
+    {
+      "api_call_id": 71909,
+      "request_id": "b4a248b2-10f7-4574-a7f9-20ec60100941",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 129
+    },
+    {
+      "api_call_id": 71910,
+      "request_id": "c9a41445-bc37-49ad-bf2b-b21a56df5460",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 205
+    },
+    {
+      "api_call_id": 71911,
+      "request_id": "8b9a3771-6f80-4f86-a631-b073349c7720",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 208
+    },
+    {
+      "api_call_id": 71912,
+      "request_id": "fc1c01af-29fc-4fd5-998a-d6006ef658fc",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 280
+    },
+    {
+      "api_call_id": 71913,
+      "request_id": "bb09764b-f49f-44ae-86d0-5d041aa443d2",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 134
+    },
+    {
+      "api_call_id": 71914,
+      "request_id": "8a7a8a16-fe4d-458c-920d-de4bcfaa6533",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 268
+    },
+    {
+      "api_call_id": 71915,
+      "request_id": "c9134e36-7b04-4e60-a763-2cd13df49b29",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 315
+    },
+    {
+      "api_call_id": 71916,
+      "request_id": "ddfe4991-4bbd-4f28-b538-35707f632ee5",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 688
+    },
+    {
+      "api_call_id": 71917,
+      "request_id": "34d8140f-a8a9-44d8-a018-652699e3ba4e",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 319
+    },
+    {
+      "api_call_id": 71918,
+      "request_id": "15a3e5a0-6f6d-40e1-89de-35f1c7d22864",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 247
+    },
+    {
+      "api_call_id": 71919,
+      "request_id": "997cdc7a-ea08-480a-bc29-932410f19ca7",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 243
+    },
+    {
+      "api_call_id": 71920,
+      "request_id": "f6fa1f9a-4fb5-4cbb-bfdf-5c5bc8d35006",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 238
+    },
+    {
+      "api_call_id": 71921,
+      "request_id": "04d02dd4-efc4-447a-b490-e83868eee5f6",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 233
+    },
+    {
+      "api_call_id": 71922,
+      "request_id": "02b93e4e-d11c-46ed-8fa2-13642e37a639",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 125
+    },
+    {
+      "api_call_id": 71923,
+      "request_id": "4abe5211-fcef-45f3-97bd-785ad66db03c",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 190
+    },
+    {
+      "api_call_id": 71924,
+      "request_id": "3842c032-ef42-49ba-804f-9384b23b1db1",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 418
+    },
+    {
+      "api_call_id": 71925,
+      "request_id": "7457403a-e978-495e-9825-1aaabe388560",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 507
+    },
+    {
+      "api_call_id": 71926,
+      "request_id": "b6dcaa3b-b5e8-4355-97fc-36fe840b381c",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 470
+    },
+    {
+      "api_call_id": 71927,
+      "request_id": "b280dd39-07da-480b-9330-6980fbb048c7",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 155
+    },
+    {
+      "api_call_id": 71928,
+      "request_id": "96c08dc1-ae4c-4f7f-8388-2b455608326f",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 315
+    },
+    {
+      "api_call_id": 71929,
+      "request_id": "c7cd980d-70d4-403b-9bd8-dfbef88f9839",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 179
+    },
+    {
+      "api_call_id": 71930,
+      "request_id": "b6bb58fa-1c37-4368-9fd7-337bf182f9f3",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 140
+    },
+    {
+      "api_call_id": 71931,
+      "request_id": "de81120f-c2ab-45ea-8872-32f2c07b6a36",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 189
+    },
+    {
+      "api_call_id": 71932,
+      "request_id": "fb206345-9b72-4b0d-a457-7583bf39dfbb",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 170
+    },
+    {
+      "api_call_id": 71933,
+      "request_id": "1e86ea05-8481-44be-b074-424b83a0770c",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 238
+    },
+    {
+      "api_call_id": 71934,
+      "request_id": "f704eb40-dce9-429e-8940-8d28a18a79ee",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 125
+    },
+    {
+      "api_call_id": 71935,
+      "request_id": "ceedd287-4b64-4f41-993b-809613757e33",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 174
+    },
+    {
+      "api_call_id": 71936,
+      "request_id": "ea1b9c4c-da07-479d-bfb7-e767a0f6cfdb",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 201
+    },
+    {
+      "api_call_id": 71937,
+      "request_id": "995a853c-6b0e-430c-bdb2-6781d9ff7a68",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 154
+    },
+    {
+      "api_call_id": 71938,
+      "request_id": "3890d327-6647-49fb-b963-a9bd8ae67c72",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 352
+    },
+    {
+      "api_call_id": 71939,
+      "request_id": "be9b0de8-902d-4e5f-b703-2e20cf2ccd1a",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 379
+    },
+    {
+      "api_call_id": 71940,
+      "request_id": "67dc2ec5-c356-430b-9e00-a4662c82875a",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 520
+    },
+    {
+      "api_call_id": 71941,
+      "request_id": "22ef75cf-7fd0-4c84-90d7-998ad12ef803",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 343
+    },
+    {
+      "api_call_id": 71942,
+      "request_id": "e6c96531-f67f-4821-b6ad-5b41c4d6b3bf",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 224
+    },
+    {
+      "api_call_id": 71943,
+      "request_id": "1e44f86a-8929-40f2-883c-b33011106c17",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 151
+    },
+    {
+      "api_call_id": 71944,
+      "request_id": "c7764f0b-d967-43cc-9526-c3db43587814",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 246
+    },
+    {
+      "api_call_id": 71945,
+      "request_id": "6ef0f372-c914-43b5-8d2c-d6617323ce28",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 239
+    },
+    {
+      "api_call_id": 71946,
+      "request_id": "1ddc6e3b-c145-4441-86ba-f9f324c11e22",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 136
+    },
+    {
+      "api_call_id": 71947,
+      "request_id": "8c09fc62-de7e-4a9a-8426-071f2b448dab",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 108
+    },
+    {
+      "api_call_id": 71948,
+      "request_id": "f03bb619-0fae-444a-801a-fa7e7d932e89",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 192
+    },
+    {
+      "api_call_id": 71949,
+      "request_id": "74883b0a-25f2-4afb-bd97-885b3ea7b163",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 147
+    },
+    {
+      "api_call_id": 71950,
+      "request_id": "33fce45c-5e32-431f-a715-c0ce07de28af",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 227
+    },
+    {
+      "api_call_id": 71951,
+      "request_id": "fe10da9f-7532-4b5d-b69d-3986ade1e4b5",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 183
+    },
+    {
+      "api_call_id": 71952,
+      "request_id": "2c2dccd8-21f2-49b1-befa-7703f7c703a4",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 570
+    },
+    {
+      "api_call_id": 71953,
+      "request_id": "ffb3fcad-e110-476e-8e5c-9a7fcf25e6be",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 404
+    },
+    {
+      "api_call_id": 71954,
+      "request_id": "022e63ff-2c75-40a0-93cc-9c3278868cbe",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 286
+    },
+    {
+      "api_call_id": 71955,
+      "request_id": "13774ac6-321d-4b80-a5f7-5856990f6c29",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 267
+    },
+    {
+      "api_call_id": 71956,
+      "request_id": "d761ebe5-a7e9-42fc-b124-a8db85d993ac",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 271
+    },
+    {
+      "api_call_id": 71957,
+      "request_id": "1bd3a820-7442-467a-824d-ff737e477678",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 151
+    },
+    {
+      "api_call_id": 71958,
+      "request_id": "4df7bb40-bb08-4d10-81f1-06de3d044e06",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 109
+    },
+    {
+      "api_call_id": 71959,
+      "request_id": "807e6002-9d01-430c-acc2-4998b3cf85b4",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 104
+    },
+    {
+      "api_call_id": 71960,
+      "request_id": "3032060f-a658-42b3-ab5b-b88299cbf232",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 275
+    },
+    {
+      "api_call_id": 71961,
+      "request_id": "de2a0976-74c5-4827-9e21-fadcb9b02940",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 275
+    },
+    {
+      "api_call_id": 71962,
+      "request_id": "6ea6ba94-4851-4019-add6-185a20b940aa",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 140
+    },
+    {
+      "api_call_id": 71963,
+      "request_id": "954df93f-4db9-4511-982b-895bc490ab24",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 172
+    },
+    {
+      "api_call_id": 71964,
+      "request_id": "e0663872-cb46-4ff0-a247-07188bd0fc07",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 602
+    },
+    {
+      "api_call_id": 71965,
+      "request_id": "6b81f52c-0587-4128-bef7-e0e7085b4e7c",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 461
+    },
+    {
+      "api_call_id": 71966,
+      "request_id": "a9e678fc-8e74-4d79-9ecf-28320cc3f3d4",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 453
+    },
+    {
+      "api_call_id": 71967,
+      "request_id": "0cdbaeb8-813d-41b6-aeda-cd22c736645e",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 354
+    },
+    {
+      "api_call_id": 71968,
+      "request_id": "4739bf6e-da30-482f-b8b4-76ccdd25950a",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 232
+    },
+    {
+      "api_call_id": 71969,
+      "request_id": "96f8ee61-e018-4e15-a470-71750227c05d",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 119
+    },
+    {
+      "api_call_id": 71970,
+      "request_id": "b31361b4-efeb-47a8-b300-8c205d76a9b2",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 155
+    },
+    {
+      "api_call_id": 71971,
+      "request_id": "f0fd1f22-0e71-4368-8a90-68c01fda39a7",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 166
+    },
+    {
+      "api_call_id": 71972,
+      "request_id": "8e8f3ef7-dfb3-4d5e-a169-504d4a301b66",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 405
+    },
+    {
+      "api_call_id": 71973,
+      "request_id": "26c6863f-ab32-4504-9fcd-7fb8b054764c",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 259
+    },
+    {
+      "api_call_id": 71974,
+      "request_id": "80923e42-2f7f-4838-a279-f8099837a356",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 194
+    },
+    {
+      "api_call_id": 71975,
+      "request_id": "f27f0d79-c337-48fd-81dd-921bfe42808f",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 119
+    },
+    {
+      "api_call_id": 71976,
+      "request_id": "61602e10-97c4-463f-af34-2d36d0ad70a4",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 680
+    },
+    {
+      "api_call_id": 71977,
+      "request_id": "49986cef-5fa4-4b65-a5c1-cb3dcf41b01c",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 384
+    },
+    {
+      "api_call_id": 71978,
+      "request_id": "aeef126f-fa89-4150-9c18-5e36a0ce3b79",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 270
+    },
+    {
+      "api_call_id": 71979,
+      "request_id": "10013311-a393-4787-b9cd-3d95e352015b",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 244
+    },
+    {
+      "api_call_id": 71980,
+      "request_id": "dd30cf35-3a77-4d1c-8016-fafaf962341e",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 192
+    },
+    {
+      "api_call_id": 71981,
+      "request_id": "3db574a4-23ad-4eaf-8e6a-d74686bb67d6",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 253
+    },
+    {
+      "api_call_id": 71982,
+      "request_id": "cefd837b-0645-40df-9dc2-26e8ff577971",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 252
+    },
+    {
+      "api_call_id": 71983,
+      "request_id": "145f3000-68f2-464e-be50-11384e53c762",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 133
+    },
+    {
+      "api_call_id": 71984,
+      "request_id": "3240fafb-2c2f-4aad-afdc-d3fcf0e9dc01",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 489
+    },
+    {
+      "api_call_id": 71985,
+      "request_id": "ab11c4cc-7043-4e97-9307-f25a03def2c9",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 174
+    },
+    {
+      "api_call_id": 71986,
+      "request_id": "6292974d-6bcc-4b13-ba32-b39efdedb4f6",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 449
+    },
+    {
+      "api_call_id": 71987,
+      "request_id": "c88f9d30-0dd1-4f0c-9ffc-24495f1ed6e3",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 460
+    },
+    {
+      "api_call_id": 71988,
+      "request_id": "95baab8e-8e33-4536-ac1b-bf07ec726e99",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 418
+    },
+    {
+      "api_call_id": 71989,
+      "request_id": "d8ce7f8f-5411-498a-9244-a26cdd1b2c5b",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 212
+    },
+    {
+      "api_call_id": 71990,
+      "request_id": "c9b34e56-7972-4678-a10c-3f4fedd63e43",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 203
+    },
+    {
+      "api_call_id": 71991,
+      "request_id": "67f05f77-60f1-4b4c-bd43-b4e736d2324e",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 140
+    },
+    {
+      "api_call_id": 71992,
+      "request_id": "0b3039c8-5284-41b7-83b4-1fbaedd6f9be",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 245
+    },
+    {
+      "api_call_id": 71993,
+      "request_id": "a247a8cd-8fcd-401b-bc1d-e8a4792a2837",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 100
+    },
+    {
+      "api_call_id": 71994,
+      "request_id": "8b248568-546a-40e9-a241-f0bb29d5ea25",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 111
+    },
+    {
+      "api_call_id": 71995,
+      "request_id": "7ecb92a1-ad1f-4424-b173-1663c150b3c7",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 114
+    },
+    {
+      "api_call_id": 71996,
+      "request_id": "829993fe-8301-401d-b481-8cf0704278d6",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 475
+    },
+    {
+      "api_call_id": 71997,
+      "request_id": "0e8ba7fa-f423-48e8-95a2-a80c2807d511",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 344
+    },
+    {
+      "api_call_id": 71998,
+      "request_id": "f3ea0bbc-876a-4bc2-854a-1450d2c920fb",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 380
+    },
+    {
+      "api_call_id": 71999,
+      "request_id": "14366ce1-ab21-41c9-adec-ab388ed91003",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 77
+    },
+    {
+      "api_call_id": 72000,
+      "request_id": "f35987e7-9146-4ff0-af31-df3bcdaa7e6c",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 406
+    },
+    {
+      "api_call_id": 72001,
+      "request_id": "90aece2b-f867-4764-9f1d-d7cb0612945b",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 225
+    },
+    {
+      "api_call_id": 72002,
+      "request_id": "9a9e7c0e-ee83-4ab3-b1ff-52d2b281ce28",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 216
+    },
+    {
+      "api_call_id": 72003,
+      "request_id": "1bafddeb-f0c3-473a-9092-50de04d6dc74",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 156
+    },
+    {
+      "api_call_id": 72004,
+      "request_id": "02914962-f5a7-4952-bf49-89026086a2b1",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 215
+    },
+    {
+      "api_call_id": 72005,
+      "request_id": "457e93a1-97a3-4b73-bce2-8b87e8d455d4",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 254
+    },
+    {
+      "api_call_id": 72006,
+      "request_id": "51932d9a-08cf-4ff1-b565-0413890b5e17",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 244
+    },
+    {
+      "api_call_id": 72007,
+      "request_id": "128a9f63-57f8-4c25-9039-ca80d7c4a8d6",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 134
+    },
+    {
+      "api_call_id": 72008,
+      "request_id": "f4a49bdd-2d8a-4eff-a390-3a9c65b68ec8",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 376
+    },
+    {
+      "api_call_id": 72009,
+      "request_id": "cd120c92-111d-475d-88ce-c86d955ccaaa",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 169
+    },
+    {
+      "api_call_id": 72010,
+      "request_id": "8c5530b2-cf15-4a76-a7f7-0e5ef5f403c3",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 279
+    },
+    {
+      "api_call_id": 72011,
+      "request_id": "4cc592be-d21f-402d-9ead-b2b6ec05934c",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 316
+    },
+    {
+      "api_call_id": 72012,
+      "request_id": "abbd61fb-70c7-4efd-a32f-8e695c353e78",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 403
+    },
+    {
+      "api_call_id": 72013,
+      "request_id": "d2a2882c-bee9-4d11-9663-dabfbdb15e4f",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 176
+    },
+    {
+      "api_call_id": 72014,
+      "request_id": "ff18df48-517d-43b9-ae93-31cd4d712dc6",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 187
+    },
+    {
+      "api_call_id": 72015,
+      "request_id": "ad6b4006-9ec8-47f7-bb96-e7055739abef",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 178
+    },
+    {
+      "api_call_id": 72016,
+      "request_id": "b79207a7-ccc5-46b8-8396-e50b7653d5eb",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 47
+    },
+    {
+      "api_call_id": 72045,
+      "request_id": "29064865-38ae-4915-a01b-054cb1061bed",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 150
+    },
+    {
+      "api_call_id": 72046,
+      "request_id": "c6a26f5b-01f1-4eb4-ada7-f75a74c7d143",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 186
+    },
+    {
+      "api_call_id": 72047,
+      "request_id": "8914ad58-cf11-477c-9c9b-62598f2fb426",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 183
+    },
+    {
+      "api_call_id": 72048,
+      "request_id": "4b705319-553d-4fbc-9be6-5106d31c0f27",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 67
+    },
+    {
+      "api_call_id": 72049,
+      "request_id": "a3f78778-5b9e-449f-a5ac-b9cffa40434b",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 182
+    },
+    {
+      "api_call_id": 72050,
+      "request_id": "2bff5cf3-8f69-4e4f-aa36-59f82fb98577",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 189
+    },
+    {
+      "api_call_id": 72051,
+      "request_id": "5d2f41b3-08b1-4634-b501-21f314cd1186",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 118
+    },
+    {
+      "api_call_id": 72052,
+      "request_id": "c8daca2d-85ef-4ad7-bb5c-3c4a480b74d1",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 52
+    },
+    {
+      "api_call_id": 72053,
+      "request_id": "a2c0756c-29d5-4b63-b2ba-5c8249bcf809",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 152
+    },
+    {
+      "api_call_id": 72054,
+      "request_id": "7a395a43-dd30-4c65-aded-1c3fdac96595",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 137
+    },
+    {
+      "api_call_id": 72055,
+      "request_id": "cfa635fb-316a-4888-950e-35b10bfeb956",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 136
+    },
+    {
+      "api_call_id": 72056,
+      "request_id": "888a79f7-cccd-4369-82d2-9fbbe1bb44bc",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 91
+    },
+    {
+      "api_call_id": 72057,
+      "request_id": "cc3618c2-eb19-42b0-ae92-2993bbc4e816",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 149
+    },
+    {
+      "api_call_id": 72058,
+      "request_id": "37e9ecd9-2e47-4763-88c8-5e7752416b66",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 196
+    },
+    {
+      "api_call_id": 72059,
+      "request_id": "e9e4c615-f455-4c65-80ea-dbbd05846297",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 88
+    },
+    {
+      "api_call_id": 72060,
+      "request_id": "369f755b-ddef-40e4-8acc-227d7f5f5210",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 136
+    },
+    {
+      "api_call_id": 72061,
+      "request_id": "998c7670-dc70-4daf-aa37-5cc90fca10cc",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 216
+    },
+    {
+      "api_call_id": 72062,
+      "request_id": "7532c2ff-01ac-42bc-85c7-4c6ce30bf058",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 372
+    },
+    {
+      "api_call_id": 72063,
+      "request_id": "e4f7bc7e-fe5b-4e9a-929f-d0ccf0bfdd70",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 275
+    },
+    {
+      "api_call_id": 72064,
+      "request_id": "6f395363-e240-41e2-a850-e011b83fb6b0",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 236
+    },
+    {
+      "api_call_id": 72065,
+      "request_id": "1d7d6d75-75d5-4420-8ecc-8bad2cf2e153",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 169
+    },
+    {
+      "api_call_id": 72066,
+      "request_id": "168a4f4b-5ff9-4beb-94dc-13b01554e274",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 143
+    },
+    {
+      "api_call_id": 72067,
+      "request_id": "b8a9ee7a-2435-44cd-8d66-17b731dba1bb",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 160
+    },
+    {
+      "api_call_id": 72068,
+      "request_id": "d07cb417-abc0-48a5-b8f3-6f1cb1b1f726",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 122
+    },
+    {
+      "api_call_id": 72069,
+      "request_id": "18f600db-e95d-4bd0-aae6-1f4813f0ceea",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 239
+    },
+    {
+      "api_call_id": 72070,
+      "request_id": "6244d45b-2986-45ee-bdb3-494ab95cf2ec",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 184
+    },
+    {
+      "api_call_id": 72071,
+      "request_id": "030c4920-1bf5-40dc-8faf-42c7b3ee2fbb",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 86
+    },
+    {
+      "api_call_id": 72072,
+      "request_id": "37bab5c6-4644-48d5-8e08-4955cba161cd",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 108
+    },
+    {
+      "api_call_id": 72073,
+      "request_id": "c60b1fcf-8a37-4222-a9c3-78e9eab2021a",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 225
+    },
+    {
+      "api_call_id": 72074,
+      "request_id": "2585b12e-a537-40ac-8dc6-bca0b15de2c3",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 252
+    },
+    {
+      "api_call_id": 72075,
+      "request_id": "37262f55-e682-4e0e-9a91-51079548aaba",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 94
+    },
+    {
+      "api_call_id": 72076,
+      "request_id": "1fc68e98-11d5-4c3b-8ee6-dd6d960606f3",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 98
+    },
+    {
+      "api_call_id": 72077,
+      "request_id": "5c5c3c10-186c-4fce-8eb7-d6ee13589c03",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 492
+    },
+    {
+      "api_call_id": 72078,
+      "request_id": "d1a564ec-861f-4495-919d-53bf5278a88d",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 430
+    },
+    {
+      "api_call_id": 72079,
+      "request_id": "de63c693-3e81-460e-b775-53ea01afc411",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 238
+    },
+    {
+      "api_call_id": 72080,
+      "request_id": "7449318d-efe0-4ff0-8c34-f8f89fddf872",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 325
+    },
+    {
+      "api_call_id": 72081,
+      "request_id": "7f8bea0f-0695-4fee-bf36-b85045193d63",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 265
+    },
+    {
+      "api_call_id": 72082,
+      "request_id": "2dd2063e-474a-491c-b04b-b5a20055d4e7",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 226
+    },
+    {
+      "api_call_id": 72083,
+      "request_id": "18cb6d47-0add-4694-be48-aa328769f7ae",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 167
+    },
+    {
+      "api_call_id": 72084,
+      "request_id": "4bfc1566-f020-4f9e-96f6-a2fc50218302",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 67
+    },
+    {
+      "api_call_id": 72085,
+      "request_id": "e5d9d149-4a5f-4b15-aee6-98bdc1f067d3",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 275
+    },
+    {
+      "api_call_id": 72086,
+      "request_id": "da8375c4-24f1-46a4-a9c9-9502b4de41a3",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 128
+    },
+    {
+      "api_call_id": 72087,
+      "request_id": "a81fa2f1-dbd9-4a35-a3fe-13c37eefaf3d",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 198
+    },
+    {
+      "api_call_id": 72088,
+      "request_id": "17e231f1-2dfc-4729-95bb-1bbd2b22400c",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 160
+    },
+    {
+      "api_call_id": 72089,
+      "request_id": "bc011b8d-cbc3-44e5-a1a1-23fb02181028",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 613
+    },
+    {
+      "api_call_id": 72090,
+      "request_id": "da5d2cf4-41d1-45a1-b327-31398df125ef",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 667
+    },
+    {
+      "api_call_id": 72091,
+      "request_id": "eef69523-2653-4adb-b412-473e08a58f8d",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 193
+    },
+    {
+      "api_call_id": 72092,
+      "request_id": "5401f5dc-c0de-4c12-aa47-c171ea404ad4",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 409
+    },
+    {
+      "api_call_id": 72093,
+      "request_id": "5cf2bdc1-bad1-49a0-b4a9-05da2286623b",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 489
+    },
+    {
+      "api_call_id": 72094,
+      "request_id": "ded40028-e5f0-4264-a74b-d9662040eed3",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 196
+    },
+    {
+      "api_call_id": 72095,
+      "request_id": "5380a02b-2c75-46da-b9fd-1a40051d2f10",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 121
+    },
+    {
+      "api_call_id": 72096,
+      "request_id": "9cbcdb6f-b5c4-46cb-a888-c0f60c234b2d",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 155
+    },
+    {
+      "api_call_id": 72097,
+      "request_id": "0811d9a9-26f6-4c96-a587-93931dd79e1f",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 240
+    },
+    {
+      "api_call_id": 72098,
+      "request_id": "9ba3c43b-5a88-47d4-ab52-4868592186f6",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 191
+    },
+    {
+      "api_call_id": 72099,
+      "request_id": "fa99a49f-e2a5-41b1-b631-5d2ec8656070",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 105
+    },
+    {
+      "api_call_id": 72100,
+      "request_id": "de7e739d-df64-49fe-a1c7-6ec277646382",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 213
+    },
+    {
+      "api_call_id": 72101,
+      "request_id": "8050c51f-bedc-433c-88c0-9203816845a7",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 623
+    },
+    {
+      "api_call_id": 72102,
+      "request_id": "02c3f0f7-d769-421a-a910-4a97d2e7bd41",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 338
+    },
+    {
+      "api_call_id": 72103,
+      "request_id": "4fe4f016-2579-47a9-81a7-9b472582e78f",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 535
+    },
+    {
+      "api_call_id": 72104,
+      "request_id": "67deebe1-7828-462d-8aa2-93af9eede6f0",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 378
+    },
+    {
+      "api_call_id": 72105,
+      "request_id": "5c41717e-b30b-407a-9e56-c152eee50776",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 261
+    },
+    {
+      "api_call_id": 72106,
+      "request_id": "37f53428-4894-4774-b252-5cb09dfd2954",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 222
+    },
+    {
+      "api_call_id": 72107,
+      "request_id": "fa0d9f9f-0433-4b6e-9629-757809ab9370",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 156
+    },
+    {
+      "api_call_id": 72108,
+      "request_id": "f2441ca7-d9ed-4262-aee0-6ef12be4ba6d",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 86
+    },
+    {
+      "api_call_id": 72109,
+      "request_id": "7c8eab93-27ea-4506-acf7-9176de7a922c",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 273
+    },
+    {
+      "api_call_id": 72110,
+      "request_id": "2bfc394b-4a37-447a-93c0-be76630f3ca1",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 227
+    },
+    {
+      "api_call_id": 72111,
+      "request_id": "f7ee2873-e1c8-4a8b-836f-34c7868c1d08",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 98
+    },
+    {
+      "api_call_id": 72112,
+      "request_id": "0a8ef870-2f24-4b3b-ae07-b0592beb6c55",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 130
+    },
+    {
+      "api_call_id": 72113,
+      "request_id": "aa48bb89-a410-41c8-8351-74515785f458",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 522
+    },
+    {
+      "api_call_id": 72114,
+      "request_id": "98e3cd23-572c-4519-a1eb-0b97273e1ee5",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 536
+    },
+    {
+      "api_call_id": 72115,
+      "request_id": "7a3008e5-9c6a-4854-81f5-35a94931909f",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 404
+    },
+    {
+      "api_call_id": 72116,
+      "request_id": "e18a2d5e-ad0f-4950-8565-4d236050889c",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 217
+    },
+    {
+      "api_call_id": 72117,
+      "request_id": "9bb55f40-e30d-4aa9-887b-922bb7784722",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 290
+    },
+    {
+      "api_call_id": 72118,
+      "request_id": "96fc195e-d9ab-438f-8f5f-dc6ed64ec7ef",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 167
+    },
+    {
+      "api_call_id": 72119,
+      "request_id": "25d27412-b92a-4667-b3be-96cff2af560a",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 199
+    },
+    {
+      "api_call_id": 72120,
+      "request_id": "9412d364-c77d-4cd1-9484-f4da5fe7f568",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 94
+    },
+    {
+      "api_call_id": 72121,
+      "request_id": "1ec16f46-547a-4b80-bfe2-fed8e05a2156",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 228
+    },
+    {
+      "api_call_id": 72122,
+      "request_id": "27136e97-028d-43ab-8d1d-456739dcf9f3",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 193
+    },
+    {
+      "api_call_id": 72123,
+      "request_id": "08ac2dd8-84d9-47b7-8f30-2b84697efeb9",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 87
+    },
+    {
+      "api_call_id": 72124,
+      "request_id": "6d019532-7952-43b5-b35b-cf3b230832b3",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 98
+    },
+    {
+      "api_call_id": 72125,
+      "request_id": "b43b1709-5585-4025-9669-cd29345dbf02",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 484
+    },
+    {
+      "api_call_id": 72126,
+      "request_id": "b3fccf54-6b4c-4401-96b9-76936b517448",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 401
+    },
+    {
+      "api_call_id": 72127,
+      "request_id": "9d72e0cc-0a02-4e7b-a40b-80abc4348095",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 171
+    },
+    {
+      "api_call_id": 72128,
+      "request_id": "1a7192de-8015-4a4f-9f94-967101d61668",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 270
+    },
+    {
+      "api_call_id": 72129,
+      "request_id": "39fe1d3d-2b0b-46f1-b2a1-116558c02e33",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 316
+    },
+    {
+      "api_call_id": 72130,
+      "request_id": "70a1bdb1-7396-45d3-876d-9371cedab86f",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 277
+    },
+    {
+      "api_call_id": 72131,
+      "request_id": "72a3e58d-bbcd-4490-839a-f337ee900564",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 151
+    },
+    {
+      "api_call_id": 72132,
+      "request_id": "082b2dee-a6f6-49e4-9e5d-96dbb74ec0e9",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 101
+    },
+    {
+      "api_call_id": 72133,
+      "request_id": "ad2c64c7-d837-4be8-abba-e8d7d0340aae",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 205
+    },
+    {
+      "api_call_id": 72134,
+      "request_id": "8462c5da-d6a2-4bb7-89fb-c15685fa27a3",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 217
+    },
+    {
+      "api_call_id": 72135,
+      "request_id": "249b2757-2213-45d8-978e-cae8cafe4601",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 147
+    },
+    {
+      "api_call_id": 72136,
+      "request_id": "ee332afe-4791-4329-895e-63f9b4409318",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 80
+    },
+    {
+      "api_call_id": 72137,
+      "request_id": "691e90c6-46d4-4d77-b829-120754541fe1",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 244
+    },
+    {
+      "api_call_id": 72138,
+      "request_id": "fcabfceb-bf17-4e3c-b058-8439e8220071",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 193
+    },
+    {
+      "api_call_id": 72139,
+      "request_id": "00bc008a-7844-43c4-b4ca-ea44f6987396",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 127
+    },
+    {
+      "api_call_id": 72140,
+      "request_id": "313853f6-a24f-4fb2-b467-eb3bc0a117ef",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 72141,
+      "request_id": "fa012ff2-45fa-4707-8689-595350efbe91",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 540
+    },
+    {
+      "api_call_id": 72142,
+      "request_id": "3f7afaa9-9483-4869-948a-d3b52aee0d96",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 537
+    },
+    {
+      "api_call_id": 72143,
+      "request_id": "fe8247d5-b892-490b-94f8-5547fe910090",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 208
+    },
+    {
+      "api_call_id": 72144,
+      "request_id": "124d0c8d-9a69-4441-99ef-2600670b7f6d",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 446
+    },
+    {
+      "api_call_id": 72145,
+      "request_id": "44311e88-25b0-4963-881a-c248f669fbb2",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 319
+    },
+    {
+      "api_call_id": 72146,
+      "request_id": "9b44e254-7fa8-4966-9000-0ece3800eb1f",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 143
+    },
+    {
+      "api_call_id": 72147,
+      "request_id": "d955fbb1-22b1-4fcb-a54c-3ba445fb4882",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 173
+    },
+    {
+      "api_call_id": 72148,
+      "request_id": "4f6eeb55-ac00-4e9e-b3b9-21cec06b958f",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 71
+    },
+    {
+      "api_call_id": 72149,
+      "request_id": "8a192973-c99e-4b4e-a7da-ccb4626255a6",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 301
+    },
+    {
+      "api_call_id": 72150,
+      "request_id": "75f420e9-c38d-4c75-b2d2-e08ef02ce9da",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 227
+    },
+    {
+      "api_call_id": 72151,
+      "request_id": "e8d39ad3-d82a-4230-90be-91883c571c75",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 95
+    },
+    {
+      "api_call_id": 72152,
+      "request_id": "56667602-6f15-4bbb-b35b-51f8cc98d8ab",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 115
+    },
+    {
+      "api_call_id": 72153,
+      "request_id": "bc450b07-9466-474e-b11b-beb91bf98adf",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 504
+    },
+    {
+      "api_call_id": 72154,
+      "request_id": "46d0c650-f8ce-4071-8d1b-9528c1501b82",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 496
+    },
+    {
+      "api_call_id": 72155,
+      "request_id": "a2342dc1-7347-4f93-abc3-403bb094e4c1",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 195
+    },
+    {
+      "api_call_id": 72156,
+      "request_id": "2e419588-5a30-443a-8f3a-768084646d7c",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 366
+    },
+    {
+      "api_call_id": 72157,
+      "request_id": "c20a816b-07e1-49bd-a0d2-1483dd47207c",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 323
+    },
+    {
+      "api_call_id": 72158,
+      "request_id": "bde534c5-675e-4b8f-a933-82c784dc0a50",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 179
+    },
+    {
+      "api_call_id": 72159,
+      "request_id": "85a52cd8-12c2-4e1e-8526-d1dd0edbf5b6",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 79
+    },
+    {
+      "api_call_id": 72160,
+      "request_id": "e32c7425-30c0-4225-a47e-f15e26bc844e",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 174
+    },
+    {
+      "api_call_id": 72161,
+      "request_id": "cec70bb7-3e42-4f72-9276-cb3b37f9eaea",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 199
+    },
+    {
+      "api_call_id": 72162,
+      "request_id": "d78e9d34-f79c-4416-801a-bd968511b829",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 106
+    },
+    {
+      "api_call_id": 72163,
+      "request_id": "79c0f12a-114e-4fd7-b1b4-e4e26515387b",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 105
+    },
+    {
+      "api_call_id": 72164,
+      "request_id": "ef283dba-3260-4d45-b02a-c27062591db2",
+      "path": "/api/transport/loading/33656/status",
+      "response_status": 200,
+      "duration_ms": 116
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 5088,
+      "api_call_id": 70443,
+      "elapsed_ms": 25,
+      "module": "WMS_API:70443",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5089,
+      "api_call_id": 70444,
+      "elapsed_ms": 109,
+      "module": "WMS_API:70444",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5090,
+      "api_call_id": 70445,
+      "elapsed_ms": 21,
+      "module": "WMS_API:70445",
+      "action": "POST /api/case-pick/tasks/1148/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5091,
+      "api_call_id": 70446,
+      "elapsed_ms": 41,
+      "module": "WMS_API:70446",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5092,
+      "api_call_id": 70449,
+      "elapsed_ms": 50,
+      "module": "WMS_API:70449",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5093,
+      "api_call_id": 70450,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70450",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5094,
+      "api_call_id": 70452,
+      "elapsed_ms": 24,
+      "module": "WMS_API:70452",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5098,
+      "api_call_id": 70531,
+      "elapsed_ms": 36,
+      "module": "WMS_API:70531",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5099,
+      "api_call_id": 70533,
+      "elapsed_ms": 115,
+      "module": "WMS_API:70533",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5100,
+      "api_call_id": 70538,
+      "elapsed_ms": 16,
+      "module": "WMS_API:70538",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5101,
+      "api_call_id": 70541,
+      "elapsed_ms": 17,
+      "module": "WMS_API:70541",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5102,
+      "api_call_id": 70543,
+      "elapsed_ms": 200,
+      "module": "WMS_API:70543",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5103,
+      "api_call_id": 70560,
+      "elapsed_ms": 12,
+      "module": "WMS_API:70560",
+      "action": "GET /api/delivery/timing/kpis",
+      "sql_sample": "Scoped delivery KPI window cohort"
+    },
+    {
+      "log_id": 5105,
+      "api_call_id": 70637,
+      "elapsed_ms": 17,
+      "module": "WMS_API:70637",
+      "action": "POST /api/finance/logistics-cost",
+      "sql_sample": "Version warehouse BOX cost rate"
+    },
+    {
+      "log_id": 5106,
+      "api_call_id": 70638,
+      "elapsed_ms": 16,
+      "module": "WMS_API:70638",
+      "action": "GET /api/admin/auth/login",
+      "sql_sample": "Current PLATFORM admin shell login READ ONLY"
+    },
+    {
+      "log_id": 5107,
+      "api_call_id": 70640,
+      "elapsed_ms": 10,
+      "module": "WMS_API:70640",
+      "action": "POST /api/finance/logistics-cost",
+      "sql_sample": "Version warehouse BOX cost rate"
+    },
+    {
+      "log_id": 5108,
+      "api_call_id": 70643,
+      "elapsed_ms": 15,
+      "module": "WMS_API:70643",
+      "action": "POST /api/finance/logistics-cost",
+      "sql_sample": "Version warehouse BOX cost rate"
+    },
+    {
+      "log_id": 5109,
+      "api_call_id": 70644,
+      "elapsed_ms": 10,
+      "module": "WMS_API:70644",
+      "action": "POST /api/finance/logistics-cost",
+      "sql_sample": "Version warehouse BOX cost rate"
+    },
+    {
+      "log_id": 5112,
+      "api_call_id": 70645,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70645",
+      "action": "POST /api/finance/logistics-cost",
+      "sql_sample": "Version warehouse BOX cost rate"
+    },
+    {
+      "log_id": 5115,
+      "api_call_id": 70649,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70649",
+      "action": "POST /api/finance/logistics-cost",
+      "sql_sample": "Version warehouse BOX cost rate"
+    },
+    {
+      "log_id": 5117,
+      "api_call_id": 70650,
+      "elapsed_ms": 5,
+      "module": "WMS_API:70650",
+      "action": "GET /api/admin/auth/me",
+      "sql_sample": "Current PLATFORM admin shell login READ ONLY"
+    },
+    {
+      "log_id": 5118,
+      "api_call_id": 70652,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70652",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5119,
+      "api_call_id": 70653,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70653",
+      "action": "GET /api/case-pick/tasks/1148/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5120,
+      "api_call_id": 70654,
+      "elapsed_ms": 10,
+      "module": "WMS_API:70654",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5121,
+      "api_call_id": 70659,
+      "elapsed_ms": 28,
+      "module": "WMS_API:70659",
+      "action": "GET /api/driver/trips",
+      "sql_sample": "Driver day READ ONLY current binding"
+    },
+    {
+      "log_id": 5122,
+      "api_call_id": 70660,
+      "elapsed_ms": 65,
+      "module": "WMS_API:70660",
+      "action": "PUT /api/transport/driver-bindin",
+      "sql_sample": "Explicit authenticated driver binding"
+    },
+    {
+      "log_id": 5125,
+      "api_call_id": 70667,
+      "elapsed_ms": 6,
+      "module": "WMS_API:70667",
+      "action": "GET /api/driver/trips",
+      "sql_sample": "Driver day READ ONLY current binding"
+    },
+    {
+      "log_id": 5126,
+      "api_call_id": 70669,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70669",
+      "action": "GET /api/driver/trips/33656/ops",
+      "sql_sample": "Driver trip READ ONLY current binding"
+    },
+    {
+      "log_id": 5127,
+      "api_call_id": 70670,
+      "elapsed_ms": 35,
+      "module": "WMS_API:70670",
+      "action": "POST /api/driver/ops/10244/done",
+      "sql_sample": "Existing driver fact serialized native owner"
+    },
+    {
+      "log_id": 5128,
+      "api_call_id": 70676,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70676",
+      "action": "GET /api/driver/trips",
+      "sql_sample": "Driver day READ ONLY current binding"
+    },
+    {
+      "log_id": 5129,
+      "api_call_id": 70677,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70677",
+      "action": "POST /api/driver/ops/10244/done",
+      "sql_sample": "Existing driver fact serialized native owner"
+    },
+    {
+      "log_id": 5130,
+      "api_call_id": 70678,
+      "elapsed_ms": 5,
+      "module": "WMS_API:70678",
+      "action": "GET /api/delivery/store-return-c",
+      "sql_sample": "Current bound driver return queue READ ONLY"
+    },
+    {
+      "log_id": 5131,
+      "api_call_id": 70679,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70679",
+      "action": "GET /api/driver/trips",
+      "sql_sample": "Driver day READ ONLY current binding"
+    },
+    {
+      "log_id": 5132,
+      "api_call_id": 70682,
+      "elapsed_ms": 14,
+      "module": "WMS_API:70682",
+      "action": "GET /api/driver/trips",
+      "sql_sample": "Driver day READ ONLY current binding"
+    },
+    {
+      "log_id": 5133,
+      "api_call_id": 70683,
+      "elapsed_ms": 16,
+      "module": "WMS_API:70683",
+      "action": "POST /api/driver/ops/10244/done",
+      "sql_sample": "Existing driver fact serialized native owner"
+    },
+    {
+      "log_id": 5138,
+      "api_call_id": 70688,
+      "elapsed_ms": 9,
+      "module": "WMS_API:70688",
+      "action": "POST /api/access/commands",
+      "sql_sample": "access.command"
+    },
+    {
+      "log_id": 5139,
+      "api_call_id": 70689,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70689",
+      "action": "POST /api/access/commands",
+      "sql_sample": "access.command"
+    },
+    {
+      "log_id": 5140,
+      "api_call_id": 70690,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70690",
+      "action": "POST /api/access/commands",
+      "sql_sample": "access.command"
+    },
+    {
+      "log_id": 5141,
+      "api_call_id": 70691,
+      "elapsed_ms": 10,
+      "module": "WMS_API:70691",
+      "action": "POST /api/access/commands",
+      "sql_sample": "access.command"
+    },
+    {
+      "log_id": 5142,
+      "api_call_id": 70692,
+      "elapsed_ms": 33,
+      "module": "WMS_API:70692",
+      "action": "POST /api/access/commands",
+      "sql_sample": "access.command"
+    },
+    {
+      "log_id": 5143,
+      "api_call_id": 70694,
+      "elapsed_ms": 20,
+      "module": "WMS_API:70694",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Read current warehouse cost rate"
+    },
+    {
+      "log_id": 5144,
+      "api_call_id": 70696,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70696",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Read current warehouse cost rate"
+    },
+    {
+      "log_id": 5145,
+      "api_call_id": 70697,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70697",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Read current warehouse cost rate"
+    },
+    {
+      "log_id": 5159,
+      "api_call_id": 71880,
+      "elapsed_ms": 38,
+      "module": "WMS_API:71880",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5160,
+      "api_call_id": 71881,
+      "elapsed_ms": 42,
+      "module": "WMS_API:71881",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5161,
+      "api_call_id": 71883,
+      "elapsed_ms": 606,
+      "module": "WMS_API:71883",
+      "action": "GET /api/outgoing-quality/OC16.2",
+      "sql_sample": "Current warehouse QC status access"
+    },
+    {
+      "log_id": 5166,
+      "api_call_id": 71897,
+      "elapsed_ms": 631,
+      "module": "WMS_API:71897",
+      "action": "GET /api/case-pick/tasks/1151",
+      "sql_sample": "Current CASE detail READ ONLY snapshot"
+    },
+    {
+      "log_id": 5167,
+      "api_call_id": 71898,
+      "elapsed_ms": 66,
+      "module": "WMS_API:71898",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5168,
+      "api_call_id": 71907,
+      "elapsed_ms": 100,
+      "module": "WMS_API:71907",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5169,
+      "api_call_id": 71906,
+      "elapsed_ms": 115,
+      "module": "WMS_API:71906",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5170,
+      "api_call_id": 71905,
+      "elapsed_ms": 137,
+      "module": "WMS_API:71905",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5171,
+      "api_call_id": 71908,
+      "elapsed_ms": 20,
+      "module": "WMS_API:71908",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5172,
+      "api_call_id": 71918,
+      "elapsed_ms": 64,
+      "module": "WMS_API:71918",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5173,
+      "api_call_id": 71917,
+      "elapsed_ms": 68,
+      "module": "WMS_API:71917",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5174,
+      "api_call_id": 71919,
+      "elapsed_ms": 57,
+      "module": "WMS_API:71919",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5175,
+      "api_call_id": 71923,
+      "elapsed_ms": 29,
+      "module": "WMS_API:71923",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5176,
+      "api_call_id": 71929,
+      "elapsed_ms": 15,
+      "module": "WMS_API:71929",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5177,
+      "api_call_id": 71930,
+      "elapsed_ms": 21,
+      "module": "WMS_API:71930",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5178,
+      "api_call_id": 71931,
+      "elapsed_ms": 42,
+      "module": "WMS_API:71931",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5179,
+      "api_call_id": 71934,
+      "elapsed_ms": 12,
+      "module": "WMS_API:71934",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5180,
+      "api_call_id": 71941,
+      "elapsed_ms": 23,
+      "module": "WMS_API:71941",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5181,
+      "api_call_id": 71942,
+      "elapsed_ms": 30,
+      "module": "WMS_API:71942",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5182,
+      "api_call_id": 71943,
+      "elapsed_ms": 30,
+      "module": "WMS_API:71943",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5183,
+      "api_call_id": 71947,
+      "elapsed_ms": 20,
+      "module": "WMS_API:71947",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5184,
+      "api_call_id": 71953,
+      "elapsed_ms": 68,
+      "module": "WMS_API:71953",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5185,
+      "api_call_id": 71954,
+      "elapsed_ms": 62,
+      "module": "WMS_API:71954",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5186,
+      "api_call_id": 71955,
+      "elapsed_ms": 53,
+      "module": "WMS_API:71955",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5187,
+      "api_call_id": 71959,
+      "elapsed_ms": 12,
+      "module": "WMS_API:71959",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5188,
+      "api_call_id": 71967,
+      "elapsed_ms": 46,
+      "module": "WMS_API:71967",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5189,
+      "api_call_id": 71965,
+      "elapsed_ms": 70,
+      "module": "WMS_API:71965",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5190,
+      "api_call_id": 71966,
+      "elapsed_ms": 86,
+      "module": "WMS_API:71966",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5191,
+      "api_call_id": 71971,
+      "elapsed_ms": 10,
+      "module": "WMS_API:71971",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5192,
+      "api_call_id": 71978,
+      "elapsed_ms": 31,
+      "module": "WMS_API:71978",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5193,
+      "api_call_id": 71979,
+      "elapsed_ms": 63,
+      "module": "WMS_API:71979",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5194,
+      "api_call_id": 71977,
+      "elapsed_ms": 65,
+      "module": "WMS_API:71977",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5195,
+      "api_call_id": 71983,
+      "elapsed_ms": 25,
+      "module": "WMS_API:71983",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5196,
+      "api_call_id": 71991,
+      "elapsed_ms": 26,
+      "module": "WMS_API:71991",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5197,
+      "api_call_id": 71989,
+      "elapsed_ms": 26,
+      "module": "WMS_API:71989",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5198,
+      "api_call_id": 71990,
+      "elapsed_ms": 23,
+      "module": "WMS_API:71990",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5199,
+      "api_call_id": 71992,
+      "elapsed_ms": 13,
+      "module": "WMS_API:71992",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5200,
+      "api_call_id": 72003,
+      "elapsed_ms": 18,
+      "module": "WMS_API:72003",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5201,
+      "api_call_id": 72001,
+      "elapsed_ms": 19,
+      "module": "WMS_API:72001",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5202,
+      "api_call_id": 72002,
+      "elapsed_ms": 36,
+      "module": "WMS_API:72002",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5203,
+      "api_call_id": 72004,
+      "elapsed_ms": 34,
+      "module": "WMS_API:72004",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5204,
+      "api_call_id": 72013,
+      "elapsed_ms": 15,
+      "module": "WMS_API:72013",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5205,
+      "api_call_id": 72015,
+      "elapsed_ms": 22,
+      "module": "WMS_API:72015",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5206,
+      "api_call_id": 72014,
+      "elapsed_ms": 31,
+      "module": "WMS_API:72014",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    }
+  ],
+  "top_sql": [
+    {
+      "sql_id": "d7qxrbmc1n97d",
+      "executions": 506,
+      "avg_ms": 95.535,
+      "avg_buffers": 1682.11,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.prepare_command(:payload,:actor,:result,:resolution); end;"
+    },
+    {
+      "sql_id": "4a4445buyma1k",
+      "executions": 55,
+      "avg_ms": 102.98,
+      "avg_buffers": 1632.33,
+      "sql_sample": "with selected_tasks as (               select CASE_PICK_TASK_ID,PICK_WAVE_ID from (                 select t.CASE_PICK_TASK_ID,t.PICK_WAVE_ID                   from RRL_CASE_PICK_TASK t                   join RRL_PICK_WAVE w on w.PICK_WAVE_ID=t.PICK_WAVE_ID                   join RRL_CUSTOMER_ORDER co on co.CUSTOMER_ORDER_ID=t.CUSTOMER_ORDER_ID                  where 1 = 1 and RRL_ACCESS_API.allowed(:view_actor,'case_pick_view','WAREHOUSE',to_char(t.WARE_ID),t.ASSIGNED_TO)=1 and t.STATUS not in ('READY_TO_SHIP', 'CANCELLED')                  order by t.STATUS,t.CREATED_AT,t.CASE_PICK_TASK_ID  "
+    },
+    {
+      "sql_id": "9n2qv3txpfwjz",
+      "executions": 371,
+      "avg_ms": 1.464,
+      "avg_buffers": 47.26,
+      "sql_sample": "select count(*) from RUSERS u where u.ID=:actor and nvl(u.DELETED,0)=0         and exists(select 1 from RRL_WARES w where (:ware is null or w.ID=:ware)         and RRL_ACCESS_API.allowed(:actor,'case_pick_view','WAREHOUSE',to_char(w.ID),:actor)=1)"
+    },
+    {
+      "sql_id": "b9cwt8gjjs3z0",
+      "executions": 3,
+      "avg_ms": 128.368,
+      "avg_buffers": 2077.67,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.prepare_command(:1,:2,:3,:4); end;"
+    },
+    {
+      "sql_id": "24qrqv1zagxm5",
+      "executions": 100,
+      "avg_ms": 2.293,
+      "avg_buffers": 7.27,
+      "sql_sample": "select count(*),nvl(max(RRL_ACCESS_API.allowed(:actor,             'transport_dispatch_view','WAREHOUSE',RRL_STOCK_PLAN_HELPER.decimal_text(ID))),0)             from RRL_WARES where ID=:ware_id"
+    },
+    {
+      "sql_id": "9n2qv3txpfwjz",
+      "executions": 100,
+      "avg_ms": 1.746,
+      "avg_buffers": 13.96,
+      "sql_sample": "select count(*) from RUSERS u where u.ID=:actor and nvl(u.DELETED,0)=0         and exists(select 1 from RRL_WARES w where (:ware is null or w.ID=:ware)         and RRL_ACCESS_API.allowed(:actor,'case_pick_view','WAREHOUSE',to_char(w.ID),:actor)=1)"
+    },
+    {
+      "sql_id": "6z6bfsn4rm4w3",
+      "executions": 100,
+      "avg_ms": 1.55,
+      "avg_buffers": 8.08,
+      "sql_sample": "select count(*) from RRL_CASE_PICK_TASK t where t.CASE_PICK_TASK_ID=:task and RRL_ACCESS_API.allowed(:view_actor,'case_pick_view','WAREHOUSE',to_char(t.WARE_ID),t.ASSIGNED_TO)=1"
+    },
+    {
+      "sql_id": "6z6bfsn4rm4w3",
+      "executions": 249,
+      "avg_ms": 0.506,
+      "avg_buffers": 8.38,
+      "sql_sample": "select count(*) from RRL_CASE_PICK_TASK t where t.CASE_PICK_TASK_ID=:task and RRL_ACCESS_API.allowed(:view_actor,'case_pick_view','WAREHOUSE',to_char(t.WARE_ID),t.ASSIGNED_TO)=1"
+    },
+    {
+      "sql_id": "b9cwt8gjjs3z0",
+      "executions": 1,
+      "avg_ms": 79.711,
+      "avg_buffers": 1154,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.prepare_command(:1,:2,:3,:4); end;"
+    },
+    {
+      "sql_id": "4czduxvryva3w",
+      "executions": 27,
+      "avg_ms": 2.38,
+      "avg_buffers": 57.33,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_TT_HU_LOAD_FACT LF JOIN RUSERS U ON U.ID=:B1 WHERE LF.LOAD_OPERATION_ID=:B2 AND LF.WARE_ID>0 AND EXISTS(SELECT 1 FROM RRL_WARES W WHERE W.ID=LF.WARE_ID)AND NVL(U.DELETED,0)=0 AND( (RRL_HAS_WRIGHT(U.ID,'stock_posting_shipping')=1 AND(UPPER(TRIM(U.USER_GROUP))='GLOBAL_ADMIN'OR U.WARE_ID=LF.WARE_ID)) OR RRL_ACCESS_API.ALLOWED(U.ID,'stock_posting_shipping','WAREHOUSE',RRL_STOCK_PLAN_HELPER.DECIMAL_TEXT(LF.WARE_ID))=1)"
+    },
+    {
+      "sql_id": "5pnvm0fbz11ju",
+      "executions": 7,
+      "avg_ms": 3.832,
+      "avg_buffers": 75.86,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_SBORKA_PALLETS S JOIN RUSERS U ON U.ID=:B1 WHERE S.PALLET_UID=:B2 AND NVL(U.DELETED,0)=0 AND( (RRL_HAS_WRIGHT(U.ID,'stock_posting_shipping')=1 AND(UPPER(TRIM(U.USER_GROUP))='GLOBAL_ADMIN'OR U.WARE_ID=S.WARE_ID)) OR RRL_ACCESS_API.ALLOWED(U.ID,'stock_posting_shipping','WAREHOUSE',RRL_STOCK_PLAN_HELPER.DECIMAL_TEXT(S.WARE_ID))=1)"
+    },
+    {
+      "sql_id": "4czduxvryva3w",
+      "executions": 2,
+      "avg_ms": 11.579,
+      "avg_buffers": 81,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_TT_HU_LOAD_FACT LF JOIN RUSERS U ON U.ID=:B1 WHERE LF.LOAD_OPERATION_ID=:B2 AND LF.WARE_ID>0 AND EXISTS(SELECT 1 FROM RRL_WARES W WHERE W.ID=LF.WARE_ID)AND NVL(U.DELETED,0)=0 AND( (RRL_HAS_WRIGHT(U.ID,'stock_posting_shipping')=1 AND(UPPER(TRIM(U.USER_GROUP))='GLOBAL_ADMIN'OR U.WARE_ID=LF.WARE_ID)) OR RRL_ACCESS_API.ALLOWED(U.ID,'stock_posting_shipping','WAREHOUSE',RRL_STOCK_PLAN_HELPER.DECIMAL_TEXT(LF.WARE_ID))=1)"
+    }
+  ],
+  "decisions": [
+    {
+      "source": "slow",
+      "id": 5088,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5089,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5090,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5091,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5092,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5093,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5094,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5098,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5099,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5100,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5101,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5102,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5103,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5105,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5106,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5107,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5108,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5109,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5112,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5115,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5117,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5118,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5119,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5120,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5121,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5122,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5125,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5126,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5127,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5128,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5129,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5130,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5131,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5132,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5133,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5138,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5139,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5140,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5141,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5142,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5143,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5144,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5145,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5159,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5160,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5161,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5166,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5167,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5168,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5169,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5170,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5171,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5172,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5173,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5174,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5175,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5176,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5177,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5178,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5179,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5180,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5181,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5182,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5183,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5184,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5185,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5186,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5187,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5188,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5189,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5190,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5191,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5192,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5193,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5194,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5195,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5196,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5197,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5198,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5199,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5200,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5201,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5202,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5203,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5204,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5205,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5206,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "d7qxrbmc1n97d",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "4a4445buyma1k",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "9n2qv3txpfwjz",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "b9cwt8gjjs3z0",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "24qrqv1zagxm5",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "9n2qv3txpfwjz",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "6z6bfsn4rm4w3",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "6z6bfsn4rm4w3",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "b9cwt8gjjs3z0",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "4czduxvryva3w",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "5pnvm0fbz11ju",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "4czduxvryva3w",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    }
+  ],
+  "native_direct_cases_not_http_paired": true,
+  "invalid": 0,
+  "errors": 0,
+  "local_pairs_observed": 364,
+  "local_missing_ids": [],
+  "max_http_ms": 1742,
+  "performance_not_load_or_p95": true
+}

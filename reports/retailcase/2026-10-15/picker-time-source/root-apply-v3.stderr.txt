@@ -1,0 +1,24 @@
+ERROR installed_guard.sql:2: ORA-20886: ORA-20886: PICKER_TIME_INSTALLED_DRIFT:RRL_PICKER_TIME_EVENT_OP_IX:INDEX
+ORA-06512: на  line 2
+ORA-06512: на  line 24
+ORA-06512: на  line 126
+https://docs.oracle.com/error-help/db/ora-20886/
+SQL: declare n number; a clob; actual_hash varchar2(64); condition_value varchar2(4000);
+Unhandled exception. Oracle.ManagedDataAccess.Client.OracleException (0x80004005): ORA-20886: PICKER_TIME_INSTALLED_DRIFT:RRL_PICKER_TIME_EVENT_OP_IX:INDEX
+ORA-06512: на  line 2
+ORA-06512: на  line 24
+ORA-06512: на  line 126
+https://docs.oracle.com/error-help/db/ora-20886/
+   at OracleInternal.ServiceObjects.OracleConnectionImpl.VerifyExecution(Int32& cursorId, Boolean bThrowArrayBindRelatedErrors, SqlStatementType sqlStatementType, Int32 arrayBindCount, OracleException& exceptionForArrayBindDML, Boolean& hasMoreRowsInDB, Boolean bFirstIterationDone)
+   at OracleInternal.ServiceObjects.OracleCommandImpl.VerifyExecution(OracleConnectionImpl connectionImpl, Int32& cursorId, Boolean bThrowArrayBindRelatedErrors, OracleException& exceptionForArrayBindDML, Boolean& hasMoreRowsInDB, Boolean bFirstIterationDone)
+   at OracleInternal.ServiceObjects.OracleCommandImpl.ExecuteNonQueryAsync(String commandText, OracleParameterCollection paramColl, CommandType commandType, OracleConnectionImpl connectionImpl, Int32 longFetchSize, Int64 clientInitialLOBFS, OracleDependencyImpl orclDependencyImpl, OracleConnection connection, ENQ_RefAndOutParamArgCtx enq_refOutArgCtx, Boolean isFromEF, Boolean bAsync)
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteNonQueryInternalAsync(Boolean bAsync, CancellationToken cancellationToken)
+   at Oracle.ManagedDataAccess.Client.OracleCommand.ExecuteNonQueryAsyncHelper(CancellationToken cancellationToken)
+   at SqlPlusLikeRunner.ExecuteAsync(String sql, String path, Int32 lineNo) in C:\projects\TMS\tools\oracle_apply\Program.cs:line 246
+   at SqlPlusLikeRunner.ExecuteAsync(String sql, String path, Int32 lineNo) in C:\projects\TMS\tools\oracle_apply\Program.cs:line 265
+   at SqlPlusLikeRunner.RunFileAsync(String path) in C:\projects\TMS\tools\oracle_apply\Program.cs:line 205
+   at SqlPlusLikeRunner.RunFileAsync(String path) in C:\projects\TMS\tools\oracle_apply\Program.cs:line 190
+   at SqlPlusLikeRunner.RunFileAsync(String path) in C:\projects\TMS\tools\oracle_apply\Program.cs:line 190
+   at Program.<Main>$(String[] args) in C:\projects\TMS\tools\oracle_apply\Program.cs:line 84
+   at Program.<Main>$(String[] args) in C:\projects\TMS\tools\oracle_apply\Program.cs:line 87
+   at Program.<Main>(String[] args)

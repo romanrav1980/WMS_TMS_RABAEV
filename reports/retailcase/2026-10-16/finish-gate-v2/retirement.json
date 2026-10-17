@@ -1,0 +1,892 @@
+{
+  "state": "PASS_16_TEST_USERS_17_ASSIGNMENTS_15_ROLES_4_GROUPS_3_RESOURCES_2_DEVICES_RETIRED_HISTORY_RETAINED",
+  "commands": {
+    "FINAL16.2240.0": {
+      "wire": {
+        "operation_id": "FINAL16.2240.0",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "DD16.a7bc0b7073.DRIVER.EXPIRED",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.0",
+        "command_type": "REVOKE",
+        "object_id": "DD16.a7bc0b7073.DRIVER.EXPIRED",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.1": {
+      "wire": {
+        "operation_id": "FINAL16.2240.1",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "DD16.a7bc0b7073.DRIVER.RESTORED",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.1",
+        "command_type": "REVOKE",
+        "object_id": "DD16.a7bc0b7073.DRIVER.RESTORED",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.2": {
+      "wire": {
+        "operation_id": "FINAL16.2240.2",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "DD16.a7bc0b7073.IND.APPROVER.WARE",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.2",
+        "command_type": "REVOKE",
+        "object_id": "DD16.a7bc0b7073.IND.APPROVER.WARE",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.3": {
+      "wire": {
+        "operation_id": "FINAL16.2240.3",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "DD16.a7bc0b7073.IND.AUTHOR.WARE",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.3",
+        "command_type": "REVOKE",
+        "object_id": "DD16.a7bc0b7073.IND.AUTHOR.WARE",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.4": {
+      "wire": {
+        "operation_id": "FINAL16.2240.4",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "DD16.a7bc0b7073.MANAGE",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.4",
+        "command_type": "REVOKE",
+        "object_id": "DD16.a7bc0b7073.MANAGE",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.5": {
+      "wire": {
+        "operation_id": "FINAL16.2240.5",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "DD16.a7bc0b7073.MANDATE",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.5",
+        "command_type": "REVOKE",
+        "object_id": "DD16.a7bc0b7073.MANDATE",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.6": {
+      "wire": {
+        "operation_id": "FINAL16.2240.6",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "DD16.a7bc0b7073.EXPIRED",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.6",
+        "command_type": "REVOKE",
+        "object_id": "DD16.a7bc0b7073.EXPIRED",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.7": {
+      "wire": {
+        "operation_id": "FINAL16.2240.7",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "OC16.1a524b2458.FULL.GROUP",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.7",
+        "command_type": "REVOKE",
+        "object_id": "OC16.1a524b2458.FULL.GROUP",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.8": {
+      "wire": {
+        "operation_id": "FINAL16.2240.8",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "FW16.fc9538d7c6.NARROW",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.8",
+        "command_type": "REVOKE",
+        "object_id": "FW16.fc9538d7c6.NARROW",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.9": {
+      "wire": {
+        "operation_id": "FINAL16.2240.9",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "FW16.fc9538d7c6.GROUP",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.9",
+        "command_type": "REVOKE",
+        "object_id": "FW16.fc9538d7c6.GROUP",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.10": {
+      "wire": {
+        "operation_id": "FINAL16.2240.10",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "MT16.926cdde30a.PROOF.LOGIN",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.10",
+        "command_type": "REVOKE",
+        "object_id": "MT16.926cdde30a.PROOF.LOGIN",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.11": {
+      "wire": {
+        "operation_id": "FINAL16.2240.11",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "MT16.926cdde30a.UI.READ.WARE",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.11",
+        "command_type": "REVOKE",
+        "object_id": "MT16.926cdde30a.UI.READ.WARE",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.12": {
+      "wire": {
+        "operation_id": "FINAL16.2240.12",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "MT16.926cdde30a.GROUP",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.12",
+        "command_type": "REVOKE",
+        "object_id": "MT16.926cdde30a.GROUP",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.13": {
+      "wire": {
+        "operation_id": "FINAL16.2240.13",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "MT16.926cdde30a.EXEC",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.13",
+        "command_type": "REVOKE",
+        "object_id": "MT16.926cdde30a.EXEC",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.14": {
+      "wire": {
+        "operation_id": "FINAL16.2240.14",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "OC16A1a524b2458",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.14",
+        "command_type": "REVOKE",
+        "object_id": "OC16A1a524b2458",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.15": {
+      "wire": {
+        "operation_id": "FINAL16.2240.15",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "OC16A2c449407d2",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.15",
+        "command_type": "REVOKE",
+        "object_id": "OC16A2c449407d2",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.16": {
+      "wire": {
+        "operation_id": "FINAL16.2240.16",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "OC16.2c449407d2.SHIP.GROUP",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.16",
+        "command_type": "REVOKE",
+        "object_id": "OC16.2c449407d2.SHIP.GROUP",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.17": {
+      "wire": {
+        "operation_id": "FINAL16.2240.17",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "DD16.a7bc0b7073.DRIVER",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "driver_return_accept"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.17",
+        "command_type": "ROLE_SAVE",
+        "object_id": "DD16.a7bc0b7073.DRIVER",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.18": {
+      "wire": {
+        "operation_id": "FINAL16.2240.18",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "DD16.a7bc0b7073.IND.APPROVER",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "expense_finance_approve",
+            "expense_logist_approve"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.18",
+        "command_type": "ROLE_SAVE",
+        "object_id": "DD16.a7bc0b7073.IND.APPROVER",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.19": {
+      "wire": {
+        "operation_id": "FINAL16.2240.19",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "DD16.a7bc0b7073.IND.AUTHOR",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "edit_bill_tt",
+            "expense_finance_approve",
+            "expense_logist_approve"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.19",
+        "command_type": "ROLE_SAVE",
+        "object_id": "DD16.a7bc0b7073.IND.AUTHOR",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.20": {
+      "wire": {
+        "operation_id": "FINAL16.2240.20",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "DD16Aa7bc0b7073",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "access_assign_manage"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.20",
+        "command_type": "ROLE_SAVE",
+        "object_id": "DD16Aa7bc0b7073",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.21": {
+      "wire": {
+        "operation_id": "FINAL16.2240.21",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "DD16Va7bc0b7073",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "transport_dispatch_view"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.21",
+        "command_type": "ROLE_SAVE",
+        "object_id": "DD16Va7bc0b7073",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.22": {
+      "wire": {
+        "operation_id": "FINAL16.2240.22",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "FH16R1886d6a9a7",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "stock_posting_shipping",
+            "transport_dispatch_close"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.22",
+        "command_type": "ROLE_SAVE",
+        "object_id": "FH16R1886d6a9a7",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.23": {
+      "wire": {
+        "operation_id": "FINAL16.2240.23",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "FW16Efc9538d7c6",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "expense_finance_approve"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.23",
+        "command_type": "ROLE_SAVE",
+        "object_id": "FW16Efc9538d7c6",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.24": {
+      "wire": {
+        "operation_id": "FINAL16.2240.24",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "FW16Rfc9538d7c6",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "create_tt_price",
+            "transport_dispatch_view"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.24",
+        "command_type": "ROLE_SAVE",
+        "object_id": "FW16Rfc9538d7c6",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.25": {
+      "wire": {
+        "operation_id": "FINAL16.2240.25",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "FW16Sfc9538d7c6",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "wms_admin_login"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.25",
+        "command_type": "ROLE_SAVE",
+        "object_id": "FW16Sfc9538d7c6",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.26": {
+      "wire": {
+        "operation_id": "FINAL16.2240.26",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "MT16.926cdde30a.UI.READ",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "transport_dispatch_view",
+            "warehouse_task_view"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.26",
+        "command_type": "ROLE_SAVE",
+        "object_id": "MT16.926cdde30a.UI.READ",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.27": {
+      "wire": {
+        "operation_id": "FINAL16.2240.27",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "MT16E926cdde30a",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_execute"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.27",
+        "command_type": "ROLE_SAVE",
+        "object_id": "MT16E926cdde30a",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.28": {
+      "wire": {
+        "operation_id": "FINAL16.2240.28",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 2,
+          "role_id": "MT16R926cdde30a",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_manage",
+            "case_pick_view"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.28",
+        "command_type": "ROLE_SAVE",
+        "object_id": "MT16R926cdde30a",
+        "version": 3,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.29": {
+      "wire": {
+        "operation_id": "FINAL16.2240.29",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "OC16R1a524b2458",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_execute"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.29",
+        "command_type": "ROLE_SAVE",
+        "object_id": "OC16R1a524b2458",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.30": {
+      "wire": {
+        "operation_id": "FINAL16.2240.30",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "OC16R2c449407d2",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_execute"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.30",
+        "command_type": "ROLE_SAVE",
+        "object_id": "OC16R2c449407d2",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.31": {
+      "wire": {
+        "operation_id": "FINAL16.2240.31",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "UL16R0970ab3741",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "stock_posting_shipping"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.31",
+        "command_type": "ROLE_SAVE",
+        "object_id": "UL16R0970ab3741",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.32": {
+      "wire": {
+        "operation_id": "FINAL16.2240.32",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 7,
+          "group_id": "FH16G1886d6a9a7",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20902283"
+            }
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.32",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FH16G1886d6a9a7",
+        "version": 8,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.33": {
+      "wire": {
+        "operation_id": "FINAL16.2240.33",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 5,
+          "group_id": "FW16Gfc9538d7c6",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20902283"
+            }
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.33",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FW16Gfc9538d7c6",
+        "version": 6,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.34": {
+      "wire": {
+        "operation_id": "FINAL16.2240.34",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 5,
+          "group_id": "MT16G926cdde30a",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20902283"
+            }
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.34",
+        "command_type": "GROUP_SAVE",
+        "object_id": "MT16G926cdde30a",
+        "version": 6,
+        "replayed": false
+      }
+    },
+    "FINAL16.2240.35": {
+      "wire": {
+        "operation_id": "FINAL16.2240.35",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 3,
+          "group_id": "UL16G0970ab3741",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20266481"
+            }
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FINAL16.2240.35",
+        "command_type": "GROUP_SAVE",
+        "object_id": "UL16G0970ab3741",
+        "version": 4,
+        "replayed": false
+      }
+    }
+  },
+  "steps": [
+    {
+      "label": "logout:73",
+      "result": null
+    },
+    {
+      "label": "logout:72",
+      "result": null
+    },
+    {
+      "label": "logout:74",
+      "result": null
+    },
+    {
+      "label": "qualification:77:CASE_PICK",
+      "result": {
+        "resource_id": 77,
+        "task_type": "CASE_PICK",
+        "active": false
+      }
+    },
+    {
+      "label": "qualification:76:CASE_PICK",
+      "result": {
+        "resource_id": 76,
+        "task_type": "CASE_PICK",
+        "active": false
+      }
+    },
+    {
+      "label": "qualification:78:CASE_PICK",
+      "result": {
+        "resource_id": 78,
+        "task_type": "CASE_PICK",
+        "active": false
+      }
+    },
+    {
+      "label": "device:AS16Ddc48b9c2aa",
+      "result": {
+        "device_id": "AS16Ddc48b9c2aa",
+        "device_policy_version": 2,
+        "active": false,
+        "device_mode": "TEST",
+        "basis": "GROSS"
+      }
+    },
+    {
+      "label": "device:AS16D410f14b915",
+      "result": {
+        "device_id": "AS16D410f14b915",
+        "device_policy_version": 2,
+        "active": false,
+        "device_mode": "TEST",
+        "basis": "GROSS"
+      }
+    }
+  ],
+  "http": [
+    {
+      "path": "/api/picking/waves/588/finish-execution",
+      "status": 200,
+      "api_call_id": "71896",
+      "request_id": "b413fe8d-ae38-475d-ac01-d96e7b6c8c7d"
+    }
+  ],
+  "identities_inactive": true,
+  "finished_wave": {
+    "wave_id": 588,
+    "kind": "CUSTOMER_ORDER",
+    "items": [
+      {
+        "kind": "PICK_TASK",
+        "id": "2157",
+        "status": "DONE",
+        "actor": null,
+        "reason": null,
+        "quantity": "25"
+      },
+      {
+        "kind": "REPLENISHMENT",
+        "id": "1655",
+        "status": "CANCELLED",
+        "actor": null,
+        "reason": null,
+        "quantity": null
+      },
+      {
+        "kind": "CASE",
+        "id": "1151",
+        "status": "SHIPPED",
+        "actor": "MT16T926cdde30a",
+        "reason": null,
+        "quantity": "25"
+      }
+    ],
+    "blocking_count": 0,
+    "completion_outcome": "PHYSICAL_EXECUTION_COMPLETE",
+    "operation_id": "OC16.1a524b2458.FINAL.FINISH",
+    "status": "DONE",
+    "completed": true,
+    "ready": false,
+    "outbox_id": 5693
+  }
+}

@@ -16,11 +16,20 @@ def replay(gateway: Any, task_id: int, request: Any) -> bool:
     return True
 
 def validate(gateway: Any, task_id: int, request: Any) -> None:
-    rows=gateway.fetch_all("""select SSCC,PICKED_QTY,CONTENT_VERSION,ASSIGNED_TO,RESOURCE_SESSION_ID
+    rows=gateway.fetch_all("""select SSCC,PICKED_QTY,CONTENT_VERSION,ASSIGNED_TO,RESOURCE_SESSION_ID,ASSIGNMENT_VERSION
         from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:task_id""",{"task_id":task_id})
     if not rows:raise HTTPException(404,detail="CASE task not found")
     task=rows[0]
-    if Decimal(str(task["picked_qty"] or 0))<=0:return
+    if (request.expected_assignment_version is not None
+        and request.expected_assignment_version!=task["assignment_version"]):
+        raise HTTPException(409,detail={"code":"CASE_HANDOFF_STALE_ASSIGNMENT_VERSION"})
+    if Decimal(str(task["picked_qty"] or 0))<=0:
+        if request.expected_content_version is not None and (
+            request.expected_content_version!=task["content_version"]
+            or request.expected_assigned_to!=task["assigned_to"]
+            or request.expected_from_session_id!=task["resource_session_id"]):
+            raise HTTPException(409,detail={"code":"CASE_HANDOFF_STALE_OWNER_OR_CONTENT"})
+        return
     if (not request.offline_event_id or not request.scan_container or request.expected_content_version is None
         or not request.expected_assigned_to):
         raise HTTPException(409,detail={"code":"CASE_PHYSICAL_HANDOFF_CONFIRMATION_REQUIRED"})

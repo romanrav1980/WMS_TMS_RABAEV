@@ -1,0 +1,15 @@
+{
+  "state": "PASS_WINDOW_AND_LOADING_SCOPE_CLEAR_UI_FIXTURES",
+  "denialClearsTripAndWindow": true,
+  "measurementsNotReusedAcrossTrip": true,
+  "newTripClearsBeforeNetwork": true,
+  "nativeLoadPanelAccessible": true,
+  "fixture": true,
+  "nativeWrites": 0,
+  "explicitMoscowOffset": true,
+  "exactRetryAfterReload": true,
+  "unknownBlocksDeparture": true,
+  "versionConflictArchiveReread": true,
+  "damagedPreserved": true,
+  "errors": []
+}

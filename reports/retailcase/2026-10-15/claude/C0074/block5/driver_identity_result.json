@@ -1,0 +1,12 @@
+{
+ "driverRequests": [
+  {
+   "path": "/api/driver/trips",
+   "user": "no_such_driver_c0074",
+   "cookie": false
+  }
+ ],
+ "driverStatus": 401,
+ "screen": "🚛 Рабочее место водителя Войдите своей учётной записью. Доступ к рейсам определяется привязкой водителя. ID водителя Пользователь Пароль Войти Error: Admin login required.",
+ "inheritedAdmin": false
+}

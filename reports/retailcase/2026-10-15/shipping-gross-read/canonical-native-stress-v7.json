@@ -1,0 +1,36 @@
+{
+  "status": "PASS_PURE_ANONYMOUS_NATIVE_ONLY",
+  "source_sha256": "617b394cd096795755141c9ce16e45718e684674c1f063d3a4df6b94c6cf548a",
+  "tested_at": "2026-10-15T23:13:26.010511+00:00",
+  "binary_pairs": 17,
+  "ddl": false,
+  "business_writes": false,
+  "variants": [
+    {
+      "nls_sort": "BINARY",
+      "nls_comp": "BINARY",
+      "result": {
+        "object": {
+          "a": 2,
+          "rus": "\u0416",
+          "z": 1
+        },
+        "array": [
+          {
+            "uid": "a"
+          },
+          {
+            "uid": "b"
+          },
+          {
+            "uid": "\u0430"
+          }
+        ],
+        "large_item_characters": 33024,
+        "max_sort_items": 1000,
+        "hash": "F04771A61B4B16A84254FCF6E78C798ABF687FAEC0605A2AE7CD797CD11B25E2"
+      },
+      "probe_ms": 3795.201
+    }
+  ]
+}

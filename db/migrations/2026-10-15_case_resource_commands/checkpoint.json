@@ -1,0 +1,122 @@
+{
+  "migration_id": "2026-10-15-case-resource-commands",
+  "status": "APPLIED_NATIVE_API_VERIFIED_QA_ACTIVE_UI_HOLD",
+  "before": [
+    {
+      "name": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE",
+      "native_sha256": "5D935C287E7D1CDB1D4D1664480724F01B8ACF610E8DC9D2E7F53E3DE339E30A"
+    },
+    {
+      "name": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE BODY",
+      "native_sha256": "4B5DC26CCF434FA78081D791B7E6A7A7214B8E9E9EE209C90875836C04986C33"
+    },
+    {
+      "name": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE",
+      "native_sha256": "D7367AA1BAC23B38B6B8403A5270FA93BC36BC5F44B4398777B6212ECFD7BE25"
+    },
+    {
+      "name": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE BODY",
+      "native_sha256": "DCD22AFBE1E3B1CD342FF69BE24925AAA6F82F87DFD601849B29EFA3EBD2A01B"
+    },
+    {
+      "name": "RRL_CASE_START_TIME_GUARD",
+      "type": "TRIGGER",
+      "native_sha256": "B99C3C94BFE509B6C488BBB24FCDB233558D1B3BCEE7AF1811512813276C8C15"
+    }
+  ],
+  "invalid_before": 0,
+  "ownership": {
+    "root_sprint_empty_trip": [
+      "CASE_TASK_ACCESS",
+      "CASE_RESOURCE_POLICY",
+      "CASE_START_TIME_GUARD",
+      "new CASE_ASSIGNMENT owners/contracts/native/metadata revision"
+    ],
+    "store_navigation": [
+      "WAREHOUSE_TASK_ACCESS",
+      "TASK_RESOURCE_POLICY",
+      "WH queue only; noCASE edits"
+    ],
+    "root": [
+      "Oracle review/apply/public composition/1136 quantitative phase"
+    ]
+  },
+  "business_writes": "NONE;1136untouched",
+  "effects": "Metadata CASE assignment/start only; no quantity commands; activelegacyroutes unchanged",
+  "receipts": "APPLIED or exact whitelisted 20886 REJECTED after full currentauth+fences; no403/unknown/systemterminal receipt",
+  "sha256": {
+    "apply.sql": "dba9c64f883024ec4254a9e82b28e07c225edc31cd63bbaf2cf7cf1545502b61",
+    "before.sql": "538e23939687b7f2c5245781be33d0075961a4bc8776f56961078c2a36da23cb",
+    "before_case_access_body.sql": "7492fce2f408ccd59db71739c4f20fca2f7712cb67ea0d2f4940de788f50a25a",
+    "before_case_access_spec.sql": "d45d29872c8d6144a7d30fefae17c70b60365e0629af5e45432f66b7838c91c0",
+    "before_resource_policy_body.sql": "d0f4a7b92057fc103a7bdeb4c2f76186a7b965cea712e58dc2c536ca3352fca7",
+    "before_resource_policy_spec.sql": "931d03b564933bf7cee4d67ba83ba56b6004c8258870b8729e6664ce4588233b",
+    "before_start_guard.sql": "f4c9732dfe45a380724ea3bc5d7ca86b6a7c311f18615d7c2322d1c7f174d12e",
+    "body.sql": "06850fc1ba673dda0c5548ade134d1f040153cd3b609e5f647d6d3346ee858c2",
+    "case_access_body.sql": "0898993f2f978aeff0937610135ebae15c63b77a765524deeadb31e8f84204e7",
+    "case_access_spec.sql": "a2eb077caf41c5940dd5d0e5697af768884c2814b0d751a57402a5c29fbdae3c",
+    "resource_policy_body.sql": "4d085c19d5860accb1400da8fbbd4f3d93b4cedff321c99cc5c71f338f2c19ce",
+    "rollback.sql": "920d229187f25bb38953d0bed2cf215d14b37915b8d965c079e351a06b43b1ca",
+    "schema.sql": "851c399ed2f4711ce4736f0dfb27e54c3c82762fc7a0045e49be26985e8c573d",
+    "spec.sql": "00ecd77cddb6e3b1ffc7157b1f4082f98c491e9ceb2e4f03bf84e95274ff8bdd",
+    "start_guard.sql": "4e5ecc060ff249ccd19db4048960883f99a3d263f17dbf9641f00350830bf3ec",
+    "verify.sql": "e08219c3c238650ca34a6dec278e1776e3899070a2604dcfefc81082723952fc",
+    "version_guard.sql": "6250f9dee7b6b1f6061012796b60a9bdc95a3715e43ce85cb08c48a28bf1448e"
+  },
+  "review_notes": [
+    "Derived assignmentversion allowners; explicitSET forbidden, includingtrustedowner",
+    "Currentauth+savedreceipt before newexecutionordinaryeligibility",
+    "Whitelistknown20886 only; rollbacktosavepoint then immutableREJECTED, 403/system notterminal",
+    "Requested sessionID journal deliberately noFK to preserve auditable missing-session REJECTED",
+    "Native scoped branch ownACTIVEsession andactualshiftWARE; legacy/GLOBALbranchunchanged",
+    "NoCASEROOT quantitypackage/StockPosting changes",
+    "Native scoped CLAIM requires OPEN shift within actual start/finish; legacy planned CLAIM unchanged",
+    "INSERT NULL or zero assignment version normalized to server zero for ROWTYPE compatibility; nonzero insert and any explicit UPDATE forbidden"
+  ],
+  "event_parity": "ExistingCASEjournal only; newevent actualresource/session/equipment/reason populated; no inventedwarehouseTASK busyflags/resourcefacts",
+  "replacement_semantics": "Native-onlynonnullsession/equipment change requires CASE_USE_EXPLICIT_TRANSFER evenbeforepick; flatbrancholdsemantics unchanged",
+  "apply_evidence": {
+    "coordinator_statements": 17,
+    "coordinator_errors": 0,
+    "independent_sources_exact": 9,
+    "invalid": 0,
+    "assignment_version_default": 0,
+    "resource_task_index": "VALID",
+    "context_namespace": "FUNCTIONAL: native current1136 known REJECTED receipt inserted under trusted context then caller rollback; ALL_CONTEXT was misinterpreted as namespace catalog",
+    "business_acceptance": "NOT_RUN",
+    "fixture1136_unchanged_at_verification": {
+      "content_version": 3,
+      "picked_qty": 1,
+      "status": "WAIT_CONTROL",
+      "assignment_version": 0,
+      "source_P": 23,
+      "source_H": 0,
+      "source_version": 11
+    }
+  },
+  "correction": "Previous absent-context inference withdrawn. Root CREATE CONTEXT returned ORA00955, changed nothing; do not retry/drop. Separate runtime proof PASS; currentcase/source/events/receipts exact rollback.",
+  "business_acceptance": {
+    "fixture": 1138,
+    "native_caller_rollback_groups": 12,
+    "actual_http_groups": 10,
+    "metadata_transitions": 2,
+    "goods_pick_commands": 0,
+    "source_parent": "P23/H1 unchanged during metadata acceptance; childP1/H0 retained",
+    "assignment_version": 2,
+    "role_versions": [
+      1,
+      2,
+      3
+    ],
+    "actual_revoke_wait": "V$SESSION observed while native metadata held REV SHARE; rollback releases; revoked receipts403; restoredv3",
+    "own_session_choices_native_guard_groups": 5,
+    "cleanup": "PREPARED ONLY; actor/session55/BOOK/reserve remain active on root UI HOLD",
+    "limits": "Actual10HTTPwritegroups WARE/SELF; GROUP/NETWORK/DC10pure-readadmission only, no Stock command after dirtyACCESS TX. Ownsession guard probe boundaries documented; hardware/UI separate.",
+    "group_network_dc_pure_read_groups": 10,
+    "group_network_dc_metadata_commits": 0
+  }
+}

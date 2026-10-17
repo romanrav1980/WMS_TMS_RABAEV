@@ -1,0 +1,49 @@
+{
+  "status": "APPLIED_REQUIRES_READBACK",
+  "at_utc": "2026-10-15T17:51:50.135441+00:00",
+  "identity": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "manifest_sha256": "3d798a55aaa2bd1040a11d448c2e8df42510cfdd9a1d37c5f2843d69ad63c8d4",
+  "files": [
+    {
+      "candidate": "tmp/picker_time_read_parser_before_body.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_read_parser/before_body.sql",
+      "sha256": "c98e5f618c5aa17e9f51e4d215a2ac9206c7db5fa0a24d609dafac403c615883",
+      "bytes": 4470
+    },
+    {
+      "candidate": "tmp/picker_time_read_parser_body.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_read_parser/body.sql",
+      "sha256": "6d02bb758c2e26d3da3bcec7d3471320966e64222b7a79d8cb4a2fed0c9919e7",
+      "bytes": 5188
+    },
+    {
+      "candidate": "tmp/picker_time_read_parser_before.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_read_parser/before.sql",
+      "sha256": "1a785d1aff26507372e9059cf3e882f5bb76ee78dc9aa739e16ff069be5eeb1e",
+      "bytes": 2172
+    },
+    {
+      "candidate": "tmp/picker_time_read_parser_verify.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_read_parser/verify.sql",
+      "sha256": "0b3d397362b114c6bc95e02077ff5e7d59fc3510e8e8f97904398707f6d654f6",
+      "bytes": 2172
+    },
+    {
+      "candidate": "tmp/picker_time_read_parser_apply.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_read_parser/apply.sql",
+      "sha256": "5ce2541248faa31c20f875ac0143c617d203707b20435a33916e5b2b58462413",
+      "bytes": 657
+    },
+    {
+      "candidate": "tmp/picker_time_read_parser_rollback.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_read_parser/rollback.sql",
+      "sha256": "5db0a89479dc58314a9701098a58d959b0d6a54d3d67e8bdfe4a8ce71f2cb6ab",
+      "bytes": 610
+    }
+  ],
+  "quantity_writes": false,
+  "returncode": 0
+}

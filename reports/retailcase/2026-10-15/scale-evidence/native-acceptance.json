@@ -1,0 +1,71 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "kind": "STORE_RECEIPT",
+      "archive": "MATCHED",
+      "read_replay": "EXACT",
+      "wrong_hash": "REJECTED",
+      "changed_body": "CONFLICT",
+      "null_protocol": "REJECTED",
+      "foreign": "DENIED",
+      "revoked": "DENIED"
+    },
+    {
+      "kind": "WAREHOUSE_PICK",
+      "archive": "MATCHED",
+      "read_replay": "EXACT",
+      "wrong_hash": "REJECTED",
+      "changed_body": "CONFLICT",
+      "null_protocol": "REJECTED",
+      "foreign": "DENIED",
+      "revoked": "DENIED"
+    },
+    {
+      "kind": "WAREHOUSE_FINAL",
+      "archive": "MATCHED",
+      "read_replay": "EXACT",
+      "wrong_hash": "REJECTED",
+      "changed_body": "CONFLICT",
+      "null_protocol": "REJECTED",
+      "foreign": "DENIED",
+      "revoked": "DENIED"
+    },
+    {
+      "case": "missing_capture",
+      "binding": "PENDING",
+      "no_capture_created": true
+    },
+    {
+      "case": "direct_dml",
+      "insert": "DENIED",
+      "update": "DENIED",
+      "delete": "DENIED"
+    },
+    {
+      "case": "changed_current_device_sender",
+      "original_sender_binding": "DENIED",
+      "all_metadata_rolled_back": true
+    }
+  ],
+  "timings": [
+    {
+      "kind": "STORE_RECEIPT",
+      "archive_ms": 21.49
+    },
+    {
+      "kind": "WAREHOUSE_PICK",
+      "archive_ms": 11.6
+    },
+    {
+      "kind": "WAREHOUSE_FINAL",
+      "archive_ms": 9.29
+    }
+  ],
+  "raw_observations": "TEST_FIXTURE_NOT_HARDWARE",
+  "business_commit": false,
+  "stock_effect": "NONE",
+  "source_capture_changes": 0,
+  "evidence_count_restored": true,
+  "historical_QA_senders_temporarily_undeleted_then_restored": true
+}

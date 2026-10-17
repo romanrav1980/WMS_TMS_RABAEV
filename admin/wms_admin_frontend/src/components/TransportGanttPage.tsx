@@ -1,3 +1,4 @@
+import { adminAuthorization, adminBasicAuth } from "../api";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TransportTimePreflight } from "./TransportTimePreflight";
 import { CHART_W, GanttOffAxis, GridLines, HEADER_H, minToPx, OpBlock, ROW_H, TimeAxisRow, useInitialGanttScroll } from "./TransportGanttAxis";
@@ -6,10 +7,9 @@ import { localDayIso, planText, scrollTargetMin, spanOf, stampText, upcomingOps 
 // Constants
 // ---------------------------------------------------------------------------
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
-const API_BASIC_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
 
 function apiHeaders(extra: HeadersInit = {}): HeadersInit {
-  return { Authorization: `Basic ${btoa(API_BASIC_AUTH)}`, ...extra };
+  return { Authorization: adminAuthorization(), ...extra };
 }
 
 // ---------------------------------------------------------------------------
@@ -681,7 +681,7 @@ export function TransportGanttPage({ onBack }: { onBack: () => void }) {
                 </div>
               ))}
             </div>
-            <div className="gantt-card-body"><TransportTimePreflight key={taskCard.tt_id} tripId={taskCard.tt_id} apiBase={API_BASE} headers={apiHeaders()} actor={API_BASIC_AUTH.split(":")[0]} /></div><div className="gantt-card-actions">
+            <div className="gantt-card-body"><TransportTimePreflight key={taskCard.tt_id} tripId={taskCard.tt_id} apiBase={API_BASE} headers={apiHeaders()} actor={adminBasicAuth().split(":")[0]} /></div><div className="gantt-card-actions">
               <button className="gantt-card-close-btn" onClick={() => setTaskCard(null)}>Закрыть</button>
             </div>
           </div>

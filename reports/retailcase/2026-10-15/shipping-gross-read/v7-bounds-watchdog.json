@@ -1,0 +1,7 @@
+{
+  "timeout_seconds": 20,
+  "read_only": true,
+  "returncode": 0,
+  "stdout": "CASE small_item\nCASE large_item\nCASE aggregate_work\nCASE duplicate_id\nCASE case_distinct_not_duplicate\n{\"state\": \"PASS_PURE_NATIVE_EARLY_BOUNDS\", \"checks\": [{\"name\": \"small_item\", \"expected\": \"SHIPPING_GROSS_SMALL_SORT_ITEM_BOUND\", \"ms\": 10.498}, {\"name\": \"large_item\", \"expected\": \"SHIPPING_GROSS_SORT_WORK_BOUND\", \"ms\": 8.799}, {\"name\": \"aggregate_work\", \"expected\": \"SHIPPING_GROSS_SORT_WORK_BOUND\", \"ms\": 610.262}, {\"name\": \"duplicate_id\", \"expected\": \"SHIPPING_GROSS_SORT_ID_DUPLICATE\", \"ms\": 89.103}, {\"name\": \"case_distinct_not_duplicate\", \"expected\": null, \"ms\": 95.594}]}\n",
+  "stderr": ""
+}

@@ -1,0 +1,9 @@
+-- running C:\projects\TMS\db\migrations\2026-10-15_warehouse_empty_scoped\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_warehouse_empty_scoped\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_warehouse_empty_scoped\before_source_guard.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_warehouse_empty_scoped\history_baseline_guard.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_warehouse_empty_scoped\resource_policy_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_warehouse_empty_scoped\queue_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_warehouse_empty_scoped\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_warehouse_empty_scoped\after_source_guard.sql
+Done. Statements=9; Errors=0; AbsentCleanup=0

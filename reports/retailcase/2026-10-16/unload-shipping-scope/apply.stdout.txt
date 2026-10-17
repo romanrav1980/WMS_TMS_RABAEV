@@ -1,0 +1,9 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_unload_shipping_scope\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unload_shipping_scope\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unload_shipping_scope\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unload_shipping_scope\rrl_stock_unload_cmd_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unload_shipping_scope\rrl_stock_posting_api_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unload_shipping_scope\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unload_shipping_scope\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unload_shipping_scope\after_sources.sql
+Done. Statements=8; Errors=0; AbsentCleanup=0

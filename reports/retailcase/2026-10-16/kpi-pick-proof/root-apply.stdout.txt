@@ -1,0 +1,8 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_kpi_pick_proof\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_kpi_pick_proof\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_kpi_pick_proof\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_kpi_pick_proof\rrl_stock_case_pick_cmd_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_kpi_pick_proof\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_kpi_pick_proof\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_kpi_pick_proof\after_sources.sql
+Done. Statements=7; Errors=0; AbsentCleanup=0

@@ -1,0 +1,26 @@
+{
+ "status": "PASS",
+ "fixtures": "UI_FIXTURES_INTERCEPTED_API_NOT_NATIVE_OR_HARDWARE",
+ "checks": [
+  "manual_default_validation_390_no_overflow",
+  "source_switch_clears_unsent_choice_both_directions",
+  "pending_draft_exact_bytes_retry_after_reload",
+  "act_shows_entered_by_user",
+  "scale_source_body_and_act",
+  "desktop_help_url"
+ ],
+ "result": {
+  "manualHint": "Будет передано 12.450 кг · введено пользователем · разница с отгрузкой +0,450 кг (предварительно; допуск проверит сервер).",
+  "summary": "Проверьте итог\nГрузовое место\nPALLET-1\nСпособ приёмки\nВес и фото\nСтрок состава\n1\n\nВес 12.45 кг · введено пользователем · фото: 3\n\nПодтверждаете получение полного состава по стратегии магазина.",
+  "body": {
+   "manual_weight_kg": "12.45",
+   "has_scale_capture_key": false,
+   "photo_ids": 3
+  },
+  "sourceLockedWhilePending": "not-rendered",
+  "act": "Вес места · введено пользователем\nСправка\nФактически\n12.45 кг\nОтгружено\n12 кг\nРазница\n0.45 кг (допуск ±0.5 кг) · в допуске\nИсточник\nвведено пользователем · receiver",
+  "scaleAct": "Вес места · получено от прибора\nСправка\nФактически\n12 кг\nОтгружено\n12 кг\nРазница\n0 кг (допуск ±0.5 кг) · в допуске\nИсточник\nприбор SCALE-12",
+  "helpLink": "http://127.0.0.1:3010/help/manual-weight.html#store",
+  "errors": []
+ }
+}

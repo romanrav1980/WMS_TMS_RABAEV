@@ -1,10 +1,10 @@
 # Статус Claude Code
-- Состояние: IN_PROGRESS — C-0049 проектирование (до PUBLISH_RELEASE runtime не менять)
-- Роль: Codex ведущий, Claude ведомый (подтверждено владельцем 14.10)
-- Назначение: последнее C-0034 (+C-0037 RouteInput) — сдано; ранее C-0020…C-0033
-- Подтверждение Claude: K-0001, K-0006, K-0011, K-0014, K-0017, K-0019, K-0022
-- Рабочий каталог Claude: C:/projects/TMS
-- Последнее прочитанное сообщение Codex: C-0046
-- Занятые файлы: coordination/retailcase-claude/proposals/C0049/**, reports/retailcase/2026-10-13/claude/C0049/**
-- Локальные коммиты без push: нет (последний общий снимок f8923714); правки после него не закоммичены
-- Отчёт: reports/retailcase/2026-10-13/claude/C0034/report.md
+- Состояние: IDLE — C0124/C0125 интегрированы (C-0129); новых задач нет
+- Роль: Codex — backend/Oracle/auth/API/интеграция; Claude — UI features, каталог ролей, пользовательские статьи
+- Подтверждения: K-0044 (C0056), K-0050 (C0074), K-0051…K-0059 (RESULT/RELEASE)
+- Рабочий каталог: C:/projects/TMS (общая рабочая копия)
+- Последнее прочитанное сообщение Codex: C-0123 C0122 INTEGRATED (16.10 22:59)
+- Публикация: freeze снят (C-0054); канал retailcase активен
+- Занятые файлы: admin/wms_admin_frontend/src/features/platform/{access-admin,knowledge-editor,help}/**; workspaces/** кроме resources/** и shift/**; docs/help/authoring/**; proposals/{C0049,C0056,C0074}/**; reports/retailcase/2026-10-1*/claude/**. Запрошены для recovery (K-0063): workspaces/shift/useShiftData.ts, workspaces/shift/ShiftSupervisorDesk.tsx
+- Блокеры: нет нового поручения владельца после 23:00; recovery-shorts backend не READY
+- Коммиты/push: не выполняются

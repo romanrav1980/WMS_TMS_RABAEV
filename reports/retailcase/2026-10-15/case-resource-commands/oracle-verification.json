@@ -1,0 +1,181 @@
+{
+  "status": "PASS",
+  "source_checks": [
+    {
+      "name": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE",
+      "source_exact": true,
+      "sha256": "6d30d8d264e21bc55b47e5d93edc3555c94dd3c5d7c115964b987684519f2f77"
+    },
+    {
+      "name": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "2575b20dd2e02a5ef115a47263d8647e54bcae09e68909d799cb8f29b5052e0f"
+    },
+    {
+      "name": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE",
+      "source_exact": true,
+      "sha256": "7ec7dd0a2814be528f372b023be61350ba7ab40816524f32856e4b61d912afca"
+    },
+    {
+      "name": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "6521a6558181fcdcb6d518ed434a5efe9fbd76868d132b94de6cf671bf58305a"
+    },
+    {
+      "name": "RRL_CASE_START_TIME_GUARD",
+      "type": "TRIGGER",
+      "source_exact": true,
+      "sha256": "b30982c09019b9cc930d70db346473629b7ce4a6fb48e2b639cc0e1a4d8e945b"
+    },
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE",
+      "source_exact": true,
+      "sha256": "84f4b3a848176e229edbaea9b78662897fca23c5737bbfb12c80235b3142a0bf"
+    },
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "2fc2becb83e77ba59c68e086b58b459fed5d6a8b1f324573d50325c5748d8b40"
+    },
+    {
+      "name": "RRL_CASE_ASSIGN_VERSION_GUARD",
+      "type": "TRIGGER",
+      "source_exact": true,
+      "sha256": "09206ae0073a9de38b0d334ee6659b383d52800ba5417f9e41a0daff7d52ce76"
+    },
+    {
+      "name": "RRL_CASE_RESOURCE_CMD_GUARD",
+      "type": "TRIGGER",
+      "source_exact": true,
+      "sha256": "7543ca65559fd73658843c239fdfd5790efb0e59a2df1030d5b8731dfbe16267"
+    }
+  ],
+  "ledger": [
+    {
+      "migration_id": "2026-10-15-case-resource-commands",
+      "status": "APPLIED"
+    }
+  ],
+  "column": [
+    {
+      "column_name": "ASSIGNMENT_VERSION",
+      "data_type": "NUMBER",
+      "nullable": "N"
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_name": "SYS_C0019396",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019397",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019398",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019399",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019400",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019401",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019402",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019403",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019404",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019405",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019406",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019407",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019408",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019409",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019410",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019411",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019412",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019413",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019414",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019415",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    }
+  ],
+  "context": {
+    "verification": "Separate trusted API native caller-rollback runtime proof",
+    "report": "reports\\retailcase\\2026-10-15\\case-resource-commands\\context-runtime-proof.json",
+    "catalog_note": "ALL_CONTEXT shows session values, not namespace catalog"
+  },
+  "invalid": 0,
+  "scope": "Exact source/schema only; native business/receipt/revoke/concurrency and HTTP separate"
+}

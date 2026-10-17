@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "kind": "HU",
+      "task_id": 1159,
+      "status": 403,
+      "source_unchanged": true,
+      "receipt_created": false
+    },
+    {
+      "kind": "MES",
+      "task_id": 514,
+      "status": 403,
+      "source_unchanged": true,
+      "receipt_created": false
+    },
+    {
+      "kind": "CASE",
+      "task_id": 1155,
+      "status": 403,
+      "source_unchanged": true,
+      "receipt_created": false
+    }
+  ],
+  "admin_rights_do_not_override_ordinary_path": true,
+  "goods_commit": false
+}

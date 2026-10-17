@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "width": 360,
+      "identity": "Задание 10 · qa",
+      "overflow": false,
+      "help_links": 2,
+      "no_api_posts": true
+    },
+    {
+      "width": 390,
+      "identity": "Задание 10 · qa",
+      "overflow": false,
+      "help_links": 2,
+      "no_api_posts": true
+    },
+    {
+      "width": 1440,
+      "identity": "Задание 10 · qa",
+      "overflow": false,
+      "help_links": 2,
+      "no_api_posts": true
+    }
+  ]
+}

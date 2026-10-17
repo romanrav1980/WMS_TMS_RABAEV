@@ -1,0 +1,160 @@
+{
+  "collected_at": "2026-10-15T19:31:34.830708+00:00",
+  "read_only": true,
+  "http": [
+    {
+      "api_call_id": 69293,
+      "request_id": "fc15a851-330f-4462-aa75-fa9924423ec7",
+      "method": "GET",
+      "path": "/api/store-app/deliveries/lookup",
+      "response_status": 404,
+      "duration_ms": 408
+    },
+    {
+      "api_call_id": 69294,
+      "request_id": "86f9ee36-3882-4fcd-a5e8-8bfd49023741",
+      "method": "GET",
+      "path": "/api/store-app/deliveries/lookup",
+      "response_status": 200,
+      "duration_ms": 46
+    },
+    {
+      "api_call_id": 69295,
+      "request_id": "472650ed-f291-4063-bf6a-82bda7265646",
+      "method": "GET",
+      "path": "/api/store-app/deliveries/lookup",
+      "response_status": 200,
+      "duration_ms": 49
+    },
+    {
+      "api_call_id": 69296,
+      "request_id": "39b6a0bd-3d62-460c-b876-017e29a59603",
+      "method": "GET",
+      "path": "/api/store-app/deliveries/lookup",
+      "response_status": 200,
+      "duration_ms": 46
+    },
+    {
+      "api_call_id": 69297,
+      "request_id": "31c49afb-5d3e-4d62-8bea-aeebe03327dd",
+      "method": "GET",
+      "path": "/api/store-app/deliveries/lookup",
+      "response_status": 200,
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 69298,
+      "request_id": "7e7f97e6-d3d2-4d8c-b5a2-f8f7882018c5",
+      "method": "GET",
+      "path": "/api/store-app/deliveries/lookup",
+      "response_status": 200,
+      "duration_ms": 48
+    },
+    {
+      "api_call_id": 69299,
+      "request_id": "cabfb356-48df-4f2d-9434-51c5f495192a",
+      "method": "GET",
+      "path": "/api/store-app/deliveries/lookup",
+      "response_status": 200,
+      "duration_ms": 43
+    }
+  ],
+  "slow": [],
+  "lookup_cumulative": [],
+  "local_pairs": [
+    {
+      "api_call_id": 69293,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "fc15a851-330f-4462-aa75-fa9924423ec7",
+        "method": "GET",
+        "path": "/api/store-app/deliveries/lookup",
+        "logged_at": "2026-10-15T19:30:42.170125+00:00",
+        "api_call_id": 69293,
+        "response_status": 404,
+        "duration_ms": 408
+      }
+    },
+    {
+      "api_call_id": 69294,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "86f9ee36-3882-4fcd-a5e8-8bfd49023741",
+        "method": "GET",
+        "path": "/api/store-app/deliveries/lookup",
+        "logged_at": "2026-10-15T19:30:42.234003+00:00",
+        "api_call_id": 69294,
+        "response_status": 200,
+        "duration_ms": 46
+      }
+    },
+    {
+      "api_call_id": 69295,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "472650ed-f291-4063-bf6a-82bda7265646",
+        "method": "GET",
+        "path": "/api/store-app/deliveries/lookup",
+        "logged_at": "2026-10-15T19:30:42.300454+00:00",
+        "api_call_id": 69295,
+        "response_status": 200,
+        "duration_ms": 49
+      }
+    },
+    {
+      "api_call_id": 69296,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "39b6a0bd-3d62-460c-b876-017e29a59603",
+        "method": "GET",
+        "path": "/api/store-app/deliveries/lookup",
+        "logged_at": "2026-10-15T19:30:42.364903+00:00",
+        "api_call_id": 69296,
+        "response_status": 200,
+        "duration_ms": 46
+      }
+    },
+    {
+      "api_call_id": 69297,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "31c49afb-5d3e-4d62-8bea-aeebe03327dd",
+        "method": "GET",
+        "path": "/api/store-app/deliveries/lookup",
+        "logged_at": "2026-10-15T19:30:42.433336+00:00",
+        "api_call_id": 69297,
+        "response_status": 200,
+        "duration_ms": 51
+      }
+    },
+    {
+      "api_call_id": 69298,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "7e7f97e6-d3d2-4d8c-b5a2-f8f7882018c5",
+        "method": "GET",
+        "path": "/api/store-app/deliveries/lookup",
+        "logged_at": "2026-10-15T19:30:42.497879+00:00",
+        "api_call_id": 69298,
+        "response_status": 200,
+        "duration_ms": 48
+      }
+    },
+    {
+      "api_call_id": 69299,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "cabfb356-48df-4f2d-9434-51c5f495192a",
+        "method": "GET",
+        "path": "/api/store-app/deliveries/lookup",
+        "logged_at": "2026-10-15T19:30:42.556844+00:00",
+        "api_call_id": 69299,
+        "response_status": 200,
+        "duration_ms": 43
+      }
+    }
+  ],
+  "max_http_ms": 408,
+  "decision": "Keep exact-first matching and at most two bounded lookups (FETCH FIRST 2), same selected-store/read-only transaction. No cache/index justified by this sample; delivery owner measures execution deltas/plan for pilot volume if repeated cost rises. Cumulative cursor averages are not per-scenario p95.",
+  "limits": "Latest100 exact-route HTTP rows since recorded floor; latest501 slow log window; local8MiB/12000lines;10 cumulative matching cursors. No new business writes."
+}

@@ -1,0 +1,166 @@
+{
+  "slow_log_last_hour": [
+    {
+      "log_id": 4749,
+      "elapsed_ms": 21500,
+      "api_path": null,
+      "sql_sample": "Independent exact ZERO sources constraints index compile readback"
+    },
+    {
+      "log_id": 4739,
+      "elapsed_ms": 11149,
+      "api_path": null,
+      "sql_sample": "select c.CONSTRAINT_NAME,p.TABLE_NAME PARENT_TABLE from USER_CONSTRAINTS c join USER_CONSTRAINTS p on p.CONSTRAINT_NAME=c.R_CONSTRAINT_NAME where c.TABLE_NAME='RRL_RESOURCE_FACT_EVENT'and c.CONSTRAINT_TYPE='R'"
+    },
+    {
+      "log_id": 4742,
+      "elapsed_ms": 3087,
+      "api_path": null,
+      "sql_sample": "select CONSTRAINT_NAME,STATUS,VALIDATED from USER_CONSTRAINTS where TABLE_NAME='RRL_CASE_RESOURCE_COMMAND'order by CONSTRAINT_NAME"
+    },
+    {
+      "log_id": 4781,
+      "elapsed_ms": 2398,
+      "api_path": null,
+      "sql_sample": "select CONSTRAINT_NAME,STATUS,VALIDATED from USER_CONSTRAINTS where TABLE_NAME='RRL_CASE_RESOURCE_COMMAND'order by CONSTRAINT_NAME"
+    },
+    {
+      "log_id": 4748,
+      "elapsed_ms": 874,
+      "api_path": null,
+      "sql_sample": "Pure ZERO two-source guard LF"
+    },
+    {
+      "log_id": 4744,
+      "elapsed_ms": 673,
+      "api_path": null,
+      "sql_sample": "Read current ASM_FINAL context only"
+    },
+    {
+      "log_id": 4738,
+      "elapsed_ms": 622,
+      "api_path": "/api/inventory/assembly-scale/context",
+      "sql_sample": "Assembly scale context"
+    },
+    {
+      "log_id": 4740,
+      "elapsed_ms": 617,
+      "api_path": null,
+      "sql_sample": "select NAME,TYPE,LINE,TEXT from USER_SOURCE where TEXT like '%SHIPMENT_OWN_PICKED_RESERVATION_INSUFFICIENT%'order by NAME,LINE"
+    },
+    {
+      "log_id": 4751,
+      "elapsed_ms": 572,
+      "api_path": null,
+      "sql_sample": "Original wave launch continuation metadata"
+    },
+    {
+      "log_id": 4755,
+      "elapsed_ms": 503,
+      "api_path": null,
+      "sql_sample": "Actual OPC ZERO validation; only ZERO rows caller rollback"
+    },
+    {
+      "log_id": 4768,
+      "elapsed_ms": 220,
+      "api_path": null,
+      "sql_sample": "Empty QA wave canonical cancellation preflight rollback"
+    },
+    {
+      "log_id": 4750,
+      "elapsed_ms": 159,
+      "api_path": null,
+      "sql_sample": "Empty QA wave canonical cancellation preflight rollback"
+    }
+  ],
+  "relevant_vsql": [
+    {
+      "sql_id": "11bnc9nqmxr23",
+      "executions": 1,
+      "avg_ms": 20.532,
+      "sql_sample": "select RRL_HAS_WRIGHT(:a,'case_pick_execute')F,RRL_CASE_TASK_ACCESS.scoped_metadata_actor(:t,'CLAIM',:a)S from dual"
+    },
+    {
+      "sql_id": "015nf04mbf19x",
+      "executions": 12,
+      "avg_ms": 1.39,
+      "sql_sample": "INSERT INTO RRL_CASE_RESOURCE_COMMAND VALUES (:B1 ,:B2 ,:B3 ,:B4 ,:B5 ,:B6 ,:B7 ,:B8 ,:B9 ,:B10 ,:B11 ,:B12 ,:B13 ) "
+    },
+    {
+      "sql_id": "6s5tp9mx88tas",
+      "executions": 6,
+      "avg_ms": 0.666,
+      "sql_sample": "select SOURCE_SHA256,RESULT_JSON from RRL_CASE_RESOURCE_COMMAND where OPERATION_ID=:o"
+    },
+    {
+      "sql_id": "fvf1nhz9vg09v",
+      "executions": 18,
+      "avg_ms": 0.476,
+      "sql_sample": "SELECT *FROM RRL_CASE_RESOURCE_COMMAND WHERE OPERATION_ID=:B1 "
+    },
+    {
+      "sql_id": "fvf1nhz9vg09v",
+      "executions": 16,
+      "avg_ms": 0.414,
+      "sql_sample": "SELECT *FROM RRL_CASE_RESOURCE_COMMAND WHERE OPERATION_ID=:B1 "
+    },
+    {
+      "sql_id": "16hqp2q5wv0cr",
+      "executions": 51,
+      "avg_ms": 0.368,
+      "sql_sample": "select count(*) N from RRL_CASE_RESOURCE_COMMAND where CASE_PICK_TASK_ID=:t"
+    }
+  ],
+  "api_audit_top": [
+    {
+      "path": "/api/case-pick/tasks/1138/resource-commands",
+      "duration_ms": 271
+    },
+    {
+      "path": "/api/case-pick/tasks/1138/resource-sessions",
+      "duration_ms": 181
+    },
+    {
+      "path": "/api/case-pick/resource-commands/CRES15.HTTP.CLAIM.A",
+      "duration_ms": 170
+    },
+    {
+      "path": "/api/case-pick/tasks/1138/resource-commands",
+      "duration_ms": 157
+    },
+    {
+      "path": "/api/case-pick/tasks/1138/resource-commands",
+      "duration_ms": 156
+    },
+    {
+      "path": "/api/case-pick/tasks/1138/resource-commands",
+      "duration_ms": 131
+    },
+    {
+      "path": "/api/case-pick/tasks/1138/resource-context",
+      "duration_ms": 122
+    },
+    {
+      "path": "/api/case-pick/tasks/1138/resource-commands",
+      "duration_ms": 121
+    },
+    {
+      "path": "/api/case-pick/tasks/1138/resource-commands",
+      "duration_ms": 108
+    },
+    {
+      "path": "/api/case-pick/resource-commands/CRES15.HTTP.START.NOOP",
+      "duration_ms": 101
+    },
+    {
+      "path": "/api/case-pick/resource-commands/CRES15.HTTP.WRONG.VERSION",
+      "duration_ms": 98
+    },
+    {
+      "path": "/api/case-pick/tasks/1138/resource-commands",
+      "duration_ms": 92
+    }
+  ],
+  "decision": "Keep native OP PK +CASE/actor/time index and20own-session readbound. Native receipts SELECT/INSERT are bounded; deliberate API concurrency and ACL fence waits are acceptance contention, not throughput benchmark. One-off dictionary USER_CONSTRAINTS1544ms previouslyrecorded belongs release verification; DB/verification owner plan/stats if repeated. No new business index/cache/window justified; real multiuser load remains separate.",
+  "correction": "Previous last-hour filters mixed server-wall DATE/TIMESTAMP without zone with SYSTIMESTAMP WITH TZ under SESSION+03/server-04, incorrectly reporting APIaudit0. Corrected DATE uses SYSDATE-1/24; slowTIMESTAMP uses CAST(SYSTIMESTAMP AS TIMESTAMP)-1hour. No log/schema/business changes."
+}

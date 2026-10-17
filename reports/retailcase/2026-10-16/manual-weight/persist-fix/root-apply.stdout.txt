@@ -1,0 +1,8 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_weight_persist\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_weight_persist\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_weight_persist\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_weight_persist\rrl_stock_store_weight_core_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_weight_persist\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_weight_persist\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_weight_persist\after_sources.sql
+Done. Statements=7; Errors=0; AbsentCleanup=0

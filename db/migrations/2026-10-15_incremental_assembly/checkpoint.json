@@ -1,0 +1,74 @@
+{
+  "migration_id": "2026-10-15-incremental-assembly",
+  "state": "APPLIED",
+  "git_head": "41c913cf44441cf3656a66b0939e40cb9a83c365",
+  "target": {
+    "user_name": "RABAEV",
+    "service_name": "orcl",
+    "db_name": "ORCL"
+  },
+  "invalid_before": 0,
+  "before_checks": [
+    {
+      "name": "RRL_SCALE_PACKET_READ",
+      "type": "PACKAGE",
+      "exact_before_source": true
+    },
+    {
+      "name": "RRL_SCALE_PACKET_READ",
+      "type": "PACKAGE BODY",
+      "exact_before_source": true
+    },
+    {
+      "name": "RRL_CASE_SCALE_ADMISSION",
+      "type": "PACKAGE",
+      "exact_before_source": true
+    },
+    {
+      "name": "RRL_CASE_SCALE_ADMISSION",
+      "type": "PACKAGE BODY",
+      "exact_before_source": true
+    },
+    {
+      "name": "RRL_STOCK_CASE_PICK_CMD",
+      "type": "PACKAGE",
+      "exact_before_source": true
+    },
+    {
+      "name": "RRL_STOCK_CASE_PICK_CMD",
+      "type": "PACKAGE BODY",
+      "exact_before_source": true
+    }
+  ],
+  "authorization": "Owner directs implementation through19:00MSK15October; root reviews/applies; isolated TEST metadata staging separately coordinated; no stock fixture commits.",
+  "recovery": "Exact-before packages; additive empty metadata rollback stops on any existing history.",
+  "sha256": {
+    "apply.sql": "d6ccd36d59df9bb89db381ebbb9f9b9aada4e04ca85d48299a59ad8987fa9f23",
+    "assembly_body.sql": "277d68d04610eff9fce236930cc7bfeb9954367d1278c20d33054cc97b051757",
+    "assembly_spec.sql": "7fde25c85de1264a63480bb6a84ff79e7e35deb6aed70f24630ffac41546b956",
+    "before_rrl_case_scale_admission_body.sql": "e733cc5e7106a4181d0f8cf2af6ed430780f7f19f89f02286f4da97cec0b99f8",
+    "before_rrl_case_scale_admission_spec.sql": "d77166a77c80e8ba53d2ca70448196dd4b11145f4d639f3848a31331c942272c",
+    "before_rrl_scale_packet_read_body.sql": "cb465688b0f3ff3515d46076df2eabbe594eedc1cc0d2cda0b1203ef0399ffa9",
+    "before_rrl_scale_packet_read_spec.sql": "59d8d8f4e1490d2af71f9db62a1f9254546b4017060dc6b1894a8978437fe74b",
+    "before_rrl_stock_case_pick_cmd_body.sql": "04a05faa61673393be5d89d556d091e5e473ba82b99c311ee24b41060bd1927a",
+    "before_rrl_stock_case_pick_cmd_spec.sql": "ac38c23b07e1509085bb8b7a158694015c943124ba8620cbced62faa9e5c5382",
+    "case_scale_admission_body.sql": "2d47bfdf156fb91bbef4d8ac3bbb87d6f063b93e805679649ff27e8e4d21e888",
+    "compile_verify.sql": "7a65c8769fa3cd1002fc304e33bff8fff61c8ce94092adc7b6fb579504108bb0",
+    "guards.sql": "2e3e487c0ced23b5320114e5558e9db104a2ad5283518e053eea4a37cb80d9af",
+    "rollback.sql": "1dc00d52518797b1c7fd98a12bc5ca246ff217e0c689ad812dd6f94f3ab0c913",
+    "scale_packet_body.sql": "e63cbf22c31ba52c8e1b522ff5eac4de86cbd502844771ceb5755ad66d290de5",
+    "scale_packet_spec.sql": "864b0d7311a26eb90847a680045c899448feda82098de8268a24140c7d1fa5e9",
+    "schema.sql": "bb4c09d010394defc80f8604166d5b33945d606863a849c600a43aa155e0d04c",
+    "stock_case_pick_body.sql": "aafe6947e0e4195dca1cd2940dbcfc2f856669bed157ec7b2d57ea67fcdbbe8b",
+    "verify.sql": "ad4b6625b5222b249e29e202323d384868d7bd1857855c0422811cbd2038d41c"
+  },
+  "verification": {
+    "source_checks": 13,
+    "user_errors": 0,
+    "global_invalid": 0,
+    "constraints": "ENABLED",
+    "ledger": "APPLIED",
+    "report": "reports/retailcase/2026-10-15/assembly-scale/oracle-verification.json",
+    "business_acceptance": "IN_PROGRESS_NOT_ACCEPTED"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "checks": [
+    "ordinary_terminal_identity_reaches_existing_owner",
+    "open_lines_native_owner_refusal",
+    "browser_actor_forbidden",
+    "other_actor_denied",
+    "no_close_event",
+    "P20H20_unchanged"
+  ],
+  "business_stock_committed": false
+}

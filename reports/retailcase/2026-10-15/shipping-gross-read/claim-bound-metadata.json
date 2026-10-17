@@ -1,0 +1,122 @@
+{
+  "read_only": true,
+  "table": "RRL_RECEIPT_SLOT_CLAIM",
+  "ddl": false,
+  "indexes": {
+    "ms": 109.046,
+    "rows": [
+      {
+        "index_name": "RRL_HU_CLAIM_CASE_U1",
+        "uniqueness": "UNIQUE",
+        "index_type": "NORMAL",
+        "status": "VALID"
+      },
+      {
+        "index_name": "RRL_REC_SLOT_PAL_UK",
+        "uniqueness": "UNIQUE",
+        "index_type": "NORMAL",
+        "status": "VALID"
+      },
+      {
+        "index_name": "RRL_REC_SLOT_PK",
+        "uniqueness": "UNIQUE",
+        "index_type": "NORMAL",
+        "status": "VALID"
+      },
+      {
+        "index_name": "RRL_REC_SLOT_SLOT_UK",
+        "uniqueness": "UNIQUE",
+        "index_type": "NORMAL",
+        "status": "VALID"
+      }
+    ]
+  },
+  "columns": {
+    "ms": 118.217,
+    "rows": [
+      {
+        "index_name": "RRL_HU_CLAIM_CASE_U1",
+        "column_position": 1,
+        "column_name": "HU_CASE_TASK_ID"
+      },
+      {
+        "index_name": "RRL_REC_SLOT_PAL_UK",
+        "column_position": 1,
+        "column_name": "UID_PALLET"
+      },
+      {
+        "index_name": "RRL_REC_SLOT_PK",
+        "column_position": 1,
+        "column_name": "TASK_ID"
+      },
+      {
+        "index_name": "RRL_REC_SLOT_SLOT_UK",
+        "column_position": 1,
+        "column_name": "CELL_SLOT_ID"
+      }
+    ]
+  },
+  "expressions": {
+    "ms": 63.384,
+    "rows": []
+  },
+  "constraints": {
+    "ms": 3469.457,
+    "rows": [
+      {
+        "constraint_name": "RRL_REC_SLOT_PAL_UK",
+        "constraint_type": "U",
+        "status": "ENABLED",
+        "validated": "VALIDATED"
+      },
+      {
+        "constraint_name": "RRL_REC_SLOT_PK",
+        "constraint_type": "P",
+        "status": "ENABLED",
+        "validated": "VALIDATED"
+      },
+      {
+        "constraint_name": "RRL_REC_SLOT_SLOT_UK",
+        "constraint_type": "U",
+        "status": "ENABLED",
+        "validated": "VALIDATED"
+      },
+      {
+        "constraint_name": "RRL_REC_SLOT_ST_CK",
+        "constraint_type": "C",
+        "status": "ENABLED",
+        "validated": "VALIDATED"
+      },
+      {
+        "constraint_name": "SYS_C0016002",
+        "constraint_type": "C",
+        "status": "ENABLED",
+        "validated": "VALIDATED"
+      },
+      {
+        "constraint_name": "SYS_C0016003",
+        "constraint_type": "C",
+        "status": "ENABLED",
+        "validated": "VALIDATED"
+      },
+      {
+        "constraint_name": "SYS_C0016004",
+        "constraint_type": "C",
+        "status": "ENABLED",
+        "validated": "VALIDATED"
+      },
+      {
+        "constraint_name": "SYS_C0016005",
+        "constraint_type": "C",
+        "status": "ENABLED",
+        "validated": "VALIDATED"
+      },
+      {
+        "constraint_name": "SYS_C0016006",
+        "constraint_type": "C",
+        "status": "ENABLED",
+        "validated": "VALIDATED"
+      }
+    ]
+  }
+}

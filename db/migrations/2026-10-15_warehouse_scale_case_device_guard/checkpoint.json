@@ -1,0 +1,17 @@
+﻿{
+    "migration_id":  "2026-10-15-warehouse-scale-case-device-guard",
+    "status":  "APPLIED",
+    "root_review_required":  true,
+    "reason":  "Root-approved cross-device CASE assembly admission guard; main CASE1136 unchanged",
+    "stock_effect":  "NONE",
+    "tables_changed":  false,
+    "original_applied_sources_preserved":  true,
+    "baseline_sha256":  "3642aabe97e8a6ba6ff03bd31b897557a6e0015c91356365444bb485abd4f1c7",
+    "main_case_or_device_changes":  false,
+    "source_sha256":  "2dea0101e5f0e4cca193063fc9656930fb4138f7f981c7d8061c4897b8eb5328",
+    "source":  "EXACT",
+    "statements":  5,
+    "errors":  0,
+    "global_invalid":  0,
+    "runtime_acceptance":  "PENDING; main physical phase left untouched"
+}

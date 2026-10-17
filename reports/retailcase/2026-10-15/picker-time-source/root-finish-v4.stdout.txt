@@ -1,0 +1,4 @@
+-- running C:\projects\TMS\db\migrations\2026-10-15_picker_actual_time_verify_fix\finish.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_picker_actual_time_verify_fix\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_picker_actual_time_verify_fix\installed_guard.sql
+Done. Statements=5; Errors=0; AbsentCleanup=0

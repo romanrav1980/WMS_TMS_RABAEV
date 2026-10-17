@@ -1,0 +1,37 @@
+﻿# Восстановление интерфейса весовой сборки
+
+15.10.2026. [[retailcase_opc40200_client]] предоставляет реальные показания; UI отправляет сканы, количество, намерения и серверные ссылки. [Отчёт](../../reports/retailcase/2026-10-15/assembly-ui-review/report.md), [16 основных Chromium checks](../../reports/retailcase/2026-10-15/assembly-ui-review/browser-report.json), [7 recovery checks](../../reports/retailcase/2026-10-15/assembly-ui-review/reconciliation-browser-report.json).
+
+Шесть команд — open_session, open_step, case_close, finish, recovery_request, recovery_authorize — сохраняют исходный target session и неизменное тело до POST. Для controller authorization сохраняется проверенный исходный контекст сверки. Reload не отправляет автоматически; GET404 не удаляет intent. Только явный повтор исходной команды с проверенным ACK освобождает журнал. Повреждённый или неполный legacy intent блокирует новые действия; исходный C0112 open_session поддержан. Пароли остаются в памяти.
+
+Task/actor scope и поздние ответы проверяются. Ошибка poll или текущего допуска делает данные неподтверждёнными и приостанавливает действия, включая физические подсказки. После content version строки перечитываются из серверного context. Вес, допуски и остатки браузер не рассчитывает. Пост TEST имеет видимый бейдж.
+
+Закрытие CASE доступно в том же приложении через session endpoint и прежний owner закрытия. Известные незавершённые строки блокируют закрытие; после него нужен отдельный FINAL_GROSS. Кандидаты ограничены тем же устройством, постом, тарой, версией и калибровкой. Freshness preview использует часы браузера; native повторно проверяет доверенное время и последовательность.
+
+## Сверка расхождения
+
+Оператор сначала получает ACK серверного HOLD. Только затем интерфейс предлагает убрать непринятый товар, сохранив принятый товар и тару. Отдельный контролёр входит под собственной учётной записью по ссылке сверки и подтверждает выполненное удаление; запросить пароль администратора в потоке комплектовщика нельзя. Серверная AUTHORIZED очередь разрешает реальный замер шлюзу. CANCELLED после успешной сверки отображается нейтрально: товар не принимается повторно. BLOCKED запрещает подсказку укладки и кнопку placed.
+
+Web Locks сериализует журнал вкладок одного задания. Неподдерживаемый браузер не отправляет команды. Все 23 browser checks используют моделируемые HTTP ответы: они подтверждают отрисовку и клиентское восстановление, а не native/hardware readiness. Отдельные live API/native TEST1032 проверки дали [DISCREPANCY/BLOCKED](../../reports/retailcase/2026-10-15/assembly-scale/opc-native-http-report.json), затем [RECONCILE → CANCELLED/OPEN](../../reports/retailcase/2026-10-15/assembly-scale/opc-reconciliation-http-report.json), без товарной проводки; raw1.1/1.2 MATCHED. OPC server локальный, физических весов нет. TEST fixture после приёмки выведен из работы.
+
+## Оставшееся ограничение
+
+Неожиданный окончательный409 может оставить неизменный intent, который нельзя безопасно исправить или удалить на клиенте. Отсутствие receipt не доказывает, что параллельная исходная команда никогда не завершится. Предварительная проверка количества, известного товара, источника, паллеты и незавершённых строк снижает такие случаи, но не заменяет серверное разрешение. Backlog владельца inventory: native tombstone/abandon для доказанно неприменённого intent с блокировкой исходной команды и аудитом; до него UI сохраняет тело и требует разбора.
+
+## Отмена ещё не созданной попытки
+
+Дополнение15.10.2026: UI поддерживает отдельный durable control intent для OPEN_SESSION/OPEN_STEP. Его запись сохраняет исходный SavedCommand, полный исходный body, причину и отдельный operation_id до POST. ABANDONED сверяется по operation/kind/task/session/step/original_operation/original/stock_posted:false; порядок JSON ключей не влияет на сравнение, дополнительные/изменённые данные original отклоняются. Только затем снимаются original и control, именно в таком порядке. Crash между удалениями восстанавливается из control.
+
+Вместо молчаливого удаления доступны два явных исхода: native ABANDONED либо успешный точный повтор исходного создания. Второй подтверждает уже созданный объект и не называется отменой. Оба пути используют тот же WebLock, сохраняют идентификаторы и не разрешают новые команды при незавершённом control. GET404, wrongACK и original409 сами по себе не очищают журнал. Для созданного шага остаётся штатная HOLD/контролёр/измеренная сверка.
+
+[15 rendered abandonment checks](../../reports/retailcase/2026-10-15/assembly-ui-review/abandonment-browser-report.json) PASS; вместе с16 основными и7 recovery —38 моделируемых HTTP сценариев. В частности проверены lostACK/reload/404, пять неверных ACK, crash после удаления original, гонка с созданным объектом, tombstoned original409, foreign/corrupt control и403. Native kit активируется и принимается отдельно владельцем; эти browser tests native записей не создают. [Инструкция оператора](../runbooks/retailcase_assembly_scale_terminal.md#не-созданный-запрос).
+
+Native abandonment kit root применил и проверил отдельно: [11 групп native/HTTP/concurrency](../../reports/retailcase/2026-10-15/assembly-intent/native.json). Дополнительно [actual production UI GET-only](../../reports/retailcase/2026-10-15/assembly-intent/production-ui-read.json)360/390/1440 PASS: уже сохранённый ABANDONED прочитан текущим оператором, обе local записи сняты, POST не отправлялся, пароль не сохранялся, overflow отсутствует. Это чтение готового native receipt, не повтор native mutation и не аппаратная приёмка.
+
+## Запросы весов и подготовленная СТ в /assembly
+
+Новый UI: скан до mass-free EMPTY request; actual native resource_session_id только из контекста; explicit zero_progress_required=true, independent FINAL после close→preparedSTbind→current ASM_FINAL/version3 signature. Часовой пояс/PC Date.now не управляют разрешением загрузки: TTL от server_now/claim_expires_at минус полный RTT, performance clock, повтор того же response не продлевает окно. Offline/403/неактуальный контекст немедленно гасят инструкцию; до подтверждённого WAITING_ZERO UI не просит освобождать чужую платформу. CANCELLED/closed без OPEN session — read-only.
+
+Отдельные scoped durable journals request/bind используют прежний task WebLock; исходный URL/body сохраняется до POST. Reload выполняет GET, 404/wrongACK/corrupt/foreign оставляют запись. Только strict native CAPTURED либо точная current binding/version позволяют снять соответствующий журнал; READ resolution не требует NEW command и не теряет соседний pending intent. Неизвестный definitive отказ сохраняется для разбора, native absence/tombstone для новых request/bind здесь не придумывается. Flat+OWN роль ASM/close/bind сохраняется; scoped-only исполнение не объявлено.
+
+Приёмка:14 новых rendered mocked-HTTP checks +16base+15abandon+7recovery =52 PASS. Новые случаи: lostACK/reload/404/exactbody; far-server-clock TTL/offline/revoke; null/foreign/wrongidentity; bind lostACK→GETcontext/noPOST; FINAL currenthash/tare;360/390/1440 titles/help2localrelated/nooverflow; CANCELLED без новых intent; CAPTURED GET resolution. [Отчёт](../../reports/retailcase/2026-10-15/assembly-ui-review/physical-flow-browser-report.json). Qualitygate PASS1042/cycles0/debt72/24tooling/обаTS, encoding PASS. Это mocked HTTP, production native read/visual/полный build root выполняет отдельно; новых Oracle writes или физических весов эти тесты не доказывают.

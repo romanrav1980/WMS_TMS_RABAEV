@@ -1,0 +1,75 @@
+{
+  "tag": "0f1e381d78",
+  "prefix": "AS16.0f1e381d78",
+  "actor": "AS16O0f1e381d78",
+  "sender": "AS16G0f1e381d78",
+  "article": "AS16A0F1E381D78",
+  "source": "AS16.LOT:0f1e381d78",
+  "warehouse_id": 20061923,
+  "cell": "AS16C0f1e381d78",
+  "role": "AS16R0f1e381d78",
+  "assignment": "AS16X0f1e381d78",
+  "device": "AS16D0f1e381d78",
+  "hardware_verified": false,
+  "quantity": "1",
+  "state": "METADATA_COMMITTED",
+  "stock_birth": "1 EA simulated inventory",
+  "recovery": [
+    "Never rerun after uncertain effect: inspect exact operation receipt",
+    "Canonical CASE_CARRIER_RETURN if picked; WAVE_CANCEL and PICK_PLAN_CANCEL release own reservations",
+    "Retain stock/scale/access journals; retire own actors/role/device/resource/session after mixed-HU follow-up",
+    "Never delete histories or touch prior QA stock; positive TEST stock remains isolated under fresh warehouse"
+  ],
+  "order": 2161,
+  "order_row": 3648,
+  "plan": 2212,
+  "line": 2221,
+  "task": 2150,
+  "reservation": 2017,
+  "wave": 581,
+  "wave_order": 1981,
+  "face": 610,
+  "face_article": 301,
+  "revision": 408,
+  "frozen_acl_commands": {
+    "WARE.OBJECT": {
+      "operation_id": "AS16.0f1e381d78.WARE.OBJECT",
+      "command_type": "OBJECT_SAVE",
+      "payload": {
+        "expected_version": 0,
+        "kind": "WAREHOUSE",
+        "object_id": "20061923",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "parent_kind": null,
+        "parent_id": null,
+        "active": true
+      }
+    }
+  },
+  "acl_receipts": {
+    "WARE.OBJECT": {
+      "operation_id": "AS16.0f1e381d78.WARE.OBJECT",
+      "command_type": "OBJECT_SAVE",
+      "object_id": "20061923",
+      "version": 1,
+      "replayed": false
+    }
+  },
+  "frozen_stock_requests": {
+    "TARE.COUNT.INIT": "{\"actor\":\"admin\",\"command_type\":\"TARE_COUNT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"condition\":\"GOOD\",\"decision_reference\":\"AS16.0f1e381d78.TEST.TARE\",\"expected_version\":0,\"observed_quantity\":\"1\",\"owner_ware_id\":20061923,\"pallet_type_id\":32,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\"},\"operation_id\":\"AS16.0f1e381d78.TARE.COUNT.INIT\",\"source\":{},\"units\":[]}"
+  },
+  "receipts": {
+    "TARE.COUNT.INIT": {
+      "status": "POSTED",
+      "tare_balance_changed": true,
+      "destination_quantity": "1",
+      "operation_id": "AS16.0f1e381d78.TARE.COUNT.INIT",
+      "quantity": "1",
+      "owner_ware_id": 20061923,
+      "pallet_type_id": 32,
+      "condition": "GOOD",
+      "goods_stock_changed": false,
+      "outbox_id": 5591
+    }
+  }
+}

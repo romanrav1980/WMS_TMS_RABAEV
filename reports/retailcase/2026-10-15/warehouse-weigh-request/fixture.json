@@ -1,0 +1,393 @@
+{
+  "prefix": "WHREQ15.AK06",
+  "cell": "QIPcdbf4c0962",
+  "actor": "WHREQ15.OP",
+  "sender": "WHREQ15.GW",
+  "source": "REUSE.RETURN:e6c16d0bbd",
+  "source_before": [
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QIPcdbf4c0962",
+      "remain": 24,
+      "hard_reserved_base": 0,
+      "stock_version": 9
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "state": "EMPTY_CAPTURED_AWAIT_CLAIM_START",
+  "order": 2146,
+  "order_row": 3634,
+  "plan": 2199,
+  "line": 2208,
+  "task": 2137,
+  "reservation": 2005,
+  "wave": 567,
+  "wave_order": 1969,
+  "face": 606,
+  "face_article": 297,
+  "metadata_fixture_committed_temporarily": true,
+  "preview_demand": [
+    {
+      "pick_wave_demand_id": 403,
+      "pick_wave_id": 567,
+      "articul": "REUSE.QA:cdbf4c0962",
+      "task_type": "CASE_PICK",
+      "target_cell_code": "QIPcdbf4c0962",
+      "pick_face_id": 606,
+      "pick_route_cell_id": null,
+      "demand_qty": 1,
+      "task_count": 1,
+      "created_at": "2026-10-15 08:06:03",
+      "created_by": "admin",
+      "pick_face_free_qty": null,
+      "replenish_qty": null,
+      "replenishment_method": null,
+      "replenishment_qty_mode": null,
+      "min_shelf_life_days": null,
+      "min_shelf_life_percent": null,
+      "replenishment_release_policy": null
+    }
+  ],
+  "launch_operation": "WHREQ15.AK06.LAUNCH",
+  "launch": {
+    "operation_id": "WHREQ15.AK06.LAUNCH",
+    "launch_outcome": "APPLIED",
+    "continuation_state": "COMPLETE",
+    "wave_status": "LAUNCHED"
+  },
+  "stock_after_launch": [
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QIPcdbf4c0962",
+      "remain": 24,
+      "hard_reserved_base": 1,
+      "stock_version": 10
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "warehouse_tasks": [],
+  "case": 1136,
+  "case_line": 1139,
+  "case_before_type": {
+    "case_pick_task_id": 1136,
+    "sscc": "CP567000000001136",
+    "content_version": 0,
+    "pallet_type_id": 1,
+    "status": "NEW",
+    "picked_qty": 0
+  },
+  "case_lines": [
+    {
+      "case_pick_line_id": 1139,
+      "cell_code": "QIPcdbf4c0962",
+      "articul": "REUSE.QA:cdbf4c0962",
+      "planned_qty": 1,
+      "picked_qty": 0
+    }
+  ],
+  "type_change": {
+    "operation_id": "WHREQ15.AK06.TYPE",
+    "command_type": "CASE_PALLET_TYPE_CHANGE",
+    "case_task_id": 1136,
+    "pallet_type_id": 32,
+    "previous_pallet_type_id": 1,
+    "planned_pallet_type_id": null,
+    "version": 1,
+    "reason": "SIMULATED_TEST_NOT_HARDWARE; root-approved isolated shared QA",
+    "stock_changed": false,
+    "status": "APPLIED",
+    "outbox_id": 5310
+  },
+  "warehouse_settings_before": {
+    "ware_id": 13583852,
+    "company_prefix": null,
+    "extension_digit": 0,
+    "coordinate_unit_m": 1,
+    "reachtruck_mps": 1,
+    "lift_mps": 0.5,
+    "placement_metric": "DISTANCE",
+    "updated_by": null,
+    "updated_at": "2026-10-10 05:08:01.409606",
+    "hu_cell_height_unit": null,
+    "outgoing_qc_mode": "NONE",
+    "outgoing_qc_independent": 0,
+    "outgoing_qc_sample_percent": 0,
+    "defer_wait_cell": null
+  },
+  "label": {
+    "case_pick_task_id": 1136,
+    "sscc": "090000000000008014",
+    "original_carrier": "CP567000000001136",
+    "content_version": 2,
+    "operation_id": "WHREQ15.AK06.LABEL",
+    "confirmed": false
+  },
+  "label_confirmation": {
+    "case_pick_task_id": 1136,
+    "sscc": "090000000000008014",
+    "confirmed": true
+  },
+  "goods_pick_committed": false,
+  "physical_hardware": false,
+  "stock_staged": [
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QIPcdbf4c0962",
+      "remain": 24,
+      "hard_reserved_base": 1,
+      "stock_version": 10
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "tare_before": {
+    "pallet_type_id": 32,
+    "pallet_type_name": "Own514 final weighing small box",
+    "pallet_type_code": "SMALL514.AF32399B",
+    "active": 1,
+    "physical_quantity": null,
+    "assembly_quantity": null,
+    "available_quantity": null,
+    "loss_pending_quantity": null,
+    "balance_version": null,
+    "count_state": "OBSERVATION_REQUIRED"
+  },
+  "tare_count": {
+    "status": "POSTED",
+    "tare_balance_changed": true,
+    "destination_quantity": "1",
+    "operation_id": "WHREQ15.AK06.TARE.COUNT",
+    "quantity": "1",
+    "owner_ware_id": 13583852,
+    "pallet_type_id": 32,
+    "condition": "GOOD",
+    "goods_stock_changed": false,
+    "outbox_id": 5311
+  },
+  "tare_book": {
+    "operation_id": "WHREQ15.AK06.TARE.BOOK",
+    "status": "HELD",
+    "place_kind": "CASE",
+    "place_id": "1136",
+    "pallet_type_id": 32,
+    "warehouse_id": 13583852,
+    "available_quantity": "0",
+    "quantity": "1",
+    "physical_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 5312
+  },
+  "device": {
+    "device_id": "WHREQ15.SCALE",
+    "device_policy_version": 1,
+    "active": true,
+    "device_mode": "TEST",
+    "basis": "GROSS"
+  },
+  "empty_request_body": {
+    "request_id": "WHREQ15.AK06.EMPTY",
+    "device_id": "WHREQ15.SCALE",
+    "purpose": "EMPTY_TARE",
+    "case_task_id": 1136,
+    "expected_content_version": 2,
+    "scan_container": "090000000000008014",
+    "resource_session_id": 54
+  },
+  "empty_request": {
+    "request_id": "WHREQ15.AK06.EMPTY",
+    "device_id": "WHREQ15.SCALE",
+    "case_task_id": 1136,
+    "purpose": "EMPTY_TARE",
+    "state": "REQUESTED",
+    "current_context": "CURRENT",
+    "admissible": false,
+    "reason": null,
+    "capture_key": null,
+    "claim_id": null,
+    "created_at": "2026-10-15T12:13:11.825251+00:00",
+    "expires_at": "2026-10-15T12:15:11.825251+00:00",
+    "stock_posted": false
+  },
+  "claim_competition": [
+    {
+      "ok": true,
+      "body": {
+        "claim_id": "WHREQ15.AK06.EMPTY.C1A",
+        "device_id": "WHREQ15.SCALE"
+      },
+      "result": {
+        "request_id": "WHREQ15.AK06.EMPTY",
+        "device_id": "WHREQ15.SCALE",
+        "case_task_id": 1136,
+        "purpose": "EMPTY_TARE",
+        "state": "CLAIMED",
+        "current_context": "CURRENT",
+        "admissible": false,
+        "reason": null,
+        "capture_key": null,
+        "created_at": "2026-10-15T12:13:11.825251+00:00",
+        "expires_at": "2026-10-15T12:15:11.825251+00:00",
+        "stock_posted": false,
+        "capture_context": {
+          "case_task_id": 1136,
+          "device_id": "WHREQ15.SCALE",
+          "expected_content_version": 2,
+          "scan_container": "090000000000008014",
+          "purpose": "EMPTY_TARE",
+          "post_cell": "QIPcdbf4c0962",
+          "device_policy_version": 1,
+          "calibration_ref": "SIMULATED_TEST_NOT_HARDWARE:WHREQ15",
+          "unit": "KG",
+          "basis": "GROSS",
+          "preset_tare_kg": "0",
+          "capture_id": "WHREQ15.AK06.EMPTY.C1A"
+        },
+        "claim_id": "WHREQ15.AK06.EMPTY.C1A",
+        "claim_expires_at": "2026-10-15T12:13:42.031986+00:00",
+        "claim_active": true
+      }
+    },
+    {
+      "ok": false,
+      "error": "ORA-20886: WH_WEIGH_REQUEST_NOT_CLAIMABLE",
+      "status": 409
+    }
+  ],
+  "empty_capture_body": {
+    "case_task_id": 1136,
+    "device_id": "WHREQ15.SCALE",
+    "expected_content_version": 2,
+    "scan_container": "090000000000008014",
+    "purpose": "EMPTY_TARE",
+    "post_cell": "QIPcdbf4c0962",
+    "device_policy_version": 1,
+    "calibration_ref": "SIMULATED_TEST_NOT_HARDWARE:WHREQ15",
+    "unit": "KG",
+    "basis": "GROSS",
+    "preset_tare_kg": "0",
+    "capture_id": "WHREQ15.AK06.EMPTY.C2",
+    "zero_confirmed": true,
+    "zero_check_kg": "0",
+    "zero_check_at": "2026-10-15T12:13:35.372917+00:00",
+    "measured_at": "2026-10-15T12:13:45.372917+00:00",
+    "samples": [
+      {
+        "offset_ms": 0,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 500,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 1000,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 1500,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 2000,
+        "weight_kg": "0.5"
+      }
+    ]
+  },
+  "empty_archive": {
+    "capture_key": "2D10B2F489D58CDE95B0AB0D487C0FDEA8EB15DF4A53D4B85C9815B948739429",
+    "device_id": "WHREQ15.SCALE",
+    "capture_id": "WHREQ15.AK06.EMPTY.C2",
+    "warehouse_id": 13583852,
+    "post_cell": "QIPcdbf4c0962",
+    "device_mode": "TEST",
+    "purpose": "EMPTY_TARE",
+    "case_task_id": 1136,
+    "case_content_version": 2,
+    "scan_container": "090000000000008014",
+    "pallet_type_id": 32,
+    "type_version": 2,
+    "basis": "GROSS",
+    "weight_kg": "0.5",
+    "device_policy_version": 1,
+    "calibration_ref": "SIMULATED_TEST_NOT_HARDWARE:WHREQ15",
+    "resolution_kg": "0.001",
+    "source_sha256": "7DF404CD86EB42A3F6B33498485F4B5728785EB5080DC06CFEDE98DE024957BE",
+    "measured_at": "2026-10-15T12:13:45.372917+00:00",
+    "sample_count": 5,
+    "span_ms": 2000,
+    "status": "ARCHIVED",
+    "stock_posted": false
+  },
+  "empty_status": {
+    "request_id": "WHREQ15.AK06.EMPTY",
+    "device_id": "WHREQ15.SCALE",
+    "case_task_id": 1136,
+    "purpose": "EMPTY_TARE",
+    "state": "CAPTURED",
+    "current_context": "CURRENT",
+    "admissible": true,
+    "reason": null,
+    "capture_key": "2D10B2F489D58CDE95B0AB0D487C0FDEA8EB15DF4A53D4B85C9815B948739429",
+    "claim_id": "WHREQ15.AK06.EMPTY.C2",
+    "created_at": "2026-10-15T12:13:11.825251+00:00",
+    "expires_at": "2026-10-15T12:15:11.825251+00:00",
+    "stock_posted": false
+  },
+  "pick_release": {
+    "wave_id": 567,
+    "warehouse": 13583852,
+    "status": "LAUNCHED",
+    "released_at": "2026-10-15T08:16:01.248989-04:00",
+    "released_by": "admin",
+    "release_operation_id": "WHREQ15.AK06.PICK.RELEASE",
+    "ready": true,
+    "tasks": [
+      {
+        "pick_task_id": 2137,
+        "wave_task_id": 2060,
+        "article": "REUSE.QA:cdbf4c0962",
+        "task_type": "CASE_PICK",
+        "status": "ASSIGNED",
+        "cell": "QIPcdbf4c0962",
+        "required_base": "1",
+        "covered_base": "1",
+        "missing_base": "0",
+        "base_uom": "EA",
+        "reservations": [
+          {
+            "reservation_id": 1863,
+            "uid": "REUSE.RETURN:e6c16d0bbd",
+            "cell": "QIPcdbf4c0962",
+            "article": "REUSE.QA:cdbf4c0962",
+            "quantity": "1",
+            "base_uom": "EA",
+            "stock_version": 10,
+            "physical": "24",
+            "hard": "1",
+            "reason": null
+          }
+        ]
+      }
+    ],
+    "open_replenishments": [],
+    "outbox_id": 5315
+  },
+  "pick_release_stock_unchanged": true
+}

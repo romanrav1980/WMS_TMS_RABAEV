@@ -1,0 +1,388 @@
+{
+  "status": "PASS_RETIRED_METADATA_ONLY",
+  "plan_sha": "48848287cfc710d63cbad8a782e9d239619202f7ae0914981a19aa13b9388b03",
+  "history": [
+    "CREATE_ACTOR",
+    "ROLE.CREATE",
+    "WARE.ASSIGN",
+    "WARE.REVOKE",
+    "GROUP.CREATE",
+    "GROUP.ASSIGN",
+    "GROUP.REMOVE",
+    "GROUP.REVOKE",
+    "FOREIGN.ASSIGN",
+    "FOREIGN.REVOKE",
+    "GROUP.RETIRE",
+    "ROLE.RETIRE",
+    "RETIRE_ACTOR"
+  ],
+  "checks": [
+    {
+      "phase": "WARE",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "task_id": 2,
+        "ware_id": 1
+      },
+      "status": 200
+    },
+    {
+      "phase": "WARE",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "task_id": 2
+      },
+      "status": 200
+    },
+    {
+      "phase": "WARE",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {
+        "ware_id": 1
+      },
+      "status": 200
+    },
+    {
+      "phase": "WARE",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {},
+      "status": 200
+    },
+    {
+      "phase": "WARE",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "ware_id": 5062399
+      },
+      "status": 403
+    },
+    {
+      "phase": "WARE",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {
+        "ware_id": 5062399
+      },
+      "status": 403
+    },
+    {
+      "phase": "REVOKED",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "task_id": 2,
+        "ware_id": 1
+      },
+      "status": 403
+    },
+    {
+      "phase": "REVOKED",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "task_id": 2
+      },
+      "status": 403
+    },
+    {
+      "phase": "REVOKED",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {
+        "ware_id": 1
+      },
+      "status": 403
+    },
+    {
+      "phase": "REVOKED",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {},
+      "status": 403
+    },
+    {
+      "phase": "REVOKED",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "ware_id": 5062399
+      },
+      "status": 403
+    },
+    {
+      "phase": "REVOKED",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {
+        "ware_id": 5062399
+      },
+      "status": 403
+    },
+    {
+      "phase": "GROUP",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "task_id": 2,
+        "ware_id": 1
+      },
+      "status": 200
+    },
+    {
+      "phase": "GROUP",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "task_id": 2
+      },
+      "status": 200
+    },
+    {
+      "phase": "GROUP",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {
+        "ware_id": 1
+      },
+      "status": 200
+    },
+    {
+      "phase": "GROUP",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {},
+      "status": 200
+    },
+    {
+      "phase": "GROUP",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "ware_id": 5062399
+      },
+      "status": 403
+    },
+    {
+      "phase": "GROUP",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {
+        "ware_id": 5062399
+      },
+      "status": 403
+    },
+    {
+      "phase": "GROUP_REMOVED",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "task_id": 2,
+        "ware_id": 1
+      },
+      "status": 403
+    },
+    {
+      "phase": "GROUP_REMOVED",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "task_id": 2
+      },
+      "status": 403
+    },
+    {
+      "phase": "GROUP_REMOVED",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {
+        "ware_id": 1
+      },
+      "status": 403
+    },
+    {
+      "phase": "GROUP_REMOVED",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {},
+      "status": 403
+    },
+    {
+      "phase": "GROUP_REMOVED",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "ware_id": 5062399
+      },
+      "status": 403
+    },
+    {
+      "phase": "GROUP_REMOVED",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {
+        "ware_id": 5062399
+      },
+      "status": 403
+    },
+    {
+      "phase": "FOREIGN_ONLY_NO_WARE_FILTER",
+      "route": "/api/inventory/tasks",
+      "status": 200,
+      "rows": 0
+    },
+    {
+      "phase": "FOREIGN_ONLY_NO_WARE_FILTER",
+      "route": "/api/inventory/recovery-shorts",
+      "status": 200,
+      "rows": 0
+    },
+    {
+      "phase": "ALL_REVOKED",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "task_id": 2,
+        "ware_id": 1
+      },
+      "status": 403
+    },
+    {
+      "phase": "ALL_REVOKED",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "task_id": 2
+      },
+      "status": 403
+    },
+    {
+      "phase": "ALL_REVOKED",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {
+        "ware_id": 1
+      },
+      "status": 403
+    },
+    {
+      "phase": "ALL_REVOKED",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {},
+      "status": 403
+    },
+    {
+      "phase": "ALL_REVOKED",
+      "route": "/api/inventory/tasks",
+      "params": {
+        "ware_id": 5062399
+      },
+      "status": 403
+    },
+    {
+      "phase": "ALL_REVOKED",
+      "route": "/api/inventory/recovery-shorts",
+      "params": {
+        "ware_id": 5062399
+      },
+      "status": 403
+    }
+  ],
+  "receipts": {
+    "ROLE.CREATE": {
+      "operation_id": "NQ15.ROLE.CREATE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "NQ15.QUEUE.VIEW",
+      "version": 1,
+      "replayed": false
+    },
+    "WARE.ASSIGN": {
+      "operation_id": "NQ15.WARE.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "NQ15.WARE",
+      "version": 1,
+      "replayed": false
+    },
+    "WARE.REVOKE": {
+      "operation_id": "NQ15.WARE.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "NQ15.WARE",
+      "version": 2,
+      "replayed": false
+    },
+    "GROUP.CREATE": {
+      "operation_id": "NQ15.QUEUE.GROUP.CREATE",
+      "command_type": "GROUP_SAVE",
+      "object_id": "NQ15.QUEUE.GROUP",
+      "version": 1,
+      "replayed": false
+    },
+    "GROUP.ASSIGN": {
+      "operation_id": "NQ15.QUEUE.GROUP.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "NQ15.QUEUE.GROUP.ASSIGN",
+      "version": 1,
+      "replayed": false
+    },
+    "GROUP.REMOVE": {
+      "operation_id": "NQ15.QUEUE.GROUP.REMOVE",
+      "command_type": "GROUP_SAVE",
+      "object_id": "NQ15.QUEUE.GROUP",
+      "version": 2,
+      "replayed": false
+    },
+    "GROUP.REVOKE": {
+      "operation_id": "NQ15.QUEUE.GROUP.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "NQ15.QUEUE.GROUP.ASSIGN",
+      "version": 2,
+      "replayed": false
+    },
+    "FOREIGN.ASSIGN": {
+      "operation_id": "NQ15.FOREIGN.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "NQ15.FOREIGN",
+      "version": 1,
+      "replayed": false
+    },
+    "FOREIGN.REVOKE": {
+      "operation_id": "NQ15.FOREIGN.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "NQ15.FOREIGN",
+      "version": 2,
+      "replayed": false
+    },
+    "GROUP.RETIRE": {
+      "operation_id": "NQ15.QUEUE.GROUP.RETIRE",
+      "command_type": "GROUP_SAVE",
+      "object_id": "NQ15.QUEUE.GROUP",
+      "version": 3,
+      "replayed": false
+    },
+    "ROLE.RETIRE": {
+      "operation_id": "NQ15.ROLE.RETIRE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "NQ15.QUEUE.VIEW",
+      "version": 2,
+      "replayed": false
+    }
+  },
+  "business_commands": 0,
+  "after": {
+    "task": [
+      {
+        "inventory_task_id": 2,
+        "task_type": "INVENTORY_CHECK",
+        "task_source": "CASE_PICK_SHORT",
+        "source_doc_type": "CASE_PICK_SHORT",
+        "source_doc_id": 3,
+        "status": "NEW",
+        "ware_id": 1,
+        "cell_code": "QP62a6187883",
+        "articul": "DS-BASE-D10",
+        "planned_qty": 3,
+        "fact_qty": null,
+        "assigned_resource_type": "INVENTORY",
+        "assigned_resource_id": null,
+        "assigned_to": null,
+        "created_at": "2026-10-09 08:39:18.465247",
+        "created_by": "admin",
+        "assigned_at": null,
+        "started_at": null,
+        "done_at": null,
+        "updated_at": null,
+        "updated_by": null,
+        "comment_text": null,
+        "priority": 0,
+        "revision_id": null,
+        "count_operation_id": null,
+        "resource_session_id": null
+      }
+    ],
+    "counts": [
+      {
+        "operations": 5080,
+        "clocks": 59,
+        "outboxes": 5088
+      }
+    ]
+  },
+  "limitation": "Recovery has no active positive rows in existing DEV; its native SQL, scope, revoke and empty result are verified, not positive shortage content"
+}

@@ -1,0 +1,242 @@
+[
+  {
+    "name": "BIN$NsKl8aF3VyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 10,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aF3VyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 3,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NsKl8aFaVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 10,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aFaVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 3,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NsKl8aFjVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 22,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aFjVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 7,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NsKl8aFmVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 22,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aFmVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 7,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NsKl8aGQVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 10,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aGQVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 3,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NsKl8aH3VyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 18,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aH3VyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 3,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NsKl8aHKVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 17,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aHKVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 3,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NsKl8aIMVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 10,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aIMVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 3,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NsKl8aIVVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 22,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aIVVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 7,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NsKl8aIYVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 22,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aIYVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 7,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NsKl8aIpVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 10,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aIpVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 3,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NsKl8aJ8VyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 17,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aJ8VyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 3,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NsKl8aJCVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 10,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aJCVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 3,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NsKl8aKpVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 18,
+    "text": "PL/SQL: ORA-02289: \u043f\u043e\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NsKl8aKpVyjgYwEAAH9lTg==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 6,
+    "position": 3,
+    "text": "PL/SQL: SQL Statement ignored"
+  },
+  {
+    "name": "BIN$NxJE3MYnESjgYwEAAH+qjQ==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 4,
+    "position": 11,
+    "text": "PL/SQL: ORA-00942: \u0442\u0430\u0431\u043b\u0438\u0446\u0430 \u0438\u043b\u0438 \u043f\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f \u043d\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442"
+  },
+  {
+    "name": "BIN$NxJE3MYnESjgYwEAAH+qjQ==$0",
+    "type": "TRIGGER",
+    "attribute": "ERROR",
+    "line": 4,
+    "position": 4,
+    "text": "PL/SQL: SQL Statement ignored"
+  }
+]

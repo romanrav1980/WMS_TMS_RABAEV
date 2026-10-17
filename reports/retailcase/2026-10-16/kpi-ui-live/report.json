@@ -1,0 +1,34 @@
+{
+  "state": "PASS_LIVE_KPI_UI_ADMIN",
+  "nativeWrites": 0,
+  "liveWarehouse": 20790457,
+  "deniedUnknownWarehouse": 999999999,
+  "limitation": "Unknown warehouse denial is not a real foreign-role permission test. Native/self/foreign tests are separate evidence.",
+  "http": [
+    {
+      "path": "/api/access/workspaces",
+      "status": 200,
+      "api_call_id": "70206",
+      "request_id": "6fce66ce-489a-4361-aada-a7f45cd1732a"
+    },
+    {
+      "path": "/api/delivery/timing/kpis",
+      "status": 200,
+      "api_call_id": "70208",
+      "request_id": "3ec922ff-cbb9-4eeb-b751-4063837581b9"
+    },
+    {
+      "path": "/api/resources/picker-kpis",
+      "status": 200,
+      "api_call_id": "70207",
+      "request_id": "198022f9-cf5a-44eb-86a6-3db6deecc64b"
+    },
+    {
+      "path": "/api/delivery/timing/kpis",
+      "status": 403,
+      "api_call_id": "70210",
+      "request_id": "b2d7df34-dda1-4ce4-aa29-f86b946c7ed2"
+    }
+  ],
+  "errors": []
+}

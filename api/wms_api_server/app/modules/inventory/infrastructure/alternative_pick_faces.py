@@ -2,6 +2,7 @@
 from decimal import Decimal
 from typing import Any
 from .alternative_face_binding import bind_alternative_face
+from .metadata_transactions import begin_wave_metadata
 
 
 class AlternativePickFaces:
@@ -12,8 +13,7 @@ class AlternativePickFaces:
         with self.gateway.transaction("Route existing replenishment to a free dynamic pick face") as cursor:
             entered = False
             try:
-                cursor.execute("begin RRL_STOCK_METADATA_TX.begin_change(:actor,'pick_wave_launch');end;", {"actor": actor})
-                entered = True
+                entered = begin_wave_metadata(self.gateway, cursor, wave_id, actor)
                 cursor.execute("""select w.WARE_ID,w.ROUTE_ID from RRL_PICK_WAVE w
                     where w.PICK_WAVE_ID=:wave and w.STATUS='LAUNCHED' and w.PICK_RELEASED_AT is null""", {"wave": wave_id})
                 wave = cursor.fetchone()

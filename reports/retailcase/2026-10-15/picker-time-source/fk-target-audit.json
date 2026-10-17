@@ -1,0 +1,283 @@
+{
+  "constraints": [
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "RRL_RESOURCE_CHK1",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "RESOURCE_CLASS",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "RRL_RESOURCE_CHK2",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "STATUS",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "RRL_RESOURCE_CHK3",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "ACTIVE",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "RRL_RESOURCE_FK1",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "RESOURCE_TYPE",
+      "position": 1
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "RRL_RESOURCE_FK2",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "EQUIPMENT_ID",
+      "position": 1
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "RRL_RESOURCE_PK",
+      "constraint_type": "P",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "RESOURCE_ID",
+      "position": 1
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "RRL_RESOURCE_U1",
+      "constraint_type": "U",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "RESOURCE_CODE",
+      "position": 1
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "SYS_C0014837",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "RESOURCE_ID",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "SYS_C0014838",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "RESOURCE_CODE",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "SYS_C0014839",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "RESOURCE_NAME",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "SYS_C0014840",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "RESOURCE_CLASS",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "SYS_C0014841",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "RESOURCE_TYPE",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "SYS_C0014842",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "STATUS",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "SYS_C0014843",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "ACTIVE",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "SYS_C0014844",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "CREATED_AT",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "constraint_name": "RRL_RESOURCE_SESSION_CHK1",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "STATUS",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "constraint_name": "RRL_RESOURCE_SESSION_CHK2",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "LOGOUT_AT",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "constraint_name": "RRL_RESOURCE_SESSION_CHK2",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "LOGIN_AT",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "constraint_name": "RRL_RESOURCE_SESSION_FK1",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "SHIFT_ID",
+      "position": 1
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "constraint_name": "RRL_RESOURCE_SESSION_FK2",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "RESOURCE_ID",
+      "position": 1
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "constraint_name": "RRL_RESOURCE_SESSION_FK3",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "EQUIPMENT_ID",
+      "position": 1
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "constraint_name": "RRL_RESOURCE_SESSION_PK",
+      "constraint_type": "P",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "SESSION_ID",
+      "position": 1
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "constraint_name": "SYS_C0014862",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "SESSION_ID",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "constraint_name": "SYS_C0014863",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "SHIFT_ID",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "constraint_name": "SYS_C0014864",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "RESOURCE_ID",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "constraint_name": "SYS_C0014865",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "LOGIN_AT",
+      "position": null
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "constraint_name": "SYS_C0014866",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "STATUS",
+      "position": null
+    },
+    {
+      "table_name": "RRL_WARES",
+      "constraint_name": "RRL_WARES_CK_ID_POS",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "column_name": "ID",
+      "position": null
+    }
+  ],
+  "columns": [
+    {
+      "table_name": "RRL_RESOURCE",
+      "column_name": "RESOURCE_ID",
+      "data_type": "NUMBER",
+      "nullable": "N"
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "column_name": "SESSION_ID",
+      "data_type": "NUMBER",
+      "nullable": "N"
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "column_name": "RESOURCE_ID",
+      "data_type": "NUMBER",
+      "nullable": "N"
+    },
+    {
+      "table_name": "RRL_WARES",
+      "column_name": "ID",
+      "data_type": "NUMBER",
+      "nullable": "Y"
+    }
+  ],
+  "duplicates": []
+}

@@ -1,0 +1,8 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_json_scalar\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_json_scalar\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_json_scalar\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_json_scalar\rrl_iw_case_bridge_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_json_scalar\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_json_scalar\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_json_scalar\after_sources.sql
+Done. Statements=7; Errors=0; AbsentCleanup=0

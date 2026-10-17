@@ -1,0 +1,319 @@
+{
+  "status": "PASS",
+  "before": {
+    "stock": [
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 14
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "task": [
+      {
+        "status": "NEW",
+        "picked_qty": 0,
+        "content_version": 2,
+        "assignment_version": 0,
+        "assigned_to": null,
+        "resource_session_id": null,
+        "assigned_resource_id": null
+      }
+    ],
+    "events": [],
+    "lineage": [
+      {
+        "uid_pallet": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "cell": "CPT_13583852",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3
+      },
+      {
+        "uid_pallet": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "cell": "QIPcdbf4c0962",
+        "remain": 1,
+        "hard_reserved_base": 0,
+        "stock_version": 1
+      },
+      {
+        "uid_pallet": "REUSE.RETURN:e6c16d0bbd",
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 14
+      },
+      {
+        "uid_pallet": "REUSE.RETURN:e6c16d0bbd",
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "child": []
+  },
+  "commands": {
+    "ABSENT": {
+      "body": {
+        "operation_id": "N1939.RMI.ABSENT",
+        "action": "CLAIM",
+        "expected_assignment_version": 0,
+        "resource_session_id": 59,
+        "resource_id": 63,
+        "equipment_id": null,
+        "reason": "SIMULATED_TEST_LABEL_NOT_PHYSICAL N1939 metadata acceptance only"
+      },
+      "wire": "{\"action\":\"CLAIM\",\"equipment_id\":null,\"expected_assignment_version\":0,\"operation_id\":\"N1939.RMI.ABSENT\",\"reason\":\"SIMULATED_TEST_LABEL_NOT_PHYSICAL N1939 metadata acceptance only\",\"resource_id\":63,\"resource_session_id\":59}"
+    },
+    "CLAIM": {
+      "body": {
+        "operation_id": "N1939.RMI.CLAIM",
+        "action": "CLAIM",
+        "expected_assignment_version": 0,
+        "resource_session_id": 59,
+        "resource_id": 63,
+        "equipment_id": null,
+        "reason": "SIMULATED_TEST_LABEL_NOT_PHYSICAL N1939 metadata acceptance only"
+      },
+      "wire": "{\"action\":\"CLAIM\",\"equipment_id\":null,\"expected_assignment_version\":0,\"operation_id\":\"N1939.RMI.CLAIM\",\"reason\":\"SIMULATED_TEST_LABEL_NOT_PHYSICAL N1939 metadata acceptance only\",\"resource_id\":63,\"resource_session_id\":59}"
+    },
+    "START": {
+      "body": {
+        "operation_id": "N1939.RMI.START",
+        "action": "START",
+        "expected_assignment_version": 1,
+        "resource_session_id": 59,
+        "resource_id": 63,
+        "equipment_id": null,
+        "reason": "SIMULATED_TEST_LABEL_NOT_PHYSICAL N1939 metadata acceptance only"
+      },
+      "wire": "{\"action\":\"START\",\"equipment_id\":null,\"expected_assignment_version\":1,\"operation_id\":\"N1939.RMI.START\",\"reason\":\"SIMULATED_TEST_LABEL_NOT_PHYSICAL N1939 metadata acceptance only\",\"resource_id\":63,\"resource_session_id\":59}"
+    },
+    "ABANDON": {
+      "operation_id": "N1939.RMI.ABANDON",
+      "domain": "CASE",
+      "task_id": 1139,
+      "reason": "TEST explicit never-recorded proof, not physical cancellation",
+      "original_wire": "{\"action\":\"CLAIM\",\"equipment_id\":null,\"expected_assignment_version\":0,\"operation_id\":\"N1939.RMI.ABSENT\",\"reason\":\"SIMULATED_TEST_LABEL_NOT_PHYSICAL N1939 metadata acceptance only\",\"resource_id\":63,\"resource_session_id\":59}"
+    },
+    "RECORDED": {
+      "operation_id": "N1939.RMI.RECORDED",
+      "domain": "CASE",
+      "task_id": 1139,
+      "reason": "TEST explicit never-recorded proof, not physical cancellation",
+      "original_wire": "{\"action\":\"CLAIM\",\"equipment_id\":null,\"expected_assignment_version\":0,\"operation_id\":\"N1939.RMI.CLAIM\",\"reason\":\"SIMULATED_TEST_LABEL_NOT_PHYSICAL N1939 metadata acceptance only\",\"resource_id\":63,\"resource_session_id\":59}"
+    }
+  },
+  "checks": [
+    "same_control_race_exact_receipt_resolution_late_original_fenced_no_receipt",
+    "changed_body_wrong_hash_browser_actor_foreign_actor_denied",
+    "current_role_revocation_denies_read_and_exact_replay",
+    "CLAIM_APPLIED_replay_RECORDED_not_ABANDONED_START_APPLIED_replay"
+  ],
+  "hardware": false,
+  "goods_commands": 0,
+  "abandonment": {
+    "operation_id": "N1939.RMI.ABANDON",
+    "status": "ABANDONED",
+    "domain": "CASE",
+    "task_id": 1139,
+    "actor": "N1939.OP",
+    "action": "CLAIM",
+    "target": "N1939.OP",
+    "original_operation_id": "N1939.RMI.ABSENT",
+    "original_wire": "{\"action\":\"CLAIM\",\"equipment_id\":null,\"expected_assignment_version\":0,\"operation_id\":\"N1939.RMI.ABSENT\",\"reason\":\"SIMULATED_TEST_LABEL_NOT_PHYSICAL N1939 metadata acceptance only\",\"resource_id\":63,\"resource_session_id\":59}",
+    "original_request_sha256": "E601FBCD8666674C7AC0032BA83CB288B5F12DF032C30DB0E0260D341F6E602E",
+    "control_request_sha256": "5E150F6CB6D0FE0D50C861C7F09CC63B74B121E0083F782C5677CC39E7ED8D57",
+    "original_expected_assignment_version": 0,
+    "assignment_version_at_abandon": 0,
+    "outcome_confirmed": true,
+    "stock_posted": false
+  },
+  "role_commands": [
+    {
+      "operation_id": "N1939.RMI.ROLE.OFF",
+      "command_type": "ROLE_SAVE",
+      "payload": {
+        "role_id": "N1939.CASE.EXEC",
+        "title": "SIMULATED_TEST_LABEL_NOT_PHYSICAL; TEST_FIXTURE_NOT_HARDWARE N1939 metadata proof",
+        "permissions": [
+          "case_pick_execute"
+        ],
+        "active": false,
+        "expected_version": 1
+      }
+    },
+    {
+      "operation_id": "N1939.RMI.ROLE.ON",
+      "command_type": "ROLE_SAVE",
+      "payload": {
+        "role_id": "N1939.CASE.EXEC",
+        "title": "SIMULATED_TEST_LABEL_NOT_PHYSICAL; TEST_FIXTURE_NOT_HARDWARE N1939 metadata proof",
+        "permissions": [
+          "case_pick_execute"
+        ],
+        "active": true,
+        "expected_version": 2
+      }
+    }
+  ],
+  "role_off": {
+    "operation_id": "N1939.RMI.ROLE.OFF",
+    "command_type": "ROLE_SAVE",
+    "object_id": "N1939.CASE.EXEC",
+    "version": 2,
+    "replayed": false
+  },
+  "role_on": {
+    "operation_id": "N1939.RMI.ROLE.ON",
+    "command_type": "ROLE_SAVE",
+    "object_id": "N1939.CASE.EXEC",
+    "version": 3,
+    "replayed": false
+  },
+  "claim": {
+    "task_id": 1139,
+    "warehouse_id": 13583852,
+    "status": "ASSIGNED",
+    "assignment_version": 1,
+    "content_version": 2,
+    "assigned_to": "N1939.OP",
+    "resource_id": 63,
+    "resource_session_id": 59,
+    "equipment_id": null,
+    "started_at_instant": null,
+    "started_shift_time_zone": null,
+    "outcome": "APPLIED",
+    "request_sha256": "9F1063F7CDACFFF9153216D69E7A3F82B355FBDD071634D8FB9EFDA50CFB8BC3",
+    "outcome_confirmed": true,
+    "may_create_corrected_operation": false,
+    "error_code": null,
+    "operation_id": "N1939.RMI.CLAIM",
+    "action": "CLAIM",
+    "actor": "N1939.OP",
+    "changed": true,
+    "stock_posted": false
+  },
+  "start": {
+    "task_id": 1139,
+    "warehouse_id": 13583852,
+    "status": "IN_PROGRESS",
+    "assignment_version": 2,
+    "content_version": 2,
+    "assigned_to": "N1939.OP",
+    "resource_id": 63,
+    "resource_session_id": 59,
+    "equipment_id": null,
+    "started_at_instant": "2026-10-15T17:19:15.519832+00:00",
+    "started_shift_time_zone": null,
+    "outcome": "APPLIED",
+    "request_sha256": "DFF92DA0B3335233B3B98D03BBE63238E8496FD4BF1D89A0AA44A46E5A25AB7F",
+    "outcome_confirmed": true,
+    "may_create_corrected_operation": false,
+    "error_code": null,
+    "operation_id": "N1939.RMI.START",
+    "action": "START",
+    "actor": "N1939.OP",
+    "changed": true,
+    "stock_posted": false
+  },
+  "after": {
+    "stock": [
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 14
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "picked_qty": 0,
+        "content_version": 2,
+        "assignment_version": 2,
+        "assigned_to": "N1939.OP",
+        "resource_session_id": 59,
+        "assigned_resource_id": 63
+      }
+    ],
+    "events": [
+      {
+        "case_pick_event_id": 3752,
+        "event_type": "CLAIMED",
+        "offline_event_id": null
+      },
+      {
+        "case_pick_event_id": 3753,
+        "event_type": "STARTED",
+        "offline_event_id": null
+      }
+    ],
+    "lineage": [
+      {
+        "uid_pallet": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "cell": "CPT_13583852",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3
+      },
+      {
+        "uid_pallet": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "cell": "QIPcdbf4c0962",
+        "remain": 1,
+        "hard_reserved_base": 0,
+        "stock_version": 1
+      },
+      {
+        "uid_pallet": "REUSE.RETURN:e6c16d0bbd",
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 14
+      },
+      {
+        "uid_pallet": "REUSE.RETURN:e6c16d0bbd",
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "child": []
+  },
+  "goods_stock_unchanged": true,
+  "role_restored_version": 3
+}

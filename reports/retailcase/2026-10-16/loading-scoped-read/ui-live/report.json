@@ -1,0 +1,22 @@
+{
+  "state": "PASS_LIVE_ROLE_ONLY_LOADING_PAGE",
+  "nativeWrites": 0,
+  "roleOnlyWarehouse": true,
+  "legacyViewAndShippingFalse": true,
+  "scopedLoadPanelVisible": true,
+  "foreignClearsTripAndWindow": true,
+  "width390Overflow": false,
+  "calls": [
+    {
+      "path": "/api/transport/loading/33655/status",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/transport/loading/33653/status",
+      "status": 403,
+      "method": "GET"
+    }
+  ],
+  "errors": []
+}

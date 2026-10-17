@@ -1,0 +1,323 @@
+{
+  "state": "PASS_IMMUTABLE_RECEIPT_SCOPE_REVOKE_AND_PLATFORM_LOGIN_ONLY_NATIVE_NAV",
+  "actor": "MT16M926cdde30a",
+  "case": 1151,
+  "http": [
+    {
+      "label": "immutable_receipt",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt?offline_event_id=MT16.926cdde30a.TRANSFER",
+      "status": 200,
+      "api_call_id": "70651",
+      "request_id": "ce996a82-2eb6-40a4-8a83-730c4c96b046"
+    },
+    {
+      "label": "not_observed",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt?offline_event_id=ABSENT.TEST.RECEIPT",
+      "status": 404,
+      "api_call_id": "70652",
+      "request_id": "2ccd2bad-b03d-4262-a3bd-c843f81e9433"
+    },
+    {
+      "label": "foreign_task",
+      "path": "/api/case-pick/tasks/1148/transfer-receipt?offline_event_id=MT16.926cdde30a.TRANSFER",
+      "status": 403,
+      "api_call_id": "70653",
+      "request_id": "25cb5f71-9c23-40ab-b982-dccc0901847e"
+    },
+    {
+      "label": "revoked_receipt",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt?offline_event_id=MT16.926cdde30a.TRANSFER",
+      "status": 403,
+      "api_call_id": "70654",
+      "request_id": "1b3df029-cbac-43da-9b91-7c0bbc6451a0"
+    },
+    {
+      "label": "restored_receipt",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt?offline_event_id=MT16.926cdde30a.TRANSFER",
+      "status": 200,
+      "api_call_id": "70655",
+      "request_id": "280d5220-2794-4e10-b9d2-530533a750cb"
+    },
+    {
+      "label": "scoped_shell",
+      "path": "/api/admin/auth/login",
+      "status": 200,
+      "api_call_id": "70656",
+      "request_id": "c12c3685-24c5-4721-8a25-99aa7e3f2aa9"
+    },
+    {
+      "label": "scoped_case_card",
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "api_call_id": "70657",
+      "request_id": "d4208d3e-6f48-45ff-9518-abdc016a7382"
+    },
+    {
+      "label": "native_workspaces",
+      "path": "/api/access/workspaces",
+      "status": 200,
+      "api_call_id": "70658",
+      "request_id": "04cf0085-15bd-4e2c-bc6c-f80d90c23b8b"
+    }
+  ],
+  "commands": {
+    "GROUP.REMOVE": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.PROOF.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 3,
+          "group_id": "MT16G926cdde30a",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.PROOF.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "MT16G926cdde30a",
+        "version": 4,
+        "replayed": false
+      }
+    },
+    "GROUP.RESTORE": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.PROOF.GROUP.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 4,
+          "group_id": "MT16G926cdde30a",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20902283"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.PROOF.GROUP.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "MT16G926cdde30a",
+        "version": 5,
+        "replayed": false
+      }
+    },
+    "MANAGER.VIEW": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.PROOF.MANAGER.VIEW",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "MT16R926cdde30a",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_manage",
+            "case_pick_view"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.PROOF.MANAGER.VIEW",
+        "command_type": "ROLE_SAVE",
+        "object_id": "MT16R926cdde30a",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "SHELL.ASSIGN": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.PROOF.SHELL.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "MT16.926cdde30a.PROOF.LOGIN",
+          "username": "MT16M926cdde30a",
+          "role_id": "FW16Sfc9538d7c6",
+          "scope_kind": "PLATFORM",
+          "scope_id": null,
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T18:49:46.714780+00:00",
+          "valid_until": "2026-10-16T21:50:46.714780+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.PROOF.SHELL.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "MT16.926cdde30a.PROOF.LOGIN",
+        "version": 1,
+        "replayed": false
+      }
+    }
+  },
+  "ui_fixture_only_business_posts": false,
+  "immutable_receipt": {
+    "case_pick_task_id": 1151,
+    "status": "TRANSFERRED",
+    "offline_event_id": "MT16.926cdde30a.TRANSFER",
+    "actor": "MT16M926cdde30a",
+    "outcome_confirmed": true,
+    "source": "IMMUTABLE_TRANSFERRED_EVENT",
+    "request": {
+      "to_resource_id": 77,
+      "to_resource_session_id": 73,
+      "to_equipment_id": null,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "offline_event_id": "MT16.926cdde30a.TRANSFER",
+      "scan_container": "090000000000020016",
+      "expected_content_version": 3,
+      "expected_assigned_to": "OC16P1a524b2458",
+      "expected_from_session_id": 72
+    }
+  },
+  "not_observed": {
+    "detail": {
+      "code": "CASE_TRANSFER_RECEIPT_NOT_OBSERVED",
+      "operation_id": "ABSENT.TEST.RECEIPT",
+      "outcome_confirmed": false,
+      "read_before_retry": true
+    }
+  },
+  "foreign_task": {
+    "detail": {
+      "code": "CASE_TRANSFER_RECEIPT_FORBIDDEN",
+      "operation_id": "MT16.926cdde30a.TRANSFER",
+      "outcome_confirmed": false,
+      "read_before_retry": true
+    }
+  },
+  "revoked_receipt": {
+    "detail": {
+      "code": "CASE_TRANSFER_RECEIPT_FORBIDDEN",
+      "operation_id": "MT16.926cdde30a.TRANSFER",
+      "outcome_confirmed": false,
+      "read_before_retry": true
+    }
+  },
+  "restored_receipt": {
+    "case_pick_task_id": 1151,
+    "status": "TRANSFERRED",
+    "offline_event_id": "MT16.926cdde30a.TRANSFER",
+    "actor": "MT16M926cdde30a",
+    "outcome_confirmed": true,
+    "source": "IMMUTABLE_TRANSFERRED_EVENT",
+    "request": {
+      "to_resource_id": 77,
+      "to_resource_session_id": 73,
+      "to_equipment_id": null,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "offline_event_id": "MT16.926cdde30a.TRANSFER",
+      "scan_container": "090000000000020016",
+      "expected_content_version": 3,
+      "expected_assigned_to": "OC16P1a524b2458",
+      "expected_from_session_id": 72
+    }
+  },
+  "shell_assignment": "MT16.926cdde30a.PROOF.LOGIN",
+  "shell_role": "FW16Sfc9538d7c6",
+  "scoped_shell": {
+    "username": "MT16M926cdde30a",
+    "display_name": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+    "user_group": "MT16M926cdde30a",
+    "permissions": [
+      "wms_admin_login"
+    ]
+  },
+  "scoped_case_card": {
+    "case_pick_task_id": 1151,
+    "pick_wave_id": 588,
+    "wave_code": "OC16.1a524b2458",
+    "wave_pick_released_at": "2026-10-16T14:12:49.515271",
+    "wave_pick_released_by": "admin",
+    "pick_plan_id": 2219,
+    "customer_order_id": 2168,
+    "order_no": "OC16.1a524b2458",
+    "customer_id": -980701,
+    "customer_name": "DS-BASE synthetic S1",
+    "sscc": "090000000000020016",
+    "pallet_type_code": "SMALL514.AF32399B",
+    "pallet_type_name": "Own514 final weighing small box",
+    "status": "SHIPPED",
+    "assigned_resource_id": 77,
+    "resource_session_id": 73,
+    "equipment_id": null,
+    "assigned_to": "MT16T926cdde30a",
+    "ware_id": 20902283,
+    "total_lines": 1,
+    "picked_lines": 1,
+    "planned_qty": "25",
+    "picked_qty": "25",
+    "current_cell": "FSdc48b9c2aa",
+    "content_version": 7,
+    "legacy_sborka_pallet_id": 641533,
+    "shipped_operation": "OC16.1a524b2458.FULL.LOAD",
+    "created_at": "2026-10-16T14:12:49.177722",
+    "started_at": "2026-10-16T14:12:50.780626",
+    "started_at_instant": "2026-10-16T14:12:50.780626-04:00",
+    "started_shift_time_zone": null,
+    "closed_at": "2026-10-16T14:26:01.808406",
+    "lines": [
+      {
+        "case_pick_line_id": 1153,
+        "pick_wave_task_id": 2075,
+        "pick_task_id": 2157,
+        "articul": "AS16ADC48B9C2AA",
+        "product_name": null,
+        "cell_code": "AS16Cdc48b9c2aa",
+        "pick_sequence": null,
+        "stack_stage": "MAIN",
+        "stack_policy_version": 0,
+        "planned_qty": "25",
+        "picked_qty": "25",
+        "status": "PICKED",
+        "last_offline_event_id": null,
+        "started_at": "2026-10-16T14:16:28.218631",
+        "done_at": "2026-10-16T14:26:01.560395"
+      }
+    ],
+    "physical_lots": [],
+    "tare": {
+      "ware_id": 20902283,
+      "pallet_type_id": 32,
+      "pallet_type_name": "Own514 final weighing small box",
+      "available_quantity": "1",
+      "booking_operation_id": "OC16.1a524b2458.TARE.BOOK",
+      "count_state": "OBSERVED"
+    }
+  },
+  "native_workspaces": {
+    "username": "MT16M926cdde30a",
+    "access_revision": 746,
+    "warehouses": [
+      {
+        "warehouse_id": 20902283,
+        "title": "AS16.dc48b9c2aa",
+        "capabilities": {
+          "dispatch": false,
+          "waves": false,
+          "picking": true,
+          "warehouse_tasks": false,
+          "resource_timeline": false,
+          "resource_registry": false,
+          "resource_sessions": false
+        }
+      }
+    ],
+    "limit": 500,
+    "has_more": false,
+    "driver_entry": "EXISTING_BOUND_LOGIN",
+    "navigation_only": true
+  }
+}

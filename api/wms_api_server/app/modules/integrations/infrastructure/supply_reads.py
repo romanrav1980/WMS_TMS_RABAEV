@@ -1,3 +1,4 @@
+from datetime import date
 """SAP receipt worklist and detailed quantity proposal in one current warehouse snapshot."""
 from decimal import Decimal, ROUND_CEILING
 from typing import Any
@@ -8,36 +9,25 @@ def rows(cur: Any) -> list[dict[str, Any]]:
     return [dict(zip(names, row)) for row in cur.fetchall()]
 
 
-def scope(cur: Any, actor: str) -> tuple[int | None, bool]:
-    cur.execute("""select WARE_ID,case when upper(trim(USER_GROUP))='GLOBAL_ADMIN'then 1 else 0 end
-        from RUSERS where ID=:actor and nvl(DELETED,0)=0 and RRL_HAS_WRIGHT(ID,'sap_supply_view')=1""", actor=actor)
-    result = cur.fetchone()
-    if result is None or (not result[1] and result[0] is None):
-        raise PermissionError("SUPPLY_CURRENT_WARE_ACTOR_REQUIRED")
-    return result[0], bool(result[1])
-
-
-def allowed(ware: int | None, own: int | None, global_admin: bool) -> None:
-    if ware is None or (not global_admin and ware != own):
-        raise PermissionError("SUPPLY_CURRENT_WARE_FORBIDDEN")
-
-
-def list_supplies(gateway: Any, warehouse: int | None, limit: int, actor: str) -> list[dict[str, Any]]:
+def list_supplies(gateway: Any, warehouse: int | None, limit: int, actor: str,
+                  date_from: date|None=None,date_to: date|None=None,date_basis: str="PLANNED_ACCEPT",include_unplanned: bool=False) -> list[dict[str, Any]]:
+    from .supply_view_scope import require_supply_view,calendar_window
     if not 1 <= limit <= 200:
         raise ValueError("SUPPLY_LIST_BOUND_200")
-    with gateway.transaction("SAP supply worklist READ ONLY current scope") as cur:
+    expression,date_params=calendar_window(date_from,date_to,date_basis,include_unplanned)
+    with gateway.transaction("SAP supply worklist READ ONLY native scope") as cur:
         if not getattr(gateway,"transaction_bound",False):
             cur.execute("set transaction read only")
-        own, global_admin = scope(cur, actor)
-        if warehouse is not None:
-            allowed(warehouse, own, global_admin)
-        target = warehouse if warehouse is not None else None if global_admin else own
+        require_supply_view(cur,actor,warehouse)
         cur.execute("""select s.ORDER_ID,s.ORDER_NUMBER,s.REVISION,s.WARE_ID,s.RECEIVE_CELL,s.NAKLAD_ID,
-            h.CONDITION,h.DATE_OF_ACCEPT from RRL_SAP_SUPPLY_ORDER s
+            h.CONDITION,h.DATE_OF_ACCEPT,h.DATE_OF_NAKLAD,h.PLANNING_ACCEPT_TIME,
+            'UNRESOLVED_SERVER_LOCAL' TIME_STATUS from RRL_SAP_SUPPLY_ORDER s
             join RRL_PRIHOD_NAKLAD h on h.ID=s.NAKLAD_ID
             where (:warehouse is null or s.WARE_ID=:warehouse)
+            and RRL_ACCESS_API.allowed(:actor,'sap_supply_view','WAREHOUSE',to_char(s.WARE_ID))=1
+            and """+expression+"""
             order by s.UPDATED_AT desc,s.ORDER_ID fetch first :page_limit rows only""",
-            warehouse=target, page_limit=limit)
+            dict(warehouse=warehouse,page_limit=limit,actor=actor,**date_params))
         return rows(cur)
 
 
@@ -45,7 +35,8 @@ def supply_detail(gateway: Any, order: str | None, document: int | None, actor: 
     with gateway.transaction("SAP source and pallet proposal READ ONLY current scope") as cur:
         if not getattr(gateway,"transaction_bound",False):
             cur.execute("set transaction read only")
-        own, global_admin = scope(cur, actor)
+        from .supply_view_scope import require_supply_view
+        require_supply_view(cur, actor)
         if document is not None:
             cur.execute("select ORDER_ID from RRL_SAP_SUPPLY_ORDER where NAKLAD_ID=:document_id", document_id=document)
             source = cur.fetchall()
@@ -59,7 +50,7 @@ def supply_detail(gateway: Any, order: str | None, document: int | None, actor: 
         if not headers:
             raise LookupError("Supply order not found")
         header = headers[0]
-        allowed(header["ware_id"], own, global_admin)
+        require_supply_view(cur, actor, header["ware_id"])
         cur.execute("""select l.LINE_NUMBER,l.ROW_ID,l.ARTICUL,a.NAME,
             to_char(l.PLANNED_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PLANNED_QTY,l.BASE_UOM,
             to_char(a.NORMA_UKLADKI,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') NORMA_UKLADKI,

@@ -1,0 +1,35 @@
+{
+  "status": "FROZEN_ADDITIVE_GATES_NOT_APPLIED",
+  "original_manifest": {
+    "path": "db/migrations/2026-10-15_resource_metadata_intents/frozen-manifest.json",
+    "sha256": "4f12af11e4fd524f28f0cd6ecf846a10679121e415045a2cabeb984ecd7945b3"
+  },
+  "original_files_unchanged": true,
+  "evidence": "reports/retailcase/2026-10-15/resource-metadata-intents/before-errors-read.json",
+  "files": [
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/before_current.sql",
+      "sha256": "1c40d11aa52b8b57b5d430f8e6f3ddde5090de383e1c0160cac49aefeed0f77d"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/verify_current.sql",
+      "sha256": "0a547dd33c7523218497134a889d98f49070dfaa7bdf78f6c7a89496e861f108"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/rollback_verify_current.sql",
+      "sha256": "19134770cb478c4cce081650f40af8b2bd44c3f3b5b41ae14a956f4ecc4ba56c"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/apply_reviewed.sql",
+      "sha256": "ba819e138ba1e2acc4bb312b5a39d07c82a15df1e16daee80c9f0fc34c0d9f0e"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/rollback_reviewed.sql",
+      "sha256": "b2dc1d3b06edf245e2d35723bba916f883ac23b62dfa05dfbd0bdf33fe29f189"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/reviewed-gates-rationale.md",
+      "sha256": "4ae5bb0e93de6d866060c0c9f97b8a662eaa9dac24190674e513fce9bf208a28"
+    }
+  ]
+}

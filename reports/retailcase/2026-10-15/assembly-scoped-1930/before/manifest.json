@@ -1,0 +1,58 @@
+{
+  "captured_at_utc": "2026-10-15T16:29:16.165443+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_ASSEMBLY_SCALE_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_assembly_scale_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "27bcb8bda054b4af54ff267040eaab0fa65b181e1d55dcb19bd97274796ad21f",
+      "artifact_sha256": "6de4b21d09deaf633898873ccf3fbdfaba3bceb29ac71b66fd175ef168fd10d2"
+    },
+    {
+      "name": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_task_access_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "745b1cf148f11c0f3adcbfcf4ea2ca41b817875601d4c1d5761ece0d73813c8c",
+      "artifact_sha256": "3f3ab03c73112e493768c890502553671f431f4c7d2cafc5dc1a3429009ceadd"
+    },
+    {
+      "name": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_resource_policy_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "a749d2e6add476e278869880b2452d5edef0b1030064f65edbdfc8bee6b8e931",
+      "artifact_sha256": "c301ac8e09d7c1bbf03abd39d1282d6e28b3a45634ce95f87d2f7f5836fc0a9c"
+    },
+    {
+      "name": "RRL_ASSEMBLY_RECOVERY_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_assembly_recovery_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "8a793c3a9a016b9315175fb957378756ecd630eb9f4cc63ee3f474de108c2f18",
+      "artifact_sha256": "aa95c5ac5179b048edf3d4c3e4359ce2971d7fa7952885b0a65b2e9758b0defa"
+    },
+    {
+      "name": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE",
+      "file": "rrl_case_task_access_package.sql",
+      "errors": [],
+      "user_source_sha256": "8d1486c3d76223dbdffe6dbb3be66f2f79695bf1f20cb6e11a3926a3ea051958",
+      "artifact_sha256": "eac283a840fc86a9024cc2550c0e3d9a4ba40cd7f5e6001f4beeb679e04547db"
+    },
+    {
+      "name": "RRL_WH_SCALE_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_wh_scale_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "59dbcd41c475a1682683ee63acb270f7ae46767ed20d1ce68deaa1e814997d30",
+      "artifact_sha256": "d9ab4c66b435ea7bb8e9b7919c173aa8a11e616273664dbea194d48bf8071795"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "state": "PUBLISHED",
+  "cell": "CPT_20846272",
+  "warehouse": 20846272,
+  "quantity_effect": false,
+  "reason": "Fresh warehouse onboarding omitted system CASE carrier cell and its published lock key; retain failed native POLICY_KEY_NOT_PUBLISHED evidence"
+}

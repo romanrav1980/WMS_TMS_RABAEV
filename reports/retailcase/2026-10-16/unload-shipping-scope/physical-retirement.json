@@ -1,0 +1,107 @@
+{
+  "state": "PASS_RETURN25EA_SOURCE_NO_RESERVATION_CANCELLED_CASE_WAVE_PLAN_HISTORY_RETAINED",
+  "commands": {
+    "RETURN": {
+      "wire": "{\"actor\":\"admin\",\"command_type\":\"CASE_CARRIER_RETURN\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"destinations\":{\"CASELOT:41F7B7504D40CF6381677528833A9001CE9A7A:1\":\"AS16C410f14b915\",\"CASELOT:5AD8A72067CDB114EEAE99B31B76421C1668B0:1\":\"AS16C410f14b915\"},\"expected_content_version\":8,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"scan_container\":\"090000000000021013\"},\"operation_id\":\"OC16.2c449407d2.FINAL.RETURN\",\"source\":{\"case_task_id\":1152},\"units\":[]}",
+      "state": "COMMITTED",
+      "result": {
+        "task": 1152,
+        "version": 8,
+        "carrier": "090000000000021013",
+        "warehouse": 20266481,
+        "stocks": [
+          {
+            "uid": "CASELOT:41F7B7504D40CF6381677528833A9001CE9A7A:1",
+            "cell": "LD410f14b915",
+            "quantity": "1",
+            "version": 4,
+            "base": "EA",
+            "article": "AS16A410F14B915",
+            "case_line": 1154,
+            "target": "AS16C410f14b915",
+            "reservations": [
+              1919
+            ]
+          },
+          {
+            "uid": "CASELOT:5AD8A72067CDB114EEAE99B31B76421C1668B0:1",
+            "cell": "LD410f14b915",
+            "quantity": "24",
+            "version": 4,
+            "base": "EA",
+            "article": "AS16A410F14B915",
+            "case_line": 1154,
+            "target": "AS16C410f14b915",
+            "reservations": [
+              1920
+            ]
+          }
+        ],
+        "before": [
+          {
+            "uid": "CASELOT:41F7B7504D40CF6381677528833A9001CE9A7A:1",
+            "cell": "LD410f14b915",
+            "quantity": "1",
+            "version": 4,
+            "base": "EA",
+            "article": "AS16A410F14B915",
+            "case_line": 1154
+          },
+          {
+            "uid": "CASELOT:5AD8A72067CDB114EEAE99B31B76421C1668B0:1",
+            "cell": "LD410f14b915",
+            "quantity": "24",
+            "version": 4,
+            "base": "EA",
+            "article": "AS16A410F14B915",
+            "case_line": 1154
+          }
+        ],
+        "unused": [],
+        "operation_id": "OC16.2c449407d2.FINAL.RETURN",
+        "status": "RETURNED",
+        "outbox_id": 5690
+      }
+    },
+    "WAVE": {
+      "wire": "{\"actor\":\"admin\",\"command_type\":\"WAVE_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"only_cancelled_replenishment\":0,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"reservation_kind\":null},\"operation_id\":\"OC16.2c449407d2.FINAL.WAVE\",\"source\":{\"document_id\":590,\"document_type\":\"PICK_WAVE\"},\"units\":[]}",
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.2c449407d2.FINAL.WAVE",
+        "document_type": "PICK_WAVE",
+        "document_id": 590,
+        "released_count": 0,
+        "outbox_id": 5691
+      }
+    },
+    "PLAN": {
+      "wire": "{\"actor\":\"admin\",\"command_type\":\"PICK_PLAN_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"only_cancelled_replenishment\":0,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"reservation_kind\":null},\"operation_id\":\"OC16.2c449407d2.FINAL.PLAN\",\"source\":{\"document_id\":2221,\"document_type\":\"PICK_PLAN\"},\"units\":[]}",
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.2c449407d2.FINAL.PLAN",
+        "document_type": "PICK_PLAN",
+        "document_id": 2221,
+        "released_count": 0,
+        "outbox_id": 5692
+      }
+    }
+  },
+  "http": [],
+  "stock": [
+    {
+      "cell": "AS16C410f14b915",
+      "remain": 1,
+      "hard_reserved_base": 0
+    },
+    {
+      "cell": "AS16C410f14b915",
+      "remain": 24,
+      "hard_reserved_base": 0
+    }
+  ],
+  "case": [
+    {
+      "status": "CANCELLED"
+    }
+  ]
+}

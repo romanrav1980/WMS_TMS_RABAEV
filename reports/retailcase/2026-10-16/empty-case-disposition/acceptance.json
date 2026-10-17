@@ -1,0 +1,135 @@
+{
+  "state": "PASS_ROLLBACK_COMMIT_REPLAY_HISTORY_PRESERVED",
+  "started_at": "2026-10-16T06:31:08.726146+00:00",
+  "body": {
+    "operation_id": "SQ16.bc4f60f03a.EMPTY.DISPOSITION",
+    "expected_content_version": 3,
+    "scan_container": "090000000000013018",
+    "reason": "Accepted full shortage and completed inventory audit; preserve execution history"
+  },
+  "canonical": "{\"actor\":\"admin\",\"command_type\":\"CASE_CARRIER_RETURN\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"allow_empty\":true,\"destinations\":{},\"empty_disposition\":\"ACCEPTED_SHORT\",\"expected_content_version\":3,\"reason\":\"Accepted full shortage and completed inventory audit; preserve execution history\",\"scan_container\":\"090000000000013018\"},\"operation_id\":\"SQ16.bc4f60f03a.EMPTY.DISPOSITION\",\"source\":{\"case_task_id\":1143},\"units\":[]}",
+  "http": [
+    {
+      "label": "COMMIT",
+      "status": 200,
+      "api_call_id": "69567",
+      "request_id": "0f881e5b-3a4e-4028-abd2-a92f05b83da4"
+    },
+    {
+      "label": "EXACT_REPLAY",
+      "status": 200,
+      "api_call_id": "69568",
+      "request_id": "217fc9ca-ac5d-4a1c-b7bc-008cae5be162"
+    },
+    {
+      "label": "CHANGED_BODY_CONFLICT",
+      "status": 409,
+      "api_call_id": "69569",
+      "request_id": "3113aa92-4cb9-4c03-8e29-a6b057471cf2"
+    }
+  ],
+  "hardware_verified": false,
+  "before": {
+    "line": [
+      {
+        "case_pick_line_id": 1145,
+        "status": "SHORT_PICKED",
+        "planned_qty": 1,
+        "picked_qty": 0
+      }
+    ],
+    "pick": [
+      {
+        "pick_task_id": 2143,
+        "status": "DONE",
+        "qty": 1,
+        "fact_qty": 0
+      }
+    ],
+    "wave_task": [
+      {
+        "pick_wave_task_id": 2066,
+        "status": "DONE",
+        "qty": 1
+      }
+    ],
+    "short": [
+      {
+        "case_pick_short_id": 24,
+        "status": "ACCEPTED",
+        "short_qty": 1,
+        "approved_by": "SQ16Ibc4f60f03a",
+        "recovery_state": null,
+        "replenish_task_id": null
+      }
+    ],
+    "inventory": [
+      {
+        "inventory_task_id": 32,
+        "status": "DONE",
+        "count_operation_id": "SQ16.bc4f60f03a.COUNT"
+      }
+    ],
+    "stock": [
+      {
+        "p": 26,
+        "h": 26
+      }
+    ],
+    "mixed": [
+      {
+        "parent_uid": "MH16.BOX:d076c19e82",
+        "child_case_task_id": 1140,
+        "active_flag": 1
+      },
+      {
+        "parent_uid": "MH16.TOP:d076c19e82",
+        "child_case_task_id": 1142,
+        "active_flag": 1
+      }
+    ]
+  },
+  "rollback_result": {
+    "empty_cancel": true,
+    "task": 1143,
+    "version": 3,
+    "carrier": "090000000000013018",
+    "warehouse": 20220394,
+    "stocks": [],
+    "before": [],
+    "unused": [],
+    "operation_id": "SQ16.bc4f60f03a.EMPTY.DISPOSITION",
+    "empty_disposition": "ACCEPTED_SHORT",
+    "execution_history_preserved": true,
+    "status": "CANCELLED_EMPTY",
+    "physical_quantity_changed": false,
+    "next_action": "RELEASE_HELD_TARE_BOOK_THEN_WAVE_DECISION",
+    "outbox_id": 5510
+  },
+  "caller_rollback": "PASS",
+  "result": {
+    "empty_cancel": true,
+    "task": 1143,
+    "version": 3,
+    "carrier": "090000000000013018",
+    "warehouse": 20220394,
+    "stocks": [],
+    "before": [],
+    "unused": [],
+    "operation_id": "SQ16.bc4f60f03a.EMPTY.DISPOSITION",
+    "empty_disposition": "ACCEPTED_SHORT",
+    "execution_history_preserved": true,
+    "status": "CANCELLED_EMPTY",
+    "physical_quantity_changed": false,
+    "next_action": "RELEASE_HELD_TARE_BOOK_THEN_WAVE_DECISION",
+    "outbox_id": 5511
+  },
+  "history_and_mixed_stock_unchanged": true,
+  "case": [
+    {
+      "status": "CANCELLED",
+      "content_version": 4,
+      "current_cell": null
+    }
+  ]
+}

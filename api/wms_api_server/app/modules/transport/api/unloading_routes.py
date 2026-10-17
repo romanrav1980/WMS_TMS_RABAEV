@@ -2,7 +2,7 @@
 from typing import Any
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, ConfigDict, Field
-from ...platform.public import AdminUser, require_permission
+from ...platform.public import AdminUser, get_current_user
 from ..contracts import TransportLoadingError, TransportLoadingPort, transport_loading_service
 from .loading_routes import failure
 
@@ -20,15 +20,13 @@ class UnloadingRequest(BaseModel):
     scan_dock: str = Field(strict=True, min_length=1, max_length=50)
     target_slot_id: int | None = Field(default=None, strict=True, ge=1)
     scanned_to_slot_code: str | None = Field(default=None, strict=True, min_length=1, max_length=100)
-    target_slot_id: int | None = Field(default=None, strict=True, ge=1)
-    scanned_to_slot_code: str | None = Field(default=None, strict=True, min_length=1, max_length=100)
     reason: str = Field(strict=True, min_length=1, max_length=1000)
 
 
 @router.post("/unload")
 def unload(
     body: UnloadingRequest,
-    user: AdminUser = Depends(require_permission("stock_posting_shipping")),
+    user: AdminUser = Depends(get_current_user),
     service: TransportLoadingPort = Depends(transport_loading_service),
 ) -> dict[str, Any]:
     try:

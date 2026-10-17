@@ -1,0 +1,69 @@
+{
+  "status": "PASS",
+  "profile_unchanged": true,
+  "profile_sha256": "F97DA21F7E49983FC35F80B2CFFF931621139DB0822F6F461C4559EAB9D50E4B",
+  "certificate_pin_unchanged": true,
+  "physical_hardware": false,
+  "gross_kg": "1.5",
+  "fresh_actual_datavalue": {
+    "observed_at": "2026-10-15T13:14:29.395964+00:00",
+    "values": {
+      "current_weight": {
+        "value": {
+          "Gross": "1.5",
+          "Net": "1.5",
+          "Tare": "0.0"
+        },
+        "status_code": 0,
+        "source_timestamp": "2026-10-15T13:14:29.390829+00:00",
+        "server_timestamp": "2026-10-15T13:14:29.390829+00:00",
+        "variant_type": "ExtensionObject"
+      },
+      "stable": {
+        "value": true,
+        "status_code": 0,
+        "source_timestamp": "2026-10-15T13:14:29.391573+00:00",
+        "server_timestamp": "2026-10-15T13:14:29.391573+00:00",
+        "variant_type": "Boolean"
+      },
+      "center_zero": {
+        "value": false,
+        "status_code": 0,
+        "source_timestamp": "2026-10-15T13:14:29.391983+00:00",
+        "server_timestamp": "2026-10-15T13:14:29.391983+00:00",
+        "variant_type": "Boolean"
+      },
+      "overload": {
+        "value": false,
+        "status_code": 0,
+        "source_timestamp": "2026-10-15T13:14:29.392418+00:00",
+        "server_timestamp": "2026-10-15T13:14:29.392418+00:00",
+        "variant_type": "Boolean"
+      },
+      "underload": {
+        "value": false,
+        "status_code": 0,
+        "source_timestamp": "2026-10-15T13:14:29.392841+00:00",
+        "server_timestamp": "2026-10-15T13:14:29.392841+00:00",
+        "variant_type": "Boolean"
+      },
+      "tare_mode": {
+        "value": 0,
+        "status_code": 0,
+        "source_timestamp": "2026-10-15T13:14:29.393245+00:00",
+        "server_timestamp": "2026-10-15T13:14:29.393245+00:00",
+        "variant_type": "Int64"
+      },
+      "engineering_units": {
+        "value": {
+          "namespace_uri": "urn:test:units",
+          "unit_id": 4933453
+        },
+        "status_code": 0,
+        "source_timestamp": "2026-10-15T13:14:29.393637+00:00",
+        "server_timestamp": "2026-10-15T13:14:29.393637+00:00",
+        "variant_type": "ExtensionObject"
+      }
+    }
+  }
+}

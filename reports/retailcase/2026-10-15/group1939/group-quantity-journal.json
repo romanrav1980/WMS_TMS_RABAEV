@@ -1,0 +1,528 @@
+{
+  "prepared_at": "2026-10-15T18:04:12.929818+00:00",
+  "status": "PASS",
+  "prepared_only": false,
+  "readiness": {
+    "clock": [
+      {
+        "shift_state": "OFF",
+        "work_state": "IDLE"
+      }
+    ],
+    "empty_capture": {
+      "capture_key": "54242B33CD51447FC75059C28DA86D5ED46FA8ED2533D22776A8109E9D874B49",
+      "case_pick_task_id": 1139,
+      "case_content_version": 2,
+      "carrier_identifier": "090000000000010017",
+      "device_id": "WHREQ15.SCALE",
+      "device_mode": "TEST",
+      "source_sha256": "C90CCC40275C0F896A47D436BC036AE88623C8D5A6BF7985CAEB5AB8A797355C",
+      "fresh": 1
+    }
+  },
+  "baseline": {
+    "carrier": [],
+    "events": [
+      {
+        "case_pick_event_id": 3752,
+        "created_by": "N1939.OP",
+        "event_type": "CLAIMED"
+      },
+      {
+        "case_pick_event_id": 3753,
+        "created_by": "N1939.OP",
+        "event_type": "STARTED"
+      }
+    ],
+    "fixture": {
+      "role": {
+        "permissions": [
+          {
+            "permission": "case_pick_execute"
+          }
+        ],
+        "row": {
+          "active": 1,
+          "role_id": "N1939.CASE.EXEC",
+          "title": "SIMULATED_TEST_LABEL_NOT_PHYSICAL; TEST_FIXTURE_NOT_HARDWARE N1939 metadata proof",
+          "version_no": 3
+        }
+      },
+      "task": [
+        {
+          "assigned_resource_id": 63,
+          "assigned_to": "N1939.OP",
+          "assignment_version": 2,
+          "content_version": 2,
+          "equipment_id": null,
+          "picked_qty": 0,
+          "resource_session_id": 59,
+          "sscc": "090000000000010017",
+          "started_at_instant": "2026-10-15 13:19:15.519832",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "user": [
+        {
+          "deleted": 0,
+          "id": "N1939.OP",
+          "user_group": "N1939.OP",
+          "ware_id": 13583852
+        }
+      ]
+    },
+    "line": [
+      {
+        "articul": "REUSE.QA:cdbf4c0962",
+        "case_pick_line_id": 1141,
+        "case_pick_task_id": 1139,
+        "cell_code": "QIPcdbf4c0962",
+        "picked_qty": 0,
+        "planned_qty": 1,
+        "status": "NEW"
+      }
+    ],
+    "lineage": [
+      {
+        "cell": "CPT_13583852",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 3,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 1,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 1,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 1,
+        "remain": 23,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 14,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 2,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      }
+    ],
+    "reservations": [
+      {
+        "base_qty": 1,
+        "cell": "QIPcdbf4c0962",
+        "reservation_id": 1872,
+        "reservation_version": 1,
+        "status": "ACTIVE",
+        "uid_pallet": "REUSE.RETURN:e6c16d0bbd"
+      }
+    ],
+    "resource_events": [],
+    "resource_receipts": [
+      {
+        "operation_id": "N1939.RMI.CLAIM",
+        "outcome": "APPLIED",
+        "source_sha256": "9F1063F7CDACFFF9153216D69E7A3F82B355FBDD071634D8FB9EFDA50CFB8BC3"
+      },
+      {
+        "operation_id": "N1939.RMI.START",
+        "outcome": "APPLIED",
+        "source_sha256": "DFF92DA0B3335233B3B98D03BBE63238E8496FD4BF1D89A0AA44A46E5A25AB7F"
+      }
+    ],
+    "warehouse_object": [
+      {
+        "active": 1,
+        "kind": "WAREHOUSE",
+        "object_id": "13583852",
+        "parent_id": null,
+        "parent_kind": null,
+        "title": "Own FULLPAL HU cdbf4c0962",
+        "version_no": 1
+      }
+    ]
+  },
+  "original_grants": [
+    {
+      "assignment_id": "N1939.SELF",
+      "membership": "CURRENT",
+      "role_id": "N1939.CASE.EXEC",
+      "scope_id": null,
+      "scope_kind": "SELF",
+      "snapshot_version": null,
+      "username": "N1939.OP",
+      "valid_from": "2026-10-15T17:10:39.774491+00:00",
+      "valid_until": "2026-10-15T22:11:39.774491+00:00",
+      "version_no": 1
+    },
+    {
+      "assignment_id": "N1939.WARE",
+      "membership": "CURRENT",
+      "role_id": "N1939.CASE.EXEC",
+      "scope_id": "13583852",
+      "scope_kind": "WAREHOUSE",
+      "snapshot_version": null,
+      "username": "N1939.OP",
+      "valid_from": "2026-10-15T17:10:43.239916+00:00",
+      "valid_until": "2026-10-15T22:11:39.774491+00:00",
+      "version_no": 1
+    }
+  ],
+  "commands": {
+    "group_create": {
+      "command": {
+        "operation_id": "N1939.GQP.GROUP.CREATE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "group_id": "N1939.GQP.WARE",
+          "title": "Private GROUP quantity caller-rollback proof",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "13583852"
+            }
+          ],
+          "active": true
+        }
+      },
+      "wire": "{\"command_type\":\"GROUP_SAVE\",\"operation_id\":\"N1939.GQP.GROUP.CREATE\",\"payload\":{\"active\":true,\"expected_version\":0,\"group_id\":\"N1939.GQP.WARE\",\"member_kind\":\"WAREHOUSE\",\"members\":[{\"kind\":\"WAREHOUSE\",\"object_id\":\"13583852\"}],\"title\":\"Private GROUP quantity caller-rollback proof\"}}",
+      "sha256": "f09699d2908dda79689f6d89e8e1b3b99cac8d6a71838c4662114bb123bb22bc"
+    },
+    "group_assign": {
+      "command": {
+        "operation_id": "N1939.GQP.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "N1939.GQP.ASSIGN",
+          "username": "N1939.OP",
+          "role_id": "N1939.CASE.EXEC",
+          "scope_kind": "GROUP",
+          "scope_id": "N1939.GQP.WARE",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-15T18:03:12.929818+00:00",
+          "valid_until": "2026-10-15T18:19:12.929818+00:00",
+          "reason": "Root-reviewed private CASE GROUP quantity proof; physical effects caller rollback"
+        }
+      },
+      "wire": "{\"command_type\":\"ASSIGN\",\"operation_id\":\"N1939.GQP.GROUP.ASSIGN\",\"payload\":{\"assignment_id\":\"N1939.GQP.ASSIGN\",\"expected_version\":0,\"membership\":\"CURRENT\",\"reason\":\"Root-reviewed private CASE GROUP quantity proof; physical effects caller rollback\",\"role_id\":\"N1939.CASE.EXEC\",\"scope_id\":\"N1939.GQP.WARE\",\"scope_kind\":\"GROUP\",\"snapshot_version\":null,\"username\":\"N1939.OP\",\"valid_from\":\"2026-10-15T18:03:12.929818+00:00\",\"valid_until\":\"2026-10-15T18:19:12.929818+00:00\"}}",
+      "sha256": "fcc06002b6a5a75a3bfc4e4440d0c09e6735c067a469b737e3e40f8964e1b860"
+    },
+    "revoke_SELF": {
+      "command": {
+        "operation_id": "N1939.GQP.ORIG.REVOKE.SELF",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "N1939.SELF",
+          "reason": "Isolate GROUP-only authority; restore equivalent scope through a NEW assignment"
+        }
+      },
+      "wire": "{\"command_type\":\"REVOKE\",\"operation_id\":\"N1939.GQP.ORIG.REVOKE.SELF\",\"payload\":{\"assignment_id\":\"N1939.SELF\",\"expected_version\":1,\"reason\":\"Isolate GROUP-only authority; restore equivalent scope through a NEW assignment\"}}",
+      "sha256": "323a8ac4de2e2488cc5b51382041aef7c6b41607dcb2a9e630f2d5d76e47b3ab"
+    },
+    "restore_SELF": {
+      "command": {
+        "operation_id": "N1939.GQP.RESTORE.SELF",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "N1939.GQP.RESTORE.SELF",
+          "username": "N1939.OP",
+          "role_id": "N1939.CASE.EXEC",
+          "scope_kind": "SELF",
+          "scope_id": null,
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-15T17:10:39.774491+00:00",
+          "valid_until": "2026-10-15T22:11:39.774491+00:00",
+          "reason": "Restore exact original effective scope and validity; revoked IDs remain revoked"
+        }
+      },
+      "wire": "{\"command_type\":\"ASSIGN\",\"operation_id\":\"N1939.GQP.RESTORE.SELF\",\"payload\":{\"assignment_id\":\"N1939.GQP.RESTORE.SELF\",\"expected_version\":0,\"membership\":\"CURRENT\",\"reason\":\"Restore exact original effective scope and validity; revoked IDs remain revoked\",\"role_id\":\"N1939.CASE.EXEC\",\"scope_id\":null,\"scope_kind\":\"SELF\",\"snapshot_version\":null,\"username\":\"N1939.OP\",\"valid_from\":\"2026-10-15T17:10:39.774491+00:00\",\"valid_until\":\"2026-10-15T22:11:39.774491+00:00\"}}",
+      "sha256": "b05d747e3ac13f26c4f4ed70e642e37358aa8f60defb490fd927d3a20cdea34b"
+    },
+    "revoke_WARE": {
+      "command": {
+        "operation_id": "N1939.GQP.ORIG.REVOKE.WARE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "N1939.WARE",
+          "reason": "Isolate GROUP-only authority; restore equivalent scope through a NEW assignment"
+        }
+      },
+      "wire": "{\"command_type\":\"REVOKE\",\"operation_id\":\"N1939.GQP.ORIG.REVOKE.WARE\",\"payload\":{\"assignment_id\":\"N1939.WARE\",\"expected_version\":1,\"reason\":\"Isolate GROUP-only authority; restore equivalent scope through a NEW assignment\"}}",
+      "sha256": "c85574e809876e5a79fcdcdf628633f6d7c366623bfc8109f472e18436331be0"
+    },
+    "restore_WARE": {
+      "command": {
+        "operation_id": "N1939.GQP.RESTORE.WARE",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "N1939.GQP.RESTORE.WARE",
+          "username": "N1939.OP",
+          "role_id": "N1939.CASE.EXEC",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "13583852",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-15T17:10:43.239916+00:00",
+          "valid_until": "2026-10-15T22:11:39.774491+00:00",
+          "reason": "Restore exact original effective scope and validity; revoked IDs remain revoked"
+        }
+      },
+      "wire": "{\"command_type\":\"ASSIGN\",\"operation_id\":\"N1939.GQP.RESTORE.WARE\",\"payload\":{\"assignment_id\":\"N1939.GQP.RESTORE.WARE\",\"expected_version\":0,\"membership\":\"CURRENT\",\"reason\":\"Restore exact original effective scope and validity; revoked IDs remain revoked\",\"role_id\":\"N1939.CASE.EXEC\",\"scope_id\":\"13583852\",\"scope_kind\":\"WAREHOUSE\",\"snapshot_version\":null,\"username\":\"N1939.OP\",\"valid_from\":\"2026-10-15T17:10:43.239916+00:00\",\"valid_until\":\"2026-10-15T22:11:39.774491+00:00\"}}",
+      "sha256": "fabb053f488d3378265fe57f4e6313d19fedb185751f61d5ea7f1e93f59e41c5"
+    },
+    "group_revoke": {
+      "command": {
+        "operation_id": "N1939.GQP.GROUP.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "N1939.GQP.ASSIGN",
+          "reason": "Retire only private GROUP proof assignment; preserve history"
+        }
+      },
+      "wire": "{\"command_type\":\"REVOKE\",\"operation_id\":\"N1939.GQP.GROUP.REVOKE\",\"payload\":{\"assignment_id\":\"N1939.GQP.ASSIGN\",\"expected_version\":1,\"reason\":\"Retire only private GROUP proof assignment; preserve history\"}}",
+      "sha256": "d67a5c55ab29a5ff88a97a06605cf18993e5e5f849a2872cdeb511a99f7a52b7"
+    },
+    "group_retire": {
+      "command": {
+        "operation_id": "N1939.GQP.GROUP.RETIRE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "group_id": "N1939.GQP.WARE",
+          "title": "Retired private GROUP quantity proof",
+          "member_kind": "WAREHOUSE",
+          "members": [],
+          "active": false
+        }
+      },
+      "wire": "{\"command_type\":\"GROUP_SAVE\",\"operation_id\":\"N1939.GQP.GROUP.RETIRE\",\"payload\":{\"active\":false,\"expected_version\":1,\"group_id\":\"N1939.GQP.WARE\",\"member_kind\":\"WAREHOUSE\",\"members\":[],\"title\":\"Retired private GROUP quantity proof\"}}",
+      "sha256": "52c09a6d557e4ac5a280f9fe36cea784c4b64f795349616d62963367e8e1f72d"
+    }
+  },
+  "stock_wire": "{\"actor\":\"N1939.OP\",\"command_type\":\"CASE_PICK_CONFIRM\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"fact_qty\":\"1\",\"offline_event_id\":null,\"scan_cell\":\"QIPcdbf4c0962\",\"scan_container\":\"090000000000010017\",\"scan_product\":\"REUSE.QA:cdbf4c0962\"},\"operation_id\":\"N1939.GQP.PICK.ROLLBACK\",\"source\":{\"case_line_id\":1141,\"case_task_id\":1139},\"units\":[]}",
+  "stock_sha256": "9e730c52234fc62c458bd1c9c93b0d5d5e2f48db1a589f77c23cb64a2c4e1ac5",
+  "steps": {
+    "group_create": {
+      "command_type": "GROUP_SAVE",
+      "object_id": "N1939.GQP.WARE",
+      "operation_id": "N1939.GQP.GROUP.CREATE",
+      "replayed": false,
+      "version": 1
+    },
+    "group_assign": {
+      "command_type": "ASSIGN",
+      "object_id": "N1939.GQP.ASSIGN",
+      "operation_id": "N1939.GQP.GROUP.ASSIGN",
+      "replayed": false,
+      "version": 1
+    },
+    "revoke_SELF": {
+      "command_type": "REVOKE",
+      "object_id": "N1939.SELF",
+      "operation_id": "N1939.GQP.ORIG.REVOKE.SELF",
+      "replayed": false,
+      "version": 2
+    },
+    "revoke_WARE": {
+      "command_type": "REVOKE",
+      "object_id": "N1939.WARE",
+      "operation_id": "N1939.GQP.ORIG.REVOKE.WARE",
+      "replayed": false,
+      "version": 2
+    },
+    "restore_SELF": {
+      "command_type": "ASSIGN",
+      "object_id": "N1939.GQP.RESTORE.SELF",
+      "operation_id": "N1939.GQP.RESTORE.SELF",
+      "replayed": false,
+      "version": 1
+    },
+    "restore_WARE": {
+      "command_type": "ASSIGN",
+      "object_id": "N1939.GQP.RESTORE.WARE",
+      "operation_id": "N1939.GQP.RESTORE.WARE",
+      "replayed": false,
+      "version": 1
+    },
+    "group_revoke": {
+      "command_type": "REVOKE",
+      "object_id": "N1939.GQP.ASSIGN",
+      "operation_id": "N1939.GQP.GROUP.REVOKE",
+      "replayed": false,
+      "version": 2
+    },
+    "group_retire": {
+      "command_type": "GROUP_SAVE",
+      "object_id": "N1939.GQP.WARE",
+      "operation_id": "N1939.GQP.GROUP.RETIRE",
+      "replayed": false,
+      "version": 2
+    }
+  },
+  "history": [
+    {
+      "step": "group_create",
+      "state": "ATTEMPT",
+      "at": "2026-10-15T18:04:13.978068+00:00"
+    },
+    {
+      "step": "group_create",
+      "state": "RECEIPT_CONFIRMED",
+      "at": "2026-10-15T18:04:14.055392+00:00"
+    },
+    {
+      "step": "group_assign",
+      "state": "ATTEMPT",
+      "at": "2026-10-15T18:04:14.062188+00:00"
+    },
+    {
+      "step": "group_assign",
+      "state": "RECEIPT_CONFIRMED",
+      "at": "2026-10-15T18:04:14.104915+00:00"
+    },
+    {
+      "step": "revoke_SELF",
+      "state": "ATTEMPT",
+      "at": "2026-10-15T18:04:14.112006+00:00"
+    },
+    {
+      "step": "revoke_SELF",
+      "state": "RECEIPT_CONFIRMED",
+      "at": "2026-10-15T18:04:14.134200+00:00"
+    },
+    {
+      "step": "revoke_WARE",
+      "state": "ATTEMPT",
+      "at": "2026-10-15T18:04:14.140371+00:00"
+    },
+    {
+      "step": "revoke_WARE",
+      "state": "RECEIPT_CONFIRMED",
+      "at": "2026-10-15T18:04:14.160125+00:00"
+    },
+    {
+      "step": "restore_SELF",
+      "state": "ATTEMPT",
+      "at": "2026-10-15T18:04:16.306903+00:00"
+    },
+    {
+      "step": "restore_SELF",
+      "state": "RECEIPT_CONFIRMED",
+      "at": "2026-10-15T18:04:16.329059+00:00"
+    },
+    {
+      "step": "restore_WARE",
+      "state": "ATTEMPT",
+      "at": "2026-10-15T18:04:16.346309+00:00"
+    },
+    {
+      "step": "restore_WARE",
+      "state": "RECEIPT_CONFIRMED",
+      "at": "2026-10-15T18:04:16.369182+00:00"
+    },
+    {
+      "step": "group_revoke",
+      "state": "ATTEMPT",
+      "at": "2026-10-15T18:04:16.399977+00:00"
+    },
+    {
+      "step": "group_revoke",
+      "state": "RECEIPT_CONFIRMED",
+      "at": "2026-10-15T18:04:16.421334+00:00"
+    },
+    {
+      "step": "group_retire",
+      "state": "ATTEMPT",
+      "at": "2026-10-15T18:04:16.439002+00:00"
+    },
+    {
+      "step": "group_retire",
+      "state": "RECEIPT_CONFIRMED",
+      "at": "2026-10-15T18:04:16.459779+00:00"
+    }
+  ],
+  "stock_committed": false,
+  "acl_replacement_map": [
+    {
+      "old_assignment_id": "N1939.SELF",
+      "new_assignment_id": "N1939.GQP.RESTORE.SELF",
+      "original_scope": {
+        "role_id": "N1939.CASE.EXEC",
+        "scope_kind": "SELF",
+        "scope_id": null,
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-15T17:10:39.774491+00:00",
+        "valid_until": "2026-10-15T22:11:39.774491+00:00"
+      }
+    },
+    {
+      "old_assignment_id": "N1939.WARE",
+      "new_assignment_id": "N1939.GQP.RESTORE.WARE",
+      "original_scope": {
+        "role_id": "N1939.CASE.EXEC",
+        "scope_kind": "WAREHOUSE",
+        "scope_id": "13583852",
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-15T17:10:43.239916+00:00",
+        "valid_until": "2026-10-15T22:11:39.774491+00:00"
+      }
+    }
+  ],
+  "ack_sha256": {
+    "group_create": "b57bb6e2b22e57a83a0cbd2b4fe3708c14d69c17ae042bcd347b57a00bcaa1ff",
+    "group_assign": "c0167f8d8c36969a2e461d1cffc2352fa0102ba6952c0b4d59daac491b94c0e8",
+    "revoke_SELF": "cd660df0777782a59d00f88e608491528bf5b7421d32f9ea900b5c91db60c9e5",
+    "revoke_WARE": "44f9162aa60437ac78b93f43a62cc583b53e7ef342aea586324d88245d8cb05e",
+    "restore_SELF": "486390b771f1503533b1ecbe0900e1c76c15fe7c2142d648eaeea278bda85b5d",
+    "restore_WARE": "e350b9b79b5e22f8f7aea68756989dfe3f9853067226d05408b75f61121bcd62",
+    "group_revoke": "3b93b7e6d1b868e09e06a7e3864273bfc8ab906dca26b798e73c22277cf420a7",
+    "group_retire": "1d8ecdc4d0f6b473f1fc24d8a71155b2036469c5e3e958b1552e64922c0dd420"
+  },
+  "inside_rolledback_stock_result": {
+    "carrier_identifier": "090000000000010017",
+    "case_pick_line_id": 1141,
+    "case_pick_task_id": 1139,
+    "cell": "CPT_13583852",
+    "fact_qty": "1",
+    "lots": [
+      {
+        "quantity": "1",
+        "source_uid": "REUSE.RETURN:e6c16d0bbd",
+        "uid": "CASELOT:569DD762DD4C9CF896E619CC4AEAD42366F12A:1",
+        "unit": "EA"
+      }
+    ],
+    "operation_id": "N1939.GQP.PICK.ROLLBACK",
+    "outbox_id": 5350,
+    "picked_from_cell": "QIPcdbf4c0962",
+    "remaining_quantity": "0",
+    "status": "PICKED"
+  },
+  "quantity_rollback": "PASS exact CASE/line/both UID lineage/reservations/events/resource receipts; no op/clock/outbox/newlots/carrier/STEP_USE",
+  "acl_restored": "PASS equivalent WARE/SELF through new IDs; private GROUP retired; history retained"
+}

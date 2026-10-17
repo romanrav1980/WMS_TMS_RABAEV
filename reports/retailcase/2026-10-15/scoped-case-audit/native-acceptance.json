@@ -1,0 +1,112 @@
+{
+  "status": "PASS",
+  "task_id": 1136,
+  "line_id": 1139,
+  "actor": "WHREQ15.OP",
+  "checks": [
+    "CASE_RESOURCE_QUALIFICATION_REQUIRED_rollback",
+    "CASE_SHIFT_UNAVAILABLE_rollback",
+    "CASE_SESSION_UNAVAILABLE_rollback",
+    "CASE_RESOURCE_UNAVAILABLE_rollback",
+    "dedicated_sender_has_no_operator_right",
+    "other_unassigned_case_not_granted_by_self",
+    "native_only_assigned_real_resource_canonical_execute",
+    "first_canonical_carrier_preserves_current_and_new_execution_scope",
+    "current_authorization_guard_and_exact_stored_applied_receipt",
+    "dirty_transaction_replay_refused_without_weakening_clean_plan",
+    "source_case_line_operation_newlots_outbox_exact_rollback"
+  ],
+  "result": {
+    "operation_id": "WHREQ15.SCOPED.ROLLBACK",
+    "case_pick_task_id": 1136,
+    "case_pick_line_id": 1139,
+    "status": "PICKED",
+    "remaining_quantity": "0",
+    "fact_qty": "1",
+    "carrier_identifier": "090000000000008014",
+    "cell": "CPT_13583852",
+    "picked_from_cell": "QIPcdbf4c0962",
+    "lots": [
+      {
+        "uid": "CASELOT:32313CD1B910776CBD61D906CF831C238D2DF2:1",
+        "source_uid": "REUSE.RETURN:e6c16d0bbd",
+        "quantity": "1",
+        "unit": "EA"
+      }
+    ],
+    "outbox_id": 5318
+  },
+  "before_after": {
+    "stock": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 24,
+        "hard_reserved_base": 1,
+        "stock_version": 10
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "picked_qty": 0,
+        "content_version": 2,
+        "legacy_sborka_pallet_id": null,
+        "assigned_to": "WHREQ15.OP",
+        "assigned_resource_id": 58,
+        "resource_session_id": 54
+      }
+    ],
+    "line": [
+      {
+        "status": "NEW",
+        "picked_qty": 0
+      }
+    ],
+    "case_events": [
+      {
+        "n": 3
+      }
+    ],
+    "resource_events": [
+      {
+        "n": 0
+      }
+    ]
+  },
+  "stock_committed": false,
+  "physical_verified": false,
+  "recent_slow": [],
+  "oracle_relevant_top_sql": [
+    {
+      "sql_id": "bm9x3banhagtr",
+      "executions": 4,
+      "avg_ms": 9.621,
+      "sql_sample": "select RRL_CASE_RESOURCE_POLICY.context_json(             :p_task,:p_action,:p_actor,:p_resource,:p_session,:p_equipment) CONTEXT_JSON from dual"
+    },
+    {
+      "sql_id": "51q795pg0wgmp",
+      "executions": 16,
+      "avg_ms": 6.225,
+      "sql_sample": "begin :retval := RRL_CASE_RESOURCE_POLICY.context_json(:1,:2,:3,:4,:5,:6); end;"
+    },
+    {
+      "sql_id": "13guc20xu6gga",
+      "executions": 40,
+      "avg_ms": 1.277,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_CASE_PICK_LINE L WHERE L.CASE_PICK_TASK_ID=:B1 AND( NOT EXISTS(SELECT 1 FROM RRL_ARTICULS A WHERE A.ACTICUL=L.ARTICUL AND NVL(A.TYPE_W,0)NOT IN(2,3,5,6,7)) OR NOT EXISTS(SELECT 1 FROM RRL_STOCK_UOM_CONVERSION U WHERE U.ARTICUL=L.ARTICUL AND U.INPUT_UOM='EA'AND U.BASE_UOM='EA'"
+    }
+  ],
+  "sql_scope": "Native-only suite; no HTTP/API-audit claim. V$SQL shared-cursor averages are diagnostic, not isolated load metrics.",
+  "limits": [
+    "Second durable partial pick not proven: demand1 and strict cleanTX prohibit two new commands in one rollbackTX",
+    "Clean-transaction APPLIED replay requires a committed TEST receipt; deferred to separately approved ASM phase",
+    "Legacy SBORKA carrier-id populated CASE not produced by this current canonical pick; that regression remains separate"
+  ],
+  "sql_decision": "PK CASE/task/line and CASE-bound SKU closure retained; no observed attributed >1000ms query requires index here; not capacity acceptance."
+}

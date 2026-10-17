@@ -1,6 +1,7 @@
 """Original CASE state, lines and physical lots; metadata only, one existing UOW."""
 import json
 from typing import Any, Callable
+from contextlib import AbstractContextManager
 from fastapi import HTTPException
 from .metadata_transactions import receipt_task_metadata
 from .case_close_journal import close_replay, record_close
@@ -36,21 +37,33 @@ def validate_close_content(cur: Any, task: int, actor: str, assignee: str | None
 
 def close_case_carrier(
     gateway: Any, task: int, request: Any, assert_scope: Callable[[Any,int,str,str],None],
+    *, metadata_context: Callable[[Any,str,str,str],AbstractContextManager[Any]] | None = None,
+    assert_new: Callable[[Any,int,str],None] | None = None,
+    validate_result: Callable[[Any],None] | None = None,
 ) -> dict[str, Any]:
     actor = request.actor
     body = request.model_dump(mode="json")
     operation = getattr(request, "operation_id", None)
     if len(json.dumps(body, ensure_ascii=True).encode()) > 16384:
         raise HTTPException(422, detail="CASE_CLOSE_REQUEST_BOUND_16KB")
-    with receipt_task_metadata(gateway, "Existing CASE carrier close", actor, "case_pick_execute") as cur:
+    with (metadata_context or receipt_task_metadata)(gateway, "Existing CASE carrier close", actor, "case_pick_execute") as cur:
         assert_scope(cur, task, actor, "case_pick_execute")
         cur.execute("""select STATUS,nvl(CONTENT_VERSION,0),ASSIGNED_TO,SHIPPED_OPERATION
             from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:id for update""", id=task)
         status,version,assignee,shipped = cur.fetchone()
         assert_scope(cur, task, actor, "case_pick_execute")
-        replay = close_replay(cur, operation, task, actor, body)
+        try:
+            replay = close_replay(cur, operation, task, actor, body, validate_result) if validate_result is not None else close_replay(cur, operation, task, actor, body)
+        except (KeyError, TypeError, AttributeError):
+            if validate_result is not None:
+                validate_result(None)
+            raise
         if replay is not None:
+            if validate_result is not None:
+                validate_result(replay)
             return replay
+        if assert_new is not None:
+            assert_new(cur, task, actor)
         expected = getattr(request, "expected_content_version", None)
         if expected is not None and expected != version:
             raise HTTPException(409, detail="CASE_CONTENT_VERSION_CHANGED")
@@ -59,6 +72,8 @@ def close_case_carrier(
             raise HTTPException(409, detail="CASE_CLOSE_" + transition)
         if transition == "ALREADY_CLOSED":
             result = {"status": status, "content_version": version, "already_closed": True, "physical_stock_changed": False}
+            if validate_result is not None:
+                validate_result(result)
             if operation is not None:
                 record_close(cur, operation, task, actor, body, result)
             return result
@@ -71,5 +86,7 @@ def close_case_carrier(
                 STATUS='WAIT_CONTROL',CLOSED_AT=systimestamp,UPDATED_AT=systimestamp,UPDATED_BY=:actor
             where CASE_PICK_TASK_ID=:id""", actor=actor,id=task)
         result = {"status": "WAIT_CONTROL", "content_version": version, "already_closed": False, "physical_stock_changed": False}
+        if validate_result is not None:
+            validate_result(result)
         record_close(cur, operation, task, actor, body, result)
         return result

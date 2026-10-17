@@ -6,6 +6,9 @@ import oracledb
 from fastapi import HTTPException
 from ..domain.historical_hu import departure_subtree
 from .hu_placement_read import recorded_placement
+from .hu_view_access import assert_hu_view, assert_resolved_hu_view
+from .hu_thermal_read import hu_thermal_admission
+from .hu_identifier_resolution import resolve_hu_rows
 from ....transaction_gateway import TransactionGateway
 from ..contracts_stock import StockCommand
 from .stock_posting_uow import StockPosting
@@ -21,8 +24,9 @@ class WarehouseHu:
             if not getattr(self.gateway, "transaction_bound", False):
                 cur.execute("set transaction read only")
             bound = WarehouseHu(TransactionGateway(cur))
-            data = bound._preview(identifier)
+            data = bound._preview(identifier, actor)
             assert_hu_view(cur, actor, int(data["warehouse"]))
+            data["thermal_admission"] = hu_thermal_admission(cur, data)
             data["placement"] = recorded_placement(cur, data)
             if data.get("case_task_id") is not None:
                 cur.execute("select OPERATION_ID,PALLET_TYPE_ID,OWNER_WARE_ID from RRL_TARE_BOOK where PLACE_KIND='CASE'and PLACE_ID=:p_case and STATUS='HELD' fetch first 2 rows only",
@@ -34,21 +38,17 @@ class WarehouseHu:
                                          "warehouse": int(books[0][2]), "nested_asset_preserved": True} if books else None)
             return data
 
-    def _preview(self, identifier: str) -> dict:
+    def _preview(self, identifier: str, actor: str) -> dict:
         normalized = normalize_incoming_sscc(identifier)
         case_number = identifier[5:] if identifier.startswith("CASE:") else ""
         case_id = (int(case_number) if case_number.isascii() and case_number.isdigit()
                    and len(case_number) <= 18 and str(int(case_number)) == case_number else None)
-        rows = self.gateway.fetch_all(
-            """select UID_PALLET,cast(null as number) CASE_TASK_ID,HU_SHIPPED_OPERATION from RRL_PALLETS
-               where UID_PALLET in(:p_code,:p_normal) or SSCC=:p_normal
-               union all select cast(null as varchar2(200)),CASE_PICK_TASK_ID,cast(null as varchar2(100)) from RRL_CASE_PICK_TASK
-                where SSCC in(:p_code,:p_normal) or CASE_PICK_TASK_ID=:p_case_id fetch first 3 rows only""",
-            {"p_code": identifier, "p_normal": normalized, "p_case_id": case_id})
+        rows = resolve_hu_rows(self.gateway, identifier, normalized, case_id)
         if not rows:
             raise HTTPException(404, "Грузовое место не найдено")
         if len(rows) != 1:
             raise HTTPException(409, "Идентификатор неоднозначен; укажите внутренний идентификатор паллеты")
+        assert_resolved_hu_view(self.gateway, rows[0], actor)
         try:
             if rows[0].get("hu_shipped_operation"):
                 raw = self.gateway.fetch_all("select RESULT_JSON SNAPSHOT from RRL_STOCK_OPERATION where OPERATION_ID=:p_op and STATE='APPLIED'",
@@ -158,10 +158,3 @@ class WarehouseHu:
         return StockPosting().post(StockCommand(
             operation_id=operation_id, command_type=kind, actor=actor, lines=(),
             source={"uid": uid}, metadata=metadata))
-
-
-def assert_hu_view(cur: Any, actor: str, warehouse: int) -> None:
-    cur.execute("select WARE_ID,USER_GROUP,RRL_HAS_WRIGHT(ID,'warehouse_task_view') from RUSERS where ID=:p_actor and nvl(DELETED,0)=0", p_actor=actor)
-    row = cur.fetchone()
-    if row is None or row[2] != 1 or warehouse < 1 or (str(row[1] or "").strip().upper() != "GLOBAL_ADMIN" and row[0] != warehouse):
-        raise HTTPException(403, "HU_CURRENT_WARE_VIEWER_REQUIRED")

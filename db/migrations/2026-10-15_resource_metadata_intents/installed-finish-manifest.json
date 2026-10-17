@@ -1,0 +1,23 @@
+{
+  "status": "FROZEN_INSTALLED_FINISH_NOT_EXECUTED",
+  "previous_manifest": {
+    "path": "db/migrations/2026-10-15_resource_metadata_intents/reviewed-v2-manifest.json",
+    "sha256": "dfcebaf65bdf64725993e4f09c280e682af5ab47236849b3f50b5f75d94976da"
+  },
+  "evidence": "reports/retailcase/2026-10-15/resource-metadata-intents/actual-indexes.json",
+  "original_and_reviewed_chains_unchanged": true,
+  "files": [
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/verify_installed_indexes.sql",
+      "sha256": "12c8480ffdfdd4b8a10f1274e02b40caac3fbb9b5156bc3852be53f772c4b964"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/apply_after_installed.sql",
+      "sha256": "2944f47541edfa9165ef4611cdb3846c166523a97f245c6aac63c3e344797e70"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/installed-index-rationale.md",
+      "sha256": "fe60f1491137471ff01324a6056621d12ee46e4ec9ca2afce01addcfe70485ce"
+    }
+  ]
+}

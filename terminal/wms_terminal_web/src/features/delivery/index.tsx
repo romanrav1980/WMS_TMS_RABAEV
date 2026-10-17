@@ -1,0 +1,1 @@
+export { StoreReceivingApp } from "./StoreReceivingApp";

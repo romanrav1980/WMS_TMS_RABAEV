@@ -1,0 +1,6 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_consolidation_manifest\complete_partial.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_consolidation_manifest\partial_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_consolidation_manifest\rrl_hu_consol_read_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_consolidation_manifest\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_consolidation_manifest\after_sources.sql
+Done. Statements=8; Errors=0; AbsentCleanup=0

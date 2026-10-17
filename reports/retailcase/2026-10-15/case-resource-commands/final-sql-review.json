@@ -1,0 +1,82 @@
+{
+  "status": "READ_ONLY_REVIEW",
+  "scope": "CRES cleanup and exact owned-grant retirement; cumulative shared cursors, not individual-call timing",
+  "oracle_top_sql_cumulative": [
+    {
+      "sql_id": "ak2m9radfzhnp",
+      "executions": 2,
+      "avg_ms": 267.011,
+      "total_ms": 534.022,
+      "buffer_gets": 14523,
+      "disk_reads": 47,
+      "sql_text": "begin RRL_STOCK_POSTING_API.prepare_command(:1,:2,:3); end;"
+    },
+    {
+      "sql_id": "d7qxrbmc1n97d",
+      "executions": 5,
+      "avg_ms": 91.5,
+      "total_ms": 457.498,
+      "buffer_gets": 10414,
+      "disk_reads": 102,
+      "sql_text": "begin RRL_STOCK_POSTING_API.prepare_command(:payload,:actor,:result,:resolution); end;"
+    },
+    {
+      "sql_id": "awrqckzvcr6xt",
+      "executions": 52,
+      "avg_ms": 6.542,
+      "total_ms": 340.177,
+      "buffer_gets": 3604,
+      "disk_reads": 33,
+      "sql_text": "begin RRL_ACCESS_API.execute_command(:1,:2,:3,:4,:5); end;"
+    },
+    {
+      "sql_id": "admdtyprqxjhm",
+      "executions": 5,
+      "avg_ms": 65.503,
+      "total_ms": 327.514,
+      "buffer_gets": 5307,
+      "disk_reads": 51,
+      "sql_text": "begin RRL_STOCK_POSTING_API.execute_prepared(:result); end;"
+    },
+    {
+      "sql_id": "5jfvwwtgzb031",
+      "executions": 1,
+      "avg_ms": 216.912,
+      "total_ms": 216.912,
+      "buffer_gets": 3707,
+      "disk_reads": 0,
+      "sql_text": "begin RRL_STOCK_POSTING_API.execute_prepared(:1); end;"
+    },
+    {
+      "sql_id": "9rhh3r95tzs57",
+      "executions": 0,
+      "avg_ms": null,
+      "total_ms": 76.68,
+      "buffer_gets": 13,
+      "disk_reads": 0,
+      "sql_text": "SELECT count(*) FROM NO_CROSS_CONTAINER(\"SYS\".\"INT$DBA_SOURCE\") \"INT$DBA_SOURCE\" WHERE \"INT$DBA_SOURCE\".\"NAME\"='RRL_ACCESS_API' AND \"INT$DBA_SOURCE\".\"TYPE\"='PACKAGE BODY' AND \"INT$DBA_SOURCE\".\"LINE\">=192 AND \"INT$DBA_SOURCE\".\"LINE\"<=211 AND \"INT$DBA_SOURCE\".\"OWNER\"=SYS_CONTEXT('USERENV','CURRENT_USER')"
+    },
+    {
+      "sql_id": "a6sm4xc2jrxjq",
+      "executions": 0,
+      "avg_ms": null,
+      "total_ms": 53.182,
+      "buffer_gets": 13,
+      "disk_reads": 0,
+      "sql_text": "SELECT count(*) FROM NO_CROSS_CONTAINER(\"SYS\".\"INT$DBA_SOURCE\") \"INT$DBA_SOURCE\" WHERE \"INT$DBA_SOURCE\".\"NAME\"='RRL_ACCESS_API' AND \"INT$DBA_SOURCE\".\"TYPE\"='PACKAGE BODY' AND \"INT$DBA_SOURCE\".\"LINE\">=84 AND \"INT$DBA_SOURCE\".\"LINE\"<=97 AND \"INT$DBA_SOURCE\".\"OWNER\"=SYS_CONTEXT('USERENV','CURRENT_USER')"
+    }
+  ],
+  "slow_last_hour": [
+    {
+      "log_id": 4845,
+      "api_call_id": null,
+      "api_path": null,
+      "elapsed_ms": 5,
+      "sql_text_hash": "ecd591828cbdfcd64479f32044ffd31f1ce795655a09d6616d56380c188c07d2",
+      "error_text": "ORA-01745: invalid host/bind variable name\nHelp: https://docs.oracle.com/error-help/db/ora-01745/"
+    }
+  ],
+  "api_audit": "Cleanup and grant retirement used native owner services directly, not HTTP; no HTTP pair is claimed for those commands. UI HTTP pairs are retained separately in case-work-ui/sql-review.json.",
+  "decision": "Retain canonical native owners and existing PK/version predicates. No speculative index from this isolated fixture. GROUP proof v1 had an invalid SQL BOOLEAN call: fixed in the separately reviewed v2 artifact using cursor.callfunc. V2 correctly rejected missing fresh measured empty tare; retain that physical guard. Resources/platform owns actor-history plan and attributed slow timeline follow-up before load pilot; cumulative cursor averages do not establish latency percentiles.",
+  "quantity_changes_in_this_review": false
+}

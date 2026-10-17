@@ -1,0 +1,43 @@
+{
+  "state": "PASS_LIVE_UI_PLAN_SAVE_CANCEL_AND_MANUAL_ACT",
+  "writes": [
+    {
+      "path": "/api/consolidation-plans/CP.20220394.20261016.76d88fa1/cancel",
+      "method": "POST",
+      "wire": "{\"operation_id\":\"CP.1d021975-78f9-444e-97f1-0744dd177b60\",\"expected_version\":1,\"reason\":\"C0116 root retire only this new future plan; preserve manifest journal\"}"
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "identity_in_normal_header_no_overlay",
+    "live_ui_save_cancel_own_future_plan_no_quantity",
+    "390_no_horizontal_overflow",
+    "production_store_live_manual_receipt_act"
+  ],
+  "plan_id": "CP.20220394.20261016.76d88fa1",
+  "prior_save": {
+    "status": 200,
+    "body": {
+      "operation_id": "CP.ed451a3c-2837-4ff6-89a0-6e8110a5d3f3",
+      "plan_id": "CP.20220394.20261016.76d88fa1",
+      "version": 1,
+      "status": "ACTIVE",
+      "expectation_signature": "430A72BF7E0994694568A1343FC77F4699FF195E485D6771882EE95C52AE7CBC",
+      "stock_changed": false
+    },
+    "api_call_id": "69581"
+  },
+  "cancel": {
+    "status": 200,
+    "body": {
+      "operation_id": "CP.1d021975-78f9-444e-97f1-0744dd177b60",
+      "plan_id": "CP.20220394.20261016.76d88fa1",
+      "version": 2,
+      "status": "CANCELLED",
+      "expectation_signature": "79699D70B309CF35BCA25EAB761639312B1DE4598EF726B734FD8505F6DDA3A2",
+      "stock_changed": false
+    },
+    "api_call_id": "69589"
+  },
+  "store_weight": "Вес места · введено пользователем\nСправка\nФактически\n10 кг\nОтгружено\n10 кг\nРазница\n0 кг (допуск ±1 кг) · в допуске\nИсточник\nвведено пользователем · admin"
+}

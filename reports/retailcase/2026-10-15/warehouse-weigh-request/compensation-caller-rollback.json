@@ -1,0 +1,115 @@
+{
+  "status": "PASS_WITH_PRIVATE_COMPILER_LIMIT",
+  "checks": [
+    "ONE_clean_prepare_execute_canonical_1EA_inside_caller_TX",
+    "pure_current_close_validation_accepts_complete_physical_1EA_no_status_write",
+    "pure_existing_bind_exact_BASE_composition_matches_prepared_ST_1EA",
+    "source_reviewed_RETURN_all_lots_original_cell_ownHARD_state_currentversion_predicates_pass_without_closed_requirement",
+    "source_case_line_events_operation_child_outbox_clock_all_rolled_back"
+  ],
+  "operation_id": "WHREQ15.COMPENSATION.ROLLBACK",
+  "stock_committed": false,
+  "metadata_close_or_bind_written": false,
+  "second_Stockprepare_called": false,
+  "native_RETURN_execute_proven": false,
+  "physical_hardware": false,
+  "before_after": {
+    "stock": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 24,
+        "hard_reserved_base": 1,
+        "stock_version": 10
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "picked_qty": 0,
+        "content_version": 2,
+        "legacy_sborka_pallet_id": null,
+        "assigned_to": "WHREQ15.OP",
+        "assigned_resource_id": 58,
+        "resource_session_id": 54
+      }
+    ],
+    "line": [
+      {
+        "status": "NEW",
+        "picked_qty": 0
+      }
+    ],
+    "case_events": [
+      {
+        "n": 3
+      }
+    ],
+    "resource_events": [
+      {
+        "n": 0
+      }
+    ]
+  },
+  "hypothetical": {
+    "case_state": "IN_PROGRESS",
+    "case_content_version": 3,
+    "case_legacy_id": null,
+    "parent_total": 23,
+    "child": {
+      "uid": "CASELOT:088A3ABBD841149DF3298D44575E1CE9AFB06E:1",
+      "cell": "CPT_13583852",
+      "P": 1,
+      "H": 1,
+      "origin": "300000034518661218",
+      "created_operation": "WHREQ15.COMPENSATION.ROLLBACK"
+    },
+    "physical": [
+      [
+        "REUSE.QA:cdbf4c0962",
+        "EA",
+        "1"
+      ]
+    ],
+    "prepared_composition": [
+      [
+        "REUSE.QA:cdbf4c0962",
+        "1",
+        "EA",
+        1,
+        1,
+        0
+      ]
+    ],
+    "return_command": {
+      "actor": "admin",
+      "command_type": "CASE_CARRIER_RETURN",
+      "contract_version": 2,
+      "lines": [],
+      "metadata": {
+        "destinations": {
+          "CASELOT:088A3ABBD841149DF3298D44575E1CE9AFB06E:1": "QIPcdbf4c0962"
+        },
+        "expected_content_version": 3,
+        "scan_container": "090000000000008014"
+      },
+      "operation_id": "WHREQ15.COMPENSATION.ROLLBACK.RETURN.PLAN",
+      "source": {
+        "case_task_id": 1136
+      },
+      "units": []
+    },
+    "return_compiler": {
+      "status": "NOT_RUN_OWNER_BOUNDARY",
+      "accessible_by": "RRL_STOCK_POSTING_API",
+      "spec": "package RRL_STOCK_CASE_RETURN_CMD authid definer accessible by(package RRL_STOCK_POSTING_API) as\r\n procedure compile_command(p_request clob,p_operation varchar2,p_policies out clob,p_resources out clob,p_domain out clob);\r\n procedure execute_command(p_request clob,p_actor varchar2,p_result out clob);\r\nend;\r\n"
+    }
+  },
+  "slow_sql": [],
+  "sql_decision": "Retain bounded CASE1136/line1139 and specificUID/operation closures; no load/capacity claim. Native RETURN prepare/execute is a separate clean-TX gate after root quantity approval."
+}

@@ -1,0 +1,22 @@
+{
+ "pending": "Незавершённая команда: Статья ui-c0056-probe Тип ARTICLE_SAVE · operation_id UI.KNOWLEDGE.ARTICLE_SAVE:9ec765ce-0050-429",
+ "receipt": "Статья ui-c0056-probe: сохранено, версия 2.",
+ "localKeys": [
+  [
+   "ui-c0056-probe",
+   "ВЕРСИЯ Б — набрана после обрыва."
+  ]
+ ],
+ "restoreOffered": 1,
+ "restoredText": "ВЕРСИЯ Б — набрана после обрыва.",
+ "serverBody": 401,
+ "afterImport": {
+  "msg": "Импорт ui-help-rules → ui-help-rules: сохранено, версия 3.",
+  "modeArticles": "true",
+  "opened": "Подсказки и контекстная помощь\nDRAFT · v3 · admin 15.10.2026, 00:55"
+ },
+ "objectsListDC": "Оргобъекты ? Вид WAREHOUSE DC STORE REGION CARRIER ZONE Поиск Найти Код Название Родитель Акт. v UI.C0056.DC.mv8ndzj9 Проверка UI C0056 (неактивный РЦ) — нет 1 Изменить Новый объект",
+ "newWarehouseTitle": "Недоступно: склады и магазины приходят из справочников. Начать новый оргобъект в форме. Склады и магазины приходят из справочников и вручную не создаются.",
+ "objectSaved": "Объект DC:UI.C0056.DC.mv8nfg7j: сохранено, версия 1.",
+ "testObject": "UI.C0056.DC.mv8nfg7j"
+}

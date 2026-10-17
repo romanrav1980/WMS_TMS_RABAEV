@@ -1,0 +1,27 @@
+/* План ожидаемого состава (C0116) — стиль двойника (.ops). Длинные идентификаторы не раздвигают экран. */
+.cp-uid{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cp-view{display:flex;flex-direction:column;gap:10px}
+.cp-root{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px;border-radius:10px;background:#16273b;border:1px solid #2a3a4f}
+.cp-root-icon{width:44px;height:44px;border-radius:10px;background:#1f3654;display:grid;place-items:center;color:#8ec5ff;font-size:22px}
+.cp-root h3{margin:2px 0;font-size:16px}
+.cp-root small,.cp-eyebrow{color:var(--ops-dim,#93a6ba);font-size:11px}
+.cp-eyebrow{letter-spacing:.4px}
+.cp-counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin:0}
+.cp-counts div{background:#172334;border-radius:8px;padding:6px 8px}
+.cp-counts dt{color:var(--ops-dim,#93a6ba);font-size:11px}.cp-counts dd{margin:0;font-weight:700;font-size:16px}
+.cp-members{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px}
+.cp-member{display:flex;flex-direction:column;gap:2px;padding:8px;border-radius:8px;background:#172334;border-left:4px solid #3d8bfd;min-width:0}
+.cp-member b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cp-member small{color:var(--ops-dim,#93a6ba)}
+.cp-member.ok{border-left-color:#2fbf71}.cp-member.bad{border-left-color:#ef5b5b}.cp-member.warn{border-left-color:#f0a531}
+.cp-state{font-size:12px;font-weight:600}
+.cp-actions{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px}
+.cp-actions a,.rg-window a{color:#8ec5ff;font-size:13px}
+.cp-editor label{display:flex;flex-direction:column;gap:4px;margin:6px 0;font-size:13px;color:var(--ops-dim,#93a6ba)}
+.cp-editor input,.cp-editor textarea,.cp-picker input{min-height:36px;padding:4px 8px;border-radius:8px;border:1px solid var(--ops-line,#2a3a4f);background:#0d141d;color:var(--ops-text,#e6eef6);font:inherit;max-width:100%;box-sizing:border-box}
+.cp-picker{border-top:1px solid #2a3a4f;margin-top:8px;padding-top:8px}
+.cp-check{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.cp-selected{outline:2px solid #3d8bfd}
+.cp-pending{border-color:#f0a531}
+.ops-consolidation .ops-left,.ops-consolidation .ops-right{max-height:none}
+.ops-consolidation .cp-center{padding:12px;overflow:visible;min-height:0}

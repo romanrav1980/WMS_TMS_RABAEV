@@ -1,0 +1,82 @@
+{
+  "captured_at_utc": "2026-10-16T15:27:27.764276+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_task_access_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "ad055af646ea15cbf4005298c8666d8b5cdd5b022e9cf8181f9b92b564423135",
+      "normalized_source_sha256": "6dbeae26dbfa93c18987333ea920d5f3054cd8989e152b871d2c43d3bae369fd",
+      "artifact_sha256": "d02893be2a3ea1f47637ad52ef72f56d67de5b79dc459c4b48c23d56d426871c"
+    },
+    {
+      "name": "RRL_HU_EXEC_ACCESS",
+      "type": "PACKAGE BODY",
+      "file": "rrl_hu_exec_access_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "0dffde2e5678c98fb10deffa59adc95b3b9d82bfc6b40553ef5e2a51db9b6ad5",
+      "normalized_source_sha256": "6322e5aeed37bc188c046a87b3b0263ee0a5aab5faf0206fbe81178c828ce8a3",
+      "artifact_sha256": "a665f29182f616f9230e3578c9b31f04f8a4b1aaa3ee1a40940d71f2c16657ad"
+    },
+    {
+      "name": "RRL_STOCK_HU_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_hu_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "4fb2605a7e28fc81a26c794c4989b674c92d852b025360a7be76dec5342d4e1c",
+      "normalized_source_sha256": "8d1a80ffaea08afd2ddf202e5247d5f053cb9aff73884fb981710f45a5387d69",
+      "artifact_sha256": "757b058d0a61152f8d7b3800d29f8c914264ccd24c0ca73bcaf1a31adb8782e7"
+    },
+    {
+      "name": "RRL_STOCK_HU_REPACK_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_hu_repack_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "691a2e1f449032fc15b3d85676082c337504485bc6ef2d59945ee9c59a417d23",
+      "normalized_source_sha256": "7517cfba80e9382069f891095357be1b55c7baebbecf4771be74cbb8155f2ef1",
+      "artifact_sha256": "9a32a908826c4ec774cffd7dd5f2c3e1633215a5a9ed30dafcf79979af253527"
+    },
+    {
+      "name": "RRL_STOCK_HU_SHIP_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_hu_ship_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "0a2e814e35ff6c833df06b4543da617efa8993381dc8ce8858e30723869e82d1",
+      "normalized_source_sha256": "f920997dd5df1d785374f0046c5bc4c6049ec89b417e63c1d73bcd502654d6bd",
+      "artifact_sha256": "f6d3e96c409961804c149dc2e11bd0e6a75afec9c4e8466750804439f7458b0c"
+    },
+    {
+      "name": "RRL_STOCK_HU_SLOT_MOVE_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_hu_slot_move_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "83d4dbf07f57980d2d4ab1899b23588596c144ce804cf67e258bfbfbdce7b8ce",
+      "normalized_source_sha256": "ad4bf68f7174ead2a4ee8402a2f70679e36cdcc7152c4b6087ff6b43caf93e77",
+      "artifact_sha256": "f3ceae6b3a22b07bbd10459832f957fff8d4ff69fb94152aef12a4a9c82ec342"
+    },
+    {
+      "name": "RRL_STOCK_POSTING_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_posting_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "0b85b44587576b4e02ffc3b951ee47731906fc49806b3448cc20021f8121ecff",
+      "normalized_source_sha256": "42070d7aabfb2f45115208b4320bb4fa2eb5bdd5584bfaae27b27afa0ad6dad8",
+      "artifact_sha256": "601d95b9d68dd8d69b7e16cb6bfc993cdcd23661aab44cc25f8c042ecb676c11"
+    },
+    {
+      "name": "RRL_HU_EXEC_ACCESS",
+      "type": "PACKAGE",
+      "file": "rrl_hu_exec_access_package.sql",
+      "errors": [],
+      "user_source_sha256": "940837c3d8dec7728a0af6e88a0a13ab86adc30a23cb84ac1181777a43148ee5",
+      "normalized_source_sha256": "6424407d52365f05c0220f8f714978d46e303e895acdf5b3c525e467e48510cc",
+      "artifact_sha256": "9e17250adc23d722b490a819d312db569d4e2ea5636ae055c4f3c191789961aa"
+    }
+  ]
+}

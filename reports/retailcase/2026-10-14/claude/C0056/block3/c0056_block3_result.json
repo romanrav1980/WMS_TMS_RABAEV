@@ -1,0 +1,34 @@
+{
+ "posts": [
+  "POST /api/knowledge/commands",
+  "POST /api/knowledge/commands",
+  "POST /api/knowledge/commands",
+  "POST /api/knowledge/commands",
+  "POST /api/knowledge/wiki-sources/import"
+ ],
+ "articles": {
+  "access-admin": {
+   "previewRelated": "Роли и области ответственности Если ответ на команду потерян Как пользоваться встроенной справкой",
+   "saved": "Статья access-admin: сохранено, версия 1.",
+   "published": "Публикация access-admin: сохранено, версия 2."
+  },
+  "knowledge-editor": {
+   "previewRelated": "Как пользоваться встроенной справкой Если ответ на команду потерян Права и назначения: как выдать роль на область и срок",
+   "saved": "Статья knowledge-editor: сохранено, версия 1.",
+   "published": "Публикация knowledge-editor: сохранено, версия 2."
+  }
+ },
+ "helpIds": 18,
+ "history": "2 PUBLISHED admin 15.10.2026, 00:29 C0056: публикация инструкции 1 DRAFT admin 15.10.2026, 00:29 C0056: пользовательская инструкция нового экрана",
+ "helpOpened": "Редактор базы знаний: черновик, публикация, импорт из wiki",
+ "restoreOffered": "В браузере есть несохранённый текст от 15.10.2026, 00:29. Восстановить Удалить копию",
+ "restoredHasEdit": true,
+ "publishWhileUnsaved": "Недоступно: укажите причину. Опубликовать текущую версию (PUBLISH): читатели увидят её в справке. Требуется право публикатора.",
+ "copyRemoved": true,
+ "wikiTarget": "Станет черновиком статьи ui-help-rules (новая статья).",
+ "wikiImport": "Импорт ui-help-rules → ui-help-rules: сохранено, версия 1.",
+ "wikiDraftInList": "Подсказки и контекстная помощь ui-help-rules · DRAFT · v1 Открыть",
+ "mobile": {
+  "overflow": 0
+ }
+}

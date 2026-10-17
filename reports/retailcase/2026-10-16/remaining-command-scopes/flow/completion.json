@@ -1,0 +1,85 @@
+{
+  "state": "PASS_SCOPED_HU_PLAN_ASSIGN_START_COMPLETE3EA_EXACT_REPLAY",
+  "request": "{\"actor\":\"HT16Oc31efb0e6c\",\"command_type\":\"HU_TASK_COMPLETE\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"fact_qty\":\"1\",\"resource_id\":72,\"resource_session_id\":68,\"scanned_from_cell\":\"HT16Sc31efb0e6c\",\"scanned_pallet\":\"HT16.P:c31efb0e6c\",\"scanned_to_cell\":\"HT16Tc31efb0e6c\"},\"operation_id\":\"HT16.c31efb0e6c.COMPLETE\",\"source\":{\"task_id\":1192},\"units\":[]}",
+  "result": {
+    "root": "HT16.P:c31efb0e6c",
+    "warehouse": 40799215,
+    "cell": "HT16Tc31efb0e6c",
+    "nodes": [
+      {
+        "uid": "HT16.P:c31efb0e6c",
+        "kind": "CONTAINER",
+        "type": "PALLET",
+        "version": 2,
+        "sscc": null,
+        "tare_weight_kg": "0.5",
+        "open_task_count": 0,
+        "cell": "HT16Tc31efb0e6c",
+        "depth": 0
+      },
+      {
+        "uid": "HT16.C:c31efb0e6c",
+        "kind": "CONTAINER",
+        "type": "PALLET",
+        "version": 3,
+        "sscc": null,
+        "tare_weight_kg": "0.5",
+        "open_task_count": 0,
+        "cell": "HT16Tc31efb0e6c",
+        "depth": 1
+      },
+      {
+        "uid": "HT16.LOT:c31efb0e6c",
+        "kind": "STOCK",
+        "type": null,
+        "version": 2,
+        "sscc": null,
+        "tare_weight_kg": "0",
+        "article": "AS16ACE9C011B16",
+        "quantity": "3",
+        "hard_quantity": "0",
+        "base_uom": "EA",
+        "stock_version": 1,
+        "weight_kg": null,
+        "open_task_count": 0,
+        "cell": "HT16Tc31efb0e6c",
+        "depth": 2
+      }
+    ],
+    "links": [
+      {
+        "id": 622,
+        "parent": "HT16.P:c31efb0e6c",
+        "child": "HT16.C:c31efb0e6c",
+        "version": 0
+      },
+      {
+        "id": 621,
+        "parent": "HT16.C:c31efb0e6c",
+        "child": "HT16.LOT:c31efb0e6c",
+        "version": 0
+      }
+    ],
+    "ancestors": [],
+    "physical_unit_count": 0,
+    "leaf_count": 1,
+    "top_place_count": 1,
+    "operation_id": "HT16.c31efb0e6c.COMPLETE",
+    "task_id": 1192,
+    "status": "DONE",
+    "pallet_identifier": "HT16.P:c31efb0e6c",
+    "source_pallet_identifier": "HT16.P:c31efb0e6c",
+    "quantity": "1",
+    "unit_code": "HU",
+    "remaining_quantity": "0",
+    "residual_task_id": null,
+    "outbox_id": 5587
+  },
+  "physical": [
+    {
+      "cell": "HT16Tc31efb0e6c",
+      "remain": 3,
+      "hard_reserved_base": 0
+    }
+  ]
+}

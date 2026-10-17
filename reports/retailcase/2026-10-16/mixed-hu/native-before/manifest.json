@@ -1,0 +1,91 @@
+{
+  "captured_at_utc": "2026-10-15T22:31:42.791598+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_INTERWARE_THERMAL",
+      "type": "PACKAGE",
+      "file": "rrl_interware_thermal_package.sql",
+      "errors": [],
+      "user_source_sha256": "e1bfaad27341bc218b1225fd60e1475bec7adff0fdf124e06a9929438bc971b9",
+      "normalized_source_sha256": "b2e01e3b1e98b1c8cd3f1bca5c3c39b7d28245f0393f7f5d4248ee611207e1a7",
+      "artifact_sha256": "6c482464458cff9205bf1bfb417997795d0b9379ad95a86f005f242dd6c374a2"
+    },
+    {
+      "name": "RRL_INTERWARE_THERMAL",
+      "type": "PACKAGE BODY",
+      "file": "rrl_interware_thermal_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "a3e5cd90c9e82969e5a41049888d0a1d7f8b6f6f511b8e1d3cb7a65f450e653e",
+      "normalized_source_sha256": "7006907b26abc50c2ac4557b85c63326b6388574313b652c5e4695d9531b5101",
+      "artifact_sha256": "0cfbe955892cf4cfe9e177190b144ca053e521fd3284b2cb0597ee89dbb5b244"
+    },
+    {
+      "name": "RRL_IW_GROUP_THERMAL",
+      "type": "PACKAGE",
+      "file": "rrl_iw_group_thermal_package.sql",
+      "errors": [],
+      "user_source_sha256": "555489a2fb94bf2c45d170791feaf55a882b118a6164b5cf55f20e8a52dccb8f",
+      "normalized_source_sha256": "f335129cb4b80e4ec2cbaad469c246978e8869a48a44a5fe0faa9ddbf208c868",
+      "artifact_sha256": "575a0f5e6cbef76da41bc948c345bbe705252400636a5441c385a570fa85caf9"
+    },
+    {
+      "name": "RRL_IW_GROUP_THERMAL",
+      "type": "PACKAGE BODY",
+      "file": "rrl_iw_group_thermal_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "9bccf5daff85110dcf0da545595982f6da678b5568c546dc30cbfc9e50b27645",
+      "normalized_source_sha256": "333d6be627de03cb6b5740c5d312e3dbc9d6cfa27cd0294fbda5c224d6119ed8",
+      "artifact_sha256": "f64d3e94961c8cf466b9d570f04c9d91af84e677f952e773ae2efd9f32303d4d"
+    },
+    {
+      "name": "RRL_STOCK_HU_CMD",
+      "type": "PACKAGE",
+      "file": "rrl_stock_hu_cmd_package.sql",
+      "errors": [],
+      "user_source_sha256": "0a15a5980ddee8db67f21374c03a4f07971c3e911009fdafb25e6336d5758861",
+      "normalized_source_sha256": "4f13570dac1ad8c98e0f8115bb27c2312350461ca871f6c751bd523b3ae234d5",
+      "artifact_sha256": "ab2daafa94dded57bd47ccd206e46d9ea909749e295eba54a37adef721f6dfe7"
+    },
+    {
+      "name": "RRL_STOCK_HU_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_hu_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "1786db185cda788054e7f33a651a89eeea807853501fc92d6ebe1adedac2745a",
+      "normalized_source_sha256": "8eb5b0aeb045b4fce41240cea241b9ad65583b1115b2e50f4a7a41191973085a",
+      "artifact_sha256": "df0bd02dab694278b7e278497b0c370b46b99fdf1c26e671b4e1dad52036ea1a"
+    },
+    {
+      "name": "RRL_STOCK_HU_READ",
+      "type": "PACKAGE",
+      "file": "rrl_stock_hu_read_package.sql",
+      "errors": [],
+      "user_source_sha256": "b5f12abc79b68734061015369831c97124ebd1e25dc62df74a36f4ec16c912a8",
+      "normalized_source_sha256": "8344c651b5cda4cbe5b8a7d49ecc2b267f211f80bf170abd3cbe17d95b934f48",
+      "artifact_sha256": "452df604d3b192431671d733e9f72459f4a3a4dbdb5fa7863366b1757dba0f41"
+    },
+    {
+      "name": "RRL_STOCK_HU_READ",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_hu_read_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "6f7d0af3758e3dafff79c9e094fd0393bc5b98cfc09dd6f3fc0606ecdb4cac47",
+      "normalized_source_sha256": "803c68eb33cc63b6a6b78e51639e6e0f528f2923f8bfd7d2e8e8e0b4ba67ec0d",
+      "artifact_sha256": "d3a2f4fe6997c5c411b411c664c739d4576f00558eed7bd7bd19406f5e2cce6a"
+    },
+    {
+      "name": "RRL_STOCK_CASE_MOVE_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_case_move_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "41dc6d16e218afe6c3192b5a08adeeaebb6217895d84abd7c76aa340ad758fe3",
+      "normalized_source_sha256": "562440379c690e4efb345080b465515b777f7b7c67653de2f4bd57aad3f5bda1",
+      "artifact_sha256": "87b3e99baee0b17ef0437e6f6843c538b108296a74e3c928db84273c9c69f0d7"
+    }
+  ]
+}

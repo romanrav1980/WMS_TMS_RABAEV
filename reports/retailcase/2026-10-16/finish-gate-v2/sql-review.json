@@ -1,0 +1,1622 @@
+{
+  "state": "PASS_105_AUDIT_PAIRS_11_LIGHTWEIGHT_READS_AND_SQL_DECISIONS",
+  "source_cases": [
+    "case-transfer-scope/acceptance.json",
+    "case-transfer-scope/receipt-acceptance.json",
+    "full-shipping-scope/acceptance.json",
+    "finance-write-export-scope/acceptance.json",
+    "driver-delegation-scope/acceptance.json"
+  ],
+  "total_http_cases": 116,
+  "lightweight_transport_reads": [
+    {
+      "label": "ware_invoice_export",
+      "path": "/api/admin/transport/billing/orders/530/export.xlsx",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "495764cd-d242-4351-94c3-1b48edb2a247",
+      "case": "finance-write-export-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "ware_registry_export",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=FW16.fc9538d7c6",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "fb8f3242-777c-4994-b4d5-bc84c9474e8d",
+      "case": "finance-write-export-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "foreign_invoice_export",
+      "path": "/api/admin/transport/billing/orders/1/export.xlsx",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "75df0b36-04d4-4522-9ce5-da61276f6a41",
+      "case": "finance-write-export-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "revoked_invoice_export",
+      "path": "/api/admin/transport/billing/orders/530/export.xlsx",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "3f74d9f8-a0dc-45b5-a336-e897fcedaa7f",
+      "case": "finance-write-export-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "group_registry_export",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=FW16.fc9538d7c6",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "fcf5b2a7-d472-4f5d-a6c4-ac4398faa638",
+      "case": "finance-write-export-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "removed_group_registry",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=FW16.fc9538d7c6",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "16ca4d39-e1c6-42a2-b188-dcef6ec435db",
+      "case": "finance-write-export-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "partial_invoice_scope",
+      "path": "/api/admin/transport/billing/orders/531/export.xlsx",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "0ce2a50e-5de9-4ea1-83b2-0368271b7e8d",
+      "case": "driver-delegation-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "partial_registry_scope",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=DD16.a7bc0b7073",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "92a6f156-faa2-4099-9ce4-4bc94f92ceef",
+      "case": "driver-delegation-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "all_invoice_scopes",
+      "path": "/api/admin/transport/billing/orders/531/export.xlsx",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "0bd076d9-61b1-41a1-a153-958742abd40e",
+      "case": "driver-delegation-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "all_registry_scopes",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=DD16.a7bc0b7073",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "11a20057-f733-4961-9c14-003d323c394a",
+      "case": "driver-delegation-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    },
+    {
+      "label": "removed_invoice_scope",
+      "path": "/api/admin/transport/billing/orders/531/export.xlsx",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "ac750597-4286-4039-bf44-8c7f164f50f7",
+      "case": "driver-delegation-scope/acceptance.json",
+      "reason": "Existing is_lightweight_transport_read bypass; request-id header only, no Oracle/local API audit row"
+    }
+  ],
+  "local_tail_cap_bytes": 33554432,
+  "local_line_cap": 60000,
+  "http": [
+    {
+      "api_call_id": 70443,
+      "request_id": "7fe5f447-6e00-4231-aadd-9d02c7e9e7da",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 403,
+      "duration_ms": 246
+    },
+    {
+      "api_call_id": 70444,
+      "request_id": "9fb3e9db-5e24-4758-958e-ddab1ea3a687",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 403,
+      "duration_ms": 156
+    },
+    {
+      "api_call_id": 70445,
+      "request_id": "9e1c6825-480d-4a52-bd65-943e7a9d636b",
+      "path": "/api/case-pick/tasks/1148/transfer",
+      "response_status": 403,
+      "duration_ms": 76
+    },
+    {
+      "api_call_id": 70446,
+      "request_id": "50078323-457d-432a-8134-f2743cefbd18",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 409,
+      "duration_ms": 92
+    },
+    {
+      "api_call_id": 70447,
+      "request_id": "14710296-b603-425a-84a0-593b3c101c8f",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 200,
+      "duration_ms": 97
+    },
+    {
+      "api_call_id": 70448,
+      "request_id": "7272c073-cbea-400b-9304-31a4d2e0658c",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 200,
+      "duration_ms": 89
+    },
+    {
+      "api_call_id": 70449,
+      "request_id": "8607b3d6-6309-4dc5-a141-83a1a1133085",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 409,
+      "duration_ms": 104
+    },
+    {
+      "api_call_id": 70450,
+      "request_id": "5a8ad38f-0f4e-48f0-91cf-140b6ddd2dc7",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70451,
+      "request_id": "be023e2e-06c2-4805-a315-29214043a3b4",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 200,
+      "duration_ms": 110
+    },
+    {
+      "api_call_id": 70452,
+      "request_id": "5facebd7-a926-45d4-86b6-0623c0806173",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 403,
+      "duration_ms": 151
+    },
+    {
+      "api_call_id": 70453,
+      "request_id": "40ea4b7c-ba80-481a-9cfb-0deefe3944b2",
+      "path": "/api/case-pick/tasks/1151/transfer",
+      "response_status": 200,
+      "duration_ms": 78
+    },
+    {
+      "api_call_id": 70454,
+      "request_id": "bf2c8042-6618-46ab-80a6-c31b3a06f9fd",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 352
+    },
+    {
+      "api_call_id": 70455,
+      "request_id": "a72bd227-1c39-4539-a51c-fd5879673b81",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 131
+    },
+    {
+      "api_call_id": 70456,
+      "request_id": "a91f4e41-a155-42b3-854d-1b9d90f32771",
+      "path": "/api/warehouse-hus/attach-case",
+      "response_status": 200,
+      "duration_ms": 1742
+    },
+    {
+      "api_call_id": 70457,
+      "request_id": "ea6bfc23-f6d8-4e3d-a815-389e753954ce",
+      "path": "/api/warehouse-hus/attach",
+      "response_status": 200,
+      "duration_ms": 246
+    },
+    {
+      "api_call_id": 70458,
+      "request_id": "80a92e0f-ee2c-4ae3-92b5-da05b54b6db0",
+      "path": "/api/sku-quality-weight/20902283/AS16ADC48B9C2AA",
+      "response_status": 200,
+      "duration_ms": 127
+    },
+    {
+      "api_call_id": 70459,
+      "request_id": "56375f3f-1197-43f9-942e-89c9308ac989",
+      "path": "/api/outgoing-quality/OC16.1a524b2458.FULL.ST",
+      "response_status": 200,
+      "duration_ms": 159
+    },
+    {
+      "api_call_id": 70460,
+      "request_id": "3418cb62-f252-4b04-84ce-3ae03baf3255",
+      "path": "/api/outgoing-quality/OC16.1a524b2458.FULL.ST/weight",
+      "response_status": 200,
+      "duration_ms": 268
+    },
+    {
+      "api_call_id": 70461,
+      "request_id": "8ff6198c-2b35-4410-8f41-774ed14d5163",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 403,
+      "duration_ms": 303
+    },
+    {
+      "api_call_id": 70462,
+      "request_id": "1d654760-e173-4f1b-8e48-41b9fda68aee",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 403,
+      "duration_ms": 67
+    },
+    {
+      "api_call_id": 70463,
+      "request_id": "0f555499-97ac-46c8-9816-68d3e62868ff",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 409,
+      "duration_ms": 566
+    },
+    {
+      "api_call_id": 70468,
+      "request_id": "33e02fbc-2bbb-48e2-9892-4da38bce5414",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 663
+    },
+    {
+      "api_call_id": 70509,
+      "request_id": "3c6e140b-29a6-47a5-b945-6a71f4633c45",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 332
+    },
+    {
+      "api_call_id": 70511,
+      "request_id": "04f0ddf6-5efa-41d2-a906-38c7f3def488",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 409,
+      "duration_ms": 90
+    },
+    {
+      "api_call_id": 70512,
+      "request_id": "c127c28a-6412-40f2-8bd4-5131a4b8d94c",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 403,
+      "duration_ms": 110
+    },
+    {
+      "api_call_id": 70515,
+      "request_id": "7da6ac57-e24a-4258-97bf-97a8f6db7456",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 120
+    },
+    {
+      "api_call_id": 70519,
+      "request_id": "c9472f9c-b33a-4b9d-9c85-ae4a29dd623a",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 403,
+      "duration_ms": 110
+    },
+    {
+      "api_call_id": 70521,
+      "request_id": "a8b8acf2-7236-4eae-b1b7-698b101661d9",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 210
+    },
+    {
+      "api_call_id": 70527,
+      "request_id": "26662b0b-6221-4187-af00-1126c3170b27",
+      "path": "/api/transport/loading/33654/depart",
+      "response_status": 403,
+      "duration_ms": 75
+    },
+    {
+      "api_call_id": 70529,
+      "request_id": "12c0245b-69a0-4375-9042-1d8f21ae79d1",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 140
+    },
+    {
+      "api_call_id": 70530,
+      "request_id": "007c4e58-fce6-4d3d-89e7-b5d7cff8a224",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 64
+    },
+    {
+      "api_call_id": 70531,
+      "request_id": "a3c7f2a3-7ebb-4ae4-8977-1167339b5532",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 121
+    },
+    {
+      "api_call_id": 70533,
+      "request_id": "ec717f03-1300-4254-ae04-ce52725c4fad",
+      "path": "/api/delivery/timing/window",
+      "response_status": 403,
+      "duration_ms": 333
+    },
+    {
+      "api_call_id": 70537,
+      "request_id": "21d6d6bc-e9c6-46ce-ae31-cf8fd54cd880",
+      "path": "/api/transport/loading/33656/depart",
+      "response_status": 200,
+      "duration_ms": 204
+    },
+    {
+      "api_call_id": 70538,
+      "request_id": "df179eff-ce4f-4eaa-9383-50e3c4245128",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 61
+    },
+    {
+      "api_call_id": 70539,
+      "request_id": "6e181938-e30d-4c75-8352-e912af7b8df0",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 70540,
+      "request_id": "388efc80-c9d6-48f0-badc-c9cce4c26268",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 70541,
+      "request_id": "055368a1-c091-4b39-b9b9-448120e07864",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 409,
+      "duration_ms": 63
+    },
+    {
+      "api_call_id": 70543,
+      "request_id": "2d5ae0e5-ccea-41b9-8e7d-4c104c7de2a3",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 403,
+      "duration_ms": 372
+    },
+    {
+      "api_call_id": 70545,
+      "request_id": "405b0e44-9bb0-498b-9940-bc66531f3f59",
+      "path": "/api/delivery/store-receipts/policy",
+      "response_status": 200,
+      "duration_ms": 145
+    },
+    {
+      "api_call_id": 70549,
+      "request_id": "451ca5d4-e890-4193-a11b-e0698fd8180f",
+      "path": "/api/delivery/store-receipts/preview",
+      "response_status": 200,
+      "duration_ms": 239
+    },
+    {
+      "api_call_id": 70550,
+      "request_id": "fe60ec28-3437-4665-ba0b-2525cc133e36",
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "response_status": 200,
+      "duration_ms": 103
+    },
+    {
+      "api_call_id": 70552,
+      "request_id": "47e380bd-71e4-4733-85ef-b37da8afba78",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 507
+    },
+    {
+      "api_call_id": 70555,
+      "request_id": "7386e299-917b-4335-9c00-79a749ffd2aa",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 112
+    },
+    {
+      "api_call_id": 70559,
+      "request_id": "73537b2e-52d1-4f1f-8c03-e7908caa6fd0",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 200,
+      "duration_ms": 181
+    },
+    {
+      "api_call_id": 70560,
+      "request_id": "1617dcad-d941-415e-8029-6fe262258b40",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 70561,
+      "request_id": "01bcb68e-8db0-401e-a7f6-442307dc7409",
+      "path": "/api/transport/loading/33656/depart",
+      "response_status": 200,
+      "duration_ms": 236
+    },
+    {
+      "api_call_id": 70565,
+      "request_id": "3f95e0fa-e855-4566-a3c1-d2e40f900e8b",
+      "path": "/api/transport/loading/33656/depart",
+      "response_status": 403,
+      "duration_ms": 88
+    },
+    {
+      "api_call_id": 70637,
+      "request_id": "ac59cc59-6e06-4d9c-979a-a8f9aedd50cc",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 403,
+      "duration_ms": 201
+    },
+    {
+      "api_call_id": 70638,
+      "request_id": "0acd673a-9164-438e-a928-8da3d3df9763",
+      "path": "/api/admin/auth/login",
+      "response_status": 403,
+      "duration_ms": 106
+    },
+    {
+      "api_call_id": 70639,
+      "request_id": "05ea1e01-9a8e-4d3b-bf87-35a1b0239b69",
+      "path": "/api/admin/auth/login",
+      "response_status": 200,
+      "duration_ms": 44
+    },
+    {
+      "api_call_id": 70640,
+      "request_id": "a6af5424-9061-4498-959c-72a713d12bb0",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70641,
+      "request_id": "e6891d69-b89f-452d-95e2-074ccb073ba3",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 200,
+      "duration_ms": 120
+    },
+    {
+      "api_call_id": 70642,
+      "request_id": "c08f80a6-e138-4499-a33f-ee9f9d18034c",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 200,
+      "duration_ms": 66
+    },
+    {
+      "api_call_id": 70643,
+      "request_id": "f504465e-6e87-4417-ba1b-2e4b0a23f936",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 409,
+      "duration_ms": 63
+    },
+    {
+      "api_call_id": 70644,
+      "request_id": "8ded4919-71b3-478e-b64e-701086ad4dac",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70645,
+      "request_id": "c0086506-937b-4d21-87ea-ee75220d52a3",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 403,
+      "duration_ms": 55
+    },
+    {
+      "api_call_id": 70646,
+      "request_id": "0906eaec-fedc-4971-8ac7-6712156855d0",
+      "path": "/api/finance/logistics-costs/rates",
+      "response_status": 200,
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 70647,
+      "request_id": "f2cc72c4-4240-4027-86f1-0bc87f664509",
+      "path": "/api/finance/logistics-costs/rates/monthly",
+      "response_status": 200,
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 70648,
+      "request_id": "da521b66-d1fa-4fc4-85fc-5e146bb9bb3b",
+      "path": "/api/finance/logistics-costs/rates/monthly",
+      "response_status": 200,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 70649,
+      "request_id": "a1b4a7e4-b585-4dd4-9972-9186b1749f69",
+      "path": "/api/finance/logistics-costs/rates/monthly",
+      "response_status": 403,
+      "duration_ms": 61
+    },
+    {
+      "api_call_id": 70650,
+      "request_id": "ecc509b4-6e9d-40f5-828f-8ff3fab5f1ee",
+      "path": "/api/admin/auth/me",
+      "response_status": 403,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 70651,
+      "request_id": "ce996a82-2eb6-40a4-8a83-730c4c96b046",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 200,
+      "duration_ms": 96
+    },
+    {
+      "api_call_id": 70652,
+      "request_id": "2ccd2bad-b03d-4262-a3bd-c843f81e9433",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 404,
+      "duration_ms": 58
+    },
+    {
+      "api_call_id": 70653,
+      "request_id": "25cb5f71-9c23-40ab-b982-dccc0901847e",
+      "path": "/api/case-pick/tasks/1148/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 70654,
+      "request_id": "1b3df029-cbac-43da-9b91-7c0bbc6451a0",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 403,
+      "duration_ms": 69
+    },
+    {
+      "api_call_id": 70655,
+      "request_id": "280d5220-2794-4e10-b9d2-530533a750cb",
+      "path": "/api/case-pick/tasks/1151/transfer-receipt",
+      "response_status": 200,
+      "duration_ms": 70
+    },
+    {
+      "api_call_id": 70656,
+      "request_id": "c12c3685-24c5-4721-8a25-99aa7e3f2aa9",
+      "path": "/api/admin/auth/login",
+      "response_status": 200,
+      "duration_ms": 47
+    },
+    {
+      "api_call_id": 70657,
+      "request_id": "d4208d3e-6f48-45ff-9518-abdc016a7382",
+      "path": "/api/case-pick/tasks/1151",
+      "response_status": 200,
+      "duration_ms": 225
+    },
+    {
+      "api_call_id": 70658,
+      "request_id": "04cf0085-15bd-4e2c-bc6c-f80d90c23b8b",
+      "path": "/api/access/workspaces",
+      "response_status": 200,
+      "duration_ms": 529
+    },
+    {
+      "api_call_id": 70659,
+      "request_id": "933c7ebc-344e-4210-b837-4cee486517fc",
+      "path": "/api/driver/trips",
+      "response_status": 403,
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 70660,
+      "request_id": "fe5da98c-bc83-474d-a74a-8b22e28cbcf4",
+      "path": "/api/transport/driver-bindings/10019",
+      "response_status": 403,
+      "duration_ms": 106
+    },
+    {
+      "api_call_id": 70665,
+      "request_id": "90694496-1588-4266-991b-7ce38497eda0",
+      "path": "/api/transport/driver-bindings/10019",
+      "response_status": 200,
+      "duration_ms": 267
+    },
+    {
+      "api_call_id": 70666,
+      "request_id": "171d1516-1b34-4412-ba0e-eceb655d739e",
+      "path": "/api/driver/trips",
+      "response_status": 200,
+      "duration_ms": 183
+    },
+    {
+      "api_call_id": 70667,
+      "request_id": "990e5675-1530-4597-b32f-25e8279572a4",
+      "path": "/api/driver/trips",
+      "response_status": 403,
+      "duration_ms": 53
+    },
+    {
+      "api_call_id": 70668,
+      "request_id": "dfa63c52-e9ad-4f48-820a-bb538dcd3d46",
+      "path": "/api/driver/trips/33657/ops",
+      "response_status": 200,
+      "duration_ms": 61
+    },
+    {
+      "api_call_id": 70669,
+      "request_id": "65a42c6d-40f9-459c-b768-fc5deef8d95a",
+      "path": "/api/driver/trips/33656/ops",
+      "response_status": 403,
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 70670,
+      "request_id": "a02192c0-5dc9-484c-893c-591249158d8a",
+      "path": "/api/driver/ops/10244/done",
+      "response_status": 409,
+      "duration_ms": 87
+    },
+    {
+      "api_call_id": 70671,
+      "request_id": "06e5c751-8cfc-4029-9576-471390b4d04e",
+      "path": "/api/delivery/store-return-custody/driver",
+      "response_status": 200,
+      "duration_ms": 113
+    },
+    {
+      "api_call_id": 70672,
+      "request_id": "fe67b699-7cf0-4623-a4d6-6a9be94e27c8",
+      "path": "/api/driver/ops/10244/start",
+      "response_status": 200,
+      "duration_ms": 104
+    },
+    {
+      "api_call_id": 70673,
+      "request_id": "ac35c485-86aa-4f6e-b30c-2d887413894e",
+      "path": "/api/driver/ops/10244/start",
+      "response_status": 200,
+      "duration_ms": 109
+    },
+    {
+      "api_call_id": 70674,
+      "request_id": "8e156b44-9608-4854-9ae3-801e29be70c7",
+      "path": "/api/driver/ops/10244/done",
+      "response_status": 200,
+      "duration_ms": 50
+    },
+    {
+      "api_call_id": 70675,
+      "request_id": "ee9fb6a1-8639-420c-a7f9-f595ae3440c9",
+      "path": "/api/driver/ops/10244/done",
+      "response_status": 200,
+      "duration_ms": 52
+    },
+    {
+      "api_call_id": 70676,
+      "request_id": "9ad5a320-7261-48ac-929c-3e53c5c7ad5f",
+      "path": "/api/driver/trips",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 70677,
+      "request_id": "43125cc1-3840-4dbe-ab10-1a6de023d4af",
+      "path": "/api/driver/ops/10244/done",
+      "response_status": 403,
+      "duration_ms": 53
+    },
+    {
+      "api_call_id": 70678,
+      "request_id": "2382292f-d367-444f-8d69-886b6f50e46f",
+      "path": "/api/delivery/store-return-custody/driver",
+      "response_status": 403,
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 70679,
+      "request_id": "9030c05c-b5d8-474c-a528-d30fe958d3bf",
+      "path": "/api/driver/trips",
+      "response_status": 403,
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 70680,
+      "request_id": "fd72c958-de7b-4545-8a8a-2caad95f1dd6",
+      "path": "/api/driver/trips",
+      "response_status": 200,
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 70681,
+      "request_id": "7a5bad83-fb5c-4e6a-9408-5add2942fd69",
+      "path": "/api/transport/driver-bindings/10019",
+      "response_status": 200,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70682,
+      "request_id": "8e873bb6-5bc4-4033-b75d-5270b918a895",
+      "path": "/api/driver/trips",
+      "response_status": 403,
+      "duration_ms": 113
+    },
+    {
+      "api_call_id": 70683,
+      "request_id": "60475650-7a7d-41df-8912-ef75620ec655",
+      "path": "/api/driver/ops/10244/done",
+      "response_status": 403,
+      "duration_ms": 136
+    },
+    {
+      "api_call_id": 70684,
+      "request_id": "48a9f56b-905e-48b2-8178-79e9c3424303",
+      "path": "/api/transport/loading/33657/depart",
+      "response_status": 403,
+      "duration_ms": 92
+    },
+    {
+      "api_call_id": 70685,
+      "request_id": "728d8c5a-f82c-487b-918a-3d111de484dc",
+      "path": "/api/transport/loading/33657/depart",
+      "response_status": 409,
+      "duration_ms": 75
+    },
+    {
+      "api_call_id": 70686,
+      "request_id": "c5a713db-47b6-4657-9709-0ac29c771c7a",
+      "path": "/api/access/commands",
+      "response_status": 200,
+      "duration_ms": 150
+    },
+    {
+      "api_call_id": 70687,
+      "request_id": "f26d1dc6-5c8d-4ae8-9d6b-67827d7d3996",
+      "path": "/api/finance/logistics-costs/warehouses/20902283/rates",
+      "response_status": 200,
+      "duration_ms": 71
+    },
+    {
+      "api_call_id": 70688,
+      "request_id": "19f601c7-e968-43df-9733-a74c2e011473",
+      "path": "/api/access/commands",
+      "response_status": 403,
+      "duration_ms": 58
+    },
+    {
+      "api_call_id": 70689,
+      "request_id": "94493246-a7a3-4a4c-bf15-904b4b5917bc",
+      "path": "/api/access/commands",
+      "response_status": 403,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 70690,
+      "request_id": "47baf83e-41dc-4803-a185-d40dceb36509",
+      "path": "/api/access/commands",
+      "response_status": 403,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 70691,
+      "request_id": "86d0c890-6b7a-4d7c-b5da-14a9c9807356",
+      "path": "/api/access/commands",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 70692,
+      "request_id": "974ff30f-dee7-4ac1-a5e0-7cae1518d452",
+      "path": "/api/access/commands",
+      "response_status": 403,
+      "duration_ms": 86
+    },
+    {
+      "api_call_id": 70693,
+      "request_id": "6a9683e6-424b-4726-b628-fbb2dc4bf36f",
+      "path": "/api/access/commands",
+      "response_status": 200,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 70694,
+      "request_id": "e14c9a21-7fa9-4dba-b652-4926bd440848",
+      "path": "/api/finance/logistics-costs/warehouses/20902283/rates",
+      "response_status": 403,
+      "duration_ms": 137
+    },
+    {
+      "api_call_id": 70695,
+      "request_id": "37fb3660-aa96-43f0-ba67-6c8b3b4225f6",
+      "path": "/api/access/commands",
+      "response_status": 200,
+      "duration_ms": 98
+    },
+    {
+      "api_call_id": 70696,
+      "request_id": "3082d036-17b9-4c11-accb-0245be2d20fc",
+      "path": "/api/finance/logistics-costs/warehouses/20902283/rates",
+      "response_status": 403,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 70697,
+      "request_id": "917e3eed-faae-4de5-9c8f-23b9d5123724",
+      "path": "/api/finance/logistics-costs/warehouses/20902283/rates",
+      "response_status": 403,
+      "duration_ms": 56
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 5088,
+      "api_call_id": 70443,
+      "elapsed_ms": 25,
+      "module": "WMS_API:70443",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5089,
+      "api_call_id": 70444,
+      "elapsed_ms": 109,
+      "module": "WMS_API:70444",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5090,
+      "api_call_id": 70445,
+      "elapsed_ms": 21,
+      "module": "WMS_API:70445",
+      "action": "POST /api/case-pick/tasks/1148/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5091,
+      "api_call_id": 70446,
+      "elapsed_ms": 41,
+      "module": "WMS_API:70446",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5092,
+      "api_call_id": 70449,
+      "elapsed_ms": 50,
+      "module": "WMS_API:70449",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5093,
+      "api_call_id": 70450,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70450",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5094,
+      "api_call_id": 70452,
+      "elapsed_ms": 24,
+      "module": "WMS_API:70452",
+      "action": "POST /api/case-pick/tasks/1151/t",
+      "sql_sample": "CASE resource transfer_task"
+    },
+    {
+      "log_id": 5098,
+      "api_call_id": 70531,
+      "elapsed_ms": 36,
+      "module": "WMS_API:70531",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5099,
+      "api_call_id": 70533,
+      "elapsed_ms": 115,
+      "module": "WMS_API:70533",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5100,
+      "api_call_id": 70538,
+      "elapsed_ms": 16,
+      "module": "WMS_API:70538",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5101,
+      "api_call_id": 70541,
+      "elapsed_ms": 17,
+      "module": "WMS_API:70541",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5102,
+      "api_call_id": 70543,
+      "elapsed_ms": 200,
+      "module": "WMS_API:70543",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5103,
+      "api_call_id": 70560,
+      "elapsed_ms": 12,
+      "module": "WMS_API:70560",
+      "action": "GET /api/delivery/timing/kpis",
+      "sql_sample": "Scoped delivery KPI window cohort"
+    },
+    {
+      "log_id": 5105,
+      "api_call_id": 70637,
+      "elapsed_ms": 17,
+      "module": "WMS_API:70637",
+      "action": "POST /api/finance/logistics-cost",
+      "sql_sample": "Version warehouse BOX cost rate"
+    },
+    {
+      "log_id": 5106,
+      "api_call_id": 70638,
+      "elapsed_ms": 16,
+      "module": "WMS_API:70638",
+      "action": "GET /api/admin/auth/login",
+      "sql_sample": "Current PLATFORM admin shell login READ ONLY"
+    },
+    {
+      "log_id": 5107,
+      "api_call_id": 70640,
+      "elapsed_ms": 10,
+      "module": "WMS_API:70640",
+      "action": "POST /api/finance/logistics-cost",
+      "sql_sample": "Version warehouse BOX cost rate"
+    },
+    {
+      "log_id": 5108,
+      "api_call_id": 70643,
+      "elapsed_ms": 15,
+      "module": "WMS_API:70643",
+      "action": "POST /api/finance/logistics-cost",
+      "sql_sample": "Version warehouse BOX cost rate"
+    },
+    {
+      "log_id": 5109,
+      "api_call_id": 70644,
+      "elapsed_ms": 10,
+      "module": "WMS_API:70644",
+      "action": "POST /api/finance/logistics-cost",
+      "sql_sample": "Version warehouse BOX cost rate"
+    },
+    {
+      "log_id": 5112,
+      "api_call_id": 70645,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70645",
+      "action": "POST /api/finance/logistics-cost",
+      "sql_sample": "Version warehouse BOX cost rate"
+    },
+    {
+      "log_id": 5115,
+      "api_call_id": 70649,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70649",
+      "action": "POST /api/finance/logistics-cost",
+      "sql_sample": "Version warehouse BOX cost rate"
+    },
+    {
+      "log_id": 5117,
+      "api_call_id": 70650,
+      "elapsed_ms": 5,
+      "module": "WMS_API:70650",
+      "action": "GET /api/admin/auth/me",
+      "sql_sample": "Current PLATFORM admin shell login READ ONLY"
+    },
+    {
+      "log_id": 5118,
+      "api_call_id": 70652,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70652",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5119,
+      "api_call_id": 70653,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70653",
+      "action": "GET /api/case-pick/tasks/1148/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5120,
+      "api_call_id": 70654,
+      "elapsed_ms": 10,
+      "module": "WMS_API:70654",
+      "action": "GET /api/case-pick/tasks/1151/tr",
+      "sql_sample": "Immutable CASE transfer receipt READ ONLY"
+    },
+    {
+      "log_id": 5121,
+      "api_call_id": 70659,
+      "elapsed_ms": 28,
+      "module": "WMS_API:70659",
+      "action": "GET /api/driver/trips",
+      "sql_sample": "Driver day READ ONLY current binding"
+    },
+    {
+      "log_id": 5122,
+      "api_call_id": 70660,
+      "elapsed_ms": 65,
+      "module": "WMS_API:70660",
+      "action": "PUT /api/transport/driver-bindin",
+      "sql_sample": "Explicit authenticated driver binding"
+    },
+    {
+      "log_id": 5125,
+      "api_call_id": 70667,
+      "elapsed_ms": 6,
+      "module": "WMS_API:70667",
+      "action": "GET /api/driver/trips",
+      "sql_sample": "Driver day READ ONLY current binding"
+    },
+    {
+      "log_id": 5126,
+      "api_call_id": 70669,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70669",
+      "action": "GET /api/driver/trips/33656/ops",
+      "sql_sample": "Driver trip READ ONLY current binding"
+    },
+    {
+      "log_id": 5127,
+      "api_call_id": 70670,
+      "elapsed_ms": 35,
+      "module": "WMS_API:70670",
+      "action": "POST /api/driver/ops/10244/done",
+      "sql_sample": "Existing driver fact serialized native owner"
+    },
+    {
+      "log_id": 5128,
+      "api_call_id": 70676,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70676",
+      "action": "GET /api/driver/trips",
+      "sql_sample": "Driver day READ ONLY current binding"
+    },
+    {
+      "log_id": 5129,
+      "api_call_id": 70677,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70677",
+      "action": "POST /api/driver/ops/10244/done",
+      "sql_sample": "Existing driver fact serialized native owner"
+    },
+    {
+      "log_id": 5130,
+      "api_call_id": 70678,
+      "elapsed_ms": 5,
+      "module": "WMS_API:70678",
+      "action": "GET /api/delivery/store-return-c",
+      "sql_sample": "Current bound driver return queue READ ONLY"
+    },
+    {
+      "log_id": 5131,
+      "api_call_id": 70679,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70679",
+      "action": "GET /api/driver/trips",
+      "sql_sample": "Driver day READ ONLY current binding"
+    },
+    {
+      "log_id": 5132,
+      "api_call_id": 70682,
+      "elapsed_ms": 14,
+      "module": "WMS_API:70682",
+      "action": "GET /api/driver/trips",
+      "sql_sample": "Driver day READ ONLY current binding"
+    },
+    {
+      "log_id": 5133,
+      "api_call_id": 70683,
+      "elapsed_ms": 16,
+      "module": "WMS_API:70683",
+      "action": "POST /api/driver/ops/10244/done",
+      "sql_sample": "Existing driver fact serialized native owner"
+    },
+    {
+      "log_id": 5138,
+      "api_call_id": 70688,
+      "elapsed_ms": 9,
+      "module": "WMS_API:70688",
+      "action": "POST /api/access/commands",
+      "sql_sample": "access.command"
+    },
+    {
+      "log_id": 5139,
+      "api_call_id": 70689,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70689",
+      "action": "POST /api/access/commands",
+      "sql_sample": "access.command"
+    },
+    {
+      "log_id": 5140,
+      "api_call_id": 70690,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70690",
+      "action": "POST /api/access/commands",
+      "sql_sample": "access.command"
+    },
+    {
+      "log_id": 5141,
+      "api_call_id": 70691,
+      "elapsed_ms": 10,
+      "module": "WMS_API:70691",
+      "action": "POST /api/access/commands",
+      "sql_sample": "access.command"
+    },
+    {
+      "log_id": 5142,
+      "api_call_id": 70692,
+      "elapsed_ms": 33,
+      "module": "WMS_API:70692",
+      "action": "POST /api/access/commands",
+      "sql_sample": "access.command"
+    },
+    {
+      "log_id": 5143,
+      "api_call_id": 70694,
+      "elapsed_ms": 20,
+      "module": "WMS_API:70694",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Read current warehouse cost rate"
+    },
+    {
+      "log_id": 5144,
+      "api_call_id": 70696,
+      "elapsed_ms": 7,
+      "module": "WMS_API:70696",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Read current warehouse cost rate"
+    },
+    {
+      "log_id": 5145,
+      "api_call_id": 70697,
+      "elapsed_ms": 8,
+      "module": "WMS_API:70697",
+      "action": "GET /api/finance/logistics-costs",
+      "sql_sample": "Read current warehouse cost rate"
+    }
+  ],
+  "top_sql": [
+    {
+      "sql_id": "d7qxrbmc1n97d",
+      "executions": 477,
+      "avg_ms": 94.931,
+      "avg_buffers": 1646.93,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.prepare_command(:payload,:actor,:result,:resolution); end;"
+    },
+    {
+      "sql_id": "4a4445buyma1k",
+      "executions": 12,
+      "avg_ms": 143.629,
+      "avg_buffers": 1647.58,
+      "sql_sample": "with selected_tasks as (               select CASE_PICK_TASK_ID,PICK_WAVE_ID from (                 select t.CASE_PICK_TASK_ID,t.PICK_WAVE_ID                   from RRL_CASE_PICK_TASK t                   join RRL_PICK_WAVE w on w.PICK_WAVE_ID=t.PICK_WAVE_ID                   join RRL_CUSTOMER_ORDER co on co.CUSTOMER_ORDER_ID=t.CUSTOMER_ORDER_ID                  where 1 = 1 and RRL_ACCESS_API.allowed(:view_actor,'case_pick_view','WAREHOUSE',to_char(t.WARE_ID),t.ASSIGNED_TO)=1 and t.STATUS not in ('READY_TO_SHIP', 'CANCELLED')                  order by t.STATUS,t.CREATED_AT,t.CASE_PICK_TASK_ID  "
+    },
+    {
+      "sql_id": "4a4445buyma1k",
+      "executions": 4,
+      "avg_ms": 220.229,
+      "avg_buffers": 2314,
+      "sql_sample": "with selected_tasks as (               select CASE_PICK_TASK_ID,PICK_WAVE_ID from (                 select t.CASE_PICK_TASK_ID,t.PICK_WAVE_ID                   from RRL_CASE_PICK_TASK t                   join RRL_PICK_WAVE w on w.PICK_WAVE_ID=t.PICK_WAVE_ID                   join RRL_CUSTOMER_ORDER co on co.CUSTOMER_ORDER_ID=t.CUSTOMER_ORDER_ID                  where 1 = 1 and RRL_ACCESS_API.allowed(:view_actor,'case_pick_view','WAREHOUSE',to_char(t.WARE_ID),t.ASSIGNED_TO)=1 and t.STATUS not in ('READY_TO_SHIP', 'CANCELLED')                  order by t.STATUS,t.CREATED_AT,t.CASE_PICK_TASK_ID  "
+    },
+    {
+      "sql_id": "dtb6crf8tcjy6",
+      "executions": 1,
+      "avg_ms": 590.821,
+      "avg_buffers": 3333,
+      "sql_sample": "declare a clob;begin\r  dbms_lob.createtemporary(a,true);\r  for r in(select TEXT from USER_SOURCE where NAME='RRL_DRIVER_SCOPE'and TYPE='PACKAGE'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;\r  if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='6E05F8AED77DF0387C70DD68C36F8A6C27D0364BE49F5CF7310C55B9DEC4AEC8'then raise_application_error(-20886,'SOURCE_GUARD_RRL_DRIVER_SCOPE');end if;dbms_lob.freetemporary(a);\r  dbms_lob.createtemporary(a,true);\r  for r in(select TEXT from USER_SOURCE where NAME='RRL_DRIVER_SCOPE'and TYPE='PAC"
+    },
+    {
+      "sql_id": "62zysdprpdqav",
+      "executions": 1,
+      "avg_ms": 569.966,
+      "avg_buffers": 282,
+      "sql_sample": "with selected_tasks as (               select CASE_PICK_TASK_ID,PICK_WAVE_ID from (                 select t.CASE_PICK_TASK_ID,t.PICK_WAVE_ID                   from RRL_CASE_PICK_TASK t                   join RRL_PICK_WAVE w on w.PICK_WAVE_ID=t.PICK_WAVE_ID                   join RRL_CUSTOMER_ORDER co on co.CUSTOMER_ORDER_ID=t.CUSTOMER_ORDER_ID                  where 1 = 1 and RRL_ACCESS_API.allowed(:view_actor,'case_pick_view','WAREHOUSE',to_char(t.WARE_ID),t.ASSIGNED_TO)=1 and t.WARE_ID = :ware and t.STATUS not in ('READY_TO_SHIP', 'CANCELLED')                  order by t.STATUS,t.CREATED_AT"
+    },
+    {
+      "sql_id": "b9cwt8gjjs3z0",
+      "executions": 2,
+      "avg_ms": 179.211,
+      "avg_buffers": 2908.5,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.prepare_command(:1,:2,:3,:4); end;"
+    },
+    {
+      "sql_id": "0yfmjwqfwk6cz",
+      "executions": 1,
+      "avg_ms": 264.803,
+      "avg_buffers": 57,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_DRIVER_SCOPE'AND TYPE='PACKAGE BODY'ORDER BY LINE"
+    },
+    {
+      "sql_id": "c4q6nk1z65ynz",
+      "executions": 1,
+      "avg_ms": 247.96,
+      "avg_buffers": 57,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_DRIVER_SCOPE'AND TYPE='PACKAGE'ORDER BY LINE"
+    },
+    {
+      "sql_id": "9n2qv3txpfwjz",
+      "executions": 103,
+      "avg_ms": 1.902,
+      "avg_buffers": 75.61,
+      "sql_sample": "select count(*) from RUSERS u where u.ID=:actor and nvl(u.DELETED,0)=0         and exists(select 1 from RRL_WARES w where (:ware is null or w.ID=:ware)         and RRL_ACCESS_API.allowed(:actor,'case_pick_view','WAREHOUSE',to_char(w.ID),:actor)=1)"
+    },
+    {
+      "sql_id": "9n2qv3txpfwjz",
+      "executions": 45,
+      "avg_ms": 2.432,
+      "avg_buffers": 11.24,
+      "sql_sample": "select count(*) from RUSERS u where u.ID=:actor and nvl(u.DELETED,0)=0         and exists(select 1 from RRL_WARES w where (:ware is null or w.ID=:ware)         and RRL_ACCESS_API.allowed(:actor,'case_pick_view','WAREHOUSE',to_char(w.ID),:actor)=1)"
+    },
+    {
+      "sql_id": "61ymznj17ust9",
+      "executions": 28,
+      "avg_ms": 2.272,
+      "avg_buffers": 53.36,
+      "sql_sample": "SELECT COUNT(*)FROM RUSERS U JOIN RRL_TR_VODITEL D ON D.ID=:B1 WHERE U.ID=:B2 AND NVL(U.DELETED,0)=0 AND NVL(D.DELETED,0)=0 AND UPPER(TRIM(U.USER_GROUP))!='GLOBAL_ADMIN'AND( RRL_HAS_WRIGHT(U.ID,'driver_return_accept')=1 OR RRL_ACCESS_API.ALLOWED(U.ID,'driver_return_accept','DRIVER',RRL_STOCK_PLAN_HELPER.DECIMAL_TEXT(:B1 ),U.ID)=1)"
+    },
+    {
+      "sql_id": "563ya7406kwy1",
+      "executions": 27,
+      "avg_ms": 2.306,
+      "avg_buffers": 55.11,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_TRANSPORT_DRIVER_USER B JOIN RUSERS U ON U.ID=B.USER_ID JOIN RRL_TR_VODITEL D ON D.ID=B.DRIVER_ID WHERE B.DRIVER_ID=:B2 AND B.USER_ID=:B1 AND B.ACTIVE=1 AND NVL(U.DELETED,0)=0 AND NVL(D.DELETED,0)=0 AND RRL_DRIVER_SCOPE.ALLOWED_ACCOUNT(U.ID,B.DRIVER_ID)=1"
+    }
+  ],
+  "decisions": [
+    {
+      "source": "slow",
+      "id": 5088,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5089,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5090,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5091,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5092,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5093,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5094,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5098,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5099,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5100,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5101,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5102,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5103,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5105,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5106,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5107,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5108,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5109,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5112,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5115,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5117,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5118,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5119,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5120,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5121,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5122,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5125,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5126,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5127,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5128,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5129,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5130,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5131,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5132,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5133,
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "slow",
+      "id": 5138,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5139,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5140,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5141,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5142,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5143,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5144,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "slow",
+      "id": 5145,
+      "owner": "finance/Codex",
+      "decision": "Retain exact version/key locks and bounded selected-invoice/WARE/task query. Complete totals required. Check JSON cohort join plans/statistics under pilot load before index changes."
+    },
+    {
+      "source": "top_sql",
+      "id": "d7qxrbmc1n97d",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "4a4445buyma1k",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "4a4445buyma1k",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "dtb6crf8tcjy6",
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "top_sql",
+      "id": "62zysdprpdqav",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "b9cwt8gjjs3z0",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "0yfmjwqfwk6cz",
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "top_sql",
+      "id": "c4q6nk1z65ynz",
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "top_sql",
+      "id": "9n2qv3txpfwjz",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "9n2qv3txpfwjz",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "61ymznj17ust9",
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    },
+    {
+      "source": "top_sql",
+      "id": "563ya7406kwy1",
+      "owner": "transport/Codex",
+      "decision": "Retain current binding/SELF native lookup and bounded100/200 queues; inspect binding/operation index plans at pilot concurrency. No cached authority."
+    }
+  ],
+  "native_direct_cases_not_http_paired": true,
+  "invalid": 0,
+  "errors": 0,
+  "local_pairs_observed": 105,
+  "local_missing_ids": [],
+  "max_http_ms": 1742,
+  "performance_not_load_or_p95": true
+}

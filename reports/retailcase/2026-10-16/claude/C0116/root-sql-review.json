@@ -1,0 +1,24 @@
+{
+  "state": "BEFORE_NONEMPTY_GUARD",
+  "body": {
+    "operation_id": "C0116.EMPTY.NONEMPTY.DENIED",
+    "expected_content_version": 6,
+    "scan_container": "090000000000012011",
+    "reason": "Guard: mixed-tree populated CASE must never be disposed as empty"
+  },
+  "http": [],
+  "native_hardware_claim": false,
+  "guard": {
+    "status": 409,
+    "body": {
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "message": "CASE_EMPTY_SHORT_BOUND_1_200",
+        "operation_id": "C0116.EMPTY.NONEMPTY.DENIED",
+        "outcome_confirmed": false,
+        "retry_same_operation_id": true
+      }
+    },
+    "api_call_id": "69605"
+  }
+}

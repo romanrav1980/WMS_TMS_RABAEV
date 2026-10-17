@@ -1,0 +1,9 @@
+{
+  "oracle_code": 20887,
+  "message": "ORA-20887: PICK_CAPACITY_BOX_BASE_CONVERSION_REQUIRED:AS16A35CEA92C27\nORA-06512: at \"RABAEV.RRL_STOCK_POSTING_API\", line 151\nORA-06512: at \"RABAEV.RRL_STOCK_REPL_CAPACITY\", line 43\nORA-06512: at \"RABAEV.RRL_STOCK_REPL_CAPACITY\", line 61\nORA-06512: at \"RABAEV.RRL_STOCK_REPL_CAPACITY\", line 87\nORA-06512: at \"RABAEV.RRL_STOCK_REPL_CAPACITY\", line 87\nORA-06512: at \"RABAEV.RRL_STOCK_WAVE_CMD\", line 459\nORA-06512: at \"RABAEV.RRL_STOCK_WAVE_CMD\", line 459\nORA-06512: at \"RABAEV.RRL_STOCK_POSTING_API\", line 139\nORA-06512: at line 1",
+  "source": {
+    "operation_id": "WAVE.LAUNCH.SOURCE:55783fdd98498c4649da332798bffc85:1640",
+    "body": "{\"actor\":\"admin\",\"command_type\":\"WAVE_RESERVE_SOURCES\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"allow_unissued_source_rebind\":true,\"launch_operation_id\":\"AS16.35cea92c27.LAUNCH\",\"requested_row_ids\":[1640]},\"operation_id\":\"WAVE.LAUNCH.SOURCE:55783fdd98498c4649da332798bffc85:1640\",\"source\":{\"type\":\"PICK_WAVE\",\"wave_id\":571},\"units\":[]}",
+    "state": null
+  }
+}

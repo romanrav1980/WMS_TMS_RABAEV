@@ -1,0 +1,12 @@
+{
+  "manual-weight.html": {
+    "api": 200,
+    "terminal_dev": 200,
+    "same_static_document": true
+  },
+  "consolidation-plan.html": {
+    "api": 200,
+    "terminal_dev": 200,
+    "same_static_document": true
+  }
+}

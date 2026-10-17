@@ -1,0 +1,25 @@
+{
+  "state": "FRESH_ASM_CASE_READY",
+  "started_at": "2026-10-16T12:21:15.208029+00:00",
+  "hardware_verified": false,
+  "steps": [
+    {
+      "name": "assembly_scope_resume_launch.py",
+      "state": "DONE",
+      "source_sha256": "6d902c27b93f076e313636c740c364a2263a81195e86f14c5e53ae561ad15c3e",
+      "frozen_sha256": "9db18d3cb8565beea3daf6646f1f3605a614004bdd8c8fc9f3267ba8a2b2a09c"
+    },
+    {
+      "name": "assembly_scope_publish_carrier_cell.py",
+      "state": "DONE",
+      "source_sha256": "3bcdde5a4502dda574c96a0be0b75406f20d24d6970f57d0b92144caa65ae035",
+      "frozen_sha256": "0e5f7de09321f2c8d9b2e845b4b82e1bccaafd07c067c7b632ac1e2e42144e70"
+    },
+    {
+      "name": "assembly_scope_setup_operator.py",
+      "state": "IN_FLIGHT",
+      "source_sha256": "87673e2c62e1a8eed8112d95ba54892804fd30865d403ae09009ff3d3aeb2571",
+      "frozen_sha256": "23bf095d580033ab66b5cfc9c1b4d68d737c449bc6ea4609ce86d7b501b40023"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 from typing import Any,Literal
 from fastapi import APIRouter,Depends,HTTPException,Request,Response
 from fastapi.concurrency import run_in_threadpool
-from ...platform.public import AdminUser,require_permission
+from ...platform.public import AdminUser,require_permission,get_current_user
 from ..contracts import StoreReceiptError
 from ..contracts_evidence import StoreEvidencePort,store_evidence_service
 
@@ -16,7 +16,7 @@ def failure(error: StoreReceiptError) -> HTTPException:
 
 @router.post("/upload")
 async def upload(load_operation_id: str,store_address: str,view: Literal["FRONT","LEFT","RIGHT","BACK","TOP"],
-                 request: Request,user: AdminUser=Depends(require_permission("store_receipt_confirm")),
+                 request: Request,user: AdminUser=Depends(get_current_user),
                  service: StoreEvidencePort=Depends(store_evidence_service)) -> dict[str,Any]:
     if not 1<=len(load_operation_id)<=100 or not 1<=len(store_address)<=255:
         raise HTTPException(422,"Укажите погрузку и адрес магазина")
@@ -36,7 +36,7 @@ async def upload(load_operation_id: str,store_address: str,view: Literal["FRONT"
 
 @router.get("/list")
 def photos(load_operation_id: str,store_address: str,
-           user: AdminUser=Depends(require_permission("store_receipt_confirm")),
+           user: AdminUser=Depends(get_current_user),
            service: StoreEvidencePort=Depends(store_evidence_service)) -> list[dict[str,Any]]:
     if not 1<=len(load_operation_id)<=100 or not 1<=len(store_address)<=255:
         raise HTTPException(422,"Укажите погрузку и адрес магазина")
@@ -47,7 +47,7 @@ def photos(load_operation_id: str,store_address: str,
 
 
 @router.get("/{photo_id}/content")
-def content(photo_id: str,user: AdminUser=Depends(require_permission("store_receipt_confirm")),
+def content(photo_id: str,user: AdminUser=Depends(get_current_user),
             service: StoreEvidencePort=Depends(store_evidence_service)) -> Response:
     if len(photo_id)!=64 or any(character not in "ABCDEF0123456789" for character in photo_id):
         raise HTTPException(422,"Некорректный идентификатор фотографии")

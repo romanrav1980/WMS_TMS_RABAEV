@@ -2,7 +2,15 @@
 
 # Database Mirror: Oracle Schema
 
+- 15.10.2026: [[retailcase_wares_identity_keys_20261015]] — APPLIED ID PK и обязательное уникальное NAME по решению владельца;291 строка сохранена,4 отрицательные проверки PASS, actual-time4FK.
+
 ## Role
+
+- 16.10.2026: [[retailcase_hu_scoped_execute_20261016]] — basic HU CREATE/ATTACH/DETACH/MOVE по WARE/GROUP APPLIED/5SHA/INVALID0;3EA/replay/revoke/foreign/rollback/REV и legacy PASS,14 HTTP/max219мс.
+
+- 16.10.2026: [[retailcase_interware_case_bridge_20261016]] — immutable CASE carrier bridge APPLIED/34SHA и JSON scalar fix/1SHA; mixed26EA два плеча и магазин PASS. [[retailcase_manual_warehouse_qc_20261016]]/[[retailcase_manual_qc_load_origin_20261016]] — ручной QC и его loading provenance APPLIED/4+3SHA/INVALID0; электронные API сохранены.
+
+16.10: [[retailcase_case_return_scope_20261016]] — scoped manager RETURN25EA/10HTTP APPLIED с отдельным compile completion; [[retailcase_single_load_scope_20261016]] — scoped single LOAD25EA/30HTTP APPLIED. Текущая цепочка37 sources/10 frozen kits сверена, ERROR0/INVALID0 (`reports/retailcase/2026-10-16/finish-gate/oracle-current.json`).
 
 This directory is the local wiki mirror of the Oracle `RABAEV` schema.
 
@@ -115,3 +123,18 @@ Clean install assumes a separate Oracle service/PDB/VM with owner `RABAEV`; the 
 ## NI02 — заказы магазинов SAP
 
 [Неизменный заказ и календарь](retailcase_ni02_store_orders.md): migration 2026-10-07-008-ni02-store-orders установлена 07.10.2026 в существующей RABAEV. Три добавочные таблицы и три guard trigger VALID; source checkpoint и apply logs runtime/ni02. Потребность сохраняется в действующих customer orders, stock не меняется. NI02 in_progress.
+# Текущее дополнение 2026-10-16
+
+[HU thermal admission](retailcase_hu_thermal_admission_20261016.md): dev APPLIED/13SHA/INVALID0,15 native matrix checks; mixed ASM+BOX24+EA1 tree26EA and HTTP revoke/preview PASS; manifest/interWARE open.
+
+[Additive legacy task scopes](retailcase_additive_legacy_task_scopes_20261016.md): dev APPLIED/23SHA/INVALID0; foreign-home flat+WARE role new CLAIM/START/BOX24+EA1/CLOSE PASS, revoke403.
+
+[Inventory task scoped claim/count](retailcase_inventory_task_scope_20261016.md): dev APPLIED/8SHA/INVALID0; positive shortage/claim/count/replay/rights/rollback PASS,19 HTTP pairs/max258ms; QA retired.
+
+[Scoped исполнение сборки на весах](retailcase_assembly_scoped_execute_20261016.md): dev APPLIED; package-only комплект, native close UOW и явная перекомпиляция зависимостей. 26 SHA/INVALID0/entry negatives PASS; полный бизнес-сценарий ещё не принят.
+
+[Independent shortage decisions](retailcase_short_independent_scope_20261016.md): dev APPLIED/7SHA/INVALID0;10HTTP/current role/revoke/independent decision/REV lock PASS.
+
+[Accepted-short inventory audit](retailcase_short_independent_scope_20261016.md): dev APPLIED/4SHA/INVALID0; accepted-short count/replay/rollback and fresh RESTORE regression PASS, existing count writer retained.
+
+[Expected consolidation manifest](retailcase_consolidation_manifest_20261016.md): IN PROGRESS; fulfillment-owned metadata/receipt and native shipping readiness.

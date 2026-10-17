@@ -74,40 +74,19 @@ class PickingService:
             StockPosting().post(StockCommand(operation_id=request.operation_id, command_type=command,
                 actor=request.updated_by, lines=(), source=source, metadata=metadata))
         except StockPostingError as exc:
-            raise HTTPException(409, detail={"code": exc.code, "operation_id": exc.operation_id,
-                "oracle_code": exc.oracle_code, "retry_same_operation_id": True}) from exc
+            uncertain = exc.code in {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "CONNECTION_UNUSABLE", "LOCK_RETRY_EXHAUSTED"}
+            status = 503 if uncertain else 403 if exc.oracle_code == 20882 else 409
+            conflict = exc.rule_reason == "OPERATION_CONFLICT"
+            raise HTTPException(status, detail={"code": exc.code, "operation_id": exc.operation_id,
+                "oracle_code": exc.oracle_code, "rule_reason": exc.rule_reason,
+                "outcome_confirmed": status < 500 and status != 403 and not conflict,
+                "read_before_retry": uncertain or conflict, "retry_same_operation_id": uncertain}) from exc
         return True
 
-    def launch_wave(self, pick_wave_id: int, request: PickWaveActionRequest) -> None:
-        if self._post_wave_command("WAVE_LAUNCH", pick_wave_id, request):
-            self._enrich_replenishment_settings(pick_wave_id, request.updated_by)
-            self._refresh_replenishment_deficit(pick_wave_id, request.updated_by)
-            self._reserve_replenishment_sources(pick_wave_id, request.updated_by)
-            self._hold_replenishment_rows_without_pick_face_capacity(pick_wave_id, request.updated_by)
-            self._release_next_replenishment_queue(pick_wave_id, request.updated_by, include_minimax=False)
-            self._sync_replenishment_warehouse_tasks(pick_wave_id, request.updated_by)
-            CasePickService(self.gateway).ensure_wave_case_pick_tasks(pick_wave_id, request.updated_by)
-            return
-        self.gateway.execute_plsql(
-            """
-            begin
-              RRL_PICK_WAVE_API.launch_wave(
-                p_pick_wave_id => :pick_wave_id,
-                p_launched_by => :updated_by
-              );
-            end;
-            """,
-            {"pick_wave_id": pick_wave_id, "updated_by": request.updated_by},
-        )
-        self._enrich_replenishment_settings(pick_wave_id, request.updated_by or "API")
-        self._refresh_replenishment_deficit(pick_wave_id, request.updated_by or "API")
-        self._release_cancelled_replenishment_source_reservations(pick_wave_id, request.updated_by or "API")
-        self._reserve_replenishment_sources(pick_wave_id, request.updated_by or "API")
-        self._hold_replenishment_rows_without_pick_face_capacity(pick_wave_id, request.updated_by or "API")
-        self._release_next_replenishment_queue(pick_wave_id, request.updated_by or "API", include_minimax=False)
-        self._hold_replenishment_rows_without_pick_face_capacity(pick_wave_id, request.updated_by or "API")
-        self._sync_replenishment_warehouse_tasks(pick_wave_id, request.updated_by or "API")
-        CasePickService(self.gateway).ensure_wave_case_pick_tasks(pick_wave_id, request.updated_by or "API")
+    def launch_wave(self, pick_wave_id: int, request: PickWaveActionRequest) -> dict[str, Any]:
+        from ..modules.fulfillment.public import resume_wave_launch
+        return resume_wave_launch(self.gateway, pick_wave_id, request.operation_id, request.updated_by,
+                                  lambda: self._post_wave_command("WAVE_LAUNCH", pick_wave_id, request), type(self))
 
     def release_minimax_replenishment(self, pick_wave_id: int, request: PickWaveActionRequest) -> int:
         updated_by = request.updated_by or "API"

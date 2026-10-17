@@ -1,0 +1,100 @@
+{
+  "status": "PASS",
+  "source_checks": [
+    {
+      "package": "RRL_STOCK_WAVE_CMD",
+      "kind": "PACKAGE BODY",
+      "source_matches": "2026-10-15_wave_launch_continuation/wave_sources.sql",
+      "sha256": "0de55312ff5b54079e7b0bf565f67e0803f9d3e2d8325075676c87686d695e05"
+    },
+    {
+      "package": "RRL_WAVE_CONTINUE_API",
+      "kind": "PACKAGE BODY",
+      "source_matches": "2026-10-15_wave_launch_continuation/continuation_api.sql",
+      "sha256": "18325fd73e55e79492f8baac854d1060b6973ea54474ba3dcfe0c21a2e73752d"
+    },
+    {
+      "package": "RRL_STOCK_POSTING_API",
+      "kind": "PACKAGE BODY",
+      "source_matches": "2026-10-15_wave_launch_continuation/posting.sql",
+      "sha256": "562bd63fa2e76a7cb9205c9a4d44ebac3d5e8d772ac4ef236b3bd18034b19f89"
+    },
+    {
+      "package": "RRL_STOCK_STORE_RECEIPT_READ",
+      "kind": "PACKAGE BODY",
+      "source_matches": "2026-10-15_store_app_final_leg/body.sql",
+      "sha256": "17de019c418281f053c9667f8056b4b160534c7e9260c1855c0d7c04d8d7937c"
+    },
+    {
+      "package": "RRL_STOCK_STORE_RECEIPT_CMD",
+      "kind": "PACKAGE BODY",
+      "source_matches": "2026-10-15_scoped_command_lock_order/rrl_stock_store_receipt_cmd.sql",
+      "sha256": "493a9d4f05ff7a4364a138e10ebcbbd28a5e73498ace05ac3d80c5db0e9149af"
+    },
+    {
+      "package": "RRL_STOCK_STORE_WEIGHT_CORE",
+      "kind": "PACKAGE BODY",
+      "source_matches": "2026-10-15_store_app_strategies/rrl_stock_store_weight_core.sql",
+      "sha256": "5d29c14a3c3e38f4bf765c11b81284a21fdafbf5f4f9713a2df74b5ff682e13b"
+    },
+    {
+      "package": "RRL_WAVE_EXEC_ACCESS",
+      "kind": "PACKAGE BODY",
+      "source_matches": "2026-10-15_wave_launch_continuation/wave_access.sql",
+      "sha256": "f97ba6ddbcf47a37f83dc6fda19193973c23fb3a83f6ab2dcd3bc081b2103c84"
+    },
+    {
+      "package": "RRL_STOCK_WAVE_LAUNCH_CMD",
+      "kind": "PACKAGE BODY",
+      "source_matches": "2026-10-15_wave_launch_scope/rrl_stock_wave_launch_cmd.sql",
+      "sha256": "6ae32dc927cb82f9b51accfb47b11618d85723f6062c332a632f8f7481c53862"
+    },
+    {
+      "package": "RRL_WAREHOUSE_TASK_ACCESS",
+      "kind": "PACKAGE BODY",
+      "source_matches": "2026-10-15_warehouse_task_scoped_complete/access_body.sql",
+      "sha256": "a0fefbe84ad236b730b039dd88a5c681f0b07d883834355fe78b7b5232d57082"
+    },
+    {
+      "package": "RRL_TASK_RESOURCE_POLICY",
+      "kind": "PACKAGE BODY",
+      "source_matches": "2026-10-15_warehouse_task_scoped_complete/resource_policy.sql",
+      "sha256": "109556d503796277ca70da54881448a1b5afb4b368e9f3da3be48bab39a380be"
+    },
+    {
+      "package": "RRL_STOCK_TASK_CORE",
+      "kind": "PACKAGE BODY",
+      "source_matches": "2026-10-15_warehouse_task_scoped_complete/task_core.sql",
+      "sha256": "cf947ce1b97f915e52ca0162bdd190da169ffcb33459fb333eb66f423a05c32c"
+    },
+    {
+      "package": "RRL_STOCK_TASK_PLAN",
+      "kind": "PACKAGE BODY",
+      "source_matches": "2026-10-15_warehouse_task_scoped_complete/task_plan.sql",
+      "sha256": "f860bd48ab59205fce072a1e95e4192b1ff6783507c7938261b6f2f7e9aaf692"
+    },
+    {
+      "package": "RRL_WAVE_CONTINUE_API",
+      "kind": "PACKAGE",
+      "source_matches": "2026-10-15_wave_launch_continuation/continuation_api.sql",
+      "sha256": "195056df4e6c76fdc01b0f0524fa86cd0529ea14a8cbe7a612e15a5d8d3101bf"
+    },
+    {
+      "package": "RRL_WAREHOUSE_TASK_ACCESS",
+      "kind": "PACKAGE",
+      "source_matches": "2026-10-15_warehouse_task_scoped_complete/access_spec.sql",
+      "sha256": "7d003b17155589b56a2b31965c49a624e301ddb2b60452cd44d69b8d494b6753"
+    },
+    {
+      "package": "RRL_STOCK_TASK_PLAN",
+      "kind": "PACKAGE",
+      "source_matches": "2026-10-15_warehouse_task_scoped_complete/task_plan_spec.sql",
+      "sha256": "07ab1ef4f5e12d9ece3744a4503e2371870bdb8203559c74290f98bbcf983d19"
+    }
+  ],
+  "invalid_count": 0,
+  "three_mode_constraint": {
+    "status": "ENABLED",
+    "search_condition_vc": "RECEIPT_MODE in('BARCODE','WEIGHT_PHOTO','PAPER_COUNT')"
+  }
+}

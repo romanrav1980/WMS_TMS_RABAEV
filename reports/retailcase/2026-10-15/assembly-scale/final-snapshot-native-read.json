@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "domain": "ASM_FINAL",
+  "version": 3,
+  "signature": "ADDFFDCCD2A0408EAF2D861BF02BE349144D33AC358B6C2FFCE101F62831ED50",
+  "repeated_context_equal": true,
+  "foreign_refusal": "ORA-20882: CASE_CURRENT_ACTION_FORBIDDEN",
+  "stock_operations_unchanged": true,
+  "physical_hardware": false,
+  "slow_sql": [
+    {
+      "log_id": 4744,
+      "elapsed_ms": 673,
+      "sql_text": "Read current ASM_FINAL context only"
+    },
+    {
+      "log_id": 4745,
+      "elapsed_ms": 5,
+      "sql_text": "Read current ASM_FINAL context only"
+    }
+  ]
+}

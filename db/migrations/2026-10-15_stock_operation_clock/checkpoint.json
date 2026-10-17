@@ -1,0 +1,20 @@
+{
+  "migration_id": "2026-10-15-stock-operation-clock",
+  "state": "PREPARED",
+  "target": [
+    "RABAEV",
+    "orcl",
+    "ORCL"
+  ],
+  "invalid_before": 0,
+  "objects_before": [],
+  "operation_rows_before": 5021,
+  "authorization": "Owner ordered all AK/KH implementations until19:00MSK15Oct2026; prospective KPI time evidence without historical reinterpretation",
+  "sha256": {
+    "apply.sql": "29b6eb528f7b335b39f9f7cde306a51d914e6e6dce49827beb4ac83178cf172f",
+    "rollback.sql": "fda05524e15d4067303ade9eac376b12c50af8dfc6764a24152ebbcc76e8b62a",
+    "schema.sql": "c185fc48dbe374883a0faff4cd29bcacb5fd4c36b7ec9e5fb504a6cd337a0266",
+    "verify.sql": "2154fa13fbec6b1aa7959bcc083b12ade22f14be396ff105a02e02fbd5c92e50"
+  },
+  "independent_review": "scale_protocol: transition/context/lock/rollback/UTC checked; COMMAND_TYPE widened to actual source80; no other blocker before runtime proof"
+}

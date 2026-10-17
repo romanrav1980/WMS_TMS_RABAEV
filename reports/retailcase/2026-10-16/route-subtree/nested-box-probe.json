@@ -1,0 +1,59 @@
+{
+  "state": "PASS_NATIVE_NESTED_MEASURED_BOX_HELPER",
+  "scope": "Read-only exact candidate helper with synthetic wrapper over immutable historic TEST snapshot; not new stock/handover acceptance.",
+  "checks": [
+    "nested_wrapper_plus_CASE_gross_not_summed_twice",
+    "wrapper_below_children",
+    "outer_below_top_measured_plus_tare",
+    "duplicate_wrapper",
+    "foreign_box",
+    "unmeasured_wrapper_tare_preserved_without_duplicate_CASE_weight"
+  ],
+  "boxes": [
+    {
+      "box_uid": "PROBE.NESTED.WRAPPER",
+      "content_version": 1,
+      "gross_weight_kg": "1.6",
+      "origin": "MANUAL_CONFIRMED",
+      "coverage_complete": 1,
+      "measurement_ref": "NESTED.PROBE",
+      "scan_box": "PROBE.NESTED.WRAPPER"
+    },
+    {
+      "box_uid": "CASE:1146",
+      "content_version": 6,
+      "gross_weight_kg": "25.5",
+      "origin": "MANUAL_CONFIRMED",
+      "coverage_complete": 1,
+      "measurement_ref": "MANUAL.QC:IC16.ce9c011b16.MANUAL.QC.ORD",
+      "scan_box": "090000000000015012",
+      "case_task_id": 1146,
+      "final_scale_capture": null,
+      "warehouse_qc_operation": "IC16.ce9c011b16.MANUAL.QC.ORD",
+      "tare_weight_kg": "0.5",
+      "net_weight_kg": "25",
+      "device_mode": null,
+      "composition_signature": "DED4A5FC0C0E4171DB90DD2DC389ACB3E747D0132E4B9EA0FB9D59C6FB03187B",
+      "signature_version": 3,
+      "measured_content_version": 6
+    },
+    {
+      "box_uid": "CASE:1145",
+      "content_version": 7,
+      "gross_weight_kg": "1.5",
+      "origin": "MANUAL_CONFIRMED",
+      "coverage_complete": 1,
+      "measurement_ref": "MANUAL.QC:IC16.ce9c011b16.MANUAL.QC.ASM",
+      "scan_box": "090000000000014015",
+      "case_task_id": 1145,
+      "final_scale_capture": null,
+      "warehouse_qc_operation": "IC16.ce9c011b16.MANUAL.QC.ASM",
+      "tare_weight_kg": "0.5",
+      "net_weight_kg": "1",
+      "device_mode": null,
+      "composition_signature": "0D8B630250C27032540A5107CDDAE0BFA9EB7C19853E14BD8CB822342BCF90F2",
+      "signature_version": 3,
+      "measured_content_version": 5
+    }
+  ]
+}

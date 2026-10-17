@@ -1,0 +1,907 @@
+{
+  "state": "PASS_70_AUDIT_PAIRS_AND_SQL_DECISIONS",
+  "source_cases": [
+    "kpi-v2/api-live-v2.json",
+    "kpi-v2/short-acceptance.json",
+    "kpi-v2/return-acceptance.json",
+    "kpi-v2/product-ui/report.json",
+    "kpi-v2/product-ui-compiled/report.json",
+    "kpi-v2/recovery-before.json",
+    "kpi-v2/recovery-after.json",
+    "kpi-v2/vehicle-timeline-native.json",
+    "product-flow/ordinary-child.json",
+    "product-flow/delivery.json",
+    "product-flow/move-scope-denials.json",
+    "product-flow/store-ui/report.json",
+    "product-release/physical-retirement.json"
+  ],
+  "total_http_cases": 70,
+  "lightweight_transport_reads": [],
+  "local_tail_cap_bytes": 33554432,
+  "local_line_cap": 60000,
+  "http": [
+    {
+      "api_call_id": 72451,
+      "request_id": "e1d5550d-dd5d-47f8-be83-4a2b7a7a19f5",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 200,
+      "duration_ms": 126
+    },
+    {
+      "api_call_id": 72575,
+      "request_id": "8f77d0df-56b0-42f9-8c62-cf11fdc787b6",
+      "path": "/api/case-pick/tasks/1153/lines/1155/short",
+      "response_status": 403,
+      "duration_ms": 209
+    },
+    {
+      "api_call_id": 72576,
+      "request_id": "b20ea6cd-40d4-4ddb-bb1c-72e3a5db6710",
+      "path": "/api/case-pick/tasks/1153/lines/1155/short",
+      "response_status": 200,
+      "duration_ms": 119
+    },
+    {
+      "api_call_id": 72577,
+      "request_id": "54ec515a-b165-440f-937f-57b4f1472167",
+      "path": "/api/case-pick/tasks/1153/lines/1155/short",
+      "response_status": 200,
+      "duration_ms": 86
+    },
+    {
+      "api_call_id": 72578,
+      "request_id": "0dd16196-0ef0-47fd-964e-2003c816b28b",
+      "path": "/api/case-pick/tasks/1153/lines/1155/short",
+      "response_status": 409,
+      "duration_ms": 85
+    },
+    {
+      "api_call_id": 72579,
+      "request_id": "930b5e99-0c6a-47be-83f9-add054fe35d1",
+      "path": "/api/case-pick/tasks/1153/lines/1155/short",
+      "response_status": 403,
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 72580,
+      "request_id": "4837742d-475b-4a64-8a76-31a01aa0537e",
+      "path": "/api/case-pick/shorts/27/approve",
+      "response_status": 200,
+      "duration_ms": 353
+    },
+    {
+      "api_call_id": 72581,
+      "request_id": "02d08bea-c02a-4cea-8426-96a2e3ed88e7",
+      "path": "/api/case-pick/shorts/27/approve",
+      "response_status": 200,
+      "duration_ms": 85
+    },
+    {
+      "api_call_id": 72582,
+      "request_id": "1391eea9-f5b0-4499-b087-426797c9b598",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 200,
+      "duration_ms": 142
+    },
+    {
+      "api_call_id": 72583,
+      "request_id": "a094c8ad-06c3-4658-9594-54a13168c6c9",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 72584,
+      "request_id": "2aeed575-b0ce-4d6e-a2f4-82adac24cb84",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 403,
+      "duration_ms": 63
+    },
+    {
+      "api_call_id": 72585,
+      "request_id": "2a429ad6-31c5-432f-802b-a519808e7bf0",
+      "path": "/api/case-pick/tasks/1153/return-carrier",
+      "response_status": 200,
+      "duration_ms": 560
+    },
+    {
+      "api_call_id": 72586,
+      "request_id": "14e50f9f-1d58-4c5b-8c71-156725877316",
+      "path": "/api/case-pick/tasks/1153/return-carrier",
+      "response_status": 200,
+      "duration_ms": 390
+    },
+    {
+      "api_call_id": 72587,
+      "request_id": "02a9c7d6-338d-492c-bd3b-9d34e0af6a32",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 200,
+      "duration_ms": 887
+    },
+    {
+      "api_call_id": 72589,
+      "request_id": "f5b290f8-f2c5-461f-9f10-6b225eb7f09a",
+      "path": "/api/access/me",
+      "response_status": 200,
+      "duration_ms": 172
+    },
+    {
+      "api_call_id": 72594,
+      "request_id": "38461fd9-8840-4a36-a36d-9ac60f8697ec",
+      "path": "/api/access/workspaces",
+      "response_status": 200,
+      "duration_ms": 272
+    },
+    {
+      "api_call_id": 72595,
+      "request_id": "b998433c-463b-4dfe-89e6-5e32e85561bb",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 200,
+      "duration_ms": 499
+    },
+    {
+      "api_call_id": 72596,
+      "request_id": "a8b58fc4-fcfd-4c1d-96a3-8e2628f93697",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 403,
+      "duration_ms": 332
+    },
+    {
+      "api_call_id": 72597,
+      "request_id": "216291aa-1f6d-4206-bcde-03d0150a76f7",
+      "path": "/api/access/navigation",
+      "response_status": 200,
+      "duration_ms": 160
+    },
+    {
+      "api_call_id": 72617,
+      "request_id": "70d93c2b-1549-4d6a-bdf4-82f34f157660",
+      "path": "/api/access/me",
+      "response_status": 200,
+      "duration_ms": 69
+    },
+    {
+      "api_call_id": 72622,
+      "request_id": "6cd5fe99-7e9f-458d-89ca-21d17d5c0963",
+      "path": "/api/access/workspaces",
+      "response_status": 200,
+      "duration_ms": 351
+    },
+    {
+      "api_call_id": 72623,
+      "request_id": "d954d48e-056b-46cb-aacc-53ce8bb7b0c2",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 200,
+      "duration_ms": 379
+    },
+    {
+      "api_call_id": 72624,
+      "request_id": "93621567-2efe-43fa-a304-cf730ef2a2b2",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 403,
+      "duration_ms": 378
+    },
+    {
+      "api_call_id": 72625,
+      "request_id": "80ef9326-defd-429d-a30c-c8d6e0f5a3b8",
+      "path": "/api/access/navigation",
+      "response_status": 200,
+      "duration_ms": 169
+    },
+    {
+      "api_call_id": 72627,
+      "request_id": "ffe5498c-a54b-4843-80c3-e8b1229674f6",
+      "path": "/api/resources/timeline",
+      "response_status": 200,
+      "duration_ms": 715
+    },
+    {
+      "api_call_id": 72628,
+      "request_id": "2df7de5e-2933-4843-b865-25e7986687ab",
+      "path": "/api/case-pick/tasks/1153/lines/1155/confirm",
+      "response_status": 200,
+      "duration_ms": 215
+    },
+    {
+      "api_call_id": 72630,
+      "request_id": "f2424f9d-cab2-44b2-b455-39892924c705",
+      "path": "/api/case-pick/tasks/1154/lines/1156/marking-policy",
+      "response_status": 200,
+      "duration_ms": 314
+    },
+    {
+      "api_call_id": 72631,
+      "request_id": "bac71888-5501-4c19-a1a0-84ba0de07069",
+      "path": "/api/case-pick/tasks/1154/lines/1156/confirm",
+      "response_status": 200,
+      "duration_ms": 941
+    },
+    {
+      "api_call_id": 72632,
+      "request_id": "7cfb9523-1188-4cfe-ac73-6e8afff1c53b",
+      "path": "/api/case-pick/tasks/1154/lines/1156/marking-policy",
+      "response_status": 200,
+      "duration_ms": 55
+    },
+    {
+      "api_call_id": 72633,
+      "request_id": "4df6e431-d1e2-432f-aef1-5450ef830438",
+      "path": "/api/case-pick/tasks/1154/lines/1156/confirm",
+      "response_status": 200,
+      "duration_ms": 111
+    },
+    {
+      "api_call_id": 72634,
+      "request_id": "e6bc917a-30d9-47de-957c-e7f5eb58c47f",
+      "path": "/api/case-pick/tasks/1154/lines/1156/marking-policy",
+      "response_status": 200,
+      "duration_ms": 64
+    },
+    {
+      "api_call_id": 72635,
+      "request_id": "7f76ce37-3c95-4cf6-82e9-710a85fa9e77",
+      "path": "/api/case-pick/tasks/1154/lines/1156/confirm",
+      "response_status": 200,
+      "duration_ms": 305
+    },
+    {
+      "api_call_id": 72636,
+      "request_id": "87c7131b-1935-4cf1-9138-ef3e1b5f05a2",
+      "path": "/api/case-pick/tasks/1154/lines/1156/marking-policy",
+      "response_status": 200,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 72637,
+      "request_id": "5572176f-89b9-43e6-93f4-4e92fdec9abc",
+      "path": "/api/case-pick/tasks/1154/lines/1156/confirm",
+      "response_status": 200,
+      "duration_ms": 112
+    },
+    {
+      "api_call_id": 72638,
+      "request_id": "b68082fa-9d4e-46a4-8128-5000766931d4",
+      "path": "/api/case-pick/tasks/1154/move-carrier",
+      "response_status": 403,
+      "duration_ms": 711
+    },
+    {
+      "api_call_id": 72684,
+      "request_id": "27d65f4a-b95b-4773-ba64-46884a284fa1",
+      "path": "/api/case-pick/tasks/1154/move-carrier",
+      "response_status": 200,
+      "duration_ms": 773
+    },
+    {
+      "api_call_id": 72685,
+      "request_id": "2e52fa8a-24bf-44c0-ac95-0a72385abea4",
+      "path": "/api/case-pick/tasks/1154/move-carrier",
+      "response_status": 200,
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 72686,
+      "request_id": "c0c69ce5-11f1-4fbf-8b5f-3a4e4d5ba43c",
+      "path": "/api/case-pick/tasks/1154/move-carrier",
+      "response_status": 409,
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 72687,
+      "request_id": "ce0e2d86-d134-45c4-ab97-73cf76f2fad8",
+      "path": "/api/sku-quality-weight/20137024/AS16A21740F343F",
+      "response_status": 200,
+      "duration_ms": 98
+    },
+    {
+      "api_call_id": 72688,
+      "request_id": "49a4a920-2e13-4b9e-8970-a9d810678294",
+      "path": "/api/outgoing-quality/OC16.4f58710060.DLV.ST",
+      "response_status": 200,
+      "duration_ms": 993
+    },
+    {
+      "api_call_id": 72689,
+      "request_id": "e73e0d05-f1fa-4109-a52e-adc5db850954",
+      "path": "/api/outgoing-quality/OC16.4f58710060.DLV.ST/weight",
+      "response_status": 200,
+      "duration_ms": 333
+    },
+    {
+      "api_call_id": 72690,
+      "request_id": "a31993d0-304b-4675-9bae-44304f20e6cf",
+      "path": "/api/transport/loading/single-preview",
+      "response_status": 200,
+      "duration_ms": 271
+    },
+    {
+      "api_call_id": 72691,
+      "request_id": "57c32b27-6363-47c9-a237-7febea86d7ae",
+      "path": "/api/transport/loading/confirm-single",
+      "response_status": 200,
+      "duration_ms": 1020
+    },
+    {
+      "api_call_id": 72692,
+      "request_id": "28bbb89d-2906-4c57-ad1b-e8669351546f",
+      "path": "/api/transport/loading/confirm-single",
+      "response_status": 200,
+      "duration_ms": 94
+    },
+    {
+      "api_call_id": 72693,
+      "request_id": "fc6d07a0-12a7-4d6b-9bd0-8e4f5930e528",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 103
+    },
+    {
+      "api_call_id": 72694,
+      "request_id": "508debb7-ac15-4a99-87c7-c7ec8bd3d006",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 72695,
+      "request_id": "f2361065-488e-4934-bdfe-d9c145e9849c",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 99
+    },
+    {
+      "api_call_id": 72696,
+      "request_id": "705bc834-48f3-4335-9cdd-1d253eb816e4",
+      "path": "/api/delivery/timing/window",
+      "response_status": 403,
+      "duration_ms": 101
+    },
+    {
+      "api_call_id": 72697,
+      "request_id": "47a37281-d45d-44a5-a2fe-a33394d2b234",
+      "path": "/api/transport/loading/33659/depart",
+      "response_status": 200,
+      "duration_ms": 330
+    },
+    {
+      "api_call_id": 72698,
+      "request_id": "0f6aea03-3581-499b-ada7-8f048fad9eac",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 64
+    },
+    {
+      "api_call_id": 72699,
+      "request_id": "78a41147-941f-46de-aa1d-928e503264eb",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 94
+    },
+    {
+      "api_call_id": 72700,
+      "request_id": "05f2a667-52ac-47f8-bc72-61f1390610a4",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 74
+    },
+    {
+      "api_call_id": 72701,
+      "request_id": "34bf9825-5bd4-4966-b69e-914b3d7c1f7f",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 409,
+      "duration_ms": 75
+    },
+    {
+      "api_call_id": 72702,
+      "request_id": "54bdaa76-e3b4-4437-a541-8897b02dea04",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 403,
+      "duration_ms": 134
+    },
+    {
+      "api_call_id": 72703,
+      "request_id": "bc7efed7-c7fa-4160-b758-3d0726f74f66",
+      "path": "/api/delivery/store-receipts/policy",
+      "response_status": 200,
+      "duration_ms": 106
+    },
+    {
+      "api_call_id": 72704,
+      "request_id": "4047e744-7e0f-4f4b-96d6-e3b13c4f86cf",
+      "path": "/api/delivery/store-receipts/preview",
+      "response_status": 200,
+      "duration_ms": 131
+    },
+    {
+      "api_call_id": 72705,
+      "request_id": "61564c87-3fae-4432-ba6b-b30a18d437c9",
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "response_status": 200,
+      "duration_ms": 103
+    },
+    {
+      "api_call_id": 72706,
+      "request_id": "9a4522a1-04f5-4920-bc99-203e6f57bad5",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 326
+    },
+    {
+      "api_call_id": 72707,
+      "request_id": "af8711b5-530b-4818-9a2d-8e4f8d485ae7",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 125
+    },
+    {
+      "api_call_id": 72708,
+      "request_id": "c82d182e-4795-426a-85ee-65f5dab11dc3",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 200,
+      "duration_ms": 174
+    },
+    {
+      "api_call_id": 72709,
+      "request_id": "344ce941-0b1b-4b72-8e77-daa6d80a18c0",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 403,
+      "duration_ms": 65
+    },
+    {
+      "api_call_id": 72718,
+      "request_id": "71530d8b-1cea-499b-95ca-cd4d2f4a8af7",
+      "path": "/api/case-pick/tasks/1153/lines/1155/confirm",
+      "response_status": 200,
+      "duration_ms": 141
+    },
+    {
+      "api_call_id": 72721,
+      "request_id": "502d7002-a89f-4673-b709-2edeca728299",
+      "path": "/api/case-pick/tasks/1154/move-carrier",
+      "response_status": 200,
+      "duration_ms": 97
+    },
+    {
+      "api_call_id": 72722,
+      "request_id": "8f19b8a0-882f-4553-9634-83786652e828",
+      "path": "/api/case-pick/tasks/1153/move-carrier",
+      "response_status": 403,
+      "duration_ms": 70
+    },
+    {
+      "api_call_id": 72723,
+      "request_id": "7bfbb826-5785-4db4-b836-d44a5ecf8ab8",
+      "path": "/api/case-pick/tasks/1154/move-carrier",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 72730,
+      "request_id": "46a817b5-c152-4bd9-96a5-46eec7cb007f",
+      "path": "/api/store-app/session",
+      "response_status": 200,
+      "duration_ms": 86
+    },
+    {
+      "api_call_id": 72731,
+      "request_id": "2bdeef22-bba7-4ef9-a2e5-4a57e3a99065",
+      "path": "/api/store-app/deliveries",
+      "response_status": 200,
+      "duration_ms": 87
+    },
+    {
+      "api_call_id": 72732,
+      "request_id": "a0fc6c4d-db51-4e87-b565-25b5d0d20edf",
+      "path": "/api/store-app/deliveries/OC16.4f58710060.DLV.LOAD",
+      "response_status": 200,
+      "duration_ms": 80
+    },
+    {
+      "api_call_id": 72733,
+      "request_id": "09d728b8-6cf5-48aa-bf29-13a678ee5868",
+      "path": "/api/store-app/deliveries",
+      "response_status": 200,
+      "duration_ms": 55
+    },
+    {
+      "api_call_id": 72734,
+      "request_id": "ec92177e-06e2-4faf-89d9-958c915a2ee4",
+      "path": "/api/picking/waves/594/finish-execution",
+      "response_status": 200,
+      "duration_ms": 316
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 5224,
+      "api_call_id": 72575,
+      "elapsed_ms": 11,
+      "module": "WMS_API:72575",
+      "action": "POST /api/case-pick/tasks/1153/l",
+      "sql_sample": "CASE scoped shortage report"
+    },
+    {
+      "log_id": 5225,
+      "api_call_id": 72578,
+      "elapsed_ms": 43,
+      "module": "WMS_API:72578",
+      "action": "POST /api/case-pick/tasks/1153/l",
+      "sql_sample": "CASE scoped shortage report"
+    },
+    {
+      "log_id": 5226,
+      "api_call_id": 72579,
+      "elapsed_ms": 8,
+      "module": "WMS_API:72579",
+      "action": "POST /api/case-pick/tasks/1153/l",
+      "sql_sample": "CASE scoped shortage report"
+    },
+    {
+      "log_id": 5227,
+      "api_call_id": 72583,
+      "elapsed_ms": 4,
+      "module": "WMS_API:72583",
+      "action": "GET /api/resources/picker-kpis",
+      "sql_sample": "Scoped immutable picker KPI window"
+    },
+    {
+      "log_id": 5228,
+      "api_call_id": 72584,
+      "elapsed_ms": 16,
+      "module": "WMS_API:72584",
+      "action": "GET /api/resources/picker-kpis",
+      "sql_sample": "Scoped immutable picker KPI window"
+    },
+    {
+      "log_id": 5233,
+      "api_call_id": 72587,
+      "elapsed_ms": 742,
+      "module": "WMS_API:72587",
+      "action": "GET /api/resources/picker-kpis",
+      "sql_sample": "Scoped immutable picker KPI window"
+    },
+    {
+      "log_id": 5235,
+      "api_call_id": 72596,
+      "elapsed_ms": 20,
+      "module": "WMS_API:72596",
+      "action": "GET /api/delivery/timing/kpis",
+      "sql_sample": "Scoped delivery KPI window cohort"
+    },
+    {
+      "log_id": 5236,
+      "api_call_id": 72624,
+      "elapsed_ms": 11,
+      "module": "WMS_API:72624",
+      "action": "GET /api/delivery/timing/kpis",
+      "sql_sample": "Scoped delivery KPI window cohort"
+    },
+    {
+      "log_id": 5237,
+      "api_call_id": 72627,
+      "elapsed_ms": 665,
+      "module": "WMS_API:72627",
+      "action": "GET /api/resources/timeline",
+      "sql_sample": "Resource timeline native scoped read"
+    },
+    {
+      "log_id": 5243,
+      "api_call_id": 72688,
+      "elapsed_ms": 945,
+      "module": "WMS_API:72688",
+      "action": "GET /api/outgoing-quality/OC16.4",
+      "sql_sample": "Current warehouse QC status access"
+    },
+    {
+      "log_id": 5244,
+      "api_call_id": 72695,
+      "elapsed_ms": 38,
+      "module": "WMS_API:72695",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5245,
+      "api_call_id": 72696,
+      "elapsed_ms": 29,
+      "module": "WMS_API:72696",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5246,
+      "api_call_id": 72698,
+      "elapsed_ms": 18,
+      "module": "WMS_API:72698",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5247,
+      "api_call_id": 72701,
+      "elapsed_ms": 23,
+      "module": "WMS_API:72701",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5248,
+      "api_call_id": 72702,
+      "elapsed_ms": 55,
+      "module": "WMS_API:72702",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5249,
+      "api_call_id": 72709,
+      "elapsed_ms": 14,
+      "module": "WMS_API:72709",
+      "action": "GET /api/delivery/timing/kpis",
+      "sql_sample": "Scoped delivery KPI window cohort"
+    }
+  ],
+  "top_sql": [
+    {
+      "sql_id": "d7qxrbmc1n97d",
+      "executions": 552,
+      "avg_ms": 103.451,
+      "avg_buffers": 1803.01,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.prepare_command(:payload,:actor,:result,:resolution); end;"
+    },
+    {
+      "sql_id": "62zysdprpdqav",
+      "executions": 2,
+      "avg_ms": 397.652,
+      "avg_buffers": 1024.5,
+      "sql_sample": "with selected_tasks as (               select CASE_PICK_TASK_ID,PICK_WAVE_ID from (                 select t.CASE_PICK_TASK_ID,t.PICK_WAVE_ID                   from RRL_CASE_PICK_TASK t                   join RRL_PICK_WAVE w on w.PICK_WAVE_ID=t.PICK_WAVE_ID                   join RRL_CUSTOMER_ORDER co on co.CUSTOMER_ORDER_ID=t.CUSTOMER_ORDER_ID                  where 1 = 1 and RRL_ACCESS_API.allowed(:view_actor,'case_pick_view','WAREHOUSE',to_char(t.WARE_ID),t.ASSIGNED_TO)=1 and t.WARE_ID = :ware and t.STATUS not in ('READY_TO_SHIP', 'CANCELLED')                  order by t.STATUS,t.CREATED_AT"
+    },
+    {
+      "sql_id": "dpnfshs8ff1n9",
+      "executions": 3,
+      "avg_ms": 66.326,
+      "avg_buffers": 1697.67,
+      "sql_sample": "select p.* from(select p.STORE_ADDR,p.RECEIPT_MODE,p.POLICY_VERSION,lower(rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p.STORE_ADDR,'AL32UTF8'),4))) STORE_ID     from RRL_STORE_RECEIPT_POLICY p) p where exists(select 1 from RUSERS u where u.ID=:actor and nvl(u.DELETED,0)=0) and (RRL_ACCESS_API.allowed(:actor,'store_receipt_confirm','STORE',STORE_ID)=1     or(RRL_HAS_WRIGHT(:actor,'store_receipt_confirm')=1 and exists(     select 1 from RRL_STORE_RECEIPT_USER b where b.USER_ID=:actor and b.STORE_ADDR=p.STORE_ADDR))) order by p.STORE_ADDR fetch first 201 rows only"
+    },
+    {
+      "sql_id": "d7gxxjr308vmf",
+      "executions": 2,
+      "avg_ms": 69.101,
+      "avg_buffers": 552.5,
+      "sql_sample": "select t.TASK_ID,t.TASK_TYPE,t.STATUS,t.RESOURCE_ID,t.EQUIPMENT_ID,t.ASSIGNED_TO,         t.SOURCE_DOC_TYPE,t.SOURCE_DOC_ID,t.TASK_SOURCE,t.SOURCE_TASK_ID,         to_char(t.PLANNED_START_AT,'YYYY-MM-DD\"T\"HH24:MI:SS') PLAN_LOCAL_START,         to_char(t.PLANNED_FINISH_AT,'YYYY-MM-DD\"T\"HH24:MI:SS') PLAN_LOCAL_FINISH,         to_char(t.STARTED_AT_INSTANT at time zone 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.FF6TZH:TZM') FACT_START_AT,         to_char(t.FINISHED_AT_INSTANT at time zone 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.FF6TZH:TZM') FACT_FINISH_AT,         t.LAST_ERROR BLOCKING_REASON from RRL_WAREHOUSE_TASK t"
+    },
+    {
+      "sql_id": "3a46zpqkc3h9g",
+      "executions": 4,
+      "avg_ms": 17.692,
+      "avg_buffers": 32,
+      "sql_sample": "select p.* from(select p.STORE_ADDR,p.RECEIPT_MODE,p.POLICY_VERSION,lower(rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p.STORE_ADDR,'AL32UTF8'),4))) STORE_ID     from RRL_STORE_RECEIPT_POLICY p) p where exists(select 1 from RUSERS u where u.ID=:actor and nvl(u.DELETED,0)=0) and (RRL_ACCESS_API.allowed(:actor,'store_receipt_confirm','STORE',STORE_ID)=1     or(RRL_HAS_WRIGHT(:actor,'store_receipt_confirm')=1 and exists(     select 1 from RRL_STORE_RECEIPT_USER b where b.USER_ID=:actor and b.STORE_ADDR=p.STORE_ADDR))) and STORE_ID=:store"
+    },
+    {
+      "sql_id": "3a46zpqkc3h9g",
+      "executions": 7,
+      "avg_ms": 9.179,
+      "avg_buffers": 48.86,
+      "sql_sample": "select p.* from(select p.STORE_ADDR,p.RECEIPT_MODE,p.POLICY_VERSION,lower(rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p.STORE_ADDR,'AL32UTF8'),4))) STORE_ID     from RRL_STORE_RECEIPT_POLICY p) p where exists(select 1 from RUSERS u where u.ID=:actor and nvl(u.DELETED,0)=0) and (RRL_ACCESS_API.allowed(:actor,'store_receipt_confirm','STORE',STORE_ID)=1     or(RRL_HAS_WRIGHT(:actor,'store_receipt_confirm')=1 and exists(     select 1 from RRL_STORE_RECEIPT_USER b where b.USER_ID=:actor and b.STORE_ADDR=p.STORE_ADDR))) and STORE_ID=:store"
+    },
+    {
+      "sql_id": "d3bc2yrkkb5hn",
+      "executions": 2,
+      "avg_ms": 30.042,
+      "avg_buffers": 232,
+      "sql_sample": "select o.ID OP_ID,o.TT_ID,o.OPERATION_CODE,t.TRANSPORT,t.DOCK,         (select max(a.VERSION_NO) from RRL_TT_TIME_APPROVAL a where a.TT_ID=t.ID) APPROVAL_VERSION,         to_char(o.PLAN_START,'YYYY-MM-DD\"T\"HH24:MI:SS') PLAN_LOCAL_START,         to_char(o.PLAN_END,'YYYY-MM-DD\"T\"HH24:MI:SS') PLAN_LOCAL_FINISH,         to_char(o.FACT_START,'YYYY-MM-DD\"T\"HH24:MI:SS') FACT_LOCAL_START,         to_char(o.FACT_END,'YYYY-MM-DD\"T\"HH24:MI:SS') FACT_LOCAL_FINISH         from RRL_TT_OPERATIONS o join RRL_TRANSPORT_TASK t on t.ID=o.TT_ID         where nvl(t.DELETED,0)=0         and exists(select 1 from RRL"
+    },
+    {
+      "sql_id": "dzyq4q8unyyz8",
+      "executions": 4,
+      "avg_ms": 9.778,
+      "avg_buffers": 62.75,
+      "sql_sample": "select REVISION ACCESS_REVISION,          RRL_ACCESS_API.allowed(:actor,'access_admin_view','PLATFORM',null) ACCESS_ADMIN,          RRL_ACCESS_API.allowed(:actor,'knowledge_edit','PLATFORM',null) KNOWLEDGE_EDITOR,          RRL_ACCESS_API.allowed(:actor,'knowledge_publish','PLATFORM',null) KNOWLEDGE_PUBLISH,          RRL_ACCESS_API.allowed(:actor,'access_role_manage','PLATFORM',null) MANAGE_ROLES,          RRL_ACCESS_API.is_admin(:actor) MANAGE_OBJECTS,          RRL_ACCESS_API.allowed(:actor,'access_group_manage','PLATFORM',null) MANAGE_GROUPS,          RRL_ACCESS_API.allowed(:actor,'access_ass"
+    },
+    {
+      "sql_id": "7y6knmp6ccb3z",
+      "executions": 2,
+      "avg_ms": 15.626,
+      "avg_buffers": 13,
+      "sql_sample": "select ID from RRL_WARES where (:ware is null or ID=:ware)         and RRL_ACCESS_API.allowed(:actor,:permission,'WAREHOUSE',to_char(ID))=1         fetch first 1 rows only"
+    },
+    {
+      "sql_id": "33mudjz82x88p",
+      "executions": 2,
+      "avg_ms": 15.358,
+      "avg_buffers": 406.5,
+      "sql_sample": "select * from (     select s.SESSION_ID,s.SHIFT_ID,s.RESOURCE_ID,r.WARE_ID,r.RESOURCE_CODE,r.RESOURCE_NAME,r.RESOURCE_TYPE,            s.EQUIPMENT_ID,e.EQUIPMENT_CODE,s.OPERATOR_USER_ID,s.LOGIN_AT,s.LOGOUT_AT,s.STATUS,s.CURRENT_TASK_ID,            s.LAST_HEARTBEAT_AT,s.TERMINAL_ID,s.ZONE_CODE,s.CREATED_BY,s.CLOSED_BY     from RRL_RESOURCE_SESSION s join RRL_RESOURCE r on r.RESOURCE_ID=s.RESOURCE_ID     left join RRL_RESOURCE_EQUIPMENT e on e.EQUIPMENT_ID=s.EQUIPMENT_ID     where r.WARE_ID=:ware and RRL_ACCESS_API.allowed(:actor,'resource_session_view','WAREHOUSE',to_char(r.WARE_ID),s.OPERATOR_"
+    },
+    {
+      "sql_id": "f0mwta865mza9",
+      "executions": 2,
+      "avg_ms": 14.984,
+      "avg_buffers": 6,
+      "sql_sample": "select RRL_ACCESS_API.allowed(:actor,'resource_gantt_view','WAREHOUSE',:ware) from dual"
+    },
+    {
+      "sql_id": "9fqgqmpk8fzyr",
+      "executions": 2,
+      "avg_ms": 14.423,
+      "avg_buffers": 20.5,
+      "sql_sample": "select count(*) from RUSERS u where ID=:actor and nvl(DELETED,0)=0 and                 exists(select 1 from RRL_WARES w where RRL_ACCESS_API.allowed(:actor,'resource_session_view','WAREHOUSE',to_char(w.ID),:actor)=1)"
+    }
+  ],
+  "decisions": [
+    {
+      "source": "slow",
+      "id": 5224,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5225,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5226,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5227,
+      "owner": "resources/Codex",
+      "decision": "Retain authorized WARE and max31day/5000fact cohort; immutable quality JSON_TABLE joins stay set-based and capped5001rows/200return stocks. Inspect actual join plan/statistics at pilot volume before an index; never hide missing time or cache authority."
+    },
+    {
+      "source": "slow",
+      "id": 5228,
+      "owner": "resources/Codex",
+      "decision": "Retain authorized WARE and max31day/5000fact cohort; immutable quality JSON_TABLE joins stay set-based and capped5001rows/200return stocks. Inspect actual join plan/statistics at pilot volume before an index; never hide missing time or cache authority."
+    },
+    {
+      "source": "slow",
+      "id": 5233,
+      "owner": "resources/Codex",
+      "decision": "Retain authorized WARE and max31day/5000fact cohort; immutable quality JSON_TABLE joins stay set-based and capped5001rows/200return stocks. Inspect actual join plan/statistics at pilot volume before an index; never hide missing time or cache authority."
+    },
+    {
+      "source": "slow",
+      "id": 5235,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5236,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5237,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5243,
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "slow",
+      "id": 5244,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5245,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5246,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5247,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5248,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "slow",
+      "id": 5249,
+      "owner": "delivery/Codex",
+      "decision": "Retain exact load/store/version journal lookup and bounded31day/500cohort KPI read; examine source plan/statistics at pilot volume, no permission/result cache."
+    },
+    {
+      "source": "top_sql",
+      "id": "d7qxrbmc1n97d",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "62zysdprpdqav",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "dpnfshs8ff1n9",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "d7gxxjr308vmf",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "3a46zpqkc3h9g",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "3a46zpqkc3h9g",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "d3bc2yrkkb5hn",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "dzyq4q8unyyz8",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "7y6knmp6ccb3z",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "33mudjz82x88p",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "f0mwta865mza9",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    },
+    {
+      "source": "top_sql",
+      "id": "9fqgqmpk8fzyr",
+      "owner": "platform/inventory/Codex",
+      "decision": "Retain bounded native scope/closure admission and REV/release fences. Profile source plan/statistics at pilot concurrency; do not weaken locks or add cache/index from isolated cold samples."
+    }
+  ],
+  "native_direct_cases_not_http_paired": true,
+  "invalid": 0,
+  "errors": 0,
+  "local_pairs_observed": 70,
+  "local_missing_ids": [],
+  "max_http_ms": 1020,
+  "performance_not_load_or_p95": true
+}

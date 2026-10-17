@@ -1,0 +1,15 @@
+{
+  "target": "RABAEV/orcl",
+  "invalid_before": 0,
+  "authorization": "Accepted scoped roles and independent approvals implementation",
+  "recovery": "exact USER_SOURCE trigger backups, no expense data rewrite",
+  "files": {
+    "apply.sql": "c34976d8cd767d14014b34e293678e28eea22f319969626a0608566f17bb674d",
+    "before_rrl_log_expense_guard.sql": "1159a9661820977a180091a608a4d7940dd791c4ff01488e9359bbc873347044",
+    "before_rrl_log_exp_decision_guard.sql": "b04804f081d77d21d6696c6cec8e222602d55d40128dc0716cc15ae2738f301c",
+    "rollback.sql": "d9d507f3b539fa6227ca9edf407026cdfdd0f2d5168ce0321b3d276c303e25b1",
+    "rrl_log_expense_guard.sql": "15d8982396175b7816aff1faa849b799b54e7caf322263ab563ebab80d4f2f5b",
+    "rrl_log_exp_decision_guard.sql": "983f688fc49612d489f7338b2dcccdfef1ea2f74cca9513ac38d01f51bb8b1ec",
+    "verify.sql": "3cb936b3b114f24c4e10904062ceb71257f6827f6bcf8ad3c4d83c7803943a4a"
+  }
+}

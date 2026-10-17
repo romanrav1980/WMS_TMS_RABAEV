@@ -1,0 +1,28 @@
+{
+  "state": "BEFORE_UI_COMMAND",
+  "writes": [
+    {
+      "path": "/api/consolidation-plans/CP.20220394.20261016.76d88fa1",
+      "method": "PUT",
+      "wire": "{\"operation_id\":\"CP.ed451a3c-2837-4ff6-89a0-6e8110a5d3f3\",\"expected_version\":0,\"reason\":\"C0116 root live UI metadata acceptance; isolated future plan, no stock change\",\"root_identifier\":\"UI16.FUTURE:mvalhh01\",\"warehouse_id\":20220394,\"cell\":\"MH16Gd076c19e82\",\"fulfillment_ids\":[193]}"
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "identity_in_normal_header_no_overlay"
+  ],
+  "plan_id": "CP.20220394.20261016.76d88fa1",
+  "save": {
+    "status": 200,
+    "body": {
+      "operation_id": "CP.ed451a3c-2837-4ff6-89a0-6e8110a5d3f3",
+      "plan_id": "CP.20220394.20261016.76d88fa1",
+      "version": 1,
+      "status": "ACTIVE",
+      "expectation_signature": "430A72BF7E0994694568A1343FC77F4699FF195E485D6771882EE95C52AE7CBC",
+      "stock_changed": false
+    },
+    "api_call_id": "69581"
+  },
+  "failure": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-help-id=\"consolidation.edit\"]')\u001b[22m\n"
+}

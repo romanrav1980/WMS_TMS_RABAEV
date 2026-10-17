@@ -1,0 +1,317 @@
+{
+ "checks": [
+  "fresh_loss_exact_retry_ok_clears",
+  "wrong_receipt_stays_unknown_exact_receipt_resolves",
+  "unknown_then_400_403_404_409_422_and_receipt_404_403_503_stay_pending",
+  "copy_keeps_pending_and_block",
+  "first_attempt_refusal_settles",
+  "damaged_blocked_copy_no_unlock_receipt_by_extracted_key",
+  "legacy_unknown_403_kept_receipt_resolves",
+  "read_failure_clears_card_and_rows",
+  "case_page_390_no_overflow_retry_not_over_title_dialog_fits",
+  "scoped_login_nav_case_warehouse_loading_gates_FIXTURE",
+  "live_workspaces_nav_admin"
+ ],
+ "fixturePosts": [
+  {
+   "mode": "abort",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:e569482a-b971-476f-adda-43fd42f0e1a5",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "ok",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:e569482a-b971-476f-adda-43fd42f0e1a5",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "abort",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:4a52699d-af85-49ae-a5da-8f5021f11c42",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "409",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:4a52699d-af85-49ae-a5da-8f5021f11c42",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "abort",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "400",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "403",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "404",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "409",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "422",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "409",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:a38c701a-02d6-43f7-a15b-37c94e805ca2",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "403",
+   "body": {
+    "to_resource_id": 990011,
+    "to_resource_session_id": 990012,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:00000000-0000-4000-8000-00000000c121",
+    "scan_container": "LEGACY-FIXTURE",
+    "expected_content_version": 0,
+    "expected_assigned_to": "x",
+    "expected_from_session_id": null
+   }
+  }
+ ],
+ "receipts": [
+  {
+   "id": "HANDOFF:4a52699d-af85-49ae-a5da-8f5021f11c42",
+   "status": 200
+  },
+  {
+   "id": "HANDOFF:4a52699d-af85-49ae-a5da-8f5021f11c42",
+   "status": 200
+  },
+  {
+   "id": "HANDOFF:4a52699d-af85-49ae-a5da-8f5021f11c42",
+   "status": 200
+  },
+  {
+   "id": "HANDOFF:4a52699d-af85-49ae-a5da-8f5021f11c42",
+   "status": 200
+  },
+  {
+   "id": "HANDOFF:4a52699d-af85-49ae-a5da-8f5021f11c42",
+   "status": 200
+  },
+  {
+   "id": "HANDOFF:4a52699d-af85-49ae-a5da-8f5021f11c42",
+   "status": 200
+  },
+  {
+   "id": "HANDOFF:4a52699d-af85-49ae-a5da-8f5021f11c42",
+   "status": 200
+  },
+  {
+   "id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+   "status": 404
+  },
+  {
+   "id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+   "status": 404
+  },
+  {
+   "id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+   "status": 404
+  },
+  {
+   "id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+   "status": 404
+  },
+  {
+   "id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+   "status": 404
+  },
+  {
+   "id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+   "status": 403
+  },
+  {
+   "id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+   "status": 503
+  },
+  {
+   "id": "HANDOFF:3cdce74e-1eea-4f7d-91f5-e78b3fba9b75",
+   "status": 200
+  },
+  {
+   "id": "HANDOFF:dddddddd-0000-4000-8000-00000000c122",
+   "status": 404
+  },
+  {
+   "id": "HANDOFF:dddddddd-0000-4000-8000-00000000c122",
+   "status": 200
+  },
+  {
+   "id": "HANDOFF:00000000-0000-4000-8000-00000000c121",
+   "status": 404
+  },
+  {
+   "id": "HANDOFF:00000000-0000-4000-8000-00000000c121",
+   "status": 200
+  }
+ ],
+ "liveWrites": [],
+ "errors": [],
+ "dialogs": [
+  "fixture 403"
+ ],
+ "task": 1040,
+ "mobile": {
+  "overflow": [
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "overlap": false,
+  "retryVisible": true
+ },
+ "mobileDialog": {
+  "l": 17,
+  "r": 373,
+  "t": 8,
+  "b": 836,
+  "vw": 390,
+  "vh": 844
+ },
+ "scoped_picking_dispatch": {
+  "nav": {
+   "hidden": false,
+   "href": "case-pick-management.html?warehouse_id=20902283"
+  },
+  "banner": "Доступ по области: склады 20902283. Данные и действия ограничит сервер.",
+  "warehouse": "20902283",
+  "listUrl": "http://127.0.0.1:8088/api/case-pick/tasks?scope=all&limit=200&ware_id=20902283",
+  "departVisible": true,
+  "husDenied": 0,
+  "huShipAttached": 1,
+  "shipSectionHidden": false
+ },
+ "scoped_shell_only": {
+  "nav": {
+   "hidden": true,
+   "href": "case-pick-management.html"
+  },
+  "rows": 0,
+  "banner": "Нет права просмотра комплектации ни по одному складу.",
+  "departVisible": false,
+  "husDenied": 1
+ },
+ "liveAdminNav": {
+  "hidden": false,
+  "href": "case-pick-management.html?warehouse_id=20902283",
+  "native": "picking"
+ },
+ "status": "PASS",
+ "fixtures": "transfer POST, transfer-receipt and scoped profile/workspaces are UI fixtures; live: admin login, CASE GET, /api/access/workspaces"
+}

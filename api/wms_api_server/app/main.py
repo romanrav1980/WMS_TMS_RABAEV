@@ -47,6 +47,7 @@ from .routers import maintenance
 
 
 from .auth import require_permission, PICK_WAVE_VIEW_PERMISSION, get_current_admin
+from .modules.platform.public import get_current_user
 from .modules.resources import public as resource_qualification
 
 settings = get_settings()
@@ -115,9 +116,9 @@ app.include_router(inventory_receiving.replenishment_progress_router)
 app.dependency_overrides[inventory_receiving.replenishment_view] = require_permission("pick_wave_view")
 app.dependency_overrides[inventory_receiving.replenishment_progress_service] = inventory_receiving.build_replenishment_progress
 app.include_router(inventory_receiving.recovery_router)
-app.dependency_overrides[inventory_receiving.inventory_task_view] = require_permission("inventory_task_view")
-app.dependency_overrides[inventory_receiving.inventory_task_execute] = require_permission("inventory_task_execute")
-app.dependency_overrides[inventory_receiving.recovery_view] = require_permission("case_pick_view")
+app.dependency_overrides[inventory_receiving.inventory_task_view] = get_current_user
+app.dependency_overrides[inventory_receiving.inventory_task_execute] = get_current_user
+app.dependency_overrides[inventory_receiving.recovery_view] = get_current_user
 app.dependency_overrides[inventory_receiving.recovery_tasks_service] = inventory_receiving.build_recovery_tasks_service
 app.include_router(inventory_receiving.source_router)
 app.dependency_overrides[inventory_receiving.source_view_permission] = require_permission(PICK_WAVE_VIEW_PERMISSION)
@@ -217,6 +218,10 @@ app.dependency_overrides[inventory_receiving.inventory_observations_service] = i
 from .modules.delivery.public import store_receipt_router,store_receipt_service
 from .delivery_composition import build_delivery_receipt
 app.include_router(store_receipt_router)
+from .modules.delivery.public import delivery_time_router, delivery_time_service
+from .delivery_composition import build_delivery_timing
+app.dependency_overrides[delivery_time_service] = build_delivery_timing
+app.include_router(delivery_time_router)
 app.dependency_overrides[store_receipt_service]=build_delivery_receipt
 
 from .modules.delivery.public import store_evidence_router,store_evidence_service
@@ -440,3 +445,35 @@ from .modules.inventory.public import quality_scope_router,quality_scope_service
 from .quality_scope_composition import quality_scope
 app.include_router(quality_scope_router)
 app.dependency_overrides[quality_scope_service]=quality_scope
+
+from .knowledge_composition import register_knowledge
+register_knowledge(app)
+
+from .metadata_composition import register_metadata
+register_metadata(app)
+
+from .resource_timeline_composition import register_resource_timeline
+register_resource_timeline(app)
+
+from .dispatch_read_composition import register_dispatch_read_errors
+register_dispatch_read_errors(app)
+
+from .shift_overview_composition import register_shift_overview
+register_shift_overview(app)
+
+from .store_app_composition import register_store_application
+register_store_application(app)
+
+from .scale_evidence_composition import register_scale_evidence
+register_scale_evidence(app)
+
+from .assembly_scale_composition import register_assembly_scale
+register_assembly_scale(app)
+
+from .case_resource_composition import register_case_resource_commands
+register_case_resource_commands(app)
+from .consolidation_composition import register_consolidation
+register_consolidation(app)
+
+from .warehouse_task_resource_composition import register_warehouse_task_resource_commands
+register_warehouse_task_resource_commands(app)

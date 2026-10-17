@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "checks": [
+    "original_launch_receipt_minimal_and_continuation_not_invented",
+    "receipt_bound_to_original_wave",
+    "other_author_no_grants_cannot_read_original_receipt"
+  ],
+  "fixture_cleaned": true,
+  "business_rows": "READ_ONLY",
+  "stock_effect": "NONE"
+}

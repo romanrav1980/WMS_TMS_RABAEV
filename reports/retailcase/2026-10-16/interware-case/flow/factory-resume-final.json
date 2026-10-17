@@ -1,0 +1,22 @@
+{
+  "state": "TWO_FRESH_CLOSED_CASES_ASM_AND_BOX24_EA1",
+  "started_at": "2026-10-16T12:25:02.659593+00:00",
+  "hardware_verified": false,
+  "steps": [
+    {
+      "name": "assembly_scope_resume_final_claim.py",
+      "state": "DONE",
+      "source_sha256": "f088035ec21df9d4381dcd729cb50c6b371e66efcb5a082829f408ce072233f9",
+      "frozen_sha256": "eab084611edade34955f729d5079b81c6faeb19081968edd5f5c67d67aab8a13"
+    },
+    {
+      "name": "hu_ordinary_child.py",
+      "state": "DONE",
+      "source_sha256": "b837469ba95781a2cf305a1c4991ce1f2410480c55b126796b18d66aea82f75e",
+      "frozen_sha256": "783674cffcfd18d787cfda863ddff5f8f2a3eb87d08a12a4db8e0219f14ab22a"
+    }
+  ],
+  "asm_case": 1145,
+  "source_warehouse": 20846272,
+  "ordinary_case": 1146
+}

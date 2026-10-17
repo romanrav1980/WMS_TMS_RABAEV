@@ -1,0 +1,55 @@
+{
+  "captured_at_utc": "2026-10-16T14:44:36.806902+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_STOCK_LOCK_API",
+      "type": "PACKAGE",
+      "file": "rrl_stock_lock_api_package.sql",
+      "errors": [],
+      "user_source_sha256": "c82fdd123b634c92f380efdbf1ddc43a02630b2aed1fc5d1a192c615d2362a55",
+      "normalized_source_sha256": "a2a901d6ea732405798062603eb483dd294cf9e67dbcfe8bd36501300fb53c30",
+      "artifact_sha256": "b9c5f25a445c8b2473775a9076a8240b673a915bc71aa2796dc9777589f160d4"
+    },
+    {
+      "name": "RRL_STOCK_LOCK_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_lock_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "4a77f13397bbb69f79ab9168d0fd942de833f28b04b13ecd0504fe3dc25554d2",
+      "normalized_source_sha256": "7e18653d8cad1f59d67baa92e5dc761e1c4c6708d92b0f5d31befae663b84f81",
+      "artifact_sha256": "62db77835b5eec8b7d2598da647f19ed9d2641f28c03c828f952f073240bbe9e"
+    },
+    {
+      "name": "RRL_STOCK_PLAN_HELPER",
+      "type": "PACKAGE",
+      "file": "rrl_stock_plan_helper_package.sql",
+      "errors": [],
+      "user_source_sha256": "9af6523db2650f1fce603aa5cc366339ada97fd3e4481f73ff21391972adcbab",
+      "normalized_source_sha256": "7a1e25da05977d7ae09a4323c66bb7e2ead8a6da395f5dd7d2b1a11b65a95b0d",
+      "artifact_sha256": "a9055374ef0f553f4445c18089d55166a7e4ae813f5560bbe3f40ab3e0de6b4d"
+    },
+    {
+      "name": "RRL_TT_OPERATION_PLAN_API",
+      "type": "PACKAGE",
+      "file": "rrl_tt_operation_plan_api_package.sql",
+      "errors": [],
+      "user_source_sha256": "f251064157227804e40c647edb200da126aa3359591177a0ca39a07700850a9f",
+      "normalized_source_sha256": "1c5e84bca7e141481abe8bfb5d7ba807da5220672d43fcec4bcc584310308732",
+      "artifact_sha256": "5d25daacfc8ae7c5c9ca36e85073dd2757a57ce99fd4ef88f840cf8acd552137"
+    },
+    {
+      "name": "RRL_STOCK_STORE_RECEIPT_READ",
+      "type": "PACKAGE",
+      "file": "rrl_stock_store_receipt_read_package.sql",
+      "errors": [],
+      "user_source_sha256": "123dbdfd92e25ebbb23cf1b689f158056cc23c63a1dd90840b980f015af783a2",
+      "normalized_source_sha256": "59b5df7502fc4572809a4e93de95f85900c33f812dc8835ec8cd06b95726425b",
+      "artifact_sha256": "d67eef23ad506eddc958c6dab0ccfe6cd97557704160d68a4556a1cb81d49bf3"
+    }
+  ]
+}

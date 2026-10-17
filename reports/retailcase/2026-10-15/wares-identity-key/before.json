@@ -1,0 +1,332 @@
+{
+  "at_utc": "2026-10-15T17:27:15.426662+00:00",
+  "read_only": true,
+  "identity": [
+    {
+      "schema_name": "RABAEV",
+      "service_name": "orcl"
+    }
+  ],
+  "table": [
+    {
+      "object_name": "RRL_WARES",
+      "object_type": "TABLE",
+      "status": "VALID"
+    }
+  ],
+  "columns": [
+    {
+      "column_name": "ID",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "NAME",
+      "data_type": "VARCHAR2",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "OVERFLOW_CELL_NAME",
+      "data_type": "VARCHAR2",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "PREFIX",
+      "data_type": "VARCHAR2",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "FAKE_ROWS",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "FAKE_ART",
+      "data_type": "VARCHAR2",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "BLOCK_IF_NO_PROOVE",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "VERIFY_VYCHERK",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "WRITE_BOTH_EXPIRYANDBEST",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "SPIS_IF_HRAN_NO_EMPTY",
+      "data_type": "VARCHAR2",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "ALLOW_HALF_VYCHERK",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "SPIS_OTBOR_ON_SCAN_OPALL",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "SPIS_OTBOR_ON_WPROOVE_OPALL",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "TIME_COEFF",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "XYZ_XCOV",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "XYZ_YCOV",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "ABC_A",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "ABC_B",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "ABC_XYZ_TIME_EDGES_IN_DAYS",
+      "data_type": "NUMBER",
+      "data_precision": 30,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "VERIFY_VYCHERK_IN_OTBOR",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "PRINT_EXPIRY_DATE_OP",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "COUNT_OF_PRINTS",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "WEIGHT_LIMIT_WARNING",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "WEIGHT_LIMIT_STOP",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "PARENT_WARE_ID",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "ORD2",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "COUNT_WEIGHT_AUTORECALC",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "AUTO_PLAN_DOCK",
+      "data_type": "NUMBER",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "FLAG_RAW_MATERIAL",
+      "data_type": "NUMBER",
+      "data_precision": 1,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "FLAG_PRODUCTION",
+      "data_type": "NUMBER",
+      "data_precision": 1,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "FLAG_PRODUCTION_BUFFER",
+      "data_type": "NUMBER",
+      "data_precision": 1,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "FLAG_FINISHED_GOODS",
+      "data_type": "NUMBER",
+      "data_precision": 1,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "MES_ENABLED",
+      "data_type": "NUMBER",
+      "data_precision": 1,
+      "data_scale": 0,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "DEFAULT_RECEIVE_CELL",
+      "data_type": "VARCHAR2",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "DEFAULT_ISSUE_CELL",
+      "data_type": "VARCHAR2",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    },
+    {
+      "column_name": "WARE_COMMENT",
+      "data_type": "VARCHAR2",
+      "data_precision": null,
+      "data_scale": null,
+      "nullable": "Y"
+    }
+  ],
+  "counts": [
+    {
+      "row_count": 291,
+      "null_ids": 0,
+      "invalid_ids": 0
+    }
+  ],
+  "duplicates": [],
+  "constraints": [
+    {
+      "constraint_name": "RRL_WARES_CK_ID_POS",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "index_name": null,
+      "search_condition_vc": "ID > 0"
+    }
+  ],
+  "indexes": [
+    {
+      "index_name": "RRL_WARES_I_MES_FLAGS",
+      "index_type": "NORMAL",
+      "uniqueness": "NONUNIQUE",
+      "status": "VALID"
+    }
+  ],
+  "index_columns": [
+    {
+      "index_name": "RRL_WARES_I_MES_FLAGS",
+      "column_name": "MES_ENABLED",
+      "column_position": 1
+    },
+    {
+      "index_name": "RRL_WARES_I_MES_FLAGS",
+      "column_name": "FLAG_RAW_MATERIAL",
+      "column_position": 2
+    },
+    {
+      "index_name": "RRL_WARES_I_MES_FLAGS",
+      "column_name": "FLAG_PRODUCTION",
+      "column_position": 3
+    },
+    {
+      "index_name": "RRL_WARES_I_MES_FLAGS",
+      "column_name": "FLAG_PRODUCTION_BUFFER",
+      "column_position": 4
+    },
+    {
+      "index_name": "RRL_WARES_I_MES_FLAGS",
+      "column_name": "FLAG_FINISHED_GOODS",
+      "column_position": 5
+    },
+    {
+      "index_name": "RRL_WARES_I_MES_FLAGS",
+      "column_name": "ID",
+      "column_position": 6
+    }
+  ],
+  "candidate_names": [],
+  "constraint_names": [],
+  "invalid": []
+}

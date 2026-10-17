@@ -1,0 +1,127 @@
+{
+  "captured_at_utc": "2026-10-15T22:08:48.509105+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE",
+      "file": "rrl_case_task_access_package.sql",
+      "errors": [],
+      "user_source_sha256": "830b25c54454fb654142507fc6a1add52b85963f85428020d7d793d3a46e530c",
+      "normalized_source_sha256": "b6add38a070ddf76c78cef556214c2c79d173008b4fe9e511b237c6a004b2152",
+      "artifact_sha256": "a4f393e4bdf610f8ef153424e9c80ec7826d5b149cb2fafae86e1302ca5bba81"
+    },
+    {
+      "name": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_task_access_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "be6cba474a75a9a0f3b3515645229513a2ffa23ac9df032ca9e819a25ca2a441",
+      "normalized_source_sha256": "57a2f2d37525dca08f25244fda2f7bf9ad4aee400039f3e6522fce4a943143a8",
+      "artifact_sha256": "25d63980185e3ec4b5d07921a2ca52e8332a388b1dcec13a6e0347f5343beb5f"
+    },
+    {
+      "name": "RRL_STOCK_CASE_PICK_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_case_pick_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "cf3aeea1e0c3af9582dde60873efec2c61705c87923289bbb9c8952a47789631",
+      "normalized_source_sha256": "3d215b4a8178add87cd03f11539c7ad2ff6e2c321af1fa93bd76631733b9be54",
+      "artifact_sha256": "8bff7022a47ec5853e5647a2af5f9b5eedda4ae5c8f18bcfaa26763869305023"
+    },
+    {
+      "name": "RRL_CASE_LIFECYCLE_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_lifecycle_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "bb654e3177531c10d329b559e857199311a8ca28f338142576b590012202800a",
+      "normalized_source_sha256": "c7f8ffe9c1c99629bfe0063672c11c03f88f100d988bef9806f477d24945b1fd",
+      "artifact_sha256": "a9716cec4224b04ea6b6c769d5e0e2202590946bc078494bf816e9906fd5a0de"
+    },
+    {
+      "name": "RRL_INVENTORY_TASK_ACCESS",
+      "type": "PACKAGE",
+      "file": "rrl_inventory_task_access_package.sql",
+      "errors": [],
+      "user_source_sha256": "633ca7a48a5ec8fa580f6d0152893ef747495f33f66ef58f0ab86676fb083e9d",
+      "normalized_source_sha256": "2275684ac231ddec115affa5ecb641b3778853876f623a55d22e779f475da261",
+      "artifact_sha256": "9f505800c372af67c01a06f20b6f50270cf1c0b3b9de2e9e2cdee3089f44cbc9"
+    },
+    {
+      "name": "RRL_INVENTORY_TASK_ACCESS",
+      "type": "PACKAGE BODY",
+      "file": "rrl_inventory_task_access_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "26409358ebeddaed9ae21d09b565ad53028ee4734d1827d737c8b6686e90d075",
+      "normalized_source_sha256": "de7e033a992c3b02f1efbaf31142b93c97838706e954af435db95388684d3e19",
+      "artifact_sha256": "12a32a25613f49d870ded4ccccc3ac65910e6ca9eed77215d772827e6a1c1bca"
+    },
+    {
+      "name": "RRL_STOCK_METADATA_TX",
+      "type": "PACKAGE",
+      "file": "rrl_stock_metadata_tx_package.sql",
+      "errors": [],
+      "user_source_sha256": "2f15c928927113570fcfd4c09b947d783ff958e9f1ec1811595081c7c6a012f5",
+      "normalized_source_sha256": "858877d265eada5a050dd8bc910e24a1bb404b9e743de2a674d4d592fe13dab7",
+      "artifact_sha256": "8233d06c9662f836aa730be8e575bc9e6f4537763d246f778250fc7e332b0bb1"
+    },
+    {
+      "name": "RRL_STOCK_METADATA_TX",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_metadata_tx_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "62a037d11b5e211c6342101264db75a6abcd2da827d23269b81b815ab4a41f54",
+      "normalized_source_sha256": "7497d2f28c6c54c5909ef83f80fbbb1d8ab777ad8d4fe69c6a7a96006e8d0a8c",
+      "artifact_sha256": "c65e5a77fae342c0088f1991c7b45db2caeb81e03b25a872cb56d280ee3610af"
+    },
+    {
+      "name": "RRL_STOCK_POSTING_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_posting_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "f5a23d5a4cebd19d218f4a4ff6300ce532704a5e73c8fe70c757fa5f0e904855",
+      "normalized_source_sha256": "ae731b15df41bb6895279d8ab7dad5324ec771218b089c70cdbc1a8b2f085754",
+      "artifact_sha256": "b4fb2626952e4db9627db565c044a962718aa30c4f4764406baeb943ee738172"
+    },
+    {
+      "name": "RRL_STOCK_CASE_SHORT_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_case_short_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "f4b58dd32f0b71d5b258fc02bb53bc1ad46d23499ac61d1a3a3d30dfbe343997",
+      "normalized_source_sha256": "340f25c14002d76d5c6ed0c433cec62fe3f5912856990aa5dbaf6da5247d255d",
+      "artifact_sha256": "5ddd2835a9ae6f44c9266af2f071c2bcfb82260f9e5b63982f7c21eea89a0aaa"
+    },
+    {
+      "name": "RRL_STOCK_SHORT_RECOVERY",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_short_recovery_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "3c69c4055abe48d2bc034eb21a5720467f82d9b253e13c8c621f4bcb2ceadb8c",
+      "normalized_source_sha256": "910587dc4b95c88d07b9da8e846e3ee65eacb7fd0d60676f98d31cf55cc0f4cf",
+      "artifact_sha256": "ea0a553cf6fea09d7bad6cee5f72b6814e5c85fbe29b0bd64deb0a03389866fc"
+    },
+    {
+      "name": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_resource_policy_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "c7118c1bd929aa8e3b9965c6c1618b4651350bd5674ba75f5f7725548be43bd7",
+      "normalized_source_sha256": "8014fa842a2fe505d76bd2f720279a113c1ffe278b23d7a1510f38b61104778a",
+      "artifact_sha256": "2bb828c0bb0ab85273eaac72771942afb2ad12e24732b7471cadd549fac97d59"
+    },
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_assignment_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "cc21895d422095e4b7ca85e51915bc8f8acf7fb33db27040e99391633396f3fc",
+      "normalized_source_sha256": "17a13dc2439099f91cc0bf9207171609f5c15d76d704c8c3465a34018b48545b",
+      "artifact_sha256": "1773e9601e506c1dcaf982767752b4d8d26745e688c888c41c6ab4aa6f0b22ec"
+    }
+  ]
+}

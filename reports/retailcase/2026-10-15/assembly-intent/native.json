@@ -1,0 +1,104 @@
+{
+  "status": "PASS",
+  "checks": [
+    "native_absent_receipt_and_read_inside_caller_owned_TX",
+    "ASSEMBLY_INTENT_CURRENT_OPERATOR_REQUIRED",
+    "ASSEMBLY_INTENT_CURRENT_OPERATOR_REQUIRED",
+    "append_only_update_delete_denied",
+    "ASSEMBLY_INTENT_ORIGINAL_SESSION_OPERATOR_REQUIRED",
+    "caller_rollback_restores_entire_absent_ledger_and_source",
+    "actual_Oracle_wait_open_after_abandon_then_committed_tombstone_denies_late_create",
+    "native_exact_receipt_replay_in_clean_transaction",
+    "ASSEMBLY_INTENT_ABANDONMENT_CONFLICT",
+    "production_HTTP_exact_original_owner_receipt_replay",
+    "production_HTTP_late_original_open_permanently_fenced",
+    "revoked_current_user_denies_read_and_exact_mutation_before_receipt_lookup_metadata_caller_rollback"
+  ],
+  "body": {
+    "operation_id": "WHREQ15.ABSENT.ABANDON",
+    "kind": "OPEN_SESSION",
+    "reason": "TEST_NOT_HARDWARE explicit never-created attempt abandonment",
+    "original": {
+      "session_id": "WHREQ15.ABSENT.SESSION",
+      "task_id": 1136,
+      "device_id": "WHREQ15.NO_DEVICE",
+      "expected_content_version": 2,
+      "tare_capture_key": "0000000000000000000000000000000000000000000000000000000000000000",
+      "scan_container": "090000000000008014"
+    }
+  },
+  "ack": {
+    "operation_id": "WHREQ15.ABSENT.ABANDON",
+    "status": "ABANDONED",
+    "kind": "OPEN_SESSION",
+    "task_id": 1136,
+    "session_id": "WHREQ15.ABSENT.SESSION",
+    "step_id": null,
+    "original_operation_id": null,
+    "original": {
+      "device_id": "WHREQ15.NO_DEVICE",
+      "expected_content_version": 2,
+      "scan_container": "090000000000008014",
+      "session_id": "WHREQ15.ABSENT.SESSION",
+      "tare_capture_key": "0000000000000000000000000000000000000000000000000000000000000000",
+      "task_id": 1136
+    },
+    "stock_posted": false
+  },
+  "before": {
+    "stock": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 24,
+        "hard_reserved_base": 1,
+        "stock_version": 10
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "picked_qty": 0,
+        "content_version": 2,
+        "assigned_to": "WHREQ15.OP"
+      }
+    ]
+  },
+  "after": {
+    "stock": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 24,
+        "hard_reserved_base": 1,
+        "stock_version": 10
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "picked_qty": 0,
+        "content_version": 2,
+        "assigned_to": "WHREQ15.OP"
+      }
+    ]
+  },
+  "stock_posted": false,
+  "note": "Append-only metadata receipt retained; no physical hardware evidence",
+  "revocation_caller_rollback": {
+    "read": "CASE_ACTIVE_USER_REQUIRED",
+    "replay": "CASE_ACTIVE_USER_REQUIRED",
+    "actor_restored": true,
+    "source_unchanged": true
+  }
+}

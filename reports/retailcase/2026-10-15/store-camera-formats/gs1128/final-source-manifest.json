@@ -1,0 +1,28 @@
+{
+  "status": "ROOT_TRANSCRIPT_VERIFIED_LOCAL",
+  "files": {
+    "api/wms_api_server/app/modules/delivery/infrastructure/store_app_reads.py": "b5eb06a26151406d2f6e860b31458a6077fbed03a429d069939f8cc3d2467e47",
+    "api/wms_api_server/app/modules/inventory/public.py": "3e81008fa26134b632547722ede2177b246ec572fa6aae3b62daeb4631ef7395",
+    "terminal/wms_terminal_web/src/features/delivery/placeScan.ts": "c22ab9db741caa26f099d26296d3803338408ef87b73874b7561d9326d299dd1",
+    "terminal/wms_terminal_web/src/features/delivery/useReceiptForm.ts": "aaaa716cbe301d9b75745034c9ba5b5c782d7419eadfb770030e4ad4785e1025",
+    "terminal/wms_terminal_web/src/features/delivery/components/DeliveryDetail.tsx": "d5ba965dd4e95d6cb50ae39418c1116bea1c51008e8de1327edfe6570397338e",
+    "terminal/wms_terminal_web/src/features/delivery/api.ts": "b2cf7af5d05745ede5156917e416db3839b378f7559a40ab1cd21fb7d40a1f15",
+    "terminal/wms_terminal_web/src/features/delivery/messages.ts": "ca932adb6646f09dd3526e5076f66ba440ba4cc4b00252ac407c3ac89adf0c72",
+    "tests/retailcase/test_store_gs1_lookup.py": "3d4e9cfc35820c2066b7793ec192cdf78e81e0d334359e2fa64c7e493ad25d31",
+    "tests/retailcase/store_place_scan_test.cjs": "9b621bec1e636f9e165d4d0f731c2fa7593f68028a9e39e9e40dbce558ba8c4d",
+    "tests/retailcase/store_api_messages_test.cjs": "baf758ef7ffe8653fa8304dcda9389c60daaf11128a0c2e34ebab0bc7d142b14",
+    "tests/retailcase/store_camera_stream_mock.cjs": "681066f3dc0fad7ccd05f181af359f8900a8356e00adc81742d23bdb06e5bcc8"
+  },
+  "checks": {
+    "backend_gs1": 10,
+    "place_binding": 10,
+    "request_message_boundary": 13,
+    "quality_gate_files": 1095,
+    "architecture_cycles": 0,
+    "architecture_debt": 72,
+    "architecture_tooling_tests": 24,
+    "both_typescript": "PASS",
+    "terminal_production_build": "PASS"
+  },
+  "limits": "Current source fingerprints and root observed command results; not independent physical/pilot acceptance. Original camera and first human-message camera assets are pinned separately; final fallback text checked by request boundary test and build."
+}

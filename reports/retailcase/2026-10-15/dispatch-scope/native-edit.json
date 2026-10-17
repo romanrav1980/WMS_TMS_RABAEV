@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "checks": [
+    "pure_actor_check_in_read_only_transaction",
+    "native_scoped_note_edit_without_legacy_group",
+    "foreign_actual_warehouse_edit_denied",
+    "mixed_trip_requires_both_native_edit_grants",
+    "revoke_native_edit_denial",
+    "empty_trip_not_created_outside_current_warehouse_mandate",
+    "own_warehouse_empty_trip_create_and_edit",
+    "other_author_empty_trip_denied",
+    "business_notes_and_all_fixtures_rolled_back"
+  ],
+  "stock_effect": "NONE",
+  "fixture_cleaned": true
+}

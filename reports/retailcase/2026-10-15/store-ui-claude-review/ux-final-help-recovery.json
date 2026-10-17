@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "checks": [
+    "compact360_list_tabs_search_short_time_no_timezone_paragraph",
+    "real_zxing_photo_decode_server_lookup_and_scanned_place_prefill",
+    "stepped_receipt_lost_response_deep_link_reload_exact_retry",
+    "paper_step_requires_actual_operator_counts",
+    "api_scale_request_without_mass_native_capture_binding_three_photo_steps",
+    "confirmed_scale_request_rejection_explicit_new_request",
+    "damaged_unloading_archive_preserves_original_block_after_reload_without_writes",
+    "restored_mark_scans_survive_form_initialization_and_are_sent"
+  ],
+  "apiWrites": "INTERCEPTED_ONLY",
+  "realQrPhotoDecoded": true,
+  "physicalScaleOrCameraTested": false
+}

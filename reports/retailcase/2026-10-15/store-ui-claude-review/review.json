@@ -1,0 +1,16 @@
+{
+  "status": "STATIC_REVIEW_AND_BUTTON_FIX_INTEGRATED_ROOT_VALIDATION_PASS_PROVIDER_LIMIT",
+  "actual_claude_session": "654a1dc6-3cca-4cab-b73f-7d82cf22ef18",
+  "changed_files": [
+    "components/MarkedGoodsPanel.tsx"
+  ],
+  "provider_limit": "23:00 Europe/Moscow",
+  "result_limit_reached_after_status_written": true,
+  "hardware_test": false,
+  "root_production_bundle_mocked_api_checks": 8,
+  "root_pwa_smoke": "PASS; offline shell/private API uncached/other app cache retained/installabilityErrors[]",
+  "root_full_quality_gate": "PASS",
+  "actual_claude_handoff_file_written": false,
+  "physical_device_installed": false,
+  "root_followup": "Unsafe damaged unloading reset fixed by root after independent review; original raw and blocking survive archive/reload. Eight final production/mock API UX checks, final build/gate/PWAs PASS."
+}

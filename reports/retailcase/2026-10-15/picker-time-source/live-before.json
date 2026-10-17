@@ -1,0 +1,1195 @@
+{
+  "schema": [
+    {
+      "schema_name": "RABAEV",
+      "service_name": "orcl"
+    }
+  ],
+  "columns": {
+    "RRL_RESOURCE": [
+      {
+        "column_name": "RESOURCE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "RESOURCE_CODE",
+        "data_type": "VARCHAR2",
+        "data_length": 60,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "RESOURCE_NAME",
+        "data_type": "VARCHAR2",
+        "data_length": 160,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "RESOURCE_CLASS",
+        "data_type": "VARCHAR2",
+        "data_length": 40,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "RESOURCE_TYPE",
+        "data_type": "VARCHAR2",
+        "data_length": 40,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "EQUIPMENT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "USER_ID",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "TEAM_CODE",
+        "data_type": "VARCHAR2",
+        "data_length": 60,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "WARE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "ZONE_CODE",
+        "data_type": "VARCHAR2",
+        "data_length": 60,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "STATUS",
+        "data_type": "VARCHAR2",
+        "data_length": 20,
+        "nullable": "N",
+        "data_default": "'AVAILABLE' "
+      },
+      {
+        "column_name": "ACTIVE",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": "1 "
+      },
+      {
+        "column_name": "CREATED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "N",
+        "data_default": "systimestamp "
+      },
+      {
+        "column_name": "CREATED_BY",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "UPDATED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "UPDATED_BY",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      }
+    ],
+    "RRL_RESOURCE_SHIFT": [
+      {
+        "column_name": "SHIFT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "SHIFT_CODE",
+        "data_type": "VARCHAR2",
+        "data_length": 60,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "SHIFT_DATE",
+        "data_type": "DATE",
+        "data_length": 7,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "WARE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "SITE_CODE",
+        "data_type": "VARCHAR2",
+        "data_length": 60,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "START_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "FINISH_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "STATUS",
+        "data_type": "VARCHAR2",
+        "data_length": 20,
+        "nullable": "N",
+        "data_default": "'PLANNED' "
+      },
+      {
+        "column_name": "CREATED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "N",
+        "data_default": "systimestamp "
+      },
+      {
+        "column_name": "CREATED_BY",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "UPDATED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "UPDATED_BY",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "BASE_SHIFT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "REACH_SHIFT_ROLE",
+        "data_type": "VARCHAR2",
+        "data_length": 10,
+        "nullable": "N",
+        "data_default": "'GENERAL' "
+      },
+      {
+        "column_name": "EXPECTED_DRIVERS",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      }
+    ],
+    "RRL_RESOURCE_SESSION": [
+      {
+        "column_name": "SESSION_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "SHIFT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "RESOURCE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "EQUIPMENT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "OPERATOR_USER_ID",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "LOGIN_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "N",
+        "data_default": "systimestamp "
+      },
+      {
+        "column_name": "LOGOUT_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "STATUS",
+        "data_type": "VARCHAR2",
+        "data_length": 20,
+        "nullable": "N",
+        "data_default": "'ACTIVE' "
+      },
+      {
+        "column_name": "CURRENT_TASK_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "LAST_HEARTBEAT_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "TERMINAL_ID",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "ZONE_CODE",
+        "data_type": "VARCHAR2",
+        "data_length": 60,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CREATED_BY",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CLOSED_BY",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "LAST_CELL",
+        "data_type": "VARCHAR2",
+        "data_length": 15,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "LAST_POSITION_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CURRENT_INVENTORY_TASK_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      }
+    ],
+    "RRL_CASE_PICK_TASK": [
+      {
+        "column_name": "CASE_PICK_TASK_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "PICK_WAVE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "PICK_PLAN_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CUSTOMER_ORDER_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "CUSTOMER_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CUSTOMER_ADDRESS_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CUSTOMER_STORE_MAP_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "SSCC",
+        "data_type": "VARCHAR2",
+        "data_length": 64,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "PALLET_TYPE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "PALLET_NO",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": "1 "
+      },
+      {
+        "column_name": "STATUS",
+        "data_type": "VARCHAR2",
+        "data_length": 30,
+        "nullable": "N",
+        "data_default": "'NEW' "
+      },
+      {
+        "column_name": "ASSIGNED_RESOURCE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "RESOURCE_SESSION_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "EQUIPMENT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "ASSIGNED_TO",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "WARE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "ZONE_CODE",
+        "data_type": "VARCHAR2",
+        "data_length": 60,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "TOTAL_LINES",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": "0 "
+      },
+      {
+        "column_name": "PICKED_LINES",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": "0 "
+      },
+      {
+        "column_name": "PLANNED_QTY",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": "0 "
+      },
+      {
+        "column_name": "PICKED_QTY",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": "0 "
+      },
+      {
+        "column_name": "OFFLINE_STATE",
+        "data_type": "VARCHAR2",
+        "data_length": 30,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CREATED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "N",
+        "data_default": "systimestamp "
+      },
+      {
+        "column_name": "CREATED_BY",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "STARTED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CLOSED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "DONE_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "UPDATED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "UPDATED_BY",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "TRANSFERRED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "TRANSFERRED_BY",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "TRANSFER_REASON",
+        "data_type": "VARCHAR2",
+        "data_length": 1000,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CURRENT_CELL",
+        "data_type": "VARCHAR2",
+        "data_length": 60,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CONTENT_VERSION",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": "0 "
+      },
+      {
+        "column_name": "LEGACY_SBORKA_PALLET_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "SHIPPED_OPERATION",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "STARTED_AT_INSTANT",
+        "data_type": "TIMESTAMP(6) WITH TIME ZONE",
+        "data_length": 13,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "STARTED_SHIFT_TIME_ZONE",
+        "data_type": "VARCHAR2",
+        "data_length": 64,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "ASSIGNMENT_VERSION",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": "0 "
+      }
+    ],
+    "RRL_WAREHOUSE_TASK": [
+      {
+        "column_name": "TASK_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "TASK_TYPE",
+        "data_type": "VARCHAR2",
+        "data_length": 40,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "TASK_SOURCE",
+        "data_type": "VARCHAR2",
+        "data_length": 40,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "SOURCE_TASK_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "SOURCE_MOVEMENT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "SOURCE_DOC_TYPE",
+        "data_type": "VARCHAR2",
+        "data_length": 40,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "SOURCE_DOC_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "PRODUCTION_ORDER_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "PROD_BATCH_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "RAW_ARTICUL",
+        "data_type": "VARCHAR2",
+        "data_length": 40,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "TARGET_ARTICUL",
+        "data_type": "VARCHAR2",
+        "data_length": 40,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "UID_PALLET",
+        "data_type": "VARCHAR2",
+        "data_length": 200,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "SSCC",
+        "data_type": "VARCHAR2",
+        "data_length": 64,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "FROM_WARE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "FROM_CELL",
+        "data_type": "VARCHAR2",
+        "data_length": 80,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "TO_WARE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "TO_CELL",
+        "data_type": "VARCHAR2",
+        "data_length": 80,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "QTY",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": "0 "
+      },
+      {
+        "column_name": "UNIT_CODE",
+        "data_type": "VARCHAR2",
+        "data_length": 20,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "PRIORITY",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": "100 "
+      },
+      {
+        "column_name": "STATUS",
+        "data_type": "VARCHAR2",
+        "data_length": 20,
+        "nullable": "N",
+        "data_default": "'PLANNED' "
+      },
+      {
+        "column_name": "ASSIGNED_TO",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CREATED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "N",
+        "data_default": "systimestamp "
+      },
+      {
+        "column_name": "CREATED_BY",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "STARTED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "FINISHED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CANCELLED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CANCELLED_BY",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "LAST_ERROR",
+        "data_type": "VARCHAR2",
+        "data_length": 2000,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "QTY_MODE",
+        "data_type": "VARCHAR2",
+        "data_length": 20,
+        "nullable": "N",
+        "data_default": "'BOX' "
+      },
+      {
+        "column_name": "FACT_QTY",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "PARENT_TASK_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "RESOURCE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "RESOURCE_SESSION_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "EQUIPMENT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "PLANNED_START_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "PLANNED_FINISH_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "DISPATCH_PRIORITY",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "FROM_CELL_SLOT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "TO_CELL_SLOT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "COMPLETION_HASH",
+        "data_type": "VARCHAR2",
+        "data_length": 64,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "COMPLETION_JSON",
+        "data_type": "CLOB",
+        "data_length": 4000,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "TARGET_UID_PALLET",
+        "data_type": "VARCHAR2",
+        "data_length": 200,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "STARTED_AT_INSTANT",
+        "data_type": "TIMESTAMP(6) WITH TIME ZONE",
+        "data_length": 13,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "STARTED_SHIFT_TIME_ZONE",
+        "data_type": "VARCHAR2",
+        "data_length": 64,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "HU_CONTENT_VERSION",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "HU_MEASUREMENTS_JSON",
+        "data_type": "CLOB",
+        "data_length": 4000,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "FINISHED_AT_INSTANT",
+        "data_type": "TIMESTAMP(6) WITH TIME ZONE",
+        "data_length": 13,
+        "nullable": "Y",
+        "data_default": null
+      }
+    ],
+    "RRL_RESOURCE_FACT_EVENT": [
+      {
+        "column_name": "EVENT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "ASSIGNMENT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "TASK_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "SESSION_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "RESOURCE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "EVENT_TYPE",
+        "data_type": "VARCHAR2",
+        "data_length": 40,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "EVENT_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "N",
+        "data_default": "systimestamp "
+      },
+      {
+        "column_name": "EVENT_BY",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "PAYLOAD_JSON",
+        "data_type": "CLOB",
+        "data_length": 4000,
+        "nullable": "Y",
+        "data_default": null
+      }
+    ],
+    "RRL_CASE_PICK_EVENT": [
+      {
+        "column_name": "CASE_PICK_EVENT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "CASE_PICK_TASK_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CASE_PICK_LINE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "EVENT_TYPE",
+        "data_type": "VARCHAR2",
+        "data_length": 60,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "OFFLINE_EVENT_ID",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "RESOURCE_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "RESOURCE_SESSION_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "EQUIPMENT_ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "MESSAGE_TEXT",
+        "data_type": "VARCHAR2",
+        "data_length": 1000,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "PAYLOAD_JSON",
+        "data_type": "CLOB",
+        "data_length": 4000,
+        "nullable": "Y",
+        "data_default": null
+      },
+      {
+        "column_name": "CREATED_AT",
+        "data_type": "TIMESTAMP(6)",
+        "data_length": 11,
+        "nullable": "N",
+        "data_default": "systimestamp "
+      },
+      {
+        "column_name": "CREATED_BY",
+        "data_type": "VARCHAR2",
+        "data_length": 100,
+        "nullable": "Y",
+        "data_default": null
+      }
+    ],
+    "RRL_ACCESS_REV": [
+      {
+        "column_name": "ID",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": null
+      },
+      {
+        "column_name": "REVISION",
+        "data_type": "NUMBER",
+        "data_length": 22,
+        "nullable": "N",
+        "data_default": "1 "
+      }
+    ]
+  },
+  "invalid": [],
+  "sources": {
+    "RRL_CASE_ASSIGNMENT_API:PACKAGE": {
+      "path": "reports\\retailcase\\2026-10-15\\picker-time-source\\rrl_case_assignment_api_spec.sql",
+      "lines": 7,
+      "sha256": "59a587ed7588fdd716b1d69b00c36fedc0b389a5c464e43ee1cbec93f27948d4"
+    },
+    "RRL_CASE_ASSIGNMENT_API:PACKAGE BODY": {
+      "path": "reports\\retailcase\\2026-10-15\\picker-time-source\\rrl_case_assignment_api_body.sql",
+      "lines": 137,
+      "sha256": "7380c3f6a71dd51b75d426239b63a2179f8debf17c93ec5c619af4b752721a3e"
+    },
+    "RRL_WTASK_ASSIGN_API:PACKAGE": {
+      "path": "reports\\retailcase\\2026-10-15\\picker-time-source\\rrl_wtask_assign_api_spec.sql",
+      "lines": 8,
+      "sha256": "3de6ffacb64f6211c901c6c6031be58a6c894039f61d3e00125713c4b02f8e5d"
+    },
+    "RRL_WTASK_ASSIGN_API:PACKAGE BODY": {
+      "path": "reports\\retailcase\\2026-10-15\\picker-time-source\\rrl_wtask_assign_api_body.sql",
+      "lines": 137,
+      "sha256": "32b19f1c8401167722890e6c3fcccee551dfd0cd7ab382020cbd78339d42ff1b"
+    },
+    "RRL_CASE_RESOURCE_POLICY:PACKAGE": {
+      "path": "reports\\retailcase\\2026-10-15\\picker-time-source\\rrl_case_resource_policy_spec.sql",
+      "lines": 3,
+      "sha256": "dba691cde6e30965f58630a067309ae01c6632082a644a51f2a4823f2db5e23d"
+    },
+    "RRL_CASE_RESOURCE_POLICY:PACKAGE BODY": {
+      "path": "reports\\retailcase\\2026-10-15\\picker-time-source\\rrl_case_resource_policy_body.sql",
+      "lines": 63,
+      "sha256": "a749d2e6add476e278869880b2452d5edef0b1030064f65edbdfc8bee6b8e931"
+    },
+    "RRL_TASK_RESOURCE_POLICY:PACKAGE": {
+      "path": "reports\\retailcase\\2026-10-15\\picker-time-source\\rrl_task_resource_policy_spec.sql",
+      "lines": 4,
+      "sha256": "642712c09ec42c2da436cb8f9c7fa74811af56113fff98b9e851db6e2fcd6e11"
+    },
+    "RRL_TASK_RESOURCE_POLICY:PACKAGE BODY": {
+      "path": "reports\\retailcase\\2026-10-15\\picker-time-source\\rrl_task_resource_policy_body.sql",
+      "lines": 120,
+      "sha256": "f7f55faad2ce525215d4839e6be592cb6097f365f3166988467e8d1c59f4e448"
+    },
+    "RRL_STOCK_TASK_CORE:PACKAGE": {
+      "path": "reports\\retailcase\\2026-10-15\\picker-time-source\\rrl_stock_task_core_spec.sql",
+      "lines": 4,
+      "sha256": "6c7d48da69eb6457f5532e491079b7985495d14ea872e6d02eac13db5067be5f"
+    },
+    "RRL_STOCK_TASK_CORE:PACKAGE BODY": {
+      "path": "reports\\retailcase\\2026-10-15\\picker-time-source\\rrl_stock_task_core_body.sql",
+      "lines": 228,
+      "sha256": "802bb8a58281e312740a29de9c7b0b072ec999d04d8d44b61cf7e7cf7b7dbce3"
+    },
+    "RRL_STOCK_CASE_RETURN_CMD:PACKAGE": {
+      "path": "reports\\retailcase\\2026-10-15\\picker-time-source\\rrl_stock_case_return_cmd_spec.sql",
+      "lines": 4,
+      "sha256": "291bb1c736fd4472a74eca45d60510b1e37b3c66a6d5edf7176d6caac12a1206"
+    },
+    "RRL_STOCK_CASE_RETURN_CMD:PACKAGE BODY": {
+      "path": "reports\\retailcase\\2026-10-15\\picker-time-source\\rrl_stock_case_return_cmd_body.sql",
+      "lines": 174,
+      "sha256": "ac8344217839b764864cd85704579c6b1f0677c2ed467b7eeff8dab976227b8b"
+    }
+  }
+}

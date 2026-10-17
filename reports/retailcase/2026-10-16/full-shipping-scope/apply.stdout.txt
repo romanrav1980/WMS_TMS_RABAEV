@@ -1,0 +1,13 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_full_shipping_scope\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_full_shipping_scope\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_full_shipping_scope\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_full_shipping_scope\rrl_full_shipping_scope_package.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_full_shipping_scope\rrl_full_shipping_scope_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_full_shipping_scope\rrl_stock_hu_ship_cmd_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_full_shipping_scope\rrl_stock_trip_depart_cmd_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_full_shipping_scope\rrl_stock_shipping_core_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_full_shipping_scope\rrl_stock_posting_api_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_full_shipping_scope\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_full_shipping_scope\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_full_shipping_scope\after_sources.sql
+Done. Statements=13; Errors=0; AbsentCleanup=0

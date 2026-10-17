@@ -1,0 +1,23 @@
+{
+  "migration_id": "2026-10-15-assembly-evidence-binding",
+  "captured_at": "2026-10-15T11:09:03.926733+00:00",
+  "identity": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "invalid_before": 0,
+  "before_exact": true,
+  "status": "APPLIED",
+  "recovery": "Quiesced writers and zero assembly evidence required for rollback; preserve history",
+  "sha256": {
+    "apply.sql": "b084f2c8ba38400a08100551021c9311b153bded95e394ab96cd50d0609bc541",
+    "before_body.sql": "148cd38fd640b2f6ed6177995040c57e43f8f2cb43ad7d3e80ca5d8804fb90ae",
+    "body.sql": "f9312c8104d7bbd219112c4fafadfed37680f6a4a39f4f39a3df0bb19b9872e5",
+    "rollback.sql": "66ba49bd7e84a5e4be1a1bb219aee7e87997f665ed7841070830efb52b915e69",
+    "verify.sql": "8756c324932e095ede40af5665b84aec9c019add0340d86456ea1767b0c342a0"
+  },
+  "statements": 6,
+  "errors": 0,
+  "source_exact": 3,
+  "invalid_after": 0
+}

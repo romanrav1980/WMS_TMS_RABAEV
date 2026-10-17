@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "purpose": "EMPTY_TARE",
+      "capture_key": "7FD4E47528CBD819F3D031416D18D4E6ED263EADE8A40AE3187E431DA643AC9A",
+      "original_ack": "VALID",
+      "exact_native_replay": "ORIGINAL",
+      "changed_body": "CONFLICT",
+      "device_mode": "TEST"
+    },
+    {
+      "purpose": "FINAL_GROSS",
+      "capture_key": "D595B485EF1A8E45139F8F9E244F73387F18BB6A080F6DA4CB9D7C031D0F0790",
+      "original_ack": "VALID",
+      "exact_native_replay": "ORIGINAL",
+      "changed_body": "CONFLICT",
+      "device_mode": "TEST"
+    },
+    {
+      "purpose": "PICK",
+      "capture_key": "6D2F1C8EFBE686A0F869CEAB4BDAA70BC61336E0CE0A4E363B55370E2332198D",
+      "original_ack": "VALID",
+      "exact_native_replay": "ORIGINAL",
+      "changed_body": "CONFLICT",
+      "device_mode": "TEST"
+    }
+  ],
+  "archive_count_unchanged": true,
+  "stock_effect": "NONE",
+  "new_measurements": 0,
+  "business_commit": false,
+  "physical_weighing_verified": false,
+  "note": "Existing development native archives; no newly manufactured mass or hardware claim",
+  "recent_slow": [],
+  "slow_sql_decision": "Three existing archive vectors bounded by purpose; exact replay uses existing unique capture key/device locks. No new index/SQL package. Recent slow entries reviewed below; repeated >1000ms requires own query attribution and execution-plan review. Native tests make no HTTP audit and no new captures."
+}

@@ -1,0 +1,986 @@
+{
+  "collected_at": "2026-10-15T20:33:12.679224+00:00",
+  "read_only": true,
+  "global_admin": [
+    {
+      "params": {
+        "task_id": 2
+      },
+      "status": 200,
+      "rows": 1
+    },
+    {
+      "params": {
+        "task_id": 2,
+        "ware_id": 1
+      },
+      "status": 200,
+      "rows": 1
+    }
+  ],
+  "http": [
+    {
+      "api_call_id": 69323,
+      "request_id": "e3dadae3-3d69-452b-89fe-27fbd2327951",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 200,
+      "duration_ms": 394
+    },
+    {
+      "api_call_id": 69324,
+      "request_id": "60831216-54aa-4148-a730-5a6b59d2f310",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 200,
+      "duration_ms": 86
+    },
+    {
+      "api_call_id": 69325,
+      "request_id": "d8bbc055-1aed-4b57-bb25-f8ab66b11afd",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 200,
+      "duration_ms": 211
+    },
+    {
+      "api_call_id": 69326,
+      "request_id": "83e3c307-b482-49f9-a7e9-3078b04cf9a2",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 200,
+      "duration_ms": 469
+    },
+    {
+      "api_call_id": 69327,
+      "request_id": "f6432e2c-c31d-4bfd-9aad-95589fd8f295",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 403,
+      "duration_ms": 66
+    },
+    {
+      "api_call_id": 69328,
+      "request_id": "8595a279-7829-4c4b-9a37-39d2444d695f",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 403,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 69329,
+      "request_id": "f7e605fe-7bf0-4544-8979-7ab75a30db01",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 403,
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 69330,
+      "request_id": "05c25802-6201-49c9-a58e-51f10df5955d",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 403,
+      "duration_ms": 185
+    },
+    {
+      "api_call_id": 69331,
+      "request_id": "4efb4529-d27a-4563-8376-79fedd7acfb3",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 403,
+      "duration_ms": 92
+    },
+    {
+      "api_call_id": 69332,
+      "request_id": "cfb21fdc-455b-4a8b-b904-b1bf38132bdb",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 403,
+      "duration_ms": 286
+    },
+    {
+      "api_call_id": 69333,
+      "request_id": "522851ae-cc5a-46fb-a505-9c9a75829c2d",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 403,
+      "duration_ms": 53
+    },
+    {
+      "api_call_id": 69334,
+      "request_id": "5c723024-047a-4e99-97cf-5c56b373f893",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 403,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 69335,
+      "request_id": "239dffaa-681d-4dc0-9906-47e2b6a244cd",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 200,
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 69336,
+      "request_id": "72bdaec9-8bd7-4b6a-b946-c7e7283dd7ea",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 200,
+      "duration_ms": 49
+    },
+    {
+      "api_call_id": 69337,
+      "request_id": "88e2cabd-d1ea-4980-9184-39e123754a9b",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 200,
+      "duration_ms": 85
+    },
+    {
+      "api_call_id": 69338,
+      "request_id": "09f01360-7841-43a5-b4cc-cdccb5ec33a6",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 200,
+      "duration_ms": 300
+    },
+    {
+      "api_call_id": 69339,
+      "request_id": "f7742847-9d4e-46aa-a589-84955a57faa4",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 403,
+      "duration_ms": 105
+    },
+    {
+      "api_call_id": 69340,
+      "request_id": "91622fea-15ff-46d7-8a31-cc1887822ae5",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 403,
+      "duration_ms": 53
+    },
+    {
+      "api_call_id": 69341,
+      "request_id": "df78f143-9b09-49e9-bae0-66fc1ac891f4",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 403,
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 69342,
+      "request_id": "20a88abf-807a-4436-a895-455c6a25711c",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 403,
+      "duration_ms": 227
+    },
+    {
+      "api_call_id": 69343,
+      "request_id": "f6bf1ed3-54dc-427e-9ee5-9a0aa974e8a2",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 403,
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 69344,
+      "request_id": "d4bba35d-2ade-46c0-a76b-54effd29f844",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 403,
+      "duration_ms": 248
+    },
+    {
+      "api_call_id": 69345,
+      "request_id": "3ce382b8-0e4a-453b-8ead-1eebae32d258",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 403,
+      "duration_ms": 98
+    },
+    {
+      "api_call_id": 69346,
+      "request_id": "5a13d92f-d72b-4b32-a784-dd2a5c7989ba",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 403,
+      "duration_ms": 76
+    },
+    {
+      "api_call_id": 69347,
+      "request_id": "2cc4b884-93b2-48af-8228-45b302aead74",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 200,
+      "duration_ms": 80
+    },
+    {
+      "api_call_id": 69348,
+      "request_id": "6e1fe753-5f70-4b1d-9bc6-1437ad34a5a0",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 200,
+      "duration_ms": 290
+    },
+    {
+      "api_call_id": 69349,
+      "request_id": "3dc05e08-5784-4590-8a19-d15f065cb2e6",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 69350,
+      "request_id": "af55e608-2bef-41bf-ab59-b1162e5b3193",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 403,
+      "duration_ms": 90
+    },
+    {
+      "api_call_id": 69351,
+      "request_id": "fe94d773-2fa1-4b03-a395-44485417765e",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 403,
+      "duration_ms": 276
+    },
+    {
+      "api_call_id": 69352,
+      "request_id": "bce21969-0c78-469e-b210-b6b29344ce3a",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 403,
+      "duration_ms": 56
+    },
+    {
+      "api_call_id": 69353,
+      "request_id": "c70abe9a-1763-4250-a027-f5e083b02b84",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 403,
+      "duration_ms": 216
+    },
+    {
+      "api_call_id": 69354,
+      "request_id": "316c9226-e01b-444d-be64-1f505d9c67d7",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 403,
+      "duration_ms": 52
+    },
+    {
+      "api_call_id": 69355,
+      "request_id": "1f1b4750-313b-4ad1-b366-94bdae04f2c4",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 69356,
+      "request_id": "2b129b9b-f3a6-431c-a3d2-3ef0eed54dfd",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 200,
+      "duration_ms": 41
+    },
+    {
+      "api_call_id": 69357,
+      "request_id": "cb5d0f4a-b06f-4017-b2a9-20e3fb143014",
+      "method": "GET",
+      "path": "/api/inventory/tasks",
+      "response_status": 200,
+      "duration_ms": 44
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 4905,
+      "api_call_id": 69355,
+      "elapsed_ms": 7,
+      "module": "WMS_API:69355",
+      "action": "GET /api/inventory/recovery-shor",
+      "sql_sample": "Recovery queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4904,
+      "api_call_id": 69354,
+      "elapsed_ms": 5,
+      "module": "WMS_API:69354",
+      "action": "GET /api/inventory/tasks",
+      "sql_sample": "Inventory queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4903,
+      "api_call_id": 69353,
+      "elapsed_ms": 166,
+      "module": "WMS_API:69353",
+      "action": "GET /api/inventory/recovery-shor",
+      "sql_sample": "Recovery queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4902,
+      "api_call_id": 69352,
+      "elapsed_ms": 7,
+      "module": "WMS_API:69352",
+      "action": "GET /api/inventory/recovery-shor",
+      "sql_sample": "Recovery queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4901,
+      "api_call_id": 69351,
+      "elapsed_ms": 168,
+      "module": "WMS_API:69351",
+      "action": "GET /api/inventory/tasks",
+      "sql_sample": "Inventory queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4900,
+      "api_call_id": 69350,
+      "elapsed_ms": 6,
+      "module": "WMS_API:69350",
+      "action": "GET /api/inventory/tasks",
+      "sql_sample": "Inventory queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4899,
+      "api_call_id": 69349,
+      "elapsed_ms": 6,
+      "module": "WMS_API:69349",
+      "action": "GET /api/inventory/tasks",
+      "sql_sample": "Inventory queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4898,
+      "api_call_id": 69346,
+      "elapsed_ms": 6,
+      "module": "WMS_API:69346",
+      "action": "GET /api/inventory/recovery-shor",
+      "sql_sample": "Recovery queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4897,
+      "api_call_id": 69345,
+      "elapsed_ms": 8,
+      "module": "WMS_API:69345",
+      "action": "GET /api/inventory/tasks",
+      "sql_sample": "Inventory queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4896,
+      "api_call_id": 69344,
+      "elapsed_ms": 199,
+      "module": "WMS_API:69344",
+      "action": "GET /api/inventory/recovery-shor",
+      "sql_sample": "Recovery queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4895,
+      "api_call_id": 69343,
+      "elapsed_ms": 6,
+      "module": "WMS_API:69343",
+      "action": "GET /api/inventory/recovery-shor",
+      "sql_sample": "Recovery queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4894,
+      "api_call_id": 69342,
+      "elapsed_ms": 168,
+      "module": "WMS_API:69342",
+      "action": "GET /api/inventory/tasks",
+      "sql_sample": "Inventory queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4893,
+      "api_call_id": 69341,
+      "elapsed_ms": 6,
+      "module": "WMS_API:69341",
+      "action": "GET /api/inventory/tasks",
+      "sql_sample": "Inventory queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4892,
+      "api_call_id": 69340,
+      "elapsed_ms": 6,
+      "module": "WMS_API:69340",
+      "action": "GET /api/inventory/recovery-shor",
+      "sql_sample": "Recovery queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4891,
+      "api_call_id": 69339,
+      "elapsed_ms": 13,
+      "module": "WMS_API:69339",
+      "action": "GET /api/inventory/tasks",
+      "sql_sample": "Inventory queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4890,
+      "api_call_id": 69334,
+      "elapsed_ms": 5,
+      "module": "WMS_API:69334",
+      "action": "GET /api/inventory/recovery-shor",
+      "sql_sample": "Recovery queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4889,
+      "api_call_id": 69333,
+      "elapsed_ms": 6,
+      "module": "WMS_API:69333",
+      "action": "GET /api/inventory/tasks",
+      "sql_sample": "Inventory queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4888,
+      "api_call_id": 69332,
+      "elapsed_ms": 194,
+      "module": "WMS_API:69332",
+      "action": "GET /api/inventory/recovery-shor",
+      "sql_sample": "Recovery queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4887,
+      "api_call_id": 69331,
+      "elapsed_ms": 12,
+      "module": "WMS_API:69331",
+      "action": "GET /api/inventory/recovery-shor",
+      "sql_sample": "Recovery queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4886,
+      "api_call_id": 69330,
+      "elapsed_ms": 138,
+      "module": "WMS_API:69330",
+      "action": "GET /api/inventory/tasks",
+      "sql_sample": "Inventory queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4885,
+      "api_call_id": 69329,
+      "elapsed_ms": 6,
+      "module": "WMS_API:69329",
+      "action": "GET /api/inventory/tasks",
+      "sql_sample": "Inventory queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4884,
+      "api_call_id": 69328,
+      "elapsed_ms": 8,
+      "module": "WMS_API:69328",
+      "action": "GET /api/inventory/recovery-shor",
+      "sql_sample": "Recovery queue scoped READ ONLY"
+    },
+    {
+      "log_id": 4883,
+      "api_call_id": 69327,
+      "elapsed_ms": 6,
+      "module": "WMS_API:69327",
+      "action": "GET /api/inventory/tasks",
+      "sql_sample": "Inventory queue scoped READ ONLY"
+    }
+  ],
+  "native_cumulative": [
+    {
+      "sql_id": "1031nnpkrfzdc",
+      "executions": 61253,
+      "avg_ms": 0.185,
+      "avg_buffers": 2.02,
+      "sql_sample": "select CASE_PICK_SHORT_ID,PICK_WAVE_ID,REPLENISH_TASK_ID,                    RECOVERY_SOURCE_REQUEST,RECOVERY_STATE                 from RRL_CASE_PICK_SHORT where RECOVERY_STATE in('WAIT_INVENTORY','WAIT_REPLENISHMENT')                  and exists(select 1 from RRL_PICK_WAVE w where w.PICK_WAVE_ID=RRL_CASE_PICK_SHORT.PICK_WAVE_ID and w.STATUS='LAUNCHED')                  and (RECOVERY_STATE!='WAIT_INVENTORY' or exists(select 1 from RRL_INVENTORY_TASK it                      where it.INVENTORY_TASK_ID=RRL_CASE_PICK_SHORT.INVENTORY_TASK_ID and it.ASSIGNED_TO is null and it.STATUS='NEW'))                  and (RECOVERY_LEASE_UNTIL is null or RECOVERY_LEASE_UNTIL<cast(systimestamp as timestamp))                  order by RECOVERY_DEADLINE_AT,CASE_PICK_SHORT_ID for update skip locked"
+    },
+    {
+      "sql_id": "8bgpqxj9ndvnu",
+      "executions": 3,
+      "avg_ms": 282.844,
+      "avg_buffers": 6771.67,
+      "sql_sample": "select * from (select sh.CASE_PICK_SHORT_ID SHORT_ID,sh.CASE_PICK_TASK_ID,sh.CASE_PICK_LINE_ID,     sh.PICK_WAVE_ID,w.WARE_ID WAREHOUSE_ID,sh.CELL_CODE CELL,sh.ARTICUL ARTICLE,sh.CREATED_BY PICKER,     sh.STATUS,sh.RECOVERY_STATE,sh.INVENTORY_TASK_ID,sh.REPLENISH_TASK_ID,     sh.RECOVERY_LAST_ERROR,sh.RECOVERY_DEADLINE_AT,sh.RESTORED_AT,     to_char(sh.SHORT_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') SHORT_QUANTITY,     greatest(0,round((cast(systimestamp as date)-cast(sh.CREATED_AT as date))*86400)) AGE_SECONDS,     round((cast(nvl(sh.RECOVERY_DEADLINE_AT,sh.CREATED_AT+numtodsinterval(300,'SECOND')) as date)       -cast(systimestamp as date))*86400) REMAINING_SECONDS,     to_char(greatest(0,l.PICKED_QTY-sh.PICKED_QTY),'TM9','NLS_NUMERIC_CHARACTERS=''.,''') RESTORED_QUANTITY,     to_char(greatest(0,l.PLANNED_QTY-l.PICKED_QTY),'TM9','NLS_NUMERIC_CHARACTERS=''.,''') ORDER_REMAINING_QUANTIT"
+    },
+    {
+      "sql_id": "8bgpqxj9ndvnu",
+      "executions": 2,
+      "avg_ms": 93.299,
+      "avg_buffers": 1181.5,
+      "sql_sample": "select * from (select sh.CASE_PICK_SHORT_ID SHORT_ID,sh.CASE_PICK_TASK_ID,sh.CASE_PICK_LINE_ID,     sh.PICK_WAVE_ID,w.WARE_ID WAREHOUSE_ID,sh.CELL_CODE CELL,sh.ARTICUL ARTICLE,sh.CREATED_BY PICKER,     sh.STATUS,sh.RECOVERY_STATE,sh.INVENTORY_TASK_ID,sh.REPLENISH_TASK_ID,     sh.RECOVERY_LAST_ERROR,sh.RECOVERY_DEADLINE_AT,sh.RESTORED_AT,     to_char(sh.SHORT_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') SHORT_QUANTITY,     greatest(0,round((cast(systimestamp as date)-cast(sh.CREATED_AT as date))*86400)) AGE_SECONDS,     round((cast(nvl(sh.RECOVERY_DEADLINE_AT,sh.CREATED_AT+numtodsinterval(300,'SECOND')) as date)       -cast(systimestamp as date))*86400) REMAINING_SECONDS,     to_char(greatest(0,l.PICKED_QTY-sh.PICKED_QTY),'TM9','NLS_NUMERIC_CHARACTERS=''.,''') RESTORED_QUANTITY,     to_char(greatest(0,l.PLANNED_QTY-l.PICKED_QTY),'TM9','NLS_NUMERIC_CHARACTERS=''.,''') ORDER_REMAINING_QUANTIT"
+    },
+    {
+      "sql_id": "8nwbap8fhguhv",
+      "executions": 4,
+      "avg_ms": 7.233,
+      "avg_buffers": 34.5,
+      "sql_sample": "select * from (select it.INVENTORY_TASK_ID,it.STATUS,it.WARE_ID WAREHOUSE_ID,it.CELL_CODE CELL,     it.ARTICUL ARTICLE,it.ASSIGNED_TO,it.PRIORITY,it.REVISION_ID,it.COUNT_OPERATION_ID,     sh.CASE_PICK_SHORT_ID SHORT_ID,sh.RECOVERY_STATE,sh.RECOVERY_DEADLINE_AT,     to_char(it.FACT_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') FACT_QUANTITY     from RRL_INVENTORY_TASK it left join RRL_CASE_PICK_SHORT sh on sh.CASE_PICK_SHORT_ID=it.SOURCE_DOC_ID     and it.SOURCE_DOC_TYPE='CASE_PICK_SHORT'                 where ((:task_id is not null and it.INVENTORY_TASK_ID=:task_id)                    or (:task_id is null and it.STATUS in('NEW','ASSIGNED','IN_PROGRESS')))                 and (:ware is null or it.WARE_ID=:ware) and it.WARE_ID is not null                 and RRL_ACCESS_API.allowed(:actor,'inventory_task_view','WAREHOUSE',to_char(it.WARE_ID))=1                 order by it.PRIORITY,it.CREATED_A"
+    },
+    {
+      "sql_id": "8nwbap8fhguhv",
+      "executions": 3,
+      "avg_ms": 8.129,
+      "avg_buffers": 36.33,
+      "sql_sample": "select * from (select it.INVENTORY_TASK_ID,it.STATUS,it.WARE_ID WAREHOUSE_ID,it.CELL_CODE CELL,     it.ARTICUL ARTICLE,it.ASSIGNED_TO,it.PRIORITY,it.REVISION_ID,it.COUNT_OPERATION_ID,     sh.CASE_PICK_SHORT_ID SHORT_ID,sh.RECOVERY_STATE,sh.RECOVERY_DEADLINE_AT,     to_char(it.FACT_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') FACT_QUANTITY     from RRL_INVENTORY_TASK it left join RRL_CASE_PICK_SHORT sh on sh.CASE_PICK_SHORT_ID=it.SOURCE_DOC_ID     and it.SOURCE_DOC_TYPE='CASE_PICK_SHORT'                 where ((:task_id is not null and it.INVENTORY_TASK_ID=:task_id)                    or (:task_id is null and it.STATUS in('NEW','ASSIGNED','IN_PROGRESS')))                 and (:ware is null or it.WARE_ID=:ware) and it.WARE_ID is not null                 and RRL_ACCESS_API.allowed(:actor,'inventory_task_view','WAREHOUSE',to_char(it.WARE_ID))=1                 order by it.PRIORITY,it.CREATED_A"
+    }
+  ],
+  "local_pairs": [
+    {
+      "api_call_id": 69323,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "e3dadae3-3d69-452b-89fe-27fbd2327951",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:28.028553+00:00",
+        "api_call_id": 69323,
+        "response_status": 200,
+        "duration_ms": 394
+      }
+    },
+    {
+      "api_call_id": 69324,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "60831216-54aa-4148-a730-5a6b59d2f310",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:28.138943+00:00",
+        "api_call_id": 69324,
+        "response_status": 200,
+        "duration_ms": 86
+      }
+    },
+    {
+      "api_call_id": 69325,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "d8bbc055-1aed-4b57-bb25-f8ab66b11afd",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:28.374519+00:00",
+        "api_call_id": 69325,
+        "response_status": 200,
+        "duration_ms": 211
+      }
+    },
+    {
+      "api_call_id": 69326,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "83e3c307-b482-49f9-a7e9-3078b04cf9a2",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:28.879292+00:00",
+        "api_call_id": 69326,
+        "response_status": 200,
+        "duration_ms": 469
+      }
+    },
+    {
+      "api_call_id": 69327,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "f6432e2c-c31d-4bfd-9aad-95589fd8f295",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:29.148901+00:00",
+        "api_call_id": 69327,
+        "response_status": 403,
+        "duration_ms": 66
+      }
+    },
+    {
+      "api_call_id": 69328,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "8595a279-7829-4c4b-9a37-39d2444d695f",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:29.232588+00:00",
+        "api_call_id": 69328,
+        "response_status": 403,
+        "duration_ms": 62
+      }
+    },
+    {
+      "api_call_id": 69329,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "f7e605fe-7bf0-4544-8979-7ab75a30db01",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:29.372951+00:00",
+        "api_call_id": 69329,
+        "response_status": 403,
+        "duration_ms": 57
+      }
+    },
+    {
+      "api_call_id": 69330,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "05c25802-6201-49c9-a58e-51f10df5955d",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:29.583463+00:00",
+        "api_call_id": 69330,
+        "response_status": 403,
+        "duration_ms": 185
+      }
+    },
+    {
+      "api_call_id": 69331,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "4efb4529-d27a-4563-8376-79fedd7acfb3",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:29.716228+00:00",
+        "api_call_id": 69331,
+        "response_status": 403,
+        "duration_ms": 92
+      }
+    },
+    {
+      "api_call_id": 69332,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "cfb21fdc-455b-4a8b-b904-b1bf38132bdb",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:30.027075+00:00",
+        "api_call_id": 69332,
+        "response_status": 403,
+        "duration_ms": 286
+      }
+    },
+    {
+      "api_call_id": 69333,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "522851ae-cc5a-46fb-a505-9c9a75829c2d",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:30.101810+00:00",
+        "api_call_id": 69333,
+        "response_status": 403,
+        "duration_ms": 53
+      }
+    },
+    {
+      "api_call_id": 69334,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "5c723024-047a-4e99-97cf-5c56b373f893",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:30.181760+00:00",
+        "api_call_id": 69334,
+        "response_status": 403,
+        "duration_ms": 56
+      }
+    },
+    {
+      "api_call_id": 69335,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "239dffaa-681d-4dc0-9906-47e2b6a244cd",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:30.336506+00:00",
+        "api_call_id": 69335,
+        "response_status": 200,
+        "duration_ms": 54
+      }
+    },
+    {
+      "api_call_id": 69336,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "72bdaec9-8bd7-4b6a-b946-c7e7283dd7ea",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:30.408961+00:00",
+        "api_call_id": 69336,
+        "response_status": 200,
+        "duration_ms": 49
+      }
+    },
+    {
+      "api_call_id": 69337,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "88e2cabd-d1ea-4980-9184-39e123754a9b",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:30.522021+00:00",
+        "api_call_id": 69337,
+        "response_status": 200,
+        "duration_ms": 85
+      }
+    },
+    {
+      "api_call_id": 69338,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "09f01360-7841-43a5-b4cc-cdccb5ec33a6",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:30.850247+00:00",
+        "api_call_id": 69338,
+        "response_status": 200,
+        "duration_ms": 300
+      }
+    },
+    {
+      "api_call_id": 69339,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "f7742847-9d4e-46aa-a589-84955a57faa4",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:30.977735+00:00",
+        "api_call_id": 69339,
+        "response_status": 403,
+        "duration_ms": 105
+      }
+    },
+    {
+      "api_call_id": 69340,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "91622fea-15ff-46d7-8a31-cc1887822ae5",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:31.056753+00:00",
+        "api_call_id": 69340,
+        "response_status": 403,
+        "duration_ms": 53
+      }
+    },
+    {
+      "api_call_id": 69341,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "df78f143-9b09-49e9-bae0-66fc1ac891f4",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:31.167486+00:00",
+        "api_call_id": 69341,
+        "response_status": 403,
+        "duration_ms": 57
+      }
+    },
+    {
+      "api_call_id": 69342,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "20a88abf-807a-4436-a895-455c6a25711c",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:31.439874+00:00",
+        "api_call_id": 69342,
+        "response_status": 403,
+        "duration_ms": 227
+      }
+    },
+    {
+      "api_call_id": 69343,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "f6bf1ed3-54dc-427e-9ee5-9a0aa974e8a2",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:31.514886+00:00",
+        "api_call_id": 69343,
+        "response_status": 403,
+        "duration_ms": 54
+      }
+    },
+    {
+      "api_call_id": 69344,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "d4bba35d-2ade-46c0-a76b-54effd29f844",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:31.787737+00:00",
+        "api_call_id": 69344,
+        "response_status": 403,
+        "duration_ms": 248
+      }
+    },
+    {
+      "api_call_id": 69345,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "3ce382b8-0e4a-453b-8ead-1eebae32d258",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:31.924169+00:00",
+        "api_call_id": 69345,
+        "response_status": 403,
+        "duration_ms": 98
+      }
+    },
+    {
+      "api_call_id": 69346,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "5a13d92f-d72b-4b32-a784-dd2a5c7989ba",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:32.022961+00:00",
+        "api_call_id": 69346,
+        "response_status": 403,
+        "duration_ms": 76
+      }
+    },
+    {
+      "api_call_id": 69347,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "2cc4b884-93b2-48af-8228-45b302aead74",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:32.187248+00:00",
+        "api_call_id": 69347,
+        "response_status": 200,
+        "duration_ms": 80
+      }
+    },
+    {
+      "api_call_id": 69348,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "6e1fe753-5f70-4b1d-9bc6-1437ad34a5a0",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:32.502060+00:00",
+        "api_call_id": 69348,
+        "response_status": 200,
+        "duration_ms": 290
+      }
+    },
+    {
+      "api_call_id": 69349,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "3dc05e08-5784-4590-8a19-d15f065cb2e6",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:32.588384+00:00",
+        "api_call_id": 69349,
+        "response_status": 403,
+        "duration_ms": 59
+      }
+    },
+    {
+      "api_call_id": 69350,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "af55e608-2bef-41bf-ab59-b1162e5b3193",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:32.725806+00:00",
+        "api_call_id": 69350,
+        "response_status": 403,
+        "duration_ms": 90
+      }
+    },
+    {
+      "api_call_id": 69351,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "fe94d773-2fa1-4b03-a395-44485417765e",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:33.023085+00:00",
+        "api_call_id": 69351,
+        "response_status": 403,
+        "duration_ms": 276
+      }
+    },
+    {
+      "api_call_id": 69352,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "bce21969-0c78-469e-b210-b6b29344ce3a",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:33.101229+00:00",
+        "api_call_id": 69352,
+        "response_status": 403,
+        "duration_ms": 56
+      }
+    },
+    {
+      "api_call_id": 69353,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "c70abe9a-1763-4250-a027-f5e083b02b84",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:33.339718+00:00",
+        "api_call_id": 69353,
+        "response_status": 403,
+        "duration_ms": 216
+      }
+    },
+    {
+      "api_call_id": 69354,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "316c9226-e01b-444d-be64-1f505d9c67d7",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:30:33.414982+00:00",
+        "api_call_id": 69354,
+        "response_status": 403,
+        "duration_ms": 52
+      }
+    },
+    {
+      "api_call_id": 69355,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "1f1b4750-313b-4ad1-b366-94bdae04f2c4",
+        "method": "GET",
+        "path": "/api/inventory/recovery-shorts",
+        "logged_at": "2026-10-15T20:30:33.499496+00:00",
+        "api_call_id": 69355,
+        "response_status": 403,
+        "duration_ms": 59
+      }
+    },
+    {
+      "api_call_id": 69356,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "2b129b9b-f3a6-431c-a3d2-3ef0eed54dfd",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:33:14.387836+00:00",
+        "api_call_id": 69356,
+        "response_status": 200,
+        "duration_ms": 41
+      }
+    },
+    {
+      "api_call_id": 69357,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "cb5d0f4a-b06f-4017-b2a9-20e3fb143014",
+        "method": "GET",
+        "path": "/api/inventory/tasks",
+        "logged_at": "2026-10-15T20:33:14.449472+00:00",
+        "api_call_id": 69357,
+        "response_status": 200,
+        "duration_ms": 44
+      }
+    }
+  ],
+  "max_http_ms": 469,
+  "decision": "Keep actual warehouse/native authority predicate BEFORE rownum, cap100, exact task ID and same READ ONLY UOW. No global default bypass/cache. Inventory owner measures live positive recovery rows and per-WARE plans at pilot scale; add an index only after repeated cost/plan evidence. Cumulative means are not scenario p95; old global recovery750ms remains historical.",
+  "limits": "HTTP latest100 exact2 paths since fixed API ID; slow latest501; local8MiB/12000lines;10 matching cumulative cursors. Recovery positive-content case still missing in current DEV."
+}

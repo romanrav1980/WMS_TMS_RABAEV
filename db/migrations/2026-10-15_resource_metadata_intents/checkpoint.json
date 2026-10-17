@@ -1,0 +1,79 @@
+{
+  "status": "FROZEN_PREPARED_NOT_APPLIED",
+  "sources": [
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE",
+      "file": "before_case_spec.sql",
+      "source_sha256": "6dfb49a0f85cffa23d687da6326a9f261707de8df61ae33b6afcd5736657de2a"
+    },
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE BODY",
+      "file": "before_case_body.sql",
+      "source_sha256": "b8bd28cbbf821cc3872079afdc60773c3eaf952db6f2d223369ba35831420644"
+    },
+    {
+      "name": "RRL_WTASK_ASSIGN_API",
+      "type": "PACKAGE",
+      "file": "before_task_spec.sql",
+      "source_sha256": "e44625e5d3d047fe94eda51bd4f67279dd2ce220c6f0e1576a0eae432c11c698"
+    },
+    {
+      "name": "RRL_WTASK_ASSIGN_API",
+      "type": "PACKAGE BODY",
+      "file": "before_task_body.sql",
+      "source_sha256": "e67191f572b756b63a28caec0ae23c60ad3fc16f98cbc0c0e125ae7a190a753f"
+    }
+  ],
+  "migration_id": "2026-10-15-resource-metadata-intents",
+  "after_sources": [
+    {
+      "name": "RRL_RESOURCE_INTENT_API",
+      "type": "PACKAGE",
+      "file": "spec.sql",
+      "source_sha256": "fd0d00a6a92c0e3c95b2897e3c9ef098901cce864aa2c6142583eee433553027"
+    },
+    {
+      "name": "RRL_RESOURCE_INTENT_API",
+      "type": "PACKAGE BODY",
+      "file": "body.sql",
+      "source_sha256": "8c7e02857a46ad53541e3a3e8ed5515772e2c30dc9e19616919e251666ba4c8f"
+    },
+    {
+      "name": "RRL_RESOURCE_INTENT_GUARD",
+      "type": "TRIGGER",
+      "file": "guards.sql",
+      "source_sha256": "8b8f6744c8fd5bdf1369ed3acdc4d92366205552c7e0072c56a621b1df378613"
+    },
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE",
+      "file": "case_spec.sql",
+      "source_sha256": "94fcdb300ba0a20eb7d9292a22971deeb4abc2d3411889b1449713b107f695a8"
+    },
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE BODY",
+      "file": "case_body.sql",
+      "source_sha256": "17a13dc2439099f91cc0bf9207171609f5c15d76d704c8c3465a34018b48545b"
+    },
+    {
+      "name": "RRL_WTASK_ASSIGN_API",
+      "type": "PACKAGE",
+      "file": "task_spec.sql",
+      "source_sha256": "23bd19364fa343539d391aa9757b4d4abe57b387960c7ef587948c29e78a1d2e"
+    },
+    {
+      "name": "RRL_WTASK_ASSIGN_API",
+      "type": "PACKAGE BODY",
+      "file": "task_body.sql",
+      "source_sha256": "cc331abbe38b775069ff9355b5a5e8063196ef0409cec017b4d2c84e9ee24d7d"
+    }
+  ],
+  "rollback": "Exact 7 applied sources and zero tombstone rows only; preserve nonempty history/forward repair",
+  "baseline_invalid": 0,
+  "namespace_context": "not globally visible; CREATE stops on collision",
+  "offline_tests": "29 mocked boundary/API PASS; quality gate1069/0cycles/debt72+24tooling+bothTS PASS; UTF8 encoding PASS",
+  "runtime": "NOT_RUN_BY_AUTHOR"
+}

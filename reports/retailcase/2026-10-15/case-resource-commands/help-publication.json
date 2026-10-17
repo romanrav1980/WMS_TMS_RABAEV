@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "articles": [
+    {
+      "article_id": "case-work",
+      "version": 3,
+      "source_revision": "6232c3c4c9a31ed73e4fe5e9df6bc2b62907fcb47a9c1b54f3d809ac28c58b07",
+      "related": 2
+    }
+  ],
+  "stock_effect": "NONE"
+}

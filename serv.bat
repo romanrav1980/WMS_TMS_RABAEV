@@ -59,7 +59,10 @@ echo   WMS_API_AUDIT_ENABLED=%WMS_API_AUDIT_ENABLED%
 echo   WMS_ADMIN_AUTH_ENABLED=%WMS_ADMIN_AUTH_ENABLED%
 echo   Admin users are read from Oracle RUSERS/USER_GROUP/RIGHTS
 echo   URL=http://%LOCAL_HOST%:%API_PORT%/docs
-"%PYTHON_CMD%" -m uvicorn app.main:app --host %API_HOST% --port %API_PORT% --reload --no-use-colors
+set "API_RELOAD_ARG=--reload"
+rem Stable integration runs can disable the Windows reload supervisor.
+if "%TMS_API_RELOAD%"=="0" set "API_RELOAD_ARG="
+"%PYTHON_CMD%" -m uvicorn app.main:app --host %API_HOST% --port %API_PORT% %API_RELOAD_ARG% --no-use-colors
 
 color 80
 echo Server exited. You can close this window.

@@ -1,0 +1,18 @@
+{
+  "migration_id": "2026-10-15-transport-time-scoped-view",
+  "git_head": "41c913cf44441cf3656a66b0939e40cb9a83c365",
+  "target": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "invalid_before": 0,
+  "sha256": {
+    "apply.sql": "68c9826247c153bdd0aed3fd98a097856f8452a58086d9355458b11e866a102b",
+    "before_rrl_tt_time_api.sql": "d15318ff2db59d98d1650224f89f3059a668dc35d63e1e3e08123751feccf9f8",
+    "rollback.sql": "f1604996b3b8e4331d78bee3b13b13fdc07b6e9b98d2b5944a7af2ef5c805c97",
+    "rrl_tt_time_api.sql": "c609a0cb15e6c7b6c30beb1ea89aa65a0401c62bfaa93736b728f90cf9e223f1",
+    "verify.sql": "3d3f8466787a3e9d2aabd633d8d39ada21b012810a8fc7ef0b56d464cb941c46"
+  },
+  "state": "PREPARED",
+  "authorization": "Owner directs all AK/KH sprints and all-resource Gantt"
+}

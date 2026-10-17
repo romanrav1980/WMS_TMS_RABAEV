@@ -1,0 +1,125 @@
+{
+  "$defs": {
+    "ScaleSample": {
+      "additionalProperties": false,
+      "properties": {
+        "offset_ms": {
+          "maximum": 10000,
+          "minimum": 0,
+          "title": "Offset Ms",
+          "type": "integer"
+        },
+        "gross_weight_kg": {
+          "pattern": "^[0-9]{1,18}(\\.[0-9]{1,9})?$",
+          "title": "Gross Weight Kg",
+          "type": "string"
+        }
+      },
+      "required": [
+        "offset_ms",
+        "gross_weight_kg"
+      ],
+      "title": "ScaleSample",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "device_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Device Id",
+      "type": "string"
+    },
+    "capture_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Capture Id",
+      "type": "string"
+    },
+    "load_operation_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Load Operation Id",
+      "type": "string"
+    },
+    "store_address": {
+      "maxLength": 255,
+      "minLength": 1,
+      "title": "Store Address",
+      "type": "string"
+    },
+    "device_policy_version": {
+      "minimum": 1,
+      "title": "Device Policy Version",
+      "type": "integer"
+    },
+    "calibration_ref": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Calibration Ref",
+      "type": "string"
+    },
+    "unit": {
+      "const": "KG",
+      "title": "Unit",
+      "type": "string"
+    },
+    "basis": {
+      "const": "GROSS",
+      "title": "Basis",
+      "type": "string"
+    },
+    "preset_tare_kg": {
+      "const": "0",
+      "title": "Preset Tare Kg",
+      "type": "string"
+    },
+    "zero_confirmed": {
+      "title": "Zero Confirmed",
+      "type": "boolean"
+    },
+    "zero_check_kg": {
+      "pattern": "^-?[0-9]{1,18}(\\.[0-9]{1,9})?$",
+      "title": "Zero Check Kg",
+      "type": "string"
+    },
+    "zero_check_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}\\+00:00$",
+      "title": "Zero Check At",
+      "type": "string"
+    },
+    "measured_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}\\+00:00$",
+      "title": "Measured At",
+      "type": "string"
+    },
+    "samples": {
+      "items": {
+        "$ref": "#/$defs/ScaleSample"
+      },
+      "maxItems": 25,
+      "minItems": 5,
+      "title": "Samples",
+      "type": "array"
+    }
+  },
+  "required": [
+    "device_id",
+    "capture_id",
+    "load_operation_id",
+    "store_address",
+    "device_policy_version",
+    "calibration_ref",
+    "unit",
+    "basis",
+    "preset_tare_kg",
+    "zero_confirmed",
+    "zero_check_kg",
+    "zero_check_at",
+    "measured_at",
+    "samples"
+  ],
+  "title": "ScalePacket",
+  "type": "object"
+}

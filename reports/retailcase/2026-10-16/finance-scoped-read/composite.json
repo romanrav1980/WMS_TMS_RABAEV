@@ -1,0 +1,420 @@
+{
+  "state": "PASS_FINANCE_COMPOSITE_ALL_WARE_REVOKE_GROUP_INVOICE_COMPATIBILITY_RETIRED",
+  "actor": "FC16Od6d9d61171",
+  "role": "FC16Rd6d9d61171",
+  "group": "FC16Gd6d9d61171",
+  "trip": 31050,
+  "warehouses": [
+    9201,
+    9202
+  ],
+  "commands": {
+    "ROLE": {
+      "wire": {
+        "operation_id": "FC16.d6d9d61171.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "FC16Rd6d9d61171",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "transport_dispatch_view"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FC16.d6d9d61171.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "FC16Rd6d9d61171",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "WARE1": {
+      "wire": {
+        "operation_id": "FC16.d6d9d61171.WARE1",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "FC16.d6d9d61171.A1",
+          "username": "FC16Od6d9d61171",
+          "role_id": "FC16Rd6d9d61171",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "9201",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T17:30:01.380227+00:00",
+          "valid_until": "2026-10-16T17:56:01.380227+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FC16.d6d9d61171.WARE1",
+        "command_type": "ASSIGN",
+        "object_id": "FC16.d6d9d61171.A1",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "WARE2": {
+      "wire": {
+        "operation_id": "FC16.d6d9d61171.WARE2",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "FC16.d6d9d61171.A2",
+          "username": "FC16Od6d9d61171",
+          "role_id": "FC16Rd6d9d61171",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "9202",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T17:30:01.380227+00:00",
+          "valid_until": "2026-10-16T17:56:01.380227+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FC16.d6d9d61171.WARE2",
+        "command_type": "ASSIGN",
+        "object_id": "FC16.d6d9d61171.A2",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "REVOKE1": {
+      "wire": {
+        "operation_id": "FC16.d6d9d61171.REVOKE1",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "FC16.d6d9d61171.A1",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FC16.d6d9d61171.REVOKE1",
+        "command_type": "REVOKE",
+        "object_id": "FC16.d6d9d61171.A1",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "REVOKE2": {
+      "wire": {
+        "operation_id": "FC16.d6d9d61171.REVOKE2",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "FC16.d6d9d61171.A2",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FC16.d6d9d61171.REVOKE2",
+        "command_type": "REVOKE",
+        "object_id": "FC16.d6d9d61171.A2",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP": {
+      "wire": {
+        "operation_id": "FC16.d6d9d61171.GROUP",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "group_id": "FC16Gd6d9d61171",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "9201"
+            },
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "9202"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FC16.d6d9d61171.GROUP",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FC16Gd6d9d61171",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.ASSIGN": {
+      "wire": {
+        "operation_id": "FC16.d6d9d61171.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "FC16.d6d9d61171.AG",
+          "username": "FC16Od6d9d61171",
+          "role_id": "FC16Rd6d9d61171",
+          "scope_kind": "GROUP",
+          "scope_id": "FC16Gd6d9d61171",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T17:30:01.380227+00:00",
+          "valid_until": "2026-10-16T17:56:01.380227+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FC16.d6d9d61171.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "FC16.d6d9d61171.AG",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.REMOVE": {
+      "wire": {
+        "operation_id": "FC16.d6d9d61171.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "group_id": "FC16Gd6d9d61171",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "9201"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FC16.d6d9d61171.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FC16Gd6d9d61171",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP.RESTORE": {
+      "wire": {
+        "operation_id": "FC16.d6d9d61171.GROUP.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 2,
+          "group_id": "FC16Gd6d9d61171",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "9201"
+            },
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "9202"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FC16.d6d9d61171.GROUP.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FC16Gd6d9d61171",
+        "version": 3,
+        "replayed": false
+      }
+    },
+    "GROUP.REVOKE": {
+      "wire": {
+        "operation_id": "FC16.d6d9d61171.GROUP.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "FC16.d6d9d61171.AG",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FC16.d6d9d61171.GROUP.REVOKE",
+        "command_type": "REVOKE",
+        "object_id": "FC16.d6d9d61171.AG",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "ROLE.RETIRE": {
+      "wire": {
+        "operation_id": "FC16.d6d9d61171.ROLE.RETIRE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "FC16Rd6d9d61171",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "transport_dispatch_view"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FC16.d6d9d61171.ROLE.RETIRE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "FC16Rd6d9d61171",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP.RETIRE": {
+      "wire": {
+        "operation_id": "FC16.d6d9d61171.GROUP.RETIRE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 3,
+          "group_id": "FC16Gd6d9d61171",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "9201"
+            },
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "9202"
+            }
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FC16.d6d9d61171.GROUP.RETIRE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FC16Gd6d9d61171",
+        "version": 4,
+        "replayed": false
+      }
+    }
+  },
+  "http": [
+    {
+      "label": "before_grants",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "status": 403,
+      "api_call_id": "70351",
+      "request_id": "7d6f15e2-1b5b-4f80-af94-95f5deef2ccd"
+    },
+    {
+      "label": "partial_object_denied",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "status": 403,
+      "api_call_id": "70352",
+      "request_id": "1f2810e5-d039-48b8-b14c-5787c053c55d"
+    },
+    {
+      "label": "all_object_warehouses",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "status": 200,
+      "api_call_id": "70353",
+      "request_id": "c646af0b-f8bf-44d8-b14b-12cebcb55bf4"
+    },
+    {
+      "label": "foreign_trip",
+      "path": "/api/finance/logistics-costs/trips/33641",
+      "status": 403,
+      "api_call_id": "70354",
+      "request_id": "42704a88-f457-49b6-9383-b35038024ae3"
+    },
+    {
+      "label": "revoked_one_warehouse",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "status": 403,
+      "api_call_id": "70355",
+      "request_id": "f349c5be-7634-4a34-916c-181a6353d435"
+    },
+    {
+      "label": "group_complete",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "status": 200,
+      "api_call_id": "70356",
+      "request_id": "04890d46-3f7e-4f77-910e-70f60636c314"
+    },
+    {
+      "label": "group_partial_denied",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "status": 403,
+      "api_call_id": "70357",
+      "request_id": "d538c700-4084-4901-a3b3-9b88afb3bcee"
+    },
+    {
+      "label": "group_restored",
+      "path": "/api/finance/logistics-costs/trips/31050",
+      "status": 200,
+      "api_call_id": "70358",
+      "request_id": "f8826b6b-11a7-498c-9f59-484fbb20f255"
+    },
+    {
+      "label": "invoice_admin",
+      "path": "/api/finance/logistics-costs/billing-orders/1",
+      "status": 200,
+      "api_call_id": "70359",
+      "request_id": "108730ac-e1b3-4ea5-b0ba-e74cd36b52b7"
+    },
+    {
+      "label": "invoice_scope_denied",
+      "path": "/api/finance/logistics-costs/billing-orders/1",
+      "status": 403,
+      "api_call_id": "70360",
+      "request_id": "5729d966-9bd9-4bd1-9837-0620a1b875d9"
+    },
+    {
+      "label": "invoice_admin/summary",
+      "path": "/api/finance/logistics-costs/billing-orders/1/summary",
+      "status": 200,
+      "api_call_id": "70361",
+      "request_id": "feb5479f-7938-4c9f-9fe2-2e91939b9464"
+    },
+    {
+      "label": "invoice_scope_denied/summary",
+      "path": "/api/finance/logistics-costs/billing-orders/1/summary",
+      "status": 403,
+      "api_call_id": "70362",
+      "request_id": "0b8815ee-3c52-487a-9a5e-da7ee0993541"
+    },
+    {
+      "label": "invoice_admin/transport-costs",
+      "path": "/api/finance/logistics-costs/billing-orders/1/transport-costs",
+      "status": 200,
+      "api_call_id": "70363",
+      "request_id": "7f943970-c033-4f63-82c7-7c68de2e383b"
+    },
+    {
+      "label": "invoice_scope_denied/transport-costs",
+      "path": "/api/finance/logistics-costs/billing-orders/1/transport-costs",
+      "status": 403,
+      "api_call_id": "70364",
+      "request_id": "090ca91f-26c1-4f91-ada2-bc9b264670f3"
+    }
+  ],
+  "business_data": "READ_ONLY",
+  "finance_recognition": "NOT_EXECUTED",
+  "line_count": 0
+}

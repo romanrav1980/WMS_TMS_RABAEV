@@ -1,0 +1,1 @@
+alter trigger RRL_STORE_RECEIPT_WEIGHT_GUARD compile;

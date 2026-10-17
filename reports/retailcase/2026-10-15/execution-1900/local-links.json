@@ -1,0 +1,106 @@
+{
+  "status": "PASS",
+  "count": 20,
+  "links": [
+    {
+      "source": "reports/retailcase/2026-10-15/execution-1900/checkpoint.md",
+      "target": "../../../../wiki/roadmap/retailcase_access_knowledge_plan.md",
+      "exists": true
+    },
+    {
+      "source": "reports/retailcase/2026-10-15/execution-1900/checkpoint.md",
+      "target": "../case-work-ui/claude-review.json",
+      "exists": true
+    },
+    {
+      "source": "reports/retailcase/2026-10-15/execution-1900/checkpoint.md",
+      "target": "../task-assignment/final-verification.json",
+      "exists": true
+    },
+    {
+      "source": "reports/retailcase/2026-10-15/execution-1900/checkpoint.md",
+      "target": "../store-ui-claude-review/review.json",
+      "exists": true
+    },
+    {
+      "source": "reports/retailcase/2026-10-15/execution-1900/checkpoint.md",
+      "target": "../case-resource-commands/final-retired-verification.json",
+      "exists": true
+    },
+    {
+      "source": "reports/retailcase/2026-10-15/execution-1900/checkpoint.md",
+      "target": "../case-resource-commands/remaining-grants-retirement.json",
+      "exists": true
+    },
+    {
+      "source": "reports/retailcase/2026-10-15/execution-1900/checkpoint.md",
+      "target": "../../../../wiki/concepts/retailcase_nested_hu_consolidation_20261015.md",
+      "exists": true
+    },
+    {
+      "source": "reports/retailcase/2026-10-15/execution-1900/checkpoint.md",
+      "target": "../case-work-ui/sql-review.json",
+      "exists": true
+    },
+    {
+      "source": "reports/retailcase/2026-10-15/execution-1900/checkpoint.md",
+      "target": "../case-resource-commands/final-sql-review.json",
+      "exists": true
+    },
+    {
+      "source": "reports/retailcase/2026-10-15/execution-1900/checkpoint.md",
+      "target": "../../../../docs/integrations/weighing-gateway-opc40200.md",
+      "exists": true
+    },
+    {
+      "source": "reports/retailcase/2026-10-15/execution-1900/checkpoint.md",
+      "target": "independent-synthesis-review.json",
+      "exists": true
+    },
+    {
+      "source": "reports/retailcase/2026-10-15/execution-1900/checkpoint.md",
+      "target": "end-state-readonly.json",
+      "exists": true
+    },
+    {
+      "source": "wiki/components/retailcase_case_work_ui_20261015.md",
+      "target": "../../reports/retailcase/2026-10-15/case-work-ui/root-rendered-mocked.json",
+      "exists": true
+    },
+    {
+      "source": "wiki/components/retailcase_case_work_ui_20261015.md",
+      "target": "../../reports/retailcase/2026-10-15/case-work-ui/production-native-read.json",
+      "exists": true
+    },
+    {
+      "source": "wiki/components/retailcase_case_work_ui_20261015.md",
+      "target": "../../reports/retailcase/2026-10-15/case-work-ui/sql-review.json",
+      "exists": true
+    },
+    {
+      "source": "wiki/components/retailcase_case_work_ui_20261015.md",
+      "target": "../../reports/retailcase/2026-10-15/case-resource-commands/final-retired-verification.json",
+      "exists": true
+    },
+    {
+      "source": "wiki/components/retailcase_case_work_ui_20261015.md",
+      "target": "../../reports/retailcase/2026-10-15/case-resource-commands/remaining-grants-retirement.json",
+      "exists": true
+    },
+    {
+      "source": "wiki/concepts/retailcase_nested_hu_consolidation_20261015.md",
+      "target": "../../reports/retailcase/2026-10-15/nested-hu-audit/",
+      "exists": true
+    },
+    {
+      "source": "wiki/concepts/retailcase_nested_hu_consolidation_20261015.md",
+      "target": "../../docs/integrations/shipping-gross-proposed.md",
+      "exists": true
+    },
+    {
+      "source": "wiki/concepts/retailcase_nested_hu_consolidation_20261015.md",
+      "target": "../../reports/retailcase/2026-10-15/nested-hu-audit/",
+      "exists": true
+    }
+  ]
+}

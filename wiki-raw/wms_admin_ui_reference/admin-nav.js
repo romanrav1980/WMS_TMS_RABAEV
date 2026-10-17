@@ -87,3 +87,68 @@ function escapeNavAttr(value) {
 }
 
 renderWmsAdminNav();
+
+/* Native-навигация (C0122): права по области не попадают в плоский auth.permissions, поэтому пункты с готовой
+   READ capability из /api/access/workspaces раскрываются отдельно. Это только навигация (navigation_only):
+   операции и данные по-прежнему проверяет сервер. Текущий склад из адреса (warehouse_id) переносится в ссылку. */
+const WMS_NATIVE_NAV = { "case-pick-management": "picking", "case-pick-tsd": "picking", "transport-loading": "dispatch", "warehouse-hus": "warehouse_tasks" };
+
+window.wmsNativeAccess = (() => {
+  let cacheKey = null, cache = null;
+  function load() {
+    const auth = window.wmsAdminAuth;
+    if (!auth?.state?.user) return Promise.resolve(null);
+    const key = auth.state.apiBase + ":" + auth.state.user.username;
+    if (cacheKey !== key) {
+      cacheKey = key;
+      cache = fetch(auth.state.apiBase + "/api/access/workspaces", { headers: auth.headers(), cache: "no-store" })
+        .then(r => r.ok ? r.json() : Promise.reject(Object.assign(new Error("HTTP " + r.status), { status: r.status })));
+      cache.catch(() => { cacheKey = null; });
+    }
+    return cache;
+  }
+  const warehouseFromUrl = () => new URLSearchParams(location.search).get("warehouse_id")?.replace(/\D/g, "") || "";
+  async function warehouses(capability) {
+    const data = await load();
+    return (data?.warehouses || []).filter(w => w.capabilities?.[capability] === true).map(w => String(w.warehouse_id));
+  }
+  /** Показать элемент: плоское право legacy ИЛИ native capability хотя бы одного склада (сервер решит по операции). */
+  async function allows(capabilities, flat) {
+    if (flat && window.wmsAdminAuth?.hasPermission(flat)) return true;
+    for (const cap of capabilities) { try { if ((await warehouses(cap)).length) return true; } catch { /* нет ответа — закрыто */ } }
+    return false;
+  }
+  async function applyNav() {
+    const wh = warehouseFromUrl();
+    for (const [key, cap] of Object.entries(WMS_NATIVE_NAV)) {
+      const item = WMS_ADMIN_NAV_ITEMS.find(i => i.key === key);
+      let list = [];
+      try { list = await warehouses(cap); } catch { continue; }
+      document.querySelectorAll(`[data-admin-nav] a[href="${escapeNavAttr(item.href)}"], [data-admin-nav] a[href^="${escapeNavAttr(item.href)}?"]`).forEach(link => {
+        if (list.length) { link.hidden = false; link.dataset.nativeCapability = cap; }
+        link.setAttribute("href", wh && list.includes(wh) ? item.href + "?warehouse_id=" + wh : item.href);
+      });
+    }
+  }
+  function deny() {
+    const workspace = document.querySelector(".workspace");
+    if (!workspace || workspace.querySelector(":scope > .native-denied")) return;
+    // Разметку страницы не удаляем (её скрипты могут ещё привязывать обработчики) — только скрываем.
+    [...workspace.children].forEach(node => { node.hidden = true; });
+    workspace.insertAdjacentHTML("beforeend", '<section class="admin-page native-denied"><article class="panel access-denied"><h2>Нет прав на этот раздел</h2>'
+      + "<p>Нет права legacy и нет готовой возможности ни по одному складу. Доступ определяет сервер.</p></article></section>");
+  }
+  async function applyPage() {
+    const page = document.body.dataset.nativePage;
+    if (page && !(await allows(page.split(/\s+/), document.body.dataset.flatPermission))) { deny(); return; }
+    for (const node of document.querySelectorAll("[data-native-capability]:not(a)")) {
+      node.hidden = !(await allows(node.dataset.nativeCapability.split(/\s+/), node.dataset.flatPermission));
+    }
+  }
+  function apply() { if (window.wmsAdminAuth?.state?.user) { applyNav(); applyPage(); } }
+  let pending = document.body.classList.contains("auth-pending");
+  new MutationObserver(() => { const now = document.body.classList.contains("auth-pending"); if (pending && !now) apply(); pending = now; })
+    .observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  window.addEventListener("wms-admin-auth-ready", apply);
+  return { load, warehouses, allows, warehouseFromUrl, apply };
+})();

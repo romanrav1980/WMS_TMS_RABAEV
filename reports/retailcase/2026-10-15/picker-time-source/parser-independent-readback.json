@@ -1,0 +1,33 @@
+{
+  "status": "PASS_READBACK_HISTORY_PRESERVED",
+  "sources": [
+    {
+      "type": "PACKAGE",
+      "sha256": "DD146D61195506D9E33029E048E2CDF85DB62F6940DA9FA5637173994C96BB95"
+    },
+    {
+      "type": "PACKAGE BODY",
+      "sha256": "9006A19AB62C2CFA1A872DA10D5DFF5E7C6E658EC83242CB3E01135AC40B5977"
+    }
+  ],
+  "counts": [
+    {
+      "streams": 1,
+      "events": 6,
+      "spans": 3,
+      "commands": 7
+    }
+  ],
+  "ledger": [
+    {
+      "migration_id": "2026-10-15-picker-actual-time-source",
+      "status": "APPLIED"
+    },
+    {
+      "migration_id": "2026-10-15-picker-time-read-parser",
+      "status": "APPLIED"
+    }
+  ],
+  "invalid": 0,
+  "quantity_writes": false
+}

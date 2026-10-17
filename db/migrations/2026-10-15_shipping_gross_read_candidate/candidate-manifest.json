@@ -1,0 +1,23 @@
+{
+  "status": "PREPARED_SOURCE_CANDIDATE_NOT_INSTALLABLE",
+  "ddl_executed": false,
+  "native_acceptance": false,
+  "before": "reports/retailcase/2026-10-15/shipping-gross-read/before/manifest.json",
+  "purity": "reports/retailcase/2026-10-15/shipping-gross-read/purity/manifest.json",
+  "files": {
+    "spec.sql": "b6eb450e8c47c9dce6bf2c0fc9af9f6206622960ac5215e4667459cec1b6b2dc",
+    "body.sql": "7e2cb98be837fd163b979a2ac44d72d8d26b0dd0e428d8168645be7f81c2a7b8",
+    "hu_ship_spec.sql": "d1b0ec51325d3e996c3110664b774cb441bd2c0f16a67470ceced3180f8bd25f",
+    "README.md": "3d31e5d64cf2afea7f6626ada4b3003025be03a9c0e3f31d2328aa7611795e96"
+  },
+  "root_review": "V8_EXPECTATION_TOKEN_ADDED_FULL_FREEZE_PURITY_RELEASE_PENDING",
+  "root_review_before": "reports/retailcase/2026-10-15/shipping-gross-read/root-review-before",
+  "native_helpers": "reports/retailcase/2026-10-15/shipping-gross-read/canonical-native-probe.json",
+  "documentation_review": "V7 candidate helper source updated, no DDL; previous code and manifest retained. Full freeze remains unaccepted.",
+  "native_helpers_v7": [
+    "reports/retailcase/2026-10-15/shipping-gross-read/canonical-native-stress-v7.json",
+    "reports/retailcase/2026-10-15/shipping-gross-read/canonical-native-probe-v7-split.json"
+  ],
+  "before_v7": "reports/retailcase/2026-10-15/shipping-gross-read/v7-before",
+  "consolidation_checkpoint": "reports/retailcase/2026-10-16/consolidation-manifest/root-readback.json"
+}

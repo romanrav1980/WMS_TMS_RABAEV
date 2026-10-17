@@ -1,0 +1,473 @@
+{
+  "state": "PASS_CANCEL_ACCESS_RETIRED_SQL_REVIEW",
+  "http": [
+    {
+      "api_call_id": 69409,
+      "request_id": "a0ea4e59-ec72-43eb-b5b6-d2cb89538169",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "response_status": 200,
+      "duration_ms": 648
+    },
+    {
+      "api_call_id": 69410,
+      "request_id": "132aaf88-3f5f-4437-9b66-eb5a012cd9ce",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "response_status": 200,
+      "duration_ms": 145
+    },
+    {
+      "api_call_id": 69411,
+      "request_id": "67c4cbb9-f523-4d38-888f-fa5ad69cd232",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "response_status": 409,
+      "duration_ms": 105
+    },
+    {
+      "api_call_id": 69412,
+      "request_id": "9ac02f20-a4de-49f8-bc14-350c8bb29d6d",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "response_status": 200,
+      "duration_ms": 109
+    },
+    {
+      "api_call_id": 69413,
+      "request_id": "d39d73bd-5579-421b-97d3-224942f41e62",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "response_status": 200,
+      "duration_ms": 150
+    },
+    {
+      "api_call_id": 69414,
+      "request_id": "12c7b63f-de3b-421a-bdef-1bb86e85e630",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "response_status": 200,
+      "duration_ms": 141
+    },
+    {
+      "api_call_id": 69415,
+      "request_id": "c29eb233-39f3-40d4-9c6b-87a407b06fcf",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "response_status": 409,
+      "duration_ms": 105
+    },
+    {
+      "api_call_id": 69416,
+      "request_id": "9b906a5f-ba21-4176-9a30-b7a96feb381d",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "response_status": 403,
+      "duration_ms": 65
+    },
+    {
+      "api_call_id": 69417,
+      "request_id": "a7b0a228-500e-4a30-a2ad-e4a4a25bc2c6",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE",
+      "response_status": 200,
+      "duration_ms": 107
+    },
+    {
+      "api_call_id": 69418,
+      "request_id": "ae431b74-9208-44ab-8d1e-2cd148860518",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE",
+      "response_status": 200,
+      "duration_ms": 69
+    },
+    {
+      "api_call_id": 69419,
+      "request_id": "d68b96c1-ad10-49c1-a7bd-7504a7d95604",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "response_status": 403,
+      "duration_ms": 120
+    },
+    {
+      "api_call_id": 69420,
+      "request_id": "543bf40e-5905-4b0f-8e13-d06948bcafa2",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "response_status": 403,
+      "duration_ms": 71
+    },
+    {
+      "api_call_id": 69421,
+      "request_id": "81150870-2109-40ac-a1a1-dcdd4843948e",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE/cancel",
+      "response_status": 200,
+      "duration_ms": 78
+    },
+    {
+      "api_call_id": 69422,
+      "request_id": "bbfea4e2-e70b-42f9-af04-24a2e0ae6c8b",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE/cancel",
+      "response_status": 200,
+      "duration_ms": 70
+    },
+    {
+      "api_call_id": 69423,
+      "request_id": "8c8bdcd2-9461-490f-816d-e0056a2bfec5",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE",
+      "response_status": 200,
+      "duration_ms": 50
+    },
+    {
+      "api_call_id": 69424,
+      "request_id": "1b7b0c53-6f17-453e-a0e2-1454b4ed3a6b",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE/cancel",
+      "response_status": 409,
+      "duration_ms": 113
+    }
+  ],
+  "stock_changed": false,
+  "hardware_verified": false,
+  "cancel_request": {
+    "operation_id": "CM16.4c03ea49b7.FUTURE.CANCEL",
+    "expected_version": 1,
+    "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+  },
+  "slow": [
+    {
+      "log_id": 4948,
+      "api_call_id": 69411,
+      "elapsed_ms": 48,
+      "module": "WMS_API:69411",
+      "action": "PUT /api/consolidation-plans/CM1",
+      "sql_sample": "Save expected consolidation and immutable receipt"
+    },
+    {
+      "log_id": 4949,
+      "api_call_id": 69415,
+      "elapsed_ms": 53,
+      "module": "WMS_API:69415",
+      "action": "PUT /api/consolidation-plans/CM1",
+      "sql_sample": "Save expected consolidation and immutable receipt"
+    },
+    {
+      "log_id": 4950,
+      "api_call_id": 69416,
+      "elapsed_ms": 16,
+      "module": "WMS_API:69416",
+      "action": "PUT /api/consolidation-plans/CM1",
+      "sql_sample": "Save expected consolidation and immutable receipt"
+    },
+    {
+      "log_id": 4951,
+      "api_call_id": 69419,
+      "elapsed_ms": 15,
+      "module": "WMS_API:69419",
+      "action": "GET /api/consolidation-plans/CM1",
+      "sql_sample": "Read current expected consolidation membership"
+    },
+    {
+      "log_id": 4952,
+      "api_call_id": 69420,
+      "elapsed_ms": 12,
+      "module": "WMS_API:69420",
+      "action": "PUT /api/consolidation-plans/CM1",
+      "sql_sample": "Save expected consolidation and immutable receipt"
+    },
+    {
+      "log_id": 4953,
+      "api_call_id": 69424,
+      "elapsed_ms": 53,
+      "module": "WMS_API:69424",
+      "action": "POST /api/consolidation-plans/CM",
+      "sql_sample": "Save expected consolidation and immutable receipt"
+    }
+  ],
+  "native_cumulative": [
+    {
+      "sql_id": "3q4fssmjqmw69",
+      "executions": 1,
+      "avg_ms": 4953.889,
+      "avg_buffers": 3779,
+      "sql_sample": "declare n number;begin\r  select count(*)into n from USER_TAB_COLUMNS where TABLE_NAME='RRL_HU_CONSOL_PLAN';if n!=11 then raise_application_error(-20886,'CONSOL_PLAN_COLUMNS');end if;\r  select count(*)into n from USER_TAB_COLUMNS where TABLE_NAME='RRL_HU_CONSOL_MEMBER';if n!=6 then raise_application_error(-20886,'CONSOL_MEMBER_COLUMNS');end if;\r  select count(*)into n from USER_TAB_COLUMNS where TABLE_NAME='RRL_HU_CONSOL_RECEIPT';if n!=8 then raise_application_error(-20886,'CONSOL_RECEIPT_COLUMNS');end if;\r  select count(*)into n from USER_CONSTRAINTS where TABLE_NAME in('RRL_HU_CONSOL_PLAN','RRL_HU_CONSOL_MEMBER','RRL_HU_CONSOL_RECEIPT')and CONSTRAINT_TYPE in('P','U','R','C')and GENERATED='USER NAME'and STATUS='ENABLED'and VALIDATED='VALIDATED';\r  if n!=8 then raise_application_error(-20886,'CONSOL_CONSTRAINTS');end if;\r  select count(*)into n from USER_INDEXES where INDEX_NAME='RRL_HU_C"
+    },
+    {
+      "sql_id": "2znm7j098ktcb",
+      "executions": 1,
+      "avg_ms": 4051.422,
+      "avg_buffers": 3143,
+      "sql_sample": "SELECT COUNT(*)FROM USER_CONSTRAINTS WHERE TABLE_NAME IN('RRL_HU_CONSOL_PLAN','RRL_HU_CONSOL_MEMBER','RRL_HU_CONSOL_RECEIPT')AND CONSTRAINT_TYPE IN('P','U','R','C')AND GENERATED='USER NAME'AND STATUS='ENABLED'AND VALIDATED='VALIDATED'"
+    },
+    {
+      "sql_id": "an1x5prszdqct",
+      "executions": 11,
+      "avg_ms": 70.029,
+      "avg_buffers": 1441.36,
+      "sql_sample": "begin RRL_HU_CONSOL_API.execute_command(:1,:2,:3); end;"
+    },
+    {
+      "sql_id": "bjrccv7tb5vyd",
+      "executions": 1,
+      "avg_ms": 323.701,
+      "avg_buffers": 78,
+      "sql_sample": "SELECT COUNT(*)FROM USER_TAB_COLUMNS WHERE TABLE_NAME='RRL_HU_CONSOL_RECEIPT'"
+    },
+    {
+      "sql_id": "836jtjq3yjqj2",
+      "executions": 3,
+      "avg_ms": 86.991,
+      "avg_buffers": 26.67,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_HU_CONSOL_RECEIPT_GUARD'AND TYPE='TRIGGER'ORDER BY LINE"
+    },
+    {
+      "sql_id": "g60hp58vb9k49",
+      "executions": 1,
+      "avg_ms": 258.107,
+      "avg_buffers": 71,
+      "sql_sample": "SELECT COUNT(*)FROM USER_TAB_COLUMNS WHERE TABLE_NAME='RRL_HU_CONSOL_MEMBER'"
+    },
+    {
+      "sql_id": "6pmw1uhgm9cx0",
+      "executions": 3,
+      "avg_ms": 84.147,
+      "avg_buffers": 26.67,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_HU_CONSOL_PLAN_GUARD'AND TYPE='TRIGGER'ORDER BY LINE"
+    },
+    {
+      "sql_id": "fzrsaskks24s7",
+      "executions": 1,
+      "avg_ms": 250.932,
+      "avg_buffers": 87,
+      "sql_sample": "SELECT COUNT(*)FROM USER_TAB_COLUMNS WHERE TABLE_NAME='RRL_HU_CONSOL_PLAN'"
+    },
+    {
+      "sql_id": "37f0gh7zm3jd9",
+      "executions": 3,
+      "avg_ms": 79.476,
+      "avg_buffers": 27.67,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_HU_CONSOL_API'AND TYPE='PACKAGE'ORDER BY LINE"
+    },
+    {
+      "sql_id": "629thuysd46tb",
+      "executions": 3,
+      "avg_ms": 75.912,
+      "avg_buffers": 30,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_HU_CONSOL_READ'AND TYPE='PACKAGE BODY'ORDER BY LINE"
+    },
+    {
+      "sql_id": "9972x41s9swm6",
+      "executions": 3,
+      "avg_ms": 73.41,
+      "avg_buffers": 28.67,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_HU_CONSOL_API'AND TYPE='PACKAGE BODY'ORDER BY LINE"
+    },
+    {
+      "sql_id": "gd3kgjbuv4rsz",
+      "executions": 3,
+      "avg_ms": 72.686,
+      "avg_buffers": 26.67,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_HU_CONSOL_READ'AND TYPE='PACKAGE'ORDER BY LINE"
+    }
+  ],
+  "local_pairs": [
+    {
+      "api_call_id": 69409,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "a0ea4e59-ec72-43eb-b5b6-d2cb89538169",
+        "method": "PUT",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+        "logged_at": "2026-10-16T04:54:03.620699+00:00",
+        "api_call_id": 69409,
+        "response_status": 200,
+        "duration_ms": 648
+      }
+    },
+    {
+      "api_call_id": 69410,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "132aaf88-3f5f-4437-9b66-eb5a012cd9ce",
+        "method": "PUT",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+        "logged_at": "2026-10-16T04:54:03.792091+00:00",
+        "api_call_id": 69410,
+        "response_status": 200,
+        "duration_ms": 145
+      }
+    },
+    {
+      "api_call_id": 69411,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "67c4cbb9-f523-4d38-888f-fa5ad69cd232",
+        "method": "PUT",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+        "logged_at": "2026-10-16T04:54:03.920461+00:00",
+        "api_call_id": 69411,
+        "response_status": 409,
+        "duration_ms": 105
+      }
+    },
+    {
+      "api_call_id": 69412,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "9ac02f20-a4de-49f8-bc14-350c8bb29d6d",
+        "method": "GET",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+        "logged_at": "2026-10-16T04:54:04.052558+00:00",
+        "api_call_id": 69412,
+        "response_status": 200,
+        "duration_ms": 109
+      }
+    },
+    {
+      "api_call_id": 69413,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "d39d73bd-5579-421b-97d3-224942f41e62",
+        "method": "PUT",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+        "logged_at": "2026-10-16T04:54:04.639055+00:00",
+        "api_call_id": 69413,
+        "response_status": 200,
+        "duration_ms": 150
+      }
+    },
+    {
+      "api_call_id": 69414,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "12c7b63f-de3b-421a-bdef-1bb86e85e630",
+        "method": "GET",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+        "logged_at": "2026-10-16T04:54:04.800513+00:00",
+        "api_call_id": 69414,
+        "response_status": 200,
+        "duration_ms": 141
+      }
+    },
+    {
+      "api_call_id": 69415,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "c29eb233-39f3-40d4-9c6b-87a407b06fcf",
+        "method": "PUT",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+        "logged_at": "2026-10-16T04:54:05.067423+00:00",
+        "api_call_id": 69415,
+        "response_status": 409,
+        "duration_ms": 105
+      }
+    },
+    {
+      "api_call_id": 69416,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "9b906a5f-ba21-4176-9a30-b7a96feb381d",
+        "method": "PUT",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+        "logged_at": "2026-10-16T04:54:05.155068+00:00",
+        "api_call_id": 69416,
+        "response_status": 403,
+        "duration_ms": 65
+      }
+    },
+    {
+      "api_call_id": 69417,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "a7b0a228-500e-4a30-a2ad-e4a4a25bc2c6",
+        "method": "PUT",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE",
+        "logged_at": "2026-10-16T04:54:05.284384+00:00",
+        "api_call_id": 69417,
+        "response_status": 200,
+        "duration_ms": 107
+      }
+    },
+    {
+      "api_call_id": 69418,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "ae431b74-9208-44ab-8d1e-2cd148860518",
+        "method": "GET",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE",
+        "logged_at": "2026-10-16T04:54:05.409455+00:00",
+        "api_call_id": 69418,
+        "response_status": 200,
+        "duration_ms": 69
+      }
+    },
+    {
+      "api_call_id": 69419,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "d68b96c1-ad10-49c1-a7bd-7504a7d95604",
+        "method": "GET",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+        "logged_at": "2026-10-16T04:54:05.616693+00:00",
+        "api_call_id": 69419,
+        "response_status": 403,
+        "duration_ms": 120
+      }
+    },
+    {
+      "api_call_id": 69420,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "543bf40e-5905-4b0f-8e13-d06948bcafa2",
+        "method": "PUT",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+        "logged_at": "2026-10-16T04:54:05.713013+00:00",
+        "api_call_id": 69420,
+        "response_status": 403,
+        "duration_ms": 71
+      }
+    },
+    {
+      "api_call_id": 69421,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "81150870-2109-40ac-a1a1-dcdd4843948e",
+        "method": "POST",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE/cancel",
+        "logged_at": "2026-10-16T04:56:13.369562+00:00",
+        "api_call_id": 69421,
+        "response_status": 200,
+        "duration_ms": 78
+      }
+    },
+    {
+      "api_call_id": 69422,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "bbfea4e2-e70b-42f9-af04-24a2e0ae6c8b",
+        "method": "POST",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE/cancel",
+        "logged_at": "2026-10-16T04:56:13.458618+00:00",
+        "api_call_id": 69422,
+        "response_status": 200,
+        "duration_ms": 70
+      }
+    },
+    {
+      "api_call_id": 69423,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "8c8bdcd2-9461-490f-816d-e0056a2bfec5",
+        "method": "GET",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE",
+        "logged_at": "2026-10-16T04:56:13.530789+00:00",
+        "api_call_id": 69423,
+        "response_status": 200,
+        "duration_ms": 50
+      }
+    },
+    {
+      "api_call_id": 69424,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "1b7b0c53-6f17-453e-a0e2-1454b4ed3a6b",
+        "method": "POST",
+        "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE/cancel",
+        "logged_at": "2026-10-16T04:56:13.662253+00:00",
+        "api_call_id": 69424,
+        "response_status": 409,
+        "duration_ms": 113
+      }
+    }
+  ],
+  "max_http_ms": 648,
+  "decision": "Retain1..200 member/200ST-row/2000total row bounds, PK plan/member lookups, source-WARE checks and rights REV->CONFIG metadata serialization. No speculative index/cache. Fulfillment owner measures legacy ST PALLET_UID lookup/anti-join plans at pilot volume; shared V$SQL averages are not request p95. One functional scenario only, no load/hardware acceptance.",
+  "retained": "Active completed-membership plan remains on TEST mixed root; future plan CANCELLED, its unpicked prepared ST/order and immutable receipts remain; temporary role/grants/user retired. No physical tree links/quantities or original QA histories changed."
+}

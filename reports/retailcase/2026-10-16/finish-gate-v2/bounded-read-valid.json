@@ -1,0 +1,1014 @@
+{
+  "state": "PASS_120_GET_FOUR_WORKERS_NO_STOCK_CHANGE",
+  "workers": 4,
+  "requests": 120,
+  "mix": [
+    "/api/case-pick/tasks/1151",
+    "/api/transport/loading/33656/status"
+  ],
+  "http": [
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 174.22,
+      "api_call_id": "72045",
+      "request_id": "29064865-38ae-4915-a01b-054cb1061bed",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 227.234,
+      "api_call_id": "72050",
+      "request_id": "2bff5cf3-8f69-4e4f-aa36-59f82fb98577",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 171.134,
+      "api_call_id": "72056",
+      "request_id": "888a79f7-cccd-4369-82d2-9fbbe1bb44bc",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 218.964,
+      "api_call_id": "72058",
+      "request_id": "37e9ecd9-2e47-4763-88c8-5e7752416b66",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 306.674,
+      "api_call_id": "72064",
+      "request_id": "6f395363-e240-41e2-a850-e011b83fb6b0",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 197.649,
+      "api_call_id": "72066",
+      "request_id": "168a4f4b-5ff9-4beb-94dc-13b01554e274",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 151.581,
+      "api_call_id": "72071",
+      "request_id": "030c4920-1bf5-40dc-8faf-42c7b3ee2fbb",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 246.295,
+      "api_call_id": "72073",
+      "request_id": "c60b1fcf-8a37-4222-a9c3-78e9eab2021a",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 390.358,
+      "api_call_id": "72079",
+      "request_id": "de63c693-3e81-460e-b775-53ea01afc411",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 310.407,
+      "api_call_id": "72081",
+      "request_id": "7f8bea0f-0695-4fee-bf36-b85045193d63",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 181.456,
+      "api_call_id": "72086",
+      "request_id": "da8375c4-24f1-46a4-a9c9-9502b4de41a3",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 685.548,
+      "api_call_id": "72089",
+      "request_id": "bc011b8d-cbc3-44e5-a1a1-23fb02181028",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 179.495,
+      "api_call_id": "72095",
+      "request_id": "5380a02b-2c75-46da-b9fd-1a40051d2f10",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 262.73,
+      "api_call_id": "72097",
+      "request_id": "0811d9a9-26f6-4c96-a587-93931dd79e1f",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 477.152,
+      "api_call_id": "72102",
+      "request_id": "02c3f0f7-d769-421a-a910-4a97d2e7bd41",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 334.439,
+      "api_call_id": "72105",
+      "request_id": "5c41717e-b30b-407a-9e56-c152eee50776",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 187.06,
+      "api_call_id": "72112",
+      "request_id": "0a8ef870-2f24-4b3b-ae07-b0592beb6c55",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 559.369,
+      "api_call_id": "72114",
+      "request_id": "98e3cd23-572c-4519-a1eb-0b97273e1ee5",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 131.232,
+      "api_call_id": "72120",
+      "request_id": "9412d364-c77d-4cd1-9484-f4da5fe7f568",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 264.15,
+      "api_call_id": "72121",
+      "request_id": "1ec16f46-547a-4b80-bfe2-fed8e05a2156",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 342.126,
+      "api_call_id": "72128",
+      "request_id": "1a7192de-8015-4a4f-9f94-967101d61668",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 335.214,
+      "api_call_id": "72130",
+      "request_id": "70a1bdb1-7396-45d3-876d-9371cedab86f",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 167.713,
+      "api_call_id": "72135",
+      "request_id": "249b2757-2213-45d8-978e-cae8cafe4601",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 230.041,
+      "api_call_id": "72138",
+      "request_id": "fcabfceb-bf17-4e3c-b058-8439e8220071",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 360.319,
+      "api_call_id": "72143",
+      "request_id": "fe8247d5-b892-490b-94f8-5547fe910090",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 374.274,
+      "api_call_id": "72145",
+      "request_id": "44311e88-25b0-4963-881a-c248f669fbb2",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 137.025,
+      "api_call_id": "72151",
+      "request_id": "e8d39ad3-d82a-4230-90be-91883c571c75",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 591.084,
+      "api_call_id": "72153",
+      "request_id": "bc450b07-9466-474e-b11b-beb91bf98adf",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 243.886,
+      "api_call_id": "72160",
+      "request_id": "e32c7425-30c0-4225-a47e-f15e26bc844e",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 135.553,
+      "api_call_id": "72164",
+      "request_id": "ef283dba-3260-4d45-b02a-c27062591db2",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 244.445,
+      "api_call_id": "72047",
+      "request_id": "8914ad58-cf11-477c-9c9b-62598f2fb426",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 85.351,
+      "api_call_id": "72052",
+      "request_id": "c8daca2d-85ef-4ad7-bb5c-3c4a480b74d1",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 173.765,
+      "api_call_id": "72053",
+      "request_id": "a2c0756c-29d5-4b63-b2ba-5c8249bcf809",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 169.413,
+      "api_call_id": "72057",
+      "request_id": "cc3618c2-eb19-42b0-ae92-2993bbc4e816",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 365.269,
+      "api_call_id": "72061",
+      "request_id": "998c7670-dc70-4daf-aa37-5cc90fca10cc",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 193.804,
+      "api_call_id": "72065",
+      "request_id": "1d7d6d75-75d5-4420-8ecc-8bad2cf2e153",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 261.497,
+      "api_call_id": "72069",
+      "request_id": "18f600db-e95d-4bd0-aae6-1f4813f0ceea",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 156.89,
+      "api_call_id": "72075",
+      "request_id": "37262f55-e682-4e0e-9a91-51079548aaba",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 549.074,
+      "api_call_id": "72077",
+      "request_id": "5c5c3c10-186c-4fce-8eb7-d6ee13589c03",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 110.612,
+      "api_call_id": "72084",
+      "request_id": "4bfc1566-f020-4f9e-96f6-a2fc50218302",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 312.649,
+      "api_call_id": "72085",
+      "request_id": "e5d9d149-4a5f-4b15-aee6-98bdc1f067d3",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 357.56,
+      "api_call_id": "72091",
+      "request_id": "eef69523-2653-4adb-b412-473e08a58f8d",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 509.451,
+      "api_call_id": "72093",
+      "request_id": "5cf2bdc1-bad1-49a0-b4a9-05da2286623b",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 167.647,
+      "api_call_id": "72099",
+      "request_id": "fa99a49f-e2a5-41b1-b631-5d2ec8656070",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 643.076,
+      "api_call_id": "72101",
+      "request_id": "8050c51f-bedc-433c-88c0-9203816845a7",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 138.482,
+      "api_call_id": "72108",
+      "request_id": "f2441ca7-d9ed-4262-aee0-6ef12be4ba6d",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 353.054,
+      "api_call_id": "72109",
+      "request_id": "7c8eab93-27ea-4506-acf7-9176de7a922c",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 425.155,
+      "api_call_id": "72115",
+      "request_id": "7a3008e5-9c6a-4854-81f5-35a94931909f",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 255.197,
+      "api_call_id": "72119",
+      "request_id": "25d27412-b92a-4667-b3be-96cff2af560a",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 175.687,
+      "api_call_id": "72124",
+      "request_id": "6d019532-7952-43b5-b35b-cf3b230832b3",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 437.46,
+      "api_call_id": "72126",
+      "request_id": "b3fccf54-6b4c-4401-96b9-76936b517448",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 168.999,
+      "api_call_id": "72131",
+      "request_id": "72a3e58d-bbcd-4490-839a-f337ee900564",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 257.443,
+      "api_call_id": "72134",
+      "request_id": "8462c5da-d6a2-4bb7-89fb-c15685fa27a3",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 120.307,
+      "api_call_id": "72140",
+      "request_id": "313853f6-a24f-4fb2-b467-eb3bc0a117ef",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 578.352,
+      "api_call_id": "72141",
+      "request_id": "fa012ff2-45fa-4707-8689-595350efbe91",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 177.639,
+      "api_call_id": "72146",
+      "request_id": "9b44e254-7fa8-4966-9000-0ece3800eb1f",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 323.515,
+      "api_call_id": "72150",
+      "request_id": "75f420e9-c38d-4c75-b2d2-e08ef02ce9da",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 474.001,
+      "api_call_id": "72156",
+      "request_id": "2e419588-5a30-443a-8f3a-768084646d7c",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 199.441,
+      "api_call_id": "72158",
+      "request_id": "bde534c5-675e-4b8f-a933-82c784dc0a50",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 165.291,
+      "api_call_id": "72163",
+      "request_id": "79c0f12a-114e-4fd7-b1b4-e4e26515387b",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 143.159,
+      "api_call_id": "72048",
+      "request_id": "4b705319-553d-4fbc-9be6-5106d31c0f27",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 231.134,
+      "api_call_id": "72049",
+      "request_id": "a3f78778-5b9e-449f-a5ac-b9cffa40434b",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 187.851,
+      "api_call_id": "72054",
+      "request_id": "7a395a43-dd30-4c65-aded-1c3fdac96595",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 217.306,
+      "api_call_id": "72060",
+      "request_id": "369f755b-ddef-40e4-8acc-227d7f5f5210",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 306.676,
+      "api_call_id": "72063",
+      "request_id": "e4f7bc7e-fe5b-4e9a-929f-d0ccf0bfdd70",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 217.769,
+      "api_call_id": "72067",
+      "request_id": "b8a9ee7a-2435-44cd-8d66-17b731dba1bb",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 185.059,
+      "api_call_id": "72072",
+      "request_id": "37bab5c6-4644-48d5-8e08-4955cba161cd",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 302.225,
+      "api_call_id": "72074",
+      "request_id": "2585b12e-a537-40ac-8dc6-bca0b15de2c3",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 364.169,
+      "api_call_id": "72080",
+      "request_id": "7449318d-efe0-4ff0-8c34-f8f89fddf872",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 248.048,
+      "api_call_id": "72082",
+      "request_id": "2dd2063e-474a-491c-b04b-b5a20055d4e7",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 216.224,
+      "api_call_id": "72088",
+      "request_id": "17e231f1-2dfc-4729-95bb-1bbd2b22400c",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 707.488,
+      "api_call_id": "72090",
+      "request_id": "da5d2cf4-41d1-45a1-b327-31398df125ef",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 171.765,
+      "api_call_id": "72096",
+      "request_id": "9cbcdb6f-b5c4-46cb-a888-c0f60c234b2d",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 289.866,
+      "api_call_id": "72100",
+      "request_id": "de7e739d-df64-49fe-a1c7-6ec277646382",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 431.363,
+      "api_call_id": "72104",
+      "request_id": "67deebe1-7828-462d-8aa2-93af9eede6f0",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 283.121,
+      "api_call_id": "72106",
+      "request_id": "37f53428-4894-4774-b252-5cb09dfd2954",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 150.584,
+      "api_call_id": "72111",
+      "request_id": "f7ee2873-e1c8-4a8b-836f-34c7868c1d08",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 558.817,
+      "api_call_id": "72113",
+      "request_id": "aa48bb89-a410-41c8-8351-74515785f458",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 183.159,
+      "api_call_id": "72118",
+      "request_id": "96fc195e-d9ab-438f-8f5f-dc6ed64ec7ef",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 249.047,
+      "api_call_id": "72122",
+      "request_id": "27136e97-028d-43ab-8d1d-456739dcf9f3",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 308.638,
+      "api_call_id": "72127",
+      "request_id": "9d72e0cc-0a02-4e7b-a40b-80abc4348095",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 370.343,
+      "api_call_id": "72129",
+      "request_id": "39fe1d3d-2b0b-46f1-b2a1-116558c02e33",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 116.526,
+      "api_call_id": "72136",
+      "request_id": "ee332afe-4791-4329-895e-63f9b4409318",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 279.855,
+      "api_call_id": "72137",
+      "request_id": "691e90c6-46d4-4d77-b829-120754541fe1",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 487.289,
+      "api_call_id": "72144",
+      "request_id": "124d0c8d-9a69-4441-99ef-2600670b7f6d",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 248.633,
+      "api_call_id": "72147",
+      "request_id": "d955fbb1-22b1-4fcb-a54c-3ba445fb4882",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 163.669,
+      "api_call_id": "72152",
+      "request_id": "56667602-6f15-4bbb-b35b-51f8cc98d8ab",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 562.93,
+      "api_call_id": "72154",
+      "request_id": "46d0c650-f8ce-4071-8d1b-9528c1501b82",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 145.266,
+      "api_call_id": "72159",
+      "request_id": "85a52cd8-12c2-4e1e-8526-d1dd0edbf5b6",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 219.068,
+      "api_call_id": "72161",
+      "request_id": "cec70bb7-3e42-4f72-9276-cb3b37f9eaea",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 226.968,
+      "api_call_id": "72046",
+      "request_id": "c6a26f5b-01f1-4eb4-ada7-f75a74c7d143",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 152.614,
+      "api_call_id": "72051",
+      "request_id": "5d2f41b3-08b1-4634-b501-21f314cd1186",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 187.753,
+      "api_call_id": "72055",
+      "request_id": "cfa635fb-316a-4888-950e-35b10bfeb956",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 148.268,
+      "api_call_id": "72059",
+      "request_id": "e9e4c615-f455-4c65-80ea-dbbd05846297",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 394.068,
+      "api_call_id": "72062",
+      "request_id": "7532c2ff-01ac-42bc-85c7-4c6ce30bf058",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 180.199,
+      "api_call_id": "72068",
+      "request_id": "d07cb417-abc0-48a5-b8f3-6f1cb1b1f726",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 221.83,
+      "api_call_id": "72070",
+      "request_id": "6244d45b-2986-45ee-bdb3-494ab95cf2ec",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 174.686,
+      "api_call_id": "72076",
+      "request_id": "1fc68e98-11d5-4c3b-8ee6-dd6d960606f3",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 474.464,
+      "api_call_id": "72078",
+      "request_id": "d1a564ec-861f-4495-919d-53bf5278a88d",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 227.677,
+      "api_call_id": "72083",
+      "request_id": "18cb6d47-0add-4694-be48-aa328769f7ae",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 254.15,
+      "api_call_id": "72087",
+      "request_id": "a81fa2f1-dbd9-4a35-a3fe-13c37eefaf3d",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 611.463,
+      "api_call_id": "72092",
+      "request_id": "5401f5dc-c0de-4c12-aa47-c171ea404ad4",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 235.787,
+      "api_call_id": "72094",
+      "request_id": "ded40028-e5f0-4264-a74b-d9662040eed3",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 221.99,
+      "api_call_id": "72098",
+      "request_id": "9ba3c43b-5a88-47d4-ab52-4868592186f6",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 588.829,
+      "api_call_id": "72103",
+      "request_id": "4fe4f016-2579-47a9-81a7-9b472582e78f",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 206.332,
+      "api_call_id": "72107",
+      "request_id": "fa0d9f9f-0433-4b6e-9629-757809ab9370",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 286.653,
+      "api_call_id": "72110",
+      "request_id": "2bfc394b-4a37-447a-93c0-be76630f3ca1",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 350.674,
+      "api_call_id": "72116",
+      "request_id": "e18a2d5e-ad0f-4950-8565-4d236050889c",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 328.363,
+      "api_call_id": "72117",
+      "request_id": "9bb55f40-e30d-4aa9-887b-922bb7784722",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 109.073,
+      "api_call_id": "72123",
+      "request_id": "08ac2dd8-84d9-47b7-8f30-2b84697efeb9",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 505.238,
+      "api_call_id": "72125",
+      "request_id": "b43b1709-5585-4025-9669-cd29345dbf02",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 153.076,
+      "api_call_id": "72132",
+      "request_id": "082b2dee-a6f6-49e4-9e5d-96dbb74ec0e9",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 254.727,
+      "api_call_id": "72133",
+      "request_id": "ad2c64c7-d837-4be8-abba-e8d7d0340aae",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 178.087,
+      "api_call_id": "72139",
+      "request_id": "00bc008a-7844-43c4-b4ca-ea44f6987396",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 577.657,
+      "api_call_id": "72142",
+      "request_id": "3f7afaa9-9483-4869-948a-d3b52aee0d96",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 137.909,
+      "api_call_id": "72148",
+      "request_id": "4f6eeb55-ac00-4e9e-b3b9-21cec06b958f",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 324.58,
+      "api_call_id": "72149",
+      "request_id": "8a192973-c99e-4b4e-a7da-ccb4626255a6",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 314.583,
+      "api_call_id": "72155",
+      "request_id": "a2342dc1-7347-4f93-abc3-403bb094e4c1",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    },
+    {
+      "path": "/api/transport/loading/33656/status",
+      "status": 200,
+      "elapsed_ms": 357.64,
+      "api_call_id": "72157",
+      "request_id": "c20a816b-07e1-49bd-a0d2-1483dd47207c",
+      "body_sha256": "9abec00f4a85512c5577e0352f84f2a4e964a6e9314b263750b148fb124746cd"
+    },
+    {
+      "path": "/api/case-pick/tasks/1151",
+      "status": 200,
+      "elapsed_ms": 135.661,
+      "api_call_id": "72162",
+      "request_id": "d78e9d34-f79c-4416-801a-bd968511b829",
+      "body_sha256": "bf85228c1540f03ecc10d51684c080f88ad71079bb66e9438b0785fdd166320c"
+    }
+  ],
+  "physical_before": [
+    {
+      "ware_id": 20266481,
+      "p": 25,
+      "h": 0
+    },
+    {
+      "ware_id": 20902283,
+      "p": 0,
+      "h": 0
+    }
+  ],
+  "environment": {
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.13.3",
+    "target": "local Windows dev; Oracle RABAEV/orcl; shared existing dev data",
+    "api": "serv.bat; one API process; TMS_API_RELOAD=0"
+  },
+  "limitations": [
+    "GET only, privileged QA reader, two own TEST documents, not simultaneous warehouse mutations",
+    "Warm isolated document reads; no inference of production shift capacity, hardware or RPO/RTO"
+  ],
+  "elapsed_seconds": 10.22704100003466,
+  "physical_after": [
+    {
+      "ware_id": 20266481,
+      "p": 25,
+      "h": 0
+    },
+    {
+      "ware_id": 20902283,
+      "p": 0,
+      "h": 0
+    }
+  ],
+  "latency_ms": {
+    "p50": 245.37,
+    "p95": 578.352,
+    "p99": 685.548,
+    "max": 707.488
+  },
+  "requests_per_second": 11.733599190576562,
+  "errors": []
+}

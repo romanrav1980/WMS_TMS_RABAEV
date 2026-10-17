@@ -2,7 +2,7 @@ from datetime import date
 from typing import Any,Literal
 from fastapi import APIRouter,Depends,HTTPException,Query
 from pydantic import BaseModel,ConfigDict,Field
-from ...platform.public import AdminUser,require_permission
+from ...platform.public import AdminUser,get_current_user,require_permission
 from ..contracts import LogisticsCostPort,LogisticsCostError,logistics_cost_service
 router=APIRouter(prefix="/api/finance/logistics-costs",tags=["existing-billing-costs"])
 
@@ -39,22 +39,22 @@ def failure(exc: LogisticsCostError,op: str|None=None) -> HTTPException:
     return HTTPException(exc.status,{"code":exc.code,"message":str(exc),"operation_id":op,"outcome_confirmed":exc.status==409})
 
 @router.post("/rates")
-def rate(body: Rate,user: AdminUser=Depends(require_permission("create_tt_price")),service: LogisticsCostPort=Depends(logistics_cost_service)) -> dict[str,Any]:
+def rate(body: Rate,user: AdminUser=Depends(get_current_user),service: LogisticsCostPort=Depends(logistics_cost_service)) -> dict[str,Any]:
     try:return service.rate(body.warehouse_id,body.currency,body.rate,body.effective_from.isoformat(),body.expected_version,body.reason,body.decision_reference,user.username)
     except LogisticsCostError as exc:raise failure(exc) from exc
 
 @router.post("/rates/monthly")
-def monthly_rate(body: MonthlyRate,user: AdminUser=Depends(require_permission("create_tt_price")),service: LogisticsCostPort=Depends(logistics_cost_service)) -> dict[str,Any]:
+def monthly_rate(body: MonthlyRate,user: AdminUser=Depends(get_current_user),service: LogisticsCostPort=Depends(logistics_cost_service)) -> dict[str,Any]:
     try:return service.monthly_rate(body.warehouse_id,body.currency,body.month,body.picking_rate,body.common_work_amount,body.basis_boxes,body.expected_version,body.reason,body.decision_reference,user.username)
     except LogisticsCostError as exc:raise failure(exc) from exc
 
 @router.get("/warehouses/{ware_id}/rates")
-def rates(ware_id: int,user: AdminUser=Depends(require_permission("transport_dispatch_view")),service: LogisticsCostPort=Depends(logistics_cost_service)) -> list[dict[str,Any]]:
+def rates(ware_id: int,user: AdminUser=Depends(get_current_user),service: LogisticsCostPort=Depends(logistics_cost_service)) -> list[dict[str,Any]]:
     try:return service.rates(ware_id,user.username)
     except LogisticsCostError as exc:raise failure(exc) from exc
 
 @router.get("/warehouses/{ware_id}/rates/history")
-def rate_history(ware_id: int,currency: str=Query(pattern=r"^[A-Z]{3}$"),before_version: int=Query(default=0,ge=0),limit: int=Query(default=25,ge=1,le=100),user: AdminUser=Depends(require_permission("transport_dispatch_view")),service: LogisticsCostPort=Depends(logistics_cost_service)) -> dict[str,Any]:
+def rate_history(ware_id: int,currency: str=Query(pattern=r"^[A-Z]{3}$"),before_version: int=Query(default=0,ge=0),limit: int=Query(default=25,ge=1,le=100),user: AdminUser=Depends(get_current_user),service: LogisticsCostPort=Depends(logistics_cost_service)) -> dict[str,Any]:
     try:return service.rate_history(ware_id,currency,before_version,limit,user.username)
     except LogisticsCostError as exc:raise failure(exc) from exc
 
@@ -64,12 +64,12 @@ def calculate(body: Calculate,user: AdminUser=Depends(require_permission("calc_t
     except LogisticsCostError as exc:raise failure(exc,body.operation_id) from exc
 
 @router.get("/trips/{trip_id}")
-def trip(trip_id: int,user: AdminUser=Depends(require_permission("transport_dispatch_view")),service: LogisticsCostPort=Depends(logistics_cost_service)) -> dict[str,Any]:
+def trip(trip_id: int,user: AdminUser=Depends(get_current_user),service: LogisticsCostPort=Depends(logistics_cost_service)) -> dict[str,Any]:
     try:return service.trip(trip_id,user.username)
     except LogisticsCostError as exc:raise failure(exc) from exc
 
 @router.get("/billing-orders/{invoice_id}")
-def invoice(invoice_id: int,user: AdminUser=Depends(require_permission("transport_dispatch_view")),service: LogisticsCostPort=Depends(logistics_cost_service)) -> list[dict[str,Any]]:
+def invoice(invoice_id: int,user: AdminUser=Depends(get_current_user),service: LogisticsCostPort=Depends(logistics_cost_service)) -> list[dict[str,Any]]:
     try:return service.invoice(invoice_id,user.username)
     except LogisticsCostError as exc:raise failure(exc) from exc
 
@@ -100,7 +100,7 @@ def configure_period(ware_id: int,body: PeriodPolicy,user: AdminUser=Depends(req
     except LogisticsCostError as exc:raise failure(exc,body.operation_id)from exc
 
 @router.get("/billing-orders/{invoice_id}/summary")
-def invoice_summary(invoice_id: int,user: AdminUser=Depends(require_permission("transport_dispatch_view")),service: LogisticsCostPort=Depends(logistics_cost_service))->dict[str,Any]:
+def invoice_summary(invoice_id: int,user: AdminUser=Depends(get_current_user),service: LogisticsCostPort=Depends(logistics_cost_service))->dict[str,Any]:
     try:return service.invoice_summary(invoice_id,user.username)
     except LogisticsCostError as exc:raise failure(exc)from exc
 
@@ -193,7 +193,7 @@ def transport_costs(trip_id: int,warehouse_id: int=Query(gt=0),
 
 @router.get("/billing-orders/{invoice_id}/transport-costs")
 def invoice_transport_costs(invoice_id: int,
-                            user: AdminUser=Depends(require_permission("transport_dispatch_view")),
+                            user: AdminUser=Depends(get_current_user),
                             service: LogisticsCostPort=Depends(logistics_cost_service))->dict[str,Any]:
     if invoice_id<1:raise HTTPException(422,"Positive invoice ID required")
     try:return service.invoice_transport_costs(invoice_id,user.username)

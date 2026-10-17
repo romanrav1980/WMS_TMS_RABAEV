@@ -1,0 +1,369 @@
+{
+  "scope": "Own TASK1188 actual metadata HTTP and receipt paths; unsupported-context three calls separately in unsupported-contexts.json",
+  "audit": [
+    {
+      "api_call_id": 68752,
+      "method": "GET",
+      "path": "/api/warehouse-tasks/1188/resource-context",
+      "response_status": 200,
+      "duration_ms": 88
+    },
+    {
+      "api_call_id": 68753,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 200,
+      "duration_ms": 200
+    },
+    {
+      "api_call_id": 68754,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 200,
+      "duration_ms": 243
+    },
+    {
+      "api_call_id": 68755,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 200,
+      "duration_ms": 74
+    },
+    {
+      "api_call_id": 68756,
+      "method": "GET",
+      "path": "/api/warehouse-tasks/resource-commands/TASK.HTTP:26fc43d117dc46c4a9e940e24336874d",
+      "response_status": 200,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 68757,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 409,
+      "duration_ms": 123
+    },
+    {
+      "api_call_id": 68758,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 422,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 68759,
+      "method": "GET",
+      "path": "/api/warehouse-tasks/resource-commands/TASK.HTTP:26fc43d117dc46c4a9e940e24336874d",
+      "response_status": 403,
+      "duration_ms": 71
+    },
+    {
+      "api_call_id": 68760,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/assign",
+      "response_status": 403,
+      "duration_ms": 32
+    },
+    {
+      "api_call_id": 68761,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/start",
+      "response_status": 403,
+      "duration_ms": 35
+    },
+    {
+      "api_call_id": 68762,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 409,
+      "duration_ms": 88
+    },
+    {
+      "api_call_id": 68763,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 409,
+      "duration_ms": 90
+    },
+    {
+      "api_call_id": 68764,
+      "method": "GET",
+      "path": "/api/warehouse-tasks/1188/resource-context",
+      "response_status": 200,
+      "duration_ms": 52
+    },
+    {
+      "api_call_id": 68765,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 200,
+      "duration_ms": 86
+    },
+    {
+      "api_call_id": 68766,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 200,
+      "duration_ms": 87
+    },
+    {
+      "api_call_id": 68767,
+      "method": "GET",
+      "path": "/api/warehouse-tasks/resource-commands/TASK.HTTP:ed9a7ba297404da5b59b9c10ff529e17",
+      "response_status": 200,
+      "duration_ms": 71
+    },
+    {
+      "api_call_id": 68768,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 409,
+      "duration_ms": 133
+    },
+    {
+      "api_call_id": 68769,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 422,
+      "duration_ms": 36
+    },
+    {
+      "api_call_id": 68770,
+      "method": "GET",
+      "path": "/api/warehouse-tasks/resource-commands/TASK.HTTP:ed9a7ba297404da5b59b9c10ff529e17",
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 68771,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/assign",
+      "response_status": 403,
+      "duration_ms": 36
+    },
+    {
+      "api_call_id": 68772,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/start",
+      "response_status": 403,
+      "duration_ms": 37
+    },
+    {
+      "api_call_id": 68773,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 409,
+      "duration_ms": 77
+    },
+    {
+      "api_call_id": 68774,
+      "method": "GET",
+      "path": "/api/warehouse-tasks/resource-commands/TASK.HTTP:26fc43d117dc46c4a9e940e24336874d",
+      "response_status": 403,
+      "duration_ms": 87
+    },
+    {
+      "api_call_id": 68775,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 403,
+      "duration_ms": 99
+    },
+    {
+      "api_call_id": 68776,
+      "method": "POST",
+      "path": "/api/warehouse-tasks/1188/resource-commands",
+      "response_status": 200,
+      "duration_ms": 86
+    }
+  ],
+  "slow_latest1200": [
+    {
+      "log_id": 4818,
+      "api_call_id": 68757,
+      "elapsed_ms": 51,
+      "api_path": "/api/warehouse-tasks/1188/resource-commands",
+      "error_text": "ORA-20886: WTASK_OPERATION_CONFLICT\nORA-06512: at \"RABAEV.RRL_WTASK_ASSIGN_API\", line 136\nORA-06512:"
+    },
+    {
+      "log_id": 4825,
+      "api_call_id": 68768,
+      "elapsed_ms": 35,
+      "api_path": "/api/warehouse-tasks/1188/resource-commands",
+      "error_text": "ORA-20886: WTASK_OPERATION_CONFLICT\nORA-06512: at \"RABAEV.RRL_WTASK_ASSIGN_API\", line 136\nORA-06512:"
+    },
+    {
+      "log_id": 4830,
+      "api_call_id": 68775,
+      "elapsed_ms": 8,
+      "api_path": "/api/warehouse-tasks/1188/resource-commands",
+      "error_text": "ORA-20882: WTASK_CURRENT_SCOPED_AUTHORITY_REQUIRED\nORA-06512: at \"RABAEV.RRL_WTASK_ASSIGN_API\", line"
+    }
+  ],
+  "oracle_top": [
+    {
+      "sql_id": "g7cvprpd739zv",
+      "executions": 39,
+      "elapsed_ms": 1598.352,
+      "avg_ms": 40.983,
+      "sql_prefix": "begin RRL_WTASK_ASSIGN_API.execute_command(:1,:2,:3,:4); end;"
+    },
+    {
+      "sql_id": "4azgjzfgadvmn",
+      "executions": 5,
+      "elapsed_ms": 16.456,
+      "avg_ms": 3.291,
+      "sql_prefix": "begin RRL_WTASK_ASSIGN_API.receipt(:1,:2,:3); end;"
+    },
+    {
+      "sql_id": "cn24np66kpjnk",
+      "executions": 2,
+      "elapsed_ms": 15.551,
+      "avg_ms": 7.776,
+      "sql_prefix": "begin RRL_WTASK_ASSIGN_API.task_context(:1,:2,:3,:4); end;"
+    },
+    {
+      "sql_id": "95xunus8a8wj5",
+      "executions": 6,
+      "elapsed_ms": 6.635,
+      "avg_ms": 1.106,
+      "sql_prefix": "select ASSIGNMENT_VERSION from RRL_WTASK_ASSIGN_VERSION where TASK_ID=:id"
+    },
+    {
+      "sql_id": "6wfcnqjungj1t",
+      "executions": 59,
+      "elapsed_ms": 6.364,
+      "avg_ms": 0.108,
+      "sql_prefix": "SELECT ASSIGNMENT_VERSION FROM RRL_WTASK_ASSIGN_VERSION WHERE TASK_ID=:B1 "
+    }
+  ],
+  "local_jsonl_finished": [
+    {
+      "api_call_id": 68752,
+      "response_status": 200,
+      "duration_ms": 88
+    },
+    {
+      "api_call_id": 68753,
+      "response_status": 200,
+      "duration_ms": 200
+    },
+    {
+      "api_call_id": 68754,
+      "response_status": 200,
+      "duration_ms": 243
+    },
+    {
+      "api_call_id": 68755,
+      "response_status": 200,
+      "duration_ms": 74
+    },
+    {
+      "api_call_id": 68756,
+      "response_status": 200,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 68757,
+      "response_status": 409,
+      "duration_ms": 123
+    },
+    {
+      "api_call_id": 68758,
+      "response_status": 422,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 68759,
+      "response_status": 403,
+      "duration_ms": 71
+    },
+    {
+      "api_call_id": 68760,
+      "response_status": 403,
+      "duration_ms": 32
+    },
+    {
+      "api_call_id": 68761,
+      "response_status": 403,
+      "duration_ms": 35
+    },
+    {
+      "api_call_id": 68762,
+      "response_status": 409,
+      "duration_ms": 88
+    },
+    {
+      "api_call_id": 68763,
+      "response_status": 409,
+      "duration_ms": 90
+    },
+    {
+      "api_call_id": 68764,
+      "response_status": 200,
+      "duration_ms": 52
+    },
+    {
+      "api_call_id": 68765,
+      "response_status": 200,
+      "duration_ms": 86
+    },
+    {
+      "api_call_id": 68766,
+      "response_status": 200,
+      "duration_ms": 87
+    },
+    {
+      "api_call_id": 68767,
+      "response_status": 200,
+      "duration_ms": 71
+    },
+    {
+      "api_call_id": 68768,
+      "response_status": 409,
+      "duration_ms": 133
+    },
+    {
+      "api_call_id": 68769,
+      "response_status": 422,
+      "duration_ms": 36
+    },
+    {
+      "api_call_id": 68770,
+      "response_status": 403,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 68771,
+      "response_status": 403,
+      "duration_ms": 36
+    },
+    {
+      "api_call_id": 68772,
+      "response_status": 403,
+      "duration_ms": 37
+    },
+    {
+      "api_call_id": 68773,
+      "response_status": 409,
+      "duration_ms": 77
+    },
+    {
+      "api_call_id": 68774,
+      "response_status": 403,
+      "duration_ms": 87
+    },
+    {
+      "api_call_id": 68775,
+      "response_status": 403,
+      "duration_ms": 99
+    },
+    {
+      "api_call_id": 68776,
+      "response_status": 200,
+      "duration_ms": 86
+    }
+  ],
+  "decision": "No additional index: TASK PK plus version PK plus operation PK and task/actor/recorded receipt index bound this increment; P95 not claimed from small fixture. Resource-policy other-IN_PROGRESS and CASE physical-work COUNT retain existing indexes/current actor predicates; owner resources/platform will assess long operator-history plans during resource/Gantt pilot load. Actual revoke wait is intentional concurrency evidence, not a slow-query regression.",
+  "headers_or_bodies_exported": false
+}

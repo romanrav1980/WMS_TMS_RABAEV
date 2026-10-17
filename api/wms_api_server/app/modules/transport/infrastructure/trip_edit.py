@@ -7,6 +7,7 @@ from .plan_application import TransportPlanError
 
 def trip_error(exc: oracledb.DatabaseError) -> TransportPlanError:
     code=getattr(exc.args[0],"code",0)
+    if code==20851:return TransportPlanError("TRANSPORT_ACCESS_DENIED","Недостаточно прав для склада рейса",403)
     if code==1403:return TransportPlanError("TRANSPORT_CURRENT_SOURCE_NOT_FOUND","Действующий рейс, машина или водитель отсутствует",404)
     if 20800<=code<=20999:return TransportPlanError("TRANSPORT_EDIT_REJECTED",str(exc.args[0]).split("\n",1)[0],403 if code==20882 else 409)
     if code in {6502,12899,1841,1843,1858,1861}:return TransportPlanError("TRANSPORT_EDIT_INPUT_INVALID","Проверьте длину полей, дату и время",422)

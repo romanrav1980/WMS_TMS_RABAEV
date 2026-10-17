@@ -1,0 +1,6901 @@
+{
+ "constants": {
+  "ADMIN_LOGIN_PERMISSION": "wms_admin_login",
+  "API_AUDIT_VIEW_PERMISSION": "api_audit_view",
+  "API_AUDIT_REPLAY_PERMISSION": "api_audit_replay",
+  "SLOW_SQL_VIEW_PERMISSION": "slow_sql_view",
+  "RIGHTS_ADMIN_VIEW_PERMISSION": "rights_admin_view",
+  "RIGHTS_ADMIN_EDIT_PERMISSION": "rights_admin_edit",
+  "TRACEABILITY_VIEW_PERMISSION": "traceability_view",
+  "EXTERNAL_OUTBOX_VIEW_PERMISSION": "external_outbox_view",
+  "EXTERNAL_OUTBOX_RETRY_PERMISSION": "external_outbox_retry",
+  "BOM_VIEW_PERMISSION": "bom_view",
+  "BOM_EDIT_PERMISSION": "bom_edit",
+  "BOM_APPROVE_PERMISSION": "bom_approve",
+  "BOM_BLOCK_PERMISSION": "bom_block",
+  "BOM_MAKE_PRIMARY_PERMISSION": "bom_make_primary",
+  "BOM_USE_ALTERNATIVE_PERMISSION": "bom_use_alternative",
+  "MES_PRODUCTION_VIEW_PERMISSION": "mes_production_view",
+  "MES_PRODUCTION_EDIT_PERMISSION": "mes_production_edit",
+  "MES_PRODUCTION_COMPLETE_PERMISSION": "mes_production_complete",
+  "MES_WMS_BRIDGE_APPLY_PERMISSION": "mes_wms_bridge_apply",
+  "MES_RAW_SUPPLY_VIEW_PERMISSION": "mes_raw_supply_view",
+  "MES_RAW_SUPPLY_CALCULATE_PERMISSION": "mes_raw_supply_calculate",
+  "MES_RAW_TRANSFER_CREATE_PERMISSION": "mes_raw_transfer_create",
+  "MES_RAW_TRANSFER_CONFIRM_PERMISSION": "mes_raw_transfer_confirm",
+  "MES_RAW_TRANSFER_CANCEL_PERMISSION": "mes_raw_transfer_cancel",
+  "WAREHOUSE_SETTINGS_VIEW_PERMISSION": "warehouse_settings_view",
+  "WAREHOUSE_SETTINGS_EDIT_PERMISSION": "warehouse_settings_edit",
+  "RAW_MATERIAL_VIEW_PERMISSION": "raw_material_view",
+  "RAW_MATERIAL_EDIT_PERMISSION": "raw_material_edit",
+  "RAW_MATERIAL_STOCK_VIEW_PERMISSION": "raw_material_stock_view",
+  "RAW_MATERIAL_EXPORT_PERMISSION": "raw_material_export",
+  "FINISHED_GOODS_VIEW_PERMISSION": "finished_goods_view",
+  "FINISHED_GOODS_EDIT_PERMISSION": "finished_goods_edit",
+  "FINISHED_GOODS_STOCK_VIEW_PERMISSION": "finished_goods_stock_view",
+  "FINISHED_GOODS_BATCH_VIEW_PERMISSION": "finished_goods_batch_view",
+  "FINISHED_GOODS_EXPORT_PERMISSION": "finished_goods_export",
+  "QUALITY_BATCH_VIEW_PERMISSION": "quality_batch_view",
+  "QUALITY_BATCH_EDIT_PERMISSION": "quality_batch_edit",
+  "CUSTOMER_VIEW_PERMISSION": "customer_view",
+  "CUSTOMER_EDIT_PERMISSION": "customer_edit",
+  "CUSTOMER_ORDER_VIEW_PERMISSION": "customer_order_view",
+  "CUSTOMER_ORDER_IMPORT_PERMISSION": "customer_order_import",
+  "CUSTOMER_FULFILLMENT_VIEW_PERMISSION": "customer_fulfillment_view",
+  "CUSTOMER_RULE_VIEW_PERMISSION": "customer_rule_view",
+  "CUSTOMER_RULE_EDIT_PERMISSION": "customer_rule_edit",
+  "VEHICLE_TYPE_VIEW_PERMISSION": "vehicle_type_view",
+  "VEHICLE_TYPE_EDIT_PERMISSION": "vehicle_type_edit",
+  "PICK_PLAN_VIEW_PERMISSION": "pick_plan_view",
+  "PICK_PLAN_CREATE_PERMISSION": "pick_plan_create",
+  "PICK_PLAN_CANCEL_PERMISSION": "pick_plan_cancel",
+  "PICK_RESERVATION_VIEW_PERMISSION": "pick_reservation_view",
+  "PICK_SHORTAGE_VIEW_PERMISSION": "pick_shortage_view",
+  "PICK_TOPOLOGY_VIEW_PERMISSION": "pick_topology_view",
+  "PICK_TOPOLOGY_EDIT_PERMISSION": "pick_topology_edit",
+  "WAREHOUSE_TOPOLOGY_VIEW_PERMISSION": "warehouse_topology_view",
+  "WAREHOUSE_TOPOLOGY_EDIT_PERMISSION": "warehouse_topology_edit",
+  "WAREHOUSE_TOPOLOGY_PUBLISH_PERMISSION": "warehouse_topology_publish",
+  "PICK_ROUTE_ADMIN_VIEW_PERMISSION": "pick_route_admin_view",
+  "PICK_ROUTE_ADMIN_EDIT_PERMISSION": "pick_route_admin_edit",
+  "PICK_ROUTE_ADMIN_PUBLISH_PERMISSION": "pick_route_admin_publish",
+  "PICK_WAVE_VIEW_PERMISSION": "pick_wave_view",
+  "PICK_WAVE_CREATE_PERMISSION": "pick_wave_create",
+  "PICK_WAVE_CALCULATE_PERMISSION": "pick_wave_calculate",
+  "PICK_WAVE_LAUNCH_PERMISSION": "pick_wave_launch",
+  "PICK_WAVE_CANCEL_PERMISSION": "pick_wave_cancel",
+  "PICK_WAVE_RELEASE_RESERVES_PERMISSION": "pick_wave_release_reserves",
+  "PICK_WAVE_AUDIT_VIEW_PERMISSION": "pick_wave_audit_view",
+  "STOCK_RESERVATION_VIEW_PERMISSION": "stock_reservation_view",
+  "STOCK_RESERVATION_EDIT_PERMISSION": "stock_reservation_edit",
+  "WAREHOUSE_TASK_VIEW_PERMISSION": "warehouse_task_view",
+  "WAREHOUSE_TASK_EXECUTE_PERMISSION": "warehouse_task_execute",
+  "RESOURCE_MANAGEMENT_VIEW_PERMISSION": "resource_management_view",
+  "RESOURCE_MANAGEMENT_EDIT_PERMISSION": "resource_management_edit",
+  "RESOURCE_SHIFT_VIEW_PERMISSION": "resource_shift_view",
+  "RESOURCE_SHIFT_EDIT_PERMISSION": "resource_shift_edit",
+  "RESOURCE_SESSION_VIEW_PERMISSION": "resource_session_view",
+  "RESOURCE_SESSION_MANAGE_PERMISSION": "resource_session_manage",
+  "RESOURCE_GANTT_VIEW_PERMISSION": "resource_gantt_view",
+  "RESOURCE_GANTT_REPLAN_PERMISSION": "resource_gantt_replan",
+  "RESOURCE_DISPATCH_MANAGE_PERMISSION": "resource_dispatch_manage",
+  "WAREHOUSE_TASK_FORCE_ASSIGN_PERMISSION": "warehouse_task_force_assign",
+  "CASE_PICK_VIEW_PERMISSION": "case_pick_view",
+  "CASE_PICK_EXECUTE_PERMISSION": "case_pick_execute",
+  "CASE_PICK_MANAGE_PERMISSION": "case_pick_manage",
+  "CASE_PICK_SHORT_APPROVE_PERMISSION": "case_pick_short_approve",
+  "INVENTORY_TASK_VIEW_PERMISSION": "inventory_task_view",
+  "INVENTORY_TASK_EXECUTE_PERMISSION": "inventory_task_execute",
+  "TRANSPORT_DISPATCH_VIEW_PERMISSION": "transport_dispatch_view",
+  "TRANSPORT_DISPATCH_EDIT_PERMISSION": "transport_dispatch_edit",
+  "TRANSPORT_DISPATCH_CLOSE_PERMISSION": "transport_dispatch_close",
+  "TRANSPORT_FLEET_EDIT_PERMISSION": "transport_fleet_edit",
+  "BILLING_EDIT_PERMISSION": "edit_bill_tt",
+  "BILLING_CALC_PRICE_PERMISSION": "calc_tt_price",
+  "BILLING_CREATE_PRICE_PERMISSION": "create_tt_price",
+  "TRANSPORT_SEND_EMPTY_TRUCK_PERMISSION": "send_empty_truck"
+ },
+ "routes": [
+  {
+   "method": "POST",
+   "path": "/api/delivery/case-work/{case_id}/assign",
+   "permissions": [
+    "store_case_manage"
+   ],
+   "deps": [
+    "case_work_service"
+   ],
+   "file": "app/modules/delivery/api/case_work_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/delivery/case-work/{case_id}/finding",
+   "permissions": [
+    "store_case_investigate"
+   ],
+   "deps": [
+    "case_work_service"
+   ],
+   "file": "app/modules/delivery/api/case_work_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/delivery/case-work/{case_id}/loss",
+   "permissions": [
+    "store_loss_confirm"
+   ],
+   "deps": [
+    "case_work_service"
+   ],
+   "file": "app/modules/delivery/api/case_work_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/case-work/mine",
+   "permissions": [
+    "store_case_investigate"
+   ],
+   "deps": [
+    "case_work_service"
+   ],
+   "file": "app/modules/delivery/api/case_work_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/case-work/{case_id}/investigation",
+   "permissions": [
+    "store_case_investigate"
+   ],
+   "deps": [
+    "case_work_service"
+   ],
+   "file": "app/modules/delivery/api/case_work_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/case-work/{case_id}/loss-review",
+   "permissions": [
+    "store_loss_confirm"
+   ],
+   "deps": [
+    "case_work_service"
+   ],
+   "file": "app/modules/delivery/api/case_work_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/case-work/{case_id}/management",
+   "permissions": [
+    "store_case_manage"
+   ],
+   "deps": [
+    "case_work_service"
+   ],
+   "file": "app/modules/delivery/api/case_work_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/delivery/case-work/{case_id}/close",
+   "permissions": [
+    "store_loss_confirm"
+   ],
+   "deps": [
+    "case_work_service"
+   ],
+   "file": "app/modules/delivery/api/case_work_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/customer-orders/{order_id}/delivery",
+   "permissions": [
+    "customer_fulfillment_view"
+   ],
+   "deps": [
+    "order_delivery_service"
+   ],
+   "file": "app/modules/delivery/api/order_delivery_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/delivery/store-return-custody/handover",
+   "permissions": [
+    "store_return_handover"
+   ],
+   "deps": [
+    "return_custody_service"
+   ],
+   "file": "app/modules/delivery/api/return_custody_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/delivery/store-return-custody/pickup",
+   "permissions": [
+    "driver_return_accept"
+   ],
+   "deps": [
+    "return_custody_service"
+   ],
+   "file": "app/modules/delivery/api/return_custody_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-return-custody/store",
+   "permissions": [
+    "store_return_handover"
+   ],
+   "deps": [
+    "return_custody_service"
+   ],
+   "file": "app/modules/delivery/api/return_custody_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-return-custody/driver",
+   "permissions": [
+    "driver_return_accept"
+   ],
+   "deps": [
+    "return_custody_service"
+   ],
+   "file": "app/modules/delivery/api/return_custody_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/delivery/store-return-transport/plan",
+   "permissions": [
+    "store_return_transport"
+   ],
+   "deps": [
+    "return_transport_service"
+   ],
+   "file": "app/modules/delivery/api/return_transport_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-return-transport/eligible",
+   "permissions": [
+    "store_return_transport"
+   ],
+   "deps": [
+    "return_transport_service"
+   ],
+   "file": "app/modules/delivery/api/return_transport_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-return-transport/trips/{task_id}",
+   "permissions": [
+    "store_return_transport"
+   ],
+   "deps": [
+    "return_transport_service"
+   ],
+   "file": "app/modules/delivery/api/return_transport_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/delivery/store-photos/upload",
+   "permissions": [
+    "store_receipt_confirm"
+   ],
+   "deps": [
+    "store_evidence_service"
+   ],
+   "file": "app/modules/delivery/api/store_evidence_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-photos/list",
+   "permissions": [
+    "store_receipt_confirm"
+   ],
+   "deps": [
+    "store_evidence_service"
+   ],
+   "file": "app/modules/delivery/api/store_evidence_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-photos/{photo_id}/content",
+   "permissions": [
+    "store_receipt_confirm"
+   ],
+   "deps": [
+    "store_evidence_service"
+   ],
+   "file": "app/modules/delivery/api/store_evidence_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-receipts/preview",
+   "permissions": [
+    "store_receipt_confirm"
+   ],
+   "deps": [
+    "store_receipt_service"
+   ],
+   "file": "app/modules/delivery/api/store_receipt_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-receipts/trips/{trip_id}/places",
+   "permissions": [
+    "store_receipt_confirm"
+   ],
+   "deps": [
+    "store_receipt_service"
+   ],
+   "file": "app/modules/delivery/api/store_receipt_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/delivery/store-receipts/confirm",
+   "permissions": [
+    "store_receipt_confirm"
+   ],
+   "deps": [
+    "store_receipt_service"
+   ],
+   "file": "app/modules/delivery/api/store_receipt_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/delivery/store-receipts/policy",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "store_receipt_service"
+   ],
+   "file": "app/modules/delivery/api/store_receipt_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/delivery/store-receipts/receivers",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "store_receipt_service"
+   ],
+   "file": "app/modules/delivery/api/store_receipt_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-receipts/cases",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "store_receipt_service"
+   ],
+   "file": "app/modules/delivery/api/store_receipt_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-receipts/cases/{case_id}",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "store_receipt_service"
+   ],
+   "file": "app/modules/delivery/api/store_receipt_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/delivery/store-receipts/load-custody/release",
+   "permissions": [
+    "transport_dispatch_close"
+   ],
+   "deps": [
+    "store_receipt_service"
+   ],
+   "file": "app/modules/delivery/api/store_receipt_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/delivery/store-receipts/unloading/start",
+   "permissions": [
+    "store_receipt_confirm"
+   ],
+   "deps": [
+    "store_receipt_service"
+   ],
+   "file": "app/modules/delivery/api/store_receipt_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-receipts/unloading",
+   "permissions": [
+    "store_receipt_confirm"
+   ],
+   "deps": [
+    "store_receipt_service"
+   ],
+   "file": "app/modules/delivery/api/store_receipt_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/delivery/store-returns/{receipt_id}/approve",
+   "permissions": [
+    "store_return_approve"
+   ],
+   "deps": [
+    "store_returns_service"
+   ],
+   "file": "app/modules/delivery/api/store_return_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-returns/{receipt_id}",
+   "permissions": [
+    "store_return_approve"
+   ],
+   "deps": [
+    "store_returns_service"
+   ],
+   "file": "app/modules/delivery/api/store_return_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-returns/{receipt_id}/reuse-preview",
+   "permissions": [
+    "store_return_approve"
+   ],
+   "deps": [
+    "store_returns_service"
+   ],
+   "file": "app/modules/delivery/api/store_return_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/delivery/store-scales/devices/{device_id}",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "store_scales_service"
+   ],
+   "file": "app/modules/delivery/api/store_scale_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/delivery/store-scales/captures",
+   "permissions": [
+    "store_scale_ingest"
+   ],
+   "deps": [
+    "store_scales_service"
+   ],
+   "file": "app/modules/delivery/api/store_scale_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-scales/captures/{capture_key}",
+   "permissions": [
+    "store_receipt_confirm"
+   ],
+   "deps": [
+    "store_scales_service"
+   ],
+   "file": "app/modules/delivery/api/store_scale_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/delivery/store-scales/captures",
+   "permissions": [
+    "store_receipt_confirm"
+   ],
+   "deps": [
+    "store_scales_service"
+   ],
+   "file": "app/modules/delivery/api/store_scale_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/day-reconciliation/warehouses/{ware_id}",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "day_reconciliation_service"
+   ],
+   "file": "app/modules/finance/api/day_reconciliation_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/day-reconciliation/warehouses/{ware_id}/stock-conflicts",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "day_reconciliation_service"
+   ],
+   "file": "app/modules/finance/api/day_reconciliation_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/day-reconciliation/warehouses/{ware_id}/review-context",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "day_reviews_service"
+   ],
+   "file": "app/modules/finance/api/day_review_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/day-reconciliation/reviews",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "day_reviews_service"
+   ],
+   "file": "app/modules/finance/api/day_review_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/day-reconciliation/reviews/resolve",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "day_reviews_service"
+   ],
+   "file": "app/modules/finance/api/day_review_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/day-reconciliation/reviews/warehouses/{ware_id}/history",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "day_reviews_service"
+   ],
+   "file": "app/modules/finance/api/day_review_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/day-reconciliation/reviews/{operation}",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "day_reviews_service"
+   ],
+   "file": "app/modules/finance/api/day_review_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/day-reconciliation/warehouses/{ware_id}/shipping-register",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "day_reviews_service"
+   ],
+   "file": "app/modules/finance/api/day_review_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/day-reconciliation/reviews/{review_id}/shipping-inspections",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "day_reviews_service"
+   ],
+   "file": "app/modules/finance/api/day_review_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/day-reconciliation/shipping-inspections",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "day_reviews_service"
+   ],
+   "file": "app/modules/finance/api/day_review_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/day-reconciliation/shipping-inspections/resolve",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "day_reviews_service"
+   ],
+   "file": "app/modules/finance/api/day_review_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/expense-allocation",
+   "permissions": [
+    "calc_tt_price"
+   ],
+   "deps": [
+    "expense_allocation_service"
+   ],
+   "file": "app/modules/finance/api/expense_allocation_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/expense-allocation/billing-orders/{invoice_id}",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "expense_allocation_service"
+   ],
+   "file": "app/modules/finance/api/expense_allocation_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/logistics-costs/rates",
+   "permissions": [
+    "create_tt_price"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/logistics-costs/rates/monthly",
+   "permissions": [
+    "create_tt_price"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-costs/warehouses/{ware_id}/rates",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-costs/warehouses/{ware_id}/rates/history",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/logistics-costs/calculate",
+   "permissions": [
+    "calc_tt_price"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-costs/trips/{trip_id}",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-costs/billing-orders/{invoice_id}",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-costs/trips/{trip_id}/assembly-period",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-costs/warehouses/{ware_id}/period-policy",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/logistics-costs/warehouses/{ware_id}/period-policy",
+   "permissions": [
+    "create_tt_price"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-costs/billing-orders/{invoice_id}/summary",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-costs/trips/{trip_id}/transport-tariff-sources",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/logistics-costs/transport-norms",
+   "permissions": [
+    "create_tt_price"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-costs/warehouses/{ware_id}/transport-norms/{source_price_id}/history",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-costs/trips/{trip_id}/transport-cost-facts",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-costs/trips/{trip_id}/transport-cost-preview",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/logistics-costs/transport-costs/conduct",
+   "permissions": [
+    "calc_tt_price"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-costs/trips/{trip_id}/transport-costs",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-costs/billing-orders/{invoice_id}/transport-costs",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_cost_service"
+   ],
+   "file": "app/modules/finance/api/logistics_cost_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-expenses/articles",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_expense_service"
+   ],
+   "file": "app/modules/finance/api/logistics_expense_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/logistics-expenses/articles",
+   "permissions": [
+    "create_tt_price"
+   ],
+   "deps": [
+    "logistics_expense_service"
+   ],
+   "file": "app/modules/finance/api/logistics_expense_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/logistics-expenses/report",
+   "permissions": [],
+   "deps": [
+    "get_current_user",
+    "logistics_expense_service"
+   ],
+   "file": "app/modules/finance/api/logistics_expense_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/finance/logistics-expenses/decide",
+   "permissions": [],
+   "deps": [
+    "get_current_user",
+    "logistics_expense_service"
+   ],
+   "file": "app/modules/finance/api/logistics_expense_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-expenses/warehouses/{ware_id}",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_expense_service"
+   ],
+   "file": "app/modules/finance/api/logistics_expense_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finance/logistics-expenses/warehouses/{ware_id}/normative-costs",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "logistics_expense_service"
+   ],
+   "file": "app/modules/finance/api/logistics_expense_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/customer-orders/{order_id}/execution",
+   "permissions": [
+    "customer_fulfillment_view"
+   ],
+   "deps": [
+    "execution_service"
+   ],
+   "file": "app/modules/fulfillment/api/execution_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/integrations/sap/store-orders/{order_id}/preparation-readiness",
+   "permissions": [
+    "customer_order_view"
+   ],
+   "deps": [
+    "preparation_service"
+   ],
+   "file": "app/modules/fulfillment/api/preparation_read_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/integrations/sap/store-orders/{order_id}/preparation-layout",
+   "permissions": [
+    "customer_order_view"
+   ],
+   "deps": [
+    "preparation_service"
+   ],
+   "file": "app/modules/fulfillment/api/preparation_read_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/integrations/sap/store-orders/{order_id}/automatic-layout",
+   "permissions": [
+    "customer_order_view"
+   ],
+   "deps": [
+    "preparation_service"
+   ],
+   "file": "app/modules/fulfillment/api/preparation_read_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/integrations/sap/store-orders/{order_id}/prepare-st/automatic",
+   "permissions": [
+    "customer_order_import"
+   ],
+   "deps": [
+    "preparation_service"
+   ],
+   "file": "app/modules/fulfillment/api/preparation_read_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/integrations/sap/store-orders/{order_id}/prepare-st/automatic/resolve",
+   "permissions": [
+    "customer_order_import"
+   ],
+   "deps": [
+    "preparation_service"
+   ],
+   "file": "app/modules/fulfillment/api/preparation_read_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/customer-orders/{order_id}/prepared-layout",
+   "permissions": [
+    "customer_order_view"
+   ],
+   "deps": [
+    "prepared_layout_service"
+   ],
+   "file": "app/modules/fulfillment/api/prepared_layout_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/customer-orders/{order_id}/prepared-layout/preview",
+   "permissions": [
+    "customer_order_view"
+   ],
+   "deps": [
+    "prepared_layout_service"
+   ],
+   "file": "app/modules/fulfillment/api/prepared_layout_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/customer-orders/{order_id}/prepared-layout/move-row",
+   "permissions": [
+    "outgoing_pallet_edit"
+   ],
+   "deps": [
+    "prepared_layout_service"
+   ],
+   "file": "app/modules/fulfillment/api/prepared_layout_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/integrations/sap/store-decisions",
+   "permissions": [
+    "sap_store_decision_import"
+   ],
+   "deps": [
+    "store_admission_service"
+   ],
+   "file": "app/modules/fulfillment/api/store_decision_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/integrations/sap/receipt-events",
+   "permissions": [
+    "sap_supply_view"
+   ],
+   "deps": [
+    "acknowledgement_service"
+   ],
+   "file": "app/modules/integrations/api/receipt_event_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/integrations/sap/receipt-events/acknowledgements",
+   "permissions": [
+    "sap_supply_import"
+   ],
+   "deps": [
+    "acknowledgement_service"
+   ],
+   "file": "app/modules/integrations/api/receipt_event_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/integrations/sap/receipt-events/{event_id}/retry",
+   "permissions": [
+    "sap_supply_import"
+   ],
+   "deps": [
+    "acknowledgement_service"
+   ],
+   "file": "app/modules/integrations/api/receipt_event_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/integrations/regulatory/runtime",
+   "permissions": [
+    "external_outbox_view"
+   ],
+   "deps": [
+    "regulatory_runtime_service"
+   ],
+   "file": "app/modules/integrations/api/regulatory_runtime_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/integrations/sap/artmas",
+   "permissions": [
+    "sap_article_import"
+   ],
+   "deps": [
+    "artmas_service"
+   ],
+   "file": "app/modules/integrations/api/routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/integrations/sap/artmas/{inbox_id}",
+   "permissions": [
+    "sap_article_import"
+   ],
+   "deps": [
+    "artmas_service"
+   ],
+   "file": "app/modules/integrations/api/routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/integrations/sap/store-returns",
+   "permissions": [
+    "sap_return_import"
+   ],
+   "deps": [
+    "sap_store_returns_service"
+   ],
+   "file": "app/modules/integrations/api/store_return_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/integrations/sap/supply-orders",
+   "permissions": [
+    "sap_supply_import"
+   ],
+   "deps": [
+    "supply_service"
+   ],
+   "file": "app/modules/integrations/api/supply_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/integrations/sap/supply-orders",
+   "permissions": [
+    "sap_supply_view"
+   ],
+   "deps": [
+    "supply_service"
+   ],
+   "file": "app/modules/integrations/api/supply_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/integrations/sap/supply-orders/by-receipt-document/{document_id}",
+   "permissions": [
+    "sap_supply_view"
+   ],
+   "deps": [
+    "supply_service"
+   ],
+   "file": "app/modules/integrations/api/supply_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/integrations/sap/supply-orders/{order_id}",
+   "permissions": [
+    "sap_supply_view"
+   ],
+   "deps": [
+    "supply_service"
+   ],
+   "file": "app/modules/integrations/api/supply_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/integrations/sap/supply-orders/{order_id}/pallet-plan",
+   "permissions": [
+    "sap_supply_view"
+   ],
+   "deps": [
+    "supply_service"
+   ],
+   "file": "app/modules/integrations/api/supply_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/integrations/sap/supply-orders/{order_id}/receipt-history",
+   "permissions": [
+    "sap_supply_view"
+   ],
+   "deps": [
+    "supply_service"
+   ],
+   "file": "app/modules/integrations/api/supply_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{task}/sscc-label",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [
+    "labels"
+   ],
+   "file": "app/modules/inventory/api/case_label_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/case-pick/tasks/{task}/sscc-label",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [
+    "labels"
+   ],
+   "file": "app/modules/inventory/api/case_label_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{task}/sscc-label/confirm",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [
+    "labels"
+   ],
+   "file": "app/modules/inventory/api/case_label_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/case-pick/tasks/{task}/sscc-label/document",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [
+    "labels"
+   ],
+   "file": "app/modules/inventory/api/case_label_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/case-pick/tasks/{task_id}/pallet-type",
+   "permissions": [
+    "case_pick_view"
+   ],
+   "deps": [
+    "case_type_service"
+   ],
+   "file": "app/modules/inventory/api/case_type_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{task_id}/pallet-type",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [
+    "case_type_service"
+   ],
+   "file": "app/modules/inventory/api/case_type_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/warehouse-tasks/{task_id}/full-pallet-shipment",
+   "permissions": [
+    "warehouse_task_view"
+   ],
+   "deps": [
+    "fullpal_shipment_service"
+   ],
+   "file": "app/modules/inventory/api/fullpal_shipment_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-tasks/{task_id}/full-pallet-shipment",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "fullpal_shipment_service"
+   ],
+   "file": "app/modules/inventory/api/fullpal_shipment_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/interwarehouse/source-loads/{load_id}/group-composition",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/interwarehouse/group-warehouses/{ware_id}",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/interwarehouse/group-plans/{plan_id}",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/interwarehouse/source-loads/{load_id}/group-proof",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/group-plan",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/plan",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/interwarehouse/warehouses/{ware_id}",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/unload",
+   "permissions": [
+    "interwarehouse_receive"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/receive",
+   "permissions": [
+    "interwarehouse_receive"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/group-receive",
+   "permissions": [
+    "interwarehouse_receive"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/group-placement",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/group-onward",
+   "permissions": [
+    "outgoing_pallet_edit"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/placement",
+   "permissions": [
+    "interwarehouse_receive"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/release-custody",
+   "permissions": [
+    "interwarehouse_receive"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/prepare-onward",
+   "permissions": [
+    "outgoing_pallet_edit"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/interwarehouse/plans/{plan_id}/units",
+   "permissions": [
+    "interwarehouse_receive"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/decisions",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/temperature-decisions",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/interwarehouse/trips/{trip_id}/incoming",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/interwarehouse/plans/{plan_id}/decisions",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/incident-closures",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/interwarehouse/receipts/{receipt_id}/shortage",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/shortage-reports",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/shortage-confirmations",
+   "permissions": [
+    "store_return_approve"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/recovery-reports",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/recovery-approvals",
+   "permissions": [
+    "store_return_approve"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/recovery-receipts",
+   "permissions": [
+    "interwarehouse_receive"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/recovery-placement",
+   "permissions": [
+    "interwarehouse_receive"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/prepare-recovery-onward",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/interwarehouse/recovery-cancellations",
+   "permissions": [
+    "store_return_approve"
+   ],
+   "deps": [
+    "interwarehouse_service"
+   ],
+   "file": "app/modules/inventory/api/interwarehouse_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/stock-posting/inventory/{revision_id}/lots",
+   "permissions": [
+    "stock_inventory_count"
+   ],
+   "deps": [
+    "inventory_observations_service"
+   ],
+   "file": "app/modules/inventory/api/inventory_count_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/stock-posting/inventory/counts",
+   "permissions": [
+    "stock_inventory_count"
+   ],
+   "deps": [
+    "inventory_observations_service"
+   ],
+   "file": "app/modules/inventory/api/inventory_count_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/stock-posting/inventory/revisions",
+   "permissions": [
+    "stock_inventory_count"
+   ],
+   "deps": [
+    "inventory_observations_service"
+   ],
+   "file": "app/modules/inventory/api/inventory_count_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/stock-posting/inventory/lots",
+   "permissions": [
+    "stock_inventory_count"
+   ],
+   "deps": [
+    "inventory_observations_service"
+   ],
+   "file": "app/modules/inventory/api/inventory_count_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/shorts/{short_id}/investigation",
+   "permissions": [
+    "inventory_task_view"
+   ],
+   "deps": [
+    "investigation_service"
+   ],
+   "file": "app/modules/inventory/api/investigation_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/shorts/{short_id}/investigation",
+   "permissions": [
+    "case_pick_short_approve"
+   ],
+   "deps": [
+    "investigation_service"
+   ],
+   "file": "app/modules/inventory/api/investigation_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/inventory/cctv-viewpoints",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "investigation_service"
+   ],
+   "file": "app/modules/inventory/api/investigation_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/cctv-viewpoints",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "investigation_service"
+   ],
+   "file": "app/modules/inventory/api/investigation_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/minimax/{warehouse}",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [
+    "minimax_service"
+   ],
+   "file": "app/modules/inventory/api/minimax_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/minimax/{warehouse}/reconcile",
+   "permissions": [
+    "pick_wave_launch"
+   ],
+   "deps": [
+    "minimax_service"
+   ],
+   "file": "app/modules/inventory/api/minimax_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/outgoing-quality/{identifier}",
+   "permissions": [
+    "outgoing_pallet_check"
+   ],
+   "deps": [
+    "outgoing_quality_service"
+   ],
+   "file": "app/modules/inventory/api/outgoing_quality_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/outgoing-quality/{identifier}/control-label",
+   "permissions": [
+    "outgoing_pallet_check"
+   ],
+   "deps": [
+    "outgoing_quality_service"
+   ],
+   "file": "app/modules/inventory/api/outgoing_quality_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/outgoing-quality/{identifier}/scan",
+   "permissions": [
+    "outgoing_pallet_check"
+   ],
+   "deps": [
+    "outgoing_quality_service"
+   ],
+   "file": "app/modules/inventory/api/outgoing_quality_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/outgoing-quality/{identifier}/weight",
+   "permissions": [
+    "outgoing_pallet_check"
+   ],
+   "deps": [
+    "outgoing_quality_service"
+   ],
+   "file": "app/modules/inventory/api/outgoing_quality_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/outgoing-quality/{identifier}/plan",
+   "permissions": [
+    "outgoing_pallet_check"
+   ],
+   "deps": [
+    "outgoing_quality_service"
+   ],
+   "file": "app/modules/inventory/api/outgoing_quality_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/outgoing-quality/{identifier}/final-weight",
+   "permissions": [
+    "outgoing_pallet_check"
+   ],
+   "deps": [
+    "outgoing_quality_service"
+   ],
+   "file": "app/modules/inventory/api/outgoing_quality_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/outgoing-quality/{identifier}/final-captures",
+   "permissions": [
+    "outgoing_pallet_check"
+   ],
+   "deps": [
+    "outgoing_quality_service"
+   ],
+   "file": "app/modules/inventory/api/outgoing_quality_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/pallet-floor-types",
+   "permissions": [
+    "stock_posting_shipping"
+   ],
+   "deps": [
+    "pallet_floor_service"
+   ],
+   "file": "app/modules/inventory/api/pallet_floor_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/pallet-floor-types",
+   "permissions": [
+    "stock_posting_shipping"
+   ],
+   "deps": [
+    "pallet_floor_service"
+   ],
+   "file": "app/modules/inventory/api/pallet_floor_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/case-pick/tasks/{task_id}/partial-shipment-layout",
+   "permissions": [
+    "case_pick_short_approve"
+   ],
+   "deps": [
+    "partial_layout_service"
+   ],
+   "file": "app/modules/inventory/api/partial_shipment_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{task_id}/partial-shipment-layout",
+   "permissions": [
+    "case_pick_short_approve"
+   ],
+   "deps": [
+    "partial_layout_service"
+   ],
+   "file": "app/modules/inventory/api/partial_shipment_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/soft-pools/{warehouse}/{article}",
+   "permissions": [
+    "stock_reservation_view"
+   ],
+   "deps": [
+    "pool_service"
+   ],
+   "file": "app/modules/inventory/api/pool_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/soft-pools/{warehouse}/{article}/allocate",
+   "permissions": [
+    "stock_reservation_edit"
+   ],
+   "deps": [
+    "pool_service"
+   ],
+   "file": "app/modules/inventory/api/pool_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/quality-policies/warehouses/{warehouse}",
+   "permissions": [
+    "warehouse_settings_view"
+   ],
+   "deps": [
+    "quality_scope_service"
+   ],
+   "file": "app/modules/inventory/api/quality_scope_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/quality-policies/warehouses/{warehouse}",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "quality_scope_service"
+   ],
+   "file": "app/modules/inventory/api/quality_scope_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/slotting/warehouses/{ware_id}/articles/{article}/recommendations",
+   "permissions": [
+    "pick_topology_edit"
+   ],
+   "deps": [
+    "range_proposal_service"
+   ],
+   "file": "app/modules/inventory/api/range_proposal_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/slotting/warehouses/{ware_id}/articles/{article}/recommendations/{proposal_id}",
+   "permissions": [
+    "pick_topology_view"
+   ],
+   "deps": [
+    "range_proposal_service"
+   ],
+   "file": "app/modules/inventory/api/range_proposal_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/slotting/warehouses/{ware_id}/articles/{article}/recommendations/{proposal_id}/cancel",
+   "permissions": [
+    "pick_topology_edit"
+   ],
+   "deps": [
+    "range_proposal_service"
+   ],
+   "file": "app/modules/inventory/api/range_proposal_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/slotting/warehouses/{ware_id}/articles/{article}/recommendations/{proposal_id}/approve",
+   "permissions": [
+    "pick_topology_edit"
+   ],
+   "deps": [
+    "range_proposal_service"
+   ],
+   "file": "app/modules/inventory/api/range_proposal_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/slotting/warehouses/{ware_id}/articles/{article}/recommendations/actions/close-drain",
+   "permissions": [
+    "pick_topology_edit"
+   ],
+   "deps": [
+    "range_proposal_service"
+   ],
+   "file": "app/modules/inventory/api/range_proposal_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/receiving/pallets/{pallet}/composition",
+   "permissions": [
+    "traceability_view"
+   ],
+   "deps": [
+    "query_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/receiving/putaway/{task_id}/replan",
+   "permissions": [
+    "warehouse_task_assign"
+   ],
+   "deps": [
+    "receiving_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/receiving/supply-orders/{order_id}/labels",
+   "permissions": [
+    "warehouse_receipt_confirm"
+   ],
+   "deps": [
+    "label_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/receiving/labels/{label_id}",
+   "permissions": [
+    "warehouse_receipt_confirm"
+   ],
+   "deps": [
+    "label_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/receiving/labels/{label_id}/confirm",
+   "permissions": [
+    "warehouse_receipt_confirm"
+   ],
+   "deps": [
+    "label_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/receiving/warehouses/{warehouse}/settings",
+   "permissions": [
+    "warehouse_settings_view"
+   ],
+   "deps": [
+    "configuration_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/receiving/warehouses/{warehouse}/settings",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "configuration_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/receiving/warehouses/{warehouse}/skus/{articul}/placement-rule",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "configuration_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/receiving/warehouses/{warehouse}/skus/{articul}/placement-rule",
+   "permissions": [
+    "warehouse_settings_view"
+   ],
+   "deps": [
+    "configuration_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/receiving/warehouses/{warehouse}/cells/{cell}/placement-rule",
+   "permissions": [
+    "warehouse_settings_view"
+   ],
+   "deps": [
+    "configuration_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/receiving/warehouses/{warehouse}/cells/{cell}/placement-rule",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "configuration_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/receiving/supply-orders/{order_id}/close",
+   "permissions": [
+    "warehouse_receipt_reconcile"
+   ],
+   "deps": [
+    "reconciliation_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/receiving/supply-orders/{order_id}/reopen",
+   "permissions": [
+    "warehouse_receipt_reconcile"
+   ],
+   "deps": [
+    "reconciliation_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/receiving/supply-orders/{order_id}/pallets",
+   "permissions": [
+    "warehouse_receipt_confirm"
+   ],
+   "deps": [
+    "receiving_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/receiving/putaway/{task_id}/complete",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "receiving_service"
+   ],
+   "file": "app/modules/inventory/api/receiving_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tasks",
+   "permissions": [
+    "inventory_task_view"
+   ],
+   "deps": [
+    "recovery_tasks_service"
+   ],
+   "file": "app/modules/inventory/api/recovery_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/tasks/{task_id}/claim",
+   "permissions": [
+    "inventory_task_execute"
+   ],
+   "deps": [
+    "recovery_tasks_service"
+   ],
+   "file": "app/modules/inventory/api/recovery_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/recovery-shorts",
+   "permissions": [
+    "case_pick_view"
+   ],
+   "deps": [
+    "recovery_tasks_service"
+   ],
+   "file": "app/modules/inventory/api/recovery_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/replenishment-progress",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [
+    "replenishment_progress_service"
+   ],
+   "file": "app/modules/inventory/api/replenishment_progress_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/return-disposal/report",
+   "permissions": [
+    "warehouse_return_dispatch"
+   ],
+   "deps": [
+    "return_disposal_service"
+   ],
+   "file": "app/modules/inventory/api/return_disposal_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/return-disposal/dispose",
+   "permissions": [
+    "store_return_approve"
+   ],
+   "deps": [
+    "return_disposal_service"
+   ],
+   "file": "app/modules/inventory/api/return_disposal_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/return-disposal/warehouses/{ware_id}",
+   "permissions": [
+    "warehouse_return_dispatch"
+   ],
+   "deps": [
+    "return_disposal_service"
+   ],
+   "file": "app/modules/inventory/api/return_disposal_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/inventory/store-return-putaway/warehouses/{ware_id}/targets",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "return_putaway_service"
+   ],
+   "file": "app/modules/inventory/api/return_putaway_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/store-return-putaway/warehouses/{ware_id}/pending",
+   "permissions": [
+    "warehouse_return_place"
+   ],
+   "deps": [
+    "return_putaway_service"
+   ],
+   "file": "app/modules/inventory/api/return_putaway_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/store-return-putaway/plan",
+   "permissions": [
+    "warehouse_return_place"
+   ],
+   "deps": [
+    "return_putaway_service"
+   ],
+   "file": "app/modules/inventory/api/return_putaway_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/slotting/warehouses/{ware_id}/articles/{article}/scenario",
+   "permissions": [
+    "pick_topology_view"
+   ],
+   "deps": [
+    "slotting_demand_service"
+   ],
+   "file": "app/modules/inventory/api/slotting_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/stock-posting/source-availability",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [
+    "source_availability_service"
+   ],
+   "file": "app/modules/inventory/api/source_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/stock-posting/manual-moves",
+   "permissions": [
+    "stock_posting_manual_move"
+   ],
+   "deps": [
+    "manual_stock_move_service"
+   ],
+   "file": "app/modules/inventory/api/stock_command_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/stock-posting/compatibility-setting",
+   "permissions": [
+    "stock_compatibility_admin"
+   ],
+   "deps": [
+    "stock_compatibility_service"
+   ],
+   "file": "app/modules/inventory/api/stock_command_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/stock-posting/compatibility/manual-moves",
+   "permissions": [
+    "stock_posting_manual_move"
+   ],
+   "deps": [
+    "manual_stock_move_service"
+   ],
+   "file": "app/modules/inventory/api/stock_command_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/stock-posting/receipt-documents/{document_id}/reverse",
+   "permissions": [
+    "stock_receipt_reverse"
+   ],
+   "deps": [
+    "receipt_reverse_service"
+   ],
+   "file": "app/modules/inventory/api/stock_command_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/stock-posting/status",
+   "permissions": [
+    "stock_reservation_view"
+   ],
+   "deps": [
+    "stock_queries_service"
+   ],
+   "file": "app/modules/inventory/api/stock_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/stock-posting/operations/{operation_id}",
+   "permissions": [
+    "stock_reservation_view"
+   ],
+   "deps": [
+    "stock_queries_service"
+   ],
+   "file": "app/modules/inventory/api/stock_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/inventory/store-returns/warehouses/{ware_id}/policy",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "store_return_receive_service"
+   ],
+   "file": "app/modules/inventory/api/store_return_receiving_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/store-returns/warehouses/{ware_id}/policy",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "store_return_receive_service"
+   ],
+   "file": "app/modules/inventory/api/store_return_receiving_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/store-returns/warehouses/{ware_id}/pending",
+   "permissions": [
+    "warehouse_return_receive"
+   ],
+   "deps": [
+    "store_return_receive_service"
+   ],
+   "file": "app/modules/inventory/api/store_return_receiving_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/store-returns/receive",
+   "permissions": [
+    "warehouse_return_receive"
+   ],
+   "deps": [
+    "store_return_receive_service"
+   ],
+   "file": "app/modules/inventory/api/store_return_receiving_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/inventory/store-returns/warehouses/{ware_id}/reuse-receiving",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "store_return_receive_service"
+   ],
+   "file": "app/modules/inventory/api/store_return_receiving_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/store-returns/warehouses/{ware_id}/pending-page",
+   "permissions": [
+    "warehouse_return_receive"
+   ],
+   "deps": [
+    "store_return_receive_service"
+   ],
+   "file": "app/modules/inventory/api/store_return_receiving_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/store-returns/warehouses/{ware_id}/pickups/{pickup_id}/source",
+   "permissions": [
+    "warehouse_return_receive"
+   ],
+   "deps": [
+    "store_return_receive_service"
+   ],
+   "file": "app/modules/inventory/api/store_return_receiving_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/supplier-handover/record",
+   "permissions": [
+    "warehouse_return_dispatch"
+   ],
+   "deps": [
+    "supplier_handover_service"
+   ],
+   "file": "app/modules/inventory/api/supplier_handover_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/supplier-handover/confirm",
+   "permissions": [
+    "store_return_approve"
+   ],
+   "deps": [
+    "supplier_handover_service"
+   ],
+   "file": "app/modules/inventory/api/supplier_handover_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/supplier-handover/warehouses/{ware_id}",
+   "permissions": [
+    "warehouse_return_dispatch"
+   ],
+   "deps": [
+    "supplier_handover_service"
+   ],
+   "file": "app/modules/inventory/api/supplier_handover_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/supplier-returns/prepare",
+   "permissions": [
+    "store_return_approve"
+   ],
+   "deps": [
+    "supplier_return_service"
+   ],
+   "file": "app/modules/inventory/api/supplier_return_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/supplier-returns/warehouses/{ware_id}",
+   "permissions": [
+    "warehouse_return_dispatch"
+   ],
+   "deps": [
+    "supplier_return_service"
+   ],
+   "file": "app/modules/inventory/api/supplier_return_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/supplier-returns/suppliers",
+   "permissions": [
+    "store_return_approve"
+   ],
+   "deps": [
+    "supplier_return_service"
+   ],
+   "file": "app/modules/inventory/api/supplier_return_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/tare/book",
+   "permissions": [
+    "tare_plan"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_assembly_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/tare/book-cancel",
+   "permissions": [
+    "tare_plan"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_assembly_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/warehouses/{ware_id}/availability",
+   "permissions": [
+    "tare_view"
+   ],
+   "deps": [
+    "tare_assembly_service"
+   ],
+   "file": "app/modules/inventory/api/tare_assembly_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/warehouses/{ware_id}/bookings",
+   "permissions": [
+    "tare_view"
+   ],
+   "deps": [
+    "tare_assembly_service"
+   ],
+   "file": "app/modules/inventory/api/tare_assembly_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/assembly/catalog",
+   "permissions": [
+    "tare_view"
+   ],
+   "deps": [
+    "tare_assembly_service"
+   ],
+   "file": "app/modules/inventory/api/tare_assembly_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/warehouses/{ware_id}/trips/{task_id}/loaded-bookings",
+   "permissions": [
+    "tare_view"
+   ],
+   "deps": [
+    "tare_assembly_service"
+   ],
+   "file": "app/modules/inventory/api/tare_assembly_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/warehouses/{ware_id}/waves/{wave_id}/forecast",
+   "permissions": [
+    "tare_view"
+   ],
+   "deps": [
+    "tare_assembly_service"
+   ],
+   "file": "app/modules/inventory/api/tare_assembly_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/load-recovery-candidates",
+   "permissions": [
+    "tare_view"
+   ],
+   "deps": [
+    "tare_assembly_service"
+   ],
+   "file": "app/modules/inventory/api/tare_assembly_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/tare/loss-report",
+   "permissions": [
+    "tare_loss_report"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_loss_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/tare/loss-decide",
+   "permissions": [
+    "tare_writeoff"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_loss_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/warehouses/{ware_id}/loss-cases",
+   "permissions": [
+    "tare_view"
+   ],
+   "deps": [
+    "tare_assembly_service"
+   ],
+   "file": "app/modules/inventory/api/tare_loss_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/return-policy",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "tare_policy_service"
+   ],
+   "file": "app/modules/inventory/api/tare_policy_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/inventory/tare/return-policy",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "tare_policy_service"
+   ],
+   "file": "app/modules/inventory/api/tare_policy_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/warehouses/{ware_id}/store-debt",
+   "permissions": [
+    "tare_view"
+   ],
+   "deps": [
+    "tare_policy_service"
+   ],
+   "file": "app/modules/inventory/api/tare_policy_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/tare/damage",
+   "permissions": [
+    "tare_damage"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_resolution_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/tare/writeoff",
+   "permissions": [
+    "tare_writeoff"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_resolution_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/warehouses/{ware_id}/damage-cases",
+   "permissions": [
+    "tare_view"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_resolution_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/tare/count",
+   "permissions": [
+    "tare_adjust"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/tare/offer",
+   "permissions": [
+    "tare_offer"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/tare/accept",
+   "permissions": [
+    "tare_accept"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/tare/offer-cancel",
+   "permissions": [
+    "tare_offer"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/warehouses/{ware_id}/balances",
+   "permissions": [
+    "tare_view"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/trips/{task_id}/offers",
+   "permissions": [
+    "tare_view"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/trips/{task_id}/context",
+   "permissions": [
+    "tare_view"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/tare/warehouses/{ware_id}/damage-custody",
+   "permissions": [
+    "tare_view"
+   ],
+   "deps": [
+    "tare_service"
+   ],
+   "file": "app/modules/inventory/api/tare_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/warehouse-tasks/{task_id}/scan-context",
+   "permissions": [
+    "warehouse_task_view"
+   ],
+   "deps": [
+    "scan_draft_service"
+   ],
+   "file": "app/modules/inventory/api/task_scan_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/warehouse-tasks/{task_id}/scan-draft",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "scan_draft_service"
+   ],
+   "file": "app/modules/inventory/api/task_scan_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-tasks/{task_id}/scan-draft",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "scan_draft_service"
+   ],
+   "file": "app/modules/inventory/api/task_scan_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/trace-manifests",
+   "permissions": [
+    "trace_manifest_import"
+   ],
+   "deps": [
+    "trace_manifest_service"
+   ],
+   "file": "app/modules/inventory/api/trace_manifest_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/trace-manifests/warehouses/{ware_id}",
+   "permissions": [
+    "trace_manifest_import"
+   ],
+   "deps": [
+    "trace_manifest_service"
+   ],
+   "file": "app/modules/inventory/api/trace_manifest_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/trace-manifests/inventory-context",
+   "permissions": [
+    "stock_inventory_count"
+   ],
+   "deps": [
+    "trace_manifest_service"
+   ],
+   "file": "app/modules/inventory/api/trace_manifest_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/trace-manifests/mes-context",
+   "permissions": [
+    "mes_wms_bridge_apply"
+   ],
+   "deps": [
+    "trace_manifest_service"
+   ],
+   "file": "app/modules/inventory/api/trace_manifest_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/trace-manifests/aggregations/invalidate",
+   "permissions": [
+    "trace_manifest_import"
+   ],
+   "deps": [
+    "trace_manifest_service"
+   ],
+   "file": "app/modules/inventory/api/trace_manifest_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/trace-manifests/warehouses/{ware_id}/pallets/{origin}/aggregations",
+   "permissions": [
+    "traceability_view"
+   ],
+   "deps": [
+    "trace_manifest_service"
+   ],
+   "file": "app/modules/inventory/api/trace_manifest_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/receiving/st-deferrals/waiting-tasks",
+   "permissions": [
+    "warehouse_task_edit"
+   ],
+   "deps": [
+    "waiting_task_dependency"
+   ],
+   "file": "app/modules/inventory/api/waiting_task_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/receiving/st-deferrals/waiting-tasks",
+   "permissions": [
+    "warehouse_task_view"
+   ],
+   "deps": [
+    "waiting_task_dependency"
+   ],
+   "file": "app/modules/inventory/api/waiting_task_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-hus/repack-slot",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_repack_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-hus/repack-case-slot",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_repack_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/warehouse-hus/composition",
+   "permissions": [
+    "warehouse_task_view"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/warehouse-hus/target-slots",
+   "permissions": [
+    "warehouse_task_view"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-hus/create",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-hus/attach",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-hus/detach",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-hus/move",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-hus/plan-move",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-hus/attach-case",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-hus/detach-case",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-hus/ship",
+   "permissions": [
+    "stock_posting_shipping"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-hus/unpack",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-hus/relocate-slot",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-hus/unpack-case",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [
+    "warehouse_hu_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_hu_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/inventory/warehouse-scales/devices/{device}",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "warehouse_scale_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_scale_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/warehouse-scales/captures",
+   "permissions": [
+    "warehouse_scale_ingest"
+   ],
+   "deps": [
+    "warehouse_scale_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_scale_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/warehouse-scales/captures",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [
+    "warehouse_scale_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_scale_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/warehouse-scales/captures/{key}",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [
+    "warehouse_scale_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_scale_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/inventory/warehouse-scales/final-captures",
+   "permissions": [
+    "warehouse_scale_ingest"
+   ],
+   "deps": [
+    "warehouse_scale_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_scale_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/inventory/warehouse-scales/final-captures",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [
+    "warehouse_scale_service"
+   ],
+   "file": "app/modules/inventory/api/warehouse_scale_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/waves/{wave_id}/execution",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [
+    "wave_execution_service"
+   ],
+   "file": "app/modules/inventory/api/wave_execution_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/waves/{wave_id}/finish-execution",
+   "permissions": [
+    "pick_wave_launch"
+   ],
+   "deps": [
+    "wave_execution_service"
+   ],
+   "file": "app/modules/inventory/api/wave_execution_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/waves/{wave_id}/pick-readiness",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [
+    "wave_pick_service"
+   ],
+   "file": "app/modules/inventory/api/wave_pick_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/waves/{wave_id}/release-picking",
+   "permissions": [
+    "pick_wave_launch"
+   ],
+   "deps": [
+    "wave_pick_service"
+   ],
+   "file": "app/modules/inventory/api/wave_pick_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{task}/lines/{line}/weighted-box",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [
+    "weighted_case_service"
+   ],
+   "file": "app/modules/inventory/api/weighted_case_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{task}/lines/{line}/weigh-line",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [
+    "weighted_case_service"
+   ],
+   "file": "app/modules/inventory/api/weighted_case_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/case-pick/tasks/{task}/lines/{line}/order-weight-preview",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [
+    "weighted_case_service"
+   ],
+   "file": "app/modules/inventory/api/weighted_case_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/case-pick/shorts/{short}/weight-preview",
+   "permissions": [
+    "case_pick_short_approve"
+   ],
+   "deps": [
+    "weighted_case_service"
+   ],
+   "file": "app/modules/inventory/api/weighted_case_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/order-rows/{row}/weighted-box-options",
+   "permissions": [
+    "pick_plan_create"
+   ],
+   "deps": [
+    "weighted_plan_service"
+   ],
+   "file": "app/modules/inventory/api/weighted_plan_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/order-rows/{row}/weighted-box-approval-preview",
+   "permissions": [
+    "case_pick_short_approve"
+   ],
+   "deps": [
+    "weighted_plan_service"
+   ],
+   "file": "app/modules/inventory/api/weighted_plan_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/weighted-box-choices",
+   "permissions": [
+    "case_pick_short_approve"
+   ],
+   "deps": [
+    "weighted_plan_service"
+   ],
+   "file": "app/modules/inventory/api/weighted_plan_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/weighted-box-choices/{choice}/cancel",
+   "permissions": [
+    "case_pick_short_approve"
+   ],
+   "deps": [
+    "weighted_plan_service"
+   ],
+   "file": "app/modules/inventory/api/weighted_plan_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/sku-allocation/{warehouse}/{article}",
+   "permissions": [
+    "stock_reservation_view"
+   ],
+   "deps": [
+    "allocation_policy_service"
+   ],
+   "file": "app/modules/master_data/api/allocation_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/sku-allocation/{warehouse}/{article}",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "allocation_policy_service"
+   ],
+   "file": "app/modules/master_data/api/allocation_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/sku-quality-weight/{warehouse}/{article}",
+   "permissions": [
+    "finished_goods_view"
+   ],
+   "deps": [
+    "quality_weight_service"
+   ],
+   "file": "app/modules/master_data/api/quality_weight_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/sku-quality-weight/{warehouse}/{article}",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "quality_weight_service"
+   ],
+   "file": "app/modules/master_data/api/quality_weight_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finished-goods/skus/{articul}/receiving-policy",
+   "permissions": [
+    "finished_goods_view"
+   ],
+   "deps": [
+    "policy_service"
+   ],
+   "file": "app/modules/master_data/api/routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/finished-goods/skus/{articul}/receiving-policy",
+   "permissions": [
+    "finished_goods_edit"
+   ],
+   "deps": [
+    "policy_service"
+   ],
+   "file": "app/modules/master_data/api/routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/master-data/stores",
+   "permissions": [],
+   "deps": [
+    "store_directory_service",
+    "store_reader"
+   ],
+   "file": "app/modules/master_data/api/store_directory_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/master-data/stores/card",
+   "permissions": [],
+   "deps": [
+    "store_directory_service",
+    "store_reader"
+   ],
+   "file": "app/modules/master_data/api/store_directory_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/master-data/stores/profile",
+   "permissions": [],
+   "deps": [
+    "store_profile_service",
+    "store_reader"
+   ],
+   "file": "app/modules/master_data/api/store_profile_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/master-data/stores/profile",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "store_profile_service"
+   ],
+   "file": "app/modules/master_data/api/store_profile_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/master-data/warehouses/options",
+   "permissions": [
+    "warehouse_settings_view"
+   ],
+   "deps": [
+    "warehouse_options_service"
+   ],
+   "file": "app/modules/master_data/api/warehouse_options_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/resources/{resource_id}/qualifications",
+   "permissions": [
+    "resource_management_view"
+   ],
+   "deps": [
+    "qualification_service"
+   ],
+   "file": "app/modules/resources/api/qualification_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/resources/{resource_id}/qualifications",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "qualification_service"
+   ],
+   "file": "app/modules/resources/api/qualification_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/sessions/{session_id}/position",
+   "permissions": [],
+   "deps": [
+    "qualification_service",
+    "resource_position_user"
+   ],
+   "file": "app/modules/resources/api/qualification_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/resources/warehouse-tasks/{task_id}/candidates",
+   "permissions": [
+    "resource_management_view"
+   ],
+   "deps": [
+    "qualification_service"
+   ],
+   "file": "app/modules/resources/api/qualification_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/warehouse-tasks/{task_id}/dispatch-nearest",
+   "permissions": [
+    "resource_dispatch_manage"
+   ],
+   "deps": [
+    "qualification_service"
+   ],
+   "file": "app/modules/resources/api/qualification_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/resources/reach-shifts/{base_shift_id}",
+   "permissions": [
+    "resource_shift_view"
+   ],
+   "deps": [
+    "reach_shift_service"
+   ],
+   "file": "app/modules/resources/api/reach_shift_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/reach-shifts/{base_shift_id}",
+   "permissions": [
+    "resource_shift_edit"
+   ],
+   "deps": [
+    "reach_shift_service"
+   ],
+   "file": "app/modules/resources/api/reach_shift_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/resources/workload/waves/{wave_id}/time-context",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [
+    "wave_time_service"
+   ],
+   "file": "app/modules/resources/api/wave_time_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/workload/waves/approve-time",
+   "permissions": [
+    "pick_wave_launch"
+   ],
+   "deps": [
+    "wave_time_service"
+   ],
+   "file": "app/modules/resources/api/wave_time_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/workload/norms",
+   "permissions": [
+    "resource_shift_edit"
+   ],
+   "deps": [
+    "workload_config_service"
+   ],
+   "file": "app/modules/resources/api/workload_config_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/workload/attendance",
+   "permissions": [
+    "resource_shift_edit"
+   ],
+   "deps": [
+    "workload_config_service"
+   ],
+   "file": "app/modules/resources/api/workload_config_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/workload/attendance/replace",
+   "permissions": [
+    "resource_shift_edit"
+   ],
+   "deps": [
+    "workload_config_service"
+   ],
+   "file": "app/modules/resources/api/workload_config_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/workload/attendance/cancel",
+   "permissions": [
+    "resource_shift_edit"
+   ],
+   "deps": [
+    "workload_config_service"
+   ],
+   "file": "app/modules/resources/api/workload_config_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/resources/workload/warehouses/{ware_id}",
+   "permissions": [
+    "resource_shift_view"
+   ],
+   "deps": [
+    "workload_config_service"
+   ],
+   "file": "app/modules/resources/api/workload_config_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/workload/forecast-scopes",
+   "permissions": [
+    "resource_shift_edit"
+   ],
+   "deps": [
+    "workload_config_service"
+   ],
+   "file": "app/modules/resources/api/workload_config_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/resources/workload/warehouses/{ware_id}/attendance/{plan_id}/history",
+   "permissions": [
+    "resource_shift_view"
+   ],
+   "deps": [
+    "workload_history_service"
+   ],
+   "file": "app/modules/resources/api/workload_history_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/workload/warehouses/{ware_id}/preview",
+   "permissions": [
+    "resource_shift_view"
+   ],
+   "deps": [
+    "workload_monitor_service"
+   ],
+   "file": "app/modules/resources/api/workload_monitor_routes.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/transport/driver-bindings/{driver_id}",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "driver_binding_service"
+   ],
+   "file": "app/modules/transport/api/driver_binding_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/driver-bindings/{driver_id}",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "driver_binding_service"
+   ],
+   "file": "app/modules/transport/api/driver_binding_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/driver/trips",
+   "permissions": [],
+   "deps": [
+    "driver_workspace_service",
+    "get_current_user"
+   ],
+   "file": "app/modules/transport/api/driver_workspace_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/driver/trips/{task_id}/sts",
+   "permissions": [],
+   "deps": [
+    "driver_workspace_service",
+    "get_current_user"
+   ],
+   "file": "app/modules/transport/api/driver_workspace_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/driver/trips/{task_id}/ops",
+   "permissions": [],
+   "deps": [
+    "driver_workspace_service",
+    "get_current_user"
+   ],
+   "file": "app/modules/transport/api/driver_workspace_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/driver/ops/{op_id}/start",
+   "permissions": [],
+   "deps": [
+    "driver_workspace_service",
+    "get_current_user"
+   ],
+   "file": "app/modules/transport/api/driver_workspace_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/driver/ops/{op_id}/done",
+   "permissions": [],
+   "deps": [
+    "driver_workspace_service",
+    "get_current_user"
+   ],
+   "file": "app/modules/transport/api/driver_workspace_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/warehouse-forecast/warehouses/{ware_id}/view",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "warehouse_forecast_service"
+   ],
+   "file": "app/modules/transport/api/forecast_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/warehouse-forecast/warehouses/{ware_id}/project",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "warehouse_forecast_service"
+   ],
+   "file": "app/modules/transport/api/forecast_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/warehouse-forecast/source",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "warehouse_forecast_service"
+   ],
+   "file": "app/modules/transport/api/forecast_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/loading/{task_id}/status",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "transport_loading_service"
+   ],
+   "file": "app/modules/transport/api/loading_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/loading/confirm",
+   "permissions": [
+    "stock_posting_shipping"
+   ],
+   "deps": [
+    "transport_loading_service"
+   ],
+   "file": "app/modules/transport/api/loading_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/loading/{task_id}/depart",
+   "permissions": [
+    "transport_dispatch_close"
+   ],
+   "deps": [
+    "transport_loading_service"
+   ],
+   "file": "app/modules/transport/api/loading_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/loading/single-preview",
+   "permissions": [
+    "stock_posting_shipping"
+   ],
+   "deps": [
+    "transport_loading_service"
+   ],
+   "file": "app/modules/transport/api/loading_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/loading/confirm-single",
+   "permissions": [
+    "stock_posting_shipping"
+   ],
+   "deps": [
+    "transport_loading_service"
+   ],
+   "file": "app/modules/transport/api/loading_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/loading/reconciliation-preview",
+   "permissions": [
+    "stock_posting_shipping"
+   ],
+   "deps": [
+    "transport_loading_service"
+   ],
+   "file": "app/modules/transport/api/loading_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/loading/confirm-reconciliation",
+   "permissions": [
+    "stock_posting_shipping"
+   ],
+   "deps": [
+    "transport_loading_service"
+   ],
+   "file": "app/modules/transport/api/loading_routes.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/transport/operations/{op_id}/fact",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "operation_fact_service"
+   ],
+   "file": "app/modules/transport/api/operation_fact_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/preflight/trips/{trip_id}/time-context",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "transport_preflight_service"
+   ],
+   "file": "app/modules/transport/api/preflight_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/preflight/trips/{trip_id}/coordination",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "transport_preflight_service"
+   ],
+   "file": "app/modules/transport/api/preflight_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/preflight/time-approvals",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "transport_preflight_service"
+   ],
+   "file": "app/modules/transport/api/preflight_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/preflight/trips/{trip_id}/time",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "transport_preflight_service"
+   ],
+   "file": "app/modules/transport/api/preflight_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/preflight/plans/{plan_id}",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "transport_preflight_service"
+   ],
+   "file": "app/modules/transport/api/preflight_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/preflight/trips/{trip_id}",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "transport_preflight_service"
+   ],
+   "file": "app/modules/transport/api/preflight_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/preflight/trips/{trip_id}/route-context",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "transport_preflight_service"
+   ],
+   "file": "app/modules/transport/api/preflight_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/preflight/route-inputs",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "transport_preflight_service"
+   ],
+   "file": "app/modules/transport/api/preflight_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/preflight/trips/{trip_id}/road-legs",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "transport_preflight_service"
+   ],
+   "file": "app/modules/transport/api/preflight_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/preflight/trips/{trip_id}/delivery-windows",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "transport_preflight_service"
+   ],
+   "file": "app/modules/transport/api/preflight_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/st-deferrals/context",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "st_deferral_service"
+   ],
+   "file": "app/modules/transport/api/st_deferral_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/st-deferrals",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [
+    "st_deferral_service"
+   ],
+   "file": "app/modules/transport/api/st_deferral_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/st-deferrals/history",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "st_deferral_service"
+   ],
+   "file": "app/modules/transport/api/st_deferral_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/st-deferrals/trip-candidates",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "st_deferral_service"
+   ],
+   "file": "app/modules/transport/api/st_deferral_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/loading/unload",
+   "permissions": [
+    "stock_posting_shipping"
+   ],
+   "deps": [
+    "transport_loading_service"
+   ],
+   "file": "app/modules/transport/api/unloading_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/vehicle-profiles",
+   "permissions": [
+    "transport_fleet_edit"
+   ],
+   "deps": [
+    "vehicle_profile_service"
+   ],
+   "file": "app/modules/transport/api/vehicle_profile_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/vehicles/{vehicle_id}/profile",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "vehicle_profile_service"
+   ],
+   "file": "app/modules/transport/api/vehicle_profile_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/vehicle-profiles/tare-types",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [
+    "vehicle_profile_service"
+   ],
+   "file": "app/modules/transport/api/vehicle_profile_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/transport/warehouse-depots/{warehouse_id}",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "warehouse_depot_service"
+   ],
+   "file": "app/modules/transport/api/warehouse_depot_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/warehouse-depots",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "warehouse_depot_service"
+   ],
+   "file": "app/modules/transport/api/warehouse_depot_routes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/transport/warehouse-depots/resolve",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [
+    "warehouse_depot_service"
+   ],
+   "file": "app/modules/transport/api/warehouse_depot_routes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/auth/login",
+   "permissions": [
+    "wms_admin_login"
+   ],
+   "deps": [],
+   "file": "app/routers/admin_auth.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/auth/me",
+   "permissions": [
+    "wms_admin_login"
+   ],
+   "deps": [],
+   "file": "app/routers/admin_auth.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/rights/users",
+   "permissions": [
+    "rights_admin_view"
+   ],
+   "deps": [],
+   "file": "app/routers/admin_rights.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/rights/groups",
+   "permissions": [
+    "rights_admin_view"
+   ],
+   "deps": [],
+   "file": "app/routers/admin_rights.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/rights/groups",
+   "permissions": [
+    "rights_admin_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/admin_rights.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/rights/groups/{group_id}/rights",
+   "permissions": [
+    "rights_admin_view"
+   ],
+   "deps": [],
+   "file": "app/routers/admin_rights.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/rights/groups/{group_id}/rights",
+   "permissions": [
+    "rights_admin_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/admin_rights.py"
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/admin/rights/groups/{group_id}/rights/{right_name}",
+   "permissions": [
+    "rights_admin_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/admin_rights.py"
+  },
+  {
+   "method": "PUT",
+   "path": "/api/admin/rights/users/{user_id}/group",
+   "permissions": [
+    "rights_admin_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/admin_rights.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/api-calls",
+   "permissions": [
+    "api_audit_view"
+   ],
+   "deps": [],
+   "file": "app/routers/api_audit.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/api-calls/{api_call_id}",
+   "permissions": [
+    "api_audit_view"
+   ],
+   "deps": [],
+   "file": "app/routers/api_audit.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/api-calls/replay",
+   "permissions": [
+    "api_audit_view"
+   ],
+   "deps": [],
+   "file": "app/routers/api_audit.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/bom",
+   "permissions": [
+    "bom_view"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/bom",
+   "permissions": [
+    "bom_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/bom/default",
+   "permissions": [
+    "bom_view"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/bom/{bom_id}",
+   "permissions": [
+    "bom_view"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/bom/{bom_id}",
+   "permissions": [
+    "bom_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/bom/{bom_id}/lines",
+   "permissions": [
+    "bom_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/bom/{bom_id}/lines/{line_id}",
+   "permissions": [
+    "bom_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/bom/{bom_id}/lines/{line_id}",
+   "permissions": [
+    "bom_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/bom/{bom_id}/approve",
+   "permissions": [
+    "bom_approve"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/bom/{bom_id}/block",
+   "permissions": [
+    "bom_block"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/bom/{bom_id}/archive",
+   "permissions": [
+    "bom_block"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/bom/{bom_id}/make-primary",
+   "permissions": [
+    "bom_make_primary"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/bom/{bom_id}/clone",
+   "permissions": [
+    "bom_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/bom/{bom_id}/calculate",
+   "permissions": [
+    "bom_view"
+   ],
+   "deps": [],
+   "file": "app/routers/bom.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/waves/{pick_wave_id}/ensure",
+   "permissions": [
+    "case_pick_manage"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/case-pick/tasks",
+   "permissions": [
+    "case_pick_view"
+   ],
+   "deps": [
+    "case_read_service"
+   ],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/case-pick/tasks/{case_pick_task_id}",
+   "permissions": [
+    "case_pick_view"
+   ],
+   "deps": [
+    "case_read_service"
+   ],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{case_pick_task_id}/claim",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{case_pick_task_id}/start",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{case_pick_task_id}/transfer",
+   "permissions": [
+    "case_pick_manage"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{case_pick_task_id}/move-carrier",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/case-pick/tasks/{case_pick_task_id}/lines/{line_id}/marking-policy",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{case_pick_task_id}/lines/{line_id}/confirm",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{case_pick_task_id}/lines/{line_id}/short",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{case_pick_task_id}/close-pallet",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/case-pick/shorts",
+   "permissions": [
+    "case_pick_view"
+   ],
+   "deps": [
+    "case_read_service"
+   ],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/shorts/{short_id}/approve",
+   "permissions": [
+    "case_pick_short_approve"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/shorts/{short_id}/reject",
+   "permissions": [
+    "case_pick_short_approve"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/case-pick/pallet-types",
+   "permissions": [
+    "case_pick_view"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/pallet-types",
+   "permissions": [
+    "case_pick_manage"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{case_pick_task_id}/bind-shipment",
+   "permissions": [
+    "case_pick_execute"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/case-pick/tasks/{case_pick_task_id}/return-carrier",
+   "permissions": [
+    "case_pick_manage"
+   ],
+   "deps": [],
+   "file": "app/routers/case_pick.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/customers",
+   "permissions": [
+    "customer_view"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_orders.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/customers",
+   "permissions": [
+    "customer_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_orders.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/customers/{customer_id}",
+   "permissions": [
+    "customer_view"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_orders.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/customers/{customer_id}",
+   "permissions": [
+    "customer_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_orders.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/customers/{customer_id}/addresses",
+   "permissions": [
+    "customer_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_orders.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/customer-orders",
+   "permissions": [
+    "customer_order_view"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_orders.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/customer-orders/{customer_order_id}",
+   "permissions": [
+    "customer_order_view"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_orders.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/customer-orders/import-legacy/{legacy_order_id}",
+   "permissions": [
+    "customer_order_import"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_orders.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/customer-orders/{customer_order_id}/fulfillment",
+   "permissions": [
+    "customer_fulfillment_view"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_orders.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/customers/{customer_id}/product-rules",
+   "permissions": [
+    "customer_rule_view"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_rules.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/customers/{customer_id}/product-rules",
+   "permissions": [
+    "customer_rule_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_rules.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/customers/{customer_id}/shelf-life-rules",
+   "permissions": [
+    "customer_rule_view"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_rules.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/customers/{customer_id}/shelf-life-rules",
+   "permissions": [
+    "customer_rule_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_rules.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/customers/{customer_id}/stack-rules",
+   "permissions": [
+    "customer_rule_view"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_rules.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/customers/{customer_id}/stack-rules",
+   "permissions": [
+    "customer_rule_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_rules.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/customers/{customer_id}/vehicle-rules",
+   "permissions": [
+    "customer_rule_view"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_rules.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/customers/{customer_id}/vehicle-rules",
+   "permissions": [
+    "customer_rule_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_rules.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/vehicle-types",
+   "permissions": [
+    "vehicle_type_view"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_rules.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/vehicle-types",
+   "permissions": [
+    "vehicle_type_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/customer_rules.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/billing/orders/{order_id}/export/1c",
+   "permissions": [
+    "edit_bill_tt"
+   ],
+   "deps": [],
+   "file": "app/routers/export_1c.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/billing/orders/export/1c",
+   "permissions": [
+    "edit_bill_tt"
+   ],
+   "deps": [],
+   "file": "app/routers/export_1c.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finished-goods/skus",
+   "permissions": [
+    "finished_goods_view"
+   ],
+   "deps": [],
+   "file": "app/routers/finished_goods.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/finished-goods/skus/{articul}",
+   "permissions": [
+    "finished_goods_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/finished_goods.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finished-goods/warehouses",
+   "permissions": [
+    "finished_goods_view"
+   ],
+   "deps": [],
+   "file": "app/routers/finished_goods.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finished-goods/batches",
+   "permissions": [
+    "finished_goods_batch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/finished_goods.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/finished-goods/remains",
+   "permissions": [
+    "finished_goods_stock_view"
+   ],
+   "deps": [],
+   "file": "app/routers/finished_goods.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/gps/track",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/gps.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/geofences",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/gps.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/transport/geofences/{addr_id:path}",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/gps.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/vehicles/positions",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/gps.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/vehicles/{vehicle_id}/track",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/gps.py"
+  },
+  {
+   "method": "GET",
+   "path": "/health",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/health.py"
+  },
+  {
+   "method": "GET",
+   "path": "/db/ping",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/health.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/maintenance/stats",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/maintenance.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/maintenance/archive",
+   "permissions": [
+    "rights_admin_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/maintenance.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/mes/production-orders",
+   "permissions": [
+    "mes_production_view"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/mes/production-orders",
+   "permissions": [
+    "mes_production_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/mes/production-orders/{production_order_id}",
+   "permissions": [
+    "mes_production_view"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/mes/production-orders/{production_order_id}/issue-raw",
+   "permissions": [
+    "mes_production_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/mes/production-orders/{production_order_id}/complete",
+   "permissions": [
+    "mes_production_complete"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/mes/production-orders/{production_order_id}/apply-wms",
+   "permissions": [
+    "mes_wms_bridge_apply"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/mes/production-orders/{production_order_id}/genealogy",
+   "permissions": [
+    "mes_production_view"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/mes/production-orders/{production_order_id}/raw-supply/calculate",
+   "permissions": [
+    "mes_raw_supply_calculate"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/mes/production-orders/{production_order_id}/raw-supply",
+   "permissions": [
+    "mes_raw_supply_view"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/mes/production-orders/{production_order_id}/release-to-production",
+   "permissions": [
+    "mes_raw_transfer_create"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/mes/raw-transfer-tasks",
+   "permissions": [
+    "mes_raw_supply_view"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/mes/raw-transfer-tasks/{task_id}",
+   "permissions": [
+    "mes_raw_supply_view"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/mes/raw-shortages",
+   "permissions": [
+    "mes_raw_supply_view"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/mes/raw-transfer-tasks/{task_id}/confirm",
+   "permissions": [
+    "mes_raw_transfer_confirm"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/mes/raw-transfer-tasks/{task_id}/cancel",
+   "permissions": [
+    "mes_raw_transfer_cancel"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/mes/movements",
+   "permissions": [
+    "mes_production_view"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/mes/movements/{movement_id}/retry",
+   "permissions": [
+    "mes_wms_bridge_apply"
+   ],
+   "deps": [],
+   "file": "app/routers/mes.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/notifications/subscribe",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/notifications.py"
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/admin/notifications/subscribe",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/notifications.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/notifications/broadcast",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/notifications.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/notifications/settings",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/notifications.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/notifications/settings",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/notifications.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/notifications/test-email",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/notifications.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/plans",
+   "permissions": [
+    "pick_plan_create"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/plans",
+   "permissions": [
+    "pick_plan_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/plans/{pick_plan_id}",
+   "permissions": [
+    "pick_plan_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/plans/{pick_plan_id}/cancel",
+   "permissions": [
+    "pick_plan_cancel"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/reservations",
+   "permissions": [
+    "pick_reservation_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/shortages",
+   "permissions": [
+    "pick_shortage_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/plans/{pick_plan_id}/shortages",
+   "permissions": [
+    "pick_shortage_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/waves",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/waves",
+   "permissions": [
+    "pick_wave_create"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/waves/candidates",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/waves/{pick_wave_id}/header",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/waves/{pick_wave_id}",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/waves/{pick_wave_id}/readiness",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/waves/{pick_wave_id}/plans",
+   "permissions": [
+    "pick_wave_create"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/waves/{pick_wave_id}/calculate",
+   "permissions": [
+    "pick_wave_calculate"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/waves/{pick_wave_id}/launch",
+   "permissions": [
+    "pick_wave_launch"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/waves/{pick_wave_id}/cancel",
+   "permissions": [
+    "pick_wave_cancel"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/waves/{pick_wave_id}/release-reservations",
+   "permissions": [
+    "pick_wave_release_reserves"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/waves/{pick_wave_id}/replenishment/minimax-check",
+   "permissions": [
+    "pick_wave_launch"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/waves/{pick_wave_id}/staging/release",
+   "permissions": [
+    "pick_wave_launch"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/waves/{pick_wave_id}/reservations",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/waves/{pick_wave_id}/replenishment-tasks",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/waves/{pick_wave_id}/tasks",
+   "permissions": [
+    "pick_wave_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/waves/{pick_wave_id}/tasks/{pick_task_id}/complete",
+   "permissions": [
+    "pick_wave_launch"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/waves/{pick_wave_id}/audit",
+   "permissions": [
+    "pick_wave_audit_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/routes",
+   "permissions": [
+    "pick_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/routes",
+   "permissions": [
+    "pick_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/route-cells",
+   "permissions": [
+    "pick_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/route-cells",
+   "permissions": [
+    "pick_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/pick-faces",
+   "permissions": [
+    "pick_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/pick-faces",
+   "permissions": [
+    "pick_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/pick-faces/{pick_face_id}/articuls",
+   "permissions": [
+    "pick_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/pick-faces/{pick_face_id}/articuls",
+   "permissions": [
+    "pick_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/picking/articul-replenishment-rules",
+   "permissions": [
+    "pick_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/picking/articul-replenishment-rules",
+   "permissions": [
+    "pick_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/picking.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/production-batches",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/production-batches/{prod_batch_id}/status",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/production-batches/{prod_batch_id}/pallets",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/raw-batches",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/raw-batches/{raw_batch_id}",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/production-batches/{prod_batch_id}/raw-usage",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/production-batches/{prod_batch_id}/crpt-codes",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/production-batches/{prod_batch_id}/aggregations",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/aggregations/{aggregation_id}/items",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/production-batches/{prod_batch_id}/mercury",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/production-batches/{prod_batch_id}/regulatory-status",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/regulatory/mercury-sites",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/regulatory/mercury-sites",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/production-batches/{prod_batch_id}/mercury-operations",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/mercury-operations",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/mercury-operations/{operation_row_id}",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/crpt-codes/status",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/regulatory/journal",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/regulatory/outbox",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/production.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/product-shipment-settings",
+   "permissions": [
+    "quality_batch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/products.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/product-shipment-settings/{articul}",
+   "permissions": [
+    "quality_batch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/products.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/raw-material/skus",
+   "permissions": [
+    "raw_material_view"
+   ],
+   "deps": [],
+   "file": "app/routers/raw_material.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/raw-material/skus/{articul}",
+   "permissions": [
+    "raw_material_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/raw_material.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/raw-material/warehouses",
+   "permissions": [
+    "raw_material_view"
+   ],
+   "deps": [],
+   "file": "app/routers/raw_material.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/raw-material/remains",
+   "permissions": [
+    "raw_material_stock_view"
+   ],
+   "deps": [],
+   "file": "app/routers/raw_material.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/resources/types",
+   "permissions": [
+    "resource_management_view"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/resources/equipment",
+   "permissions": [
+    "resource_management_view"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/equipment",
+   "permissions": [
+    "resource_management_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/resources",
+   "permissions": [
+    "resource_management_view"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources",
+   "permissions": [
+    "resource_management_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/resources/shifts",
+   "permissions": [
+    "resource_shift_view"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/shifts",
+   "permissions": [
+    "resource_shift_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/resources/sessions",
+   "permissions": [
+    "resource_session_view"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/sessions/login",
+   "permissions": [
+    "resource_session_manage"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/sessions/tsd-login",
+   "permissions": [
+    "resource_session_manage"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/sessions/{session_id}/heartbeat",
+   "permissions": [
+    "resource_session_manage"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/sessions/{session_id}/pause",
+   "permissions": [
+    "resource_session_manage"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/sessions/{session_id}/resume",
+   "permissions": [
+    "resource_session_manage"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/resources/sessions/{session_id}/logout",
+   "permissions": [
+    "resource_session_manage"
+   ],
+   "deps": [],
+   "file": "app/routers/resource_management.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/slow-sql",
+   "permissions": [
+    "slow_sql_view"
+   ],
+   "deps": [],
+   "file": "app/routers/slow_sql.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/slow-sql/top",
+   "permissions": [
+    "slow_sql_view"
+   ],
+   "deps": [],
+   "file": "app/routers/slow_sql.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/slow-sql/oracle-top",
+   "permissions": [
+    "slow_sql_view"
+   ],
+   "deps": [],
+   "file": "app/routers/slow_sql.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/slow-sql/{log_id}",
+   "permissions": [
+    "slow_sql_view"
+   ],
+   "deps": [],
+   "file": "app/routers/slow_sql.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/stock-reservations",
+   "permissions": [
+    "stock_reservation_view"
+   ],
+   "deps": [],
+   "file": "app/routers/stock_reservations.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/stock-reservations/{reservation_id}",
+   "permissions": [
+    "stock_reservation_view"
+   ],
+   "deps": [],
+   "file": "app/routers/stock_reservations.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/stock-reservations",
+   "permissions": [
+    "stock_reservation_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/stock_reservations.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/stock-reservations/{reservation_id}/promote-to-hard",
+   "permissions": [
+    "stock_reservation_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/stock_reservations.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/stock-reservations/{reservation_id}/release",
+   "permissions": [
+    "stock_reservation_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/stock_reservations.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/stock-reservations/{reservation_id}/consume",
+   "permissions": [
+    "stock_reservation_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/stock_reservations.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/stock-reservations/{reservation_id}/cancel",
+   "permissions": [
+    "stock_reservation_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/stock_reservations.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/trace/entities/{entity_type}/{entity_id}/forward",
+   "permissions": [
+    "traceability_view"
+   ],
+   "deps": [],
+   "file": "app/routers/traceability.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/trace/entities/{entity_type}/{entity_id}/backward",
+   "permissions": [
+    "traceability_view"
+   ],
+   "deps": [],
+   "file": "app/routers/traceability.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/event-outbox",
+   "permissions": [
+    "external_outbox_view"
+   ],
+   "deps": [],
+   "file": "app/routers/traceability.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/event-outbox/{event_outbox_id}",
+   "permissions": [
+    "external_outbox_view"
+   ],
+   "deps": [],
+   "file": "app/routers/traceability.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/event-outbox/{event_outbox_id}/retry",
+   "permissions": [
+    "external_outbox_view"
+   ],
+   "deps": [],
+   "file": "app/routers/traceability.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/adapter-requests",
+   "permissions": [
+    "external_outbox_view"
+   ],
+   "deps": [],
+   "file": "app/routers/traceability.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/adapter-requests/{adapter_request_id}",
+   "permissions": [
+    "external_outbox_view"
+   ],
+   "deps": [],
+   "file": "app/routers/traceability.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/vehicles",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/vehicles/full",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/vehicles",
+   "permissions": [
+    "transport_fleet_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/transport/vehicles/{vehicle_id}",
+   "permissions": [
+    "transport_fleet_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/admin/transport/vehicles/{vehicle_id}",
+   "permissions": [
+    "transport_fleet_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/drivers",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/drivers/full",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/drivers",
+   "permissions": [
+    "transport_fleet_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/transport/drivers/{driver_id}",
+   "permissions": [
+    "transport_fleet_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/admin/transport/drivers/{driver_id}",
+   "permissions": [
+    "transport_fleet_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/types",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/available-sts",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/clusters",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/clusters/{raion}/create-task",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/tasks/export.xlsx",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/tasks",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/tasks",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/tasks/{task_id}",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/transport/tasks/{task_id}",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/tasks/{task_id}/close",
+   "permissions": [
+    "transport_dispatch_close"
+   ],
+   "deps": [
+    "transport_loading_service"
+   ],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/tasks/{task_id}/cancel",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/tasks/{task_id}/sts",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/tasks/{task_id}/sts",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/admin/transport/tasks/{task_id}/sts/{st_number}",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/transport/tasks/{task_id}/sts/{st_number}/load-type",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/transport/tasks/{task_id}/sts/{st_number}/order",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/sts/{st_number}/pallets",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/planner/orders",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/routing/status",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/distance-matrix/rebuild",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/planner/solve",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/planner/solve/{job_id}/stream",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/admin/transport/planner/solve/{job_id}",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/planner/apply",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/planner/metrics",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/planner/templates",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/planner/history",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/planner/demand-forecast",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/tasks/{task_id}/plan-operations",
+   "permissions": [
+    "transport_dispatch_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/tasks/{task_id}/operations",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/vehicles/gantt",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/vehicles/available",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/plan-fact",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/billing/orders",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/billing/orders/export.xlsx",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/billing/orders",
+   "permissions": [
+    "edit_bill_tt"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/billing/orders/{order_id}",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/transport/billing/orders/{order_id}/close",
+   "permissions": [
+    "edit_bill_tt"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/transport/billing/orders/{order_id}/pay",
+   "permissions": [
+    "edit_bill_tt"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/billing/orders/{order_id}/tasks",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/billing/orders/{order_id}/export.xlsx",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/billing/orders/{order_id}/tasks",
+   "permissions": [
+    "edit_bill_tt"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/tasks/{task_id}/billing",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/tasks/{task_id}/billing/open",
+   "permissions": [
+    "edit_bill_tt"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/admin/transport/billing/orders/{order_id}/tasks/{tt_id}",
+   "permissions": [
+    "edit_bill_tt"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/transport/tasks/{task_id}/recalculate-price",
+   "permissions": [
+    "calc_tt_price"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/transport/tasks/{task_id}/price",
+   "permissions": [
+    "create_tt_price"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/billing/companies",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/ws/status",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/kpi/fleet",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport_kpi.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/kpi/summary",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport_kpi.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/kpi/regions",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport_kpi.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/kpi/billing",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport_kpi.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/kpi/billing/by-company",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport_kpi.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/tariffs",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport_tariffs.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/transport/tariffs/table-info",
+   "permissions": [
+    "transport_dispatch_view"
+   ],
+   "deps": [],
+   "file": "app/routers/transport_tariffs.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/legacy/tserver/execute",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/tserver.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/terminal/users/{user_id}",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/tserver.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/products/by-barcode/{barcode}",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/tserver.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/lots/{usscc}/items",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/tserver.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/places/{place_id}/items",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/tserver.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/terminal/lots/{usscc}/check",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/tserver.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/terminal/place-checks",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/tserver.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/terminal/order-checks",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/tserver.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/terminal/call-spf",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/tserver.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/terminal/auth/me",
+   "permissions": [],
+   "deps": [],
+   "file": "app/routers/tserver.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/users",
+   "permissions": [
+    "rights_admin_view"
+   ],
+   "deps": [],
+   "file": "app/routers/users.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/users/groups",
+   "permissions": [
+    "rights_admin_view"
+   ],
+   "deps": [],
+   "file": "app/routers/users.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/users/rights",
+   "permissions": [
+    "rights_admin_view"
+   ],
+   "deps": [],
+   "file": "app/routers/users.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/users",
+   "permissions": [
+    "rights_admin_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/users.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/users/{login}",
+   "permissions": [
+    "rights_admin_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/users.py"
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/admin/users/{login}",
+   "permissions": [
+    "rights_admin_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/users.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/users/{login}/password",
+   "permissions": [
+    "rights_admin_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/users.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/users/groups/{group}/rights",
+   "permissions": [
+    "rights_admin_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/users.py"
+  },
+  {
+   "method": "DELETE",
+   "path": "/api/admin/users/groups/{group}/rights/{right}",
+   "permissions": [
+    "rights_admin_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/users.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/users/groups",
+   "permissions": [
+    "rights_admin_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/users.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/warehouse-map/warehouses/{ware_id}/canvases",
+   "permissions": [
+    "warehouse_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/warehouse-map/warehouses/{ware_id}/state",
+   "permissions": [
+    "warehouse_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/warehouse-map/canvases/{canvas_id}",
+   "permissions": [
+    "warehouse_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map/canvases/{canvas_id}/archive",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map/warehouses/{ware_id}/canvases",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map/canvases/{canvas_id}/cameras",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map/cameras/{camera_id}/clone",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map/cameras/{camera_id}/archive",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/warehouse-map/cameras/{camera_id}/objects",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/warehouse-map/cameras/{camera_id}/passages",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/warehouse-map/canvases/{canvas_id}/camera-links",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/warehouse-map-drafts",
+   "permissions": [
+    "warehouse_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/load-from-db",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}",
+   "permissions": [
+    "warehouse_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/cells",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/diff",
+   "permissions": [
+    "warehouse_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/save-to-db",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/metadata",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/route/build",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/route",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/route/save-to-db",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/publish-oracle",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/bulk-role",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/pick-face-addresses/generate",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/small-pick-faces/generate",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/small-pick-faces/{small_pick_face_id}",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/small-pick-faces/renumber",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/storage-slots/generate",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/storage-slots/{storage_slot_id}",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/validate",
+   "permissions": [
+    "warehouse_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/projection/preview",
+   "permissions": [
+    "warehouse_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/projection/save-to-topology",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-map-drafts/{draft_id}/publish",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_map_drafts.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/warehouse-tasks",
+   "permissions": [
+    "warehouse_task_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_tasks.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/warehouse-tasks/domain-sync",
+   "permissions": [
+    "warehouse_task_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_tasks.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/warehouse-tasks/{task_id}",
+   "permissions": [
+    "warehouse_task_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_tasks.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/warehouse-tasks/{task_id}/progress",
+   "permissions": [
+    "warehouse_task_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_tasks.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/warehouse-tasks/{task_id}/sync",
+   "permissions": [
+    "warehouse_task_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_tasks.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-tasks/{task_id}/assign",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_tasks.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-tasks/{task_id}/start",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_tasks.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-tasks/{task_id}/complete",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_tasks.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-tasks/{task_id}/sync/retry",
+   "permissions": [
+    "warehouse_task_execute"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_tasks.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/warehouse-tasks/{task_id}/cancel",
+   "permissions": [
+    "warehouse_task_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_tasks.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/warehouse-topologies",
+   "permissions": [
+    "warehouse_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_topology.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-topologies",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_topology.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/warehouse-topologies/{topology_id}/map",
+   "permissions": [
+    "warehouse_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_topology.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-topologies/{topology_id}/generate-cells",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_topology.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-topologies/{topology_id}/generate-gates",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_topology.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-topologies/{topology_id}/distances/recalculate",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_topology.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-topologies/{topology_id}/validate",
+   "permissions": [
+    "warehouse_topology_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_topology.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-topologies/{topology_id}/normalize-cell-codes",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_topology.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/warehouse-topologies/{topology_id}/publish",
+   "permissions": [
+    "warehouse_topology_publish"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_topology.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/topology-cells/{topology_cell_id}",
+   "permissions": [
+    "warehouse_topology_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_topology.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/pick-routes",
+   "permissions": [
+    "pick_route_admin_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_topology.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/pick-routes/build",
+   "permissions": [
+    "pick_route_admin_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_topology.py"
+  },
+  {
+   "method": "POST",
+   "path": "/api/admin/pick-routes/{pick_route_id}/publish",
+   "permissions": [
+    "pick_route_admin_publish"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouse_topology.py"
+  },
+  {
+   "method": "GET",
+   "path": "/api/admin/warehouses",
+   "permissions": [
+    "warehouse_settings_view"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouses.py"
+  },
+  {
+   "method": "PATCH",
+   "path": "/api/admin/warehouses/{ware_id}",
+   "permissions": [
+    "warehouse_settings_edit"
+   ],
+   "deps": [],
+   "file": "app/routers/warehouses.py"
+  }
+ ]
+}

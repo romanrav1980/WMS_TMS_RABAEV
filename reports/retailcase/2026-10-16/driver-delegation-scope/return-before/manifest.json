@@ -1,0 +1,28 @@
+{
+  "captured_at_utc": "2026-10-16T18:58:40.469978+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_STOCK_STORE_RETURN_CUST_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_store_return_cust_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "783c2bbbf9453d6f665302f2ba1e1f2f4cb7ac42b9a81d81115627f90c3ce059",
+      "normalized_source_sha256": "e29ec5de45a4056840236d0b52458ce1a122fdb01673ad81888e5725f5d3deaa",
+      "artifact_sha256": "4ba58bc5ccb50a2573cb2594616be3b096028e6267efe59efaa0ea06debf2656"
+    },
+    {
+      "name": "RRL_STOCK_POSTING_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_posting_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "941c192611e1543836487147ce9487a8a7d3c64176d8f7bf1cb7fb1473558225",
+      "normalized_source_sha256": "d85b5fcabc365beafe91a06f03b6acbf9e8bb681b42551c5c72e40047b89474a",
+      "artifact_sha256": "769d09f2cb4416725ede24192a213ce4b075b410c0cb2892419c1bf724062ea0"
+    }
+  ]
+}

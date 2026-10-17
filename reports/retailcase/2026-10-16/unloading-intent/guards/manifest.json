@@ -1,0 +1,19 @@
+{
+  "captured_at_utc": "2026-10-16T15:05:49.089238+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_STORE_UNLOAD_START_G",
+      "type": "TRIGGER",
+      "file": "rrl_store_unload_start_g_trigger.sql",
+      "errors": [],
+      "user_source_sha256": "e36f7bd2639603a51f9f4d8fc7e888f7bcf305b8da8470e77a3e98bc7cb16761",
+      "normalized_source_sha256": "7b755725fa5c7cee47b8b3f458cc150113a9b79304d525f52235b41fe7594fe4",
+      "artifact_sha256": "4e8defffe66343c98c9d4f81de4baf9d1555f947e9b0b9b2a1b6290b9318857d"
+    }
+  ]
+}

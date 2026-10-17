@@ -94,8 +94,6 @@ class LogisticsCosts:
             raise LogisticsCostError("COST_SUMMARY_SOURCE_INVALID",str(exc))from exc
 
     def invoice(self,invoice: int,actor: str) -> list[dict[str,Any]]:
-        exists=self.gateway.fetch_all("select count(*) CNT from RRL_BILL_ORDERS where ID=:id",{"id":invoice})
-        if exists[0]["cnt"]!=1:raise LogisticsCostError("COST_INVOICE_NOT_FOUND","Счёт не найден",404)
         return self._lines("t.PAY_ORDER_ID=:id",invoice,actor)
 
     def invoice_summary(self,invoice: int,actor: str) -> dict[str,Any]:
@@ -107,14 +105,20 @@ class LogisticsCosts:
             raise LogisticsCostError("COST_SUMMARY_SOURCE_INVALID",str(exc))from exc
 
     def _lines(self,clause: str,object_id: int,actor: str) -> list[dict[str,Any]]:
-        rows=self.gateway.fetch_all("""select r.OPERATION_ID,l.TT_ID,l.WARE_ID,c.LOAD_OPERATION_ID,c.COST_CODE,c.CURRENCY,
+        from ....transaction_gateway import TransactionGateway
+        from .cost_read_scope import authorize_cost_object
+        if clause not in {"l.TT_ID=:id", "t.PAY_ORDER_ID=:id"}:
+            raise ValueError("Unknown cost detail clause")
+        with self.gateway.transaction("All warehouse cost detail READ ONLY") as cursor:
+            cursor.execute("set transaction read only")
+            authorize_cost_object(cursor, "TRIP" if clause == "l.TT_ID=:id" else "INVOICE", object_id, actor)
+            rows=TransactionGateway(cursor).fetch_all("""select r.OPERATION_ID,l.TT_ID,l.WARE_ID,c.LOAD_OPERATION_ID,c.COST_CODE,c.CURRENCY,
         c.QUANTITY,to_char(c.RATE_VALUE,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') RATE_VALUE,to_char(c.AMOUNT,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') AMOUNT,c.VERSION_NO,c.BASIS,h.COMPONENTS_JSON COMPONENTS,
         to_char(c.RATE_DATE,'YYYY-MM-DD') RATE_DATE,c.PERIOD_MODE,c.PERIOD_TIME_ZONE,c.PERIOD_POLICY_VERSION
         from RRL_LOGISTICS_COST_RUN r join RRL_LOGISTICS_COST_LINE c on c.OPERATION_ID=r.OPERATION_ID
         join RRL_LOGISTICS_RATE_HISTORY h on h.RATE_KEY=c.RATE_KEY and h.VERSION_NO=c.VERSION_NO
         join RRL_TT_HU_LOAD_FACT l on l.LOAD_OPERATION_ID=c.LOAD_OPERATION_ID join RRL_TRANSPORT_TASK t on t.ID=l.TT_ID
-        join RUSERS u on u.ID=:actor and nvl(u.DELETED,0)=0 and(u.WARE_ID=l.WARE_ID or upper(trim(u.USER_GROUP))='GLOBAL_ADMIN')
-        where """+clause+" order by l.TT_ID,c.LOAD_OPERATION_ID,c.RATE_DATE fetch first 501 rows only",{"id":object_id,"actor":actor})
+        where """+clause+" order by l.TT_ID,c.LOAD_OPERATION_ID,c.RATE_DATE fetch first 501 rows only",{"id":object_id})
         from ...platform.public import read_oracle_json
         for row in rows:
             if row["components"] is not None:row["components"]=read_oracle_json(row["components"])

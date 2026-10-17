@@ -1,0 +1,103 @@
+{
+  "state": "RETIRED_AFTER_LIVE_UI",
+  "actor": "UL16O2d575c5f49",
+  "role": "UL16R2d575c5f49",
+  "assignment": "UL16A2d575c5f49",
+  "commands": {
+    "ROLE": {
+      "wire": {
+        "operation_id": "UL16.2d575c5f49.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "UL16R2d575c5f49",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "stock_posting_shipping",
+            "transport_dispatch_view"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "UL16.2d575c5f49.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "UL16R2d575c5f49",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "ASSIGN": {
+      "wire": {
+        "operation_id": "UL16.2d575c5f49.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "UL16A2d575c5f49",
+          "username": "UL16O2d575c5f49",
+          "role_id": "UL16R2d575c5f49",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20854558",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T17:13:04.020095+00:00",
+          "valid_until": "2026-10-16T17:44:04.020095+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "UL16.2d575c5f49.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "UL16A2d575c5f49",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "REVOKE": {
+      "wire": {
+        "operation_id": "UL16.2d575c5f49.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "UL16A2d575c5f49",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "UL16.2d575c5f49.REVOKE",
+        "command_type": "REVOKE",
+        "object_id": "UL16A2d575c5f49",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "ROLE.RETIRE": {
+      "wire": {
+        "operation_id": "UL16.2d575c5f49.ROLE.RETIRE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "UL16R2d575c5f49",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "stock_posting_shipping",
+            "transport_dispatch_view"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "UL16.2d575c5f49.ROLE.RETIRE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "UL16R2d575c5f49",
+        "version": 2,
+        "replayed": false
+      }
+    }
+  },
+  "browser_returncode": 0
+}

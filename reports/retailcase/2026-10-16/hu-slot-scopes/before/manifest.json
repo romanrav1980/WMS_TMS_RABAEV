@@ -1,0 +1,55 @@
+{
+  "captured_at_utc": "2026-10-16T16:03:17.613983+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_HU_EXEC_ACCESS",
+      "type": "PACKAGE BODY",
+      "file": "rrl_hu_exec_access_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "a844c64163df5502bdc02b093f6a8e8069b4cee4204281988fb0e75631a97eed",
+      "normalized_source_sha256": "93a63640f727eec0e9654c635e5026beb9863ea56450e740716c613fcfbad894",
+      "artifact_sha256": "7ec6f3150318805b636026d0f2e7a7cdba95434eb2ebe46fa4d2aa9520111181"
+    },
+    {
+      "name": "RRL_STOCK_HU_SLOT_MOVE_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_hu_slot_move_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "83d4dbf07f57980d2d4ab1899b23588596c144ce804cf67e258bfbfbdce7b8ce",
+      "normalized_source_sha256": "ad4bf68f7174ead2a4ee8402a2f70679e36cdcc7152c4b6087ff6b43caf93e77",
+      "artifact_sha256": "f3ceae6b3a22b07bbd10459832f957fff8d4ff69fb94152aef12a4a9c82ec342"
+    },
+    {
+      "name": "RRL_STOCK_HU_REPACK_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_hu_repack_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "691a2e1f449032fc15b3d85676082c337504485bc6ef2d59945ee9c59a417d23",
+      "normalized_source_sha256": "7517cfba80e9382069f891095357be1b55c7baebbecf4771be74cbb8155f2ef1",
+      "artifact_sha256": "9a32a908826c4ec774cffd7dd5f2c3e1633215a5a9ed30dafcf79979af253527"
+    },
+    {
+      "name": "RRL_STOCK_HU_UNPACK_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_hu_unpack_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "0f1f1494ab240aec4c4d1a9cf44b98298fba8296827f8a264a5c228b09ebda3d",
+      "normalized_source_sha256": "a2760e9dfd8032ba0d6528b671b1c5241b80b287135920d38e30ee4f2f473d35",
+      "artifact_sha256": "277b6f1f35bab948f6e446327b50bd68b802aceda39a5adfa7a53b7e02c53a7f"
+    },
+    {
+      "name": "RRL_STOCK_POSTING_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_posting_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "464f7c86a23f299d43dec23714cc3d84cce970c77c23b4bf6b5e5791754464f9",
+      "normalized_source_sha256": "ef1d280344d259e6280c1640002c760801e1975ee1a0dd85aff2ce19d7caee31",
+      "artifact_sha256": "f3836b6da4d496c78239ceb80bf69ca5c4ea74d1d8da4a5c2de63a0972c778d4"
+    }
+  ]
+}

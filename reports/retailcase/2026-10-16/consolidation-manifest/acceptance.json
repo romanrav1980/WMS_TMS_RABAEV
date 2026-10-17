@@ -1,0 +1,261 @@
+{
+  "state": "PASS_EXPECTED_MISSING_COMPLETE_REPLAY_SCOPE",
+  "http": [
+    {
+      "label": "SAVE_MISSING",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "status": 200,
+      "api_call_id": "69409",
+      "request_id": "a0ea4e59-ec72-43eb-b5b6-d2cb89538169"
+    },
+    {
+      "label": "EXACT_REPLAY",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "status": 200,
+      "api_call_id": "69410",
+      "request_id": "132aaf88-3f5f-4437-9b66-eb5a012cd9ce"
+    },
+    {
+      "label": "BODY_CONFLICT",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "status": 409,
+      "api_call_id": "69411",
+      "request_id": "67c4cbb9-f523-4d38-888f-fa5ad69cd232"
+    },
+    {
+      "label": "READ_MISSING",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "status": 200,
+      "api_call_id": "69412",
+      "request_id": "9ac02f20-a4de-49f8-bc14-350c8bb29d6d"
+    },
+    {
+      "label": "SAVE_COMPLETE",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "status": 200,
+      "api_call_id": "69413",
+      "request_id": "d39d73bd-5579-421b-97d3-224942f41e62"
+    },
+    {
+      "label": "READ_COMPLETE",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "status": 200,
+      "api_call_id": "69414",
+      "request_id": "12c7b63f-de3b-421a-bdef-1bb86e85e630"
+    },
+    {
+      "label": "STALE_VERSION",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "status": 409,
+      "api_call_id": "69415",
+      "request_id": "c29eb233-39f3-40d4-9c6b-87a407b06fcf"
+    },
+    {
+      "label": "WRONG_TARGET_SCOPE",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "status": 403,
+      "api_call_id": "69416",
+      "request_id": "9b906a5f-ba21-4176-9a30-b7a96feb381d"
+    },
+    {
+      "label": "SAVE_BEFORE_ROOT_OR_PICK",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE",
+      "status": 200,
+      "api_call_id": "69417",
+      "request_id": "a7b0a228-500e-4a30-a2ad-e4a4a25bc2c6"
+    },
+    {
+      "label": "READ_FUTURE",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.FUTURE",
+      "status": 200,
+      "api_call_id": "69418",
+      "request_id": "ae431b74-9208-44ab-8d1e-2cd148860518"
+    },
+    {
+      "label": "REVOKED_READ",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "status": 403,
+      "api_call_id": "69419",
+      "request_id": "d68b96c1-ad10-49c1-a7bd-7504a7d95604"
+    },
+    {
+      "label": "REVOKED_REPLAY",
+      "path": "/api/consolidation-plans/CM16.4c03ea49b7.PLAN",
+      "status": 403,
+      "api_call_id": "69420",
+      "request_id": "543bf40e-5905-4b0f-8e13-d06948bcafa2"
+    }
+  ],
+  "hardware_verified": false,
+  "stock_changed": false,
+  "missing": {
+    "plan_id": "CM16.4c03ea49b7.PLAN",
+    "version": 1,
+    "root_identifier": "MH16.TOP:d076c19e82",
+    "warehouse_id": 20220394,
+    "cell": "MH16Gd076c19e82",
+    "status": "ACTIVE",
+    "members": [
+      {
+        "fulfillment_id": 191,
+        "shipment_id": 641521,
+        "pallet_identifier": "AS16.35cea92c27.ST",
+        "source_warehouse_id": 20220394,
+        "rows_signature": "63F56011681292C9E13C8DC59F38E3D2AD5D5BD429CB8F4DA9C6DE6A907B0411"
+      },
+      {
+        "fulfillment_id": 192,
+        "shipment_id": 641522,
+        "pallet_identifier": "OC16.217454ca1e.ST",
+        "source_warehouse_id": 20220394,
+        "rows_signature": "7C303681A3A748211F0907B69C143770861B5DB9C362E661796AF728B644740A"
+      },
+      {
+        "fulfillment_id": 193,
+        "shipment_id": 641523,
+        "pallet_identifier": "CM16.4c03ea49b7.ST",
+        "source_warehouse_id": 20220394,
+        "rows_signature": "5BDCA485501108FC72915FD16CA4583E73CEC261D92080C2FEA19082EA5148D0"
+      }
+    ],
+    "readiness": {
+      "domain": "CONSOLIDATION_READINESS",
+      "version": 1,
+      "plan_id": "CM16.4c03ea49b7.PLAN",
+      "plan_version": 1,
+      "ready": false,
+      "location_ready": true,
+      "expected_count": 3,
+      "missing_count": 1,
+      "extra_count": 0,
+      "changed_count": 0,
+      "unknown_leaf_count": 0,
+      "members": [
+        {
+          "fulfillment_id": 191,
+          "shipment_id": 641521,
+          "pallet_identifier": "AS16.35cea92c27.ST",
+          "state": "IN_ROOT"
+        },
+        {
+          "fulfillment_id": 192,
+          "shipment_id": 641522,
+          "pallet_identifier": "OC16.217454ca1e.ST",
+          "state": "IN_ROOT"
+        },
+        {
+          "fulfillment_id": 193,
+          "shipment_id": 641523,
+          "pallet_identifier": "CM16.4c03ea49b7.ST",
+          "state": "NOT_PICKED"
+        }
+      ],
+      "expectation_signature": "A549C579F75DE47A993F09B9FF648A8CD648BA629DB92F0C529877FC32CE8A5E",
+      "quality_release_approved": false,
+      "stock_changed": false
+    }
+  },
+  "native_ship_denial": "ORA-20886: CONSOLIDATION_EXPECTED_COMPOSITION_NOT_READY",
+  "complete": {
+    "plan_id": "CM16.4c03ea49b7.PLAN",
+    "version": 2,
+    "root_identifier": "MH16.TOP:d076c19e82",
+    "warehouse_id": 20220394,
+    "cell": "MH16Gd076c19e82",
+    "status": "ACTIVE",
+    "members": [
+      {
+        "fulfillment_id": 191,
+        "shipment_id": 641521,
+        "pallet_identifier": "AS16.35cea92c27.ST",
+        "source_warehouse_id": 20220394,
+        "rows_signature": "63F56011681292C9E13C8DC59F38E3D2AD5D5BD429CB8F4DA9C6DE6A907B0411"
+      },
+      {
+        "fulfillment_id": 192,
+        "shipment_id": 641522,
+        "pallet_identifier": "OC16.217454ca1e.ST",
+        "source_warehouse_id": 20220394,
+        "rows_signature": "7C303681A3A748211F0907B69C143770861B5DB9C362E661796AF728B644740A"
+      }
+    ],
+    "readiness": {
+      "domain": "CONSOLIDATION_READINESS",
+      "version": 1,
+      "plan_id": "CM16.4c03ea49b7.PLAN",
+      "plan_version": 2,
+      "ready": true,
+      "location_ready": true,
+      "expected_count": 2,
+      "missing_count": 0,
+      "extra_count": 0,
+      "changed_count": 0,
+      "unknown_leaf_count": 0,
+      "members": [
+        {
+          "fulfillment_id": 191,
+          "shipment_id": 641521,
+          "pallet_identifier": "AS16.35cea92c27.ST",
+          "state": "IN_ROOT"
+        },
+        {
+          "fulfillment_id": 192,
+          "shipment_id": 641522,
+          "pallet_identifier": "OC16.217454ca1e.ST",
+          "state": "IN_ROOT"
+        }
+      ],
+      "expectation_signature": "7FFF9DDD620D9AC916006999274CF73BF8CC0A0EB209F3A8122352387EC062EA",
+      "quality_release_approved": false,
+      "stock_changed": false
+    }
+  },
+  "admission": {
+    "domain": "CONSOLIDATION_EXPECTATIONS",
+    "version": 1,
+    "plan_id": "CM16.4c03ea49b7.PLAN",
+    "plan_version": 2,
+    "signature": "7FFF9DDD620D9AC916006999274CF73BF8CC0A0EB209F3A8122352387EC062EA"
+  },
+  "future": {
+    "plan_id": "CM16.4c03ea49b7.FUTURE",
+    "version": 1,
+    "root_identifier": "CM16.FUTURE:4c03ea49b7",
+    "warehouse_id": 20220394,
+    "cell": "MH16Gd076c19e82",
+    "status": "ACTIVE",
+    "members": [
+      {
+        "fulfillment_id": 193,
+        "shipment_id": 641523,
+        "pallet_identifier": "CM16.4c03ea49b7.ST",
+        "source_warehouse_id": 20220394,
+        "rows_signature": "5BDCA485501108FC72915FD16CA4583E73CEC261D92080C2FEA19082EA5148D0"
+      }
+    ],
+    "readiness": {
+      "domain": "CONSOLIDATION_READINESS",
+      "version": 1,
+      "plan_id": "CM16.4c03ea49b7.FUTURE",
+      "plan_version": 1,
+      "ready": false,
+      "location_ready": false,
+      "expected_count": 1,
+      "missing_count": 1,
+      "extra_count": 0,
+      "changed_count": 0,
+      "unknown_leaf_count": 0,
+      "members": [
+        {
+          "fulfillment_id": 193,
+          "shipment_id": 641523,
+          "pallet_identifier": "CM16.4c03ea49b7.ST",
+          "state": "NOT_PICKED"
+        }
+      ],
+      "expectation_signature": "B92CB984B96803A9A398CFD2D98EC6E294802AEE0D8861B470279ABA80BBF121",
+      "quality_release_approved": false,
+      "stock_changed": false
+    }
+  }
+}

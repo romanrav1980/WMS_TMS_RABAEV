@@ -1,0 +1,192 @@
+{
+  "state": "PASS_NATIVE_SCOPED_ASM_PICK_CLOSE_REPLAY",
+  "hardware_verified": false,
+  "body": {
+    "contract_version": 2,
+    "command_type": "CASE_PICK_CONFIRM",
+    "lines": [],
+    "units": [],
+    "operation_id": "AS16.35cea92c27.PICK",
+    "actor": "AS16O35cea92c27",
+    "source": {
+      "case_task_id": 1140,
+      "case_line_id": 1142
+    },
+    "metadata": {
+      "fact_qty": "1",
+      "scan_cell": "AS16C35cea92c27",
+      "scan_product": "AS16A35CEA92C27",
+      "scan_container": "090000000000011014",
+      "offline_event_id": null,
+      "assembly_step_id": "AS16.35cea92c27.STEP",
+      "assembly_consent_id": "AS16.35cea92c27.STEP",
+      "automation_origin": "ASSEMBLY_GATEWAY_AUTO",
+      "automation_sender": "AS16G35cea92c27"
+    }
+  },
+  "checks": [
+    {
+      "case": "FOREIGN_ACTOR",
+      "code": 20882,
+      "reason": "ORA-20882: CASE_CURRENT_ACTION_FORBIDDEN"
+    },
+    {
+      "case": "MISSING_ASM_STEP",
+      "code": 20886,
+      "reason": "ORA-20886: ASSEMBLY_ACTIVE_SESSION_STEP_REQUIRED"
+    },
+    {
+      "case": "WRONG_CONSENT",
+      "code": 20886,
+      "reason": "ORA-20886: ASSEMBLY_POST_SOURCE_POLICY_CONFLICT"
+    },
+    {
+      "case": "POSITIVE_QUANTITY_AND_STEP_USE_ROLLBACK_EXACT"
+    }
+  ],
+  "before": {
+    "stock": [
+      {
+        "uid_poleta": "AS16.LOT:35cea92c27",
+        "cell": "AS16C35cea92c27",
+        "remain": 1,
+        "hard_reserved_base": 1,
+        "stock_version": 2
+      }
+    ],
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "content_version": 2,
+        "picked_qty": 0
+      }
+    ],
+    "step": [
+      {
+        "state": "READY"
+      }
+    ],
+    "uses": [
+      {
+        "n": 0
+      }
+    ]
+  },
+  "rollback_result": {
+    "operation_id": "AS16.35cea92c27.PICK",
+    "case_pick_task_id": 1140,
+    "case_pick_line_id": 1142,
+    "status": "PICKED",
+    "remaining_quantity": "0",
+    "fact_qty": "1",
+    "carrier_identifier": "090000000000011014",
+    "cell": "CPT_20220394",
+    "picked_from_cell": "AS16C35cea92c27",
+    "lots": [
+      {
+        "uid": "CASELOT:F4919A88E403111851D9EA31F410A57E0834BE:1",
+        "source_uid": "AS16.LOT:35cea92c27",
+        "quantity": "1",
+        "unit": "EA"
+      }
+    ],
+    "outbox_id": 5366
+  },
+  "pick": {
+    "operation_id": "AS16.35cea92c27.PICK",
+    "case_pick_task_id": 1140,
+    "case_pick_line_id": 1142,
+    "status": "PICKED",
+    "remaining_quantity": "0",
+    "fact_qty": "1",
+    "carrier_identifier": "090000000000011014",
+    "cell": "CPT_20220394",
+    "picked_from_cell": "AS16C35cea92c27",
+    "lots": [
+      {
+        "uid": "CASELOT:F4919A88E403111851D9EA31F410A57E0834BE:1",
+        "source_uid": "AS16.LOT:35cea92c27",
+        "quantity": "1",
+        "unit": "EA"
+      }
+    ],
+    "outbox_id": 5367
+  },
+  "replay": {
+    "operation_id": "AS16.35cea92c27.PICK",
+    "case_pick_task_id": 1140,
+    "case_pick_line_id": 1142,
+    "status": "PICKED",
+    "remaining_quantity": "0",
+    "fact_qty": "1",
+    "carrier_identifier": "090000000000011014",
+    "cell": "CPT_20220394",
+    "picked_from_cell": "AS16C35cea92c27",
+    "lots": [
+      {
+        "uid": "CASELOT:F4919A88E403111851D9EA31F410A57E0834BE:1",
+        "source_uid": "AS16.LOT:35cea92c27",
+        "quantity": "1",
+        "unit": "EA"
+      }
+    ],
+    "outbox_id": 5367
+  },
+  "after_pick": {
+    "stock": [
+      {
+        "uid_poleta": "AS16.LOT:35cea92c27",
+        "cell": "AS16C35cea92c27",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3
+      },
+      {
+        "uid_poleta": "CASELOT:F4919A88E403111851D9EA31F410A57E0834BE:1",
+        "cell": "CPT_20220394",
+        "remain": 1,
+        "hard_reserved_base": 1,
+        "stock_version": 1
+      }
+    ],
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "content_version": 3,
+        "picked_qty": 1
+      }
+    ],
+    "step": [
+      {
+        "state": "APPLIED"
+      }
+    ],
+    "uses": [
+      {
+        "n": 1
+      }
+    ]
+  },
+  "close_request": {
+    "operation_id": "AS16.35cea92c27.CLOSE",
+    "expected_content_version": 3
+  },
+  "close": {
+    "session_id": "AS16.35cea92c27.SESSION",
+    "operation_id": "AS16.35cea92c27.CLOSE",
+    "case_pick_task_id": 1140,
+    "status": "WAIT_CONTROL",
+    "content_version": 3,
+    "already_closed": false,
+    "physical_stock_changed": false
+  },
+  "close_replay": {
+    "session_id": "AS16.35cea92c27.SESSION",
+    "operation_id": "AS16.35cea92c27.CLOSE",
+    "case_pick_task_id": 1140,
+    "already_closed": false,
+    "content_version": 3,
+    "physical_stock_changed": false,
+    "status": "WAIT_CONTROL"
+  }
+}

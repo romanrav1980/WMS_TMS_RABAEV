@@ -1,0 +1,30 @@
+{
+  "state": "PASS_CANCELLED_CASE_EMPTY_TARE_HOLD_RELEASED_PHYSICAL2_HISTORY_RETAINED",
+  "before": [
+    {
+      "physical_qty": 2,
+      "assembly_qty": 1
+    }
+  ],
+  "wire": "{\"actor\":\"admin\",\"command_type\":\"TARE_BOOK_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{},\"operation_id\":\"OC16.60406a495a.FINAL.BOOK.RELEASE\",\"source\":{\"booking_operation_id\":\"OC16.60406a495a.TARE.BOOK\"},\"units\":[]}",
+  "receipt": {
+    "operation_id": "OC16.60406a495a.FINAL.BOOK.RELEASE",
+    "status": "CANCELLED",
+    "place_kind": "CASE",
+    "place_id": "1149",
+    "pallet_type_id": 32,
+    "warehouse_id": 20382575,
+    "available_quantity": "2",
+    "quantity": "1",
+    "physical_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 5653
+  },
+  "elapsed_ms": 294,
+  "after": [
+    {
+      "physical_qty": 2,
+      "assembly_qty": 0
+    }
+  ]
+}

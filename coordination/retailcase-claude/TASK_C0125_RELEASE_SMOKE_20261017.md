@@ -1,0 +1,9 @@
+# C0125 — one final release smoke, finish before11:00MSK
+
+Owner explicitly asks root and real Claude to finish the product. C0124 RELEASE received; do not repeat its full package. Read AGENTS.md Minimal Code Discipline (Ponytail/YAGNI). ACK with owned files, then one RESULT/RELEASE. Do not spawn agents, publish GitHub, mutate business data, change Oracle/backend/contracts, or reactivate retired users.
+
+Running compiled product: admin http://127.0.0.1:3000/ ; terminal/store http://127.0.0.1:3010/store/ ; API http://127.0.0.1:8088/docs . Existing admin login workflow only; no reading QA passwords. Full-app routes, not Vite source previews. Root continues current CASE1154/WARE20137024 delivery in reports/retailcase/2026-10-17/product-flow/delivery.json. Do not issue its commands or change data; unfinished status is expected until root completes it.
+
+One bounded final smoke at desktop and390px: supervisor → wave/readiness/risks → resource/task/Gantt → back; store list → receipt → scan/manual weight/help and recovery availability. Use existing valid readable data; distinguish real GET/UI from fixtures, and actual missing permission from UI failure. Reuse C0124 proofs for unchanged areas; review only compiled-start regressions and concrete blockers. All reachtruck/picker/dock/vehicle families were checked earlier; root also has actual native VEHICLE events in kpi-v2/vehicle-timeline-native.json, so do not add mock data to production.
+
+Own only frontend/help files for demonstrated release blockers, list each before editing in ACK/channel. No redesign or speculative additions. If no blocker, no code changes. Save RESULT_C0125.md and bounded evidence under reports/retailcase/2026-10-17/claude/C0125/. Report real/fixture separation, JS errors, exact files/checks and remaining blockers. Root handles scoped credentials, real mutation lifecycle, restart/replay, SQL, retirement, final release report. No extra owner questions for minor decisions.

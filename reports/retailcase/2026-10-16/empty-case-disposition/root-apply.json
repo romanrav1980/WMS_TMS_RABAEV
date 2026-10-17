@@ -1,0 +1,7 @@
+{
+  "status": "APPLIED_PENDING_READBACK",
+  "manifest_sha256": "e38d70f85ce8b6b1b1c6d52a3dc579598b8107c7ec0e851eba0faa41ffb32ae0",
+  "author_review_only": true,
+  "hardware_verified": false,
+  "returncode": 0
+}

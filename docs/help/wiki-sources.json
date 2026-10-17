@@ -1,0 +1,145 @@
+[
+  {
+    "source_id": "access-concept",
+    "article_id": "access-model",
+    "space_id": "general",
+    "title": "Роли и области ответственности",
+    "summary": "Принятая модель прав, областей и совместимости.",
+    "path": "wiki/architecture/retailcase_scoped_access_and_knowledge.md",
+    "section": "Модель прав",
+    "status": "APPROVED",
+    "owner": "platform"
+  },
+  {
+    "source_id": "ui-help-rules",
+    "article_id": "ui-help-rules",
+    "space_id": "general",
+    "title": "Подсказки и контекстная помощь",
+    "summary": "Как элементы интерфейса объясняют действие и результат.",
+    "path": "wiki/concepts/ui_interaction_rules.md",
+    "section": "Контекстная Help-Система",
+    "status": "APPROVED",
+    "owner": "platform"
+  },
+  {
+    "source_id": "store-receiving-app",
+    "article_id": "store-receiving-app",
+    "space_id": "general",
+    "title": "Приложение магазина: вход и список поставок",
+    "summary": "Отдельное мобильное приложение приёмщика магазина — вход, выбор магазина, список поставок и восстановление после потери связи.",
+    "path": "wiki/runbooks/retailcase_store_receiving_app.md",
+    "section": "app",
+    "status": "APPROVED",
+    "owner": "delivery"
+  },
+  {
+    "source_id": "store-receiving-barcode",
+    "article_id": "store-receiving-barcode",
+    "space_id": "general",
+    "title": "Приёмка по идентификатору (BARCODE)",
+    "summary": "Сканирование грузового места и, если товар маркирован, кодов каждой единицы.",
+    "path": "wiki/runbooks/retailcase_store_receiving_app.md",
+    "section": "barcode",
+    "status": "APPROVED",
+    "owner": "delivery"
+  },
+  {
+    "source_id": "store-receiving-weight-photo",
+    "article_id": "store-receiving-weight-photo",
+    "space_id": "general",
+    "title": "Приёмка по весу и фотографиям (WEIGHT_PHOTO)",
+    "summary": "Контроль веса брутто и фотографии грузового места при приёмке.",
+    "path": "wiki/runbooks/retailcase_store_receiving_app.md",
+    "section": "weight-photo",
+    "status": "APPROVED",
+    "owner": "delivery"
+  },
+  {
+    "source_id": "store-receiving-paper-count",
+    "article_id": "store-receiving-paper-count",
+    "space_id": "general",
+    "title": "Приёмка пересчётом по бумаге (PAPER_COUNT)",
+    "summary": "Полный построчный пересчёт по бумажному документу с указанием его номера.",
+    "path": "wiki/runbooks/retailcase_store_receiving_app.md",
+    "section": "paper-count",
+    "status": "APPROVED",
+    "owner": "delivery"
+  },
+  {
+    "source_id": "store-receiving-recovery",
+    "article_id": "store-receiving-recovery",
+    "space_id": "general",
+    "title": "Потеря связи, повторы и признаки отказа",
+    "summary": "Что делать, если ответ на отправленную приёмку не пришёл, и как отличить подтверждённый отказ от неизвестного результата.",
+    "path": "wiki/runbooks/retailcase_store_receiving_app.md",
+    "section": "recovery",
+    "status": "APPROVED",
+    "owner": "delivery"
+  },
+  {
+    "source_id": "store-scale-gateway",
+    "article_id": "store-scale-gateway",
+    "space_id": "general",
+    "title": "Весы и шлюз: склад и магазин",
+    "summary": "Как получить измерение от весов, проверить результат и восстановить запрос.",
+    "path": "wiki/components/retailcase_weighing_gateway.md",
+    "section": "Оператор весов",
+    "status": "APPROVED",
+    "owner": "integrations"
+  },
+  {
+    "source_id": "assembly-scale",
+    "article_id": "assembly-scale",
+    "space_id": "general",
+    "title": "Сборка на весах: порядок работы",
+    "summary": "Подача товара к человеку, проверка каждой укладки и финальное взвешивание.",
+    "path": "wiki/runbooks/retailcase_assembly_scale_terminal.md",
+    "section": "Работа на посту",
+    "status": "APPROVED",
+    "owner": "inventory"
+  },
+  {
+    "source_id": "case-work",
+    "article_id": "case-work",
+    "space_id": "general",
+    "title": "Задание комплектовщика: взять и начать",
+    "summary": "Собственная рабочая сессия, подтверждение назначения и восстановление потерянного ответа.",
+    "path": "wiki/runbooks/retailcase_case_work_terminal.md",
+    "section": "Работа с заданием",
+    "status": "APPROVED",
+    "owner": "resources"
+  },
+  {
+    "source_id": "warehouse-hu-tree",
+    "article_id": "warehouse-hu-tree",
+    "space_id": "general",
+    "title": "Консолидация: дерево грузового места",
+    "summary": "Как просмотреть вложенные паллеты, коробки и сборки и различить основания массы.",
+    "path": "wiki/runbooks/retailcase_hu_tree_workspace.md",
+    "section": "Работа",
+    "status": "APPROVED",
+    "owner": "inventory"
+  },
+  {
+    "source_id": "metadata-intent-recovery",
+    "article_id": "metadata-intent-recovery",
+    "space_id": "general",
+    "title": "Восстановление назначения или запуска",
+    "summary": "Как прочитать потерянный результат и прекратить ещё не исполненный запрос.",
+    "path": "wiki/runbooks/retailcase_metadata_intent_recovery.md",
+    "section": "Работа",
+    "status": "APPROVED",
+    "owner": "resources"
+  },
+  {
+    "source_id": "picker-actual-time",
+    "article_id": "picker-actual-time",
+    "space_id": "general",
+    "title": "Фактическое время: смена, сборка и паузы",
+    "summary": "Явные отметки времени, исходное задание и восстановление потерянной квитанции.",
+    "path": "wiki/runbooks/retailcase_picker_actual_time_ui.md",
+    "section": "Работа",
+    "status": "APPROVED",
+    "owner": "resources"
+  }
+]

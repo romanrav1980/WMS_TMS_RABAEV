@@ -1,0 +1,16 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\schema.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\rrl_iw_case_bridge_package.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\rrl_iw_case_bridge_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\rrl_iw_group_archive_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\rrl_iw_group_rec_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\rrl_iw_hu_rec_core_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\rrl_stock_hu_read_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\rrl_hu_container_guard_trigger.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\rrl_iw_case_carrier_guard.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_interware_case_bridge\after_sources.sql
+Done. Statements=21; Errors=0; AbsentCleanup=0

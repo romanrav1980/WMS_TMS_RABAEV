@@ -1,0 +1,18 @@
+{
+  "migration_id": "2026-10-15-assembly-evidence-shape-fix",
+  "status": "APPLIED",
+  "reason": "Live repro: strict HAS(missing) raisesORA40565 for valid absent zero_observation",
+  "sha256": {
+    "apply.sql": "9fcd2d48e2ac4f802380c5e9f5968e524ea0259b6af4d597cf6eb511af033c28",
+    "before_body.sql": "f9312c8104d7bbd219112c4fafadfed37680f6a4a39f4f39a3df0bb19b9872e5",
+    "body.sql": "60b5fb1dabdaecd57c93f4c87bc7a2911d21ab09957405494af4b0d08a4ff6cc",
+    "rollback.sql": "e1e544bc0329eee4dac13b2866f3769bf998c4a48d39785a72d22bdf84ba90aa",
+    "verify.sql": "3ad417fa80a6eea7eb096d0bdb09b5d7e3b02a4f29bd5799643ecc23079163b7"
+  },
+  "statements": 4,
+  "errors": 0,
+  "source_exact": 3,
+  "invalid_after": 0,
+  "before_image_exact_to_previous_verified_applied_source": true,
+  "preapply_runner_issue": "Ad-hoc normalizer omitted CR removal; assertion failed and PowerShell did not halt subsequent native command. Verified saved before equals preceding live-verified applied source afterwards; future dependent native steps use separate tool calls."
+}

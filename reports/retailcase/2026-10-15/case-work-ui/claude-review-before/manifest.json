@@ -1,0 +1,67 @@
+{
+  "status": "CAPTURED_BEFORE_FIRST_CLAUDE_UI_CHANGE",
+  "captured_utc": "2026-10-15T15:01:00.215293+00:00",
+  "session_id": "654a1dc6-3cca-4cab-b73f-7d82cf22ef18",
+  "files": [
+    {
+      "file": "api.ts",
+      "sha256": "8e495640e188c7ad5a0d265c6eb68c8130143fcdf118214c789707931191ee56",
+      "bytes": 2639
+    },
+    {
+      "file": "case-work.css",
+      "sha256": "26f724afa0e3de26fe7e869fbb42860d0b03fa6736b6aa7aa6acf75d786f90f8",
+      "bytes": 5830
+    },
+    {
+      "file": "CaseWorkApp.tsx",
+      "sha256": "665d73da72e9b6df3806505bca8ef9a566961061f86e3af893873c0935a81b22",
+      "bytes": 5951
+    },
+    {
+      "file": "contracts.ts",
+      "sha256": "df7dec7c3deaa725de80ec4798a6fb127508a986b25d4aba327acac0a7457797",
+      "bytes": 7763
+    },
+    {
+      "file": "journal.ts",
+      "sha256": "11e732ff2fa29b313852823e18c53c515c98b4042703b0b567ee83df926d2103",
+      "bytes": 4097
+    },
+    {
+      "file": "JournalPanel.tsx",
+      "sha256": "b1a15a70744d5ee7bef58e76fb384ed3ce471812f0e4635c22348db54e07bce1",
+      "bytes": 3596
+    },
+    {
+      "file": "ReasonNotice.tsx",
+      "sha256": "99b78da9a48f0a4bbcb1125ae8bbe74ae2bf6874295b372f41698c0bade88421",
+      "bytes": 517
+    },
+    {
+      "file": "reasonText.ts",
+      "sha256": "7a0b9b7645420fe1b17aaea08d3eb950be094dca4ee7d338f13858a61912da2a",
+      "bytes": 5135
+    },
+    {
+      "file": "TaskCard.tsx",
+      "sha256": "aad116e3e84eece33edcb7a420afa564004813c6616b08f868bb08cc2e6bdad7",
+      "bytes": 2323
+    },
+    {
+      "file": "useCaseActions.ts",
+      "sha256": "29d4d84b637d71a1a8d6ae12c76db485fbd7dc3a8b71d0501765cf48ff44bc67",
+      "bytes": 4699
+    },
+    {
+      "file": "useCaseWork.ts",
+      "sha256": "381b923fa4a9afae17e29bba0ef422ce4262c15a26c7058c9e28b8b0a513c82a",
+      "bytes": 4978
+    },
+    {
+      "file": "WorkPanel.tsx",
+      "sha256": "4e11ab34b4bde5afce7a0f912935c8437b84ef14802d5c93511373e6ea9e987b",
+      "bytes": 4824
+    }
+  ]
+}

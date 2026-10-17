@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "checks": [
+    "coherent_resource_and_shift_actual_warehouse_required",
+    "current_native_resource_qualification_required"
+  ],
+  "only_owned_fixture_metadata_temporarily_committed": true,
+  "shift_warehouse_exactly_restored": true,
+  "qualification_active_restored": true,
+  "command_receipts_events_task_version": "CALLER_ROLLBACK_UNCHANGED",
+  "goods_commit": false
+}

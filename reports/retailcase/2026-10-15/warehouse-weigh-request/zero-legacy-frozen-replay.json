@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "original_request_id": "WHREQ15.OPC.EMPTY:b06c5d4bbb0b42ea817902a784e145c7",
+  "new_dto_wire_exact": true,
+  "original_actor": true,
+  "result_state": "CAPTURED",
+  "capture_key": "F4B685621BE6DED35F6AD0EE6C6B610AC3315B390734C832CB839B608622BB89",
+  "current_context": "STALE",
+  "zero_progress_required": false,
+  "load_allowed": false,
+  "main_case_unchanged": true,
+  "business_writes": false
+}

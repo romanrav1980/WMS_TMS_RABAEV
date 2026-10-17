@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "response": {
+    "task_id": 1138,
+    "warehouse_id": 13583852,
+    "current_actor": "CRES15.OP",
+    "action": "START",
+    "items": [
+      {
+        "resource_session_id": 55,
+        "resource_id": 59,
+        "equipment_id": null,
+        "resource_code": "CRES15.CASE",
+        "ready": true,
+        "reason": null
+      }
+    ],
+    "command_revalidates": true
+  },
+  "read_only": true,
+  "command_revalidates": true
+}

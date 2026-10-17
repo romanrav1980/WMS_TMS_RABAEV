@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "cell": [
+    {
+      "cell": "CPT_13583852",
+      "ware_id": 13583852,
+      "is_system": 1,
+      "otbor": 0,
+      "blocked_for_remains": 1,
+      "blocked_for_popolnenie": 1
+    }
+  ],
+  "policy": [
+    {
+      "key_hex": "313A32343A43454C4C31323A4350545F3133353833383532",
+      "lock_id": 900074177,
+      "policy_version": 1
+    }
+  ],
+  "stock_before_after": [
+    {
+      "cell": "QIPcdbf4c0962",
+      "remain": 24,
+      "hard_reserved_base": 1,
+      "stock_version": 10
+    },
+    {
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "ledger": [
+    {
+      "migration_id": "2026-10-15-case-transit-13583852",
+      "status": "APPLIED"
+    }
+  ],
+  "active_object_errors": [],
+  "recycle_errors_count": [
+    {
+      "n": 30
+    }
+  ],
+  "invalid": [
+    {
+      "n": 0
+    }
+  ]
+}

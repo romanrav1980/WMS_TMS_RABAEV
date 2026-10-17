@@ -1,0 +1,166 @@
+{
+  "state": "PASS_NEW_MANUAL_RECEIPT_ROLLBACK_COMMIT_REPLAY_CUSTODY",
+  "operation_id": "MW16.RECEIPT.ab42b67239",
+  "http": [
+    {
+      "label": "MANUAL_COMMIT",
+      "path": "/api/delivery/store-receipts/confirm",
+      "status": 200,
+      "api_call_id": "69455",
+      "request_id": "84f0ce20-0802-4199-b897-19cccda34544"
+    },
+    {
+      "label": "EXACT_REPLAY",
+      "path": "/api/delivery/store-receipts/confirm",
+      "status": 200,
+      "api_call_id": "69456",
+      "request_id": "1a91ad6e-794c-4ad9-952a-1f1b0754a38b"
+    },
+    {
+      "label": "CHANGED_WEIGHT_CONFLICT",
+      "path": "/api/delivery/store-receipts/confirm",
+      "status": 409,
+      "api_call_id": "69457",
+      "request_id": "fd34dc77-2284-4b8e-87f7-8eab5216a434"
+    }
+  ],
+  "new_manual_source": "MANUAL_CONFIRMED",
+  "hardware_verified": false,
+  "native_frozen_wire": "{\"actor\":\"admin\",\"command_type\":\"STORE_RECEIPT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"aggregation_scans\":[],\"before_cameras\":true,\"expected_composition_signature\":\"3F041F2135F4D2F26E64C3F8AD21DE51671E15C78B29D67DEDBBE133210D1E9E\",\"manual_weight_kg\":\"10\",\"observations\":[{\"accepted\":\"3\",\"damaged\":\"0\",\"extra\":\"0\",\"lot_uid\":\"FULL.QA:ab42b67239\",\"missing\":\"0\",\"refused\":\"0\"}],\"paper_reference\":\"\",\"photo_ids\":[\"E848B1DFBAC613A6A5EEAD98676A30D5C115AA341CBE417DF1574392E270C6DE\",\"2EB9031FD2F82590280DF3285E159C590864A7E833114FFF4203C388C774FB73\",\"5D048567E7D26C5D058C3247F854C822E4D67F0AACF1C5815DE7E6C53937E9DB\"],\"scan_place\":\"HU.FULL:ab42b67239\",\"unloading\":{\"evidence_reference\":\"ISOLATED TEST; manual operator weights and synthetic test photo assets; no real delivery or instrume\",\"loader_present\":false,\"method\":\"MANUAL\",\"rolling_difficult\":false,\"start_operation_id\":\"MW16.UNLOAD.ab42b67239\"}},\"operation_id\":\"MW16.RECEIPT.ab42b67239\",\"source\":{\"load_operation_id\":\"MW16.LOAD.ab42b67239\",\"store_address\":\"STORE.QA:ab42b67239\"},\"units\":[]}",
+  "caller_rollback_result": {
+    "load_custody_released": true,
+    "weight": {
+      "capture_key": null,
+      "device_id": null,
+      "device_policy_version": null,
+      "measurement_origin": "MANUAL_CONFIRMED",
+      "recorded_by": "admin",
+      "shipping_gross_kg": "10",
+      "observed_gross_kg": "10",
+      "tolerance_kg": "1",
+      "delta_kg": "0",
+      "in_tolerance": 1,
+      "act_confirmed": 0,
+      "photos": [
+        {
+          "photo_id": "E848B1DFBAC613A6A5EEAD98676A30D5C115AA341CBE417DF1574392E270C6DE",
+          "view": "FRONT",
+          "sha256": "05686831D2375193B54A2592959B62244B8A5715DBA584C347B21741B3D54B24"
+        },
+        {
+          "photo_id": "2EB9031FD2F82590280DF3285E159C590864A7E833114FFF4203C388C774FB73",
+          "view": "LEFT",
+          "sha256": "E6CDC73E1D1F59BFD1AAE5035C649B70B60C33E22C1F0B7D2831B71D4C287F27"
+        },
+        {
+          "photo_id": "5D048567E7D26C5D058C3247F854C822E4D67F0AACF1C5815DE7E6C53937E9DB",
+          "view": "RIGHT",
+          "sha256": "E891788819DF1DF7FA7811153378FC293C53F45F49F9D0AFF01338ED20E93AA2"
+        }
+      ]
+    },
+    "unloading": {
+      "evidence_reference": "ISOLATED TEST; manual operator weights and synthetic test photo assets; no real delivery or instrume",
+      "loader_present": false,
+      "method": "MANUAL",
+      "rolling_difficult": false,
+      "start_operation_id": "MW16.UNLOAD.ab42b67239"
+    },
+    "receipt_mode": "WEIGHT_PHOTO",
+    "policy_version": 1,
+    "operation_id": "MW16.RECEIPT.ab42b67239",
+    "load_operation_id": "MW16.LOAD.ab42b67239",
+    "store_address": "STORE.QA:ab42b67239",
+    "root": "HU.FULL:ab42b67239",
+    "status": "ACCEPTED",
+    "accepted_lines": [
+      {
+        "line_no": 1,
+        "lot_uid": "FULL.QA:ab42b67239",
+        "article": "DS-BASE-D10",
+        "base_uom": "EA",
+        "shipped": "3",
+        "accepted": "3",
+        "missing": "0",
+        "refused": "0",
+        "damaged": "0",
+        "extra": "0",
+        "accepted_quantity": "3"
+      }
+    ],
+    "warehouse_stock_consumed_again": false,
+    "government_ack_created": false,
+    "outbox_id": 5507
+  },
+  "caller_rollback": "PASS",
+  "committed_result": {
+    "load_custody_released": true,
+    "weight": {
+      "capture_key": null,
+      "device_id": null,
+      "device_policy_version": null,
+      "measurement_origin": "MANUAL_CONFIRMED",
+      "recorded_by": "admin",
+      "shipping_gross_kg": "10",
+      "observed_gross_kg": "10",
+      "tolerance_kg": "1",
+      "delta_kg": "0",
+      "in_tolerance": 1,
+      "act_confirmed": 0,
+      "photos": [
+        {
+          "photo_id": "E848B1DFBAC613A6A5EEAD98676A30D5C115AA341CBE417DF1574392E270C6DE",
+          "view": "FRONT",
+          "sha256": "05686831D2375193B54A2592959B62244B8A5715DBA584C347B21741B3D54B24"
+        },
+        {
+          "photo_id": "2EB9031FD2F82590280DF3285E159C590864A7E833114FFF4203C388C774FB73",
+          "view": "LEFT",
+          "sha256": "E6CDC73E1D1F59BFD1AAE5035C649B70B60C33E22C1F0B7D2831B71D4C287F27"
+        },
+        {
+          "photo_id": "5D048567E7D26C5D058C3247F854C822E4D67F0AACF1C5815DE7E6C53937E9DB",
+          "view": "RIGHT",
+          "sha256": "E891788819DF1DF7FA7811153378FC293C53F45F49F9D0AFF01338ED20E93AA2"
+        }
+      ]
+    },
+    "unloading": {
+      "evidence_reference": "ISOLATED TEST; manual operator weights and synthetic test photo assets; no real delivery or instrume",
+      "loader_present": false,
+      "method": "MANUAL",
+      "rolling_difficult": false,
+      "start_operation_id": "MW16.UNLOAD.ab42b67239"
+    },
+    "receipt_mode": "WEIGHT_PHOTO",
+    "policy_version": 1,
+    "operation_id": "MW16.RECEIPT.ab42b67239",
+    "load_operation_id": "MW16.LOAD.ab42b67239",
+    "store_address": "STORE.QA:ab42b67239",
+    "root": "HU.FULL:ab42b67239",
+    "status": "ACCEPTED",
+    "accepted_lines": [
+      {
+        "line_no": 1,
+        "lot_uid": "FULL.QA:ab42b67239",
+        "article": "DS-BASE-D10",
+        "base_uom": "EA",
+        "shipped": "3",
+        "accepted": "3",
+        "missing": "0",
+        "refused": "0",
+        "damaged": "0",
+        "extra": "0",
+        "accepted_quantity": "3"
+      }
+    ],
+    "warehouse_stock_consumed_again": false,
+    "government_ack_created": false,
+    "outbox_id": 5508
+  },
+  "custody": "ALREADY_CANONICALLY_RELEASED",
+  "accepted_ea": 3,
+  "warehouse_p": 0,
+  "warehouse_h": 0,
+  "protected_unchanged": true
+}

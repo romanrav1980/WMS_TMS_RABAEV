@@ -1,0 +1,39 @@
+{
+  "state": "PREPARED",
+  "grant": {
+    "assignment_id": "IQ16.26c2f13302.LOCK.SELF",
+    "username": "IQ16I26c2f13302",
+    "role_id": "IQ16R26c2f13302",
+    "scope_kind": "SELF",
+    "scope_id": null,
+    "valid_from": "2026-10-15T21:57:34.858207+00:00",
+    "valid_until": "2026-10-15T22:17:44.858207+00:00",
+    "expected_version": 0,
+    "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+  },
+  "http": [
+    {
+      "case": "SELF_ASSIGNED_LOTS",
+      "path": "/api/inventory/stock-posting/inventory/402/lots",
+      "status": 200
+    },
+    {
+      "case": "SELF_COUNT_REPLAY",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "status": 200
+    }
+  ],
+  "hardware_verified": false,
+  "quantity_effect": false,
+  "blocked": {
+    "oracle_code": 54,
+    "elapsed_ms": 5056
+  },
+  "revoke": {
+    "operation_id": "IQ16.26c2f13302.LOCK.REVOKE",
+    "command_type": "REVOKE",
+    "object_id": "IQ16.26c2f13302.LOCK.SELF",
+    "version": 2,
+    "replayed": false
+  }
+}

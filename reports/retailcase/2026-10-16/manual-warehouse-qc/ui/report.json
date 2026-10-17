@@ -1,0 +1,11 @@
+{
+  "state": "PASS_MANUAL_QC_UI_AND_EXACT_RETRY",
+  "fixture": true,
+  "nativeWrites": 0,
+  "manualEditable": true,
+  "sourceWithinWeightStage": true,
+  "exactReplay": true,
+  "legacyIntentAccepted": true,
+  "electronicSelectionRetained": true,
+  "errors": []
+}

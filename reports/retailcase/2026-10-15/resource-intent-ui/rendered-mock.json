@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "checks": [
+    "lost_response_reload_exact_control_retry_original_blocked_ABANDONED_not_task_cancelled",
+    "shared_browser_journal_control_blocks_second_tab_original_retry",
+    "revoked_read_does_not_clear_unknown_control_or_original",
+    "lost_response_reload_read_native_control_receipt_without_resend",
+    "unknown_preserves_pending_no_original_or_fake_confirmation",
+    "mismatch_preserves_pending_no_original_or_fake_confirmation",
+    "quota_preserves_pending_no_original_or_fake_confirmation",
+    "RECORDED_winner_original_ack_not_ABANDONED",
+    "RECORDED_REJECTED_keeps_original_denial_not_fake_abandonment",
+    "same_operator_other_device_exact_original_tombstone_readonly_no_control_POST",
+    "foreign_actor_no_recovery_send",
+    "damaged_control_fail_closed_original_raw_retained"
+  ],
+  "apiWrites": "INTERCEPTED_ONLY",
+  "staticFiles": "C:\\projects\\TMS\\terminal\\wms_terminal_web\\dist",
+  "nativeAcceptance": false,
+  "hardware": false
+}

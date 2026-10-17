@@ -1,0 +1,39 @@
+{
+ "writes": [],
+ "errors": [],
+ "runs": {
+  "390": {
+   "waves": 1,
+   "wave": "Волна FULL.QA:8c0eda9a6f",
+   "waveTitle": "Волна FULL.QA:8c0eda9a6f\nLAUNCHED · CUSTOMER_ORDER · склад Own CASE QC 8c0eda9a6",
+   "readiness": "Заказы / задания\n2 / 2\nОкно волны\nне задано\nВремя утверждено\nнет утверждённого плана\nВорота / маршрут\nворота не назначены\nОтбор разрешён\n10.10 22:05 UTC · admin\nЗапас под задания\n0 из 2 заданий покрыт",
+   "risksHeading": "Риски запуска 5",
+   "ganttVisible": true,
+   "cards": [
+    "Работа Сборка 1040 · волна 405 | Сборка 1040 · волна 405CASE_PICK_TASK · CASE_PICK_TASK:1040×Закрыть карточку объ"
+   ],
+   "workCard": "Сборка 1040 · волна 405\nCASE_PICK_TASK · CASE_PICK_TASK:1040\n×\nСостояние\nASSIGNED\nВолна\n405\nЗадание\n1040\nПлан\nнет времени\nФакт\nнет отметки\nКоличество\nнет данных\nИсточник\nRRL_CASE_PICK_TASK\nСтатус времени\nTIME_UNRESOLVED\nСтроки сборки\n0 из 1\nОкончание факта\nне известно у источника\nРесурсы работы 0\n\nРесурс не назначен — работа в очереди «без ресурса».\n\nОткрыть работу",
+   "ganttInView": true,
+   "backButton": 1,
+   "backToWave": "Волна FULL.QA:8c0eda9a6f\nLAUNCHED · CUSTOMER_ORDER · склад Own CASE QC 8c0eda9a6",
+   "overflow": 0
+  },
+  "1440": {
+   "waves": 1,
+   "wave": "Волна FULL.QA:8c0eda9a6f",
+   "waveTitle": "Волна FULL.QA:8c0eda9a6f\nLAUNCHED · CUSTOMER_ORDER · склад Own CASE QC 8c0eda9a6",
+   "readiness": "Заказы / задания\n2 / 2\nОкно волны\nне задано\nВремя утверждено\nнет утверждённого плана\nВорота / маршрут\nворота не назначены\nОтбор разрешён\n10.10 22:05 UTC · admin\nЗапас под задания\n0 из 2 заданий покрыт",
+   "risksHeading": "Риски запуска 5",
+   "ganttVisible": true,
+   "cards": [
+    "Работа Сборка 1040 · волна 405 | Сборка 1040 · волна 405CASE_PICK_TASK · CASE_PICK_TASK:1040×Закрыть карточку объ"
+   ],
+   "workCard": "Сборка 1040 · волна 405\nCASE_PICK_TASK · CASE_PICK_TASK:1040\n×\nСостояние\nASSIGNED\nВолна\n405\nЗадание\n1040\nПлан\nнет времени\nФакт\nнет отметки\nКоличество\nнет данных\nИсточник\nRRL_CASE_PICK_TASK\nСтатус времени\nTIME_UNRESOLVED\nСтроки сборки\n0 из 1\nОкончание факта\nне известно у источника\nРесурсы работы 0\n\nРесурс не назначен — работа в очереди «без ресурса».\n\nОткрыть работу",
+   "ganttInView": true,
+   "backButton": 1,
+   "backToWave": "Волна FULL.QA:8c0eda9a6f\nLAUNCHED · CUSTOMER_ORDER · склад Own CASE QC 8c0eda9a6",
+   "overflow": 0
+  }
+ },
+ "status": "PASS"
+}

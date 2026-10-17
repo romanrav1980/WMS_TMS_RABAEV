@@ -1,0 +1,189 @@
+{
+ "checks": [
+  "task_id_in_url",
+  "form_labels_titles_focus_validation_esc",
+  "fresh_submit_loss_exact_retry_success_clears_own_only",
+  "unknown_then_409_403_keeps_intent_explicit_resolve_archives",
+  "first_attempt_refusal_settles",
+  "legacy_intent_separate_exact_retry_403_kept",
+  "corrupt_journal_preserved_archive_only",
+  "card_403_no_stale_data",
+  "list_403_clears_rows",
+  "reload_keeps_task",
+  "mobile_390_dialog_fits_keyboard",
+  "scoped_assignment_opens_page_none_denies"
+ ],
+ "fixturePosts": [
+  {
+   "mode": "abort",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:83edf7f3-7b3a-4ebc-ae18-d8669473fad5",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "ok",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:83edf7f3-7b3a-4ebc-ae18-d8669473fad5",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "abort",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:4dde3243-139c-43b1-b9d3-7b231b2c06b4",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "409",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:4dde3243-139c-43b1-b9d3-7b231b2c06b4",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "403",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:4dde3243-139c-43b1-b9d3-7b231b2c06b4",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "409",
+   "body": {
+    "to_resource_id": 990001,
+    "to_resource_session_id": 990002,
+    "to_equipment_id": null,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:6212115d-beac-49f2-a484-6d3817a50620",
+    "scan_container": "FIXTURE-PALLET-1",
+    "expected_content_version": 0,
+    "expected_assigned_to": "admin",
+    "expected_from_session_id": null
+   }
+  },
+  {
+   "mode": "403",
+   "body": {
+    "to_resource_id": 990011,
+    "to_resource_session_id": 990012,
+    "reason": "Подтверждённая передача из ARM комплектации",
+    "offline_event_id": "HANDOFF:00000000-0000-4000-8000-00000000c121",
+    "scan_container": "LEGACY-FIXTURE",
+    "expected_content_version": 0,
+    "expected_assigned_to": "x",
+    "expected_from_session_id": null
+   }
+  }
+ ],
+ "liveWrites": [],
+ "errors": [],
+ "dialogs": [
+  "fixture 403"
+ ],
+ "task": 1040,
+ "card": "Сейчас у\nadmin\nРесурс\n—\nСессия\n—\nТехника\n—\nПаллета\nCP405000000001040\nВерсия содержимого\n0\nСклад\n9278842\nОтобрано строк\n0 из 1",
+ "untitled": [],
+ "focus": "resource",
+ "emptySubmit": "Укажите ID ресурса целым числом.",
+ "enterMovesTo": "reason",
+ "afterLoss": [
+  "retailcase.caseHandoff:foreign",
+  "retailcase.caseHandoff:http://127.0.0.1:8088:admin:1040",
+  "retailcase.caseHandoff:http://127.0.0.1:8088:admin:1040:delivery"
+ ],
+ "exactRetryBody": {
+  "to_resource_id": 990001,
+  "to_resource_session_id": 990002,
+  "to_equipment_id": null,
+  "reason": "Подтверждённая передача из ARM комплектации",
+  "offline_event_id": "HANDOFF:83edf7f3-7b3a-4ebc-ae18-d8669473fad5",
+  "scan_container": "FIXTURE-PALLET-1",
+  "expected_content_version": 0,
+  "expected_assigned_to": "admin",
+  "expected_from_session_id": null
+ },
+ "afterSuccess": [
+  "retailcase.caseHandoff:foreign"
+ ],
+ "after409": [
+  "retailcase.caseHandoff:http://127.0.0.1:8088:admin:1040",
+  "retailcase.caseHandoff:http://127.0.0.1:8088:admin:1040:delivery"
+ ],
+ "after403": [
+  "retailcase.caseHandoff:http://127.0.0.1:8088:admin:1040",
+  "retailcase.caseHandoff:http://127.0.0.1:8088:admin:1040:delivery"
+ ],
+ "afterResolve": [
+  "retailcase.caseHandoff:http://127.0.0.1:8088:admin:1040:resolved:863f42ec-0288-4374-ace8-a08bef7e9fa3"
+ ],
+ "firstRefusal": [],
+ "legacyText": "Запрос из прежней версии экрана — исход неизвестен. Повтор отправит то же тело с тем же ключом HANDOFF:00000000-0000-4000-8000-00000000c121.",
+ "legacyKept": true,
+ "damagedArchive": [
+  "{broken"
+ ],
+ "card403": {
+  "status": "Карточка недоступна: CASE_SCOPE_DENIED (fixture)",
+  "form": 0,
+  "card": 0
+ },
+ "rowsAfter403": 0,
+ "mobile": {
+  "left": 17,
+  "right": 373,
+  "top": 8,
+  "bottom": 836,
+  "vw": 390,
+  "vh": 844,
+  "overflowX": 0,
+  "small": 0
+ },
+ "mobileTab": true,
+ "scoped_active": {
+  "rows": 60,
+  "banner": "Доступ по назначению области: WAREHOUSE 20902283. Данные и действия ограничит сервер."
+ },
+ "scoped_none": {
+  "rows": 0,
+  "banner": "Нет права case_pick_view и нет действующего назначения по области."
+ },
+ "status": "PASS",
+ "fixtures": "transfer POST responses and scoped profile are UI fixtures; live API used only for login and GET"
+}

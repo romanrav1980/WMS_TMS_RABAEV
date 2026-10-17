@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "checks": [
+    "operator_no_admin_flag_reads_immutable_CAPTURED_with_STALE_context_after_actual_claim_start",
+    "exact_original_request_HTTP_replay_has_current_auth_and_historical_key",
+    "late_historical_original_sender_exact_packet_returns_identical_native_ACK",
+    "scoped_actual_device_catalog_active_calibration_and_UNKNOWN_connectivity",
+    "dedicated_ingest_only_sender_can_poll_without_admin_shell_permission",
+    "operator_cannot_impersonate_ingest_sender",
+    "captured_expired_exact_claim_HTTP_replay_never_renews_lease",
+    "unsupported_protocol_rejected_before_native_mutation",
+    "browser_mass_and_actor_fields_rejected",
+    "operator_cannot_post_equipment_packet",
+    "sender_ingest_permission_does_not_grant_operator_measurement_intent"
+  ],
+  "case": 1136,
+  "historical_status": {
+    "request_id": "WHREQ15.AK06.EMPTY",
+    "device_id": "WHREQ15.SCALE",
+    "case_task_id": 1136,
+    "purpose": "EMPTY_TARE",
+    "state": "CAPTURED",
+    "current_context": "STALE",
+    "admissible": false,
+    "reason": "CURRENT_SOURCE_ASSIGNMENT_OR_POLICY_CHANGED",
+    "capture_key": "2D10B2F489D58CDE95B0AB0D487C0FDEA8EB15DF4A53D4B85C9815B948739429",
+    "claim_id": "WHREQ15.AK06.EMPTY.C2",
+    "created_at": "2026-10-15T12:13:11.825251+00:00",
+    "expires_at": "2026-10-15T12:15:11.825251+00:00",
+    "stock_posted": false
+  },
+  "original_native_ACK_unchanged": true,
+  "physical_hardware": false,
+  "new_goods_mutations": 0,
+  "new_requests_created": 0
+}

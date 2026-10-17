@@ -1,0 +1,76 @@
+{
+  "status": "PASS",
+  "origin": "production 8088 static build",
+  "case": 1136,
+  "state": "CANCELLED",
+  "checks": [
+    {
+      "width": 360,
+      "status": "PASS",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/api/terminal/auth/me"
+        },
+        {
+          "method": "GET",
+          "path": "/api/inventory/assembly-scale/context?task_id=1136"
+        },
+        {
+          "method": "GET",
+          "path": "/api/help/articles/assembly-scale"
+        }
+      ],
+      "javascript_errors": [],
+      "business_posts": [],
+      "published_help": true,
+      "secret_in_storage": false
+    },
+    {
+      "width": 390,
+      "status": "PASS",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/api/terminal/auth/me"
+        },
+        {
+          "method": "GET",
+          "path": "/api/inventory/assembly-scale/context?task_id=1136"
+        },
+        {
+          "method": "GET",
+          "path": "/api/help/articles/assembly-scale"
+        }
+      ],
+      "javascript_errors": [],
+      "business_posts": [],
+      "published_help": true,
+      "secret_in_storage": false
+    },
+    {
+      "width": 1440,
+      "status": "PASS",
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/api/terminal/auth/me"
+        },
+        {
+          "method": "GET",
+          "path": "/api/inventory/assembly-scale/context?task_id=1136"
+        },
+        {
+          "method": "GET",
+          "path": "/api/help/articles/assembly-scale"
+        }
+      ],
+      "javascript_errors": [],
+      "business_posts": [],
+      "published_help": true,
+      "secret_in_storage": false
+    }
+  ],
+  "native_mutations": false,
+  "physical_hardware": false
+}

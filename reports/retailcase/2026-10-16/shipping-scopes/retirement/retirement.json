@@ -1,0 +1,117 @@
+{
+  "state": "PASS_SINGLE_LOAD_IDENTITIES_RETIRED_WAVE_DONE_HISTORY_RETAINED",
+  "commands": {
+    "OC16.9f34aa2614.FINAL.REVOKE.0": {
+      "wire": {
+        "operation_id": "OC16.9f34aa2614.FINAL.REVOKE.0",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "OC16A9f34aa2614",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.9f34aa2614.FINAL.REVOKE.0",
+        "command_type": "REVOKE",
+        "object_id": "OC16A9f34aa2614",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "OC16.9f34aa2614.FINAL.ROLE_SAVE.1": {
+      "wire": {
+        "operation_id": "OC16.9f34aa2614.FINAL.ROLE_SAVE.1",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "OC16R9f34aa2614",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_execute"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.9f34aa2614.FINAL.ROLE_SAVE.1",
+        "command_type": "ROLE_SAVE",
+        "object_id": "OC16R9f34aa2614",
+        "version": 2,
+        "replayed": false
+      }
+    }
+  },
+  "http": [
+    {
+      "wave": 586,
+      "status": 200,
+      "api_call_id": "70325",
+      "request_id": "96b7da89-ce52-471e-b4d4-ff4920f328d4",
+      "response": {
+        "wave_id": 586,
+        "kind": "CUSTOMER_ORDER",
+        "items": [
+          {
+            "kind": "PICK_TASK",
+            "id": "2155",
+            "status": "DONE",
+            "actor": null,
+            "reason": null,
+            "quantity": "25"
+          },
+          {
+            "kind": "REPLENISHMENT",
+            "id": "1654",
+            "status": "CANCELLED",
+            "actor": null,
+            "reason": null,
+            "quantity": null
+          },
+          {
+            "kind": "CASE",
+            "id": "1150",
+            "status": "SHIPPED",
+            "actor": "OC16P9f34aa2614",
+            "reason": null,
+            "quantity": "25"
+          }
+        ],
+        "blocking_count": 0,
+        "completion_outcome": "PHYSICAL_EXECUTION_COMPLETE",
+        "operation_id": "OC16.9f34aa2614.FINAL.FINISH",
+        "status": "DONE",
+        "completed": true,
+        "ready": false,
+        "outbox_id": 5652
+      }
+    }
+  ],
+  "steps": [
+    {
+      "label": "disable-device:AS16Dd0a1e6ce56",
+      "result": {
+        "device_id": "AS16Dd0a1e6ce56",
+        "device_policy_version": 2,
+        "active": false,
+        "device_mode": "TEST",
+        "basis": "GROSS"
+      }
+    },
+    {
+      "label": "logout:71",
+      "result": null
+    },
+    {
+      "label": "unqualify:75:CASE_PICK",
+      "result": {
+        "resource_id": 75,
+        "task_type": "CASE_PICK",
+        "active": false
+      }
+    }
+  ],
+  "identities_inactive": true
+}

@@ -1,0 +1,1455 @@
+{
+  "state": "PASS_FRESH_SCOPED_CASE25EA_NESTED_MEASURED_BOX_LOAD_DEPART",
+  "warehouse": 20061923,
+  "case": 1148,
+  "prefix": "OC16.3151980d02.NEST",
+  "store": "OC16.3151980d02.NEST.STORE",
+  "dock": "NS0f1e381d78",
+  "top": "OC16.3151980d02.NEST.TOP",
+  "box": "OC16.3151980d02.NEST.BOX",
+  "http": [
+    {
+      "label": "create_PALLET",
+      "path": "/api/warehouse-hus/create",
+      "status": 200,
+      "api_call_id": "70166",
+      "request_id": "3274097d-897e-4dcd-817d-174ab4f94a3c"
+    },
+    {
+      "label": "create_BOX",
+      "path": "/api/warehouse-hus/create",
+      "status": 200,
+      "api_call_id": "70167",
+      "request_id": "7597974e-7153-4052-8274-aca55589511c"
+    },
+    {
+      "label": "attach_case",
+      "path": "/api/warehouse-hus/attach-case",
+      "status": 200,
+      "api_call_id": "70168",
+      "request_id": "0fd0eb04-55a7-463e-a911-938f5f6ab795"
+    },
+    {
+      "label": "attach_case_replay",
+      "path": "/api/warehouse-hus/attach-case",
+      "status": 200,
+      "api_call_id": "70169",
+      "request_id": "c5f0c2c4-bb1e-4451-9fb8-e955fed9ba83"
+    },
+    {
+      "label": "revoked_case_replay",
+      "path": "/api/warehouse-hus/attach-case",
+      "status": 403,
+      "api_call_id": "70170",
+      "request_id": "391fdc12-7ca6-4c46-9801-eb2732b40c52"
+    },
+    {
+      "label": "group_case_replay",
+      "path": "/api/warehouse-hus/attach-case",
+      "status": 200,
+      "api_call_id": "70171",
+      "request_id": "c6470811-1d43-42d9-ba3b-d242b6dee85f"
+    },
+    {
+      "label": "pack_box",
+      "path": "/api/warehouse-hus/attach",
+      "status": 200,
+      "api_call_id": "70172",
+      "request_id": "26197f8d-e9b8-40d0-9476-40e3aca93ae8"
+    },
+    {
+      "label": "mass_policy",
+      "path": "/api/sku-quality-weight/20061923/AS16A0F1E381D78",
+      "status": 200,
+      "api_call_id": "70173",
+      "request_id": "e5c93bb8-5d45-4a52-84e9-7a619fc4c552"
+    },
+    {
+      "label": "qc_before",
+      "path": "/api/outgoing-quality/OC16.3151980d02.NEST.ST",
+      "status": 200,
+      "api_call_id": "70174",
+      "request_id": "4fc187a7-7844-4011-92ed-9724943da577"
+    },
+    {
+      "label": "manual_qc",
+      "path": "/api/outgoing-quality/OC16.3151980d02.NEST.ST/weight",
+      "status": 200,
+      "api_call_id": "70175",
+      "request_id": "91806cb7-7411-4781-b345-9ee2c8f7cad0"
+    },
+    {
+      "label": "nested_loading",
+      "path": "/api/transport/loading/confirm",
+      "status": 200,
+      "api_call_id": "70176",
+      "request_id": "3122976b-7a7f-44a4-9e7b-caa4895bafe1"
+    },
+    {
+      "label": "nested_loading_replay",
+      "path": "/api/transport/loading/confirm",
+      "status": 200,
+      "api_call_id": "70177",
+      "request_id": "8d612c80-e747-48e3-8446-4fa26d39e67f"
+    },
+    {
+      "label": "depart",
+      "path": "/api/transport/loading/33654/depart",
+      "status": 200,
+      "api_call_id": "70178",
+      "request_id": "34e03918-0520-47b0-a088-60ad137ef316"
+    }
+  ],
+  "commands": {
+    "TO.DOCK": {
+      "wire": "{\"actor\":\"admin\",\"command_type\":\"CASE_CARRIER_MOVE\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"expected_content_version\":4,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"scan_container\":\"090000000000017016\",\"scanned_to_cell\":\"NS0f1e381d78\",\"target_cell\":\"NS0f1e381d78\"},\"operation_id\":\"OC16.3151980d02.NEST.TO.DOCK\",\"source\":{\"case_task_id\":1148},\"units\":[]}",
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.3151980d02.NEST.TO.DOCK",
+        "case_pick_task_id": 1148,
+        "carrier_identifier": "090000000000017016",
+        "from_cell": "CPT_20061923",
+        "cell": "NS0f1e381d78",
+        "content_version": 5,
+        "status": "MOVED",
+        "lots": [
+          {
+            "uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+            "cell": "CPT_20061923",
+            "quantity": "1",
+            "version": 1,
+            "base": "EA",
+            "article": "AS16A0F1E381D78",
+            "case_line": 1150
+          },
+          {
+            "uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+            "cell": "CPT_20061923",
+            "quantity": "24",
+            "version": 1,
+            "base": "EA",
+            "article": "AS16A0F1E381D78",
+            "case_line": 1150
+          }
+        ],
+        "outbox_id": 5601
+      }
+    }
+  },
+  "hardware_verified": false,
+  "st": 641531,
+  "st_identifier": "OC16.3151980d02.NEST.ST",
+  "binding": {
+    "case_pick_task_id": 1148,
+    "pallet_identifier": "OC16.3151980d02.NEST.ST",
+    "status": "BOUND",
+    "fulfillment_status": "PICKED",
+    "physical_composition": [
+      {
+        "article": "AS16A0F1E381D78",
+        "base_uom": "EA",
+        "quantity": "25"
+      }
+    ],
+    "idempotent": false
+  },
+  "vehicle_type": "10",
+  "vehicle_plate": "NV0f1e381d78",
+  "vehicle": 10110,
+  "trip": 33654,
+  "acl": {
+    "HU.ASSIGN": {
+      "request": {
+        "operation_id": "OC16.3151980d02.NEST.HU.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "OC16.3151980d02.NEST.HU.SCOPE",
+          "username": "HT16Oc31efb0e6c",
+          "role_id": "HT16Rc31efb0e6c",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20061923",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T15:48:27.943481+00:00",
+          "valid_until": "2026-10-16T17:49:27.943511+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.3151980d02.NEST.HU.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "OC16.3151980d02.NEST.HU.SCOPE",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "HU.REVOKE": {
+      "request": {
+        "operation_id": "OC16.3151980d02.NEST.HU.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "OC16.3151980d02.NEST.HU.SCOPE",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.3151980d02.NEST.HU.REVOKE",
+        "command_type": "REVOKE",
+        "object_id": "OC16.3151980d02.NEST.HU.SCOPE",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "HU.GROUP": {
+      "request": {
+        "operation_id": "OC16.3151980d02.NEST.HU.GROUP",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 2,
+          "group_id": "HT16Gc31efb0e6c",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20061923"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.3151980d02.NEST.HU.GROUP",
+        "command_type": "GROUP_SAVE",
+        "object_id": "HT16Gc31efb0e6c",
+        "version": 3,
+        "replayed": false
+      }
+    }
+  },
+  "create_PALLET": {
+    "root": "OC16.3151980d02.NEST.TOP",
+    "warehouse": 20061923,
+    "cell": "NS0f1e381d78",
+    "nodes": [
+      {
+        "uid": "OC16.3151980d02.NEST.TOP",
+        "kind": "CONTAINER",
+        "type": "PALLET",
+        "version": 0,
+        "sscc": null,
+        "tare_weight_kg": "0.3",
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 0
+      }
+    ],
+    "links": [],
+    "ancestors": [],
+    "physical_unit_count": 0,
+    "leaf_count": 0,
+    "top_place_count": 1,
+    "operation_id": "OC16.3151980d02.NEST.CREATE.PALLET",
+    "command": "HU_CREATE",
+    "outbox_id": 5602
+  },
+  "create_BOX": {
+    "root": "OC16.3151980d02.NEST.BOX",
+    "warehouse": 20061923,
+    "cell": "NS0f1e381d78",
+    "nodes": [
+      {
+        "uid": "OC16.3151980d02.NEST.BOX",
+        "kind": "CONTAINER",
+        "type": "BOX",
+        "version": 0,
+        "sscc": null,
+        "tare_weight_kg": "0.2",
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 0
+      }
+    ],
+    "links": [],
+    "ancestors": [],
+    "physical_unit_count": 0,
+    "leaf_count": 0,
+    "top_place_count": 1,
+    "operation_id": "OC16.3151980d02.NEST.CREATE.BOX",
+    "command": "HU_CREATE",
+    "outbox_id": 5603
+  },
+  "attach_case": {
+    "root": "OC16.3151980d02.NEST.BOX",
+    "warehouse": 20061923,
+    "cell": "NS0f1e381d78",
+    "nodes": [
+      {
+        "uid": "OC16.3151980d02.NEST.BOX",
+        "kind": "CONTAINER",
+        "type": "BOX",
+        "version": 1,
+        "sscc": null,
+        "tare_weight_kg": "0.2",
+        "packing_start": {
+          "operation_id": "OC16.3151980d02.NEST.ATTACH.CASE",
+          "content_version": 1,
+          "warehouse": 20061923,
+          "instant": "2026-10-16T11:49:28.731647-04:00"
+        },
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 0
+      },
+      {
+        "uid": "CASE:1148",
+        "case_task_id": 1148,
+        "kind": "CASE",
+        "type": "CASE",
+        "sscc": "090000000000017016",
+        "version": 6,
+        "status": "WAIT_CONTROL",
+        "wave_id": 582,
+        "cell": "NS0f1e381d78",
+        "depth": 1,
+        "open_task_count": 0,
+        "tare_weight_kg": null
+      },
+      {
+        "uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "kind": "STOCK",
+        "type": null,
+        "version": 0,
+        "sscc": null,
+        "tare_weight_kg": "0",
+        "case_task_id": 1148,
+        "article": "AS16A0F1E381D78",
+        "quantity": "1",
+        "hard_quantity": "1",
+        "base_uom": "EA",
+        "stock_version": 1,
+        "weight_kg": null,
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 2
+      },
+      {
+        "uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "kind": "STOCK",
+        "type": null,
+        "version": 0,
+        "sscc": null,
+        "tare_weight_kg": "0",
+        "case_task_id": 1148,
+        "article": "AS16A0F1E381D78",
+        "quantity": "24",
+        "hard_quantity": "24",
+        "base_uom": "EA",
+        "stock_version": 1,
+        "weight_kg": null,
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 2
+      }
+    ],
+    "links": [
+      {
+        "id": 623,
+        "parent": "OC16.3151980d02.NEST.BOX",
+        "child": "CASE:1148",
+        "version": 0
+      },
+      {
+        "parent": "CASE:1148",
+        "child": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "membership": "CASE_CARRIER_LOT"
+      },
+      {
+        "parent": "CASE:1148",
+        "child": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "membership": "CASE_CARRIER_LOT"
+      }
+    ],
+    "ancestors": [],
+    "physical_unit_count": 0,
+    "leaf_count": 2,
+    "top_place_count": 1,
+    "operation_id": "OC16.3151980d02.NEST.ATTACH.CASE",
+    "command": "HU_ATTACH",
+    "outbox_id": 5604
+  },
+  "attach_case_replay": {
+    "root": "OC16.3151980d02.NEST.BOX",
+    "warehouse": 20061923,
+    "cell": "NS0f1e381d78",
+    "nodes": [
+      {
+        "uid": "OC16.3151980d02.NEST.BOX",
+        "kind": "CONTAINER",
+        "type": "BOX",
+        "version": 1,
+        "sscc": null,
+        "tare_weight_kg": "0.2",
+        "packing_start": {
+          "operation_id": "OC16.3151980d02.NEST.ATTACH.CASE",
+          "content_version": 1,
+          "warehouse": 20061923,
+          "instant": "2026-10-16T11:49:28.731647-04:00"
+        },
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 0
+      },
+      {
+        "uid": "CASE:1148",
+        "case_task_id": 1148,
+        "kind": "CASE",
+        "type": "CASE",
+        "sscc": "090000000000017016",
+        "version": 6,
+        "status": "WAIT_CONTROL",
+        "wave_id": 582,
+        "cell": "NS0f1e381d78",
+        "depth": 1,
+        "open_task_count": 0,
+        "tare_weight_kg": null
+      },
+      {
+        "uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "kind": "STOCK",
+        "type": null,
+        "version": 0,
+        "sscc": null,
+        "tare_weight_kg": "0",
+        "case_task_id": 1148,
+        "article": "AS16A0F1E381D78",
+        "quantity": "1",
+        "hard_quantity": "1",
+        "base_uom": "EA",
+        "stock_version": 1,
+        "weight_kg": null,
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 2
+      },
+      {
+        "uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "kind": "STOCK",
+        "type": null,
+        "version": 0,
+        "sscc": null,
+        "tare_weight_kg": "0",
+        "case_task_id": 1148,
+        "article": "AS16A0F1E381D78",
+        "quantity": "24",
+        "hard_quantity": "24",
+        "base_uom": "EA",
+        "stock_version": 1,
+        "weight_kg": null,
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 2
+      }
+    ],
+    "links": [
+      {
+        "id": 623,
+        "parent": "OC16.3151980d02.NEST.BOX",
+        "child": "CASE:1148",
+        "version": 0
+      },
+      {
+        "parent": "CASE:1148",
+        "child": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "membership": "CASE_CARRIER_LOT"
+      },
+      {
+        "parent": "CASE:1148",
+        "child": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "membership": "CASE_CARRIER_LOT"
+      }
+    ],
+    "ancestors": [],
+    "physical_unit_count": 0,
+    "leaf_count": 2,
+    "top_place_count": 1,
+    "operation_id": "OC16.3151980d02.NEST.ATTACH.CASE",
+    "command": "HU_ATTACH",
+    "outbox_id": 5604
+  },
+  "revoked_case_replay": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "OC16.3151980d02.NEST.ATTACH.CASE",
+      "reason": "HU_CURRENT_WARE_EXECUTION_FORBIDDEN",
+      "oracle_code": 20882,
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false
+    }
+  },
+  "group_case_replay": {
+    "root": "OC16.3151980d02.NEST.BOX",
+    "warehouse": 20061923,
+    "cell": "NS0f1e381d78",
+    "nodes": [
+      {
+        "uid": "OC16.3151980d02.NEST.BOX",
+        "kind": "CONTAINER",
+        "type": "BOX",
+        "version": 1,
+        "sscc": null,
+        "tare_weight_kg": "0.2",
+        "packing_start": {
+          "operation_id": "OC16.3151980d02.NEST.ATTACH.CASE",
+          "content_version": 1,
+          "warehouse": 20061923,
+          "instant": "2026-10-16T11:49:28.731647-04:00"
+        },
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 0
+      },
+      {
+        "uid": "CASE:1148",
+        "case_task_id": 1148,
+        "kind": "CASE",
+        "type": "CASE",
+        "sscc": "090000000000017016",
+        "version": 6,
+        "status": "WAIT_CONTROL",
+        "wave_id": 582,
+        "cell": "NS0f1e381d78",
+        "depth": 1,
+        "open_task_count": 0,
+        "tare_weight_kg": null
+      },
+      {
+        "uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "kind": "STOCK",
+        "type": null,
+        "version": 0,
+        "sscc": null,
+        "tare_weight_kg": "0",
+        "case_task_id": 1148,
+        "article": "AS16A0F1E381D78",
+        "quantity": "1",
+        "hard_quantity": "1",
+        "base_uom": "EA",
+        "stock_version": 1,
+        "weight_kg": null,
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 2
+      },
+      {
+        "uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "kind": "STOCK",
+        "type": null,
+        "version": 0,
+        "sscc": null,
+        "tare_weight_kg": "0",
+        "case_task_id": 1148,
+        "article": "AS16A0F1E381D78",
+        "quantity": "24",
+        "hard_quantity": "24",
+        "base_uom": "EA",
+        "stock_version": 1,
+        "weight_kg": null,
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 2
+      }
+    ],
+    "links": [
+      {
+        "id": 623,
+        "parent": "OC16.3151980d02.NEST.BOX",
+        "child": "CASE:1148",
+        "version": 0
+      },
+      {
+        "parent": "CASE:1148",
+        "child": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "membership": "CASE_CARRIER_LOT"
+      },
+      {
+        "parent": "CASE:1148",
+        "child": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "membership": "CASE_CARRIER_LOT"
+      }
+    ],
+    "ancestors": [],
+    "physical_unit_count": 0,
+    "leaf_count": 2,
+    "top_place_count": 1,
+    "operation_id": "OC16.3151980d02.NEST.ATTACH.CASE",
+    "command": "HU_ATTACH",
+    "outbox_id": 5604
+  },
+  "pack_box": {
+    "root": "OC16.3151980d02.NEST.TOP",
+    "warehouse": 20061923,
+    "cell": "NS0f1e381d78",
+    "nodes": [
+      {
+        "uid": "OC16.3151980d02.NEST.TOP",
+        "kind": "CONTAINER",
+        "type": "PALLET",
+        "version": 1,
+        "sscc": null,
+        "tare_weight_kg": "0.3",
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 0
+      },
+      {
+        "uid": "OC16.3151980d02.NEST.BOX",
+        "kind": "CONTAINER",
+        "type": "BOX",
+        "version": 2,
+        "sscc": null,
+        "tare_weight_kg": "0.2",
+        "packing_start": {
+          "operation_id": "OC16.3151980d02.NEST.ATTACH.CASE",
+          "content_version": 1,
+          "warehouse": 20061923,
+          "instant": "2026-10-16T11:49:28.731647-04:00"
+        },
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 1
+      },
+      {
+        "uid": "CASE:1148",
+        "case_task_id": 1148,
+        "kind": "CASE",
+        "type": "CASE",
+        "sscc": "090000000000017016",
+        "version": 6,
+        "status": "WAIT_CONTROL",
+        "wave_id": 582,
+        "cell": "NS0f1e381d78",
+        "depth": 2,
+        "open_task_count": 0,
+        "tare_weight_kg": null
+      },
+      {
+        "uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "kind": "STOCK",
+        "type": null,
+        "version": 0,
+        "sscc": null,
+        "tare_weight_kg": "0",
+        "case_task_id": 1148,
+        "article": "AS16A0F1E381D78",
+        "quantity": "1",
+        "hard_quantity": "1",
+        "base_uom": "EA",
+        "stock_version": 1,
+        "weight_kg": null,
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 3
+      },
+      {
+        "uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "kind": "STOCK",
+        "type": null,
+        "version": 0,
+        "sscc": null,
+        "tare_weight_kg": "0",
+        "case_task_id": 1148,
+        "article": "AS16A0F1E381D78",
+        "quantity": "24",
+        "hard_quantity": "24",
+        "base_uom": "EA",
+        "stock_version": 1,
+        "weight_kg": null,
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 3
+      }
+    ],
+    "links": [
+      {
+        "id": 624,
+        "parent": "OC16.3151980d02.NEST.TOP",
+        "child": "OC16.3151980d02.NEST.BOX",
+        "version": 0
+      },
+      {
+        "id": 623,
+        "parent": "OC16.3151980d02.NEST.BOX",
+        "child": "CASE:1148",
+        "version": 0
+      },
+      {
+        "parent": "CASE:1148",
+        "child": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "membership": "CASE_CARRIER_LOT"
+      },
+      {
+        "parent": "CASE:1148",
+        "child": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "membership": "CASE_CARRIER_LOT"
+      }
+    ],
+    "ancestors": [],
+    "physical_unit_count": 0,
+    "leaf_count": 2,
+    "top_place_count": 1,
+    "operation_id": "OC16.3151980d02.NEST.ATTACH.BOX",
+    "command": "HU_ATTACH",
+    "outbox_id": 5605
+  },
+  "sku_rule": {
+    "warehouse_id": 20061923,
+    "articul": "AS16A0F1E381D78",
+    "pick_cell": "AS16C0f1e381d78",
+    "temp_min": null,
+    "temp_max": null,
+    "min_shelf_days": 0
+  },
+  "mass_policy": {
+    "warehouse": 20061923,
+    "article": "AS16A0F1E381D78",
+    "version": 1,
+    "base_uom": "EA",
+    "base_weight_kg": "1",
+    "box_weight_kg": "24"
+  },
+  "qc_before": {
+    "shipment_identifier": "OC16.3151980d02.NEST.ST",
+    "document_id": 641531,
+    "ready": false,
+    "case_content_version": 6,
+    "composition_signature_version": 3,
+    "final_scale_required": true,
+    "required": true,
+    "control_mode": "WEIGHT",
+    "independent_controller_required": false,
+    "quality_policy": {
+      "warehouse_id": 20061923,
+      "mode": "NONE",
+      "independent": 0,
+      "sample_percent": 0,
+      "exempt_whole": 0,
+      "exempt_storage": 0,
+      "scoped_rule": false
+    },
+    "weight_exemption": {
+      "eligible": false,
+      "reason": "NO_APPLICABLE_WHOLE_PALLET_EXCEPTION"
+    },
+    "unique_mark_control_required": false,
+    "mark_profiles": [],
+    "case_task_id": 1148,
+    "case_status": "WAIT_CONTROL",
+    "physical_unit_count": 0,
+    "composition_signature": "100CD01188533FF57F352439F543D22B3D2D0568061E59C1E72C974B8D2A6756",
+    "weight_exemption_recorded": false,
+    "sample_percent": 0,
+    "sample_selected": false,
+    "rescan_required": false,
+    "control_plan_required": false,
+    "full_scan_required": false,
+    "scan_matches": null,
+    "weight_matches": null,
+    "expected_weight_kg": "25",
+    "tolerance_kg": "12",
+    "reason": "ORA-20886: SHIPMENT_CURRENT_COMPOSITION_QUALITY_REQUIRED:WEIGHT",
+    "transport_assignment": {
+      "state": "ASSIGNED",
+      "shipment_id": 641531,
+      "transport_task_id": 33654
+    }
+  },
+  "manual_qc": {
+    "ready": true,
+    "whole_hu_shipment_required": true,
+    "measurement_origin": "MANUAL_CONFIRMED",
+    "recorded_by": "admin",
+    "final_scale_capture": null,
+    "gross_weight_kg": "25.5",
+    "tare_weight_kg": "0.5",
+    "net_weight_kg": "25",
+    "failure_reason": null,
+    "operation_id": "OC16.3151980d02.NEST.QC",
+    "verified": 1,
+    "shipped": 0,
+    "physical_loading_required": true,
+    "return_code": 1,
+    "outbox_id": 5606
+  },
+  "load": "OC16.3151980d02.NEST.LOAD",
+  "tree_before": {
+    "root": "OC16.3151980d02.NEST.TOP",
+    "warehouse": 20061923,
+    "cell": "NS0f1e381d78",
+    "nodes": [
+      {
+        "uid": "OC16.3151980d02.NEST.TOP",
+        "kind": "CONTAINER",
+        "type": "PALLET",
+        "version": 1,
+        "sscc": null,
+        "tare_weight_kg": "0.3",
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 0
+      },
+      {
+        "uid": "OC16.3151980d02.NEST.BOX",
+        "kind": "CONTAINER",
+        "type": "BOX",
+        "version": 2,
+        "sscc": null,
+        "tare_weight_kg": "0.2",
+        "packing_start": {
+          "operation_id": "OC16.3151980d02.NEST.ATTACH.CASE",
+          "content_version": 1,
+          "warehouse": 20061923,
+          "instant": "2026-10-16T11:49:28.731647-04:00"
+        },
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 1
+      },
+      {
+        "uid": "CASE:1148",
+        "case_task_id": 1148,
+        "kind": "CASE",
+        "type": "CASE",
+        "sscc": "090000000000017016",
+        "version": 6,
+        "status": "CONTROLLED",
+        "wave_id": 582,
+        "cell": "NS0f1e381d78",
+        "depth": 2,
+        "open_task_count": 0,
+        "scale_qc": {
+          "case_task_id": 1148,
+          "case_content_version": 6,
+          "measured_content_version": 6,
+          "sscc": "090000000000017016",
+          "capture_key": null,
+          "device_mode": null,
+          "qc_operation_id": "OC16.3151980d02.NEST.QC",
+          "gross_weight_kg": "25.5",
+          "tare_weight_kg": "0.5",
+          "net_weight_kg": "25",
+          "origin": "MANUAL_CONFIRMED",
+          "recorded_by": "admin",
+          "measurement_ref": "MANUAL.QC:OC16.3151980d02.NEST.QC",
+          "composition_signature": "100CD01188533FF57F352439F543D22B3D2D0568061E59C1E72C974B8D2A6756",
+          "signature_version": 3,
+          "assembly_origin": []
+        },
+        "gross_weight_kg": "25.5",
+        "tare_weight_kg": "0.5",
+        "net_weight_kg": "25"
+      },
+      {
+        "uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "kind": "STOCK",
+        "type": null,
+        "version": 0,
+        "sscc": null,
+        "tare_weight_kg": "0",
+        "case_task_id": 1148,
+        "article": "AS16A0F1E381D78",
+        "quantity": "1",
+        "hard_quantity": "1",
+        "base_uom": "EA",
+        "stock_version": 1,
+        "weight_kg": null,
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 3
+      },
+      {
+        "uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "kind": "STOCK",
+        "type": null,
+        "version": 0,
+        "sscc": null,
+        "tare_weight_kg": "0",
+        "case_task_id": 1148,
+        "article": "AS16A0F1E381D78",
+        "quantity": "24",
+        "hard_quantity": "24",
+        "base_uom": "EA",
+        "stock_version": 1,
+        "weight_kg": null,
+        "open_task_count": 0,
+        "cell": "NS0f1e381d78",
+        "depth": 3
+      }
+    ],
+    "links": [
+      {
+        "id": 624,
+        "parent": "OC16.3151980d02.NEST.TOP",
+        "child": "OC16.3151980d02.NEST.BOX",
+        "version": 0
+      },
+      {
+        "id": 623,
+        "parent": "OC16.3151980d02.NEST.BOX",
+        "child": "CASE:1148",
+        "version": 0
+      },
+      {
+        "parent": "CASE:1148",
+        "child": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+        "membership": "CASE_CARRIER_LOT"
+      },
+      {
+        "parent": "CASE:1148",
+        "child": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+        "membership": "CASE_CARRIER_LOT"
+      }
+    ],
+    "ancestors": [],
+    "physical_unit_count": 0,
+    "leaf_count": 2,
+    "top_place_count": 1,
+    "quantities": [
+      {
+        "article": "AS16A0F1E381D78",
+        "base_uom": "EA",
+        "quantity": "25"
+      }
+    ],
+    "gross_weight_kg": "26.0",
+    "unknown_weight_leaves": 0,
+    "unknown_tare_containers": 0,
+    "thermal_admission": {
+      "domain": "HU_THERMAL_ADMISSION",
+      "version": 1,
+      "warehouse_id": 20061923,
+      "cell": "NS0f1e381d78",
+      "status": "UNSPECIFIED",
+      "allowed": true,
+      "code": "HU_THERMAL_RULES_UNSPECIFIED",
+      "policy_only": true,
+      "observed_temperature_c": null,
+      "source": "RRL_RECEIPT_SKU_RULE/RRL_RECEIPT_CELL_RULE",
+      "known_sku_count": 0,
+      "unknown_sku_count": 1,
+      "sku_count": 1,
+      "common_min_c": null,
+      "common_max_c": null,
+      "cell_min_c": null,
+      "cell_max_c": null,
+      "rules": [
+        {
+          "article": "AS16A0F1E381D78",
+          "min_c": null,
+          "max_c": null
+        }
+      ]
+    },
+    "placement": null
+  },
+  "nested_loading": {
+    "physical_load": {
+      "trip": 33654,
+      "vehicle_id": 10110,
+      "vehicle": "NV0f1e381d78",
+      "dock": "NS0f1e381d78",
+      "warehouse": 20061923,
+      "uid": "OC16.3151980d02.NEST.TOP",
+      "case_task_id": null,
+      "content_version": 1,
+      "mass_kg": "26",
+      "volume_m3": "1.5",
+      "members": [
+        641531
+      ],
+      "destinations": [
+        {
+          "id": 641531,
+          "address": "OC16.3151980d02.NEST.STORE"
+        }
+      ],
+      "physical_boxes": [
+        {
+          "box_uid": "OC16.3151980d02.NEST.BOX",
+          "content_version": 2,
+          "gross_weight_kg": "25.7",
+          "origin": "MANUAL_CONFIRMED",
+          "coverage_complete": 1,
+          "measurement_ref": "OC16.3151980d02.NEST.TEST.WRAPPER",
+          "scan_box": "OC16.3151980d02.NEST.BOX"
+        },
+        {
+          "box_uid": "CASE:1148",
+          "content_version": 6,
+          "gross_weight_kg": "25.5",
+          "origin": "MANUAL_CONFIRMED",
+          "coverage_complete": 1,
+          "measurement_ref": "MANUAL.QC:OC16.3151980d02.NEST.QC",
+          "scan_box": "090000000000017016",
+          "case_task_id": 1148,
+          "final_scale_capture": null,
+          "warehouse_qc_operation": "OC16.3151980d02.NEST.QC",
+          "tare_weight_kg": "0.5",
+          "net_weight_kg": "25",
+          "device_mode": null,
+          "composition_signature": "100CD01188533FF57F352439F543D22B3D2D0568061E59C1E72C974B8D2A6756",
+          "signature_version": 3,
+          "measured_content_version": 6
+        }
+      ],
+      "floor_at_loading": null,
+      "temperature_at_loading": null
+    },
+    "operation_id": "OC16.3151980d02.NEST.LOAD",
+    "status": "SHIPPED",
+    "uid": "OC16.3151980d02.NEST.TOP",
+    "shipments": [
+      {
+        "case_pick_task_id": 1148,
+        "operation_id": "OC16.3151980d02.NEST.LOAD",
+        "status": "APPLIED",
+        "document_id": 641531,
+        "allocations": [
+          {
+            "row_id": 16728010,
+            "uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+            "cell": "NS0f1e381d78",
+            "article": "AS16A0F1E381D78",
+            "source_p": "1",
+            "quantity": "1",
+            "base_uom": "EA",
+            "uom_version": 1,
+            "reservation_id": 1896,
+            "owner_type": "PICK_WAVE",
+            "owner_id": 582,
+            "pick_task_id": 2151,
+            "reservation_version": 4
+          },
+          {
+            "row_id": 16728010,
+            "uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+            "cell": "NS0f1e381d78",
+            "article": "AS16A0F1E381D78",
+            "source_p": "24",
+            "quantity": "24",
+            "base_uom": "EA",
+            "uom_version": 1,
+            "reservation_id": 1897,
+            "owner_type": "PICK_WAVE",
+            "owner_id": 582,
+            "pick_task_id": 2151,
+            "reservation_version": 1
+          }
+        ]
+      }
+    ],
+    "composition_at_departure": {
+      "root": "OC16.3151980d02.NEST.TOP",
+      "warehouse": 20061923,
+      "cell": "NS0f1e381d78",
+      "nodes": [
+        {
+          "uid": "OC16.3151980d02.NEST.TOP",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 1,
+          "sscc": null,
+          "tare_weight_kg": "0.3",
+          "open_task_count": 0,
+          "cell": "NS0f1e381d78",
+          "depth": 0
+        },
+        {
+          "uid": "OC16.3151980d02.NEST.BOX",
+          "kind": "CONTAINER",
+          "type": "BOX",
+          "version": 2,
+          "sscc": null,
+          "tare_weight_kg": "0.2",
+          "packing_start": {
+            "operation_id": "OC16.3151980d02.NEST.ATTACH.CASE",
+            "content_version": 1,
+            "warehouse": 20061923,
+            "instant": "2026-10-16T11:49:28.731647-04:00"
+          },
+          "open_task_count": 0,
+          "cell": "NS0f1e381d78",
+          "depth": 1
+        },
+        {
+          "uid": "CASE:1148",
+          "case_task_id": 1148,
+          "kind": "CASE",
+          "type": "CASE",
+          "sscc": "090000000000017016",
+          "version": 6,
+          "status": "CONTROLLED",
+          "wave_id": 582,
+          "cell": "NS0f1e381d78",
+          "depth": 2,
+          "open_task_count": 0,
+          "scale_qc": {
+            "case_task_id": 1148,
+            "case_content_version": 6,
+            "measured_content_version": 6,
+            "sscc": "090000000000017016",
+            "capture_key": null,
+            "device_mode": null,
+            "qc_operation_id": "OC16.3151980d02.NEST.QC",
+            "gross_weight_kg": "25.5",
+            "tare_weight_kg": "0.5",
+            "net_weight_kg": "25",
+            "origin": "MANUAL_CONFIRMED",
+            "recorded_by": "admin",
+            "measurement_ref": "MANUAL.QC:OC16.3151980d02.NEST.QC",
+            "composition_signature": "100CD01188533FF57F352439F543D22B3D2D0568061E59C1E72C974B8D2A6756",
+            "signature_version": 3,
+            "assembly_origin": []
+          },
+          "gross_weight_kg": "25.5",
+          "tare_weight_kg": "0.5",
+          "net_weight_kg": "25"
+        },
+        {
+          "uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+          "kind": "STOCK",
+          "type": null,
+          "version": 0,
+          "sscc": null,
+          "tare_weight_kg": "0",
+          "case_task_id": 1148,
+          "article": "AS16A0F1E381D78",
+          "quantity": "1",
+          "hard_quantity": "1",
+          "base_uom": "EA",
+          "stock_version": 1,
+          "weight_kg": null,
+          "open_task_count": 0,
+          "cell": "NS0f1e381d78",
+          "depth": 3
+        },
+        {
+          "uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+          "kind": "STOCK",
+          "type": null,
+          "version": 0,
+          "sscc": null,
+          "tare_weight_kg": "0",
+          "case_task_id": 1148,
+          "article": "AS16A0F1E381D78",
+          "quantity": "24",
+          "hard_quantity": "24",
+          "base_uom": "EA",
+          "stock_version": 1,
+          "weight_kg": null,
+          "open_task_count": 0,
+          "cell": "NS0f1e381d78",
+          "depth": 3
+        }
+      ],
+      "links": [
+        {
+          "id": 624,
+          "parent": "OC16.3151980d02.NEST.TOP",
+          "child": "OC16.3151980d02.NEST.BOX",
+          "version": 0
+        },
+        {
+          "id": 623,
+          "parent": "OC16.3151980d02.NEST.BOX",
+          "child": "CASE:1148",
+          "version": 0
+        },
+        {
+          "parent": "CASE:1148",
+          "child": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+          "membership": "CASE_CARRIER_LOT"
+        },
+        {
+          "parent": "CASE:1148",
+          "child": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+          "membership": "CASE_CARRIER_LOT"
+        }
+      ],
+      "ancestors": [],
+      "physical_unit_count": 0,
+      "leaf_count": 2,
+      "top_place_count": 1
+    },
+    "top_place_count": 1,
+    "outbox_id": 5607
+  },
+  "nested_loading_replay": {
+    "physical_load": {
+      "trip": 33654,
+      "vehicle_id": 10110,
+      "vehicle": "NV0f1e381d78",
+      "dock": "NS0f1e381d78",
+      "warehouse": 20061923,
+      "uid": "OC16.3151980d02.NEST.TOP",
+      "case_task_id": null,
+      "content_version": 1,
+      "mass_kg": "26",
+      "volume_m3": "1.5",
+      "members": [
+        641531
+      ],
+      "destinations": [
+        {
+          "id": 641531,
+          "address": "OC16.3151980d02.NEST.STORE"
+        }
+      ],
+      "physical_boxes": [
+        {
+          "box_uid": "OC16.3151980d02.NEST.BOX",
+          "content_version": 2,
+          "gross_weight_kg": "25.7",
+          "origin": "MANUAL_CONFIRMED",
+          "coverage_complete": 1,
+          "measurement_ref": "OC16.3151980d02.NEST.TEST.WRAPPER",
+          "scan_box": "OC16.3151980d02.NEST.BOX"
+        },
+        {
+          "box_uid": "CASE:1148",
+          "content_version": 6,
+          "gross_weight_kg": "25.5",
+          "origin": "MANUAL_CONFIRMED",
+          "coverage_complete": 1,
+          "measurement_ref": "MANUAL.QC:OC16.3151980d02.NEST.QC",
+          "scan_box": "090000000000017016",
+          "case_task_id": 1148,
+          "final_scale_capture": null,
+          "warehouse_qc_operation": "OC16.3151980d02.NEST.QC",
+          "tare_weight_kg": "0.5",
+          "net_weight_kg": "25",
+          "device_mode": null,
+          "composition_signature": "100CD01188533FF57F352439F543D22B3D2D0568061E59C1E72C974B8D2A6756",
+          "signature_version": 3,
+          "measured_content_version": 6
+        }
+      ],
+      "floor_at_loading": null,
+      "temperature_at_loading": null
+    },
+    "operation_id": "OC16.3151980d02.NEST.LOAD",
+    "status": "SHIPPED",
+    "uid": "OC16.3151980d02.NEST.TOP",
+    "shipments": [
+      {
+        "case_pick_task_id": 1148,
+        "operation_id": "OC16.3151980d02.NEST.LOAD",
+        "status": "APPLIED",
+        "document_id": 641531,
+        "allocations": [
+          {
+            "row_id": 16728010,
+            "uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+            "cell": "NS0f1e381d78",
+            "article": "AS16A0F1E381D78",
+            "source_p": "1",
+            "quantity": "1",
+            "base_uom": "EA",
+            "uom_version": 1,
+            "reservation_id": 1896,
+            "owner_type": "PICK_WAVE",
+            "owner_id": 582,
+            "pick_task_id": 2151,
+            "reservation_version": 4
+          },
+          {
+            "row_id": 16728010,
+            "uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+            "cell": "NS0f1e381d78",
+            "article": "AS16A0F1E381D78",
+            "source_p": "24",
+            "quantity": "24",
+            "base_uom": "EA",
+            "uom_version": 1,
+            "reservation_id": 1897,
+            "owner_type": "PICK_WAVE",
+            "owner_id": 582,
+            "pick_task_id": 2151,
+            "reservation_version": 1
+          }
+        ]
+      }
+    ],
+    "composition_at_departure": {
+      "root": "OC16.3151980d02.NEST.TOP",
+      "warehouse": 20061923,
+      "cell": "NS0f1e381d78",
+      "nodes": [
+        {
+          "uid": "OC16.3151980d02.NEST.TOP",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 1,
+          "sscc": null,
+          "tare_weight_kg": "0.3",
+          "open_task_count": 0,
+          "cell": "NS0f1e381d78",
+          "depth": 0
+        },
+        {
+          "uid": "OC16.3151980d02.NEST.BOX",
+          "kind": "CONTAINER",
+          "type": "BOX",
+          "version": 2,
+          "sscc": null,
+          "tare_weight_kg": "0.2",
+          "packing_start": {
+            "operation_id": "OC16.3151980d02.NEST.ATTACH.CASE",
+            "content_version": 1,
+            "warehouse": 20061923,
+            "instant": "2026-10-16T11:49:28.731647-04:00"
+          },
+          "open_task_count": 0,
+          "cell": "NS0f1e381d78",
+          "depth": 1
+        },
+        {
+          "uid": "CASE:1148",
+          "case_task_id": 1148,
+          "kind": "CASE",
+          "type": "CASE",
+          "sscc": "090000000000017016",
+          "version": 6,
+          "status": "CONTROLLED",
+          "wave_id": 582,
+          "cell": "NS0f1e381d78",
+          "depth": 2,
+          "open_task_count": 0,
+          "scale_qc": {
+            "case_task_id": 1148,
+            "case_content_version": 6,
+            "measured_content_version": 6,
+            "sscc": "090000000000017016",
+            "capture_key": null,
+            "device_mode": null,
+            "qc_operation_id": "OC16.3151980d02.NEST.QC",
+            "gross_weight_kg": "25.5",
+            "tare_weight_kg": "0.5",
+            "net_weight_kg": "25",
+            "origin": "MANUAL_CONFIRMED",
+            "recorded_by": "admin",
+            "measurement_ref": "MANUAL.QC:OC16.3151980d02.NEST.QC",
+            "composition_signature": "100CD01188533FF57F352439F543D22B3D2D0568061E59C1E72C974B8D2A6756",
+            "signature_version": 3,
+            "assembly_origin": []
+          },
+          "gross_weight_kg": "25.5",
+          "tare_weight_kg": "0.5",
+          "net_weight_kg": "25"
+        },
+        {
+          "uid": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+          "kind": "STOCK",
+          "type": null,
+          "version": 0,
+          "sscc": null,
+          "tare_weight_kg": "0",
+          "case_task_id": 1148,
+          "article": "AS16A0F1E381D78",
+          "quantity": "1",
+          "hard_quantity": "1",
+          "base_uom": "EA",
+          "stock_version": 1,
+          "weight_kg": null,
+          "open_task_count": 0,
+          "cell": "NS0f1e381d78",
+          "depth": 3
+        },
+        {
+          "uid": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+          "kind": "STOCK",
+          "type": null,
+          "version": 0,
+          "sscc": null,
+          "tare_weight_kg": "0",
+          "case_task_id": 1148,
+          "article": "AS16A0F1E381D78",
+          "quantity": "24",
+          "hard_quantity": "24",
+          "base_uom": "EA",
+          "stock_version": 1,
+          "weight_kg": null,
+          "open_task_count": 0,
+          "cell": "NS0f1e381d78",
+          "depth": 3
+        }
+      ],
+      "links": [
+        {
+          "id": 624,
+          "parent": "OC16.3151980d02.NEST.TOP",
+          "child": "OC16.3151980d02.NEST.BOX",
+          "version": 0
+        },
+        {
+          "id": 623,
+          "parent": "OC16.3151980d02.NEST.BOX",
+          "child": "CASE:1148",
+          "version": 0
+        },
+        {
+          "parent": "CASE:1148",
+          "child": "CASELOT:2B8711095E7133AFFB9D6E7DF487C810573F5D:1",
+          "membership": "CASE_CARRIER_LOT"
+        },
+        {
+          "parent": "CASE:1148",
+          "child": "CASELOT:7804C8D30B3F2D1D3E0D61ADA52B12DC3515C1:1",
+          "membership": "CASE_CARRIER_LOT"
+        }
+      ],
+      "ancestors": [],
+      "physical_unit_count": 0,
+      "leaf_count": 2,
+      "top_place_count": 1
+    },
+    "top_place_count": 1,
+    "outbox_id": 5607
+  },
+  "depart": {
+    "operation_id": "OC16.3151980d02.NEST.DEPART",
+    "task_id": 33654,
+    "status": "DEPARTED",
+    "physical_places": 1,
+    "gross_weight_kg": "26",
+    "stock_consumed_again": false,
+    "outbox_id": 5608
+  },
+  "proofs": [
+    {
+      "box_uid": "CASE:1148",
+      "gross_weight_kg": 25.5,
+      "measurement_origin": "MANUAL_CONFIRMED",
+      "case_box_task_id": 1148,
+      "final_scale_capture": null
+    },
+    {
+      "box_uid": "OC16.3151980d02.NEST.BOX",
+      "gross_weight_kg": 25.7,
+      "measurement_origin": "MANUAL_CONFIRMED",
+      "case_box_task_id": null,
+      "final_scale_capture": null
+    }
+  ],
+  "stock": [
+    {
+      "p": 0,
+      "h": 0
+    }
+  ]
+}

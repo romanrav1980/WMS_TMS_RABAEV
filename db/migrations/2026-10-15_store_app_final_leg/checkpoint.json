@@ -1,0 +1,13 @@
+{
+  "migration_id": "2026-10-15-store-app-final-leg",
+  "git_head": "41c913cf44441cf3656a66b0939e40cb9a83c365",
+  "invalid_before": 0,
+  "sha256": {
+    "apply.sql": "ca5b4beb46a1ecac5500b791c1a244a7cb90fc9716c1aebceaa1a7642c607ab6",
+    "before_body.sql": "b2ce0356c9d27c08c0bc3dd048b013dcd990df06b11fddcb65492813af000328",
+    "body.sql": "be9c7ac732efba4bc9a1b25077bc0003c4889249de402100a4c7a18827ff1c52",
+    "rollback.sql": "ea1504d1d9453dcefc30ff3f07bf5d9ded70212fac2dac7f70b3d3a27187dd7c",
+    "verify.sql": "ee7e77a39780f038ed2a791c3dbd90bf63c4cc64e32591a19a7a4430a1a2285d"
+  },
+  "state": "PREPARED"
+}

@@ -1,0 +1,202 @@
+{
+  "status": "PREPARED_ROOT_REVIEW_REQUIRED",
+  "actor": "NQ15.VIEW",
+  "home_ware": 13583852,
+  "allowed_ware": 1,
+  "foreign_ware": 5062399,
+  "quantity_writes": 0,
+  "before": {
+    "task": [
+      {
+        "inventory_task_id": 2,
+        "task_type": "INVENTORY_CHECK",
+        "task_source": "CASE_PICK_SHORT",
+        "source_doc_type": "CASE_PICK_SHORT",
+        "source_doc_id": 3,
+        "status": "NEW",
+        "ware_id": 1,
+        "cell_code": "QP62a6187883",
+        "articul": "DS-BASE-D10",
+        "planned_qty": 3,
+        "fact_qty": null,
+        "assigned_resource_type": "INVENTORY",
+        "assigned_resource_id": null,
+        "assigned_to": null,
+        "created_at": "2026-10-09 08:39:18.465247",
+        "created_by": "admin",
+        "assigned_at": null,
+        "started_at": null,
+        "done_at": null,
+        "updated_at": null,
+        "updated_by": null,
+        "comment_text": null,
+        "priority": 0,
+        "revision_id": null,
+        "count_operation_id": null,
+        "resource_session_id": null
+      }
+    ],
+    "counts": [
+      {
+        "operations": 5080,
+        "clocks": 59,
+        "outboxes": 5088
+      }
+    ]
+  },
+  "commands": {
+    "ROLE.CREATE": {
+      "operation_id": "NQ15.ROLE.CREATE",
+      "command_type": "ROLE_SAVE",
+      "payload": {
+        "expected_version": 0,
+        "role_id": "NQ15.QUEUE.VIEW",
+        "title": "TEST_METADATA_ONLY_NQ15_QUEUE_SCOPE",
+        "permissions": [
+          "inventory_task_view",
+          "case_pick_view"
+        ],
+        "active": true
+      }
+    },
+    "WARE.ASSIGN": {
+      "operation_id": "NQ15.WARE.ASSIGN",
+      "command_type": "ASSIGN",
+      "payload": {
+        "expected_version": 0,
+        "assignment_id": "NQ15.WARE",
+        "username": "NQ15.VIEW",
+        "role_id": "NQ15.QUEUE.VIEW",
+        "scope_kind": "WAREHOUSE",
+        "scope_id": "1",
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-15T20:30:01.631114+00:00",
+        "valid_until": "2026-10-15T21:15:06.631114+00:00",
+        "reason": "TEST_METADATA_ONLY_NQ15_QUEUE_SCOPE"
+      }
+    },
+    "WARE.REVOKE": {
+      "operation_id": "NQ15.WARE.REVOKE",
+      "command_type": "REVOKE",
+      "payload": {
+        "expected_version": 1,
+        "assignment_id": "NQ15.WARE",
+        "reason": "TEST_METADATA_ONLY_NQ15_QUEUE_SCOPE"
+      }
+    },
+    "GROUP.CREATE": {
+      "operation_id": "NQ15.QUEUE.GROUP.CREATE",
+      "command_type": "GROUP_SAVE",
+      "payload": {
+        "expected_version": 0,
+        "group_id": "NQ15.QUEUE.GROUP",
+        "title": "TEST_METADATA_ONLY_NQ15_QUEUE_SCOPE",
+        "member_kind": "WAREHOUSE",
+        "members": [
+          {
+            "kind": "WAREHOUSE",
+            "object_id": "1"
+          }
+        ],
+        "active": true
+      }
+    },
+    "GROUP.ASSIGN": {
+      "operation_id": "NQ15.QUEUE.GROUP.ASSIGN",
+      "command_type": "ASSIGN",
+      "payload": {
+        "expected_version": 0,
+        "assignment_id": "NQ15.QUEUE.GROUP.ASSIGN",
+        "username": "NQ15.VIEW",
+        "role_id": "NQ15.QUEUE.VIEW",
+        "scope_kind": "GROUP",
+        "scope_id": "NQ15.QUEUE.GROUP",
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-15T20:30:01.631114+00:00",
+        "valid_until": "2026-10-15T21:15:06.631114+00:00",
+        "reason": "TEST_METADATA_ONLY_NQ15_QUEUE_SCOPE"
+      }
+    },
+    "GROUP.REMOVE": {
+      "operation_id": "NQ15.QUEUE.GROUP.REMOVE",
+      "command_type": "GROUP_SAVE",
+      "payload": {
+        "expected_version": 1,
+        "group_id": "NQ15.QUEUE.GROUP",
+        "title": "TEST_METADATA_ONLY_NQ15_QUEUE_SCOPE",
+        "member_kind": "WAREHOUSE",
+        "members": [],
+        "active": true
+      }
+    },
+    "GROUP.REVOKE": {
+      "operation_id": "NQ15.QUEUE.GROUP.REVOKE",
+      "command_type": "REVOKE",
+      "payload": {
+        "expected_version": 1,
+        "assignment_id": "NQ15.QUEUE.GROUP.ASSIGN",
+        "reason": "TEST_METADATA_ONLY_NQ15_QUEUE_SCOPE"
+      }
+    },
+    "GROUP.RETIRE": {
+      "operation_id": "NQ15.QUEUE.GROUP.RETIRE",
+      "command_type": "GROUP_SAVE",
+      "payload": {
+        "expected_version": 2,
+        "group_id": "NQ15.QUEUE.GROUP",
+        "title": "TEST_METADATA_ONLY_NQ15_QUEUE_SCOPE",
+        "member_kind": "WAREHOUSE",
+        "members": [],
+        "active": false
+      }
+    },
+    "ROLE.RETIRE": {
+      "operation_id": "NQ15.ROLE.RETIRE",
+      "command_type": "ROLE_SAVE",
+      "payload": {
+        "expected_version": 1,
+        "role_id": "NQ15.QUEUE.VIEW",
+        "title": "TEST_METADATA_ONLY_NQ15_QUEUE_SCOPE",
+        "permissions": [
+          "inventory_task_view",
+          "case_pick_view"
+        ],
+        "active": false
+      }
+    },
+    "FOREIGN.ASSIGN": {
+      "operation_id": "NQ15.FOREIGN.ASSIGN",
+      "command_type": "ASSIGN",
+      "payload": {
+        "expected_version": 0,
+        "assignment_id": "NQ15.FOREIGN",
+        "username": "NQ15.VIEW",
+        "role_id": "NQ15.QUEUE.VIEW",
+        "scope_kind": "WAREHOUSE",
+        "scope_id": "5062399",
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-15T20:30:01.631114+00:00",
+        "valid_until": "2026-10-15T21:15:06.631114+00:00",
+        "reason": "TEST_METADATA_ONLY_NQ15_QUEUE_SCOPE"
+      }
+    },
+    "FOREIGN.REVOKE": {
+      "operation_id": "NQ15.FOREIGN.REVOKE",
+      "command_type": "REVOKE",
+      "payload": {
+        "expected_version": 1,
+        "assignment_id": "NQ15.FOREIGN",
+        "reason": "TEST_METADATA_ONLY_NQ15_QUEUE_SCOPE"
+      }
+    }
+  },
+  "source_hashes": {
+    "api/wms_api_server/app/main.py": "c4f1e1cb230b750eb3e9e8f4f9274c5b8ab4d133def5a5a7dff4ff478ff647e2",
+    "api/wms_api_server/app/modules/inventory/infrastructure/recovery_reads.py": "440be6ad0f040238cf74027f196f9ff18f161026ed7fa5520adb048e2e736475",
+    "api/wms_api_server/app/modules/inventory/infrastructure/recovery_tasks.py": "cd88a5aa5999269d7dc398375af5f7d1b986b9fad9cf7c5f1f0015a8110dd0ad",
+    "api/wms_api_server/app/modules/inventory/api/recovery_routes.py": "8f5c67bab49e888dbfce444b8dd344450b0a3d3abf09fdbc079919e68cca8d71"
+  }
+}

@@ -14,6 +14,10 @@ class StoreReceipt:
         self.gateway=gateway
         self.post=post
 
+    def abandon_unloading(self,body: dict[str,Any],actor: str)->dict[str,Any]:
+        from .store_unloading import abandon_unloading
+        return abandon_unloading(self.gateway,body,actor)
+
     def start_unloading(self,body: dict[str,Any],actor: str)->dict[str,Any]:
         from .store_unloading import start_unloading
         return start_unloading(self.gateway,body,actor)
@@ -48,12 +52,13 @@ class StoreReceipt:
                    lf.GROSS_WEIGHT_KG,lf.DEPARTED_AT,receipt.OPERATION_ID RECEIPT_OPERATION_ID,receipt.RECEIPT_STATE,lf.LOADED_AT SORT_AT
               from RRL_TT_HU_LOAD_FACT lf left join RRL_STORE_RECEIPT_FACT receipt on receipt.LOAD_OPERATION_ID=lf.LOAD_OPERATION_ID
              where lf.TT_ID=:trip and lf.STATUS='DEPARTED'
+               and not exists(select 1 from RRL_INTERWARE_PLAN leg where leg.SOURCE_LOAD_OPERATION_ID=lf.LOAD_OPERATION_ID)
                and exists(select 1 from RRL_STORE_RECEIPT_POLICY where STORE_ADDR=:addr)
                and exists(select 1 from RRL_TT_HU_LOAD_ST member where member.LOAD_OPERATION_ID=lf.LOAD_OPERATION_ID and member.ACTIVE_FLAG=1 and member.DESTINATION_ADDR=:addr)
                and not exists(select 1 from RRL_TT_HU_LOAD_ST member where member.LOAD_OPERATION_ID=lf.LOAD_OPERATION_ID and member.ACTIVE_FLAG=1 and (member.DESTINATION_ADDR is null or member.DESTINATION_ADDR<>:addr))
                and exists(select 1 from RUSERS receiver where receiver.ID=:actor and nvl(receiver.DELETED,0)=0
-                and RRL_HAS_WRIGHT(receiver.ID,'store_receipt_confirm')=1 and(upper(trim(receiver.USER_GROUP))='GLOBAL_ADMIN'
-                    or exists(select 1 from RRL_STORE_RECEIPT_USER binding where binding.USER_ID=receiver.ID and binding.STORE_ADDR=:addr)))
+                and(RRL_ACCESS_API.allowed(receiver.ID,'store_receipt_confirm','STORE',lower(rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(:addr,'AL32UTF8'),4))))=1
+                  or(RRL_HAS_WRIGHT(receiver.ID,'store_receipt_confirm')=1 and exists(select 1 from RRL_STORE_RECEIPT_USER binding where binding.USER_ID=receiver.ID and binding.STORE_ADDR=:addr))))
 """
         if after:
             found=self.gateway.fetch_all("with eligible as("+eligible+")select count(*) N from eligible where LOAD_OPERATION_ID=:after_id",{k:v for k,v in params.items()if k!="page_size"})

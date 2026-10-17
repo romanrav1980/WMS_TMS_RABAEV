@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "checks": [
+    "lost_empty_ack_reload_get404_exact_body_no_auto_post",
+    "server_clock_far_from_pc_still_valid_zero_then_offline_hides_instruction",
+    "claim_ttl_expires_without_poll_response_no_timezone_dependency",
+    "revoked_sender_operator_poll_disables_physical_instruction_preserves_intent",
+    "null_physical_journal_blocks_new_request",
+    "foreign_physical_journal_blocks_new_request",
+    "wrong_weigh_ack_identity_preserves_original_request",
+    "lost_bind_ack_reload_get_context_proves_exact_binding_no_auto_post",
+    "final_request_current_asm_domain_signature_same_tare_no_resource_override",
+    "layout_360_tooltips_localhelp_nooverflow",
+    "layout_390_tooltips_localhelp_nooverflow",
+    "layout_1440_tooltips_localhelp_nooverflow",
+    "cancelled_without_open_session_readonly_no_new_weight_or_session",
+    "strict_captured_identity_resolves_request_get_without_extra_post"
+  ],
+  "evidence": "RENDERED_CHROMIUM_MOCKED_HTTP",
+  "native_mutations": false,
+  "physical_hardware": false
+}

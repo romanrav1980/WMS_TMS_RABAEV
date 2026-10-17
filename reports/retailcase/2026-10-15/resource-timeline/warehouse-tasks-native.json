@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "checks": [
+    "native_only_warehouse_task_view",
+    "native_filter_before_top_one",
+    "foreign_detail_and_explicit_warehouse_denied",
+    "mixed_task_requires_both_sides_and_destination_revoke",
+    "selected_warehouse_revoke_immediate"
+  ],
+  "fixture_cleaned": true,
+  "business_data": "READ_ONLY",
+  "stock_effect": "NONE"
+}

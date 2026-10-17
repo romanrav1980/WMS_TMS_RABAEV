@@ -39,7 +39,9 @@ class LogisticsExpenses:
         return self._action(decide_expense,op,expense,phase,outcome,basis,reference,reason,actor)
 
     def pending(self,ware: int,actor: str,operation_id: str|None=None) -> list[dict[str,Any]]:
-        with self.gateway.transaction("Read own warehouse expenses") as cur:
-            require_warehouse(cur,ware,actor,"transport_dispatch_view")
+        from ....transaction_gateway import TransactionGateway
         from .expense_register_read import warehouse_expenses
-        return warehouse_expenses(self.gateway,ware,operation_id)
+        with self.gateway.transaction("Read own warehouse expenses") as cur:
+            cur.execute("set transaction read only")
+            require_warehouse(cur,ware,actor,"transport_dispatch_view")
+            return warehouse_expenses(TransactionGateway(cur),ware,operation_id)

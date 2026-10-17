@@ -1,0 +1,380 @@
+{
+  "status": "PASS",
+  "kind": "CHROMIUM_FAKE_VIDEO_REAL_GET_USER_MEDIA_AND_ZXING",
+  "format": "GS1128",
+  "physical_camera": false,
+  "physical_hardware": false,
+  "actual_api_calls": 0,
+  "actual_business_writes": 0,
+  "all_network_intercepted": true,
+  "code": "00090000000000010017",
+  "video": {
+    "file": "C:\\projects\\TMS\\reports\\retailcase\\2026-10-15\\store-camera-formats\\gs1128\\gs1128-software-camera.y4m",
+    "sha256": "aa20aad1162f24c25ea8bade77ab0a450ec8cbabb1dbe0aeafa86464e64073d3",
+    "bytes": 1382457,
+    "encoder": {
+      "generator": "ReportLab",
+      "version": "4.4.10",
+      "format": "GS1128",
+      "width": 192,
+      "height": 60,
+      "bars": [
+        [
+          18,
+          0,
+          2,
+          60
+        ],
+        [
+          21,
+          0,
+          1,
+          60
+        ],
+        [
+          24,
+          0,
+          3,
+          60
+        ],
+        [
+          29,
+          0,
+          4,
+          60
+        ],
+        [
+          34,
+          0,
+          1,
+          60
+        ],
+        [
+          36,
+          0,
+          3,
+          60
+        ],
+        [
+          40,
+          0,
+          2,
+          60
+        ],
+        [
+          43,
+          0,
+          2,
+          60
+        ],
+        [
+          47,
+          0,
+          2,
+          60
+        ],
+        [
+          51,
+          0,
+          2,
+          60
+        ],
+        [
+          55,
+          0,
+          1,
+          60
+        ],
+        [
+          58,
+          0,
+          1,
+          60
+        ],
+        [
+          62,
+          0,
+          2,
+          60
+        ],
+        [
+          65,
+          0,
+          2,
+          60
+        ],
+        [
+          69,
+          0,
+          2,
+          60
+        ],
+        [
+          73,
+          0,
+          2,
+          60
+        ],
+        [
+          76,
+          0,
+          2,
+          60
+        ],
+        [
+          80,
+          0,
+          2,
+          60
+        ],
+        [
+          84,
+          0,
+          2,
+          60
+        ],
+        [
+          87,
+          0,
+          2,
+          60
+        ],
+        [
+          91,
+          0,
+          2,
+          60
+        ],
+        [
+          95,
+          0,
+          2,
+          60
+        ],
+        [
+          98,
+          0,
+          2,
+          60
+        ],
+        [
+          102,
+          0,
+          2,
+          60
+        ],
+        [
+          106,
+          0,
+          2,
+          60
+        ],
+        [
+          109,
+          0,
+          2,
+          60
+        ],
+        [
+          113,
+          0,
+          2,
+          60
+        ],
+        [
+          117,
+          0,
+          2,
+          60
+        ],
+        [
+          121,
+          0,
+          2,
+          60
+        ],
+        [
+          124,
+          0,
+          2,
+          60
+        ],
+        [
+          128,
+          0,
+          2,
+          60
+        ],
+        [
+          131,
+          0,
+          2,
+          60
+        ],
+        [
+          135,
+          0,
+          2,
+          60
+        ],
+        [
+          139,
+          0,
+          1,
+          60
+        ],
+        [
+          142,
+          0,
+          3,
+          60
+        ],
+        [
+          147,
+          0,
+          2,
+          60
+        ],
+        [
+          150,
+          0,
+          2,
+          60
+        ],
+        [
+          154,
+          0,
+          3,
+          60
+        ],
+        [
+          159,
+          0,
+          1,
+          60
+        ],
+        [
+          161,
+          0,
+          2,
+          60
+        ],
+        [
+          166,
+          0,
+          3,
+          60
+        ],
+        [
+          170,
+          0,
+          1,
+          60
+        ],
+        [
+          172,
+          0,
+          2,
+          60
+        ]
+      ]
+    }
+  },
+  "blank": null,
+  "assets": [
+    {
+      "file": "/assets/store-D1VChR8h.js",
+      "sha256": "ec79d6d08ccc4d519f329441e2de3da332b73886a74afd40b786aa2f5ccbfdda"
+    },
+    {
+      "file": "/assets/client-Dcqo-eS2.js",
+      "sha256": "09da0c6c84219de9612c9606343f809bb513383b119f45ccdca64f2ed3de1f1d"
+    },
+    {
+      "file": "/assets/shared-D_pcc_jk.js",
+      "sha256": "4bdb48dca92a56f977b3b567172d980e28a59b50aac228ac63640070e1c19ab5"
+    },
+    {
+      "file": "/assets/shared-ZwPWzfPt.css",
+      "sha256": "48d409bca7b2bc04617e4bbb2d6186653f2d0affb6a644c09d44d5cbc77303b4"
+    },
+    {
+      "file": "/assets/store-DJvJY3Md.css",
+      "sha256": "1303d782413b2b5df9a7ef51d4b362945045c42aa2944258b0fdb131f9e1d49e"
+    }
+  ],
+  "results": [
+    {
+      "width": 390,
+      "status": "PASS",
+      "case": "native_mediaStream_video_frame_ZXing_GS1128_accept_lookup_and_stop",
+      "proof": {
+        "calls": 1,
+        "constraints": [
+          {
+            "audio": false,
+            "video": {
+              "facingMode": {
+                "ideal": "environment"
+              },
+              "width": {
+                "ideal": 1280
+              }
+            }
+          }
+        ],
+        "frames": [
+          {
+            "width": 640,
+            "height": 480,
+            "readyState": 4
+          }
+        ],
+        "tracks": [
+          {
+            "kind": "video",
+            "state": "ended",
+            "settings": {
+              "deviceId": "dc02cecd77d16cef63d7811a94fcd781e16b9146dc043622a4744412728301f3",
+              "groupId": "0b64dd82afd74b7778aa5228ce94d09face904111b268b25b9aa93fbfb6ad7b0"
+            }
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/api/store-app/session",
+          "code": null
+        },
+        {
+          "method": "GET",
+          "path": "/api/store-app/deliveries",
+          "code": null
+        },
+        {
+          "method": "GET",
+          "path": "/api/store-app/deliveries/lookup",
+          "code": "00090000000000010017"
+        },
+        {
+          "method": "GET",
+          "path": "/api/store-app/deliveries/CAMERA.QA.LOAD",
+          "code": null
+        },
+        {
+          "method": "POST",
+          "path": "/api/delivery/store-receipts/confirm",
+          "code": null
+        },
+        {
+          "method": "POST",
+          "path": "/api/delivery/store-receipts/confirm",
+          "code": null
+        }
+      ],
+      "mocked_receipt_posts": 2,
+      "exact_frozen_retry": true
+    }
+  ]
+}

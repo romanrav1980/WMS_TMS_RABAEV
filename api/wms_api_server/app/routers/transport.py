@@ -55,12 +55,13 @@ transport.py — FastAPI роутер диспетчера отгрузки.
 
 from datetime import date
 from typing import Annotated
+from ..modules.finance.public import billing_export_response
 from ..modules.transport.public import TransportLoadingPort, transport_loading_service
 
 import threading
 
 from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSocketDisconnect
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, Response
 
 from ..auth import (
     AdminUser,
@@ -72,7 +73,7 @@ from ..auth import (
     TRANSPORT_DISPATCH_VIEW_PERMISSION,
     TRANSPORT_FLEET_EDIT_PERMISSION,
     require_permission,
-    load_admin_user,
+    load_admin_user, get_current_admin,
 )
 from ..config import get_settings
 from ..schemas import (
@@ -308,11 +309,10 @@ def export_tasks_xlsx(
     date_from:     date | None = Query(default=None),
     date_to:       date | None = Query(default=None),
     no_payments_only: bool = False,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+    _user: AdminUser = Depends(get_current_admin),
 ):
     """Экспорт списка рейсов в Excel — Sprint 28, ТЗ §3 «В Excel»."""
-    import io
-    data = TransportService().export_tasks_xlsx(
+    data = TransportService().export_tasks_xlsx(actor=_user.username,
         shipment_date=shipment_date,
         condition=condition,
         task_id=task_id,
@@ -323,8 +323,8 @@ def export_tasks_xlsx(
         no_payments_only=no_payments_only,
     )
     fname = f"transport_tasks_{shipment_date or 'all'}.xlsx"
-    return StreamingResponse(
-        io.BytesIO(data),
+    return Response(
+        content=data,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": f'attachment; filename="{fname}"'},
     )
@@ -342,9 +342,9 @@ def list_tasks(
     date_from: date | None = None,
     date_to: date | None = None,
     no_payments_only: bool = False,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+    _user: AdminUser = Depends(get_current_admin),
 ) -> list[dict]:
-    return TransportService().list_tasks(
+    return TransportService().list_tasks(actor=_user.username,
         shipment_date=shipment_date or stdate,
         condition=condition,
         include_readiness=include_readiness,
@@ -360,7 +360,7 @@ def list_tasks(
 @router.post("/tasks")
 def create_task(
     req: TransportTaskCreateRequest,
-    user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+    user: AdminUser = Depends(get_current_admin),
 ) -> dict:
     svc = TransportService()
     task_id = svc.create_task(req, user.username)
@@ -374,16 +374,16 @@ def create_task(
 @router.get("/tasks/{task_id}")
 def get_task(
     task_id: int,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+    _user: AdminUser = Depends(get_current_admin),
 ) -> dict:
-    return TransportService().get_task(task_id)
+    return TransportService().get_task(task_id, actor=_user.username)
 
 
 @router.patch("/tasks/{task_id}")
 def update_task(
     task_id: int,
     req: TransportTaskUpdateRequest,
-    user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_EDIT_PERMISSION)),
+    user: AdminUser = Depends(get_current_admin),
 ) -> dict:
     TransportService().update_task(task_id, req, user.username)
     ws_manager.broadcast_sync({"type": "task_updated", "payload": {"task_id": task_id}})
@@ -418,9 +418,9 @@ def cancel_task(
 @router.get("/tasks/{task_id}/sts")
 def get_task_sts(
     task_id: int,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+    _user: AdminUser = Depends(get_current_admin),
 ) -> list[dict]:
-    return TransportService().get_task_sts(task_id)
+    return TransportService().get_task_sts(task_id, actor=_user.username)
 
 
 @router.post("/tasks/{task_id}/sts")
@@ -707,10 +707,10 @@ def plan_operations(
 @router.get("/tasks/{task_id}/operations")
 def get_operations(
     task_id: int,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+    _user: AdminUser = Depends(get_current_admin),
 ) -> list[dict]:
     """Список операций рейса с плановыми и фактическими временами."""
-    return TransportService().get_operations(task_id)
+    return TransportService().get_operations(task_id, actor=_user.username)
 
 
 
@@ -719,13 +719,13 @@ def get_operations(
 def get_vehicles_gantt(
     gantt_date: date | None = Query(default=None, description="Дата для Ганта"),
     plan_date: date | None = Query(default=None, description="Legacy alias for gantt_date"),
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+    _user: AdminUser = Depends(get_current_admin),
 ) -> list[dict]:
     """Данные диаграммы Ганта для всех машин на день."""
     effective_date = gantt_date or plan_date
     if effective_date is None:
         raise HTTPException(status_code=422, detail="gantt_date is required")
-    return TransportService().get_vehicles_gantt(effective_date)
+    return TransportService().get_vehicles_gantt(effective_date, actor=_user.username)
 
 
 # ---------------------------------------------------------------------------
@@ -777,15 +777,12 @@ def export_billing_registry_xlsx(
     date_to:   date | None = Query(default=None),
     closed:    int | None = Query(default=None),
     payed:     int | None = Query(default=None),
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+    _user: AdminUser = Depends(get_current_admin),
 ):
     """Экспорт реестра биллинг-заказов в Excel — Sprint 27."""
-    import io
-    data = TransportService().export_billing_registry_xlsx(company, date_from, date_to, closed, payed)
-    return StreamingResponse(
-        io.BytesIO(data),
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": 'attachment; filename="billing_registry.xlsx"'},
+    return billing_export_response(
+        lambda: TransportService().export_billing_registry_xlsx(company, date_from, date_to, closed, payed, _user.username),
+        "billing_registry.xlsx",
     )
 
 
@@ -845,16 +842,11 @@ def get_billing_order_tasks(
 @router.get("/billing/orders/{order_id}/export.xlsx")
 def export_billing_order_xlsx(
     order_id: int,
-    _user: AdminUser = Depends(require_permission(TRANSPORT_DISPATCH_VIEW_PERMISSION)),
+    _user: AdminUser = Depends(get_current_admin),
 ):
     """Экспорт счёта в Excel (.xlsx) — Sprint 26, DoD §12 #7."""
-    import io
-    data = TransportService().export_billing_order_xlsx(order_id)
-    filename = f"billing_order_{order_id}.xlsx"
-    return StreamingResponse(
-        io.BytesIO(data),
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    return billing_export_response(
+        lambda: TransportService().export_billing_order_xlsx(order_id, _user.username), f"billing_order_{order_id}.xlsx",
     )
 
 

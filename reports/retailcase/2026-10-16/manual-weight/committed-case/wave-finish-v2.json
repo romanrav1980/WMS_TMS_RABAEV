@@ -1,0 +1,47 @@
+{
+  "state": "PASS_NATIVE_WAVE_FINISH",
+  "wave_id": 576,
+  "body": {
+    "operation_id": "MW16.WAVE.FINISH.ab42b67239"
+  },
+  "http": {
+    "api_call_id": "69459",
+    "request_id": "7d705a9c-1aae-424e-ae74-db0cd4aebbd4",
+    "status": 200
+  },
+  "result": {
+    "wave_id": 576,
+    "kind": "CUSTOMER_ORDER",
+    "items": [
+      {
+        "kind": "PICK_TASK",
+        "id": "2145",
+        "status": "DONE",
+        "actor": null,
+        "reason": null,
+        "quantity": "3"
+      },
+      {
+        "kind": "WAREHOUSE_TASK",
+        "id": "1190",
+        "status": "DONE",
+        "actor": "admin",
+        "reason": null,
+        "quantity": "3"
+      }
+    ],
+    "blocking_count": 0,
+    "completion_outcome": "PHYSICAL_EXECUTION_COMPLETE",
+    "operation_id": "MW16.WAVE.FINISH.ab42b67239",
+    "status": "DONE",
+    "completed": true,
+    "ready": false,
+    "outbox_id": 5509
+  },
+  "wave": [
+    {
+      "pick_wave_id": 576,
+      "status": "DONE"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "migration_id": "2026-10-15-wave-launch-continuation",
+  "state": "APPLIED",
+  "prepared_at": "2026-10-15T10:48:44.239697+00:00",
+  "invalid_before": 0,
+  "target": {
+    "user_name": "RABAEV",
+    "service_name": "orcl",
+    "db_name": "ORCL"
+  },
+  "authorization": "Parent approved prepared migration, fresh shared Posting TASK+STORE snapshot, requires independent review before apply",
+  "baseline": "TASK scoped complete current Posting exact match; preserve STORE current replay and strict begin_plan ordering",
+  "sha256": {
+    "apply.sql": "692a9960f0b64cceb28e847ddd3aa46bc08d634ad193ab4d8fcbdf6b3be2dc1b",
+    "before_posting.sql": "8f77026a97053dd4e08535508efe5415c0b664b1b1fb368b3bbf9e6f400c1166",
+    "before_wave_access.sql": "fe3a9d50769db9982a6746dcf0ef44bb737e39f6e3e17d0a11406ce6e568f936",
+    "before_wave_sources.sql": "72013a4a967266c0328a15f0e28fb741991f55689e35f7ed647202bc1917219f",
+    "continuation_api.sql": "1ba7b31a8e858cdcb3bff8932bde27b7f48d56c99502d367e92b6b06f20ad51a",
+    "guards.sql": "8dfa5ac82b302ff65a646069b4438c3fee17e41a4deda5ae65336592463c0f5d",
+    "posting.sql": "8f8ef1bd12ee71f23d810e9b8ec23303010de4166c4327e6eebe9cc620871855",
+    "rollback.sql": "b2ec207b866091b5ee875590248c7d8614eb57a9960decf1e83e1e37607dc19e",
+    "schema.sql": "d9cf61bf5472adf5e7c7963fc98bfa37a18f41ba766d9c9f6f08d0c093484a6b",
+    "verify.sql": "4d738129c59e13bf9b92a14bb35e1b540094f10a31519ae838e6bef717729d60",
+    "wave_access.sql": "608610a8175f3b5e7feeb2e5349c3eedd90888f047f3b5562ecbfb639cb1f92e",
+    "wave_sources.sql": "a37d00977d14c32f45af57ae315fc5f6ee3deca6e0c57fa618b0bb2ca6d0b4de"
+  },
+  "review_note": "CASE_PICK_CONFIRM revision SHARE addition explicitly requested by root; native source size4000 and FAILED new-intent RELEASED normalization retained from prior helper",
+  "independent_review_fixes": [
+    "Root found session context transaction gap: g_tx initialized after strict begin_plan, writing/assert_context require same live transaction, all context cleared on failure/end",
+    "SOURCE ledger append-only trigger",
+    "p_step integer 1..7"
+  ],
+  "applied_by": "Root OracleApply after independent review; 14 statements/0 errors",
+  "live_verified_at": "2026-10-15T10:59:38.374176+00:00",
+  "live_readback_checks": [
+    "RRL_STOCK_POSTING_API BODY exact",
+    "RRL_WAVE_EXEC_ACCESS BODY exact",
+    "RRL_STOCK_WAVE_CMD BODY exact",
+    "RRL_WAVE_CONTINUE_API PACKAGE exact",
+    "RRL_WAVE_CONTINUE_API PACKAGE BODY exact"
+  ],
+  "user_errors": [],
+  "global_invalid": [],
+  "ledger": [
+    {
+      "migration_id": "2026-10-15-wave-launch-continuation",
+      "status": "APPLIED"
+    }
+  ],
+  "acceptance_state": "ACCEPTED bounded DEV native+HTTP; physical hardware/large warehouse load not claimed",
+  "acceptance": {
+    "durable_native_grouped_checks": 9,
+    "native_and_actual_http_replay_groups": 8,
+    "minimal_receipt_compatibility_groups": 3,
+    "unit_tests": 21,
+    "source_chain_exact_checks": 15,
+    "global_invalid": 0,
+    "successful_wave": 565,
+    "stock_physical": 24,
+    "stock_hard": 0,
+    "stock_version_final": 9,
+    "physical_task_moves": 0,
+    "active_physical_or_planning_residuals": 0,
+    "history_retained": true,
+    "failed_compensated_fixture_attempts": [
+      562,
+      563,
+      564
+    ],
+    "report": "reports/retailcase/2026-10-15/resource-timeline/wave-continuation-native.json",
+    "replay_report": "reports/retailcase/2026-10-15/resource-timeline/wave-continuation-replay.json",
+    "sql_report": "reports/retailcase/2026-10-15/resource-timeline/wave-continuation-sql-residuals.json",
+    "quality_gate": "PASS architecture1004files/cycles0/debt72 +24 architecture/tooling tests +admin and terminal tsc",
+    "verified_at": "2026-10-15T11:20:07.569889+00:00"
+  }
+}

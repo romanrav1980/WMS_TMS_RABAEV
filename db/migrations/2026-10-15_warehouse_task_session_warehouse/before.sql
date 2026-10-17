@@ -1,0 +1,3 @@
+@@../2026-10-15_warehouse_task_scoped_assignment/after_source_guard.sql
+declare n number;begin select count(*)into n from RRL_SCHEMA_MIGRATIONS where MIGRATION_ID='2026-10-15-warehouse-task-scoped-assignment'and STATUS='APPLIED';if n!=1 then raise_application_error(-20886,'WTASK_SESSION_PARENT_NOT_APPLIED');end if;select count(*)into n from USER_OBJECTS where STATUS='INVALID';if n!=0 then raise_application_error(-20886,'WTASK_SESSION_BASELINE_INVALID');end if;select count(*)into n from RRL_SCHEMA_MIGRATIONS where MIGRATION_ID='2026-10-15-warehouse-task-session-warehouse'and STATUS!='ROLLED_BACK';if n!=0 then raise_application_error(-20886,'WTASK_SESSION_LEDGER_EXISTS');end if;end;
+/

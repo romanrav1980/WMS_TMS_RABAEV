@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "standaloneRoute": true,
+  "nativeStoreOnlyUser": true,
+  "deliveryCount": 40,
+  "realPreview": true,
+  "publishedHelpForStoreOnlyUser": true,
+  "mobileOverflow": false,
+  "pageErrors": [],
+  "unexpectedWrites": [],
+  "passwordStored": false
+}

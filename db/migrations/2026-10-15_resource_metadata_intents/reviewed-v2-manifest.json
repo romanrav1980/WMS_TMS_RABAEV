@@ -1,0 +1,39 @@
+{
+  "status": "FROZEN_ADDITIVE_V2_NOT_APPLIED",
+  "previous_manifest": {
+    "path": "db/migrations/2026-10-15_resource_metadata_intents/reviewed-manifest.json",
+    "sha256": "0dc4f6bd09fdcb2193b2bd0b4403b6b6a6aba92e4613c5b5d42fa456f07d72f3"
+  },
+  "original_manifest": {
+    "path": "db/migrations/2026-10-15_resource_metadata_intents/frozen-manifest.json",
+    "sha256": "4f12af11e4fd524f28f0cd6ecf846a10679121e415045a2cabeb984ecd7945b3"
+  },
+  "all_original_and_reviewed_v1_files_unchanged": true,
+  "utf8_no_bom": true,
+  "files": [
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/before_current_v2.sql",
+      "sha256": "852a668d2654abe95af071e8bcecf9509eb92734cefc6d9b79842cf6d13ebbe0"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/verify_current_v2.sql",
+      "sha256": "47daa35bdd0663b96fb9d4ad28605fc19404d722bf21e7de211e578e66cb53bd"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/rollback_verify_current_v2.sql",
+      "sha256": "6d861037a677970080cf69be7fe26e0e1272b38499c9a9bbd708ce625ae27602"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/apply_reviewed_v2.sql",
+      "sha256": "8c05fc19a9e37be083f511fe9d0f3b61f96ce5aca52c2a3af9ff5b02483d81d0"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/rollback_reviewed_v2.sql",
+      "sha256": "7a1082d545a13bceff9655d6d68843efd067214593d1d4a664ab9129f9e8535f"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/reviewed-v2-rationale.md",
+      "sha256": "83570a080e2b5f9f8379de71d0b5702858f13d397e21760eede49dd4ddec7ca2"
+    }
+  ]
+}

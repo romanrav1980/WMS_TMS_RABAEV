@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "checks": [
+    "open_session_lost_abandon_ack_reload_get404_exact_retry_clears_only_verified_pair",
+    "open_step_lost_abandon_ack_reload_get404_exact_retry_clears_only_verified_pair",
+    "wrong_abandon_ack_operation_preserves_both",
+    "wrong_abandon_ack_session_preserves_both",
+    "wrong_abandon_ack_original_preserves_both",
+    "wrong_abandon_ack_stock_preserves_both",
+    "wrong_abandon_ack_task_preserves_both",
+    "crash_after_original_clear_control_read_recovers_pair",
+    "already_created_refusal_resolves_only_by_frozen_original_success_ack",
+    "tombstoned_original_409_keeps_pair_until_exact_abandoned_read",
+    "foreign_control_blocks_new_post_without_discard",
+    "broken_control_blocks_new_post_without_discard",
+    "current_scope_403_blocks_further_actions_keeps_both_journals",
+    "finish_has_no_unsupported_abandon_action",
+    "case_close_has_no_unsupported_abandon_action"
+  ],
+  "evidence": "RENDERED_CHROMIUM_MOCKED_HTTP",
+  "native_mutations": false,
+  "physical_hardware": false
+}

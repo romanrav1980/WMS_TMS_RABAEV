@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "checks": [
+    "open_session_reload_404_preserves_original_url_body_exact_retry_no_auto_post",
+    "open_step_reload_404_preserves_original_url_body_exact_retry_no_auto_post",
+    "finish_reload_404_preserves_original_url_body_exact_retry_no_auto_post",
+    "case_close_reload_404_preserves_original_url_body_exact_retry_no_auto_post",
+    "wrong_ack_identity_keeps_journal_and_blocks_new_command",
+    "poll_403_marks_stale_and_disables_placement",
+    "placed_real_envelope_unwrapped_and_session_reread",
+    "final_candidates_filter_age_tare_calibration_and_clear_selection_on_reload",
+    "task_switch_never_renders_old_context_while_new_request_pending",
+    "damaged_journal_blocks_new_commands_without_discard",
+    "in_app_close_uses_owner_command_and_refreshes_case_state",
+    "legacy_c0112_open_session_recovers_exact_original_body",
+    "close_wrong_operation_ack_preserves_original_intent",
+    "cancelled_step_is_neutral_never_stock_success",
+    "unfinished_lines_never_offer_invalid_close_command",
+    "server_remaining_source_product_and_carrier_preflight_before_journal"
+  ],
+  "evidence": "RENDERED_CHROMIUM_MOCKED_HTTP",
+  "native_mutations": false,
+  "physical_hardware": false
+}

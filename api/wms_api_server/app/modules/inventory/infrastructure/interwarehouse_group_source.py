@@ -85,6 +85,9 @@ class InterwarehouseGroupSource:
             with self.gateway.transaction("Bounded grouped interwarehouse source")as q:
                 q.execute("set transaction read only")
                 row,tree,domain=_archive(q,load,actor)
+                if any(node.get("kind") == "CASE" for node in tree["nodes"]):
+                    from .interwarehouse_case_source import read_case_group
+                    return read_case_group(q, load, actor)
                 members=_members(q,load,tree,domain)
                 lots=[_lot(q,load,row[4].read() if hasattr(row[4],"read")else row[4],x)for x in members]
                 q.execute("""select count(*)from RRL_STORE_RECEIPT_FACT where LOAD_OPERATION_ID=:load_id""",load_id=load)

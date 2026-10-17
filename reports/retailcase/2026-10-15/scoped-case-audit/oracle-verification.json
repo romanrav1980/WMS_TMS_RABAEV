@@ -1,0 +1,52 @@
+{
+  "status": "PASS",
+  "mode": "APPLIED",
+  "source_checks": [
+    {
+      "object": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE",
+      "source_exact": true,
+      "sha256": "e3b75bf016eaab95fbd95b0df321650993318cf52a637e42ba57610ab66c01f1"
+    },
+    {
+      "object": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "835a65d1201f97cc676c6755d1dbb7ebd1fafcfd22b1fcdcac3753fa5f98bf02"
+    },
+    {
+      "object": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE",
+      "source_exact": true,
+      "sha256": "7ec7dd0a2814be528f372b023be61350ba7ab40816524f32856e4b61d912afca"
+    },
+    {
+      "object": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "8f459430d9be7632e1ceaad5766eb8da0fd5f9fbb94278827415cd69900673c6"
+    },
+    {
+      "object": "RRL_STOCK_CASE_PICK_CMD",
+      "type": "PACKAGE",
+      "source_exact": true,
+      "sha256": "2cae60fcc1e7a21d850faa0135b422196382f985025e9c46174ed92a19272dc5"
+    },
+    {
+      "object": "RRL_STOCK_CASE_PICK_CMD",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "c9c8d3fe96ce22e6d21eb334f5c39c7fd1582d1e9c8f64789cc99e6c9ea07ad8"
+    }
+  ],
+  "invalid_count": 0,
+  "ledger": [
+    {
+      "migration_id": "2026-10-15-case-scoped-confirmation",
+      "status": "APPLIED"
+    }
+  ],
+  "recent_slow": [],
+  "scope": "Exact source/errors/ledger only; real current-rights/stock/resource/replay/concurrency proof separate",
+  "sql_decision": "CASE-bound identity and line closure retained; inspect attributed long-query plan before index change. No capacity claim."
+}

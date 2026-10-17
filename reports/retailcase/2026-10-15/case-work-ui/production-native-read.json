@@ -1,0 +1,106 @@
+{
+  "status": "PASS",
+  "origin": "http://127.0.0.1:8088",
+  "case": 1138,
+  "actor": "CRES15.OP",
+  "legacy_execute": false,
+  "current": {
+    "task_id": 1138,
+    "warehouse_id": 13583852,
+    "status": "IN_PROGRESS",
+    "assignment_version": 2,
+    "content_version": 2,
+    "assigned_to": "CRES15.OP",
+    "resource_id": 59,
+    "resource_session_id": 55,
+    "equipment_id": null,
+    "started_at_instant": "2026-10-15T13:31:51.198164+00:00",
+    "started_shift_time_zone": null,
+    "current_actor": "CRES15.OP"
+  },
+  "checks": [
+    {
+      "width": 360,
+      "status": "PASS",
+      "business_posts": 0,
+      "published_help": 3,
+      "related": 2,
+      "visible_controls_help": true,
+      "javascript_errors": [],
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/api/terminal/auth/me"
+        },
+        {
+          "method": "GET",
+          "path": "/api/case-pick/tasks/1138/resource-context"
+        },
+        {
+          "method": "GET",
+          "path": "/api/case-pick/tasks/1138/resource-sessions"
+        },
+        {
+          "method": "GET",
+          "path": "/api/help/articles/case-work"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "status": "PASS",
+      "business_posts": 0,
+      "published_help": 3,
+      "related": 2,
+      "visible_controls_help": true,
+      "javascript_errors": [],
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/api/terminal/auth/me"
+        },
+        {
+          "method": "GET",
+          "path": "/api/case-pick/tasks/1138/resource-context"
+        },
+        {
+          "method": "GET",
+          "path": "/api/case-pick/tasks/1138/resource-sessions"
+        },
+        {
+          "method": "GET",
+          "path": "/api/help/articles/case-work"
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "status": "PASS",
+      "business_posts": 0,
+      "published_help": 3,
+      "related": 2,
+      "visible_controls_help": true,
+      "javascript_errors": [],
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/api/terminal/auth/me"
+        },
+        {
+          "method": "GET",
+          "path": "/api/case-pick/tasks/1138/resource-context"
+        },
+        {
+          "method": "GET",
+          "path": "/api/case-pick/tasks/1138/resource-sessions"
+        },
+        {
+          "method": "GET",
+          "path": "/api/help/articles/case-work"
+        }
+      ]
+    }
+  ],
+  "native_mutations": false,
+  "hardware": false
+}

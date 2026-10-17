@@ -1,0 +1,25 @@
+{
+  "migration_id": "2026-10-15-warehouse-task-session-warehouse",
+  "status": "APPLIED",
+  "applied": true,
+  "before_sha256": "d50637bd79b5f83580b875a17f1a730550b68db7523138ec8df3e4ba16dc9011",
+  "after_sha256": "e67191f572b756b63a28caec0ae23c60ad3fc16f98cbc0c0e125ae7a190a753f",
+  "source_count": 16,
+  "change": "ONE_PREDICATE_REPLACEMENT_ACTUAL_FROM_EQUALS_TO_EQUALS_RESOURCE_EQUALS_SHIFT",
+  "stock_effect": "NONE",
+  "root_review_required": false,
+  "apply": {
+    "statements": 7,
+    "errors": 0
+  },
+  "independent_readback": {
+    "exact_sources": 16,
+    "user_errors": 0,
+    "global_invalid": 0
+  },
+  "runtime": {
+    "source": "reports/retailcase/2026-10-15/task-assignment",
+    "physical_warehouse_negative": "PASS",
+    "quantity_effect": "NONE"
+  }
+}

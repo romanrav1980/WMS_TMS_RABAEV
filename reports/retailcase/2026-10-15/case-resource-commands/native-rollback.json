@@ -1,0 +1,99 @@
+{
+  "status": "PASS",
+  "checks": [
+    "CASE_RESOURCE_QUALIFICATION_REQUIRED_purepolicy_callerrollback",
+    "CASE_SHIFT_UNAVAILABLE_purepolicy_callerrollback",
+    "CASE_SHIFT_UNAVAILABLE_purepolicy_callerrollback",
+    "CASE_SHIFT_UNAVAILABLE_purepolicy_callerrollback",
+    "CASE_SCOPED_ACTIVE_SESSION_REQUIRED_purepolicy_callerrollback",
+    "CASE_RESOURCE_UNAVAILABLE_purepolicy_callerrollback",
+    "CASE_SCOPED_SHIFT_WAREHOUSE_CONFLICT_purepolicy_callerrollback",
+    "CASE_SESSION_OWNER_CONFLICT_purepolicy_callerrollback",
+    "native_scoped_claim_assignment_version_event_hash_rollback",
+    "CASE_RESOURCE_ASSIGNMENT_VERSION_CHANGED",
+    "CASE_RESOURCE_IDENTITY_MISSING",
+    "explicit_version_update_denied"
+  ],
+  "fixture": 1138,
+  "before": {
+    "task": [
+      {
+        "status": "NEW",
+        "assigned_to": null,
+        "assigned_resource_id": null,
+        "resource_session_id": null,
+        "equipment_id": null,
+        "assignment_version": 0,
+        "content_version": 2,
+        "picked_qty": 0,
+        "started_at_instant": null
+      }
+    ],
+    "stock": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 12
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "events": [
+      {
+        "n": 0
+      }
+    ],
+    "receipts": [
+      {
+        "n": 0
+      }
+    ]
+  },
+  "after": {
+    "task": [
+      {
+        "status": "NEW",
+        "assigned_to": null,
+        "assigned_resource_id": null,
+        "resource_session_id": null,
+        "equipment_id": null,
+        "assignment_version": 0,
+        "content_version": 2,
+        "picked_qty": 0,
+        "started_at_instant": null
+      }
+    ],
+    "stock": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 12
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "events": [
+      {
+        "n": 0
+      }
+    ],
+    "receipts": [
+      {
+        "n": 0
+      }
+    ]
+  },
+  "quantity_commands": 0,
+  "hardware_verified": false,
+  "limitations": "Durable receipt/revoke/START/concurrency and HTTP require separate approved metadata phase"
+}

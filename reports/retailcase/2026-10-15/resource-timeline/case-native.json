@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "checks": [
+    "native_only_case_view_actual_warehouse",
+    "scope_filter_before_top_one",
+    "detail_scope_foreign_hidden_invalid_warehouse",
+    "shortage_scope_before_limit",
+    "case_native_revoke_immediate"
+  ],
+  "fixture_cleaned": true,
+  "business_data": "READ_ONLY",
+  "stock_effect": "NONE"
+}

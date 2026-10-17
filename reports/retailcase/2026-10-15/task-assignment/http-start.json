@@ -1,0 +1,82 @@
+{
+  "status": "PASS",
+  "checks": [
+    "authenticated_no_flat_permission_context",
+    "actual_start_metadata_committed",
+    "exact_original_command_replay",
+    "durable_original_receipt",
+    "changed_body_never_reuses_or_confirms_original_intent",
+    "browser_actor_rejected",
+    "receipt_not_transferable_to_other_actor",
+    "legacy_flat_routes_unchanged_no_fallback",
+    "old_rejected_intent_cannot_execute_after_later_state_change"
+  ],
+  "operation_id": "TASK.HTTP:ed9a7ba297404da5b59b9c10ff529e17",
+  "state": {
+    "stock": [
+      {
+        "cell": "CPT_13583852",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 1,
+        "hard_reserved_base": 0,
+        "stock_version": 1
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 12
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "tasks": [
+      {
+        "task_id": 1188,
+        "status": "IN_PROGRESS",
+        "assigned_to": "wa5930091c",
+        "resource_id": 62,
+        "resource_session_id": 58,
+        "equipment_id": 30,
+        "started_at": "2026-10-15 10:14:54.701997",
+        "started_at_instant": "2026-10-15 10:14:54.701997",
+        "started_shift_time_zone": "+03:00",
+        "fact_qty": null,
+        "assignment_version": 2
+      },
+      {
+        "task_id": 1189,
+        "status": "PLANNED",
+        "assigned_to": null,
+        "resource_id": null,
+        "resource_session_id": null,
+        "equipment_id": null,
+        "started_at": null,
+        "started_at_instant": null,
+        "started_shift_time_zone": null,
+        "fact_qty": null,
+        "assignment_version": 0
+      }
+    ],
+    "session": [
+      {
+        "status": "ACTIVE",
+        "current_task_id": 1188
+      }
+    ],
+    "events": 2,
+    "receipts": 3
+  },
+  "goods_commit": false,
+  "metadata_command_committed": true,
+  "main_and_CRES_mutated": false
+}

@@ -1,0 +1,62 @@
+{
+  "state": "PASS_LIVE_UI_WRITES_NONEMPTY_DENIAL_SQL_REVIEW",
+  "body": {
+    "operation_id": "C0116.EMPTY.NONEMPTY.DENIED",
+    "expected_content_version": 6,
+    "scan_container": "090000000000012011",
+    "reason": "Guard: mixed-tree populated CASE must never be disposed as empty"
+  },
+  "http": [
+    {
+      "api_call_id": 69581,
+      "request_id": "90088777-9945-4b21-9943-93236c8e2acb",
+      "path": "/api/consolidation-plans/CP.20220394.20261016.76d88fa1",
+      "response_status": 200,
+      "duration_ms": 266
+    },
+    {
+      "api_call_id": 69589,
+      "request_id": "9f4a5c55-6f8c-4058-b69b-39c35415ed70",
+      "path": "/api/consolidation-plans/CP.20220394.20261016.76d88fa1/cancel",
+      "response_status": 200,
+      "duration_ms": 92
+    },
+    {
+      "api_call_id": 69605,
+      "request_id": "75e77704-e0b9-4b9f-9593-d8543986f505",
+      "path": "/api/case-pick/tasks/1142/empty-disposition",
+      "response_status": 409,
+      "duration_ms": 61
+    }
+  ],
+  "native_hardware_claim": false,
+  "guard": {
+    "status": 409,
+    "body": {
+      "detail": {
+        "code": "STOCK_RULE_REJECTED",
+        "message": "CASE_EMPTY_SHORT_BOUND_1_200",
+        "operation_id": "C0116.EMPTY.NONEMPTY.DENIED",
+        "outcome_confirmed": false,
+        "retry_same_operation_id": true
+      }
+    },
+    "api_call_id": "69605"
+  },
+  "slow": [],
+  "local_pairs": [
+    {
+      "api_call_id": 69581,
+      "request_id": "90088777-9945-4b21-9943-93236c8e2acb"
+    },
+    {
+      "api_call_id": 69589,
+      "request_id": "9f4a5c55-6f8c-4058-b69b-39c35415ed70"
+    },
+    {
+      "api_call_id": 69605,
+      "request_id": "75e77704-e0b9-4b9f-9593-d8543986f505"
+    }
+  ],
+  "decision": "Keep bounded200 member updates and existing native source/target admission. No quantity writes from plan UI. Current primary keys/source guards and bounded CASE proof retained. No new cache/index for these subsecond writes; fulfillment owner checks plans on pilot volume. Prior empty-disposition SQL review includes bounded V$SQL, not endpoint p95."
+}

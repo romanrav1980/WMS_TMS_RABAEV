@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "checks": [
+    "existing_committed_dev_paper_receipt_strategy_and_explicit_counts",
+    "unchanged_operation_replays_same_original_receipt_after_policy_restored",
+    "changed_document_same_operation_conflict",
+    "single_receipt_no_second_acceptance_and_dev_policy_restored"
+  ],
+  "receipt_state": "EXISTING_COMMITTED_DEV_FIXTURE",
+  "original_operation_id": "PAPER.ROLLBACK:41005408317040d0b433353978c38d9a:2",
+  "receipt_count": 1,
+  "new_receipts": 0,
+  "warehouse_stock_consumed_again": false,
+  "dev_policy_mode_restored": true
+}

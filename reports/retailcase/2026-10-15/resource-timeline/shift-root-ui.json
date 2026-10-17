@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "mainRoute": true,
+  "coverage": "Подробные проверки — 1 из 1 видимых волн, прочитано 15.10 10:20 UTC. Список волн сам ограничен выборкой (до 50 будущих и 100 в работе). Риски — только с основанием из источника; проценты и сроки не рассчитываются.",
+  "caseScoped": true,
+  "mobileOverflow": false,
+  "pageErrors": [],
+  "unexpectedWrites": [],
+  "oldGanttHiddenAfterWarehouseChange": true
+}

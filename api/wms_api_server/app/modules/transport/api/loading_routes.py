@@ -3,7 +3,7 @@ from decimal import Decimal
 from typing import Any, Literal
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
-from ...platform.public import AdminUser, require_permission
+from ...platform.public import AdminUser, get_current_user, require_permission
 from ..contracts import TransportLoadingError, TransportLoadingPort, transport_loading_service
 
 router = APIRouter(prefix="/api/transport/loading", tags=["transport-loading"])
@@ -67,7 +67,7 @@ def failure(exc: TransportLoadingError) -> HTTPException:
 
 
 @router.get("/{task_id}/status")
-def status(task_id: int, user: AdminUser = Depends(require_permission("transport_dispatch_view")),
+def status(task_id: int, user: AdminUser = Depends(get_current_user),
            service: TransportLoadingPort = Depends(transport_loading_service)) -> dict[str, Any]:
     try:
         return service.status(task_id, user.username)
@@ -76,7 +76,7 @@ def status(task_id: int, user: AdminUser = Depends(require_permission("transport
 
 
 @router.post("/confirm")
-def confirm(body: LoadingRequest, user: AdminUser = Depends(require_permission("stock_posting_shipping")),
+def confirm(body: LoadingRequest, user: AdminUser = Depends(get_current_user),
             service: TransportLoadingPort = Depends(transport_loading_service)) -> dict[str, Any]:
     metadata = body.model_dump(mode="json",exclude={"operation_id","identifier","transport_task_id","scan_vehicle","scan_dock","measurements","physical_boxes","temperature_confirmation"})
     metadata["loading_context"]={"transport_task_id":body.transport_task_id,
@@ -94,7 +94,7 @@ def confirm(body: LoadingRequest, user: AdminUser = Depends(require_permission("
 
 @router.post("/{task_id}/depart")
 def depart(task_id: int, body: DepartureRequest,
-           user: AdminUser = Depends(require_permission("transport_dispatch_close")),
+           user: AdminUser = Depends(get_current_user),
            service: TransportLoadingPort = Depends(transport_loading_service)) -> dict[str, Any]:
     if task_id<1:
         raise HTTPException(422,"Положительный идентификатор рейса обязателен")
@@ -112,7 +112,7 @@ class SingleLoadingRequest(LoadingRequest):
 
 @router.get("/single-preview")
 def single_preview(shipment_identifier: str,
-                   user: AdminUser = Depends(require_permission("stock_posting_shipping")),
+                   user: AdminUser = Depends(get_current_user),
                    service: TransportLoadingPort = Depends(transport_loading_service)) -> dict[str, Any]:
     if not shipment_identifier or len(shipment_identifier)>200:
         raise HTTPException(422,"Укажите идентификатор СТ")
@@ -124,7 +124,7 @@ def single_preview(shipment_identifier: str,
 
 @router.post("/confirm-single")
 def confirm_single(body: SingleLoadingRequest,
-                   user: AdminUser = Depends(require_permission("stock_posting_shipping")),
+                   user: AdminUser = Depends(get_current_user),
                    service: TransportLoadingPort = Depends(transport_loading_service)) -> dict[str, Any]:
     metadata=body.model_dump(mode="json",exclude={"operation_id","identifier","transport_task_id","scan_vehicle","scan_dock","measurements","physical_boxes","temperature_confirmation"})
     metadata["loading_context"]={"transport_task_id":body.transport_task_id,

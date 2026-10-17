@@ -1,0 +1,28 @@
+{
+  "captured_at_utc": "2026-10-16T15:39:58.203120+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_TASK_RESOURCE_POLICY",
+      "type": "PACKAGE BODY",
+      "file": "rrl_task_resource_policy_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "f7f55faad2ce525215d4839e6be592cb6097f365f3166988467e8d1c59f4e448",
+      "normalized_source_sha256": "a021b05b9f426686da0510fec1cb36e1db62dc32ac42f1ab734c64c0e8e948cd",
+      "artifact_sha256": "021f401ab3685d4420d12f683f6c6c7a2e375da83b343810977a64efe4ff353d"
+    },
+    {
+      "name": "RRL_WAREHOUSE_TASK_ACCESS",
+      "type": "PACKAGE BODY",
+      "file": "rrl_warehouse_task_access_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "92607834e81f42ac566ebc8f9ff895d8b58ed8fc2fcf9388c067eea928eff56d",
+      "normalized_source_sha256": "604dab919c40eda35dc7b73c4f2dc7c98b70ee5f9237aeebea54861e978c099b",
+      "artifact_sha256": "4b59d58da378eea47c3c65c58f7bdeff10e21db6fc9e72d77dee38609ec84c28"
+    }
+  ]
+}

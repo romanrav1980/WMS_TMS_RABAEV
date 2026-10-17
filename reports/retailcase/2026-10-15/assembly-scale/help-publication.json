@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "articles": [
+    {
+      "article_id": "assembly-scale",
+      "version": 15,
+      "source_revision": "cb76e692079829b3711700ebea798fdc1d5501e052b5c3b70fc50def87b8c863",
+      "related": 2
+    }
+  ],
+  "stock_effect": "NONE"
+}

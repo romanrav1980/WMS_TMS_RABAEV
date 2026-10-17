@@ -1,11 +1,13 @@
 import xml.etree.ElementTree as ET
+from datetime import date
+from typing import Literal
 from decimal import Decimal
 from pydantic import BaseModel, ConfigDict, Field
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from starlette.concurrency import run_in_threadpool
 
-from ...platform.public import AdminUser, require_permission
+from ...platform.public import AdminUser, require_permission, get_current_user
 from ..application.ingestion import IdocConflict
 from ..domain.artmas import MAX_IDOC_BYTES
 from ..application.receipt_ports import SupplyPort as SupplyOrders
@@ -37,18 +39,23 @@ async def import_supply(request: Request,
 
 
 @router.get("")
-def list_supplies(warehouse_id: int | None = None, limit: int = Query(100, ge=1, le=200),
-                  user: AdminUser = Depends(require_permission("sap_supply_view")),
+def list_supplies(warehouse_id: int | None = Query(default=None,gt=0), limit: int = Query(100, ge=1, le=200),
+                  date_from: date|None=None, date_to: date|None=None,
+                  date_basis: Literal["PLANNED_ACCEPT","ACCEPTED","DOCUMENT"]="PLANNED_ACCEPT",
+                  include_unplanned: bool=False,
+                  user: AdminUser = Depends(get_current_user),
                   service: SupplyOrders = Depends(supply_service)) -> list[dict]:
     try:
-        return service.list(warehouse_id, limit, user.username)
+        return service.list(warehouse_id, limit, user.username, date_from, date_to, date_basis, include_unplanned)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
     except PermissionError as exc:
         raise HTTPException(403, str(exc)) from exc
 
 
 @router.get("/by-receipt-document/{document_id}")
 def supply_by_document(document_id: int,
-                       user: AdminUser = Depends(require_permission("sap_supply_view")),
+                       user: AdminUser = Depends(get_current_user),
                        service: SupplyOrders = Depends(supply_service)) -> dict:
     if document_id < 1:
         raise HTTPException(422, "Положительный номер накладной обязателен")
@@ -63,7 +70,7 @@ def supply_by_document(document_id: int,
 
 
 @router.get("/{order_id}")
-def supply_detail(order_id: str, user: AdminUser = Depends(require_permission("sap_supply_view")),
+def supply_detail(order_id: str, user: AdminUser = Depends(get_current_user),
                   service: SupplyOrders = Depends(supply_service)) -> dict:
     try:
         return service.get(order_id, user.username)

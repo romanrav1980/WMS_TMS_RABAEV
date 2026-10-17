@@ -1,0 +1,161 @@
+{
+  "sources": {
+    "RRL_INTERWARE_THERMAL|PACKAGE": "B2E01E3B1E98B1C8CD3F1BCA5C3C39B7D28245F0393F7F5D4248EE611207E1A7",
+    "RRL_INTERWARE_THERMAL|PACKAGE BODY": "7006907B26ABC50C2AC4557B85C63326B6388574313B652C5E4695D9531B5101",
+    "RRL_IW_GROUP_THERMAL|PACKAGE": "F335129CB4B80E4EC2CBAAD469C246978E8869A48A44A5FE0FAA9DDBF208C868",
+    "RRL_IW_GROUP_THERMAL|PACKAGE BODY": "333D6BE627DE03CB6B5740C5D312E3DBC9D6CFA27CD0294FBDA5C224D6119ED8",
+    "RRL_STOCK_HU_CMD|PACKAGE": "4F13570DAC1AD8C98E0F8115BB27C2312350461CA871F6C751BD523B3AE234D5",
+    "RRL_STOCK_HU_CMD|PACKAGE BODY": "634DC3AB4AC8C21C9EC8A4E225BF270B8CB9D3B4D1A02E5AE94C2CC65F19C3AE",
+    "RRL_STOCK_HU_READ|PACKAGE": "8344C651B5CDA4CBE5B8A7D49ECC2B267F211F80BF170ABD3CBE17D95B934F48",
+    "RRL_STOCK_HU_READ|PACKAGE BODY": "803C68EB33CC63B6A6B78E51639E6E0F528F2923F8BFD7D2E8E8E0B4BA67EC0D",
+    "RRL_STOCK_CASE_MOVE_CMD|PACKAGE BODY": "D124FCC4E2D2AF9447AB3463907B1EEADB2A72596C9756ECA2EE3635FA9CF021",
+    "RRL_STOCK_HU_SHIP_CMD|PACKAGE": "9BFDD25B23EE98476DB952EB4FA4E2992EC19D6F46C4C1FCFB7C3369D714AA9B",
+    "RRL_STOCK_HU_SHIP_CMD|PACKAGE BODY": "950765C06B4EC33A666F0C0ABC92DC43FADD79E5FDFFD995D91055BC3678F95C",
+    "RRL_HU_THERMAL_READ|PACKAGE": "B94CA5BD0C69C3975CDEEC4E0BE86AD06580C83C89B7E43C44ED67A159AF709A",
+    "RRL_HU_THERMAL_READ|PACKAGE BODY": "3298A6EA2B6E477E1BA5816725876596D4943DF13405342EF100BBF373E1EC8B"
+  },
+  "quantity_effect": false,
+  "rule_columns": [
+    {
+      "table": "RRL_RECEIPT_CELL_RULE",
+      "column": "WARE_ID",
+      "type": "NUMBER",
+      "nullable": "N",
+      "default": null
+    },
+    {
+      "table": "RRL_RECEIPT_CELL_RULE",
+      "column": "CELL",
+      "type": "VARCHAR2",
+      "nullable": "N",
+      "default": null
+    },
+    {
+      "table": "RRL_RECEIPT_CELL_RULE",
+      "column": "TEMP_MIN",
+      "type": "NUMBER",
+      "nullable": "Y",
+      "default": null
+    },
+    {
+      "table": "RRL_RECEIPT_CELL_RULE",
+      "column": "TEMP_MAX",
+      "type": "NUMBER",
+      "nullable": "Y",
+      "default": null
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "WARE_ID",
+      "type": "NUMBER",
+      "nullable": "N",
+      "default": null
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "ARTICUL",
+      "type": "VARCHAR2",
+      "nullable": "N",
+      "default": null
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "PICK_CELL",
+      "type": "VARCHAR2",
+      "nullable": "N",
+      "default": null
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "TEMP_MIN",
+      "type": "NUMBER",
+      "nullable": "Y",
+      "default": null
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "TEMP_MAX",
+      "type": "NUMBER",
+      "nullable": "Y",
+      "default": null
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "MIN_SHELF_DAYS",
+      "type": "NUMBER",
+      "nullable": "N",
+      "default": "0 "
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "SOURCE_PICK_MODE",
+      "type": "VARCHAR2",
+      "nullable": "N",
+      "default": "'AFTER_PUTAWAY' "
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "SHIP_FROM_STOCK",
+      "type": "NUMBER",
+      "nullable": "Y",
+      "default": null
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "STOCK_ALLOC_CLASS",
+      "type": "VARCHAR2",
+      "nullable": "N",
+      "default": "'OTHER' "
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "PICK_STEP_BASE",
+      "type": "NUMBER",
+      "nullable": "N",
+      "default": "1 "
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "ALLOCATION_VERSION",
+      "type": "NUMBER",
+      "nullable": "N",
+      "default": "1 "
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "ALLOW_PICK_BATCH_MIX",
+      "type": "NUMBER",
+      "nullable": "N",
+      "default": "0 "
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "QC_BASE_WEIGHT_KG",
+      "type": "NUMBER",
+      "nullable": "Y",
+      "default": null
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "QC_BOX_WEIGHT_KG",
+      "type": "NUMBER",
+      "nullable": "Y",
+      "default": null
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "QC_WEIGHT_VERSION",
+      "type": "NUMBER",
+      "nullable": "N",
+      "default": "0 "
+    },
+    {
+      "table": "RRL_RECEIPT_SKU_RULE",
+      "column": "QC_WEIGHT_BASE_UOM",
+      "type": "VARCHAR2",
+      "nullable": "Y",
+      "default": null
+    }
+  ],
+  "state": "PASS_SOURCE_COMPILE_LEDGER"
+}

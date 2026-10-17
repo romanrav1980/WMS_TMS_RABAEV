@@ -1,0 +1,8 @@
+{
+  "state": "FROZEN_BEFORE_RECEIPT",
+  "operation_id": "MW16.RECEIPT.ab42b67239",
+  "http": [],
+  "new_manual_source": "MANUAL_CONFIRMED",
+  "hardware_verified": false,
+  "native_frozen_wire": "{\"actor\":\"admin\",\"command_type\":\"STORE_RECEIPT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"aggregation_scans\":[],\"before_cameras\":true,\"expected_composition_signature\":\"3F041F2135F4D2F26E64C3F8AD21DE51671E15C78B29D67DEDBBE133210D1E9E\",\"manual_weight_kg\":\"10\",\"observations\":[{\"accepted\":\"3\",\"damaged\":\"0\",\"extra\":\"0\",\"lot_uid\":\"FULL.QA:ab42b67239\",\"missing\":\"0\",\"refused\":\"0\"}],\"paper_reference\":\"\",\"photo_ids\":[\"E848B1DFBAC613A6A5EEAD98676A30D5C115AA341CBE417DF1574392E270C6DE\",\"2EB9031FD2F82590280DF3285E159C590864A7E833114FFF4203C388C774FB73\",\"5D048567E7D26C5D058C3247F854C822E4D67F0AACF1C5815DE7E6C53937E9DB\"],\"scan_place\":\"HU.FULL:ab42b67239\",\"unloading\":{\"evidence_reference\":\"ISOLATED TEST; manual operator weights and synthetic test photo assets; no real delivery or instrume\",\"loader_present\":false,\"method\":\"MANUAL\",\"rolling_difficult\":false,\"start_operation_id\":\"MW16.UNLOAD.ab42b67239\"}},\"operation_id\":\"MW16.RECEIPT.ab42b67239\",\"source\":{\"load_operation_id\":\"MW16.LOAD.ab42b67239\",\"store_address\":\"STORE.QA:ab42b67239\"},\"units\":[]}"
+}

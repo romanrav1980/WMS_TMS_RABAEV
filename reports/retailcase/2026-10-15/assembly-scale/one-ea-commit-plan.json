@@ -1,0 +1,41 @@
+{
+  "state": "ROOT_APPROVED_BEFORE_COMMIT",
+  "environment": "isolated DEV RABAEV@127.0.0.1:1521/orcl; TEST_NOT_HARDWARE",
+  "case_task_id": 1136,
+  "case_line_id": 1139,
+  "warehouse_id": 13583852,
+  "session_id": "WHREQ15.ASM.S1136",
+  "step_id": "WHREQ15.ASM.T1136",
+  "only_allowed_goods_operation_id": "WHREQ15.ASM.PICK1136",
+  "quantity": "1 EA",
+  "source": {
+    "uid": "REUSE.RETURN:e6c16d0bbd",
+    "cell": "QIPcdbf4c0962",
+    "physical": 24,
+    "hard": 1,
+    "version": 10
+  },
+  "expected_after_pick": "Original UID23/H0 + CASE child UID1/H1 in CPT_13583852; one STEP_USE, APPLIED clock, stock operation and outbox only",
+  "preflight": [
+    "native scoped execute1EA/full caller rollback",
+    "real encrypted OPC EMPTY0.5 + raw1.0MATCHED",
+    "native parent + immutable exact STEP/explicit AUTO consent",
+    "actual encrypted OPC BEFORE0.5/ARMED + raw1.1MATCHED/no stock",
+    "prepared ST641520/fulfillment190/1EA/FACT0 metadata",
+    "caller rollback ONE canonical pick + pure close content/composition + native RETURN source/predicates"
+  ],
+  "allowed_next": "AFTER actual local TEST OPC1.5 through real producer?productionAPI; one canonical stock commit only; exact replays allowed without another effect",
+  "after": "Existing CASE close owner?existing binder samepreparedST?fresh independent actual FINAL_GROSS1.5/request/capture/raw?native finish",
+  "compensation": [
+    "Fresh clean canonical CASE_CARRIER_RETURN via soleStockPosting to SAME originalsourcecell; no direct quantities",
+    "Canonical WAVE_CANCEL567 and PICK_PLAN_CANCEL actualoneplan",
+    "Close own resource session/shift, release TEST tare booking/count, retire new actors/device/face via current owners"
+  ],
+  "required_end": "Total physical24/H0 at originalcell split originalUID23 + returnedCASE childUID1; preserve lineage originalroot300000034518661218, child created_by original operation, no active task holds; all histories retained",
+  "limits": [
+    "No physical scales/printer/warehouse pick claimed",
+    "RETURN private compiler ACCESSIBLEBY was not bypassed; native RETURN full clean transaction is next guard",
+    "TEST preparedST/rows + PLANNEDfulfillment may remain as explicit history: no cancellationowner found, no destructive delete or invented CONDITION",
+    "Only source total balances restored, original UID exact24 not required because canonical return preserves childUID"
+  ]
+}

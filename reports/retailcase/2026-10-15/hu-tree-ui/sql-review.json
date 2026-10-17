@@ -1,0 +1,309 @@
+{
+  "status": "PASS_BOUNDED_READ_REVIEW",
+  "audit": [
+    {
+      "api_call_id": 69106,
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 292
+    },
+    {
+      "api_call_id": 69107,
+      "method": "GET",
+      "path": "/api/help/articles/warehouse-hu-tree",
+      "response_status": 200,
+      "duration_ms": 79
+    },
+    {
+      "api_call_id": 69113,
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 148
+    },
+    {
+      "api_call_id": 69115,
+      "method": "GET",
+      "path": "/api/help/articles/warehouse-hu-tree",
+      "response_status": 200,
+      "duration_ms": 107
+    },
+    {
+      "api_call_id": 69121,
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 156
+    },
+    {
+      "api_call_id": 69123,
+      "method": "GET",
+      "path": "/api/help/articles/warehouse-hu-tree",
+      "response_status": 200,
+      "duration_ms": 84
+    },
+    {
+      "api_call_id": 69129,
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 149
+    },
+    {
+      "api_call_id": 69131,
+      "method": "GET",
+      "path": "/api/help/articles/warehouse-hu-tree",
+      "response_status": 200,
+      "duration_ms": 124
+    },
+    {
+      "api_call_id": 69166,
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 292
+    },
+    {
+      "api_call_id": 69168,
+      "method": "GET",
+      "path": "/api/help/articles/warehouse-hu-tree",
+      "response_status": 200,
+      "duration_ms": 135
+    },
+    {
+      "api_call_id": 69174,
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 45
+    },
+    {
+      "api_call_id": 69176,
+      "method": "GET",
+      "path": "/api/help/articles/warehouse-hu-tree",
+      "response_status": 200,
+      "duration_ms": 107
+    },
+    {
+      "api_call_id": 69182,
+      "method": "GET",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 66
+    },
+    {
+      "api_call_id": 69184,
+      "method": "GET",
+      "path": "/api/help/articles/warehouse-hu-tree",
+      "response_status": 200,
+      "duration_ms": 85
+    }
+  ],
+  "preflight": [
+    {
+      "api_call_id": 69111,
+      "method": "OPTIONS",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 34
+    },
+    {
+      "api_call_id": 69114,
+      "method": "OPTIONS",
+      "path": "/api/help/articles/warehouse-hu-tree",
+      "response_status": 200,
+      "duration_ms": 19
+    },
+    {
+      "api_call_id": 69120,
+      "method": "OPTIONS",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 16
+    },
+    {
+      "api_call_id": 69122,
+      "method": "OPTIONS",
+      "path": "/api/help/articles/warehouse-hu-tree",
+      "response_status": 200,
+      "duration_ms": 21
+    },
+    {
+      "api_call_id": 69127,
+      "method": "OPTIONS",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 69130,
+      "method": "OPTIONS",
+      "path": "/api/help/articles/warehouse-hu-tree",
+      "response_status": 200,
+      "duration_ms": 36
+    },
+    {
+      "api_call_id": 69165,
+      "method": "OPTIONS",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 27
+    },
+    {
+      "api_call_id": 69167,
+      "method": "OPTIONS",
+      "path": "/api/help/articles/warehouse-hu-tree",
+      "response_status": 200,
+      "duration_ms": 17
+    },
+    {
+      "api_call_id": 69173,
+      "method": "OPTIONS",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 17
+    },
+    {
+      "api_call_id": 69175,
+      "method": "OPTIONS",
+      "path": "/api/help/articles/warehouse-hu-tree",
+      "response_status": 200,
+      "duration_ms": 24
+    },
+    {
+      "api_call_id": 69181,
+      "method": "OPTIONS",
+      "path": "/api/warehouse-hus/composition",
+      "response_status": 200,
+      "duration_ms": 19
+    },
+    {
+      "api_call_id": 69183,
+      "method": "OPTIONS",
+      "path": "/api/help/articles/warehouse-hu-tree",
+      "response_status": 200,
+      "duration_ms": 21
+    }
+  ],
+  "local_pairs": [
+    {
+      "api_call_id": 69106,
+      "response_status": 200,
+      "duration_ms": 292
+    },
+    {
+      "api_call_id": 69107,
+      "response_status": 200,
+      "duration_ms": 79
+    },
+    {
+      "api_call_id": 69113,
+      "response_status": 200,
+      "duration_ms": 148
+    },
+    {
+      "api_call_id": 69115,
+      "response_status": 200,
+      "duration_ms": 107
+    },
+    {
+      "api_call_id": 69121,
+      "response_status": 200,
+      "duration_ms": 156
+    },
+    {
+      "api_call_id": 69123,
+      "response_status": 200,
+      "duration_ms": 84
+    },
+    {
+      "api_call_id": 69129,
+      "response_status": 200,
+      "duration_ms": 149
+    },
+    {
+      "api_call_id": 69131,
+      "response_status": 200,
+      "duration_ms": 124
+    },
+    {
+      "api_call_id": 69166,
+      "response_status": 200,
+      "duration_ms": 292
+    },
+    {
+      "api_call_id": 69168,
+      "response_status": 200,
+      "duration_ms": 135
+    },
+    {
+      "api_call_id": 69174,
+      "response_status": 200,
+      "duration_ms": 45
+    },
+    {
+      "api_call_id": 69176,
+      "response_status": 200,
+      "duration_ms": 107
+    },
+    {
+      "api_call_id": 69182,
+      "response_status": 200,
+      "duration_ms": 66
+    },
+    {
+      "api_call_id": 69184,
+      "response_status": 200,
+      "duration_ms": 85
+    }
+  ],
+  "own_slow": [],
+  "cumulative_top_sql": [
+    {
+      "sql_id": "60pnuw4g8tg32",
+      "executions": 2,
+      "avg_ms": 5.908,
+      "buffer_gets": 207,
+      "disk_reads": 0,
+      "sql_text": "SELECT HU_LINK_ID,PARENT_UID,LEVEL DEPTH,CONNECT_BY_ISCYCLE CYCLIC FROM RRL_WMS_HU_LINK START WITH ACTIVE_FLAG=1 AND (CHILD_PALLET_UID=:B1 OR CHILD_CASE_TASK_ID IN (SELECT CASE_PICK_TASK_ID FROM RRL_CASE_CARRIER_LOT WHERE LOT_UID=:B1 )) CONNECT BY NOCYCLE PRIOR PARENT_UID=CHILD_PALLET_UID AND ACTIVE_FLAG=1"
+    },
+    {
+      "sql_id": "3wjvc3pfmkxtw",
+      "executions": 3,
+      "avg_ms": 3.34,
+      "buffer_gets": 34,
+      "disk_reads": 0,
+      "sql_text": "SELECT PARENT_UID,LEVEL DEPTH,CONNECT_BY_ISCYCLE CYCLIC FROM RRL_WMS_HU_LINK START WITH (CHILD_PALLET_UID=:B2 OR CHILD_CASE_TASK_ID=:B1 ) AND ACTIVE_FLAG=1 CONNECT BY NOCYCLE PRIOR PARENT_UID=CHILD_PALLET_UID AND ACTIVE_FLAG=1"
+    },
+    {
+      "sql_id": "87ch11p9uuvu2",
+      "executions": 9,
+      "avg_ms": 1.089,
+      "buffer_gets": 56,
+      "disk_reads": 0,
+      "sql_text": "SELECT COUNT(*) FROM RRL_WMS_HU_LINK WHERE ACTIVE_FLAG=1 AND (CHILD_PALLET_UID=:B1 OR CHILD_CASE_TASK_ID IN(SELECT CASE_PICK_TASK_ID FROM RRL_CASE_CARRIER_LOT WHERE LOT_UID=:B1 ))"
+    },
+    {
+      "sql_id": "8bpxjtnazuf2u",
+      "executions": 1,
+      "avg_ms": 7.413,
+      "buffer_gets": 143,
+      "disk_reads": 0,
+      "sql_text": "SELECT * FROM RRL_WMS_HU_LINK WHERE PARENT_UID=:B1 AND ACTIVE_FLAG=1 ORDER BY HU_LINK_ID"
+    },
+    {
+      "sql_id": "8bpxjtnazuf2u",
+      "executions": 5,
+      "avg_ms": 0.882,
+      "buffer_gets": 13,
+      "disk_reads": 0,
+      "sql_text": "SELECT * FROM RRL_WMS_HU_LINK WHERE PARENT_UID=:B1 AND ACTIVE_FLAG=1 ORDER BY HU_LINK_ID"
+    }
+  ],
+  "max_http_ms": 292,
+  "admin_slow_status": 200,
+  "admin_slow_count": 0,
+  "decision": "Keep existing link/identifier indexes and bounded composition limits (200 nodes, depth16,10000 units). No new index justified by this read case. Inventory/platform must inspect representative mixed-HU plans under pilot load; cumulative SQL averages are not scenario percentiles.",
+  "quantity_writes": false
+}

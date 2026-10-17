@@ -1,0 +1,138 @@
+[
+  {
+    "file": "kpi-pick-proof/forward/parent/fixture.json",
+    "actor": "AS16Oc0fb95573e",
+    "prefix": "AS16.c0fb95573e",
+    "sessions": [],
+    "assignments": [],
+    "role": [],
+    "user": [
+      {
+        "id": "AS16Oc0fb95573e",
+        "user_group": "AS16Oc0fb95573e",
+        "ware_id": 20790457,
+        "deleted": 0
+      }
+    ],
+    "wave": 579
+  },
+  {
+    "file": "kpi-pick-proof/forward/ordinary/fixture.json",
+    "actor": "OC16P5e071e9f41",
+    "prefix": "OC16.5e071e9f41",
+    "sessions": [
+      {
+        "session_id": 67,
+        "status": "ACTIVE",
+        "resource_id": 71
+      }
+    ],
+    "assignments": [
+      {
+        "assignment_id": "OC16A5e071e9f41",
+        "version_no": 1
+      }
+    ],
+    "role": [
+      {
+        "role_id": "OC16R5e071e9f41",
+        "version_no": 1,
+        "active": 1
+      }
+    ],
+    "user": [
+      {
+        "id": "OC16P5e071e9f41",
+        "user_group": "OC16P5e071e9f41",
+        "ware_id": 1,
+        "deleted": 0
+      }
+    ],
+    "wave": 580
+  },
+  {
+    "file": "route-subtree/ordinary-flow/parent/fixture.json",
+    "actor": "AS16O0f1e381d78",
+    "prefix": "AS16.0f1e381d78",
+    "sessions": [],
+    "assignments": [],
+    "role": [],
+    "user": [
+      {
+        "id": "AS16O0f1e381d78",
+        "user_group": "AS16O0f1e381d78",
+        "ware_id": 20061923,
+        "deleted": 0
+      }
+    ],
+    "wave": 581
+  },
+  {
+    "file": "route-subtree/ordinary-flow/ordinary/fixture.json",
+    "actor": "OC16P3151980d02",
+    "prefix": "OC16.3151980d02",
+    "sessions": [
+      {
+        "session_id": 69,
+        "status": "ACTIVE",
+        "resource_id": 73
+      }
+    ],
+    "assignments": [
+      {
+        "assignment_id": "OC16A3151980d02",
+        "version_no": 1
+      }
+    ],
+    "role": [
+      {
+        "role_id": "OC16R3151980d02",
+        "version_no": 1,
+        "active": 1
+      }
+    ],
+    "user": [
+      {
+        "id": "OC16P3151980d02",
+        "user_group": "OC16P3151980d02",
+        "ware_id": 1,
+        "deleted": 0
+      }
+    ],
+    "wave": 582
+  },
+  {
+    "file": "remaining-command-scopes/flow/acceptance-v5.json",
+    "actor": "HT16Oc31efb0e6c",
+    "prefix": "HT16.c31efb0e6c",
+    "sessions": [
+      {
+        "session_id": 68,
+        "status": "ACTIVE",
+        "resource_id": 72
+      }
+    ],
+    "assignments": [
+      {
+        "assignment_id": "HT16Bc31efb0e6c",
+        "version_no": 1
+      }
+    ],
+    "role": [
+      {
+        "role_id": "HT16Rc31efb0e6c",
+        "version_no": 1,
+        "active": 1
+      }
+    ],
+    "user": [
+      {
+        "id": "HT16Oc31efb0e6c",
+        "user_group": "HT16Oc31efb0e6c",
+        "ware_id": 1,
+        "deleted": 0
+      }
+    ],
+    "wave": null
+  }
+]

@@ -1,0 +1,225 @@
+{
+  "prefix": "OC16.9f34aa2614",
+  "actor": "OC16P9f34aa2614",
+  "role": "OC16R9f34aa2614",
+  "assignment": "OC16A9f34aa2614",
+  "source": "OC16.LOT:9f34aa2614",
+  "warehouse_id": 20854558,
+  "article": "AS16AD0A1E6CE56",
+  "cell": "AS16Cd0a1e6ce56",
+  "face": 612,
+  "revision": 410,
+  "hardware_verified": false,
+  "state": "ORDINARY_BOX24_EA1_CLOSED_RETAINED",
+  "box_barcode": "OC16.9f34aa2614.BOX24",
+  "order": 2166,
+  "order_row": 3653,
+  "plan": 2217,
+  "line": 2226,
+  "task": 2155,
+  "reservation": 2022,
+  "wave": 586,
+  "wave_order": 1986,
+  "frozen_acl_commands": {
+    "ROLE": {
+      "operation_id": "OC16.9f34aa2614.ROLE",
+      "command_type": "ROLE_SAVE",
+      "payload": {
+        "expected_version": 0,
+        "role_id": "OC16R9f34aa2614",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "permissions": [
+          "case_pick_execute"
+        ],
+        "active": true
+      }
+    },
+    "ASSIGN": {
+      "operation_id": "OC16.9f34aa2614.ASSIGN",
+      "command_type": "ASSIGN",
+      "payload": {
+        "expected_version": 0,
+        "assignment_id": "OC16A9f34aa2614",
+        "username": "OC16P9f34aa2614",
+        "role_id": "OC16R9f34aa2614",
+        "scope_kind": "WAREHOUSE",
+        "scope_id": "20854558",
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-16T17:03:57.786270+00:00",
+        "valid_until": "2026-10-16T23:04:57.786270+00:00",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    }
+  },
+  "acl_receipts": {
+    "ROLE": {
+      "operation_id": "OC16.9f34aa2614.ROLE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "OC16R9f34aa2614",
+      "version": 1,
+      "replayed": false
+    },
+    "ASSIGN": {
+      "operation_id": "OC16.9f34aa2614.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "OC16A9f34aa2614",
+      "version": 1,
+      "replayed": false
+    }
+  },
+  "frozen_stock_requests": {
+    "BIRTH": "{\"actor\":\"admin\",\"command_type\":\"INVENTORY_REGISTER_LOT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"article\":\"AS16AD0A1E6CE56\",\"cell\":\"AS16Cd0a1e6ce56\",\"expiry_date\":\"2030-01-01\",\"price\":\"0\",\"quantity\":\"25\",\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"uid\":\"OC16.LOT:9f34aa2614\"},\"operation_id\":\"OC16.9f34aa2614.BIRTH\",\"source\":{\"revision_id\":410},\"units\":[]}",
+    "RELEASE": "{\"actor\":\"admin\",\"command_type\":\"WAVE_PICK_RELEASE\",\"contract_version\":2,\"lines\":[],\"metadata\":{},\"operation_id\":\"OC16.9f34aa2614.RELEASE\",\"source\":{\"wave_id\":586},\"units\":[]}",
+    "TYPE": "{\"actor\":\"admin\",\"command_type\":\"CASE_PALLET_TYPE_CHANGE\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"expected_version\":0,\"pallet_type_id\":32,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"scan_container\":\"CP586000000001150\"},\"operation_id\":\"OC16.9f34aa2614.TYPE\",\"source\":{\"case_task_id\":1150},\"units\":[]}",
+    "TARE.COUNT": "{\"actor\":\"admin\",\"command_type\":\"TARE_COUNT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"condition\":\"GOOD\",\"decision_reference\":\"OC16.9f34aa2614.SIMULATED\",\"expected_version\":1,\"observed_quantity\":\"2\",\"owner_ware_id\":20854558,\"pallet_type_id\":32,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\"},\"operation_id\":\"OC16.9f34aa2614.TARE.COUNT\",\"source\":{},\"units\":[]}",
+    "TARE.BOOK": "{\"actor\":\"admin\",\"command_type\":\"TARE_BOOK\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"expected_warehouse_id\":20854558,\"pallet_type_id\":32},\"operation_id\":\"OC16.9f34aa2614.TARE.BOOK\",\"source\":{\"place_id\":\"1150\",\"place_kind\":\"CASE\"},\"units\":[]}"
+  },
+  "receipts": {
+    "BIRTH": {
+      "operation_id": "OC16.9f34aa2614.BIRTH",
+      "revision_id": 410,
+      "uid": "OC16.LOT:9f34aa2614",
+      "cell": "AS16Cd0a1e6ce56",
+      "article": "AS16AD0A1E6CE56",
+      "quantity": "25",
+      "unit": "EA",
+      "event_id": 6446901,
+      "lot_source": "INVENTORY",
+      "outbox_id": 5637
+    },
+    "RELEASE": {
+      "wave_id": 586,
+      "warehouse": 20854558,
+      "status": "LAUNCHED",
+      "released_at": "2026-10-16T13:05:00.228228-04:00",
+      "released_by": "admin",
+      "release_operation_id": "OC16.9f34aa2614.RELEASE",
+      "ready": true,
+      "tasks": [
+        {
+          "pick_task_id": 2155,
+          "wave_task_id": 2074,
+          "article": "AS16AD0A1E6CE56",
+          "task_type": "CASE_PICK",
+          "status": "ASSIGNED",
+          "cell": "AS16Cd0a1e6ce56",
+          "required_base": "25",
+          "covered_base": "25",
+          "missing_base": "0",
+          "base_uom": "EA",
+          "reservations": [
+            {
+              "reservation_id": 1902,
+              "uid": "OC16.LOT:9f34aa2614",
+              "cell": "AS16Cd0a1e6ce56",
+              "article": "AS16AD0A1E6CE56",
+              "quantity": "25",
+              "base_uom": "EA",
+              "stock_version": 2,
+              "physical": "25",
+              "hard": "25",
+              "reason": null
+            }
+          ]
+        }
+      ],
+      "open_replenishments": [],
+      "outbox_id": 5640
+    },
+    "TYPE": {
+      "operation_id": "OC16.9f34aa2614.TYPE",
+      "command_type": "CASE_PALLET_TYPE_CHANGE",
+      "case_task_id": 1150,
+      "pallet_type_id": 32,
+      "previous_pallet_type_id": 1,
+      "planned_pallet_type_id": null,
+      "version": 1,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "stock_changed": false,
+      "status": "APPLIED",
+      "outbox_id": 5641
+    },
+    "TARE.COUNT": {
+      "status": "POSTED",
+      "tare_balance_changed": true,
+      "destination_quantity": "2",
+      "operation_id": "OC16.9f34aa2614.TARE.COUNT",
+      "quantity": "2",
+      "owner_ware_id": 20854558,
+      "pallet_type_id": 32,
+      "condition": "GOOD",
+      "goods_stock_changed": false,
+      "outbox_id": 5642
+    },
+    "TARE.BOOK": {
+      "operation_id": "OC16.9f34aa2614.TARE.BOOK",
+      "status": "HELD",
+      "place_kind": "CASE",
+      "place_id": "1150",
+      "pallet_type_id": 32,
+      "warehouse_id": 20854558,
+      "available_quantity": "1",
+      "quantity": "1",
+      "physical_tare_changed": false,
+      "goods_stock_changed": false,
+      "outbox_id": 5643
+    }
+  },
+  "launch": {
+    "operation_id": "OC16.9f34aa2614.LAUNCH",
+    "launch_outcome": "APPLIED",
+    "continuation_state": "COMPLETE",
+    "wave_status": "LAUNCHED"
+  },
+  "task_id": 1150,
+  "case_before": {
+    "case_pick_task_id": 1150,
+    "content_version": 0,
+    "sscc": "CP586000000001150"
+  },
+  "case_line_id": 1152,
+  "resource_id": 75,
+  "shift_id": 80,
+  "resource_session_id": 71,
+  "label": {
+    "case_pick_task_id": 1150,
+    "sscc": "090000000000019010",
+    "original_carrier": "CP586000000001150",
+    "content_version": 2,
+    "operation_id": "OC16.9f34aa2614.LABEL",
+    "confirmed": false
+  },
+  "pick_bodies": {
+    "BOX24": {
+      "fact_qty": "24",
+      "operation_id": "OC16.9f34aa2614.BOX24",
+      "unit_keys": [],
+      "unit_scans": [],
+      "scan_cell": "AS16Cd0a1e6ce56",
+      "scan_product": "OC16.9f34aa2614.BOX24",
+      "scan_box": null,
+      "scan_container": "090000000000019010",
+      "offline_event_id": null,
+      "resource_id": 75,
+      "resource_session_id": 71,
+      "equipment_id": null,
+      "actor": "OC16P9f34aa2614"
+    },
+    "EA1": {
+      "fact_qty": "25",
+      "operation_id": "OC16.9f34aa2614.EA1",
+      "unit_keys": [],
+      "unit_scans": [],
+      "scan_cell": "AS16Cd0a1e6ce56",
+      "scan_product": "AS16AD0A1E6CE56",
+      "scan_box": null,
+      "scan_container": "090000000000019010",
+      "offline_event_id": null,
+      "resource_id": 75,
+      "resource_session_id": 71,
+      "equipment_id": null,
+      "actor": "OC16P9f34aa2614"
+    }
+  }
+}

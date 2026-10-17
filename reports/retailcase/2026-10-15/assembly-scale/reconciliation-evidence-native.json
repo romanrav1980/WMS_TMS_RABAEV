@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "actual_encrypted_opc_record": true,
+  "physical_hardware": false,
+  "binding": "MATCHED",
+  "exact_replay": true,
+  "changed_existing_reference": "PAYLOAD_CONFLICT",
+  "reference_fields": 4,
+  "retired_sender_denied": true,
+  "foreign_sender_denied": true,
+  "temporary_undelete_rolled_back": true,
+  "evidence_count_unchanged": true,
+  "source_P": 20,
+  "source_H": 20,
+  "read_ms": 10.192,
+  "sql_decision": "PK identity lookup retained; no index needed for bounded replay/read"
+}

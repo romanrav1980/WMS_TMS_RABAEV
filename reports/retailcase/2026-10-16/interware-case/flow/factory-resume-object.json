@@ -1,0 +1,31 @@
+{
+  "state": "RESUME_CONFIRMED_LAUNCH_APPLIED_CAPACITY_CONVERSION_MISSING",
+  "started_at": "2026-10-16T12:21:49.820434+00:00",
+  "hardware_verified": false,
+  "steps": [
+    {
+      "name": "assembly_scope_resume_operator.py",
+      "state": "DONE",
+      "source_sha256": "04b7e5cb1f76e0dc738fdc84a918b354005156b791679dc8f6823f9e3456a6d8",
+      "frozen_sha256": "978363926b8ea48751f7e8e88c7c5e6103d1184d909a4bb43e53e406de7fae14"
+    },
+    {
+      "name": "assembly_scope_stage_mass.py",
+      "state": "DONE",
+      "source_sha256": "709b9c54e108ea31695d81aae8b597a426cedc8e4a971fb45f6cdfc294b3124d",
+      "frozen_sha256": "1f77cf7a9ba5b9c1a6e2e4573e50c4cf22d6f304a02d6386a4a42df95ec82ecb"
+    },
+    {
+      "name": "assembly_scope_pick_acceptance.py",
+      "state": "DONE",
+      "source_sha256": "79ebba931cd39da0495edc16e6285dcd4909fb04a566b275af69b23811995136",
+      "frozen_sha256": "b3a707c84b916c6ca8c27e3f03857161db2499559e965c3a502e87147434fabf"
+    },
+    {
+      "name": "assembly_scope_finalize.py",
+      "state": "IN_FLIGHT",
+      "source_sha256": "5ea3ac959df4cdd9a2ddfa9b4f6b52d97befd2aad89a1713b7c7cdcde52cf76d",
+      "frozen_sha256": "1d7ef12d8cb86c30e05f82cd791fa078ea9fc132d7837ad1618b54868f982124"
+    }
+  ]
+}

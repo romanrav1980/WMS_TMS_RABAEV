@@ -1,0 +1,33 @@
+{
+  "status": "PASS_INDEPENDENT_READBACK",
+  "sources": [
+    {
+      "name": "RRL_WH_WEIGH_REQUEST_API",
+      "type": "PACKAGE",
+      "sha256": "6056cf3b8ce3fe3f71bca1cb0c030f3ad73c834a78c911b6cf6201e7a20ce3e8"
+    },
+    {
+      "name": "RRL_WH_WEIGH_REQUEST_API",
+      "type": "PACKAGE BODY",
+      "sha256": "b21176b5ed0f8b82eb316e1ce276106bca35170c4f1ee9bafa2e980b846cbc4e"
+    },
+    {
+      "name": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE",
+      "sha256": "d7367aa1bac23b38b6b8403a5270fa93bc36bc5f44b4398777b6212ecfd7be25"
+    },
+    {
+      "name": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE BODY",
+      "sha256": "091a694d638e09257e47104d782bb95f9d8fbc4d10fd6f1181e252683c2f2580"
+    }
+  ],
+  "ledger": [
+    {
+      "migration_id": "2026-10-15-warehouse-empty-scoped",
+      "status": "APPLIED"
+    }
+  ],
+  "invalid": 0,
+  "quantity_writes": false
+}

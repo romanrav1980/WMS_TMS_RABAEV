@@ -1,0 +1,6 @@
+[
+  {
+    "constraint_name": "SYS_C0019270",
+    "search_condition_vc": "STATE in('WAITING_BEFORE','ARMED','READY','APPLIED','DISCREPANCY')"
+  }
+]

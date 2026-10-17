@@ -1,0 +1,11 @@
+{
+  "task": "C0119",
+  "owner": "single-local-CLI-attempt",
+  "started_at": "2026-10-16T16:14:59.554352+00:00",
+  "retry_authorized": false,
+  "state": "FAILED_AUTH_BEFORE_MODEL",
+  "tokens": 0,
+  "cost_usd": 0,
+  "active": false,
+  "root_owns_kpi_ui": true
+}

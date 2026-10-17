@@ -1,0 +1,102 @@
+{
+  "observed_at_utc": "2026-10-15T14:13:13.381510+00:00",
+  "method": "READ ONLY SELECT USER_SOURCE/USER_OBJECTS; no native business command or quantity test",
+  "records": [
+    {
+      "name": "RRL_STOCK_HU_READ",
+      "type": "PACKAGE BODY",
+      "line_count": 104,
+      "status": "VALID",
+      "last_ddl_database_wall_time": "2026-10-15 09:07:39",
+      "source_sha256_cr_removed": "803c68eb33cc63b6a6b78e51639e6e0f528f2923f8bfd7d2e8e8e0b4ba67ec0d"
+    },
+    {
+      "name": "RRL_STOCK_HU_CMD",
+      "type": "PACKAGE BODY",
+      "line_count": 294,
+      "status": "VALID",
+      "last_ddl_database_wall_time": "2026-10-15 09:07:43",
+      "source_sha256_cr_removed": "8eb5b0aeb045b4fce41240cea241b9ad65583b1115b2e50f4a7a41191973085a"
+    },
+    {
+      "name": "RRL_STOCK_HU_SHIP_CMD",
+      "type": "PACKAGE BODY",
+      "line_count": 140,
+      "status": "VALID",
+      "last_ddl_database_wall_time": "2026-10-15 09:07:40",
+      "source_sha256_cr_removed": "3a6d1baf9d408c1c061326a650b09d47df2b0f3fb44eccb8bf9e42c70f695812"
+    },
+    {
+      "name": "RRL_STOCK_HU_LOAD_CORE",
+      "type": "PACKAGE BODY",
+      "line_count": 92,
+      "status": "VALID",
+      "last_ddl_database_wall_time": "2026-10-14 13:51:53",
+      "source_sha256_cr_removed": "0853fd345333323d6b075d536f3b61d9ffafbe702375ed4871cab37c964b2951"
+    },
+    {
+      "name": "RRL_STOCK_HU_TASK",
+      "type": "PACKAGE BODY",
+      "line_count": 304,
+      "status": "VALID",
+      "last_ddl_database_wall_time": "2026-10-15 10:05:03",
+      "source_sha256_cr_removed": "40db57ae9ff3c07e59e6b9aa125cd4b445d5f12b74587958e8603d4c9b8cc9ee"
+    },
+    {
+      "name": "RRL_STOCK_LOAD_THERMAL",
+      "type": "PACKAGE BODY",
+      "line_count": 126,
+      "status": "VALID",
+      "last_ddl_database_wall_time": "2026-10-13 18:24:00",
+      "source_sha256_cr_removed": "2c1e73f3e97ec0955754b227abdef62a533af56ec120577b5f42e36aeeb47110"
+    },
+    {
+      "name": "RRL_STOCK_CASE_MOVE_CMD",
+      "type": "PACKAGE BODY",
+      "line_count": 73,
+      "status": "VALID",
+      "last_ddl_database_wall_time": "2026-10-15 09:07:43",
+      "source_sha256_cr_removed": "562440379c690e4efb345080b465515b777f7b7c67653de2f4bd57aad3f5bda1"
+    },
+    {
+      "name": "RRL_STOCK_CASE_BIND_MOVE",
+      "type": "PACKAGE BODY",
+      "line_count": 90,
+      "status": "VALID",
+      "last_ddl_database_wall_time": "2026-10-15 09:07:43",
+      "source_sha256_cr_removed": "52dfe86490c3fb6811fb071d90da9bc7c269ff4fbeb9a273f44729ead9aa696e"
+    },
+    {
+      "name": "RRL_STOCK_LOAD_BOX_CORE",
+      "type": "PACKAGE BODY",
+      "line_count": 129,
+      "status": "VALID",
+      "last_ddl_database_wall_time": "2026-10-10 23:29:41",
+      "source_sha256_cr_removed": "35f1f62ca5df979753eabf446de73ad5ae84b466bd25270e00680be2bd382849"
+    },
+    {
+      "name": "RRL_STOCK_STORE_RECEIPT_READ",
+      "type": "PACKAGE BODY",
+      "line_count": 64,
+      "status": "VALID",
+      "last_ddl_database_wall_time": "2026-10-15 02:52:48",
+      "source_sha256_cr_removed": "75c643d5c7844834073c3420d590cb8a0c35d1a26d6d37bd6e0ea45196de57e2"
+    },
+    {
+      "name": "RRL_STOCK_STORE_WEIGHT_CORE",
+      "type": "PACKAGE BODY",
+      "line_count": 66,
+      "status": "VALID",
+      "last_ddl_database_wall_time": "2026-10-15 02:43:34",
+      "source_sha256_cr_removed": "d26a5f3256a6f5160cc2e3225db4bbb46b1d308d16cfac7130b3ebee4652e0c1"
+    },
+    {
+      "name": "RRL_WH_FINAL_SCALE_ADMISSION",
+      "type": "PACKAGE BODY",
+      "line_count": 118,
+      "status": "VALID",
+      "last_ddl_database_wall_time": "2026-10-15 09:14:31",
+      "source_sha256_cr_removed": "26699e1022101cba6e4d78f4893b77a6b167db010f70c496abc188d46eceb217"
+    }
+  ]
+}

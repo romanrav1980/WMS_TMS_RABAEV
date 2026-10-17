@@ -1,0 +1,85 @@
+{
+  "state": "PASS_CASE_CANCELLED_WAVE_DONE_OWN_TEST_TARE_RETIRED",
+  "http": [
+    {
+      "status": 200,
+      "api_call_id": "69570",
+      "request_id": "49e93a73-bc7f-4918-878b-fe05a3f8b935"
+    }
+  ],
+  "native_frozen_commands": {
+    "BOOK.RELEASE": "{\"actor\":\"admin\",\"command_type\":\"TARE_BOOK_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{},\"operation_id\":\"SQ16.bc4f60f03a.EMPTY.BOOK.RELEASE\",\"source\":{\"booking_operation_id\":\"SQ16.bc4f60f03a.TARE.BOOK\"},\"units\":[]}",
+    "TARE.RETIRE": "{\"actor\":\"admin\",\"command_type\":\"TARE_COUNT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"condition\":\"GOOD\",\"decision_reference\":\"SQ16.bc4f60f03a.EMPTY.SIMULATED.RETIRED\",\"expected_version\":15,\"observed_quantity\":\"2\",\"owner_ware_id\":20220394,\"pallet_type_id\":32,\"reason\":\"Retire only the third simulated QA tare; retain two mixed-tree bookings\"},\"operation_id\":\"SQ16.bc4f60f03a.EMPTY.TARE.RETIRE\",\"source\":{},\"units\":[]}"
+  },
+  "BOOK.RELEASE": {
+    "operation_id": "SQ16.bc4f60f03a.EMPTY.BOOK.RELEASE",
+    "status": "CANCELLED",
+    "place_kind": "CASE",
+    "place_id": "1143",
+    "pallet_type_id": 32,
+    "warehouse_id": 20220394,
+    "available_quantity": "1",
+    "quantity": "1",
+    "physical_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 5512
+  },
+  "TARE.RETIRE": {
+    "status": "POSTED",
+    "tare_balance_changed": true,
+    "destination_quantity": "2",
+    "operation_id": "SQ16.bc4f60f03a.EMPTY.TARE.RETIRE",
+    "quantity": "2",
+    "owner_ware_id": 20220394,
+    "pallet_type_id": 32,
+    "condition": "GOOD",
+    "goods_stock_changed": false,
+    "outbox_id": 5513
+  },
+  "frozen_wave_body": {
+    "operation_id": "SQ16.bc4f60f03a.EMPTY.WAVE.FINISH"
+  },
+  "wave_result": {
+    "wave_id": 574,
+    "kind": "CUSTOMER_ORDER",
+    "items": [
+      {
+        "kind": "PICK_TASK",
+        "id": "2143",
+        "status": "DONE",
+        "actor": null,
+        "reason": null,
+        "quantity": "0"
+      },
+      {
+        "kind": "REPLENISHMENT",
+        "id": "1645",
+        "status": "CANCELLED",
+        "actor": null,
+        "reason": null,
+        "quantity": null
+      },
+      {
+        "kind": "CASE",
+        "id": "1143",
+        "status": "CANCELLED",
+        "actor": "SQ16Pbc4f60f03a",
+        "reason": null,
+        "quantity": "0"
+      }
+    ],
+    "blocking_count": 0,
+    "completion_outcome": "PHYSICAL_EXECUTION_COMPLETE",
+    "operation_id": "SQ16.bc4f60f03a.EMPTY.WAVE.FINISH",
+    "status": "DONE",
+    "completed": true,
+    "ready": false,
+    "outbox_id": 5514
+  },
+  "tare": [
+    {
+      "physical_qty": 2,
+      "assembly_qty": 2
+    }
+  ]
+}

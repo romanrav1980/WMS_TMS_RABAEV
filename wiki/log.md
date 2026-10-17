@@ -4289,3 +4289,447 @@ C0029–C0034 приняты после source/screenshot review, включая
 ### retailcase: применение косметической миграции
 
 После checkpoint-коммита выполнены apply5/0 и verify1/0 для 2026-10-14-retailcase-wave-name. ID230/231, склад и статусDONE сохранены; INVALID0; чтениепоPK8.882мс. Остатки/движения не затронуты. Проверена компиляция desktop-миграции файлов pending-команд.
+
+## 2026-10-14 — ревью начала C0049 по запросу владельца
+
+Прочитаны реальная инвентаризация, каталог/генератор и определения10 ролей. Подтверждено отличие GET candidates от POST dispatch-nearest; замечания по SoD совмещённых ролей, назначению ставок/согласований, источникам KPI и готовности UI. Report76, components/retailcase_roles_initial_review_20261014.md; Claude направлено C0055 с конкретным следующим результатом. Runtime/Oracle не менялись, GitHub не обновлялся.
+
+## 2026-10-14 — повторное ревью C0049
+Изучены proposals Claude и auth/main/resources/finance/frontend. Подтверждены 10 предварительных ролей; UI не передан. Зафиксированы связь права с областью назначения, эффективное право dispatch-nearest, отдельное согласование расходов и уточнение version-conflict retry. Предложено продолжение server-contract/UI. Component/index обновлены; runtime/Oracle и канал поручений не менялись.
+
+## 2026-10-14 — структурное предложение по запросу владельца
+Создан concepts/retailcase_roles_kpi_command_proposal_20261014.md: совместимость legacy и scoped assignments, бизнес-возможности, формулы KPI и восстановление команд. Противоречие о складской области transport_kpi зафиксировано по SQL. Заданы три вопроса по KPI. Это предложение, runtime/Oracle не менялись.
+
+## 2026-10-14 — принят доступ по областям и встроенные знания
+По решению владельца созданы architecture/retailcase_scoped_access_and_knowledge и план AK01–08/KH01–08. Исторический запрет новых таблиц уточнён в legacy_rights_model. Начата реализация контрактов и read-only help. Oracle и пользователи не меняются; KPI пока не утверждены.
+
+## 2026-10-14 — AK01/KH01 первый инкремент
+Контракты назначений и API/React help реализованы. 17 targeted PASS, live UI desktop/mobile/search/reload/retry PASS, screenshots просмотрены. Scoped-права/Oracle/пользователи не менялись. Slow SQL3975→3981: help без новых slow; склады1753мс и водители1378мс — backlog AK05-PERF01/Codex, bounded выборки/cache после замеров. Отчёт reports/retailcase/2026-10-14/access-knowledge; план/index обновлены. Независимая приёмка отдельно.
+
+## 2026-10-14 — разделение AK/KH с Claude
+По прямому поручению владельца подготовлены TASK_C0056, API v1 и промпт; C0056 отправлен через прежний файловый канал. Codex — Oracle/backend, Claude — UI/контент. ACK не получен, согласование не объявляется состоявшимся. План обновлён; реализация backend продолжается.
+
+## 2026-10-14 — RUSERS: ключ и удаление дубля
+По прямым поручениям владельца установлены 2026-10-14-rusers-identity-constraints и rusers-deduplicate-login. Повторно использован точный unique index для UK/FK, сохранена backup1строка, удалён только soft-deleted дубль. RUSERS1168/normalized duplicates0/INVALID0; пароли не выводились. Wiki/database/index обновлены; основная AK/KH реализация продолжается.
+
+## 2026-10-15 — native access/knowledge и явная пользовательская identity
+Миграции scoped-access-knowledge, RUSERS UK/dedup и warehouse registry применены. 11native checks/liveHTTP PASS, INVALID0, fixtures очищены. Admin UI перешёл на явный вход с паролем только в памяти, configured-admin fallback удалён; рабочие журналы не очищаются. Claude ACK K0044, C0058 API READY, C0059–62 контракты/ревью. Полный объём не закрыт, продолжается UI и scoped business integration.
+
+## 2026-10-15 — финансы: scoped native guards и независимый автор
+По принятой модели установлена миграция finance-scoped-decisions с исходными USER_SOURCE checkpoints. Узкие expense_logist_approve/expense_finance_approve не дают ставки; неизменяемость финансовых журналов сохранена. Rollback-only live fixture6checks PASS, без признания/outbox/stock. Первое испытание выявило прежний trigger gate; доступы/машина очищены, тестовая статья неактивна с историей. Wiki/database/index обновлены; C0066 READY Claude.
+
+- 15.10.2026: по уточнению владельца закреплена визуальная основа рабочих мест — существующий цифровой двойник, задания/ресурсы, связанный выбор и план/факт; без ложного LIVE/итогов по ограниченной выборке. C0072 передан Claude в прежний журнал, обновлён фактический статус AK/KH; ACK C0072 ожидается.
+
+- 15.10.2026: Codex добавил exact trip deep link для цифрового двойника и убрал demo fallback диспетчера при API failure; live read-only/browser503 PASS, screenshots просмотрены, gate837/0/73+24tests+обаTS PASS, baseline только уменьшен. Отчёт reports/retailcase/2026-10-15/twin-integration/report.md. Очередь C0072/C0073 передана Claude, новое ACK ожидается.
+
+- 15.10.2026: получен K0048/ACK C0070–C0073; Claude подтвердил очередь рабочих мест, правки редактора, оргобъекты и справку; ожидание ACK снято.
+
+- 15.10.2026: закреплено расширение владельца — общий Гант всех4типов ресурсов, старший смены/подготовка будущих волн/риски/текущая сборка. C0074 и промпт созданы, очередь восьми спринтов продолжается; Codex resources/API, Claude UI/help, ACK ожидается.
+
+- 15.10.2026: C0074 ACK K0050; K0049 workspace entry интегрирован. Добавлен read-only scoped resources/timeline (aware интервал<=7д), общий event/bindings, CASE и warehouse task identities;7interval+6liveHTTP/native PASS,stockNONE,fixtures очищены. C0075/C0076 переданы Claude; timezone старых планов/общий UI/приёмка продолжаются.
+
+- 15.10.2026: PREPARED миграция2026-10-15-transport-scoped-edit: before bodies/SHA256/HEAD и rollback сохранены, INVALID0; native perwarehouse edit и revision guard без изменения legacy. После apply требуется rollback-only verify.
+
+- 15.10.2026: scoped dispatch list/detail/STS/operations/Gantt/XLSX live8PASS; filters до aggregate/default31d/max93d/2000bound. Native2026-10-15-transport-scoped-edit APPLIED/INVALID0,9rollback-only checksPASS; POST/create+PATCH используютnative scope. Товарных/финансовых эффектов нет; C0080/C0082 направленыClaude, общийgate после stableUI.
+
+- 15.10.2026: PREPARED2026-10-15-wave-scoped-views, before/rollback/checkpoint и INVALID0; перевод только native view в подготовке, без расширения команд запуска.
+
+- 15.10.2026: wave-scoped-viewsAPPLIED,8livechecksPASS; POST picking/shift-overview<=50наодномREADONLYsnapshot готов, replprogressguard обновлён. C0086/C0088 отправленыClaude; API штатно restart serv.bat, новыйOpenAPIпроверен. Навигацияускорена:2193мс→84–153мс на291склад послеотсеченияневозможныхnativeпроверок/fastGLOBAL_ADMIN, безcacheправ.
+
+- 15.10.2026: PREPARED transport-time-scoped-view, checkpoint/before/rollback и INVALID0; pure view для native time context, без выдачи новойкомандыapprove.
+
+- 15.10.2026: transport-time-scoped-view APPLIED/VALID/errors0/INVALID0; native scoped context проверен в dispatch9, SOURCE_CHANGED2 не проецируются. CASE5/tasks5/sessions4 HTTP PASS, фильтр доlimit; межскладской task требует обе стороны. Гант переведён на единый READ ONLY снимок. Восстановление wave launch различает неопределённый запуск и APPLIED+незавершённое продолжение,9tests PASS. Root supervisor main-route/mobile PASS (1/1 волн, безwrites), K0056 получен. План AK/KH переписан по фактическим результатам и остаткам; gate884/0/72+24tests+обаTS PASS. Slow4401=9319мс требует атрибуции; повторный профиль163/50мс, без слепого индекса. Все8спринтов не объявлены закрытыми.
+
+- 15.10.2026: PREPARED wave-launch-scope, live before bodies/checkpoint/rollback; выявлен плоский запуск без native области, scope добавлен в существующие pre/post hooks и execute. Apply/verify ещё впереди.
+
+- 15.10.2026: владелец уточнил KPI — строки/час и коробки/час, точное плановое окно, полнота по стратегии приёмки; отдельно потребовал приложение магазина. Решение зафиксировано, C0095/TASK передан Claude; отдельный PWA entry/backend/native берёт Codex. Это расширение AK06, прежняя очередь сохраняется.
+
+- 15.10.2026: PREPARED store-app-strategies: before/checkpoint/rollback, PAPER_COUNT и pure scoped receiver, прежние проверки состава/маркировки/веса сохранены. Приложение магазина C0095; native apply/verify впереди.
+
+- 15.10.2026: paper rollback-case выявил ошибку собственного нового guard: LOCK TABLE revision до begin_plan создаёт dirty transaction. PREPARED follow-up scoped-command-lock-order переносит guard внутрь исходного stock prepare; invariant не ослабляется, effect откатился, dev policy восстановлена.
+
+- 15.10.2026: PREPARED store-app-final-leg: native preview и списки ограничиваются финальным плечом по существующему критерию insert-trigger; IW291 невалидная положительная фикстура, effect откатился.
+
+- 15.10.2026: NativeAPI.post владеет COMMIT: тестовая PAPER.ROLLBACK...:2/THERMAL1168 сохранена ACCEPTED. Владелец уведомлён, policy mode восстановлен, журнал не удаляется, повторного warehouse расхода нет. PREPARED store-command-current-access: current receiver до compile и при replay под revision guard.
+
+- 15.10.2026: native store strategies/lock-order/final-leg/current-access APPLIED. STORE-only API/native8 PASS, положительный caller-owned BARCODE receipt rollback проверен; original dev PAPER_COUNT replay2/conflict/single receipt PASS4. Самостоятельный /store/ mobileUI actual identity PASS безPOST/passwordstorage. Verifier сравнивает6последних package bodies и INVALID0; финальныйUI/PWA review продолжается. SlowSQL dictionary2.4–5.5с — толькоmigrationdiagnostics, безSYSindex; runtimeboundedCASE/task0.55–0.67с наблюдать до>1с.
+
+- 2026-10-15: C0095 фактически остановлен лимитом провайдера; Codex принял интеграцию. App расположен в существующем delivery domain, scoped backend READY; исправлены receipt state/outcome, показ исходного акта, late-response cleanup, подсказки и чтение native help. Добавлен операторский runbook и пять allowlisted wiki sources. Физический мобильный пилот отдельно.
+
+- 2026-10-15: приложение магазина production `/store/` проверено: native10/live, recovery6, mobile без overflow/JS errors, PWA installability без ошибок Chromium, offline оболочка работает, private API не кешируются. Пять опубликованных инструкций читаются store-only ролью, bundle генерируется из той же wiki. SQL315/26,36/24,46/32мс, recent slow log пуст: bounded/keyset сохранить, новый индекс не нужен. Физический телефон/оборудование/независимый пилот не объявлены выполненными; общий AK06 и остальные остатки остаются в плане.
+
+- 2026-10-15: пользователь отклонил UX магазина; новый список компактный, фильтры/поиск/shorttime, три шага приёмки, камера ZXing/фото/HID, запрос API весов. C0106 Claude вернул429 до12:40МСК, root продолжил с внутренними агентами без имитации Claude. Пользователь выбрал OPC UA for Weighing Technology(OPC40200) для обоих постов; добавлено описание общего шлюза и требования к поставщику/профилям/раздельным capture DTO. API очереди магазина применён/проверен; OPCclient и SHIPPING_GROSS wholepallet описаны следующими инкрементами, не выданы за готовые. AK05-DRAFT01 исправленAPPLIED7+9PASS; AK06-CLOCK01 currentv7positive7PASS/rollback закрыт. Подключена шестая wiki-source инструкция о шлюзе весов.
+
+- 2026-10-15: описание общего OPC40200 шлюза склада и магазина опубликовано локально; шесть wiki-инструкций, production UX8/PWA PASS. Найден и исправлен production lifecycle сброс сохранённой выгрузки/маркировки. AK05-EXPORT02 закрыт: bounded источники, полные HTTP workbook/CRC/OOXML/суммы,7 tests. TASK_COMPLETE scoped kit при пробном apply получил PLS00904 из ACCESSIBLE BY; функциональная попытка откатилась, узкое исправление whitelist только PREPARED, API завершения задания не открыт.
+
+- 2026-10-15: после rollback TASK_COMPLETE восстановлены два зависимых package body; USER_ERRORS0/globalINVALID0, все7 live sources точно равны before, ledger пуст. Исправленный whitelist kit PREPARED_NOT_APPLIED; функциональная миграция и HTTP complete не открыты. Итоговый quality gate943/0/72 +24 tests +оба TypeScript PASS; production PWA и encoding PASS.
+
+- 2026-10-15: владелец добавил goods-to-person/сборку накидыванием на весах. В описание шлюза и wiki внесены before→скан/укладка→терминальное намерение→after/delta→единственный stock effect, отдельный финальный capture, допуски/коррекции/упаковка, exact replay и блокировка неоднозначного reconnect. Это проект нового режима, не готовность существующего PICK API; функциональный код/Oracle не менялись.
+
+- 2026-10-15: владелец уточнил INCREMENTAL_ASSEMBLY: допустима автофиксация укладки после стабилизации без кнопки «Положил». Спецификация/wiki дополнены двумя режимами, предварительным step/operation_id, защитой от повторного Stable/исходного плато, проверкой полного прироста и отдельным серверным подтверждением. Это изменение требований; код и Oracle не менялись.
+
+- 2026-10-15: по запросу владельца обновлено распределение восьми AK/KH спринтов и очередь подинкрементов весового шлюза/накидывания. Устаревшая ближайшая очередь явно замещена актуальным разделом; обозначены ответственность Codex/Claude и критерии приёмки, без заявления активной Claude-сессии или календарного обещания.
+
+- 2026-10-15: принято поручение продолжать до полного результата либо19:00МСК. Реальный ClaudeC0108 запущен с file-only tools, первый navблок RELEASE и root route/mobile PASS; tsc nullablefocus исправлен, дальнейшая навигация и точныйwavefilter C0109–10. Исправленный TASK_COMPLETE native комплект APPLIED12statements0errors/INVALID0,13native checks callerrollback/no stockcommit; Pythonintegration продолжается. Новый rawOPCarchive APPLIED8/0,3sourceexact/INVALID0, API11tests и native3kinds+identity/sender/hash/immutable/PENDING/rollback PASS. WarehouseHTTPSadapter RELEASE20+2tests/3nativeACK TESTархива. Интеграционный gate959/0/72+24tests/обаTS PASS на промежуточном снимке. Реальные приборы не выбраны, аппаратного пилота нет. До следующей функциональной приёмки сохранены bounds/PK; archive17/8/12мс, спекулятивных индексов нет.
+
+- 2026-10-15: сформированы паспорта KPI с разделением принятых владельцем правил и предложений. Liveкаталог показал legacy CASE/stock/session/shift timestamps без offset, магазинный RECEIVED_AT aware. Предложены два часовых знаменателя и завершённая строка без двойного учёта частичных fact_qty; автоматического утверждения нет. Новый prospectiveUTCclock APPLIED6/0 после независимого review, runtimeproof продолжается; исторического backfill нет.
+
+
+## 15.10.2026 · текущий сеанс · assembly/native и локальная помощь
+
+Root применил incremental-assembly27/0 после независимого обзора и свежих BEFORE6 exact/INVALID0. Автор подтвердил source13 exact/constraints/ledger, положительный CASE_PICK_CONFIRM исполнен и откатан caller-ом; расширенная приёмка продолжается. Отдельно assembly-evidence-binding6/0, v1.1 real initial tare reference; source3 exact/INVALID0. Raw archive не является товарным эффектом. Stock clock основной паспорт исправлен на APPLIED и связан с независимой8-case приёмкой. Native knowledge article assembly-scale v3 опубликован штатными draft/save/publish, source/body readback exact,2 related links. UI пока на проверке восстановления всех трёх видов команд; Claude429 до18МСК, root продолжает с внутренними исполнителями. GitHub не публиковался.
+
+
+## 15.10.2026 · текущий сеанс · raw1.1 native приёмка
+
+Реальный native тест выявил HAS(missing) под on_error1. Отдельная forward shape-fix4/0 сохраняет strict required getters; исходный применённый kit не переписан. source3 exact/INVALID0; BEFORE/AFTER binding и8wrong-reference, exact replay/read/hash/conflict/revoke/append-only проверки PASS с caller rollback, evidencecount/sourceP20H20 восстановлены. Старый v1.0 smoke всех3контекстов PASS. Archive19.1/15.6мс, адресные ключи достаточны. Ошибка ad-hoc preapply runner и последующая проверка beforeimage явно отражены в checkpoint/зеркале; не скрыты.
+
+
+## 15.10.2026 · текущий сеанс · recovery, UI и выпуск оболочек
+
+Assembly recovery root APPLIED16/0 после2 independent reviews/исправлений; source6exact/constraints/ledger/INVALID0. Rawrecovery1.2 APPLIED6/0/source3exact, actualencryptedOPC→productionHTTP→native COMPLETED/CANCELLED/OPEN+MATCHED, quantity/version unchanged. СтарыйAFTER HTTP replay не воскресил отменённый stockeffect. WAVE continuation RELEASE20 groupedchecks+21unit, sharedsource15exact/INVALID0, canonicalcleanupP24/H0/V9 сохранён. UI recovery14mockedchecks, actualprodread/help/localrelated360/390/1440PASS; storeproductionUX8/PWAoffline и assemblyPWAoffline PASS. НаWindows исправлена отдачаJS text/plain через явные web media types; serv.bat получил TMS_API_RELOAD=0 для стабильной интеграционной сессии, defaultreload сохранён. Root исправил mobilewrap длиннойnativeпричины и улучшает визуальное оформление нового поста; новый recoveryUI в работе. GitHub не публикуется.
+
+- 2026-10-15: Подготовлен `2026-10-15-assembly-intent-abandon`: текущая REC+WH ASM before-image exact, namespace empty/INVALID0, checkpoint/paired empty-only rollback; два fenced hooks и original-session operator guard. Native применение/приёмка ещё впереди. Index обновлён; help assembly-scale v6 и23 rendered checks приведены к текущему evidence.
+
+- 2026-10-15 15:24 МСК: root применил intent-abandon с остановкой compile guard PLS00231(private IDENTITY_KEY в SQL), сохранил failed body и завершил scalar repair5/0. Readback4 EXACT/errors0/INVALID0/ledgerAPPLIED. Складская очередь: исходный14/0 +scalar-boundary5/0, owner20 native/11 actualHTTP PASS; API8088 stableworker66684. Новые quantitative commits не выполнялись.
+
+- 2026-10-15: intent-abandon11 native/actualHTTP групп PASS на1136, actualOracle OPEN wait→durabletombstone→latecreate denied; без goods. Production native UI360/390/1440 PASS/noPOST; UI38 моделируемых сценариев и helpv9 опубликованы. Полный qualitygate1029/0/72 +24tests/обаTS, productionbuild иencoding PASS. CPT13583852 boundedmetadata применён1/0, scopedCASE author11groups/revokeactualwait PASS с callerrollback; sourceP24/H1/version10 сохранён. Подробные ограничения и slowSQL решение на focused pages, index/roadmap обновлены.
+
+- 2026-10-15: PREPARED assembly-shipping-context — только read-only own CASE/customerorder/WARE projection,20 candidates/error guard, существующий QC signature. Фактический gap close≠bind описан; отдельная TEST metadataСТ641520/fulfillment190 не является отбором. Index/database mirror/checkpoint обновлены.
+
+- 2026-10-15: Реальный encryptedOPC EMPTY→ASM BEFORE→AFTER1EA APPLIED/rawMATCHED и exactrepeat/no duplicate подтверждены; close+bind metadata succeeded. FINAL blocked на shippingQC signature изCPT system blocked cell; incident/index сохранены, готовится отдельная ASM_FINALv3 без разрешения shipping изслужебнойячейки. Quantitative scope остаётся ровно1EA и canonicalcompensation, неhardwarepilot.
+
+- 2026-10-15: assembly-shipping-context APPLIED5/0 фактически использован для close/bind1136. Blocker служебной CPT устранён dedicated ASM_FINAL domain/version3 без изменения shipping cell admission. Root apply10/0, независимый source6EXACT/errors0/INVALID0/ledgerAPPLIED; actual current context повторно одинаков/foreign refused; encrypted pinned TEST OPC FINAL zero→1.5/raw1.0MATCHED, root HTTP finish/exactrepeat FINALIZED. Saved-body capture/raw replay сохранил original13:15:25UTC, нового stock effect нет. Rollback history guard отказал до DDL; OPEN policy mutation negatives не выполнены до финализации, прямого reset нет. Первый context673мс/повтор5мс: bound200 сохранён, планы/200position workload до пилота ownerintegrations. Incident/database/index/checkpoint обновлены; ONE1EA canonical компенсация и hardware pilot отдельно.
+
+- 2026-10-15 · Root: подготовлена инструкция case-work и явный allowlist PREPARED для локального help. Native/HTTP CLAIM/START и выбор собственных сессий подтверждены; публикация статьи после UI C0113/независимой проверки.
+
+- 2026-10-15 · Root: identity-only выбор собственных CASE сессий actualWARE, native readiness в READ ONLY TX; реальные native/HTTP и независимые пять guard-групп PASS. Список не заменяет повторную проверку записи; неизвестные ошибки не превращаются в ready.
+
+## 2026-10-15 — Warehouse ZERO progress APPLIED
+
+Root применил warehouse_scale_zero_progress15/0 после independent review; exact spec/body/trigger +unchangedWH/ASM/constraints/indexes, INVALID0.15 native checks,6 real HTTP calls (включая latefirstZERO deny иunchangedoldfrozenMAIN replay),47 focused tests иencryptedlocalhost6 PASS. ZERO rows caller rollback/capture0/goods0; отдельные WAVE568/CASE1137/order2147/TESTdevice отменены/retired штатно, prefix восстановлен, request/claim/label/operation history сохранена. Подробности [[database/retailcase_warehouse_scale_zero_progress_20261015]]. SQLavg27.558ms, boundedqueries/PK достаточны; longhistory backlog сохраняется. Последний общий gate покаFAIL толькона параллельном terminal AssemblyStage contextprop; root/UI owner уведомлены, baseline не менялся. TASK_ASSIGN/START далее PREPARE scoped sidecar version вместо ALTER60dependents.
+
+- 2026-10-15 · CASE resource owner: APPLIED17/0, source9exact/default/index/ledger/INVALID0; dedicated1138 12 native caller-rollback +10 actual HTTP +5 own-session guards PASS. Only2 metadata transitions/zero goods PICK, immutable APPLIED/REJECTED UTF8hash/replay, current revoke actualOraclewait/ROLEv1→2→3. QA1138/session55/tareHELD1/sourceH1 retained on root UI HOLD18:30–18:45; cleanup only PREPARED. GROUP/NETWORK admission and physical hardware not yet claimed. Earlier ALL_CONTEXT-as-namespace inference withdrawn; original context functional, proposed forward CREATE ORA00955/no change, no retry/drop.
+
+- 2026-10-15 · Root: актуализировано описание общего шлюза: применённый mass-free request/claim, неизменный ZERO receipt против текущего разрешения, сроки UI, явный ASM_FINAL3 и реальный программный цикл/компенсация. Не заявлена готовность whole-pallet SHIPPING_GROSS или аппаратного пилота.
+
+- 2026-10-15 · CASE scopes:10 native pure-read GROUP/NETWORK/DC admission groups PASS,0.285s/metadata commits0. Native ACCESS owner CURRENT warehouse/DC-group descendant covers actualWARE; empty/member-remove/inactive/foreign/revoked/expired and DC-parent removal deny. Original WARE/SELF temporarily revoked insideTX; all ACL revision/object/assignment/group/member/journal/audit +CASE/source/events/receipts exact rollback. No dirty Stock/CASE command; actual10HTTP CLAIM/START execution remains WARE/SELF. CASE1138 UI HOLD retained.
+
+- 2026-10-15 · Root: план8спринтов дополнен текущими проверенными CASE/ZERO/сквозной сборкой и canonical компенсацией. Сохранены открытые границы role-only ASM, SHIPPING_GROSS, KPI и аппаратного пилота; текущая подготовка не названа завершением спринтов.
+
+- 2026-10-15 · Root: в карточке исходной scoped-access миграции снята двусмысленность старой строки PREPARED: это состояние перед применением, текущий APPLIED подтверждён существующим Live-разделом; факты/история не переписаны. Индекс уже ссылается на актуальное выполнение.
+
+- 2026-10-15: UI /assembly RELEASE — durable EMPTY/FINAL warehouse requests, zero-progress serverTTL/monotonic clock, offline/403 stop, preparedSTbind exactjournal/GETcontext proof, current ASM_FINAL3-only candidates, CANCELLED/noOPEN read-only.14new+38existing renderedmock checks PASS; titles/localHelp2related/nooverflow360/390/1440, qualitygate1042/0/72+24tooling/bothTS, encodingPASS. Полная production build/native read/rootvisual отдельно. Guide/runbook/component/index/report обновлены; nativeflat+OWN role и pending unknown-rejection limits сохранены, новых stock/Oracle writes изUItests нет.
+
+- 2026-10-15 · /assembly: после независимого visual review добавлены постоянные задание/оператор в setup; tsc и повторные360/390/1440 DOM/help/nooverflow проверки PASS без POST. Исправлена граница публикуемого раздела инструкции: новый EMPTY→ZERO→preparedСТ→FINAL и recovery теперь внутри «Работа на посту»; WikiPublication.preview revision cb76e692079829b3711700ebea798fdc1d5501e052b5c3b70fc50def87b8c863 проверен read-only. Прежняя v12 не содержала нового физического потока; публикация новой редакции отдельно root.
+
+- 2026-10-15 · Read-only аудит матрёшки: текущие native HU/CASE binding/loading/store/thermal тела сохранены; существующее recursive tree переиспользуется. Зафиксированы незакрытые смешанный ASM→QC→HU цикл, аппаратный outer GROSS/weight provenance/direct-child расчёт, fail-closed unknown температуры при консолидации и own-child приёмка route-pallet. Предложен AK06-C-tree/E +AK08 mixed acceptance, без новых SQL/UI/quantity команд.
+
+- 2026-10-15 · Поручение владельца о матрёшке из весовых и стеллажных сборок включено в AK06-F/F1–F6 (связи AK03/AK08): существующее дерево сохраняется, отдельно закрываются масса внешнего HU, термозона/пищевое соседство, межскладской переход, версии/QC и приёмка своего поддерева магазина. Текущая программная/аппаратная приёмка не объявлена завершённой.
+
+- 2026-10-15 · Независимое ревью AK06-F: план ожидаемых дочерних мест отделён от активного физического дерева; unknown expected не отменяет самостоятельный measured outer GROSS, но запрещает ложный MATCHED. Уточнена приёмка поддерева по frozen departure/handover и сохранение остального груза. Индекс AK06-F ведёт на актуальную редакцию.
+
+- 2026-10-15 · HU audit уточнён: существующий per-ST QC после ATTACH без DETACH допускается; nested запрет касается отдельной отгрузки, не контроля. Parent aggregate QC отсутствует. Отделены будущий dependency manifest от физического дерева, отдельный WARE handover от sameWAREmove, actual outer measured от unknown expected, scoped HU gap от ordinaryTASK. Новых native/quantity команд нет.
+
+- 2026-10-15 · Дополнительный аудит interWARE для AK06-F: одиночный и групповой текущие owners явно исключают CASE; F2 дополнен обязательным CASE-aware переходом и разделением task/physical HU/custody, исходной/целевой ST identity. Ограничение не скрыто за формулировкой «штатный перенос».
+
+- 2026-10-15 17:24 МСК: уточнена ссылка mixed-tree на AK06-F; будущая TEST-приёмка следует общему поручению владельца и native readiness/компенсации, отдельного разрешения на продолжение не вводится.
+
+- 2026-10-15 · Независимый interWARE source review уточнил HU F2: текущие IW_HU_SOURCE/INTERWARE_REC явно исключают CASE; CONTAINER/STOCK доказательство не переносится на ASM. Требуется CASE-preserving bridge в существующем owner, без подмены WARE/нового stockwriter.
+
+- 2026-10-15 17:31 МСК: TASK_ASSIGN/START native/API RELEASE:28 actualHTTP calls,19unit, REV SHARE concurrency/revoke и canonical cancellation PASS; фикстуры1188/1189 CANCELLED, session58 CLOSED, H1 относится только к ожидающему UI CASE1138. SQL max243ms: индекс не требуется, actor-history plan — resources/platform backlog.
+
+- 2026-10-15 17:33 МСК: инструкция case-work согласована с реализованными названиями действий; source allowlist APPROVED для локальной публикации. Root rendered fault tests проходят отдельно от native/API, UI production-приёмка ещё продолжается.
+
+- 2026-10-15 17:36 МСК: прямой ответ владельца «Да, показывать оба» — приняты строки/коробки в час фактической сборки без явно зарегистрированных пауз и в час смены с паузами. Паспорта/roadmap обновлены; без подтверждённых aware интервалов KPI остаётся «нет данных». Правило начисления завершённой строки и источник actual delivery ещё открыты.
+
+- 2026-10-15 17:43 МСК: production case-work/native role-only read/help v3 на360/390/1440 PASS,21 independent mocked paths PASS, gate1056/0/72+24+обаTS PASS. SQL12 Oracle/local pairs/maxHTTP259ms/ownslow0/contextavg5.698ms: без нового индекса. Уточнена mixed-последовательность: актуальный QC выполняется после последнего физического move/attach; shipping QC не переносится через инвалидирующую упаковку.
+
+- 2026-10-15 17:45 МСК: описание OPC40200 шлюза дополнено проектом nested HU/AK06-F: frozen closure, отдельный внешний GROSS, direct-child expected без двойной тары, UNKNOWN при неполноте и магазинное поддерево. Это проектируемый SHIPPING_GROSS, не объявление native реализации.
+
+- 2026-10-15 17:53 МСК: approved picker time kernel RELEASE:24 focused tests + независимые100 наборов PASS, public export и bounded UTC/DST/coverage contract. SQL/API/товарных изменений и нового ledger нет; источник actual intervals и числовые KPI ещё не интегрированы.
+
+- 2026-10-15 17:55 МСК: синтезирован CASE work UI:23 independent rendered checks и актуальный production native read/help3viewports PASS, полный gate1059/0/72+24+обаTS PASS; нет hardware/native POST claims, cleanup1138 пока HOLD.
+
+- 2026-10-15 17:53 МСК: явно зафиксирована открытая граница CASE/TASK metadata recovery: exact retry реализован, отдельный native abandon/tombstone никогда не принятого intent — следующий owner-bound инкремент. Browser clear/newoperation не предлагаются как обход unknown. AK07 time kernel не считается runtime KPI.
+
+- 2026-10-15 18:36 МСК: после live проверки типов времени зафиксирован следующий AK07 инкремент owner-bound aware WORK/PAUSE/SHIFT. Это план источника для готового kernel, не новый runtime API. Правила атрибуции строк/доставки ещё ожидают владельца.
+
+- 2026-10-15 18:45 МСК: реальный Claude C0113 CASE review интегрирован; C0114 магазинный review/button fix сохранён до session quota23МСК, root8UX+PWA/25CASE/48pure/fullgate PASS. CASE1138 канонически отменён, session55 CLOSED,24/H0/lineage preserved; CRES rolev4inactive/user retired/all assignments revoked/private groups inactive. GROUP quantity proof v2 правильно блокирован отсутствием свежего measured EMPTY tare, APPLIED не заявляется. Post-cleanup native SQL review: без speculative index, ошибочный diagnostic bind исправлен. Roadmap/component/runbook/index/итог обновлены; fullmixed/HW/runtimeKPI остаются открыты.
+
+- 2026-10-15 18:57 МСК: root UI audit выявил unsafe reset повреждённого unloading intent. Исправлен fail-closed archive-copy/original retained/block through reload, без нового operation_id; independent store reviewer подтвердил race. Дополнены help attributes,131 eligible controls/49TSX audited. Повторные gate1059/0/72+24+обаTS/build/store+assembly PWA PASS; browser regression отдельный, runtime/native abandonment остаётся открытым.
+
+- 2026-10-15 18:58 МСК: финальные8 browser production/mock API cases PASS, включая отсутствие всех изменяющих HTTP запросов при archive/reload damaged unloading; финальная UTF-8 проверка PASS. Evidence manifest со SHA256 сохранён, все восемь спринтов не объявлены завершёнными.
+
+- 2026-10-15 19:27 МСК: по просьбе владельца проанализированы навыки для снижения стоимости; предложены узкие рецепты поверх существующих NICORA skills и детерминированные helpers. Проверены официальные playwright/webapp-testing/frontend-design; установки/покупки/смены моделей не выполнялись, проценты экономии не заявляются. Пользователь продлил исполнение до23:00МСК или полного завершения, возобновлены AK07 actual time и metadata recovery, UI HU F1.
+
+- 2026-10-15 19:37 МСК: подготовлен и независимо просмотрен frozen CASE/TASK intent-abandon kit, before4/after7 exact-source guards, PK/UK/FK/append-only/context verification доledger; root начинает последовательное dev apply по текущему поручению владельца. Native приёмка ещё впереди, новых quantity effects нет.
+
+- 2026-10-15 20:34 МСК: metadata-intents APPLIED/readback7exact/INVALID0;8 caller-rollback и4 actualHTTP группы PASS, CASE1139 START без quantity writes. Scoped CLOSE APPLIED10/0/readback2exact,4 native negative checks PASS. HU tree real read/help360/390/1440 и компактное мобильное меню PASS;14 Oracle/local audit pairs, maxHTTP292ms/ownslow0, сохраняем bounded reads без нового индекса. Учёт времени остановлен до первого CREATE на отсутствующем WARES key, objects/ledger отсутствуют. По прямому решению владельца готовится PK(ID)+mandatory UNIQUE(NAME),291 ID/NAME без NULL/дублей; fallback FK→CHECK не применяется.
+
+- 2026-10-15 20:47 МСК: WARES keys APPLIED7/0,291 ID/NAME сохранены,4 duplicate/null refusals PASS. Actual-time v3 DDL завершён, additive v4 исправил только verifier Oracle TZ-expression indexes; finish5/0, independent12sources/80constraints/4WAREFK/4guards/9indexes/INVALID0 PASS. Первые6 явных TEST timeevents сохранены, SHIFT_OFF; window parser выявил OracleFX/FF6 quirk, READ-only fix готовится с сохранением исходных receipt/continuation IDs. EMPTY scoped APPLIED9/0/readback4exact, request-only TEST driver ждёт fresh measurement window. Metadata recovery help опубликованv3 с двумя локальными связанными статьями. Все спринты завершёнными не объявлены.
+
+- 2026-10-15 21:30 МСК: time READ parser APPLIED/sourceexact/INVALID0; original continuation8events/10commands/4spans OFFv8 PASS. TimeUI native read/help3width и metadata recovery/helpv3 PASS; HU mobile/Gantt/camera-stream evidence собраны отдельно с mock/hardware границами. GROUP-only1EA caller-rollback PASS после реального TEST EMPTY B. Новый EMPTY C потребовал явного Oracle UTC readback вместо naive driver datetime; свежий capture/raw MATCHED. Root positive CASE1139 PICK/CLOSE/actual HTTP exact CLOSE/body conflict/RETURN и canonical cleanup PASS:24/H0/lineage, grants revoked/session59closed. Bounded SQL review63API/51local/max335ms; catalog5.9s/background845ms имеют владельцев и решения. Добавлен контекст до23:00; все спринты не закрыты. Root23 focused CLOSE checks PASS после fail-closed проверки malformed saved envelope.
+
+- 2026-10-15 21:35 МСК: владелец указал на чрезмерный расход токенов. Сокращены параллельные задания, дальнейшее расширение SHIPPING_GROSS остановлено на неустановленном кандидате. Рекомендации по модели/Standard/контексту/проверкам сверены с официальной документацией и внесены в cost synthesis; стоимость данной сессии не заявляется. Текущий HU role-only read пакет завершается отдельно, без новой широкой очереди.
+
+- 2026-10-15 21:45 МСК: HU composition/target-slots переведены на identity+native actualWARE authority до rich snapshot и после него в одном READ ONLY TX.13focused+peer review PASS; actual WARE/GROUP200, revoke/member-remove403, flat0/noadmin. N2140 actor/grants/group/role retired, qty0/HU/Stock/clock/outbox unchanged.16 Oracle/local pairs/maxHTTP260ms;8 denial transactions6-23ms, native cumulative HU15.85ms, новый индекс не нужен. HU mass UI14new+17model/3rendered+actual native read390/helpPASS. Финальный общий gate1094/0/72+24+обаTS PASS, без повторного запуска на тех же sources. CASE1139 postpositive retirement независимо подтверждён.
+
+- 2026-10-15 21:48 МСК: root review неустановленного SHIPPING_GROSS read обнаружил locking assert_allowed в read-only пути и rollback borrowed dirty TX. Pure allowed+NULL denial и clean-connection preflight исправлены; первоначальные bytes сохранены.15 адресных тестов и один полный gate после функциональной правки PASS. Native DDL/маршрутов/capture/QC нет; кандидат не объявлен принятым producer. Расширение параллельной разработки не возобновлялось, запрошено предпочтение экономного режима.
+
+- 2026-10-15: уточнена provenance HU mass UI: actual native read390 выполнялся на Vite localhost3000, отдельно от3 production-bundle/mock проверок. Исполнение dist с живым API этим прогоном не заявляется. Доступный локальный usage относится к отдельным автоматическим проверкам, полного счётчика этой сессии нет; стоимость и сумму токенов не выводить из частичных логов.
+
+- 2026-10-15: read-only просмотр разрешённых полей local Codex config показал gpt-6.1-sol/low/priority и6 MCP. Поскольку Priority соответствует Fast, рекомендован Standard прежде смены основной модели. Это defaults, active app override не определён; конфиг/серверы не изменялись, секреты не выводились.
+
+- 2026-10-15: по замечанию о стоимости начальная wiki сокращена1017→66строк/195418→4948bytes. Полный каталог и оригинальные bytes сохранены;798 markdown targets проверены, новые router-ссылки существуют. WIKI_SCHEMA: index≤100строк, хроника вlog/focused pages. Это сокращение контекста, не объявление процента экономии всей разработки. Native SHIPPING_GROSS helper17pairs/2NLS/reorder PASS; крупные CLOB/sort эксперименты5.14/5.52s и timeout не выпущены, причина/владелец/потерянный ранний v5 artifact записаны явно. Ещё7 native bodies захвачены read-only/INVALID0, transitive audit продолжается, SQL не установлен.
+
+- 2026-10-15 22:35 МСК: исправлен GS1-128 lookup и scan_place новых команд приёмки/разгрузки. Exact legacy ID приоритетен; выбранный магазин и READ ONLY TX сохраняются, original ACK и frozen retry bytes не переписываются.10 backend+10 UI checks, GS1 программная камера с точным повтором, production build и общий gate1095/0/debt72+24tooling+обаTS PASS.5 вариантов кода на существующей DEV-поставке подтверждены live HTTP GET; identity admin, qty0, physical=false. SQL7 Oracle/local pairs/max408ms/slow0; ограничения V$SQL и решение без нового индекса записаны в operator UI evidence.
+
+- 2026-10-15 22:45 МСК: store API сообщения очищены от технических маршрутов/HTTP/Error-prefix; структурные status/code и правило коррелированного отказа сохранены.13 boundary checks, production build и gate PASS. В SHIPPING_GROSS read закрыт один вопрос границ: live VALID UNIQUE CASE/UID indexes ограничивают placement claim одним рядом. Thermal assert_cell отдельно inspected как SELECT predicate, unknown temperature не становится совместимостью. Catalog constraints3469ms закреплён за operations/schema-verification: exact-name release checks, не runtime. Полный кандидат всё ещё NOT INSTALLABLE. Обновлены focused pages; новый маршрут/DDL/capture/товарные операции не добавлялись.
+
+- 2026-10-15 22:55 МСК: live production shift UI390 завершён после исправления teardown тестового proxy (первый ранний PASS явно отвергнут).11 HTTP200/width390/товарных команд0; live набор только DOCK, остальные семейства не объявлены принятыми.21 HTTP/3slow entries: first1469ms/second823ms; CASE1021/recovery750/overview775ms закреплены за inventory/resources/platform с конкретной диагностикой до пилота. Recovery source выявлен как legacy global read без actor/ware в port: scoped переход доlimit — следующий backend инкремент. SHIPPING_GROSS README/manifest синхронизированы, before сохранён, SQL bytes неизменны. C0115 подготовлен в прежнем файловом канале, нового ACK реального Claude нет; deadline23:00 не продлевается сбросом квоты.
+
+- 2026-10-15 22:58 МСК: recovery scope gap локализован до flat binding main.py:120, port/list_recovery и уже существующего JOIN PICK_WAVE без warehouse filter. Найдены оба потребителя — shift и TwinDesk. В checkpoint закреплены actor/ware/READ ONLY/current authority доlimit, совместимость без глобального обхода и отрицательные проверки; runtime код этого следующего инкремента пока не изменён.6 focused wiki/coordination страниц проверены на существование обычных относительных ссылок; индекс67строк.
+
+- 2026-10-15 22:59 МСК: финальные11 GS1/store source/test SHA и наблюдённые root результаты сохранены отдельным manifest. Последняя функциональная версия прошла адресные checks, terminal build и полный gate; после неё менялись только документы/readonly acceptance helpers. Новый native schema/stock effect не добавлялся; API serv.bat остаётся на8088. Следующий recovery инкремент подготовлен, не объявлен реализованным.
+
+- 2026-10-15 23:00 МСК: достигнута граница владельца, дальнейшая реализация остановлена. Все спринты не завершены; точный следующий recovery scope инкремент и ограничения зафиксированы. Проверены11 текущих source SHA/6 страниц ссылок/index67lines; encoding PASS. Новый срок или автоматический запуск Claude после quota reset не предполагаются.
+
+- 2026-10-15: по новому запросу владельца составлен план завершения AK01–AK08 с единственным запросом Claude Code. Codex доводит backend и готовность контрактов; Claude получает автономный UI/help/review пакет; Codex закрывает интеграцию и остаток без зависимости от доступности Claude. Подготовлен PROMPT_CLAUDE_SINGLE_FINISH.txt, запуск только после реального API_READY (пока отсутствует). Новая реализация/сессия Claude не запускались; KPI решения и аппаратная приёмка обозначены отдельными условиями закрытия, GitHub не менялся.
+
+- 2026-10-15: владелец возобновил реализацию блоков1–3 после прежней границы23:00; единственный запрос Claude сохранён до готовности API. Блок1: inventory/recovery GET переведены с flat view gate на identity+native actualWARE predicate доlimit в READ ONLY TX, omittedware не даёт bypass.14 focused checks,7 actual hook/API-shim cases,32 native HTTP checks/11ACCESS receipts PASS; actor/grants retired, quantity0/source task/Stock/clock/outbox unchanged/INVALID0. Shared row materializer сохранён; claim response теперь внутри исходной TX, native claim write всё ещё legacy. Shift передаёт WARE; multiwarehouse TwinDesk показывает область/лимит50 и источник склада.35 Oracle/local pairs max469ms,23 TX records max199ms; no speculative index. Positive active recovery content в DEV отсутствует и остаётся в приёмке. Новый component mirror содержит ограничения; общий gate1096/0/debt72+24tooling+обаTS и admin build PASS.
+## 2026-10-16 — scoped ASM, checkpoint перед применением
+
+Продолжено поручение выполнить блоки 1–3. Подготовлен package-only комплект `2026-10-15-assembly-scoped-execute` v3: assigned-role ASM metadata, прежняя canonical CASE проводка, native close UOW и session binding. Сохранены before sources/15 зависимостей/history guards и парный rollback; SHA frozen manifest `02875126bc2a25e98f6a4b031a1c1f8e4d8a5f58c9fd946e71deac149b7b4bfe`. DDL ещё не применён. Python close/binding 27 PASS, quality gate PASS. Добавлена database mirror; независимая/native/физическая приёмка не заявляется. Legacy flat+foreign scoped расширение отмечено отдельным GAP.
+## 2026-10-16 — scoped ASM v3 применён и прочитан обратно
+
+`2026-10-15-assembly-scoped-execute`: OracleApply завершился успешно; отдельное readback проверило 26 SHA исходников, ledger APPLIED, ERROR/INVALID0 и неизменность семи историй. Native anonymous helper PLS-00904, unknown actor и dirty metadata caller отклонены до эффекта. API перезапущен root serv.bat без reload. Авторские проверки не заменяют positive workflow/concurrency/hardware; блоки 1–3 остаются в работе.
+## 2026-10-16 — fresh CASE1140: metadata transaction ordering
+
+Новая изолированная фикстура WARE20220394, CASE1140, ресурс64/session60; scoped CLAIM/START без flat execute PASS. TEST tare сохранён, ASM session/pick не созданы: v3 ошибочно выделял TX перед begin_plan и получил DIRTY_TRANSACTION. Подготовлено body-only исправление `2026-10-16-assembly-metadata-lock-order` с before/SHA/rollback; native positive acceptance остаётся открытой. Ошибка фикстуры BOX capacity conversion исправлена отдельно, волна571 продолжена с исходным operation_id без повторного создания.
+## 2026-10-16 — scoped ASM1140: полный TEST и HTTP права
+
+Body-only исправление порядка begin_plan применено, отдельное readback SHA/ERROR/INVALID0. Новая CASE1140 прошла native TEST tare→AUTO step→canonical pick (сначала exact caller rollback)→close/replay→manager ST bind→FINAL request/claim/capture→FINALIZED/replay. Чужой actor/нет ASM step/неверный consent отклонены; некорректные интервалы/просроченные claims не приняты, свежий валидный claim принят. 12 actualHTTP WARE/SELF/GROUP/revoke/member-remove/replay PASS; все назначения отозваны. Two-connection exclusive REV:2019мс/ORA54, clean contexts и replay после release PASS. SQL:12 native/local HTTP пар,max235мс,6 TX/denial records; оставить bounded reads, индексы только по pilot plan evidence. TEST не является hardware или shippingQC. Mixed-HU/остальные права/SHIPPING_GROSS ещё открыты. Fresh-warehouse ACCESS_OBJECT/CPT onboarding GAP записан в mirror.
+## 2026-10-16 — подготовлен inventory task scope
+
+Блок1: prepared `2026-10-16-inventory-task-scope`, новый native metadata claim/current count/read authority и guarded root/inventory/short-recovery bodies. Scoped count строго assigned task/cell/article/revision; standalone legacy homeWARE сохранён. Python reads собраны в одну READ ONLY snapshot; claim не добавляет read gate после commit. 23 focused tests PASS; SQL frozen manifest `2b422ef4cebd4c0f7cced63649a4146c537b9fd917e2ef178948e97a0288c020`. Native применение/positive shortage/concurrency ещё не выполнены; revision creation/lot birth HTTP остаются flat-gated.
+## 2026-10-16 — inventory task scope применён
+
+`2026-10-16-inventory-task-scope`: OracleApply0, отдельное readback8 SHA/ledgerAPPLIED/ERROR0/INVALID0; legacy admin read и3 inactive actor native denials PASS. 23 focused tests и полный quality gate PASS (архитектура1097/0циклов/debt72,tooling24,обаTS). API root serv.bat перезапущен без reload. Положительный shortage→claim→count и дополнительные concurrency/SQL ещё в работе; не закрывать блок1 по entry negatives.
+## 2026-10-16 — inventory27: positive shortage/count, scope и retirement
+
+Новые CASE1141/SHORT23/INVENTORY27: picker0/short1→admin RESTORE→GROUP auditor homeWARE1/actual20220394 claim→canonical count0/replay; сначала exact caller rollback, old ASM1140 snapshots неизменны. 15HTTP/11ACL +SELF/replay2HTTP в каждом lock harness; недостаточное право/SELF-unassigned/чужая ячейка/member-remove/revoke отклоняются. Two-connection REV5034мс/ORA54 и reset_connection/replay PASS; исходный raw harness без reset сохранён как отклонённый, production UOW контракт не менялся. SQL19 Oracle/local пар,max258мс,6 TX/denial records; bounded reads оставить, pilot plans перед индексами. Собственные CASE/wave/plan/tare retired canonical owners; inventory DONE/loss/access истории сохранены,3 QA users DELETED/resource/session/grants/role/group закрыты. Old ASM exact/INVALID0. Legacy additive matrix/revision owner/остальные блоки1–3 открыты.
+
+## 2026-10-16 — prepared additive legacy task scopes
+
+Подготовлен `2026-10-16-additive-legacy-task-scopes`: legacy_executor отделяет homeWARE/GLOBAL от явного foreign role;12 guarded package sources/16 recompiles, SHA `3c89b36cf52fe8313b25f654c138614cd777e9fc9bff4fc035442ce4c9715ba4`. Inventory foreign-flat идёт через assigned task gates. Общий flat metadata owner получает REV fence после begin_plan; permissions whitelist неизменён. Before sources/paired rollback/mirror сохранены. BIRTH owner дополнительно прочитан: native homeWARE guard сохранён; это не новый допуск регистрации партий. Применение и native legacy/role/concurrency проверки следующие.
+
+## 2026-10-16 — HU thermal admission prepared
+
+Блок2: existing SKU/cell temperature rules, новый pure helper с200nodes/2MiB bounds, CASE move/HU attach/move/ship compile+under-lock recheck. UNSPECIFIED не считается температурной проверкой, observed_temperature_c=null. 15 focused tests и quality gate PASS (1098/0циклов/debt72,tooling24,обаTS). SQL/rollback и Python before image сохранены; frozen manifest `b5e33a6197bba424a9a3e25e23d220597a758aa90b32f595b1d6b63dbabac890`. Native apply/positive policy/physical software cases/SQL следующие; mixed manifest/interWARE/subtree/SHIPPING_GROSS ещё открыты.
+
+- 2026-10-16: HU thermal APPLIED/13SHA/INVALID0;15 native policy checks with unchanged exact proof/change refusal, rollback. Mixed ASM1140 + ordinary1142 BOX24/EA1:3 unique leaves/26EA, foreign-home flat+WARE role new quantity, HTTP revoke403/thermal preview PASS.3HTTP/max333ms/slow SQL reviewed. Fixture retained; manifest/interWARE/gross/hardware open. Corrected prior discovery: HU_MOVE slot thermal check already existed. Corrected PowerShell pipeline non-ASCII replacement in new wiki append text; historical entries preserved. [[database/retailcase_hu_thermal_admission_20261016]].
+
+- 2026-10-16: prepared short independent/current-scope kit4488fb53,7 source guards/3 bodies/rollback; native positive and concurrency acceptance pending. [[database/retailcase_short_independent_scope_20261016]].
+
+- 2026-10-16: independent short scope APPLIED/7SHA/INVALID0,10HTTP/rollback/replay/REV lock PASS; own SQ16 CASE1143/short24 accepted, audit32 count exposed existing ACCEPT_SHORT vs RESTORE state mismatch. Prepared one-body repair c19210d2; no direct state rewrite. [[database/retailcase_short_independent_scope_20261016]].
+
+- 2026-10-16: short approval dev7SHA/10HTTP10pairs/max188ms/0slow; ordinary audit repair dev4SHA/count32 DONE/no replenishment, rollback/replay PASS. Fresh RESTORE CASE1144/short25/task33 -> repl1648 PASS and fully canonical QA retirement. SQ16 CASE1143 remains closed empty with HELD TEST tare (native cancellation/finish refused); access retired, explicit inventory backlog, no state rewrite. Mixed tree26EA unchanged.6 boundary tests and quality gate PASS. [[database/retailcase_short_independent_scope_20261016]].
+- 2026-10-16: non-installable SHIPPING_GROSS candidate v7 uses DOM merge sort/cached UTF8 keys and early work bounds;17 binary pairs, two NLS, split0/1/999/1000 native helpers PASS;5 early-bound cases9-610ms under external watchdog. Initial uninstrumented client wall overrun retained as unresolved, not a success. Full freeze/purity/release/capture/use/loading remain open.
+
+- 2026-10-16: RESTORE regression native SQL reviewed (bounded task/short/replenishment plans; no speculative indexes/cache), post-change live API preview69408 confirms mixed26EA/ADMISSIBLE/observed temperature null. API restarted through root serv.bat without reload. Remaining block1 managers/delegation, block2 manifest/CASE interWARE/subtree/empty disposition and block3 full freeze/gateway flow remain open. [[concepts/retailcase_hu_mass_projection_20261015]].
+
+- 2026-10-16: resumed blocks1-3; consolidation manifest limited scenario defined: existing fulfilment/ST expectations separate from physical HU tree, native current authority/idempotency and pre-shipping completeness,8 fresh native source checkpoints/INVALID0. Implementation in progress; no new acceptance/install claimed. [[database/retailcase_consolidation_manifest_20261016]].
+
+- 2026-10-16: consolidation manifest native/HTTP implementation PREPARED, frozen52bab71b; additive3 tables/2packages/3owner triggers and HU_SHIP admission/current token. Quality gate1102/0cycles/debt72/tooling24/bothTS PASS. Apply and functional missing/complete/replay/current-scope checks next. [[database/retailcase_consolidation_manifest_20261016]].
+
+- 2026-10-16: consolidation manifest dev APPLIED/15 source hashes/INVALID0;16HTTP/replay/revoke/missing composition guard PASS, physical26EA unchanged. SHIPPING_GROSS v8 candidate binds expected plan token; Python26 wire/UOW tests and quality gate PASS, native freeze still uninstalled. Local help published revision2/4HTTP/max155ms/0slow; owner rejected unnecessary API publication for ordinary instructions. Future default file+local URL recorded in components/retailcase_simple_solution_rule_20261016.md. Consolidation list package installed/7 source hashes/INVALID0; functional page acceptance pending, no new quantity scenario.
+
+- 2026-10-16: owner prioritizes manual weight while retaining integrated scale API. Manual store receipt optional field/native source discriminator APPLIED/6SHA/INVALID0; seven exact native calculation/API wire checks and eight live schema/list/static-help/guard calls PASS, no new receipt or quantity effects. Full committed manual receipt acceptance remains open. Simple curated HTML URLs now live200, no API publication. C0116 UI contract/prompt written and assignment appended to existing Claude channel; ACK pending. Hardware SHIPPING_GROSS no longer blocks this UI package. Quality gate PASS; SQL0slow,1093ms maximum is OpenAPI, business/list timings and plan decision in focused wiki.
+
+- 2026-10-16: current single-Claude entrypoint redirects to C0116; old full-scope prompt retained as history. Roadmap stale absent-READY/C0115 wording updated to actual installed-contract handoff; ACK still pending.
+
+- 2026-10-16: Claude ACK K-0064 C0116/UI IN_PROGRESS. Fresh isolated warehouse11323734:3EA full-pallet task -> TOP/BOX manual loading/departure -> photos/unloading -> manual store receipt. Caller rollback exposed ORA-40573 JSON method in SQL VALUES; scalar-bind fix4b36fee8 APPLIED/3SHA/INVALID0. Same saved receipt then commit/replay/changed-weight409 PASS, one manual row/no capture, stock0/0, protected old warehouses unchanged, custody canonically released; wave576 native DONE. Eleven HTTP/local pairs,0slow; loading1791ms needs phase attribution if recurrent, no speculative index/cache. Native/DTO update sent to Claude; full evidence in manual-weight/committed-case.
+
+
+## 2026-10-16 - Empty accepted-short CASE disposition prepared
+
+Inventory owner: explicit ordinary-CASE disposition preserves DONE/SHORT_PICKED/accepted-short/count history; no fictional shipment. Native package checkpoint captured, separate API prepared; live apply/acceptance still open. See database/retailcase_empty_short_disposition_20261016.md. Claude C0116 RELEASE received; terminal dev /help proxy added.
+
+
+## 2026-10-16 - C0116 integrated; empty shortage CASE lifecycle closed
+
+C0116 RELEASE received; root /help dev proxy and identity overlay fix, both production builds/common gate1112/0cycles/debt72/24tooling/bothTS PASS. Real UI future-plan create/cancel + production manual receipt act PASS;3HTTP/3pairs/0slow/max266ms. See database/retailcase_manual_weight_20261016.md.
+
+MIGRATION_ID2026-10-16-empty-short-disposition applied in authorized dev,4SHA/INVALID0. CASE1143 rollback/commit/replay/conflict and populated CASE1142 denial PASS. Native short/line/pick/count history and mixed tree unchanged; own booking released, third TEST tare retired, wave574 DONE.5HTTP/5pairs/0slow/max304ms including manual-wave576 finish. Keep bounded200 proof/PK and sorted inventory locks; no speculative index/cache. Source/rollback/readback and code checkpoint saved. See database/retailcase_empty_short_disposition_20261016.md. Broader scopes/interWARE/electronic/hardware/sprint acceptance remain open.
+
+
+## 2026-10-16 - next Codex/Claude division C0117
+
+Read latest K-0065/K-0066, RESULT_C0116 and current recovery reader/consumers. C0116 integration is complete; old backend-not-ready status is stale for scoped recovery reads. Explicit mismatch recorded: current limited list has no total/cursor/has_more, omitted WARE is all authorized warehouses, unknown warehouse403, legacy dates have no timezone.
+
+Codex owns CASE-aware interWARE/then subtree handover and remaining native scope matrix. Claude receives one bounded UI task: typed recovery overview at shift desk with actual stages/wave context/mobile/URL help, no new mutations. TASK_C0117.md/PROMPT_CLAUDE_C0117.txt and existing coordination channel updated; ACK not yet observed. See roadmap/retailcase_codex_claude_c0117_20261016.md; wiki index updated. No functional code/DDL/publication or repeated test suite.
+
+
+## 2026-10-16 - CASE-aware interWARE implementation started
+
+Claude actual ACK K-0067 received for C0117. Codex captured31 current sources/INVALID0 for grouped receiving/physical HU guards. Decision: preserve shipped picking task and create physical carrier continuation through existing pallet/HU owners, immutable native CASE origin map, same stock leaves and same external identifier. Group receipt permits multiple leaves per source ST while preserving OP+leaf uniqueness. Tare ownership stays with existing explicit handover; unknown mass is not zero evidence. See database/retailcase_interware_case_bridge_20261016.md; index updated. Not installed or accepted yet.
+
+
+## 2026-10-16 - explicit manual warehouse QC prepared
+
+CASE interWARE first-leg loading correctly rejects missing current WEIGHT approval (ASM_FINAL is not shipping QC). Owner manual-weight decision requires explicit MANUAL_CONFIRMED path at warehouse QC too. Prepared two-body/4-source package kit, unchanged electronic flow, Root journal/manual actor/signature evidence, strict exclusive source; raw QC screen source choice and static help updated. Migration2026-10-16-manual-warehouse-qc frozen SHA 6c8724b13baecfc5fb64405ccddf753a0fecd7839857954c85aa4dcf85f88ef6. No fake electronic capture/use, controller/quantity/tolerance checks retained. See database/retailcase_manual_warehouse_qc_20261016.md. Live apply/acceptance still pending.
+
+
+## 2026-10-16 - manual CASE QC loading provenance prepared
+
+Manual warehouse QC installed/4SHA/INVALID0, both fresh source CASE QC/replay/conflict PASS; no new electronic capture rows. Frozen loading consumer previously labels all CASE QC electronic and CASE CHECK requires capture/device. Separate migration2026-10-16-manual-qc-load-origin prepared SHA 645d325111834d7993c6d49174451b950e21a57c8a89551aa0c78c7a0f5e0d5e,3 source guards + exact normalized CHECK guard; explicit manual CASE branch and finance origin match. Existing coverage and electronic rules retained. See database/retailcase_manual_qc_load_origin_20261016.md. Apply/flow completion pending.
+
+## 2026-10-16 — C0117 принят; смешанная CASE матрёшка прошла два плеча и магазин
+
+По поручению владельца Claude получил C0117 через прежний файловый канал, ACK K-0067/RESULT RELEASE K-0068. Recovery UI интегрирован; root вынес URL-склад/session-resource map из105-строчной функции без расширения debt. Общий gate:1118 файлов/0cycles/debt72,24 tests/обаTS PASS, admin production build PASS (существующие предупреждения leaflet/chunk size), root9 browser checks PASS, live empty/403 и остальные UI fixtures отмечены честно.
+
+Миграции CASE bridge34SHA, manual warehouse QC4SHA, manual loading origin3SHA APPLIED/ERROR0/INVALID0. Runtime ORA-40573 в source_cases исправлен отдельным immutable scalar-bind комплектом1SHA; старые frozen manifests не менялись. CASE1145 ASM1EA +CASE1146 BOX24+EA1 → top26EA → рейс33651 → WARE30846272 приёмка/целое HU placement/custody →3 onward ST/рейс33652 → магазин PAPER_COUNT26EA. Caller rollback, commit/replay/conflict, оригинальные идентификаторы carrier, исторические SHIPPED CASE/source ASM, заказы1/1 и25/25, P/H0 и protected WARE unchanged PASS. STORE_RECEIPT освобождает custody атомарно; повторная независимая release закономерно409. Тестовые роли/назначения/пользователи/ресурсы/весы retired, волны577/578 DONE,2 source HELD tare books и истории сохранены.
+
+Ручной QC явно MANUAL_CONFIRMED без фиктивных capture/use;9 focused tests, browser manual-edit/exact lost-response retry/old intent/electronic selector PASS.35 Oracle/local HTTP pairs/max1686мс, slow56/126/544мс; inventory/transport integration backlog: до нагрузочного пилота профилировать admission/prepare/execute/audit и возможный ST metadata N+1, проверить планы/статистику; существующие locks/bounds/indexes сохранены. Детали: [[database/retailcase_interware_case_bridge_20261016]], [[database/retailcase_manual_warehouse_qc_20261016]], [[database/retailcase_manual_qc_load_origin_20261016]], [[roadmap/retailcase_codex_claude_c0117_20261016]]. Положительный аппаратный пилот, выдача поддеревьев разным магазинам, universal nested BOX manifest и оставшаяся scoped write/конкурентная матрица ролей остаются открытыми; все спринты не объявлены готовыми.
+
+
+## 2026-10-16 - basic scoped HU commands prepared
+
+Prepared native CREATE/ATTACH/DETACH/MOVE authority using actual source/child/target WARE before rich compile/replay and after REV/config/resource locks. Legacy/global retained; direct CASE and other HU contracts unchanged. Before3SHA/INVALID0, guarded kit and HTTP checkpoint frozen ed1089477064a2e024d8c98c8c9a7e0229b04ff52a5d6cf7e4a92e4373ae7bbd. See [[database/retailcase_hu_scoped_execute_20261016]]. Not yet applied.
+
+
+## 2026-10-16 - basic scoped HU commands dev APPLIED and accepted by author
+
+Five source SHA/ledger APPLIED/ERROR0/INVALID0. Fresh HS16.3c390ab3a0 homeWARE1/flat execute+admin0: WARE CREATE/ATTACH3EA, exact replay/changed payload; CURRENT GROUP MOVE/DETACH, WARE revoke/group membership removal and foreign warehouse denied. Caller rollback retained3EA/H0, second connection blocked on exclusive REV while Root prepare held shared fence. Legacy global path PASS. Temporary user/role/group/grants retired, isolated stock/history retained.14 actual Oracle/local HTTP pairs/max219ms/ownslow0; keep indexed UID/cell checks and REV fence, no speculative cache/index. See [[database/retailcase_hu_scoped_execute_20261016]]. Direct CASE/slot/task/shipping and other manager/driver/finance scopes remain open.
+
+
+## 2026-10-16 - owner approved three KPI business rules
+
+Direct owner answers: completed line credited to its final completing picker; boxes credited per each picker confirmed own picks. On-time delivery uses vehicle arrival at store. In-full delivery requires store confirmation under its configured strategy and full acceptance without shortage/refusal/damage; completed discrepant receipts shown separately and excluded from numerator. Updated KPI passport, active roadmap and wiki index. Source/time adapters, arrival evidence policy, partial-box and cancellation rules remain separate; no runtime implementation or complete KPI acceptance inferred. See [[concepts/retailcase_kpi_passports_20261015]].
+
+
+## 2026-10-16 - completion plan with two available Claude tasks
+
+Owner requested remaining work and a completion plan. Added roadmap/retailcase_finish_two_claude_20261016.md and two prepared prompts: final operator navigation/help now, KPI UI after installed API_READY. Codex owns residual native permissions, subtree/multi-store receipt and nested BOX coverage, production KPI sources/calculation, unloading START recovery and integrated release. Corrected stale backlog interpretation: CASE/TASK abandon and native actual-time/manual window adapter already exist; certified WORK coverage/numerators are still open. Hardware SHIPPING_GROSS and actual device pilot do not block the owner-approved manual software flow. Prompts prepared only, no ACK/start or all-sprints completion claimed. Index updated.
+
+
+## 2026-10-16 - execution resumed, target21:00 MSK; C0118 and KPI pick proof
+
+Owner authorized execution with about3 Claude attempts and target working software by21:00 today. Activated C0118 navigation/help task in existing file channel; ACK not yet observed, attempts2/3 reserved for ready KPI UI and final fixes. Preparing body-only frozen pick delta/packaging evidence, source guard/rollback; no historical UOM inference or cumulative fact sum. See [[database/retailcase_kpi_pick_proof_20261016]] and [[roadmap/retailcase_finish_two_claude_20261016]].
+
+
+## 2026-10-16 Delivery timing PREPARED
+
+See [native timing](database/retailcase_delivery_time_20261016.md). Additive immutable aware delivery window/arrival metadata, current source authority, guarded native kit and API checkpoint; not yet applied. Architecture 1127 files, 0 cycles, debt72 PASS.
+
+
+## 2026-10-16 Unloading START resolution PREPARED
+
+See [owner-specific intent](database/retailcase_unloading_intent_20261016.md). Frozen six-source native checkpoint, immutable control receipt and shared original OP/load fences. No stock/cost writes, no blind local reset. Not applied yet.
+
+
+## 2026-10-16 Delivery timing and unloading intent APPLIED
+
+See [aware timing](database/retailcase_delivery_time_20261016.md) and [START resolution](database/retailcase_unloading_intent_20261016.md). Nine/seven SHA, ERROR0/INVALID0;25EA?ON_TIME/FULL and6 START control HTTP cases PASS, rollback/REV/control race. Initial ALL_CONTEXT verification failure retained; completion did not repeat DDL.33 actual HTTP/audit pairs/max1304ms, dictionary2545ms/QC829ms decisions assigned. Store arrival/recovery UI added, browser check pending. C0118 ACK K-0069 received; API_READY for C0119 queued, third attempt reserved.
+
+
+## 2026-10-16 Observed picker KPI runtime
+
+[Pick proof](database/retailcase_kpi_pick_proof_20261016.md) is APPLIED1SHA. Fresh BOX24+EA1 gives25EA/1box/1line, four registered-time rates, exact replay/self HTTP/foreign403 PASS. Historic packaging null, whole-work coverage explicitlyfalse; no heartbeat inference. Passport/index updated; compensation/partial-box instrumentation limitations retained.
+
+
+## 2026-10-16 Nested measured BOX PREPARED
+
+[Native manifest](database/retailcase_nested_box_manifest_20261016.md): body-only checkpoint8 sources. Nearest physical leaf coverage retained, measured wrappers allowed; child gross contributes once and outside tare remains explicit. Read-only candidate probe distinct from new LOAD/handover acceptance.
+
+
+## 2026-10-16 Planned HU / direct CASE scopes PREPARED
+
+See [native scope extension](database/retailcase_hu_task_scopes_20261016.md).10 source checkpoint,6 body changes; exact HU metadata/execution shape, both actual cells/current assignment and REV retained. Plan/attach-case/detach-case HTTP identity-only, live acceptance pending. Remaining manager/slot/repack/shipping and SELF scope not claimed closed.
+
+
+## 2026-10-16 HU scope primary APPLIED; secondary policy fix PREPARED
+
+See [HU task scopes](database/retailcase_hu_task_scopes_20261016.md).10SHA/INVALID0, new3EA HU plan/ASSIGN/START PASS; completion rolled back at remaining legacy-only resource-policy preflight. Separate body-only forward kit delegates assigned HU completion to native scope owner, retaining qualifications/shift/physical gates. No frozen applied files changed.
+
+
+## 2026-10-16 HU slot scopes PREPARED
+
+See [slot/repack/unpack scopes](database/retailcase_hu_slot_scopes_20261016.md). Five-body current source/replay/REV extension retaining existing capacity/physical owners. Native acceptance pending; no shipping/SELF/finance completion claim.
+
+## 2026-10-16 — CASE return scope PREPARED
+
+[Решение](database/retailcase_case_return_scope_20261016.md): command-specific manager WARE/GROUP для возврата CASE, native current cells/REV/replay; прежние quantity owners. Новый TEST кейс обязателен; legacy TRANSFER не расширяется.
+
+## 2026-10-16 — завершённые проверки и следующая область чтения
+
+HU task policy APPLIED/2SHA,14HTTP; slots APPLIED/5SHA,5EA/12HTTP; nested BOX APPLIED/8SHA, новый CASE1148→магазин25EA и original/control race PASS. UI окна/прибытия/разгрузки проверен390px. KPI UI root fixture +live API PASS, null/403/503/timezone; две frontend build и quality gate PASS. Локальный Claude CLI OAuth failure до модели,0tokens/cost; повтор не запускался, C0120 передан для ограниченного ревью существующей сессии. Свои тестовые grants/sessions закрыты, волны580/582 DONE,5EA сохранены. Долгие SQL:63 фактические HTTP пары/max1128мс, bounded reads и явный pilot profiling backlog. Следующее: [loading scoped read](components/retailcase_loading_scoped_read_20261016.md); write/shipping/finance и multi-store handover не объявлены готовыми.
+
+## 2026-10-16 — single physical load scope PREPARED
+
+[Узкий native LOAD_SHIPMENT](database/retailcase_single_load_scope_20261016.md): current WARE/GROUP и REV/replay с прежним QC/physical owner; другие shipping команды не расширяются. До этого loading read11HTTP, manager RETURN25EA/10HTTP/rollback/REV и finance read33HTTP прошли; final combined gate ещё впереди.
+
+## 2026-10-16 — working dev flow и итоговая цепочка
+
+Single LOAD APPLIED/4SHA: CASE1150/WARE20854558/trip33655→магазин25EA/FULL,30HTTP WARE/GROUP/foreign/revoke/replay/rollback/REV PASS; свои session71/grants/device retired, wave586 DONE. Manager RETURN CASE1149 вернул25EA/H0; separate compile repair сохранён, wave584 штатно CANCELLED после подтверждённого отказа FINISH. Raw UI устранены flat-only display gate и stale trip/window после403/смены рейса, живой role-only390/JS0 PASS. Finance three scoped reads33HTTP/one snapshot PASS. Full frontend login/KPI/navigation/help200 PASS. Current Oracle37sources/10kits/ERROR0/INVALID0,33focusedtests,86HTTP/max730мс и explicit SQL decisions — `finish-gate/`. [[roadmap/retailcase_finish_two_claude_20261016]] содержит явный остаток; multi-store physical handover и остальные F1 роли не помечены готовыми. C0120 review READY, ACK отсутствует.
+
+## 2026-10-16 — F2 handover implementation contract
+
+[Зафиксирован OPEN контракт](concepts/retailcase_multi_store_handover_contract_20261016.md): физическая единица/чистые recipient leaves, immutable departure + custody overlay, атомарные native handover/receipt/outbox и отсутствие повторного SHIP. Не ослаблять whole-load guards; проследить unloading/returns/KPI consumers до миграции. Подготовка контракта не считается реализацией выдачи двум магазинам. KPI source flags/стратегии приёмки переведены в понятные русские пояснения, без изменения DTO/формул.
+
+## 2026-10-16 — finance composite read gap
+
+Найден legacy home-фильтр детализации рейса/счёта: частичные строки нельзя выдавать за полный итог. [Finance continuation](database/retailcase_finance_scoped_20261015.md): все фактические области до rich read, один snapshot, без записей/изменения DTO. Статус IN_PROGRESS до live composite/отзыв и финальных проверок.
+
+## 2026-10-16 — завершение composite read и мобильного KPI
+
+Finance composite read реализован:14liveHTTP на mixed trip31050/WARE9201+9202, partial403/all200/revoke403/GROUP; invoice1 admin compatibility/foreign403.5unit и7export checks PASS, без финансового признания; actor/grants retired. Финальный SQL review100 explicit pairs/max730мс,41slow rows/явные решения; sourcechain37/ERROR0/INVALID0 сохранён. KPI mobile сжал параметры/шапку и убрал inherited grid:4rates до766px на390×844, actual frontend/fixture PASS. V1 явно считает строку при полном planned quantity; вопрос владельцу про agreed-short completion отправлен, до ответа новое правило не применяется. Финальная очередь — checks/report и bounded Claude review, без новых Oracle изменений.
+
+## 2026-10-16 — ручные измерения не переносятся между контекстами
+
+Raw loading перечитывание состава/смена рейса/auth scope и отказ доступа очищают ручные вес/размеры/temperature confirmations; durable body повтора не изменяется. Fixture recovery и measurement clearing PASS, tooltip объясняет сброс. У отменённой CASE1149 штатно освобождён tare hold (physical2/assembly0, native294мс), история и25EA возврата сохранены. Итоговый список остатка по-прежнему открыт, SHORT-line вопрос ожидает ответа.
+
+## 2026-10-16 — итоговый проверенный dev-пакет
+
+[Отчёт](../reports/retailcase/2026-10-16/finish-gate/report.json):18 evidence artifacts с SHA,37 текущих Oracle sources/ERROR0/INVALID0,38focused+7export tests и полный quality gate1141files/0cycles/debt72+24tooling+обаTS PASS. Обе production builds PASS; после mobile финала admin пересобран, raw JS syntax/UTF8 PASS.100 explicit HTTP pairs/max730мс — не нагрузочный p95. Рабочие entrypoints сохранены, публикаций GitHub нет. Весь проект/все спринты не объявлены завершёнными: оставшиеся F1 write/SELF/delegation, F2 multi-store handover, F3 coverage/правила и pilot перечислены с owners. C0120 read-only review READY, ACK/результата нет.
+
+## 2026-10-16 — разбор compile incident
+
+[Причина и предотвращение](incidents/retailcase_case_return_compile_20261016.md): alias.column нельзя переносить между таблицами; source hash не заменяет компиляцию. Перед kit — bounded schema/SELECT check; TEST factory запускается только после успешного readback и проверки exit code. Ошибка устранена отдельным frozen repair, исходные артефакты сохранены, TYPE продолжен по прежнему ключу без дублей.
+
+## 2026-10-16 — перераспределены два оставшихся запроса Claude
+
+Актуализирован [[roadmap/retailcase_finish_two_claude_20261016]]: Codex закрывает оставшиеся native scopes, передачу поддеревьев двум магазинам, источники KPI и выпускной gate. Claude получает два законченных пакета: UI передачи/приёмки после API_READY и итоговый сквозной UI-прогон с исправлениями. Промпты сохранены в coordination/retailcase-claude/PLAN_TWO_REQUESTS_FINAL.md; готовый C0118/KPI не повторяется, старый C0120 включён в финальный пакет. Это план без ACK/запуска; новые проверки кода не заявлены.
+
+## 2026-10-16 — отмена multi-store и продолжение до11:00
+
+По прямому решению владельца выдача частей одной паллеты разным магазинам снята как управленчески неприменимая. Исторический контракт отмечен CANCELLED_BY_OWNER, roadmap/index и контекст продолжения обновлены. Вложенность и смешанный отбор одному магазину сохраняются. Поручение действует до завершения текущих спринтов либо17.10.2026 11:00MSK. Codex начал точечный CASE TRANSFER scope; до нового readback/acceptance готовность не заявлена.
+
+## 2026-10-16 — CASE TRANSFER native gate и совместный C0121
+
+Передача CASE по области применена: frozen SHA2f0cd47603a092e0eceece21290d553a3b26c76e5835f9a17c7c4580f4f2ce47, readback4SHA/ERROR0/INVALID0. CASE1151/24EA передана новому исполнителю,11HTTP WARE/GROUP/revoke/replay/conflict/foreign и target-no-permission PASS; caller rollback/REV PASS.11 local/Oracle HTTP pairs, max246ms,7slow SQL получили bounded/plan-check решения resources owner. Остаток fixture retained явно. C0121 UI READY передан через прежний файловый канал, ACK не заявлен. По новому поручению ориентир17.10 до08:00MSK; контекст сохранён.
+
+## 2026-10-16 — scoped shipping/finance/shell и driver SELF подготовка
+
+Whole HU/DEPART: readback8SHA/ERROR0/INVALID0,37HTTP/25EA FULL после передачи задания; SQL37pairs/max1742ms/6slow с явными решениями, не p95. Rates trigger readback1SHA/ERROR0/INVALID0;20HTTP rates/monthly/XLSX/revoke/GROUP/rollback/REV и отдельный PLATFORM login. Immutable CASE receipt8HTTP/current manager/revoke/PLATFORM shell/native nav PASS. C0122 READY передан в файловый канал; неизвестный исход нельзя доказывать совпадением текущего исполнителя. Driver fixture выявил flat native binding barrier; подготовлен отдельный SELF kit, legacy RIGHTS не добавлялись, apply/acceptance ещё ожидаются.
+
+## 2026-10-16 — F1 native матрица и выпускные проверки
+
+Driver SELF APPLIED/6SHA/ERROR0/INVALID0,40HTTP identity/binding/expiry/revoke/delegation/composite PASS;6 новых native finance independence checks rollback-only.159 адресных tests, quality gate1145files/0cycles/debt72+24tooling+обаTS и обе production builds PASS.116 новых HTTP:105 exact local/Oracle pairs,11 XLSX — intentional lightweight reads без audit row;43slow/12top SQL с решениями, max1742ms не p95. C0122 ACK IN_PROGRESS, финальные UI/encoding/retirement ещё выполняются. Индекс и актуальный roadmap обновлены; F2 multi-store снят владельцем.
+
+- 16.10.2026: UNLOAD scoped migration APPLIED/2SHA, fresh LOAD→UNLOAD25EA14HTTP/rollback/REV/revoke/GROUP PASS. Final Oracle50sources/15kits/ERROR0/INVALID0, SQL123 audit pairs+11 lightweight reads;163 tests PASS. C0122 live scoped UI11checks PASS; assignment-version CAS preserves old exact replay. Retirement/final release gate продолжаются.
+
+- 16.10.2026 после23:00: C0121/C0122 интегрированы, никаких новых запросов Claude. UNLOAD fixture штатно возвращена25EA/P25H0, tare hold освобождён, два неотправленных TEST рейса отменены;16users/17grants/15roles/4groups/3resources/2devices retired, история сохранена. Final quality/163focused tests/raw gates/encoding PASS; bounded120GET4workers p95=578ms без ошибок, не shift capacity. Первый load-набор сохранил ошибку теста:40 original-actor403. SQL review375HTTP/364audit pairs/87slow/12top decisions. F3 несогласованные правила и реальные pilot/cutover gates остаются открытыми.
+
+- 16.10.2026 продолжение после23:00: найден и закрыт программный остаток KH08 — публичное offline-чтение общей панели знаний. Только три bundled статьи/поиск/связи/редакция, без кеша native данных;401/403/404/503 не подменяются. Actual offline browser11checks и19publication/access tests PASS, quality1147/0/debt72+24tooling/обаTS и admin build PASS. Обновлён текущий раздел исходного living checklist, прежние таблицы явно исторические. KPI решения и реальные эксплуатационные gates остаются открытыми.
+
+- 16.10.2026 23:16MSK: аудит остатка повторно подтвердил F3_RULES/F3_COVERAGE/PILOT; ответов и новых внешних данных нет,71source hashes совпали. C0121/C0122 integrated, новая задача Claude отсутствует. Тот же блокер три consecutive goal turns: goal BLOCKED, не COMPLETE/PAUSED; критерии возобновления в coordination/retailcase-claude/BLOCKED_AUDIT_20261016.md. Новых функциональных изменений и повторных TEST factory нет.
+
+- 17.10.2026: владелец поручил мелкие решения принимать самостоятельно. Codex зафиксировал выбранные правила BOX/закрытия с недостачей/возвратов в KPI-паспорте; прежнее ожидание этих ответов снято. План: Codex — реализация KPI/полнота часов/выпускное восстановление, Claude — один итоговый UI-пакет после готового API, затем совместный сквозной прогон. Это план, не запуск/не доказательство завершения.
+
+## 2026-10-17 — Ponytail/YAGNI и актуальный контекст
+По поручению владельца подтверждён общий Minimal Code Discipline в AGENTS.md и ссылка CLAUDE.md (Claude K-0078). Правило распространяется на Codex, Claude и будущих агентов; дополнительные агенты не запускались. Обновлён RESUME_TO_20261017_1100.md: устаревшая блокировка отделена от текущей работы, сохранены KPI V2, APPLIED REPORT scope, реальные UI/HTTP доказательства, compiled launcher и остаток выпуска. Индекс обновлён без расширения; описание миграции приведено к подтверждённому dev APPLIED. Новые функции и повторные проверки бизнес-сценариев в рамках этого изменения не добавлялись.
+
+## 2026-10-17 — локальный программный выпуск
+KPI V2/native/API/compiled UI PASS. CASE1154 BOX24+EA1 → scoped MOVE/manual QC/LOAD/DEPART/ON_TIME/FULL25EA, P0H0; STORE-only login/акт1440/390 real PASS. CASE1153 restart exact replay сохранил ответ/P25H0. Legacy-only MOVE execute gate заменён существующим native CASE scope, frozen APPLIED/1SHA; итог53sources/17kits/ERROR0/INVALID0. C0124/C0125 RELEASE приняты. Quality1151/0/debt72/24tooling/обаTS;70auditpairs/16SQLlogs/12top/28decisions, maxSQL945ms/maxHTTP1020ms, не load/p95.6QA users/3grants/3roles/2resources/2devices отключены, stock/history сохранены. Index/KPI/roadmap/runbook обновлены; реальный hardware/pilot/Oracle backuprestore/cutover отдельно. GitHub не публиковался.

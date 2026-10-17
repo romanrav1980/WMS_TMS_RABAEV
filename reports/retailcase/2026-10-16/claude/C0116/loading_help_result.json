@@ -1,0 +1,38 @@
+{
+ "writes": [],
+ "fields": [
+  {
+   "id": "loadGross",
+   "title": true,
+   "helpId": "loading.measure.gross"
+  },
+  {
+   "id": "loadWidth",
+   "title": true,
+   "helpId": "loading.measure.width"
+  },
+  {
+   "id": "loadDepth",
+   "title": true,
+   "helpId": "loading.measure.depth"
+  },
+  {
+   "id": "loadHeight",
+   "title": true,
+   "helpId": "loading.measure.height"
+  },
+  {
+   "id": "loadConfirm",
+   "title": true,
+   "helpId": "loading.confirm"
+  }
+ ],
+ "links": [
+  "/help/manual-weight.html#enter",
+  "/help/manual-weight.html#retry"
+ ],
+ "legend": "Вес и размеры места — вводит пользователь Справка",
+ "overflow390": 22,
+ "overflow1440": 0,
+ "status": "PASS"
+}

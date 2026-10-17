@@ -1,0 +1,13 @@
+{
+  "status": "APPLY_STOPPED_PRESERVE_PARTIAL_STATE",
+  "at_utc": "2026-10-15T16:51:20.042762+00:00",
+  "identity": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "frozen_manifest_sha256": "4f12af11e4fd524f28f0cd6ecf846a10679121e415045a2cabeb984ecd7945b3",
+  "independent_review": "Root native/code review and separate store_navigation read-only PASS",
+  "quantity_writes": false,
+  "reviewed_manifest_sha256": "dfcebaf65bdf64725993e4f09c280e682af5ab47236849b3f50b5f75d94976da",
+  "returncode": 3762504530
+}

@@ -1,0 +1,104 @@
+{
+  "state": "ACCESS_RETIRED_COUNT_DONE_EMPTY_HISTORY_RETAINED",
+  "hardware_verified": false,
+  "simulated_inventory_loss": "1 EA",
+  "history_retained": true,
+  "claim": {
+    "inventory_task_id": 32,
+    "status": "IN_PROGRESS",
+    "warehouse_id": 20220394,
+    "cell": "AS16C35cea92c27",
+    "article": "AS16A35CEA92C27",
+    "assigned_to": "admin",
+    "priority": 100,
+    "revision_id": null,
+    "count_operation_id": null,
+    "short_id": 24,
+    "recovery_state": null,
+    "recovery_deadline_at": "2026-10-15 19:28:29.552093",
+    "fact_quantity": null
+  },
+  "count_request": {
+    "operation_id": "SQ16.bc4f60f03a.COUNT",
+    "revision_id": 402,
+    "inventory_task_id": 32,
+    "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+    "counts": [
+      {
+        "uid": "SQ16.LOT:bc4f60f03a",
+        "cell": "AS16C35cea92c27",
+        "article": "AS16A35CEA92C27",
+        "unit": "EA",
+        "quantity": "0",
+        "expected_stock_version": 3,
+        "unit_keys": [],
+        "scans": []
+      }
+    ]
+  },
+  "count_canonical": "{\"actor\":\"admin\",\"command_type\":\"INVENTORY_COUNT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"counts\":[{\"article\":\"AS16A35CEA92C27\",\"cell\":\"AS16C35cea92c27\",\"expected_stock_version\":3,\"quantity\":\"0\",\"uid\":\"SQ16.LOT:bc4f60f03a\",\"unit\":\"EA\",\"unit_keys\":[]}],\"inventory_task_id\":32,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"requested_counts\":[{\"article\":\"AS16A35CEA92C27\",\"cell\":\"AS16C35cea92c27\",\"expected_stock_version\":3,\"quantity\":\"0\",\"scans\":[],\"uid\":\"SQ16.LOT:bc4f60f03a\",\"unit\":\"EA\",\"unit_keys\":[]}]},\"operation_id\":\"SQ16.bc4f60f03a.COUNT\",\"source\":{\"revision_id\":402},\"units\":[]}",
+  "count_rollback": {
+    "operation_id": "SQ16.bc4f60f03a.COUNT",
+    "revision_id": 402,
+    "counts": [
+      {
+        "uid": "SQ16.LOT:bc4f60f03a",
+        "cell": "AS16C35cea92c27",
+        "base_uom": "EA",
+        "before": "1",
+        "after": "0",
+        "delta": "-1",
+        "event_id": 6446759
+      }
+    ],
+    "inventory_task_id": 32,
+    "short_id": 24,
+    "replenish_task_id": null,
+    "observed_quantity": "0",
+    "recovery_state": null,
+    "outbox_id": 5476
+  },
+  "count": {
+    "operation_id": "SQ16.bc4f60f03a.COUNT",
+    "revision_id": 402,
+    "counts": [
+      {
+        "uid": "SQ16.LOT:bc4f60f03a",
+        "cell": "AS16C35cea92c27",
+        "base_uom": "EA",
+        "before": "1",
+        "after": "0",
+        "delta": "-1",
+        "event_id": 6446761
+      }
+    ],
+    "inventory_task_id": 32,
+    "short_id": 24,
+    "replenish_task_id": null,
+    "observed_quantity": "0",
+    "recovery_state": null,
+    "outbox_id": 5477
+  },
+  "empty_return_refused": "CASE_EMPTY_CANCEL_SHARED_OR_EXECUTED_PICK_TASK: accepted short completes the pick task; preserve history",
+  "close": {
+    "operation_id": "SQ16.bc4f60f03a.RETIRE.CLOSE",
+    "case_pick_task_id": 1143,
+    "already_closed": false,
+    "content_version": 3,
+    "physical_stock_changed": false,
+    "status": "WAIT_CONTROL"
+  },
+  "wave_finish_refused": "WAVE_EXECUTION_OR_SHIPPING_PENDING: retain closed empty CASE/history; no fabricated shipment or state rewrite",
+  "tare_cancel_refused": "TARE_BOOK_CASE_PHYSICALLY_UNUSED_REQUIRED: closed empty CASE retains its original HELD book until an explicit canonical disposition exists",
+  "retained_tare": {
+    "physical_qty": 3,
+    "assembly_qty": 3,
+    "balance_version": 10
+  },
+  "qualification": {
+    "resource_id": 67,
+    "task_type": "CASE_PICK",
+    "active": false
+  },
+  "protected_after": "c2f3c946a9bfd4a9c475dbf8443288479b8698a954334f89c66b073da52606e9"
+}

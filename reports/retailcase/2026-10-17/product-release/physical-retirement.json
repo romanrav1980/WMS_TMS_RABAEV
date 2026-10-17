@@ -1,0 +1,111 @@
+{
+  "commands": {
+    "TARE": {
+      "wire": "{\"actor\":\"admin\",\"command_type\":\"TARE_BOOK_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{},\"operation_id\":\"OC16.d21d129674.RELEASE.TARE\",\"source\":{\"booking_operation_id\":\"OC16.d21d129674.TARE.BOOK\"},\"units\":[]}",
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.d21d129674.RELEASE.TARE",
+        "status": "CANCELLED",
+        "place_kind": "CASE",
+        "place_id": "1153",
+        "pallet_type_id": 32,
+        "warehouse_id": 20033496,
+        "available_quantity": "2",
+        "quantity": "1",
+        "physical_tare_changed": false,
+        "goods_stock_changed": false,
+        "outbox_id": 5723
+      }
+    },
+    "WAVE": {
+      "wire": "{\"actor\":\"admin\",\"command_type\":\"WAVE_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"only_cancelled_replenishment\":0,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"reservation_kind\":null},\"operation_id\":\"OC16.d21d129674.RELEASE.WAVE\",\"source\":{\"document_id\":592,\"document_type\":\"PICK_WAVE\"},\"units\":[]}",
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.d21d129674.RELEASE.WAVE",
+        "document_type": "PICK_WAVE",
+        "document_id": 592,
+        "released_count": 0,
+        "outbox_id": 5724
+      }
+    },
+    "PLAN": {
+      "wire": "{\"actor\":\"admin\",\"command_type\":\"PICK_PLAN_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"only_cancelled_replenishment\":0,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"reservation_kind\":null},\"operation_id\":\"OC16.d21d129674.RELEASE.PLAN\",\"source\":{\"document_id\":2223,\"document_type\":\"PICK_PLAN\"},\"units\":[]}",
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.d21d129674.RELEASE.PLAN",
+        "document_type": "PICK_PLAN",
+        "document_id": 2223,
+        "released_count": 0,
+        "outbox_id": 5725
+      }
+    }
+  },
+  "http": [
+    {
+      "label": "finish_delivered_wave",
+      "path": "/api/picking/waves/594/finish-execution",
+      "status": 200,
+      "api_call_id": "72734",
+      "request_id": "ec92177e-06e2-4faf-89d9-958c915a2ee4"
+    }
+  ],
+  "finish_delivered_wave": {
+    "wave_id": 594,
+    "kind": "CUSTOMER_ORDER",
+    "items": [
+      {
+        "kind": "PICK_TASK",
+        "id": "2163",
+        "status": "DONE",
+        "actor": null,
+        "reason": null,
+        "quantity": "25"
+      },
+      {
+        "kind": "REPLENISHMENT",
+        "id": "1658",
+        "status": "CANCELLED",
+        "actor": null,
+        "reason": null,
+        "quantity": null
+      },
+      {
+        "kind": "CASE",
+        "id": "1154",
+        "status": "SHIPPED",
+        "actor": "OC16P4f58710060",
+        "reason": null,
+        "quantity": "25"
+      }
+    ],
+    "blocking_count": 0,
+    "completion_outcome": "PHYSICAL_EXECUTION_COMPLETE",
+    "operation_id": "OC16.4f58710060.FINAL.FINISH",
+    "status": "DONE",
+    "completed": true,
+    "ready": false,
+    "outbox_id": 5726
+  },
+  "warehouses": {
+    "20033496": [
+      {
+        "p": 25,
+        "h": 0
+      }
+    ],
+    "20137024": [
+      {
+        "p": 0,
+        "h": 0
+      }
+    ]
+  },
+  "delivered_tare_history": [
+    {
+      "operation_id": "OC16.4f58710060.TARE.BOOK",
+      "status": "HELD"
+    }
+  ],
+  "delivered_tare_decision": "Preserve delivered pallet/tare custody journals; do not cancel shipped booking as an unshipped reservation.",
+  "state": "PASS_RETURNED_CASE_WAVE_PLAN_TARE_RELEASED_DELIVERED_WAVE_FINISHED_STOCK_HISTORY_RETAINED"
+}

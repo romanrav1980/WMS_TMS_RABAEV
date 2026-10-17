@@ -1,0 +1,87 @@
+{
+  "status": "PASS",
+  "source_checks": [
+    {
+      "object": "RRL_OPC_EVIDENCE_API",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "298027ccafbc311c6ea5bd9430a9913a939ad718c0e40372872ec1899cf9df2e"
+    },
+    {
+      "object": "RRL_OPC_EVIDENCE_API",
+      "type": "PACKAGE",
+      "source_exact": true,
+      "sha256": "136edb3d4c3adc53b197c05c53d831b84c0feec1347dc0a7b6e590ff0aea0bcb"
+    },
+    {
+      "object": "RRL_OPC_EVIDENCE_GUARD",
+      "type": "TRIGGER",
+      "source_exact": true,
+      "sha256": "f778e3d1e0e711d039768fb9c70a48e69d35a89e2095be60fd1304bf27cb2be4"
+    }
+  ],
+  "user_errors": 0,
+  "invalid_count": 0,
+  "ledger": [
+    {
+      "migration_id": "2026-10-15-opc-scale-evidence",
+      "status": "APPLIED"
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_name": "RRL_OPC_EVIDENCE_KIND_CK",
+      "status": "ENABLED"
+    },
+    {
+      "constraint_name": "RRL_OPC_EVIDENCE_PK",
+      "status": "ENABLED"
+    },
+    {
+      "constraint_name": "RRL_OPC_EVIDENCE_SHA_CK",
+      "status": "ENABLED"
+    },
+    {
+      "constraint_name": "SYS_C0019134",
+      "status": "ENABLED"
+    },
+    {
+      "constraint_name": "SYS_C0019135",
+      "status": "ENABLED"
+    },
+    {
+      "constraint_name": "SYS_C0019136",
+      "status": "ENABLED"
+    },
+    {
+      "constraint_name": "SYS_C0019137",
+      "status": "ENABLED"
+    },
+    {
+      "constraint_name": "SYS_C0019138",
+      "status": "ENABLED"
+    },
+    {
+      "constraint_name": "SYS_C0019139",
+      "status": "ENABLED"
+    },
+    {
+      "constraint_name": "SYS_C0019140",
+      "status": "ENABLED"
+    },
+    {
+      "constraint_name": "SYS_C0019141",
+      "status": "ENABLED"
+    },
+    {
+      "constraint_name": "SYS_C0019142",
+      "status": "ENABLED"
+    },
+    {
+      "constraint_name": "SYS_C0019143",
+      "status": "ENABLED"
+    }
+  ],
+  "recent_slow": [],
+  "decision": "Native archive17/8/12ms. Existing unique identity/capture lookups retained; no index added. Repeated >1000ms needs query/plan attribution. Native caller-owned acceptance generates no HTTP API audit."
+}

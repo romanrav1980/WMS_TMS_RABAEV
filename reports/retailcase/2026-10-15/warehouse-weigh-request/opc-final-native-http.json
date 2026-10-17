@@ -1,0 +1,113 @@
+{
+  "status": "PASS",
+  "native_archive": {
+    "signature_domain": "ASM_FINAL",
+    "tare_capture_key": "F4B685621BE6DED35F6AD0EE6C6B610AC3315B390734C832CB839B608622BB89",
+    "tare_weight_kg": "0.5",
+    "net_weight_kg": "1",
+    "composition_signature": "ADDFFDCCD2A0408EAF2D861BF02BE349144D33AC358B6C2FFCE101F62831ED50",
+    "composition_signature_version": 3,
+    "capture_key": "163BD3827534486732C4139D5990AFD91139530C2DE4E862F44EACA8BD14F9D0",
+    "device_id": "WHREQ15.SCALE",
+    "capture_id": "WH.OPC.52ec28e9b7454dbd9515dca36fcc6d94",
+    "warehouse_id": 13583852,
+    "post_cell": "QIPcdbf4c0962",
+    "device_mode": "TEST",
+    "purpose": "FINAL_GROSS",
+    "case_task_id": 1136,
+    "case_content_version": 3,
+    "scan_container": "090000000000008014",
+    "pallet_type_id": 32,
+    "type_version": 2,
+    "basis": "GROSS",
+    "weight_kg": "1.5",
+    "device_policy_version": 1,
+    "calibration_ref": "SIMULATED_TEST_NOT_HARDWARE:WHREQ15",
+    "resolution_kg": "0.001",
+    "source_sha256": "2CD24B798A5B716359A9F994BFD75095BA26BB176AEE48417C6FD96250A83C08",
+    "measured_at": "2026-10-15T13:15:25.561551+00:00",
+    "sample_count": 5,
+    "span_ms": 2106,
+    "status": "ARCHIVED",
+    "stock_posted": false
+  },
+  "capture_key": "163BD3827534486732C4139D5990AFD91139530C2DE4E862F44EACA8BD14F9D0",
+  "measured_at": "2026-10-15T13:15:25.561551+00:00",
+  "weight_kg": "1.5",
+  "request": {
+    "case_task_id": 1136,
+    "device_id": "WHREQ15.SCALE",
+    "expected_composition_signature": "ADDFFDCCD2A0408EAF2D861BF02BE349144D33AC358B6C2FFCE101F62831ED50",
+    "expected_content_version": 3,
+    "purpose": "FINAL_GROSS",
+    "request_id": "WHREQ15.OPC.FINAL:cba726b45fe2483d98edd4de8a94c7fe",
+    "scan_container": "090000000000008014",
+    "tare_capture_key": "F4B685621BE6DED35F6AD0EE6C6B610AC3315B390734C832CB839B608622BB89"
+  },
+  "archive": {
+    "status": "ARCHIVED",
+    "exact_replay": true
+  },
+  "evidence": {
+    "status": "EVIDENCE_ARCHIVED",
+    "binding": "MATCHED"
+  },
+  "source_before": {
+    "source": [
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 0,
+        "stock_version": 11
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "child": [
+      {
+        "lot_uid": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "remain": 1,
+        "hard_reserved_base": 1
+      }
+    ]
+  },
+  "source_after": {
+    "source": [
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 0,
+        "stock_version": 11
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "child": [
+      {
+        "lot_uid": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "remain": 1,
+        "hard_reserved_base": 1
+      }
+    ]
+  },
+  "physical_hardware": false,
+  "stock_changed": false,
+  "local_encrypted_opc": true,
+  "capture_sha256": "2CD24B798A5B716359A9F994BFD75095BA26BB176AEE48417C6FD96250A83C08",
+  "raw_sha256": "8A8A8710AF68CACACC5D6E2BDC8AFFAADAAC4263421916120334B31EB5184017",
+  "slow_sql": []
+}

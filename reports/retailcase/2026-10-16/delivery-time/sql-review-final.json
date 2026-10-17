@@ -1,0 +1,663 @@
+{
+  "state": "PASS_EXPLICIT_HTTP_PAIRS_BOUNDED_SQL_REVIEW",
+  "read_only": true,
+  "local_pairs": [
+    {
+      "request_id": "88c054bc-9ad3-4100-9dd9-02fbb85af8b9",
+      "api_call_id": 69867,
+      "path": "/api/sku-quality-weight/20790457/AS16AC0FB95573E",
+      "response_status": 200,
+      "duration_ms": 329
+    },
+    {
+      "request_id": "61c2699a-63cf-4fcc-9991-7553577af57c",
+      "api_call_id": 69868,
+      "path": "/api/outgoing-quality/OC16.5e071e9f41.DLV.ST",
+      "response_status": 200,
+      "duration_ms": 919
+    },
+    {
+      "request_id": "9113aa38-efa7-4072-8f64-43d9f5f419ef",
+      "api_call_id": 69869,
+      "path": "/api/outgoing-quality/OC16.5e071e9f41.DLV.ST/weight",
+      "response_status": 200,
+      "duration_ms": 346
+    },
+    {
+      "request_id": "104f5f79-7a24-4c32-b817-6706435541bc",
+      "api_call_id": 69870,
+      "path": "/api/transport/loading/confirm",
+      "response_status": 409,
+      "duration_ms": 51
+    },
+    {
+      "request_id": "56e39192-3276-46f7-a5b8-9d5f409d0ef8",
+      "api_call_id": 69871,
+      "path": "/api/transport/loading/single-preview",
+      "response_status": 200,
+      "duration_ms": 284
+    },
+    {
+      "request_id": "073827a0-9acf-44b1-bf9e-0a2527469b79",
+      "api_call_id": 69872,
+      "path": "/api/transport/loading/single-preview",
+      "response_status": 200,
+      "duration_ms": 429
+    },
+    {
+      "request_id": "5fa5202c-9ae2-4f13-b1ea-836e8447dd65",
+      "api_call_id": 69873,
+      "path": "/api/transport/loading/single-preview",
+      "response_status": 200,
+      "duration_ms": 232
+    },
+    {
+      "request_id": "74d12105-3038-44d4-86db-7ed60e1b6090",
+      "api_call_id": 69874,
+      "path": "/api/transport/loading/confirm-single",
+      "response_status": 200,
+      "duration_ms": 1304
+    },
+    {
+      "request_id": "1cf30c14-e24c-4f4a-ac3e-97cf01480904",
+      "api_call_id": 69875,
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 203
+    },
+    {
+      "request_id": "729b3df3-4c0a-4a6a-b726-7a157f071b68",
+      "api_call_id": 69876,
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 67
+    },
+    {
+      "request_id": "4dd82466-4de3-43be-a6ad-a5b3c498e5ad",
+      "api_call_id": 69877,
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 123
+    },
+    {
+      "request_id": "762e8465-3e2e-4567-8f7d-6fa324a84f07",
+      "api_call_id": 69878,
+      "path": "/api/delivery/timing/window",
+      "response_status": 403,
+      "duration_ms": 231
+    },
+    {
+      "request_id": "422b0e2d-31e2-49ea-8f1c-271255489aa6",
+      "api_call_id": 69879,
+      "path": "/api/transport/loading/33653/depart",
+      "response_status": 200,
+      "duration_ms": 387
+    },
+    {
+      "request_id": "a7658a21-fcc5-455b-b0fe-bc348d936b9d",
+      "api_call_id": 69880,
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 103
+    },
+    {
+      "request_id": "277fca70-d18b-4701-a911-4fa010fd9a55",
+      "api_call_id": 69881,
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 176
+    },
+    {
+      "request_id": "9e12ea7a-524a-490b-b1b0-4af7159988a3",
+      "api_call_id": 69882,
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 144
+    },
+    {
+      "request_id": "c81665ed-4aab-4d12-9eda-1132481ed997",
+      "api_call_id": 69883,
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 409,
+      "duration_ms": 72
+    },
+    {
+      "request_id": "b67fce73-3435-4cb9-8ef4-88a50177b2d2",
+      "api_call_id": 69884,
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 403,
+      "duration_ms": 102
+    },
+    {
+      "request_id": "67d249be-eea8-4048-9503-f903f09b4e9b",
+      "api_call_id": 69885,
+      "path": "/api/delivery/store-receipts/policy",
+      "response_status": 200,
+      "duration_ms": 102
+    },
+    {
+      "request_id": "9b7b4ebc-497e-4eca-8cf4-67157b2fe5fb",
+      "api_call_id": 69886,
+      "path": "/api/delivery/store-receipts/preview",
+      "response_status": 200,
+      "duration_ms": 152
+    },
+    {
+      "request_id": "e4125363-848c-4648-ab8d-529ddd066f46",
+      "api_call_id": 69887,
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "response_status": 200,
+      "duration_ms": 116
+    },
+    {
+      "request_id": "256350cc-0108-4a34-aec1-b23d8858a0ed",
+      "api_call_id": 69888,
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 492
+    },
+    {
+      "request_id": "4af59559-a673-44a8-ba39-f35fc2d5d9cd",
+      "api_call_id": 69889,
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 85
+    },
+    {
+      "request_id": "591446ec-d469-4bd4-99da-478def0cafb0",
+      "api_call_id": 69890,
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 200,
+      "duration_ms": 221
+    },
+    {
+      "request_id": "f0941816-0aa3-4e71-81d6-e6e7ab7c898b",
+      "api_call_id": 69891,
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 403,
+      "duration_ms": 73
+    },
+    {
+      "request_id": "98bacb9d-c99e-437c-8a76-21e81f8297f0",
+      "api_call_id": 69892,
+      "path": "/api/resources/picker-kpis",
+      "response_status": 200,
+      "duration_ms": 224
+    },
+    {
+      "request_id": "63f11d82-7e81-45c2-8366-1fea6c9e2094",
+      "api_call_id": 69893,
+      "path": "/api/resources/picker-kpis",
+      "response_status": 403,
+      "duration_ms": 66
+    },
+    {
+      "request_id": "7a5ca763-76c6-43b6-a804-9c21af17a20e",
+      "api_call_id": 69958,
+      "path": "/api/delivery/store-receipts/unloading/abandon-start",
+      "response_status": 200,
+      "duration_ms": 327
+    },
+    {
+      "request_id": "cad033f5-3cec-4be2-b84a-c5e4e53c692c",
+      "api_call_id": 69959,
+      "path": "/api/delivery/store-receipts/unloading/abandon-start",
+      "response_status": 200,
+      "duration_ms": 72
+    },
+    {
+      "request_id": "72439491-3817-4986-8054-2e7689f11d1a",
+      "api_call_id": 69960,
+      "path": "/api/delivery/store-receipts/unloading/abandon-start",
+      "response_status": 409,
+      "duration_ms": 93
+    },
+    {
+      "request_id": "b1997bf5-5987-43b4-a7ce-223968cef5eb",
+      "api_call_id": 69961,
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "response_status": 409,
+      "duration_ms": 85
+    },
+    {
+      "request_id": "4816235e-1e6d-40e9-9dfd-a7fb6ffa7c52",
+      "api_call_id": 69962,
+      "path": "/api/delivery/store-receipts/unloading/abandon-start",
+      "response_status": 403,
+      "duration_ms": 81
+    },
+    {
+      "request_id": "80fcfb67-b686-4ee1-82f9-c51544775526",
+      "api_call_id": 69963,
+      "path": "/api/delivery/store-receipts/unloading/abandon-start",
+      "response_status": 200,
+      "duration_ms": 79
+    }
+  ],
+  "local_tail_bytes": 4556121,
+  "local_line_cap": 12000,
+  "native_direct_calls_not_http_paired": true,
+  "limitations": [
+    "Bounded shared V$SQL is cumulative, not per-case latency or p95.",
+    "Local source window can omit older fixture setup; no invented pairing for direct native calls."
+  ],
+  "api": [
+    {
+      "api_call_id": 69867,
+      "request_id": "88c054bc-9ad3-4100-9dd9-02fbb85af8b9",
+      "path": "/api/sku-quality-weight/20790457/AS16AC0FB95573E",
+      "response_status": 200,
+      "duration_ms": 329
+    },
+    {
+      "api_call_id": 69868,
+      "request_id": "61c2699a-63cf-4fcc-9991-7553577af57c",
+      "path": "/api/outgoing-quality/OC16.5e071e9f41.DLV.ST",
+      "response_status": 200,
+      "duration_ms": 919
+    },
+    {
+      "api_call_id": 69869,
+      "request_id": "9113aa38-efa7-4072-8f64-43d9f5f419ef",
+      "path": "/api/outgoing-quality/OC16.5e071e9f41.DLV.ST/weight",
+      "response_status": 200,
+      "duration_ms": 346
+    },
+    {
+      "api_call_id": 69870,
+      "request_id": "104f5f79-7a24-4c32-b817-6706435541bc",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 409,
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 69871,
+      "request_id": "56e39192-3276-46f7-a5b8-9d5f409d0ef8",
+      "path": "/api/transport/loading/single-preview",
+      "response_status": 200,
+      "duration_ms": 284
+    },
+    {
+      "api_call_id": 69872,
+      "request_id": "073827a0-9acf-44b1-bf9e-0a2527469b79",
+      "path": "/api/transport/loading/single-preview",
+      "response_status": 200,
+      "duration_ms": 429
+    },
+    {
+      "api_call_id": 69873,
+      "request_id": "5fa5202c-9ae2-4f13-b1ea-836e8447dd65",
+      "path": "/api/transport/loading/single-preview",
+      "response_status": 200,
+      "duration_ms": 232
+    },
+    {
+      "api_call_id": 69874,
+      "request_id": "74d12105-3038-44d4-86db-7ed60e1b6090",
+      "path": "/api/transport/loading/confirm-single",
+      "response_status": 200,
+      "duration_ms": 1304
+    },
+    {
+      "api_call_id": 69875,
+      "request_id": "1cf30c14-e24c-4f4a-ac3e-97cf01480904",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 203
+    },
+    {
+      "api_call_id": 69876,
+      "request_id": "729b3df3-4c0a-4a6a-b726-7a157f071b68",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 67
+    },
+    {
+      "api_call_id": 69877,
+      "request_id": "4dd82466-4de3-43be-a6ad-a5b3c498e5ad",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 123
+    },
+    {
+      "api_call_id": 69878,
+      "request_id": "762e8465-3e2e-4567-8f7d-6fa324a84f07",
+      "path": "/api/delivery/timing/window",
+      "response_status": 403,
+      "duration_ms": 231
+    },
+    {
+      "api_call_id": 69879,
+      "request_id": "422b0e2d-31e2-49ea-8f1c-271255489aa6",
+      "path": "/api/transport/loading/33653/depart",
+      "response_status": 200,
+      "duration_ms": 387
+    },
+    {
+      "api_call_id": 69880,
+      "request_id": "a7658a21-fcc5-455b-b0fe-bc348d936b9d",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 103
+    },
+    {
+      "api_call_id": 69881,
+      "request_id": "277fca70-d18b-4701-a911-4fa010fd9a55",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 176
+    },
+    {
+      "api_call_id": 69882,
+      "request_id": "9e12ea7a-524a-490b-b1b0-4af7159988a3",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 144
+    },
+    {
+      "api_call_id": 69883,
+      "request_id": "c81665ed-4aab-4d12-9eda-1132481ed997",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 409,
+      "duration_ms": 72
+    },
+    {
+      "api_call_id": 69884,
+      "request_id": "b67fce73-3435-4cb9-8ef4-88a50177b2d2",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 403,
+      "duration_ms": 102
+    },
+    {
+      "api_call_id": 69885,
+      "request_id": "67d249be-eea8-4048-9503-f903f09b4e9b",
+      "path": "/api/delivery/store-receipts/policy",
+      "response_status": 200,
+      "duration_ms": 102
+    },
+    {
+      "api_call_id": 69886,
+      "request_id": "9b7b4ebc-497e-4eca-8cf4-67157b2fe5fb",
+      "path": "/api/delivery/store-receipts/preview",
+      "response_status": 200,
+      "duration_ms": 152
+    },
+    {
+      "api_call_id": 69887,
+      "request_id": "e4125363-848c-4648-ab8d-529ddd066f46",
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "response_status": 200,
+      "duration_ms": 116
+    },
+    {
+      "api_call_id": 69888,
+      "request_id": "256350cc-0108-4a34-aec1-b23d8858a0ed",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 492
+    },
+    {
+      "api_call_id": 69889,
+      "request_id": "4af59559-a673-44a8-ba39-f35fc2d5d9cd",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 85
+    },
+    {
+      "api_call_id": 69890,
+      "request_id": "591446ec-d469-4bd4-99da-478def0cafb0",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 200,
+      "duration_ms": 221
+    },
+    {
+      "api_call_id": 69891,
+      "request_id": "f0941816-0aa3-4e71-81d6-e6e7ab7c898b",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 403,
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 69892,
+      "request_id": "98bacb9d-c99e-437c-8a76-21e81f8297f0",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 200,
+      "duration_ms": 224
+    },
+    {
+      "api_call_id": 69893,
+      "request_id": "63f11d82-7e81-45c2-8366-1fea6c9e2094",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 403,
+      "duration_ms": 66
+    },
+    {
+      "api_call_id": 69958,
+      "request_id": "7a5ca763-76c6-43b6-a804-9c21af17a20e",
+      "path": "/api/delivery/store-receipts/unloading/abandon-start",
+      "response_status": 200,
+      "duration_ms": 327
+    },
+    {
+      "api_call_id": 69959,
+      "request_id": "cad033f5-3cec-4be2-b84a-c5e4e53c692c",
+      "path": "/api/delivery/store-receipts/unloading/abandon-start",
+      "response_status": 200,
+      "duration_ms": 72
+    },
+    {
+      "api_call_id": 69960,
+      "request_id": "72439491-3817-4986-8054-2e7689f11d1a",
+      "path": "/api/delivery/store-receipts/unloading/abandon-start",
+      "response_status": 409,
+      "duration_ms": 93
+    },
+    {
+      "api_call_id": 69961,
+      "request_id": "b1997bf5-5987-43b4-a7ce-223968cef5eb",
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "response_status": 409,
+      "duration_ms": 85
+    },
+    {
+      "api_call_id": 69962,
+      "request_id": "4816235e-1e6d-40e9-9dfd-a7fb6ffa7c52",
+      "path": "/api/delivery/store-receipts/unloading/abandon-start",
+      "response_status": 403,
+      "duration_ms": 81
+    },
+    {
+      "api_call_id": 69963,
+      "request_id": "80fcfb67-b686-4ee1-82f9-c51544775526",
+      "path": "/api/delivery/store-receipts/unloading/abandon-start",
+      "response_status": 200,
+      "duration_ms": 79
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 5013,
+      "api_call_id": 69868,
+      "elapsed_ms": 829,
+      "module": "WMS_API:69868",
+      "action": "GET /api/outgoing-quality/OC16.5",
+      "sql_sample": "Current warehouse QC status access"
+    },
+    {
+      "log_id": 5014,
+      "api_call_id": 69877,
+      "elapsed_ms": 48,
+      "module": "WMS_API:69877",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5015,
+      "api_call_id": 69878,
+      "elapsed_ms": 72,
+      "module": "WMS_API:69878",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5016,
+      "api_call_id": 69880,
+      "elapsed_ms": 49,
+      "module": "WMS_API:69880",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5017,
+      "api_call_id": 69883,
+      "elapsed_ms": 26,
+      "module": "WMS_API:69883",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5018,
+      "api_call_id": 69884,
+      "elapsed_ms": 48,
+      "module": "WMS_API:69884",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5019,
+      "api_call_id": 69891,
+      "elapsed_ms": 15,
+      "module": "WMS_API:69891",
+      "action": "GET /api/delivery/timing/kpis",
+      "sql_sample": "Scoped delivery KPI window cohort"
+    },
+    {
+      "log_id": 5020,
+      "api_call_id": 69893,
+      "elapsed_ms": 5,
+      "module": "WMS_API:69893",
+      "action": "GET /api/resources/picker-kpis",
+      "sql_sample": "Scoped immutable picker KPI window"
+    },
+    {
+      "log_id": 5024,
+      "api_call_id": 69960,
+      "elapsed_ms": 37,
+      "module": "WMS_API:69960",
+      "action": "POST /api/delivery/store-receipt",
+      "sql_sample": "Start unloading original departed store place"
+    },
+    {
+      "log_id": 5025,
+      "api_call_id": 69961,
+      "elapsed_ms": 41,
+      "module": "WMS_API:69961",
+      "action": "POST /api/delivery/store-receipt",
+      "sql_sample": "Start unloading original departed store place"
+    },
+    {
+      "log_id": 5026,
+      "api_call_id": 69962,
+      "elapsed_ms": 29,
+      "module": "WMS_API:69962",
+      "action": "POST /api/delivery/store-receipt",
+      "sql_sample": "Start unloading original departed store place"
+    }
+  ],
+  "top_sql": [
+    {
+      "sql_id": "admdtyprqxjhm",
+      "executions": 199,
+      "avg_ms": 91.511,
+      "avg_buffers": 1249.64,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.execute_prepared(:result); end;"
+    },
+    {
+      "sql_id": "b52ty3ch4buy9",
+      "executions": 1,
+      "avg_ms": 2560.249,
+      "avg_buffers": 763,
+      "sql_sample": "declare n number;begin select count(*)into n from USER_CONSTRAINTS where TABLE_NAME='RRL_STORE_UNLOAD_INTENT'and(STATUS!='ENABLED'or VALIDATED!='VALIDATED');if n!=0 then raise_application_error(-20886,'UNLOAD_INTENT_CONSTRAINTS');end if;end;\r "
+    },
+    {
+      "sql_id": "19uu2ytmtyj8w",
+      "executions": 1,
+      "avg_ms": 2545.436,
+      "avg_buffers": 608,
+      "sql_sample": "SELECT COUNT(*)FROM USER_CONSTRAINTS WHERE TABLE_NAME='RRL_STORE_UNLOAD_INTENT'AND(STATUS!='ENABLED'OR VALIDATED!='VALIDATED')"
+    },
+    {
+      "sql_id": "4p27xr1u2kcfq",
+      "executions": 1,
+      "avg_ms": 45.27,
+      "avg_buffers": 15,
+      "sql_sample": "declare n number;begin select count(*)into n from USER_OBJECTS where OBJECT_NAME in('RRL_STORE_UNLOAD_INTENT','RRL_UNLOAD_INTENT_GUARD');if n!=0 then raise_application_error(-20886,'UNLOAD_INTENT_NAMESPACE');end if;end;\r "
+    },
+    {
+      "sql_id": "a6thr1nkj2yqv",
+      "executions": 1,
+      "avg_ms": 39.198,
+      "avg_buffers": 15,
+      "sql_sample": "SELECT COUNT(*)FROM USER_OBJECTS WHERE OBJECT_NAME IN('RRL_STORE_UNLOAD_INTENT','RRL_UNLOAD_INTENT_GUARD')"
+    },
+    {
+      "sql_id": "8hrstxuv7cvh7",
+      "executions": 3,
+      "avg_ms": 12.849,
+      "avg_buffers": 245.67,
+      "sql_sample": "INSERT INTO RRL_STORE_UNLOAD_INTENT(CONTROL_OPERATION_ID,ORIGINAL_OPERATION_ID,LOAD_OPERATION_ID,STORE_ADDR,ACTOR,OUTCOME,ORIGINAL_JSON,CONTROL_JSON,RESULT_JSON) VALUES(:B9 ,:B8 ,:B7 ,:B6 ,:B5 ,:B4 ,:B3 ,:B2 ,:B1 )"
+    },
+    {
+      "sql_id": "atzjda8adw3x3",
+      "executions": 1,
+      "avg_ms": 22.208,
+      "avg_buffers": 323,
+      "sql_sample": "select SPAN_ID,OPERATOR_ID,KIND,SOURCE_KIND,SOURCE_ID,SOURCE_MODE,             to_char(START_AT at time zone 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.FF6TZH:TZM') START_AT,             to_char(FINISH_AT at time zone 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.FF6TZH:TZM') FINISH_AT             from RRL_PICKER_TIME_SPAN where WARE_ID=:warehouse             and START_AT<to_timestamp_tz(:finish_at,'YYYY-MM-DD\"T\"HH24:MI:SS.FF6TZH:TZM')and FINISH_AT>to_timestamp_tz(:start_at,'YYYY-MM-DD\"T\"HH24:MI:SS.FF6TZH:TZM')             and(:operator is null or OPERATOR_ID=:operator)order by START_AT,SPAN_ID fetch first 5001 rows only"
+    },
+    {
+      "sql_id": "c27v28kr2u9w4",
+      "executions": 2,
+      "avg_ms": 4.788,
+      "avg_buffers": 6,
+      "sql_sample": "SELECT /* OPT_DYN_SAMP */ /*+ ALL_ROWS  RESULT_CACHE(SNAPSHOT=3600) opt_param('parallel_execution_enabled', 'false') NO_PARALLEL(SAMPLESUB) NO_PARALLEL_INDEX(SAMPLESUB) NO_SQL_TUNE */ NVL(SUM(C1),0), NVL(SUM(C2),0), NVL(SUM(C3),0) FROM (SELECT /*+ NO_PARALLEL(\"RRL_DELIVERY_WINDOW\") INDEX(\"RRL_DELIVERY_WINDOW\" RRL_DELIV_WINDOW_VER_UK) NO_PARALLEL_INDEX(\"RRL_DELIVERY_WINDOW\") */ 1 AS C1, 1 AS C2, 1 AS C3  FROM \"RABAEV\".\"RRL_DELIVERY_WINDOW\" \"RRL_DELIVERY_WINDOW\" WHERE \"RRL_DELIVERY_WINDOW\".\"LOAD_OPERATION_ID\"=:B1 AND \"RRL_DELIVERY_WINDOW\".\"STORE_ADDR\"=:B2 AND ROWNUM <= 2500) SAMPLESUB"
+    },
+    {
+      "sql_id": "ak2fd7qr6zhst",
+      "executions": 1,
+      "avg_ms": 9.095,
+      "avg_buffers": 139,
+      "sql_sample": "CREATE UNIQUE INDEX \"RABAEV\".\"RRL_UNLOAD_INTENT_PK\" on \"RABAEV\".\"RRL_STORE_UNLOAD_INTENT\"(\"CONTROL_OPERATION_ID\") NOPARALLEL"
+    },
+    {
+      "sql_id": "c1dtmrmcs0rr1",
+      "executions": 2,
+      "avg_ms": 4.392,
+      "avg_buffers": 4,
+      "sql_sample": "SELECT /* OPT_DYN_SAMP */ /*+ ALL_ROWS IGNORE_WHERE_CLAUSE RESULT_CACHE(SNAPSHOT=3600) opt_param('parallel_execution_enabled', 'false') NO_PARALLEL(SAMPLESUB) NO_PARALLEL_INDEX(SAMPLESUB) NO_SQL_TUNE */ NVL(SUM(C1),0), NVL(SUM(C2),0) FROM (SELECT /*+ IGNORE_WHERE_CLAUSE NO_PARALLEL(\"RRL_DELIVERY_WINDOW\") FULL(\"RRL_DELIVERY_WINDOW\") NO_PARALLEL_INDEX(\"RRL_DELIVERY_WINDOW\") */ 1 AS C1, CASE WHEN \"RRL_DELIVERY_WINDOW\".\"LOAD_OPERATION_ID\"=:B1 AND \"RRL_DELIVERY_WINDOW\".\"STORE_ADDR\"=:B2 THEN 1 ELSE 0 END AS C2 FROM \"RABAEV\".\"RRL_DELIVERY_WINDOW\" \"RRL_DELIVERY_WINDOW\") SAMPLESUB"
+    },
+    {
+      "sql_id": "4abn9fng76uhu",
+      "executions": 1,
+      "avg_ms": 8.104,
+      "avg_buffers": 54,
+      "sql_sample": "insert into RRL_STORE_UNLOAD_INTENT(CONTROL_OPERATION_ID,ORIGINAL_OPERATION_ID,LOAD_OPERATION_ID,STORE_ADDR,ACTOR,OUTCOME,ORIGINAL_JSON,CONTROL_JSON,RESULT_JSON)select :new_id,:new_op,LOAD_OPERATION_ID,STORE_ADDR,ACTOR,OUTCOME,ORIGINAL_JSON,CONTROL_JSON,RESULT_JSON from RRL_STORE_UNLOAD_INTENT where CONTROL_OPERATION_ID=:id"
+    },
+    {
+      "sql_id": "2cju6pb5yb3na",
+      "executions": 4,
+      "avg_ms": 1.86,
+      "avg_buffers": 3.25,
+      "sql_sample": "SELECT /* OPT_DYN_SAMP */ /*+ ALL_ROWS  RESULT_CACHE(SNAPSHOT=3600) opt_param('parallel_execution_enabled', 'false') NO_PARALLEL(SAMPLESUB) NO_PARALLEL_INDEX(SAMPLESUB) NO_SQL_TUNE */ NVL(SUM(C1),0), NVL(SUM(C2),0), NVL(SUM(C3),0) FROM (SELECT /*+ NO_PARALLEL(\"W\") INDEX(\"W\" RRL_DELIV_WINDOW_WARE_IX) NO_PARALLEL_INDEX(\"W\") */ 1 AS C1, 1 AS C2, 1 AS C3  FROM \"RABAEV\".\"RRL_DELIVERY_WINDOW\" \"W\" WHERE \"W\".\"WARE_ID\"=:B1 AND ROWNUM <= 2500) SAMPLESUB"
+    }
+  ],
+  "invalid": 0,
+  "max_http_ms": 1304,
+  "decisions": [
+    "Keep current source/load/store authority and immutable version/arrival unique lookups.",
+    "KPI reads remain bounded31days/500deliveries or5000picks/spans; overflow rejects, no silent truncation. Query owner: inspect actual KPI cohort plans and JSON warehouse extraction at pilot volume before adding indexes; retain request-id audit evidence.",
+    "Native V$SQL averages are cumulative observations, not endpoint p95. Direct fixture/time/concurrency commands have no invented HTTP pairing.",
+    "Inventory/transport owner retains loading admission/prepare/execute profiling backlog before pilot. Do not weaken locking or invent cache/index from isolated small data.",
+    "Operations/schema verification: USER_CONSTRAINTS metadata gate averaged2545ms; bound by exact constraint names and inspect dictionary plan before migration batches. This is DDL validation, not business latency.",
+    "Inventory QC owner: access read829ms; separate scope/admission/source timings and inspect actual plans/statistics at pilot load before adding speculative indexes/caches."
+  ]
+}

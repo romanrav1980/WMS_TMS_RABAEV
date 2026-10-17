@@ -1,0 +1,64 @@
+{
+  "status": "PASS",
+  "kind": "OFFLINE_PRODUCTION_BUNDLE_MOCK",
+  "actual_api_calls": 0,
+  "oracle_writes": 0,
+  "hardware": false,
+  "assets": [
+    {
+      "name": "index-DlOjP9zi.css",
+      "sha256": "4abe950ff16f64e7bc464d7cef9fe12855e5836d4a2b9566ff190b95d5ee0485"
+    },
+    {
+      "name": "index-DoiCfn1S.js",
+      "sha256": "089481fec7b14c811c605a590069fd842a8369eceab844f53583777cabbb4af2"
+    }
+  ],
+  "results": [
+    {
+      "width": 360,
+      "status": "PASS",
+      "checks": [
+        "actual open CASE statuses",
+        "actual pending shortage",
+        "failed preparation UNREAD not CLEAR",
+        "four resource families",
+        "all visible buttons help"
+      ],
+      "all_network_intercepted": true,
+      "synthetic_readonly_post": [
+        "/api/picking/shift-overview"
+      ]
+    },
+    {
+      "width": 390,
+      "status": "PASS",
+      "checks": [
+        "actual open CASE statuses",
+        "actual pending shortage",
+        "failed preparation UNREAD not CLEAR",
+        "four resource families",
+        "all visible buttons help"
+      ],
+      "all_network_intercepted": true,
+      "synthetic_readonly_post": [
+        "/api/picking/shift-overview"
+      ]
+    },
+    {
+      "width": 1440,
+      "status": "PASS",
+      "checks": [
+        "actual open CASE statuses",
+        "actual pending shortage",
+        "failed preparation UNREAD not CLEAR",
+        "four resource families",
+        "all visible buttons help"
+      ],
+      "all_network_intercepted": true,
+      "synthetic_readonly_post": [
+        "/api/picking/shift-overview"
+      ]
+    }
+  ]
+}

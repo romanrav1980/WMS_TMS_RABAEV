@@ -1,0 +1,45 @@
+{
+  "state": "PASS_NATIVE_CALCULATION_AND_API_CONTRACT_ONLY",
+  "scope": "Exact calculation procedure, historic QA load/photos, READ ONLY. Not full committed STORE_RECEIPT acceptance.",
+  "checks": [
+    "manual_gross_frozen_shipping_tolerance_three_original_views",
+    "dual_source",
+    "zero",
+    "out_of_tolerance",
+    "legacy_body_unchanged",
+    "manual_metadata_passed_to_native_owner",
+    "strict_single_positive_manual_source"
+  ],
+  "quantity_effect": false,
+  "proof": {
+    "capture_key": null,
+    "device_id": null,
+    "device_policy_version": null,
+    "measurement_origin": "MANUAL_CONFIRMED",
+    "recorded_by": "admin",
+    "shipping_gross_kg": "10",
+    "observed_gross_kg": "10",
+    "tolerance_kg": "1",
+    "delta_kg": "0",
+    "in_tolerance": 1,
+    "act_confirmed": 0,
+    "photos": [
+      {
+        "photo_id": "50A7301E75F3FD21E5AAADA16F84548ED75A094B2550432A4705D151FB8CB9DC",
+        "view": "LEFT",
+        "sha256": "991F61C04A3AF814EE1803F52F7A19E278CC7718EFCFAD7375BFE432C34C70E9"
+      },
+      {
+        "photo_id": "79EC50193587AA2E8DB1C7988C541D70D944C4F331A24B30C34B2BC257158A4A",
+        "view": "FRONT",
+        "sha256": "D61A338CE864D02F7F38E3B4577A17BDA5C941E66249A9115E4E9E693A41E306"
+      },
+      {
+        "photo_id": "F7BCADB45295DA9D2F505ACBB5D0B46D6C36267C7BCE11F067EC6FB5CB36FA32",
+        "view": "RIGHT",
+        "sha256": "F7A9FE66FBB906896C8C286C53E3FD0B00A33F72202659E822C187B8EE299A0A"
+      }
+    ]
+  },
+  "procedure_sha256": "89cc17c1ccb50e86e502f1089fd160083ea7271537d249dd682fc01b1a6be3f5"
+}

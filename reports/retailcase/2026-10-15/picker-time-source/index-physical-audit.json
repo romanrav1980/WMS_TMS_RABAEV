@@ -1,0 +1,255 @@
+{
+  "indexes": [
+    {
+      "table_name": "RRL_PICKER_TIME_COMMAND",
+      "index_name": "PT_CMD_01",
+      "index_type": "NORMAL",
+      "uniqueness": "UNIQUE",
+      "status": "VALID",
+      "visibility": "VISIBLE"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_COMMAND",
+      "index_name": "RRL_PICKER_TIME_CMD_OP_IX",
+      "index_type": "FUNCTION-BASED NORMAL",
+      "uniqueness": "NONUNIQUE",
+      "status": "VALID",
+      "visibility": "VISIBLE"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_COMMAND",
+      "index_name": "SYS_IL0000087284C00009$$",
+      "index_type": "LOB",
+      "uniqueness": "UNIQUE",
+      "status": "VALID",
+      "visibility": "VISIBLE"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_COMMAND",
+      "index_name": "SYS_IL0000087284C00010$$",
+      "index_type": "LOB",
+      "uniqueness": "UNIQUE",
+      "status": "VALID",
+      "visibility": "VISIBLE"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_EVENT",
+      "index_name": "PT_EV_01",
+      "index_type": "NORMAL",
+      "uniqueness": "UNIQUE",
+      "status": "VALID",
+      "visibility": "VISIBLE"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_EVENT",
+      "index_name": "PT_EV_20",
+      "index_type": "NORMAL",
+      "uniqueness": "UNIQUE",
+      "status": "VALID",
+      "visibility": "VISIBLE"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_EVENT",
+      "index_name": "RRL_PICKER_TIME_EVENT_OP_IX",
+      "index_type": "FUNCTION-BASED NORMAL",
+      "uniqueness": "NONUNIQUE",
+      "status": "VALID",
+      "visibility": "VISIBLE"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_SPAN",
+      "index_name": "PT_SP_01",
+      "index_type": "NORMAL",
+      "uniqueness": "UNIQUE",
+      "status": "VALID",
+      "visibility": "VISIBLE"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_SPAN",
+      "index_name": "PT_SP_23",
+      "index_type": "NORMAL",
+      "uniqueness": "UNIQUE",
+      "status": "VALID",
+      "visibility": "VISIBLE"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_SPAN",
+      "index_name": "RRL_PICKER_TIME_SPAN_OP_IX",
+      "index_type": "FUNCTION-BASED NORMAL",
+      "uniqueness": "NONUNIQUE",
+      "status": "VALID",
+      "visibility": "VISIBLE"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_STREAM",
+      "index_name": "PT_STR_01",
+      "index_type": "NORMAL",
+      "uniqueness": "UNIQUE",
+      "status": "VALID",
+      "visibility": "VISIBLE"
+    }
+  ],
+  "columns": [
+    {
+      "table_name": "RRL_PICKER_TIME_COMMAND",
+      "index_name": "PT_CMD_01",
+      "column_name": "OPERATION_ID",
+      "column_position": 1,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_EVENT",
+      "index_name": "PT_EV_01",
+      "column_name": "OPERATION_ID",
+      "column_position": 1,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_EVENT",
+      "index_name": "PT_EV_20",
+      "column_name": "OPERATOR_ID",
+      "column_position": 1,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_EVENT",
+      "index_name": "PT_EV_20",
+      "column_name": "AFTER_VERSION",
+      "column_position": 2,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_SPAN",
+      "index_name": "PT_SP_01",
+      "column_name": "SPAN_ID",
+      "column_position": 1,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_SPAN",
+      "index_name": "PT_SP_23",
+      "column_name": "FINISH_OPERATION_ID",
+      "column_position": 1,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_SPAN",
+      "index_name": "PT_SP_23",
+      "column_name": "KIND",
+      "column_position": 2,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_STREAM",
+      "index_name": "PT_STR_01",
+      "column_name": "OPERATOR_ID",
+      "column_position": 1,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_COMMAND",
+      "index_name": "RRL_PICKER_TIME_CMD_OP_IX",
+      "column_name": "ACTOR_ID",
+      "column_position": 1,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_COMMAND",
+      "index_name": "RRL_PICKER_TIME_CMD_OP_IX",
+      "column_name": "SYS_NC00014$",
+      "column_position": 2,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_EVENT",
+      "index_name": "RRL_PICKER_TIME_EVENT_OP_IX",
+      "column_name": "OPERATOR_ID",
+      "column_position": 1,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_EVENT",
+      "index_name": "RRL_PICKER_TIME_EVENT_OP_IX",
+      "column_name": "SYS_NC00015$",
+      "column_position": 2,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_SPAN",
+      "index_name": "RRL_PICKER_TIME_SPAN_OP_IX",
+      "column_name": "OPERATOR_ID",
+      "column_position": 1,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_SPAN",
+      "index_name": "RRL_PICKER_TIME_SPAN_OP_IX",
+      "column_name": "SYS_NC00013$",
+      "column_position": 2,
+      "descend": "ASC"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_SPAN",
+      "index_name": "RRL_PICKER_TIME_SPAN_OP_IX",
+      "column_name": "SYS_NC00014$",
+      "column_position": 3,
+      "descend": "ASC"
+    }
+  ],
+  "expressions": [
+    {
+      "table_name": "RRL_PICKER_TIME_COMMAND",
+      "index_name": "RRL_PICKER_TIME_CMD_OP_IX",
+      "column_position": 2,
+      "column_expression": "SYS_EXTRACT_UTC(\"RECORDED_AT\")"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_EVENT",
+      "index_name": "RRL_PICKER_TIME_EVENT_OP_IX",
+      "column_position": 2,
+      "column_expression": "SYS_EXTRACT_UTC(\"EFFECTIVE_AT\")"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_SPAN",
+      "index_name": "RRL_PICKER_TIME_SPAN_OP_IX",
+      "column_position": 2,
+      "column_expression": "SYS_EXTRACT_UTC(\"FINISH_AT\")"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_SPAN",
+      "index_name": "RRL_PICKER_TIME_SPAN_OP_IX",
+      "column_position": 3,
+      "column_expression": "SYS_EXTRACT_UTC(\"START_AT\")"
+    }
+  ],
+  "hidden_columns": [
+    {
+      "table_name": "RRL_PICKER_TIME_COMMAND",
+      "column_name": "SYS_NC00014$",
+      "data_type": "TIMESTAMP(6)",
+      "hidden_column": "YES",
+      "virtual_column": "YES"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_EVENT",
+      "column_name": "SYS_NC00015$",
+      "data_type": "TIMESTAMP(6)",
+      "hidden_column": "YES",
+      "virtual_column": "YES"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_SPAN",
+      "column_name": "SYS_NC00013$",
+      "data_type": "TIMESTAMP(6)",
+      "hidden_column": "YES",
+      "virtual_column": "YES"
+    },
+    {
+      "table_name": "RRL_PICKER_TIME_SPAN",
+      "column_name": "SYS_NC00014$",
+      "data_type": "TIMESTAMP(6)",
+      "hidden_column": "YES",
+      "virtual_column": "YES"
+    }
+  ]
+}

@@ -1,0 +1,223 @@
+{
+  "status": "PASS_CALLER_ROLLBACK_ONLY",
+  "checks": [
+    "absent_ABANDONED_exact_hash_identity",
+    "native_describe_resolution_and_wronghash_actor_guards",
+    "append_only_insert_update_delete",
+    "dirty_original_entry_denied_not_latefence_claim",
+    "absent_tombstone_full_caller_rollback_both_UID_history_exact",
+    "original_REJECTED_unchanged_and_read",
+    "RECORDED_resolution_does_not_create_ABANDONED",
+    "recorded_REJECTED_full_caller_rollback_no_stock_clock_outbox"
+  ],
+  "elapsed_seconds": 1.9650531000224873,
+  "before": {
+    "carrier": [],
+    "events": [
+      {
+        "case_pick_event_id": 3750,
+        "event_type": "CLAIMED"
+      },
+      {
+        "case_pick_event_id": 3751,
+        "event_type": "STARTED"
+      }
+    ],
+    "lines": [
+      {
+        "case_pick_line_id": 1140,
+        "picked_qty": 0,
+        "planned_qty": 1,
+        "status": "CANCELLED"
+      }
+    ],
+    "receipts": [
+      {
+        "operation_id": "CRES15.HTTP.CLAIM.A",
+        "outcome": "APPLIED",
+        "source_sha256": "5AB77878F48A26202F901AF0FE0DCBB61C6696E093BE9AE27EECFCA549DC83EE"
+      },
+      {
+        "operation_id": "CRES15.HTTP.CLAIM.B",
+        "outcome": "REJECTED",
+        "source_sha256": "7D8E26D18EB6DF00CCFA8FF3FB8455108F7E4763CF980C5A8485F8CEC1477ABB"
+      },
+      {
+        "operation_id": "CRES15.HTTP.START",
+        "outcome": "APPLIED",
+        "source_sha256": "87462E3E5036A7C60C702FE11E9EAAAA24E8A957069F265AC0B52E425F860E39"
+      },
+      {
+        "operation_id": "CRES15.HTTP.START.NOOP",
+        "outcome": "APPLIED",
+        "source_sha256": "05A784E5F05532501BACBB7B6F4AB5D8A792EA5A03C6A8B34ACE717AF121186D"
+      },
+      {
+        "operation_id": "CRES15.HTTP.WRONG.VERSION",
+        "outcome": "REJECTED",
+        "source_sha256": "BE649BBD82580203E7DD720021E0B9529C4784FC1622A7307AE616141D012BAE"
+      }
+    ],
+    "stock": [
+      {
+        "cell": "CPT_13583852",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 3,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 1,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 1,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 0,
+        "remain": 23,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 13,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 2,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      }
+    ],
+    "task": [
+      {
+        "assigned_resource_id": 59,
+        "assigned_to": "CRES15.OP",
+        "assignment_version": 3,
+        "content_version": 3,
+        "equipment_id": null,
+        "picked_qty": 0,
+        "resource_session_id": 55,
+        "started_at_instant": "2026-10-15 09:31:51.198164",
+        "status": "CANCELLED"
+      }
+    ],
+    "tombstones": []
+  },
+  "after": {
+    "carrier": [],
+    "events": [
+      {
+        "case_pick_event_id": 3750,
+        "event_type": "CLAIMED"
+      },
+      {
+        "case_pick_event_id": 3751,
+        "event_type": "STARTED"
+      }
+    ],
+    "lines": [
+      {
+        "case_pick_line_id": 1140,
+        "picked_qty": 0,
+        "planned_qty": 1,
+        "status": "CANCELLED"
+      }
+    ],
+    "receipts": [
+      {
+        "operation_id": "CRES15.HTTP.CLAIM.A",
+        "outcome": "APPLIED",
+        "source_sha256": "5AB77878F48A26202F901AF0FE0DCBB61C6696E093BE9AE27EECFCA549DC83EE"
+      },
+      {
+        "operation_id": "CRES15.HTTP.CLAIM.B",
+        "outcome": "REJECTED",
+        "source_sha256": "7D8E26D18EB6DF00CCFA8FF3FB8455108F7E4763CF980C5A8485F8CEC1477ABB"
+      },
+      {
+        "operation_id": "CRES15.HTTP.START",
+        "outcome": "APPLIED",
+        "source_sha256": "87462E3E5036A7C60C702FE11E9EAAAA24E8A957069F265AC0B52E425F860E39"
+      },
+      {
+        "operation_id": "CRES15.HTTP.START.NOOP",
+        "outcome": "APPLIED",
+        "source_sha256": "05A784E5F05532501BACBB7B6F4AB5D8A792EA5A03C6A8B34ACE717AF121186D"
+      },
+      {
+        "operation_id": "CRES15.HTTP.WRONG.VERSION",
+        "outcome": "REJECTED",
+        "source_sha256": "BE649BBD82580203E7DD720021E0B9529C4784FC1622A7307AE616141D012BAE"
+      }
+    ],
+    "stock": [
+      {
+        "cell": "CPT_13583852",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 3,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 1,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 1,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 0,
+        "remain": 23,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 13,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 2,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      }
+    ],
+    "task": [
+      {
+        "assigned_resource_id": 59,
+        "assigned_to": "CRES15.OP",
+        "assignment_version": 3,
+        "content_version": 3,
+        "equipment_id": null,
+        "picked_qty": 0,
+        "resource_session_id": 55,
+        "started_at_instant": "2026-10-15 09:31:51.198164",
+        "status": "CANCELLED"
+      }
+    ],
+    "tombstones": []
+  },
+  "metadata_commits": 0,
+  "quantity_effect": false,
+  "hardware": false,
+  "pending": [
+    "committed metadata exact replay/late-original races",
+    "fresh active scoped CASE/TASK fixture",
+    "HTTP/UI composition",
+    "SQL attribution by coordinator"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "prefix": "SQ16.bc4f60f03a",
+  "tag": "bc4f60f03a",
+  "actor": "SQ16Ibc4f60f03a",
+  "picker": "SQ16Pbc4f60f03a",
+  "other": "SQ16Xbc4f60f03a",
+  "source": "SQ16.LOT:bc4f60f03a",
+  "warehouse_id": 20220394,
+  "article": "AS16A35CEA92C27",
+  "cell": "AS16C35cea92c27",
+  "face": 607,
+  "revision": 402,
+  "role": "SQ16Rbc4f60f03a",
+  "assignment": "SQ16Abc4f60f03a",
+  "hardware_verified": false,
+  "state": "PREPARED",
+  "quantity": "1",
+  "recovery": [
+    "Never rerun stage after an uncertain result; inspect original operation receipt",
+    "Only own new lot is counted; original ASM CASE1140/lot/ST are protected",
+    "Canonical WAVE_CANCEL/PICK_PLAN_CANCEL release own remaining reservations; keep inventory loss/shortage/access journals",
+    "Retire new actors/roles/resources/session after final acceptance; no history deletion"
+  ]
+}

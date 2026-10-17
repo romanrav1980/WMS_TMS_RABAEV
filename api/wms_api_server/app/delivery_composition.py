@@ -67,3 +67,9 @@ from .modules.delivery.public import ReturnCustodyPort,build_return_custody
 
 def build_delivery_return_custody() -> ReturnCustodyPort:
     return build_return_custody(OracleGateway(),_delivery_post())
+
+
+from .modules.delivery.public import DeliveryTimePort,build_delivery_time
+
+def build_delivery_timing() -> DeliveryTimePort:
+    return build_delivery_time(OracleGateway())

@@ -1,0 +1,55 @@
+{
+  "status": "ALL_CRES_ASSIGNMENTS_REVOKED_HISTORY_RETAINED",
+  "source": [
+    {
+      "assignment_id": "CRES15.GQP2.RESTORE.SELF",
+      "role_id": "CRES15.CASE.EXEC",
+      "scope_kind": "SELF",
+      "scope_id": null,
+      "version_no": 1
+    },
+    {
+      "assignment_id": "CRES15.GQP2.RESTORE.WARE",
+      "role_id": "CRES15.CASE.EXEC",
+      "scope_kind": "WAREHOUSE",
+      "scope_id": "13583852",
+      "version_no": 1
+    }
+  ],
+  "commands": [
+    {
+      "operation_id": "CRES15.CLEANUP.REVOKE.GQP2.SELF",
+      "command_type": "REVOKE",
+      "payload": {
+        "expected_version": 1,
+        "assignment_id": "CRES15.GQP2.RESTORE.SELF",
+        "reason": "Retire exact owned TEST grant after canonical CASE cleanup; preserve all metadata history"
+      }
+    },
+    {
+      "operation_id": "CRES15.CLEANUP.REVOKE.GQP2.WARE",
+      "command_type": "REVOKE",
+      "payload": {
+        "expected_version": 1,
+        "assignment_id": "CRES15.GQP2.RESTORE.WARE",
+        "reason": "Retire exact owned TEST grant after canonical CASE cleanup; preserve all metadata history"
+      }
+    }
+  ],
+  "receipts": [
+    {
+      "operation_id": "CRES15.CLEANUP.REVOKE.GQP2.SELF",
+      "command_type": "REVOKE",
+      "object_id": "CRES15.GQP2.RESTORE.SELF",
+      "version": 2,
+      "replayed": false
+    },
+    {
+      "operation_id": "CRES15.CLEANUP.REVOKE.GQP2.WARE",
+      "command_type": "REVOKE",
+      "object_id": "CRES15.GQP2.RESTORE.WARE",
+      "version": 2,
+      "replayed": false
+    }
+  ]
+}

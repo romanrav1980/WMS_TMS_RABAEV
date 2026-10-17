@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "source_exact": true,
+  "invalid": 0,
+  "context": {
+    "task_id": 1136,
+    "task_state": "IN_PROGRESS",
+    "content_version": 2,
+    "scan_container": "090000000000008014",
+    "warehouse_id": 13583852,
+    "resource_session_id": 54,
+    "assigned_resource_id": 58,
+    "shipment_binding_state": "REQUIRED",
+    "bound_pallet_identifier": null,
+    "final_composition_signature": null,
+    "prepared_shipments": [
+      {
+        "pallet_identifier": "TEST.WHREQ15.PREPARED",
+        "shipment_id": 641520,
+        "fulfillment_id": 190,
+        "state": "PLANNED"
+      }
+    ],
+    "can_close": false,
+    "lines": [
+      {
+        "case_line_id": 1139,
+        "article": "REUSE.QA:cdbf4c0962",
+        "name": "Own full box reuse cdbf4c0962",
+        "status": "NEW",
+        "source_cell": "QIPcdbf4c0962",
+        "product_codes": [
+          "REUSE.QA:cdbf4c0962",
+          "REUSE.EA:cdbf4c0962",
+          "REUSE.BOX:cdbf4c0962"
+        ],
+        "remaining_quantity": "1",
+        "base_uom": "EA",
+        "policy_state": "CONFIGURED"
+      }
+    ],
+    "stations": [
+      {
+        "device_id": "WHREQ15.SCALE",
+        "post_cell": "QIPcdbf4c0962",
+        "confirmation_mode": "AUTO",
+        "device_mode": "TEST",
+        "device_policy_version": 1,
+        "calibration_ref": "SIMULATED_TEST_NOT_HARDWARE:WHREQ15",
+        "tare_captures": []
+      }
+    ],
+    "active_session": null
+  },
+  "stock_posted": false
+}

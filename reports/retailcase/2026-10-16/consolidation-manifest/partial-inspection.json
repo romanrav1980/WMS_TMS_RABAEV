@@ -1,0 +1,26 @@
+{
+  "read_only": true,
+  "invalid": [
+    [
+      "RRL_HU_CONSOL_READ",
+      "PACKAGE BODY"
+    ]
+  ],
+  "errors": [
+    [
+      "RRL_HU_CONSOL_READ",
+      "PACKAGE BODY",
+      58,
+      128,
+      "PL/SQL: ORA-00933: \u043d\u0435\u0432\u0435\u0440\u043d\u043e\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0438\u0435 SQL-\u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u044f"
+    ],
+    [
+      "RRL_HU_CONSOL_READ",
+      "PACKAGE BODY",
+      58,
+      19,
+      "PL/SQL: SQL Statement ignored"
+    ]
+  ],
+  "ledger": []
+}

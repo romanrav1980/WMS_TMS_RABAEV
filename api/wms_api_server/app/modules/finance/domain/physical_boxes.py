@@ -22,8 +22,11 @@ def physical_box_count(tree: dict, proofs: list[dict]) -> int:
             raise ValueError("Версия измеренной коробки не совпадает с архивом погрузки")
         small = node.get("scale_qc")
         if small:
-            if proof["case_box_task_id"] != node["case_task_id"] or proof["measurement_origin"] != "WAREHOUSE_SCALE_QC" or proof["coverage_complete"] != 1:
+            expected_origin = "MANUAL_CONFIRMED" if small.get("origin") == "MANUAL_CONFIRMED" else "WAREHOUSE_SCALE_QC"
+            if proof["case_box_task_id"] != node["case_task_id"] or proof["measurement_origin"] != expected_origin or proof["coverage_complete"] != 1:
                 raise ValueError("Малой таре нужен полный исходный весовой контроль")
+            if expected_origin == "MANUAL_CONFIRMED" and (proof["final_scale_capture"] is not None or proof.get("device_mode") is not None):
+                raise ValueError("Ручной контроль не является электронным замером")
             for field, source in [("final_scale_capture", "capture_key"), ("warehouse_qc_operation", "qc_operation_id"),
                                   ("signature_version", "signature_version"), ("measured_content_version", "measured_content_version")]:
                 if proof[field] != small[source]:

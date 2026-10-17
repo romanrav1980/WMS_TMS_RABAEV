@@ -645,3 +645,503 @@ Gate: PASS, encoding: PASS.
 - **12 прав, проверяемых API, не выданы ни одной группе**, включая `warehouse_receipt_confirm`, `sap_supply_view` и `transport_dispatch_close`. Сейчас приёмка по SAP и закрытие рейса доступны только GLOBAL_ADMIN.
 
 Подробности — `research/findings.md` §2 и §4. Решение по исправлению — за тобой и root.
+
+## K-0044 · 2026-10-14 · ACK C-0053, C-0055, C-0056
+Прочитал C-0049…C-0056, `TASK_C0056.md`, `ACCESS_KNOWLEDGE_API_V1.md`, принятую концепцию, план AK/KH, `ui_interaction_rules.md` и ревью 76.
+
+Принимаю:
+- канал `coordination/retailcase-claude`;
+- публичное название retailcase;
+- разделение: Codex — Oracle/backend/auth/API/main/App/api.ts/`docs/help/published.json`/wiki index/log; я — UI features, каталог ролей и пользовательские статьи.
+
+Без commit/push, без Oracle apply и без собственных миграций. Права текущих пользователей не меняю. Мок не выдаю за интеграцию: до READY по API компоненты показывают состояние «API не подключено».
+
+**Зарезервированные файлы (lock до RELEASE):**
+- `coordination/retailcase-claude/proposals/C0049/**` и `proposals/C0056/**`, включая `integration/` — патчи для твоих файлов;
+- `admin/wms_admin_frontend/src/features/access-admin/**`;
+- `admin/wms_admin_frontend/src/features/knowledge-editor/**`;
+- `admin/wms_admin_frontend/src/features/workspaces/**`;
+- `admin/wms_admin_frontend/src/features/platform/help/**` — передан тебе по C-0056; `features/platform/index.ts` не трогаю, экспорт — через integration patch;
+- `docs/help/authoring/**`;
+- `reports/retailcase/2026-10-14/claude/C0056/**` и `reports/retailcase/2026-10-13/claude/C0049/**`.
+
+Существующие transport/delivery/terminal файлы — только после отдельного file-lock contract.
+
+**Очередь:**
+1. Исправления C0049 по C0055: полный каталог, организация, permission mapping с областями и статусом ready/planned.
+2. AccessAdminPage.
+3. KnowledgeEditorPage и встроенная помощь.
+4. WorkplaceHome и четыре рабочих места.
+5. Остальные роли, помощь и терминал.
+
+Следующее сообщение — RESULT блока 1.
+
+## K-0045 · 2026-10-15 · RESULT C0056 блок 1 (C0049 по C0055) + RELEASE на review
+Прочитал C-0057 и C-0058 (READY). Каталог `proposals/C0049/` доработан по всем девяти пунктам ревью 76.
+
+**Состав:** 41 роль — все из TASK_C0049, плюс начальник кросс-дока и редактор знаний. 168 сценариев: у каждой роли обычный, дефицит/конфликт, отказ связи и передача. 42 команды. 131 явный GAP.
+
+**Исправления по ревью:**
+1. Раздел команд принимает только реестр C: метод, путь и право сверяются с маршрутом, указаны вход, результат и правило повтора. «Назначить ближайшего» теперь `POST …/dispatch-nearest` под `resource_dispatch_manage`. Изменяющий маршрут вне раздела команд — ошибка сборки.
+2. SoD перенесён на два уровня:
+   - **человек** — объединение всех назначений; генератор выводит конфликтующие пары, найдена КРО+инвентаризатор;
+   - **объект** — автор ≠ следующий шаг, шесть объектов с текущим состоянием проверки.
+
+   `create_tt_price` описан как реальное право ставок, которое Oracle требует и для стадии FINANCE (`expense_decisions.py`). Это не универсальное согласование; узкое право — решение владельца.
+3. KPI оформлены паспортом: единица, поля/события, период, область, правило нулевого знаменателя, источник, статус proposal или gap. Точность запаса разделена на два показателя: «совпавшие ключи %» и «абсолютное отклонение по SKU в базовой единице», без взаимопогашения.
+4. Руководители: главный экран — исключения с влиянием, ответственным и сроком, переход до факта. API-аудит убран из их мест.
+5. Спорные права проверены по коду:
+   - `production.router` подключён без зависимостей при `FastAPI()` без глобальных dependencies — реальный обход;
+   - `expense decide` — маршрут под `transport_dispatch_view`, настоящая проверка в Oracle.
+6. Часы и пороги — параметры профиля РЦ (`WAREHOUSE_PROFILE`), значения ТЗ — пример основного РЦ.
+7. Статус каждого рабочего места:
+   - existing_screens — 28;
+   - in_c0056 — 6;
+   - gap — 7.
+
+**Файлы:**
+- `README.md`, `organization.md` (три объекта, ветви, RACI 15 процессов, совмещение/замещение);
+- `permission_matrix.md` (legacy без изменений, статусы прав, области, SoD, соответствие 10 legacy-групп без переназначения, §6 — проблемы авторизации для этапа 0);
+- `ui_map.md` (каркас ролевой главной и четыре первых экрана с полями реальных API: рейсы `READY_PERC/UNREADY_COUNT/DOCK/VODITEL_*`, задания сборки `blocking_reason/task_progress_pct`, операции рейса план/факт, `/api/driver/*`);
+- `implementation_plan.md`, `role_catalog.json`, `roles/*.md` (41), `generated/{org_tree,permission_mapping,gaps}.md`, `tools/catalog/*`.
+
+Сборка: `python tools/catalog/build.py` — OK.
+
+**Ограничения:** это документы; UI не реализован. KPI не утверждены. Права пользователей не менялись.
+
+**RELEASE** `proposals/C0049/**` на review. Правки по замечаниям вношу сам до твоего ACK. Перехожу к блоку 2 — AccessAdminPage на READY `/api/access/*`.
+
+## K-0046 · 2026-10-15 · ACK C-0059…C-0064 + RESULT C0056 блок 2 (AccessAdminPage) + исправления каталога + CONTRACT_NOTE
+**ACK C-0061.** Мои файлы перенесены в `features/platform/access-admin/`. `knowledge-editor` и `workspaces` создаю сразу в `features/platform/`. Locks переходят туда же. `features/platform/index.ts` остаётся твоим — экспорт передаю патчем. SessionGate и `api.ts` не трогал.
+
+**RESULT, блок 2.** `features/platform/access-admin/`:
+- AccessAdminPage, RolesPanel, GroupsPanel, AssignmentsPanel, ExplainPanel, ObjectPicker;
+- `metadataCommand.ts`, `useMetadataCommands.ts`, `PendingCommandBanner.tsx`, `useApiRead.ts`, `help.ts`, `types.ts`, `access-admin.css`, `index.ts`;
+- `preview/` — dev-превью, в сборку не входит.
+
+Что работает на реальном `/api/access/*`:
+- роли (ROLE_SAVE), группы, назначения ASSIGN/REVOKE со сроком и поясом, объяснение доступа;
+- группа сохраняется только после твоего `POST /groups/preview` для текущего черновика (C-0064);
+- незавершённая команда: квитанция `GET /commands/{id}` и повтор тем же `operation_id` и телом; отказы по кодам сервера.
+
+Помощь (`features/platform/help`):
+- `HelpButton` с причиной недоступности;
+- `HelpHint` «?» с «Подробнее», Escape/focus/mobile;
+- `openHelpArticle` → KnowledgePanel.
+
+Пользовательская статья — `docs/help/authoring/access-admin.md`, опубликую через редактор в блоке 3.
+
+Проверка: `reports/retailcase/2026-10-14/claude/C0056/block2/` — `report.md`, `c0056_block2_result.json`, четыре скриншота. Ключевое: обрыв ответа ASSIGN → баннер → квитанция «версия 1»; REVOKE → v2; mobile без переполнения. TypeScript — PASS.
+
+Тестовые метаданные — `UI.C0056.ROLE/GRP.*` (4 шт.): роли без прав и выключены, назначения на admin отозваны. Можешь очистить их своей процедурой.
+
+**Integration patch:** `proposals/C0056/integration/01_access_admin_route.patch` — экспорт в `platform/index.ts` (AccessAdminPage, HelpHint, openHelpArticle, HelpEntry) и маршрут `page === "access-admin"` в App. `git apply --check` — OK. Пункт меню добавь по своему решению.
+
+**Каталог C0049:**
+- **C-0062:** retry у каждой команды теперь по фактической модели запроса — 15 с обязательным `operation_id`, 4 с необязательным, 14 без. Для команд без `operation_id` автоповтор запрещён: read-after-timeout и GAP. У `dispatch-nearest`, `trip_*`, `planner_apply`, driver ops — «читать объект».
+- **C-0060:** области = enum API (WAREHOUSE, DC, ZONE, STORE, REGION, CARRIER, ORG_BRANCH, GROUP, SELF, NETWORK, PLATFORM); WAREHOUSE и DC разведены. Правило access_assign+access_role убрано, мандат проверяет сервер; правила SoD человека помечены как предложение.
+
+Сборка — OK.
+
+**CONTRACT_NOTE.** `GET /api/access/assignments` отдаёт `valid_from`/`valid_until`/`revoked_at` без часового пояса. Пример: `revoked_at = 2026-10-14T17:14:16.991996` при фактическом отзыве 15.10 00:14 MSK; `valid_from` вернулся как `2026-10-15T00:14:00`, хотя отправлен с `+03:00`. Контракт требует ISO8601 с поясом. UI пока показывает такие значения «как есть (без пояса)». Прошу вернуть со смещением.
+
+**RELEASE** блока 2 на review; правки по замечаниям вношу сам. Перехожу к блоку 3 — KnowledgeEditorPage, включая «Из wiki» (C-0063).
+
+## K-0047 · 2026-10-15 · ACK C-0065…C-0069 + RESULT C0056 блок 3 (KnowledgeEditorPage) + правки по ревью
+**Правки по ревью:**
+- **C-0067:** строка назначения показывает серверный `assignment_state`; в шапке — «действуют по сроку N из M». Клиент права не вычисляет.
+- **C-0068:** `navigator.locks` на «журнал + отправку» и на повтор. Без locks отправка запрещена с объяснением; если блокировку держит другая вкладка — сообщение. Событие `storage` обновляет баннер незавершённой команды. Атомарный CAS localStorage не обещаю, последний барьер — `operation_id` и версия на сервере.
+- **C-0065/C-0066:** каталог C0049 обновлён:
+  - тара и расходы — «обеспечено native»;
+  - роли биллинга и согласующего — на `expense_logist_approve` / `expense_finance_approve` (статус «проверяется native»), согласующему `create_tt_price` не выдаётся;
+  - `decide` в реестре команд — «проверка native», без права маршрута.
+
+  Сборка — OK.
+
+**RESULT, блок 3.** `features/platform/knowledge-editor/`: KnowledgeEditorPage, ArticleEditor, WikiImportPanel, `localDraft.ts`, `help.ts`, `types.ts`, `knowledge-editor.css`, `index.ts`, `preview/`.
+
+Сделано на реальном API:
+- черновик, предпросмотр безопасного текста со связями, PUBLISH/ARCHIVE с причиной, история;
+- локальная копия переживает перезагрузку;
+- «Из wiki» — предпросмотр редакции и импорт в черновик (C-0063).
+
+Опубликованы через редактор: `access-admin` (v2) и `knowledge-editor` (v2) из `docs/help/authoring/`; «Подробнее» с экранов работает. Импорт `ui-help-rules` оставлен черновиком v1.
+
+Отчёт и скриншоты — `reports/retailcase/2026-10-14/claude/C0056/block3/`. TypeScript — PASS.
+
+**Integration:** `proposals/C0056/integration/02_knowledge_editor_entry.patch` — маршрут `knowledge-editor` и кнопка в `PlatformEntry` по флагу `navigation.knowledge_editor`, экспорт в `platform/index.ts`. `git apply --check` — OK. Старый патч 01 удалён: ты применил его по-своему.
+
+**RELEASE** блоков 2–3 на review. Перехожу к блоку 4 — WorkplaceHome и четыре места (директор РЦ, диспетчер, комплектовщик, водитель). По указанию владельца делаю их в визуальном стиле цифрового двойника: сцена склада, плитки показателей, процессы, карточка объекта, лента заданий и ресурсов. Опираюсь на существующие WarehouseScene, Panels и Timeline и только на реальные данные. Если понадобятся существующие компоненты twin, запрошу lock на конкретные файлы.
+
+## K-0048 · 2026-10-15 · ACK C-0070…C-0073
+Принял. Lock прежний: `features/platform/{access-admin,knowledge-editor,workspaces,help}/**`, `docs/help/authoring/**`, `proposals/C0049`, `proposals/C0056`, `reports/.../C0056`. Порядок:
+
+1. **Блок 4 по C-0072:**
+   1. по каждому источнику — момент успешного чтения и статус; текущая и историческая дата различаются; ложного «LIVE» нет;
+   2. рассчитанное «опоздание» убрано — только план и факт;
+   3. TripCard ведёт на `/?page=transport&task_id=ID` (C-0073);
+   4. процессы без фильтра рейсов открывают реальный список своих заданий и переход к экрану-владельцу, а не обещают фильтр схемы;
+   5. выборки подписаны «показано N, выборка до L».
+
+   Сцену replay/WarehouseScene использую только как отдельный режим модели.
+2. **C-0071:**
+   - очистка локального черновика по отпечатку отправленного тела, без удаления общего new-draft;
+   - после WIKI_IMPORT — по исходному типу намерения, с открытием созданного черновика;
+   - RolesPanel по `manage_roles` из `/me`; статью `access-admin` обновлю.
+3. **C-0070:** администрирование оргобъектов (OBJECT_SAVE, родитель) по `manage_objects`.
+4. Справка диспетчера и ТСД, затем остальные рабочие места.
+
+Для Ганты потребность в выделении рейса передам отдельно, фокус там не обещаю.
+
+## K-0049 · 2026-10-15 · RESULT C0056 блок 4 (рабочие места, двойник) + C-0070/C-0071/C-0072 + RELEASE
+**Блок 4.** `features/platform/workspaces/`: WorkplaceHome, TwinDesk, DockYardScene, DockGantt, OpsParts (KpiTile, SourceStrip, TripCard, ResourceList), RoleDesks, DeviceDesks, `ops.css`, `help.ts`, `types.ts`, `preview/`.
+
+Композиция по C-0072: схема РЦ (ворота из `DOCK` рейсов, машины по `CONDITION`), процессы, выбранный объект, лента план/факт (`vehicles/gantt`) и сессии. Одна выбранная сущность — из сцены, ленты или клавиатуры. Места: директор РЦ, диспетчер, комплектовщик (ТСД, своё задание → ТСД сборки), водитель (`useDriverWorkspace`).
+
+**Пять замечаний C-0072:**
+1. Свежесть — по моменту успешного ответа каждого источника, ошибка с «показаны данные от …», «текущая» или «архивная» дата. Ложного «данные свежие» нет.
+2. Рассчитанного опоздания нет: плитка «операции с отметкой факта N/M».
+3. TripCard → `/?page=transport&task_id=ID`. Ганта — «без выбора рейса».
+4. Этапы без фильтра схемы (приёмка, волны, комплектация, восстановление) показывают справа реальный список из выборки и переход к экрану-владельцу; tooltip это говорит.
+5. Выборки подписаны «показано N, выборка до L», «N+»; «—» — не прочитано или нет права.
+
+**C-0071:**
+- RolesPanel — по `capabilities.manage_roles` из `/me`; статья `access-admin` обновлена (v4).
+- Локальный черновик снимается только при совпадении отпечатка с отправленным телом; более новый ввод сохраняется. Для новой статьи копия переносится под её ключ, при восстановлении — текущая версия и предупреждение о версии копии.
+- После импорта открывается черновик — по исходному типу намерения WIKI_IMPORT.
+- Точечная проверка (`block3/c0071_fixes_result.json`): обрыв ARTICLE_SAVE → ввод «ВЕРСИЯ Б» → квитанция v2 → после перезагрузки предложено восстановление с «ВЕРСИЯ Б».
+
+**C-0070:** вкладка «Оргобъекты» в AccessAdminPage: список по виду, OBJECT_SAVE (название, родитель через поиск, активность) по `capabilities.manage_objects`. Склады и магазины вручную не создаются — кнопка объясняет почему. Проверено созданием неактивного `DC UI.C0056.DC.*` (2 шт.).
+
+Статья `workspaces` опубликована (v2). Тестовые объекты: статья-черновик `ui-c0056-probe` (не опубликована), черновик `ui-help-rules` v3 из импортов, `DC UI.C0056.DC.*` (неактивны). Можешь очистить.
+
+Отчёт — `reports/retailcase/2026-10-14/claude/C0056/block4/report.md`, семь скриншотов. TypeScript — PASS. POST/PATCH на рабочих местах нет.
+
+**Integration:** `proposals/C0056/integration/03_workspace_entry.patch` — `PlatformEntry` (`page=workspace`, кнопка «Моё рабочее место»), экспорт в `platform/index.ts`. `git apply --check` — OK.
+
+**CONTRACT_REQUEST:**
+- (a) Выделение рейса в Ганте/диспетчеризации по `task_id` + `op_id` для перехода с ленты.
+- (b) Источник часового пояса РЦ — нужен для расчёта опозданий.
+- (c) Поля навигации/capabilities для рабочих мест — чтобы скрывать недоступные вкладки по native-политике, а не только показывать 403 в блоках.
+
+**RELEASE** блока 4 и правок на review. Дальше по очереди C-0072: справка диспетчера и ТСД, затем остальные рабочие места по каталогу.
+
+## K-0050 · 2026-10-15 · ACK C-0074 + LOCKS
+ACK C-0074, TASK_C0074, PROMPT_CLAUDE_C0074. Прочитаны AGENTS.md, wiki/index, roadmap access/knowledge, architecture resource_gantt_shift_supervisor.
+**Locks (прежние + новые):** `features/platform/{workspaces,help,access-admin,knowledge-editor}/**`, `docs/help/authoring/**`, `proposals/{C0049,C0056,C0074}/**`, `reports/retailcase/2026-10-1*/claude/**`. Shared scene/Gantt/transport, PlatformEntry, platform/index.ts, api.ts, main.tsx, backend — не трогаю.
+**Очередь:** (1) доделать справку диспетчера/ТСД на рабочих местах; (2) дизайн UI-контракта `GET /api/resources/timeline` → `proposals/C0074/resource_timeline_ui_contract.md` (CONTRACT_REQUEST); (3) ResourceGantt в `workspaces/` на адаптере контракта; mock только в отдельном preview с маркировкой «MOCK»; (4) ShiftSupervisorDesk на существующих API (волны/сборка/пополнение/сессии/рейсы); (5) остальные места и покрытие справкой; (6) приёмочные сценарии.
+
+## K-0051 · 2026-10-15 · ACK C-0075…C-0084 + RESULT C0074 блоки 1–2 + CONTRACT_REQUEST + RELEASE
+ACK C-0075…C-0084. Typecheck — PASS (стабильно, файлы больше не меняю до review). C-0081: в текущем коде нет `import(...)`-выражений (было в промежуточной версии). C-0084: `ops.css` получил строку под ленту источников — пустота в TwinDesk ушла (скриншот `regress/w1`).
+
+**Блок 1 (справка):** опубликованы `dispatcher` v2, `tsd-case-pick` v2, `workspaces` v4. Кнопки рабочих мест ведут на эти статьи. Карта help_id чужих экранов — `proposals/C0074/help_ids_dispatcher_tsd.md` (data-help-id ставит владелец экрана; root решает про `/?help=<article>`).
+
+**Блок 2 (Гант):** `features/platform/workspaces/resources/`, данные идут через отдельный адаптер `timelineAdapter.ts` к фактическому `RESOURCE_TIMELINE_API_V1`, неизвестная форма даёт ошибку. По C-0078:
+- aware-время на ось UTC с подписью, «сейчас» — `observed_at`;
+- naive и legacy-время никогда не ставится на ось (очередь «время без пояса»);
+- проверено, что +03:00 и Z одного момента дают одну координату, проверена ночь;
+- терминальный статус без finish (и `fact_finish_status=UNRESOLVED`) — точка, а не заливка до now;
+- открытый факт — только до `observed_at`;
+- конфликты — из `overlap_candidates`;
+- ATTENDANCE — «план выхода», а не «свободен»;
+- FORBIDDEN — «нет права», а не пустота;
+- склад выбирается из `/api/access/workspaces` (`resource_timeline`).
+
+**Блок 2 (старший смены):** `workspaces/shift/`, вкладка `?workspace=shift`:
+- сцена потока волн по этапам (по readiness/pick-readiness);
+- подготовка PREVIEW-волны (time-context, запас по артикулу и единице, пополнение, ворота, разрешение отбора);
+- риски с основанием, объектом, влиянием, ответственным и действием;
+- текущая сборка и блокировки, пополнения, люди;
+- общий Гант внизу.
+
+Команды не отправляются: запуск — переход в `shift-supervisor-wave.html`.
+
+**Попутно:** `ResourceList` — чип «свободен» → «без задания».
+
+**Проверки:** `reports/retailcase/2026-10-15/claude/C0074/block2/` — `model_check.ts` PASS (включая живой ответ склада 1 и синтетический DTO), MOCK-превью (`resources/preview-mock/`, явная плашка MOCK), живой API старшего смены (POST/PATCH = 0, чужой склад → 404-ошибка и скрытый Гант, mobile 390 без переполнения), регрессия блока 4. 14 скриншотов. Отчёт — `report.md`.
+
+**CONTRACT_REQUEST:**
+- (a) `warehouse_time_zone` (уже у тебя) — после него UI сам переключит окно и ось на пояс склада.
+- (b) Идемпотентный запуск и разрешение отбора волны: `operation_id` + квитанция (сейчас `PickWaveActionRequest` без ключа). До этого кнопки запуска на рабочем месте нет.
+- (c) Обеспеченность волны квалифицированными людьми и техникой и окно ворот волны в aware-времени (источник workload/qualification), чтобы показать «нужно / есть / нет данных» без расчёта в браузере.
+- (d) Bulk-чтение готовности волн (`readiness` + `pick-readiness` + `time-context` по списку ids, bounded), чтобы риски считались не по 12 волнам, а по всем видимым.
+- (e) В ресурсах timeline — по возможности `zone_code`, квалификации, последний сигнал сессии (`observed_at`, aware). Сейчас в карточке «нет данных».
+
+**RELEASE:** блоки 1–2 (справка, Гант, старший смены, правки ops.css/OpsParts) — на review и gate. Дальше, без ожидания: остальные рабочие места по каталогу C0049 (кладовщик приёмки, водитель ричтрака/ТСД пополнения, контролёр отгрузки) в стиле двойника и общий Гант на месте диспетчера/директора; полное покрытие справкой; приёмочные сценарии.
+
+## K-0052 · 2026-10-15 · ACK C-0085/C-0086 + RESULT C0074 блок 3 + RELEASE
+ACK C-0085, C-0086. **Исправлено:**
+- `timelineAdapter.ts`: `require` → `assertShape` (в `workspaces/` больше нет `require(`).
+- Старший смены: обязательный выбор склада (`/api/access/workspaces`, `waves`); единственный подставляется сам, при нескольких не угадывается.
+- Волны читаются с `ware_id`; сборка — `scope=all` с фильтром по `ware_id` задания (подписано: выборка до 200 по всем складам); недостачи — по волнам склада; Гант стола — тот же склад.
+- В TwinDesk сборка тоже `scope=all`.
+- Детали — не больше 12 волн, подписано «проверено N из M». На `shift-overview` переключу после READY.
+- «Отбор не разрешён» — только для LAUNCHED и как «внимание».
+
+**Блок 3:**
+- `workspaces/storage/StorageLeadDesk.tsx` — хранение и ричтраки (`?workspace=storage`): открытые задания, сцена состояний, карточка с кандидатами, Гант ричтраков. `dispatch-nearest` не отправляется (нет operation_id), вместо него переход.
+- `YardDesk` — двор и ворота (`?workspace=yard`): пробел модуля двора показан на экране, Гант по воротам и машинам.
+- Общий Гант у директора, диспетчера и двора.
+- Общая `IsoStageScene.tsx`.
+- Статьи `storage-lead` v2, `workspaces` v6.
+
+**Проверки:** TS PASS, `model_check` PASS. На живом складе 6558233 старший смены показывает волну 478 с 2 блокировками (STAGING, нехватка 3/3) и 2 предупреждениями. Хранение, двор и директор — POST/PATCH 0, mobile без переполнения. Отчёт — `reports/retailcase/2026-10-15/claude/C0074/block3/report.md`.
+
+**CONTRACT_REQUEST:**
+- (f) `ware_id` в `/api/resources/sessions` и/или фильтр по складу — чтобы «Ресурсы на смене» резались по выбранному складу.
+- (g) Нужен ли `ware_id` в `/api/warehouse-tasks` для мультискладовых пользователей — тогда добавлю выбор склада на месте хранения.
+- (h) Идемпотентный `dispatch-nearest` (operation_id + квитанция) — для назначения ричтрака с рабочего места.
+
+**RELEASE:** блок 3 на review/gate. Дальше: приёмка (оператор/старший приёмки), контроль качества/отгрузки, водитель ричтрака (ТСД пополнения) по каталогу C0049; затем полное покрытие справкой и приёмочные сценарии.
+
+## K-0053 · 2026-10-15 · ACK C-0087/C-0088 + RESULT bulk shift-overview + RELEASE
+ACK C-0087, C-0088. `useWaveDetails` переведён на `POST /api/picking/shift-overview`:
+- батчи до 50, параллельность 2;
+- по всем видимым волнам выбранного склада (только `ware_id` == выбранному, чтобы прежний список не ушёл с новым складом);
+- ошибка источника внутри батча показывается как «нет права» или «ошибка источника (код)» и не считается готовностью;
+- непрочитанный батч — ошибка, его волны остаются в «детали не прочитаны»;
+- coverage на экране: «N из M видимых волн, K снимков (не единый снимок смены), прочитано …»; плюс оговорка, что сам список волн ограничен выборкой;
+- смена склада, списка или пользователя отменяет прежние запросы; автоповтора нет.
+
+Предела в 12 волн больше нет. Статья `shift-supervisor` v4. Проверка: `block2/scripts/shift_live_check.cjs` — read-only POST учитывается отдельно (`overview`: только `{warehouse_id:6558233, wave_ids:[478]}`), изменяющих запросов 0, «1 из 1 видимых волн, прочитано 05:51 UTC», 2 блокировки и 2 предупреждения по волне 478. TS PASS.
+
+Многобатчевый случай (>50 волн на склад) на живых данных не проверен: таких складов нет.
+
+**RELEASE** правки. Дальше: приёмка, контроль, ТСД ричтрака.
+
+## K-0054 · 2026-10-15 · ACK C-0089 + RESULT
+- Адаптер: `zone_code`; `qualifications` (null — не прочитано, [] — нет допусков; срок `legacy_valid_until` с пометкой «без пояса»; допуск не трактуется как доступность); `last_signal` («свежий ≤5 мин по часам сервера» или «старше 5 мин», время `legacy_at` «без пояса», на ось не ставится); источник `sessions` — «Сессии».
+- ResourcePlanner: интервал следует за датой шапки, пока пользователь не задал свой. Свой интервал помечен «не следует за датой шапки», «Сутки D» возвращает к дате.
+- `model_check` дополнен (C-0089), PASS; TS PASS. **RELEASE.**
+
+## K-0055 · 2026-10-15 · RESULT C0074 блок 4 + RELEASE
+- `workspaces/receiving/ReceivingLeadDesk.tsx` — приёмка (`?workspace=receiving`): поставки SAP по коду состояния (как `receipt_state` на сервере); карточка из `supply-orders/{id}` со строками план/принято/остаток по артикулу; задания размещения. Команды не отправляются, переход в `receiving.html`.
+- `ReachDriverDesk` — ТСД водителя ричтрака (`?workspace=reach`): свои задания, крупно «откуда/куда», переход в `reachtruck-tsd.html`, предупреждение о read-after-timeout.
+- Статьи `receiving-lead` v2, `reach-driver` v2.
+- Проверки: POST/PATCH 0, mobile и ТСД без переполнения, TS PASS. Отчёт — `reports/retailcase/2026-10-15/claude/C0074/block4/report.md`.
+
+**CONTRACT_REQUEST:**
+- (i) Фильтр даты в `GET /api/integrations/sap/supply-orders` (`date_from`/`date_to` или окно) — чтобы показывать поставки смены, а не последние 100.
+- (j) Очередь проверок контроля (красные теги) — для места контролёра; сейчас gap.
+
+**RELEASE** блока 4. Дальше: полное покрытие справкой новых экранов (аудит help_id/tooltip по всем кнопкам рабочих мест) и приёмочные сценарии C0074 одним прогоном.
+
+## K-0056 · 2026-10-15 · RESULT C0074 блок 5 (аудит справки + приёмка) + RELEASE
+- **Аудит справки** (`block5/scripts/help_audit.cjs`): 9 рабочих мест, 299 элементов, 0 пропусков. Строгое правило: свой title/tooltip и help_id на элементе, label или группе. Все 8 статей опубликованы. Форма входа водителя (transport, чужой файл) получила групповую справку; поля — у владельца.
+- **Приёмочный прогон** (`acceptance_check.cjs`): устаревший ответ отсекается, потеря ответа не рисует Гант, 403 скрывает прежние данные, неизвестная форма — ошибка, смена даты двигает интервал, свой интервал — нет, reload сохраняет роль.
+- **Дефект, найденный и исправленный:** при 401/403/404 после успешного чтения того же пути оставались прежние данные — в `useResourceTimeline` и общем `useApiRead` (access-admin, мой). Теперь они сбрасываются; сеть и 5xx оставляют прежний ответ с пометкой. Регрессия (старший смены, столы блока 3, AccessAdmin read-only) — PASS.
+- **Матрица приёмки по доказательствам:** `proposals/C0074/acceptance_matrix.md`. Смена пользователя проверена только по коду (ремоунт по `apiOperationScope`); вторым живым пользователем не проверялась — нужна твоя native-фикстура, если это обязательно для приёмки.
+- Кроме того, на Ганте есть `data-warehouse`/`data-window` для автоматических проверок.
+
+**RELEASE** блока 5. Согласованная UI-очередь C0074 закрыта до открытых CONTRACT_REQUEST (пояс; идемпотентные launch и dispatch-nearest; квалификации и окна ворот волны; `ware_id` у sessions и warehouse-tasks; фильтр даты поставок; очередь контроля). Дальше по мере READY: переключение на пояс склада, кнопки команд с квитанцией, место контролёра. Читаю канал.
+
+## K-0057 · 2026-10-15 · ACK C-0090 + RESULT
+- Старший смены: `GET /api/resources/sessions?ware_id=<выбранный>`. Фильтр первых 200 сборок в UI остаётся временным — жду серверный CASE warehouse filter, переключу без изменения правил.
+- Запуск волны с рабочего места не добавляю, пока ты не дашь RELEASE по неоднозначным ошибкам и post-commit (принято: `operation_id` уже есть).
+- **Маршрут водителя** (`block5/scripts/driver_identity_check.cjs`): в сессии admin вход водителя с заведомо неверными данными шлёт `/api/driver/trips` от пользователя водителя, без cookie; сервер отвечает 401; admin-идентичность не наследуется. **Находка (не мой файл):** водителю показывается серверный текст «Admin login required.» — для экрана водителя нужен свой код или текст отказа.
+- **Аудит справки:** 299 элементов, 0 пропусков (K-0056). Смена склада, дня и мобильные экраны проверены (`acceptance_check`, `desks_check`, `receiving_reach_check`). Смена пользователя вживую не проверялась: второй тестовой учётки нет, свои не создаю.
+- **Матрица всех рабочих мест** (источники / команды / права / справка / зависимости от API): `proposals/C0074/workplaces_matrix.md`. Полное закрытие спринта не заявляю: это read-only проекции и переходы.
+- Регрессия старшего смены после правки — PASS, TS PASS. **RELEASE.**
+
+## K-0058 · 2026-10-15 · ACK C-0091 + RESULT ware_id + RELEASE
+- **Старший смены:** `case-pick/tasks?scope=all&ware_id`, `case-pick/shorts?ware_id`, `resources/sessions?ware_id`. Фильтрация первых 200 в браузере удалена.
+- **Хранение и ричтраки:** обязательный выбор склада (единственный подставляется сам), `warehouse-tasks?status&ware_id` ×3, сессии по складу, Гант того же склада.
+- **Приёмка:** размещение — `warehouse-tasks?...&ware_id`. Поставки SAP по складу пока фильтруются в браузере (API склад не принимает), это подписано.
+- **Без изменений:** ричтрак ТСД и комплектовщик — свои задания (SELF по `assigned_to`), `ware_id` не нужен.
+- **Проверки:** `desks_check` (хранение просит склад; по складу 1 — пополнение 564), `shift_live_check` (волна 478, 2 блокировки), `acceptance_check` (на столе директора: старый ответ → показан склад 51365792, 403/обрыв/неверная форма → без данных), `help_audit` — 312 элементов, 0 пропусков. POST/PATCH 0, TS PASS.
+- Матрицы обновлены: `proposals/C0074/workplaces_matrix.md`, `acceptance_matrix.md`. **RELEASE.**
+
+## K-0059 · 2026-10-15 · ACK C-0092 + RESULT
+- `PickerDesk`: `/api/case-pick/tasks?scope=self&limit=200`; клиентский фильтр `assigned_to` оставлен только как защита формы. Без назначенных — «Заданий нет».
+- Статья `shift-supervisor` v6: три исхода запуска в панели смены — отказ; «запуск не подтверждён» (повтор той же командой, новую не создавать); «запущена, подготовка заданий не завершена» (перечитать по квитанции, затем повтор той же командой). Кнопки запуска на рабочем месте по-прежнему нет — жду твой RELEASE по квитанции и native launch.
+- TS PASS, регрессия рабочих мест (`C0056/block4/workspaces_check`, комплектовщик ТСД) — без POST, без переполнения. **RELEASE.**
+
+## K-0060 · 2026-10-15 · ACK C-0093…C-0110 + перераспределение locks
+ACK C-0093…C-0110. Принято: C0095/C0106 (магазин) и C0108 (старший смены и Гант) ведут отдельные сессии. **Снимаю свои locks** с `workspaces/resources/**` и `workspaces/shift/**` — они эксклюзивно у C0108; `features/delivery/**` магазина не трогаю.
+**Беру по C-0093/C-0094 (мой каталог `workspaces/receiving/`):**
+1. Приёмка на реальном контракте: `warehouse_id` (не `ware_id`) серверу; `date_from`/`date_to` (календарные, включительно, ≤31 дня); `date_basis` PLANNED_ACCEPT/ACCEPTED/DOCUMENT с понятной подписью; `include_unplanned` — отдельный backlog «без плановой даты»; `time_status=UNRESOLVED_SERVER_LOCAL` — «календарная дата источника, пояс не известен». Клиентский фильтр первых 100 удаляю.
+2. Аудит текста отказа входа водителя: файлы transport не мои — дам точную рекомендацию.
+3. Карточка восстановления запуска (read-only `GET …/launch-receipts/{operation}`) по месту относится к `shift/`, то есть к C0108. Сделаю её отдельным компонентом в своём каталоге (`workspaces/recovery/LaunchReceiptCard.tsx`) без отправки команд, а встраивание в стол старшего смены передам C0108 через root.
+
+## K-0061 · 2026-10-15 · RESULT C-0093/C-0094 + RELEASE
+1. **Приёмка на календарном контракте** (`workspaces/receiving/`: `supplyQuery.ts`, `SupplyFilterBar.tsx`, `ReceivingLeadDesk.tsx`):
+   - серверу уходят `warehouse_id`, `date_from`/`date_to` (≤31 дня, проверка до запроса, иначе запрос не отправляется) и `date_basis` (плановая дата приёмки / дата приёмки / дата документа, с пояснением);
+   - `include_unplanned` даёт отдельный список «без плановой даты» — не в плитках и не на схеме;
+   - даты показаны как календарные поля источника, пояс не известен;
+   - клиентский фильтр первых 100 удалён;
+   - окно следует за датой шапки, пока не задано вручную.
+
+   Живая проверка (`block4/scripts/receiving_calendar_check.cjs`): точные запросы в логе; PLANNED_ACCEPT — 0 в окне и 64 без плановой даты; ACCEPTED 01–15.10 — 3/37/2; со складом 31217707 — 0/1; окно с 01.08 — ошибка, запрос не отправлен; POST 0. Статья `receiving-lead` обновлена.
+2. **Текст отказа водителя:** `proposals/C0074/driver_auth_text.md`. Причина — общий `raise_unauthorized()` («Admin login required.») плюс `driverApi.ts:13` выводит `detail` плюс `String(e)` даёт «Error:». Готовый патч сопоставления 401/403/404 для владельца transport; я файлы не правил.
+3. **Карточка квитанции запуска** (read-only): `workspaces/recovery/LaunchReceiptCard.tsx`, экспорт из `workspaces/index.ts`, превью `recovery/preview/`. Читает `launch-receipts/{operation}` и `readiness`; APPLIED — «проведён, подготовка заданий квитанцией не подтверждается»; NOT_VISIBLE — «не доказательство отмены или отката, повтор той же командой тем же ключом»; переход в панель смены. Команд нет. Проверено: NOT_VISIBLE на волне 561, кнопка неактивна без данных, mobile без переполнения, POST 0. **Встраивание в стол старшего смены — `shift/` (C0108), передаю через тебя.**
+
+**Внимание C0108/root:** сейчас `tsc` падает только в `workspaces/resources/preview-mock/mockTimeline.ts:16,24` — `last_signal` без `session_id` после их правки типа. Не моя зона, не трогаю; мои файлы чистые.
+
+**RELEASE** пунктов 1–3. Дальше по твоей очереди — жду READY native launch и очередь контроля; читаю канал.
+
+## K-0062 · 2026-10-15 ~18:10 МСК · возобновление после лимита + C0113
+Сессия возобновлена после сброса лимита. Прочитаны C0111/C0112, PROMPT C0113 и C0113 REVIEW. Ревью C0113 взял (файла статуса не было): RESULT/RELEASE — в `CLAUDE_C0113_TO_CODEX.md` (Q-0001), три правки в `features/inventory/case-work/`. Главная — сбой чтения контекста больше не блокирует явный повтор сохранённой операции. Мои прежние RELEASE K-0061 (календарь приёмки, текст водителя, карточка квитанции запуска) ждут твоей интеграции. До 19:00 читаю канал.
+
+## K-0063 · 2026-10-15 23:05 МСК · ACK C0113/C0114 integration + ACK C0115 + CONTRACT_REQUEST
+**ACK** интеграции C0113/C0114 (18:45). Принято:
+- C0113 записан на сессию `654a1dc6…`;
+- мои три правки в `case-work/` (`CaseWorkApp.tsx`, `useCaseWork.ts`, `WorkPanel.tsx`, см. `CLAUDE_C0113_TO_CODEX.md` Q-0001) просмотрены root отдельно и не приписываются C0113;
+- исторические journals и cleanup CASE1138/1139 не повторяю.
+
+**ACK C0115** (checkpoint 22:55). Прочитаны `wiki/roadmap/retailcase_execution_2300_20261015.md` и PROMPT C0115. Граница 23:00 прошла. Новую реализацию не начинаю, пока нет нового поручения владельца и READY backend. Параллельных веток и повторных общих проверок не запускаю.
+
+**Занятые файлы** (для следующего разрешённого окна):
+- остаются за мной: `admin/wms_admin_frontend/src/features/platform/{access-admin,knowledge-editor,help}/**`; `workspaces/**`, кроме `resources/**` и `shift/**`; `docs/help/authoring/**`; `proposals/{C0049,C0056,C0074}/**`; `reports/retailcase/2026-10-1*/claude/**`;
+- для задачи recovery дополнительно нужны (сессия C0108 освободила их): `workspaces/shift/useShiftData.ts`, `workspaces/shift/ShiftSupervisorDesk.tsx`; в `TwinDesk.tsx` (мой) — источник «Восстановления»;
+- `features/delivery/**`, `inventory/assembly/**` и `inventory/case-work/**` не беру.
+
+**CONTRACT_REQUEST — recovery-shorts scoped:**
+1. `GET /api/inventory/recovery-shorts?ware_id=<id>&limit=<n>`: native-допуск текущего склада для actor, фильтр до limit; при нескольких складах без `ware_id` — ошибка, а не первый склад; превышение limit — явный 409 или `has_more`, не обрезка.
+2. Точная форма строки (поля и типы, время с `time_status`, если legacy) — сейчас UI показывает `Record<string, unknown>`.
+3. Коды отказов: 403 (нет права или revoke), 404 (склад), 422 (параметры).
+
+**План UI после READY:**
+- передать выбранный склад (старший смены — `wh`; директор — без склада, источник явно помечен «нужен склад» вместо чтения без scope);
+- при 401/403/404 скрывать прежние данные (поведение `useApiRead` уже такое);
+- переключение склада без устаревшего ответа;
+- tooltip/help и статус «источник не прочитан / нет права»;
+- проверки: смена склада, revoke, устаревший ответ, mobile.
+
+До READY источник не выдаётся за доказанный scoped обзор.
+
+## K-0064 · 2026-10-16 · ACK C0116
+ACK `PROMPT_CLAUDE_C0116_MANUAL_WEIGHT.txt` и `API_READY_SINGLE_CLAUDE.md`. Работаю без ожидания. Backend, Oracle, DDL и live quantity POST — не мои.
+**Занятые файлы:**
+1. **Вес магазина:** `terminal/wms_terminal_web/src/features/delivery/` — `contracts.ts`, `receiptIntentValidation.ts`, `receiptDraft.ts`, `receiptResult.ts`, `components/WeightEvidencePanel.tsx`, `components/ScaleConnection.tsx` и их фактические вызывающие (`useStoreWeighing.ts`, `receiptFlowActions.ts`, `useReceiptForm.ts`, `components/DeliveryDetail.tsx`, `components/ReceiptSummary.tsx` — по мере необходимости), `styles.css`.
+2. **Погрузка:** действующий экран `/wms-admin/transport-loading.html` уже шлёт `measurements` с `MANUAL_CONFIRMED`. Правлю только подсказки и ссылки справки в `wiki-raw/wms_admin_ui_reference/transport-loading.html`/`.js`, без изменения тела команды.
+3. **Ожидаемый состав:** `admin/wms_admin_frontend/src/features/platform/workspaces/consolidation/**` (новый экран плана рядом с `HuTreeDesk`), `workspaces/WorkplaceHome.tsx` (навигация). `features/inventory/HuTreeWorkspace.tsx` только читаю.
+4. **Отчёт и проверки:** `coordination/retailcase-claude/RESULT_C0116.md`, `reports/retailcase/2026-10-16/claude/C0116/**`.
+
+## K-0065 · 2026-10-16 · RESULT + RELEASE C0116
+Полный отчёт — `RESULT_C0116.md`; проверки и скриншоты — `reports/retailcase/2026-10-16/claude/C0116/`.
+**Изменённые файлы:**
+- **Магазин:** `terminal/wms_terminal_web/src/features/delivery/` — `manualWeight.ts` (новый), `contracts.ts`, `receiptIntentValidation.ts`, `useReceiptForm.ts`, `useStoreReceivingFlow.ts`, `components/{WeightEvidencePanel,ReceiptVerification,DeliveryDetail,ReceiptSummary}.tsx`, `styles.css`. `ScaleConnection.tsx` не менялся.
+- **Погрузка:** `wiki-raw/wms_admin_ui_reference/transport-loading.html` — только группа, подсказки и ссылки справки; тело `measurements` прежнее.
+- **Ожидаемый состав:** `admin/.../workspaces/consolidation/{planModel,planCommands,usePlanList}.ts`, `{PlanView,PlanEditor,ConsolidationDesk}.tsx`, `plan.css` (новые), `HuTreeDesk.tsx`; плюс `workspaces/WorkplaceHome.tsx`, `workspaces/ops.css`, `workspaces/shift/ShiftSupervisorDesk.tsx` (склад из адреса и кнопка «Ожидаемый состав»).
+
+**Проверки:** TS терминала и админки — PASS; `vite build` терминала в отдельный каталог — PASS. UI fixtures магазина — 6/6 (точный повтор тех же байт после reload, переключение источника веса, тело только с одним источником, акт «введено пользователем / получено от прибора»). Консолидация — 7/7 (GET живые, PUT перехвачены: обрыв → reload → точный повтор → ACK; 409 `outcome_confirmed` снимает команду; устаревший склад отброшен; 390 px). Погрузка — подсказки и справка; навигация «старший смены ↔ консолидация» — PASS. Реальных изменяющих запросов 0.
+
+**Нужно от root:**
+- (1) Прокси `/help` в `terminal/wms_terminal_web/vite.config.ts` для dev-режима (в production same origin работает).
+- (2) Живая приёмка магазина с ручным весом и живой PUT/cancel плана — на твоей стороне.
+- (3) Если нужна отдельная возможность «консолидация» в `/api/access/workspaces` — пока использую `warehouse_tasks`.
+
+**RELEASE C0116.**
+
+## K-0066 · 2026-10-16 · ACK C0116 native update
+ACK: DTO не менялся. Сверил реальный `weight` из `manual-weight/committed-case/receipt-v3.json` с разбором акта в UI (`ReceiptSummary.validWeight`/`ReceiptWeight`): поля и типы совпадают (строки масс, `in_tolerance`/`act_confirmed` 0/1, `capture_key`/`device_id` null, `MANUAL_CONFIRMED`). Акт покажет «введено пользователем». Live POST не выполнял. RELEASE K-0065 в силе.
+
+## K-0067 · 2026-10-16 · ACK C0117
+ACK `TASK_C0117.md` и `PROMPT_CLAUDE_C0117.txt`. Принял к сведению интеграцию C0116 (root-integration-v3). Работаю без ожидания.
+**Занятые файлы:**
+- `admin/wms_admin_frontend/src/features/platform/workspaces/recovery/**` — новые: тип, модель, хук, список, карточка; `LaunchReceiptCard` не трогаю;
+- `shift/useShiftData.ts`, `shift/ShiftSupervisorDesk.tsx`, при необходимости `shift/types.ts`;
+- точечно `TwinDesk.tsx` и `RoleDesks.tsx` (обзор директора);
+- `docs/help/public/short-recovery.html` (новый);
+- `coordination/retailcase-claude/RESULT_C0117.md`, `reports/retailcase/2026-10-16/claude/C0117/**`.
+
+Backend, SQL, Oracle, `session.css`, `vite.config.ts` и отчёты C0116 не трогаю. Живые недостачи не создаю.
+
+## K-0068 · 2026-10-16 · RESULT + RELEASE C0117
+Отчёт — `RESULT_C0117.md`; проверки и скриншоты — `reports/retailcase/2026-10-16/claude/C0117/`.
+**Изменённые файлы:**
+- `workspaces/recovery/{recoveryModel,useRecovery}.ts`, `RecoveryPanel.tsx`, `recovery.css` — новые;
+- `shift/ShiftSupervisorDesk.tsx`, `shift/useShiftData.ts`, `TwinDesk.tsx`, `RoleDesks.tsx`;
+- `docs/help/public/short-recovery.html` — новый.
+
+**Суть:**
+- типизированный и строго проверенный источник `recovery-shorts?ware_id&limit=50`;
+- этапы по фактическим полям сервера, неизвестный код помечен и не считается «готово»;
+- карточка связывает недостачу, сборку, волну, пересчёт и пополнение; ссылки только в существующие экраны и поддержанные параметры;
+- «Волна» открывает карточку волны, после её закрытия — возврат к той же недостаче; волна подсвечивается на схеме;
+- у директора — честный обзор «все разрешённые склады».
+
+Предел 50 без полноты, даты без пояса, 403 вместо 404 и относительный `remaining_seconds` показаны явно.
+**Проверки:** TS PASS; `recovery_check.cjs` 9/9 — живые пустая выборка и 403; этапы, предел, 5xx, смена склада, волна и возврат, 390 px — на UI fixtures. Изменяющих запросов 0.
+**RELEASE C0117.**
+
+## K-0069 · 2026-10-16 · ACK C0118 (задача 1 из 3)
+ACK `TASK_C0118.md` и `PROMPT_FINISH_UI_A_20261016.txt`. Принял интеграцию C0117 (`shift/useShiftContext.ts` — твоя экстракция, сохраняю её). Работаю сразу.
+**Locks** (в пределах `admin/wms_admin_frontend/src/features/platform/`):
+- `help/KnowledgePanel.tsx`, `help/help.css` — плавающая справка;
+- `workspaces/WorkplaceHome.tsx`, `workspaces/shift/{ShiftSupervisorDesk.tsx,useShiftContext.ts,WaveCard.tsx}`;
+- `workspaces/resources/{ResourcePlanner.tsx,WarehousePicker.tsx}`;
+- `workspaces/storage/StorageLeadDesk.tsx`, `workspaces/receiving/ReceivingLeadDesk.tsx`, `workspaces/consolidation/ConsolidationDesk.tsx`;
+- новый `workspaces/useUrlWarehouse.ts`;
+- `docs/help/public/shift-navigation.html` (новый);
+- отчёт `RESULT_C0118.md`, `reports/retailcase/2026-10-16/claude/C0118/**`.
+
+Backend, SQL, права, KPI и `features/delivery` не трогаю. Если понадобится что-то вне списка — сначала напишу сюда.
+
+## K-0070 · 2026-10-16 · RESULT + RELEASE C0118
+Отчёт — `RESULT_C0118.md`; проверки и скриншоты — `reports/retailcase/2026-10-16/claude/C0118/`.
+**Исправлено (подтверждено аудитом):**
+- (1) склад терялся при переключении рабочих мест → общий `useUrlWarehouse` (хранение, приёмка, Гант директора/диспетчера/двора, консолидация; `useShiftWarehouse` теперь он же);
+- (2) плавающая «? Справка» закрывала кнопку процесса на 390 px → на узком экране она в потоке страницы (static), на desktop компактная; имя «? Справка» сохранено;
+- (3) не было переходов к контролю и магазину → `shift/ShiftWarehouseBar.tsx` («Грузовые места», «Приложение магазина», «Справка») и «Контроль места» в плане консолидации (`warehouse-hus.html?identifier=`);
+- функция стола старшего смены — 95 строк, строка склада вынесена.
+
+**Вне поимённого ACK** (в объявленных каталогах): `shift/ShiftWarehouseBar.tsx` (новый), `consolidation/PlanView.tsx`.
+**Проверки:** TS PASS; `c0118_check.cjs` 6/6. Склад 6558233 сохраняется на 6 местах; путь «волна → ресурсы волны в Ганте → снять фильтр → волна»; чужой склад → ошибка без Ганта; семейства — живые ричтраки, ворота, комплектовщики, машины только в MOCK (в живом окне их нет); 390 px без перекрытий и переполнения. Записей и ошибок JS 0.
+**RELEASE C0118.** Следующий запуск — C0119 (KPI) по `API_READY_FINISH_KPI.md`.
+
+## K-0071
+**ACK C0121 — CASE handoff UI** (API_READY_C0121.md, TASK 21:19). Multi-store не делаю; C0119/C0120 не запускаю.
+**Владение (wiki-raw/wms_admin_ui_reference/):** `case-handoff.js` (переписываю: журнал передачи на `wmsCommandIntent`, отправка/повтор/исход), новые `case-handoff-dialog.js` (форма `<dialog>`), `case-handoff.css`, `case-access.js` (гейт страницы по плоскому праву ИЛИ активному назначению области из `/api/access/me`; сервер решает), правки `case-pick-management.html` (подключение файлов; гейт `data-required-permission` заменяю на `case-access.js`) и `case-pick-management.js` (transferSelected, task_id в адресе, очистка данных при 401/403/404, повтор решений по недостачам не отсекать только плоским правом).
+**Плюс:** `docs/help/public/case-handoff.html` (новая); отчёты в `reports/retailcase/2026-10-17/claude/C0121/`.
+**Не трогаю:** admin-auth.js, admin-nav.js, wave-command-intent.js (только использую), backend/Oracle, loading/finance/KPI, React-админку. Старые legacy-intents `case.handoff:*` не удаляю молча: показываю отдельно, повтор тем же телом, архив только явным действием. Бизнес-POST не выполняю; позитив — fixture с пометкой.
+
+## K-0072
+**RESULT + RELEASE C0121** — `RESULT_C0121.md`.
+- Вместо prompt — `<dialog>` (`case-handoff-dialog.js`, `case-handoff.css`): живая карточка текущего исполнителя, подписанные ID ресурса/сессии (проверит сервер), скан «Идентификатор паллеты» (не SSCC-only), причина, флажок физической передачи; title+help-id, `/help/case-handoff.html`, 390 px, клавиатура.
+- `case-handoff.js` на `wmsCommandIntent`: тело и `offline_event_id` неизменны; 403/409 на первой отправке снимают запрос; после неизвестного исхода 403/409 запрос НЕ снимают (readback карточки: уже у цели → доказано), снятие только явным действием в `:resolved:`; повреждённая запись — только архив. Legacy `case.handoff:*` показываются отдельно, исход неизвестен, не удаляются.
+- `case-access.js`: страница открывается по `case_pick_view` ИЛИ ACTIVE-назначению из `/api/access/me`; отказ/401/403/404 очищают данные. `task_id` в адресе.
+**Проверки:** `c0121_check.cjs` PASS 12/12; POST передачи — только UI fixture, живых записей 0, ошибок JS 0.
+**Вне UI:** вход требует плоский PRAVO_ADMIN_LOGIN; ссылка навигации в `admin-nav.js` — по плоскому праву (предлагаю root). **RELEASE C0121.** Жду `RELEASE_READY_C0122.md`.
+
+## K-0073
+**ACK C0122 — финальный UI-пакет** (RELEASE_READY_C0122.md 21:52). Multi-store, бизнес-POST, backend/Oracle/grants не трогаю.
+**Владение (wiki-raw/wms_admin_ui_reference/):**
+- CASE: `case-handoff.js`, `case-handoff-dialog.js`, `case-handoff.css`, `case-access.js`, `case-pick-management.{html,js}`, новый `case-page-mobile.css` (локальный override min-width/компоновки, глобальный styles.css не меняю); `docs/help/public/case-handoff.html`.
+- Навигация: `admin-nav.js` (+ helper `window.wmsNativeAccess` внутри него: кэш `/api/access/workspaces`, раскрытие пунктов по native capabilities с текущим складом; общий auth.permissions не меняю).
+- Погрузка: `transport-loading.html` (секция «Выезд» — flat `transport_dispatch_close` → flat ИЛИ native `dispatch`), `warehouse-hus.html` (гейт страницы и секция «Отгрузка целого места» — flat ИЛИ native `warehouse_tasks`/`dispatch`).
+- Отчёты: `reports/retailcase/2026-10-17/claude/C0122/`.
+**Recovery:** квитанция `transfer-receipt` с полной сверкой тела; после unknown любой отказ (400/403/404/409/422) оставляет pending; «копия для разбора» не снимает блокировку; повреждённый журнал не разблокируется архивом (только квитанция по извлечённому `offline_event_id`).
+**Ограничение среды:** чтение пароля тестового actor `MT16M…` из RUSERS заблокировано авто-режимом моей сессии — живые проверки под admin, scoped login/nav/CASE — fixture профиля + живые GET под admin. Root может прогнать `c0122_check.cjs` с env `C0122_SCOPED_USER/PASS` (поддержу).
+
+## K-0074
+**RESULT + RELEASE C0122** — `RESULT_C0122.md`.
+- Recovery: доказательство только неизменной квитанцией `transfer-receipt` (task/id/actor/source/confirmed + все 9 полей тела, nullable опущено=null); совпадение текущего назначения — не квитанция. После unknown 400/403/404/409/422 запрос остаётся; «Снять в архив» удалено → «Копия для разбора» (блокировка остаётся); повреждённая запись — только квитанция по извлечённому ключу. Справка обновлена.
+- CASE 390: локальный `case-page-mobile.css` (body.case-mgmt), кнопка повтора недостач в потоке и только при наличии решений.
+- Nav: helper `wmsNativeAccess` в `admin-nav.js` по `/api/access/workspaces` (picking/dispatch/warehouse_tasks, склад в ссылке); CASE — flat ИЛИ picking (не любое ACTIVE), выбор склада → `ware_id`. Loading: «Выезд» и HU (страница/скан/упаковка/отгрузка) — flat ИЛИ native.
+**Проверки:** `c0122_check.cjs` PASS 12/12 (POST/квитанции/scoped-профиль — fixture), `legacy_gates` PASS, повтор C0118 PASS, `e2e_smoke` (KPI/консолидация/магазин desktop+390) PASS, architecture PASS; живых записей 0, ошибок JS 0.
+**Не сделано мной:** живой scoped-вход — чтение пароля MT16M… заблокировано авто-режимом; запуск с `C0122_SCOPED_USER/PASS` поддержан. Оставшиеся плоские гейты перечислены с file:line. **RELEASE C0122.**
+
+## K-0075
+**ACK C0124 — финальный UI-пакет** (TASK_C0124 07:42). Начинаю независимый обзор сейчас; KPI V2 — после `API_READY_C0124.md`.
+**Владение:** `admin/wms_admin_frontend/src/features/platform/workspaces/kpi/{PickerSection.tsx, labels.ts, kpi.css}`, `docs/help/public/kpi-workplace.html`. `kpi/contracts.ts`, resources/shift contracts — не трогаю (при необходимости — CONTRACT_REQUEST). Другие файлы — только при доказанном блокере, с отдельным списком в RESULT.
+**Отчёты:** `reports/retailcase/2026-10-17/claude/C0124/`. Без мутаций, без агентов, без старых QA-учёток; живые чтение/вход отделены от перехваченных fixture.
+
+## K-0076
+**RESULT + RELEASE C0124** — `RESULT_C0124.md`.
+- Путь смены → волна (готовность/риски) → сборка «В Ганте» → карточка работы → «Волна» назад: PASS desktop+390 (живой, склад 9278842). Регрессия C0118 (4 семейства, VEHICLE только MOCK), C0117 recovery, C0116 магазин/ручной вес — PASS. Кода в этой части не менял: блокеров нет.
+- KPI V2: `PickerSection.tsx` (итог: строки/из них с согласованной недостачей, целые коробки + штуки отдельно, null=«Нет данных», покрытие наблюдённых отборов «не табель»; завершённые строки с `at`/`approved_at`; недостача и связанные возвраты по товару+единице без суммирования единиц и без вины), `labels.ts` (5 новых кодов, удалены policy-pending), `kpi.css`, справка `kpi-workplace.html` V2.
+**Проверки:** tsc PASS, architecture PASS; `kpi_v2_check.cjs` живой GET 20266481 (1 BOX + 1 EA + возврат 25 EA) и UI fixture (ACCEPTED_SHORT, EA+KG, null) — PASS desktop+390; записей 0, ошибок JS 0.
+**Ограничение:** `time_reasons` нет в contracts.ts — не показан (по желанию CONTRACT_REQUEST). **Блокер: НЕТ. RELEASE C0124.**
+
+## K-0077
+Дополнение к RELEASE C0124 (по C-0126): живое чтение V2 склада 20033496 / CASE1153 под admin (учётку кейса не трогал) — PASS desktop+390: «1 строка (из них с согласованной недостачей 1)», 1153/1155 ACCEPTED_SHORT 24/1, `at` 04:51 и `approved_at` 04:59 раздельно, недостача 1 EA, связанный возврат 24 EA отдельно. `kpi_v2_short_live.json`, `k3_live_short_*.png`. RESULT_C0124 обновлён. Блокер: НЕТ.
+
+## K-0078
+**Поручение владельца (17.10): принципы Ponytail/YAGNI для всех агентов проекта.** Добавлен раздел `## Minimal Code Discipline (Ponytail / YAGNI)` в конец `AGENTS.md` и строка-указатель в начале `CLAUDE.md`. Суть: перед кодом — нужно ли сейчас → существующий helper/модуль проекта → stdlib/платформа → установленная зависимость → только затем минимальный код; без спекулятивных опций и одноразовых абстракций, удалять мёртвый код в затронутой зоне. Не урезаются: серверные права/scope, валидация, идемпотентность и recovery, очистка устаревших данных, encoding, доступность (title/help-id/390), живые проверки и честные доказательства. Прошу применять в своей части и при ревью. Если формулировка в AGENTS.md (root-файл) требует правки — правь сам.
+
+## K-0079
+**ACK C0125 — смоук собранного продукта** (3000/3010/8088). Сначала проверка без правок кода (Ponytail): смена → волна → задание/Гант → назад; магазин: список → приёмка → скан/ручной вес/справка/восстановление; desktop+390. Файлы правлю только при доказанном блокере — список отдельным сообщением ДО правки. Отчёт: `reports/retailcase/2026-10-17/claude/C0125/`, `RESULT_C0125.md`. Без мутаций, без чтения QA-паролей, CASE1154 не трогаю.
+
+## K-0080
+**RESULT + RELEASE C0125** — `RESULT_C0125.md`. Собранный продукт: путь смены 3000 (`?page=workspace&workspace=shift`) → волна → сборка 1040 «В Ганте» → «Волна» назад — живой PASS desktop+390; магазин 3010 живой: магазины → поставки (рейс 33651) читаются, «Принять →» требует учётку приёмщика (граница прав, не сбой); C0116 fixture-регрессия магазина (ручной вес/весы/повтор/акт/справка) PASS после исправления тайминга в ТЕСТЕ. Записей 0, ошибок JS 0. Изменений продукта нет. **Блокер: НЕТ. RELEASE C0125.**

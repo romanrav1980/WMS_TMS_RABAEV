@@ -1,7 +1,7 @@
 """Slotted packing reuses the original native HU attach and placement owners."""
 from fastapi import APIRouter, Depends
 from pydantic import Field
-from ...platform.public import AdminUser, require_permission
+from ...platform.public import AdminUser, get_current_user
 from .warehouse_hu_routes import (
     Link, CaseLink, Measurements, WarehouseHuPort, warehouse_hu_service, execute,
 )
@@ -26,12 +26,12 @@ class CaseRepack(CaseLink):
 
 
 @router.post("/repack-slot")
-def repack(body: Repack, user: AdminUser = Depends(require_permission("warehouse_task_execute")),
+def repack(body: Repack, user: AdminUser = Depends(get_current_user),
            service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     return execute(service, "HU_REPACK_SLOT", body, user.username)
 
 
 @router.post("/repack-case-slot")
-def repack_case(body: CaseRepack, user: AdminUser = Depends(require_permission("warehouse_task_execute")),
+def repack_case(body: CaseRepack, user: AdminUser = Depends(get_current_user),
                 service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     return execute(service, "HU_REPACK_SLOT", body, user.username)

@@ -1,0 +1,36 @@
+{
+  "migration_id": "2026-10-15-assembly-scale-recovery",
+  "state": "APPLIED",
+  "before": [
+    "RRL_ASSEMBLY_SCALE_API PACKAGE",
+    "RRL_ASSEMBLY_SCALE_API PACKAGE BODY"
+  ],
+  "invalid_before": 0,
+  "authorization": "Root approved two-stage requester HOLD then distinct controller removal confirmation then actual stable RECONCILE; no goods stock commits in fixtures",
+  "recovery": "Empty-only paired rollback; history preserved forward repair after use",
+  "sha256": {
+    "apply.sql": "a1983dc7e62f81f3f2079d5d07596499068f59d6be7609a97a4af97ac874d074",
+    "assembly_body.sql": "809b749e10b20e8fd9b7aec5e676b95de7dfe8da2075558c5c0c1fac248552c1",
+    "assembly_spec.sql": "34a8a5b80a265c747ae6635d1fb20e2c5f2b0acc43f21213abc228df6de2e010",
+    "before_assembly_body.sql": "8429da5248e749c54bd381ec654c9158f6bf04530ff475b0071a415615f05370",
+    "before_assembly_spec.sql": "219b8114f84b04dbf3970e0f767a44ffe951211bb1f7cc9db0278f01e3ab18ed",
+    "body.sql": "a20970dbc3621c7611cd00f69cc7cebcae717481a0c17a51e553872098f2e2b8",
+    "compile_verify.sql": "80b4420b343b2c541f6579935bec60fb5785369befc727b6fcf8de40868a0d9b",
+    "guards.sql": "5d649bac93aa8bd6c0dedcf4f46bc4fd015ff86214b8861db5969619e35fe8b4",
+    "rollback.sql": "9b3ab4b1e5cf6cfdd5e63cdd7247ccc112fe10f07b2e6b415fd09916dd515525",
+    "schema.sql": "1f31cb17ca5d03177f92bd31b42c041d1000cad454547d4990ab132076a54830",
+    "spec.sql": "d51a392865b5ec95e5ed10810a31d145ca27e8b53dc7673fb49794682456f833",
+    "verify.sql": "eebb6c3c46fcf7322f211d2e132584dffe10460552ed9080f4091fba7fd4c27a"
+  },
+  "verification": {
+    "source_checks": 6,
+    "global_invalid": 0,
+    "user_errors": 0,
+    "constraints": "ENABLED",
+    "ledger": "APPLIED",
+    "source_report": "reports/retailcase/2026-10-15/assembly-scale/recovery-oracle-verification.json",
+    "native_report": "reports/retailcase/2026-10-15/assembly-scale/recovery-native.json",
+    "actual_opc_http_recovery": "PASS_COMPLETED_CANCELLED_OPEN_RAW1.2MATCHED_NO_GOODS",
+    "cleanup": "reports/retailcase/2026-10-15/assembly-scale/final-cleanup-verification.json"
+  }
+}

@@ -1,0 +1,13 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_task_scopes\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_task_scopes\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_task_scopes\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_task_scopes\rrl_hu_exec_access_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_task_scopes\rrl_case_task_access_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_task_scopes\rrl_warehouse_task_access_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_task_scopes\rrl_stock_hu_cmd_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_task_scopes\rrl_stock_hu_task_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_task_scopes\rrl_stock_posting_api_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_task_scopes\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_task_scopes\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_task_scopes\after_sources.sql
+Done. Statements=12; Errors=0; AbsentCleanup=0

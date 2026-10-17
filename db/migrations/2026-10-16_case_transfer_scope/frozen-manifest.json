@@ -1,0 +1,35 @@
+{
+  "migration_id": "2026-10-16-case-transfer-scope",
+  "status": "PREPARED_NOT_APPLIED",
+  "before_sources": {
+    "RRL_CASE_RESOURCE_POLICY|PACKAGE BODY": "E0C2A5F3F43FCD7083A081E219B2E592B1C2D6DF52DD0BEA78D00D4ADF1D4AF3",
+    "RRL_CASE_TASK_ACCESS|PACKAGE BODY": "77A708C1475DE798D7C5F66D5F5F245ADB55E9A278BA7048045C5183A28E4CD9"
+  },
+  "after_sources": {
+    "RRL_CASE_RESOURCE_POLICY|PACKAGE BODY": "D97BF859C9F5BCB5A62E6AA473DF40F2410B1E54588D5374CDE09C3DF4E01B89",
+    "RRL_CASE_TASK_ACCESS|PACKAGE BODY": "77A708C1475DE798D7C5F66D5F5F245ADB55E9A278BA7048045C5183A28E4CD9",
+    "RRL_CASE_TRANSFER_SCOPE|PACKAGE": "43CEA533BECFEA25147E8195F33570A3C10C0EBB78385351F9E68B1626A938B0",
+    "RRL_CASE_TRANSFER_SCOPE|PACKAGE BODY": "26A7545F3BD56FEF1B5837AE2CA792B7D6BE88B847E34F4A93259AAB6E5F887B"
+  },
+  "dependencies": [],
+  "files": {
+    "after_sources.sql": "da4b8e8e81ba828333b70b925c364439380ea7bbf633c85c33f0caaa71c6db6e",
+    "apply.sql": "95a1ebb4036eee70ee68b053c64570929a9b25724ffba9c159d846a24fc9c4b5",
+    "before.sql": "4f1416d24743828bbe018b70fb7233460058d5d603f7a410a5e796ff76f16de3",
+    "before_sources.sql": "e81b1dd1a94b6fd5e1545c15f6abdf66861e4dd08432559f39352131399b72a6",
+    "compile_dependents.sql": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "804dab073ed3bb31ddb06de1b85c0b15dab035ecbac120d0f9994753703874a2",
+    "restore_rrl_case_resource_policy_package_body.sql": "0f5decb79dbbd36c48570e4226103ceb1a576fe405119c96abe6b9f61d932deb",
+    "rollback.sql": "10e15d6cd97ace8131704d651a8ec73665ff606963b4911d14ed26be396a5e43",
+    "rrl_case_resource_policy_package_body.sql": "d61eb334bbf04529df16efcafa9e6487b43ef852b6d1966f24e974863f548793",
+    "rrl_case_transfer_scope_package.sql": "a62055c82a4ce6ea84974087ae0937a8ceaa963e40c83ebe0dbcdc2e977bb210",
+    "rrl_case_transfer_scope_package_body.sql": "4cd4b0dbacb1cf647d9a8e89caf7217b64b3d1be27791745bf405afc36577e7f",
+    "verify.sql": "00680b8bf2b2fd199e1f99646fc7d68baac69f7fa7a0b5e65279fa4eca95dd73"
+  },
+  "code_checkpoint": {
+    "api/wms_api_server/app/modules/resources/infrastructure/case_assignment.py": "e518686ce93515681fed06fe3efa83d891f5b35275f11a2028b15373f2672e0e",
+    "api/wms_api_server/app/routers/case_pick.py": "d461d7204695a21ec059e093da08313ac8ef057e043ad331799229a511884c98",
+    "api/wms_api_server/app/modules/resources/infrastructure/case_handoff.py": "2c6ff4e471ad77880b9b02d7a52150ae47e4335a95d5464829b6c8dddb7f9d21",
+    "api/wms_api_server/app/modules/resources/infrastructure/case_actions.py": "6cd7d56986cb1b2ad978bc3cf9eddce8dc31587fb754e2446fae04dff1a038b9"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "migration_id": "2026-10-15-wave-launch-scope",
+  "git_head": "41c913cf44441cf3656a66b0939e40cb9a83c365",
+  "target": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "invalid_before": 0,
+  "sha256": {
+    "apply.sql": "920ab1220756402f73f3ef5ecf16b537ce5a55b66555bb04c51ad4a693ef00ab",
+    "before_rrl_stock_posting_api.sql": "828d8a4d146d5a2d7bf9dd08c67dc8dd99c9e7a006ae42f5bed7487d3dde84ce",
+    "before_rrl_stock_wave_launch_cmd.sql": "2bfc2174077c28259bf379b773ae40d372c8911061ad61e240d582ed42b13e2d",
+    "before_rrl_wave_exec_access.sql": "f3e787fca665ef397f6a3af8e8bdc00851eb1cda287d40577af12351f8a2e3a9",
+    "rollback.sql": "85b1561f35d2219668c11c975f6548485fa3388d77899891b479355f18182d87",
+    "rrl_stock_posting_api.sql": "51d2269260a11b68ffc28680ab9538f6767600bab0ee9287dd8b3afb2f67cf90",
+    "rrl_stock_wave_launch_cmd.sql": "8dba2e1e076283b04af717489fa446f230cc62b8d5f1ab6f1835fda134ef2b6c",
+    "rrl_wave_exec_access.sql": "20942ac65d10d3ae59cd1d4f43be8718d8f610a74dfa7565c19749916d7a1daf",
+    "verify.sql": "7db6bcdff117c113857267f680b430bb2814d7067a98308369632609e0297b89"
+  },
+  "authorization": "Owner directs scoped rights implementation; physical fixtures rollback-only; no GitHub publication",
+  "state": "PREPARED"
+}

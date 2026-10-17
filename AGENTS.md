@@ -95,3 +95,15 @@ Before making non-trivial project decisions, start here:
 Before RETAILCASE functional changes, read wiki/architecture/retailcase_modular_development_contract.md and config/architecture/retailcase-policy.json. New backend domains use app/modules/<area> with public.py/contracts.py boundaries; frontend features expose index.ts/index.tsx. Do not grow existing oversized legacy functions to add a new scenario.
 
 Run `python scripts/retailcase_quality_gate.py` before accepting code changes. Architecture baseline is existing debt, not permission to add violations. Never regenerate or enlarge it to hide failures; `python scripts/check_architecture.py --tighten-baseline` only reduces paid-down allowances. Changes to ownership, policy or exceptions require documented rationale and independent review. This offline gate does not replace real business/API/Oracle, concurrency, hardware or slow-SQL acceptance.
+
+## Minimal Code Discipline (Ponytail / YAGNI)
+
+Owner rule (17.10.2026) for every agent (Codex, Claude, subagents): write the least code that correctly solves the current, stated requirement. Before writing code, stop at the first rung that works:
+1. Is it needed now? Do not build speculative options, configs, flags, variants or "future" extension points.
+2. Does existing project code already do it? Reuse current helpers and modules (`wmsCommandIntent`, `wmsNativeAccess`, `useApiRead`, `HelpButton`, existing native packages/public.py ports) instead of a parallel copy.
+3. Does the language standard library or platform provide it (`<dialog>`, `URLSearchParams`, `Intl`, Oracle built-ins, FastAPI/Pydantic validation)?
+4. Does an already installed dependency provide it? Do not add new dependencies for small needs.
+5. Only then write the minimum new code; no new abstraction or file for a single call site; prefer editing over adding.
+Delete dead code and obsolete text in the area you touch; do not leave duplicates "just in case". Smaller diffs, fewer files, one answer instead of several alternatives.
+
+Never minimized away: server-authoritative rights and scope checks, input validation, idempotent intents/exact replay and unknown-outcome recovery, error/401/403/404 handling that clears stale data, encoding rules, accessibility (`title`, `data-help-id`, keyboard, 390 px), live verification, quality gate and honest evidence. Record a consciously deferred shortcut in RESULT/limitations instead of hiding it.

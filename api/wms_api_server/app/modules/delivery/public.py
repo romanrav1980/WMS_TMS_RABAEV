@@ -9,6 +9,14 @@ from .infrastructure.store_receipt import StoreReceipt
 def build_store_receipt(gateway: Any, post: Callable[[str,str,dict[str,Any],dict[str,Any],str],dict[str,Any]]) -> StoreReceiptPort:
     return StoreReceipt(gateway,post)
 
+from .contracts_delivery_time import DeliveryTimePort, delivery_time_service
+from .api.delivery_time_routes import router as delivery_time_router
+from .infrastructure.delivery_time import DeliveryTime
+
+
+def build_delivery_time(gateway: Any) -> DeliveryTimePort:
+    return DeliveryTime(gateway)
+
 from .contracts_evidence import StoreEvidencePort,store_evidence_service
 from .api.store_evidence_routes import router as store_evidence_router
 from .infrastructure.store_evidence import StoreEvidence
@@ -60,3 +68,14 @@ from .infrastructure.return_custody import ReturnCustody
 
 def build_return_custody(gateway: Any,post: Callable[[str,str,dict[str,Any],dict[str,Any],str],dict[str,Any]]) -> ReturnCustodyPort:
     return ReturnCustody(gateway,post)
+from .contracts_store_app import StoreAppPort,store_app_service
+from .api.store_app_routes import router as store_app_router
+from .infrastructure.store_app_reads import StoreAppReads
+
+from .contracts_scale_requests import StoreScaleRequestsPort, store_scale_requests_service
+from .api.store_scale_request_routes import router as store_scale_requests_router
+from .infrastructure.store_scale_requests import StoreScaleRequests
+
+
+def build_store_scale_requests(gateway: Any) -> StoreScaleRequestsPort:
+    return StoreScaleRequests(gateway)

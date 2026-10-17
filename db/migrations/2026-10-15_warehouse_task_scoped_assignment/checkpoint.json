@@ -1,0 +1,228 @@
+{
+  "migration_id": "2026-10-15-warehouse-task-scoped-assignment",
+  "status": "APPLIED",
+  "applied": true,
+  "baseline_invalid": 0,
+  "sources": [
+    {
+      "name": "RRL_WAREHOUSE_TASK_ACCESS",
+      "type": "PACKAGE",
+      "file": "before_access_spec.sql",
+      "sha256": "9c093b7877a8f7f1c6df6d4c7d4723d9cd0a42c1f22d2d0a92201cd951148666"
+    },
+    {
+      "name": "RRL_WAREHOUSE_TASK_ACCESS",
+      "type": "PACKAGE BODY",
+      "file": "before_access_body.sql",
+      "sha256": "2021161deb7165ae6239f31ee06e82a18041801fbf2b9f42b53fe4a2123f9aeb"
+    },
+    {
+      "name": "RRL_TASK_RESOURCE_POLICY",
+      "type": "PACKAGE BODY",
+      "file": "before_resource_policy.sql",
+      "sha256": "bc7b7e35f719e0287ac2d36a8c70b8e8048e1092d6c4d716777121e113024e33"
+    },
+    {
+      "name": "RRL_STOCK_TASK_PLAN",
+      "type": "PACKAGE BODY",
+      "file": "before_task_plan.sql",
+      "sha256": "73661c8189b7b8e6b278806b81544e3c70b85e6d349af680aec8f75cac88982e",
+      "unchanged": true
+    },
+    {
+      "name": "RRL_STOCK_TASK_CORE",
+      "type": "PACKAGE BODY",
+      "file": "before_task_core.sql",
+      "sha256": "55934a1cdbadada32570b62c2a1da06511511bde2d4b316dc03622cd7f5fdc40",
+      "unchanged": true
+    },
+    {
+      "name": "RRL_STOCK_POSTING_API",
+      "type": "PACKAGE BODY",
+      "file": "before_posting.sql",
+      "sha256": "52af65674b75a4c5365f1cf91f26d7ffc47f67775af3d8b15fa7ca3230e673f0",
+      "unchanged": true
+    },
+    {
+      "name": "RRL_STOCK_HU_TASK",
+      "type": "PACKAGE BODY",
+      "file": "before_hu_task.sql",
+      "sha256": "40db57ae9ff3c07e59e6b9aa125cd4b445d5f12b74587958e8603d4c9b8cc9ee",
+      "unchanged": true
+    },
+    {
+      "name": "RRL_ST_DEFER_CASE_WAIT",
+      "type": "PACKAGE BODY",
+      "file": "before_defer_case.sql",
+      "sha256": "d8680505278245748945455d17e8218429a5a544250c8b86071f995b8e945785",
+      "unchanged": true
+    }
+  ],
+  "dependent_recompile": [
+    "RRL_STOCK_TASK_PLAN",
+    "RRL_STOCK_TASK_CORE",
+    "RRL_STOCK_POSTING_API",
+    "RRL_STOCK_HU_TASK",
+    "RRL_ST_DEFER_CASE_WAIT"
+  ],
+  "version_strategy": "SIDECAR_AFTER_ROW_NO_TASK_TABLE_ALTER",
+  "delete_owner_audit": {
+    "native_direct_task_delete": 0,
+    "legacy_QA_dynamic_delete": "scripts/warehouse_task_scoped_complete_smoke.py:126; must retire metadata instead of deleting tracked task",
+    "foreign_key": "RESTRICT_NO_DELETE_CASCADE_HISTORY"
+  },
+  "after_sources": [
+    {
+      "name": "RRL_WAREHOUSE_TASK_ACCESS",
+      "type": "PACKAGE",
+      "file": "access_spec.sql",
+      "sha256": "64975e3e78a1ae6870c9230d01318a8f88a43b11c7dc0c58a798010dd080449e"
+    },
+    {
+      "name": "RRL_WAREHOUSE_TASK_ACCESS",
+      "type": "PACKAGE BODY",
+      "file": "access_body.sql",
+      "sha256": "08807c32c42337eb1e08e048d7d48aa073ed10c92731d5a313c0cbb088654c83"
+    },
+    {
+      "name": "RRL_TASK_RESOURCE_POLICY",
+      "type": "PACKAGE BODY",
+      "file": "resource_policy.sql",
+      "sha256": "a021b05b9f426686da0510fec1cb36e1db62dc32ac42f1ab734c64c0e8e948cd"
+    },
+    {
+      "name": "RRL_WTASK_VERSION_API",
+      "type": "PACKAGE",
+      "file": "version_api.sql",
+      "sha256": "5a5dc71bf6836460a6e0931aa13c4551ea39e0c94e723f8c395534a6f0a82cdb"
+    },
+    {
+      "name": "RRL_WTASK_VERSION_API",
+      "type": "PACKAGE BODY",
+      "file": "version_api.sql",
+      "sha256": "1aabec2527d7ead1aae0778fbb27973c4d60bf1c681fb03221d4d29fbd8015f5"
+    },
+    {
+      "name": "RRL_WTASK_VERSION_GUARD",
+      "type": "TRIGGER",
+      "file": "version_api.sql",
+      "sha256": "76284884e4a758f1bddb6b674862523d859e230fcc8bcc2e9f05ecdaf3eb12e2"
+    },
+    {
+      "name": "RRL_WTASK_ASSIGN_DERIVE",
+      "type": "TRIGGER",
+      "file": "version_trigger.sql",
+      "sha256": "da478cd58a9f889f23fcc66b5810f82f6297a54be5dbdfd5dd1f0d556c466bb9"
+    },
+    {
+      "name": "RRL_WTASK_ASSIGN_API",
+      "type": "PACKAGE",
+      "file": "spec.sql",
+      "sha256": "e44625e5d3d047fe94eda51bd4f67279dd2ce220c6f0e1576a0eae432c11c698"
+    },
+    {
+      "name": "RRL_WTASK_ASSIGN_API",
+      "type": "PACKAGE BODY",
+      "file": "body.sql",
+      "sha256": "d50637bd79b5f83580b875a17f1a730550b68db7523138ec8df3e4ba16dc9011"
+    },
+    {
+      "name": "RRL_WTASK_COMMAND_GUARD",
+      "type": "TRIGGER",
+      "file": "receipt_guard.sql",
+      "sha256": "ce267e3bc39616f8ef22d24b0195c315f2bb9f4ec35b3b7df84e2c6a1ac6aa57"
+    },
+    {
+      "name": "RRL_WTASK_IDENTITY_GUARD",
+      "type": "TRIGGER",
+      "file": "identity_guard.sql",
+      "sha256": "a7e94ebac80b49a74ff23a6c50df8c2cc32e31bdd3ee87ce3cc8b2669e8b579a"
+    },
+    {
+      "name": "RRL_STOCK_TASK_PLAN",
+      "type": "PACKAGE BODY",
+      "file": "before_task_plan.sql",
+      "sha256": "73661c8189b7b8e6b278806b81544e3c70b85e6d349af680aec8f75cac88982e",
+      "unchanged": true
+    },
+    {
+      "name": "RRL_STOCK_TASK_CORE",
+      "type": "PACKAGE BODY",
+      "file": "before_task_core.sql",
+      "sha256": "55934a1cdbadada32570b62c2a1da06511511bde2d4b316dc03622cd7f5fdc40",
+      "unchanged": true
+    },
+    {
+      "name": "RRL_STOCK_POSTING_API",
+      "type": "PACKAGE BODY",
+      "file": "before_posting.sql",
+      "sha256": "52af65674b75a4c5365f1cf91f26d7ffc47f67775af3d8b15fa7ca3230e673f0",
+      "unchanged": true
+    },
+    {
+      "name": "RRL_STOCK_HU_TASK",
+      "type": "PACKAGE BODY",
+      "file": "before_hu_task.sql",
+      "sha256": "40db57ae9ff3c07e59e6b9aa125cd4b445d5f12b74587958e8603d4c9b8cc9ee",
+      "unchanged": true
+    },
+    {
+      "name": "RRL_ST_DEFER_CASE_WAIT",
+      "type": "PACKAGE BODY",
+      "file": "before_defer_case.sql",
+      "sha256": "d8680505278245748945455d17e8218429a5a544250c8b86071f995b8e945785",
+      "unchanged": true
+    }
+  ],
+  "root_review_required": false,
+  "stock_effect": "NONE",
+  "rollback": "EMPTY_RECEIPTS_AND_EMPTY_CLOCK_ONLY_FORWARD_OTHERWISE",
+  "prepared_at": "2026-10-15T16:55:00+03:00",
+  "before_guard_verification": {
+    "LF": "PASS",
+    "CRLF": "PASS",
+    "mutations": 0,
+    "normalization": "CR_REMOVAL_ONLY_PRESERVE_EXACT_TRAILING_LF"
+  },
+  "apply_attempt": {
+    "statements": "all DDL and five recompiles completed; exact16 passed",
+    "failure": "WTASK_INDEXES: 3 NORMAL/FUNCTION-BASED plus 2 Oracle-owned LOB indexes; original verifier counted all five",
+    "global_invalid": 0,
+    "user_errors": 0,
+    "recovery": "complete_after_index_verify_fix.sql; no DDL replay/history deletion",
+    "original_apply_verify_preserved": true
+  },
+  "completion": {
+    "script": "complete_after_index_verify_fix.sql",
+    "statements": 6,
+    "errors": 0,
+    "exact_sources": 16,
+    "global_invalid": 0,
+    "ledger": "APPLIED",
+    "trusted_context_binding": "PASS"
+  },
+  "fresh_install_entry": "apply_verified.sql",
+  "verification_entry": "verify_index_fix.sql",
+  "current_verifier": "../2026-10-15_warehouse_task_session_warehouse/verify.sql",
+  "owner_body_superseded_by": "2026-10-15-warehouse-task-session-warehouse",
+  "acceptance": {
+    "native_assign_checks": 13,
+    "native_start_checks": 6,
+    "actual_revoke_fence_groups": 6,
+    "physical_negative_groups": 2,
+    "cancel_preflight_groups": 2,
+    "trusted_capability_history_groups": 5,
+    "actual_http_calls": 28,
+    "unit_tests": 19,
+    "fixture": "CANONICALLY_CANCELLED_RETIRED_HISTORY_RETAINED",
+    "goods_commit": false,
+    "evidence": "reports/retailcase/2026-10-15/task-assignment"
+  },
+  "quality_gate": {
+    "architecture": "PASS1055/0cycles/debt72",
+    "tooling": "PASS24",
+    "admin_typescript": "PASS",
+    "terminal_typescript": "BLOCKED_PARALLEL_CASE_WORK_DTO_NARROWING_AND_PROMISE_TYPING",
+    "baseline_not_enlarged": true
+  }
+}

@@ -39,7 +39,7 @@ export interface StorePreview {
  root: string;
  root_scan_identifier: string;
  composition_signature: string;
- mode: "BARCODE" | "WEIGHT_PHOTO";
+ mode: "BARCODE" | "WEIGHT_PHOTO" | "PAPER_COUNT";
  shipping_gross_weight_kg: string;
  shipping_weight_tolerance_kg: string|null;
  requires_marked_recipient_flow: boolean;

@@ -1,0 +1,11 @@
+﻿{
+    "migration_id":  "2026-10-15-warehouse-scale-request-sql-boundary",
+    "status":  "APPLIED",
+    "root_review_required":  false,
+    "reason":  "Actual first request ORA40573 at SQL j.get_string; all attempted request/archive rows caller rollback",
+    "stock_effect":  "NONE",
+    "tables_changed":  false,
+    "original_applied_sources_preserved":  true,
+    "apply_result":  "5 statements/0 errors; queuebody EXACT SHA2561cb746e64d2258fa4983abbc2077a21bd3b18fba51e094f310b112846bc9aace; errors0/globalINVALID0/ledgerAPPLIED",
+    "acceptance":  "20 native queue/EMPTY grouped checks; 11 actualHTTP checks; strict native ACK/sourceSHA, actual lease expiry/concurrency, actor/sender revoke, append-only, callerrollback, historical CAPTURED+STALE after canonicalCLAIM/START"
+}

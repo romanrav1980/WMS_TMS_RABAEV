@@ -59,3 +59,21 @@ class StockReservationStatusRequest(BaseModel):
 
 
 from .contracts_pallet_types import PalletTypeUpsertRequest
+
+
+class WarehouseTaskStatusRequest(BaseModel):
+    expected_task_signature: str | None = Field(default=None, strict=True, pattern=r"^[A-F0-9]{64}$")
+    scan_draft_id: str | None = Field(default=None,min_length=1,max_length=100)
+    updated_by: str | None = None
+    assigned_to: str | None = None
+    resource_id: int | None = None
+    resource_session_id: int | None = None
+    equipment_id: int | None = None
+    fact_qty: Decimal | None = Field(default=None, ge=0, allow_inf_nan=False)
+    scanned_pallet: str | None = None
+    scanned_from_cell: str | None = None
+    scanned_to_cell: str | None = None
+    reason: str | None = None
+    scanned_to_slot_code: str | None = Field(default=None, min_length=1, max_length=100)
+    operation_id: str | None = Field(default=None, min_length=1, max_length=100)
+    unit_keys: list[str] = Field(default_factory=list, max_length=10000)

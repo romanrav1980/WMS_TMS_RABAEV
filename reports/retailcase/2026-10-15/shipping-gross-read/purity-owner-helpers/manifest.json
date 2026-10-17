@@ -1,0 +1,64 @@
+{
+  "captured_at_utc": "2026-10-15T19:10:14.045451+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_STOCK_HU_PLACEMENT_CORE",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_hu_placement_core_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "51f37728ecaef47668dac6c42e9af28eff7abae72607a718a99f3b11fedfb858",
+      "normalized_source_sha256": "0fbf7b0d6313dba5a9ad7901871bc3fae0ab7a9df68ef85235146885f3c576fd",
+      "artifact_sha256": "f625ccbb1f1ffb07021ffe6592ebaff9d82d5e953c09b91073694532726b5951"
+    },
+    {
+      "name": "RRL_STOCK_CASE_PICK_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_case_pick_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "db62c55a3d126a18425eb78fed7d8572550ab868caff475dae2cd75fab3ae13d",
+      "normalized_source_sha256": "eb9e5323c7618a1589ce238d65bb59bb0462fb1a3deb0bc89af38e9b20111a53",
+      "artifact_sha256": "3bcbc1222f64fb6b6d20f45f44fd935c6f63580edef668819bd300d075214863"
+    },
+    {
+      "name": "RRL_STOCK_PLAN_HELPER",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_plan_helper_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "65a1e021965476b8cb3de3210a73e431533abbfca4ce4f320cb2db87def7bf49",
+      "normalized_source_sha256": "025689ccce8ed56c2c049ae925090d6771c6a224f7a0132f6c5425929ec046d9",
+      "artifact_sha256": "30367b6be895647041f1de80146903c785868c6a6cbe283d9135b96c474119a0"
+    },
+    {
+      "name": "RRL_INTERWARE_MARK_SCAN",
+      "type": "PACKAGE BODY",
+      "file": "rrl_interware_mark_scan_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "4c0a476192971b2fdd586f53c8dbd597ce7032e7ef9dc1af6e9cb399503ee993",
+      "normalized_source_sha256": "30672efbb2f00447f8aa5dfd72a7016692d0ff286f95506b1b3993fdd6d0f3e0",
+      "artifact_sha256": "9cbd883719c4810966180893d6636aee66973a13cf5c80a8dd12907f39363bf5"
+    },
+    {
+      "name": "RRL_IW_GROUP_THERMAL",
+      "type": "PACKAGE BODY",
+      "file": "rrl_iw_group_thermal_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "9bccf5daff85110dcf0da545595982f6da678b5568c546dc30cbfc9e50b27645",
+      "normalized_source_sha256": "333d6be627de03cb6b5740c5d312e3dbc9d6cfa27cd0294fbda5c224d6119ed8",
+      "artifact_sha256": "f64d3e94961c8cf466b9d570f04c9d91af84e677f952e773ae2efd9f32303d4d"
+    },
+    {
+      "name": "RRL_WEIGHT_BOX_CAPACITY",
+      "type": "PACKAGE BODY",
+      "file": "rrl_weight_box_capacity_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "22edc788ba5033986ae114511731fe63b9a4d2d0c78b3d36966b81b7b04af61b",
+      "normalized_source_sha256": "71a16c1fba74693074f3dbf2022f9010530da2981c7e396b9857f95877075dea",
+      "artifact_sha256": "4542cb8a0dd74089c6e223e5b37fd61cdc85f4c854db5593c27b385f934c178b"
+    }
+  ]
+}

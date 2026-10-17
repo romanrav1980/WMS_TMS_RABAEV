@@ -1,0 +1,19 @@
+{
+  "captured_at_utc": "2026-10-17T04:56:19.517622+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_resource_policy_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "560cbeed0eb67ac23b6fa2c899d105d41e16eaf3193177966794758c18c690ae",
+      "normalized_source_sha256": "d97bf859c9f5bcb5a62e6aa473df40f2410b1e54588d5374cde09c3df4e01b89",
+      "artifact_sha256": "f0fb0d62ae1e334fe3b448dab02617f1a10b46e104d27c6339418cd61ea096e0"
+    }
+  ]
+}

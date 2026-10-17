@@ -1,0 +1,55 @@
+{
+  "captured_at_utc": "2026-10-15T20:41:50.190737+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE",
+      "file": "rrl_case_resource_policy_package.sql",
+      "errors": [],
+      "user_source_sha256": "dba691cde6e30965f58630a067309ae01c6632082a644a51f2a4823f2db5e23d",
+      "normalized_source_sha256": "d7367aa1bac23b38b6b8403a5270fa93bc36bc5f44b4398777b6212ecfd7be25",
+      "artifact_sha256": "a10eeca1ea9edb9ad29c0335eaf06e5a84e6a392c5320577b3fdc371da7bfce2"
+    },
+    {
+      "name": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_resource_policy_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "2b2494dcfb01e57dd2f943f833f906ed47ff468f8193d0bd19ed52fb16b32765",
+      "normalized_source_sha256": "091a694d638e09257e47104d782bb95f9d8fbc4d10fd6f1181e252683c2f2580",
+      "artifact_sha256": "81a8ea2aca237c8f6a48bf501feccbefc016f7447985ad1109e08292b83846f2"
+    },
+    {
+      "name": "RRL_CASE_LIFECYCLE_API",
+      "type": "PACKAGE",
+      "file": "rrl_case_lifecycle_api_package.sql",
+      "errors": [],
+      "user_source_sha256": "9bd9ba97f899035005cdbc5933fedcc1a2d051b773ca3004ec27a48a391b21ac",
+      "normalized_source_sha256": "8ed6eb80267413df7b4c02495907a4ee396b09f5897097f755b936eb7b669861",
+      "artifact_sha256": "7163d7b94aef7a0017a36a0331758142f211ba7f6875b2d408609af4166869c3"
+    },
+    {
+      "name": "RRL_WH_FINAL_SCALE_ADMISSION",
+      "type": "PACKAGE BODY",
+      "file": "rrl_wh_final_scale_admission_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "504534a8223a108b482c1cbe1f1f41513d0adcfca827e7e7bf039c2524879133",
+      "normalized_source_sha256": "26699e1022101cba6e4d78f4893b77a6b167db010f70c496abc188d46eceb217",
+      "artifact_sha256": "89ff16b7ed83e74831df6294cf1527607747c3904e1db6c7d496a4bd8b60aef4"
+    },
+    {
+      "name": "RRL_ASM_INTENT_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_asm_intent_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "5294ea289160465aa07aef70d9e6b0f3fd374ebaa3cd6f3c93af5c0fc477a4d7",
+      "normalized_source_sha256": "6cb88e6fb147095d4f3d5623f107eba09f2fb811c843b765896cedad5e4f4cef",
+      "artifact_sha256": "27e87e9553a32acd0ce477ad643a45df46832b931991a55eff8591bf182e590f"
+    }
+  ]
+}

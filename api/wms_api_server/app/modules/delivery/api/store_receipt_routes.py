@@ -1,9 +1,10 @@
 from ...master_data.contracts import MarkingProfileCode
 """Authenticated destination confirmation, distinct from driver_id and trip closing."""
 from typing import Any, Literal, Annotated
+from decimal import Decimal
 from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import BaseModel, ConfigDict, Field
-from ...platform.public import AdminUser, require_permission
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from ...platform.public import AdminUser, require_permission, get_current_user
 from ..contracts import StoreReceiptError, StoreReceiptPort, store_receipt_service
 
 router=APIRouter(prefix="/api/delivery/store-receipts",tags=["store-receipt"])
@@ -61,16 +62,31 @@ class StoreReceiptRequest(BaseModel):
     expected_composition_signature: str=Field(pattern=r"^[A-F0-9]{64}$")
     before_cameras: bool=Field(strict=True)
     observations: list[StoreDisposition]=Field(default_factory=list,max_length=200)
+    paper_reference: str=Field(default="",max_length=200)
     case_note: str=Field(default="",max_length=2000)
     scale_capture_key: str=Field(default="",pattern=r"^([A-F0-9]{64})?$")
+    manual_weight_kg: str | None=Field(default=None,strict=True,pattern=r"^[0-9]{1,18}(\.[0-9]{1,9})?$")
     photo_ids: list[Annotated[str,Field(strict=True,pattern=r"^[A-F0-9]{64}$")]]=Field(default_factory=list,max_length=12)
     weight_act_confirmed: bool=Field(default=False,strict=True)
+
+    @field_validator("manual_weight_kg")
+    @classmethod
+    def positive_manual_weight(cls, value: str | None) -> str | None:
+        if value is not None and Decimal(value)<=0:
+            raise ValueError("Positive gross weight in kilograms required")
+        return value
+
+    @model_validator(mode="after")
+    def single_weight_source(self) -> "StoreReceiptRequest":
+        if self.manual_weight_kg is not None and self.scale_capture_key:
+            raise ValueError("Choose manual weight or integrated scale capture")
+        return self
 
 
 class PolicyRequest(BaseModel):
     model_config=ConfigDict(extra="forbid")
     store_address: str=Field(min_length=1,max_length=255)
-    mode: Literal["BARCODE","WEIGHT_PHOTO"]
+    mode: Literal["BARCODE","WEIGHT_PHOTO","PAPER_COUNT"]
     expected_version: int=Field(strict=True,ge=0)
 
 
@@ -88,7 +104,7 @@ def failure(error: StoreReceiptError) -> HTTPException:
 
 @router.get("/preview")
 def preview(load_operation_id: str,store_address: str,
-            user: AdminUser=Depends(require_permission("store_receipt_confirm")),
+            user: AdminUser=Depends(get_current_user),
             service: StoreReceiptPort=Depends(store_receipt_service)) -> dict[str,Any]:
     if not 1<=len(load_operation_id)<=100 or not 1<=len(store_address)<=255:
         raise HTTPException(422,"Укажите погрузку и адрес магазина")
@@ -100,7 +116,7 @@ def preview(load_operation_id: str,store_address: str,
 
 @router.get("/trips/{trip_id}/places")
 def places(trip_id: int,store_address: str,after: str=Query("",max_length=100),limit: int=Query(200,ge=1,le=200),
-           user: AdminUser=Depends(require_permission("store_receipt_confirm")),
+           user: AdminUser=Depends(get_current_user),
            service: StoreReceiptPort=Depends(store_receipt_service)) -> list[dict[str,Any]]:
     if trip_id<1 or not 1<=len(store_address)<=255:
         raise HTTPException(422,"Укажите рейс и адрес магазина")
@@ -112,7 +128,7 @@ def places(trip_id: int,store_address: str,after: str=Query("",max_length=100),l
 
 @router.post("/confirm")
 def confirm(body: StoreReceiptRequest,
-            user: AdminUser=Depends(require_permission("store_receipt_confirm")),
+            user: AdminUser=Depends(get_current_user),
             service: StoreReceiptPort=Depends(store_receipt_service)) -> dict[str,Any]:
     metadata=body.model_dump(exclude_none=True,exclude={"scans","operation_id","load_operation_id","store_address","observations","case_note","scale_capture_key","photo_ids","weight_act_confirmed"})
     if body.scans:
@@ -191,16 +207,30 @@ def release_custody(body: StoreCustodyRelease,user: AdminUser=Depends(require_pe
         raise failure(exc) from exc
 
 @router.post("/unloading/start")
-def start_unloading(body: UnloadingStart,user: AdminUser=Depends(require_permission("store_receipt_confirm")),
+def start_unloading(body: UnloadingStart,user: AdminUser=Depends(get_current_user),
                     service: StoreReceiptPort=Depends(store_receipt_service))->dict[str,Any]:
     try:return service.start_unloading(body.model_dump(mode="json"),user.username)
+    except StoreReceiptError as exc:raise failure(exc)from exc
+
+
+class UnloadingAbandon(BaseModel):
+    model_config=ConfigDict(extra="forbid")
+    operation_id: str=Field(strict=True,min_length=1,max_length=100,pattern=r"^[A-Za-z0-9_.:-]+$")
+    original: UnloadingStart
+    reason: str=Field(strict=True,min_length=8,max_length=500)
+
+
+@router.post("/unloading/abandon-start")
+def abandon_unloading(body: UnloadingAbandon,user: AdminUser=Depends(get_current_user),
+                      service: StoreReceiptPort=Depends(store_receipt_service))->dict[str,Any]:
+    try:return service.abandon_unloading(body.model_dump(mode="json"),user.username)
     except StoreReceiptError as exc:raise failure(exc)from exc
 
 
 @router.get("/unloading")
 def unloading(load_operation_id: Annotated[str,Query(min_length=1,max_length=100)],
               store_address: Annotated[str,Query(min_length=1,max_length=255)],
-              user: AdminUser=Depends(require_permission("store_receipt_confirm")),
+              user: AdminUser=Depends(get_current_user),
               service: StoreReceiptPort=Depends(store_receipt_service))->dict[str,Any]:
     try:return service.unloading(load_operation_id,store_address,user.username)
     except StoreReceiptError as exc:raise failure(exc)from exc

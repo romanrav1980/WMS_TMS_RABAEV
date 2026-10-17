@@ -1,0 +1,20 @@
+.knowledge-launch{position:fixed;right:18px;bottom:18px;z-index:1000}.help-action{position:relative;display:inline-block;margin:3px}.help-action button{min-height:44px;padding:8px 12px;border:1px solid #b7c7d6;border-radius:8px;background:#f7fafc;color:#15354e;cursor:pointer}.help-action button:focus-visible,.knowledge-panel input:focus-visible{outline:3px solid #237ec1;outline-offset:2px}.help-tooltip{display:none;position:absolute;z-index:5;bottom:calc(100% + 6px);right:0;width:min(270px,70vw);padding:10px;background:#17364d;color:white;border-radius:6px;font-size:13px;pointer-events:none}.help-action:not(.help-dismissed):hover .help-tooltip,.help-action:not(.help-dismissed):focus-within .help-tooltip{display:block}.knowledge-panel{position:fixed;inset:12px 12px 12px auto;margin:0;width:min(620px,calc(100vw - 24px));height:calc(100dvh - 24px);max-height:none;max-width:none;box-sizing:border-box;border:1px solid #bdcddb;border-radius:12px;padding:20px;background:#fff;color:#183548;overflow:auto;font:16px/1.5 system-ui,sans-serif}.knowledge-panel::backdrop{background:rgba(20,39,55,.3)}.knowledge-panel header{display:flex;align-items:center;justify-content:space-between;gap:12px}.knowledge-panel h2{font-size:20px}.knowledge-panel label,.knowledge-panel small{display:block}.knowledge-panel small{font-size:13px;color:#536b7a;margin-top:4px}.knowledge-panel input{box-sizing:border-box;width:100%;min-height:44px;padding:10px;font:inherit}.knowledge-panel nav{display:flex;flex-wrap:wrap;margin:14px 0}.knowledge-content{overflow-wrap:anywhere}.knowledge-content p{white-space:pre-wrap}.knowledge-panel details{margin-top:24px;border-top:1px solid #d8e2ea;padding-top:10px}.knowledge-panel summary{cursor:pointer;min-height:44px}@media(max-width:600px){.knowledge-panel{inset:0;width:100vw;height:100dvh;border-radius:0;padding:16px}.knowledge-launch{right:10px;bottom:10px}}
+
+.help-blocked button{background:repeating-linear-gradient(135deg,#f1f4f6 0 6px,#e4e9ed 6px 12px);color:#5d6f7c;cursor:not-allowed}
+.help-hint{position:relative;display:inline-block;vertical-align:middle;margin:0 4px}
+.help-hint-trigger{width:28px;height:28px;min-width:28px;border-radius:50%;border:1px solid #8aa5ba;background:#fff;color:#15354e;font-weight:700;cursor:pointer;padding:0}
+.help-hint-trigger:focus-visible,.help-hint-panel button:focus-visible{outline:3px solid #237ec1;outline-offset:2px}
+.help-hint-panel{position:absolute;z-index:30;top:calc(100% + 6px);left:0;width:min(320px,80vw);padding:12px;background:#fff;border:1px solid #9fb6c7;border-radius:8px;box-shadow:0 8px 24px rgba(20,39,55,.18);color:#183548;font-size:14px;line-height:1.45;text-align:left}
+.help-hint-panel p{margin:6px 0}
+.help-hint-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.help-hint-actions button{min-height:40px;padding:6px 12px;border:1px solid #b7c7d6;border-radius:8px;background:#f7fafc;cursor:pointer}
+@media(max-width:600px){.help-hint-panel{position:fixed;left:8px;right:8px;top:auto;bottom:8px;width:auto;z-index:1200}}
+/* C0118: общая справка не перекрывает рабочие кнопки. Desktop — компактная полупрозрачная кнопка в углу;
+   узкий экран (<=600px) — обычная кнопка в конце страницы (не fixed): ничего не закрывает, у каждого места есть ссылка «Справка» вверху. */
+.knowledge-launch .help-action{margin:0}
+.knowledge-launch .help-action button{min-height:40px;padding:6px 12px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.25);opacity:.88}
+.knowledge-launch .help-action button:hover,.knowledge-launch .help-action button:focus-visible{opacity:1}
+@media(max-width:600px){
+  .knowledge-launch{position:static;display:flex;justify-content:center;padding:12px 0 20px}
+  .knowledge-launch .help-action button{opacity:1;box-shadow:none;min-height:44px}
+}

@@ -1,0 +1,39 @@
+{
+  "status": "READ_ONLY_SOURCE_AUDIT_NO_FUNCTIONAL_ACCEPTANCE",
+  "business_writes": 0,
+  "new_quantity_commands": 0,
+  "source_manifest": "interware-source-manifest.json",
+  "findings": [
+    {
+      "code": "PHYSICAL_TREE_COMMON_LOCATION",
+      "evidence": [
+        "RRL_STOCK_HU_CMD parent/child same cell+warehouse",
+        "RRL_STOCK_HU_READ CASE/common cell guards",
+        "RRL_STOCK_HU_TASK FROM_WARE=TO_WARE"
+      ],
+      "requirement": "Separate-WARE produce/chilled streams need canonical interwarehouse transfer before active common physical HU attach; a planned consolidation manifest remains separate."
+    },
+    {
+      "code": "CASE_INTERWARE_BRIDGE_MISSING",
+      "evidence": [
+        "RRL_IW_HU_SOURCE.stock_uid: ROOT_CASE_TASK_ID IS NULL; only STOCK/CONTAINER",
+        "RRL_STOCK_INTERWARE_REC.describe: only STOCK/CONTAINER",
+        "RRL_IW_GROUP_ARCHIVE.snapshot_json: case_task_id NULL, CHILD_CASE_TASK_ID NULL, no CASE nodes",
+        "RRL_IW_HU_REC_CORE restores CONTAINER current cell/version and generic CHILD_PALLET links only"
+      ],
+      "requirement": "Extend existing interwarehouse owner with explicit CASE carrier/task/WARE/tare/custody/fulfilment and shipping-lineage bridge; do not infer support from UNIT_SOURCE.assert_case_archive."
+    },
+    {
+      "code": "MASS_BASIS_SEPARATION",
+      "requirement": "Direct observed outer GROSS may be measured while calculated expected total or reconciliation is UNKNOWN due missing child basis. Sum immediate-child GROSS plus own tare once; freeze child/version/tare provenance."
+    },
+    {
+      "code": "STORE_SUBTREE_AUTHORITY",
+      "evidence": [
+        "RRL_STOCK_STORE_RECEIPT_READ requires frozen single destination for all active ST members"
+      ],
+      "requirement": "Own-subtree-only handover receipt with frozen departure/subtree identity, once-use and remaining-cargo/seal/custody versioning; outer mass cannot validate partial child delivery."
+    }
+  ],
+  "sql_decision": "Only selected USER_SOURCE PK/name/type/line reads, no new business workload. Retain bounded source lookup; next mixed functional case must profile closure, multi-ST and thermal queries under actual native plan before index/cache decisions."
+}

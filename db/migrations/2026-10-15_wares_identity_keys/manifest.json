@@ -1,0 +1,27 @@
+{
+  "status": "FROZEN_REVIEWED_NOT_APPLIED",
+  "migration_id": "2026-10-15-wares-identity-keys",
+  "independent_review": "sprint_empty_trip RELEASE",
+  "files": [
+    {
+      "path": "db\\migrations\\2026-10-15_wares_identity_keys\\before.sql",
+      "sha256": "948281458ff00154133a9dab50cbc00ecce73bd1f71f14e523819b5ce82dd4a4"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_wares_identity_keys\\verify.sql",
+      "sha256": "eab4652c4fd524a8b9b26c73ccd6b1f8e672ccc242abd83fb4a04f0d34032c13"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_wares_identity_keys\\apply.sql",
+      "sha256": "0cf68ddced81749ea5693ed6a32b7f76aa9f61c7b6ee8767feaaa9d307fd951a"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_wares_identity_keys\\rollback.sql",
+      "sha256": "2d5d9ac66bbb97533fedd539d690cb1e58924f698acbf079454d9e2d799f39ab"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_wares_identity_keys\\recovery.md",
+      "sha256": "bb01452fa69402ef7fff7b9c23b477dc0f75cdeea714bcbfac099900d4afb89f"
+    }
+  ]
+}

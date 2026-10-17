@@ -1,0 +1,114 @@
+{
+  "actors": [
+    {
+      "id": "ASM15.CFG1031",
+      "deleted": 1,
+      "ware_id": 6667491
+    },
+    {
+      "id": "ASM15.GW1031",
+      "deleted": 1,
+      "ware_id": 6667491
+    },
+    {
+      "id": "ASM15.GW1032",
+      "deleted": 1,
+      "ware_id": 6667491
+    },
+    {
+      "id": "ASM15.OP1031",
+      "deleted": 1,
+      "ware_id": 6667491
+    },
+    {
+      "id": "ASM15.OP1032",
+      "deleted": 1,
+      "ware_id": 6667491
+    }
+  ],
+  "devices": [
+    {
+      "device_id": "ASM15.CASE1031",
+      "active_flag": 0,
+      "policy_version": 2
+    },
+    {
+      "device_id": "ASM15.CASE1032",
+      "active_flag": 0,
+      "policy_version": 2
+    }
+  ],
+  "cases": [
+    {
+      "case_pick_task_id": 1031,
+      "sscc": "090000000000006010",
+      "pallet_type_id": 32,
+      "content_version": 2,
+      "picked_qty": 0,
+      "status": "NEW",
+      "assigned_to": null,
+      "started_at": "2026-10-15 07:09:24.674408",
+      "started_at_instant": "2026-10-15 07:09:24.674408"
+    },
+    {
+      "case_pick_task_id": 1032,
+      "sscc": "090000000000007017",
+      "pallet_type_id": 32,
+      "content_version": 2,
+      "picked_qty": 0,
+      "status": "NEW",
+      "assigned_to": null,
+      "started_at": "2026-10-15 07:12:11.844807",
+      "started_at_instant": "2026-10-15 07:12:11.844807"
+    }
+  ],
+  "type_restore": "BOTH REFUSED CASE_TYPE_USE_PHYSICAL_REPACK: type32/v2 retained, no bypass. Earlier spoken type1/v3 summary was incorrect; this live verification supersedes it.",
+  "tare": [
+    {
+      "physical_qty": 0,
+      "assembly_qty": 0,
+      "available_qty": 0,
+      "balance_version": 7
+    }
+  ],
+  "assembly": [
+    {
+      "session_id": "ASM15.S1031",
+      "state": "OPEN",
+      "last_weight_kg": 0.5,
+      "last_content_version": 2
+    },
+    {
+      "session_id": "ASM15.S1032",
+      "state": "OPEN",
+      "last_weight_kg": 0.5,
+      "last_content_version": 2
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "ASM15.T1031",
+      "state": "READY"
+    },
+    {
+      "step_id": "ASM15.T1032",
+      "state": "CANCELLED"
+    }
+  ],
+  "source": [
+    {
+      "cell": "QFd9a5c53b54",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 4
+    },
+    {
+      "cell": "QGd9a5c53b54",
+      "remain": 20,
+      "hard_reserved_base": 20,
+      "stock_version": 1
+    }
+  ],
+  "goods_operations_and_step_use": "ABSENT",
+  "history": "Immutable TEST captures/receipts/start instants/type+SSCC+TARE journals retained; no hardware or goods commit claim"
+}

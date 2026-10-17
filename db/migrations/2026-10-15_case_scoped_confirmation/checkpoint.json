@@ -1,0 +1,37 @@
+{
+  "migration_id": "2026-10-15-case-scoped-confirmation",
+  "state": "APPLIED",
+  "before_objects": 6,
+  "invalid_before": 0,
+  "authorization": "Root approves narrow scoped assigned ordinaryCASE; nativeapply/fixture metadata pending independent review; no goods fixture commits",
+  "scope": "CASE_PICK_CONFIRM only; assert_scope/CLAIM/START/labels/ASM unchanged",
+  "sha256": {
+    "apply.sql": "07a357b812b03dc1cb060bbaaf2796d49ab15684ba8e5209d12edb190791238c",
+    "before_case_access_body.sql": "0f00b12095076578468226fc0963b3d253001753e592136b137459919446f0b6",
+    "before_case_access_spec.sql": "2727d004462b811fa1c9464b527af916d7d94535aed92f051754c7b50e325222",
+    "before_case_pick_body.sql": "e7022659ff9989da0c227d542c821e91fb188cce1fc719418cf69bfa32e065db",
+    "before_case_pick_spec.sql": "ac38c23b07e1509085bb8b7a158694015c943124ba8620cbced62faa9e5c5382",
+    "before_resource_policy_body.sql": "c4f6a98f05e59c2e53e51e1ea458b559811142da58c3190badb1ddafd986f377",
+    "before_resource_policy_spec.sql": "a10eeca1ea9edb9ad29c0335eaf06e5a84e6a392c5320577b3fdc371da7bfce2",
+    "case_access_body.sql": "a23bdd027ec53a53b629f6a3bf3b57be6865b3ef43e668fada6e81a5f68dbc10",
+    "case_access_spec.sql": "cfbd2815cf17e92e071033d5bb9dc05c8b475961cba6185c589f94f6cfa74dfb",
+    "case_pick_body.sql": "d1a9b1d693a113a94cc861a9a88a4721f0b11a91dc91663c957be919b857f1a4",
+    "compile_verify.sql": "5c73596c8627bf61d285ab9880414751e4067b5143e13a06010013afa007afc8",
+    "resource_policy_body.sql": "eea8c0a9307352d0b19484c9f4616bb29205a2b1bb22b02d7160c2a838a0f390",
+    "rollback.sql": "f9b2b235d7aa680e4c6b55fde36316c504a57a175943457dc528dd626d2d8355",
+    "verify.sql": "85ec04a67ed482087564fb719fb05b98514cfb3b5296875c8ce09e2efa65ca78"
+  },
+  "guards": [
+    "Legacy/global old branch unchanged",
+    "Current assigned native scope before replay independent of execution eligibility",
+    "Ordinary unmarked EA new execution only; physical qualified session mandatory",
+    "Canonical CASE_PICK writer unchanged; no new quantity commits"
+  ],
+  "application": {
+    "statements": 8,
+    "errors": 0,
+    "applied_by": "root coordinator",
+    "verification": "source6 exact; USER_ERRORS0; globalINVALID0; ledgerAPPLIED",
+    "business_acceptance": "PENDING shared reviewed fixture; no new stock committed"
+  }
+}

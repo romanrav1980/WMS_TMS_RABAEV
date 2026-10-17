@@ -1,3 +1,4 @@
+import { adminBasicAuth } from "./api";
 import { Component, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import "./styles.css";
@@ -187,7 +188,7 @@ export default function App() {
             <div className="twin-clock"><span>Время</span><b>{clock(minute)}</b></div>
             <button className="icon-button">⌕</button>
             <button className="icon-button alert">{state.collisions.length}</button>
-            <div className="profile compact-profile"><span className="avatar" /><div><b>admin</b><small>operator</small></div></div>
+            <div className="profile compact-profile"><span className="avatar" /><div><b>{adminBasicAuth().split(":", 1)[0]}</b><small>Пользователь</small></div></div>
           </div>
         </header>
 

@@ -1,0 +1,198 @@
+{
+  "state": "PASS_FOREIGN_FLAT_ROLE_NEW_QUANTITY",
+  "hardware_verified": false,
+  "quantity_base": "25",
+  "steps": [
+    {
+      "action": "CLAIM",
+      "result": {
+        "task_id": 1152,
+        "warehouse_id": 20266481,
+        "status": "ASSIGNED",
+        "assignment_version": 1,
+        "content_version": 2,
+        "assigned_to": "OC16P2c449407d2",
+        "resource_id": 78,
+        "resource_session_id": 74,
+        "equipment_id": null,
+        "started_at_instant": null,
+        "started_shift_time_zone": null,
+        "outcome": "APPLIED",
+        "request_sha256": "C0E68AC4DD943D8A088237B45CD5DE166B9E5174DB876687613FAF31711C3644",
+        "outcome_confirmed": true,
+        "may_create_corrected_operation": false,
+        "error_code": null,
+        "operation_id": "OC16.2c449407d2.CLAIM",
+        "action": "CLAIM",
+        "actor": "OC16P2c449407d2",
+        "changed": true,
+        "stock_posted": false
+      }
+    },
+    {
+      "action": "START",
+      "result": {
+        "task_id": 1152,
+        "warehouse_id": 20266481,
+        "status": "IN_PROGRESS",
+        "assignment_version": 2,
+        "content_version": 2,
+        "assigned_to": "OC16P2c449407d2",
+        "resource_id": 78,
+        "resource_session_id": 74,
+        "equipment_id": null,
+        "started_at_instant": "2026-10-16T19:34:45.691620+00:00",
+        "started_shift_time_zone": null,
+        "outcome": "APPLIED",
+        "request_sha256": "EBFC2F6E13C4C5EDB2A9A65487D72FF7B1743091B258BD1B77519DA5B2FB2942",
+        "outcome_confirmed": true,
+        "may_create_corrected_operation": false,
+        "error_code": null,
+        "operation_id": "OC16.2c449407d2.START",
+        "action": "START",
+        "actor": "OC16P2c449407d2",
+        "changed": true,
+        "stock_posted": false
+      }
+    },
+    {
+      "action": "BOX24",
+      "result": {
+        "operation_id": "OC16.2c449407d2.BOX24",
+        "case_pick_task_id": 1152,
+        "case_pick_line_id": 1154,
+        "status": "PARTIAL",
+        "remaining_quantity": "1",
+        "fact_qty": "24",
+        "carrier_identifier": "090000000000021013",
+        "cell": "CPT_20266481",
+        "picked_from_cell": "AS16C410f14b915",
+        "lots": [
+          {
+            "uid": "CASELOT:5AD8A72067CDB114EEAE99B31B76421C1668B0:1",
+            "source_uid": "OC16.LOT:2c449407d2",
+            "quantity": "24",
+            "unit": "EA"
+          }
+        ],
+        "outbox_id": 5683
+      },
+      "replay_exact": true
+    },
+    {
+      "action": "EA1",
+      "result": {
+        "operation_id": "OC16.2c449407d2.EA1",
+        "case_pick_task_id": 1152,
+        "case_pick_line_id": 1154,
+        "status": "PICKED",
+        "remaining_quantity": "0",
+        "fact_qty": "25",
+        "carrier_identifier": "090000000000021013",
+        "cell": "CPT_20266481",
+        "picked_from_cell": "AS16C410f14b915",
+        "lots": [
+          {
+            "uid": "CASELOT:41F7B7504D40CF6381677528833A9001CE9A7A:1",
+            "source_uid": "OC16.LOT:2c449407d2",
+            "quantity": "1",
+            "unit": "EA"
+          }
+        ],
+        "outbox_id": 5684
+      },
+      "replay_exact": true
+    }
+  ],
+  "qualification": {
+    "resource_id": 78,
+    "task_type": "CASE_PICK",
+    "active": true
+  },
+  "label_confirm": {
+    "case_pick_task_id": 1152,
+    "sscc": "090000000000021013",
+    "confirmed": true
+  },
+  "classifier": [
+    {
+      "f": 1,
+      "l": 0,
+      "s": 1
+    }
+  ],
+  "empty_tare_request": {
+    "device_id": "AS16D410f14b915",
+    "capture_id": "OC16.2c449407d2.TARE",
+    "post_cell": "AS16C410f14b915",
+    "case_task_id": 1152,
+    "expected_content_version": 2,
+    "scan_container": "090000000000021013",
+    "purpose": "EMPTY_TARE",
+    "tare_capture_key": null,
+    "device_policy_version": 1,
+    "calibration_ref": "AS16.410f14b915.TEST",
+    "unit": "KG",
+    "basis": "GROSS",
+    "preset_tare_kg": "0",
+    "zero_confirmed": true,
+    "zero_check_kg": "0",
+    "zero_check_at": "2026-10-16T19:34:35.609439+00:00",
+    "measured_at": "2026-10-16T19:34:45.609439+00:00",
+    "samples": [
+      {
+        "offset_ms": 0,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 500,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 1000,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 1500,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 2000,
+        "weight_kg": "0.5"
+      }
+    ]
+  },
+  "empty_tare": {
+    "capture_key": "675671EB395C9CFDC4251A89AC7813B4476E92AEB032A0D8102B5E48D1910F88",
+    "device_id": "AS16D410f14b915",
+    "capture_id": "OC16.2c449407d2.TARE",
+    "warehouse_id": 20266481,
+    "post_cell": "AS16C410f14b915",
+    "device_mode": "TEST",
+    "purpose": "EMPTY_TARE",
+    "case_task_id": 1152,
+    "case_content_version": 2,
+    "scan_container": "090000000000021013",
+    "pallet_type_id": 32,
+    "type_version": 2,
+    "basis": "GROSS",
+    "weight_kg": "0.5",
+    "device_policy_version": 1,
+    "calibration_ref": "AS16.410f14b915.TEST",
+    "resolution_kg": "0.001",
+    "source_sha256": "F687047855D1A02B74ECA73DF85BAFEAFDBC1EBC7E7E990C432CF97B070D40F4",
+    "measured_at": "2026-10-16T19:34:45.609439+00:00",
+    "sample_count": 5,
+    "span_ms": 2000,
+    "status": "ARCHIVED",
+    "stock_posted": false
+  },
+  "close": {
+    "operation_id": "OC16.2c449407d2.CLOSE",
+    "case_pick_task_id": 1152,
+    "status": "WAIT_CONTROL",
+    "content_version": 4,
+    "already_closed": false,
+    "physical_stock_changed": false
+  }
+}

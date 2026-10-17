@@ -1,0 +1,102 @@
+[
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "column_name": "OPERATION_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "column_name": "RECEIPT_OPERATION_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "column_name": "LOAD_OPERATION_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "column_name": "RELEASED_AT",
+    "data_type": "TIMESTAMP(6) WITH TIME ZONE"
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "column_name": "RELEASED_BY",
+    "data_type": "NVARCHAR2"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "column_name": "OPERATION_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "column_name": "LOAD_OPERATION_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "column_name": "STORE_ADDR",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "column_name": "ROOT_KEY",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "column_name": "POLICY_VERSION",
+    "data_type": "NUMBER"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "column_name": "RECEIPT_STATE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "column_name": "CAMERA_CONFIRMED",
+    "data_type": "NUMBER"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "column_name": "COMPOSITION_SIGNATURE",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "column_name": "COMPOSITION_JSON",
+    "data_type": "CLOB"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "column_name": "RECEIVED_BY",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "column_name": "RECEIVED_AT",
+    "data_type": "TIMESTAMP(6) WITH TIME ZONE"
+  },
+  {
+    "table_name": "RRL_TT_HU_LOAD_ST",
+    "column_name": "LOAD_OPERATION_ID",
+    "data_type": "VARCHAR2"
+  },
+  {
+    "table_name": "RRL_TT_HU_LOAD_ST",
+    "column_name": "SBORKA_PALLET_ID",
+    "data_type": "NUMBER"
+  },
+  {
+    "table_name": "RRL_TT_HU_LOAD_ST",
+    "column_name": "ACTIVE_FLAG",
+    "data_type": "NUMBER"
+  },
+  {
+    "table_name": "RRL_TT_HU_LOAD_ST",
+    "column_name": "DESTINATION_ADDR",
+    "data_type": "VARCHAR2"
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "migration_id": "2026-10-17-case-move-scope",
+  "status": "PREPARED_NOT_APPLIED",
+  "before_sources": {
+    "RRL_STOCK_CASE_MOVE_CMD|PACKAGE BODY": "D124FCC4E2D2AF9447AB3463907B1EEADB2A72596C9756ECA2EE3635FA9CF021"
+  },
+  "after_sources": {
+    "RRL_STOCK_CASE_MOVE_CMD|PACKAGE BODY": "FB1064313E6750D650A53EDED16D2BA61120BE33D481BEED3C03618AF5153E0B"
+  },
+  "dependencies": [],
+  "files": {
+    "after_sources.sql": "4e63340430c9d880a91b82257fc9aa12bc134ea305174d2c278828b36e159fff",
+    "apply.sql": "4e90b48d135c53196959e7e14d439144f2cfa8252dffd2e5803f6891574858b7",
+    "before.sql": "483e7dd0dee6eb7beab4bc08456937a2813d610666b1cf26720d8f1522c604df",
+    "before_sources.sql": "cbc5d30e7966025079bd996256f8d62e812a7b907bf9c7e8e46118f88dfcd318",
+    "compile_dependents.sql": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "d2eceb618c8ff58e534c321b52c295b9bc90cf39d153ad1837d89166129b6f6b",
+    "restore_rrl_stock_case_move_cmd_package_body.sql": "ae2713fcd4296e4d744225f930471e7edcca1913ba3351e7aab7d4f0e2e163a1",
+    "rollback.sql": "7684a17b2e1bd448ec0ab0c75fd16a4b6d195c41c3f75ed614db3ff960885bfc",
+    "rrl_stock_case_move_cmd_package_body.sql": "ab0cf3513b68dfd75844e9bc332654d6c1d809bb7fcb164d2e00ab83009feaf8",
+    "verify.sql": "00680b8bf2b2fd199e1f99646fc7d68baac69f7fa7a0b5e65279fa4eca95dd73"
+  }
+}

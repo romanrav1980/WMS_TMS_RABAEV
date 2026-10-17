@@ -17,6 +17,7 @@ def set_box_rate(gateway: Any,ware: int,currency: str,value: str,effective: str,
     key=sha256(f"{ware}:WAREHOUSE_PICKING:{currency}".encode()).hexdigest()
     try:
         with gateway.transaction("Version warehouse BOX cost rate") as cur:
+            cur.execute("lock table RRL_ACCESS_REV in share mode wait 5")
             require_warehouse(cur,ware,actor,"create_tt_price")
             cur.execute("select VERSION_NO from RRL_LOGISTICS_RATE_HEAD where RATE_KEY=:key for update",{"key":key})
             old=cur.fetchone()

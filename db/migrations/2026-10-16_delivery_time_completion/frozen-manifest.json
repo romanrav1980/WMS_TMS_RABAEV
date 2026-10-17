@@ -1,0 +1,9 @@
+{
+  "original_manifest_sha256": "39e1c7d52fef39692ed7650a8262e7814f3c0078745821f182eb93fe16ce5644",
+  "no_ddl": true,
+  "files": {
+    "after_sources.sql": "56a800d62a8f6c3300a19b7cf3797f29018f84d39c9b6fb76af3f530da234f69",
+    "apply.sql": "b097e66fe55350d48a206cb12f156c1c3ff1cf69a8eb541ea5e2146bef545200",
+    "verify.sql": "223d986d325bebb61f286da3465677fa7be0e39e7ea7320decaf2ee3e68ad64e"
+  }
+}

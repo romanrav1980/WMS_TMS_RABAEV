@@ -1,0 +1,282 @@
+{
+  "state": "PASS_NATIVE_RETURN24_COUNT1_STOCK25H0_ORIGINAL_SHORT_LINE_BOX_FOUR_RATES_PRESERVED",
+  "http": [
+    {
+      "label": "returned",
+      "path": "/api/case-pick/tasks/1153/return-carrier",
+      "status": 200,
+      "api_call_id": "72585",
+      "request_id": "2a429ad6-31c5-432f-802b-a519808e7bf0"
+    },
+    {
+      "label": "return_replay",
+      "path": "/api/case-pick/tasks/1153/return-carrier",
+      "status": 200,
+      "api_call_id": "72586",
+      "request_id": "14e50f9f-1d58-4c5b-8c71-156725877316"
+    },
+    {
+      "label": "kpi_after_return",
+      "path": "/api/resources/picker-kpis?warehouse_id=20033496&start_at=2026-10-17T04%3A51%3A27.795585%2B00%3A00&finish_at=2026-10-17T04%3A59%3A52.341208%2B00%3A00",
+      "status": 200,
+      "api_call_id": "72587",
+      "request_id": "02a9c7d6-338d-492c-bd3b-9d34e0af6a32"
+    }
+  ],
+  "commands": {},
+  "hardware_verified": false,
+  "claim": {
+    "inventory_task_id": 34,
+    "status": "IN_PROGRESS",
+    "warehouse_id": 20033496,
+    "cell": "AS16C082d87dbd8",
+    "article": "AS16A082D87DBD8",
+    "assigned_to": "admin",
+    "priority": 100,
+    "revision_id": null,
+    "count_operation_id": null,
+    "short_id": 27,
+    "recovery_state": null,
+    "recovery_deadline_at": "2026-10-17 01:04:50.722138",
+    "fact_quantity": null
+  },
+  "count_request": {
+    "operation_id": "OC16.d21d129674.COUNT.REMAINING",
+    "revision_id": 413,
+    "inventory_task_id": 34,
+    "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+    "counts": [
+      {
+        "uid": "OC16.LOT:d21d129674",
+        "cell": "AS16C082d87dbd8",
+        "article": "AS16A082D87DBD8",
+        "unit": "EA",
+        "quantity": "1",
+        "expected_stock_version": 4,
+        "unit_keys": [],
+        "scans": []
+      }
+    ]
+  },
+  "count": {
+    "operation_id": "OC16.d21d129674.COUNT.REMAINING",
+    "revision_id": 413,
+    "counts": [
+      {
+        "uid": "OC16.LOT:d21d129674",
+        "cell": "AS16C082d87dbd8",
+        "base_uom": "EA",
+        "before": "1",
+        "after": "1",
+        "delta": "0",
+        "event_id": null
+      }
+    ],
+    "inventory_task_id": 34,
+    "short_id": 27,
+    "replenish_task_id": null,
+    "observed_quantity": "1",
+    "recovery_state": null,
+    "outbox_id": 5705
+  },
+  "return_body": {
+    "operation_id": "OC16.d21d129674.RETURN",
+    "scan_container": "090000000000022010",
+    "expected_content_version": 4,
+    "destinations": {
+      "CASELOT:76F9DCE42A9A33F27356D87B91472B4EF2FEF4:1": "AS16C082d87dbd8"
+    },
+    "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+  },
+  "rollback_wire": "{\"actor\":\"admin\",\"command_type\":\"CASE_CARRIER_RETURN\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"destinations\":{\"CASELOT:76F9DCE42A9A33F27356D87B91472B4EF2FEF4:1\":\"AS16C082d87dbd8\"},\"expected_content_version\":4,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"scan_container\":\"090000000000022010\"},\"operation_id\":\"OC16.d21d129674.RETURN.ROLLBACK\",\"source\":{\"case_task_id\":1153},\"units\":[]}",
+  "return_rollback_REV": "PASS",
+  "returned": {
+    "task": 1153,
+    "version": 4,
+    "carrier": "090000000000022010",
+    "warehouse": 20033496,
+    "stocks": [
+      {
+        "uid": "CASELOT:76F9DCE42A9A33F27356D87B91472B4EF2FEF4:1",
+        "cell": "CPT_20033496",
+        "quantity": "24",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A082D87DBD8",
+        "case_line": 1155,
+        "target": "AS16C082d87dbd8",
+        "reservations": [
+          1922
+        ]
+      }
+    ],
+    "before": [
+      {
+        "uid": "CASELOT:76F9DCE42A9A33F27356D87B91472B4EF2FEF4:1",
+        "cell": "CPT_20033496",
+        "quantity": "24",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A082D87DBD8",
+        "case_line": 1155
+      }
+    ],
+    "unused": [],
+    "operation_id": "OC16.d21d129674.RETURN",
+    "status": "RETURNED",
+    "outbox_id": 5707
+  },
+  "return_replay": {
+    "task": 1153,
+    "version": 4,
+    "carrier": "090000000000022010",
+    "warehouse": 20033496,
+    "stocks": [
+      {
+        "uid": "CASELOT:76F9DCE42A9A33F27356D87B91472B4EF2FEF4:1",
+        "cell": "CPT_20033496",
+        "quantity": "24",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A082D87DBD8",
+        "case_line": 1155,
+        "target": "AS16C082d87dbd8",
+        "reservations": [
+          1922
+        ]
+      }
+    ],
+    "before": [
+      {
+        "uid": "CASELOT:76F9DCE42A9A33F27356D87B91472B4EF2FEF4:1",
+        "cell": "CPT_20033496",
+        "quantity": "24",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A082D87DBD8",
+        "case_line": 1155
+      }
+    ],
+    "unused": [],
+    "operation_id": "OC16.d21d129674.RETURN",
+    "status": "RETURNED",
+    "outbox_id": 5707
+  },
+  "kpi_after_return": {
+    "warehouse_id": 20033496,
+    "start_at": "2026-10-17T04:51:27.795585+00:00",
+    "finish_at": "2026-10-17T04:59:52.341208+00:00",
+    "as_of": "2026-10-17T05:01:40.990535+00:00",
+    "formula_version": "PICKER_KPI_V2",
+    "operators": [
+      {
+        "operator_id": "OC16Pd21d129674",
+        "completed_lines": 1,
+        "boxes": "1",
+        "pieces": "0",
+        "box_reasons": [],
+        "operation_ids": [
+          "OC16.d21d129674.BOX24"
+        ],
+        "quantities": [
+          {
+            "article": "AS16A082D87DBD8",
+            "base_uom": "EA",
+            "quantity": "24"
+          }
+        ],
+        "shortage_completed_lines": 1,
+        "shortage_quantities": [
+          {
+            "article": "AS16A082D87DBD8",
+            "base_uom": "EA",
+            "quantity": "1"
+          }
+        ],
+        "line_completions": [
+          {
+            "operation_id": "OC16.d21d129674.SHORT.APPROVE",
+            "task_id": 1153,
+            "line_id": 1155,
+            "actor": "OC16Pd21d129674",
+            "at": "2026-10-17T04:51:28.628890+00:00",
+            "approved_at": "2026-10-17T04:59:51.485444+00:00",
+            "kind": "ACCEPTED_SHORT",
+            "quantity": "24",
+            "shortage_quantity": "1"
+          }
+        ],
+        "return_events": 1,
+        "returned_quantities": [
+          {
+            "article": "AS16A082D87DBD8",
+            "base_uom": "EA",
+            "quantity": "24"
+          }
+        ],
+        "registered_assembly_hours": "0.000270143333333333333333333333333333333333333333333333333333333",
+        "registered_shift_hours": "0.000333240833333333333333333333333333333333333333333333333333334",
+        "rates": {
+          "lines_per_assembly_hour": "3701.739",
+          "boxes_per_assembly_hour": "3701.739",
+          "lines_per_shift_hour": "3000.833",
+          "boxes_per_shift_hour": "3000.833"
+        },
+        "time_basis": "REGISTERED_CONFIRMED_INTERVALS",
+        "work_coverage_certified": false,
+        "uncovered_work_operations": [],
+        "uncovered_shift_operations": [],
+        "observed_pick_coverage": {
+          "total": 1,
+          "covered_work": 1,
+          "covered_shift": 1,
+          "complete_for_observed_picks": true
+        },
+        "time_reasons": {
+          "assembly": [],
+          "shift": []
+        },
+        "facts": [
+          {
+            "operation_id": "OC16.d21d129674.BOX24",
+            "actor": "OC16Pd21d129674",
+            "at": "2026-10-17T04:51:28.628890+00:00",
+            "task_id": 1153,
+            "line_id": 1155,
+            "article": "AS16A082D87DBD8",
+            "base_uom": "EA",
+            "previous": "0",
+            "cumulative": "24",
+            "planned": "25",
+            "boxes": "1",
+            "packaging_reason": null,
+            "box_size_base": "24",
+            "input_kind": "BOX_SCAN",
+            "delta": "24",
+            "pieces": "0"
+          }
+        ]
+      }
+    ],
+    "scope": "REGISTERED_OBSERVATIONS",
+    "work_coverage_certified": false,
+    "source_limitations": [
+      "REGISTERED_TIME_IS_NOT_CERTIFIED_ALL_WORK",
+      "NATIVE_APPLIED_CLOCK_NOT_PHYSICAL_PICK_TIME",
+      "HISTORICAL_PACKAGING_NOT_BACKFILLED",
+      "HISTORICAL_QUALITY_WITHOUT_AWARE_CLOCK_NOT_BACKFILLED",
+      "OPEN_INTERVALS_PROJECTED_TO_AS_OF",
+      "WHOLE_BOXES_AND_LOOSE_PIECES_SEPARATE",
+      "APPROVED_SHORT_CREDIT_AT_LAST_PHYSICAL_PICK",
+      "RETURNS_RETAIN_WORK_LINE_QUALITY_SEPARATE",
+      "QUALITY_IS_NOT_EMPLOYEE_FAULT_ATTRIBUTION"
+    ],
+    "stock_changed": false
+  },
+  "stock": [
+    {
+      "p": 25,
+      "h": 0
+    }
+  ]
+}

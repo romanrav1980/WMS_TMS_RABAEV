@@ -39,7 +39,15 @@ if exist "%REACT_FRONT_DIR%\package.json" (
   echo Starting WMS admin frontend...
   echo   VITE_API_BASE=%VITE_API_BASE%
   echo   PORT=%PORT%
-  npm.cmd run start -- --port %FRONT_PORT% --strictPort
+  if /I "%TMS_FRONT_MODE%"=="preview" (
+    npm.cmd run preview -- --host %LOCAL_HOST% --port %FRONT_PORT% --strictPort
+  ) else (
+    if /I "%TMS_FRONT_MODE%"=="preview" (
+    npm.cmd run preview -- --host %LOCAL_HOST% --port %FRONT_PORT% --strictPort
+  ) else (
+    npm.cmd run start -- --port %FRONT_PORT% --strictPort
+  )
+  )
 ) else (
   cd /d "%RAW_FRONT_DIR%"
   echo React admin frontend is not created yet.

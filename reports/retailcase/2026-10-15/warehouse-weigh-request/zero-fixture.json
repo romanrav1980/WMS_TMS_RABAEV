@@ -1,0 +1,90 @@
+{
+  "prefix": "WHZERO15.AK06",
+  "device": "WHZERO15.AK06.SCALE",
+  "ware": 13583852,
+  "cell": "QIPcdbf4c0962",
+  "source_before": [
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QIPcdbf4c0962",
+      "remain": 23,
+      "hard_reserved_base": 0,
+      "stock_version": 11
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "state": "CANONICALLY_CANCELLED_METADATA_RETIRED",
+  "physical_hardware": false,
+  "wave": 568,
+  "order": 2147,
+  "case": 1137,
+  "cancel_preflight_result": {
+    "operation_id": "WHZERO15.AK06.CANCEL",
+    "document_type": "PICK_WAVE",
+    "document_id": 568,
+    "released_count": 0,
+    "outbox_id": 5335
+  },
+  "canonical_cancel_preflight_rollback": true,
+  "warehouse_settings_before": {
+    "ware_id": 13583852,
+    "company_prefix": null,
+    "extension_digit": 0,
+    "coordinate_unit_m": 1,
+    "reachtruck_mps": 1,
+    "lift_mps": 0.5,
+    "placement_metric": "DISTANCE",
+    "updated_by": "admin",
+    "updated_at": "2026-10-15 08:06:07.754338",
+    "hu_cell_height_unit": null,
+    "outgoing_qc_mode": "NONE",
+    "outgoing_qc_independent": 0,
+    "outgoing_qc_sample_percent": 0,
+    "defer_wait_cell": null
+  },
+  "label": {
+    "case_pick_task_id": 1137,
+    "sscc": "090000000000009011",
+    "original_carrier": "CPZERO1137",
+    "content_version": 1,
+    "operation_id": "WHZERO15.AK06.LABEL",
+    "confirmed": false
+  },
+  "label_confirmation": {
+    "case_pick_task_id": 1137,
+    "sscc": "090000000000009011",
+    "confirmed": true
+  },
+  "stock_changed": false,
+  "qualified_operator_proof": false,
+  "cancel_result": {
+    "operation_id": "WHZERO15.AK06.CANCEL",
+    "document_type": "PICK_WAVE",
+    "document_id": 568,
+    "released_count": 0,
+    "outbox_id": 5336
+  },
+  "source_after_cleanup": [
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QIPcdbf4c0962",
+      "remain": 23,
+      "hard_reserved_base": 1,
+      "stock_version": 12
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "immutable_history_preserved": true
+}

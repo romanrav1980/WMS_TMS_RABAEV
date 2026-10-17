@@ -1,0 +1,36 @@
+{
+  "state": "BEFORE_OWN_SHIPMENT_METADATA",
+  "warehouse": 20790457,
+  "case": 1147,
+  "prefix": "OC16.5e071e9f41.DLV",
+  "store": "OC16.5e071e9f41.DLV.STORE",
+  "dock": "DLV5e071e9f41",
+  "http": [],
+  "commands": {
+    "TO.DOCK": {
+      "wire": "{\"actor\":\"admin\",\"command_type\":\"CASE_CARRIER_MOVE\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"expected_content_version\":4,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"scan_container\":\"090000000000016019\",\"scanned_to_cell\":\"DLV5e071e9f41\",\"target_cell\":\"DLV5e071e9f41\"},\"operation_id\":\"OC16.5e071e9f41.DLV.TO.DOCK\",\"source\":{\"case_task_id\":1147},\"units\":[]}",
+      "state": "IN_FLIGHT"
+    }
+  },
+  "hardware_verified": false,
+  "st": 641530,
+  "st_identifier": "OC16.5e071e9f41.DLV.ST",
+  "binding": {
+    "case_pick_task_id": 1147,
+    "pallet_identifier": "OC16.5e071e9f41.DLV.ST",
+    "status": "BOUND",
+    "fulfillment_status": "PICKED",
+    "physical_composition": [
+      {
+        "article": "AS16AC0FB95573E",
+        "base_uom": "EA",
+        "quantity": "25"
+      }
+    ],
+    "idempotent": false
+  },
+  "vehicle_type": "10",
+  "vehicle_plate": "DV5e071e9f41",
+  "vehicle": 10109,
+  "trip": 33653
+}

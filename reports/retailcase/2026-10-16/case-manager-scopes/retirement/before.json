@@ -1,0 +1,53 @@
+[
+  {
+    "file": "case-manager-scopes/ordinary-flow/parent/fixture.json",
+    "actor": "AS16O5d66f0691f",
+    "prefix": "AS16.5d66f0691f",
+    "sessions": [],
+    "assignments": [],
+    "role": [],
+    "user": [
+      {
+        "id": "AS16O5d66f0691f",
+        "user_group": "AS16O5d66f0691f",
+        "ware_id": 20382575,
+        "deleted": 0
+      }
+    ],
+    "wave": 583
+  },
+  {
+    "file": "case-manager-scopes/ordinary-flow/ordinary/fixture.json",
+    "actor": "OC16P60406a495a",
+    "prefix": "OC16.60406a495a",
+    "sessions": [
+      {
+        "session_id": 70,
+        "status": "ACTIVE",
+        "resource_id": 74
+      }
+    ],
+    "assignments": [
+      {
+        "assignment_id": "OC16A60406a495a",
+        "version_no": 1
+      }
+    ],
+    "role": [
+      {
+        "role_id": "OC16R60406a495a",
+        "version_no": 1,
+        "active": 1
+      }
+    ],
+    "user": [
+      {
+        "id": "OC16P60406a495a",
+        "user_group": "OC16P60406a495a",
+        "ware_id": 1,
+        "deleted": 0
+      }
+    ],
+    "wave": 584
+  }
+]

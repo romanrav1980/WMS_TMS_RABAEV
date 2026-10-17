@@ -1,0 +1,42 @@
+{
+  "captured_at_utc": "2026-10-15T16:38:33.939556+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE",
+      "file": "rrl_case_assignment_api_package.sql",
+      "errors": [],
+      "user_source_sha256": "59a587ed7588fdd716b1d69b00c36fedc0b389a5c464e43ee1cbec93f27948d4",
+      "artifact_sha256": "6ffb68521ae95fdb63c733432be02b277faa03f47e2ffe6d4a864d0ab8e12e9b"
+    },
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_assignment_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "7380c3f6a71dd51b75d426239b63a2179f8debf17c93ec5c619af4b752721a3e",
+      "artifact_sha256": "72bd3ebadc1a042b022e6ffc5a6b08c29bb3e56a8dcecfefcf280a4ec3267fb7"
+    },
+    {
+      "name": "RRL_WTASK_ASSIGN_API",
+      "type": "PACKAGE",
+      "file": "rrl_wtask_assign_api_package.sql",
+      "errors": [],
+      "user_source_sha256": "3de6ffacb64f6211c901c6c6031be58a6c894039f61d3e00125713c4b02f8e5d",
+      "artifact_sha256": "bea48fd0180642846e38a98a1f264d664abd329f530c103f1fb96daa97f1bfb8"
+    },
+    {
+      "name": "RRL_WTASK_ASSIGN_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_wtask_assign_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "32b19f1c8401167722890e6c3fcccee551dfd0cd7ab382020cbd78339d42ff1b",
+      "artifact_sha256": "5d7e6a7da27900839863e32b84cc5d15a247c9045bc96d890685be06f7c29f71"
+    }
+  ]
+}

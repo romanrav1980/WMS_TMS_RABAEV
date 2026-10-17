@@ -1,0 +1,79 @@
+{
+  "oracle_blocking_wait": [
+    {
+      "event": "enq: TM - contention",
+      "wait_class": "Application",
+      "waiter_sid": 340,
+      "blocking_sid": 106
+    }
+  ],
+  "deactivation": {
+    "operation_id": "WHREQ15.CASE.ROLE.REVOKE",
+    "command_type": "ROLE_SAVE",
+    "object_id": "WHREQ15.CASE.EXEC",
+    "version": 2,
+    "replayed": false
+  },
+  "current_revoke_denied": true,
+  "reactivation": {
+    "operation_id": "WHREQ15.CASE.ROLE.RESTORE",
+    "command_type": "ROLE_SAVE",
+    "object_id": "WHREQ15.CASE.EXEC",
+    "version": 3,
+    "replayed": false
+  },
+  "status": "PASS",
+  "task_id": 1136,
+  "stock_committed": false,
+  "physical_verified": false,
+  "role_versions": [
+    1,
+    2,
+    3
+  ],
+  "stock_before_after": {
+    "stock": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 24,
+        "hard_reserved_base": 1,
+        "stock_version": 10
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "picked_qty": 0,
+        "content_version": 2,
+        "legacy_sborka_pallet_id": null,
+        "assigned_to": "WHREQ15.OP",
+        "assigned_resource_id": 58,
+        "resource_session_id": 54
+      }
+    ],
+    "line": [
+      {
+        "status": "NEW",
+        "picked_qty": 0
+      }
+    ],
+    "case_events": [
+      {
+        "n": 3
+      }
+    ],
+    "resource_events": [
+      {
+        "n": 0
+      }
+    ]
+  },
+  "evidence": "Revocation blocked during canonical uncommitted stock execution; stock rollback releases fence, revoke then denies current guard and original operation; role restored by native owner",
+  "limitation": "No committed APPLIED receipt existed for this rollback operation; durable old receipt after downstream progress is separate"
+}

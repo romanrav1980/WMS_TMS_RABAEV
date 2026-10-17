@@ -1,0 +1,484 @@
+{
+  "status": "PASS_RETIRED_NO_QUANTITY_EFFECT",
+  "initial_plan_sha256": "3c9e42022524a6feac50508f1a35fbb6ac3e2cfeaa8fde1d7d49c55372725740",
+  "executable_sha256": "9b470fe8cae8c0cb850b7e79f3ae191a455bcf7b2c8e6d71f869837892bcce21",
+  "before": {
+    "hu": {
+      "root": "HU1069:4bb85f1f15",
+      "warehouse": 5062399,
+      "cell": "QW4bb85f1f15",
+      "nodes": [
+        {
+          "uid": "HU1069:4bb85f1f15",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 10,
+          "sscc": null,
+          "tare_weight_kg": "1",
+          "open_task_count": 0,
+          "cell": "QW4bb85f1f15",
+          "depth": 0
+        },
+        {
+          "uid": "CASE:1131",
+          "case_task_id": 1131,
+          "kind": "CASE",
+          "type": "CASE",
+          "sscc": "CP553000000001131",
+          "version": 20,
+          "status": "WAIT_CONTROL",
+          "wave_id": 553,
+          "cell": "QW4bb85f1f15",
+          "depth": 1,
+          "open_task_count": 0,
+          "tare_weight_kg": null
+        },
+        {
+          "uid": "CASELOT:C5622546955335244142496C5D188F090F2D85:1",
+          "kind": "STOCK",
+          "type": null,
+          "version": 7,
+          "sscc": null,
+          "tare_weight_kg": "0",
+          "case_task_id": 1131,
+          "article": "QNATIVE4BB85F1F15",
+          "quantity": "12",
+          "hard_quantity": "12",
+          "base_uom": "EA",
+          "stock_version": 9,
+          "weight_kg": null,
+          "open_task_count": 0,
+          "cell": "QW4bb85f1f15",
+          "depth": 2
+        }
+      ],
+      "links": [
+        {
+          "id": 466,
+          "parent": "HU1069:4bb85f1f15",
+          "child": "CASE:1131",
+          "version": 0
+        },
+        {
+          "parent": "CASE:1131",
+          "child": "CASELOT:C5622546955335244142496C5D188F090F2D85:1",
+          "membership": "CASE_CARRIER_LOT"
+        }
+      ],
+      "ancestors": [],
+      "physical_unit_count": 0,
+      "leaf_count": 1,
+      "top_place_count": 1,
+      "quantities": [
+        {
+          "article": "QNATIVE4BB85F1F15",
+          "base_uom": "EA",
+          "quantity": "12"
+        }
+      ],
+      "gross_weight_kg": null,
+      "unknown_weight_leaves": 1,
+      "unknown_tare_containers": 1,
+      "placement": null
+    },
+    "stock_counts": [
+      {
+        "operations": 5080,
+        "clocks": 59,
+        "outboxes": 5088
+      }
+    ]
+  },
+  "frozen_commands": {
+    "ROLE.CREATE": {
+      "command": {
+        "operation_id": "N2140.HU.ROLE.CREATE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "N2140.HU.VIEW",
+          "title": "TEST_METADATA_ONLY_NO_HARDWARE N2140 scoped HU read acceptance",
+          "permissions": [
+            "warehouse_task_view"
+          ],
+          "active": true
+        }
+      },
+      "sha256": "8e429cf5b4bcb80094edd1d128ece3bc4958bb385253e3cac4220dd4a4dd4e02"
+    },
+    "WARE.ASSIGN": {
+      "command": {
+        "operation_id": "N2140.HU.WARE.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "N2140.HU.WARE",
+          "username": "N2140.VIEW",
+          "role_id": "N2140.HU.VIEW",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "5062399",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-15T18:30:07.354692+00:00",
+          "valid_until": "2026-10-15T19:11:07.354692+00:00",
+          "reason": "TEST_METADATA_ONLY_NO_HARDWARE N2140 scoped HU read acceptance"
+        }
+      },
+      "sha256": "539931124b8ad0578071f34458ba558f076c7610b6e99d4b9a3f235f76b51b2f"
+    },
+    "WARE.REVOKE": {
+      "command": {
+        "operation_id": "N2140.HU.WARE.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "N2140.HU.WARE",
+          "reason": "TEST_METADATA_ONLY_NO_HARDWARE N2140 scoped HU read acceptance"
+        }
+      },
+      "sha256": "4804f1e8bf72503303a76373ba8e49059f836e1eecda06770d13c1895a022899"
+    },
+    "GROUP.CREATE": {
+      "command": {
+        "operation_id": "N2140.HU.GROUP.CREATE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "group_id": "N2140.HU.GROUP",
+          "title": "TEST_METADATA_ONLY_NO_HARDWARE N2140 scoped HU read acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "5062399"
+            }
+          ],
+          "active": true
+        }
+      },
+      "sha256": "a09cef12754604fa48e72fd92d0d35c8abc474cf3cfaaeb5b69eaf1ed34c56a2"
+    },
+    "GROUP.ASSIGN": {
+      "command": {
+        "operation_id": "N2140.HU.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "N2140.HU.GROUP.ASSIGN",
+          "username": "N2140.VIEW",
+          "role_id": "N2140.HU.VIEW",
+          "scope_kind": "GROUP",
+          "scope_id": "N2140.HU.GROUP",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-15T18:30:07.354692+00:00",
+          "valid_until": "2026-10-15T19:11:07.354692+00:00",
+          "reason": "TEST_METADATA_ONLY_NO_HARDWARE N2140 scoped HU read acceptance"
+        }
+      },
+      "sha256": "7ab3c5a5362a3e8bc0d6ff3da3edda6aff6a19c04ce110a72e099064b0e07a78"
+    },
+    "GROUP.REMOVE": {
+      "command": {
+        "operation_id": "N2140.HU.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "group_id": "N2140.HU.GROUP",
+          "title": "TEST_METADATA_ONLY_NO_HARDWARE N2140 scoped HU read acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [],
+          "active": true
+        }
+      },
+      "sha256": "93a3b91e32b2a3a9c5aa4662464570e7047075939185e12efb9bd3f9a14f16af"
+    },
+    "GROUP.REVOKE": {
+      "command": {
+        "operation_id": "N2140.HU.GROUP.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "N2140.HU.GROUP.ASSIGN",
+          "reason": "TEST_METADATA_ONLY_NO_HARDWARE N2140 scoped HU read acceptance"
+        }
+      },
+      "sha256": "1601c2d31a2ae9f0d14dacf81a8d5f894553bad81a9b857623f6bc16356fcebe"
+    },
+    "GROUP.RETIRE": {
+      "command": {
+        "operation_id": "N2140.HU.GROUP.RETIRE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 2,
+          "group_id": "N2140.HU.GROUP",
+          "title": "TEST_METADATA_ONLY_NO_HARDWARE N2140 scoped HU read acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [],
+          "active": false
+        }
+      },
+      "sha256": "aa101fcd94ea0c3a08eaa7b986d5f4bfabe611dd31fdde34a6007d79ca170942"
+    },
+    "ROLE.RETIRE": {
+      "command": {
+        "operation_id": "N2140.HU.ROLE.RETIRE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "N2140.HU.VIEW",
+          "title": "TEST_METADATA_ONLY_NO_HARDWARE N2140 scoped HU read acceptance",
+          "permissions": [
+            "warehouse_task_view"
+          ],
+          "active": false
+        }
+      },
+      "sha256": "6fe473f655cdbc9e61ef44b4946a46862465ddd60c7771f62be31d44e689af9f"
+    }
+  },
+  "history": [
+    {
+      "step": "CONFIG_CREATE_ACTOR",
+      "state": "ATTEMPT"
+    },
+    {
+      "step": "ROLE.CREATE",
+      "state": "ATTEMPT"
+    },
+    {
+      "step": "WARE.ASSIGN",
+      "state": "ATTEMPT"
+    },
+    {
+      "step": "WARE.REVOKE",
+      "state": "ATTEMPT"
+    },
+    {
+      "step": "GROUP.CREATE",
+      "state": "ATTEMPT"
+    },
+    {
+      "step": "GROUP.ASSIGN",
+      "state": "ATTEMPT"
+    },
+    {
+      "step": "GROUP.REMOVE",
+      "state": "ATTEMPT"
+    },
+    {
+      "step": "GROUP.REVOKE",
+      "state": "ATTEMPT"
+    },
+    {
+      "step": "GROUP.RETIRE",
+      "state": "ATTEMPT"
+    },
+    {
+      "step": "ROLE.RETIRE",
+      "state": "ATTEMPT"
+    },
+    {
+      "step": "CONFIG_RETIRE_ACTOR",
+      "state": "ATTEMPT"
+    }
+  ],
+  "receipts": {
+    "ROLE.CREATE": {
+      "operation_id": "N2140.HU.ROLE.CREATE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "N2140.HU.VIEW",
+      "version": 1,
+      "replayed": false
+    },
+    "WARE.ASSIGN": {
+      "operation_id": "N2140.HU.WARE.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "N2140.HU.WARE",
+      "version": 1,
+      "replayed": false
+    },
+    "WARE.REVOKE": {
+      "operation_id": "N2140.HU.WARE.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "N2140.HU.WARE",
+      "version": 2,
+      "replayed": false
+    },
+    "GROUP.CREATE": {
+      "operation_id": "N2140.HU.GROUP.CREATE",
+      "command_type": "GROUP_SAVE",
+      "object_id": "N2140.HU.GROUP",
+      "version": 1,
+      "replayed": false
+    },
+    "GROUP.ASSIGN": {
+      "operation_id": "N2140.HU.GROUP.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "N2140.HU.GROUP.ASSIGN",
+      "version": 1,
+      "replayed": false
+    },
+    "GROUP.REMOVE": {
+      "operation_id": "N2140.HU.GROUP.REMOVE",
+      "command_type": "GROUP_SAVE",
+      "object_id": "N2140.HU.GROUP",
+      "version": 2,
+      "replayed": false
+    },
+    "GROUP.REVOKE": {
+      "operation_id": "N2140.HU.GROUP.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "N2140.HU.GROUP.ASSIGN",
+      "version": 2,
+      "replayed": false
+    },
+    "GROUP.RETIRE": {
+      "operation_id": "N2140.HU.GROUP.RETIRE",
+      "command_type": "GROUP_SAVE",
+      "object_id": "N2140.HU.GROUP",
+      "version": 3,
+      "replayed": false
+    },
+    "ROLE.RETIRE": {
+      "operation_id": "N2140.HU.ROLE.RETIRE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "N2140.HU.VIEW",
+      "version": 2,
+      "replayed": false
+    }
+  },
+  "quantity_commands": 0,
+  "hardware": false,
+  "http": {
+    "WARE": [
+      {
+        "route": "/api/warehouse-hus/composition",
+        "status": 200
+      },
+      {
+        "route": "/api/warehouse-hus/target-slots",
+        "status": 200
+      }
+    ],
+    "WARE_REVOKED": [
+      {
+        "route": "/api/warehouse-hus/composition",
+        "status": 403
+      },
+      {
+        "route": "/api/warehouse-hus/target-slots",
+        "status": 403
+      }
+    ],
+    "GROUP": [
+      {
+        "route": "/api/warehouse-hus/composition",
+        "status": 200
+      },
+      {
+        "route": "/api/warehouse-hus/target-slots",
+        "status": 200
+      }
+    ],
+    "GROUP_MEMBER_REMOVED": [
+      {
+        "route": "/api/warehouse-hus/composition",
+        "status": 403
+      },
+      {
+        "route": "/api/warehouse-hus/target-slots",
+        "status": 403
+      }
+    ]
+  },
+  "after": {
+    "hu": {
+      "root": "HU1069:4bb85f1f15",
+      "warehouse": 5062399,
+      "cell": "QW4bb85f1f15",
+      "nodes": [
+        {
+          "uid": "HU1069:4bb85f1f15",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 10,
+          "sscc": null,
+          "tare_weight_kg": "1",
+          "open_task_count": 0,
+          "cell": "QW4bb85f1f15",
+          "depth": 0
+        },
+        {
+          "uid": "CASE:1131",
+          "case_task_id": 1131,
+          "kind": "CASE",
+          "type": "CASE",
+          "sscc": "CP553000000001131",
+          "version": 20,
+          "status": "WAIT_CONTROL",
+          "wave_id": 553,
+          "cell": "QW4bb85f1f15",
+          "depth": 1,
+          "open_task_count": 0,
+          "tare_weight_kg": null
+        },
+        {
+          "uid": "CASELOT:C5622546955335244142496C5D188F090F2D85:1",
+          "kind": "STOCK",
+          "type": null,
+          "version": 7,
+          "sscc": null,
+          "tare_weight_kg": "0",
+          "case_task_id": 1131,
+          "article": "QNATIVE4BB85F1F15",
+          "quantity": "12",
+          "hard_quantity": "12",
+          "base_uom": "EA",
+          "stock_version": 9,
+          "weight_kg": null,
+          "open_task_count": 0,
+          "cell": "QW4bb85f1f15",
+          "depth": 2
+        }
+      ],
+      "links": [
+        {
+          "id": 466,
+          "parent": "HU1069:4bb85f1f15",
+          "child": "CASE:1131",
+          "version": 0
+        },
+        {
+          "parent": "CASE:1131",
+          "child": "CASELOT:C5622546955335244142496C5D188F090F2D85:1",
+          "membership": "CASE_CARRIER_LOT"
+        }
+      ],
+      "ancestors": [],
+      "physical_unit_count": 0,
+      "leaf_count": 1,
+      "top_place_count": 1,
+      "quantities": [
+        {
+          "article": "QNATIVE4BB85F1F15",
+          "base_uom": "EA",
+          "quantity": "12"
+        }
+      ],
+      "gross_weight_kg": null,
+      "unknown_weight_leaves": 1,
+      "unknown_tare_containers": 1,
+      "placement": null
+    },
+    "stock_counts": [
+      {
+        "operations": 5080,
+        "clocks": 59,
+        "outboxes": 5088
+      }
+    ]
+  },
+  "scope": "Actual WARE and CURRENT GROUP HTTP reads/revocation; no separate caller-rollback GROUP repetition",
+  "sql_decision": "Exact HU/WARE/actor lookups and fixed HTTP requests; retain bounded reads. Global count checkpoint is acceptance-only, not UI/runtime query."
+}

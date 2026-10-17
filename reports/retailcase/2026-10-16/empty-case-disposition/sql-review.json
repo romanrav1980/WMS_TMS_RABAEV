@@ -1,0 +1,117 @@
+{
+  "native_calls_not_http_paired": true,
+  "http": [
+    {
+      "api_call_id": 69459,
+      "request_id": "7d705a9c-1aae-424e-ae74-db0cd4aebbd4",
+      "path": "/api/picking/waves/576/finish-execution",
+      "response_status": 200,
+      "duration_ms": 304
+    },
+    {
+      "api_call_id": 69567,
+      "request_id": "0f881e5b-3a4e-4028-abd2-a92f05b83da4",
+      "path": "/api/case-pick/tasks/1143/empty-disposition",
+      "response_status": 200,
+      "duration_ms": 237
+    },
+    {
+      "api_call_id": 69568,
+      "request_id": "217fc9ca-ac5d-4a1c-b7bc-008cae5be162",
+      "path": "/api/case-pick/tasks/1143/empty-disposition",
+      "response_status": 200,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 69569,
+      "request_id": "3113aa92-4cb9-4c03-8e29-a6b057471cf2",
+      "path": "/api/case-pick/tasks/1143/empty-disposition",
+      "response_status": 409,
+      "duration_ms": 68
+    },
+    {
+      "api_call_id": 69570,
+      "request_id": "49e93a73-bc7f-4918-878b-fe05a3f8b935",
+      "path": "/api/picking/waves/574/finish-execution",
+      "response_status": 200,
+      "duration_ms": 177
+    }
+  ],
+  "slow": [],
+  "top_sql": [
+    {
+      "sql_id": "admdtyprqxjhm",
+      "executions": 132,
+      "avg_ms": 55.567,
+      "avg_buffers": 695.08,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.execute_prepared(:result); end;"
+    },
+    {
+      "sql_id": "5jfvwwtgzb031",
+      "executions": 13,
+      "avg_ms": 137.442,
+      "avg_buffers": 1730.54,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.execute_prepared(:1); end;"
+    },
+    {
+      "sql_id": "fymrgaf5r1rrc",
+      "executions": 2,
+      "avg_ms": 13.165,
+      "avg_buffers": 50.5,
+      "sql_sample": "SELECT SR.RESERVATION_ID,SR.UID_PALLET,SR.CELL,SR.BASE_UOM,SR.BASE_QTY,P.ARTICUL FROM RRL_STOCK_RESERVATION SR JOIN RRL_PALLETS P ON P.UID_PALLET=SR.UID_PALLET WHERE SR.SOURCE_DOC_TYPE='PICK_WAVE' AND SR.SOURCE_DOC_ID=:B1 AND SR.RESERVATION_KIND='HARD' AND SR.STATUS IN('ACTIVE','ALLOCATED','PICKING') AND SR.BASE_QTY>0 AND EXISTS(SELECT 1 FROM RRL_CASE_PICK_LINE L WHERE L.CASE_PICK_TASK_ID=:B2 AND L.PICK_TASK_ID=SR.SOURCE_LINE_ID) AND NOT EXISTS(SELECT 1 FROM RRL_CASE_CARRIER_LOT CL WHERE CL.LOT_"
+    },
+    {
+      "sql_id": "5kc86c595vr2p",
+      "executions": 4,
+      "avg_ms": 4.13,
+      "avg_buffers": 31,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_CASE_PICK_SHORT SH WHERE SH.CASE_PICK_TASK_ID=:B1 AND (NVL(SH.STATUS,'-')!='ACCEPTED' OR SH.APPROVED_BY IS NULL OR SH.CREATED_BY IS NULL OR SH.APPROVED_BY=SH.CREATED_BY OR SH.RECOVERY_STATE IS NOT NULL OR SH.REPLENISH_TASK_ID IS NOT NULL OR SH.WEIGHT_DECISION_OPERATION IS NOT NULL OR NOT EXISTS(SELECT 1 FROM RRL_CASE_PICK_LINE L WHERE L.CASE_PICK_LINE_ID=SH.CASE_PICK_LINE_ID AND L.CASE_PICK_TASK_ID=:B1 ) OR(SH.INVENTORY_TASK_ID IS NOT NULL AND NOT EXISTS(SELECT 1 FROM RRL"
+    },
+    {
+      "sql_id": "2nkk6b4f1bhu2",
+      "executions": 4,
+      "avg_ms": 3.507,
+      "avg_buffers": 23,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_CASE_PICK_LINE L WHERE L.CASE_PICK_TASK_ID=:B1 AND (L.PICK_TASK_ID IS NULL OR L.PICK_WAVE_TASK_ID IS NULL OR NOT EXISTS(SELECT 1 FROM RRL_PICK_TASK PT WHERE PT.PICK_TASK_ID=L.PICK_TASK_ID) OR NOT EXISTS(SELECT 1 FROM RRL_PICK_WAVE_TASK WT WHERE WT.PICK_WAVE_TASK_ID=L.PICK_WAVE_TASK_ID) OR EXISTS( SELECT 1 FROM RRL_PICK_TASK PT WHERE PT.PICK_TASK_ID=L.PICK_TASK_ID AND (NVL(PT.FACT_QTY,0)!=0 OR(PT.STATUS='DONE'AND :B2 =0))) OR EXISTS(SELECT 1 FROM RRL_CASE_PICK_LINE OTHER_L"
+    },
+    {
+      "sql_id": "36sqgwpmtyg2z",
+      "executions": 4,
+      "avg_ms": 2.939,
+      "avg_buffers": 15.75,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_WAREHOUSE_TASK WH WHERE WH.TASK_SOURCE='WAVE'AND WH.SOURCE_DOC_ID=(SELECT PICK_WAVE_ID FROM RRL_CASE_PICK_TASK WHERE CASE_PICK_TASK_ID=:B1 )AND NVL(WH.STATUS,'-')!='CANCELLED' AND NVL(WH.TASK_TYPE,'-')!='REPLENISHMENT'AND EXISTS(SELECT 1 FROM RRL_CASE_PICK_LINE L WHERE L.CASE_PICK_TASK_ID=:B1 AND L.PICK_WAVE_TASK_ID=WH.SOURCE_TASK_ID)"
+    },
+    {
+      "sql_id": "f5akkz2hjg1gu",
+      "executions": 4,
+      "avg_ms": 2.692,
+      "avg_buffers": 18.75,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_CASE_PICK_LINE L WHERE L.CASE_PICK_TASK_ID=:B1 AND (NVL(L.STATUS,'-')!='SHORT_PICKED' OR NVL(L.PICKED_QTY,0)!=0 OR NVL(L.PLANNED_QTY,0)<=0 OR NOT EXISTS(SELECT 1 FROM RRL_PICK_TASK PT WHERE PT.PICK_TASK_ID=L.PICK_TASK_ID AND PT.STATUS='DONE'AND NVL(PT.FACT_QTY,0)=0) OR NOT EXISTS(SELECT 1 FROM RRL_PICK_WAVE_TASK WT WHERE WT.PICK_WAVE_TASK_ID=L.PICK_WAVE_TASK_ID AND WT.STATUS='DONE') OR L.PLANNED_QTY!=(SELECT NVL(SUM(SH.SHORT_QTY),0)FROM RRL_CASE_PICK_SHORT SH WHERE SH.CAS"
+    }
+  ],
+  "local_pairs": [
+    {
+      "api_call_id": 69459,
+      "request_id": "7d705a9c-1aae-424e-ae74-db0cd4aebbd4"
+    },
+    {
+      "api_call_id": 69567,
+      "request_id": "0f881e5b-3a4e-4028-abd2-a92f05b83da4"
+    },
+    {
+      "api_call_id": 69568,
+      "request_id": "217fc9ca-ac5d-4a1c-b7bc-008cae5be162"
+    },
+    {
+      "api_call_id": 69569,
+      "request_id": "3113aa92-4cb9-4c03-8e29-a6b057471cf2"
+    },
+    {
+      "api_call_id": 69570,
+      "request_id": "49e93a73-bc7f-4918-878b-fe05a3f8b935"
+    }
+  ],
+  "max_http_ms": 304,
+  "decision": "Retain existing CASE/line/short/task keys and bounded200 proof rows; no new index/cache. Root sorted row locks include audit task before effect. Empty disposition has no quantity transfer. Inventory owner checks short/line execution plans at pilot cardinality if repeated >1000ms. Shared V$SQL means are not endpoint p95; direct caller rollback/book/count calls have no invented HTTP pairing.",
+  "state": "PASS_AUDIT_PAIRS_SQL_REVIEW"
+}

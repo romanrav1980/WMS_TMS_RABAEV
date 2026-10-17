@@ -1,0 +1,195 @@
+{
+  "status": "READ_OK",
+  "timeline": {
+    "warehouse_id": 13583852,
+    "start_at": "2026-10-14T21:00:00+00:00",
+    "finish_at": "2026-10-15T21:00:00+00:00",
+    "observed_at": "2026-10-15T13:56:03.311366+00:00",
+    "access_revision": 457,
+    "warehouse_time_zone": null,
+    "resources": [
+      {
+        "resource_id": "RESOURCE:58",
+        "kind": "CASE_PICKER",
+        "label": "TEST_FIXTURE_NOT_HARDWARE shared scoped CASE proof; metadata only",
+        "warehouse_id": 13583852,
+        "source_state": "AVAILABLE",
+        "availability": "UNKNOWN",
+        "zone_code": null,
+        "qualifications": [
+          {
+            "source_resource_id": 58,
+            "task_type": "CASE_PICK",
+            "current_by_native_policy": true,
+            "legacy_valid_from": "2026-10-15T08:06:22.151385",
+            "legacy_valid_until": null,
+            "time_status": "UNRESOLVED_SERVER_LOCAL"
+          }
+        ],
+        "last_signal": null
+      },
+      {
+        "resource_id": "RESOURCE:59",
+        "kind": "CASE_PICKER",
+        "label": "SIMULATED_TEST_LABEL_NOT_PHYSICAL; TEST_FIXTURE_NOT_HARDWARE CRES15 metadata proof",
+        "warehouse_id": 13583852,
+        "source_state": "AVAILABLE",
+        "availability": "UNKNOWN",
+        "zone_code": null,
+        "qualifications": [
+          {
+            "source_resource_id": 59,
+            "task_type": "CASE_PICK",
+            "current_by_native_policy": true,
+            "legacy_valid_from": "2026-10-15T09:26:48.200898",
+            "legacy_valid_until": null,
+            "time_status": "UNRESOLVED_SERVER_LOCAL"
+          }
+        ],
+        "last_signal": {
+          "session_id": 55,
+          "aware_at": null,
+          "legacy_at": "2026-10-15T09:26:48.425806",
+          "time_status": "UNRESOLVED_SERVER_LOCAL",
+          "recent_by_native_server_clock": false
+        }
+      },
+      {
+        "resource_id": "DOCK:13583852:QDcdbf4c0962",
+        "kind": "DOCK",
+        "label": "QDcdbf4c0962",
+        "warehouse_id": 13583852,
+        "source_state": "UNKNOWN",
+        "availability": "UNKNOWN",
+        "zone_code": null,
+        "qualifications": null,
+        "last_signal": null
+      }
+    ],
+    "events": [
+      {
+        "event_id": "WAREHOUSE_TASK:828",
+        "kind": "WAREHOUSE_TASK",
+        "label": "PUTAWAY \u00b7 828",
+        "source": "RRL_WAREHOUSE_TASK",
+        "source_id": 828,
+        "status": "DONE",
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "task_source": "MANUAL",
+        "source_task_id": 828,
+        "wave_id": null,
+        "fact_start_at": "2026-10-10T09:13:16.142850+00:00",
+        "fact_finish_at": null,
+        "time_status": "AWARE_FACT",
+        "legacy_time": {
+          "plan_start": null,
+          "plan_finish": null
+        },
+        "blocking_reason": null
+      },
+      {
+        "event_id": "CASE_PICK_TASK:1136",
+        "kind": "CASE_PICK_TASK",
+        "label": "\u0421\u0431\u043e\u0440\u043a\u0430 1136 \u00b7 \u0432\u043e\u043b\u043d\u0430 567",
+        "source": "RRL_CASE_PICK_TASK",
+        "source_id": 1136,
+        "wave_id": 567,
+        "status": "CANCELLED",
+        "total_lines": 1,
+        "picked_lines": 1,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": "2026-10-15T12:16:32.620507+00:00",
+        "fact_finish_at": null,
+        "time_status": "AWARE_FACT",
+        "legacy_time": {
+          "fact_finish": null
+        },
+        "fact_finish_status": "UNRESOLVED"
+      },
+      {
+        "event_id": "CASE_PICK_TASK:1138",
+        "kind": "CASE_PICK_TASK",
+        "label": "\u0421\u0431\u043e\u0440\u043a\u0430 1138 \u00b7 \u0432\u043e\u043b\u043d\u0430 569",
+        "source": "RRL_CASE_PICK_TASK",
+        "source_id": 1138,
+        "wave_id": 569,
+        "status": "IN_PROGRESS",
+        "total_lines": 1,
+        "picked_lines": 0,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": "2026-10-15T13:31:51.198164+00:00",
+        "fact_finish_at": null,
+        "time_status": "AWARE_FACT",
+        "legacy_time": {
+          "fact_finish": null
+        },
+        "fact_finish_status": "UNRESOLVED"
+      }
+    ],
+    "unscheduled": [],
+    "assignments": [
+      {
+        "event_id": "CASE_PICK_TASK:1136",
+        "resource_id": "RESOURCE:58"
+      },
+      {
+        "event_id": "CASE_PICK_TASK:1138",
+        "resource_id": "RESOURCE:59"
+      }
+    ],
+    "sources": [
+      {
+        "source_id": "registry",
+        "status": "READY",
+        "permission": "resource_management_view",
+        "limit": 500,
+        "observed_at": "2026-10-15T13:56:03.300592+00:00"
+      },
+      {
+        "source_id": "attendance",
+        "status": "READY",
+        "permission": "resource_shift_view",
+        "limit": 500,
+        "observed_at": "2026-10-15T13:56:03.300592+00:00"
+      },
+      {
+        "source_id": "warehouse_tasks",
+        "status": "READY",
+        "permission": "warehouse_task_view",
+        "limit": 2000,
+        "observed_at": "2026-10-15T13:56:03.300592+00:00"
+      },
+      {
+        "source_id": "case_tasks",
+        "status": "READY",
+        "permission": "case_pick_view",
+        "limit": 2000,
+        "observed_at": "2026-10-15T13:56:03.300592+00:00"
+      },
+      {
+        "source_id": "transport",
+        "status": "READY",
+        "permission": "transport_dispatch_view",
+        "limit": 2000,
+        "observed_at": "2026-10-15T13:56:03.300592+00:00"
+      },
+      {
+        "source_id": "sessions",
+        "status": "READY",
+        "permission": "resource_session_view",
+        "limit": 2000,
+        "observed_at": "2026-10-15T13:56:03.300592+00:00"
+      }
+    ],
+    "overlap_candidates": [],
+    "overlap_limit": 200,
+    "time_policy": "AWARE_ONLY_LEGACY_LOCAL_UNRESOLVED",
+    "snapshot": "ORACLE_READ_ONLY",
+    "commands_executed": false
+  },
+  "physical_hardware": false,
+  "native_mutations": false
+}

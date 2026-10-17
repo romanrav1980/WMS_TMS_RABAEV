@@ -1,0 +1,158 @@
+{
+  "state": "BEFORE_OWN_SLOT_ONBOARDING",
+  "warehouse": 40799215,
+  "cell": "HT16Vc31efb0e6c",
+  "parent": "HT16.P:c31efb0e6c",
+  "child": "HT16.SLOT.CHILD:c31efb0e6c",
+  "lot": "HT16.SLOT.LOT:c31efb0e6c",
+  "commands": {
+    "BIRTH2": {
+      "wire": "{\"actor\":\"admin\",\"command_type\":\"INVENTORY_REGISTER_LOT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"article\":\"AS16ACE9C011B16\",\"cell\":\"HT16Uc31efb0e6c\",\"expiry_date\":\"2030-01-01\",\"price\":\"0\",\"quantity\":\"2\",\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"uid\":\"HT16.SLOT.LOT:c31efb0e6c\"},\"operation_id\":\"HT16.c31efb0e6c.SLOT.BIRTH2\",\"source\":{\"revision_id\":407},\"units\":[]}",
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "HT16.c31efb0e6c.SLOT.BIRTH2",
+        "revision_id": 407,
+        "uid": "HT16.SLOT.LOT:c31efb0e6c",
+        "cell": "HT16Uc31efb0e6c",
+        "article": "AS16ACE9C011B16",
+        "quantity": "2",
+        "unit": "EA",
+        "event_id": 6446877,
+        "lot_source": "INVENTORY",
+        "outbox_id": 5610
+      }
+    },
+    "CREATE.CHILD": {
+      "wire": "{\"actor\":\"HT16Oc31efb0e6c\",\"command_type\":\"HU_CREATE\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"cell\":\"HT16Uc31efb0e6c\",\"container_type\":\"PALLET\",\"scan_cell\":\"HT16Uc31efb0e6c\",\"scan_container\":\"HT16.SLOT.CHILD:c31efb0e6c\",\"tare_weight_kg\":0.5,\"warehouse\":40799215},\"operation_id\":\"HT16.c31efb0e6c.SLOT.CREATE.CHILD\",\"source\":{\"uid\":\"HT16.SLOT.CHILD:c31efb0e6c\"},\"units\":[]}",
+      "state": "COMMITTED",
+      "result": {
+        "root": "HT16.SLOT.CHILD:c31efb0e6c",
+        "warehouse": 40799215,
+        "cell": "HT16Uc31efb0e6c",
+        "nodes": [
+          {
+            "uid": "HT16.SLOT.CHILD:c31efb0e6c",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 0,
+            "sscc": null,
+            "tare_weight_kg": "0.5",
+            "open_task_count": 0,
+            "cell": "HT16Uc31efb0e6c",
+            "depth": 0
+          }
+        ],
+        "links": [],
+        "ancestors": [],
+        "physical_unit_count": 0,
+        "leaf_count": 0,
+        "top_place_count": 1,
+        "operation_id": "HT16.c31efb0e6c.SLOT.CREATE.CHILD",
+        "command": "HU_CREATE",
+        "outbox_id": 5611
+      }
+    },
+    "ATTACH.LOT": {
+      "wire": "{\"actor\":\"HT16Oc31efb0e6c\",\"command_type\":\"HU_ATTACH\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"child_uid\":\"HT16.SLOT.LOT:c31efb0e6c\",\"expected_child_version\":0,\"expected_version\":0,\"scan_child\":\"HT16.SLOT.LOT:c31efb0e6c\",\"scan_container\":\"HT16.SLOT.CHILD:c31efb0e6c\"},\"operation_id\":\"HT16.c31efb0e6c.SLOT.ATTACH.LOT\",\"source\":{\"uid\":\"HT16.SLOT.CHILD:c31efb0e6c\"},\"units\":[]}",
+      "state": "COMMITTED",
+      "result": {
+        "root": "HT16.SLOT.CHILD:c31efb0e6c",
+        "warehouse": 40799215,
+        "cell": "HT16Uc31efb0e6c",
+        "nodes": [
+          {
+            "uid": "HT16.SLOT.CHILD:c31efb0e6c",
+            "kind": "CONTAINER",
+            "type": "PALLET",
+            "version": 1,
+            "sscc": null,
+            "tare_weight_kg": "0.5",
+            "open_task_count": 0,
+            "cell": "HT16Uc31efb0e6c",
+            "depth": 0
+          },
+          {
+            "uid": "HT16.SLOT.LOT:c31efb0e6c",
+            "kind": "STOCK",
+            "type": null,
+            "version": 1,
+            "sscc": null,
+            "tare_weight_kg": "0",
+            "article": "AS16ACE9C011B16",
+            "quantity": "2",
+            "hard_quantity": "0",
+            "base_uom": "EA",
+            "stock_version": 1,
+            "weight_kg": null,
+            "open_task_count": 0,
+            "cell": "HT16Uc31efb0e6c",
+            "depth": 1
+          }
+        ],
+        "links": [
+          {
+            "id": 625,
+            "parent": "HT16.SLOT.CHILD:c31efb0e6c",
+            "child": "HT16.SLOT.LOT:c31efb0e6c",
+            "version": 0
+          }
+        ],
+        "ancestors": [],
+        "physical_unit_count": 0,
+        "leaf_count": 1,
+        "top_place_count": 1,
+        "operation_id": "HT16.c31efb0e6c.SLOT.ATTACH.LOT",
+        "command": "HU_ATTACH",
+        "outbox_id": 5612
+      }
+    },
+    "PLACE.PARENT": {
+      "wire": "{\"actor\":\"HT16Oc31efb0e6c\",\"command_type\":\"HU_MOVE\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"expected_version\":3,\"measurements\":{\"content_version\":3,\"depth_m\":\"1\",\"gross_weight_kg\":\"5\",\"height_m\":\"1.5\",\"origin\":\"MANUAL_CONFIRMED\",\"width_m\":\"1\"},\"scan_container\":\"HT16.P:c31efb0e6c\",\"scanned_from_cell\":\"HT16Uc31efb0e6c\",\"scanned_to_cell\":\"HT16Vc31efb0e6c\",\"scanned_to_slot_code\":\"HT16.c31efb0e6c.SLOT.1\",\"target_cell\":\"HT16Vc31efb0e6c\",\"target_slot_id\":225},\"operation_id\":\"HT16.c31efb0e6c.SLOT.PLACE.PARENT\",\"source\":{\"uid\":\"HT16.P:c31efb0e6c\"},\"units\":[]}",
+      "state": "IN_FLIGHT"
+    }
+  },
+  "acl": {
+    "GROUP.BOTH": {
+      "request": {
+        "operation_id": "HT16.c31efb0e6c.SLOT.GROUP.BOTH",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 3,
+          "group_id": "HT16Gc31efb0e6c",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "40799215"
+            },
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20061923"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "HT16.c31efb0e6c.SLOT.GROUP.BOTH",
+        "command_type": "GROUP_SAVE",
+        "object_id": "HT16Gc31efb0e6c",
+        "version": 4,
+        "replayed": false
+      }
+    }
+  },
+  "hardware_verified": false,
+  "topology": 74,
+  "topology_cell": 87806,
+  "slots": [
+    225,
+    226
+  ],
+  "slot_codes": [
+    "HT16.c31efb0e6c.SLOT.1",
+    "HT16.c31efb0e6c.SLOT.2"
+  ]
+}

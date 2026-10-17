@@ -1,0 +1,3 @@
+select NAME,TYPE,LINE,TEXT from USER_ERRORS where NAME='RRL_OPC_EVIDENCE_API';
+select OBJECT_NAME from USER_OBJECTS where STATUS='INVALID';
+select STATUS from RRL_SCHEMA_MIGRATIONS where MIGRATION_ID='2026-10-15-assembly-evidence-shape-fix';

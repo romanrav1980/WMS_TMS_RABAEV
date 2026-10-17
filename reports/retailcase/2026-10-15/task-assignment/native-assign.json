@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "checks": [
+    "exact16_sources_errors0_invalid0",
+    "native_only_ASSIGN_effect_receipt_event_version_caller_rollback",
+    "WTASK_EXPECTED_VERSION_CHANGED",
+    "WTASK_EXPECTED_SIGNATURE_CHANGED",
+    "TASK_SESSION_RESOURCE_IDENTITY_CONFLICT",
+    "other_target_without_dispatch_denied",
+    "unseeded_parent_WTASK_IDENTITY_HISTORY_NO_DELETE",
+    "unseeded_parent_WTASK_IDENTITY_IMMUTABLE",
+    "direct_sidecar_write_denied",
+    "same_id_noop_and_legacy_ABA_version_increments",
+    "executeA_viewB_not_executeBoth",
+    "both_rights_cannot_start_unsupported_crosswarehouse_workflow",
+    "SELF_alone_cannot_claim_unassigned"
+  ],
+  "command_effects": "CALLER_ROLLBACK_ONLY",
+  "goods_commit": false,
+  "source_after": [
+    {
+      "cell": "CPT_13583852",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 3
+    },
+    {
+      "cell": "QIPcdbf4c0962",
+      "remain": 1,
+      "hard_reserved_base": 0,
+      "stock_version": 1
+    },
+    {
+      "cell": "QIPcdbf4c0962",
+      "remain": 23,
+      "hard_reserved_base": 1,
+      "stock_version": 12
+    },
+    {
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "case1136_1138_mutated": false
+}

@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "checks": [
+    "native_store_identity_without_warehouse_legacy_right_or_admin_shell",
+    "own_frozen_delivery_list_and_native_preview",
+    "native_scanned_place_lookup_own_foreign_missing_or_explicit_ambiguity",
+    "foreign_store_and_direct_preview_denied",
+    "missing_receipt_not_proof_of_rollback",
+    "server_keyset_cursor",
+    "published_wiki_help_and_related_visible_to_store_only_identity",
+    "real_http_store_login_list_preview_without_admin_grant",
+    "standalone_mobile_browser_native_identity",
+    "native_store_only_physical_receipt_caller_owned_rollback_verified",
+    "revoke_removes_store_and_data"
+  ],
+  "fixture_cleaned": true,
+  "business_rows": "READ_WITH_ROLLBACK_RECEIPT_TRIAL",
+  "stock_effect": "NONE"
+}

@@ -1,0 +1,26 @@
+{
+  "migration_id": "2026-10-15-assembly-intent-abandon",
+  "status": "APPLIED",
+  "before_assembly_sha256": "0D8C29AF78DC7564DFD86DE944ADEE4313AFEBE46E385324F4BDBADDD23A52AB",
+  "invalid_before": 0,
+  "stock_effect": "NONE",
+  "scope": "Proven absent OPEN_SESSION/OPEN_STEP only; current original session operator checked",
+  "recovery": "Empty-only paired rollback; nonempty history forward repair",
+  "sha256": {
+    "apply.sql": "ec49696ad6c9347816ec8eb17c804c61a809f682dfd25bf9025b35bb91e5c469",
+    "assembly_body.sql": "0548ec1f6740cfe718fb9537c09571f30e3076fb1585b3ba5718ba692eb42d4c",
+    "before.sql": "2986e938851186b8c3e74b60f0c48ac412d31c8ea656468ad340a0555763a6c3",
+    "before_assembly_body.sql": "207d47dcff91cabb66aab161fbb8cb1f96cf08974ed88f09e5fc86a586b1c6b9",
+    "body.sql": "f615bde1164a4adef50a82245c2981adb9ec0abee3d5d1478cf27c8f05909691",
+    "complete_after_compile_fix.sql": "0cbd7066ecc81c18786d498ab31497458331683a4e93e420cd37f8c217967217",
+    "guards.sql": "2547ee7a36b42945a0f1d8d250097b0df331482b6c0504ba28040350e813782d",
+    "rollback.sql": "2cfa40b61e1a5c1e68857b167d069198b88535efa11a967ef85cbc7b32f3d334",
+    "schema.sql": "28942204090f0842dcfdb6d5ca3788ca5f8292fc5d90c0635a7f420a46bc6fca",
+    "spec.sql": "fe4cbbda475a8220ba9fe6738b94951551222da995076eeb3c47c51f68199cd2",
+    "verify.sql": "004c432190f9442ab74cd22f203c909eec446be5f19a4e92f3aa4ef210d3c18a"
+  },
+  "failure": "PLS00231 private IDENTITY_KEY called from SQL; compute PL/SQL scalar before SELECT",
+  "repair": "complete_after_compile_fix.sql, preserve failed_body_before_compile_fix.txt",
+  "verification": "4 exact sources / USER_ERRORS0 / globalINVALID0 / ledgerAPPLIED; native business pending",
+  "initial_failure_preserved": true
+}

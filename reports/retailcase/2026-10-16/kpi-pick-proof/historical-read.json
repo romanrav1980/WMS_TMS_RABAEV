@@ -1,0 +1,154 @@
+{
+  "warehouse_id": 20846272,
+  "start_at": "2026-10-16T00:00:00+00:00",
+  "finish_at": "2026-10-17T00:00:00+00:00",
+  "as_of": "2026-10-16T14:35:07.916361+00:00",
+  "formula_version": "PICKER_KPI_V1",
+  "operators": [
+    {
+      "operator_id": "AS16Oce9c011b16",
+      "completed_lines": 1,
+      "boxes": null,
+      "box_reasons": [
+        "HISTORICAL_PACKAGING_PROOF_UNAVAILABLE"
+      ],
+      "operation_ids": [
+        "AS16.ce9c011b16.PICK"
+      ],
+      "quantities": [
+        {
+          "article": "AS16ACE9C011B16",
+          "base_uom": "EA",
+          "quantity": "1"
+        }
+      ],
+      "registered_assembly_hours": null,
+      "registered_shift_hours": null,
+      "rates": {
+        "lines_per_assembly_hour": null,
+        "boxes_per_assembly_hour": null,
+        "lines_per_shift_hour": null,
+        "boxes_per_shift_hour": null
+      },
+      "time_basis": "REGISTERED_CONFIRMED_INTERVALS",
+      "work_coverage_certified": false,
+      "uncovered_work_operations": [
+        "AS16.ce9c011b16.PICK"
+      ],
+      "uncovered_shift_operations": [
+        "AS16.ce9c011b16.PICK"
+      ],
+      "time_reasons": {
+        "assembly": [
+          "ZERO_DURATION"
+        ],
+        "shift": [
+          "ZERO_DURATION"
+        ]
+      },
+      "facts": [
+        {
+          "operation_id": "AS16.ce9c011b16.PICK",
+          "actor": "AS16Oce9c011b16",
+          "at": "2026-10-16T12:21:57.903650+00:00",
+          "task_id": 1145,
+          "line_id": 1147,
+          "article": "AS16ACE9C011B16",
+          "base_uom": "EA",
+          "previous": "0",
+          "cumulative": "1",
+          "planned": "1",
+          "boxes": null,
+          "packaging_reason": "HISTORICAL_PACKAGING_PROOF_UNAVAILABLE",
+          "delta": "1"
+        }
+      ]
+    },
+    {
+      "operator_id": "OC16Peed8111226",
+      "completed_lines": 1,
+      "boxes": null,
+      "box_reasons": [
+        "HISTORICAL_PACKAGING_PROOF_UNAVAILABLE"
+      ],
+      "operation_ids": [
+        "OC16.eed8111226.BOX24",
+        "OC16.eed8111226.EA1"
+      ],
+      "quantities": [
+        {
+          "article": "AS16ACE9C011B16",
+          "base_uom": "EA",
+          "quantity": "25"
+        }
+      ],
+      "registered_assembly_hours": null,
+      "registered_shift_hours": null,
+      "rates": {
+        "lines_per_assembly_hour": null,
+        "boxes_per_assembly_hour": null,
+        "lines_per_shift_hour": null,
+        "boxes_per_shift_hour": null
+      },
+      "time_basis": "REGISTERED_CONFIRMED_INTERVALS",
+      "work_coverage_certified": false,
+      "uncovered_work_operations": [
+        "OC16.eed8111226.BOX24",
+        "OC16.eed8111226.EA1"
+      ],
+      "uncovered_shift_operations": [
+        "OC16.eed8111226.BOX24",
+        "OC16.eed8111226.EA1"
+      ],
+      "time_reasons": {
+        "assembly": [
+          "ZERO_DURATION"
+        ],
+        "shift": [
+          "ZERO_DURATION"
+        ]
+      },
+      "facts": [
+        {
+          "operation_id": "OC16.eed8111226.BOX24",
+          "actor": "OC16Peed8111226",
+          "at": "2026-10-16T12:25:11.678057+00:00",
+          "task_id": 1146,
+          "line_id": 1148,
+          "article": "AS16ACE9C011B16",
+          "base_uom": "EA",
+          "previous": "0",
+          "cumulative": "24",
+          "planned": "25",
+          "boxes": null,
+          "packaging_reason": "HISTORICAL_PACKAGING_PROOF_UNAVAILABLE",
+          "delta": "24"
+        },
+        {
+          "operation_id": "OC16.eed8111226.EA1",
+          "actor": "OC16Peed8111226",
+          "at": "2026-10-16T12:25:11.918935+00:00",
+          "task_id": 1146,
+          "line_id": 1148,
+          "article": "AS16ACE9C011B16",
+          "base_uom": "EA",
+          "previous": "24",
+          "cumulative": "25",
+          "planned": "25",
+          "boxes": null,
+          "packaging_reason": "HISTORICAL_PACKAGING_PROOF_UNAVAILABLE",
+          "delta": "1"
+        }
+      ]
+    }
+  ],
+  "scope": "REGISTERED_OBSERVATIONS",
+  "work_coverage_certified": false,
+  "source_limitations": [
+    "REGISTERED_TIME_IS_NOT_CERTIFIED_ALL_WORK",
+    "NATIVE_APPLIED_CLOCK_NOT_PHYSICAL_PICK_TIME",
+    "HISTORICAL_PACKAGING_NOT_BACKFILLED",
+    "OPEN_INTERVALS_PROJECTED_TO_AS_OF"
+  ],
+  "stock_changed": false
+}

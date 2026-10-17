@@ -1,0 +1,68 @@
+{
+  "state": "PASS_OWN_UNSHIPPED_TRIPS_DRIVER_TARE_RETIRED_25EA_UNRESERVED_STOCK_HISTORY_RETAINED",
+  "steps": [
+    {
+      "label": "remove-own-unpaid-TEST-invoice-trip",
+      "result": {
+        "order_id": 531,
+        "tt_id": 33657,
+        "removed": true
+      }
+    },
+    {
+      "label": "cancel-unshipped-trip:33657",
+      "result": null
+    },
+    {
+      "label": "cancel-unshipped-trip:33658",
+      "result": null
+    },
+    {
+      "label": "deactivate-own-driver",
+      "result": null
+    }
+  ],
+  "commands": {
+    "tare": {
+      "wire": "{\"actor\":\"admin\",\"command_type\":\"TARE_BOOK_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{},\"operation_id\":\"OC16.2c449407d2.FINAL.TARE\",\"source\":{\"booking_operation_id\":\"OC16.2c449407d2.TARE.BOOK\"},\"units\":[]}",
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.2c449407d2.FINAL.TARE",
+        "status": "CANCELLED",
+        "place_kind": "CASE",
+        "place_id": "1152",
+        "pallet_type_id": 32,
+        "warehouse_id": 20266481,
+        "available_quantity": "2",
+        "quantity": "1",
+        "physical_tare_changed": false,
+        "goods_stock_changed": false,
+        "outbox_id": 5694
+      }
+    }
+  },
+  "trips": [
+    {
+      "id": 33657,
+      "deleted": 1,
+      "pay_order_id": null
+    },
+    {
+      "id": 33658,
+      "deleted": 1,
+      "pay_order_id": 0
+    }
+  ],
+  "slot_claims": [],
+  "stock": [
+    {
+      "p": 25,
+      "h": 0
+    }
+  ],
+  "tare": [
+    {
+      "status": "CANCELLED"
+    }
+  ]
+}

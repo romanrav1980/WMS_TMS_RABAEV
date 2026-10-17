@@ -1,0 +1,59 @@
+{
+  "tag": "5930091c",
+  "prefix": "wta5930091c",
+  "actor": "wa5930091c",
+  "other": "wb5930091c",
+  "grants": [
+    [
+      "wta5930091crassign",
+      "wta5930091caassign"
+    ],
+    [
+      "wta5930091crexecute",
+      "wta5930091caexecute"
+    ],
+    [
+      "wta5930091crexecutea",
+      "wta5930091caexecutea"
+    ],
+    [
+      "wta5930091crassigna",
+      "wta5930091caassigna"
+    ],
+    [
+      "wta5930091crviewb",
+      "wta5930091caviewb"
+    ]
+  ],
+  "cell": "WTA5930091c",
+  "source_cell": "QIPcdbf4c0962",
+  "ware_id": 13583852,
+  "base_uom": "EA",
+  "foreign_cell": "QS55edaf9dce",
+  "foreign_ware": 1,
+  "task": 1188,
+  "mixed_task": 1189,
+  "equipment": 30,
+  "resource": 62,
+  "shift": 67,
+  "session": 58,
+  "before_source": [
+    {
+      "cell": "QIPcdbf4c0962",
+      "remain": 23,
+      "hard_reserved_base": 1,
+      "stock_version": 12
+    },
+    {
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "assign_grant": "wta5930091caassign",
+  "metadata_fixture_committed": true,
+  "goods_commit": false,
+  "reserve_created": false,
+  "setup_preflight_rollback": true
+}

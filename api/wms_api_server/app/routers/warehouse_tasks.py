@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from ..auth import (
     AdminUser,
+    get_current_admin,
     WAREHOUSE_TASK_EXECUTE_PERMISSION,
     WAREHOUSE_TASK_VIEW_PERMISSION,
     require_permission,
@@ -14,6 +15,8 @@ from collections.abc import Callable
 from typing import TypeVar, Literal
 from ..transaction_gateway import TransactionGateway
 from ..modules.inventory.public import TaskReadError,TaskViewScope,read_task_snapshot,read_task_progress_snapshot
+from ..modules.inventory.public import scoped_task_queue, scoped_task_detail
+from ..modules.inventory.public import authorize_task_completion, TaskCompletionAccessError
 
 router = APIRouter(prefix="/api/warehouse-tasks", tags=["warehouse-tasks"])
 ReadResult=TypeVar("ReadResult")
@@ -37,18 +40,16 @@ def list_warehouse_tasks(
     source_doc_id: int | None = None,
     limit: int = Query(default=100, ge=1, le=500),
     queue_group: Literal["SHIPPING","DEFER_WAITING"] | None = None,
-    _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_VIEW_PERMISSION)),
+    ware_id: int | None = Query(default=None, gt=0),
+    _user: AdminUser = Depends(get_current_admin),
 ) -> list[dict]:
-    return _read(_user,lambda gateway,scope: WarehouseTaskService(gateway).list_tasks(
-        status=status,
-        task_type=task_type,
-        task_source=task_source,
-        assigned_to=assigned_to,
-        production_order_id=production_order_id,
-        source_doc_type=source_doc_type,
-        source_doc_id=source_doc_id,
-        limit=limit,scope_warehouse_id=scope.warehouse_id,scope_global=scope.global_admin,queue_group=queue_group,
-    ))
+    try:
+        return scoped_task_queue(WarehouseTaskService().gateway, _user.username, ware_id, dict(
+            status=status, task_type=task_type, task_source=task_source, assigned_to=assigned_to,
+            production_order_id=production_order_id, source_doc_type=source_doc_type,
+            source_doc_id=source_doc_id, limit=limit, queue_group=queue_group))
+    except TaskReadError as exc:
+        raise HTTPException(exc.status, detail=exc.code) from exc
 
 
 @router.get("/domain-sync")
@@ -72,9 +73,12 @@ def list_warehouse_task_sync(
 @router.get("/{task_id}")
 def get_warehouse_task(
     task_id: int,
-    _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_VIEW_PERMISSION)),
+    _user: AdminUser = Depends(get_current_admin),
 ) -> dict:
-    return _read(_user,lambda gateway,scope: WarehouseTaskService(gateway).get_task_or_404(task_id),task_id)
+    try:
+        return scoped_task_detail(WarehouseTaskService().gateway, _user.username, task_id)
+    except TaskReadError as exc:
+        raise HTTPException(exc.status, detail=exc.code) from exc
 
 
 @router.get("/{task_id}/progress")
@@ -123,10 +127,18 @@ def start_warehouse_task(
 def complete_warehouse_task(
     task_id: int,
     request: WarehouseTaskStatusRequest,
-    _user: AdminUser = Depends(require_permission(WAREHOUSE_TASK_EXECUTE_PERMISSION)),
+    _user: AdminUser = Depends(get_current_admin),
 ) -> dict:
     request.updated_by = _user.username
-    result = WarehouseTaskService().complete_task(task_id, request, actor=_user.username)
+    service = WarehouseTaskService()
+    try:
+        authorize_task_completion(service.gateway, task_id, _user.username,
+                                  request.operation_id, request.expected_task_signature)
+    except TaskCompletionAccessError as exc:
+        raise HTTPException(exc.status, detail={"code": exc.code, "operation_id": request.operation_id,
+                            "outcome_confirmed": exc.status == 422,
+                            "retry_same_operation_id": False}) from exc
+    result = service.complete_task(task_id, request, actor=_user.username)
     return {"status": "ok", "result": result}
 
 

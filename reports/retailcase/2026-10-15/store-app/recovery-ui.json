@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "checks": [
+    "lost_response_reload_unknown_status_exact_body_retry_and_confirmed_receipt",
+    "completed_delivery_original_receipt_no_mutation_form",
+    "paper_count_requires_operator_actual_count_and_reference",
+    "weight_mode_requires_real_capture_and_three_distinct_photos",
+    "corrupt_unloading_journal_blocks_receipt",
+    "published_help_and_logout_clear_late_delivery_response"
+  ],
+  "browserWrites": "INTERCEPTED_ONLY",
+  "physicalDeviceTested": false
+}

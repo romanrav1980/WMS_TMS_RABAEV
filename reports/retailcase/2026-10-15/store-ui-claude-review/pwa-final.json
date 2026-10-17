@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "productionSameOrigin": true,
+  "scope": "http://127.0.0.1:8088/store/",
+  "offlineLoginShell": true,
+  "privateApiCached": false,
+  "otherApplicationCachePreserved": true,
+  "installabilityErrors": [],
+  "physicalDeviceInstalled": false,
+  "pageErrors": []
+}

@@ -1,0 +1,100 @@
+{
+  "status": "PASS",
+  "evidence": "ACTUAL_PRODUCTION_UI_NATIVE_GET_ONLY",
+  "results": [
+    {
+      "width": 360,
+      "receipt": [
+        {
+          "status": 200,
+          "path": "/api/inventory/assembly-scale/abandonments/WHREQ15.ABSENT.ABANDON"
+        }
+      ],
+      "api_requests": [
+        {
+          "method": "GET",
+          "path": "/api/terminal/auth/me"
+        },
+        {
+          "method": "GET",
+          "path": "/api/inventory/assembly-scale/context"
+        },
+        {
+          "method": "GET",
+          "path": "/api/inventory/assembly-scale/abandonments/WHREQ15.ABSENT.ABANDON"
+        },
+        {
+          "method": "GET",
+          "path": "/api/inventory/assembly-scale/context"
+        }
+      ],
+      "password_persistent": false,
+      "both_local_intents_resolved": true,
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "receipt": [
+        {
+          "status": 200,
+          "path": "/api/inventory/assembly-scale/abandonments/WHREQ15.ABSENT.ABANDON"
+        }
+      ],
+      "api_requests": [
+        {
+          "method": "GET",
+          "path": "/api/terminal/auth/me"
+        },
+        {
+          "method": "GET",
+          "path": "/api/inventory/assembly-scale/context"
+        },
+        {
+          "method": "GET",
+          "path": "/api/inventory/assembly-scale/abandonments/WHREQ15.ABSENT.ABANDON"
+        },
+        {
+          "method": "GET",
+          "path": "/api/inventory/assembly-scale/context"
+        }
+      ],
+      "password_persistent": false,
+      "both_local_intents_resolved": true,
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "receipt": [
+        {
+          "status": 200,
+          "path": "/api/inventory/assembly-scale/abandonments/WHREQ15.ABSENT.ABANDON"
+        }
+      ],
+      "api_requests": [
+        {
+          "method": "GET",
+          "path": "/api/terminal/auth/me"
+        },
+        {
+          "method": "GET",
+          "path": "/api/inventory/assembly-scale/context"
+        },
+        {
+          "method": "GET",
+          "path": "/api/inventory/assembly-scale/abandonments/WHREQ15.ABSENT.ABANDON"
+        },
+        {
+          "method": "GET",
+          "path": "/api/inventory/assembly-scale/context"
+        }
+      ],
+      "password_persistent": false,
+      "both_local_intents_resolved": true,
+      "horizontal_overflow": false
+    }
+  ],
+  "api_mutations": false,
+  "native_stock_writes": false,
+  "physical_hardware": false,
+  "native_receipt_operation": "WHREQ15.ABSENT.ABANDON"
+}

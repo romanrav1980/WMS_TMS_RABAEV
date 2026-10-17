@@ -1,0 +1,10 @@
+create or replace trigger RRL_COMPOSITION_VERSION_GUARD before insert or update of STOCK_COMPOSITION_VERSION on RRL_PALLETS for each row
+begin
+ if inserting and :new.STOCK_COMPOSITION_VERSION=0 then return;end if;
+ if inserting then raise_application_error(-20863,'INITIAL_COMPOSITION_VERSION_ZERO_REQUIRED');end if;
+ RRL_STOCK_WRITE_GUARD.require_effect('COMPOSITION',:new.UID_PALLET);
+ if sys_context('RRL_STOCK_WRITE_CTX','EFFECT_UID') is null or sys_context('RRL_STOCK_WRITE_CTX','EFFECT_UID')!=:new.UID_PALLET
+  or :new.STOCK_COMPOSITION_VERSION!=:old.STOCK_COMPOSITION_VERSION+1 then raise_application_error(-20863,'STOCK_COMPOSITION_VERSION_CONFLICT');end if;
+ RRL_STOCK_LOCK_API.assert_held(20,RRL_STOCK_LOCK_API.resource_key('ROW','RRL_PALLETS',:new.UID_PALLET));
+end;
+/

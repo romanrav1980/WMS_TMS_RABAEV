@@ -1,3 +1,4 @@
+import { adminAuthorization } from "../api";
 import { PointerEvent, useEffect, useMemo, useState } from "react";
 
 type TopologyStatus = "DRAFT" | "VALIDATED" | "PUBLISHED" | "ARCHIVED";
@@ -131,14 +132,13 @@ type AreaDragState = { start: SvgPoint; current: SvgPoint; additive: boolean };
 type SvgPoint = { x: number; y: number };
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
-const API_BASIC_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
 const MIN_TOPOLOGY_ZOOM = 0.1;
 const MAX_TOPOLOGY_ZOOM = 12;
 const PLAN_DOCK_GATE_Y = 690;
 
 function apiHeaders(extra?: HeadersInit): HeadersInit {
   return {
-    Authorization: `Basic ${btoa(API_BASIC_AUTH)}`,
+    Authorization: adminAuthorization(),
     ...extra
   };
 }

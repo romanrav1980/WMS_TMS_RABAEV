@@ -1,0 +1,11 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_store_weight\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_store_weight\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_store_weight\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_store_weight\schema_before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_store_weight\schema.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_store_weight\rrl_stock_store_weight_core_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_store_weight\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_store_weight\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_store_weight\after_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_manual_store_weight\schema_after.sql
+Done. Statements=13; Errors=0; AbsentCleanup=0

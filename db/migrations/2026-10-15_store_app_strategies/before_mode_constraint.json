@@ -1,0 +1,6 @@
+[
+  {
+    "constraint_name": "SYS_C0016351",
+    "search_condition_vc": "RECEIPT_MODE in('BARCODE','WEIGHT_PHOTO')"
+  }
+]

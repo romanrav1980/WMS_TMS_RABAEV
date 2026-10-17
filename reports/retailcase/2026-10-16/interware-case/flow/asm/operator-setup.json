@@ -1,0 +1,72 @@
+{
+  "state": "PASS",
+  "actor": "AS16Oce9c011b16",
+  "task": 1145,
+  "hardware_verified": false,
+  "temporary_flat": {
+    "user_group": "AS16Oce9c011b16",
+    "right1": "CASE_PICK_EXECUTE",
+    "descr": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+  },
+  "qualification": {
+    "resource_id": 69,
+    "task_type": "CASE_PICK",
+    "active": true
+  },
+  "flat_revoked": {
+    "user_group": "AS16Oce9c011b16",
+    "right1": "CASE_PICK_EXECUTE",
+    "deleted": 1
+  },
+  "simulated_label_confirmation": {
+    "case_pick_task_id": 1145,
+    "sscc": "090000000000014015",
+    "confirmed": true
+  },
+  "CLAIM": {
+    "task_id": 1145,
+    "warehouse_id": 20846272,
+    "status": "ASSIGNED",
+    "assignment_version": 1,
+    "content_version": 2,
+    "assigned_to": "AS16Oce9c011b16",
+    "resource_id": 69,
+    "resource_session_id": 65,
+    "equipment_id": null,
+    "started_at_instant": null,
+    "started_shift_time_zone": null,
+    "outcome": "APPLIED",
+    "request_sha256": "36794CDD87B299D417B89E89C1BC734BF37A115A3BACF8E6723113C8F9D0030D",
+    "outcome_confirmed": true,
+    "may_create_corrected_operation": false,
+    "error_code": null,
+    "operation_id": "AS16.ce9c011b16.CLAIM",
+    "action": "CLAIM",
+    "actor": "AS16Oce9c011b16",
+    "changed": true,
+    "stock_posted": false
+  },
+  "START": {
+    "task_id": 1145,
+    "warehouse_id": 20846272,
+    "status": "IN_PROGRESS",
+    "assignment_version": 2,
+    "content_version": 2,
+    "assigned_to": "AS16Oce9c011b16",
+    "resource_id": 69,
+    "resource_session_id": 65,
+    "equipment_id": null,
+    "started_at_instant": "2026-10-16T12:21:51.448058+00:00",
+    "started_shift_time_zone": null,
+    "outcome": "APPLIED",
+    "request_sha256": "32CC998DF9967DD82A2DE3796D3EBED87E3111A137FBF07B66D98C391EDA518F",
+    "outcome_confirmed": true,
+    "may_create_corrected_operation": false,
+    "error_code": null,
+    "operation_id": "AS16.ce9c011b16.START",
+    "action": "START",
+    "actor": "AS16Oce9c011b16",
+    "changed": true,
+    "stock_posted": false
+  }
+}

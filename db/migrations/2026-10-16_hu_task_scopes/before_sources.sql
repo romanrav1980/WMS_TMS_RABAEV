@@ -1,0 +1,33 @@
+declare a clob;begin
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_CASE_TASK_ACCESS'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='6DBEAE26DBFA93C18987333EA920D5F3054CD8989E152B871D2C43D3BAE369FD'then raise_application_error(-20886,'SOURCE_GUARD_RRL_CASE_TASK_ACCESS');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_HU_EXEC_ACCESS'and TYPE='PACKAGE'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='6424407D52365F05C0220F8F714978D46E303E895ACDF5B3C525E467E48510CC'then raise_application_error(-20886,'SOURCE_GUARD_RRL_HU_EXEC_ACCESS');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_HU_EXEC_ACCESS'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='6322E5AEED37BC188C046A87B3B0263EE0A5AAB5FAF0206FBE81178C828CE8A3'then raise_application_error(-20886,'SOURCE_GUARD_RRL_HU_EXEC_ACCESS');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_HU_CMD'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='8D1A80FFAEA08AFD2DDF202E5247D5F053CB9AFF73884FB981710F45A5387D69'then raise_application_error(-20886,'SOURCE_GUARD_RRL_STOCK_HU_CMD');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_HU_REPACK_CMD'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='7517CFBA80E9382069F891095357BE1B55C7BAEBBECF4771BE74CBB8155F2EF1'then raise_application_error(-20886,'SOURCE_GUARD_RRL_STOCK_HU_REPACK_CMD');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_HU_SHIP_CMD'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='F920997DD5DF1D785374F0046C5BC4C6049EC89B417E63C1D73BCD502654D6BD'then raise_application_error(-20886,'SOURCE_GUARD_RRL_STOCK_HU_SHIP_CMD');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_HU_SLOT_MOVE_CMD'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='AD4BF68F7174EAD2A4EE8402A2F70679E36CDCC7152C4B6087FF6B43CAF93E77'then raise_application_error(-20886,'SOURCE_GUARD_RRL_STOCK_HU_SLOT_MOVE_CMD');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_HU_TASK'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='40DB57AE9FF3C07E59E6B9AA125CD4B445D5F12B74587958E8603D4C9B8CC9EE'then raise_application_error(-20886,'SOURCE_GUARD_RRL_STOCK_HU_TASK');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_POSTING_API'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='42070D7AABFB2F45115208B4320BB4FA2EB5BDD5584BFAAE27B27AFA0AD6DAD8'then raise_application_error(-20886,'SOURCE_GUARD_RRL_STOCK_POSTING_API');end if;dbms_lob.freetemporary(a);
+ dbms_lob.createtemporary(a,true);
+ for r in(select TEXT from USER_SOURCE where NAME='RRL_WAREHOUSE_TASK_ACCESS'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;
+ if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='08807C32C42337EB1E08E048D7D48AA073ED10C92731D5A313C0CBB088654C83'then raise_application_error(-20886,'SOURCE_GUARD_RRL_WAREHOUSE_TASK_ACCESS');end if;dbms_lob.freetemporary(a);
+end;
+/

@@ -1,0 +1,18 @@
+{
+  "status": "PASS_NATIVE_READ_ONLY",
+  "candidates": [
+    {
+      "identifier": "HU1069:4bb85f1f15",
+      "status": 200,
+      "api_call_id": null,
+      "nodes": 3,
+      "depth": 2
+    }
+  ],
+  "help_status": 200,
+  "help_revision": "3",
+  "sql_slow_marker": 4845,
+  "quantity_mutations": false,
+  "hardware": false,
+  "scope": "Existing HU GET and published help; no mixed warehouse consolidation command"
+}

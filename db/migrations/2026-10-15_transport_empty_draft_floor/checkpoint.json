@@ -1,0 +1,24 @@
+{
+  "migration_id": "2026-10-15-transport-empty-draft-floor",
+  "target": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "invalid_before": 0,
+  "git_head": "41c913cf44441cf3656a66b0939e40cb9a83c365",
+  "state": "APPLIED",
+  "sha256": {
+    "apply.sql": "3f0f68e5e3161d79b3e3428c97b403b1dc78745739dc6405ba58551e5989b31c",
+    "before_rrl_transport_plan_rules.sql": "e6a4f25597faa19f1f7c33d838ae0dbbb5471e5518651617dd128afddb7fe584",
+    "rollback.sql": "ea5511e883c1102f898002cf785bb22005a6bbcfe27dafcd1b8dc65f64e88aa8",
+    "rrl_transport_plan_rules.sql": "61d856949a8a1973a28aee3a1114f8fdad3be251e367052816d6634ddf57505e",
+    "verify.sql": "b2411b62214ff6cd78bfc07acb835d2551a05f33bf50d0ea01a5dc44b9648991"
+  },
+  "verification": {
+    "source_matches": true,
+    "user_errors": 0,
+    "invalid_count": 0,
+    "native_cases": 7,
+    "scoped_regression_cases": 9
+  }
+}

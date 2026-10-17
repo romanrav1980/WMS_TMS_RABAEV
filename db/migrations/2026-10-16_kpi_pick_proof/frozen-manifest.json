@@ -1,0 +1,23 @@
+{
+  "migration_id": "2026-10-16-kpi-pick-proof",
+  "status": "PREPARED_NOT_APPLIED",
+  "before_sources": {
+    "RRL_STOCK_CASE_PICK_CMD|PACKAGE BODY": "19CD9C4577ACD00E97C27E5A7F3292112747FD4E05B792B6041DC27755B146ED"
+  },
+  "after_sources": {
+    "RRL_STOCK_CASE_PICK_CMD|PACKAGE BODY": "EFA992EDDBFA629D729328B34E04904942DDE94993456B5BAD2958766F12E2D6"
+  },
+  "dependencies": [],
+  "files": {
+    "after_sources.sql": "d6a4b848fc6fe3d0fc552622c9cb9a17d281497d032bd9e98a67c6283816309b",
+    "apply.sql": "8be7714d4d13088abba45f34a229a858c4e32564d4d49e1917c517f7cbbc8130",
+    "before.sql": "483e7dd0dee6eb7beab4bc08456937a2813d610666b1cf26720d8f1522c604df",
+    "before_sources.sql": "2a7c4a91912fa0918d57ebfe20b291f41c9200e7164840239a1e90c1548f87ca",
+    "compile_dependents.sql": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "a3d1bb19c2849fe94089f45804d715a67aa00334bb10cd6bc0e43213cf79adca",
+    "restore_rrl_stock_case_pick_cmd_package_body.sql": "81eef80e92af99166d182dc20d61fab42084bc073bc70e8561b68c560fe9129e",
+    "rollback.sql": "774e814a98ebc4e5cb765d29812b16e17cbc4830fa5fab19a089ed830402b058",
+    "rrl_stock_case_pick_cmd_package_body.sql": "465dce5572b0fc97770568cc55e1fcab6048705a5291f18207bd5e0f623a568d",
+    "verify.sql": "00680b8bf2b2fd199e1f99646fc7d68baac69f7fa7a0b5e65279fa4eca95dd73"
+  }
+}

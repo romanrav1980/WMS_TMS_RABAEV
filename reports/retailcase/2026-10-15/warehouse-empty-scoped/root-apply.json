@@ -1,0 +1,77 @@
+{
+  "status": "APPLIED_REQUIRES_READBACK",
+  "at_utc": "2026-10-15T17:37:28.831386+00:00",
+  "identity": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "manifest_sha256": "1642d03bb5c21a38cdde9bb32c025ead30280bf43d7690a4f44ca46d576440c2",
+  "files": [
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\after_source_guard.sql",
+      "sha256": "11bff7f719906c6ae4a7141e3bc43e43b2fc36ba913b299b448d1aef03ec4474"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\apply.sql",
+      "sha256": "26c1836310d99c082b8d50963da643d68cf96a3bc1c20a81112ed6fcdc02e84c"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\before.sql",
+      "sha256": "5b1bf4d2218371d71372fbe88b7d70843e52a4a58106bf6fec58c481ae87d4f8"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\before_rrl_case_resource_policy_package.sql",
+      "sha256": "a10eeca1ea9edb9ad29c0335eaf06e5a84e6a392c5320577b3fdc371da7bfce2"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\before_rrl_case_resource_policy_package_body.sql",
+      "sha256": "c301ac8e09d7c1bbf03abd39d1282d6e28b3a45634ce95f87d2f7f5836fc0a9c"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\before_rrl_wh_weigh_request_api_package.sql",
+      "sha256": "9bd6bcb3da1161bb4b59a08c3891bccf6a091f1ae63dd022e06cbd5b4978ea62"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\before_rrl_wh_weigh_request_api_package_body.sql",
+      "sha256": "83a0793a0843ebcfc91973ac45bf6a37190292391b6c2407fac5059bc8d395f1"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\before_source_guard.sql",
+      "sha256": "0f3852bfa35a855e128171cfd9c6781f3a5bc003073aa17a9eb87c0073b880bf"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\checkpoint.json",
+      "sha256": "469795d6bff89a01209f2d4f6eff409d74ebccac22489acb7c3edc450edf1a0a"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\history_baseline_guard.sql",
+      "sha256": "3d64d60225ea2ebfea4835de64c08e0da5f0fd24f49e7f68324670cf0cf8f71c"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\queue_body.sql",
+      "sha256": "94a79ca2ce2334df50351168ac608f9f802eafee68b93b94c59e1e76ff4d021b"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\README.md",
+      "sha256": "bcce1d832264b28e607b53c47c792ba916f2617b15a76f27aabb03618d354358"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\resource_policy_body.sql",
+      "sha256": "b5ab3ea4ca993704561f52fefc67e8b8f93d29b3c88a6cd1f6b55adbb05b509b"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\rollback.sql",
+      "sha256": "8b6080d3f8e00fb6f287a1e9cf02433e3484446f3af4bc88efb2331229455f22"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\rollback_verify.sql",
+      "sha256": "8281095e7dc6d0a4f1833cadc13c1e4189a8d24e82c6aecbc51ae600f24205f4"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_warehouse_empty_scoped\\verify.sql",
+      "sha256": "bdad04b817879fa5db3dda01b0b6be43477b473148374b1d5b0720df6944bb4b"
+    }
+  ],
+  "quantity_writes": false,
+  "returncode": 0
+}

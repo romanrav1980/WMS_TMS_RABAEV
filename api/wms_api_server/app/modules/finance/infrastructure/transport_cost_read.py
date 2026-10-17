@@ -27,14 +27,13 @@ def transport_costs(gateway: Any,trip: int,ware: int,actor: str)->dict[str,Any]:
 
 def invoice_snapshot(cursor: Any,invoice: int,actor: str)->dict[str,Any]:
     from decimal import Decimal,localcontext
+    from .cost_read_scope import authorize_cost_object
+    authorize_cost_object(cursor, "INVOICE", invoice, actor)
     cursor.execute("""select r.RESULT_JSON from RRL_LOGISTICS_COST_RUN r
      join RRL_TRANSPORT_COST_CLAIM c on c.OPERATION_ID=r.OPERATION_ID
      join RRL_TRANSPORT_TASK t on t.ID=r.TT_ID
-     join RUSERS u on u.ID=:actor and nvl(u.DELETED,0)=0
-      and(u.WARE_ID=r.WARE_ID or upper(trim(u.USER_GROUP))='GLOBAL_ADMIN')
-      and RRL_HAS_WRIGHT(u.ID,'transport_dispatch_view')=1
      where t.PAY_ORDER_ID=:invoice order by r.TT_ID,r.OPERATION_ID fetch first 201 rows only""",
-                   actor=actor,invoice=invoice)
+                   invoice=invoice)
     rows=cursor.fetchall()
     if len(rows)>200:raise LogisticsCostError("TRANSPORT_INVOICE_BOUND","Не более 200 транспортных начислений; используйте детализацию рейса")
     items=[read_oracle_json(row[0])for row in rows]
@@ -53,11 +52,8 @@ def invoice_snapshot(cursor: Any,invoice: int,actor: str)->dict[str,Any]:
             confirmed_currency_totals[code]=confirmed_currency_totals.get(code,Decimal(0))+confirmed
     cursor.execute("""select distinct l.TT_ID,l.WARE_ID from RRL_TT_HU_LOAD_FACT l
      join RRL_TRANSPORT_TASK t on t.ID=l.TT_ID
-     join RUSERS u on u.ID=:actor and nvl(u.DELETED,0)=0
-      and(u.WARE_ID=l.WARE_ID or upper(trim(u.USER_GROUP))='GLOBAL_ADMIN')
-      and RRL_HAS_WRIGHT(u.ID,'transport_dispatch_view')=1
      where t.PAY_ORDER_ID=:invoice order by l.TT_ID,l.WARE_ID fetch first 201 rows only""",
-                   actor=actor,invoice=invoice)
+                   invoice=invoice)
     sources=cursor.fetchall()
     if len(sources)>200:raise LogisticsCostError("TRANSPORT_INVOICE_SOURCE_BOUND","Не более 200 пар рейс/склад; используйте детализацию")
     return {"invoice_id":invoice,"sources":[{"trip":trip,"warehouse":ware}for trip,ware in sources],"items":items,"currency_totals":[{"currency":code,"amount":format(value,"f"),"confirmed_amount":format(confirmed_currency_totals[code],"f")}for code,value in sorted(totals.items())],

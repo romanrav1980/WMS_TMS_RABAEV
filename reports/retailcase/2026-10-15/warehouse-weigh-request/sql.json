@@ -1,0 +1,202 @@
+{
+  "scope": "warehouse request native20 + actual HTTP11 (12 requests)",
+  "audit_rows": [
+    {
+      "API_CALL_ID": 68475,
+      "METHOD": "GET",
+      "PATH": "/api/inventory/warehouse-scales/requests/WHREQ15.AK06.EMPTY",
+      "RESPONSE_STATUS": 200,
+      "DURATION_MS": 301
+    },
+    {
+      "API_CALL_ID": 68486,
+      "METHOD": "POST",
+      "PATH": "/api/inventory/warehouse-scales/requests",
+      "RESPONSE_STATUS": 403,
+      "DURATION_MS": 132
+    },
+    {
+      "API_CALL_ID": 68476,
+      "METHOD": "POST",
+      "PATH": "/api/inventory/warehouse-scales/requests",
+      "RESPONSE_STATUS": 200,
+      "DURATION_MS": 94
+    },
+    {
+      "API_CALL_ID": 68478,
+      "METHOD": "GET",
+      "PATH": "/api/inventory/warehouse-scales/devices",
+      "RESPONSE_STATUS": 200,
+      "DURATION_MS": 71
+    },
+    {
+      "API_CALL_ID": 68481,
+      "METHOD": "POST",
+      "PATH": "/api/inventory/warehouse-scales/gateway/requests/WHREQ15.AK06.EMPTY/claim",
+      "RESPONSE_STATUS": 200,
+      "DURATION_MS": 66
+    },
+    {
+      "API_CALL_ID": 68479,
+      "METHOD": "GET",
+      "PATH": "/api/inventory/warehouse-scales/gateway/requests",
+      "RESPONSE_STATUS": 200,
+      "DURATION_MS": 65
+    },
+    {
+      "API_CALL_ID": 68477,
+      "METHOD": "POST",
+      "PATH": "/api/inventory/warehouse-scales/final-captures",
+      "RESPONSE_STATUS": 200,
+      "DURATION_MS": 59
+    },
+    {
+      "API_CALL_ID": 68484,
+      "METHOD": "POST",
+      "PATH": "/api/inventory/warehouse-scales/requests",
+      "RESPONSE_STATUS": 422,
+      "DURATION_MS": 46
+    },
+    {
+      "API_CALL_ID": 68480,
+      "METHOD": "GET",
+      "PATH": "/api/inventory/warehouse-scales/gateway/requests",
+      "RESPONSE_STATUS": 403,
+      "DURATION_MS": 41
+    },
+    {
+      "API_CALL_ID": 68485,
+      "METHOD": "POST",
+      "PATH": "/api/inventory/warehouse-scales/final-captures",
+      "RESPONSE_STATUS": 403,
+      "DURATION_MS": 40
+    },
+    {
+      "API_CALL_ID": 68482,
+      "METHOD": "POST",
+      "PATH": "/api/inventory/warehouse-scales/requests",
+      "RESPONSE_STATUS": 422,
+      "DURATION_MS": 39
+    },
+    {
+      "API_CALL_ID": 68483,
+      "METHOD": "POST",
+      "PATH": "/api/inventory/warehouse-scales/requests",
+      "RESPONSE_STATUS": 422,
+      "DURATION_MS": 38
+    }
+  ],
+  "top_sql": [
+    {
+      "SQL_ID": "fk2qc3yt7dd3a",
+      "EXECUTIONS": 10,
+      "TOTAL_MS": 490.419,
+      "AVG_MS": 49.042,
+      "SQL_PREVIEW": "begin RRL_WH_WEIGH_REQUEST_API.request_capture(:1,:2,:3); end;"
+    },
+    {
+      "SQL_ID": "ca7pfdp2a45xq",
+      "EXECUTIONS": 5,
+      "TOTAL_MS": 268.716,
+      "AVG_MS": 53.743,
+      "SQL_PREVIEW": "begin RRL_WH_WEIGH_REQUEST_API.claim_request(:1,:2,:3,:4); end;"
+    },
+    {
+      "SQL_ID": "gz4tnp3uj1a1k",
+      "EXECUTIONS": 4,
+      "TOTAL_MS": 75.209,
+      "AVG_MS": 18.802,
+      "SQL_PREVIEW": "begin RRL_WH_WEIGH_REQUEST_API.request_status(:1,:2,:3); end;"
+    },
+    {
+      "SQL_ID": "0xwcdwbr67vpc",
+      "EXECUTIONS": 1,
+      "TOTAL_MS": 22.226,
+      "AVG_MS": 22.226,
+      "SQL_PREVIEW": "begin RRL_WH_WEIGH_REQUEST_API.devices(:1,:2,:3,:4); end;"
+    },
+    {
+      "SQL_ID": "c4s4a703s17s1",
+      "EXECUTIONS": 1,
+      "TOTAL_MS": 14.55,
+      "AVG_MS": 14.55,
+      "SQL_PREVIEW": "begin RRL_WH_WEIGH_REQUEST_API.pending_requests(:1,:2,:3); end;"
+    }
+  ],
+  "slow_log": {
+    "bounded_latest_rows": 700,
+    "matching_rows": 1,
+    "max_ms": 31,
+    "sql": "Warehouse weighing request",
+    "outcome": "Expected sender cannot request operator intent, native403"
+  },
+  "decisions": [
+    "Keep existing DEVICE_ID/EXPIRES_AT request index and existing DEVICE_ID/CAPTURE_ID archive unique index; no speculative duplicate index.",
+    "Pending max20/devices max50; native request/claim averages about49/54ms; HTTP first history read301ms, other successful requests59..94ms; no current expensive query requiring rewrite.",
+    "Inventory/platform backlog before larger pilot: bound supersession existence check (avoid COUNT over long device history; reuse exact120-second EXPIRES_AT ordering or inspect plan/index for DEVICE_ID/CREATED_AT). Owner inventory/platform; historical volume not load-tested here.",
+    "Global CONFIG lock in rollback fixture intentionally serializes TEST metadata for2-second simulated sample; real31-second expired lease wait held no DB transaction.",
+    "Time window chosen by bounded monotonic audit/log IDs because CREATED_AT naive DB/session time zones differ; no false empty-time-filter performance claim."
+  ],
+  "local_jsonl_finished": [
+    {
+      "api_call_id": 68475,
+      "duration_ms": 301,
+      "response_status": 200
+    },
+    {
+      "api_call_id": 68476,
+      "duration_ms": 94,
+      "response_status": 200
+    },
+    {
+      "api_call_id": 68477,
+      "duration_ms": 59,
+      "response_status": 200
+    },
+    {
+      "api_call_id": 68478,
+      "duration_ms": 71,
+      "response_status": 200
+    },
+    {
+      "api_call_id": 68479,
+      "duration_ms": 65,
+      "response_status": 200
+    },
+    {
+      "api_call_id": 68480,
+      "duration_ms": 41,
+      "response_status": 403
+    },
+    {
+      "api_call_id": 68481,
+      "duration_ms": 66,
+      "response_status": 200
+    },
+    {
+      "api_call_id": 68482,
+      "duration_ms": 39,
+      "response_status": 422
+    },
+    {
+      "api_call_id": 68483,
+      "duration_ms": 38,
+      "response_status": 422
+    },
+    {
+      "api_call_id": 68484,
+      "duration_ms": 46,
+      "response_status": 422
+    },
+    {
+      "api_call_id": 68485,
+      "duration_ms": 40,
+      "response_status": 403
+    },
+    {
+      "api_call_id": 68486,
+      "duration_ms": 132,
+      "response_status": 403
+    }
+  ]
+}

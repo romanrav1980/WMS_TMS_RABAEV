@@ -1,0 +1,193 @@
+{
+  "state": "PASS_HTTP_LOCAL_PAIRS_AND_SQL_REVIEW",
+  "scope": "One isolated3EA manual-weight business case; no load/hardware acceptance",
+  "native_direct_calls_not_http_paired": true,
+  "http": [
+    {
+      "api_call_id": 69440,
+      "request_id": "746a1ca4-a4bd-4492-8b7b-f331be3aadad",
+      "path": "/api/delivery/store-receipts/policy",
+      "response_status": 200,
+      "duration_ms": 113
+    },
+    {
+      "api_call_id": 69441,
+      "request_id": "d20acc72-0325-4a3a-9651-9524b65c3717",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 1791
+    },
+    {
+      "api_call_id": 69445,
+      "request_id": "34a798e2-8423-4794-8b51-8cad77216062",
+      "path": "/api/transport/loading/33650/depart",
+      "response_status": 200,
+      "duration_ms": 304
+    },
+    {
+      "api_call_id": 69446,
+      "request_id": "a376ca8c-13c8-484a-be7f-b691e81caf4c",
+      "path": "/api/delivery/store-receipts/preview",
+      "response_status": 200,
+      "duration_ms": 116
+    },
+    {
+      "api_call_id": 69447,
+      "request_id": "21f612ab-c912-48af-b183-71318063cc10",
+      "path": "/api/delivery/store-photos/upload",
+      "response_status": 200,
+      "duration_ms": 181
+    },
+    {
+      "api_call_id": 69448,
+      "request_id": "85f1de2e-215d-4a73-9b7e-73fd56785bfb",
+      "path": "/api/delivery/store-photos/upload",
+      "response_status": 200,
+      "duration_ms": 68
+    },
+    {
+      "api_call_id": 69449,
+      "request_id": "f2192b3b-1fad-485f-80e4-896cd9d6cc08",
+      "path": "/api/delivery/store-photos/upload",
+      "response_status": 200,
+      "duration_ms": 71
+    },
+    {
+      "api_call_id": 69450,
+      "request_id": "a8b4e964-9ee5-4ea4-bdac-32e72fc20920",
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "response_status": 200,
+      "duration_ms": 88
+    },
+    {
+      "api_call_id": 69455,
+      "request_id": "84f0ce20-0802-4199-b897-19cccda34544",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 203
+    },
+    {
+      "api_call_id": 69456,
+      "request_id": "1a91ad6e-794c-4ad9-952a-1f1b0754a38b",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 77
+    },
+    {
+      "api_call_id": 69457,
+      "request_id": "fd34dc77-2284-4b8e-87f7-8eab5216a434",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 409,
+      "duration_ms": 67
+    }
+  ],
+  "slow": [],
+  "top_sql": [
+    {
+      "sql_id": "admdtyprqxjhm",
+      "executions": 127,
+      "avg_ms": 56.377,
+      "avg_buffers": 704.09,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.execute_prepared(:result); end;"
+    },
+    {
+      "sql_id": "5jfvwwtgzb031",
+      "executions": 12,
+      "avg_ms": 143.707,
+      "avg_buffers": 1791.92,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.execute_prepared(:1); end;"
+    },
+    {
+      "sql_id": "9jq693ya37kuh",
+      "executions": 27,
+      "avg_ms": 0.457,
+      "avg_buffers": 3.85,
+      "sql_sample": "SELECT VIEW_CODE,ASSET_SHA256 FROM RRL_STORE_RECEIPT_PHOTO WHERE PHOTO_ID=:B3 AND LOAD_OPERATION_ID=:B2 AND STORE_ADDR=:B1 "
+    },
+    {
+      "sql_id": "g5bfbc3ww6a2m",
+      "executions": 2,
+      "avg_ms": 3.896,
+      "avg_buffers": 16.5,
+      "sql_sample": "INSERT INTO RRL_STORE_RECEIPT_WEIGHT(OPERATION_ID,CAPTURE_KEY,SHIPPING_GROSS_KG,OBSERVED_GROSS_KG,TOLERANCE_KG,DELTA_KG,IN_TOLERANCE,ACT_CONFIRMED,PHOTOS_JSON,RECORDED_BY,MEASUREMENT_ORIGIN) VALUES(:B11 ,:B10 ,:B9 ,:B8 ,:B7 ,:B6 ,:B5 ,:B4 ,:B3 ,:B2 ,:B1 )"
+    },
+    {
+      "sql_id": "6gaz8mth09z29",
+      "executions": 3,
+      "avg_ms": 1.158,
+      "avg_buffers": 2,
+      "sql_sample": "select PHOTO_ID from RRL_STORE_RECEIPT_PHOTO where LOAD_OPERATION_ID=:load order by PHOTO_ID"
+    },
+    {
+      "sql_id": "7m02zb3mm0xfg",
+      "executions": 3,
+      "avg_ms": 1.061,
+      "avg_buffers": 5.67,
+      "sql_sample": "SELECT COUNT(*) FROM RRL_STORE_RECEIPT_PHOTO WHERE PHOTO_ID=:B1 "
+    },
+    {
+      "sql_id": "ayvmx4gvwumgz",
+      "executions": 3,
+      "avg_ms": 0.814,
+      "avg_buffers": 3,
+      "sql_sample": "SELECT COUNT(*) FROM RRL_STORE_RECEIPT_PHOTO WHERE LOAD_OPERATION_ID=:B2 AND STORE_ADDR=:B1 "
+    }
+  ],
+  "persisted_weight": [
+    {
+      "capture_key": null,
+      "measurement_origin": "MANUAL_CONFIRMED",
+      "observed_gross_kg": 10.0,
+      "recorded_by": "admin",
+      "recorded_at": "2026-10-16 02:09:46.272981"
+    }
+  ],
+  "local_pairs": [
+    {
+      "api_call_id": 69440,
+      "request_id": "746a1ca4-a4bd-4492-8b7b-f331be3aadad"
+    },
+    {
+      "api_call_id": 69441,
+      "request_id": "d20acc72-0325-4a3a-9651-9524b65c3717"
+    },
+    {
+      "api_call_id": 69445,
+      "request_id": "34a798e2-8423-4794-8b51-8cad77216062"
+    },
+    {
+      "api_call_id": 69446,
+      "request_id": "a376ca8c-13c8-484a-be7f-b691e81caf4c"
+    },
+    {
+      "api_call_id": 69447,
+      "request_id": "21f612ab-c912-48af-b183-71318063cc10"
+    },
+    {
+      "api_call_id": 69448,
+      "request_id": "85f1de2e-215d-4a73-9b7e-73fd56785bfb"
+    },
+    {
+      "api_call_id": 69449,
+      "request_id": "f2192b3b-1fad-485f-80e4-896cd9d6cc08"
+    },
+    {
+      "api_call_id": 69450,
+      "request_id": "a8b4e964-9ee5-4ea4-bdac-32e72fc20920"
+    },
+    {
+      "api_call_id": 69455,
+      "request_id": "84f0ce20-0802-4199-b897-19cccda34544"
+    },
+    {
+      "api_call_id": 69456,
+      "request_id": "1a91ad6e-794c-4ad9-952a-1f1b0754a38b"
+    },
+    {
+      "api_call_id": 69457,
+      "request_id": "fd34dc77-2284-4b8e-87f7-8eab5216a434"
+    }
+  ],
+  "max_http_ms": 1791,
+  "decision": "Retain scalar origin bind before SQL; no PL/SQL JSON methods inside SQL VALUES. Existing unique operation/capture and photo PK lookups, bound3..12 photos/200boxes and one stock owner remain. No speculative index/cache; delivery owner profiles receipt locks/photo lookup at pilot volume if repeatedly slow. Shared V$SQL averages include other cases and are not this endpoint p95."
+}

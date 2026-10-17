@@ -195,9 +195,9 @@ class CasePickService:
 
     def short_line(self, case_pick_task_id: int, line_id: int, request: CasePickLineShortRequest) -> dict[str, Any]:
         from decimal import Decimal
-        from ..modules.inventory.public import warehouse_metadata_transaction
+        from ..modules.resources.public import case_short_report_transaction
         from ..transaction_gateway import TransactionGateway
-        with warehouse_metadata_transaction(self.gateway, "CASE shortage metadata", request.actor, "case_pick_execute") as cursor:
+        with case_short_report_transaction(self.gateway, case_pick_task_id, request.actor) as cursor:
             from ..modules.resources.public import assert_case_task_access
             assert_case_task_access(cursor,case_pick_task_id,request.actor,"case_pick_execute")
             bound = TransactionGateway(cursor)

@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "mode": "BEFORE",
+  "source_checks": [
+    {
+      "object": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE",
+      "source_exact": true,
+      "sha256": "8a8fddd9e97f5aec31b2c696e0898cbc82005bd633a1ec948522b180841e8341"
+    },
+    {
+      "object": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "4349db3e3fedea9a150181db3a8790e07548abe9da0755a09550911dedbdda5f"
+    },
+    {
+      "object": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE",
+      "source_exact": true,
+      "sha256": "7ec7dd0a2814be528f372b023be61350ba7ab40816524f32856e4b61d912afca"
+    },
+    {
+      "object": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "69941b637cd3cdbc4a7a58f76bbd5b239e976310a6cf1b4b5a225c9d3abe8140"
+    },
+    {
+      "object": "RRL_STOCK_CASE_PICK_CMD",
+      "type": "PACKAGE",
+      "source_exact": true,
+      "sha256": "2cae60fcc1e7a21d850faa0135b422196382f985025e9c46174ed92a19272dc5"
+    },
+    {
+      "object": "RRL_STOCK_CASE_PICK_CMD",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "7798ac370fd5337c83eb9d537dda813449cf0b89f2177d37a87576c198dbaee5"
+    }
+  ],
+  "invalid_count": 0,
+  "ledger": [],
+  "recent_slow": [],
+  "scope": "Exact source/errors/ledger only; real current-rights/stock/resource/replay/concurrency proof separate",
+  "sql_decision": "CASE-bound identity and line closure retained; inspect attributed long-query plan before index change. No capacity claim."
+}

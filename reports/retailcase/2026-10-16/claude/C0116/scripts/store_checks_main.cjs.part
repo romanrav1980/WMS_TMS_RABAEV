@@ -1,0 +1,52 @@
+
+// C0116 UI fixtures (перехват /api в браузере, не native/hardware): ручной вес магазина и источник веса.
+const OUT=path.join(__dirname,'..','screenshots');
+const scroll=async page=>page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
+(async()=>{const browser=await chromium.launch({headless:true}),checks=[],result={};try{
+ // 1. По умолчанию — «Ввести вес»; продолжить можно только с корректным весом и фото.
+ let t=await setup(browser,'WEIGHT_PHOTO',390);await t.open();await t.ready();
+ const manualBtn=t.page.getByRole('radio',{name:'Ввести вес'}),scaleBtn=t.page.getByRole('radio',{name:'Электронные весы'});
+ assert.equal(await manualBtn.getAttribute('aria-checked'),'true');assert.equal(await t.page.getByRole('button',{name:'Получить вес',exact:true}).count(),0);
+ const next=t.page.getByRole('button',{name:'Продолжить',exact:true});
+ const input=()=>t.page.getByLabel('Вес брутто по весам, кг');
+ await t.page.waitForFunction(()=>/3\/3/.test(document.body.innerText));assert(await next.isDisabled());
+ await input().fill('0');assert(await next.isDisabled());await input().fill('12,4,5');assert(await next.isDisabled());
+ await input().fill('12,450');await t.page.getByText('Будет передано 12.450 кг',{exact:false}).waitFor();assert(!(await next.isDisabled()));
+ result.manualHint=await t.page.locator('.store-app-manual [role=status]').innerText();
+ assert.equal(await scroll(t.page),false);await t.page.screenshot({path:path.join(OUT,'s1_manual_weight_390.png'),fullPage:true});checks.push('manual_default_validation_390_no_overflow');
+ // 2. Переключение источника очищает неотправленный выбор; весы — прежний API без массы в запросе.
+ await scaleBtn.click();assert.equal(await input().count(),0);assert(await next.isDisabled());
+ await t.page.getByRole('button',{name:'Получить вес',exact:true}).click();assert(t.state.weigh&&!('gross_weight_kg'in t.state.weigh));
+ t.state.weighReady=true;await t.page.getByText('12 кг',{exact:true}).last().waitFor({timeout:10000});
+ await t.page.waitForFunction(()=>{const b=[...document.querySelectorAll('footer button')].find(x=>x.textContent==='Продолжить');return b&&!b.disabled;},null,{timeout:10000});
+ await manualBtn.click();assert(await next.isDisabled());assert.equal(await input().inputValue(),'');checks.push('source_switch_clears_unsent_choice_both_directions');
+ await input().fill('12.45');await next.click();
+ result.summary=await t.page.locator('.store-app-step-content:not([hidden])').innerText();assert(result.summary.includes('введено пользователем'));
+ // 3. Отправка: только manual_weight_kg; исход неизвестен (обрыв) — черновик заморожен, после reload точный повтор тех же байт.
+ await t.page.getByRole('button',{name:'Подтвердить приёмку',exact:true}).click();await t.page.getByRole('button',{name:'Повторить сохранённую операцию',exact:true}).waitFor();
+ const body=JSON.parse(t.posts[0]);result.body={manual_weight_kg:body.manual_weight_kg,has_scale_capture_key:'scale_capture_key' in body,photo_ids:(body.photo_ids||[]).length};
+ assert.equal(body.manual_weight_kg,'12.45');assert(!('scale_capture_key' in body));
+ result.sourceLockedWhilePending=await t.page.getByRole('radio',{name:'Электронные весы'}).isDisabled().catch(()=>'not-rendered');
+ await t.page.reload();await t.login();
+ await t.page.getByRole('button',{name:'Повторить сохранённую операцию',exact:true}).click();await t.page.waitForTimeout(700);
+ assert.equal(t.posts[1],t.posts[0]);checks.push('pending_draft_exact_bytes_retry_after_reload');
+ t.state.unknown=false;await t.page.getByRole('button',{name:'Повторить сохранённую операцию',exact:true}).click();
+ await t.page.getByText('Приёмка подтверждена',{exact:false}).waitFor({timeout:10000});assert.equal(t.posts[2],t.posts[0]);
+ result.act=await t.page.locator('.store-app-weight-outcome').innerText();assert(result.act.includes('введено пользователем'));
+ await t.page.screenshot({path:path.join(OUT,'s2_act_manual_390.png'),fullPage:true});checks.push('act_shows_entered_by_user');
+ // 4. Источник «весы»: тело только со scale_capture_key, акт — «получено от прибора».
+ t=await setup(browser,'WEIGHT_PHOTO',1440);await t.open();await t.ready();t.state.unknown=false;
+ await t.page.getByRole('radio',{name:'Электронные весы'}).click();await t.page.getByRole('button',{name:'Получить вес',exact:true}).click();t.state.weighReady=true;
+ await t.page.getByText('12 кг',{exact:true}).last().waitFor({timeout:10000});await t.page.screenshot({path:path.join(OUT,'s3_scale_source_desktop.png'),fullPage:true});
+ await t.page.waitForFunction(()=>{const b=[...document.querySelectorAll('footer button')].find(x=>x.textContent==='Продолжить');return b&&!b.disabled;},null,{timeout:10000});await t.next();
+ await t.page.getByRole('button',{name:'Подтвердить приёмку',exact:true}).click();await t.page.getByText('Приёмка подтверждена',{exact:false}).waitFor({timeout:10000});
+ const sbody=JSON.parse(t.posts[0]);assert.equal(sbody.scale_capture_key,'B'.repeat(64));assert(!('manual_weight_kg' in sbody));
+ result.scaleAct=await t.page.locator('.store-app-weight-outcome').innerText();assert(result.scaleAct.includes('получено от прибора'));checks.push('scale_source_body_and_act');
+ // 5. Desktop: ручной ввод и обычный help URL.
+ t=await setup(browser,'WEIGHT_PHOTO',1440);await t.open();await t.ready();await t.page.getByLabel('Вес брутто по весам, кг').fill('11,9');
+ await t.page.screenshot({path:path.join(OUT,'s4_manual_weight_desktop.png'),fullPage:true});
+ result.helpLink=await t.page.locator('[data-help-id="weight.help"]').getAttribute('href');assert(/\/help\/manual-weight\.html#store$/.test(result.helpLink));
+ result.errors=t.errors;assert.deepEqual(t.errors,[]);checks.push('desktop_help_url');
+ const output={status:'PASS',fixtures:'UI_FIXTURES_INTERCEPTED_API_NOT_NATIVE_OR_HARDWARE',checks,result};
+ fs.writeFileSync(path.join(__dirname,'..','store_manual_weight_result.json'),JSON.stringify(output,null,1));console.log(JSON.stringify(output,null,1));
+}finally{await browser.close();}})().catch(error=>{console.error(error);process.exitCode=1;});

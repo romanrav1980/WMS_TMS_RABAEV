@@ -7,11 +7,19 @@ from ..contracts import StoreReceiptError
 
 
 def start_unloading(gateway: Any,body: dict[str,Any],actor: str)->dict[str,Any]:
+    return _command(gateway,body,actor,"start_unloading")
+
+
+def abandon_unloading(gateway: Any,body: dict[str,Any],actor: str)->dict[str,Any]:
+    return _command(gateway,body,actor,"abandon_start")
+
+
+def _command(gateway: Any,body: dict[str,Any],actor: str,procedure: str)->dict[str,Any]:
     operation=str(body["operation_id"])
     try:
         with gateway.transaction("Start unloading original departed store place")as cursor:
             result=cursor.var(oracledb.DB_TYPE_CLOB)
-            cursor.callproc("RRL_STORE_UNLOAD_API.start_unloading",[
+            cursor.callproc("RRL_STORE_UNLOAD_API."+procedure,[
                 json.dumps(body,sort_keys=True,separators=(",",":"),ensure_ascii=False),actor,result])
             return read_oracle_json(result.getvalue())
     except oracledb.DatabaseError as exc:

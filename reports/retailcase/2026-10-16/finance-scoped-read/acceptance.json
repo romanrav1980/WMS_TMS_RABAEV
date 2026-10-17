@@ -1,0 +1,501 @@
+{
+  "state": "PASS_FINANCE_THREE_READS_WARE_GROUP_TWO_RC_REVOKE_RETIRED",
+  "prefix": "FS16.1169a84593",
+  "actor": "FS16O1169a84593",
+  "role": "FS16R1169a84593",
+  "group": "FS16G1169a84593",
+  "commands": {
+    "ROLE": {
+      "wire": {
+        "operation_id": "FS16.1169a84593.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "FS16R1169a84593",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "transport_dispatch_view"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FS16.1169a84593.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "FS16R1169a84593",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "WARE.ASSIGN": {
+      "wire": {
+        "operation_id": "FS16.1169a84593.WARE.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "FS16.1169a84593.WARE",
+          "username": "FS16O1169a84593",
+          "role_id": "FS16R1169a84593",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20790457",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T16:59:39.702089+00:00",
+          "valid_until": "2026-10-16T18:00:39.702089+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FS16.1169a84593.WARE.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "FS16.1169a84593.WARE",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "WARE.REVOKE": {
+      "wire": {
+        "operation_id": "FS16.1169a84593.WARE.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "FS16.1169a84593.WARE",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FS16.1169a84593.WARE.REVOKE",
+        "command_type": "REVOKE",
+        "object_id": "FS16.1169a84593.WARE",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP.ONE": {
+      "wire": {
+        "operation_id": "FS16.1169a84593.GROUP.ONE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "group_id": "FS16G1169a84593",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20790457"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FS16.1169a84593.GROUP.ONE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FS16G1169a84593",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.ASSIGN": {
+      "wire": {
+        "operation_id": "FS16.1169a84593.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "FS16.1169a84593.GROUP",
+          "username": "FS16O1169a84593",
+          "role_id": "FS16R1169a84593",
+          "scope_kind": "GROUP",
+          "scope_id": "FS16G1169a84593",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T16:59:39.702089+00:00",
+          "valid_until": "2026-10-16T18:00:39.702089+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FS16.1169a84593.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "FS16.1169a84593.GROUP",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.BOTH": {
+      "wire": {
+        "operation_id": "FS16.1169a84593.GROUP.BOTH",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "group_id": "FS16G1169a84593",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20790457"
+            },
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20061923"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FS16.1169a84593.GROUP.BOTH",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FS16G1169a84593",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP.REMOVE": {
+      "wire": {
+        "operation_id": "FS16.1169a84593.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 2,
+          "group_id": "FS16G1169a84593",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20061923"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FS16.1169a84593.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FS16G1169a84593",
+        "version": 3,
+        "replayed": false
+      }
+    },
+    "GROUP.REVOKE": {
+      "wire": {
+        "operation_id": "FS16.1169a84593.GROUP.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "FS16.1169a84593.GROUP",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FS16.1169a84593.GROUP.REVOKE",
+        "command_type": "REVOKE",
+        "object_id": "FS16.1169a84593.GROUP",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "ROLE.RETIRE": {
+      "wire": {
+        "operation_id": "FS16.1169a84593.ROLE.RETIRE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "FS16R1169a84593",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "transport_dispatch_view"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FS16.1169a84593.ROLE.RETIRE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "FS16R1169a84593",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP.RETIRE": {
+      "wire": {
+        "operation_id": "FS16.1169a84593.GROUP.RETIRE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 3,
+          "group_id": "FS16G1169a84593",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20061923"
+            }
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FS16.1169a84593.GROUP.RETIRE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FS16G1169a84593",
+        "version": 4,
+        "replayed": false
+      }
+    }
+  },
+  "http": [
+    {
+      "label": "before_grants",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "status": 403,
+      "api_call_id": "70239",
+      "request_id": "e499240f-29b4-401c-934e-9299b8c6e320"
+    },
+    {
+      "label": "before_grants",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history?currency=RUB",
+      "status": 403,
+      "api_call_id": "70240",
+      "request_id": "74fd143f-57f0-4dad-b644-34bdec56c251"
+    },
+    {
+      "label": "before_grants",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "status": 403,
+      "api_call_id": "70241",
+      "request_id": "693c4675-3392-4997-8096-3a714defa1d9"
+    },
+    {
+      "label": "ware_own",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "status": 200,
+      "api_call_id": "70242",
+      "request_id": "7f3a11e0-7e25-42dc-ac9a-0436c5b03cda"
+    },
+    {
+      "label": "ware_own",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history?currency=RUB",
+      "status": 200,
+      "api_call_id": "70243",
+      "request_id": "eb66e591-228a-4e60-88ce-2c5d3b0ccba9"
+    },
+    {
+      "label": "ware_own",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "status": 200,
+      "api_call_id": "70244",
+      "request_id": "fcd34648-c7b3-4db1-8746-01fa111ebd82"
+    },
+    {
+      "label": "ware_foreign",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "status": 403,
+      "api_call_id": "70245",
+      "request_id": "8c6a85f7-cfea-4704-ac1d-415e68848f48"
+    },
+    {
+      "label": "ware_foreign",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history?currency=RUB",
+      "status": 403,
+      "api_call_id": "70246",
+      "request_id": "c2f37297-1734-461c-bff1-cb277fbbfcd2"
+    },
+    {
+      "label": "ware_foreign",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "status": 403,
+      "api_call_id": "70247",
+      "request_id": "8d716c4c-6978-4db8-83e0-e9334805a085"
+    },
+    {
+      "label": "ware_revoked",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "status": 403,
+      "api_call_id": "70248",
+      "request_id": "0d61fbb0-7349-49fd-92c5-4832b68202ef"
+    },
+    {
+      "label": "ware_revoked",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history?currency=RUB",
+      "status": 403,
+      "api_call_id": "70249",
+      "request_id": "d2349c78-43cf-40ee-b5bc-2fce594e189e"
+    },
+    {
+      "label": "ware_revoked",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "status": 403,
+      "api_call_id": "70250",
+      "request_id": "78766076-4c54-4d37-b736-9407eb4e7321"
+    },
+    {
+      "label": "group_own",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "status": 200,
+      "api_call_id": "70251",
+      "request_id": "ca4d04fb-d5b4-427d-bd80-799bd69ce5ff"
+    },
+    {
+      "label": "group_own",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history?currency=RUB",
+      "status": 200,
+      "api_call_id": "70252",
+      "request_id": "4499d309-80eb-4a79-ad12-7f0e01c5834c"
+    },
+    {
+      "label": "group_own",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "status": 200,
+      "api_call_id": "70253",
+      "request_id": "eef5a52f-689e-43fc-9a9b-bc8181467aab"
+    },
+    {
+      "label": "group_foreign",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "status": 403,
+      "api_call_id": "70254",
+      "request_id": "40e49c0b-d625-486d-b9e5-6a7e04dbfff0"
+    },
+    {
+      "label": "group_foreign",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history?currency=RUB",
+      "status": 403,
+      "api_call_id": "70255",
+      "request_id": "f3f6adde-f8d9-4c54-b755-88c21f831316"
+    },
+    {
+      "label": "group_foreign",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "status": 403,
+      "api_call_id": "70256",
+      "request_id": "0918016f-f6ff-4c1c-969c-cbbdf49e20bf"
+    },
+    {
+      "label": "multi_rc_first",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "status": 200,
+      "api_call_id": "70257",
+      "request_id": "d5e6c06a-d35e-4cd0-bf62-897a011fce7d"
+    },
+    {
+      "label": "multi_rc_first",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history?currency=RUB",
+      "status": 200,
+      "api_call_id": "70258",
+      "request_id": "3add76e4-72dc-458c-aa3b-3130d19adbca"
+    },
+    {
+      "label": "multi_rc_first",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "status": 200,
+      "api_call_id": "70259",
+      "request_id": "67d0d335-f189-405e-870d-b9121c414742"
+    },
+    {
+      "label": "multi_rc_second",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "status": 200,
+      "api_call_id": "70260",
+      "request_id": "53850975-4ce6-45b3-88e7-a0e27096fd6e"
+    },
+    {
+      "label": "multi_rc_second",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history?currency=RUB",
+      "status": 200,
+      "api_call_id": "70261",
+      "request_id": "0dc32bc3-5b0e-46bc-b3bf-d424003ac19c"
+    },
+    {
+      "label": "multi_rc_second",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "status": 200,
+      "api_call_id": "70262",
+      "request_id": "6a56d63b-f180-428f-bf4f-861cbcd45c04"
+    },
+    {
+      "label": "removed_member",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates",
+      "status": 403,
+      "api_call_id": "70263",
+      "request_id": "d212de9c-9af0-458d-91af-15099ab57ff9"
+    },
+    {
+      "label": "removed_member",
+      "path": "/api/finance/logistics-costs/warehouses/20790457/rates/history?currency=RUB",
+      "status": 403,
+      "api_call_id": "70264",
+      "request_id": "8eccb892-c2b0-4e5d-83a4-04881a185b13"
+    },
+    {
+      "label": "removed_member",
+      "path": "/api/finance/logistics-expenses/warehouses/20790457",
+      "status": 403,
+      "api_call_id": "70265",
+      "request_id": "b6303793-1c7f-4395-8fb7-c388f591c4b8"
+    },
+    {
+      "label": "remaining_member",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "status": 200,
+      "api_call_id": "70266",
+      "request_id": "a20d6ac1-3077-4895-9b43-2f51a19fa9c8"
+    },
+    {
+      "label": "remaining_member",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history?currency=RUB",
+      "status": 200,
+      "api_call_id": "70267",
+      "request_id": "ae549ca6-0cd4-4abe-ac4b-59e9cc64a837"
+    },
+    {
+      "label": "remaining_member",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "status": 200,
+      "api_call_id": "70268",
+      "request_id": "b4ffc9ed-d55b-48bf-ad0a-a2b358920a31"
+    },
+    {
+      "label": "group_revoked",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates",
+      "status": 403,
+      "api_call_id": "70269",
+      "request_id": "d2a946a1-2f34-432b-b698-02ee2257e6fa"
+    },
+    {
+      "label": "group_revoked",
+      "path": "/api/finance/logistics-costs/warehouses/20061923/rates/history?currency=RUB",
+      "status": 403,
+      "api_call_id": "70270",
+      "request_id": "93237139-0fdb-4aa5-8a9f-1140bedea0e7"
+    },
+    {
+      "label": "group_revoked",
+      "path": "/api/finance/logistics-expenses/warehouses/20061923",
+      "status": 403,
+      "api_call_id": "70271",
+      "request_id": "5b3a6806-b0de-4a0f-829b-86b9b260325c"
+    }
+  ],
+  "warehouses": [
+    20790457,
+    20061923
+  ],
+  "trips": [
+    33653,
+    33654
+  ],
+  "quantity_effect": false
+}

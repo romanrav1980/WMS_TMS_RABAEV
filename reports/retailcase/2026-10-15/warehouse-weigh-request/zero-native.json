@@ -1,0 +1,113 @@
+{
+  "status": "PASS",
+  "checks": [
+    "flagged_capture_requires_zero",
+    "source_hash",
+    "current_weight",
+    "center_zero",
+    "tare_mode",
+    "engineering_units",
+    "quality",
+    "timestamp_binding",
+    "actual_opc_native_zero_strict_ack",
+    "exact_immutable_receipt",
+    "immutable_payload",
+    "same_timestamp_nonzero_capture_rejected",
+    "capture_timestamp_binding",
+    "append_only_update_delete",
+    "zero_rollback_case_stock_archive_unchanged"
+  ],
+  "count": 15,
+  "receipt": {
+    "receipt": {
+      "request_id": "WHZERO15.AK06.REQUEST",
+      "claim_id": "WHZERO15.AK06.CLAIM1",
+      "device_id": "WHZERO15.AK06.SCALE",
+      "zero_confirmed": true,
+      "zero_source_sha256": "AD08170E519B07BB2756269216C08E45C2268151CA120AE3BB73446CB5BA1F25",
+      "profile_sha256": "AE51134ED4DE6AAD9BAA40E5990AF9E5B98C0D222F0621EEC4B9FD4D0E8690D7",
+      "zero_observed_at": "2026-10-15T13:29:06.412426+00:00",
+      "claim_expires_at": "2026-10-15T13:29:36.410331+00:00",
+      "source_sha256": "71FF19F694253B64745DFEC75DDFA8ECDCDD6955817DA4AC2BABC3ACC7A5FC31",
+      "stock_posted": false
+    },
+    "current": {
+      "request_id": "WHZERO15.AK06.REQUEST",
+      "device_id": "WHZERO15.AK06.SCALE",
+      "case_task_id": 1137,
+      "purpose": "EMPTY_TARE",
+      "state": "CLAIMED",
+      "current_context": "CURRENT",
+      "admissible": false,
+      "reason": null,
+      "capture_key": null,
+      "claim_id": "WHZERO15.AK06.CLAIM1",
+      "created_at": "2026-10-15T13:29:06.185752+00:00",
+      "expires_at": "2026-10-15T13:31:06.185752+00:00",
+      "stock_posted": false,
+      "zero_progress_required": true,
+      "server_now": "2026-10-15T13:29:06.839491+00:00",
+      "claim_created_at": "2026-10-15T13:29:06.410331+00:00",
+      "claim_expires_at": "2026-10-15T13:29:36.410331+00:00",
+      "zero_confirmed_at": "2026-10-15T13:29:06.412426+00:00",
+      "zero_source_sha256": "AD08170E519B07BB2756269216C08E45C2268151CA120AE3BB73446CB5BA1F25",
+      "measurement_stage": "ZERO_CONFIRMED",
+      "load_allowed": true
+    }
+  },
+  "stock_before": [
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QIPcdbf4c0962",
+      "remain": 23,
+      "hard_reserved_base": 1,
+      "stock_version": 12
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "stock_after": [
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QIPcdbf4c0962",
+      "remain": 23,
+      "hard_reserved_base": 1,
+      "stock_version": 12
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "zero_rows_rollback_verified": true,
+  "capture_rows": 0,
+  "goods_stock_committed": false,
+  "actual_encrypted_local_opc": true,
+  "physical_hardware": false,
+  "request_id": "WHZERO15.AK06.REQUEST",
+  "claim_id": "WHZERO15.AK06.CLAIM1",
+  "http_before_after": [
+    "REQUESTED_WAITING_ZERO",
+    "CLAIMED_WAITING_ZERO",
+    "ZERO_ROLLBACK_WAITING_ZERO"
+  ],
+  "request_claim_metadata_committed": true,
+  "immutable_request_claim_history_retained": true,
+  "profile_sha256": "ae51134ed4de6aad9baa40e5990af9e5b98c0d222f0621eec4b9fd4d0e8690d7",
+  "isolated_device": "WHZERO15.AK06.SCALE",
+  "late_first_zero_http_denial": {
+    "status": "PASS",
+    "code": "SCALE_HTTP_409",
+    "measurement_stage": "WAITING_ZERO",
+    "load_allowed": false,
+    "no_database_transaction_during_wait": true
+  }
+}

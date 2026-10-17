@@ -1,0 +1,29 @@
+{
+  "before": [
+    {
+      "input_uom": "EA",
+      "base_uom": "EA",
+      "numerator": 1,
+      "denominator": 1,
+      "policy_version": 1
+    }
+  ],
+  "source_policy": [
+    {
+      "input_uom": "BOX",
+      "base_uom": "EA",
+      "numerator": 24,
+      "denominator": 1,
+      "policy_version": 1
+    },
+    {
+      "input_uom": "EA",
+      "base_uom": "EA",
+      "numerator": 1,
+      "denominator": 1,
+      "policy_version": 1
+    }
+  ],
+  "reason": "Fresh fixture omitted BOX capacity conversion; clone only missing original exact conversions, no quantities",
+  "state": "METADATA_REPAIRED"
+}

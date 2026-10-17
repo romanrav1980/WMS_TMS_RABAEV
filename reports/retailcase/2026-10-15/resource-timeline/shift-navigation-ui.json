@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "source": "UI_TEST_PROJECTION_INTERCEPTED",
+  "nativeWaveIdentity": 478,
+  "exactWaveResourceFilter": true,
+  "exactWaveQueueFilter": true,
+  "clearRestores": true,
+  "eventToWaveReturn": true,
+  "mobileOverflow": false,
+  "pageErrors": [],
+  "unexpectedWrites": []
+}

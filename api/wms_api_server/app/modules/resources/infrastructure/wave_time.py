@@ -18,7 +18,7 @@ class WaveTime:
     def context(self,wave: int,actor: str) -> dict[str,Any]:
         try:
             with self.gateway.transaction("Existing wave time context READ ONLY") as cur:
-                cur.execute("set transaction read only")
+                if not getattr(self.gateway,"transaction_bound",False):cur.execute("set transaction read only")
                 result=cur.var(oracledb.DB_TYPE_CLOB)
                 cur.callproc("RRL_WAVE_TIME_API.context",[wave,actor,result])
                 return read_oracle_json(result.getvalue())

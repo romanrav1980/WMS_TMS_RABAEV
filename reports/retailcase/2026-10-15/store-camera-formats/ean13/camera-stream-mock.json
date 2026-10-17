@@ -1,0 +1,290 @@
+{
+  "status": "PASS",
+  "kind": "CHROMIUM_FAKE_VIDEO_REAL_GET_USER_MEDIA_AND_ZXING",
+  "format": "EAN13",
+  "physical_camera": false,
+  "physical_hardware": false,
+  "actual_api_calls": 0,
+  "actual_business_writes": 0,
+  "all_network_intercepted": true,
+  "code": "4006381333931",
+  "video": {
+    "file": "C:\\projects\\TMS\\reports\\retailcase\\2026-10-15\\store-camera-formats\\ean13\\ean13-software-camera.y4m",
+    "sha256": "0902308451ec9589a3d93e8e033dcc4bd2fff50991e82faf354eea0bb66178a8",
+    "bytes": 1382457,
+    "encoder": {
+      "generator": "ReportLab",
+      "version": "4.4.10",
+      "format": "EAN13",
+      "width": 113,
+      "height": 60,
+      "bars": [
+        [
+          9,
+          0,
+          1,
+          60
+        ],
+        [
+          11,
+          0,
+          1,
+          60
+        ],
+        [
+          15,
+          0,
+          2,
+          60
+        ],
+        [
+          18,
+          0,
+          1,
+          60
+        ],
+        [
+          20,
+          0,
+          1,
+          60
+        ],
+        [
+          23,
+          0,
+          3,
+          60
+        ],
+        [
+          27,
+          0,
+          1,
+          60
+        ],
+        [
+          29,
+          0,
+          4,
+          60
+        ],
+        [
+          34,
+          0,
+          4,
+          60
+        ],
+        [
+          39,
+          0,
+          1,
+          60
+        ],
+        [
+          43,
+          0,
+          1,
+          60
+        ],
+        [
+          46,
+          0,
+          1,
+          60
+        ],
+        [
+          48,
+          0,
+          2,
+          60
+        ],
+        [
+          52,
+          0,
+          2,
+          60
+        ],
+        [
+          55,
+          0,
+          1,
+          60
+        ],
+        [
+          57,
+          0,
+          1,
+          60
+        ],
+        [
+          59,
+          0,
+          1,
+          60
+        ],
+        [
+          64,
+          0,
+          1,
+          60
+        ],
+        [
+          66,
+          0,
+          1,
+          60
+        ],
+        [
+          71,
+          0,
+          1,
+          60
+        ],
+        [
+          73,
+          0,
+          1,
+          60
+        ],
+        [
+          78,
+          0,
+          1,
+          60
+        ],
+        [
+          80,
+          0,
+          3,
+          60
+        ],
+        [
+          84,
+          0,
+          1,
+          60
+        ],
+        [
+          87,
+          0,
+          1,
+          60
+        ],
+        [
+          92,
+          0,
+          1,
+          60
+        ],
+        [
+          94,
+          0,
+          2,
+          60
+        ],
+        [
+          98,
+          0,
+          2,
+          60
+        ],
+        [
+          101,
+          0,
+          1,
+          60
+        ],
+        [
+          103,
+          0,
+          1,
+          60
+        ]
+      ]
+    }
+  },
+  "blank": null,
+  "assets": [
+    {
+      "file": "/assets/store-1JZFpLKD.js",
+      "sha256": "7db962585732ef56788fcb9af6b25353385ab4c778a90b749de460f6a1725cca"
+    },
+    {
+      "file": "/assets/client-Dcqo-eS2.js",
+      "sha256": "09da0c6c84219de9612c9606343f809bb513383b119f45ccdca64f2ed3de1f1d"
+    },
+    {
+      "file": "/assets/shared-D_pcc_jk.js",
+      "sha256": "4bdb48dca92a56f977b3b567172d980e28a59b50aac228ac63640070e1c19ab5"
+    },
+    {
+      "file": "/assets/shared-ZwPWzfPt.css",
+      "sha256": "48d409bca7b2bc04617e4bbb2d6186653f2d0affb6a644c09d44d5cbc77303b4"
+    },
+    {
+      "file": "/assets/store-DJvJY3Md.css",
+      "sha256": "1303d782413b2b5df9a7ef51d4b362945045c42aa2944258b0fdb131f9e1d49e"
+    }
+  ],
+  "results": [
+    {
+      "width": 390,
+      "status": "PASS",
+      "case": "native_mediaStream_video_frame_ZXing_EAN13_accept_lookup_and_stop",
+      "proof": {
+        "calls": 1,
+        "constraints": [
+          {
+            "audio": false,
+            "video": {
+              "facingMode": {
+                "ideal": "environment"
+              },
+              "width": {
+                "ideal": 1280
+              }
+            }
+          }
+        ],
+        "frames": [
+          {
+            "width": 640,
+            "height": 480,
+            "readyState": 4
+          }
+        ],
+        "tracks": [
+          {
+            "kind": "video",
+            "state": "ended",
+            "settings": {
+              "deviceId": "51055f7e7d89c96558df30af7b383cb34d2ff9816c25f67d7d4381e8b86ae589",
+              "groupId": "2438f6eb2fe67c5b70d53e7b672fe181af064efe870f368c62684e1d718c469f"
+            }
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/api/store-app/session",
+          "code": null
+        },
+        {
+          "method": "GET",
+          "path": "/api/store-app/deliveries",
+          "code": null
+        },
+        {
+          "method": "GET",
+          "path": "/api/store-app/deliveries/lookup",
+          "code": "4006381333931"
+        },
+        {
+          "method": "GET",
+          "path": "/api/store-app/deliveries/CAMERA.QA.LOAD",
+          "code": null
+        }
+      ]
+    }
+  ]
+}

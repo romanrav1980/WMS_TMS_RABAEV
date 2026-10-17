@@ -1,4 +1,5 @@
-﻿from typing import Any
+from datetime import date
+from typing import Any
 """SAP supply plans reuse legacy incoming headers/rows; never book inventory."""
 import json
 from decimal import Decimal
@@ -111,9 +112,10 @@ class SupplyOrders:
     def _text(value: Any) -> str:
         return value.read() if hasattr(value, "read") else value
 
-    def list(self, warehouse_id: int | None, limit: int, actor: str) -> list[dict]:
+    def list(self, warehouse_id: int | None, limit: int, actor: str, date_from: date|None=None, date_to: date|None=None,
+             date_basis: str="PLANNED_ACCEPT", include_unplanned: bool=False) -> list[dict]:
         from .supply_reads import list_supplies
-        return list_supplies(self.gateway, warehouse_id, limit, actor)
+        return list_supplies(self.gateway, warehouse_id, limit, actor, date_from, date_to, date_basis, include_unplanned)
 
     def by_receipt_document(self, document_id: int, actor: str) -> dict:
         from .supply_reads import supply_detail

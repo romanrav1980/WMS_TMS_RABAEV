@@ -1,0 +1,220 @@
+{
+  "state": "PASS_LIVE_SCHEMA_LIST_CURSOR_STATIC_HELP_AND_RECEIPT_GUARD",
+  "calls": [
+    {
+      "method": "GET",
+      "path": "/api/consolidation-plans?warehouse_id=20220394&status=ALL&limit=1",
+      "status": 200,
+      "api_call_id": "69430",
+      "request_id": "e10920b7-abc4-4470-af0e-8452cbf7e233"
+    },
+    {
+      "method": "GET",
+      "path": "/api/consolidation-plans?warehouse_id=20220394&status=ALL&limit=1&after=CM16.4c03ea49b7.FUTURE",
+      "status": 200,
+      "api_call_id": "69431",
+      "request_id": "424ff36a-6752-4f99-871c-40c623fc95fd"
+    },
+    {
+      "method": "GET",
+      "path": "/help/manual-weight.html",
+      "status": 200,
+      "api_call_id": "69432",
+      "request_id": "22883766-bb78-40bc-94d0-64939e8754ce"
+    },
+    {
+      "method": "GET",
+      "path": "/help/consolidation-plan.html",
+      "status": 200,
+      "api_call_id": "69433",
+      "request_id": "2f79c530-7623-4c68-8324-b474c3fd738d"
+    },
+    {
+      "method": "GET",
+      "path": "/openapi.json",
+      "status": 200,
+      "api_call_id": "69434",
+      "request_id": "b79581b7-becb-4670-b8df-f9e9727fc893"
+    },
+    {
+      "method": "POST",
+      "path": "/api/delivery/store-receipts/confirm",
+      "status": 422,
+      "api_call_id": "69435",
+      "request_id": "36939570-16ce-4b9c-bb9f-221a77aa0c58"
+    },
+    {
+      "method": "POST",
+      "path": "/api/delivery/store-receipts/confirm",
+      "status": 422,
+      "api_call_id": "69436",
+      "request_id": "f5f563f2-79fa-402b-a10d-9b31ca7af3f6"
+    },
+    {
+      "method": "POST",
+      "path": "/api/delivery/store-receipts/confirm",
+      "status": 409,
+      "api_call_id": "69437",
+      "request_id": "e011b40d-6b19-4774-864e-e4a74100f126"
+    }
+  ],
+  "new_receipts": 0,
+  "consolidation_pages": [
+    {
+      "items": [
+        {
+          "plan_id": "CM16.4c03ea49b7.FUTURE",
+          "version": 2,
+          "status": "CANCELLED",
+          "root_identifier": "CM16.FUTURE:4c03ea49b7",
+          "warehouse_id": 20220394,
+          "cell": "MH16Gd076c19e82",
+          "expected_count": 1,
+          "updated_at": "2026-10-16T04:56:16.089896+00:00"
+        }
+      ],
+      "has_more": true,
+      "warehouse_id": 20220394,
+      "next_after": "CM16.4c03ea49b7.FUTURE",
+      "stock_changed": false
+    },
+    {
+      "items": [
+        {
+          "plan_id": "CM16.4c03ea49b7.PLAN",
+          "version": 2,
+          "status": "ACTIVE",
+          "root_identifier": "MH16.TOP:d076c19e82",
+          "warehouse_id": 20220394,
+          "cell": "MH16Gd076c19e82",
+          "expected_count": 2,
+          "updated_at": "2026-10-16T04:54:07.249336+00:00"
+        }
+      ],
+      "has_more": false,
+      "warehouse_id": 20220394,
+      "next_after": null,
+      "stock_changed": false
+    }
+  ],
+  "integrated_capture_routes_preserved": [
+    "/api/delivery/store-scales/captures",
+    "/api/inventory/warehouse-scales/captures",
+    "/api/inventory/warehouse-scales/final-captures",
+    "/api/inventory/assembly-scale/captures"
+  ],
+  "existing_receipt_guard": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "message": "STORE_PLACE_ALREADY_RECEIVED",
+      "operation_id": "MW16.READONLY.RECEIVED.GUARD",
+      "retry_same_operation_id": true,
+      "outcome_confirmed": true
+    }
+  },
+  "oracle_http": [
+    {
+      "api_call_id": 69430,
+      "request_id": "e10920b7-abc4-4470-af0e-8452cbf7e233",
+      "duration_ms": 343
+    },
+    {
+      "api_call_id": 69431,
+      "request_id": "424ff36a-6752-4f99-871c-40c623fc95fd",
+      "duration_ms": 76
+    },
+    {
+      "api_call_id": 69432,
+      "request_id": "22883766-bb78-40bc-94d0-64939e8754ce",
+      "duration_ms": 24
+    },
+    {
+      "api_call_id": 69433,
+      "request_id": "2f79c530-7623-4c68-8324-b474c3fd738d",
+      "duration_ms": 29
+    },
+    {
+      "api_call_id": 69434,
+      "request_id": "b79581b7-becb-4670-b8df-f9e9727fc893",
+      "duration_ms": 1093
+    },
+    {
+      "api_call_id": 69435,
+      "request_id": "36939570-16ce-4b9c-bb9f-221a77aa0c58",
+      "duration_ms": 31
+    },
+    {
+      "api_call_id": 69436,
+      "request_id": "f5f563f2-79fa-402b-a10d-9b31ca7af3f6",
+      "duration_ms": 38
+    },
+    {
+      "api_call_id": 69437,
+      "request_id": "e011b40d-6b19-4774-864e-e4a74100f126",
+      "duration_ms": 92
+    }
+  ],
+  "slow": [],
+  "top_sql": [
+    {
+      "sql_id": "4ku9pqw7k0vct",
+      "executions": 1,
+      "avg_ms": 142.249
+    },
+    {
+      "sql_id": "9n0rbhscnnpfr",
+      "executions": 7,
+      "avg_ms": 18.074
+    },
+    {
+      "sql_id": "gf3bmguz079z3",
+      "executions": 1,
+      "avg_ms": 109.997
+    },
+    {
+      "sql_id": "4ku9pqw7k0vct",
+      "executions": 1,
+      "avg_ms": 19.111
+    },
+    {
+      "sql_id": "gf3bmguz079z3",
+      "executions": 1,
+      "avg_ms": 15.177
+    }
+  ],
+  "local_pairs": [
+    {
+      "api_call_id": 69430,
+      "request_id": "e10920b7-abc4-4470-af0e-8452cbf7e233"
+    },
+    {
+      "api_call_id": 69431,
+      "request_id": "424ff36a-6752-4f99-871c-40c623fc95fd"
+    },
+    {
+      "api_call_id": 69432,
+      "request_id": "22883766-bb78-40bc-94d0-64939e8754ce"
+    },
+    {
+      "api_call_id": 69433,
+      "request_id": "2f79c530-7623-4c68-8324-b474c3fd738d"
+    },
+    {
+      "api_call_id": 69434,
+      "request_id": "b79581b7-becb-4670-b8df-f9e9727fc893"
+    },
+    {
+      "api_call_id": 69435,
+      "request_id": "36939570-16ce-4b9c-bb9f-221a77aa0c58"
+    },
+    {
+      "api_call_id": 69436,
+      "request_id": "f5f563f2-79fa-402b-a10d-9b31ca7af3f6"
+    },
+    {
+      "api_call_id": 69437,
+      "request_id": "e011b40d-6b19-4774-864e-e4a74100f126"
+    }
+  ],
+  "sql_decision": "Preserve current load/photo primary-key lookups, photo bound3..12 and box bound200. Page is warehouse-selected/keyset, max50 returned after current native scope; this does not bound all filtered candidates. Fulfillment owner measures binary-sort/scope plan at pilot volume before any index/cache. Native helper and shared SQL averages are not endpoint p95. No extra index/cache."
+}

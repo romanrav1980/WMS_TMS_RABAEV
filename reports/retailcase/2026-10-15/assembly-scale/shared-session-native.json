@@ -1,0 +1,80 @@
+{
+  "status": "PASS",
+  "session": {
+    "session_id": "WHREQ15.ASM.S1136",
+    "task_id": 1136,
+    "device_id": "WHREQ15.SCALE",
+    "post_cell": "QIPcdbf4c0962",
+    "operator_id": "WHREQ15.OP",
+    "warehouse_id": 13583852,
+    "scan_container": "090000000000008014",
+    "cumulative_tolerance_kg": "0.02",
+    "state": "OPEN",
+    "confirmation_mode": "AUTO",
+    "content_version": 2,
+    "tare_capture_key": "F4B685621BE6DED35F6AD0EE6C6B610AC3315B390734C832CB839B608622BB89",
+    "tare_weight_kg": "0.5",
+    "last_weight_kg": "0.5",
+    "expires_at": "2026-10-15T20:42:21.480421+00:00",
+    "block_reason": null,
+    "steps": [],
+    "has_older": false,
+    "reconciliation": null
+  },
+  "original": {
+    "session_id": "WHREQ15.ASM.S1136",
+    "task_id": 1136,
+    "device_id": "WHREQ15.SCALE",
+    "expected_content_version": 2,
+    "tare_capture_key": "F4B685621BE6DED35F6AD0EE6C6B610AC3315B390734C832CB839B608622BB89",
+    "scan_container": "090000000000008014"
+  },
+  "abandonment": {
+    "operation_id": "WHREQ15.EXISTS.ABANDON",
+    "kind": "OPEN_SESSION",
+    "reason": "TEST_NOT_HARDWARE original open wins race must not abandon existing session",
+    "original": {
+      "session_id": "WHREQ15.ASM.S1136",
+      "task_id": 1136,
+      "device_id": "WHREQ15.SCALE",
+      "expected_content_version": 2,
+      "tare_capture_key": "F4B685621BE6DED35F6AD0EE6C6B610AC3315B390734C832CB839B608622BB89",
+      "scan_container": "090000000000008014"
+    }
+  },
+  "reverse_race": {
+    "denial": "ASSEMBLY_INTENT_EXISTS_READ_OR_RECONCILE_REQUIRED"
+  },
+  "actual_Oracle_wait": [
+    [
+      "enq: UL - contention",
+      248
+    ]
+  ],
+  "stock_before_after": {
+    "stock": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 24,
+        "hard_reserved_base": 1,
+        "stock_version": 10
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "picked_qty": 0,
+        "content_version": 2,
+        "assigned_to": "WHREQ15.OP"
+      }
+    ]
+  },
+  "stock_posted": false,
+  "physical_hardware": false
+}

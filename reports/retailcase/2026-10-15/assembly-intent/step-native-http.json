@@ -1,0 +1,71 @@
+{
+  "status": "PASS",
+  "checks": [
+    "OPEN_STEP exact immutable abandonment POST and GET ACK",
+    "late original plus changed quantity/step-id/original-operation-id all fenced",
+    "parent OPEN unchanged and no step created"
+  ],
+  "body": {
+    "operation_id": "WHREQ15.ASM.NEVER.ABANDON",
+    "kind": "OPEN_STEP",
+    "session_id": "WHREQ15.ASM.S1136",
+    "reason": "TEST_NOT_HARDWARE explicit proven absent step cancellation",
+    "original": {
+      "step_id": "WHREQ15.ASM.NEVER.STEP",
+      "operation_id": "WHREQ15.ASM.NEVER.OP",
+      "case_line_id": 1139,
+      "quantity": "1",
+      "scan_source_cell": "QIPcdbf4c0962",
+      "scan_product": "REUSE.QA:cdbf4c0962",
+      "scan_container": "090000000000008014",
+      "expected_content_version": 2,
+      "consent_to_auto": true
+    }
+  },
+  "ack": {
+    "operation_id": "WHREQ15.ASM.NEVER.ABANDON",
+    "status": "ABANDONED",
+    "kind": "OPEN_STEP",
+    "task_id": 1136,
+    "session_id": "WHREQ15.ASM.S1136",
+    "step_id": "WHREQ15.ASM.NEVER.STEP",
+    "original_operation_id": "WHREQ15.ASM.NEVER.OP",
+    "original": {
+      "case_line_id": 1139,
+      "consent_to_auto": true,
+      "expected_content_version": 2,
+      "operation_id": "WHREQ15.ASM.NEVER.OP",
+      "quantity": "1",
+      "scan_container": "090000000000008014",
+      "scan_product": "REUSE.QA:cdbf4c0962",
+      "scan_source_cell": "QIPcdbf4c0962",
+      "step_id": "WHREQ15.ASM.NEVER.STEP"
+    },
+    "stock_posted": false
+  },
+  "stock_before_after": {
+    "stock": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 24,
+        "hard_reserved_base": 1,
+        "stock_version": 10
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "picked_qty": 0,
+        "content_version": 2,
+        "assigned_to": "WHREQ15.OP"
+      }
+    ]
+  },
+  "stock_posted": false
+}

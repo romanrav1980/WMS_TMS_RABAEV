@@ -1,0 +1,145 @@
+{
+  "captured_at_utc": "2026-10-15T21:02:30.058604+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_ASM_FINAL_SNAPSHOT",
+      "type": "PACKAGE BODY",
+      "file": "rrl_asm_final_snapshot_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "3474339dbace3212e4be2efa5f165ad27ed9e137db49f6a82a02c9c09f6bb50c",
+      "normalized_source_sha256": "b3807d49e123b85175108004c944a013cbab22eb3915bdcd94230f8ae2ce62a3",
+      "artifact_sha256": "d2165292e99624b36daf1a01eb1920a814c3b67519f464d20e520fc563923c73"
+    },
+    {
+      "name": "RRL_ASM_INTENT_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_asm_intent_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "5294ea289160465aa07aef70d9e6b0f3fd374ebaa3cd6f3c93af5c0fc477a4d7",
+      "normalized_source_sha256": "6cb88e6fb147095d4f3d5623f107eba09f2fb811c843b765896cedad5e4f4cef",
+      "artifact_sha256": "27e87e9553a32acd0ce477ad643a45df46832b931991a55eff8591bf182e590f"
+    },
+    {
+      "name": "RRL_ASSEMBLY_RECOVERY_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_assembly_recovery_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "8a793c3a9a016b9315175fb957378756ecd630eb9f4cc63ee3f474de108c2f18",
+      "normalized_source_sha256": "ead314382a4b10091a315395e5d91b25d20eeb3647ed154f2e7ba0487a663530",
+      "artifact_sha256": "aa95c5ac5179b048edf3d4c3e4359ce2971d7fa7952885b0a65b2e9758b0defa"
+    },
+    {
+      "name": "RRL_ASSEMBLY_SCALE_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_assembly_scale_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "27bcb8bda054b4af54ff267040eaab0fa65b181e1d55dcb19bd97274796ad21f",
+      "normalized_source_sha256": "3959831fe6663eca0049caed70ed6fe0c00570b61732a491cd0ba55a03774159",
+      "artifact_sha256": "6de4b21d09deaf633898873ccf3fbdfaba3bceb29ac71b66fd175ef168fd10d2"
+    },
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_assignment_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "cc21895d422095e4b7ca85e51915bc8f8acf7fb33db27040e99391633396f3fc",
+      "normalized_source_sha256": "17a13dc2439099f91cc0bf9207171609f5c15d76d704c8c3465a34018b48545b",
+      "artifact_sha256": "1773e9601e506c1dcaf982767752b4d8d26745e688c888c41c6ab4aa6f0b22ec"
+    },
+    {
+      "name": "RRL_CASE_LIFECYCLE_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_lifecycle_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "6f2ae09a583f4362613387c6bc9511dc5c7e8c1b700af85a5d0893b45068e2db",
+      "normalized_source_sha256": "f2233800f1776b824dba1a4dc03c686d4fce52e69a68eee4d7cf2ab4ab017188",
+      "artifact_sha256": "952cfaa0fb05b9399b292a5364692830277b0f8554f038e8defe10e4a1dff877"
+    },
+    {
+      "name": "RRL_CASE_PALLET_TYPE_READ",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_pallet_type_read_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "a6d3657f7860f841ecec030695e44b87b1f8e0b38794c7959d84d037856509d7",
+      "normalized_source_sha256": "6768d5d3e6d2946ae742170358b8f9becd9d4f675dcdae0eb71f2cd01579af90",
+      "artifact_sha256": "01ca9c74994e31f918a840d76e21cbe0a8e02ca6d30ac1ba3365252f61e8ae5c"
+    },
+    {
+      "name": "RRL_CASE_RESOURCE_POLICY",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_resource_policy_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "2b2494dcfb01e57dd2f943f833f906ed47ff468f8193d0bd19ed52fb16b32765",
+      "normalized_source_sha256": "091a694d638e09257e47104d782bb95f9d8fbc4d10fd6f1181e252683c2f2580",
+      "artifact_sha256": "81a8ea2aca237c8f6a48bf501feccbefc016f7447985ad1109e08292b83846f2"
+    },
+    {
+      "name": "RRL_CASE_SSCC_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_sscc_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "cf5d416a5fc3a2d1b3f6f812c9430d0ecc7d1c319487e4b9c3e099b6e7f43d30",
+      "normalized_source_sha256": "21d68572664e70e8ca2d323649d0e2dcb948e37f47373d988d21d5b5b58efbd8",
+      "artifact_sha256": "2bbc4d63770444896cfcb6be05dc3a41685af45b03e38d6e6bccf64316da8102"
+    },
+    {
+      "name": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_task_access_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "745b1cf148f11c0f3adcbfcf4ea2ca41b817875601d4c1d5761ece0d73813c8c",
+      "normalized_source_sha256": "14f44269cdbbced4602d740c058b99e2bc69051699401068a87a6c4953dc3461",
+      "artifact_sha256": "3f3ab03c73112e493768c890502553671f431f4c7d2cafc5dc1a3429009ceadd"
+    },
+    {
+      "name": "RRL_ORDER_WEIGHT_READ",
+      "type": "PACKAGE BODY",
+      "file": "rrl_order_weight_read_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "e6d88fbf1d0bf194f43f4bab0ef613998367ee870fb88b604bf588e3370ebceb",
+      "normalized_source_sha256": "d3908e72f20f27f154c760a0331538a05dd9b584ac5c35b5fa51b88fc6d8d5da",
+      "artifact_sha256": "6e4cba1edf1316ed4cfc2efda7426677f6fdb0f60800f34548b8eb32887d3407"
+    },
+    {
+      "name": "RRL_STOCK_CASE_PICK_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_case_pick_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "db62c55a3d126a18425eb78fed7d8572550ab868caff475dae2cd75fab3ae13d",
+      "normalized_source_sha256": "eb9e5323c7618a1589ce238d65bb59bb0462fb1a3deb0bc89af38e9b20111a53",
+      "artifact_sha256": "3bcbc1222f64fb6b6d20f45f44fd935c6f63580edef668819bd300d075214863"
+    },
+    {
+      "name": "RRL_STOCK_CASE_TYPE_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_case_type_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "eb68da8a3bbd9ede2b7a3d4b7f324c0658b94ff43390abe17d8200f12de6deca",
+      "normalized_source_sha256": "3942eb967650774a0a493c1107c5e07f6243ad64cd01e083708bb8e2e940dbaf",
+      "artifact_sha256": "e08526d1b82892af1dc86ee766b874c5f83e393d956d6c1ef2621eb02bcc2f84"
+    },
+    {
+      "name": "RRL_STOCK_POSTING_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_posting_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "b661b4c72f3bb4aefe4bbcd3928c317ed84a5cb9c3f17bc0cacbf642804f395a",
+      "normalized_source_sha256": "52af65674b75a4c5365f1cf91f26d7ffc47f67775af3d8b15fa7ca3230e673f0",
+      "artifact_sha256": "cd4b6c9bac20ed57470f7ca3658a65cd2405998cf4bf821588e1bfffbfc05dd1"
+    },
+    {
+      "name": "RRL_WH_WEIGH_REQUEST_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_wh_weigh_request_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "879542ff5a689ed66eebe6176af2160a84b6840bc8391171d87071b5f90eef8b",
+      "normalized_source_sha256": "b21176b5ed0f8b82eb316e1ce276106bca35170c4f1ee9bafa2e980b846cbc4e",
+      "artifact_sha256": "f6f873c3c42b4823000650e110dfce9a8fdbf1ffe2fe9f1fc259132935d68cf6"
+    }
+  ]
+}

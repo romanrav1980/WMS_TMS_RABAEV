@@ -1,0 +1,230 @@
+{
+  "state": "PASS_HTTP_LOCAL_PAIRS_NATIVE_SQL_REVIEW",
+  "read_only": true,
+  "quantity_effect": false,
+  "native_direct_calls_not_http_paired": true,
+  "api": [
+    {
+      "api_call_id": 69853,
+      "request_id": "25c5851c-7c17-4191-8a2b-c693d8010167",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 403,
+      "duration_ms": 211
+    },
+    {
+      "api_call_id": 69854,
+      "request_id": "d337fdca-6de4-4cc8-87d6-89a6332e9040",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 172
+    },
+    {
+      "api_call_id": 69855,
+      "request_id": "4aee3d67-2567-41f0-a643-e9f29167ad18",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 105
+    },
+    {
+      "api_call_id": 69856,
+      "request_id": "af43a8af-8010-4449-8d29-0140aafca93d",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 409,
+      "duration_ms": 103
+    },
+    {
+      "api_call_id": 69857,
+      "request_id": "656bb48b-d5fd-4382-9aa7-4a0305ac4dd7",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 147
+    },
+    {
+      "api_call_id": 69858,
+      "request_id": "d3cac06a-8eac-4318-9d40-6e7137d481e7",
+      "path": "/api/warehouse-hus/attach",
+      "response_status": 200,
+      "duration_ms": 219
+    },
+    {
+      "api_call_id": 69859,
+      "request_id": "4e735615-2b5b-4c99-9acb-6cc59c23a7e2",
+      "path": "/api/warehouse-hus/attach",
+      "response_status": 200,
+      "duration_ms": 138
+    },
+    {
+      "api_call_id": 69860,
+      "request_id": "b40ee85c-7ebd-4324-bbfe-b1d8ee6f9934",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 403,
+      "duration_ms": 72
+    },
+    {
+      "api_call_id": 69861,
+      "request_id": "c1e3edb1-9a66-4eab-83b7-483be7d84f5e",
+      "path": "/api/warehouse-hus/move",
+      "response_status": 403,
+      "duration_ms": 97
+    },
+    {
+      "api_call_id": 69862,
+      "request_id": "90b1e75a-3271-41da-a851-10ceb3a24a60",
+      "path": "/api/warehouse-hus/move",
+      "response_status": 409,
+      "duration_ms": 66
+    },
+    {
+      "api_call_id": 69863,
+      "request_id": "4d8e5cb2-2aff-4ebb-87af-0909e8ac3748",
+      "path": "/api/warehouse-hus/move",
+      "response_status": 200,
+      "duration_ms": 204
+    },
+    {
+      "api_call_id": 69864,
+      "request_id": "80458fcf-6b36-48f9-9ed9-0e970a7216ed",
+      "path": "/api/warehouse-hus/detach",
+      "response_status": 403,
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 69865,
+      "request_id": "3f1a5457-b069-419d-8dd8-37b76979f0fe",
+      "path": "/api/warehouse-hus/detach",
+      "response_status": 200,
+      "duration_ms": 196
+    },
+    {
+      "api_call_id": 69866,
+      "request_id": "568ffe59-a268-4b46-8f07-cc87bd94a470",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 86
+    }
+  ],
+  "slow": [],
+  "top_sql": [
+    {
+      "sql_id": "admdtyprqxjhm",
+      "executions": 183,
+      "avg_ms": 85.876,
+      "avg_buffers": 1172.59,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.execute_prepared(:result); end;"
+    },
+    {
+      "sql_id": "5wamwb184g57y",
+      "executions": 1,
+      "avg_ms": 542.032,
+      "avg_buffers": 3494,
+      "sql_sample": "declare a clob;begin\r  dbms_lob.createtemporary(a,true);\r  for r in(select TEXT from USER_SOURCE where NAME='RRL_HU_EXEC_ACCESS'and TYPE='PACKAGE'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;\r  if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='6424407D52365F05C0220F8F714978D46E303E895ACDF5B3C525E467E48510CC'then raise_application_error(-20886,'SOURCE_GUARD_RRL_HU_EXEC_ACCESS');end if;dbms_lob.freetemporary(a);\r  dbms_lob.createtemporary(a,true);\r  for r in(select TEXT from USER_SOURCE where NAME='RRL_HU_EXEC_ACCESS'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;\r  if dbms"
+    },
+    {
+      "sql_id": "cw3qu2c3sd2sp",
+      "executions": 1,
+      "avg_ms": 240.153,
+      "avg_buffers": 57,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_HU_EXEC_ACCESS'AND TYPE='PACKAGE'ORDER BY LINE"
+    },
+    {
+      "sql_id": "cy2kn2zg80uwq",
+      "executions": 1,
+      "avg_ms": 238.256,
+      "avg_buffers": 58,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_HU_EXEC_ACCESS'AND TYPE='PACKAGE BODY'ORDER BY LINE"
+    },
+    {
+      "sql_id": "5jfvwwtgzb031",
+      "executions": 1,
+      "avg_ms": 63.841,
+      "avg_buffers": 868,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.execute_prepared(:1); end;"
+    },
+    {
+      "sql_id": "53ucubad8xf4j",
+      "executions": 1,
+      "avg_ms": 43.428,
+      "avg_buffers": 12,
+      "sql_sample": "declare n number;begin select count(*)into n from USER_OBJECTS where OBJECT_NAME='RRL_HU_EXEC_ACCESS';if n!=0 then raise_application_error(-20886,'PACKAGE_KIT_NAMESPACE');end if;end;\r "
+    },
+    {
+      "sql_id": "649xt6p3qqgxw",
+      "executions": 1,
+      "avg_ms": 37.709,
+      "avg_buffers": 12,
+      "sql_sample": "SELECT COUNT(*)FROM USER_OBJECTS WHERE OBJECT_NAME='RRL_HU_EXEC_ACCESS'"
+    },
+    {
+      "sql_id": "91np0mq682hkn",
+      "executions": 9,
+      "avg_ms": 0.528,
+      "avg_buffers": 17.22,
+      "sql_sample": "SELECT CASE WHEN P.HU_KIND='CONTAINER'THEN P.HU_CURRENT_CELL ELSE (SELECT MIN(R.CELL)FROM RRL_REMAINS R WHERE R.UID_POLETA=P.UID_PALLET AND R.REMAIN>0)END FROM RRL_PALLETS P WHERE P.UID_PALLET=:B1 "
+    }
+  ],
+  "invalid": 0,
+  "local_pairs": [
+    {
+      "api_call_id": 69853,
+      "request_id": "25c5851c-7c17-4191-8a2b-c693d8010167"
+    },
+    {
+      "api_call_id": 69854,
+      "request_id": "d337fdca-6de4-4cc8-87d6-89a6332e9040"
+    },
+    {
+      "api_call_id": 69855,
+      "request_id": "4aee3d67-2567-41f0-a643-e9f29167ad18"
+    },
+    {
+      "api_call_id": 69856,
+      "request_id": "af43a8af-8010-4449-8d29-0140aafca93d"
+    },
+    {
+      "api_call_id": 69857,
+      "request_id": "656bb48b-d5fd-4382-9aa7-4a0305ac4dd7"
+    },
+    {
+      "api_call_id": 69858,
+      "request_id": "d3cac06a-8eac-4318-9d40-6e7137d481e7"
+    },
+    {
+      "api_call_id": 69859,
+      "request_id": "4e735615-2b5b-4c99-9acb-6cc59c23a7e2"
+    },
+    {
+      "api_call_id": 69860,
+      "request_id": "b40ee85c-7ebd-4324-bbfe-b1d8ee6f9934"
+    },
+    {
+      "api_call_id": 69861,
+      "request_id": "c1e3edb1-9a66-4eab-83b7-483be7d84f5e"
+    },
+    {
+      "api_call_id": 69862,
+      "request_id": "90b1e75a-3271-41da-a851-10ceb3a24a60"
+    },
+    {
+      "api_call_id": 69863,
+      "request_id": "4d8e5cb2-2aff-4ebb-87af-0909e8ac3748"
+    },
+    {
+      "api_call_id": 69864,
+      "request_id": "80458fcf-6b36-48f9-9ed9-0e970a7216ed"
+    },
+    {
+      "api_call_id": 69865,
+      "request_id": "3f1a5457-b069-419d-8dd8-37b76979f0fe"
+    },
+    {
+      "api_call_id": 69866,
+      "request_id": "568ffe59-a268-4b46-8f07-cc87bd94a470"
+    }
+  ],
+  "max_http_ms": 219,
+  "decisions": [
+    "Keep exact UID/cell/WARE permission checks and child UID stock lookup; no speculative cache or index.",
+    "Retain REV share fence before config/resources and repeat current authority after locks; never cache allowed across revoked assignments.",
+    "Shared execute_prepared cursor totals are cumulative across earlier scenarios, not this case p95. Inventory/platform owner profiles per-call prepare/execute/audit and indexed cell/UID plans if repeated500ms statements or1000ms HU endpoints occur at pilot load."
+  ]
+}

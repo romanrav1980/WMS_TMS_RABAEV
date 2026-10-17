@@ -1,0 +1,13 @@
+{
+  "desktop": true,
+  "mobile": true,
+  "search": true,
+  "related": true,
+  "deepLinkReload": true,
+  "escape": true,
+  "f1": true,
+  "workplacePreserved": true,
+  "retry": true,
+  "mobileOverflow": false,
+  "pageErrors": []
+}

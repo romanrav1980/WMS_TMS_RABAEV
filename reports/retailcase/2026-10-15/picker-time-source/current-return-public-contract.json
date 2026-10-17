@@ -1,0 +1,4 @@
+{
+  "RRL_STOCK_POSTING_API": "package RRL_STOCK_POSTING_API authid definer as\n procedure prepare_command(p_request clob,p_actor varchar2,p_replay out clob,p_hints clob default null);\n procedure execute_prepared(p_result out clob);\n procedure stage_birth(p_uid varchar2);\n procedure finish_birth_capture;\n procedure reset_connection;\nend;\n\n",
+  "RRL_STOCK_CASE_RETURN_CMD": "package RRL_STOCK_CASE_RETURN_CMD authid definer accessible by(package RRL_STOCK_POSTING_API) as\n procedure compile_command(p_request clob,p_operation varchar2,p_policies out clob,p_resources out clob,p_domain out clob);\n procedure execute_command(p_request clob,p_actor varchar2,p_result out clob);\nend;\n"
+}

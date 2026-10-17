@@ -1,0 +1,248 @@
+[
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016375",
+    "constraint_type": "R",
+    "search_condition_vc": null
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016376",
+    "constraint_type": "R",
+    "search_condition_vc": null
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016377",
+    "constraint_type": "R",
+    "search_condition_vc": null
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "constraint_name": "SYS_C0017873",
+    "constraint_type": "R",
+    "search_condition_vc": null
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "constraint_name": "SYS_C0017874",
+    "constraint_type": "R",
+    "search_condition_vc": null
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "constraint_name": "SYS_C0017875",
+    "constraint_type": "R",
+    "search_condition_vc": null
+  },
+  {
+    "table_name": "RRL_STORE_UNLOAD_START",
+    "constraint_name": "SYS_C0018626",
+    "constraint_type": "R",
+    "search_condition_vc": null
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016360",
+    "constraint_type": "C",
+    "search_condition_vc": "\"LOAD_OPERATION_ID\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016361",
+    "constraint_type": "C",
+    "search_condition_vc": "\"STORE_ADDR\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016362",
+    "constraint_type": "C",
+    "search_condition_vc": "\"ROOT_KEY\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016363",
+    "constraint_type": "C",
+    "search_condition_vc": "\"POLICY_VERSION\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016364",
+    "constraint_type": "C",
+    "search_condition_vc": "\"RECEIPT_STATE\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016365",
+    "constraint_type": "C",
+    "search_condition_vc": "\"CAMERA_CONFIRMED\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016366",
+    "constraint_type": "C",
+    "search_condition_vc": "\"COMPOSITION_SIGNATURE\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016367",
+    "constraint_type": "C",
+    "search_condition_vc": "\"COMPOSITION_JSON\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016368",
+    "constraint_type": "C",
+    "search_condition_vc": "\"RECEIVED_BY\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016369",
+    "constraint_type": "C",
+    "search_condition_vc": "\"RECEIVED_AT\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016370",
+    "constraint_type": "C",
+    "search_condition_vc": "RECEIPT_STATE in('ACCEPTED','DISCREPANCY')"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016371",
+    "constraint_type": "C",
+    "search_condition_vc": "CAMERA_CONFIRMED=1"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016372",
+    "constraint_type": "C",
+    "search_condition_vc": "COMPOSITION_JSON is json"
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "constraint_name": "SYS_C0017866",
+    "constraint_type": "C",
+    "search_condition_vc": "\"RECEIPT_OPERATION_ID\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "constraint_name": "SYS_C0017867",
+    "constraint_type": "C",
+    "search_condition_vc": "\"LOAD_OPERATION_ID\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "constraint_name": "SYS_C0017868",
+    "constraint_type": "C",
+    "search_condition_vc": "\"RELEASED_AT\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "constraint_name": "SYS_C0017869",
+    "constraint_type": "C",
+    "search_condition_vc": "\"RELEASED_BY\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_UNLOAD_START",
+    "constraint_name": "SYS_C0018614",
+    "constraint_type": "C",
+    "search_condition_vc": "\"LOAD_OPERATION_ID\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_UNLOAD_START",
+    "constraint_name": "SYS_C0018615",
+    "constraint_type": "C",
+    "search_condition_vc": "\"STORE_ADDR\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_UNLOAD_START",
+    "constraint_name": "SYS_C0018616",
+    "constraint_type": "C",
+    "search_condition_vc": "\"ROOT_KEY\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_UNLOAD_START",
+    "constraint_name": "SYS_C0018617",
+    "constraint_type": "C",
+    "search_condition_vc": "\"COMPOSITION_SIGNATURE\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_UNLOAD_START",
+    "constraint_name": "SYS_C0018618",
+    "constraint_type": "C",
+    "search_condition_vc": "\"ACTOR\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_UNLOAD_START",
+    "constraint_name": "SYS_C0018619",
+    "constraint_type": "C",
+    "search_condition_vc": "\"STARTED_AT_INSTANT\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_UNLOAD_START",
+    "constraint_name": "SYS_C0018620",
+    "constraint_type": "C",
+    "search_condition_vc": "\"REQUEST_JSON\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_UNLOAD_START",
+    "constraint_name": "SYS_C0018621",
+    "constraint_type": "C",
+    "search_condition_vc": "\"RESULT_JSON\" IS NOT NULL"
+  },
+  {
+    "table_name": "RRL_STORE_UNLOAD_START",
+    "constraint_name": "SYS_C0018622",
+    "constraint_type": "C",
+    "search_condition_vc": "REQUEST_JSON is json"
+  },
+  {
+    "table_name": "RRL_STORE_UNLOAD_START",
+    "constraint_name": "SYS_C0018623",
+    "constraint_type": "C",
+    "search_condition_vc": "RESULT_JSON is json"
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016373",
+    "constraint_type": "P",
+    "search_condition_vc": null
+  },
+  {
+    "table_name": "RRL_STORE_RECEIPT_FACT",
+    "constraint_name": "SYS_C0016374",
+    "constraint_type": "U",
+    "search_condition_vc": null
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "constraint_name": "SYS_C0017870",
+    "constraint_type": "P",
+    "search_condition_vc": null
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "constraint_name": "SYS_C0017871",
+    "constraint_type": "U",
+    "search_condition_vc": null
+  },
+  {
+    "table_name": "RRL_STORE_LOAD_CUSTODY",
+    "constraint_name": "SYS_C0017872",
+    "constraint_type": "U",
+    "search_condition_vc": null
+  },
+  {
+    "table_name": "RRL_STORE_UNLOAD_START",
+    "constraint_name": "SYS_C0018624",
+    "constraint_type": "P",
+    "search_condition_vc": null
+  },
+  {
+    "table_name": "RRL_STORE_UNLOAD_START",
+    "constraint_name": "SYS_C0018625",
+    "constraint_type": "U",
+    "search_condition_vc": null
+  }
+]

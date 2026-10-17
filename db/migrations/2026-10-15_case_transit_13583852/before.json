@@ -1,0 +1,34 @@
+{
+  "warehouse": [
+    {
+      "id": 13583852
+    }
+  ],
+  "release": [
+    {
+      "release_id": 1,
+      "state": "ACTIVE"
+    }
+  ],
+  "stock": [
+    {
+      "cell": "QIPcdbf4c0962",
+      "remain": 24,
+      "hard_reserved_base": 1,
+      "stock_version": 10
+    },
+    {
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "cell": [],
+  "key": [],
+  "invalid": [
+    {
+      "n": 0
+    }
+  ]
+}

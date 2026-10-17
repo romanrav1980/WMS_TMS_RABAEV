@@ -1,0 +1,595 @@
+{
+  "prefix": "IQ16.26c2f13302",
+  "tag": "26c2f13302",
+  "actor": "IQ16I26c2f13302",
+  "picker": "IQ16P26c2f13302",
+  "other": "IQ16X26c2f13302",
+  "source": "IQ16.LOT:26c2f13302",
+  "warehouse_id": 20220394,
+  "article": "AS16A35CEA92C27",
+  "cell": "AS16C35cea92c27",
+  "face": 607,
+  "revision": 402,
+  "role": "IQ16R26c2f13302",
+  "assignment": "IQ16A26c2f13302",
+  "hardware_verified": false,
+  "state": "RETIRED_HISTORY_RETAINED",
+  "quantity": "1",
+  "recovery": [
+    "Never rerun stage after an uncertain result; inspect original operation receipt",
+    "Only own new lot is counted; original ASM CASE1140/lot/ST are protected",
+    "Canonical WAVE_CANCEL/PICK_PLAN_CANCEL release own remaining reservations; keep inventory loss/shortage/access journals",
+    "Retire new actors/roles/resources/session after final acceptance; no history deletion"
+  ],
+  "order": 2151,
+  "order_row": 3638,
+  "plan": 2203,
+  "line": 2212,
+  "task": 2141,
+  "reservation": 2009,
+  "wave": 572,
+  "wave_order": 1973,
+  "receipts": {
+    "BIRTH": {
+      "operation_id": "IQ16.26c2f13302.BIRTH",
+      "revision_id": 402,
+      "uid": "IQ16.LOT:26c2f13302",
+      "cell": "AS16C35cea92c27",
+      "article": "AS16A35CEA92C27",
+      "quantity": "1",
+      "unit": "EA",
+      "event_id": 6446727,
+      "lot_source": "INVENTORY",
+      "outbox_id": 5368
+    },
+    "RELEASE": {
+      "wave_id": 572,
+      "warehouse": 20220394,
+      "status": "LAUNCHED",
+      "released_at": "2026-10-15T17:51:59.420833-04:00",
+      "released_by": "admin",
+      "release_operation_id": "IQ16.26c2f13302.RELEASE",
+      "ready": true,
+      "tasks": [
+        {
+          "pick_task_id": 2141,
+          "wave_task_id": 2064,
+          "article": "AS16A35CEA92C27",
+          "task_type": "CASE_PICK",
+          "status": "ASSIGNED",
+          "cell": "AS16C35cea92c27",
+          "required_base": "1",
+          "covered_base": "1",
+          "missing_base": "0",
+          "base_uom": "EA",
+          "reservations": [
+            {
+              "reservation_id": 1880,
+              "uid": "IQ16.LOT:26c2f13302",
+              "cell": "AS16C35cea92c27",
+              "article": "AS16A35CEA92C27",
+              "quantity": "1",
+              "base_uom": "EA",
+              "stock_version": 2,
+              "physical": "1",
+              "hard": "1",
+              "reason": null
+            }
+          ]
+        }
+      ],
+      "open_replenishments": [],
+      "outbox_id": 5371
+    },
+    "TYPE": {
+      "operation_id": "IQ16.26c2f13302.TYPE",
+      "command_type": "CASE_PALLET_TYPE_CHANGE",
+      "case_task_id": 1141,
+      "pallet_type_id": 32,
+      "previous_pallet_type_id": 1,
+      "planned_pallet_type_id": null,
+      "version": 1,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "stock_changed": false,
+      "status": "APPLIED",
+      "outbox_id": 5372
+    },
+    "TARE.COUNT": {
+      "status": "POSTED",
+      "tare_balance_changed": true,
+      "destination_quantity": "2",
+      "operation_id": "IQ16.26c2f13302.TARE.COUNT",
+      "quantity": "2",
+      "owner_ware_id": 20220394,
+      "pallet_type_id": 32,
+      "condition": "GOOD",
+      "goods_stock_changed": false,
+      "outbox_id": 5373
+    },
+    "TARE.BOOK": {
+      "operation_id": "IQ16.26c2f13302.TARE.BOOK",
+      "status": "HELD",
+      "place_kind": "CASE",
+      "place_id": "1141",
+      "pallet_type_id": 32,
+      "warehouse_id": 20220394,
+      "available_quantity": "0",
+      "quantity": "1",
+      "physical_tare_changed": false,
+      "goods_stock_changed": false,
+      "outbox_id": 5374
+    },
+    "RETIRE.EMPTY": {
+      "empty_cancel": true,
+      "task": 1141,
+      "version": 2,
+      "carrier": "CP572000000001141",
+      "warehouse": 20220394,
+      "stocks": [],
+      "before": [],
+      "unused": [],
+      "operation_id": "IQ16.26c2f13302.RETIRE.EMPTY",
+      "status": "CANCELLED_EMPTY",
+      "physical_quantity_changed": false,
+      "next_action": "RELEASE_HELD_TARE_BOOK_THEN_WAVE_DECISION",
+      "outbox_id": 5438
+    },
+    "RETIRE.WAVE": {
+      "operation_id": "IQ16.26c2f13302.RETIRE.WAVE",
+      "document_type": "PICK_WAVE",
+      "document_id": 572,
+      "released_count": 0,
+      "outbox_id": 5439
+    },
+    "RETIRE.PLAN": {
+      "operation_id": "IQ16.26c2f13302.RETIRE.PLAN",
+      "document_type": "PICK_PLAN",
+      "document_id": 2203,
+      "released_count": 0,
+      "outbox_id": 5440
+    },
+    "RETIRE.BOOK": {
+      "operation_id": "IQ16.26c2f13302.RETIRE.BOOK",
+      "status": "CANCELLED",
+      "place_kind": "CASE",
+      "place_id": "1141",
+      "pallet_type_id": 32,
+      "warehouse_id": 20220394,
+      "available_quantity": "1",
+      "quantity": "1",
+      "physical_tare_changed": false,
+      "goods_stock_changed": false,
+      "outbox_id": 5441
+    },
+    "RETIRE.COUNT": {
+      "status": "POSTED",
+      "tare_balance_changed": true,
+      "destination_quantity": "1",
+      "operation_id": "IQ16.26c2f13302.RETIRE.COUNT",
+      "quantity": "1",
+      "owner_ware_id": 20220394,
+      "pallet_type_id": 32,
+      "condition": "GOOD",
+      "goods_stock_changed": false,
+      "outbox_id": 5442
+    }
+  },
+  "launch": {
+    "operation_id": "IQ16.26c2f13302.LAUNCH",
+    "launch_outcome": "APPLIED",
+    "continuation_state": "COMPLETE",
+    "wave_status": "LAUNCHED"
+  },
+  "case_task_id": 1141,
+  "case_line_id": 1143,
+  "resource_id": 65,
+  "qualification": {
+    "resource_id": 65,
+    "task_type": "CASE_PICK",
+    "active": true
+  },
+  "shift_id": 70,
+  "resource_session_id": 61,
+  "claimed": true,
+  "frozen_stock_requests": {
+    "TYPE": "{\"actor\":\"admin\",\"command_type\":\"CASE_PALLET_TYPE_CHANGE\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"expected_version\":0,\"pallet_type_id\":32,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"scan_container\":\"CP572000000001141\"},\"operation_id\":\"IQ16.26c2f13302.TYPE\",\"source\":{\"case_task_id\":1141},\"units\":[]}",
+    "TARE.COUNT": "{\"actor\":\"admin\",\"command_type\":\"TARE_COUNT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"condition\":\"GOOD\",\"decision_reference\":\"IQ16.26c2f13302.SIMULATED\",\"expected_version\":2,\"observed_quantity\":\"2\",\"owner_ware_id\":20220394,\"pallet_type_id\":32,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\"},\"operation_id\":\"IQ16.26c2f13302.TARE.COUNT\",\"source\":{},\"units\":[]}",
+    "TARE.BOOK": "{\"actor\":\"admin\",\"command_type\":\"TARE_BOOK\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"expected_warehouse_id\":20220394,\"pallet_type_id\":32},\"operation_id\":\"IQ16.26c2f13302.TARE.BOOK\",\"source\":{\"place_id\":\"1141\",\"place_kind\":\"CASE\"},\"units\":[]}",
+    "RETIRE.EMPTY": "{\"actor\":\"admin\",\"command_type\":\"CASE_CARRIER_RETURN\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"allow_empty\":true,\"destinations\":{},\"expected_content_version\":2,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"scan_container\":\"CP572000000001141\"},\"operation_id\":\"IQ16.26c2f13302.RETIRE.EMPTY\",\"source\":{\"case_task_id\":1141},\"units\":[]}",
+    "RETIRE.WAVE": "{\"actor\":\"admin\",\"command_type\":\"WAVE_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"only_cancelled_replenishment\":0,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"reservation_kind\":null},\"operation_id\":\"IQ16.26c2f13302.RETIRE.WAVE\",\"source\":{\"document_id\":572,\"document_type\":\"PICK_WAVE\"},\"units\":[]}",
+    "RETIRE.PLAN": "{\"actor\":\"admin\",\"command_type\":\"PICK_PLAN_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"only_cancelled_replenishment\":0,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"reservation_kind\":null},\"operation_id\":\"IQ16.26c2f13302.RETIRE.PLAN\",\"source\":{\"document_id\":2203,\"document_type\":\"PICK_PLAN\"},\"units\":[]}",
+    "RETIRE.BOOK": "{\"actor\":\"admin\",\"command_type\":\"TARE_BOOK_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{},\"operation_id\":\"IQ16.26c2f13302.RETIRE.BOOK\",\"source\":{\"booking_operation_id\":\"IQ16.26c2f13302.TARE.BOOK\"},\"units\":[]}",
+    "RETIRE.COUNT": "{\"actor\":\"admin\",\"command_type\":\"TARE_COUNT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"condition\":\"GOOD\",\"decision_reference\":\"IQ16.26c2f13302.RETIRE.SIMULATED\",\"expected_version\":5,\"observed_quantity\":\"1\",\"owner_ware_id\":20220394,\"pallet_type_id\":32,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\"},\"operation_id\":\"IQ16.26c2f13302.RETIRE.COUNT\",\"source\":{},\"units\":[]}"
+  },
+  "label_request": {
+    "operation_id": "IQ16.26c2f13302.LABEL",
+    "scan_container": "CP572000000001141",
+    "expected_content_version": 1
+  },
+  "label_issue_rejection": "CASE_LABEL_EMPTY_CURRENT_CARRIER_REQUIRED: assigned carrier retains its internal identifier; no goods picking or simulated label confirmation",
+  "tare_before": {
+    "physical_qty": 1,
+    "assembly_qty": 1,
+    "balance_version": 2
+  },
+  "started": true,
+  "short": {
+    "case_pick_short_id": 23,
+    "status": "PENDING_APPROVAL",
+    "short_qty": "1"
+  },
+  "short_id": 23,
+  "decision_request": {
+    "decision": "RESTORE",
+    "operation_id": "IQ16.26c2f13302.RESTORE",
+    "actor": "admin",
+    "reason_text": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+  },
+  "decision": {
+    "recovery_state": "WAIT_INVENTORY",
+    "status": "ACCEPTED",
+    "inventory_task_id": 27,
+    "released_reservations": 1,
+    "operation_id": "IQ16.26c2f13302.RESTORE",
+    "outbox_id": 5375
+  },
+  "inventory_task_id": 27,
+  "frozen_acl_commands": {
+    "ACCEPT.ROLE.MIN": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.ROLE.MIN",
+      "command_type": "ROLE_SAVE",
+      "payload": {
+        "expected_version": 0,
+        "role_id": "IQ16R26c2f13302",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "permissions": [
+          "case_pick_view",
+          "inventory_task_execute",
+          "inventory_task_view"
+        ],
+        "active": true
+      }
+    },
+    "ACCEPT.WARE.ASSIGN": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.WARE.ASSIGN",
+      "command_type": "ASSIGN",
+      "payload": {
+        "expected_version": 0,
+        "assignment_id": "IQ16A26c2f13302",
+        "username": "IQ16I26c2f13302",
+        "role_id": "IQ16R26c2f13302",
+        "scope_kind": "WAREHOUSE",
+        "scope_id": "20220394",
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-15T21:55:51.740968+00:00",
+        "valid_until": "2026-10-15T23:56:01.740968+00:00",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "ACCEPT.ROLE.FULL": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.ROLE.FULL",
+      "command_type": "ROLE_SAVE",
+      "payload": {
+        "expected_version": 1,
+        "role_id": "IQ16R26c2f13302",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "permissions": [
+          "case_pick_view",
+          "inventory_task_execute",
+          "inventory_task_view",
+          "stock_inventory_count"
+        ],
+        "active": true
+      }
+    },
+    "ACCEPT.WARE.REVOKE": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.WARE.REVOKE",
+      "command_type": "REVOKE",
+      "payload": {
+        "expected_version": 1,
+        "assignment_id": "IQ16A26c2f13302",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "ACCEPT.SELF.ASSIGN": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.SELF.ASSIGN",
+      "command_type": "ASSIGN",
+      "payload": {
+        "expected_version": 0,
+        "assignment_id": "IQ16.26c2f13302.SELF",
+        "username": "IQ16I26c2f13302",
+        "role_id": "IQ16R26c2f13302",
+        "scope_kind": "SELF",
+        "scope_id": null,
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-15T21:55:51.740968+00:00",
+        "valid_until": "2026-10-15T23:56:01.740968+00:00",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "ACCEPT.SELF.REVOKE": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.SELF.REVOKE",
+      "command_type": "REVOKE",
+      "payload": {
+        "expected_version": 1,
+        "assignment_id": "IQ16.26c2f13302.SELF",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "ACCEPT.GROUP.CREATE": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.GROUP.CREATE",
+      "command_type": "GROUP_SAVE",
+      "payload": {
+        "expected_version": 0,
+        "group_id": "IQ16.26c2f13302.GROUP",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "member_kind": "WAREHOUSE",
+        "members": [
+          {
+            "kind": "WAREHOUSE",
+            "object_id": "20220394"
+          }
+        ],
+        "active": true
+      }
+    },
+    "ACCEPT.GROUP.ASSIGN": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.GROUP.ASSIGN",
+      "command_type": "ASSIGN",
+      "payload": {
+        "expected_version": 0,
+        "assignment_id": "IQ16.26c2f13302.GROUP.ASSIGN",
+        "username": "IQ16I26c2f13302",
+        "role_id": "IQ16R26c2f13302",
+        "scope_kind": "GROUP",
+        "scope_id": "IQ16.26c2f13302.GROUP",
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-15T21:55:51.740968+00:00",
+        "valid_until": "2026-10-15T23:56:01.740968+00:00",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "ACCEPT.GROUP.REMOVE": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.GROUP.REMOVE",
+      "command_type": "GROUP_SAVE",
+      "payload": {
+        "expected_version": 1,
+        "group_id": "IQ16.26c2f13302.GROUP",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "member_kind": "WAREHOUSE",
+        "members": [],
+        "active": true
+      }
+    },
+    "ACCEPT.GROUP.RESTORE": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.GROUP.RESTORE",
+      "command_type": "GROUP_SAVE",
+      "payload": {
+        "expected_version": 2,
+        "group_id": "IQ16.26c2f13302.GROUP",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "member_kind": "WAREHOUSE",
+        "members": [
+          {
+            "kind": "WAREHOUSE",
+            "object_id": "20220394"
+          }
+        ],
+        "active": true
+      }
+    },
+    "ACCEPT.GROUP.REVOKE": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.GROUP.REVOKE",
+      "command_type": "REVOKE",
+      "payload": {
+        "expected_version": 1,
+        "assignment_id": "IQ16.26c2f13302.GROUP.ASSIGN",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "LOCK.ASSIGN": {
+      "operation_id": "IQ16.26c2f13302.LOCK.ASSIGN",
+      "command_type": "ASSIGN",
+      "payload": {
+        "expected_version": 0,
+        "assignment_id": "IQ16.26c2f13302.LOCK.SELF",
+        "username": "IQ16I26c2f13302",
+        "role_id": "IQ16R26c2f13302",
+        "scope_kind": "SELF",
+        "scope_id": null,
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-15T21:57:34.858207+00:00",
+        "valid_until": "2026-10-15T22:17:44.858207+00:00",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "LOCK.REVOKE": {
+      "operation_id": "IQ16.26c2f13302.LOCK.REVOKE",
+      "command_type": "REVOKE",
+      "payload": {
+        "expected_version": 1,
+        "assignment_id": "IQ16.26c2f13302.LOCK.SELF",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "LOCK2.ASSIGN": {
+      "operation_id": "IQ16.26c2f13302.LOCK2.ASSIGN",
+      "command_type": "ASSIGN",
+      "payload": {
+        "expected_version": 0,
+        "assignment_id": "IQ16.26c2f13302.LOCK2.SELF",
+        "username": "IQ16I26c2f13302",
+        "role_id": "IQ16R26c2f13302",
+        "scope_kind": "SELF",
+        "scope_id": null,
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-15T21:58:26.744434+00:00",
+        "valid_until": "2026-10-15T22:18:36.744434+00:00",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "LOCK2.REVOKE": {
+      "operation_id": "IQ16.26c2f13302.LOCK2.REVOKE",
+      "command_type": "REVOKE",
+      "payload": {
+        "expected_version": 1,
+        "assignment_id": "IQ16.26c2f13302.LOCK2.SELF",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "RETIRE.ROLE": {
+      "operation_id": "IQ16.26c2f13302.RETIRE.ROLE",
+      "command_type": "ROLE_SAVE",
+      "payload": {
+        "expected_version": 2,
+        "role_id": "IQ16R26c2f13302",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "permissions": [
+          "case_pick_view",
+          "inventory_task_execute",
+          "inventory_task_view",
+          "stock_inventory_count"
+        ],
+        "active": false
+      }
+    },
+    "RETIRE.GROUP": {
+      "operation_id": "IQ16.26c2f13302.RETIRE.GROUP",
+      "command_type": "GROUP_SAVE",
+      "payload": {
+        "expected_version": 3,
+        "group_id": "IQ16.26c2f13302.GROUP",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "member_kind": "WAREHOUSE",
+        "members": [],
+        "active": false
+      }
+    }
+  },
+  "acl_receipts": {
+    "ACCEPT.ROLE.MIN": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.ROLE.MIN",
+      "command_type": "ROLE_SAVE",
+      "object_id": "IQ16R26c2f13302",
+      "version": 1,
+      "replayed": false
+    },
+    "ACCEPT.WARE.ASSIGN": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.WARE.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "IQ16A26c2f13302",
+      "version": 1,
+      "replayed": false
+    },
+    "ACCEPT.ROLE.FULL": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.ROLE.FULL",
+      "command_type": "ROLE_SAVE",
+      "object_id": "IQ16R26c2f13302",
+      "version": 2,
+      "replayed": false
+    },
+    "ACCEPT.WARE.REVOKE": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.WARE.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "IQ16A26c2f13302",
+      "version": 2,
+      "replayed": false
+    },
+    "ACCEPT.SELF.ASSIGN": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.SELF.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "IQ16.26c2f13302.SELF",
+      "version": 1,
+      "replayed": false
+    },
+    "ACCEPT.SELF.REVOKE": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.SELF.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "IQ16.26c2f13302.SELF",
+      "version": 2,
+      "replayed": false
+    },
+    "ACCEPT.GROUP.CREATE": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.GROUP.CREATE",
+      "command_type": "GROUP_SAVE",
+      "object_id": "IQ16.26c2f13302.GROUP",
+      "version": 1,
+      "replayed": false
+    },
+    "ACCEPT.GROUP.ASSIGN": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.GROUP.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "IQ16.26c2f13302.GROUP.ASSIGN",
+      "version": 1,
+      "replayed": false
+    },
+    "ACCEPT.GROUP.REMOVE": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.GROUP.REMOVE",
+      "command_type": "GROUP_SAVE",
+      "object_id": "IQ16.26c2f13302.GROUP",
+      "version": 2,
+      "replayed": false
+    },
+    "ACCEPT.GROUP.RESTORE": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.GROUP.RESTORE",
+      "command_type": "GROUP_SAVE",
+      "object_id": "IQ16.26c2f13302.GROUP",
+      "version": 3,
+      "replayed": false
+    },
+    "ACCEPT.GROUP.REVOKE": {
+      "operation_id": "IQ16.26c2f13302.ACCEPT.GROUP.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "IQ16.26c2f13302.GROUP.ASSIGN",
+      "version": 2,
+      "replayed": false
+    },
+    "LOCK.ASSIGN": {
+      "operation_id": "IQ16.26c2f13302.LOCK.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "IQ16.26c2f13302.LOCK.SELF",
+      "version": 1,
+      "replayed": false
+    },
+    "LOCK.REVOKE": {
+      "operation_id": "IQ16.26c2f13302.LOCK.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "IQ16.26c2f13302.LOCK.SELF",
+      "version": 2,
+      "replayed": false
+    },
+    "LOCK2.ASSIGN": {
+      "operation_id": "IQ16.26c2f13302.LOCK2.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "IQ16.26c2f13302.LOCK2.SELF",
+      "version": 1,
+      "replayed": false
+    },
+    "LOCK2.REVOKE": {
+      "operation_id": "IQ16.26c2f13302.LOCK2.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "IQ16.26c2f13302.LOCK2.SELF",
+      "version": 2,
+      "replayed": false
+    },
+    "RETIRE.ROLE": {
+      "operation_id": "IQ16.26c2f13302.RETIRE.ROLE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "IQ16R26c2f13302",
+      "version": 3,
+      "replayed": false
+    },
+    "RETIRE.GROUP": {
+      "operation_id": "IQ16.26c2f13302.RETIRE.GROUP",
+      "command_type": "GROUP_SAVE",
+      "object_id": "IQ16.26c2f13302.GROUP",
+      "version": 4,
+      "replayed": false
+    }
+  }
+}

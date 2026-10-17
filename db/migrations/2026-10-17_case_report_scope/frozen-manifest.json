@@ -1,0 +1,33 @@
+{
+  "migration_id": "2026-10-17-case-report-scope",
+  "status": "PREPARED_NOT_APPLIED",
+  "before_sources": {
+    "RRL_CASE_RESOURCE_POLICY|PACKAGE BODY": "D97BF859C9F5BCB5A62E6AA473DF40F2410B1E54588D5374CDE09C3DF4E01B89"
+  },
+  "after_sources": {
+    "RRL_CASE_RESOURCE_POLICY|PACKAGE BODY": "8C5C471BC0CDE948F9E3D442BE7D00CF69D02198D80DA6208350E46D7736BD7A",
+    "RRL_CASE_REPORT_SCOPE|PACKAGE": "8851BCBA50CB77D554BD60314B83A80DA0B5C74D88456938C821692D8C6D3042",
+    "RRL_CASE_REPORT_SCOPE|PACKAGE BODY": "61D7B05F1A7755A517F3195FEAAB4892235B049EEF6EB387CF1A43B6C1C4400E"
+  },
+  "dependencies": [],
+  "files": {
+    "after_sources.sql": "60bfecf11d38f4e59d3f433eaf35457faed965f9eb96e6e650270ca7ff09a367",
+    "apply.sql": "5a81389e62c49330f6a637c00c2d5cbcd9fce6190d1b55ba528aa1b4ec3c71b7",
+    "before.sql": "20e0d5220b89862cbd677dfe68611aea0e7426cbbbed3c8d1c36c2499e50423f",
+    "before_sources.sql": "69b66051c98334173d0917ba8f387a52a96bb7a532f12d690ced061b10f6739b",
+    "compile_dependents.sql": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "9aabf911cd2ab4693b7add0b642b159e3790dfbb83b887e06efde79a47f71f6f",
+    "restore_rrl_case_resource_policy_package_body.sql": "f0fb0d62ae1e334fe3b448dab02617f1a10b46e104d27c6339418cd61ea096e0",
+    "rollback.sql": "21fd1346dd49ee10188a875e0edfb36ee605fbedf69b4d2c3b93f6d788a42310",
+    "rrl_case_report_scope_package.sql": "076023767a5baa5b4e484d05f82a7688e19a95589c7b549d31a96293387e90cd",
+    "rrl_case_report_scope_package_body.sql": "37ed7a4396e255286b2339883b03f16e5341539c330bc6b76265b81da3afade3",
+    "rrl_case_resource_policy_package_body.sql": "9377e1c03f086c6e58e73c21c67cae6f86137c170c19ec71bd5089fddbc18571",
+    "verify.sql": "00680b8bf2b2fd199e1f99646fc7d68baac69f7fa7a0b5e65279fa4eca95dd73"
+  },
+  "code_checkpoint": {
+    "api/wms_api_server/app/modules/resources/infrastructure/case_report_metadata.py": "3d98f83ec5128b90d8acc4b1be1a2eaa2f0f384a0d4f16f1d43d1e017903a767",
+    "api/wms_api_server/app/modules/resources/public.py": "f1b92bcfef3ec4658f8946703e409828637ea07866a5197bee491d97b7607e17",
+    "api/wms_api_server/app/services/case_pick_service.py": "1a1f40755671374da8cfbdb6280d58e1ff14aef95f533bc6c9e7b1af713c7c50",
+    "api/wms_api_server/app/routers/case_pick.py": "210015a093ea07f88c42c1be94f4ac4a5cfc7f9d44e207abdb8293964591f96f"
+  }
+}

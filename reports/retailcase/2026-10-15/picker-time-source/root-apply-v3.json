@@ -1,0 +1,91 @@
+{
+  "status": "STOPPED_PRESERVE_PARTIAL_STATE",
+  "at_utc": "2026-10-15T17:35:34.574398+00:00",
+  "identity": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "manifest_sha256": "26c45ed33440bab3e0465078567d011ddba7c4137f6e3fd470a97560470dd6dd",
+  "files": [
+    {
+      "candidate": "tmp/picker_actual_time_v3_before.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v3_source/before.sql",
+      "sha256": "7111d53758cc618656d09b4e91d12b74aef8a55f592b3ede8182cb27ab7aac51",
+      "bytes": 2158
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v3_schema.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v3_source/schema.sql",
+      "sha256": "a088ece663abce9d68c5b3f2ea033a21bcaa1015dc197fa8c5248a32e7d5a648",
+      "bytes": 7031
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v3_api_spec.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v3_source/api_spec.sql",
+      "sha256": "13b65c67516f0a17125e384e4ebbe40e07ed7144e8575f98721e10cfc15e8c99",
+      "bytes": 532
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v3_auth.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v3_source/auth.sql",
+      "sha256": "144860efc2415f052718893d331aa5c364dd266402451438dfa9b96f07af6dd0",
+      "bytes": 4638
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v3_read.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v3_source/read.sql",
+      "sha256": "73085a973c3ddb21d97c89dff850e84389bff35112186131d3f4a4bc45263ac8",
+      "bytes": 4974
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v3_write.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v3_source/write.sql",
+      "sha256": "6ee60022538a27b74ef2e32bfbc5e41c00d1f2e4292347467aad8c1209b0e056",
+      "bytes": 5335
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v3_api_body.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v3_source/api_body.sql",
+      "sha256": "9e67272a7601840ffb919f57953197cb4ddde607a37413cd54af39d1341ba743",
+      "bytes": 11153
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v3_guards.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v3_source/guards.sql",
+      "sha256": "2f9ee989bfc51fb3419a24aa2cd3083055efb0233a84bfa0a9192857da7f233f",
+      "bytes": 1599
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v3_installed_guard.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v3_source/installed_guard.sql",
+      "sha256": "197c0aec614bc6e9587f3e8beed932e7df219e3ea6d3fb8c224db1a3381d6fc6",
+      "bytes": 30083
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v3_verify.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v3_source/verify.sql",
+      "sha256": "e5d1409bbd703db8eedf243154e7060084630fb47794fec531f3b8754ef092ff",
+      "bytes": 1447
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v3_apply.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v3_source/apply.sql",
+      "sha256": "a960319949a83691337f91f88ff20a4936fdaf8414d4bf57da9ab67dc0e24da3",
+      "bytes": 605
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v3_rollback.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v3_source/rollback.sql",
+      "sha256": "fbf4febaa2dd90889177c233225d6494ea745adadb012bf9eed4a30ebfe5fca7",
+      "bytes": 1635
+    },
+    {
+      "candidate": "tmp/picker_actual_time_v3_checkpoint.json",
+      "release": "db/migrations/2026-10-15_picker_actual_time_v3_source/checkpoint.json",
+      "sha256": "0b0b0bb9256c8accced590e71a02f34f0f2cc86eed73fc9959690f6db32f5a0f",
+      "bytes": 4753
+    }
+  ],
+  "quantity_writes": false,
+  "returncode": 3762504530
+}

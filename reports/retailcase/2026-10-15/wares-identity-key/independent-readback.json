@@ -1,0 +1,74 @@
+{
+  "status": "PASS_INDEPENDENT_READBACK_AND_CONSTRAINT_REJECTIONS",
+  "rows_preserved": 291,
+  "constraints": [
+    {
+      "constraint_name": "RRL_WARES_CK_ID_POS",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "index_name": null
+    },
+    {
+      "constraint_name": "RRL_WARES_NAME_NN",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "index_name": null
+    },
+    {
+      "constraint_name": "RRL_WARES_NAME_UK",
+      "constraint_type": "U",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "index_name": "RRL_WARES_NAME_UK"
+    },
+    {
+      "constraint_name": "RRL_WARES_PK",
+      "constraint_type": "P",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "index_name": "RRL_WARES_PK"
+    }
+  ],
+  "indexes": [
+    {
+      "index_name": "RRL_WARES_NAME_UK",
+      "index_type": "NORMAL",
+      "uniqueness": "UNIQUE",
+      "status": "VALID"
+    },
+    {
+      "index_name": "RRL_WARES_PK",
+      "index_type": "NORMAL",
+      "uniqueness": "UNIQUE",
+      "status": "VALID"
+    }
+  ],
+  "checks": [
+    {
+      "check": "duplicate_ID",
+      "oracle_error": 1
+    },
+    {
+      "check": "duplicate_NAME",
+      "oracle_error": 1
+    },
+    {
+      "check": "null_ID",
+      "oracle_error": 1407
+    },
+    {
+      "check": "null_NAME",
+      "oracle_error": 1407
+    }
+  ],
+  "ledger": [
+    {
+      "migration_id": "2026-10-15-wares-identity-keys",
+      "status": "APPLIED"
+    }
+  ],
+  "invalid": 0,
+  "committed_row_changes": 0
+}

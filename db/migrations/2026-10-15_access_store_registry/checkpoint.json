@@ -1,0 +1,14 @@
+{
+  "target": "RABAEV/orcl",
+  "source": "RRL_ADDR.ADDR; no NUM column",
+  "source_active_rows": 381,
+  "source_active_duplicate_addresses": 0,
+  "max_address_characters": 55,
+  "identity": "lower hex SHA256(UTF8 ADDR); group key stays opaque ASCII; real ADDR remains source of truth",
+  "no_assignments": true,
+  "files": {
+    "apply.sql": "2420af7574448022cca801e450626d95554419229d67f0733dfae1efa9ff8771",
+    "rollback.sql": "ecc2137f040f53ccea5e115509a89b22c358192aa7cefe2d1f8db82b9848142c",
+    "verify.sql": "168011ec8ac9ee864a93d033edd37184bec84102e020c94c7cebbff0cd4c3a0c"
+  }
+}

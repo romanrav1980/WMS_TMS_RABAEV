@@ -1,0 +1,23 @@
+{
+  "migration_id": "2026-10-16-interware-case-json-scalar",
+  "status": "PREPARED_NOT_APPLIED",
+  "before_sources": {
+    "RRL_IW_CASE_BRIDGE|PACKAGE BODY": "3188C9A17D7A6A3D296D3E1AB7B0707FC441A169DEF5CE539E19E3777F1D1161"
+  },
+  "after_sources": {
+    "RRL_IW_CASE_BRIDGE|PACKAGE BODY": "3F95FD161E588057AF31D1692D3A4B44427701703BE9A5752BE73556098C7246"
+  },
+  "dependencies": [],
+  "files": {
+    "after_sources.sql": "89d910427da87032d0b82da2e14d9648ae9be3d22d3ca67557d4870035ef108f",
+    "apply.sql": "968101dd7770bab83a668a462ab6b88731d3b8a9a1b0d54d9b4ba53f0f4cd1c2",
+    "before.sql": "483e7dd0dee6eb7beab4bc08456937a2813d610666b1cf26720d8f1522c604df",
+    "before_sources.sql": "21a2921dcdd381abfe756fb2df4e541b2fe0495f92c6cb1b69d5e19a657519fc",
+    "compile_dependents.sql": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "7897ca3bf58de8cbd5ad10dc7fd045da1618f5df1fd45255460909bd0bd9a02c",
+    "restore_rrl_iw_case_bridge_package_body.sql": "687cb49ed0684d95ec580a43dc8a37aee92fc324bad125a65aa1e64468555bc5",
+    "rollback.sql": "f64bf49b9105867a550dc43c7fb4377b185e3bd8a762d878287880bed84cddc8",
+    "rrl_iw_case_bridge_package_body.sql": "4d3f50b39beefde10ddb4372c1a331723751a317cbbf33a7e14c55a60ace9011",
+    "verify.sql": "00680b8bf2b2fd199e1f99646fc7d68baac69f7fa7a0b5e65279fa4eca95dd73"
+  }
+}

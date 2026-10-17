@@ -1,0 +1,184 @@
+{
+  "status": "PASS_READ_ONLY_PREFLIGHT",
+  "snapshot": {
+    "active_hard": [
+      {
+        "base_qty": 1,
+        "cell": "QIPcdbf4c0962",
+        "reservation_id": 1872,
+        "reservation_version": 1,
+        "status": "ACTIVE",
+        "uid_pallet": "REUSE.RETURN:e6c16d0bbd"
+      }
+    ],
+    "carrier": [],
+    "clock": [
+      {
+        "shift_state": "OFF",
+        "stream_version": 8,
+        "work_state": "IDLE"
+      }
+    ],
+    "events": [
+      {
+        "case_pick_event_id": 3752,
+        "created_by": "N1939.OP",
+        "event_type": "CLAIMED",
+        "offline_event_id": null
+      },
+      {
+        "case_pick_event_id": 3753,
+        "created_by": "N1939.OP",
+        "event_type": "STARTED",
+        "offline_event_id": null
+      }
+    ],
+    "legacy_plan": [
+      {
+        "pick_reservation_id": 2007,
+        "reservation_status": "ACTIVE",
+        "reserved_qty": 1
+      }
+    ],
+    "legacy_wave": [],
+    "line": [
+      {
+        "articul": "REUSE.QA:cdbf4c0962",
+        "case_pick_line_id": 1141,
+        "cell_code": "QIPcdbf4c0962",
+        "picked_qty": 0,
+        "planned_qty": 1,
+        "status": "NEW"
+      }
+    ],
+    "plan": [
+      {
+        "status": "RELEASED"
+      }
+    ],
+    "session": [
+      {
+        "current_task_id": null,
+        "operator_user_id": "N1939.OP",
+        "resource_id": 63,
+        "status": "ACTIVE"
+      }
+    ],
+    "stock": [
+      {
+        "cell": "CPT_13583852",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 3,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 1,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 1,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 1,
+        "remain": 23,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 14,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 2,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      }
+    ],
+    "tare": [
+      {
+        "assembly_qty": 1,
+        "available_qty": 0,
+        "balance_version": 10,
+        "physical_qty": 1
+      }
+    ],
+    "task": [
+      {
+        "assigned_resource_id": 63,
+        "assigned_to": "N1939.OP",
+        "assignment_version": 2,
+        "content_version": 2,
+        "legacy_sborka_pallet_id": null,
+        "picked_qty": 0,
+        "resource_session_id": 59,
+        "sscc": "090000000000010017",
+        "started_at_instant": "2026-10-15 13:19:15.519832",
+        "status": "IN_PROGRESS"
+      }
+    ],
+    "wave": [
+      {
+        "status": "LAUNCHED"
+      }
+    ]
+  },
+  "restored_scope_provenance": {
+    "report_sha256": "8b1786a923ecbf8ab5d8151c468f2123cc77407b30da1d623fdb01a2acc22872",
+    "mapping": [
+      {
+        "old_assignment_id": "N1939.SELF",
+        "new_assignment_id": "N1939.GQP.RESTORE.SELF",
+        "original_scope": {
+          "role_id": "N1939.CASE.EXEC",
+          "scope_kind": "SELF",
+          "scope_id": null,
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-15T17:10:39.774491+00:00",
+          "valid_until": "2026-10-15T22:11:39.774491+00:00"
+        }
+      },
+      {
+        "old_assignment_id": "N1939.WARE",
+        "new_assignment_id": "N1939.GQP.RESTORE.WARE",
+        "original_scope": {
+          "role_id": "N1939.CASE.EXEC",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "13583852",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-15T17:10:43.239916+00:00",
+          "valid_until": "2026-10-15T22:11:39.774491+00:00"
+        }
+      }
+    ],
+    "retire": [
+      {
+        "operation_id": "N1939.GQC.RETIRE.SELF",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "N1939.GQP.RESTORE.SELF",
+          "reason": "SIMULATED_TEST_NOT_HARDWARE; root-reviewed one-EA ordinary CASE close and canonical compensation; retain lineage"
+        }
+      },
+      {
+        "operation_id": "N1939.GQC.RETIRE.WARE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "N1939.GQP.RESTORE.WARE",
+          "reason": "SIMULATED_TEST_NOT_HARDWARE; root-reviewed one-EA ordinary CASE close and canonical compensation; retain lineage"
+        }
+      }
+    ]
+  }
+}

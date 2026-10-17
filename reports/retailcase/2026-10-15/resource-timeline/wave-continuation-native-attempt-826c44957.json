@@ -1,0 +1,40 @@
+{
+  "status": "FAILED",
+  "checks": [
+    "metadata_only_setup_and_positive_launch_plan_cancel_caller_rollback_no_stock_commit",
+    "explicit_authorized_launch_commit_H1_and_cancel_compensator_rollback_proven",
+    "native_metadata_context_rejects_commit_and_rollback_reuse",
+    "native_fractional_step_denied",
+    "canonical_cancel_preflight_rollback_then_wave_and_plan_compensation_APPLIED"
+  ],
+  "context": {
+    "prefix": "wld826c44957",
+    "actor": "wld826c44957",
+    "cell": "WL826c44957",
+    "role": "wld826c44957r",
+    "assignment": "wld826c44957a",
+    "launch": "WAVE.DURABLE.LAUNCH:826c44957",
+    "cancel": "WAVE.DURABLE.CANCEL:826c44957",
+    "plan_cancel": "WAVE.DURABLE.PLAN.CANCEL:826c44957",
+    "order": 2142,
+    "order_row": 3630,
+    "plan": 2195,
+    "line": 2204,
+    "task": 2133,
+    "reservation": 2001,
+    "wave": 563,
+    "wave_order": 1965,
+    "face": 602,
+    "face_article": 293
+  },
+  "error": "AssertionError([])",
+  "source": "REUSE.RETURN:e6c16d0bbd",
+  "stock_final": {
+    "remain": 24,
+    "hard_reserved_base": 0,
+    "stock_version": 5
+  },
+  "stock_commit": "EXPLICIT_AUTHORIZED_RESERVATION_ONLY",
+  "physical_moves": 0,
+  "history_retained": true
+}

@@ -1,0 +1,4 @@
+-- running C:\projects\TMS\tmp\delivery-time-completion\apply.sql
+-- running C:\projects\TMS\tmp\delivery-time-completion\verify.sql
+-- running C:\projects\TMS\tmp\delivery-time-completion\after_sources.sql
+Done. Statements=6; Errors=0; AbsentCleanup=0

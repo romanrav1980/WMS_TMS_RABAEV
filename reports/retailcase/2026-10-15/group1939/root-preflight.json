@@ -1,0 +1,164 @@
+{
+  "status": "READ_ONLY_PREFLIGHT",
+  "snapshot": {
+    "carrier": [],
+    "events": [
+      {
+        "case_pick_event_id": 3752,
+        "created_by": "N1939.OP",
+        "event_type": "CLAIMED"
+      },
+      {
+        "case_pick_event_id": 3753,
+        "created_by": "N1939.OP",
+        "event_type": "STARTED"
+      }
+    ],
+    "fixture": {
+      "role": {
+        "permissions": [
+          {
+            "permission": "case_pick_execute"
+          }
+        ],
+        "row": {
+          "active": 1,
+          "role_id": "N1939.CASE.EXEC",
+          "title": "SIMULATED_TEST_LABEL_NOT_PHYSICAL; TEST_FIXTURE_NOT_HARDWARE N1939 metadata proof",
+          "version_no": 3
+        }
+      },
+      "task": [
+        {
+          "assigned_resource_id": 63,
+          "assigned_to": "N1939.OP",
+          "assignment_version": 2,
+          "content_version": 2,
+          "equipment_id": null,
+          "picked_qty": 0,
+          "resource_session_id": 59,
+          "sscc": "090000000000010017",
+          "started_at_instant": "2026-10-15 13:19:15.519832",
+          "status": "IN_PROGRESS"
+        }
+      ],
+      "user": [
+        {
+          "deleted": 0,
+          "id": "N1939.OP",
+          "user_group": "N1939.OP",
+          "ware_id": 13583852
+        }
+      ]
+    },
+    "line": [
+      {
+        "articul": "REUSE.QA:cdbf4c0962",
+        "case_pick_line_id": 1141,
+        "case_pick_task_id": 1139,
+        "cell_code": "QIPcdbf4c0962",
+        "picked_qty": 0,
+        "planned_qty": 1,
+        "status": "NEW"
+      }
+    ],
+    "lineage": [
+      {
+        "cell": "CPT_13583852",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 3,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 1,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 1,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 1,
+        "remain": 23,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 14,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 2,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      }
+    ],
+    "reservations": [
+      {
+        "base_qty": 1,
+        "cell": "QIPcdbf4c0962",
+        "reservation_id": 1872,
+        "reservation_version": 1,
+        "status": "ACTIVE",
+        "uid_pallet": "REUSE.RETURN:e6c16d0bbd"
+      }
+    ],
+    "resource_events": [],
+    "resource_receipts": [
+      {
+        "operation_id": "N1939.RMI.CLAIM",
+        "outcome": "APPLIED",
+        "source_sha256": "9F1063F7CDACFFF9153216D69E7A3F82B355FBDD071634D8FB9EFDA50CFB8BC3"
+      },
+      {
+        "operation_id": "N1939.RMI.START",
+        "outcome": "APPLIED",
+        "source_sha256": "DFF92DA0B3335233B3B98D03BBE63238E8496FD4BF1D89A0AA44A46E5A25AB7F"
+      }
+    ],
+    "warehouse_object": [
+      {
+        "active": 1,
+        "kind": "WAREHOUSE",
+        "object_id": "13583852",
+        "parent_id": null,
+        "parent_kind": null,
+        "title": "Own FULLPAL HU cdbf4c0962",
+        "version_no": 1
+      }
+    ]
+  },
+  "grants": [
+    {
+      "assignment_id": "N1939.SELF",
+      "username": "N1939.OP",
+      "role_id": "N1939.CASE.EXEC",
+      "scope_kind": "SELF",
+      "scope_id": null,
+      "membership": "CURRENT",
+      "snapshot_version": null,
+      "version_no": 1,
+      "valid_from": "2026-10-15T17:10:39.774491+00:00",
+      "valid_until": "2026-10-15T22:11:39.774491+00:00"
+    },
+    {
+      "assignment_id": "N1939.WARE",
+      "username": "N1939.OP",
+      "role_id": "N1939.CASE.EXEC",
+      "scope_kind": "WAREHOUSE",
+      "scope_id": "13583852",
+      "membership": "CURRENT",
+      "snapshot_version": null,
+      "version_no": 1,
+      "valid_from": "2026-10-15T17:10:43.239916+00:00",
+      "valid_until": "2026-10-15T22:11:39.774491+00:00"
+    }
+  ]
+}

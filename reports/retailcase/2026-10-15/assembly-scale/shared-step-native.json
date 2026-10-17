@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "body": {
+    "step_id": "WHREQ15.ASM.T1136",
+    "operation_id": "WHREQ15.ASM.PICK1136",
+    "case_line_id": 1139,
+    "quantity": "1",
+    "scan_source_cell": "QIPcdbf4c0962",
+    "scan_product": "REUSE.QA:cdbf4c0962",
+    "scan_container": "090000000000008014",
+    "expected_content_version": 2,
+    "consent_to_auto": true
+  },
+  "step": {
+    "step_id": "WHREQ15.ASM.T1136",
+    "session_id": "WHREQ15.ASM.S1136",
+    "operation_id": "WHREQ15.ASM.PICK1136",
+    "sequence": 1,
+    "case_line_id": 1139,
+    "article": "REUSE.QA:cdbf4c0962",
+    "quantity": "1",
+    "state": "WAITING_BEFORE",
+    "confirmation_mode": "AUTO",
+    "content_version": 2,
+    "before_capture_id": "ASM.7B752CD206AB64CAA7DF857C7B499701C0980380E492CDA0D082ADE9ED58B789",
+    "after_capture_id": "ASM.8BBCB6850C0E429EED3E3EC77D46B54757A850C7962093848F3129E39E54E205",
+    "before_weight_kg": null,
+    "after_weight_kg": null,
+    "delta_kg": null,
+    "min_delta_kg": "0.05",
+    "expected_delta_min_kg": "0.99",
+    "expected_delta_max_kg": "1.01",
+    "button_intent": false,
+    "consent_to_auto": true,
+    "block_reason": null,
+    "stock_posted": false
+  },
+  "stock_before_after": [
+    {
+      "cell": "QIPcdbf4c0962",
+      "remain": 24,
+      "hard_reserved_base": 1,
+      "stock_version": 10
+    },
+    {
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "stock_posted": false,
+  "physical_hardware": false
+}

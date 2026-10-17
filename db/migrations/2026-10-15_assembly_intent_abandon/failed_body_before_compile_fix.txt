@@ -1,0 +1,86 @@
+create or replace package body RRL_ASM_INTENT_API as
+ procedure clear_context is begin dbms_session.clear_context('RRL_ASM_INTENT_CTX',null);RRL_STOCK_LOCK_API.clear_plan;end;
+ function write_allowed return number is tx varchar2(100):=sys_context('RRL_ASM_INTENT_CTX','TX_ID');begin
+  if tx is not null and tx=dbms_transaction.local_transaction_id(false)then return 1;end if;return 0;
+ end;
+ procedure current_operator(p_task number,p_actor nvarchar2)is assigned nvarchar2(50);n number;begin
+  if p_actor is null or p_task is null then raise_application_error(-20882,'ASSEMBLY_INTENT_CURRENT_OPERATOR_REQUIRED');end if;
+  RRL_CASE_TASK_ACCESS.assert_scope(p_task,p_actor,'case_pick_execute');
+  select ASSIGNED_TO into assigned from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=p_task;
+  select count(*)into n from RUSERS where ID=p_actor and nvl(DELETED,0)=0;
+  if n!=1 or assigned is null or assigned!=p_actor then raise_application_error(-20882,'ASSEMBLY_INTENT_CURRENT_OPERATOR_REQUIRED');end if;
+ end;
+ function identity_key(p_kind varchar2,p_actor nvarchar2,p_task number,p_session varchar2,p_step varchar2)return varchar2 is j json_array_t:=json_array_t();begin
+  j.append(p_kind);j.append(p_actor);j.append(p_task);j.append(p_session);j.append(p_step);
+  return rawtohex(sys.dbms_crypto.hash(j.to_clob,sys.dbms_crypto.hash_sh256));
+ end;
+ procedure assert_available(p_kind varchar2,p_actor nvarchar2,p_task number,p_session varchar2,p_step varchar2 default null,p_operation varchar2 default null)is n number;begin
+  if p_kind is null or p_kind not in('OPEN_SESSION','OPEN_STEP')or p_actor is null or p_task is null or p_session is null then raise_application_error(-20886,'ASSEMBLY_INTENT_IDENTITY_REQUIRED');end if;
+  select count(*)into n from RRL_ASM_INTENT_ABANDON where IDENTITY_KEY=identity_key(p_kind,p_actor,p_task,p_session,p_step)
+   or(p_kind='OPEN_STEP'and ACTOR_ID=p_actor and CASE_PICK_TASK_ID=p_task and ORIGINAL_OPERATION_ID=p_operation);
+  if n!=0 then raise_application_error(-20886,'ASSEMBLY_INTENT_ABANDONED_DO_NOT_RETRY');end if;
+ end;
+ procedure describe(p_id varchar2,p_actor nvarchar2,p_result out clob)is v RRL_ASM_INTENT_ABANDON%rowtype;begin
+  select *into v from RRL_ASM_INTENT_ABANDON where ABANDONMENT_ID=p_id;current_operator(v.CASE_PICK_TASK_ID,p_actor);
+  if v.ACTOR_ID!=p_actor then raise_application_error(-20882,'ASSEMBLY_INTENT_ORIGINAL_OPERATOR_REQUIRED');end if;p_result:=v.RESULT_JSON;
+ end;
+ procedure abandon(p_request clob,p_actor nvarchar2,p_result out clob)is
+  j json_object_t;original json_object_t;v RRL_ASM_INTENT_ABANDON%rowtype;old RRL_ASM_INTENT_ABANDON%rowtype;
+  f json_array_t:=json_array_t();r json_array_t:=json_array_t();outcome json_object_t:=json_object_t();n number;release_state varchar2(20);task_value number;session_actor nvarchar2(50);session_task number;
+ begin
+  if p_request is null or dbms_lob.getlength(p_request)>16384 then raise_application_error(-20886,'ASSEMBLY_INTENT_PACKET_BOUND_16K');end if;
+  j:=json_object_t.parse(p_request);original:=j.get_object('original');
+  if original is null then raise_application_error(-20886,'ASSEMBLY_INTENT_ORIGINAL_BODY_REQUIRED');end if;
+  v.ABANDONMENT_ID:=j.get_string('operation_id');v.INTENT_KIND:=j.get_string('kind');v.ACTOR_ID:=p_actor;
+  if v.ABANDONMENT_ID is null or not regexp_like(v.ABANDONMENT_ID,'^[A-Za-z0-9_.:-]{1,100}$','c')or v.INTENT_KIND is null or v.INTENT_KIND not in('OPEN_SESSION','OPEN_STEP')
+   or j.get_string('reason')is null or length(j.get_string('reason'))not between 8 and 500 then raise_application_error(-20886,'ASSEMBLY_INTENT_EXPLICIT_REQUEST_REQUIRED');end if;
+  if v.INTENT_KIND='OPEN_SESSION'then v.SESSION_ID:=original.get_string('session_id');v.CASE_PICK_TASK_ID:=original.get_number('task_id');
+  else
+   v.SESSION_ID:=j.get_string('session_id');v.STEP_ID:=original.get_string('step_id');v.ORIGINAL_OPERATION_ID:=original.get_string('operation_id');
+   if v.STEP_ID is null or v.ORIGINAL_OPERATION_ID is null then raise_application_error(-20886,'ASSEMBLY_INTENT_ORIGINAL_STEP_REQUIRED');end if;
+   select CASE_PICK_TASK_ID,OPERATOR_ID into v.CASE_PICK_TASK_ID,session_actor from RRL_ASSEMBLY_SESSION where SESSION_ID=v.SESSION_ID;
+   if session_actor is null or session_actor!=p_actor then raise_application_error(-20882,'ASSEMBLY_INTENT_ORIGINAL_SESSION_OPERATOR_REQUIRED');end if;
+  end if;
+  if v.SESSION_ID is null or v.CASE_PICK_TASK_ID is null then raise_application_error(-20886,'ASSEMBLY_INTENT_IDENTITY_REQUIRED');end if;
+  current_operator(v.CASE_PICK_TASK_ID,p_actor);
+  RRL_STOCK_PLAN_HELPER.fence(f,'RELEASE','STOCK');RRL_STOCK_PLAN_HELPER.fence(f,'CONFIG','WAREHOUSE',6);
+  if v.INTENT_KIND='OPEN_STEP'then RRL_STOCK_PLAN_HELPER.anchor(r,10,'OP',v.ORIGINAL_OPERATION_ID);
+  else RRL_STOCK_PLAN_HELPER.anchor(r,10,'OP','ASM.SESSION.INTENT:'||v.SESSION_ID);end if;
+  RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_STOCK_POLICY_GUARD','WAREHOUSE.METADATA');
+  RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_CASE_PICK_TASK',RRL_STOCK_PLAN_HELPER.decimal_text(v.CASE_PICK_TASK_ID));
+  RRL_STOCK_LOCK_API.begin_plan;lock table RRL_ACCESS_REV in share mode wait 2;
+  RRL_STOCK_LOCK_API.acquire_policies(f.to_clob);RRL_STOCK_LOCK_API.acquire_resources(r.to_clob);
+  select STATE into release_state from RRL_STOCK_RELEASE where RELEASE_ID=1;
+  if release_state is null or release_state not in('PREPARED','ACTIVE')then raise_application_error(-20886,'ASSEMBLY_INTENT_RELEASE_CLOSED');end if;
+  select CASE_PICK_TASK_ID into task_value from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=v.CASE_PICK_TASK_ID for update;
+  current_operator(task_value,p_actor);
+  if v.INTENT_KIND='OPEN_STEP'then
+   select CASE_PICK_TASK_ID,OPERATOR_ID into session_task,session_actor from RRL_ASSEMBLY_SESSION where SESSION_ID=v.SESSION_ID;
+   if session_task!=task_value or session_actor is null or session_actor!=p_actor then raise_application_error(-20882,'ASSEMBLY_INTENT_ORIGINAL_SESSION_OPERATOR_REQUIRED');end if;
+  end if;
+  begin select *into old from RRL_ASM_INTENT_ABANDON where ABANDONMENT_ID=v.ABANDONMENT_ID;
+   if old.ACTOR_ID!=p_actor or old.CASE_PICK_TASK_ID!=task_value or dbms_lob.compare(old.SOURCE_JSON,p_request)!=0 then raise_application_error(-20886,'ASSEMBLY_INTENT_ABANDONMENT_CONFLICT');end if;
+   p_result:=old.RESULT_JSON;clear_context;return;exception when no_data_found then null;end;
+  assert_available(v.INTENT_KIND,p_actor,task_value,v.SESSION_ID,v.STEP_ID,v.ORIGINAL_OPERATION_ID);
+  if v.INTENT_KIND='OPEN_SESSION'then
+   select count(*)into n from RRL_ASSEMBLY_SESSION where SESSION_ID=v.SESSION_ID;
+  else
+   select count(*)into n from RRL_ASSEMBLY_STEP where STEP_ID=v.STEP_ID or OPERATION_ID=v.ORIGINAL_OPERATION_ID;
+  end if;
+  if n!=0 then raise_application_error(-20886,'ASSEMBLY_INTENT_EXISTS_READ_OR_RECONCILE_REQUIRED');end if;
+  if v.INTENT_KIND='OPEN_STEP'then
+   select count(*)into n from RRL_STOCK_OPERATION where OPERATION_ID=v.ORIGINAL_OPERATION_ID;
+   if n!=0 then raise_application_error(-20886,'ASSEMBLY_INTENT_STOCK_OUTCOME_REVIEW_REQUIRED');end if;
+   select count(*)into n from RRL_ASSEMBLY_STEP_USE where STEP_ID=v.STEP_ID or STOCK_OPERATION_ID=v.ORIGINAL_OPERATION_ID;
+   if n!=0 then raise_application_error(-20886,'ASSEMBLY_INTENT_STOCK_OUTCOME_REVIEW_REQUIRED');end if;
+  end if;
+  v.IDENTITY_KEY:=identity_key(v.INTENT_KIND,p_actor,task_value,v.SESSION_ID,v.STEP_ID);
+  v.SOURCE_SHA256:=rawtohex(sys.dbms_crypto.hash(p_request,sys.dbms_crypto.hash_sh256));v.SOURCE_JSON:=p_request;v.ORIGINAL_JSON:=original.to_clob;v.RECORDED_AT:=systimestamp;
+  outcome.put('operation_id',v.ABANDONMENT_ID);outcome.put('status','ABANDONED');outcome.put('kind',v.INTENT_KIND);outcome.put('task_id',task_value);
+  outcome.put('session_id',v.SESSION_ID);outcome.put('step_id',v.STEP_ID);outcome.put('original_operation_id',v.ORIGINAL_OPERATION_ID);
+  outcome.put('original',original);outcome.put('stock_posted',false);v.RESULT_JSON:=outcome.to_clob;
+  dbms_session.set_context('RRL_ASM_INTENT_CTX','TX_ID',dbms_transaction.local_transaction_id(true));
+  insert into RRL_ASM_INTENT_ABANDON values v;p_result:=v.RESULT_JSON;clear_context;
+ exception when others then clear_context;raise;end;
+end;
+/

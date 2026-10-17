@@ -1,0 +1,99 @@
+{
+  "state": "BEFORE_RETIREMENT",
+  "commands": {
+    "AS16.ce9c011b16.RETIRE.GRANT.0": {
+      "wire": {
+        "operation_id": "AS16.ce9c011b16.RETIRE.GRANT.0",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "AS16Xce9c011b16",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "AS16.ce9c011b16.RETIRE.GRANT.0",
+        "command_type": "REVOKE",
+        "object_id": "AS16Xce9c011b16",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "AS16.ce9c011b16.RETIRE.ROLE": {
+      "wire": {
+        "operation_id": "AS16.ce9c011b16.RETIRE.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "AS16Rce9c011b16",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_execute"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "AS16.ce9c011b16.RETIRE.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "AS16Rce9c011b16",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "OC16.eed8111226.RETIRE.GRANT.0": {
+      "wire": {
+        "operation_id": "OC16.eed8111226.RETIRE.GRANT.0",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "OC16Aeed8111226",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.eed8111226.RETIRE.GRANT.0",
+        "command_type": "REVOKE",
+        "object_id": "OC16Aeed8111226",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "OC16.eed8111226.RETIRE.ROLE": {
+      "wire": {
+        "operation_id": "OC16.eed8111226.RETIRE.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "OC16Reed8111226",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_execute"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.eed8111226.RETIRE.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "OC16Reed8111226",
+        "version": 2,
+        "replayed": false
+      }
+    }
+  },
+  "http": [],
+  "stock_effect": false,
+  "retained": "All CASE/ASM/scale/stock/fulfillment/receipt/HU histories and two source HELD tare books; no automatic transfer of tare ownership",
+  "device_disabled": {
+    "device_id": "AS16Dce9c011b16",
+    "device_policy_version": 2,
+    "active": false,
+    "device_mode": "TEST",
+    "basis": "GROSS"
+  }
+}

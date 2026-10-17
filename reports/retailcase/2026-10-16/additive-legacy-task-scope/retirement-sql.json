@@ -1,0 +1,224 @@
+{
+  "state": "RETIRED_AND_SQL_REVIEWED",
+  "quantity_effect": false,
+  "hardware_verified": false,
+  "flat_revoke": {
+    "user_group": "LC16I466e3c4005",
+    "right1": "STOCK_INVENTORY_COUNT",
+    "deleted": 1
+  },
+  "role": {
+    "operation_id": "LC16.466e3c4005.RETIRE.ROLE",
+    "command_type": "ROLE_SAVE",
+    "object_id": "LC16R466e3c4005",
+    "version": 2,
+    "replayed": false
+  },
+  "http": [
+    {
+      "api_call_id": 69389,
+      "request_id": "a684819b-0743-4ea1-a931-b63a6417db79",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "response_status": 403,
+      "duration_ms": 272
+    },
+    {
+      "api_call_id": 69390,
+      "request_id": "698c4309-1c2e-46c9-9e82-b760b6ce389b",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "response_status": 200,
+      "duration_ms": 147
+    },
+    {
+      "api_call_id": 69391,
+      "request_id": "6106c5ce-4d0a-4c80-ad1c-9eade4f8532e",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/finish",
+      "response_status": 200,
+      "duration_ms": 152
+    },
+    {
+      "api_call_id": 69392,
+      "request_id": "2deecb30-cb60-4a0a-ad92-efcc38494597",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/close",
+      "response_status": 200,
+      "duration_ms": 183
+    },
+    {
+      "api_call_id": 69393,
+      "request_id": "7ae2cca6-6b24-476a-a079-95623288ac48",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "response_status": 403,
+      "duration_ms": 67
+    },
+    {
+      "api_call_id": 69394,
+      "request_id": "de2dff25-4183-4952-96c1-db007f8f552c",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "response_status": 200,
+      "duration_ms": 128
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 4934,
+      "api_call_id": 69393,
+      "elapsed_ms": 11,
+      "module": "WMS_API:69393",
+      "action": "GET /api/inventory/assembly-scal",
+      "sql_sample": "Assembly scale read_session"
+    },
+    {
+      "log_id": 4933,
+      "api_call_id": 69389,
+      "elapsed_ms": 68,
+      "module": "WMS_API:69389",
+      "action": "GET /api/inventory/assembly-scal",
+      "sql_sample": "Assembly scale read_session"
+    }
+  ],
+  "native_cumulative": [
+    {
+      "sql_id": "1031nnpkrfzdc",
+      "executions": 64644,
+      "avg_ms": 0.185,
+      "sql_sample": "select CASE_PICK_SHORT_ID,PICK_WAVE_ID,REPLENISH_TASK_ID,                    RECOVERY_SOURCE_REQUEST,RECOVERY_STATE                 from RRL_CASE_PICK_SHORT where RECOVERY_STATE in('WAIT_INVENTORY','WAIT_REPLENISHMENT')                  and exists(select 1 from RRL_PICK_WAVE w where w.PICK_WAVE_ID=RRL_CASE_PICK_SHORT.PICK_WAVE_ID and w.STATUS='LAUNCHED')                  and (RECOVERY_STATE!='WAIT_INVENTORY' or exists(select 1 from RRL_INVENTORY_TASK it                      where it.INVENTORY_TASK_ID=RRL_CASE_PICK_SHORT.INVENTORY_TASK_ID and it.ASSIGNED_TO is null and it.STATUS='NEW'))                  and (RECOVERY_LEASE_UNTIL is null or RECOVERY_LEASE_UNTIL<cast(systimestamp as timestamp))                  order by RECOVERY_DEADLINE_AT,CASE_PICK_SHORT_ID for update skip locked"
+    },
+    {
+      "sql_id": "3wr2u6acauubg",
+      "executions": 2,
+      "avg_ms": 72.006,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_INVENTORY_TASK_ACCESS'AND TYPE='PACKAGE'ORDER BY LINE"
+    },
+    {
+      "sql_id": "8w4ad409rb9yx",
+      "executions": 2,
+      "avg_ms": 63.318,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_INVENTORY_TASK_ACCESS'AND TYPE='PACKAGE BODY'ORDER BY LINE"
+    },
+    {
+      "sql_id": "gwj4f6cdpzk3n",
+      "executions": 5,
+      "avg_ms": 20.403,
+      "sql_sample": "begin RRL_INVENTORY_TASK_ACCESS.claim_task(:1,:2); end;"
+    },
+    {
+      "sql_id": "85dy26pbhz4bd",
+      "executions": 14,
+      "avg_ms": 3.352,
+      "sql_sample": "begin RRL_INVENTORY_TASK_ACCESS.assert_read(:1,:2,:3,:4,:5,:6); end;"
+    },
+    {
+      "sql_id": "b5bcvfm40jvt4",
+      "executions": 3,
+      "avg_ms": 11.72,
+      "sql_sample": "begin RRL_INVENTORY_TASK_ACCESS.assert_count(:1,:2); end;"
+    },
+    {
+      "sql_id": "85dy26pbhz4bd",
+      "executions": 1,
+      "avg_ms": 16.498,
+      "sql_sample": "begin RRL_INVENTORY_TASK_ACCESS.assert_read(:1,:2,:3,:4,:5,:6); end;"
+    },
+    {
+      "sql_id": "86xrba9mfubb7",
+      "executions": 24,
+      "avg_ms": 0.447,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_CASE_PICK_TASK T JOIN RUSERS U ON U.ID=:B1 AND NVL(U.DELETED,0)=0 WHERE T.CASE_PICK_TASK_ID=:B2 AND(U.WARE_ID=T.WARE_ID OR UPPER(TRIM(U.USER_GROUP))='GLOBAL_ADMIN')"
+    },
+    {
+      "sql_id": "14z6511j1ugqs",
+      "executions": 79,
+      "avg_ms": 0.113,
+      "sql_sample": "SELECT *FROM RRL_INVENTORY_TASK WHERE INVENTORY_TASK_ID=:B1 "
+    },
+    {
+      "sql_id": "86xrba9mfubb7",
+      "executions": 6,
+      "avg_ms": 1.337,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_CASE_PICK_TASK T JOIN RUSERS U ON U.ID=:B1 AND NVL(U.DELETED,0)=0 WHERE T.CASE_PICK_TASK_ID=:B2 AND(U.WARE_ID=T.WARE_ID OR UPPER(TRIM(U.USER_GROUP))='GLOBAL_ADMIN')"
+    }
+  ],
+  "invalid": 0,
+  "local_pairs": [
+    {
+      "api_call_id": 69389,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "a684819b-0743-4ea1-a931-b63a6417db79",
+        "method": "GET",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+        "logged_at": "2026-10-15T22:26:13.678799+00:00",
+        "api_call_id": 69389,
+        "response_status": 403,
+        "duration_ms": 272
+      }
+    },
+    {
+      "api_call_id": 69390,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "698c4309-1c2e-46c9-9e82-b760b6ce389b",
+        "method": "GET",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+        "logged_at": "2026-10-15T22:26:14.031890+00:00",
+        "api_call_id": 69390,
+        "response_status": 200,
+        "duration_ms": 147
+      }
+    },
+    {
+      "api_call_id": 69391,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "6106c5ce-4d0a-4c80-ad1c-9eade4f8532e",
+        "method": "POST",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/finish",
+        "logged_at": "2026-10-15T22:26:14.208704+00:00",
+        "api_call_id": 69391,
+        "response_status": 200,
+        "duration_ms": 152
+      }
+    },
+    {
+      "api_call_id": 69392,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "2deecb30-cb60-4a0a-ad92-efcc38494597",
+        "method": "POST",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/close",
+        "logged_at": "2026-10-15T22:26:14.413922+00:00",
+        "api_call_id": 69392,
+        "response_status": 200,
+        "duration_ms": 183
+      }
+    },
+    {
+      "api_call_id": 69393,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "7ae2cca6-6b24-476a-a079-95623288ac48",
+        "method": "GET",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+        "logged_at": "2026-10-15T22:26:14.586868+00:00",
+        "api_call_id": 69393,
+        "response_status": 403,
+        "duration_ms": 67
+      }
+    },
+    {
+      "api_call_id": 69394,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "de2dff25-4183-4952-96c1-db007f8f552c",
+        "method": "GET",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+        "logged_at": "2026-10-15T22:26:14.797576+00:00",
+        "api_call_id": 69394,
+        "response_status": 200,
+        "duration_ms": 128
+      }
+    }
+  ],
+  "max_http_ms": 272,
+  "decision": "Retain actual homeWARE classifier and current explicit-role/assigned-task gates; exact PK reads, bounded histories and REV-before-CONFIG remain. No speculative cache/index. Inventory/access owner measures joined classifier and per-WARE membership plans on pilot volume. Intentional metadata REV wait about2s is not SELECT latency. Cumulative cursor means are not scenario p95."
+}

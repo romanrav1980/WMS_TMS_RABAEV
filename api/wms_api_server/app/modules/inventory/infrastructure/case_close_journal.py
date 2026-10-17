@@ -1,11 +1,12 @@
 """Exact metadata command result in the original immutable CASE event journal."""
 import json
-from typing import Any
+from typing import Any, Callable
 import oracledb
 from fastapi import HTTPException
 
 
-def close_replay(cur: Any, operation: str | None, task: int, actor: str, body: dict[str, Any]) -> dict[str, Any] | None:
+def close_replay(cur: Any, operation: str | None, task: int, actor: str, body: dict[str, Any],
+                 validate_result: Callable[[Any],None] | None = None) -> dict[str, Any] | None:
     if operation is None:
         return None
     cur.execute("""select CASE_PICK_TASK_ID,EVENT_TYPE,CREATED_BY,to_clob(PAYLOAD_JSON)
@@ -18,8 +19,10 @@ def close_replay(cur: Any, operation: str | None, task: int, actor: str, body: d
         data = json.loads(raw)
     except (TypeError, json.JSONDecodeError):
         raise HTTPException(409, detail="CASE_CLOSE_CONTENT_CONFLICT")
-    if row[0] != task or row[1] not in ("CLOSED", "CLOSE_ACK") or row[2] != actor or data.get("request") != body:
+    if not isinstance(data, dict) or row[0] != task or row[1] not in ("CLOSED", "CLOSE_ACK") or row[2] != actor or data.get("request") != body:
         raise HTTPException(409, detail="CASE_CLOSE_CONTENT_CONFLICT")
+    if validate_result is not None:
+        validate_result(data.get("result"))
     return data["result"]
 
 

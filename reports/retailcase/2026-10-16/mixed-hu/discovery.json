@@ -1,0 +1,183 @@
+{
+  "read_only": true,
+  "objects": [
+    {
+      "object_name": "RRL_INTERWARE_THERMAL",
+      "object_type": "PACKAGE"
+    },
+    {
+      "object_name": "RRL_INTERWARE_THERMAL",
+      "object_type": "PACKAGE BODY"
+    },
+    {
+      "object_name": "RRL_INTERWARE_THERMAL_FACT",
+      "object_type": "TABLE"
+    },
+    {
+      "object_name": "RRL_IW_GROUP_THERMAL",
+      "object_type": "PACKAGE"
+    },
+    {
+      "object_name": "RRL_IW_GROUP_THERMAL",
+      "object_type": "PACKAGE BODY"
+    },
+    {
+      "object_name": "RRL_IW_THERMAL_GUARD",
+      "object_type": "TRIGGER"
+    },
+    {
+      "object_name": "RRL_IW_THERM_PK",
+      "object_type": "INDEX"
+    },
+    {
+      "object_name": "RRL_IW_THERM_REV_UK",
+      "object_type": "INDEX"
+    },
+    {
+      "object_name": "RRL_LOAD_THERMAL_FACT_GUARD",
+      "object_type": "TRIGGER"
+    },
+    {
+      "object_name": "RRL_STOCK_LOAD_THERMAL",
+      "object_type": "PACKAGE"
+    },
+    {
+      "object_name": "RRL_STOCK_LOAD_THERMAL",
+      "object_type": "PACKAGE BODY"
+    },
+    {
+      "object_name": "RRL_TT_LOAD_THERMAL_FACT",
+      "object_type": "TABLE"
+    }
+  ],
+  "columns": [
+    {
+      "table_name": "RRL_CASE_PICK_SHORT",
+      "column_name": "RECOVERY_ATTEMPTS",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_CCTV_VIEWPOINT",
+      "column_name": "ARCHIVE_URI_TEMPLATE",
+      "data_type": "VARCHAR2"
+    },
+    {
+      "table_name": "RRL_INTERWARE_PUT_PLAN",
+      "column_name": "TASK_TEMP_MAX",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_INTERWARE_PUT_PLAN",
+      "column_name": "TASK_TEMP_MIN",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_INTERWARE_PUT_PLAN",
+      "column_name": "TEMP_DECISION_OPERATION_ID",
+      "data_type": "VARCHAR2"
+    },
+    {
+      "table_name": "RRL_INTERWARE_THERMAL_FACT",
+      "column_name": "SKU_TEMP_MAX",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_INTERWARE_THERMAL_FACT",
+      "column_name": "SKU_TEMP_MIN",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_INTERWARE_THERMAL_FACT",
+      "column_name": "TASK_TEMP_MAX",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_INTERWARE_THERMAL_FACT",
+      "column_name": "TASK_TEMP_MIN",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_IW_RECOVERY_PUT_PLAN",
+      "column_name": "TASK_TEMP_MAX",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_IW_RECOVERY_PUT_PLAN",
+      "column_name": "TASK_TEMP_MIN",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_IW_RECOVERY_PUT_PLAN",
+      "column_name": "TEMP_DECISION_OPERATION_ID",
+      "data_type": "VARCHAR2"
+    },
+    {
+      "table_name": "RRL_RECEIPT_CELL_RULE",
+      "column_name": "TEMP_MAX",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_RECEIPT_CELL_RULE",
+      "column_name": "TEMP_MIN",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_RECEIPT_SKU_RULE",
+      "column_name": "TEMP_MAX",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_RECEIPT_SKU_RULE",
+      "column_name": "TEMP_MIN",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_STORE_PROFILE",
+      "column_name": "STORAGE_TEMP_CLASS",
+      "data_type": "VARCHAR2"
+    },
+    {
+      "table_name": "RRL_TOPOLOGY_ZONE",
+      "column_name": "TEMPERATURE_CLASS",
+      "data_type": "VARCHAR2"
+    },
+    {
+      "table_name": "RRL_TRANSPORT_TASK",
+      "column_name": "TEMP_REGION",
+      "data_type": "VARCHAR2"
+    },
+    {
+      "table_name": "RRL_TRANSPORT_TASK",
+      "column_name": "TEMP_WEIGHT",
+      "data_type": "NUMBER"
+    },
+    {
+      "table_name": "RRL_WAREHOUSE_TASK_SYNC",
+      "column_name": "SYNC_ATTEMPT",
+      "data_type": "NUMBER"
+    }
+  ],
+  "assert_cells": [
+    {
+      "name": "RRL_INTERWARE_THERMAL",
+      "type": "PACKAGE"
+    },
+    {
+      "name": "RRL_INTERWARE_THERMAL",
+      "type": "PACKAGE BODY"
+    },
+    {
+      "name": "RRL_IW_GROUP_THERMAL",
+      "type": "PACKAGE"
+    },
+    {
+      "name": "RRL_IW_GROUP_THERMAL",
+      "type": "PACKAGE BODY"
+    }
+  ],
+  "invalid": [
+    {
+      "n": 0
+    }
+  ]
+}

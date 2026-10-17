@@ -1,0 +1,78 @@
+{
+  "root": "HU1069:4bb85f1f15",
+  "warehouse": 5062399,
+  "cell": "QW4bb85f1f15",
+  "nodes": [
+    {
+      "uid": "HU1069:4bb85f1f15",
+      "kind": "CONTAINER",
+      "type": "PALLET",
+      "version": 10,
+      "sscc": null,
+      "tare_weight_kg": "1",
+      "open_task_count": 0,
+      "cell": "QW4bb85f1f15",
+      "depth": 0
+    },
+    {
+      "uid": "CASE:1131",
+      "case_task_id": 1131,
+      "kind": "CASE",
+      "type": "CASE",
+      "sscc": "CP553000000001131",
+      "version": 20,
+      "status": "WAIT_CONTROL",
+      "wave_id": 553,
+      "cell": "QW4bb85f1f15",
+      "depth": 1,
+      "open_task_count": 0,
+      "tare_weight_kg": null
+    },
+    {
+      "uid": "CASELOT:C5622546955335244142496C5D188F090F2D85:1",
+      "kind": "STOCK",
+      "type": null,
+      "version": 7,
+      "sscc": null,
+      "tare_weight_kg": "0",
+      "case_task_id": 1131,
+      "article": "QNATIVE4BB85F1F15",
+      "quantity": "12",
+      "hard_quantity": "12",
+      "base_uom": "EA",
+      "stock_version": 9,
+      "weight_kg": null,
+      "open_task_count": 0,
+      "cell": "QW4bb85f1f15",
+      "depth": 2
+    }
+  ],
+  "links": [
+    {
+      "id": 466,
+      "parent": "HU1069:4bb85f1f15",
+      "child": "CASE:1131",
+      "version": 0
+    },
+    {
+      "parent": "CASE:1131",
+      "child": "CASELOT:C5622546955335244142496C5D188F090F2D85:1",
+      "membership": "CASE_CARRIER_LOT"
+    }
+  ],
+  "ancestors": [],
+  "physical_unit_count": 0,
+  "leaf_count": 1,
+  "top_place_count": 1,
+  "quantities": [
+    {
+      "article": "QNATIVE4BB85F1F15",
+      "base_uom": "EA",
+      "quantity": "12"
+    }
+  ],
+  "gross_weight_kg": null,
+  "unknown_weight_leaves": 1,
+  "unknown_tare_containers": 1,
+  "placement": null
+}

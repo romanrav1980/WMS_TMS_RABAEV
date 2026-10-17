@@ -1,0 +1,7 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_assembly_metadata_lock_order\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_assembly_metadata_lock_order\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_assembly_metadata_lock_order\rrl_asm_meta_scope.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_assembly_metadata_lock_order\rrl_assembly_scale_api.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_assembly_metadata_lock_order\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_assembly_metadata_lock_order\after_sources.sql
+Done. Statements=8; Errors=0; AbsentCleanup=0

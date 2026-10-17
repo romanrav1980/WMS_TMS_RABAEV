@@ -1,0 +1,7 @@
+# Сообщение о недостаче по текущей роли склада
+
+17.10.2026. APPLIED в dev: `2026-10-17-case-report-scope`, новый узкий RRL_CASE_REPORT_SCOPE и additive REPORT admission в RRL_CASE_RESOURCE_POLICY. При подготовке KPI V2 выявлено: HTTP short-report и общий metadata begin_change всё ещё требовали legacy flat case_pick_execute. Это блокировало обычного комплектовщика с одной новой складской ролью.
+
+Новая граница проверяет действие на конкретном CASE, берёт прежние RELEASE/CONFIG/WAREHOUSE.METADATA locks и shared ACCESS_REV, повторяет допуск. Generic metadata gate не расширяется. REPORT сохраняет текущую активную физическую сессию, ресурс, квалификацию, склад смены, исполнителя и выпущенную волну; для assembly используется прежний scoped_assembly_executor. Складское количество и независимое согласование остаются у прежних владельцев.
+
+Python входит через публичную resources/case_short_report_transaction. HTTP принимает identity, разрешение решает native в той же транзакции. До cached replay повторная проверка выполняется под fence. Frozen kit применён:3SHA совпадают, ledger APPLIED, ERROR0/INVALID0. Артефакты — `reports/retailcase/2026-10-17/case-report-scope/`. Свежая CASE1153/WARE20033496:24EA из25 с зарегистрированными WORK/SHIFT; role-only/foreign/revoke/replay/caller rollback/REV PASS, независимое согласование недостачи1EA и последующий возврат24EA PASS. Подробности — `reports/retailcase/2026-10-17/kpi-v2/short-acceptance.json` и `return-acceptance.json`; старые фикстуры не активировались.

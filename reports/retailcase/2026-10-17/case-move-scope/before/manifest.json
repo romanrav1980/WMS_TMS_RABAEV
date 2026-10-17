@@ -1,0 +1,19 @@
+{
+  "captured_at_utc": "2026-10-17T06:57:10.537443+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_STOCK_CASE_MOVE_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_case_move_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "3b37b10bc9929d826e261ccd82288c99847ed3c489c16727c3060972132fe061",
+      "normalized_source_sha256": "d124fcc4e2d2af9447ab3463907b1eeadb2a72596c9756eca2ee3635fa9cf021",
+      "artifact_sha256": "ae2713fcd4296e4d744225f930471e7edcca1913ba3351e7aab7d4f0e2e163a1"
+    }
+  ]
+}

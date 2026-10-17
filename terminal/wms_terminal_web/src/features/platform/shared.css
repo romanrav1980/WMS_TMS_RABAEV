@@ -1,0 +1,6 @@
+.store-app-scanner-overlay,.wms-help-overlay { position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0f172ab3;padding:12px;z-index:110; }
+.store-app-scanner-dialog,.wms-help-dialog { background:#fff;color:#0f172a;padding:16px;width:100%;max-width:600px;max-height:90dvh;overflow:auto;border-radius:16px; }
+.store-app-scanner-dialog header,.wms-help-dialog header { display:flex;gap:8px;align-items:center;justify-content:space-between; }
+.store-app-scanner-dialog h2,.wms-help-dialog h2 { font-size:1.15rem;margin:0; }
+.store-app-inline-actions,.wms-help-dialog nav { display:flex;gap:8px;flex-wrap:wrap;margin-top:8px; }
+.wms-help-dialog p { white-space:pre-wrap;overflow-wrap:anywhere; }

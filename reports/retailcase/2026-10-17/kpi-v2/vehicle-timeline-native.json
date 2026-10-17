@@ -1,0 +1,494 @@
+{
+  "status": 200,
+  "http": [
+    {
+      "path": "/api/resources/timeline?warehouse_id=9807&start_at=2026-10-13T00%3A00%3A00%2B00%3A00&finish_at=2026-10-15T00%3A00%3A00%2B00%3A00",
+      "status": 200,
+      "api_call_id": "72627",
+      "request_id": "ffe5498c-a54b-4843-80c3-e8b1229674f6"
+    }
+  ],
+  "response": {
+    "warehouse_id": 9807,
+    "start_at": "2026-10-13T00:00:00+00:00",
+    "finish_at": "2026-10-15T00:00:00+00:00",
+    "observed_at": "2026-10-17T05:16:24.338072+00:00",
+    "access_revision": 821,
+    "warehouse_time_zone": null,
+    "resources": [
+      {
+        "resource_id": "DOCK:9807:B01c0c2a00c",
+        "kind": "DOCK",
+        "label": "B01c0c2a00c",
+        "warehouse_id": 9807,
+        "source_state": "UNKNOWN",
+        "availability": "UNKNOWN",
+        "zone_code": null,
+        "qualifications": null,
+        "last_signal": null
+      },
+      {
+        "resource_id": "VEHICLE:QC241EDE877F6D1",
+        "kind": "VEHICLE",
+        "label": "QC241ede877f6d1",
+        "warehouse_id": 9807,
+        "source_state": null,
+        "availability": "UNKNOWN",
+        "zone_code": null,
+        "qualifications": null,
+        "last_signal": null
+      }
+    ],
+    "events": [
+      {
+        "event_id": "WAREHOUSE_TASK:1163",
+        "kind": "WAREHOUSE_TASK",
+        "label": "PUTAWAY \u00b7 1163",
+        "source": "RRL_WAREHOUSE_TASK",
+        "source_id": 1163,
+        "status": "DONE",
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "task_source": "SAP_RECEIPT",
+        "source_task_id": null,
+        "wave_id": null,
+        "fact_start_at": "2026-10-14T07:02:06.728780+00:00",
+        "fact_finish_at": "2026-10-14T07:02:08.148619+00:00",
+        "time_status": "AWARE_FACT",
+        "legacy_time": {
+          "plan_start": null,
+          "plan_finish": null
+        },
+        "blocking_reason": null
+      },
+      {
+        "event_id": "WAREHOUSE_TASK:1164",
+        "kind": "WAREHOUSE_TASK",
+        "label": "PUTAWAY \u00b7 1164",
+        "source": "RRL_WAREHOUSE_TASK",
+        "source_id": 1164,
+        "status": "DONE",
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "task_source": "SAP_RECEIPT",
+        "source_task_id": null,
+        "wave_id": null,
+        "fact_start_at": "2026-10-14T07:05:02.417100+00:00",
+        "fact_finish_at": "2026-10-14T07:05:03.967940+00:00",
+        "time_status": "AWARE_FACT",
+        "legacy_time": {
+          "plan_start": null,
+          "plan_finish": null
+        },
+        "blocking_reason": null
+      },
+      {
+        "event_id": "WAREHOUSE_TASK:1165",
+        "kind": "WAREHOUSE_TASK",
+        "label": "PICKING_MOVE \u00b7 1165",
+        "source": "RRL_WAREHOUSE_TASK",
+        "source_id": 1165,
+        "status": "DONE",
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "task_source": "WAVE",
+        "source_task_id": 2048,
+        "wave_id": 559,
+        "fact_start_at": "2026-10-14T07:35:43.955268+00:00",
+        "fact_finish_at": "2026-10-14T07:35:44.683240+00:00",
+        "time_status": "AWARE_FACT",
+        "legacy_time": {
+          "plan_start": null,
+          "plan_finish": null
+        },
+        "blocking_reason": null
+      },
+      {
+        "event_id": "WAREHOUSE_TASK:1166",
+        "kind": "WAREHOUSE_TASK",
+        "label": "PICKING_MOVE \u00b7 1166",
+        "source": "RRL_WAREHOUSE_TASK",
+        "source_id": 1166,
+        "status": "DONE",
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "task_source": "WAVE",
+        "source_task_id": 2049,
+        "wave_id": 559,
+        "fact_start_at": "2026-10-14T07:35:46.018522+00:00",
+        "fact_finish_at": "2026-10-14T07:35:46.543753+00:00",
+        "time_status": "AWARE_FACT",
+        "legacy_time": {
+          "plan_start": null,
+          "plan_finish": null
+        },
+        "blocking_reason": null
+      }
+    ],
+    "unscheduled": [
+      {
+        "event_id": "TRANSPORT_OPERATION:10165",
+        "kind": "TRANSPORT_OPERATION",
+        "label": "DOCK_ASSIGN \u00b7 \u0440\u0435\u0439\u0441 33564",
+        "source": "RRL_TT_OPERATIONS",
+        "source_id": 10165,
+        "trip_id": 33564,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": null,
+        "fact_finish_at": null,
+        "time_status": "TIME_UNRESOLVED",
+        "approval_status": "SOURCE_CHANGED",
+        "approval_version": 4,
+        "time_zone_source": null,
+        "legacy_time": {
+          "plan_start": "2026-10-14T00:00:00",
+          "plan_finish": "2026-10-14T00:15:00",
+          "fact_start": null,
+          "fact_finish": null
+        }
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10166",
+        "kind": "TRANSPORT_OPERATION",
+        "label": "WAIT_LOAD \u00b7 \u0440\u0435\u0439\u0441 33564",
+        "source": "RRL_TT_OPERATIONS",
+        "source_id": 10166,
+        "trip_id": 33564,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": null,
+        "fact_finish_at": null,
+        "time_status": "TIME_UNRESOLVED",
+        "approval_status": "SOURCE_CHANGED",
+        "approval_version": 4,
+        "time_zone_source": null,
+        "legacy_time": {
+          "plan_start": "2026-10-14T00:15:00",
+          "plan_finish": "2026-10-14T00:25:00",
+          "fact_start": null,
+          "fact_finish": null
+        }
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10167",
+        "kind": "TRANSPORT_OPERATION",
+        "label": "LOADING \u00b7 \u0440\u0435\u0439\u0441 33564",
+        "source": "RRL_TT_OPERATIONS",
+        "source_id": 10167,
+        "trip_id": 33564,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": null,
+        "fact_finish_at": null,
+        "time_status": "TIME_UNRESOLVED",
+        "approval_status": "SOURCE_CHANGED",
+        "approval_version": 4,
+        "time_zone_source": null,
+        "legacy_time": {
+          "plan_start": "2026-10-14T00:25:00",
+          "plan_finish": "2026-10-14T00:31:00",
+          "fact_start": null,
+          "fact_finish": null
+        }
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10168",
+        "kind": "TRANSPORT_OPERATION",
+        "label": "CLOSE_GATE \u00b7 \u0440\u0435\u0439\u0441 33564",
+        "source": "RRL_TT_OPERATIONS",
+        "source_id": 10168,
+        "trip_id": 33564,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": null,
+        "fact_finish_at": null,
+        "time_status": "TIME_UNRESOLVED",
+        "approval_status": "SOURCE_CHANGED",
+        "approval_version": 4,
+        "time_zone_source": null,
+        "legacy_time": {
+          "plan_start": "2026-10-14T00:31:00",
+          "plan_finish": "2026-10-14T00:41:00",
+          "fact_start": null,
+          "fact_finish": null
+        }
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10169",
+        "kind": "TRANSPORT_OPERATION",
+        "label": "DOCUMENTS \u00b7 \u0440\u0435\u0439\u0441 33564",
+        "source": "RRL_TT_OPERATIONS",
+        "source_id": 10169,
+        "trip_id": 33564,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": null,
+        "fact_finish_at": null,
+        "time_status": "TIME_UNRESOLVED",
+        "approval_status": "SOURCE_CHANGED",
+        "approval_version": 4,
+        "time_zone_source": null,
+        "legacy_time": {
+          "plan_start": "2026-10-14T00:41:00",
+          "plan_finish": "2026-10-14T00:51:00",
+          "fact_start": null,
+          "fact_finish": null
+        }
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10170",
+        "kind": "TRANSPORT_OPERATION",
+        "label": "DEPART \u00b7 \u0440\u0435\u0439\u0441 33564",
+        "source": "RRL_TT_OPERATIONS",
+        "source_id": 10170,
+        "trip_id": 33564,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": null,
+        "fact_finish_at": null,
+        "time_status": "TIME_UNRESOLVED",
+        "approval_status": "SOURCE_CHANGED",
+        "approval_version": 4,
+        "time_zone_source": null,
+        "legacy_time": {
+          "plan_start": "2026-10-14T00:51:00",
+          "plan_finish": "2026-10-14T00:51:00",
+          "fact_start": null,
+          "fact_finish": null
+        }
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10171",
+        "kind": "TRANSPORT_OPERATION",
+        "label": "DRIVE \u00b7 \u0440\u0435\u0439\u0441 33564",
+        "source": "RRL_TT_OPERATIONS",
+        "source_id": 10171,
+        "trip_id": 33564,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": null,
+        "fact_finish_at": null,
+        "time_status": "TIME_UNRESOLVED",
+        "approval_status": "SOURCE_CHANGED",
+        "approval_version": 4,
+        "time_zone_source": null,
+        "legacy_time": {
+          "plan_start": "2026-10-14T00:51:00",
+          "plan_finish": "2026-10-14T00:51:00",
+          "fact_start": null,
+          "fact_finish": null
+        }
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10172",
+        "kind": "TRANSPORT_OPERATION",
+        "label": "UNLOAD \u00b7 \u0440\u0435\u0439\u0441 33564",
+        "source": "RRL_TT_OPERATIONS",
+        "source_id": 10172,
+        "trip_id": 33564,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": null,
+        "fact_finish_at": null,
+        "time_status": "TIME_UNRESOLVED",
+        "approval_status": "SOURCE_CHANGED",
+        "approval_version": 4,
+        "time_zone_source": null,
+        "legacy_time": {
+          "plan_start": "2026-10-14T00:51:00",
+          "plan_finish": "2026-10-14T00:57:00",
+          "fact_start": null,
+          "fact_finish": null
+        }
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10173",
+        "kind": "TRANSPORT_OPERATION",
+        "label": "LOAD_RETURNS \u00b7 \u0440\u0435\u0439\u0441 33564",
+        "source": "RRL_TT_OPERATIONS",
+        "source_id": 10173,
+        "trip_id": 33564,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": null,
+        "fact_finish_at": null,
+        "time_status": "TIME_UNRESOLVED",
+        "approval_status": "SOURCE_CHANGED",
+        "approval_version": 4,
+        "time_zone_source": null,
+        "legacy_time": {
+          "plan_start": "2026-10-14T00:57:00",
+          "plan_finish": "2026-10-14T01:12:00",
+          "fact_start": null,
+          "fact_finish": null
+        }
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10174",
+        "kind": "TRANSPORT_OPERATION",
+        "label": "DRIVE_BACK \u00b7 \u0440\u0435\u0439\u0441 33564",
+        "source": "RRL_TT_OPERATIONS",
+        "source_id": 10174,
+        "trip_id": 33564,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": null,
+        "fact_finish_at": null,
+        "time_status": "TIME_UNRESOLVED",
+        "approval_status": "SOURCE_CHANGED",
+        "approval_version": 4,
+        "time_zone_source": null,
+        "legacy_time": {
+          "plan_start": "2026-10-14T01:12:00",
+          "plan_finish": "2026-10-14T01:12:00",
+          "fact_start": null,
+          "fact_finish": null
+        }
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10175",
+        "kind": "TRANSPORT_OPERATION",
+        "label": "RETURN_HANDOVER \u00b7 \u0440\u0435\u0439\u0441 33564",
+        "source": "RRL_TT_OPERATIONS",
+        "source_id": 10175,
+        "trip_id": 33564,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": null,
+        "fact_finish_at": null,
+        "time_status": "TIME_UNRESOLVED",
+        "approval_status": "SOURCE_CHANGED",
+        "approval_version": 4,
+        "time_zone_source": null,
+        "legacy_time": {
+          "plan_start": "2026-10-14T01:12:00",
+          "plan_finish": "2026-10-14T01:32:00",
+          "fact_start": null,
+          "fact_finish": null
+        }
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10176",
+        "kind": "TRANSPORT_OPERATION",
+        "label": "CLEAN_RETURNS \u00b7 \u0440\u0435\u0439\u0441 33564",
+        "source": "RRL_TT_OPERATIONS",
+        "source_id": 10176,
+        "trip_id": 33564,
+        "plan_start_at": null,
+        "plan_finish_at": null,
+        "fact_start_at": null,
+        "fact_finish_at": null,
+        "time_status": "TIME_UNRESOLVED",
+        "approval_status": "SOURCE_CHANGED",
+        "approval_version": 4,
+        "time_zone_source": null,
+        "legacy_time": {
+          "plan_start": "2026-10-14T01:32:00",
+          "plan_finish": "2026-10-14T01:52:00",
+          "fact_start": null,
+          "fact_finish": null
+        }
+      }
+    ],
+    "assignments": [
+      {
+        "event_id": "TRANSPORT_OPERATION:10165",
+        "resource_id": "VEHICLE:QC241EDE877F6D1"
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10166",
+        "resource_id": "VEHICLE:QC241EDE877F6D1"
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10167",
+        "resource_id": "VEHICLE:QC241EDE877F6D1"
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10168",
+        "resource_id": "VEHICLE:QC241EDE877F6D1"
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10169",
+        "resource_id": "VEHICLE:QC241EDE877F6D1"
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10170",
+        "resource_id": "VEHICLE:QC241EDE877F6D1"
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10171",
+        "resource_id": "VEHICLE:QC241EDE877F6D1"
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10172",
+        "resource_id": "VEHICLE:QC241EDE877F6D1"
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10173",
+        "resource_id": "VEHICLE:QC241EDE877F6D1"
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10174",
+        "resource_id": "VEHICLE:QC241EDE877F6D1"
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10175",
+        "resource_id": "VEHICLE:QC241EDE877F6D1"
+      },
+      {
+        "event_id": "TRANSPORT_OPERATION:10176",
+        "resource_id": "VEHICLE:QC241EDE877F6D1"
+      }
+    ],
+    "sources": [
+      {
+        "source_id": "registry",
+        "status": "READY",
+        "permission": "resource_management_view",
+        "limit": 500,
+        "observed_at": "2026-10-17T05:16:24.322046+00:00"
+      },
+      {
+        "source_id": "attendance",
+        "status": "READY",
+        "permission": "resource_shift_view",
+        "limit": 500,
+        "observed_at": "2026-10-17T05:16:24.322046+00:00"
+      },
+      {
+        "source_id": "warehouse_tasks",
+        "status": "READY",
+        "permission": "warehouse_task_view",
+        "limit": 2000,
+        "observed_at": "2026-10-17T05:16:24.322046+00:00"
+      },
+      {
+        "source_id": "case_tasks",
+        "status": "READY",
+        "permission": "case_pick_view",
+        "limit": 2000,
+        "observed_at": "2026-10-17T05:16:24.322046+00:00"
+      },
+      {
+        "source_id": "transport",
+        "status": "READY",
+        "permission": "transport_dispatch_view",
+        "limit": 2000,
+        "observed_at": "2026-10-17T05:16:24.322046+00:00"
+      },
+      {
+        "source_id": "sessions",
+        "status": "READY",
+        "permission": "resource_session_view",
+        "limit": 2000,
+        "observed_at": "2026-10-17T05:16:24.322046+00:00"
+      }
+    ],
+    "overlap_candidates": [],
+    "overlap_limit": 200,
+    "time_policy": "AWARE_ONLY_LEGACY_LOCAL_UNRESOLVED",
+    "snapshot": "ORACLE_READ_ONLY",
+    "commands_executed": false
+  }
+}

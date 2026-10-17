@@ -1,0 +1,56 @@
+{
+  "status": "PASS_PURE_ANONYMOUS_NATIVE_ONLY",
+  "source_sha256": "3978858e88dc58408e88a7756aad04dfedc984cb13abae4b06c4de2352cb278d",
+  "tested_at": "2026-10-15T18:52:55.041306+00:00",
+  "binary_pairs": 17,
+  "ddl": false,
+  "business_writes": false,
+  "variants": [
+    {
+      "nls_sort": "BINARY",
+      "nls_comp": "BINARY",
+      "result": {
+        "object": {
+          "a": 2,
+          "rus": "\u0416",
+          "z": 1
+        },
+        "array": [
+          {
+            "uid": "a"
+          },
+          {
+            "uid": "b"
+          },
+          {
+            "uid": "\u0430"
+          }
+        ],
+        "hash": "0222BAF131024B8A04DFCA1BA61C538A9D25D553A86386389157083C044D2184"
+      }
+    },
+    {
+      "nls_sort": "RUSSIAN",
+      "nls_comp": "LINGUISTIC",
+      "result": {
+        "object": {
+          "a": 2,
+          "rus": "\u0416",
+          "z": 1
+        },
+        "array": [
+          {
+            "uid": "a"
+          },
+          {
+            "uid": "b"
+          },
+          {
+            "uid": "\u0430"
+          }
+        ],
+        "hash": "0222BAF131024B8A04DFCA1BA61C538A9D25D553A86386389157083C044D2184"
+      }
+    }
+  ]
+}

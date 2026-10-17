@@ -1,0 +1,53 @@
+[
+  {
+    "file": "shipping-scopes/ordinary-flow/parent/fixture.json",
+    "actor": "AS16Od0a1e6ce56",
+    "prefix": "AS16.d0a1e6ce56",
+    "sessions": [],
+    "assignments": [],
+    "role": [],
+    "user": [
+      {
+        "id": "AS16Od0a1e6ce56",
+        "user_group": "AS16Od0a1e6ce56",
+        "ware_id": 20854558,
+        "deleted": 0
+      }
+    ],
+    "wave": 585
+  },
+  {
+    "file": "shipping-scopes/ordinary-flow/ordinary/fixture.json",
+    "actor": "OC16P9f34aa2614",
+    "prefix": "OC16.9f34aa2614",
+    "sessions": [
+      {
+        "session_id": 71,
+        "status": "ACTIVE",
+        "resource_id": 75
+      }
+    ],
+    "assignments": [
+      {
+        "assignment_id": "OC16A9f34aa2614",
+        "version_no": 1
+      }
+    ],
+    "role": [
+      {
+        "role_id": "OC16R9f34aa2614",
+        "version_no": 1,
+        "active": 1
+      }
+    ],
+    "user": [
+      {
+        "id": "OC16P9f34aa2614",
+        "user_group": "OC16P9f34aa2614",
+        "ware_id": 1,
+        "deleted": 0
+      }
+    ],
+    "wave": 586
+  }
+]

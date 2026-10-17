@@ -4,6 +4,8 @@ This page catalogs raw sources that the root wiki compiles from.
 
 ## RETAILCASE
 
+- [Проверки совместного исполнения 15.10](../../reports/retailcase/2026-10-15/execution-1900/checkpoint.md): native/API/UI/protocol evidence и ограничения, фактическое ревью Claude C0113/C0114, каноническое завершение TEST24/H0; ссылки на неизменные отчёты и HU source audit.
+
 - [retailcase_agents_20260915.md](retailcase_agents_20260915.md): источники агентного плана, ограничения локальных GPU, API-тарифы, 41 ТЗ и воспроизводимая проверка бюджета без амортизации.
 - [retailcase_ui_20260915.md](retailcase_ui_20260915.md): требования 15 рабочих мест, быстрый ТСД/диспетчер ричтраков, источники переиспользования и 25 проверенных offline-рисунков.
 - [retailcase_20260915.md](retailcase_20260915.md): ТЗ 1.3, XML 1.1.0, IT guide, операционные материалы Drive и код TMS/WMS; результаты проверки 15.09.2026.
@@ -57,3 +59,5 @@ This page catalogs raw sources that the root wiki compiles from.
 - [RETAILCASE сквозная маркировка 07.10.2026](retailcase_track_trace_20261007.md): поручение владельца, официальные различия табачных кодов и документооборота ЕГАИС, исходный SQL CRPT; ТЗ 57, модель RABAEV и 43 спринта. Внешние адаптеры и миграции ещё не выполнены.
 
 - [retailcase_ns00_environment_20261007.md](retailcase_ns00_environment_20261007.md): NS00 — живой seed/reset/cleanup, rollback, fresh dependencies и restart evidence; пределы core fixture и незавершённые gates.
+
+- [Полный прежний каталог wiki](wiki_index_catalog_20261015.md): снимок15.10.2026,1017 строк;798 markdown-ссылок перенесены с сохранением целей. Текущий вход — [короткий index](../index.md), исторические статусы не считаются актуальными. [Исходные bytes и проверка](../../reports/retailcase/2026-10-15/wiki-navigation/report.json).

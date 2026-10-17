@@ -1,0 +1,31 @@
+{
+  "migration_id": "2026-10-16-case-return-scope",
+  "status": "PREPARED_NOT_APPLIED",
+  "before_sources": {
+    "RRL_CASE_TASK_ACCESS|PACKAGE BODY": "5B122285074AFE3FAA0AE079317345632CB1E4DC5C02E17FC351EACDF9F44949",
+    "RRL_STOCK_CASE_RETURN_CMD|PACKAGE BODY": "640E3446B3E05301C4A65B77C0C5FC329529BCF509BD26838B72F43ABE308728",
+    "RRL_STOCK_POSTING_API|PACKAGE BODY": "E2935A1E007561BDD76CE9000461641B07F42DFFFC8C1176353E149F7D96950B"
+  },
+  "after_sources": {
+    "RRL_CASE_TASK_ACCESS|PACKAGE BODY": "4FD53CF0A844F5B97AD46C3DF16A99E15342CDDAD7C88DCE49901DDDED6D76C5",
+    "RRL_STOCK_CASE_RETURN_CMD|PACKAGE BODY": "3746370C3A55602F2836563A1F2B5BDED1FC4F948B3C04431A6D8E519B990B89",
+    "RRL_STOCK_POSTING_API|PACKAGE BODY": "4A6D5EEAA59ECED249C7CDBD6C62E9D2A15203928E958A227396A3DF4597A778"
+  },
+  "dependencies": [],
+  "files": {
+    "after_sources.sql": "f51af9db898ccbf6d72ee08df3ef3bb3edee75b717e1300d46a3f09b6f20f35e",
+    "apply.sql": "2892780b0403c27900913cd5f786fe175e69c8ec4c04de4ce130b1e64a7d5f6c",
+    "before.sql": "483e7dd0dee6eb7beab4bc08456937a2813d610666b1cf26720d8f1522c604df",
+    "before_sources.sql": "a5a2a20875451ea0b4ae20e6f0f1601111ae54dfae0016ca10233ae4a6c470a5",
+    "compile_dependents.sql": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "6952dab7411ac3e3e5bcc043fa980022b80f84718191b7207891105d65c2f645",
+    "restore_rrl_case_task_access_package_body.sql": "fc8664449bb8dfc6dee62c3b113ee48159c076cb19d0c7b67a1b0c2fdcb3cf3f",
+    "restore_rrl_stock_case_return_cmd_package_body.sql": "51a07b7389cc5970fb18020939b1b953cf92e26b4b0375a048f057ff13de3db5",
+    "restore_rrl_stock_posting_api_package_body.sql": "133425019f876a068cd23b09857e23307b8f8e07d14171e3e27ff02b28e82c8f",
+    "rollback.sql": "64a346872f056221282447b8c68cc48f9c46ca59a64357cbabafb692c9500669",
+    "rrl_case_task_access_package_body.sql": "c406205d6dbc5aac1fb610276146c76a224eb4379ab7be01904370b35e484f6e",
+    "rrl_stock_case_return_cmd_package_body.sql": "f4fd7ed2b1aea8b3586e8cc7f044daa5d5f7a59d8c5090d7efed1d82b37b47cf",
+    "rrl_stock_posting_api_package_body.sql": "60ecea8dca66a4dcdcc762a60dd390cac8df9036b78d449a3d39f2ee43a98816",
+    "verify.sql": "00680b8bf2b2fd199e1f99646fc7d68baac69f7fa7a0b5e65279fa4eca95dd73"
+  }
+}

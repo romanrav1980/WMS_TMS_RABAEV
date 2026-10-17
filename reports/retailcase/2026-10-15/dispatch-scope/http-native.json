@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "checks": [
+    "native_only_grant_list_detail_sts_operations",
+    "native_only_temporal_view_actual_trip_scope",
+    "foreign_trip_direct_reads_and_list_hidden",
+    "scoped_export_valid_complete_xlsx",
+    "scoped_gantt_only_admitted_trip",
+    "mixed_trip_partial_warehouse_grant_denied",
+    "mixed_trip_all_warehouses_granted",
+    "revoke_denies_mixed_trip_immediately",
+    "wide_period_rejected_before_query"
+  ],
+  "fixture_cleaned": true,
+  "business_data": "READ_ONLY",
+  "stock_effect": "NONE"
+}

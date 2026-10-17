@@ -1,0 +1,21 @@
+{
+  "prefix": "MH16.d076c19e82",
+  "tag": "d076c19e82",
+  "warehouse_id": 20220394,
+  "article": "AS16A35CEA92C27",
+  "case_task_id": 1140,
+  "good": "MH16Gd076c19e82",
+  "bad": "MH16Bd076c19e82",
+  "second": "MH16Sd076c19e82",
+  "inner": "MH16.BOX:d076c19e82",
+  "outer": "MH16.TOP:d076c19e82",
+  "state": "ASM_NESTED_RETAINED_FOR_ORDINARY_CHILD",
+  "hardware_verified": false,
+  "frozen_stock_requests": {
+    "MH16.d076c19e82.CASE.COLD.MOVE": "{\"actor\":\"admin\",\"command_type\":\"CASE_CARRIER_MOVE\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"expected_content_version\":3,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"scan_container\":\"090000000000011014\",\"scanned_to_cell\":\"MH16Gd076c19e82\",\"target_cell\":\"MH16Gd076c19e82\"},\"operation_id\":\"MH16.d076c19e82.CASE.COLD.MOVE\",\"source\":{\"case_task_id\":1140},\"units\":[]}",
+    "MH16.d076c19e82.inner.CREATE": "{\"actor\":\"admin\",\"command_type\":\"HU_CREATE\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"cell\":\"MH16Gd076c19e82\",\"container_type\":\"BOX\",\"scan_cell\":\"MH16Gd076c19e82\",\"scan_container\":\"MH16.BOX:d076c19e82\",\"tare_weight_kg\":\"0.2\",\"warehouse\":20220394},\"operation_id\":\"MH16.d076c19e82.inner.CREATE\",\"source\":{\"uid\":\"MH16.BOX:d076c19e82\"},\"units\":[]}",
+    "MH16.d076c19e82.outer.CREATE": "{\"actor\":\"admin\",\"command_type\":\"HU_CREATE\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"cell\":\"MH16Gd076c19e82\",\"container_type\":\"PALLET\",\"scan_cell\":\"MH16Gd076c19e82\",\"scan_container\":\"MH16.TOP:d076c19e82\",\"tare_weight_kg\":\"1\",\"warehouse\":20220394},\"operation_id\":\"MH16.d076c19e82.outer.CREATE\",\"source\":{\"uid\":\"MH16.TOP:d076c19e82\"},\"units\":[]}",
+    "MH16.d076c19e82.CASE.PACK": "{\"actor\":\"admin\",\"command_type\":\"HU_ATTACH\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"child_case_task_id\":1140,\"expected_child_version\":4,\"expected_version\":0,\"retained_tare_booking_operation_id\":\"AS16.35cea92c27.TARE.BOOK\",\"scan_child\":\"090000000000011014\",\"scan_container\":\"MH16.BOX:d076c19e82\"},\"operation_id\":\"MH16.d076c19e82.CASE.PACK\",\"source\":{\"uid\":\"MH16.BOX:d076c19e82\"},\"units\":[]}",
+    "MH16.d076c19e82.BOX.PACK": "{\"actor\":\"admin\",\"command_type\":\"HU_ATTACH\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"child_uid\":\"MH16.BOX:d076c19e82\",\"expected_child_version\":1,\"expected_version\":0,\"scan_child\":\"MH16.BOX:d076c19e82\",\"scan_container\":\"MH16.TOP:d076c19e82\"},\"operation_id\":\"MH16.d076c19e82.BOX.PACK\",\"source\":{\"uid\":\"MH16.TOP:d076c19e82\"},\"units\":[]}"
+  }
+}

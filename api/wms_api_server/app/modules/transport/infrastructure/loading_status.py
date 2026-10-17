@@ -3,6 +3,7 @@ from typing import Any
 from ..contracts import TransportLoadingError
 from .loading_thermal_read import loading_thermal_read
 from .loading_floor_read import loading_floor_read
+from .loading_access import authorized_trip_header
 
 def loading_status(gateway: Any, trip: int, actor: str) -> dict[str, Any]:
     with gateway.transaction("Current physical trip loading READ ONLY snapshot") as cur:
@@ -10,16 +11,7 @@ def loading_status(gateway: Any, trip: int, actor: str) -> dict[str, Any]:
         return read_loading_status(cur, trip, actor)
 
 def read_loading_status(cur: Any, trip: int, actor: str) -> dict[str, Any]:
-    cur.execute("""select WARE_ID,USER_GROUP from RUSERS where ID=:actor
-        and nvl(DELETED,0)=0 and RRL_HAS_WRIGHT(ID,'transport_dispatch_view')=1""",actor=actor)
-    user=cur.fetchone()
-    if user is None:
-        raise TransportLoadingError("LOADING_CURRENT_VIEW_ACTOR_REQUIRED","Недоступен просмотр погрузки",status=403)
-    global_scope=str(user[1]or"").strip().upper()=="GLOBAL_ADMIN"
-    cur.execute("select ID,TRANSPORT,DOCK,CONDITION,VODITEL_ID,USER_ID from RRL_TRANSPORT_TASK where ID=:trip_id",trip_id=trip)
-    header=cur.fetchone()
-    if header is None:
-        raise TransportLoadingError("TRIP_NOT_FOUND","Рейс не найден",status=404)
+    header = authorized_trip_header(cur, trip, actor)
     cur.execute("""select sp.ID,sp.ST_NUMBER,sp.PALLET_UID,sp.CONDITION,
         ls.DESTINATION_ADDR,lf.LOAD_OPERATION_ID,
         coalesce(lf.ROOT_UID,case when lf.ROOT_CASE_TASK_ID is not null then 'CASE:'||to_char(lf.ROOT_CASE_TASK_ID)end),lf.STATUS,
@@ -51,13 +43,6 @@ def read_loading_status(cur: Any, trip: int, actor: str) -> dict[str, Any]:
                 "root_case_task_id","ware_id","root_scan_identifier","root_kind","origin_cell",
                 "custody_released_at","custody_release_operation")
     loads=[dict(zip(load_names,row))for row in raw_loads]
-    warehouses={row["warehouse_id"]for row in members}|{row["ware_id"]for row in loads}
-    if not warehouses and not global_scope and header[5]!=actor:
-        raise TransportLoadingError("LOADING_EMPTY_TRIP_OWNER_REQUIRED","Недоступный пустой рейс",status=403)
-    for warehouse in warehouses:
-        cur.execute("select count(*)from RRL_WARES where ID=:ware_id",ware_id=warehouse)
-        if cur.fetchone()[0]!=1 or (not global_scope and user[0]!=warehouse):
-            raise TransportLoadingError("LOADING_CURRENT_WARE_REQUIRED","Недоступный склад рейса",status=403)
     def physically_loaded(row: dict[str,Any]) -> bool:
         return (row["load_status"]in{"LOADED","DEPARTED"} and row["stock_operation_state"]=="APPLIED"
                 and row["load_trip_id"]==trip and row["vehicle_number"]==header[1])

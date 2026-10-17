@@ -1,0 +1,51 @@
+{
+  "migration_id": "2026-10-15-case-transit-13583852",
+  "status": "APPLIED",
+  "authorization": "Root approves PREPARE only; independent review/apply required",
+  "scope": "One metadata cell +one policy key, no quantity writes, no globalWAREscan/releaseflags",
+  "before": {
+    "warehouse": [
+      {
+        "id": 13583852
+      }
+    ],
+    "release": [
+      {
+        "release_id": 1,
+        "state": "ACTIVE"
+      }
+    ],
+    "stock": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 24,
+        "hard_reserved_base": 1,
+        "stock_version": 10
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "cell": [],
+    "key": [],
+    "invalid": [
+      {
+        "n": 0
+      }
+    ]
+  },
+  "sha256": {
+    "apply.sql": "4ebc008415049ef53cf4ef0fd7c91921be8b070ed1250ccad01901d8820c3a24",
+    "rollback.sql": "f06bc6f1d6c50f3e52fede11c7c0bbad16e2ddca0af3a78d77e6a4b0e6dce22c",
+    "verify.sql": "cb8ae129eb26fc259ba1f5dd85330260b47f0d121e226f3216a6d3d1f1c40b6d"
+  },
+  "application": {
+    "coordinator": "root",
+    "statements": 1,
+    "errors": 0,
+    "independent_verify": "exactcell/key/ledger/sourcefactsPASS; activeUSER_ERRORS0/globalINVALID0; oldrecycleerrorsseparate"
+  }
+}

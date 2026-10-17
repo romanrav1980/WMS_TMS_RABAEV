@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "checks": [
+    "role_scope_pairing_no_cartesian_expansion",
+    "current_and_snapshot_membership",
+    "expiry_and_revocation",
+    "branch_snapshot_does_not_expand",
+    "delegation_scope_and_lifetime_same_grant",
+    "role_designer_mandate_no_self_escalation",
+    "snapshot_reactivation_mandate_and_impact_preview",
+    "native_explanation_sources",
+    "durable_receipt_and_payload_version_conflicts",
+    "concurrent_same_operation_once",
+    "draft_does_not_replace_publication",
+    "private_search_detail_links_history_hidden",
+    "archive_hidden_from_reader",
+    "curated_wiki_import_receipt_survives_source_change"
+  ],
+  "isolated_prefix": "ak6d03613f",
+  "fixture_cleaned": true,
+  "stock_effect": "NONE"
+}

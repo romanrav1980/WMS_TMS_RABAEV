@@ -1,0 +1,135 @@
+{
+  "state": "APPLIED",
+  "author": "scale_protocol",
+  "source_hash_method": "UTF8 USER_SOURCE ordered TEXT concatenated CR removed",
+  "before": [
+    {
+      "name": "RRL_ASSEMBLY_SCALE_API",
+      "type": "PACKAGE BODY",
+      "before_sha256": "445d03d595696d0ebdf6060008a5d050f66eeaef9f0be45f8e88e8d287226607",
+      "before_lines": 516
+    },
+    {
+      "name": "RRL_WH_WEIGH_REQUEST_API",
+      "type": "PACKAGE BODY",
+      "before_sha256": "2dea0101e5f0e4cca193063fc9656930fb4138f7f981c7d8061c4897b8eb5328",
+      "before_lines": 385
+    },
+    {
+      "name": "RRL_WH_SCALE_API",
+      "type": "PACKAGE BODY",
+      "before_sha256": "3d43a59f7bb7ecff99e9e983bde0708cc3707bd42bd0b7aeb2ba2836d8e4072a",
+      "before_lines": 135
+    },
+    {
+      "name": "RRL_WH_FINAL_SCALE_ADMISSION",
+      "type": "PACKAGE BODY",
+      "before_sha256": "bdd43bc5844defdfc51ebbffa7c8d2e002a88434f355b5efaf8ca55bddd9794c",
+      "before_lines": 119
+    }
+  ],
+  "files": {
+    "admission_body.sql": "a131fd2aa3888ec89b8e4608806fa1a8c01975aabc92252840f8ff5634898d41",
+    "apply.sql": "120127e684a467fb3770bd4e980e93a2fba2be5d1a307d7c8bf18ebd3f0e306d",
+    "assembly_body.sql": "db3190fb864b5f5a30533ff84d1a23fdcc609a826ddd2209a02d270eb7660215",
+    "helper.sql": "22fe8e0e07d46fc7d99c50cd0ea42299861b4429875aa31f7742177ac97fe557",
+    "queue_body.sql": "af5e54cc82a9c444cc25234c67b164529e21301d23140fcce0986d9b06f29351",
+    "rollback.sql": "eab17d3cdd32f8cffe9098e235ecb847117513e8f2be8acd43a467523ebc181c",
+    "rollback_history_guard.sql": "389859080643afc761a02ed0d47badb9d48eab76e1f1df390bf4d1bd16f763e2",
+    "rollback_verify.sql": "a2392965da6793521c040da80d52b29819102f6d5063352f1cb90838fb1b054f",
+    "verify.sql": "af2e594447f73a3546589a924a707d268d4488d42ba0e717c0de834aca19d5dd",
+    "wh_body.sql": "9d400fc679c30bf7b54d96b748659eee24c1b6d2ec0e832d1b283d9d9943f128"
+  },
+  "quantity_commands": "NONE",
+  "new_domain": "ASM_FINAL",
+  "signature_version": 3,
+  "legacy_small_hu_v3": "PRESERVED",
+  "ddl_owner": "root",
+  "acceptance": "PENDING_ROOT_REVIEW_APPLY_NATIVE",
+  "independent_review": "sprint_empty_trip: quantity/domain compatible; NULL+station requests fixed, pending root final review",
+  "after_expected": [
+    {
+      "name": "RRL_WH_WEIGH_REQUEST_API",
+      "type": "PACKAGE BODY",
+      "sha256": "1D64EC22FA49A7FB7C39E10FFEC9CB5B9C0D24AE54E1E329B43A0FB9F3A7D368"
+    },
+    {
+      "name": "RRL_WH_SCALE_API",
+      "type": "PACKAGE BODY",
+      "sha256": "AACBA7EF3C676C11664CE1CB9A394052B91EE0B7D487BAEED1780C1D969A7269"
+    },
+    {
+      "name": "RRL_ASSEMBLY_SCALE_API",
+      "type": "PACKAGE BODY",
+      "sha256": "3959831FE6663ECA0049CAED70ED6FE0C00570B61732A491CD0BA55A03774159"
+    },
+    {
+      "name": "RRL_WH_FINAL_SCALE_ADMISSION",
+      "type": "PACKAGE BODY",
+      "sha256": "26699E1022101CBA6E4D78F4893B77A6B167DB010F70C496ABC188D46ECEB217"
+    },
+    {
+      "name": "RRL_ASM_FINAL_SNAPSHOT",
+      "type": "PACKAGE",
+      "sha256": "DD67A6819DC61986696F08B059D1ED7ED9402E953EEE1FAEF795922022C96A67"
+    },
+    {
+      "name": "RRL_ASM_FINAL_SNAPSHOT",
+      "type": "PACKAGE BODY",
+      "sha256": "B3807D49E123B85175108004C944A013CBAB22EB3915BDCD94230F8AE2CE62A3"
+    }
+  ],
+  "fresh_before_rechecked": "CASE metadata kit APPLIED; four source SHA still exact",
+  "rollback_history_guard": "Reject any archived ASM_FINAL domain, session use and live ASM_FINAL request before source restoration/drop",
+  "native_statements": 10,
+  "native_errors": 0,
+  "independent_source_readback": [
+    {
+      "name": "RRL_WH_WEIGH_REQUEST_API",
+      "type": "PACKAGE BODY",
+      "sha256": "1D64EC22FA49A7FB7C39E10FFEC9CB5B9C0D24AE54E1E329B43A0FB9F3A7D368",
+      "exact": true
+    },
+    {
+      "name": "RRL_WH_SCALE_API",
+      "type": "PACKAGE BODY",
+      "sha256": "AACBA7EF3C676C11664CE1CB9A394052B91EE0B7D487BAEED1780C1D969A7269",
+      "exact": true
+    },
+    {
+      "name": "RRL_ASSEMBLY_SCALE_API",
+      "type": "PACKAGE BODY",
+      "sha256": "3959831FE6663ECA0049CAED70ED6FE0C00570B61732A491CD0BA55A03774159",
+      "exact": true
+    },
+    {
+      "name": "RRL_WH_FINAL_SCALE_ADMISSION",
+      "type": "PACKAGE BODY",
+      "sha256": "26699E1022101CBA6E4D78F4893B77A6B167DB010F70C496ABC188D46ECEB217",
+      "exact": true
+    },
+    {
+      "name": "RRL_ASM_FINAL_SNAPSHOT",
+      "type": "PACKAGE",
+      "sha256": "DD67A6819DC61986696F08B059D1ED7ED9402E953EEE1FAEF795922022C96A67",
+      "exact": true
+    },
+    {
+      "name": "RRL_ASM_FINAL_SNAPSHOT",
+      "type": "PACKAGE BODY",
+      "sha256": "B3807D49E123B85175108004C944A013CBAB22EB3915BDCD94230F8AE2CE62A3",
+      "exact": true
+    }
+  ],
+  "user_errors": [],
+  "invalid": [],
+  "ledger": [
+    {
+      "status": "APPLIED"
+    }
+  ],
+  "actual_context_read_report": "reports/retailcase/2026-10-15/assembly-scale/final-snapshot-native-read.json",
+  "actual_final_report": "reports/retailcase/2026-10-15/warehouse-weigh-request/opc-final-native-http.json",
+  "actual_finish_report": "reports/retailcase/2026-10-15/assembly-scale/finish-native-http.json",
+  "negative_owner_mutations": "NOT_RUN_BEFORE_ROOT_FINALIZED_SESSION; no direct reset"
+}

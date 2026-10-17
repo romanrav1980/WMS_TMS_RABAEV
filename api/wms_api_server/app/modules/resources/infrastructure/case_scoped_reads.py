@@ -4,18 +4,11 @@ import oracledb
 from ....transaction_gateway import TransactionGateway
 from ..contracts_case_read import CaseReadError
 from .case_read_model import LegacyCaseReads
-
-
-def actor_scope(cur: Any, actor: str) -> tuple[int | None, bool]:
-    cur.execute("""select WARE_ID,case when upper(trim(USER_GROUP))='GLOBAL_ADMIN'then 1 else 0 end
-        from RUSERS where ID=:actor and nvl(DELETED,0)=0 and RRL_HAS_WRIGHT(ID,'case_pick_view')=1""", actor=actor)
-    row = cur.fetchone()
-    if row is None or (row[0] is None and row[1] != 1):
-        raise CaseReadError("CASE_CURRENT_WARE_VIEWER_REQUIRED", "Требуется действующий пользователь своего склада")
-    return row[0], row[1] == 1
+from .case_view_scope import require_viewer, require_task_view
 
 
 def native_task_scope(cur: Any, task: int, actor: str, permission: str) -> None:
+    """Public legacy command guard: read scopes must never replace execution checks."""
     try:
         cur.callproc("RRL_CASE_TASK_ACCESS.assert_scope", [task, actor, permission, None])
     except oracledb.DatabaseError as exc:
@@ -31,30 +24,32 @@ def native_task_scope(cur: Any, task: int, actor: str, permission: str) -> None:
 
 
 def task_scope(cur: Any, task: int, actor: str) -> None:
-    actor_scope(cur, actor)
-    native_task_scope(cur, task, actor, "case_pick_view")
+    require_viewer(cur, actor)
+    require_task_view(cur, task, actor)
 
 
 class ScopedCaseReads:
     def __init__(self, gateway: Any) -> None:
         self.gateway = gateway
 
-    def tasks(self, actor: str, resource: int | None, scope: str, status: str | None, limit: int) -> list[dict[str, Any]]:
-        if scope not in {"mine", "free", "all"} or not 1 <= limit <= 500:
-            raise CaseReadError("CASE_LIST_SCOPE_INVALID", "Допустимы mine/free/all и предел1–500", 422)
+    def tasks(self, actor: str, resource: int | None, scope: str, status: str | None, limit: int,
+              warehouse: int | None = None) -> list[dict[str, Any]]:
+        if scope not in {"mine", "free", "all", "self"} or not 1 <= limit <= 500:
+            raise CaseReadError("CASE_LIST_SCOPE_INVALID", "Допустимы mine/free/all/self и предел1–500", 422)
         with self.gateway.transaction("Current CASE queue READ ONLY snapshot") as cur:
             if not getattr(self.gateway, "transaction_bound", False):
                 cur.execute("set transaction read only")
-            ware, global_admin = actor_scope(cur, actor)
+            require_viewer(cur, actor, warehouse)
             if resource is not None:
                 cur.execute("select WARE_ID from RRL_RESOURCE where RESOURCE_ID=:id and ACTIVE=1", id=resource)
                 row = cur.fetchone()
                 if row is None:
                     raise CaseReadError("CASE_RESOURCE_NOT_FOUND", "Действующий ресурс отсутствует", 404)
-                if not global_admin and row[0] != ware:
-                    raise CaseReadError("CASE_CURRENT_WARE_RESOURCE_REQUIRED", "Недоступный склад ресурса")
+                require_viewer(cur, actor, row[0])
+                if warehouse is not None and row[0] != warehouse:
+                    raise CaseReadError("CASE_CURRENT_WARE_RESOURCE_REQUIRED", "Ресурс другого склада")
             return LegacyCaseReads(TransactionGateway(cur)).list_tasks(
-                resource, scope, status, limit, None if global_admin else ware,
+                resource, scope, status, limit, warehouse, view_actor=actor,
             )
 
     def task(self, task: int, actor: str) -> dict[str, Any]:
@@ -68,11 +63,12 @@ class ScopedCaseReads:
             return result
 
 
-    def shorts(self, actor: str, status: str | None, limit: int) -> list[dict[str, Any]]:
+    def shorts(self, actor: str, status: str | None, limit: int,
+               warehouse: int | None = None) -> list[dict[str, Any]]:
         if not 1 <= limit <= 500:
             raise CaseReadError("CASE_LIST_SCOPE_INVALID", "Предел должен быть1–500", 422)
         with self.gateway.transaction("Current CASE shortages READ ONLY snapshot") as cur:
             if not getattr(self.gateway, "transaction_bound", False):
                 cur.execute("set transaction read only")
-            ware, global_admin = actor_scope(cur, actor)
-            return LegacyCaseReads(TransactionGateway(cur)).list_shorts(status, limit, None if global_admin else ware)
+            require_viewer(cur, actor, warehouse)
+            return LegacyCaseReads(TransactionGateway(cur)).list_shorts(status, limit, warehouse, view_actor=actor)

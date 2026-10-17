@@ -1,0 +1,20 @@
+{
+  "migration_id": "2026-10-15-transport-scoped-edit",
+  "git_head": "41c913cf44441cf3656a66b0939e40cb9a83c365",
+  "target": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "invalid_before": 0,
+  "sha256": {
+    "apply.sql": "d0489d20df24fbbb19b45aa4cb5de91f80c1a0c60a5d2de65293640ce91faead",
+    "before_rrl_transport_edit_api.sql": "46c55c9ffed4e4b26b5d7ba55bd239fde0d43797e82236b4d42e5595d32db2f5",
+    "before_rrl_transport_plan_rules.sql": "beaa2721eb4c3f081518b2a70dc9b4a11c19fa848121c63613eeb8669388b870",
+    "rollback.sql": "882874474f9a59a8ea94861e7ac34d73878ff48f1cf32c4d1621c56287955909",
+    "rrl_transport_edit_api.sql": "85572ca18f295ffd2679530f2d19b84183c2ba4d1e775f6148efb9d7b39067be",
+    "rrl_transport_plan_rules.sql": "8f479c9077bebcf00adbd3c19ccc0ccccfcde348e3759093e63b010bad9d200b",
+    "verify.sql": "ab091a0ecfccd04933010f4eb7e2be6551d7b052a87e14d62bbe73c485cb8d69"
+  },
+  "authorization": "Owner directs implementation of all accepted access/knowledge sprints; no publication or mass reassignment",
+  "state": "PREPARED"
+}

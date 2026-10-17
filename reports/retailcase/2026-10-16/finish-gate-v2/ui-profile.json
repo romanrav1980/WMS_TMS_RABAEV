@@ -1,0 +1,58 @@
+{
+  "state": "READY_CASE_MANAGER_PLUS_EXPLICIT_WAREHOUSE_READ_ROLE",
+  "actor": "MT16M926cdde30a",
+  "warehouse": 20902283,
+  "commands": {
+    "ROLE": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.UI.READ.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "MT16.926cdde30a.UI.READ",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "transport_dispatch_view",
+            "warehouse_task_view"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.UI.READ.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "MT16.926cdde30a.UI.READ",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "ASSIGN": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.UI.READ.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "MT16.926cdde30a.UI.READ.WARE",
+          "username": "MT16M926cdde30a",
+          "role_id": "MT16.926cdde30a.UI.READ",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20902283",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T19:23:27.988777+00:00",
+          "valid_until": "2026-10-16T21:24:27.988777+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.UI.READ.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "MT16.926cdde30a.UI.READ.WARE",
+        "version": 1,
+        "replayed": false
+      }
+    }
+  }
+}

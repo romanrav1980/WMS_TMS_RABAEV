@@ -1,0 +1,203 @@
+{
+  "read_only": true,
+  "min_api_id": 69302,
+  "limits": "API latest100 and slow latest501; includes initial interrupted browser attempt, not load/p95",
+  "http": [
+    {
+      "api_call_id": 69302,
+      "request_id": "cdb37870-b2b5-45e3-972d-399243d58409",
+      "method": "GET",
+      "path": "/api/access/me",
+      "response_status": 200,
+      "duration_ms": 98
+    },
+    {
+      "api_call_id": 69303,
+      "request_id": "db250d7b-7c6d-4b0f-8d85-2b048b0d68df",
+      "method": "GET",
+      "path": "/api/access/workspaces",
+      "response_status": 200,
+      "duration_ms": 343
+    },
+    {
+      "api_call_id": 69304,
+      "request_id": "f621cca3-c6c3-44ba-8af5-b76206473f62",
+      "method": "GET",
+      "path": "/api/access/navigation",
+      "response_status": 200,
+      "duration_ms": 1244
+    },
+    {
+      "api_call_id": 69305,
+      "request_id": "e9f9109a-2792-45de-8cce-549b63993f1a",
+      "method": "GET",
+      "path": "/api/resources/timeline",
+      "response_status": 200,
+      "duration_ms": 409
+    },
+    {
+      "api_call_id": 69306,
+      "request_id": "a9d60cce-3855-4fcf-b4c8-d44eb4131ded",
+      "method": "GET",
+      "path": "/api/picking/waves",
+      "response_status": 200,
+      "duration_ms": 1127
+    },
+    {
+      "api_call_id": 69307,
+      "request_id": "d53122bc-4d76-4e74-83d1-dfafef658dc5",
+      "method": "GET",
+      "path": "/api/picking/waves",
+      "response_status": 200,
+      "duration_ms": 426
+    },
+    {
+      "api_call_id": 69308,
+      "request_id": "1d09c2f9-bb71-4ac4-87b1-44a769d6fb0c",
+      "method": "GET",
+      "path": "/api/case-pick/tasks",
+      "response_status": 200,
+      "duration_ms": 1469
+    },
+    {
+      "api_call_id": 69309,
+      "request_id": "f038ac29-cc7c-490c-8320-00f12bb84819",
+      "method": "GET",
+      "path": "/api/resources/sessions",
+      "response_status": 200,
+      "duration_ms": 1106
+    },
+    {
+      "api_call_id": 69310,
+      "request_id": "c4e1b18e-0b1d-4271-806f-54299dd436b3",
+      "method": "GET",
+      "path": "/api/case-pick/shorts",
+      "response_status": 200,
+      "duration_ms": 1060
+    },
+    {
+      "api_call_id": 69311,
+      "request_id": "8396687f-c0a2-4935-9858-1af8ad929635",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 200,
+      "duration_ms": 958
+    },
+    {
+      "api_call_id": 69312,
+      "request_id": "b2b8300a-1fcc-4dc9-986e-41f4caa44acf",
+      "method": "GET",
+      "path": "/api/access/me",
+      "response_status": 200,
+      "duration_ms": 52
+    },
+    {
+      "api_call_id": 69313,
+      "request_id": "ee2a5143-ef66-44aa-8b0c-cc746dc34918",
+      "method": "GET",
+      "path": "/api/access/workspaces",
+      "response_status": 200,
+      "duration_ms": 94
+    },
+    {
+      "api_call_id": 69314,
+      "request_id": "5ffcfa7b-a75d-4172-a441-acdc9f53ef36",
+      "method": "GET",
+      "path": "/api/access/navigation",
+      "response_status": 200,
+      "duration_ms": 51
+    },
+    {
+      "api_call_id": 69315,
+      "request_id": "934fa296-3112-4d5e-b2ae-10651c70fae8",
+      "method": "GET",
+      "path": "/api/resources/timeline",
+      "response_status": 200,
+      "duration_ms": 637
+    },
+    {
+      "api_call_id": 69316,
+      "request_id": "20068431-a8c5-4df1-845a-1ef8d893debe",
+      "method": "GET",
+      "path": "/api/picking/waves",
+      "response_status": 200,
+      "duration_ms": 748
+    },
+    {
+      "api_call_id": 69317,
+      "request_id": "204177df-3ec1-4060-ae0e-7082e5a43c1c",
+      "method": "GET",
+      "path": "/api/picking/waves",
+      "response_status": 200,
+      "duration_ms": 742
+    },
+    {
+      "api_call_id": 69318,
+      "request_id": "95dcea84-220d-441c-b81b-b91b59bc2cc6",
+      "method": "GET",
+      "path": "/api/case-pick/tasks",
+      "response_status": 200,
+      "duration_ms": 659
+    },
+    {
+      "api_call_id": 69319,
+      "request_id": "6346ecc5-725c-43af-adab-cf11a91d6145",
+      "method": "GET",
+      "path": "/api/resources/sessions",
+      "response_status": 200,
+      "duration_ms": 395
+    },
+    {
+      "api_call_id": 69320,
+      "request_id": "b6bed90b-6562-4369-910e-57e5a2ceb5c5",
+      "method": "GET",
+      "path": "/api/case-pick/shorts",
+      "response_status": 200,
+      "duration_ms": 693
+    },
+    {
+      "api_call_id": 69321,
+      "request_id": "9bf7f148-fb8c-4d7a-b635-7b46c989e633",
+      "method": "GET",
+      "path": "/api/inventory/recovery-shorts",
+      "response_status": 200,
+      "duration_ms": 533
+    },
+    {
+      "api_call_id": 69322,
+      "request_id": "d90affa7-15f7-40d6-a819-634f91e32d1e",
+      "method": "POST",
+      "path": "/api/picking/shift-overview",
+      "response_status": 200,
+      "duration_ms": 823
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 4882,
+      "api_call_id": 69322,
+      "elapsed_ms": 775,
+      "module": "WMS_API:69322",
+      "action": "POST /api/picking/shift-overview",
+      "sql_sample": "Bounded shift overview single READ ONLY snapshot"
+    },
+    {
+      "log_id": 4881,
+      "api_call_id": 69308,
+      "elapsed_ms": 1021,
+      "module": "WMS_API:69308",
+      "action": "GET /api/case-pick/tasks",
+      "sql_sample": "Current CASE queue READ ONLY snapshot"
+    },
+    {
+      "log_id": 4880,
+      "api_call_id": 69311,
+      "elapsed_ms": 750,
+      "module": "WMS_API:69311",
+      "action": "GET /api/inventory/recovery-shor",
+      "sql_sample": "select * from (\n            select sh.CASE_PICK_SHORT_ID SHORT_ID,sh.CASE_PICK_TASK_ID,sh.CASE_PICK_LINE_ID,\n                   sh.PICK_WAVE_ID,sh.CELL_CODE CELL,sh.ARTICUL ARTICLE,sh.CREATED_BY PICKER,\n                   sh.STATUS,sh.RECOVERY_STATE,sh.INVENTORY_TASK_ID,sh.REPLENISH_TASK_ID,\n                   sh.RECOVERY_LAST_ERROR,sh.RECOVERY_DEADLINE_AT,sh.RESTORED_AT,\n                   to_char(sh.SHORT_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') SHORT_QUANTITY,\n                   greatest(0,round((cast(systimestamp as date)-cast(sh.CREATED_AT as date))*86400)) AGE_SECONDS,\n                   round((cast(nvl(sh.RECOVERY_DEADLINE_AT,sh.CREATED_AT+numtodsinterval(300,'SECOND')) as date)\n                     -cast(systimestamp as date))*86400) REMAINING_SECONDS,\n                   to_char(greatest(0,l.PICKED_QTY-sh.PICKED_QTY),'TM9','NLS_NUMERIC_CHARACTERS=''.,''') RESTORED_QUANTITY,\n                   to_char(greatest(0,l.PLANNED_QTY-l.PICKED_QTY),'TM9','NLS_NUMERIC_CHARACTERS=''.,''') ORDER_REMAINING_QUANTITY,\n                   it.STATUS INVENTORY_STATUS,it.ASSIGNED_TO AUDITOR,it.COUNT_OPERATION_ID,\n                   rt.STATUS REPLENISH_STATUS,rt.WAIT_REASON,\n                  "
+    }
+  ],
+  "max_http_ms": 1469,
+  "decision": "Retain exact warehouse filters, current source limits and shift read-only batches<=50/concurrency2. Inventory/resources owner profiles any repeated500ms or single1000ms source with native SQL/lock deltas and actual plan; no speculative business index. Access navigation metadata remains schema/access-owned if catalog cost repeats. One browser sample is not p95/load acceptance."
+}

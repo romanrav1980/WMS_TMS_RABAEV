@@ -1,0 +1,204 @@
+{
+  "status": "PASS",
+  "kind": "CHROMIUM_FAKE_VIDEO_REAL_GET_USER_MEDIA_AND_ZXING",
+  "physical_camera": false,
+  "physical_hardware": false,
+  "actual_api_calls": 0,
+  "actual_business_writes": 0,
+  "all_network_intercepted": true,
+  "code": "PALLET-1",
+  "qr": {
+    "file": "C:\\projects\\TMS\\reports\\retailcase\\2026-10-15\\store-camera-stream\\qr-software-camera.y4m",
+    "sha256": "9becc23d16b5b090c0e993b930c6b687688a2ea5991d013ed42bac039f3e9ec1",
+    "bytes": 1382457
+  },
+  "blank": {
+    "file": "C:\\projects\\TMS\\reports\\retailcase\\2026-10-15\\store-camera-stream\\blank-software-camera.y4m",
+    "sha256": "ae18992ece5f976b683e7f42f1e8a3ff49aba895ba8fcdabfba04f7d83151eac",
+    "bytes": 1382457
+  },
+  "assets": [
+    {
+      "file": "/assets/store-1JZFpLKD.js",
+      "sha256": "7db962585732ef56788fcb9af6b25353385ab4c778a90b749de460f6a1725cca"
+    },
+    {
+      "file": "/assets/client-Dcqo-eS2.js",
+      "sha256": "09da0c6c84219de9612c9606343f809bb513383b119f45ccdca64f2ed3de1f1d"
+    },
+    {
+      "file": "/assets/shared-D_pcc_jk.js",
+      "sha256": "4bdb48dca92a56f977b3b567172d980e28a59b50aac228ac63640070e1c19ab5"
+    },
+    {
+      "file": "/assets/shared-ZwPWzfPt.css",
+      "sha256": "48d409bca7b2bc04617e4bbb2d6186653f2d0affb6a644c09d44d5cbc77303b4"
+    },
+    {
+      "file": "/assets/store-DJvJY3Md.css",
+      "sha256": "1303d782413b2b5df9a7ef51d4b362945045c42aa2944258b0fdb131f9e1d49e"
+    }
+  ],
+  "results": [
+    {
+      "width": 390,
+      "status": "PASS",
+      "case": "native_mediaStream_video_frame_ZXing_QR_accept_lookup_and_stop",
+      "proof": {
+        "calls": 1,
+        "constraints": [
+          {
+            "audio": false,
+            "video": {
+              "facingMode": {
+                "ideal": "environment"
+              },
+              "width": {
+                "ideal": 1280
+              }
+            }
+          }
+        ],
+        "frames": [
+          {
+            "width": 640,
+            "height": 480,
+            "readyState": 4
+          }
+        ],
+        "tracks": [
+          {
+            "kind": "video",
+            "state": "ended",
+            "settings": {
+              "deviceId": "39ae19e1682f9bb30430d206adcf95315224b751b1142ffbacc7257de29ca5d1",
+              "groupId": "5d41034ba00591f5392a7d8946eae5e517b59901627aa351436687393a1e5999"
+            }
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/api/store-app/session",
+          "code": null
+        },
+        {
+          "method": "GET",
+          "path": "/api/store-app/deliveries",
+          "code": null
+        },
+        {
+          "method": "GET",
+          "path": "/api/store-app/deliveries/lookup",
+          "code": "PALLET-1"
+        },
+        {
+          "method": "GET",
+          "path": "/api/store-app/deliveries/CAMERA.QA.LOAD",
+          "code": null
+        }
+      ]
+    },
+    {
+      "width": 360,
+      "status": "PASS",
+      "case": "blank_live_video_manual_close_stops_tracks",
+      "proof": {
+        "calls": 1,
+        "constraints": [
+          {
+            "audio": false,
+            "video": {
+              "facingMode": {
+                "ideal": "environment"
+              },
+              "width": {
+                "ideal": 1280
+              }
+            }
+          }
+        ],
+        "frames": [
+          {
+            "width": 640,
+            "height": 480,
+            "readyState": 4
+          }
+        ],
+        "tracks": [
+          {
+            "kind": "video",
+            "state": "ended",
+            "settings": {
+              "deviceId": "9b152f5f926936552541e118bf7bf48142fa1081574cf7a9d5f0cc58bb67969c",
+              "groupId": "0e82f8d21042949a233bf49da6152e594c5e9bc867ac10244589effd11794e9f"
+            }
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/api/store-app/session",
+          "code": null
+        },
+        {
+          "method": "GET",
+          "path": "/api/store-app/deliveries",
+          "code": null
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "status": "PASS",
+      "case": "blank_live_video_manual_close_stops_tracks",
+      "proof": {
+        "calls": 1,
+        "constraints": [
+          {
+            "audio": false,
+            "video": {
+              "facingMode": {
+                "ideal": "environment"
+              },
+              "width": {
+                "ideal": 1280
+              }
+            }
+          }
+        ],
+        "frames": [
+          {
+            "width": 640,
+            "height": 480,
+            "readyState": 4
+          }
+        ],
+        "tracks": [
+          {
+            "kind": "video",
+            "state": "ended",
+            "settings": {
+              "deviceId": "688918258a5c7a444eaa81f08bf661e6aca55aa020f2bc1d5dfc456c7ab3a982",
+              "groupId": "4d88c87136dbfd4fac8beeaf2fa3808c87e4a99ee6b2dd325e9eea35cbd3dff2"
+            }
+          }
+        ]
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/api/store-app/session",
+          "code": null
+        },
+        {
+          "method": "GET",
+          "path": "/api/store-app/deliveries",
+          "code": null
+        }
+      ]
+    }
+  ]
+}

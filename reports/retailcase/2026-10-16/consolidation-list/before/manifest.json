@@ -1,0 +1,55 @@
+{
+  "captured_at_utc": "2026-10-16T05:14:33.746547+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_HU_CONSOL_READ",
+      "type": "PACKAGE",
+      "file": "rrl_hu_consol_read_package.sql",
+      "errors": [],
+      "user_source_sha256": "2d860a45668c5264c2658819e0af0ec31e833f87710267a8c0b9e8c12b38f4d9",
+      "normalized_source_sha256": "51fa9b38f5ab0fcf870e9b08a11caba31e79c2665377379ec12c8b4bd8e0b6a3",
+      "artifact_sha256": "1343509179b55b1c882d7eaee1bca9faf78d62d4465fbf2115c120c66dfb209b"
+    },
+    {
+      "name": "RRL_HU_CONSOL_READ",
+      "type": "PACKAGE BODY",
+      "file": "rrl_hu_consol_read_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "239c8e67d3b8bb86f7d2e662e0c0984adf2960eaefe3f04ed72cdbfcccd81190",
+      "normalized_source_sha256": "af080630446d8be02f94f8b04c7479936686189c4c32b68205e5b12dd467c883",
+      "artifact_sha256": "36db5c2640b4214a1473b9a1759d837b894a1c5d1d7a5f8e62069360e1ba625c"
+    },
+    {
+      "name": "RRL_ACCESS_API",
+      "type": "PACKAGE",
+      "file": "rrl_access_api_package.sql",
+      "errors": [],
+      "user_source_sha256": "c0dcb35298e707c93bc33d071084123829041dd3c3807e03f0e9b63d9239339b",
+      "normalized_source_sha256": "5f23ab1317a104445205effa27e3960ca0adddf96bf1a1a9d055dc4109b7aee8",
+      "artifact_sha256": "a844cfbf23bc737e15ecf2d86565a199f461bd1d160dbbd924651fedf273ef47"
+    },
+    {
+      "name": "RRL_ACCESS_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_access_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "9e5bc343e4c2becc4bc94164cec2ef3943ff52c208c8bc0305ceadd3bb09f95d",
+      "normalized_source_sha256": "4142c392e38deda38585c65073dba7d83c6125faacd2f378b656f7aa810f9604",
+      "artifact_sha256": "d4428bb1585431840262c2f30f730f62e7cba9081fa902700c8ed7f6c3fe6d5d"
+    },
+    {
+      "name": "RRL_STOCK_PLAN_HELPER",
+      "type": "PACKAGE",
+      "file": "rrl_stock_plan_helper_package.sql",
+      "errors": [],
+      "user_source_sha256": "9af6523db2650f1fce603aa5cc366339ada97fd3e4481f73ff21391972adcbab",
+      "normalized_source_sha256": "7a1e25da05977d7ae09a4323c66bb7e2ead8a6da395f5dd7d2b1a11b65a95b0d",
+      "artifact_sha256": "a9055374ef0f553f4445c18089d55166a7e4ae813f5560bbe3f40ab3e0de6b4d"
+    }
+  ]
+}

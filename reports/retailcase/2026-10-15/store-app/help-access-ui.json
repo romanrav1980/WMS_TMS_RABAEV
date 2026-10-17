@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "checks": [
+    "http_401_does_not_expose_bundled_or_published_body",
+    "http_403_does_not_expose_bundled_or_published_body",
+    "http_404_does_not_expose_bundled_or_published_body",
+    "published_article_used",
+    "network_failure_uses_explicit_public_bundle"
+  ],
+  "apiWrites": "INTERCEPTED_ONLY"
+}

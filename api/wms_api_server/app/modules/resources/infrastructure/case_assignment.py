@@ -31,15 +31,19 @@ def run_action(gateway: Any, task_id: int, action: str, request: Any, handler: C
     with gateway.transaction("CASE resource "+action) as cursor:
         try:
             permission="case_pick_manage" if action=="transfer_task" else "case_pick_execute"
-            cursor.execute("select RRL_HAS_WRIGHT(:actor,:permission) from dual",{"actor":request.actor,"permission":permission})
-            if cursor.fetchone()[0]!=1:raise HTTPException(403,detail="CASE action permission required")
-            cursor.execute("begin RRL_STOCK_METADATA_TX.begin_change(:actor,:permission);end;",{"actor":request.actor,"permission":permission})
+            if action=="transfer_task":
+                cursor.execute("begin RRL_CASE_TRANSFER_SCOPE.begin_change(:task,:actor);end;",{"task":task_id,"actor":request.actor})
+            else:
+                cursor.execute("select RRL_HAS_WRIGHT(:actor,:permission) from dual",{"actor":request.actor,"permission":permission})
+                if cursor.fetchone()[0]!=1:raise HTTPException(403,detail="CASE action permission required")
+                cursor.execute("begin RRL_STOCK_METADATA_TX.begin_change(:actor,:permission);end;",{"actor":request.actor,"permission":permission})
             bound=TransactionGateway(cursor)
             task=bound.fetch_all("select PICK_WAVE_ID from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:id",{"id":task_id})
             if not task:raise HTTPException(404,detail="CASE task not found")
             bound.fetch_all("select PICK_WAVE_ID from RRL_PICK_WAVE where PICK_WAVE_ID=:id for update",{"id":task[0]["pick_wave_id"]})
             bound.fetch_all("select CASE_PICK_TASK_ID from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:id for update",{"id":task_id})
             if action=="transfer_task":
+                cursor.execute("begin RRL_CASE_TRANSFER_SCOPE.assert_manager(:task,:actor);end;",{"task":task_id,"actor":request.actor})
                 from .case_handoff import replay
                 if replay(bound,task_id,request):return
             handler(bound,task_id,request)

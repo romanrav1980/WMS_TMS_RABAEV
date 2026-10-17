@@ -1,0 +1,1025 @@
+{
+  "state": "PASS_EXPLICIT_HTTP_PAIRS_BOUNDED_SQL_REVIEW",
+  "read_only": true,
+  "local_pairs": [
+    {
+      "request_id": "1cf30c14-e24c-4f4a-ac3e-97cf01480904",
+      "api_call_id": 69875,
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 203
+    },
+    {
+      "request_id": "729b3df3-4c0a-4a6a-b726-7a157f071b68",
+      "api_call_id": 69876,
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 67
+    },
+    {
+      "request_id": "4dd82466-4de3-43be-a6ad-a5b3c498e5ad",
+      "api_call_id": 69877,
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 123
+    },
+    {
+      "request_id": "762e8465-3e2e-4567-8f7d-6fa324a84f07",
+      "api_call_id": 69878,
+      "path": "/api/delivery/timing/window",
+      "response_status": 403,
+      "duration_ms": 231
+    },
+    {
+      "request_id": "a7658a21-fcc5-455b-b0fe-bc348d936b9d",
+      "api_call_id": 69880,
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 103
+    },
+    {
+      "request_id": "277fca70-d18b-4701-a911-4fa010fd9a55",
+      "api_call_id": 69881,
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 176
+    },
+    {
+      "request_id": "9e12ea7a-524a-490b-b1b0-4af7159988a3",
+      "api_call_id": 69882,
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 144
+    },
+    {
+      "request_id": "c81665ed-4aab-4d12-9eda-1132481ed997",
+      "api_call_id": 69883,
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 409,
+      "duration_ms": 72
+    },
+    {
+      "request_id": "b67fce73-3435-4cb9-8ef4-88a50177b2d2",
+      "api_call_id": 69884,
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 403,
+      "duration_ms": 102
+    },
+    {
+      "request_id": "591446ec-d469-4bd4-99da-478def0cafb0",
+      "api_call_id": 69890,
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 200,
+      "duration_ms": 221
+    },
+    {
+      "request_id": "f0941816-0aa3-4e71-81d6-e6e7ab7c898b",
+      "api_call_id": 69891,
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 403,
+      "duration_ms": 73
+    },
+    {
+      "request_id": "98bacb9d-c99e-437c-8a76-21e81f8297f0",
+      "api_call_id": 69892,
+      "path": "/api/resources/picker-kpis",
+      "response_status": 200,
+      "duration_ms": 224
+    },
+    {
+      "request_id": "63f11d82-7e81-45c2-8366-1fea6c9e2094",
+      "api_call_id": 69893,
+      "path": "/api/resources/picker-kpis",
+      "response_status": 403,
+      "duration_ms": 66
+    },
+    {
+      "request_id": "2f660804-789a-409d-a843-6abe8046846b",
+      "api_call_id": 70152,
+      "path": "/api/warehouse-hus/plan-move",
+      "response_status": 403,
+      "duration_ms": 204
+    },
+    {
+      "request_id": "b8daf7bd-fc27-482f-a9e3-363402a1fba3",
+      "api_call_id": 70153,
+      "path": "/api/warehouse-hus/plan-move",
+      "response_status": 200,
+      "duration_ms": 286
+    },
+    {
+      "request_id": "fe6c4a46-6f74-49b7-8ff9-42cdc98761d3",
+      "api_call_id": 70154,
+      "path": "/api/warehouse-hus/plan-move",
+      "response_status": 200,
+      "duration_ms": 82
+    },
+    {
+      "request_id": "ff852edb-9437-4ffb-bdf3-8b0e912c3ec8",
+      "api_call_id": 70155,
+      "path": "/api/warehouse-hus/plan-move",
+      "response_status": 409,
+      "duration_ms": 89
+    },
+    {
+      "request_id": "b7275903-4809-4f9c-a738-61abd52422c4",
+      "api_call_id": 70156,
+      "path": "/api/warehouse-hus/plan-move",
+      "response_status": 403,
+      "duration_ms": 44
+    },
+    {
+      "request_id": "a805c1d5-c6c0-4f11-8ae5-fbf3c9fdc629",
+      "api_call_id": 70157,
+      "path": "/api/warehouse-hus/plan-move",
+      "response_status": 200,
+      "duration_ms": 83
+    },
+    {
+      "request_id": "017589d1-8a79-46b2-b1c3-5005f743ae6a",
+      "api_call_id": 70158,
+      "path": "/api/warehouse-tasks/1194/resource-commands",
+      "response_status": 200,
+      "duration_ms": 152
+    },
+    {
+      "request_id": "0e328bd0-3045-4cf8-9b84-08a6ff062f47",
+      "api_call_id": 70159,
+      "path": "/api/warehouse-tasks/1194/resource-commands",
+      "response_status": 200,
+      "duration_ms": 130
+    },
+    {
+      "request_id": "f7dfd7bc-0b32-4d3c-810b-206815808d99",
+      "api_call_id": 70160,
+      "path": "/api/warehouse-tasks/1194/resource-commands",
+      "response_status": 200,
+      "duration_ms": 78
+    },
+    {
+      "request_id": "d5680510-be08-40f3-bd90-0ada11ff3e3c",
+      "api_call_id": 70161,
+      "path": "/api/warehouse-tasks/1194/resource-commands",
+      "response_status": 200,
+      "duration_ms": 79
+    },
+    {
+      "request_id": "d2b27ecc-78ee-4972-9979-47bb28464621",
+      "api_call_id": 70162,
+      "path": "/api/warehouse-tasks/1194/complete",
+      "response_status": 403,
+      "duration_ms": 76
+    },
+    {
+      "request_id": "4ef8d650-3865-4dd3-81b1-709e9c94e117",
+      "api_call_id": 70163,
+      "path": "/api/warehouse-tasks/1194/complete",
+      "response_status": 200,
+      "duration_ms": 568
+    },
+    {
+      "request_id": "4dacf0d0-3291-400f-950b-715a2df2f03b",
+      "api_call_id": 70164,
+      "path": "/api/warehouse-tasks/1194/complete",
+      "response_status": 200,
+      "duration_ms": 140
+    },
+    {
+      "request_id": "bd3595bf-fd47-4d89-affc-c2ddddb51080",
+      "api_call_id": 70165,
+      "path": "/api/warehouse-tasks/1194/complete",
+      "response_status": 403,
+      "duration_ms": 103
+    },
+    {
+      "request_id": "3274097d-897e-4dcd-817d-174ab4f94a3c",
+      "api_call_id": 70166,
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 163
+    },
+    {
+      "request_id": "7597974e-7153-4052-8274-aca55589511c",
+      "api_call_id": 70167,
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 151
+    },
+    {
+      "request_id": "0fd0eb04-55a7-463e-a911-938f5f6ab795",
+      "api_call_id": 70168,
+      "path": "/api/warehouse-hus/attach-case",
+      "response_status": 200,
+      "duration_ms": 1128
+    },
+    {
+      "request_id": "c5f0c2c4-bb1e-4451-9fb8-e955fed9ba83",
+      "api_call_id": 70169,
+      "path": "/api/warehouse-hus/attach-case",
+      "response_status": 200,
+      "duration_ms": 92
+    },
+    {
+      "request_id": "391fdc12-7ca6-4c46-9801-eb2732b40c52",
+      "api_call_id": 70170,
+      "path": "/api/warehouse-hus/attach-case",
+      "response_status": 403,
+      "duration_ms": 66
+    },
+    {
+      "request_id": "c6470811-1d43-42d9-ba3b-d242b6dee85f",
+      "api_call_id": 70171,
+      "path": "/api/warehouse-hus/attach-case",
+      "response_status": 200,
+      "duration_ms": 97
+    },
+    {
+      "request_id": "26197f8d-e9b8-40d0-9476-40e3aca93ae8",
+      "api_call_id": 70172,
+      "path": "/api/warehouse-hus/attach",
+      "response_status": 200,
+      "duration_ms": 260
+    },
+    {
+      "request_id": "e5c93bb8-5d45-4a52-84e9-7a619fc4c552",
+      "api_call_id": 70173,
+      "path": "/api/sku-quality-weight/20061923/AS16A0F1E381D78",
+      "response_status": 200,
+      "duration_ms": 98
+    },
+    {
+      "request_id": "4fc187a7-7844-4011-92ed-9724943da577",
+      "api_call_id": 70174,
+      "path": "/api/outgoing-quality/OC16.3151980d02.NEST.ST",
+      "response_status": 200,
+      "duration_ms": 152
+    },
+    {
+      "request_id": "91806cb7-7411-4781-b345-9ee2c8f7cad0",
+      "api_call_id": 70175,
+      "path": "/api/outgoing-quality/OC16.3151980d02.NEST.ST/weight",
+      "response_status": 200,
+      "duration_ms": 288
+    },
+    {
+      "request_id": "3122976b-7a7f-44a4-9e7b-caa4895bafe1",
+      "api_call_id": 70176,
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 1007
+    },
+    {
+      "request_id": "8d612c80-e747-48e3-8446-4fa26d39e67f",
+      "api_call_id": 70177,
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 74
+    },
+    {
+      "request_id": "34e03918-0520-47b0-a088-60ad137ef316",
+      "api_call_id": 70178,
+      "path": "/api/transport/loading/33654/depart",
+      "response_status": 200,
+      "duration_ms": 257
+    },
+    {
+      "request_id": "3679e4f1-f0ea-44ea-a2c6-69bf1256008f",
+      "api_call_id": 70179,
+      "path": "/api/delivery/store-receipts/policy",
+      "response_status": 200,
+      "duration_ms": 86
+    },
+    {
+      "request_id": "a8acfa40-65c8-437b-9c90-6e30167d796a",
+      "api_call_id": 70180,
+      "path": "/api/delivery/store-receipts/preview",
+      "response_status": 200,
+      "duration_ms": 128
+    },
+    {
+      "request_id": "50d60211-7671-417d-b71a-93f00fce3c87",
+      "api_call_id": 70181,
+      "path": "/api/delivery/store-receipts/unloading/abandon-start",
+      "response_status": 200,
+      "duration_ms": 73
+    },
+    {
+      "request_id": "f78b9b88-5230-4eba-98d6-631a57457647",
+      "api_call_id": 70182,
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "response_status": 200,
+      "duration_ms": 76
+    },
+    {
+      "request_id": "628ae7f5-bbe8-4bc2-ab72-9e9a60d356c1",
+      "api_call_id": 70183,
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 137
+    },
+    {
+      "request_id": "d6bae5c9-e9f4-4866-9645-6c2a1fd2d924",
+      "api_call_id": 70184,
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 409
+    },
+    {
+      "request_id": "427bb53e-d2e4-49d5-9b7e-3be3352a4434",
+      "api_call_id": 70185,
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 169
+    },
+    {
+      "request_id": "15d02dee-8bab-49c1-b971-6434d84bef2f",
+      "api_call_id": 70194,
+      "path": "/api/warehouse-hus/repack-slot",
+      "response_status": 200,
+      "duration_ms": 240
+    },
+    {
+      "request_id": "2f8c39cc-9fab-41db-845e-b5d60a86d7ee",
+      "api_call_id": 70195,
+      "path": "/api/warehouse-hus/repack-slot",
+      "response_status": 409,
+      "duration_ms": 85
+    },
+    {
+      "request_id": "9f798820-70ee-45c3-b106-c48bb9b31624",
+      "api_call_id": 70196,
+      "path": "/api/warehouse-hus/repack-slot",
+      "response_status": 403,
+      "duration_ms": 57
+    },
+    {
+      "request_id": "2e6f6da4-5ded-4c4b-adde-1dc2247787d5",
+      "api_call_id": 70197,
+      "path": "/api/warehouse-hus/relocate-slot",
+      "response_status": 200,
+      "duration_ms": 78
+    },
+    {
+      "request_id": "a459e76a-34d2-44b5-ac21-76b97382c8b8",
+      "api_call_id": 70198,
+      "path": "/api/warehouse-hus/relocate-slot",
+      "response_status": 409,
+      "duration_ms": 93
+    },
+    {
+      "request_id": "d4994968-cfe0-4a00-a771-4ac9ab243446",
+      "api_call_id": 70199,
+      "path": "/api/warehouse-hus/relocate-slot",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "request_id": "c1aa98c4-853f-47a9-bc71-80aa8dbb31cc",
+      "api_call_id": 70200,
+      "path": "/api/warehouse-hus/unpack",
+      "response_status": 200,
+      "duration_ms": 129
+    },
+    {
+      "request_id": "760b357b-5f8c-4269-b90c-7d16e07dbc57",
+      "api_call_id": 70201,
+      "path": "/api/warehouse-hus/unpack",
+      "response_status": 409,
+      "duration_ms": 83
+    },
+    {
+      "request_id": "d9e01635-f0a1-49ca-b7ec-25405ea43899",
+      "api_call_id": 70202,
+      "path": "/api/warehouse-hus/unpack",
+      "response_status": 403,
+      "duration_ms": 55
+    },
+    {
+      "request_id": "5a831ec4-5cd2-414b-8a0b-5f838166fa64",
+      "api_call_id": 70203,
+      "path": "/api/warehouse-hus/repack-slot",
+      "response_status": 403,
+      "duration_ms": 71
+    },
+    {
+      "request_id": "ef14f60b-c1b5-4745-a954-0f6d57fd0688",
+      "api_call_id": 70204,
+      "path": "/api/warehouse-hus/relocate-slot",
+      "response_status": 403,
+      "duration_ms": 105
+    },
+    {
+      "request_id": "19169918-156a-4588-ae02-8d904f0e84da",
+      "api_call_id": 70205,
+      "path": "/api/warehouse-hus/unpack",
+      "response_status": 403,
+      "duration_ms": 54
+    },
+    {
+      "request_id": "198022f9-cf5a-44eb-86a6-3db6deecc64b",
+      "api_call_id": 70207,
+      "path": "/api/resources/picker-kpis",
+      "response_status": 200,
+      "duration_ms": 628
+    },
+    {
+      "request_id": "3ec922ff-cbb9-4eeb-b751-4063837581b9",
+      "api_call_id": 70208,
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 200,
+      "duration_ms": 406
+    },
+    {
+      "request_id": "9d7b7d02-d15d-47b5-b5b6-59c9a8491795",
+      "api_call_id": 70209,
+      "path": "/api/resources/picker-kpis",
+      "response_status": 403,
+      "duration_ms": 141
+    },
+    {
+      "request_id": "b2d7df34-dda1-4ce4-aa29-f86b946c7ed2",
+      "api_call_id": 70210,
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 403,
+      "duration_ms": 81
+    }
+  ],
+  "local_tail_bytes": 7377212,
+  "local_line_cap": 12000,
+  "native_direct_calls_not_http_paired": true,
+  "limitations": [
+    "Bounded shared V$SQL is cumulative, not per-case latency or p95.",
+    "Local source window can omit older fixture setup; no invented pairing for direct native calls."
+  ],
+  "api": [
+    {
+      "api_call_id": 69875,
+      "request_id": "1cf30c14-e24c-4f4a-ac3e-97cf01480904",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 203
+    },
+    {
+      "api_call_id": 69876,
+      "request_id": "729b3df3-4c0a-4a6a-b726-7a157f071b68",
+      "path": "/api/delivery/timing/window",
+      "response_status": 200,
+      "duration_ms": 67
+    },
+    {
+      "api_call_id": 69877,
+      "request_id": "4dd82466-4de3-43be-a6ad-a5b3c498e5ad",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 123
+    },
+    {
+      "api_call_id": 69878,
+      "request_id": "762e8465-3e2e-4567-8f7d-6fa324a84f07",
+      "path": "/api/delivery/timing/window",
+      "response_status": 403,
+      "duration_ms": 231
+    },
+    {
+      "api_call_id": 69880,
+      "request_id": "a7658a21-fcc5-455b-b0fe-bc348d936b9d",
+      "path": "/api/delivery/timing/window",
+      "response_status": 409,
+      "duration_ms": 103
+    },
+    {
+      "api_call_id": 69881,
+      "request_id": "277fca70-d18b-4701-a911-4fa010fd9a55",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 176
+    },
+    {
+      "api_call_id": 69882,
+      "request_id": "9e12ea7a-524a-490b-b1b0-4af7159988a3",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 144
+    },
+    {
+      "api_call_id": 69883,
+      "request_id": "c81665ed-4aab-4d12-9eda-1132481ed997",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 409,
+      "duration_ms": 72
+    },
+    {
+      "api_call_id": 69884,
+      "request_id": "b67fce73-3435-4cb9-8ef4-88a50177b2d2",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 403,
+      "duration_ms": 102
+    },
+    {
+      "api_call_id": 69890,
+      "request_id": "591446ec-d469-4bd4-99da-478def0cafb0",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 200,
+      "duration_ms": 221
+    },
+    {
+      "api_call_id": 69891,
+      "request_id": "f0941816-0aa3-4e71-81d6-e6e7ab7c898b",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 403,
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 69892,
+      "request_id": "98bacb9d-c99e-437c-8a76-21e81f8297f0",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 200,
+      "duration_ms": 224
+    },
+    {
+      "api_call_id": 69893,
+      "request_id": "63f11d82-7e81-45c2-8366-1fea6c9e2094",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 403,
+      "duration_ms": 66
+    },
+    {
+      "api_call_id": 70152,
+      "request_id": "2f660804-789a-409d-a843-6abe8046846b",
+      "path": "/api/warehouse-hus/plan-move",
+      "response_status": 403,
+      "duration_ms": 204
+    },
+    {
+      "api_call_id": 70153,
+      "request_id": "b8daf7bd-fc27-482f-a9e3-363402a1fba3",
+      "path": "/api/warehouse-hus/plan-move",
+      "response_status": 200,
+      "duration_ms": 286
+    },
+    {
+      "api_call_id": 70154,
+      "request_id": "fe6c4a46-6f74-49b7-8ff9-42cdc98761d3",
+      "path": "/api/warehouse-hus/plan-move",
+      "response_status": 200,
+      "duration_ms": 82
+    },
+    {
+      "api_call_id": 70155,
+      "request_id": "ff852edb-9437-4ffb-bdf3-8b0e912c3ec8",
+      "path": "/api/warehouse-hus/plan-move",
+      "response_status": 409,
+      "duration_ms": 89
+    },
+    {
+      "api_call_id": 70156,
+      "request_id": "b7275903-4809-4f9c-a738-61abd52422c4",
+      "path": "/api/warehouse-hus/plan-move",
+      "response_status": 403,
+      "duration_ms": 44
+    },
+    {
+      "api_call_id": 70157,
+      "request_id": "a805c1d5-c6c0-4f11-8ae5-fbf3c9fdc629",
+      "path": "/api/warehouse-hus/plan-move",
+      "response_status": 200,
+      "duration_ms": 83
+    },
+    {
+      "api_call_id": 70158,
+      "request_id": "017589d1-8a79-46b2-b1c3-5005f743ae6a",
+      "path": "/api/warehouse-tasks/1194/resource-commands",
+      "response_status": 200,
+      "duration_ms": 152
+    },
+    {
+      "api_call_id": 70159,
+      "request_id": "0e328bd0-3045-4cf8-9b84-08a6ff062f47",
+      "path": "/api/warehouse-tasks/1194/resource-commands",
+      "response_status": 200,
+      "duration_ms": 130
+    },
+    {
+      "api_call_id": 70160,
+      "request_id": "f7dfd7bc-0b32-4d3c-810b-206815808d99",
+      "path": "/api/warehouse-tasks/1194/resource-commands",
+      "response_status": 200,
+      "duration_ms": 78
+    },
+    {
+      "api_call_id": 70161,
+      "request_id": "d5680510-be08-40f3-bd90-0ada11ff3e3c",
+      "path": "/api/warehouse-tasks/1194/resource-commands",
+      "response_status": 200,
+      "duration_ms": 79
+    },
+    {
+      "api_call_id": 70162,
+      "request_id": "d2b27ecc-78ee-4972-9979-47bb28464621",
+      "path": "/api/warehouse-tasks/1194/complete",
+      "response_status": 403,
+      "duration_ms": 76
+    },
+    {
+      "api_call_id": 70163,
+      "request_id": "4ef8d650-3865-4dd3-81b1-709e9c94e117",
+      "path": "/api/warehouse-tasks/1194/complete",
+      "response_status": 200,
+      "duration_ms": 568
+    },
+    {
+      "api_call_id": 70164,
+      "request_id": "4dacf0d0-3291-400f-950b-715a2df2f03b",
+      "path": "/api/warehouse-tasks/1194/complete",
+      "response_status": 200,
+      "duration_ms": 140
+    },
+    {
+      "api_call_id": 70165,
+      "request_id": "bd3595bf-fd47-4d89-affc-c2ddddb51080",
+      "path": "/api/warehouse-tasks/1194/complete",
+      "response_status": 403,
+      "duration_ms": 103
+    },
+    {
+      "api_call_id": 70166,
+      "request_id": "3274097d-897e-4dcd-817d-174ab4f94a3c",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 163
+    },
+    {
+      "api_call_id": 70167,
+      "request_id": "7597974e-7153-4052-8274-aca55589511c",
+      "path": "/api/warehouse-hus/create",
+      "response_status": 200,
+      "duration_ms": 151
+    },
+    {
+      "api_call_id": 70168,
+      "request_id": "0fd0eb04-55a7-463e-a911-938f5f6ab795",
+      "path": "/api/warehouse-hus/attach-case",
+      "response_status": 200,
+      "duration_ms": 1128
+    },
+    {
+      "api_call_id": 70169,
+      "request_id": "c5f0c2c4-bb1e-4451-9fb8-e955fed9ba83",
+      "path": "/api/warehouse-hus/attach-case",
+      "response_status": 200,
+      "duration_ms": 92
+    },
+    {
+      "api_call_id": 70170,
+      "request_id": "391fdc12-7ca6-4c46-9801-eb2732b40c52",
+      "path": "/api/warehouse-hus/attach-case",
+      "response_status": 403,
+      "duration_ms": 66
+    },
+    {
+      "api_call_id": 70171,
+      "request_id": "c6470811-1d43-42d9-ba3b-d242b6dee85f",
+      "path": "/api/warehouse-hus/attach-case",
+      "response_status": 200,
+      "duration_ms": 97
+    },
+    {
+      "api_call_id": 70172,
+      "request_id": "26197f8d-e9b8-40d0-9476-40e3aca93ae8",
+      "path": "/api/warehouse-hus/attach",
+      "response_status": 200,
+      "duration_ms": 260
+    },
+    {
+      "api_call_id": 70173,
+      "request_id": "e5c93bb8-5d45-4a52-84e9-7a619fc4c552",
+      "path": "/api/sku-quality-weight/20061923/AS16A0F1E381D78",
+      "response_status": 200,
+      "duration_ms": 98
+    },
+    {
+      "api_call_id": 70174,
+      "request_id": "4fc187a7-7844-4011-92ed-9724943da577",
+      "path": "/api/outgoing-quality/OC16.3151980d02.NEST.ST",
+      "response_status": 200,
+      "duration_ms": 152
+    },
+    {
+      "api_call_id": 70175,
+      "request_id": "91806cb7-7411-4781-b345-9ee2c8f7cad0",
+      "path": "/api/outgoing-quality/OC16.3151980d02.NEST.ST/weight",
+      "response_status": 200,
+      "duration_ms": 288
+    },
+    {
+      "api_call_id": 70176,
+      "request_id": "3122976b-7a7f-44a4-9e7b-caa4895bafe1",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 1007
+    },
+    {
+      "api_call_id": 70177,
+      "request_id": "8d612c80-e747-48e3-8446-4fa26d39e67f",
+      "path": "/api/transport/loading/confirm",
+      "response_status": 200,
+      "duration_ms": 74
+    },
+    {
+      "api_call_id": 70178,
+      "request_id": "34e03918-0520-47b0-a088-60ad137ef316",
+      "path": "/api/transport/loading/33654/depart",
+      "response_status": 200,
+      "duration_ms": 257
+    },
+    {
+      "api_call_id": 70179,
+      "request_id": "3679e4f1-f0ea-44ea-a2c6-69bf1256008f",
+      "path": "/api/delivery/store-receipts/policy",
+      "response_status": 200,
+      "duration_ms": 86
+    },
+    {
+      "api_call_id": 70180,
+      "request_id": "a8acfa40-65c8-437b-9c90-6e30167d796a",
+      "path": "/api/delivery/store-receipts/preview",
+      "response_status": 200,
+      "duration_ms": 128
+    },
+    {
+      "api_call_id": 70181,
+      "request_id": "50d60211-7671-417d-b71a-93f00fce3c87",
+      "path": "/api/delivery/store-receipts/unloading/abandon-start",
+      "response_status": 200,
+      "duration_ms": 73
+    },
+    {
+      "api_call_id": 70182,
+      "request_id": "f78b9b88-5230-4eba-98d6-631a57457647",
+      "path": "/api/delivery/store-receipts/unloading/start",
+      "response_status": 200,
+      "duration_ms": 76
+    },
+    {
+      "api_call_id": 70183,
+      "request_id": "628ae7f5-bbe8-4bc2-ab72-9e9a60d356c1",
+      "path": "/api/delivery/timing/arrival",
+      "response_status": 200,
+      "duration_ms": 137
+    },
+    {
+      "api_call_id": 70184,
+      "request_id": "d6bae5c9-e9f4-4866-9645-6c2a1fd2d924",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 409
+    },
+    {
+      "api_call_id": 70185,
+      "request_id": "427bb53e-d2e4-49d5-9b7e-3be3352a4434",
+      "path": "/api/delivery/store-receipts/confirm",
+      "response_status": 200,
+      "duration_ms": 169
+    },
+    {
+      "api_call_id": 70194,
+      "request_id": "15d02dee-8bab-49c1-b971-6434d84bef2f",
+      "path": "/api/warehouse-hus/repack-slot",
+      "response_status": 200,
+      "duration_ms": 240
+    },
+    {
+      "api_call_id": 70195,
+      "request_id": "2f8c39cc-9fab-41db-845e-b5d60a86d7ee",
+      "path": "/api/warehouse-hus/repack-slot",
+      "response_status": 409,
+      "duration_ms": 85
+    },
+    {
+      "api_call_id": 70196,
+      "request_id": "9f798820-70ee-45c3-b106-c48bb9b31624",
+      "path": "/api/warehouse-hus/repack-slot",
+      "response_status": 403,
+      "duration_ms": 57
+    },
+    {
+      "api_call_id": 70197,
+      "request_id": "2e6f6da4-5ded-4c4b-adde-1dc2247787d5",
+      "path": "/api/warehouse-hus/relocate-slot",
+      "response_status": 200,
+      "duration_ms": 78
+    },
+    {
+      "api_call_id": 70198,
+      "request_id": "a459e76a-34d2-44b5-ac21-76b97382c8b8",
+      "path": "/api/warehouse-hus/relocate-slot",
+      "response_status": 409,
+      "duration_ms": 93
+    },
+    {
+      "api_call_id": 70199,
+      "request_id": "d4994968-cfe0-4a00-a771-4ac9ab243446",
+      "path": "/api/warehouse-hus/relocate-slot",
+      "response_status": 403,
+      "duration_ms": 59
+    },
+    {
+      "api_call_id": 70200,
+      "request_id": "c1aa98c4-853f-47a9-bc71-80aa8dbb31cc",
+      "path": "/api/warehouse-hus/unpack",
+      "response_status": 200,
+      "duration_ms": 129
+    },
+    {
+      "api_call_id": 70201,
+      "request_id": "760b357b-5f8c-4269-b90c-7d16e07dbc57",
+      "path": "/api/warehouse-hus/unpack",
+      "response_status": 409,
+      "duration_ms": 83
+    },
+    {
+      "api_call_id": 70202,
+      "request_id": "d9e01635-f0a1-49ca-b7ec-25405ea43899",
+      "path": "/api/warehouse-hus/unpack",
+      "response_status": 403,
+      "duration_ms": 55
+    },
+    {
+      "api_call_id": 70203,
+      "request_id": "5a831ec4-5cd2-414b-8a0b-5f838166fa64",
+      "path": "/api/warehouse-hus/repack-slot",
+      "response_status": 403,
+      "duration_ms": 71
+    },
+    {
+      "api_call_id": 70204,
+      "request_id": "ef14f60b-c1b5-4745-a954-0f6d57fd0688",
+      "path": "/api/warehouse-hus/relocate-slot",
+      "response_status": 403,
+      "duration_ms": 105
+    },
+    {
+      "api_call_id": 70205,
+      "request_id": "19169918-156a-4588-ae02-8d904f0e84da",
+      "path": "/api/warehouse-hus/unpack",
+      "response_status": 403,
+      "duration_ms": 54
+    },
+    {
+      "api_call_id": 70207,
+      "request_id": "198022f9-cf5a-44eb-86a6-3db6deecc64b",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 200,
+      "duration_ms": 628
+    },
+    {
+      "api_call_id": 70208,
+      "request_id": "3ec922ff-cbb9-4eeb-b751-4063837581b9",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 200,
+      "duration_ms": 406
+    },
+    {
+      "api_call_id": 70209,
+      "request_id": "9d7b7d02-d15d-47b5-b5b6-59c9a8491795",
+      "path": "/api/resources/picker-kpis",
+      "response_status": 403,
+      "duration_ms": 141
+    },
+    {
+      "api_call_id": 70210,
+      "request_id": "b2d7df34-dda1-4ce4-aa29-f86b946c7ed2",
+      "path": "/api/delivery/timing/kpis",
+      "response_status": 403,
+      "duration_ms": 81
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 5014,
+      "api_call_id": 69877,
+      "elapsed_ms": 48,
+      "module": "WMS_API:69877",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5015,
+      "api_call_id": 69878,
+      "elapsed_ms": 72,
+      "module": "WMS_API:69878",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5016,
+      "api_call_id": 69880,
+      "elapsed_ms": 49,
+      "module": "WMS_API:69880",
+      "action": "POST /api/delivery/timing/window",
+      "sql_sample": "Native delivery time plan_window"
+    },
+    {
+      "log_id": 5017,
+      "api_call_id": 69883,
+      "elapsed_ms": 26,
+      "module": "WMS_API:69883",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5018,
+      "api_call_id": 69884,
+      "elapsed_ms": 48,
+      "module": "WMS_API:69884",
+      "action": "POST /api/delivery/timing/arriva",
+      "sql_sample": "Native delivery time record_arrival"
+    },
+    {
+      "log_id": 5019,
+      "api_call_id": 69891,
+      "elapsed_ms": 15,
+      "module": "WMS_API:69891",
+      "action": "GET /api/delivery/timing/kpis",
+      "sql_sample": "Scoped delivery KPI window cohort"
+    },
+    {
+      "log_id": 5020,
+      "api_call_id": 69893,
+      "elapsed_ms": 5,
+      "module": "WMS_API:69893",
+      "action": "GET /api/resources/picker-kpis",
+      "sql_sample": "Scoped immutable picker KPI window"
+    },
+    {
+      "log_id": 5034,
+      "api_call_id": 70162,
+      "elapsed_ms": 19,
+      "module": "WMS_API:70162",
+      "action": "POST /api/warehouse-tasks/1194/c",
+      "sql_sample": "Read current ordinary task completion admission"
+    },
+    {
+      "log_id": 5035,
+      "api_call_id": 70165,
+      "elapsed_ms": 17,
+      "module": "WMS_API:70165",
+      "action": "POST /api/warehouse-tasks/1194/c",
+      "sql_sample": "Read current ordinary task completion admission"
+    },
+    {
+      "log_id": 5037,
+      "api_call_id": 70210,
+      "elapsed_ms": 15,
+      "module": "WMS_API:70210",
+      "action": "GET /api/delivery/timing/kpis",
+      "sql_sample": "Scoped delivery KPI window cohort"
+    },
+    {
+      "log_id": 5038,
+      "api_call_id": 70209,
+      "elapsed_ms": 23,
+      "module": "WMS_API:70209",
+      "action": "GET /api/resources/picker-kpis",
+      "sql_sample": "Scoped immutable picker KPI window"
+    }
+  ],
+  "top_sql": [
+    {
+      "sql_id": "admdtyprqxjhm",
+      "executions": 238,
+      "avg_ms": 101.034,
+      "avg_buffers": 1375.63,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.execute_prepared(:result); end;"
+    },
+    {
+      "sql_id": "cy2kn2zg80uwq",
+      "executions": 2,
+      "avg_ms": 230.565,
+      "avg_buffers": 265,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_HU_EXEC_ACCESS'AND TYPE='PACKAGE BODY'ORDER BY LINE"
+    },
+    {
+      "sql_id": "568zn96rhwjru",
+      "executions": 2,
+      "avg_ms": 130.191,
+      "avg_buffers": 36.5,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_STOCK_HU_SLOT_MOVE_CMD'AND TYPE='PACKAGE BODY'ORDER BY LINE"
+    },
+    {
+      "sql_id": "5jfvwwtgzb031",
+      "executions": 1,
+      "avg_ms": 102.546,
+      "avg_buffers": 2705,
+      "sql_sample": "begin RRL_STOCK_POSTING_API.execute_prepared(:1); end;"
+    }
+  ],
+  "invalid": 0,
+  "max_http_ms": 1128,
+  "decisions": [
+    "Keep current source/load/store authority and immutable version/arrival unique lookups.",
+    "KPI reads remain bounded31days/500deliveries or5000picks/spans; overflow rejects, no silent truncation. Query owner: inspect actual KPI cohort plans and JSON warehouse extraction at pilot volume before adding indexes; retain request-id audit evidence.",
+    "Native V$SQL averages are cumulative observations, not endpoint p95. Direct fixture/time/concurrency commands have no invented HTTP pairing.",
+    "Inventory/transport owner retains loading admission/prepare/execute profiling backlog before pilot. Do not weaken locking or invent cache/index from isolated small data."
+  ]
+}

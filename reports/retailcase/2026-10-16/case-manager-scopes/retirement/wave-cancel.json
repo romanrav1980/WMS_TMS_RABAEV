@@ -1,0 +1,21 @@
+{
+  "state": "PASS_OWN_RETURNED_CASE_WAVE_CANCELLED_HISTORY_RETAINED",
+  "body": {
+    "operation_id": "OC16.60406a495a.FINAL.CANCEL",
+    "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+  },
+  "wave": 584,
+  "earlier_finish": "Confirmed rejection WAVE_EXECUTION_OR_SHIPPING_PENDING, do not retry",
+  "status": 200,
+  "response": {
+    "pick_wave_id": 584,
+    "status": "CANCELLED"
+  },
+  "api_call_id": "70238",
+  "request_id": "762228c3-2ecf-474a-a0c5-c6f81cb0bf71",
+  "wave_readback": [
+    {
+      "status": "CANCELLED"
+    }
+  ]
+}

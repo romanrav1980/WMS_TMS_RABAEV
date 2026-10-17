@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "RRL_ASM_INTENT_API",
+      "kind": "PACKAGE",
+      "exact": true,
+      "sha256": "6c39dd28ce09af01d777999ab6245578a097706cc86c643b9ef5e0d735185dc9"
+    },
+    {
+      "name": "RRL_ASM_INTENT_API",
+      "kind": "PACKAGE BODY",
+      "exact": true,
+      "sha256": "838a4d092acca32ef284504242a9ebfd979f9e6fce4fa7188ea26b024ad6fdb0"
+    },
+    {
+      "name": "RRL_ASM_INTENT_GUARD",
+      "kind": "TRIGGER",
+      "exact": true,
+      "sha256": "a7a0edb47562ddfefbfa9857cdd7b4c4faf7da2857d27f5794cd1a3a09c6628f"
+    },
+    {
+      "name": "RRL_ASSEMBLY_SCALE_API",
+      "kind": "PACKAGE BODY",
+      "exact": true,
+      "sha256": "46d5d94c5ddf9316e8d67af86909901c6b4c19bb6906b891b27eab84546b80a2"
+    }
+  ],
+  "invalid": 0,
+  "ledger": [
+    {
+      "status": "APPLIED"
+    }
+  ],
+  "scope": "Source and DDL; native business separate"
+}

@@ -1,0 +1,8 @@
+{
+  "status": "NOT_ACCEPTED_TEARDOWN_FAILURE",
+  "exit_code": 1,
+  "reason": "Browser closed with pending proxy callbacks; previous PASS is not final acceptance",
+  "correction": "networkidle and await unrouteAll; sanitized exception output",
+  "accepted_replacement": "../shift-native-production-final/native-ui.json",
+  "business_commands": 0
+}

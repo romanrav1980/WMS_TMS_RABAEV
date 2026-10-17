@@ -1,0 +1,53 @@
+{
+  "status": "PREPARED_READ_BODY_ONLY_NOT_APPLIED",
+  "kit_sha256": "995a4b75906fa3607ebef5e4cc931abbfedc57759c102dd880587714d2940a66",
+  "before_body_sha256": "E09544EF9238E611D805BAED692EFA2CE8004331ABC35728B80E612CCFA4785F",
+  "after_body_sha256": "9006A19AB62C2CFA1A872DA10D5DFF5E7C6E658EC83242CB3E01135AC40B5977",
+  "spec_sha256": "DD146D61195506D9E33029E048E2CDF85DB62F6940DA9FA5637173994C96BB95",
+  "clock_history": {
+    "streams": 1,
+    "events": 6,
+    "spans": 3,
+    "commands": 7,
+    "state": "OFF/IDLE",
+    "version": 6
+  },
+  "files": [
+    {
+      "candidate": "tmp/picker_time_read_parser_before_body.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_read_parser/before_body.sql",
+      "sha256": "c98e5f618c5aa17e9f51e4d215a2ac9206c7db5fa0a24d609dafac403c615883",
+      "bytes": 4470
+    },
+    {
+      "candidate": "tmp/picker_time_read_parser_body.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_read_parser/body.sql",
+      "sha256": "6d02bb758c2e26d3da3bcec7d3471320966e64222b7a79d8cb4a2fed0c9919e7",
+      "bytes": 5188
+    },
+    {
+      "candidate": "tmp/picker_time_read_parser_before.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_read_parser/before.sql",
+      "sha256": "1a785d1aff26507372e9059cf3e882f5bb76ee78dc9aa739e16ff069be5eeb1e",
+      "bytes": 2172
+    },
+    {
+      "candidate": "tmp/picker_time_read_parser_verify.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_read_parser/verify.sql",
+      "sha256": "0b3d397362b114c6bc95e02077ff5e7d59fc3510e8e8f97904398707f6d654f6",
+      "bytes": 2172
+    },
+    {
+      "candidate": "tmp/picker_time_read_parser_apply.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_read_parser/apply.sql",
+      "sha256": "5ce2541248faa31c20f875ac0143c617d203707b20435a33916e5b2b58462413",
+      "bytes": 657
+    },
+    {
+      "candidate": "tmp/picker_time_read_parser_rollback.sql",
+      "release": "db/migrations/2026-10-15_picker_actual_time_read_parser/rollback.sql",
+      "sha256": "5db0a89479dc58314a9701098a58d959b0d6a54d3d67e8bdfe4a8ce71f2cb6ab",
+      "bytes": 610
+    }
+  ]
+}

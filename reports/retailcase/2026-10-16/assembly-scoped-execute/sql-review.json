@@ -1,0 +1,373 @@
+{
+  "read_only": true,
+  "hardware_verified": false,
+  "http": [
+    {
+      "api_call_id": 69369,
+      "request_id": "8e7071de-3e04-444e-8372-8f3e7f22fa8b",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "response_status": 403,
+      "duration_ms": 58
+    },
+    {
+      "api_call_id": 69368,
+      "request_id": "799ae41c-bfd6-4fdf-ae60-c41dd7966ca9",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "response_status": 403,
+      "duration_ms": 84
+    },
+    {
+      "api_call_id": 69367,
+      "request_id": "0ca70f4d-45aa-4d6a-a362-b885bdaac6fe",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "response_status": 200,
+      "duration_ms": 86
+    },
+    {
+      "api_call_id": 69366,
+      "request_id": "cb2453c7-f3f7-4d48-b0a4-90a9855f62e4",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "response_status": 403,
+      "duration_ms": 61
+    },
+    {
+      "api_call_id": 69365,
+      "request_id": "2709a396-6a3e-44c3-aa61-725607e90cb9",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "response_status": 200,
+      "duration_ms": 60
+    },
+    {
+      "api_call_id": 69364,
+      "request_id": "64e4ed29-5492-4908-a276-482de497ad5e",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/finish",
+      "response_status": 403,
+      "duration_ms": 62
+    },
+    {
+      "api_call_id": 69363,
+      "request_id": "f674aac3-c8c4-48bb-85e4-fd5f60ab4ebe",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "response_status": 403,
+      "duration_ms": 64
+    },
+    {
+      "api_call_id": 69362,
+      "request_id": "5774562a-bfb7-4227-82f7-4d0bfc4a87cb",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/finish",
+      "response_status": 409,
+      "duration_ms": 104
+    },
+    {
+      "api_call_id": 69361,
+      "request_id": "7d1fac08-8be7-456b-a2af-73abc912edf8",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/close",
+      "response_status": 200,
+      "duration_ms": 161
+    },
+    {
+      "api_call_id": 69360,
+      "request_id": "3de6455a-933e-435c-b14c-0a0cfe96b1e7",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/finish",
+      "response_status": 200,
+      "duration_ms": 141
+    },
+    {
+      "api_call_id": 69359,
+      "request_id": "0c2c628c-8a92-488e-a7b9-bf1c305ec957",
+      "path": "/api/inventory/assembly-scale/steps/AS16.35cea92c27.STEP",
+      "response_status": 200,
+      "duration_ms": 68
+    },
+    {
+      "api_call_id": 69358,
+      "request_id": "ebd13d54-9fcd-4903-89ec-07d427d1cd4e",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "response_status": 200,
+      "duration_ms": 235
+    }
+  ],
+  "slow": [
+    {
+      "log_id": 4922,
+      "api_call_id": 69369,
+      "elapsed_ms": 8,
+      "module": "WMS_API:69369",
+      "action": "GET /api/inventory/assembly-scal",
+      "sql_sample": "Assembly scale read_session"
+    },
+    {
+      "log_id": 4921,
+      "api_call_id": 69368,
+      "elapsed_ms": 15,
+      "module": "WMS_API:69368",
+      "action": "GET /api/inventory/assembly-scal",
+      "sql_sample": "Assembly scale read_session"
+    },
+    {
+      "log_id": 4920,
+      "api_call_id": 69366,
+      "elapsed_ms": 10,
+      "module": "WMS_API:69366",
+      "action": "GET /api/inventory/assembly-scal",
+      "sql_sample": "Assembly scale read_session"
+    },
+    {
+      "log_id": 4919,
+      "api_call_id": 69364,
+      "elapsed_ms": 11,
+      "module": "WMS_API:69364",
+      "action": "POST /api/inventory/assembly-sca",
+      "sql_sample": "Assembly scale finish"
+    },
+    {
+      "log_id": 4918,
+      "api_call_id": 69363,
+      "elapsed_ms": 12,
+      "module": "WMS_API:69363",
+      "action": "GET /api/inventory/assembly-scal",
+      "sql_sample": "Assembly scale read_session"
+    },
+    {
+      "log_id": 4917,
+      "api_call_id": 69362,
+      "elapsed_ms": 38,
+      "module": "WMS_API:69362",
+      "action": "POST /api/inventory/assembly-sca",
+      "sql_sample": "Assembly scale finish"
+    }
+  ],
+  "native_cumulative": [
+    {
+      "sql_id": "fk2qc3yt7dd3a",
+      "executions": 4,
+      "avg_ms": 75.817,
+      "avg_buffers": 1165,
+      "sql_sample": "begin RRL_WH_WEIGH_REQUEST_API.request_capture(:1,:2,:3); end;"
+    },
+    {
+      "sql_id": "ca7pfdp2a45xq",
+      "executions": 3,
+      "avg_ms": 85.011,
+      "avg_buffers": 1819.33,
+      "sql_sample": "begin RRL_WH_WEIGH_REQUEST_API.claim_request(:1,:2,:3,:4); end;"
+    },
+    {
+      "sql_id": "gz4tnp3uj1a1k",
+      "executions": 2,
+      "avg_ms": 45.105,
+      "avg_buffers": 447,
+      "sql_sample": "begin RRL_WH_WEIGH_REQUEST_API.request_status(:1,:2,:3); end;"
+    },
+    {
+      "sql_id": "11bpzy048p6nb",
+      "executions": 19,
+      "avg_ms": 1.513,
+      "avg_buffers": 9.63,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_WH_WEIGH_REQUEST NEWER WHERE NEWER.DEVICE_ID=:B3 AND NEWER.REQUEST_ID!=:B2 AND NEWER.CREATED_AT>=:B1 AND NOT EXISTS(SELECT 1 FROM RRL_WH_WEIGH_CLAIM CL JOIN RRL_WH_SCALE_CAPTURE C ON C.DEVICE_ID=CL.DEVICE_ID AND C.CAPTURE_ID=CL.CLAIM_ID WHERE CL.REQUEST_ID=:B2 )"
+    },
+    {
+      "sql_id": "a9xscwwhcmn1d",
+      "executions": 1,
+      "avg_ms": 25,
+      "avg_buffers": 35,
+      "sql_sample": "SELECT COUNT(*),MIN(SESSION_ID)FROM RRL_ASSEMBLY_SESSION WHERE CASE_PICK_TASK_ID=:B3 AND OPERATOR_ID=:B2 AND STATE='OPEN'AND LAST_CONTENT_VERSION=:B1 AND EXPIRES_AT>=SYSTIMESTAMP"
+    },
+    {
+      "sql_id": "7y5hh2ynjpmr5",
+      "executions": 2,
+      "avg_ms": 12.257,
+      "avg_buffers": 49.5,
+      "sql_sample": "SELECT R.*FROM RRL_ASM_RECONCILIATION R JOIN RRL_ASSEMBLY_SESSION A ON A.SESSION_ID=R.SESSION_ID WHERE A.DEVICE_ID=:B1 AND R.STATE='AUTHORIZED'ORDER BY R.REQUESTED_AT FETCH FIRST 1 ROW ONLY"
+    },
+    {
+      "sql_id": "bf55ghnpf9jkd",
+      "executions": 1,
+      "avg_ms": 22.723,
+      "avg_buffers": 92,
+      "sql_sample": "SELECT COUNT(*)FROM RRL_ASSEMBLY_SESSION S JOIN RRL_CASE_PICK_TASK T ON T.CASE_PICK_TASK_ID=S.CASE_PICK_TASK_ID WHERE S.CASE_PICK_TASK_ID=:B2 AND S.OPERATOR_ID=:B1 AND S.STATE='OPEN'AND S.EXPIRES_AT>=SYSTIMESTAMP AND S.LAST_CONTENT_VERSION=T.CONTENT_VERSION AND S.CARRIER_IDENTIFIER=T.SSCC AND S.LAST_SEQUENCE>0 AND EXISTS(SELECT 1 FROM RRL_ASSEMBLY_STEP A WHERE A.SESSION_ID=S.SESSION_ID AND A.STATE='APPLIED') AND NOT EXISTS(SELECT 1 FROM RRL_ASSEMBLY_STEP A WHERE A.SESSION_ID=S.SESSION_ID AND A.STATE NOT IN('APPLIED','CANCELLED'))"
+    },
+    {
+      "sql_id": "1um2md6mguyh9",
+      "executions": 1,
+      "avg_ms": 19.139,
+      "avg_buffers": 15,
+      "sql_sample": "SELECT /* OPT_DYN_SAMP */ /*+ ALL_ROWS IGNORE_WHERE_CLAUSE RESULT_CACHE(SNAPSHOT=3600) opt_param('parallel_execution_enabled', 'false') NO_PARALLEL(SAMPLESUB) NO_PARALLEL_INDEX(SAMPLESUB) NO_SQL_TUNE */ NVL(SUM(C1),0), NVL(SUM(C2),0) FROM (SELECT /*+ IGNORE_WHERE_CLAUSE NO_PARALLEL(\"RRL_ASSEMBLY_SESSION\") FULL(\"RRL_ASSEMBLY_SESSION\") NO_PARALLEL_INDEX(\"RRL_ASSEMBLY_SESSION\") */ 1 AS C1, CASE WHEN \"RRL_ASSEMBLY_SESSION\".\"CASE_PICK_TASK_ID\"=:B1 AND \"RRL_ASSEMBLY_SESSION\".\"OPERATOR_ID\"=:B2 AND \"RRL_ASSEMBLY_SESSION\".\"STATE\"='OPEN' AND \"RRL_ASSEMBLY_SESSION\".\"LAST_CONTENT_VERSION\"=:B3 AND SYS_EXTRACT_UTC(\"RRL_ASSEMBLY_SESSION\".\"EXPIRES_AT\")>=SYS_EXTRACT_UTC(SYSTIMESTAMP(6)) THEN 1 ELSE 0 END AS C2 FROM \"RABAEV\".\"RRL_ASSEMBLY_SESSION\" \"RRL_ASSEMBLY_SESSION\") SAMPLESUB"
+    },
+    {
+      "sql_id": "847pb2q4ps4zh",
+      "executions": 3,
+      "avg_ms": 6.071,
+      "avg_buffers": 69.67,
+      "sql_sample": "SELECT *FROM RRL_WH_WEIGH_REQUEST WHERE DEVICE_ID=JSON_VALUE(:B1 ,'$.device_id' RETURNING VARCHAR2(512))AND EXPIRES_AT>=SYSTIMESTAMP"
+    },
+    {
+      "sql_id": "cf5acczxdf07u",
+      "executions": 2,
+      "avg_ms": 7.961,
+      "avg_buffers": 135,
+      "sql_sample": "INSERT INTO RRL_WH_WEIGH_REQUEST VALUES (:B1 ,:B2 ,:B3 ,:B4 ,:B5 ,:B6 ,:B7 ,:B8 ,:B9 ,:B10 ,:B11 ) "
+    }
+  ],
+  "local_pairs": [
+    {
+      "api_call_id": 69369,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "8e7071de-3e04-444e-8372-8f3e7f22fa8b",
+        "method": "GET",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+        "logged_at": "2026-10-15T21:30:56.971372+00:00",
+        "api_call_id": 69369,
+        "response_status": 403,
+        "duration_ms": 58
+      }
+    },
+    {
+      "api_call_id": 69368,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "799ae41c-bfd6-4fdf-ae60-c41dd7966ca9",
+        "method": "GET",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+        "logged_at": "2026-10-15T21:30:56.875863+00:00",
+        "api_call_id": 69368,
+        "response_status": 403,
+        "duration_ms": 84
+      }
+    },
+    {
+      "api_call_id": 69367,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "0ca70f4d-45aa-4d6a-a362-b885bdaac6fe",
+        "method": "GET",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+        "logged_at": "2026-10-15T21:30:56.741624+00:00",
+        "api_call_id": 69367,
+        "response_status": 200,
+        "duration_ms": 86
+      }
+    },
+    {
+      "api_call_id": 69366,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "cb2453c7-f3f7-4d48-b0a4-90a9855f62e4",
+        "method": "GET",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+        "logged_at": "2026-10-15T21:30:56.546934+00:00",
+        "api_call_id": 69366,
+        "response_status": 403,
+        "duration_ms": 61
+      }
+    },
+    {
+      "api_call_id": 69365,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "2709a396-6a3e-44c3-aa61-725607e90cb9",
+        "method": "GET",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+        "logged_at": "2026-10-15T21:30:56.450456+00:00",
+        "api_call_id": 69365,
+        "response_status": 200,
+        "duration_ms": 60
+      }
+    },
+    {
+      "api_call_id": 69364,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "64e4ed29-5492-4908-a276-482de497ad5e",
+        "method": "POST",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/finish",
+        "logged_at": "2026-10-15T21:30:56.338028+00:00",
+        "api_call_id": 69364,
+        "response_status": 403,
+        "duration_ms": 62
+      }
+    },
+    {
+      "api_call_id": 69363,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "f674aac3-c8c4-48bb-85e4-fd5f60ab4ebe",
+        "method": "GET",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+        "logged_at": "2026-10-15T21:30:56.258580+00:00",
+        "api_call_id": 69363,
+        "response_status": 403,
+        "duration_ms": 64
+      }
+    },
+    {
+      "api_call_id": 69362,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "5774562a-bfb7-4227-82f7-4d0bfc4a87cb",
+        "method": "POST",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/finish",
+        "logged_at": "2026-10-15T21:30:56.124678+00:00",
+        "api_call_id": 69362,
+        "response_status": 409,
+        "duration_ms": 104
+      }
+    },
+    {
+      "api_call_id": 69361,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "7d1fac08-8be7-456b-a2af-73abc912edf8",
+        "method": "POST",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/close",
+        "logged_at": "2026-10-15T21:30:56.002241+00:00",
+        "api_call_id": 69361,
+        "response_status": 200,
+        "duration_ms": 161
+      }
+    },
+    {
+      "api_call_id": 69360,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "3de6455a-933e-435c-b14c-0a0cfe96b1e7",
+        "method": "POST",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/finish",
+        "logged_at": "2026-10-15T21:30:55.821695+00:00",
+        "api_call_id": 69360,
+        "response_status": 200,
+        "duration_ms": 141
+      }
+    },
+    {
+      "api_call_id": 69359,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "0c2c628c-8a92-488e-a7b9-bf1c305ec957",
+        "method": "GET",
+        "path": "/api/inventory/assembly-scale/steps/AS16.35cea92c27.STEP",
+        "logged_at": "2026-10-15T21:30:55.653607+00:00",
+        "api_call_id": 69359,
+        "response_status": 200,
+        "duration_ms": 68
+      }
+    },
+    {
+      "api_call_id": 69358,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "ebd13d54-9fcd-4903-89ec-07d427d1cd4e",
+        "method": "GET",
+        "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+        "logged_at": "2026-10-15T21:30:55.561934+00:00",
+        "api_call_id": 69358,
+        "response_status": 200,
+        "duration_ms": 235
+      }
+    }
+  ],
+  "max_http_ms": 235,
+  "decision": "Retain exact session/step identity reads, 50-step history bound and current native scope checks; no speculative cache/index. Claim TTL30/requestTTL120 are correctness fences, not slow SQL. Cumulative cursor averages include previous cases and are not scenario p95. Owner: inventory/native assembly; measure per-session plans at pilot scale before new indexes.",
+  "limits": "12 actual HTTP functional requests plus direct native workflow; not a load test. SQL slow records may be whole TX or denial, not SELECT over500ms; top10 cumulative cursors cannot establish per-case latency."
+}

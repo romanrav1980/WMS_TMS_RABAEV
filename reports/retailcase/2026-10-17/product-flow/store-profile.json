@@ -1,0 +1,83 @@
+{
+  "actor": "AS16O21740f343f",
+  "role": "OC16.4f58710060.DLV.STORE.ROLE",
+  "store_id": "f36e33a74107dfa6ea4502d1f63793b8fee47e76b0788ba1c5a4c21b7d17d383",
+  "store": "OC16.4f58710060.DLV.STORE",
+  "load": "OC16.4f58710060.DLV.LOAD",
+  "commands": [
+    {
+      "wire": {
+        "operation_id": "OC16.4f58710060.DLV.STORE.PROFILE.0",
+        "command_type": "OBJECT_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "kind": "STORE",
+          "object_id": "f36e33a74107dfa6ea4502d1f63793b8fee47e76b0788ba1c5a4c21b7d17d383",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "parent_kind": null,
+          "parent_id": null,
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.4f58710060.DLV.STORE.PROFILE.0",
+        "command_type": "OBJECT_SAVE",
+        "object_id": "f36e33a74107dfa6ea4502d1f63793b8fee47e76b0788ba1c5a4c21b7d17d383",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    {
+      "wire": {
+        "operation_id": "OC16.4f58710060.DLV.STORE.PROFILE.1",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "OC16.4f58710060.DLV.STORE.ROLE",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "store_receipt_confirm"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.4f58710060.DLV.STORE.PROFILE.1",
+        "command_type": "ROLE_SAVE",
+        "object_id": "OC16.4f58710060.DLV.STORE.ROLE",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    {
+      "wire": {
+        "operation_id": "OC16.4f58710060.DLV.STORE.PROFILE.2",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "OC16.4f58710060.DLV.STORE.ACCESS",
+          "username": "AS16O21740f343f",
+          "role_id": "OC16.4f58710060.DLV.STORE.ROLE",
+          "scope_kind": "STORE",
+          "scope_id": "f36e33a74107dfa6ea4502d1f63793b8fee47e76b0788ba1c5a4c21b7d17d383",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-17T07:04:50.433036+00:00",
+          "valid_until": "2026-10-17T09:05:50.433036+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "OC16.4f58710060.DLV.STORE.PROFILE.2",
+        "command_type": "ASSIGN",
+        "object_id": "OC16.4f58710060.DLV.STORE.ACCESS",
+        "version": 1,
+        "replayed": false
+      }
+    }
+  ],
+  "state": "READY_OWN_STORE_ONLY_NO_FLAT_RIGHT"
+}

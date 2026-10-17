@@ -1,0 +1,202 @@
+{
+  "indexes": [
+    {
+      "index_name": "RRL_RESOURCE_INTENT_OLD_UK",
+      "index_type": "NORMAL",
+      "uniqueness": "UNIQUE",
+      "status": "VALID",
+      "partitioned": "NO"
+    },
+    {
+      "index_name": "SYS_C0019476",
+      "index_type": "NORMAL",
+      "uniqueness": "UNIQUE",
+      "status": "VALID",
+      "partitioned": "NO"
+    },
+    {
+      "index_name": "SYS_IL0000087249C00013$$",
+      "index_type": "LOB",
+      "uniqueness": "UNIQUE",
+      "status": "VALID",
+      "partitioned": "NO"
+    },
+    {
+      "index_name": "SYS_IL0000087249C00014$$",
+      "index_type": "LOB",
+      "uniqueness": "UNIQUE",
+      "status": "VALID",
+      "partitioned": "NO"
+    },
+    {
+      "index_name": "SYS_IL0000087249C00015$$",
+      "index_type": "LOB",
+      "uniqueness": "UNIQUE",
+      "status": "VALID",
+      "partitioned": "NO"
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_name": "RRL_RESOURCE_INTENT_OLD_UK",
+      "constraint_type": "U",
+      "index_name": "RRL_RESOURCE_INTENT_OLD_UK",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019457",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019458",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019459",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019460",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019461",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019462",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019463",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019464",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019465",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019466",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019467",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019468",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019469",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019470",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019471",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019472",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019473",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019474",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019475",
+      "constraint_type": "C",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019476",
+      "constraint_type": "P",
+      "index_name": "SYS_C0019476",
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019478",
+      "constraint_type": "R",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    },
+    {
+      "constraint_name": "SYS_C0019479",
+      "constraint_type": "R",
+      "index_name": null,
+      "status": "ENABLED",
+      "validated": "VALIDATED"
+    }
+  ]
+}

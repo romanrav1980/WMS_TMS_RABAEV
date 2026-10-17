@@ -1,0 +1,11 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_scoped_execute\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_scoped_execute\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_scoped_execute\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_scoped_execute\rrl_hu_exec_access_package.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_scoped_execute\rrl_hu_exec_access_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_scoped_execute\rrl_stock_hu_cmd_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_scoped_execute\rrl_stock_posting_api_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_scoped_execute\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_scoped_execute\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_hu_scoped_execute\after_sources.sql
+Done. Statements=11; Errors=0; AbsentCleanup=0

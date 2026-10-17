@@ -1,0 +1,243 @@
+{
+  "status": "RETIRED_CANONICAL_EMPTY_CANCEL_NO_GOODS_PICK",
+  "before": {
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "assigned_to": "CRES15.OP",
+        "assigned_resource_id": 59,
+        "resource_session_id": 55,
+        "equipment_id": null,
+        "assignment_version": 2,
+        "content_version": 2,
+        "picked_qty": 0,
+        "started_at_instant": "2026-10-15 09:31:51.198164"
+      }
+    ],
+    "stock": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 12
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "events": [
+      {
+        "n": 2
+      }
+    ],
+    "receipts": [
+      {
+        "n": 5
+      }
+    ]
+  },
+  "quantity_pick_commands": 0,
+  "hardware_verified": false,
+  "commands": {
+    "EMPTY": "{\"actor\":\"admin\",\"command_type\":\"CASE_CARRIER_RETURN\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"allow_empty\":true,\"destinations\":{},\"expected_content_version\":2,\"reason\":\"SIMULATED_TEST_LABEL_NOT_PHYSICAL; TEST_FIXTURE_NOT_HARDWARE CRES15 metadata proof\",\"scan_container\":\"090000000000009028\"},\"operation_id\":\"CRES15.CLEANUP.EMPTY\",\"source\":{\"case_task_id\":1138},\"units\":[]}",
+    "WAVE": "{\"actor\":\"admin\",\"command_type\":\"WAVE_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"only_cancelled_replenishment\":0,\"reason\":\"SIMULATED_TEST_LABEL_NOT_PHYSICAL; TEST_FIXTURE_NOT_HARDWARE CRES15 metadata proof\",\"reservation_kind\":null},\"operation_id\":\"CRES15.CLEANUP.WAVE\",\"source\":{\"document_id\":569,\"document_type\":\"PICK_WAVE\"},\"units\":[]}",
+    "PLAN": "{\"actor\":\"admin\",\"command_type\":\"PICK_PLAN_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"only_cancelled_replenishment\":0,\"reason\":\"SIMULATED_TEST_LABEL_NOT_PHYSICAL; TEST_FIXTURE_NOT_HARDWARE CRES15 metadata proof\",\"reservation_kind\":null},\"operation_id\":\"CRES15.CLEANUP.PLAN\",\"source\":{\"document_id\":2200,\"document_type\":\"PICK_PLAN\"},\"units\":[]}",
+    "BOOK": "{\"actor\":\"admin\",\"command_type\":\"TARE_BOOK_CANCEL\",\"contract_version\":2,\"lines\":[],\"metadata\":{},\"operation_id\":\"CRES15.CLEANUP.BOOK\",\"source\":{\"booking_operation_id\":\"CRES15.AK06.TARE.BOOK\"},\"units\":[]}",
+    "COUNT": "{\"actor\":\"admin\",\"command_type\":\"TARE_COUNT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"condition\":\"GOOD\",\"decision_reference\":\"TEST_CRES15_RESTORE0\",\"expected_version\":7,\"observed_quantity\":\"0\",\"owner_ware_id\":13583852,\"pallet_type_id\":32,\"reason\":\"SIMULATED_TEST_LABEL_NOT_PHYSICAL; TEST_FIXTURE_NOT_HARDWARE CRES15 metadata proof\"},\"operation_id\":\"CRES15.CLEANUP.COUNT\",\"source\":{},\"units\":[]}"
+  },
+  "empty_cancel_caller_rollback": "PASS source/case/events/receipts restored; op/clock/outbox absent",
+  "lineage_before": [
+    {
+      "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+      "cell": "CPT_13583852",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 3,
+      "stock_origin_uid": "300000034518661218",
+      "created_by_stock_op": "WHREQ15.ASM.PICK1136"
+    },
+    {
+      "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+      "cell": "QIPcdbf4c0962",
+      "remain": 1,
+      "hard_reserved_base": 0,
+      "stock_version": 1,
+      "stock_origin_uid": "300000034518661218",
+      "created_by_stock_op": "WHREQ15.ASM.PICK1136"
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QIPcdbf4c0962",
+      "remain": 23,
+      "hard_reserved_base": 1,
+      "stock_version": 12,
+      "stock_origin_uid": "300000034518661218",
+      "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd"
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2,
+      "stock_origin_uid": "300000034518661218",
+      "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd"
+    }
+  ],
+  "empty_cancel": {
+    "empty_cancel": true,
+    "task": 1138,
+    "version": 2,
+    "carrier": "090000000000009028",
+    "warehouse": 13583852,
+    "stocks": [],
+    "before": [],
+    "unused": [
+      {
+        "id": 1871,
+        "uid": "REUSE.RETURN:e6c16d0bbd",
+        "article": "REUSE.QA:cdbf4c0962",
+        "base": "EA",
+        "cell": "QIPcdbf4c0962"
+      }
+    ],
+    "operation_id": "CRES15.CLEANUP.EMPTY",
+    "status": "CANCELLED_EMPTY",
+    "physical_quantity_changed": false,
+    "next_action": "RELEASE_HELD_TARE_BOOK_THEN_WAVE_DECISION",
+    "outbox_id": 5339
+  },
+  "WAVE": {
+    "operation_id": "CRES15.CLEANUP.WAVE",
+    "document_type": "PICK_WAVE",
+    "document_id": 569,
+    "released_count": 0,
+    "outbox_id": 5340
+  },
+  "PLAN": {
+    "operation_id": "CRES15.CLEANUP.PLAN",
+    "document_type": "PICK_PLAN",
+    "document_id": 2200,
+    "released_count": 0,
+    "outbox_id": 5341
+  },
+  "BOOK": {
+    "operation_id": "CRES15.CLEANUP.BOOK",
+    "status": "CANCELLED",
+    "place_kind": "CASE",
+    "place_id": "1138",
+    "pallet_type_id": 32,
+    "warehouse_id": 13583852,
+    "available_quantity": "1",
+    "quantity": "1",
+    "physical_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 5342
+  },
+  "COUNT": {
+    "status": "POSTED",
+    "tare_balance_changed": true,
+    "destination_quantity": "0",
+    "operation_id": "CRES15.CLEANUP.COUNT",
+    "quantity": "0",
+    "owner_ware_id": 13583852,
+    "pallet_type_id": 32,
+    "condition": "GOOD",
+    "goods_stock_changed": false,
+    "outbox_id": 5343
+  },
+  "qualification_retired": {
+    "resource_id": 59,
+    "task_type": "CASE_PICK",
+    "active": false
+  },
+  "role_retired": {
+    "operation_id": "CRES15.ROLE.RETIRE",
+    "command_type": "ROLE_SAVE",
+    "object_id": "CRES15.CASE.EXEC",
+    "version": 4,
+    "replayed": false
+  },
+  "lineage_after": [
+    {
+      "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+      "cell": "CPT_13583852",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 3,
+      "stock_origin_uid": "300000034518661218",
+      "created_by_stock_op": "WHREQ15.ASM.PICK1136"
+    },
+    {
+      "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+      "cell": "QIPcdbf4c0962",
+      "remain": 1,
+      "hard_reserved_base": 0,
+      "stock_version": 1,
+      "stock_origin_uid": "300000034518661218",
+      "created_by_stock_op": "WHREQ15.ASM.PICK1136"
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QIPcdbf4c0962",
+      "remain": 23,
+      "hard_reserved_base": 0,
+      "stock_version": 13,
+      "stock_origin_uid": "300000034518661218",
+      "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd"
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2,
+      "stock_origin_uid": "300000034518661218",
+      "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd"
+    }
+  ],
+  "after": {
+    "task": [
+      {
+        "status": "CANCELLED",
+        "assigned_to": "CRES15.OP",
+        "assigned_resource_id": 59,
+        "resource_session_id": 55,
+        "equipment_id": null,
+        "assignment_version": 3,
+        "content_version": 3,
+        "picked_qty": 0,
+        "started_at_instant": "2026-10-15 09:31:51.198164"
+      }
+    ],
+    "stock": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 0,
+        "stock_version": 13
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "events": [
+      {
+        "n": 2
+      }
+    ],
+    "receipts": [
+      {
+        "n": 5
+      }
+    ]
+  },
+  "retained": "TYPE32/SSCC/start/version/shift/order/metadata receipts and ACL history preserved; no direct CASE reset or physical hardware claim",
+  "source_parent23_child1_lineage_unchanged": true
+}

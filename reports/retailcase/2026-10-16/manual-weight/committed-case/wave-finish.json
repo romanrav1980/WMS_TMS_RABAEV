@@ -1,0 +1,15 @@
+{
+  "state": "FROZEN_BEFORE_WAVE_FINISH",
+  "wave_id": 576,
+  "body": {
+    "operation_id": "MW16.WAVE.FINISH.ab42b67239"
+  },
+  "http": {
+    "api_call_id": "69458",
+    "request_id": "2d4dbcce-0b57-452a-916c-576cb4adb421",
+    "status": 404
+  },
+  "result": {
+    "detail": "Not Found"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "checks": [
+    "exact_intent",
+    "immutable_body_conflict",
+    "original_actor",
+    "device_busy",
+    "dedicated_sender_poll_only",
+    "fixed_exact_claim_lease",
+    "second_claim_busy",
+    "orphan_packet_denied",
+    "capture_context_fenced",
+    "cached_preclaim_series_denied",
+    "strict_real_native_ack",
+    "derived_capture_key_not_stock_posted",
+    "exact_archive_ack",
+    "reassigned_sender_cannot_inherit_original_ack",
+    "revoked_operator_cannot_read_or_replay_request",
+    "request_and_claim_append_only",
+    "all_archive_request_claim_and_fixture_changes_rollback_P_H_V_unchanged",
+    "two_simultaneous_claims_one_winner_one_definite_busy",
+    "expired_claim_cannot_archive_or_renew_exact_retry",
+    "new_fenced_claim_after_proven_absence_archives_one_EMPTY_without_stock"
+  ],
+  "stock": [
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QIPcdbf4c0962",
+      "remain": 24,
+      "hard_reserved_base": 1,
+      "stock_version": 10
+    },
+    {
+      "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "stock_effect": "NONE_FROM_QUEUE",
+  "physical_hardware": false
+}

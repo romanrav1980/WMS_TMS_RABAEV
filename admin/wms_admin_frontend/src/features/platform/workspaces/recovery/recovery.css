@@ -1,0 +1,18 @@
+/* Восстановление недостач (C0117) — стиль двойника (.ops). Длинные артикулы/ячейки не раздвигают экран. */
+.rc-head{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.rc-link{color:#8ec5ff;font-size:13px;white-space:nowrap}
+.rc-stages{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.rc-stages button{border:1px solid transparent;cursor:pointer;font:inherit;font-size:12px}
+.rc-stages button[aria-pressed=true]{border-color:#e6eef6}
+.rc-list li{display:block;padding:0;background:none}
+.rc-row{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;gap:2px 8px;width:100%;text-align:left;padding:8px;border-radius:8px;border:1px solid transparent;background:#172334;color:inherit;font:inherit;cursor:pointer;min-width:0}
+.rc-row:hover,.rc-row:focus-visible{border-color:#3d8bfd}
+.rc-row small{grid-column:1;color:var(--ops-dim,#93a6ba)}
+.rc-row .ops-chip{grid-row:1/3;grid-column:2;align-self:center}
+.rc-ellipsis{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.rc-card dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;margin:8px 0}
+.rc-card dt{color:var(--ops-dim,#93a6ba)}.rc-card dd{margin:0;overflow-wrap:anywhere}
+.rc-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+@media(max-width:420px){.rc-row{grid-template-columns:1fr}.rc-row .ops-chip{grid-row:auto;grid-column:1;justify-self:start}}
+.rc-row .ops-chip{white-space:normal;max-width:150px;text-align:center}
+.rc-row small{overflow-wrap:anywhere}

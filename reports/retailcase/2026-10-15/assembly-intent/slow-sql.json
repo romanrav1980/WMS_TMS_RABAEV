@@ -1,0 +1,58 @@
+{
+  "status": "REVIEWED",
+  "rows": [
+    {
+      "log_id": 4726,
+      "elapsed_ms": 46,
+      "api_path": "/api/inventory/assembly-scale/sessions",
+      "sql_sample": "Assembly scale open_session"
+    },
+    {
+      "log_id": 4696,
+      "elapsed_ms": 558,
+      "api_path": "/api/inventory/assembly-scale/context",
+      "sql_sample": "Assembly scale context"
+    },
+    {
+      "log_id": 4693,
+      "elapsed_ms": 9,
+      "api_path": "/api/inventory/assembly-scale/sessions/ASM15.S1031/close",
+      "sql_sample": "Assembly close current session"
+    },
+    {
+      "log_id": 4692,
+      "elapsed_ms": 98,
+      "api_path": "/api/inventory/assembly-scale/sessions/ASM15.S1031/close",
+      "sql_sample": "Existing CASE carrier close"
+    }
+  ],
+  "decision": "Keep bounded identity lookups and existing PK/unique receipt/session/step indexes. Latest attributable calls reviewed; >1000ms requires query-plan attribution before any new index. Oracle lock waits in concurrency proofs intentional and recorded separately; no speculative index.",
+  "source": "RRL_SQL_SLOW_LOG latest LOG_ID filtered assembly-scale, not naive local-time comparison",
+  "local_api_audit": [
+    {
+      "path": "/api/inventory/assembly-scale/abandonments/WHREQ15.ABSENT.ABANDON",
+      "response_status": 200,
+      "duration_ms": 47,
+      "logged_at": "2026-10-15T12:28:06.530047+00:00"
+    },
+    {
+      "path": "/api/inventory/assembly-scale/abandonments/WHREQ15.ABSENT.ABANDON",
+      "response_status": 200,
+      "duration_ms": 67,
+      "logged_at": "2026-10-15T12:29:19.869064+00:00"
+    },
+    {
+      "path": "/api/inventory/assembly-scale/abandonments/WHREQ15.ABSENT.ABANDON",
+      "response_status": 200,
+      "duration_ms": 53,
+      "logged_at": "2026-10-15T12:29:21.652993+00:00"
+    },
+    {
+      "path": "/api/inventory/assembly-scale/abandonments/WHREQ15.ABSENT.ABANDON",
+      "response_status": 200,
+      "duration_ms": 96,
+      "logged_at": "2026-10-15T12:29:23.044129+00:00"
+    }
+  ],
+  "local_api_max_ms": 96
+}

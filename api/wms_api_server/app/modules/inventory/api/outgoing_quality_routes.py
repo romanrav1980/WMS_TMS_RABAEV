@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import Literal, Protocol
 from fastapi import APIRouter, Depends, Path, Query, HTTPException, Response
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from ...platform.public import AdminUser, require_permission
 from .task_scan_routes import UnitScan
 from ..domain.quality_label import quality_label_html
@@ -43,6 +43,15 @@ class WeightRequest(QualityRequest):
     quality_kind: Literal["WEIGHT", "WEIGHT2"]
     gross_weight: Decimal = Field(gt=0, max_digits=18, decimal_places=9)
     wood_weight: Decimal = Field(ge=0, max_digits=18, decimal_places=9)
+    measurement_origin: Literal["MANUAL_CONFIRMED"] | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def exclusive_source(cls, value: object) -> object:
+        if (isinstance(value, dict) and value.get("measurement_origin") == "MANUAL_CONFIRMED"
+                and any(key in value for key in ("final_scale_capture", "capture_key"))):
+            raise ValueError("Manual weight and electronic capture are mutually exclusive")
+        return value
 
 
 @router.get("/{identifier}")
@@ -78,7 +87,10 @@ def scan(body: ScanRequest, identifier: str = Path(min_length=1, max_length=150)
 def weight(body: WeightRequest, identifier: str = Path(min_length=1, max_length=150),
            user: AdminUser = Depends(require_permission("outgoing_pallet_check")),
            service: QualityPort = Depends(outgoing_quality_service)) -> dict:
-    return service.check(identifier, body.model_dump(mode="json"), user.username)
+    payload = body.model_dump(mode="json")
+    if body.measurement_origin is None:
+        payload.pop("measurement_origin")
+    return service.check(identifier, payload, user.username)
 
 
 @router.post("/{identifier}/plan")

@@ -161,7 +161,7 @@ def load_admin_user(username: str, password: str) -> AdminUser | None:
             """
             select ID, NAME, USER_GROUP, PRAVO_ADMIN_LOGIN
               from RUSERS
-             where lower(ID) = lower(:username)
+             where lower(trim(ID)) = lower(trim(:username))
                and PASS = :password
                and nvl(DELETED, 0) = 0
             """,

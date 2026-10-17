@@ -1,7 +1,7 @@
 from typing import Any, Literal
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field
-from ...platform.public import AdminUser, require_permission
+from ...platform.public import AdminUser, require_permission, get_current_user
 from ..contracts_preflight import TransportPreflightPort, transport_preflight_service, TransportPlanError
 
 router = APIRouter(prefix="/api/transport/preflight", tags=["transport-preflight"])
@@ -27,7 +27,7 @@ class TimeApproval(TimePreflight):
 
 
 @router.get("/trips/{trip_id}/time-context")
-def time_context(trip_id: int, user: AdminUser = Depends(require_permission("transport_dispatch_edit")),
+def time_context(trip_id: int, user: AdminUser = Depends(get_current_user),
                  service: TransportPreflightPort = Depends(transport_preflight_service)) -> dict[str, Any]:
     if trip_id < 1:
         raise HTTPException(422, "Positive trip required")

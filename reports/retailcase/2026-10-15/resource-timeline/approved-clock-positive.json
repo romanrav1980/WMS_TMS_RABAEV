@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "checks": [
+    "native_v7_valid_route_approval_without_operational_admission",
+    "native_view_only_actor_gets_two_approved_aware_operations",
+    "foreign_warehouse_clock_denied",
+    "source_change_removes_projection",
+    "exact_source_restoration_restores_original_projection",
+    "revocation_denies_previously_approved_clock",
+    "approval_source_and_scoped_fixtures_rolled_back"
+  ],
+  "timings": [
+    {
+      "operation": "native_v7_approval",
+      "ms": 208.43
+    }
+  ],
+  "trip_id": 33641,
+  "source_contract_version": 7,
+  "explicit_fixture_region": "Asia/Tbilisi",
+  "projected_operations": 2,
+  "approval_actor": "admin",
+  "view_actor": "NATIVE_VIEW_ONLY",
+  "road_provider": "NI081TEST",
+  "business_commit": false,
+  "physical_site_verified": false,
+  "stock_effect": "NONE",
+  "invalid_count": 0,
+  "user_errors": 0,
+  "native_approval_has_no_commit": true,
+  "recent_slow": [],
+  "top_sql": [],
+  "slow_sql_decision": "Native approval measured208.43ms. Keep bounded 200trip members/operations and 2000 source lines; no index without slow-plan evidence. Direct native calls generated no HTTP API audit. Review repeated >1000ms with plan; owner transport/Codex."
+}

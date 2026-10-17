@@ -1,0 +1,36 @@
+const REASONS: Record<string, string> = {
+  CASE_RESOURCE_ASSIGNMENT_VERSION_CHANGED: "Задание уже изменилось. Обновите данные перед новым действием.",
+  CASE_RESOURCE_TASK_STATE_CONFLICT: "Состояние задания изменилось. Обновите данные.",
+  CASE_SESSION_UNAVAILABLE: "Рабочая сессия закрыта или приостановлена. Обратитесь к старшему смены.",
+  CASE_SCOPED_ACTIVE_SESSION_REQUIRED: "Нужна действующая активная рабочая сессия.",
+  CASE_PHYSICAL_SESSION_REQUIRED: "Откройте рабочую сессию назначенного ресурса.",
+  CASE_SCOPED_PHYSICAL_SESSION_REQUIRED: "Для этого действия нужна собственная рабочая сессия.",
+  CASE_SHIFT_UNAVAILABLE: "Смена ещё не открыта или уже закончилась. Проверьте смену со старшим.",
+  CASE_RESOURCE_QUALIFICATION_REQUIRED: "Для ресурса не подтверждён допуск к сборке. Обратитесь к старшему смены.",
+  CASE_OPERATOR_BUSY_WITH_OTHER_PHYSICAL_STEP: "У вас уже есть другая незавершённая физическая работа. Завершите её или согласуйте передачу.",
+  CASE_RESOURCE_UNAVAILABLE: "Ресурс сейчас недоступен. Выберите другую разрешённую сессию или обратитесь к старшему.",
+  CASE_EQUIPMENT_UNAVAILABLE: "Техника сейчас недоступна. Проверьте её назначение и состояние.",
+  CASE_RESOURCE_TYPE_UNSUITABLE: "Этот ресурс не подходит для сборки. Выберите подходящую собственную сессию.",
+  CASE_RESOURCE_EQUIPMENT_BINDING_CONFLICT: "Назначение техники не совпадает с рабочей сессией. Обновите данные.",
+  CASE_RESOURCE_CONTEXT_CONFLICT: "Назначение ресурса изменилось. Обновите задание и рабочие сессии.",
+  CASE_SESSION_CONTEXT_CONFLICT: "Рабочая сессия больше не соответствует заданию. Обновите данные.",
+  CASE_RESOURCE_IDENTITY_MISSING: "Выбранная рабочая сессия или ресурс не найдены. Обновите список.",
+  CASE_SCOPED_SHIFT_WAREHOUSE_CONFLICT: "Смена и ресурс относятся к разным складам. Исправление выполняет старший смены.",
+  CASE_SESSION_OWNER_CONFLICT: "Эта сессия принадлежит другому оператору. Выберите собственную.",
+  CASE_SCOPED_SESSION_OWNER_REQUIRED: "Доступна только собственная рабочая сессия.",
+  CASE_TARGET_NOT_EXECUTOR: "Не подтверждён допуск исполнителя к этому заданию.",
+  CASE_EXECUTE_FORBIDDEN: "Нет действующего допуска к выполнению этого задания.",
+  CASE_RESOURCE_CURRENT_SCOPE_REQUIRED: "Нет действующего допуска к заданию на этом складе.",
+  CASE_RESOURCE_SCOPED_EXECUTION_FORBIDDEN: "Нет действующего допуска к этому действию. Обратитесь к старшему смены.",
+  CASE_USE_EXPLICIT_TRANSFER: "Для смены исполнителя или ресурса нужна отдельная передача старшим смены.",
+  CASE_CARRIER_NEEDS_EXPLICIT_TRANSFER: "Тара уже закреплена за работой. Нужна отдельная подтверждённая передача.",
+  CASE_TRANSFER_FORBIDDEN: "Передача требует отдельного допуска старшего смены.",
+  CASE_TRANSFER_TARGET_SESSION_REQUIRED: "У получателя должна быть собственная действующая рабочая сессия.",
+  WAVE_PICK_RELEASE_REQUIRED: "Волна ещё не выпущена в сборку. Выпуск подтверждает старший смены.",
+  CASE_ASSEMBLY_GOOD_TARE_BOOK_REQUIRED: "Для начала нужна подтверждённая пригодная тара. Проверьте подготовку задания со старшим.",
+  CASE_RESOURCE_UNSUPPORTED_CONTEXT: "Для этого задания требуется отдельный рабочий процесс или допуск. Обратитесь к старшему смены.",
+};
+export function reasonText(value: string | null): string {
+  const code = value?.match(/\b(?:CASE_|WAVE_)[A-Z0-9_]+\b/)?.[0] || "";
+  return REASONS[code] || "Условия действия не подтверждены. Обратитесь к старшему смены.";
+}

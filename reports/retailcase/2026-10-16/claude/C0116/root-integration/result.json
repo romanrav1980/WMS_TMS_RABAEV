@@ -1,0 +1,9 @@
+{
+  "state": "BEFORE_UI_COMMAND",
+  "writes": [],
+  "errors": [],
+  "checks": [
+    "identity_in_normal_header_no_overlay"
+  ],
+  "failure": "Error: locator.innerText: Error: strict mode violation: locator('.cp-editor h3') resolved to 2 elements:\n    1) <h3>…</h3> aka getByRole('heading', { name: 'Новый план CP.20220394.' })\n    2) <h3>…</h3> aka getByRole('heading', { name: 'Сборки в плане' })\n\nCall log:\n\u001b[2m  - waiting for locator('.cp-editor h3')\u001b[22m\n"
+}

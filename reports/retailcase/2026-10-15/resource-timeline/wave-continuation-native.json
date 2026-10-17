@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "checks": [
+    "metadata_only_setup_and_positive_launch_plan_cancel_caller_rollback_no_stock_commit",
+    "explicit_authorized_launch_commit_H1_and_cancel_compensator_rollback_proven",
+    "native_metadata_context_rejects_commit_and_rollback_reuse",
+    "native_fractional_step_denied",
+    "source_commit_answer_loss_launch_APPLIED_continuation_FAILED_and_frozen_original_body",
+    "middle_metadata_fault_atomic_rollback_and_done_prefix_preserved",
+    "current_revoke_denies_launch_replay_continuation_and_minimal_receipt",
+    "concurrent_exact_recovery_runs_only_remaining_steps_no_second_launch_source_CASE_or_warehouse_task",
+    "canonical_cancel_preflight_rollback_then_wave_and_plan_compensation_APPLIED"
+  ],
+  "context": {
+    "prefix": "wldd214fecbf",
+    "actor": "wldd214fecbf",
+    "cell": "WLd214fecbf",
+    "role": "wldd214fecbfr",
+    "assignment": "wldd214fecbfar",
+    "launch": "WAVE.DURABLE.LAUNCH:d214fecbf",
+    "cancel": "WAVE.DURABLE.CANCEL:d214fecbf",
+    "plan_cancel": "WAVE.DURABLE.PLAN.CANCEL:d214fecbf",
+    "order": 2144,
+    "order_row": 3632,
+    "plan": 2197,
+    "line": 2206,
+    "task": 2135,
+    "reservation": 2003,
+    "wave": 565,
+    "wave_order": 1967,
+    "face": 604,
+    "face_article": 295,
+    "assignments": [
+      "wldd214fecbfa",
+      "wldd214fecbfar"
+    ],
+    "source_operation": "WAVE.LAUNCH.SOURCE:c4b298bfcd87969934e8c1afb20c07e6:1636",
+    "source_body": "{\"actor\":\"wldd214fecbf\",\"command_type\":\"WAVE_RESERVE_SOURCES\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"allow_unissued_source_rebind\":true,\"launch_operation_id\":\"WAVE.DURABLE.LAUNCH:d214fecbf\",\"requested_row_ids\":[1636]},\"operation_id\":\"WAVE.LAUNCH.SOURCE:c4b298bfcd87969934e8c1afb20c07e6:1636\",\"source\":{\"type\":\"PICK_WAVE\",\"wave_id\":565},\"units\":[]}"
+  },
+  "error": null,
+  "source": "REUSE.RETURN:e6c16d0bbd",
+  "stock_final": {
+    "remain": 24,
+    "hard_reserved_base": 0,
+    "stock_version": 9
+  },
+  "stock_commit": "EXPLICIT_AUTHORIZED_RESERVATION_ONLY",
+  "physical_moves": 0,
+  "history_retained": true
+}

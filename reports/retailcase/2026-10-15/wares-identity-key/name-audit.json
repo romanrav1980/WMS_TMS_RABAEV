@@ -1,0 +1,74 @@
+{
+  "read_only": true,
+  "names": [
+    {
+      "id": 1,
+      "name": "1"
+    },
+    {
+      "id": 2,
+      "name": "2"
+    },
+    {
+      "id": 3,
+      "name": "3"
+    },
+    {
+      "id": 4,
+      "name": "4"
+    },
+    {
+      "id": 5,
+      "name": "5"
+    },
+    {
+      "id": 6,
+      "name": "6"
+    },
+    {
+      "id": 7,
+      "name": "7"
+    },
+    {
+      "id": 8,
+      "name": "8"
+    },
+    {
+      "id": 10,
+      "name": "10"
+    },
+    {
+      "id": 12,
+      "name": "12"
+    },
+    {
+      "id": 9101,
+      "name": "TEST RAW MATERIAL"
+    },
+    {
+      "id": 9102,
+      "name": "TEST PRODUCTION"
+    }
+  ],
+  "name_counts": [
+    {
+      "row_count": 291,
+      "null_names": 0,
+      "distinct_names": 291,
+      "normalized_names": 291
+    }
+  ],
+  "duplicate_names": [],
+  "normalized_duplicate_names": [],
+  "column_comments": [
+    {
+      "column_name": "ID",
+      "comments": null
+    },
+    {
+      "column_name": "NAME",
+      "comments": null
+    }
+  ],
+  "dependent_fk": []
+}

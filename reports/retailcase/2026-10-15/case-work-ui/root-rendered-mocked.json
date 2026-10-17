@@ -1,0 +1,157 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "CLAIM_APPLIED_360",
+      "status": "PASS",
+      "posts": 1,
+      "javascript_errors": []
+    },
+    {
+      "name": "CLAIM_APPLIED_390",
+      "status": "PASS",
+      "posts": 1,
+      "javascript_errors": []
+    },
+    {
+      "name": "CLAIM_APPLIED_1440",
+      "status": "PASS",
+      "posts": 1,
+      "javascript_errors": []
+    },
+    {
+      "name": "START_original_instant",
+      "status": "PASS",
+      "posts": 1,
+      "javascript_errors": []
+    },
+    {
+      "name": "PRESERVE_raw409",
+      "status": "PASS",
+      "posts": 1,
+      "javascript_errors": []
+    },
+    {
+      "name": "PRESERVE_forbidden",
+      "status": "PASS",
+      "posts": 1,
+      "javascript_errors": []
+    },
+    {
+      "name": "PRESERVE_hash",
+      "status": "PASS",
+      "posts": 1,
+      "javascript_errors": []
+    },
+    {
+      "name": "PRESERVE_wrong-binding",
+      "status": "PASS",
+      "posts": 1,
+      "javascript_errors": []
+    },
+    {
+      "name": "PRESERVE_wrong-version",
+      "status": "PASS",
+      "posts": 1,
+      "javascript_errors": []
+    },
+    {
+      "name": "PRESERVE_wrong-status",
+      "status": "PASS",
+      "posts": 1,
+      "javascript_errors": []
+    },
+    {
+      "name": "DEFINITE_REJECTED_409",
+      "status": "PASS",
+      "posts": 1,
+      "javascript_errors": []
+    },
+    {
+      "name": "LOST_reload_GET404_exact_manual_retry",
+      "status": "PASS",
+      "posts": 2,
+      "javascript_errors": []
+    },
+    {
+      "name": "CORRUPT_journal_blocked",
+      "status": "PASS",
+      "posts": 0,
+      "javascript_errors": []
+    },
+    {
+      "name": "PRESERVE_foreign-actor",
+      "status": "PASS",
+      "posts": 0,
+      "javascript_errors": []
+    },
+    {
+      "name": "PRESERVE_foreign-server",
+      "status": "PASS",
+      "posts": 0,
+      "javascript_errors": []
+    },
+    {
+      "name": "PRESERVE_foreign-task",
+      "status": "PASS",
+      "posts": 0,
+      "javascript_errors": []
+    },
+    {
+      "name": "PRESERVE_corrupt-wire",
+      "status": "PASS",
+      "posts": 0,
+      "javascript_errors": []
+    },
+    {
+      "name": "STORAGE_write_failure_prevents_POST",
+      "status": "PASS",
+      "posts": 0,
+      "javascript_errors": []
+    },
+    {
+      "name": "FOREIGN_ASSIGNED_no_start_offer",
+      "status": "PASS",
+      "posts": 0,
+      "javascript_errors": []
+    },
+    {
+      "name": "UNICODE_4codepoints_not8",
+      "status": "PASS",
+      "posts": 0,
+      "javascript_errors": []
+    },
+    {
+      "name": "CROSS_TAB_preserve_one_exact_original",
+      "status": "PASS",
+      "posts": 2,
+      "javascript_errors": []
+    },
+    {
+      "name": "SESSION_reason_guidance_ CASE_RESOURCE_QUALIFICATION_REQUIRED",
+      "status": "PASS",
+      "posts": 0,
+      "javascript_errors": []
+    },
+    {
+      "name": "SESSION_reason_guidance_ FUTURE_UNKNOWN_REASON",
+      "status": "PASS",
+      "posts": 0,
+      "javascript_errors": []
+    },
+    {
+      "name": "CLAUDE_C0113_archived_result_is_different_task",
+      "status": "PASS",
+      "posts": 0,
+      "javascript_errors": []
+    },
+    {
+      "name": "CONTEXT_read_failure_preserves_exact_recovery",
+      "status": "PASS",
+      "posts": 1,
+      "javascript_errors": []
+    }
+  ],
+  "native_mutations": false,
+  "hardware": false
+}

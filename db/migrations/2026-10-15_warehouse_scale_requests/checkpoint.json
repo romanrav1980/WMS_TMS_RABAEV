@@ -1,0 +1,36 @@
+﻿{
+    "migration_id":  "2026-10-15-warehouse-scale-requests",
+    "status":  "APPLIED",
+    "target":  "RABAEV@127.0.0.1:1521/orcl",
+    "applied":  true,
+    "native_acceptance":  "20 grouped native queue/EMPTY checks +11 actualHTTP checks PASS; positive FINAL/weighted PICK and automated gateway request observer not yet complete",
+    "review_required":  false,
+    "stock_effect":  "NONE; existing WH_SCALE_API only archive writer",
+    "shared_device_followup":  "Included: fresh post-REC ASM open_session reverse guard plus additive context fields; close writer unchanged",
+    "rollback":  "Refuses nonempty intent/claim history; archived evidence never deleted",
+    "files":  [
+                  "schema.sql",
+                  "body.sql",
+                  "wh_scale_api.sql",
+                  "000_before_wh_scale_api.sql",
+                  "before.sql",
+                  "apply.sql",
+                  "rollback.sql",
+                  "verify.sql",
+                  "assembly_body.sql",
+                  "000_before_assembly_body.sql"
+              ],
+    "offline_acceptance":  "16 new HTTP tests +20 warehouse gateway regressions PASS; full gate24 architecture/tooling +both tsc PASS; encoding PASS",
+    "source_guard_attempt":  {
+                                 "reason":  "Expected multiline literals CRLF while USER_SOURCE CR stripped",
+                                 "result":  "STOPPED_BEFORE_DDL",
+                                 "verified":  "Exact guard executed with LF and CRLF both PASS; original baseline hashes unchanged; INVALID0",
+                                 "ledger_rows":  0,
+                                 "asm_lengths":  "51477 vs 51950",
+                                 "wh_lengths":  "14287 vs 14415",
+                                 "new_namespace":  0,
+                                 "fix":  "Normalize expected_source CR as actual_source; no baseline resnapshot"
+                             },
+    "apply_result":  "14 statements/0 errors; source6 EXACT; USER_ERRORS0/globalINVALID0; ledgerAPPLIED",
+    "forward_fix":  "2026-10-15_warehouse_scale_request_sql_boundary: first actual request ORA40573, request/archive transaction rolled back; versioned scalar-SQL followup APPLIED5/0"
+}

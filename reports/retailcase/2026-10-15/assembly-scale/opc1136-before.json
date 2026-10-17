@@ -1,0 +1,99 @@
+{
+  "status": "PASS",
+  "phase": "BEFORE",
+  "request": {
+    "session_id": "WHREQ15.ASM.S1136",
+    "step_id": "WHREQ15.ASM.T1136",
+    "operation_id": "WHREQ15.ASM.PICK1136",
+    "case_task_id": 1136,
+    "scan_container": "090000000000008014",
+    "capture_id": "ASM.7B752CD206AB64CAA7DF857C7B499701C0980380E492CDA0D082ADE9ED58B789",
+    "phase": "BEFORE",
+    "device_id": "WHREQ15.SCALE",
+    "device_policy_version": 1,
+    "calibration_ref": "SIMULATED_TEST_NOT_HARDWARE:WHREQ15",
+    "confirmation_mode": "AUTO",
+    "expected_before_kg": "0.5",
+    "min_delta_kg": "0.05",
+    "expected_content_version": 2,
+    "tare_capture_key": "F4B685621BE6DED35F6AD0EE6C6B610AC3315B390734C832CB839B608622BB89",
+    "expires_at": "2026-10-15T20:42:21.480421+00:00"
+  },
+  "capture": {
+    "status": "CAPTURE_ARCHIVED",
+    "step_state": "ARMED",
+    "stock_outcome": "READ_STEP"
+  },
+  "evidence": {
+    "status": "EVIDENCE_ARCHIVED",
+    "binding": "MATCHED"
+  },
+  "step": {
+    "state": "ARMED",
+    "operation_id": "WHREQ15.ASM.PICK1136",
+    "source_version": 2,
+    "fact_qty": 1
+  },
+  "operation": [],
+  "step_use_count": 0,
+  "source_before": {
+    "stock": [
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 24,
+        "hard_reserved_base": 1,
+        "stock_version": 10
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "case": [
+      {
+        "status": "IN_PROGRESS",
+        "content_version": 2,
+        "picked_qty": 0,
+        "legacy_sborka_pallet_id": null
+      }
+    ]
+  },
+  "source_after": {
+    "stock": [
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 24,
+        "hard_reserved_base": 1,
+        "stock_version": 10
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "case": [
+      {
+        "status": "IN_PROGRESS",
+        "content_version": 2,
+        "picked_qty": 0,
+        "legacy_sborka_pallet_id": null
+      }
+    ]
+  },
+  "physical_hardware": false,
+  "local_encrypted_opc": true,
+  "stock_committed": false,
+  "body_sha256": "1FA7F32FAB7A821F185DE82A2B90279A71D26ED9551ACA2D25609CFB45238E46",
+  "raw_sha256": "965998C8E2CD55B4722E446B66178E2E438BD9021FAF7AC1A778A8518847AEDB",
+  "measured_at": "2026-10-15T12:44:49.842268+00:00",
+  "weight_kg": "0.5",
+  "slow_sql": []
+}

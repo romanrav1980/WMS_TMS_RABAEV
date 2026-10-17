@@ -1,0 +1,191 @@
+{
+  "status": "PASS",
+  "retirement_plan_sha256": "0af9b5760ad8fcefa2e3844b3e4d7213a3382e4b33895847f43dcc70db173dc6",
+  "executed_runner_sha256": "81686a7165bb886999ce2cbd561a381f6735d69f6ec342598fadc69104f29f0f",
+  "root_reviewed_initial_plan_sha256": "a433fa6fddf6d6f51cfb9201d217982846a79ac2273a87a00aac647525525a31",
+  "assurance": "Root compared exact initial plan and executed runner hashes immediately before execution; executed artifacts retained. Reusable successor must independently pin role command body/ACK.",
+  "actual": {
+    "active_hard": [],
+    "carrier": [],
+    "clock": [
+      {
+        "shift_state": "OFF",
+        "stream_version": 8,
+        "work_state": "IDLE"
+      }
+    ],
+    "events": [
+      {
+        "case_pick_event_id": 3752,
+        "created_by": "N1939.OP",
+        "event_type": "CLAIMED",
+        "offline_event_id": null
+      },
+      {
+        "case_pick_event_id": 3753,
+        "created_by": "N1939.OP",
+        "event_type": "STARTED",
+        "offline_event_id": null
+      },
+      {
+        "case_pick_event_id": 3756,
+        "created_by": "N1939.OP",
+        "event_type": "LINE_CONFIRMED",
+        "offline_event_id": null
+      },
+      {
+        "case_pick_event_id": 3757,
+        "created_by": "N1939.OP",
+        "event_type": "CLOSED",
+        "offline_event_id": "N1939.GQC.CLOSE"
+      }
+    ],
+    "legacy_plan": [],
+    "legacy_wave": [],
+    "line": [
+      {
+        "articul": "REUSE.QA:cdbf4c0962",
+        "case_pick_line_id": 1141,
+        "cell_code": "QIPcdbf4c0962",
+        "picked_qty": 1,
+        "planned_qty": 1,
+        "status": "CANCELLED"
+      }
+    ],
+    "plan": [
+      {
+        "status": "CANCELLED"
+      }
+    ],
+    "session": [
+      {
+        "current_task_id": null,
+        "operator_user_id": "N1939.OP",
+        "resource_id": 63,
+        "status": "CLOSED"
+      }
+    ],
+    "stock": [
+      {
+        "cell": "CPT_13583852",
+        "created_by_stock_op": "N1939.GQC.PICK",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 3,
+        "uid_poleta": "CASELOT:CA4DD2FD07A84F9E6D4769A62F3B9D5F55AD2F:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "N1939.GQC.PICK",
+        "hard_reserved_base": 0,
+        "remain": 1,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 1,
+        "uid_poleta": "CASELOT:CA4DD2FD07A84F9E6D4769A62F3B9D5F55AD2F:1"
+      },
+      {
+        "cell": "CPT_13583852",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 3,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136",
+        "hard_reserved_base": 0,
+        "remain": 1,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 1,
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1"
+      },
+      {
+        "cell": "QIPcdbf4c0962",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 0,
+        "remain": 22,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 15,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd",
+        "hard_reserved_base": 0,
+        "remain": 0,
+        "stock_origin_uid": "300000034518661218",
+        "stock_version": 2,
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd"
+      }
+    ],
+    "tare": [
+      {
+        "assembly_qty": 0,
+        "available_qty": 0,
+        "balance_version": 12,
+        "physical_qty": 0
+      }
+    ],
+    "task": [
+      {
+        "assigned_resource_id": 63,
+        "assigned_to": "N1939.OP",
+        "assignment_version": 4,
+        "content_version": 4,
+        "legacy_sborka_pallet_id": null,
+        "picked_qty": 1,
+        "resource_session_id": 59,
+        "sscc": "090000000000010017",
+        "started_at_instant": "2026-10-15 13:19:15.519832",
+        "status": "CANCELLED"
+      }
+    ],
+    "wave": [
+      {
+        "status": "CANCELLED"
+      }
+    ]
+  },
+  "metadata": {
+    "actor": [
+      {
+        "id": "N1939.OP",
+        "user_group": "N1939.OP",
+        "ware_id": 13583852,
+        "deleted": 1
+      }
+    ],
+    "resource": [
+      {
+        "resource_id": 63,
+        "resource_code": "N1939.CASE",
+        "user_id": "N1939.OP",
+        "ware_id": 13583852,
+        "active": 0
+      }
+    ],
+    "qualification": [
+      {
+        "resource_id": 63,
+        "task_type": "CASE_PICK",
+        "active": 0
+      }
+    ],
+    "role": [
+      {
+        "role_id": "N1939.CASE.EXEC",
+        "version_no": 4,
+        "active": 0
+      }
+    ]
+  },
+  "active_warehouse_tasks": [],
+  "active_case_tasks": [],
+  "active_grants": [],
+  "invalid": [],
+  "writes_executed": false,
+  "retained": "24/H0 split22+1+1, origin/cell/CASE picked1/history/manual-time unchanged"
+}

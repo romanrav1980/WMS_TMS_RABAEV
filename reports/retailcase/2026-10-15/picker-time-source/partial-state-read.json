@@ -1,0 +1,25 @@
+{
+  "objects": [],
+  "constraints": [
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "RRL_RESOURCE_PK",
+      "constraint_type": "P",
+      "cols": "RESOURCE_ID"
+    },
+    {
+      "table_name": "RRL_RESOURCE",
+      "constraint_name": "RRL_RESOURCE_U1",
+      "constraint_type": "U",
+      "cols": "RESOURCE_CODE"
+    },
+    {
+      "table_name": "RRL_RESOURCE_SESSION",
+      "constraint_name": "RRL_RESOURCE_SESSION_PK",
+      "constraint_type": "P",
+      "cols": "SESSION_ID"
+    }
+  ],
+  "invalid": [],
+  "ledger": []
+}

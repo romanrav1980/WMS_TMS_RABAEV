@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "phase": "AFTER",
+      "matched": true,
+      "exact_replay": true,
+      "readback": true,
+      "bad_refs": 4,
+      "wrong_hash": true,
+      "changed_body": true,
+      "foreign": true,
+      "revoked": true
+    },
+    {
+      "phase": "BEFORE",
+      "matched": true,
+      "exact_replay": true,
+      "readback": true,
+      "bad_refs": 4,
+      "wrong_hash": true,
+      "changed_body": true,
+      "foreign": true,
+      "revoked": true
+    }
+  ],
+  "archive_ms": [
+    19.105,
+    15.605
+  ],
+  "raw": "SIMULATED_TEST_NOT_HARDWARE",
+  "business_stock_committed": false,
+  "evidence_count_restored": true,
+  "source_P": 20,
+  "source_H": 20,
+  "invalid": 0,
+  "sql_decision": "Indexed device/capture identities; no index needed for bounded archive; no physical wait in transaction"
+}

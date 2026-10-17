@@ -1,0 +1,32 @@
+{
+  "status": "BLOCKED_NATIVE_POSITIVE_NOT_YET_PASSED",
+  "task_id": 1136,
+  "line_id": 1139,
+  "native_error": "ORA-20848 POLICY_KEY_NOT_PUBLISHED",
+  "proven_missing_cell": "CPT_13583852",
+  "missing_policy_hex": "313A32343A43454C4C31323A4350545F3133353833383532",
+  "completed_before_stop": [
+    "qualification_missing_denied_rollback",
+    "shift_not_open_denied_rollback",
+    "paused_session_denied_rollback",
+    "resource_foreign_warehouse_denied_rollback",
+    "dedicated_sender_not_operator_denied",
+    "other_unassigned_case_denied"
+  ],
+  "stock_committed": false,
+  "stock_after_caller_rollback": [
+    {
+      "cell": "QIPcdbf4c0962",
+      "remain": 24,
+      "hard_reserved_base": 1,
+      "stock_version": 10
+    },
+    {
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "remediation": "Prepared bounded CONFIG-owner transit metadata kit; coordinator review/apply required"
+}

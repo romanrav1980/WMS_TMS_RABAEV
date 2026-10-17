@@ -1,7 +1,7 @@
 from hashlib import sha256
 from typing import Any
 import json,oracledb
-from ...platform.public import read_oracle_json
+from ...platform.public import read_oracle_json, assert_independent_decision
 from ..contracts import LogisticsCostError
 from .finance_outbox import enqueue,expense_payload
 from .cost_access import require_warehouse
@@ -13,13 +13,26 @@ def decide_expense(gateway: Any,op: str,expense: str,phase: str,outcome: str,bas
         from .normative_correction import lock_root
         cost_root=lock_root(cur,expense)
         root=lock_correction_root(cur,expense)if cost_root is None else None
-        cur.execute("select WARE_ID,OBJECT_KIND from RRL_LOGISTICS_EXPENSE where OPERATION_ID=:id for update",{"id":expense});source=cur.fetchone()
+        cur.execute("select WARE_ID,OBJECT_KIND,ACTOR from RRL_LOGISTICS_EXPENSE where OPERATION_ID=:id for update",{"id":expense});source=cur.fetchone()
         if not source:raise LogisticsCostError("EXPENSE_NOT_FOUND","Расход не найден",404)
-        require_warehouse(cur,source[0],actor,"calc_tt_price" if phase=="LOGIST" else "create_tt_price")
+        narrow = "expense_logist_approve" if phase=="LOGIST" else "expense_finance_approve"
+        cur.execute("select RRL_ACCESS_API.allowed(:actor,:permission,'WAREHOUSE',:ware) ALLOWED from dual",{"actor":actor,"permission":narrow,"ware":str(source[0])})
+        permission = narrow if cur.fetchone()[0] else "calc_tt_price" if phase=="LOGIST" else "create_tt_price"
+        require_warehouse(cur,source[0],actor,permission)
         cur.execute("select PAYLOAD_HASH,RESULT_JSON from RRL_LOGISTICS_EXP_DECISION where OPERATION_ID=:op",{"op":op});old=cur.fetchone()
         if old:
             if old[0]!=digest:raise LogisticsCostError("EXPENSE_DECISION_PAYLOAD_CONFLICT","Операция уже имеет другое содержание")
             return read_oracle_json(old[1])
+        try:
+            assert_independent_decision(cur,actor,source[2],"EXTRA_EXPENSE_AUTHOR")
+            if phase=="FINANCE":
+                cur.execute("select ACTOR from RRL_LOGISTICS_EXP_DECISION where EXPENSE_OPERATION_ID=:id and PHASE='LOGIST'",{"id":expense})
+                prior=cur.fetchone()
+                if prior: assert_independent_decision(cur,actor,prior[0],"EXTRA_EXPENSE_PHASES")
+        except oracledb.DatabaseError as error:
+            if getattr(error.args[0],"code",0)==20851:
+                raise LogisticsCostError("EXPENSE_INDEPENDENT_DECISION_REQUIRED","Автор расхода и согласующие стадии должны быть разными пользователями",403) from error
+            raise
         cur.execute("select count(*)from RRL_LOGISTICS_EXP_DECISION where EXPENSE_OPERATION_ID=:id and PHASE=:phase",{"id":expense,"phase":phase})
         if cur.fetchone()[0]:raise LogisticsCostError("EXPENSE_PHASE_ALREADY_DECIDED","Решение этой стадии уже сохранено")
         if root:assert_correction_decision(cur,expense,root,phase,outcome,basis)

@@ -1,3 +1,4 @@
+import { adminAuthorization } from "../api";
 /**
  * PlannerAnalyticsTab.tsx — Sprint 10: история планов, Score-график, прогноз спроса.
  */
@@ -5,10 +6,9 @@
 import { useCallback, useEffect, useState } from "react";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
-const API_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
 
 function apiHeaders(): HeadersInit {
-  return { Authorization: `Basic ${btoa(API_AUTH)}`, "Content-Type": "application/json" };
+  return { Authorization: adminAuthorization(), "Content-Type": "application/json" };
 }
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {

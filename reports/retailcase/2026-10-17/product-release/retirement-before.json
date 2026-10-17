@@ -1,0 +1,265 @@
+{
+  "files": [
+    "kpi-v2/flow/parent/fixture.json",
+    "kpi-v2/flow/ordinary/fixture.json",
+    "product-flow/parent/fixture.json",
+    "product-flow/ordinary/fixture.json"
+  ],
+  "fixtures": [
+    {
+      "file": "kpi-v2/flow/parent/fixture.json",
+      "actor": "AS16O082d87dbd8",
+      "prefix": "AS16.082d87dbd8",
+      "warehouse_id": 20033496,
+      "device": "AS16D082d87dbd8",
+      "sender": "AS16G082d87dbd8",
+      "wave": 591
+    },
+    {
+      "file": "kpi-v2/flow/ordinary/fixture.json",
+      "actor": "OC16Pd21d129674",
+      "prefix": "OC16.d21d129674",
+      "warehouse_id": 20033496,
+      "resource_id": 79,
+      "shift_id": 83,
+      "resource_session_id": 75,
+      "wave": 592
+    },
+    {
+      "file": "product-flow/parent/fixture.json",
+      "actor": "AS16O21740f343f",
+      "prefix": "AS16.21740f343f",
+      "warehouse_id": 20137024,
+      "device": "AS16D21740f343f",
+      "sender": "AS16G21740f343f",
+      "wave": 593
+    },
+    {
+      "file": "product-flow/ordinary/fixture.json",
+      "actor": "OC16P4f58710060",
+      "prefix": "OC16.4f58710060",
+      "warehouse_id": 20137024,
+      "resource_id": 80,
+      "shift_id": 84,
+      "resource_session_id": 76,
+      "wave": 594
+    }
+  ],
+  "users": [
+    {
+      "id": "AS16G082d87dbd8",
+      "user_group": "AS16G082d87dbd8",
+      "name": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "deleted": 0
+    },
+    {
+      "id": "AS16G21740f343f",
+      "user_group": "AS16G21740f343f",
+      "name": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "deleted": 0
+    },
+    {
+      "id": "AS16O082d87dbd8",
+      "user_group": "AS16O082d87dbd8",
+      "name": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "deleted": 0
+    },
+    {
+      "id": "AS16O21740f343f",
+      "user_group": "AS16O21740f343f",
+      "name": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "deleted": 0
+    },
+    {
+      "id": "OC16P4f58710060",
+      "user_group": "OC16P4f58710060",
+      "name": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "deleted": 0
+    },
+    {
+      "id": "OC16Pd21d129674",
+      "user_group": "OC16Pd21d129674",
+      "name": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "deleted": 0
+    }
+  ],
+  "roles": [
+    {
+      "role_id": "OC16R4f58710060",
+      "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "active": 1,
+      "version_no": 2,
+      "permissions": [
+        "case_pick_execute",
+        "warehouse_task_execute"
+      ]
+    },
+    {
+      "role_id": "OC16Rd21d129674",
+      "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "active": 1,
+      "version_no": 2,
+      "permissions": [
+        "case_pick_execute",
+        "wms_admin_login"
+      ]
+    }
+  ],
+  "groups": [],
+  "sessions": [
+    {
+      "session_id": 76,
+      "resource_id": 80
+    },
+    {
+      "session_id": 75,
+      "resource_id": 79
+    }
+  ],
+  "resources": [
+    {
+      "resource_id": 80,
+      "user_id": "OC16P4f58710060",
+      "active": 1
+    },
+    {
+      "resource_id": 79,
+      "user_id": "OC16Pd21d129674",
+      "active": 1
+    }
+  ],
+  "shifts": [
+    {
+      "shift_id": 83,
+      "shift_code": "OC16.d21d129674",
+      "shift_date": "2026-10-17 00:00:00",
+      "ware_id": 20033496,
+      "site_code": null,
+      "start_at": "2026-10-17 07:50:26",
+      "finish_at": "2026-10-17 13:51:26",
+      "status": "OPEN",
+      "created_at": "2026-10-17 00:51:26.416264",
+      "created_by": "admin",
+      "updated_at": null,
+      "updated_by": null,
+      "base_shift_id": null,
+      "reach_shift_role": "GENERAL",
+      "expected_drivers": null
+    },
+    {
+      "shift_id": 84,
+      "shift_code": "OC16.4f58710060",
+      "shift_date": "2026-10-17 00:00:00",
+      "ware_id": 20137024,
+      "site_code": null,
+      "start_at": "2026-10-17 08:18:09",
+      "finish_at": "2026-10-17 14:19:09",
+      "status": "OPEN",
+      "created_at": "2026-10-17 01:19:09.486767",
+      "created_by": "admin",
+      "updated_at": null,
+      "updated_by": null,
+      "base_shift_id": null,
+      "reach_shift_role": "GENERAL",
+      "expected_drivers": null
+    }
+  ],
+  "assignments": [
+    {
+      "assignment_id": "OC16.d21d129674.UI.LOGIN",
+      "username": "OC16Pd21d129674",
+      "role_id": "OC16Rd21d129674",
+      "version_no": 1
+    },
+    {
+      "assignment_id": "OC16.d21d129674.RESTORE.EXEC",
+      "username": "OC16Pd21d129674",
+      "role_id": "OC16Rd21d129674",
+      "version_no": 1
+    }
+  ],
+  "devices": [
+    {
+      "device_id": "AS16D082d87dbd8",
+      "active_flag": 1,
+      "device_mode": "TEST",
+      "sender_id": "AS16G082d87dbd8"
+    },
+    {
+      "device_id": "AS16D21740f343f",
+      "active_flag": 1,
+      "device_mode": "TEST",
+      "sender_id": "AS16G21740f343f"
+    }
+  ],
+  "tare_columns": [
+    {
+      "table_name": "RRL_TARE_BOOK",
+      "column_name": "OPERATION_ID"
+    },
+    {
+      "table_name": "RRL_TARE_BOOK",
+      "column_name": "BALANCE_KEY"
+    },
+    {
+      "table_name": "RRL_TARE_BOOK",
+      "column_name": "OWNER_WARE_ID"
+    },
+    {
+      "table_name": "RRL_TARE_BOOK",
+      "column_name": "PALLET_TYPE_ID"
+    },
+    {
+      "table_name": "RRL_TARE_BOOK",
+      "column_name": "PLACE_KIND"
+    },
+    {
+      "table_name": "RRL_TARE_BOOK",
+      "column_name": "PLACE_ID"
+    },
+    {
+      "table_name": "RRL_TARE_BOOK",
+      "column_name": "STATUS"
+    },
+    {
+      "table_name": "RRL_TARE_BOOK",
+      "column_name": "QUANTITY"
+    },
+    {
+      "table_name": "RRL_TARE_BOOK",
+      "column_name": "CREATED_BY"
+    },
+    {
+      "table_name": "RRL_TARE_BOOK",
+      "column_name": "CREATED_AT"
+    },
+    {
+      "table_name": "RRL_TARE_BOOK",
+      "column_name": "CLOSED_OPERATION_ID"
+    },
+    {
+      "table_name": "RRL_TARE_BOOK",
+      "column_name": "CLOSED_BY"
+    },
+    {
+      "table_name": "RRL_TARE_BOOK",
+      "column_name": "CLOSED_AT"
+    },
+    {
+      "table_name": "RRL_TARE_OFFER_BOOK",
+      "column_name": "OFFER_OPERATION_ID"
+    },
+    {
+      "table_name": "RRL_TARE_OFFER_BOOK",
+      "column_name": "BOOK_OPERATION_ID"
+    },
+    {
+      "table_name": "RRL_TARE_OFFER_BOOK",
+      "column_name": "LOAD_OPERATION_ID"
+    },
+    {
+      "table_name": "RRL_TARE_OFFER_BOOK",
+      "column_name": "CREATED_AT"
+    }
+  ]
+}

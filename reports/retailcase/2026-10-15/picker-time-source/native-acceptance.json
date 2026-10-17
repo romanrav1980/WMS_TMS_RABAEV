@@ -1,0 +1,628 @@
+{
+  "status": "RECOVERY_REQUIRED_NO_AUTOMATIC_FINISH_OR_NEW_OPERATION",
+  "fixture": {
+    "actor": "N1939.OP",
+    "session": 59,
+    "task": 1139,
+    "warehouse": 13583852
+  },
+  "hardware_verified": false,
+  "quantity_commands": false,
+  "checks": [
+    "caller rollback removes bootstrap event/stream/receipt without changing source/session/CASE",
+    "six explicit manual transitions committed separately; exact command replay and GET receipt identical",
+    "historical APPLIED replay remains original after later FINISH",
+    "known stale version yields retained exact REJECTED receipt; no event/version increment"
+  ],
+  "frozen_intents": [
+    {
+      "action": "ACTUAL_SHIFT_START",
+      "expected_version": 0,
+      "operation_id": "N1939.TIME.ROLLBACK",
+      "reason": "TEST_FIXTURE_NOT_HARDWARE; explicit simulated manual clock acceptance",
+      "resource_session_id": 59,
+      "source_id": null,
+      "source_kind": null
+    },
+    {
+      "action": "ACTUAL_SHIFT_START",
+      "expected_version": 0,
+      "operation_id": "N1939.TIME.ACTUAL_SHIFT_START",
+      "reason": "TEST_FIXTURE_NOT_HARDWARE; explicit simulated manual clock acceptance",
+      "resource_session_id": 59,
+      "source_id": null,
+      "source_kind": null
+    },
+    {
+      "action": "WORK_START",
+      "expected_version": 1,
+      "operation_id": "N1939.TIME.WORK_START",
+      "reason": "TEST_FIXTURE_NOT_HARDWARE; explicit simulated manual clock acceptance",
+      "resource_session_id": 59,
+      "source_id": 1139,
+      "source_kind": "CASE_PICK_TASK"
+    },
+    {
+      "action": "PAUSE",
+      "expected_version": 2,
+      "operation_id": "N1939.TIME.PAUSE",
+      "reason": "TEST_FIXTURE_NOT_HARDWARE; explicit simulated manual clock acceptance",
+      "resource_session_id": 59,
+      "source_id": 1139,
+      "source_kind": "CASE_PICK_TASK"
+    },
+    {
+      "action": "RESUME",
+      "expected_version": 3,
+      "operation_id": "N1939.TIME.RESUME",
+      "reason": "TEST_FIXTURE_NOT_HARDWARE; explicit simulated manual clock acceptance",
+      "resource_session_id": 59,
+      "source_id": 1139,
+      "source_kind": "CASE_PICK_TASK"
+    },
+    {
+      "action": "WORK_FINISH",
+      "expected_version": 4,
+      "operation_id": "N1939.TIME.WORK_FINISH",
+      "reason": "TEST_FIXTURE_NOT_HARDWARE; explicit simulated manual clock acceptance",
+      "resource_session_id": 59,
+      "source_id": 1139,
+      "source_kind": "CASE_PICK_TASK"
+    },
+    {
+      "action": "ACTUAL_SHIFT_FINISH",
+      "expected_version": 5,
+      "operation_id": "N1939.TIME.ACTUAL_SHIFT_FINISH",
+      "reason": "TEST_FIXTURE_NOT_HARDWARE; explicit simulated manual clock acceptance",
+      "resource_session_id": 59,
+      "source_id": null,
+      "source_kind": null
+    },
+    {
+      "action": "ACTUAL_SHIFT_START",
+      "expected_version": 5,
+      "operation_id": "N1939.TIME.REJECT.VERSION",
+      "reason": "TEST_FIXTURE_NOT_HARDWARE; explicit simulated manual clock acceptance",
+      "resource_session_id": 59,
+      "source_id": null,
+      "source_kind": null
+    },
+    {
+      "action": "ACTUAL_SHIFT_START",
+      "expected_version": 6,
+      "operation_id": "N1939.TIME.RACE.A",
+      "reason": "TEST_FIXTURE_NOT_HARDWARE; explicit simulated manual clock acceptance",
+      "resource_session_id": 59,
+      "source_id": null,
+      "source_kind": null
+    },
+    {
+      "action": "ACTUAL_SHIFT_START",
+      "expected_version": 6,
+      "operation_id": "N1939.TIME.RACE.B",
+      "reason": "TEST_FIXTURE_NOT_HARDWARE; explicit simulated manual clock acceptance",
+      "resource_session_id": 59,
+      "source_id": null,
+      "source_kind": null
+    },
+    {
+      "action": "ACTUAL_SHIFT_FINISH",
+      "expected_version": 7,
+      "operation_id": "N1939.TIME.RACE.FINISH",
+      "reason": "TEST_FIXTURE_NOT_HARDWARE; explicit simulated manual clock acceptance",
+      "resource_session_id": 59,
+      "source_id": null,
+      "source_kind": null
+    }
+  ],
+  "before": {
+    "stock": [
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136"
+      },
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "QIPcdbf4c0962",
+        "remain": 1,
+        "hard_reserved_base": 0,
+        "stock_version": 1,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136"
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 14,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd"
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd"
+      }
+    ],
+    "case": [
+      {
+        "status": "IN_PROGRESS",
+        "assigned_to": "N1939.OP",
+        "resource_session_id": 59,
+        "assigned_resource_id": 63,
+        "assignment_version": 2,
+        "content_version": 2,
+        "picked_qty": 0,
+        "started_at_instant": "2026-10-15 13:19:15.519832"
+      }
+    ],
+    "case_events": [
+      {
+        "n": 2
+      }
+    ],
+    "physical": [
+      {
+        "status": "ACTIVE",
+        "current_task_id": null,
+        "resource_id": 63,
+        "shift_id": 68
+      }
+    ],
+    "stock_operations": [
+      {
+        "n": 5074
+      }
+    ],
+    "stock_outbox": [
+      {
+        "n": 5111
+      }
+    ]
+  },
+  "clock_before": {
+    "operator_id": "N1939.OP",
+    "stream_version": 0,
+    "shift_state": "OFF",
+    "work_state": "IDLE",
+    "warehouse_id": null,
+    "resource_session_id": null,
+    "resource_id": null,
+    "source_kind": null,
+    "source_id": null,
+    "shift_started_at": null,
+    "work_started_at": null,
+    "pause_started_at": null,
+    "last_event_at": null,
+    "work_coverage_certified": false,
+    "source_mode": "MANUAL_CONFIRMED"
+  },
+  "rollback_start": {
+    "operation_id": "N1939.TIME.ROLLBACK",
+    "actor": "N1939.OP",
+    "action": "ACTUAL_SHIFT_START",
+    "resource_session_id": 59,
+    "warehouse_id": 13583852,
+    "request_sha256": "203A7D605CB95E691BE887547D3BE93B938A2902DF50EDEA88F28E1738F39CA0",
+    "outcome": "APPLIED",
+    "outcome_confirmed": true,
+    "changed": true,
+    "may_create_corrected_operation": false,
+    "error_code": null,
+    "stock_posted": false,
+    "event_at": "2026-10-15T17:42:21.117757+00:00",
+    "before_version": 0,
+    "after_version": 1,
+    "state": {
+      "operator_id": "N1939.OP",
+      "stream_version": 1,
+      "shift_state": "OPEN",
+      "work_state": "IDLE",
+      "warehouse_id": 13583852,
+      "resource_session_id": 59,
+      "resource_id": 63,
+      "source_kind": null,
+      "source_id": null,
+      "shift_started_at": "2026-10-15T17:42:21.117757+00:00",
+      "work_started_at": null,
+      "pause_started_at": null,
+      "last_event_at": "2026-10-15T17:42:21.117757+00:00",
+      "work_coverage_certified": false,
+      "source_mode": "MANUAL_CONFIRMED"
+    }
+  },
+  "lifecycle": [
+    {
+      "operation_id": "N1939.TIME.ACTUAL_SHIFT_START",
+      "actor": "N1939.OP",
+      "action": "ACTUAL_SHIFT_START",
+      "resource_session_id": 59,
+      "warehouse_id": 13583852,
+      "request_sha256": "3A9FFADFD8D43C175995356CAF897534A897CB7A0B0F316E30A1A8939E2F1094",
+      "outcome": "APPLIED",
+      "outcome_confirmed": true,
+      "changed": true,
+      "may_create_corrected_operation": false,
+      "error_code": null,
+      "stock_posted": false,
+      "event_at": "2026-10-15T17:42:21.317553+00:00",
+      "before_version": 0,
+      "after_version": 1,
+      "state": {
+        "operator_id": "N1939.OP",
+        "stream_version": 1,
+        "shift_state": "OPEN",
+        "work_state": "IDLE",
+        "warehouse_id": 13583852,
+        "resource_session_id": 59,
+        "resource_id": 63,
+        "source_kind": null,
+        "source_id": null,
+        "shift_started_at": "2026-10-15T17:42:21.317553+00:00",
+        "work_started_at": null,
+        "pause_started_at": null,
+        "last_event_at": "2026-10-15T17:42:21.317553+00:00",
+        "work_coverage_certified": false,
+        "source_mode": "MANUAL_CONFIRMED"
+      }
+    },
+    {
+      "operation_id": "N1939.TIME.WORK_START",
+      "actor": "N1939.OP",
+      "action": "WORK_START",
+      "resource_session_id": 59,
+      "warehouse_id": 13583852,
+      "request_sha256": "8C8E112BE04894598201121176E764590485A1502612B2CEEC91F04F0F583DCD",
+      "outcome": "APPLIED",
+      "outcome_confirmed": true,
+      "changed": true,
+      "may_create_corrected_operation": false,
+      "error_code": null,
+      "stock_posted": false,
+      "event_at": "2026-10-15T17:42:21.459210+00:00",
+      "before_version": 1,
+      "after_version": 2,
+      "state": {
+        "operator_id": "N1939.OP",
+        "stream_version": 2,
+        "shift_state": "OPEN",
+        "work_state": "WORK",
+        "warehouse_id": 13583852,
+        "resource_session_id": 59,
+        "resource_id": 63,
+        "source_kind": "CASE_PICK_TASK",
+        "source_id": 1139,
+        "shift_started_at": "2026-10-15T17:42:21.317553+00:00",
+        "work_started_at": "2026-10-15T17:42:21.459210+00:00",
+        "pause_started_at": null,
+        "last_event_at": "2026-10-15T17:42:21.459210+00:00",
+        "work_coverage_certified": false,
+        "source_mode": "MANUAL_CONFIRMED"
+      }
+    },
+    {
+      "operation_id": "N1939.TIME.PAUSE",
+      "actor": "N1939.OP",
+      "action": "PAUSE",
+      "resource_session_id": 59,
+      "warehouse_id": 13583852,
+      "request_sha256": "55402B4786AD7F13C381D75CBEF7204145172977BED3228D6A27083C346AD4AB",
+      "outcome": "APPLIED",
+      "outcome_confirmed": true,
+      "changed": true,
+      "may_create_corrected_operation": false,
+      "error_code": null,
+      "stock_posted": false,
+      "event_at": "2026-10-15T17:42:21.566647+00:00",
+      "before_version": 2,
+      "after_version": 3,
+      "state": {
+        "operator_id": "N1939.OP",
+        "stream_version": 3,
+        "shift_state": "OPEN",
+        "work_state": "PAUSED",
+        "warehouse_id": 13583852,
+        "resource_session_id": 59,
+        "resource_id": 63,
+        "source_kind": "CASE_PICK_TASK",
+        "source_id": 1139,
+        "shift_started_at": "2026-10-15T17:42:21.317553+00:00",
+        "work_started_at": "2026-10-15T17:42:21.459210+00:00",
+        "pause_started_at": "2026-10-15T17:42:21.566647+00:00",
+        "last_event_at": "2026-10-15T17:42:21.566647+00:00",
+        "work_coverage_certified": false,
+        "source_mode": "MANUAL_CONFIRMED"
+      }
+    },
+    {
+      "operation_id": "N1939.TIME.RESUME",
+      "actor": "N1939.OP",
+      "action": "RESUME",
+      "resource_session_id": 59,
+      "warehouse_id": 13583852,
+      "request_sha256": "F0BBE68F7DECC8766E4D981D2FA44F759015B4FAD5517F83286B4CB711EA9C06",
+      "outcome": "APPLIED",
+      "outcome_confirmed": true,
+      "changed": true,
+      "may_create_corrected_operation": false,
+      "error_code": null,
+      "stock_posted": false,
+      "event_at": "2026-10-15T17:42:21.662132+00:00",
+      "before_version": 3,
+      "after_version": 4,
+      "state": {
+        "operator_id": "N1939.OP",
+        "stream_version": 4,
+        "shift_state": "OPEN",
+        "work_state": "WORK",
+        "warehouse_id": 13583852,
+        "resource_session_id": 59,
+        "resource_id": 63,
+        "source_kind": "CASE_PICK_TASK",
+        "source_id": 1139,
+        "shift_started_at": "2026-10-15T17:42:21.317553+00:00",
+        "work_started_at": "2026-10-15T17:42:21.459210+00:00",
+        "pause_started_at": null,
+        "last_event_at": "2026-10-15T17:42:21.662132+00:00",
+        "work_coverage_certified": false,
+        "source_mode": "MANUAL_CONFIRMED"
+      }
+    },
+    {
+      "operation_id": "N1939.TIME.WORK_FINISH",
+      "actor": "N1939.OP",
+      "action": "WORK_FINISH",
+      "resource_session_id": 59,
+      "warehouse_id": 13583852,
+      "request_sha256": "1404BCAA5AA9B4D78D41B101945D76BFBE8ED106188132B6C8DEF69D6133E75A",
+      "outcome": "APPLIED",
+      "outcome_confirmed": true,
+      "changed": true,
+      "may_create_corrected_operation": false,
+      "error_code": null,
+      "stock_posted": false,
+      "event_at": "2026-10-15T17:42:21.828468+00:00",
+      "before_version": 4,
+      "after_version": 5,
+      "state": {
+        "operator_id": "N1939.OP",
+        "stream_version": 5,
+        "shift_state": "OPEN",
+        "work_state": "IDLE",
+        "warehouse_id": 13583852,
+        "resource_session_id": 59,
+        "resource_id": 63,
+        "source_kind": null,
+        "source_id": null,
+        "shift_started_at": "2026-10-15T17:42:21.317553+00:00",
+        "work_started_at": null,
+        "pause_started_at": null,
+        "last_event_at": "2026-10-15T17:42:21.828468+00:00",
+        "work_coverage_certified": false,
+        "source_mode": "MANUAL_CONFIRMED"
+      }
+    },
+    {
+      "operation_id": "N1939.TIME.ACTUAL_SHIFT_FINISH",
+      "actor": "N1939.OP",
+      "action": "ACTUAL_SHIFT_FINISH",
+      "resource_session_id": 59,
+      "warehouse_id": 13583852,
+      "request_sha256": "77EEDBF58B8BE173CFBC58D337C703BCDA65EBD06CC3884E48183C6843191A44",
+      "outcome": "APPLIED",
+      "outcome_confirmed": true,
+      "changed": true,
+      "may_create_corrected_operation": false,
+      "error_code": null,
+      "stock_posted": false,
+      "event_at": "2026-10-15T17:42:22.045305+00:00",
+      "before_version": 5,
+      "after_version": 6,
+      "state": {
+        "operator_id": "N1939.OP",
+        "stream_version": 6,
+        "shift_state": "OFF",
+        "work_state": "IDLE",
+        "warehouse_id": null,
+        "resource_session_id": null,
+        "resource_id": null,
+        "source_kind": null,
+        "source_id": null,
+        "shift_started_at": null,
+        "work_started_at": null,
+        "pause_started_at": null,
+        "last_event_at": "2026-10-15T17:42:22.045305+00:00",
+        "work_coverage_certified": false,
+        "source_mode": "MANUAL_CONFIRMED"
+      }
+    }
+  ],
+  "rejected": {
+    "operation_id": "N1939.TIME.REJECT.VERSION",
+    "actor": "N1939.OP",
+    "action": "ACTUAL_SHIFT_START",
+    "resource_session_id": 59,
+    "warehouse_id": 13583852,
+    "request_sha256": "D478E5326D8FA2D08F6C9AA110CD6970854EC03D582120A08B2003D1A1A38363",
+    "outcome": "REJECTED",
+    "outcome_confirmed": true,
+    "changed": false,
+    "may_create_corrected_operation": true,
+    "error_code": "PICKER_TIME_EXPECTED_VERSION_CHANGED",
+    "stock_posted": false,
+    "event_at": null,
+    "before_version": 6,
+    "after_version": 6,
+    "state": {
+      "operator_id": "N1939.OP",
+      "stream_version": 6,
+      "shift_state": "OFF",
+      "work_state": "IDLE",
+      "warehouse_id": null,
+      "resource_session_id": null,
+      "resource_id": null,
+      "source_kind": null,
+      "source_id": null,
+      "shift_started_at": null,
+      "work_started_at": null,
+      "pause_started_at": null,
+      "last_event_at": "2026-10-15T17:42:22.045305+00:00",
+      "work_coverage_certified": false,
+      "source_mode": "MANUAL_CONFIRMED"
+    }
+  },
+  "error": "ORA-01862: the numeric value does not match the length of the format item",
+  "recovery_current": {
+    "operator_id": "N1939.OP",
+    "stream_version": 6,
+    "shift_state": "OFF",
+    "work_state": "IDLE",
+    "warehouse_id": null,
+    "resource_session_id": null,
+    "resource_id": null,
+    "source_kind": null,
+    "source_id": null,
+    "shift_started_at": null,
+    "work_started_at": null,
+    "pause_started_at": null,
+    "last_event_at": "2026-10-15T17:42:22.045305+00:00",
+    "work_coverage_certified": false,
+    "source_mode": "MANUAL_CONFIRMED"
+  },
+  "recovery_saved_receipts": [
+    {
+      "operation_id": "N1939.TIME.ACTUAL_SHIFT_START",
+      "outcome": "APPLIED",
+      "source_sha256": "3A9FFADFD8D43C175995356CAF897534A897CB7A0B0F316E30A1A8939E2F1094",
+      "before_version": 0,
+      "after_version": 1
+    },
+    {
+      "operation_id": "N1939.TIME.WORK_START",
+      "outcome": "APPLIED",
+      "source_sha256": "8C8E112BE04894598201121176E764590485A1502612B2CEEC91F04F0F583DCD",
+      "before_version": 1,
+      "after_version": 2
+    },
+    {
+      "operation_id": "N1939.TIME.PAUSE",
+      "outcome": "APPLIED",
+      "source_sha256": "55402B4786AD7F13C381D75CBEF7204145172977BED3228D6A27083C346AD4AB",
+      "before_version": 2,
+      "after_version": 3
+    },
+    {
+      "operation_id": "N1939.TIME.RESUME",
+      "outcome": "APPLIED",
+      "source_sha256": "F0BBE68F7DECC8766E4D981D2FA44F759015B4FAD5517F83286B4CB711EA9C06",
+      "before_version": 3,
+      "after_version": 4
+    },
+    {
+      "operation_id": "N1939.TIME.WORK_FINISH",
+      "outcome": "APPLIED",
+      "source_sha256": "1404BCAA5AA9B4D78D41B101945D76BFBE8ED106188132B6C8DEF69D6133E75A",
+      "before_version": 4,
+      "after_version": 5
+    },
+    {
+      "operation_id": "N1939.TIME.ACTUAL_SHIFT_FINISH",
+      "outcome": "APPLIED",
+      "source_sha256": "77EEDBF58B8BE173CFBC58D337C703BCDA65EBD06CC3884E48183C6843191A44",
+      "before_version": 5,
+      "after_version": 6
+    },
+    {
+      "operation_id": "N1939.TIME.REJECT.VERSION",
+      "outcome": "REJECTED",
+      "source_sha256": "D478E5326D8FA2D08F6C9AA110CD6970854EC03D582120A08B2003D1A1A38363",
+      "before_version": 6,
+      "after_version": 6
+    }
+  ],
+  "recovery_domain_baseline": {
+    "stock": [
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136"
+      },
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "QIPcdbf4c0962",
+        "remain": 1,
+        "hard_reserved_base": 0,
+        "stock_version": 1,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "WHREQ15.ASM.PICK1136"
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 14,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd"
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2,
+        "stock_origin_uid": "300000034518661218",
+        "created_by_stock_op": "REUSE.RECEIVE:e6c16d0bbd"
+      }
+    ],
+    "case": [
+      {
+        "status": "IN_PROGRESS",
+        "assigned_to": "N1939.OP",
+        "resource_session_id": 59,
+        "assigned_resource_id": 63,
+        "assignment_version": 2,
+        "content_version": 2,
+        "picked_qty": 0,
+        "started_at_instant": "2026-10-15 13:19:15.519832"
+      }
+    ],
+    "case_events": [
+      {
+        "n": 2
+      }
+    ],
+    "physical": [
+      {
+        "status": "ACTIVE",
+        "current_task_id": null,
+        "resource_id": 63,
+        "shift_id": 68
+      }
+    ],
+    "stock_operations": [
+      {
+        "n": 5074
+      }
+    ],
+    "stock_outbox": [
+      {
+        "n": 5111
+      }
+    ]
+  }
+}

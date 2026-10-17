@@ -16,7 +16,7 @@ from ..auth import (
     PICK_WAVE_LAUNCH_PERMISSION,
     PICK_WAVE_RELEASE_RESERVES_PERMISSION,
     PICK_WAVE_VIEW_PERMISSION,
-    require_permission,
+    require_permission, get_current_admin,
 )
 from ..schemas import (
     ArticulReplenishmentRuleUpsertRequest,
@@ -129,7 +129,7 @@ def list_pick_waves(
     ware_id: int | None = None,
     customer_id: int | None = None,
     limit: int = 100,
-    user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+    user: AdminUser = Depends(get_current_admin),
 ) -> list[dict]:
     return build_wave_queue_reads().waves(user.username,ware_id,lambda gateway,warehouse:PickingService(gateway).list_waves(
         status=status,
@@ -175,7 +175,7 @@ def list_pick_wave_candidates(
 @router.get("/waves/{pick_wave_id}/header")
 def get_pick_wave_header(
     pick_wave_id: int,
-    user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+    user: AdminUser = Depends(get_current_admin),
 ) -> dict:
     return build_wave_queue_reads().wave(
         pick_wave_id,user.username,lambda gateway:PickingService(gateway).get_wave_header(pick_wave_id))
@@ -184,7 +184,7 @@ def get_pick_wave_header(
 @router.get("/waves/{pick_wave_id}")
 def get_pick_wave(
     pick_wave_id: int,
-    user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+    user: AdminUser = Depends(get_current_admin),
 ) -> dict:
     wave = build_wave_queue_reads().wave(pick_wave_id,user.username,lambda gateway:PickingService(gateway).get_wave(pick_wave_id))
     if wave is None:
@@ -194,7 +194,7 @@ def get_pick_wave(
 @router.get("/waves/{pick_wave_id}/readiness")
 def get_pick_wave_readiness(
     pick_wave_id: int,
-    user: AdminUser = Depends(require_permission(PICK_WAVE_VIEW_PERMISSION)),
+    user: AdminUser = Depends(get_current_admin),
 ) -> dict:
     readiness = build_wave_queue_reads().wave(pick_wave_id,user.username,lambda gateway:PickingService(gateway).get_wave_readiness(pick_wave_id))
     if readiness is None:
@@ -230,11 +230,20 @@ def calculate_pick_wave(
 def launch_pick_wave(
     pick_wave_id: int,
     request: PickWaveActionRequest,
-    user: AdminUser = Depends(require_permission(PICK_WAVE_LAUNCH_PERMISSION)),
+    user: AdminUser = Depends(get_current_admin),
 ) -> dict[str, str | int]:
     request.updated_by = user.username
-    PickingService().launch_wave(pick_wave_id, request)
-    return {"pick_wave_id": pick_wave_id, "status": "LAUNCHED"}
+    result = PickingService().launch_wave(pick_wave_id, request)
+    return {"pick_wave_id": pick_wave_id, "status": result["wave_status"], **result}
+
+
+@router.get("/waves/{pick_wave_id}/launch-receipts/{operation_id}")
+def wave_launch_receipt(pick_wave_id: int, operation_id: str,
+                        user: AdminUser = Depends(get_current_admin)) -> dict:
+    from ..modules.fulfillment.public import read_launch_receipt
+    if pick_wave_id <= 0 or not 1 <= len(operation_id) <= 100:
+        raise HTTPException(422, detail="WAVE_RECEIPT_IDENTITY_REQUIRED")
+    return read_launch_receipt(PickingService().gateway, pick_wave_id, operation_id, user.username)
 
 
 @router.post("/waves/{pick_wave_id}/cancel")

@@ -1,0 +1,157 @@
+{
+  "captured_utc": "2026-10-15T15:11:56.323260+00:00",
+  "files": [
+    {
+      "file": "api.ts",
+      "sha256": "d0b667fc3fef2db6d1c84fb02c21f2ed77207e1ae93c177d25616c34a1494358"
+    },
+    {
+      "file": "components/DeliveriesList.tsx",
+      "sha256": "99df1db729ed69275f651cb5ef9b66b5e4b3ba571b0eb8eb885a668c38218bcb"
+    },
+    {
+      "file": "components/DeliveryDetail.tsx",
+      "sha256": "aac647e84e2624bfee861e3c673940752b2bf6f68d4bd765858142c81650eb4e"
+    },
+    {
+      "file": "components/DeliveryScanner.tsx",
+      "sha256": "e6815fe6bba78467ebf3e0c566ca32d9ca34fd19becbfc55c55854be96961091"
+    },
+    {
+      "file": "components/DiscrepancyFields.tsx",
+      "sha256": "0d1d7472810286f10e80e5a60e8d3854b9357a7da710abfcb94440c629b14ff8"
+    },
+    {
+      "file": "components/LoginScreen.tsx",
+      "sha256": "0f9c40e733d52d2ad12b0994c89b704d0ac3d621a33825100df256dad037d675"
+    },
+    {
+      "file": "components/MarkedGoodsPanel.tsx",
+      "sha256": "d15ff215ceffd36dd5746ebe3d3e1ecd1c97d541ceb9d659af6b6232b43b0b84"
+    },
+    {
+      "file": "components/MarkedGoodsSummary.tsx",
+      "sha256": "8e4ef20c2fc5c1b00344546acfd8b8fe6a7befa2b5002affdb5dcabe201af63f"
+    },
+    {
+      "file": "components/ReceiptRecovery.tsx",
+      "sha256": "0639ff4d56023877551fd4df354cd8b692dd235e3fef3316abc34f7a329ead43"
+    },
+    {
+      "file": "components/ReceiptSummary.tsx",
+      "sha256": "0d4330b4ae18e3f9c8cac1ebc7a683a5c2044205df02d0ec2b15605649e109fe"
+    },
+    {
+      "file": "components/ReceiptVerification.tsx",
+      "sha256": "6fc3df0ebdc50712f107c41da2162d2c4d0870f1fa5a33bb5b5c76961bef6ee7"
+    },
+    {
+      "file": "components/ScaleConnection.tsx",
+      "sha256": "f7bd483615506c9dcc7d9bbbc7c4afa08794ae197bfab3565c73430361d1e2cd"
+    },
+    {
+      "file": "components/StoreSelector.tsx",
+      "sha256": "ff12185ebff936d2678d54c1fb62d666e72af0147388df80e95fd2b1edea727f"
+    },
+    {
+      "file": "components/UnloadingStep.tsx",
+      "sha256": "7a44cbbca68577101c0223c4cefc5253a6b1a7c6207c8e221a5f252b1e201b18"
+    },
+    {
+      "file": "components/WeightEvidencePanel.tsx",
+      "sha256": "203657ab12c113a7f32cb1f647485a16ea153e9ad4dbdb3a14a025d6fec1daa8"
+    },
+    {
+      "file": "contracts.ts",
+      "sha256": "d42d9121a02e1dd9823d51a073041e8e039a8e02296a28e0fe057f67cd4f4f45"
+    },
+    {
+      "file": "help/helpArticles.ts",
+      "sha256": "6e442af79a517c7a73abacec89dcb46764656318224ce5794b485ca9ec380ce4"
+    },
+    {
+      "file": "help/HelpContext.tsx",
+      "sha256": "8a6f071915fd8dca4beb28a6d3baeba84c1719dc5080b4acad81b2792fa4a7b0"
+    },
+    {
+      "file": "help/HelpHint.tsx",
+      "sha256": "f1821120965d980f5bd08f27c257f8ea1d3c5417c7ef629416e0b1c89ba7abaa"
+    },
+    {
+      "file": "help/HelpPanel.tsx",
+      "sha256": "d9f593ce6d8b0c64f6fcf9783491bd60b49756772c463234b6f597a71dbe738e"
+    },
+    {
+      "file": "index.tsx",
+      "sha256": "1feaf9509cd13e3a3f99aa21fdb4188a593270032f4e2a0af589abeb35c8f118"
+    },
+    {
+      "file": "listNavigation.ts",
+      "sha256": "b637553496e630b2841b8300debce7f18bd8e5bdcf21eedfaa0e1887dd816136"
+    },
+    {
+      "file": "messages.ts",
+      "sha256": "626c4b0b14b788f4c55426ea59ced5028e70002ee5f3d01cde22a0202fa93059"
+    },
+    {
+      "file": "photoApi.ts",
+      "sha256": "2ea8c233dfea6f4cffc8753a2a599248c1cc6d2376347bb0ca1b9a5ee205d516"
+    },
+    {
+      "file": "receiptDraft.ts",
+      "sha256": "c1c8d78ea3f3ce34ffd3c9b3cfcb7de54d486dad779e8b5a6a33079f6497c243"
+    },
+    {
+      "file": "receiptFlowActions.ts",
+      "sha256": "5db61293fd124f975320a5a022c467ac3cf5362ebc4b31e58e8370a078dd9323"
+    },
+    {
+      "file": "receiptIntentValidation.ts",
+      "sha256": "4faa6629313c8412a68ed280576e3f9598ad1d3a8536fe177fc92a4a1e39a160"
+    },
+    {
+      "file": "receiptResult.ts",
+      "sha256": "32798ea41fd4e86d60295437155962e2cd9affc97cf9c98abef22281e1e6f888"
+    },
+    {
+      "file": "scaleRequests.ts",
+      "sha256": "25a8febcf1c06e922f66994c3e37e057c3768a0f704e75f27cd872764844fe1e"
+    },
+    {
+      "file": "StoreReceivingApp.tsx",
+      "sha256": "8fbb5c792b1d9415acc36643cc15c7cc36fc2da0b7da15277415ca074c5a3dbd"
+    },
+    {
+      "file": "styles.css",
+      "sha256": "c6c58279175276ea809b9ce93e23fe0efe2725aef39e437f0f4ba4b7963909a2"
+    },
+    {
+      "file": "useReceiptForm.ts",
+      "sha256": "605c51ae3656d5bff1c395147c6f6cb707aa88b87faf600f169afa358247342b"
+    },
+    {
+      "file": "useStoreDeliveries.ts",
+      "sha256": "12a809990872418a0387e0b7d3c1bb7b4736ac9c98704674572d10738198852b"
+    },
+    {
+      "file": "useStoreNavigation.ts",
+      "sha256": "645d2cf7cb2ed6b66b9f9c339e18fe2bc529eff2da117276633fd9d49b440a6d"
+    },
+    {
+      "file": "useStorePhotos.ts",
+      "sha256": "45e5fe52fb23705379d3e6c036a3d6b4a4bd6a842bafbb59bd5638fb7d46bc67"
+    },
+    {
+      "file": "useStoreReceivingFlow.ts",
+      "sha256": "09a74936c9555250728a44b9e6240423ac2810139180d6c1cea9e6dcf8a2c6a3"
+    },
+    {
+      "file": "useStoreSession.ts",
+      "sha256": "7056633db037f8d646d96346aedc9d0a53f1b286a6c7086ff12278deccde5117"
+    },
+    {
+      "file": "useStoreWeighing.ts",
+      "sha256": "5c296f532b51eb5ec6f97d74bc315e92bab27f2d04d841d23a2cc035568bbc1c"
+    }
+  ]
+}

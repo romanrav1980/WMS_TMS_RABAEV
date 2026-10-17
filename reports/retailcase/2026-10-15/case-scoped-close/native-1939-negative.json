@@ -1,0 +1,156 @@
+{
+  "status": "PASS_NEGATIVE_CALLER_ROLLBACK_ONLY",
+  "checks": [
+    {
+      "name": "VERSION",
+      "expected_marker": "CASE_CONTENT_VERSION_CHANGED",
+      "rollback_exact": true
+    },
+    {
+      "name": "OPENLINES",
+      "expected_marker": "CASE_OPEN_LINES_REMAIN",
+      "rollback_exact": true
+    },
+    {
+      "name": "FOREIGN",
+      "expected_marker": "CASE_CLOSE_CURRENT_SCOPE_REQUIRED",
+      "rollback_exact": true
+    },
+    {
+      "name": "INACTIVE",
+      "expected_marker": "CASE_CLOSE_CURRENT_SCOPE_REQUIRED",
+      "rollback_exact": true
+    }
+  ],
+  "before": {
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "assigned_to": "N1939.OP",
+        "content_version": 2,
+        "assignment_version": 2,
+        "picked_qty": 0,
+        "resource_session_id": 59
+      }
+    ],
+    "lines": [
+      {
+        "case_pick_line_id": 1141,
+        "status": "NEW",
+        "planned_qty": 1,
+        "picked_qty": 0
+      }
+    ],
+    "stock": [
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3
+      },
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "QIPcdbf4c0962",
+        "remain": 1,
+        "hard_reserved_base": 0,
+        "stock_version": 1
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 14
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "events": [
+      {
+        "case_pick_event_id": 3752,
+        "offline_event_id": null,
+        "event_type": "CLAIMED"
+      },
+      {
+        "case_pick_event_id": 3753,
+        "offline_event_id": null,
+        "event_type": "STARTED"
+      }
+    ]
+  },
+  "after": {
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "assigned_to": "N1939.OP",
+        "content_version": 2,
+        "assignment_version": 2,
+        "picked_qty": 0,
+        "resource_session_id": 59
+      }
+    ],
+    "lines": [
+      {
+        "case_pick_line_id": 1141,
+        "status": "NEW",
+        "planned_qty": 1,
+        "picked_qty": 0
+      }
+    ],
+    "stock": [
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3
+      },
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "QIPcdbf4c0962",
+        "remain": 1,
+        "hard_reserved_base": 0,
+        "stock_version": 1
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 14
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "events": [
+      {
+        "case_pick_event_id": 3752,
+        "offline_event_id": null,
+        "event_type": "CLAIMED"
+      },
+      {
+        "case_pick_event_id": 3753,
+        "offline_event_id": null,
+        "event_type": "STARTED"
+      }
+    ]
+  },
+  "quantity_effect": false,
+  "close_commits": 0,
+  "pending": [
+    "current-role revoke after native fences requires separate canonical committed ACL window",
+    "positive CLOSE requires physically admissible fulfilled CASE, cannot follow dirty Stock transaction",
+    "actual HTTP replay/positive lifecycle under root release"
+  ]
+}

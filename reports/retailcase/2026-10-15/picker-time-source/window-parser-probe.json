@@ -1,0 +1,17 @@
+[
+  {
+    "format": "FXYYYY-MM-DD\"T\"HH24:MI:SS.FF6TZH:TZM",
+    "value": "2026-10-15T17:42:22.045305+00:00",
+    "error": "ORA-01862: the numeric value does not match the length of the format item"
+  },
+  {
+    "format": "YYYY-MM-DD\"T\"HH24:MI:SS.FF6TZH:TZM",
+    "value": "2026-10-15T17:42:22.045305+00:00",
+    "result": "2026-10-15T17:42:22.045305+00:00"
+  },
+  {
+    "format": "FXYYYY-MM-DD\"T\"HH24:MI:SS.FF6 TZH:TZM",
+    "value": "2026-10-15T17:42:22.045305 +00:00",
+    "error": "ORA-01862: the numeric value does not match the length of the format item"
+  }
+]

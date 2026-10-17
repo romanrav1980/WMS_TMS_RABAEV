@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "station": {
+    "version": 1,
+    "policy_kind": "STATION",
+    "operation_id": "WHREQ15.ASM.STATION"
+  },
+  "sku": {
+    "version": 1,
+    "policy_kind": "SKU",
+    "operation_id": "WHREQ15.ASM.SKU"
+  },
+  "stock_before_after": [
+    {
+      "cell": "QIPcdbf4c0962",
+      "remain": 24,
+      "hard_reserved_base": 1,
+      "stock_version": 10
+    },
+    {
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "physical_verified": false,
+  "stock_posted": false
+}

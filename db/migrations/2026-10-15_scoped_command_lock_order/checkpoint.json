@@ -1,0 +1,18 @@
+{
+  "migration_id": "2026-10-15-scoped-command-lock-order",
+  "git_head": "41c913cf44441cf3656a66b0939e40cb9a83c365",
+  "invalid_before": 0,
+  "sha256": {
+    "apply.sql": "76ba1b7907c7129043576a85af59bf36351957464caa98b07c5e8e0064972e30",
+    "before_rrl_stock_posting_api.sql": "51d2269260a11b68ffc28680ab9538f6767600bab0ee9287dd8b3afb2f67cf90",
+    "before_rrl_stock_store_receipt_cmd.sql": "4753b1cf4987e07cf3790d601d91f9ec56ad46dc732b9deae95c592ffe3ce1c7",
+    "before_rrl_wave_exec_access.sql": "20942ac65d10d3ae59cd1d4f43be8718d8f610a74dfa7565c19749916d7a1daf",
+    "rollback.sql": "459e9a2150cd874cf61c490749f3382287090938bad4d722ac1ba9c250546493",
+    "rrl_stock_posting_api.sql": "90ad15febd828e7fc21b23c022cff8af2d95744c88571dedb8af09ef927fed69",
+    "rrl_stock_store_receipt_cmd.sql": "b572e12d93d9080f39c8c9fe4bf3d5c8b333aa20364f8a7640cd24bb72695fd4",
+    "rrl_wave_exec_access.sql": "fe3a9d50769db9982a6746dcf0ef44bb737e39f6e3e17d0a11406ce6e568f936",
+    "verify.sql": "1a8522d586e55a4f10a901667c06fadd7e3839f6471ab5411d886ae0b0add360"
+  },
+  "state": "PREPARED",
+  "reason": "Rollback-only positive paper fixture exposed pre-plan revision table lock as DIRTY_TRANSACTION; preserve strict no-prewrite invariant"
+}

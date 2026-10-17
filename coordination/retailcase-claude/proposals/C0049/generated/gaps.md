@@ -1,0 +1,133 @@
+# GAP по ролям (сгенерировано)
+
+- `access_admin` — /api/access/assignments — до READY
+- `access_admin` — API до READY
+- `access_admin` — GET /api/access/commands/{id} — до READY
+- `access_admin` — POST /api/access/commands — до READY
+- `access_admin` — POST /api/access/explain — до READY
+- `access_admin` — features/access-admin реализуется; API /api/access/* — READY от Codex
+- `access_admin` — до READY
+- `access_admin` — нет
+- `analyst` — не нужны
+- `analyst` — область GROUP в фильтрах экранов — AK05
+- `analyst` — очереди нет
+- `analyst` — реестра паспортов нет
+- `analyst` — роль только читает
+- `auditor_ro` — AK02+
+- `auditor_ro` — не нужны
+- `auditor_ro` — отдельного экрана нет
+- `auditor_ro` — реестра нет
+- `auditor_ro` — роль только читает
+- `billing_economist` — нет
+- `carrier_manager` — модуля нет (carrier_manage)
+- `carrier_manager` — нет
+- `carrier_manager` — только TRANSPORT_COMPANY в машине
+- `cost_approver` — нет
+- `crossdock_head` — агрегата нет
+- `crossdock_head` — отчёта нет
+- `crossdock_head` — события прибытия нет
+- `dc_director` — отчёта по результатам пересчётов нет
+- `dc_director` — ролевой главной нет — реализуется в features/workspaces
+- `dc_director` — уведомлений руководителю нет
+- `dispatcher` — агрегата нет
+- `dispatcher` — ролевой главной нет — сейчас диспетчеризация
+- `dispatcher` — событийных уведомлений нет
+- `dispatcher` — фильтр по нескольким разрешённым РЦ — AK05
+- `driver` — push водителю нет
+- `driver` — водителю отчёт не нужен
+- `driver` — ролевая главная — улучшение текущей страницы
+- `fleet_manager` — PATCH /api/admin/transport/vehicles/{id} — добавить в реестр после ревью
+- `fleet_manager` — нет
+- `fleet_manager` — статуса ремонта нет
+- `fleet_manager` — статуса ремонта/ТО нет
+- `forklift_driver` — агрегата нет
+- `forklift_driver` — отчёта нет
+- `forklift_driver` — события прибытия нет
+- `forklift_driver` — фильтры ТСД экспедиции не выделены
+- `integration_specialist` — POST /api/admin/event-outbox/* — добавить в реестр после ревью
+- `integration_specialist` — нет
+- `inventory_auditor` — звук ТСД нет
+- `inventory_auditor` — отчёта нет
+- `inventory_auditor` — фильтры ТСД не нужны
+- `knowledge_editor` — POST /api/knowledge/commands — до READY
+- `knowledge_editor` — features/knowledge-editor; API /api/knowledge/* — до READY
+- `knowledge_editor` — до READY
+- `knowledge_editor` — не нужны
+- `knowledge_editor` — реестр покрытия help_id
+- `knowledge_editor` — реестр — KH
+- `lead_expedition` — объекта реестра нет
+- `lead_expedition` — события прибытия нет
+- `lead_picking` — уведомления нет
+- `lead_qc` — PUT quality-policies под warehouse_settings_edit — у руководителя операций
+- `lead_qc` — агрегата нет
+- `lead_qc` — агрегата по контролю нет
+- `lead_qc` — отдельной очереди красных тегов нет
+- `lead_qc` — уведомления нет
+- `lead_receiving` — отчёта нет
+- `lead_storage` — уведомления нет
+- `loader` — отчёта нет
+- `loader` — уведомления нет
+- `loader` — фильтр ТСД не выделен
+- `logistics_director` — агрегата исключений по нескольким РЦ нет; все чтения ограничены складом (require_warehouse)
+- `logistics_director` — команды поручения нет; решения передаются владельцу процесса вне системы
+- `logistics_director` — область «группа объектов» — модуль доступа AK02+
+- `logistics_director` — объекта «исключение/эскалация» с владельцем и сроком в системе нет
+- `logistics_director` — сетевого агрегата нет; по рейсу — delivery-windows
+- `logistics_director` — событийных уведомлений руководителю нет
+- `mdm_specialist` — PUT /api/master-data/stores/profile есть; в реестр команд добавить после ревью права
+- `mdm_specialist` — история профиля в UI не показана
+- `mdm_specialist` — отчёта нет
+- `mdm_specialist` — очереди нет
+- `mdm_specialist` — уведомления нет
+- `picker` — звук/вибрация ТСД не реализованы
+- `picker` — отчёта нет
+- `picker` — ролевой главной ТСД нет — сейчас ТСД сборки
+- `picker` — фильтры комплектовщику не нужны
+- `qc_controller` — агрегата нет
+- `qc_controller` — отчёта нет
+- `qc_controller` — очереди красных тегов нет
+- `qc_controller` — уведомления нет
+- `reach_driver` — звук/вибрация ТСД не реализованы
+- `reach_driver` — отчёта нет
+- `reach_driver` — фильтры ТСД не нужны
+- `receiving_operator` — отчёта нет
+- `receiving_operator` — справка по кодам отказа — knowledge (KH)
+- `region_manager` — агрегата по ветви нет
+- `region_manager` — команд нет — роль наблюдающая
+- `region_manager` — нет
+- `region_manager` — область REGION и сводка магазинов — AK06
+- `region_manager` — фильтр по ветви нет
+- `region_manager` — чтение актов по ветви нет
+- `returns_specialist` — агрегата нет
+- `returns_specialist` — нет узкой команды; cell_availability_edit
+- `returns_specialist` — отчёта нет
+- `returns_specialist` — уведомления нет
+- `route_planner` — уведомления нет
+- `sap_doc_operator` — журнала импорта в API нет
+- `sap_doc_operator` — импорт выполняется шлюзом/API integrations/sap; ролевого экрана загрузки нет
+- `sap_doc_operator` — общего журнала входящих файлов шлюза в UI нет
+- `sap_doc_operator` — отчёта нет
+- `sap_doc_operator` — уведомления нет
+- `shift_supervisor` — звук/push на панели смены нет
+- `stock_controller` — команды утверждения нет (stock_adjust_approve)
+- `stock_controller` — отчёта нет
+- `stock_controller` — уведомления нет
+- `store_director` — агрегата нет
+- `store_director` — нет
+- `store_director` — рабочего места магазина нет (акт сейчас в странице водителя)
+- `store_director` — чтение актов магазина нет
+- `store_receiver` — не нужны
+- `store_receiver` — нет
+- `tare_owner` — уведомления нет
+- `transport_director` — PUT /api/inventory/tare/return-policy под warehouse_settings_edit — узкого права транспорта нет
+- `transport_director` — уведомлений директору нет
+- `transport_director` — фильтра по перевозчику нет
+- `transport_planning_head` — агрегата нет
+- `transport_planning_head` — уведомления нет
+- `wave_planner` — уведомления нет
+- `wh_ops_head` — уведомления нет
+- `yard_coordinator` — журнала прибытия нет
+- `yard_coordinator` — модуля двора нет (yard_gate_manage)
+- `yard_coordinator` — нет
+- `yard_coordinator` — событий нет
+- `yard_coordinator` — только правка рейса диспетчером/legacy change_tt_dock

@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "checks": [
+    "live_context_help_local_links_360",
+    "live_context_help_local_links_390",
+    "live_context_help_local_links_1440"
+  ],
+  "shots": [
+    "native-assembly-360.png",
+    "native-assembly-390.png",
+    "native-assembly-1440.png"
+  ],
+  "apiWrites": 0,
+  "nativeContext": true,
+  "physicalDevice": false
+}

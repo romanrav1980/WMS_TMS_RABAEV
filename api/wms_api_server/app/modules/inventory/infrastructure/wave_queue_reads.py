@@ -22,14 +22,20 @@ class WaveQueueReads:
         with self.gateway.transaction("Current warehouse wave queue READ ONLY") as cursor:
             if not getattr(self.gateway,"transaction_bound",False):
                 cursor.execute("set transaction read only")
-            cursor.execute("""select WARE_ID,upper(trim(USER_GROUP)) from RUSERS
-                where ID=:actor and nvl(DELETED,0)=0 and RRL_HAS_WRIGHT(ID,'pick_wave_view')=1""",actor=actor)
-            row=cursor.fetchone()
-            if row is None:
-                raise HTTPException(403,detail="WAVE_ACTIVE_VIEWER_REQUIRED")
-            actor_warehouse,group=row
-            if group!="GLOBAL_ADMIN":
-                if actor_warehouse is None or (warehouse is not None and warehouse!=actor_warehouse):
+            cursor.execute("select RRL_ACCESS_API.is_admin(:actor) from dual",actor=actor)
+            global_admin=cursor.fetchone()[0]==1
+            if warehouse is not None:
+                cursor.execute("select RRL_ACCESS_API.allowed(:actor,'pick_wave_view','WAREHOUSE',:ware) from dual",actor=actor,ware=str(warehouse))
+                if cursor.fetchone()[0]!=1:
                     raise HTTPException(403,detail="WAVE_CURRENT_WARE_VIEWER_REQUIRED")
-                warehouse=actor_warehouse
+            elif not global_admin:
+                cursor.execute("""select ID from RRL_WARES
+                    where RRL_ACCESS_API.allowed(:actor,'pick_wave_view','WAREHOUSE',to_char(ID))=1
+                    order by ID fetch first 2 rows only""",actor=actor)
+                available=cursor.fetchall()
+                if not available:
+                    raise HTTPException(403,detail="WAVE_ACTIVE_VIEWER_REQUIRED")
+                if len(available)>1:
+                    raise HTTPException(422,detail="WAVE_SELECT_EXPLICIT_WAREHOUSE")
+                warehouse=int(available[0][0])
             return reader(TransactionGateway(cursor),warehouse)

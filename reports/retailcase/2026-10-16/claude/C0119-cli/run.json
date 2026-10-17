@@ -1,0 +1,7 @@
+{
+  "state": "EXITED_REVIEW_RESULT",
+  "cwd": "C:\\projects\\TMS",
+  "max_turns": 40,
+  "automatic_retry": false,
+  "returncode": 1
+}

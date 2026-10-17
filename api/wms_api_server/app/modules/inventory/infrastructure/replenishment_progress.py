@@ -1,11 +1,14 @@
 """Physical supply progress remains separate from original picking demand."""
 from typing import Any
+from .wave_queue_reads import WaveQueueReads
 
 class ReplenishmentProgress:
     def __init__(self,gateway: Any) -> None:
         self.gateway=gateway
 
-    def list_rows(self,wave_id: int,limit: int) -> list[dict[str,Any]]:
+    def list_rows(self,wave_id: int,limit: int,actor: str | None = None) -> list[dict[str,Any]]:
+        if actor is not None:
+            return WaveQueueReads(self.gateway).wave(wave_id,actor,lambda bound: ReplenishmentProgress(bound).list_rows(wave_id,limit))
         return self.gateway.fetch_all("""select PICK_WAVE_REPLENISH_TASK_ID,PICK_WAVE_ID,PICK_TASK_ID,ARTICUL,TARGET_CELL_CODE,SOURCE_CELL_CODE,STATUS,WAIT_REASON,PLANNED_BASE,DEMAND_BASE,
             to_char(CONFIRMED_NUMBER,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') CONFIRMED_BASE,
             (select to_char(greatest(0,p.QTY-nvl(p.FACT_QTY,0)),'TM9','NLS_NUMERIC_CHARACTERS=''.,''')

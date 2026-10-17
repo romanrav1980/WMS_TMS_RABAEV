@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "checks": [
+    "configured_vehicle_assigned_to_empty_owned_draft",
+    "complete_empty_not_admitted",
+    "nonempty_bound_200_preserved",
+    "nonempty_numeric_source_rejected",
+    "nonempty_blank_source_rejected",
+    "unknown_tare_proof_stays_unconfirmed",
+    "created_header_and_vehicle_assignment_rolled_back"
+  ],
+  "business_commit": false,
+  "stock_effect": "NONE"
+}

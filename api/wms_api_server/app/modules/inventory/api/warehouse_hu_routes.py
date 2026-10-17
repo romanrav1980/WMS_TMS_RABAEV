@@ -2,7 +2,7 @@ from decimal import Decimal
 from typing import Literal, Protocol
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
-from ...platform.public import AdminUser, require_permission
+from ...platform.public import AdminUser, get_current_user, require_permission
 from ..contracts_stock import StockPostingError
 
 
@@ -90,32 +90,32 @@ def execute(service: WarehouseHuPort, kind: str, body: Command, actor: str) -> d
 
 @router.get("/composition")
 def preview(identifier: str = Query(min_length=1, max_length=200),
-            _user: AdminUser = Depends(require_permission("warehouse_task_view")),
+            _user: AdminUser = Depends(get_current_user),
             service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     return service.preview(identifier, _user.username)
 
 
 @router.get("/target-slots")
 def target_slots(cell: str = Query(min_length=1, max_length=60), warehouse: int = Query(ge=1),
-                 _user: AdminUser = Depends(require_permission("warehouse_task_view")),
+                 _user: AdminUser = Depends(get_current_user),
                  service: WarehouseHuPort = Depends(warehouse_hu_service)) -> list[dict]:
     return service.target_slots(cell, warehouse, _user.username)
 
 
 @router.post("/create")
-def create(body: Create, user: AdminUser = Depends(require_permission("warehouse_task_execute")),
+def create(body: Create, user: AdminUser = Depends(get_current_user),
            service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     return execute(service, "HU_CREATE", body, user.username)
 
 
 @router.post("/attach")
-def attach(body: Link, user: AdminUser = Depends(require_permission("warehouse_task_execute")),
+def attach(body: Link, user: AdminUser = Depends(get_current_user),
            service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     return execute(service, "HU_ATTACH", body, user.username)
 
 
 @router.post("/detach")
-def detach(body: Link, user: AdminUser = Depends(require_permission("warehouse_task_execute")),
+def detach(body: Link, user: AdminUser = Depends(get_current_user),
            service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     if not body.reason:
         raise HTTPException(422, "Укажите причину вскрытия")
@@ -123,24 +123,24 @@ def detach(body: Link, user: AdminUser = Depends(require_permission("warehouse_t
 
 
 @router.post("/move")
-def move(body: Move, user: AdminUser = Depends(require_permission("warehouse_task_execute")),
+def move(body: Move, user: AdminUser = Depends(get_current_user),
          service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     return execute(service, "HU_MOVE", body, user.username)
 
 @router.post("/plan-move")
-def plan_move(body: Move, user: AdminUser = Depends(require_permission("warehouse_task_execute")),
+def plan_move(body: Move, user: AdminUser = Depends(get_current_user),
               service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     return execute(service, "HU_PLAN_MOVE", body, user.username)
 
 
 @router.post("/attach-case")
-def attach_case(body: CaseLink, user: AdminUser = Depends(require_permission("warehouse_task_execute")),
+def attach_case(body: CaseLink, user: AdminUser = Depends(get_current_user),
                 service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     return execute(service, "HU_ATTACH", body, user.username)
 
 
 @router.post("/detach-case")
-def detach_case(body: CaseLink, user: AdminUser = Depends(require_permission("warehouse_task_execute")),
+def detach_case(body: CaseLink, user: AdminUser = Depends(get_current_user),
                 service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     if not body.reason:
         raise HTTPException(422, "Укажите причину вскрытия")
@@ -154,7 +154,7 @@ class Ship(Command):
 
 
 @router.post("/ship")
-def ship(body: Ship, user: AdminUser = Depends(require_permission("stock_posting_shipping")),
+def ship(body: Ship, user: AdminUser = Depends(get_current_user),
          service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     return execute(service, "HU_SHIP", body, user.username)
 
@@ -170,7 +170,7 @@ class Unpack(Link):
 
 
 @router.post("/unpack")
-def unpack(body: Unpack, user: AdminUser = Depends(require_permission("warehouse_task_execute")),
+def unpack(body: Unpack, user: AdminUser = Depends(get_current_user),
            service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     return execute(service,"HU_UNPACK",body,user.username)
 
@@ -188,7 +188,7 @@ class RelocateSlot(Command):
 
 
 @router.post("/relocate-slot")
-def relocate_slot(body: RelocateSlot, user: AdminUser = Depends(require_permission("warehouse_task_execute")),
+def relocate_slot(body: RelocateSlot, user: AdminUser = Depends(get_current_user),
                   service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     return execute(service,"HU_RELOCATE_SLOT",body,user.username)
 
@@ -209,6 +209,6 @@ class CaseUnpack(Command):
 
 
 @router.post("/unpack-case")
-def unpack_case(body: CaseUnpack, user: AdminUser = Depends(require_permission("warehouse_task_execute")),
+def unpack_case(body: CaseUnpack, user: AdminUser = Depends(get_current_user),
                 service: WarehouseHuPort = Depends(warehouse_hu_service)) -> dict:
     return execute(service,"HU_UNPACK",body,user.username)

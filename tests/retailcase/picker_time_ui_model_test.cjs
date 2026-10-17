@@ -1,0 +1,30 @@
+﻿// Pure strict receipt/storage checks. No native API, Oracle, or business facts.
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto');
+const root=path.resolve(__dirname,'../..'),ts=require(path.join(root,'terminal/wms_terminal_web/node_modules/typescript')),base=path.join(root,'terminal/wms_terminal_web/src/features/inventory/picker-time');
+const data=new Map(),store={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)},cache={};
+function load(name){if(cache[name])return cache[name];const exports={};cache[name]=exports;vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.join(base,name+'.ts'),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,require:id=>load(id.replace('./','')),crypto:crypto.webcrypto,TextEncoder,Date,Map,Set,Number,localStorage:store,navigator:{locks:{request:async(k,o,fn)=>fn()}},location:{origin:'http://test.invalid'}});return exports;}
+const c=load('contracts'),j=load('journal');
+const body={operation_id:'TIME:1',action:'ACTUAL_SHIFT_START',expected_version:0,resource_session_id:3,source_kind:null,source_id:null,reason:'Начинаю фактическую смену'};
+const off={operator_id:'worker',stream_version:0,shift_state:'OFF',work_state:'IDLE',warehouse_id:null,resource_session_id:null,resource_id:null,source_kind:null,source_id:null,shift_started_at:null,work_started_at:null,pause_started_at:null,last_event_at:null,work_coverage_certified:false,source_mode:'MANUAL_CONFIRMED'};
+let count=0;async function check(name,run){await run();count++;console.log('PASS',name);}
+(async()=>{const wire=c.canonical(body),i={server:'http://test.invalid',actor:'worker',body,wire,request_sha256:await c.sha(wire)};
+const open={...off,stream_version:1,shift_state:'OPEN',warehouse_id:7,resource_session_id:3,resource_id:4,shift_started_at:'2026-10-15T12:00:00+00:00',last_event_at:'2026-10-15T12:00:00+00:00'};
+const a={operation_id:body.operation_id,actor:'worker',action:body.action,resource_session_id:3,warehouse_id:7,request_sha256:i.request_sha256,outcome:'APPLIED',outcome_confirmed:true,changed:true,may_create_corrected_operation:false,error_code:null,stock_posted:false,event_at:open.last_event_at,before_version:0,after_version:1,state:open};
+await check('Unicode canonical wire hashes actual UTF8 without ASCII escaping',()=>{assert.ok(wire.includes('Начинаю'));assert.equal(i.request_sha256,crypto.createHash('sha256').update(wire,'utf8').digest('hex').toUpperCase());assert.equal(c.canonical({...body,reason:body.reason}),wire);});
+await check('native state/receipt accepted with original actor and session',()=>{assert.equal(c.state(off,'worker'),off);assert.equal(c.ack(a,i),a);});
+for(const [key,value] of [['operation_id','OTHER'],['actor','foreign'],['action','WORK_START'],['resource_session_id',8],['request_sha256','F'.repeat(64)],['stock_posted',true],['outcome_confirmed',1],['before_version',1],['after_version',2],['event_at','2026-10-15T13:00:00Z']])await check('mismatched ACK '+key+' refused',()=>assert.throws(()=>c.ack({...a,[key]:value},i)));
+await check('rejected old expectedversion keeps actual unchanged before/after version',()=>{const state={...open,stream_version:3};assert.equal(c.ack({...a,outcome:'REJECTED',changed:false,may_create_corrected_operation:true,error_code:'VERSION_CONFLICT',event_at:null,before_version:3,after_version:3,state},i).outcome,'REJECTED');});
+await check('fake certified manual state refused',()=>assert.throws(()=>c.state({...off,work_coverage_certified:true},'worker')));
+await check('aware but nonexistent calendar date refused',()=>assert.throws(()=>c.state({...open,last_event_at:'2026-02-30T12:00:00Z'},'worker')));
+await check('naive timestamp refused',()=>assert.throws(()=>c.state({...open,last_event_at:'2026-10-15T12:00:00'},'worker')));
+await check('state source mismatch cannot finish a different source',()=>{const wi={...i,body:{...body,action:'WORK_START',expected_version:1,source_kind:'CASE_PICK_TASK',source_id:12}};assert.throws(()=>c.ack({...a,action:'WORK_START',before_version:1,after_version:2,state:{...open,stream_version:2,work_state:'WORK',source_kind:'CASE_PICK_TASK',source_id:99,work_started_at:open.last_event_at}},wi));});
+await check('SHIFT command cannot pretend CASE source',()=>assert.throws(()=>c.command({...body,source_kind:'CASE_PICK_TASK',source_id:12})));
+await check('WORK command requires explicit source',()=>assert.throws(()=>c.command({...body,action:'WORK_START'})));
+await check('extra actor body is forbidden',()=>assert.throws(()=>c.command({...body,actor:'worker'})));
+await check('pending persists and reloads exact original Unicode bytes',async()=>{j.save('worker',{schema:1,pending:i,last:null},null);const saved=await j.read('worker');assert.equal(saved.journal.pending.wire,wire);assert.equal(saved.journal.pending.request_sha256,i.request_sha256);});
+await check('storage cross-tab CAS never overwrites another pending',()=>assert.throws(()=>j.save('worker',{schema:1,pending:null,last:null},null)));
+await check('wrong session retarget with unchanged wire refused',async()=>{await assert.rejects(()=>c.intent({...i,body:{...body,resource_session_id:9}}));});
+await check('malformed receipt cannot clear original pending',async()=>{const before=store.getItem(j.key('worker'));assert.throws(()=>c.ack({...a,request_sha256:'BAD'},i));assert.equal(store.getItem(j.key('worker')),before);});
+await check('unreadable journal fails closed without resetting bytes',async()=>{store.setItem(j.key('bad'),'broken');await assert.rejects(()=>j.read('bad'));assert.equal(store.getItem(j.key('bad')),'broken');});
+await check('quota failure before POST leaves existing journal intact',()=>{const original=store.setItem;store.setItem=()=>{throw new Error('quota');};assert.throws(()=>j.save('new',{schema:1,pending:i,last:null},null));store.setItem=original;assert.equal(store.getItem(j.key('new')),null);});
+console.log(count+' picker-time pure checks PASS');})().catch(e=>{console.error(e);process.exitCode=1;});

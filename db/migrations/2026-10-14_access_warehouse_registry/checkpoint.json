@@ -1,0 +1,10 @@
+{
+  "target": "RABAEV/orcl",
+  "users_changed": false,
+  "mapping": "RRL_WARES.ID -> WAREHOUSE object identity; no source title edited",
+  "files": {
+    "apply.sql": "570e4c3cca3388cba91ee1da11e326dd80cef1471d6dfa02704ab81a345d380e",
+    "rollback.sql": "1607e2f621257e43901499f15a1d90309b3d82bbe9cd3bd51dfc21fd1ee3a891",
+    "verify.sql": "a189a1e2eaaf6c6e2c664d86da90de1363e4c4ecb68016b9dbe23453b1a65737"
+  }
+}

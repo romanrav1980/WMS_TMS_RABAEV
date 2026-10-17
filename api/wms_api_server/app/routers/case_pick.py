@@ -1,8 +1,11 @@
 from ..modules.resources.public import CaseReadPort, CaseReadError, case_read_service, assert_case_task_access
 from ..modules.inventory.public import CaseCarrierReturnRequest, CaseCarrierCloseRequest
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Path
+from typing import Annotated
+from ..modules.platform.public import get_current_user
 
 from ..auth import (
+    get_current_admin,
     AdminUser,
     CASE_PICK_EXECUTE_PERMISSION,
     CASE_PICK_MANAGE_PERMISSION,
@@ -35,11 +38,12 @@ def ensure_wave_case_pick_tasks(
 @router.get("/tasks")
 def list_case_pick_tasks(
     resource_id: int | None = None, scope: str = "mine", status: str | None = None, limit: int = 100,
-    user: AdminUser = Depends(require_permission(CASE_PICK_VIEW_PERMISSION)),
+    ware_id: int | None = None,
+    user: AdminUser = Depends(get_current_admin),
     service: CaseReadPort = Depends(case_read_service),
 ) -> list[dict]:
     try:
-        return service.tasks(user.username, resource_id, scope, status, limit)
+        return service.tasks(user.username, resource_id, scope, status, limit, ware_id)
     except CaseReadError as exc:
         raise HTTPException(exc.status, {"code": exc.code, "message": str(exc)}) from exc
 
@@ -47,7 +51,7 @@ def list_case_pick_tasks(
 @router.get("/tasks/{case_pick_task_id}")
 def get_case_pick_task(
     case_pick_task_id: int,
-    user: AdminUser = Depends(require_permission(CASE_PICK_VIEW_PERMISSION)),
+    user: AdminUser = Depends(get_current_admin),
     service: CaseReadPort = Depends(case_read_service),
 ) -> dict:
     try:
@@ -82,7 +86,7 @@ def start_case_pick_task(
 def transfer_case_pick_task(
     case_pick_task_id: int,
     request: CasePickTransferRequest,
-    user: AdminUser = Depends(require_permission(CASE_PICK_MANAGE_PERMISSION)),
+    user: AdminUser = Depends(get_current_admin),
 ) -> dict[str, int | str]:
     request.actor = user.username
     CasePickService().transfer_task(case_pick_task_id, request)
@@ -101,7 +105,7 @@ class CaseCarrierMoveRequest(BaseModel):
 
 @router.post("/tasks/{case_pick_task_id}/move-carrier")
 def move_case_carrier(case_pick_task_id: int, request: CaseCarrierMoveRequest,
-    user: AdminUser = Depends(require_permission(CASE_PICK_EXECUTE_PERMISSION))) -> dict:
+    user: AdminUser = Depends(get_current_user)) -> dict:
     from ..modules.inventory.public import build_case_carrier_move_service
     from ..modules.inventory.public import StockPostingError
     try:
@@ -111,14 +115,14 @@ def move_case_carrier(case_pick_task_id: int, request: CaseCarrierMoveRequest,
         raise HTTPException(422, str(exc)) from exc
     except StockPostingError as exc:
         uncertain = exc.code in {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "CONNECTION_UNUSABLE", "LOCK_RETRY_EXHAUSTED", "STOCK_RELEASE_NOT_ACTIVE"}
-        raise HTTPException(503 if uncertain else 409, detail={"code": exc.code,
+        raise HTTPException(403 if exc.oracle_code == 20882 else 503 if uncertain else 409, detail={"code": exc.code,
             "operation_id": exc.operation_id, "oracle_code": exc.oracle_code,
             "outcome_confirmed": not uncertain, "retry_same_operation_id": uncertain}) from exc
 
 
 @router.get("/tasks/{case_pick_task_id}/lines/{line_id}/marking-policy")
 def case_line_marking_policy(case_pick_task_id: int, line_id: int,
-    user: AdminUser = Depends(require_permission(CASE_PICK_EXECUTE_PERMISSION))) -> dict:
+    user: AdminUser = Depends(get_current_user)) -> dict:
     from ..modules.inventory.public import build_case_task_services
     try:
         return build_case_task_services().marking_policy(case_pick_task_id, line_id, user.username, assert_case_task_access)
@@ -135,8 +139,14 @@ def confirm_case_pick_line(
     case_pick_task_id: int,
     line_id: int,
     request: CasePickLineConfirmRequest,
-    user: AdminUser = Depends(require_permission(CASE_PICK_EXECUTE_PERMISSION)),
+    user: AdminUser = Depends(get_current_admin),
 ) -> dict:
+    from ..modules.inventory.public import authorize_existing_case_confirmation, CaseConfirmationAccessError
+    try:
+        authorize_existing_case_confirmation(case_pick_task_id, line_id, user.username)
+    except CaseConfirmationAccessError as exc:
+        raise HTTPException(exc.status, detail={"code": exc.code, "message": str(exc),
+            "operation_id": request.operation_id, "outcome_confirmed": False, "read_before_retry": True}) from exc
     request.actor = user.username
     result = CasePickService().confirm_line(case_pick_task_id, line_id, request)
     return {"case_pick_task_id": case_pick_task_id, "case_pick_line_id": line_id, **result}
@@ -147,7 +157,7 @@ def create_case_pick_short(
     case_pick_task_id: int,
     line_id: int,
     request: CasePickLineShortRequest,
-    user: AdminUser = Depends(require_permission(CASE_PICK_EXECUTE_PERMISSION)),
+    user: AdminUser = Depends(get_current_user),
 ) -> dict:
     request.actor = user.username
     try:
@@ -180,23 +190,32 @@ def close_case_pick_task(
 @router.get("/shorts")
 def list_case_pick_shorts(
     status: str | None = None, limit: int = 200,
-    user: AdminUser = Depends(require_permission(CASE_PICK_VIEW_PERMISSION)),
+    ware_id: int | None = None,
+    user: AdminUser = Depends(get_current_admin),
     service: CaseReadPort = Depends(case_read_service),
 ) -> list[dict]:
     try:
-        return service.shorts(user.username, status, limit)
+        return service.shorts(user.username, status, limit, ware_id)
     except CaseReadError as exc:
         raise HTTPException(exc.status, {"code": exc.code, "message": str(exc)}) from exc
 
 
 @router.post("/shorts/{short_id}/approve")
 def approve_case_pick_short(
-    short_id: int,
+    short_id: Annotated[int, Path(gt=0)],
     request: CasePickShortDecisionRequest,
-    user: AdminUser = Depends(require_permission(CASE_PICK_SHORT_APPROVE_PERMISSION)),
+    user: AdminUser = Depends(get_current_user),
 ) -> dict:
+    from ..modules.inventory.public import StockPostingError
     request.actor = user.username
-    return {"case_pick_short_id": short_id, **CasePickService().approve_short(short_id, request)}
+    try:
+        return {"case_pick_short_id": short_id, **CasePickService().approve_short(short_id, request)}
+    except StockPostingError as exc:
+        uncertain = exc.code in {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "CONNECTION_UNUSABLE", "LOCK_RETRY_EXHAUSTED", "STOCK_RELEASE_NOT_ACTIVE"}
+        raise HTTPException(403 if exc.oracle_code == 20882 else 503 if uncertain else 409, detail={
+            "code": exc.code, "operation_id": exc.operation_id, "oracle_code": exc.oracle_code,
+            "reason": exc.rule_reason, "outcome_confirmed": not uncertain,
+            "retry_same_operation_id": uncertain}) from exc
 
 
 @router.post("/shorts/{short_id}/reject")
@@ -253,6 +272,13 @@ def bind_case_shipment(case_pick_task_id: int, request: CaseShipmentBindRequest,
 
 @router.post("/tasks/{case_pick_task_id}/return-carrier")
 def return_case_carrier(case_pick_task_id:int,request:CaseCarrierReturnRequest,
-    user:AdminUser=Depends(require_permission(CASE_PICK_MANAGE_PERMISSION))) -> dict:
-    from ..modules.inventory.public import return_existing_case_carrier
-    return return_existing_case_carrier(case_pick_task_id,request,user.username)
+    user:AdminUser=Depends(get_current_user)) -> dict:
+    from ..modules.inventory.public import return_existing_case_carrier, StockPostingError
+    try:
+        return return_existing_case_carrier(case_pick_task_id,request,user.username)
+    except StockPostingError as exc:
+        uncertain = exc.code in {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "CONNECTION_UNUSABLE", "LOCK_RETRY_EXHAUSTED"}
+        raise HTTPException(403 if exc.oracle_code == 20882 else 503 if uncertain else 409, detail={
+            "code": exc.code, "operation_id": exc.operation_id, "reason": exc.rule_reason,
+            "oracle_code": exc.oracle_code, "outcome_confirmed": not uncertain,
+            "retry_same_operation_id": uncertain}) from exc

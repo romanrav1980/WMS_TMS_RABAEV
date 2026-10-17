@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "started_at": "2026-10-15T19:30:40.069549+00:00",
+  "min_api_id": 69293,
+  "actor": "admin",
+  "scope": "Existing DEV data, global admin identity; not new store-only rights acceptance",
+  "hardware": false,
+  "business_writes": 0,
+  "candidate_count": 12,
+  "checks": [
+    {
+      "code": "500008618308650819",
+      "status": 200,
+      "load": "IW622.LOAD:c8a91f60b9",
+      "ms": 65.32
+    },
+    {
+      "code": "00500008618308650819",
+      "status": 200,
+      "load": "IW622.LOAD:c8a91f60b9",
+      "ms": 64.35
+    },
+    {
+      "code": "(00)500008618308650819",
+      "status": 200,
+      "load": "IW622.LOAD:c8a91f60b9",
+      "ms": 68.4
+    },
+    {
+      "code": "]C100500008618308650819",
+      "status": 200,
+      "load": "IW622.LOAD:c8a91f60b9",
+      "ms": 64.62
+    },
+    {
+      "code": "]C1(00)500008618308650819",
+      "status": 200,
+      "load": "IW622.LOAD:c8a91f60b9",
+      "ms": 58.49
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "status": "AUTHOR_VERIFIED_DEV_INCREMENT",
+  "hashes": {
+    "api/wms_api_server/app/modules/inventory/api/warehouse_hu_routes.py": "067a51a569118aaa517302d9704b001630c9bb2f77e6bcdfe70015abca7bee3f",
+    "api/wms_api_server/app/modules/inventory/infrastructure/hu_identifier_resolution.py": "21a182d1d5daeeb5d1400eadaff21778e35c15cb6ace7303f20939c24057d095",
+    "api/wms_api_server/app/modules/inventory/infrastructure/warehouse_hu.py": "9eae6a9fc2579b589905aac0e09f6e4c41940a2f98d801b4e6e8de1bb487471f",
+    "api/wms_api_server/app/modules/inventory/infrastructure/interwarehouse_case_source.py": "0dd44f32a8a4d1fc78413a4c0e03ca6ca71f97b88fa7593ecc332795165698a5",
+    "api/wms_api_server/app/modules/inventory/infrastructure/interwarehouse_group_source.py": "335e482eaf7375249fced8bf08327cb56fd68fbc99ae3c6ab01b1e10c4e42b7c",
+    "api/wms_api_server/app/modules/inventory/api/outgoing_quality_routes.py": "c981b766ad0bfb4e45b6b58f3d58d410673cf66591e5e0fc05693966a4279225",
+    "api/wms_api_server/app/modules/finance/domain/physical_boxes.py": "05e4a521281ed554b48ef721a4f2b8d618341b1970ef4b031feeff77de0a230e",
+    "admin/wms_admin_frontend/src/features/platform/workspaces/shift/ShiftSupervisorDesk.tsx": "7dcd420a92c3517b4585ef19b93b4eef77fe910c02d2a882a9467c232977e8b6",
+    "admin/wms_admin_frontend/src/features/platform/workspaces/shift/useShiftContext.ts": "8ba6726d34277bce5fb53bbeaa372cadd3f2893d82c1a55e8bec49516cebf23c",
+    "wiki-raw/wms_admin_ui_reference/outgoing-quality.js": "fc7377d72fca903fbbf0ad03049c4c2c45424b5bd38b617fdb4fc3b7f530fc17",
+    "wiki-raw/wms_admin_ui_reference/outgoing-quality-intent.js": "586c87e276367a2df4a33630e5dc28ffa5cfb61a074c86175480e8ad833bb7ad"
+  },
+  "migration_id": "2026-10-16-hu-scoped-execute",
+  "manifest_sha256": "ed1089477064a2e024d8c98c8c9a7e0229b04ff52a5d6cf7e4a92e4373ae7bbd",
+  "http_pairs": 14,
+  "max_http_ms": 219,
+  "slow": 0,
+  "physical_retained": 3,
+  "hardware_verified": false,
+  "all_sprints_complete": false
+}

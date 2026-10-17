@@ -1,0 +1,94 @@
+{
+  "status": "PASS",
+  "checks": [
+    "native_exact_source_and_launch_replay_after_compensation_returns_original_receipts_without_effect",
+    "native_changed_frozen_source_same_key_denied",
+    "native_frozen_source_UPDATE_DELETE_append_only_denied",
+    "actual_http_current_scoped_receipt_APPLIED_separate_CANCELLED_wave_COMPLETE_steps",
+    "actual_http_exact_cancelled_replay_200_no_false_LAUNCHED_and_authenticated_actor_binding",
+    "actual_http_missing_operation422_foreignWARE403_no_operation_other_actions_remain403",
+    "native_and_actualHTTP_wrong_WARE_after_revoke_denies_exact_replay_and_receipt",
+    "final_admin_receipt_CANCELLED_distinct_original_launch_APPLIED_and_P_H_version_unchanged"
+  ],
+  "final_receipt": {
+    "operation_id": "WAVE.DURABLE.LAUNCH:d214fecbf",
+    "wave_id": 565,
+    "state": "APPLIED",
+    "wave_status": "CANCELLED",
+    "launch_outcome_confirmed": true,
+    "continuation_state": "COMPLETE",
+    "continuation_steps": [
+      {
+        "step": "SETTINGS",
+        "state": "DONE",
+        "error_code": null,
+        "completed_at": "2026-10-15T07:06:21.203895"
+      },
+      {
+        "step": "DEFICIT",
+        "state": "DONE",
+        "error_code": null,
+        "completed_at": "2026-10-15T07:06:21.252241"
+      },
+      {
+        "step": "RESERVE_SOURCES",
+        "state": "DONE",
+        "error_code": null,
+        "completed_at": "2026-10-15T07:06:21.794354"
+      },
+      {
+        "step": "PICK_FACE_CAPACITY",
+        "state": "DONE",
+        "error_code": null,
+        "completed_at": "2026-10-15T07:06:21.899319"
+      },
+      {
+        "step": "RELEASE_QUEUE",
+        "state": "DONE",
+        "error_code": null,
+        "completed_at": "2026-10-15T07:06:22.601247"
+      },
+      {
+        "step": "WAREHOUSE_TASKS",
+        "state": "DONE",
+        "error_code": null,
+        "completed_at": "2026-10-15T07:06:23.414752"
+      },
+      {
+        "step": "CASE_TASKS",
+        "state": "DONE",
+        "error_code": null,
+        "completed_at": "2026-10-15T07:06:23.757585"
+      }
+    ],
+    "commands_executed": false
+  },
+  "stock_before": [
+    {
+      "cell": "QIPcdbf4c0962",
+      "remain": 24,
+      "hard_reserved_base": 0,
+      "stock_version": 9
+    },
+    {
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "stock_after": [
+    {
+      "cell": "QIPcdbf4c0962",
+      "remain": 24,
+      "hard_reserved_base": 0,
+      "stock_version": 9
+    },
+    {
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ]
+}

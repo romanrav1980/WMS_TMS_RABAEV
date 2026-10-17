@@ -1,0 +1,44 @@
+{
+  "migration_id": "2026-10-16-driver-self-scope",
+  "status": "PREPARED_NOT_APPLIED",
+  "before_sources": {
+    "RRL_TT_OPERATION_PLAN_API|PACKAGE BODY": "1E5B838C99AAE0A4E05A6AF6EA62D0D69713867C0A8C36EBD049A76C63621673",
+    "RRL_TRANSPORT_DRIVER_USER_GUARD|TRIGGER": "5BD760BC77332F96CF141E398416700897D587F7DF77FC76AED12A582698A109",
+    "RRL_STOCK_STORE_RETURN_CUST_CMD|PACKAGE BODY": "E29EC5DE45A4056840236D0B52458CE1A122FDB01673AD81888E5725F5D3DEAA",
+    "RRL_STOCK_POSTING_API|PACKAGE BODY": "D85B5FCABC365BEAFE91A06F03B6ACBF9E8BB681B42551C5C72E40047B89474A"
+  },
+  "after_sources": {
+    "RRL_TT_OPERATION_PLAN_API|PACKAGE BODY": "7364432ED0997E9A9127B78CC819D273238CE2D325B6E8D7F83C860AAEB78FA1",
+    "RRL_TRANSPORT_DRIVER_USER_GUARD|TRIGGER": "347CABDDE3D4238E0238EFBB7630F15D9CD9157CEA12CD742B284B4C4B6DF538",
+    "RRL_STOCK_STORE_RETURN_CUST_CMD|PACKAGE BODY": "CB38863C3AC47CBA119DCAC31F105B98986BF19478EDD66B23AA8C5E08B0B0F1",
+    "RRL_STOCK_POSTING_API|PACKAGE BODY": "E5199D7752C6B08CC0F11CA444D2D66526FFB6E932C9909D9C75CC9FF1C3681C",
+    "RRL_DRIVER_SCOPE|PACKAGE": "6E05F8AED77DF0387C70DD68C36F8A6C27D0364BE49F5CF7310C55B9DEC4AEC8",
+    "RRL_DRIVER_SCOPE|PACKAGE BODY": "26B618BD9D617299EA88D3C8150BC820AD8068BDFF2EA8A9B2106A0B176A3BF9"
+  },
+  "dependencies": [],
+  "files": {
+    "after_sources.sql": "d92ad6a2df8827b26671f0101c1f50aed7e3740bd82dce42067767a383f53c39",
+    "apply.sql": "f647ad1993f237bb3317ef441d46b28e32cae0cc0ae9522fc3ea529a4fdd143b",
+    "before.sql": "b5956216d70e8ae84188a491967bfb7d4349d12dcb9fd2da1075e9f691890d15",
+    "before_sources.sql": "a83b4be3c68d906c86637f6c96a82bafaadc6372e79e5b60c07baa679f8d91ca",
+    "compile_dependents.sql": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "af2353e348a71f4bdc4806112b845a4e40cd79c7475154e4d4f1fcbc343eda53",
+    "restore_rrl_stock_posting_api_package_body.sql": "769d09f2cb4416725ede24192a213ce4b075b410c0cb2892419c1bf724062ea0",
+    "restore_rrl_stock_store_return_cust_cmd_package_body.sql": "4ba58bc5ccb50a2573cb2594616be3b096028e6267efe59efaa0ea06debf2656",
+    "restore_rrl_transport_driver_user_guard_trigger.sql": "8ba42d23687fc28ac2d2a768ccc2bb2e1ce51dd4cbfb5f072942341fcca456aa",
+    "restore_rrl_tt_operation_plan_api_package_body.sql": "a4a62c1377256b643cb2f1c6c345c51565a5ee9c3ecbc6d62585f502462e86be",
+    "rollback.sql": "4c0ea3faecb671565f1c766cbcaf2e52f4394125a0ba266e18086b7231b143bf",
+    "rrl_driver_scope_package.sql": "e84c314f5123a219accfa91020c82b59812ef3e52ce135f6a0bf6e015cd26f66",
+    "rrl_driver_scope_package_body.sql": "0c93189e298525fea184787bc709b3f1d1a95bd997afd6eed929c8e4f1866601",
+    "rrl_stock_posting_api_package_body.sql": "f30f98103e8e40e7d574adaab1d8ba9ffd07c0531c2200541ac5134df0bafb8a",
+    "rrl_stock_store_return_cust_cmd_package_body.sql": "2b5298f289592a6f199394df15c77a50be78243c2841a5aa43ad1fedcc07c21c",
+    "rrl_transport_driver_user_guard_trigger.sql": "a5e9e33d035f913ab22b8ba67c814ab3e031a1790844448b0ed67d561fd7ee18",
+    "rrl_tt_operation_plan_api_package_body.sql": "c7813b9ba1745bb475ba7df2324cd3e0713d04edc8ab360ba64b93d57f34d0b0",
+    "verify.sql": "00680b8bf2b2fd199e1f99646fc7d68baac69f7fa7a0b5e65279fa4eca95dd73"
+  },
+  "code_checkpoint": {
+    "api/wms_api_server/app/modules/delivery/infrastructure/return_driver_read.py": "4162a969bcbf0324373bc2591c8102eba6ccc0a1cce3e1f19f9b4e6757806cee",
+    "api/wms_api_server/app/modules/delivery/infrastructure/return_custody.py": "5ccc5187945f919cdd1c6e36a4ec17756308ae8668742a8e55a00372d16a46e3",
+    "api/wms_api_server/app/modules/delivery/api/return_custody_routes.py": "a6b9fc2a088c870c2031bbce5f1f6fc0920207f09eaea1c337d91488bc025a97"
+  }
+}

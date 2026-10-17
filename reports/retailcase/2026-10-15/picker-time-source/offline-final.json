@@ -1,0 +1,22 @@
+{
+  "status": "OFFLINE_PASS_NOT_NATIVE_ACCEPTED",
+  "observed_at": "2026-10-15T17:25:12.287854+00:00",
+  "focused_tests": "59 PASS (35 source +24 kernel)",
+  "quality_gate": "PASS architecture1078/cycles0/debt72 +24 architecture/tooling +bothTS",
+  "encoding": "PASS",
+  "sql_kit_sha256": "93343f230c33a44358fc909e890ad5045f5acb3c7885476b4a4e1173cdb1922e",
+  "sql_frozen_unchanged": false,
+  "runtime_oracle_acceptance": false,
+  "owner_instrumentation": false,
+  "work_complete_coverage": false,
+  "files": {
+    "api/wms_api_server/app/modules/resources/contracts_picker_time.py": "303679ba06977962a1953d49e396a6011cce2adc5071bacbfeb617b434d0cae7",
+    "api/wms_api_server/app/modules/resources/application/picker_time_service.py": "3e17e9b68e185e631aad0bd987152519d6332c410cc72d3ca319fedf30611b22",
+    "api/wms_api_server/app/modules/resources/infrastructure/picker_time_native.py": "45ff4d28b8f42589e40096f05b05b235e995bb1aa242806ca2776b4f6949d26d",
+    "api/wms_api_server/app/modules/resources/api/picker_time_routes.py": "6a230cf02c68895ad40bcb7d664e5fedb93678ee9746eef81ce4ac1c2bc5c274",
+    "tests/retailcase/test_picker_time_source.py": "7eda8985523336db54af815fadb246213f4da0d75c6c6fb59845baa706c32760"
+  },
+  "dst_regression": "Aware ZoneInfo fall-back45min window normalized to UTC before positivity/bounds",
+  "sql_revision": "Separate v2 candidate; original frozen kit retained after ORA-02270 first CREATE TABLE refusal/no installed objects",
+  "maximum_operation_regression": "100-character operation native span IDs preserved; SHA256 internal kernel identities prevent >100char kernel-ID failure"
+}

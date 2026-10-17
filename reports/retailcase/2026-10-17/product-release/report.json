@@ -1,0 +1,81 @@
+{
+  "state": "PASS_LOCAL_SOFTWARE_RELEASE_NOT_PRODUCTION_CUTOVER",
+  "completed_at_moscow": "2026-10-17T10:15:18.321712+03:00",
+  "health": [
+    {
+      "url": "http://127.0.0.1:3000/",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:3010/store/",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:8088/docs",
+      "status": 200
+    }
+  ],
+  "launch": "product.bat",
+  "oracle": {
+    "current_sources": 53,
+    "frozen_kits": 17,
+    "errors": 0,
+    "invalid": 0,
+    "proof": "product-flow/oracle-current.json"
+  },
+  "quality": {
+    "architecture_files": 1151,
+    "cycles": 0,
+    "existing_debt": 72,
+    "tooling_tests": 24,
+    "typescript_both": "PASS",
+    "production_builds_both": "PASS",
+    "encoding": "PASS"
+  },
+  "acceptance": [
+    "product-flow/delivery.json",
+    "product-flow/move-scope-denials.json",
+    "product-flow/store-ui/report.json",
+    "kpi-v2/short-acceptance.json",
+    "kpi-v2/return-acceptance.json",
+    "kpi-v2/recovery-after.json",
+    "kpi-v2/product-ui-compiled/report.json",
+    "product-release/physical-retirement.json"
+  ],
+  "sql": {
+    "paired_http": 70,
+    "local_pairs": 70,
+    "slow_entries": 16,
+    "top_sql": 12,
+    "decisions": 28,
+    "max_statement_ms": 945,
+    "max_http_ms": 1020,
+    "load_or_p95": false
+  },
+  "retirement": {
+    "state": "PASS_OWN_TEST_ACCESS_RETIRED_HISTORY_RETAINED",
+    "users": 6,
+    "roles": 3,
+    "assignments": 3,
+    "resources": 2,
+    "devices": 2
+  },
+  "claude": {
+    "C0124": "RELEASE_INTEGRATED",
+    "C0125": "RELEASE_INTEGRATED_NO_PRODUCT_CHANGES",
+    "new_assignment": false
+  },
+  "source_freeze": {
+    "files": 108,
+    "sha256": "c05b9a6d388abbaaafcaaaf56ae31e3422d6ce1986b65beee6be93e2c26d9dd5"
+  },
+  "limitations": [
+    "Local compiled software and isolated TEST Oracle/API proof; not production cutover.",
+    "Store receipt committed through real API; final STORE-only UI pass was read-only.",
+    "Real weighing/scanning hardware, deployment phone and warehouse pilot not certified.",
+    "Production load and Oracle backup restore/RPO/RTO remain operational acceptance.",
+    "Observed-pick time coverage is not certification of all WORK or payroll."
+  ],
+  "cancelled_scope": "Multi-store partial pallet handover",
+  "github_published": false
+}

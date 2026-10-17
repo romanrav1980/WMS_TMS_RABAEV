@@ -49,8 +49,9 @@ CASE_TASK_LIST_SQL = """
                      sum(case when STATUS in ('ASSIGNED', 'IN_PROGRESS', 'PARTIAL', 'WAIT_REPLENISHMENT', 'PICKED') then 1 else 0 end) ROUTE_ACTIVE_PALLET_COUNT,
                      nvl(sum(PLANNED_QTY), 0) ROUTE_PLANNED_QTY,
                      nvl(sum(PICKED_QTY), 0) ROUTE_PICKED_QTY
-                from RRL_CASE_PICK_TASK
+                from RRL_CASE_PICK_TASK tot
                where STATUS not in ('CANCELLED', 'FAILED')
+                 and {totals_scope_sql}
                  and PICK_WAVE_ID in(select PICK_WAVE_ID from selected_tasks)
                group by PICK_WAVE_ID
             )
@@ -145,9 +146,16 @@ class LegacyCaseReads:
         status: str | None = None,
         limit: int = 100,
         warehouse_id: int | None = None,
+        view_actor: str | None = None,
     ) -> list[dict[str, Any]]:
         conditions = ["1 = 1"]
         params: dict[str, Any] = {"limit": min(max(limit, 1), 500)}
+        totals_scope_sql = "1=1"
+        if view_actor is not None:
+            from .case_view_scope import view_predicate
+            conditions.append(view_predicate("t"))
+            totals_scope_sql = view_predicate("tot")
+            params["view_actor"] = view_actor
         if warehouse_id is not None:
             conditions.append("t.WARE_ID = :ware")
             params["ware"] = warehouse_id
@@ -156,7 +164,11 @@ class LegacyCaseReads:
             params["status"] = status.upper()
         else:
             conditions.append("t.STATUS not in ('READY_TO_SHIP', 'CANCELLED')")
-        if scope == "mine":
+        if scope == "self":
+            if view_actor is None:
+                raise ValueError("Authenticated CASE viewer required for self queue")
+            conditions.append("upper(trim(t.ASSIGNED_TO))=upper(trim(:view_actor))")
+        elif scope == "mine":
             if resource_id is not None:
                 conditions.append("(t.ASSIGNED_RESOURCE_ID = :resource_id or t.ASSIGNED_RESOURCE_ID is null)")
                 params["resource_id"] = resource_id
@@ -166,7 +178,7 @@ class LegacyCaseReads:
             conditions.append("t.ASSIGNED_RESOURCE_ID is null")
         where_sql = " and ".join(conditions)
         return self.gateway.fetch_all(
-            CASE_TASK_LIST_SQL.format(where_sql=where_sql),
+            CASE_TASK_LIST_SQL.format(where_sql=where_sql, totals_scope_sql=totals_scope_sql),
             params,
         )
 
@@ -197,7 +209,7 @@ class LegacyCaseReads:
                    t.PICKED_LINES,
                    to_char(t.PLANNED_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PLANNED_QTY,
                    to_char(t.PICKED_QTY,'TM9','NLS_NUMERIC_CHARACTERS=''.,''') PICKED_QTY,
-                   t.CURRENT_CELL,t.CONTENT_VERSION,t.LEGACY_SBORKA_PALLET_ID,t.SHIPPED_OPERATION,
+                   t.CURRENT_CELL,t.CONTENT_VERSION,t.ASSIGNMENT_VERSION,t.LEGACY_SBORKA_PALLET_ID,t.SHIPPED_OPERATION,
                    t.CREATED_AT,
                    t.STARTED_AT,
                    to_char(t.STARTED_AT_INSTANT,'YYYY-MM-DD"T"HH24:MI:SS.FF6TZH:TZM') STARTED_AT_INSTANT,
@@ -250,11 +262,16 @@ class LegacyCaseReads:
         return task
 
 
-    def list_shorts(self, status: str | None = None, limit: int = 200, warehouse_id: int | None = None) -> list[dict[str, Any]]:
+    def list_shorts(self, status: str | None = None, limit: int = 200, warehouse_id: int | None = None,
+                    view_actor: str | None = None) -> list[dict[str, Any]]:
         conditions = []
         if warehouse_id is not None:
             conditions.append("exists(select 1 from RRL_CASE_PICK_TASK ct where ct.CASE_PICK_TASK_ID=s.CASE_PICK_TASK_ID and ct.WARE_ID=:ware)")
         params: dict[str, Any] = {"limit": min(max(limit, 1), 500)}
+        if view_actor is not None:
+            from .case_view_scope import view_predicate
+            conditions.append("exists(select 1 from RRL_CASE_PICK_TASK ct where ct.CASE_PICK_TASK_ID=s.CASE_PICK_TASK_ID and " + view_predicate("ct") + ")")
+            params["view_actor"] = view_actor
         if warehouse_id is not None:
             params["ware"] = warehouse_id
         if status:
@@ -296,4 +313,3 @@ class LegacyCaseReads:
             """,
             params,
         )
-

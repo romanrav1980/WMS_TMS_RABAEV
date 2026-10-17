@@ -17,6 +17,8 @@ def complete_existing_task(gateway: OracleGateway | TransactionGateway, task_id:
     if not rows or rows[0]["state"] != "ACTIVE":
         raise HTTPException(503, detail="STOCK_RELEASE_NOT_ACTIVE")
     metadata = request.model_dump(mode="json", exclude={"updated_by", "assigned_to", "operation_id"})
+    if request.expected_task_signature is None:
+        metadata.pop("expected_task_signature", None)
     if metadata.get('scanned_to_slot_code') is None:
         metadata.pop('scanned_to_slot_code',None)
     if request.scan_draft_id is None:
@@ -66,8 +68,12 @@ def _post_completion(command: StockCommand) -> dict[str, Any]:
                                    "CONNECTION_UNUSABLE", "RESULT_UNCERTAIN", "LOCK_RETRY_EXHAUSTED"} else 409
         if exc.oracle_code == 20882:
             code = 403
+        conflict = exc.rule_reason == "OPERATION_CONFLICT"
+        confirmed = code < 500 and code not in (401, 403) and not conflict
         raise HTTPException(code, detail={"code": exc.code, "operation_id": exc.operation_id,
-                                         "oracle_code": exc.oracle_code, "reason": exc.rule_reason}) from exc
+                                         "oracle_code": exc.oracle_code, "reason": exc.rule_reason,
+                                         "outcome_confirmed": confirmed, "retry_same_operation_id": code >= 500,
+                                         "read_before_retry": code >= 500 or conflict}) from exc
 
 
 def lock_domain(gateway: OracleGateway | TransactionGateway, task: dict[str, Any]) -> None:

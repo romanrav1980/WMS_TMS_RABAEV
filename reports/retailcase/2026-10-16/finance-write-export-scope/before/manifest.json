@@ -1,0 +1,19 @@
+{
+  "captured_at_utc": "2026-10-16T18:35:56.519602+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_LOG_RATE_HISTORY_GUARD",
+      "type": "TRIGGER",
+      "file": "rrl_log_rate_history_guard_trigger.sql",
+      "errors": [],
+      "user_source_sha256": "8a7ced0c3ea193968bfa817fc13516be1ce529a067c6afc52a36a6179f596b39",
+      "normalized_source_sha256": "f5162031ea4dd41262fa63996b08633005f54e80e449243a40a323169ccbd92a",
+      "artifact_sha256": "128925c0571970e2ea85f1d2bb82f7e6927c22d169edc38ce0f8fd9681c12b69"
+    }
+  ]
+}

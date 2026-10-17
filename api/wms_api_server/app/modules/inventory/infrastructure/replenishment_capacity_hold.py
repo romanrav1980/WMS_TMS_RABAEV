@@ -1,13 +1,13 @@
 """Evaluate capacity before DML; Oracle functions cannot read a table being updated by their caller."""
 from typing import Any
+from .metadata_transactions import begin_wave_metadata
 
 
 def hold_unissued_capacity(gateway: Any, wave_id: int, actor: str) -> int:
     with gateway.transaction("Hold unissued replenishment without target capacity") as cursor:
         entered = False
         try:
-            cursor.execute("begin RRL_STOCK_METADATA_TX.begin_change(:actor,'pick_wave_launch');end;", {"actor": actor})
-            entered = True
+            entered = begin_wave_metadata(gateway, cursor, wave_id, actor)
             cursor.execute("""
                 select rt.PICK_WAVE_REPLENISH_TASK_ID,rt.QTY,
                     RRL_STOCK_REPL_CAPACITY.remaining_base_quantity(

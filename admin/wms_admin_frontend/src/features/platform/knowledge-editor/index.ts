@@ -1,0 +1,1 @@
+export { KnowledgeEditorPage } from "./KnowledgeEditorPage";

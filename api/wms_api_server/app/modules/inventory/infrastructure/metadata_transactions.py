@@ -6,6 +6,16 @@ from ....transaction_gateway import TransactionGateway
 from contextlib import contextmanager
 
 
+def begin_wave_metadata(gateway: OracleGateway | TransactionGateway, cursor: oracledb.Cursor,
+                        wave: int, actor: str) -> bool:
+    """Nested projection joins a native, source-bound step; ordinary callers keep legacy gates."""
+    if getattr(gateway, "wave_continuation_scope", None) == (wave, actor):
+        cursor.callproc("RRL_WAVE_CONTINUE_API.assert_context", [wave, actor])
+        return False
+    cursor.execute("begin RRL_STOCK_METADATA_TX.begin_change(:actor,'pick_wave_launch');end;", {"actor": actor})
+    return True
+
+
 @contextmanager
 def receipt_task_metadata(gateway: OracleGateway | TransactionGateway, purpose: str, actor: str, permission: str) -> Iterator[oracledb.Cursor]:
     with gateway.transaction(purpose) as cursor:

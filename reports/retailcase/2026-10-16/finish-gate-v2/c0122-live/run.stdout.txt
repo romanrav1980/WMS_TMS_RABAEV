@@ -1,0 +1,51 @@
+{
+ "status": "PASS",
+ "checks": [
+  "fresh_loss_exact_retry_ok_clears",
+  "wrong_receipt_stays_unknown_exact_receipt_resolves",
+  "unknown_then_400_403_404_409_422_and_receipt_404_403_503_stay_pending",
+  "copy_keeps_pending_and_block",
+  "first_attempt_refusal_settles",
+  "damaged_blocked_copy_no_unlock_receipt_by_extracted_key",
+  "legacy_unknown_403_kept_receipt_resolves",
+  "read_failure_clears_card_and_rows",
+  "case_page_390_no_overflow_retry_not_over_title_dialog_fits",
+  "scoped_login_nav_case_warehouse_loading_gates_LIVE",
+  "live_workspaces_nav_admin"
+ ],
+ "mobile": {
+  "overflow": [
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "overlap": false,
+  "retryVisible": true
+ },
+ "scoped": [
+  {
+   "nav": {
+    "hidden": false,
+    "href": "case-pick-management.html?warehouse_id=20902283"
+   },
+   "banner": "Доступ по области: склады 20902283. Данные и действия ограничит сервер.",
+   "warehouse": "20902283",
+   "listUrl": "http://127.0.0.1:8088/api/case-pick/tasks?scope=all&limit=200&ware_id=20902283",
+   "departVisible": true,
+   "husDenied": 0,
+   "huShipAttached": 1,
+   "shipSectionHidden": false
+  },
+  null
+ ],
+ "liveAdminNav": {
+  "hidden": false,
+  "href": "case-pick-management.html?warehouse_id=20902283",
+  "native": "picking"
+ },
+ "dialogs": [
+  "fixture 403"
+ ]
+}

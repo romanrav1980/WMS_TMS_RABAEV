@@ -1,0 +1,696 @@
+{
+  "status": "APPLIED_SCHEMA_VERIFIED_NOT_FUNCTIONAL_ACCEPTANCE",
+  "kit_sha256": "25a0e98ed9f3b6efdfe51a45ac850ca3b52f85eef811ceb85a602a3c2837a33f",
+  "sources": [
+    {
+      "name": "RRL_PICKER_TIME_API",
+      "type": "PACKAGE",
+      "sha256": "918380F56E0954C72B7459EF8FC791D162ECA61472BD28824A2837114A23F5BD"
+    },
+    {
+      "name": "RRL_PICKER_TIME_AUTH",
+      "type": "PACKAGE",
+      "sha256": "C9E658B51F2DD359E00F1C70799E6FBDEC93721440D8C48CF14926C8922655DA"
+    },
+    {
+      "name": "RRL_PICKER_TIME_AUTH",
+      "type": "PACKAGE BODY",
+      "sha256": "D3D8C777E6B2FA9F3DF54406F14B20782F74690F130D16D4B68C7491CEA37EC4"
+    },
+    {
+      "name": "RRL_PICKER_TIME_READ",
+      "type": "PACKAGE",
+      "sha256": "DD146D61195506D9E33029E048E2CDF85DB62F6940DA9FA5637173994C96BB95"
+    },
+    {
+      "name": "RRL_PICKER_TIME_READ",
+      "type": "PACKAGE BODY",
+      "sha256": "E09544EF9238E611D805BAED692EFA2CE8004331ABC35728B80E612CCFA4785F"
+    },
+    {
+      "name": "RRL_PICKER_TIME_WRITE",
+      "type": "PACKAGE",
+      "sha256": "F542284021E1D6E3BB2F2020BA95247AA050DAD699E52ABB48BD01A163D665A9"
+    },
+    {
+      "name": "RRL_PICKER_TIME_WRITE",
+      "type": "PACKAGE BODY",
+      "sha256": "D0D38AB7CEF5CD6952418B6F15E9A6A4C4D9AB8C9998742DF8AF9B3C748029F9"
+    },
+    {
+      "name": "RRL_PICKER_TIME_API",
+      "type": "PACKAGE BODY",
+      "sha256": "9DBB713B9BD47982FC61EF32221EE29480901DAF927A5BD73E70DB7328E4EADF"
+    },
+    {
+      "name": "RRL_PICKER_TIME_STREAM_G",
+      "type": "TRIGGER",
+      "sha256": "6188977DB18FF4B976447F2B655898B5C4AB8B3CA5D1BB9C8BA59DA0023CAD5F"
+    },
+    {
+      "name": "RRL_PICKER_TIME_EVENT_G",
+      "type": "TRIGGER",
+      "sha256": "76BA2E92E17681D1EBCA9CE33A61D2B86820BAF61E2AF7319FE0F4D697253E58"
+    },
+    {
+      "name": "RRL_PICKER_TIME_SPAN_G",
+      "type": "TRIGGER",
+      "sha256": "06C8E175411D129C4C814AD1FBE8A0E2781B87C1ECCADA14ADF64781E940A1FD"
+    },
+    {
+      "name": "RRL_PICKER_TIME_COMMAND_G",
+      "type": "TRIGGER",
+      "sha256": "259EC257D027025EFF518A450C37AB1FD3E2D786CD6DA68FDD8111FDCF81D96D"
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_name": "PT_CMD_01",
+      "constraint_type": "P",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_02",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_03",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_04",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "RRL_WARES_PK"
+    },
+    {
+      "constraint_name": "PT_CMD_05",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_06",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "RRL_RESOURCE_SESSION_PK"
+    },
+    {
+      "constraint_name": "PT_CMD_07",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_08",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_09",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_10",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_11",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_12",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_13",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_14",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_15",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_16",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_17",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_18",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_19",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_CMD_20",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_01",
+      "constraint_type": "P",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_02",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_03",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "PT_STR_01"
+    },
+    {
+      "constraint_name": "PT_EV_04",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_05",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "RRL_WARES_PK"
+    },
+    {
+      "constraint_name": "PT_EV_06",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_07",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "RRL_RESOURCE_SESSION_PK"
+    },
+    {
+      "constraint_name": "PT_EV_08",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_09",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "RRL_RESOURCE_PK"
+    },
+    {
+      "constraint_name": "PT_EV_10",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_11",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_12",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_13",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_14",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_15",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_16",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_17",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_18",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_19",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_20",
+      "constraint_type": "U",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_EV_21",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_01",
+      "constraint_type": "P",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_02",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_03",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "PT_STR_01"
+    },
+    {
+      "constraint_name": "PT_SP_04",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_05",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_06",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_07",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "RRL_WARES_PK"
+    },
+    {
+      "constraint_name": "PT_SP_08",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_09",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "RRL_RESOURCE_SESSION_PK"
+    },
+    {
+      "constraint_name": "PT_SP_10",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_11",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_12",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_13",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_14",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_15",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_16",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_17",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "PT_EV_01"
+    },
+    {
+      "constraint_name": "PT_SP_18",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_19",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "PT_EV_01"
+    },
+    {
+      "constraint_name": "PT_SP_20",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_21",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_22",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_23",
+      "constraint_type": "U",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_SP_24",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_STR_01",
+      "constraint_type": "P",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_STR_02",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_STR_03",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_STR_04",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_STR_05",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_STR_06",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_STR_07",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_STR_08",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "RRL_WARES_PK"
+    },
+    {
+      "constraint_name": "PT_STR_09",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "RRL_RESOURCE_SESSION_PK"
+    },
+    {
+      "constraint_name": "PT_STR_10",
+      "constraint_type": "R",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": "RRL_RESOURCE_PK"
+    },
+    {
+      "constraint_name": "PT_STR_11",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_STR_12",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_STR_13",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_STR_14",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    },
+    {
+      "constraint_name": "PT_STR_15",
+      "constraint_type": "C",
+      "status": "ENABLED",
+      "validated": "VALIDATED",
+      "r_constraint_name": null
+    }
+  ],
+  "warehouse_foreign_keys": 4,
+  "guards": [
+    {
+      "trigger_name": "RRL_PICKER_TIME_COMMAND_G",
+      "status": "ENABLED"
+    },
+    {
+      "trigger_name": "RRL_PICKER_TIME_EVENT_G",
+      "status": "ENABLED"
+    },
+    {
+      "trigger_name": "RRL_PICKER_TIME_SPAN_G",
+      "status": "ENABLED"
+    },
+    {
+      "trigger_name": "RRL_PICKER_TIME_STREAM_G",
+      "status": "ENABLED"
+    }
+  ],
+  "indexes": [
+    {
+      "index_name": "PT_CMD_01",
+      "status": "VALID"
+    },
+    {
+      "index_name": "PT_EV_01",
+      "status": "VALID"
+    },
+    {
+      "index_name": "PT_EV_20",
+      "status": "VALID"
+    },
+    {
+      "index_name": "PT_SP_01",
+      "status": "VALID"
+    },
+    {
+      "index_name": "PT_SP_23",
+      "status": "VALID"
+    },
+    {
+      "index_name": "PT_STR_01",
+      "status": "VALID"
+    },
+    {
+      "index_name": "RRL_PICKER_TIME_CMD_OP_IX",
+      "status": "VALID"
+    },
+    {
+      "index_name": "RRL_PICKER_TIME_EVENT_OP_IX",
+      "status": "VALID"
+    },
+    {
+      "index_name": "RRL_PICKER_TIME_SPAN_OP_IX",
+      "status": "VALID"
+    }
+  ],
+  "errors": [],
+  "global_invalid": [],
+  "ledger": [
+    {
+      "migration_id": "2026-10-15-picker-actual-time-source",
+      "status": "APPLIED"
+    }
+  ],
+  "existing_owner_changes": false,
+  "fixture_writes": false,
+  "hardware_verified": false
+}

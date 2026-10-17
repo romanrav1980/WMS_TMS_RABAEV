@@ -91,3 +91,7 @@ Periodically check for:
 - Use markdown links for actual repository paths.
 - Use relative links when linking wiki pages.
 - Use explicit source links for evidence.
+
+## Entry Point Size
+
+Keep `index.md` a routing page of at most100 lines. Link the current execution packet and relevant synthesis pages; do not prepend a chronology of individual tests. Record history in `log.md` and focused pages. Update an existing index entry when its status changes. The former full index is retained in `sources/wiki_index_catalog_20261015.md` with relative links rebased; read its relevant section only when the short router does not answer the navigation question. This reduces repeated context without deleting project knowledge.

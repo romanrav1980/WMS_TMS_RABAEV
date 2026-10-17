@@ -1,0 +1,23 @@
+{
+  "status": "PASS_INDEPENDENT_READBACK",
+  "sources": [
+    {
+      "name": "RRL_CASE_LIFECYCLE_API",
+      "type": "PACKAGE",
+      "sha256": "8ED6EB80267413DF7B4C02495907A4EE396B09F5897097F755B936EB7B669861"
+    },
+    {
+      "name": "RRL_CASE_LIFECYCLE_API",
+      "type": "PACKAGE BODY",
+      "sha256": "F2233800F1776B824DBA1A4DC03C686D4FCE52E69A68EEE4D7CF2AB4AB017188"
+    }
+  ],
+  "ledger": [
+    {
+      "migration_id": "2026-10-15-case-scoped-close",
+      "status": "APPLIED"
+    }
+  ],
+  "invalid": 0,
+  "quantity_writes": false
+}

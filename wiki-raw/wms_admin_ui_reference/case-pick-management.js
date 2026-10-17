@@ -50,12 +50,21 @@ async function loadCaseData() {
   if (demo) {
     caseState.tasks = demoTasks; caseState.shorts = demoShorts;
   } else {
-    const [tasks, shorts] = await Promise.all([
-      caseFetch("/api/case-pick/tasks?scope=all&limit=200"),
-      caseFetch("/api/case-pick/shorts?limit=100"),
-    ]);
-    caseState.tasks = tasks.map(normalizeApiTask); caseState.shorts = shorts;
+    try {
+      const wh = new URLSearchParams(location.search).get("warehouse_id")?.replace(/\D/g, "");
+      const ware = wh ? "&ware_id=" + wh : "";
+      const [tasks, shorts] = await Promise.all([
+        caseFetch("/api/case-pick/tasks?scope=all&limit=200" + ware),
+        caseFetch("/api/case-pick/shorts?limit=100" + ware),
+      ]);
+      caseState.tasks = tasks.map(normalizeApiTask); caseState.shorts = shorts;
+    } catch (error) {
+      // Отказ доступа или пропажа не оставляют на экране прежние данные.
+      if ([401, 403, 404].includes(error.status)) { caseState.tasks = []; caseState.shorts = []; caseState.selectedId = null; renderAll(); }
+      throw error;
+    }
   }
+  caseState.selectedId ??= Number(new URLSearchParams(location.search).get("task_id")) || null;
   if (!caseState.tasks.some(task => task.case_pick_task_id === caseState.selectedId))
     caseState.selectedId = caseState.tasks[0]?.case_pick_task_id || null;
   renderAll();
@@ -105,6 +114,7 @@ function filteredTasks() {
 }
 
 function renderAll() {
+  if (typeof caseRefreshShortRetry === "function") caseRefreshShortRetry();
   renderWaveFilter();
   renderKpis();
   renderRows();
@@ -182,6 +192,7 @@ function renderDetail() {
     return;
   }
   caseState.selectedId = task.case_pick_task_id;
+  caseRememberTask(task.case_pick_task_id);
   const related = caseState.tasks.filter((item) => item.wave_code === task.wave_code);
   const problem = caseState.shorts.find((item) => item.case_pick_task_id === task.case_pick_task_id) || (task.problem ? { reason_text: task.problem, sscc: task.sscc, created_by: task.assigned_to } : null);
   document.getElementById("caseDetail").innerHTML = `
@@ -213,7 +224,7 @@ function renderDetail() {
       </div>
     ` : ""}
     <div class="case-actions">
-      <button id="caseTransfer" type="button">Передать</button>
+      <button id="caseTransfer" type="button" title="Передать задание и паллету другому комплектовщику: форма с ресурсом, сессией и сканом паллеты" data-help-id="case.handoff.open">Передать</button>
       <button id="caseOpenTsd" type="button">Открыть ТСД</button>
       <button id="caseApproveShort" type="button">Восстановить отбор</button><button id="caseAcceptShort" type="button">Принять недобор</button><button id="caseAcceptWeight" type="button">Завершить по допуску массы</button>
       <button id="caseRejectShort" class="danger" type="button">Отклонить</button>
@@ -301,8 +312,15 @@ function renderAnalytics() {
 
 async function transferSelected(task) {
   if (caseState.demo) { alert("Демо-режим: передача доступна на API-данных."); return; }
-  await window.caseHandoff.send(task);
-  await loadCaseData();
+  if (await window.caseHandoffDialog.open(task.case_pick_task_id)) await loadCaseData();
+}
+
+/** Выбранное задание хранится в адресе (task_id): перезагрузка и возврат открывают то же задание; склад в адресе не трогается. */
+function caseRememberTask(id) {
+  const url = new URL(location.href);
+  if (url.searchParams.get("task_id") === String(id)) return;
+  url.searchParams.set("task_id", id);
+  history.replaceState(history.state, "", url);
 }
 
 function shortDecisionPrefix() {
@@ -311,7 +329,8 @@ function shortDecisionPrefix() {
 }
 
 async function retrySavedShortDecisions() {
-  if (!window.wmsAdminAuth?.hasPermission("case_pick_short_approve")) return;
+  // Права по области не видны в плоском списке: решение о доступе принимает сервер при повторе.
+  if (!window.wmsAdminAuth?.state?.user) return;
   const prefix = shortDecisionPrefix();
   const keys = Object.keys(localStorage).filter(key => key.startsWith(prefix));
   for (const key of keys) {
@@ -333,7 +352,16 @@ shortRetryButton.addEventListener("click", async () => {
   try { await retrySavedShortDecisions(); } catch (error) { alert(error.message); }
   finally { shortRetryButton.disabled = false; }
 });
-(document.querySelector("main") || document.body).prepend(shortRetryButton);
+// Кнопка повтора стоит в потоке страницы под заголовком (не поверх него) и видна, только когда есть сохранённые решения.
+shortRetryButton.className = "case-short-retry";
+shortRetryButton.title = "Повторить решения по недостачам, сохранённые после потери ответа, теми же ключами";
+shortRetryButton.dataset.helpId = "case.shorts.retry";
+document.querySelector(".case-page")?.prepend(shortRetryButton);
+function caseRefreshShortRetry() {
+  const prefix = window.wmsAdminAuth?.state?.user ? shortDecisionPrefix() : null;
+  shortRetryButton.hidden = !prefix || !Object.keys(localStorage).some(key => key.startsWith(prefix));
+}
+caseRefreshShortRetry();
 
 async function approveSelectedShort(task, decision) {
   const short = caseState.shorts.find((item) => item.case_pick_task_id === task.case_pick_task_id && item.status === "PENDING_APPROVAL");
@@ -521,5 +549,6 @@ async function caseSafe(fn) {
 document.getElementById("caseRefresh").addEventListener("click", () => caseSafe(loadCaseData));
 document.getElementById("caseConfigure").addEventListener("click", () => alert("Настройка вида будет сохранена в профиле диспетчера."));
 
-window.addEventListener("wms-admin-auth-ready", () => caseSafe(loadCaseData));
-if (window.wmsAdminAuth?.state?.user || new URLSearchParams(location.search).get("demo")==="1") caseSafe(loadCaseData);
+window.addEventListener("wms-admin-auth-ready", () => caseSafe(window.caseAccess.start));
+if (new URLSearchParams(location.search).get("demo")==="1") caseSafe(loadCaseData);
+else if (window.wmsAdminAuth?.state?.user) caseSafe(window.caseAccess.start);

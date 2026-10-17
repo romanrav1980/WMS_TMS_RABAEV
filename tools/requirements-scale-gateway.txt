@@ -1,0 +1,2 @@
+# Isolated equipment gateway; no change to WMS API dependencies
+asyncua==2.1.0

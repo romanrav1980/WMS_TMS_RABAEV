@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "rollback_refusal": "ORA-20886: ASM_FINAL_ROLLBACK_ARCHIVE_HISTORY_EXISTS",
+  "finalized_state_unchanged": true,
+  "session": [
+    {
+      "state": "FINALIZED",
+      "final_capture_key": "163BD3827534486732C4139D5990AFD91139530C2DE4E862F44EACA8BD14F9D0"
+    }
+  ],
+  "private_helper_direct_call": false,
+  "metadata_policy_mutation_negatives": "NOT_RUN: root finalized before these trials; no direct reset",
+  "stock_mutations": false
+}

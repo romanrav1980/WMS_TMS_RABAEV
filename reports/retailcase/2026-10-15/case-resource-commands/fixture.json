@@ -1,0 +1,211 @@
+{
+  "approved_case_resource_fixture": true,
+  "prefix": "CRES15.AK06",
+  "cell": "QIPcdbf4c0962",
+  "actor": "CRES15.OP",
+  "source": "REUSE.RETURN:e6c16d0bbd",
+  "warehouse_id": 13583852,
+  "source_before": [
+    {
+      "cell": "QIPcdbf4c0962",
+      "remain": 23,
+      "hard_reserved_base": 0,
+      "stock_version": 11
+    },
+    {
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ],
+  "hardware_verified": false,
+  "state": "NEW_UNASSIGNED_READY_METADATA_ACCEPTANCE",
+  "face": 606,
+  "order": 2148,
+  "order_row": 3635,
+  "plan": 2200,
+  "line": 2209,
+  "task": 2138,
+  "reservation": 2006,
+  "wave": 569,
+  "wave_order": 1970,
+  "metadata_created": true,
+  "temporary_flat": {
+    "user_group": "CRES15.OP",
+    "right1": "CASE_PICK_EXECUTE",
+    "descr": "SIMULATED_TEST_LABEL_NOT_PHYSICAL; TEST_FIXTURE_NOT_HARDWARE CRES15 metadata proof"
+  },
+  "resource_id": 59,
+  "qualification": {
+    "resource_id": 59,
+    "task_type": "CASE_PICK",
+    "active": true
+  },
+  "shift_id": 64,
+  "session_id": 55,
+  "flat_revoked": {
+    "user_group": "CRES15.OP",
+    "right1": "CASE_PICK_EXECUTE",
+    "deleted": 1
+  },
+  "role": {
+    "operation_id": "CRES15.AK06.ROLE",
+    "command_type": "ROLE_SAVE",
+    "object_id": "CRES15.CASE.EXEC",
+    "version": 1,
+    "replayed": false
+  },
+  "assignment_until": "2026-10-15T16:26:48.466547+00:00",
+  "grant_SELF": {
+    "operation_id": "CRES15.AK06.ASSIGN.SELF",
+    "command_type": "ASSIGN",
+    "object_id": "CRES15.SELF",
+    "version": 1,
+    "replayed": false
+  },
+  "launch": {
+    "operation_id": "CRES15.AK06.LAUNCH",
+    "launch_outcome": "APPLIED",
+    "continuation_state": "COMPLETE",
+    "wave_status": "LAUNCHED"
+  },
+  "warehouse_tasks": [],
+  "task_id": 1138,
+  "case_before_type": {
+    "case_pick_task_id": 1138,
+    "content_version": 0,
+    "sscc": "CP569000000001138",
+    "status": "NEW",
+    "picked_qty": 0
+  },
+  "case_line_id": 1140,
+  "pick_release": {
+    "wave_id": 569,
+    "warehouse": 13583852,
+    "status": "LAUNCHED",
+    "released_at": "2026-10-15T09:26:51.624534-04:00",
+    "released_by": "admin",
+    "release_operation_id": "CRES15.AK06.RELEASE",
+    "ready": true,
+    "tasks": [
+      {
+        "pick_task_id": 2138,
+        "wave_task_id": 2061,
+        "article": "REUSE.QA:cdbf4c0962",
+        "task_type": "CASE_PICK",
+        "status": "ASSIGNED",
+        "cell": "QIPcdbf4c0962",
+        "required_base": "1",
+        "covered_base": "1",
+        "missing_base": "0",
+        "base_uom": "EA",
+        "reservations": [
+          {
+            "reservation_id": 1871,
+            "uid": "REUSE.RETURN:e6c16d0bbd",
+            "cell": "QIPcdbf4c0962",
+            "article": "REUSE.QA:cdbf4c0962",
+            "quantity": "1",
+            "base_uom": "EA",
+            "stock_version": 12,
+            "physical": "23",
+            "hard": "1",
+            "reason": null
+          }
+        ]
+      }
+    ],
+    "open_replenishments": [],
+    "outbox_id": 5331
+  },
+  "self_unassigned_denied": "Native403 callerrollback; no definitive receipt",
+  "grant_WARE": {
+    "operation_id": "CRES15.AK06.ASSIGN.WARE",
+    "command_type": "ASSIGN",
+    "object_id": "CRES15.WARE",
+    "version": 1,
+    "replayed": false
+  },
+  "type_change": {
+    "operation_id": "CRES15.AK06.TYPE",
+    "command_type": "CASE_PALLET_TYPE_CHANGE",
+    "case_task_id": 1138,
+    "pallet_type_id": 32,
+    "previous_pallet_type_id": 1,
+    "planned_pallet_type_id": null,
+    "version": 1,
+    "reason": "SIMULATED_TEST_LABEL_NOT_PHYSICAL; TEST_FIXTURE_NOT_HARDWARE CRES15 metadata proof",
+    "stock_changed": false,
+    "status": "APPLIED",
+    "outbox_id": 5332
+  },
+  "warehouse_settings_before": {
+    "ware_id": 13583852,
+    "company_prefix": null,
+    "extension_digit": 0,
+    "coordinate_unit_m": 1,
+    "reachtruck_mps": 1,
+    "lift_mps": 0.5,
+    "placement_metric": "DISTANCE",
+    "updated_by": "admin",
+    "updated_at": "2026-10-15 09:25:51.863076",
+    "hu_cell_height_unit": null,
+    "outgoing_qc_mode": "NONE",
+    "outgoing_qc_independent": 0,
+    "outgoing_qc_sample_percent": 0,
+    "defer_wait_cell": null
+  },
+  "label": {
+    "case_pick_task_id": 1138,
+    "sscc": "090000000000009028",
+    "original_carrier": "CP569000000001138",
+    "content_version": 2,
+    "operation_id": "CRES15.AK06.LABEL",
+    "confirmed": false
+  },
+  "label_confirmation": {
+    "case_pick_task_id": 1138,
+    "sscc": "090000000000009028",
+    "confirmed": true
+  },
+  "tare_count": {
+    "status": "POSTED",
+    "tare_balance_changed": true,
+    "destination_quantity": "1",
+    "operation_id": "CRES15.AK06.TARE.COUNT",
+    "quantity": "1",
+    "owner_ware_id": 13583852,
+    "pallet_type_id": 32,
+    "condition": "GOOD",
+    "goods_stock_changed": false,
+    "outbox_id": 5333
+  },
+  "tare_book": {
+    "operation_id": "CRES15.AK06.TARE.BOOK",
+    "status": "HELD",
+    "place_kind": "CASE",
+    "place_id": "1138",
+    "pallet_type_id": 32,
+    "warehouse_id": 13583852,
+    "available_quantity": "0",
+    "quantity": "1",
+    "physical_tare_changed": false,
+    "goods_stock_changed": false,
+    "outbox_id": 5334
+  },
+  "source_after": [
+    {
+      "cell": "QIPcdbf4c0962",
+      "remain": 23,
+      "hard_reserved_base": 1,
+      "stock_version": 12
+    },
+    {
+      "cell": "QRREe6c16d0bbd",
+      "remain": 0,
+      "hard_reserved_base": 0,
+      "stock_version": 2
+    }
+  ]
+}

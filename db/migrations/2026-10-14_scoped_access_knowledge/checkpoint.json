@@ -1,0 +1,22 @@
+{
+  "migration_id": "2026-10-14-scoped-access-knowledge",
+  "target": "RABAEV@127.0.0.1:1521/orcl",
+  "invalid_before": 0,
+  "existing_prefix_objects": 0,
+  "authorization": "Owner explicitly requested implementation of accepted additive access/knowledge model, continuing until implemented",
+  "legacy_writes": "NONE",
+  "recovery": "additive empty metadata + paired rollback; export authored rows before later rollback",
+  "files": {
+    "001_tables.sql": "2280ed60a41e16afa73909ca180e2c563294e42f1718f5aa3af9c2723ba042ea",
+    "002_access_spec.sql": "a475383f12ad9e398bd0ef0be8f1c904765aef668c0eb8ce11bcaf99a92fa1f5",
+    "003_access_body.sql": "047e26c39495c0be7a88a27c30d423d5db6fdc2b3f1cce4ee0c3cc11d5540177",
+    "004_knowledge.sql": "c9fdd75743107ae02d552e22f87b871e6f3777f6c48926518d69ba7206783fbe",
+    "005_seed.sql": "f7e31e8da6b60dac4b7ccd013b1e99813ea7fd754cd15b459d4f6ce545e93ff5",
+    "apply.sql": "769995c61ce23a0a090f05478f63196a707d2bc2570397210350754ee920d457",
+    "resume_apply.sql": "388132742b0c02b6bfa9c29e47b53e57bd4a34efd9cb63249b7716abc81b6303",
+    "resume_tables.sql": "3f19426674b0fa4fd43632a76de3e8cb92d2a7ce49a5b6496de8bdce061b3a1f",
+    "rollback.sql": "de54976e2688f362305e7dfe77529a01d5aefee07f765986a057447756bd5abb",
+    "verify.sql": "3d9d84cf72b00bc518cc7875ce5ffb1c9f2ce515170b8728511e3357f2debda5"
+  },
+  "recovery_note": "First apply retained first six empty metadata tables; RUSERS.ID has no eligible unique constraint. Removed FK to legacy; native USER_NOT_FOUND/ambiguous identity guard retained. resume_apply.sql applies only missing suffix."
+}

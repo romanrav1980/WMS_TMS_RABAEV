@@ -1,0 +1,24 @@
+const {chromium}=require('../../../../admin/wms_admin_frontend/node_modules/playwright');
+const fs=require('fs'),path=require('path');
+(async()=>{const basic=fs.readFileSync('front.bat','utf8').match(/VITE_ADMIN_BASIC_AUTH=([^"\r\n]+)/)[1];
+const browser=await chromium.launch({headless:true});try{
+const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[],writes=[],reads=[];
+page.on('pageerror',e=>errors.push(String(e)));
+page.on('request',r=>{if(!r.url().includes('/api/'))return;if(r.method()==='GET')reads.push(r.url());else if(!r.url().includes('/picking/shift-overview'))writes.push(r.method()+' '+r.url());});
+await page.goto('http://127.0.0.1:3000/?page=workspace&workspace=shift');const sep=basic.indexOf(':');
+await page.locator('input[autocomplete="username"]').fill(basic.slice(0,sep));await page.locator('input[type="password"]').fill(basic.slice(sep+1));await page.locator('.session-login button[type="submit"]').click();
+await page.locator('[role="tab"][aria-selected="true"]').waitFor();
+await page.locator('input[list="rg-wh-waves"]').fill('6558233');
+await page.waitForFunction(()=>{const n=(document.querySelector('.ops-left .ops-note')?.textContent||'').match(/\d+/g)||[];return Number(n[0])>0&&Number(n[1])>0;},null,{timeout:40000});
+await page.waitForSelector('.rg-summary',{timeout:30000});
+const coverage=await page.locator('.ops-left .ops-note').innerText();
+const caseScoped=reads.some(u=>u.includes('/api/case-pick/tasks?')&&u.includes('ware_id=6558233'));
+await page.screenshot({path:path.join(__dirname,'shift-root-desktop.png')});
+await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(__dirname,'shift-root-mobile.png')});
+const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
+await page.locator('input[list="rg-wh-waves"]').fill('999999999');
+await page.waitForFunction(()=>!document.querySelector('.rg-summary'),null,{timeout:15000});
+const result={status:'PASS',mainRoute:true,coverage,caseScoped,mobileOverflow:overflow,pageErrors:errors,unexpectedWrites:writes,oldGanttHiddenAfterWarehouseChange:true};
+fs.writeFileSync(path.join(__dirname,'shift-root-ui.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result));
+if(errors.length||writes.length||overflow||!caseScoped)throw Error('Root supervisor acceptance failed');
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

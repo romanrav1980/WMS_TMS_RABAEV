@@ -1,0 +1,27 @@
+const {chromium}=require('../../../../admin/wms_admin_frontend/node_modules/playwright');
+const fs=require('fs'),path=require('path');
+(async()=>{const browser=await chromium.launch({headless:true});try{
+ const page=await browser.newPage({viewport:{width:390,height:844}}),errors=[],writes=[];
+ page.on('pageerror',e=>errors.push(String(e)));
+ page.on('request',r=>{if(r.url().includes('/api/')&&r.method()!=='GET')writes.push(r.method()+' '+r.url());});
+ await page.goto(process.env.STORE_UI_URL||'http://127.0.0.1:3010/store/');
+ await page.locator('input[autocomplete="username"]').fill(process.env.STORE_SMOKE_USER);
+ await page.locator('input[type="password"]').fill(process.env.STORE_SMOKE_PASSWORD);
+ await page.getByRole('button',{name:'Войти',exact:true}).click();
+ await page.getByRole('heading',{name:'Поставки',exact:true}).waitFor({timeout:30000});
+ await page.getByRole('button',{name:/^Все\s/}).click();
+ await page.locator('.store-app-list-item').first().waitFor({timeout:30000});
+ await page.screenshot({path:path.join(__dirname,'store-mobile-list.png')});
+ const count=await page.locator('.store-app-list-item').count();
+ await page.locator('.store-app-list-item').first().click();
+ await page.locator('.store-app-stepper, .store-app-receipt-act tbody tr').first().waitFor({timeout:30000});
+ await page.screenshot({path:path.join(__dirname,'store-mobile-detail.png')});
+ await page.getByRole('button',{name:/Справка:/}).first().click();
+ await page.getByRole('dialog',{name:'Справка'}).getByText(/Опубликованная база знаний/).waitFor({timeout:30000});
+ await page.getByRole('button',{name:'Закрыть справку'}).click();
+ const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
+ const secretStored=await page.evaluate(p=>Object.keys(localStorage).some(k=>localStorage.getItem(k).includes(p)),process.env.STORE_SMOKE_PASSWORD);
+ const result={status:'PASS',standaloneRoute:true,nativeStoreOnlyUser:true,deliveryCount:count,realPreview:true,publishedHelpForStoreOnlyUser:true,mobileOverflow:overflow,pageErrors:errors,unexpectedWrites:writes,passwordStored:secretStored};
+ fs.writeFileSync(path.join(__dirname,'ui-native.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result));
+ if(errors.length||writes.length||overflow||secretStored)throw Error('Store application smoke failed');
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

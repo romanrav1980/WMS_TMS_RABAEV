@@ -1,0 +1,11 @@
+# CASE/TASK: прекращение ещё не принятой metadata-команды
+
+15.10.2026. Migration `2026-10-15-resource-metadata-intents` **APPLIED**, независимый readback7 exact source/global INVALID0. [[../components/retailcase_resource_metadata_intents_20261015]].
+
+Восемь caller-rollback проверок и четыре группы actual HTTP проверки PASS: конкуренция original/control, точный повтор, поздний original без эффекта, текущий отзыв прав. CASE1139 назначен и стартован через прежние owners без количественного эффекта. Доказательства: [readback](../../reports/retailcase/2026-10-15/resource-metadata-intents/independent-readback.json), [HTTP](../../reports/retailcase/2026-10-15/resource-metadata-intents/http-1939.json). UI recovery имеет отдельную приёмку и опубликованную справку `metadata-intent-recovery` v3.
+
+Authoritative owner — resources/native `RRL_RESOURCE_INTENT_API` и прежние `RRL_CASE_ASSIGNMENT_API`/`RRL_WTASK_ASSIGN_API`. Отдельная immutable таблица хранит контрольную команду ABANDONED, original domain/operation/actor/task/action/target, точные original/control JSON+SHA и версии. Уникальный domain+original operation и тот же OP fence запрещают поздний original; старые APPLIED/REJECTED не меняются. Количественных effects нет. CASE/TASK metadata assignment guards, текущие права и native owner сохраняются; browser actor/confirmed запрещены.
+
+Комплект: [apply/verify/paired rollback](../../db/migrations/2026-10-15_resource_metadata_intents/), [замороженный manifest](../../db/migrations/2026-10-15_resource_metadata_intents/frozen-manifest.json). Зафиксированы4 before source и7 after source; проверяются PK/UK, FK NO ACTION, enabled append-only trigger, context binding и global INVALID0 до ledger. Откат допускается только без tombstone history и при точном текущем source set; иначе forward repair. Контекст не объявляется отсутствующим по ALL_CONTEXT; collision останавливает применение.
+
+Root выполняет DDL последовательно в явно изолированном dev RABAEV/orcl по действующему поручению реализации. Перед apply — fresh identity/source/hash/INVALID check; после — отдельный readback.29 strict/mock boundary/API tests и offline full gate PASS не заменяют native concurrency/revoke/replay/rollback acceptance. Unloading START остаётся отдельным owner-specific инкрементом, его неизвестный журнал не сбрасывается.

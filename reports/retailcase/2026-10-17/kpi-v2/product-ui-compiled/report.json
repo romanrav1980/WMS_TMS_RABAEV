@@ -1,0 +1,50 @@
+{
+  "state": "PASS_COMPILED_SCOPED_PRODUCT_LOGIN_V2_SHORT_RETURN_FOUR_RATES",
+  "url": "http://127.0.0.1:3000/?page=workspace&workspace=kpi&warehouse_id=20033496&kpi_start=2026-10-17T03%3A16&kpi_finish=2026-10-17T05%3A26&kpi_zone=%2B00%3A00",
+  "actor": "OC16Pd21d129674",
+  "warehouse": 20033496,
+  "desktop": true,
+  "width390": true,
+  "rates": [
+    "3 701,739",
+    "3 701,739",
+    "3 000,833",
+    "3 000,833"
+  ],
+  "staticHelp200": true,
+  "http": [
+    {
+      "path": "/api/access/me",
+      "status": 200,
+      "api_call_id": "72617",
+      "request_id": "70d93c2b-1549-4d6a-bdf4-82f34f157660"
+    },
+    {
+      "path": "/api/access/navigation",
+      "status": 200,
+      "api_call_id": "72625",
+      "request_id": "80ef9326-defd-429d-a30c-c8d6e0f5a3b8"
+    },
+    {
+      "path": "/api/access/workspaces",
+      "status": 200,
+      "api_call_id": "72622",
+      "request_id": "6cd5fe99-7e9f-458d-89ca-21d17d5c0963"
+    },
+    {
+      "path": "/api/resources/picker-kpis",
+      "status": 200,
+      "api_call_id": "72623",
+      "request_id": "d954d48e-056b-46cb-aacc-53ce8bb7b0c2"
+    },
+    {
+      "path": "/api/delivery/timing/kpis",
+      "status": 403,
+      "api_call_id": "72624",
+      "request_id": "93621567-2efe-43fa-a304-cf730ef2a2b2"
+    }
+  ],
+  "errors": [],
+  "writes": [],
+  "fixtures": false
+}

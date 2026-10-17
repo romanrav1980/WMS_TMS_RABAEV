@@ -1,0 +1,312 @@
+{
+  "read_only": true,
+  "hardware_verified": false,
+  "http": [
+    {
+      "api_call_id": 69398,
+      "request_id": "4869bc98-dc58-4dce-9b24-a84cbac222a5",
+      "path": "/api/case-pick/shorts/24/approve",
+      "response_status": 409,
+      "duration_ms": 188
+    },
+    {
+      "api_call_id": 69399,
+      "request_id": "4210124f-9696-4d15-b5ef-1b0f3cd475d0",
+      "path": "/api/case-pick/shorts/24/approve",
+      "response_status": 409,
+      "duration_ms": 65
+    },
+    {
+      "api_call_id": 69400,
+      "request_id": "7ffb6003-cd18-432c-bbe2-949528b8e34c",
+      "path": "/api/case-pick/shorts/24/approve",
+      "response_status": 403,
+      "duration_ms": 61
+    },
+    {
+      "api_call_id": 69401,
+      "request_id": "5ea91459-1bc4-424b-badb-f070d83cfda1",
+      "path": "/api/case-pick/shorts/24/approve",
+      "response_status": 403,
+      "duration_ms": 87
+    },
+    {
+      "api_call_id": 69402,
+      "request_id": "aeda8f27-45f2-4eef-9333-d4c7225e311d",
+      "path": "/api/case-pick/shorts/24/approve",
+      "response_status": 200,
+      "duration_ms": 159
+    },
+    {
+      "api_call_id": 69403,
+      "request_id": "467a8909-d01d-4f0f-9a8a-5561f5c4bead",
+      "path": "/api/case-pick/shorts/24/approve",
+      "response_status": 200,
+      "duration_ms": 84
+    },
+    {
+      "api_call_id": 69404,
+      "request_id": "24c820a2-82c4-4ef2-96ec-8f3366d2a6d1",
+      "path": "/api/case-pick/shorts/24/approve",
+      "response_status": 409,
+      "duration_ms": 79
+    },
+    {
+      "api_call_id": 69405,
+      "request_id": "c539ad77-783e-4898-9c65-0e86f922f16e",
+      "path": "/api/case-pick/shorts/24/approve",
+      "response_status": 403,
+      "duration_ms": 188
+    },
+    {
+      "api_call_id": 69406,
+      "request_id": "0d4e46c1-be06-4b0c-9484-86fbf72b85ee",
+      "path": "/api/case-pick/shorts/24/approve",
+      "response_status": 200,
+      "duration_ms": 93
+    },
+    {
+      "api_call_id": 69407,
+      "request_id": "d2cc7b1d-a2eb-4a08-a006-6b6ea51cee69",
+      "path": "/api/case-pick/shorts/24/approve",
+      "response_status": 403,
+      "duration_ms": 69
+    }
+  ],
+  "slow": [],
+  "native_cumulative": [
+    {
+      "sql_id": "1031nnpkrfzdc",
+      "executions": 66678,
+      "avg_ms": 0.186,
+      "avg_buffers": 2.16,
+      "sql_sample": "select CASE_PICK_SHORT_ID,PICK_WAVE_ID,REPLENISH_TASK_ID,                    RECOVERY_SOURCE_REQUEST,RECOVERY_STATE                 from RRL_CASE_PICK_SHORT where RECOVERY_STATE in('WAIT_INVENTORY','WAIT_REPLENISHMENT')                  and exists(select 1 from RRL_PICK_WAVE w where w.PICK_WAVE_ID=RRL_CASE_PICK_SHORT.PICK_WAVE_ID and w.STATUS='LAUNCHED')                  and (RECOVERY_STATE!='WAIT_INVENTORY' or exists(select 1 from RRL_INVENTORY_TASK it                      where it.INVENTORY_TASK_ID=RRL_CASE_PICK_SHORT.INVENTORY_TASK_ID and it.ASSIGNED_TO is null and it.STATUS='NEW'))                  and (RECOVERY_LEASE_UNTIL is null or RECOVERY_LEASE_UNTIL<cast(systimestamp as timestamp))                  order by RECOVERY_DEADLINE_AT,CASE_PICK_SHORT_ID for update skip locked"
+    },
+    {
+      "sql_id": "c6bdrnrytghxb",
+      "executions": 1,
+      "avg_ms": 774.702,
+      "avg_buffers": 3150,
+      "sql_sample": "declare a clob;begin\r  dbms_lob.createtemporary(a,true);\r  for r in(select TEXT from USER_SOURCE where NAME='RRL_INVENTORY_TASK_ACCESS'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;\r  if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='0B68A6116E114FF3E015D0DF8E2167D67A3710FD5806285C5A44E4E15C51EB62'then raise_application_error(-20886,'SOURCE_GUARD_RRL_INVENTORY_TASK_ACCESS');end if;dbms_lob.freetemporary(a);\r  dbms_lob.createtemporary(a,true);\r  for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_INVENTORY_CMD'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;\r  if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='84982C5FB169AF20A35537AD1FCA41665139F35E449CD0BEA7545F534AD8A94A'then raise_application_er"
+    },
+    {
+      "sql_id": "8w4ad409rb9yx",
+      "executions": 2,
+      "avg_ms": 110.831,
+      "avg_buffers": 36,
+      "sql_sample": "SELECT TEXT FROM USER_SOURCE WHERE NAME='RRL_INVENTORY_TASK_ACCESS'AND TYPE='PACKAGE BODY'ORDER BY LINE"
+    },
+    {
+      "sql_id": "gwj4f6cdpzk3n",
+      "executions": 2,
+      "avg_ms": 55.537,
+      "avg_buffers": 1225.5,
+      "sql_sample": "begin RRL_INVENTORY_TASK_ACCESS.claim_task(:1,:2); end;"
+    },
+    {
+      "sql_id": "g3gr6wjpmwt7t",
+      "executions": 1,
+      "avg_ms": 71.807,
+      "avg_buffers": 3074,
+      "sql_sample": "declare a clob;begin\r  dbms_lob.createtemporary(a,true);\r  for r in(select TEXT from USER_SOURCE where NAME='RRL_INVENTORY_TASK_ACCESS'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;\r  if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='0B68A6116E114FF3E015D0DF8E2167D67A3710FD5806285C5A44E4E15C51EB62'then raise_application_error(-20886,'SOURCE_GUARD_RRL_INVENTORY_TASK_ACCESS');end if;dbms_lob.freetemporary(a);\r  dbms_lob.createtemporary(a,true);\r  for r in(select TEXT from USER_SOURCE where NAME='RRL_STOCK_INVENTORY_CMD'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(a,replace(r.TEXT,chr(13),''));end loop;\r  if dbms_lob.getlength(a)=0 or rawtohex(sys.dbms_crypto.hash(a,sys.dbms_crypto.hash_sh256))!='84982C5FB169AF20A35537AD1FCA41665139F35E449CD0BEA7545F534AD8A94A'then raise_application_er"
+    },
+    {
+      "sql_id": "7gvy6x8pn3hw7",
+      "executions": 62,
+      "avg_ms": 0.648,
+      "avg_buffers": 18.15,
+      "sql_sample": "SELECT A.* FROM RRL_ACCESS_ASSIGNMENT A JOIN RRL_ACCESS_ROLE RO ON RO.ROLE_ID=A.ROLE_ID AND RO.ACTIVE=1 JOIN RRL_ACCESS_ROLE_RIGHT RR ON RR.ROLE_ID=A.ROLE_ID AND RR.PERMISSION=LOWER(:B1 ) WHERE A.USERNAME=:B2 AND A.REVOKED_AT IS NULL AND A.VALID_FROM<=SYSTIMESTAMP AND(A.VALID_UNTIL IS NULL OR A.VALID_UNTIL>SYSTIMESTAMP)"
+    },
+    {
+      "sql_id": "40zmwn8mruffd",
+      "executions": 1,
+      "avg_ms": 39.824,
+      "avg_buffers": 416,
+      "sql_sample": "declare               v_id number;v_sla number:=300;             begin               select nvl(max(SHORT_RECOVERY_SLA_SECONDS),300) into v_sla from RRL_CASE_PICK_SETTING                where WARE_ID=(select WARE_ID from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:case_pick_task_id) and ACTIVE=1;               select RRL_CASE_PICK_SHORT_SQ.nextval into v_id from dual;               insert into RRL_CASE_PICK_SHORT (                 CASE_PICK_SHORT_ID, PICK_WAVE_ID, CASE_PICK_TASK_ID, CASE_PICK_LINE_ID,                 PICK_WAVE_TASK_ID, CUSTOMER_ORDER_ID, CUSTOMER_ID, ARTICUL, CELL_CODE,                 PLANNED_QTY, PICKED_QTY, SHORT_QTY, REASON_TEXT, STATUS,                 OFFLINE_EVENT_ID, CREATED_AT, CREATED_BY, RECOVERY_DEADLINE_AT               ) values (                 v_id, :pick_wave_id, :case_pick_task_id, :case_pick_line_id,                 :pick_wave_task_id, :customer_order_"
+    },
+    {
+      "sql_id": "8jm3qs9mv24ra",
+      "executions": 60,
+      "avg_ms": 0.544,
+      "avg_buffers": 20.43,
+      "sql_sample": "update RRL_PICK_WAVE_REPLENISH_TASK set                     REPLENISHMENT_METHOD='IMMEDIATE',REPLENISHMENT_QTY_MODE='FILL_TO_VOLUME',                     QTY=(select l.PLANNED_QTY-l.PICKED_QTY from RRL_CASE_PICK_SHORT sh join RRL_CASE_PICK_LINE l on l.CASE_PICK_LINE_ID=sh.CASE_PICK_LINE_ID where sh.REPLENISH_TASK_ID=RRL_PICK_WAVE_REPLENISH_TASK.PICK_WAVE_REPLENISH_TASK_ID),                     STATUS=case when STATUS in('FAILED','WAIT_FREE_CELL','WAIT_MINIMAX','QUEUED') and SOURCE_RESERVATION_ID is null then 'RELEASED' else STATUS end                     where PICK_WAVE_REPLENISH_TASK_ID=:repl_id"
+    },
+    {
+      "sql_id": "bjx5auqgsn5kk",
+      "executions": 18,
+      "avg_ms": 1.765,
+      "avg_buffers": 23.67,
+      "sql_sample": "SELECT COUNT(*) FROM RRL_CASE_PICK_SHORT SH WHERE SH.CELL_CODE=:B2 AND SH.ARTICUL=:B1 AND (SH.STATUS IN('CREATED','PENDING_APPROVAL') OR SH.RECOVERY_STATE='WAIT_INVENTORY' OR EXISTS(SELECT 1 FROM RRL_INVENTORY_TASK IT WHERE IT.INVENTORY_TASK_ID=SH.INVENTORY_TASK_ID AND IT.STATUS NOT IN('DONE','CANCELLED')))"
+    },
+    {
+      "sql_id": "2z0p5am2vquca",
+      "executions": 60,
+      "avg_ms": 0.39,
+      "avg_buffers": 5.27,
+      "sql_sample": "select wt.TASK_ID,wt.STATUS,wt.ASSIGNED_TO         from RRL_CASE_PICK_SHORT sh join RRL_WAREHOUSE_TASK wt          on wt.TASK_SOURCE='WAVE' and wt.TASK_TYPE='REPLENISHMENT'           and wt.SOURCE_TASK_ID=sh.REPLENISH_TASK_ID         where sh.CASE_PICK_SHORT_ID=:short_id and sh.RECOVERY_STATE='WAIT_REPLENISHMENT'          and wt.PRIORITY=0 and wt.STATUS in('PLANNED','ASSIGNED','IN_PROGRESS')         order by wt.TASK_ID fetch first 1 row only"
+    },
+    {
+      "sql_id": "c5ndg7w6xas0m",
+      "executions": 60,
+      "avg_ms": 0.346,
+      "avg_buffers": 6.45,
+      "sql_sample": "update RRL_CASE_PICK_SHORT set RECOVERY_SOURCE_REQUEST=null             where CASE_PICK_SHORT_ID=:short_id and RECOVERY_WORKER=:worker"
+    },
+    {
+      "sql_id": "25pa9jyst0nvf",
+      "executions": 60,
+      "avg_ms": 0.276,
+      "avg_buffers": 5.03,
+      "sql_sample": "select RECOVERY_SOURCE_REQUEST from RRL_CASE_PICK_SHORT where CASE_PICK_SHORT_ID=:short_id for update"
+    }
+  ],
+  "final": [
+    {
+      "status": "DONE",
+      "count_operation_id": "SQ16.bc4f60f03a.COUNT",
+      "short_status": "ACCEPTED",
+      "recovery_state": null,
+      "replenish_task_id": null
+    }
+  ],
+  "local_pairs": [
+    {
+      "api_call_id": 69398,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "4869bc98-dc58-4dce-9b24-a84cbac222a5",
+        "method": "POST",
+        "path": "/api/case-pick/shorts/24/approve",
+        "logged_at": "2026-10-15T23:26:56.367447+00:00",
+        "api_call_id": 69398,
+        "response_status": 409,
+        "duration_ms": 188
+      }
+    },
+    {
+      "api_call_id": 69399,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "4210124f-9696-4d15-b5ef-1b0f3cd475d0",
+        "method": "POST",
+        "path": "/api/case-pick/shorts/24/approve",
+        "logged_at": "2026-10-15T23:27:12.491964+00:00",
+        "api_call_id": 69399,
+        "response_status": 409,
+        "duration_ms": 65
+      }
+    },
+    {
+      "api_call_id": 69400,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "7ffb6003-cd18-432c-bbe2-949528b8e34c",
+        "method": "POST",
+        "path": "/api/case-pick/shorts/24/approve",
+        "logged_at": "2026-10-15T23:27:13.981504+00:00",
+        "api_call_id": 69400,
+        "response_status": 403,
+        "duration_ms": 61
+      }
+    },
+    {
+      "api_call_id": 69401,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "5ea91459-1bc4-424b-badb-f070d83cfda1",
+        "method": "POST",
+        "path": "/api/case-pick/shorts/24/approve",
+        "logged_at": "2026-10-15T23:27:15.554834+00:00",
+        "api_call_id": 69401,
+        "response_status": 403,
+        "duration_ms": 87
+      }
+    },
+    {
+      "api_call_id": 69402,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "aeda8f27-45f2-4eef-9333-d4c7225e311d",
+        "method": "POST",
+        "path": "/api/case-pick/shorts/24/approve",
+        "logged_at": "2026-10-15T23:27:22.673241+00:00",
+        "api_call_id": 69402,
+        "response_status": 200,
+        "duration_ms": 159
+      }
+    },
+    {
+      "api_call_id": 69403,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "467a8909-d01d-4f0f-9a8a-5561f5c4bead",
+        "method": "POST",
+        "path": "/api/case-pick/shorts/24/approve",
+        "logged_at": "2026-10-15T23:27:24.050878+00:00",
+        "api_call_id": 69403,
+        "response_status": 200,
+        "duration_ms": 84
+      }
+    },
+    {
+      "api_call_id": 69404,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "24c820a2-82c4-4ef2-96ec-8f3366d2a6d1",
+        "method": "POST",
+        "path": "/api/case-pick/shorts/24/approve",
+        "logged_at": "2026-10-15T23:27:25.451808+00:00",
+        "api_call_id": 69404,
+        "response_status": 409,
+        "duration_ms": 79
+      }
+    },
+    {
+      "api_call_id": 69405,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "c539ad77-783e-4898-9c65-0e86f922f16e",
+        "method": "POST",
+        "path": "/api/case-pick/shorts/24/approve",
+        "logged_at": "2026-10-15T23:27:27.011608+00:00",
+        "api_call_id": 69405,
+        "response_status": 403,
+        "duration_ms": 188
+      }
+    },
+    {
+      "api_call_id": 69406,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "0d4e46c1-be06-4b0c-9484-86fbf72b85ee",
+        "method": "POST",
+        "path": "/api/case-pick/shorts/24/approve",
+        "logged_at": "2026-10-15T23:27:28.455809+00:00",
+        "api_call_id": 69406,
+        "response_status": 200,
+        "duration_ms": 93
+      }
+    },
+    {
+      "api_call_id": 69407,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "d2cc7b1d-a2eb-4a08-a006-6b6ea51cee69",
+        "method": "POST",
+        "path": "/api/case-pick/shorts/24/approve",
+        "logged_at": "2026-10-15T23:27:29.898984+00:00",
+        "api_call_id": 69407,
+        "response_status": 403,
+        "duration_ms": 69
+      }
+    }
+  ],
+  "max_http_ms": 188,
+  "code_checkpoint": {
+    "api/wms_api_server/app/routers/case_pick.py": "1a7cf6bd34d417d578855aca827da63b2df54ff1262c833246c7e534dc29bdc8",
+    "tests/retailcase/test_short_approval_current_boundary.py": "aaf89bee48269d08dd162d06fe7bbc4345763f77ffc047aaa770755e544b0cb3"
+  },
+  "decision": "Keep original current-WARE PK lookup, bounded reservation lists and whole-cell/SKU count under CELL X; retain new rights REV-before-CONFIG fence and explicit audit/restoration split. No speculative cache/index. Inventory/access owner checks reservation anti-join and task/short plans on pilot volume. Intentional REV wait5044ms is concurrency refusal, not SELECT p95; cumulative V$SQL history is not this case latency.",
+  "limits": "10 HTTP requests, includes repeated initial self-denial fixture expectation; direct native rollback/lock/count/retirement are not paired with invented HTTP. Existing all-short empty CASE disposition remains open: closed CASE/WAVE and HELD TEST tare retained; no state rewrite or fabricated shipment. RESTORE branch not rerun after audit fix yet.",
+  "state": "PASS_SQL_REVIEW_WITH_EXPLICIT_REMAINDERS"
+}

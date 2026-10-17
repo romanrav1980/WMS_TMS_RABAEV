@@ -1,0 +1,45 @@
+{
+  "status": "PASS",
+  "checks": [
+    "six_explicit_transitions_360",
+    "six_explicit_transitions_390",
+    "six_explicit_transitions_1440",
+    "original_WAREHOUSE_TASK_pinned_pause_resume_finish_then_new_CASE_work",
+    "lost_reload_two_tabs_changed_CASE_exact_same_wire_session_pinned",
+    "GET_receipt_recovers_without_POST",
+    "CASE_context_denied_does_not_hide_independent_time_exact_retry",
+    "malformed_ACK_and_403_preserve_unknown",
+    "quota_before_POST_zero_commands"
+  ],
+  "assets": [
+    {
+      "file": "/assets/caseWork-De5N-nX-.js",
+      "sha256": "1BC42BCA118086BF05CD2CF0BBBC97CD99C00EBF92E1E6211BBEDB01165ED9D6"
+    },
+    {
+      "file": "/assets/client-Dcqo-eS2.js",
+      "sha256": "09DA0C6C84219DE9612C9606343F809BB513383B119F45CCDCA64F2ED3DE1F1D"
+    },
+    {
+      "file": "/assets/shared-D_pcc_jk.js",
+      "sha256": "4BDB48DCA92A56F977B3B567172D980E28A59B50AAC228AC63640070E1C19AB5"
+    },
+    {
+      "file": "/assets/case-work-DOG7gkKD.js",
+      "sha256": "19EF3C4F05F6BCBE6984BFF4F7937FB64AB70856FC7D4768E89696687C00A114"
+    },
+    {
+      "file": "/assets/shared-ZwPWzfPt.css",
+      "sha256": "48D409BCA7B2BC04617E4BBB2D6186653F2D0AFFB6A644C09D44D5CBC77303B4"
+    },
+    {
+      "file": "/assets/case-work-DyO-XDyT.css",
+      "sha256": "04FF6D4E6BD3ED5DA0BB37E3B3340E872793D66D565C148B2C527F4D7DF866CB"
+    }
+  ],
+  "actual_api_calls": 0,
+  "oracle_writes": 0,
+  "hardware": false,
+  "all_network_intercepted": true,
+  "kind": "PRODUCTION_BUNDLE_SYNTHETIC_RESPONSES"
+}

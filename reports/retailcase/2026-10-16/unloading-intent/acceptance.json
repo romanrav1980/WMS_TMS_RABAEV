@@ -1,0 +1,134 @@
+{
+  "state": "PASS_HTTP_REPLAY_LATE_START_BLOCKED_RECORDED_ROLLBACK_REV_RACE",
+  "checks": [
+    "caller_rollback_no_control_history",
+    "two_connection_REV_shared_fence",
+    "direct_insert_native_owner_denied",
+    "two_controls_one_original_serialized"
+  ],
+  "http": [
+    {
+      "label": "abandon",
+      "status": 200,
+      "api_call_id": "69958",
+      "request_id": "7a5ca763-76c6-43b6-a804-9c21af17a20e"
+    },
+    {
+      "label": "replay",
+      "status": 200,
+      "api_call_id": "69959",
+      "request_id": "cad033f5-3cec-4be2-b84a-c5e4e53c692c"
+    },
+    {
+      "label": "changed",
+      "status": 409,
+      "api_call_id": "69960",
+      "request_id": "72439491-3817-4986-8054-2e7689f11d1a"
+    },
+    {
+      "label": "late_original",
+      "status": 409,
+      "api_call_id": "69961",
+      "request_id": "b1997bf5-5987-43b4-a7ce-223968cef5eb"
+    },
+    {
+      "label": "foreign",
+      "status": 403,
+      "api_call_id": "69962",
+      "request_id": "4816235e-1e6d-40e9-9dfd-a7fb6ffa7c52"
+    },
+    {
+      "label": "recorded",
+      "status": 200,
+      "api_call_id": "69963",
+      "request_id": "80fcfb67-b686-4ee1-82f9-c51544775526"
+    }
+  ],
+  "quantity_effect": false,
+  "rollback_result": {
+    "operation_id": "OC16.5e071e9f41.DLV.STOP.CONTROL",
+    "original_operation_id": "OC16.5e071e9f41.DLV.STOP.ORIGINAL",
+    "load_operation_id": "OC16.5e071e9f41.DLV.LOAD.SINGLE",
+    "store_address": "OC16.5e071e9f41.DLV.STORE",
+    "status": "ABANDONED",
+    "recorded_by": "admin",
+    "stock_changed": false,
+    "cost_posted": false,
+    "original_receipt": null
+  },
+  "abandon": {
+    "operation_id": "OC16.5e071e9f41.DLV.STOP.CONTROL",
+    "original_operation_id": "OC16.5e071e9f41.DLV.STOP.ORIGINAL",
+    "load_operation_id": "OC16.5e071e9f41.DLV.LOAD.SINGLE",
+    "store_address": "OC16.5e071e9f41.DLV.STORE",
+    "status": "ABANDONED",
+    "recorded_by": "admin",
+    "stock_changed": false,
+    "cost_posted": false,
+    "original_receipt": null
+  },
+  "replay": {
+    "operation_id": "OC16.5e071e9f41.DLV.STOP.CONTROL",
+    "original_operation_id": "OC16.5e071e9f41.DLV.STOP.ORIGINAL",
+    "load_operation_id": "OC16.5e071e9f41.DLV.LOAD.SINGLE",
+    "store_address": "OC16.5e071e9f41.DLV.STORE",
+    "status": "ABANDONED",
+    "recorded_by": "admin",
+    "stock_changed": false,
+    "cost_posted": false,
+    "original_receipt": null
+  },
+  "changed": {
+    "detail": {
+      "code": "STORE_UNLOAD_REJECTED",
+      "message": "ORA-20864: UNLOAD_INTENT_CONTROL_CONFLICT",
+      "operation_id": "OC16.5e071e9f41.DLV.STOP.CONTROL",
+      "retry_same_operation_id": true,
+      "outcome_confirmed": true
+    }
+  },
+  "late_original": {
+    "detail": {
+      "code": "STORE_UNLOAD_REJECTED",
+      "message": "ORA-20886: UNLOAD_START_ABANDONED",
+      "operation_id": "OC16.5e071e9f41.DLV.STOP.ORIGINAL",
+      "retry_same_operation_id": true,
+      "outcome_confirmed": true
+    }
+  },
+  "foreign": {
+    "detail": {
+      "code": "STORE_UNLOAD_REJECTED",
+      "message": "ORA-20882: STORE_RECEIPT_FORBIDDEN",
+      "operation_id": "OC16.5e071e9f41.DLV.STOP.FOREIGN",
+      "retry_same_operation_id": true,
+      "outcome_confirmed": false
+    }
+  },
+  "recorded": {
+    "operation_id": "OC16.5e071e9f41.DLV.STOP.RECORDED",
+    "original_operation_id": "OC16.5e071e9f41.DLV.UNLOAD",
+    "load_operation_id": "OC16.5e071e9f41.DLV.LOAD.SINGLE",
+    "store_address": "OC16.5e071e9f41.DLV.STORE",
+    "status": "RECORDED",
+    "recorded_by": "admin",
+    "stock_changed": false,
+    "cost_posted": false,
+    "original_receipt": {
+      "operation_id": "OC16.5e071e9f41.DLV.UNLOAD",
+      "load_operation_id": "OC16.5e071e9f41.DLV.LOAD.SINGLE",
+      "store_address": "OC16.5e071e9f41.DLV.STORE",
+      "root": "CASE:1147",
+      "trip_id": 33653,
+      "started_at_instant": "2026-10-16T11:00:54.018329-04:00",
+      "time_source": "SYSTEM_CAPTURED",
+      "status": "STARTED",
+      "stock_changed": false,
+      "cost_posted": false
+    }
+  },
+  "race": [
+    "ABANDONED",
+    "ALREADY_RESOLVED"
+  ]
+}

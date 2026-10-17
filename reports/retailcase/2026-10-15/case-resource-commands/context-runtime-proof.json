@@ -1,0 +1,165 @@
+{
+  "status": "PASS",
+  "ack": {
+    "task_id": 1136,
+    "warehouse_id": 13583852,
+    "status": "WAIT_CONTROL",
+    "assignment_version": 0,
+    "content_version": 3,
+    "assigned_to": "WHREQ15.OP",
+    "resource_id": 58,
+    "resource_session_id": 54,
+    "equipment_id": null,
+    "started_at_instant": "2026-10-15T12:16:32.620507+00:00",
+    "started_shift_time_zone": null,
+    "outcome": "REJECTED",
+    "request_sha256": "4F035932862102FE9E0EEE1868CC1BF8C4EE16DB6BADDAA1E0DCD18AA31F361A",
+    "outcome_confirmed": true,
+    "may_create_corrected_operation": true,
+    "error_code": "CASE_RESOURCE_ASSIGNMENT_VERSION_CHANGED",
+    "operation_id": "CRES15.CONTEXT.DIAG.ROLLBACK",
+    "action": "START",
+    "actor": "WHREQ15.OP",
+    "changed": false,
+    "stock_posted": false
+  },
+  "before": {
+    "source": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 0,
+        "stock_version": 11
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "case": [
+      {
+        "status": "WAIT_CONTROL",
+        "content_version": 3,
+        "picked_qty": 1,
+        "assigned_to": "WHREQ15.OP",
+        "assignment_version": 0,
+        "resource_session_id": 54
+      }
+    ],
+    "events": [
+      {
+        "n": 6
+      }
+    ],
+    "receipts": [
+      {
+        "n": 0
+      }
+    ],
+    "stock_ops": [
+      {
+        "n": 0
+      }
+    ]
+  },
+  "after": {
+    "source": [
+      {
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 0,
+        "stock_version": 11
+      },
+      {
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "case": [
+      {
+        "status": "WAIT_CONTROL",
+        "content_version": 3,
+        "picked_qty": 1,
+        "assigned_to": "WHREQ15.OP",
+        "assignment_version": 0,
+        "resource_session_id": 54
+      }
+    ],
+    "events": [
+      {
+        "n": 6
+      }
+    ],
+    "receipts": [
+      {
+        "n": 0
+      }
+    ],
+    "stock_ops": [
+      {
+        "n": 0
+      }
+    ]
+  },
+  "caller_rollback": true,
+  "all_context": "session current values, NOT namespace catalog",
+  "forward_create": "parent ORA00955; no retry/drop; original context functional",
+  "slow_sql": {
+    "slow_log_last_hour": [],
+    "relevant_vsql": [
+      {
+        "sql_id": "4fqf1kwty90fa",
+        "executions": 2,
+        "avg_ms": 1544.416,
+        "sql_sample": "select CONSTRAINT_NAME,STATUS,VALIDATED from USER_CONSTRAINTS where TABLE_NAME='RRL_CASE_RESOURCE_COMMAND'order by CONSTRAINT_NAME"
+      },
+      {
+        "sql_id": "2sh8373qh2ymu",
+        "executions": 0,
+        "avg_ms": 760.929,
+        "sql_sample": "SELECT count(*) FROM NO_CROSS_CONTAINER(\"SYS\".\"INT$INT$DBA_CONSTRAINTS\") \"INT$INT$DBA_CONSTRAINTS\" WHERE \"INT$INT$DBA_CONSTRAINTS\".\"TABLE_NAME\"='RRL_CASE_RESOURCE_COMMAND' AND (\"IN"
+      },
+      {
+        "sql_id": "9chfx143pr1vy",
+        "executions": 0,
+        "avg_ms": 561.088,
+        "sql_sample": "SELECT count(*) FROM NO_CROSS_CONTAINER(\"SYS\".\"INT$INT$DBA_CONSTRAINTS\") \"INT$INT$DBA_CONSTRAINTS\" WHERE \"INT$INT$DBA_CONSTRAINTS\".\"TABLE_NAME\"='RRL_CASE_RESOURCE_COMMAND' AND \"INT"
+      },
+      {
+        "sql_id": "4sq15rspxz6kb",
+        "executions": 2,
+        "avg_ms": 486.907,
+        "sql_sample": "SELECT /*+ NO_STATEMENT_QUEUING RESULT_CACHE (SYSOBJ=TRUE) OPT_PARAM('_ENABLE_VIEW_PDB', 'FALSE') */ \"OWNER\",\"CONSTRAINT_NAME\",\"TABLE_NAME\",\"OBJECT_TYPE#\",\"STATUS\",\"VALIDATED\",\"ORI"
+      },
+      {
+        "sql_id": "015nf04mbf19x",
+        "executions": 1,
+        "avg_ms": 63.193,
+        "sql_sample": "INSERT INTO RRL_CASE_RESOURCE_COMMAND VALUES (:B1 ,:B2 ,:B3 ,:B4 ,:B5 ,:B6 ,:B7 ,:B8 ,:B9 ,:B10 ,:B11 ,:B12 ,:B13 ) "
+      },
+      {
+        "sql_id": "7mksbtm46ub8n",
+        "executions": 1,
+        "avg_ms": 8.945,
+        "sql_sample": "select count(*)N from RRL_CASE_RESOURCE_COMMAND where CASE_PICK_TASK_ID=1136"
+      },
+      {
+        "sql_id": "2tzbmgf5cun3b",
+        "executions": 1,
+        "avg_ms": 3.994,
+        "sql_sample": "select count(*)from RRL_CASE_RESOURCE_COMMAND where OPERATION_ID=:o"
+      },
+      {
+        "sql_id": "36cx6ahkca4xr",
+        "executions": 1,
+        "avg_ms": 2.902,
+        "sql_sample": "SELECT /* OPT_DYN_SAMP */ /*+ ALL_ROWS IGNORE_WHERE_CLAUSE RESULT_CACHE(SNAPSHOT=3600) opt_param('parallel_execution_enabled', 'false') NO_PARALLEL(SAMPLESUB) NO_PARALLEL_INDEX(SAM"
+      }
+    ],
+    "decision": "Longest 1544ms query is one-off USER_CONSTRAINTS deployment verification, SYS recursive dictionary child cursors not completed executions are not business throughput. Decision: keep as bounded one-time release verification; DB/verification owner inspect dictionary statistics/plan if repeated slow verification persists, do not add business index/cache for SYS dictionary latency. Actual receipt INSERT first execution63ms/countByCASE8.945ms/PK3.994ms: retain existing PK+CASE index, reprofile after dedicated business/concurrency phase; no load acceptance claim."
+  }
+}

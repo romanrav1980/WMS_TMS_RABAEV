@@ -1,0 +1,28 @@
+{
+  "captured_at_utc": "2026-10-15T20:45:06.730556+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_WH_WEIGH_REQUEST_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_wh_weigh_request_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "879542ff5a689ed66eebe6176af2160a84b6840bc8391171d87071b5f90eef8b",
+      "normalized_source_sha256": "b21176b5ed0f8b82eb316e1ce276106bca35170c4f1ee9bafa2e980b846cbc4e",
+      "artifact_sha256": "f6f873c3c42b4823000650e110dfce9a8fdbf1ffe2fe9f1fc259132935d68cf6"
+    },
+    {
+      "name": "RRL_WH_SCALE_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_wh_scale_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "59dbcd41c475a1682683ee63acb270f7ae46767ed20d1ce68deaa1e814997d30",
+      "normalized_source_sha256": "aacba7ef3c676c11664ce1cb9a394052b91ee0b7d487baeed1780c1d969a7269",
+      "artifact_sha256": "d9ab4c66b435ea7bb8e9b7919c173aa8a11e616273664dbea194d48bf8071795"
+    }
+  ]
+}

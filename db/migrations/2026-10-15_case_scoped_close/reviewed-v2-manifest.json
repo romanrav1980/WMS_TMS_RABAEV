@@ -1,0 +1,34 @@
+{
+  "status": "PREPARED_NOT_APPLIED",
+  "rationale": "Existing raw USER_SOURCE baseline must not be compared with normalized text. Original files preserved. New package after-source guard remains CR-normalized.",
+  "files": [
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\known_sources_guard_raw.sql",
+      "sha256": "a86670f522170aec65e55ca3932e369869fcd9bd25a321af7389c226a87ad3cd"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\before_v2.sql",
+      "sha256": "c14edeb09bc88ddbe388bf2b3ab3fd35a7a0a05901677cc80296789d36c7f901"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\verify_v2.sql",
+      "sha256": "b75870acf87ab54d12e4f188144ed5518c4155e6c40bf787831c26aa41650453"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\rollback_v2.sql",
+      "sha256": "f4cd571cfcda4305b18a6e74aa1f824cd6f0d6d90023b8b3d9f808ec07210f01"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\rollback_verify_v2.sql",
+      "sha256": "629ac8763024148c42ef4253e5b1c299c2c93002f53d9cb2d5ef8e6031f55959"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\apply_v2.sql",
+      "sha256": "2d5daa18cfa53c6f7ba60aeac99eb26ff9c6a0bae7d4018102fb527efddb39a8"
+    },
+    {
+      "path": "db\\migrations\\2026-10-15_case_scoped_close\\checkpoint_v2.json",
+      "sha256": "f657d81eb1f369567eb0932c57cc947b3bb0f5b251cd2858f3c984bf49ecad6e"
+    }
+  ]
+}

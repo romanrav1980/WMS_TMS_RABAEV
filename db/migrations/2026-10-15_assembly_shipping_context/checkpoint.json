@@ -1,0 +1,16 @@
+{
+  "status": "APPLIED",
+  "migration_id": "2026-10-15-assembly-shipping-context",
+  "before_sha256": "F785EA4A93151725E712ACC957A98E2B97296915D3D652D0F0068FF5D9F0F815",
+  "stock_effect": "NONE",
+  "authority": "Unchanged assert_task precedes helper; current CASE customerorder + actualWARE only; bounded20 candidates, native binder remains writer",
+  "sha256": {
+    "apply.sql": "84a50abc81d610dde7f100863786a6ab47a46cf01f8bef5e5b74af52b1ff820c",
+    "before.sql": "3cf6ed9c94f7cc4a3a78b22160ef0a0098f6d55d77c62e467f9098c449740086",
+    "before_body.sql": "105837696f83689d157de1fc971eaf2aa158f6db0a094dd3037b0f868cbc5592",
+    "body.sql": "f95c6f8f16c67e644289f93e7776090a3e829c91561ebb5b1c145db96d898e2b",
+    "rollback.sql": "cd81f621efce630a980c763f49f4ee04ad54bc317a80e3f908b3f2cf67a4606f",
+    "verify.sql": "edf00d2df0cb7cade26ebc66ba2235fb1b4f5bf942a1b5ac6d26c3c557dcbf15"
+  },
+  "verification": "source EXACT/errors0/INVALID0; current1136 resource54/preparedST641520/fulfillment190/REQUIRED/null signature native PASS"
+}

@@ -1,0 +1,32 @@
+{
+  "state": "BEFORE_MANUAL_QC",
+  "started_at": "2026-10-16T12:44:51.575989+00:00",
+  "http": [
+    {
+      "label": "POLICY",
+      "path": "/api/sku-quality-weight/20846272/AS16ACE9C011B16",
+      "status": 409,
+      "api_call_id": "69760",
+      "request_id": "0debcb65-a693-4b03-878f-ede42fa3b59f"
+    }
+  ],
+  "bodies": {
+    "POLICY": {
+      "expected_version": 0,
+      "base_uom": "EA",
+      "base_weight_kg": "1",
+      "box_weight_kg": "24"
+    }
+  },
+  "warehouse": 20846272,
+  "article": "AS16ACE9C011B16",
+  "electronic_capture_rows_before": 3,
+  "in_flight": {
+    "label": "POLICY",
+    "method": "PUT",
+    "path": "/api/sku-quality-weight/20846272/AS16ACE9C011B16"
+  },
+  "POLICY": {
+    "detail": "\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u0442\u0435 \u044f\u0447\u0435\u0439\u043a\u0443 \u043e\u0442\u0431\u043e\u0440\u0430 \u0442\u043e\u0432\u0430\u0440\u0430 \u0432 \u0434\u0430\u043d\u043d\u043e\u043c \u0441\u043a\u043b\u0430\u0434\u0435"
+  }
+}

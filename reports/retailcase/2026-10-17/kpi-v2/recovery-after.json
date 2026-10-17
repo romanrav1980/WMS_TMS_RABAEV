@@ -1,0 +1,39 @@
+{
+  "http": [
+    {
+      "path": "/api/case-pick/tasks/1153/lines/1155/confirm",
+      "status": 200,
+      "api_call_id": "72718",
+      "request_id": "71530d8b-1cea-499b-95ca-cd4d2f4a8af7"
+    }
+  ],
+  "reply": {
+    "case_pick_task_id": 1153,
+    "case_pick_line_id": 1155,
+    "operation_id": "OC16.d21d129674.BOX24",
+    "status": "PARTIAL",
+    "remaining_quantity": "1",
+    "fact_qty": "24",
+    "carrier_identifier": "090000000000022010",
+    "cell": "CPT_20033496",
+    "picked_from_cell": "AS16C082d87dbd8",
+    "lots": [
+      {
+        "uid": "CASELOT:76F9DCE42A9A33F27356D87B91472B4EF2FEF4:1",
+        "source_uid": "OC16.LOT:d21d129674",
+        "quantity": "24",
+        "unit": "EA"
+      }
+    ],
+    "outbox_id": 5703
+  },
+  "stock": [
+    {
+      "p": 25,
+      "h": 0
+    }
+  ],
+  "state": "PASS_EXACT_PICK_REPLAY_AFTER_APPLICATION_RESTART_AND_RETURN",
+  "restart_manifest": "runtime/product-launch/20261017-081738-5962a7/launch.json",
+  "database_restore_not_tested": true
+}

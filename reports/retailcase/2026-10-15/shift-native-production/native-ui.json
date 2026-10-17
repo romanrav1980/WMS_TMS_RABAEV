@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "width": 390,
+  "kind": "PRODUCTION_ASSETS_REAL_API_PROXY",
+  "api_data_mocked": false,
+  "physical_hardware": false,
+  "business_commands": 0,
+  "read_only_post_route": "/api/picking/shift-overview",
+  "bounds": {
+    "viewport": 390,
+    "scroll": 390
+  },
+  "calls": [
+    {
+      "path": "/api/access/me",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/api/access/workspaces",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/api/resources/timeline",
+      "method": "GET",
+      "status": 200
+    }
+  ],
+  "assets": [
+    {
+      "file": "/assets/index-K8rhPSIm.js",
+      "sha256": "699ab25cbb5117e146c709179f4daaeb275e56cfdd3fcb379911334f6a00d242"
+    },
+    {
+      "file": "/assets/index-Dhn_UlOW.css",
+      "sha256": "a23cd1e5e1332437deebdb44186af6bd674f831d98fe728a4b423fa721652db2"
+    }
+  ],
+  "errors": [],
+  "blocked": [],
+  "timelines": [
+    {
+      "warehouse": 5062399,
+      "resources": [
+        "DOCK"
+      ],
+      "events": 2,
+      "unscheduled": 0,
+      "time_zone": null
+    }
+  ]
+}

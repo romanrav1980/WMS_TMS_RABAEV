@@ -1,0 +1,20 @@
+{
+  "migration_id": "2026-10-15-wave-scoped-views",
+  "git_head": "41c913cf44441cf3656a66b0939e40cb9a83c365",
+  "target": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "invalid_before": 0,
+  "sha256": {
+    "apply.sql": "170de252ea32a79880cda2896a9d807075eb5a0d84e4bfd8b2726d9734f163e1",
+    "before_rrl_wave_exec_access.sql": "f4055c779286f6ff6b1083f9ee4db096c93f1e2127ade091c103efbe3b67eade",
+    "before_rrl_wave_time_api.sql": "2c14cff54ecb29882f4a8c265a93ca1f43123aefcc600aa009a6f97aaa77105a",
+    "rollback.sql": "5b1c74fa9f29df168053e3839fead71ab02b8594b965061f45f3529e0f6f7026",
+    "rrl_wave_exec_access.sql": "97423f6d50b7e65fa46e285caf231034b05a123bb349c32d2d7bfc2e6988961e",
+    "rrl_wave_time_api.sql": "7bc2bde8cd7afb654e408752402c91d1ba302c9df17a488898b70b1de5207873",
+    "verify.sql": "8a1c8a3bbed013a92afbf4ad3bd97899869c71d528c9fc5ef0124dff1f865bc3"
+  },
+  "state": "PREPARED",
+  "authorization": "Owner explicitly directs all accepted AK/KH sprints"
+}

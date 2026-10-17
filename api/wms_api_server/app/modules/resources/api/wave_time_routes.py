@@ -2,7 +2,7 @@ from datetime import timezone
 from typing import Any,Literal
 from fastapi import APIRouter,Depends,HTTPException,Path
 from pydantic import BaseModel,ConfigDict,Field,AwareDatetime,model_validator
-from ...platform.public import AdminUser,require_permission
+from ...platform.public import AdminUser,require_permission,get_current_user
 from ..contracts_wave_time import WaveTimePort,wave_time_service
 from ..contracts_workload import WorkloadError
 
@@ -25,7 +25,7 @@ class WaveTimeApproval(BaseModel):
 router=APIRouter(prefix="/api/resources/workload/waves",tags=["resource-workload"])
 
 @router.get("/{wave_id}/time-context")
-def context(wave_id: int=Path(gt=0),user: AdminUser=Depends(require_permission("pick_wave_view")),service: WaveTimePort=Depends(wave_time_service)) -> dict[str,Any]:
+def context(wave_id: int=Path(gt=0),user: AdminUser=Depends(get_current_user),service: WaveTimePort=Depends(wave_time_service)) -> dict[str,Any]:
     try:return service.context(wave_id,user.username)
     except WorkloadError as exc:raise HTTPException(exc.status,{"code":exc.code,"message":str(exc)}) from exc
 

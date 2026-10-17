@@ -1,0 +1,174 @@
+{
+  "slow_gateway": [
+    {
+      "operation_kind": "TRANSACTION",
+      "executions": 7,
+      "avg_ms": 290.857,
+      "max_ms": 815,
+      "sql_prefix": "Original wave launch continuation metadata"
+    },
+    {
+      "operation_kind": "TRANSACTION",
+      "executions": 8,
+      "avg_ms": 29.5,
+      "max_ms": 76,
+      "sql_prefix": "Current source/launch replay guard; caller-owned rollback"
+    }
+  ],
+  "oracle_top_sql": [
+    {
+      "sql_id": "cshn8u2f5apkj",
+      "executions": 14,
+      "total_ms": 284.477,
+      "avg_ms": 20.32,
+      "sql_prefix": "begin RRL_WAVE_CONTINUE_API.begin_step(:1,:2,:3,:4,:5); end;"
+    },
+    {
+      "sql_id": "b9tr8q6n3vqga",
+      "executions": 9,
+      "total_ms": 58.122,
+      "avg_ms": 6.458,
+      "sql_prefix": "select o.STATE,c.STATE,w.STATUS,w.PICK_RELEASED_AT             from RRL_STOCK_OPERATION o join RRL_PICK_WAVE w on w.PICK_WAVE_ID=:wave             left join RRL_WAVE_CONTINUE c on c.LAUNCH_OPERATION_ID=o.OPERATION_ID    "
+    },
+    {
+      "sql_id": "4n3pw9ykj1qtn",
+      "executions": 5,
+      "total_ms": 17.846,
+      "avg_ms": 3.569,
+      "sql_prefix": "select STEP_NAME,STATE,ERROR_CODE,COMPLETED_AT from RRL_WAVE_CONTINUE_STEP                 where LAUNCH_OPERATION_ID=:operation order by STEP_NO"
+    },
+    {
+      "sql_id": "4atw9wz577c18",
+      "executions": 7,
+      "total_ms": 10.614,
+      "avg_ms": 1.516,
+      "sql_prefix": "SELECT C.LAUNCH_OPERATION_ID,C.PICK_WAVE_ID,C.ACTOR,S.CANONICAL_REQUEST FROM RRL_WAVE_CONTINUE_SOURCE S JOIN RRL_WAVE_CONTINUE C ON C.LAUNCH_OPERATION_ID=S.LAUNCH_OPERATION_ID WHERE S.SOURCE_OPERATION_ID=:B1 "
+    },
+    {
+      "sql_id": "bpky4zrvb9mjc",
+      "executions": 2,
+      "total_ms": 5.928,
+      "avg_ms": 2.964,
+      "sql_prefix": "update RRL_WAVE_CONTINUE_SOURCE set CANONICAL_REQUEST=CANONICAL_REQUEST where SOURCE_OPERATION_ID=:op"
+    },
+    {
+      "sql_id": "g9w8914j4g4tp",
+      "executions": 1,
+      "total_ms": 4.119,
+      "avg_ms": 4.119,
+      "sql_prefix": "SELECT /* OPT_DYN_SAMP */ /*+ ALL_ROWS  RESULT_CACHE(SNAPSHOT=3600) opt_param('parallel_execution_enabled', 'false') NO_PARALLEL(SAMPLESUB) NO_PARALLEL_INDEX(SAMPLESUB) NO_SQL_TUNE */ NVL(SUM(C1),0), NVL(SUM(C2),0), NVL("
+    },
+    {
+      "sql_id": "5vb1q2y1x9awq",
+      "executions": 2,
+      "total_ms": 2.953,
+      "avg_ms": 1.477,
+      "sql_prefix": "delete from RRL_WAVE_CONTINUE_SOURCE where SOURCE_OPERATION_ID=:op"
+    }
+  ],
+  "decision": "Keep PK/unique lookup workflow/source operations; at most200 frozen intents, 7 fixed metadata steps, stock commands each fresh native TX. No new performance index justified by this bounded DEV evidence. Alternative face routing remains warehouse-bounded; representative large warehouse load/plan acceptance owned by fulfillment performance backlog, not claimed by this fixture.",
+  "residuals": {
+    "active_hard": 0,
+    "active_soft_projection": 0,
+    "active_warehouse_tasks": 0,
+    "active_CASE_tasks": 0,
+    "physical_task_moves": 0,
+    "resource_fact_events": 0,
+    "active_actors": 0,
+    "active_QA_faces": 0
+  },
+  "successful_wave_command_counts": [
+    {
+      "command_type": "WAVE_LAUNCH",
+      "n": 1
+    },
+    {
+      "command_type": "WAVE_RESERVE_SOURCES",
+      "n": 1
+    }
+  ],
+  "audit_clock_context": [
+    {
+      "db_clock": "2026-10-15 07:17:30 -04:00",
+      "session_clock": "2026-10-15 14:17:30 +03:00",
+      "dbtimezone": "+00:00",
+      "sessiontimezone": "+03:00"
+    }
+  ],
+  "window": "Latest500 LOG_ID rows; initial timestamp/TZ filter returned no rows and was replaced with explicit bounded identity window, not interpreted as no SQL.",
+  "local_api_audit": [
+    {
+      "request_id": "b07f102e-ce84-4899-b875-028d2f339705",
+      "path": "/api/picking/waves/565/launch-receipts/WAVE.DURABLE.LAUNCH:d214fecbf",
+      "status": 200,
+      "duration_ms": 264
+    },
+    {
+      "request_id": "3a81659b-ee09-4ac3-9c2b-146d4574872e",
+      "path": "/api/picking/waves/565/launch",
+      "status": 200,
+      "duration_ms": 353
+    },
+    {
+      "request_id": "f1fb89a7-232b-49be-8d3a-16af91184eee",
+      "path": "/api/picking/waves/565/launch",
+      "status": 422,
+      "duration_ms": 47
+    },
+    {
+      "request_id": "a397bf54-e56f-4b88-8b35-012db4d316ba",
+      "path": "/api/picking/waves/565/cancel",
+      "status": 403,
+      "duration_ms": 79
+    },
+    {
+      "request_id": "a696c5f8-d44d-4569-8002-8a50ebded935",
+      "path": "/api/picking/waves/565/preview",
+      "status": 404,
+      "duration_ms": 46
+    },
+    {
+      "request_id": "3c06b48c-9ca6-4629-b7fa-426645e25651",
+      "path": "/api/picking/waves/565/launch-receipts/WAVE.DURABLE.LAUNCH:d214fecbf",
+      "status": 200,
+      "duration_ms": 52
+    },
+    {
+      "request_id": "dc317e2e-824f-4708-977d-af2300a446e6",
+      "path": "/api/picking/waves/565/launch",
+      "status": 200,
+      "duration_ms": 343
+    },
+    {
+      "request_id": "398d1026-db7c-47d8-839b-ccdf10d7ec2a",
+      "path": "/api/picking/waves/565/launch",
+      "status": 422,
+      "duration_ms": 60
+    },
+    {
+      "request_id": "1316163a-56f0-439c-97d2-f34d07cbbbec",
+      "path": "/api/picking/waves/565/cancel",
+      "status": 403,
+      "duration_ms": 108
+    },
+    {
+      "request_id": "b59c64e8-ba03-4aaf-8709-4492ce35dcda",
+      "path": "/api/picking/waves/565/calculate",
+      "status": 403,
+      "duration_ms": 123
+    },
+    {
+      "request_id": "9cc9107a-62e3-48c5-8f8d-4ff4f62a0a61",
+      "path": "/api/picking/waves/565/launch",
+      "status": 403,
+      "duration_ms": 89
+    },
+    {
+      "request_id": "8c15937b-cdf4-4afb-a045-2870cf2e15cc",
+      "path": "/api/picking/waves/565/launch-receipts/WAVE.DURABLE.LAUNCH:d214fecbf",
+      "status": 200,
+      "duration_ms": 169
+    }
+  ],
+  "performance_decision": "Preserve existing global CONFIG6/WAREHOUSE.METADATA lock order; longest metadata TX815ms includes concurrency/serialization, begin_step mean20.32ms, receipt mean6.458ms, source lookup mean1.516ms. PK/unique lookup and bounded200 frozen intents retained; no new index from this DEV-only case. Fulfillment/platform owns representative warehouse-scale lock/plan/load acceptance before any finer fencing change."
+}

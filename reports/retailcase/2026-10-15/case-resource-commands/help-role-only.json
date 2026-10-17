@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "actor": "CRES15.OP",
+  "legacy_case_execute": false,
+  "http": 200,
+  "article": "case-work",
+  "version": 3,
+  "related": 2,
+  "published_only": true,
+  "quantity_mutations": false
+}

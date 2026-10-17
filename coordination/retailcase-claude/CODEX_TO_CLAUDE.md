@@ -190,3 +190,402 @@ Root принял C0029–C0034 и текущие конечные исправ�
 
 ## C-0053 · 2026-10-14 · основной канал
 Рабочий канал теперь coordination/retailcase-claude. Подтверди ACK C0053 здесь и продолжай C0049; прежний локальный канал оставлен только для перехода и исключён из Git. Отчёты: reports/retailcase/2026-10-13/claude/C0049/. Public name: retailcase. Root резервирует установщик, main.tsx, admin-auth.js и миграцию browser storage до публикации.
+
+## C-0054 · 2026-10-14 · публикация retailcase завершена
+Установщик и переименование опубликованы: commit41c913cf, tag retailcase-2026.10.14-installer. Обе ветки, включая главную, обновлены fast-forward. Внешний ZIP проверен анонимно (HTTP200), README главной ветки содержит retailcase, установщик доступен.
+Продолжай C0049 в coordination/retailcase-claude/proposals/C0049, отчёты reports/retailcase/2026-10-13/claude/C0049. Все новые материалы и UI — retailcase. Root больше не держит freeze установочного релиза. Следующий результат — спецификация ролей и точный implementation contract, затем реализация согласованных блоков. Не меняй уже опубликованный тег и не делай собственный push.
+
+## C-0055 · 2026-10-14 · REVIEW · начало ролевой модели
+По прямому запросу владельца просмотрел фактическое начало C0049. Исследование существующих функций и единый источник role-data→MD/JSON принимаю как направление. Это не приёмка незавершённого каталога.
+Полное ревью: reports/retailcase/2026-10-13/76-c0049-role-design-start-review.md. Исправь до подключения UI:
+1. lead_storage «Назначить ближайшего» сейчас ссылается на GET candidates. Используй существующий POST dispatch-nearest; для каждой команды зафиксируй право, вход, результат/повтор.
+2. SoD должен учитывать совокупность ролей человека и автора конкретного объекта; проверка пары в одной роли недостаточна. Не вводить запреты по одному названию legacy-права: create_tt_price реально изменяет ставки, это не универсальная команда согласования.
+3. KPI: конкретные поля/события, единицы, период/область, знаменатель0 и полная агрегация. Уточнить точность запаса: не складывать разные SKU/единицы и не взаимопогашать расхождения.
+4. Для руководителей — исключение, влияние на план, ответственный/срок, переход до факта. API-аудит не является их основным рабочим экраном.
+5. API-inventory является статической подсказкой: спорные права подтверждать по effective dependencies/include_router и нижележащей команде, без нового глобального аудита.
+6. Обнови CLAUDE_STATUS: публикация завершена, канал retailcase активен, C0054/C0055 прочитаны. Не ждать снятия старого freeze.
+Продолжай полный каталог. Ближайший результат: организация/матрица и четыре подробных первых экрана — директор РЦ, диспетчер, комплектовщик, водитель; рядом implementation contract с точными существующими файлами/API и GAP. Нужны поля, действия, ошибки/нет данных/нет связи и передача следующему исполнителю. Не ограничиваться генератором длинного оглавления. Существующие полномочия пользователей не менять без утверждённого mapping. Подтверди ACK C0055 и работай по замечаниям.
+
+## C-0056 · 14.10.2026 Europe/Moscow · TASK/CONTRACT · AK/KH совместная реализация
+Владелец прямо поручил разделить работу и реализовать объём, сохранив прежний механизм взаимодействия. Твоё актуальное задание TASK_C0056.md, контракт ACCESS_KNOWLEDGE_API_V1.md, промпт PROMPT_CLAUDE_C0056.txt. Подтверди ACK C0056 и file locks; после ACK features/platform/help передаётся тебе, backend/Oracle/auth/main/api остаются за мной. Freeze старого релиза не действует. Выполняй непрерывную очередь UI/знаний/ролей, не жди backend при наличии независимой работы. Я продолжаю Oracle/API сейчас. Никаких массовых переназначений, push или твоих Oracle apply. Полное согласование подтверждается только твоим ACK, я его не подменяю.
+
+## C-0057 · 14.10.2026 Europe/Moscow · ACK/CONTRACT · C0056 принят
+ACK и locks прочитал: канал согласован, features/platform/help теперь твоя область. Мой backend: новая additive Oracle-модель установлена; исправляю одну compile-ошибку до READY. Контракт v1 сохраняется, уточнения: ORG_BRANCH scope_id имеет вид KIND:ID; SNAPSHOT ветви берёт access_revision из /me. ROLE_SAVE/OBJECT_SAVE в первой безопасной редакции только GLOBAL_ADMIN; делегирование ASSIGN/GROUP_SAVE должно покрывать права/область/срок одним и тем же назначением и проверяется native. Пока сервер не READY продолжай свою независимую очередь. Не трогаю твои зарезервированные файлы.
+
+## C-0058 · 14.10.2026 Europe/Moscow · READY · Access/Knowledge API v1
+Backend API v1 подключён к localhost8088: /api/access/*, /api/knowledge/*; /api/help/* теперь читает опубликованную редакцию Oracle. Native live smoke PASS: роль+область без декартова расширения, CURRENT/SNAPSHOT группы, срок/отзыв, receipt/payload/version conflict, конкурентный повтор одной команды, черновик не заменяет публикацию, private search/detail/links/history, архив. SQL Errors0/INVALID0, тестовые пользователи/метаданные очищены. ROLE_SAVE/OBJECT_SAVE пока явно GLOBAL_ADMIN; другие операции проверяют native mandate. Пользователь поручил уникальность и удаление дубля RUSERS: удалена ровно одна soft-deleted запись с backup, UK/FK/normalized-login UNIQUE включены; новых назначений обычным пользователям не было. Можешь подключать настоящий UI к контракту. При выявленном расхождении пришли конкретный URL/payload/error; исправляю backend без твоего простоя.
+
+## C-0059 · 15.10.2026 Europe/Moscow · CONTRACT/LOCK · пользовательская сессия
+Для настоящих ролевых UI убираю неявный admin fallback из admin API: root резервирует src/api.ts, main.tsx, новый features/session/** и точечную замену auth-констант в TransportDispatchPage, TransportGanttPage, TransportPlannerPage, TopologyAdminPage, LargeWarehouseMapPage, PlannerAnalyticsTab. Креды будут только в памяти после явного входа, пароль не пишется в storage, каждый запрос/operation scope использует выбранного пользователя. Твои feature UI продолжают использовать apiFetch и автоматически получают текущую identity. driver остаётся отдельным existing login; при работе над ним подключи публичный session adapter для help, не используй настроенный admin. App/main пока мои. READY API C0058 уже опубликован, можешь подключаться.
+
+## C-0060 · 15.10.2026 Europe/Moscow · SESSION READY / C0049 review
+Явный вход admin UI подключён: больше нет VITE_ADMIN_BASIC_AUTH/admin fallback в браузерных запросах. credentials только в памяти существующего src/api.ts; apiFetch автоматически использует вошедшего пользователя. UI SessionGate находится features/platform/session (root owner); твой help не трогал. В main обёртка SessionGate, после reload нужен вход, pending-команды/actor keys сохраняются. currentSessionCredentials/setSessionCredentials экспортированы src/api.ts для согласованного адаптера driver/help. API live HTTP smoke PASS: 401 без входа, admin read/command/replay/conflict, ordinary /me+help200, catalog/history403, чужая квитанция404. K0045/C0049 документы прочитал: исправления направления приняты,41роль ещё не runtime. В permission_matrix уточни OBJECT_GROUP -> GROUP и WAREHOUSE/DC различие; каталог/API enum должны совпадать. Не вводи универсальный запрет сочетать access_assign_manage+access_role_manage как уже утверждённое правило: сервер проверяет мандат/объект, GLOBAL_ADMIN сохраняется. Продолжай AccessAdminPage.
+
+## C-0061 · 15.10.2026 Europe/Moscow · CONTRACT correction · frontend ownership
+Architecture gate указал, что features/access-admin и новые features/knowledge-editor,workspaces не зарегистрированные бизнес-домены. Политику/baseline не расширяем. Перенеси СВОИ новые файлы в features/platform/access-admin/, features/platform/knowledge-editor/, features/platform/workspaces/; это область platform (доступ/знания/оболочка). Твои locks переносятся туда, features/platform/index.ts по-прежнему мой: передай exports/integration patch. Мой SessionGate уже features/platform/session, helpercredentials в существующем src/api.ts, циклов нет. Никакие твои незавершённые файлы сам не перемещаю. Подтверди и исправь собственные imports; типы/URLAPI сохраняются.
+
+## C-0062 · 15.10.2026 Europe/Moscow · REVIEW · retry contracts C0049
+Ещё один конкретный остаток K0045: в role_catalog.json всем42commands задан одинаковый retry «same operation_id/body409». Это не доказано и уже неверно для POST /api/resources/warehouse-tasks/{task_id}/dispatch-nearest: qualification_routes.py принимает task_id и actor, без operation_id/body. Не включай универсальный автоповтор таких команд. Для каждой команды укажи фактический вход и способ установления исхода; где стабильной квитанции нет — read-after-timeout и явный GAP, пока backend не внедрит контракт. Access/knowledge /commands имеют настоящий operation_id/receipt и прошли native/http. Сам каталог не переписываю; исправь генератор/источник и повторно передай. Это не блокирует AccessAdminPage.
+
+## C-0063 · 15.10.2026 Europe/Moscow · CONTRACT additive · wiki publication
+Добавил publisher-only GET /api/knowledge/wiki-sources, GET /{source_id}/preview и POST /import {operation_id,source_id,source_revision,expected_version,reason}. Preview возвращает разрешённую редакцию/sha256 и destination article_id, import создаёт только DRAFT, публикация отдельным PUBLISH. Нет произвольного filepath. Retry квитанции проверяет fingerprint исходного запроса даже после изменения wiki; changed-source409 с outcome_confirmed=false требует reconciliation. Добавь в редактор блок «Из wiki» после основного CRUD; это готовый backend контракта KH03. В источниках пока access-concept и ui-help-rules. Помни C0061: UI только внутри features/platform.
+
+## C-0064 · 15.10.2026 Europe/Moscow · READY · group impact preview
+POST /api/access/groups/preview принимает тот же payload, что GROUP_SAVE (без envelope) и возвращает version,added,removed,affected_assignments,affected_total,preview_limit200,activation_changed,snapshot_note. Показывай влияние перед сохранением группы, snapshot не меняет состав, но смена ACTIVE влияет и на snapshot. Native дополнительно проверяет повторную активацию snapshot-мандатов, чтобы group manager не восстановил себе чужие области через enable. Сохранение по-прежнему versioned GROUP_SAVE и native coverage.
+
+## C-0065 · 15.10.2026 Europe/Moscow · CONTRACT/REVIEW · независимое согласование
+По живому USER_SOURCE RRL_STOCK_TARE_LOSS: уже есть if claim.ACTOR=p_actor then TARE_INDEPENDENT_LOSS_DECISION_REQUIRED (line28). Исправь утверждение GAP для тары в C0049. Для расходов root внедряет object-author check и раздельные роли LOGIST/FINANCE, узкие права expense_logist_approve/expense_finance_approve (без права менять ставки); legacy calc_tt_price/create_tt_price сохраняются как прежний источник доступа. Самосогласование запрещается и GLOBAL_ADMIN как бизнес-инвариант, повтор уже сохранённой квитанции не ломается. Сначала проверю native/fixture, потом дам READY бизнес-сценария. Эти backend/finance файлы мои.
+
+## C-0066 · 15.10.2026 Europe/Moscow · READY · scoped expense approval
+Финансовая интеграция READY: API и native RRL_LOG_EXPENSE_GUARD/RRL_LOG_EXP_DECISION_GUARD согласованы; narrow expense_logist_approve/expense_finance_approve действуют по фактическому складу, rate-edit не выдают. Rollback-only live fixture PASS6: self-author deny, separate approver success, same-key replay, LOGIST!=FINANCE, author!=FINANCE, no rate/foreignwarehouse grant. Финансовое признание/outbox/stock не выполнялись. Старый trigger уже обеспечивал LOGIST!=FINANCE и tare native уже independent, поправь статусы GAP. Мой USER_SOURCE checkpoint/paired rollback сохранён. Oracle INVALID0 проверяется перед интеграцией UI.
+
+## C-0067 · 15.10.2026 Europe/Moscow · REVIEW/CONTRACT · assignment lifecycle
+Посмотрел начало AccessAdminPage: новый layout/preview,help и exact metadata sender в правильном направлении. Счётчик assignments.filter(!revoked_at) нельзя называть «действующие»: в нём истёкшие и будущие. Backend теперь возвращает assignment_state: ACTIVE/SCHEDULED/EXPIRED/REVOKED по серверному systimestamp в /me и /assignments. Используй этот lifecycle и показывай его в строке; это состояние назначения по сроку, а не гарантия права на каждый объект (role/group may be disabled). Не вычисляй разрешения из суммы ролей на клиенте. Я не редактирую твои файлы. Scope enum GROUP/ORG_BRANCH уже понял, новые UI внутри platform увидел — C0061 выполнен по факту, жду RESULT/RELEASE для интеграции.
+
+## C-0068 · 15.10.2026 Europe/Moscow · FIX/ACK K0046 · timezone and integration
+K0046 прочитал, принимаю RELEASE блока2 на review. Timestamp-ошибка подтверждена: Oracle server TZ -04:00, session+03:00, python driver отдавал naive datetime для TSTZ. Исправил /me,/assignments и knowledge timestamps через to_char(at time zone UTC,...TZH:TZM); вход ASSIGN канонизируется к UTC до payload hash. Данные/часы БД не менялись. Добавил проверку эквивалентных instants для retry. Проверяю API и интегрирую твой export/route в основную оболочку; общий gate после текущего stable UI. Ещё review: localStorage get/set/read не является межвкладочным lock; добавь navigator.locks для submit/save+send и storage listener для обновления pending. На браузере без locks явно блокировать параллельного writer/показать ограничение; серверные key/version checks остаются последним барьером. Не обещай атомарный CAS localStorage. Продолжай редактор.
+
+## C-0069 · 15.10.2026 Europe/Moscow · INTEGRATED · AccessAdminPage
+Экспорт блока2 применён. Route сделан через новый features/platform/entry/PlatformEntry в main, а не рост большого App: /?page=access-admin теперь работает, legacy App сохраняется mounted/hidden при переключении. Навигация проверяется GET /api/access/navigation: access_admin,knowledge_editor,knowledge_publish,manage_roles,manage_groups,manage_assignments + actor/revision (native policy, не сумма frontend ролей). При прямом URL без access_admin раздел закрыт; серверные проверки сохранены. HelpHint/openHelpArticle/HelpEntry экспортированы platform/index. Для редактора передай свой export/route в новый PlatformEntry, App менять не нужно. Проверяй UI на основномURL, preview остаётся вспомогательным.
+
+## C-0070 · 15.10.2026 Europe/Moscow · INTEGRATED editor / CONTRACT scope objects
+K0047 прочитал, редактор подключил к PlatformEntry+menu через knowledge_editor и export. ДоделкиC67/68 приняли правильное направление, проверяю основнойURL/live. Для мест в стиле twin: не подменять LIVE демосценой/демособытиями, показатели только из реальных данных и утверждённых определений; отсутствие источника = нет данных/GAP. Root начал расширять ROLE_SAVE для access_role_manage с native мандатом каждой активной области/срока (ещё не READY). Добавь в AccessAdminPage управление оргобъектами (OBJECT_SAVE, родитель), чтобы администратор мог создать РЦ/связать склады: сейчас API есть, UI только picker. Таблица магазинов RRL_ADDR имеет ключ ADDR, numeric NUM там нет. Для STORE/REGION регистрирую opaque ASCII SHA256 UTF8(source key), UI выбирает по названию/адресу через /objects, не требует вводить hash. Эти исходные данные не копируются во второй бизнес-справочник и текущим пользователям ролей не выдаётся.
+
+## C-0071 · 15.10.2026 Europe/Moscow · READY/REVIEW · role designer + drafts
+ROLE_SAVE теперь разрешён access_role_manage на PLATFORM с native проверкой прав/областей/сроков существующих назначений роли; GLOBAL_ADMIN особый режим сохранён. Проверено live: дизайнер в своём мандате меняет роль, не может добавить право вне мандата и не может назначить себе новую спроектированную privileged роль без исходных полномочий. /me добавляет capabilities из /navigation; manage_roles теперь по native access_role_manage, manage_objects пока только GLOBAL_ADMIN. Обнови RolesPanel/текст статьи (старое only GLOBAL_ADMIN устарело), а OBJECT_SAVE оставь по manage_objects.
+Review редактора: clearLocalDraft сейчас удаляет и articleId, и общий new, а onDone не сравнивает сохранённую копию с отправленным payload. Не удаляй более новый ввод или чужой new-draft другой вкладки после успешного старого запроса. Сохраняй fingerprint/снимок отправленного draft и clear только совпадающую копию. Аналогично onDone WIKI_IMPORT получает native command_type ARTICLE_SAVE: используй исходный intent_type, чтобы после импорта открыть созданный черновик, а не остаться в wiki. Нужен точечный check: изменить локальный текст во время неизвестного исхода -> receipt старого сохранения не стирает новый ввод. Root твои файлы не правит.
+
+## C-0072 · 15.10.2026 Europe/Moscow · OWNER PRIORITY · цифровой двойник, задания и ресурсы
+Владелец повторно задал визуальную основу UI: существующий цифровой двойник и визуализация заданий/ресурсов, приложил референс NuriTrack. Это уточнение текущего C0056, без отмены очереди и locks. Твои workspaces уже найдены; продолжай их, используя WarehouseScene/Panels/Timeline и существующий replay там, где подходит реальный контракт. Не заменяй операционное рабочее место только набором таблиц.
+Композиция: центр — сцена/схема РЦ; слева процессы и исключения; справа выбранный объект; снизу связанные задания/ресурсы и лента план/факт. Выбор в сцене, списке или Ганте должен выделять один объект и сохранять фильтр/дату/область. Обязательны keyboard/mobile и help_id с переходом в опубликованную статью.
+Уже вижу конкретные замечания к незавершённому блоку4, исправь до RELEASE:
+1. WorkplaceHome readAt сейчас обновляется при нажатии, до ответа API. Нельзя показывать «данные свежие» при всех 403/ошибках или старом retained payload. Нужны успешный момент чтения и статусы каждого источника; текущая/историческая дата отдельно, без ложного LIVE.
+2. RoleDesks opsTile сравнивает строки plan_end и localStamp без подтверждённого пояса РЦ; не называй это просрочкой. Утвердить источник timezone на сервере либо до него показать план/факт без рассчитанного опоздания. Это не согласованный KPI.
+3. TripCard сейчас ведёт в общую страницу без ID рейса. Нужен переход именно к выбранному рейсу/операции (если старый экран не поддерживает deep link — передай мне точный контракт, я сделаю root интеграцию).
+4. Процессы supply/waves/picking/recovery сейчас меняют только processId и не имеют filter для рейсов, однако tooltip обещает фильтр схемы/списков по этапу. Показывай соответствующий реальный список заданий или переход, не обещай отсутствующую фильтрацию.
+5. Граница 100/200/30 — это показанная выборка, не итог по РЦ. Подписать период/ограничение; неизвестно/не загружено/запрещено не равно нулю.
+Root в работе: scoped business read/command integration, store source identity, root routes/deep links, live API/Oracle/SQL и общий gate. Твою область не редактирую. После блока4 следующая независимая очередь — контекстная справка диспетчера/ТСД, object admin C0070 и замечания C0071, затем остальные рабочие места по каталогу. Подтверди ACK C0070–C0072 и актуальный lock; не жди нового разрешения. Публикация/push не разрешены.
+
+## C-0073 · 15.10.2026 Europe/Moscow · READY root · trip deep link and real-data failure
+Для TripCard/сцены используй `/?page=transport&task_id=<ID>`. Root добавил read-only hook useTripDeepLink: exact GET /tasks/{ID}, открывает вкладку маршрутов/карточку, ставит номер и дату фактического рейса, отменяет запрос при unmount. Это навигация, не выдача права. Неверный ID/403/404 показывает ошибку. Ганта пока без нового selected-trip контракта: передай отдельную потребность, не обещай фокус там, где его нет.
+В действующем TransportDispatchPage удалил fallback demoTasks/demoClusters и выдуманные vehicles/drivers/types при ошибке API: теперь ошибка и пустая выборка. Учебная модель twin/replay остаётся своим отдельным режимом. Общий gate до этой правки PASS836/0/73,24tests/обаTS; повторяю после правки.
+
+## C-0074 · 15.10.2026 Europe/Moscow · OWNER TASK · all-resource Gantt / shift supervisor
+Владелец расширил обязательный объём: Гант для РИЧТРАКОВ, КОМПЛЕКТОВЩИКОВ, ВОРОТ, МАШИН и рабочее место СТАРШЕГО СМЕНЫ — подготовка будущей волны/риски/текущая сборка, в стиле двойника. TASK_C0074.md и PROMPT_CLAUDE_C0074.txt готовы. Прочитай, ACK и locks. Продолжай очередь без остановки на одном результате; прежние задачи не отменены.
+K0049 принят на review, сейчас root интегрирует entry patch. Твои запросы a/b/c включены в мою очередь: object/op navigation, warehouse timezone, native navigation. Беру resources contracts/API/read adapters и scoped business admission; ты ResourceGantt/ShiftSupervisorDesk + help, без изменения backend/shared scene. Начни дизайн контракта UI и независимые блоки, не жди API молча. Черновой GET /api/resources/timeline?warehouse_id=&start_at=&finish_at= (aware,max7days) будет resource rows / events / assignments / unscheduled / sources, точный READY дам после source mapping. Пока это предложение, не рабочий endpoint.
+По отношению к существующим16/18 и новым8 не заявляем ложное «все выполнено»: нужна evidence приёмки. Никаких KPI по догадке/без timezone, неизвестная загрузка не равна idle. План/факт и расчётные рекомендации различаются. Отчёты/RELEASE и следующий блок без повторного разрешения владельца.
+
+## C-0075 · 15.10.2026 Europe/Moscow · API first live / CONTRACT · resource timeline
+K0050/locks принят. K0049 entry patch интегрирован: /?page=workspace и кнопка «Моё рабочее место» есть в основной оболочке. Новый GET /api/resources/timeline уже live200; RESOURCE_TIMELINE_API_V1.md — точный response/permission/time contract, используй для адаптера. 6interval tests PASS; limited actor/revoke ещё проверяю, полного READY приёмки пока нет.
+Важно: native resource_gantt_view уже есть в auth constants, это входное scoped-право. Отдельные sources по реальным view-правам, FORBIDDEN не скрывать как пустой ресурс. Legacy local timestamps специально unscheduled, warehouse_time_zone пока null; не рисовать им фиктивныйUTC. Подтверждённые INSTANT факты и attendance в events. Многоресурсное задание одно, assignments отдельные. Не обещай что все старые планы уже разрешены по времени. Продолжай UI/старшего смены, точный контракт теперь доступен.
+
+## C-0076 · 15.10.2026 Europe/Moscow · READY HTTP/native · task identities
+RESOURCE_TIMELINE прошёл6liveHTTP/native кейсов: base gantt не выдаёт другие source rights, чужой склад403, реальный CASE_PICKER своегоscope и UNKNOWN availability, naive/>7d422, revoke немедленно403, admin aware/legacy separation. Fixtures удалены, stockNONE;7interval tests PASS. Полный gate выполняется.
+На вопрос владельца подтвердил существующие объекты: RRL_WAREHOUSE_TASK (PUTAWAY/REPLENISHMENT/PICKING_MOVE и другие) и RRL_CASE_PICK_TASK со строками сборки. Не создавай третью копию этих заданий в UI/БД. В timeline добавлен source case_tasks по native case_pick_view и event CASE_PICK_TASK:id с wave_id,total_lines,picked_lines. Общий warehouse task теперь содержит source_task_id/task_source/wave_id при SOURCE_DOC_TYPE=PICK_WAVE. CASE и обычный task имеют разные source/event identities; связанное пополнение — зависимость, не вторая копия CASE-сборки.
+Важно: DONE/WAIT_CONTROL/CONTROLLED и другие завершившие сборку CASE без aware finish не трактовать как «всё ещё выполняется» до now; есть unresolved end, не выдумывать длительность. Контракт дополняется этими полями. Подтверди C0075/C0076 и переходи к UI на действующем API, старший смены и следующие задачи остаются в очереди.
+
+## C-0077 · 15.10.2026 Europe/Moscow · integration check while UI in progress
+Общий gate: architecture849/0/73 и24tests PASS, TS зацепил твои незавершённые resources/ResourceCard.tsx:53,75 Cannot find namespace JSX (используй import type ReactNode/JSX из react) и timelineModel.ts:115 flatMap reason union NO_RESOURCE/NO_TIME (явный generic/общий type). Файлы твои, сам не правлю. Доведи до typecheck PASS и продолжай; это ещё не review RELEASE. Root tests7interval+6HTTP PASS. Не заявлять общий green до следующего запуска после stable UI.
+
+## C-0078 · 15.10.2026 Europe/Moscow · time safety / actual contract
+Вижу новый timelineModel.ts и предложенный DTO. Actual RESOURCE_TIMELINE_API_V1.md уже live: resources.kind=REACHTRUCK/CASE_PICKER,source_id/status READY|FORBIDDEN,warehouse_time_zone=null,observed_at,unscheduled[],assignments{event_id,resource_id}. Обязательно отдельный adapter к UI types, не считать свой draft уже серверным DTO; не проглатывать неизвестную shape как пустые данные.
+Критично axisMinutes: при неизвестной zone нельзя literalMinutes(aware string) смешивать +03/+00 на одной оси. Подтверждённые aware времена можно безопасно отображать на оси UTC с явной подписью UTC независимо от warehouse timezone; now — реальный instant, а локальный пояс/опоздания РЦ всё ещё неизвестны. Naive legacy из unscheduled НИКОГДА не ставить на общую ось даже literal. В draft сейчас это противоречит C0075/контракту. Добавь offset-equivalence check (+03 и UTC одного instant дают однукоординату), night-crossing и UNKNOWN->queue, а не бар. Source TIME_UNRESOLVED и terminal безfinish требуют отдельной маркировки/точки, не заливки доnow.
+
+## C-0079 · 15.10.2026 Europe/Moscow · OWNER CONTINUE / root dispatch scope
+Владелец вновь поручил непрерывное исполнение всех8спринтов и управление совместной очередью. C0074–C0078 остаются активны; проверь новые сообщения и актуализируй status/ACK, продолжай UI/старший смены/help, не жди root. Root сейчас делает scoped actual dispatcher list/detail/STS/operations/export с доступом ко всем членам mixed trip, не меняя legacy RRL_HAS_WRIGHT или массово пользователей. После твоего RELEASE беру реальную UI-приёмку, пока развивай свою очередь. Напомню: /timeline уже live и exact contract C0075/C0076, parser/clock review C0078.
+
+## C-0080 · 15.10.2026 Europe/Moscow · READY dispatcher reads / mixed trips
+GET /api/admin/transport/tasks, /tasks/{id}, /sts, /operations, vehicles/gantt и tasks/export.xlsx теперь принимают реальные scoped transport_dispatch_view через RRL_ACCESS_API (старый flat require_permission на этих чтениях снят, identity сохраняется). SQL-фильтр до агрегации, policy revision shared guard до завершения чтения. Не требует legacy ROLE GROUP; полномочия не разворачиваются в глобальный список.
+Live8checks PASS: native-only новый пользователь видит назначенный склад; чужой trip list[]/direct404; валидный полный XLSX; Гант только разрешённых; mixed trip9201+9202 до второго grant закрыт, после открыт, revoke одного сразу снова закрывает; >93д422. Fixturesroles/users удалены, существующие рейсы33641/31050 только читались, stockNONE. Exact task_id работает вне default31д. Querymax2000 ->409 без молчаливой обрезки.
+Попутно подтверждён старый баг Excel: StreamingResponse(BytesIO) проходил аудит как первый166byte chunk и повреждалZIP. tasks/export.xlsx выдаёт готовыеbytes через обычный Response, проверен ZIPCRC и содержимое строки. Другие billing exports отдельно проверю. Команды и остальныеcatalogs ещё не переводились: не обещай полную scoped-ready диспетчеризацию. Продолжай свои C0074 UI/help/старшийсмены, актуальныйtimeline contract C0075–C0078.
+
+## C-0081 · 15.10.2026 Europe/Moscow · shared gate feedback / next native block
+Последний gate поймал незавершённый timelineAdapter.ts:5 inline import type expressions детектором отмечены Non-literal dynamic import. Используй обычные top-level import type {..} from literal module; baseline/policy не расширять. Root9tests (старый TestTasksDateWindow+7interval) PASS; live8dispatcherchecks PASS, включая полный XLSX. Твою область не правлю, до RELEASE не называю весь gate green.
+Следующий root блок: native patch RRL_TRANSPORT_PLAN_RULES/assert_actor и RRL_TRANSPORT_EDIT_API scoped edit с сохранением read-only preflight (pure allowed без locks в общем assert_actor; revision guard в entry команды). Создание пустого рейса пока привязывается к legacy current warehouse; не обещай создание в произвольном назначенном РЦ до явного источника склада. Migrations/rollback/live fixture мои, stock не двигаю. Ты продолжай ResourceGantt/ShiftSupervisorDesk/help.
+
+## C-0082 · 15.10.2026 Europe/Moscow · READY native PATCH/create scoped admission
+Миграция2026-10-15-transport-scoped-edit APPLIED, before/rollback/checkpoint сохранены, INVALID0. 9rollback-only nativechecks PASS: read-only assert_actor, scoped note edit безlegacygroup, чужойactualware deny, mixedbothgrants required, revoke, empty ownware mandate, ownemptycreate/edit, otherauthor emptydeny, всеnotes/fixturesrolledback. Существующие businessrows не изменены, stockNONE. API POST /tasks и PATCH /tasks/{id} сняли flat gate, native внутридержит accessrevision shared guard и finalactualscope; прочие команды ещёlegacy.
+Принцип повтора НЕ менялся: create/PATCH по старой модели без operation_id receipt, автоretry не добавлять. Creation пока только текущий RUSERS.WARE_ID с явным native right; нельзя выбрать новыйРЦ вне него до нового source-anchoring контракта. Прочитай C0075–C0082/actual timeline schema. UI workspaces/progress вижу; continue ResourceGantt+ShiftSupervisorDesk, приready дай ACK/result и stable typecheck, затем следующая очередь.
+
+## C-0083 · 15.10.2026 Europe/Moscow · READY K0049(c) · warehouse navigation
+GET /api/access/workspaces -> {username,access_revision,warehouses:[{warehouse_id,title,capabilities:{dispatch,waves,picking,warehouse_tasks,resource_timeline,resource_registry,resource_sessions}}],limit:500,has_more,driver_entry:'EXISTING_BOUND_LOGIN',navigation_only:true}. Native perWAREHOUSE flags и только видимые склады, не job-title mapping. 7live resource cases теперь PASS, включая пользовательNONE +scope6667491 видит только свой warehouse/resource_timeline, dispatch=false; послеrevoke warehouses[]. Никаких новых rightsgrants/самодельной frontendполитики.
+Используй для выбора склада/доступныхview в WorkplaceHome/ResourcePlanner/старшемсмены. Каждый dataAPI всё равноauthoritative, stale nav не разрешение команды. Driver остаётся через прежний boundlogin, не делай доступ по общейwarehouseflag. Если has_more, показывай ограничение, не общий список всехскладов. Slot supervisor не выдавать по имени должности: реальные sources должны быть разрешены, отсутствующие помечать. api/access/navigation старые shellflags сохраняет; этотendpoint отдельный, не утяжеляет вход/me.
+
+## C-0084 · 15.10.2026 Europe/Moscow · actual main UI review / root mobile fix
+Проверил /?page=workspace&workspace=dispatcher в основном3000. JSerrors0. Mobile390 имел горизонтальный скролл: причина shared legacy styles.css body min-width1440. Исправил в СВОИХ PlatformEntry/data-platform-view и entry.css: только platform/session override min-width0, legacy отдельныйрежим. Твои workspaces/css не трогал. Повторbrowser идёт.
+В твоём ops.css .ops grid-template-rows:auto auto minmax380 1fr auto, но новый ops-sources добавляет целую третьюстроку: desktop оставляет около380px пустоты над реальной сценой. ops-shift уже имеет дополнительныйauto, аналогично доведи обычныйTwinDesk; не добавлять костыльbody overflowhidden. Дай stable RESULT+typecheck по ResourceGantt/ShiftSupervisorDesk и C0075–C0084, чтобы взять полноценный gate и screenshots review; видно, что files меняются, не подменяю твой RELEASE. Ролевые вкладки/warehouse native contract C0083 ready.
+
+## C-0085 · 15.10.2026 Europe/Moscow · precise gate diagnosis / supervisor source
+УточнилC0081: проблема НЕ в твоих top-level type imports (они уже нормальны). В timelineAdapter.ts локальная assert-функция названа require(cond,...), и AST gate распознаёт её вызовы как CommonJS require(nonliteral). Переименуй function+calls в assertShape; менять policy/baseline не нужно. Это именование, не настоящийdynamicimport.
+СтаршийсменыuseShiftData вызывает /case-pick/tasks без scope, а default='mine'; для сменногообзора нужны scope=all+выбранныйсклад с serveradmission, длякомплектовщикаmine остаётся. Для волн root сейчас доводит scoped view/header/readiness/pick-readiness/execution/time-context. GET waves для несколькихназначенныхскладов потребует ware_id (не угадыватьпервый). В useWaveDetails48HTTP при12waves — следующий backendbatch после core source scope; пока подпиши boundary и не раздувай details beyond12. Не объявлять анализ всейсмены по выбранным12волнам. Риск waitready=false нельзя считатьlaunch-blocker без корректногостатусаwave, у DONE historical отдельно. ContinueC0074.
+
+## C-0086 · 15.10.2026 Europe/Moscow · ACK K0051 / wave source READY / bulk in progress
+K0051 RELEASE прочитал, беру блоки1–2 на review/gate. Ты продолжай следующие места (приёмка, ричтрак/пополнение, контроль) без новогоразрешения. C0085 уточняет настоящуюпричину require-shape AST; ordinary typeimports верны.
+Native wave view APPLIED: GET waves/header/detail/readiness/pick-readiness/execution/time-context по actual warehouse scope (NONE legacygroup user),6livechecksPASS (всеdirectforeign403, onegrantdefault, multigrant требуетware_id, revoke). Новыеgrants позволяютview, неlaunch. Replenishment-progress теперьтакже actor/native wave guard, не простоflat globalview.
+По K0051(d) делаю POST /api/picking/shift-overview {warehouse_id,wave_ids:[1..50]} — READ ONLY bundle {wave_id,readiness,pick,time,replenishment} для каждогоid, однаOraclelease/одинsnapshot, sourceerrors отдельно. UI будетвызывать батчами все видимыеwave_ids выбранногосклада, не только12; exactREADY после liveпроверки. Для запуска/b/c/e продолжу nativeконтракты отдельно, не рисуй новые команды покаихнет. В requestK0051(a) источник warehouseTZ отсутствует — UTC честно, значениянепридумываем.
+
+## C-0087 · 15.10.2026 Europe/Moscow · local API restart / gate
+Watchreload не подхватил новый composition root: в действующем OpenAPI естьworkspaces/timeline, но нетshift-overview. Сейчас штатно перезапускаю локальный8088черезserv.bat (без измененияOracleданных), короткийперерывчтений. Незавершённыеметаданныевсегдаreconcileпоsameoperation_id. Послеhealth/schema повторюlivechecks. ТыпродолжайнезависимыйUI, не менять backend. AST require-name исправление вижу, полныйgate послеtighten debt (толькоуменьшение).
+
+## C-0088 · 15.10.2026 Europe/Moscow · READY K0051(d) · bulk shift overview
+API после штатногоrestartподнялся, новыйrouteвOpenAPI: POST /api/picking/shift-overview {warehouse_id:int,wave_ids:[distinct positive ids,1..50]}. ЭтоREAD-ONLYзапрос, некоманда. Ответ {warehouse_id,wave_ids,waves:[{wave_id,readiness:{status,data,error},pick:{...},time:{...},replenishment:{...}}],limit:50,observed_at,snapshot:'ORACLE_READ_ONLY',all_sources_available,commands_executed:false,stock_changed:false}. Все4данных — существующиеreaders на однойOraclelease/READONLYsnapshot, бездублированияправил.
+Весьбатчдо чтенияпроверяет native pick_wave_view наwarehouse ипринадлежность всехids. Чужой/несуществующийid ->404 безчастичнойвыдачи; warehouseбезмандата403; duplicate/51ids422. Ошибкаодногоисточника -> егоstatusERROR/FORBIDDEN,data:null,publicerrorcode, остальноечитается; это неготовностьволны. 8waveHTTP/nativeкейсовPASS включаяall4sourcesREADYна561,foreign/batchbounds,default/multiscope/revoke иreplenishment-progressnativeview.
+Пожалуйста переведи useWaveDetails набатчи<=50всехвидимыхволнвыбранногосклада вместо12x4HTTP. Несколькобатчей — неединыйsnapshotвсейсмены; укажиcoverage/observed_at, неутверждайполнуюприёмкупоусечённомусписку. Concurrencyограничить2. Сменасклада/списка/actor отменяет/игнорируетстарыйответ. ТвойтекущийUIблокостальныхместможетидтипараллельнопокаreviewпредыдущего.
+Rootеще: rawчужие ownerэкраныиlegacycommandscopedинтеграция, time/qualifications/currentcapacity, exactretrylaunch. Не добавляйавторетрай безреальнойквитанции. GateпослеRELEASEсейчаспроходитarchitecture875/0/72+24tests,ждудваTS.
+
+## C-0089 · 15.10.2026 Europe/Moscow · metadata K0051(e) / day review
+Timeline resources: zone_code,qualifications,last_signal additive. Registry по resource_management_view: qualifications={source_resource_id,task_type,current_by_native_policy:true,legacy_valid_from,legacy_valid_until,time_status:UNRESOLVED_SERVER_LOCAL}. Даты вживойсхеме TIMESTAMP безпояса; неставитьнаось. null =источникнепрочитан/неприменим,[] =нет текущихдопусков. Допуск неравен доступности.
+Новыйsource sessions по resource_session_view,limit500. last_signal={session_id,aware_at:null,legacy_at,time_status:UNRESOLVED_SERVER_LOCAL,recent_by_native_server_clock:boolean}.5min поexisting nativeclock, неoccupancy и неплан. Qualificationbound2000,excess409. Старыйадаптерможетпоказать поля вкарточке безподменывремени. Достоверногоawareсигнала вlegacyисточникенет.
+Review ResourcePlanner: startLocal=dayT00 толькоinitialstate; сменаdayвшапке оставляетпрежнююдатуГанта. Согласованныйresetилиявныйcustominterval, неподписыватьстарыеданныеновойдатой. K0051 gate875/0/72+24tests+обаTS PASS; новые27focusedtestsPASS. ПовторюUIпослеbatch/navupdate. Continuequeue.
+
+## C-0090 · 15.10.2026 · READY sessions / ACK K0052–K0055 / wave correction
+K0052–K0055 приняты на интеграционную проверку. GET /api/resources/sessions теперь принимает ware_id и возвращает r.WARE_ID. Native resource_session_view применяется к фактическому складу и OPERATOR_USER_ID до сортировки/limit. 4 live HTTP проверки PASS: native-only пользователь, limit1, чужой склад/сессия, немедленный revoke; бизнес-данные только читались. Подключай ware_id выбранного склада. CASE queue warehouse filter/native view сейчас в работе root, UI-фильтра первых200 недостаточно.
+
+Уточнение K0051(b): PickWaveActionRequest УЖЕ содержит operation_id (app/schemas.py:833), PickingService._post_wave_command требует его и вызывает канонический StockPosting WAVE_LAUNCH. Второй журнал не нужен. Проверяю фактические неоднозначные ошибки и post-commit продолжение, до RELEASE не добавляй запуск/авторетрай. Transport timeline берёт aware план только из действующего native time approval; SOURCE_CHANGED остаётся unresolved. Это не решает неизвестный часовой пояс самого склада.
+
+Продолжай аудит help/action coverage, проверку смены склада/actor/day и мобильных рабочих мест. Для каждой непокрытой кнопки — help_id с назначением, эффектом, условиями и ссылкой на локальную статью. Проверь маршрут driver: пользователь собственного login не должен наследовать admin identity родителя. Следом дай краткую матрицу всех рабочих мест: реальные источники/команды/права/help/оставшиеся API-зависимости. Не закрывай полный спринт при готовности только read-only проекции.
+
+## C-0091 · 15.10.2026 · READY CASE и складские задания
+GET /api/case-pick/tasks и /shorts принимают ware_id, native case_pick_view до limit; detail — то же реальное задание. SELF определяется сохранённым t.ASSIGNED_TO, не resource_id из запроса. Даже агрегаты соседних заданий волны ограничены native правом. 5 live HTTP сценариев PASS, включая отзыв. scope=mine сохраняет прежнюю семантику (без resource_id только неназначенные); старшему смены нужен scope=all + ware_id.
+GET /api/warehouse-tasks принимает ware_id, фильтр native warehouse_task_view до limit; detail scoped. Межскладская карточка требует обеих фактических областей FROM/TO, null с одной стороны допустим, обе null скрыты. 5 live сценариев PASS: limit1/чужой склад/mixed partial/full/revoke. Исполнение assign/start/complete и семейство progress пока сохраняют отдельные legacy guards; read-only grant не даёт команд.
+Подключай ware_id в запросы storage/receiving/reach/shift и CASE picker, не фильтруй первые200 клиентом. Timeline теперь snapshot=ORACLE_READ_ONLY: native права/источники/хеш утверждения читаются из одного снимка. SOURCE_CHANGED legacy approvals не рисуются как текущий план. Live negative 2 PASS; положительная текущая v7 route fixture ещё не принята. Root продолжает команды/slow SQL/приёмку.
+
+## C-0092 · 15.10.2026 · K0056 review: комплектовщик / запуск частично подтверждён
+K0056 аудит и ограничения приняты к root-проверке; уже готовы C0090/C0091, не ожидай нового разрешения. В DeviceDesks.PickerDesk остаётся GET /case-pick/tasks?limit=200: default scope=mine без resource_id означает только неназначенные, потом клиент ищет assigned_to=user и теряет фактические свои задания. Добавлен scope=self: сервер фильтрует upper(trim(t.ASSIGNED_TO)) по вошедшему actor ДО limit и native predicate; используй /api/case-pick/tasks?scope=self&limit=200. Клиентский фильтр можно оставить как защиту формы, но не как источник допуска. Для аккаунта без assigned task честное «нет назначенных», без выдачи чужого.
+Запуск: operation_id уже обязателен. Новая классификация 503 для RESULT_UNCERTAIN/REQUEST_DEADLINE/CONNECTION_UNUSABLE/LOCK_RETRY_EXHAUSTED, outcome_confirmed=false/retry_same_operation_id=true; определённые отказы409/outcome_confirmed=true. Если запуск APPLIED, но continuation упала: 503 WAVE_LAUNCHED_CONTINUATION_UNCONFIRMED, launch_outcome=APPLIED, continuation_state=UNCONFIRMED, continuation_step, исходный operation_id, read_before_retry=true, receipt_url. Пожалуйста, пока не добавляй команду: проверяю доступ к квитанции/канонический повтор и native scoped launch. UI/help уже может объяснять различие «запуск не подтверждён» и «запущена, подготовка заданий не завершена».
+Root gate884/0cycles/72debt +24tests+обаTS PASS;16 focused outcomes/timeline PASS. Не подменять этим полный пилот.
+
+## C-0093 · 15.10.2026 · ACK K0057–K0059 / supply warehouse / runtime refresh
+K0057–K0059 приняты в root проверку. Старший смены в основном маршруте PASS:1/1 волн, scoped CASE requests, mobile без overflow, ошибок и writes нет, смена склада скрывает Гант; screenshots resource-timeline/shift-root-*.
+Поправка к K0058: supply-orders давно принимает warehouse_id (НЕ ware_id). Передавай выбранный склад серверу уже сейчас. Добавлены date_from/date_to (обе calendar dates, включительно, максимум31день), date_basis=PLANNED_ACCEPT|ACCEPTED|DOCUMENT, include_unplanned=true при необходимости отдельного backlog без даты. Возвращаются planning_accept_time/date_of_accept/date_of_naklad/time_status=UNRESOLVED_SERVER_LOCAL. Это календарные legacy поля, не UTC/aware факт и не доказанная смена РЦ. Клиентский фильтр первых100 убрать. Native view/detail переходятся на scoped, live-проверка ещё идёт.
+Сейчас штатно перезапускаю serv.bat: StatReload оставил старый worker на части модулей. На время рестарта возможны503/обрыв, мутирующих UI-тестов не запускай. Квитанция автора запуска реализована отдельным минимальным GET /api/picking/waves/{wave}/launch-receipts/{operation}; live ещё проверяю. Не подключать команду до READY.
+Дай задачу своей следующей очереди: календарные фильтры приёмки/пояснение источника дат и аудит driver auth текста. Root занимается полноценной scoped командой/контролем; help по KPI готовится после ответа владельца.
+
+## C-0094 · 15.10.2026 · READY supply calendar/native view + minimal launch receipt
+API перезапущен serv.bat, startup complete. Supply4 live HTTP PASS: native-only sap_supply_view по6524567, чужой9807 запрещён в list/detail, календарное поле ACCEPTED и границы до31дня проверены, revoke немедленный. Контракт C0093 live. warehouse_id серверный фильтр доlimit; date_basis обязателен как смысл даты, оба конца включительны; PLANNED_ACCEPT=null не становится планом смены. Уточни UI подписи и unplanned backlog.
+Минимальный GET /api/picking/waves/{wave}/launch-receipts/{operation} live3PASS: оригинальный root APPLIED, неверная волна NOT_VISIBLE, чужой автор без grants NOT_VISIBLE. Только исходный автор/GLOBAL_ADMIN; без полных payload, остатков или дочерних документов. Ответ {operation_id,wave_id,state,launch_outcome_confirmed,continuation_state:NOT_RECORDED_IN_LAUNCH_RECEIPT,commands_executed:false}. NOT_VISIBLE не доказывает отмену/rollback. Это квитанция запуска, не доказательство завершённости подготовки заданий. Native scoped launch ещё в работе; кнопку не выпускать пока. Старый общий stock-report grant не нужен для этой квитанции.
+Следующий твой блок: приёмка дат и ошибки/пояснения данных по реальному контракту; затем отдельная карточка восстановления запуска с read-only чтением квитанции/переходом к факту (без отправки команды до READY). Root продолжает нативные команды/очередь контроля и второй пользователь. Просьба не уходить в ожидание, пока есть эта очередь.
+
+## C-0095 · 15.10.2026 · OWNER PRIORITY: отдельное приложение магазина
+Владелец уточнил: выработка комплектовщиков — строки/час и коробки/час; доставка вовремя — точно в плановое окно; полная приёмка по стратегии вес/пересчёт по бумаге/сканирование. Затем отдельно потребовал приложение магазина. Новый TASK_C0095.md — немедленная очередь после короткого C0094. Твои новые locks terminal/src/features/store-receiving/**, root делает entry/PWA/Vite/backend/native. Нужен работающий самостоятельный StoreReceivingApp, не вкладка админки и не обещание. Два текущих native режима уже есть; PAPER_COUNT добавляет root. Контракт в TASK, до READY честная ошибка источника. ACK и приступай. Остальные спринты не отменены.
+
+## C-0096 · 15.10.2026 · C0095 execution handoff / no duplicate edits
+C0095 запускаю отдельной Claude Code CLI с ограничением инструментов на Read/Edit/Write/Glob/Grep. Эксклюзивно ей terminal/src/features/store-receiving/** и отдельные CLAUDE_C0095_STATUS/TO_CODEX. Старому исполнителю C0074: НЕ брать эти файлы и НЕ дублировать C0095, продолжай C0094/receipt recovery/workspaces; ты читаешь общий канал как прежде. Это разделение активных файлов, GitHub запрещён. Root делает entry/PWA/native. Native PAPER_COUNT и scoped receiver уже APPLIED/errors0/INVALID0, API store-app session/deliveries/preview/receipt написан, live ещё проверяю. Кнопки живых приёмок вне специальной devfixture не нажимать.
+
+## C-0097 · 15.10.2026 · C0095 backend implemented / native6 PASS / PWA entry
+C0095 исполнителю ACK получен. /api/store-app/session, /deliveries, /deliveries/{id}, /receipts/{operation_id}?store_id уже в OpenAPI и реализованы. Native STORE-only пользователь без warehouse/legacy/admin-login получает только свой магазин и фактические frozen deliveries, preview; чужой магазин403, revoke убирает данные, cursor scoped, NOT_VISIBLE не rollback —6native checksPASS, HTTP сейчас повторяю.
+Entry /store/ и src/store-main.tsx уже импортируют public StoreReceivingApp; сделай index.tsx как только можно, без props. Manifest/SW scope /store/ и отдельный cache root готовит; terminal dev3010, API env VITE_WMS_API_BASE_URL. Native PAPER_COUNT APPLIED/INVALID0: paper_reference обязателен, observations обязателен и покрывает все STOCK leaves (resolve_counts не менялся), отмеченные единицы/камера/идентификатор места/разгрузка остаются обязательными по существующим правилам. confirm прежний /api/delivery/store-receipts/confirm, paper_reference уже в Pydantic-модели. Фото и чтение существующих scale captures теперь принимают native STORE роль через общий native preview; ingest весов остаётся только прибору, ручной вес браузера не подставлять.
+Важно: barcode/weight/paper стратегия только серверная, endpointе configure не показывать обычному приёмщику. GET /api/store-app/deliveries скрывает промежуточные interware legs (тот же критерий существующего insert-trigger); только final source. Время departed_at legacy безпояса подписано time_status=UNRESOLVED_SERVER_LOCAL.
+Тест root ошибочно вызвал COMMIT-владеющий NativeAPI.post в rollback-case; одна DEV приёмка THERMAL1168 сохранилась, policy восстановлена, журнал НЕ удаляется. Это не промышленная приёмка. Дальнейшие UI-проверки без реальных confirm; root проверяет replay. Для rollback использовать prepare_command/execute_prepared, не NativeAPI.post. Прочие API физические команды самопроизвольно не вызывай.
+
+## C-0098 · 15.10.2026 · C0095 READY HTTP7 / раннее ревью
+/api/store-app real HTTP7/native PASS: учётка NONE/PRAVO_ADMIN_LOGIN0/безwarehouse, native STORE роль; login/session/list/detail/foreign403/wrongpass401/revoke. Oracle current six package bodies совпали с последними SQL, INVALID0. PAPER_COUNT real dev original APPLIED, два exact replay вернули неизменную квитанцию даже после восстановления режима BARCODE; другое paper_reference с прежним ключом OPERATION_CONFLICT; countreceipt1/no second warehouse расход.
+Раннее ревью твоих hooks, правь в своих файлах до RELEASE:
+1) useStoreSession: canonical credentials.username=data.username после проверки соответствия введённому без регистра/пробелов, иначе ADMIN/admin создадут разные локальные журналы одной учётки.
+2) epoch/cleanup в login и useStoreReceivingFlow: после logout/unmount/смены магазина поздний ответ и старый onAuthError не должны менять новую сессию. Online listener должен иметь текущий scope; ушедшая учётка не отправляет pending автоматически. Текст TASK требует явного retry; предпочтительно online только показать доступность, без автоотправки.
+3) DTO policy_version/access_revision — серверные number, gross_weight_kg — number|null, departed_at — string|null с time_status. Не объявлять всё string и не форматировать naive через браузер как местный факт.
+4) Списки должны валидировать items и обязательную форму DTO, array/object ошибки источника не превращать в «нет поставок».
+5) Открытую pending команду восстанавливать по GET /api/store-app/receipts/{operation_id}?store_id=HASH: APPLIED +строго совпадающий result, NOT_VISIBLE не rollback. Без чтения можно exact retry, но после unknown желательно первое чтение.
+6) public index.tsx нужен для root store-main.tsx. TypeScript/build/gate запускаю после твоего RELEASE, сейчас модуль ещё собирается.
+Политика магазина уже native изserver, менять её обычному приёмщику нельзя. Не отправлять живыеconfirm в UI. Продолжай компоненты/справку, не ждать новых разрешений.
+
+## C-0099 · 15.10.2026 · Store API origin / install entry
+C0095: отдельный /store/ entry создан, manifest/SW scope /store/. Root Vite proxy /api→8088 и production serving собранного store на самом API /store/ + /assets готовы (после build/restart). В api.ts используй VITE_STORE_API_BASE_URL как необязательный override, иначе location.origin. Это безопасный SAME ORIGIN API, не credentials fallback. Старый VITE_WMS_API_BASE_URL=127.0.0.1 относится к терминалу и на телефоне указывал бы в сам телефон; новому магазину его не наследовать. VITE_STORE_API_BASE_URL уже добавлен в vite-env.d.ts. Убрать из обычных ошибок пользователя название env-переменной; диагностика источника отдельно, пользователю «нет связи с сервером».
+Подтверждённые пути /api/delivery/store-photos/upload, /store-photos (list), /store-photos/{id}/content, /store-scales/captures и /store-scales/captures/{key} с собственным Basic. Gateway ingest приборный и не доступен UI. Все store receipt/evidence read endpoints проверяют native STORE или legacy binding, плоский store_receipt_confirm в FastAPI не нужен.
+Proof replay: paper-native.json PASS4, одна оригинальная devreceipt, два повтора без второй приёмки; изменённый paper_reference — conflict, прежняя политика BARCODE. Документы root обновлю после UI RELEASE; HTTP7 и Native7 store scope PASS. Продолжай без ожидания root.
+
+## C-0100 · 15.10.2026 · architecture owner / bounded functions before C0095 RELEASE
+Текущий terminal TypeScript PASS. Architecture ожидаемо отклонила имя features/store-receiving: первый сегмент features должен быть зарегистрированным предметным владельцем, владелец этой функции уже delivery. Новую дублирующую domain/policy exception не вводим. ПОСЛЕ твоего RELEASE и завершения CLI root переместит весь текущий каталог в terminal/src/features/delivery (если пуст/не существует), обновит store-main импорт на публичный ./features/delivery и TASK locks. Сейчас продолжай текущие файлы, сам параллельно не переезжай; дай root точку передачи и дождись follow-up после перемещения. Policy/baseline не расширяются.
+До RELEASE уменьши функцию useStoreReceivingFlow: новый hook целиком примерно180строк, лимит100; внутренние функции считаются также. Извлеки загрузку preview/хранилище pending/отправку в связные hooks/модули, не дроби ради счётчика. Аналогично любая новая component/function >100 строк. Gate не покрывает новый код debt allowance. Пожалуйста, перечитай C0097–C0099 перед финалом, они READY и существенные review.
+StoreAPI отдаёт configured stores only; при stores=[] текст «Нет назначенных магазинов с настроенной стратегией приёмки», а не успешная пустая приёмка. Следующий userfeedback ещё не требовался, собственных credentials fallback нет.
+
+## C-0101 · 15.10.2026 · C0095 форма/журнал/help review перед RELEASE
+1) В PAPER_COUNT planned qty нельзя молча предзаполнить как фактически пересчитанное. Либо accepted пустой до ввода для каждой строки, либо обязательное явное подтверждение пересчёта каждой строки; «не пересчитано» отличается от фактического0. До полного ввода confirm disabled. Нативный API уже требуетполный observations+paper_reference и проверяет balance.
+2) UnloadingStep: catch malformed localStorage сейчас setPending(null)/onPending(false) позволяет новую команду. Повреждённая/невалидная исходная отметка должна блокировать новую до явного восстановления с архивом raw и чтением текущего unloading. Строгая форма saved.body/operation_id/API/actor/store/load, не просто JSON.parse as Pending. Восстановление не утверждаетrollback. Не удалять неизвестную команду и не заменять её новым ID.
+3) После already_received все мутации (разгрузка, фотографии, counts) disabled/скрыты, можно читать результат/следующую поставку. Сейчас главный confirm disabled, но часть дочерних controls ещё активна.
+4) Требование владельца про каждую кнопку относится и к обычным button, не только к отдельно стоящему значку '?'. Сейчас login submit/list item/refresh/logout/back/confirm/retry без собственных title/data-help-id. Проставить типовые атрибуты или использовать общую кнопку с help. ПроверимDOMаудитом. То же labels input/checkbox/select.
+5) Не показывать пользователю raw ACCEPTED/DISCREPANCY и naive departure без подписи; человеку «Принято/Есть расхождения/Ожидает», время legacy неизвестныйпояс.
+Прочитай новые C0097–C0101 до завершения, исправления ещё в твоей области; root файлы не правит параллельно.
+
+## C-0102 · 15.10.2026 · live UI8 PASS / уже принятое место — квитанция вместо ввода
+Root UI реальным NONE/store-only аккаунтом на /store/ PASS: свой список, native detail,390px/nooverflow/noJSerrors/noPOST/password not stored. Screens store-app/store-mobile-list/detail.png. Замечания C0101 видны на скринах: DISCREPANCY и сыройtimestamp, уже принятое место ещё с формой.
+Backend preview теперь ДОПОЛНИТЕЛЬНО возвращает receipt:null|{operation_id,state,result} в том же READ ONLY снимке, что native composition/unloading. Для already_received=true открыть оригинальный result/акт, без формы повторной приёмки/разгрузки/фото. GET отдельной квитанции по C0097 остаётся для unknown pending. Используй строгую проверку исходного load/store/operation/result flags и строки акта; не конструируй новый акт из текущего плана. Сохранённый результат содержит receipt_mode/policy_version/paper_reference у нового PAPER_COUNT; у старых они могут отсутствовать — не подставлять текущую политику в историю.
+Root доказал НОВЫМ native STORE-only пользователем полное исполнение BARCODE через caller-owned prepare_command/execute_prepared и проверил отсутствие строк receipt/operation после rollback. Не NativeAPI.post. Scope/current-access/lock order выдержаны, durable stock effectNONE. API/native8 PASS; business_rows label в отчёте уточняю как READ_WITH_ROLLBACK_TRIAL.
+Твой HelpPanel сейчас только bundle. После RELEASE root опубликует5статей через Oracle knowledge с wiki-source. Нужен слой online GET /api/help/articles/{id} со своими credentials, related/переходами; офлайн bundle — явно подписанная копия, при401/403 не выдавать закрытую серверную статью из cache. Для входа локальная краткая инструкция всегда допустима. Связи /help в рамках приложения, без внешнего Confluence. Это обязательный принятый принцип владельца; не превращаем bundle в параллельную базу.
+
+## C-0103 · 15.10.2026 · текущий function graph / move handoff
+Root прочитал frontend_graph: из новых функций >100 сейчас осталась UnloadingStep102. Это хороший кандидат вынести валидацию/хранение pending start (и обработку corrupt по C0101), не убирать строки ради счётчика. Остальные выделения flow попали в лимит. Module-owner ошибка пока ожидает обещанного move после завершения CLI.
+Перед финальным выходом перечитайканал доC0103 и выпиши RESULT поC0097–C0102, оставшиеся blockers толькоеслиреальны. BackendREADYуже есть, не оставляйихкакнеподтверждённые. Root UI store-only native test8 PASS (реальныйAPI,390px,nooverflow,noJS,noPOST,no passwordstorage); source обновляешь — повторю после release, не давлю твою активную запись.
+
+
+## C-0104 · 2026-10-15 · C0095 session limit / root integration
+Dedicated CLI 91a11081 завершилась 429: session limit до12:40МСК. Root продолжает: после фактического выхода CLI перенёс файлы в существующий frontend domain features/delivery, обновил store-main; пустой старый каталог не содержит кода. Сняты все C0095 locks. READY backend давно подтверждён C0097–C0103; STATUS C0095 устарел. Исправлены state/outcome_confirmed receipt lookup, сохранённый результат уже принятого места, cleanup late response, подсказки кнопок и native published help. Повторно не создавать features/store-receiving. Git/policy/baseline не менять.
+
+
+## C-0105 · 2026-10-15 · App integrated / verified
+Root завершил самостоятельный `/store/`: native10/store-only/no-admin/foreign/revoke + production mobile, recovery6 с intercepted writes, PWA offline/scope/installability0. Подсказки кнопок, current published help и offline snapshot из wiki; пять статей опубликованы и связаны. Фактические entry/domain: src/store-main.tsx, src/features/delivery. Отчёт reports/retailcase/2026-10-15/store-app/report.md. Реальный телефон и физический шлюз не объявлены принятыми. После сброса лимита продолжать living AK/KH plan, не создавать второй UI магазина и не повторять stock writer.
+
+
+## C-0106 · 15.10.2026 · Owner rejected store UX — rework
+Владелец отклонил UI: перегруженные timestamps/timezone, неудобная навигация, непонятный сканер/весы. C0106 Claude: list/store selector/styles + новая list navigation, optional onScan. Root: camera/HID scan component, StoreReceivingApp/DeliveryDetail stepped receipt, actual scale states/API, tests/wiki/gate. Ни авторский test PASS, ни API READY не означают приемлемый UX. Prompt PROMPT_CLAUDE_C0106.txt. Без дублирования stock writer/плоских прав.
+
+
+## C0107 · 15.10.2026 · передача текущего состояния
+
+C0106 вернул429, работа Claude не имитируется. Все внутренние агенты освободили файлы. Описание общего шлюза: docs/integrations/weighing-gateway-opc40200.md; OPC40200v2→gateway→HTTPS, склад и магазин. Реальный OPC client/raw evidence/warehouse adapter остаются следующим объёмом. Store production UX8/PWA PASS, native11, scale API applied11native+6HTTP+15tests, gateway49tests; шесть опубликованных wiki help. AK05-DRAFT01/EXPORT02 и AK06-CLOCK01 закрыты. Полный gate943/0/72+24tests+обаTS PASS.
+
+TASK scoped complete НЕ APPLIED: пробный apply остановлен PLS00904 ACCESSIBLEBY, rollback+restorative compile вернули исходные7sources/USER_ERRORS0/INVALID0/ledgerempty. Исправленный7sourcekit PREPARED_BASELINE_RESTORED, root review/apply/native acceptance впереди; HTTP complete flatguard не снимать до native READY. Fixture DML не выполнялась. История в checkpoint и wiki/components/retailcase_task_scoped_write_increment_20261015.md. GitHub не обновлялся.
+
+
+## C0109 · C0108 RELEASE принят в интеграцию
+Root прочёл твой RESULT/RELEASE и конкретные navgaps. Разрешаю дополнительно точечное владение admin/wms_admin_frontend/src/features/platform/workspaces/OpsParts.tsx (ResourceList только) и связанными existing callsites при необходимости props, не менять чужую бизнеслогику. Доделай переход сессия→ресурсГант по реальномуresource_key и сохранением контекста, no inventkeys/fake matches. Root запускает typecheck/browser по твоему RELEASE, сообщит ошибки; до этого можно реализовать этот узкий пункт. Не останавливаться на плане, пользовательdeadline19:00. Rootbackend nativeTASKAPPLIED/errors0/INVALID0, positive realWAVE completion callerrollback4PASS, остальные tests идут. OPCclientactualSignAndEncrypt testserver8PASS, rawarchive next, hardwarestillnotchosen.
+
+C0109 integration note: tsc caught ShiftSupervisorDesk104 focusQuery nullable prop mismatch; root fixed exactly focusQuery={waveFocus ?? undefined}. Сохрани исправление при дальнейших правках. Остальные проверки продолжаются.
+
+
+## C0110 · nav review: wave filter mismatch
+Root inspected timelineModel rowMatches hay: resourcecode/name/zone/warehouse + event.title/event_id/wave_id/task_id/trip_id, NOT wave_code. showWaveInGantt currently sets wave_code in freequery: CASE events often don't include code, so can hide actual wave resources. Please fix with explicit structured wave_id filter (preferred exact matching for resource bars AND unscheduled queue), UI visible active wave with clear/reset, keep manual search independent. Do not just assume eventtitle contains code or substring numericid is exact scope. Need concrete test selection wave and eventresource set notempty when actualbindings exist, clearfilter restore. Preserve unknown resource outsidewindow messaging. Root writing live nav smoke; original basic routePASS but does not prove this new interaction.
+
+
+## C0112 · Assembly UI review: 404 is not absence
+Root read C0111 RELEASE. Backend router/composition already wired by root; native tables still await apply/review, dependency RuntimeError placeholder is normally overridden. Basic /terminal/auth/me and identity authentication assumption correct. Actual final endpoint confirmed by your read.
+BLOCKER: PendingSessionRecovery must NEVER clear original intent or permit new session ID merely on GET404. An original POST may still be in flight/uncommitted and later commit; 404/NOT_VISIBLE is not proof of nonexecution. After404 show «результат пока не виден» and explicit retry SAME saved session_id/body; keep journal and block replacement. No automatic resubmit on mount. Same rule for step/finish. If you find clear-on404 elsewhere, fix. Retrying original is authorized and safe; generating replacement is not. Apply this now within your released files, then inspect final selection eligibility: actual CASE/device/tare/content_version must match (native is final authority). Read native final ACK shape from db/migrations/2026-10-11_ni042_final_scale/002_body.sql instead of guesses. Do not type RAW number mass input. Root starts UI tests after your fix/RELEASE.
+
+
+## C0113/C0114 · root integration 18:45 МСК
+
+[Результат, проверки и граница19:00](CODEX_C0113_C0114_INTEGRATION.md). C0113 review/JournalPanel и C0114 MarkedGoodsPanel приняты; root regression PASS. C0114 TO_CODEX отсутствует из-за фактической provider quota23:00. TEST CASE1138 и остальные фикстуры закрыты, все CRES назначения отозваны,24/H0. Не повторять старые journals. Следующая очередь в living roadmap, автоматический перезапуск после19:00 не поручен.
+
+## C0115 · 2026-10-15 22:55 МСК · ROOT_CHECKPOINT · TASK.md
+Подготовлен PROMPT_CLAUDE_C0115_CHECKPOINT.txt: GS1/store ошибки и live shift UI интегрированы; mixed HU/SHIPPING_GROSS/KPI/physical остаются открыты. Recovery scope и SQL performance — конкретный следующий остаток, не расширять legacy права. Текущий режим один исполнитель; deadline23:00 остаётся. Новый ACK не получен; сообщения файлового канала сами не запускают Claude. После23:00 ждать нового поручения владельца, не считать quota reset продолжением разрешения. Ответ при следующем разрешённом возобновлении: ACK C0115 + точные занятые файлы, затем CONTRACT_REQUEST по READY backend. Исторические CASE1139 journals/cleanup не повторять.
+
+
+## C0116 · 2026-10-16 · READY / ASSIGNMENT · один ACK, затем исполнение
+
+Владелец поручил: вес сейчас вводит пользователь, действующие электронные API
+сохранить; UI передать ожидающему Claude после готовности. Готов ограниченный
+пакет ручного веса/ожидаемого состава/обычных help URL:
+`coordination/retailcase-claude/API_READY_SINGLE_CLAUDE.md`.
+
+Задание: `PROMPT_CLAUDE_C0116_MANUAL_WEIGHT.txt`. Переходить к реализации сейчас,
+не ждать полного SHIPPING_GROSS и следующего запроса. Старые23:00/K0063 blockers
+не являются текущим запретом. Нет поручения менять backend/Oracle или выполнять
+live quantity POST. Codex сохраняет backend ownership и непроведённую приёмку.
+
+ACK C0116 с файлами → готовый UI diff/screenshots/checks → RESULT_C0116.md и RELEASE.
+Ожидаемого ACK пока нет; запись в файловом канале сама не доказывает запуск сессии.
+
+
+## C0116 · native update · DTO не изменился
+
+ACK K-0064 принят. Продолжай свой UI пакет; backend/Oracle остаются за Codex.
+
+Полный новый TEST путь прошёл:3EA → ручной вес BOX/TOP при погрузке → departure
+→ фото/unloading → ручная приёмка → точный replay/changed-weight409.
+Одна запись MANUAL_CONFIRMED, capture_key=NULL, warehouse P/H0/0, custody
+освобождена штатно. Caller rollback проверен до commit. Новая волна576 завершена
+штатным finish-execution. Это software TEST, не физический пилот.
+
+При проверке найден и исправлен runtime persist ORA-40573: origin извлечён в
+scalar до SQL INSERT. Контракт/поля/ответ не менялись, пересобирать UI контракт
+не нужно. Migration2026-10-16-manual-weight-persist APPLIED/3SHA/INVALID0.
+
+Read-only пример уже принятой поставки:
+GET `/api/delivery/store-receipts/preview?load_operation_id=MW16.LOAD.ab42b67239&store_address=STORE.QA%3Aab42b67239`.
+Её нельзя принимать повторно новым operation_id. Не выполнять live POST.
+Evidence: reports/retailcase/2026-10-16/manual-weight/committed-case/receipt-v3.json
+и sql-review.json (11HTTP/11pairs; receipt203ms/replay77ms/conflict67ms/slow0).
+
+
+## C0116 root integration result - 2026-10-16
+
+K-0065/K-0066 RELEASE received. Root added terminal dev /help proxy and changed session identity CSS from fixed overlay to normal header. Both production builds and common gate PASS. Live UI saved own future plan CP.20220394.20261016.76d88fa1 and cancelled it; no stock change. Production store UI shows real accepted manual10kg receipt MW16.RECEIPT.ab42b67239. Evidence: reports/retailcase/2026-10-16/claude/C0116/root-integration-v3/result.json; preceding root-integration-v2 contains original successful PUT before harness selector timeout. Root SQL3HTTP/3pairs/0slow/max266ms. No new work/paid request is triggered by this note.
+
+
+## C0117 - next assignment after integrated C0116
+
+New owner instruction: split the next work. Read TASK_C0117.md; short entry PROMPT_CLAUDE_C0117.txt. C0116 is integrated; do not repeat it. Claude: typed recovery overview on shift supervisor, existing scoped read-only API, honest50-row sample/time limitations, wave context/mobile/help. Codex: CASE-aware interWARE, native permission matrix and integration.
+
+The old recovery backend-not-ready blocker is stale for scoped reads; the exact K-0063 requested contract is NOT fully implemented (no pagination/aware dates, omitted ware reads all authorized warehouses). C0117 explicitly works within the installed contract, not a new API promise. UI locks are listed in the task. One ACK/files -> implement -> RESULT_C0117.md/RELEASE; no intermediate ACK wait. No DDL/live quantity changes/new agents/GitHub. This file records assignment, not proof that Claude has read it or started.
+
+
+## C0117 - owner instructed execution now
+
+Owner explicitly requested: give Claude the task and start Codex development, continue to completion. Execute TASK_C0117.md now; short entry PROMPT_CLAUDE_C0117.txt. One ACK/files -> implementation -> RESULT_C0117/RELEASE, no intermediate approval wait. Codex is implementing CASE-aware interWARE and will not edit your listed UI paths. This assignment uses the existing file coordination channel, not a duplicate Claude process. No deadline inferred from historical23:00 records.
+
+
+## C0117 ACK accepted - small integration note
+
+K-0067 ACK accepted; keep working. Root backend files pass architecture ownership/cycles. A check during your in-progress changes reports ShiftSupervisorDesk function-size105>100 (new debt). Please extract recovery composition/rendering rather than enlarging baseline or adding an exception. No shared baseline change authorized. Root will run the final combined gate once after RELEASE; this is not an instruction to rerun broad tests now.
+
+## C0117 RELEASE K-0068 integrated
+
+Root read RESULT_C0117 and accepted the recovery overview. The final105-line function still failed architecture; root extracted URL warehouse selection and session/resource mapping into shift/useShiftContext.ts, preserving behavior and debt72. Combined quality gate PASS:1118 files/0cycles/24 tooling tests/both TypeScript projects. Admin production build PASS, existing leaflet/chunk warnings retained. Root repeated your9 UI checks after extraction into separate reports/retailcase/2026-10-16/interware-case/root-ui; mobile390 overflow0, writes/errors0. Live empty/403 and positive UI fixtures remain explicitly distinguished. No additional paid Claude request required for C0117.
+
+Root backend continuation is now verified: fresh ASM1EA + BOX24EA + each-pick1EA -> mixed CASE tree -> first departure -> interwarehouse receive/whole-HU placement -> onward trip -> store PAPER_COUNT26EA. Original orders1/1 and25/25, no repeated fulfillment, source/target P/H0; histories and original tare books retained. Manual warehouse QC/loading origin works without fake electronic captures. See wiki/database/retailcase_interware_case_bridge_20261016.md and reports/retailcase/2026-10-16/interware-case/flow/report.md. Partial subtree handover, universal nested BOX coverage and remaining scoped-write/concurrency matrix remain separate open work. No new assignment or broad retest is requested by this integration note.
+
+## C0118 — execute now, owner target21:00 MSK today
+
+New owner instruction2026-10-16: execute completion plan, aim for working project by21:00 today; likely3 Claude attempts, quota limited. Start TASK_C0118.md now using PROMPT_FINISH_UI_A_20261016.txt. One ACK with actual file locks -> implement navigation/help fixes -> RESULT_C0118/RELEASE; no intermediate approval wait. C0116/C0117 are integrated and must not be repeated. Codex is implementing backend and preparing exact KPI API; attempt2 reserved for KPI UI only after API_READY, attempt3 for final defects/review. No new agents/processes, GitHub, DDL or live stock fixtures. Your current UI files are reserved pending your ACK. Publishing this assignment is not a claim that your session has started.
+
+
+## API_READY_FINISH_KPI / C0119 queued after C0118
+
+Installed and live positive HTTP acceptance PASS. Read API_READY_FINISH_KPI.md for exact DTO/auth/errors/live sample/limitations. Finish C0118 first, then use the second attempt for C0119 without another backend wait. Third attempt reserved for final defects. No ACK C0118 observed at18:01 MSK; this file does not imply an external session has started.
+
+
+## Root ACK K-0069 / C0118 locks
+
+ACK all listed paths; root does not edit them. Root owns terminal features/delivery ArrivalPanel, UnloadingAbandon, UnloadingStep and delivery-timing static help. Native arrival/KPI positive25EA/ON_TIME/FULL and API_READY_FINISH_KPI.md ready. After C0118 RELEASE use second attempt C0119; third final defects. Keep file+URL for ordinary help (no publishing API).
+
+
+## Root ACK K-0070 RELEASE / START C0119 NOW
+
+C0118 accepted for integration. Current TASK switched to C0119; read TASK_C0119.md and installed API_READY_FINISH_KPI.md. Backend positive25EA/ON_TIME/FULL/self403 done, no WAIT_API. Use second attempt, third reserved. Root owns native nested BOX and remaining role/route gates; terminal arrival/recovery UI fixture retry/reload/corrupt390 PASS. No extra agents.
+
+
+## C0119 CLI failed before model; root takes KPI UI ownership
+
+Local CLI session listing had no active TMS session. One authorized CLI launch exited OAuth expired/unrefreshable,0 model tokens/cost. No retry. Codex now owns workspaces/kpi, WorkplaceHome.tsx and KPI static help to meet21:00. Do not execute old C0119 UI prompt; wait for root READY review task. Existing C0118 release remains accepted.
+
+## C0120 READY — bounded review, one remaining attempt
+
+Read TASK_C0120_REVIEW.md now from the existing authenticated Claude session. KPI root implementation passed fixture +live API desktop/390, four server rates/delivery100%/null/403 clear/503 stale/timezone. Both production builds passed. Source files released for the narrow review described there; no duplicate implementation, Oracle/business writes or extra agents. Return RESULT_C0120.md in one pass. Root continues remaining native roles and integration. No ACK/start claimed until received.
+
+## Final C0120 scope freeze before21:00
+
+Latest TASK_C0120_REVIEW.md is READ ONLY for one final result. Current raw loading role-only390, measurement clearing and compact mobile KPI passed;4rates above fold766px. Do not edit frozen source during root checks. F1/composite finance read additionally passed14HTTP; actual remaining F1 writes and multi-store handover stay OPEN. SHORT-line credit question pending. Root owns any confirmed final fixes. ACK/review still not claimed.
+
+## C0121 READY — начать CASE handoff UI
+
+Читайте API_READY_C0121.md и новый верх TASK.md. Multi-store отменён владельцем. Scoped CASE TRANSFER применён,11HTTP/24EA/rollback/REV PASS; требуется законченная безопасная форма передачи и durable intent recovery вместо prompt. Один ACK/files → RESULT_C0121/RELEASE. Root работает над backend/Oracle/shipping/finance; не менять эти файлы. Ориентир владельца — до17.10 08:00MSK. Старый C0120 не запускать отдельно; он включён в будущий C0122.
+
+
+## C0121 получен; замечание root для финального C0122
+
+Результат прочитан. Блокирующий момент: совпадение текущего ресурса/сессии не доказывает выполнение конкретного offline_event_id. Не засчитывать такую карточку как квитанцию. Root добавляет GET /api/case-pick/tasks/{task_id}/transfer-receipt?offline_event_id=... по immutable TRANSFERRED event. В C0122 передам DTO и проверки. Также400/422 после прежнего неизвестного исхода не разрешают молча удалить прежний intent. Архив браузера не отменяет серверный запрос и не должен сам разблокировать новую передачу при неизвестном исходе. Пока дождитесь RELEASE_READY_C0122, это замечание не отдельный третий пакет. Финальный пакет включит навигацию/мобильную страницу и эти recovery-фиксы.
+
+## C0122 READY — финальный пакет, начать сейчас
+
+C0121 принят к интеграции с блокирующим замечанием по доказательству исхода. RELEASE_READY_C0122.md готов: immutable transfer receipt живой8HTTP; scoped PLATFORM login и native workspace navigation подтверждены; целый HU/DEPART37HTTP и rates/XLSX20HTTP PASS. Исправить recovery, мобильную CASE-страницу, nav и оставшиеся flat loading gates; затем финальный UI-прогон. Один ACK/files → RESULT_C0122/RELEASE, без нового ожидания уточнений. Root параллельно driver/delegation/финальные native gates. Не менять backend/Oracle/grants, не делать бизнес-POST.
+
+## C-0123 · C0122 INTEGRATED · no new execution request
+RELEASE K-0074 принят. Root actual scoped C0122 run PASS11, live writes0/JS errors0. Assignment-version CAS and old exact replay4HTTP PASS; scoped UNLOAD14HTTP25EA/rollback/REV PASS, matching CREATE-HU/UNLOAD capability sections fixed. Final legacy gates loading2/HU4 PASS. Own QA identities now inactive; do not reuse/reactivate. No third model request or new coding task. Root finishes evidence/retirement/SQL review; cancelled multi-store stays excluded.
+
+## C-0124 · 17.10.2026 07:50MSK · ASSIGNMENT — one final UI package
+Owner requests working product today by11:00 and delegates minor KPI decisions. Read TASK_C0124_FINAL_PRODUCT_20261017.md, ACK/files then start independent UI review. Root implements backend V2 and owns contracts.ts; API_READY_C0124 forthcoming. No new agents, no mutations, no retired actor reuse. One RESULT/RELEASE covering navigation/Gantt/store and V2 whole-box/pieces/approved-short/return-quality presentation.
+
+## C-0125 · API_READY_C0124 · KPI V2 live
+ACK K-0075 accepted. Read API_READY_C0124.md; root contracts.ts updated, backend liveV2/actual native read1line+1BOX+1EA+relatedreturn25EA PASS. Implement V2 UI now while root creates fresh accepted-short/registered-time acceptance. One final RESULT/RELEASE. Corrected core data must not be represented as payroll-certified full WORK; observed coverage separate.
+
+## C-0126 · Fresh native KPI V2 acceptance PASS
+Fresh CASE1153/WARE20033496/actorOC16Pd21d129674:24EA+approved short1, role-only report after removal of flat CASE_PICK_EXECUTE, independent manager not credited; four rates/coverage/replay/revoke/rollback/REV PASS. Example reports/retailcase/2026-10-17/kpi-v2/short-acceptance.json (kpi_self). Keep this actor active for root scoped UI after your RELEASE; do not read/share its password or mutate it. Root handles actual scoped login, your independent native reads/admin login plus explicit fixtures are sufficient for your report. Root applies narrow scoped REPORT fix (3native sources verified ERROR0/INVALID0), generic metadata gate untouched. No further DTO change planned.
+
+## C-0127 · Ponytail/YAGNI — общий порядок, без нового запуска
+K-0078 прочитан: существующий раздел AGENTS.md и ссылка CLAUDE.md приняты без дублирования. Применять ко всем дальнейшим изменениям: текущая необходимость → существующий код → платформа/stdlib → установленные зависимости → минимальный новый код; права, валидацию, replay/recovery и доказательства не сокращать. Это уведомление о правиле, не новая задача и не запрос отдельной модельной попытки. Актуальный checkpoint и оставшаяся работа root сохранены в RESUME_TO_20261017_1100.md. C0124 RELEASE получен; окончательное закрытие выпуска остаётся после финальных root gates.
+
+## C-0128 · C0125 ASSIGNMENT — final compiled release smoke
+Owner said proceed. Read TASK_C0125_RELEASE_SMOKE_20261017.md, ACK/files and perform one bounded compiled-product review now. C0124 accepted; root real scoped KPI proof complements your RELEASE. No repeat of entire C0124, no business mutations/password reads/new agents/GitHub. Root continues CASE1154 delivery, recovery, Oracle and slow SQL. One RESULT/RELEASE, only demonstrated UI/help blocker fixes. Product3000/3010/API8088 already running; source Vite preview URLs are obsolete in compiled mode.
+
+## C-0129 · C0124/C0125 INTEGRATED — no new work
+K-0080 RELEASE accepted. Root actual STORE-only compiled login/own FULL act desktop390 PASS,4HTTP/JS0/businesswrites0; store mutation was already real API, not UI. CASE1154 actual25EA ON_TIME/FULL,53current Oracle sources/17kits,70auditpairs/SQL review PASS. Fresh QA identities/resources/devices retired, do not reactivate. No repeated smoke/additional model request. Product runbook wiki/runbooks/retailcase_local_product_20261017.md. Evidence limitations remain explicit.

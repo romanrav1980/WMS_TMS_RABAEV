@@ -1,0 +1,28 @@
+{
+  "captured_at_utc": "2026-10-15T17:43:05.901011+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_PICKER_TIME_READ",
+      "type": "PACKAGE",
+      "file": "rrl_picker_time_read_package.sql",
+      "errors": [],
+      "user_source_sha256": "5ce23918c16a3ab6fdc8d4b1f13f5c7aed060749ce70a94dcaffb8528aa122e8",
+      "normalized_source_sha256": "f538a83783a601db16d5a3d840797cd775acb7a99ea73fac300a81bba8db1bb5",
+      "artifact_sha256": "c508676dad7b7d40ef5d2bc59bec6f1d5f5e56b16dd9b8743207b74c7bc1f0ca"
+    },
+    {
+      "name": "RRL_PICKER_TIME_READ",
+      "type": "PACKAGE BODY",
+      "file": "rrl_picker_time_read_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "6c3cc6c6f0d20e393ade477ec0268c35f26a1ed75aca49ce67d13f2734510e2b",
+      "normalized_source_sha256": "f306322333fb5f81654c32b0f92830fae3623674121d853cffe2d5d3d0848487",
+      "artifact_sha256": "8bd96e66864e31832b8ed11dcf0eb26e508a8f67d6dffa5245e631f9d68be3a1"
+    }
+  ]
+}

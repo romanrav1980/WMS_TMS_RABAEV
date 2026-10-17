@@ -1,0 +1,155 @@
+{
+  "state": "PASS_CURRENT_ROLES_INDEPENDENT_FINANCE_NATIVE_ROLLBACK_ONLY",
+  "commands": {
+    "AUTHOR.ROLE": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.IND.AUTHOR.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "DD16.a7bc0b7073.IND.AUTHOR",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "edit_bill_tt",
+            "expense_finance_approve",
+            "expense_logist_approve"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.IND.AUTHOR.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "DD16.a7bc0b7073.IND.AUTHOR",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "AUTHOR.ASSIGN": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.IND.AUTHOR.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "DD16.a7bc0b7073.IND.AUTHOR.WARE",
+          "username": "DD16Ma7bc0b7073",
+          "role_id": "DD16.a7bc0b7073.IND.AUTHOR",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20902283",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T19:03:56.644817+00:00",
+          "valid_until": "2026-10-16T21:04:56.644817+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.IND.AUTHOR.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "DD16.a7bc0b7073.IND.AUTHOR.WARE",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "APPROVER.ROLE": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.IND.APPROVER.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "DD16.a7bc0b7073.IND.APPROVER",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "expense_finance_approve",
+            "expense_logist_approve"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.IND.APPROVER.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "DD16.a7bc0b7073.IND.APPROVER",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "APPROVER.ASSIGN": {
+      "wire": {
+        "operation_id": "DD16.a7bc0b7073.IND.APPROVER.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "DD16.a7bc0b7073.IND.APPROVER.WARE",
+          "username": "DD16Da7bc0b7073",
+          "role_id": "DD16.a7bc0b7073.IND.APPROVER",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20902283",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T19:03:56.644817+00:00",
+          "valid_until": "2026-10-16T21:04:56.644817+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "DD16.a7bc0b7073.IND.APPROVER.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "DD16.a7bc0b7073.IND.APPROVER.WARE",
+        "version": 1,
+        "replayed": false
+      }
+    }
+  },
+  "checks": [
+    "AUTHOR_WITH_BOTH_ROLES_CANNOT_LOGIST",
+    "LOGIST_WITH_FINANCE_ROLE_CANNOT_FINANCE",
+    "AUTHOR_WITH_FINANCE_ROLE_CANNOT_FINANCE",
+    "SEPARATE_LOGIST_FINANCE_APPROVE",
+    "OUTBOX_ATOMIC_NOT_EXTERNALLY_VISIBLE",
+    "CALLER_ROLLBACK_NO_EXPENSE_DECISIONS_OUTBOX_OR_CATALOG"
+  ],
+  "stock_effect": false,
+  "financial_recognition": "ROLLBACK_ONLY_NOT_COMMITTED",
+  "article": "DD16.A7BC0B7073.IND.EXTRA",
+  "expense": "DD16.a7bc0b7073.IND.EXP",
+  "event": "FIN:43c1eaba81dff23a006a1161abeab27c9a0f4352b72664f3239d11269df7ca6e",
+  "catalog": {
+    "code": "DD16.A7BC0B7073.IND.EXTRA",
+    "name": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+    "scope": "TRIP",
+    "included_in_rate": false,
+    "active": true,
+    "version": 1
+  },
+  "report": {
+    "operation_id": "DD16.a7bc0b7073.IND.EXP",
+    "status": "REPORTED",
+    "object_kind": "TRIP",
+    "object_id": 33657,
+    "amount": "1.00",
+    "currency": "RUB",
+    "warehouse_id": 20902283,
+    "stock_changed": false
+  },
+  "logist": {
+    "operation_id": "DD16.a7bc0b7073.IND.LOGIST",
+    "expense_operation_id": "DD16.a7bc0b7073.IND.EXP",
+    "status": "LOGIST_APPROVED",
+    "phase": "LOGIST",
+    "basis": "BASE_QUANTITY",
+    "stock_changed": false
+  },
+  "finance": {
+    "operation_id": "DD16.a7bc0b7073.IND.FIN",
+    "expense_operation_id": "DD16.a7bc0b7073.IND.EXP",
+    "status": "APPROVED_PENDING_ALLOCATION",
+    "phase": "FINANCE",
+    "basis": "BASE_QUANTITY",
+    "stock_changed": false
+  }
+}

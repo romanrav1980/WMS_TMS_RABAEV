@@ -1,0 +1,104 @@
+{
+  "status": "RETIRED_POSTPOSITIVE_NO_STOCK_EFFECT",
+  "journal_sha256": "a4f27502219ee33f897945b505f3898e8aad961f545f1f93a923c9f29d0ce793",
+  "before": {
+    "actor": [
+      {
+        "id": "N1939.OP",
+        "user_group": "N1939.OP",
+        "ware_id": 13583852,
+        "deleted": 0
+      }
+    ],
+    "resource": [
+      {
+        "resource_id": 63,
+        "resource_code": "N1939.CASE",
+        "user_id": "N1939.OP",
+        "ware_id": 13583852,
+        "active": 1
+      }
+    ],
+    "qualification": [
+      {
+        "resource_id": 63,
+        "task_type": "CASE_PICK",
+        "active": 1
+      }
+    ],
+    "role": [
+      {
+        "role_id": "N1939.CASE.EXEC",
+        "version_no": 3,
+        "active": 1
+      }
+    ]
+  },
+  "role_command": {
+    "operation_id": "N1939.GQC.RETIRE.ROLE",
+    "command_type": "ROLE_SAVE",
+    "payload": {
+      "expected_version": 3,
+      "role_id": "N1939.CASE.EXEC",
+      "title": "SIMULATED_TEST_NOT_HARDWARE; retire isolated N1939 identity/resource after canonical positive compensation; retain all histories",
+      "permissions": [
+        "case_pick_execute"
+      ],
+      "active": false
+    }
+  },
+  "qualification": {
+    "resource_id": 63,
+    "task_type": "CASE_PICK",
+    "active": false,
+    "actor": "admin"
+  },
+  "identity_owner": "stock_configuration_transaction(admin, warehouse_settings_edit); exact isolated resource63 and RUSERS N1939.OP only",
+  "stock_commands": [],
+  "retained": "CASE1139 CANCELLED picked1/version4, source22+1+1 total24/H0; session59 CLOSED, restored assignments already revoked; manual-time8OFF and all histories preserved",
+  "qualification_result": {
+    "resource_id": 63,
+    "task_type": "CASE_PICK",
+    "active": false
+  },
+  "role_result": {
+    "operation_id": "N1939.GQC.RETIRE.ROLE",
+    "command_type": "ROLE_SAVE",
+    "object_id": "N1939.CASE.EXEC",
+    "version": 4,
+    "replayed": false
+  },
+  "after": {
+    "actor": [
+      {
+        "id": "N1939.OP",
+        "user_group": "N1939.OP",
+        "ware_id": 13583852,
+        "deleted": 1
+      }
+    ],
+    "resource": [
+      {
+        "resource_id": 63,
+        "resource_code": "N1939.CASE",
+        "user_id": "N1939.OP",
+        "ware_id": 13583852,
+        "active": 0
+      }
+    ],
+    "qualification": [
+      {
+        "resource_id": 63,
+        "task_type": "CASE_PICK",
+        "active": 0
+      }
+    ],
+    "role": [
+      {
+        "role_id": "N1939.CASE.EXEC",
+        "version_no": 4,
+        "active": 0
+      }
+    ]
+  }
+}

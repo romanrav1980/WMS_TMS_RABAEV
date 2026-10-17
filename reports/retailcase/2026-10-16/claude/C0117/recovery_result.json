@@ -1,0 +1,43 @@
+{
+ "checks": [
+  "live_empty_selected_warehouse",
+  "live_403_hides_data",
+  "fixture_six_stages_unknown_marked",
+  "card_links_existing_screens_only",
+  "wave_and_back_to_same_short",
+  "fifty_rows_completeness_unknown",
+  "5xx_stale_marked",
+  "warehouse_switch_no_previous_sample",
+  "mobile_390_card_back"
+ ],
+ "writes": [],
+ "errors": [],
+ "liveEmpty": "Восстановление недостач Справка Склад 20220394 · показано 0 · прочитано 07:46 Открытых недостач в выборке нет. Обновить",
+ "live403": "Восстановление недостач Справка Склад 999999999 · Нет права просматривать восстановление недостач на этом складе (case_pick_view). Обновить",
+ "stages": [
+  "Ошибка · 1",
+  "Ждёт решения · 1",
+  "Пересчёт · 1",
+  "Пополнение · 1",
+  "Готово к продолжению · 1",
+  "Неизвестное состояние · 1"
+ ],
+ "unknownRow": "FIX-ART-6 · FIX-CELL-6\nнедостача 3 · волна 478 · код APPROVED/NEW_SERVER_STATE\nНеизвестное состояние",
+ "filtered": 1,
+ "card": "← К списку Пополнение недостача 9003 · APPROVED / WAIT_REPLENISHMENT Товар / ячейка FIX-ART-3 · FIX-CELL-3 Количество недостача 3 · восстановлено 0 · осталось по строке 3 (в единице строки) Сборка задание 2003 · строка 3003 · fixture Волна 478 Волна Пересчёт не назначен Пополнение WAITING · ждёт: NO_SOURCE_STOCK · складское задание 564 Срок осталось ~3 мин (по часам сервера на момент чтения) · до 2026-10-16 15:20 Даты — время источника без часового пояса. Разбор недостачи Пополнение волны Складское задание",
+ "links": [
+  "/wms-admin/short-investigation.html?short_id=9003",
+  "/wms-admin/wave-replenishment.html?wave_id=478&ware_id=6558233",
+  "/wms-admin/warehouse-tasks.html?task_id=564"
+ ],
+ "sceneSelected": 1,
+ "waveCard": "Волна FULL.QA:628b79593a\nLAUNCHED · CUSTOMER_ORDER · склад Own FULLPAL HU 628b79593a\n×",
+ "backToSame": true,
+ "limitNote": "Склад 6558233 · показано 50, выборка до 50 — полнота неизвестна · прочитано 07:47",
+ "staleText": "HTTP 503: fixture unavailable Показан прежний снимок — он устарел, «проблем нет» из него не следует.",
+ "duringSwitch": 0,
+ "afterSwitch": "Восстановление недостач Справка Склад 20220394 · показано 0 · прочитано 07:47 Открытых недостач в выборке нет. Обновить",
+ "mobileOverflow": 0,
+ "status": "PASS",
+ "fixtures": "live: empty + 403; positive states = UI fixtures (intercepted), not native"
+}

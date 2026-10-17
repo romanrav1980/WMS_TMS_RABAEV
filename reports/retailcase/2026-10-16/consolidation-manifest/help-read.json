@@ -1,0 +1,134 @@
+{
+  "state": "PASS_CURATED_HELP_READ_AND_DISCOVERY",
+  "http": [
+    {
+      "path": "/api/help/articles/consolidation-plan",
+      "api_call_id": 69428,
+      "request_id": "df4b3950-741f-420b-8a96-470a0e1dc07b"
+    },
+    {
+      "path": "/api/help/articles",
+      "api_call_id": 69429,
+      "request_id": "b531888d-097c-4667-b9d4-d1f908491245"
+    }
+  ],
+  "business_commands": false,
+  "hardware_verified": false,
+  "article": {
+    "article_id": "consolidation-plan",
+    "revision": "2",
+    "sources": [
+      "wiki/database/retailcase_consolidation_manifest_20261016.md",
+      "wiki/concepts/retailcase_nested_hu_consolidation_20261015.md"
+    ],
+    "related": [
+      {
+        "article_id": "access-model",
+        "title": "Роли и области ответственности"
+      },
+      {
+        "article_id": "operation-recovery",
+        "title": "Если ответ на команду потерян"
+      },
+      {
+        "article_id": "using-help",
+        "title": "Как пользоваться встроенной справкой"
+      }
+    ]
+  },
+  "publication_http": [
+    {
+      "api_call_id": 69426,
+      "request_id": "fb193c22-5aa0-4ba4-aa9b-f683080b3435",
+      "status": 200,
+      "ack": {
+        "operation_id": "CM16.HELP.CONSOLIDATION.SAVE.1",
+        "command_type": "ARTICLE_SAVE",
+        "object_id": "consolidation-plan",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    {
+      "api_call_id": 69427,
+      "request_id": "48429415-d040-4bca-8261-e2b703b2f992",
+      "status": 200,
+      "ack": {
+        "operation_id": "CM16.HELP.CONSOLIDATION.PUBLISH.1",
+        "command_type": "PUBLISH",
+        "object_id": "consolidation-plan",
+        "version": 2,
+        "replayed": false
+      }
+    }
+  ],
+  "oracle_http": [
+    {
+      "api_call_id": 69426,
+      "request_id": "fb193c22-5aa0-4ba4-aa9b-f683080b3435",
+      "duration_ms": 125
+    },
+    {
+      "api_call_id": 69427,
+      "request_id": "48429415-d040-4bca-8261-e2b703b2f992",
+      "duration_ms": 86
+    },
+    {
+      "api_call_id": 69428,
+      "request_id": "df4b3950-741f-420b-8a96-470a0e1dc07b",
+      "duration_ms": 155
+    },
+    {
+      "api_call_id": 69429,
+      "request_id": "b531888d-097c-4667-b9d4-d1f908491245",
+      "duration_ms": 142
+    }
+  ],
+  "slow": [],
+  "auth_top_sql": [
+    {
+      "sql_id": "8a2w4ubyb1ram",
+      "executions": 425031,
+      "avg_ms": 0.034
+    },
+    {
+      "sql_id": "0xf1zjadz2fz2",
+      "executions": 391089,
+      "avg_ms": 0.032
+    },
+    {
+      "sql_id": "96684xrs373w7",
+      "executions": 42232,
+      "avg_ms": 0.115
+    },
+    {
+      "sql_id": "600z300ssc7sr",
+      "executions": 2,
+      "avg_ms": 35.278
+    },
+    {
+      "sql_id": "8n0ttv6fwv4dy",
+      "executions": 1,
+      "avg_ms": 67.742
+    }
+  ],
+  "local_pairs": [
+    {
+      "api_call_id": 69426,
+      "request_id": "fb193c22-5aa0-4ba4-aa9b-f683080b3435"
+    },
+    {
+      "api_call_id": 69427,
+      "request_id": "48429415-d040-4bca-8261-e2b703b2f992"
+    },
+    {
+      "api_call_id": 69428,
+      "request_id": "df4b3950-741f-420b-8a96-470a0e1dc07b"
+    },
+    {
+      "api_call_id": 69429,
+      "request_id": "b531888d-097c-4667-b9d4-d1f908491245"
+    }
+  ],
+  "sql_decision": "Runtime help uses native published revision, not the fallback file catalog. No stock or consolidation queries. Retain search limit50, article PK/version lookups, native publication/REV locks and existing RUSERS identity lookup. Shared SQL averages are cumulative, not help request p95. Platform owner inspects an attributed recurring slow knowledge/auth plan before indexing/caching; no speculative index/cache added."
+}

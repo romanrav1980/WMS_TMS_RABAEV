@@ -1,0 +1,11 @@
+# Публичная справка при потере связи
+
+16.10.2026, программный остаток KH08. Общая React-панель знаний ранее показывала только ошибку сети. Теперь в уже загруженном приложении доступны три публичные инструкции: использование справки, роли/области и восстановление потерянного ответа. Поиск, переходы и Escape работают без сети, рабочий экран сохраняется. Пометка локальной копии и её редакция видны пользователю.
+
+Это встроенная поставка публичного текста, не кэш ответов Oracle/API. Локальный JSON содержит только три выбранные статьи из `docs/help/published.json` без required_permissions. Публикационный тест проверяет точное соответствие источнику, allowlist и отсутствие ограниченных связанных страниц. Тексты обновлены до редакции16.10/2: действующие роли и редактор больше не названы будущей функцией. Сервисные, закрытые и персональные статьи в bundle не входят.
+
+Fallback включается только при транспортной ошибке fetch. HTTP401/403/404/503 остаются ошибками сервера и не подменяются локальной статьёй. Прежний native текст очищается до нового чтения; неизвестная локальному каталогу статья без сети недоступна. Полномочия не сохраняются и не выдаются. Перезагрузка всего admin shell без сети этим инкрементом не реализована; приложение магазина имеет отдельный прежний PWA/offline механизм. Native публикация статей через API/Oracle не выполнялась.
+
+Доказательства: `reports/retailcase/2026-10-16/offline-knowledge/ui-report.json`:11 browser checks, actual frontend3000 и context offline,390px, search/related/private absence/HTTP отказ/возврат к работе, ошибок JS и business writes0. Native/private online content и отказы — UI fixtures, не новая native проверка.19 focused publication/access tests PASS, quality1147files/0cycles/debt72+24tooling+обаTS PASS; admin production build PASS, encoding PASS. Предыдущие два browser timeout относятся к ошибкам сценария: fixture перехватывала запрос при offline и повторное нажатие уже выбранной статьи не отправляло запрос; код продукта ими не изменялся.
+
+Исходники: [панель](../../admin/wms_admin_frontend/src/features/platform/help/KnowledgePanel.tsx), [чтение публичной копии](../../admin/wms_admin_frontend/src/features/platform/help/offlinePublicKnowledge.ts), [публикационный guard](../../tests/retailcase/test_public_offline_knowledge.py). [[../roadmap/retailcase_access_knowledge_plan]].

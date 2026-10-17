@@ -1,0 +1,118 @@
+{
+  "status": "PASS",
+  "identity": "TEST.WHREQ15.PREPARED",
+  "trial_ids": {
+    "st_id": 641519,
+    "row_id": 16727998,
+    "fulfillment_id": 189
+  },
+  "committed_ids": {
+    "st_id": 641520,
+    "row_id": 16727999,
+    "fulfillment_id": 190
+  },
+  "caller_rollback_all_three_absent": true,
+  "sequence_gaps_expected": true,
+  "before": {
+    "stock": [
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 24,
+        "hard_reserved_base": 1,
+        "stock_version": 10
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "case": [
+      {
+        "status": "IN_PROGRESS",
+        "sscc": "090000000000008014",
+        "content_version": 2,
+        "picked_qty": 0,
+        "legacy_sborka_pallet_id": null
+      }
+    ]
+  },
+  "after": {
+    "stock": [
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 24,
+        "hard_reserved_base": 1,
+        "stock_version": 10
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "case": [
+      {
+        "status": "IN_PROGRESS",
+        "sscc": "090000000000008014",
+        "content_version": 2,
+        "picked_qty": 0,
+        "legacy_sborka_pallet_id": null
+      }
+    ]
+  },
+  "metadata": {
+    "st": [
+      {
+        "id": 641520,
+        "pallet_uid": "TEST.WHREQ15.PREPARED",
+        "st_number": "TEST.WHREQ15.PREPARED",
+        "ware_id": 13583852,
+        "condition": 0
+      }
+    ],
+    "rows": [
+      {
+        "id": 16727999,
+        "pallet_uid": "TEST.WHREQ15.PREPARED",
+        "articul": "REUSE.QA:cdbf4c0962",
+        "ei": "EA",
+        "quantity": 1
+      }
+    ],
+    "fulfillment": [
+      {
+        "fulfillment_id": 190,
+        "customer_order_id": 2146,
+        "legacy_sborka_pallet_id": 641520,
+        "pallet_uid": "TEST.WHREQ15.PREPARED",
+        "status": "PLANNED",
+        "fact_qty": 0
+      }
+    ]
+  },
+  "stock_changed": false,
+  "case_bound": false,
+  "physical_hardware": false,
+  "native_function_source_sha256": "D335C89FCC01C288D338F13604F305CAC72957F8917A29E959EB80C049B1E3E8",
+  "native_function_lines": 205,
+  "native_function_commit": false,
+  "prior_trial_error": "ORA-01745 reserved :uid smoke bind; CONFIG rollback and identities/source reverified before corrected trial",
+  "row_DOCID": null,
+  "unmeasured_logistics_fields": null,
+  "source_system": "TEST_WHREQ15",
+  "cleanup": "Canonical CASE_CARRIER_RETURN resets current fulfillment PLANNED/0 and unbinds CASE; TEST ST/row/fulfillment history retained, no business journal deletion.",
+  "slow_sql": [
+    {
+      "log_id": 4731,
+      "elapsed_ms": 151,
+      "sql_text": "TEST_NOT_HARDWARE_CASE1136_PREPARED_METADATA_ONLY"
+    }
+  ]
+}

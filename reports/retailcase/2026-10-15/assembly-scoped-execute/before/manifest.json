@@ -1,0 +1,64 @@
+{
+  "captured_at_utc": "2026-10-15T20:38:02.593743+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_ASSEMBLY_SCALE_API",
+      "type": "PACKAGE",
+      "file": "rrl_assembly_scale_api_package.sql",
+      "errors": [],
+      "user_source_sha256": "b78f13f6c511f82d2289930492ee9d8bb03ec32878b5da5fa8feaf34ff940c04",
+      "normalized_source_sha256": "d9dd9c566b0ad1b1ae7daae415e5f4eb5012ff5a720186379941d31c975dfb69",
+      "artifact_sha256": "9dc910919d78326d6caf73a771e79f3b3351c51c559e8c72e92966e556f99f9c"
+    },
+    {
+      "name": "RRL_ASSEMBLY_SCALE_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_assembly_scale_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "27bcb8bda054b4af54ff267040eaab0fa65b181e1d55dcb19bd97274796ad21f",
+      "normalized_source_sha256": "3959831fe6663eca0049caed70ed6fe0c00570b61732a491cd0ba55a03774159",
+      "artifact_sha256": "6de4b21d09deaf633898873ccf3fbdfaba3bceb29ac71b66fd175ef168fd10d2"
+    },
+    {
+      "name": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE",
+      "file": "rrl_case_task_access_package.sql",
+      "errors": [],
+      "user_source_sha256": "8d1486c3d76223dbdffe6dbb3be66f2f79695bf1f20cb6e11a3926a3ea051958",
+      "normalized_source_sha256": "86c70086e629052090c1c8983be8c40e5e23dfd9da82403819e58c7024267716",
+      "artifact_sha256": "eac283a840fc86a9024cc2550c0e3d9a4ba40cd7f5e6001f4beeb679e04547db"
+    },
+    {
+      "name": "RRL_CASE_TASK_ACCESS",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_task_access_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "745b1cf148f11c0f3adcbfcf4ea2ca41b817875601d4c1d5761ece0d73813c8c",
+      "normalized_source_sha256": "14f44269cdbbced4602d740c058b99e2bc69051699401068a87a6c4953dc3461",
+      "artifact_sha256": "3f3ab03c73112e493768c890502553671f431f4c7d2cafc5dc1a3429009ceadd"
+    },
+    {
+      "name": "RRL_CASE_SCALE_ADMISSION",
+      "type": "PACKAGE BODY",
+      "file": "rrl_case_scale_admission_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "68e00bfcaa7afbe699d000d8665caea58b80da813fa50d0df3e55336784bee25",
+      "normalized_source_sha256": "bd52e881d19cc5998e45b39c8dfe0f7fb61b91ff49162c49024d2fb0dca8030a",
+      "artifact_sha256": "d5dd048a4d4881093f0ea6952364eea658ec0371eeea00833070b1b7343d1485"
+    },
+    {
+      "name": "RRL_STOCK_CASE_PICK_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_case_pick_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "db62c55a3d126a18425eb78fed7d8572550ab868caff475dae2cd75fab3ae13d",
+      "normalized_source_sha256": "eb9e5323c7618a1589ce238d65bb59bb0462fb1a3deb0bc89af38e9b20111a53",
+      "artifact_sha256": "3bcbc1222f64fb6b6d20f45f44fd935c6f63580edef668819bd300d075214863"
+    }
+  ]
+}

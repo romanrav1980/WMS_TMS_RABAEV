@@ -1,0 +1,807 @@
+[
+  {
+    "table": "RRL_ACCESS_REV",
+    "column": "ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_ACCESS_REV",
+    "column": "REVISION",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "CASE_PICK_TASK_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "PICK_WAVE_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "PICK_PLAN_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "CUSTOMER_ORDER_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "CUSTOMER_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "CUSTOMER_ADDRESS_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "CUSTOMER_STORE_MAP_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "SSCC",
+    "type": "VARCHAR2",
+    "length": 64,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "PALLET_TYPE_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "PALLET_NO",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "STATUS",
+    "type": "VARCHAR2",
+    "length": 30,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "ASSIGNED_RESOURCE_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "RESOURCE_SESSION_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "EQUIPMENT_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "ASSIGNED_TO",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "WARE_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "ZONE_CODE",
+    "type": "VARCHAR2",
+    "length": 60,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "TOTAL_LINES",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "PICKED_LINES",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "PLANNED_QTY",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "PICKED_QTY",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "OFFLINE_STATE",
+    "type": "VARCHAR2",
+    "length": 30,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "CREATED_AT",
+    "type": "TIMESTAMP(6)",
+    "length": 11,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "CREATED_BY",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "STARTED_AT",
+    "type": "TIMESTAMP(6)",
+    "length": 11,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "CLOSED_AT",
+    "type": "TIMESTAMP(6)",
+    "length": 11,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "DONE_AT",
+    "type": "TIMESTAMP(6)",
+    "length": 11,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "UPDATED_AT",
+    "type": "TIMESTAMP(6)",
+    "length": 11,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "UPDATED_BY",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "TRANSFERRED_AT",
+    "type": "TIMESTAMP(6)",
+    "length": 11,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "TRANSFERRED_BY",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "TRANSFER_REASON",
+    "type": "VARCHAR2",
+    "length": 1000,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "CURRENT_CELL",
+    "type": "VARCHAR2",
+    "length": 60,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "CONTENT_VERSION",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "LEGACY_SBORKA_PALLET_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "SHIPPED_OPERATION",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "STARTED_AT_INSTANT",
+    "type": "TIMESTAMP(6) WITH TIME ZONE",
+    "length": 13,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "STARTED_SHIFT_TIME_ZONE",
+    "type": "VARCHAR2",
+    "length": 64,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_PICK_TASK",
+    "column": "ASSIGNMENT_VERSION",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_RESOURCE_COMMAND",
+    "column": "OPERATION_ID",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_RESOURCE_COMMAND",
+    "column": "CASE_PICK_TASK_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_RESOURCE_COMMAND",
+    "column": "ACTOR_ID",
+    "type": "NVARCHAR2",
+    "length": 100,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_RESOURCE_COMMAND",
+    "column": "ACTION",
+    "type": "VARCHAR2",
+    "length": 10,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_RESOURCE_COMMAND",
+    "column": "OUTCOME",
+    "type": "VARCHAR2",
+    "length": 10,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_RESOURCE_COMMAND",
+    "column": "ERROR_CODE",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_CASE_RESOURCE_COMMAND",
+    "column": "SOURCE_SHA256",
+    "type": "VARCHAR2",
+    "length": 64,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_RESOURCE_COMMAND",
+    "column": "SOURCE_JSON",
+    "type": "CLOB",
+    "length": 4000,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_RESOURCE_COMMAND",
+    "column": "RESULT_JSON",
+    "type": "CLOB",
+    "length": 4000,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_RESOURCE_COMMAND",
+    "column": "BEFORE_VERSION",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_RESOURCE_COMMAND",
+    "column": "AFTER_VERSION",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_RESOURCE_COMMAND",
+    "column": "RESOURCE_SESSION_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_CASE_RESOURCE_COMMAND",
+    "column": "RECORDED_AT",
+    "type": "TIMESTAMP(6) WITH TIME ZONE",
+    "length": 13,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "TASK_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "TASK_TYPE",
+    "type": "VARCHAR2",
+    "length": 40,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "TASK_SOURCE",
+    "type": "VARCHAR2",
+    "length": 40,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "SOURCE_TASK_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "SOURCE_MOVEMENT_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "SOURCE_DOC_TYPE",
+    "type": "VARCHAR2",
+    "length": 40,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "SOURCE_DOC_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "PRODUCTION_ORDER_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "PROD_BATCH_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "RAW_ARTICUL",
+    "type": "VARCHAR2",
+    "length": 40,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "TARGET_ARTICUL",
+    "type": "VARCHAR2",
+    "length": 40,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "UID_PALLET",
+    "type": "VARCHAR2",
+    "length": 200,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "SSCC",
+    "type": "VARCHAR2",
+    "length": 64,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "FROM_WARE_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "FROM_CELL",
+    "type": "VARCHAR2",
+    "length": 80,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "TO_WARE_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "TO_CELL",
+    "type": "VARCHAR2",
+    "length": 80,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "QTY",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "UNIT_CODE",
+    "type": "VARCHAR2",
+    "length": 20,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "PRIORITY",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "STATUS",
+    "type": "VARCHAR2",
+    "length": 20,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "ASSIGNED_TO",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "CREATED_AT",
+    "type": "TIMESTAMP(6)",
+    "length": 11,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "CREATED_BY",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "STARTED_AT",
+    "type": "TIMESTAMP(6)",
+    "length": 11,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "FINISHED_AT",
+    "type": "TIMESTAMP(6)",
+    "length": 11,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "CANCELLED_AT",
+    "type": "TIMESTAMP(6)",
+    "length": 11,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "CANCELLED_BY",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "LAST_ERROR",
+    "type": "VARCHAR2",
+    "length": 2000,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "QTY_MODE",
+    "type": "VARCHAR2",
+    "length": 20,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "FACT_QTY",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "PARENT_TASK_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "RESOURCE_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "RESOURCE_SESSION_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "EQUIPMENT_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "PLANNED_START_AT",
+    "type": "TIMESTAMP(6)",
+    "length": 11,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "PLANNED_FINISH_AT",
+    "type": "TIMESTAMP(6)",
+    "length": 11,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "DISPATCH_PRIORITY",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "FROM_CELL_SLOT_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "TO_CELL_SLOT_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "COMPLETION_HASH",
+    "type": "VARCHAR2",
+    "length": 64,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "COMPLETION_JSON",
+    "type": "CLOB",
+    "length": 4000,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "TARGET_UID_PALLET",
+    "type": "VARCHAR2",
+    "length": 200,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "STARTED_AT_INSTANT",
+    "type": "TIMESTAMP(6) WITH TIME ZONE",
+    "length": 13,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "STARTED_SHIFT_TIME_ZONE",
+    "type": "VARCHAR2",
+    "length": 64,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "HU_CONTENT_VERSION",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "HU_MEASUREMENTS_JSON",
+    "type": "CLOB",
+    "length": 4000,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WAREHOUSE_TASK",
+    "column": "FINISHED_AT_INSTANT",
+    "type": "TIMESTAMP(6) WITH TIME ZONE",
+    "length": 13,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WTASK_RESOURCE_COMMAND",
+    "column": "OPERATION_ID",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WTASK_RESOURCE_COMMAND",
+    "column": "TASK_ID",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WTASK_RESOURCE_COMMAND",
+    "column": "ACTOR_ID",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WTASK_RESOURCE_COMMAND",
+    "column": "TARGET_ID",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WTASK_RESOURCE_COMMAND",
+    "column": "ACTION",
+    "type": "VARCHAR2",
+    "length": 10,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WTASK_RESOURCE_COMMAND",
+    "column": "OUTCOME",
+    "type": "VARCHAR2",
+    "length": 10,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WTASK_RESOURCE_COMMAND",
+    "column": "ERROR_CODE",
+    "type": "VARCHAR2",
+    "length": 100,
+    "nullable": "Y"
+  },
+  {
+    "table": "RRL_WTASK_RESOURCE_COMMAND",
+    "column": "SOURCE_SHA256",
+    "type": "VARCHAR2",
+    "length": 64,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WTASK_RESOURCE_COMMAND",
+    "column": "SOURCE_JSON",
+    "type": "CLOB",
+    "length": 4000,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WTASK_RESOURCE_COMMAND",
+    "column": "RESULT_JSON",
+    "type": "CLOB",
+    "length": 4000,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WTASK_RESOURCE_COMMAND",
+    "column": "BEFORE_VERSION",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WTASK_RESOURCE_COMMAND",
+    "column": "AFTER_VERSION",
+    "type": "NUMBER",
+    "length": 22,
+    "nullable": "N"
+  },
+  {
+    "table": "RRL_WTASK_RESOURCE_COMMAND",
+    "column": "RECORDED_AT",
+    "type": "TIMESTAMP(6) WITH TIME ZONE",
+    "length": 13,
+    "nullable": "N"
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "status": "STATIC_REVIEW_INTEGRATED_ROOT_REGRESSION_PASS",
+  "actual_claude_session": "654a1dc6-3cca-4cab-b73f-7d82cf22ef18",
+  "actual_claude_tool_edit_files": [
+    "JournalPanel.tsx"
+  ],
+  "all_changed_since_snapshot": [
+    "CaseWorkApp.tsx",
+    "JournalPanel.tsx",
+    "useCaseWork.ts",
+    "WorkPanel.tsx"
+  ],
+  "other_concurrent_local_changes": [
+    "CaseWorkApp.tsx",
+    "useCaseWork.ts",
+    "WorkPanel.tsx"
+  ],
+  "other_changes_review": "Preserved and reviewed separately: neutral non-navigation brand, recover original intent despite selected-context read failure, action-specific default reason. Attribution is not assigned to the actual C0113 session.",
+  "finding": "Archived success must belong to currently open task; otherwise display distinct original-task link",
+  "native_or_hardware_acceptance": false,
+  "root_rendered_mock_checks": 25,
+  "root_production_native_read_widths": [
+    360,
+    390,
+    1440
+  ],
+  "root_production_help_revision": 3,
+  "full_quality_gate": "PASS:1059files/0cycles/debt72+24tooling+adminTS+terminalTS",
+  "fixture_cleanup": "CASE1138 CANCELLED/session55 CLOSED/all CRES grants revoked/source physical24 hard0; history retained"
+}

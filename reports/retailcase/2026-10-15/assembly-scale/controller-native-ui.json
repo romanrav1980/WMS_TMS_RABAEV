@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "width": 360,
+      "actual_native_history": true,
+      "no_mutation": true,
+      "no_overflow": true,
+      "help_current": true
+    },
+    {
+      "width": 390,
+      "actual_native_history": true,
+      "no_mutation": true,
+      "no_overflow": true,
+      "help_current": true
+    },
+    {
+      "width": 1440,
+      "actual_native_history": true,
+      "no_mutation": true,
+      "no_overflow": true,
+      "help_current": true
+    }
+  ],
+  "hardware": false,
+  "production_build": true
+}

@@ -1,0 +1,478 @@
+{
+  "state": "PASS",
+  "hardware_verified": false,
+  "device_mode": "TEST",
+  "stock_effects": 0,
+  "device_request": {
+    "warehouse_id": 20220394,
+    "post_cell": "AS16C35cea92c27",
+    "sender_id": "AS16G35cea92c27",
+    "expected_version": 0,
+    "active": true,
+    "device_mode": "TEST",
+    "basis": "GROSS",
+    "capacity_kg": "100",
+    "resolution_kg": "0.001",
+    "calibration_ref": "AS16.35cea92c27.TEST",
+    "calibrated_until": "2026-10-16T21:15:35.068529+00:00"
+  },
+  "device": {
+    "device_id": "AS16D35cea92c27",
+    "device_policy_version": 1,
+    "active": true,
+    "device_mode": "TEST",
+    "basis": "GROSS"
+  },
+  "station_request": {
+    "operation_id": "AS16.35cea92c27.STATION",
+    "expected_version": 0,
+    "confirmation_mode": "AUTO",
+    "max_session_seconds": 21600,
+    "cumulative_tolerance_kg": "0.002",
+    "active": true,
+    "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+  },
+  "station": {
+    "version": 1,
+    "policy_kind": "STATION",
+    "operation_id": "AS16.35cea92c27.STATION"
+  },
+  "sku_request": {
+    "operation_id": "AS16.35cea92c27.SKU",
+    "warehouse_id": 20220394,
+    "article": "AS16A35CEA92C27",
+    "base_uom": "EA",
+    "expected_version": 0,
+    "min_unit_kg": "0.99",
+    "max_unit_kg": "1.01",
+    "min_delta_kg": "0.01",
+    "tolerance_kg": "0",
+    "active": true,
+    "evidence_reference": "AS16.35cea92c27.TEST",
+    "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+  },
+  "sku": {
+    "version": 1,
+    "policy_kind": "SKU",
+    "operation_id": "AS16.35cea92c27.SKU"
+  },
+  "tare_request": {
+    "device_id": "AS16D35cea92c27",
+    "capture_id": "AS16.35cea92c27.TARE",
+    "post_cell": "AS16C35cea92c27",
+    "case_task_id": 1140,
+    "expected_content_version": 2,
+    "scan_container": "090000000000011014",
+    "purpose": "EMPTY_TARE",
+    "device_policy_version": 1,
+    "calibration_ref": "AS16.35cea92c27.TEST",
+    "unit": "KG",
+    "basis": "GROSS",
+    "preset_tare_kg": "0",
+    "zero_confirmed": true,
+    "zero_check_kg": "0",
+    "zero_check_at": "2026-10-15T21:15:25.731029+00:00",
+    "measured_at": "2026-10-15T21:15:35.731029+00:00",
+    "samples": [
+      {
+        "offset_ms": 0,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 500,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 1000,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 1500,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 2000,
+        "weight_kg": "0.5"
+      }
+    ]
+  },
+  "tare": {
+    "capture_key": "D18043B76838EF5990FD42E4E48D54F7692712803BA240E8026164096EBD78F8",
+    "device_id": "AS16D35cea92c27",
+    "capture_id": "AS16.35cea92c27.TARE",
+    "warehouse_id": 20220394,
+    "post_cell": "AS16C35cea92c27",
+    "device_mode": "TEST",
+    "purpose": "EMPTY_TARE",
+    "case_task_id": 1140,
+    "case_content_version": 2,
+    "scan_container": "090000000000011014",
+    "pallet_type_id": 32,
+    "type_version": 2,
+    "basis": "GROSS",
+    "weight_kg": "0.5",
+    "device_policy_version": 1,
+    "calibration_ref": "AS16.35cea92c27.TEST",
+    "resolution_kg": "0.001",
+    "source_sha256": "DF70780B3790440DF6B9D8BDEFDD0C5267D7F3C32A41394B120A274F0DB1EEDC",
+    "measured_at": "2026-10-15T21:15:35.731029+00:00",
+    "sample_count": 5,
+    "span_ms": 2000,
+    "status": "ARCHIVED",
+    "stock_posted": false
+  },
+  "session_request": {
+    "session_id": "AS16.35cea92c27.SESSION",
+    "task_id": 1140,
+    "device_id": "AS16D35cea92c27",
+    "expected_content_version": 2,
+    "tare_capture_key": "26599C8427CC21F217BE8BB1E2D04620A2E3CB7D72D1CEF637C79358A869BC10",
+    "scan_container": "090000000000011014"
+  },
+  "refreshed_tare_request": {
+    "device_id": "AS16D35cea92c27",
+    "capture_id": "AS16.35cea92c27.TARE.REFRESH2",
+    "post_cell": "AS16C35cea92c27",
+    "case_task_id": 1140,
+    "expected_content_version": 2,
+    "scan_container": "090000000000011014",
+    "purpose": "EMPTY_TARE",
+    "device_policy_version": 1,
+    "calibration_ref": "AS16.35cea92c27.TEST",
+    "unit": "KG",
+    "basis": "GROSS",
+    "preset_tare_kg": "0",
+    "zero_confirmed": true,
+    "zero_check_kg": "0",
+    "zero_check_at": "2026-10-15T21:19:33.585904+00:00",
+    "measured_at": "2026-10-15T21:19:43.585904+00:00",
+    "samples": [
+      {
+        "offset_ms": 0,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 500,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 1000,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 1500,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 2000,
+        "weight_kg": "0.5"
+      }
+    ]
+  },
+  "rejected_refresh_before_correction": {
+    "device_id": "AS16D35cea92c27",
+    "capture_id": "AS16.35cea92c27.TARE.REFRESH1",
+    "post_cell": "AS16C35cea92c27",
+    "case_task_id": 1140,
+    "expected_content_version": 2,
+    "scan_container": "090000000000011014",
+    "purpose": "EMPTY_TARE",
+    "device_policy_version": 1,
+    "calibration_ref": "AS16.35cea92c27.TEST",
+    "unit": "KG",
+    "basis": "GROSS",
+    "preset_tare_kg": "0",
+    "zero_confirmed": true,
+    "zero_check_kg": "0",
+    "zero_check_at": "2026-10-15T21:19:15.586877+00:00",
+    "measured_at": "2026-10-15T21:19:15.586828+00:00",
+    "samples": [
+      {
+        "offset_ms": 0,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 500,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 1000,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 1500,
+        "weight_kg": "0.5"
+      },
+      {
+        "offset_ms": 2000,
+        "weight_kg": "0.5"
+      }
+    ]
+  },
+  "refreshed_tare": {
+    "capture_key": "26599C8427CC21F217BE8BB1E2D04620A2E3CB7D72D1CEF637C79358A869BC10",
+    "device_id": "AS16D35cea92c27",
+    "capture_id": "AS16.35cea92c27.TARE.REFRESH2",
+    "warehouse_id": 20220394,
+    "post_cell": "AS16C35cea92c27",
+    "device_mode": "TEST",
+    "purpose": "EMPTY_TARE",
+    "case_task_id": 1140,
+    "case_content_version": 2,
+    "scan_container": "090000000000011014",
+    "pallet_type_id": 32,
+    "type_version": 2,
+    "basis": "GROSS",
+    "weight_kg": "0.5",
+    "device_policy_version": 1,
+    "calibration_ref": "AS16.35cea92c27.TEST",
+    "resolution_kg": "0.001",
+    "source_sha256": "726638ECB6E7BD6654FDA90C77A28D7341D1A6B31894677EB969575852C37AB6",
+    "measured_at": "2026-10-15T21:19:43.585904+00:00",
+    "sample_count": 5,
+    "span_ms": 2000,
+    "status": "ARCHIVED",
+    "stock_posted": false
+  },
+  "rejected_stale_session_request": {
+    "session_id": "AS16.35cea92c27.SESSION",
+    "task_id": 1140,
+    "device_id": "AS16D35cea92c27",
+    "expected_content_version": 2,
+    "tare_capture_key": "D18043B76838EF5990FD42E4E48D54F7692712803BA240E8026164096EBD78F8",
+    "scan_container": "090000000000011014"
+  },
+  "session": {
+    "session_id": "AS16.35cea92c27.SESSION",
+    "task_id": 1140,
+    "device_id": "AS16D35cea92c27",
+    "post_cell": "AS16C35cea92c27",
+    "operator_id": "AS16O35cea92c27",
+    "warehouse_id": 20220394,
+    "scan_container": "090000000000011014",
+    "cumulative_tolerance_kg": "0.002",
+    "state": "OPEN",
+    "confirmation_mode": "AUTO",
+    "content_version": 2,
+    "tare_capture_key": "26599C8427CC21F217BE8BB1E2D04620A2E3CB7D72D1CEF637C79358A869BC10",
+    "tare_weight_kg": "0.5",
+    "last_weight_kg": "0.5",
+    "expires_at": "2026-10-16T03:19:43.906143+00:00",
+    "block_reason": null,
+    "steps": [],
+    "has_older": false,
+    "reconciliation": null
+  },
+  "step_request": {
+    "step_id": "AS16.35cea92c27.STEP",
+    "operation_id": "AS16.35cea92c27.PICK",
+    "case_line_id": 1142,
+    "quantity": "1",
+    "scan_source_cell": "AS16C35cea92c27",
+    "scan_product": "AS16A35CEA92C27",
+    "scan_container": "090000000000011014",
+    "expected_content_version": 2,
+    "consent_to_auto": true
+  },
+  "step": {
+    "step_id": "AS16.35cea92c27.STEP",
+    "session_id": "AS16.35cea92c27.SESSION",
+    "operation_id": "AS16.35cea92c27.PICK",
+    "sequence": 1,
+    "case_line_id": 1142,
+    "article": "AS16A35CEA92C27",
+    "quantity": "1",
+    "state": "WAITING_BEFORE",
+    "confirmation_mode": "AUTO",
+    "content_version": 2,
+    "before_capture_id": "ASM.D90A4CA94B313008A8DA6A9A3DC4A7CD4F86BB76064628151D073C53BEBEF436",
+    "after_capture_id": "ASM.5C3D62709FA3269F0BB92278E253EE4754CB21F129920C1DB06690667CA17747",
+    "before_weight_kg": null,
+    "after_weight_kg": null,
+    "delta_kg": null,
+    "min_delta_kg": "0.01",
+    "expected_delta_min_kg": "0.99",
+    "expected_delta_max_kg": "1.01",
+    "button_intent": false,
+    "consent_to_auto": true,
+    "block_reason": null,
+    "stock_posted": false
+  },
+  "requests": {
+    "BEFORE": {
+      "session_id": "AS16.35cea92c27.SESSION",
+      "step_id": "AS16.35cea92c27.STEP",
+      "capture_id": "ASM.D90A4CA94B313008A8DA6A9A3DC4A7CD4F86BB76064628151D073C53BEBEF436",
+      "phase": "BEFORE",
+      "device_id": "AS16D35cea92c27",
+      "device_policy_version": 1,
+      "calibration_ref": "AS16.35cea92c27.TEST",
+      "unit": "KG",
+      "basis": "GROSS",
+      "preset_tare_kg": "0",
+      "tare_mode_clear": true,
+      "quality_confirmed": true,
+      "measured_at": "2026-10-15T21:19:46.174754+00:00",
+      "samples": [
+        {
+          "offset_ms": 0,
+          "weight_kg": "0.5"
+        },
+        {
+          "offset_ms": 500,
+          "weight_kg": "0.5"
+        },
+        {
+          "offset_ms": 1000,
+          "weight_kg": "0.5"
+        },
+        {
+          "offset_ms": 1500,
+          "weight_kg": "0.5"
+        },
+        {
+          "offset_ms": 2000,
+          "weight_kg": "0.5"
+        }
+      ]
+    },
+    "AFTER": {
+      "session_id": "AS16.35cea92c27.SESSION",
+      "step_id": "AS16.35cea92c27.STEP",
+      "capture_id": "ASM.5C3D62709FA3269F0BB92278E253EE4754CB21F129920C1DB06690667CA17747",
+      "phase": "AFTER",
+      "device_id": "AS16D35cea92c27",
+      "device_policy_version": 1,
+      "calibration_ref": "AS16.35cea92c27.TEST",
+      "unit": "KG",
+      "basis": "GROSS",
+      "preset_tare_kg": "0",
+      "tare_mode_clear": true,
+      "quality_confirmed": true,
+      "measured_at": "2026-10-15T21:19:48.373176+00:00",
+      "samples": [
+        {
+          "offset_ms": 0,
+          "weight_kg": "1.5"
+        },
+        {
+          "offset_ms": 500,
+          "weight_kg": "1.5"
+        },
+        {
+          "offset_ms": 1000,
+          "weight_kg": "1.5"
+        },
+        {
+          "offset_ms": 1500,
+          "weight_kg": "1.5"
+        },
+        {
+          "offset_ms": 2000,
+          "weight_kg": "1.5"
+        }
+      ]
+    }
+  },
+  "BEFORE": {
+    "capture_key": "ACD02CF44F22D186CBE6AAA74CE8B1B3ACE63EBBBD36DE9AE7A757445C5B726B",
+    "status": "ARCHIVED",
+    "device_id": "AS16D35cea92c27",
+    "capture_id": "ASM.D90A4CA94B313008A8DA6A9A3DC4A7CD4F86BB76064628151D073C53BEBEF436",
+    "session_id": "AS16.35cea92c27.SESSION",
+    "step_id": "AS16.35cea92c27.STEP",
+    "phase": "BEFORE",
+    "source_sha256": "21B6C9428074279695FBDCEF0A432B0DE9F70EB0C9ED1438A5B6518E45FC329B",
+    "weight_kg": "0.5",
+    "measured_at": "2026-10-15T21:19:46.174754+00:00",
+    "device_policy_version": 1,
+    "calibration_ref": "AS16.35cea92c27.TEST",
+    "stock_posted": false
+  },
+  "AFTER": {
+    "capture_key": "8905B28308B7CD4C6C956E2ADA0E751C0E85B43F756766511CC80CFE3670E7F6",
+    "status": "ARCHIVED",
+    "device_id": "AS16D35cea92c27",
+    "capture_id": "ASM.5C3D62709FA3269F0BB92278E253EE4754CB21F129920C1DB06690667CA17747",
+    "session_id": "AS16.35cea92c27.SESSION",
+    "step_id": "AS16.35cea92c27.STEP",
+    "phase": "AFTER",
+    "source_sha256": "2D68CA5C3BFBBCB0B90A370047C4E06FB53A737C1E52CBBACBA2EE2A1F2DECE1",
+    "weight_kg": "1.5",
+    "measured_at": "2026-10-15T21:19:48.373176+00:00",
+    "device_policy_version": 1,
+    "calibration_ref": "AS16.35cea92c27.TEST",
+    "stock_posted": false
+  },
+  "current": {
+    "step_id": "AS16.35cea92c27.STEP",
+    "session_id": "AS16.35cea92c27.SESSION",
+    "operation_id": "AS16.35cea92c27.PICK",
+    "sequence": 1,
+    "case_line_id": 1142,
+    "article": "AS16A35CEA92C27",
+    "quantity": "1",
+    "state": "READY",
+    "confirmation_mode": "AUTO",
+    "content_version": 2,
+    "before_capture_id": "ASM.D90A4CA94B313008A8DA6A9A3DC4A7CD4F86BB76064628151D073C53BEBEF436",
+    "after_capture_id": "ASM.5C3D62709FA3269F0BB92278E253EE4754CB21F129920C1DB06690667CA17747",
+    "before_weight_kg": "0.5",
+    "after_weight_kg": "1.5",
+    "delta_kg": "1",
+    "min_delta_kg": "0.01",
+    "expected_delta_min_kg": "0.99",
+    "expected_delta_max_kg": "1.01",
+    "button_intent": false,
+    "consent_to_auto": true,
+    "block_reason": null,
+    "stock_posted": false
+  },
+  "post_context": {
+    "step": {
+      "step_id": "AS16.35cea92c27.STEP",
+      "session_id": "AS16.35cea92c27.SESSION",
+      "operation_id": "AS16.35cea92c27.PICK",
+      "sequence": 1,
+      "case_line_id": 1142,
+      "article": "AS16A35CEA92C27",
+      "quantity": "1",
+      "state": "READY",
+      "confirmation_mode": "AUTO",
+      "content_version": 2,
+      "before_capture_id": "ASM.D90A4CA94B313008A8DA6A9A3DC4A7CD4F86BB76064628151D073C53BEBEF436",
+      "after_capture_id": "ASM.5C3D62709FA3269F0BB92278E253EE4754CB21F129920C1DB06690667CA17747",
+      "before_weight_kg": "0.5",
+      "after_weight_kg": "1.5",
+      "delta_kg": "1",
+      "min_delta_kg": "0.01",
+      "expected_delta_min_kg": "0.99",
+      "expected_delta_max_kg": "1.01",
+      "button_intent": false,
+      "consent_to_auto": true,
+      "block_reason": null,
+      "stock_posted": false
+    },
+    "operation_id": "AS16.35cea92c27.PICK",
+    "command": {
+      "operation_id": "AS16.35cea92c27.PICK",
+      "actor": "AS16O35cea92c27",
+      "source": {
+        "case_task_id": 1140,
+        "case_line_id": 1142
+      },
+      "metadata": {
+        "fact_qty": "1",
+        "scan_cell": "AS16C35cea92c27",
+        "scan_product": "AS16A35CEA92C27",
+        "scan_container": "090000000000011014",
+        "offline_event_id": null,
+        "assembly_step_id": "AS16.35cea92c27.STEP",
+        "assembly_consent_id": "AS16.35cea92c27.STEP",
+        "automation_origin": "ASSEMBLY_GATEWAY_AUTO",
+        "automation_sender": "AS16G35cea92c27"
+      }
+    },
+    "eligible": true
+  }
+}

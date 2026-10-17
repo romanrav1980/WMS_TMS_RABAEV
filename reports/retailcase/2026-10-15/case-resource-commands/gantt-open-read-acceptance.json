@@ -1,0 +1,97 @@
+{
+  "status": "NATIVE_AND_HTTP_PASS",
+  "native": {
+    "active": {
+      "event_id": "CASE_PICK_TASK:1138",
+      "kind": "CASE_PICK_TASK",
+      "label": "\u0421\u0431\u043e\u0440\u043a\u0430 1138 \u00b7 \u0432\u043e\u043b\u043d\u0430 569",
+      "source": "RRL_CASE_PICK_TASK",
+      "source_id": 1138,
+      "wave_id": 569,
+      "status": "IN_PROGRESS",
+      "total_lines": 1,
+      "picked_lines": 0,
+      "plan_start_at": null,
+      "plan_finish_at": null,
+      "fact_start_at": "2026-10-15T13:31:51.198164+00:00",
+      "fact_finish_at": null,
+      "time_status": "AWARE_FACT",
+      "legacy_time": {
+        "fact_finish": null
+      },
+      "fact_finish_status": "OPEN"
+    },
+    "terminal": {
+      "event_id": "CASE_PICK_TASK:1136",
+      "kind": "CASE_PICK_TASK",
+      "label": "\u0421\u0431\u043e\u0440\u043a\u0430 1136 \u00b7 \u0432\u043e\u043b\u043d\u0430 567",
+      "source": "RRL_CASE_PICK_TASK",
+      "source_id": 1136,
+      "wave_id": 567,
+      "status": "CANCELLED",
+      "total_lines": 1,
+      "picked_lines": 1,
+      "plan_start_at": null,
+      "plan_finish_at": null,
+      "fact_start_at": "2026-10-15T12:16:32.620507+00:00",
+      "fact_finish_at": null,
+      "time_status": "AWARE_FACT",
+      "legacy_time": {
+        "fact_finish": null
+      },
+      "fact_finish_status": "UNRESOLVED"
+    },
+    "binding": "RESOURCE:59",
+    "snapshot": "ORACLE_READ_ONLY"
+  },
+  "hardware_verified": false,
+  "behavior": "ResourceCard state corrected to ongoing; bar geometry already supported ongoing statuses; no finish instant invented",
+  "http_status": 200,
+  "http": {
+    "active": {
+      "event_id": "CASE_PICK_TASK:1138",
+      "kind": "CASE_PICK_TASK",
+      "label": "\u0421\u0431\u043e\u0440\u043a\u0430 1138 \u00b7 \u0432\u043e\u043b\u043d\u0430 569",
+      "source": "RRL_CASE_PICK_TASK",
+      "source_id": 1138,
+      "wave_id": 569,
+      "status": "IN_PROGRESS",
+      "total_lines": 1,
+      "picked_lines": 0,
+      "plan_start_at": null,
+      "plan_finish_at": null,
+      "fact_start_at": "2026-10-15T13:31:51.198164+00:00",
+      "fact_finish_at": null,
+      "time_status": "AWARE_FACT",
+      "legacy_time": {
+        "fact_finish": null
+      },
+      "fact_finish_status": "OPEN"
+    },
+    "terminal": {
+      "event_id": "CASE_PICK_TASK:1136",
+      "kind": "CASE_PICK_TASK",
+      "label": "\u0421\u0431\u043e\u0440\u043a\u0430 1136 \u00b7 \u0432\u043e\u043b\u043d\u0430 567",
+      "source": "RRL_CASE_PICK_TASK",
+      "source_id": 1136,
+      "wave_id": 567,
+      "status": "CANCELLED",
+      "total_lines": 1,
+      "picked_lines": 1,
+      "plan_start_at": null,
+      "plan_finish_at": null,
+      "fact_start_at": "2026-10-15T12:16:32.620507+00:00",
+      "fact_finish_at": null,
+      "time_status": "AWARE_FACT",
+      "legacy_time": {
+        "fact_finish": null
+      },
+      "fact_finish_status": "UNRESOLVED"
+    },
+    "binding": "RESOURCE:59",
+    "snapshot": "ORACLE_READ_ONLY"
+  },
+  "source_case_events_receipts_unchanged": true,
+  "slow_sql_timeline_last_hour": [],
+  "sql_decision": "Retain existing bounded timeline sources (2000 events/500 registry) and READONLY current rights. Projection change adds no SQL. This read-only acceptance is not a load test. Any slow timeline query remains a resource-timeline owner plan/stats/bounds investigation; no new index or cache justified by this pure projection fix."
+}

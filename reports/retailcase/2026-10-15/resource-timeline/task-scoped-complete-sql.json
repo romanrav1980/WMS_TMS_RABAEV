@@ -1,0 +1,178 @@
+{
+  "status": "REVIEWED",
+  "logs": [
+    {
+      "log_id": 4519,
+      "elapsed_ms": 336,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": "ORA-00001: unique constraint (RABAEV.RRL_WAREHOUSE_TASK_U2) violated\nHelp: https://docs.oracle.com/e"
+    },
+    {
+      "log_id": 4516,
+      "elapsed_ms": 312,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": "ORA-01745: invalid host/bind variable name\nHelp: https://docs.oracle.com/error-help/db/ora-01745/"
+    },
+    {
+      "log_id": 4517,
+      "elapsed_ms": 253,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": "ORA-01745: invalid host/bind variable name\nHelp: https://docs.oracle.com/error-help/db/ora-01745/"
+    },
+    {
+      "log_id": 4557,
+      "elapsed_ms": 209,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4518,
+      "elapsed_ms": 164,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": "ORA-01745: invalid host/bind variable name\nHelp: https://docs.oracle.com/error-help/db/ora-01745/"
+    },
+    {
+      "log_id": 4531,
+      "elapsed_ms": 143,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4521,
+      "elapsed_ms": 140,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4554,
+      "elapsed_ms": 134,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4534,
+      "elapsed_ms": 128,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4608,
+      "elapsed_ms": 121,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4611,
+      "elapsed_ms": 120,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4573,
+      "elapsed_ms": 111,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4542,
+      "elapsed_ms": 108,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4545,
+      "elapsed_ms": 107,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4588,
+      "elapsed_ms": 107,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4576,
+      "elapsed_ms": 100,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4591,
+      "elapsed_ms": 92,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4596,
+      "elapsed_ms": 84,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4520,
+      "elapsed_ms": 49,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    },
+    {
+      "log_id": 4581,
+      "elapsed_ms": 48,
+      "api_path": null,
+      "operation_kind": "TRANSACTION",
+      "error_hint": null
+    }
+  ],
+  "top_sql": [
+    {
+      "sql_id": "2vpqv8v5a9bv2",
+      "executions": 8,
+      "avg_ms": 8.989,
+      "sql_hint": "select RRL_WAREHOUSE_TASK_ACCESS.task_signature(:id) SIGNATURE from dual"
+    },
+    {
+      "sql_id": "94sz8sdk5sv1c",
+      "executions": 18,
+      "avg_ms": 3.623,
+      "sql_hint": "select RRL_WAREHOUSE_TASK_ACCESS.scoped_stock_executor(:task,:actor)from dual"
+    },
+    {
+      "sql_id": "67cbu47p31qpw",
+      "executions": 10,
+      "avg_ms": 3.642,
+      "sql_hint": "select RRL_HAS_WRIGHT(u.ID,'warehouse_task_execute'),             RRL_WAREHOUSE_TASK_ACCESS.scoped_stock_executor(:task,u.ID)             from RUSERS u where u.ID=:actor and nvl(u."
+    },
+    {
+      "sql_id": "cfdbc1fhxkm6x",
+      "executions": 8,
+      "avg_ms": 4.503,
+      "sql_hint": "select RRL_WAREHOUSE_TASK_ACCESS.task_signature(:task) SIGNATURE from dual"
+    },
+    {
+      "sql_id": "8yharzaqb9gaf",
+      "executions": 2,
+      "avg_ms": 7.275,
+      "sql_hint": "select RRL_WAREHOUSE_TASK_ACCESS.task_signature(:task) from dual"
+    }
+  ],
+  "decision": "Keep task PK + two exact cell warehouse lookups and native scoped permission checks; no measured query requires a new index. Stock preparation retains canonical bounded closures. Separate two-session concurrency and load acceptance remain required."
+}

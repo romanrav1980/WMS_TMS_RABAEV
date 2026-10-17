@@ -1,0 +1,68 @@
+{
+  "status": "PASS_INDEPENDENT_READBACK",
+  "at_utc": "2026-10-15T17:09:40.086203+00:00",
+  "sources": [
+    {
+      "name": "RRL_RESOURCE_INTENT_API",
+      "type": "PACKAGE",
+      "sha256": "fd0d00a6a92c0e3c95b2897e3c9ef098901cce864aa2c6142583eee433553027"
+    },
+    {
+      "name": "RRL_RESOURCE_INTENT_API",
+      "type": "PACKAGE BODY",
+      "sha256": "8c7e02857a46ad53541e3a3e8ed5515772e2c30dc9e19616919e251666ba4c8f"
+    },
+    {
+      "name": "RRL_RESOURCE_INTENT_GUARD",
+      "type": "TRIGGER",
+      "sha256": "8b8f6744c8fd5bdf1369ed3acdc4d92366205552c7e0072c56a621b1df378613"
+    },
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE",
+      "sha256": "94fcdb300ba0a20eb7d9292a22971deeb4abc2d3411889b1449713b107f695a8"
+    },
+    {
+      "name": "RRL_CASE_ASSIGNMENT_API",
+      "type": "PACKAGE BODY",
+      "sha256": "17a13dc2439099f91cc0bf9207171609f5c15d76d704c8c3465a34018b48545b"
+    },
+    {
+      "name": "RRL_WTASK_ASSIGN_API",
+      "type": "PACKAGE",
+      "sha256": "23bd19364fa343539d391aa9757b4d4abe57b387960c7ef587948c29e78a1d2e"
+    },
+    {
+      "name": "RRL_WTASK_ASSIGN_API",
+      "type": "PACKAGE BODY",
+      "sha256": "cc331abbe38b775069ff9355b5a5e8063196ef0409cec017b4d2c84e9ee24d7d"
+    }
+  ],
+  "errors": [],
+  "invalid": [],
+  "ledger": [
+    {
+      "migration_id": "2026-10-15-resource-metadata-intents",
+      "status": "APPLIED"
+    }
+  ],
+  "indexes": [
+    {
+      "constraint_name": "SYS_C0019476",
+      "constraint_type": "P",
+      "index_name": "SYS_C0019476",
+      "index_type": "NORMAL",
+      "status": "VALID",
+      "uniqueness": "UNIQUE"
+    },
+    {
+      "constraint_name": "RRL_RESOURCE_INTENT_OLD_UK",
+      "constraint_type": "U",
+      "index_name": "RRL_RESOURCE_INTENT_OLD_UK",
+      "index_type": "NORMAL",
+      "status": "VALID",
+      "uniqueness": "UNIQUE"
+    }
+  ],
+  "quantity_writes": false
+}

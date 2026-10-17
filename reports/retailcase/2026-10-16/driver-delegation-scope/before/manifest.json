@@ -1,0 +1,28 @@
+{
+  "captured_at_utc": "2026-10-16T18:57:31.005091+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_TT_OPERATION_PLAN_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_tt_operation_plan_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "ceb996823ca905e677aecd9edc9c72bf1184c76e4077c3c55b1d2b28ec91ff45",
+      "normalized_source_sha256": "1e5b838c99aae0a4e05a6af6ea62d0d69713867c0a8c36ebd049a76c63621673",
+      "artifact_sha256": "a4a62c1377256b643cb2f1c6c345c51565a5ee9c3ecbc6d62585f502462e86be"
+    },
+    {
+      "name": "RRL_TRANSPORT_DRIVER_USER_GUARD",
+      "type": "TRIGGER",
+      "file": "rrl_transport_driver_user_guard_trigger.sql",
+      "errors": [],
+      "user_source_sha256": "46e53312d68f449b43c9513f88aa35e19897b7dd18c9309d320c88b5022f171e",
+      "normalized_source_sha256": "5bd760bc77332f96cf141e398416700897d587f7df77fc76aed12a582698a109",
+      "artifact_sha256": "8ba42d23687fc28ac2d2a768ccc2bb2e1ce51dd4cbfb5f072942341fcca456aa"
+    }
+  ]
+}

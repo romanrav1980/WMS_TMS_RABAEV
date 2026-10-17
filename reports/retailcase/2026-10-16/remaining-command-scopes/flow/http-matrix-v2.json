@@ -1,0 +1,534 @@
+{
+  "state": "PASS_NATIVE_HTTP_WARE_GROUP_PLAN_ASSIGN_START_COMPLETE_ROLLBACK_REV_REVOKE",
+  "http": [
+    {
+      "label": "foreign_target",
+      "status": 403,
+      "path": "/api/warehouse-hus/plan-move",
+      "api_call_id": "70152",
+      "request_id": "2f660804-789a-409d-a843-6abe8046846b"
+    },
+    {
+      "label": "ware_plan",
+      "status": 200,
+      "path": "/api/warehouse-hus/plan-move",
+      "api_call_id": "70153",
+      "request_id": "b8daf7bd-fc27-482f-a9e3-363402a1fba3"
+    },
+    {
+      "label": "ware_plan_replay",
+      "status": 200,
+      "path": "/api/warehouse-hus/plan-move",
+      "api_call_id": "70154",
+      "request_id": "fe6c4a46-6f74-49b7-8ff9-42cdc98761d3"
+    },
+    {
+      "label": "plan_changed",
+      "status": 409,
+      "path": "/api/warehouse-hus/plan-move",
+      "api_call_id": "70155",
+      "request_id": "ff852edb-9437-4ffb-bdf3-8b0e912c3ec8"
+    },
+    {
+      "label": "revoked_plan_replay",
+      "status": 403,
+      "path": "/api/warehouse-hus/plan-move",
+      "api_call_id": "70156",
+      "request_id": "b7275903-4809-4f9c-a738-61abd52422c4"
+    },
+    {
+      "label": "group_plan_replay",
+      "status": 200,
+      "path": "/api/warehouse-hus/plan-move",
+      "api_call_id": "70157",
+      "request_id": "a805c1d5-c6c0-4f11-8ae5-fbf3c9fdc629"
+    },
+    {
+      "label": "ASSIGN",
+      "status": 200,
+      "path": "/api/warehouse-tasks/1194/resource-commands",
+      "api_call_id": "70158",
+      "request_id": "017589d1-8a79-46b2-b1c3-5005f743ae6a"
+    },
+    {
+      "label": "ASSIGN_replay",
+      "status": 200,
+      "path": "/api/warehouse-tasks/1194/resource-commands",
+      "api_call_id": "70159",
+      "request_id": "0e328bd0-3045-4cf8-9b84-08a6ff062f47"
+    },
+    {
+      "label": "START",
+      "status": 200,
+      "path": "/api/warehouse-tasks/1194/resource-commands",
+      "api_call_id": "70160",
+      "request_id": "f7dfd7bc-0b32-4d3c-810b-206815808d99"
+    },
+    {
+      "label": "START_replay",
+      "status": 200,
+      "path": "/api/warehouse-tasks/1194/resource-commands",
+      "api_call_id": "70161",
+      "request_id": "d5680510-be08-40f3-bd90-0ada11ff3e3c"
+    },
+    {
+      "label": "complete",
+      "status": 403,
+      "path": "/api/warehouse-tasks/1194/complete",
+      "api_call_id": "70162",
+      "request_id": "d2b27ecc-78ee-4972-9979-47bb28464621"
+    },
+    {
+      "label": "complete",
+      "status": 200,
+      "path": "/api/warehouse-tasks/1194/complete",
+      "api_call_id": "70163",
+      "request_id": "4ef8d650-3865-4dd3-81b1-709e9c94e117"
+    },
+    {
+      "label": "complete_replay",
+      "status": 200,
+      "path": "/api/warehouse-tasks/1194/complete",
+      "api_call_id": "70164",
+      "request_id": "4dacf0d0-3291-400f-950b-715a2df2f03b"
+    },
+    {
+      "label": "removed_group_complete_replay",
+      "status": 403,
+      "path": "/api/warehouse-tasks/1194/complete",
+      "api_call_id": "70165",
+      "request_id": "bd3595bf-fd47-4d89-affc-c2ddddb51080"
+    }
+  ],
+  "acl": {
+    "REVOKE.WARE": {
+      "request": {
+        "operation_id": "HT16.c31efb0e6c.MATRIX.REVOKE.WARE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "HT16Ac31efb0e6c",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "HT16.c31efb0e6c.MATRIX.REVOKE.WARE",
+        "command_type": "REVOKE",
+        "object_id": "HT16Ac31efb0e6c",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP": {
+      "request": {
+        "operation_id": "HT16.c31efb0e6c.MATRIX.GROUP",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "group_id": "HT16Gc31efb0e6c",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "40799215"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "HT16.c31efb0e6c.MATRIX.GROUP",
+        "command_type": "GROUP_SAVE",
+        "object_id": "HT16Gc31efb0e6c",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.ASSIGN": {
+      "request": {
+        "operation_id": "HT16.c31efb0e6c.MATRIX.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "HT16Bc31efb0e6c",
+          "username": "HT16Oc31efb0e6c",
+          "role_id": "HT16Rc31efb0e6c",
+          "scope_kind": "GROUP",
+          "scope_id": "HT16Gc31efb0e6c",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T15:42:07.835850+00:00",
+          "valid_until": "2026-10-16T17:43:07.835850+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "HT16.c31efb0e6c.MATRIX.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "HT16Bc31efb0e6c",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.REMOVE": {
+      "request": {
+        "operation_id": "HT16.c31efb0e6c.MATRIX.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "group_id": "HT16Gc31efb0e6c",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "HT16.c31efb0e6c.MATRIX.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "HT16Gc31efb0e6c",
+        "version": 2,
+        "replayed": false
+      }
+    }
+  },
+  "foreign_target": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "HT16.c31efb0e6c.FOREIGN.PLAN",
+      "reason": "HU_CURRENT_WARE_EXECUTION_FORBIDDEN",
+      "oracle_code": 20882,
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false
+    }
+  },
+  "caller_rollback_REV": "PASS",
+  "ware_plan": {
+    "operation_id": "HT16.c31efb0e6c.HTTP.PLAN",
+    "task_id": 1194,
+    "pallet_identifier": "HT16.P:c31efb0e6c",
+    "from_cell": "HT16Tc31efb0e6c",
+    "cell": "HT16Uc31efb0e6c",
+    "target_slot_id": null,
+    "placement": {
+      "target_role": "ORDINARY_STORAGE"
+    },
+    "status": "PLANNED",
+    "quantity": "1",
+    "unit_code": "HU",
+    "content_version": 2,
+    "outbox_id": 5589
+  },
+  "ware_plan_replay": {
+    "operation_id": "HT16.c31efb0e6c.HTTP.PLAN",
+    "task_id": 1194,
+    "pallet_identifier": "HT16.P:c31efb0e6c",
+    "from_cell": "HT16Tc31efb0e6c",
+    "cell": "HT16Uc31efb0e6c",
+    "target_slot_id": null,
+    "placement": {
+      "target_role": "ORDINARY_STORAGE"
+    },
+    "status": "PLANNED",
+    "quantity": "1",
+    "unit_code": "HU",
+    "content_version": 2,
+    "outbox_id": 5589
+  },
+  "plan_changed": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "HT16.c31efb0e6c.HTTP.PLAN",
+      "reason": "OPERATION_CONFLICT",
+      "oracle_code": 20872,
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false
+    }
+  },
+  "revoked_plan_replay": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "HT16.c31efb0e6c.HTTP.PLAN",
+      "reason": "HU_CURRENT_WARE_EXECUTION_FORBIDDEN",
+      "oracle_code": 20882,
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false
+    }
+  },
+  "group_plan_replay": {
+    "operation_id": "HT16.c31efb0e6c.HTTP.PLAN",
+    "task_id": 1194,
+    "pallet_identifier": "HT16.P:c31efb0e6c",
+    "from_cell": "HT16Tc31efb0e6c",
+    "cell": "HT16Uc31efb0e6c",
+    "target_slot_id": null,
+    "placement": {
+      "target_role": "ORDINARY_STORAGE"
+    },
+    "status": "PLANNED",
+    "quantity": "1",
+    "unit_code": "HU",
+    "content_version": 2,
+    "outbox_id": 5589
+  },
+  "task_id": 1194,
+  "ASSIGN": {
+    "task_id": 1194,
+    "status": "ASSIGNED",
+    "assignment_version": 1,
+    "task_signature": "0987B1C569B9B7A2C515F053EB08D5273ED9ECCD69277AA521933DE39A71DCDD",
+    "assigned_to": "HT16Oc31efb0e6c",
+    "resource_id": 72,
+    "resource_session_id": 68,
+    "equipment_id": null,
+    "started_shift_time_zone": null,
+    "started_at_instant": null,
+    "operation_id": "HT16.c31efb0e6c.HTTP.ASSIGN",
+    "action": "ASSIGN",
+    "actor": "HT16Oc31efb0e6c",
+    "target": "HT16Oc31efb0e6c",
+    "outcome": "APPLIED",
+    "error_code": null,
+    "outcome_confirmed": true,
+    "stock_posted": false,
+    "changed": true,
+    "request_sha256": "5BFD15F75CFF67868B67BB14BCA6B37B914372B36837C5A4CBC0FA9844090A61",
+    "may_create_corrected_operation": false
+  },
+  "ASSIGN_replay": {
+    "task_id": 1194,
+    "status": "ASSIGNED",
+    "assignment_version": 1,
+    "task_signature": "0987B1C569B9B7A2C515F053EB08D5273ED9ECCD69277AA521933DE39A71DCDD",
+    "assigned_to": "HT16Oc31efb0e6c",
+    "resource_id": 72,
+    "resource_session_id": 68,
+    "equipment_id": null,
+    "started_shift_time_zone": null,
+    "started_at_instant": null,
+    "operation_id": "HT16.c31efb0e6c.HTTP.ASSIGN",
+    "action": "ASSIGN",
+    "actor": "HT16Oc31efb0e6c",
+    "target": "HT16Oc31efb0e6c",
+    "outcome": "APPLIED",
+    "error_code": null,
+    "outcome_confirmed": true,
+    "stock_posted": false,
+    "changed": true,
+    "request_sha256": "5BFD15F75CFF67868B67BB14BCA6B37B914372B36837C5A4CBC0FA9844090A61",
+    "may_create_corrected_operation": false
+  },
+  "START": {
+    "task_id": 1194,
+    "status": "IN_PROGRESS",
+    "assignment_version": 2,
+    "task_signature": "A65DAAF9004B5545BA9BF27273D146979BD2982108EFF2A1BD61008E853D43BD",
+    "assigned_to": "HT16Oc31efb0e6c",
+    "resource_id": 72,
+    "resource_session_id": 68,
+    "equipment_id": null,
+    "started_shift_time_zone": "+03:00",
+    "started_at_instant": "2026-10-16T15:43:08.506056+00:00",
+    "operation_id": "HT16.c31efb0e6c.HTTP.START",
+    "action": "START",
+    "actor": "HT16Oc31efb0e6c",
+    "target": "HT16Oc31efb0e6c",
+    "outcome": "APPLIED",
+    "error_code": null,
+    "outcome_confirmed": true,
+    "stock_posted": false,
+    "changed": true,
+    "request_sha256": "A4A08357B68BE17FF62B4E217A0EFB48FF1DB7BECB82671EF291624397AD5B90",
+    "may_create_corrected_operation": false
+  },
+  "START_replay": {
+    "task_id": 1194,
+    "status": "IN_PROGRESS",
+    "assignment_version": 2,
+    "task_signature": "A65DAAF9004B5545BA9BF27273D146979BD2982108EFF2A1BD61008E853D43BD",
+    "assigned_to": "HT16Oc31efb0e6c",
+    "resource_id": 72,
+    "resource_session_id": 68,
+    "equipment_id": null,
+    "started_shift_time_zone": "+03:00",
+    "started_at_instant": "2026-10-16T15:43:08.506056+00:00",
+    "operation_id": "HT16.c31efb0e6c.HTTP.START",
+    "action": "START",
+    "actor": "HT16Oc31efb0e6c",
+    "target": "HT16Oc31efb0e6c",
+    "outcome": "APPLIED",
+    "error_code": null,
+    "outcome_confirmed": true,
+    "stock_posted": false,
+    "changed": true,
+    "request_sha256": "A4A08357B68BE17FF62B4E217A0EFB48FF1DB7BECB82671EF291624397AD5B90",
+    "may_create_corrected_operation": false
+  },
+  "complete": {
+    "status": "ok",
+    "result": {
+      "root": "HT16.P:c31efb0e6c",
+      "warehouse": 40799215,
+      "cell": "HT16Uc31efb0e6c",
+      "nodes": [
+        {
+          "uid": "HT16.P:c31efb0e6c",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 3,
+          "sscc": null,
+          "tare_weight_kg": "0.5",
+          "open_task_count": 0,
+          "cell": "HT16Uc31efb0e6c",
+          "depth": 0
+        },
+        {
+          "uid": "HT16.C:c31efb0e6c",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 4,
+          "sscc": null,
+          "tare_weight_kg": "0.5",
+          "open_task_count": 0,
+          "cell": "HT16Uc31efb0e6c",
+          "depth": 1
+        },
+        {
+          "uid": "HT16.LOT:c31efb0e6c",
+          "kind": "STOCK",
+          "type": null,
+          "version": 3,
+          "sscc": null,
+          "tare_weight_kg": "0",
+          "article": "AS16ACE9C011B16",
+          "quantity": "3",
+          "hard_quantity": "0",
+          "base_uom": "EA",
+          "stock_version": 1,
+          "weight_kg": null,
+          "open_task_count": 0,
+          "cell": "HT16Uc31efb0e6c",
+          "depth": 2
+        }
+      ],
+      "links": [
+        {
+          "id": 622,
+          "parent": "HT16.P:c31efb0e6c",
+          "child": "HT16.C:c31efb0e6c",
+          "version": 0
+        },
+        {
+          "id": 621,
+          "parent": "HT16.C:c31efb0e6c",
+          "child": "HT16.LOT:c31efb0e6c",
+          "version": 0
+        }
+      ],
+      "ancestors": [],
+      "physical_unit_count": 0,
+      "leaf_count": 1,
+      "top_place_count": 1,
+      "operation_id": "HT16.c31efb0e6c.HTTP.COMPLETE",
+      "task_id": 1194,
+      "status": "DONE",
+      "pallet_identifier": "HT16.P:c31efb0e6c",
+      "source_pallet_identifier": "HT16.P:c31efb0e6c",
+      "quantity": "1",
+      "unit_code": "HU",
+      "remaining_quantity": "0",
+      "residual_task_id": null,
+      "outbox_id": 5590
+    }
+  },
+  "complete_replay": {
+    "status": "ok",
+    "result": {
+      "root": "HT16.P:c31efb0e6c",
+      "warehouse": 40799215,
+      "cell": "HT16Uc31efb0e6c",
+      "nodes": [
+        {
+          "uid": "HT16.P:c31efb0e6c",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 3,
+          "sscc": null,
+          "tare_weight_kg": "0.5",
+          "open_task_count": 0,
+          "cell": "HT16Uc31efb0e6c",
+          "depth": 0
+        },
+        {
+          "uid": "HT16.C:c31efb0e6c",
+          "kind": "CONTAINER",
+          "type": "PALLET",
+          "version": 4,
+          "sscc": null,
+          "tare_weight_kg": "0.5",
+          "open_task_count": 0,
+          "cell": "HT16Uc31efb0e6c",
+          "depth": 1
+        },
+        {
+          "uid": "HT16.LOT:c31efb0e6c",
+          "kind": "STOCK",
+          "type": null,
+          "version": 3,
+          "sscc": null,
+          "tare_weight_kg": "0",
+          "article": "AS16ACE9C011B16",
+          "quantity": "3",
+          "hard_quantity": "0",
+          "base_uom": "EA",
+          "stock_version": 1,
+          "weight_kg": null,
+          "open_task_count": 0,
+          "cell": "HT16Uc31efb0e6c",
+          "depth": 2
+        }
+      ],
+      "links": [
+        {
+          "id": 622,
+          "parent": "HT16.P:c31efb0e6c",
+          "child": "HT16.C:c31efb0e6c",
+          "version": 0
+        },
+        {
+          "id": 621,
+          "parent": "HT16.C:c31efb0e6c",
+          "child": "HT16.LOT:c31efb0e6c",
+          "version": 0
+        }
+      ],
+      "ancestors": [],
+      "physical_unit_count": 0,
+      "leaf_count": 1,
+      "top_place_count": 1,
+      "operation_id": "HT16.c31efb0e6c.HTTP.COMPLETE",
+      "task_id": 1194,
+      "status": "DONE",
+      "pallet_identifier": "HT16.P:c31efb0e6c",
+      "source_pallet_identifier": "HT16.P:c31efb0e6c",
+      "quantity": "1",
+      "unit_code": "HU",
+      "remaining_quantity": "0",
+      "residual_task_id": null,
+      "outbox_id": 5590
+    }
+  },
+  "removed_group_complete_replay": {
+    "detail": {
+      "code": "TASK_CURRENT_SCOPED_EXECUTE_REQUIRED",
+      "operation_id": "HT16.c31efb0e6c.HTTP.COMPLETE",
+      "outcome_confirmed": false,
+      "retry_same_operation_id": false
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "state": "BEFORE_SOURCE_PROOF",
+  "http": [],
+  "hardware_verified": false,
+  "in_flight": {
+    "label": "proof",
+    "path": "/api/inventory/interwarehouse/source-loads/IC16.ce9c011b16.LOAD.TOP/group-proof",
+    "body": null
+  }
+}

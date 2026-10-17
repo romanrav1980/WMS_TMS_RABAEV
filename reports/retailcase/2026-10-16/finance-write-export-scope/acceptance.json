@@ -1,0 +1,622 @@
+{
+  "state": "PASS_SCOPED_RATE_MONTHLY_XLSX_SHELL_REPLAY_REVOKE_GROUP_ROLLBACK_REV",
+  "prefix": "FW16.fc9538d7c6",
+  "actor": "FW16Ofc9538d7c6",
+  "narrow_actor": "FW16Nfc9538d7c6",
+  "role": "FW16Rfc9538d7c6",
+  "narrow_role": "FW16Efc9538d7c6",
+  "shell_role": "FW16Sfc9538d7c6",
+  "group": "FW16Gfc9538d7c6",
+  "ware": 20902283,
+  "commands": {
+    "ROLE": {
+      "wire": {
+        "operation_id": "FW16.fc9538d7c6.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "FW16Rfc9538d7c6",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "create_tt_price",
+            "transport_dispatch_view"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FW16.fc9538d7c6.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "FW16Rfc9538d7c6",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "NARROW.ROLE": {
+      "wire": {
+        "operation_id": "FW16.fc9538d7c6.NARROW.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "FW16Efc9538d7c6",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "expense_finance_approve"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FW16.fc9538d7c6.NARROW.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "FW16Efc9538d7c6",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "SHELL.ROLE": {
+      "wire": {
+        "operation_id": "FW16.fc9538d7c6.SHELL.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "FW16Sfc9538d7c6",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "wms_admin_login"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FW16.fc9538d7c6.SHELL.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "FW16Sfc9538d7c6",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "WARE.ASSIGN": {
+      "wire": {
+        "operation_id": "FW16.fc9538d7c6.WARE.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "FW16.fc9538d7c6.WARE",
+          "username": "FW16Ofc9538d7c6",
+          "role_id": "FW16Rfc9538d7c6",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20902283",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T18:48:07.150014+00:00",
+          "valid_until": "2026-10-16T21:49:07.150014+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FW16.fc9538d7c6.WARE.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "FW16.fc9538d7c6.WARE",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "NARROW.ASSIGN": {
+      "wire": {
+        "operation_id": "FW16.fc9538d7c6.NARROW.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "FW16.fc9538d7c6.NARROW",
+          "username": "FW16Nfc9538d7c6",
+          "role_id": "FW16Efc9538d7c6",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20902283",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T18:48:07.150014+00:00",
+          "valid_until": "2026-10-16T21:49:07.150014+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FW16.fc9538d7c6.NARROW.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "FW16.fc9538d7c6.NARROW",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "SHELL.ASSIGN": {
+      "wire": {
+        "operation_id": "FW16.fc9538d7c6.SHELL.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "FW16.fc9538d7c6.SHELL",
+          "username": "FW16Ofc9538d7c6",
+          "role_id": "FW16Sfc9538d7c6",
+          "scope_kind": "PLATFORM",
+          "scope_id": null,
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T18:48:07.150014+00:00",
+          "valid_until": "2026-10-16T21:49:07.150014+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FW16.fc9538d7c6.SHELL.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "FW16.fc9538d7c6.SHELL",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "WARE.REVOKE": {
+      "wire": {
+        "operation_id": "FW16.fc9538d7c6.WARE.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "FW16.fc9538d7c6.WARE",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FW16.fc9538d7c6.WARE.REVOKE",
+        "command_type": "REVOKE",
+        "object_id": "FW16.fc9538d7c6.WARE",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP": {
+      "wire": {
+        "operation_id": "FW16.fc9538d7c6.GROUP",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "group_id": "FW16Gfc9538d7c6",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20902283"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FW16.fc9538d7c6.GROUP",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FW16Gfc9538d7c6",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.ASSIGN": {
+      "wire": {
+        "operation_id": "FW16.fc9538d7c6.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "FW16.fc9538d7c6.GROUP",
+          "username": "FW16Ofc9538d7c6",
+          "role_id": "FW16Rfc9538d7c6",
+          "scope_kind": "GROUP",
+          "scope_id": "FW16Gfc9538d7c6",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T18:48:07.150014+00:00",
+          "valid_until": "2026-10-16T21:49:07.150014+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FW16.fc9538d7c6.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "FW16.fc9538d7c6.GROUP",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.REMOVE": {
+      "wire": {
+        "operation_id": "FW16.fc9538d7c6.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "group_id": "FW16Gfc9538d7c6",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FW16.fc9538d7c6.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FW16Gfc9538d7c6",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP.RESTORE": {
+      "wire": {
+        "operation_id": "FW16.fc9538d7c6.GROUP.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 2,
+          "group_id": "FW16Gfc9538d7c6",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20902283"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FW16.fc9538d7c6.GROUP.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "FW16Gfc9538d7c6",
+        "version": 3,
+        "replayed": false
+      }
+    },
+    "SHELL.REVOKE": {
+      "wire": {
+        "operation_id": "FW16.fc9538d7c6.SHELL.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "FW16.fc9538d7c6.SHELL",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "FW16.fc9538d7c6.SHELL.REVOKE",
+        "command_type": "REVOKE",
+        "object_id": "FW16.fc9538d7c6.SHELL",
+        "version": 2,
+        "replayed": false
+      }
+    }
+  },
+  "http": [
+    {
+      "label": "no_grant_rate",
+      "path": "/api/finance/logistics-costs/rates",
+      "status": 403,
+      "api_call_id": "70637",
+      "request_id": "ac59cc59-6e06-4d9c-979a-a8f9aedd50cc"
+    },
+    {
+      "label": "no_shell_grant",
+      "path": "/api/admin/auth/login",
+      "status": 403,
+      "api_call_id": "70638",
+      "request_id": "0acd673a-9164-438e-a928-8da3d3df9763"
+    },
+    {
+      "label": "platform_shell",
+      "path": "/api/admin/auth/login",
+      "status": 200,
+      "api_call_id": "70639",
+      "request_id": "05ea1e01-9a8e-4d3b-bf87-35a1b0239b69"
+    },
+    {
+      "label": "narrow_cannot_set_rate",
+      "path": "/api/finance/logistics-costs/rates",
+      "status": 403,
+      "api_call_id": "70640",
+      "request_id": "a6af5424-9061-4498-959c-72a713d12bb0"
+    },
+    {
+      "label": "ware_rate",
+      "path": "/api/finance/logistics-costs/rates",
+      "status": 200,
+      "api_call_id": "70641",
+      "request_id": "e6891d69-b89f-452d-95e2-074ccb073ba3"
+    },
+    {
+      "label": "rate_exact_repeat",
+      "path": "/api/finance/logistics-costs/rates",
+      "status": 200,
+      "api_call_id": "70642",
+      "request_id": "c08f80a6-e138-4499-a33f-ee9f9d18034c"
+    },
+    {
+      "label": "rate_changed_body",
+      "path": "/api/finance/logistics-costs/rates",
+      "status": 409,
+      "api_call_id": "70643",
+      "request_id": "f504465e-6e87-4417-ba1b-2e4b0a23f936"
+    },
+    {
+      "label": "foreign_rate",
+      "path": "/api/finance/logistics-costs/rates",
+      "status": 403,
+      "api_call_id": "70644",
+      "request_id": "8ded4919-71b3-478e-b64e-701086ad4dac"
+    },
+    {
+      "label": "ware_invoice_export",
+      "path": "/api/admin/transport/billing/orders/530/export.xlsx",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "495764cd-d242-4351-94c3-1b48edb2a247"
+    },
+    {
+      "label": "ware_registry_export",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=FW16.fc9538d7c6",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "fb8f3242-777c-4994-b4d5-bc84c9474e8d"
+    },
+    {
+      "label": "foreign_invoice_export",
+      "path": "/api/admin/transport/billing/orders/1/export.xlsx",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "75df0b36-04d4-4522-9ce5-da61276f6a41"
+    },
+    {
+      "label": "revoked_rate_repeat",
+      "path": "/api/finance/logistics-costs/rates",
+      "status": 403,
+      "api_call_id": "70645",
+      "request_id": "c0086506-937b-4d21-87ea-ee75220d52a3"
+    },
+    {
+      "label": "revoked_invoice_export",
+      "path": "/api/admin/transport/billing/orders/530/export.xlsx",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "3f74d9f8-a0dc-45b5-a336-e897fcedaa7f"
+    },
+    {
+      "label": "group_rate_repeat",
+      "path": "/api/finance/logistics-costs/rates",
+      "status": 200,
+      "api_call_id": "70646",
+      "request_id": "0906eaec-fedc-4971-8ac7-6712156855d0"
+    },
+    {
+      "label": "group_registry_export",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=FW16.fc9538d7c6",
+      "status": 200,
+      "api_call_id": null,
+      "request_id": "fcf5b2a7-d472-4f5d-a6c4-ac4398faa638"
+    },
+    {
+      "label": "monthly_rate",
+      "path": "/api/finance/logistics-costs/rates/monthly",
+      "status": 200,
+      "api_call_id": "70647",
+      "request_id": "f2cc72c4-4240-4027-86f1-0bc87f664509"
+    },
+    {
+      "label": "monthly_repeat",
+      "path": "/api/finance/logistics-costs/rates/monthly",
+      "status": 200,
+      "api_call_id": "70648",
+      "request_id": "da521b66-d1fa-4fc4-85fc-5e146bb9bb3b"
+    },
+    {
+      "label": "removed_group_rate",
+      "path": "/api/finance/logistics-costs/rates/monthly",
+      "status": 403,
+      "api_call_id": "70649",
+      "request_id": "a1b4a7e4-b585-4dd4-9972-9186b1749f69"
+    },
+    {
+      "label": "removed_group_registry",
+      "path": "/api/admin/transport/billing/orders/export.xlsx?company=FW16.fc9538d7c6",
+      "status": 403,
+      "api_call_id": null,
+      "request_id": "16ca4d39-e1c6-42a2-b188-dcef6ec435db"
+    },
+    {
+      "label": "revoked_platform_shell",
+      "path": "/api/admin/auth/me",
+      "status": 403,
+      "api_call_id": "70650",
+      "request_id": "ecc509b4-6e9d-40f5-828f-8ff3fab5f1ee"
+    }
+  ],
+  "financial_recognition": false,
+  "invoice": 530,
+  "no_grant_rate": {
+    "detail": {
+      "code": "COST_WAREHOUSE_FORBIDDEN",
+      "message": "\u041d\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u043c\u043e\u0447\u0438\u0439 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0441\u043a\u043b\u0430\u0434",
+      "operation_id": null,
+      "outcome_confirmed": false
+    }
+  },
+  "no_shell_grant": {
+    "detail": {
+      "code": "ADMIN_LOGIN_SCOPE_REQUIRED"
+    }
+  },
+  "platform_shell": {
+    "username": "FW16Ofc9538d7c6",
+    "display_name": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+    "user_group": "FW16Ofc9538d7c6",
+    "permissions": [
+      "wms_admin_login"
+    ]
+  },
+  "narrow_cannot_set_rate": {
+    "detail": {
+      "code": "COST_WAREHOUSE_FORBIDDEN",
+      "message": "\u041d\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u043c\u043e\u0447\u0438\u0439 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0441\u043a\u043b\u0430\u0434",
+      "operation_id": null,
+      "outcome_confirmed": false
+    }
+  },
+  "ware_rate": {
+    "warehouse_id": 20902283,
+    "cost_code": "WAREHOUSE_PICKING",
+    "currency": "RUB",
+    "rate_key": "fa34fe96852ca6a60d8c350563f0e8ad6428d079dd57656276d27c45868c263e",
+    "version": 1,
+    "rate": "1.25",
+    "basis": "BOX",
+    "effective_from": "2026-10-01",
+    "common_work_included": true
+  },
+  "rate_exact_repeat": {
+    "warehouse_id": 20902283,
+    "cost_code": "WAREHOUSE_PICKING",
+    "currency": "RUB",
+    "rate_key": "fa34fe96852ca6a60d8c350563f0e8ad6428d079dd57656276d27c45868c263e",
+    "version": 1,
+    "rate": "1.25",
+    "basis": "BOX",
+    "effective_from": "2026-10-01",
+    "common_work_included": true
+  },
+  "rate_changed_body": {
+    "detail": {
+      "code": "COST_RATE_VERSION_CONFLICT",
+      "message": "\u041e\u0431\u043d\u043e\u0432\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e \u0441\u0442\u0430\u0432\u043a\u0438",
+      "operation_id": null,
+      "outcome_confirmed": true
+    }
+  },
+  "foreign_rate": {
+    "detail": {
+      "code": "COST_WAREHOUSE_FORBIDDEN",
+      "message": "\u041d\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u043c\u043e\u0447\u0438\u0439 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0441\u043a\u043b\u0430\u0434",
+      "operation_id": null,
+      "outcome_confirmed": false
+    }
+  },
+  "ware_invoice_export": {
+    "bytes": 5405,
+    "sha256": "fee51496655f2c5bab3c96e7f958c39e9acf79efd919929a4516b31e37d1deb6",
+    "zip_members": 9
+  },
+  "ware_registry_export": {
+    "bytes": 5465,
+    "sha256": "79eb387fd5591afd4c63953c42b63f40a35f18126e1302048baf8db76adf809f",
+    "zip_members": 9
+  },
+  "foreign_invoice_export": {
+    "detail": {
+      "code": "BILLING_EXPORT_UNKNOWN_DOCUMENT_SCOPE",
+      "message": "\u041d\u0435 \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0435\u043d\u044b \u0441\u043a\u043b\u0430\u0434\u044b \u0432\u0441\u0435\u0445 \u0441\u0447\u0435\u0442\u043e\u0432; \u0443\u0442\u043e\u0447\u043d\u0438\u0442\u0435 \u0444\u0438\u043b\u044c\u0442\u0440\u044b"
+    }
+  },
+  "revoked_rate_repeat": {
+    "detail": {
+      "code": "COST_WAREHOUSE_FORBIDDEN",
+      "message": "\u041d\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u043c\u043e\u0447\u0438\u0439 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0441\u043a\u043b\u0430\u0434",
+      "operation_id": null,
+      "outcome_confirmed": false
+    }
+  },
+  "revoked_invoice_export": {
+    "detail": {
+      "code": "COST_WAREHOUSE_FORBIDDEN",
+      "message": "\u041d\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u043c\u043e\u0447\u0438\u0439 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0441\u043a\u043b\u0430\u0434"
+    }
+  },
+  "group_rate_repeat": {
+    "warehouse_id": 20902283,
+    "cost_code": "WAREHOUSE_PICKING",
+    "currency": "RUB",
+    "rate_key": "fa34fe96852ca6a60d8c350563f0e8ad6428d079dd57656276d27c45868c263e",
+    "version": 1,
+    "rate": "1.25",
+    "basis": "BOX",
+    "effective_from": "2026-10-01",
+    "common_work_included": true
+  },
+  "group_registry_export": {
+    "bytes": 5465,
+    "sha256": "ecb2d16789132ea7092d2a2b14ca9eef59b69641d35539ea99731b228bd4734c",
+    "zip_members": 9
+  },
+  "monthly_rate": {
+    "warehouse_id": 20902283,
+    "cost_code": "WAREHOUSE_PICKING",
+    "currency": "RUB",
+    "rate_key": "fa34fe96852ca6a60d8c350563f0e8ad6428d079dd57656276d27c45868c263e",
+    "version": 2,
+    "rate": "6.25",
+    "basis": "BOX",
+    "effective_from": "2026-10-01",
+    "common_work_included": true,
+    "components": {
+      "month": "2026-10",
+      "picking_rate": "1.25",
+      "common_work_amount": "50",
+      "basis_boxes": "10",
+      "common_work_rate": "5",
+      "combined_rate": "6.25",
+      "basis_provenance": "DECLARED_MONTHLY_BOX_BASE"
+    }
+  },
+  "monthly_repeat": {
+    "warehouse_id": 20902283,
+    "cost_code": "WAREHOUSE_PICKING",
+    "currency": "RUB",
+    "rate_key": "fa34fe96852ca6a60d8c350563f0e8ad6428d079dd57656276d27c45868c263e",
+    "version": 2,
+    "rate": "6.25",
+    "basis": "BOX",
+    "effective_from": "2026-10-01",
+    "common_work_included": true,
+    "components": {
+      "month": "2026-10",
+      "picking_rate": "1.25",
+      "common_work_amount": "50",
+      "basis_boxes": "10",
+      "common_work_rate": "5",
+      "combined_rate": "6.25",
+      "basis_provenance": "DECLARED_MONTHLY_BOX_BASE"
+    }
+  },
+  "rate_rollback_REV": "PASS",
+  "removed_group_rate": {
+    "detail": {
+      "code": "COST_WAREHOUSE_FORBIDDEN",
+      "message": "\u041d\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u043c\u043e\u0447\u0438\u0439 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0441\u043a\u043b\u0430\u0434",
+      "operation_id": null,
+      "outcome_confirmed": false
+    }
+  },
+  "removed_group_registry": {
+    "detail": {
+      "code": "COST_WAREHOUSE_FORBIDDEN",
+      "message": "\u041d\u0435\u0442 \u043f\u043e\u043b\u043d\u043e\u043c\u043e\u0447\u0438\u0439 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0441\u043a\u043b\u0430\u0434"
+    }
+  },
+  "revoked_platform_shell": {
+    "detail": {
+      "code": "ADMIN_LOGIN_SCOPE_REQUIRED"
+    }
+  }
+}

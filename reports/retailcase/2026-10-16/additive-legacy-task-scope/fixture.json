@@ -1,0 +1,135 @@
+{
+  "prefix": "LC16.466e3c4005",
+  "actor": "LC16I466e3c4005",
+  "role": "LC16R466e3c4005",
+  "assignment": "LC16A466e3c4005",
+  "warehouse_id": 20220394,
+  "frozen_acl_commands": {
+    "CASE.ASSIGN": {
+      "operation_id": "LC16.466e3c4005.CASE.ASSIGN",
+      "command_type": "ASSIGN",
+      "payload": {
+        "expected_version": 0,
+        "assignment_id": "LC16.466e3c4005.CASE",
+        "username": "AS16O35cea92c27",
+        "role_id": "AS16R35cea92c27",
+        "scope_kind": "WAREHOUSE",
+        "scope_id": "20220394",
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-15T22:26:01.705997+00:00",
+        "valid_until": "2026-10-16T00:26:11.705997+00:00",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "CASE.REVOKE": {
+      "operation_id": "LC16.466e3c4005.CASE.REVOKE",
+      "command_type": "REVOKE",
+      "payload": {
+        "expected_version": 1,
+        "assignment_id": "LC16.466e3c4005.CASE",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "ROLE": {
+      "operation_id": "LC16.466e3c4005.ROLE",
+      "command_type": "ROLE_SAVE",
+      "payload": {
+        "expected_version": 0,
+        "role_id": "LC16R466e3c4005",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "permissions": [
+          "case_pick_execute",
+          "inventory_task_execute",
+          "stock_inventory_count"
+        ],
+        "active": true
+      }
+    },
+    "COUNTER.ASSIGN": {
+      "operation_id": "LC16.466e3c4005.COUNTER.ASSIGN",
+      "command_type": "ASSIGN",
+      "payload": {
+        "expected_version": 0,
+        "assignment_id": "LC16A466e3c4005",
+        "username": "LC16I466e3c4005",
+        "role_id": "LC16R466e3c4005",
+        "scope_kind": "WAREHOUSE",
+        "scope_id": "20220394",
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-15T22:26:01.705997+00:00",
+        "valid_until": "2026-10-16T00:26:11.705997+00:00",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "COUNTER.REVOKE": {
+      "operation_id": "LC16.466e3c4005.COUNTER.REVOKE",
+      "command_type": "REVOKE",
+      "payload": {
+        "expected_version": 1,
+        "assignment_id": "LC16A466e3c4005",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "RETIRE.ROLE": {
+      "operation_id": "LC16.466e3c4005.RETIRE.ROLE",
+      "command_type": "ROLE_SAVE",
+      "payload": {
+        "expected_version": 1,
+        "role_id": "LC16R466e3c4005",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "permissions": [
+          "case_pick_execute",
+          "inventory_task_execute",
+          "stock_inventory_count"
+        ],
+        "active": false
+      }
+    }
+  },
+  "acl_receipts": {
+    "CASE.ASSIGN": {
+      "operation_id": "LC16.466e3c4005.CASE.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "LC16.466e3c4005.CASE",
+      "version": 1,
+      "replayed": false
+    },
+    "CASE.REVOKE": {
+      "operation_id": "LC16.466e3c4005.CASE.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "LC16.466e3c4005.CASE",
+      "version": 2,
+      "replayed": false
+    },
+    "ROLE": {
+      "operation_id": "LC16.466e3c4005.ROLE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "LC16R466e3c4005",
+      "version": 1,
+      "replayed": false
+    },
+    "COUNTER.ASSIGN": {
+      "operation_id": "LC16.466e3c4005.COUNTER.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "LC16A466e3c4005",
+      "version": 1,
+      "replayed": false
+    },
+    "COUNTER.REVOKE": {
+      "operation_id": "LC16.466e3c4005.COUNTER.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "LC16A466e3c4005",
+      "version": 2,
+      "replayed": false
+    },
+    "RETIRE.ROLE": {
+      "operation_id": "LC16.466e3c4005.RETIRE.ROLE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "LC16R466e3c4005",
+      "version": 2,
+      "replayed": false
+    }
+  }
+}

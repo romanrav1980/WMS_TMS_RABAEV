@@ -1,0 +1,13 @@
+{
+  "status": "PREPARED_SOURCE_CANDIDATE_NOT_INSTALLABLE",
+  "ddl_executed": false,
+  "native_acceptance": false,
+  "before": "reports/retailcase/2026-10-15/shipping-gross-read/before/manifest.json",
+  "purity": "reports/retailcase/2026-10-15/shipping-gross-read/purity/manifest.json",
+  "files": {
+    "spec.sql": "b6eb450e8c47c9dce6bf2c0fc9af9f6206622960ac5215e4667459cec1b6b2dc",
+    "body.sql": "8afd9dbe72e96252fce4165904324da288c3d274fcd208c2e524b66c040a22a1",
+    "hu_ship_spec.sql": "d1b0ec51325d3e996c3110664b774cb441bd2c0f16a67470ceced3180f8bd25f",
+    "README.md": "d9ebc834ddbf0fdfed2bf6a37c2142dcf0fc39f094fe90edaa70c9e67c788345"
+  }
+}

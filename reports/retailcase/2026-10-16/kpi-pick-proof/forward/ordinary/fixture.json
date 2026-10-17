@@ -1,0 +1,483 @@
+{
+  "prefix": "OC16.5e071e9f41",
+  "actor": "OC16P5e071e9f41",
+  "role": "OC16R5e071e9f41",
+  "assignment": "OC16A5e071e9f41",
+  "source": "OC16.LOT:5e071e9f41",
+  "warehouse_id": 20790457,
+  "article": "AS16AC0FB95573E",
+  "cell": "AS16Cc0fb95573e",
+  "face": 609,
+  "revision": 406,
+  "hardware_verified": false,
+  "state": "ORDINARY_BOX24_EA1_CLOSED_RETAINED",
+  "box_barcode": "OC16.5e071e9f41.BOX24",
+  "order": 2160,
+  "order_row": 3647,
+  "plan": 2211,
+  "line": 2220,
+  "task": 2149,
+  "reservation": 2016,
+  "wave": 580,
+  "wave_order": 1980,
+  "frozen_acl_commands": {
+    "ROLE": {
+      "operation_id": "OC16.5e071e9f41.ROLE",
+      "command_type": "ROLE_SAVE",
+      "payload": {
+        "expected_version": 0,
+        "role_id": "OC16R5e071e9f41",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "permissions": [
+          "case_pick_execute"
+        ],
+        "active": true
+      }
+    },
+    "ASSIGN": {
+      "operation_id": "OC16.5e071e9f41.ASSIGN",
+      "command_type": "ASSIGN",
+      "payload": {
+        "expected_version": 0,
+        "assignment_id": "OC16A5e071e9f41",
+        "username": "OC16P5e071e9f41",
+        "role_id": "OC16R5e071e9f41",
+        "scope_kind": "WAREHOUSE",
+        "scope_id": "20790457",
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-16T14:36:18.716904+00:00",
+        "valid_until": "2026-10-16T20:37:18.716904+00:00",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    }
+  },
+  "acl_receipts": {
+    "ROLE": {
+      "operation_id": "OC16.5e071e9f41.ROLE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "OC16R5e071e9f41",
+      "version": 1,
+      "replayed": false
+    },
+    "ASSIGN": {
+      "operation_id": "OC16.5e071e9f41.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "OC16A5e071e9f41",
+      "version": 1,
+      "replayed": false
+    }
+  },
+  "frozen_stock_requests": {
+    "BIRTH": "{\"actor\":\"admin\",\"command_type\":\"INVENTORY_REGISTER_LOT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"article\":\"AS16AC0FB95573E\",\"cell\":\"AS16Cc0fb95573e\",\"expiry_date\":\"2030-01-01\",\"price\":\"0\",\"quantity\":\"25\",\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"uid\":\"OC16.LOT:5e071e9f41\"},\"operation_id\":\"OC16.5e071e9f41.BIRTH\",\"source\":{\"revision_id\":406},\"units\":[]}",
+    "RELEASE": "{\"actor\":\"admin\",\"command_type\":\"WAVE_PICK_RELEASE\",\"contract_version\":2,\"lines\":[],\"metadata\":{},\"operation_id\":\"OC16.5e071e9f41.RELEASE\",\"source\":{\"wave_id\":580},\"units\":[]}",
+    "TYPE": "{\"actor\":\"admin\",\"command_type\":\"CASE_PALLET_TYPE_CHANGE\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"expected_version\":0,\"pallet_type_id\":32,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"scan_container\":\"CP580000000001147\"},\"operation_id\":\"OC16.5e071e9f41.TYPE\",\"source\":{\"case_task_id\":1147},\"units\":[]}",
+    "TARE.COUNT": "{\"actor\":\"admin\",\"command_type\":\"TARE_COUNT\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"condition\":\"GOOD\",\"decision_reference\":\"OC16.5e071e9f41.SIMULATED\",\"expected_version\":1,\"observed_quantity\":\"2\",\"owner_ware_id\":20790457,\"pallet_type_id\":32,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\"},\"operation_id\":\"OC16.5e071e9f41.TARE.COUNT\",\"source\":{},\"units\":[]}",
+    "TARE.BOOK": "{\"actor\":\"admin\",\"command_type\":\"TARE_BOOK\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"expected_warehouse_id\":20790457,\"pallet_type_id\":32},\"operation_id\":\"OC16.5e071e9f41.TARE.BOOK\",\"source\":{\"place_id\":\"1147\",\"place_kind\":\"CASE\"},\"units\":[]}"
+  },
+  "receipts": {
+    "BIRTH": {
+      "operation_id": "OC16.5e071e9f41.BIRTH",
+      "revision_id": 406,
+      "uid": "OC16.LOT:5e071e9f41",
+      "cell": "AS16Cc0fb95573e",
+      "article": "AS16AC0FB95573E",
+      "quantity": "25",
+      "unit": "EA",
+      "event_id": 6446835,
+      "lot_source": "INVENTORY",
+      "outbox_id": 5567
+    },
+    "RELEASE": {
+      "wave_id": 580,
+      "warehouse": 20790457,
+      "status": "LAUNCHED",
+      "released_at": "2026-10-16T10:37:21.901661-04:00",
+      "released_by": "admin",
+      "release_operation_id": "OC16.5e071e9f41.RELEASE",
+      "ready": true,
+      "tasks": [
+        {
+          "pick_task_id": 2149,
+          "wave_task_id": 2071,
+          "article": "AS16AC0FB95573E",
+          "task_type": "CASE_PICK",
+          "status": "ASSIGNED",
+          "cell": "AS16Cc0fb95573e",
+          "required_base": "25",
+          "covered_base": "25",
+          "missing_base": "0",
+          "base_uom": "EA",
+          "reservations": [
+            {
+              "reservation_id": 1892,
+              "uid": "OC16.LOT:5e071e9f41",
+              "cell": "AS16Cc0fb95573e",
+              "article": "AS16AC0FB95573E",
+              "quantity": "25",
+              "base_uom": "EA",
+              "stock_version": 2,
+              "physical": "25",
+              "hard": "25",
+              "reason": null
+            }
+          ]
+        }
+      ],
+      "open_replenishments": [],
+      "outbox_id": 5570
+    },
+    "TYPE": {
+      "operation_id": "OC16.5e071e9f41.TYPE",
+      "command_type": "CASE_PALLET_TYPE_CHANGE",
+      "case_task_id": 1147,
+      "pallet_type_id": 32,
+      "previous_pallet_type_id": 1,
+      "planned_pallet_type_id": null,
+      "version": 1,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "stock_changed": false,
+      "status": "APPLIED",
+      "outbox_id": 5571
+    },
+    "TARE.COUNT": {
+      "status": "POSTED",
+      "tare_balance_changed": true,
+      "destination_quantity": "2",
+      "operation_id": "OC16.5e071e9f41.TARE.COUNT",
+      "quantity": "2",
+      "owner_ware_id": 20790457,
+      "pallet_type_id": 32,
+      "condition": "GOOD",
+      "goods_stock_changed": false,
+      "outbox_id": 5572
+    },
+    "TARE.BOOK": {
+      "operation_id": "OC16.5e071e9f41.TARE.BOOK",
+      "status": "HELD",
+      "place_kind": "CASE",
+      "place_id": "1147",
+      "pallet_type_id": 32,
+      "warehouse_id": 20790457,
+      "available_quantity": "1",
+      "quantity": "1",
+      "physical_tare_changed": false,
+      "goods_stock_changed": false,
+      "outbox_id": 5573
+    }
+  },
+  "launch": {
+    "operation_id": "OC16.5e071e9f41.LAUNCH",
+    "launch_outcome": "APPLIED",
+    "continuation_state": "COMPLETE",
+    "wave_status": "LAUNCHED"
+  },
+  "task_id": 1147,
+  "case_before": {
+    "case_pick_task_id": 1147,
+    "content_version": 0,
+    "sscc": "CP580000000001147"
+  },
+  "case_line_id": 1149,
+  "resource_id": 71,
+  "shift_id": 76,
+  "resource_session_id": 67,
+  "label": {
+    "case_pick_task_id": 1147,
+    "sscc": "090000000000016019",
+    "original_carrier": "CP580000000001147",
+    "content_version": 2,
+    "operation_id": "OC16.5e071e9f41.LABEL",
+    "confirmed": false
+  },
+  "time_requests": {
+    "ACTUAL_SHIFT_START": {
+      "operation_id": "OC16.5e071e9f41.TIME.ACTUAL_SHIFT_START",
+      "action": "ACTUAL_SHIFT_START",
+      "expected_version": 0,
+      "resource_session_id": 67,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+    },
+    "WORK_START": {
+      "operation_id": "OC16.5e071e9f41.TIME.WORK_START",
+      "action": "WORK_START",
+      "expected_version": 1,
+      "resource_session_id": 67,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "source_kind": "CASE_PICK_TASK",
+      "source_id": 1147
+    },
+    "PAUSE": {
+      "operation_id": "OC16.5e071e9f41.TIME.PAUSE",
+      "action": "PAUSE",
+      "expected_version": 2,
+      "resource_session_id": 67,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "source_kind": "CASE_PICK_TASK",
+      "source_id": 1147
+    },
+    "RESUME": {
+      "operation_id": "OC16.5e071e9f41.TIME.RESUME",
+      "action": "RESUME",
+      "expected_version": 3,
+      "resource_session_id": 67,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "source_kind": "CASE_PICK_TASK",
+      "source_id": 1147
+    },
+    "WORK_FINISH": {
+      "operation_id": "OC16.5e071e9f41.TIME.WORK_FINISH",
+      "action": "WORK_FINISH",
+      "expected_version": 4,
+      "resource_session_id": 67,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "source_kind": "CASE_PICK_TASK",
+      "source_id": 1147
+    },
+    "ACTUAL_SHIFT_FINISH": {
+      "operation_id": "OC16.5e071e9f41.TIME.ACTUAL_SHIFT_FINISH",
+      "action": "ACTUAL_SHIFT_FINISH",
+      "expected_version": 5,
+      "resource_session_id": 67,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+    }
+  },
+  "time_results": {
+    "ACTUAL_SHIFT_START": {
+      "operation_id": "OC16.5e071e9f41.TIME.ACTUAL_SHIFT_START",
+      "actor": "OC16P5e071e9f41",
+      "action": "ACTUAL_SHIFT_START",
+      "resource_session_id": 67,
+      "warehouse_id": 20790457,
+      "request_sha256": "BED6BC064E902162C4380F8308B9F53DE2A60D2103EF285CE31FD300066563A9",
+      "outcome": "APPLIED",
+      "outcome_confirmed": true,
+      "changed": true,
+      "may_create_corrected_operation": false,
+      "error_code": null,
+      "stock_posted": false,
+      "event_at": "2026-10-16T14:37:23.298851+00:00",
+      "before_version": 0,
+      "after_version": 1,
+      "state": {
+        "operator_id": "OC16P5e071e9f41",
+        "stream_version": 1,
+        "shift_state": "OPEN",
+        "work_state": "IDLE",
+        "warehouse_id": 20790457,
+        "resource_session_id": 67,
+        "resource_id": 71,
+        "source_kind": null,
+        "source_id": null,
+        "shift_started_at": "2026-10-16T14:37:23.298851+00:00",
+        "work_started_at": null,
+        "pause_started_at": null,
+        "last_event_at": "2026-10-16T14:37:23.298851+00:00",
+        "work_coverage_certified": false,
+        "source_mode": "MANUAL_CONFIRMED"
+      }
+    },
+    "WORK_START": {
+      "operation_id": "OC16.5e071e9f41.TIME.WORK_START",
+      "actor": "OC16P5e071e9f41",
+      "action": "WORK_START",
+      "resource_session_id": 67,
+      "warehouse_id": 20790457,
+      "request_sha256": "90509B269242961CC74A4FA8430C017C31BA04A24F35768FF9965B99F76152D4",
+      "outcome": "APPLIED",
+      "outcome_confirmed": true,
+      "changed": true,
+      "may_create_corrected_operation": false,
+      "error_code": null,
+      "stock_posted": false,
+      "event_at": "2026-10-16T14:37:23.397158+00:00",
+      "before_version": 1,
+      "after_version": 2,
+      "state": {
+        "operator_id": "OC16P5e071e9f41",
+        "stream_version": 2,
+        "shift_state": "OPEN",
+        "work_state": "WORK",
+        "warehouse_id": 20790457,
+        "resource_session_id": 67,
+        "resource_id": 71,
+        "source_kind": "CASE_PICK_TASK",
+        "source_id": 1147,
+        "shift_started_at": "2026-10-16T14:37:23.298851+00:00",
+        "work_started_at": "2026-10-16T14:37:23.397158+00:00",
+        "pause_started_at": null,
+        "last_event_at": "2026-10-16T14:37:23.397158+00:00",
+        "work_coverage_certified": false,
+        "source_mode": "MANUAL_CONFIRMED"
+      }
+    },
+    "PAUSE": {
+      "operation_id": "OC16.5e071e9f41.TIME.PAUSE",
+      "actor": "OC16P5e071e9f41",
+      "action": "PAUSE",
+      "resource_session_id": 67,
+      "warehouse_id": 20790457,
+      "request_sha256": "9C583640B49A31930BC70520CDFC02B58A0D516C7C0F15D0F11A8CDFE50201EB",
+      "outcome": "APPLIED",
+      "outcome_confirmed": true,
+      "changed": true,
+      "may_create_corrected_operation": false,
+      "error_code": null,
+      "stock_posted": false,
+      "event_at": "2026-10-16T14:38:55.868731+00:00",
+      "before_version": 2,
+      "after_version": 3,
+      "state": {
+        "operator_id": "OC16P5e071e9f41",
+        "stream_version": 3,
+        "shift_state": "OPEN",
+        "work_state": "PAUSED",
+        "warehouse_id": 20790457,
+        "resource_session_id": 67,
+        "resource_id": 71,
+        "source_kind": "CASE_PICK_TASK",
+        "source_id": 1147,
+        "shift_started_at": "2026-10-16T14:37:23.298851+00:00",
+        "work_started_at": "2026-10-16T14:37:23.397158+00:00",
+        "pause_started_at": "2026-10-16T14:38:55.868731+00:00",
+        "last_event_at": "2026-10-16T14:38:55.868731+00:00",
+        "work_coverage_certified": false,
+        "source_mode": "MANUAL_CONFIRMED"
+      }
+    },
+    "RESUME": {
+      "operation_id": "OC16.5e071e9f41.TIME.RESUME",
+      "actor": "OC16P5e071e9f41",
+      "action": "RESUME",
+      "resource_session_id": 67,
+      "warehouse_id": 20790457,
+      "request_sha256": "F1DD8E4C16AE803B1220D427C8744DDB59732CDB7F0A25AB8828E3191F37600A",
+      "outcome": "APPLIED",
+      "outcome_confirmed": true,
+      "changed": true,
+      "may_create_corrected_operation": false,
+      "error_code": null,
+      "stock_posted": false,
+      "event_at": "2026-10-16T14:38:55.962038+00:00",
+      "before_version": 3,
+      "after_version": 4,
+      "state": {
+        "operator_id": "OC16P5e071e9f41",
+        "stream_version": 4,
+        "shift_state": "OPEN",
+        "work_state": "WORK",
+        "warehouse_id": 20790457,
+        "resource_session_id": 67,
+        "resource_id": 71,
+        "source_kind": "CASE_PICK_TASK",
+        "source_id": 1147,
+        "shift_started_at": "2026-10-16T14:37:23.298851+00:00",
+        "work_started_at": "2026-10-16T14:37:23.397158+00:00",
+        "pause_started_at": null,
+        "last_event_at": "2026-10-16T14:38:55.962038+00:00",
+        "work_coverage_certified": false,
+        "source_mode": "MANUAL_CONFIRMED"
+      }
+    },
+    "WORK_FINISH": {
+      "operation_id": "OC16.5e071e9f41.TIME.WORK_FINISH",
+      "actor": "OC16P5e071e9f41",
+      "action": "WORK_FINISH",
+      "resource_session_id": 67,
+      "warehouse_id": 20790457,
+      "request_sha256": "079983716C9C3D82995E05466D8FBC68B931E140C5A4D6F634C93BAF5644BAE6",
+      "outcome": "APPLIED",
+      "outcome_confirmed": true,
+      "changed": true,
+      "may_create_corrected_operation": false,
+      "error_code": null,
+      "stock_posted": false,
+      "event_at": "2026-10-16T14:38:56.483640+00:00",
+      "before_version": 4,
+      "after_version": 5,
+      "state": {
+        "operator_id": "OC16P5e071e9f41",
+        "stream_version": 5,
+        "shift_state": "OPEN",
+        "work_state": "IDLE",
+        "warehouse_id": 20790457,
+        "resource_session_id": 67,
+        "resource_id": 71,
+        "source_kind": null,
+        "source_id": null,
+        "shift_started_at": "2026-10-16T14:37:23.298851+00:00",
+        "work_started_at": null,
+        "pause_started_at": null,
+        "last_event_at": "2026-10-16T14:38:56.483640+00:00",
+        "work_coverage_certified": false,
+        "source_mode": "MANUAL_CONFIRMED"
+      }
+    },
+    "ACTUAL_SHIFT_FINISH": {
+      "operation_id": "OC16.5e071e9f41.TIME.ACTUAL_SHIFT_FINISH",
+      "actor": "OC16P5e071e9f41",
+      "action": "ACTUAL_SHIFT_FINISH",
+      "resource_session_id": 67,
+      "warehouse_id": 20790457,
+      "request_sha256": "CF72DA5BC27ED3DAB6884B4CC45F1A688F2C0B8FA898AE73ABD5226DB0C5F423",
+      "outcome": "APPLIED",
+      "outcome_confirmed": true,
+      "changed": true,
+      "may_create_corrected_operation": false,
+      "error_code": null,
+      "stock_posted": false,
+      "event_at": "2026-10-16T14:38:56.566141+00:00",
+      "before_version": 5,
+      "after_version": 6,
+      "state": {
+        "operator_id": "OC16P5e071e9f41",
+        "stream_version": 6,
+        "shift_state": "OFF",
+        "work_state": "IDLE",
+        "warehouse_id": null,
+        "resource_session_id": null,
+        "resource_id": null,
+        "source_kind": null,
+        "source_id": null,
+        "shift_started_at": null,
+        "work_started_at": null,
+        "pause_started_at": null,
+        "last_event_at": "2026-10-16T14:38:56.566141+00:00",
+        "work_coverage_certified": false,
+        "source_mode": "MANUAL_CONFIRMED"
+      }
+    }
+  },
+  "pick_bodies": {
+    "BOX24": {
+      "fact_qty": "24",
+      "operation_id": "OC16.5e071e9f41.BOX24",
+      "unit_keys": [],
+      "unit_scans": [],
+      "scan_cell": "AS16Cc0fb95573e",
+      "scan_product": "OC16.5e071e9f41.BOX24",
+      "scan_box": null,
+      "scan_container": "090000000000016019",
+      "offline_event_id": null,
+      "resource_id": 71,
+      "resource_session_id": 67,
+      "equipment_id": null,
+      "actor": "OC16P5e071e9f41"
+    },
+    "EA1": {
+      "fact_qty": "25",
+      "operation_id": "OC16.5e071e9f41.EA1",
+      "unit_keys": [],
+      "unit_scans": [],
+      "scan_cell": "AS16Cc0fb95573e",
+      "scan_product": "AS16AC0FB95573E",
+      "scan_box": null,
+      "scan_container": "090000000000016019",
+      "offline_event_id": null,
+      "resource_id": 71,
+      "resource_session_id": 67,
+      "equipment_id": null,
+      "actor": "OC16P5e071e9f41"
+    }
+  }
+}

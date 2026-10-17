@@ -1,0 +1,45 @@
+{
+  "status": "FAILED",
+  "checks": [
+    "metadata_only_setup_and_positive_launch_plan_cancel_caller_rollback_no_stock_commit",
+    "explicit_authorized_launch_commit_H1_and_cancel_compensator_rollback_proven",
+    "native_metadata_context_rejects_commit_and_rollback_reuse",
+    "native_fractional_step_denied",
+    "source_commit_answer_loss_launch_APPLIED_continuation_FAILED_and_frozen_original_body",
+    "middle_metadata_fault_atomic_rollback_and_done_prefix_preserved",
+    "current_revoke_denies_launch_replay_continuation_and_minimal_receipt",
+    "canonical_cancel_preflight_rollback_then_wave_and_plan_compensation_APPLIED"
+  ],
+  "context": {
+    "prefix": "wld55a4c7fbc",
+    "actor": "wld55a4c7fbc",
+    "cell": "WL55a4c7fbc",
+    "role": "wld55a4c7fbcr",
+    "assignment": "wld55a4c7fbca",
+    "launch": "WAVE.DURABLE.LAUNCH:55a4c7fbc",
+    "cancel": "WAVE.DURABLE.CANCEL:55a4c7fbc",
+    "plan_cancel": "WAVE.DURABLE.PLAN.CANCEL:55a4c7fbc",
+    "order": 2143,
+    "order_row": 3631,
+    "plan": 2196,
+    "line": 2205,
+    "task": 2134,
+    "reservation": 2002,
+    "wave": 564,
+    "wave_order": 1966,
+    "face": 603,
+    "face_article": 294,
+    "source_operation": "WAVE.LAUNCH.SOURCE:d94bf8a558d0f308d6c655ba46cb5ff3:1634",
+    "source_body": "{\"actor\":\"wld55a4c7fbc\",\"command_type\":\"WAVE_RESERVE_SOURCES\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"allow_unissued_source_rebind\":true,\"launch_operation_id\":\"WAVE.DURABLE.LAUNCH:55a4c7fbc\",\"requested_row_ids\":[1634]},\"operation_id\":\"WAVE.LAUNCH.SOURCE:d94bf8a558d0f308d6c655ba46cb5ff3:1634\",\"source\":{\"type\":\"PICK_WAVE\",\"wave_id\":564},\"units\":[]}"
+  },
+  "error": "MetadataError('VERSION_CONFLICT')",
+  "source": "REUSE.RETURN:e6c16d0bbd",
+  "stock_final": {
+    "remain": 24,
+    "hard_reserved_base": 0,
+    "stock_version": 7
+  },
+  "stock_commit": "EXPLICIT_AUTHORIZED_RESERVATION_ONLY",
+  "physical_moves": 0,
+  "history_retained": true
+}

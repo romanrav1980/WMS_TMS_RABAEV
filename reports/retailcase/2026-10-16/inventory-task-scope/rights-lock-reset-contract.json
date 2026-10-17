@@ -1,0 +1,42 @@
+{
+  "state": "PASS_TWO_CONNECTION_COUNT_REV_FENCE_AND_SELF",
+  "grant": {
+    "assignment_id": "IQ16.26c2f13302.LOCK2.SELF",
+    "username": "IQ16I26c2f13302",
+    "role_id": "IQ16R26c2f13302",
+    "scope_kind": "SELF",
+    "scope_id": null,
+    "valid_from": "2026-10-15T21:58:26.744434+00:00",
+    "valid_until": "2026-10-15T22:18:36.744434+00:00",
+    "expected_version": 0,
+    "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+  },
+  "http": [
+    {
+      "case": "SELF_ASSIGNED_LOTS",
+      "path": "/api/inventory/stock-posting/inventory/402/lots",
+      "status": 200
+    },
+    {
+      "case": "SELF_COUNT_REPLAY",
+      "path": "/api/inventory/stock-posting/inventory/counts",
+      "status": 200
+    }
+  ],
+  "hardware_verified": false,
+  "quantity_effect": false,
+  "caller_reset_contract": "After failure/rollback call root reset_connection before reusing native connection; original raw harness omitted reset and correctly hit DIRTY_TRANSACTION",
+  "blocked": {
+    "oracle_code": 54,
+    "elapsed_ms": 5034
+  },
+  "after_release_replay_exact": true,
+  "contexts_clean": true,
+  "revoke": {
+    "operation_id": "IQ16.26c2f13302.LOCK2.REVOKE",
+    "command_type": "REVOKE",
+    "object_id": "IQ16.26c2f13302.LOCK2.SELF",
+    "version": 2,
+    "replayed": false
+  }
+}

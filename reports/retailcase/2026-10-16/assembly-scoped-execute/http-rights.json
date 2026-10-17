@@ -1,0 +1,131 @@
+{
+  "state": "PASS_ACTUAL_HTTP_SCOPE_REPLAY_REVOKE",
+  "plan_sha256": "74d27373800911b379e8c22e4444cdda4bc67d28395d54936474055cc44d2147",
+  "http": [
+    {
+      "label": "WARE",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "status": 200,
+      "request_id": null
+    },
+    {
+      "label": "WARE_STEP",
+      "path": "/api/inventory/assembly-scale/steps/AS16.35cea92c27.STEP",
+      "status": 200,
+      "request_id": null
+    },
+    {
+      "label": "FINISH_REPLAY",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/finish",
+      "status": 200,
+      "request_id": null
+    },
+    {
+      "label": "CLOSE_REPLAY",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/close",
+      "status": 200,
+      "request_id": null
+    },
+    {
+      "label": "CHANGED_FINISH_BODY",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/finish",
+      "status": 409,
+      "request_id": null
+    },
+    {
+      "label": "REVOKED_SESSION",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "status": 403,
+      "request_id": null
+    },
+    {
+      "label": "REVOKED_FINISH",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/finish",
+      "status": 403,
+      "request_id": null
+    },
+    {
+      "label": "SELF_OWNER",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "status": 200,
+      "request_id": null
+    },
+    {
+      "label": "SELF_REVOKED",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "status": 403,
+      "request_id": null
+    },
+    {
+      "label": "CURRENT_GROUP",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "status": 200,
+      "request_id": null
+    },
+    {
+      "label": "GROUP_MEMBER_REMOVED",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "status": 403,
+      "request_id": null
+    },
+    {
+      "label": "ALL_REVOKED",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "status": 403,
+      "request_id": null
+    }
+  ],
+  "acl": {
+    "WARE.REVOKE": {
+      "operation_id": "AS16.35cea92c27.HTTP.WARE.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "AS16X35cea92c27",
+      "version": 2,
+      "replayed": false
+    },
+    "SELF.ASSIGN": {
+      "operation_id": "AS16.35cea92c27.HTTP.SELF.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "AS16.35cea92c27.SELF",
+      "version": 1,
+      "replayed": false
+    },
+    "SELF.REVOKE": {
+      "operation_id": "AS16.35cea92c27.HTTP.SELF.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "AS16.35cea92c27.SELF",
+      "version": 2,
+      "replayed": false
+    },
+    "GROUP.CREATE": {
+      "operation_id": "AS16.35cea92c27.HTTP.GROUP.CREATE",
+      "command_type": "GROUP_SAVE",
+      "object_id": "AS16.35cea92c27.GROUP",
+      "version": 1,
+      "replayed": false
+    },
+    "GROUP.ASSIGN": {
+      "operation_id": "AS16.35cea92c27.HTTP.GROUP.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "AS16.35cea92c27.GROUP.ASSIGN",
+      "version": 1,
+      "replayed": false
+    },
+    "GROUP.REMOVE": {
+      "operation_id": "AS16.35cea92c27.HTTP.GROUP.REMOVE",
+      "command_type": "GROUP_SAVE",
+      "object_id": "AS16.35cea92c27.GROUP",
+      "version": 2,
+      "replayed": false
+    },
+    "GROUP.REVOKE": {
+      "operation_id": "AS16.35cea92c27.HTTP.GROUP.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "AS16.35cea92c27.GROUP.ASSIGN",
+      "version": 2,
+      "replayed": false
+    }
+  },
+  "hardware_verified": false,
+  "quantity_effect": false
+}

@@ -1,0 +1,67 @@
+{
+  "state": "FROZEN_BEFORE_SOURCE_FLOW",
+  "started_at": "2026-10-16T12:26:58.287444+00:00",
+  "prefix": "IC16.ce9c011b16",
+  "tag": "ce9c011b16",
+  "source_warehouse": 20846272,
+  "target_warehouse": 30846272,
+  "asm_case": 1145,
+  "ordinary_case": 1146,
+  "top": "IC16.TOP:ce9c011b16",
+  "box": "IC16.BOX:ce9c011b16",
+  "store": "IC16.STORE:ce9c011b16",
+  "source_dock": "IC16Sce9c011b16",
+  "target_dock": "IC16Tce9c011b16",
+  "inbound": "IC16Ice9c011b16",
+  "receive_cell": "IC16Rce9c011b16",
+  "http": [],
+  "commands": {
+    "ASM.TO.DOCK": {
+      "wire": "{\"actor\":\"admin\",\"command_type\":\"CASE_CARRIER_MOVE\",\"contract_version\":2,\"lines\":[],\"metadata\":{\"expected_content_version\":3,\"reason\":\"ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance\",\"scan_container\":\"090000000000014015\",\"scanned_to_cell\":\"IC16Sce9c011b16\",\"target_cell\":\"IC16Sce9c011b16\"},\"operation_id\":\"IC16.ce9c011b16.ASM.TO.DOCK\",\"source\":{\"case_task_id\":1145},\"units\":[]}",
+      "state": "IN_FLIGHT"
+    }
+  },
+  "hardware_verified": false,
+  "protected_before": [
+    {
+      "ware_id": 6667491,
+      "p": 20,
+      "h": 20
+    },
+    {
+      "ware_id": 20220394,
+      "p": 26,
+      "h": 26
+    }
+  ],
+  "source_sts": [
+    641525,
+    641526
+  ],
+  "ordinary_binding_metadata": {
+    "st": 641526,
+    "identifier": "IC16.ce9c011b16.ORD.ST"
+  },
+  "ordinary_binding": {
+    "case_pick_task_id": 1146,
+    "pallet_identifier": "IC16.ce9c011b16.ORD.ST",
+    "status": "BOUND",
+    "fulfillment_status": "PICKED",
+    "physical_composition": [
+      {
+        "article": "AS16ACE9C011B16",
+        "base_uom": "EA",
+        "quantity": "25"
+      }
+    ],
+    "idempotent": false
+  },
+  "source_vehicle_plate": "ICSce9c011b16",
+  "source_vehicle": 10107,
+  "target_vehicle_plate": "ICTce9c011b16",
+  "target_vehicle": 10108,
+  "vehicle_type": "10",
+  "driver": 1,
+  "source_trip": 33651,
+  "target_trip": 33652
+}

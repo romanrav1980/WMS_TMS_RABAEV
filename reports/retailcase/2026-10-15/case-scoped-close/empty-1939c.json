@@ -1,0 +1,152 @@
+{
+  "status": "PASS",
+  "capture_key": "747F2EBEA0CCA06C9D7153C38D9CAB66EDE6B65F195DA211670F34E971CF62B9",
+  "measured_at": "2026-10-15T18:20:14.961188+00:00",
+  "weight_kg": "0.5",
+  "request": {
+    "case_task_id": 1139,
+    "device_id": "WHREQ15.SCALE",
+    "expected_content_version": 2,
+    "purpose": "EMPTY_TARE",
+    "request_id": "N1939.EMPTY.1139C",
+    "resource_session_id": 59,
+    "scan_container": "090000000000010017",
+    "zero_progress_required": true
+  },
+  "capture": {
+    "status": "ARCHIVED"
+  },
+  "evidence": {
+    "status": "EVIDENCE_ARCHIVED",
+    "binding": "MATCHED"
+  },
+  "capture_sha256": "89A50D7D4AE5AF793079776B6F41E5DF50E01960E6B1E9276AE4536EBE129F9B",
+  "raw_sha256": "84E28213C8CFACDB155356FF00FDF723FE2997A775CD93E4A64D3D831A12C0A6",
+  "source_before": {
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "assigned_to": "N1939.OP",
+        "content_version": 2,
+        "assignment_version": 2,
+        "picked_qty": 0,
+        "resource_session_id": 59
+      }
+    ],
+    "lines": [
+      {
+        "case_pick_line_id": 1141,
+        "status": "NEW",
+        "planned_qty": 1,
+        "picked_qty": 0
+      }
+    ],
+    "stock": [
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3
+      },
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "QIPcdbf4c0962",
+        "remain": 1,
+        "hard_reserved_base": 0,
+        "stock_version": 1
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 14
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "events": [
+      {
+        "case_pick_event_id": 3752,
+        "offline_event_id": null,
+        "event_type": "CLAIMED"
+      },
+      {
+        "case_pick_event_id": 3753,
+        "offline_event_id": null,
+        "event_type": "STARTED"
+      }
+    ]
+  },
+  "source_after": {
+    "task": [
+      {
+        "status": "IN_PROGRESS",
+        "assigned_to": "N1939.OP",
+        "content_version": 2,
+        "assignment_version": 2,
+        "picked_qty": 0,
+        "resource_session_id": 59
+      }
+    ],
+    "lines": [
+      {
+        "case_pick_line_id": 1141,
+        "status": "NEW",
+        "planned_qty": 1,
+        "picked_qty": 0
+      }
+    ],
+    "stock": [
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "CPT_13583852",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3
+      },
+      {
+        "uid_poleta": "CASELOT:E8EAB9A962B9D19BA5AC8FCEE19D8021895BD0:1",
+        "cell": "QIPcdbf4c0962",
+        "remain": 1,
+        "hard_reserved_base": 0,
+        "stock_version": 1
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QIPcdbf4c0962",
+        "remain": 23,
+        "hard_reserved_base": 1,
+        "stock_version": 14
+      },
+      {
+        "uid_poleta": "REUSE.RETURN:e6c16d0bbd",
+        "cell": "QRREe6c16d0bbd",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 2
+      }
+    ],
+    "events": [
+      {
+        "case_pick_event_id": 3752,
+        "offline_event_id": null,
+        "event_type": "CLAIMED"
+      },
+      {
+        "case_pick_event_id": 3753,
+        "offline_event_id": null,
+        "event_type": "STARTED"
+      }
+    ]
+  },
+  "physical_hardware": false,
+  "encrypted_opc": true,
+  "quantity_effect": false
+}

@@ -1,0 +1,45 @@
+﻿# Independent assembly UI source review — 15.10.2026
+
+Scope: read-only review of terminal/wms_terminal_web/src/features/inventory/assembly during root/Claude active edits. This is source evidence, not rendered UX or live API acceptance. Reviewed revision is the shared working tree at the review instant; root owns fixes and retesting.
+
+1. HIGH: only open_session has a durable recovery component. open_step and finish are persisted by commands.ts but never restored into a retry action after reload. If a lost open_step response actually committed and the restored session later contains APPLIED, a new step produces fresh IDs but withJournal refuses to overwrite the original unresolved entry. retrySame then captures the new rejected body, not the original saved command. Finish has the same lost-original-key problem. Persist the target session URL as part of the intent and provide read/resolve/exact retry for every command kind; clear only after matching result. Native idempotency prevents duplicate stock, but the workstation can become stuck.
+2. HIGH: useAssemblyContext.refresh retains the old context while a new task request is loading. AssemblyScaleApp renders any ctx.context under key={current taskId}. Task A → task B can therefore mount a new TaskRuntime with A's context and interactive session while B loads. Clear context on new load and require rendered context.task_id to equal selected task, with current actor/server scope.
+3. MEDIUM: commands.markPlaced claims AssemblyStep but the actual API returns {step,posting}. useAssemblySession.place reads top-level step_id and fails to update the matching step; a later successful poll may hide the mismatch. Unwrap/validate the real DTO and read current session after uncertain outcome.
+4. MEDIUM: usePolling suppresses every error; current session can remain visibly OPEN with enabled actions after401/403/revoke or repeated network errors. Server denial remains authoritative, but the UI needs an explicit stale/auth recovery state rather than an apparently current workstation.
+5. MEDIUM: useAssemblyAuth checks epoch after fetch but before awaiting response.json; it does not recheck immediately before setCredentials/setIdentity. A superseded login/logout while JSON decoding is pending can publish a stale identity. Recheck after the final await.
+
+Relevant files: journal.ts, commands.ts, useAssemblySession.ts, useAssemblyContext.ts, AssemblyScaleApp.tsx, useAssemblyAuth.ts, usePolling.ts. No UI files changed by this reviewer. Root received each finding while implementing corrections.
+
+## Исправления и повторная проверка
+
+После source review root передал владение UI этому исполнителю. Исправлены все пять найденных путей: исходные URL/body всех команд восстанавливаются, каждый ACK проверяется до очистки; task/actor и поздние ответы защищены; placed распаковывает реальный envelope; ошибочный poll приостанавливает действия; поздний login JSON повторно проверяет epoch.
+
+Дополнительно добавлен четвёртый журнал case_close для нового тонкого session API, использующего прежний owner закрытия. Действие находится в том же приложении; список строк перечитывается из native context при изменении версии, без расчёта остатков в браузере. Финальные кандидаты фильтруются по сессии/таре/устройству/посту/версии/калибровке и preview freshness; окончательный допуск и порядок после AFTER остаются native. Preview возраста использует часы браузера и не является доверенным источником времени.
+
+`python scripts/assembly_ui_recovery_smoke.py`: 13 rendered Chromium / mocked-HTTP checks PASS. Это не native UI acceptance: HTTP ответы намеренно моделируются, товарных изменений нет. Реальный OPC→HTTP→native TEST1032 отдельно подтверждён [native отчётом](../assembly-scale/opc-native-http-report.json), включая обе raw1.1 связи MATCHED, DISCREPANCY/BLOCKED и неизменный товарный остаток.
+
+Для браузеров нужен Web Locks API (HTTPS либо localhost). Вкладки используют одну блокировку задания перед записью журнала; неподдерживаемый браузер явно запрещает отправку. Старые C0112 open_session записи восстанавливаются без изменения тела. Legacy step/finish без доказанного target-session не угадываются: сохранённое тело блокирует новые действия до разбора.
+
+Последний browser run после согласованного CANCELLED:14 сценариев PASS; CANCELLED имеет нейтральный текст и не показывает товарный успех. Общий quality gate PASS (архитектура/24 tests/оба TypeScript); после gateway recovery изменённый модуль дополнительно прошёл46 focused +14 encryptedOPC tests и повторный реальный HTTP/bundle cycle. Физического оборудования в этих проверках нет.
+
+## Финальный UI increment: шесть намерений и сверка
+
+Фактический итог браузерной приёмки:16 основных +7 recovery rendered Chromium / mocked-HTTP сценариев PASS (JSON отчёты рядом). Добавлены recovery_request и recovery_authorize: HOLD подтверждается до инструкции удаления непринятого товара, контролёр входит отдельно, исходные target/body/context переживают reload и GET404 без автоматического POST. ACK authorization проверяет исходный operation_id. Неисправный или чужой ACK журнал не очищает.
+
+BLOCKED и неподтверждённый poll скрывают инструкции укладки/placed; успешная сверка CANCELLED нейтральна. TEST пост явно обозначен. Закрытие не предлагается при известных незавершённых строках; сканы/количество проверяются по доступному native context. Интерфейс использует базовые штуки, не вычисляет массу или количество по штрихкоду. Controller layout360/390/1440 проверен без горизонтального overflow. Снимки recovery-hold-mocked-http.png и controller-390-mocked-http.png относятся к моделируемым HTTP.
+
+Общий quality gate PASS (архитектура1018 файлов/0 циклов/72 прежних allowance,24 tooling tests, оба TypeScript); после завершающих UI поправок direct terminal tsc и оба браузерных runner PASS. Encoding PASS. Production rebuild/живой визуальный просмотр выполняет root отдельно после RELEASE.
+
+Известное ограничение: неожиданный definitive409 сохраняет исходный intent и может блокировать следующую команду. Без native tombstone/abandon отсутствие receipt не доказывает отсутствие будущего commit исходной команды. Нельзя молча удалить запись. Inventory owner/root ведёт серверный increment отмены доказанно неприменённого намерения; до него требуется разбор, а не обещание полного восстановления любой ошибки.
+
+Отдельная реальная encrypted localhost OPC→live HTTP/native сверка TEST1032 завершилась CANCELLED/OPEN, raw1.2 MATCHED, без stock effect. Это протокольный TEST, не физические весы. После приёмки fixture выведен из работы; дополнительный HTTP success replay после удаления credentials не запускался. Native exact saved-CLOB replay проверен root отдельно внутри caller rollback.
+
+## Durable abandonment UI
+
+15 новых rendered mocked-HTTP checks PASS, включая current-scope403. Вместе с16 основными и7 recovery —38. Separate control сохраняется до HTTP; исходная команда до strict ABANDONED не стирается. Альтернативный явный точный original retry разрешён только для frozen исходного запроса; его штатный strict successful ACK разрешает снять пару как доказанное создание. Original409/GET404/wrongACK/неподтверждённый отказ ничего не очищают. Crash между удалениями восстанавливается из control. NativeHelp добавлен на экран ожидания, операторская инструкция дополнена разделом «Не созданный запрос». Закрытие/finish/recovery не получили непредусмотренную отмену.
+
+Full quality gate PASS1029/0cycles/72existing debt/24tooling/оба TypeScript; последующая малая403 защита дополнительно проверена direct terminal tsc и новым browser runner. Encoding проверяется повторно после документации. Native business/API acceptance abandonment принадлежит root, браузерные проверки не выполняли native writes.
+
+Actual production abandonment UI/native GET-only360/390/1440 PASS: отдельный root native receipt, исходные frozen local intents, explicitGET200→обе записи сняты; ни одного API POST, пароль отсутствует в local/sessionStorage. Проверены и pending, и resolved снимки. scripts/assembly_intent_production_read_smoke.py; отдельный production-ui-read.json в reports/retailcase/2026-10-15/assembly-intent. Это дополняет mocked browser проверки реальным чтением существующего immutable native результата.
+
+New physical flow RELEASE:14 rendered mocked-HTTP checks PASS, in addition to16base/15abandon/7recovery (52 total). Durable warehouse request and shipment binding, no autoPOST on reload, strict result identities, serverTTL/monotonic expiry/offline/revoke gating, explicit current ASM_FINAL3 final filter, CANCELLED/noOPEN read-only. New360/390/1440 screenshots physical-setup-*.png, tooltip audit/local help2related/nooverflow PASS. Qualitygate1042/0cycles/debt72/24tooling/bothTS PASS; encodingPASS. Input touch height enlarged44px after screenshot review; root production rebuild/independent native read/visual follows. Role flat+OWN limitation preserved; no nativeauth edits and no new physical/Oracle mutations. Unexpected unresolved request/bind rejections retain journal for owner review, without invented tombstone.

@@ -1,0 +1,18 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\rrl_case_task_access_package.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\rrl_case_task_access_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\rrl_case_assignment_api_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\rrl_case_lifecycle_api_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\rrl_asm_meta_scope_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\rrl_assembly_scale_api_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\rrl_case_resource_policy_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\rrl_wh_weigh_request_api_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\rrl_stock_case_pick_cmd_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\rrl_inventory_task_access_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\rrl_stock_metadata_tx_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_additive_legacy_task_scopes\after_sources.sql
+Done. Statements=33; Errors=0; AbsentCleanup=0

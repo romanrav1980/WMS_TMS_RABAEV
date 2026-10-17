@@ -1,0 +1,90 @@
+{
+  "http": [
+    {
+      "label": "exact_after_delivery",
+      "path": "/api/case-pick/tasks/1154/move-carrier",
+      "status": 200,
+      "api_call_id": "72721",
+      "request_id": "502d7002-a89f-4673-b709-2edeca728299"
+    },
+    {
+      "label": "foreign_warehouse",
+      "path": "/api/case-pick/tasks/1153/move-carrier",
+      "status": 403,
+      "api_call_id": "72722",
+      "request_id": "8f19b8a0-882f-4553-9634-83786652e828"
+    },
+    {
+      "label": "replay_after_revoke",
+      "path": "/api/case-pick/tasks/1154/move-carrier",
+      "status": 403,
+      "api_call_id": "72723",
+      "request_id": "7bfbb826-5785-4db4-b836-d44a5ecf8ab8"
+    }
+  ],
+  "exact_after_delivery": {
+    "operation_id": "OC16.4f58710060.DLV.TO.DOCK",
+    "case_pick_task_id": 1154,
+    "carrier_identifier": "090000000000023017",
+    "from_cell": "CPT_20137024",
+    "cell": "PD21740f343f",
+    "content_version": 5,
+    "status": "MOVED",
+    "lots": [
+      {
+        "uid": "CASELOT:8EF721B6E958CDA2A0660BD4AF8412C23708BF:1",
+        "cell": "CPT_20137024",
+        "quantity": "24",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A21740F343F",
+        "case_line": 1156
+      },
+      {
+        "uid": "CASELOT:FAB4E8560DB2B5855A3E6D34688A94814FA622:1",
+        "cell": "CPT_20137024",
+        "quantity": "1",
+        "version": 1,
+        "base": "EA",
+        "article": "AS16A21740F343F",
+        "case_line": 1156
+      }
+    ],
+    "outbox_id": 5718
+  },
+  "foreign_warehouse": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "OC16.4f58710060.MOVE.FOREIGN",
+      "oracle_code": 20882,
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false
+    }
+  },
+  "revoke_command": {
+    "operation_id": "OC16.4f58710060.FINAL.REVOKE",
+    "command_type": "REVOKE",
+    "payload": {
+      "expected_version": 1,
+      "assignment_id": "OC16A4f58710060",
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+    }
+  },
+  "revoke": {
+    "operation_id": "OC16.4f58710060.FINAL.REVOKE",
+    "command_type": "REVOKE",
+    "object_id": "OC16A4f58710060",
+    "version": 2,
+    "replayed": false
+  },
+  "replay_after_revoke": {
+    "detail": {
+      "code": "STOCK_RULE_REJECTED",
+      "operation_id": "OC16.4f58710060.DLV.TO.DOCK",
+      "oracle_code": 20882,
+      "outcome_confirmed": true,
+      "retry_same_operation_id": false
+    }
+  },
+  "state": "PASS_MOVE_EXACT_REPLAY_AFTER_DELIVERY_FOREIGN403_REVOKED403"
+}

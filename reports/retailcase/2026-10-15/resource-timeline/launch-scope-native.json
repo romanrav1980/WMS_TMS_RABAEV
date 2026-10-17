@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "checks": [
+    "native_only_launch_mandate_actual_wave_warehouse",
+    "canonical_post_foreign_rejected_before_stock_plan",
+    "own_mandate_reaches_existing_business_rule_without_flat_grant",
+    "revoke_denies_next_native_command"
+  ],
+  "fixture_cleaned": true,
+  "stock_effect": "NONE",
+  "positive_launch": "PENDING_SEPARATE_PREVIEW_FIXTURE"
+}

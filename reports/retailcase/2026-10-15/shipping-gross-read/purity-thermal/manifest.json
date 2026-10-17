@@ -1,0 +1,19 @@
+{
+  "captured_at_utc": "2026-10-15T19:41:04.099963+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_INTERWARE_THERMAL",
+      "type": "PACKAGE BODY",
+      "file": "rrl_interware_thermal_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "a3e5cd90c9e82969e5a41049888d0a1d7f8b6f6f511b8e1d3cb7a65f450e653e",
+      "normalized_source_sha256": "7006907b26abc50c2ac4557b85c63326b6388574313b652c5e4695d9531b5101",
+      "artifact_sha256": "0cfbe955892cf4cfe9e177190b144ca053e521fd3284b2cb0597ee89dbb5b244"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_short_accepted_audit\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_short_accepted_audit\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_short_accepted_audit\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_short_accepted_audit\rrl_stock_short_recovery_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_short_accepted_audit\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_short_accepted_audit\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_short_accepted_audit\after_sources.sql
+Done. Statements=7; Errors=0; AbsentCleanup=0

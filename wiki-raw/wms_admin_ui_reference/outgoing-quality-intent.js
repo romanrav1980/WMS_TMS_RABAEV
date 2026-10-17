@@ -20,7 +20,8 @@
   if(v.kind==='scan')return exact(b,[...base,'error_count','scans','item_scans'])&&Number.isSafeInteger(b.error_count)&&b.error_count>=0&&
     list(b.scans,mark,20000)&&list(b.item_scans,item,20000);
   if(v.kind==='final-weight')return exact(b,[...base,'capture_key'])&&signature(b.capture_key);
-  if(v.kind==='weight')return exact(b,[...base,'gross_weight','wood_weight','quality_kind'])&&
+  if(v.kind==='weight')return exact(b,[...base,'gross_weight','wood_weight','quality_kind','measurement_origin'])&&
+    (b.measurement_origin===undefined||b.measurement_origin==='MANUAL_CONFIRMED')&&
     decimal(b.gross_weight)&&Number(b.gross_weight)>0&&decimal(b.wood_weight)&&['WEIGHT','WEIGHT2'].includes(b.quality_kind);
   return false;
  }

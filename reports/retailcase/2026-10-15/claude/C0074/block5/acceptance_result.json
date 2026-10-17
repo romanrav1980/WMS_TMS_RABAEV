@@ -1,0 +1,33 @@
+{
+ "writes": [],
+ "errors": [],
+ "staleResponse": {
+  "shown": "склад 51365792 · Ресурсов 4",
+  "expected": "склад 51365792"
+ },
+ "lostResponse": {
+  "error": "Сервер не ответил — данные не получены.",
+  "gantt": "нет Ганта"
+ },
+ "afterRefresh": "склад 6667491 · Ресурсов 1",
+ "forbidden": {
+  "error": "Нет права просмотра (RESOURCE_TIMELINE_ACCESS_DENIED).",
+  "gantt": "нет Ганта"
+ },
+ "badShape": {
+  "error": "Неожиданный ответ API ресурсов: нет склада/окна/observed_at",
+  "gantt": "нет Ганта"
+ },
+ "dayChange": {
+  "start": "2026-10-10T00:00",
+  "gantt": "склад 51365792 · Ресурсов 4"
+ },
+ "customInterval": {
+  "start": "2026-10-10T00:00",
+  "note": true
+ },
+ "reloadNeedsLogin": true,
+ "reload": {
+  "role": "Директор РЦ"
+ }
+}

@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "reconciliation_id": "ASM15.RECON1032",
+  "results": {
+    "capture": {
+      "status": "CAPTURE_ARCHIVED",
+      "step_state": "CANCELLED",
+      "stock_outcome": "NO_STOCK_EFFECT_RECONCILIATION"
+    },
+    "evidence": {
+      "status": "EVIDENCE_ARCHIVED",
+      "binding": "MATCHED"
+    },
+    "source_sha256": "8A7163980BD9910C0673683E9D6DF624DA1C5027FF86C2378FEBD268364AC8E6",
+    "evidence_sha256": "6EFC0147A0060F1AC4F1C5725FC024C9C98AB986F09843B5A490565EE199F356",
+    "capture_id": "ASM.RECON.1E73C4C13DFB7D32236ABB389C879849747DBF0591E5C90D04B6382D8C4C1EE3"
+  },
+  "stock_changed": false,
+  "accepted_baseline_unchanged": true,
+  "content_version_unchanged": true,
+  "step": "CANCELLED",
+  "session": "OPEN",
+  "physical_hardware": false,
+  "immutable_test_history_retained": true,
+  "slow_sql": [],
+  "post_retirement_http_success_replay": "NOT_RUN: credentials already removed and actors retired before HTTP call; no reactivation. Root separately verified exact native saved-CLOB replay within caller rollback."
+}

@@ -1,0 +1,11 @@
+{
+  "status": "FROZEN_VERIFIED_BEFORE_APPLY",
+  "at_utc": "2026-10-15T16:39:09.155754+00:00",
+  "identity": {
+    "schema_name": "RABAEV",
+    "service_name": "orcl"
+  },
+  "frozen_manifest_sha256": "4f12af11e4fd524f28f0cd6ecf846a10679121e415045a2cabeb984ecd7945b3",
+  "independent_review": "Root native/code review and separate store_navigation read-only PASS",
+  "quantity_writes": false
+}

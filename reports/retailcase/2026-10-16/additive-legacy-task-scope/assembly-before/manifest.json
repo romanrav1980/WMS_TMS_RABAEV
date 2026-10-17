@@ -1,0 +1,37 @@
+{
+  "captured_at_utc": "2026-10-15T22:11:29.187052+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_ASM_META_SCOPE",
+      "type": "PACKAGE BODY",
+      "file": "rrl_asm_meta_scope_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "16a8984c599c21ca225974d0f4c6f4e31ddbf42e943082880b50ec74e7136f0c",
+      "normalized_source_sha256": "bb4e8cdad45c5270601cb9f0bfb16699da06313c53c32a347613c6ace9340326",
+      "artifact_sha256": "1686282203e67b7a1afa68f1388fcfe6a63be40fcb2c245d9f13ef62536bfa84"
+    },
+    {
+      "name": "RRL_ASSEMBLY_SCALE_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_assembly_scale_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "947f945b30cc4c6ad1b05fd111d62c365b7c6946f8ce2a6334cb0df1bd8e1983",
+      "normalized_source_sha256": "b71df7482ece70ab3e9108ca47e9c86cbfab08ca2642505e523a238bc9ec5a35",
+      "artifact_sha256": "739fe760b154c51b13658cf7ac34254c225a76c33b86718b93b57883dd62c74a"
+    },
+    {
+      "name": "RRL_WH_WEIGH_REQUEST_API",
+      "type": "PACKAGE BODY",
+      "file": "rrl_wh_weigh_request_api_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "879542ff5a689ed66eebe6176af2160a84b6840bc8391171d87071b5f90eef8b",
+      "normalized_source_sha256": "b21176b5ed0f8b82eb316e1ce276106bca35170c4f1ee9bafa2e980b846cbc4e",
+      "artifact_sha256": "f6f873c3c42b4823000650e110dfce9a8fdbf1ffe2fe9f1fc259132935d68cf6"
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "prefix": "CM16.4c03ea49b7",
+  "tag": "4c03ea49b7",
+  "actor": "CM16U4c03ea49b7",
+  "role": "CM16R4c03ea49b7",
+  "assignment": "CM16A4c03ea49b7",
+  "warehouse_id": 20220394,
+  "root": "MH16.TOP:d076c19e82",
+  "cell": "MH16Gd076c19e82",
+  "plan": "CM16.4c03ea49b7.PLAN",
+  "future_plan": "CM16.4c03ea49b7.FUTURE",
+  "future_root": "CM16.FUTURE:4c03ea49b7",
+  "started_at": "2026-10-16T04:53:34.492061+00:00",
+  "hardware_verified": false,
+  "state": "MANIFEST_FUNCTIONAL_ACCESS_RETIRED",
+  "protected_sha256": "c2f3c946a9bfd4a9c475dbf8443288479b8698a954334f89c66b073da52606e9",
+  "order": 2155,
+  "order_row": 3642,
+  "st": 641523,
+  "future_fulfillment": 193,
+  "st_identifier": "CM16.4c03ea49b7.ST",
+  "members": [
+    191,
+    192
+  ],
+  "frozen_acl_commands": {
+    "ROLE": {
+      "operation_id": "CM16.4c03ea49b7.ROLE",
+      "command_type": "ROLE_SAVE",
+      "payload": {
+        "expected_version": 0,
+        "role_id": "CM16R4c03ea49b7",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "permissions": [
+          "warehouse_task_execute",
+          "warehouse_task_view"
+        ],
+        "active": true
+      }
+    },
+    "ASSIGN": {
+      "operation_id": "CM16.4c03ea49b7.ASSIGN",
+      "command_type": "ASSIGN",
+      "payload": {
+        "expected_version": 0,
+        "assignment_id": "CM16A4c03ea49b7",
+        "username": "CM16U4c03ea49b7",
+        "role_id": "CM16R4c03ea49b7",
+        "scope_kind": "WAREHOUSE",
+        "scope_id": "20220394",
+        "membership": "CURRENT",
+        "snapshot_version": null,
+        "valid_from": "2026-10-16T04:53:30.261848+00:00",
+        "valid_until": "2026-10-16T07:53:35.261848+00:00",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "REVOKE": {
+      "operation_id": "CM16.4c03ea49b7.REVOKE",
+      "command_type": "REVOKE",
+      "payload": {
+        "expected_version": 1,
+        "assignment_id": "CM16A4c03ea49b7",
+        "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+      }
+    },
+    "RETIRE.ROLE": {
+      "operation_id": "CM16.4c03ea49b7.RETIRE.ROLE",
+      "command_type": "ROLE_SAVE",
+      "payload": {
+        "expected_version": 1,
+        "role_id": "CM16R4c03ea49b7",
+        "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+        "permissions": [
+          "warehouse_task_execute",
+          "warehouse_task_view"
+        ],
+        "active": false
+      }
+    }
+  },
+  "acl_receipts": {
+    "ROLE": {
+      "operation_id": "CM16.4c03ea49b7.ROLE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "CM16R4c03ea49b7",
+      "version": 1,
+      "replayed": false
+    },
+    "ASSIGN": {
+      "operation_id": "CM16.4c03ea49b7.ASSIGN",
+      "command_type": "ASSIGN",
+      "object_id": "CM16A4c03ea49b7",
+      "version": 1,
+      "replayed": false
+    },
+    "REVOKE": {
+      "operation_id": "CM16.4c03ea49b7.REVOKE",
+      "command_type": "REVOKE",
+      "object_id": "CM16A4c03ea49b7",
+      "version": 2,
+      "replayed": false
+    },
+    "RETIRE.ROLE": {
+      "operation_id": "CM16.4c03ea49b7.RETIRE.ROLE",
+      "command_type": "ROLE_SAVE",
+      "object_id": "CM16R4c03ea49b7",
+      "version": 2,
+      "replayed": false
+    }
+  },
+  "frozen_http": {
+    "SAVE_MISSING": {
+      "operation_id": "CM16.4c03ea49b7.SAVE.1",
+      "expected_version": 0,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "root_identifier": "MH16.TOP:d076c19e82",
+      "warehouse_id": 20220394,
+      "cell": "MH16Gd076c19e82",
+      "fulfillment_ids": [
+        191,
+        192,
+        193
+      ]
+    },
+    "EXACT_REPLAY": {
+      "operation_id": "CM16.4c03ea49b7.SAVE.1",
+      "expected_version": 0,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "root_identifier": "MH16.TOP:d076c19e82",
+      "warehouse_id": 20220394,
+      "cell": "MH16Gd076c19e82",
+      "fulfillment_ids": [
+        191,
+        192,
+        193
+      ]
+    },
+    "BODY_CONFLICT": {
+      "operation_id": "CM16.4c03ea49b7.SAVE.1",
+      "expected_version": 0,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance changed",
+      "root_identifier": "MH16.TOP:d076c19e82",
+      "warehouse_id": 20220394,
+      "cell": "MH16Gd076c19e82",
+      "fulfillment_ids": [
+        191,
+        192,
+        193
+      ]
+    },
+    "SAVE_COMPLETE": {
+      "operation_id": "CM16.4c03ea49b7.SAVE.2",
+      "expected_version": 1,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "root_identifier": "MH16.TOP:d076c19e82",
+      "warehouse_id": 20220394,
+      "cell": "MH16Gd076c19e82",
+      "fulfillment_ids": [
+        191,
+        192
+      ]
+    },
+    "STALE_VERSION": {
+      "operation_id": "CM16.4c03ea49b7.STALE",
+      "expected_version": 1,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "root_identifier": "MH16.TOP:d076c19e82",
+      "warehouse_id": 20220394,
+      "cell": "MH16Gd076c19e82",
+      "fulfillment_ids": [
+        191,
+        192
+      ]
+    },
+    "WRONG_TARGET_SCOPE": {
+      "operation_id": "CM16.4c03ea49b7.FOREIGN",
+      "expected_version": 2,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "root_identifier": "MH16.TOP:d076c19e82",
+      "warehouse_id": 1,
+      "cell": "MH16Gd076c19e82",
+      "fulfillment_ids": [
+        191,
+        192
+      ]
+    },
+    "SAVE_BEFORE_ROOT_OR_PICK": {
+      "operation_id": "CM16.4c03ea49b7.FUTURE.SAVE",
+      "expected_version": 0,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "root_identifier": "CM16.FUTURE:4c03ea49b7",
+      "warehouse_id": 20220394,
+      "cell": "MH16Gd076c19e82",
+      "fulfillment_ids": [
+        193
+      ]
+    },
+    "REVOKED_REPLAY": {
+      "operation_id": "CM16.4c03ea49b7.SAVE.2",
+      "expected_version": 1,
+      "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+      "root_identifier": "MH16.TOP:d076c19e82",
+      "warehouse_id": 20220394,
+      "cell": "MH16Gd076c19e82",
+      "fulfillment_ids": [
+        191,
+        192
+      ]
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "state": "PASS",
+  "checks": [
+    "Online authorized native fixture rendered",
+    "Actual offline public article; previous native content cleared",
+    "Offline full text search of public copies",
+    "Offline search opens recovery instruction and revision",
+    "390px dialog fits",
+    "Unbundled native/private article unavailable offline",
+    "HTTP 401 never replaced by offline publication",
+    "HTTP 403 never replaced by offline publication",
+    "HTTP 404 never replaced by offline publication",
+    "HTTP 503 never replaced by offline publication",
+    "Escape preserves workstation"
+  ],
+  "errors": [],
+  "writes": [],
+  "http": [
+    {
+      "path": "/api/access/me",
+      "status": 200,
+      "api_call_id": "72180",
+      "request_id": "8ea7f1f4-9a90-4c0a-a67c-91a3119fa263"
+    },
+    {
+      "path": "/api/access/navigation",
+      "status": 200,
+      "api_call_id": "72184",
+      "request_id": "4c7fdda7-b16f-4e0c-b6d6-b1803ab04f98"
+    },
+    {
+      "path": "/api/access/workspaces",
+      "status": 200,
+      "api_call_id": "72181",
+      "request_id": "a60f10cd-4f06-4368-b9c0-2c84ff4eca5e"
+    },
+    {
+      "path": "/api/delivery/timing/kpis",
+      "status": 200,
+      "api_call_id": "72183",
+      "request_id": "4558d3ce-55bb-4c9d-8ca4-2fe18d0c0550"
+    },
+    {
+      "path": "/api/resources/picker-kpis",
+      "status": 200,
+      "api_call_id": "72182",
+      "request_id": "9b60fc6d-8180-4ce2-9139-72b8741e82c5"
+    }
+  ],
+  "actualFrontend": true,
+  "actualOfflineContext": true,
+  "nativeArticleAndHttpDenials": "UI fixtures only; not native authorization acceptance"
+}

@@ -1,0 +1,19 @@
+{
+  "captured_at_utc": "2026-10-15T21:49:47.517877+00:00",
+  "schema": "RABAEV",
+  "service": "orcl",
+  "host": "vbox",
+  "read_only": true,
+  "invalid_count": 0,
+  "sources": [
+    {
+      "name": "RRL_STOCK_CASE_SHORT_CMD",
+      "type": "PACKAGE BODY",
+      "file": "rrl_stock_case_short_cmd_package_body.sql",
+      "errors": [],
+      "user_source_sha256": "f4b58dd32f0b71d5b258fc02bb53bc1ad46d23499ac61d1a3a3d30dfbe343997",
+      "normalized_source_sha256": "340f25c14002d76d5c6ed0c433cec62fe3f5912856990aa5dbaf6da5247d255d",
+      "artifact_sha256": "5ddd2835a9ae6f44c9266af2f071c2bcfb82260f9e5b63982f7c21eea89a0aaa"
+    }
+  ]
+}

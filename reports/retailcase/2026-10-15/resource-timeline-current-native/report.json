@@ -1,0 +1,88 @@
+{
+  "status": "PASS",
+  "actor": "admin",
+  "scope": "One existing WARE/current UTC day; not role-only/physical/load acceptance",
+  "started_at": "2026-10-15T19:46:27.465177+00:00",
+  "request": {
+    "warehouse_id": 1,
+    "start_at": "2026-10-15T00:00:00+00:00",
+    "finish_at": "2026-10-16T00:00:00+00:00"
+  },
+  "http_status": 200,
+  "client_ms": 2028.265,
+  "business_commands": 0,
+  "min_api_id": 69300,
+  "http": [
+    {
+      "api_call_id": 69300,
+      "request_id": "e427b6d5-7490-4cdd-a202-752a848620e7",
+      "response_status": 200,
+      "duration_ms": 379
+    }
+  ],
+  "slow": [],
+  "native_cumulative": [],
+  "local_pairs": [
+    {
+      "api_call_id": 69300,
+      "local": {
+        "phase": "FINISHED",
+        "request_id": "e427b6d5-7490-4cdd-a202-752a848620e7",
+        "method": "GET",
+        "path": "/api/resources/timeline",
+        "logged_at": "2026-10-15T19:46:29.637691+00:00",
+        "api_call_id": 69300,
+        "response_status": 200,
+        "duration_ms": 379
+      }
+    }
+  ],
+  "decision": "Keep warehouse filter, explicit aware24h interval and source caps; no index/cache from one read. Resource owner profiles nested SQL/lock timing and actual plan for repeated500ms or any1000ms; shared cursor means are not this call p95. Missing source/family must remain unavailable, never invented.",
+  "resources_by_kind": {},
+  "events": 3,
+  "unscheduled": 23,
+  "sources": [
+    {
+      "source_id": "registry",
+      "status": "READY",
+      "permission": "resource_management_view",
+      "limit": 500,
+      "observed_at": "2026-10-15T19:46:29.587034+00:00"
+    },
+    {
+      "source_id": "attendance",
+      "status": "READY",
+      "permission": "resource_shift_view",
+      "limit": 500,
+      "observed_at": "2026-10-15T19:46:29.587034+00:00"
+    },
+    {
+      "source_id": "warehouse_tasks",
+      "status": "READY",
+      "permission": "warehouse_task_view",
+      "limit": 2000,
+      "observed_at": "2026-10-15T19:46:29.587034+00:00"
+    },
+    {
+      "source_id": "case_tasks",
+      "status": "READY",
+      "permission": "case_pick_view",
+      "limit": 2000,
+      "observed_at": "2026-10-15T19:46:29.587034+00:00"
+    },
+    {
+      "source_id": "transport",
+      "status": "READY",
+      "permission": "transport_dispatch_view",
+      "limit": 2000,
+      "observed_at": "2026-10-15T19:46:29.587034+00:00"
+    },
+    {
+      "source_id": "sessions",
+      "status": "READY",
+      "permission": "resource_session_view",
+      "limit": 2000,
+      "observed_at": "2026-10-15T19:46:29.587034+00:00"
+    }
+  ]
+}

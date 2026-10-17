@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "timings": [
+    {
+      "trial": 1,
+      "ms": 17.02,
+      "outcome": "RESOLVED"
+    },
+    {
+      "trial": 2,
+      "ms": 13.47,
+      "outcome": "RESOLVED"
+    }
+  ],
+  "decision": "Keep one bounded destination CTE and root JSON lookup outside it; scan aliases and prefer sole unreceived match, limit2 explicit ambiguity. No index without measured repeated cost/plan."
+}

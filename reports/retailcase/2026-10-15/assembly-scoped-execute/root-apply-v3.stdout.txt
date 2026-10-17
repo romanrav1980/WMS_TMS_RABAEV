@@ -1,0 +1,16 @@
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\history_guard.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\case_access_spec.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\case_access_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\meta_scope_spec.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\meta_scope_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\resource_policy_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\case_pick_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\assembly_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\lifecycle_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-15_assembly_scoped_execute\after_sources.sql
+Done. Statements=30; Errors=0; AbsentCleanup=0

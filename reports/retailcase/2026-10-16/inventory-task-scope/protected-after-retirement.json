@@ -1,0 +1,30 @@
+{
+  "state": "PASS_OLD_ASM_EXACT_AFTER_RETIREMENT",
+  "actual": {
+    "stock": [
+      {
+        "uid_poleta": "AS16.LOT:35cea92c27",
+        "cell": "AS16C35cea92c27",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3
+      },
+      {
+        "uid_poleta": "CASELOT:F4919A88E403111851D9EA31F410A57E0834BE:1",
+        "cell": "CPT_20220394",
+        "remain": 1,
+        "hard_reserved_base": 1,
+        "stock_version": 1
+      }
+    ],
+    "task": [
+      {
+        "status": "WAIT_CONTROL",
+        "content_version": 3,
+        "picked_qty": 1,
+        "legacy_sborka_pallet_id": 641521
+      }
+    ]
+  },
+  "invalid": 0
+}

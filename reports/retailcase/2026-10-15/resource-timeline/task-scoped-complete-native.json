@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "checks": [
+    "foreign_assigned_actor_denied",
+    "stale_expected_task_signature_rejected",
+    "native_only_assigned_actor_physical_completion",
+    "stock_operation_movement_event_sync_residual_rollback_verified",
+    "domain_facts_outbox_and_new_partial_unit_rollback_verified",
+    "missing_signature_rejected",
+    "physical_wrong_target_scan_rejected",
+    "native_warehouse_execute_does_not_enable_hu",
+    "native_warehouse_execute_does_not_enable_case_carrier",
+    "closure_changed_after_prepare_cannot_execute",
+    "both_actual_warehouses_require_execute_and_destination_revoke",
+    "original_committed_canonical_receipt_replayed_by_current_native_role",
+    "original_operation_changed_body_conflicts",
+    "current_revoke_denies_original_committed_replay",
+    "actual_http_native_identity_detail_signature",
+    "actual_http_missing_correlation_version_rejected",
+    "actual_http_physical_scan_native_rejection_rollback",
+    "actual_http_assign_start_cancel_remain_separate",
+    "actual_http_other_assignee_and_hu_denied",
+    "temporary_metadata_absent_and_historical_identity_exactly_restored"
+  ],
+  "metadata_fixture_committed_temporarily": true,
+  "metadata_fixture_cleaned": true,
+  "native_access_audit_retained": true,
+  "stock_execute": "CALLER_ROLLBACK_ONLY",
+  "physical_hardware": false
+}

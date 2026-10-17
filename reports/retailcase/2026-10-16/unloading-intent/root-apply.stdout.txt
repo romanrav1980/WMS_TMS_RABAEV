@@ -1,0 +1,11 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_unloading_intent\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unloading_intent\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unloading_intent\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unloading_intent\schema.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unloading_intent\rrl_store_unload_api_package.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unloading_intent\rrl_store_unload_api_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unloading_intent\trigger.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unloading_intent\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unloading_intent\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_unloading_intent\after_sources.sql
+Done. Statements=13; Errors=0; AbsentCleanup=0

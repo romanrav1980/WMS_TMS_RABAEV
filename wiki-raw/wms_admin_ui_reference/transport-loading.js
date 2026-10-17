@@ -6,10 +6,21 @@
  const intent=window.wmsLoadingIntent.create(scope);
  const modeInput=mode=>el(mode==="SINGLE"?"loadShipment":mode==="RECONCILE"?"loadOriginalOperation":"loadIdentifier").value;
  const status=text=>{el("loadStatus").textContent=text;};
- function controls(){document.querySelectorAll("main input,main select,main button").forEach(n=>{n.disabled=busy;});el("loadRetry").hidden=!pending||!!record?.damaged;el("loadArchive").hidden=!record?.damaged;el("loadRestart").hidden=!pending?.confirmed_rejection;el("tripDepart").disabled=busy||!!pending||trip?.trip?.condition!=="Спланирован"||!trip?.all_members_physically_loaded;el("loadConfirm").disabled=busy||!!pending||trip?.trip?.condition!=="Спланирован";}
+ function controls(){document.querySelectorAll("main input,main select,main button").forEach(n=>{if(!n.closest("#deliveryWindow"))n.disabled=busy;});el("loadRetry").hidden=!pending||!!record?.damaged;el("loadArchive").hidden=!record?.damaged;el("loadRestart").hidden=!pending?.confirmed_rejection;el("tripDepart").disabled=busy||!!pending||trip?.trip?.condition!=="Спланирован"||!trip?.all_members_physically_loaded;el("loadConfirm").disabled=busy||!!pending||trip?.trip?.condition!=="Спланирован";}
  async function request(path,body){
   const r=await fetch(base()+path,{method:body?"POST":"GET",headers:{...window.wmsAdminAuth.headers(),...(body?{"Content-Type":"application/json"}:{})},...(body?{body:JSON.stringify(body)}:{})});
-  const data=await r.json();if(!r.ok){const error=new Error(JSON.stringify(data.detail||data));error.confirmed=(r.status===422||data.detail?.outcome_confirmed===true)&&![401,403].includes(r.status)&&!String(data.detail?.message||data.detail?.code||"").includes("CONFLICT");throw error;}return data;
+  const data=await r.json();if(!r.ok){const error=new Error(JSON.stringify(data.detail||data));error.status=r.status;error.confirmed=(r.status===422||data.detail?.outcome_confirmed===true)&&![401,403].includes(r.status)&&!String(data.detail?.message||data.detail?.code||"").includes("CONFLICT");throw error;}return data;
+ }
+ function clearMeasurements(){
+  for(const id of ["loadGross","loadWidth","loadDepth","loadHeight","loadTempObserved","loadTempReference","departTempObserved","departTempReference"]){const node=el(id);if(node)node.value="";}
+  for(const id of ["loadTempConfirm","departTempConfirm","loadBoxWeightsEnabled"]){const node=el(id);if(node)node.checked=false;}
+ }
+ function clearTrip(){
+  clearMeasurements();
+  trip=null;composition=null;window.wmsPhysicalBoxes.render(null);window.wmsPalletFloorType.reset();
+  el("tripRows").replaceChildren();el("tripSummary").textContent="Назначение рейса не прочитано.";el("loadCompositionSummary").textContent="";
+  el("loadTempVersion").value="";el("loadTempProfile").textContent="";el("departTempProfile").textContent="";
+  window.dispatchEvent(new CustomEvent("wms-physical-load-cleared"));controls();
  }
  function render(data){
   trip=data;
@@ -31,12 +42,14 @@
  }
  async function refresh(){
   if(busy)return;const id=Number(el("tripId").value),key=scope(),version=++generation;
-  if(!Number.isSafeInteger(id)||id<1){status("Укажите номер рейса.");return;}
+  if(!Number.isSafeInteger(id)||id<1){clearTrip();status("Укажите номер рейса.");return;}
+  if(trip?.trip?.id!==id)clearTrip();
   try{const data=await request("/api/transport/loading/"+id+"/status");if(key===scope()&&version===generation&&id===Number(el("tripId").value))render(data);}
-  catch(e){status(e.message);}
+  catch(e){if(key!==scope()||version!==generation||id!==Number(el("tripId").value))return;if([401,403,404].includes(e.status))clearTrip();status(e.message);}
  }
  async function showComposition(){
   if(busy)return;const mode=el("loadMode").value,input=modeInput(mode),key=scope(),version=++generation;window.wmsPalletFloorType.reset();
+  clearMeasurements();composition=null;window.wmsPhysicalBoxes.render(null);el("loadCompositionSummary").textContent="";
   try{
    const preview=await request(mode==="RECONCILE"?"/api/transport/loading/reconciliation-preview?shipping_operation_id="+encodeURIComponent(input):mode==="SINGLE"?"/api/transport/loading/single-preview?shipment_identifier="+encodeURIComponent(input):"/api/warehouse-hus/composition?identifier="+encodeURIComponent(input));const data=mode==="HU"?preview:preview.snapshot;
    if(key!==scope()||version!==generation||mode!==el("loadMode").value||input!==modeInput(mode))return;
@@ -48,7 +61,7 @@
   }catch(e){if(key===scope()&&version===generation){composition=null;window.wmsPalletFloorType.reset();status(e.message);}}
  }
  async function submit(action){
-  if(busy||pending||window.wmsPhysicalUnload?.hasPending()||window.wmsPhysicalUnload?.isBusy()){status("Сначала повторите сохранённую операцию.");return;}
+  if(busy||pending||window.wmsPhysicalUnload?.hasPending()||window.wmsPhysicalUnload?.isBusy()||window.wmsDeliveryWindow?.hasPending()||window.wmsDeliveryWindow?.isBusy()){status("Сначала повторите сохранённую операцию.");return;}
   const key=scope(),id=Number(el("tripId").value);
   try{
    if(!trip||trip.trip.id!==id)throw new Error("Сначала покажите назначение этого рейса.");
@@ -99,7 +112,7 @@
   finally{busy=false;controls();}
  }
  function auth(){
-  const key=scope();if(key===identity)return;identity=key;++generation;trip=null;composition=null;pending=null;window.wmsPalletFloorType.reset();window.wmsPhysicalBoxes.render(null);el("tripRows").replaceChildren();el("tripSummary").textContent="";el("loadCompositionSummary").textContent="";
+  const key=scope();if(key===identity)return;identity=key;++generation;trip=null;composition=null;pending=null;clearMeasurements();window.wmsPalletFloorType.reset();window.wmsPhysicalBoxes.render(null);el("tripRows").replaceChildren();el("tripSummary").textContent="";el("loadCompositionSummary").textContent="";
   record=null;
   try{if(window.wmsAdminAuth.state.user?.username){record=intent.read();pending=record.damaged?{damaged:true}:record.value;
    if(record.damaged)status("Сохранённая команда повреждена. Новые операции заблокированы. Архивируйте исходный текст и перечитайте рейс.");
@@ -115,5 +128,7 @@
  el("loadRetry").addEventListener("click",()=>send(scope()));
  el("loadRestart").addEventListener("click",()=>{try{if(!busy&&pending?.confirmed_rejection){intent.settle(record);record=null;pending=null;controls();status("Исправьте данные. Следующее подтверждение создаст новую операцию.");}}catch(e){status(e.message);}});
  el("loadArchive").addEventListener("click",async()=>{try{if(busy||!record?.damaged)return;intent.archiveDamaged(record);record=null;pending=null;controls();status("Исходный текст сохранён в архиве. Сверьте серверный статус перед новой операцией: архив не отменяет ранее выполненную погрузку.");await refresh();}catch(e){status(e.message);}});
+ el("loadComposition").title="Перечитать состав места; введённые вес, размеры и температура сбросятся для нового измерения.";
+ el("loadComposition").dataset.helpId="loading.composition.refresh";
  window.addEventListener("wms-admin-auth-ready",auth);auth();
 })();

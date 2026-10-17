@@ -1,0 +1,12 @@
+{
+  "state": "PASS",
+  "files": [
+    "case-handoff.js",
+    "case-handoff-dialog.js",
+    "case-access.js",
+    "admin-nav.js",
+    "case-pick-management.js",
+    "transport-loading.js",
+    "warehouse-hus.js"
+  ]
+}

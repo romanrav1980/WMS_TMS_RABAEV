@@ -1,0 +1,180 @@
+"""C-0049: реестр существующих рабочих мест/API, на которые ссылаются карточки ролей.
+
+Каждая ссылка проверяется генератором: raw-страница должна существовать в wiki-raw/wms_admin_ui_reference,
+React-страница — в App.tsx, маршрут API — в research/api_inventory.json. GAP оформляется строкой "GAP: ...".
+"""
+
+# kind: raw | react | terminal | api
+S = {
+    # --- приёмка, задания, ТСД
+    "receiving": ("raw", "receiving.html", "Приёмка поставки SAP"),
+    "warehouse_tasks": ("raw", "warehouse-tasks.html", "Складские задания"),
+    "warehouse_hus": ("raw", "warehouse-hus.html", "Грузовые места (HU/CASE)"),
+    "reach_tsd": ("raw", "reachtruck-tsd.html", "ТСД ричтрака"),
+    "case_tsd": ("raw", "case-pick-tsd.html", "ТСД сборки"),
+    "case_mgmt": ("raw", "case-pick-management.html", "Комплектация"),
+    "short_inv": ("raw", "short-investigation.html", "Расследование недостачи"),
+    "task_sync": ("raw", "warehouse-task-sync.html", "Синхронизация заданий"),
+    # --- волны, ресурсы, смена
+    "shift_wave": ("raw", "shift-supervisor-wave.html", "Панель смены (волна)"),
+    "wave_repl": ("raw", "wave-replenishment.html", "Пополнение волны"),
+    "wh_sim": ("raw", "warehouse-simulation.html", "Симуляция склада"),
+    "resources": ("raw", "resource-management.html", "Ресурсы (сотрудники, техника, сессии)"),
+    "workload": ("raw", "resource-workload.html", "Нагрузка и выход персонала"),
+    "wh_forecast": ("raw", "warehouse-forecast.html", "Прогноз складской нагрузки"),
+    "slotting": ("raw", "slotting-demand.html", "Потребность для диапазона"),
+    "twin": ("react", "twin", "Цифровой двойник склада"),
+    "wh_map": ("react", "warehouse-map", "Карта большого склада"),
+    "topology": ("react", "topology", "Топология и маршруты"),
+    # --- контроль, остатки, прослеживаемость
+    "quality_policy": ("raw", "quality-policy.html", "Правила контроля отгрузки"),
+    "inv_count": ("raw", "inventory-count.html", "Пересчёт"),
+    "pallet_comp": ("raw", "pallet-composition.html", "Состав и происхождение паллеты"),
+    "trace_manifests": ("raw", "trace-manifests.html", "Состав маркированного груза"),
+    "aging": ("raw", "product-shipment-settings.html", "Вылежка партий / сроки"),
+    # --- экспедиция, транспорт
+    "loading": ("raw", "transport-loading.html", "Погрузка и выезд"),
+    "transport": ("react", "transport", "Диспетчеризация рейсов"),
+    "planner": ("react", "planner", "Планировщик маршрутов (VRP)"),
+    "gantt": ("react", "gantt", "Диаграмма Ганта рейсов"),
+    "fleet": ("react", "fleet", "Автопарк"),
+    "kpi": ("react", "kpi", "KPI транспорта"),
+    "driver": ("react", "driver", "Мобильное место водителя"),
+    "driver_bind": ("raw", "driver-bindings.html", "Учётные записи водителей"),
+    "interwh": ("raw", "interwarehouse.html", "Межскладской поток"),
+    "interwh_groups": ("raw", "interwarehouse-groups.html", "Межскладские грузовые места"),
+    "customer_orders": ("raw", "customer-orders.html", "Заказы клиентов / СТ"),
+    "customers": ("raw", "customers.html", "Клиенты и правила"),
+    "stores": ("raw", "store-directory.html", "Магазины и профиль приёмки"),
+    # --- доставка, магазин, возвраты
+    "store_inv": ("raw", "store-investigations.html", "Расследования поставок"),
+    "store_returns": ("raw", "store-returns.html", "Возвраты магазинов"),
+    "store_ret_transport": ("raw", "store-return-transport.html", "Вывоз возвратов"),
+    "store_ret_receiving": ("raw", "store-return-receiving.html", "Складская приёмка возвратов"),
+    "store_ret_putaway": ("raw", "store-return-putaway.html", "Размещение возвратов"),
+    "supplier_return": ("raw", "supplier-return.html", "Возврат поставщику"),
+    "supplier_handover": ("raw", "supplier-handover.html", "Передача поставщику"),
+    "return_disposal": ("raw", "return-disposal.html", "Утилизация возврата"),
+    # --- тара
+    "tare_ledger": ("raw", "tare-ledger.html", "Оборотная тара"),
+    "tare_assembly": ("raw", "tare-assembly.html", "Тара для сборки"),
+    "tare_loss": ("raw", "tare-loss.html", "Недостача тары"),
+    "tare_res": ("raw", "tare-resolutions.html", "Повреждения тары"),
+    "tare_policy": ("raw", "tare-return-policy.html", "Сроки возврата тары"),
+    "tare_recovery": ("raw", "tare-load-recovery.html", "Тара возвращённой погрузки"),
+    # --- финансы, сверка
+    "day_rec": ("raw", "day-reconciliation.html", "Сверка исполнения дня"),
+    "log_costs": ("raw", "logistics-costs.html", "Складские затраты"),
+    "log_expenses": ("raw", "logistics-expenses.html", "Дополнительные расходы"),
+    # --- платформа
+    "users": ("react", "users", "Пользователи"),
+    "rights": ("raw", "rights-admin.html", "Права групп"),
+    "api_audit": ("raw", "api-audit.html", "API-аудит"),
+    "outbox": ("raw", "external-outbox.html", "Внешние отправки (outbox)"),
+    "warehouses": ("raw", "warehouses.html", "Склады и типы"),
+    "home": ("raw", "index.html", "Главная raw UI"),
+    # --- терминал PWA
+    "term_product": ("terminal", "product", "Терминал: товар по EAN/DataMatrix"),
+    "term_lot": ("terminal", "lot", "Терминал: паллета"),
+    "term_place": ("terminal", "place", "Терминал: место"),
+    "term_legacy": ("terminal", "legacy", "Терминал: legacy TSERVER"),
+}
+
+# Ключевые API, на которые опираются KPI и очереди (метод + путь проверяются по инвентаризации).
+A = {
+    "tasks": ("GET", "/api/warehouse-tasks"),
+    "task_card": ("GET", "/api/warehouse-tasks/{task_id}"),
+    "waves": ("GET", "/api/picking/waves"),
+    "shortages": ("GET", "/api/picking/shortages"),
+    "repl_progress": ("GET", "/api/inventory/replenishment-progress"),
+    "workload": ("GET", "/api/resources/workload/warehouses/{ware_id}"),
+    "sessions": ("GET", "/api/resources/sessions"),
+    "resources": ("GET", "/api/resources"),
+    "candidates": ("GET", "/api/resources/warehouse-tasks/{task_id}/candidates"),
+    "inv_tasks": ("GET", "/api/inventory/tasks"),
+    "recovery_shorts": ("GET", "/api/inventory/recovery-shorts"),
+    "case_tasks": ("GET", "/api/case-pick/tasks"),
+    "case_shorts": ("GET", "/api/case-pick/shorts"),
+    "supply_orders": ("GET", "/api/integrations/sap/supply-orders"),
+    "tare": ("GET", "/api/inventory/tare/warehouses/{ware_id}/balances"),
+    "store_receipts": ("GET", "/api/delivery/store-receipts/cases"),
+    "case_work": ("GET", "/api/delivery/case-work/mine"),
+    "store_returns": ("GET", "/api/delivery/store-returns/{receipt_id}"),
+    "day_rec": ("GET", "/api/finance/day-reconciliation/warehouses/{ware_id}"),
+    "kpi_summary": ("GET", "/api/admin/transport/kpi/summary"),
+    "kpi_fleet": ("GET", "/api/admin/transport/kpi/fleet"),
+    "kpi_billing": ("GET", "/api/admin/transport/kpi/billing"),
+    "planner_metrics": ("GET", "/api/admin/transport/planner/metrics"),
+    "gantt": ("GET", "/api/admin/transport/vehicles/gantt"),
+    "delivery_windows": ("GET", "/api/transport/preflight/trips/{trip_id}/delivery-windows"),
+    "loading": ("GET", "/api/transport/loading/{task_id}/status"),
+    "outbox": ("GET", "/api/admin/event-outbox"),
+    "api_calls": ("GET", "/api/admin/api-calls"),
+    "slow_sql": ("GET", "/api/admin/slow-sql"),
+    "users": ("GET", "/api/admin/users"),
+    "me": ("GET", "/api/admin/auth/me"),
+    "driver_trips": ("GET", "/api/driver/trips"),
+    "interwh": ("GET", "/api/inventory/interwarehouse/trips/{trip_id}/incoming"),
+    "log_costs": ("GET", "/api/finance/logistics-costs/trips/{trip_id}"),
+    "stores": ("GET", "/api/master-data/stores"),
+    "store_profile": ("GET", "/api/master-data/stores/profile"),
+    "trace": ("GET", "/api/trace/entities/{entity_type}/{entity_id}/backward"),
+    "stock_journal": ("GET", "/api/inventory/stock-posting/operations/{operation_id}"),
+}
+
+# Команды: (метод, путь, право по маршруту, вход, результат, повтор/ошибки). Генератор сверяет путь и право с инвентаризацией.
+_RETRY = "повтор тем же operation_id и телом; изменённое тело под тем же ключом — 409; сеть/5xx — результат неизвестен до чтения статуса"
+C = {
+    "dispatch_nearest": ("POST", "/api/resources/warehouse-tasks/{task_id}/dispatch-nearest", "resource_dispatch_manage",
+                         "задание; сервер выбирает ближайший допустимый ресурс по последней подтверждённой позиции", "задание закреплено за ресурсом/техникой или отказ с причиной (нет кандидата, позиция устарела)", _RETRY),
+    "wave_create": ("POST", "/api/picking/waves", "pick_wave_create", "склад, тип волны, заказы/параметры", "волна в статусе черновика", _RETRY),
+    "wave_calculate": ("POST", "/api/picking/waves/{pick_wave_id}/calculate", "pick_wave_calculate", "волна", "план отбора и потребность пополнения", _RETRY),
+    "wave_approve_time": ("POST", "/api/resources/workload/waves/approve-time", "pick_wave_launch", "волна, версия временного контекста", "время волны утверждено", _RETRY),
+    "wave_launch": ("POST", "/api/picking/waves/{pick_wave_id}/launch", "pick_wave_launch", "обеспеченная волна", "задания комплектации выданы; launched_at/launched_by", _RETRY),
+    "short_approve": ("POST", "/api/case-pick/shorts/{short_id}/approve", "case_pick_short_approve", "недостача и решение", "недостача подтверждена (approved_at/approved_by)", _RETRY),
+    "task_transfer": ("POST", "/api/case-pick/tasks/{case_pick_task_id}/transfer", "case_pick_manage", "неначатое задание сборки, новый исполнитель, причина", "задание у другого комплектовщика", _RETRY),
+    "pick_claim": ("POST", "/api/case-pick/tasks/{case_pick_task_id}/claim", "case_pick_execute", "задание", "задание закреплено за собой", _RETRY),
+    "pick_line_confirm": ("POST", "/api/case-pick/tasks/{case_pick_task_id}/lines/{line_id}/confirm", "case_pick_execute", "строка, отсканированные ячейка/товар, количество", "строка подтверждена в грузовом месте", _RETRY),
+    "pick_line_short": ("POST", "/api/case-pick/tasks/{case_pick_task_id}/lines/{line_id}/short", "case_pick_execute", "строка, фактическое количество, причина", "недостача создана, запускается проверка ячейки", _RETRY),
+    "pick_close_pallet": ("POST", "/api/case-pick/tasks/{case_pick_task_id}/close-pallet", "case_pick_execute", "грузовое место, этикетка", "место закрыто и передано на контроль", _RETRY),
+    "receipt_pallet": ("POST", "/api/receiving/supply-orders/{order_id}/pallets", "warehouse_receipt_confirm", "поставка SAP, SSCC/внутренний код, SKU, количество, партия, срок, коды", "паллета принята через ядро проводки", _RETRY),
+    "receipt_close": ("POST", "/api/receiving/supply-orders/{order_id}/close", "warehouse_receipt_reconcile", "поставка, итог сверки", "поставка закрыта, факт в outbox SAP", _RETRY),
+    "putaway_replan": ("POST", "/api/receiving/putaway/{task_id}/replan", "warehouse_task_assign", "задание размещения, причина", "новое целевое место", _RETRY),
+    "putaway_complete": ("POST", "/api/receiving/putaway/{task_id}/complete", "warehouse_task_execute", "задание, отсканированная ячейка", "паллета в подтверждённом адресе", _RETRY),
+    "qc_scan": ("POST", "/api/outgoing-quality/{identifier}/scan", "outgoing_pallet_check", "место (SSCC/CASE), отсканированные коробки", "результат проверки состава", _RETRY),
+    "qc_weight": ("POST", "/api/outgoing-quality/{identifier}/final-weight", "outgoing_pallet_check", "место, устойчивое измерение весов", "допуск или ошибка веса (красный тег)", _RETRY),
+    "loading_confirm": ("POST", "/api/transport/loading/confirm", "stock_posting_shipping", "рейс, идентификатор места, машина", "место погружено; списание через ядро один раз", _RETRY),
+    "depart": ("POST", "/api/transport/loading/{task_id}/depart", "transport_dispatch_close", "рейс, подтверждения температуры/тары", "рейс выехал", _RETRY),
+    "trip_edit": ("PATCH", "/api/admin/transport/tasks/{task_id}", "transport_dispatch_edit", "рейс, изменяемые поля (машина, водитель, ворота, время)", "рейс обновлён", "без operation_id: перед повтором перечитать рейс"),
+    "trip_add_st": ("POST", "/api/admin/transport/tasks/{task_id}/sts", "transport_dispatch_edit", "рейс, номера СТ", "СТ назначены в рейс", "без operation_id: перечитать состав рейса"),
+    "trip_close": ("POST", "/api/admin/transport/tasks/{task_id}/close", "transport_dispatch_close", "рейс", "рейс закрыт", "перечитать статус рейса"),
+    "planner_apply": ("POST", "/api/admin/transport/planner/apply", "transport_dispatch_edit", "задача VRP, выбранное решение", "рейсы созданы/изменены по решению", "перечитать рейсы дня"),
+    "driver_op_start": ("POST", "/api/driver/ops/{op_id}/start", "native:привязка учётной записи к водителю", "операция своего рейса (привязка учётной записи к водителю)", "операция начата, время факта", "повтор безопасен для той же операции; чужая операция — отказ"),
+    "driver_op_done": ("POST", "/api/driver/ops/{op_id}/done", "native:привязка учётной записи к водителю", "операция своего рейса", "операция завершена", "повтор безопасен для той же операции"),
+    "store_receipt_confirm": ("POST", "/api/delivery/store-receipts/confirm", "store_receipt_confirm", "место поставки магазина, результат приёмки, подпись приёмщика", "акт приёмки места", _RETRY),
+    "case_loss": ("POST", "/api/delivery/case-work/{case_id}/loss", "store_loss_confirm", "кейс, решение о потере", "потеря утверждена", _RETRY),
+    "store_return_approve": ("POST", "/api/delivery/store-returns/{receipt_id}/approve", "store_return_approve", "возврат магазина", "возврат утверждён к вывозу", _RETRY),
+    "tare_loss_report": ("POST", "/api/inventory/tare/loss-report", "tare_loss_report", "контрагент, тип тары, количество", "недостача зарегистрирована", _RETRY),
+    "tare_loss_decide": ("POST", "/api/inventory/tare/loss-decide", "tare_writeoff", "недостача, решение", "недостача списана/отклонена", _RETRY),
+    "inv_count": ("POST", "/api/inventory/stock-posting/inventory/counts", "stock_inventory_count", "ревизия/задание, партии и ячейки, сканы единиц", "результат проведён через ядро (без второго подтверждения)", _RETRY),
+    "expense_decide": ("POST", "/api/finance/logistics-expenses/decide", "native:expense_logist_approve|expense_finance_approve", "расход, фаза LOGIST|FINANCE, решение, основание; native требует expense_logist_approve/expense_finance_approve (legacy calc_tt_price/create_tt_price сохраняются) по складу расхода, автор ≠ решающий, LOGIST ≠ FINANCE", "решение стадии; FINANCE ставит событие признания в outbox", _RETRY),
+    "interwh_receive": ("POST", "/api/inventory/interwarehouse/receive", "interwarehouse_receive", "межскладской рейс, SSCC", "место принято на целевом складе", _RETRY),
+    "attendance": ("POST", "/api/resources/workload/attendance", "resource_shift_edit", "план выхода по сменам/подскладам", "план выхода с версией", _RETRY),
+}
+
+# C-0062: способ установления исхода — по фактическому контракту маршрута (проверено по моделям запросов 15.10.2026).
+_REQ = "operation_id обязателен в теле: при потере ответа — повтор тем же operation_id и телом; отдельной GET-квитанции нет, исход также виден чтением объекта"
+_OPT = "operation_id в модели необязателен: UI обязан его передавать; без него повтор может задвоить действие. После таймаута — перечитать объект"
+_NONE = "operation_id нет: автоповтор запрещён; после таймаута перечитать объект (read-after-timeout). GAP: нет контракта идемпотентности"
+_OUTCOME = {
+    "dispatch_nearest": _NONE + "; читать задание/кандидатов", "wave_create": _NONE, "wave_calculate": _OPT, "wave_approve_time": _REQ, "wave_launch": _OPT,
+    "short_approve": _OPT, "task_transfer": _NONE, "pick_claim": _NONE, "pick_line_confirm": _OPT, "pick_line_short": _NONE, "pick_close_pallet": _OPT,
+    "receipt_pallet": _REQ, "receipt_close": _REQ, "putaway_replan": _REQ, "putaway_complete": _NONE, "qc_scan": _REQ, "qc_weight": _REQ,
+    "loading_confirm": _REQ, "depart": _REQ, "trip_edit": _NONE + "; читать рейс", "trip_add_st": _NONE + "; читать состав рейса", "trip_close": _NONE + "; читать статус рейса",
+    "planner_apply": _NONE + "; читать рейсы дня", "driver_op_start": _NONE + "; читать операции рейса (GET /api/driver/trips/{id}/ops)",
+    "driver_op_done": _NONE + "; читать операции рейса", "store_receipt_confirm": _REQ, "case_loss": _REQ, "store_return_approve": _REQ,
+    "tare_loss_report": _REQ, "tare_loss_decide": _REQ, "inv_count": _REQ + "; ответ RESULT_UNCERTAIN требует повтора тем же operation_id",
+    "expense_decide": _REQ + "; изменённое тело — EXPENSE_DECISION_PAYLOAD_CONFLICT", "interwh_receive": _REQ, "attendance": _REQ,
+}
+assert set(_OUTCOME) == set(C), sorted(set(C) ^ set(_OUTCOME))
+C = {k: (*v[:5], _OUTCOME[k]) for k, v in C.items()}

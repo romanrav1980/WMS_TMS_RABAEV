@@ -1,0 +1,124 @@
+{
+  "state": "PASS_ADDITIVE_LEGACY_FOREIGN_ROLE_SCOPE",
+  "http": [
+    {
+      "label": "FOREIGN_FLAT_NO_ROLE",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "status": 403,
+      "api_call_id": "69389"
+    },
+    {
+      "label": "FOREIGN_FLAT_WITH_ROLE",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "status": 200,
+      "api_call_id": "69390"
+    },
+    {
+      "label": "FOREIGN_ROLE_FINISH_REPLAY",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/finish",
+      "status": 200,
+      "api_call_id": "69391"
+    },
+    {
+      "label": "FOREIGN_ROLE_CLOSE_REPLAY",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION/close",
+      "status": 200,
+      "api_call_id": "69392"
+    },
+    {
+      "label": "FOREIGN_ROLE_REVOKED",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "status": 403,
+      "api_call_id": "69393"
+    },
+    {
+      "label": "HOME_FLAT_NO_ROLE",
+      "path": "/api/inventory/assembly-scale/sessions/AS16.35cea92c27.SESSION",
+      "status": 200,
+      "api_call_id": "69394"
+    }
+  ],
+  "native": [
+    "legacy own-home classifier1",
+    "foreign flat + explicit role canonical pick replay exact",
+    "foreign flat + role assigned inventory admission/read PASS; standalone denied; synthetic row rollback exact",
+    "foreign birth native homeWARE guard retained; caller rollback",
+    "legacy metadata REV fence and after-release clean entry"
+  ],
+  "hardware_verified": false,
+  "quantity_effect": false,
+  "protected_before": {
+    "stock": [
+      {
+        "uid_poleta": "AS16.LOT:35cea92c27",
+        "cell": "AS16C35cea92c27",
+        "remain": 0,
+        "hard_reserved_base": 0,
+        "stock_version": 3
+      },
+      {
+        "uid_poleta": "CASELOT:F4919A88E403111851D9EA31F410A57E0834BE:1",
+        "cell": "CPT_20220394",
+        "remain": 1,
+        "hard_reserved_base": 1,
+        "stock_version": 1
+      }
+    ],
+    "task": [
+      {
+        "status": "WAIT_CONTROL",
+        "content_version": 3,
+        "picked_qty": 1,
+        "legacy_sborka_pallet_id": 641521
+      }
+    ]
+  },
+  "original_home": 20220394,
+  "flat_case": {
+    "user_group": "AS16O35cea92c27",
+    "right1": "CASE_PICK_EXECUTE",
+    "descr": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+  },
+  "case_grant": {
+    "operation_id": "LC16.466e3c4005.CASE.ASSIGN",
+    "command_type": "ASSIGN",
+    "object_id": "LC16.466e3c4005.CASE",
+    "version": 1,
+    "replayed": false
+  },
+  "case_revoke": {
+    "operation_id": "LC16.466e3c4005.CASE.REVOKE",
+    "command_type": "REVOKE",
+    "object_id": "LC16.466e3c4005.CASE",
+    "version": 2,
+    "replayed": false
+  },
+  "counter_created": true,
+  "counter_grant": {
+    "operation_id": "LC16.466e3c4005.COUNTER.ASSIGN",
+    "command_type": "ASSIGN",
+    "object_id": "LC16A466e3c4005",
+    "version": 1,
+    "replayed": false
+  },
+  "synthetic_rollback_task_ids": [
+    28,
+    29
+  ],
+  "counter_revoke": {
+    "operation_id": "LC16.466e3c4005.COUNTER.REVOKE",
+    "command_type": "REVOKE",
+    "object_id": "LC16A466e3c4005",
+    "version": 2,
+    "replayed": false
+  },
+  "metadata_revision_fence": {
+    "code": 54,
+    "elapsed_ms": 2016
+  },
+  "flat_case_revoke": {
+    "user_group": "AS16O35cea92c27",
+    "right1": "CASE_PICK_EXECUTE",
+    "deleted": 1
+  }
+}

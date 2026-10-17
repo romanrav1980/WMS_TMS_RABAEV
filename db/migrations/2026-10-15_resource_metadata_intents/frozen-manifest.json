@@ -1,0 +1,109 @@
+{
+  "status": "FROZEN_PREPARED_NOT_APPLIED",
+  "files": [
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/after_source_guard.sql",
+      "sha256": "1ea91a7046abd918b08d629860c120ab3f61a7f3b69539d80df2b2b8b1e6ba3b"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/apply.sql",
+      "sha256": "81b0857f551482046e27671527ceb5f27847c14d811000540f6f06cc616a6e7a"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/baseline_schema.json",
+      "sha256": "ddb0b7c508b18a86aa98e270b96ac8e85c0e81505533312ee36ccada6be0c286"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/before.sql",
+      "sha256": "5044e594409e54c924d174ab2a3cee55ba259f69289c401da4e866cec74c195b"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/before_case_body.sql",
+      "sha256": "a4b498076b2ac86f748cf9c247c9e1a04c84ab2cbd908b84da67d15ac92c5be9"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/before_case_spec.sql",
+      "sha256": "475bf5eaba2b22f31b1d8633c65d3b7ac423bb60cd2130a168fc58bc5cad6a51"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/before_task_body.sql",
+      "sha256": "23595fb98fe09708b09a313f2294e0deb7e44a2c7c41c8ea743dacf7c8824299"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/before_task_spec.sql",
+      "sha256": "23f520fd6b89fad821b96287e6f3188a658bb4e4b3eea4f9726bcdddba792333"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/body.sql",
+      "sha256": "09f5dfca8408b034cb523c2d70d12dcdc6db0d200e622a2531268248b3b553fd"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/case_body.sql",
+      "sha256": "3f63d0bc32fa5a899f7ca3e44726bfb5200a9c6546fb238e29988e47a1b8866d"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/case_spec.sql",
+      "sha256": "0fd412fa491ee271b74308121cecae2deaa63562cf568833b6bd6b5c6a6a0182"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/checkpoint.json",
+      "sha256": "8c17cbdf3e3b79a817427db13042817eeda6155cea87a0964fb9e1f17115e9cc"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/guards.sql",
+      "sha256": "347df84834c3078f2b8443d6ad5b689f8740208eeaa5dc703b66813a0da0607d"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/README.md",
+      "sha256": "64319f2e111e631a77b72fd6c2e136013f2945e740822653a095593e5ffc4545"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/rollback.sql",
+      "sha256": "7ef295a4dd8f440fc539f3dc431215aec82ee6ab049396e46ca094debad71c16"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/rollback_verify.sql",
+      "sha256": "0a2f27f42f1b88b20a8b90bd578039f7890cb53d74607f66a9df7f3c0596d38a"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/schema.sql",
+      "sha256": "e63eca6180656870fd65d82ec60159f5cd173600f4e513a9b013cacf23d8daa4"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/spec.sql",
+      "sha256": "1479a5e36d0cd1ded9fbdaf1feabeda21ed532db2a5f51ea3f2a4ad0ea989875"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/task_body.sql",
+      "sha256": "8afc00163c6cecf094cc25f9685efdbe050f0b99dfb1f33a2e8cada51d34f969"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/task_spec.sql",
+      "sha256": "664192bbf76e6cea8855a8e66d82c0855e3b4cd71cd5fa0eb53374026756b3a5"
+    },
+    {
+      "path": "db/migrations/2026-10-15_resource_metadata_intents/verify.sql",
+      "sha256": "7b55c3d74971272d8551245e6e6a61bbcfd90c8af851e2d6d1174c054f39797e"
+    },
+    {
+      "path": "api/wms_api_server/app/modules/resources/contracts_resource_intents.py",
+      "sha256": "ca6aa9f8cc4c992ec05f8ac95b2e045c691088fa58c53eef3dfc17866944c0da"
+    },
+    {
+      "path": "api/wms_api_server/app/modules/resources/infrastructure/resource_intent_commands.py",
+      "sha256": "2db722fa62372f6bbfc8804ef69406ab6b85b3632f9387f30ae9e6dfe33bf57f"
+    },
+    {
+      "path": "api/wms_api_server/app/modules/resources/api/resource_intent_routes.py",
+      "sha256": "846b8daa9f59783c620de63fa00cfd33aeb7116b86c53eca2a541e3a172d9e83"
+    },
+    {
+      "path": "tests/retailcase/test_resource_metadata_intents.py",
+      "sha256": "e8a3e90625ae9a95b2315ed0c26cea33c43b1b8be08f3c9e18bc79b118ab3241"
+    },
+    {
+      "path": "wiki/components/retailcase_resource_metadata_intents_20261015.md",
+      "sha256": "488c27fd04b6b1adc59c825881373ebca8a219bcf7aaf9ad5c6e3fbd60e13ac1"
+    }
+  ]
+}

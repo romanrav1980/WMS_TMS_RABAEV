@@ -1,9 +1,24 @@
-const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
+let credentials: {username: string; password: string} | null = null;
+export function setSessionCredentials(value: {username: string; password: string} | null): void { credentials = value; }
+export function adminBasicAuth(): string {
+  if (!credentials) throw new Error("Войдите своей учётной записью.");
+  return credentials.username + ":" + credentials.password;
+}
+export function adminAuthorization(): string {
+  const bytes = new TextEncoder().encode(adminBasicAuth());
+  return "Basic " + btoa(String.fromCharCode(...bytes));
+}
+
+export function currentSessionCredentials(): {username: string; password: string} {
+  if (!credentials) throw new Error("Войдите своей учётной записью.");
+  return {...credentials};
+}
+
+export const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8088";
 export const RAW_ADMIN_BASE = String(import.meta.env.VITE_RAW_ADMIN_BASE || `${API_BASE.replace(/\/$/, "")}/wms-admin`).replace(/\/$/, "");
-const API_BASIC_AUTH = import.meta.env.VITE_ADMIN_BASIC_AUTH || "admin:admin123";
 
 export function apiOperationScope(): string {
-  return API_BASE+":"+API_BASIC_AUTH.split(":",1)[0];
+  return API_BASE+":"+adminBasicAuth().split(":",1)[0];
 }
 export class ApiRequestError extends Error {
   constructor(public readonly status:number,public readonly detail:unknown){
@@ -17,7 +32,7 @@ export class ApiRequestError extends Error {
 
 function apiHeaders(initHeaders?: HeadersInit): HeadersInit {
   return {
-    Authorization: `Basic ${btoa(API_BASIC_AUTH)}`,
+    Authorization: adminAuthorization(),
     "Content-Type": "application/json",
     ...(initHeaders || {}),
   };

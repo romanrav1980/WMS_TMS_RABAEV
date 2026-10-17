@@ -1,0 +1,3 @@
+select NAME,LINE,TEXT from USER_ERRORS where NAME='RRL_OPC_EVIDENCE_API';
+select MIGRATION_ID,STATUS from RRL_SCHEMA_MIGRATIONS where MIGRATION_ID='2026-10-15-assembly-evidence-binding';
+select count(*)as INVALID_COUNT from USER_OBJECTS where STATUS='INVALID';

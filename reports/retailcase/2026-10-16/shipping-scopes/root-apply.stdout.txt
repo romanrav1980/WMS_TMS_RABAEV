@@ -1,0 +1,11 @@
+-- running C:\projects\TMS\db\migrations\2026-10-16_single_load_scope\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_single_load_scope\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_single_load_scope\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_single_load_scope\rrl_stock_loading_read_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_single_load_scope\rrl_stock_single_load_cmd_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_single_load_scope\rrl_stock_shipping_core_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_single_load_scope\rrl_stock_posting_api_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_single_load_scope\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_single_load_scope\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-16_single_load_scope\after_sources.sql
+Done. Statements=10; Errors=0; AbsentCleanup=0

@@ -1,0 +1,10 @@
+-- running C:\projects\TMS\db\migrations\2026-10-17_case_report_scope\apply.sql
+-- running C:\projects\TMS\db\migrations\2026-10-17_case_report_scope\before.sql
+-- running C:\projects\TMS\db\migrations\2026-10-17_case_report_scope\before_sources.sql
+-- running C:\projects\TMS\db\migrations\2026-10-17_case_report_scope\rrl_case_report_scope_package.sql
+-- running C:\projects\TMS\db\migrations\2026-10-17_case_report_scope\rrl_case_report_scope_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-17_case_report_scope\rrl_case_resource_policy_package_body.sql
+-- running C:\projects\TMS\db\migrations\2026-10-17_case_report_scope\compile_dependents.sql
+-- running C:\projects\TMS\db\migrations\2026-10-17_case_report_scope\verify.sql
+-- running C:\projects\TMS\db\migrations\2026-10-17_case_report_scope\after_sources.sql
+Done. Statements=10; Errors=0; AbsentCleanup=0

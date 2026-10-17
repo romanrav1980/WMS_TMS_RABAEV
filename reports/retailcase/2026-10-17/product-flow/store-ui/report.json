@@ -1,0 +1,40 @@
+{
+  "state": "PASS_REAL_COMPILED_STORE_ROLE_ONLY_LOGIN_OWN_DELIVERY_FULL_ACT_DESKTOP_390",
+  "actor": "AS16O21740f343f",
+  "store_id": "f36e33a74107dfa6ea4502d1f63793b8fee47e76b0788ba1c5a4c21b7d17d383",
+  "fixtures": false,
+  "business_writes": 0,
+  "desktop": true,
+  "width390": true,
+  "http": [
+    {
+      "path": "/api/store-app/session",
+      "status": 200,
+      "api_call_id": "72730",
+      "request_id": "46a817b5-c152-4bd9-96a5-46eec7cb007f"
+    },
+    {
+      "path": "/api/store-app/deliveries",
+      "status": 200,
+      "api_call_id": "72731",
+      "request_id": "2bdeef22-bba7-4ef9-a2e5-4a57e3a99065"
+    },
+    {
+      "path": "/api/store-app/deliveries/OC16.4f58710060.DLV.LOAD",
+      "status": 200,
+      "api_call_id": "72732",
+      "request_id": "a0fc6c4d-db51-4e87-b565-25b5d0d20edf"
+    },
+    {
+      "path": "/api/store-app/deliveries",
+      "status": 200,
+      "api_call_id": "72733",
+      "request_id": "09d728b8-6cf5-48aa-bf29-13a678ee5868"
+    }
+  ],
+  "errors": [],
+  "writes": [],
+  "limitations": [
+    "Receipt was committed via real API before this read-only UI pass; no physical scanner or scales used."
+  ]
+}

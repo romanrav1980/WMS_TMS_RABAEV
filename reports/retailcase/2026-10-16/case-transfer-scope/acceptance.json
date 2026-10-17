@@ -1,0 +1,415 @@
+{
+  "state": "PASS_HANDOFF_24EA_WARE_GROUP_REPLAY_REVOKE_ROLLBACK_REV_RETAINED",
+  "prefix": "MT16.926cdde30a",
+  "manager": "MT16M926cdde30a",
+  "target": "MT16T926cdde30a",
+  "role": "MT16R926cdde30a",
+  "target_role": "MT16E926cdde30a",
+  "group": "MT16G926cdde30a",
+  "commands": {
+    "MANAGER.ROLE": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.MANAGER.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "MT16R926cdde30a",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_manage"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.MANAGER.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "MT16R926cdde30a",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "WARE.ASSIGN": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.WARE.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "MT16.926cdde30a.WARE",
+          "username": "MT16M926cdde30a",
+          "role_id": "MT16R926cdde30a",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20902283",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T18:15:30.383059+00:00",
+          "valid_until": "2026-10-16T20:16:30.383059+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.WARE.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "MT16.926cdde30a.WARE",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "TARGET.ROLE": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.TARGET.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "MT16E926cdde30a",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "case_pick_execute"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.TARGET.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "MT16E926cdde30a",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "TARGET.ASSIGN": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.TARGET.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "MT16.926cdde30a.EXEC",
+          "username": "MT16T926cdde30a",
+          "role_id": "MT16E926cdde30a",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20902283",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T18:15:30.383059+00:00",
+          "valid_until": "2026-10-16T20:16:30.383059+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.TARGET.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "MT16.926cdde30a.EXEC",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "WARE.REVOKE": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.WARE.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "MT16.926cdde30a.WARE",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.WARE.REVOKE",
+        "command_type": "REVOKE",
+        "object_id": "MT16.926cdde30a.WARE",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP.CREATE": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.GROUP.CREATE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "group_id": "MT16G926cdde30a",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20902283"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.GROUP.CREATE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "MT16G926cdde30a",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.ASSIGN": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "MT16.926cdde30a.GROUP",
+          "username": "MT16M926cdde30a",
+          "role_id": "MT16R926cdde30a",
+          "scope_kind": "GROUP",
+          "scope_id": "MT16G926cdde30a",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T18:15:30.383059+00:00",
+          "valid_until": "2026-10-16T20:16:30.383059+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "MT16.926cdde30a.GROUP",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.REMOVE": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "group_id": "MT16G926cdde30a",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "MT16G926cdde30a",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP.RESTORE": {
+      "wire": {
+        "operation_id": "MT16.926cdde30a.GROUP.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 2,
+          "group_id": "MT16G926cdde30a",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20902283"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "MT16.926cdde30a.GROUP.RESTORE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "MT16G926cdde30a",
+        "version": 3,
+        "replayed": false
+      }
+    }
+  },
+  "http": [
+    {
+      "label": "before_grant",
+      "status": 403,
+      "api_call_id": "70443",
+      "request_id": "7fe5f447-6e00-4231-aadd-9d02c7e9e7da"
+    },
+    {
+      "label": "target_without_permission",
+      "status": 403,
+      "api_call_id": "70444",
+      "request_id": "9fb3e9db-5e24-4758-958e-ddab1ea3a687"
+    },
+    {
+      "label": "foreign_task",
+      "status": 403,
+      "api_call_id": "70445",
+      "request_id": "9e1c6825-480d-4a52-bd65-943e7a9d636b"
+    },
+    {
+      "label": "wrong_carrier",
+      "status": 409,
+      "api_call_id": "70446",
+      "request_id": "50078323-457d-432a-8134-f2743cefbd18"
+    },
+    {
+      "label": "ware_transfer",
+      "status": 200,
+      "api_call_id": "70447",
+      "request_id": "14710296-b603-425a-84a0-593b3c101c8f"
+    },
+    {
+      "label": "exact_replay",
+      "status": 200,
+      "api_call_id": "70448",
+      "request_id": "7272c073-cbea-400b-9304-31a4d2e0658c"
+    },
+    {
+      "label": "changed_replay",
+      "status": 409,
+      "api_call_id": "70449",
+      "request_id": "8607b3d6-6309-4dc5-a141-83a1a1133085"
+    },
+    {
+      "label": "revoked_replay",
+      "status": 403,
+      "api_call_id": "70450",
+      "request_id": "5a8ad38f-0f4e-48f0-91cf-140b6ddd2dc7"
+    },
+    {
+      "label": "group_replay",
+      "status": 200,
+      "api_call_id": "70451",
+      "request_id": "be023e2e-06c2-4805-a315-29214043a3b4"
+    },
+    {
+      "label": "removed_group_replay",
+      "status": 403,
+      "api_call_id": "70452",
+      "request_id": "5facebd7-a926-45d4-86b6-0623c0806173"
+    },
+    {
+      "label": "restored_group_replay",
+      "status": 200,
+      "api_call_id": "70453",
+      "request_id": "40ea4b7c-ba80-481a-9cfb-0deefe3944b2"
+    }
+  ],
+  "hardware_verified": false,
+  "resource": 77,
+  "qualification": {
+    "resource_id": 77,
+    "task_type": "CASE_PICK",
+    "active": true
+  },
+  "session": 73,
+  "fixture_policy_repair": "Own fresh CPT cell and published CELL key; no business operation changed",
+  "partial_pick": {
+    "operation_id": "OC16.1a524b2458.BOX24",
+    "case_pick_task_id": 1151,
+    "case_pick_line_id": 1153,
+    "status": "PARTIAL",
+    "remaining_quantity": "1",
+    "fact_qty": "24",
+    "carrier_identifier": "090000000000020016",
+    "cell": "CPT_20902283",
+    "picked_from_cell": "AS16Cdc48b9c2aa",
+    "lots": [
+      {
+        "uid": "CASELOT:41F2809F25454EFC5F88702C150E17A21E8F41:1",
+        "source_uid": "OC16.LOT:1a524b2458",
+        "quantity": "24",
+        "unit": "EA"
+      }
+    ],
+    "outbox_id": 5662
+  },
+  "before": {
+    "sscc": "090000000000020016",
+    "content_version": 3,
+    "assigned_to": "OC16P1a524b2458",
+    "resource_session_id": 72,
+    "assigned_resource_id": 76,
+    "status": "IN_PROGRESS",
+    "picked_qty": 24,
+    "assignment_version": 2
+  },
+  "body": {
+    "to_resource_id": 77,
+    "to_resource_session_id": 73,
+    "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+    "offline_event_id": "MT16.926cdde30a.TRANSFER",
+    "scan_container": "090000000000020016",
+    "expected_content_version": 3,
+    "expected_assigned_to": "OC16P1a524b2458",
+    "expected_from_session_id": 72
+  },
+  "before_grant": {
+    "detail": {
+      "code": "CASE_ACTION_REJECTED",
+      "message": "ORA-20882: CASE_TRANSFER_CURRENT_SCOPE_REQUIRED"
+    }
+  },
+  "target_without_permission": {
+    "detail": {
+      "code": "CASE_RESOURCE_REJECTED",
+      "message": "ORA-20882: CASE_TRANSFER_CURRENT_SCOPE_REQUIRED"
+    }
+  },
+  "foreign_task": {
+    "detail": {
+      "code": "CASE_ACTION_REJECTED",
+      "message": "ORA-20882: CASE_TRANSFER_CURRENT_SCOPE_REQUIRED"
+    }
+  },
+  "wrong_carrier": {
+    "detail": {
+      "code": "CASE_HANDOFF_WRONG_CARRIER"
+    }
+  },
+  "caller_rollback_REV": "PASS",
+  "ware_transfer": {
+    "case_pick_task_id": 1151,
+    "status": "TRANSFERRED"
+  },
+  "exact_replay": {
+    "case_pick_task_id": 1151,
+    "status": "TRANSFERRED"
+  },
+  "changed_replay": {
+    "detail": {
+      "code": "CASE_HANDOFF_CONTENT_CONFLICT"
+    }
+  },
+  "after": {
+    "assigned_to": "MT16T926cdde30a",
+    "resource_session_id": 73,
+    "assigned_resource_id": 77,
+    "picked_qty": 24,
+    "content_version": 3,
+    "assignment_version": 3
+  },
+  "revoked_replay": {
+    "detail": {
+      "code": "CASE_ACTION_REJECTED",
+      "message": "ORA-20882: CASE_TRANSFER_CURRENT_SCOPE_REQUIRED"
+    }
+  },
+  "group_replay": {
+    "case_pick_task_id": 1151,
+    "status": "TRANSFERRED"
+  },
+  "removed_group_replay": {
+    "detail": {
+      "code": "CASE_ACTION_REJECTED",
+      "message": "ORA-20882: CASE_TRANSFER_CURRENT_SCOPE_REQUIRED"
+    }
+  },
+  "restored_group_replay": {
+    "case_pick_task_id": 1151,
+    "status": "TRANSFERRED"
+  }
+}

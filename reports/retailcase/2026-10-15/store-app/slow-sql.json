@@ -1,0 +1,42 @@
+{
+  "status": "REVIEWED",
+  "timings": [
+    {
+      "operation": "session",
+      "trial": 1,
+      "ms": 178.15,
+      "stores": 25
+    },
+    {
+      "operation": "deliveries",
+      "trial": 1,
+      "ms": 74.2,
+      "rows": 40
+    },
+    {
+      "operation": "native_preview",
+      "trial": 1,
+      "ms": 142.39
+    },
+    {
+      "operation": "session",
+      "trial": 2,
+      "ms": 29.93,
+      "stores": 25
+    },
+    {
+      "operation": "deliveries",
+      "trial": 2,
+      "ms": 35.48,
+      "rows": 40
+    },
+    {
+      "operation": "native_preview",
+      "trial": 2,
+      "ms": 34.84
+    }
+  ],
+  "recent_slow": [],
+  "decision": "Keep destination predicates before limit and keyset pages <=200; no speculative index. Dictionary inspection is migration verification, not an interactive endpoint. Track repeated source/profile queries above 1000ms with plan and attribution before indexing; owner Codex.",
+  "stock_effect": "NONE"
+}

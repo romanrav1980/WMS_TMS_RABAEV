@@ -1,0 +1,38 @@
+{
+ "director": {
+  "total": 47,
+  "missing": []
+ },
+ "shift": {
+  "total": 41,
+  "missing": []
+ },
+ "receiving": {
+  "total": 35,
+  "missing": []
+ },
+ "storage": {
+  "total": 64,
+  "missing": []
+ },
+ "dispatcher": {
+  "total": 44,
+  "missing": []
+ },
+ "yard": {
+  "total": 42,
+  "missing": []
+ },
+ "picker": {
+  "total": 12,
+  "missing": []
+ },
+ "reach": {
+  "total": 12,
+  "missing": []
+ },
+ "driver": {
+  "total": 15,
+  "missing": []
+ }
+}

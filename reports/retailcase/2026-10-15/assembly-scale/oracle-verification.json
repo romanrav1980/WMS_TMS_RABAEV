@@ -1,0 +1,720 @@
+{
+  "status": "PASS",
+  "source_checks": [
+    {
+      "object": "RRL_ASSEMBLY_SCALE_API",
+      "type": "PACKAGE",
+      "source_exact": true,
+      "sha256": "1e3e7ec643cce35ea96b19fe8843039bb49cecc48b53eeeb3975fa3b863a6645"
+    },
+    {
+      "object": "RRL_ASSEMBLY_SCALE_API",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "67b49506d4785926f6c825b415daf80f8c090958e8b7d45344c798db46e4ab3c"
+    },
+    {
+      "object": "RRL_SCALE_PACKET_READ",
+      "type": "PACKAGE",
+      "source_exact": true,
+      "sha256": "854d835f68dc4e41ff0bd2ab30de90483a84ac2a35d86acd739edd85fe567f47"
+    },
+    {
+      "object": "RRL_SCALE_PACKET_READ",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "1012f22587d8f0fc89fc4069dbbecd7937bf2b46b67df8178055c35168cceb1a"
+    },
+    {
+      "object": "RRL_CASE_SCALE_ADMISSION",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "5e39d9b3bee0e8e1ef28dfde1260b5802a65eca173733248b2032db43983d487"
+    },
+    {
+      "object": "RRL_STOCK_CASE_PICK_CMD",
+      "type": "PACKAGE BODY",
+      "source_exact": true,
+      "sha256": "7798ac370fd5337c83eb9d537dda813449cf0b89f2177d37a87576c198dbaee5"
+    },
+    {
+      "object": "RRL_ASM_STATION_GUARD",
+      "type": "TRIGGER",
+      "source_exact": true,
+      "sha256": "85366778822be8f9ff3a2be094166b0a61add0669fa44e555288fa023658c590"
+    },
+    {
+      "object": "RRL_ASM_SKU_POLICY_GUARD",
+      "type": "TRIGGER",
+      "source_exact": true,
+      "sha256": "cc2418d06fa45fdcd677e949ad92f189be5fc18abfeca6234ceba6509a6f8ec7"
+    },
+    {
+      "object": "RRL_ASM_POLICY_EVENT_GUARD",
+      "type": "TRIGGER",
+      "source_exact": true,
+      "sha256": "043a9e3e01a5938e749816133e8233945e5a89759fddf0ef2e2d19ffab9d95db"
+    },
+    {
+      "object": "RRL_ASM_SESSION_GUARD",
+      "type": "TRIGGER",
+      "source_exact": true,
+      "sha256": "3d2dd84ff8414b06429c3c708966c277b3233b6ebdfe297cf3a93843d6b03795"
+    },
+    {
+      "object": "RRL_ASM_STEP_GUARD",
+      "type": "TRIGGER",
+      "source_exact": true,
+      "sha256": "6c6c05ec853460ca26be07ac7211ce5bf03e46b745c221cac3e511ee57eff864"
+    },
+    {
+      "object": "RRL_ASM_CAPTURE_GUARD",
+      "type": "TRIGGER",
+      "source_exact": true,
+      "sha256": "37135f13647fc137dfb7bfb1b6c8dfe6e3da8a86901acdc6597420c20df5ce1a"
+    },
+    {
+      "object": "RRL_ASM_STEP_USE_GUARD",
+      "type": "TRIGGER",
+      "source_exact": true,
+      "sha256": "4f390e6feb52383cc5ddaa250a2f710d038f1e77ff42f19ddb23193d047204e1"
+    }
+  ],
+  "invalid_count": 0,
+  "ledger": [
+    {
+      "migration_id": "2026-10-15-incremental-assembly",
+      "status": "APPLIED"
+    }
+  ],
+  "constraints": [
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019278",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019279",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019280",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019281",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019282",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019283",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019284",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019285",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019286",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019287",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019288",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019289",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019290",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019291",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019292",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019293",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019294",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019295",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019296",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019297",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_CAPTURE",
+      "constraint_name": "SYS_C0019298",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_POLICY_EVENT",
+      "constraint_name": "SYS_C0019209",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_POLICY_EVENT",
+      "constraint_name": "SYS_C0019210",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_POLICY_EVENT",
+      "constraint_name": "SYS_C0019211",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_POLICY_EVENT",
+      "constraint_name": "SYS_C0019212",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_POLICY_EVENT",
+      "constraint_name": "SYS_C0019213",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_POLICY_EVENT",
+      "constraint_name": "SYS_C0019214",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_POLICY_EVENT",
+      "constraint_name": "SYS_C0019215",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_POLICY_EVENT",
+      "constraint_name": "SYS_C0019216",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_POLICY_EVENT",
+      "constraint_name": "SYS_C0019217",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_POLICY_EVENT",
+      "constraint_name": "SYS_C0019218",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019219",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019220",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019221",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019222",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019223",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019224",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019225",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019226",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019227",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019228",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019229",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019230",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019231",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019232",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019233",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019234",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019235",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019236",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019237",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019238",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019239",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019240",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019241",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019242",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019243",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019244",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019245",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SESSION",
+      "constraint_name": "SYS_C0019246",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019192",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019193",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019194",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019195",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019196",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019197",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019198",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019199",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019200",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019201",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019202",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019203",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019204",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019205",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019206",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019207",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_SKU_POLICY",
+      "constraint_name": "SYS_C0019208",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STATION",
+      "constraint_name": "SYS_C0019180",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STATION",
+      "constraint_name": "SYS_C0019181",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STATION",
+      "constraint_name": "SYS_C0019182",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STATION",
+      "constraint_name": "SYS_C0019183",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STATION",
+      "constraint_name": "SYS_C0019184",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STATION",
+      "constraint_name": "SYS_C0019185",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STATION",
+      "constraint_name": "SYS_C0019186",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STATION",
+      "constraint_name": "SYS_C0019187",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STATION",
+      "constraint_name": "SYS_C0019188",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STATION",
+      "constraint_name": "SYS_C0019189",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STATION",
+      "constraint_name": "SYS_C0019190",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STATION",
+      "constraint_name": "SYS_C0019191",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "RRL_ASM_STEP_STATE_CK",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019247",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019248",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019249",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019250",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019251",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019252",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019253",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019254",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019255",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019256",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019257",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019258",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019259",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019260",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019261",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019262",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019263",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019264",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019265",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019266",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019267",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019268",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019269",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019271",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019272",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019273",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019274",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019275",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019276",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP",
+      "constraint_name": "SYS_C0019277",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP_USE",
+      "constraint_name": "SYS_C0019299",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP_USE",
+      "constraint_name": "SYS_C0019300",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP_USE",
+      "constraint_name": "SYS_C0019301",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP_USE",
+      "constraint_name": "SYS_C0019302",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP_USE",
+      "constraint_name": "SYS_C0019303",
+      "status": "ENABLED"
+    },
+    {
+      "table_name": "RRL_ASSEMBLY_STEP_USE",
+      "constraint_name": "SYS_C0019304",
+      "status": "ENABLED"
+    }
+  ],
+  "recent_slow": [],
+  "scope": "Source/guard/DDL only; native business and concurrency acceptance separate",
+  "sql_decision": "Bounded indexed identities retained; attributable >1000ms queries require plan review, no speculative index."
+}

@@ -1,0 +1,347 @@
+{
+  "state": "PASS_LIVE_WARE_GROUP_TWO_RC_REVOKE_RETIRED",
+  "prefix": "LS16.5d61fb72fa",
+  "actor": "LS16O5d61fb72fa",
+  "role": "LS16R5d61fb72fa",
+  "group": "LS16G5d61fb72fa",
+  "commands": {
+    "ROLE": {
+      "wire": {
+        "operation_id": "LS16.5d61fb72fa.ROLE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "role_id": "LS16R5d61fb72fa",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "transport_dispatch_view"
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "LS16.5d61fb72fa.ROLE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "LS16R5d61fb72fa",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "WARE.ASSIGN": {
+      "wire": {
+        "operation_id": "LS16.5d61fb72fa.WARE.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "LS16.5d61fb72fa.WARE",
+          "username": "LS16O5d61fb72fa",
+          "role_id": "LS16R5d61fb72fa",
+          "scope_kind": "WAREHOUSE",
+          "scope_id": "20790457",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T16:40:40.036937+00:00",
+          "valid_until": "2026-10-16T17:41:40.036937+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "LS16.5d61fb72fa.WARE.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "LS16.5d61fb72fa.WARE",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "WARE.REVOKE": {
+      "wire": {
+        "operation_id": "LS16.5d61fb72fa.WARE.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "LS16.5d61fb72fa.WARE",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "LS16.5d61fb72fa.WARE.REVOKE",
+        "command_type": "REVOKE",
+        "object_id": "LS16.5d61fb72fa.WARE",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP.ONE": {
+      "wire": {
+        "operation_id": "LS16.5d61fb72fa.GROUP.ONE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 0,
+          "group_id": "LS16G5d61fb72fa",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20790457"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "LS16.5d61fb72fa.GROUP.ONE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "LS16G5d61fb72fa",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.ASSIGN": {
+      "wire": {
+        "operation_id": "LS16.5d61fb72fa.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "payload": {
+          "expected_version": 0,
+          "assignment_id": "LS16.5d61fb72fa.GROUP",
+          "username": "LS16O5d61fb72fa",
+          "role_id": "LS16R5d61fb72fa",
+          "scope_kind": "GROUP",
+          "scope_id": "LS16G5d61fb72fa",
+          "membership": "CURRENT",
+          "snapshot_version": null,
+          "valid_from": "2026-10-16T16:40:40.036937+00:00",
+          "valid_until": "2026-10-16T17:41:40.036937+00:00",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "LS16.5d61fb72fa.GROUP.ASSIGN",
+        "command_type": "ASSIGN",
+        "object_id": "LS16.5d61fb72fa.GROUP",
+        "version": 1,
+        "replayed": false
+      }
+    },
+    "GROUP.BOTH": {
+      "wire": {
+        "operation_id": "LS16.5d61fb72fa.GROUP.BOTH",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "group_id": "LS16G5d61fb72fa",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20790457"
+            },
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20061923"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "LS16.5d61fb72fa.GROUP.BOTH",
+        "command_type": "GROUP_SAVE",
+        "object_id": "LS16G5d61fb72fa",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP.REMOVE": {
+      "wire": {
+        "operation_id": "LS16.5d61fb72fa.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 2,
+          "group_id": "LS16G5d61fb72fa",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20061923"
+            }
+          ],
+          "active": true
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "LS16.5d61fb72fa.GROUP.REMOVE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "LS16G5d61fb72fa",
+        "version": 3,
+        "replayed": false
+      }
+    },
+    "GROUP.REVOKE": {
+      "wire": {
+        "operation_id": "LS16.5d61fb72fa.GROUP.REVOKE",
+        "command_type": "REVOKE",
+        "payload": {
+          "expected_version": 1,
+          "assignment_id": "LS16.5d61fb72fa.GROUP",
+          "reason": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance"
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "LS16.5d61fb72fa.GROUP.REVOKE",
+        "command_type": "REVOKE",
+        "object_id": "LS16.5d61fb72fa.GROUP",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "ROLE.RETIRE": {
+      "wire": {
+        "operation_id": "LS16.5d61fb72fa.ROLE.RETIRE",
+        "command_type": "ROLE_SAVE",
+        "payload": {
+          "expected_version": 1,
+          "role_id": "LS16R5d61fb72fa",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "permissions": [
+            "transport_dispatch_view"
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "LS16.5d61fb72fa.ROLE.RETIRE",
+        "command_type": "ROLE_SAVE",
+        "object_id": "LS16R5d61fb72fa",
+        "version": 2,
+        "replayed": false
+      }
+    },
+    "GROUP.RETIRE": {
+      "wire": {
+        "operation_id": "LS16.5d61fb72fa.GROUP.RETIRE",
+        "command_type": "GROUP_SAVE",
+        "payload": {
+          "expected_version": 3,
+          "group_id": "LS16G5d61fb72fa",
+          "title": "ISOLATED TEST FIXTURE; simulated label/mass; NOT HARDWARE acceptance",
+          "member_kind": "WAREHOUSE",
+          "members": [
+            {
+              "kind": "WAREHOUSE",
+              "object_id": "20061923"
+            }
+          ],
+          "active": false
+        }
+      },
+      "state": "COMMITTED",
+      "result": {
+        "operation_id": "LS16.5d61fb72fa.GROUP.RETIRE",
+        "command_type": "GROUP_SAVE",
+        "object_id": "LS16G5d61fb72fa",
+        "version": 4,
+        "replayed": false
+      }
+    }
+  },
+  "http": [
+    {
+      "label": "before_grants",
+      "path": "/api/transport/loading/33653/status",
+      "status": 403,
+      "api_call_id": "70216",
+      "request_id": "e575c188-a515-408c-b8fc-26b9dac462f3"
+    },
+    {
+      "label": "ware_own",
+      "path": "/api/transport/loading/33653/status",
+      "status": 200,
+      "api_call_id": "70217",
+      "request_id": "f81862c2-ec74-495f-a50f-e52f65b49407"
+    },
+    {
+      "label": "ware_foreign",
+      "path": "/api/transport/loading/33654/status",
+      "status": 403,
+      "api_call_id": "70218",
+      "request_id": "a8edc911-b655-4f5e-8171-ae009ea104d7"
+    },
+    {
+      "label": "ware_revoked",
+      "path": "/api/transport/loading/33653/status",
+      "status": 403,
+      "api_call_id": "70219",
+      "request_id": "63e999d2-d21c-4dd7-97ae-a2a23468ce89"
+    },
+    {
+      "label": "group_own",
+      "path": "/api/transport/loading/33653/status",
+      "status": 200,
+      "api_call_id": "70220",
+      "request_id": "04307365-7917-479a-b58d-87dfd87d0427"
+    },
+    {
+      "label": "group_foreign",
+      "path": "/api/transport/loading/33654/status",
+      "status": 403,
+      "api_call_id": "70221",
+      "request_id": "c82ad49f-7066-4e3a-af09-6a3da3b875bf"
+    },
+    {
+      "label": "multi_rc_first",
+      "path": "/api/transport/loading/33653/status",
+      "status": 200,
+      "api_call_id": "70222",
+      "request_id": "34712b52-a79c-49df-ae43-6b6eecfed33e"
+    },
+    {
+      "label": "multi_rc_second",
+      "path": "/api/transport/loading/33654/status",
+      "status": 200,
+      "api_call_id": "70223",
+      "request_id": "6d999a23-3897-466a-bb1d-241abc98ae9a"
+    },
+    {
+      "label": "removed_member",
+      "path": "/api/transport/loading/33653/status",
+      "status": 403,
+      "api_call_id": "70224",
+      "request_id": "586a460c-927a-4a9c-aea0-b67e36be7174"
+    },
+    {
+      "label": "remaining_member",
+      "path": "/api/transport/loading/33654/status",
+      "status": 200,
+      "api_call_id": "70225",
+      "request_id": "79f4a733-3ed8-4ed0-b87d-f1c955f4839c"
+    },
+    {
+      "label": "group_revoked",
+      "path": "/api/transport/loading/33654/status",
+      "status": 403,
+      "api_call_id": "70226",
+      "request_id": "a5b4984f-9be2-4094-9b0f-9e3937ea9f73"
+    }
+  ],
+  "warehouses": [
+    20790457,
+    20061923
+  ],
+  "trips": [
+    33653,
+    33654
+  ],
+  "quantity_effect": false
+}

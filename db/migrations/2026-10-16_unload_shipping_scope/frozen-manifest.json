@@ -1,0 +1,30 @@
+{
+  "migration_id": "2026-10-16-unload-shipping-scope",
+  "status": "PREPARED_NOT_APPLIED",
+  "before_sources": {
+    "RRL_STOCK_UNLOAD_CMD|PACKAGE BODY": "070E8708E84E85594A352360CB347E6FDB0E882E9A0FCD50B2325B649CD2409F",
+    "RRL_STOCK_POSTING_API|PACKAGE BODY": "E5199D7752C6B08CC0F11CA444D2D66526FFB6E932C9909D9C75CC9FF1C3681C"
+  },
+  "after_sources": {
+    "RRL_STOCK_UNLOAD_CMD|PACKAGE BODY": "61C7F440218F0FC2B4E2BAB0B0AEE3B873AC18C996474398E94725791D07DBD9",
+    "RRL_STOCK_POSTING_API|PACKAGE BODY": "0EB209D4360E488263984FF9F01ED8BF928551BD104EBE0FA23C5877D98205CE"
+  },
+  "dependencies": [],
+  "files": {
+    "after_sources.sql": "d47bf90c69336b434d77835d5223b960fd5737650fd337348fc0ab3b1994e67f",
+    "apply.sql": "54125a81622550fca5fe4196e226b947a5d5aa2514cd3e5d57e86c38b55c9083",
+    "before.sql": "483e7dd0dee6eb7beab4bc08456937a2813d610666b1cf26720d8f1522c604df",
+    "before_sources.sql": "c5f30bcfe3b93cc8cd59bf528fd255aea364134d5531ae5d0f5db2b9ce9868ac",
+    "compile_dependents.sql": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "16583ba5b707fb38a92f988fa4c83417512bc611b8a8a8d99a4df423cf389ddb",
+    "restore_rrl_stock_posting_api_package_body.sql": "b932988b5b3d7f0336520c28e36e2236c7716f916e0d3b9a6e16f19f7f2be04c",
+    "restore_rrl_stock_unload_cmd_package_body.sql": "dcab99d6bc57d04934379070a03527d5c3af8fe4b436e81cd4fbe5d60819aa5e",
+    "rollback.sql": "87306350256812eff5879fa47cbb0d51d658a579bb55daaa3cd280e442920d84",
+    "rrl_stock_posting_api_package_body.sql": "4ff6bc3259bee62740f64da23e5c291d03086b93b43d84cf599a7d5281094385",
+    "rrl_stock_unload_cmd_package_body.sql": "fcf7e8ade73c1212993b9d6103590bbab0d0e2a911350c7636ce52aa66f07c58",
+    "verify.sql": "00680b8bf2b2fd199e1f99646fc7d68baac69f7fa7a0b5e65279fa4eca95dd73"
+  },
+  "code_checkpoint": {
+    "api/wms_api_server/app/modules/transport/api/unloading_routes.py": "d88d812da29633fa400d0b599a4d277eb120fd8a792ea303150239ffaba49642"
+  }
+}

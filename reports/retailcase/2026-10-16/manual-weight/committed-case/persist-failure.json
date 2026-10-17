@@ -1,0 +1,13 @@
+{
+  "native_error": "ORA-40573 in RRL_STOCK_STORE_WEIGHT_CORE persist line73; JSON object method inside SQL VALUES",
+  "caller_rollback": true,
+  "receipt": 0,
+  "weight": 0,
+  "stock_operation": 0,
+  "warehouse": [
+    {
+      "p": 0,
+      "h": 0
+    }
+  ]
+}

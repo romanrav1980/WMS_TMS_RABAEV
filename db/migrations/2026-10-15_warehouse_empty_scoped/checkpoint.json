@@ -1,0 +1,61 @@
+{
+  "status": "PREPARED_REVIEW_READY_NOT_APPLIED",
+  "source_baseline": "reports\\retailcase\\2026-10-15\\warehouse-empty-scoped\\before",
+  "source_hash_mode": "CR-normalized USER_SOURCE ordered LINE; raw baseline retained separately",
+  "before": [
+    [
+      "RRL_WH_WEIGH_REQUEST_API",
+      "PACKAGE",
+      "6056cf3b8ce3fe3f71bca1cb0c030f3ad73c834a78c911b6cf6201e7a20ce3e8"
+    ],
+    [
+      "RRL_WH_WEIGH_REQUEST_API",
+      "PACKAGE BODY",
+      "a384012e3557c3a87047b787d1812c939fe17fa80d1b386eaf49fbe2e2e66d6d"
+    ],
+    [
+      "RRL_CASE_RESOURCE_POLICY",
+      "PACKAGE",
+      "d7367aa1bac23b38b6b8403a5270fa93bc36bc5f44b4398777b6212ecfd7be25"
+    ],
+    [
+      "RRL_CASE_RESOURCE_POLICY",
+      "PACKAGE BODY",
+      "e7bc54a226d09f825d2cc6bfaef75e0591fd8a37a80b0e3e897b8a877b837dcc"
+    ]
+  ],
+  "after": [
+    [
+      "RRL_WH_WEIGH_REQUEST_API",
+      "PACKAGE",
+      "6056cf3b8ce3fe3f71bca1cb0c030f3ad73c834a78c911b6cf6201e7a20ce3e8"
+    ],
+    [
+      "RRL_WH_WEIGH_REQUEST_API",
+      "PACKAGE BODY",
+      "b21176b5ed0f8b82eb316e1ce276106bca35170c4f1ee9bafa2e980b846cbc4e"
+    ],
+    [
+      "RRL_CASE_RESOURCE_POLICY",
+      "PACKAGE",
+      "d7367aa1bac23b38b6b8403a5270fa93bc36bc5f44b4398777b6212ecfd7be25"
+    ],
+    [
+      "RRL_CASE_RESOURCE_POLICY",
+      "PACKAGE BODY",
+      "091a694d638e09257e47104d782bb95f9d8fbc4d10fd6f1181e252683c2f2580"
+    ]
+  ],
+  "author_oracle_mutations": false,
+  "history_guard_pending": false,
+  "history_baseline": {
+    "path": "reports\\retailcase\\2026-10-15\\warehouse-empty-scoped\\history-before.json",
+    "sha256": "8574de95837bf9c6c1fee45b09e28efd90a6e76f881ceb58826721bd322c37b4",
+    "counts": {
+      "requests": 4,
+      "claims": 5,
+      "zeros": 0,
+      "captures": 77
+    }
+  }
+}
