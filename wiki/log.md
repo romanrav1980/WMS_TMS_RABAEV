@@ -4868,3 +4868,5 @@ T08runtime/test-evidence/.../T08/capacity-fixture.json; APIcapacity успешн
 - 19.10.2026 15:40MSK — подготовлен T09 NEED: версионный снимок и объяснимый расчёт без складских движений. Шесть domain/contract tests PASS; Oracle/APIs ещё не приняты. Исправлены устаревший статус documents и повреждённый текст README document_journal.
 
 - 19.10.2026 15:47MSK — T09 частично: NEED применён, rollback/reapply/INVALID0;12 проверок API и scoped-права PASS, потребность40A+30B без двойного обеспечения. UI1440/3906checks PASS. Общий quality gate и39focused tests PASS. Четыре пакета UI повторно проверены на3000. Автоматические предложения/маршрут/заказы SAP остаются открытыми.
+
+- 19.10.2026 15:55MSK — подготовлен native возврат TRADECASE CASE с историей unit для текущих owner-прав после удаления временной связи; до apply/live не принят.
