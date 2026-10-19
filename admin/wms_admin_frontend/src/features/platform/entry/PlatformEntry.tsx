@@ -4,13 +4,14 @@ import { apiFetch } from "../../../api";
 import { AccessAdminPage } from "../access-admin";
 import { KnowledgeEditorPage } from "../knowledge-editor";
 import { WorkplaceHome } from "../workspaces";
+import { TradecasePage } from "../../integrations";
 import { HelpButton } from "../help/HelpButton";
 import { openHelpArticle } from "../help/catalog";
 import "./entry.css";
 
 type Navigation = { username: string; access_admin: boolean; knowledge_editor: boolean; knowledge_publish: boolean; manage_roles: boolean; manage_groups: boolean; manage_assignments: boolean; access_revision: number };
 const currentPage = () => new URLSearchParams(location.search).get("page") || "twin";
-const platformPage = (page: string) => page === "access-admin" || page === "knowledge-editor" || page === "workspace";
+const platformPage = (page: string) => page === "access-admin" || page === "knowledge-editor" || page === "workspace" || page === "tradecase";
 
 /** Platform routes live outside the legacy App function; switching preserves mounted legacy work. */
 export function PlatformEntry({legacy}: {legacy: ReactNode}) {
@@ -46,6 +47,7 @@ export function PlatformEntry({legacy}: {legacy: ReactNode}) {
       <HelpButton help={{id:"shell.work",text:"Вернуться к рабочему экрану. Состояние открытого экрана сохраняется.",article:"using-help"}} onClick={()=>navigate(lastLegacy.current)}>Рабочий экран</HelpButton>
       {navigation?.access_admin && <HelpButton help={{id:"shell.access",text:"Открыть роли, группы объектов и назначения. Полномочия проверяет сервер.",article:"access-admin"}} onClick={()=>navigate("access-admin")}>Права и назначения</HelpButton>}
       <HelpButton help={{id:"shell.workspace",text:"Открыть рабочее место (директор РЦ, диспетчер, комплектовщик, водитель). Данные и права проверяет сервер.",article:"workspaces"}} onClick={()=>navigate("workspace")}>Моё рабочее место</HelpButton>
+      <HelpButton help={{id:"shell.tradecase",text:"Открыть СНС/BLC: принятые заказы, рейсы, справочники и журнал обмена склада. Только просмотр; права проверяет сервер.",article:"tradecase-documents"}} onClick={()=>navigate("tradecase")}>СНС/BLC</HelpButton>
       {navigation?.knowledge_editor && <HelpButton help={{id:"shell.knowledge_editor",text:"Открыть редактор: черновики, публикация, импорт выбранных знаний wiki. Сервер проверяет полномочия.",article:"knowledge-editor"}} onClick={()=>navigate("knowledge-editor")}>Редактор знаний</HelpButton>}
       <HelpButton help={{id:"shell.knowledge",text:"Открыть поиск по опубликованным инструкциям и связанные знания, сохранив текущую работу.",article:"using-help"}} onClick={()=>openHelpArticle("using-help")}>База знаний</HelpButton>
       <HelpButton help={{id:"shell.refresh_access",text:"Перечитать доступные разделы после назначения или отзыва роли.",article:"access-model"}} onClick={()=>setRefresh(value=>value+1)}>Обновить доступ</HelpButton>
@@ -56,6 +58,7 @@ export function PlatformEntry({legacy}: {legacy: ReactNode}) {
     {page==="access-admin" && (navigation?.access_admin ? <AccessAdminPage onBack={()=>navigate(lastLegacy.current)}/>
       : <p role="status" className="platform-message">{navigation ? "Нет права просмотра администрирования доступа." : "Проверяем доступ к разделу…"}</p>)}
     {page==="workspace" && <WorkplaceHome onBack={()=>navigate(lastLegacy.current)}/>}
+    {page==="tradecase" && <TradecasePage onBack={()=>navigate(lastLegacy.current)}/>}
     {page==="knowledge-editor" && (navigation?.knowledge_editor ? <KnowledgeEditorPage onBack={()=>navigate(lastLegacy.current)}/>
       : <p role="status" className="platform-message">{navigation ? "Нет права редактирования базы знаний." : "Проверяем доступ к разделу…"}</p>)}
   </div>;

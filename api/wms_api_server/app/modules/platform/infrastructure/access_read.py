@@ -10,8 +10,8 @@ class AccessRead:
     def __init__(self, gateway: Any) -> None:
         self.gateway = gateway
 
-    def workspaces(self, actor: str) -> dict[str,Any]:
-        return read_workspace_navigation(self.gateway, actor)
+    def workspaces(self, actor: str, capability: str | None = None) -> dict[str,Any]:
+        return read_workspace_navigation(self.gateway, actor, capability)
 
     def read(self, actor: str, sql: str, params: dict[str,Any] | None = None, permission: str = "access_admin_view") -> list[dict[str,Any]]:
         try:

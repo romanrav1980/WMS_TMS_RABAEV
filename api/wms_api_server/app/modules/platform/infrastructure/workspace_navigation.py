@@ -4,6 +4,7 @@ import oracledb
 from .metadata_io import MetadataError, rows
 
 WORKSPACE_READ_PERMISSIONS = {
+    "tradecase": "tradecase_view",
     "dispatch": "transport_dispatch_view", "waves": "pick_wave_view", "picking": "case_pick_view",
     "warehouse_tasks": "warehouse_task_view", "resource_timeline": "resource_gantt_view",
     "resource_registry": "resource_management_view", "resource_sessions": "resource_session_view",
@@ -13,7 +14,7 @@ WORKSPACE_READ_PERMISSIONS = {
 def capability_columns(cur: Any, actor: str) -> str:
     cur.execute("select RRL_ACCESS_API.is_admin(:actor) from dual", actor=actor)
     if cur.fetchone()[0] == 1:
-        return ",".join("1 " + name for name in WORKSPACE_READ_PERMISSIONS)
+        return ",".join(("case when exists(select 1 from RRL_TRADE_SITE ts where ts.WARE_ID=w.ID)then 1 else 0 end" if name == "tradecase" else "1") + " " + name for name in WORKSPACE_READ_PERMISSIONS)
     # Candidate permissions only prune impossible checks. Warehouse admission remains native.
     cur.execute("""select distinct rr.PERMISSION from RRL_ACCESS_ROLE_RIGHT rr
         join RRL_ACCESS_ROLE r on r.ROLE_ID=rr.ROLE_ID join RRL_ACCESS_ASSIGNMENT a on a.ROLE_ID=r.ROLE_ID
@@ -24,13 +25,21 @@ def capability_columns(cur: Any, actor: str) -> str:
                       for name, permission in WORKSPACE_READ_PERMISSIONS.items())
     cur.execute("select " + legacy + " from dual", actor=actor)
     candidates.update(permission for permission, value in zip(WORKSPACE_READ_PERMISSIONS.values(), cur.fetchone()) if value == 1)
-    return ",".join(("RRL_ACCESS_API.allowed(:actor,'" + permission + "','WAREHOUSE',to_char(w.ID))"
-                     if permission in candidates else "0") + " " + name for name, permission in WORKSPACE_READ_PERMISSIONS.items())
+    expressions = []
+    for name, permission in WORKSPACE_READ_PERMISSIONS.items():
+        decision = "RRL_ACCESS_API.allowed(:actor,'" + permission + "','WAREHOUSE',to_char(w.ID))" if permission in candidates else "0"
+        if name == "tradecase":
+            decision = "case when exists(select 1 from RRL_TRADE_SITE ts where ts.WARE_ID=w.ID)then " + decision + " else 0 end"
+        expressions.append(decision + " " + name)
+    return ",".join(expressions)
 
 
-def read_workspace_navigation(gateway: Any, actor: str) -> dict[str, Any]:
+
+def read_workspace_navigation(gateway: Any, actor: str, capability: str | None = None) -> dict[str, Any]:
     # Identifiers and permission literals are fixed server constants; actor remains bound.
-    visible = " or ".join(name + "=1" for name in WORKSPACE_READ_PERMISSIONS)
+    if capability not in (None, "tradecase"):
+        raise MetadataError("WORKSPACE_CAPABILITY_INVALID", 422)
+    visible = "tradecase=1" if capability == "tradecase" else " or ".join(name + "=1" for name in WORKSPACE_READ_PERMISSIONS)
     try:
         with gateway.transaction("Native workspace navigation bounded warehouses") as cur:
             cur.execute("lock table RRL_ACCESS_REV in share mode wait 5")

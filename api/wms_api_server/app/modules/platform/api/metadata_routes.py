@@ -1,6 +1,6 @@
 """HTTP contracts; native repositories own authorization and transaction boundaries."""
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Literal
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import ValidationError
 from .metadata_inputs import Command, Explain, Kind, GroupSave, normalize
@@ -29,8 +29,8 @@ def access_navigation(user: MetadataUser = Depends(metadata_user), service: Acce
     return service.navigation(user.username)
 
 @access_router.get("/workspaces")
-def access_workspaces(user: MetadataUser = Depends(metadata_user), service: AccessMetadataPort = Depends(access_service)) -> dict[str,Any]:
-    return service.workspaces(user.username)
+def access_workspaces(user: MetadataUser = Depends(metadata_user), service: AccessMetadataPort = Depends(access_service), capability: Literal["tradecase"] | None = Query(default=None)) -> dict[str,Any]:
+    return service.workspaces(user.username, capability) if capability else service.workspaces(user.username)
 @access_router.get("/catalog")
 def access_catalog(user: MetadataUser = Depends(metadata_user), service: AccessMetadataPort = Depends(access_service)) -> dict[str,Any]:
     return service.catalog(user.username)
