@@ -99,6 +99,25 @@ class StockRunnerTests(unittest.TestCase):
         self.assertEqual(connection.requests, [command().canonical_json()] * 2)
         self.assertEqual((connection.resets, pool.releases), (2, 1))
 
+    def test_trade_business_rules_rollback_once_without_confirming_unknown_errors(self):
+        original = Cursor.execute
+        for code in (20911, 20912, 20913, 20999):
+            with self.subTest(code=code):
+                connection = Connection()
+                pool = Pool(connection)
+                def execute(cursor, sql, binds=None):
+                    if "execute_prepared" in sql:
+                        raise oracledb.DatabaseError(SimpleNamespace(code=code, message=f"ORA-{code}: TRADE_ORDER_BINDING_REQUIRED"))
+                    return original(cursor, sql, binds)
+                expected = oracledb.DatabaseError if code == 20999 else StockPostingError
+                with patch.object(uow, "_oracle_pool", return_value=pool), patch.object(Cursor, "execute", execute):
+                    with self.assertRaises(expected) as error:
+                        uow.StockPosting(wait=lambda _: None).post(command())
+                if code != 20999:
+                    self.assertEqual(error.exception.code, "STOCK_RULE_REJECTED")
+                    self.assertEqual(error.exception.rule_reason, "TRADE_ORDER_BINDING_REQUIRED")
+                self.assertEqual((connection.committed, connection.rollbacks, len(connection.requests)), (0, 1, 1))
+
     def test_unknown_commit_is_never_automatically_retried(self):
         connection = Connection(uncertain=True)
         pool = Pool(connection)

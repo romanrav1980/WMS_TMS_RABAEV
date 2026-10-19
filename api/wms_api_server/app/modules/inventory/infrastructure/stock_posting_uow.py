@@ -139,7 +139,7 @@ class StockPosting:
                         raise StockPostingError("RESOURCE_NOT_FOUND" if code == 1403 else "DATA_AMBIGUOUS",
                                                 command.operation_id, code) from exc
                     if code not in RETRY_CODES:
-                        if code is not None and 20800 <= code <= 20899:
+                        if code is not None and (20800 <= code <= 20899 or code in {20911, 20912, 20913}):
                             detail = exc.args[0] if exc.args else exc
                             message = str(getattr(detail, "message", exc))
                             match = re.search(r"ORA-\d{5}:\s*([A-Z][A-Z0-9_]+)(?::\s*([A-Z][A-Z0-9_]+))?", message)
