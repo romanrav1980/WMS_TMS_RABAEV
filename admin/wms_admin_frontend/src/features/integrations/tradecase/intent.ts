@@ -34,7 +34,11 @@ export function journal<B extends { operation_id: string }>(kind: string, prefix
     clear: (user: string, wh: string) => localStorage.removeItem(key(user, wh)) };
 }
 
-export const codeOf = (e: ApiRequestError) => typeof e.detail === "object" && e.detail ? String((e.detail as { code?: string }).code ?? "") : String(e.detail ?? "");
+export const codeOf = (e: ApiRequestError) => {
+  if (typeof e.detail !== "object" || !e.detail) return String(e.detail ?? "");
+  const detail = e.detail as { code?: string; reason?: string }, code = String(detail.code ?? "");
+  return code === "STOCK_RULE_REJECTED" && typeof detail.reason === "string" ? detail.reason.split(":", 1)[0].trim() : code;
+};
 const KEEP_CODES = ["OPERATION_CONFLICT", "OPERATION_CONTENT_CONFLICT"];
 
 /** Исход ошибки POST. unknown — ответ не получен (сеть/5xx); kept — отказ при повторе после неизвестной отправки,

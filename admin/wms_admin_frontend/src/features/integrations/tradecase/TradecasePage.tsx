@@ -69,6 +69,9 @@ export function TradecasePage({ onBack }: { onBack: () => void }) {
           <span className={"tc-chip " + (site.data.enabled ? "ok" : "off")}>{site.data.enabled ? "приём включён" : "приём выключен"}</span><small>версия настроек {site.data.version}</small></>}
       </section>
       <Flow onTab={chooseTab} />
+      <label className="tc-mobile-tabs">Раздел<select value={view.tab} onChange={e => chooseTab(e.target.value as Tab)} title="Перейти к выбранному разделу на этом складе" data-help-id="tradecase.mobile-tab">
+        {TABS.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+      </select></label>
       <div className="tc-tabs" role="tablist" aria-label="Виды документов">{TABS.map(t =>
         <button key={t.id} role="tab" aria-selected={view.tab === t.id} title={tcHelp.tab.text + " (" + t.label + ")"} data-help-id={tcHelp.tab.id + "." + t.id} onClick={() => chooseTab(t.id)}>{t.label}</button>)}</div>
       {view.tab === "RETURN" ? <CaseReturn key={view.wh} wh={view.wh} user={user} /> : view.tab === "SORT" ? <SortPanel wh={view.wh} user={user} /> : <div className="tc-body">

@@ -4876,3 +4876,9 @@ T08runtime/test-evidence/.../T08/capacity-fixture.json; APIcapacity успешн
 - 19.10.2026 15:59MSK — возврат CASE1157 role-only BLC manager PASS7checks, rollback/replay/revoke и освобождение брони тары; склад250/HARD10. Подготовлен case_owner_query, before12samplesmedian10,0625мс; до apply ускорение не принято.
 
 - 19.10.2026 16:20MSK — T11 UI390:10BLC возвращены, потеря ответа после commit и неизменный повтор дали одну APPLIED операцию; склад250/HARD0. T08:200строк203→5SQL, owner200→1, результаты равны; устаревшая привязка блокирует расчёт. case_owner_query APPLIED/rollback/reapply, aftermedian2,52мс и повтор прав PASS. T12 пиковая нагрузка/провайдеры остаются открытыми.
+
+- 19.10.2026 16:57MSK — основной план сведён к текущему checklist; промежуточные срезы сохранены в истории. Матрица45:30частичных/2пробела/13не выполнены. Основной источник — native tests.txt;45ожидаемых результатов Word-копии совпали, полные документы не объявлены одинаковыми. Обратное направление1BLC→СНС и старый forward-reply не меняют последующую сделку; T09 stale/offsets/source-refresh7 PASS6checks.
+
+- 19.10.2026 17:00MSK — записан отдельный SQL-протокол с решениями для долгих блоков/cold-запросов и корректной временной шкалой. Oracle mirror дополнен текущими250/H0,обратным1,NEED7 и историей RETURN11units. Промышленный пилот не принят.
+
+- 19.10.2026 18:25MSK — checkpoint остановки: граница18:00пропущена, решение18:20; только восстановление проверенного состояния и QAretirement после остановки. Непроверенный GS1fallback откатан; восстановлен тот же asset index-fVkgn0sP.js/BUILD_EXIT0. STOPPED.json incomplete, DONEcomplete нет; INVALID0/activeQA0,250H0и110H0.

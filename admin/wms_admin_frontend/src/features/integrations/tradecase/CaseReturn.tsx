@@ -19,7 +19,13 @@ export function CaseReturn({ wh, user }: { wh: string; user: string }) {
   const [scan, setScan] = useState(""), [requested, setRequested] = useState(""), [reload, setReload] = useState(0), [targets, setTargets] = useState<Record<string, string>>({});
   const [review, setReview] = useState<Omit<Body, "operation_id"> | null>(null);
   const read = useRead<Context>(requested ? `/api/case-pick/resolve-carrier?warehouse_id=${encodeURIComponent(wh)}&pallet_identifier=${encodeURIComponent(requested)}` : null, reload);
-  const cmd = useCommand<Body, Result>(returns, "", user, wh, { RULE_REJECTED: "состав, состояние сборки или права изменились — перечитайте сборку",
+  const cmd = useCommand<Body, Result>(returns, "", user, wh, { STOCK_RULE_REJECTED: "состав, состояние сборки или права изменились — перечитайте сборку",
+    CASE_RETURN_STATE_SCAN_VERSION_CONFLICT: "состояние или состав изменились — перечитайте сборку",
+    CASE_RETURN_SCAN_ORIGINAL_CELL_REQUIRED: "ячейка возврата отличается от исходной — повторите скан",
+    CASE_RETURN_ALL_LOTS_REQUIRED: "нужно отсканировать ячейки для всего состава",
+    TRADE_OWNER_ACCESS_DENIED: "нет права выполнения по текущему собственнику товара",
+    STOCK_RELEASE_NOT_ACTIVE: "складские операции приостановлены — повторите команду после разрешения руководителя",
+    OPERATION_CONFLICT: "номер операции уже связан с другим содержимым",
     OPERATION_CONTENT_CONFLICT: "сохранённый номер операции связан с другим содержимым" }, (result, body) =>
     result.operation_id === body.operation_id && result.task === body.case_task_id && result.warehouse === Number(wh) && result.status === "RETURNED"
       ? "Товар возвращён в исходные ячейки; сборка отменена. Передайте пустую тару ответственному за её учёт." : null, transport);
@@ -28,12 +34,12 @@ export function CaseReturn({ wh, user }: { wh: string; user: string }) {
   const lots = ctx?.physical_lots ?? [], lines = new Map(ctx?.lines.map(line => [line.case_pick_line_id, line]) ?? []);
   const unique = new Set(lots.map(lot => lot.uid)).size === lots.length;
   const ready = Boolean(user && cmd.msg?.tone !== "bad" && ctx?.return_allowed && unique && lots.length > 0 && lots.every(lot => lines.get(lot.case_pick_line_id)?.cell_code === targets[lot.uid]?.trim()));
-  const notice = cmd.msg && <p className={"tc-msg " + cmd.msg.tone} role="status">{cmd.msg.text}</p>;
+  const notice = cmd.msg && <><p className={"tc-msg " + cmd.msg.tone} role="status">{cmd.msg.text}</p>{cmd.msg.tech !== undefined && <Tech value={cmd.msg.tech} label="Ответ сервера: технические сведения" />}</>;
   return <section className="tc-panel tc-bind" aria-label="Возврат содержимого сборки">
     <h3>Вернуть товар из сборки <HelpLink anchor="case-return" /></h3>
     {cmd.stored.kind === "damaged" ? <p className="tc-err" role="alert">Сохранённая команда не читается. Передайте технические сведения администратору; новую команду не отправляйте.<Tech value={cmd.stored.raw} /></p>
       : cmd.stored.kind === "ok" ? <><p>Сохранён возврат сборки {cmd.stored.intent.body.scan_container}. Повторите ту же команду, чтобы установить результат. Товар повторно не перемещайте.</p>
-        <Act help={{ id: "tradecase.return.retry", text: "Повторить сохранённую команду без изменения номера, состава и ячеек.", anchor: "case-return" }} disabled={cmd.busy} onClick={() => cmd.stored.kind === "ok" && cmd.send(cmd.stored.intent, done)}>Повторить ту же команду</Act>{notice}</>
+        <Act help={{ id: "tradecase.return.retry", text: "Повторить сохранённую команду без изменения номера, состава и ячеек.", anchor: "case-return" }} disabled={cmd.busy} onClick={() => cmd.stored.kind === "ok" && cmd.send(cmd.stored.intent, done)}>Повторить ту же команду</Act><Tech value={cmd.stored.intent.body} label="Сохранённая команда: технические сведения" />{notice}</>
       : review ? <>
         <p>Вернуть весь состав сборки <b>{review.scan_container}</b> по отсканированным исходным ячейкам. После подтверждения сборка будет отменена.</p>
         <ul>{Object.entries(review.destinations).map(([uid, cell], i) => { const lot = lots.find(l => l.uid === uid); return <li key={uid}>Место {i + 1}: {lot?.physical_qty ?? "—"} {lot ? UOM[lot.base_uom] ?? lot.base_uom : ""} → <b>{cell}</b></li>; })}</ul>

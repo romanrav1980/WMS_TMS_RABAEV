@@ -1,0 +1,69 @@
+{
+  "status": "stopped_incomplete",
+  "deadline": "2026-10-19T18:00:00+03:00",
+  "stop_decision_at": "2026-10-19T18:20:00+03:00",
+  "checkpoint_at": "2026-10-19T18:25:51.903083+03:00",
+  "deadline_missed": true,
+  "claude_requests_used": 4,
+  "claude_requests_limit": 4,
+  "all_sprints_complete": false,
+  "done_file_created": false,
+  "completed_sprints": [
+    "T01"
+  ],
+  "partial_sprints": [
+    "T02",
+    "T03",
+    "T04",
+    "T05",
+    "T06",
+    "T07",
+    "T08",
+    "T09",
+    "T10",
+    "T11",
+    "T12"
+  ],
+  "whole_45_program_accepted": false,
+  "acceptance_matrix": "wiki/roadmap/tradecase_acceptance_20261019.md",
+  "roadmap": "wiki/roadmap/tradecase_execution_20261019.md",
+  "remaining": [
+    "Deferred references and packet exchange",
+    "Factory BOX/tree3+7 and full-pallet execution",
+    "Bulk loading/unload and controlled topup",
+    "Dispatcher approval, SAP topup order, recipient addresses, routing and needs allocation",
+    "Full45program, peak capacity, equipment and real providers"
+  ],
+  "services": {
+    "api": "http://127.0.0.1:8088",
+    "frontend": "http://127.0.0.1:3000/?page=tradecase",
+    "api_restored": true,
+    "frontend_asset": "index-fVkgn0sP.js"
+  },
+  "safety": {
+    "unverified_GS1_lookup_reverted": true,
+    "QA_users_in_owned_wares_active": 0,
+    "oracle_invalid_objects": 0,
+    "no_new_functional_work_after_stop": true,
+    "cleanup_only_after_stop": true
+  },
+  "retained_test_state": {
+    "warehouse211559882": {
+      "stock": 250,
+      "hard": 0,
+      "owners": {
+        "BLC": 79,
+        "SNS": 171
+      },
+      "pending_financial_holds": 150,
+      "held_tare_booking": "T6B.TARE.BOOK"
+    },
+    "warehouse215590763": {
+      "stock": 110,
+      "hard": 0,
+      "departed_units": 140
+    },
+    "case_return_history_rows": 11,
+    "outbox": "Synthetic QA events remain pending; external delivery is not claimed"
+  }
+}
