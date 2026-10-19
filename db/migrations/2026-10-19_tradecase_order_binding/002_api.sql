@@ -31,10 +31,10 @@ create or replace package body RRL_TRADE_ORDER_API as
    result_json:=json_object_t.parse(old_cmd.RESULT_JSON);result_json.put('replayed',true);p_result:=result_json.to_clob;RRL_STOCK_LOCK_API.clear_plan;return;
   exception when no_data_found then null;end;
   if enabled<>1 then fail('TRADE_SITE_DISABLED');end if;
-  select BODY_JSON,DOCUMENT_VERSION into body_text,doc_version from RRL_TRADE_DOCUMENT where WARE_ID=p_ware and ENTITY_TYPE='ORDER'and EXTERNAL_ID=v_external and STATUS='ACCEPTED';
+  select BODY_JSON,VERSION_NO into body_text,doc_version from RRL_TRADE_DOCUMENT where WARE_ID=p_ware and ENTITY_TYPE='ORDER'and EXTERNAL_ID=v_external and STATUS='ACCEPTED';
   if j.get_number('expected_order_version')is null or doc_version<>j.get_number('expected_order_version')then fail('VERSION_CONFLICT');end if;
   b:=json_object_t.parse(body_text);v_recipient:=b.get_string('recipient_id');
-  select BODY_JSON,DOCUMENT_VERSION into recipient_text,profile_version from RRL_TRADE_DOCUMENT where WARE_ID=p_ware and ENTITY_TYPE='RECIPIENT'and EXTERNAL_ID=v_recipient and STATUS='ACCEPTED';
+  select BODY_JSON,VERSION_NO into recipient_text,profile_version from RRL_TRADE_DOCUMENT where WARE_ID=p_ware and ENTITY_TYPE='RECIPIENT'and EXTERNAL_ID=v_recipient and STATUS='ACCEPTED';
   profile:=json_object_t.parse(recipient_text);
   if not profile.get_boolean('active')or b.get_boolean('cancelled')then fail('TRADE_ORDER_INACTIVE');end if;
   if profile.get_number('wms_customer_id')is null then fail('TRADE_CUSTOMER_MAPPING_REQUIRED');end if;
@@ -60,7 +60,7 @@ create or replace package body RRL_TRADE_ORDER_API as
    if not matched or row_id is null then fail('TRADE_ORDER_LINE_MAPPING_REQUIRED');end if;
    select *into v_row from RRL_CUSTOMER_ORDER_ROW where CUSTOMER_ORDER_ROW_ID=row_id and CUSTOMER_ORDER_ID=v_native and STATUS<>'CANCELLED'for update wait 5;
    v_sku:=line.get_string('sku_id');
-   select BODY_JSON,DOCUMENT_VERSION into sku_text,v_sku_version from RRL_TRADE_DOCUMENT where WARE_ID=p_ware and ENTITY_TYPE='SKU'and EXTERNAL_ID=v_sku and STATUS='ACCEPTED';
+   select BODY_JSON,VERSION_NO into sku_text,v_sku_version from RRL_TRADE_DOCUMENT where WARE_ID=p_ware and ENTITY_TYPE='SKU'and EXTERNAL_ID=v_sku and STATUS='ACCEPTED';
    sku:=json_object_t.parse(sku_text);
    if sku.get_string('wms_article_id')is null or sku.get_string('wms_article_id')<>v_row.ARTICUL or v_row.WARE_ID<>p_ware
     or v_row.UNIT_CODE<>line.get_string('uom')or v_row.ORDER_QTY<>line.get_number('quantity')then fail('TRADE_NATIVE_LINE_MISMATCH');end if;

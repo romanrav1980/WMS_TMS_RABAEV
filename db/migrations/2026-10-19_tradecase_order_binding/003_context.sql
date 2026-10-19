@@ -16,9 +16,9 @@ create or replace package body RRL_TRADE_PICK_CONTEXT as
    select WARE_ID into g_ware from RRL_TRADE_ORDER_LINK where CUSTOMER_ORDER_ID=g_line.CUSTOMER_ORDER_ID;
   exception when no_data_found then return;end;
   select count(*)into n from RRL_TRADE_ORDER_LINK l
-   join RRL_TRADE_DOCUMENT d on d.WARE_ID=l.WARE_ID and d.ENTITY_TYPE='ORDER'and d.EXTERNAL_ID=l.EXTERNAL_ID and d.DOCUMENT_VERSION=l.DOCUMENT_VERSION and d.STATUS='ACCEPTED'
-   join RRL_TRADE_DOCUMENT r on r.WARE_ID=l.WARE_ID and r.ENTITY_TYPE='RECIPIENT'and r.EXTERNAL_ID=l.RECIPIENT_ID and r.DOCUMENT_VERSION=l.RECIPIENT_VERSION and r.STATUS='ACCEPTED'
-   join RRL_TRADE_DOCUMENT s on s.WARE_ID=l.WARE_ID and s.ENTITY_TYPE='SKU'and s.EXTERNAL_ID=g_line.SKU_ID and s.DOCUMENT_VERSION=g_line.SKU_VERSION and s.STATUS='ACCEPTED'
+   join RRL_TRADE_DOCUMENT d on d.WARE_ID=l.WARE_ID and d.ENTITY_TYPE='ORDER'and d.EXTERNAL_ID=l.EXTERNAL_ID and d.VERSION_NO=l.DOCUMENT_VERSION and d.STATUS='ACCEPTED'
+   join RRL_TRADE_DOCUMENT r on r.WARE_ID=l.WARE_ID and r.ENTITY_TYPE='RECIPIENT'and r.EXTERNAL_ID=l.RECIPIENT_ID and r.VERSION_NO=l.RECIPIENT_VERSION and r.STATUS='ACCEPTED'
+   join RRL_TRADE_DOCUMENT s on s.WARE_ID=l.WARE_ID and s.ENTITY_TYPE='SKU'and s.EXTERNAL_ID=g_line.SKU_ID and s.VERSION_NO=g_line.SKU_VERSION and s.STATUS='ACCEPTED'
    join RRL_TRADE_SITE ts on ts.WARE_ID=l.WARE_ID and ts.ENABLED=1
    where l.CUSTOMER_ORDER_ID=g_line.CUSTOMER_ORDER_ID and json_value(r.BODY_JSON,'$.active')='true'and json_value(s.BODY_JSON,'$.active')='true';
   g_valid:=n=1;g_actor:=p_actor;g_tx:=dbms_transaction.local_transaction_id(false);
