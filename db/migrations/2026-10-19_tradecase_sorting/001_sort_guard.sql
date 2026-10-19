@@ -26,16 +26,16 @@ create or replace package body RRL_TRADE_SORT_GUARD as
  end;
  procedure assert_selection(p_request clob,p_actor varchar2) is
   d json_object_t:=json_object_t.parse(p_request);m json_object_t:=d.get_object('metadata');
-  uid varchar2(200):=m.get_string('uid');src varchar2(60):=m.get_string('source_cell');dst varchar2(60):=m.get_string('target_cell');
+  v_uid varchar2(200):=m.get_string('uid');src varchar2(60):=m.get_string('source_cell');dst varchar2(60):=m.get_string('target_cell');
   units clob:=d.get_array('units').to_clob;n number;qty number;expected number:=d.get_array('units').get_size;groups_count number;
  begin
   assert_scope(p_request,p_actor);
   if expected=0 then fail('TRADE_SORT_SCANS_REQUIRED');end if;
-  select count(*)into n from RRL_WMS_HU_LINK where ACTIVE_FLAG=1 and(CHILD_PALLET_UID=uid or PARENT_UID=uid);
+  select count(*)into n from RRL_WMS_HU_LINK where ACTIVE_FLAG=1 and(CHILD_PALLET_UID=v_uid or PARENT_UID=v_uid);
   if n>0 then fail('TRADE_SORT_UNPACK_REQUIRED');end if;
   select count(*),sum(u.BASE_QTY)into n,qty from json_table(units,'$[*]'columns(K varchar2(64)path '$'))j
    join RRL_WMS_RECEIPT_UNIT u on u.PHYSICAL_UNIT_KEY=j.K join RRL_TRADE_STOCK_ATTR a on a.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY
-   where u.CURRENT_UID=uid and u.CURRENT_CELL=src and u.STOCK_STATUS='AVAILABLE'and u.HARD_RESERVATION_ID is null and a.MARK_STATE='VALID'
+   where u.CURRENT_UID=v_uid and u.CURRENT_CELL=src and u.STOCK_STATUS='AVAILABLE'and u.HARD_RESERVATION_ID is null and a.MARK_STATE='VALID'
     and not exists(select 1 from RRL_TRADE_BUYOUT_UNIT b where b.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY and b.HOLD_ACTIVE=1);
   if n<>expected or RRL_STOCK_PLAN_HELPER.decimal_text(qty)<>m.get_string('quantity')then fail('TRADE_SORT_SELECTION_NOT_AVAILABLE');end if;
   select count(*)into groups_count from(select distinct a.OWNER_ID,a.SKU_ID,a.MRC,a.EXPIRY_DATE from RRL_TRADE_STOCK_ATTR a

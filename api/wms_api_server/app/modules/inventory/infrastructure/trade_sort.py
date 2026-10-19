@@ -28,9 +28,9 @@ def resolve(gateway: Any, warehouse: int, body: TradeSort) -> tuple[tuple[str, .
                 join RRL_WMS_RECEIPT_CODE c on c.SYSTEM_CODE=j.S and c.CODE_HASH=j.H
                 join RRL_WMS_RECEIPT_UNIT u on u.UID_PALLET=c.UID_PALLET and u.UNIT_ID=c.UNIT_ID
                 join RRL_CELLS cell on cell.CELL=u.CURRENT_CELL and cell.WARE_ID=:ware
-                where u.CURRENT_UID=:uid and u.CURRENT_CELL=:cell and u.STOCK_STATUS<>'ISSUED'
+                where u.CURRENT_UID=:pallet_id and u.CURRENT_CELL=:cell and u.STOCK_STATUS<>'ISSUED'
                   and exists(select 1 from json_table(c.PROFILES_JSON,'$[*]'columns(P varchar2(80)path '$.profile'))p where p.P=j.P)
-            """,scans=wire,ware=warehouse,uid=body.source_pallet,cell=body.source_cell)
+            """,scans=wire,ware=warehouse,pallet_id=body.source_pallet,cell=body.source_cell)
             for i,key,qty,uom in cur:
                 if int(i) in found:
                     raise ValueError("Ambiguous physical unit for scanned code")
