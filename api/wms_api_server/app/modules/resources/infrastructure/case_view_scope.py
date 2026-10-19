@@ -6,7 +6,7 @@ from ..contracts_case_read import CaseReadError
 def view_predicate(alias: str) -> str:
     if alias not in {"t", "ct", "tot"}:
         raise ValueError("Fixed CASE aliases only")
-    return f"RRL_ACCESS_API.allowed(:view_actor,'case_pick_view','WAREHOUSE',to_char({alias}.WARE_ID),{alias}.ASSIGNED_TO)=1"
+    return f"(RRL_ACCESS_API.allowed(:view_actor,'case_pick_view','WAREHOUSE',to_char({alias}.WARE_ID),{alias}.ASSIGNED_TO)=1 and RRL_TRADE_CASE_ACCESS.allowed({alias}.CASE_PICK_TASK_ID,:view_actor)=1)"
 
 
 def require_viewer(cur: Any, actor: str, warehouse: int | None = None) -> None:
