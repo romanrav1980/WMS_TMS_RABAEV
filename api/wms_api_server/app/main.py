@@ -477,3 +477,6 @@ register_consolidation(app)
 
 from .warehouse_task_resource_composition import register_warehouse_task_resource_commands
 register_warehouse_task_resource_commands(app)
+
+from .tradecase_composition import register_tradecase
+register_tradecase(app)

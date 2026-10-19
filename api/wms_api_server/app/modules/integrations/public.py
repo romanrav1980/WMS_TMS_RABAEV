@@ -73,3 +73,10 @@ from .infrastructure.scale_evidence import ScaleEvidenceArchive
 
 def build_scale_evidence() -> ScaleEvidenceArchive:
     return ScaleEvidenceArchive(OracleGateway())
+
+from .api.tradecase_routes import router as tradecase_router, tradecase_documents
+from .infrastructure.tradecase_documents import OracleTradecaseDocuments
+
+
+def build_tradecase_documents() -> OracleTradecaseDocuments:
+    return OracleTradecaseDocuments(OracleGateway())
