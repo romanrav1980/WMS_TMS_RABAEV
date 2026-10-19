@@ -2,12 +2,14 @@ whenever sqlerror exit failure rollback
 @@001_context.sql
 @@002_case_pick.sql
 @@003_guard.sql
+@@004_trade_case_access.sql
+@@005_case_access.sql
 alter package RRL_PICKING_API compile body;
 alter package RRL_STOCK_WAVE_LAUNCH_CMD compile body;
 alter package RRL_STOCK_WAVE_CMD compile body;
 alter package RRL_STOCK_WAVE_READY compile body;
 declare n number;begin
- select count(*)into n from user_errors where name in('RRL_TRADE_PICK_CONTEXT','RRL_STOCK_CASE_PICK_CMD','RRL_TRADE_STOCK_GUARD','RRL_PICKING_API','RRL_STOCK_WAVE_LAUNCH_CMD','RRL_STOCK_WAVE_CMD','RRL_STOCK_WAVE_READY');
+ select count(*)into n from user_errors where name in('RRL_TRADE_PICK_CONTEXT','RRL_STOCK_CASE_PICK_CMD','RRL_TRADE_STOCK_GUARD','RRL_PICKING_API','RRL_STOCK_WAVE_LAUNCH_CMD','RRL_STOCK_WAVE_CMD','RRL_STOCK_WAVE_READY','RRL_TRADE_CASE_ACCESS','RRL_CASE_TASK_ACCESS');
  if n<>0 then raise_application_error(-20999,'TRADE_CASE_ADMISSION_COMPILE_ERRORS');end if;
 end;
 /

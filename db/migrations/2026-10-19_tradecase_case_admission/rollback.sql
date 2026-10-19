@@ -1,4 +1,6 @@
 whenever sqlerror exit failure rollback
+@@before_rrl_case_task_access.sql
+drop package RRL_TRADE_CASE_ACCESS;
 @@before_rrl_stock_case_pick_cmd_package_body.sql
 @@before_rrl_trade_stock_guard_package_body.sql
 @@before_rrl_trade_pick_context_package.sql
