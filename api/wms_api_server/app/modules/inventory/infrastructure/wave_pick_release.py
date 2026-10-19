@@ -31,7 +31,7 @@ class WavePickRelease:
                     cursor.callproc("RRL_TRADE_STOCK_GUARD.assert_owner",[actor,warehouse,owner,0])
             except oracledb.DatabaseError as exc:
                 raise HTTPException(403 if getattr(exc.args[0],"code",0)==20882 else 503,detail="TRADE_WAVE_LEGAL_VIEW_DENIED")from exc
-            cursor.execute("select RRL_STOCK_WAVE_READY.snapshot_json(:wave,:actor) from dual",wave=wave_id,actor=actor)
+            cursor.execute("select RRL_STOCK_WAVE_READY.snapshot_json(:wave,:actor,0) from dual",wave=wave_id,actor=actor)
             raw=cursor.fetchone()[0]
             return json.loads(raw.read() if hasattr(raw,"read") else raw)
 

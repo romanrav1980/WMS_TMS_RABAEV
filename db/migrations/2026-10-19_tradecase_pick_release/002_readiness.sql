@@ -1,5 +1,5 @@
 create or replace package RRL_STOCK_WAVE_READY authid definer as
- function snapshot_json(p_wave number,p_actor varchar2 default null) return clob;
+ function snapshot_json(p_wave number,p_actor varchar2 default null,p_write number default 1) return clob;
  procedure assert_released(p_wave number);
 end;
 /
@@ -9,7 +9,7 @@ create or replace package body RRL_STOCK_WAVE_READY as
   select count(*) into n from RRL_PICK_WAVE where PICK_WAVE_ID=p_wave and STATUS='LAUNCHED' and PICK_RELEASED_AT is not null;
   if n!=1 then raise_application_error(-20886,'WAVE_PICK_RELEASE_REQUIRED');end if;
  end;
- function snapshot_json(p_wave number,p_actor varchar2 default null) return clob is
+ function snapshot_json(p_wave number,p_actor varchar2 default null,p_write number default 1) return clob is
   w RRL_PICK_WAVE%rowtype;j json_object_t:=json_object_t();tasks json_array_t:=json_array_t();
   repl json_array_t:=json_array_t();owned json_array_t;entry json_object_t;x json_object_t;
   missing number;covered number;needed number;v_cell varchar2(60);v_reason varchar2(100);v_base varchar2(20);
@@ -35,7 +35,7 @@ create or replace package body RRL_STOCK_WAVE_READY as
    where wt.PICK_WAVE_ID=p_wave and wt.TASK_TYPE in('CASE_PICK','FULL_PALLET')
     and nvl(wt.STATUS,'?')!='CANCELLED' and nvl(pt.STATUS,'?')!='CANCELLED'
    order by wt.PICK_WAVE_TASK_ID fetch first 201 rows only) loop
-   RRL_TRADE_PICK_CONTEXT.enter_pick_task(t.PICK_TASK_ID,p_actor);
+   RRL_TRADE_PICK_CONTEXT.enter_pick_task(t.PICK_TASK_ID,p_actor,p_write);
    if tasks.get_size>=200 then raise_application_error(-20881,'WAVE_READY_TASK_BOUND');end if;
    v_total:=v_total+1;needed:=greatest(nvl(t.QTY,0)-nvl(t.FACT_QTY,0),0);
    v_cell:=t.SOURCE_CELL_CODE;covered:=0;v_base:=null;owned:=json_array_t();

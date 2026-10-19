@@ -2,14 +2,14 @@ create or replace package RRL_TRADE_PICK_CONTEXT authid definer
  accessible by(package RRL_PICKING_API,package RRL_TRADE_STOCK_GUARD,package RRL_STOCK_WAVE_LAUNCH_CMD,package RRL_STOCK_WAVE_CMD,package RRL_STOCK_WAVE_READY)as
  procedure enter_line(p_row number,p_actor varchar2);
  procedure clear_line;
- procedure enter_pick_task(p_task number,p_actor varchar2);
+ procedure enter_pick_task(p_task number,p_actor varchar2,p_write number default 1);
  function has_line return number;
  function reason(p_uid varchar2,p_cell varchar2,p_ware number,p_purpose varchar2 default 'ALLOCATE')return varchar2;
 end;
 /
 create or replace package body RRL_TRADE_PICK_CONTEXT as
- g_line RRL_TRADE_ORDER_LINE%rowtype;g_ware number;g_actor varchar2(50);g_tx varchar2(100);g_valid boolean;
- procedure clear_line is begin g_line.CUSTOMER_ORDER_ROW_ID:=null;g_actor:=null;g_tx:=null;g_valid:=false;g_ware:=null;end;
+ g_line RRL_TRADE_ORDER_LINE%rowtype;g_write number:=1;g_ware number;g_actor varchar2(50);g_tx varchar2(100);g_valid boolean;
+ procedure clear_line is begin g_line.CUSTOMER_ORDER_ROW_ID:=null;g_actor:=null;g_tx:=null;g_valid:=false;g_ware:=null;g_write:=1;end;
  procedure enter_line(p_row number,p_actor varchar2)is n number;
  begin
   clear_line;
@@ -28,13 +28,14 @@ create or replace package body RRL_TRADE_PICK_CONTEXT as
  function has_line return number is begin
   if g_line.CUSTOMER_ORDER_ROW_ID is not null then return 1;end if;return 0;
  end;
- procedure enter_pick_task(p_task number,p_actor varchar2)is row_id number;
+ procedure enter_pick_task(p_task number,p_actor varchar2,p_write number default 1)is row_id number;
  begin
   clear_line;if p_task is null then return;end if;
   begin
    select pl.CUSTOMER_ORDER_ROW_ID into row_id from RRL_PICK_TASK t join RRL_PICK_PLAN_LINE pl on pl.PICK_PLAN_LINE_ID=t.PICK_PLAN_LINE_ID where t.PICK_TASK_ID=p_task;
   exception when no_data_found then return;end;
   enter_line(row_id,p_actor);
+  if p_write is null or p_write not in(0,1)then raise_application_error(-20912,'TRADE_CONTEXT_MODE');end if;g_write:=p_write;
  end;
  function reason(p_uid varchar2,p_cell varchar2,p_ware number,p_purpose varchar2 default 'ALLOCATE')return varchar2 is
   n number;v_owner varchar2(100);v_sku varchar2(100);v_mrc number;v_expiry date;
@@ -48,7 +49,7 @@ create or replace package body RRL_TRADE_PICK_CONTEXT as
   if v_expiry<g_line.MIN_EXPIRY_DATE then return 'TRADE_ORDER_OSG_NOT_MET';end if;
   if v_owner<>g_line.SOURCE_OWNER_ID and v_owner<>g_line.TARGET_OWNER_ID then return 'TRADE_ORDER_OWNER_MISMATCH';end if;
   if p_purpose<>'REPLENISH'and g_line.BUYOUT_MODE='BEFORE_PICK'and v_owner<>g_line.TARGET_OWNER_ID then return 'TRADE_BUYOUT_REQUIRED_BEFORE_PICK';end if;
-  if RRL_TRADE_STOCK_GUARD.owner_allowed(g_actor,p_ware,v_owner,1)<>1 then return 'TRADE_OWNER_ACCESS_DENIED';end if;
+  if RRL_TRADE_STOCK_GUARD.owner_allowed(g_actor,p_ware,v_owner,g_write)<>1 then return 'TRADE_OWNER_ACCESS_DENIED';end if;
   select count(*)into n from RRL_TRADE_DOCUMENT where WARE_ID=p_ware and ENTITY_TYPE='OWNER'and EXTERNAL_ID=v_owner and STATUS='ACCEPTED'and json_value(BODY_JSON,'$.active')='true';
   if n<>1 then return 'TRADE_ORDER_OWNER_INACTIVE';end if;
   return null;
