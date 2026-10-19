@@ -39,7 +39,10 @@ class OracleTradecaseDocuments:
                 request.setvalue(0, raw)
                 result = cur.var(oracledb.DB_TYPE_CLOB)
                 cur.callproc("RRL_TRADE_DOCUMENT_API." + procedure, [warehouse_id, actor, request, result])
-                return read_oracle_json(result.getvalue())
+                response = read_oracle_json(result.getvalue())
+            if response.get("status") == "REJECTED":
+                raise TradecaseError(response["code"], 409)
+            return response
         except oracledb.DatabaseError as exc:
             raise native_error(exc) from exc
 
@@ -72,3 +75,9 @@ class OracleTradecaseDocuments:
 
     def document(self, warehouse_id: int, kind: str, external_id: str, actor: str) -> dict[str, Any]:
         return self._read(warehouse_id, actor, "DETAIL", kind, external_id)
+
+    def messages(self, warehouse_id: int, after: str, limit: int, actor: str) -> dict[str, Any]:
+        return self._read(warehouse_id, actor, "MESSAGES", key=after, limit=limit)
+
+    def message(self, warehouse_id: int, event_id: str, actor: str) -> dict[str, Any]:
+        return self._read(warehouse_id, actor, "MESSAGE", key=event_id)

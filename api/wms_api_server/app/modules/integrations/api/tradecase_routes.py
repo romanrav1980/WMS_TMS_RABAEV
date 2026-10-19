@@ -64,3 +64,23 @@ def document(kind: Kind, external_id: str, warehouse_id: int = Warehouse,
         return service.document(warehouse_id, kind, external_id, user.username)
     except TradecaseError as exc:
         raise HTTPException(exc.status, {"code": exc.code}) from exc
+
+
+@router.get("/warehouses/{warehouse_id}/messages")
+def messages(warehouse_id: int = Warehouse, after: str = Query(default="", max_length=100),
+             limit: int = Query(default=50, ge=1, le=100), user: AdminUser = Depends(get_current_user),
+             service: TradecaseDocuments = Depends(tradecase_documents)) -> dict[str, Any]:
+    try:
+        return service.messages(warehouse_id, after, limit, user.username)
+    except TradecaseError as exc:
+        raise HTTPException(exc.status, {"code": exc.code}) from exc
+
+
+@router.get("/warehouses/{warehouse_id}/messages/{event_id}")
+def message(event_id: str = Path(min_length=1, max_length=100), warehouse_id: int = Warehouse,
+            user: AdminUser = Depends(get_current_user),
+            service: TradecaseDocuments = Depends(tradecase_documents)) -> dict[str, Any]:
+    try:
+        return service.message(warehouse_id, event_id, user.username)
+    except TradecaseError as exc:
+        raise HTTPException(exc.status, {"code": exc.code}) from exc
