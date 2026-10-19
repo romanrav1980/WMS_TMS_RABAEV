@@ -148,7 +148,8 @@ create or replace package body RRL_TRADE_STOCK_GUARD as
      begin
       select rt.PICK_TASK_ID,wh.FROM_CELL into v_pick_task,v_from from RRL_WAREHOUSE_TASK wh join RRL_PICK_WAVE_REPLENISH_TASK rt
        on wh.TASK_SOURCE='WAVE'and wh.SOURCE_DOC_ID=rt.PICK_WAVE_ID and wh.SOURCE_TASK_ID=rt.PICK_WAVE_REPLENISH_TASK_ID
-       where wh.TASK_ID=v_task_id and wh.WARE_ID=w.WARE_ID;
+       join RRL_PICK_WAVE pw on pw.PICK_WAVE_ID=rt.PICK_WAVE_ID
+       where wh.TASK_ID=v_task_id and pw.WARE_ID=w.WARE_ID and wh.UID_PALLET=p_uid;
      exception when no_data_found then fail('TRADE_TASK_BINDING_REQUIRED');end;
      RRL_TRADE_PICK_CONTEXT.enter_pick_task(v_pick_task,p_actor);
      v_reason:=reason(p_uid,v_from,w.WARE_ID,'REPLENISH');RRL_TRADE_PICK_CONTEXT.clear_line;
