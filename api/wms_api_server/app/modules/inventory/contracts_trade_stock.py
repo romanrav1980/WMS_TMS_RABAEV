@@ -73,6 +73,20 @@ class TradeMarkConfirmation(TradeStockRequest):
         return self
 
 
+class TradeSortScan(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    system_code: str = Field(strict=True, min_length=1, max_length=40)
+    profile_code: str = Field(strict=True, min_length=1, max_length=80)
+    code: str = Field(strict=True, min_length=1, max_length=4000)
+
+
+class TradeSort(TradeStockRequest):
+    source_pallet: str = Field(min_length=1, max_length=200)
+    source_cell: str = Field(min_length=1, max_length=60)
+    target_cell: str = Field(min_length=1, max_length=60)
+    scans: list[TradeSortScan] = Field(min_length=1, max_length=10000)
+
+
 class TradeStockError(RuntimeError):
     def __init__(self, code: str, status: int = 409) -> None:
         self.code, self.status = code, status
@@ -80,6 +94,7 @@ class TradeStockError(RuntimeError):
 
 
 class TradeStockPort(Protocol):
+    def sort(self, warehouse_id: int, body: TradeSort, actor: str) -> dict[str, Any]: ...
     def summary(self, warehouse_id: int, after: str, limit: int, actor: str) -> dict[str, Any]: ...
     def confirm_marks(self, warehouse_id: int, body: TradeMarkConfirmation, actor: str) -> dict[str, Any]: ...
     def bind(self, warehouse_id: int, body: TradeStockBind, actor: str) -> dict[str, Any]: ...

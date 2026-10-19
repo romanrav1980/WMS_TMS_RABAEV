@@ -1,7 +1,7 @@
 from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from ...platform.public import AdminUser, get_current_user
-from ..contracts_trade_stock import TradeMarkConfirmation, TradeCellPolicy, TradeOwnerGrant, TradeStockBind, TradeStockError, TradeStockPort
+from ..contracts_trade_stock import TradeSort, TradeMarkConfirmation, TradeCellPolicy, TradeOwnerGrant, TradeStockBind, TradeStockError, TradeStockPort
 
 router = APIRouter(prefix="/api/tradecase/warehouses/{warehouse_id}/stock", tags=["tradecase-stock"])
 
@@ -65,5 +65,14 @@ def summary(warehouse_id: int = Path(gt=0), after: str = Query(default="", max_l
             service: TradeStockPort = Depends(trade_stock_service)) -> dict[str, Any]:
     try:
         return service.summary(warehouse_id, after, limit, user.username)
+    except TradeStockError as exc:
+        raise HTTPException(exc.status, {"code": exc.code}) from exc
+
+
+@router.post("/sort")
+def sort(body: TradeSort, warehouse_id: int = Path(gt=0), user: AdminUser = Depends(get_current_user),
+         service: TradeStockPort = Depends(trade_stock_service)) -> dict[str, Any]:
+    try:
+        return service.sort(warehouse_id, body, user.username)
     except TradeStockError as exc:
         raise HTTPException(exc.status, {"code": exc.code}) from exc

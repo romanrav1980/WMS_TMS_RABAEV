@@ -5,7 +5,7 @@ from typing import Any
 import oracledb
 from ...platform.public import read_oracle_json
 from ..contracts_trade_buyout import TradeBuyoutRequest,TradeBuyoutResult
-from ..contracts_trade_stock import TradeMarkConfirmation, TradeCellPolicy, TradeOwnerGrant, TradeStockBind, TradeStockError
+from ..contracts_trade_stock import TradeSort, TradeMarkConfirmation, TradeCellPolicy, TradeOwnerGrant, TradeStockBind, TradeStockError
 from ..domain.mark_identity import canonical_mark
 from ..domain.pallet_identifiers import normalize_receipt_identifier
 
@@ -13,6 +13,10 @@ from ..domain.pallet_identifiers import normalize_receipt_identifier
 class OracleTradeStock:
     def __init__(self, gateway: Any) -> None:
         self.gateway = gateway
+
+    def sort(self, warehouse_id: int, body: TradeSort, actor: str) -> dict[str, Any]:
+        from .trade_sort import post_sort
+        return post_sort(self.gateway, warehouse_id, body, actor)
 
     def _call(self, warehouse_id: int, actor: str, command: str, payload: dict[str, Any]) -> dict[str, Any]:
         raw = json.dumps(dict(payload, command_type=command), sort_keys=True, ensure_ascii=True, separators=(",", ":"), allow_nan=False)
