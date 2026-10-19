@@ -3,10 +3,7 @@ import oracledb
 from ..contracts_stock import StockPostingError
 
 def quality_identifier(cur: oracledb.Cursor, value: str, actor: str) -> str:
-    cur.execute("""select 1 from RUSERS u where u.ID=:a and nvl(u.DELETED,0)=0
-        and (RRL_HAS_WRIGHT(:a,'outgoing_pallet_check')=1
-        or RRL_HAS_WRIGHT(:a,'stock_posting_shipping')=1
-        or RRL_HAS_WRIGHT(:a,'CLOSE_OTHOD_NAKLAD')=1)""", a=actor)
+    cur.execute("select 1 from RUSERS u where u.ID=:a and nvl(u.DELETED,0)=0", a=actor)
     if cur.fetchone() is None:
         raise StockPostingError("OUTGOING_QC_FORBIDDEN", "", 20882)
     case_id = None

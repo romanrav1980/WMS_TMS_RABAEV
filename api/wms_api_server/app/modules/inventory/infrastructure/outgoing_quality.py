@@ -42,6 +42,16 @@ class OutgoingQuality:
         return value if isinstance(value, dict) else json.loads(value)
 
     def check(self, identifier: str, body: dict, actor: str) -> dict:
+        try:
+            with self.gateway.transaction("Resolve physical QC scan READ ONLY") as q:
+                q.execute("set transaction read only")
+                from .quality_identifier import quality_identifier
+                identifier = quality_identifier(q, identifier, actor)
+        except oracledb.DatabaseError as exc:
+            error = exc.args[0]
+            known = 20800 <= error.code <= 20999
+            raise StockPostingError("STOCK_RULE_REJECTED" if known else "RESULT_UNCERTAIN",
+                body["operation_id"], error.code, str(error).split("\n", 1)[0]) from exc
         metadata = {key: value for key, value in body.items() if key != "operation_id"}
         raw_scans = metadata.pop("scans",None)
         if raw_scans is not None:
@@ -65,6 +75,8 @@ class OutgoingQuality:
         try:
             with self.gateway.transaction("Immutable whole CASE final scale source")as q:
                 q.execute("set transaction read only")
+                from .quality_identifier import quality_identifier
+                identifier = quality_identifier(q, identifier, actor)
                 q.callproc("RRL_OUTGOING_QC_ACCESS.assert_identifier",[identifier,actor])
                 q.execute("select RESULT_JSON from RRL_WH_SCALE_CAPTURE where CAPTURE_KEY=:p_key and CAPTURE_PURPOSE='FINAL_GROSS'",p_key=body["capture_key"])
                 row=q.fetchone()
@@ -82,6 +94,8 @@ class OutgoingQuality:
         try:
             with self.gateway.transaction("Current QC whole CASE final scale readings")as q:
                 q.execute("set transaction read only")
+                from .quality_identifier import quality_identifier
+                identifier = quality_identifier(q, identifier, actor)
                 q.callproc("RRL_OUTGOING_QC_ACCESS.assert_identifier",[identifier,actor])
                 q.execute("select c.CASE_PICK_TASK_ID,c.CONTENT_VERSION from RRL_CASE_PICK_TASK c join RRL_SBORKA_PALLETS s on s.ID=c.LEGACY_SBORKA_PALLET_ID where s.PALLET_UID=:p_id",p_id=identifier)
                 case=q.fetchone()
