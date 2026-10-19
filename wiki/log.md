@@ -4870,3 +4870,7 @@ T08runtime/test-evidence/.../T08/capacity-fixture.json; APIcapacity успешн
 - 19.10.2026 15:47MSK — T09 частично: NEED применён, rollback/reapply/INVALID0;12 проверок API и scoped-права PASS, потребность40A+30B без двойного обеспечения. UI1440/3906checks PASS. Общий quality gate и39focused tests PASS. Четыре пакета UI повторно проверены на3000. Автоматические предложения/маршрут/заказы SAP остаются открытыми.
 
 - 19.10.2026 15:55MSK — подготовлен native возврат TRADECASE CASE с историей unit для текущих owner-прав после удаления временной связи; до apply/live не принят.
+
+- 19.10.2026 15:52MSK — compile gate остановил case_return на неверном WARE_ID; исправлено соединение с заголовком, добавлен resume.sql, физический возврат ещё не выполнялся.
+
+- 19.10.2026 15:59MSK — возврат CASE1157 role-only BLC manager PASS7checks, rollback/replay/revoke и освобождение брони тары; склад250/HARD10. Подготовлен case_owner_query, before12samplesmedian10,0625мс; до apply ускорение не принято.

@@ -75,7 +75,8 @@ create or replace package body RRL_TRADE_STOCK_GUARD as
     select count(*)into n from RRL_CASE_CARRIER_LOT lot join RRL_CASE_PICK_TASK ct on ct.CASE_PICK_TASK_ID=lot.CASE_PICK_TASK_ID
      join RRL_CASE_PICK_LINE cl on cl.CASE_PICK_LINE_ID=lot.CASE_PICK_LINE_ID and cl.CASE_PICK_TASK_ID=ct.CASE_PICK_TASK_ID
      join RRL_PICK_PLAN_LINE pl on pl.PICK_PLAN_LINE_ID=cl.PICK_PLAN_LINE_ID
-     join RRL_TRADE_ORDER_LINE tl on tl.CUSTOMER_ORDER_ROW_ID=pl.CUSTOMER_ORDER_ROW_ID and tl.WARE_ID=ct.WARE_ID
+     join RRL_TRADE_ORDER_LINE tl on tl.CUSTOMER_ORDER_ROW_ID=pl.CUSTOMER_ORDER_ROW_ID
+     join RRL_TRADE_ORDER_LINK th on th.CUSTOMER_ORDER_ID=tl.CUSTOMER_ORDER_ID and th.WARE_ID=ct.WARE_ID
      where lot.LOT_UID=p_uid and ct.CASE_PICK_TASK_ID=v_task_id and ct.WARE_ID=w.WARE_ID and ct.SHIPPED_OPERATION is null;
     if n<>1 then raise_application_error(-20886,'TRADE_RETURN_CASE_LOT_BINDING_REQUIRED');end if;
    elsif command_kind in('CASE_PICK_CONFIRM','CASE_CARRIER_MOVE')then
