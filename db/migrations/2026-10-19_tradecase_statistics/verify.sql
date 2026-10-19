@@ -1,0 +1,2 @@
+select table_name,num_rows,last_analyzed,stale_stats from user_tab_statistics where partition_name is null and table_name in('RRL_TRADE_STOCK_ATTR','RRL_TRADE_BUYOUT','RRL_TRADE_BUYOUT_UNIT','RRL_TRADE_OWNER_GRANT','RRL_TRADE_DOCUMENT','RRL_TRADE_ORDER_LINE','RRL_WMS_RECEIPT_UNIT')order by table_name;
+select object_name,object_type from user_objects where status='INVALID'and object_name not like'BIN$%';
