@@ -529,3 +529,11 @@ from .infrastructure.case_empty import CaseEmpty
 
 def build_case_empty() -> CaseEmptyPort:
     return CaseEmpty()
+
+
+from .api.trade_stock_routes import router as trade_stock_router, trade_stock_service
+from .infrastructure.trade_stock import OracleTradeStock
+
+
+def build_trade_stock() -> OracleTradeStock:
+    return OracleTradeStock(OracleGateway())

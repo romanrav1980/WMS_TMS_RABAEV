@@ -7,7 +7,7 @@ from ...platform.public import AdminUser, get_current_user
 from ..contracts_tradecase import TradecaseDocuments, TradecaseError, TradeEnvelope, TradeSiteSetting
 
 router = APIRouter(prefix="/api/tradecase", tags=["tradecase"])
-Kind = Literal["OWNER", "SKU", "RECIPIENT", "ORDER", "TRIP"]
+Kind = Literal["OWNER", "SKU", "RECIPIENT", "ORDER", "TRIP", "SUPPLY"]
 Warehouse = Path(gt=0)
 
 

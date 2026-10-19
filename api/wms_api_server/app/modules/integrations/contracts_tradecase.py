@@ -1,4 +1,5 @@
 """TRADECASE document v1; acceptance is separate from physical execution."""
+from datetime import date
 from decimal import Decimal
 from typing import Annotated, Any, Literal, Protocol
 
@@ -23,6 +24,7 @@ class TradeOwner(TradeModel):
 
 class TradeSku(TradeModel):
     entity_type: Literal["SKU"]
+    wms_article_id: Key | None = None
     title: str = Field(min_length=1, max_length=200)
     base_uom: Literal["EA"] = "EA"
     units_per_box: int = Field(strict=True, gt=0, le=100000)
@@ -109,7 +111,28 @@ class TradeTrip(TradeModel):
         return self
 
 
-TradePayload = Annotated[TradeOwner | TradeSku | TradeRecipient | TradeOrder | TradeTrip,
+class TradeSupplyCode(TradeModel):
+    system_code: Literal["CRPT"] = "CRPT"
+    profile_code: Literal["TOBACCO"] = "TOBACCO"
+    code: str = Field(min_length=21, max_length=4000)
+
+
+class TradeSupply(TradeModel):
+    entity_type: Literal["SUPPLY"]
+    wms_article_id: Key
+    sap_order_id: Key
+    sap_line_id: Key
+    sku_id: Key
+    owner_id: Key
+    mrc: Money
+    pallet_identifier: str = Field(min_length=1, max_length=50)
+    supplier_batch: str = Field(min_length=1, max_length=100)
+    expiry_date: date
+    composition_source: Literal["SAP"]
+    codes: list[TradeSupplyCode] = Field(min_length=1, max_length=10000)
+
+
+TradePayload = Annotated[TradeOwner | TradeSku | TradeRecipient | TradeOrder | TradeTrip | TradeSupply,
                          Field(discriminator="entity_type")]
 
 
