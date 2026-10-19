@@ -76,8 +76,8 @@ create or replace package body RRL_TRADE_DOCUMENT_API as
    values(p_ware,p_source,p_event,p_kind,p_id,p_version,p_hash,p_business,p_json,p_result,p_actor);
  end;
  procedure configure(p_ware number,p_actor nvarchar2,p_json clob,p_result out clob) is
-  j json_object_t:=json_object_t.parse(p_json);old RRL_TRADE_SITE%rowtype;h varchar2(64);v_id varchar2(100);n number;
-  out_j json_object_t:=json_object_t();prior clob;prior_hash varchar2(64);prior_actor varchar2(50);
+  j json_object_t:=json_object_t.parse(p_json);previous_site RRL_TRADE_SITE%rowtype;h varchar2(64);v_id varchar2(100);n number;
+  out_j json_object_t:=json_object_t();previous_result clob;prior_hash varchar2(64);prior_actor varchar2(50);
   v_source varchar2(100);v_skm varchar2(100);v_plan varchar2(12);v_enabled number;v_reason varchar2(2000);
  begin
   authorize(p_ware,p_actor,'warehouse_settings_edit');v_id:=j.get_string('operation_id');h:=j.get_string('payload_hash');
@@ -85,27 +85,27 @@ create or replace package body RRL_TRADE_DOCUMENT_API as
   v_reason:=j.get_string('reason');v_enabled:=case when j.get_boolean('enabled')then 1 else 0 end;
   select ID into n from RRL_WARES where ID=p_ware for update wait 5;
   begin
-   select PAYLOAD_HASH,RESULT_JSON,ACTOR into prior_hash,prior,prior_actor from RRL_TRADE_MESSAGE where WARE_ID=p_ware and SOURCE_ID='#CONFIG' and EVENT_ID=v_id;
+   select PAYLOAD_HASH,RESULT_JSON,ACTOR into prior_hash,previous_result,prior_actor from RRL_TRADE_MESSAGE where WARE_ID=p_ware and SOURCE_ID='#CONFIG' and EVENT_ID=v_id;
    if prior_hash<>h or prior_actor<>p_actor then fail('OPERATION_CONFLICT');end if;
-   out_j:=json_object_t.parse(prior);out_j.put('replayed',true);p_result:=out_j.to_clob;return;
+   out_j:=json_object_t.parse(previous_result);out_j.put('replayed',true);p_result:=out_j.to_clob;return;
   exception when no_data_found then null;end;
-  begin select * into old from RRL_TRADE_SITE where WARE_ID=p_ware for update wait 5;exception when no_data_found then old.VERSION_NO:=0;end;
-  if j.get_number('expected_version')<>old.VERSION_NO then fail('VERSION_CONFLICT');end if;
-  if old.VERSION_NO>0 and v_source<>old.SOURCE_ID then
+  begin select * into previous_site from RRL_TRADE_SITE where WARE_ID=p_ware for update wait 5;exception when no_data_found then previous_site.VERSION_NO:=0;end;
+  if j.get_number('expected_version')<>previous_site.VERSION_NO then fail('VERSION_CONFLICT');end if;
+  if previous_site.VERSION_NO>0 and v_source<>previous_site.SOURCE_ID then
    select count(*)into n from RRL_TRADE_DOCUMENT where WARE_ID=p_ware;if n>0 then fail('SOURCE_IN_USE');end if;
   end if;
   merge into RRL_TRADE_SITE d using(select p_ware WARE_ID from dual)x on(d.WARE_ID=x.WARE_ID)
    when matched then update set SOURCE_ID=v_source,ACTIVE_SKM=v_skm,PLANNING_SOURCE=v_plan,ENABLED=v_enabled,
-    VERSION_NO=old.VERSION_NO+1,REASON=v_reason,CHANGED_BY=p_actor,CHANGED_AT=systimestamp
+    VERSION_NO=previous_site.VERSION_NO+1,REASON=v_reason,CHANGED_BY=p_actor,CHANGED_AT=systimestamp
    when not matched then insert(WARE_ID,SOURCE_ID,ACTIVE_SKM,PLANNING_SOURCE,ENABLED,VERSION_NO,REASON,CHANGED_BY)
     values(p_ware,v_source,v_skm,v_plan,v_enabled,1,v_reason,p_actor);
-  out_j.put('warehouse_id',p_ware);out_j.put('version',old.VERSION_NO+1);out_j.put('replayed',false);out_j.put('stock_changed',false);p_result:=out_j.to_clob;
-  record_message(p_ware,'#CONFIG',v_id,'SITE',to_char(p_ware,'TM9'),old.VERSION_NO+1,h,h,p_json,p_result,p_actor);
+  out_j.put('warehouse_id',p_ware);out_j.put('version',previous_site.VERSION_NO+1);out_j.put('replayed',false);out_j.put('stock_changed',false);p_result:=out_j.to_clob;
+  record_message(p_ware,'#CONFIG',v_id,'SITE',to_char(p_ware,'TM9'),previous_site.VERSION_NO+1,h,h,p_json,p_result,p_actor);
  end;
  procedure receive_document(p_ware number,p_actor nvarchar2,p_json clob,p_result out clob) is
   j json_object_t:=json_object_t.parse(p_json);b json_object_t:=j.get_object('payload');site RRL_TRADE_SITE%rowtype;
   v_id varchar2(100);v_kind varchar2(12);v_event varchar2(100);h varchar2(64);bh varchar2(64);v_version number;
-  prior_hash varchar2(64);prior clob;old_version number;old_hash varchar2(64);old_scan timestamp with time zone;
+  prior_hash varchar2(64);previous_result clob;old_version number;old_hash varchar2(64);old_scan timestamp with time zone;
   out_j json_object_t:=json_object_t();new_status varchar2(12):='ACCEPTED';body clob;
  begin
   authorize(p_ware,p_actor,'tradecase_import');
@@ -115,9 +115,9 @@ create or replace package body RRL_TRADE_DOCUMENT_API as
   v_event:=j.get_string('event_id');v_id:=j.get_string('document_id');v_kind:=b.get_string('entity_type');v_version:=j.get_number('version');
   h:=j.get_string('payload_hash');bh:=j.get_string('business_hash');
   begin
-   select PAYLOAD_HASH,RESULT_JSON into prior_hash,prior from RRL_TRADE_MESSAGE where WARE_ID=p_ware and SOURCE_ID=site.SOURCE_ID and EVENT_ID=v_event;
+   select PAYLOAD_HASH,RESULT_JSON into prior_hash,previous_result from RRL_TRADE_MESSAGE where WARE_ID=p_ware and SOURCE_ID=site.SOURCE_ID and EVENT_ID=v_event;
    if prior_hash<>h then fail('EVENT_CONTENT_CONFLICT');end if;
-   out_j:=json_object_t.parse(prior);out_j.put('replayed',true);p_result:=out_j.to_clob;return;
+   out_j:=json_object_t.parse(previous_result);out_j.put('replayed',true);p_result:=out_j.to_clob;return;
   exception when no_data_found then null;end;
   begin select VERSION_NO,CONTENT_HASH,FIRST_SCAN_AT into old_version,old_hash,old_scan from RRL_TRADE_DOCUMENT
    where WARE_ID=p_ware and ENTITY_TYPE=v_kind and EXTERNAL_ID=v_id;
