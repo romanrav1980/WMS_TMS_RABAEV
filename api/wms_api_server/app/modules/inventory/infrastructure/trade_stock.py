@@ -4,6 +4,7 @@ import json
 from typing import Any
 import oracledb
 from ...platform.public import read_oracle_json
+from ..contracts_trade_buyout import TradeBuyoutRequest,TradeBuyoutResult
 from ..contracts_trade_stock import TradeMarkConfirmation, TradeCellPolicy, TradeOwnerGrant, TradeStockBind, TradeStockError
 from ..domain.mark_identity import canonical_mark
 from ..domain.pallet_identifiers import normalize_receipt_identifier
@@ -15,6 +16,8 @@ class OracleTradeStock:
 
     def _call(self, warehouse_id: int, actor: str, command: str, payload: dict[str, Any]) -> dict[str, Any]:
         raw = json.dumps(dict(payload, command_type=command), sort_keys=True, ensure_ascii=True, separators=(",", ":"), allow_nan=False)
+        if len(raw.encode()) > 2 * 1024 * 1024:
+            raise TradeStockError("TRADE_STOCK_MESSAGE_TOO_LARGE", 413)
         value = dict(payload, command_type=command, payload_hash=sha256(raw.encode()).hexdigest())
         try:
             with self.gateway.transaction("TRADECASE stock " + command) as cur:
@@ -82,3 +85,18 @@ class OracleTradeStock:
 
     def summary(self, warehouse_id: int, after: str, limit: int, actor: str) -> dict[str, Any]:
         return self._call(warehouse_id, actor, "VIEW_SUMMARY", {"after": after, "limit": limit})
+
+    def request_buyout(self,warehouse:int,body:TradeBuyoutRequest,actor:str)->dict[str,Any]:
+        value=body.model_dump(mode="json")
+        business={k:v for k,v in value.items()if k!="operation_id"}
+        value["business_hash"]=sha256(json.dumps(business,sort_keys=True,separators=(",",":"),ensure_ascii=True).encode()).hexdigest()
+        return self._call(warehouse,actor,"BUYOUT_REQUEST",value)
+
+    def buyout_result(self,warehouse:int,body:TradeBuyoutResult,actor:str)->dict[str,Any]:
+        value=body.model_dump(mode="json")
+        business={k:v for k,v in value.items()if k!="operation_id"}
+        value["business_hash"]=sha256(json.dumps(business,sort_keys=True,separators=(",",":"),ensure_ascii=True).encode()).hexdigest()
+        return self._call(warehouse,actor,"BUYOUT_RESULT",value)
+
+    def read_buyouts(self,warehouse:int,kind:str,identity:str,after:str,limit:int,pending_only:bool,actor:str)->dict[str,Any]:
+        return self._call(warehouse,actor,kind,dict(buyout_id=identity,after=after,limit=limit,pending_only=pending_only))

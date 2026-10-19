@@ -54,7 +54,7 @@ class OracleTradecaseDocuments:
     def receive(self, body: TradeEnvelope, actor: str) -> dict[str, Any]:
         value = body.model_dump(mode="json")
         # Additive optional mappings must not change the hash of an older unchanged message.
-        for key in ("wms_article_id", "wms_customer_id"):
+        for key in ("wms_article_id", "wms_customer_id", "buyout_mode"):
             if value["payload"].get(key) is None:
                 value["payload"].pop(key, None)
         value["payload_hash"] = sha256(canonical(value).encode()).hexdigest()

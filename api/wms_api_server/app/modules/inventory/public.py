@@ -543,3 +543,5 @@ from .infrastructure.trade_planning import OracleTradePlanning
 
 def build_trade_planning() -> OracleTradePlanning:
     return OracleTradePlanning(OracleGateway())
+
+from .api.trade_buyout_routes import router as trade_buyout_router,trade_buyout_service

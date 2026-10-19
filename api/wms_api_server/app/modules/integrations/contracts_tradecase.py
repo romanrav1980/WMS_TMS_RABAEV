@@ -74,7 +74,8 @@ class TradeOrderLine(TradeModel):
 class TradeOrder(TradeModel):
     entity_type: Literal["ORDER"]
     recipient_id: Key
-    order_kind: Literal["OUTBOUND", "TOPUP"] = "OUTBOUND"
+    order_kind: Literal["OUTBOUND", "TOPUP", "BUYOUT"] = "OUTBOUND"
+    buyout_mode: Literal["BEFORE_PICK", "AFTER_PICK", "IN_TRANSIT"] | None = None
     parent_trip_id: Key | None = None
     planned_ship_at: AwareDatetime
     cancelled: bool = False
@@ -84,6 +85,12 @@ class TradeOrder(TradeModel):
     def unique_lines(self) -> "TradeOrder":
         if len({line.line_id for line in self.lines}) != len(self.lines):
             raise ValueError("Duplicate order line")
+        if (self.order_kind == "BUYOUT") != (self.buyout_mode is not None):
+            raise ValueError("Only a buyout basis requires its explicit buyout mode")
+        if self.order_kind == "BUYOUT" and any(line.uom != "EA" for line in self.lines):
+            raise ValueError("Buyout basis quantities must identify base pieces")
+        if self.order_kind == "BUYOUT" and self.parent_trip_id is not None:
+            raise ValueError("Buyout basis is not a shipment assignment")
         if self.order_kind == "TOPUP" and self.parent_trip_id is None:
             raise ValueError("Topup requires parent trip")
         return self
