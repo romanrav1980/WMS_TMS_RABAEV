@@ -41,10 +41,11 @@ def owner_grant(body: TradeOwnerGrant, warehouse_id: int = Path(gt=0),
 
 @router.get("")
 def stock(warehouse_id: int = Path(gt=0), after: str = Query(default="", max_length=64),
+          pallet_identifier: str | None = Query(default=None, min_length=1, max_length=200),
           limit: int = Query(default=50, ge=1, le=100), user: AdminUser = Depends(get_current_user),
           service: TradeStockPort = Depends(trade_stock_service)) -> dict[str, Any]:
     try:
-        return service.view(warehouse_id, after, limit, user.username)
+        return service.view(warehouse_id, after, limit, user.username, pallet_identifier) if pallet_identifier else service.view(warehouse_id, after, limit, user.username)
     except TradeStockError as exc:
         raise HTTPException(exc.status, {"code": exc.code}) from exc
 

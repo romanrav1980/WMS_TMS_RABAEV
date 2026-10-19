@@ -80,8 +80,8 @@ class OracleTradeStock:
     def confirm_marks(self, warehouse_id: int, body: TradeMarkConfirmation, actor: str) -> dict[str, Any]:
         return self._call(warehouse_id, actor, "CONFIRM_MARKS", body.model_dump(mode="json"))
 
-    def view(self, warehouse_id: int, after: str, limit: int, actor: str) -> dict[str, Any]:
-        return self._call(warehouse_id, actor, "VIEW", {"after": after, "limit": limit})
+    def view(self, warehouse_id: int, after: str, limit: int, actor: str, pallet_identifier: str | None = None) -> dict[str, Any]:
+        return self._call(warehouse_id, actor, "VIEW", {"after": after, "limit": limit, "pallet_identifier": pallet_identifier.strip() if pallet_identifier else None})
 
     def summary(self, warehouse_id: int, after: str, limit: int, actor: str) -> dict[str, Any]:
         return self._call(warehouse_id, actor, "VIEW_SUMMARY", {"after": after, "limit": limit})

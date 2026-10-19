@@ -26,7 +26,7 @@ create or replace package body RRL_TRADE_STOCK_API as
  end;
  procedure read_stock(p_ware number,p_actor varchar2,j json_object_t,p_result out clob) is
   result_json json_object_t:=json_object_t();items json_array_t:=json_array_t();item json_object_t;
-  v_limit number:=j.get_number('limit');row_limit number;after_key varchar2(64):=j.get_string('after');n number:=0;admin_flag number;
+  v_limit number:=j.get_number('limit');row_limit number;after_key varchar2(64):=j.get_string('after');n number:=0;admin_flag number;v_pallet_filter varchar2(200):=j.get_string('pallet_identifier');
  begin
   if v_limit is null or v_limit<1 or v_limit>100 or v_limit<>trunc(v_limit)then fail('TRADE_STOCK_PAGE_LIMIT');end if;
   row_limit:=v_limit+1;admin_flag:=RRL_ACCESS_API.is_admin(p_actor);
@@ -34,7 +34,7 @@ create or replace package body RRL_TRADE_STOCK_API as
    u.CURRENT_UID,u.CURRENT_CELL,u.BASE_QTY,u.BASE_UOM,u.UNIT_VERSION,u.HARD_RESERVATION_ID
    from RRL_TRADE_STOCK_ATTR a join RRL_WMS_RECEIPT_UNIT u on u.PHYSICAL_UNIT_KEY=a.PHYSICAL_UNIT_KEY
    join RRL_CELLS c on c.CELL=u.CURRENT_CELL
-   where c.WARE_ID=p_ware and u.STOCK_STATUS<>'ISSUED' and(after_key is null or a.PHYSICAL_UNIT_KEY>after_key)
+   where c.WARE_ID=p_ware and u.STOCK_STATUS<>'ISSUED'and(v_pallet_filter is null or u.CURRENT_UID=v_pallet_filter) and(after_key is null or a.PHYSICAL_UNIT_KEY>after_key)
     and(admin_flag=1 or exists(select 1 from RRL_TRADE_OWNER_GRANT g where g.USERNAME=p_actor and g.WARE_ID=p_ware and g.OWNER_ID=a.OWNER_ID and g.CAN_VIEW=1))
    order by a.PHYSICAL_UNIT_KEY fetch first row_limit rows only)loop
    n:=n+1;if n>v_limit then result_json.put('has_more',true);exit;end if;
