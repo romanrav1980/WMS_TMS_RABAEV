@@ -33,6 +33,7 @@ end;
   RRL_STOCK_PLAN_HELPER.anchor(r,10,'OP',p_operation);
   RRL_STOCK_PLAN_HELPER.anchor(r,70,'UNIQUE','STOCK.OUTBOX:'||rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p_operation,'AL32UTF8'),sys.dbms_crypto.hash_sh256)));
   RRL_STOCK_PLAN_HELPER.stock_closure(f,r,p.UID_PALLET,p.ARTICUL,v_from,v_to);
+  if RRL_TRADE_SORT_GUARD.is_sort(p_request)=1 and p.STOCK_ORIGIN_UID is not null and p.STOCK_ORIGIN_UID<>p.UID_PALLET then RRL_STOCK_PLAN_HELPER.anchor(r,50,'STOCK',p.STOCK_ORIGIN_UID);end if;
   if p.PRIHOD_NAKLAD_ID is not null and p.PRIHOD_NAKLAD_ID>0 then
    RRL_STOCK_PLAN_HELPER.row_key(r,'RRL_PRIHOD_NAKLAD',RRL_STOCK_PLAN_HELPER.decimal_text(p.PRIHOD_NAKLAD_ID));
   end if;
