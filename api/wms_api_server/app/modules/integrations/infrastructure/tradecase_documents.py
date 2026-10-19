@@ -85,3 +85,7 @@ class OracleTradecaseDocuments:
 
     def message(self, warehouse_id: int, event_id: str, actor: str) -> dict[str, Any]:
         return self._read(warehouse_id, actor, "MESSAGE", key=event_id)
+
+    def need(self,warehouse_id:int,key:str,max_age:int,actor:str)->dict[str,Any]:
+        from .trade_need import need_preview
+        return need_preview(self.gateway,warehouse_id,key,max_age,actor)

@@ -7,7 +7,7 @@ from ...platform.public import AdminUser, get_current_user
 from ..contracts_tradecase import TradecaseDocuments, TradecaseError, TradeEnvelope, TradeSiteSetting
 
 router = APIRouter(prefix="/api/tradecase", tags=["tradecase"])
-Kind = Literal["OWNER", "SKU", "RECIPIENT", "ORDER", "TRIP", "SUPPLY"]
+Kind = Literal["OWNER", "SKU", "RECIPIENT", "ORDER", "TRIP", "SUPPLY", "NEED"]
 Warehouse = Path(gt=0)
 
 
@@ -84,3 +84,11 @@ def message(event_id: str = Path(min_length=1, max_length=100), warehouse_id: in
         return service.message(warehouse_id, event_id, user.username)
     except TradecaseError as exc:
         raise HTTPException(exc.status, {"code": exc.code}) from exc
+
+
+@router.get('/warehouses/{warehouse_id}/needs/{document_id}')
+def need(document_id:str=Path(min_length=1,max_length=100),warehouse_id:int=Warehouse,
+         max_age_minutes:int=Query(ge=1,le=1440),user:AdminUser=Depends(get_current_user),
+         service:TradecaseDocuments=Depends(tradecase_documents))->dict[str,Any]:
+    try:return service.need(warehouse_id,document_id,max_age_minutes,user.username)
+    except TradecaseError as exc:raise HTTPException(exc.status,{'code':exc.code})from exc

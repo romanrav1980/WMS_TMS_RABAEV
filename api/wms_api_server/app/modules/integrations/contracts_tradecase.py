@@ -5,15 +5,12 @@ from typing import Annotated, Any, Literal, Protocol
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, PlainSerializer, model_validator
 
-Key = Annotated[str, Field(min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_.:/-]+$")]
+from .contracts_trade_base import Key,TradeModel
+
 Money = Annotated[Decimal, Field(ge=0, max_digits=12, decimal_places=2, allow_inf_nan=False),
                   PlainSerializer(lambda value: format(value.normalize(), "f"), return_type=str)]
 Quantity = Annotated[Decimal, Field(gt=0, max_digits=18, decimal_places=6, allow_inf_nan=False),
                      PlainSerializer(lambda value: format(value.normalize(), "f"), return_type=str)]
-
-
-class TradeModel(BaseModel):
-    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
 
 class TradeOwner(TradeModel):
@@ -140,7 +137,10 @@ class TradeSupply(TradeModel):
     codes: list[TradeSupplyCode] = Field(min_length=1, max_length=10000)
 
 
-TradePayload = Annotated[TradeOwner | TradeSku | TradeRecipient | TradeOrder | TradeTrip | TradeSupply,
+from .contracts_trade_need import TradeNeed
+
+
+TradePayload = Annotated[TradeOwner | TradeSku | TradeRecipient | TradeOrder | TradeTrip | TradeSupply | TradeNeed,
                          Field(discriminator="entity_type")]
 
 
@@ -181,3 +181,5 @@ class TradecaseDocuments(Protocol):
 
     def messages(self, warehouse_id: int, after: str, limit: int, actor: str) -> dict[str, Any]: ...
     def message(self, warehouse_id: int, event_id: str, actor: str) -> dict[str, Any]: ...
+
+    def need(self,warehouse_id:int,key:str,max_age:int,actor:str)->dict[str,Any]: ...
