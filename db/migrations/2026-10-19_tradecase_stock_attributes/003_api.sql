@@ -10,7 +10,6 @@ create or replace package body RRL_TRADE_STOCK_API as
  end;
  procedure fail(p_code varchar2) is begin raise_application_error(-20911,p_code);end;
  procedure authorize(p_ware number,p_actor varchar2,p_permission varchar2) is begin
-  lock table RRL_ACCESS_REV in share mode wait 5;
   RRL_ACCESS_API.assert_allowed(p_actor,p_permission,'WAREHOUSE',to_char(p_ware,'TM9'));
  end;
  procedure metadata_fence is
@@ -20,7 +19,9 @@ create or replace package body RRL_TRADE_STOCK_API as
   RRL_STOCK_PLAN_HELPER.fence(policies,'RELEASE','STOCK');
   RRL_STOCK_PLAN_HELPER.fence(policies,'CONFIG','WAREHOUSE',6);
   RRL_STOCK_PLAN_HELPER.row_key(resources,'RRL_STOCK_POLICY_GUARD','WAREHOUSE.CONFIGURATION');
-  RRL_STOCK_LOCK_API.begin_plan;RRL_STOCK_LOCK_API.acquire_policies(policies.to_clob);RRL_STOCK_LOCK_API.acquire_resources(resources.to_clob);
+  RRL_STOCK_LOCK_API.begin_plan;
+  lock table RRL_ACCESS_REV in share mode wait 5;
+  RRL_STOCK_LOCK_API.acquire_policies(policies.to_clob);RRL_STOCK_LOCK_API.acquire_resources(resources.to_clob);
  end;
  function owner_exists(p_ware number,p_owner varchar2) return number is n number;begin
   select count(*)into n from RRL_TRADE_DOCUMENT where WARE_ID=p_ware and ENTITY_TYPE='OWNER' and EXTERNAL_ID=p_owner and STATUS='ACCEPTED';
