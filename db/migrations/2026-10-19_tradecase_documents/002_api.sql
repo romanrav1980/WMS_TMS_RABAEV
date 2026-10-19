@@ -28,7 +28,7 @@ create or replace package body RRL_TRADE_DOCUMENT_API as
  end;
  procedure validate_payload(p_ware number,p_kind varchar2,p_id varchar2,b json_object_t) is
   a json_array_t;v json_object_t;r json_object_t;s json_object_t;owners json_array_t;prices json_array_t;items json_array_t;
-  found boolean;qty number;n number;owner_id varchar2(100);line_id varchar2(100);order_id varchar2(100);mode varchar2(12);
+  found boolean;qty number;n number;owner_id varchar2(100);line_id varchar2(100);order_id varchar2(100);v_plan_mode varchar2(12);
  begin
   if p_kind='RECIPIENT' then
    v:=document_body(p_ware,'OWNER',b.get_string('target_owner_id'));a:=b.get_array('permitted_source_owners');
@@ -53,8 +53,8 @@ create or replace package body RRL_TRADE_DOCUMENT_API as
     if n>v.get_number('quantity') or(b.get_boolean('cancelled') and n>0) then fail('ORDER_ASSIGNED_NEEDS_CHANGE');end if;
    end loop;
   elsif p_kind='TRIP' then
-   select PLANNING_SOURCE into mode from RRL_TRADE_SITE where WARE_ID=p_ware;
-   if b.get_string('planning_source')<>mode then fail('PLANNING_SOURCE_MISMATCH');end if;
+   select PLANNING_SOURCE into v_plan_mode from RRL_TRADE_SITE where WARE_ID=p_ware;
+   if b.get_string('planning_source')<>v_plan_mode then fail('PLANNING_SOURCE_MISMATCH');end if;
    a:=b.get_array('orders');
    for i in 0..a.get_size-1 loop
     v:=treat(a.get(i)as json_object_t);order_id:=v.get_string('order_id');line_id:=v.get_string('line_id');
