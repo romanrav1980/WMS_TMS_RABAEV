@@ -28,7 +28,7 @@ create or replace package body RRL_TRADE_DOCUMENT_API as
  end;
  procedure validate_payload(p_ware number,p_kind varchar2,p_id varchar2,b json_object_t) is
   a json_array_t;v json_object_t;r json_object_t;s json_object_t;owners json_array_t;prices json_array_t;items json_array_t;
-  found boolean;qty number;n number;owner_id varchar2(100);line_id varchar2(100);order_id varchar2(100);v_plan_mode varchar2(12);
+  previous_body clob;current_body clob;found boolean;qty number;n number;owner_id varchar2(100);line_id varchar2(100);order_id varchar2(100);v_plan_mode varchar2(12);
  begin
   if p_kind='RECIPIENT' then
    v:=document_body(p_ware,'OWNER',b.get_string('target_owner_id'));a:=b.get_array('permitted_source_owners');
@@ -36,6 +36,12 @@ create or replace package body RRL_TRADE_DOCUMENT_API as
   elsif p_kind='ORDER' then
    r:=document_body(p_ware,'RECIPIENT',b.get_string('recipient_id'));owners:=r.get_array('permitted_source_owners');
    if b.get_string('order_kind')='TOPUP' then v:=document_body(p_ware,'TRIP',b.get_string('parent_trip_id'));end if;
+   current_body:=b.to_clob;
+   select count(*)into n from RRL_TRADE_DOCUMENT d,
+    json_table(d.BODY_JSON,'$.orders[*]' columns(order_id varchar2(100) path '$.order_id',line_id varchar2(100) path '$.line_id'))x
+    where d.WARE_ID=p_ware and d.ENTITY_TYPE='TRIP' and d.STATUS='ACCEPTED' and x.order_id=p_id
+     and not exists(select 1 from json_table(current_body,'$.lines[*]' columns(line_id varchar2(100) path '$.line_id'))y where y.line_id=x.line_id);
+   if n>0 then fail('ASSIGNED_LINE_REMOVAL_REQUIRES_CHANGE');end if;
    a:=b.get_array('lines');
    for i in 0..a.get_size-1 loop
     v:=treat(a.get(i)as json_object_t);s:=document_body(p_ware,'SKU',v.get_string('sku_id'));
@@ -105,7 +111,7 @@ create or replace package body RRL_TRADE_DOCUMENT_API as
  procedure receive_document(p_ware number,p_actor nvarchar2,p_json clob,p_result out clob) is
   j json_object_t:=json_object_t.parse(p_json);b json_object_t:=j.get_object('payload');site RRL_TRADE_SITE%rowtype;
   v_id varchar2(100);v_kind varchar2(12);v_event varchar2(100);h varchar2(64);bh varchar2(64);v_version number;
-  prior_hash varchar2(64);previous_result clob;old_version number;old_hash varchar2(64);old_scan timestamp with time zone;
+  prior_hash varchar2(64);previous_result clob;old_version number;old_hash varchar2(64);old_scan timestamp with time zone;old_status varchar2(12);
   out_j json_object_t:=json_object_t();new_status varchar2(12):='ACCEPTED';body clob;
  begin
   authorize(p_ware,p_actor,'tradecase_import');
@@ -119,12 +125,13 @@ create or replace package body RRL_TRADE_DOCUMENT_API as
    if prior_hash<>h then fail('EVENT_CONTENT_CONFLICT');end if;
    out_j:=json_object_t.parse(previous_result);out_j.put('replayed',true);p_result:=out_j.to_clob;return;
   exception when no_data_found then null;end;
-  begin select VERSION_NO,CONTENT_HASH,FIRST_SCAN_AT into old_version,old_hash,old_scan from RRL_TRADE_DOCUMENT
+  begin select VERSION_NO,CONTENT_HASH,FIRST_SCAN_AT,STATUS into old_version,old_hash,old_scan,old_status from RRL_TRADE_DOCUMENT
    where WARE_ID=p_ware and ENTITY_TYPE=v_kind and EXTERNAL_ID=v_id;
   exception when no_data_found then old_version:=0;end;
   if v_version<old_version then fail('STALE_VERSION');end if;
   if v_version=old_version and bh<>old_hash then fail('VERSION_CONTENT_CONFLICT');end if;
   if v_version>old_version then
+   if old_status='CANCELLED' then fail('CANCELLED_DOCUMENT_REQUIRES_NEW_ID');end if;
    if old_scan is not null then fail('FIRST_SCAN_REQUIRES_REVERSE');end if;
    validate_payload(p_ware,v_kind,v_id,b);body:=b.to_clob;
    if b.has('cancelled') and b.get_boolean('cancelled') then new_status:='CANCELLED';end if;
