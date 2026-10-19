@@ -25,6 +25,8 @@ class OracleTradeStock:
         value = dict(payload, command_type=command, payload_hash=sha256(raw.encode()).hexdigest())
         try:
             with self.gateway.transaction("TRADECASE stock " + command) as cur:
+                if command in {"VIEW", "VIEW_TRANSIT", "VIEW_SUMMARY", "BUYOUT_LIST", "BUYOUT_DETAIL", "BUYOUT_UNITS"}:
+                    cur.execute("set transaction read only")
                 hints: list[dict[str, str]] = []
                 if command == "BIND":
                     cur.execute("select 1 from RRL_TRADE_STOCK_COMMAND where OPERATION_ID=:id", id=payload["operation_id"])
