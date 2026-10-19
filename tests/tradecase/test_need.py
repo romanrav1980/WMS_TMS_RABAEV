@@ -48,3 +48,11 @@ def test_duplicate_version_and_invalid_horizon_rejected():
 def test_zero_forecast_is_preserved_in_exchange():
     b=body(forecast_quantity='0');e=TradeEnvelope(schema_version=1,event_id='E',source_id='S',warehouse_id=1,document_id='N',version=2,occurred_at=NOW,payload=b)
     assert Decimal(e.model_dump(mode='json')['payload']['forecast_quantity'])==0
+
+
+def test_offset_changes_do_not_change_snapshot_period_identity():
+    local=timezone(timedelta(hours=3))
+    a=body(supplies=[supply('S')])
+    b=body(snapshot_at=NOW.astimezone(local),period_from=NOW.astimezone(local),period_until=(NOW+timedelta(days=1)).astimezone(local),supplies=[supply('S',expected_at=(NOW+timedelta(hours=1)).astimezone(local))])
+    assert a.model_dump(mode='json')==b.model_dump(mode='json')
+    assert isinstance(b.model_dump()['snapshot_at'],datetime)

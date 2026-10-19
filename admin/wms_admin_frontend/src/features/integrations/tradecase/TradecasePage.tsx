@@ -10,6 +10,7 @@ import { StockList } from "./Stock";
 import { BindPanel } from "./Bind";
 import { BuyoutList, BuyoutView } from "./Buyouts";
 import { BuyoutBasis } from "./BuyoutCreate";
+import { CaseReturn } from "./CaseReturn";
 import { SortPanel } from "./Sort";
 import { NeedPreview } from "./NeedPreview";
 import { TripExecution } from "./TripExecution";
@@ -42,7 +43,7 @@ export function TradecasePage({ onBack }: { onBack: () => void }) {
   const ws = useRead<Workspaces>("/api/access/workspaces?capability=tradecase");
   const user = useRead<{ username: string }>("/api/access/navigation").data?.username ?? "";
   const site = useRead<Site>(view.wh ? sitePath(view.wh) : null, reload);
-  const list = useRead<Page<DocRow | MsgRow>>(view.wh && view.tab !== "SORT" ? listPath(view.wh, view.tab, view.after, view.pending) : null, reload);
+  const list = useRead<Page<DocRow | MsgRow>>(view.wh && !["SORT", "RETURN"].includes(view.tab) ? listPath(view.wh, view.tab, view.after, view.pending) : null, reload);
   const openBuyout = (id: string) => { setPrev([]); setReload(n => n + 1); go({ tab: "BUYOUTS", after: null, open: id }); };
   const card = useRead<DocCard | MsgCard>(view.wh && view.open ? cardPath(view.wh, view.tab, view.open) : null, reload);
   if (names.current.wh !== view.wh) names.current = { wh: view.wh, map: new Map() };
@@ -70,7 +71,7 @@ export function TradecasePage({ onBack }: { onBack: () => void }) {
       <Flow onTab={chooseTab} />
       <div className="tc-tabs" role="tablist" aria-label="Виды документов">{TABS.map(t =>
         <button key={t.id} role="tab" aria-selected={view.tab === t.id} title={tcHelp.tab.text + " (" + t.label + ")"} data-help-id={tcHelp.tab.id + "." + t.id} onClick={() => chooseTab(t.id)}>{t.label}</button>)}</div>
-      {view.tab === "SORT" ? <SortPanel wh={view.wh} user={user} /> : <div className="tc-body">
+      {view.tab === "RETURN" ? <CaseReturn key={view.wh} wh={view.wh} user={user} /> : view.tab === "SORT" ? <SortPanel wh={view.wh} user={user} /> : <div className="tc-body">
         <section className="tc-panel" aria-label={tabLabel}>
           <h3>{tabLabel} {view.after && view.after !== "0" && <small>· не первая страница</small>}
             {view.tab === "BUYOUTS" && <label className="tc-check"><input type="checkbox" checked={view.pending} onChange={e => { setPrev([]); go({ pending: e.target.checked, after: null, open: null }); }} title={tcHelp.pending.text} data-help-id={tcHelp.pending.id} /> Есть ожидающие коды</label>} <HelpLink anchor={view.tab === "MESSAGES" ? "exchange" : view.tab === "STOCK" ? "stock" : view.tab === "SUPPLY" ? "bind" : view.tab === "NEED" ? "need" : "order"} /></h3>

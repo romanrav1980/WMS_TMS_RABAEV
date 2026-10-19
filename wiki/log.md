@@ -4874,3 +4874,5 @@ T08runtime/test-evidence/.../T08/capacity-fixture.json; APIcapacity успешн
 - 19.10.2026 15:52MSK — compile gate остановил case_return на неверном WARE_ID; исправлено соединение с заголовком, добавлен resume.sql, физический возврат ещё не выполнялся.
 
 - 19.10.2026 15:59MSK — возврат CASE1157 role-only BLC manager PASS7checks, rollback/replay/revoke и освобождение брони тары; склад250/HARD10. Подготовлен case_owner_query, before12samplesmedian10,0625мс; до apply ускорение не принято.
+
+- 19.10.2026 16:20MSK — T11 UI390:10BLC возвращены, потеря ответа после commit и неизменный повтор дали одну APPLIED операцию; склад250/HARD0. T08:200строк203→5SQL, owner200→1, результаты равны; устаревшая привязка блокирует расчёт. case_owner_query APPLIED/rollback/reapply, aftermedian2,52мс и повтор прав PASS. T12 пиковая нагрузка/провайдеры остаются открытыми.

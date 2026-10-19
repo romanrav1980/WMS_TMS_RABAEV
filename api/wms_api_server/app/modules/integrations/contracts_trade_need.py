@@ -1,8 +1,8 @@
 """Versioned recipient demand snapshot; quantities are never warehouse movements."""
-from datetime import timedelta
+from datetime import timedelta,timezone
 from decimal import Decimal
 from typing import Annotated,Literal
-from pydantic import AwareDatetime,Field,PlainSerializer,model_validator
+from pydantic import AwareDatetime,Field,PlainSerializer,model_validator,field_serializer
 from .contracts_trade_base import TradeModel,Key
 
 Amount=Annotated[Decimal,Field(ge=0,max_digits=18,decimal_places=6,allow_inf_nan=False),PlainSerializer(lambda v:format(v.normalize(),'f'),return_type=str)]
@@ -16,6 +16,10 @@ class ExpectedSupply(TradeModel):
     confirmed:bool
     current_trip:bool=False
     expected_at:AwareDatetime
+
+    @field_serializer('expected_at',when_used='json')
+    def timestamp(self,value:AwareDatetime)->str:
+        return value.astimezone(timezone.utc).isoformat().replace('+00:00','Z')
 
 class TradeNeed(TradeModel):
     entity_type:Literal['NEED']
@@ -32,6 +36,10 @@ class TradeNeed(TradeModel):
     available_quantity:Amount
     received_in_available:Literal[True]
     supplies:list[ExpectedSupply]=Field(default_factory=list,max_length=200)
+
+    @field_serializer('snapshot_at','period_from','period_until',when_used='json')
+    def timestamp(self,value:AwareDatetime)->str:
+        return value.astimezone(timezone.utc).isoformat().replace('+00:00','Z')
 
     @model_validator(mode='after')
     def horizon(self)->'TradeNeed':

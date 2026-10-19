@@ -145,3 +145,5 @@ from .infrastructure.picker_kpi_read import PickerKpiRead
 def build_picker_kpi_service() -> PickerKpiPort:
     from ...oracle_gateway import OracleGateway
     return PickerKpiService(PickerKpiRead(OracleGateway()))
+
+from .api.case_carrier_lookup_routes import router as case_carrier_lookup_router

@@ -9,7 +9,7 @@ type Journal<B extends { operation_id: string }> = ReturnType<typeof journal<B>>
 /** Отправка долговечной команды: тело сохранено до POST; неизвестный исход блокирует изменения и повторяется тем же телом;
  *  подтверждённый отказ снимает команду; отказ при повторе после неизвестной отправки и конфликт операции её сохраняют. */
 export function useCommand<B extends { operation_id: string }, R>(j: Journal<B>, path: string, user: string, wh: string,
-  reasons: Record<string, string>, accept: (r: R, body: B) => string | null) {
+  reasons: Record<string, string>, accept: (r: R, body: B) => string | null, transport?: { path: (body: B) => string; payload: (body: B) => unknown }) {
   const lock = useRef(false), [busy, setBusy] = useState(false), [msg, setMsg] = useState<Msg | null>(null), [, rerender] = useState(0);
   async function send(intent: Intent<B>, after?: (r: R) => void) {
     if (lock.current) return;
@@ -17,7 +17,7 @@ export function useCommand<B extends { operation_id: string }, R>(j: Journal<B>,
     const prior = intent.sent;
     try {
       j.markSent(user, wh, intent);
-      const r = await apiFetch<R>(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(intent.body) });
+      const r = await apiFetch<R>(transport?.path(intent.body) ?? path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(transport ? transport.payload(intent.body) : intent.body) });
       const done = accept(r, intent.body);
       if (done === null) { setMsg({ text: "Ответ сервера не подтверждает эту команду. Повторите ту же команду.", tone: "warn", tech: r }); return; }
       j.clear(user, wh); setMsg({ text: done, tone: "ok", tech: r }); after?.(r);

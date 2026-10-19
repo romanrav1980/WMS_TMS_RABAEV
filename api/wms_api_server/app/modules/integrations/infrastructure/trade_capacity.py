@@ -26,20 +26,32 @@ def _box(cur:Any,ware:int,sku:str)->dict:
     return dict(sku_id=sku,sku_version=version,units_per_box=doc['units_per_box'],weight=weight,volume=axes[0]*axes[1]*axes[2],dimensions=axes)
 
 def _planned(cur:Any,ware:int,trip:dict,actor:str)->tuple[list[dict],list[dict],dict[str,dict]]:
-    items=[];versions=[];boxes={};orders={}
+    items=[];versions=[];boxes={};orders={};bound_lines={};checked_owners=set()
     for assignment in trip['orders']:
         identity=assignment['order_id']
         if identity not in orders:
             orders[identity]=_document(cur,ware,'ORDER',identity)
             versions.append(dict(order_id=identity,version=orders[identity][1]))
+            cur.execute('select h.DOCUMENT_VERSION,l.EXTERNAL_LINE_ID,l.SKU_ID,l.SKU_VERSION from RRL_TRADE_ORDER_LINK h join RRL_TRADE_ORDER_LINE l on l.CUSTOMER_ORDER_ID=h.CUSTOMER_ORDER_ID where h.WARE_ID=:w and h.EXTERNAL_ID=:id',w=ware,id=identity)
+            bound_lines[identity]={}
+            for order_version,line_id,sku_id,sku_version in cur:
+                if order_version!=orders[identity][1]:raise TradeTransportError('TRADE_CAPACITY_ORDER_BINDING_STALE',409)
+                if line_id in bound_lines[identity]:raise TradeTransportError('TRADE_CAPACITY_ORDER_BINDING_AMBIGUOUS',409)
+                bound_lines[identity][line_id]=(sku_id,int(sku_version))
         order=orders[identity][0]
         if order.get('order_kind')=='BUYOUT':raise TradeTransportError('TRADE_CAPACITY_SHIPMENT_ORDER_REQUIRED',409)
         line=next((x for x in order['lines']if x['line_id']==assignment['line_id']),None)
         if line is None or Decimal(str(assignment['quantity']))>Decimal(str(line['quantity'])):raise TradeTransportError('TRADE_CAPACITY_ORDER_LINE_MISMATCH',409)
-        cur.execute('select RRL_TRADE_STOCK_GUARD.owner_allowed(:a,:w,:src,0),RRL_TRADE_STOCK_GUARD.owner_allowed(:a,:w,:dst,0)from dual',a=actor,w=ware,src=line['source_owner_id'],dst=line['target_owner_id'])
-        if max(cur.fetchone())!=1:raise TradeTransportError('TRADE_OWNER_ACCESS_DENIED',403)
+        owner_pair=(line['source_owner_id'],line['target_owner_id'])
+        if owner_pair not in checked_owners:
+            cur.execute('select RRL_TRADE_STOCK_GUARD.owner_allowed(:a,:w,:src,0),RRL_TRADE_STOCK_GUARD.owner_allowed(:a,:w,:dst,0)from dual',a=actor,w=ware,src=owner_pair[0],dst=owner_pair[1])
+            if max(cur.fetchone())!=1:raise TradeTransportError('TRADE_OWNER_ACCESS_DENIED',403)
+            checked_owners.add(owner_pair)
         if line['sku_id']not in boxes:boxes[line['sku_id']]=_box(cur,ware,line['sku_id'])
-        package=boxes[line['sku_id']];quantity=Decimal(str(assignment['quantity']))
+        package=boxes[line['sku_id']]
+        bound=bound_lines[identity]
+        if bound and bound.get(assignment['line_id'])!=(line['sku_id'],package['sku_version']):raise TradeTransportError('TRADE_CAPACITY_BOUND_SKU_VERSION_CHANGED',409)
+        quantity=Decimal(str(assignment['quantity']))
         n=quantity if line['uom']=='BOX'else quantity/Decimal(package['units_per_box'])
         if n!=n.to_integral_value():raise TradeTransportError('TRADE_CAPACITY_WHOLE_BOXES_REQUIRED',409)
         items.append(dict(package,boxes=n))

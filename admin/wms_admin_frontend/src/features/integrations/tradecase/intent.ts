@@ -38,11 +38,11 @@ export const codeOf = (e: ApiRequestError) => typeof e.detail === "object" && e.
 const KEEP_CODES = ["OPERATION_CONFLICT", "OPERATION_CONTENT_CONFLICT"];
 
 /** Исход ошибки POST. unknown — ответ не получен (сеть/5xx); kept — отказ при повторе после неизвестной отправки,
- *  команда остаётся (первая отправка могла дойти, конфликт операции не разрешает новую команду); refused — подтверждённый отказ. */
+ *  команда остаётся при любом4xx: ранняя проверка текущих прав/политики не опровергает первый эффект; refused — отказ первой отправки. */
 export function classify(e: unknown, prior: boolean): { outcome: "unknown" | "auth" | "kept" | "refused"; code: string } {
   if (!(e instanceof ApiRequestError) || e.status >= 500) return { outcome: "unknown", code: "" };
   const code = codeOf(e);
   if (e.status === 401) return { outcome: "auth", code };
-  if (KEEP_CODES.includes(code) || (prior && e.status === 403)) return { outcome: "kept", code };
+  if (KEEP_CODES.includes(code) || prior) return { outcome: "kept", code };
   return { outcome: "refused", code };
 }

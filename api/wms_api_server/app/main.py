@@ -396,7 +396,8 @@ from .transport_preflight_composition import preflight_service
 app.include_router(transport_preflight_router)
 app.dependency_overrides[transport_preflight_service] = preflight_service
 
-from .modules.resources.public import case_read_service
+from .modules.resources.public import case_read_service,case_carrier_lookup_router
+app.include_router(case_carrier_lookup_router)
 from .case_read_composition import scoped_case_reads
 app.dependency_overrides[case_read_service] = scoped_case_reads
 

@@ -63,6 +63,34 @@ class ScopedCaseReads:
             return result
 
 
+    def carrier(self,warehouse:int,identifier:str,actor:str)->dict[str,Any]:
+        if not identifier.strip() or len(identifier)>150:
+            raise CaseReadError('CASE_CARRIER_IDENTIFIER_INVALID','Invalid carrier identifier',422)
+        with self.gateway.transaction('Current scanned CASE detail READ ONLY snapshot')as cur:
+            if not getattr(self.gateway,'transaction_bound',False):cur.execute('set transaction read only')
+            require_viewer(cur,actor,warehouse)
+            cur.execute('select CASE_PICK_TASK_ID from RRL_CASE_PICK_TASK where WARE_ID=:w and SSCC=:id fetch first 2 rows only',w=warehouse,id=identifier.strip())
+            rows=cur.fetchall()
+            if not rows:raise CaseReadError('CASE_TASK_NOT_FOUND','Carrier not found',404)
+            if len(rows)>1:raise CaseReadError('CASE_CARRIER_AMBIGUOUS','Carrier identifier is ambiguous',409)
+            task=int(rows[0][0]);require_task_view(cur,task,actor)
+            result=LegacyCaseReads(TransactionGateway(cur)).get_task(task)
+            if result is None:raise CaseReadError('CASE_TASK_NOT_FOUND','Carrier not found',404)
+            cur.execute("select RRL_ACCESS_API.allowed(:a,'case_pick_manage','WAREHOUSE',:w,:owner)from dual",a=actor,w=str(warehouse),owner=result.get('assigned_to'))
+            permitted=cur.fetchone()[0]==1
+            if permitted:
+                try:cur.callproc('RRL_TRADE_CASE_ACCESS.assert_scope',[task,actor,1])
+                except oracledb.DatabaseError as exc:
+                    if getattr(exc.args[0],'code',0)!=20882:raise
+                    permitted=False
+            cur.execute('select count(*)from RRL_WMS_HU_LINK where CHILD_CASE_TASK_ID=:t and ACTIVE_FLAG=1',t=task);parent=cur.fetchone()[0]>0
+            cur.execute("select count(*)from RRL_ASSEMBLY_SESSION where CASE_PICK_TASK_ID=:t and STATE in('OPEN','BLOCKED','HOLD')",t=task);assembly=cur.fetchone()[0]>0
+            state_ok=result.get('status')not in{'CANCELLED','FAILED','SHIPPED'}and not result.get('shipped_operation')
+            lots=result.get('physical_lots',[])
+            result.update(return_allowed=permitted and state_ok and not parent and not assembly and 1<=len(lots)<=200,
+                          return_blocking_reason='PERMISSION'if not permitted else'PARENT'if parent else'ASSEMBLY'if assembly else'STATE'if not state_ok else'EMPTY'if not lots else None)
+            return result
+
     def shorts(self, actor: str, status: str | None, limit: int,
                warehouse: int | None = None) -> list[dict[str, Any]]:
         if not 1 <= limit <= 500:

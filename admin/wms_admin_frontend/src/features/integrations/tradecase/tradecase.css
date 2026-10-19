@@ -44,3 +44,5 @@
 .tc-check{display:flex;align-items:center;gap:8px;min-height:40px;color:var(--tc-text);font-size:14px;font-weight:400}.tc-check input{width:20px;height:20px;min-height:0}
 .tc-inline{display:flex;align-items:center;gap:8px;margin:6px 0}.tc-inline input{width:110px;cursor:text}
 .tc-bind > label{display:flex;flex-direction:column;gap:4px;color:var(--tc-dim);margin:6px 0}.tc-bind label select{width:100%}.tc-bindform{margin-top:8px}
+
+.tc-return-lots{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px;margin:12px 0}.tc-return-lots article{border:1px solid #30445e;border-radius:8px;padding:14px;min-width:0}.tc-return-lots label{display:flex;flex-direction:column;align-items:stretch;gap:6px}.tc-return-lots input{width:100%;box-sizing:border-box}.tc-return-lots b{overflow-wrap:anywhere}

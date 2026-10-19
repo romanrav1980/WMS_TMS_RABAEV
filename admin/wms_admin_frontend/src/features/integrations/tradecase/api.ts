@@ -1,7 +1,7 @@
 
 /** TRADECASE T02 (API_READY_C0130): только GET. Сервер проверяет право в области склада на каждом чтении. */
 export type Kind = "ORDER" | "TRIP" | "RECIPIENT" | "SKU" | "OWNER" | "SUPPLY" | "NEED";
-export type Tab = Kind | "MESSAGES" | "STOCK" | "BUYOUTS" | "SORT";
+export type Tab = Kind | "MESSAGES" | "STOCK" | "BUYOUTS" | "SORT" | "RETURN";
 export type Site = { warehouse_id: number; source_id: string; active_skm: string; planning_source: string; enabled: boolean; version: number };
 export type Payload = Record<string, unknown>;
 export type DocRow = { document_id: string; version: number; status: "ACCEPTED" | "CANCELLED"; payload: Payload };
@@ -38,7 +38,7 @@ export type BindResult = { warehouse_id: number; operation_id: string; stock_cha
 export const TABS: { id: Tab; label: string }[] = [
   { id: "ORDER", label: "Заказы" }, { id: "TRIP", label: "Рейсы" }, { id: "RECIPIENT", label: "Получатели" },
   { id: "NEED", label: "Потребность" }, { id: "SKU", label: "Товары" }, { id: "OWNER", label: "Собственники" }, { id: "SUPPLY", label: "Поставки" }, { id: "STOCK", label: "Запас" },
-  { id: "BUYOUTS", label: "Выкупы" }, { id: "SORT", label: "Разделение" }, { id: "MESSAGES", label: "Обмен" },
+  { id: "BUYOUTS", label: "Выкупы" }, { id: "SORT", label: "Разделение" }, { id: "RETURN", label: "Возврат сборки" }, { id: "MESSAGES", label: "Обмен" },
 ];
 
 const base = (wh: string) => "/api/tradecase/warehouses/" + encodeURIComponent(wh);
