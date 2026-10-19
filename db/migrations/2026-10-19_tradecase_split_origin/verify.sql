@@ -1,0 +1,2 @@
+select OBJECT_NAME,OBJECT_TYPE,STATUS from user_objects where STATUS='INVALID'and OBJECT_NAME not like 'BIN$%';
+select NAME,LINE,POSITION,TEXT from user_errors where NAME in('RRL_STOCK_INTERNAL_CMD','RRL_SAP_PALLET_WRITE_GUARD');
