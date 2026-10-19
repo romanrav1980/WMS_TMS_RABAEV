@@ -10,7 +10,9 @@ create or replace package body RRL_TRADE_STOCK_API as
  end;
  procedure fail(p_code varchar2) is begin raise_application_error(-20911,p_code);end;
  procedure authorize(p_ware number,p_actor varchar2,p_permission varchar2) is begin
-  RRL_ACCESS_API.assert_allowed(p_actor,p_permission,'WAREHOUSE',to_char(p_ware,'TM9'));
+  if RRL_ACCESS_API.allowed(p_actor,p_permission,'WAREHOUSE',to_char(p_ware,'TM9'))<>1 then
+   raise_application_error(-20882,'ACCESS_DENIED');
+  end if;
  end;
  procedure metadata_fence is
   policies json_array_t:=json_array_t();resources json_array_t:=json_array_t();

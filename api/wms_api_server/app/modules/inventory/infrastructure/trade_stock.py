@@ -39,8 +39,10 @@ class OracleTradeStock:
             raise TradeStockError(str(exc), 422) from exc
 
     def _codes(self, cur: Any, warehouse_id: int, actor: str, supply_id: str) -> list[dict[str, str]]:
-        cur.execute("begin RRL_ACCESS_API.assert_allowed(:actor,'tradecase_stock_bind','WAREHOUSE',:ware);end;",
+        cur.execute("select RRL_ACCESS_API.allowed(:actor,'tradecase_stock_bind','WAREHOUSE',:ware) from dual",
                     actor=actor, ware=str(warehouse_id))
+        if cur.fetchone()[0] != 1:
+            raise TradeStockError("ACCESS_DENIED", 403)
         cur.execute("""select d.BODY_JSON from RRL_TRADE_DOCUMENT d where d.WARE_ID=:ware
             and d.ENTITY_TYPE='SUPPLY' and d.EXTERNAL_ID=:id and d.STATUS='ACCEPTED'""", ware=warehouse_id, id=supply_id)
         row = cur.fetchone()
