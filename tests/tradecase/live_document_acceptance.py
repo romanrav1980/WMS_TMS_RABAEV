@@ -34,7 +34,10 @@ def http(method, path, body=None, actor=None, password=None):
             code, raw = response.status, response.read()
     except HTTPError as exc:
         code, raw = exc.code, exc.read()
-    value = json.loads(raw)
+    try:
+        value = json.loads(raw)
+    except json.JSONDecodeError:
+        value = {"raw_response": raw.decode("utf-8", errors="replace")[:1000]}
     CALLS.append(dict(method=method, path=path, status=code, elapsed_ms=round((time.perf_counter()-started)*1000, 2), response=value))
     return code, value
 
@@ -98,6 +101,27 @@ def run(fixture):
     missing=envelope("BAD",deepcopy(order));missing["payload"]["lines"][0]["sku_id"]="UNKNOWN"
     assert "MASTER_MISSING" in expect(409,send(missing))["detail"]["code"]
     expect(404,http("GET",path+"/documents/ORDER/BAD",actor=actor,password=password))
+    rejected=expect(200,http("GET",path+"/messages/"+missing["event_id"],actor=actor,password=password))
+    assert rejected["result"]["status"]=="REJECTED" and rejected["request"]["document_id"]=="BAD"
+    assert "MASTER_MISSING" in expect(409,send(missing))["detail"]["code"]
+    page=expect(200,http("GET",path+"/messages?limit=1",actor=actor,password=password))
+    assert len(page["items"])==1 and page["has_more"]
+    # The native effect, receipt and outbox roll back together on caller failure.
+    from api.wms_api_server.app.modules.integrations.contracts_tradecase import TradeEnvelope
+    from api.wms_api_server.app.modules.integrations.infrastructure.tradecase_documents import OracleTradecaseDocuments
+    from api.wms_api_server.app.transaction_gateway import TransactionGateway
+    rolled=envelope("ROLLBACK",dict(entity_type="OWNER",title="Rollback proof"))
+    with oracle_connection() as conn:
+        answer=OracleTradecaseDocuments(TransactionGateway(conn.cursor())).receive(TradeEnvelope.model_validate(rolled),actor)
+        conn.rollback()
+    with oracle_connection() as conn:
+        cur=conn.cursor()
+        cur.execute("select count(*) from RRL_TRADE_DOCUMENT where WARE_ID=:w and EXTERNAL_ID='ROLLBACK'",w=ware)
+        assert cur.fetchone()[0]==0
+        cur.execute("select count(*) from RRL_TRADE_MESSAGE where WARE_ID=:w and EVENT_ID=:id",w=ware,id=rolled["event_id"])
+        assert cur.fetchone()[0]==0
+        cur.execute("select count(*) from RRL_EVENT_OUTBOX where EVENT_OUTBOX_ID=:id",id=answer["outbox_id"])
+        assert cur.fetchone()[0]==0
     original=envelope("O1",order)
     expect(200,send(original));assert expect(200,send(original))["replayed"]
     alias=deepcopy(original);alias["event_id"]=uuid4().hex
@@ -130,6 +154,8 @@ def run(fixture):
         cur=conn.cursor();cur.execute("select count(*) from RRL_PALLETS");assert cur.fetchone()[0]==fixture["physical_before"]
         cur.execute("select count(*) from user_objects where status='INVALID' and object_name not like 'BIN$%'");assert cur.fetchone()[0]==0
         cur.execute("select count(*) from RRL_TRADE_DOCUMENT where WARE_ID=:w and ENTITY_TYPE='TRIP'",w=ware);assert cur.fetchone()[0]==1
+        cur.execute("select count(*) from RRL_TRADE_MESSAGE m where WARE_ID=:w and SOURCE_ID='SAP_QA' and not exists(select 1 from RRL_EVENT_OUTBOX o where o.EVENT_OUTBOX_ID=json_value(m.RESULT_JSON,'$.outbox_id' returning number))",w=ware)
+        assert cur.fetchone()[0]==0
         cur.execute("select LOG_ID,ELAPSED_MS,OPERATION_KIND from RRL_SQL_SLOW_LOG where LOG_ID>:n order by LOG_ID fetch first 30 rows only",n=fixture["slow_marker"])
         return [list(row) for row in cur]
 

@@ -2,6 +2,10 @@
 
 This page catalogs raw sources that the root wiki compiles from.
 
+## TRADECASE — СНС/BLC
+
+- [Сверка 19.10.2026](tradecase_20261019.md): подключённый Google Drive, требования и ответ СНС 14.10, программа испытаний 16.10 revision 16, TO BE 2.4, НФТ 1.2 и расхождения; [снимки прочитанных источников](../../wiki-raw/tradecase_source_review_20261019/). Реализация и промышленная приёмка этими документами не подтверждаются.
+
 ## RETAILCASE
 
 - [Проверки совместного исполнения 15.10](../../reports/retailcase/2026-10-15/execution-1900/checkpoint.md): native/API/UI/protocol evidence и ограничения, фактическое ревью Claude C0113/C0114, каноническое завершение TEST24/H0; ссылки на неизменные отчёты и HU source audit.

@@ -21,7 +21,7 @@ export const str = (v: unknown) => v === null || v === undefined || v === "" ? "
 export const yes = (v: unknown) => v === true ? "да" : v === false ? "нет" : "—";
 export const BUYOUT: Record<string, string> = { BEFORE_PICK: "до сборки", AFTER_PICK: "после сборки", IN_TRANSIT: "в пути" };
 export const OSG: Record<string, string> = { SHIP_DATE: "от даты отгрузки", DELIVERY_DATE: "от даты доставки" };
-export const ORDER_KIND: Record<string, string> = { OUTBOUND: "основной", TOPUP: "добивочный" };
+export const ORDER_KIND: Record<string, string> = { OUTBOUND: "основной", TOPUP: "добивочный", BUYOUT: "финансовое основание выкупа" };
 export const UOM: Record<string, string> = { BOX: "кор.", EA: "шт." };
 export const docStatus = (s: string) => s === "ACCEPTED" ? <span className="tc-chip ok">Основание принято</span>
   : s === "CANCELLED" ? <span className="tc-chip off">Отменено</span> : <span className="tc-chip">{s}</span>;

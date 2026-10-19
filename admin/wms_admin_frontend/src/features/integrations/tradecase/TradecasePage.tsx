@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { TABS, cardPath, listPath, sitePath, tcHelp } from "./api";
-import type { DocCard, DocRow, Kind, MsgCard, MsgRow, Page, Site, StockGroup, Tab } from "./api";
+import type { Buyout, DocCard, DocRow, Kind, MsgCard, MsgRow, Page, Site, StockGroup, Tab } from "./api";
 import { useRead } from "./useRead";
 import { DocList, KIND_NAME, MsgList } from "./Lists";
 import type { Names } from "./Lists";
@@ -8,18 +8,22 @@ import { DocumentView, MessageView } from "./Cards";
 import { Flow } from "./Flow";
 import { StockList } from "./Stock";
 import { BindPanel } from "./Bind";
+import { BuyoutList, BuyoutView } from "./Buyouts";
+import { BuyoutBasis } from "./BuyoutCreate";
+import { SortPanel } from "./Sort";
+import { TripExecution } from "./TripExecution";
 import { Act, HelpLink } from "./ui";
 import "./tradecase.css";
 
-type View = { wh: string; tab: Tab; after: string | null; open: string | null };
+type View = { wh: string; tab: Tab; after: string | null; open: string | null; pending: boolean };
 const TAB_IDS = TABS.map(t => t.id);
 function fromUrl(): View {
   const q = new URLSearchParams(location.search), tab = q.get("tc_tab") as Tab;
-  return { wh: (q.get("tc_wh") ?? "").replace(/\D/g, ""), tab: TAB_IDS.includes(tab) ? tab : "ORDER", after: q.get("tc_after"), open: q.get("tc_open") };
+  return { wh: (q.get("tc_wh") ?? "").replace(/\D/g, ""), tab: TAB_IDS.includes(tab) ? tab : "ORDER", after: q.get("tc_after"), open: q.get("tc_open"), pending: q.get("tc_pending") === "1" };
 }
 function toUrl(v: View) {
   const url = new URL(location.href);
-  for (const [k, val] of [["tc_wh", v.wh], ["tc_tab", v.tab], ["tc_after", v.after], ["tc_open", v.open]] as const) if (val) url.searchParams.set(k, val); else url.searchParams.delete(k);
+  for (const [k, val] of [["tc_wh", v.wh], ["tc_tab", v.tab], ["tc_after", v.after], ["tc_open", v.open], ["tc_pending", v.pending ? "1" : null]] as const) if (val) url.searchParams.set(k, val); else url.searchParams.delete(k);
   history.replaceState(history.state, "", url);
 }
 type Workspaces = { warehouses: { warehouse_id: number; title: string }[]; has_more: boolean; limit: number };
@@ -31,13 +35,14 @@ export function TradecasePage({ onBack }: { onBack: () => void }) {
   const cardRef = useRef<HTMLElement>(null);
   useEffect(() => toUrl(view), [view]);
   const go = (patch: Partial<View>) => setView(v => ({ ...v, ...patch }));
-  const chooseWh = (wh: string) => { setPrev([]); setView({ wh, tab: view.tab, after: null, open: null }); };
+  const chooseWh = (wh: string) => { setPrev([]); setView({ wh, tab: view.tab, after: null, open: null, pending: view.pending }); };
   const chooseTab = (tab: Tab) => { setPrev([]); go({ tab, after: null, open: null }); };
   const openRelated = (kind: Kind, id: string) => { setPrev([]); go({ tab: kind, after: null, open: id }); };
   const ws = useRead<Workspaces>("/api/access/workspaces?capability=tradecase");
   const user = useRead<{ username: string }>("/api/access/navigation").data?.username ?? "";
   const site = useRead<Site>(view.wh ? sitePath(view.wh) : null, reload);
-  const list = useRead<Page<DocRow | MsgRow>>(view.wh ? listPath(view.wh, view.tab, view.after) : null, reload);
+  const list = useRead<Page<DocRow | MsgRow>>(view.wh && view.tab !== "SORT" ? listPath(view.wh, view.tab, view.after, view.pending) : null, reload);
+  const openBuyout = (id: string) => { setPrev([]); setReload(n => n + 1); go({ tab: "BUYOUTS", after: null, open: id }); };
   const card = useRead<DocCard | MsgCard>(view.wh && view.open ? cardPath(view.wh, view.tab, view.open) : null, reload);
   if (names.current.wh !== view.wh) names.current = { wh: view.wh, map: new Map() };
   if (list.data && ["SKU", "OWNER", "RECIPIENT"].includes(view.tab))
@@ -64,12 +69,14 @@ export function TradecasePage({ onBack }: { onBack: () => void }) {
       <Flow onTab={chooseTab} />
       <div className="tc-tabs" role="tablist" aria-label="Виды документов">{TABS.map(t =>
         <button key={t.id} role="tab" aria-selected={view.tab === t.id} title={tcHelp.tab.text + " (" + t.label + ")"} data-help-id={tcHelp.tab.id + "." + t.id} onClick={() => chooseTab(t.id)}>{t.label}</button>)}</div>
-      <div className="tc-body">
+      {view.tab === "SORT" ? <SortPanel wh={view.wh} user={user} /> : <div className="tc-body">
         <section className="tc-panel" aria-label={tabLabel}>
-          <h3>{tabLabel} {view.after && <small>· не первая страница</small>} <HelpLink anchor={view.tab === "MESSAGES" ? "exchange" : view.tab === "STOCK" ? "stock" : view.tab === "SUPPLY" ? "bind" : "order"} /></h3>
+          <h3>{tabLabel} {view.after && view.after !== "0" && <small>· не первая страница</small>}
+            {view.tab === "BUYOUTS" && <label className="tc-check"><input type="checkbox" checked={view.pending} onChange={e => { setPrev([]); go({ pending: e.target.checked, after: null, open: null }); }} title={tcHelp.pending.text} data-help-id={tcHelp.pending.id} /> Есть ожидающие коды</label>} <HelpLink anchor={view.tab === "MESSAGES" ? "exchange" : view.tab === "STOCK" ? "stock" : view.tab === "SUPPLY" ? "bind" : "order"} /></h3>
           {list.error && <p className="tc-err" role="alert">{list.error}</p>}
           {list.loading && !list.data ? <p className="tc-note">Читаем страницу…</p> : list.data && (list.data.items.length === 0 ? <p className="tc-note">На этой странице записей нет.</p>
-            : view.tab === "STOCK" ? <StockList rows={list.data.items as unknown as StockGroup[]} names={names.current.map} />
+            : view.tab === "BUYOUTS" ? <BuyoutList rows={list.data.items as unknown as Buyout[]} names={names.current.map} selected={view.open ?? ""} onOpen={id => go({ open: id })} />
+            : view.tab === "STOCK" ? <StockList rows={list.data.items as unknown as StockGroup[]} names={names.current.map} filtered={list.data.owner_scope_filtered} />
             : view.tab === "MESSAGES" ? <MsgList rows={list.data.items as MsgRow[]} selected={view.open ?? ""} onOpen={id => go({ open: id })} />
             : <DocList tab={view.tab} rows={list.data.items as DocRow[]} names={names.current.map} selected={view.open ?? ""} onOpen={id => go({ open: id })} />)}
           <div className="tc-pager">
@@ -79,12 +86,14 @@ export function TradecasePage({ onBack }: { onBack: () => void }) {
           </div>
         </section>
         {view.open && <section ref={cardRef} className="tc-panel tc-card" aria-label={"Карточка " + view.open}>
-          <h3><span>{view.tab === "MESSAGES" ? "Сообщение обмена" : KIND_NAME[view.tab]} <b>{view.tab === "MESSAGES" ? view.open.slice(0, 8) + "…" : view.open}</b></span>
+          <h3><span>{view.tab === "MESSAGES" ? "Сообщение обмена" : view.tab === "BUYOUTS" ? "Выкуп" : KIND_NAME[view.tab]} <b>{view.tab === "MESSAGES" ? view.open.slice(0, 8) + "…" : view.open}</b></span>
             <Act help={tcHelp.close} aria-label="Закрыть карточку" onClick={() => go({ open: null })}>×</Act></h3>
           {card.error ? <p className="tc-err" role="alert">{card.error}</p> : card.loading && !card.data ? <p className="tc-note">Читаем карточку…</p>
-            : card.data && (view.tab === "MESSAGES" ? <MessageView card={card.data as MsgCard} onOpen={openRelated} /> : <DocumentView card={card.data as DocCard} names={names.current.map} onOpen={openRelated}
-              bind={<BindPanel wh={view.wh} user={user} card={card.data as DocCard} names={names.current.map} onOpen={openRelated} onDone={() => setReload(n => n + 1)} />} />)}
+            : card.data && (view.tab === "BUYOUTS" ? <BuyoutView key={view.open} wh={view.wh} card={card.data as unknown as Buyout} names={names.current.map} /> : view.tab === "MESSAGES" ? <MessageView card={card.data as MsgCard} onOpen={openRelated} /> : <DocumentView card={card.data as DocCard} names={names.current.map} onOpen={openRelated}
+              bind={(card.data as DocCard).entity_type === "SUPPLY" ? <BindPanel wh={view.wh} user={user} card={card.data as DocCard} names={names.current.map} onOpen={openRelated} onDone={() => setReload(n => n + 1)} />
+                : (card.data as DocCard).entity_type === "TRIP" ? <TripExecution key={view.open} wh={view.wh} user={user} trip={card.data as DocCard} />
+                : (card.data as DocCard).entity_type === "ORDER" && (card.data as DocCard).payload.order_kind === "BUYOUT" ? <BuyoutBasis wh={view.wh} user={user} order={card.data as DocCard} names={names.current.map} onDone={openBuyout} /> : null} />)}
         </section>}
-      </div></>}
+      </div>}</>}
   </main>;
 }

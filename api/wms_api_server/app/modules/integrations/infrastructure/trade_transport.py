@@ -40,3 +40,7 @@ class OracleTradeTransport:
 
     def state(self,ware:int,trip:str,actor:str)->dict[str,Any]:
         return self._command(ware,trip,"TRIP_STATE",{},actor)
+
+    def capacity(self,ware:int,trip:str,sku:str,requested:int,actor:str)->dict[str,Any]:
+        from .trade_capacity import capacity_preview
+        return capacity_preview(self.gateway,ware,trip,sku,requested,actor)

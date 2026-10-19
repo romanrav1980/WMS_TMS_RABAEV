@@ -4,6 +4,7 @@
 
 ## Текущая работа
 
+- [СНС/BLC — TRADECASE, выполнение 19.10](roadmap/tradecase_execution_20261019.md): T01 завершён; T02–04 частично проверены, T05 три режима проверены на локальных ответах; T06 разделение/CASE100+40 частично; T07 два выезда, склад110/HARD0; T08preview проверен; согласование/T09–11 открыты. [Oracle и доказательства](database/tradecase_contract_20261019.md), [редакции](sources/tradecase_20261019.md), [BP01–18](concepts/tradecase_process_20261019.md). Волна595/пополнение1210/выпуск сборки проверены; роли12HTTP PASS, INVALID0. Claude4/4: последний пакетRELEASEK0088, root проверяет; T12 статистика/сравнение начаты; остановка18:00.
 - [Описание работы в системе RETAILCASE](components/retailcase_operations_guide_20261019.md#публикация-19102026-и-повторная-проверка-текста): опубликовано в GitHub/Pages и главном README;43должности/19процессов/272обязанности,597UI-checks. Сегодня08:30 анализ СНС/BLC,09–18 реализация, Claude≤4.
 - [Проверка скорости вместе с функциональностью](runbooks/slow_sql_review.md#поручение-владельца19102026-скорость-вместе-с-функциональностью): UI/API/SQL, причина→исправление→сравнение; владелец разрешил код/SQL/индексы, миграции и live verify обязательны.
 
@@ -101,3 +102,4 @@
 ## Control Files
 
 [AGENTS.md](../AGENTS.md) · [WIKI_SCHEMA](WIKI_SCHEMA.md) · [Архитектурная политика](../config/architecture/retailcase-policy.json) · [Остальные контрольные файлы](sources/wiki_index_catalog_20261015.md#control-files).
+

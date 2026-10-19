@@ -1,5 +1,5 @@
 from typing import Any
-from fastapi import APIRouter,Depends,HTTPException,Path
+from fastapi import APIRouter,Depends,HTTPException,Path,Query
 from ...platform.public import AdminUser,get_current_user
 from ..contracts_trade_transport import TripBinding,TransportDocumentResult,TradeTransportPort,TradeTransportError
 router=APIRouter(prefix="/api/tradecase/warehouses/{warehouse}/trips/{trip}",tags=["tradecase-transport-documents"])
@@ -19,4 +19,9 @@ def result(body:TransportDocumentResult,warehouse:int=Path(gt=0),trip:str=Path(m
 @router.get("/execution")
 def state(warehouse:int=Path(gt=0),trip:str=Path(min_length=1,max_length=100),user:AdminUser=Depends(get_current_user),service:TradeTransportPort=Depends(trade_transport_service))->dict[str,Any]:
     try:return service.state(warehouse,trip,user.username)
+    except TradeTransportError as exc:raise HTTPException(exc.status,{"code":exc.code})from exc
+
+@router.get("/capacity")
+def capacity(warehouse:int=Path(gt=0),trip:str=Path(min_length=1,max_length=100),sku_id:str=Query(min_length=1,max_length=100),requested_boxes:int=Query(ge=1,le=100000),user:AdminUser=Depends(get_current_user),service:TradeTransportPort=Depends(trade_transport_service))->dict[str,Any]:
+    try:return service.capacity(warehouse,trip,sku_id,requested_boxes,user.username)
     except TradeTransportError as exc:raise HTTPException(exc.status,{"code":exc.code})from exc

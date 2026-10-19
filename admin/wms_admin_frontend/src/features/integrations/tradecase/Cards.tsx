@@ -13,11 +13,11 @@ type Open = (kind: Kind, id: string) => void;
 export function DocumentView({ card, names, onOpen, bind }: { card: DocCard; names: Names; onOpen: Open; bind?: React.ReactNode }) {
   const p = card.payload;
   return <>
-    <p className="tc-note">Это принятое основание (версия {card.document_version}). Сборка, выкуп и погрузка по нему на этом экране не показываются.{p.cancelled === true ? " Документ отменён источником." : ""}</p>
+    <p className="tc-note">Основание принято, версия {card.document_version}. Проверьте строки и плановую дату.{p.cancelled === true ? " Документ отменён источником." : ""}</p>
     <dl className="tc-fields">{fields(card.entity_type, p, names)}</dl>
     {card.entity_type === "ORDER" && <OrderLines lines={arr(p.lines)} names={names} />}
     {card.entity_type === "TRIP" && <TripOrders orders={arr(p.orders)} onOpen={onOpen} />}
-    {card.entity_type === "SUPPLY" && bind}
+    {bind}
     <Tech value={{ warehouse_id: card.warehouse_id, source_id: card.source_id, entity_type: card.entity_type, document_version: card.document_version, payload: p }} />
   </>;
 }
