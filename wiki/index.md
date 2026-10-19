@@ -4,6 +4,9 @@
 
 ## Текущая работа
 
+- [Атлас процессов и должностей RETAILCASE](components/retailcase_operations_guide_20261019.md): сайт4175;43 инструкции после редакторского чтения/272 обязанности, прямые ссылки на работу и99экранных назначений,19процессов/изометрия; СНС/BLC — TRADECASE.
+- [Проверка скорости вместе с функциональностью](runbooks/slow_sql_review.md#поручение-владельца19102026-скорость-вместе-с-функциональностью): UI/API/SQL, причина→исправление→сравнение; владелец разрешил код/SQL/индексы, миграции и live verify обязательны.
+
 - [Локальный продукт17.10: запуск и ограничения](runbooks/retailcase_local_product_20261017.md): KPI V2/25EA→магазин/restart/UI PASS; [REPORT](database/retailcase_case_report_scope_20261017.md) и [MOVE](database/retailcase_case_move_scope_20261017.md) APPLIED; C0124/C0125 RELEASE; [контекст](../coordination/retailcase-claude/RESUME_TO_20261017_1100.md), Ponytail — [AGENTS.md](../AGENTS.md).
 - [Погрузка отдельного места по области](database/retailcase_single_load_scope_20261016.md): dev APPLIED/4SHA;30HTTP, CASE1150→магазин25EA, rollback/REV/replay/revoke PASS.
 - [Финансовые области](database/retailcase_finance_scoped_20261015.md): rates APPLIED/1SHA;20HTTP rates/monthly/XLSX/PLATFORM shell +composite/independence native PASS.

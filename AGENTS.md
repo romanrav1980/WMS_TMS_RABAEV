@@ -37,6 +37,7 @@ Before making non-trivial project decisions, start here:
 - For local Windows runs, prefer root `serv.bat` for the WMS API server, root `front.bat` for the WMS admin frontend/raw UI reference, and root `terminal.bat` for the WMS terminal Web/PWA app. These scripts clear their target ports before starting.
 - Pallet identifier fields are not SSCC-only fields. They must accept both standard SSCC values and other internal/legacy WMS pallet identifiers; label them as `Идентификатор паллеты` where possible.
 - After every meaningful functional case, load test, release gate, or pilot rehearsal, analyze the longest SQL/SKV queries. Use `RRL_SQL_SLOW_LOG`, `/api/admin/slow-sql`, Oracle top SQL, and local API audit as evidence. Long queries must produce an explicit decision: code rewrite, bounded query/window, batching, cache, index/migration, statistics/plan check, or a documented backlog item with owner and rationale.
+- Owner instruction 19.10.2026: functional verification must also measure perceived UI speed, relevant API latency and SQL cost. Investigate and fix observed slowness, then compare before/after under the same conditions with result equality and preserved rights/quantity/idempotency semantics. The owner authorizes necessary code/SQL rewrites and indexes; Oracle changes still require the migration, rollback, wiki/database mirror and live verification above. Record sample count, data volume, cache state and environment; do not present local static-site timings as WMS/Oracle throughput. See wiki/runbooks/slow_sql_review.md.
 
 ## Активный проект: ТМС-2
 
@@ -76,6 +77,15 @@ Before making non-trivial project decisions, start here:
 - Preserve the legacy rights semantics: `RRL_HAS_WRIGHT` treats `GLOBAL_ADMIN` as all-rights, and the API admin auth mirrors that with `*`.
 - Rights administration is a separate raw admin page: `wiki-raw/wms_admin_ui_reference/rights-admin.html`. It uses `RIGHTS_ADMIN_VIEW` for read access and `RIGHTS_ADMIN_EDIT` for mutations.
 - The audit/replay layer is the base for real Mercury and Honest Sign adapters: outbound adapter calls must keep certificate/signature metadata, queue/outbox status, request payloads, response payloads, external IDs, and retry diagnostics so failures in external services can be repeated and investigated.
+
+## Редактура пользовательских документов
+
+Правило владельца от 19.10.2026 для всех агентов: «Каждое предложение должно описывать действие, решение или результат; внутренние коды — только в технических приложениях; повторы и общие фразы — удалять».
+
+- Перед сдачей самостоятельно перечитать весь итоговый документ. Проверка ключевых слов и вёрстки не заменяет чтение.
+- В должностных инструкциях указывать, что сотрудник делает, что решает и кому передаёт работу. Ссылаться на порядок работы и нужные экраны, в том числе в печатном сборнике.
+- Не вставлять заметки о разработке, коды прав, имена полей, рассуждения о готовности проекта и повторяющиеся оговорки вместо обязанностей. Не дополнять документ вымышленными функциями или нормативами.
+- Объём определять содержанием. Не дописывать пункты ради одинакового количества разделов или обязанностей.
 
 ## Encoding Discipline
 
