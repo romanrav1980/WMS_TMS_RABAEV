@@ -54,6 +54,34 @@ create or replace package body RRL_TRADE_STOCK_API as
   if n<=v_limit then result_json.put('has_more',false);result_json.put_null('next_after');end if;
   result_json.put('items',items);result_json.put('warehouse_id',p_ware);p_result:=result_json.to_clob;
  end;
+ procedure read_summary(p_ware number,p_actor varchar2,j json_object_t,p_result out clob) is
+  result_json json_object_t:=json_object_t();items json_array_t:=json_array_t();item json_object_t;
+  v_limit number:=j.get_number('limit');row_limit number;after_key varchar2(64):=j.get_string('after');n number:=0;admin_flag number;
+ begin
+  if v_limit is null or v_limit<1 or v_limit>100 or v_limit<>trunc(v_limit)then fail('TRADE_STOCK_PAGE_LIMIT');end if;
+  row_limit:=v_limit+1;admin_flag:=RRL_ACCESS_API.is_admin(p_actor);
+  for r in(select min(a.PHYSICAL_UNIT_KEY)PAGE_KEY,u.CURRENT_UID,u.CURRENT_CELL,a.SKU_ID,a.OWNER_ID,a.MRC,a.EXPIRY_DATE,u.BASE_UOM,
+   count(*)UNITS,sum(u.BASE_QTY)BASE_QTY,sum(case when u.HARD_RESERVATION_ID is not null then u.BASE_QTY else 0 end)RESERVED_QTY,
+   sum(case when a.MARK_STATE='PENDING'then 1 else 0 end)PENDING_UNITS,
+   sum(case when a.MARK_STATE='VALID'then 1 else 0 end)VALID_UNITS,
+   sum(case when a.MARK_STATE='REJECTED'then 1 else 0 end)REJECTED_UNITS
+   from RRL_TRADE_STOCK_ATTR a join RRL_WMS_RECEIPT_UNIT u on u.PHYSICAL_UNIT_KEY=a.PHYSICAL_UNIT_KEY
+   join RRL_CELLS c on c.CELL=u.CURRENT_CELL where c.WARE_ID=p_ware and u.STOCK_STATUS<>'ISSUED'
+   and(admin_flag=1 or exists(select 1 from RRL_TRADE_OWNER_GRANT g where g.USERNAME=p_actor and g.WARE_ID=p_ware and g.OWNER_ID=a.OWNER_ID and g.CAN_VIEW=1))
+   group by u.CURRENT_UID,u.CURRENT_CELL,a.SKU_ID,a.OWNER_ID,a.MRC,a.EXPIRY_DATE,u.BASE_UOM
+   having after_key is null or min(a.PHYSICAL_UNIT_KEY)>after_key
+   order by min(a.PHYSICAL_UNIT_KEY)fetch first row_limit rows only)loop
+   n:=n+1;if n>v_limit then result_json.put('has_more',true);exit;end if;
+   item:=json_object_t();item.put('pallet_identifier',r.CURRENT_UID);item.put('cell',r.CURRENT_CELL);
+   item.put('sku_id',r.SKU_ID);item.put('owner_id',r.OWNER_ID);item.put('mrc',RRL_STOCK_PLAN_HELPER.decimal_text(r.MRC));
+   item.put('expiry_date',to_char(r.EXPIRY_DATE,'YYYY-MM-DD'));item.put('base_uom',r.BASE_UOM);
+   item.put('base_quantity',RRL_STOCK_PLAN_HELPER.decimal_text(r.BASE_QTY));item.put('hard_reserved_base',RRL_STOCK_PLAN_HELPER.decimal_text(r.RESERVED_QTY));
+   item.put('unit_count',r.UNITS);item.put('pending_units',r.PENDING_UNITS);item.put('valid_units',r.VALID_UNITS);item.put('rejected_units',r.REJECTED_UNITS);
+   items.append(item);result_json.put('next_after',r.PAGE_KEY);
+  end loop;
+  if n<=v_limit then result_json.put('has_more',false);result_json.put_null('next_after');end if;
+  result_json.put('items',items);result_json.put('warehouse_id',p_ware);p_result:=result_json.to_clob;
+ end;
  procedure save_cell(p_ware number,p_actor varchar2,j json_object_t,result_json in out nocopy json_object_t) is
   v_cell varchar2(60):=j.get_string('cell');v_zone varchar2(12):=j.get_string('zone_kind');v_owner varchar2(100):=j.get_string('owner_id');
   v_reason varchar2(2000):=j.get_string('reason');v_version number;n number;
@@ -172,6 +200,7 @@ create or replace package body RRL_TRADE_STOCK_API as
   v_operation varchar2(100):=j.get_string('operation_id');v_hash varchar2(64):=j.get_string('payload_hash');
   v_kind varchar2(20):=j.get_string('command_type');v_permission varchar2(40);site_enabled number;outbox_id number;
  begin
+  if v_kind='VIEW_SUMMARY'then authorize(p_ware,p_actor,'tradecase_view');read_summary(p_ware,p_actor,j,p_result);return;end if;
   if v_kind='VIEW'then authorize(p_ware,p_actor,'tradecase_view');read_stock(p_ware,p_actor,j,p_result);return;end if;
   if v_kind in('CELL','GRANT')then v_permission:='warehouse_settings_edit';elsif v_kind='BIND'then v_permission:='tradecase_stock_bind';elsif v_kind='CONFIRM_MARKS'then v_permission:='tradecase_code_confirm';else fail('TRADE_STOCK_COMMAND');end if;
   authorize(p_ware,p_actor,v_permission);metadata_fence;

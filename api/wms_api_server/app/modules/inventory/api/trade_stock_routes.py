@@ -56,3 +56,13 @@ def confirm_marks(body: TradeMarkConfirmation, warehouse_id: int = Path(gt=0), u
         return service.confirm_marks(warehouse_id, body, user.username)
     except TradeStockError as exc:
         raise HTTPException(exc.status, {"code": exc.code}) from exc
+
+
+@router.get("/pallets")
+def summary(warehouse_id: int = Path(gt=0), after: str = Query(default="", max_length=64),
+            limit: int = Query(default=50, ge=1, le=100), user: AdminUser = Depends(get_current_user),
+            service: TradeStockPort = Depends(trade_stock_service)) -> dict[str, Any]:
+    try:
+        return service.summary(warehouse_id, after, limit, user.username)
+    except TradeStockError as exc:
+        raise HTTPException(exc.status, {"code": exc.code}) from exc

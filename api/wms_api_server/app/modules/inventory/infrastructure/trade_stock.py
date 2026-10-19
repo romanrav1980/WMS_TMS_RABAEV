@@ -79,3 +79,6 @@ class OracleTradeStock:
 
     def view(self, warehouse_id: int, after: str, limit: int, actor: str) -> dict[str, Any]:
         return self._call(warehouse_id, actor, "VIEW", {"after": after, "limit": limit})
+
+    def summary(self, warehouse_id: int, after: str, limit: int, actor: str) -> dict[str, Any]:
+        return self._call(warehouse_id, actor, "VIEW_SUMMARY", {"after": after, "limit": limit})
