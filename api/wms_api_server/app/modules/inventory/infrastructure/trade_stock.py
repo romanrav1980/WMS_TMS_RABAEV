@@ -7,7 +7,7 @@ from ...platform.public import read_oracle_json
 from ..contracts_trade_buyout import TradeBuyoutRequest,TradeBuyoutResult
 from ..contracts_trade_stock import TradeSort, TradeMarkConfirmation, TradeCellPolicy, TradeOwnerGrant, TradeStockBind, TradeStockError
 from ..domain.mark_identity import canonical_mark
-from ..domain.pallet_identifiers import normalize_receipt_identifier
+from ..domain.pallet_identifiers import normalize_receipt_identifier, normalize_incoming_sscc
 
 
 class OracleTradeStock:
@@ -85,7 +85,13 @@ class OracleTradeStock:
         return self._call(warehouse_id, actor, "CONFIRM_MARKS", body.model_dump(mode="json"))
 
     def view(self, warehouse_id: int, after: str, limit: int, actor: str, pallet_identifier: str | None = None) -> dict[str, Any]:
-        return self._call(warehouse_id, actor, "VIEW", {"after": after, "limit": limit, "pallet_identifier": pallet_identifier.strip() if pallet_identifier else None})
+        value = pallet_identifier.strip() if pallet_identifier else None
+        alt = normalize_incoming_sscc(value)
+        return self._call(warehouse_id, actor, "VIEW", {"after": after, "limit": limit, "pallet_identifier": value,
+            "pallet_identifier_alt": alt if alt != value else None})
+
+    def transit(self, warehouse_id: int, load_operation_id: str, after: str, limit: int, actor: str) -> dict[str, Any]:
+        return self._call(warehouse_id, actor, "VIEW_TRANSIT", dict(load_operation_id=load_operation_id, after=after, limit=limit))
 
     def summary(self, warehouse_id: int, after: str, limit: int, actor: str) -> dict[str, Any]:
         return self._call(warehouse_id, actor, "VIEW_SUMMARY", {"after": after, "limit": limit})

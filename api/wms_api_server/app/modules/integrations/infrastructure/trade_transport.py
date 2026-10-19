@@ -20,6 +20,7 @@ class OracleTradeTransport:
         value["payload_hash"]=sha256(raw.encode()).hexdigest()
         try:
             with self.gateway.transaction("TRADECASE transport "+kind)as cur:
+                if kind=="TRIP_STATE":cur.execute("set transaction read only")
                 wire=cur.var(oracledb.DB_TYPE_CLOB);wire.setvalue(0,encode(value))
                 codes=cur.var(oracledb.DB_TYPE_CLOB);codes.setvalue(0,"[]")
                 result=cur.var(oracledb.DB_TYPE_CLOB)
