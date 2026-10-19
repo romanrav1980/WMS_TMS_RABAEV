@@ -135,6 +135,7 @@ create or replace package body RRL_TRADE_STOCK_API as
  end;
  procedure confirm_marks(p_ware number,p_actor varchar2,j json_object_t,result_json in out nocopy json_object_t) is
   skm varchar2(100):=j.get_string('skm_id');event_id varchar2(100):=j.get_string('external_event_id');
+  event_json clob;event_operation varchar2(100):=j.get_string('operation_id');event_hash varchar2(64):=j.get_string('payload_hash');
   active_skm varchar2(100);site_version number;old_event RRL_TRADE_MARK_EVENT%rowtype;
   a RRL_TRADE_STOCK_ATTR%rowtype;current_ware number;current_status varchar2(30);updated_count number:=0;
   items json_array_t:=j.get_array('items');item json_object_t;v_key varchar2(64);verdict varchar2(10);
@@ -160,8 +161,9 @@ create or replace package body RRL_TRADE_STOCK_API as
    update RRL_TRADE_STOCK_ATTR set MARK_STATE=verdict,VERSION_NO=VERSION_NO+1 where PHYSICAL_UNIT_KEY=v_key;
    updated_count:=updated_count+1;
   end loop;
+  event_json:=j.to_clob;
   insert into RRL_TRADE_MARK_EVENT(WARE_ID,SKM_ID,EXTERNAL_EVENT_ID,OPERATION_ID,PAYLOAD_HASH,BODY_JSON)
-   values(p_ware,skm,event_id,j.get_string('operation_id'),j.get_string('payload_hash'),j.to_clob);
+   values(p_ware,skm,event_id,event_operation,event_hash,event_json);
   result_json.put('confirmed_units',updated_count);result_json.put('external_event_id',event_id);result_json.put('skm_id',skm);
   result_json.put('owner_changed',false);
  end;
