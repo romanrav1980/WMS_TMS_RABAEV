@@ -4789,3 +4789,17 @@ quality gate/обаTS/24tests/UTF-8 PASS. Cached local load28–33мс,
 cached load25–33мс, сборник35мс; SQL не менялся. Quality gate PASS.
 Правило владельца о действии/решении/результате и обязательном чтении результата
 внесено в AGENTS.md. Подробности: components/retailcase_operations_guide_20261019.md.
+
+## 2026-10-19 — описание опубликовано, следующий цикл СНС/BLC назначен
+
+По прямому поручению опубликованы сайт GitHub Pages, блок главного README и
+WORK-IN-SYSTEM.md. Исходникиf55f28e8, Pages024262b/built, README37e2160e.
+Повторно отредактированы процессы/экраны/пример/KPI;597рендеров без ошибок,
+публичный сайт и README открываются,20HTTP200, сборник43глав/198ссылок92мс.
+Quality gate/24tests/обаTS/UTF-8 PASS. Сканирование шаблонных вставок в
+документах и продуктовых исходниках не выявило новых типовых заглушек;
+реальные пометки генерации схем, паролей и тестов сохранены.
+Зарегистрированы однократные Windows tasks на сегодня08:30/09:00/18:00MSK
+через codex queue текущей сессии; пакет coordination/tradecase-20261019/ локален,
+Claude limit4/used0. План после сверки Google Drive — tradecase_execution_20261019.md.
+Подробности и условия: components/retailcase_operations_guide_20261019.md.

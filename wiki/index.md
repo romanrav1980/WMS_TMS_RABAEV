@@ -4,7 +4,7 @@
 
 ## Текущая работа
 
-- [Атлас процессов и должностей RETAILCASE](components/retailcase_operations_guide_20261019.md): сайт4175;43 инструкции после редакторского чтения/272 обязанности, прямые ссылки на работу и99экранных назначений,19процессов/изометрия; СНС/BLC — TRADECASE.
+- [Описание работы в системе RETAILCASE](components/retailcase_operations_guide_20261019.md#публикация-19102026-и-повторная-проверка-текста): опубликовано в GitHub/Pages и главном README;43должности/19процессов/272обязанности,597UI-checks. Сегодня08:30 анализ СНС/BLC,09–18 реализация, Claude≤4.
 - [Проверка скорости вместе с функциональностью](runbooks/slow_sql_review.md#поручение-владельца19102026-скорость-вместе-с-функциональностью): UI/API/SQL, причина→исправление→сравнение; владелец разрешил код/SQL/индексы, миграции и live verify обязательны.
 
 - [Локальный продукт17.10: запуск и ограничения](runbooks/retailcase_local_product_20261017.md): KPI V2/25EA→магазин/restart/UI PASS; [REPORT](database/retailcase_case_report_scope_20261017.md) и [MOVE](database/retailcase_case_move_scope_20261017.md) APPLIED; C0124/C0125 RELEASE; [контекст](../coordination/retailcase-claude/RESUME_TO_20261017_1100.md), Ponytail — [AGENTS.md](../AGENTS.md).
