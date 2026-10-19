@@ -23,7 +23,12 @@ end;
    RRL_STOCK_PALLET_UOM.resolve_quantity(p.UID_PALLET,v_base,RRL_STOCK_PLAN_HELPER.decimal_text(v_p),v_base,v_qty,v_uom_version,v_sig);
   else RRL_STOCK_PALLET_UOM.resolve_quantity(p.UID_PALLET,v_input,m.get_string('quantity'),v_base,v_qty,v_uom_version,v_sig);end if;
   v_target:=p.UID_PALLET;
-  if v_qty<v_p then v_target:='PART:'||rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p_operation,'AL32UTF8'),sys.dbms_crypto.hash_sh256));end if;
+  if v_qty<v_p then
+   if RRL_TRADE_SORT_GUARD.is_sort(p_request)=1 then
+    -- 32-byte SHA256 as 43 base64url characters; PART: fits UID_PALLET VARCHAR2(50 CHAR).
+    v_target:='PART:'||replace(replace(rtrim(utl_raw.cast_to_varchar2(utl_encode.base64_encode(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p_operation,'AL32UTF8'),sys.dbms_crypto.hash_sh256))),'='),'+','-'),'/','_');
+   else v_target:='PART:'||rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p_operation,'AL32UTF8'),sys.dbms_crypto.hash_sh256));end if;
+  end if;
   RRL_STOCK_PLAN_HELPER.fence(f,'RELEASE','STOCK');
   RRL_STOCK_PLAN_HELPER.anchor(r,10,'OP',p_operation);
   RRL_STOCK_PLAN_HELPER.anchor(r,70,'UNIQUE','STOCK.OUTBOX:'||rawtohex(sys.dbms_crypto.hash(utl_i18n.string_to_raw(p_operation,'AL32UTF8'),sys.dbms_crypto.hash_sh256)));
