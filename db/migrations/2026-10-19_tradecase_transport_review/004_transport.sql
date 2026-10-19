@@ -122,7 +122,7 @@ create or replace package body RRL_TRADE_TRANSPORT_CORE as
   l RRL_TRADE_TRIP_LINK%rowtype;d RRL_TRADE_TRIP_DOC_EVENT%rowtype;id_value varchar2(100):=j.get_string('trip_id');r json_object_t:=json_object_t();sig varchar2(64);n number;plan_current number:=1;loads json_array_t:=json_array_t();item json_object_t;
  begin
   select *into l from RRL_TRADE_TRIP_LINK where WARE_ID=p_ware and TRIP_ID=id_value;sig:=signature(l.NATIVE_TASK_ID);
-  begin current_plan(p_ware,l);exception when others then if sqlcode in(-20886,-1403,-1422)then plan_current:=0;else raise;end if;end;
+  begin current_plan(p_ware,l);exception when others then if sqlcode in(-20886,100,-1403,-1422)then plan_current:=0;else raise;end if;end;
   r.put('basis_current',plan_current=1);
   r.put('trip_id',id_value);r.put('native_task_id',l.NATIVE_TASK_ID);r.put('trip_version',l.TRIP_VERSION);r.put('binding_version',l.VERSION_NO);r.put('manifest_signature',sig);r.put('document_ready',false);
   for ld in(select lf.LOAD_OPERATION_ID,lf.STATUS,lf.ROOT_UID,lf.CONTENT_VERSION,lf.DEPARTED_AT,lf.CUSTODY_RELEASED_AT,ct.SSCC
