@@ -1,7 +1,7 @@
 """Legal stock facets reference the existing physical ledger."""
 from typing import Any, Literal, Protocol
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, model_validator
 
 
 class TradeStockRequest(BaseModel):
@@ -45,6 +45,34 @@ class TradeOwnerGrant(TradeStockRequest):
         return self
 
 
+class TradeMarkItem(BaseModel):
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+    physical_unit_key: str = Field(pattern=r"^[0-9A-Fa-f]{64}$")
+    expected_attribute_version: int = Field(strict=True, gt=0)
+    verdict: Literal["VALID", "REJECTED"]
+    external_reason: str | None = Field(default=None, min_length=1, max_length=500)
+
+    @model_validator(mode="after")
+    def rejection_reason(self) -> "TradeMarkItem":
+        if self.verdict == "REJECTED" and not self.external_reason:
+            raise ValueError("Rejected code requires external reason")
+        return self
+
+
+class TradeMarkConfirmation(TradeStockRequest):
+    skm_id: str = Field(min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_.:-]+$")
+    external_event_id: str = Field(min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_.:-]+$")
+    expected_site_version: int = Field(strict=True, gt=0)
+    occurred_at: AwareDatetime
+    items: list[TradeMarkItem] = Field(min_length=1, max_length=1000)
+
+    @model_validator(mode="after")
+    def unique_units(self) -> "TradeMarkConfirmation":
+        if len({item.physical_unit_key for item in self.items}) != len(self.items):
+            raise ValueError("Duplicate physical unit")
+        return self
+
+
 class TradeStockError(RuntimeError):
     def __init__(self, code: str, status: int = 409) -> None:
         self.code, self.status = code, status
@@ -52,6 +80,7 @@ class TradeStockError(RuntimeError):
 
 
 class TradeStockPort(Protocol):
+    def confirm_marks(self, warehouse_id: int, body: TradeMarkConfirmation, actor: str) -> dict[str, Any]: ...
     def bind(self, warehouse_id: int, body: TradeStockBind, actor: str) -> dict[str, Any]: ...
     def cell(self, warehouse_id: int, cell: str, body: TradeCellPolicy, actor: str) -> dict[str, Any]: ...
     def grant(self, warehouse_id: int, body: TradeOwnerGrant, actor: str) -> dict[str, Any]: ...

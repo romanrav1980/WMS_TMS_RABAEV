@@ -4,7 +4,7 @@ import json
 from typing import Any
 import oracledb
 from ...platform.public import read_oracle_json
-from ..contracts_trade_stock import TradeCellPolicy, TradeOwnerGrant, TradeStockBind, TradeStockError
+from ..contracts_trade_stock import TradeMarkConfirmation, TradeCellPolicy, TradeOwnerGrant, TradeStockBind, TradeStockError
 from ..domain.mark_identity import canonical_mark
 from ..domain.pallet_identifiers import normalize_receipt_identifier
 
@@ -73,6 +73,9 @@ class OracleTradeStock:
 
     def grant(self, warehouse_id: int, body: TradeOwnerGrant, actor: str) -> dict[str, Any]:
         return self._call(warehouse_id, actor, "GRANT", body.model_dump(mode="json"))
+
+    def confirm_marks(self, warehouse_id: int, body: TradeMarkConfirmation, actor: str) -> dict[str, Any]:
+        return self._call(warehouse_id, actor, "CONFIRM_MARKS", body.model_dump(mode="json"))
 
     def view(self, warehouse_id: int, after: str, limit: int, actor: str) -> dict[str, Any]:
         return self._call(warehouse_id, actor, "VIEW", {"after": after, "limit": limit})
