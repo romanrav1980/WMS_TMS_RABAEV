@@ -13,7 +13,7 @@ type Open = (kind: Kind, id: string) => void;
 export function DocumentView({ card, names, onOpen, bind }: { card: DocCard; names: Names; onOpen: Open; bind?: React.ReactNode }) {
   const p = card.payload;
   return <>
-    <p className="tc-note">Основание принято, версия {card.document_version}. Проверьте строки и плановую дату.{p.cancelled === true ? " Документ отменён источником." : ""}</p>
+    <p className="tc-note">Основание принято, версия {card.document_version}. {card.entity_type === "NEED" ? "Сверьте получателя, товар и период." : card.entity_type === "ORDER" || card.entity_type === "TRIP" ? "Проверьте строки и плановую дату." : "Сверьте данные документа."}{p.cancelled === true ? " Документ отменён источником." : ""}</p>
     <dl className="tc-fields">{fields(card.entity_type, p, names)}</dl>
     {card.entity_type === "ORDER" && <OrderLines lines={arr(p.lines)} names={names} />}
     {card.entity_type === "TRIP" && <TripOrders orders={arr(p.orders)} onOpen={onOpen} />}
@@ -33,6 +33,7 @@ function fields(kind: Kind, p: Payload, names: Names) {
       <Row k="Момент выкупа" v={BUYOUT[str(p.buyout_mode)] ?? str(p.buyout_mode)} /><Row k="ОСГ" v={`${OSG[str(p.osg_basis)] ?? str(p.osg_basis)}, не меньше ${str(p.min_osg_days)} дн.`} />
       <Row k="Срок доставки, дн." v={str(p.lead_time_days)} /><Row k="Частичный отбор / отгрузка / вскрытие короба" v={`${yes(p.allow_partial_pick)} / ${yes(p.allow_partial_ship)} / ${yes(p.allow_broken_box)}`} />
       <Row k="Активен" v={yes(p.active)} /></>;
+    case "NEED": return <><Row k="Получатель" v={named(names, "RECIPIENT", p.recipient_id)} /><Row k="Товар" v={named(names, "SKU", p.sku_id)} /><Row k="Снимок на" v={<Time value={p.snapshot_at} />} /><Row k="Период" v={<><Time value={p.period_from} /> — <Time value={p.period_until} /></>} /></>;
     case "SKU": return <><Row k="Название" v={str(p.title)} /><Row k="Базовая единица" v={UOM[str(p.base_uom)] ?? str(p.base_uom)} /><Row k="В коробе, шт." v={str(p.units_per_box)} />
       <Row k="Разрешённые МРЦ" v={arr(p.permitted_mrc).join(", ") || "—"} /><Row k="Активен" v={yes(p.active)} /></>;
     case "SUPPLY": return <><Row k="Идентификатор паллеты" v={str(p.pallet_identifier)} /><Row k="Товар" v={named(names, "SKU", p.sku_id)} />
@@ -68,6 +69,9 @@ const REASONS: Record<string, string> = {
   TARGET_OWNER_MISMATCH: "собственник-получатель не совпадает с профилем получателя", PLANNING_SOURCE_MISMATCH: "источник плана рейса не совпадает с настройкой площадки",
   BROKEN_BOX_NOT_ALLOWED: "получателю запрещено вскрытие короба: количество должно быть кратно целому коробу",
   PARTIAL_SHIPMENT_NOT_ALLOWED: "получателю запрещена частичная отгрузка: включите в рейс всю строку заказа",
+  NEED_IDENTITY_CHANGED: "у снимка изменены получатель, товар или период — источник должен передать новый номер снимка",
+  NEED_RECIPIENT_VERSION_CHANGED: "профиль получателя изменился — запросите снимок с актуальной версией",
+  NEED_SKU_VERSION_CHANGED: "упаковка товара изменилась — запросите снимок с актуальной версией",
   SOURCE_MISMATCH: "сообщение пришло не от активного источника площадки", SITE_DISABLED: "приём на площадке выключен",
 };
 /** Понятная причина отказа; сам код остаётся в технических сведениях. */

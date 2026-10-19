@@ -4866,3 +4866,5 @@ T08runtime/test-evidence/.../T08/capacity-fixture.json; APIcapacity успешн
 - 19.10.2026 15:35MSK — TRADECASE: wave_cancel и marked_case_scope применены, отмена/повтор и BLC-only сеанс/отбор из клона проверены. Ошибочный1EA при запрете вскрытия не принят; box_boundaries блокирует новые неверные заказы/рейсы/складские операции. Шесть проверок правил упаковки и новый отбор10EA в CASE1158 PASS; общий250/HARD11. См. roadmap/tradecase_execution_20261019 и database/tradecase_contract_20261019.
 
 - 19.10.2026 15:40MSK — подготовлен T09 NEED: версионный снимок и объяснимый расчёт без складских движений. Шесть domain/contract tests PASS; Oracle/APIs ещё не приняты. Исправлены устаревший статус documents и повреждённый текст README document_journal.
+
+- 19.10.2026 15:47MSK — T09 частично: NEED применён, rollback/reapply/INVALID0;12 проверок API и scoped-права PASS, потребность40A+30B без двойного обеспечения. UI1440/3906checks PASS. Общий quality gate и39focused tests PASS. Четыре пакета UI повторно проверены на3000. Автоматические предложения/маршрут/заказы SAP остаются открытыми.

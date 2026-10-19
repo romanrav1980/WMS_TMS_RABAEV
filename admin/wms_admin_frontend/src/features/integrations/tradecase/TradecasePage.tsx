@@ -11,6 +11,7 @@ import { BindPanel } from "./Bind";
 import { BuyoutList, BuyoutView } from "./Buyouts";
 import { BuyoutBasis } from "./BuyoutCreate";
 import { SortPanel } from "./Sort";
+import { NeedPreview } from "./NeedPreview";
 import { TripExecution } from "./TripExecution";
 import { Act, HelpLink } from "./ui";
 import "./tradecase.css";
@@ -52,7 +53,7 @@ export function TradecasePage({ onBack }: { onBack: () => void }) {
   return <main className="tc" aria-label="СНС/BLC: основания и обмен">
     <header className="tc-panel tc-head">
       <Act help={tcHelp.back} onClick={onBack}>← Назад</Act>
-      <div className="tc-title"><b>СНС/BLC · основания и обмен</b><small>принятые документы источника; физическое исполнение здесь не показывается</small></div>
+      <div className="tc-title"><b>СНС/BLC · основания и обмен</b><small>заказы, запас, выкуп и исполнение рейсов</small></div>
       <label>Склад <input list="tc-wh" inputMode="numeric" value={view.wh} placeholder="код склада" onChange={e => chooseWh(e.target.value.replace(/\D/g, ""))}
         title={tcHelp.warehouse.text} data-help-id={tcHelp.warehouse.id} />
         <datalist id="tc-wh">{ws.data?.warehouses.map(w => <option key={w.warehouse_id} value={String(w.warehouse_id)}>{w.title}</option>)}</datalist></label>
@@ -72,7 +73,7 @@ export function TradecasePage({ onBack }: { onBack: () => void }) {
       {view.tab === "SORT" ? <SortPanel wh={view.wh} user={user} /> : <div className="tc-body">
         <section className="tc-panel" aria-label={tabLabel}>
           <h3>{tabLabel} {view.after && view.after !== "0" && <small>· не первая страница</small>}
-            {view.tab === "BUYOUTS" && <label className="tc-check"><input type="checkbox" checked={view.pending} onChange={e => { setPrev([]); go({ pending: e.target.checked, after: null, open: null }); }} title={tcHelp.pending.text} data-help-id={tcHelp.pending.id} /> Есть ожидающие коды</label>} <HelpLink anchor={view.tab === "MESSAGES" ? "exchange" : view.tab === "STOCK" ? "stock" : view.tab === "SUPPLY" ? "bind" : "order"} /></h3>
+            {view.tab === "BUYOUTS" && <label className="tc-check"><input type="checkbox" checked={view.pending} onChange={e => { setPrev([]); go({ pending: e.target.checked, after: null, open: null }); }} title={tcHelp.pending.text} data-help-id={tcHelp.pending.id} /> Есть ожидающие коды</label>} <HelpLink anchor={view.tab === "MESSAGES" ? "exchange" : view.tab === "STOCK" ? "stock" : view.tab === "SUPPLY" ? "bind" : view.tab === "NEED" ? "need" : "order"} /></h3>
           {list.error && <p className="tc-err" role="alert">{list.error}</p>}
           {list.loading && !list.data ? <p className="tc-note">Читаем страницу…</p> : list.data && (list.data.items.length === 0 ? <p className="tc-note">На этой странице записей нет.</p>
             : view.tab === "BUYOUTS" ? <BuyoutList rows={list.data.items as unknown as Buyout[]} names={names.current.map} selected={view.open ?? ""} onOpen={id => go({ open: id })} />
@@ -91,6 +92,7 @@ export function TradecasePage({ onBack }: { onBack: () => void }) {
           {card.error ? <p className="tc-err" role="alert">{card.error}</p> : card.loading && !card.data ? <p className="tc-note">Читаем карточку…</p>
             : card.data && (view.tab === "BUYOUTS" ? <BuyoutView key={view.open} wh={view.wh} card={card.data as unknown as Buyout} names={names.current.map} /> : view.tab === "MESSAGES" ? <MessageView card={card.data as MsgCard} onOpen={openRelated} /> : <DocumentView card={card.data as DocCard} names={names.current.map} onOpen={openRelated}
               bind={(card.data as DocCard).entity_type === "SUPPLY" ? <BindPanel wh={view.wh} user={user} card={card.data as DocCard} names={names.current.map} onOpen={openRelated} onDone={() => setReload(n => n + 1)} />
+                : (card.data as DocCard).entity_type === "NEED" ? <NeedPreview key={view.open} wh={view.wh} id={view.open} />
                 : (card.data as DocCard).entity_type === "TRIP" ? <TripExecution key={view.open} wh={view.wh} user={user} trip={card.data as DocCard} />
                 : (card.data as DocCard).entity_type === "ORDER" && (card.data as DocCard).payload.order_kind === "BUYOUT" ? <BuyoutBasis wh={view.wh} user={user} order={card.data as DocCard} names={names.current.map} onDone={openBuyout} /> : null} />)}
         </section>}

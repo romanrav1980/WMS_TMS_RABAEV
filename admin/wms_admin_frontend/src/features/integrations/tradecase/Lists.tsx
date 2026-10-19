@@ -14,6 +14,7 @@ function columns(tab: Tab, names: Names): [string, (p: Payload) => React.ReactNo
     case "TRIP": return [["Машина", p => str(p.vehicle_id)], ["Выезд (план)", p => <Time value={p.planned_departure_at} />], ["Заказов", p => new Set(arr(p.orders).map(o => (o as Payload).order_id)).size]];
     case "RECIPIENT": return [["Название", p => str(p.title)], ["Собственник после выкупа", p => name(names, "OWNER", p.target_owner_id)],
       ["Выкуп", p => BUYOUT[str(p.buyout_mode)] ?? str(p.buyout_mode)], ["Мин. ОСГ, дн.", p => str(p.min_osg_days)]];
+    case "NEED": return [["Получатель", p => name(names, "RECIPIENT", p.recipient_id)], ["Товар", p => name(names, "SKU", p.sku_id)], ["Данные на", p => <Time value={p.snapshot_at} />], ["Период до", p => <Time value={p.period_until} />]];
     case "SKU": return [["Название", p => str(p.title)], ["В коробе, шт.", p => str(p.units_per_box)], ["МРЦ", p => arr(p.permitted_mrc).join(", ") || "—"]];
     case "SUPPLY": return [["Идентификатор паллеты", p => str(p.pallet_identifier)], ["Товар", p => name(names, "SKU", p.sku_id)], ["Собственник", p => name(names, "OWNER", p.owner_id)],
       ["МРЦ", p => str(p.mrc)], ["Срок", p => str(p.expiry_date)], ["Кодов в составе", p => arr(p.codes).length]];
@@ -31,7 +32,7 @@ export function DocList({ tab, rows, names, selected, onOpen }: { tab: Tab; rows
 
 export const resultChip = (s: string) => s === "ACCEPTED" ? <span className="tc-chip ok">Принято основание</span>
   : s === "REJECTED" ? <span className="tc-chip bad">Отклонено</span> : <span className="tc-chip">{s}</span>;
-export const KIND_NAME: Record<string, string> = { ORDER: "Заказ", TRIP: "Рейс", RECIPIENT: "Получатель", SKU: "Товар", OWNER: "Собственник", SUPPLY: "Поставка" };
+export const KIND_NAME: Record<string, string> = { ORDER: "Заказ", TRIP: "Рейс", RECIPIENT: "Получатель", SKU: "Товар", OWNER: "Собственник", SUPPLY: "Поставка", NEED: "Потребность" };
 
 export function MsgList({ rows, selected, onOpen }: { rows: MsgRow[]; selected: string; onOpen: (id: string) => void }) {
   return <div className="tc-scroll"><table className="tc-table"><thead><tr><th>Документ</th><th>Версия</th><th>Приём на складе</th><th>Ответ источнику</th><th>Время</th><th /></tr></thead>

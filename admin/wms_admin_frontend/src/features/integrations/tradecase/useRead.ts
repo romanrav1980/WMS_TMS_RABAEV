@@ -27,6 +27,10 @@ export function useRead<T>(path: string | null, reload = 0): Read<T> {
 function text(reason: unknown): string {
   if (!(reason instanceof ApiRequestError)) return "Нет связи с сервером — данные не получены.";
   const codes: Record<string, string> = {
+    NEED_MASTER_VERSION_CHANGED: "Профиль получателя или упаковка товара изменились. Запросите новый снимок у источника данных.",
+    NEED_SNAPSHOT_IN_FUTURE: "Время снимка позже серверного времени. Сверьте дату у источника данных.",
+    NEED_STORED_SNAPSHOT_INVALID: "Состав снимка не прошёл проверку. Передайте номер и версию ответственному за источник.",
+    NEED_MASTER_INACTIVE: "Получатель или товар неактивен. Проверьте справочник перед расчётом.",
     TRADE_CAPACITY_PACKAGE_MEASUREMENTS_REQUIRED: "У товара не заполнены масса или габариты короба. Заполните упаковку перед расчётом.",
     TRADE_CAPACITY_PACKAGE_COEFFICIENT_MISMATCH: "Количество штук в коробе расходится с основанием. Сверьте упаковку товара.",
     TRADE_CAPACITY_VEHICLE_DIMENSIONS_REQUIRED: "У машины не заполнены габариты полезного кузова. Заполните профиль машины.",
