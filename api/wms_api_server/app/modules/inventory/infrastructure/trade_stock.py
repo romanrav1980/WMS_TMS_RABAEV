@@ -39,7 +39,7 @@ class OracleTradeStock:
                 return read_oracle_json(result.getvalue())
         except oracledb.DatabaseError as exc:
             number = getattr(exc.args[0], "code", 0)
-            status = 403 if number in {20851, 20882} else 404 if number == 1403 else 409 if 20900 <= number <= 20999 else 503
+            status = 403 if number in {20851, 20882} else 404 if number == 1403 else 409 if 20800 <= number <= 20999 else 503
             code = str(exc.args[0]).split("\n", 1)[0].split(":", 1)[-1].strip() if status != 503 else "TRADE_STOCK_RESULT_UNKNOWN"
             raise TradeStockError(code, status) from exc
         except ValueError as exc:

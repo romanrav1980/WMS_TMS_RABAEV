@@ -80,3 +80,11 @@ from .infrastructure.tradecase_documents import OracleTradecaseDocuments
 
 def build_tradecase_documents() -> OracleTradecaseDocuments:
     return OracleTradecaseDocuments(OracleGateway())
+
+from .api.trade_transport_routes import router as trade_transport_router,trade_transport_service
+from .infrastructure.trade_transport import OracleTradeTransport
+
+
+def build_trade_transport()->OracleTradeTransport:
+    from ...oracle_gateway import OracleGateway
+    return OracleTradeTransport(OracleGateway())
