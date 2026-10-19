@@ -40,6 +40,7 @@ class TradeSku(TradeModel):
 
 class TradeRecipient(TradeModel):
     entity_type: Literal["RECIPIENT"]
+    wms_customer_id: int | None = Field(default=None, strict=True, gt=0)
     title: str = Field(min_length=1, max_length=200)
     target_owner_id: Key
     permitted_source_owners: list[Key] = Field(min_length=1, max_length=100)
