@@ -1,11 +1,16 @@
 """Warehouse-bounded source projections; no second resource or task master."""
 from datetime import datetime
 from typing import Any
+import oracledb
 from ..contracts_timeline import TimelineError
 from .case_view_scope import view_predicate
 
 
 def read_rows(cur: Any, sql: str, params: dict[str, Any], limit: int = 2000) -> list[dict[str, Any]]:
+    # Python datetime inference uses TIMESTAMP and drops an aware offset. Keep known
+    # instants explicit; legacy naive dates retain their existing unresolved policy.
+    cur.setinputsizes(**{key: oracledb.DB_TYPE_TIMESTAMP_TZ if isinstance(value, datetime)
+                       and value.utcoffset() is not None else None for key, value in params.items()})
     cur.execute(sql, params)
     names = [column[0].lower() for column in cur.description]
     result = [dict(zip(names, row)) for row in cur.fetchall()]

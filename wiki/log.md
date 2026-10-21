@@ -4955,3 +4955,8 @@ Grant-миграция послеa07edbae: apply/rollback/reapply PASS/INVALID0;
 ## 21.10.2026 — подготовка scoped FULL_PALLET
 
 Подготовлен native допуск привязки своему назначенному заданию через существующий scoped_stock_executor. Изменены только два body/HTTP dependency; окончательная авторизация остаётся в StockPosting. Пока не применён. Новые staging-задания получают реальные warehouse-колонки при создании. Уточнение: старый1219имел NULLдо исполнения, после CORE содержитоба221164919. [Зеркало](database/tradecase_full_pallet_admission_20261021.md).
+
+
+## 22.10.2026 — СНС/BLC: складская роль и исправление окна Ганта
+
+Применён и проверен scoped bind после checkpoint76093b89: MOVE10/bind/exact replay, отзыв403 и восстановление прежнего результата, две APPLIED. QA/session/qualification/grants закрыты,22063978910/HARD10. Staging пишет реальные FROM/TO_WARE_ID до исполнения. Исправлена передача aware границ Oracle TIMESTAMP_TZ; реальный SQL/HTTP UTC,+03,−04 и UI1440/390 находят1221/EQUIPMENT32. Сокращено UTC-предупреждение.21timeline и quality gate1199/0cycles/72debt/24tests/bothTS PASS. Подробности: [[database/tradecase_full_pallet_admission_20261021]]. LOAD/DEPART и весь T06/T07 ещё не завершены, Claude4/4 не менялся.

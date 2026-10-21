@@ -43,7 +43,6 @@ export function ResourcePlanner({ day, reload, initialTypes, warehouseId: fixedW
         title={ganttHelp.window.text} data-help-id={ganttHelp.window.id + ".hours"} style={{ width: 80 }} /></label>
       <HelpButton help={ganttHelp.window} onClick={() => { setCustom(false); setW({ ...w, startLocal: startOfDayLocal(day), hours: 24 }); }}>Сутки {day}</HelpButton>
       {custom && <span className="ops-note">свой интервал — не следует за датой шапки</span>}
-      {data && <span className="ops-note">{data.warehouse.time_zone ? `время склада ${data.warehouse.time_zone}` : "пояс РЦ не подтверждён — окно и ось в UTC"}</span>}
     </div>
     {!win.warehouseId && <p className="ops-note">Укажите склад или РЦ: Гант строится по одному объекту доступа.</p>}
     {read.error && <p className="ops-err">{read.error}{data && read.at ? ` Показан прежний ответ этого окна от ${read.at.toLocaleTimeString("ru-RU")}.` : ""}</p>}

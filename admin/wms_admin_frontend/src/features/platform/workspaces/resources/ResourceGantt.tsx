@@ -42,7 +42,7 @@ export function ResourceGantt({ timeline, selection, onSelect, initialTypes, wav
     <p className="rg-summary" aria-live="polite">
       Ресурсов {sum.resources} · работ {sum.events} (по event_id) · назначений {sum.bindings} · пересечений {sum.conflicts}{timeline.overlap_limit != null && (timeline.overlaps?.length ?? 0) >= timeline.overlap_limit ? ` (не меньше; предел сервера ${timeline.overlap_limit})` : ""}
       {sum.quantifiedEvents > 0 && ` · количество указано у ${sum.quantifiedEvents} работ (отдельно в карточках, без общего объёма разных товаров)`}
-      {!tz && <b className="rg-tz-warn"> · Ось в UTC: пояс РЦ не подтверждён, местные опоздания не рассчитываются; время без пояса — в очереди</b>}
+      {!tz && <b className="rg-tz-warn" title="Часовой пояс склада не подтверждён. Записи без часового пояса показаны в очереди; местные опоздания по ним не рассчитываются."> · время UTC</b>}
       {tz && <span> · время склада ({tz})</span>}
     </p>
     <GanttLegend />
