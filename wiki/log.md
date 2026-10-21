@@ -4975,3 +4975,8 @@ Checkpointc09b7d27 → pallet-floor apply/rollback/reapply/INVALID0/liveSHA; nat
 ## 22.10.2026 — ограничение Oracle trace подтверждено
 
 V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в доступе, session_trace_enable отказалORA01031, DBMS_MONITOR не доступен. Docker Desktop не запускается. Трасса не включилась, новых привилегий/настроек не выдавали. Точная атрибуция нового запуска остаётся Codex/T12; общийv$sql не подменяет её. [[runbooks/tradecase_new_wave_profile_20261021]].
+
+
+## 22.10.2026 — подготовка additive scope типа паллеты
+
+РольWARE/legacy0 выявила PALLET_FLOOR_ACTOR_REQUIRED. Подготовлен2026-10-22-pallet-floor-scopes, экспорт current body/manifest/rollback; read/command используют существующую shipping scope и current owner operate перед replay. QA PF220c55adb663 пока активна, apply не выполнен. [[database/tradecase_full_pallet_admission_20261021]].

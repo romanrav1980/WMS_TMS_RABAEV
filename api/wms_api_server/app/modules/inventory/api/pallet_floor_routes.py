@@ -1,7 +1,7 @@
 from typing import Any
 from fastapi import APIRouter,Depends,HTTPException,Query
 from pydantic import BaseModel,ConfigDict,Field
-from ...platform.public import AdminUser,require_permission
+from ...platform.public import AdminUser,get_current_user
 from ..contracts_pallet_floor import PalletFloorPort,pallet_floor_service
 from ..contracts_stock import StockPostingError
 
@@ -19,19 +19,20 @@ class PalletFloorRequest(BaseModel):
 
 def failure(exc: StockPostingError)->HTTPException:
     uncertain=exc.code in {"RESULT_UNCERTAIN","REQUEST_DEADLINE","LOCK_RETRY_EXHAUSTED","CONNECTION_UNUSABLE","STOCK_RELEASE_NOT_ACTIVE"}
-    status=503 if uncertain else 403 if exc.oracle_code==20882 else 409
+    denied=exc.oracle_code==20882
+    status=503 if uncertain else 403 if denied else 409
     return HTTPException(status,{"code":exc.code,"message":exc.rule_reason or str(exc),"operation_id":exc.operation_id,
-        "outcome_confirmed":not uncertain,"retry_same_operation_id":uncertain})
+        "outcome_confirmed":not (uncertain or denied),"retry_same_operation_id":uncertain or denied})
 
 @router.get("")
 def read(identifier: str=Query(min_length=1,max_length=200),
-         user: AdminUser=Depends(require_permission("stock_posting_shipping")),
+         user: AdminUser=Depends(get_current_user),
          service: PalletFloorPort=Depends(pallet_floor_service))->dict[str,Any]:
     try:return service.read(identifier,user.username)
     except StockPostingError as exc:raise failure(exc)from exc
 
 @router.post("")
-def confirm(body: PalletFloorRequest,user: AdminUser=Depends(require_permission("stock_posting_shipping")),
+def confirm(body: PalletFloorRequest,user: AdminUser=Depends(get_current_user),
             service: PalletFloorPort=Depends(pallet_floor_service))->dict[str,Any]:
     try:
         values=body.model_dump(mode="json")
