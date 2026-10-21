@@ -4935,3 +4935,8 @@ Grant-миграция послеa07edbae: apply/rollback/reapply PASS/INVALID0;
 [Распределение места](components/tradecase_topup_allocation_20261021.md) связывает потребности и вместимость в одном READ ONLY Oracle snapshot.35HTTP/6UI checks1440/390:40A+20B, смена приоритета, очистка по403, primary mismatch/давность/дубли и owner grant/revoke прошли. Заказы SAP/резерв/approval не создаются; T08/T09 частичные. Gate1198/0cycles/72debt и50focused PASS.
 
 [Новый wave602/CASE1160](runbooks/tradecase_new_wave_profile_20261021.md): native2EA/повтор/возврат,10/H0, QA/session закрыты.3498мс launch/1009мс first pick остаются исследованием T12; сохранены общие v$sql/ограничения и решения по тяжёлым блокам. Дополнительных Claude-запросов/публикаций нет.
+
+
+## 21.10.2026 — подготовка допуска FULL_PALLET
+
+На owned221164919 подтверждён native отказ TASK1219/wave603 после release-picking. Подготовлен экспорт/парная body-миграция и [зеркало](database/tradecase_full_pallet_admission_20261021.md); применение и новый полный прогон ещё не выполнялись.
