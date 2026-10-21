@@ -4,9 +4,9 @@
 
 ## Текущая работа
 
-- [СНС/BLC: целая паллета](database/tradecase_full_pallet_admission_20261021.md): три миграции APPLIED/rollback/reapply; MOVE10/bind складской ролью, отзыв/восстановление и UI1440/390 прошли. Исправлен сдвиг окна Ганта;10/HARD10, погрузка/выезд открыты; подготовлен допуск штатного подтверждения типа паллеты.
+- [СНС/BLC: целая паллета](database/tradecase_full_pallet_admission_20261021.md): scoped MOVE/bind, исправленное окно Ганта, LOAD/UNLOAD/RELOAD/DEPART и повторы проверены. Два owned-склада0/HARD0; внешние ответы синтетические, вся программа не завершена.
 
-- [СНС/BLC: распределение места](components/tradecase_topup_allocation_20261021.md):40A+20B/обратный приоритет,35HTTP и UI1440/390; один READ ONLY snapshot, без заказа/резерва. [Профиль нового запуска](runbooks/tradecase_new_wave_profile_20261021.md) сохраняет3498мс и открытое исследование.
+- [СНС/BLC: распределение места](components/tradecase_topup_allocation_20261021.md):40A+20B/обратный приоритет,35HTTP и UI1440/390; один READ ONLY snapshot, без заказа/резерва. [Профиль нового запуска](runbooks/tradecase_new_wave_profile_20261021.md) сохраняет3498мс; точная Oracle trace пока недоступна текущему пользователю.
 
 - [СНС/BLC: источники21.10](sources/tradecase_20261021.md): Drive revision27 программы,12разделов вместо45проверок; [новая матрица](roadmap/tradecase_acceptance_20261021.md), прежние статусы автоматически не перенесены.
 

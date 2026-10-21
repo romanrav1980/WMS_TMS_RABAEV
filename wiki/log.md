@@ -4965,3 +4965,13 @@ Grant-миграция послеa07edbae: apply/rollback/reapply PASS/INVALID0;
 ## 22.10.2026 — подготовлен допуск типа паллеты СНС/BLC
 
 Реальный LOAD owned1221 остановлен до QC и без типа верхнего STOCK. QC10/replay прошёл; обнаружен отказ существующей zero-quantity команды PALLET_FLOOR_TYPE_CONFIRM общим trade guard. Подготовлена миграция2026-10-22-tradecase-pallet-floor с экспортом live body/manifest и rollback; owner operate остаётся обязательным. Применение/LOAD ещё не приняты. См. [[database/tradecase_full_pallet_admission_20261021]].
+
+
+## 22.10.2026 — СНС/BLC: целая паллета LOAD/UNLOAD/RELOAD/DEPART
+
+Checkpointc09b7d27 → pallet-floor apply/rollback/reapply/INVALID0/liveSHA; native owner deny, точный повтор/конфликт прошли. Два owned-рейса33662/33663 завершили по10EA, склад220639789и221164919теперь0/HARD0. Второй: UNLOAD native rollback/409+200 race/replay, новый QC/RELOAD; старый LOAD replay не погружает снова. После DEPART UNLOAD запрещён. Документы ERROR/missing/bad manifest блокируют выезд, синтетический READY допускает; реальные подключения не объявлены.40TRADECASE tests и общий gate1199/0cycles/72debt/24+bothTS PASS. SQL preview782мс/HTTP858/QC926/LOAD971 оставлены Codex/T12 на cold trace, индекс без плана не добавлен. [[database/tradecase_full_pallet_admission_20261021]]. Вся программа не завершена, Claude4/4 сохранён.
+
+
+## 22.10.2026 — ограничение Oracle trace подтверждено
+
+V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в доступе, session_trace_enable отказалORA01031, DBMS_MONITOR не доступен. Docker Desktop не запускается. Трасса не включилась, новых привилегий/настроек не выдавали. Точная атрибуция нового запуска остаётся Codex/T12; общийv$sql не подменяет её. [[runbooks/tradecase_new_wave_profile_20261021]].

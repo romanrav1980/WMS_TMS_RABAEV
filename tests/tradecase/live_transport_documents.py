@@ -36,7 +36,7 @@ try:
   s['depart_body']=dict(operation_id='T7.DEPART.'+tag);save();s['departed']=expect(200,http('POST',f"/api/transport/loading/{s['transport_task_id']}/depart",s['depart_body']));save()
  assert expect(200,http('POST',f"/api/transport/loading/{s['transport_task_id']}/depart",s['depart_body']))==s['departed']
  with oracle_connection()as c:
-  q=c.cursor();q.execute('select STATUS,DEPARTURE_OPERATION_ID,DEPARTED_AT from RRL_TT_HU_LOAD_FACT where LOAD_OPERATION_ID=:o',o=s['load_body']['operation_id']);status,operation,at=q.fetchone();assert status=='DEPARTED'and operation==s['depart_body']['operation_id'];s['departed_at']=str(at)
+  q=c.cursor();q.execute('select STATUS,DEPARTURE_OPERATION_ID,DEPARTED_AT from RRL_TT_HU_LOAD_FACT where LOAD_OPERATION_ID=:o',o=s.get('reload_body',s['load_body'])['operation_id']);status,operation,at=q.fetchone();assert status=='DEPARTED'and operation==s['depart_body']['operation_id'];s['departed_at']=str(at)
   q.execute('select sum(r.REMAIN),sum(r.HARD_RESERVED_BASE)from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w',w=w);assert list(q.fetchone())==[s.get('expected_remaining',150),0]
  s['transport_stage']='PASS';s['provider']='LOCAL_SYNTHETIC_ONLY';print(json.dumps(dict(status=s['transport_stage'],trip=s['transport_task_id'],departure=s['departed'],provider=s['provider'])))
 finally:s['http']+=CALLS;save()
