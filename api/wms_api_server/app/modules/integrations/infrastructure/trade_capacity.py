@@ -54,8 +54,27 @@ def _planned(cur:Any,ware:int,trip:dict,actor:str)->tuple[list[dict],list[dict],
         quantity=Decimal(str(assignment['quantity']))
         n=quantity if line['uom']=='BOX'else quantity/Decimal(package['units_per_box'])
         if n!=n.to_integral_value():raise TradeTransportError('TRADE_CAPACITY_WHOLE_BOXES_REQUIRED',409)
-        items.append(dict(package,boxes=n))
+        items.append(dict(package,boxes=n,recipient_id=order['recipient_id']))
     return items,versions,boxes
+
+def capacity_context(cur:Any,ware:int,trip_id:str,actor:str)->dict:
+    trip,version=_document(cur,ware,'TRIP',trip_id)
+    planned,orders,packages=_planned(cur,ware,trip,actor)
+    cur.execute('select ID from RRL_TR_VEHICLE where NUM=:v and nvl(DELETED,0)=0',v=trip['vehicle_id']);vehicles=cur.fetchall()
+    if len(vehicles)!=1:raise TradeTransportError('TRADE_CAPACITY_VEHICLE_MAPPING_REQUIRED',409)
+    profile=read_oracle_json(cur.callfunc('RRL_VEHICLE_PROFILE_API.describe_profile',oracledb.DB_TYPE_CLOB,[vehicles[0][0]]))
+    if profile.get('state')!='READY':raise TradeTransportError('TRADE_CAPACITY_VEHICLE_PROFILE_STALE',409)
+    data=profile.get('profile',profile)
+    dimensions=tuple(Decimal(str((data.get(k)or 0)))/1000 for k in ['cargo_length_mm','cargo_width_mm','cargo_height_mm'])
+    if any(d<=0 for d in dimensions):raise TradeTransportError('TRADE_CAPACITY_VEHICLE_DIMENSIONS_REQUIRED',409)
+    cur.execute("select count(*)from RRL_TRADE_TRIP_LINK l join RRL_TT_HU_LOAD_FACT f on f.TT_ID=l.NATIVE_TASK_ID where l.WARE_ID=:w and l.TRIP_ID=:t and f.STATUS in('LOADED','DEPARTED')",w=ware,t=trip_id)
+    started=cur.fetchone()[0]>0
+    cur.execute('select MAX_WEIGHT_KG from RRL_TR_VEHICLE where ID=:id',id=vehicles[0][0]);native_weight=cur.fetchone()[0]
+    if native_weight is None or native_weight<=0:raise TradeTransportError('TRADE_CAPACITY_VEHICLE_WEIGHT_REQUIRED',409)
+    max_weight=min(Decimal(str(trip['capacity_kg'])),Decimal(str(native_weight)))
+    max_volume=min(Decimal(str(trip['capacity_m3'])),dimensions[0]*dimensions[1]*dimensions[2])
+    return dict(trip=trip,version=version,planned=planned,orders=orders,packages=packages,profile=profile,dimensions=dimensions,started=started,max_weight=max_weight,max_volume=max_volume)
+
 
 def capacity_preview(gateway:Any,ware:int,trip_id:str,sku_id:str,requested:int,actor:str)->dict:
     try:
@@ -63,22 +82,9 @@ def capacity_preview(gateway:Any,ware:int,trip_id:str,sku_id:str,requested:int,a
             cur.execute('set transaction read only')
             cur.execute("select RRL_ACCESS_API.allowed(:a,'tradecase_view','WAREHOUSE',:w)from dual",a=actor,w=str(ware))
             if cur.fetchone()[0]!=1:raise TradeTransportError('ACCESS_DENIED',403)
-            trip,version=_document(cur,ware,'TRIP',trip_id)
-            planned,orders,packages=_planned(cur,ware,trip,actor)
+            context=capacity_context(cur,ware,trip_id,actor)
+            trip,version,planned,orders,packages,profile,dimensions,started,max_weight,max_volume=(context[k]for k in ['trip','version','planned','orders','packages','profile','dimensions','started','max_weight','max_volume'])
             if sku_id not in packages:packages[sku_id]=_box(cur,ware,sku_id)
-            cur.execute('select ID from RRL_TR_VEHICLE where NUM=:v and nvl(DELETED,0)=0',v=trip['vehicle_id']);vehicles=cur.fetchall()
-            if len(vehicles)!=1:raise TradeTransportError('TRADE_CAPACITY_VEHICLE_MAPPING_REQUIRED',409)
-            profile=read_oracle_json(cur.callfunc('RRL_VEHICLE_PROFILE_API.describe_profile',oracledb.DB_TYPE_CLOB,[vehicles[0][0]]))
-            if profile.get('state')!='READY':raise TradeTransportError('TRADE_CAPACITY_VEHICLE_PROFILE_STALE',409)
-            data=profile.get('profile',profile)
-            dimensions=tuple(Decimal(str((data.get(k)or 0)))/1000 for k in ['cargo_length_mm','cargo_width_mm','cargo_height_mm'])
-            if any(d<=0 for d in dimensions):raise TradeTransportError('TRADE_CAPACITY_VEHICLE_DIMENSIONS_REQUIRED',409)
-            cur.execute("select count(*)from RRL_TRADE_TRIP_LINK l join RRL_TT_HU_LOAD_FACT f on f.TT_ID=l.NATIVE_TASK_ID where l.WARE_ID=:w and l.TRIP_ID=:t and f.STATUS in('LOADED','DEPARTED')",w=ware,t=trip_id)
-            started=cur.fetchone()[0]>0
-            cur.execute('select MAX_WEIGHT_KG from RRL_TR_VEHICLE where ID=:id',id=vehicles[0][0]);native_weight=cur.fetchone()[0]
-            if native_weight is None or native_weight<=0:raise TradeTransportError('TRADE_CAPACITY_VEHICLE_WEIGHT_REQUIRED',409)
-            max_weight=min(Decimal(str(trip['capacity_kg'])),Decimal(str(native_weight)))
-            max_volume=min(Decimal(str(trip['capacity_m3'])),dimensions[0]*dimensions[1]*dimensions[2])
             result=box_capacity(max_weight,max_volume,dimensions,planned,packages[sku_id],requested)
             result.update(warehouse_id=ware,trip_id=trip_id,trip_version=version,sku_id=sku_id,order_versions=orders,profile_version=profile['version'],profile_base_hash=profile['base_hash'],
                           capacity_kg=str(max_weight),capacity_m3=str(max_volume),loading_started=started,loading_mode='BOX_FIXED_ORIENTATION',operational_admission=False,

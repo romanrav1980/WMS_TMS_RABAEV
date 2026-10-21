@@ -2,6 +2,7 @@
 from typing import Any,Literal,Protocol
 from pydantic import AwareDatetime,Field,model_validator
 from .contracts_tradecase import TradeModel,Key
+from .contracts_trade_topup import TopupPreview
 
 class TripBinding(TradeModel):
     operation_id: Key
@@ -36,6 +37,7 @@ class TradeTransportError(RuntimeError):
         super().__init__(code)
 
 class TradeTransportPort(Protocol):
+    def topup(self,ware:int,trip:str,body:TopupPreview,actor:str)->dict[str,Any]:...
     def capacity(self,ware:int,trip:str,sku:str,requested:int,actor:str)->dict[str,Any]:...
     def bind(self,ware:int,trip:str,body:TripBinding,actor:str)->dict[str,Any]:...
     def result(self,ware:int,trip:str,body:TransportDocumentResult,actor:str)->dict[str,Any]:...

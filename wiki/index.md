@@ -4,6 +4,10 @@
 
 ## Текущая работа
 
+- [СНС/BLC: распределение места](components/tradecase_topup_allocation_20261021.md):40A+20B/обратный приоритет,35HTTP и UI1440/390; один READ ONLY snapshot, без заказа/резерва. [Профиль нового запуска](runbooks/tradecase_new_wave_profile_20261021.md) сохраняет3498мс и открытое исследование.
+
+- [СНС/BLC: источники21.10](sources/tradecase_20261021.md): Drive revision27 программы,12разделов вместо45проверок; [новая матрица](roadmap/tradecase_acceptance_20261021.md), прежние статусы автоматически не перенесены.
+
 - [СНС/BLC: смена и ресурсы](components/tradecase_shift_resources_20261021.md): переход с сохранением склада/входа; исправлена видимость CASE в Ганте по собственнику; live scopes и UI1440/390 прошли. Двор пока общий обзор, T10 не закрыт.
 
 - [Отзыв доступа отключённого сотрудника СНС/BLC](database/tradecase_retired_grant_revoke_20261021.md): исправлено и проверено8HTTP; повтор/версия/admin-only, inactive enable запрещён.

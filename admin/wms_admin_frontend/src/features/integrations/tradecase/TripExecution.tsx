@@ -1,4 +1,5 @@
 import { CapacityPreview } from "./CapacityPreview";
+import { TopupPreview } from "./TopupPreview";
 import { useState } from "react";
 import { RAW_ADMIN_BASE } from "../../../api";
 import { executionPath, nativeTripPath, tcHelp, tripBindingPath } from "./api";
@@ -37,6 +38,7 @@ export function TripExecution({ wh, user, trip }: { wh: string; user: string; tr
     {e && !edit && <Act help={tcHelp.rebindTrip} onClick={() => setEdit(true)}>Изменить привязку</Act>}
     {(missing || edit) && <BindForm wh={wh} user={user} trip={trip} bindingVersion={e?.binding_version ?? 0} onDone={() => { setEdit(false); setReload(n => n + 1); }} />}
     <CapacityPreview wh={wh} trip={trip.document_id} />
+    <TopupPreview wh={wh} trip={trip.document_id} />
   </section>;
 }
 
