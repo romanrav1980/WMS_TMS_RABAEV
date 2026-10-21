@@ -75,7 +75,7 @@ create or replace package body RRL_TRADE_STOCK_GUARD as
     select count(*)into n from RRL_CASE_PICK_TASK ct
      join RRL_PALLET_TYPE pt on pt.PALLET_TYPE_ID=ct.PALLET_TYPE_ID
      join RRL_SBORKA_PALLETS sp on sp.ID=ct.LEGACY_SBORKA_PALLET_ID
-     where sp.PALLET_UID=root_valueand upper(pt.LOAD_UNIT_CLASS)='CONTAINER'
+     where sp.PALLET_UID=root_value and upper(pt.LOAD_UNIT_CLASS)='CONTAINER'
       and pt.FINAL_WEIGHT_REQUIRED=1 and pt.ACTIVE=1 and ct.SHIPPED_OPERATION is null
       and not exists(select 1 from RRL_WMS_HU_LINK h where h.CHILD_CASE_TASK_ID=ct.CASE_PICK_TASK_ID and h.ACTIVE_FLAG=1);
    end if;

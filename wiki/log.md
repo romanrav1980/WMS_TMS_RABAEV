@@ -5023,3 +5023,5 @@ V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в
 
 
 2026-10-22: prepared scoped CASE labels migration and independent weighed CASE bulk-carton guard. Native snapshots and paired rollbacks saved. Neither new migration is accepted yet. WARE220793322 has 10 units / HARD6: CASE1161+1162 picked2 each, CASE1163 empty IN_PROGRESS with2 reserved; no bulk loads. QA shipping BL2286cdb38dcf and picker from bulk-small-case.json remain active during this owned proof. Existing rejected LABEL403 and LOAD_BOX_MANIFEST_CASE_FLOW_REQUIRED retained. No Claude requests or publication.
+
+22Oct bulk-case native compile rejected missing space root_valueand; both attempts rolled back immediately, INVALID0. Scoped label migration apply/rollback/reapply passed. Error evidence T07/bulk-case-compile-errors.json includes recycled BIN diagnostics, only current guard ORA00933 is new. Corrected SQL checkpoint follows; no load executed.
