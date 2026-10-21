@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { apiOperationScope } from "../../../api";
 import { HelpButton } from "../help/HelpButton";
 import { DriverDesk, PickerDesk, ReachDriverDesk } from "./DeviceDesks";
@@ -24,6 +24,7 @@ const initialRole = (): Role => { const v = new URLSearchParams(location.search)
 /** Ролевые рабочие места C0056 (блок 4) в стиле цифрового двойника. Выбор места не меняет прав: данные режет сервер. */
 export function WorkplaceHome({ onBack }: { onBack?: () => void }) {
   const [role, setRole] = useState<Role>(initialRole);
+  useEffect(() => { const sync = () => setRole(initialRole()); window.addEventListener("popstate", sync); return () => window.removeEventListener("popstate", sync); }, []);
   const [day, setDay] = useState(localDay);
   const [reload, setReload] = useState(0);
   const choose = (next: Role) => { setRole(next); const url = new URL(location.href); url.searchParams.set("workspace", next); history.replaceState(history.state, "", url); };

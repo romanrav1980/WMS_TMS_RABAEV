@@ -2,7 +2,7 @@ import { HelpButton } from "../help/HelpButton";
 import { formatMoment } from "../access-admin";
 import { wsHelp } from "./help";
 import { stageMeta, stageOf } from "./recovery/recoveryModel";
-import { rawLink } from "./OpsParts";
+import { rawLink, shiftLink, openShift } from "./OpsParts";
 import { LIMITS, TwinDesk, useDeskData } from "./TwinDesk";
 import type { DeskData, Process } from "./TwinDesk";
 import type { GanttVehicle, Trip } from "./types";
@@ -22,13 +22,13 @@ const readyTile = (d: DeskData) => ({ icon: "📦", label: "Рейсы с нег
 const sessionTile = (d: DeskData) => ({ icon: "👷", label: "Открытые сессии ресурсов", read: d.sessions, source: "GET /api/resources/sessions",
   value: (s: { status: string }[]) => s.filter(x => x.status === "ACTIVE").length, sub: () => "сотрудники и техника, вошедшие в терминал" });
 
-const warehouseProcesses: Process[] = [
+const warehouseProcesses = (): Process[] => [
   { id: "supply", icon: "⤓", title: "Приёмка по SAP", sub: () => `поставки, выборка до ${LIMITS.supply}`, count: d => cnt(d.supply, LIMITS.supply),
     list: d => ({ read: d.supply, limit: LIMITS.supply, items: (d.supply.data ?? []).map(o => ({ key: o.order_id, title: o.order_number, sub: `склад ${o.ware_id} · состояние ${o.condition} · ${formatMoment(o.date_of_accept)}` })) }),
     owner: { label: "Приёмка поставки SAP", href: rawLink("receiving.html") } },
   { id: "waves", icon: "≋", title: "Волны", sub: d => d.waves.data ? `запущено ${d.waves.data.filter(w => w.launched_at).length} в выборке до ${LIMITS.waves}` : "не прочитано", count: d => cnt(d.waves, LIMITS.waves),
     list: d => ({ read: d.waves, limit: LIMITS.waves, items: (d.waves.data ?? []).map(w => ({ key: String(w.pick_wave_id), title: w.wave_code, sub: `${w.status} · ${w.ware_name} · заказов ${w.order_count} · заданий ${w.task_count}${w.launched_at ? " · запущена " + formatMoment(w.launched_at) : ""}` })) }),
-    owner: { label: "Панель смены", href: rawLink("shift-supervisor-wave.html") } },
+    owner: { label: "Панель смены", href: shiftLink() } },
   { id: "picking", icon: "✋", title: "Комплектация", sub: d => d.caseTasks.data ? `с остановкой ${d.caseTasks.data.filter(t => t.blocking_reason).length} · выборка до ${LIMITS.caseTasks}` : "не прочитано",
     count: d => d.caseTasks.data ? String(d.caseTasks.data.filter(t => t.picked_lines < t.total_lines).length) + (d.caseTasks.data.length >= LIMITS.caseTasks ? "+" : "") : "—",
     list: d => ({ read: d.caseTasks, limit: LIMITS.caseTasks, items: (d.caseTasks.data ?? []).filter(t => t.picked_lines < t.total_lines).map(t => ({ key: String(t.case_pick_task_id),
@@ -48,10 +48,10 @@ export function DirectorDesk({ day, isToday, reload }: { day: string; isToday: b
   const waveTile = { icon: "≋", label: "Волны", read: data.waves, source: `GET /api/picking/waves (выборка до ${LIMITS.waves})`,
     value: (w: { launched_at: string | null }[]) => w.length >= LIMITS.waves ? `${LIMITS.waves}+` : w.length,
     sub: (w: { launched_at: string | null }[]) => `запущено ${w.filter(x => x.launched_at).length}${w.length >= LIMITS.waves ? ` в выборке до ${LIMITS.waves}` : ""}` };
-  return <TwinDesk day={day} isToday={isToday} data={data} sceneTitle="РЦ · склад" processes={warehouseProcesses}
+  return <TwinDesk day={day} isToday={isToday} data={data} sceneTitle="РЦ · склад" processes={warehouseProcesses()}
     kpis={[tripTile(data), readyTile(data), waveTile, sessionTile(data)]} resourceTypes={["PICKER", "REACH_TRUCK", "DOCK", "VEHICLE", "OTHER"]} reload={reload}
     extraLeft={<div className="aa-actions" style={{ marginTop: 10 }}>
-      <HelpButton help={wsHelp.openShift} onClick={() => window.open(rawLink("shift-supervisor-wave.html"), "_blank")}>Панель смены</HelpButton>
+      <HelpButton help={wsHelp.openShift} onClick={() => openShift()}>Панель смены</HelpButton>
       <HelpButton help={wsHelp.openTasks} onClick={() => window.open(rawLink("warehouse-tasks.html"), "_blank")}>Задания</HelpButton></div>} />;
 }
 

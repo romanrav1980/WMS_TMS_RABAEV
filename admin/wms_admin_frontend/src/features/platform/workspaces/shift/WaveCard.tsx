@@ -1,4 +1,4 @@
-import { preparationComplete } from "./executionState";
+import { isClosedWave, preparationComplete } from "./executionState";
 import { HelpButton } from "../../help/HelpButton";
 import { wsHelp } from "../help";
 import { fmtTime } from "../resources/timelineModel";
@@ -8,6 +8,7 @@ import { shiftHelp } from "./help";
 import type { Risk, WaveDetail } from "./types";
 
 const t = (iso: string | null | undefined) => iso ? fmtTime(null, iso) : "не задано";
+const waveStatus: Record<string, string> = { DONE: "Завершена", CANCELLED: "Отменена", PREVIEW: "Подготовка", LAUNCHED: "В работе", DRAFT: "Черновик" };
 
 /** Карточка подготовки волны: спрос/запас, пополнение, время, ворота, риски, текущая сборка волны и переход к реальному действию.
  *  Количества показываются по артикулу и базовой единице; разные SKU не складываются в процент.
@@ -19,7 +20,7 @@ export function WaveCard({ wave, detail, risks, tasks, onClose, onShowInGantt, o
   const replWait = (repl ?? []).filter(r => r.status !== "DONE");
   return <section className="ops-card" aria-label={"Волна " + wave.wave_code}>
     <h3 style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-      <span>Волна {wave.wave_code}<br /><small>{wave.status} · {wave.wave_kind} · склад {wave.ware_name || wave.ware_id}</small></span>
+      <span>Волна {wave.wave_code}<br /><small>{waveStatus[wave.status] ?? "Статус не определён"} · склад {wave.ware_name || wave.ware_id}</small></span>
       <HelpButton help={wsHelp.closeCard} onClick={onClose} aria-label="Закрыть карточку">×</HelpButton></h3>
     {!detail && <p className="ops-note" title={shiftHelp.details.text}>Подробные проверки загружаются…</p>}
     {!preparationComplete(detail) && <p className="ops-note" role="status">Подготовка не проверена полностью. Отсутствие прочитанных блокировок не подтверждает готовность.</p>}
@@ -37,9 +38,9 @@ export function WaveCard({ wave, detail, risks, tasks, onClose, onShowInGantt, o
     {missing.length > 0 && <><h3>Не хватает запаса <small>{missing.length}</small></h3>
       <ul className="ops-list">{missing.slice(0, 12).map(m => <li key={m.pick_task_id}><span><b>{m.article}</b><br />
         <small>не хватает {m.missing_base} из {m.required_base} {m.base_uom ?? "баз. ед. (не указана)"}{m.cell ? " · " + m.cell : ""}</small></span></li>)}</ul></>}
-    <h3>Риски запуска <small>{risks.length}</small></h3>
+    {isClosedWave(wave.status) ? <p className="ops-note">{wave.status === "DONE" ? "Волна завершена." : "Волна отменена."} Показаны сохранённые задания.</p> : <><h3>Риски запуска <small>{risks.length}</small></h3>
     {risks.length === 0 ? <p className="ops-note">{preparationComplete(detail) ? "В прочитанном снимке блокировок не найдено. Допуск к запуску проверяет сервер при команде." : "Нет полной проверки подготовки; готовность неизвестна."}</p> :
-      <RiskList risks={risks} />}
+      <RiskList risks={risks} />}</>}
     <h3>Сборка этой волны <small>{tasks.length}</small></h3>
     {tasks.length === 0 ? <p className="ops-note">Активных заданий сборки по этой волне в текущей выборке нет.</p> :
       <ul className="ops-list">{tasks.slice(0, 12).map(ct => <li key={ct.case_pick_task_id}>

@@ -14,3 +14,4 @@ export function preparationComplete(detail: {
   return !!detail && [detail.readiness, detail.pick, detail.time, detail.replenishment]
     .every(source => source.data != null && !source.error);
 }
+export const isClosedWave = (status: string) => status === "DONE" || status === "CANCELLED";

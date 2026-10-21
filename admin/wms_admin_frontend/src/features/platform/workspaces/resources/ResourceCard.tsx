@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import type { ReactElement } from "react";
 import { HelpButton } from "../../help/HelpButton";
-import { appLink, rawLink } from "../OpsParts";
+import { appLink, rawLink, openShift } from "../OpsParts";
 import { wsHelp } from "../help";
 import { ganttHelp } from "./ganttHelp";
 import { buildRows, fmtAxis, fmtTime, nowAxis, stateNow, zoneKnown } from "./timelineModel";
@@ -11,6 +11,7 @@ import type { GanttSelection, ObjectLink, ResourceTimeline } from "./timelineTyp
 
 export function openLink(link: ObjectLink) {
   if (!link) return;
+  if (link.page === "shift-supervisor-wave.html") { openShift(Number(link.params?.wave_id)); return; }
   const q = Object.entries(link.params ?? {}).map(([k, v]) => `&${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`).join("");
   location.href = link.page.endsWith(".html") ? rawLink(link.page) + (q ? "?" + q.slice(1) : "") : appLink(link.page, q);
 }

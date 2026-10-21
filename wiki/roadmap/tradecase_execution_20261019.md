@@ -121,7 +121,12 @@ Google Drive проверен повторно: программа теперь 
 
 ## 22.10: тип паллеты по складской роли
 
-[Scoped подтверждение](../database/tradecase_pallet_floor_scope_20261022.md) работает при legacy shipping0 и legacy складе вне роли. Текущий owner operate и warehouse permission проверяются до повтора. Версия/конфликт/отзыв/восстановление/очисткаQA, native apply/rollback/reapply/liveSHA/INVALID0 прошли. В React «Запас» добавлена форма со сканами и справкой,6UI1440/390 без живых POST. Количество21902323210/HARD0 сохранено. Raw loading catalog требует dispatch view; все отгрузочные роли ещё не приняты. T06/T11 остаются частичными, Claude4/4.
+[Scoped подтверждение](../database/tradecase_pallet_floor_scope_20261022.md) работает при legacy shipping0 и legacy складе вне роли. Текущий owner operate и warehouse permission проверяются до повтора. Версия/конфликт/отзыв/восстановление/очисткаQA, native apply/rollback/reapply/liveSHA/INVALID0 прошли. В React «Запас» добавлена форма со сканами и справкой,6UI1440/390 без живых POST. Количество21902323210/HARD0 сохранено. Raw loading catalog позднее исправлен; все отгрузочные роли ещё не приняты. T06/T11 остаются частичными, Claude4/4.
 
 
 T11/T12 дополнение: raw-форма типа паллеты больше не требует диспетчерский каталог; исправлено обрезание fieldset443на390.8UIReact/raw PASS. Для floor/bind/loading ошибки403/OPERATION_CONFLICT сохраняют неизвестность прежнего результата.9реальных HTTP подтвердили исходные квитанции после DEPART, отказ/конфликт без новых проводок и0/HARD0.73focused/quality gate1200/0cycles/72debt/24+bothTS/encoding PASS. [Доказательства](../database/tradecase_pallet_floor_scope_20261022.md). Спринты остаются частичными.
+
+
+## 22.10: реальная смена и закрытие двух волн
+
+[Переходы к реальной смене](../components/tradecase_shift_resources_20261021.md) заменили ссылки на фиксированный демонстрационный экран. Склад/вход/wave_id сохраняются; DONE волна читается native header вне активной выборки, другой склад/403 не показывают старую карточку. Архивные волны отделены от подготовки запуска, подсказки не обещают отсутствующих команд.10UI1440/390 и6+8регрессионных проверок прошли; gate1200/0cycles/72debt/24+обаTS без расширения baseline. Волны603/604 штатно завершены DONE/exact replay, по одной APPLIED, склады0/HARD0. Это не завершение спринтов. Найденные CASE queue1.0–1.4с/recovery851мс/timeline502–872мс переходят в ближайшее исследование Codex/T12. Claude4/4 не менялся.

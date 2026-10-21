@@ -1,4 +1,4 @@
-import { isPendingShort } from "./executionState";
+import { isClosedWave, isPendingShort } from "./executionState";
 import type { CaseTask, Wave } from "../types";
 import type { CaseShort, Risk, WaveDetail } from "./types";
 
@@ -16,6 +16,7 @@ const uom = (u: string | null) => u ?? "баз. ед. (не указана)";
 
 /** Риски по волне из фактических данных источников. Владелец — только если источник его называет (иначе null). */
 export function waveRisks(wave: Wave, d: WaveDetail): Risk[] {
+  if (isClosedWave(wave.status)) return [];
   const out: Risk[] = [], w = wave.pick_wave_id, shift = { label: "Панель смены", page: "shift-supervisor-wave.html", params: { wave_id: w } };
   for (const [source, read] of Object.entries(d).filter(([key]) => key !== "wave_id")) {
     if (typeof read !== "object" || read == null) continue;

@@ -1,4 +1,4 @@
-import { preparationComplete } from "./executionState";
+import { isClosedWave, preparationComplete } from "./executionState";
 import { IsoStageScene } from "../IsoStageScene";
 import type { IsoStage } from "../IsoStageScene";
 import type { Wave } from "../types";
@@ -8,15 +8,17 @@ import type { WaveDetail } from "./types";
 // Поток волн по этапам склада. Этап — по фактическим данным readiness/pick-readiness; без прочитанных деталей волна стоит
 // в «детали не прочитаны», а не в выдуманном этапе.
 
-export type Stage = "PREP" | "RELEASE" | "REPL" | "PICK" | "STAGE" | "CLEAR" | "UNREAD";
+export type Stage = "PREP" | "RELEASE" | "REPL" | "PICK" | "STAGE" | "CLEAR" | "UNREAD" | "ARCHIVE";
 export const STAGES: (IsoStage & { id: Stage })[] = [
   { id: "PREP", title: "Подготовка (до запуска)", x: 0, y: 0 }, { id: "RELEASE", title: "Ждёт разрешения отбора", x: 1, y: 0 },
   { id: "REPL", title: "Пополнение отбора", x: 2, y: 0 }, { id: "PICK", title: "Сборка", x: 0, y: 1 },
   { id: "STAGE", title: "Размещение / недостачи", x: 1, y: 1 }, { id: "CLEAR", title: "Открытых блокировок нет", x: 2, y: 1 },
   { id: "UNREAD", title: "Детали не прочитаны", x: 3, y: 0.5, dashed: true },
+  { id: "ARCHIVE", title: "Завершены / отменены", x: 3, y: 1.5 },
 ];
 
 export function stageOf(w: Wave, d: WaveDetail | undefined): Stage {
+  if (isClosedWave(w.status)) return "ARCHIVE";
   if (w.status === "PREVIEW") return "PREP";
   if (!preparationComplete(d) || !d?.readiness.data) return "UNREAD";
   if (d.pick.data && !d.pick.data.released_at) return "RELEASE";

@@ -38,6 +38,17 @@ export function SourceStrip({ sources, isToday, day }: { sources: [string, ReadS
 
 export const rawLink = (page: string) => `${RAW_ADMIN_BASE}/${page}`;
 export const appLink = (page: string, extra = "") => `${location.pathname.includes("/preview/") ? "/" : location.pathname}?page=${page}${extra}`;
+export function shiftLink(wave?: number): string {
+  const url = new URL(location.href);
+  url.searchParams.set("page", "workspace"); url.searchParams.set("workspace", "shift");
+  if (wave != null && Number.isSafeInteger(wave) && wave > 0) url.searchParams.set("wave_id", String(wave));
+  else url.searchParams.delete("wave_id");
+  return (url.pathname.includes("/preview/") ? "/" : url.pathname) + url.search;
+}
+export function openShift(wave?: number): void {
+  history.pushState(history.state, "", shiftLink(wave));
+  window.dispatchEvent(new PopStateEvent("popstate"));
+}
 
 export function TripCard({ trip, vehicle, onClose, day }: { trip: Trip; vehicle?: GanttVehicle; onClose: () => void; day: string }) {
   const ops = vehicle?.operations.filter(o => o.tt_id === trip.ID) ?? [];

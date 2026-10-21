@@ -8,7 +8,7 @@ import type { RecoveryRow } from "./recovery/recoveryModel";
 import type { ReadState } from "../access-admin/useApiRead";
 import { DockGantt } from "./DockGantt";
 import { DockYardScene } from "./DockYardScene";
-import { KpiTile, ResourceList, SourceStrip, TripCard } from "./OpsParts";
+import { KpiTile, ResourceList, SourceStrip, TripCard, openShift } from "./OpsParts";
 import type { CaseTask, GanttVehicle, Selection, Session, SupplyOrder, Trip, Wave } from "./types";
 import { ResourcePlanner } from "./resources/ResourcePlanner";
 import type { GanttSelection, ResourceType } from "./resources/timelineTypes";
@@ -48,7 +48,7 @@ function ProcessListCard({ process, data, onClose }: { process: Process; data: D
       <ul className="ops-list">{list.items.slice(0, 40).map(i => <li key={i.key}><span><b>{i.title}</b><br /><small>{i.sub}</small></span></li>)}</ul>)}
     <div className="aa-actions" style={{ marginTop: 10 }}>
       {process.owner && <HelpButton help={{ id: "workspace.process.owner." + process.id, text: `Открыть экран «${process.owner.label}», где выполняются действия этого этапа.`, article: "workspaces" }}
-        onClick={() => window.open(process.owner?.href, "_blank")}>{process.owner.label}</HelpButton>}
+        onClick={() => process.id === "waves" ? openShift() : window.open(process.owner?.href, "_blank")}>{process.owner.label}</HelpButton>}
       <HelpButton help={{ id: "workspace.process.close", text: "Закрыть список этапа.", article: "workspaces" }} onClick={onClose}>Закрыть</HelpButton>
     </div>
   </section>;

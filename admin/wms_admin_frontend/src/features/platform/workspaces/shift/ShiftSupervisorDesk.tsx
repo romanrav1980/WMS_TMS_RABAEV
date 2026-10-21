@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { apiOperationScope } from "../../../../api";
+import { useApiRead } from "../../access-admin";
 import { HelpButton } from "../../help/HelpButton";
 import { KpiTile, ResourceList, SourceStrip } from "../OpsParts";
 import { ResourcePlanner } from "../resources/ResourcePlanner";
@@ -20,7 +21,7 @@ import { shiftHelp } from "./help";
 import { isOpenCase } from "./executionState";
 import { executionRisks, waveRisks } from "./risks";
 import { SHIFT_LIMITS, useShiftData, useWaveDetails } from "./useShiftData";
-import { useResourceKeyBySession, useShiftWarehouse } from "./useShiftContext";
+import { useShiftWave, useResourceKeyBySession, useShiftWarehouse } from "./useShiftContext";
 import type { Risk } from "./types";
 import "../resources/gantt.css";
 
@@ -42,7 +43,7 @@ export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isT
   const recovery = useRecovery(wh || null, apiOperationScope(), reload + recoveryReload);
   const [recoveryOpen, setRecoveryOpen] = useState<RecoveryRow | null>(null), [recoveryFilter, setRecoveryFilter] = useState<Stage | null>(null);
   const recoverySource = { data: recovery.rows, error: recovery.error, loading: recovery.loading, at: recovery.at };
-  const [waveId, setWaveId] = useState<number | null>(null);
+  const [waveId, setWaveId] = useShiftWave();
   const [panel, setPanel] = useState<Panel | null>("future");
   const [gantt, setGantt] = useState<GanttSelection>(null);
   // Структурный фильтр Ганта по точному wave_id (навигация «волна → её ресурсы», C-0110: не текстовый поиск по wave_code,
@@ -57,9 +58,12 @@ export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isT
   const resourceKeyBySession = useResourceKeyBySession(timeline);
   const future = data.future.data ?? [], launched = data.launched.data ?? [];
   // Только волны выбранного склада: списки прежнего склада (до перечитывания) не попадают ни на схему, ни в пакет проверок.
-  const waves = useMemo(() => [...future, ...launched].filter(w => String(w.ware_id) === wh), [future, launched, wh]);
+  const listed = [...future, ...launched].some(w => w.pick_wave_id === waveId && String(w.ware_id) === wh);
+  const requested = useApiRead<Wave>(wh && waveId != null && !listed ? `/api/picking/waves/${waveId}/header?ware_id=${wh}` : null, reload);
+  const extra = !requested.loading && !requested.error && requested.data?.pick_wave_id === waveId && String(requested.data.ware_id) === wh ? requested.data : null;
+  const waves = useMemo(() => [...future, ...launched, ...(extra && !listed ? [extra] : [])].filter(w => String(w.ware_id) === wh), [future, launched, wh, extra, listed]);
   // Детали — по всем видимым волнам склада (bulk shift-overview, C-0088), выбранная волна первой.
-  const ids = useMemo(() => [...new Set([...(waveId != null ? [waveId] : []), ...waves.map(w => w.pick_wave_id)])], [waveId, waves]);
+  const ids = useMemo(() => [...new Set(waves.map(w => w.pick_wave_id))], [waves]);
   const { details, loading, coverage } = useWaveDetails(ids, wh, reload);
   const risks = useMemo(() => {
     const list: Risk[] = waves.flatMap(w => { const d = details.get(w.pick_wave_id); return d ? waveRisks(w, d) : []; });
@@ -69,8 +73,9 @@ export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isT
   const wave = waves.find(w => w.pick_wave_id === waveId);
   const picking = (data.caseTasks.data ?? []).filter(t => isOpenCase(t.status));
   const blocked = (data.caseTasks.data ?? []).filter(t => t.blocking_reason);
+  const clearWave = () => setWaveId(null);
   const selectWave = (id: number) => { setWaveId(id); setGantt(null); };
-  const selectGantt = (s: GanttSelection) => { setGantt(s); if (s) setWaveId(null); };
+  const selectGantt = (s: GanttSelection) => { setGantt(s); if (s) clearWave(); };
   // Переход «текущая работа → её ресурсы в Ганте»: выделяет событие и прокручивает к общему Ганту (важно на мобильном экране).
   const jumpToGantt = (s: GanttSelection) => { selectGantt(s); scrollToGantt(); };
   // Переход «волна → её ресурсы в Ганте»: точный структурный фильтр по wave_id (не по тексту кода — он не всегда есть в событии),
@@ -78,7 +83,7 @@ export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isT
   const showWaveInGantt = (w: Wave) => { setWaveFocus(old => ({ waveId: w.pick_wave_id, label: w.wave_code, token: (old?.token ?? 0) + 1 })); scrollToGantt(); };
   // Переход «работа в Ганте → её волна»: возврат к контексту карточки волны с прокруткой (работа могла быть выбрана далеко внизу).
   const backToWave = (id: number) => { selectWave(id); scrollToWaveCard(); };
-  const picker = <ShiftWarehouseBar wh={wh} onChange={id => { setWh(id); setWaveId(null); setGantt(null); setRecoveryOpen(null); setRecoveryFilter(null); }} />;
+  const picker = <ShiftWarehouseBar wh={wh} onChange={id => { setWh(id); clearWave(); setGantt(null); setRecoveryOpen(null); setRecoveryFilter(null); }} />;
   if (!wh) return <>{picker}<p className="ops-panel ops-note" style={{ gridColumn: "1/-1" }}>Выберите склад или РЦ: при нескольких доступных складах первый не подставляется.</p></>;
   return <>
     {picker}
@@ -112,8 +117,9 @@ export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isT
     </section>
     <aside className="ops-panel ops-right" aria-label="Выбранный объект" ref={waveCardRef}>
       {wave ? <WaveCard wave={wave} detail={details.get(wave.pick_wave_id)} risks={risks.filter(r => r.wave_id === wave.pick_wave_id)}
-          tasks={(data.caseTasks.data ?? []).filter(ct => ct.pick_wave_id === wave.pick_wave_id)} onClose={() => setWaveId(null)}
+          tasks={(data.caseTasks.data ?? []).filter(ct => ct.pick_wave_id === wave.pick_wave_id)} onClose={clearWave}
           onShowInGantt={() => showWaveInGantt(wave)} onOpenTask={id => jumpToGantt({ kind: "event", id: "CASE_PICK_TASK:" + id })} />
+        : waveId != null && (requested.error || (requested.data && String(requested.data.ware_id) !== wh)) ? <p role="alert" className="ops-err">Выбранная волна недоступна на этом складе. Проверьте склад и право просмотра волны.</p>
         : panel === "recovery" ? <RecoveryPanel read={recovery} scopeLabel={`Склад ${wh}`} openId={recoveryOpen?.short_id ?? null} onSelect={setRecoveryOpen}
             filter={recoveryFilter} onFilter={setRecoveryFilter} onWave={selectWave} onRefresh={() => setRecoveryReload(n => n + 1)} />
         : panel ? <PanelList panel={panel} future={future} risks={risks} picking={picking} blocked={blocked} details={details} sessions={data.sessions} onWave={selectWave}

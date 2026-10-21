@@ -4995,3 +4995,8 @@ V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в
 ## 22.10.2026 — raw форма поддона и восстановление команды
 
 Лишний dispatch catalog удалён из raw компонента; текущие типы приходят после native scope. На390 найдено обрезание fieldset до443, исправлен min-inline-size/select, убран внутренний код типа. Повтор8React/raw UI PASS/0livePOST, PNG прочитан. Точечный escalation разрешил запись raw путей после отказа apply_patch(reparse point). HTTP403/OPERATION_CONFLICT теперь сохраняют неизвестность прежней команды в floor/bind/loading.9реальных HTTP: исходные квитанции равны после выезда, conflict409/warehouse403 не создают новых проводок, оба склада0/HARD0; QA отключён.73focused и общий gate без роста baseline прошли. [[database/tradecase_pallet_floor_scope_20261022]].
+
+
+## 22.10.2026 — реальная смена/архив волн, завершены603/604
+
+Кнопки смены вместо статического raw-демо открывают реальный workspace без перезагрузки/потери входа. URLвыбор wave_id, native header для волны вне списка, фильтр warehouse до overview,403 очистка. DONE/CANCELLED отдельно в изометрической схеме; удалены обещания отсутствующих UI-команд. Native finish603/604/replay/APPLIED/P0H0 проверены.10UI1440/390, navigation6/floor8,buildDqjEM9IM и gate1200/0cycles/72debt/24+обаTS PASS после выделения URL-состояния вместо роста baseline. Обнаружены CASE queue1033–1417мс, recovery851, timeline502/872: сохраняются как ближайшее исследование Codex/T12, не исправлены. [[components/tradecase_shift_resources_20261021]].
