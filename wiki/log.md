@@ -4940,3 +4940,8 @@ Grant-миграция послеa07edbae: apply/rollback/reapply PASS/INVALID0;
 ## 21.10.2026 — подготовка допуска FULL_PALLET
 
 На owned221164919 подтверждён native отказ TASK1219/wave603 после release-picking. Подготовлен экспорт/парная body-миграция и [зеркало](database/tradecase_full_pallet_admission_20261021.md); применение и новый полный прогон ещё не выполнялись.
+
+
+## 21.10.2026 — FULL_PALLET: повторная проверка источника
+
+Первый допуск применён/откачен/применён, direct guard1219PASS/foreignDENY,10/HARD10сохранены. Полный HTTP выявил ещё один отказ: core проверяет пригодность без заказа. Подготовлен экспорт и follow-up контекста в RRL_STOCK_TASK_CORE; пока не применён. [Зеркало](database/tradecase_full_pallet_admission_20261021.md).
