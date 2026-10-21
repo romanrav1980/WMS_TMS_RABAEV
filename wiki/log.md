@@ -5005,3 +5005,6 @@ V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в
 ## 22.10.2026 — CASE queue: уменьшен повторный scoped фильтр
 
 Удалён второй WHERE после join уже допущенных selected_tasks; native owner-фильтр итогов волны сохранён.239CASE/63строки, old/new в одном READ ONLY snapshot: все поля/порядок равны, SQL95→51мс;18+18HTTP равны, warmmedian203→191мс. Первый1199мс не исправлен.8liveSQLscopeпар и HTTP owner/WARE revoke/чужой склад прошли; CQ221992d3595c retired/owner0/assignment revoked, P10H0. План недоступен(V$SQL_PLAN), статистику/индексы без основания не меняли.73focused и gate1200/0cycles/72debt/24+обаTS PASS. [[runbooks/tradecase_case_queue_performance_20261022]].
+
+
+22.10 T12: diagnostic ASGI/real Oracle/audit, new process/pool, no lifespan workers: first480ms/pool292ms; next5 requests134–190ms/auth1–2ms/CASE54–86ms/cleanup2–5ms. Same63rows/SHA. No bind values recorded, slow threshold unchanged500ms. Prior751ms SQL/1199msHTTP not reproduced, NOTfixed. Preserve rights/cleanup/audit, no speculativeindex. Evidence T12/case-request-stages.json, script tests/tradecase/profile_case_request.py. Next T03/T06 factory aggregates/tree.

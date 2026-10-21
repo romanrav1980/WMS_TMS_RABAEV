@@ -133,3 +133,6 @@ T11/T12 дополнение: raw-форма типа паллеты больш�
 
 
 T12 CASE queue: [профиль и исправление](../runbooks/tradecase_case_queue_performance_20261022.md) убрали повторную проверку тех же selected IDs, сохранив owner-фильтр общих итогов. На239CASE/63строках все результаты совпали, SQL95→51мс/HTTP203→191мс.8scopeпар/реальные HTTP и cleanupQA прошли. Холодный1199мс и прочие очереди ещё открыты; полная программа не завершена.
+
+
+22.10 T12: diagnostic ASGI/real Oracle/audit, new process/pool, no lifespan workers: first480ms/pool292ms; next5 requests134–190ms/auth1–2ms/CASE54–86ms/cleanup2–5ms. Same63rows/SHA. No bind values recorded, slow threshold unchanged500ms. Prior751ms SQL/1199msHTTP not reproduced, NOTfixed. Preserve rights/cleanup/audit, no speculativeindex. Evidence T12/case-request-stages.json, script tests/tradecase/profile_case_request.py. Next T03/T06 factory aggregates/tree.
