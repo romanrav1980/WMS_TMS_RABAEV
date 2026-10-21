@@ -4980,3 +4980,8 @@ V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в
 ## 22.10.2026 — подготовка additive scope типа паллеты
 
 РольWARE/legacy0 выявила PALLET_FLOOR_ACTOR_REQUIRED. Подготовлен2026-10-22-pallet-floor-scopes, экспорт current body/manifest/rollback; read/command используют существующую shipping scope и current owner operate перед replay. QA PF220c55adb663 пока активна, apply не выполнен. [[database/tradecase_full_pallet_admission_20261021]].
+
+
+## 22.10.2026 — scope-body: ошибка компиляции исправлена до повторного применения
+
+Первый apply после67a9cf29 отклонён PLS00302(private warehouse procedure). Автоматического продолжения не было; rollback восстановил INVALID0. Вместо расширения spec использован публичный RRL_ACCESS_API.allowed с прежним legacy-фильтром; исправленная версия checkpoint до reapply. QA PF220c55adb663 остаётся активна до проверки. [[database/tradecase_full_pallet_admission_20261021]].

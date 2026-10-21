@@ -10,7 +10,10 @@ create or replace package body RRL_PALLET_FLOOR_READ as
    begin select DECLARED_WARE_ID into ware_no from RRL_PALLET_FLOOR_TYPE where UID_PALLET=p_uid;
    exception when no_data_found then raise_application_error(-20886,'PALLET_FLOOR_CURRENT_SOURCE_REQUIRED');end;
   end if;
-  RRL_FULL_SHIPPING_SCOPE.warehouse(ware_no,p_actor,'stock_posting_shipping');
+  select count(*)into n from RUSERS u join RRL_WARES w on w.ID=ware_no where u.ID=p_actor and nvl(u.DELETED,0)=0
+   and((RRL_HAS_WRIGHT(u.ID,'stock_posting_shipping')=1 and(u.WARE_ID=ware_no or upper(trim(u.USER_GROUP))='GLOBAL_ADMIN'))
+    or RRL_ACCESS_API.allowed(p_actor,'stock_posting_shipping','WAREHOUSE',to_char(ware_no,'TM9','NLS_NUMERIC_CHARACTERS=''.,'''))=1);
+  if n!=1 then raise_application_error(-20882,'PALLET_FLOOR_CURRENT_WARE_FORBIDDEN');end if;
   -- This declaration requires current owner operate even for an immutable replay.
   for owner_row in(select distinct a.OWNER_ID from RRL_WMS_RECEIPT_UNIT u
    join RRL_TRADE_STOCK_ATTR a on a.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY where u.CURRENT_UID=p_uid)loop
