@@ -62,8 +62,9 @@ class DepartureRequest(BaseModel):
 
 
 def failure(exc: TransportLoadingError) -> HTTPException:
+    unconfirmed=exc.status>=500 or exc.status in {401,403} or "OPERATION_CONFLICT" in str(exc)
     return HTTPException(exc.status, detail={"code":exc.code,"message":str(exc),
-        "operation_id":exc.operation_id,"retry_same_operation_id":bool(exc.operation_id),"outcome_confirmed":exc.status<500})
+        "operation_id":exc.operation_id,"retry_same_operation_id":bool(exc.operation_id),"outcome_confirmed":not unconfirmed})
 
 
 @router.get("/{task_id}/status")

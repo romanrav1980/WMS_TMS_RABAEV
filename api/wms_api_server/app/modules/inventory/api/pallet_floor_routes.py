@@ -20,9 +20,10 @@ class PalletFloorRequest(BaseModel):
 def failure(exc: StockPostingError)->HTTPException:
     uncertain=exc.code in {"RESULT_UNCERTAIN","REQUEST_DEADLINE","LOCK_RETRY_EXHAUSTED","CONNECTION_UNUSABLE","STOCK_RELEASE_NOT_ACTIVE"}
     denied=exc.oracle_code==20882
+    conflict="OPERATION_CONFLICT" in (exc.rule_reason or exc.code)
     status=503 if uncertain else 403 if denied else 409
     return HTTPException(status,{"code":exc.code,"message":exc.rule_reason or str(exc),"operation_id":exc.operation_id,
-        "outcome_confirmed":not (uncertain or denied),"retry_same_operation_id":uncertain or denied})
+        "outcome_confirmed":not (uncertain or denied or conflict),"retry_same_operation_id":uncertain or denied or conflict})
 
 @router.get("")
 def read(identifier: str=Query(min_length=1,max_length=200),

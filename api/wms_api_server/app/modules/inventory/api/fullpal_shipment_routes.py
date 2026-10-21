@@ -48,7 +48,8 @@ def bind(task_id: int, body: FullPalletBindingRequest,
     except StockPostingError as exc:
         uncertain = exc.code in {"RESULT_UNCERTAIN","REQUEST_DEADLINE","CONNECTION_UNUSABLE","LOCK_RETRY_EXHAUSTED"}
         denied = exc.oracle_code in {20882,20851}
+        conflict = "OPERATION_CONFLICT" in (exc.rule_reason or exc.code)
         raise HTTPException(503 if uncertain else 403 if denied else 409, detail={
-            "code":exc.code,"message":exc.rule_reason,"operation_id":exc.operation_id,"outcome_confirmed":not (uncertain or denied),
-            "retry_same_operation_id":uncertain or denied,"read_before_retry":uncertain or denied,
+            "code":exc.code,"message":exc.rule_reason,"operation_id":exc.operation_id,"outcome_confirmed":not (uncertain or denied or conflict),
+            "retry_same_operation_id":uncertain or denied or conflict,"read_before_retry":uncertain or denied or conflict,
         }) from exc

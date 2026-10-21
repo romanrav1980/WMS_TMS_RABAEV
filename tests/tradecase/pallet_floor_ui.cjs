@@ -38,5 +38,26 @@ const report = {checks:[],errors:[],writes:[],fixtureCommands:[]};let browser;
     mode='denied';await field('read').click();await panel.getByRole('alert').filter({hasText:'Паллета недоступна'}).waitFor();assert.equal(await panel.locator('dl').count(),0);
     report.checks.push({width,test:'foreign warehouse and403 clear physical data/form'});await ctx.close();
   }
+  for(const width of [1440,390]) {
+    const ctx=await browser.newContext({viewport:{width,height:width===390?844:1000}}),page=await ctx.newPage();let catalogCalls=0;
+    page.on('pageerror',e=>report.errors.push(String(e)));
+    await page.route('**/api/**',route=>{const r=route.request();if(r.url().includes('/vehicle-profiles/tare-types')){catalogCalls++;return route.abort();}if(!['GET','OPTIONS'].includes(r.method())&&!r.url().includes('/auth/')){report.writes.push(r.url());return route.abort();}return route.continue();});
+    await page.goto('http://127.0.0.1:8088/wms-admin/transport-loading.html');
+    if(await page.locator('#loginUser').count()){await page.fill('#loginUser','admin');await page.fill('#loginPassword',pass);await page.click('#adminLoginForm button[type=submit]');}
+    await page.waitForFunction(()=>window.wmsAdminAuth?.state.user?.username==='admin');
+    const actual=await page.evaluate(async uid=>{
+      const data=await fetch('/api/inventory/pallet-floor-types?identifier='+encodeURIComponent(uid),{headers:window.wmsAdminAuth.headers()}).then(r=>r.json());
+      const composition={mode:'SINGLE',root:uid,nodes:[{kind:'STOCK'}]};window.floorTestComposition=composition;
+      await window.wmsPalletFloorType.read(composition,async path=>{const r=await fetch(path,{headers:window.wmsAdminAuth.headers()});if(!r.ok)throw Error(String(r.status));return r.json();},()=>true);
+      return data;
+    },proof.uid);
+    await page.locator('#palletFloorPanel').waitFor({state:'visible'});await page.selectOption('#palletFloorSelect','1');await page.fill('#palletFloorReference','Осмотр: проверка старой формы');await page.fill('#loadScan',actual.uid);await page.fill('#loadCell',actual.cell);
+    const collected=await page.evaluate(()=>window.wmsPalletFloorType.collect(window.floorTestComposition));assert.equal(collected.identifier,proof.uid);assert.equal(collected.expected_version,actual.version);assert.equal(catalogCalls,0);
+    await page.locator('#palletFloorPanel').screenshot({path:out+'/pallet-floor-raw-'+width+'.png'});
+    const geometry=await page.evaluate(()=>({viewport:innerWidth,page:document.documentElement.scrollWidth,right:document.querySelector('#palletFloorPanel').getBoundingClientRect().right}));
+    assert(geometry.page<=geometry.viewport&&geometry.right<=geometry.viewport,JSON.stringify(geometry));
+    await page.evaluate(async()=>{try{await window.wmsPalletFloorType.read(window.floorTestComposition,async()=>{throw Error('403');},()=>true);}catch(e){if(String(e)!=='Error: 403')throw e;}});assert(await page.locator('#palletFloorPanel').isHidden());
+    report.checks.push({width,test:'real raw component/current native type+catalog in one response; collect scans; failed read clears; no dispatcher catalog'});await ctx.close();
+  }
   assert.deepEqual(report.errors,[]);assert.deepEqual(report.writes,[]);report.status='PASS';fs.writeFileSync(out+'/pallet-floor-ui.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report));await browser.close();
 })().catch(async e=>{report.status='FAIL';report.error=String(e);fs.writeFileSync(out+'/pallet-floor-ui.json',JSON.stringify(report,null,2));console.error(e);if(browser)await browser.close();process.exit(1);});

@@ -4990,3 +4990,8 @@ V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в
 ## 22.10.2026 — тип паллеты: scoped API и форма СНС/BLC проверены
 
 Исправленный checkpoint45c2d75f → apply/rollback/reapply/INVALID0/liveSHA. РольWARE при legacy0/другомWARE выполнила подтверждение/exact replay; owner operate и warehouse revoke/restore, чужой склад/версия/конфликт прошли. QA PF220c55adb663 отключён, оба назначения/owner отозваны, склад21902323210/HARD0. Новый React экран/локальная справка/каталог после native auth,6UI checks1440/390/0livewrites PASS; мобильный PNG прочитан.6GET64–256мс, slow новых0; индекс не требуется по этому набору. Общий gate1200/0cycles/72debt/24+bothTS и build PASS. Raw loading catalog всё ещё требует dispatch view, полная role shipping UI не закрыта. [[database/tradecase_pallet_floor_scope_20261022]].
+
+
+## 22.10.2026 — raw форма поддона и восстановление команды
+
+Лишний dispatch catalog удалён из raw компонента; текущие типы приходят после native scope. На390 найдено обрезание fieldset до443, исправлен min-inline-size/select, убран внутренний код типа. Повтор8React/raw UI PASS/0livePOST, PNG прочитан. Точечный escalation разрешил запись raw путей после отказа apply_patch(reparse point). HTTP403/OPERATION_CONFLICT теперь сохраняют неизвестность прежней команды в floor/bind/loading.9реальных HTTP: исходные квитанции равны после выезда, conflict409/warehouse403 не создают новых проводок, оба склада0/HARD0; QA отключён.73focused и общий gate без роста baseline прошли. [[database/tradecase_pallet_floor_scope_20261022]].
