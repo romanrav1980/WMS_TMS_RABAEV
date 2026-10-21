@@ -1,0 +1,7 @@
+{
+  "migration_id": "2026-10-22-hu-pack-replay-owner",
+  "before_normalized_sha": "514122AFC25CCFA2C60E79749D9FE1426BFBB381DB95501154DF64E6ED8675DE",
+  "object": "RRL_HU_EXEC_ACCESS PACKAGE BODY",
+  "scope": "Only cached HU_ATTACH/HU_DETACH UNIT resources; frozen warehouse/current owners",
+  "normalization": "Remove CR and trailing LF only"
+}

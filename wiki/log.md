@@ -5011,3 +5011,6 @@ V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в
 
 
 22.10 T06: prepared 2026-10-22-tradecase-hu-pack (body only, two zero quantity commands, unchanged native scopes/owner operate). Live baseline attach409 TRADE_ORDER_BINDING_REQUIRED, role warehouse-view/no-owner incorrectly read3EA. QA retired. Added owner-read gate in same snapshot; not yet deployed/accepted. Owned21910/H0, three empty test containers retained; checkpoint before apply pending.
+
+
+22.10 T06: first HU migration APPLIED/rollback/reapply INVALID0 after newline source guard and delimiter corrections. Failed role proof found cached replay owner bypass; original3EA grouping restored, QA HP22e73b21aff0 retired/owner0/assignmentrevoked. Prepared separate 2026-10-22-hu-pack-replay-owner, source UNIT keys/current owner/frozen warehouse check before replay. Not yet applied; no completion claim. HTTP unknown-recovery extended to HU scope/conflict.
