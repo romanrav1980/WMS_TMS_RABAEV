@@ -39,7 +39,7 @@ def preview(task_id: int, _user: AdminUser = Depends(get_current_user),
 
 @router.post("/{task_id}/full-pallet-shipment")
 def bind(task_id: int, body: FullPalletBindingRequest,
-         user: AdminUser = Depends(require_permission("warehouse_task_execute")),
+         user: AdminUser = Depends(get_current_user),
          service: FullPalletPort = Depends(fullpal_shipment_service)) -> dict:
     if task_id < 1:
         raise HTTPException(422, "Positive task ID required")

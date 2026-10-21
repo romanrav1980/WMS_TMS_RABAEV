@@ -42,12 +42,13 @@ def _release(cursor: Any, wave: int, cell: str, actor: str) -> int:
         if not existing:
             cursor.execute("""insert into RRL_WAREHOUSE_TASK
                 (TASK_ID,TASK_TYPE,TASK_SOURCE,SOURCE_TASK_ID,SOURCE_DOC_TYPE,SOURCE_DOC_ID,
-                 TARGET_ARTICUL,UID_PALLET,SSCC,FROM_CELL,TO_CELL,QTY,UNIT_CODE,QTY_MODE,
+                 TARGET_ARTICUL,UID_PALLET,SSCC,FROM_CELL,TO_CELL,FROM_WARE_ID,TO_WARE_ID,QTY,UNIT_CODE,QTY_MODE,
                  PRIORITY,STATUS,CREATED_AT,CREATED_BY)
                 select RRL_WAREHOUSE_TASK_SQ.nextval,'PICKING_MOVE','WAVE',:task,'PICK_WAVE',
-                 :wave,:article,:pallet,p.SSCC,:source,:target,:qty,r.BASE_UOM,'PALLET',
+                 :wave,:article,:pallet,p.SSCC,:source,:target,src.WARE_ID,dst.WARE_ID,:qty,r.BASE_UOM,'PALLET',
                  90,'PLANNED',systimestamp,substr(:actor,1,100)
                 from RRL_PALLETS p join RRL_REMAINS r on r.UID_POLETA=p.UID_PALLET
+                 join RRL_CELLS src on src.CELL=r.CELL join RRL_CELLS dst on dst.CELL=:target
                 where p.UID_PALLET=:pallet and p.ARTICUL=:article and r.CELL=:source""",
                 task=task, wave=wave, article=article, pallet=uid, source=source,
                 target=cell, qty=quantity, actor=actor)

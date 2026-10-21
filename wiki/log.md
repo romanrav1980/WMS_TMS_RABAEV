@@ -4950,3 +4950,8 @@ Grant-миграция послеa07edbae: apply/rollback/reapply PASS/INVALID0;
 ## 21.10.2026 — native FULL_PALLET10 и экран восстановления
 
 Две миграции допуска/контекста применены с парными rollback/reapply; INVALID0, source SHA совпали. NativeMOVE10/task1219 и bind641540 прошли, точные повторы дали по одной APPLIED. Проверены warehouse+owner-read и отзыв. UI1440/390:6checks, потеря ответа/reload/exact retry с fixture POST, live writes0; найденная перестановка аргументов хранилища исправлена, новые команды без пользователя/склада блокируются. [Доказательства и ограничения](database/tradecase_full_pallet_admission_20261021.md). Количество10/HARD10сохранено; LOAD/DEPART, scoped запись, автоматическая СТ и заполнение warehouse-колонок staging для общего Ганта открыты. Claude по-прежнему4/4, публикаций нет.
+
+
+## 21.10.2026 — подготовка scoped FULL_PALLET
+
+Подготовлен native допуск привязки своему назначенному заданию через существующий scoped_stock_executor. Изменены только два body/HTTP dependency; окончательная авторизация остаётся в StockPosting. Пока не применён. Новые staging-задания получают реальные warehouse-колонки при создании. Уточнение: старый1219имел NULLдо исполнения, после CORE содержитоба221164919. [Зеркало](database/tradecase_full_pallet_admission_20261021.md).

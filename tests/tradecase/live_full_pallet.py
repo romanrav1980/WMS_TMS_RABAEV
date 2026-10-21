@@ -24,7 +24,7 @@ def step(key,path,body,method='POST'):
     return s[key]
 
 
-def prepare():
+def prepare(attempt_rejected=True):
     if 'fixture'not in s:
         f=box.setup();s['fixture']={k:v for k,v in f.items()if k!='password'};save()
         box.split_box=lambda *_:dict(status='NOT_RUN',reason='Whole pallet retained for FULL_PALLET proof')
@@ -34,6 +34,7 @@ def prepare():
         q=c.cursor();q.execute("select NAME from RRL_WARES where ID=:w",w=w);assert q.fetchone()==('TRADECASE QA '+f['tag'],)
     receipt=next(x['response']for x in s['history']+CALLS if x['status']==201 and '/receiving/supply-orders/'in x['path'])
     step('putaway',f"/api/receiving/putaway/{receipt['task_id']}/complete",dict(scanned_pallet=f['pallet'],scanned_from_cell=f['receive'],scanned_to_cell=receipt['putaway_cell']))
+    step('expedition',base+'/stock/cells/'+f['receive'],dict(operation_id=tag+'.expedition',expected_version=1,zone_kind='EXPEDITION',reason='Owned whole-pallet fixture staging zone'),'PUT')
     units=expect(200,http('GET',base+'/stock?pallet_identifier='+f['pallet']+'&limit=100'))['items']
     step('mark_valid',base+'/stock/mark-confirmations',dict(operation_id=tag+'.valid',skm_id='TC03.SKM',external_event_id=tag+'.valid',expected_site_version=1,occurred_at=datetime.now(timezone.utc).isoformat(),
         items=[dict(physical_unit_key=x['physical_unit_key'],expected_attribute_version=x['attribute_version'],verdict='VALID')for x in units]))
@@ -70,7 +71,9 @@ def prepare():
     with oracle_connection()as c:
         q=c.cursor();q.execute("select TASK_ID,UID_PALLET,FROM_CELL,TO_CELL,QTY from RRL_WAREHOUSE_TASK where TASK_SOURCE='WAVE'and SOURCE_DOC_ID=:w and TASK_TYPE='PICKING_MOVE'",w=wave);tasks=q.fetchall();assert len(tasks)==1,tasks;s['task']=list(tasks[0]);save()
     tid,pallet,src,dst,qty=s['task'];body=dict(operation_id=tag+'.complete.v2',scanned_pallet=pallet,scanned_from_cell=src,scanned_to_cell=dst,fact_qty=str(qty))
-    before=http('POST',f'/api/warehouse-tasks/{tid}/complete',body);s['admission_before']=before;s['complete_body']=body;save()
+    s['complete_body']=body;save()
+    if not attempt_rejected:return
+    before=http('POST',f'/api/warehouse-tasks/{tid}/complete',body);s['admission_before']=before;save()
     assert before[0]==409 and 'TRADE_TASK_BINDING_REQUIRED'in str(before),before
 
 
