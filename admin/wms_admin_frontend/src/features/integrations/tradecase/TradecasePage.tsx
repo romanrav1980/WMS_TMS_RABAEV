@@ -31,7 +31,7 @@ function toUrl(v: View) {
 type Workspaces = { warehouses: { warehouse_id: number; title: string }[]; has_more: boolean; limit: number };
 
 /** Рабочее место оснований, запаса и команд СНС/BLC. Склад/вкладка/курсор/карточка — в адресе, возврат сохраняет их. */
-export function TradecasePage({ onBack }: { onBack: () => void }) {
+export function TradecasePage({ onBack, onWorkspace }: { onBack: () => void; onWorkspace?: (desk: "shift" | "yard", warehouse: string) => void }) {
   const [view, setView] = useState(fromUrl), [prev, setPrev] = useState<(string | null)[]>([]), [reload, setReload] = useState(0);
   const names = useRef<{ wh: string; map: Names }>({ wh: "", map: new Map() });
   const cardRef = useRef<HTMLElement>(null);
@@ -59,6 +59,10 @@ export function TradecasePage({ onBack }: { onBack: () => void }) {
         title={tcHelp.warehouse.text} data-help-id={tcHelp.warehouse.id} />
         <datalist id="tc-wh">{ws.data?.warehouses.map(w => <option key={w.warehouse_id} value={String(w.warehouse_id)}>{w.title}</option>)}</datalist></label>
       <Act help={tcHelp.refresh} disabled={!view.wh} onClick={() => setReload(n => n + 1)}>Обновить</Act>
+      {onWorkspace && <>
+        <Act help={{ id: "tradecase.shift", anchor: "shift", text: "Открыть старшего смены и общий Гант ресурсов выбранного склада. Доступ к данным проверяет сервер." }} disabled={!view.wh} onClick={() => onWorkspace("shift", view.wh)}>Смена и ресурсы</Act>
+        <Act help={{ id: "tradecase.yard", anchor: "shift", text: "Открыть обзор двора по всем доступным складам. Общий Гант откроется на выбранном складе; доступ проверяет сервер." }} disabled={!view.wh} onClick={() => onWorkspace("yard", view.wh)}>Двор: общий обзор</Act>
+      </>}
       <HelpLink anchor="screen" />
     </header>
     {!view.wh ? <p className="tc-panel tc-note">Выберите склад. Список подсказок — ваши текущие доступы; право на СНС/BLC проверит сервер.{ws.data?.has_more ? ` Показаны первые ${ws.data.limit}; другой склад введите кодом.` : ""}</p> : <>

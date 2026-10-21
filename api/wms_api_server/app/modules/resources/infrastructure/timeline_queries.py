@@ -2,6 +2,7 @@
 from datetime import datetime
 from typing import Any
 from ..contracts_timeline import TimelineError
+from .case_view_scope import view_predicate
 
 
 def read_rows(cur: Any, sql: str, params: dict[str, Any], limit: int = 2000) -> list[dict[str, Any]]:
@@ -76,12 +77,12 @@ def dock_rows(cur: Any, warehouse: int) -> list[dict[str, Any]]:
 
 
 def case_rows(cur: Any, params: dict[str, Any]) -> list[dict[str, Any]]:
-    return read_rows(cur, """select t.CASE_PICK_TASK_ID,t.PICK_WAVE_ID,t.STATUS,
+    return read_rows(cur, f"""select t.CASE_PICK_TASK_ID,t.PICK_WAVE_ID,t.STATUS,
         t.ASSIGNED_RESOURCE_ID RESOURCE_ID,t.EQUIPMENT_ID,t.ASSIGNED_TO,t.TOTAL_LINES,t.PICKED_LINES,
         to_char(t.STARTED_AT_INSTANT at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.FF6TZH:TZM') FACT_START_AT,
         to_char(t.DONE_AT,'YYYY-MM-DD"T"HH24:MI:SS') FACT_LOCAL_FINISH,
         t.STARTED_SHIFT_TIME_ZONE from RRL_CASE_PICK_TASK t
-        where t.WARE_ID=:ware and (t.STATUS not in('DONE','CANCELLED','SHIPPED') or
+        where t.WARE_ID=:ware and {view_predicate('t')} and (t.STATUS not in('DONE','CANCELLED','SHIPPED') or
           (t.STARTED_AT_INSTANT<:finish_at and nvl(t.DONE_AT,nvl(t.CLOSED_AT,t.UPDATED_AT))>=:local_start))
         order by t.CASE_PICK_TASK_ID fetch first 2001 rows only""", params)
 

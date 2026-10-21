@@ -23,6 +23,7 @@ export function PlatformEntry({legacy}: {legacy: ReactNode}) {
   const [sectionsOpen,setSectionsOpen] = useState(false);
   const sectionsToggle = useRef<HTMLButtonElement>(null);
   const lastLegacy = useRef(platformPage(page) ? "twin" : page);
+  const workspaceOrigin = useRef(lastLegacy.current);
   useEffect(() => {
     const onPop = () => { const next=currentPage();setPage(next);if(!platformPage(next)){setLegacyMounted(true);lastLegacy.current=next;} };
     window.addEventListener("popstate",onPop);return()=>window.removeEventListener("popstate",onPop);
@@ -34,6 +35,7 @@ export function PlatformEntry({legacy}: {legacy: ReactNode}) {
     return()=>controller.abort();
   },[refresh,page]);
   const navigate = (next: string) => {
+    if(next==="workspace" && page!=="workspace")workspaceOrigin.current=page;
     if(sectionsOpen && matchMedia("(max-width:600px)").matches)sectionsToggle.current?.focus();
     if(!platformPage(page))lastLegacy.current=page;
     if(!platformPage(next))setLegacyMounted(true);
@@ -43,11 +45,11 @@ export function PlatformEntry({legacy}: {legacy: ReactNode}) {
     <button ref={sectionsToggle} className="platform-menu-toggle" type="button" aria-expanded={sectionsOpen} aria-controls="platform-sections"
       title="Открыть или свернуть разделы системы, сохранив текущую работу." data-help-id="shell.sections"
       onClick={()=>setSectionsOpen(value=>!value)}>Разделы системы {sectionsOpen ? "▴" : "▾"}</button>
-    <nav id="platform-sections" className={"platform-navigation"+(sectionsOpen?" is-open":"")} aria-label="Разделы retailcase">
+    <nav id="platform-sections" className={"platform-navigation"+(sectionsOpen?" is-open":"")} aria-label="Разделы системы">
       <HelpButton help={{id:"shell.work",text:"Вернуться к рабочему экрану. Состояние открытого экрана сохраняется.",article:"using-help"}} onClick={()=>navigate(lastLegacy.current)}>Рабочий экран</HelpButton>
       {navigation?.access_admin && <HelpButton help={{id:"shell.access",text:"Открыть роли, группы объектов и назначения. Полномочия проверяет сервер.",article:"access-admin"}} onClick={()=>navigate("access-admin")}>Права и назначения</HelpButton>}
       <HelpButton help={{id:"shell.workspace",text:"Открыть рабочее место (директор РЦ, диспетчер, комплектовщик, водитель). Данные и права проверяет сервер.",article:"workspaces"}} onClick={()=>navigate("workspace")}>Моё рабочее место</HelpButton>
-      <HelpButton help={{id:"shell.tradecase",text:"Открыть СНС/BLC: принятые заказы, рейсы, справочники и журнал обмена склада. Только просмотр; права проверяет сервер.",article:"tradecase-documents"}} onClick={()=>navigate("tradecase")}>СНС/BLC</HelpButton>
+      <HelpButton help={{id:"shell.tradecase",text:"Открыть СНС/BLC: заказы, запас, выкуп, рейсы и журнал обмена. Доступ проверяет сервер.",article:"tradecase-documents"}} onClick={()=>navigate("tradecase")}>СНС/BLC</HelpButton>
       {navigation?.knowledge_editor && <HelpButton help={{id:"shell.knowledge_editor",text:"Открыть редактор: черновики, публикация, импорт выбранных знаний wiki. Сервер проверяет полномочия.",article:"knowledge-editor"}} onClick={()=>navigate("knowledge-editor")}>Редактор знаний</HelpButton>}
       <HelpButton help={{id:"shell.knowledge",text:"Открыть поиск по опубликованным инструкциям и связанные знания, сохранив текущую работу.",article:"using-help"}} onClick={()=>openHelpArticle("using-help")}>База знаний</HelpButton>
       <HelpButton help={{id:"shell.refresh_access",text:"Перечитать доступные разделы после назначения или отзыва роли.",article:"access-model"}} onClick={()=>setRefresh(value=>value+1)}>Обновить доступ</HelpButton>
@@ -57,8 +59,11 @@ export function PlatformEntry({legacy}: {legacy: ReactNode}) {
     <div className="platform-legacy" hidden={platformPage(page)}>{legacyMounted && legacy}</div>
     {page==="access-admin" && (navigation?.access_admin ? <AccessAdminPage onBack={()=>navigate(lastLegacy.current)}/>
       : <p role="status" className="platform-message">{navigation ? "Нет права просмотра администрирования доступа." : "Проверяем доступ к разделу…"}</p>)}
-    {page==="workspace" && <WorkplaceHome onBack={()=>navigate(lastLegacy.current)}/>}
-    {page==="tradecase" && <TradecasePage onBack={()=>navigate(lastLegacy.current)}/>}
+    {page==="workspace" && <WorkplaceHome onBack={()=>navigate(workspaceOrigin.current)}/>}
+    {page==="tradecase" && <TradecasePage onBack={()=>navigate(lastLegacy.current)} onWorkspace={(desk,warehouse)=>{
+      const url=new URL(location.href);url.searchParams.set("workspace",desk);url.searchParams.set("warehouse_id",warehouse);
+      history.replaceState(history.state,"",url);navigate("workspace");
+    }}/>}
     {page==="knowledge-editor" && (navigation?.knowledge_editor ? <KnowledgeEditorPage onBack={()=>navigate(lastLegacy.current)}/>
       : <p role="status" className="platform-message">{navigation ? "Нет права редактирования базы знаний." : "Проверяем доступ к разделу…"}</p>)}
   </div>;

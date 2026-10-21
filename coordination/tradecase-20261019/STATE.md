@@ -16,3 +16,6 @@ Frontend3000 index-LaOuDUHg.js, API8088перезапущенпоследнимg
 
 
 Историческая остановка19.10: STOPPED.json; исходное состояние сохранено коммитом7d8f95c3 и в wiki/roadmap/tradecase_execution_20261019_history.md.
+
+
+T10 navigation/shared shift/Gantt проверены21.10:6UI checks1440/390,44HTTP/2readonlyPOST/0businesswrites. Исправлен CASE owner leak в timeline,4live scopes/21unit PASS. QA T10e1f94abe94 retired/grants revoked, stock10/H0. Frontasset index-z2PZ6rbd.js. Общий gate PASS1195/0cycles/72debt; stock/deferred regression2+6PASS. Двор сводный по всем разрешённым WARE, только Гант по выбранному WARE; visits/queue не реализованы. Google Drive программа изменена21.10 12:39:39UTC, новый снимок program.txt сохранён отдельно; пересверка новой структуры в работе, старые45номеров пока только baseline16.10.

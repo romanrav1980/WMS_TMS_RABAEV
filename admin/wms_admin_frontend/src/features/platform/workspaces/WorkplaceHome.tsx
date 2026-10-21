@@ -30,7 +30,7 @@ export function WorkplaceHome({ onBack }: { onBack?: () => void }) {
   // Свежесть показывает каждый источник по моменту успешного ответа (SourceStrip), а не момент нажатия.
   const refresh = () => setReload(n => n + 1);
   const header = <header className="ops-panel ops-header">
-    <div className="ops-brand">retailcase · рабочее место<small>данные сервера; права определяет сервер</small></div>
+    <div className="ops-brand">Склад · рабочее место<small>данные сервера; права определяет сервер</small></div>
     <label className="ops-role-select">Рабочее место <select value={role} title="Выбрать рабочее место. Доступ к его данным проверяет сервер."
       data-help-id="workspace.role.select" onChange={event=>choose(event.target.value as Role)}>{ROLES.map(item=><option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
     <div role="tablist" aria-label="Рабочее место" className="ops-roles">{ROLES.map(r =>

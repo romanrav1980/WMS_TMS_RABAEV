@@ -85,7 +85,7 @@ class ResourceTimeline:
             for row in task_rows(cur, {"ware": warehouse, "actor": actor, "start_at": start, "finish_at": finish}):
                 projection.task(row)
         if "case_tasks" in allowed:
-            for row in case_rows(cur, {"ware": warehouse, "finish_at": finish,
+            for row in case_rows(cur, {"ware": warehouse, "finish_at": finish, "view_actor": actor,
                                       "local_start": start.replace(tzinfo=None) - timedelta(days=1)}):
                 projection.case_task(row)
         if "transport" in allowed:

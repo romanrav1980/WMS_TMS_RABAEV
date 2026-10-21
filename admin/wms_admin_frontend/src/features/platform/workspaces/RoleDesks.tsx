@@ -88,8 +88,9 @@ export function YardDesk({ day, isToday, reload }: { day: string; isToday: boole
   const data = useDeskData(day, reload, false);
   const docks = { icon: "🚪", label: "Ворота в работе", read: data.trips, source: "DOCK рейсов на дату",
     value: (t: Trip[]) => new Set(t.filter(x => x.DOCK).map(x => x.DOCK)).size, sub: (t: Trip[]) => `рейсов у ворот ${t.filter(atDock).length} · без ворот ${t.filter(noDock).length}` };
-  return <TwinDesk day={day} isToday={isToday} data={data} sceneTitle="Двор и ворота" processes={yardProcesses} kpis={[tripTile(data), docks, readyTile(data)]}
+  return <TwinDesk day={day} isToday={isToday} data={data} sceneTitle="Двор и ворота · все доступные склады" processes={yardProcesses} kpis={[tripTile(data), docks, readyTile(data)]}
     resourceTypes={["DOCK", "VEHICLE"]} reload={reload}
     extraLeft={<div className="ops-note" style={{ marginTop: 10 }} title={wsHelp.yardGap.text} data-help-id={wsHelp.yardGap.id}>
+      <p>Сводка рейсов показывает все разрешённые склады. Склад в общем Ганте выбирается отдельно.</p>
       <b>Нет в системе:</b> журнала прибытия машин и очереди двора — время ожидания у ворот не рассчитывается. Назначение ворот — правкой рейса у диспетчера.</div>} />;
 }
