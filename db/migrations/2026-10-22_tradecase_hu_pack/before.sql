@@ -178,4 +178,5 @@ create or replace package body RRL_TRADE_STOCK_GUARD as
    end loop;
   end if;
  end;
-end;/
+end;
+/
