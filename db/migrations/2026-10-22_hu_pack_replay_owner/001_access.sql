@@ -1,10 +1,11 @@
 create or replace package body RRL_HU_EXEC_ACCESS as
  procedure assert_pack_replay_owners(p_request clob,p_actor varchar2)is
-  d json_object_t:=json_object_t.parse(p_request);plan clob;ware number;trade_site number;
+  d json_object_t:=json_object_t.parse(p_request);plan clob;ware number;trade_site number;operation_value varchar2(100);
  begin
   if d.get_string('command_type')not in('HU_ATTACH','HU_DETACH')then return;end if;
+  operation_value:=d.get_string('operation_id');
   begin select RESOLVED_PLAN_JSON into plan from RRL_STOCK_OPERATION
-   where OPERATION_ID=d.get_string('operation_id')and STATE='APPLIED'and COMMAND_TYPE in('HU_ATTACH','HU_DETACH');
+   where OPERATION_ID=operation_valueand STATE='APPLIED'and COMMAND_TYPE in('HU_ATTACH','HU_DETACH');
   exception when no_data_found then return;end;
   select json_value(plan,'$.domain.parent_snapshot.warehouse' returning number)into ware from dual;
   if ware is null or ware<1 then raise_application_error(-20886,'HU_REPLAY_PHYSICAL_WARE_REQUIRED');end if;

@@ -82,11 +82,11 @@ def execute(service: WarehouseHuPort, kind: str, body: Command, actor: str) -> d
                 metadata.pop(field, None)
         return service.command(kind, body.identifier, body.operation_id, metadata, actor)
     except StockPostingError as exc:
-        uncertain = (exc.code in {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "CONNECTION_UNUSABLE", "LOCK_RETRY_EXHAUSTED"}
-                     or exc.oracle_code == 20882 or "OPERATION_CONFLICT" in (exc.rule_reason or ""))
+        uncertain = exc.code in {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "CONNECTION_UNUSABLE", "LOCK_RETRY_EXHAUSTED"}
+        unknown_outcome = uncertain or exc.oracle_code == 20882 or "OPERATION_CONFLICT" in (exc.rule_reason or "")
         raise HTTPException(403 if exc.oracle_code == 20882 else 503 if uncertain else 409, detail={
             "code": exc.code, "operation_id": exc.operation_id, "reason": exc.rule_reason, "oracle_code": exc.oracle_code,
-            "outcome_confirmed": not uncertain, "retry_same_operation_id": uncertain}) from exc
+            "outcome_confirmed": not unknown_outcome, "retry_same_operation_id": unknown_outcome}) from exc
 
 
 @router.get("/composition")
