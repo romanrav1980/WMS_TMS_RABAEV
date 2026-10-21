@@ -62,6 +62,19 @@ class OracleTradecaseDocuments:
         value["business_hash"] = sha256(canonical(business).encode()).hexdigest()
         return self._command("receive_document", body.warehouse_id, actor, value)
 
+    def retry(self, warehouse_id: int, event_id: str, actor: str) -> dict[str, Any]:
+        try:
+            with self.gateway.transaction("TRADECASE retry deferred document") as cur:
+                result = cur.var(oracledb.DB_TYPE_CLOB)
+                cur.callproc("RRL_TRADE_DOCUMENT_API.retry_document", [warehouse_id, actor, event_id, result])
+                response = read_oracle_json(result.getvalue())
+            # A business rejection is committed with its journal/outbox before returning HTTP 409.
+            if response.get("status") == "REJECTED":
+                raise TradecaseError(response["code"], 409)
+            return response
+        except oracledb.DatabaseError as exc:
+            raise native_error(exc) from exc
+
     def _read(self, warehouse_id: int, actor: str, mode: str, kind: str = "", key: str = "", limit: int = 1) -> dict[str, Any]:
         try:
             with self.gateway.transaction("TRADECASE bounded " + mode) as cur:

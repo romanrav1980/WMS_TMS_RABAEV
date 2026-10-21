@@ -92,3 +92,13 @@ def need(document_id:str=Path(min_length=1,max_length=100),warehouse_id:int=Ware
          service:TradecaseDocuments=Depends(tradecase_documents))->dict[str,Any]:
     try:return service.need(warehouse_id,document_id,max_age_minutes,user.username)
     except TradecaseError as exc:raise HTTPException(exc.status,{'code':exc.code})from exc
+
+
+@router.post("/warehouses/{warehouse_id}/messages/{event_id}/retry")
+def retry(event_id: str = Path(min_length=1, max_length=100), warehouse_id: int = Warehouse,
+          user: AdminUser = Depends(get_current_user),
+          service: TradecaseDocuments = Depends(tradecase_documents)) -> dict[str, Any]:
+    try:
+        return service.retry(warehouse_id, event_id, user.username)
+    except TradecaseError as exc:
+        raise HTTPException(exc.status, {"code": exc.code}) from exc

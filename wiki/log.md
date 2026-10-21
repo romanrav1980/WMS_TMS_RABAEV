@@ -4882,3 +4882,8 @@ T08runtime/test-evidence/.../T08/capacity-fixture.json; APIcapacity успешн
 - 19.10.2026 17:00MSK — записан отдельный SQL-протокол с решениями для долгих блоков/cold-запросов и корректной временной шкалой. Oracle mirror дополнен текущими250/H0,обратным1,NEED7 и историей RETURN11units. Промышленный пилот не принят.
 
 - 19.10.2026 18:25MSK — checkpoint остановки: граница18:00пропущена, решение18:20; только восстановление проверенного состояния и QAretirement после остановки. Непроверенный GS1fallback откатан; восстановлен тот же asset index-fVkgn0sP.js/BUILD_EXIT0. STOPPED.json incomplete, DONEcomplete нет; INVALID0/activeQA0,250H0и110H0.
+
+
+## 21.10.2026 — возобновление СНС/BLC
+
+По новому поручению продолжены незавершённые спринты; остановка19.10 сохранена как исторический факт. Прочитаны AGENTS/index/план/состояние/результаты Claude; новых запросов Claude нет (4/4). Oracle read-only: RABAEV/ORCL/orcl, INVALID0; live package после нормализации переводов строк совпадает с NEED-миграцией. Подготовлены deferred migration/API и [зеркало](database/tradecase_deferred_documents_20261021.md); применять после checkpoint. Бизнес-эффект и приёмка пока не заявляются.
