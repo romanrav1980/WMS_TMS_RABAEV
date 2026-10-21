@@ -31,13 +31,13 @@ export function DocList({ tab, rows, names, selected, onOpen }: { tab: Tab; rows
 }
 
 export const resultChip = (s: string) => s === "ACCEPTED" ? <span className="tc-chip ok">Принято основание</span>
-  : s === "REJECTED" ? <span className="tc-chip bad">Отклонено</span> : <span className="tc-chip">{s}</span>;
+  : s === "REJECTED" ? <span className="tc-chip bad">Отклонено</span> : <span className="tc-chip">{s === "WAITING" ? "Ожидает справочник" : s}</span>;
 export const KIND_NAME: Record<string, string> = { ORDER: "Заказ", TRIP: "Рейс", RECIPIENT: "Получатель", SKU: "Товар", OWNER: "Собственник", SUPPLY: "Поставка", NEED: "Потребность" };
 
 export function MsgList({ rows, selected, onOpen }: { rows: MsgRow[]; selected: string; onOpen: (id: string) => void }) {
   return <div className="tc-scroll"><table className="tc-table"><thead><tr><th>Документ</th><th>Версия</th><th>Приём на складе</th><th>Ответ источнику</th><th>Время</th><th /></tr></thead>
     <tbody>{rows.map(m => <tr key={m.event_id} className={m.event_id === selected ? "is-selected" : ""}>
-      <td>{KIND_NAME[m.entity_type] ?? m.entity_type} <b>{m.document_id}</b></td><td>{m.version}</td><td>{resultChip(m.result.status)}</td>
+      <td>{KIND_NAME[m.entity_type] ?? m.entity_type} <b>{m.document_id}</b></td><td>{m.version}</td><td>{resultChip((m.current_result ?? m.result).status)}</td>
       <td>{m.result.external_delivery === "PENDING" ? "в очереди" : str(m.result.external_delivery)}{m.result.external_business === "NOT_CONFIRMED" ? " · внешний ответ не получен" : ""}</td>
       <td><Time value={m.result.occurred_at} /></td><td><Act help={tcHelp.openMessage} onClick={() => onOpen(m.event_id)}>Открыть</Act></td></tr>)}</tbody></table></div>;
 }

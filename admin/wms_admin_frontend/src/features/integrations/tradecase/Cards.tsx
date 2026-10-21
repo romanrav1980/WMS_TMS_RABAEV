@@ -1,4 +1,6 @@
-import { tcHelp } from "./api";
+import { useRef, useState } from "react";
+import { apiFetch, ApiRequestError } from "../../../api";
+import { cardPath, tcHelp } from "./api";
 import type { DocCard, Kind, MsgCard, Payload } from "./api";
 import type { Names } from "./Lists";
 import { KIND_NAME, resultChip } from "./Lists";
@@ -82,12 +84,28 @@ function reason(code: unknown): string {
 }
 
 /** Карточка сообщения обмена: «принято/отклонено» отдельно от доставки ответа и внешнего подтверждения. */
-export function MessageView({ card, onOpen }: { card: MsgCard; onOpen: Open }) {
-  const r = card.result, kind = r.entity_type as Kind, id = str(r.document_id);
+export function MessageView({ card, onOpen, onDone }: { card: MsgCard; onOpen: Open; onDone: () => void }) {
+  const r = card.current_result ?? card.result, kind = r.entity_type as Kind, id = str(r.document_id);
+  const [pending, setPending] = useState(false), [error, setError] = useState("");
+  const sending = useRef(false);
+  async function retry() {
+    if (sending.current) return;
+    sending.current = true; setPending(true); setError("");
+    try {
+      await apiFetch(cardPath(String(card.warehouse_id), "MESSAGES", str(card.result.event_id)) + "/retry", { method: "POST" });
+    } catch (e) {
+      setError(e instanceof ApiRequestError && e.status === 403 ? "Нет права повторной проверки на этом складе."
+        : e instanceof ApiRequestError && e.status === 409 ? "Проверка завершилась отказом. Сверьте обновлённую причину."
+        : "Сервер не подтвердил результат. Обновите карточку; повторная проверка использует то же сохранённое сообщение.");
+    } finally { sending.current = false; setPending(false); onDone(); }
+  }
   return <>
     <dl className="tc-fields">
       <Row k="Документ" v={<>{KIND_NAME[kind] ?? kind} <b>{id}</b>, версия {str(r.version)} {r.status === "ACCEPTED" && <Act help={tcHelp.related} onClick={() => onOpen(kind, id)}>Открыть документ</Act>}</>} />
       <Row k="Приём на складе" v={resultChip(r.status)} />
+      {card.current_result && <Row k="Первоначальная квитанция" v={resultChip(card.result.status)} />}
+      {r.status === "WAITING" && <Row k="Следующий шаг" v={<>{reason(r.code)}. Загрузите запись из источника и повторите проверку. <HelpLink anchor="deferred" />
+        <Act help={{ id: "tradecase.message.retry", anchor: "deferred", text: "Заново проверить сохранённое сообщение по текущим справочникам. Исходное сообщение не изменяется." }} disabled={pending} onClick={retry}>{pending ? "Проверяем…" : "Проверить после загрузки справочника"}</Act></>} />}
       {r.status === "REJECTED" && <Row k="Причина отказа" v={<>{reason(r.code)}. Передайте номер документа, версию и код из технических сведений ответственному за источник ({card.source_id}). <HelpLink anchor="exchange" label="Как" /></>} />}
       {r.replayed === true && <Row k="Повтор" v="повтор уже полученного сообщения — новый документ не создан" />}
       <Row k="Остатки" v={r.stock_changed === false ? "не менялись" : str(r.stock_changed)} />
@@ -96,6 +114,7 @@ export function MessageView({ card, onOpen }: { card: MsgCard; onOpen: Open }) {
       <Row k="Внешнее подтверждение" v={r.external_business === "NOT_CONFIRMED" ? "внешний ответ не получен" : str(r.external_business)} />
       <Row k="Время" v={<Time value={r.occurred_at} />} />
     </dl>
-    <Tech value={{ request: card.request, result: r }} label="Исходное сообщение и технический результат" />
+    {error && <p role="alert" className="tc-err">{error}</p>}
+    <Tech value={{ request: card.request, result: card.result, current_result: card.current_result }} label="Исходное сообщение и технический результат" />
   </>;
 }

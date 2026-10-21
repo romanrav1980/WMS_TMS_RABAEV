@@ -99,11 +99,11 @@ def run(fixture):
     line=dict(line_id="10",sku_id="A",source_owner_id="SNS",target_owner_id="BLC",mrc="200",quantity="25",uom="BOX",min_osg_days=50)
     order=dict(entity_type="ORDER",recipient_id="C1",planned_ship_at="2026-10-19T12:00:00+03:00",lines=[line])
     missing=envelope("BAD",deepcopy(order));missing["payload"]["lines"][0]["sku_id"]="UNKNOWN"
-    assert "MASTER_MISSING" in expect(409,send(missing))["detail"]["code"]
+    assert expect(200,send(missing))["status"]=="WAITING"
     expect(404,http("GET",path+"/documents/ORDER/BAD",actor=actor,password=password))
     rejected=expect(200,http("GET",path+"/messages/"+missing["event_id"],actor=actor,password=password))
-    assert rejected["result"]["status"]=="REJECTED" and rejected["request"]["document_id"]=="BAD"
-    assert "MASTER_MISSING" in expect(409,send(missing))["detail"]["code"]
+    assert rejected["result"]["status"]=="WAITING" and rejected["request"]["document_id"]=="BAD"
+    assert expect(200,send(missing))["status"]=="WAITING"
     page=expect(200,http("GET",path+"/messages?limit=1",actor=actor,password=password))
     assert len(page["items"])==1 and page["has_more"]
     # The native effect, receipt and outbox roll back together on caller failure.

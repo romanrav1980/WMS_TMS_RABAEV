@@ -5,12 +5,12 @@ export type Tab = Kind | "MESSAGES" | "STOCK" | "BUYOUTS" | "SORT" | "RETURN";
 export type Site = { warehouse_id: number; source_id: string; active_skm: string; planning_source: string; enabled: boolean; version: number };
 export type Payload = Record<string, unknown>;
 export type DocRow = { document_id: string; version: number; status: "ACCEPTED" | "CANCELLED"; payload: Payload };
-export type Result = { status: "ACCEPTED" | "REJECTED"; code?: string; replayed?: boolean; stock_changed?: boolean; physical_execution?: string;
+export type Result = { status: "ACCEPTED" | "REJECTED" | "WAITING"; code?: string; replayed?: boolean; stock_changed?: boolean; physical_execution?: string;
   external_delivery?: string; external_business?: string; outbox_id?: number; occurred_at?: string; [key: string]: unknown };
-export type MsgRow = { event_id: string; entity_type: Kind; document_id: string; version: number; result: Result };
+export type MsgRow = { event_id: string; entity_type: Kind; document_id: string; version: number; result: Result; current_result?: Result };
 export type Page<T> = Site & { owner_scope_filtered?: boolean; items: T[]; has_more: boolean; next_after: string | null };
 export type DocCard = Site & { document_id: string; entity_type: Kind; document_version: number; payload: Payload };
-export type MsgCard = Site & { request: unknown; result: Result };
+export type MsgCard = Site & { request: unknown; result: Result; current_result?: Result };
 /** Группа запаса (C-0133): количества — десятичные строки, счётчики кодов — числа. Один идентификатор может иметь несколько групп. */
 export type StockGroup = { pallet_identifier: string; cell: string | null; sku_id: string; owner_id: string; mrc: string | null; expiry_date: string | null;
   base_uom: string; base_quantity: string; hard_reserved_base: string; unit_count: number; pending_units: number; valid_units: number; rejected_units: number };
