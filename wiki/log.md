@@ -5008,3 +5008,6 @@ V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в
 
 
 22.10 T12: diagnostic ASGI/real Oracle/audit, new process/pool, no lifespan workers: first480ms/pool292ms; next5 requests134–190ms/auth1–2ms/CASE54–86ms/cleanup2–5ms. Same63rows/SHA. No bind values recorded, slow threshold unchanged500ms. Prior751ms SQL/1199msHTTP not reproduced, NOTfixed. Preserve rights/cleanup/audit, no speculativeindex. Evidence T12/case-request-stages.json, script tests/tradecase/profile_case_request.py. Next T03/T06 factory aggregates/tree.
+
+
+22.10 T06: prepared 2026-10-22-tradecase-hu-pack (body only, two zero quantity commands, unchanged native scopes/owner operate). Live baseline attach409 TRADE_ORDER_BINDING_REQUIRED, role warehouse-view/no-owner incorrectly read3EA. QA retired. Added owner-read gate in same snapshot; not yet deployed/accepted. Owned21910/H0, three empty test containers retained; checkpoint before apply pending.

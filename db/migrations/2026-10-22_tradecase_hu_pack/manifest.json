@@ -1,0 +1,12 @@
+{
+  "migration_id": "2026-10-22-tradecase-hu-pack",
+  "target": "RABAEV@127.0.0.1:1521/orcl",
+  "before_source_sha": "590C2A2D4C275278E9081662FC0B98CCBBA4B9165A049B9721D45ED3F6995655",
+  "objects": [
+    "RRL_TRADE_STOCK_GUARD PACKAGE BODY"
+  ],
+  "added_commands": [
+    "HU_ATTACH",
+    "HU_DETACH"
+  ]
+}

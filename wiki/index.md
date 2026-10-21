@@ -4,6 +4,8 @@
 
 ## Текущая работа
 
+- [СНС/BLC: вложенные места](database/tradecase_hu_pack_20261022.md): воспроизведены запрет упаковки и чтение без owner-grant; миграция и исправление чтения подготовлены, ещё не применены.
+
 - [СНС/BLC: целая паллета](database/tradecase_full_pallet_admission_20261021.md): scoped MOVE/bind, исправленное окно Ганта, LOAD/UNLOAD/RELOAD/DEPART и повторы проверены. Два owned-склада0/HARD0; внешние ответы синтетические, вся программа не завершена; [тип паллеты по области](database/tradecase_pallet_floor_scope_20261022.md) и UI1440/390 прошли; исправлены мобильная raw-форма и контракт неизвестного исхода.
 
 - [СНС/BLC: распределение места](components/tradecase_topup_allocation_20261021.md):40A+20B/обратный приоритет,35HTTP и UI1440/390; один READ ONLY snapshot, без заказа/резерва. [Профиль нового запуска](runbooks/tradecase_new_wave_profile_20261021.md) сохраняет3498мс; точная Oracle trace пока недоступна текущему пользователю.

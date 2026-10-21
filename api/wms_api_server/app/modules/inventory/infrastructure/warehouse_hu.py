@@ -6,7 +6,7 @@ import oracledb
 from fastapi import HTTPException
 from ..domain.historical_hu import departure_subtree
 from .hu_placement_read import recorded_placement
-from .hu_view_access import assert_hu_view, assert_resolved_hu_view
+from .hu_view_access import assert_hu_view, assert_resolved_hu_view, assert_hu_stock_owners
 from .hu_thermal_read import hu_thermal_admission
 from .hu_identifier_resolution import resolve_hu_rows
 from ....transaction_gateway import TransactionGateway
@@ -26,6 +26,7 @@ class WarehouseHu:
             bound = WarehouseHu(TransactionGateway(cur))
             data = bound._preview(identifier, actor)
             assert_hu_view(cur, actor, int(data["warehouse"]))
+            assert_hu_stock_owners(cur, actor, data)
             data["thermal_admission"] = hu_thermal_admission(cur, data)
             data["placement"] = recorded_placement(cur, data)
             if data.get("case_task_id") is not None:
