@@ -26,6 +26,7 @@ export function journal<B extends { operation_id: string }>(kind: string, prefix
   }
   /** Новое намерение: только если сохранённого нет. operation_id генерируется здесь один раз. */
   function create(user: string, wh: string, body: Omit<B, "operation_id">): Intent<B> {
+    if (!user.trim() || !wh.trim()) throw new Error("Войдите в систему и выберите склад перед отправкой команды.");
     if (read(user, wh).kind !== "none") throw new Error(`Сначала завершите сохранённую команду (${what}) на этом складе.`);
     const intent = { body: { ...body, operation_id: prefix + ":" + crypto.randomUUID() } as B, sent: false };
     write(user, wh, intent); return intent;

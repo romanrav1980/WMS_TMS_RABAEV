@@ -4945,3 +4945,8 @@ Grant-миграция послеa07edbae: apply/rollback/reapply PASS/INVALID0;
 ## 21.10.2026 — FULL_PALLET: повторная проверка источника
 
 Первый допуск применён/откачен/применён, direct guard1219PASS/foreignDENY,10/HARD10сохранены. Полный HTTP выявил ещё один отказ: core проверяет пригодность без заказа. Подготовлен экспорт и follow-up контекста в RRL_STOCK_TASK_CORE; пока не применён. [Зеркало](database/tradecase_full_pallet_admission_20261021.md).
+
+
+## 21.10.2026 — native FULL_PALLET10 и экран восстановления
+
+Две миграции допуска/контекста применены с парными rollback/reapply; INVALID0, source SHA совпали. NativeMOVE10/task1219 и bind641540 прошли, точные повторы дали по одной APPLIED. Проверены warehouse+owner-read и отзыв. UI1440/390:6checks, потеря ответа/reload/exact retry с fixture POST, live writes0; найденная перестановка аргументов хранилища исправлена, новые команды без пользователя/склада блокируются. [Доказательства и ограничения](database/tradecase_full_pallet_admission_20261021.md). Количество10/HARD10сохранено; LOAD/DEPART, scoped запись, автоматическая СТ и заполнение warehouse-колонок staging для общего Ганта открыты. Claude по-прежнему4/4, публикаций нет.

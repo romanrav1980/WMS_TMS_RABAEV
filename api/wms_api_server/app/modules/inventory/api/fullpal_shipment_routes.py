@@ -1,7 +1,7 @@
 from typing import Protocol
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
-from ...platform.public import AdminUser, require_permission
+from ...platform.public import AdminUser, require_permission, get_current_user
 from ..contracts_stock import StockPostingError
 
 
@@ -25,7 +25,7 @@ class FullPalletBindingRequest(BaseModel):
 
 
 @router.get("/{task_id}/full-pallet-shipment")
-def preview(task_id: int, _user: AdminUser = Depends(require_permission("warehouse_task_view")),
+def preview(task_id: int, _user: AdminUser = Depends(get_current_user),
             service: FullPalletPort = Depends(fullpal_shipment_service)) -> dict:
     if task_id < 1:
         raise HTTPException(422, "Positive task ID required")

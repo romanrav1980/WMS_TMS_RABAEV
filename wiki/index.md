@@ -4,7 +4,7 @@
 
 ## Текущая работа
 
-- [СНС/BLC: целая паллета](database/tradecase_full_pallet_admission_20261021.md): native FULL_PALLET10/wave603/task1219; первый допуск apply/rollback/reapply; HTTP выявил отсутствие контекста в core, follow-up подготовлен.
+- [СНС/BLC: целая паллета](database/tradecase_full_pallet_admission_20261021.md): две миграции APPLIED/rollback/reapply; MOVE10/bind/повторы, owner-view и UI1440/390 прошли.10/HARD10; погрузка/выезд и полная scoped запись открыты.
 
 - [СНС/BLC: распределение места](components/tradecase_topup_allocation_20261021.md):40A+20B/обратный приоритет,35HTTP и UI1440/390; один READ ONLY snapshot, без заказа/резерва. [Профиль нового запуска](runbooks/tradecase_new_wave_profile_20261021.md) сохраняет3498мс и открытое исследование.
 

@@ -7,6 +7,7 @@ import type { Names } from "./Lists";
 import { DocumentView, MessageView } from "./Cards";
 import { Flow } from "./Flow";
 import { StockList } from "./Stock";
+import { FullPalletBinding } from "./FullPalletBinding";
 import { BindPanel } from "./Bind";
 import { BuyoutList, BuyoutView } from "./Buyouts";
 import { BuyoutBasis } from "./BuyoutCreate";
@@ -85,7 +86,7 @@ export function TradecasePage({ onBack, onWorkspace }: { onBack: () => void; onW
           {list.error && <p className="tc-err" role="alert">{list.error}</p>}
           {list.loading && !list.data ? <p className="tc-note">Читаем страницу…</p> : list.data && (list.data.items.length === 0 ? <p className="tc-note">На этой странице записей нет.</p>
             : view.tab === "BUYOUTS" ? <BuyoutList rows={list.data.items as unknown as Buyout[]} names={names.current.map} selected={view.open ?? ""} onOpen={id => go({ open: id })} />
-            : view.tab === "STOCK" ? <StockList rows={list.data.items as unknown as StockGroup[]} names={names.current.map} filtered={list.data.owner_scope_filtered} />
+            : view.tab === "STOCK" ? <><StockList rows={list.data.items as unknown as StockGroup[]} names={names.current.map} filtered={list.data.owner_scope_filtered} /><FullPalletBinding key={view.wh + ":" + user} wh={view.wh} user={user} /></>
             : view.tab === "MESSAGES" ? <MsgList rows={list.data.items as MsgRow[]} selected={view.open ?? ""} onOpen={id => go({ open: id })} />
             : <DocList tab={view.tab} rows={list.data.items as DocRow[]} names={names.current.map} selected={view.open ?? ""} onOpen={id => go({ open: id })} />)}
           <div className="tc-pager">
