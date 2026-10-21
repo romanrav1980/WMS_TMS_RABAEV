@@ -15,6 +15,8 @@ def run_wave_launch(wave: int, operation: str, actor: str,
     post_launch()
     for number, name in enumerate(STEPS, 1):
         try:
+            if number == 1 and repository.completed():
+                break
             with repository.step(number) as (bound, run):
                 if not run:
                     continue

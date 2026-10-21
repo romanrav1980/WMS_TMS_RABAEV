@@ -17,9 +17,16 @@ class Ledger:
     def __init__(self):
         self.done, self.effects, self.failures, self.frozen = set(), [], {}, None
         self.current, self.authorized, self.in_metadata = 0, True, False
+        self.step_calls = 0
+
+    def completed(self):
+        if not self.authorized:
+            raise PermissionError("current warehouse grant revoked")
+        return self.done == set(range(1, 8))
 
     @contextmanager
     def step(self, number):
+        self.step_calls += 1
         if not self.authorized:
             raise PermissionError("current warehouse grant revoked")
         before = deepcopy((self.done, self.effects, self.frozen))
@@ -93,8 +100,10 @@ def test_complete_replay_still_checks_current_access_and_executes_no_step():
     repo = Ledger()
     execute(repo)
     before = list(repo.effects)
+    count = repo.step_calls
     execute(repo)
     assert repo.effects == before
+    assert repo.step_calls == count
     repo.authorized = False
     with pytest.raises(HTTPException) as caught:
         execute(repo)

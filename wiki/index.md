@@ -4,13 +4,13 @@
 
 ## Текущая работа
 
-- [Отзыв доступа отключённого сотрудника СНС/BLC](database/tradecase_retired_grant_revoke_20261021.md): обнаружена блокировка отзыва; подготовлено исправление, ещё не применено.
+- [Отзыв доступа отключённого сотрудника СНС/BLC](database/tradecase_retired_grant_revoke_20261021.md): исправлено и проверено8HTTP; повтор/версия/admin-only, inactive enable запрещён.
 
-- [СНС/BLC: отбор после приёмки коробом](database/tradecase_case_receipt_modes_20261021.md): обнаружен запрет BOX-профиля в допуске CASE; подготовлено узкое изменение, ещё не применено.
+- [СНС/BLC: отбор после приёмки коробом](database/tradecase_case_receipt_modes_20261021.md): исправлено: роль/сессия, CASE2/повтор/возврат,10/HARD0; мобильный запас карточками; native/экраны1440/390 проверены.
 - [СНС/BLC: продолжение21.10](database/tradecase_deferred_documents_20261021.md): владелец возобновил спринты; T02 — сохранение сообщений при отсутствии справочника и повторная проверка. Oracle apply/rollback/reapply и44+29HTTP прошли; UI1440/390 и6проверок восстановления прошли. Лимит Claude прежнего цикла4/4 сохранён.
 
 - [СНС/BLC — выполнение19.10](roadmap/tradecase_execution_20261019.md): T01 завершён, остальные спринты частично; [матрица45](roadmap/tradecase_acceptance_20261019.md), [Oracle](database/tradecase_contract_20261019.md), [источники](sources/tradecase_20261019.md), [история](roadmap/tradecase_execution_20261019_history.md). Три режима выкупа/два выезда/возврат1+10/обратное направление1 проверены локально; добивка/маршрут/промышленные подключения открыты. Claude4/4 RELEASE; цикл остановлен18:20сопозданием, [состояние](../coordination/tradecase-20261019/STOPPED.json); завершение не объявлено.
-- [Описание работы в системе RETAILCASE](components/retailcase_operations_guide_20261019.md#публикация-19102026-и-повторная-проверка-текста): опубликовано в GitHub/Pages и главном README;43должности/19процессов/272обязанности,597UI-checks. Сегодня08:30 анализ СНС/BLC,09–18 реализация, Claude≤4.
+- [Описание работы в системе RETAILCASE](components/retailcase_operations_guide_20261019.md#публикация-19102026-и-повторная-проверка-текста): опубликовано в GitHub/Pages и главном README;43должности/19процессов/272обязанности,597UI-checks. Расписание19.10 завершено; СНС/BLC продолжен21.10 новым поручением.
 - [SQL TRADECASE19.10](runbooks/tradecase_sql_review_20261019.md):200строк203→5SQL, CASE owner через целевые ключи; cold-задержки, нагрузка и решения по каждому долгому блоку сохранены.
 - [Проверка скорости вместе с функциональностью](runbooks/slow_sql_review.md#поручение-владельца19102026-скорость-вместе-с-функциональностью): UI/API/SQL, причина→исправление→сравнение; владелец разрешил код/SQL/индексы, миграции и live verify обязательны.
 
@@ -69,43 +69,15 @@
 
 [Модульный договор](architecture/retailcase_modular_development_contract.md) · [Единая проводка](requirements/stock_posting_core_tz.md) · [Каталог RETAILCASE](sources/wiki_index_catalog_20261015.md#retailcase--межскладской-подвоз-и-cross-dock).
 
-## Logical Branches
+## Справочники проекта
 
-[Oracle, C#, терминалы, интеграции](sources/wiki_index_catalog_20261015.md#logical-branches).
-
-## Subprojects
-
-[Подпроекты](sources/wiki_index_catalog_20261015.md#subprojects).
-
-## Architecture
-
-[Архитектурные страницы](sources/wiki_index_catalog_20261015.md#architecture) · [Права и встроенные знания](architecture/retailcase_scoped_access_and_knowledge.md).
-
-## Database Mirror
-
-[Oracle mirror](database/index.md) · [Изменения Oracle](database/oracle_change_protocol.md) · [WARES: PK и название как уникальный ключ](database/retailcase_wares_identity_keys_20261015.md).
-
-## Incidents
-
-[Инциденты и принятые исправления](sources/wiki_index_catalog_20261015.md#incidents).
-
-## Concepts
-
-[Дерево грузовых мест](concepts/retailcase_nested_hu_consolidation_20261015.md) · [Паспорта KPI](concepts/retailcase_kpi_passports_20261015.md) · [Остальные понятия](sources/wiki_index_catalog_20261015.md#concepts).
-
-## Runbooks
-
-[Приёмка сценария](runbooks/evidence_driven_process_testing.md) · [Долгие SQL](runbooks/slow_sql_review.md) · [Полный каталог](sources/wiki_index_catalog_20261015.md#runbooks).
-
-## Roadmap
-
-[Права/знания](roadmap/retailcase_access_knowledge_plan.md) · [ТМС-2](roadmap/transport_execution_plan.md) · [Остальные планы](sources/wiki_index_catalog_20261015.md#roadmap).
-
-## Requirements
-
-[Требования и версии](sources/wiki_index_catalog_20261015.md#requirements).
-
-## Control Files
-
-[AGENTS.md](../AGENTS.md) · [WIKI_SCHEMA](WIKI_SCHEMA.md) · [Архитектурная политика](../config/architecture/retailcase-policy.json) · [Остальные контрольные файлы](sources/wiki_index_catalog_20261015.md#control-files).
-
+- <a id="logical-branches"></a> **Logical Branches.** [Oracle, C#, терминалы, интеграции](sources/wiki_index_catalog_20261015.md#logical-branches).
+- <a id="subprojects"></a> **Subprojects.** [Подпроекты](sources/wiki_index_catalog_20261015.md#subprojects).
+- <a id="architecture"></a> **Architecture.** [Архитектурные страницы](sources/wiki_index_catalog_20261015.md#architecture) · [Права и встроенные знания](architecture/retailcase_scoped_access_and_knowledge.md).
+- <a id="database-mirror"></a> **Database Mirror.** [Oracle mirror](database/index.md) · [Изменения Oracle](database/oracle_change_protocol.md) · [WARES: PK и название как уникальный ключ](database/retailcase_wares_identity_keys_20261015.md).
+- <a id="incidents"></a> **Incidents.** [Инциденты и принятые исправления](sources/wiki_index_catalog_20261015.md#incidents).
+- <a id="concepts"></a> **Concepts.** [Дерево грузовых мест](concepts/retailcase_nested_hu_consolidation_20261015.md) · [Паспорта KPI](concepts/retailcase_kpi_passports_20261015.md) · [Остальные понятия](sources/wiki_index_catalog_20261015.md#concepts).
+- <a id="runbooks"></a> **Runbooks.** [Приёмка сценария](runbooks/evidence_driven_process_testing.md) · [Долгие SQL](runbooks/slow_sql_review.md) · [Полный каталог](sources/wiki_index_catalog_20261015.md#runbooks).
+- <a id="roadmap"></a> **Roadmap.** [Права/знания](roadmap/retailcase_access_knowledge_plan.md) · [ТМС-2](roadmap/transport_execution_plan.md) · [Остальные планы](sources/wiki_index_catalog_20261015.md#roadmap).
+- <a id="requirements"></a> **Requirements.** [Требования и версии](sources/wiki_index_catalog_20261015.md#requirements).
+- <a id="control-files"></a> **Control Files.** [AGENTS.md](../AGENTS.md) · [WIKI_SCHEMA](WIKI_SCHEMA.md) · [Архитектурная политика](../config/architecture/retailcase-policy.json) · [Остальные контрольные файлы](sources/wiki_index_catalog_20261015.md#control-files).

@@ -30,7 +30,7 @@ function toUrl(v: View) {
 }
 type Workspaces = { warehouses: { warehouse_id: number; title: string }[]; has_more: boolean; limit: number };
 
-/** Рабочее место оснований СНС/BLC (C-0130): только GET. Склад/вкладка/курсор/карточка — в адресе, возврат сохраняет их. */
+/** Рабочее место оснований, запаса и команд СНС/BLC. Склад/вкладка/курсор/карточка — в адресе, возврат сохраняет их. */
 export function TradecasePage({ onBack }: { onBack: () => void }) {
   const [view, setView] = useState(fromUrl), [prev, setPrev] = useState<(string | null)[]>([]), [reload, setReload] = useState(0);
   const names = useRef<{ wh: string; map: Names }>({ wh: "", map: new Map() });

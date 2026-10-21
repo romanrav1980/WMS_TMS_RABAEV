@@ -1,5 +1,5 @@
 
-/** TRADECASE T02 (API_READY_C0130): только GET. Сервер проверяет право в области склада на каждом чтении. */
+/** TRADECASE: чтение оснований и команды через native API. Сервер проверяет право в области склада на каждом чтении. */
 export type Kind = "ORDER" | "TRIP" | "RECIPIENT" | "SKU" | "OWNER" | "SUPPLY" | "NEED";
 export type Tab = Kind | "MESSAGES" | "STOCK" | "BUYOUTS" | "SORT" | "RETURN";
 export type Site = { warehouse_id: number; source_id: string; active_skm: string; planning_source: string; enabled: boolean; version: number };

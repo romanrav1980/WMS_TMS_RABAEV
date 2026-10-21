@@ -19,6 +19,22 @@ class WaveContinuation:
     def __init__(self, gateway: Any, wave: int, operation: str, actor: str) -> None:
         self.gateway, self.wave, self.operation, self.actor = gateway, wave, operation, actor
 
+    def completed(self) -> bool:
+        # post_launch has already verified the immutable stock command. Recheck current scope
+        # before skipping seven metadata transactions for a fully completed continuation.
+        with self.gateway.transaction("Check completed original wave continuation READ ONLY") as cursor:
+            cursor.execute("set transaction read only")
+            cursor.execute("""select count(*) from RRL_WAVE_CONTINUE c
+                join RRL_PICK_WAVE w on w.PICK_WAVE_ID=c.PICK_WAVE_ID
+                join RRL_STOCK_RELEASE r on r.RELEASE_ID=1 and r.STATE='ACTIVE'
+                where c.LAUNCH_OPERATION_ID=:operation and c.PICK_WAVE_ID=:wave and c.ACTOR=:actor
+                  and c.STATE='COMPLETE' and c.SOURCES_FROZEN=1
+                  and RRL_ACCESS_API.allowed(:actor,'pick_wave_launch','WAREHOUSE',to_char(w.WARE_ID))=1
+                  and 7=(select count(*) from RRL_WAVE_CONTINUE_STEP s
+                    where s.LAUNCH_OPERATION_ID=c.LAUNCH_OPERATION_ID and s.STATE='DONE')""",
+                           operation=self.operation, wave=self.wave, actor=self.actor)
+            return cursor.fetchone()[0] == 1
+
     @contextmanager
     def step(self, number: int) -> Iterator[tuple[WaveStepGateway, bool]]:
         with self.gateway.transaction("Original wave launch continuation metadata") as cursor:
