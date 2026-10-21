@@ -4960,3 +4960,8 @@ Grant-миграция послеa07edbae: apply/rollback/reapply PASS/INVALID0;
 ## 22.10.2026 — СНС/BLC: складская роль и исправление окна Ганта
 
 Применён и проверен scoped bind после checkpoint76093b89: MOVE10/bind/exact replay, отзыв403 и восстановление прежнего результата, две APPLIED. QA/session/qualification/grants закрыты,22063978910/HARD10. Staging пишет реальные FROM/TO_WARE_ID до исполнения. Исправлена передача aware границ Oracle TIMESTAMP_TZ; реальный SQL/HTTP UTC,+03,−04 и UI1440/390 находят1221/EQUIPMENT32. Сокращено UTC-предупреждение.21timeline и quality gate1199/0cycles/72debt/24tests/bothTS PASS. Подробности: [[database/tradecase_full_pallet_admission_20261021]]. LOAD/DEPART и весь T06/T07 ещё не завершены, Claude4/4 не менялся.
+
+
+## 22.10.2026 — подготовлен допуск типа паллеты СНС/BLC
+
+Реальный LOAD owned1221 остановлен до QC и без типа верхнего STOCK. QC10/replay прошёл; обнаружен отказ существующей zero-quantity команды PALLET_FLOOR_TYPE_CONFIRM общим trade guard. Подготовлена миграция2026-10-22-tradecase-pallet-floor с экспортом live body/manifest и rollback; owner operate остаётся обязательным. Применение/LOAD ещё не приняты. См. [[database/tradecase_full_pallet_admission_20261021]].
