@@ -155,12 +155,11 @@ create or replace package body RRL_TRADE_STOCK_API as
   write_flag number:=case when j.get_boolean('can_operate')then 1 else 0 end;v_reason varchar2(2000):=j.get_string('reason');
  begin
   if RRL_ACCESS_API.is_admin(p_actor)<>1 then raise_application_error(-20882,'TRADE_OWNER_GRANT_ADMIN_REQUIRED');end if;
-  if view_flag=0 and write_flag=0 then
+  select count(*)into n from RUSERS where ID=v_user and nvl(DELETED,0)=0;
+  if n<>1 or owner_exists(p_ware,v_owner)<>1 then
+   if view_flag<>0 or write_flag<>0 then fail('TRADE_GRANT_USER_OR_OWNER_NOT_FOUND');end if;
    select count(*)into n from RRL_TRADE_OWNER_GRANT where USERNAME=v_user and WARE_ID=p_ware and OWNER_ID=v_owner;
-   if n<>1 then fail('TRADE_GRANT_NOT_FOUND');end if;
-  else
-   select count(*)into n from RUSERS where ID=v_user and nvl(DELETED,0)=0;
-   if n<>1 or owner_exists(p_ware,v_owner)<>1 then fail('TRADE_GRANT_USER_OR_OWNER_NOT_FOUND');end if;
+   if n<>1 then fail('TRADE_GRANT_USER_OR_OWNER_NOT_FOUND');end if;
   end if;
   if write_flag>view_flag then fail('TRADE_OPERATE_REQUIRES_VIEW');end if;
   begin select VERSION_NO into v_version from RRL_TRADE_OWNER_GRANT where USERNAME=v_user and WARE_ID=p_ware and OWNER_ID=v_owner;
