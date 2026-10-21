@@ -1,4 +1,6 @@
 whenever sqlerror exit failure rollback
+@@000_context_spec.sql
+@@before_context_body.sql
 @@001_body.sql
 @@verify.sql
 merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-21-tradecase-full-pallet-context' MIGRATION_ID from dual)x on(d.MIGRATION_ID=x.MIGRATION_ID)

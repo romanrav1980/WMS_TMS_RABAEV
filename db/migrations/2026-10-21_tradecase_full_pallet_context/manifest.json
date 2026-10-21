@@ -2,5 +2,37 @@
   "package": "RRL_STOCK_TASK_CORE",
   "before_sha256": "60f20b2745e31a1aa7a52e69a82a394257faf78a7460245363be154b164cf57b",
   "before_raw_sha256": "e60da5443f1d3efc48c232aee0e69d1d212fc35a3f10332e402401593b89b524",
-  "normalization": "Line endings and trailing whitespace only; raw source retained in runtime evidence"
+  "normalization": "Line endings and trailing whitespace only; raw source retained in runtime evidence",
+  "context_dependents": [
+    [
+      "RRL_PICKING_API",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_STOCK_CASE_PICK_CMD",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_STOCK_WAVE_CMD",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_STOCK_WAVE_LAUNCH_CMD",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_STOCK_WAVE_READY",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_TRADE_PICK_CONTEXT",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_TRADE_STOCK_GUARD",
+      "PACKAGE BODY"
+    ]
+  ],
+  "initial_compile_failure": "PLS-00904: CORE not present in context accessible by; rollback restored INVALID0 before correction",
+  "context_access_change": "Add only existing RRL_STOCK_TASK_CORE to package accessor whitelist"
 }
