@@ -8,5 +8,7 @@
   "added_commands": [
     "HU_ATTACH",
     "HU_DETACH"
-  ]
+  ],
+  "source_guard_normalization": "CR removed; trailing LF ignored; no other source changes accepted",
+  "before_normalized_sha": "f19d8cacc263b341598a6c316e4cafd4eda23860ec0b8191fe28baf410d79d10"
 }
