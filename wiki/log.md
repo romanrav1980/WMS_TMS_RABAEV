@@ -5020,3 +5020,6 @@ V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в
 
 
 22.10 T07 preparation: explicit confirm-bulk-box reuses HU_SHIP loading, no new stock ledger or SAP schema.5offline HTTP checks PASS (server-owned marker, unchanged ordinary metadata, unknown response recovery). Prepared body-only 2026-10-22-bulk-box-loading against actual guard4af17d73; no live apply or box load yet. Next checkpoint/native guard proof and isolated two-BOX physical pass.
+
+
+2026-10-22: prepared scoped CASE labels migration and independent weighed CASE bulk-carton guard. Native snapshots and paired rollbacks saved. Neither new migration is accepted yet. WARE220793322 has 10 units / HARD6: CASE1161+1162 picked2 each, CASE1163 empty IN_PROGRESS with2 reserved; no bulk loads. QA shipping BL2286cdb38dcf and picker from bulk-small-case.json remain active during this owned proof. Existing rejected LABEL403 and LOAD_BOX_MANIFEST_CASE_FLOW_REQUIRED retained. No Claude requests or publication.

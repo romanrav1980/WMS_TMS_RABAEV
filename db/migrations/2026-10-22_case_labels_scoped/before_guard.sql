@@ -1,0 +1,5 @@
+declare s clob;begin if user<>'RABAEV'or sys_context('USERENV','SERVICE_NAME')<>'orcl'then raise_application_error(-20999,'WRONG_TARGET');end if;
+s:=null;dbms_lob.createtemporary(s,true);for r in(select TEXT from USER_SOURCE where NAME='RRL_CASE_SSCC_API'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(s,replace(r.TEXT,chr(13),''));end loop;if rawtohex(sys.dbms_crypto.hash(rtrim(s,chr(10)),sys.dbms_crypto.hash_sh256))<>'15B6BF808AEAC95A8E9AD51F7C7F076B1EC50F6B311248E4841565AC434B1901'then raise_application_error(-20999,'SOURCE_DRIFT_RRL_CASE_SSCC_API');end if;dbms_lob.freetemporary(s);
+s:=null;dbms_lob.createtemporary(s,true);for r in(select TEXT from USER_SOURCE where NAME='RRL_SSCC_ALLOCATOR'and TYPE='PACKAGE BODY'order by LINE)loop dbms_lob.append(s,replace(r.TEXT,chr(13),''));end loop;if rawtohex(sys.dbms_crypto.hash(rtrim(s,chr(10)),sys.dbms_crypto.hash_sh256))<>'4B8A71F258BD79724686E50E3C74C1F56CA00D18E794EA1A1D2E23C0FC84180B'then raise_application_error(-20999,'SOURCE_DRIFT_RRL_SSCC_ALLOCATOR');end if;dbms_lob.freetemporary(s);
+end;
+/

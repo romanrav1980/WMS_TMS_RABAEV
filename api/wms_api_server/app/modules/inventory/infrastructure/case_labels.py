@@ -7,7 +7,6 @@ from ..contracts_case_labels import CaseSsccLabelRequest
 from ..contracts_stock import StockPostingError
 from ..domain.pallet_identifiers import normalize_incoming_sscc
 from ..domain.sscc_label import label_html,label_zpl
-from .metadata_transactions import receipt_task_metadata
 
 class CaseLabels:
     def __init__(self,gateway:OracleGateway)->None:
@@ -15,10 +14,13 @@ class CaseLabels:
 
     def _command(self,procedure:str,task:int,value:str,actor:str,operation:str="")->dict:
         try:
-            with receipt_task_metadata(self.gateway,"Original CASE logistic label",actor,"case_pick_execute")as q:
-                result=q.var(oracledb.DB_TYPE_CLOB)
-                q.callproc(procedure,[task,value,actor,result])
-                return read_oracle_json(result.getvalue())
+            with self.gateway.transaction("Original CASE logistic label with native task fence")as q:
+                try:
+                    result=q.var(oracledb.DB_TYPE_CLOB)
+                    q.callproc(procedure,[task,value,actor,result])
+                    return read_oracle_json(result.getvalue())
+                finally:
+                    q.callproc("RRL_STOCK_LOCK_API.clear_plan")
         except oracledb.DatabaseError as exc:
             error=exc.args[0];code=error.code
             raise StockPostingError("CASE_SSCC_REJECTED" if code and(code==1 or 20800<=code<=20899)else "RESULT_UNCERTAIN",operation,code,str(error.message).split("\n")[0])from exc
