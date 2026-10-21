@@ -76,9 +76,7 @@ def status(task_id: int, user: AdminUser = Depends(get_current_user),
         raise failure(exc) from exc
 
 
-@router.post("/confirm")
-def confirm(body: LoadingRequest, user: AdminUser = Depends(get_current_user),
-            service: TransportLoadingPort = Depends(transport_loading_service)) -> dict[str, Any]:
+def loading_metadata(body: LoadingRequest) -> dict[str, Any]:
     metadata = body.model_dump(mode="json",exclude={"operation_id","identifier","transport_task_id","scan_vehicle","scan_dock","measurements","physical_boxes","temperature_confirmation"})
     metadata["loading_context"]={"transport_task_id":body.transport_task_id,
         "scan_vehicle":body.scan_vehicle,"scan_dock":body.scan_dock,
@@ -87,6 +85,23 @@ def confirm(body: LoadingRequest, user: AdminUser = Depends(get_current_user),
         metadata["loading_context"]["temperature_confirmation"]=body.temperature_confirmation.model_dump(mode="json")
     if body.physical_boxes:
         metadata["loading_context"]["physical_boxes"]=[item.model_dump() for item in body.physical_boxes]
+    return metadata
+
+
+@router.post("/confirm")
+def confirm(body: LoadingRequest, user: AdminUser = Depends(get_current_user),
+            service: TransportLoadingPort = Depends(transport_loading_service)) -> dict[str, Any]:
+    try:
+        return service.load(body.operation_id,body.identifier,loading_metadata(body),user.username)
+    except TransportLoadingError as exc:
+        raise failure(exc) from exc
+
+
+@router.post("/confirm-bulk-box")
+def confirm_bulk_box(body: LoadingRequest, user: AdminUser = Depends(get_current_user),
+                     service: TransportLoadingPort = Depends(transport_loading_service)) -> dict[str, Any]:
+    metadata=loading_metadata(body)
+    metadata["bulk_box_scan"]=True
     try:
         return service.load(body.operation_id,body.identifier,metadata,user.username)
     except TransportLoadingError as exc:

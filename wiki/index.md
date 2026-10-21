@@ -4,6 +4,8 @@
 
 ## Текущая работа
 
+- [СНС/BLC: короб навалом](database/tradecase_bulk_box_loading_20261022.md): подготовлены отдельное действие API и native ограничение BOX;5offline проверок. Миграция/погрузка ещё не приняты.
+
 - [СНС/BLC: вложенные места](database/tradecase_hu_pack_20261022.md): две миграции APPLIED/rollback/reapply; роль46HTTP, дерево глубины3, отзыв owner/повторы/конкуренция и8UI1440/390 прошли; группа3EA восстановлена.
 
 - [СНС/BLC: целая паллета](database/tradecase_full_pallet_admission_20261021.md): scoped MOVE/bind, исправленное окно Ганта, LOAD/UNLOAD/RELOAD/DEPART и повторы проверены. Два owned-склада0/HARD0; внешние ответы синтетические, вся программа не завершена; [тип паллеты по области](database/tradecase_pallet_floor_scope_20261022.md) и UI1440/390 прошли; исправлены мобильная raw-форма и контракт неизвестного исхода.

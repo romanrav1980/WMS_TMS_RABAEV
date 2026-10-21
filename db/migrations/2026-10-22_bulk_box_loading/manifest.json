@@ -1,0 +1,6 @@
+{
+  "migration_id": "2026-10-22-bulk-box-loading",
+  "before_normalized_sha": "4AF17D736EEF8DF4F3112196BDFB0DB689AF5FF6E0A1B5562D08CAA319910E4C",
+  "object": "RRL_TRADE_STOCK_GUARD PACKAGE BODY",
+  "effect": "Only explicit bulk_box_scan HU_SHIP actions require independent BOX root; existing writer and ordinary calls unchanged"
+}
