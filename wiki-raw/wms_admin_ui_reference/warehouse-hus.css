@@ -25,3 +25,10 @@
 .hu-page #huPlacement:not([hidden]){display:grid;gap:8px;padding:14px 16px;border-left:4px solid #5596eb;background:#f2f7ff;border-radius:8px;margin-bottom:16px}.hu-page #huPlacement span{font-size:13px;color:#66788e;line-height:1.5}.hu-page #huPlacement a{font-size:13px;font-weight:600}
 
 .hu-workspace>.topbar button{padding:9px 14px;border:1px solid #d9e1ec;border-radius:9px;background:white;color:#44546b;cursor:pointer}
+
+@media(max-width:850px){
+ body:has(.hu-page) .app{grid-template-columns:minmax(0,1fr)}
+ body:has(.hu-page) .sidebar{display:none}
+ .hu-workspace,.hu-page,.hu-page>.panel,.hu-page .hu-query>*{min-width:0}
+ .hu-page #huStatus,.hu-page #huSummary{overflow-wrap:anywhere}
+}

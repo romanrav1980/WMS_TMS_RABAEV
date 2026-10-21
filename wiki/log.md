@@ -5014,3 +5014,6 @@ V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в
 
 
 22.10 T06: first HU migration APPLIED/rollback/reapply INVALID0 after newline source guard and delimiter corrections. Failed role proof found cached replay owner bypass; original3EA grouping restored, QA HP22e73b21aff0 retired/owner0/assignmentrevoked. Prepared separate 2026-10-22-hu-pack-replay-owner, source UNIT keys/current owner/frozen warehouse check before replay. Not yet applied; no completion claim. HTTP unknown-recovery extended to HU scope/conflict.
+
+
+22.10 T06: nested HU — две body-миграции APPLIED/rollback/reapply/INVALID0. Scoped HP22d8ece2b3ec legacy0:46HTTP, PALLET/BOX/BOX/STOCK3EA, current owner-view/operate, cached replay revoke+restore, cycle/second-parent/stale denied, detach race200/409. QAretired/assignmentrevoked/owner0/0v5; all links detached;21910/H0 groups2/3/5.8UI1440/390 PASS0businessPOST, raw403stale/mobile1280->390 fixed; ordinary nontrade read PASS.69focused+gate1200/0cycles/72debt/24+bothTS PASS. FinalDD6dVNRN (last weight wording14model+build only), API67080/session10056. SQL median124/max600race, HU errorSQL7–44ms noindex; T12cold open. No Claude/push. Next T06/T07 manifest/BOX and bulk/remainder, externalprovider/hardware unavailable. See wiki/database/tradecase_hu_pack_20261022.md.

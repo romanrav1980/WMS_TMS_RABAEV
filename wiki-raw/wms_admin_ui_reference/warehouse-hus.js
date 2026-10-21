@@ -19,7 +19,7 @@
   }
   async function get(identifier){
     const r=await fetch(base()+"/api/warehouse-hus/composition?identifier="+encodeURIComponent(identifier),{headers:window.wmsAdminAuth.headers()});
-    const data=await r.json();if(!r.ok)throw new Error(JSON.stringify(data.detail||data));return data;
+    const data=await r.json();if(!r.ok)throw new Error(r.status===403?"Нет доступа к складу или собственнику товара в составе грузового места.":JSON.stringify(data.detail||data));return data;
   }
   const measureText=value=>String(value??"—").replace(/^[.]/,"0.").replace(".",",");
   const typeText=value=>({"ROLL_CAGE":"Ролл-кейдж","PALLET":"Паллета","BOX":"Коробка","BAG":"Мешок","STOCK":"Товарная партия","CASE":"CASE","CONTAINER":"Контейнер"}[value]||value);
@@ -50,6 +50,8 @@
   async function load(){
     if(busy)return;
     const input=el("huIdentifier").value,id=++generation,scope=key();
+    view=null;window.wmsHuTree?.clear();el("huRows").replaceChildren();el("huSummary").replaceChildren();
+    el("huPlacement").replaceChildren();el("huPlacement").hidden=true;controls();status("Загрузка состава…");
     try{
       const data=await get(input);
       if(id!==generation||key()!==scope||input!==el("huIdentifier").value)return;

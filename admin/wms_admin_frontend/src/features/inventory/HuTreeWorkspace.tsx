@@ -13,21 +13,22 @@ export type HuTreeWorkspaceProps = {
  onReference?: (reference: HuReference) => void;
  helpSlot?: ReactNode;
 };
+const placeType = (node: HuNode) => ({ CONTAINER: "Контейнер", CASE: "Собранное место", STOCK: "Товарная партия", PALLET: "Паллета", BOX: "Короб", ROLL_CAGE: "Ролл-кейдж", BAG: "Мешок" }[node.type || node.kind] || "Грузовое место");
 function NodeFacts({ node, snapshot, onReference }: { node: HuNode; snapshot: HuSnapshot; onReference?: (reference: HuReference) => void }) {
  const references: HuReference[] = [];
  if (positiveId(node.case_task_id)) references.push({ kind: "case", id: node.case_task_id });
  if (positiveId(node.wave_id)) references.push({ kind: "wave", id: node.wave_id });
  if (node.uid === snapshot.root && snapshot.placement) references.push({ kind: "warehouse-task", id: snapshot.placement.task_id });
  return <aside className="hu-tree-inspector" aria-label="Выбранное грузовое место">
-  <span className="hu-tree-eyebrow">{node.kind} · {node.type || "тип не передан"}</span><h3>{node.uid}</h3>
+  <span className="hu-tree-eyebrow">{placeType(node)}</span><h3>{node.uid}</h3>
   <dl><dt>Идентификатор паллеты</dt><dd>{node.sscc || node.uid}</dd>
-   <dt>Состояние</dt><dd>{node.status || "Не передано"}</dd><dt>Версия состава</dt><dd>{node.version ?? "Не передана"}</dd>
-   <dt>Ячейка</dt><dd>{node.cell || snapshot.cell}</dd><dt>Способ сборки</dt><dd>Неизвестен: основание способа не передано</dd>
+   {node.status && <><dt>Состояние</dt><dd>{node.status}</dd></>}<dt>Версия состава</dt><dd>{node.version ?? "Не передана"}</dd>
+   <dt>Ячейка</dt><dd>{node.cell || snapshot.cell}</dd>
    {node.article && <><dt>Артикул</dt><dd>{node.article}</dd></>}
    {node.quantity != null && <><dt>Количество</dt><dd>{node.quantity} {node.base_uom || "единица не передана"}</dd></>}
    <dt>Открытые задания</dt><dd>{node.open_task_count ?? "Не передано"}</dd></dl>
   <HuMassFacts node={node} snapshot={snapshot} />
-  {node.scale_qc && <details><summary title="Показать исходные поля основания массы без переинтерпретации QC" data-help-id="hu.mass.basis">Основание scale_qc</summary><pre>{JSON.stringify(node.scale_qc, null, 2)}</pre></details>}
+  {node.scale_qc && <details><summary title="Показать исходные данные контроля веса" data-help-id="hu.mass.basis">Технические данные контроля веса</summary><pre>{JSON.stringify(node.scale_qc, null, 2)}</pre></details>}
   {node.uid === snapshot.root && snapshot.placement && <p className="hu-tree-note">Размещение: {snapshot.placement.slot_code} · {snapshot.placement.task_status}. {snapshot.placement.version_matches ? "Версия совпадает." : "Версия отличается: запись не подтверждает состав."} Записанный GROSS: {snapshot.placement.gross_weight_kg ?? "не передан"} кг; это не новое измерение.</p>}
   {references.length > 0 && <div className="hu-tree-references" aria-label="Связанные объекты">{references.map(reference => onReference
    ? <button key={reference.kind} type="button" title="Открыть связанный объект по реальному серверному ID" data-help-id="hu.reference.open" onClick={() => onReference(reference)}>{reference.kind} #{reference.id} →</button>
@@ -44,7 +45,7 @@ function TreeBranch({ uid, snapshot, selected, onSelect, collapsed, onToggle }: 
   {children.length > 0 ? <button type="button" className="hu-tree-toggle" aria-expanded={open} aria-label={(open ? "Скрыть" : "Показать") + " детей " + uid}
    title="Показать или скрыть дочерние места без изменения состава" data-help-id="hu.branch.toggle" onClick={() => onToggle(uid)}>{open ? "−" : "+"}</button> : <span className="hu-tree-leaf">·</span>}
   <button type="button" className="hu-tree-select" aria-pressed={selected === uid} title="Выбрать узел и посмотреть состояние, количество и основание массы" data-help-id="hu.node.select" onClick={() => onSelect(uid)}>
-   <span className="hu-tree-kind">{node.kind}</span><strong>{node.sscc || uid}</strong><small>{node.status || "Статус не передан"}{node.quantity != null ? " · " + node.quantity + " " + (node.base_uom || "") : ""}</small>
+   <span className="hu-tree-kind">{placeType(node)}</span><strong>{node.sscc || uid}</strong>{(node.status || node.quantity != null) && <small>{node.status}{node.quantity != null ? (node.status ? " · " : "") + node.quantity + " " + (node.base_uom || "") : ""}</small>}
   </button></div>
   {open && children.length > 0 && <ul>{children.map(child => <TreeBranch key={child.child} uid={child.child} snapshot={snapshot} selected={selected} onSelect={onSelect} collapsed={collapsed} onToggle={onToggle} />)}</ul>}
  </li>;

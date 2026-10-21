@@ -11,7 +11,7 @@ export function huMassFacts(node: HuNode, snapshot: HuSnapshot): { facts: MassFa
  if (qc) facts.push({ label: "GROSS из контроля CASE", value: qc,
   basis: "Основание scale_qc. Не отгрузочное измерение всей внешней HU; аппаратность и актуальность этим экраном не устанавливаются." });
  const stock = node.kind === "STOCK" && massText(node.weight_kg);
- if (stock) facts.push({ label: "Учётный вес товара", value: stock, basis: "Поле STOCK; не измерение весами." });
+ if (stock) facts.push({ label: "Учётный вес товара", value: stock, basis: "Учётный вес; не измерение весами." });
  const tare = massText(node.tare_weight_kg);
  if (tare) facts.push({ label: "Собственная тара", value: tare, basis: "Учётное поле снимка; не новая квитанция весов." });
  else if (node.kind !== "STOCK") missing.push("Собственная тара выбранного места не передана либо имеет неподдерживаемый формат.");

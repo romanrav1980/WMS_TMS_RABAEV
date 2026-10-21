@@ -125,5 +125,23 @@ def verify():
     print(json.dumps(dict(status=report['status'],checks=report['checks'],http_calls=len(CALLS))))
 
 
+def ui_tree(restore=False):
+    s=json.loads(STATE.read_text(encoding='utf-8'));assert s.get('verified')
+    outer,middle,inner=[x['uid']for x in s['containers']]
+    pairs=[(outer,middle),(middle,inner),(inner,s['stock_uid'])]if restore else[(inner,s['stock_uid']),(middle,inner),(outer,middle)]
+    for i,(parent,child)in enumerate(pairs):
+        p,ch=composition(parent),composition(child)
+        body=dict(operation_id=s['tag']+'.ui.'+('detach'if restore else'attach')+'.'+str(i),identifier=parent,child_uid=child,
+            expected_version=p['nodes'][0]['version'],expected_child_version=ch['nodes'][0]['version'],scan_container=parent,scan_child=child)
+        if restore:body['reason']='Restore original stock after browser acceptance'
+        expect(200,http('POST','/api/warehouse-hus/'+('detach'if restore else'attach'),body))
+    result=dict(status='RESTORED'if restore else'PACKED',snapshot=composition(outer),calls=list(CALLS))
+    (OUT/('hu-ui-restored.json'if restore else'hu-ui-tree.json')).write_text(json.dumps(result,indent=2,default=str),encoding='utf-8')
+    print(json.dumps(dict(status=result['status'],root=outer)))
+
+
 if __name__=='__main__':
-    verify()if '--verify'in sys.argv else prepare()
+    if '--ui-pack'in sys.argv:ui_tree()
+    elif '--ui-restore'in sys.argv:ui_tree(True)
+    elif '--verify'in sys.argv:verify()
+    else:prepare()
