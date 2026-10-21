@@ -5000,3 +5000,8 @@ V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в
 ## 22.10.2026 — реальная смена/архив волн, завершены603/604
 
 Кнопки смены вместо статического raw-демо открывают реальный workspace без перезагрузки/потери входа. URLвыбор wave_id, native header для волны вне списка, фильтр warehouse до overview,403 очистка. DONE/CANCELLED отдельно в изометрической схеме; удалены обещания отсутствующих UI-команд. Native finish603/604/replay/APPLIED/P0H0 проверены.10UI1440/390, navigation6/floor8,buildDqjEM9IM и gate1200/0cycles/72debt/24+обаTS PASS после выделения URL-состояния вместо роста baseline. Обнаружены CASE queue1033–1417мс, recovery851, timeline502/872: сохраняются как ближайшее исследование Codex/T12, не исправлены. [[components/tradecase_shift_resources_20261021]].
+
+
+## 22.10.2026 — CASE queue: уменьшен повторный scoped фильтр
+
+Удалён второй WHERE после join уже допущенных selected_tasks; native owner-фильтр итогов волны сохранён.239CASE/63строки, old/new в одном READ ONLY snapshot: все поля/порядок равны, SQL95→51мс;18+18HTTP равны, warmmedian203→191мс. Первый1199мс не исправлен.8liveSQLscopeпар и HTTP owner/WARE revoke/чужой склад прошли; CQ221992d3595c retired/owner0/assignment revoked, P10H0. План недоступен(V$SQL_PLAN), статистику/индексы без основания не меняли.73focused и gate1200/0cycles/72debt/24+обаTS PASS. [[runbooks/tradecase_case_queue_performance_20261022]].

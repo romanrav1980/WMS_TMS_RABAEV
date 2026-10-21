@@ -129,7 +129,6 @@ CASE_TASK_LIST_SQL = """
                   left join task_short ts on ts.CASE_PICK_TASK_ID = t.CASE_PICK_TASK_ID
                   left join task_event te on te.CASE_PICK_TASK_ID = t.CASE_PICK_TASK_ID
                   left join wave_totals wt on wt.PICK_WAVE_ID = t.PICK_WAVE_ID
-                 where {where_sql}
                  order by t.STATUS, t.CREATED_AT, t.CASE_PICK_TASK_ID
               )
              where rownum <= :limit
