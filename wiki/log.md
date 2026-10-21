@@ -4985,3 +4985,8 @@ V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в
 ## 22.10.2026 — scope-body: ошибка компиляции исправлена до повторного применения
 
 Первый apply после67a9cf29 отклонён PLS00302(private warehouse procedure). Автоматического продолжения не было; rollback восстановил INVALID0. Вместо расширения spec использован публичный RRL_ACCESS_API.allowed с прежним legacy-фильтром; исправленная версия checkpoint до reapply. QA PF220c55adb663 остаётся активна до проверки. [[database/tradecase_full_pallet_admission_20261021]].
+
+
+## 22.10.2026 — тип паллеты: scoped API и форма СНС/BLC проверены
+
+Исправленный checkpoint45c2d75f → apply/rollback/reapply/INVALID0/liveSHA. РольWARE при legacy0/другомWARE выполнила подтверждение/exact replay; owner operate и warehouse revoke/restore, чужой склад/версия/конфликт прошли. QA PF220c55adb663 отключён, оба назначения/owner отозваны, склад21902323210/HARD0. Новый React экран/локальная справка/каталог после native auth,6UI checks1440/390/0livewrites PASS; мобильный PNG прочитан.6GET64–256мс, slow новых0; индекс не требуется по этому набору. Общий gate1200/0cycles/72debt/24+bothTS и build PASS. Raw loading catalog всё ещё требует dispatch view, полная role shipping UI не закрыта. [[database/tradecase_pallet_floor_scope_20261022]].

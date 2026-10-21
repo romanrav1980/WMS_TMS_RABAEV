@@ -117,3 +117,8 @@ Google Drive проверен повторно: программа теперь 
 ## 22.10: целая паллета на рейсе и обратная погрузка
 
 Два owned-рейса33662/33663 завершили LOAD/DEPART по10EA. Второй также прошёл UNLOAD/rollback/конкуренцию/повторный QC/RELOAD. Старый LOAD после UNLOAD возвращает прежний ответ без нового списания. Пустой/ERROR документ блокирует выезд, чужой manifest отклоняется, синтетический READY разрешает выезд; снятие после выезда запрещено. Сейчас220639789и2211649190/HARD0. Исправлен допуск штатной zero-quantity команды типа паллеты, native owner operate сохранён; apply/rollback/reapply/liveSHA/INVALID0 проверены. [Результаты и SQL](../database/tradecase_full_pallet_admission_20261021.md).40TRADECASE tests и общий gate PASS, baseline прежний. T06/T07 остаются частичными: навал, перенос/изменения, все роли, внешние документы и полная программа открыты. Claude4/4, новых обращений/публикаций нет.
+
+
+## 22.10: тип паллеты по складской роли
+
+[Scoped подтверждение](../database/tradecase_pallet_floor_scope_20261022.md) работает при legacy shipping0 и legacy складе вне роли. Текущий owner operate и warehouse permission проверяются до повтора. Версия/конфликт/отзыв/восстановление/очисткаQA, native apply/rollback/reapply/liveSHA/INVALID0 прошли. В React «Запас» добавлена форма со сканами и справкой,6UI1440/390 без живых POST. Количество21902323210/HARD0 сохранено. Raw loading catalog требует dispatch view; все отгрузочные роли ещё не приняты. T06/T11 остаются частичными, Claude4/4.

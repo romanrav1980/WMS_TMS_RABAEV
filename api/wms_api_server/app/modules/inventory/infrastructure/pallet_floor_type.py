@@ -12,7 +12,14 @@ class PalletFloorType:
         try:
             with self.gateway.transaction("Read current scoped full-pallet normative type")as cur:
                 cur.execute("set transaction read only")
-                return read_oracle_json(cur.callfunc("RRL_PALLET_FLOOR_READ.describe_type",oracledb.DB_TYPE_CLOB,[identifier,actor]))
+                result=read_oracle_json(cur.callfunc("RRL_PALLET_FLOOR_READ.describe_type",oracledb.DB_TYPE_CLOB,[identifier,actor]))
+                cur.execute("""select PALLET_TYPE_ID,PALLET_TYPE_CODE,PALLET_TYPE_NAME from RRL_PALLET_TYPE
+                    where ACTIVE=1 order by PALLET_TYPE_ID fetch first 501 rows only""")
+                rows=cur.fetchall()
+                if len(rows)>500:
+                    raise StockPostingError("PALLET_FLOOR_CATALOG_BOUND_500","READ",20886)
+                result["types"]=[dict(zip(("id","code","name"),row))for row in rows]
+                return result
         except oracledb.DatabaseError as exc:
             code=getattr(exc.args[0],"code",None)
             if code is not None and 20800<=code<=20999:
