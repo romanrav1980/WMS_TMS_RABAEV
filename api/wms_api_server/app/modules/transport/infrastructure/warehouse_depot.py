@@ -28,7 +28,7 @@ class WarehouseDepot:
                 entered=False
                 try:
                     check=cur.var(oracledb.DB_TYPE_CLOB);cur.callproc("RRL_WARE_DEPOT_API.context",[body["warehouse_id"],actor,check])
-                    cur.callproc("RRL_STOCK_METADATA_TX.begin_change",[actor,"warehouse_settings_edit"]);entered=True
+                    cur.callproc("RRL_STOCK_METADATA_TX.begin_warehouse_change",[actor,body["warehouse_id"]]);entered=True
                     cur.callproc("RRL_WARE_DEPOT_API.context",[body["warehouse_id"],actor,check])
                     cur.execute("select WARE_ID,ACTOR,REQUEST_JSON,RESULT_JSON from RRL_WARE_DEPOT_HISTORY where OPERATION_ID=:operation_id",operation_id=operation)
                     row=cur.fetchone()

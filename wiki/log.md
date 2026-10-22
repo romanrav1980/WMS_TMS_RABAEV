@@ -5096,3 +5096,6 @@ C0150 checkpoint4d9bbed0:7SHA совпали; OracleApply16/8/16оператор
 22.10 — HTTP приёмка двора: live_yard_scope.py PASS2/17HTTP/max276мс, реальный API75144/session92806. Owner/actor-bound replay/revoke/retireduser проверены, QA отключены/визиты CANCELLED/7H5 сохранены. topSQLyard среднее185мс/2, slow TX15–21мс, решение без нового индекса; большой набор/конкуренция остаютсяT10/T12. Обновлён RESUME_LATEST.md.
 
 22.10 — сохранён checkpoint357f33ba принятых T08/C0148. После apply двора настоящий UI1440/390 GET200/0active,0JS/0horizontaloverflow;390скриншот просмотрен. Исправлены устаревшая надпись в YardDesk/подсказка, добавлен переход в смену. Build index-DKuXeLVq.js PASS. Quality gate до этих текстов PASS24/обаTS/1215files/0cycles/debt72; после текста build/tsc PASS.
+
+## 23.10 — маршрут продолжен Codex
+ClaudeC0151 остановлен лимитом до реализации; через канал зафиксирована передача route paths root. В экран добавлены существующие команды депо/оценки рейса с долговечным журналом. Реальный scoped тест выявил403 API+legacy-only native metadata проверки. Подготовлена additive warehouse_depot_scope:3свежих исходника/SHA/rollback, прежняя legacy проверка сохранена; новая процедура ограничена warehouse_settings_edit и областью склада. Перед применением кандидат не объявляется работающим.

@@ -110,3 +110,5 @@
 - [Двор: HTTP после apply](database/tradecase_yard_visit_20261022.md#проверки): owner/actor/revoke/retireduser прошли17HTTP, тестовые визиты отменены; API75144/session92806.
 
 - [Двор: настоящий экран1440/390](database/tradecase_yard_visit_20261022.md#экран-после-применения): API200, без переполнения/JS-ошибок; вход из сводки обновлён.
+
+- [Адрес склада по назначенной роли23.10](database/warehouse_depot_scope_20261023.md): исправление выявленного отказа scoped сотруднику; кандидат до Oracle apply.
