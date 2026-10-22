@@ -1,0 +1,81 @@
+{
+  "migration_id": "2026-10-23-transport-metadata-fence",
+  "target": "RABAEV/orcl",
+  "object": "RRL_STOCK_METADATA_TX",
+  "before": {
+    "PACKAGE": "5C2226F476E4498AADE46494BC62F1C710AACB65BAACE563686A3A5C604ADBF2",
+    "PACKAGE BODY": "2DE37D9A1D086B03551D781A772625EF48195825971CE24602723BEBCAE04207"
+  },
+  "after": {
+    "PACKAGE": "99751329FC37C1DC722ABAC65761BF5B7912234213DD75C3A85A456062471D5C",
+    "PACKAGE BODY": "0AF674340F3C89C27AE61A7EED81D5A900F5B4C4CF2AF7513214DC494C23133B"
+  },
+  "unchanged_dependents": [
+    [
+      "RRL_ASSEMBLY_SCALE_API",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_INTERWARE_INCIDENT_API",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_SAP_STORE_ADMISSION_API",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_STOCK_METADATA_TX",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_STORE_CALENDAR_API",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_ST_DEFER_API",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_ST_DEFER_WAIT_API",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_TT_ROUTE_API",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_TT_TIME_API",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_UPDATE_PALLET_ROW2",
+      "FUNCTION"
+    ],
+    [
+      "RRL_UPDATE_PALLET_ROW3",
+      "FUNCTION"
+    ],
+    [
+      "RRL_WARE_DEPOT_API",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_WAVE_TIME_API",
+      "PACKAGE BODY"
+    ],
+    [
+      "RRL_WORKLOAD_CONFIG_API",
+      "PACKAGE BODY"
+    ]
+  ],
+  "files_sha256": {
+    "001_fence.sql": "9395a3ff5368f87760f071e8c9e879baf8b161d762943a4250d83eb3f5e25eaf",
+    "apply.sql": "a72537162499f00c3191b89f0aec1c039e4039ce828ebfdce6d426f667a2ea2f",
+    "before.sql": "75738fdbcd22ef9de87561c3ac34881a943a66c7397b6f1e85c4992fc1f30902",
+    "preflight.sql": "5db652a55a795ee9615c8cf6d117289c32b26b63aca754c01765ec2760d9b94b",
+    "recompile.sql": "0e76e190faf8a0d390aeb70b1dde1323a449398d66ef67cfa5a9e82d9dca581b",
+    "rollback.sql": "c293486f863ef3e936ca9532e2120b73722f8de7a1e7f7ab16c7244689fede01",
+    "rollback_verify.sql": "5db652a55a795ee9615c8cf6d117289c32b26b63aca754c01765ec2760d9b94b",
+    "verify.sql": "f51266de214090af0ea0d8ab8f73ee3d323b4c1c9a6712f1bcf3b2edd2ce9d37"
+  }
+}
