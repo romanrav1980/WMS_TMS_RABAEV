@@ -15,10 +15,33 @@ OUT=ROOT/'runtime/test-evidence/tradecase/2026-10-22/T12';OUT.mkdir(exist_ok=Tru
 RUN=os.environ.get('TRADECASE_WAVE_PROFILE_RUN','');assert not RUN or re.fullmatch(r'[A-Za-z0-9_-]{1,20}',RUN)
 TAG='WP22'+('.'+RUN if RUN else '')
 FILE=OUT/('wave-request-'+RUN+'.json'if RUN else 'wave-request-state.json');s=json.loads(FILE.read_text(encoding='utf-8'))if FILE.exists()else dict(warehouse=220793322,order=2196,history=[],samples=[])
-calls=[];original_attempt=uow._attempt
+calls=[];profiles=[];line_profile_active=False;original_attempt=uow._attempt
 
 
 def save():FILE.write_text(json.dumps(s,indent=2,default=str),encoding='utf-8')
+
+
+def transaction_id(connection):
+    q=connection.cursor()
+    try:
+        value=q.var(str,100);q.execute('begin :value:=dbms_transaction.local_transaction_id(false);end;',value=value)
+        return value.getvalue()
+    finally:q.close()
+
+
+@contextmanager
+def line_profile(connection,kind):
+    if not line_profile_active:
+        yield None;return
+    assert transaction_id(connection)is None,'Do not profile a pre-existing business transaction'
+    q=connection.cursor();run=q.var(int)
+    q.callproc('DBMS_PROFILER.START_PROFILER',[TAG+'.'+kind,'Owned launch; no bind values',run])
+    connection.commit()  # Only profiler setup; no business transaction exists yet.
+    number=int(run.getvalue());profiles.append(dict(run_id=number,phase=kind))
+    try:yield number
+    finally:
+        assert transaction_id(connection)is None,'Do not flush or commit an active business transaction'
+        q.callproc('DBMS_PROFILER.STOP_PROFILER');connection.commit();q.close()
 
 
 def step(key,path,body):
@@ -55,13 +78,18 @@ class Connection:
 
 @contextmanager
 def measured_metadata_lease():
-    with stages.measured_lease()as connection:yield Connection(connection,'METADATA')
+    with stages.measured_lease()as connection:
+        with line_profile(connection,'METADATA')as run:
+            stages.events[-1]['profile_run_id']=run
+            yield Connection(connection,'METADATA')
 
 
 def measured_attempt(lease,payload,*args,**kwargs):
-    raw=lease.connection;kind=json.loads(payload)['command_type'];lease.connection=Connection(raw,kind);start=perf_counter()
-    try:return original_attempt(lease,payload,*args,**kwargs)
-    finally:lease.connection=raw;calls.append(dict(command=kind,stage='ATTEMPT_TOTAL',ms=round((perf_counter()-start)*1000,3)))
+    raw=lease.connection;kind=json.loads(payload)['command_type']
+    with line_profile(raw,kind)as run:
+        lease.connection=Connection(raw,kind);start=perf_counter()
+        try:return original_attempt(lease,payload,*args,**kwargs)
+        finally:lease.connection=raw;calls.append(dict(command=kind,stage='ATTEMPT_TOTAL',profile_run_id=run,ms=round((perf_counter()-start)*1000,3)))
 
 
 def measured_log(self,connection,sql,params,started,row_count,error_text,operation_kind):
@@ -81,16 +109,19 @@ def prepare():
 
 
 def profile(base):
+    global line_profile_active
     if s.get('samples'):return
     from fastapi.testclient import TestClient
     with patch.object(stages.oracle_gateway,'oracle_connection',measured_metadata_lease),patch.object(stages.oracle_gateway.OracleGateway,'_log_slow_sql',measured_log),patch.object(uow,'_attempt',measured_attempt):
         client=TestClient(stages.app)
         for i in range(4):
-            stages.events.clear();calls.clear();start=perf_counter()
+            line_profile_active=i==0 and os.environ.get('TRADECASE_PLSQL_PROFILE')=='1'
+            stages.events.clear();calls.clear();profiles.clear();start=perf_counter()
             r=client.post(base+'/launch',json=dict(operation_id=TAG+'.LAUNCH.2196'),auth=('admin',os.environ['TRADECASE_ADMIN_PASSWORD']))
-            sample=dict(round=i,http=r.status_code,total_ms=round((perf_counter()-start)*1000,3),leases=list(stages.events),native_calls=list(calls),response=r.json())
+            sample=dict(round=i,http=r.status_code,total_ms=round((perf_counter()-start)*1000,3),leases=list(stages.events),native_calls=list(calls),profiles=list(profiles),response=r.json())
             s['samples'].append(sample);save();assert r.status_code==200,sample['response']
             assert sample['response']==s['samples'][0]['response'],'Launch receipt changed'
+        line_profile_active=False
 
 
 def cleanup(base):
