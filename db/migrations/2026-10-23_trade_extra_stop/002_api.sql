@@ -190,7 +190,6 @@ create or replace package body RRL_TRADE_EXTRA_STOP_API as
   -- Only native data decides: any caller-supplied rule, synthetic window or ban flag is replaced here; legs come from the native material.
   q.remove('extra_rule');q.remove('new_stops_forbidden');q.put('extra_rule',rule);q.put('new_stops_forbidden',p.NEW_STOPS_FORBIDDEN=1);
   r:=json_object_t.parse(assess(c.get_object('source').to_clob,q.to_clob,null,p_after));
-  if p_after is not null then r.put('proposal_fingerprint',sha(base_hash||chr(10)||p_after));end if;
   -- Mileage change (program: show the change of time and mileage) from cached road distances, never estimated.
   declare m json_object_t:=c.get_object('source').get_object('route_material');stops json_array_t:=m.get_array('stops');ord json_array_t:=json_array_t();
    before_km number;after_km number;
@@ -207,7 +206,14 @@ create or replace package body RRL_TRADE_EXTRA_STOP_API as
   end;
   r.put('trip_id',p_trip);r.put('source_hash',base_hash);r.put('time_version',c.get_number('version'));
   r.put('policy_version',p.VERSION_NO);r.put('new_stops_forbidden',p.NEW_STOPS_FORBIDDEN=1);
-  r.put('external_sap_order','NOT_CREATED');  -- the SAP order is created by SAP after approval; not simulated here
+  r.put('external_sap_order','NOT_CREATED');
+  r.put('zone',nvl(q.get_string('zone'),'UTC'));
+  if p_after is not null then
+   declare binding json_object_t:=json_object_t.parse(r.to_clob);begin
+    binding.remove('variants');
+    r.put('proposal_fingerprint',sha(binding.to_clob||chr(10)||p_after));
+   end;
+  end if;
   return r.to_clob;
  end;
 
@@ -221,19 +227,24 @@ create or replace package body RRL_TRADE_EXTRA_STOP_API as
   v_address varchar2(255):=d.get_string('address');expected number:=d.get_number('expected_version');given_hash varchar2(64):=d.get_string('source_hash');
   v_position number:=d.get_number('position');v_reason varchar2(500):=d.get_string('reason');forbid number:=case when d.get_boolean('new_stops_forbidden')then 1 else 0 end;
   given_print varchar2(64):=d.get_string('proposal_fingerprint');result_text clob;after_src clob;fingerprint varchar2(64);existing varchar2(100);
+  scope_ware number;metadata_entered boolean:=false;
  begin
   if op is null or lengthb(op)>100 or not regexp_like(op,'^[A-Za-z0-9_.:-]+$')or v_trip is null or act not in('APPROVE','DECLINE','SET_POLICY')then fail('EXTRA_STOP_REQUEST_INVALID');end if;
   if act='APPROVE'and(v_position is null or given_print is null)then fail('EXTRA_STOP_REQUEST_INVALID');end if;  -- NULL never compares as "different"
   -- Current access fence first (as the other TRADECASE writers), then the trip row; rights checked before and under both.
-  lock table RRL_ACCESS_REV in share mode wait 5;
   require_edit(v_trip,p_actor);
+  select min(WARE_ID)into scope_ware from RRL_SBORKA_PALLETS where TRANSTASK_ID=v_trip;
+  if scope_ware is null then fail('EXTRA_STOP_ACCESS_DENIED');end if;
+  RRL_STOCK_METADATA_TX.begin_transport_change(p_actor,scope_ware);metadata_entered:=true;
+  savepoint trade_extra_stop_cmd;
   begin select 1 into dummy from RRL_TRANSPORT_TASK where ID=v_trip for update wait 5;
   exception when no_data_found then fail('EXTRA_STOP_TRIP_NOT_FOUND');end;
   require_edit(v_trip,p_actor);
   begin
    select*into e from RRL_TRADE_EXTRA_STOP_EVENT where OPERATION_ID=op;
    if e.TRIP_ID<>v_trip or e.ACTOR<>p_actor or e.REQUEST_HASH<>hash_value then fail('EXTRA_STOP_OPERATION_CONFLICT');end if;
-   j:=json_object_t.parse(e.RESULT_JSON);j.put('replayed',true);p_result:=j.to_clob;return;
+   j:=json_object_t.parse(e.RESULT_JSON);j.put('replayed',true);p_result:=j.to_clob;
+   RRL_STOCK_METADATA_TX.end_change;metadata_entered:=false;return;
   exception when no_data_found then null;end;
   if v_reason is null or length(trim(v_reason))<3 then fail('EXTRA_STOP_REASON_REQUIRED');end if;
   p:=policy(v_trip);
@@ -273,6 +284,10 @@ create or replace package body RRL_TRADE_EXTRA_STOP_API as
   insert into RRL_TRADE_EXTRA_STOP_EVENT(OPERATION_ID,TRIP_ID,ACTION,ADDRESS,POSITION_NO,DECISION,SOURCE_HASH,TIME_VERSION,PROPOSAL_FINGERPRINT,REQUEST_HASH,ACTOR,EVENT_AT,RESULT_JSON)
    values(op,v_trip,act,v_address,v_position,v_decision,given_hash,expected,fingerprint,hash_value,p_actor,now,result_text);
   j.put('replayed',false);p_result:=j.to_clob;
+  RRL_STOCK_METADATA_TX.end_change;metadata_entered:=false;
+ exception when others then
+  if metadata_entered then rollback to trade_extra_stop_cmd;RRL_STOCK_METADATA_TX.end_change;end if;
+  raise;
  end;
 
  -- Validity of decisions: a changed base route makes every decision stale; the newest approval per address (at most 5, one variant each)
@@ -281,13 +296,13 @@ create or replace package body RRL_TRADE_EXTRA_STOP_API as
   o json_object_t;p RRL_TRADE_ROUTE_STOP_POLICY%rowtype;current_hash varchar2(64);ev json_object_t;q json_object_t;after_src clob;checked number:=0;validity varchar2(30);
  begin
   RRL_TT_TIME_API.context(p_trip,p_actor,ctx);c:=json_object_t.parse(ctx);current_hash:=c.get_string('source_hash');
-  for x in(select OPERATION_ID,ACTION,ADDRESS,POSITION_NO,DECISION,SOURCE_HASH,PROPOSAL_FINGERPRINT,ACTOR,EVENT_AT,
+  for x in(select OPERATION_ID,ACTION,ADDRESS,POSITION_NO,DECISION,SOURCE_HASH,PROPOSAL_FINGERPRINT,ACTOR,EVENT_AT,RESULT_JSON,
      row_number()over(partition by ADDRESS order by EVENT_AT desc)NEWEST from RRL_TRADE_EXTRA_STOP_EVENT
     where TRIP_ID=p_trip and ACTION in('APPROVE','DECLINE')order by EVENT_AT desc fetch first 50 rows only)loop
    validity:=case when x.SOURCE_HASH=current_hash then 'CURRENT'else 'STALE_ROUTE_CHANGED'end;
    if validity='CURRENT'and x.DECISION='APPROVED'then
     if x.NEWEST=1 and checked<5 then
-     checked:=checked+1;q:=json_object_t();q.put('address',x.ADDRESS);q.put('position',x.POSITION_NO);q.put('zone','UTC');
+     checked:=checked+1;q:=json_object_t();q.put('address',x.ADDRESS);q.put('position',x.POSITION_NO);o:=json_object_t.parse(x.RESULT_JSON);q.put('zone',nvl(o.get_string('zone'),'UTC'));
      ev:=json_object_t.parse(evaluate_internal(p_trip,p_actor,q.to_clob,after_src));
      if ev.get_string('decision')<>'PROPOSE'or nvl(ev.get_string('proposal_fingerprint'),'-')<>x.PROPOSAL_FINGERPRINT then validity:='STALE_INPUTS_CHANGED';end if;
     else validity:='SUPERSEDED_OR_NOT_RECHECKED';end if;

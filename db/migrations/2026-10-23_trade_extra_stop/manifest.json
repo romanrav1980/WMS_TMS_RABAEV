@@ -7,7 +7,8 @@
   "RRL_TT_TIME_API.context",
   "RRL_TT_ROUTE_SCHEDULE.material/calculate",
   "RRL_STORE_WINDOW_RULES.material",
-  "RRL_ACCESS_API.allowed"
+  "RRL_ACCESS_API.allowed",
+  "RRL_STOCK_METADATA_TX.begin_transport_change/end_change"
  ],
  "new_objects": [
   "RRL_TRADE_ROUTE_STOP_POLICY",
@@ -20,7 +21,7 @@
  "files_sha256": {
   "000_preflight.sql": "8ed313035abf01f91718284b7a935f00f2304f03c6662bf279b7e4f4e4ff51f1",
   "001_schema.sql": "2f4ee874c817f01cb316054c6320fc195efc49d1174fe8638bfad6d50c215d90",
-  "002_api.sql": "3a0050975ec7460a3ebe0999d7083b56b570c2c8fa188e3be4124270d1779293",
+  "002_api.sql": "686c542788a6e2a2e6c184f91a40d1e0ff7114dce4a527a5c28a049449eab000",
   "apply.sql": "417cd17ac856e6b081f30286c8460f6c59df3cfa14246340b6d9539ccedb8578",
   "rollback.sql": "0e690541bbe9f74c96c02912abd464b6c00586480b998dc48d732028f3233039",
   "rollback_verify.sql": "851ba6105e16963769d5fdd820e774f2ccbf1e01a0045e464a8c8d0c3fc53fdb",
@@ -33,5 +34,6 @@
   "RRL_TT_ROUTE_SCHEDULE.lock_material on the AFTER source before the final evaluation",
   "NULL position/fingerprint rejected natively",
   "duplicate active approval refused (EXTRA_STOP_ALREADY_APPROVED)"
- ]
+ ],
+ "root_review": "Transport metadata fence; selected proposal includes zone and mileage; history preserves zone."
 }
