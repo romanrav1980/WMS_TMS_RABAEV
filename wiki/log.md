@@ -5092,3 +5092,5 @@ Codex проверил кандидат C0143/9f62fcb8 и исправил те�
 
 ## 22.10 — Oracle двора применён и native цикл проверен
 C0150 checkpoint4d9bbed0:7SHA совпали; OracleApply16/8/16операторов apply/rollback/reapply,0ошибок. Новый tests/tradecase/live_yard_acceptance.py PASS3, fixture полностью rollback: exact replay/changed-body, missing binding, цикл со сменой ворот/закрытой историей/append-only. Остатки250/0,1000/0,10/0,7/5 сохранены. Начальные ошибки runner сохранены отдельно; scopes/конкуренция/HTTP не объявлены принятыми. C0151 ACKK0110: Claude сообщил лимит сессии, исследование есть, реализация не начата. Состояние и следующий шаг — coordination/tradecase-20261019/RESUME_LATEST.md.
+
+22.10 — HTTP приёмка двора: live_yard_scope.py PASS2/17HTTP/max276мс, реальный API75144/session92806. Owner/actor-bound replay/revoke/retireduser проверены, QA отключены/визиты CANCELLED/7H5 сохранены. topSQLyard среднее185мс/2, slow TX15–21мс, решение без нового индекса; большой набор/конкуренция остаютсяT10/T12. Обновлён RESUME_LATEST.md.

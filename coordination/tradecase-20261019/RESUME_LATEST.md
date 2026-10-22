@@ -25,7 +25,7 @@
 
 ## Состояние среды и ограничения
 
-- API8088: serv.bat, TMS_API_RELOAD=0, последний процесс55692/session27642. После новых исходников нужен явный штатный перезапуск, autoreload не полагаться. Проверять процесс, номер может измениться.
+- API8088: serv.bat, TMS_API_RELOAD=0, последний процесс75144/session92806. Перезапущен для HTTP приёмки двора. После новых исходников нужен явный штатный перезапуск, autoreload не полагаться. Проверять процесс, номер может измениться.
 - Frontend3000: последний принятый dist index-BnTtzKfW.js. Новая сборка нужна после изменения UI, не после одних документов.
 - Сохранить физические остатки:210564699=250/H0;215266197=1000/H0;219023232=10/H0;220793322=7/H5.225837931 заморожен. Старые QA не включать; повторных приходов не создавать.
 - Нет разрешения публиковать SAP/SAP_INTEGRATION. Реальные SAP/СКМ/оборудование/пилот не приняты; синтетические ответы не заменяют их.
@@ -38,3 +38,7 @@
 Результаты runtime/test-evidence/tradecase/2026-10-22: topup-wave-adoption-live.json, topup-capacity-intersection.json, adoption-independent-negative.json, topup-native-verification.json в T08; manual-tare-pick-race.json в T11; UI T09/root-C0148. Двор: T10/yard-{apply,rollback,reapply}.txt и T10/YD22.d26c4554ee.json. Неудачные начальные тестовые запуски также сохранены, все откатились; они выявили ошибки настройки runner, не дефекты двора. Полные ссылки и результаты в соответствующих wiki/database страницах и STATE.md.
 
 DONE.json со статусом complete не создавать до настоящего завершения.
+
+## После checkpoint9ba63de4
+
+Реальный HTTP/Oracle tests/tradecase/live_yard_scope.py PASS2groups/17запросов, максимум276мс: внешний ORDER без nativebinding, отсутствие/read-only/operate owner-права, exact replay, другой actor/body, отзыв owner скрывает визит/квитанцию, retireduser401. QA YS22c2c124ba6f отключён/assignment отозван/owner0; визит4 CANCELLED. Предыдущая попытка YS22 завершилась только ошибкой ожидания403 вместо правильного401; её QA тоже отключён, визит3CANCELLED. Ни одного активного YS22QA не осталось. Физические7/H5 сохранены. Evidence T10/YS22c2c124ba6f.json и yard-sql-review.json; topSQL yard максимум185мссреднее/2исполнения, новые slow TX15–21мс. Индекс не добавлять: задержка не подтверждает необходимость. Большой скрытый набор/межскладская конкуренция остаются Codex/T10/T12.
