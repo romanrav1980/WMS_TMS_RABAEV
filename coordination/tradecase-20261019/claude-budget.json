@@ -122,7 +122,7 @@
                      {
                          "id":  "C-0154",
                          "registered_at":  "2026-10-23T01:31:08.2865838+03:00",
-                         "status":  "REGISTERED before delivery; ACK pending",
+                         "status":  "ACK K0116 WORKING: full route and extra stop decision under existing schedule",
                          "delivery":  "existing file channel",
                          "task":  "T09 full time-window route and additional stop 15/45 decision using existing native TMS"
                      }

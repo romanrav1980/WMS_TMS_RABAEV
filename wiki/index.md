@@ -4,6 +4,8 @@
 
 ## Текущая работа
 
+- [Очередь заданий: SQL200→78мс](components/warehouse_task_queue_performance_20261023.md): те же500 строк, назначенная роль/отзыв/отключение проверены. [Списание брака](database/tradecase_quality_posting_20261023.md): настоящий цикл2EA и повтор прошли, внешние ответыPENDING. Claude C0154 ACKK0116 выполняет полный маршрут/заезд.
+
 - [Проводка брака](database/tradecase_quality_posting_20261023.md): C0153 RELEASEK0115/7b076874, root проверяет перед применением. C0154 на полный маршрут/новый заезд передан Claude; подтверждение начала ожидается.
 
 - [Дорожные плечи рейса](database/trip_road_refresh_20261023.md): подготовлен bounded refresh через дорожный сервис, приёмка продолжается. [Дела качества](database/tradecase_quality_case_20261023.md): apply/rollback/reapply15/9/15 без ошибок; C0153 ACKK0113, Claude выполняет проводку и удержание.

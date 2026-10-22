@@ -62,8 +62,7 @@ class OracleQualityCases:
         return receipt
 
     def quarantine_move(self, ware: int, body: QuarantineMove, actor: str) -> dict[str, Any]:
-        # An open, defect or posted case keeps the pallet in quarantine. This read precedes the posting transaction, so a case
-        # opened in between is not seen: the native guard belongs to RRL_TRADE_STOCK_GUARD (root boundary, see RESULT_C0152).
+        # This read gives an early refusal. The native stock guard repeats the hold check under the posting STOCK lock.
         try:
             with self.gateway.transaction("TRADECASE quality release check READ ONLY") as cur:
                 cur.execute("set transaction read only")
