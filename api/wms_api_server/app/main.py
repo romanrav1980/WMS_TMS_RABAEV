@@ -395,6 +395,8 @@ from .modules.transport.public import transport_preflight_router, transport_pref
 from .transport_preflight_composition import preflight_service
 app.include_router(transport_preflight_router)
 app.dependency_overrides[transport_preflight_service] = preflight_service
+from .extra_stop_composition import register_extra_stop
+register_extra_stop(app)
 
 from .modules.resources.public import case_read_service,case_carrier_lookup_router
 app.include_router(case_carrier_lookup_router)

@@ -1,0 +1,129 @@
+{
+ "base": "http://127.0.0.1:3021/",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "every extra-stop button has title and help id"
+  },
+  {
+   "width": 1440,
+   "name": "decision made on an older route is shown as stale"
+  },
+  {
+   "width": 1440,
+   "name": "LIVE trip 33665: missing inputs point to the existing controls"
+  },
+  {
+   "width": 1440,
+   "name": "15-minute stop with 30 minutes slack is proposed with changed arrivals/return (real calculator output)"
+  },
+  {
+   "width": 1440,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 1440,
+   "name": "approval binds address, position, route version and source hash"
+  },
+  {
+   "width": 1440,
+   "name": "unconfirmed decision survives reload"
+  },
+  {
+   "width": 1440,
+   "name": "retry resends identical bytes; SAP order not invented"
+  },
+  {
+   "width": 1440,
+   "name": "45-minute stop is rejected and cannot be approved"
+  },
+  {
+   "width": 1440,
+   "name": "changed route refuses an old decision"
+  },
+  {
+   "width": 1440,
+   "name": "real trip 33665: missing inputs named, no promise"
+  },
+  {
+   "width": 1440,
+   "name": "ban on new points: not proposed"
+  },
+  {
+   "width": 1440,
+   "name": "ban is a versioned command"
+  },
+  {
+   "width": 1440,
+   "name": "not applied is explicit"
+  },
+  {
+   "width": 390,
+   "name": "every extra-stop button has title and help id"
+  },
+  {
+   "width": 390,
+   "name": "decision made on an older route is shown as stale"
+  },
+  {
+   "width": 390,
+   "name": "LIVE trip 33665: missing inputs point to the existing controls"
+  },
+  {
+   "width": 390,
+   "name": "15-minute stop with 30 minutes slack is proposed with changed arrivals/return (real calculator output)"
+  },
+  {
+   "width": 390,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 390,
+   "name": "approval binds address, position, route version and source hash"
+  },
+  {
+   "width": 390,
+   "name": "unconfirmed decision survives reload"
+  },
+  {
+   "width": 390,
+   "name": "retry resends identical bytes; SAP order not invented"
+  },
+  {
+   "width": 390,
+   "name": "45-minute stop is rejected and cannot be approved"
+  },
+  {
+   "width": 390,
+   "name": "changed route refuses an old decision"
+  },
+  {
+   "width": 390,
+   "name": "real trip 33665: missing inputs named, no promise"
+  },
+  {
+   "width": 390,
+   "name": "ban on new points: not proposed"
+  },
+  {
+   "width": 390,
+   "name": "ban is a versioned command"
+  },
+  {
+   "width": 390,
+   "name": "not applied is explicit"
+  }
+ ],
+ "liveWrites": [],
+ "errors": [],
+ "posts": 8,
+ "timings": {
+  "panel_1440": [
+   2740
+  ],
+  "panel_390": [
+   2512
+  ]
+ },
+ "status": "PASS"
+}

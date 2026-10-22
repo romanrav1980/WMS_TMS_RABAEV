@@ -96,3 +96,8 @@ from .infrastructure.trip_list_filters import trip_list_filters
 from .infrastructure.dispatch_read_scope import guarded_trip_read, scoped_dispatch_rows
 
 from .infrastructure.timeline_clock import current_timeline_clock
+
+from .contracts_extra_stop import ExtraStopPort, extra_stop_service
+from .api.extra_stop_routes import router as extra_stop_router
+
+from .infrastructure.extra_stop import OracleExtraStop

@@ -1,0 +1,219 @@
+{
+ "kind": "REAL_TRIPS_READ_ONLY_EVALUATE_WITHOUT_POLICY_TABLE",
+ "33665": {
+  "ms": 359,
+  "result": {
+   "address": "СМ Тюмень - 30 лет Победы 112",
+   "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",
+   "before": {
+    "status": "INSUFFICIENT_EVIDENCE",
+    "return_at": null,
+    "departure_at": null,
+    "drive_min": "0",
+    "stops": [
+     {
+      "address": "FP21.QA.ADDRESS",
+      "st_numbers": [
+       "N22A.220793322"
+      ],
+      "window_from": null,
+      "window_to": null,
+      "arrival_at": null,
+      "service_start_at": null,
+      "service_finish_at": null,
+      "wait_min": null,
+      "late_min": null,
+      "unload_norm_min": null,
+      "window_strict": null,
+      "window_source": "ST_MATERIALIZED",
+      "issues": [
+       "DESTINATION_RULE_INVALID",
+       "ROUTE_ARRIVAL_UNKNOWN"
+      ]
+     }
+    ],
+    "issues": [
+     {
+      "code": "WAREHOUSE_DEPOT_NOT_CONFIGURED",
+      "address": null
+     },
+     {
+      "code": "ROUTE_DEPARTURE_STAGE_UNKNOWN",
+      "address": null
+     },
+     {
+      "code": "ROUTE_ROAD_MISSING_STALE_OR_UNSUPPORTED",
+      "address": "FP21.QA.ADDRESS"
+     },
+     {
+      "code": "DESTINATION_RULE_INVALID",
+      "address": "FP21.QA.ADDRESS"
+     },
+     {
+      "code": "ROUTE_ARRIVAL_UNKNOWN",
+      "address": "FP21.QA.ADDRESS"
+     },
+     {
+      "code": "ROUTE_ROAD_MISSING_STALE_OR_UNSUPPORTED",
+      "address": null
+     },
+     {
+      "code": "ROUTE_RETURN_TIME_UNKNOWN",
+      "address": null
+     }
+    ]
+   },
+   "before_slack_min": null,
+   "decision": "UNKNOWN",
+   "reason": "BASE_ROUTE_NOT_CONFIRMED",
+   "distance_km_before": null,
+   "trip_id": 33665,
+   "source_hash": "507a470109b6a6e1109a5b1be86e778b494c8af238d6691b7c389b5e3f3b0734",
+   "time_version": 0,
+   "policy_version": 0,
+   "new_stops_forbidden": false,
+   "external_sap_order": "NOT_CREATED"
+  }
+ },
+ "33660": {
+  "ms": 21,
+  "result": {
+   "address": "СМ Тюмень - 30 лет Победы 112",
+   "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",
+   "before": {
+    "status": "INSUFFICIENT_EVIDENCE",
+    "return_at": null,
+    "departure_at": null,
+    "drive_min": "0",
+    "stops": [
+     {
+      "address": "TRADECASE.QA.1155",
+      "st_numbers": [
+       "TC7.1155"
+      ],
+      "window_from": null,
+      "window_to": null,
+      "arrival_at": null,
+      "service_start_at": null,
+      "service_finish_at": null,
+      "wait_min": null,
+      "late_min": null,
+      "unload_norm_min": null,
+      "window_strict": null,
+      "window_source": "ST_MATERIALIZED",
+      "issues": [
+       "DESTINATION_RULE_INVALID",
+       "ROUTE_ARRIVAL_UNKNOWN"
+      ]
+     }
+    ],
+    "issues": [
+     {
+      "code": "WAREHOUSE_DEPOT_NOT_CONFIGURED",
+      "address": null
+     },
+     {
+      "code": "ROUTE_DEPARTURE_STAGE_UNKNOWN",
+      "address": null
+     },
+     {
+      "code": "ROUTE_ROAD_MISSING_STALE_OR_UNSUPPORTED",
+      "address": "TRADECASE.QA.1155"
+     },
+     {
+      "code": "DESTINATION_RULE_INVALID",
+      "address": "TRADECASE.QA.1155"
+     },
+     {
+      "code": "ROUTE_ARRIVAL_UNKNOWN",
+      "address": "TRADECASE.QA.1155"
+     },
+     {
+      "code": "ROUTE_ROAD_MISSING_STALE_OR_UNSUPPORTED",
+      "address": null
+     },
+     {
+      "code": "ROUTE_RETURN_TIME_UNKNOWN",
+      "address": null
+     }
+    ]
+   },
+   "before_slack_min": null,
+   "decision": "UNKNOWN",
+   "reason": "BASE_ROUTE_NOT_CONFIRMED",
+   "distance_km_before": null,
+   "trip_id": 33660,
+   "source_hash": "d9faf67b336f12107ae8832e5f21ff5c570eef2b636155659a23796bfb382b8b",
+   "time_version": 0,
+   "policy_version": 0,
+   "new_stops_forbidden": false,
+   "external_sap_order": "NOT_CREATED"
+  }
+ },
+ "33564": {
+  "ms": 41,
+  "result": {
+   "address": "СМ Тюмень - 30 лет Победы 112",
+   "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",
+   "before": {
+    "status": "INSUFFICIENT_EVIDENCE",
+    "return_at": null,
+    "departure_at": "2026-10-14T00:51:00.000000+00:00",
+    "drive_min": "0",
+    "stops": [
+     {
+      "address": "Own full-pallet ST",
+      "st_numbers": [
+       "M270:4edcbf41c6"
+      ],
+      "window_from": null,
+      "window_to": null,
+      "arrival_at": null,
+      "service_start_at": null,
+      "service_finish_at": null,
+      "wait_min": null,
+      "late_min": null,
+      "unload_norm_min": "30",
+      "window_strict": 0,
+      "window_source": "ST_MATERIALIZED",
+      "issues": [
+       "ROUTE_ARRIVAL_UNKNOWN"
+      ]
+     }
+    ],
+    "issues": [
+     {
+      "code": "WAREHOUSE_DEPOT_NOT_CONFIGURED",
+      "address": null
+     },
+     {
+      "code": "ROUTE_ROAD_MISSING_STALE_OR_UNSUPPORTED",
+      "address": "Own full-pallet ST"
+     },
+     {
+      "code": "ROUTE_ARRIVAL_UNKNOWN",
+      "address": "Own full-pallet ST"
+     },
+     {
+      "code": "ROUTE_ROAD_MISSING_STALE_OR_UNSUPPORTED",
+      "address": null
+     },
+     {
+      "code": "ROUTE_RETURN_TIME_UNKNOWN",
+      "address": null
+     }
+    ]
+   },
+   "before_slack_min": null,
+   "decision": "UNKNOWN",
+   "reason": "BASE_ROUTE_NOT_CONFIRMED",
+   "distance_km_before": null,
+   "trip_id": 33564,
+   "source_hash": "b319c244437a68b027fb3624472f606e2929c02dc81ded04967c4b02c001d34b",
+   "time_version": 4,
+   "policy_version": 0,
+   "new_stops_forbidden": false,
+   "external_sap_order": "NOT_CREATED"
+  }
+ }
+}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRead } from "./useRead";
 import { RoutePlan } from "./RoutePlan";
 import { RouteSettings } from "./RouteSettings";
+import { ExtraStop } from "./ExtraStop";
 import type { Points, RouteMember } from "./RoutePlan";
 import { HelpLink, Tech } from "./ui";
 
@@ -43,6 +44,7 @@ export function TripRoute({ wh, user, trip, nativeTask, bindingState }: { wh: st
           : nativeTask && points.data && <RoutePlan key={reload} nativeTask={nativeTask} members={members} points={points.data} />}
         {nativeTask && <RouteSettings key={`${user}:${wh}:${nativeTask}`} wh={wh} user={user} trip={nativeTask}
           version={r.version} sourceHash={r.source_hash} refreshing={route.loading} onSaved={() => setReload(n => n + 1)} />}
+        {nativeTask && <ExtraStop key={`stop:${user}:${wh}:${nativeTask}`} wh={wh} user={user} trip={nativeTask} />}
         <p className="tc-note">Карта не строится: координат точек в источнике нет.</p>
         <Tech value={r} label="Транспортное основание" /></>}
     <h4>Обеспеченность заказов рейса <HelpLink anchor="coverage" /></h4>

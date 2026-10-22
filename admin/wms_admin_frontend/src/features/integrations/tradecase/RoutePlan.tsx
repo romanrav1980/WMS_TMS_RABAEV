@@ -26,6 +26,12 @@ const REASON: Record<string, string> = { NO_ORDER_FOR_POINT: "у точки не
 const ADDRESS: Record<string, string> = { CONFIRMED: "адрес совпадает с адресом клиента", NOT_IN_CUSTOMER_ADDRESSES: "адреса точки нет среди адресов клиента",
   AMBIGUOUS: "адрес совпадает с несколькими адресами клиента", ADDRESS_MISSING: "у точки нет адреса", UNKNOWN: "адрес не проверен" };
 const issue = (code: string) => ISSUE[code] ?? "другая причина источника (подробно — в технических сведениях)";
+export const routeIssue = issue;
+// Где сотрудник задаёт недостающее: только существующие действия этого экрана (C-0154).
+const FIX: Record<string, string> = { WAREHOUSE_DEPOT_NOT_CONFIGURED: "«Настроить исходные данные маршрута» → адрес склада выезда",
+  ROUTE_DEPARTURE_STAGE_UNKNOWN: "«Настроить исходные данные маршрута» → оценка длительности рейса (создаёт плановые операции и время выезда)",
+  ROUTE_ROAD_MISSING_STALE_OR_UNSUPPORTED: "«Обновить дорожные плечи»", DESTINATION_RULE_INVALID: "«Настроить окна и разгрузку магазина» у точки",
+  DELIVERY_WINDOW_UNCONFIGURED: "«Настроить окна и разгрузку магазина» у точки" };
 const time = (iso: string | null) => (iso ? `${iso.slice(8, 10)}.${iso.slice(5, 7)} ${iso.slice(11, 16)} UTC` : "неизвестно");
 const minutes = (v: string | null) => (v === null ? "неизвестно" : `${Math.round(Number(v))} мин`);
 
@@ -45,6 +51,8 @@ export function RoutePlan({ nativeTask, members, points }: { nativeTask: number;
       {w.status === "NO_EARLIEST_WINDOW_VIOLATION" ? "Нарушений окон по расчёту нет." : "Окна не подтверждены"}
       {tripIssues.length ? `: ${tripIssues.map(issue).join("; ")}` : ""}.
       {points.blocked_reason && " Не у всех точек подтверждён получатель."} Расчёт — план; выезд и доставку он не подтверждает.</p>}
+    {w && (() => { const fixes = [...new Set(w.issues.map(i => FIX[i.code]).filter(Boolean))];
+      return fixes.length > 0 && <p className="tc-note" title="Что задать, чтобы расчёт стал полным" data-help-id="tradecase.route.fix">Что сделать: {fixes.join("; ")}.</p>; })()}
     {members.map(m => {
       const p = byPoint.get(m.id), s = stop(m.address);
       return <article key={m.id} className="tc-panel" aria-label={`Точка ${m.route_ordinal ?? "без номера"}`}>

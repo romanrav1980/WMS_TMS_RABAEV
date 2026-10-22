@@ -46,6 +46,7 @@ function text(reason: unknown): string {
     TRADE_CAPACITY_WHOLE_BOXES_REQUIRED: "В основном плане есть неполные короба. Для расчёта требуется схема размещения такого груза.",
     TRADE_CAPACITY_SOURCE_MISSING: "В плане не найден товар, заказ или его строка. Перечитайте основания рейса.",
     TRADE_CAPACITY_SOURCE_INACTIVE: "Основание отменено или товар неактивен. Уточните план рейса.",
+    EXTRA_STOP_NOT_AVAILABLE: "Решения о дополнительных заездах на сервере ещё не включены.",
   };
   const code = reason.detail && typeof reason.detail === "object" && "code" in reason.detail ? String(reason.detail.code) : "";
   if (codes[code]) return codes[code];
