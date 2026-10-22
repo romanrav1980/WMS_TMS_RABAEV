@@ -5099,3 +5099,5 @@ C0150 checkpoint4d9bbed0:7SHA совпали; OracleApply16/8/16оператор
 
 ## 23.10 — маршрут продолжен Codex
 ClaudeC0151 остановлен лимитом до реализации; через канал зафиксирована передача route paths root. В экран добавлены существующие команды депо/оценки рейса с долговечным журналом. Реальный scoped тест выявил403 API+legacy-only native metadata проверки. Подготовлена additive warehouse_depot_scope:3свежих исходника/SHA/rollback, прежняя legacy проверка сохранена; новая процедура ограничена warehouse_settings_edit и областью склада. Перед применением кандидат не объявляется работающим.
+
+23.10 — первая depot_scope применена7/7/7. Проверка выявила порядок блокировок в новой ветке: scoped assert_allowed до begin_plan создаёт DIRTY_TRANSACTION. Подготовлен отдельный lock_order (2body/before/verify/rollback); предварительная allowed без блокировки, повтор под fence. Провалившийся QA убран, данных истории не создал.
