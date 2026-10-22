@@ -83,14 +83,15 @@ const yardProcesses: Process[] = [
   { id: "shipped", icon: "➜", title: "Убыли (отгружены)", sub: () => "рейсы «Отгружен»", count: d => ofTrips(d, byCond("Отгружен")), filter: byCond("Отгружен") },
 ];
 
-/** Координатор двора и ворот (C0049 yard_coordinator): модуля двора нет — показываем то, что есть в рейсах, и честно помечаем пробелы. */
+/** Сводка плановых рейсов; факты двора ведутся в панели выбранного склада. */
 export function YardDesk({ day, isToday, reload }: { day: string; isToday: boolean; reload: number }) {
   const data = useDeskData(day, reload, false);
-  const docks = { icon: "🚪", label: "Ворота в работе", read: data.trips, source: "DOCK рейсов на дату",
-    value: (t: Trip[]) => new Set(t.filter(x => x.DOCK).map(x => x.DOCK)).size, sub: (t: Trip[]) => `рейсов у ворот ${t.filter(atDock).length} · без ворот ${t.filter(noDock).length}` };
+  const docks = { icon: "🚪", label: "Ворота в плане", read: data.trips, source: "DOCK рейсов на дату",
+    value: (t: Trip[]) => new Set(t.filter(x => x.DOCK).map(x => x.DOCK)).size, sub: (t: Trip[]) => `рейсов с воротами ${t.filter(atDock).length} · без ворот ${t.filter(noDock).length}` };
   return <TwinDesk day={day} isToday={isToday} data={data} sceneTitle="Двор и ворота · все доступные склады" processes={yardProcesses} kpis={[tripTile(data), docks, readyTile(data)]}
     resourceTypes={["DOCK", "VEHICLE"]} reload={reload}
     extraLeft={<div className="ops-note" style={{ marginTop: 10 }} title={wsHelp.yardGap.text} data-help-id={wsHelp.yardGap.id}>
       <p>Сводка рейсов показывает все разрешённые склады. Склад в общем Ганте выбирается отдельно.</p>
-      <b>Нет в системе:</b> журнала прибытия машин и очереди двора — время ожидания у ворот не рассчитывается. Назначение ворот — правкой рейса у диспетчера.</div>} />;
+      <p>Для регистрации приезда и назначения ворот откройте панель смены, выберите склад и раздел «Двор и ворота».</p>
+      <HelpButton help={wsHelp.yardGap} onClick={() => openShift()}>Открыть панель смены</HelpButton></div>} />;
 }

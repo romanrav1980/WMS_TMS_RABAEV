@@ -108,3 +108,5 @@
 - [Двор/ворота22.10](database/tradecase_yard_visit_20261022.md): миграция применена с откатом/повтором; native цикл и история прошли в откатываемой fixture; scopes/конкуренция/HTTP ещё открыты.
 
 - [Двор: HTTP после apply](database/tradecase_yard_visit_20261022.md#проверки): owner/actor/revoke/retireduser прошли17HTTP, тестовые визиты отменены; API75144/session92806.
+
+- [Двор: настоящий экран1440/390](database/tradecase_yard_visit_20261022.md#экран-после-применения): API200, без переполнения/JS-ошибок; вход из сводки обновлён.
