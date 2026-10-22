@@ -481,3 +481,5 @@ register_warehouse_task_resource_commands(app)
 
 from .tradecase_composition import register_tradecase
 register_tradecase(app)
+from .quality_case_composition import register_quality_cases
+register_quality_cases(app)

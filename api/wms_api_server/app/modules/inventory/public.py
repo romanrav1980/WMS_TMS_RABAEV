@@ -545,3 +545,13 @@ def build_trade_planning() -> OracleTradePlanning:
     return OracleTradePlanning(OracleGateway())
 
 from .api.trade_buyout_routes import router as trade_buyout_router,trade_buyout_service
+
+from .contracts_quality_case import QualityCasePort, quality_case_service
+from .api.quality_case_routes import router as quality_case_router
+
+
+def build_quality_cases() -> QualityCasePort:
+    from .infrastructure.quality_cases import OracleQualityCases
+    return OracleQualityCases(OracleGateway(), build_stock_posting_service().post)
+
+__all__.extend(["quality_case_router", "quality_case_service", "build_quality_cases"])

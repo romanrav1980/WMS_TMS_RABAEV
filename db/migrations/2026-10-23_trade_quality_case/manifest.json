@@ -1,0 +1,29 @@
+{
+ "target": "RABAEV/orcl",
+ "migration_id": "2026-10-23-trade-quality-case",
+ "shared_objects_changed": [],
+ "new_objects": [
+  "RRL_TRADE_QUALITY_CASE",
+  "RRL_TRADE_QUALITY_CASE_UNIT",
+  "RRL_TRADE_QUALITY_CASE_EVENT",
+  "RRL_TRADE_QUALITY_CASE_SQ",
+  "RRL_TRADE_QUALITY_CASE_API",
+  "RRL_TRADE_QUALITY_CASE_EVENT_APPEND",
+  "RRL_TRADE_QUALITY_CASE_UNIT_FROZEN"
+ ],
+ "applied_by_claude": false,
+ "revision": "C-0152",
+ "files_sha256": {
+  "000_preflight.sql": "9873b7e4e942563b342e9fcf759710247b7bd6e9782622cedfe43ee434ceb5df",
+  "001_schema.sql": "17d05e3f5dc4966229749b8d70885228fc2151c35e696289ccd35b3693765d79",
+  "002_api.sql": "dbf7888f9fb54947de1602351de71fd7c2b97aa15f300509fca5b12fcb1ce14c",
+  "apply.sql": "81c5e5038ac0548f234f32968478cadcb12274d215a5d79df7790b85f6fa21b6",
+  "rollback.sql": "308dcff0153265f778874a950065c02b495aeba519dca54a43022fdfdc874fe2",
+  "rollback_verify.sql": "1441d8e38e1d52f9f6c937c69a873b0f7b386cd0585ac4b43d5c498f82bce7c6",
+  "verify.sql": "b445f560e2ad0c5d7dadda99e5095da870a31578792d88e142d5296f22f23df4"
+ },
+ "existing_objects_written": [
+  "RRL_QUALITY_HOLD (rows via RRL_TRACEABILITY_API.create_quality_hold/release_quality_hold)"
+ ],
+ "root_candidate_not_applied": "reports/tradecase/2026-10-23/claude/C0152/root_candidate_trade_stock_guard.md"
+}
