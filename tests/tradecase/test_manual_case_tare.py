@@ -1,5 +1,7 @@
 """Manual input stays distinct from device packets and retains uncertain commands."""
 from types import SimpleNamespace
+from contextlib import contextmanager
+import oracledb
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -39,3 +41,25 @@ def test_unknown_or_forbidden_replay_keeps_original_operation(status,message):
 def test_manual_packet_cannot_be_substituted_for_electronic_capture(extra):
     def unexpected(*args):pytest.fail("Invalid input reached Oracle")
     assert client(unexpected).post("/api/inventory/warehouse-scales/tasks/1/manual-empty-tare",json={**BODY,**extra}).status_code==422
+
+
+def test_closed_release_does_not_disprove_a_prior_manual_measurement():
+    from api.wms_api_server.app.modules.inventory.infrastructure.warehouse_scales import scale_error
+    error=oracledb.DatabaseError(SimpleNamespace(code=20860,message="TASK_METADATA_RELEASE_CLOSED"))
+    assert scale_error(error).status==503
+
+
+def test_closed_release_keeps_label_outcome_unknown_before_cached_lookup():
+    from api.wms_api_server.app.modules.inventory.infrastructure.case_labels import CaseLabels
+    from api.wms_api_server.app.modules.inventory.contracts_stock import StockPostingError
+    class Cursor:
+        def var(self,*args):return None
+        def callproc(self,name,args=None):
+            if name.endswith("clear_plan"):return
+            raise oracledb.DatabaseError(SimpleNamespace(code=20860,message="TASK_METADATA_RELEASE_CLOSED"))
+    class Gateway:
+        @contextmanager
+        def transaction(self,purpose):yield Cursor()
+    with pytest.raises(StockPostingError)as error:
+        CaseLabels(Gateway())._command("RRL_CASE_SSCC_API.issue",1,"{}","worker","ORIGINAL")
+    assert error.value.code=="RESULT_UNCERTAIN"and error.value.operation_id=="ORIGINAL"

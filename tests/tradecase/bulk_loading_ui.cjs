@@ -20,6 +20,8 @@ const pass=fs.readFileSync('AGENTS.md','utf8').match(/PASS=(\S+?)[`,)\s]/)[1],re
   await page.fill('#loadIdentifier',proof.preview.snapshot.nodes[0].sscc);await page.click('#loadComposition');await page.locator('#loadCompositionSummary').filter({hasText:'Версия 4'}).waitFor();
   assert((await page.locator('#loadBoxRows').innerText()).includes('итогового весового контроля'));assert.equal(await page.locator('#loadBoxRows input').count(),0);assert(await page.locator('a[href="/help/manual-weight.html#bulk"]').count());
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'bulk overflow '+width);
+  await page.locator('.loading-manual-measure').screenshot({path:out+'/bulk-measures-'+width+'.png'});
+  if(width===390){const rows=await page.locator('.loading-manual-measure>label').evaluateAll(nodes=>nodes.map(n=>({top:n.getBoundingClientRect().top,bottom:n.getBoundingClientRect().bottom})));assert.equal(rows.length,4);for(let i=1;i<rows.length;i++)assert(rows[i].top>=rows[i-1].bottom,'measurement labels overlap');}
   await page.screenshot({path:out+'/bulk-mode-'+width+'.png',fullPage:true});report.checks.push({width,test:'real trip and captured pre-load carton preview; server QC mass; mode navigation/help/geometry',usefulScreenMs:Date.now()-start});
   const values={loadScan:proof.preview.snapshot.nodes[0].sscc,loadCell:proof.preview.snapshot.cell,loadVehicle:'B22V1161',loadDock:'B22D1161',loadGross:'2.1',loadWidth:'0.4',loadDepth:'0.5',loadHeight:'0.5'};for(const[id,value]of Object.entries(values))await page.fill('#'+id,value);
   await page.click('#loadConfirm');await page.locator('#loadStatus').filter({hasText:'исходный идентификатор'}).waitFor();assert.equal(attempt,1);

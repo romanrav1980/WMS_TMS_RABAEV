@@ -23,7 +23,7 @@ class CaseLabels:
                     q.callproc("RRL_STOCK_LOCK_API.clear_plan")
         except oracledb.DatabaseError as exc:
             error=exc.args[0];code=error.code
-            raise StockPostingError("CASE_SSCC_REJECTED" if code and(code==1 or 20800<=code<=20899)else "RESULT_UNCERTAIN",operation,code,str(error.message).split("\n")[0])from exc
+            raise StockPostingError("CASE_SSCC_REJECTED" if code and code!=20860 and(code==1 or 20800<=code<=20899)else "RESULT_UNCERTAIN",operation,code,str(error.message).split("\n")[0])from exc
 
     def issue(self,task:int,request:CaseSsccLabelRequest,actor:str)->dict:
         wire=json.dumps(request.model_dump(),ensure_ascii=True,sort_keys=True,separators=(",",":"))

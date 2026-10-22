@@ -81,6 +81,12 @@ def probes(actor,password,base):
 
 def cleanup(base):
     step('cancelled',base+'/return-carrier',dict(operation_id=case.tag+'.cancel',scan_container=s['label']['sscc'],expected_content_version=s['label']['content_version'],destinations={},allow_empty=True,reason='Cancel empty manual-tare verification without picking goods'))
+    step('book_released','/api/inventory/tare/book-cancel',dict(operation_id=case.tag+'.book.cancel',booking_operation_id=s['tare_book']['operation_id']))
+    if 'tare_restored'not in s:
+        balances=expect(200,http('GET',f"/api/inventory/tare/warehouses/{case.w}/balances"))
+        balance=next(v for v in balances if v['pallet_type_id']==s['pallet_type_id']and v['custodian_kind']=='WAREHOUSE'and v['condition_code']=='GOOD')
+        step('tare_restored','/api/inventory/tare/count',dict(operation_id=case.tag+'.tare.restore',owner_ware_id=case.w,pallet_type_id=s['pallet_type_id'],condition='GOOD',observed_quantity=str(int(s['tare_count']['destination_quantity'])-1),expected_version=balance['balance_version'],reason='Remove additional synthetic empty test carton after unbooking',decision_reference='TEST_FIXTURE_RESTORE:'+case.tag))
+    step('wave_finished',f"/api/picking/waves/{s['wave']}/finish-execution",dict(operation_id=case.tag+'.wave.finish',disposition='RETURNED_TO_PLANNING',reason='Empty manual-tare acceptance ended without a physical pick; preserve open demand'))
     step('logout',f"/api/resources/sessions/{s['session']['id']}/logout",dict(reason='Manual tare replay acceptance complete'))
     owner('retired-owner',False,False)
     step('qualification-off',f"/api/resources/{s['resource']['id']}/qualifications",dict(task_type='CASE_PICK',active=False),'PUT')
@@ -88,12 +94,13 @@ def cleanup(base):
         q=c.cursor();q.execute('update RUSERS set DELETED=1 where ID=:a',a=s['actor']);q.execute('update RRL_ACCESS_ASSIGNMENT set REVOKED_AT=systimestamp where ASSIGNMENT_ID=:a',a=s['actor']);c.commit()
         q.execute('select sum(REMAIN),sum(HARD_RESERVED_BASE)from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w',w=case.w);s['stock_after']=list(q.fetchone())
     s['qa_retired']=True;save()
+    assert s['stock_after']==[8,4],s['stock_after']
 
 
 if __name__=='__main__':
     os.environ['TRADECASE_ADMIN_USER']='admin';os.environ['TRADECASE_ADMIN_PASSWORD']=re.search(r'PASS=(\S+?)[`,)\s]',(ROOT/'AGENTS.md').read_text(encoding='utf-8'))[1]
     try:
-        if s.get('status')!='PASS':
+        if s.get('status')!='PASS'or('--cleanup'in sys.argv and 'wave_finished'not in s):
             if '--cleanup'in sys.argv:cleanup(f"/api/case-pick/tasks/{s['case']}")
             else:
                 actor,password,base=prepare();probes(actor,password,base);cleanup(base)

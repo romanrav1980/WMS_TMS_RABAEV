@@ -46,7 +46,7 @@ def bind(task_id: int, body: FullPalletBindingRequest,
     try:
         return service.bind(task_id, body.model_dump(mode="json"), user.username)
     except StockPostingError as exc:
-        uncertain = exc.code in {"RESULT_UNCERTAIN","REQUEST_DEADLINE","CONNECTION_UNUSABLE","LOCK_RETRY_EXHAUSTED"}
+        uncertain = exc.code in {"RESULT_UNCERTAIN","REQUEST_DEADLINE","CONNECTION_UNUSABLE","LOCK_RETRY_EXHAUSTED","STOCK_RELEASE_NOT_ACTIVE"}
         denied = exc.oracle_code in {20882,20851}
         conflict = "OPERATION_CONFLICT" in (exc.rule_reason or exc.code)
         raise HTTPException(503 if uncertain else 403 if denied else 409, detail={

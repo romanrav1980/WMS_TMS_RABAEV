@@ -278,8 +278,9 @@ def return_case_carrier(case_pick_task_id:int,request:CaseCarrierReturnRequest,
     try:
         return return_existing_case_carrier(case_pick_task_id,request,user.username)
     except StockPostingError as exc:
-        uncertain = exc.code in {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "CONNECTION_UNUSABLE", "LOCK_RETRY_EXHAUSTED"}
+        uncertain = exc.code in {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "CONNECTION_UNUSABLE", "LOCK_RETRY_EXHAUSTED", "STOCK_RELEASE_NOT_ACTIVE"}
+        unknown_outcome = uncertain or exc.oracle_code == 20882 or "OPERATION_CONFLICT" in (exc.rule_reason or "")
         raise HTTPException(403 if exc.oracle_code == 20882 else 503 if uncertain else 409, detail={
             "code": exc.code, "operation_id": exc.operation_id, "reason": exc.rule_reason,
-            "oracle_code": exc.oracle_code, "outcome_confirmed": not uncertain,
-            "retry_same_operation_id": uncertain}) from exc
+            "oracle_code": exc.oracle_code, "outcome_confirmed": not unknown_outcome,
+            "retry_same_operation_id": unknown_outcome}) from exc

@@ -23,3 +23,6 @@ Claude4/4использованы; оставшиеся работы выпол�
 
 
 22.10 — T07: отдельный CASE-короб2EA погружен,8EA/HARD4 остались; точный повтор и owner revoke/restore проверены. Выезд до перепланирования непогруженных мест запрещён. Этикетка и ручная тара проверены под scoped ролью.12UI1440/390,8регрессия типа паллеты; потери ответа в UI — перехваченные тестовые ответы. Полные разделы6/7/12 программы не закрыты. Доказательства и пропуски: [[database/tradecase_bulk_box_loading_20261022]], [[database/tradecase_manual_case_tare_20261022]].
+
+
+22.10 T11: пустаяCASE1164 CANCELLED без отбора, HARD6→4, тара book-CANCELLED, wave608 DONE/UNFULFILLED_RETURNED_TO_PLANNING. Две миграции apply/rollback/reapply,7nativeSHA/INVALID0. Ручное измерение: реальный одинаковый concurrent/replay и owner/assignment revoke/restore; этикетка также проверена.6UI возврата/86focused PASS,0UI nativebusinessPOST. Принят участок отмены обычного пустого задания; полный раздел возвратов, принятой недостачи, финансовых оснований и внешних ответов остаётся частичным. См [[database/tradecase_empty_case_cancel_20261022]].

@@ -10,7 +10,7 @@ from ..contracts_warehouse_scale import WarehouseScaleError, WarehouseScaleConfi
 
 def scale_error(exc: oracledb.DatabaseError) -> WarehouseScaleError:
     code = exc.args[0].code
-    status = 403 if code == 20882 else 409 if 20800 <= code <= 20999 else 503
+    status = 503 if code == 20860 else 403 if code == 20882 else 409 if 20800 <= code <= 20999 else 503
     return WarehouseScaleError("WAREHOUSE_SCALE_REJECTED" if status < 500 else "WAREHOUSE_SCALE_OUTCOME_UNCERTAIN",
                                str(exc.args[0]).split("\n", 1)[0], status)
 

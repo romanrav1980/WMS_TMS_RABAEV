@@ -23,7 +23,8 @@ with oracle_connection()as c:
     pairs={
         'RRL_CASE_SSCC_API':('case_labels_scoped','001_labels.sql'),
         'RRL_SSCC_ALLOCATOR':('case_labels_scoped','001_labels.sql'),
-        'RRL_TRADE_STOCK_GUARD':('bulk_case_carton','001_guard.sql'),
+        'RRL_TRADE_STOCK_GUARD':('trade_empty_case_cancel','001_guard.sql'),
+        'RRL_STOCK_CASE_RETURN_CMD':('trade_empty_case_capture','001_guard.sql'),
         'RRL_CASE_SCALE_ADMISSION':('manual_case_tare','002_pick_admission.sql'),
         'RRL_WH_FINAL_SCALE_ADMISSION':('manual_case_tare','003_final_admission.sql'),
         'RRL_CASE_MANUAL_TARE_API':('manual_case_tare','001_manual_tare.sql')}
