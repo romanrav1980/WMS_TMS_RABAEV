@@ -1,0 +1,16 @@
+{
+  "migration_id": "2026-10-23-quarantine-role-scope",
+  "target": "RABAEV/orcl",
+  "object": "RRL_STOCK_INTERNAL_CMD:PACKAGE BODY",
+  "before_sha256": "0D54BF2408595D70434771B5BD960BD2DE97E220ABCF6FF7D68AF836603B2B59",
+  "after_sha256": "555BDCBFDB82D23AF18F92604655EF6E8AA54A9DB1785BFA4ED2BD8B93681A53",
+  "files_sha256": {
+    "001_scoped.sql": "e1fc32faac8252d919bbd7355c300c4398821db3d6a6d5a1468e4a298fcfecbe",
+    "apply.sql": "ac3f9bb3be0301112723d03d583f557cc43b4354bf298a3a6f23e3dd8c0dd7be",
+    "before.sql": "4c9e6ca2e8a8d4857ae735e97f40fd79ba36419667de394eb055a29ef701deab",
+    "preflight.sql": "be67fa92248052dd1df61a32b28e56a45087a585c8d93516bae4c393b11b4e21",
+    "rollback.sql": "95fbc793c47d64a5d28d49b5f1db622b441efe2d1fb3517f44c8c8df77f6e997",
+    "rollback_verify.sql": "be67fa92248052dd1df61a32b28e56a45087a585c8d93516bae4c393b11b4e21",
+    "verify.sql": "c122d813a29560957c122cec5ca2a9c722f5d12c8ef43ed70d3335d8540792f8"
+  }
+}
