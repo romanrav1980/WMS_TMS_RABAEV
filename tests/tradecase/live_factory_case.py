@@ -88,7 +88,7 @@ def prepare():
     print(json.dumps({k:s[k]for k in ["warehouse_id","case","line","wave","admission_before"]}))
 
 
-def execute(return_after=True):
+def start():
     assert "case" in s
     case = f"/api/case-pick/tasks/{s['case']}"
     with oracle_connection()as conn:
@@ -123,6 +123,12 @@ def execute(return_after=True):
         if action not in s:
             ctx=expect(200,own("GET",case+"/resource-context"))
             step(action,case+"/resource-commands",dict(operation_id=tag+"."+action,action=action,expected_assignment_version=ctx["assignment_version"],resource_session_id=session,resource_id=resource,reason="Factory BOX profile piece CASE proof"),actor=actor,password=password)
+    return actor,password,case,resource,session
+
+
+def execute(return_after=True):
+    actor,password,case,resource,session=start()
+    def own(method,path,body=None):return http(method,path,body,actor,password)
     if "pick_body" not in s:
         with oracle_connection()as conn:
             q=conn.cursor();q.execute("select c.SYSTEM_CODE,c.RAW_CODE from RRL_WMS_RECEIPT_UNIT u join RRL_WMS_RECEIPT_CODE c on c.UID_PALLET=u.UID_PALLET and c.UNIT_ID=u.UNIT_ID join RRL_STOCK_RESERVATION r on r.RESERVATION_ID=u.HARD_RESERVATION_ID where r.SOURCE_DOC_TYPE='PICK_WAVE'and r.SOURCE_LINE_ID=:p and r.STATUS in('ACTIVE','ALLOCATED','PICKING')",p=s["pick_task"])
