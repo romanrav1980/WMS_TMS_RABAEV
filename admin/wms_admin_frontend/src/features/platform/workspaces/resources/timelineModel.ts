@@ -48,13 +48,18 @@ export function fmtTime(tz: string | null, iso: string | null | undefined): stri
 export type Bar = { key: string; event: TimelineEvent; binding: TimelineBinding; basis: "PLAN" | "FACT";
   start: number; end: number; open: boolean; point: boolean; conflict: boolean };
 export type Segment = { start: number; end: number; open: boolean; a: Availability };
-export type Row = { resource: TimelineResource; bars: Bar[]; availability: Segment[]; conflicts: number; sourceDown: boolean };
+/** untimed — работы, назначенные ресурсу источником, но без времени на оси (нет времени или время без пояса): ресурс не «без назначений». */
+export type Row = { resource: TimelineResource; bars: Bar[]; untimed: TimelineEvent[]; availability: Segment[]; conflicts: number; sourceDown: boolean };
 
 function barOf(b: TimelineBinding, e: TimelineEvent, tz: string | null, readAt: number | null): Bar | null {
   const fact = b.basis === "FACT";
-  const s = axisMinutes(b.start_at ?? (fact ? e.fact_start_at : e.plan_start_at), tz);
+  const startsAt = b.start_at ?? (fact ? e.fact_start_at : e.plan_start_at);
+  const finishesAt = b.finish_at ?? (fact ? e.fact_finish_at : e.plan_finish_at);
+  const s = axisMinutes(startsAt, tz);
   if (s == null) return null;
-  const f = axisMinutes(b.finish_at ?? (fact ? e.fact_finish_at : e.plan_finish_at), tz);
+  const f = axisMinutes(finishesAt, tz);
+  if (f === s && Date.parse(startsAt!) === Date.parse(finishesAt!))
+    return { key: b.binding_id, event: e, binding: b, basis: b.basis, start: s, end: s, open: false, point: true, conflict: false };
   // Незавершённый факт тянется только до момента чтения (подтверждено, что ещё идёт), окончание не выдумывается.
   // Терминальный статус без окончания (сборка закрыта, finish у источника не известен) — точка, не заливка до «сейчас».
   if (f == null && fact && !e.terminal && readAt != null && readAt >= s) return { key: b.binding_id, event: e, binding: b, basis: b.basis, start: s, end: readAt, open: true, point: false, conflict: false };
@@ -86,12 +91,14 @@ export function markConflicts(bars: Bar[], server?: { basis: "PLAN" | "FACT"; ev
 export type Filters = { types: Set<ResourceType>; query: string; groupBy: "type" | "warehouse"; onlyConflicts: boolean; waveId: number | null; waveLabel: string | null };
 export type Group = { key: string; label: string; rows: Row[] };
 
-function matches(r: TimelineResource, bars: Bar[], q: string) {
+const rowEvents = (row: Row) => [...row.bars.map(b => b.event), ...row.untimed];
+function matches(row: Row, q: string) {
   if (!q) return true;
-  const hay = [r.code, r.name, r.zone_code, r.warehouse_name, String(r.warehouse_id), ...bars.flatMap(b => [b.event.title, b.event.event_id, b.event.wave_id, b.event.task_id, b.event.trip_id])];
+  const r = row.resource;
+  const hay = [r.code, r.name, r.zone_code, r.warehouse_name, String(r.warehouse_id), ...rowEvents(row).flatMap(e => [e.title, e.event_id, e.wave_id, e.task_id, e.trip_id])];
   return hay.some(v => v != null && String(v).toLowerCase().includes(q));
 }
-const hasWave = (bars: Bar[], waveId: number) => bars.some(b => b.event.wave_id === waveId);
+const hasWave = (row: Row, waveId: number) => rowEvents(row).some(e => e.wave_id === waveId);
 
 export function buildRows(t: ResourceTimeline): Row[] {
   const tz = zoneKnown(t) ? t.warehouse.time_zone : null, readAt = axisMinutes(t.read_at, tz);
@@ -100,7 +107,10 @@ export function buildRows(t: ResourceTimeline): Row[] {
   const byRes = new Map<string, TimelineBinding[]>();
   for (const b of t.bindings) (byRes.get(b.resource_key) ?? byRes.set(b.resource_key, []).get(b.resource_key)!).push(b);
   return t.resources.map(resource => {
-    const bars = (byRes.get(resource.resource_key) ?? []).flatMap(b => { const e = events.get(b.event_id); const bar = e && barOf(b, e, tz, readAt); return bar ? [bar] : []; });
+    const own = byRes.get(resource.resource_key) ?? [];
+    const bars = own.flatMap(b => { const e = events.get(b.event_id); const bar = e && barOf(b, e, tz, readAt); return bar ? [bar] : []; });
+    const timed = new Set(bars.map(b => b.event.event_id));
+    const untimed = [...new Set(own.map(b => b.event_id))].flatMap(id => { const e = events.get(id); return e && !timed.has(id) ? [e] : []; });
     const availability = resource.availability.flatMap(a => {
       const s = axisMinutes(a.start_at, tz); if (s == null) return [];
       const f = axisMinutes(a.finish_at, tz);
@@ -108,14 +118,14 @@ export function buildRows(t: ResourceTimeline): Row[] {
     });
     const conflicts = markConflicts(bars, t.overlaps?.filter(o => o.resource_key === resource.resource_key));
     const sourceDown = resource.availability.some(a => down.has(a.source)) || bars.some(b => down.has(b.event.source));
-    return { resource, bars, availability, conflicts, sourceDown };
+    return { resource, bars, untimed, availability, conflicts, sourceDown };
   });
 }
 
 export function groupRows(rows: Row[], f: Filters, typeLabel: (t: ResourceType) => string): Group[] {
   const q = f.query.trim().toLowerCase();
-  const list = rows.filter(r => f.types.has(r.resource.resource_type) && matches(r.resource, r.bars, q) && (!f.onlyConflicts || r.conflicts > 0)
-    && (f.waveId == null || hasWave(r.bars, f.waveId)));
+  const list = rows.filter(r => f.types.has(r.resource.resource_type) && matches(r, q) && (!f.onlyConflicts || r.conflicts > 0)
+    && (f.waveId == null || hasWave(r, f.waveId)));
   const groups = new Map<string, Group>();
   for (const r of list) {
     const key = f.groupBy === "type" ? r.resource.resource_type : `${r.resource.warehouse_id}`;

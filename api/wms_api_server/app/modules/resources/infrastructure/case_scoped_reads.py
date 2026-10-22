@@ -33,13 +33,23 @@ class ScopedCaseReads:
         self.gateway = gateway
 
     def tasks(self, actor: str, resource: int | None, scope: str, status: str | None, limit: int,
-              warehouse: int | None = None) -> list[dict[str, Any]]:
+              warehouse: int | None = None, wave: int | None = None, include_closed: bool = False) -> list[dict[str, Any]]:
         if scope not in {"mine", "free", "all", "self"} or not 1 <= limit <= 500:
             raise CaseReadError("CASE_LIST_SCOPE_INVALID", "Допустимы mine/free/all/self и предел1–500", 422)
         with self.gateway.transaction("Current CASE queue READ ONLY snapshot") as cur:
             if not getattr(self.gateway, "transaction_bound", False):
                 cur.execute("set transaction read only")
             require_viewer(cur, actor, warehouse)
+            if wave is not None:
+                if isinstance(wave, bool) or not isinstance(wave, int) or wave < 1:
+                    raise CaseReadError("CASE_WAVE_INVALID", "Номер волны должен быть положительным целым", 422)
+                cur.execute("select WARE_ID from RRL_PICK_WAVE where PICK_WAVE_ID=:wave", wave=wave)
+                row = cur.fetchone()
+                if row is None:
+                    raise CaseReadError("CASE_WAVE_NOT_FOUND", "Волна отсутствует", 404)
+                require_viewer(cur, actor, row[0])
+                if warehouse is not None and row[0] != warehouse:
+                    raise CaseReadError("CASE_CURRENT_WARE_WAVE_REQUIRED", "Волна другого склада")
             if resource is not None:
                 cur.execute("select WARE_ID from RRL_RESOURCE where RESOURCE_ID=:id and ACTIVE=1", id=resource)
                 row = cur.fetchone()
@@ -49,7 +59,7 @@ class ScopedCaseReads:
                 if warehouse is not None and row[0] != warehouse:
                     raise CaseReadError("CASE_CURRENT_WARE_RESOURCE_REQUIRED", "Ресурс другого склада")
             return LegacyCaseReads(TransactionGateway(cur)).list_tasks(
-                resource, scope, status, limit, warehouse, view_actor=actor,
+                resource, scope, status, limit, warehouse, view_actor=actor, wave_id=wave, include_closed=include_closed,
             )
 
     def task(self, task: int, actor: str) -> dict[str, Any]:

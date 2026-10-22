@@ -18,9 +18,9 @@ import { RECOVERY_LIMIT } from "../recovery/recoveryModel";
 import type { RecoveryRow, Stage } from "../recovery/recoveryModel";
 import { useRecovery } from "../recovery/useRecovery";
 import { shiftHelp } from "./help";
-import { isOpenCase } from "./executionState";
-import { executionRisks, waveRisks } from "./risks";
-import { SHIFT_LIMITS, useShiftData, useWaveDetails } from "./useShiftData";
+import { isOpenCase, isOpenReplenishment } from "./executionState";
+import { useShiftRisks } from "./useShiftRisks";
+import { SHIFT_LIMITS, useShiftData, useWaveDetails, useSelectedWaveCases } from "./useShiftData";
 import { useShiftWave, useResourceKeyBySession, useShiftWarehouse } from "./useShiftContext";
 import type { Risk } from "./types";
 import "../resources/gantt.css";
@@ -65,14 +65,11 @@ export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isT
   // Детали — по всем видимым волнам склада (bulk shift-overview, C-0088), выбранная волна первой.
   const ids = useMemo(() => [...new Set(waves.map(w => w.pick_wave_id))], [waves]);
   const { details, loading, coverage } = useWaveDetails(ids, wh, reload);
-  const risks = useMemo(() => {
-    const list: Risk[] = waves.flatMap(w => { const d = details.get(w.pick_wave_id); return d ? waveRisks(w, d) : []; });
-    return [...list, ...executionRisks(data.caseTasks.data ?? [], data.shorts.data ?? [])];
-  }, [waves, details, data.caseTasks.data, data.shorts.data]);
-  const risky = new Set(risks.filter(r => r.severity === "BLOCKER" && r.wave_id != null).map(r => r.wave_id!));
+  const { risks, risky, cases: overviewCases, gaps } = useShiftRisks(waves, details, data, coverage, loading);
+  const selectedCases = useSelectedWaveCases(wh, waveId, reload, overviewCases), cases = selectedCases.cases;
   const wave = waves.find(w => w.pick_wave_id === waveId);
   const picking = (data.caseTasks.data ?? []).filter(t => isOpenCase(t.status));
-  const blocked = (data.caseTasks.data ?? []).filter(t => t.blocking_reason);
+  const blocked = (data.caseTasks.data ?? []).filter(t => isOpenCase(t.status) && t.blocking_reason);
   const clearWave = () => setWaveId(null);
   const selectWave = (id: number) => { setWaveId(id); setGantt(null); };
   const selectGantt = (s: GanttSelection) => { setGantt(s); if (s) clearWave(); };
@@ -90,7 +87,7 @@ export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isT
     <div className="ops-kpis">
       <KpiTile icon="◇" label="Будущие волны (до запуска)" read={data.future} source="picking/waves PREVIEW" value={(d: Wave[]) => plus(d.length, SHIFT_LIMITS.future)} sub={() => "статус PREVIEW"} />
       <KpiTile icon="▶" label="Волны в работе" read={data.launched} source="picking/waves LAUNCHED" value={(d: Wave[]) => plus(d.length, SHIFT_LIMITS.launched)} sub={() => `подробно проверено ${coverage.read} из ${coverage.requested}`} />
-      <KpiTile icon="!" label="Подтверждённые блокировки" read={data.launched} source="readiness/pick-readiness/case-pick" value={() => String(risks.filter(r => r.severity === "BLOCKER").length)} sub={() => `по ${details.size} волнам и выборке сборки`} />
+      <KpiTile icon="!" label="Подтверждённые блокировки" read={data.launched} source="readiness/pick-readiness/case-pick" value={() => String(risks.filter(r => r.severity === "BLOCKER").length)} sub={() => `по ${details.size} волнам и выборке сборки${gaps.length ? " · проверено не полностью" : ""}`} />
       <KpiTile icon="▤" label="Сборка в работе" read={data.caseTasks} source="case-pick/tasks" value={() => plus(picking.length, SHIFT_LIMITS.caseTasks)} sub={() => `остановлено ${blocked.length}`} />
       <KpiTile icon="👤" label="Открытые сессии" read={data.sessions} source="resources/sessions" value={(d: { status: string }[]) => String(d.filter(s => s.status === "ACTIVE").length)} sub={() => "люди и техника в терминале"} />
     </div>
@@ -100,7 +97,7 @@ export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isT
       <ul className="ops-proc">{PANELS.map(p => <li key={p.id}>
         <button type="button" aria-pressed={panel === p.id} title={shiftHelp.process.text} data-help-id={shiftHelp.process.id + "." + p.id} onClick={() => { setPanel(v => v === p.id ? null : p.id); setWaveId(null); setGantt(null); }}>
           <span className="ops-ico" aria-hidden="true">{p.icon}</span><span><b>{p.title}</b></span>
-          <span className="ops-count">{{ future: future.length, risks: risks.length, picking: picking.length, blocked: blocked.length, repl: [...details.values()].reduce((n, d) => n + (d.replenishment.data?.filter(r => r.status !== "DONE").length ?? 0), 0),
+          <span className="ops-count">{{ future: future.length, risks: risks.length, picking: picking.length, blocked: blocked.length, repl: [...details.values()].reduce((n, d) => n + (d.replenishment.data?.filter(r => isOpenReplenishment(r.status)).length ?? 0), 0),
             recovery: recovery.rows ? plus(recovery.rows.length, RECOVERY_LIMIT) : "—", people: (data.sessions.data ?? []).length }[p.id]}</span>
         </button></li>)}</ul>
       <p className="ops-note" title={shiftHelp.details.text} data-help-id={shiftHelp.details.id}>Подробные проверки — {coverage.read} из {coverage.requested} видимых волн{loading || data.future.loading || data.launched.loading ? " (загрузка…)" : ""}
@@ -111,18 +108,18 @@ export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isT
     <section className="ops-panel ops-center" aria-label="Поток волн по складу">
       <span className="ops-scene-title">Поток волн по этапам склада · схема условная</span>
       {data.future.error && data.launched.error ? <p className="ops-err" style={{ padding: 40 }}>Волны не прочитаны: {data.launched.error}</p>
-        : <WaveFlowScene waves={waves} details={details} riskyWaves={risky} selected={waveId ?? (panel === "recovery" ? recoveryOpen?.pick_wave_id ?? null : null)} onSelect={selectWave} />}
+        : <WaveFlowScene waves={waves} details={details} riskyWaves={risky} cases={cases} selected={waveId ?? (panel === "recovery" ? recoveryOpen?.pick_wave_id ?? null : null)} onSelect={selectWave} />}
       <div className="ops-scene-legend"><span><i style={{ background: "#3d8bfd" }} />до запуска</span><span><i style={{ background: "#2fbf71" }} />в работе</span>
         <span><i style={{ background: "#ef5b5b" }} />есть подтверждённая блокировка</span><span>этап — по данным готовности</span></div>
     </section>
     <aside className="ops-panel ops-right" aria-label="Выбранный объект" ref={waveCardRef}>
       {wave ? <WaveCard wave={wave} detail={details.get(wave.pick_wave_id)} risks={risks.filter(r => r.wave_id === wave.pick_wave_id)}
-          tasks={(data.caseTasks.data ?? []).filter(ct => ct.pick_wave_id === wave.pick_wave_id)} onClose={clearWave}
+          tasks={selectedCases.tasks} caseStatuses={cases.get(wave.pick_wave_id)} onClose={clearWave}
           onShowInGantt={() => showWaveInGantt(wave)} onOpenTask={id => jumpToGantt({ kind: "event", id: "CASE_PICK_TASK:" + id })} />
         : waveId != null && (requested.error || (requested.data && String(requested.data.ware_id) !== wh)) ? <p role="alert" className="ops-err">Выбранная волна недоступна на этом складе. Проверьте склад и право просмотра волны.</p>
         : panel === "recovery" ? <RecoveryPanel read={recovery} scopeLabel={`Склад ${wh}`} openId={recoveryOpen?.short_id ?? null} onSelect={setRecoveryOpen}
             filter={recoveryFilter} onFilter={setRecoveryFilter} onWave={selectWave} onRefresh={() => setRecoveryReload(n => n + 1)} />
-        : panel ? <PanelList panel={panel} future={future} risks={risks} picking={picking} blocked={blocked} details={details} sessions={data.sessions} onWave={selectWave}
+        : panel ? <PanelList panel={panel} future={future} risks={risks} gaps={gaps} picking={picking} blocked={blocked} details={details} sessions={data.sessions} onWave={selectWave}
             onTask={id => jumpToGantt({ kind: "event", id: "CASE_PICK_TASK:" + id })}
             resourceKeyBySession={resourceKeyBySession} onOpenResource={key => jumpToGantt({ kind: "resource", key })} />
         : <p className="ops-note">Выберите волну на схеме, процесс слева или ресурс в Ганте ниже.</p>}
@@ -135,20 +132,22 @@ export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isT
   </>;
 }
 
-type ListProps = { panel: Panel; future: Wave[]; risks: Risk[]; picking: CaseTask[]; blocked: CaseTask[]; details: ReturnType<typeof useWaveDetails>["details"];
+type ListProps = { panel: Panel; future: Wave[]; risks: Risk[]; gaps: string[]; picking: CaseTask[]; blocked: CaseTask[]; details: ReturnType<typeof useWaveDetails>["details"];
   sessions: Parameters<typeof ResourceList>[0]["read"]; onWave: (id: number) => void; onTask: (id: number) => void;
   resourceKeyBySession: Map<number, string>; onOpenResource: (key: string) => void };
 
-function PanelList({ panel, future, risks, picking, blocked, details, sessions, onWave, onTask, resourceKeyBySession, onOpenResource }: ListProps) {
+function PanelList({ panel, future, risks, gaps, picking, blocked, details, sessions, onWave, onTask, resourceKeyBySession, onOpenResource }: ListProps) {
   const title = PANELS.find(p => p.id === panel)!.title;
   const box = (body: ReactNode, note?: string) => <section className="ops-card" aria-label={title}><h3>{title}</h3>{body}{note && <p className="ops-note">{note}</p>}</section>;
   if (panel === "people") return <ResourceList read={sessions} resourceKeyBySession={resourceKeyBySession} onOpenResource={onOpenResource} />;
-  if (panel === "risks") return box(risks.length ? <RiskList risks={risks} onWave={onWave} /> : <p className="ops-note">Подтверждённых рисков по прочитанным источникам нет.</p>);
+  if (panel === "risks") return box(<>
+    {gaps.length > 0 && <div className="ops-err" role="status"><b>Проверено не полностью — отсутствие риска не подтверждено:</b><ul>{gaps.map(g => <li key={g}>{g}</li>)}</ul></div>}
+    {risks.length ? <RiskList risks={risks} onWave={onWave} /> : <p className="ops-note">{gaps.length ? "В прочитанной части рисков не найдено." : "Подтверждённых рисков по прочитанным источникам нет."}</p>}</>);
   if (panel === "future") return box(future.length === 0 ? <p className="ops-note">Будущих волн (PREVIEW) в выборке нет.</p> :
     <ul className="ops-list">{future.slice(0, 40).map(w => <li key={w.pick_wave_id}><span><b>{w.wave_code}</b><br /><small>заказов {w.order_count} · заданий {w.task_count} · {w.ware_name || w.ware_id}</small></span>
       <HelpButton help={shiftHelp.wavePick} onClick={() => onWave(w.pick_wave_id)}>Подготовка</HelpButton></li>)}</ul>);
   if (panel === "repl") {
-    const rows = [...details.values()].flatMap(d => (d.replenishment.data ?? []).filter(r => r.status !== "DONE"));
+    const rows = [...details.values()].flatMap(d => (d.replenishment.data ?? []).filter(r => isOpenReplenishment(r.status)));
     return box(rows.length === 0 ? <p className="ops-note">Незавершённых пополнений по проверенным волнам нет.</p> :
       <ul className="ops-list">{rows.slice(0, 40).map(r => <li key={r.pick_wave_replenish_task_id}><span><b>{r.articul}</b> <small>{r.status}{r.wait_reason ? " · ждёт: " + r.wait_reason : ""}</small><br />
         <small>{r.source_cell_code ?? "?"} → {r.target_cell_code ?? "?"} · осталось {r.demand_remaining_base ?? "нет данных"} баз. ед. · волна {r.pick_wave_id}</small></span>

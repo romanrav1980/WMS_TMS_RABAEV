@@ -15,6 +15,26 @@ def test_local_clock_is_not_silently_assumed_utc():
         instant("2026-10-15T00:30:00")
 
 
+def test_confirmed_moment_is_in_half_open_window_but_has_no_occupancy():
+    start=instant("2026-10-15T00:00:00Z");finish=instant("2026-10-16T00:00:00Z")
+    assert overlaps(start.isoformat(),start.isoformat(),start,finish)
+    assert not overlaps(finish.isoformat(),finish.isoformat(),start,finish)
+    events=[dict(event_id=k,kind='LOAD_CONFIRMATION',fact_start_at=start.isoformat(),fact_finish_at=start.isoformat())for k in ['A','B']]
+    assert overlap_candidates(events,[dict(event_id=k,resource_id='DOCK:1:A')for k in ['A','B']],finish,finish)==[]
+
+
+def test_loading_confirmations_bind_frozen_vehicle_and_dock_and_departure_once():
+    projection=TimelineProjection(1)
+    row=dict(load_operation_id='LOAD.A',tt_id=4,vehicle_number='TEST',dock='A',status='DEPARTED',
+             departure_operation_id='DEPART.4',loaded_at='2026-10-15T01:00:00+00:00',departed_at='2026-10-15T02:00:00+00:00')
+    projection.loading(row);projection.loading(dict(row,load_operation_id='LOAD.B'))
+    assert len(projection.events)==3
+    assert ('LOAD_CONFIRMATION:LOAD.A','DOCK:1:A')in projection.bindings
+    assert ('LOAD_CONFIRMATION:LOAD.A','VEHICLE:TEST')in projection.bindings
+    assert ('TRIP_DEPARTURE:DEPART.4','DOCK:1:A')not in projection.bindings
+    assert all(e['fact_start_at']==e['fact_finish_at']for e in projection.events)
+
+
 def test_half_open_boundary_is_not_a_conflict():
     assert not overlaps("2026-10-15T01:00:00+00:00", "2026-10-15T02:00:00+00:00",
                         instant("2026-10-15T02:00:00+00:00"), instant("2026-10-15T03:00:00+00:00"))

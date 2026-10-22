@@ -1,41 +1,69 @@
 {
-  "date": "2026-10-19",
-  "timezone": "Europe/Moscow",
-  "limit": 4,
-  "used": 4,
-  "requests": [
-    {
-      "id": "C-0130",
-      "task": "TRADECASE document workspace and T02 interface review",
-      "registered_at": "2026-10-19T09:29:00+03:00",
-      "status": "RESULT + RELEASE K-0082; compiled UI accepted by Codex",
-      "delivery": "existing file channel",
-      "deadline": "2026-10-19T18:00:00+03:00",
-      "cli_auth": "loggedIn=false; no CLI model request sent"
-    },
-    {
-      "id": "C-0133",
-      "task": "TRADECASE stock and supply capture workspace, safe retry and operator help",
-      "registered_at": "2026-10-19T10:25:00+03:00",
-      "status": "RESULT + RELEASE K-0084; compiled UI accepted by Codex",
-      "delivery": "existing file channel",
-      "deadline": "2026-10-19T18:00:00+03:00"
-    },
-    {
-      "id": "C-0136",
-      "task": "TRADECASE buyout and scanned sorting UI, help, independent sorting admission review",
-      "registered_at": "2026-10-19T12:13:39.3612802+03:00",
-      "status": "RESULT + RELEASE K0086; root compiled UI10/10 PASS; review fixes integrated",
-      "delivery": "existing file channel",
-      "deadline": "2026-10-19T18:00:00+03:00"
-    },
-    {
-      "id": "C-0139",
-      "task": "TRADECASE transport execution and AFTER_PICK/IN_TRANSIT UI, operator help, independent admission review and compiled regression",
-      "registered_at": "2026-10-19T14:08:22.8454725+03:00",
-      "status": "RESULT + RELEASE K0088; root compiled11checks65GET PASS; integrated review fixes; no further requests",
-      "delivery": "existing file channel",
-      "deadline": "2026-10-19T18:00:00+03:00"
-    }
-  ]
+    "date":  "2026-10-19",
+    "timezone":  "Europe/Moscow",
+    "limit":  7,
+    "used":  6,
+    "requests":  [
+                     {
+                         "id":  "C-0130",
+                         "task":  "TRADECASE document workspace and T02 interface review",
+                         "registered_at":  "2026-10-19T09:29:00+03:00",
+                         "status":  "RESULT + RELEASE K-0082; compiled UI accepted by Codex",
+                         "delivery":  "existing file channel",
+                         "deadline":  "2026-10-19T18:00:00+03:00",
+                         "cli_auth":  "loggedIn=false; no CLI model request sent"
+                     },
+                     {
+                         "id":  "C-0133",
+                         "task":  "TRADECASE stock and supply capture workspace, safe retry and operator help",
+                         "registered_at":  "2026-10-19T10:25:00+03:00",
+                         "status":  "RESULT + RELEASE K-0084; compiled UI accepted by Codex",
+                         "delivery":  "existing file channel",
+                         "deadline":  "2026-10-19T18:00:00+03:00"
+                     },
+                     {
+                         "id":  "C-0136",
+                         "task":  "TRADECASE buyout and scanned sorting UI, help, independent sorting admission review",
+                         "registered_at":  "2026-10-19T12:13:39.3612802+03:00",
+                         "status":  "RESULT + RELEASE K0086; root compiled UI10/10 PASS; review fixes integrated",
+                         "delivery":  "existing file channel",
+                         "deadline":  "2026-10-19T18:00:00+03:00"
+                     },
+                     {
+                         "id":  "C-0139",
+                         "task":  "TRADECASE transport execution and AFTER_PICK/IN_TRANSIT UI, operator help, independent admission review and compiled regression",
+                         "registered_at":  "2026-10-19T14:08:22.8454725+03:00",
+                         "status":  "RESULT + RELEASE K0088; root compiled11checks65GET PASS; integrated review fixes; no further requests",
+                         "delivery":  "existing file channel",
+                         "deadline":  "2026-10-19T18:00:00+03:00"
+                     },
+                     {
+                         "id":  "C-0142",
+                         "status":  "RESULT + RELEASE K0090; Codex acceptance 24 UI + 12 model + 11 regression PASS",
+                         "delivery":  "existing file channel",
+                         "grant_date":  "2026-10-22",
+                         "registered_at":  "2026-10-22T07:58:00+03:00",
+                         "task":  "TRADECASE shift supervisor and unified resource Gantt integration, defects and acceptance evidence"
+                     },
+                     {
+                         "id":  "C-0143",
+                         "delivery":  "existing file channel",
+                         "grant_date":  "2026-10-22",
+                         "registered_at":  "2026-10-22T06:06:15.8615645+00:00",
+                         "status":  "PAUSED K0093; automatic permission review denied Oracle and inventory reads; no implementation delivered",
+                         "task":  "TRADECASE T08 durable topup approval, stock and capacity reservation, SAP order correlation and acceptance"
+                     }
+                 ],
+    "additional_grants":  [
+                              {
+                                  "date":  "2026-10-22",
+                                  "used":  2,
+                                  "authorization":  "Owner explicitly granted three additional Claude Code requests",
+                                  "limit":  3,
+                                  "request_ids":  [
+                                                      "C-0142",
+                                                      "C-0143"
+                                                  ]
+                              }
+                          ]
 }

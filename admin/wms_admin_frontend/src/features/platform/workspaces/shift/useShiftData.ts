@@ -19,10 +19,23 @@ export function useShiftData(reload: number, warehouseId: string): ShiftData {
   return {
     future: useApiRead<Wave[]>(wh && `/api/picking/waves?status=PREVIEW&limit=${SHIFT_LIMITS.future}${wh}`, reload),
     launched: useApiRead<Wave[]>(wh && `/api/picking/waves?status=LAUNCHED&limit=${SHIFT_LIMITS.launched}${wh}`, reload),
-    caseTasks: useApiRead<CaseTask[]>(wh && `/api/case-pick/tasks?scope=all&limit=${SHIFT_LIMITS.caseTasks}${wh}`, reload),
+    caseTasks: useApiRead<CaseTask[]>(wh && `/api/case-pick/tasks?scope=all&include_closed=true&limit=${SHIFT_LIMITS.caseTasks}${wh}`, reload),
     sessions: useApiRead<Session[]>(wh && `/api/resources/sessions?${wh.slice(1)}`, reload),
     shorts: useApiRead<CaseShort[]>(wh && `/api/case-pick/shorts?${wh.slice(1)}`, reload),
   };
+}
+
+/** Selected wave reads its own bounded queue, including completed carriers. */
+export function useSelectedWaveCases(warehouse: string, wave: number | null, reload: number, overview: Map<number, string[]>) {
+  const read = useApiRead<CaseTask[]>(warehouse && wave != null
+    ? `/api/case-pick/tasks?scope=all&include_closed=true&limit=500&ware_id=${warehouse}&pick_wave_id=${wave}` : null, reload);
+  const cases = new Map(overview);
+  if (wave != null) {
+    cases.delete(wave);
+    if (!read.loading && !read.error && read.data && read.data.length < 500 && read.data.every(t => t.pick_wave_id === wave))
+      cases.set(wave, read.data.map(t => t.status));
+  }
+  return { cases, tasks: !read.loading && !read.error ? read.data ?? [] : [] };
 }
 
 type Part<T> = { status: string; data: T | null; error: string };

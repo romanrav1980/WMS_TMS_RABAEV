@@ -79,7 +79,7 @@ function GanttToolbar({ filters, setFilters, zoom, setZoom, pan, canPan, clearWa
 function GanttLegend() {
   return <div className="rg-legend" aria-label="Обозначения">
     <span><i className="rg-sw plan" />план</span><span><i className="rg-sw fact" />факт</span><span><i className="rg-sw open" />факт идёт (до момента чтения)</span>
-    <span><i className="rg-sw point" />нет окончания</span><span><i className="rg-sw conflict" />пересечение</span>
+    <span><i className="rg-sw point" />момент / нет окончания</span><span><i className="rg-sw conflict" />пересечение</span>
     <span><i className="rg-sw shift" />на смене</span><span><i className="rg-sw planned" />план выхода</span><span title={ganttHelp.unknown.text}><i className="rg-sw unknown" />нет данных ≠ свободен</span><span><i className="rg-sw down" />недоступен</span>
   </div>;
 }
@@ -119,9 +119,9 @@ function GanttRow({ row, view, now, selection, onSelect, waveId }: { row: Row; v
   // состояние «сейчас» слева считается по всем барам ресурса — иначе занятый другой волной ресурс мог бы ложно показаться свободным.
   const bars = row.bars.filter(b => b.end >= view.from && b.start <= view.to && (waveId == null || b.event.wave_id === waveId));
   return <div className={"rg-row" + (selected ? " selected" : "")} role="row">
-    <button type="button" className="rg-label" role="rowheader" aria-pressed={selected} title={`${ganttHelp.row.text}\n${st.label}: ${st.basis}`} data-help-id={ganttHelp.row.id}
+    <button type="button" className="rg-label" role="rowheader" aria-pressed={selected} title={`${ganttHelp.row.text}\n${st.label}: ${st.basis}${row.untimed.length ? `\nНазначено работ без времени: ${row.untimed.length}` : ""}`} data-help-id={ganttHelp.row.id}
       onClick={() => onSelect({ kind: "resource", key: r.resource_key })}>
-      <b>{r.code}</b><small>{typeShort(r.resource_type)}{r.zone_code ? " · " + r.zone_code : ""}</small>
+      <b>{r.code}</b><small>{typeShort(r.resource_type)}{r.zone_code ? " · " + r.zone_code : ""}{row.untimed.length ? ` · без времени ${row.untimed.length}` : ""}</small>
       <i className={"rg-state " + st.tone}>{st.label}</i>
     </button>
     <div className="rg-track unknown" title={ganttHelp.unknown.text}>
@@ -135,8 +135,8 @@ function GanttRow({ row, view, now, selection, onSelect, waveId }: { row: Row; v
 
 function GanttBar({ bar, view, selection, onSelect }: { bar: Bar; view: View; selection: GanttSelection; onSelect: (s: GanttSelection) => void }) {
   const e = bar.event, sel = selection?.kind === "event" && selection.id === e.event_id;
-  const help = bar.point ? ganttHelp.point : bar.basis === "FACT" ? ganttHelp.barFact : ganttHelp.barPlan;
-  const when = bar.point ? `начало ${fmtAxis(bar.start, true)}, окончание не задано` : `${fmtAxis(bar.start, true)} — ${bar.open ? "идёт (на момент чтения " + fmtAxis(bar.end) + ")" : fmtAxis(bar.end, true)}`;
+  const help = bar.point ? bar.open ? ganttHelp.point : ganttHelp.confirmedPoint : bar.basis === "FACT" ? ganttHelp.barFact : ganttHelp.barPlan;
+  const when = bar.point ? bar.open ? `начало ${fmtAxis(bar.start, true)}, окончание не задано` : `подтверждённый момент ${fmtAxis(bar.start, true)}` : `${fmtAxis(bar.start, true)} — ${bar.open ? "идёт (на момент чтения " + fmtAxis(bar.end) + ")" : fmtAxis(bar.end, true)}`;
   const cls = ["rg-bar", bar.basis.toLowerCase(), bar.open && !bar.point ? "open" : "", bar.point ? "point" : "", bar.conflict ? "conflict" : "", sel ? "selected" : ""].join(" ");
   return <button type="button" className={cls} style={{ left: pct(view, bar.start), width: bar.point ? undefined : width(view, bar.start, bar.end) }}
     title={`${e.title} · ${bar.basis === "FACT" ? "факт" : "план"} · ${when}${e.status ? " · " + e.status : ""}${bar.conflict ? " · пересекается с другой работой ресурса" : ""}\n${help.text}`}

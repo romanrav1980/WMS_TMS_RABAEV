@@ -1,4 +1,4 @@
-import { isClosedWave, preparationComplete } from "./executionState";
+import { caseStage, isClosedWave, isOpenReplenishment, preparationComplete } from "./executionState";
 import { HelpButton } from "../../help/HelpButton";
 import { wsHelp } from "../help";
 import { fmtTime } from "../resources/timelineModel";
@@ -8,16 +8,17 @@ import { shiftHelp } from "./help";
 import type { Risk, WaveDetail } from "./types";
 
 const t = (iso: string | null | undefined) => iso ? fmtTime(null, iso) : "не задано";
+const CASE_STAGE = { PICKING: "сборка идёт", AWAITING_SHIPMENT: "собрано, ждёт контроля или погрузки", SHIPPED: "все задания отгружены, волна ещё не закрыта" } as const;
 const waveStatus: Record<string, string> = { DONE: "Завершена", CANCELLED: "Отменена", PREVIEW: "Подготовка", LAUNCHED: "В работе", DRAFT: "Черновик" };
 
 /** Карточка подготовки волны: спрос/запас, пополнение, время, ворота, риски, текущая сборка волны и переход к реальному действию.
  *  Количества показываются по артикулу и базовой единице; разные SKU не складываются в процент.
  *  onShowInGantt/onOpenTask — навигация к работам и ресурсам этой волны в общем Ганте ниже (не второй расчёт занятости). */
-export function WaveCard({ wave, detail, risks, tasks, onClose, onShowInGantt, onOpenTask }:
-  { wave: Wave & { dock_id?: number | null; route_code?: string | null }; detail: WaveDetail | undefined; risks: Risk[]; tasks: CaseTask[]; onClose: () => void; onShowInGantt: () => void; onOpenTask: (id: number) => void }) {
+export function WaveCard({ wave, detail, risks, tasks, caseStatuses, onClose, onShowInGantt, onOpenTask }:
+  { wave: Wave & { dock_id?: number | null; route_code?: string | null }; detail: WaveDetail | undefined; risks: Risk[]; tasks: CaseTask[]; caseStatuses: string[] | undefined; onClose: () => void; onShowInGantt: () => void; onOpenTask: (id: number) => void }) {
   const pick = detail?.pick.data, ready = detail?.readiness.data, time = detail?.time.data, repl = detail?.replenishment.data;
   const missing = (pick?.tasks ?? []).filter(x => Number(x.missing_base) > 0);
-  const replWait = (repl ?? []).filter(r => r.status !== "DONE");
+  const replWait = (repl ?? []).filter(r => isOpenReplenishment(r.status)), stage = caseStage(caseStatuses ?? []);
   return <section className="ops-card" aria-label={"Волна " + wave.wave_code}>
     <h3 style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
       <span>Волна {wave.wave_code}<br /><small>{waveStatus[wave.status] ?? "Статус не определён"} · склад {wave.ware_name || wave.ware_id}</small></span>
@@ -26,6 +27,7 @@ export function WaveCard({ wave, detail, risks, tasks, onClose, onShowInGantt, o
     {!preparationComplete(detail) && <p className="ops-note" role="status">Подготовка не проверена полностью. Отсутствие прочитанных блокировок не подтверждает готовность.</p>}
     <dl>
       <dt>Заказы / задания</dt><dd>{wave.order_count} / {wave.task_count}</dd>
+      <dt>Сборка по факту</dt><dd>{stage ? CASE_STAGE[stage] : caseStatuses === undefined ? "сборка не прочитана полностью — стадия не определяется" : !tasks.length ? "заданий сборки в выборке нет" : "стадия не определена по статусам заданий"}</dd>
       <dt>Окно волны</dt><dd>{wave.planned_start_at || wave.planned_finish_at ? `${t(wave.planned_start_at)} — ${t(wave.planned_finish_at)}` : "не задано"}</dd>
       <dt>Время утверждено</dt><dd>{detail?.time.error ? <span className="ops-err">{detail.time.error}</span> : time ? (time.plan_status === "NO_APPROVED_PLAN" ? "нет утверждённого плана" : time.plan_status) : "—"}</dd>
       <dt>Ворота / маршрут</dt><dd>{wave.dock_id ?? "ворота не назначены"}{wave.route_code ? " · " + wave.route_code : ""}</dd>
@@ -42,7 +44,7 @@ export function WaveCard({ wave, detail, risks, tasks, onClose, onShowInGantt, o
     {risks.length === 0 ? <p className="ops-note">{preparationComplete(detail) ? "В прочитанном снимке блокировок не найдено. Допуск к запуску проверяет сервер при команде." : "Нет полной проверки подготовки; готовность неизвестна."}</p> :
       <RiskList risks={risks} />}</>}
     <h3>Сборка этой волны <small>{tasks.length}</small></h3>
-    {tasks.length === 0 ? <p className="ops-note">Активных заданий сборки по этой волне в текущей выборке нет.</p> :
+    {tasks.length === 0 ? <p className="ops-note">Заданий сборки по этой волне в текущей выборке нет.</p> :
       <ul className="ops-list">{tasks.slice(0, 12).map(ct => <li key={ct.case_pick_task_id}>
         <span><b>Сборка {ct.case_pick_task_id}</b> <small>{ct.status}{ct.blocking_reason ? " · остановка: " + ct.blocking_reason : ""}</small><br />
           <small>строк {ct.picked_lines} из {ct.total_lines} · {ct.assigned_to ?? "исполнитель не назначен"}</small></span>
@@ -50,6 +52,7 @@ export function WaveCard({ wave, detail, risks, tasks, onClose, onShowInGantt, o
     <div className="aa-actions" style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 6 }}>
       <HelpButton help={shiftHelp.waveGantt} onClick={onShowInGantt}>Ресурсы волны в Ганте</HelpButton>
       <HelpButton help={shiftHelp.openShift} onClick={() => openLink({ page: "shift-supervisor-wave.html", params: { wave_id: wave.pick_wave_id } })}>Панель смены</HelpButton>
+
       <HelpButton help={shiftHelp.openRepl} onClick={() => openLink({ page: "wave-replenishment.html", params: { wave_id: wave.pick_wave_id } })}>Пополнение</HelpButton>
       <HelpButton help={shiftHelp.openWorkload} onClick={() => openLink({ page: "resource-workload.html", params: { wave_id: wave.pick_wave_id } })}>Загрузка ресурсов</HelpButton>
     </div>

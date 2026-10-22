@@ -6,7 +6,7 @@ from ..contracts_timeline import TimelineError, TimelineClockReader
 from ..domain.timeline_intervals import overlap_candidates, overlaps
 from .timeline_projection import TimelineProjection
 from .timeline_queries import resource_rows, attendance_rows, task_rows, dock_rows, transport_rows, case_rows
-from .timeline_queries import qualification_rows, session_rows
+from .timeline_queries import qualification_rows, session_rows, loading_rows
 
 
 class ResourceTimeline:
@@ -107,6 +107,8 @@ class ResourceTimeline:
                 row["clock_version"] = clock.get("version")
                 row["aware_operation"] = clock.get("operations", {}).get(int(row["op_id"]))
                 projection.transport(row)
+            for row in loading_rows(cur, {"ware": warehouse, "actor": actor, "start_at": start, "finish_at": finish}):
+                projection.loading(row)
         completed_at = datetime.now(timezone.utc).isoformat()
         for source in sources:
             source["observed_at"] = completed_at if source["status"] == "READY" else None

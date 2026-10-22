@@ -13,11 +13,24 @@ sys.path[:0] = [str(ROOT / 'api/wms_api_server'), str(ROOT)]
 from fastapi.testclient import TestClient
 from app import oracle_gateway
 from app.main import app
+from app.modules.resources.infrastructure import timeline_queries
 
 OUT = ROOT / 'runtime/test-evidence/tradecase/2026-10-22/T12/case-request-stages.json'
 events = []
 original_lease = oracle_gateway.oracle_connection
 original_log = oracle_gateway.OracleGateway._log_slow_sql
+original_rows = timeline_queries.read_rows
+
+
+def measured_rows(cursor, sql, params, limit=2000):
+    began = perf_counter()
+    try:
+        result = original_rows(cursor, sql, params, limit)
+    finally:
+        events[-1].setdefault('timeline_queries', []).append(dict(
+            sql_sha256=sha256(sql.encode()).hexdigest(), ms=round((perf_counter()-began)*1000, 3)))
+    events[-1]['timeline_queries'][-1]['rows'] = len(result)
+    return result
 
 
 @contextmanager
@@ -61,7 +74,7 @@ if __name__ == '__main__':
     try:
         # No lifespan context: do not start unrelated background workers.
         with patch.object(oracle_gateway, 'oracle_connection', measured_lease), patch.object(
-            oracle_gateway.OracleGateway, '_log_slow_sql', measured_log):
+            oracle_gateway.OracleGateway, '_log_slow_sql', measured_log), patch.object(timeline_queries, 'read_rows', measured_rows):
             client = TestClient(app)
             expected = None
             for i in range(6):
@@ -70,9 +83,14 @@ if __name__ == '__main__':
                 response = client.get(args.path, auth=('admin', 'admin123'))
                 elapsed = (perf_counter()-began)*1000
                 assert response.status_code == 200, response.status_code
-                digest = sha256(response.content).hexdigest()
+                payload = response.json()
+                if args.path.startswith('/api/resources/timeline?'):
+                    report['excluded_volatile_fields'] = ['observed_at','sources[*].observed_at']
+                    payload = {key:value for key,value in payload.items() if key != 'observed_at'}
+                    payload['sources'] = [{key:value for key,value in source.items() if key != 'observed_at'} for source in payload['sources']]
+                digest = sha256(json.dumps(payload,sort_keys=True,separators=(',',':')).encode()).hexdigest()
                 if expected is None: expected = digest
-                assert digest == expected, 'CASE results changed'
+                assert digest == expected, 'Response changed beyond declared volatile fields'
                 report['samples'].append(dict(round=i, total_ms=round(elapsed, 3), rows=len(response.json())if isinstance(response.json(),list)else None,
                     sha=digest, request_id=response.headers.get('x-wms-request-id'), leases=list(events)))
             report['status'] = 'PASS'

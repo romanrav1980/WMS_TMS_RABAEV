@@ -7,6 +7,7 @@ class TimelineProjection:
         self.warehouse = warehouse
         self.resources: dict[str, dict[str, Any]] = {}
         self.events: list[dict[str, Any]] = []
+        self.event_ids: set[str] = set()
         self.bindings: set[tuple[str, str]] = set()
         self.person: dict[str, str] = {}
         self.original: dict[int, str] = {}
@@ -52,7 +53,9 @@ class TimelineProjection:
         self.resources[key]["zone_code"] = row["zone_code"] or self.resources[key]["zone_code"]
 
     def add(self, event: dict[str, Any], lanes: list[str | None]) -> None:
-        self.events.append(event)
+        if event["event_id"] not in self.event_ids:
+            self.events.append(event)
+            self.event_ids.add(event["event_id"])
         for key in lanes:
             if key is not None and key in self.resources:
                 self.bindings.add((event["event_id"], key))
@@ -95,6 +98,25 @@ class TimelineProjection:
                   "time_zone_source": row.get("clock_time_zone"),
                   "legacy_time": {"plan_start": row["plan_local_start"], "plan_finish": row["plan_local_finish"],
                                   "fact_start": row["fact_local_start"], "fact_finish": row["fact_local_finish"]}}, lanes)
+
+    def loading(self, row: dict[str, Any]) -> None:
+        vehicle = None
+        if row["vehicle_number"]:
+            vehicle = "VEHICLE:" + row["vehicle_number"].strip().upper()
+            if vehicle not in self.resources:
+                self.lane(vehicle, "VEHICLE", row["vehicle_number"])
+        dock = f"DOCK:{self.warehouse}:{row['dock']}" if row["dock"] else None
+        if dock and dock not in self.resources:
+            self.lane(dock, "DOCK", row["dock"], "HISTORICAL")
+        for kind, operation, at, label, lanes in [
+            ("LOAD_CONFIRMATION", row["load_operation_id"], row["loaded_at"], "Погрузка подтверждена", [vehicle, dock]),
+            ("TRIP_DEPARTURE", row["departure_operation_id"], row["departed_at"], "Выезд подтверждён", [vehicle]),
+        ]:
+            if operation and at:
+                self.add({"event_id": f"{kind}:{operation}", "kind": kind, "label": f"{label} · рейс {row['tt_id']}",
+                          "source": "RRL_TT_HU_LOAD_FACT", "source_id": operation, "trip_id": row["tt_id"],
+                          "status": "DONE", "plan_start_at": None, "plan_finish_at": None,
+                          "fact_start_at": at, "fact_finish_at": at, "time_status": "AWARE_FACT"}, lanes)
 
     def case_task(self, row: dict[str, Any]) -> None:
         # The query supplies only aware STARTED_AT_INSTANT; a legacy finish is not an end instant.

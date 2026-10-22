@@ -6,7 +6,8 @@ import type { Availability, BindingRole, ObjectLink, ResourceTimeline, ResourceT
 type ServerEvent = { event_id: string; kind: string; label: string; source: string; source_id: string | number;
   plan_start_at: string | null; plan_finish_at: string | null; fact_start_at: string | null; fact_finish_at: string | null; time_status: string;
   status?: string | null; trip_id?: number | null; wave_id?: number | null; task_source?: string | null; source_task_id?: number | null;
-  total_lines?: number | null; picked_lines?: number | null; legacy_time?: Record<string, string | null> | null; blocking_reason?: string | null; fact_finish_status?: string };
+  total_lines?: number | null; picked_lines?: number | null; legacy_time?: Record<string, string | null> | null; blocking_reason?: string | null; fact_finish_status?: string;
+  approval_status?: string | null };
 type ServerQualification = { source_resource_id?: number; task_type: string; current_by_native_policy?: boolean; legacy_valid_from?: string | null; legacy_valid_until?: string | null; time_status?: string };
 type ServerSignal = { session_id: number; aware_at: string | null; legacy_at: string | null; time_status: string; recent_by_native_server_clock: boolean };
 type ServerResource = { resource_id: string; kind: string; label: string | null; warehouse_id: number; source_state: string | null; availability: string;
@@ -22,12 +23,17 @@ const KIND: Record<string, ResourceType> = { CASE_PICKER: "PICKER", REACHTRUCK: 
 const ROLE: Record<ResourceType, BindingRole> = { PICKER: "EXECUTOR", REACH_TRUCK: "EQUIPMENT", DOCK: "DOCK", VEHICLE: "VEHICLE", OTHER: "EXECUTOR" };
 // Статусы, после которых работа не продолжается; без окончания у источника — точка, а не занятость до «сейчас» (как в overlap сервера).
 const TERMINAL = new Set(["DONE", "CANCELLED", "SHIPPED", "READY_TO_SHIP", "CONTROLLED", "WAIT_CONTROL", "CONTROL_IN_PROGRESS", "PICKED", "CLOSED"]);
+const TIME: Record<string, string> = { AWARE_FACT: "факт с часовым поясом", AWARE_PLAN: "план с часовым поясом", AWARE_APPROVED: "утверждённый план с часовым поясом",
+  AWARE_TIME_SCHEDULE: "расписание с часовым поясом", TIME_UNRESOLVED: "время источника без часового пояса — на шкалу не ставится" };
+const APPROVAL: Record<string, string> = { APPROVED: "утверждено", SOURCE_CHANGED: "источник изменился после утверждения — время не подтверждено", NOT_APPROVED: "не утверждено" };
 const SOURCE_TITLE: Record<string, string> = { sessions: "Сессии", registry: "Реестр ресурсов", attendance: "План выхода", warehouse_tasks: "Складские задания", case_tasks: "Сборка", transport: "Рейсы и ворота" };
 
 function assertShape(cond: unknown, what: string): asserts cond { if (!cond) throw new TimelineShapeError("Неожиданный ответ API ресурсов: " + what); }
 const isArr = Array.isArray;
 
 function linkOf(e: ServerEvent): ObjectLink {
+  if ((e.kind === "LOAD_CONFIRMATION" || e.kind === "TRIP_DEPARTURE") && e.trip_id != null)
+    return { page: "transport-loading.html", params: { trip_id: e.trip_id } };
   if (e.kind === "TRANSPORT_OPERATION" && e.trip_id != null) return { page: "transport", params: { task_id: e.trip_id } };
   if (e.kind === "CASE_PICK_TASK") return { page: "case-pick-management.html" };
   if (e.kind === "WAREHOUSE_TASK") return { page: "warehouse-tasks.html" };
@@ -36,12 +42,14 @@ function linkOf(e: ServerEvent): ObjectLink {
 
 function eventOf(e: ServerEvent): TimelineEvent {
   assertShape(typeof e.event_id === "string" && typeof e.kind === "string", "событие без event_id/kind");
-  const details: [string, string][] = [["Статус времени", e.time_status]];
+  const details: [string, string][] = [["Время", TIME[e.time_status] ?? "состояние не распознано"]];
   if (e.total_lines != null) details.push(["Строки сборки", `${e.picked_lines ?? "?"} из ${e.total_lines}`]); // строки разных SKU — не единицы товара
   if (e.task_source) details.push(["Источник задания", `${e.task_source}${e.source_task_id != null ? " · " + e.source_task_id : ""}`]);
   if (e.blocking_reason) details.push(["Блокировка", e.blocking_reason]);
   if (e.fact_finish_status === "UNRESOLVED") details.push(["Окончание факта", "не известно у источника"]);
-  return { event_id: e.event_id, event_kind: e.kind, title: e.label, status: e.status ?? null, wave_id: e.wave_id ?? null, task_id: e.source_id, trip_id: e.trip_id ?? null,
+  if (e.approval_status) details.push(["Утверждение времени", APPROVAL[e.approval_status] ?? "состояние не распознано"]);
+  return { event_id: e.event_id, event_kind: e.kind, title: e.label, status: e.status ?? null, wave_id: e.wave_id ?? null,
+    task_id: e.kind === "LOAD_CONFIRMATION" || e.kind === "TRIP_DEPARTURE" ? null : e.source_id, trip_id: e.trip_id ?? null,
     plan_start_at: e.plan_start_at, plan_finish_at: e.plan_finish_at, fact_start_at: e.fact_start_at, fact_finish_at: e.fact_finish_at,
     quantity: null, source: e.source, link: linkOf(e), finish_unresolved: e.fact_finish_status === "UNRESOLVED",
     terminal: e.status != null && TERMINAL.has(e.status), legacy_time: e.legacy_time ?? null, time_status: e.time_status, details };

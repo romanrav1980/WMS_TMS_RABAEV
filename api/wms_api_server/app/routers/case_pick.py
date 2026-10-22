@@ -1,6 +1,6 @@
 from ..modules.resources.public import CaseReadPort, CaseReadError, case_read_service, assert_case_task_access
 from ..modules.inventory.public import CaseCarrierReturnRequest, CaseCarrierCloseRequest
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from typing import Annotated
 from ..modules.platform.public import get_current_user
 
@@ -39,10 +39,14 @@ def ensure_wave_case_pick_tasks(
 def list_case_pick_tasks(
     resource_id: int | None = None, scope: str = "mine", status: str | None = None, limit: int = 100,
     ware_id: int | None = None,
+    pick_wave_id: int | None = Query(default=None, gt=0),
+    include_closed: bool = False,
     user: AdminUser = Depends(get_current_admin),
     service: CaseReadPort = Depends(case_read_service),
 ) -> list[dict]:
     try:
+        if pick_wave_id is not None or include_closed:
+            return service.tasks(user.username, resource_id, scope, status, limit, ware_id, pick_wave_id, include_closed)
         return service.tasks(user.username, resource_id, scope, status, limit, ware_id)
     except CaseReadError as exc:
         raise HTTPException(exc.status, {"code": exc.code, "message": str(exc)}) from exc

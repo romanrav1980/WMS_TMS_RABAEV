@@ -146,6 +146,8 @@ class LegacyCaseReads:
         limit: int = 100,
         warehouse_id: int | None = None,
         view_actor: str | None = None,
+        wave_id: int | None = None,
+        include_closed: bool = False,
     ) -> list[dict[str, Any]]:
         conditions = ["1 = 1"]
         params: dict[str, Any] = {"limit": min(max(limit, 1), 500)}
@@ -158,10 +160,13 @@ class LegacyCaseReads:
         if warehouse_id is not None:
             conditions.append("t.WARE_ID = :ware")
             params["ware"] = warehouse_id
+        if wave_id is not None:
+            conditions.append("t.PICK_WAVE_ID = :wave")
+            params["wave"] = wave_id
         if status:
             conditions.append("t.STATUS = :status")
             params["status"] = status.upper()
-        else:
+        elif not include_closed:
             conditions.append("t.STATUS not in ('READY_TO_SHIP', 'CANCELLED')")
         if scope == "self":
             if view_actor is None:

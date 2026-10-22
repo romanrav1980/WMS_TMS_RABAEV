@@ -107,3 +107,30 @@ def transport_rows(cur: Any, params: dict[str, Any]) -> list[dict[str, Any]]:
         and ((o.PLAN_START<:local_finish and (o.PLAN_END>:local_start or o.PLAN_END is null))
           or (o.FACT_START<:local_finish and (o.FACT_END>:local_start or o.FACT_END is null)))
         order by o.TT_ID,o.ORD,o.ID fetch first 2001 rows only""", params)
+
+
+def loading_rows(cur: Any, params: dict[str, Any]) -> list[dict[str, Any]]:
+    return read_rows(cur, """select f.LOAD_OPERATION_ID,f.TT_ID,f.VEHICLE_NUMBER,f.DOCK,f.STATUS,
+        f.DEPARTURE_OPERATION_ID,
+        to_char(f.LOADED_AT at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.FF6TZH:TZM') LOADED_AT,
+        to_char(f.DEPARTED_AT at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS.FF6TZH:TZM') DEPARTED_AT
+        from RRL_TT_HU_LOAD_FACT f join RRL_STOCK_OPERATION op on op.OPERATION_ID=f.LOAD_OPERATION_ID and op.STATE='APPLIED'
+        where f.WARE_ID=:ware
+        and((f.LOADED_AT>=:start_at and f.LOADED_AT<:finish_at)
+          or(f.DEPARTED_AT>=:start_at and f.DEPARTED_AT<:finish_at))
+        and not exists(select 1 from RRL_TT_HU_LOAD_ST ls
+          join RRL_SBORKA_PALLETS p on p.ID=ls.SBORKA_PALLET_ID
+          where ls.LOAD_OPERATION_ID=f.LOAD_OPERATION_ID and(p.WARE_ID is null
+            or RRL_ACCESS_API.allowed(:actor,'transport_dispatch_view','WAREHOUSE',to_char(p.WARE_ID))=0))
+        and(not exists(select 1 from RRL_TRADE_SITE site where site.WARE_ID=f.WARE_ID)
+          or exists(select 1 from json_table(op.RESOLVED_PLAN_JSON,'$.resources[*]'
+            columns(R number path '$.rank'))j where j.R=60))
+        and not exists(select 1 from json_table(op.RESOLVED_PLAN_JSON,'$.resources[*]'
+          columns(R number path '$.rank',K varchar2(4000)path '$.key_hex'))j
+          left join RRL_TRADE_STOCK_ATTR a
+            on a.PHYSICAL_UNIT_KEY=lower(substr(utl_raw.cast_to_varchar2(hextoraw(j.K)),-64))
+            and rawtohex(RRL_STOCK_LOCK_API.resource_key('UNIT',a.PHYSICAL_UNIT_KEY))=j.K
+          where j.R=60 and((a.PHYSICAL_UNIT_KEY is null
+            and exists(select 1 from RRL_TRADE_SITE site where site.WARE_ID=f.WARE_ID))
+            or(a.PHYSICAL_UNIT_KEY is not null and RRL_TRADE_STOCK_GUARD.owner_allowed(:actor,f.WARE_ID,a.OWNER_ID,0)<>1)))
+        order by f.LOADED_AT,f.LOAD_OPERATION_ID fetch first 2001 rows only""", params)

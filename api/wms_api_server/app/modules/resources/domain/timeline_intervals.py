@@ -14,6 +14,8 @@ def instant(value: str | None) -> datetime | None:
 
 def overlaps(start: str | None, finish: str | None, view_start: datetime, view_finish: datetime) -> bool:
     begins, ends = instant(start), instant(finish)
+    if begins is not None and ends == begins:
+        return view_start <= begins < view_finish
     return begins is not None and begins < view_finish and (ends is None or ends > view_start)
 
 
