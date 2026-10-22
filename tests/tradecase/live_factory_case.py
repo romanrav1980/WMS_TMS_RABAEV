@@ -56,15 +56,16 @@ def prepare():
             document_id=tag+"."+kind, version=1, occurred_at="2026-10-21T12:00:00+03:00", payload=dict(entity_type=kind, **payload)))
     send("recipient", "RECIPIENT", dict(title="Factory CASE QA", wms_customer_id=s["customer"], target_owner_id="SNS", permitted_source_owners=["SNS"],
         buyout_mode="BEFORE_PICK", min_osg_days=0, lead_time_days=0, allow_broken_box=True, allow_partial_pick=True, allow_partial_ship=True))
-    send("order", "ORDER", dict(recipient_id=tag+".RECIPIENT", planned_ship_at="2026-10-22T12:00:00+03:00",
-        lines=[dict(line_id="1", sku_id="A", source_owner_id="SNS", target_owner_id="SNS", mrc="200", quantity="2", uom="EA", min_osg_days=0)]))
+    quantity=int(s.get("quantity",2));assert quantity>0
+    send("order", "ORDER", dict(recipient_id=s.get("recipient_id",tag+".RECIPIENT"), planned_ship_at="2026-10-22T12:00:00+03:00",
+        lines=[dict(line_id="1", sku_id="A", source_owner_id="SNS", target_owner_id="SNS", mrc="200", quantity=str(quantity), uom="EA", min_osg_days=0)]))
     if "native_order" not in s:
         with oracle_connection() as conn:
             q=conn.cursor();q.callproc("RRL_STOCK_METADATA_TX.begin_change", ["admin", "warehouse_settings_edit"])
             try:
                 q.execute("select RRL_CUSTOMER_ORDER_SQ.nextval,RRL_CUSTOMER_ORDER_ROW_SQ.nextval from dual");order,row=q.fetchone()
                 q.execute("insert into RRL_CUSTOMER_ORDER(CUSTOMER_ORDER_ID,ORDER_NO,CUSTOMER_ID,WARE_ID,SHIPMENT_DATE,STATUS,SOURCE_SYSTEM,CREATED_BY)values(:o,:code,:c,:w,to_date('2026-10-22','YYYY-MM-DD'),'OPEN','QA_TRADECASE_ONLY','admin')", o=order,code=tag,c=s["customer"],w=w)
-                q.execute("insert into RRL_CUSTOMER_ORDER_ROW(CUSTOMER_ORDER_ROW_ID,CUSTOMER_ORDER_ID,LINE_NO,ARTICUL,PRODUCT_NAME,UNIT_CODE,ORDER_QTY,WARE_ID,STATUS,CREATED_BY)values(:r,:o,1,:a,'Factory CASE QA','EA',2,:w,'OPEN','admin')", r=row,o=order,a=s["article"],w=w);conn.commit()
+                q.execute("insert into RRL_CUSTOMER_ORDER_ROW(CUSTOMER_ORDER_ROW_ID,CUSTOMER_ORDER_ID,LINE_NO,ARTICUL,PRODUCT_NAME,UNIT_CODE,ORDER_QTY,WARE_ID,STATUS,CREATED_BY)values(:r,:o,1,:a,'Factory CASE QA','EA',:qty,:w,'OPEN','admin')", r=row,o=order,a=s["article"],qty=quantity,w=w);conn.commit()
             finally:q.callproc("RRL_STOCK_METADATA_TX.end_change")
         s.update(native_order=order,native_row=row);save()
     step("binding", base+"/orders/"+tag+".ORDER/binding", dict(operation_id=tag+".bind", expected_order_version=1,
@@ -132,9 +133,9 @@ def execute(return_after=True):
     if "pick_body" not in s:
         with oracle_connection()as conn:
             q=conn.cursor();q.execute("select c.SYSTEM_CODE,c.RAW_CODE from RRL_WMS_RECEIPT_UNIT u join RRL_WMS_RECEIPT_CODE c on c.UID_PALLET=u.UID_PALLET and c.UNIT_ID=u.UNIT_ID join RRL_STOCK_RESERVATION r on r.RESERVATION_ID=u.HARD_RESERVATION_ID where r.SOURCE_DOC_TYPE='PICK_WAVE'and r.SOURCE_LINE_ID=:p and r.STATUS in('ACTIVE','ALLOCATED','PICKING')",p=s["pick_task"])
-            scans=[dict(system_code=system,profile_code="TOBACCO",code=raw.read()if hasattr(raw,"read")else raw)for system,raw in q];assert len(scans)==2
+            scans=[dict(system_code=system,profile_code="TOBACCO",code=raw.read()if hasattr(raw,"read")else raw)for system,raw in q];assert len(scans)==int(s.get("quantity",2))
             q.execute("select SSCC from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:t",t=s["case"]);carrier=q.fetchone()[0]
-        s["pick_body"]=dict(operation_id=tag+".pick",fact_qty="2",scan_cell=s["pick"],scan_product=s["article"],scan_container=carrier,resource_id=resource,resource_session_id=session,unit_scans=scans);save()
+        s["pick_body"]=dict(operation_id=tag+".pick",fact_qty=str(s.get("quantity",2)),scan_cell=s["pick"],scan_product=s["article"],scan_container=carrier,resource_id=resource,resource_session_id=session,unit_scans=scans);save()
     step("picked",case+f"/lines/{s['line']}/confirm",s["pick_body"],actor=actor,password=password)
     assert expect(200,own("POST",case+f"/lines/{s['line']}/confirm",s["pick_body"]))==s["picked"]
     if "close_body" not in s:
