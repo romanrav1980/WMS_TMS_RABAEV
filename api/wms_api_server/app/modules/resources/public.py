@@ -147,3 +147,12 @@ def build_picker_kpi_service() -> PickerKpiPort:
     return PickerKpiService(PickerKpiRead(OracleGateway()))
 
 from .api.case_carrier_lookup_routes import router as case_carrier_lookup_router
+
+from .contracts_yard import YardPort, yard_service
+from .api.yard_routes import router as yard_router
+
+
+def build_yard_service() -> YardPort:
+    from ...oracle_gateway import OracleGateway
+    from .infrastructure.yard_visits import OracleYardVisits
+    return OracleYardVisits(OracleGateway())

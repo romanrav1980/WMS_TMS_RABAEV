@@ -130,3 +130,23 @@ class TimelineProjection:
                   "legacy_time": {"fact_finish": row["fact_local_finish"]}, "fact_finish_status": "OPEN" if ongoing else "UNRESOLVED"},
                  [self.original.get(row["resource_id"]), f"EQUIPMENT:{row['equipment_id']}",
                   self.person.get(str(row["assigned_to"] or "").strip().lower())])
+
+    def yard(self, row: dict[str, Any]) -> None:
+        # A visit holds its dock from docking and the vehicle from arrival; the end stays open until departure.
+        vehicle = dock = None
+        if row.get("vehicle"):
+            vehicle = "VEHICLE:" + row["vehicle"].strip().upper()
+            if vehicle not in self.resources:
+                self.lane(vehicle, "VEHICLE", row["vehicle"])
+        if row.get("dock") and row["state"] in {"AT_DOCK", "WORKING", "WORK_DONE"}:
+            dock = f"DOCK:{self.warehouse}:{row['dock']}"
+            if dock not in self.resources:
+                self.lane(dock, "DOCK", row["dock"], "UNKNOWN")
+        start = row.get("docked_at") or row.get("arrived_at")
+        plan = row.get("planned_arrival_at") if row["state"] == "EXPECTED" else None
+        self.add({"event_id": f"YARD_VISIT:{row['visit_id']}", "kind": "YARD_VISIT",
+                  "label": f"Визит {row['visit_id']} · рейс {row['trip_id']}", "source": "RRL_YARD_VISIT",
+                  "source_id": row["visit_id"], "trip_id": row["trip_id"], "status": row["state"],
+                  "plan_start_at": plan, "plan_finish_at": plan, "fact_start_at": start, "fact_finish_at": None,
+                  "time_status": "AWARE_FACT" if start else "AWARE_PLAN" if plan else "TIME_UNRESOLVED",
+                  "fact_finish_status": "OPEN" if start else "UNRESOLVED"}, [vehicle, dock])

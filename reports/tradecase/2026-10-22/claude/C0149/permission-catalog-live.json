@@ -1,0 +1,26 @@
+{
+ "access_tables": [
+  "RRL_ACCESS_ASSIGNMENT",
+  "RRL_ACCESS_AUDIT",
+  "RRL_ACCESS_BRANCH_MEMBER",
+  "RRL_ACCESS_GROUP",
+  "RRL_ACCESS_GROUP_MEMBER",
+  "RRL_ACCESS_OBJECT",
+  "RRL_ACCESS_REV",
+  "RRL_ACCESS_ROLE",
+  "RRL_ACCESS_ROLE_RIGHT"
+ ],
+ "tradecase_permissions": {
+  "RRL_ACCESS_ROLE_RIGHT.PERMISSION": [
+   "tradecase_buyout_basis_import",
+   "tradecase_buyout_request",
+   "tradecase_import",
+   "tradecase_stock_bind",
+   "tradecase_stock_sort",
+   "tradecase_topup_approve",
+   "tradecase_topup_result",
+   "tradecase_view"
+  ]
+ },
+ "yard_objects": []
+}

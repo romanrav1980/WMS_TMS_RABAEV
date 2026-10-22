@@ -20,9 +20,10 @@ const typeShort = (t: string) => RESOURCE_TYPES.find(x => x.id === t)?.short ?? 
 const ROLE: Record<string, string> = { EXECUTOR: "исполнитель", EQUIPMENT: "техника", DOCK: "ворота", VEHICLE: "машина" };
 const STATUS: Record<string, string> = { NEW: "Новое", PLANNED: "Запланировано", ASSIGNED: "Назначено", IN_PROGRESS: "В работе",
   DONE: "Выполнено", CANCELLED: "Отменено", SHIPPED: "Отгружено", CONTROLLED: "Проверено", READY_TO_SHIP: "Готово к отгрузке",
-  WAIT_CONTROL: "Ожидает контроля", CONTROL_IN_PROGRESS: "Идёт контроль", PICKED: "Собрано", PARTIAL: "Собрано частично", WAIT_REPLENISHMENT: "Ожидает пополнения", FAILED: "Ошибка" };
+  WAIT_CONTROL: "Ожидает контроля", CONTROL_IN_PROGRESS: "Идёт контроль", PICKED: "Собрано", PARTIAL: "Собрано частично", WAIT_REPLENISHMENT: "Ожидает пополнения", FAILED: "Ошибка",
+  EXPECTED: "Ожидается", ARRIVED: "На площадке", AT_DOCK: "У ворот", WORKING: "Идёт работа", WORK_DONE: "Работа закончена, не выехала" };
 const SOURCE: Record<string, string> = { RRL_TT_HU_LOAD_FACT: "Журнал погрузки", RRL_WAREHOUSE_TASK: "Складские задания",
-  RRL_CASE_PICK_TASK: "Задания сборки", RRL_TT_OPERATIONS: "Операции рейса", RRL_WORKLOAD_ATTENDANCE: "План выхода" };
+  RRL_CASE_PICK_TASK: "Задания сборки", RRL_TT_OPERATIONS: "Операции рейса", RRL_WORKLOAD_ATTENDANCE: "План выхода", RRL_YARD_VISIT: "Визиты двора" };
 const when = (b: Bar) => b.point ? b.open ? `с ${fmtAxis(b.start, true)}, окончание не задано` : `подтверждённый момент ${fmtAxis(b.start, true)}` : `${fmtAxis(b.start, true)} — ${b.open ? "идёт" : fmtAxis(b.end, true)}`;
 
 /** Карточка выбранного ресурса или работы. Одна работа показывает все свои ресурсы (одно событие, несколько привязок).

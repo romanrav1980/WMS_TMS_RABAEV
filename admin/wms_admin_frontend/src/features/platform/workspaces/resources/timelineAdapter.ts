@@ -26,7 +26,7 @@ const TERMINAL = new Set(["DONE", "CANCELLED", "SHIPPED", "READY_TO_SHIP", "CONT
 const TIME: Record<string, string> = { AWARE_FACT: "факт с часовым поясом", AWARE_PLAN: "план с часовым поясом", AWARE_APPROVED: "утверждённый план с часовым поясом",
   AWARE_TIME_SCHEDULE: "расписание с часовым поясом", TIME_UNRESOLVED: "время источника без часового пояса — на шкалу не ставится" };
 const APPROVAL: Record<string, string> = { APPROVED: "утверждено", SOURCE_CHANGED: "источник изменился после утверждения — время не подтверждено", NOT_APPROVED: "не утверждено" };
-const SOURCE_TITLE: Record<string, string> = { sessions: "Сессии", registry: "Реестр ресурсов", attendance: "План выхода", warehouse_tasks: "Складские задания", case_tasks: "Сборка", transport: "Рейсы и ворота" };
+const SOURCE_TITLE: Record<string, string> = { sessions: "Сессии", registry: "Реестр ресурсов", attendance: "План выхода", warehouse_tasks: "Складские задания", case_tasks: "Сборка", transport: "Рейсы и ворота", yard: "Двор (визиты)" };
 
 function assertShape(cond: unknown, what: string): asserts cond { if (!cond) throw new TimelineShapeError("Неожиданный ответ API ресурсов: " + what); }
 const isArr = Array.isArray;
@@ -47,9 +47,10 @@ function eventOf(e: ServerEvent): TimelineEvent {
   if (e.task_source) details.push(["Источник задания", `${e.task_source}${e.source_task_id != null ? " · " + e.source_task_id : ""}`]);
   if (e.blocking_reason) details.push(["Блокировка", e.blocking_reason]);
   if (e.fact_finish_status === "UNRESOLVED") details.push(["Окончание факта", "не известно у источника"]);
+  if (e.kind === "YARD_VISIT") details.push(["Окончание", e.fact_start_at ? "открыто до выезда — ворота/машина заняты" : "не начат"]);
   if (e.approval_status) details.push(["Утверждение времени", APPROVAL[e.approval_status] ?? "состояние не распознано"]);
   return { event_id: e.event_id, event_kind: e.kind, title: e.label, status: e.status ?? null, wave_id: e.wave_id ?? null,
-    task_id: e.kind === "LOAD_CONFIRMATION" || e.kind === "TRIP_DEPARTURE" ? null : e.source_id, trip_id: e.trip_id ?? null,
+    task_id: e.kind === "LOAD_CONFIRMATION" || e.kind === "TRIP_DEPARTURE" || e.kind === "YARD_VISIT" ? null : e.source_id, trip_id: e.trip_id ?? null,
     plan_start_at: e.plan_start_at, plan_finish_at: e.plan_finish_at, fact_start_at: e.fact_start_at, fact_finish_at: e.fact_finish_at,
     quantity: null, source: e.source, link: linkOf(e), finish_unresolved: e.fact_finish_status === "UNRESOLVED",
     terminal: e.status != null && TERMINAL.has(e.status), legacy_time: e.legacy_time ?? null, time_status: e.time_status, details };
@@ -100,7 +101,7 @@ export function adaptTimeline(raw: unknown): ResourceTimeline {
     warehouse: { warehouse_id: t.warehouse_id, name: null, time_zone: t.warehouse_time_zone, time_zone_source: null },
     window: { start_at: t.start_at, finish_at: t.finish_at }, read_at: t.observed_at,
     resources, events, bindings,
-    sources: t.sources.map(s => ({ source: s.source_id, title: SOURCE_TITLE[s.source_id] ?? s.source_id, status: (s.status === "READY" ? "OK" : s.status === "FORBIDDEN" ? "NO_ACCESS" : "ERROR") as SourceStatus,
+    sources: t.sources.map(s => ({ source: s.source_id, title: SOURCE_TITLE[s.source_id] ?? s.source_id, status: (s.status === "READY" ? "OK" : s.status === "FORBIDDEN" ? "NO_ACCESS" : s.status === "NOT_MAPPED" ? "NOT_MAPPED" : "ERROR") as SourceStatus,
       read_at: s.observed_at, row_count: null, limit: s.limit, truncated: false, message: s.status === "FORBIDDEN" ? `нет права ${s.permission} на этот склад` : null })),
     overlaps: t.overlap_candidates.map(o => ({ resource_key: o.resource_id, basis: o.phase === "fact" ? "FACT" as const : "PLAN" as const, event_ids: o.event_ids })),
     overlap_limit: t.overlap_limit,

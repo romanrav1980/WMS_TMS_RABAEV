@@ -10,6 +10,7 @@ from .modules.inventory.public import (
     case_current_close_router, case_current_close_service, build_case_current_close,
     case_empty_router, case_empty_service, build_case_empty,
 )
+from .modules.resources.public import yard_router, yard_service, build_yard_service
 from .modules.resources.public import (
     picker_time_router, picker_time_service, build_picker_time_service,
     picker_kpi_router, picker_kpi_service, build_picker_kpi_service,
@@ -29,6 +30,8 @@ def register_case_resource_commands(app: FastAPI) -> None:
     app.include_router(picker_time_router)
     app.dependency_overrides[picker_kpi_service] = build_picker_kpi_service
     app.include_router(picker_kpi_router)
+    app.dependency_overrides[yard_service] = build_yard_service
+    app.include_router(yard_router)
 
     build = Path(__file__).resolve().parents[3] / "terminal/wms_terminal_web/dist/case-work"
     if (build / "index.html").is_file():

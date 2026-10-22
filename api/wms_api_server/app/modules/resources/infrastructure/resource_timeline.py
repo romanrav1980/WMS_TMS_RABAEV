@@ -4,6 +4,7 @@ from typing import Any
 import oracledb
 from ..contracts_timeline import TimelineError, TimelineClockReader
 from ..domain.timeline_intervals import overlap_candidates, overlaps
+from ...platform.public import read_oracle_json
 from .timeline_projection import TimelineProjection
 from .timeline_queries import resource_rows, attendance_rows, task_rows, dock_rows, transport_rows, case_rows
 from .timeline_queries import qualification_rows, session_rows, loading_rows
@@ -58,7 +59,7 @@ class ResourceTimeline:
     def _sources(cur: Any, warehouse: int, actor: str) -> list[dict[str, Any]]:
         permissions = {"registry": "resource_management_view", "attendance": "resource_shift_view",
                        "warehouse_tasks": "warehouse_task_view", "case_tasks": "case_pick_view", "transport": "transport_dispatch_view",
-                       "sessions": "resource_session_view"}
+                       "sessions": "resource_session_view", "yard": "tradecase_view"}
         result = []
         for name, permission in permissions.items():
             cur.execute("select RRL_ACCESS_API.allowed(:actor,:permission,'WAREHOUSE',:ware) from dual",
@@ -109,6 +110,17 @@ class ResourceTimeline:
                 projection.transport(row)
             for row in loading_rows(cur, {"ware": warehouse, "actor": actor, "start_at": start, "finish_at": finish}):
                 projection.loading(row)
+        if "yard" in allowed:
+            # Active visits only, through the owner-filtered native read; absent before the migration is applied.
+            try:
+                rows = read_oracle_json(cur.callfunc("RRL_YARD_VISIT_API.visits", oracledb.DB_TYPE_CLOB, [warehouse, actor, 1]))
+            except oracledb.DatabaseError as error:
+                if getattr(error.args[0], "code", 0) not in (4043, 6550):
+                    raise
+                next(source for source in sources if source["source_id"] == "yard")["status"] = "NOT_MAPPED"
+            else:
+                for row in rows["visits"]:
+                    projection.yard(row)
         completed_at = datetime.now(timezone.utc).isoformat()
         for source in sources:
             source["observed_at"] = completed_at if source["status"] == "READY" else None

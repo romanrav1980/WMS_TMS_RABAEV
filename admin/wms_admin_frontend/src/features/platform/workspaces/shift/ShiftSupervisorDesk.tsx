@@ -20,20 +20,22 @@ import { useRecovery } from "../recovery/useRecovery";
 import { shiftHelp } from "./help";
 import { isOpenCase, isOpenReplenishment } from "./executionState";
 import { useShiftRisks } from "./useShiftRisks";
+import { YardPanel } from "./YardPanel";
 import { SHIFT_LIMITS, useShiftData, useWaveDetails, useSelectedWaveCases } from "./useShiftData";
 import { useShiftWave, useResourceKeyBySession, useShiftWarehouse } from "./useShiftContext";
 import type { Risk } from "./types";
 import "../resources/gantt.css";
 
-type Panel = "future" | "risks" | "picking" | "blocked" | "repl" | "recovery" | "people";
+type Panel = "future" | "risks" | "picking" | "blocked" | "repl" | "recovery" | "people" | "yard";
 const PANELS: { id: Panel; icon: string; title: string }[] = [
   { id: "future", icon: "◇", title: "Будущие волны" }, { id: "risks", icon: "!", title: "Риски запуска" }, { id: "picking", icon: "▤", title: "Текущая сборка" },
   { id: "blocked", icon: "⛔", title: "Блокировки сборки" }, { id: "repl", icon: "⇅", title: "Пополнения" }, { id: "recovery", icon: "⚠", title: "Восстановление недостач" }, { id: "people", icon: "👤", title: "Люди и техника" },
+  { id: "yard", icon: "⛟", title: "Двор и ворота" },
 ];
 const plus = (n: number, limit: number) => (n >= limit ? `${n}+` : String(n));
 
 /** Рабочее место старшего смены (C0074): поток волн на схеме склада, подготовка будущей волны, риски, текущая сборка, общий Гант ресурсов.
- *  Запуск и переназначение — только в экранах-владельцах существующими командами; здесь команды не отправляются. */
+ *  Запуск и переназначение — только в экранах-владельцах существующими командами; здесь отправляются только переходы визитов двора (C-0149). */
 export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isToday: boolean; reload: number }) {
   // Склад — из адреса (warehouse_id), чтобы переходы «Консолидация ↔ старший смены» открывали тот же склад (C0116).
   const [wh, setWh] = useShiftWarehouse();
@@ -98,7 +100,7 @@ export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isT
         <button type="button" aria-pressed={panel === p.id} title={shiftHelp.process.text} data-help-id={shiftHelp.process.id + "." + p.id} onClick={() => { setPanel(v => v === p.id ? null : p.id); setWaveId(null); setGantt(null); }}>
           <span className="ops-ico" aria-hidden="true">{p.icon}</span><span><b>{p.title}</b></span>
           <span className="ops-count">{{ future: future.length, risks: risks.length, picking: picking.length, blocked: blocked.length, repl: [...details.values()].reduce((n, d) => n + (d.replenishment.data?.filter(r => isOpenReplenishment(r.status)).length ?? 0), 0),
-            recovery: recovery.rows ? plus(recovery.rows.length, RECOVERY_LIMIT) : "—", people: (data.sessions.data ?? []).length }[p.id]}</span>
+            recovery: recovery.rows ? plus(recovery.rows.length, RECOVERY_LIMIT) : "—", people: (data.sessions.data ?? []).length, yard: "→" }[p.id]}</span>
         </button></li>)}</ul>
       <p className="ops-note" title={shiftHelp.details.text} data-help-id={shiftHelp.details.id}>Подробные проверки — {coverage.read} из {coverage.requested} видимых волн{loading || data.future.loading || data.launched.loading ? " (загрузка…)" : ""}
         {coverage.batches > 1 ? `, ${coverage.batches} снимков (не единый снимок смены)` : ""}{coverage.observed.length ? `, прочитано ${coverage.observed.map(o => fmtTime(null, o)).join(", ")}` : ""}.
@@ -119,6 +121,7 @@ export function ShiftSupervisorDesk({ day, isToday, reload }: { day: string; isT
         : waveId != null && (requested.error || (requested.data && String(requested.data.ware_id) !== wh)) ? <p role="alert" className="ops-err">Выбранная волна недоступна на этом складе. Проверьте склад и право просмотра волны.</p>
         : panel === "recovery" ? <RecoveryPanel read={recovery} scopeLabel={`Склад ${wh}`} openId={recoveryOpen?.short_id ?? null} onSelect={setRecoveryOpen}
             filter={recoveryFilter} onFilter={setRecoveryFilter} onWave={selectWave} onRefresh={() => setRecoveryReload(n => n + 1)} />
+        : panel === "yard" ? <YardPanel key={wh} wh={wh} reload={reload} onGantt={id => jumpToGantt({ kind: "event", id })} />
         : panel ? <PanelList panel={panel} future={future} risks={risks} gaps={gaps} picking={picking} blocked={blocked} details={details} sessions={data.sessions} onWave={selectWave}
             onTask={id => jumpToGantt({ kind: "event", id: "CASE_PICK_TASK:" + id })}
             resourceKeyBySession={resourceKeyBySession} onOpenResource={key => jumpToGantt({ kind: "resource", key })} />
