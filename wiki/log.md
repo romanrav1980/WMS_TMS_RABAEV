@@ -5128,3 +5128,5 @@ C0152 получен RELEASE K0112/c4a2f0b8: экран исключений и 
 23.10 — согласованы текущие wiki/index/database статусы после применения качества, прежние ошибки/NOT_APPLIED сохранены в истории. Quality scoped14HTTP2groupsPASS; owner/WARErevoke, readonly/operate/crossactor. API77916/session9987 послеSQLdeploy,6realHTTPtask500rowswarmmedian305мс (не before/afterHTTPclaim). Dockerstillstarting45stimeout, realroadsнеприняты. Следующийrootучасток: выпускгодноготовара/scopedquarantine; ClaudeC0154WORKING.
 
 23.10 — role-only qualityrelease воспроизвёл403 nativeQUARANTINE_MOVE legacy-only. Собственнаяновая1EA Q23.GOOD.25cadbfc размещенавstorage212476763,невыдана/нерезервирована; QAretired/owner0. Подготовлена quarantine_role_scope body/SHA/rollback/verify; доapplyкандидатнепринят. Резюмируемыйlive_quality_release_scope.py не создаёт второй приход. Старые250/0,1000/0,10/0,7/5 не затрагивались.
+
+23.10 — quarantinerolescope5/5/5PASS, ноliveвыявилвторойlegacygateвRRL_STOCK_TRANSFER_CORE. Подготовленузкийquarantine_transfer_scopefreshbody/SHA. Прежняя1EAсохранена, QAretired, повторприходанет. Rootдоводитполныйпуть, ClaudeC0154RELEASEполученожидаетrootreview.
