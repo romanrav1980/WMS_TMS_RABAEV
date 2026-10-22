@@ -1,5 +1,6 @@
 """Durable top-up proposals: save/decide in one Oracle transaction; confirm/release through StockPosting only."""
 from datetime import datetime, timezone
+from hashlib import sha256
 from decimal import Decimal
 import json
 from typing import Any
@@ -64,11 +65,19 @@ class OracleTopupProposals:
     def save(self, ware: int, trip: str, body: TopupSave, actor: str) -> dict[str, Any]:
         try:
             with self.gateway.transaction("TRADECASE topup proposal save") as cur:
-                # Same order as external document intake: the site row first, then every read of the calculation.
+                # Match the access-revision/site lock order of native document intake.
+                cur.execute("lock table RRL_ACCESS_REV in share mode wait 5")
+                cur.callproc("RRL_ACCESS_API.assert_allowed", [actor, "tradecase_topup_approve", "WAREHOUSE", str(ware)])
                 cur.execute("select ENABLED from RRL_TRADE_SITE where WARE_ID=:w for update", w=ware)
+                identity = dict(body.model_dump(mode="json"), warehouse_id=ware, trip_id=trip)
+                client_hash = sha256(json.dumps(identity, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()).hexdigest()
+                saved = cur.var(oracledb.DB_TYPE_CLOB)
+                cur.callproc("RRL_TRADE_TOPUP_API.load_saved", [ware, trip, body.operation_id, client_hash, actor, saved])
+                if saved.getvalue() is not None:
+                    return read_oracle_json(saved.getvalue())
                 basis = cur.callfunc("RRL_TRADE_TOPUP_READ.trip_basis", oracledb.DB_TYPE_VARCHAR, [ware, trip, None])
                 calculation = allocate(cur, ware, trip, body, actor)
-                request = dict(operation_id=body.operation_id, warehouse_id=ware, trip_id=trip, trip_version=calculation["trip_version"],
+                request = dict(operation_id=body.operation_id, client_request_hash=client_hash, warehouse_id=ware, trip_id=trip, trip_version=calculation["trip_version"],
                                max_age_minutes=body.max_age_minutes, capacity_basis=basis,
                                calculation_signature=calculation["calculation_signature"], items=_items(calculation))
                 result = _call(cur, "RRL_TRADE_TOPUP_API.save", request, actor)

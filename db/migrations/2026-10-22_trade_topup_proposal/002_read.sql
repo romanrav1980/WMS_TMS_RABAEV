@@ -8,6 +8,7 @@ create or replace package RRL_TRADE_TOPUP_READ authid definer as
  function protected_units(p_ware number,p_sku varchar2,p_owner varchar2,p_mrc number)return number;
  -- Eligible free physical units (EA) ordered FEFO: JSON array of {uid,cell,units:[keys...]}; whole boxes (p_step units) per source, up to p_limit units.
  function candidates(p_ware number,p_article varchar2,p_sku varchar2,p_owner varchar2,p_mrc number,p_min_expiry date,p_limit number,p_step number)return clob;
+ -- Physical eligibility uses REPLENISH because there is no picking order yet; proposal terms and owner rights are checked separately.
  -- Same eligibility, total whole-box units only (first 200 sources); used to keep protected main demand untouched.
  function eligible_units(p_ware number,p_article varchar2,p_sku varchar2,p_owner varchar2,p_mrc number,p_min_expiry date,p_step number)return number;
  function card(p_id number)return clob;
@@ -82,7 +83,7 @@ create or replace package body RRL_TRADE_TOPUP_READ as
     group by u.CURRENT_UID,u.CURRENT_CELL order by min(a.EXPIRY_DATE),u.CURRENT_UID,u.CURRENT_CELL fetch first 200 rows only)loop
    exit when left_units<=0;
    -- Quarantine, rejected/pending codes, mixed pallets, buyout/owner rules: the same reason picking uses.
-   if RRL_STOCK_ELIGIBILITY.reason(s.UID_VALUE,s.CELL,p_ware,0,null,null,'ALLOCATE',null,p_article)is null then
+   if RRL_STOCK_ELIGIBILITY.reason(s.UID_VALUE,s.CELL,p_ware,0,null,null,'REPLENISH',null,p_article)is null then
     taken:=least(trunc(s.N/p_step)*p_step,left_units);keys:=json_array_t();
     for k in(select u.PHYSICAL_UNIT_KEY from RRL_WMS_RECEIPT_UNIT u join RRL_TRADE_STOCK_ATTR a on a.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY
       where u.CURRENT_UID=s.UID_VALUE and u.CURRENT_CELL=s.CELL and u.STOCK_STATUS='AVAILABLE'and u.HARD_RESERVATION_ID is null
@@ -109,7 +110,7 @@ create or replace package body RRL_TRADE_TOPUP_READ as
      and a.SKU_ID=p_sku and a.OWNER_ID=p_owner and a.MRC=p_mrc and a.MARK_STATE='VALID'and a.EXPIRY_DATE>=p_min_expiry
      and not exists(select 1 from RRL_TRADE_BUYOUT_UNIT bu where bu.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY and bu.HOLD_ACTIVE=1)
     group by u.CURRENT_UID,u.CURRENT_CELL order by min(a.EXPIRY_DATE),u.CURRENT_UID,u.CURRENT_CELL fetch first 200 rows only)loop
-   if RRL_STOCK_ELIGIBILITY.reason(s.UID_VALUE,s.CELL,p_ware,0,null,null,'ALLOCATE',null,p_article)is null then total:=total+trunc(s.N/p_step)*p_step;end if;
+   if RRL_STOCK_ELIGIBILITY.reason(s.UID_VALUE,s.CELL,p_ware,0,null,null,'REPLENISH',null,p_article)is null then total:=total+trunc(s.N/p_step)*p_step;end if;
   end loop;
   return total;
  end;

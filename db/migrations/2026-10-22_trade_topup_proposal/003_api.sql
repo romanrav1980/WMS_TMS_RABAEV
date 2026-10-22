@@ -1,6 +1,7 @@
 create or replace package RRL_TRADE_TOPUP_API authid definer as
  -- Non-stock decisions only. Confirmation and release of physical holds are StockPosting commands (RRL_TRADE_TOPUP_CMD).
  procedure save(p_request clob,p_actor varchar2,p_result out clob);
+ procedure load_saved(p_ware number,p_trip varchar2,p_operation varchar2,p_request_hash varchar2,p_actor varchar2,p_result out clob);
  procedure decide(p_request clob,p_actor varchar2,p_result out clob);
  procedure sap_accept(p_request clob,p_actor varchar2,p_result out clob);
  function list_trip(p_ware number,p_trip varchar2,p_actor varchar2)return clob;
@@ -20,6 +21,7 @@ create or replace package body RRL_TRADE_TOPUP_API as
 
  procedure lock_site(p_ware number)is n number;
  begin
+  lock table RRL_ACCESS_REV in share mode wait 5;
   select ENABLED into n from RRL_TRADE_SITE where WARE_ID=p_ware for update;
   if n<>1 then fail('TRADE_SITE_DISABLED');end if;
  exception when no_data_found then fail('TRADE_SITE_REQUIRED');
@@ -46,15 +48,39 @@ create or replace package body RRL_TRADE_TOPUP_API as
    values(p_operation,p_ware,p_id,p_action,p_boxes,p_hash,p_actor,p_result);
  end;
 
+ procedure load_saved(p_ware number,p_trip varchar2,p_operation varchar2,p_request_hash varchar2,p_actor varchar2,p_result out clob)is
+  d RRL_TRADE_TOPUP_DECISION%rowtype;j json_object_t;a json_array_t;x json_object_t;p RRL_TRADE_TOPUP_PROPOSAL%rowtype;
+ begin
+  p_result:=null;lock_site(p_ware);require(p_actor,'tradecase_topup_approve',p_ware);
+  begin select*into d from RRL_TRADE_TOPUP_DECISION where OPERATION_ID=p_operation;
+  exception when no_data_found then return;end;
+  if d.WARE_ID<>p_ware or d.ACTION<>'SAVE'or d.REQUEST_HASH<>p_request_hash then fail('TRADE_TOPUP_OPERATION_CONFLICT');end if;
+  j:=json_object_t.parse(d.RESULT_JSON);
+  if nvl(j.get_string('trip_id'),'-')<>p_trip then fail('TRADE_TOPUP_OPERATION_CONFLICT');end if;
+  a:=j.get_array('proposals');
+  for i in 0..a.get_size-1 loop
+   x:=treat(a.get(i)as json_object_t);
+   select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=x.get_number('proposal_id');
+   RRL_TRADE_STOCK_GUARD.assert_owner(p_actor,p_ware,p.SOURCE_OWNER_ID,1);
+  end loop;
+  j.put('replayed',true);p_result:=j.to_clob;
+ end;
+
  procedure save(p_request clob,p_actor varchar2,p_result out clob)is
   d json_object_t:=json_object_t.parse(p_request);items json_array_t;x json_object_t;out_json json_array_t:=json_array_t();r json_object_t:=json_object_t();
   ware number:=d.get_number('warehouse_id');trip varchar2(100):=d.get_string('trip_id');op varchar2(100):=d.get_string('operation_id');
-  hash_value varchar2(64):=sha(p_request);basis varchar2(64);old_row RRL_TRADE_TOPUP_PROPOSAL%rowtype;id_value number;reuse boolean;
+  hash_value varchar2(64):=d.get_string('client_request_hash');basis varchar2(64);old_row RRL_TRADE_TOPUP_PROPOSAL%rowtype;id_value number;reuse boolean;
  begin
-  if op is null or ware is null or trip is null then fail('TRADE_TOPUP_REQUEST_INVALID');end if;
+  if op is null or ware is null or trip is null or hash_value is null or not regexp_like(hash_value,'^[a-f0-9]{64}$')then fail('TRADE_TOPUP_REQUEST_INVALID');end if;
   lock_site(ware);
-  if replay(op,hash_value,ware,p_result)then return;end if;
   require(p_actor,'tradecase_topup_approve',ware);
+  items:=d.get_array('items');
+  if items is null or items.get_size<1 or items.get_size>20 then fail('TRADE_TOPUP_ITEM_BOUND');end if;
+  for i in 0..items.get_size-1 loop
+   x:=treat(items.get(i)as json_object_t);
+   RRL_TRADE_STOCK_GUARD.assert_owner(p_actor,ware,x.get_string('source_owner_id'),1);
+  end loop;
+  if replay(op,hash_value,ware,p_result)then return;end if;
   basis:=RRL_TRADE_TOPUP_READ.trip_basis(ware,trip);
   if basis<>d.get_string('capacity_basis')then fail('TRADE_TOPUP_CAPACITY_BASIS_CHANGED');end if;
   if RRL_TRADE_TOPUP_READ.loading_started(ware,trip)=1 then fail('TOPUP_LOADING_ALREADY_STARTED');end if;
@@ -102,8 +128,8 @@ create or replace package body RRL_TRADE_TOPUP_API as
   begin select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=d.get_number('proposal_id');
   exception when no_data_found then fail('TRADE_TOPUP_PROPOSAL_NOT_FOUND');end;
   same_scope(p,d);lock_site(p.WARE_ID);
-  if replay(op,hash_value,p.WARE_ID,p_result)then return;end if;
   require(p_actor,'tradecase_topup_approve',p.WARE_ID);RRL_TRADE_STOCK_GUARD.assert_owner(p_actor,p.WARE_ID,p.SOURCE_OWNER_ID,1);
+  if replay(op,hash_value,p.WARE_ID,p_result)then return;end if;
   select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=p.PROPOSAL_ID for update;
   if p.STATUS not in('PROPOSED','ADJUSTED')then fail('TRADE_TOPUP_STATE_CONFLICT');end if;
   if d.get_number('expected_version')is null or p.VERSION_NO<>d.get_number('expected_version')then fail('VERSION_CONFLICT');end if;
@@ -127,14 +153,15 @@ create or replace package body RRL_TRADE_TOPUP_API as
   begin select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=d.get_number('proposal_id');
   exception when no_data_found then fail('TRADE_TOPUP_PROPOSAL_NOT_FOUND');end;
   same_scope(p,d);lock_site(p.WARE_ID);
+  require(p_actor,'tradecase_topup_result',p.WARE_ID);
+  RRL_TRADE_STOCK_GUARD.assert_owner(p_actor,p.WARE_ID,p.SOURCE_OWNER_ID,1);
+  select SOURCE_ID into site_source from RRL_TRADE_SITE where WARE_ID=p.WARE_ID;
+  if site_source<>source_value then fail('TRADE_TOPUP_SOURCE_MISMATCH');end if;
   begin
    select*into e from RRL_TRADE_TOPUP_EVENT where WARE_ID=p.WARE_ID and SOURCE_ID=source_value and EVENT_ID=event_value;
    if e.PAYLOAD_HASH<>hash_value then fail('TRADE_TOPUP_EVENT_CONFLICT');end if;
    r:=json_object_t.parse(e.RESULT_JSON);r.put('replayed',true);p_result:=r.to_clob;return;
   exception when no_data_found then null;end;
-  require(p_actor,'tradecase_topup_result',p.WARE_ID);
-  select SOURCE_ID into site_source from RRL_TRADE_SITE where WARE_ID=p.WARE_ID;
-  if site_source<>source_value then fail('TRADE_TOPUP_SOURCE_MISMATCH');end if;
   select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=p.PROPOSAL_ID for update;
   if p.STATUS<>'CONFIRMED'then fail('TRADE_TOPUP_STATE_CONFLICT');end if;
   update RRL_TRADE_TOPUP_PROPOSAL set STATUS='SAP_ACCEPTED',SAP_ORDER_ID=order_value,VERSION_NO=VERSION_NO+1,UPDATED_BY=p_actor,UPDATED_AT=systimestamp
@@ -153,8 +180,9 @@ create or replace package body RRL_TRADE_TOPUP_API as
   select RRL_ACCESS_API.allowed(p_actor,'tradecase_view','WAREHOUSE',to_char(p_ware))into n from dual;
   if n<>1 then raise_application_error(-20882,'TRADE_TOPUP_ACCESS_DENIED');end if;
   for p in(select PROPOSAL_ID,SOURCE_OWNER_ID from RRL_TRADE_TOPUP_PROPOSAL where WARE_ID=p_ware and TRIP_ID=p_trip and STATUS<>'SUPERSEDED'
+    and RRL_TRADE_STOCK_GUARD.owner_allowed(p_actor,p_ware,SOURCE_OWNER_ID,0)=1
     order by case when STATUS in('PROPOSED','ADJUSTED')then 0 else 1 end,PRIORITY,PROPOSAL_ID fetch first 200 rows only)loop
-   if RRL_TRADE_STOCK_GUARD.owner_allowed(p_actor,p_ware,p.SOURCE_OWNER_ID,0)=1 then a.append(json_object_t.parse(RRL_TRADE_TOPUP_READ.card(p.PROPOSAL_ID)));end if;
+   a.append(json_object_t.parse(RRL_TRADE_TOPUP_READ.card(p.PROPOSAL_ID)));
   end loop;
   return a.to_clob;
  end;

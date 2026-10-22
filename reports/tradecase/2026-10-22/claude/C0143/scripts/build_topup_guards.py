@@ -79,7 +79,7 @@ record = lambda status, script: (  # noqa: E731
     "when not matched then insert(MIGRATION_ID,DESCRIPTION,APPLIED_AT,APPLIED_BY,SCRIPT_NAME,ROLLBACK_SCRIPT,STATUS)\n"
     f"values(x.MIGRATION_ID,'{DESC}',sysdate,user,'{script}','rollback.sql','{status}');\ncommit;\n")
 apply = ("whenever sqlerror exit failure rollback\n@@000_preflight.sql\n@@001_schema.sql\n@@008_core_access.sql\n@@002_read.sql\n@@003_api.sql\n"
-         "@@004_cmd.sql\n@@005_posting_api.sql\n@@006_trade_guard.sql\n@@007_pick_context.sql\n@@verify.sql\n" + record("APPLIED", "apply.sql"))
+         "@@004_cmd.sql\n@@005_posting_api.sql\n@@006_trade_guard.sql\n@@007_pick_context.sql\nbegin dbms_utility.compile_schema(user,false);end;\n/\n@@verify.sql\n" + record("APPLIED", "apply.sql"))
 rollback = ("whenever sqlerror exit failure rollback\n"
             "declare n number;begin\n"
             " if user<>'RABAEV' or sys_context('USERENV','SERVICE_NAME')<>'orcl' then raise_application_error(-20999,'WRONG_TARGET');end if;\n"

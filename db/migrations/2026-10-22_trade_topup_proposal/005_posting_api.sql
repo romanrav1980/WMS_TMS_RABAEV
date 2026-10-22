@@ -46,6 +46,7 @@ create or replace package body RRL_STOCK_POSTING_API as
    raise_application_error(-20871,'OPERATION_CONTRACT_INVALID');  
   end if;  
   assert_actor_active(p_actor);
+  if g_kind in('TRADE_TOPUP_CONFIRM','TRADE_TOPUP_RELEASE')then RRL_TRADE_TOPUP_CMD.assert_access(p_request,p_actor);end if;
   if RRL_TRADE_SORT_GUARD.is_sort(p_request)=1 then RRL_TRADE_SORT_GUARD.assert_scope(p_request,p_actor);end if;
   RRL_HU_EXEC_ACCESS.assert_request(p_request,p_actor);
   RRL_FULL_SHIPPING_SCOPE.assert_request(p_request,p_actor);
@@ -219,6 +220,7 @@ create or replace package body RRL_STOCK_POSTING_API as
   RRL_STOCK_LOCK_API.acquire_policies(v_policies);  
   RRL_STOCK_LOCK_API.acquire_resources(v_resources);  
   assert_actor_active(p_actor);
+  if g_kind in('TRADE_TOPUP_CONFIRM','TRADE_TOPUP_RELEASE')then RRL_TRADE_TOPUP_CMD.assert_access(p_request,p_actor);end if;
   if RRL_TRADE_SORT_GUARD.is_sort(p_request)=1 then RRL_TRADE_SORT_GUARD.assert_scope(p_request,p_actor);end if;
   RRL_HU_EXEC_ACCESS.assert_request(p_request,p_actor);
   RRL_FULL_SHIPPING_SCOPE.assert_request(p_request,p_actor);

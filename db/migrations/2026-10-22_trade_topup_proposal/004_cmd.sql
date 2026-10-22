@@ -4,6 +4,7 @@ create or replace package RRL_TRADE_TOPUP_CMD authid definer
  -- TRADE_TOPUP_RELEASE: release of this proposal's own holds only (dispatcher cancel or SAP rejection).
  procedure compile_command(p_request clob,p_operation varchar2,p_policies out clob,p_resources out clob,p_domain out clob);
  procedure execute_command(p_request clob,p_actor varchar2,p_result out clob);
+ procedure assert_access(p_request clob,p_actor varchar2);
 end;
 /
 create or replace package body RRL_TRADE_TOPUP_CMD as
@@ -90,6 +91,21 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
   return v;
  end;
 
+ procedure assert_access(p_request clob,p_actor varchar2)is
+  d json_object_t:=json_object_t.parse(p_request);s json_object_t:=d.get_object('source');m json_object_t:=d.get_object('metadata');
+  p RRL_TRADE_TOPUP_PROPOSAL%rowtype;
+ begin
+  lock table RRL_ACCESS_REV in share mode wait 5;
+  begin select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=s.get_number('proposal_id');
+  exception when no_data_found then fail('TRADE_TOPUP_PROPOSAL_NOT_FOUND');end;
+  if s.get_number('warehouse')is null or s.get_number('warehouse')<>p.WARE_ID or nvl(s.get_string('trip_id'),'-')<>p.TRIP_ID then
+   fail('TRADE_TOPUP_PROPOSAL_NOT_FOUND');end if;
+  if d.get_string('command_type')='TRADE_TOPUP_RELEASE'and m.get_string('reason')='SAP_REJECTED'then
+   require(p_actor,'tradecase_topup_result',p.WARE_ID);
+  else require(p_actor,'tradecase_topup_approve',p.WARE_ID);end if;
+  RRL_TRADE_STOCK_GUARD.assert_owner(p_actor,p.WARE_ID,p.SOURCE_OWNER_ID,1);
+ end;
+
  procedure confirm(p in out nocopy RRL_TRADE_TOPUP_PROPOSAL%rowtype,v json_object_t,p_op varchar2,p_actor varchar2)is
   sources json_array_t:=v.get_array('sources');x json_object_t;keys clob;qty number;n number;needed number:=p.APPROVED_BOXES*p.UNITS_PER_BOX;
   ver number:=uom_version(p.ARTICLE);details json_object_t;body json_object_t;outbox number;free_units number;
@@ -113,7 +129,7 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
      and not exists(select 1 from RRL_TRADE_BUYOUT_UNIT bu where bu.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY and bu.HOLD_ACTIVE=1)
      and u.PHYSICAL_UNIT_KEY in(select K from json_table(keys,'$[*]'columns(K varchar2(64)path'$')));
    if n<>qty then fail('TRADE_TOPUP_STOCK_CHANGED');end if;
-   RRL_STOCK_ELIGIBILITY.assert_source(x.get_string('uid'),x.get_string('cell'),p.WARE_ID,qty,null,null,'ALLOCATE',null,p.ARTICLE);
+   RRL_STOCK_ELIGIBILITY.assert_source(x.get_string('uid'),x.get_string('cell'),p.WARE_ID,qty,null,null,'REPLENISH',null,p.ARTICLE);
    details:=json_object_t();details.put('reservation_scope','QTY');details.put('priority',100);
    RRL_STOCK_RESERVE_CORE.create_hard(x.get_number('reservation_id'),x.get_string('uid'),x.get_string('cell'),qty,'EA',ver,
     'TRADE_TOPUP',p.PROPOSAL_ID,null,'SHIPMENT',p_actor,details.to_clob);
