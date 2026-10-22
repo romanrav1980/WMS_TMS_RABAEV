@@ -1,0 +1,157 @@
+{
+ "base": "http://127.0.0.1:3021/",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "groups, queue, server-clock delay, conflict, missing data"
+  },
+  {
+   "width": 1440,
+   "name": "every yard button has title and help id"
+  },
+  {
+   "width": 1440,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 1440,
+   "name": "503 keeps the command as unconfirmed"
+  },
+  {
+   "width": 1440,
+   "name": "new actions blocked while unconfirmed"
+  },
+  {
+   "width": 1440,
+   "name": "unconfirmed command survives reload"
+  },
+  {
+   "width": 1440,
+   "name": "retry resends identical bytes with the same operation_id"
+  },
+  {
+   "width": 1440,
+   "name": "foreign receipt keeps the command unconfirmed"
+  },
+  {
+   "width": 1440,
+   "name": "retry after a foreign receipt resends the same bytes"
+  },
+  {
+   "width": 1440,
+   "name": "409 refusal clears the command with a reason"
+  },
+  {
+   "width": 1440,
+   "name": "cancel needs a reason"
+  },
+  {
+   "width": 1440,
+   "name": "yard visit is selected in the resource Gantt"
+  },
+  {
+   "width": 1440,
+   "name": "Gantt card shows visit state and open end"
+  },
+  {
+   "width": 1440,
+   "name": "reassigned visit: closed interval on the old dock, open on the new one"
+  },
+  {
+   "width": 1440,
+   "name": "late response of an older read is ignored"
+  },
+  {
+   "width": 1440,
+   "name": "yard not available is explicit, not an empty yard"
+  },
+  {
+   "width": 1440,
+   "name": "403 clears visible visits"
+  },
+  {
+   "width": 390,
+   "name": "groups, queue, server-clock delay, conflict, missing data"
+  },
+  {
+   "width": 390,
+   "name": "every yard button has title and help id"
+  },
+  {
+   "width": 390,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 390,
+   "name": "503 keeps the command as unconfirmed"
+  },
+  {
+   "width": 390,
+   "name": "new actions blocked while unconfirmed"
+  },
+  {
+   "width": 390,
+   "name": "unconfirmed command survives reload"
+  },
+  {
+   "width": 390,
+   "name": "retry resends identical bytes with the same operation_id"
+  },
+  {
+   "width": 390,
+   "name": "foreign receipt keeps the command unconfirmed"
+  },
+  {
+   "width": 390,
+   "name": "retry after a foreign receipt resends the same bytes"
+  },
+  {
+   "width": 390,
+   "name": "409 refusal clears the command with a reason"
+  },
+  {
+   "width": 390,
+   "name": "cancel needs a reason"
+  },
+  {
+   "width": 390,
+   "name": "yard visit is selected in the resource Gantt"
+  },
+  {
+   "width": 390,
+   "name": "Gantt card shows visit state and open end"
+  },
+  {
+   "width": 390,
+   "name": "reassigned visit: closed interval on the old dock, open on the new one"
+  },
+  {
+   "width": 390,
+   "name": "late response of an older read is ignored"
+  },
+  {
+   "width": 390,
+   "name": "yard not available is explicit, not an empty yard"
+  },
+  {
+   "width": 390,
+   "name": "403 clears visible visits"
+  }
+ ],
+ "liveWrites": [],
+ "errors": [],
+ "posts": 10,
+ "timings": {
+  "yard_panel_render_ms": [
+   8,
+   7
+  ],
+  "timeline_live_ms": [
+   943,
+   705,
+   808,
+   753
+  ]
+ },
+ "liveYardSource": "NOT_MAPPED"
+}

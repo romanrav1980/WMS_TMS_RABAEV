@@ -132,21 +132,37 @@ class TimelineProjection:
                   self.person.get(str(row["assigned_to"] or "").strip().lower())])
 
     def yard(self, row: dict[str, Any]) -> None:
-        # A visit holds its dock from docking and the vehicle from arrival; the end stays open until departure.
-        vehicle = dock = None
-        if row.get("vehicle"):
-            vehicle = "VEHICLE:" + row["vehicle"].strip().upper()
-            if vehicle not in self.resources:
-                self.lane(vehicle, "VEHICLE", row["vehicle"])
-        if row.get("dock") and row["state"] in {"AT_DOCK", "WORKING", "WORK_DONE"}:
-            dock = f"DOCK:{self.warehouse}:{row['dock']}"
-            if dock not in self.resources:
-                self.lane(dock, "DOCK", row["dock"], "UNKNOWN")
-        start = row.get("docked_at") or row.get("arrived_at")
-        plan = row.get("planned_arrival_at") if row["state"] == "EXPECTED" else None
-        self.add({"event_id": f"YARD_VISIT:{row['visit_id']}", "kind": "YARD_VISIT",
-                  "label": f"Визит {row['visit_id']} · рейс {row['trip_id']}", "source": "RRL_YARD_VISIT",
-                  "source_id": row["visit_id"], "trip_id": row["trip_id"], "status": row["state"],
-                  "plan_start_at": plan, "plan_finish_at": plan, "fact_start_at": start, "fact_finish_at": None,
-                  "time_status": "AWARE_FACT" if start else "AWARE_PLAN" if plan else "TIME_UNRESOLVED",
-                  "fact_finish_status": "OPEN" if start else "UNRESOLVED"}, [vehicle, dock])
+        # Intervals come from the visit's immutable event times. The vehicle is held from ARRIVE to DEPART/CANCEL; each dock from its
+        # (re)assignment to the next reassignment, DEPART or CANCEL. Different starts are separate events; an open end stays open
+        # (occupied up to the read, never projected into the future).
+        visit, state = row["visit_id"], row["state"]
+        vehicle = "VEHICLE:" + row["vehicle"] if row.get("vehicle") else None  # stored upper/trim, as the transport lanes
+        if vehicle and vehicle not in self.resources:
+            self.lane(vehicle, "VEHICLE", row["vehicle"])
+        arrived = finished = None
+        docks: list[list[Any]] = []
+        for event in row["events"]:
+            if event["action"] == "ARRIVE":
+                arrived = event["at"]
+            elif event["action"] in {"ASSIGN_DOCK", "REASSIGN_DOCK"}:
+                if docks and docks[-1][2] is None:
+                    docks[-1][2] = event["at"]
+                docks.append([event["dock"], event["at"], None])
+            elif event["action"] in {"DEPART", "CANCEL"}:
+                finished = event["at"]
+                if docks and docks[-1][2] is None:
+                    docks[-1][2] = finished
+        plan = row.get("planned_arrival_at") if state == "EXPECTED" else None
+        base = {"source": "RRL_YARD_VISIT", "source_id": visit, "trip_id": row["trip_id"], "plan_start_at": None, "plan_finish_at": None}
+        self.add({**base, "event_id": f"YARD_VISIT:{visit}", "kind": "YARD_VISIT", "label": f"Визит {visit} · рейс {row['trip_id']}",
+                  "status": state, "plan_start_at": plan, "plan_finish_at": plan, "fact_start_at": arrived,
+                  "fact_finish_at": finished if arrived else None,
+                  "time_status": "AWARE_FACT" if arrived else "AWARE_PLAN" if plan else "TIME_UNRESOLVED",
+                  "fact_finish_status": ("CLOSED" if finished else "OPEN") if arrived else "UNRESOLVED"}, [vehicle])
+        for number, (dock, start, end) in enumerate(docks, 1):
+            lane = f"DOCK:{self.warehouse}:{dock}"
+            if lane not in self.resources:
+                self.lane(lane, "DOCK", dock, "UNKNOWN")
+            self.add({**base, "event_id": f"YARD_DOCK:{visit}:{number}", "kind": "YARD_DOCK", "label": f"Ворота {dock} · визит {visit}",
+                      "status": "DONE" if end else state, "fact_start_at": start, "fact_finish_at": end, "time_status": "AWARE_FACT",
+                      "fact_finish_status": "CLOSED" if end else "OPEN"}, [lane])

@@ -6,16 +6,18 @@
   "RRL_YARD_VISIT",
   "RRL_YARD_VISIT_EVENT",
   "RRL_YARD_VISIT_SQ",
-  "RRL_YARD_VISIT_API"
+  "RRL_YARD_VISIT_API",
+  "RRL_YARD_VISIT_EVENT_APPEND"
  ],
  "files_sha256": {
   "000_preflight.sql": "4ec0ecb1d7904cb33c981ebdcaf109de363aa3c528739e81fe7097ac313b7a83",
-  "001_schema.sql": "515f4cd491ac0f52cf0bbc86a49bde87a4c0b4890a183470d8106adf9865947e",
-  "002_api.sql": "ee9cddf51a8d0e2fe925825f5d886a8aee94b9efeef540d01e2985c318fbb604",
+  "001_schema.sql": "45c59d896979f5b3f8805ca6ada00fc66ab8dc4cec2fabb718ff009157fcbd2f",
+  "002_api.sql": "8d3dbd885c9fe1e0b3daaf35c2d3ad30a52c6caf2d9441a0e735a17306eb3836",
   "apply.sql": "48e49253353d5b0ba9e254e1b93250647b70aece36732d0bd00256562ea03ed7",
   "rollback.sql": "f19ff0e526665fabc74abb1bf2a6d89bd09d0ecdd85c2375df5234284f776cc8",
   "rollback_verify.sql": "34fa78e89cba813a112b46842dfe9510524d43e1574455548482b283dcd4087b",
   "verify.sql": "b6b5ec393f0e343975bdceeed06323ef780d4ddd743aaf09b3a38a845ba3a479"
  },
- "applied_by_claude": false
+ "applied_by_claude": false,
+ "revision": "C-0150"
 }

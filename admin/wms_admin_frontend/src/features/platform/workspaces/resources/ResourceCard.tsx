@@ -21,7 +21,7 @@ const ROLE: Record<string, string> = { EXECUTOR: "исполнитель", EQUIP
 const STATUS: Record<string, string> = { NEW: "Новое", PLANNED: "Запланировано", ASSIGNED: "Назначено", IN_PROGRESS: "В работе",
   DONE: "Выполнено", CANCELLED: "Отменено", SHIPPED: "Отгружено", CONTROLLED: "Проверено", READY_TO_SHIP: "Готово к отгрузке",
   WAIT_CONTROL: "Ожидает контроля", CONTROL_IN_PROGRESS: "Идёт контроль", PICKED: "Собрано", PARTIAL: "Собрано частично", WAIT_REPLENISHMENT: "Ожидает пополнения", FAILED: "Ошибка",
-  EXPECTED: "Ожидается", ARRIVED: "На площадке", AT_DOCK: "У ворот", WORKING: "Идёт работа", WORK_DONE: "Работа закончена, не выехала" };
+  EXPECTED: "Ожидается", ARRIVED: "На площадке", AT_DOCK: "У ворот", WORKING: "Идёт работа", WORK_DONE: "Работа закончена, не выехала", DEPARTED: "Выехала" };
 const SOURCE: Record<string, string> = { RRL_TT_HU_LOAD_FACT: "Журнал погрузки", RRL_WAREHOUSE_TASK: "Складские задания",
   RRL_CASE_PICK_TASK: "Задания сборки", RRL_TT_OPERATIONS: "Операции рейса", RRL_WORKLOAD_ATTENDANCE: "План выхода", RRL_YARD_VISIT: "Визиты двора" };
 const when = (b: Bar) => b.point ? b.open ? `с ${fmtAxis(b.start, true)}, окончание не задано` : `подтверждённый момент ${fmtAxis(b.start, true)}` : `${fmtAxis(b.start, true)} — ${b.open ? "идёт" : fmtAxis(b.end, true)}`;

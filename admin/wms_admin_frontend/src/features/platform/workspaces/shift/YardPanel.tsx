@@ -45,7 +45,9 @@ export function YardPanel({ wh, reload, onGantt }: { wh: string; reload: number;
     <h3>Двор</h3>
     <p className="ops-note">{snap ? `Снимок сервера ${fmtTime(null, snap.observed_at)}` : read.loading ? "Загрузка…" : ""}{" "}
       <HelpButton help={shiftHelp.yardRefresh} onClick={() => setLocal(n => n + 1)}>Обновить</HelpButton></p>
-    {(read.error || parsed.error) && <p role="alert" className="ops-err">Двор не прочитан: {read.error || parsed.error}</p>}
+    {(read.error || parsed.error) && <p role="alert" className="ops-err">{read.error.includes("YARD_NOT_AVAILABLE")
+      ? "Учёт двора на сервере ещё не включён: визиты и занятость ворот неизвестны (это не «ворота свободны»)."
+      : `Двор не прочитан: ${read.error || parsed.error}`}</p>}
     {pending.damaged && <p role="alert" className="ops-err">{pending.damaged}</p>}
     {intent && <div role="status" className="ops-err">Команда «{intent.action === "EXPECT" ? "добавить визит" : ACTION_TITLE[intent.action]}»{intent.visit_id ? ` визита ${intent.visit_id}` : ""} не подтверждена.{" "}
       <HelpButton help={shiftHelp.yardRetry} disabled={busy} onClick={() => run(() => intent)}>Повторить</HelpButton></div>}

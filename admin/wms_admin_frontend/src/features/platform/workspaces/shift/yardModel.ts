@@ -71,6 +71,8 @@ const REFUSAL: Record<string, string> = {
   YARD_DOCK_OR_VEHICLE_OCCUPIED: "Ворота или машина уже заняты другим визитом.", YARD_DOCK_OCCUPIED: "Ворота заняты другим визитом.",
   YARD_DOCK_BLOCKED: "Ворота заблокированы.", YARD_DOCK_UNKNOWN: "Таких ворот на складе нет.",
   YARD_TRIP_VISIT_ACTIVE: "У рейса уже есть активный визит.", YARD_VEHICLE_OCCUPIED: "Машина уже на площадке в другом визите.",
-  YARD_VISIT_NOT_FOUND: "Визит не найден или недоступен.", YARD_TRIP_REQUIRED: "Рейс не найден или недоступен.", YARD_ACCESS_DENIED: "Нет права управлять двором на этом складе.",
+  YARD_VISIT_NOT_FOUND: "Визит не найден или недоступен.", YARD_OPERATION_CONFLICT: "Этот номер операции уже использован другим действием или пользователем.",
+  YARD_TRIP_BINDING_REQUIRED: "Рейс не привязан к транспортному заданию — приезд не подтверждается.",
+  YARD_VEHICLE_REQUIRED: "В рейсе не указана машина — приезд не подтверждается.", YARD_INBOUND_UNSUPPORTED: "Входящие визиты пока не поддерживаются.", YARD_TRIP_REQUIRED: "Рейс не найден или недоступен.", YARD_ACCESS_DENIED: "Нет права управлять двором на этом складе.",
 };
 export const refusalText = (code: string) => REFUSAL[code] ?? `Сервер отклонил действие (${code}). Обновите двор и проверьте данные.`;

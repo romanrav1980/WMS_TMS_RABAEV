@@ -111,11 +111,15 @@ class ResourceTimeline:
             for row in loading_rows(cur, {"ware": warehouse, "actor": actor, "start_at": start, "finish_at": finish}):
                 projection.loading(row)
         if "yard" in allowed:
-            # Active visits only, through the owner-filtered native read; absent before the migration is applied.
+            # Visits touching the window with their immutable event times, owner-filtered natively. Before the migration the
+            # package is absent: the yard source is NOT_MAPPED (unknown), never "no visits / docks free"; other sources still load.
+            utc = "%Y-%m-%dT%H:%M:%S+00:00"
             try:
-                rows = read_oracle_json(cur.callfunc("RRL_YARD_VISIT_API.visits", oracledb.DB_TYPE_CLOB, [warehouse, actor, 1]))
+                rows = read_oracle_json(cur.callfunc("RRL_YARD_VISIT_API.history", oracledb.DB_TYPE_CLOB,
+                                                     [warehouse, actor, start.astimezone(timezone.utc).strftime(utc),
+                                                      finish.astimezone(timezone.utc).strftime(utc)]))
             except oracledb.DatabaseError as error:
-                if getattr(error.args[0], "code", 0) not in (4043, 6550):
+                if getattr(error.args[0], "code", 0) not in (942, 4043, 6550):
                     raise
                 next(source for source in sources if source["source_id"] == "yard")["status"] = "NOT_MAPPED"
             else:

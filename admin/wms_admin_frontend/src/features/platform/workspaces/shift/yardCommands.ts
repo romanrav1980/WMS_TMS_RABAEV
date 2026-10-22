@@ -45,8 +45,9 @@ function clearIfSame(intent: YardIntent) {
 /** Отправить ровно сохранённые байты. */
 export async function sendPending(intent: YardIntent): Promise<YardSend> {
   try {
-    const v = await apiFetch<{ visit_id?: number }>(intent.path, { method: "POST", body: intent.wire });
-    if (typeof v?.visit_id !== "number" || (intent.visit_id && v.visit_id !== intent.visit_id)) return { kind: "unknown", message: "Ответ сервера не относится к этому визиту. Команда сохранена; повторите её." };
+    const v = await apiFetch<{ visit_id?: number; operation_id?: string }>(intent.path, { method: "POST", body: intent.wire });
+    // Квитанция принимается только своей операции и своего визита: чужой/неполный/поздний ответ команду не снимает.
+    if (v?.operation_id !== intent.operation_id || typeof v.visit_id !== "number" || (intent.visit_id && v.visit_id !== intent.visit_id)) return { kind: "unknown", message: "Ответ сервера не относится к этому визиту. Команда сохранена; повторите её." };
     clearIfSame(intent);
     return { kind: "ack" };
   } catch (error) {

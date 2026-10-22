@@ -6,8 +6,13 @@ from ...platform.public import read_oracle_json
 from ..contracts_yard import YardError, YardExpect, YardTransition, wire
 
 
+MISSING = (942, 4043, 6550)  # table/package absent: the yard migration is not applied here
+
+
 def _error(exc: oracledb.DatabaseError) -> YardError:
     number = getattr(exc.args[0], "code", 0)
+    if number in MISSING:
+        return YardError("YARD_NOT_AVAILABLE", 503)
     if not 20800 <= number <= 20999:
         return YardError("YARD_RESULT_UNKNOWN", 503)  # outcome unknown: repeat the same operation_id
     code = str(exc.args[0]).split("\n", 1)[0].split(":", 1)[-1].strip()
@@ -34,9 +39,13 @@ class OracleYardVisits:
                 request.setvalue(0, json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=True))
                 result = cur.var(oracledb.DB_TYPE_CLOB)
                 cur.callproc("RRL_YARD_VISIT_API.command", [ware, request, actor, result])
-                return read_oracle_json(result.getvalue())
+                receipt = read_oracle_json(result.getvalue())
         except oracledb.DatabaseError as exc:
             raise _error(exc) from exc
+        # A receipt is accepted only for this very operation; anything else is an unknown outcome (repeat the same operation_id).
+        if not isinstance(receipt, dict) or receipt.get("operation_id") != body["operation_id"]:
+            raise YardError("YARD_RESULT_UNKNOWN", 503)
+        return receipt
 
     def expect(self, ware: int, body: YardExpect, actor: str) -> dict[str, Any]:
         return self._command(ware, wire(body, action="EXPECT", visit_kind="OUTBOUND"), actor)

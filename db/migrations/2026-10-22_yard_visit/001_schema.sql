@@ -18,26 +18,32 @@ create table RRL_YARD_VISIT(
   or(STATE in('AT_DOCK','WORKING','WORK_DONE')and ARRIVED_AT is not null and DOCK is not null and DOCKED_AT is not null)
   or(STATE='DEPARTED'and DEPARTED_AT is not null)or(STATE='CANCELLED'and CANCELLED_AT is not null and CANCEL_REASON is not null)),
  constraint RRL_YARD_VISIT_WORK check((STATE<>'WORKING'or WORK_STARTED_AT is not null)and(STATE<>'WORK_DONE'or WORK_FINISHED_AT is not null)),
- constraint RRL_YARD_VISIT_TRIP check(VISIT_KIND<>'OUTBOUND'or TRIP_ID is not null)
+ constraint RRL_YARD_VISIT_TRIP check(VISIT_KIND<>'OUTBOUND'or TRIP_ID is not null),
+ -- One spelling per vehicle: case and spaces cannot slip past the occupancy index; arrival needs an identified vehicle.
+ constraint RRL_YARD_VISIT_VEHICLE check(VEHICLE is null or VEHICLE=upper(trim(VEHICLE))),
+ constraint RRL_YARD_VISIT_ARRIVAL check(STATE in('EXPECTED','CANCELLED')or VEHICLE is not null)
 );
 -- One dock, one vehicle, one trip: at most one active visit each (the database is the final guard against two dispatchers).
+-- The vehicle guard is global: one truck cannot stand in two warehouse yards at once; EXPECTED holds nothing.
 create unique index RRL_YARD_VISIT_DOCK_UK on RRL_YARD_VISIT(case when STATE in('AT_DOCK','WORKING','WORK_DONE')then WARE_ID end,
  case when STATE in('AT_DOCK','WORKING','WORK_DONE')then DOCK end);
-create unique index RRL_YARD_VISIT_VEHICLE_UK on RRL_YARD_VISIT(case when STATE in('ARRIVED','AT_DOCK','WORKING','WORK_DONE')and VEHICLE is not null then WARE_ID end,
- case when STATE in('ARRIVED','AT_DOCK','WORKING','WORK_DONE')and VEHICLE is not null then VEHICLE end);
+create unique index RRL_YARD_VISIT_VEHICLE_UK on RRL_YARD_VISIT(case when STATE in('ARRIVED','AT_DOCK','WORKING','WORK_DONE')then VEHICLE end);
 create unique index RRL_YARD_VISIT_TRIP_UK on RRL_YARD_VISIT(case when STATE not in('DEPARTED','CANCELLED')and TRIP_ID is not null then WARE_ID end,
  case when STATE not in('DEPARTED','CANCELLED')and TRIP_ID is not null then TRIP_ID end);
 create index RRL_YARD_VISIT_STATE_IX on RRL_YARD_VISIT(WARE_ID,STATE,PLANNED_ARRIVAL_AT);
+create index RRL_YARD_VISIT_ARRIVED_IX on RRL_YARD_VISIT(WARE_ID,ARRIVED_AT);
 create table RRL_YARD_VISIT_EVENT(
  OPERATION_ID varchar2(100)not null,WARE_ID number not null,VISIT_ID number not null,ACTION varchar2(20)not null,
- FROM_STATE varchar2(12),TO_STATE varchar2(12)not null,DOCK varchar2(50),REQUEST_HASH varchar2(64)not null,ACTOR varchar2(50)not null,
+ FROM_STATE varchar2(12),TO_STATE varchar2(12)not null,DOCK varchar2(50),VEHICLE varchar2(50),REQUEST_HASH varchar2(64)not null,ACTOR varchar2(50)not null,
+ -- EVENT_AT is the fact time written to the visit in the same command: the timeline rebuilds dock/vehicle intervals from it.
+ EVENT_AT timestamp with time zone not null,
  RESULT_JSON clob not null,CREATED_AT timestamp with time zone default systimestamp not null,
  constraint RRL_YARD_VISIT_EVENT_PK primary key(OPERATION_ID),
  constraint RRL_YARD_VISIT_EVENT_VISIT_FK foreign key(VISIT_ID)references RRL_YARD_VISIT(VISIT_ID),
  constraint RRL_YARD_VISIT_EVENT_ACTION check(ACTION in('EXPECT','ARRIVE','ASSIGN_DOCK','REASSIGN_DOCK','START','FINISH','DEPART','CANCEL')),
  constraint RRL_YARD_VISIT_EVENT_JSON check(RESULT_JSON is json)
 );
-create index RRL_YARD_VISIT_EVENT_VISIT_IX on RRL_YARD_VISIT_EVENT(VISIT_ID,CREATED_AT);
+create index RRL_YARD_VISIT_EVENT_VISIT_IX on RRL_YARD_VISIT_EVENT(VISIT_ID,EVENT_AT);
 -- Event history is append-only: a recorded yard event (and its replay answer) is never rewritten or removed.
 create or replace trigger RRL_YARD_VISIT_EVENT_APPEND before update or delete on RRL_YARD_VISIT_EVENT
 begin raise_application_error(-20911,'YARD_EVENT_APPEND_ONLY');end;
