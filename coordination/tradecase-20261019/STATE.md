@@ -140,3 +140,6 @@ ClaudeC0149registered11/11(workingallocationnotownerhardcap), ACKK0106, пише
 
 ## Актуальная точка после поручения сохранить контекст
 Читать RESUME_LATEST.md: C0150 APPLIED/rollback/reapply16/8/16; native fixture PASS3/полный rollback. C0151 ACKK0110 получен, но Claude сообщил лимит сессии, реализации нет.13 запросов учтены. Root продолжает yard scopes/конкуренцию/API; route ownership у Claude до передачи.
+
+## 23.10 — действующее распределение
+C0151 root: RouteSettings+TripRoute/TripExecution/help, native warehouse_depot_scope и lock_order APPLIED/rollback/reapply PASS7/7/7и6/6/6. Настоящий role-only HTTP PASS3groups/10calls/max254ms; native legacyfence/INVALID0/остатки250/0,1000/0,10/0,7/5. UI6PASS fixtures commands/realGET, noJS/overflow/writes. BuildDgvZfiy_, API21716/session40184 безreload. Qualitygate24/обаTS/1216/debt72PASS. Полный T09 не закрыт. C0152 исключенияT11 переданClaude, ACKK0111 WORKING; ownership inventoryquality/карантин/экран, sharedcoreнеправитбезrootreview. Зарегистрировано14обращений.

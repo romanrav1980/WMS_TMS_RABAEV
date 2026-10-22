@@ -1,8 +1,8 @@
 {
   "date": "2026-10-19",
   "timezone": "Europe/Moscow",
-  "limit": 13,
-  "used": 13,
+  "limit": 14,
+  "used": 14,
   "requests": [
     {
       "id": "C-0130",
@@ -101,9 +101,16 @@
     {
       "id": "C-0151",
       "registered_at": "2026-10-22T23:24:15.2909607+03:00",
-      "status": "ACK K0110; research completed; session limit reported, implementation not started",
+      "status": "Transferred to Codex23Oct after session limit; route implementation owned by root",
       "delivery": "existing file channel",
       "task": "Complete T09 editable route inputs, full window calculation and additional-stop decision using existing native TMS"
+    },
+    {
+      "id": "C-0152",
+      "registered_at": "2026-10-23T00:32:18.437634+03:00",
+      "status": "ACK K0111; WORKING: T11 quarantine/quality exceptions; write-off semantics clarification sent",
+      "delivery": "existing file channel",
+      "task": "T11 exception workplace: inventory discrepancies, quarantine, defect and write-off using existing native operations"
     }
   ],
   "additional_grants": [
@@ -167,6 +174,16 @@
       "used": 1,
       "request_ids": [
         "C-0151"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "authorization": "Owner explicitly authorized additional parallel Claude work",
+      "allocation_basis": "One large T11 package; no numeric cap imposed by owner",
+      "limit": 1,
+      "used": 1,
+      "request_ids": [
+        "C-0152"
       ]
     }
   ]

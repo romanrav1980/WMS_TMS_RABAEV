@@ -39,7 +39,7 @@ export function TripExecution({ wh, user, trip }: { wh: string; user: string; tr
       <Tech value={e} /></>}
     {e && !edit && <Act help={tcHelp.rebindTrip} onClick={() => setEdit(true)}>Изменить привязку</Act>}
     {(missing || edit) && <BindForm wh={wh} user={user} trip={trip} bindingVersion={e?.binding_version ?? 0} onDone={() => { setEdit(false); setReload(n => n + 1); }} />}
-    <TripRoute wh={wh} trip={trip.document_id} nativeTask={e?.native_task_id ?? null} bindingState={ex.loading && !e ? "LOADING" : ex.error && !missing ? "UNAVAILABLE" : "KNOWN"} />
+    <TripRoute wh={wh} user={user} trip={trip.document_id} nativeTask={e?.native_task_id ?? null} bindingState={ex.loading && !e ? "LOADING" : ex.error && !missing ? "UNAVAILABLE" : "KNOWN"} />
     <CapacityPreview wh={wh} trip={trip.document_id} />
     <TopupPreview wh={wh} trip={trip.document_id} saveLocked={topup.cmd.stored.kind !== "none" || topup.cmd.busy}
       onSave={(needIds, age) => topup.cmd.start({ action: "SAVE", trip: trip.document_id, need_ids: needIds, max_age_minutes: age }, topup.refresh)} />

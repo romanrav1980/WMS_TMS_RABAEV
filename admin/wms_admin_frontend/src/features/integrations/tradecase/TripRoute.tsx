@@ -1,11 +1,13 @@
+import { useState } from "react";
 import { useRead } from "./useRead";
 import { RoutePlan } from "./RoutePlan";
+import { RouteSettings } from "./RouteSettings";
 import type { Points, RouteMember } from "./RoutePlan";
 import { HelpLink, Tech } from "./ui";
 
 type Member = RouteMember;
 type Leg = { from_address: string | null; to_address: string | null; duration_min: number | null; fresh: boolean };
-type RouteContext = { route_status: string; route_duration_verified: boolean; source: { members: Member[];
+type RouteContext = { version: number; source_hash: string; route_status: string; route_duration_verified: boolean; source: { members: Member[];
   warehouse_origins: { status: string; depot_address: string | null }[]; route_material: { legs: Leg[]; order_valid: boolean } } };
 type Line = { order_id: string; line_id: string; order_kind: string; recipient_id: string; order_cancelled: boolean; native_error: string | null; sku_id: string;
   source_owner_id: string; uom: string; units_per_box: number; ordered_base: string; native_row_id: number | null; binding_current: boolean | null;
@@ -18,11 +20,12 @@ const orderLink = (wh: string, id: string) => `?page=tradecase&tc_wh=${encodeURI
 
 /** Маршрут рейса из текущего транспортного основания склада и обеспеченность его настоящих строк заказов.
  *  Порядок точек — план, не исполненный маршрут; отсутствующий источник показывается как «нет данных», не ноль. */
-export function TripRoute({ wh, trip, nativeTask, bindingState }: { wh: string; trip: string; nativeTask: number | null; bindingState: "LOADING" | "UNAVAILABLE" | "KNOWN" }) {
+export function TripRoute({ wh, user, trip, nativeTask, bindingState }: { wh: string; user: string; trip: string; nativeTask: number | null; bindingState: "LOADING" | "UNAVAILABLE" | "KNOWN" }) {
+  const [reload, setReload] = useState(0);
   const cover = useRead<Coverage>(`/api/tradecase/warehouses/${encodeURIComponent(wh)}/trips/${encodeURIComponent(trip)}/coverage`);
   const points = useRead<Points>(nativeTask ? `/api/tradecase/warehouses/${encodeURIComponent(wh)}/trips/${encodeURIComponent(trip)}/route-points` : null);
   const routeAllowed = points.data && points.data.blocked_reason !== "ROUTE_POINTS_NOT_VISIBLE";
-  const route = useRead<RouteContext>(nativeTask && routeAllowed ? `/api/transport/preflight/trips/${nativeTask}/route-context` : null);
+  const route = useRead<RouteContext>(nativeTask && routeAllowed ? `/api/transport/preflight/trips/${nativeTask}/route-context` : null, reload);
   const r = route.data, members = [...(r?.source.members ?? [])].sort((a, b) => (a.route_ordinal ?? 1e9) - (b.route_ordinal ?? 1e9));
   return <section className="tc-bind" aria-label="Маршрут и обеспеченность рейса">
     <h4>Маршрут рейса <HelpLink anchor="route" /></h4>
@@ -37,7 +40,9 @@ export function TripRoute({ wh, trip, nativeTask, bindingState }: { wh: string; 
           Склад отправления: {r.source.warehouse_origins[0]?.status === "NOT_CONFIGURED" || !r.source.warehouse_origins.length ? "адрес не настроен" : q(r.source.warehouse_origins[0].depot_address)};
           {" "}{ROUTE[r.route_status] ?? "время в пути не подтверждено"}.</p>
         {members.length === 0 ? <p className="tc-note">В транспортном основании нет точек доставки.</p>
-          : nativeTask && points.data && <RoutePlan nativeTask={nativeTask} members={members} points={points.data} />}
+          : nativeTask && points.data && <RoutePlan key={reload} nativeTask={nativeTask} members={members} points={points.data} />}
+        {nativeTask && <RouteSettings key={`${user}:${wh}:${nativeTask}`} wh={wh} user={user} trip={nativeTask}
+          version={r.version} sourceHash={r.source_hash} refreshing={route.loading} onSaved={() => setReload(n => n + 1)} />}
         <p className="tc-note">Карта не строится: координат точек в источнике нет.</p>
         <Tech value={r} label="Транспортное основание" /></>}
     <h4>Обеспеченность заказов рейса <HelpLink anchor="coverage" /></h4>
