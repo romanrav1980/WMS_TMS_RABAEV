@@ -12,7 +12,7 @@ try:
  with oracle_connection()as c:
   q=c.cursor();q.execute("select PASS from RUSERS where ID='admin'");os.environ['TRADECASE_ADMIN_USER']='admin';os.environ['TRADECASE_ADMIN_PASSWORD']=q.fetchone()[0]
  if 'external_trip'not in s:
-  body=dict(schema_version=1,event_id='T7.TRIP.'+tag,source_id='TC03.SAP',warehouse_id=w,document_id=trip,version=1,occurred_at=datetime.now(timezone.utc).isoformat(),payload=dict(entity_type='TRIP',vehicle_id=s['vehicle_number'],planning_source='SAP',planned_departure_at='2026-11-01T10:00:00+03:00',capacity_kg='1000',capacity_m3='17.28',orders=[dict(order_id=s.get('demand_order_id','AFTER'),line_id='1',quantity=str(s.get('quantity',100)))]))
+  body=dict(schema_version=1,event_id='T7.TRIP.'+tag,source_id='TC03.SAP',warehouse_id=w,document_id=trip,version=1,occurred_at=datetime.now(timezone.utc).isoformat(),payload=dict(entity_type='TRIP',vehicle_id=s['vehicle_number'],planning_source='SAP',planned_departure_at=s.get('planned_departure_at','2026-11-01T10:00:00+03:00'),capacity_kg='1000',capacity_m3='17.28',orders=[dict(order_id=s.get('demand_order_id','AFTER'),line_id='1',quantity=str(s.get('quantity',100)))]))
   s['external_trip']=expect(200,http('POST','/api/tradecase/messages',body));save()
  if 'trip_binding'not in s:
   s['trip_bind_body']=dict(operation_id='T7.TRIP.BIND.'+tag,native_task_id=s['transport_task_id'],expected_trip_version=1,expected_binding_version=0);save()
@@ -37,6 +37,6 @@ try:
  assert expect(200,http('POST',f"/api/transport/loading/{s['transport_task_id']}/depart",s['depart_body']))==s['departed']
  with oracle_connection()as c:
   q=c.cursor();q.execute('select STATUS,DEPARTURE_OPERATION_ID,DEPARTED_AT from RRL_TT_HU_LOAD_FACT where LOAD_OPERATION_ID=:o',o=s.get('reload_body',s['load_body'])['operation_id']);status,operation,at=q.fetchone();assert status=='DEPARTED'and operation==s['depart_body']['operation_id'];s['departed_at']=str(at)
-  q.execute('select sum(r.REMAIN),sum(r.HARD_RESERVED_BASE)from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w',w=w);assert list(q.fetchone())==[s.get('expected_remaining',150),0]
+  q.execute('select sum(r.REMAIN),sum(r.HARD_RESERVED_BASE)from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w',w=w);assert list(q.fetchone())==[s.get('expected_remaining',150),s.get('expected_hard',0)]
  s['transport_stage']='PASS';s['provider']='LOCAL_SYNTHETIC_ONLY';print(json.dumps(dict(status=s['transport_stage'],trip=s['transport_task_id'],departure=s['departed'],provider=s['provider'])))
 finally:s['http']+=CALLS;save()

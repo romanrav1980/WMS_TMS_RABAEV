@@ -1,0 +1,338 @@
+create or replace package body RRL_ST_DEFER_WAIT_API as
+
+ g_tx varchar2(100);
+
+ function write_allowed return number is
+
+ begin return case when g_tx is not null and g_tx=dbms_transaction.local_transaction_id(false)then 1 else 0 end;end;
+
+ procedure plan_waiting(p_operation varchar2,p_decision varchar2,p_actor varchar2,p_result out clob,p_root varchar2 default null)is
+
+  decision RRL_ST_DEFER_DECISION%rowtype;existing RRL_ST_DEFER_WAIT_RUN%rowtype;request json_object_t:=json_object_t();
+
+  request_body clob;source clob;hu_request clob;arr json_array_t;selected json_array_t;first_member json_object_t;v json_object_t;
+
+  targets json_array_t:=json_array_t();skips json_array_t:=json_array_t();result json_object_t:=json_object_t();
+
+  target varchar2(50);uid varchar2(50 char);task_id number;n number;qty number;unit varchar2(20);from_cell varchar2(50);
+
+  type seen_set is table of pls_integer index by varchar2(200);seen seen_set;
+
+  meta_started boolean:=false;saved boolean:=false;
+
+ begin
+
+  if p_operation is null or lengthb(p_operation)>100 or not regexp_like(p_operation,'^[A-Za-z0-9_.:-]+$')
+
+   or p_decision is null or lengthb(p_decision)>100 then raise_application_error(-20881,'DEFER_WAIT_OPERATION_DECISION_REQUIRED');end if;
+
+  select *into decision from RRL_ST_DEFER_DECISION where OPERATION_ID=p_decision;
+
+  select count(*)into n from RUSERS u where u.ID=p_actor and nvl(u.DELETED,0)=0 and RRL_HAS_WRIGHT(p_actor,'warehouse_task_edit')=1
+
+   and(u.WARE_ID=decision.WARE_ID or upper(trim(u.USER_GROUP))='GLOBAL_ADMIN');
+
+  if n!=1 then raise_application_error(-20882,'DEFER_WAIT_CURRENT_WAREHOUSE_PLANNER_REQUIRED');end if;
+
+  request.put('decision_operation_id',p_decision);request.put('actor',p_actor);if p_root is not null then request.put('root_identifier',p_root);end if;request_body:=request.to_clob;
+
+  begin
+   select *into existing from RRL_ST_DEFER_WAIT_RUN where OPERATION_ID=p_operation;
+   if existing.ACTOR!=p_actor or dbms_lob.compare(existing.REQUEST_JSON,request_body)!=0 then raise_application_error(-20886,'DEFER_WAIT_OPERATION_PAYLOAD_CONFLICT');end if;
+   select count(*)into n from RRL_ST_DEFER_WAIT_PLAN where PLAN_OPERATION_ID=p_operation and BASE_UOM='HU';
+   if n>0 then
+    if RRL_HAS_WRIGHT(p_actor,'warehouse_task_execute')!=1 then raise_application_error(-20882,'DEFER_HU_CURRENT_EXECUTION_RIGHT_REQUIRED');end if;
+    begin select RESULT_JSON into p_result from RRL_STOCK_OPERATION
+     where OPERATION_ID=p_operation and COMMAND_TYPE='HU_PLAN_MOVE'and STATE='APPLIED'and ACTOR=p_actor;
+    exception when no_data_found then raise_application_error(-20890,'DEFER_HU_APPLIED_ROOT_RESULT_REQUIRED');end;
+   else p_result:=existing.RESULT_JSON;end if;
+   return;
+  exception when no_data_found then null;end;
+  RRL_ST_DEFER_HU_WAIT.request_plan(p_operation,p_decision,p_actor,hu_request,p_root);
+  if hu_request is not null then
+   RRL_STOCK_POSTING_API.prepare_command(hu_request,p_actor,p_result,null);
+   if p_result is null then RRL_STOCK_POSTING_API.execute_prepared(p_result);end if;
+   return;
+  end if;
+  RRL_STOCK_METADATA_TX.begin_change(p_actor,'warehouse_task_edit');meta_started:=true;savepoint RRL_DWAIT772;saved:=true;
+
+  select count(*)into n from RUSERS u where u.ID=p_actor and nvl(u.DELETED,0)=0 and RRL_HAS_WRIGHT(p_actor,'warehouse_task_edit')=1
+
+   and(u.WARE_ID=decision.WARE_ID or upper(trim(u.USER_GROUP))='GLOBAL_ADMIN');
+
+  if n!=1 then raise_application_error(-20882,'DEFER_WAIT_CURRENT_WAREHOUSE_PLANNER_REQUIRED');end if;
+  select count(*)into n from RRL_STOCK_OPERATION op where op.OPERATION_ID=p_operation
+   and not exists(select 1 from RRL_ST_DEFER_WAIT_RUN run where run.OPERATION_ID=p_operation);
+  if n>0 then raise_application_error(-20886,'DEFER_WAIT_OPERATION_PAYLOAD_CONFLICT');end if;
+
+
+  begin
+
+   select *into existing from RRL_ST_DEFER_WAIT_RUN where OPERATION_ID=p_operation;
+
+   if existing.ACTOR!=p_actor or dbms_lob.compare(existing.REQUEST_JSON,request_body)!=0 then raise_application_error(-20886,'DEFER_WAIT_OPERATION_PAYLOAD_CONFLICT');end if;
+
+   p_result:=existing.RESULT_JSON;RRL_STOCK_METADATA_TX.end_change;return;
+
+  exception when no_data_found then null;end;
+
+  select count(*)into n from RRL_ST_DEFER_DECISION where ST_NUMBER=decision.ST_NUMBER and VERSION_NO>decision.VERSION_NO;
+
+  if n!=0 then raise_application_error(-20886,'DEFER_WAIT_DECISION_SUPERSEDED');end if;
+
+  select count(*)into n from RRL_SBORKA_PALLETS p where p.ST_NUMBER=decision.ST_NUMBER and(
+
+   nvl(p.TRANSTASK_ID,-1)!=decision.TARGET_TT_ID or nvl(p.CONDITION,0)=2
+
+   or exists(select 1 from RRL_TT_HU_LOAD_ST ls join RRL_TT_HU_LOAD_FACT l on l.LOAD_OPERATION_ID=ls.LOAD_OPERATION_ID
+
+    where ls.SBORKA_PALLET_ID=p.ID and ls.ACTIVE_FLAG=1 and l.STATUS in('LOADED','DEPARTED')));
+
+  if n!=0 then raise_application_error(-20886,'DEFER_WAIT_ST_ASSIGNMENT_OR_LOAD_CHANGED');end if;
+
+  select count(*)into n from RRL_TRANSPORT_TASK where ID=decision.TARGET_TT_ID and CONDITION='Спланирован'and nvl(DELETED,0)=0 and nvl(PAY_ORDER_ID,0)=0;
+
+  if n!=1 then raise_application_error(-20886,'DEFER_WAIT_PLANNED_TARGET_TRIP_REQUIRED');end if;
+
+  select DEFER_WAIT_CELL into target from RRL_RECEIPT_WARE_SETTINGS where WARE_ID=decision.WARE_ID;
+
+  if target is null then raise_application_error(-20886,'DEFER_WAIT_TARGET_CONFIGURATION_REQUIRED');end if;
+
+  RRL_ST_DEFER_WAIT_CORE.check_target(target,decision.WARE_ID);
+
+  select count(*)into n from RRL_CELLS where CELL=target and(nvl(LIMIT_HEIGHT,0)>0 or nvl(LIMIT_WEIGHT,0)>0);
+
+  if n!=0 then raise_application_error(-20886,'DEFER_WAIT_MEASURED_CAPACITY_PLAN_REQUIRED');end if;
+
+  select count(*)into n from RRL_TOPOLOGY_CELL tc join RRL_WAREHOUSE_TOPOLOGY tp on tp.TOPOLOGY_ID=tc.TOPOLOGY_ID
+
+   join RRL_TOPOLOGY_CELL_SLOT sl on sl.TOPOLOGY_CELL_ID=tc.TOPOLOGY_CELL_ID
+
+   where tc.LEGACY_CELL_CODE=target and tc.WARE_ID=decision.WARE_ID and tc.ACTIVE=1 and sl.ACTIVE=1 and tp.STATUS='PUBLISHED';
+
+  if n!=0 then raise_application_error(-20886,'DEFER_WAIT_PHYSICAL_SLOT_PLAN_REQUIRED');end if;
+
+  if p_root is null then source:=RRL_ST_DEFER_PHYSICAL.snapshot(decision.ST_NUMBER,decision.WARE_ID);
+  else source:=RRL_ST_DEFER_PLACE_READ.selected(decision.ST_NUMBER,decision.WARE_ID,p_root);end if;
+  if p_root is not null then result.put('root_identifier',p_root);end if;
+
+  declare prep json_object_t:=json_object_t.parse(source);src_case number;case_uid varchar2(200);case_version number;
+
+   cases json_array_t:=json_array_t();child json_object_t;case_body clob;
+
+   type origin_map is table of clob index by varchar2(100);origins origin_map;origin_key varchar2(100);
+
+  begin
+
+   if prep.get_string('state')='PREPARED_HU'then
+    if prep.get_string('cell')!=target then raise_application_error(-20886,'DEFER_HU_ROOT_PLANNING_REQUIRED');end if;
+    skips.append(prep.get_string('root'));
+    result.put('operation_id',p_operation);result.put('decision_operation_id',p_decision);result.put('st_number',decision.ST_NUMBER);
+    result.put('warehouse_id',decision.WARE_ID);result.put('waiting_cell',target);result.put('tasks',targets);result.put('already_waiting',skips);
+    result.put('stock_changed',false);result.put('physical_move_completed',false);p_result:=result.to_clob;
+    g_tx:=dbms_transaction.local_transaction_id(true);
+    insert into RRL_ST_DEFER_WAIT_RUN(OPERATION_ID,DECISION_OPERATION_ID,ACTOR,REQUEST_JSON,RESULT_JSON)
+     values(p_operation,p_decision,p_actor,request_body,p_result);
+    g_tx:=null;RRL_STOCK_METADATA_TX.end_change;return;
+   end if;
+   if prep.get_string('state')in('PREPARED_CASE','PREPARED_CASES')then
+
+    if prep.get_string('state')='PREPARED_CASE'then cases.append(prep);else cases:=prep.get_array('cases');end if;
+
+    if cases is null or cases.get_size<1 or cases.get_size>200 then raise_application_error(-20881,'DEFER_WAIT_CASE_MEMBER_BOUND_200');end if;
+
+    for i in 0..cases.get_size-1 loop
+
+     child:=treat(cases.get(i)as json_object_t);src_case:=child.get_number('case_task_id');from_cell:=child.get_string('cell');case_uid:=child.get_string('pallet_identifier');
+
+     origin_key:=RRL_STOCK_PLAN_HELPER.decimal_text(src_case);origins(origin_key):=child.to_clob;
+
+     if from_cell=target then skips.append(case_uid);
+
+     else
+
+      select RRL_WAREHOUSE_TASK_SQ.nextval into task_id from dual;
+
+      v:=json_object_t();v.put('task_id',task_id);v.put('pallet_identifier',case_uid);v.put('case_pick_task_id',src_case);targets.append(v);
+
+     end if;
+
+    end loop;
+
+    result.put('operation_id',p_operation);result.put('decision_operation_id',p_decision);result.put('st_number',decision.ST_NUMBER);
+
+    result.put('warehouse_id',decision.WARE_ID);result.put('waiting_cell',target);result.put('tasks',targets);result.put('already_waiting',skips);
+
+    result.put('stock_changed',false);result.put('physical_move_completed',false);p_result:=result.to_clob;
+
+    g_tx:=dbms_transaction.local_transaction_id(true);
+
+    insert into RRL_ST_DEFER_WAIT_RUN(OPERATION_ID,DECISION_OPERATION_ID,ACTOR,REQUEST_JSON,RESULT_JSON)values(p_operation,p_decision,p_actor,request_body,p_result);
+
+    for i in 0..targets.get_size-1 loop
+
+     v:=treat(targets.get(i)as json_object_t);task_id:=v.get_number('task_id');src_case:=v.get_number('case_pick_task_id');
+
+     child:=json_object_t.parse(origins(RRL_STOCK_PLAN_HELPER.decimal_text(src_case)));
+
+     child.put('cohort_manifest',RRL_ST_DEFER_PLACE_READ.manifest(decision.ST_NUMBER));
+     from_cell:=child.get_string('cell');case_uid:=child.get_string('pallet_identifier');case_version:=child.get_number('content_version');case_body:=child.to_clob;
+
+     insert into RRL_WAREHOUSE_TASK(TASK_ID,TASK_TYPE,TASK_SOURCE,SOURCE_TASK_ID,SOURCE_DOC_TYPE,SOURCE_DOC_ID,UID_PALLET,
+
+      FROM_CELL,TO_CELL,FROM_WARE_ID,TO_WARE_ID,QTY,UNIT_CODE,QTY_MODE,STATUS,CREATED_BY)
+
+      values(task_id,'PUTAWAY','MANUAL',task_id,'ST_DEFER_CASE',decision.VERSION_NO,case_uid,from_cell,target,decision.WARE_ID,decision.WARE_ID,1,'CASE','PALLET','PLANNED',p_actor);
+
+     insert into RRL_ST_DEFER_WAIT_PLAN(TASK_ID,PLAN_OPERATION_ID,UID_PALLET,FROM_CELL,TARGET_CELL,BASE_QTY,BASE_UOM,STOCK_VERSION,SOURCE_MEMBERS_JSON,CASE_TASK_ID)
+
+      values(task_id,p_operation,case_uid,from_cell,target,1,'CASE',case_version,case_body,src_case);
+
+    end loop;
+
+    g_tx:=null;RRL_STOCK_METADATA_TX.end_change;return;
+
+   end if;
+
+  end;
+
+  arr:=json_object_t.parse(source).get_array('members');
+
+  if arr is null or arr.get_size=0 or arr.get_size>200 then raise_application_error(-20886,'DEFER_WAIT_PREPARED_SOURCE_REQUIRED');end if;
+
+  g_tx:=dbms_transaction.local_transaction_id(true);
+
+  -- The run row is inserted before FK-bound plans; the result is built from all original members.
+
+  for i in 0..arr.get_size-1 loop
+
+   v:=treat(arr.get(i)as json_object_t);uid:=v.get_string('pallet_identifier');
+
+   if not seen.exists(uid)then
+
+    seen(uid):=1;selected:=json_array_t.parse(RRL_ST_DEFER_WAIT_CORE.members(source,uid));
+
+    first_member:=treat(selected.get(0)as json_object_t);from_cell:=first_member.get_string('cell');
+
+    if from_cell=target then skips.append(uid);
+
+    else select RRL_WAREHOUSE_TASK_SQ.nextval into task_id from dual;
+
+     v:=json_object_t();v.put('task_id',task_id);v.put('pallet_identifier',uid);targets.append(v);
+
+    end if;
+
+   end if;
+
+  end loop;
+
+  result.put('operation_id',p_operation);result.put('decision_operation_id',p_decision);result.put('st_number',decision.ST_NUMBER);
+
+  result.put('warehouse_id',decision.WARE_ID);result.put('waiting_cell',target);result.put('tasks',targets);result.put('already_waiting',skips);
+
+  result.put('stock_changed',false);result.put('physical_move_completed',false);p_result:=result.to_clob;
+
+  insert into RRL_ST_DEFER_WAIT_RUN(OPERATION_ID,DECISION_OPERATION_ID,ACTOR,REQUEST_JSON,RESULT_JSON)values(p_operation,p_decision,p_actor,request_body,p_result);
+
+  for i in 0..targets.get_size-1 loop
+
+   v:=treat(targets.get(i)as json_object_t);uid:=v.get_string('pallet_identifier');task_id:=v.get_number('task_id');
+
+   selected:=json_array_t.parse(RRL_ST_DEFER_WAIT_CORE.members(source,uid));first_member:=treat(selected.get(0)as json_object_t);
+
+   qty:=RRL_STOCK_MATH.quantity(first_member.get_string('pallet_quantity'));unit:=first_member.get_string('base_uom');from_cell:=first_member.get_string('cell');
+
+   insert into RRL_WAREHOUSE_TASK(TASK_ID,TASK_TYPE,TASK_SOURCE,SOURCE_TASK_ID,SOURCE_DOC_TYPE,SOURCE_DOC_ID,UID_PALLET,
+
+    FROM_CELL,TO_CELL,FROM_WARE_ID,TO_WARE_ID,QTY,UNIT_CODE,QTY_MODE,STATUS,CREATED_BY)
+
+    values(task_id,'PUTAWAY','MANUAL',task_id,'ST_DEFER',decision.VERSION_NO,uid,from_cell,target,decision.WARE_ID,decision.WARE_ID,qty,unit,'PALLET','PLANNED',p_actor);
+
+   declare members_body clob:=selected.to_clob;version_no number:=first_member.get_number('stock_version');
+
+   begin insert into RRL_ST_DEFER_WAIT_PLAN(TASK_ID,PLAN_OPERATION_ID,UID_PALLET,FROM_CELL,TARGET_CELL,BASE_QTY,BASE_UOM,STOCK_VERSION,SOURCE_MEMBERS_JSON)
+
+    values(task_id,p_operation,uid,from_cell,target,qty,unit,version_no,members_body);end;
+
+  end loop;
+
+  g_tx:=null;RRL_STOCK_METADATA_TX.end_change;
+
+ exception when others then
+
+  g_tx:=null;if saved then rollback to RRL_DWAIT772;end if;
+
+  if meta_started then RRL_STOCK_METADATA_TX.end_change;end if;raise;
+
+ end;
+
+
+ procedure record_hu_plan(p_request clob,p_task number,p_frozen json_object_t,p_result in out clob)is
+  d json_object_t:=json_object_t.parse(p_request);req json_object_t:=json_object_t();result json_object_t:=json_object_t.parse(p_result);
+  value json_object_t;entry json_object_t:=json_object_t();tasks json_array_t:=json_array_t();source clob;decision varchar2(100);op varchar2(100);
+  uid varchar2(200);from_cell varchar2(50);to_cell varchar2(50);version_no number;actor_name varchar2(100);req_clob clob;kind varchar2(80);state_name varchar2(20);
+ begin
+  op:=d.get_string('operation_id');decision:=p_frozen.get_string('decision_operation_id');uid:=p_frozen.get_string('root');
+  from_cell:=p_frozen.get_string('cell');to_cell:=p_frozen.get_string('target_cell');version_no:=p_frozen.get_number('content_version');
+  if op is null or sys_context('RRL_STOCK_WRITE_CTX','OPERATION_ID')!=op
+   or sys_context('RRL_STOCK_WRITE_CTX','TX_ID')!=dbms_transaction.local_transaction_id(false)then raise_application_error(-20863,'DEFER_HU_PLAN_ROOT_REQUIRED');end if;
+  select COMMAND_TYPE,STATE into kind,state_name from RRL_STOCK_OPERATION where OPERATION_ID=op;
+  if kind!='HU_PLAN_MOVE'or state_name!='IN_FLIGHT' then raise_application_error(-20863,'DEFER_HU_PLAN_ROOT_REQUIRED');end if;
+  RRL_STOCK_LOCK_API.assert_held(20,RRL_STOCK_LOCK_API.resource_key('ROW','RRL_ST_DEFER_WAIT_RUN',op));
+  RRL_STOCK_LOCK_API.assert_held(20,RRL_STOCK_LOCK_API.resource_key('ROW','RRL_ST_DEFER_WAIT_PLAN',RRL_STOCK_PLAN_HELPER.decimal_text(p_task)));
+  actor_name:=d.get_string('actor');
+  req.put('decision_operation_id',decision);req.put('actor',d.get_string('actor'));
+  if d.get_object('metadata').get_string('defer_requested_root')is not null then
+   req.put('root_identifier',d.get_object('metadata').get_string('defer_requested_root'));
+   result.put('root_identifier',d.get_object('metadata').get_string('defer_requested_root'));
+  end if;
+  entry.put('task_id',p_task);entry.put('pallet_identifier',uid);entry.put('unit_code','HU');tasks.append(entry);
+  result.put('decision_operation_id',decision);result.put('st_number',p_frozen.get_string('st_number'));result.put('warehouse_id',p_frozen.get_number('warehouse'));
+  result.put('waiting_cell',to_cell);result.put('tasks',tasks);result.put('already_waiting',json_array_t());
+  result.put('stock_changed',false);result.put('physical_move_completed',false);p_result:=result.to_clob;
+  value:=json_object_t.parse(p_frozen.to_clob);value.remove('decision_operation_id');value.remove('st_number');value.remove('warehouse');
+  value.remove('decision_version');value.remove('target_trip');value.remove('target_cell');value.remove('cohort_manifest');source:=value.to_clob;
+  req_clob:=req.to_clob;g_tx:=dbms_transaction.local_transaction_id(true);
+  insert into RRL_ST_DEFER_WAIT_RUN(OPERATION_ID,DECISION_OPERATION_ID,ACTOR,REQUEST_JSON,RESULT_JSON)
+   values(op,decision,actor_name,req_clob,p_result);
+  insert into RRL_ST_DEFER_WAIT_PLAN(TASK_ID,PLAN_OPERATION_ID,UID_PALLET,FROM_CELL,TARGET_CELL,BASE_QTY,BASE_UOM,STOCK_VERSION,SOURCE_MEMBERS_JSON)
+   values(p_task,op,uid,from_cell,to_cell,1,'HU',version_no,source);
+  g_tx:=null;
+ exception when others then g_tx:=null;raise;
+ end;
+
+ procedure read_places(p_decision varchar2,p_actor varchar2,p_result out clob)is
+  dec RRL_ST_DEFER_DECISION%rowtype;v_n number;full_value json_object_t;items json_array_t;out_items json_array_t:=json_array_t();
+  item json_object_t;value json_object_t;out_item json_object_t;summary json_object_t:=json_object_t();need_choice boolean:=false;has_hu boolean:=false;has_planned boolean:=false;
+ begin
+  select *into dec from RRL_ST_DEFER_DECISION where OPERATION_ID=p_decision;
+  select count(*)into v_n from RUSERS u where u.ID=p_actor and nvl(u.DELETED,0)=0 and RRL_HAS_WRIGHT(u.ID,'warehouse_task_view')=1
+   and(u.WARE_ID=dec.WARE_ID or upper(trim(u.USER_GROUP))='GLOBAL_ADMIN');
+  if v_n!=1 then raise_application_error(-20882,'DEFER_PLACE_CURRENT_WARE_VIEW_REQUIRED');end if;
+  select count(*)into v_n from RRL_ST_DEFER_DECISION where ST_NUMBER=dec.ST_NUMBER and VERSION_NO>dec.VERSION_NO;
+  if v_n>0 then summary.put('places',out_items);summary.put('selection_required',false);summary.put('unavailable_reason','DECISION_SUPERSEDED');p_result:=summary.to_clob;return;end if;
+  begin
+   full_value:=json_object_t.parse(RRL_ST_DEFER_PLACE_READ.collect(dec.ST_NUMBER,dec.WARE_ID,null,true));items:=full_value.get_array('places');
+   for i in 0..items.get_size-1 loop
+    item:=treat(items.get(i)as json_object_t);out_item:=json_object_t();
+    out_item.put('root_identifier',item.get_string('root_identifier'));out_item.put('place_kind',item.get_string('place_kind'));
+    if item.get_string('place_kind')='HU'then has_hu:=true;end if;
+    if item.has('blocked')then out_item.put('available',false);out_item.put('reason','CURRENT_SOURCE_OR_OPEN_TASK_REQUIRES_REVIEW');
+    else
+     value:=item.get_object('source');out_item.put('cell',value.get_string('cell'));out_item.put('content_version',value.get_number('content_version'));
+     out_item.put('move_required',value.get_boolean('physical_move_required'));out_item.put('available',true);
+     if item.get_number('planned_task_id')is not null then
+      out_item.put('planned_task_id',item.get_number('planned_task_id'));out_item.put('available',false);has_planned:=true;
+     end if;
+    end if;
+    out_items.append(out_item);
+   end loop;
+   need_choice:=out_items.get_size>1 and(has_hu or has_planned);
+  exception when others then
+   if sqlcode not between -20999 and -20800 then raise;end if;
+   summary.put('unavailable_reason','CURRENT_PREPARED_SOURCE_REQUIRES_REVIEW');
+  end;
+  summary.put('places',out_items);summary.put('selection_required',need_choice);p_result:=summary.to_clob;
+ end;
+end;
+/

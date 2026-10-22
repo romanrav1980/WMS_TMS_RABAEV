@@ -154,6 +154,19 @@ def waiting():
     s['status']='REMAINDER_WAIT_TASK_PLANNED';save();print(json.dumps(dict(status=s['status'],plan=result)))
 
 
+def complete_wait():
+    task=s['results']['wait_plan']['task_id'];path=f'/api/warehouse-tasks/{task}/complete'
+    if 'wait_complete'not in s['requests']:
+        detail=expect(200,http('GET',f'/api/warehouse-tasks/{task}'))
+        s['requests']['wait_complete']=dict(path=path,body=dict(operation_id='NB22.WAIT.COMPLETE.B',scanned_pallet=s['root'],scanned_from_cell=s['cell'],scanned_to_cell=s['wait_cell_seeded'],fact_qty='1',expected_task_signature=detail['task_signature']));save()
+    r=s['requests']['wait_complete'];result=step('wait_complete',path,r['body'])
+    assert expect(200,http('POST',path,r['body']))==result
+    s['wait_snapshot']=tree(s['root']);assert s['wait_snapshot']['cell']==s['wait_cell_seeded']and s['wait_snapshot']['physical_unit_count']==1
+    with oracle_connection()as c:
+        q=c.cursor();q.execute('select sum(REMAIN),sum(HARD_RESERVED_BASE)from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID=:w',w=w);s['stock_waiting']=list(q.fetchone());assert s['stock_waiting']==[7,5]
+    s['status']='REMAINDER_PHYSICALLY_WAITING_NEXT_TRIP';save();print(json.dumps(dict(status=s['status'],stock=s['stock_waiting'],result=result)))
+
+
 if __name__=='__main__':
     os.environ['TRADECASE_ADMIN_USER']='admin';os.environ['TRADECASE_ADMIN_PASSWORD']=re.search(r'PASS=(\S+?)[`,)\s]',(ROOT/'AGENTS.md').read_text(encoding='utf-8'))[1]
     try:
@@ -161,6 +174,7 @@ if __name__=='__main__':
         elif '--load'in sys.argv:load()
         elif '--defer'in sys.argv:defer()
         elif '--waiting'in sys.argv:waiting()
+        elif '--complete-wait'in sys.argv:complete_wait()
         else:prepare()
     except Exception as exc:s['error']=str(exc);save();raise
     finally:s['history']+=CALLS;save()
