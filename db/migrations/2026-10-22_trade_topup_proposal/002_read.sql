@@ -55,15 +55,31 @@ create or replace package body RRL_TRADE_TOPUP_READ as
   return n;
  end;
 
- function protected_units(p_ware number,p_sku varchar2,p_owner varchar2,p_mrc number)return number is total number:=0;n number:=0;x json_object_t;
+ function protected_units(p_ware number,p_sku varchar2,p_owner varchar2,p_mrc number)return number is
+  total number:=0;n number:=0;x json_object_t;units_per_box number;
  begin
-  for l in(select ol.CUSTOMER_ORDER_ROW_ID from RRL_TRADE_ORDER_LINK tl join RRL_TRADE_ORDER_LINE ol on ol.CUSTOMER_ORDER_ID=tl.CUSTOMER_ORDER_ID
-    where tl.WARE_ID=p_ware and ol.SKU_ID=p_sku and ol.SOURCE_OWNER_ID=p_owner and ol.MRC=p_mrc
-     and not exists(select 1 from RRL_TRADE_TOPUP_PROPOSAL p where p.WARE_ID=tl.WARE_ID and p.SAP_ORDER_ID=tl.EXTERNAL_ID)
-    order by ol.CUSTOMER_ORDER_ROW_ID)loop
+  select json_value(BODY_JSON,'$.units_per_box'returning number)into units_per_box from RRL_TRADE_DOCUMENT
+   where WARE_ID=p_ware and ENTITY_TYPE='SKU'and EXTERNAL_ID=p_sku and STATUS='ACCEPTED';
+  for l in(select d.EXTERNAL_ID,ln.LINE_ID,ln.QTY,ln.UOM,ol.CUSTOMER_ORDER_ROW_ID
+    from RRL_TRADE_DOCUMENT d cross apply json_table(d.BODY_JSON,'$.lines[*]'columns(
+     LINE_ID varchar2(100)path'$.line_id',SKU_ID varchar2(100)path'$.sku_id',
+     OWNER_ID varchar2(100)path'$.source_owner_id',MRC number path'$.mrc',QTY number path'$.quantity',UOM varchar2(10)path'$.uom'))ln
+    left join RRL_TRADE_ORDER_LINK tl on tl.WARE_ID=d.WARE_ID and tl.EXTERNAL_ID=d.EXTERNAL_ID and tl.DOCUMENT_VERSION=d.VERSION_NO
+    left join RRL_TRADE_ORDER_LINE ol on ol.CUSTOMER_ORDER_ID=tl.CUSTOMER_ORDER_ID and ol.EXTERNAL_LINE_ID=ln.LINE_ID
+    where d.WARE_ID=p_ware and d.ENTITY_TYPE='ORDER'and d.STATUS='ACCEPTED'
+     and nvl(json_value(d.BODY_JSON,'$.cancelled'),'false')<>'true'
+     and nvl(json_value(d.BODY_JSON,'$.order_kind'),'OUTBOUND')<>'BUYOUT'
+     and ln.SKU_ID=p_sku and ln.OWNER_ID=p_owner and ln.MRC=p_mrc
+     and not exists(select 1 from RRL_TRADE_TOPUP_PROPOSAL p where p.WARE_ID=d.WARE_ID and p.SAP_ORDER_ID=d.EXTERNAL_ID
+       and p.STATUS in('CONFIRMED','SAP_ACCEPTED'))
+    order by d.EXTERNAL_ID,ln.LINE_ID fetch first 201 rows only)loop
    n:=n+1;if n>200 then raise_application_error(-20911,'TRADE_TOPUP_PROTECTED_DEMAND_BOUND_200');end if;
-   x:=json_object_t.parse(RRL_STOCK_POOL_READ.line_snapshot_json(l.CUSTOMER_ORDER_ROW_ID));
-   if x.get_boolean('open')then total:=total+RRL_STOCK_MATH.quantity(x.get_string('quantity'));end if;
+   if l.CUSTOMER_ORDER_ROW_ID is not null then
+    x:=json_object_t.parse(RRL_STOCK_POOL_READ.line_snapshot_json(l.CUSTOMER_ORDER_ROW_ID));
+    if x.get_boolean('open')then total:=total+RRL_STOCK_MATH.quantity(x.get_string('quantity'));end if;
+   else
+    total:=total+l.QTY*case when l.UOM='BOX'then units_per_box else 1 end;
+   end if;
   end loop;
   return total;
  end;
