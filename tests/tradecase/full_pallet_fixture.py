@@ -3,7 +3,8 @@ from tools.mcp.tms_mcp_server import oracle_connection
 
 
 def prepare_shipment(state):
-    f=state['fixture'];w=f['warehouse_id'];uid='FP21.ST.'+str(w)
+    f=state['fixture'];w=f['warehouse_id'];uid=state.get('shipment_identifier','FP21.ST.'+str(w))
+    quantity=int(state.get('shipment_quantity',10));assert quantity>0
     assert f['article'].startswith('TC03') and state['native_order']>0
     with oracle_connection()as c:
         q=c.cursor();q.execute('select NAME from RRL_WARES where ID=:w',w=w);assert q.fetchone()==('TRADECASE QA '+f['tag'],)
@@ -17,7 +18,7 @@ def prepare_shipment(state):
             q.execute('select trunc(sysdate)+1 from dual');day=q.fetchone()[0]
             st=q.callfunc('RRL_SBORKA_PALLETS_ADD2',int,['FP.'+str(w),'FP21.QA.ADDRESS',1,uid,'1',day,'','admin',w]);assert st>0
             q.execute('update RRL_SBORKA_PALLETS set CONDITION=0 where ID=:s',s=st)
-            row=q.callfunc('RRL_SBORKA_PALLET_ROWS_ADD4',int,[uid,f['article'],'Whole pallet QA','','EA',0,'',10,'',10,0,None,'FP.'+str(w),w,1]);assert row>0
+            row=q.callfunc('RRL_SBORKA_PALLET_ROWS_ADD4',int,[uid,f['article'],'Owned physical shipment QA','','EA',0,'',quantity,'',quantity,0,None,'FP.'+str(w),w,1]);assert row>0
             q.execute("insert into RRL_CUSTOMER_ORDER_FULFILLMENT(FULFILLMENT_ID,CUSTOMER_ORDER_ID,LEGACY_SBORKA_PALLET_ID,PALLET_UID,ADDRESS_TEXT,STATUS,FACT_QTY,FACT_WEIGHT,SOURCE_SYSTEM,CREATED_AT,CREATED_BY)values(RRL_CUSTOMER_ORDER_FULF_SQ.nextval,:o,:s,:u,'FP21.QA.ADDRESS','PLANNED',0,0,'QA_TRADECASE_ONLY',sysdate,'admin')",o=state['native_order'],s=st,u=uid);c.commit()
         finally:q.callproc('RRL_STOCK_METADATA_TX.end_change')
     return dict(shipment_id=st,shipment_identifier=uid)

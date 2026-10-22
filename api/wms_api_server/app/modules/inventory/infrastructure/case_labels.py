@@ -44,7 +44,15 @@ class CaseLabels:
                 if not row:raise StockPostingError("CASE_SSCC_SOURCE_REQUIRED","",20886)
                 if row[0]is None:return {"case_pick_task_id":task,"issued":False,"final_scale_required":row[5]==1}
                 result=read_oracle_json(row[0])
-                return {**result,"issued":True,"confirmed":row[1]is not None,"confirmed_at":row[1].isoformat()if row[1]else None,"confirmed_by":row[2],"current_carrier":row[3],"current_content_version":int(row[4]),"final_scale_required":row[5]==1}
+                q.execute("""select m.RESULT_JSON from RRL_CASE_MANUAL_TARE m
+                    join RRL_CASE_PICK_TASK c on c.CASE_PICK_TASK_ID=m.CASE_PICK_TASK_ID
+                    join RRL_PALLET_TYPE p on p.PALLET_TYPE_ID=c.PALLET_TYPE_ID
+                    where m.CASE_PICK_TASK_ID=:task and m.WARE_ID=c.WARE_ID and m.SSCC=c.SSCC
+                    and m.PALLET_TYPE_ID=c.PALLET_TYPE_ID and m.TYPE_VERSION=p.TYPE_VERSION
+                    and m.RECORDED_AT>=systimestamp-numtodsinterval(24,'HOUR')and m.RECORDED_AT<=systimestamp
+                    order by m.RECORDED_AT desc,m.OPERATION_ID desc fetch first 1 row only""",task=task)
+                manual=q.fetchone()
+                return {**result,"issued":True,"confirmed":row[1]is not None,"confirmed_at":row[1].isoformat()if row[1]else None,"confirmed_by":row[2],"current_carrier":row[3],"current_content_version":int(row[4]),"final_scale_required":row[5]==1,"manual_empty_tare":read_oracle_json(manual[0])if manual else None}
         except oracledb.DatabaseError as exc:
             error=exc.args[0]
             raise StockPostingError("CASE_SSCC_READ_REJECTED","",error.code,str(error.message).split("\n")[0])from exc

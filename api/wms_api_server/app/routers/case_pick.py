@@ -115,9 +115,10 @@ def move_case_carrier(case_pick_task_id: int, request: CaseCarrierMoveRequest,
         raise HTTPException(422, str(exc)) from exc
     except StockPostingError as exc:
         uncertain = exc.code in {"RESULT_UNCERTAIN", "REQUEST_DEADLINE", "CONNECTION_UNUSABLE", "LOCK_RETRY_EXHAUSTED", "STOCK_RELEASE_NOT_ACTIVE"}
+        unknown_outcome = uncertain or exc.oracle_code == 20882 or "OPERATION_CONFLICT" in (exc.rule_reason or "")
         raise HTTPException(403 if exc.oracle_code == 20882 else 503 if uncertain else 409, detail={"code": exc.code,
-            "operation_id": exc.operation_id, "oracle_code": exc.oracle_code,
-            "outcome_confirmed": not uncertain, "retry_same_operation_id": uncertain}) from exc
+            "operation_id": exc.operation_id, "oracle_code": exc.oracle_code, "reason": exc.rule_reason,
+            "outcome_confirmed": not unknown_outcome, "retry_same_operation_id": unknown_outcome}) from exc
 
 
 @router.get("/tasks/{case_pick_task_id}/lines/{line_id}/marking-policy")

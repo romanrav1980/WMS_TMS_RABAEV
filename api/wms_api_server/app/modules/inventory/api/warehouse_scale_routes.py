@@ -17,10 +17,10 @@ def manual_empty_tare(task: int, body: ManualEmptyTareRequest,
     if task<1:raise HTTPException(422,"Укажите задание сборки")
     try:return service.manual_tare(task,body,user.username)
     except WarehouseScaleError as exc:
-        error=failure(exc)
-        error.detail.update(operation_id=body.operation_id,retry_same_operation_id=exc.status>=500 or exc.status==403 or "CONFLICT"in str(exc))
-        if error.detail["retry_same_operation_id"]:error.detail["outcome_confirmed"]=False
-        raise error from exc
+        uncertain=exc.status>=500 or exc.status==403 or "CONFLICT"in str(exc)
+        raise HTTPException(exc.status,{"code":exc.code,"message":str(exc),
+            "operation_id":body.operation_id,"retry_same_operation_id":uncertain,
+            "outcome_confirmed":not uncertain})from exc
 
 
 def failure(exc: WarehouseScaleError) -> HTTPException:
@@ -53,7 +53,7 @@ def capture(body: WarehouseScalePacket, user: AdminUser = Depends(require_permis
 
 @router.get("/captures")
 def readings(task: int = Query(ge=1), line: int = Query(ge=1),
-             user: AdminUser = Depends(require_permission("case_pick_execute")),
+             user: AdminUser = Depends(get_current_user),
              service: WarehouseScalePort = Depends(warehouse_scale_service)) -> dict[str, Any]:
     try:
         return service.readings(task, line, user.username)
@@ -62,7 +62,7 @@ def readings(task: int = Query(ge=1), line: int = Query(ge=1),
 
 
 @router.get("/captures/{key}")
-def reading(key: str, user: AdminUser = Depends(require_permission("case_pick_execute")),
+def reading(key: str, user: AdminUser = Depends(get_current_user),
             service: WarehouseScalePort = Depends(warehouse_scale_service)) -> dict[str, Any]:
     if len(key) != 64 or any(c not in "0123456789ABCDEF" for c in key):
         raise HTTPException(422, "Scale capture key required")
@@ -80,7 +80,7 @@ def final_capture(body:WarehouseFinalScalePacket,user:AdminUser=Depends(require_
         error=failure(exc);error.detail.update(device_id=body.device_id,capture_id=body.capture_id);raise error from exc
 
 @router.get("/final-captures")
-def final_readings(task:int=Query(ge=1),user:AdminUser=Depends(require_permission("case_pick_execute")),
+def final_readings(task:int=Query(ge=1),user:AdminUser=Depends(get_current_user),
                    service:WarehouseScalePort=Depends(warehouse_scale_service))->dict[str,Any]:
     try:return service.final_readings(task,user.username)
     except WarehouseScaleError as exc:raise failure(exc)from exc

@@ -9,7 +9,8 @@
   panel=node("section");panel.className="tsd-panel";
   panel.append(node("h3","Этикетка пустой коробки SSCC"),node("p","До отбора выдайте этикетку, прикрепите её и подтвердите сканированием. Повторная печать сохраняет идентификатор."));
   issue=node("button","Выдать SSCC");retry=node("button","Повторить сохранённую выдачу");print=node("button","Печать");confirm=node("button","Подтвердить этикетку");scan=node("input");scan.autocomplete="off";scan.setAttribute("aria-label","Скан прикреплённого SSCC");message=node("p");
-  tareNote=node("p");tareRefresh=node("button","Обновить показание пустой тары");tareRefresh.onclick=refresh;panel.append(issue,retry,print,scan,confirm,message,tareNote,tareRefresh);
+  for(const [button,title,id]of [[issue,"Выпустить этикетку пустого короба; выдача сохраняется для точного повтора.","case.label.issue"],[retry,"Повторить сохранённый запрос без смены идентификатора операции.","case.label.retry"],[print,"Открыть прежнюю этикетку для печати; новый идентификатор не создаётся.","case.label.print"],[confirm,"Проверить скан прикреплённой к этому коробу этикетки.","case.label.confirm"]]){button.title=title;button.dataset.helpId=id;}
+  tareNote=node("p");tareNote.id="cpCaseLabelTare";tareRefresh=node("button","Обновить показание пустой тары");tareRefresh.title="Перечитать подтверждённый ручной вес и показания электронных весов этого короба.";tareRefresh.dataset.helpId="case.tare.refresh";tareRefresh.onclick=refresh;panel.append(issue,retry,print,scan,confirm,message,tareNote,tareRefresh);
   document.getElementById("cpTsdWeightedBox").after(panel);
   issue.onclick=()=>submit(false);retry.onclick=()=>submit(true);
   print.onclick=async()=>{
@@ -34,17 +35,17 @@
  }
  async function refresh(){
   mount();const id=cpTsd.task?.case_pick_task_id,gen=++generation;
-  current=null;issue.disabled=true;print.disabled=true;confirm.disabled=true;retry.hidden=!localStorage.getItem(storageKey());
+  current=null;message.textContent="";tareNote.textContent="";tareNote.hidden=true;scan.value="";issue.disabled=true;print.disabled=true;confirm.disabled=true;retry.hidden=!localStorage.getItem(storageKey());
   panel.hidden=!id;if(!id)return;
   try{
    const data=await cpTsdFetch(path(id));if(gen!==generation||id!==cpTsd.task?.case_pick_task_id)return;
    current=data;print.disabled=!data.issued;confirm.disabled=!data.issued||data.confirmed;
-   issue.disabled=data.issued||!["NEW","ASSIGNED"].includes(cpTsd.task.status)||!!localStorage.getItem(storageKey());
+   issue.disabled=data.issued||(!["NEW","ASSIGNED","IN_PROGRESS"].includes(cpTsd.task.status)||Number(cpTsd.task.picked_qty)>0)||!!localStorage.getItem(storageKey());
    tareNote.hidden=!data.final_scale_required;tareRefresh.hidden=!data.final_scale_required;
    const readings=data.final_scale_required?await cpTsdFetch("/api/inventory/warehouse-scales/final-captures?task="+id):{items:[]};
    if(gen!==generation||id!==cpTsd.task?.case_pick_task_id)return;
    const tare=(readings.items||[]).find(item=>item.purpose==="EMPTY_TARE"&&item.scan_container===cpTsd.task.sscc);
-   tareNote.textContent=tare?"Пустая тара измерена: "+tare.weight_kg+" кг / "+tare.device_mode+" / "+tare.measured_at:"До наполнения малой коробки измерьте её пустую тару на весовом посту и обновите показание.";
+   tareNote.textContent=data.manual_empty_tare?"Пустая тара: "+data.manual_empty_tare.tare_weight_kg+" кг, введено вручную; "+data.manual_empty_tare.measurement_ref:tare?"Пустая тара измерена: "+tare.weight_kg+" кг / "+tare.device_mode+" / "+tare.measured_at:"До наполнения малой коробки измерьте её пустую тару на весовом посту и обновите показание.";
    message.textContent=data.issued?data.sscc+" — "+(data.confirmed?"этикетка подтверждена":"требуется скан прикреплённой этикетки"):"SSCC ещё не выдан. Сканируйте текущий идентификатор пустого места.";
   }catch(error){if(gen===generation)message.textContent=error.message;}
  }

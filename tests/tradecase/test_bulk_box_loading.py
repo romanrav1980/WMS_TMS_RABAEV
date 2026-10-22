@@ -14,10 +14,10 @@ BODY=dict(operation_id='BULK.ORIGINAL',identifier='BOX.LEGACY',expected_version=
           content_version=3,gross_weight_kg='10',width_m='0.4',depth_m='0.5',height_m='0.5'))
 
 
-def client(load):
+def client(load,single=None):
     app=FastAPI();app.include_router(routes.router)
     app.dependency_overrides[routes.get_current_user]=lambda:SimpleNamespace(username='worker')
-    app.dependency_overrides[routes.transport_loading_service]=lambda:SimpleNamespace(load=load)
+    app.dependency_overrides[routes.transport_loading_service]=lambda:SimpleNamespace(load=load,load_single=single)
     return TestClient(app)
 
 
@@ -46,3 +46,18 @@ def test_bulk_failure_keeps_original_operation_and_unknown_outcome(status,code):
 def test_client_cannot_override_the_native_action_marker():
     def never(*args):pytest.fail('Malformed action marker reached the writer')
     assert client(never).post('/api/transport/loading/confirm-bulk-box',json=dict(BODY,bulk_box_scan=False)).status_code==422
+
+
+def test_case_carton_reuses_single_writer_with_the_native_composition_signature():
+    calls=[]
+    def never(*args):pytest.fail('CASE carton selected the HU writer')
+    def single(*args):calls.append(args);return dict(operation_id=args[0])
+    body=dict(BODY,source_kind='SINGLE',expected_composition_signature='A'*64)
+    assert client(never,single).post('/api/transport/loading/confirm-bulk-box',json=body).status_code==200
+    assert calls[0][2]['expected_composition_signature']=='A'*64
+    assert calls[0][2]['bulk_box_scan']is True and 'source_kind'not in calls[0][2]
+
+
+def test_case_carton_requires_current_signature():
+    def never(*args):pytest.fail('Unidentified CASE composition reached a writer')
+    assert client(never,never).post('/api/transport/loading/confirm-bulk-box',json=dict(BODY,source_kind='SINGLE')).status_code==422

@@ -145,6 +145,7 @@ function cpTsdStatusClass(status) {
 }
 
 async function cpTsdTaskAction(action) {
+  if(window.wmsCaseManualTare?.hasPending())throw Error("Сначала повторите сохранённое измерение тары.");
   if(window.wmsCaseType?.hasPending())throw new Error("Сначала повторите сохранённое переопределение типа паллеты.");
   const task = cpTsd.task;
   if (!task) throw new Error("Нет выбранного поддона");

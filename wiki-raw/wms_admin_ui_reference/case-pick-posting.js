@@ -44,7 +44,7 @@
       }).catch(error => { if(generation === policyGeneration)cpTsdSetState(error.message); });
   };
   async function post(retry,kind="pick") {
-    if (busy || window.cpTsdStockBusy || window.cpCaseClose?.hasPending() || window.wmsCaseType?.hasPending()) return;
+    if (busy || window.cpTsdStockBusy || window.cpCaseClose?.hasPending() || window.wmsCaseType?.hasPending() || window.wmsCaseManualTare?.hasPending()) return;
     busy = true;window.cpTsdStockBusy = true;cpTsdEl("cpTsdConfirm").disabled = cpTsdEl("cpTsdRetryPosting").disabled = true;
     let storageKey,draftNotice="";
     let attempted = false, priorUnknown = false, capturedRaw=null;

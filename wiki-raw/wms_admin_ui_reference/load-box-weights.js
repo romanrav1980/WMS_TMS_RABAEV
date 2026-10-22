@@ -23,7 +23,8 @@
    }
    fields.push(field);el("loadBoxRows").append(row);
   }
-  if(!fields.length){const text=document.createElement("p");text.textContent="Нет явно идентифицированных физических BOX. Весовой допуск по нормативу товара не подставляется.";el("loadBoxRows").append(text);}
+  el("loadBoxWeightsEnabled").disabled=!fields.length;if(!fields.length)el("loadBoxWeightsEnabled").checked=false;
+  if(!fields.length){const text=document.createElement("p"),measured=nodes.filter(n=>n.kind==="CASE"&&n.scale_qc);text.textContent=measured.length?"Вес "+measured.length+" коробов передаётся из итогового весового контроля. Повторно вводить его здесь не нужно.":"Нет отдельных коробок с собственным идентификатором. Норматив товара не заменяет измерение.";el("loadBoxRows").append(text);}
  }
  function collect(){
   if(!el("loadBoxWeightsEnabled").checked)return undefined;

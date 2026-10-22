@@ -6,7 +6,7 @@
  const intent=window.wmsLoadingIntent.create(scope);
  const modeInput=mode=>el(mode==="SINGLE"?"loadShipment":mode==="RECONCILE"?"loadOriginalOperation":"loadIdentifier").value;
  const status=text=>{el("loadStatus").textContent=text;};
- function controls(){document.querySelectorAll("main input,main select,main button").forEach(n=>{if(!n.closest("#deliveryWindow"))n.disabled=busy;});el("loadRetry").hidden=!pending||!!record?.damaged;el("loadArchive").hidden=!record?.damaged;el("loadRestart").hidden=!pending?.confirmed_rejection;el("tripDepart").disabled=busy||!!pending||trip?.trip?.condition!=="Спланирован"||!trip?.all_members_physically_loaded;el("loadConfirm").disabled=busy||!!pending||trip?.trip?.condition!=="Спланирован";}
+ function controls(){for(const [id,visible]of [["loadShipment",el("loadMode").value==="SINGLE"],["loadOriginalOperation",el("loadMode").value==="RECONCILE"],["loadIdentifier",["HU","BULK"].includes(el("loadMode").value)]])el(id).closest("label").hidden=!visible;el("loadConfirm").textContent=el("loadMode").value==="BULK"?"Погрузить короб":"Подтвердить фактическую погрузку";document.querySelectorAll("main input,main select,main button").forEach(n=>{if(!n.closest("#deliveryWindow"))n.disabled=busy;});el("loadRetry").hidden=!pending||!!record?.damaged;el("loadArchive").hidden=!record?.damaged;el("loadRestart").hidden=!pending?.confirmed_rejection;el("tripDepart").disabled=busy||!!pending||trip?.trip?.condition!=="Спланирован"||!trip?.all_members_physically_loaded;el("loadConfirm").disabled=busy||!!pending||trip?.trip?.condition!=="Спланирован";}
  async function request(path,body){
   const r=await fetch(base()+path,{method:body?"POST":"GET",headers:{...window.wmsAdminAuth.headers(),...(body?{"Content-Type":"application/json"}:{})},...(body?{body:JSON.stringify(body)}:{})});
   const data=await r.json();if(!r.ok){const error=new Error(JSON.stringify(data.detail||data));error.status=r.status;error.confirmed=(r.status===422||data.detail?.outcome_confirmed===true)&&![401,403].includes(r.status)&&!String(data.detail?.message||data.detail?.code||"").includes("CONFLICT");throw error;}return data;
@@ -51,14 +51,15 @@
   if(busy)return;const mode=el("loadMode").value,input=modeInput(mode),key=scope(),version=++generation;window.wmsPalletFloorType.reset();
   clearMeasurements();composition=null;window.wmsPhysicalBoxes.render(null);el("loadCompositionSummary").textContent="";
   try{
-   const preview=await request(mode==="RECONCILE"?"/api/transport/loading/reconciliation-preview?shipping_operation_id="+encodeURIComponent(input):mode==="SINGLE"?"/api/transport/loading/single-preview?shipment_identifier="+encodeURIComponent(input):"/api/warehouse-hus/composition?identifier="+encodeURIComponent(input));const data=mode==="HU"?preview:preview.snapshot;
+   const preview=await request(mode==="RECONCILE"?"/api/transport/loading/reconciliation-preview?shipping_operation_id="+encodeURIComponent(input):mode==="SINGLE"?"/api/transport/loading/single-preview?shipment_identifier="+encodeURIComponent(input):mode==="BULK"?"/api/transport/loading/bulk-box-preview?identifier="+encodeURIComponent(input):"/api/warehouse-hus/composition?identifier="+encodeURIComponent(input));const data=mode==="HU"?preview:preview.snapshot;
    if(key!==scope()||version!==generation||mode!==el("loadMode").value||input!==modeInput(mode))return;
-   if(preview.already_reconciled||(mode!=="RECONCILE"&&data.historical_composition)||(mode!=="SINGLE"&&data.nodes[0].kind!=="CONTAINER")||data.top_place_count!==1)throw new Error("Выберите актуальное верхнее грузовое место.");
-   composition={...data,input,mode,shipment_identifier:preview.shipment_identifier,shipping_operation_id:preview.shipping_operation_id,composition_signature:preview.composition_signature};
+   if(preview.already_reconciled||(mode!=="RECONCILE"&&data.historical_composition)||(mode!=="SINGLE"&&!(mode==="BULK"&&preview.source_kind==="SINGLE")&&data.nodes[0].kind!=="CONTAINER")||data.top_place_count!==1)throw new Error("Выберите актуальное верхнее грузовое место.");
+   if(mode==="BULK"&&((preview.source_kind!=="SINGLE"&&data.nodes[0].type!=="BOX")||data.ancestors?.length))throw new Error("Сканируйте самостоятельный короб. Если он вложен в паллету, сначала оформите вскрытие.");
+   composition={...data,input,mode,bulk_source_kind:preview.source_kind,bulk_identifier:preview.identifier,shipment_identifier:preview.shipment_identifier,shipping_operation_id:preview.shipping_operation_id,composition_signature:preview.composition_signature};
    window.wmsPhysicalBoxes.render(composition);
    el("loadCompositionSummary").textContent="Версия "+data.nodes[0].version+"; товарных листьев "+data.leaf_count+"; ячейка "+data.cell+". Подтвердите новые измерения всего места.";
    await window.wmsPalletFloorType.read(composition,request,()=>key===scope()&&version===generation&&mode===el("loadMode").value&&input===modeInput(mode));
-  }catch(e){if(key===scope()&&version===generation){composition=null;window.wmsPalletFloorType.reset();status(e.message);}}
+  }catch(e){if(key===scope()&&version===generation){composition=null;window.wmsPhysicalBoxes.render(null);el("loadCompositionSummary").textContent="";window.wmsPalletFloorType.reset();status(e.message);}}
  }
  async function submit(action){
   if(busy||pending||window.wmsPhysicalUnload?.hasPending()||window.wmsPhysicalUnload?.isBusy()||window.wmsDeliveryWindow?.hasPending()||window.wmsDeliveryWindow?.isBusy()){status("Сначала повторите сохранённую операцию.");return;}
@@ -81,7 +82,7 @@
      body.temperature_confirmation={origin:"MANUAL_AT_LOADING",observed_c:observed,vehicle_profile_version:version,observation_reference:reference};
     }
     const boxes=window.wmsPhysicalBoxes.collect();if(boxes)body.physical_boxes=boxes;
-    if(composition.mode==="RECONCILE"){body.identifier=composition.shipping_operation_id;body.expected_composition_signature=composition.composition_signature;path="/api/transport/loading/confirm-reconciliation";}else if(composition.mode==="SINGLE"){body.identifier=composition.shipment_identifier;body.expected_composition_signature=composition.composition_signature;path="/api/transport/loading/confirm-single";}else path="/api/transport/loading/confirm";
+    if(composition.mode==="RECONCILE"){body.identifier=composition.shipping_operation_id;body.expected_composition_signature=composition.composition_signature;path="/api/transport/loading/confirm-reconciliation";}else if(composition.mode==="SINGLE"){body.identifier=composition.shipment_identifier;body.expected_composition_signature=composition.composition_signature;path="/api/transport/loading/confirm-single";}else if(composition.mode==="BULK"){body.source_kind=composition.bulk_source_kind;body.identifier=composition.bulk_identifier;if(body.source_kind==="SINGLE")body.expected_composition_signature=composition.composition_signature;path="/api/transport/loading/confirm-bulk-box";}else path="/api/transport/loading/confirm";
    }else{
     const observed=el("departTempObserved").value,reference=el("departTempReference").value;
     if(observed||reference||el("departTempConfirm").checked){
@@ -128,6 +129,7 @@
  el("loadRetry").addEventListener("click",()=>send(scope()));
  el("loadRestart").addEventListener("click",()=>{try{if(!busy&&pending?.confirmed_rejection){intent.settle(record);record=null;pending=null;controls();status("Исправьте данные. Следующее подтверждение создаст новую операцию.");}}catch(e){status(e.message);}});
  el("loadArchive").addEventListener("click",async()=>{try{if(busy||!record?.damaged)return;intent.archiveDamaged(record);record=null;pending=null;controls();status("Исходный текст сохранён в архиве. Сверьте серверный статус перед новой операцией: архив не отменяет ранее выполненную погрузку.");await refresh();}catch(e){status(e.message);}});
+ el("loadMode").addEventListener("change",()=>{generation++;composition=null;clearMeasurements();window.wmsPhysicalBoxes.render(null);window.wmsPalletFloorType.reset();el("loadCompositionSummary").textContent="";controls();});
  el("loadComposition").title="Перечитать состав места; введённые вес, размеры и температура сбросятся для нового измерения.";
  el("loadComposition").dataset.helpId="loading.composition.refresh";
  window.addEventListener("wms-admin-auth-ready",auth);auth();

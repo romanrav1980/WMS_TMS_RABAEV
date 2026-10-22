@@ -88,7 +88,7 @@ def prepare():
     print(json.dumps({k:s[k]for k in ["warehouse_id","case","line","wave","admission_before"]}))
 
 
-def execute():
+def execute(return_after=True):
     assert "case" in s
     case = f"/api/case-pick/tasks/{s['case']}"
     with oracle_connection()as conn:
@@ -117,8 +117,8 @@ def execute():
     resource=step("resource","/api/resources",dict(resource_code=tag,resource_name="Factory CASE QA",resource_type="CASE_PICKER",resource_class="PERSON",user_id=actor,ware_id=w))["id"]
     step("qualification",f"/api/resources/{resource}/qualifications",dict(task_type="CASE_PICK",active=True),"PUT")
     session=step("session","/api/resources/sessions/login",dict(shift_id=shift,resource_id=resource,operator_user_id=actor,terminal_id="QA_NOT_HARDWARE"))["id"]
-    step("tare_count","/api/inventory/tare/count",dict(operation_id=tag+".tare.count",owner_ware_id=w,pallet_type_id=1,condition="GOOD",observed_quantity="1",expected_version=0,reason="Synthetic fixture, not physical tare survey",decision_reference="TEST_FIXTURE_NOT_HARDWARE:"+tag))
-    step("tare_book","/api/inventory/tare/book",dict(operation_id=tag+".tare.book",place_kind="CASE",place_id=str(s["case"]),expected_warehouse_id=w,pallet_type_id=1))
+    step("tare_count","/api/inventory/tare/count",dict(operation_id=tag+".tare.count",owner_ware_id=w,pallet_type_id=s.get("pallet_type_id",1),condition="GOOD",observed_quantity="1",expected_version=0,reason="Synthetic fixture, not physical tare survey",decision_reference="TEST_FIXTURE_NOT_HARDWARE:"+tag))
+    step("tare_book","/api/inventory/tare/book",dict(operation_id=tag+".tare.book",place_kind="CASE",place_id=str(s["case"]),expected_warehouse_id=w,pallet_type_id=s.get("pallet_type_id",1)))
     for action in ["CLAIM","START"]:
         if action not in s:
             ctx=expect(200,own("GET",case+"/resource-context"))
@@ -131,7 +131,12 @@ def execute():
         s["pick_body"]=dict(operation_id=tag+".pick",fact_qty="2",scan_cell=s["pick"],scan_product=s["article"],scan_container=carrier,resource_id=resource,resource_session_id=session,unit_scans=scans);save()
     step("picked",case+f"/lines/{s['line']}/confirm",s["pick_body"],actor=actor,password=password)
     assert expect(200,own("POST",case+f"/lines/{s['line']}/confirm",s["pick_body"]))==s["picked"]
-    step("closed",case+"/close-current",dict(operation_id=tag+".close",expected_content_version=1),actor=actor,password=password)
+    if "close_body" not in s:
+        with oracle_connection()as conn:
+            q=conn.cursor();q.execute("select CONTENT_VERSION from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:t",t=s["case"])
+            s["close_body"]=dict(operation_id=tag+".close",expected_content_version=q.fetchone()[0]);save()
+    step("closed",case+"/close-current",s["close_body"],actor=actor,password=password)
+    if not return_after:return
     with oracle_connection()as conn:
         q=conn.cursor();q.execute("select SSCC,CONTENT_VERSION from RRL_CASE_PICK_TASK where CASE_PICK_TASK_ID=:t",t=s["case"]);carrier,version=q.fetchone()
         q.execute("select lot.LOT_UID,l.CELL_CODE from RRL_CASE_CARRIER_LOT lot join RRL_CASE_PICK_LINE l on l.CASE_PICK_LINE_ID=lot.CASE_PICK_LINE_ID where lot.CASE_PICK_TASK_ID=:t",t=s["case"]);destinations=dict(q.fetchall())

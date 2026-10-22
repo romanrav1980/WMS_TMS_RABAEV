@@ -19,6 +19,17 @@ class TransportLoading:
     def load(self, operation_id: str, identifier: str, metadata: dict[str, Any], actor: str) -> dict[str, Any]:
         return self.post("HU_SHIP", operation_id, {"uid": identifier}, metadata, actor)
 
+    def preview_bulk(self, identifier: str, actor: str) -> dict[str, Any]:
+        from .bulk_loading_read import bulk_loading_preview
+        try:return bulk_loading_preview(self.gateway,identifier,actor)
+        except oracledb.DatabaseError as exc:
+            code=getattr(exc.args[0],"code",0)
+            if code==20882:
+                raise TransportLoadingError("BULK_BOX_FORBIDDEN",str(exc.args[0]).split("\n",1)[0],status=403)from exc
+            if code==1403 or 20800<=abs(code)<=20999:
+                raise TransportLoadingError("BULK_BOX_SOURCE_UNAVAILABLE",str(exc.args[0]).split("\n",1)[0])from exc
+            raise
+
     def unload(self, operation_id: str, load_operation_id: str, metadata: dict[str, Any], actor: str) -> dict[str, Any]:
         return self.post("UNLOAD_SHIPMENT", operation_id, {"load_operation_id": load_operation_id}, metadata, actor)
 

@@ -1,5 +1,6 @@
 """Measure real CASE request stages in an isolated process; never record bind values."""
 from contextlib import contextmanager
+import argparse
 from hashlib import sha256
 import json
 from pathlib import Path
@@ -42,7 +43,8 @@ def measured_log(self, connection, sql, params, started, row_count, error_text, 
     label = ('AUTH' if 'from RUSERS' in sql else
              'AUDIT_START' if 'RRL_API_AUDIT_API.start_call' in sql else
              'AUDIT_FINISH' if 'RRL_API_AUDIT_API.finish_call' in sql else
-             'CASE_QUEUE' if sql == 'Current CASE queue READ ONLY snapshot' else operation_kind)
+             'CASE_QUEUE' if sql == 'Current CASE queue READ ONLY snapshot' else
+             'QC_STATUS' if sql == 'Current warehouse QC status access' else operation_kind)
     began = perf_counter()
     original_log(self, connection, sql, params, started, row_count, error_text, operation_kind)
     events[-1].update(stage=label, sql_ms=round(elapsed, 3),
@@ -50,6 +52,10 @@ def measured_log(self, connection, sql, params, started, row_count, error_text, 
 
 
 if __name__ == '__main__':
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--path',default='/api/case-pick/tasks?scope=all&limit=200')
+    parser.add_argument('--out',type=Path,default=OUT)
+    args=parser.parse_args()
     report = dict(status='FAIL', transport='in-process ASGI with real Oracle and audit middleware',
                   startup='No lifespan workers; new process and new Oracle pool', physical_writes=0, samples=[])
     try:
@@ -61,18 +67,18 @@ if __name__ == '__main__':
             for i in range(6):
                 events.clear()
                 began = perf_counter()
-                response = client.get('/api/case-pick/tasks?scope=all&limit=200', auth=('admin', 'admin123'))
+                response = client.get(args.path, auth=('admin', 'admin123'))
                 elapsed = (perf_counter()-began)*1000
                 assert response.status_code == 200, response.status_code
                 digest = sha256(response.content).hexdigest()
                 if expected is None: expected = digest
                 assert digest == expected, 'CASE results changed'
-                report['samples'].append(dict(round=i, total_ms=round(elapsed, 3), rows=len(response.json()),
+                report['samples'].append(dict(round=i, total_ms=round(elapsed, 3), rows=len(response.json())if isinstance(response.json(),list)else None,
                     sha=digest, request_id=response.headers.get('x-wms-request-id'), leases=list(events)))
             report['status'] = 'PASS'
     except Exception as exc:
         report['error'] = str(exc)
         raise
     finally:
-        OUT.write_text(json.dumps(report, indent=2), encoding='utf-8')
+        args.out.write_text(json.dumps(report, indent=2), encoding='utf-8')
     print(json.dumps(report))

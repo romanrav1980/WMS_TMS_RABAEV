@@ -1,8 +1,8 @@
 """Scan the real upper place, vehicle and dock; departure is a separate command."""
 from decimal import Decimal
 from typing import Any, Literal
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel, ConfigDict, Field
+from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from ...platform.public import AdminUser, get_current_user, require_permission
 from ..contracts import TransportLoadingError, TransportLoadingPort, transport_loading_service
 
@@ -77,7 +77,7 @@ def status(task_id: int, user: AdminUser = Depends(get_current_user),
 
 
 def loading_metadata(body: LoadingRequest) -> dict[str, Any]:
-    metadata = body.model_dump(mode="json",exclude={"operation_id","identifier","transport_task_id","scan_vehicle","scan_dock","measurements","physical_boxes","temperature_confirmation"})
+    metadata = body.model_dump(mode="json",exclude={"operation_id","identifier","transport_task_id","scan_vehicle","scan_dock","measurements","physical_boxes","temperature_confirmation","source_kind"})
     metadata["loading_context"]={"transport_task_id":body.transport_task_id,
         "scan_vehicle":body.scan_vehicle,"scan_dock":body.scan_dock,
         "measurements":body.measurements.model_dump(mode="json")}
@@ -97,12 +97,34 @@ def confirm(body: LoadingRequest, user: AdminUser = Depends(get_current_user),
         raise failure(exc) from exc
 
 
+class BulkLoadingRequest(LoadingRequest):
+    source_kind: Literal["HU","SINGLE"] = "HU"
+    expected_composition_signature: str | None = Field(default=None,pattern=r"^[A-F0-9]{64}$")
+
+    @model_validator(mode="after")
+    def require_signature(self) -> "BulkLoadingRequest":
+        if self.source_kind=="SINGLE" and self.expected_composition_signature is None:
+            raise ValueError("Read the current carton composition before loading")
+        return self
+
+
+@router.get("/bulk-box-preview")
+def bulk_box_preview(identifier: str = Query(min_length=1,max_length=200),
+                     user: AdminUser = Depends(get_current_user),
+                     service: TransportLoadingPort = Depends(transport_loading_service)) -> dict[str, Any]:
+    try:return service.preview_bulk(identifier,user.username)
+    except TransportLoadingError as exc:raise failure(exc)from exc
+
+
 @router.post("/confirm-bulk-box")
-def confirm_bulk_box(body: LoadingRequest, user: AdminUser = Depends(get_current_user),
+def confirm_bulk_box(body: BulkLoadingRequest, user: AdminUser = Depends(get_current_user),
                      service: TransportLoadingPort = Depends(transport_loading_service)) -> dict[str, Any]:
     metadata=loading_metadata(body)
     metadata["bulk_box_scan"]=True
     try:
+        if body.source_kind=="SINGLE":
+            return service.load_single(body.operation_id,body.identifier,metadata,user.username)
+        metadata.pop("expected_composition_signature",None)
         return service.load(body.operation_id,body.identifier,metadata,user.username)
     except TransportLoadingError as exc:
         raise failure(exc) from exc

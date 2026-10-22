@@ -15,7 +15,8 @@
   if(!r.value){
    const t=cpTsd.task;if(!t)throw Error('Выберите сборку.');
    if(localStorage.getItem(JSON.stringify(['retailcase.casePickIntent',cpTsdApiBase(),cpTsdUser()])))throw Error('Сначала повторите сохранённый отбор.');
-   if(window.wmsCaseType?.hasPending())throw Error('Сначала повторите изменение типа паллеты.');
+   if(window.wmsCaseManualTare?.hasPending())throw Error("Сначала повторите сохранённое измерение тары.");
+  if(window.wmsCaseType?.hasPending())throw Error('Сначала повторите изменение типа паллеты.');
    r=intent.save({task:t.case_pick_task_id,body:{operation_id:'CASE.CLOSE.UI:'+crypto.randomUUID(),expected_content_version:t.content_version}});
   }
   const current=()=>intent.scope()===r.storageKey&&localStorage.getItem(r.storageKey)===r.raw;
