@@ -88,3 +88,8 @@ from .infrastructure.trade_transport import OracleTradeTransport
 def build_trade_transport()->OracleTradeTransport:
     from ...oracle_gateway import OracleGateway
     return OracleTradeTransport(OracleGateway())
+
+
+def build_trade_deferred_worker() -> Any:
+    from .infrastructure.trade_deferred_worker import TradeDeferredWorker
+    return TradeDeferredWorker(OracleGateway())

@@ -2,7 +2,7 @@
     "date":  "2026-10-19",
     "timezone":  "Europe/Moscow",
     "limit":  7,
-    "used":  6,
+    "used":  7,
     "requests":  [
                      {
                          "id":  "C-0130",
@@ -50,19 +50,28 @@
                          "delivery":  "existing file channel",
                          "grant_date":  "2026-10-22",
                          "registered_at":  "2026-10-22T06:06:15.8615645+00:00",
-                         "status":  "PAUSED K0093; automatic permission review denied Oracle and inventory reads; no implementation delivered",
+                         "status":  "RESULT RELEASE K0096; candidate 9f62fcb8; NOT_APPLIED; Codex native review found replay access issues",
                          "task":  "TRADECASE T08 durable topup approval, stock and capacity reservation, SAP order correlation and acceptance"
+                     },
+                     {
+                         "id":  "C-0145",
+                         "grant_date":  "2026-10-22",
+                         "registered_at":  "2026-10-22T17:29:36.0926307+03:00",
+                         "status":  "RESULT RELEASE K0098; route coverage delivered, pending Codex acceptance",
+                         "delivery":  "existing file channel",
+                         "task":  "T09 real route and order coverage read model/UI, outside blocked inventory and Oracle reads"
                      }
                  ],
     "additional_grants":  [
                               {
                                   "date":  "2026-10-22",
-                                  "used":  2,
+                                  "used":  3,
                                   "authorization":  "Owner explicitly granted three additional Claude Code requests",
                                   "limit":  3,
                                   "request_ids":  [
                                                       "C-0142",
-                                                      "C-0143"
+                                                      "C-0143",
+                                                      "C-0145"
                                                   ]
                               }
                           ]
