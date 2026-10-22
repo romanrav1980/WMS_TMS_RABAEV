@@ -103,7 +103,8 @@ create or replace package body RRL_TRADE_TOPUP_API as
     end;
     -- Same inputs, same space: the existing proposal stays (no second proposal for the same volume).
     if old_row.NEED_VERSION=x.get_number('need_version')and old_row.NEED_SIGNATURE=x.get_string('need_signature')
-     and old_row.CAPACITY_BASIS=basis and old_row.PROPOSED_BOXES=x.get_number('proposed_boxes')and old_row.PRIORITY=x.get_number('priority')then
+     and old_row.CAPACITY_BASIS=basis and old_row.PROPOSED_BOXES=x.get_number('proposed_boxes')and old_row.PRIORITY=x.get_number('priority')
+     and old_row.MAX_AGE_MINUTES=d.get_number('max_age_minutes')and old_row.CALC_SIGNATURE=d.get_string('calculation_signature')then
      reuse:=true;id_value:=old_row.PROPOSAL_ID;
     else
      update RRL_TRADE_TOPUP_PROPOSAL set STATUS='SUPERSEDED',VERSION_NO=VERSION_NO+1,UPDATED_BY=p_actor,UPDATED_AT=systimestamp where PROPOSAL_ID=old_row.PROPOSAL_ID;
