@@ -5,6 +5,7 @@ from typing import Any
 import oracledb
 from ...platform.public import read_oracle_json
 from ..contracts_plan import TransportPlanError
+from ..contracts_preflight import RoadCosts
 from ..domain.preflight_routes import plan_routes
 from ..domain.temperature_preflight import temperature_preflight
 
@@ -109,8 +110,13 @@ def route_result(cur: Any, route: dict[str, Any], rows: list[dict[str, Any]], tr
 
 
 class TransportPreflight:
-    def __init__(self, gateway: Any) -> None:
+    def __init__(self, gateway: Any, road_costs: RoadCosts | None = None) -> None:
         self.gateway = gateway
+        self.road_costs = road_costs
+
+    def refresh_road(self, operation: str, body: dict[str, Any], actor: str) -> dict[str, Any]:
+        from .road_refresh import refresh_road
+        return refresh_road(self.gateway, operation, body, actor, self.road_costs)
 
     def trip_time(self, trip: int, zone: str, actor: str) -> dict[str, Any]:
         from .time_preflight import trip_time_preview

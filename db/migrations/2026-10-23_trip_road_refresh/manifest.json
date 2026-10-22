@@ -1,0 +1,17 @@
+{
+    "migration_id":  "2026-10-23-trip-road-refresh",
+    "target":  "RABAEV/orcl",
+    "new_objects":  [
+                        "RRL_TT_ROAD_REFRESH",
+                        "RRL_TT_ROAD_REFRESH_APPEND"
+                    ],
+    "shared_objects_changed":  [
+
+                               ],
+    "files_sha256":  {
+                         "001_schema.sql":  "0727c00baf51f8ca043af28fb1e2aaf0ad82fd7cafe3a869e89fcddef13b07bd",
+                         "apply.sql":  "5cd69a9313179e40ab2c99822c1850727ded1ddd2268c01707e1982980087c47",
+                         "rollback.sql":  "12bea8ab784385bdebb72f2f8d633ff37ad8146e45d8a5102f8c93d5a3147a7d",
+                         "verify.sql":  "bfafeb8a6e4bee25f2e01bc0b17880f28c96dd0ac39835e6d8c8004f8d3f0b9d"
+                     }
+}

@@ -3,6 +3,7 @@ import { journal } from "./intent";
 import { useCommand } from "./useCommand";
 import { useRead } from "./useRead";
 import { Act, Tech } from "./ui";
+import { RoadRefresh } from "./RoadRefresh";
 
 type Setting = { operation_id: string; kind: "DEPOT" | "DURATION"; warehouse_id: number; trip_id: number;
   expected_version: number; reason: string; depot_address?: string; source_hash?: string;
@@ -60,6 +61,7 @@ export function RouteSettings({ wh, user, trip, version, sourceHash, refreshing,
       disabled={locked || current.loading || !!current.error || !current.data || !depot.trim() || reason.trim().length < 8}
       onClick={() => cmd.start({ ...base, kind: "DEPOT", expected_version: current.data!.version, depot_address: depot.trim() }, after)}>Сохранить адрес склада</Act>
     <h5>Оценка длительности рейса</h5>
+    <RoadRefresh wh={wh} user={user} trip={trip} version={version} sourceHash={sourceHash} refreshing={refreshing} onSaved={after} />
     <label>К точкам доставки, мин <input type="number" min={1} max={1440} step={1} value={drive} disabled={locked} onChange={e => setDrive(e.target.value)} /></label>
     <label>Возврат на склад, мин <input type="number" min={1} max={1440} step={1} value={back} disabled={locked} onChange={e => setBack(e.target.value)} /></label>
     <label>Источник оценки <input value={reference} maxLength={500} disabled={locked} onChange={e => setReference(e.target.value)} /></label>

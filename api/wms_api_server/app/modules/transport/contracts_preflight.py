@@ -1,9 +1,12 @@
 """Read-only boundary to the same native rules used by transport commands."""
-from typing import Any, Protocol
+from typing import Any, Protocol, Callable
 from .contracts_plan import TransportPlanError
+
+RoadCosts = Callable[[list[tuple[float, float]]], tuple[str, list[list[float]], list[list[float]]]]
 
 
 class TransportPreflightPort(Protocol):
+    def refresh_road(self, operation: str, body: dict[str, Any], actor: str) -> dict[str, Any]: ...
     def delivery_windows(self,trip: int,depot: str,max_age: int,zone: str,actor: str) -> dict[str,Any]: ...
     def road_legs(self,trip: int,depot: str,max_age: int,actor: str) -> dict[str,Any]: ...
     def plan(self, plan: int, actor: str) -> dict[str, Any]: ...

@@ -104,6 +104,23 @@ class RouteInput(BaseModel):
     reason: str = Field(min_length=8, max_length=500)
 
 
+class RoadRefresh(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    operation_id: str = Field(min_length=1, max_length=100, pattern=r"^[A-Za-z0-9_.:-]+$")
+    trip_id: int = Field(strict=True, gt=0)
+    expected_version: int = Field(strict=True, ge=0)
+    source_hash: str = Field(pattern=r"^[a-f0-9]{64}$")
+
+
+@router.post("/road-refreshes")
+def refresh_road(body: RoadRefresh, user: AdminUser = Depends(require_permission("transport_dispatch_edit")),
+                 service: TransportPreflightPort = Depends(transport_preflight_service)) -> dict[str, Any]:
+    try:
+        return service.refresh_road(body.operation_id, body.model_dump(exclude={"operation_id"}), user.username)
+    except TransportPlanError as exc:
+        raise HTTPException(exc.status, {"code": exc.code, "message": str(exc)}) from exc
+
+
 @router.get("/trips/{trip_id}/route-context")
 def route_context(trip_id: int, user: AdminUser = Depends(require_permission("transport_dispatch_edit")),
                   service: TransportPreflightPort = Depends(transport_preflight_service)) -> dict[str, Any]:
