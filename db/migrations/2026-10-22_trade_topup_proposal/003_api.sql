@@ -60,7 +60,11 @@ create or replace package body RRL_TRADE_TOPUP_API as
   a:=j.get_array('proposals');
   for i in 0..a.get_size-1 loop
    x:=treat(a.get(i)as json_object_t);
-   select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=x.get_number('proposal_id');
+   declare
+    json_arg_1 number:=x.get_number('proposal_id');
+   begin
+    select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=json_arg_1;
+   end;
    RRL_TRADE_STOCK_GUARD.assert_owner(p_actor,p_ware,p.SOURCE_OWNER_ID,1);
   end loop;
   j.put('replayed',true);p_result:=j.to_clob;
@@ -91,8 +95,12 @@ create or replace package body RRL_TRADE_TOPUP_API as
    RRL_TRADE_STOCK_GUARD.assert_owner(p_actor,ware,x.get_string('source_owner_id'),1);
    reuse:=false;
    begin
-    select*into old_row from RRL_TRADE_TOPUP_PROPOSAL where WARE_ID=ware and TRIP_ID=trip and NEED_ID=x.get_string('need_id')
+    declare
+     json_arg_1 varchar2(32767):=x.get_string('need_id');
+    begin
+     select*into old_row from RRL_TRADE_TOPUP_PROPOSAL where WARE_ID=ware and TRIP_ID=trip and NEED_ID=json_arg_1
      and STATUS in('PROPOSED','ADJUSTED')for update;
+    end;
     -- Same inputs, same space: the existing proposal stays (no second proposal for the same volume).
     if old_row.NEED_VERSION=x.get_number('need_version')and old_row.NEED_SIGNATURE=x.get_string('need_signature')
      and old_row.CAPACITY_BASIS=basis and old_row.PROPOSED_BOXES=x.get_number('proposed_boxes')and old_row.PRIORITY=x.get_number('priority')then
@@ -103,15 +111,37 @@ create or replace package body RRL_TRADE_TOPUP_API as
    exception when no_data_found then null;end;
    if not reuse then
     select RRL_TRADE_TOPUP_PROPOSAL_SQ.nextval into id_value from dual;
-    insert into RRL_TRADE_TOPUP_PROPOSAL(PROPOSAL_ID,WARE_ID,TRIP_ID,TRIP_VERSION,NEED_ID,NEED_VERSION,NEED_SIGNATURE,NEED_SNAPSHOT_AT,
+    declare
+     json_arg_1 number:=d.get_number('trip_version');
+     json_arg_2 varchar2(32767):=x.get_string('need_id');
+     json_arg_3 number:=x.get_number('need_version');
+     json_arg_4 varchar2(32767):=x.get_string('need_signature');
+     json_arg_5 varchar2(32767):=x.get_string('need_snapshot_at');
+     json_arg_6 number:=d.get_number('max_age_minutes');
+     json_arg_7 number:=x.get_number('priority');
+     json_arg_8 varchar2(32767):=x.get_string('recipient_id');
+     json_arg_9 varchar2(32767):=x.get_string('sku_id');
+     json_arg_10 varchar2(32767):=x.get_string('article');
+     json_arg_11 number:=x.get_number('units_per_box');
+     json_arg_12 varchar2(32767):=x.get_string('source_owner_id');
+     json_arg_13 varchar2(32767):=x.get_string('target_owner_id');
+     json_arg_14 number:=x.get_number('mrc');
+     json_arg_15 varchar2(32767):=x.get_string('min_expiry_date');
+     json_arg_16 number:=x.get_number('need_boxes');
+     json_arg_17 number:=x.get_number('proposed_boxes');
+     json_arg_18 varchar2(32767):=d.get_string('calculation_signature');
+     json_arg_19 clob:=x.get_object('calculation').to_clob;
+    begin
+     insert into RRL_TRADE_TOPUP_PROPOSAL(PROPOSAL_ID,WARE_ID,TRIP_ID,TRIP_VERSION,NEED_ID,NEED_VERSION,NEED_SIGNATURE,NEED_SNAPSHOT_AT,
      MAX_AGE_MINUTES,PRIORITY,RECIPIENT_ID,SKU_ID,ARTICLE,UNITS_PER_BOX,SOURCE_OWNER_ID,TARGET_OWNER_ID,MRC,MIN_EXPIRY,NEED_BOXES,
      PROPOSED_BOXES,APPROVED_BOXES,CAPACITY_BASIS,CALC_SIGNATURE,CALC_JSON,STATUS,VERSION_NO,CREATED_BY,UPDATED_BY)
-    values(id_value,ware,trip,d.get_number('trip_version'),x.get_string('need_id'),x.get_number('need_version'),x.get_string('need_signature'),
-     to_timestamp_tz(x.get_string('need_snapshot_at'),'YYYY-MM-DD"T"HH24:MI:SS.FFTZH:TZM'),d.get_number('max_age_minutes'),x.get_number('priority'),
-     x.get_string('recipient_id'),x.get_string('sku_id'),x.get_string('article'),x.get_number('units_per_box'),x.get_string('source_owner_id'),
-     x.get_string('target_owner_id'),x.get_number('mrc'),to_date(x.get_string('min_expiry_date'),'FXYYYY-MM-DD'),x.get_number('need_boxes'),
-     x.get_number('proposed_boxes'),x.get_number('proposed_boxes'),basis,d.get_string('calculation_signature'),x.get_object('calculation').to_clob,
+    values(id_value,ware,trip,json_arg_1,json_arg_2,json_arg_3,json_arg_4,
+     to_timestamp_tz(json_arg_5,'YYYY-MM-DD"T"HH24:MI:SS.FFTZH:TZM'),json_arg_6,json_arg_7,
+     json_arg_8,json_arg_9,json_arg_10,json_arg_11,json_arg_12,
+     json_arg_13,json_arg_14,to_date(json_arg_15,'FXYYYY-MM-DD'),json_arg_16,
+     json_arg_17,json_arg_17,basis,json_arg_18,json_arg_19,
      'PROPOSED',1,p_actor,p_actor);
+    end;
    end if;
    out_json.append(json_object_t.parse(RRL_TRADE_TOPUP_READ.card(id_value)));
   end loop;
@@ -125,7 +155,11 @@ create or replace package body RRL_TRADE_TOPUP_API as
   op varchar2(100):=d.get_string('operation_id');action varchar2(20):=d.get_string('action');boxes number:=d.get_number('boxes');hash_value varchar2(64):=sha(p_request);
  begin
   if op is null or action is null or action not in('ADJUST','REJECT')then fail('TRADE_TOPUP_REQUEST_INVALID');end if;
-  begin select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=d.get_number('proposal_id');
+  begin declare
+   json_arg_1 number:=d.get_number('proposal_id');
+  begin
+   select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=json_arg_1;
+  end;
   exception when no_data_found then fail('TRADE_TOPUP_PROPOSAL_NOT_FOUND');end;
   same_scope(p,d);lock_site(p.WARE_ID);
   require(p_actor,'tradecase_topup_approve',p.WARE_ID);RRL_TRADE_STOCK_GUARD.assert_owner(p_actor,p.WARE_ID,p.SOURCE_OWNER_ID,1);
@@ -150,7 +184,11 @@ create or replace package body RRL_TRADE_TOPUP_API as
   hash_value varchar2(64):=sha(p_request);site_source varchar2(100);
  begin
   if source_value is null or event_value is null or order_value is null then fail('TRADE_TOPUP_REQUEST_INVALID');end if;
-  begin select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=d.get_number('proposal_id');
+  begin declare
+   json_arg_1 number:=d.get_number('proposal_id');
+  begin
+   select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=json_arg_1;
+  end;
   exception when no_data_found then fail('TRADE_TOPUP_PROPOSAL_NOT_FOUND');end;
   same_scope(p,d);lock_site(p.WARE_ID);
   require(p_actor,'tradecase_topup_result',p.WARE_ID);

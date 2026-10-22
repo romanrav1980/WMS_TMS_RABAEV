@@ -81,7 +81,6 @@ class OracleTopupProposals:
                                max_age_minutes=body.max_age_minutes, capacity_basis=basis,
                                calculation_signature=calculation["calculation_signature"], items=_items(calculation))
                 result = _call(cur, "RRL_TRADE_TOPUP_API.save", request, actor)
-                result["calculation"] = {k: v for k, v in calculation.items() if k != "items"}
                 return result
         except TradecaseError as exc:
             raise TradeTransportError(exc.code, exc.status) from exc

@@ -29,7 +29,11 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
   f json_array_t:=json_array_t();r json_array_t:=json_array_t();v json_object_t:=json_object_t();sources json_array_t:=json_array_t();
   plan json_array_t;x json_object_t;item json_object_t;p RRL_TRADE_TOPUP_PROPOSAL%rowtype;rid number;total number:=0;needed number;
  begin
-  begin select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=s.get_number('proposal_id');
+  begin declare
+   json_arg_1 number:=s.get_number('proposal_id');
+  begin
+   select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=json_arg_1;
+  end;
   exception when no_data_found then fail('TRADE_TOPUP_PROPOSAL_NOT_FOUND');end;
   if s.get_number('warehouse')is null or s.get_number('warehouse')<>p.WARE_ID or nvl(s.get_string('trip_id'),'-')<>p.TRIP_ID then
    fail('TRADE_TOPUP_PROPOSAL_NOT_FOUND');end if;
@@ -96,7 +100,11 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
   p RRL_TRADE_TOPUP_PROPOSAL%rowtype;
  begin
   lock table RRL_ACCESS_REV in share mode wait 5;
-  begin select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=s.get_number('proposal_id');
+  begin declare
+   json_arg_1 number:=s.get_number('proposal_id');
+  begin
+   select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=json_arg_1;
+  end;
   exception when no_data_found then fail('TRADE_TOPUP_PROPOSAL_NOT_FOUND');end;
   if s.get_number('warehouse')is null or s.get_number('warehouse')<>p.WARE_ID or nvl(s.get_string('trip_id'),'-')<>p.TRIP_ID then
    fail('TRADE_TOPUP_PROPOSAL_NOT_FOUND');end if;
@@ -123,19 +131,30 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
   if free_units-RRL_TRADE_TOPUP_READ.protected_units(p.WARE_ID,p.SKU_ID,p.SOURCE_OWNER_ID,p.MRC)<needed then fail('TRADE_TOPUP_MAIN_ORDER_STOCK_PROTECTED');end if;
   for i in 0..sources.get_size-1 loop
    x:=treat(sources.get(i)as json_object_t);keys:=x.get_array('units').to_clob;qty:=x.get_number('quantity');
-   select count(*)into n from RRL_WMS_RECEIPT_UNIT u join RRL_TRADE_STOCK_ATTR a on a.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY
-    where u.CURRENT_UID=x.get_string('uid')and u.CURRENT_CELL=x.get_string('cell')and u.STOCK_STATUS='AVAILABLE'and u.HARD_RESERVATION_ID is null
+   declare
+    json_arg_1 varchar2(32767):=x.get_string('uid');
+    json_arg_2 varchar2(32767):=x.get_string('cell');
+   begin
+    select count(*)into n from RRL_WMS_RECEIPT_UNIT u join RRL_TRADE_STOCK_ATTR a on a.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY
+    where u.CURRENT_UID=json_arg_1and u.CURRENT_CELL=json_arg_2and u.STOCK_STATUS='AVAILABLE'and u.HARD_RESERVATION_ID is null
      and a.SKU_ID=p.SKU_ID and a.OWNER_ID=p.SOURCE_OWNER_ID and a.MRC=p.MRC and a.MARK_STATE='VALID'and a.EXPIRY_DATE>=p.MIN_EXPIRY
      and not exists(select 1 from RRL_TRADE_BUYOUT_UNIT bu where bu.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY and bu.HOLD_ACTIVE=1)
      and u.PHYSICAL_UNIT_KEY in(select K from json_table(keys,'$[*]'columns(K varchar2(64)path'$')));
+   end;
    if n<>qty then fail('TRADE_TOPUP_STOCK_CHANGED');end if;
    RRL_STOCK_ELIGIBILITY.assert_source(x.get_string('uid'),x.get_string('cell'),p.WARE_ID,qty,null,null,'REPLENISH',null,p.ARTICLE);
    details:=json_object_t();details.put('reservation_scope','QTY');details.put('priority',100);
    RRL_STOCK_RESERVE_CORE.create_hard(x.get_number('reservation_id'),x.get_string('uid'),x.get_string('cell'),qty,'EA',ver,
     'TRADE_TOPUP',p.PROPOSAL_ID,null,'SHIPMENT',p_actor,details.to_clob);
    RRL_STOCK_UNIT_CORE.reserve_units(x.get_string('uid'),x.get_string('cell'),x.get_number('reservation_id'),qty,keys);
-   insert into RRL_TRADE_TOPUP_HOLD(RESERVATION_ID,PROPOSAL_ID,UID_PALLET,CELL,BASE_QTY,STATUS,CREATED_OPERATION_ID)
-    values(x.get_number('reservation_id'),p.PROPOSAL_ID,x.get_string('uid'),x.get_string('cell'),qty,'ACTIVE',p_op);
+   declare
+    json_arg_1 number:=x.get_number('reservation_id');
+    json_arg_2 varchar2(32767):=x.get_string('uid');
+    json_arg_3 varchar2(32767):=x.get_string('cell');
+   begin
+    insert into RRL_TRADE_TOPUP_HOLD(RESERVATION_ID,PROPOSAL_ID,UID_PALLET,CELL,BASE_QTY,STATUS,CREATED_OPERATION_ID)
+    values(json_arg_1,p.PROPOSAL_ID,json_arg_2,json_arg_3,qty,'ACTIVE',p_op);
+   end;
   end loop;
   update RRL_TRADE_TOPUP_PROPOSAL set STATUS='CONFIRMED',VERSION_NO=VERSION_NO+1,CONFIRM_OPERATION_ID=p_op,UPDATED_BY=p_actor,UPDATED_AT=systimestamp
    where PROPOSAL_ID=p.PROPOSAL_ID;
@@ -154,9 +173,18 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
    if p.STATUS<>'CONFIRMED'then fail('TRADE_TOPUP_STATE_CONFLICT');end if;
    sap:=m.get_object('sap');
    if sap is null or sap.get_string('event_id')is null or sap.get_string('reason')is null then fail('TRADE_TOPUP_SAP_REASON_REQUIRED');end if;
-   select count(*)into n from RRL_TRADE_SITE where WARE_ID=p.WARE_ID and SOURCE_ID=sap.get_string('source_id');
+   declare
+    json_arg_1 varchar2(32767):=sap.get_string('source_id');
+   begin
+    select count(*)into n from RRL_TRADE_SITE where WARE_ID=p.WARE_ID and SOURCE_ID=json_arg_1;
+   end;
    if n<>1 then fail('TRADE_TOPUP_SOURCE_MISMATCH');end if;
-   select count(*)into n from RRL_TRADE_TOPUP_EVENT where WARE_ID=p.WARE_ID and SOURCE_ID=sap.get_string('source_id')and EVENT_ID=sap.get_string('event_id');
+   declare
+    json_arg_1 varchar2(32767):=sap.get_string('source_id');
+    json_arg_2 varchar2(32767):=sap.get_string('event_id');
+   begin
+    select count(*)into n from RRL_TRADE_TOPUP_EVENT where WARE_ID=p.WARE_ID and SOURCE_ID=json_arg_1and EVENT_ID=json_arg_2;
+   end;
    if n>0 then fail('TRADE_TOPUP_EVENT_ALREADY_RECORDED');end if;
   elsif reason_value='CANCELLED'then
    if p.STATUS not in('CONFIRMED','SAP_ACCEPTED')then fail('TRADE_TOPUP_STATE_CONFLICT');end if;
@@ -168,18 +196,33 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
   if n<>sources.get_size then fail('TRADE_TOPUP_HOLDS_CHANGED');end if;
   for i in 0..sources.get_size-1 loop
    x:=treat(sources.get(i)as json_object_t);
-   select*into h from RRL_TRADE_TOPUP_HOLD where RESERVATION_ID=x.get_number('reservation_id')and PROPOSAL_ID=p.PROPOSAL_ID and STATUS='ACTIVE'for update;
+   declare
+    json_arg_1 number:=x.get_number('reservation_id');
+   begin
+    select*into h from RRL_TRADE_TOPUP_HOLD where RESERVATION_ID=json_arg_1and PROPOSAL_ID=p.PROPOSAL_ID and STATUS='ACTIVE'for update;
+   end;
    RRL_STOCK_UNIT_CORE.release_units(h.RESERVATION_ID,h.BASE_QTY,null,0);
    RRL_STOCK_RESERVE_CORE.release_hard(h.RESERVATION_ID,h.BASE_QTY,ver,'TRADE_TOPUP',p.PROPOSAL_ID,p_actor);
    update RRL_TRADE_TOPUP_HOLD set STATUS='RELEASED',RELEASED_OPERATION_ID=p_op where RESERVATION_ID=h.RESERVATION_ID;
   end loop;
-  update RRL_TRADE_TOPUP_PROPOSAL set STATUS=case when reason_value='SAP_REJECTED'then'SAP_REJECTED'else'CANCELLED'end,
-   SAP_REASON=case when reason_value='SAP_REJECTED'then substr(sap.get_string('reason'),1,2000)else SAP_REASON end,
+  declare
+   json_arg_1 varchar2(32767):=sap.get_string('reason');
+  begin
+   update RRL_TRADE_TOPUP_PROPOSAL set STATUS=case when reason_value='SAP_REJECTED'then'SAP_REJECTED'else'CANCELLED'end,
+   SAP_REASON=case when reason_value='SAP_REJECTED'then substr(json_arg_1,1,2000)else SAP_REASON end,
    VERSION_NO=VERSION_NO+1,UPDATED_BY=p_actor,UPDATED_AT=systimestamp where PROPOSAL_ID=p.PROPOSAL_ID;
+  end;
   if reason_value='SAP_REJECTED'then
-   insert into RRL_TRADE_TOPUP_EVENT(WARE_ID,SOURCE_ID,EVENT_ID,PROPOSAL_ID,PAYLOAD_HASH,BODY_JSON,RESULT_JSON)
-    values(p.WARE_ID,sap.get_string('source_id'),sap.get_string('event_id'),p.PROPOSAL_ID,nvl(sap.get_string('payload_hash'),'-'),sap.to_clob,
+   declare
+    json_arg_1 varchar2(32767):=sap.get_string('source_id');
+    json_arg_2 varchar2(32767):=sap.get_string('event_id');
+    json_arg_3 varchar2(32767):=sap.get_string('payload_hash');
+    json_arg_4 clob:=sap.to_clob;
+   begin
+    insert into RRL_TRADE_TOPUP_EVENT(WARE_ID,SOURCE_ID,EVENT_ID,PROPOSAL_ID,PAYLOAD_HASH,BODY_JSON,RESULT_JSON)
+    values(p.WARE_ID,json_arg_1,json_arg_2,p.PROPOSAL_ID,nvl(json_arg_3,'-'),json_arg_4,
      RRL_TRADE_TOPUP_READ.card(p.PROPOSAL_ID));
+   end;
   elsif p.REQUEST_OUTBOX_ID is not null then
    -- SAP already got the request: it must also learn about the cancellation (one event per proposal).
    body:=json_object_t.parse(RRL_TRADE_TOPUP_READ.card(p.PROPOSAL_ID));
@@ -193,7 +236,11 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
   op varchar2(100):=d.get_string('operation_id');v json_object_t:=domain_of(d.get_string('operation_id'));p RRL_TRADE_TOPUP_PROPOSAL%rowtype;j json_object_t;
   action varchar2(20);
  begin
-  select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=v.get_number('proposal_id');
+  declare
+   json_arg_1 number:=v.get_number('proposal_id');
+  begin
+   select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=json_arg_1;
+  end;
   lock_scope(p,m.get_number('expected_version'));
   if kind='TRADE_TOPUP_RELEASE'and m.get_string('reason')='SAP_REJECTED'then require(p_actor,'tradecase_topup_result',p.WARE_ID);
   else require(p_actor,'tradecase_topup_approve',p.WARE_ID);end if;
