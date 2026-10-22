@@ -166,7 +166,7 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
 
  procedure release(p in out nocopy RRL_TRADE_TOPUP_PROPOSAL%rowtype,v json_object_t,m json_object_t,p_op varchar2,p_actor varchar2)is
   sources json_array_t:=v.get_array('sources');x json_object_t;h RRL_TRADE_TOPUP_HOLD%rowtype;reason_value varchar2(20):=m.get_string('reason');
-  sap json_object_t;ver number:=uom_version(p.ARTICLE);n number;outbox number;body json_object_t;
+  sap json_object_t:=json_object_t();ver number:=uom_version(p.ARTICLE);n number;outbox number;body json_object_t;
  begin
   if reason_value='SAP_REJECTED'then
    if p.STATUS<>'CONFIRMED'then fail('TRADE_TOPUP_STATE_CONFLICT');end if;

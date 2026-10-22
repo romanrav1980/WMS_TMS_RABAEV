@@ -111,6 +111,8 @@ class OracleTopupProposals:
                                source={"type": "TRADE_TOPUP", "proposal_id": proposal, "warehouse": ware, "trip_id": trip}, metadata=metadata)
         try:
             return build_stock_posting_service().post(command)
+        except oracledb.DatabaseError as exc:
+            raise _oracle_error(exc) from exc
         except StockPostingError as exc:
             uncertain = exc.code in UNCERTAIN
             # An unknown outcome is never reported as a refusal: the same operation must be repeated.
