@@ -94,7 +94,10 @@ if __name__=='__main__':
     os.environ['TRADECASE_ADMIN_USER']='admin';os.environ['TRADECASE_ADMIN_PASSWORD']=re.search(r'PASS=(\S+?)[`,)\s]',(ROOT/'AGENTS.md').read_text(encoding='utf-8'))[1]
     try:
         if s.get('status')!='PASS':
-            actor,password,base=prepare();probes(actor,password,base);cleanup(base);s['status']='PASS';save()
+            if '--cleanup'in sys.argv:cleanup(f"/api/case-pick/tasks/{s['case']}")
+            else:
+                actor,password,base=prepare();probes(actor,password,base);cleanup(base)
+            s['status']='PASS';save()
         print(json.dumps(dict(status=s['status'],case=s['case'],stock=s['stock_after'],qa_retired=s['qa_retired'])))
     except Exception as exc:s['error']=str(exc);save();raise
     finally:s['history']+=CALLS;save()
