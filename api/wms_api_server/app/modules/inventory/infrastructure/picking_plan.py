@@ -32,7 +32,7 @@ def create_existing_plan(gateway: OracleGateway,request: PickingPlanCreateReques
                 "message":"Проверьте справочники товара, единицы измерения и настройки обеспечения.","outcome_confirmed":True})from exc
         if code==20882:status=403
         elif code==20886 and "PICK_ORDER_IDENTITY_MISSING"in str(detail):status=404
-        elif code in {1,20840,20846,20850,20860,20873,20881,20886,20890}:status=409
+        elif code in {1,20840,20846,20850,20860,20873,20881,20886,20890,20911}:status=409
         elif code in {20868,20980}:status=422
         else:raise
         raise HTTPException(status,detail=str(detail).split("\n",1)[0])from exc
