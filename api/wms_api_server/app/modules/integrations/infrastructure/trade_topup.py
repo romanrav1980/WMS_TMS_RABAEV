@@ -13,11 +13,32 @@ from .trade_capacity import capacity_context, _box, _document
 from .trade_need import need_snapshot
 
 
-def _confirmed(cur: Any, ware: int, trip: str) -> list[tuple[str, int]]:
-    """Top-ups already confirmed for this trip occupy space like main orders until released."""
-    cur.execute("select SKU_ID,APPROVED_BOXES from RRL_TRADE_TOPUP_PROPOSAL where WARE_ID=:w and TRIP_ID=:t "
-                "and STATUS in('CONFIRMED','SAP_ACCEPTED') order by PROPOSAL_ID", w=ware, t=trip)
-    return [(sku, int(boxes)) for sku, boxes in cur.fetchall()]
+def _in_trip_boxes(cur: Any, ware: int, trip: dict, order_id: str | None, units_per_box: int) -> Decimal:
+    """Boxes of the SAP top-up order that the current TRIP document already carries (counted there with the main orders)."""
+    if not order_id:
+        return Decimal(0)
+    total = Decimal(0)
+    for assignment in trip['orders']:
+        if assignment['order_id'] != order_id:
+            continue
+        order, _ = _document(cur, ware, 'ORDER', order_id)
+        line = next((x for x in order['lines'] if x['line_id'] == assignment['line_id']), None)
+        if line is None:
+            raise TradeTransportError('TRADE_CAPACITY_ORDER_LINE_MISMATCH', 409)
+        quantity = Decimal(str(assignment['quantity']))
+        total += quantity if line['uom'] == 'BOX' else quantity / units_per_box
+    return total
+
+
+def _confirmed(cur: Any, ware: int, trip_id: str, trip: dict) -> list[dict]:
+    """Confirmed top-ups of this trip; `extra` is the part not yet in the TRIP document (only that occupies more space)."""
+    cur.execute("select NEED_ID,SKU_ID,APPROVED_BOXES,SAP_ORDER_ID,UNITS_PER_BOX from RRL_TRADE_TOPUP_PROPOSAL where WARE_ID=:w and TRIP_ID=:t "
+                "and STATUS in('CONFIRMED','SAP_ACCEPTED') order by PROPOSAL_ID", w=ware, t=trip_id)
+    out = []
+    for need, sku, boxes, order, units in cur.fetchall():
+        inside = _in_trip_boxes(cur, ware, trip, order, int(units))
+        out.append(dict(need_id=need, sku_id=sku, inside=min(inside, Decimal(boxes)), extra=max(Decimal(0), Decimal(boxes) - inside)))
+    return out
 
 
 def _terms(cur: Any, ware: int, trip: dict, recipient: str, sku: str) -> dict:
@@ -71,10 +92,12 @@ def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> 
     if context['started']:
         raise TradeTransportError('TOPUP_LOADING_ALREADY_STARTED', 409)
     planned = list(context['planned']);packages = context['packages']
-    for sku, boxes in _confirmed(cur, ware, trip):
-        if sku not in packages:
-            packages[sku] = _box(cur, ware, sku)
-        planned.append(dict(packages[sku], boxes=Decimal(boxes), recipient_id=None))
+    confirmed_topups = _confirmed(cur, ware, trip, context['trip'])
+    for topup in confirmed_topups:
+        if topup['extra']:
+            if topup['sku_id'] not in packages:
+                packages[topup['sku_id']] = _box(cur, ware, topup['sku_id'])
+            planned.append(dict(packages[topup['sku_id']], boxes=topup['extra'], recipient_id=None))
     selected = [];identities = set();now = datetime.now(timezone.utc)
     departure = datetime.fromisoformat(context['trip']['planned_departure_at'].replace('Z', '+00:00'))
     for key in body.need_ids:
@@ -91,7 +114,9 @@ def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> 
                        if (p['recipient_id'],p['sku_id']) == identity), Decimal(0))
         if primary != Decimal(need['current_trip_quantity']):
             raise TradeTransportError('TOPUP_PRIMARY_SNAPSHOT_MISMATCH:'+key, 409)
-        confirmed = Decimal(cur.callfunc('RRL_TRADE_TOPUP_READ.need_confirmed_boxes', oracledb.DB_TYPE_NUMBER, [ware, key, None]))
+        # The part of this trip's top-up already inside the TRIP is in need.current_trip_quantity (checked above): not again.
+        inside = sum((t['inside'] for t in confirmed_topups if t['need_id'] == key), Decimal(0))
+        confirmed = Decimal(cur.callfunc('RRL_TRADE_TOPUP_READ.need_confirmed_boxes', oracledb.DB_TYPE_NUMBER, [ware, key, None])) - inside
         item = _item(cur, ware, context, planned, need, confirmed)
         item['priority'] = len(selected)+1
         selected.append(item)
