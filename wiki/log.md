@@ -5134,3 +5134,5 @@ C0152 получен RELEASE K0112/c4a2f0b8: экран исключений и 
 23.10 — nativequarantinerole+transfer5/5/5каждая, scopedrelease3groupsPASS/1EAсписана/stock0. До приёмки повтора найден execution-only ACL+dynamicprecheck; подготовлен quarantine_replay_scope, новаяпроводканеисполнялась. MES5старыхFAILоказалисьустаревшимstub: currentwarehouseACLпередcachedpayloadсохранена, mockобновлён+revoketest,29focusedPASS.
 
 23.10 — C0154 исправленныйRELEASE7f15288c получен. Rootобнаружил,чтоlock_materialнеблокируетstoreprofile/weeklywindows, поэтому подготовил scopedbegin_transport_change втомже metadatahelper/fence;14свежихзависимостей/SHA/rollbackпередapply. C0155paperотпущенClaude,ACKpending. Новыефункцииреализованнымидоприменениянеобъявляются.
+
+23.10 — transportmetadatafence39b87b8f7/8/7PASS/14dependents/INVALID0. RootдоработалнеприменённыйC0154: общийfenceвcommandнаnormal/replay/error, полноеоснованиевыбранногопредложениявключаетzone/пробег, историяиспользуетсохранённыйzone. Nativeкандидатещёнеприменён, mirrortrade_extra_stop_20261023.md. C0155бумагапередана, ACKpending.
