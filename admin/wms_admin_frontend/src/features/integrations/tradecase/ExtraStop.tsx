@@ -31,11 +31,13 @@ const mins = (v: number | string | null | undefined) => (v === null || v === und
 const WHY: Record<string, string> = { BASE_ROUTE_NOT_CONFIRMED: "сам основной маршрут ещё не рассчитан полностью — обещать заезд нельзя",
   EXTRA_STOP_INPUTS_MISSING: "для новой точки не хватает данных (время в пути до неё, норма разгрузки или окно приёма)",
   EXTRA_ADDRESS_NOT_UNIQUE: "адрес не найден в справочнике или найден несколько раз", EXTRA_STOP_BREAKS_DEADLINE: "заезд не укладывается в остаток до предельного времени",
-  NEW_STOPS_FORBIDDEN: "для рейса включён запрет новых точек" };
+  NEW_STOPS_FORBIDDEN: "для рейса включён запрет новых точек",
+  EXTRA_STOP_POSITION_REQUIRED: "маршрут длинный — укажите, перед какой точкой вставить заезд, и проверьте снова",
+  EXTRA_STOP_POSITION_INVALID: "такой позиции вставки в маршруте нет" };
 
 export function ExtraStop({ wh, user, trip }: { wh: string; user: string; trip: number }) {
-  const [address, setAddress] = useState(""), [asked, setAsked] = useState(""), [reload, setReload] = useState(0), [reason, setReason] = useState("");
-  const ev = useRead<Evaluation>(asked ? `/api/transport/preflight/trips/${trip}/extra-stops?address=${encodeURIComponent(asked)}&zone=UTC` : null, reload);
+  const [address, setAddress] = useState(""), [asked, setAsked] = useState(""), [pos, setPos] = useState(""), [askedPos, setAskedPos] = useState(""), [reload, setReload] = useState(0), [reason, setReason] = useState("");
+  const ev = useRead<Evaluation>(asked ? `/api/transport/preflight/trips/${trip}/extra-stops?address=${encodeURIComponent(asked)}&zone=UTC${askedPos ? `&position=${askedPos}` : ""}` : null, reload);
   const hist = useRead<Decisions>(`/api/transport/preflight/trips/${trip}/extra-stops/decisions`, reload);
   const cmd = useCommand<Body, Receipt>(pending, `/api/transport/preflight/trips/${trip}/extra-stops`, user, wh, reasons,
     (r, b) => r.operation_id !== b.operation_id ? null : b.action === "APPROVE" ? "Заезд согласован. Новая точка появится после заказа SAP; SAP сейчас недоступен — заказ не создан."
@@ -58,8 +60,9 @@ export function ExtraStop({ wh, user, trip }: { wh: string; user: string; trip: 
         disabled={locked || reason.trim().length < 3} onClick={() => cmd.start({ trip_id: trip, action: "SET_POLICY", reason: reason.trim(),
           new_stops_forbidden: !policy.new_stops_forbidden, expected_policy_version: policy.policy_version }, after)}>{policy.new_stops_forbidden ? "Снять запрет" : "Запретить новые точки"}</Act></p>}
     <label>Адрес получателя для заезда <input value={address} maxLength={255} disabled={locked} onChange={x => setAddress(x.target.value)} /></label>
+    <label>Перед какой точкой вставить (необязательно; 0 — первой) <input value={pos} inputMode="numeric" maxLength={3} disabled={locked} onChange={x => setPos(x.target.value.replace(/\D/g, ""))} /></label>
     <Act help={help("check", "Пересчитать рейс с этим адресом в каждой возможной точке вставки и показать, укладывается ли заезд.")} disabled={!address.trim()}
-      onClick={() => { setAsked(address.trim()); setReload(n => n + 1); }}>Проверить заезд</Act>
+      onClick={() => { setAsked(address.trim()); setAskedPos(/^\d{1,3}$/.test(pos) ? pos : ""); setReload(n => n + 1); }}>Проверить заезд</Act>
     {ev.error && <p role="alert" className="tc-err">Проверка не выполнена: {ev.error}</p>}
     {ev.loading && asked && <p className="tc-note">Пересчитываем маршрут…</p>}
     {e && e.address === asked && <Verdict e={e} />}

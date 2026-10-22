@@ -5,12 +5,13 @@ create or replace package RRL_TRADE_EXTRA_STOP_API authid definer as
  function evaluate(p_trip number,p_actor varchar2,p_request clob)return clob;           -- READ ONLY
  procedure command(p_request clob,p_actor varchar2,p_result out clob);                   -- APPROVE / DECLINE / SET_POLICY
  function decisions(p_trip number,p_actor varchar2)return clob;                          -- READ ONLY
- -- Pure part: the route source of RRL_TT_TIME_API.context in, the decision out. p_legs (synthetic legs) only for controlled checks.
- function evaluate_source(p_source clob,p_request clob,p_legs clob default null)return clob;
 end;
 /
 create or replace package body RRL_TRADE_EXTRA_STOP_API as
- -- PURE BEGIN (depends only on RRL_TT_ROUTE_SCHEDULE, RRL_STORE_WINDOW_RULES, RRL_STOCK_PLAN_HELPER; checked in a read-only block)
+ -- PURE BEGIN (private; depends only on RRL_TT_ROUTE_SCHEDULE, RRL_STORE_WINDOW_RULES, RRL_STOCK_PLAN_HELPER; checked in a read-only block).
+ -- p_legs/synthetic windows exist only for that controlled check; evaluate() never passes them, so no caller can substitute route data.
+ -- Cost (measured live): one variant = 2 material + 1 calculate, ~14 ms at 1 stop and ~320 ms at 51 stops. All n+1 positions are tried only
+ -- for routes up to 20 stops; longer routes need the dispatcher's insertion position (one variant). Technical bound, not a business rule.
  function minutes_between(p_from varchar2,p_to varchar2)return number is
  begin
   if p_from is null or p_to is null then return null;end if;
@@ -102,17 +103,20 @@ create or replace package body RRL_TRADE_EXTRA_STOP_API as
   src json_object_t:=json_object_t.parse(p_source);q json_object_t:=json_object_t.parse(p_request);res json_object_t:=json_object_t();
   zone varchar2(30):=nvl(q.get_string('zone'),'UTC');address varchar2(255):=q.get_string('address');rule json_object_t:=q.get_object('extra_rule');
   before json_object_t;after json_object_t;best json_object_t;best_pos number;stops json_array_t;v json_object_t;kind varchar2(20);
-  variants json_array_t:=json_array_t();unknown boolean:=false;row_v json_object_t;
+  variants json_array_t:=json_array_t();unknown boolean:=false;row_v json_object_t;pick number;
  begin
   res.put('address',address);res.put('rule_source','TRADECASE program section 12: propose if it fits the slack before the main delivery deadline');
   if q.get_boolean('new_stops_forbidden')then res.put('decision','FORBIDDEN');res.put('reason','NEW_STOPS_FORBIDDEN');return res.to_clob;end if;
   before:=calc(src,zone);res.put('before',brief(before));res.put('before_slack_min',slack(src,before));
   if verdict(before)<>'FEASIBLE'then res.put('decision','UNKNOWN');res.put('reason','BASE_ROUTE_NOT_CONFIRMED');return res.to_clob;end if;
   stops:=src.get_object('route_material').get_array('stops');
+  pick:=q.get_number('position');
+  if pick is not null and(pick<0 or pick>stops.get_size or pick<>trunc(pick))then res.put('decision','UNKNOWN');res.put('reason','EXTRA_STOP_POSITION_INVALID');return res.to_clob;end if;
+  if pick is null and stops.get_size>20 then res.put('decision','UNKNOWN');res.put('reason','EXTRA_STOP_POSITION_REQUIRED');return res.to_clob;end if;
   for i in 0..stops.get_size-1 loop if stops.get_string(i)=address then res.put('decision','ALREADY_ON_ROUTE');return res.to_clob;end if;end loop;
   if rule is null or rule.get_number('address_count')is null or rule.get_number('address_count')<>1 then
    res.put('decision','UNKNOWN');res.put('reason','EXTRA_ADDRESS_NOT_UNIQUE');return res.to_clob;end if;
-  for pos in 0..stops.get_size loop
+  for pos in nvl(pick,0)..nvl(pick,stops.get_size)loop
    v:=variant(src,stops,pos,address,rule,p_legs);after:=calc(v,zone);kind:=verdict(after);
    row_v:=json_object_t();row_v.put('position',pos);row_v.put('verdict',kind);row_v.put('return_at',after.get_string('return_at'));
    row_v.put('issues',after.get_array('issues'));variants.append(row_v);
@@ -176,7 +180,9 @@ create or replace package body RRL_TRADE_EXTRA_STOP_API as
   RRL_TT_TIME_API.context(p_trip,p_actor,ctx);c:=json_object_t.parse(ctx);
   select count(*),min(UNLOAD_NORM_MIN),min(TW_STRICT)into n,norm,strict from RRL_ADDR where nvl(DELETED3,0)=0 and ADDR=v_address;
   rule.put('address_count',n);rule.put('unload_norm_min',norm);rule.put('window_strict',strict);
-  p:=policy(p_trip);q.put('extra_rule',rule);q.put('new_stops_forbidden',p.NEW_STOPS_FORBIDDEN=1);
+  p:=policy(p_trip);
+  -- Only native data decides: any caller-supplied rule, synthetic window or ban flag is replaced here; legs come from the native material.
+  q.remove('extra_rule');q.remove('new_stops_forbidden');q.put('extra_rule',rule);q.put('new_stops_forbidden',p.NEW_STOPS_FORBIDDEN=1);
   r:=json_object_t.parse(evaluate_source(c.get_object('source').to_clob,q.to_clob));
   -- Mileage change (program: show the change of time and mileage) from cached road distances, never estimated.
   declare m json_object_t:=c.get_object('source').get_object('route_material');stops json_array_t:=m.get_array('stops');ord json_array_t:=json_array_t();

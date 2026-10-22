@@ -548,6 +548,161 @@
   "decision": "UNKNOWN",
   "reason": "EXTRA_STOP_INPUTS_MISSING"
  },
+ "extra_15_position_2": {
+  "address": "EXTRA",
+  "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",
+  "before": {
+   "status": "NO_EARLIEST_WINDOW_VIOLATION",
+   "return_at": "2026-11-02T14:10:00.000000+03:00",
+   "departure_at": "2026-11-02T10:00:00.000000+03:00",
+   "drive_min": "190",
+   "stops": [
+    {
+     "address": "HUB",
+     "st_numbers": [
+      "SYN.HUB"
+     ],
+     "window_from": "2026-11-02T11:00:00.000000+03:00",
+     "window_to": "2026-11-02T12:00:00.000000+03:00",
+     "arrival_at": "2026-11-02T11:00:00.000000+03:00",
+     "service_start_at": "2026-11-02T11:00:00.000000+03:00",
+     "service_finish_at": "2026-11-02T11:15:00.000000+03:00",
+     "wait_min": "0",
+     "late_min": "0",
+     "unload_norm_min": "15",
+     "window_strict": 1,
+     "window_source": "ST_MATERIALIZED",
+     "issues": []
+    },
+    {
+     "address": "BRANCH",
+     "st_numbers": [
+      "SYN.BRANCH"
+     ],
+     "window_from": "2026-11-02T11:30:00.000000+03:00",
+     "window_to": "2026-11-02T13:00:00.000000+03:00",
+     "arrival_at": "2026-11-02T11:55:00.000000+03:00",
+     "service_start_at": "2026-11-02T11:55:00.000000+03:00",
+     "service_finish_at": "2026-11-02T12:10:00.000000+03:00",
+     "wait_min": "0",
+     "late_min": "0",
+     "unload_norm_min": "15",
+     "window_strict": 1,
+     "window_source": "ST_MATERIALIZED",
+     "issues": []
+    },
+    {
+     "address": "STORE",
+     "st_numbers": [
+      "SYN.STORE"
+     ],
+     "window_from": "2026-11-02T12:00:00.000000+03:00",
+     "window_to": "2026-11-02T13:40:00.000000+03:00",
+     "arrival_at": "2026-11-02T12:55:00.000000+03:00",
+     "service_start_at": "2026-11-02T12:55:00.000000+03:00",
+     "service_finish_at": "2026-11-02T13:10:00.000000+03:00",
+     "wait_min": "0",
+     "late_min": "0",
+     "unload_norm_min": "15",
+     "window_strict": 1,
+     "window_source": "ST_MATERIALIZED",
+     "issues": []
+    }
+   ],
+   "issues": []
+  },
+  "before_slack_min": 30,
+  "after_slack_min": 15,
+  "variants": [
+   {
+    "position": 2,
+    "verdict": "FEASIBLE",
+    "return_at": "2026-11-02T14:25:00.000000+03:00",
+    "issues": []
+   }
+  ],
+  "decision": "PROPOSE",
+  "position": 2,
+  "after": {
+   "status": "NO_EARLIEST_WINDOW_VIOLATION",
+   "return_at": "2026-11-02T14:25:00.000000+03:00",
+   "departure_at": "2026-11-02T10:00:00.000000+03:00",
+   "drive_min": "190",
+   "stops": [
+    {
+     "address": "HUB",
+     "st_numbers": [
+      "SYN.HUB"
+     ],
+     "window_from": "2026-11-02T11:00:00.000000+03:00",
+     "window_to": "2026-11-02T12:00:00.000000+03:00",
+     "arrival_at": "2026-11-02T11:00:00.000000+03:00",
+     "service_start_at": "2026-11-02T11:00:00.000000+03:00",
+     "service_finish_at": "2026-11-02T11:15:00.000000+03:00",
+     "wait_min": "0",
+     "late_min": "0",
+     "unload_norm_min": "15",
+     "window_strict": 1,
+     "window_source": "ST_MATERIALIZED",
+     "issues": []
+    },
+    {
+     "address": "BRANCH",
+     "st_numbers": [
+      "SYN.BRANCH"
+     ],
+     "window_from": "2026-11-02T11:30:00.000000+03:00",
+     "window_to": "2026-11-02T13:00:00.000000+03:00",
+     "arrival_at": "2026-11-02T11:55:00.000000+03:00",
+     "service_start_at": "2026-11-02T11:55:00.000000+03:00",
+     "service_finish_at": "2026-11-02T12:10:00.000000+03:00",
+     "wait_min": "0",
+     "late_min": "0",
+     "unload_norm_min": "15",
+     "window_strict": 1,
+     "window_source": "ST_MATERIALIZED",
+     "issues": []
+    },
+    {
+     "address": "EXTRA",
+     "st_numbers": [
+      "EXTRA"
+     ],
+     "window_from": "2026-11-02T09:00:00.000000+03:00",
+     "window_to": "2026-11-02T18:00:00.000000+03:00",
+     "arrival_at": "2026-11-02T12:25:00.000000+03:00",
+     "service_start_at": "2026-11-02T12:25:00.000000+03:00",
+     "service_finish_at": "2026-11-02T12:40:00.000000+03:00",
+     "wait_min": "0",
+     "late_min": "0",
+     "unload_norm_min": "15",
+     "window_strict": 0,
+     "window_source": "ST_MATERIALIZED",
+     "issues": []
+    },
+    {
+     "address": "STORE",
+     "st_numbers": [
+      "SYN.STORE"
+     ],
+     "window_from": "2026-11-02T12:00:00.000000+03:00",
+     "window_to": "2026-11-02T13:40:00.000000+03:00",
+     "arrival_at": "2026-11-02T13:10:00.000000+03:00",
+     "service_start_at": "2026-11-02T13:10:00.000000+03:00",
+     "service_finish_at": "2026-11-02T13:25:00.000000+03:00",
+     "wait_min": "0",
+     "late_min": "0",
+     "unload_norm_min": "15",
+     "window_strict": 1,
+     "window_source": "ST_MATERIALIZED",
+     "issues": []
+    }
+   ],
+   "issues": []
+  },
+  "added_min": 15,
+  "added_drive_min": 0
+ },
  "extra_rule_missing": {
   "address": "EXTRA",
   "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",

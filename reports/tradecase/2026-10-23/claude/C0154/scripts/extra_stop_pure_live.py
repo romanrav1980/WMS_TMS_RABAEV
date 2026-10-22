@@ -47,6 +47,7 @@ CASES = {
     "extra_45_slack_30": (source("13:40:00", "14:40:00"), {"address": "EXTRA", "zone": "Europe/Moscow", "extra_rule": RULE}, legs(45)),
     "new_stops_forbidden": (source("13:40:00", "14:40:00"), {"address": "EXTRA", "zone": "Europe/Moscow", "extra_rule": RULE, "new_stops_forbidden": True}, legs(15)),
     "extra_legs_unknown": (source("13:40:00", "14:40:00"), {"address": "EXTRA", "zone": "Europe/Moscow", "extra_rule": RULE}, [l for l in legs(15) if l["to_address"] != "EXTRA"]),
+    "extra_15_position_2": (source("13:40:00", "14:40:00"), {"address": "EXTRA", "zone": "Europe/Moscow", "extra_rule": RULE, "position": 2}, legs(15)),
     "extra_rule_missing": (source("13:40:00", "14:40:00"), {"address": "EXTRA", "zone": "Europe/Moscow", "extra_rule": {**RULE, "unload_norm_min": None}}, legs(15)),
 }
 

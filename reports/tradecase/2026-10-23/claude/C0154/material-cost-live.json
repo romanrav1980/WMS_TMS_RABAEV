@@ -1,0 +1,49 @@
+{
+ "kind": "REAL_TRIP_SOURCES_READ_ONLY_NATIVE_CALL_COST",
+ "33665": {
+  "stops": 1,
+  "median_ms": {
+   "window_material": 3.5,
+   "route_material": 4.0,
+   "calculate": 6.4
+  },
+  "per_variant_ms": 13.9,
+  "calls": {
+   "calculate": 3,
+   "material": 4
+  },
+  "projected_evaluate_ms": 34.2
+ },
+ "33564": {
+  "stops": 1,
+  "median_ms": {
+   "window_material": 2.7,
+   "route_material": 4.2,
+   "calculate": 9.6
+  },
+  "per_variant_ms": 16.5,
+  "calls": {
+   "calculate": 3,
+   "material": 4
+  },
+  "projected_evaluate_ms": 42.6
+ },
+ "5977": {
+  "stops": 51,
+  "median_ms": {
+   "window_material": 20.8,
+   "route_material": 18.7,
+   "calculate": 282.0
+  },
+  "per_variant_ms": 321.5,
+  "calls": {
+   "calculate": 53,
+   "material": 104
+  },
+  "projected_evaluate_ms": 17000.0
+ },
+ "largest_trip_by_addresses": {
+  "trip": 5977,
+  "addresses": 51
+ }
+}

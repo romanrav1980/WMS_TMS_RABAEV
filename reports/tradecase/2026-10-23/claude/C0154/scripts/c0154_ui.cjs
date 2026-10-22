@@ -90,7 +90,7 @@ async function width(b, w, h) {
     expected_version: 3, source_hash: H, position: 0 }); ok(w, "approval binds address, position, route version and source hash");
   await p.reload(); await enter(p);
   await panel(p).getByText("не подтверждено").waitFor(); ok(w, "unconfirmed decision survives reload");
-  fx.replies = [200]; await panel(p).getByRole("button", { name: "Повторить ту же команду" }).click(); await panel(p).getByText("ждёт", { exact: false }).first().waitFor();
+  fx.replies = [200]; await panel(p).getByRole("button", { name: "Повторить ту же команду" }).click(); await panel(p).getByText("Заезд согласован").waitFor();
   assert.strictEqual(res.posts.at(-1), res.posts.at(-2)); assert((await panel(p).innerText()).includes("SAP сейчас недоступен")); ok(w, "retry resends identical bytes; SAP order not invented");
 
   await check(p, "EXTRA-45"); await panel(p).getByText("Заезд не укладывается").waitFor();

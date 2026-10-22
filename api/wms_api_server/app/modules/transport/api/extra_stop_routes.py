@@ -18,9 +18,10 @@ def _call(run: Callable[[], dict[str, Any]]) -> dict[str, Any]:
 
 @router.get("")
 def evaluate(trip_id: int = Path(gt=0), address: str = Query(min_length=1, max_length=255), zone: Zone = Query(default="UTC"),
+             position: int | None = Query(default=None, ge=0, le=200),
              user: AdminUser = Depends(require_permission("transport_dispatch_edit")),
              service: ExtraStopPort = Depends(extra_stop_service)) -> dict[str, Any]:
-    return _call(lambda: service.evaluate(trip_id, address.strip(), zone, user.username))
+    return _call(lambda: service.evaluate(trip_id, address.strip(), zone, user.username, position))
 
 
 @router.get("/decisions")

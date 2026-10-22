@@ -30,8 +30,8 @@ class OracleExtraStop:
         except oracledb.DatabaseError as exc:
             raise _error(exc) from exc
 
-    def evaluate(self, trip: int, address: str, zone: str, actor: str) -> dict[str, Any]:
-        request = json.dumps({"address": address, "zone": zone}, ensure_ascii=False)
+    def evaluate(self, trip: int, address: str, zone: str, actor: str, position: int | None = None) -> dict[str, Any]:
+        request = json.dumps({"address": address, "zone": zone, **({"position": position} if position is not None else {})}, ensure_ascii=False)
         return self._read("Extra stop evaluation READ ONLY", "RRL_TRADE_EXTRA_STOP_API.evaluate", [trip, actor, request])
 
     def decisions(self, trip: int, actor: str) -> dict[str, Any]:

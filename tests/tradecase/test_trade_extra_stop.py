@@ -96,7 +96,7 @@ def test_decision_is_one_native_command_with_the_trip_and_only_its_receipt_count
 
 def test_routes():
     class Service:
-        def evaluate(self, trip, address, zone, actor):
+        def evaluate(self, trip, address, zone, actor, position=None):
             return {"trip": trip, "address": address, "zone": zone, "actor": actor}
 
         def decisions(self, trip, actor):
@@ -154,3 +154,14 @@ def test_live_evidence_matches_the_program_example():
     assert data["extra_45_slack_30"]["decision"] == "REJECT"
     assert data["new_stops_forbidden"]["decision"] == "FORBIDDEN"
     assert data["extra_legs_unknown"]["decision"] == "UNKNOWN" and data["extra_rule_missing"]["decision"] == "UNKNOWN"
+    assert data["extra_15_position_2"]["decision"] == "PROPOSE" and data["extra_15_position_2"]["position"] == 2
+    assert [v["position"] for v in data["extra_15_position_2"]["variants"]] == [2]  # a chosen position evaluates exactly one variant
+
+
+def test_evaluation_is_bounded_and_caller_cannot_supply_route_data():
+    spec = API[:API.index("create or replace package body")]
+    assert "evaluate_source" not in spec  # the pure part with controlled legs is private
+    evaluate = body_of("function evaluate(p_trip number")
+    assert "q.remove('extra_rule');q.remove('new_stops_forbidden')" in evaluate and "evaluate_source(c.get_object('source').to_clob,q.to_clob)" in evaluate
+    source = body_of("function evaluate_source(")
+    assert "stops.get_size>20 then" in source and "EXTRA_STOP_POSITION_REQUIRED" in source and "for pos in nvl(pick,0)..nvl(pick,stops.get_size)loop" in source
