@@ -11,11 +11,16 @@ from app.services.mes_service import MesService
 
 
 class ReplayGateway:
-    def __init__(self, original):
+    def __init__(self, original, authorized=True):
         self.original = original
+        self.authorized = authorized
+        self.calls = []
     def fetch_all(self, sql, params=None):
+        self.calls.append(sql)
         if "RRL_STOCK_RELEASE" in sql:
             return [{"state": "ACTIVE"}]
+        if "RRL_PRODUCTION_ORDER" in sql and "ALLOWED" in sql:
+            return [{"allowed": 1}] if self.authorized else []
         if "CANONICAL_REQUEST" in sql:
             return [{"canonical_request": json.dumps(self.original)}]
         raise AssertionError("Replay must not resolve current MES movements or document status")
@@ -38,6 +43,16 @@ def test_implicit_retry_restores_original_movements(monkeypatch):
         ReplayGateway(envelope()), 7, MesApplyWmsRequest(operation_id="saved"), "operator")
     assert result["applied"] == 2
     assert captured[0].source["movement_ids"] == [11, 12]
+
+
+def test_retry_rechecks_current_access_before_reading_the_saved_envelope(monkeypatch):
+    gateway = ReplayGateway(envelope(), authorized=False)
+    monkeypatch.setattr(mes_commands, "_post", lambda _: pytest.fail("Revoked actor posted"))
+    with pytest.raises(HTTPException) as error:
+        mes_commands.apply_mes_movements(gateway, 7, MesApplyWmsRequest(operation_id="saved"), "operator")
+    assert error.value.status_code == 403
+    assert error.value.detail["code"] == "MES_CURRENT_WAREHOUSE_ACTOR_REQUIRED"
+    assert not any("CANONICAL_REQUEST" in sql for sql in gateway.calls)
 
 
 @pytest.mark.parametrize("change", ["actor", "order", "units", "ids"])

@@ -62,13 +62,7 @@ class OracleQualityCases:
         return receipt
 
     def quarantine_move(self, ware: int, body: QuarantineMove, actor: str) -> dict[str, Any]:
-        # This read gives an early refusal. The native stock guard repeats the hold check under the posting STOCK lock.
-        try:
-            with self.gateway.transaction("TRADECASE quality release check READ ONLY") as cur:
-                cur.execute("set transaction read only")
-                cur.callproc("RRL_TRADE_QUALITY_CASE_API.assert_release", [ware, actor, body.pallet_uid])
-        except oracledb.DatabaseError as exc:
-            raise _error(exc) from exc
+        # Native access checks precede archived replay; the hold guard applies only to a new physical effect.
         command = StockCommand(operation_id=body.operation_id, command_type="MOVE_QUARANTINE", actor=actor, lines=(),
                                source={"type": "QUALITY", "warehouse_id": ware, "uid": body.pallet_uid},
                                metadata={"uid": body.pallet_uid, "source_cell": None, "target_cell": body.target_cell,

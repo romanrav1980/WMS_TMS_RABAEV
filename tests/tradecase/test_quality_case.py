@@ -99,11 +99,12 @@ def test_case_command_is_one_native_call_and_only_its_own_receipt_is_accepted():
 MOVE = QuarantineMove(operation_id="op-00002", pallet_uid="P1", target_cell="Q-01", reason="подозрение на брак")
 
 
-def test_quarantine_move_is_the_existing_native_command_after_the_case_check():
+def test_quarantine_move_uses_native_access_and_does_not_gate_archived_receipts_on_a_new_case():
     posted = []
     gateway = Gateway()
     result = OracleQualityCases(gateway, lambda c: posted.append(c) or {"operation_id": c.operation_id, "status": "APPLIED"}).quarantine_move(7, MOVE, "keeper")
-    assert result["status"] == "APPLIED" and ("RRL_TRADE_QUALITY_CASE_API.assert_release", 7, "P1") in gateway.calls
+    assert result["status"] == "APPLIED"
+    assert not any("assert_release" in str(call) for call in gateway.calls)
     command = posted[0]
     assert "source_cell" in command.metadata and command.metadata["source_cell"] is None
     assert "unit" in command.metadata and command.metadata["unit"] is None
@@ -111,14 +112,10 @@ def test_quarantine_move_is_the_existing_native_command_after_the_case_check():
     assert command.source == {"type": "QUALITY", "warehouse_id": 7, "uid": "P1"}
 
 
-def test_a_case_blocks_release_without_posting_and_posting_errors_keep_their_meaning():
-    posted = []
-    blocked = Gateway(release_fail=ora(20911, "ORA-20911: QUALITY_CASE_BLOCKS_RELEASE"))
-    with pytest.raises(QualityCaseError) as caught:
-        OracleQualityCases(blocked, posted.append).quarantine_move(7, MOVE, "keeper")
-    assert (caught.value.code, caught.value.status, posted) == ("QUALITY_CASE_BLOCKS_RELEASE", 409, [])
+def test_native_hold_and_posting_errors_keep_their_meaning():
     for error, status in [(StockPostingError("RESULT_UNCERTAIN", "op-00002"), 503), (StockPostingError("QUARANTINE_MOVE_FORBIDDEN", "op-00002", 20882), 403),
-                          (StockPostingError("QUARANTINE_CELL_REQUIRED", "op-00002", 20879), 409)]:
+                          (StockPostingError("QUARANTINE_CELL_REQUIRED", "op-00002", 20879), 409),
+                          (StockPostingError("STOCK_RULE_REJECTED", "op-00002", 20911, "QUALITY_HOLD_ACTIVE"), 409)]:
         def post(_c, error=error):
             raise error
         with pytest.raises(QualityCaseError) as caught:

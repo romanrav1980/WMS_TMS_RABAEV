@@ -1,0 +1,18 @@
+{
+  "migration_id": "2026-10-23-quarantine-replay-scope",
+  "target": "RABAEV/orcl",
+  "shared_object": "RRL_STOCK_POSTING_API:PACKAGE BODY",
+  "new_object": "RRL_QUARANTINE_ACCESS",
+  "before_sha256": "701F24145014ADE2A81E05084FCADDAD9B4D2DA9E541C5FDF212EF04E093817B",
+  "after_sha256": "6DAA16DD11152C696B6B20D5E10247BF59F36D2E94BB08489402516D0082BC81",
+  "files_sha256": {
+    "001_access.sql": "86a1c4454d16b1c07c7d6f6cd858e458ca027809e2b5e660be06d01a7d227fc7",
+    "002_dispatch.sql": "27f0dfd826d374d1fe3b985795b13ae3c7f6c6b9099dc5d744d2391aadfbefac",
+    "apply.sql": "393a775ecbc3cc267d8bdee3b37d7f281c49a971e371df7d4b8d27a50e2f27ed",
+    "before.sql": "a0728475c717d428e68b34e9369fdf8e379c322a9f18d952d682c5b05f4eaf78",
+    "preflight.sql": "63d7bae80cd020ec987833c9bbb69b8416450a28c1b74613472f544f67deb5d5",
+    "rollback.sql": "2b3a002e2506aee2ae71451f27c572b6dcb7de4980b695f338604cc3c195d5fc",
+    "rollback_verify.sql": "63d7bae80cd020ec987833c9bbb69b8416450a28c1b74613472f544f67deb5d5",
+    "verify.sql": "e4433786f5fb3facdd4ba98f8d738998852d64ebd192b4b9180339a11a43cb95"
+  }
+}

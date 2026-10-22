@@ -5130,3 +5130,5 @@ C0152 получен RELEASE K0112/c4a2f0b8: экран исключений и 
 23.10 — role-only qualityrelease воспроизвёл403 nativeQUARANTINE_MOVE legacy-only. Собственнаяновая1EA Q23.GOOD.25cadbfc размещенавstorage212476763,невыдана/нерезервирована; QAretired/owner0. Подготовлена quarantine_role_scope body/SHA/rollback/verify; доapplyкандидатнепринят. Резюмируемыйlive_quality_release_scope.py не создаёт второй приход. Старые250/0,1000/0,10/0,7/5 не затрагивались.
 
 23.10 — quarantinerolescope5/5/5PASS, ноliveвыявилвторойlegacygateвRRL_STOCK_TRANSFER_CORE. Подготовленузкийquarantine_transfer_scopefreshbody/SHA. Прежняя1EAсохранена, QAretired, повторприходанет. Rootдоводитполныйпуть, ClaudeC0154RELEASEполученожидаетrootreview.
+
+23.10 — nativequarantinerole+transfer5/5/5каждая, scopedrelease3groupsPASS/1EAсписана/stock0. До приёмки повтора найден execution-only ACL+dynamicprecheck; подготовлен quarantine_replay_scope, новаяпроводканеисполнялась. MES5старыхFAILоказалисьустаревшимstub: currentwarehouseACLпередcachedpayloadсохранена, mockобновлён+revoketest,29focusedPASS.
