@@ -99,7 +99,6 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
   d json_object_t:=json_object_t.parse(p_request);s json_object_t:=d.get_object('source');m json_object_t:=d.get_object('metadata');
   p RRL_TRADE_TOPUP_PROPOSAL%rowtype;
  begin
-  lock table RRL_ACCESS_REV in share mode wait 5;
   begin declare
    json_arg_1 number:=s.get_number('proposal_id');
   begin

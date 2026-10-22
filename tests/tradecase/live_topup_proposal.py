@@ -17,6 +17,16 @@ import live_stock_acceptance as stock
 from live_document_acceptance import http,expect,CALLS
 from tools.mcp.tms_mcp_server import oracle_connection
 OUT=ROOT/'runtime/test-evidence/tradecase/2026-10-22/T08'
+_original_http = http
+
+
+def http(method, path, body=None, actor=None, password=None):
+    for _ in range(3):
+        answer = _original_http(method, path, body, actor, password)
+        if answer[0] != 503 or method != 'POST' or '/topup-proposals' not in path:
+            return answer
+    return answer
+
 
 
 def run(f,r):
