@@ -25,7 +25,7 @@
   const labels={PLANNED:'Запланировано',ASSIGNED:'Назначено',IN_PROGRESS:'В работе',DONE:'Выполнено',CANCELLED:'Отменено'};
   el('swRows').replaceChildren(...rows.map(row=>{
    const tr=document.createElement('tr');
-   for(const value of [row.task_id,row.pallet_identifier,row.from_cell,row.to_cell,row.quantity+' '+row.base_uom]){
+   for(const value of [row.task_id,row.pallet_identifier,row.from_cell,row.to_cell,row.quantity+' '+({HU:'место',CASE:'сборка'}[row.base_uom]||row.base_uom)]){
     const td=document.createElement('td');td.textContent=String(value??'');tr.appendChild(td);
    }
    tr.firstChild.className='task-id';
@@ -44,7 +44,7 @@
   const empty=document.createElement('option');empty.value='';empty.textContent=selectionRequired?'Выберите одно верхнее место':'По действующему составу СТ';el('swRoot').appendChild(empty);
   for(const place of places){
    const option=document.createElement('option');option.value=place.root_identifier;option.disabled=!place.available;
-   const label=place.place_kind==='CASE'?'CASE':'HU';
+   const label=place.place_kind==='CASE'?'Сборка':'Контейнер';
    option.textContent=label+' '+place.root_identifier+(place.cell?' · '+place.cell:'')+
     (place.planned_task_id?' · задание #'+place.planned_task_id:!place.available?' · требуется разбор':!place.move_required?' · уже в ожидании':'');
    el('swRoot').appendChild(option);
@@ -52,7 +52,7 @@
   if(places.some(p=>p.root_identifier===chosen&&p.available))el('swRoot').value=chosen;
   else if(places.length===1&&places[0].available&&selectionRequired)el('swRoot').value=places[0].root_identifier;
   el('swRootHint').textContent=selectionRequired?'Каждое верхнее место получает своё задание. Выберите место; состав и принадлежность проверит WMS.':
-   'Для нескольких контейнеров выбирается конкретное место. Самостоятельные CASE можно запланировать прежним общим действием.';
+   'Выберите контейнер, чтобы создать задание для него. Сборки вне контейнеров перемещаются отдельными заданиями.';
  }
  async function request(path,options={}){
   const identity=scope(),response=await fetch(auth().state.apiBase.replace(/\/$/,'')+'/api/receiving/st-deferrals/waiting-tasks'+path,
@@ -60,7 +60,7 @@
   const text=await response.text();let result;
   try{result=JSON.parse(text);}catch{throw Error('Ответ не подтверждён. Повторите исходную команду.');}
   if(identity!==scope())throw Error('Пользователь изменился.');
-  if(!response.ok){const error=Error(result.detail?.code==='ST_WAITING_ROOT_SELECTION_REQUIRED'?'Выберите конкретное верхнее место.':result.detail?.message||'Операция не подтверждена.');error.code=result.detail?.code;throw error;}
+  if(!response.ok){const error=Error(result.detail?.code==='ST_WAITING_ROOT_SELECTION_REQUIRED'?'Выберите конкретное верхнее место.':result.detail?.message||'Операция не подтверждена.');error.code=result.detail?.code;error.status=response.status;throw error;}
   return result;
  }
  async function read(after=0){
@@ -75,7 +75,10 @@
    rows=Array.from(new Map([...existing,...result.tasks].map(row=>[row.task_id,row])).values());
    next=result.next_after_task_id;shownDecision=decision;places=result.available_places||[];selectionRequired=result.selection_required===true;renderPlaces();render();
    el('swMessage').textContent='СТ '+result.st_number+' · склад '+result.warehouse_id+' · ячейка ожидания '+(result.waiting_cell||'не настроена')+'. Статусы прочитаны из WMS.';
-  }catch(e){if(epoch===readEpoch&&identity===scope())el('swMessage').textContent=e.message;}
+  }catch(e){if(epoch===readEpoch&&identity===scope()){
+   if([401,403,404].includes(e.status))resetRows();
+   el('swMessage').textContent=[401,403].includes(e.status)?'Нет доступа к заданиям этого решения. Проверьте вход и назначенные права.':e.message;
+  }}
   finally{if(epoch===readEpoch)loading=false;controls();}
  }
  async function recover(){
@@ -91,7 +94,10 @@
    if(localStorage.getItem(savedKey)!==raw)throw Error('Исходник изменён другой вкладкой.');
    localStorage.removeItem(savedKey);rows=result.tasks;next=result.next_after_task_id;shownDecision=decision;places=result.available_places||[];selectionRequired=result.selection_required===true;renderPlaces();render();
    el('swMessage').textContent='Повреждённый исходник сохранён в архив. Текущие задания перечитаны. Проверьте их перед созданием нового плана; архивирование не подтверждает физическое перемещение.';
-  }catch(error){if(epoch===readEpoch&&identity===scope())el('swMessage').textContent=error.message+' Создание остаётся заблокированным.';}
+  }catch(error){if(epoch===readEpoch&&identity===scope()){
+   if([401,403,404].includes(error.status))resetRows();
+   el('swMessage').textContent=error.message+' Создание остаётся заблокированным.';
+  }}
   finally{if(epoch===readEpoch)loading=false;controls();}
  }
  async function send(){
@@ -122,7 +128,10 @@
   }catch(e){
    if(identity===scope()&&firstAttempt&&e.code==='ST_WAITING_ROOT_SELECTION_REQUIRED'&&localStorage.getItem(savedKey)===intent.raw){
     localStorage.removeItem(savedKey);await read();if(identity===scope())el('swMessage').textContent='Выберите верхнее место. Новый план не был создан.';
-   }else if(identity===scope())el('swMessage').textContent=e.message+' Исходную команду можно повторить.';
+   }else if(identity===scope()){
+    if([401,403,404].includes(e.status))resetRows();
+    el('swMessage').textContent=([401,403].includes(e.status)?'Нет доступа к заданиям этого решения. Проверьте вход и назначенные права.':e.message)+' Исходную команду можно повторить.';
+   }
   }
   finally{busy=false;controls();}
  }

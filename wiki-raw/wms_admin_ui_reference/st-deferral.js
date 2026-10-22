@@ -56,7 +56,7 @@
   try{const v=await api('/context?'+new URLSearchParams({st_number:el('sdSt').value.trim()}));
    if(token!==epoch||identity!==scope())return;context=v;showSummary(v);
    el('sdMessage').textContent='СТ '+v.st_number+', склад '+v.warehouse_id+', рейс '+v.source_trip_id+', версия '+v.version+
-    ', паллет '+v.members.length+'. Исходная дата рейса '+v.source_trip.shipment_date+'. Перенос разрешается только до погрузки. Отбор сохраняется. Подготовленные CASE и целое вложенное HU перемещаются штатными заданиями; система проверяет весь исходный состав.';if(v.physical_preparation)el('sdMessage').textContent+=v.physical_preparation.physical_move_required?' Товар уже отобран: перенос рейса не перемещает его. Создайте штатное складское задание в зону ожидания.':' Отобранный товар уже находится в настроенной ячейке ожидания; повторное перемещение не требуется.';controls();
+    ', паллет '+v.members.length+'. Исходная дата рейса '+v.source_trip.shipment_date+'. Перенос разрешается только до погрузки. Отбор сохраняется. Собранный товар и контейнеры с вложениями перемещаются складскими заданиями; система проверяет весь исходный состав.';if(v.physical_preparation)el('sdMessage').textContent+=v.physical_preparation.physical_move_required?' Товар уже отобран: перенос рейса не перемещает его. Создайте штатное складское задание в зону ожидания.':' Отобранный товар уже находится в настроенной ячейке ожидания; повторное перемещение не требуется.';controls();
   }catch(e){if(token===epoch&&identity===scope())el('sdMessage').textContent=e.message;}
  }
  async function send(){
