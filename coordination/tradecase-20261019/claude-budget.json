@@ -1,8 +1,8 @@
 {
     "date":  "2026-10-19",
     "timezone":  "Europe/Moscow",
-    "limit":  15,
-    "used":  15,
+    "limit":  16,
+    "used":  16,
     "requests":  [
                      {
                          "id":  "C-0130",
@@ -115,9 +115,16 @@
                      {
                          "id":  "C-0153",
                          "registered_at":  "2026-10-23T01:04:06.2239989+03:00",
-                         "status":  "REGISTERED before file delivery; ACK pending",
+                         "status":  "RELEASE K0115 checkpoint7b076874; NOT_APPLIED; root native review and live acceptance",
                          "delivery":  "existing file channel",
                          "task":  "T11 native quality hold enforcement and actual goods write-off through stock posting with transactional outgoing document"
+                     },
+                     {
+                         "id":  "C-0154",
+                         "registered_at":  "2026-10-23T01:31:08.2865838+03:00",
+                         "status":  "REGISTERED before delivery; ACK pending",
+                         "delivery":  "existing file channel",
+                         "task":  "T09 full time-window route and additional stop 15/45 decision using existing native TMS"
                      }
                  ],
     "additional_grants":  [
@@ -201,6 +208,16 @@
                                   "used":  1,
                                   "request_ids":  [
                                                       "C-0153"
+                                                  ]
+                              },
+                              {
+                                  "date":  "2026-10-23",
+                                  "authorization":  "Owner: continue joint work until all sprints done; Claude waiting",
+                                  "allocation_basis":  "One further large independent route completion under open delegation authorization",
+                                  "limit":  1,
+                                  "used":  1,
+                                  "request_ids":  [
+                                                      "C-0154"
                                                   ]
                               }
                           ]
