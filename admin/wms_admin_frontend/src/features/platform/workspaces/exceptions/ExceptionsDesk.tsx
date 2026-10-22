@@ -7,7 +7,7 @@ import { WarehousePicker } from "../resources/WarehousePicker";
 import { useUrlWarehouse } from "../useUrlWarehouse";
 import { readPending, savePending, sendPending } from "./exceptionsCommands";
 import type { ExceptionsIntent } from "./exceptionsCommands";
-import { ACTIONS, ACTION_TITLE, STATE_TITLE, compositionText, parseSnapshot, refusalText, releaseBlocked } from "./exceptionsModel";
+import { ACTIONS, ACTION_TITLE, EXTERNAL_TITLE, STATE_TITLE, compositionText, parseSnapshot, refusalText, releaseBlocked } from "./exceptionsModel";
 import type { CaseAction, CaseDetail, Discrepancy, ExceptionsSnapshot, QualityCase } from "./exceptionsModel";
 import { excHelp } from "./help";
 
@@ -111,21 +111,26 @@ function CasesSection({ snap, blocked, run, form, setForm, wh, reload }: Section
   const [open, setOpen] = useState<number | null>(null);
   const detail = useApiRead<CaseDetail>(open != null ? `/api/tradecase/warehouses/${encodeURIComponent(wh)}/exceptions/cases/${open}` : null, reload);
   if (snap.cases.length === 0) return <p className="ops-note">Дел качества нет (дела недоступных собственников не показываются).</p>;
-  const act = (c: QualityCase, a: CaseAction): NonNullable<Form> => ({ key: `${c.case_id}:${a}`, title: ACTION_TITLE[a],
+  const act = (c: QualityCase, a: CaseAction): NonNullable<Form> => a === "POST"
+    // Проведение: складская проводка списывает остаток и коды; подтверждение — повторным нажатием, данных не требуется.
+    ? { key: `${c.case_id}:${a}`, title: "Подтвердить проведение", fields: [],
+        send: () => run(`проведение списания · дело ${c.case_id}`, "WRITE_OFF", { case_id: c.case_id, expected_version: c.version }) }
+    : { key: `${c.case_id}:${a}`, title: ACTION_TITLE[a],
     fields: [{ name: "note", label: a === "APPROVE" ? "Основание утверждения (документ)" : "Заключение контролёра", value: "", min: 3 }],
     send: v => run(`${ACTION_TITLE[a]} · дело ${c.case_id}`, "CASE", a === "APPROVE" ? { action: "APPROVE", case_id: c.case_id, expected_version: c.version, note: v.note }
-      : { action: "DECIDE", case_id: c.case_id, expected_version: c.version, decision: a, note: v.note }) });
+      : { action: "DECIDE", case_id: c.case_id, expected_version: c.version, decision: a, note: v.note }) };
   return <ul className="ops-list">{snap.cases.map(c => <li key={c.case_id}><span>
     <b>Дело {c.case_id}</b> <small>{STATE_TITLE[c.state]} · паллета {c.pallet_uid} · ячейка {c.cell}</small><br />
     <small>Основание: {c.reason} · открыл {c.opened_by} {fmtTime(null, c.opened_at)}</small><br />
     <small>Состав: {compositionText(c.composition)}</small>
     {c.decision_note && <><br /><small>Решение {c.decided_by}: {c.decision_note}</small></>}
-    {c.state === "WAITING_POSTING" && <><br /><small className="ops-err">Списание утверждено ({c.approved_by}: {c.approval_note}). Складское проведение и ответ SAP/СКМ — отдельные этапы, здесь не выполняются; товар остаётся в карантине.</small></>}
+    {c.state === "WAITING_POSTING" && <><br /><small className="ops-err">Списание утверждено ({c.approved_by}: {c.approval_note}), но ещё не проведено: товар остаётся в карантине до «Провести списание».</small></>}
+    {c.state === "POSTED" && <><br /><small>Списано складской проводкой {c.posted_by ?? ""} {c.posted_at ? fmtTime(null, c.posted_at) : ""} · {EXTERNAL_TITLE[c.external_status ?? ""] ?? "ответ SAP/СКМ неизвестен"}</small></>}
     {form && form.key.startsWith(c.case_id + ":") && <FormRow form={form} blocked={blocked} setForm={setForm} />}
     {open === c.case_id && (detail.error ? <p className="ops-err">{detail.error}</p> : detail.data && <ul>{detail.data.units.slice(0, 50).map(u =>
       <li key={u.unit_key}><small>{u.unit_key} · {u.sku_id} · {u.owner_id} · {u.base_qty} {u.base_uom}{u.unchanged ? "" : " · изменился после открытия"}</small></li>)}</ul>)}
   </span><span style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-    {ACTIONS[c.state].map(a => <HelpButton key={a} help={excHelp.action} disabled={blocked} onClick={() => setForm(act(c, a))}>{ACTION_TITLE[a]}</HelpButton>)}
+    {ACTIONS[c.state].map(a => <HelpButton key={a} help={a === "POST" ? excHelp.post : excHelp.action} disabled={blocked} onClick={() => setForm(act(c, a))}>{ACTION_TITLE[a]}</HelpButton>)}
     <HelpButton help={excHelp.detail} onClick={() => setOpen(v => v === c.case_id ? null : c.case_id)}>{open === c.case_id ? "Скрыть коды" : "Коды"}</HelpButton>
   </span></li>)}</ul>;
 }

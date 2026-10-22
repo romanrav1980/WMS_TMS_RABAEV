@@ -4,7 +4,7 @@ import json
 from typing import Any, Callable
 import oracledb
 from ...platform.public import read_oracle_json
-from ..contracts_quality_case import QualityCaseCommand, QualityCaseError, QuarantineMove
+from ..contracts_quality_case import QualityCaseCommand, QualityCaseError, QualityWriteOff, QuarantineMove
 from ..contracts_stock import StockCommand, StockPostingError
 
 MISSING = (942, 4043, 6550)  # the quality case migration is not applied here
@@ -19,6 +19,12 @@ def _error(exc: oracledb.DatabaseError) -> QualityCaseError:
         return QualityCaseError("QUALITY_RESULT_UNKNOWN", 503)  # outcome unknown: repeat the same operation_id
     code = str(exc.args[0]).split("\n", 1)[0].split(":", 1)[-1].strip()
     return QualityCaseError(code, 403 if number == 20882 else 404 if code.endswith("_NOT_FOUND") else 409)
+
+
+def _posting_error(exc: StockPostingError) -> QualityCaseError:
+    """Runner refusal keeps its native reason (e.g. QUALITY_HOLD_ACTIVE); transient/uncertain outcomes ask for the same operation_id."""
+    status = 503 if exc.code in TRANSIENT else 403 if exc.oracle_code == 20882 else 409
+    return QualityCaseError((exc.rule_reason or exc.code) if status == 409 else exc.code, status)
 
 
 class OracleQualityCases:
@@ -70,4 +76,16 @@ class OracleQualityCases:
         try:
             return self.post(command)
         except StockPostingError as exc:
-            raise QualityCaseError(exc.code, 503 if exc.code in TRANSIENT else 403 if exc.oracle_code == 20882 else 409) from exc
+            raise _posting_error(exc) from exc
+
+    def write_off(self, ware: int, body: QualityWriteOff, actor: str) -> dict[str, Any]:
+        # The whole effect (stock, codes, case, hold, outgoing document) is the native posting kind; Python only submits it.
+        command = StockCommand(operation_id=body.operation_id, command_type="TRADE_QUALITY_WRITE_OFF", actor=actor, lines=(),
+                               source={"case_id": body.case_id, "warehouse_id": ware}, metadata={"expected_case_version": body.expected_version})
+        try:
+            result = self.post(command)
+        except StockPostingError as exc:
+            raise _posting_error(exc) from exc
+        if not isinstance(result, dict) or result.get("operation_id") != body.operation_id:
+            raise QualityCaseError("QUALITY_RESULT_UNKNOWN", 503)
+        return result

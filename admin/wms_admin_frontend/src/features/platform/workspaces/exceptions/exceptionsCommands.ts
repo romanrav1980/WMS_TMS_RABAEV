@@ -1,15 +1,15 @@
 import { ApiRequestError, apiFetch, apiOperationScope } from "../../../../api";
 
-// Команды исключений (дело качества или перемещение в/из карантина). Тело с operation_id сохраняется в браузере ДО отправки;
+// Команды исключений (дело качества, перемещение в/из карантина, проведение списания). Тело с operation_id сохраняется в браузере ДО отправки;
 // повтор — те же байты. Снимается только подтверждённым исходом: квитанцией своей операции или отказом с outcome_confirmed=true.
 // 503/сеть/401/403 без подтверждения — команда остаётся (переживает перезагрузку). Одна команда на склад.
 
-export type ExceptionsIntent = { ware: string; kind: "CASE" | "QUARANTINE"; title: string; path: string; wire: string; operation_id: string; created_at: string; scope: string };
+export type ExceptionsIntent = { ware: string; kind: "CASE" | "QUARANTINE" | "WRITE_OFF"; title: string; path: string; wire: string; operation_id: string; created_at: string; scope: string };
 export type ExceptionsSend = { kind: "ack" } | { kind: "refused"; code: string } | { kind: "unknown"; message: string };
 
 const key = (ware: string) => `retailcase.exceptions.pending.v1:${apiOperationScope()}:${ware}`;
 const pathOf = (ware: string, kind: ExceptionsIntent["kind"]) =>
-  `/api/tradecase/warehouses/${encodeURIComponent(ware)}/exceptions/${kind === "CASE" ? "cases" : "quarantine-moves"}`;
+  `/api/tradecase/warehouses/${encodeURIComponent(ware)}/exceptions/${kind === "CASE" ? "cases" : kind === "WRITE_OFF" ? "write-offs" : "quarantine-moves"}`;
 
 export function readPending(ware: string): { intent: ExceptionsIntent | null; damaged: string } {
   let raw: string | null;

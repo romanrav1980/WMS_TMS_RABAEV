@@ -1,0 +1,200 @@
+{
+ "base": "http://127.0.0.1:3021/",
+ "checks": [
+  {
+   "width": 1440,
+   "name": "sections, quarantine pallets and their case state"
+  },
+  {
+   "width": 1440,
+   "name": "release is unavailable while a case holds the pallet"
+  },
+  {
+   "width": 1440,
+   "name": "every button has title and help id"
+  },
+  {
+   "width": 1440,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 1440,
+   "name": "503 keeps the command as unconfirmed"
+  },
+  {
+   "width": 1440,
+   "name": "unconfirmed command survives reload"
+  },
+  {
+   "width": 1440,
+   "name": "foreign receipt keeps the command"
+  },
+  {
+   "width": 1440,
+   "name": "retries resend identical bytes with the same operation_id"
+  },
+  {
+   "width": 1440,
+   "name": "decision 409 clears the command with a reason"
+  },
+  {
+   "width": 1440,
+   "name": "management approves the write-off of a defect"
+  },
+  {
+   "width": 1440,
+   "name": "approved write-off is shown as waiting for posting, not as posted"
+  },
+  {
+   "width": 1440,
+   "name": "write-off posts the case and version to the native posting command"
+  },
+  {
+   "width": 1440,
+   "name": "write-off retry resends identical bytes"
+  },
+  {
+   "width": 1440,
+   "name": "native refusal of a changed composition is explained"
+  },
+  {
+   "width": 1440,
+   "name": "posted case shows the stock write-off and the pending external answer separately"
+  },
+  {
+   "width": 1440,
+   "name": "case codes with owner and quantity"
+  },
+  {
+   "width": 1440,
+   "name": "count discrepancy listed"
+  },
+  {
+   "width": 1440,
+   "name": "no inventory right: section closed, not empty"
+  },
+  {
+   "width": 1440,
+   "name": "late response of an older read is ignored"
+  },
+  {
+   "width": 1440,
+   "name": "not applied is explicit"
+  },
+  {
+   "width": 1440,
+   "name": "403 clears the data"
+  },
+  {
+   "width": 390,
+   "name": "sections, quarantine pallets and their case state"
+  },
+  {
+   "width": 390,
+   "name": "release is unavailable while a case holds the pallet"
+  },
+  {
+   "width": 390,
+   "name": "every button has title and help id"
+  },
+  {
+   "width": 390,
+   "name": "no horizontal page scroll"
+  },
+  {
+   "width": 390,
+   "name": "503 keeps the command as unconfirmed"
+  },
+  {
+   "width": 390,
+   "name": "unconfirmed command survives reload"
+  },
+  {
+   "width": 390,
+   "name": "foreign receipt keeps the command"
+  },
+  {
+   "width": 390,
+   "name": "retries resend identical bytes with the same operation_id"
+  },
+  {
+   "width": 390,
+   "name": "decision 409 clears the command with a reason"
+  },
+  {
+   "width": 390,
+   "name": "management approves the write-off of a defect"
+  },
+  {
+   "width": 390,
+   "name": "approved write-off is shown as waiting for posting, not as posted"
+  },
+  {
+   "width": 390,
+   "name": "write-off posts the case and version to the native posting command"
+  },
+  {
+   "width": 390,
+   "name": "write-off retry resends identical bytes"
+  },
+  {
+   "width": 390,
+   "name": "native refusal of a changed composition is explained"
+  },
+  {
+   "width": 390,
+   "name": "posted case shows the stock write-off and the pending external answer separately"
+  },
+  {
+   "width": 390,
+   "name": "case codes with owner and quantity"
+  },
+  {
+   "width": 390,
+   "name": "count discrepancy listed"
+  },
+  {
+   "width": 390,
+   "name": "no inventory right: section closed, not empty"
+  },
+  {
+   "width": 390,
+   "name": "late response of an older read is ignored"
+  },
+  {
+   "width": 390,
+   "name": "not applied is explicit"
+  },
+  {
+   "width": 390,
+   "name": "403 clears the data"
+  }
+ ],
+ "liveWrites": [],
+ "errors": [],
+ "posts": 16,
+ "paths": [
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/cases",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/cases",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/cases",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/cases",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/cases",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/write-offs",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/write-offs",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/write-offs",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/cases",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/cases",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/cases",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/cases",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/cases",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/write-offs",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/write-offs",
+  "http://127.0.0.1:8088/api/tradecase/warehouses/220793322/exceptions/write-offs"
+ ],
+ "timings": {
+  "desk_ready_ms": [
+   1162,
+   1226
+  ]
+ }
+}

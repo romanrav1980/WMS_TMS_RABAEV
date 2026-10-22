@@ -1,4 +1,4 @@
-"""TRADECASE quality exceptions: quarantine move, controller decision and approved write-off (waits for native posting; no stock effect)."""
+"""TRADECASE quality exceptions: quarantine move, controller decision, approval and the native write-off posting of an approved case."""
 from typing import Any, Literal, Protocol
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -39,6 +39,14 @@ class QualityCaseCommand(BaseModel):
         return self
 
 
+class QualityWriteOff(BaseModel):
+    """Posting of an approved case (WAITING_POSTING): the native TRADE_QUALITY_WRITE_OFF writes the stock off in one transaction."""
+    model_config = ConfigDict(extra="forbid")
+    operation_id: str = Operation
+    case_id: int = Field(strict=True, gt=0)
+    expected_version: int = Field(strict=True, gt=0)
+
+
 class QualityCaseError(RuntimeError):
     def __init__(self, code: str, status: int) -> None:
         self.code, self.status = code, status
@@ -50,6 +58,7 @@ class QualityCasePort(Protocol):
     def detail(self, ware: int, case: int, actor: str) -> dict[str, Any]: ...
     def command(self, ware: int, body: QualityCaseCommand, actor: str) -> dict[str, Any]: ...
     def quarantine_move(self, ware: int, body: QuarantineMove, actor: str) -> dict[str, Any]: ...
+    def write_off(self, ware: int, body: QualityWriteOff, actor: str) -> dict[str, Any]: ...
 
 
 def quality_case_service() -> QualityCasePort:

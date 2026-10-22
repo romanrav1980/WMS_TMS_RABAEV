@@ -1,0 +1,56 @@
+{
+ "target": "RABAEV/orcl",
+ "migration_id": "2026-10-23-trade-quality-posting",
+ "revision": "C-0153",
+ "requires": [
+  "2026-10-23-trade-quality-case (C-0152) applied"
+ ],
+ "objects_before": {
+  "RRL_STOCK_EFFECT_CORE:PACKAGE": "676C0FC9C13365B2906DC32A9111CF1A7C61C859DD2FC5ABBA98EF9304587BB7",
+  "RRL_STOCK_EFFECT_CORE:PACKAGE BODY": "4A8461AC6B8CD97B55C37D3402522E65BFC07ECC42FBC8624DEC6B9546FC0B4D",
+  "RRL_STOCK_POSTING_API:PACKAGE BODY": "51D467C081F4B2443FF8EBCBADE3559A31E0F6D79180E80BFE50AD472DD7F6AE",
+  "RRL_TRADE_STOCK_GUARD:PACKAGE BODY": "AB52B7FCBE3A59ED7412030B4DC93D7282674FAE1F0A51AE80C9A7AB5963667F",
+  "RRL_REGULATORY_STOCK_OUTBOX:PACKAGE BODY": "43E3E02E0666705D3C3AB31E6119F940BD2F8F2AC2E035C0FB5680CF53F3D369",
+  "RRL_TRADE_QUALITY_CASE_API:PACKAGE": "1F32E751412C08DFC1FF00E616C524164CAFDBB583085C76F77F419F079BB0DA",
+  "RRL_TRADE_QUALITY_CASE_API:PACKAGE BODY": "D928F1F1311E65559B62B272A31660D35CDEEBDE03D94321A4CC4F029D505809"
+ },
+ "shared_objects_changed": [
+  "RRL_STOCK_EFFECT_CORE:PACKAGE",
+  "RRL_STOCK_EFFECT_CORE:PACKAGE BODY",
+  "RRL_STOCK_POSTING_API:PACKAGE BODY",
+  "RRL_TRADE_STOCK_GUARD:PACKAGE BODY",
+  "RRL_REGULATORY_STOCK_OUTBOX:PACKAGE BODY"
+ ],
+ "candidate_objects_changed": [
+  "RRL_TRADE_QUALITY_CASE_API (installed C-0152 version captured live after root apply; byte-identical to C-0152 002_api.sql)",
+  "RRL_TRADE_QUALITY_CASE (+POSTED columns/constraints/index)"
+ ],
+ "new_objects": [
+  "RRL_STOCK_QUALITY_WRITEOFF",
+  "RRL_TRADE_QUALITY_CASE_POST_UK"
+ ],
+ "new_posting_kind": "TRADE_QUALITY_WRITE_OFF",
+ "applied_by_claude": false,
+ "compiled_by_claude": false,
+ "files_sha256": {
+  "000_preflight.sql": "c8f769feb612b8275f01dcbf734414d24664888c817cd6ba8f98be04ec44660e",
+  "001_schema.sql": "901544fe6369e333958c9ba6e271b6f4d5ec7f670e4f7fee7b2c3c1909c3a352",
+  "002_effect_core.sql": "2094e156f26cb1602eccaeba7e68903e844c26e02c8607f8e23ee757d0507c17",
+  "002_effect_core_spec.sql": "c74088cbb19606775992ac17fe4661d6c40847b44d670bca0f7b2f5da01de661",
+  "003_quality_case_api.sql": "9701b5d7d1a756ad0a9bc810bf8e73829a5941951477e65243a9063541677284",
+  "004_quality_writeoff.sql": "f929b0b8011be45ac55c045751f3d3155b115e69dc7c0c788ab2ee82d77cc155",
+  "005_trade_stock_guard.sql": "b8eb3c861b8bf424a0ff5b82fe941c780062dc7926788f8f313fca58d28962a3",
+  "006_regulatory_stock_outbox.sql": "d81c647df6f70ad735f0a49d1ea4a18b6a592bc898421e1efc4a071b66e7ddcc",
+  "007_stock_posting_api.sql": "32f724a56fe968a06c9ca38f59b8e51832ceb7cdbc439d8914bca4651807a986",
+  "apply.sql": "205bf8d2e4ecd2deb581cc45237654c6023743c3d2233c579516d183b9af1171",
+  "before_rrl_regulatory_stock_outbox.sql": "279a7e72619e7414396be80d7b34115f5caec59f9cdd50fad59e00241fa8e1fa",
+  "before_rrl_stock_effect_core.sql": "2f70093c179fa0c18f572a4ef5f5f3b9cce0a759c97a4177fcc95b8c5eea4925",
+  "before_rrl_stock_effect_core_spec.sql": "e86486c2e40b617f1ccf89180c5028726046085241524e48fedcb7fb5efaa6c9",
+  "before_rrl_stock_posting_api.sql": "881fd6973e798c49b0bdc6516d4b6dc0d82c4489fd94d15bb1ee787104a9446e",
+  "before_rrl_trade_quality_case_api.sql": "dbf7888f9fb54947de1602351de71fd7c2b97aa15f300509fca5b12fcb1ce14c",
+  "before_rrl_trade_stock_guard.sql": "37d1a2c3b117724e65d123169e45464af8ab2b6778c4c5f6405fe295e4dc8101",
+  "rollback.sql": "43e4d3d25b2e2dedaf1fa26027968488967d70a2b15d0cd00fbb277752862d14",
+  "rollback_verify.sql": "ac4975db09c5f8e1f6830a63b0de83600519a4af7c07b43a2afb878f55102bb2",
+  "verify.sql": "686ae229be2098b425601423a41ce7c5a1d4ca70795e9bc08f603303ac33c681"
+ }
+}
