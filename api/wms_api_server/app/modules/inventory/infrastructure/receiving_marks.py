@@ -90,54 +90,28 @@ class ReceivingMarks:
             from .weighted_box_capture import assert_current_weighted_policy
             assert_current_weighted_policy(cur, pallet, marks)
         elif marks.get('units'):assert_current_mark_policy(cur,pallet,marks)
-        binding_map = {b["unit_id"]: b for b in bindings or []}
         # Receiving caller holds global receipt identity lock; database PK rejects cross-pallet duplicates.
-        identities = {}
+        # Set-based: a 1000-unit pallet used to cost ~6000 round trips (C-0147); effects, order and errors are unchanged.
         expected_gtin = None
         if any(profile[0]=='CRPT' for codes in marks['units'].values() for profile in codes):
             cur.execute('select nvl(f.GTIN,a.BARCODE_SHT) from RRL_ARTICULS a join RRL_PALLETS p on p.ARTICUL=a.ACTICUL left join RRL_FINISHED_GOODS_SKU f on f.ARTICUL=a.ACTICUL where p.UID_PALLET=:p', {'p': pallet})
             expected_gtin = str(cur.fetchone()[0]).zfill(14)
-        for unit_id, codes in marks["units"].items():
-            if bindings is None:
-                cur.execute("insert into RRL_WMS_RECEIPT_UNIT(UID_PALLET,UNIT_ID,POLICY_VERSION,BASE_QTY) values(:p,:u,:v,:q)",
-                            {"p": pallet, "u": unit_id, "v": marks["policy_version"], "q": marks['unit_quantities'][unit_id]})
-            else:
-                binding = binding_map[unit_id]
-                box = marks.get("weighted_boxes", {}).get(unit_id, {})
-                cur.execute("""insert into RRL_WMS_RECEIPT_UNIT(UID_PALLET,UNIT_ID,POLICY_VERSION,BASE_QTY,
-                    PHYSICAL_UNIT_KEY,CURRENT_UID,CURRENT_CELL,BASE_UOM,STOCK_STATUS,UNIT_VERSION,
-                    GROSS_WEIGHT_KG,BOX_VOLUME_M3,MEASUREMENT_REFERENCE,WEIGHT_LABEL_SCAN)
-                    values(:p,:u,:v,:q,:k,:p,:c,:base,'CAPTURED',0,:gross,:volume,:reference,:label)""",
-                    p=pallet,u=unit_id,v=marks["policy_version"],q=marks['unit_quantities'][unit_id],k=binding["key"],c=cell,base=base_uom,gross=Decimal(box["gross_weight_kg"]) if box.get("gross_weight_kg") else None,volume=Decimal(box["volume_m3"]) if box.get("volume_m3") else None,
-                    reference=box.get("measurement_reference"),label=box.get("raw_scan"))
-            for profile, code in codes.items():
-                normalized = canonical_mark(profile[0], profile[1], code, expected_gtin)
-                key = (profile[0], sha256(normalized["identity"].encode()).hexdigest())
-                if key in identities and identities[key]["unit"] != unit_id:
-                    raise ValueError("One unique code cannot identify different physical units")
-                identity = identities.setdefault(key, {"unit": unit_id, "code": code, "profiles": [], **normalized})
-                identity["profiles"].append({"profile": profile[1], "version": marks["profiles"][profile]["version"], "raw_code": code})
+        identities = self._identities(marks, expected_gtin)
+        self._insert_units(pallet, marks, bindings, base_uom, cell)
         crpt_parent,regulatory_sscc = None,None
         if any(system == 'CRPT' for system, _ in identities):
             crpt_parent,regulatory_sscc=create_receipt_parent(cur,pallet,marks["scanned"])
-        for (system, digest), identity in identities.items():
-            if system == "CRPT":
-                cur.execute("select count(*) from RRL_CRPT_CODES c where c.CIS=:code and nvl(c.UID_PALLET,'#')<>:p", {"code": identity["identity"], "p": pallet})
-                if cur.fetchone()[0]:
-                    raise ValueError("Unique code already belongs to stock in legacy CRPT registry")
-            cur.execute("select UID_PALLET from RRL_WMS_RECEIPT_CODE where SYSTEM_CODE=:s and CODE_HASH=:h", {"s": system, "h": digest})
-            if cur.fetchone():
-                raise ValueError("Unique unit code has already been received")
+        self._assert_new_codes(pallet, identities)
+        crpt = [identity for (system, _), identity in identities.items() if system == "CRPT"]
+        if crpt and (not expected_gtin.isdigit() or any(expected_gtin.zfill(14) != identity['gtin'] for identity in crpt)):
+            raise ValueError('Unique code GTIN does not match received article')
+        if identities:
             cur.setinputsizes(p_raw=oracledb.DB_TYPE_CLOB, profiles=oracledb.DB_TYPE_CLOB)
-            cur.execute("insert into RRL_WMS_RECEIPT_CODE(SYSTEM_CODE,CODE_HASH,UID_PALLET,UNIT_ID,RAW_CODE,PROFILES_JSON,CANONICAL_CODE) values(:s,:h,:p,:u,:p_raw,:profiles,:canonical)",
-                        {"s": system, "h": digest, "p": pallet, "u": identity["unit"], "p_raw": identity["code"], "profiles": json.dumps(identity["profiles"]), "canonical": identity["identity"]})
-            if system == "CRPT":
-                if not expected_gtin.isdigit() or expected_gtin.zfill(14) != identity['gtin']:
-                    raise ValueError('Unique code GTIN does not match received article')
-                cur.callfunc("RRL_PRODUCTION_API.ADD_CRPT_CODE", oracledb.DB_TYPE_NUMBER,
-                             [None, pallet, identity["gtin"], identity["identity"], identity["serial"], identity["code"], regulatory_sscc])
-                if crpt_parent is not None:
-                    cur.callproc('RRL_PRODUCTION_API.ADD_AGGREGATION_ITEM', [crpt_parent, 'CIS', identity['identity'], None, identity['gtin'], None])
+            cur.executemany("insert into RRL_WMS_RECEIPT_CODE(SYSTEM_CODE,CODE_HASH,UID_PALLET,UNIT_ID,RAW_CODE,PROFILES_JSON,CANONICAL_CODE) values(:s,:h,:p,:u,:p_raw,:profiles,:canonical)",
+                            [{"s": system, "h": digest, "p": pallet, "u": identity["unit"], "p_raw": identity["code"], "profiles": json.dumps(identity["profiles"]),
+                              "canonical": identity["identity"]} for (system, digest), identity in identities.items()])
+        if crpt:
+            self._register_crpt(pallet, crpt, regulatory_sscc, crpt_parent)
         for system in {key[0] for key in identities}:
             journal = json.dumps({'pallet': pallet, 'units': len(marks['units']), 'physical_receipt': source_kind == 'PHYSICAL_RECEIPT', 'policy_version': marks['policy_version']})
             cur.callfunc('RRL_REGULATORY_API.WRITE_JOURNAL', oracledb.DB_TYPE_NUMBER,
@@ -145,6 +119,67 @@ class ReceivingMarks:
                     'p_uid_pallet': pallet, 'p_sscc': regulatory_sscc if system=='CRPT' else None, 'p_operation_type': source_kind,
                     'p_new_status': 'CAPTURED', 'p_payload_json': journal, 'p_created_by': actor})
         persist_scanned_aggregates(cur,pallet,marks["scanned"])
+
+    @staticmethod
+    def _identities(marks: dict, expected_gtin: str | None) -> dict:
+        identities = {}
+        for unit_id, codes in marks["units"].items():
+            for profile, code in codes.items():
+                normalized = canonical_mark(profile[0], profile[1], code, expected_gtin)
+                key = (profile[0], sha256(normalized["identity"].encode()).hexdigest())
+                if key in identities and identities[key]["unit"] != unit_id:
+                    raise ValueError("One unique code cannot identify different physical units")
+                identity = identities.setdefault(key, {"unit": unit_id, "code": code, "profiles": [], **normalized})
+                identity["profiles"].append({"profile": profile[1], "version": marks["profiles"][profile]["version"], "raw_code": code})
+        return identities
+
+    def _insert_units(self, pallet: str, marks: dict, bindings: list | None, base_uom: str | None, cell: str | None) -> None:
+        units = list(marks["units"])
+        if not units:
+            return
+        if bindings is None:
+            self.cur.executemany("insert into RRL_WMS_RECEIPT_UNIT(UID_PALLET,UNIT_ID,POLICY_VERSION,BASE_QTY) values(:p,:u,:v,:q)",
+                                 [{"p": pallet, "u": u, "v": marks["policy_version"], "q": marks['unit_quantities'][u]} for u in units])
+            return
+        binding_map, boxes, rows = {b["unit_id"]: b for b in bindings}, marks.get("weighted_boxes", {}), []
+        for u in units:
+            box = boxes.get(u, {})
+            rows.append(dict(p=pallet, u=u, v=marks["policy_version"], q=marks['unit_quantities'][u], k=binding_map[u]["key"], c=cell, base=base_uom,
+                             gross=Decimal(box["gross_weight_kg"]) if box.get("gross_weight_kg") else None,
+                             volume=Decimal(box["volume_m3"]) if box.get("volume_m3") else None,
+                             reference=box.get("measurement_reference"), label=box.get("raw_scan")))
+        self.cur.executemany("""insert into RRL_WMS_RECEIPT_UNIT(UID_PALLET,UNIT_ID,POLICY_VERSION,BASE_QTY,
+            PHYSICAL_UNIT_KEY,CURRENT_UID,CURRENT_CELL,BASE_UOM,STOCK_STATUS,UNIT_VERSION,
+            GROSS_WEIGHT_KG,BOX_VOLUME_M3,MEASUREMENT_REFERENCE,WEIGHT_LABEL_SCAN)
+            values(:p,:u,:v,:q,:k,:p,:c,:base,'CAPTURED',0,:gross,:volume,:reference,:label)""", rows)
+
+    def _assert_new_codes(self, pallet: str, identities: dict) -> None:
+        """Both uniqueness checks for the whole pallet in one query each (same predicates as the per-code checks)."""
+        cis = [identity["identity"] for (system, _), identity in identities.items() if system == "CRPT"]
+        if cis:
+            self.cur.setinputsizes(codes=oracledb.DB_TYPE_CLOB)
+            self.cur.execute("select count(*) from RRL_CRPT_CODES c join json_table(:codes,'$[*]' columns(CIS varchar2(4000) path '$')) j on j.CIS=c.CIS "
+                             "where nvl(c.UID_PALLET,'#')<>:p", codes=json.dumps(cis), p=pallet)
+            if self.cur.fetchone()[0]:
+                raise ValueError("Unique code already belongs to stock in legacy CRPT registry")
+        for system in {key[0] for key in identities}:
+            self.cur.setinputsizes(hashes=oracledb.DB_TYPE_CLOB)
+            self.cur.execute("select count(*) from RRL_WMS_RECEIPT_CODE r join json_table(:hashes,'$[*]' columns(H varchar2(64) path '$')) j on j.H=r.CODE_HASH "
+                             "where r.SYSTEM_CODE=:s", hashes=json.dumps([digest for (s, digest) in identities if s == system]), s=system)
+            if self.cur.fetchone()[0]:
+                raise ValueError("Unique unit code has already been received")
+
+    def _register_crpt(self, pallet: str, crpt: list[dict], sscc: str | None, parent: int | None) -> None:
+        """The same native registration calls per code, in the same order, inside one server round trip."""
+        self.cur.setinputsizes(codes=oracledb.DB_TYPE_CLOB)
+        self.cur.execute("""declare v number;begin
+             for r in(select GTIN,CIS,SERIAL_NO,RAW_CODE from json_table(:codes,'$[*]' columns(SEQ for ordinality,GTIN varchar2(14) path '$.gtin',
+               CIS varchar2(4000) path '$.cis',SERIAL_NO varchar2(4000) path '$.serial',RAW_CODE varchar2(4000) path '$.raw')) order by SEQ)loop
+              v:=RRL_PRODUCTION_API.ADD_CRPT_CODE(null,:p,r.GTIN,r.CIS,r.SERIAL_NO,r.RAW_CODE,:sscc);
+              if :parent is not null then RRL_PRODUCTION_API.ADD_AGGREGATION_ITEM(:parent,'CIS',r.CIS,null,r.GTIN,null);end if;
+             end loop;end;""",
+                         codes=json.dumps([{"gtin": i["gtin"], "cis": i["identity"], "serial": i["serial"], "raw": i["code"]} for i in crpt]),
+                         p=pallet, sscc=sscc, parent=parent)
 
     @staticmethod
     def _quantity(quantities: dict, unit_id: str, value: Decimal) -> None:

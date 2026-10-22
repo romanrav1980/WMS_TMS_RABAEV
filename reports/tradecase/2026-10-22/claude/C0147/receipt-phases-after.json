@@ -1,0 +1,26 @@
+{
+ "operation_id": "T3.receive.505b15a0",
+ "units": 1000,
+ "read_only": true,
+ "plan_receipt_ms": 124,
+ "plan_bindings": 1000,
+ "persist_round_trips": 7,
+ "persist_kinds": {
+  "select nvl(f.GTIN,a.BARCODE_SHT) from RR": 1,
+  "executemany insert into RRL_WMS_RECEIPT_UN": 1,
+  "select count(*) from RRL_CRPT_CODES c jo": 1,
+  "select count(*) from RRL_WMS_RECEIPT_COD": 1,
+  "executemany insert into RRL_WMS_RECEIPT_CO": 1,
+  "declare v number;begin for r in(select G": 1,
+  "callfunc RRL_REGULATORY_API.WRITE_JOURNAL": 1
+ },
+ "persist_python_ms": 24,
+ "dup_checks_2000_ms": 2985,
+ "ms_per_round_trip": 1.493,
+ "batched_dup_checks_ms": 43,
+ "batched_found": {
+  "legacy": 0,
+  "received": 0
+ },
+ "estimated_persist_round_trip_ms": 10
+}
