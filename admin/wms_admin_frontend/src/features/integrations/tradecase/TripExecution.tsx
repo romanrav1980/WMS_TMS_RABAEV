@@ -1,5 +1,7 @@
 import { CapacityPreview } from "./CapacityPreview";
 import { TopupPreview } from "./TopupPreview";
+import { TopupProposals, useTopup } from "./TopupProposals";
+import { TripRoute } from "./TripRoute";
 import { useState } from "react";
 import { RAW_ADMIN_BASE } from "../../../api";
 import { executionPath, nativeTripPath, tcHelp, tripBindingPath } from "./api";
@@ -19,7 +21,7 @@ export const tripScreen = (nativeId: number) => `${RAW_ADMIN_BASE}/transport-loa
 
 /** Фактическое исполнение внешнего рейса: привязка к рейсу склада, документ и погрузки. Документ ≠ доставка; очередь ≠ внешний документ. */
 export function TripExecution({ wh, user, trip }: { wh: string; user: string; trip: DocCard }) {
-  const [reload, setReload] = useState(0), [edit, setEdit] = useState(false);
+  const [reload, setReload] = useState(0), [edit, setEdit] = useState(false), topup = useTopup(wh, user);
   const ex = useRead<TripExec>(executionPath(wh, trip.document_id), reload);
   const missing = Boolean(ex.error) && ex.error.includes("не найден");
   const e = ex.data;
@@ -37,8 +39,11 @@ export function TripExecution({ wh, user, trip }: { wh: string; user: string; tr
       <Tech value={e} /></>}
     {e && !edit && <Act help={tcHelp.rebindTrip} onClick={() => setEdit(true)}>Изменить привязку</Act>}
     {(missing || edit) && <BindForm wh={wh} user={user} trip={trip} bindingVersion={e?.binding_version ?? 0} onDone={() => { setEdit(false); setReload(n => n + 1); }} />}
+    <TripRoute wh={wh} trip={trip.document_id} nativeTask={e?.native_task_id ?? null} bindingState={ex.loading && !e ? "LOADING" : ex.error && !missing ? "UNAVAILABLE" : "KNOWN"} />
     <CapacityPreview wh={wh} trip={trip.document_id} />
-    <TopupPreview wh={wh} trip={trip.document_id} />
+    <TopupPreview wh={wh} trip={trip.document_id} saveLocked={topup.cmd.stored.kind !== "none" || topup.cmd.busy}
+      onSave={(needIds, age) => topup.cmd.start({ action: "SAVE", trip: trip.document_id, need_ids: needIds, max_age_minutes: age }, topup.refresh)} />
+    <TopupProposals wh={wh} trip={trip.document_id} topup={topup} />
   </section>;
 }
 

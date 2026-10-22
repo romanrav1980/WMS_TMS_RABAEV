@@ -79,6 +79,8 @@ def setup():
 
 
 def run(f):
+    quantity = int(f.get('receipt_quantity', 250))
+    assert 100 < quantity <= 1000 and quantity % 10 == 0, quantity
     ware=f['warehouse_id'];path=f'/api/tradecase/warehouses/{ware}';stock=path+'/stock'
     expect(200,http('PUT',path+'/site',dict(operation_id='T3.site.'+f['tag'],expected_version=0,source_id='TC03.SAP',active_skm='TC03.SKM',planning_source='SAP',enabled=True,reason='Isolated native stock acceptance')))
     def send(identifier,payload):
@@ -90,10 +92,10 @@ def run(f):
         if zone=='PICK':body['owner_id']='SNS'
         expect(200,http('PUT',stock+'/cells/'+cell,body))
     supply=ET.Element('WarehouseSupplyOrder',version='1');fields(supply,dict(Sender='TC03.QA.SAP',MessageId='T3.SUPPLY.'+f['tag'],OrderNumber='T3.'+f['tag'],Revision=1,WarehouseId=ware,ReceiveCell=f['receive'],Supplier='TRADECASE QA sender'))
-    line=ET.SubElement(ET.SubElement(supply,'Lines'),'Line');fields(line,dict(LineNumber='1',Material=f['article']));ET.SubElement(line,'Quantity',unit='EA').text='250'
+    line=ET.SubElement(ET.SubElement(supply,'Lines'),'Line');fields(line,dict(LineNumber='1',Material=f['article']));ET.SubElement(line,'Quantity',unit='EA').text=str(quantity)
     imported=xml_call('/api/integrations/sap/supply-orders',supply,202)
-    units=[dict(unit_id=str(i),quantity='1',codes=[dict(system_code='CRPT',profile_code='TOBACCO',code=f['gtin']+f['tag'][:3]+str(i).zfill(4))])for i in range(1,251)]
-    received=expect(201,http('POST',f"/api/receiving/supply-orders/{imported['order_id']}/pallets",dict(operation_id='T3.receive.'+f['tag'],line_number='1',pallet_identifier=f['pallet'],quantity='250',supplier_batch='TC03.'+f['tag'],expiry_date='2030-01-01',gross_weight='250',units=units)))
+    units=[dict(unit_id=str(i),quantity='1',codes=[dict(system_code='CRPT',profile_code='TOBACCO',code=f['gtin']+f['tag'][:3]+str(i).zfill(4))])for i in range(1,quantity+1)]
+    received=expect(201,http('POST',f"/api/receiving/supply-orders/{imported['order_id']}/pallets",dict(operation_id='T3.receive.'+f['tag'],line_number='1',pallet_identifier=f['pallet'],quantity=str(quantity),supplier_batch='TC03.'+f['tag'],expiry_date='2030-01-01',gross_weight=str(quantity),units=units)))
     f.update(sap_order_id=imported['order_id'],task_id=received['task_id'],codes=[u['codes'][0]for u in units])
     send('SUPPLY',dict(entity_type='SUPPLY',wms_article_id=f['article'],sap_order_id=imported['order_id'],sap_line_id='1',sku_id='A',owner_id='SNS',mrc='200',pallet_identifier=f['pallet'],supplier_batch='TC03.'+f['tag'],expiry_date='2030-01-01',composition_source='SAP',codes=f['codes']))
     body=dict(operation_id='T3.bind.'+f['tag'],supply_id='SUPPLY',expected_supply_version=1,scanned_pallet=f['pallet'])
@@ -102,7 +104,7 @@ def run(f):
     expect(200,http('PUT',stock+'/owner-grants',grant));expect(403,http('POST',stock+'/bind',body,f['actor'],f['password']))
     grant.update(operation_id='T3.grant1.'+f['tag'],expected_version=1,can_operate=True)
     expect(200,http('PUT',stock+'/owner-grants',grant))
-    bound=expect(200,http('POST',stock+'/bind',body,f['actor'],f['password']));assert bound['bound_units']==250 and bound['mark_state']=='PENDING'
+    bound=expect(200,http('POST',stock+'/bind',body,f['actor'],f['password']));assert bound['bound_units']==quantity and bound['mark_state']=='PENDING'
     assert expect(200,http('POST',stock+'/bind',body,f['actor'],f['password']))['replayed']
     view=expect(200,http('GET',stock+'?limit=100',actor=f['actor'],password=f['password']));assert len(view['items'])==100 and view['has_more']
     assert all(item['owner_id']=='SNS'and item['mark_state']=='PENDING'for item in view['items'])
@@ -119,7 +121,7 @@ def run(f):
     with oracle_connection()as c:
         q=c.cursor();q.execute("select RRL_STOCK_ELIGIBILITY.reason(:pallet_uid,:cell,:ware,1,null,null,'ALLOCATE')from dual",pallet_uid=f['pallet'],cell=target,ware=ware)
         reason=q.fetchone()[0];assert reason=='TRADE_CODE_VALIDATION_PENDING',reason
-        q.execute('select REMAIN,HARD_RESERVED_BASE from RRL_REMAINS where UID_POLETA=:pallet_uid and CELL=:cell',pallet_uid=f['pallet'],cell=target);assert q.fetchone()==(250,0)
+        q.execute('select REMAIN,HARD_RESERVED_BASE from RRL_REMAINS where UID_POLETA=:pallet_uid and CELL=:cell',pallet_uid=f['pallet'],cell=target);assert q.fetchone()==(quantity,0)
         q.execute("select count(*)from user_objects where status='INVALID'and object_name not like'BIN$%'");assert q.fetchone()[0]==0
         try:q.execute("update RRL_TRADE_STOCK_ATTR set MRC=201 where CAPTURE_WARE_ID=:w",w=ware)
         except Exception as e:assert 'TRADE_STOCK_WRITE_FORBIDDEN'in str(e)
@@ -127,7 +129,7 @@ def run(f):
         c.rollback()
         q.execute('select LOG_ID,ELAPSED_MS,OPERATION_KIND from RRL_SQL_SLOW_LOG where LOG_ID>:n order by LOG_ID fetch first 40 rows only',n=f['slow_marker'])
         slow=[list(x)for x in q]
-    return dict(status='PASS',leaf_units=250,boxes_equivalent=25,physical_quantity=250,hard_reserved=0,mark_state='PENDING',admission_reason=reason,slow_sql=slow)
+    return dict(status='PASS',leaf_units=quantity,boxes_equivalent=quantity//10,physical_quantity=quantity,hard_reserved=0,mark_state='PENDING',admission_reason=reason,slow_sql=slow)
 
 
 if __name__=='__main__':

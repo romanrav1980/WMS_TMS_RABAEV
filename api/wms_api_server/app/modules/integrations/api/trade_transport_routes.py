@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from typing import Any
 from fastapi import APIRouter,Depends,HTTPException,Path,Query
 from ...platform.public import AdminUser,get_current_user
@@ -27,6 +28,18 @@ def state(warehouse:int=Path(gt=0),trip:str=Path(min_length=1,max_length=100),us
     try:return service.state(warehouse,trip,user.username)
     except TradeTransportError as exc:raise HTTPException(exc.status,{"code":exc.code})from exc
 
+@router.get("/coverage")
+def coverage(warehouse:int=Path(gt=0),trip:str=Path(min_length=1,max_length=100),user:AdminUser=Depends(get_current_user),service:TradeTransportPort=Depends(trade_transport_service))->dict[str,Any]:
+    """Ordered/reserved/picked/loaded/departed by the trip's real order lines; one READ ONLY snapshot, unknown is null."""
+    try:return service.coverage(warehouse,trip,user.username)
+    except TradeTransportError as exc:raise HTTPException(exc.status,{"code":exc.code})from exc
+
+@router.get("/route-points")
+def route_points(warehouse:int=Path(gt=0),trip:str=Path(min_length=1,max_length=100),user:AdminUser=Depends(get_current_user),service:TradeTransportPort=Depends(trade_transport_service))->dict[str,Any]:
+    """Route stops of the bound warehouse trip linked to TRADECASE recipients by keys only; READ ONLY."""
+    try:return service.route_points(warehouse,trip,user.username)
+    except TradeTransportError as exc:raise HTTPException(exc.status,{"code":exc.code})from exc
+
 @router.get("/capacity")
 def capacity(warehouse:int=Path(gt=0),trip:str=Path(min_length=1,max_length=100),sku_id:str=Query(min_length=1,max_length=100),requested_boxes:int=Query(ge=1,le=100000),user:AdminUser=Depends(get_current_user),service:TradeTransportPort=Depends(trade_transport_service))->dict[str,Any]:
     try:return service.capacity(warehouse,trip,sku_id,requested_boxes,user.username)
@@ -35,9 +48,11 @@ def capacity(warehouse:int=Path(gt=0),trip:str=Path(min_length=1,max_length=100)
 # Durable top-up decisions. Save/adjust/reject never touch stock; confirm/release/SAP rejection go through StockPosting.
 Proposal=Path(gt=0)
 
-def _topup(call)->dict[str,Any]:
+def _topup(call:Callable[[],dict[str,Any]])->dict[str,Any]:
     try:return call()
-    except TradeTransportError as exc:raise HTTPException(exc.status,{"code":exc.code,"outcome_confirmed":exc.status!=503,"retry_same_operation_id":exc.status==503})from exc
+    except TradeTransportError as exc:
+        uncertain=exc.status in {401,403,404,503} or exc.code in {"OPERATION_CONFLICT","TRADE_TOPUP_OPERATION_CONFLICT","TRADE_TOPUP_EVENT_CONFLICT"}
+        raise HTTPException(exc.status,{"code":exc.code,"outcome_confirmed":not uncertain,"retry_same_operation_id":uncertain})from exc
 
 @router.get("/topup-proposals")
 def topup_list(warehouse:int=Path(gt=0),trip:str=Path(min_length=1,max_length=100),user:AdminUser=Depends(get_current_user),service:TradeTransportPort=Depends(trade_transport_service))->dict[str,Any]:

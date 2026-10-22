@@ -9,20 +9,38 @@ M=ROOT/'db/migrations/2026-10-22_trade_topup_proposal'
 report=dict(status='FAIL',sources={},checks=[])
 with oracle_connection() as c:
  q=c.cursor();q.execute("select user,sys_context('USERENV','SERVICE_NAME')from dual");assert q.fetchone()==('RABAEV','orcl')
- expected={(k,'PACKAGE'if k in('RRL_STOCK_UNIT_CORE','RRL_STOCK_RESERVE_CORE')else'PACKAGE BODY'):v for k,v in json.loads((M/'manifest.json').read_text())['objects_after'].items()}
+ expected={(k,'PACKAGE'if k in('RRL_STOCK_UNIT_CORE','RRL_STOCK_RESERVE_CORE')else'PACKAGE BODY'):v for k,v in json.loads((M/'manifest.json').read_text(encoding='utf-8'))['objects_after'].items()}
  for file in ('002_read.sql','003_api.sql','004_cmd.sql'):
   for chunk in re.split(r'(?m)^/\s*$',(M/file).read_text(encoding='utf-8').replace('\r','')):
    if not chunk.strip():continue
    stored=chunk.strip()[len('create or replace '):]
    match=re.match(r'package\s+(body\s+)?(\w+)',stored,re.I);assert match
    expected[(match[2].upper(),'PACKAGE BODY'if match[1]else'PACKAGE')]=hashlib.sha256(stored.encode()).hexdigest().upper()
+ # Later additive migrations are explicit exact baselines, only when their
+ # own migration ledger says APPLIED. Keep all prior untouched checks.
+ migrations=ROOT/'db/migrations'
+ for folder in ('2026-10-22_trade_topup_wave_adoption','2026-10-22_trade_topup_adoption_guard','2026-10-22_trade_topup_cancelled_wave_reconcile'):
+  manifest=json.loads((migrations/folder/'manifest.json').read_text(encoding='utf-8'))
+  q.execute('select STATUS from RRL_SCHEMA_MIGRATIONS where MIGRATION_ID=:m',m=manifest['migration_id'])
+  if q.fetchone()!=('APPLIED',):continue
+  report.setdefault('additive_migrations',[]).append(manifest['migration_id'])
+  if 'objects_after' in manifest:
+   for key,digest in manifest['objects_after'].items():
+    name,kind=key.split(':',1);expected[(name,kind)]=digest
+   for chunk in re.split(r'(?m)^/\s*$',(migrations/folder/'002_adopt.sql').read_text(encoding='utf-8').replace('\r','')):
+    if 'create or replace ' not in chunk:continue
+    stored=chunk.split('create or replace ',1)[1].strip()
+    match=re.match(r'package\s+(body\s+)?(\w+)',stored,re.I);assert match
+    expected[(match[2].upper(),'PACKAGE BODY'if match[1]else'PACKAGE')]=hashlib.sha256(stored.encode()).hexdigest().upper()
+  else:
+   name,kind=manifest['object'].split(':',1);expected[(name,kind)]=manifest['after']
  for (name,kind),digest in expected.items():
   q.execute('select TEXT from USER_SOURCE where NAME=:n and TYPE=:t order by LINE',n=name,t=kind)
   actual=hashlib.sha256(''.join(r[0]for r in q).replace('\r','').rstrip('\n').encode()).hexdigest().upper()
   assert actual==digest,(name,kind,actual,digest);report['sources'][name+'.'+kind]=actual
  q.execute("select count(*)from USER_OBJECTS where STATUS='INVALID'");assert q.fetchone()==(0,)
  q.execute("select INDEX_TYPE,UNIQUENESS,STATUS from USER_INDEXES where INDEX_NAME='RRL_TRADE_TOPUP_SAP_ORDER_UK'");assert q.fetchone()==('FUNCTION-BASED NORMAL','UNIQUE','VALID')
- report['checks'].append('Eleven source SHA match, INVALID zero, conditional unique order index valid')
+ report['checks'].append(f'{len(expected)} source SHA match, INVALID zero, conditional unique order index valid')
  q.execute('select STATUS,sum(BASE_QTY),count(*)from RRL_TRADE_TOPUP_HOLD where PROPOSAL_ID in(4,5)group by STATUS');report['holds']=[list(r)for r in q];assert report['holds']==[['RELEASED',80,2]]
  q.execute('select c.WARE_ID,sum(r.REMAIN),sum(r.HARD_RESERVED_BASE)from RRL_REMAINS r join RRL_CELLS c on c.CELL=r.CELL where c.WARE_ID in(214410245,223887522,210564699,220793322)group by c.WARE_ID order by c.WARE_ID');report['stock']=[list(r)for r in q];assert report['stock']==[[210564699,250,0],[214410245,250,0],[220793322,7,5],[223887522,250,0]]
  q.execute("select count(*)from RRL_TRADE_TOPUP_PROPOSAL where WARE_ID=210564699 and STATUS in('CONFIRMED','SAP_ACCEPTED')");assert q.fetchone()==(0,)
@@ -33,4 +51,7 @@ with oracle_connection() as c:
   report['top_sql']=[list(r)for r in q]
  except Exception as exc: report['top_sql_unavailable']=type(exc).__name__
 report['status']='PASS'
-output=ROOT/'runtime/test-evidence/tradecase/2026-10-22/T08/topup-native-verification.json';output.write_text(json.dumps(report,indent=2,default=str),encoding='utf-8');print(json.dumps(dict(status='PASS',sources=len(expected),checks=len(report['checks']),stock=report['stock'],top_sql=report.get('top_sql'))))
+output=ROOT/'runtime/test-evidence/tradecase/2026-10-22/T08/topup-native-verification.json'
+archive=output.with_name('topup-native-verification-before-adoption.json')
+if output.exists() and not archive.exists():archive.write_bytes(output.read_bytes())
+output.write_text(json.dumps(report,indent=2,default=str),encoding='utf-8');print(json.dumps(dict(status='PASS',sources=len(expected),checks=len(report['checks']),stock=report['stock'],top_sql=report.get('top_sql'))))

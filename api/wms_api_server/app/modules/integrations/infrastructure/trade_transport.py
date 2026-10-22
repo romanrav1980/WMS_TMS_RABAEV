@@ -1,10 +1,12 @@
 """Delegate metadata to the existing fenced native command owner; never post goods."""
 from hashlib import sha256
 import json
-from typing import Any
+from typing import TYPE_CHECKING,Any
 import oracledb
 from ...platform.public import read_oracle_json
 from ..contracts_trade_transport import TripBinding,TransportDocumentResult,TradeTransportError
+if TYPE_CHECKING:
+    from .trade_topup_proposals import OracleTopupProposals
 
 class OracleTradeTransport:
     def __init__(self,gateway:Any)->None:
@@ -49,6 +51,14 @@ class OracleTradeTransport:
         from .trade_topup import topup_preview
         return topup_preview(self.gateway,ware,trip,body,actor)
 
-    def proposals(self):
+    def coverage(self,ware:int,trip:str,actor:str)->dict[str,Any]:
+        from .trade_route import trip_coverage
+        return trip_coverage(self.gateway,ware,trip,actor)
+
+    def route_points(self,ware:int,trip:str,actor:str)->dict[str,Any]:
+        from .trade_route_plan import route_points
+        return route_points(self.gateway,ware,trip,actor)
+
+    def proposals(self)->"OracleTopupProposals":
         from .trade_topup_proposals import OracleTopupProposals
         return OracleTopupProposals(self.gateway)

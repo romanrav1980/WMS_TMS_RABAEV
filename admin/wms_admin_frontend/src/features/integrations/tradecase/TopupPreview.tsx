@@ -24,7 +24,7 @@ function failure(e: unknown) {
   return "Не удалось получить расчёт. Повторите после восстановления связи.";
 }
 
-export function TopupPreview({ wh, trip }: { wh: string; trip: string }) {
+export function TopupPreview({ wh, trip, onSave, saveLocked }: { wh: string; trip: string; onSave?: (needIds: string[], age: number) => void; saveLocked?: boolean }) {
   const needs = useRead<Page<DocRow>>(listPath(wh, "NEED", null));
   const [choice, setChoice] = useState(""), [selected, setSelected] = useState<string[]>([]), [age, setAge] = useState("");
   const [result, setResult] = useState<Result | null>(null), [error, setError] = useState(""), [busy, setBusy] = useState(false), [detail, setDetail] = useState<unknown>(null);
@@ -67,6 +67,9 @@ export function TopupPreview({ wh, trip }: { wh: string; trip: string }) {
     {result && <div aria-label="Результат распределения"><p><b>Всего предложено: {result.proposed_boxes} кор.</b></p>
       {result.items.map(x => <article key={x.need.document_id} className="tc-panel"><h5>{x.priority}. {x.need.recipient_title} · {x.need.sku_title}</h5>
         <dl className="tc-fields"><dt>Потребность</dt><dd>{x.need.additional_boxes} кор.</dd><dt>Предложено</dt><dd>{x.proposed_boxes} кор.</dd><dt>Осталось покрыть</dt><dd>{x.uncovered_boxes} кор.</dd></dl></article>)}
-      <p>Перед согласованием проверьте пригодный запас отправителя, маршрут, укладку и сроки доставки. Заказы SAP и складские задания этим расчётом не создаются.</p><Tech value={result} label="Версии и исходные данные расчёта" /></div>}
+      <p>Расчёт учитывает свободное место, уже подтверждённые добивки и пригодный запас сверх основных заказов. Маршрут, укладку и сроки доставки проверьте отдельно. Заказы SAP и складские задания расчётом не создаются.</p>
+      {onSave && <Act help={help("save", "Сохранить расчёт как предложения для согласования. Повтор на тех же данных вернёт те же предложения; запас не удерживается.")}
+        disabled={saveLocked} onClick={() => onSave(selected, Number(age))}>Сохранить как предложения</Act>}
+      <Tech value={result} label="Версии и исходные данные расчёта" /></div>}
   </section>;
 }

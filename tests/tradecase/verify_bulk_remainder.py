@@ -10,6 +10,13 @@ report=dict(checks=[],sources={})
 with oracle_connection()as c:
  q=c.cursor();q.execute("select user,sys_context('USERENV','SERVICE_NAME')from dual");assert q.fetchone()==('RABAEV','orcl')
  q.execute("select count(*)from user_objects where STATUS='INVALID'");assert q.fetchone()[0]==0
+ q.execute("select STATUS from RRL_SCHEMA_MIGRATIONS where MIGRATION_ID='2026-10-22-trade-topup-proposal'")
+ latest=q.fetchone()
+ if latest and latest[0]=='APPLIED':
+  expected=json.loads((ROOT/'db/migrations/2026-10-22_trade_topup_proposal/manifest.json').read_text())['objects_after']['RRL_TRADE_STOCK_GUARD']
+  for item in manifest.values():
+   if item['name']=='RRL_TRADE_STOCK_GUARD'and item['type']=='PACKAGE BODY':item['after']=expected
+  report['guard_successor']='2026-10-22-trade-topup-proposal; original waiting assertions retained'
  for key,item in manifest.items():
   q.execute('select text from user_source where NAME=:n and TYPE=:t order by LINE',n=item['name'],t=item['type']);digest=hashlib.sha256(''.join(r[0]for r in q).replace('\r','').rstrip('\n').encode()).hexdigest().upper();assert digest==item['after'];report['sources'][key]=digest
  q.execute('select LOT_UID from RRL_CASE_CARRIER_LOT where CASE_PICK_TASK_ID=1169');uid=q.fetchone()[0]
