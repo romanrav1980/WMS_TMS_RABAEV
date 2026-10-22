@@ -1,5 +1,5 @@
 """Fit ordered recipient needs into one consistent trip snapshot; no reservations."""
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal, ROUND_FLOOR
 from hashlib import sha256
 import json
@@ -9,8 +9,61 @@ from ..contracts_trade_topup import TopupPreview
 from ..contracts_trade_transport import TradeTransportError
 from ..contracts_tradecase import TradecaseError
 from ..domain.trade_capacity import box_capacity
-from .trade_capacity import capacity_context, _box
+from .trade_capacity import capacity_context, _box, _document
 from .trade_need import need_snapshot
+
+
+def _confirmed(cur: Any, ware: int, trip: str) -> list[tuple[str, int]]:
+    """Top-ups already confirmed for this trip occupy space like main orders until released."""
+    cur.execute("select SKU_ID,APPROVED_BOXES from RRL_TRADE_TOPUP_PROPOSAL where WARE_ID=:w and TRIP_ID=:t "
+                "and STATUS in('CONFIRMED','SAP_ACCEPTED') order by PROPOSAL_ID", w=ware, t=trip)
+    return [(sku, int(boxes)) for sku, boxes in cur.fetchall()]
+
+
+def _terms(cur: Any, ware: int, trip: dict, recipient: str, sku: str) -> dict:
+    """Owner/MRC/shelf-life come from the main order of the same recipient and goods; unknown terms block the top-up."""
+    found = set()
+    for assignment in trip['orders']:
+        order, _ = _document(cur, ware, 'ORDER', assignment['order_id'])
+        line = next((x for x in order['lines'] if x['line_id'] == assignment['line_id']), None)
+        if order.get('recipient_id') == recipient and line and line['sku_id'] == sku:
+            found.add((line['source_owner_id'], line['target_owner_id'], str(line['mrc']), int(line.get('min_osg_days') or 0)))
+    if not found:
+        raise TradeTransportError('TOPUP_STOCK_TERMS_REQUIRED', 409)
+    if len(found) > 1:
+        raise TradeTransportError('TOPUP_STOCK_TERMS_AMBIGUOUS', 409)
+    owner, target, mrc, days = found.pop()
+    departure = date.fromisoformat(trip['planned_departure_at'][:10])
+    return dict(source_owner_id=owner, target_owner_id=target, mrc=mrc, min_expiry_date=(departure + timedelta(days=days)).isoformat())
+
+
+def _stock_boxes(cur: Any, ware: int, article: str, sku: str, terms: dict, units_per_box: int) -> int:
+    """Eligible free whole boxes above the unallocated quantity of open main orders with the same terms."""
+    expiry = date.fromisoformat(terms['min_expiry_date'])
+    eligible = cur.callfunc('RRL_TRADE_TOPUP_READ.eligible_units', oracledb.DB_TYPE_NUMBER,
+                            [ware, article, sku, terms['source_owner_id'], Decimal(terms['mrc']), expiry, units_per_box])
+    protected = cur.callfunc('RRL_TRADE_TOPUP_READ.protected_units', oracledb.DB_TYPE_NUMBER,
+                             [ware, sku, terms['source_owner_id'], Decimal(terms['mrc'])])
+    return max(0, int((Decimal(eligible) - Decimal(protected)) // units_per_box))
+
+
+def _item(cur: Any, ware: int, context: dict, planned: list, need: dict, confirmed_boxes: Decimal) -> dict:
+    packages = context['packages']
+    if need['sku_id'] not in packages:
+        packages[need['sku_id']] = _box(cur, ware, need['sku_id'])
+    package = packages[need['sku_id']]
+    sku_doc, _ = _document(cur, ware, 'SKU', need['sku_id'])
+    terms = _terms(cur, ware, context['trip'], need['recipient_id'], need['sku_id'])
+    remaining = max(Decimal(0), Decimal(need['additional_boxes']) - confirmed_boxes)
+    requested = int(remaining.to_integral_value(rounding=ROUND_FLOOR))
+    capacity = box_capacity(context['max_weight'], context['max_volume'], context['dimensions'], planned, package, requested)
+    if capacity['maximum_boxes'] is None:
+        raise TradeTransportError('TOPUP_MIXED_PACKAGE_LAYOUT_REQUIRED', 409)
+    stock = _stock_boxes(cur, ware, sku_doc['wms_article_id'], need['sku_id'], terms, package['units_per_box'])
+    fit = min(capacity['fitting_boxes'], stock)
+    limit = 'SENDER_STOCK' if stock < capacity['fitting_boxes'] else 'CAPACITY' if capacity['fitting_boxes'] < requested else None
+    return dict(need=need, capacity=capacity, proposed_boxes=fit, uncovered_boxes=str(remaining - fit), already_confirmed_boxes=str(confirmed_boxes),
+                sender_stock_boxes=stock, limited_by=limit, article=sku_doc['wms_article_id'], **terms)
 
 
 def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> dict:
@@ -18,6 +71,10 @@ def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> 
     if context['started']:
         raise TradeTransportError('TOPUP_LOADING_ALREADY_STARTED', 409)
     planned = list(context['planned']);packages = context['packages']
+    for sku, boxes in _confirmed(cur, ware, trip):
+        if sku not in packages:
+            packages[sku] = _box(cur, ware, sku)
+        planned.append(dict(packages[sku], boxes=Decimal(boxes), recipient_id=None))
     selected = [];identities = set();now = datetime.now(timezone.utc)
     departure = datetime.fromisoformat(context['trip']['planned_departure_at'].replace('Z', '+00:00'))
     for key in body.need_ids:
@@ -34,24 +91,18 @@ def allocate(cur: Any, ware: int, trip: str, body: TopupPreview, actor: str) -> 
                        if (p['recipient_id'],p['sku_id']) == identity), Decimal(0))
         if primary != Decimal(need['current_trip_quantity']):
             raise TradeTransportError('TOPUP_PRIMARY_SNAPSHOT_MISMATCH:'+key, 409)
-        if need['sku_id'] not in packages:
-            packages[need['sku_id']] = _box(cur, ware, need['sku_id'])
-        package = packages[need['sku_id']]
-        requested = int(Decimal(need['additional_boxes']).to_integral_value(rounding=ROUND_FLOOR))
-        capacity = box_capacity(context['max_weight'], context['max_volume'], context['dimensions'], planned, package, requested)
-        if capacity['maximum_boxes'] is None:
-            raise TradeTransportError('TOPUP_MIXED_PACKAGE_LAYOUT_REQUIRED', 409)
-        fit = capacity['fitting_boxes']
-        selected.append(dict(priority=len(selected)+1, need=need, capacity=capacity, proposed_boxes=fit,
-                             uncovered_boxes=str(Decimal(need['additional_boxes'])-fit)))
-        if fit:
-            planned.append(dict(package, boxes=Decimal(fit), recipient_id=need['recipient_id']))
+        confirmed = Decimal(cur.callfunc('RRL_TRADE_TOPUP_READ.need_confirmed_boxes', oracledb.DB_TYPE_NUMBER, [ware, key, None]))
+        item = _item(cur, ware, context, planned, need, confirmed)
+        item['priority'] = len(selected)+1
+        selected.append(item)
+        if item['proposed_boxes']:
+            planned.append(dict(packages[need['sku_id']], boxes=Decimal(item['proposed_boxes']), recipient_id=need['recipient_id']))
     result = dict(warehouse_id=ware, trip_id=trip, trip_version=context['version'],
                   profile_version=context['profile']['version'], profile_base_hash=context['profile']['base_hash'],
                   order_versions=context['orders'], items=selected,
                   proposed_boxes=sum(x['proposed_boxes'] for x in selected),
                   physical_execution=False, approval_available=False, topup_order_created=False,
-                  sender_stock_checked=False, route_checked=False, stacking_rules_checked=False,
+                  sender_stock_checked=True, route_checked=False, stacking_rules_checked=False,
                   loading_mode='BOX_FIXED_ORIENTATION')
     # Time-dependent age is displayed but is not an identity/version input.
     basis = dict(warehouse_id=ware, trip_id=trip, trip_version=context['version'],

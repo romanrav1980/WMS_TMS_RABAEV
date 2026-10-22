@@ -48,3 +48,7 @@ class OracleTradeTransport:
     def topup(self,ware:int,trip:str,body:Any,actor:str)->dict[str,Any]:
         from .trade_topup import topup_preview
         return topup_preview(self.gateway,ware,trip,body,actor)
+
+    def proposals(self):
+        from .trade_topup_proposals import OracleTopupProposals
+        return OracleTopupProposals(self.gateway)
