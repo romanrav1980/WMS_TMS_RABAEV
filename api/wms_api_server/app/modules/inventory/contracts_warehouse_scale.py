@@ -12,6 +12,15 @@ class WarehouseScaleError(RuntimeError):
         self.code, self.status = code, status
 
 
+class ManualEmptyTareRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    operation_id: str = Field(min_length=1,max_length=100,pattern=r"^[A-Za-z0-9_.:-]+$")
+    expected_content_version: int = Field(strict=True,ge=0)
+    scan_container: str = Field(min_length=1,max_length=150)
+    tare_weight_kg: str = Field(pattern=r"^[0-9]{1,9}(\.[0-9]{1,9})?$")
+    measurement_ref: str = Field(min_length=1,max_length=100)
+
+
 class WarehouseScaleConfiguration(BaseModel):
     model_config = ConfigDict(extra="forbid")
     warehouse_id: int = Field(strict=True, ge=1)
@@ -79,6 +88,7 @@ class WarehouseFinalScalePacket(BaseModel):
 
 
 class WarehouseScalePort(Protocol):
+    def manual_tare(self, task: int, body: ManualEmptyTareRequest, actor: str) -> dict[str, Any]: ...
     def configure(self, device: str, body: WarehouseScaleConfiguration, actor: str) -> dict[str, Any]: ...
     def capture(self, body: WarehouseScalePacket|WarehouseFinalScalePacket, actor: str) -> dict[str, Any]: ...
     def readings(self, task: int, line: int, actor: str) -> dict[str, Any]: ...

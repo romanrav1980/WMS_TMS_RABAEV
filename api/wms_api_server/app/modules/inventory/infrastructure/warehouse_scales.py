@@ -5,7 +5,7 @@ from typing import Any
 import oracledb
 from ....oracle_gateway import OracleGateway
 from ...platform.public import stock_configuration_transaction, read_oracle_json
-from ..contracts_warehouse_scale import WarehouseScaleError, WarehouseScaleConfiguration, WarehouseScalePacket, WarehouseFinalScalePacket
+from ..contracts_warehouse_scale import WarehouseScaleError, WarehouseScaleConfiguration, WarehouseScalePacket, WarehouseFinalScalePacket, ManualEmptyTareRequest
 
 
 def scale_error(exc: oracledb.DatabaseError) -> WarehouseScaleError:
@@ -16,6 +16,17 @@ def scale_error(exc: oracledb.DatabaseError) -> WarehouseScaleError:
 
 
 class WarehouseScales:
+    def manual_tare(self, task: int, body: ManualEmptyTareRequest, actor: str) -> dict[str, Any]:
+        wire=json.dumps(body.model_dump(),ensure_ascii=True,sort_keys=True,separators=(",",":"))
+        try:
+            with self.gateway.transaction("Native manual empty CASE tare evidence")as q:
+                try:
+                    result=q.var(oracledb.DB_TYPE_CLOB)
+                    q.callproc("RRL_CASE_MANUAL_TARE_API.record_tare",[task,wire,actor,result])
+                    return read_oracle_json(result.getvalue())
+                finally:q.callproc("RRL_STOCK_LOCK_API.clear_plan")
+        except oracledb.DatabaseError as exc:raise scale_error(exc)from exc
+
     def __init__(self, gateway: OracleGateway) -> None:
         self.gateway = gateway
 

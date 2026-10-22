@@ -1,13 +1,26 @@
 """Warehouse device packets are evidence, never browser-supplied stock quantities."""
 from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query
-from ...platform.public import AdminUser, require_permission
+from ...platform.public import AdminUser, require_permission, get_current_user
 from ..contracts_warehouse_scale import (
     WarehouseScaleConfiguration, WarehouseScalePacket, WarehouseFinalScalePacket, WarehouseScalePort,
-    WarehouseScaleError, warehouse_scale_service,
+    WarehouseScaleError, warehouse_scale_service, ManualEmptyTareRequest,
 )
 
 router = APIRouter(prefix="/api/inventory/warehouse-scales", tags=["warehouse-scale-evidence"])
+
+
+@router.post("/tasks/{task}/manual-empty-tare")
+def manual_empty_tare(task: int, body: ManualEmptyTareRequest,
+                      user: AdminUser = Depends(get_current_user),
+                      service: WarehouseScalePort = Depends(warehouse_scale_service)) -> dict[str, Any]:
+    if task<1:raise HTTPException(422,"Укажите задание сборки")
+    try:return service.manual_tare(task,body,user.username)
+    except WarehouseScaleError as exc:
+        error=failure(exc)
+        error.detail.update(operation_id=body.operation_id,retry_same_operation_id=exc.status>=500 or exc.status==403 or "CONFLICT"in str(exc))
+        if error.detail["retry_same_operation_id"]:error.detail["outcome_confirmed"]=False
+        raise error from exc
 
 
 def failure(exc: WarehouseScaleError) -> HTTPException:
