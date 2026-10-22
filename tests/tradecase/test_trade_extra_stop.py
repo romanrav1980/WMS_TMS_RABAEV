@@ -170,15 +170,16 @@ def test_evaluation_is_bounded_and_caller_cannot_supply_route_data():
 
 def test_review_rules_access_fence_proposal_lock_and_single_approval():
     command = body_of("procedure command(")
-    fence, first, row, second = (command.index(x) for x in ("lock table RRL_ACCESS_REV in share mode", "require_edit(v_trip", "for update wait 5", "for update wait 5"))
-    assert fence < first < row < command.rindex("require_edit(v_trip")  # current access fence before the trip row, rights before and under
+    first, fence, row = (command.index(x) for x in ("require_edit(v_trip", "RRL_STOCK_METADATA_TX.begin_transport_change", "for update wait 5"))
+    assert first < fence < row < command.rindex("require_edit(v_trip")
     assert "if act='APPROVE'and(v_position is null or given_print is null)then fail('EXTRA_STOP_REQUEST_INVALID')" in command
     lock, final = command.index("RRL_TT_ROUTE_SCHEDULE.lock_material(after_src)"), command.rindex("evaluate_internal(v_trip,p_actor,p_request,after_src)")
     assert lock < final  # inputs of the proposal are locked, then evaluated once more inside the same transaction
     assert command.index("fingerprint<>given_print") < command.index("EXTRA_STOP_ALREADY_APPROVED") < command.index("insert into RRL_TRADE_EXTRA_STOP_EVENT")
     assert "e.DECISION='APPROVED'and e.SOURCE_HASH=given_hash and e.PROPOSAL_FINGERPRINT=fingerprint" in command
     internal = body_of("function evaluate_internal(")
-    assert "sha(base_hash||chr(10)||p_after)" in internal  # fingerprint of the whole AFTER source plus the base route
+    assert "sha(binding.to_clob||chr(10)||p_after)" in internal
+    assert "binding.remove('variants')" in internal and "r.put('zone',nvl(q.get_string('zone'),'UTC'))" in internal
     decisions = body_of("function decisions(")
     assert "STALE_INPUTS_CHANGED" in decisions and "checked<5" in decisions and "x.NEWEST=1" in decisions
     assert "PROPOSAL_FINGERPRINT is not null" in SCHEMA

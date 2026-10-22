@@ -5136,3 +5136,6 @@ C0152 получен RELEASE K0112/c4a2f0b8: экран исключений и 
 23.10 — C0154 исправленныйRELEASE7f15288c получен. Rootобнаружил,чтоlock_materialнеблокируетstoreprofile/weeklywindows, поэтому подготовил scopedbegin_transport_change втомже metadatahelper/fence;14свежихзависимостей/SHA/rollbackпередapply. C0155paperотпущенClaude,ACKpending. Новыефункцииреализованнымидоприменениянеобъявляются.
 
 23.10 — transportmetadatafence39b87b8f7/8/7PASS/14dependents/INVALID0. RootдоработалнеприменённыйC0154: общийfenceвcommandнаnormal/replay/error, полноеоснованиевыбранногопредложениявключаетzone/пробег, историяиспользуетсохранённыйzone. Nativeкандидатещёнеприменён, mirrortrade_extra_stop_20261023.md. C0155бумагапередана, ACKpending.
+
+23.10: C0154 root561eb8e1 установлен10/7/10; HTTP/Oracle5групп ES23bd3fdbf2fa, роль/отзыв, пробег/часовой пояс; UI28/1440/390, build330 и gatePASS. API29700/session83519 безreload. Карантинные три миграции и11HTTP сохранены в обновлённой текущей карточке.932мс scoped history записан Codex/T12 как ограниченный backlog с владельцем. План/index обновлены, T09/T11 не закрыты целиком; C0155 подтверждён, ACK ожидается.
+
