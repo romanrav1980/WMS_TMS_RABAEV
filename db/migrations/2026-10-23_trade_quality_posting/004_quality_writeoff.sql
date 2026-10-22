@@ -112,7 +112,7 @@ create or replace package body RRL_STOCK_QUALITY_WRITEOFF as
  procedure execute_command(p_request clob,p_actor varchar2,p_result out clob)is
   d json_object_t:=json_object_t.parse(p_request);op varchar2(100):=d.get_string('operation_id');plan clob;v json_object_t;fresh json_object_t;
   j json_object_t:=json_object_t();payload json_object_t;v_case number;v_uid varchar2(200);v_hold number;v_version number;now timestamp with time zone:=systimestamp;
-  gov_ids json_array_t;
+  gov_ids json_array_t;outbox_key varchar2(200);
  begin
   select RESOLVED_PLAN_JSON into plan from RRL_STOCK_OPERATION where OPERATION_ID=op;
   v:=json_object_t.parse(plan).get_object('domain');describe(p_request,p_actor,fresh);
@@ -132,7 +132,8 @@ create or replace package body RRL_STOCK_QUALITY_WRITEOFF as
   end if;
   -- Outgoing document with the exact written-off composition; the external answer is a later, separate state.
   payload:=json_object_t.parse(v.to_clob);payload.put('operation_id',op);payload.put('status','POSTED');payload.put('actor',p_actor);
-  insert into RRL_SAP_RECEIPT_OUTBOX(EVENT_ID,EVENT_TYPE,PAYLOAD_JSON)values(hash_key('QUALITY.WRITE_OFF:',op),'TRADE_QUALITY_WRITTEN_OFF',payload.to_clob);
+  outbox_key:=hash_key('QUALITY.WRITE_OFF:',op);
+  insert into RRL_SAP_RECEIPT_OUTBOX(EVENT_ID,EVENT_TYPE,PAYLOAD_JSON)values(outbox_key,'TRADE_QUALITY_WRITTEN_OFF',payload.to_clob);
   p_result:=j.to_clob;
  end;
 end;

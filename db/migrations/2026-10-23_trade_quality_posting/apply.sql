@@ -8,6 +8,7 @@ whenever sqlerror exit failure rollback
 @@006_regulatory_stock_outbox.sql
 @@005_trade_stock_guard.sql
 @@007_stock_posting_api.sql
+@@recompile_dependents.sql
 @@verify.sql
 merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-23-trade-quality-posting' MIGRATION_ID from dual)x on(d.MIGRATION_ID=x.MIGRATION_ID)
 when matched then update set STATUS='APPLIED',APPLIED_AT=sysdate,APPLIED_BY=user

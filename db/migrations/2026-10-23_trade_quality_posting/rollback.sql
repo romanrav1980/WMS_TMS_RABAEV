@@ -24,6 +24,7 @@ alter table RRL_TRADE_QUALITY_CASE add constraint RRL_TRADE_QUALITY_CASE_STATE c
 alter table RRL_TRADE_QUALITY_CASE add constraint RRL_TRADE_QUALITY_CASE_FACTS check((STATE='OPEN'and DECIDED_AT is null and APPROVED_AT is null)
   or(STATE in('DEFECT','RELEASED')and DECIDED_AT is not null and DECIDED_BY is not null and APPROVED_AT is null)
   or(STATE='WAITING_POSTING'and DECIDED_AT is not null and APPROVED_AT is not null and APPROVED_BY is not null));
+@@recompile_dependents.sql
 @@rollback_verify.sql
 merge into RRL_SCHEMA_MIGRATIONS d using(select '2026-10-23-trade-quality-posting' MIGRATION_ID from dual)x on(d.MIGRATION_ID=x.MIGRATION_ID)
 when matched then update set STATUS='ROLLED_BACK',APPLIED_AT=sysdate,APPLIED_BY=user
