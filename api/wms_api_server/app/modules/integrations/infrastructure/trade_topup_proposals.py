@@ -128,7 +128,7 @@ class OracleTopupProposals:
 
     def sap_reply(self, ware: int, trip: str, proposal: int, body: TopupSapReply, actor: str) -> dict[str, Any]:
         if body.outcome == "ACCEPTED":
-            return self._api("RRL_TRADE_TOPUP_API.sap_accept", dict(proposal_id=proposal, warehouse_id=ware, trip_id=trip, source_id=body.source_id,
+            return self._api("RRL_TRADE_TOPUP_API.sap_accept", dict(operation_id=body.operation_id, expected_version=body.expected_version, proposal_id=proposal, warehouse_id=ware, trip_id=trip, source_id=body.source_id,
                                                                     event_id=body.event_id, sap_order_id=body.sap_order_id), actor)
         # Rejection frees this proposal's own holds in the same transaction that records the SAP reason.
         sap = dict(source_id=body.source_id, event_id=body.event_id, reason=body.reason)

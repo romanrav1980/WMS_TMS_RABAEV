@@ -203,6 +203,7 @@ create or replace package body RRL_TRADE_TOPUP_API as
   exception when no_data_found then null;end;
   select*into p from RRL_TRADE_TOPUP_PROPOSAL where PROPOSAL_ID=p.PROPOSAL_ID for update;
   if p.STATUS<>'CONFIRMED'then fail('TRADE_TOPUP_STATE_CONFLICT');end if;
+  if d.get_number('expected_version')is null or p.VERSION_NO<>d.get_number('expected_version')then fail('VERSION_CONFLICT');end if;
   update RRL_TRADE_TOPUP_PROPOSAL set STATUS='SAP_ACCEPTED',SAP_ORDER_ID=order_value,VERSION_NO=VERSION_NO+1,UPDATED_BY=p_actor,UPDATED_AT=systimestamp
    where PROPOSAL_ID=p.PROPOSAL_ID;
   r:=json_object_t.parse(RRL_TRADE_TOPUP_READ.card(p.PROPOSAL_ID));r.put('replayed',false);
@@ -210,7 +211,7 @@ create or replace package body RRL_TRADE_TOPUP_API as
   p_result:=r.to_clob;
   insert into RRL_TRADE_TOPUP_EVENT(WARE_ID,SOURCE_ID,EVENT_ID,PROPOSAL_ID,PAYLOAD_HASH,BODY_JSON,RESULT_JSON)
    values(p.WARE_ID,source_value,event_value,p.PROPOSAL_ID,hash_value,p_request,p_result);
-  journal('SAP:'||source_value||':'||event_value,p.WARE_ID,p.PROPOSAL_ID,'SAP_ACCEPT',p.APPROVED_BOXES,hash_value,p_actor,p_result);
+  journal(d.get_string('operation_id'),p.WARE_ID,p.PROPOSAL_ID,'SAP_ACCEPT',p.APPROVED_BOXES,hash_value,p_actor,p_result);
  exception when dup_val_on_index then fail('TRADE_TOPUP_SAP_ORDER_ALREADY_LINKED');
  end;
 

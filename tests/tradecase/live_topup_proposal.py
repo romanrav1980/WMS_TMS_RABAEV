@@ -133,6 +133,10 @@ if __name__=='__main__':
             for pid,version in active:
                 r.setdefault('cleanup',[]).append(http('POST',base+f'/topup-proposals/{pid}/release',dict(operation_id='TP22.CLEANUP.'+str(pid),expected_version=version)))
             with oracle_connection() as c:
+                q=c.cursor();q.execute("select VERSION_NO,CAN_VIEW,CAN_OPERATE from RRL_TRADE_OWNER_GRANT where WARE_ID=:w and USERNAME=:a and OWNER_ID='SNS'",w=w,a=f['actor']);owner=q.fetchone()
+            if owner and (owner[1] or owner[2]):
+                r['owner_retirement']=http('PUT',f'/api/tradecase/warehouses/{w}/stock/owner-grants',dict(operation_id=f['actor']+'.retire',expected_version=owner[0],username=f['actor'],owner_id='SNS',can_view=False,can_operate=False,reason='Retire owned top-up acceptance'))
+            with oracle_connection() as c:
                 q=c.cursor();q.execute("update RUSERS set DELETED=1 where ID=:a and USER_GROUP='TC03QA'",a=f['actor']);q.execute('update RRL_ACCESS_ASSIGNMENT set REVOKED_AT=coalesce(REVOKED_AT,systimestamp) where ASSIGNMENT_ID=:r',r=f['role']);c.commit()
                 q.execute('select LOG_ID,ELAPSED_MS,OPERATION_KIND from RRL_SQL_SLOW_LOG where LOG_ID>:n order by LOG_ID fetch first 40 rows only',n=f['slow_marker']);r['slow_sql']=[list(row)for row in q]
             r['qa_retired']=True
