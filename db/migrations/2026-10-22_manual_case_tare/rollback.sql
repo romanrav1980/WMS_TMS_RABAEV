@@ -3,8 +3,9 @@ declare n number;begin select count(*)into n from RRL_CASE_MANUAL_TARE;if n<>0 t
 /
 @@rrl_case_scale_admission_before.sql
 @@rrl_wh_final_scale_admission_before.sql
-drop trigger RRL_CASE_MANUAL_TARE_GUARD;
-drop context RRL_MANUAL_TARE_CTX;
+begin execute immediate 'drop trigger RRL_CASE_MANUAL_TARE_GUARD';exception when others then if sqlcode<>-4080 then raise;end if;end;
+/
+-- Dev role cannot DROP ANY CONTEXT; namespace remains inert after its trusted package is dropped.
 drop package RRL_CASE_MANUAL_TARE_API;
 drop table RRL_CASE_MANUAL_TARE;
 @@verify.sql

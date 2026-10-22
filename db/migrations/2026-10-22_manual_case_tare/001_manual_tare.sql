@@ -67,7 +67,7 @@ create or replace package body RRL_CASE_MANUAL_TARE_API as
  exception when others then dbms_session.clear_context('RRL_MANUAL_TARE_CTX',null);RRL_STOCK_LOCK_API.clear_plan;raise;end;
 end;
 /
-create context RRL_MANUAL_TARE_CTX using RRL_CASE_MANUAL_TARE_API;
+create or replace context RRL_MANUAL_TARE_CTX using RRL_CASE_MANUAL_TARE_API;
 create or replace trigger RRL_CASE_MANUAL_TARE_GUARD before insert or update or delete on RRL_CASE_MANUAL_TARE
 begin
  if updating or deleting or sys_context('RRL_MANUAL_TARE_CTX','TX_ID')is null

@@ -5027,3 +5027,5 @@ V$DIAG_INFO/V$SESSION читаются, trace contents отсутствует в
 22Oct bulk-case native compile rejected missing space root_valueand; both attempts rolled back immediately, INVALID0. Scoped label migration apply/rollback/reapply passed. Error evidence T07/bulk-case-compile-errors.json includes recycled BIN diagnostics, only current guard ORA00933 is new. Corrected SQL checkpoint follows; no load executed.
 
 22Oct: manual empty tare gap confirmed by SMALL_BOX_MEASURED_EMPTY_TARE_BEFORE_PICK_REQUIRED after issued+confirmed scoped label. Prepared additive native immutable manual evidence and API, old electronic archive retained. New manual migration UNAPPLIED, no manual tare or pick posted yet. Synthetic GS1 prefix9999999 configured ONLY owned QA WARE220793322; not an assigned production prefix. Bulk CASE guard corrected and apply/rollback/reapply PASS/INVALID0.
+
+22Oct manual tare apply PASS, initial rollback stopped at DROP CONTEXT ORA01031 after admission restored and trigger dropped. No manual rows existed. Paired rollback corrected to retain inert context namespace and safely skip absent trigger; no privileges granted. Recovery verification pending.
