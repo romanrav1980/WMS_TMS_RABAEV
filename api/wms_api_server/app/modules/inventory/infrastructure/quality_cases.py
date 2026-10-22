@@ -72,11 +72,14 @@ class OracleQualityCases:
             raise _error(exc) from exc
         command = StockCommand(operation_id=body.operation_id, command_type="MOVE_QUARANTINE", actor=actor, lines=(),
                                source={"type": "QUALITY", "warehouse_id": ware, "uid": body.pallet_uid},
-                               metadata={"uid": body.pallet_uid, "target_cell": body.target_cell, "quantity": "0", "reason": body.reason})
+                               metadata={"uid": body.pallet_uid, "source_cell": None, "target_cell": body.target_cell,
+                                         "unit": None, "quantity": "0", "reason": body.reason})
         try:
             return self.post(command)
         except StockPostingError as exc:
             raise _posting_error(exc) from exc
+        except oracledb.DatabaseError as exc:
+            raise _error(exc) from exc
 
     def write_off(self, ware: int, body: QualityWriteOff, actor: str) -> dict[str, Any]:
         # The whole effect (stock, codes, case, hold, outgoing document) is the native posting kind; Python only submits it.
@@ -86,6 +89,8 @@ class OracleQualityCases:
             result = self.post(command)
         except StockPostingError as exc:
             raise _posting_error(exc) from exc
+        except oracledb.DatabaseError as exc:
+            raise _error(exc) from exc
         if not isinstance(result, dict) or result.get("operation_id") != body.operation_id:
             raise QualityCaseError("QUALITY_RESULT_UNKNOWN", 503)
         return result

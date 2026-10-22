@@ -1,0 +1,16 @@
+{
+  "migration_id": "2026-10-23-quality-outbox-payload",
+  "target": "RABAEV/orcl",
+  "object": "RRL_STOCK_QUALITY_WRITEOFF:PACKAGE BODY",
+  "before_sha256": "AB336D4A45F7261093331294B4EE87CC723731F1991ADCED2958274DC92378E3",
+  "after_sha256": "D685A1604BAAE813AAB33E03BD32BF932501983D8B8F5B4AB9C7083697AA9F50",
+  "files_sha256": {
+    "001_payload.sql": "be759baf7ad0c0f3271d06f84316a606c76116e5f6337335cbf8bafd10b8b554",
+    "apply.sql": "fd8dffafa46e8d21d0ec8ecc0411ea8eecfb179cfe37ddaf6a83a53bfdc4c378",
+    "before.sql": "97e8cad04d7881b3e7eb381ff577495e442db97e09f64039d5d2c623da9d72e9",
+    "preflight.sql": "4e03a4c382037b3b1c793887a2613d855ccad8f73b5d2f43d6ae06ef31d07338",
+    "rollback.sql": "d122510cb061d18fd0d0a02dfb24f7653f8524fc11da281eb40c5fb49b6a8169",
+    "rollback_verify.sql": "4e03a4c382037b3b1c793887a2613d855ccad8f73b5d2f43d6ae06ef31d07338",
+    "verify.sql": "ad98f5b0140fc2fb988fa4a853407112cb4fec788d2dceb1c6487696e6172fe5"
+  }
+}

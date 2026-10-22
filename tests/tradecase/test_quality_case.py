@@ -105,6 +105,8 @@ def test_quarantine_move_is_the_existing_native_command_after_the_case_check():
     result = OracleQualityCases(gateway, lambda c: posted.append(c) or {"operation_id": c.operation_id, "status": "APPLIED"}).quarantine_move(7, MOVE, "keeper")
     assert result["status"] == "APPLIED" and ("RRL_TRADE_QUALITY_CASE_API.assert_release", 7, "P1") in gateway.calls
     command = posted[0]
+    assert "source_cell" in command.metadata and command.metadata["source_cell"] is None
+    assert "unit" in command.metadata and command.metadata["unit"] is None
     assert (command.command_type, command.lines, command.metadata["quantity"], command.metadata["target_cell"]) == ("MOVE_QUARANTINE", (), "0", "Q-01")
     assert command.source == {"type": "QUALITY", "warehouse_id": 7, "uid": "P1"}
 
