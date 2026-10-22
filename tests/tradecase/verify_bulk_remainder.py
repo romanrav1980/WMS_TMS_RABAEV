@@ -5,7 +5,7 @@ ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT))
 from tools.mcp.tms_mcp_server import oracle_connection
 OUT=ROOT/'runtime/test-evidence/tradecase/2026-10-22/T07'
 s=json.loads((OUT/'bulk-remainder.json').read_text(encoding='utf-8'))
-manifest=json.loads((ROOT/'db/migrations/2026-10-22_trade_hu_defer_wait/manifest.json').read_text())
+manifest={folder+'.'+key:item for folder in ['trade_hu_defer_wait','trade_hu_wait_replay']for key,item in json.loads((ROOT/('db/migrations/2026-10-22_'+folder)/'manifest.json').read_text()).items()}
 report=dict(checks=[],sources={})
 with oracle_connection()as c:
  q=c.cursor();q.execute("select user,sys_context('USERENV','SERVICE_NAME')from dual");assert q.fetchone()==('RABAEV','orcl')

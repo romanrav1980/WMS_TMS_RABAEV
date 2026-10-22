@@ -151,7 +151,9 @@ def waiting():
         body={key:settings[key]for key in fields};body['defer_wait_cell']=cell
         s['wait_settings']=expect(200,http('PUT',path,body));save()
     result=step('wait_plan','/api/receiving/st-deferrals/waiting-tasks',dict(operation_id='NB22.WAIT.PLAN.B',decision_operation_id='NB22.DEFER.B',root_identifier=s['root']))
-    s['status']='REMAINDER_WAIT_TASK_PLANNED';save();print(json.dumps(dict(status=s['status'],plan=result)))
+    request=s['requests']['wait_plan'];assert expect(200,http('POST',request['path'],request['body']))==result
+    if 'wait_complete'not in s['results']:s['status']='REMAINDER_WAIT_TASK_PLANNED'
+    save();print(json.dumps(dict(status=s['status'],task_id=result['task_id'])))
 
 
 def complete_wait():
