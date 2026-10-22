@@ -136,7 +136,7 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
     json_arg_2 varchar2(32767):=x.get_string('cell');
    begin
     select count(*)into n from RRL_WMS_RECEIPT_UNIT u join RRL_TRADE_STOCK_ATTR a on a.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY
-    where u.CURRENT_UID=json_arg_1and u.CURRENT_CELL=json_arg_2and u.STOCK_STATUS='AVAILABLE'and u.HARD_RESERVATION_ID is null
+    where u.CURRENT_UID=json_arg_1 and u.CURRENT_CELL=json_arg_2 and u.STOCK_STATUS='AVAILABLE'and u.HARD_RESERVATION_ID is null
      and a.SKU_ID=p.SKU_ID and a.OWNER_ID=p.SOURCE_OWNER_ID and a.MRC=p.MRC and a.MARK_STATE='VALID'and a.EXPIRY_DATE>=p.MIN_EXPIRY
      and not exists(select 1 from RRL_TRADE_BUYOUT_UNIT bu where bu.PHYSICAL_UNIT_KEY=u.PHYSICAL_UNIT_KEY and bu.HOLD_ACTIVE=1)
      and u.PHYSICAL_UNIT_KEY in(select K from json_table(keys,'$[*]'columns(K varchar2(64)path'$')));
@@ -183,7 +183,7 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
     json_arg_1 varchar2(32767):=sap.get_string('source_id');
     json_arg_2 varchar2(32767):=sap.get_string('event_id');
    begin
-    select count(*)into n from RRL_TRADE_TOPUP_EVENT where WARE_ID=p.WARE_ID and SOURCE_ID=json_arg_1and EVENT_ID=json_arg_2;
+    select count(*)into n from RRL_TRADE_TOPUP_EVENT where WARE_ID=p.WARE_ID and SOURCE_ID=json_arg_1 and EVENT_ID=json_arg_2;
    end;
    if n>0 then fail('TRADE_TOPUP_EVENT_ALREADY_RECORDED');end if;
   elsif reason_value='CANCELLED'then
@@ -199,7 +199,7 @@ create or replace package body RRL_TRADE_TOPUP_CMD as
    declare
     json_arg_1 number:=x.get_number('reservation_id');
    begin
-    select*into h from RRL_TRADE_TOPUP_HOLD where RESERVATION_ID=json_arg_1and PROPOSAL_ID=p.PROPOSAL_ID and STATUS='ACTIVE'for update;
+    select*into h from RRL_TRADE_TOPUP_HOLD where RESERVATION_ID=json_arg_1 and PROPOSAL_ID=p.PROPOSAL_ID and STATUS='ACTIVE'for update;
    end;
    RRL_STOCK_UNIT_CORE.release_units(h.RESERVATION_ID,h.BASE_QTY,null,0);
    RRL_STOCK_RESERVE_CORE.release_hard(h.RESERVATION_ID,h.BASE_QTY,ver,'TRADE_TOPUP',p.PROPOSAL_ID,p_actor);
