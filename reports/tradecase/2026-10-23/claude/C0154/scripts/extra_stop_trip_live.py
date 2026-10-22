@@ -12,7 +12,7 @@ body = SQL[SQL.rindex("create or replace package body"):]
 PURE = body[body.index(" -- PURE BEGIN"):body.index(" -- PURE END")]
 helpers = body[body.index(" procedure fail(p_code varchar2)"):body.index(" -- Every warehouse of the trip")]
 distance = body[body.index(" -- Road distance of an ordered route"):body.index(" -- Real evaluation: current native time context")]
-evaluate = body[body.index(" function evaluate(p_trip number"):body.index(" procedure command(p_request clob")]
+evaluate = body[body.index(" -- Real evaluation: current native time context"):body.index(" procedure command(p_request clob")]
 typedecl = " type policy_t is record(TRIP_ID number,NEW_STOPS_FORBIDDEN number,VERSION_NO number);\n"  # types precede subprograms
 stub = (" function policy(p_trip number)return policy_t is p policy_t;begin p.TRIP_ID:=p_trip;p.NEW_STOPS_FORBIDDEN:=0;p.VERSION_NO:=0;return p;end;\n")
 evaluate = evaluate.replace("p RRL_TRADE_ROUTE_STOP_POLICY%rowtype;", "p policy_t;")

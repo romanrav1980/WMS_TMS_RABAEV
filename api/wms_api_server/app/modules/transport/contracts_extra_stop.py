@@ -15,6 +15,7 @@ class ExtraStopCommand(BaseModel):
     expected_version: int | None = Field(default=None, strict=True, ge=0)
     source_hash: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
     position: int | None = Field(default=None, strict=True, ge=0, le=200)
+    proposal_fingerprint: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
     new_stops_forbidden: bool | None = None
     expected_policy_version: int | None = Field(default=None, strict=True, ge=0)
 
@@ -22,10 +23,12 @@ class ExtraStopCommand(BaseModel):
     def arguments(self) -> "ExtraStopCommand":
         decision = (self.address, self.expected_version, self.source_hash)
         if self.action == "SET_POLICY":
-            ok = self.new_stops_forbidden is not None and self.expected_policy_version is not None and all(v is None for v in (*decision, self.position))
+            ok = self.new_stops_forbidden is not None and self.expected_policy_version is not None \
+                and all(v is None for v in (*decision, self.position, self.proposal_fingerprint))
         else:
+            approve = self.action == "APPROVE"  # an approval names the exact proposal it accepts
             ok = all(v is not None for v in decision) and self.new_stops_forbidden is None and self.expected_policy_version is None \
-                and (self.action == "APPROVE") == (self.position is not None)
+                and approve == (self.position is not None) and approve == (self.proposal_fingerprint is not None)
         if not ok:
             raise ValueError("SET_POLICY names the ban and its version; APPROVE/DECLINE name the address and the route version (APPROVE: position)")
         return self

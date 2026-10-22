@@ -1,7 +1,7 @@
 {
  "kind": "REAL_TRIPS_READ_ONLY_EVALUATE_WITHOUT_POLICY_TABLE",
  "33665": {
-  "ms": 370,
+  "ms": 142,
   "result": {
    "address": "СМ Тюмень - 30 лет Победы 112",
    "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",
@@ -76,7 +76,7 @@
   }
  },
  "33660": {
-  "ms": 24,
+  "ms": 22,
   "result": {
    "address": "СМ Тюмень - 30 лет Победы 112",
    "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",
@@ -151,7 +151,7 @@
   }
  },
  "33564": {
-  "ms": 29,
+  "ms": 27,
   "result": {
    "address": "СМ Тюмень - 30 лет Победы 112",
    "rule_source": "TRADECASE program section 12: propose if it fits the slack before the main delivery deadline",

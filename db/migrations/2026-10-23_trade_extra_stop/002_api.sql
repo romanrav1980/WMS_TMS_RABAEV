@@ -99,11 +99,11 @@ create or replace package body RRL_TRADE_EXTRA_STOP_API as
   return o;
  end;
 
- function evaluate_source(p_source clob,p_request clob,p_legs clob default null)return clob is
+ function assess(p_source clob,p_request clob,p_legs clob,p_after out clob)return clob is
   src json_object_t:=json_object_t.parse(p_source);q json_object_t:=json_object_t.parse(p_request);res json_object_t:=json_object_t();
   zone varchar2(30):=nvl(q.get_string('zone'),'UTC');address varchar2(255):=q.get_string('address');rule json_object_t:=q.get_object('extra_rule');
   before json_object_t;after json_object_t;best json_object_t;best_pos number;stops json_array_t;v json_object_t;kind varchar2(20);
-  variants json_array_t:=json_array_t();unknown boolean:=false;row_v json_object_t;pick number;
+  variants json_array_t:=json_array_t();unknown boolean:=false;row_v json_object_t;pick number;best_src json_object_t;
  begin
   res.put('address',address);res.put('rule_source','TRADECASE program section 12: propose if it fits the slack before the main delivery deadline');
   if q.get_boolean('new_stops_forbidden')then res.put('decision','FORBIDDEN');res.put('reason','NEW_STOPS_FORBIDDEN');return res.to_clob;end if;
@@ -122,17 +122,20 @@ create or replace package body RRL_TRADE_EXTRA_STOP_API as
    row_v.put('issues',after.get_array('issues'));variants.append(row_v);
    if kind='UNKNOWN'then unknown:=true;end if;
    if kind='FEASIBLE'and(best is null or after.get_string('return_at')<best.get_string('return_at'))then best:=after;best_pos:=pos;
-    res.put('after_slack_min',slack(v,after));end if;
+    res.put('after_slack_min',slack(v,after));best_src:=v;end if;
   end loop;
   res.put('variants',variants);
   if best is not null then
-   res.put('decision','PROPOSE');res.put('position',best_pos);res.put('after',brief(best));
+   res.put('decision','PROPOSE');res.put('position',best_pos);res.put('after',brief(best));p_after:=best_src.to_clob;
    res.put('added_min',minutes_between(before.get_string('return_at'),best.get_string('return_at')));
    res.put('added_drive_min',to_number(best.get_string('drive_min'))-to_number(before.get_string('drive_min')));
   elsif unknown then res.put('decision','UNKNOWN');res.put('reason','EXTRA_STOP_INPUTS_MISSING');
   else res.put('decision','REJECT');res.put('reason','EXTRA_STOP_BREAKS_DEADLINE');end if;
   return res.to_clob;
  end;
+
+ function evaluate_source(p_source clob,p_request clob,p_legs clob default null)return clob is after_src clob;
+ begin return assess(p_source,p_request,p_legs,after_src);end;
  -- PURE END
 
  procedure fail(p_code varchar2)is begin raise_application_error(-20911,p_code);end;
@@ -173,17 +176,21 @@ create or replace package body RRL_TRADE_EXTRA_STOP_API as
  end;
 
  -- Real evaluation: current native time context (it checks the view right), the extra address rule as RRL_TT_TIME_API builds it.
- function evaluate(p_trip number,p_actor varchar2,p_request clob)return clob is ctx clob;c json_object_t;q json_object_t:=json_object_t.parse(p_request);
-  rule json_object_t:=json_object_t();n number;norm number;strict number;v_address varchar2(255):=q.get_string('address');r json_object_t;p RRL_TRADE_ROUTE_STOP_POLICY%rowtype;
+ -- The proposal fingerprint covers the whole route it was computed on: the base source hash and the chosen AFTER source built by the
+ -- native material owners (legs with their cache time, address rules, store window profiles, operations). Any change => another proposal.
+ function evaluate_internal(p_trip number,p_actor varchar2,p_request clob,p_after out clob)return clob is ctx clob;c json_object_t;
+  q json_object_t:=json_object_t.parse(p_request);rule json_object_t:=json_object_t();n number;norm number;strict number;
+  v_address varchar2(255):=q.get_string('address');r json_object_t;p RRL_TRADE_ROUTE_STOP_POLICY%rowtype;base_hash varchar2(64);
  begin
   if v_address is null or length(v_address)>255 then fail('EXTRA_STOP_REQUEST_INVALID');end if;
-  RRL_TT_TIME_API.context(p_trip,p_actor,ctx);c:=json_object_t.parse(ctx);
+  RRL_TT_TIME_API.context(p_trip,p_actor,ctx);c:=json_object_t.parse(ctx);base_hash:=c.get_string('source_hash');
   select count(*),min(UNLOAD_NORM_MIN),min(TW_STRICT)into n,norm,strict from RRL_ADDR where nvl(DELETED3,0)=0 and ADDR=v_address;
   rule.put('address_count',n);rule.put('unload_norm_min',norm);rule.put('window_strict',strict);
   p:=policy(p_trip);
   -- Only native data decides: any caller-supplied rule, synthetic window or ban flag is replaced here; legs come from the native material.
   q.remove('extra_rule');q.remove('new_stops_forbidden');q.put('extra_rule',rule);q.put('new_stops_forbidden',p.NEW_STOPS_FORBIDDEN=1);
-  r:=json_object_t.parse(evaluate_source(c.get_object('source').to_clob,q.to_clob));
+  r:=json_object_t.parse(assess(c.get_object('source').to_clob,q.to_clob,null,p_after));
+  if p_after is not null then r.put('proposal_fingerprint',sha(base_hash||chr(10)||p_after));end if;
   -- Mileage change (program: show the change of time and mileage) from cached road distances, never estimated.
   declare m json_object_t:=c.get_object('source').get_object('route_material');stops json_array_t:=m.get_array('stops');ord json_array_t:=json_array_t();
    before_km number;after_km number;
@@ -198,22 +205,28 @@ create or replace package body RRL_TRADE_EXTRA_STOP_API as
     if before_km is not null and after_km is not null then r.put('added_km',after_km-before_km);end if;
    end if;
   end;
-  r.put('trip_id',p_trip);r.put('source_hash',c.get_string('source_hash'));r.put('time_version',c.get_number('version'));
+  r.put('trip_id',p_trip);r.put('source_hash',base_hash);r.put('time_version',c.get_number('version'));
   r.put('policy_version',p.VERSION_NO);r.put('new_stops_forbidden',p.NEW_STOPS_FORBIDDEN=1);
   r.put('external_sap_order','NOT_CREATED');  -- the SAP order is created by SAP after approval; not simulated here
   return r.to_clob;
  end;
+
+ function evaluate(p_trip number,p_actor varchar2,p_request clob)return clob is after_src clob;
+ begin return evaluate_internal(p_trip,p_actor,p_request,after_src);end;
 
  procedure command(p_request clob,p_actor varchar2,p_result out clob)is
   d json_object_t:=json_object_t.parse(p_request);op varchar2(100):=d.get_string('operation_id');act varchar2(20):=d.get_string('action');
   v_trip number:=d.get_number('trip_id');hash_value varchar2(64):=sha(p_request);e RRL_TRADE_EXTRA_STOP_EVENT%rowtype;j json_object_t;dummy number;
   ev json_object_t;p RRL_TRADE_ROUTE_STOP_POLICY%rowtype;v_decision varchar2(20);now timestamp with time zone:=systimestamp;
   v_address varchar2(255):=d.get_string('address');expected number:=d.get_number('expected_version');given_hash varchar2(64):=d.get_string('source_hash');
-  v_position number:=d.get_number('position');v_reason varchar2(500):=d.get_string('reason');forbid number:=case when d.get_boolean('new_stops_forbidden')then 1 else 0 end;result_text clob;
+  v_position number:=d.get_number('position');v_reason varchar2(500):=d.get_string('reason');forbid number:=case when d.get_boolean('new_stops_forbidden')then 1 else 0 end;
+  given_print varchar2(64):=d.get_string('proposal_fingerprint');result_text clob;after_src clob;fingerprint varchar2(64);existing varchar2(100);
  begin
   if op is null or lengthb(op)>100 or not regexp_like(op,'^[A-Za-z0-9_.:-]+$')or v_trip is null or act not in('APPROVE','DECLINE','SET_POLICY')then fail('EXTRA_STOP_REQUEST_INVALID');end if;
+  if act='APPROVE'and(v_position is null or given_print is null)then fail('EXTRA_STOP_REQUEST_INVALID');end if;  -- NULL never compares as "different"
+  -- Current access fence first (as the other TRADECASE writers), then the trip row; rights checked before and under both.
+  lock table RRL_ACCESS_REV in share mode wait 5;
   require_edit(v_trip,p_actor);
-  -- One writer per trip at a time: the trip row is the same anchor the route commands use for this trip.
   begin select 1 into dummy from RRL_TRANSPORT_TASK where ID=v_trip for update wait 5;
   exception when no_data_found then fail('EXTRA_STOP_TRIP_NOT_FOUND');end;
   require_edit(v_trip,p_actor);
@@ -231,30 +244,56 @@ create or replace package body RRL_TRADE_EXTRA_STOP_API as
    j:=json_object_t();j.put('operation_id',op);j.put('trip_id',v_trip);j.put('action',act);j.put('new_stops_forbidden',forbid=1);j.put('policy_version',p.VERSION_NO+1);
    v_decision:='POLICY';
   else
-   -- Re-evaluated now, inside this transaction, on the same route source the dispatcher saw; a changed route needs a new v_decision.
-   ev:=json_object_t.parse(evaluate(v_trip,p_actor,p_request));
+   ev:=json_object_t.parse(evaluate_internal(v_trip,p_actor,p_request,after_src));
+   if act='APPROVE'then
+    if ev.get_string('decision')<>'PROPOSE'or ev.get_number('position')<>v_position then fail('EXTRA_STOP_NOT_PROPOSED');end if;
+    -- Freeze the proposal's inputs with the native locker (addresses incl. the extra one, every leg), then evaluate once more:
+    -- nothing can change between the shown proposal, the final check and commit, and before/after are never mixed.
+    RRL_TT_ROUTE_SCHEDULE.lock_material(after_src);
+    ev:=json_object_t.parse(evaluate_internal(v_trip,p_actor,p_request,after_src));
+    if ev.get_string('decision')<>'PROPOSE'or ev.get_number('position')<>v_position then fail('EXTRA_STOP_NOT_PROPOSED');end if;
+   end if;
    if expected is null or given_hash is null or ev.get_number('time_version')<>expected or ev.get_string('source_hash')<>given_hash then fail('EXTRA_STOP_SOURCE_CHANGED');end if;
-   if act='APPROVE'and(ev.get_string('decision')<>'PROPOSE'or ev.get_number('position')<>v_position)then fail('EXTRA_STOP_NOT_PROPOSED');end if;
+   fingerprint:=ev.get_string('proposal_fingerprint');
+   if act='APPROVE'and(fingerprint is null or fingerprint<>given_print)then fail('EXTRA_STOP_PROPOSAL_CHANGED');end if;
+   if act='APPROVE'then
+    -- One accepted stop per address on the same route basis: a second approval without a new basis returns a conflict.
+    select max(OPERATION_ID)keep(dense_rank last order by EVENT_AT)into existing from RRL_TRADE_EXTRA_STOP_EVENT
+     where TRIP_ID=v_trip and ADDRESS=v_address and ACTION in('APPROVE','DECLINE');
+    if existing is not null then
+     select*into e from RRL_TRADE_EXTRA_STOP_EVENT where OPERATION_ID=existing;
+     if e.DECISION='APPROVED'and e.SOURCE_HASH=given_hash and e.PROPOSAL_FINGERPRINT=fingerprint then fail('EXTRA_STOP_ALREADY_APPROVED');end if;
+    end if;
+   end if;
    v_decision:=case when act='APPROVE'then 'APPROVED'else 'DECLINED'end;
    j:=ev;j.put('operation_id',op);j.put('action',act);j.put('decision_state',v_decision);j.put('decided_by',p_actor);j.put('decided_at',stamp(now));j.put('reason',trim(v_reason));
    if v_decision='APPROVED'then j.put('next_stage','WAITING_SAP_ORDER');end if;  -- the new stop appears with the SAP order, not before
   end if;
   result_text:=j.to_clob;  -- JSON methods never inside SQL
-  insert into RRL_TRADE_EXTRA_STOP_EVENT(OPERATION_ID,TRIP_ID,ACTION,ADDRESS,POSITION_NO,DECISION,SOURCE_HASH,TIME_VERSION,REQUEST_HASH,ACTOR,EVENT_AT,RESULT_JSON)
-   values(op,v_trip,act,v_address,v_position,v_decision,given_hash,expected,hash_value,p_actor,now,result_text);
+  insert into RRL_TRADE_EXTRA_STOP_EVENT(OPERATION_ID,TRIP_ID,ACTION,ADDRESS,POSITION_NO,DECISION,SOURCE_HASH,TIME_VERSION,PROPOSAL_FINGERPRINT,REQUEST_HASH,ACTOR,EVENT_AT,RESULT_JSON)
+   values(op,v_trip,act,v_address,v_position,v_decision,given_hash,expected,fingerprint,hash_value,p_actor,now,result_text);
   j.put('replayed',false);p_result:=j.to_clob;
  end;
 
+ -- Validity of decisions: a changed base route makes every decision stale; the newest approval per address (at most 5, one variant each)
+ -- is also re-checked against its proposal fingerprint, so changed rules/windows/legs of the extra stop are never shown as current.
  function decisions(p_trip number,p_actor varchar2)return clob is ctx clob;c json_object_t;r json_object_t:=json_object_t();a json_array_t:=json_array_t();
-  o json_object_t;p RRL_TRADE_ROUTE_STOP_POLICY%rowtype;current_hash varchar2(64);
+  o json_object_t;p RRL_TRADE_ROUTE_STOP_POLICY%rowtype;current_hash varchar2(64);ev json_object_t;q json_object_t;after_src clob;checked number:=0;validity varchar2(30);
  begin
   RRL_TT_TIME_API.context(p_trip,p_actor,ctx);c:=json_object_t.parse(ctx);current_hash:=c.get_string('source_hash');
-  for x in(select OPERATION_ID,ACTION,ADDRESS,POSITION_NO,DECISION,SOURCE_HASH,ACTOR,EVENT_AT from RRL_TRADE_EXTRA_STOP_EVENT
+  for x in(select OPERATION_ID,ACTION,ADDRESS,POSITION_NO,DECISION,SOURCE_HASH,PROPOSAL_FINGERPRINT,ACTOR,EVENT_AT,
+     row_number()over(partition by ADDRESS order by EVENT_AT desc)NEWEST from RRL_TRADE_EXTRA_STOP_EVENT
     where TRIP_ID=p_trip and ACTION in('APPROVE','DECLINE')order by EVENT_AT desc fetch first 50 rows only)loop
+   validity:=case when x.SOURCE_HASH=current_hash then 'CURRENT'else 'STALE_ROUTE_CHANGED'end;
+   if validity='CURRENT'and x.DECISION='APPROVED'then
+    if x.NEWEST=1 and checked<5 then
+     checked:=checked+1;q:=json_object_t();q.put('address',x.ADDRESS);q.put('position',x.POSITION_NO);q.put('zone','UTC');
+     ev:=json_object_t.parse(evaluate_internal(p_trip,p_actor,q.to_clob,after_src));
+     if ev.get_string('decision')<>'PROPOSE'or nvl(ev.get_string('proposal_fingerprint'),'-')<>x.PROPOSAL_FINGERPRINT then validity:='STALE_INPUTS_CHANGED';end if;
+    else validity:='SUPERSEDED_OR_NOT_RECHECKED';end if;
+   end if;
    o:=json_object_t();o.put('operation_id',x.OPERATION_ID);o.put('address',x.ADDRESS);o.put('position',x.POSITION_NO);o.put('decision_state',x.DECISION);
-   o.put('decided_by',x.ACTOR);o.put('decided_at',stamp(x.EVENT_AT));
-   -- A decision is bound to the route it was made on.
-   o.put('validity',case when x.SOURCE_HASH=current_hash then 'CURRENT'else 'STALE_ROUTE_CHANGED'end);a.append(o);
+   o.put('decided_by',x.ACTOR);o.put('decided_at',stamp(x.EVENT_AT));o.put('validity',validity);a.append(o);
   end loop;
   p:=policy(p_trip);r.put('trip_id',p_trip);r.put('source_hash',current_hash);r.put('time_version',c.get_number('version'));
   r.put('new_stops_forbidden',p.NEW_STOPS_FORBIDDEN=1);r.put('policy_version',p.VERSION_NO);r.put('decisions',a);

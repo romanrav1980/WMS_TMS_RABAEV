@@ -19,12 +19,19 @@
  "applied_by_claude": false,
  "files_sha256": {
   "000_preflight.sql": "8ed313035abf01f91718284b7a935f00f2304f03c6662bf279b7e4f4e4ff51f1",
-  "001_schema.sql": "ad1004ee44b316291e7ec51ec683dd2a8d1c271465e171ebb4ce1b4f32694830",
-  "002_api.sql": "55b34eec2d29b5e51d25b66b1d52ac537ab967ce0118abe49a6c402bef1f2a64",
+  "001_schema.sql": "2f4ee874c817f01cb316054c6320fc195efc49d1174fe8638bfad6d50c215d90",
+  "002_api.sql": "3a0050975ec7460a3ebe0999d7083b56b570c2c8fa188e3be4124270d1779293",
   "apply.sql": "417cd17ac856e6b081f30286c8460f6c59df3cfa14246340b6d9539ccedb8578",
   "rollback.sql": "0e690541bbe9f74c96c02912abd464b6c00586480b998dc48d732028f3233039",
   "rollback_verify.sql": "851ba6105e16963769d5fdd820e774f2ccbf1e01a0045e464a8c8d0c3fc53fdb",
   "verify.sql": "f7975a7add9e40219082bb8f3d493ab1d61159b233ab92ece27eca48d2c77b8d"
  },
- "cost_bound": "all n+1 positions only up to 20 stops; longer routes require the dispatcher's position (one variant ~320 ms at 51 stops, measured live)"
+ "cost_bound": "all n+1 positions only up to 20 stops; longer routes require the dispatcher's position (one variant ~320 ms at 51 stops, measured live)",
+ "review_C0154": [
+  "RRL_ACCESS_REV share fence before trip row",
+  "approval bound to proposal fingerprint (base hash + full AFTER source)",
+  "RRL_TT_ROUTE_SCHEDULE.lock_material on the AFTER source before the final evaluation",
+  "NULL position/fingerprint rejected natively",
+  "duplicate active approval refused (EXTRA_STOP_ALREADY_APPROVED)"
+ ]
 }

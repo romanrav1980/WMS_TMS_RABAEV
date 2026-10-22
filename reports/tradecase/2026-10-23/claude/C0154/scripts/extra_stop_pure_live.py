@@ -67,6 +67,16 @@ def main():
             stops = [(x["address"], hm(x["arrival_at"]), hm(x.get("service_finish_at"))) for x in (r.get("after") or r.get("before") or {}).get("stops", [])]
             print(f"{name}: {r['decision']} {r.get('reason', '')} pos={r.get('position')} slack {r.get('before_slack_min')}->{r.get('after_slack_min')}"
                   f" added={r.get('added_min')} stops={stops} return={hm((r.get('after') or r.get('before') or {}).get('return_at'))}")
+        # Proposal fingerprint (sha of the chosen AFTER source, as evaluate_internal stores it): stable for equal inputs, changes with them.
+        FP = ("declare\n a clob;r clob;\n" + PURE + "\n function sha(p_text clob)return varchar2 is begin return lower(rawtohex(sys.dbms_crypto.hash(p_text,sys.dbms_crypto.hash_sh256)));end;"
+              "\nbegin\n r:=assess(:src,:req,:legs,a);:out:=case when a is null then null else sha(a) end;\nend;")
+        prints = {}
+        for name, rule in [("first", RULE), ("same_again", RULE), ("extra_norm_changed", {**RULE, "unload_norm_min": 20})]:
+            res = cur.var(oracledb.DB_TYPE_VARCHAR); s_, q_, l_ = cur.var(oracledb.DB_TYPE_CLOB), cur.var(oracledb.DB_TYPE_CLOB), cur.var(oracledb.DB_TYPE_CLOB)
+            s_.setvalue(0, json.dumps(source("13:40:00", "14:40:00"))); q_.setvalue(0, json.dumps({"address": "EXTRA", "zone": "Europe/Moscow", "extra_rule": rule, "position": 2}))
+            l_.setvalue(0, json.dumps(legs(15))); cur.execute(FP, out=res, src=s_, req=q_, legs=l_); prints[name] = res.getvalue()
+        out["fingerprint"] = {"stable": prints["first"] == prints["same_again"], "changes_with_extra_norm": prints["first"] != prints["extra_norm_changed"], **prints}
+        print("fingerprint", out["fingerprint"]["stable"], out["fingerprint"]["changes_with_extra_norm"])
     pathlib.Path(__file__).parent.parent.joinpath("extra-stop-pure-live.json").write_text(json.dumps(out, indent=1, ensure_ascii=False), encoding="utf-8")
 
 

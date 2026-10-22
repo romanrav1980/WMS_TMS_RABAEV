@@ -11,12 +11,12 @@ type StopRow = { address: string; arrival_at: string | null; service_finish_at: 
 type Brief = { status: string; return_at: string | null; drive_min: string | null; stops: StopRow[]; issues: { code: string; address: string | null }[] };
 type Evaluation = { decision: "PROPOSE" | "REJECT" | "UNKNOWN" | "FORBIDDEN" | "ALREADY_ON_ROUTE"; reason?: string; address: string; position?: number;
   before?: Brief; after?: Brief; before_slack_min?: number | null; after_slack_min?: number | null; added_min?: number | null;
-  distance_km_before?: number | null; distance_km_after?: number | null; added_km?: number | null; source_hash: string; time_version: number;
+  distance_km_before?: number | null; distance_km_after?: number | null; added_km?: number | null; source_hash: string; time_version: number; proposal_fingerprint?: string;
   variants?: { position: number; verdict: string; issues: { code: string }[] }[] };
 type Decisions = { new_stops_forbidden: boolean; policy_version: number; decisions: { operation_id: string; address: string; decision_state: string;
-  decided_by: string; decided_at: string; validity: "CURRENT" | "STALE_ROUTE_CHANGED" }[] };
+  decided_by: string; decided_at: string; validity: "CURRENT" | "STALE_ROUTE_CHANGED" | "STALE_INPUTS_CHANGED" | "SUPERSEDED_OR_NOT_RECHECKED" }[] };
 type Body = { operation_id: string; trip_id: number; action: "APPROVE" | "DECLINE" | "SET_POLICY"; reason: string; address?: string; zone?: string;
-  expected_version?: number; source_hash?: string; position?: number; new_stops_forbidden?: boolean; expected_policy_version?: number };
+  expected_version?: number; source_hash?: string; position?: number; proposal_fingerprint?: string; new_stops_forbidden?: boolean; expected_policy_version?: number };
 type Receipt = { operation_id: string; action: string };
 
 const pending = journal<Body>("extra-stop", "TC.STOP.UI", b => Number.isSafeInteger(b.trip_id) && b.trip_id > 0 && typeof b.reason === "string"
@@ -25,7 +25,9 @@ const help = (id: string, text: string) => ({ id: "tradecase.route.extra." + id,
 const reasons = { EXTRA_STOP_SOURCE_CHANGED: "Маршрут или его данные изменились после проверки. Проверьте заезд заново.",
   EXTRA_STOP_NOT_PROPOSED: "На текущих данных заезд уже не укладывается или точка вставки другая. Проверьте заново.",
   EXTRA_STOP_ACCESS_DENIED: "Согласование заездов вам недоступно для складов этого рейса.", VERSION_CONFLICT: "Настройку уже изменил другой сотрудник. Перечитайте.",
-  EXTRA_STOP_OPERATION_CONFLICT: "Этот номер операции уже связан с другим запросом.", EXTRA_STOP_REASON_REQUIRED: "Укажите основание решения." };
+  EXTRA_STOP_OPERATION_CONFLICT: "Этот номер операции уже связан с другим запросом.", EXTRA_STOP_REASON_REQUIRED: "Укажите основание решения.",
+  EXTRA_STOP_PROPOSAL_CHANGED: "Данные новой точки (норма, окно, время в пути) изменились после проверки. Проверьте заезд заново.",
+  EXTRA_STOP_ALREADY_APPROVED: "Этот заезд уже согласован на текущем маршруте. Повторное согласование не нужно." };
 const time = (iso: string | null | undefined) => (iso ? iso.slice(11, 16) : "—");
 const mins = (v: number | string | null | undefined) => (v === null || v === undefined ? "нет данных" : `${Math.round(Number(v))} мин`);
 const WHY: Record<string, string> = { BASE_ROUTE_NOT_CONFIRMED: "сам основной маршрут ещё не рассчитан полностью — обещать заезд нельзя",
@@ -45,7 +47,7 @@ export function ExtraStop({ wh, user, trip }: { wh: string; user: string; trip: 
     path: () => `/api/transport/preflight/trips/${trip}/extra-stops`, payload: ({ trip_id: _t, ...b }) => b });
   const after = () => setReload(n => n + 1), locked = cmd.busy || cmd.stored.kind !== "none", e = ev.data;
   const decide = (action: "APPROVE" | "DECLINE") => e && cmd.start({ trip_id: trip, action, reason: reason.trim(), address: e.address, zone: "UTC",
-    expected_version: e.time_version, source_hash: e.source_hash, ...(action === "APPROVE" ? { position: e.position } : {}) }, after);
+    expected_version: e.time_version, source_hash: e.source_hash, ...(action === "APPROVE" ? { position: e.position, proposal_fingerprint: e.proposal_fingerprint } : {}) }, after);
   const policy = hist.data;
   return <section className="tc-panel" aria-label="Дополнительный заезд">
     <h5>Дополнительный заезд вне маршрута</h5>
@@ -73,7 +75,8 @@ export function ExtraStop({ wh, user, trip }: { wh: string; user: string; trip: 
       <Act help={help("decline", "Записать отказ от заезда с основанием. Маршрут не меняется.")} disabled={locked || reason.trim().length < 3} onClick={() => decide("DECLINE")}>Отклонить заезд</Act></>}
     {policy && policy.decisions.length > 0 && <><h6>Решения по рейсу</h6><ul>{policy.decisions.map(d => <li key={d.operation_id}>
       {d.decision_state === "APPROVED" ? "Согласован" : "Отклонён"} заезд «{d.address}» — {d.decided_by}, {time(d.decided_at)} UTC
-      {d.validity === "STALE_ROUTE_CHANGED" ? " · маршрут изменился после решения — нужно новое решение" : ""}{d.decision_state === "APPROVED" && d.validity === "CURRENT" ? " · ждёт заказ SAP" : ""}</li>)}</ul></>}
+      {d.validity === "STALE_ROUTE_CHANGED" ? " · маршрут изменился после решения — нужно новое решение" : d.validity === "STALE_INPUTS_CHANGED"
+        ? " · данные новой точки изменились после решения — нужно новое решение" : d.validity === "SUPERSEDED_OR_NOT_RECHECKED" ? " · заменено более поздним решением" : ""}{d.decision_state === "APPROVED" && d.validity === "CURRENT" ? " · ждёт заказ SAP" : ""}</li>)}</ul></>}
   </section>;
 }
 

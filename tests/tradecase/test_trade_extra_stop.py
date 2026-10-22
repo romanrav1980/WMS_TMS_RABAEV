@@ -33,12 +33,13 @@ def ora(code, text=""):
 
 
 def test_command_arguments_are_exact():
-    ExtraStopCommand(operation_id="TC.STOP.UI:abcd1234", action="APPROVE", reason="клиент просит", address="A", expected_version=2, source_hash=H, position=1)
+    ExtraStopCommand(operation_id="TC.STOP.UI:abcd1234", action="APPROVE", reason="клиент просит", address="A", expected_version=2, source_hash=H, position=1, proposal_fingerprint=H)
     ExtraStopCommand(operation_id="TC.STOP.UI:abcd1234", action="DECLINE", reason="не нужно", address="A", expected_version=2, source_hash=H)
     ExtraStopCommand(operation_id="TC.STOP.UI:abcd1234", action="SET_POLICY", reason="запрет", new_stops_forbidden=True, expected_policy_version=0)
-    for bad in [dict(action="APPROVE", address="A", expected_version=2, source_hash=H), dict(action="DECLINE", address="A", expected_version=2, source_hash=H, position=0),
+    for bad in [dict(action="APPROVE", address="A", expected_version=2, source_hash=H, position=1), dict(action="DECLINE", address="A", expected_version=2, source_hash=H, proposal_fingerprint=H),
+                dict(action="APPROVE", address="A", expected_version=2, source_hash=H), dict(action="DECLINE", address="A", expected_version=2, source_hash=H, position=0),
                 dict(action="SET_POLICY", new_stops_forbidden=True), dict(action="SET_POLICY", new_stops_forbidden=True, expected_policy_version=0, address="A"),
-                dict(action="APPROVE", address="A", expected_version=2, source_hash="x", position=0), dict(action="APPROVE", address="A", expected_version=2, source_hash=H, position=0, reason="x")]:
+                dict(action="APPROVE", address="A", expected_version=2, source_hash="x", position=0, proposal_fingerprint=H), dict(action="APPROVE", address="A", expected_version=2, source_hash=H, position=0, proposal_fingerprint=H, reason="x")]:
         with pytest.raises(ValidationError):
             ExtraStopCommand(**{"operation_id": "TC.STOP.UI:abcd1234", "reason": "основание", **bad})
 
@@ -129,7 +130,7 @@ def test_native_rules_static():
     assert "RRL_TRADE_" not in pure and "RRL_ACCESS_API" not in pure  # the pure part only uses the existing calculator and material owners
     verdict = body_of("function verdict(")
     assert "'DELIVERY_HARD_WINDOW_MISSED','ROUTE_EXCEEDS_PLANNED_RESOURCE_ENVELOPE','DRIVER_TRIP_DRIVE_LIMIT'" in verdict and "return 'UNKNOWN'" in verdict
-    evaluate = body_of("function evaluate_source(")
+    evaluate = body_of("function assess(")
     order = ["new_stops_forbidden", "BASE_ROUTE_NOT_CONFIRMED", "ALREADY_ON_ROUTE", "EXTRA_ADDRESS_NOT_UNIQUE", "variant(src,stops,pos", "'PROPOSE'", "EXTRA_STOP_INPUTS_MISSING", "EXTRA_STOP_BREAKS_DEADLINE"]
     positions = [evaluate.index(x) for x in order]
     assert positions == sorted(positions)
@@ -138,7 +139,7 @@ def test_native_rules_static():
     command = body_of("procedure command(")
     assert command.index("require_edit(v_trip") < command.index("for update wait 5") < command.rindex("require_edit(v_trip")
     assert command.index("e.ACTOR<>p_actor or e.REQUEST_HASH<>hash_value") < command.index("'replayed',true")
-    assert "ev:=json_object_t.parse(evaluate(v_trip,p_actor,p_request))" in command and "EXTRA_STOP_SOURCE_CHANGED" in command
+    assert "ev:=json_object_t.parse(evaluate_internal(v_trip,p_actor,p_request,after_src))" in command and "EXTRA_STOP_SOURCE_CHANGED" in command
     assert "ev.get_string('decision')<>'PROPOSE'or ev.get_number('position')<>v_position" in command and "'WAITING_SAP_ORDER'" in command
     assert "'transport_dispatch_edit'" in body_of("procedure require_edit(")
     assert "STALE_ROUTE_CHANGED" in body_of("function decisions(")
@@ -161,7 +162,28 @@ def test_live_evidence_matches_the_program_example():
 def test_evaluation_is_bounded_and_caller_cannot_supply_route_data():
     spec = API[:API.index("create or replace package body")]
     assert "evaluate_source" not in spec  # the pure part with controlled legs is private
-    evaluate = body_of("function evaluate(p_trip number")
-    assert "q.remove('extra_rule');q.remove('new_stops_forbidden')" in evaluate and "evaluate_source(c.get_object('source').to_clob,q.to_clob)" in evaluate
-    source = body_of("function evaluate_source(")
+    evaluate = body_of("function evaluate_internal(")
+    assert "q.remove('extra_rule');q.remove('new_stops_forbidden')" in evaluate and "assess(c.get_object('source').to_clob,q.to_clob,null,p_after)" in evaluate
+    source = body_of("function assess(")
     assert "stops.get_size>20 then" in source and "EXTRA_STOP_POSITION_REQUIRED" in source and "for pos in nvl(pick,0)..nvl(pick,stops.get_size)loop" in source
+
+
+def test_review_rules_access_fence_proposal_lock_and_single_approval():
+    command = body_of("procedure command(")
+    fence, first, row, second = (command.index(x) for x in ("lock table RRL_ACCESS_REV in share mode", "require_edit(v_trip", "for update wait 5", "for update wait 5"))
+    assert fence < first < row < command.rindex("require_edit(v_trip")  # current access fence before the trip row, rights before and under
+    assert "if act='APPROVE'and(v_position is null or given_print is null)then fail('EXTRA_STOP_REQUEST_INVALID')" in command
+    lock, final = command.index("RRL_TT_ROUTE_SCHEDULE.lock_material(after_src)"), command.rindex("evaluate_internal(v_trip,p_actor,p_request,after_src)")
+    assert lock < final  # inputs of the proposal are locked, then evaluated once more inside the same transaction
+    assert command.index("fingerprint<>given_print") < command.index("EXTRA_STOP_ALREADY_APPROVED") < command.index("insert into RRL_TRADE_EXTRA_STOP_EVENT")
+    assert "e.DECISION='APPROVED'and e.SOURCE_HASH=given_hash and e.PROPOSAL_FINGERPRINT=fingerprint" in command
+    internal = body_of("function evaluate_internal(")
+    assert "sha(base_hash||chr(10)||p_after)" in internal  # fingerprint of the whole AFTER source plus the base route
+    decisions = body_of("function decisions(")
+    assert "STALE_INPUTS_CHANGED" in decisions and "checked<5" in decisions and "x.NEWEST=1" in decisions
+    assert "PROPOSAL_FINGERPRINT is not null" in SCHEMA
+
+
+def test_live_fingerprint_is_stable_and_follows_inputs():
+    data = json.loads((ROOT / "reports/tradecase/2026-10-23/claude/C0154/extra-stop-pure-live.json").read_text(encoding="utf-8"))
+    assert data["fingerprint"]["stable"] is True and data["fingerprint"]["changes_with_extra_norm"] is True

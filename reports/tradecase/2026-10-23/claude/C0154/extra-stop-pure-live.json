@@ -871,5 +871,12 @@
   ],
   "decision": "UNKNOWN",
   "reason": "EXTRA_STOP_INPUTS_MISSING"
+ },
+ "fingerprint": {
+  "stable": true,
+  "changes_with_extra_norm": true,
+  "first": "ea12a6e8605a3c48a696df78ae16d550a482b27b5b02e6d99cc1ae5307c5b829",
+  "same_again": "ea12a6e8605a3c48a696df78ae16d550a482b27b5b02e6d99cc1ae5307c5b829",
+  "extra_norm_changed": "9a3b1603e6bb4dc2c0c7e9293c1889b6b97d32c764cb5aaea8ab1c74f9283e31"
  }
 }

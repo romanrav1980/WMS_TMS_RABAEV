@@ -23,7 +23,7 @@
   },
   {
    "width": 1440,
-   "name": "approval binds address, position, route version and source hash"
+   "name": "approval binds address, position, route version, source hash and the exact proposal"
   },
   {
    "width": 1440,
@@ -79,7 +79,7 @@
   },
   {
    "width": 390,
-   "name": "approval binds address, position, route version and source hash"
+   "name": "approval binds address, position, route version, source hash and the exact proposal"
   },
   {
    "width": 390,
@@ -119,10 +119,10 @@
  "posts": 8,
  "timings": {
   "panel_1440": [
-   3272
+   3308
   ],
   "panel_390": [
-   2603
+   2730
   ]
  },
  "status": "PASS"

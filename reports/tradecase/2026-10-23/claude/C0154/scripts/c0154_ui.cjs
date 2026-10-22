@@ -12,7 +12,8 @@ const BASE = process.env.C0154_BASE || "http://127.0.0.1:3021/", WH = "220793322
 const res = { base: BASE, checks: [], liveWrites: [], errors: [], posts: [], timings: {} };
 const cors = { "access-control-allow-origin": "*" };
 let fx = {};
-const bind = (r, address) => ({ ...r, address, source_hash: H, time_version: 3 });
+const FPR = "f".repeat(64);
+const bind = (r, address) => ({ ...r, address, source_hash: H, time_version: 3, ...(r.decision === "PROPOSE" ? { proposal_fingerprint: FPR } : {}) });
 const EVAL = { EXTRA: bind(PURE.extra_15_slack_30, "EXTRA"), "EXTRA-45": bind(PURE.extra_45_slack_30, "EXTRA-45"), "EXTRA-BAN": bind(PURE.new_stops_forbidden, "EXTRA-BAN"),
   "EXTRA-REAL": { ...TRIP, address: "EXTRA-REAL" } };
 
@@ -87,7 +88,7 @@ async function width(b, w, h) {
   await panel(p).getByRole("button", { name: "Согласовать заезд" }).click(); await panel(p).getByText("Результат неизвестен").waitFor();
   const sent = JSON.parse(res.posts.at(-1));
   assert.deepStrictEqual({ ...sent, operation_id: 0 }, { operation_id: 0, action: "APPROVE", reason: "магазин просит довезти", address: "EXTRA", zone: "UTC",
-    expected_version: 3, source_hash: H, position: 0 }); ok(w, "approval binds address, position, route version and source hash");
+    expected_version: 3, source_hash: H, position: 0, proposal_fingerprint: FPR }); ok(w, "approval binds address, position, route version, source hash and the exact proposal");
   await p.reload(); await enter(p);
   await panel(p).getByText("не подтверждено").waitFor(); ok(w, "unconfirmed decision survives reload");
   fx.replies = [200]; await panel(p).getByRole("button", { name: "Повторить ту же команду" }).click(); await panel(p).getByText("Заезд согласован").waitFor();
